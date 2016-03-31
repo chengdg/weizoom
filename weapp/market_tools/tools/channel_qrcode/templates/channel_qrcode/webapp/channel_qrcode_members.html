@@ -138,6 +138,7 @@
     }
     .xui-choose{
     	width: 5%;
+    	vertical-align: middle;
     }
     .xui-time-input{
     	border: none;
@@ -158,6 +159,15 @@
     .mbsc-ios .dwwc {
         padding: 2.5em 0em .833333em 0.833333em;
     }
+    .xui-all-span{
+    	display: inline-block;
+		font-size: 1rem;
+		vertical-align: sub;
+    }
+    .mbsc-ios .dwo {
+	    background: #FFF !important;
+	    opacity: 0;
+	}
 </style>
 {% endblock %}
 {% block content-panel %}
@@ -168,7 +178,7 @@
 	 		{% if startDate and endDate %}
 	 			<span>{{startDate}}&nbsp;-&nbsp;{{endDate}}</span>
  			{% else %}
-	 			<span>全部</span>
+	 			<span class="xui-all-span">全部</span>
  			{% endif %}
  			<img class="xui-choose" src="/termite_static/img/qrcode_arrow.png"/>
 		</div>
@@ -279,22 +289,22 @@
 		// };
 		// $("#startDate").mobiscroll($.extend(opt['date'], opt['default']));
 		// $("#endDate").mobiscroll($.extend(opt['date'], opt['default']));
-		$('#startDate').mobiscroll().datetime({
+		$('#startDate').mobiscroll().date({
             theme: 'ios',
             mode: 'scroller',
             display: 'bottom',
             lang: 'zh',
-            minDate: new Date(2006,3,10,9,22),
-            maxDate: new Date(2026,7,30,15,44),
+            minDate: new Date(2006,3,10),
+            maxDate: new Date(2026,7,30),
             stepMinute: 5
         });
-        $('#endDate').mobiscroll().datetime({
+        $('#endDate').mobiscroll().date({
             theme: 'ios',
             mode: 'scroller',
             display: 'bottom',
             lang: 'zh',
-            minDate: new Date(2006,3,10,9,22),
-            maxDate: new Date(2026,7,30,15,44),
+            minDate: new Date(2006,3,10),
+            maxDate: new Date(2026,7,30),
             stepMinute: 5
         });
 	});
