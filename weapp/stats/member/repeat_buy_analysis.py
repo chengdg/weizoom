@@ -65,7 +65,8 @@ class RepeatBuyAnalysis(resource.Resource):
 					u"消费金额：100-200": 76, 
 					u"消费金额：200-500": 34, 
 					u"其他": 21
-				}
+				},
+				tooltip
 			)
 
 
@@ -74,7 +75,7 @@ class BuyPercent(resource.Resource):
 	会员购买占比
 	"""
 	app = 'stats'
-	resource = 'repeat_buy_percent'
+	resource = 'buy_percent'
 
 	@login_required
 	def api_get(request):
