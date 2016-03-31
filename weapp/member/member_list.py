@@ -421,7 +421,7 @@ class MemberDetail(resource.Resource):
 				logging.info(member.last_pay_time)
 			for order in orders:
 				order.final_price = order.final_price + order.weizoom_card_money
-				if order.status == 2:
+				if order.status == 5:
 					pay_money += order.final_price
 					pay_times += 1
 					weizoom_card_total_money += order.weizoom_card_money
