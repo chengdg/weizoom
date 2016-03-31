@@ -8,7 +8,7 @@ Feature: 会员列表-会员详情-收货信息
 	2.会员设置默认地址，后台查看会员地址列表默认置顶
 
 """
-@mall2 @member @memberList
+@mall2 @member @memberList @yanhaonan
 Scenario:1 会员添加地址，后台查看会员地址列表
 	Given jobs登录系统
 	And 开启手动清除cookie模式
@@ -66,6 +66,7 @@ Scenario:1 会员添加地址，后台查看会员地址列表
 		}]
 		"""
 
+@yanhaonan
 Scenario:2 会员设置默认地址，后台查看会员地址列表默认置顶
 	Given jobs登录系统
 	And 开启手动清除cookie模式

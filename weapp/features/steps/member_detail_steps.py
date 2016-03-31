@@ -299,15 +299,26 @@ def step_impl(context):
 
 @Then(u"{user}获得'{member}'的收货信息列表")
 def step_impl(context, user, member):
+    member_id = bdd_util.get_member_by_username(member, context.webapp_id).id
+    url = '/member/api/member_shipinfo/?id='+str(member_id)
     expected = json.loads(context.text)
-    response = _get_member_info(context, member)
+    response = context.client.get(bdd_util.nginx(url))
+    items = json.loads(response.content)['data']['items']
     actual = []
-    for ship_info in response.context['ship_infos']:
-        ship = {}
-        ship['area'] = regional_util.get_str_value_by_string_ids(ship_info.area)
-        ship['area'] = ','.join(ship['area'].split())
-        ship['ship_address'] = ship_info.ship_address
-        ship['ship_name'] = ship_info.ship_name
-        ship['ship_tel'] = ship_info.ship_tel
-        actual.append(ship)
+    for record in items:
+		# detail = record['coupon_detail'].split()[0]
+		actual.append(dict(
+			ship_name=record['ship_name'],
+			ship_tel=record['ship_tel'],
+			area=','.join(record['area'].split()),
+			ship_address=record['ship_address'],
+		))
+    # for ship_info in response.context['ship_infos']:
+    #     ship = {}
+    #     ship['area'] = regional_util.get_str_value_by_string_ids(ship_info.area)
+    #     ship['area'] = ','.join(ship['area'].split())
+    #     ship['ship_address'] = ship_info.ship_address
+    #     ship['ship_name'] = ship_info.ship_name
+    #     ship['ship_tel'] = ship_info.ship_tel
+    #     actual.append(ship)
     bdd_util.assert_list(actual, expected)

@@ -33,7 +33,7 @@ def step_impl(context, user, member):
 			coupon_id=record['coupon_id'],
 			name=record['coupon_name'],
 			type=record['coupon_detail'].split()[1],
-			get_time=record['provided_time'],
+			get_time=record['provided_time'].split()[0].replace('/', '-'),
 			money=detail[1:],
 			status=record['coupon_state'],
 		))
