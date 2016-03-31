@@ -749,7 +749,8 @@ class MemberFriends(resource.Resource):
 			'sortAttr': request.GET.get('sort_attr', '-created_at'),
 			'population': population,
 			'population_order': population_order,
-			'amount': '%.2f' % amount
+			'amount': '%.2f' % amount,
+			'data_value': data_value
 		}
 		return response.get_response()
 

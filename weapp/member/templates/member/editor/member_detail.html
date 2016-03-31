@@ -689,9 +689,9 @@
 		$('.friends').click(function(event){
 			var $el = $(event.currentTarget);
 			var data_value = $el.attr('data-value');
-			if ($el.html() == '0') {
-				return false;
-			}
+			// if ($el.html() == '0') {
+			// 	return false;
+			// }
 
 			W.dialog.showDialog('W.member.dialog.MemberDetailRelationsDialog', {
 				memberId: memberId,
