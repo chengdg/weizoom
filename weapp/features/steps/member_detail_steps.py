@@ -145,25 +145,37 @@ def step_impl(context, user, member):
     bdd_util.assert_dict(actual, expected)
 
 
+STATUS2TEXT = {
+    0: u'待支付',
+    1: u'已取消',
+    2: u'已支付',
+    3: u'待发货',
+    4: u'已发货',
+    5: u'已完成',
+    6: u'退款中',
+    7: u'退款成功',
+    8: u'退款中',
+    9: u'退款成功',
+}
 @then(u"{user}获得'{member}'的订单列表")
 def step_impl(context, user, member):
-    response = _get_member_info(context, member)
-    orders = response.context['orders']
-    actual = []
-    for order in orders:
-        actual.append(dict(
-                order_id = order.order_id,
-                order_amount = "%.2f" % order.final_price,
-                date = order.created_at.strftime("%Y-%m-%d"),
-                order_status = STATUS2TEXT[order.status]
-            ))
-    if context.table:
-        expected = []
-        for order in context.table:
-            order = order.as_dict()
-            expected.append(dict(order))
+    url = '/member/api/order_list/'
+    response = context.client.get(url, {'id': context.member_id})
+    items = json.loads(response.content)['data']['items']
+    for item in items:
+        item["order_amount"] = float(item["final_price"])
+        item["date"] = item["created_at"].split()[0]
+        item["order_status"]=STATUS2TEXT[item["order_status"]]
 
-    bdd_util.assert_list(actual, expected)
+    expected = []
+    if context.table:
+        for row in context.table:
+            cur_p = row.as_dict()
+            cur_p["order_amount"] = float(cur_p["order_amount"])
+            expected.append(cur_p)
+
+    bdd_util.assert_list(expected, items)
+
 
 @when(u"{webapp_user_name}访问{share_member}分享{webapp_owner_name}的微站链接")
 def step_impl(context, webapp_user_name, share_member, webapp_owner_name):
