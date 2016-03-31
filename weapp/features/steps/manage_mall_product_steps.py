@@ -65,9 +65,9 @@ def step_product_add(context, user):
         __process_product_data(product, user=user)
         product = __supplement_product(context.webapp_owner_id, product)
         product['is_enable_bill'] = product.get('invoice', False)
-        tmp_property = {}
         tmp_properties = []
         for property in product.get('properties', []):
+            tmp_property = {}
             tmp_property['name'] = property['name']
             tmp_property['value'] = property['description']
             tmp_properties.append(tmp_property)
@@ -428,9 +428,18 @@ def __get_product_from_web_page(context, product_name):
     if len(category_name) > 0:
         category_name = category_name[1:]
 
+    tmp_properties = product.properties
+    properties = []
+    for property in tmp_properties:
+        properties.append({
+                'name': property['name'],
+                'description': property['value']
+            })
+
     actual = {
         "sales": product.sales,
         "name": product.name,
+        "categories": category_name,
         "physical_unit": product.physical_unit,
         "thumbnails_url": product.thumbnails_url,
         "pic_url": product.pic_url,
@@ -445,6 +454,8 @@ def __get_product_from_web_page(context, product_name):
         'is_use_custom_model': u'是' if product.is_use_custom_model else u'否',
         'is_enable_model': u'启用规格' if product.is_use_custom_model else u'不启用规格',
         'model': {},
+        'bar_code': product.bar_code,
+        'min_limit': product.min_limit,
         'postage': u'免运费',
         'pay_interfaces': [],
         "is_member_product": 'on' if product.is_member_product else 'off',
@@ -453,6 +464,7 @@ def __get_product_from_web_page(context, product_name):
         "promotion_title": product.promotion_title,
         "invoice": product.is_enable_bill,
         "distribution_time": 'on' if product.is_delivery else 'off',
+        "properties": properties
     }
 
     #填充运费
@@ -517,7 +529,7 @@ def __get_product_from_web_page(context, product_name):
                     "market_price": "" if product_model['market_price'] == 0 else product_model['market_price'],
                     "stock_type": u'无限' if product_model['stock_type'] == mall_models.PRODUCT_STOCK_TYPE_UNLIMIT else u'有限',
                     "stocks": product_model['stocks'],
-                    "bar_code": product.bar_code
+                    "bar_code": product_model['user_code']
                 }
                 # 积分商品
                 if product.type == mall_models.PRODUCT_INTEGRAL_TYPE:

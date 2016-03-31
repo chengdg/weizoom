@@ -60,7 +60,7 @@ def step_impl(context, user):
 def step_impl(context, user, product_name, sync_time):
     user_id = User.objects.get(username=user).id
     url = '/mall2/api/product_pool/?method=put'
-    product_id = Product.objects.get(name=product_name).id
+    product_id = Product.objects.get(name=product_name, supplier_user_id=0).id
     args = {
         'product_ids': json.dumps([product_id]),
         '_method': 'put'
@@ -72,6 +72,23 @@ def step_impl(context, user, product_name, sync_time):
     sync_product.created_at = sync_time
     sync_product.save()
 
+    WeizoomHasMallProductRelation.objects.filter(
+        mall_product_id=product_id,
+        weizoom_product_id=sync_product_id).update(sync_time=sync_time)
+
+@when(u"{user}更新商品池商品'{product_name}'于'{sync_time}'")
+def step_impl(context, user, product_name, sync_time):
+    url = '/mall2/api/product_pool/'
+    product_id = Product.objects.get(name=product_name, supplier_user_id=0).id
+    args = {
+        'product_id': product_id,
+        '_method': 'post'
+    }
+    response = context.client.post(url, args)
+    bdd_util.assert_api_call_success(response)
+    user_id = User.objects.get(username=user).id
+    sync_product = Product.objects.get(name=product_name, owner_id=user_id)
+    sync_product_id = sync_product.id
     WeizoomHasMallProductRelation.objects.filter(
         mall_product_id=product_id,
         weizoom_product_id=sync_product_id).update(sync_time=sync_time)

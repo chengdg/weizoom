@@ -646,6 +646,7 @@ Scenario:1 有效商家的"无规格"的上架的"待售商品管理"中的商�
 			}]
 			"""
 
+@product @product_pool @eugene
 Scenario:2 有效商家上下架"无规格"的没有同步的商品,商品池中展示的商品变化
 	#商家bill上下架无规格的没有同步的商品
 		Given bill登录系统
@@ -690,6 +691,7 @@ Scenario:2 有效商家上下架"无规格"的没有同步的商品,商品池中
 			}]
 			"""
 
+@product @product_pool @eugene
 Scenario:3 有效商家修改未同步商品的【库存】【商品名称】【商品编码】,商品池中展示的商品变化
 	#商家bill修改在售商品的【库存】【商品名称】【商品编码】,商品池中展示的商品对应字段对应更新变化
 		Given bill登录系统
@@ -779,6 +781,7 @@ Scenario:3 有效商家修改未同步商品的【库存】【商品名称】【
 			}]
 			"""
 
+@product @product_pool @eugene
 Scenario:4 自营平台同步商品池中的商品
 	#1 不同的自营平台同步商家商品,对商品池中的商品的"商品信息","供货商","库存"没有影响,同步的商品放入待售列表
 	#2 同步商品的如下字段：除了【店内分组】,【会员折扣】,【运费设置】,【支付方式】,【商品发票】,【配送时间】,【总销量】,【采购价】其他字段都同步
@@ -829,10 +832,8 @@ Scenario:4 自营平台同步商品池中的商品
 
 		Then jobs能获取商品'tom无规格商品1'
 			"""
-			[{
+			{
 				"name": "tom无规格商品1",
-				"created_at": "2015-08-03 10:30",
-				"sync_time":"2015-08-03 10:30",
 				"promotion_title": "促销的东坡肘子",
 				"categories": "",
 				"bar_code":"112233",
@@ -842,7 +843,7 @@ Scenario:4 自营平台同步商品池中的商品
 					"models": {
 						"standard": {
 							"price": 11.12,
-							"user_code":"1112",
+							"bar_code":"1112",
 							"weight": 5.0,
 							"stock_type": "无限"
 						}
@@ -866,16 +867,13 @@ Scenario:4 自营平台同步商品池中的商品
 						"name": "内存",
 						"description": "内存描述"
 					}],
-				"detail": "商品描述信息",
-				"status": "待售"
-			}]
+				"detail": "商品描述信息"
+			}
 			"""
 		Then jobs能获取商品'bill无规格商品1'
 			"""
-			[{
+			{
 				"name": "bill无规格商品1",
-				"created_at": "2015-08-02 10:30",
-				"sync_time":"2015-08-02 10:30",
 				"promotion_title": "促销的东坡肘子",
 				"categories": "",
 				"bar_code":"112233",
@@ -885,7 +883,7 @@ Scenario:4 自营平台同步商品池中的商品
 					"models": {
 						"standard": {
 							"price": 11.12,
-							"user_code":"1112",
+							"bar_code":"1112",
 							"weight": 5.0,
 							"stock_type": "无限"
 						}
@@ -909,9 +907,8 @@ Scenario:4 自营平台同步商品池中的商品
 						"name": "内存",
 						"description": "内存描述"
 					}],
-				"detail": "商品描述信息",
-				"status": "待售"
-			}]
+				"detail": "商品描述信息"
+			}
 			"""
 
 	#nokia自营平台同步商品池中的商品
@@ -958,10 +955,8 @@ Scenario:4 自营平台同步商品池中的商品
 			"""
 		Then jobs能获取商品'tom无规格商品1'
 			"""
-			[{
+			{
 				"name": "tom无规格商品1",
-				"created_at": "2015-08-05 10:30",
-				"sync_time":"2015-08-05 10:30",
 				"promotion_title": "促销的东坡肘子",
 				"categories": "",
 				"bar_code":"112233",
@@ -971,7 +966,7 @@ Scenario:4 自营平台同步商品池中的商品
 					"models": {
 						"standard": {
 							"price": 11.12,
-							"user_code":"1112",
+							"bar_code":"1112",
 							"weight": 5.0,
 							"stock_type": "无限"
 						}
@@ -995,16 +990,13 @@ Scenario:4 自营平台同步商品池中的商品
 						"name": "内存",
 						"description": "内存描述"
 					}],
-				"detail": "商品描述信息",
-				"status": "待售"
-			}]
+				"detail": "商品描述信息"
+			}
 			"""
 		Then jobs能获取商品'bill无规格商品1'
 			"""
-			[{
+			{
 				"name": "bill无规格商品1",
-				"created_at": "2015-08-04 10:30",
-				"sync_time":"2015-08-04 10:30",
 				"promotion_title": "促销的东坡肘子",
 				"categories": "",
 				"bar_code":"112233",
@@ -1014,7 +1006,7 @@ Scenario:4 自营平台同步商品池中的商品
 					"models": {
 						"standard": {
 							"price": 11.12,
-							"user_code":"1112",
+							"bar_code":"1112",
 							"weight": 5.0,
 							"stock_type": "无限"
 						}
@@ -1038,11 +1030,11 @@ Scenario:4 自营平台同步商品池中的商品
 						"name": "内存",
 						"description": "内存描述"
 					}],
-				"detail": "商品描述信息",
-				"status": "待售"
-			}]
+				"detail": "商品描述信息"
+			}
 			"""
 
+@product @product_pool @eugene @eugeneTMP
 Scenario:5 自营平台同步的商品在"待售列表",商家更新被自营平台同步商品的【商品名称】【促销标题】
 	#1 商家修改被自营平台同步的商品,自营平台商品池对应商品【状态】字段变为"待更新",商品的【操作】字段变为"更新"
 	#2 更新商品除部分字段（【店内分组】【会员折扣】【运费设置】【支付方式】【总销量】【库存】）保留自营平台更改值,其他的都更新成与商家同步
@@ -1055,12 +1047,10 @@ Scenario:5 自营平台同步的商品在"待售列表",商家更新被自营平
 
 		Then jobs能获取商品'tom无规格商品1'
 			"""
-			[{
+			{
 				"name": "tom无规格商品1",
 				"supplier": "tom商家",
 				"purchase_price": "",
-				"created_at": "2015-08-03 10:30",
-				"sync_time":"2015-08-03 10:30",
 				"promotion_title": "促销的东坡肘子",
 				"categories": "",
 				"bar_code":"112233",
@@ -1070,7 +1060,7 @@ Scenario:5 自营平台同步的商品在"待售列表",商家更新被自营平
 					"models": {
 						"standard": {
 							"price": 11.12,
-							"user_code":"1112",
+							"bar_code":"1112",
 							"weight": 5.0,
 							"stock_type": "无限"
 						}
@@ -1094,18 +1084,15 @@ Scenario:5 自营平台同步的商品在"待售列表",商家更新被自营平
 						"name": "内存",
 						"description": "内存描述"
 					}],
-				"detail": "商品描述信息",
-				"status": "待售"
-			}]
+				"detail": "商品描述信息"
+			}
 			"""
 		Then jobs能获取商品'bill无规格商品1'
 			"""
-			[{
+			{
 				"name": "bill无规格商品1",
 				"supplier": "bill商家",
 				"purchase_price": "",
-				"created_at": "2015-08-02 10:30",
-				"sync_time":"2015-08-02 10:30",
 				"promotion_title": "促销的东坡肘子",
 				"categories": "",
 				"bar_code":"112233",
@@ -1115,7 +1102,7 @@ Scenario:5 自营平台同步的商品在"待售列表",商家更新被自营平
 					"models": {
 						"standard": {
 							"price": 11.12,
-							"user_code":"1112",
+							"bar_code":"1112",
 							"weight": 5.0,
 							"stock_type": "无限"
 						}
@@ -1139,9 +1126,8 @@ Scenario:5 自营平台同步的商品在"待售列表",商家更新被自营平
 						"name": "内存",
 						"description": "内存描述"
 					}],
-				"detail": "商品描述信息",
-				"status": "待售"
-			}]
+				"detail": "商品描述信息"
+			}
 			"""
 
 	#更新【商品名称】或【促销标题】触发更新
@@ -1195,7 +1181,7 @@ Scenario:5 自营平台同步的商品在"待售列表",商家更新被自营平
 			"""
 
 		#tom更新商品"bill无规格商品1"的【促销标题】字段
-		Given tom登录系统 
+		Given tom登录系统
 		When tom更新商品'tom无规格商品1'
 			"""
 			{
@@ -1691,7 +1677,7 @@ Scenario:6 自营平台同步商品在"在售列表",商家更新被自营平台
 			"""
 
 		#tom更新更新商品"tom无规格商品1"的【起购】
-		Given tom登录系统 
+		Given tom登录系统
 		When tom更新商品'tom无规格商品1'
 			"""
 			{
@@ -2085,7 +2071,7 @@ Scenario:7 自营平台同步商品参与限时抢购或买赠活动,商家更�
 			"""
 
 		#tom更新商品'tom无规格商品1'的【商品编码】
-		Given tom登录系统 
+		Given tom登录系统
 		When tom更新商品'tom无规格商品1'
 			"""
 			{
@@ -2300,7 +2286,7 @@ Scenario:8 自营平台同步商品参与积分应用或优惠券活动,商家�
 	#更新同步商品时,不同更新的字段保留自营平台修改后的值不变
 
 	#jobs自营平台同步商品池中的商品
-		Given jobs登录系统			
+		Given jobs登录系统
 			"""
 			[{
 				"name": "tom无规格商品3",
@@ -2535,7 +2521,7 @@ Scenario:8 自营平台同步商品参与积分应用或优惠券活动,商家�
 			"""
 
 		#bill更新商品'tom无规格商品1'的【商品图片】
-		Given tom登录系统 
+		Given tom登录系统
 		When tom更新商品'tom无规格商品1'
 			"""
 			{
@@ -3367,7 +3353,7 @@ Scenario:12 商家下架或删除被自营平台同步商品,自营平台的对�
 		Given bill登录系统
 		When bill'下架'商品'bill无规格商品1'
 
-		Given tom登录系统 
+		Given tom登录系统
 		When tom'永久删除'商品'tom无规格商品1'
 
 		Given jobs登录系统
@@ -3797,7 +3783,7 @@ Scenario:15 "查看失效商品"功能
 		Given bill登录系统
 		When bill'下架'商品'bill无规格商品1'
 
-		Given tom登录系统 
+		Given tom登录系统
 		When tom'永久删除'商品'tom无规格商品1'
 		#tom更新商品'tom无规格商品3'为多规格
 		When tom更新商品'tom无规格商品3'
@@ -4090,7 +4076,7 @@ Scenario:16 商品池的搜索功能
 				"sync_time":"",
 				"actions": ["放入待售"]
 			}]
-			""" 
+			"""
 
 		When jobs设置商品池列表查询条件
 			"""
@@ -4109,7 +4095,7 @@ Scenario:16 商品池的搜索功能
 				"sync_time":"",
 				"actions": ["放入待售"]
 			}]
-			""" 
+			"""
 
 		When jobs设置商品池列表查询条件
 			"""
@@ -4120,7 +4106,7 @@ Scenario:16 商品池的搜索功能
 		Then jobs获得商品池商品列表
 			"""
 			[]
-			""" 
+			"""
 
 		#按照【供应商】查询
 		When jobs设置商品池列表查询条件
@@ -4148,7 +4134,7 @@ Scenario:16 商品池的搜索功能
 				"sync_time":"",
 				"actions": ["放入待售"]
 			}]
-			""" 
+			"""
 
 		When jobs设置商品池列表查询条件
 			"""
@@ -4175,7 +4161,7 @@ Scenario:16 商品池的搜索功能
 				"sync_time":"",
 				"actions": ["放入待售"]
 			}]
-			""" 
+			"""
 
 		When jobs设置商品池列表查询条件
 			"""
@@ -4186,7 +4172,7 @@ Scenario:16 商品池的搜索功能
 		Then jobs获得商品池商品列表
 			"""
 			[]
-			""" 	
+			"""
 
 		#按照【状态】查询
 		When jobs设置商品池列表查询条件
