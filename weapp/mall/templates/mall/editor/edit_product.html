@@ -159,8 +159,8 @@
 			<div class="form-group">
 				<label class="control-label fl" for="min_limit">下单位置：</label>
 				<div class="fl w700 pl5 pr">
-					<label class="mr20" style="line-height:22px;"><input type="radio" name="buy_in_supplier" value="0" {% if product.buy_in_supplier == 0 or not product.buy_in_supplier%}checked{% endif %}>商城</label>
-					<label style="line-height:22px;"><input type="radio" name="buy_in_supplier" value="1" {% if product.buy_in_supplier == 1 %}checked{% endif %}>供货商</label>
+					<label class="mr20" style="line-height:22px;"><input type="radio" name="buy_in_supplier" value="0" {% if not product.buy_in_supplier %}checked{% endif %}>商城</label>
+					<label style="line-height:22px;"><input type="radio" name="buy_in_supplier" value="1" {% if product.buy_in_supplier %}checked{% endif %}>供货商</label>
 				</div>
 			</div>
 			{% endif%}
@@ -182,14 +182,14 @@
 				<div class="col-sm-2 fl pl5">
 					<label for="" class="xui-category checkbox-inline">
 						<input name="is_member_product" type="checkbox" id="member_count"
-							{% if product.is_member_product %}checked{% endif %} 
+							{% if product.is_member_product %}checked{% endif %}
 							{% if product.is_group_buying %}disabled{% endif %}
 						/>
 						参与会员折扣
 					</label>
 					{% if product.is_group_buying %}
 					<input type="hidden" name="is_member_product" value="{% if product.is_member_product %}on{% endif %}" />
-					{% endif %}					
+					{% endif %}
 				</div>
 			</div>
 		</fieldset>
@@ -261,7 +261,7 @@
             			<span class="xui-bold">统一运费：￥</span>
 			            <input type='text' name="unified_postage_money"
 							value='{% if product %}{{product.unified_postage_money}}{% endif %}'
-							style="width: 80px;" 
+							style="width: 80px;"
 							class="form-control xui-inlineblock xa-unifiedPostageInput mb5"
 							placeholder="0.0"
 							{% if product.is_group_buying %}readonly{% endif %}
@@ -318,7 +318,7 @@
                     {% endif %}
 	         		</label>
 
-					<label class="checkbox inline tx-checkbox-item xa-pay-method" >					
+					<label class="checkbox inline tx-checkbox-item xa-pay-method" >
 						{% if product.is_group_buying and product.is_use_cod_pay_interface %}
 						<input type="hidden" name="is_enable_cod_pay_interface"
 							value="{% if product.is_use_cod_pay_interface %}1{% else %}{% endif %}"
@@ -393,7 +393,7 @@
 			{% if not property_templates%}
 				<span style="padding-left:18px;">您还没有配置属性模板，可以前往<a href="/mall2/property_list/" target="_blank">配置属性模板</a></span>
 			{% else %}
-			<select class="ml20 xa-propertyTemplateSelector" 
+			<select class="ml20 xa-propertyTemplateSelector"
 				{% if product.is_group_buying %}disabled{% endif %}
 			>
 				<option value="-1">选择属性模板</option>
@@ -412,11 +412,11 @@
                     <li class="xui-i-templateProperty xa-property" data-property-id="{{property.id}}">
 
                         <input class="xui-i-propertyName xui-propertyNameBtn xa-name{% if has_store_name %} c9{% endif %}" readonly=true value='{{property.name}}' maxlength="15">
-                        <input 
-                        	class="xui-i-propertyValue xui-propertyValueInput xa-contenteditable xa-value" 
-	                        value='{{property.value}}33' 
+                        <input
+                        	class="xui-i-propertyValue xui-propertyValueInput xa-contenteditable xa-value"
+	                        value='{{property.value}}33'
 	                        maxlength="255"
-                        	{% if has_store_name %}readonly=true{% endif %} 
+                        	{% if has_store_name %}readonly=true{% endif %}
                         	{% if product.is_group_buying %}readonly=true{% endif %}/>
 
                         {% if product.is_group_buying or has_store_name %}

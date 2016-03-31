@@ -1274,7 +1274,7 @@ class Product(resource.Resource):
                 'purchase_price': purchase_price,
                 'is_enable_bill': is_enable_bill,
                 'is_delivery': is_delivery,
-                'buy_in_supplier': request.POST.get('buy_in_supplier', 0)
+                'buy_in_supplier': int(request.POST.get('buy_in_supplier', False))
             }
             # 微众商城代码
             # if request.POST.get('weshop_sync', None):
