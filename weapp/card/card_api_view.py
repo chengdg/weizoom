@@ -577,6 +577,10 @@ def post_all_cards(request):
     cur_page = int(request.GET.get('page', '1'))
     search_query = request.GET.get('query','')
     orgin_card_list = request.GET.get('orginCardList', '')
+    #获得已经过期的微众卡id
+    today = datetime.today()
+    WeizoomCard.objects.filter(expired_time__lte=today, is_expired=False).update(is_expired=True)
+
     card_status = [WEIZOOM_CARD_STATUS_UNUSED,WEIZOOM_CARD_STATUS_USED,WEIZOOM_CARD_STATUS_EMPTY]
     weizoom_cards = WeizoomCard.objects.filter(status__in=card_status,is_expired=False)
     if search_query:
@@ -588,15 +592,6 @@ def post_all_cards(request):
     can_stop_card = 0
     can_view_card_details = 0
 
-    #获得已经过期的微众卡id
-    today = datetime.today()
-    card_ids_need_expire = []
-    for card in weizoom_cards:
-        #记录过期并且是未使用的微众卡id
-        if card.expired_time < today:
-            card_ids_need_expire.append(card.id)
-    if len(card_ids_need_expire) > 0:
-        WeizoomCard.objects.filter(id__in=card_ids_need_expire).update(is_expired=True)
     pageinfo, weizoom_cards = paginator.paginate(weizoom_cards, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
     rule_card_ids = set([weizoom_card.weizoom_card_rule_id for weizoom_card in weizoom_cards])
     w_card_ids = set([weizoom_card.id for weizoom_card in weizoom_cards])

@@ -156,10 +156,12 @@
 						<a data-id={{cardId}} style="display:inline-block;marginLeft:20px;cursor:pointer" onClick="card_recharge_delete(this);">删除</a>
 					</div>
 				{{/each}}
+				{{#if card_list}}
 				<div style="margin: 40px 0 40px 102px;">
 					<button type="button" class="btn btn-success card_recharge_save" onClick="card_recharge_save();">确定</button>
 					<a href="/card/recharge_detail/get/"><button class="btn btn-cancel" style="margin-left: 20px;background:RGBA(242, 216, 216, 0.74);">取消</button></a>
 				</div>
+				{{/if }}
 			</div>
 		</script>
     {% endverbatim %}
