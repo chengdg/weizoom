@@ -12,7 +12,7 @@ from core.jsonresponse import JsonResponse, create_response
 from core.exceptionutil import unicode_full_stack
 from core import paginator
 #import sys
-from mall.models import Order, STATUS2TEXT
+from mall.models import Order, STATUS2TEXT, ORDER_STATUS_SUCCESSED
 
 from modules.member.models import *
 from watchdog.utils import watchdog_error
@@ -984,3 +984,35 @@ class MemberExport(resource.Resource):
 				members_info.append(info_list)
 
 		return ExcelResponse(members_info,output_name=u'会员列表'.encode('utf8'),force_csv=False)
+
+
+class MemberOrders(resource.Resource):
+	app='member'
+	resource='order_list'
+
+	@login_required
+	def api_get(request):
+		webapp_id = request.user_profile.webapp_id
+		member_id = request.GET.get('id', None)
+		cur_page = int(request.GET.get('page', '1'))
+		count = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
+		orders = []
+		#try:
+		if member_id:
+			member = Member.objects.get(id=member_id, webapp_id=webapp_id)
+			orders = get_member_orders(member)
+			pay_money = 0
+			orders_valid = orders.filter(status=ORDER_STATUS_SUCCESSED)
+			for order in orders_valid:
+				order_final_price = order.final_price + order.weizoom_card_money
+				pay_money += order_final_price
+			total_count = orders.count()
+			pageinfo, orders = paginator.paginate(orders, cur_page, count)
+
+		response = create_response(200)
+		response.data = {
+			'items': orders,
+			'pageinfo': paginator.to_dict(pageinfo),
+			'pay_money': '%.2f' % pay_money,
+		}
+		return response.get_response()
