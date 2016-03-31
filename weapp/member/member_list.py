@@ -739,7 +739,7 @@ class MemberFriends(resource.Resource):
 
 		#增加计算follow_members的人数、下单人数、成交金额
 		population = len(follow_members)
-		population_order  = get_purchased_fans(fans_count)
+		population_order  = get_purchased_fans(follow_members)
 		# for follow_member in follow_members:
 		# 	user_orders = Order.get_orders_from_webapp_user_ids(follow_member.get_webapp_user_ids)
 		# 	if user_orders and user_orders.filter(status=5).count() > 0:
