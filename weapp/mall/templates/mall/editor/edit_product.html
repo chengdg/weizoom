@@ -155,6 +155,15 @@
 					<div class="errorHint"></div>
 				</div>
 			</div>
+			{% if mall_type and has_store_name %}
+			<div class="form-group">
+				<label class="control-label fl" for="min_limit">下单位置：</label>
+				<div class="fl w700 pl5 pr">
+					<label class="mr20" style="line-height:22px;"><input type="radio" name="buy_in_supplier" value="0" {% if product.buy_in_supplier == 0 or not product.buy_in_supplier%}checked{% endif %}>商城</label>
+					<label style="line-height:22px;"><input type="radio" name="buy_in_supplier" value="1" {% if product.buy_in_supplier == 1 %}checked{% endif %}>供货商</label>
+				</div>
+			</div>
+			{% endif%}
 {#           微众商城代码#}
 {#			{% if not request.manager.is_weizoom_mall and supplier|length == 0 %}#}
 {#			<div class="form-group nostar ">#}
