@@ -34,7 +34,7 @@ def get_coupons_of_member(member_id, status):
 						item['coupon_detail'] = '￥'+str(code_coupon.money)+' 全店通用券'
 					item['coupon_state'] = COUPONSTATUS[code_coupon.status]['name']
 
-					if status == COUPON_STATUS_USED:
+					if code_coupon.status == COUPON_STATUS_USED:
 						whereabouts['type'] = COUPON_STATUS_USED  # 去处 1
 						whereabouts['content'] = code_order.order_id
 						whereabouts['orderid'] = code_order.id
@@ -112,7 +112,7 @@ class MemberCouponInfo(resource.Resource):
 
 		if status != 0:
 			items.extend(get_coupons_of_member(member_id, status))
-			items.sort(lambda x,y: cmp(x['provided_time'], y['provided_time']))
+			items.sort(lambda x,y: cmp(y['provided_time'], x['provided_time']))
 
 		response = create_response(200)
 		response.data = {
