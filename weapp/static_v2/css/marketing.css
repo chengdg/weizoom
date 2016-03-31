@@ -7,7 +7,7 @@
 
 
 /*订单概况分析*/
-.xui-wepage-orderSummaryPage .xui-filter{
+.xui-wepage-orderSummaryPage .xui-filter,.xui-wepage-BIPage .xui-filter{
 	height: 66px;
 	width: 100%;
 	background-color: #eaeef6;
@@ -30,7 +30,7 @@
     border: solid 1px #1D84C7;
 }
 
-.xui-wepage-orderSummaryPage .xb-rightPanel {
+.xui-wepage-orderSummaryPage .xb-rightPanel,.xui-wepage-BIPage .xb-rightPanel {
 	background-color: #fff;
 	margin-bottom: 15px;
 }
@@ -90,7 +90,8 @@
 	font-size: 16px;
 	font-weight: bold;
 }
-.xui-wepage-orderSummaryPage .xui-summary .xui-i-wrap .xui-i-img {
+.xui-wepage-orderSummaryPage .xui-summary .xui-i-wrap .xui-i-img,
+.xui-wepage-BIPage .xui-charWrap .xui-i-img {
 	background-image: url(/static_v2/img/editor/help.png);
 	width:18px;
 	height: 18px;
@@ -98,7 +99,7 @@
 .xui-wepage-orderSummaryPage .xui-charWrap:nth-child(odd){
 	float: left;
 }
-.xui-wepage-orderSummaryPage .xui-charWrap {
+.xui-wepage-orderSummaryPage .xui-charWrap,.xui-wepage-BIPage .xui-charWrap {
 	width: 480px;
 	height: 400px;
 	border: 1px solid #eee;
@@ -114,6 +115,7 @@
 	
 }
 .xui-wepage-orderSummaryPage .xui-charWrap .xui-i-title,
+.xui-wepage-BIPage .xui-charWrap .xui-i-title,
 .xui-mall-outlinePage .xui-title{
 	background-color: #edf3f8;
 	width: 100%;
@@ -133,6 +135,7 @@
 	margin-top: -5px;
 }
 .xui-wepage-orderSummaryPage .xui-charWrap .xui-i-block ,
+.xui-wepage-BIPage .xui-charWrap .xui-i-block,
 .xui-mall-outlinePage .xui-i-block{
 	height: 20px;
 	width: 5px;
@@ -786,3 +789,29 @@
 	max-width: 220px;
 }
 
+/*复购分析页面*/
+.xui-rePurchaseAnalyzePage .xui-setConsumption{
+	font-weight: normal;
+}
+.xui-rePurchaseAnalyzePage .xui-setConsumptionBtn{
+	color: #1261B7;
+}
+.xui-rePurchaseAnalyzePage .xui-consumptionBox{
+	background: #fff;
+	border: 1px solid #DDDDDD;
+	padding: 15px 10px 0;
+	font-size: 12px;
+	color: #333;
+	width: 334px;
+	z-index: 1000;
+    right: 12px;
+    top: 30px;
+}
+.xui-rePurchaseAnalyzePage .xui-consumptionBox  input{
+	height: 22px;
+	line-height: 22px;
+	width: 90px;
+}
+.xui-rePurchaseAnalyzePage .errorHint{
+	line-height: 0px;
+}
