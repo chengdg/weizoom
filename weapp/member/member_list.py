@@ -727,7 +727,7 @@ class MemberFriends(resource.Resource):
 			only_fans = '1'
 		else:
 			only_fans = '0'
-
+		logging.info(">>>>>>>>>>>>>>>1",data_value)
 		if data_value:
 			if data_value == 'shared':
 				follow_members = MemberFollowRelation.get_follow_members_for_shred_url(member_id)
@@ -735,14 +735,19 @@ class MemberFriends(resource.Resource):
 				follow_members=  MemberFollowRelation.get_follow_members_for(member_id, '1', True)
 			elif data_value == 'purchase':
 				follow_members=  MemberFollowRelation.get_follow_members_purchase_for(member_id)
+				logging.info(">>>>>>>>>>>>>>>1",follow_members.count())
 			else:
 				follow_members = []
 		else:
 			follow_members = MemberFollowRelation.get_follow_members_for(member_id, only_fans)
 
 		#增加计算follow_members的人数、下单人数、成交金额
-		population = follow_members.count()
-		population_order  = get_purchased_fans(follow_members)
+		if follow_members:
+			population = follow_members.count()
+			population_order  = get_purchased_fans(follow_members)
+		else:
+			population = 0
+			population_order = 0
 		# for follow_member in follow_members:
 		# 	user_orders = Order.get_orders_from_webapp_user_ids(follow_member.get_webapp_user_ids)
 		# 	if user_orders and user_orders.filter(status=5).count() > 0:
