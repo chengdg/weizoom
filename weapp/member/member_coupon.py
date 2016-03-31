@@ -32,9 +32,9 @@ class MemberCouponInfo(resource.Resource):
 
 		items = []
 		if status == -1:
-			member_coupon_list = Coupon.objects.filter(member_id=member_id).order_by('-provided_time')
+			member_coupon_list = Coupon.objects.filter(member_id=member_id).order_by('-provided_time').order_by('-id')
 		else:
-			member_coupon_list = Coupon.objects.filter(member_id=member_id).filter(status=status).order_by('-provided_time')
+			member_coupon_list = Coupon.objects.filter(member_id=member_id).filter(status=status).order_by('-provided_time').order_by('-id')
 		count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
 		current_page = int(request.GET.get('page', '1'))
 		pageinfo, member_coupon_list = paginator.paginate(member_coupon_list, current_page, count_per_page,

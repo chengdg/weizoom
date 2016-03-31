@@ -35,8 +35,11 @@ def step_impl(context, user, member):
 			type=record['coupon_detail'].split()[1],
 			get_time=record['provided_time'],
 			money=detail[1:],
-			status=record['coupon_state']
+			status=record['coupon_state'],
 		))
+		# print('>>>>>>>>'+record['coupon_id'])
+		# print('>>>>>>>>'+record['coupon_name'])
+		# print('>>>>>>>>'+record['coupon_state'])
 
 	bdd_util.assert_list(actual, expected)
 
