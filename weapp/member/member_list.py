@@ -727,7 +727,8 @@ class MemberFriends(resource.Resource):
 			only_fans = '1'
 		else:
 			only_fans = '0'
-		logging.info(">>>>>>>>>>>>>>>1",data_value)
+		logging.info(">>>>>>>>>>>>>>>1")
+		logging.info(data_value)
 		if data_value:
 			if data_value == 'shared':
 				follow_members = MemberFollowRelation.get_follow_members_for_shred_url(member_id)
@@ -735,7 +736,9 @@ class MemberFriends(resource.Resource):
 				follow_members=  MemberFollowRelation.get_follow_members_for(member_id, '1', True)
 			elif data_value == 'purchase':
 				follow_members=  MemberFollowRelation.get_follow_members_purchase_for(member_id)
-				logging.info(">>>>>>>>>>>>>>>1",follow_members.count())
+				logging.info(">>>>>>>>>>>>>>>2")
+				logging.info(follow_members.count())
+				logging.info(">>>>>>>>>>>>>>>3")
 			else:
 				follow_members = []
 		else:
