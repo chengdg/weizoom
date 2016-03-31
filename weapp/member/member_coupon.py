@@ -10,6 +10,46 @@ from mall.models import Order
 COUNT_PER_PAGE = 10
 
 
+def get_coupons_of_member(member_id, status):
+		items = []
+		if status != 0:
+			member = Member.objects.get(id=member_id)
+			# coupon_rec_list = Coupon.objects.filter(member_id=member_id).order_by('-provided_time', '-coupon_record_id', '-id')
+			member_code_order_list = Order.objects.filter(webapp_user_id__in=member.get_webapp_user_ids, coupon_id__gt=0).order_by('-payment_time')
+			for code_order in member_code_order_list:
+				if status == -1:
+					code_coupon = Coupon.objects.get(id=code_order.coupon_id)
+				else:
+					code_coupon = Coupon.objects.get(id=code_order.coupon_id).filter(status=status)
+				if code_coupon.member_id == 0:
+					coupon_rule = code_coupon.coupon_rule
+					item = dict()
+					whereabouts = dict()
+					item['provided_time'] = code_order.payment_time.strftime("%Y/%m/%d %H:%M")
+					item['coupon_id'] = code_coupon.coupon_id
+					item['coupon_name'] = coupon_rule.name
+					if coupon_rule.limit_product:
+						item['coupon_detail'] = '￥'+str(code_coupon.money)+' 单品券'
+					else:
+						item['coupon_detail'] = '￥'+str(code_coupon.money)+' 全店通用券'
+					item['coupon_state'] = COUPONSTATUS[code_coupon.status]['name']
+
+					if code_coupon.status == COUPON_STATUS_USED:
+						whereabouts['type'] = COUPON_STATUS_USED  # 去处 1
+						whereabouts['content'] = code_order.order_id
+						whereabouts['orderid'] = code_order.id
+					else:
+						whereabouts['type'] = COUPON_STATUS_UNUSED  # 来源 0
+						whereabouts['content'] = ''
+						whereabouts['orderid'] = None
+
+					item['coupon_whereabouts'] = whereabouts
+
+					items.append(item)
+
+			return items
+
+
 class MemberCouponInfo(resource.Resource):
 
 	app = "member"
@@ -69,6 +109,10 @@ class MemberCouponInfo(resource.Resource):
 			item['coupon_whereabouts'] = whereabouts
 
 			items.append(item)
+
+		if status != 0:
+			items.extend(get_coupons_of_member(member_id, status))
+			items.sort(lambda x,y: cmp(y['provided_time'], x['provided_time']))
 
 		response = create_response(200)
 		response.data = {
