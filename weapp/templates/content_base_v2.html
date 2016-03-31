@@ -87,12 +87,23 @@
 				<ul class="nav">
 				{% for second_nav in second_navs %}
 					{% for nav in second_nav.navs %}
-						<li class="{% ifequal second_nav_name nav.name %}active{% endifequal %}">
-							<a href="{{nav.url}}" title="{{nav.title}}" name="{{nav.name}}">
-								<i class="xui-icon-sideBar xui-sideBar-{{nav.name}}"></i> {{nav.title|safe}}
-								<i class="xui-icon-arrow"></i>
-							</a>
-						</li>
+						{% if nav.name == 'orderMoney' %}
+							{% if request.user_profile.webapp_type == 1 %}
+								<li class="{% ifequal second_nav_name nav.name %}active{% endifequal %}">
+									<a href="{{nav.url}}" title="{{nav.title}}" name="{{nav.name}}">
+										<i class="xui-icon-sideBar xui-sideBar-{{nav.name}}"></i> {{nav.title|safe}}
+										<i class="xui-icon-arrow"></i>
+									</a>
+								</li>
+							{% endif %}
+						{% else %}
+							<li class="{% ifequal second_nav_name nav.name %}active{% endifequal %}">
+								<a href="{{nav.url}}" title="{{nav.title}}" name="{{nav.name}}">
+									<i class="xui-icon-sideBar xui-sideBar-{{nav.name}}"></i> {{nav.title|safe}}
+									<i class="xui-icon-arrow"></i>
+								</a>
+							</li>
+						{% endif %}
 						<!-- 三级导航 -->
 						{% if nav.third_navs %}
 							{% for third_nav in nav.third_navs %}
