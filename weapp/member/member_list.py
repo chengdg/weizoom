@@ -1033,3 +1033,38 @@ class MemberOrders(resource.Resource):
 			'pay_money': '%.2f' % pay_money,
 		}
 		return response.get_response()
+
+
+
+#by bert
+class MemberSpread(resource.Resource):
+	app='member'
+	resource='spread'
+
+	@login_required
+	def api_get(request):
+		webapp_id = request.user_profile.webapp_id
+		member_id = request.GET.get('id', None)
+		cur_page = int(request.GET.get('page', '1'))
+		count = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
+		shared_url_infos = []
+		if member_id:
+			member = Member.objects.get(id=member_id, webapp_id=webapp_id)
+			shared_url_infos = get_member_shared_urls(member)
+		
+		pageinfo, shared_url_infos = paginator.paginate(shared_url_infos, cur_page, count)
+		items = []
+		for shared_url_info in shared_url_infos:
+			items.append({
+				"id": shared_url_info.id,
+				"title": shared_url_info.title,
+				"pv": shared_url_info.pv,
+				"followers": shared_url_info.followers,
+				"leadto_buy_count": shared_url_info.leadto_buy_count,
+				})
+		response = create_response(200)
+		response.data = {
+			'items': items,
+			'pageinfo': paginator.to_dict(pageinfo)
+		}
+		return response.get_response()
