@@ -541,11 +541,20 @@ class MemberDetail(resource.Resource):
 			shared_url_pv = numbers["pv__sum"]
 
 		qrcode_friends = 0
+		purchased_fans = 0
 		if fans_count:
 			qrcode_friends = fans_count.filter(source=SOURCE_MEMBER_QRCODE).count()
 
+			for follow_member in fans_count:
+				if Order.get_orders_from_webapp_user_ids(follow_member.get_webapp_user_ids).filter(status=2).count() >0:
+					purchased_fans += 1
+
 		shared_url_lead_number = fans_count.count() - qrcode_friends
 
+		if purchased_fans:
+			conversion_rate = "%.2f" % (float(buy_count) / float(fans_count.count()) * 100)
+		else:
+			conversion_rate = 0
 		#微众卡使用金额
 		if member:
 			member.weizoom_card_total_money = weizoom_card_total_money
@@ -570,6 +579,8 @@ class MemberDetail(resource.Resource):
 			'shared_url_lead_number':shared_url_lead_number,
 			'shared_url_pv':shared_url_pv,
 			'qrcode_friends':qrcode_friends,
+			'purchased_fans': purchased_fans,
+			'conversion_rate': conversion_rate
 		})
 		return render_to_response('member/editor/member_detail.html', c)
 
@@ -585,7 +596,6 @@ class MemberDetail(resource.Resource):
 		is_for_buy_test = request.POST.get('is_for_buy_test', 0)
 		member = Member.objects.get(id=member_id)
 		tag_ids = request.POST.get('tag_ids', None)
-		print phone_number,">>>>>>DSSSSSSSSSSphone_number"
 		if member.webapp_id == webapp_id:
 			if grade_id:
 				member.grade = MemberGrade.objects.get(id=grade_id)
@@ -693,7 +703,6 @@ class Integral(resource.Resource):
 		response = create_response(200)
 		return response.get_response()
 
-
 class MemberFriends(resource.Resource):
 	app='member'
 	resource='follow_relations'
@@ -712,7 +721,7 @@ class MemberFriends(resource.Resource):
 		if data_value:
 			if data_value == 'shared':
 				follow_members = MemberFollowRelation.get_follow_members_for_shred_url(member_id)
-			elif  data_value == 'qrcode':
+			elif  data_value == 'qrcode' or data_value == 'purchase':
 				follow_members=  MemberFollowRelation.get_follow_members_for(member_id, '1', True)
 			else:
 				follow_members = []
@@ -734,9 +743,12 @@ class MemberFriends(resource.Resource):
 		#增加计算follow_members的人数、下单人数、成交金额
 
 		#进行排序
-		follow_members = follow_members.order_by(sort_attr)
-		if data_value:
-			filter_date_follow_members = follow_members
+		if follow_members:
+			follow_members = follow_members.order_by(sort_attr)
+			if data_value:
+				filter_date_follow_members = follow_members
+			else:
+				filter_date_follow_members = []
 		else:
 			filter_date_follow_members = []
 		#进行分页
@@ -751,6 +763,7 @@ class MemberFriends(resource.Resource):
 
 		for follow_member in follow_members:
 			return_follow_members_json_array.append(build_follow_member_basic_json(follow_member, member_id))
+
 
 		response = create_response(200)
 		response.data = {
