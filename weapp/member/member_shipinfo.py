@@ -24,7 +24,8 @@ class MemberShipInfo(resource.Resource):
 			return response.get_response()
 
 		member = Member.objects.get(id=member_id)
-		member_ships = ShipInfo.objects.filter(webapp_user_id__in=member.get_webapp_user_ids)
+		# member_default_ship = ShipInfo.objects.filter(webapp_user_id__in=member.get_webapp_user_ids).get(is_selected=1)
+		member_ships = ShipInfo.objects.filter(webapp_user_id__in=member.get_webapp_user_ids).order_by('-is_selected')
 		count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
 		current_page = int(request.GET.get('page', '1'))
 		pageinfo, member_ships = paginator.paginate(member_ships, current_page, count_per_page, 

@@ -50,7 +50,7 @@
 					<p>平均客单价</p>
 				</dd>
 				<dd>
-					<p>￥730</p>
+					<p>￥{{show_member.weizoom_card_total_money}}</p>
 					<p>微众卡使用金额</p>
 				</dd>
 				<dd>
@@ -174,10 +174,10 @@
 		      分享链接引流会员数量：<a href="javascript:void(0);" class="xui-color-blue friends" data-value="shared">{{shared_url_lead_number}}</a>人
 		      </span>
 		      <span class="ml50">
-		      购买转化会员数量：<a href="javascript:void(0);" class="xui-color-blue friends" data-value="purchase">00</a>人
+		      购买转化会员数量：<a href="javascript:void(0);" class="xui-color-blue friends" data-value="purchase">{{purchased_fans}}</a>人
 		      </span>
 		      <span class="ml50">
-		      转化率：70.1%
+		      转化率：{{conversion_rate}}
 		      </span>
 	      </p>
 	      <div
@@ -188,6 +188,7 @@
           data-template-id="#mall-member-transmission-view"
           data-item-count-per-page="6"
           data-selectable = "false"
+          data-args='{"id": {{show_member.id}}}'
         >
         </div>
 	   	</div>
@@ -690,9 +691,9 @@
 		$('.friends').click(function(event){
 			var $el = $(event.currentTarget);
 			var data_value = $el.attr('data-value');
-			if ($el.html() == '0') {
-				return false;
-			}
+			// if ($el.html() == '0') {
+			// 	return false;
+			// }
 
 			W.dialog.showDialog('W.member.dialog.MemberDetailRelationsDialog', {
 				memberId: memberId,

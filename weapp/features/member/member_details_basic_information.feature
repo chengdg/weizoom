@@ -90,7 +90,7 @@ Background:
 
 	And bill关注jobs的公众号于'2015-05-20'
 
-@mall2 @member @memberList
+@mall2 @member @memberList @member_detail_new @bert
 Scenario:1 会员基本信息（会员昵称、关注时间、上次交易时间只计算已完成订单时间）展示，修改基本信息项（姓名、会员等级、性别、绑定手机、备注）
 
 	#微信用户批量下订单
@@ -117,7 +117,7 @@ Scenario:1 会员基本信息（会员昵称、关注时间、上次交易时间
 			"name":"",
 			"sex":"未知",
 			"phone":"",
-			"last_buy_time":"2015-07-02",
+			"last_buy_time":"今天",
 			"tags": ["未分组"],
 			"integral":0,
 			"friend_count":0,
@@ -143,7 +143,7 @@ Scenario:1 会员基本信息（会员昵称、关注时间、上次交易时间
 			"name":"会员姓名",
 			"sex":"女",
 			"phone":"15934567895",
-			"last_buy_time":"2015-07-02",
+			"last_buy_time":"今天",
 			"tags": ["未分组"],
 			"integral":0,
 			"friend_count":0,
@@ -151,7 +151,7 @@ Scenario:1 会员基本信息（会员昵称、关注时间、上次交易时间
 		}
 		"""
 
-@mall2 @member @memberList
+@mall2 @member @memberList @member_detail_new @bert
 Scenario:2 会员基本信息修改"所在分组"
 
 	Given jobs登录系统
@@ -196,7 +196,7 @@ Scenario:2 会员基本信息修改"所在分组"
 		}
 		"""
 
-@mall2 @member @memberList
+@mall2 @member @memberList  @member_detail_new @bert
 Scenario:3 会员基本信息修改"调积分"
 
 	Given jobs登录系统
@@ -285,7 +285,7 @@ Scenario:3 会员基本信息修改"调积分"
 		}]
 		"""
 
-@mall2 @member @memberList
+@mall2 @member @memberList  @member_detail_new @bert
 Scenario:4 会员基本信息好友数验证
 	#bill和tom建立好友关系
 			When bill访问jobs的webapp

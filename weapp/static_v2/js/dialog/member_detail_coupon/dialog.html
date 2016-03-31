@@ -83,7 +83,11 @@
 		    	{{/if}}
 		    </td>
 		    <td>
-		    	<a href="/mall2/order/?order_id=" target="_blank">${coupon_whereabouts}</a>
+		    	{{if coupon_whereabouts.type == 1}}
+		    	<a href="/mall2/order/?order_id=${coupon_whereabouts.orderid}" target="_blank">${coupon_whereabouts.content}</a>
+		    	{{else}}
+		    	${coupon_whereabouts.content}
+		    	{{/if}}
 		    </td>
 		</tr>
 		{{/each}}
