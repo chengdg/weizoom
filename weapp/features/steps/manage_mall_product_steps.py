@@ -419,6 +419,11 @@ def __get_product_from_web_page(context, product_name):
     supplier = None
     if 'supplier' in response.context:
         supplier = response.context['supplier']
+    has_store_name = response.context['has_store_name']
+    if has_store_name:
+        supplier = response.context['store_name']
+    else:
+        supplier = 0 if not supplier else dict(supplier).get(product.supplier)
     #处理category
     categories = response.context['categories']
     category_name = ''
@@ -459,8 +464,8 @@ def __get_product_from_web_page(context, product_name):
         'postage': u'免运费',
         'pay_interfaces': [],
         "is_member_product": 'on' if product.is_member_product else 'off',
-        "supplier": 0 if not supplier else dict(supplier).get(product.supplier),
-        "purchase_price": product.purchase_price,
+        "supplier": supplier,
+        "purchase_price": product.purchase_price if product.purchase_price else "",
         "promotion_title": product.promotion_title,
         "invoice": product.is_enable_bill,
         "distribution_time": 'on' if product.is_delivery else 'off',
