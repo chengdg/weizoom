@@ -1012,7 +1012,8 @@ class MemberOrders(resource.Resource):
 		items = []
 		for order in orders:
 			items.append({
-				"order_id": order.id,
+				"id": order.id,
+				"order_id": order.order_id,
 				"final_price": order.final_price,
 				"created_at": datetime.strftime(order.created_at, '%Y-%m-%d %H:%M:%S'),
 				"order_status": order.status,
