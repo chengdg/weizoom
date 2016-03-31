@@ -33,7 +33,7 @@ def step_impl(context, user, member):
 			coupon_id=record['coupon_id'],
 			name=record['coupon_name'],
 			type=record['coupon_detail'].split()[1],
-			get_time=record['provided_time'].split()[0].replace('/', '-'),
+			get_time=bdd_util.judge_date_today_for_meanning(record['provided_time'].split()[0].replace('/', '-')),
 			money=detail[1:],
 			status=record['coupon_state'],
 		))
@@ -48,7 +48,7 @@ def step_impl(context, user, member):
 def step_impl(context, user, member):
 	expected = json.loads(context.text)
 	actual = []
-	item = ()
+	item = dict()
 	item['status'] = '全部'
 	actual.append(item)
 	bdd_util.assert_list(actual, expected)
@@ -56,6 +56,6 @@ def step_impl(context, user, member):
 
 @when(u'{user}设置优惠券状态查询条件')
 def step_impl(context, user):
-	expected = json.loads(context.text)
+	expected = json.loads(context.text)[0]
 	context.coupon_status = expected['status']
 
