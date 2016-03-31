@@ -1000,10 +1000,11 @@ class MemberOrders(resource.Resource):
 		cur_page = int(request.GET.get('page', '1'))
 		count = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
 		orders = []
-		#try:
 		if member_id:
 			member = Member.objects.get(id=member_id, webapp_id=webapp_id)
-			orders = get_member_orders(member)
+			webapp_user_ids = member.get_webapp_user_ids
+			orders = Order.by_webapp_user_id(webapp_user_ids).order_by("-created_at","-id")
+
 			pay_money = 0
 			orders_valid = orders.filter(status=ORDER_STATUS_SUCCESSED)
 			for order in orders_valid:
@@ -1017,7 +1018,7 @@ class MemberOrders(resource.Resource):
 			items.append({
 				"id": order.id,
 				"order_id": order.order_id,
-				"final_price": float('%.2f' % order.final_price),
+				"final_price": float('%.2f' % (order.final_price+order.weizoom_card_money)),
 				"created_at": datetime.strftime(order.created_at, '%Y-%m-%d %H:%M:%S'),
 				"order_status": order.status,
 				})
