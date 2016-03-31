@@ -265,7 +265,7 @@ Scenario:3 按优惠券状态进行筛选
 			"type": "全店通用券",
 			"get_time": "今天",
 			"money": 50.00,
-			"status": "已过期"
+			"status": "未使用"
 		}]
 		"""
 
