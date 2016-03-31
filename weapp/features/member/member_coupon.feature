@@ -291,6 +291,13 @@ Scenario:3 按优惠券状态进行筛选
 			"get_time": "今天",
 			"money": 20.00,
 			"status": "未使用"
+		},{
+			"coupon_id": "coupon3_id_1",
+			"name": "过期券3",
+			"type": "全店通用券",
+			"get_time": "今天",
+			"money": 50.00,
+			"status": "未使用"
 		}]
 		"""
 
