@@ -60,7 +60,7 @@
 			</dl>
 			<div class="fr" style="margin-top:-15px;">
 				<p class="mb5 tr">关注时间：{{ show_member.created_at|date:"Y-m-j" }} 直接关注</p>
-				<p class="mb0">最近交易时间：{{ show_member.last_pay_time|unify_datetime }}</p>
+				<p class="mb0">最近交易时间：{{ show_member.last_pay_time|date:"Y-m-j H:i" }}</p>
 			</div>
 		</div>
 		<div class="xui-infoEdit clearfix">
