@@ -26,5 +26,4 @@ class Command(BaseCommand):
 				#二次过滤，创建时间和订单状态
 				orders = orders.filter(payment_time__gte=date_before_30,status=ORDER_STATUS_SUCCESSED)
 				purchase_count_30days = orders.count()
-				if purchase_count_30days > 0:
-					Member.objects.filter(id=member.id).update(purchase_frequency=purchase_count_30days)
+				Member.objects.filter(id=member.id).update(purchase_frequency=purchase_count_30days)
