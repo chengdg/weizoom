@@ -66,7 +66,7 @@ Background:
 				"is_active": "启用"
 			}]
 			"""
-		And jobs已创建微众卡
+		given jobs已创建微众卡
 		"""
 		{
 			"cards":[{
@@ -87,7 +87,7 @@ Background:
 			}]
 		}
 		"""
-	And jobs添加优惠券规则
+	when jobs添加优惠券规则
 		"""
 		[{
 			"name": "全体券1",
