@@ -577,12 +577,13 @@ def post_all_cards(request):
     cur_page = int(request.GET.get('page', '1'))
     search_query = request.GET.get('query','')
     orgin_card_list = request.GET.get('orginCardList', '')
-    weizoom_cards = WeizoomCard.objects.all()
+    card_status = [WEIZOOM_CARD_STATUS_UNUSED,WEIZOOM_CARD_STATUS_USED,WEIZOOM_CARD_STATUS_EMPTY]
+    weizoom_cards = WeizoomCard.objects.filter(status__in=card_status,is_expired=False)
     if search_query:
         search_query_dict=json.loads(search_query)
         card_filter_id = search_query_dict['cardIds']
         if card_filter_id:
-            weizoom_cards = weizoom_cards.filter(weizoom_card_id__contains=card_filter_id)
+            weizoom_cards = WeizoomCard.objects.filter(weizoom_card_id__contains=card_filter_id)
     can_active_card = 0
     can_stop_card = 0
     can_view_card_details = 0

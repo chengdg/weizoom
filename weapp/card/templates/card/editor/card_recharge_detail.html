@@ -181,13 +181,17 @@
 			var another_list = card_list;
 			$('.modal-footer').attr('data-list', JSON.stringify(another_list));
 			var listView = $('[data-ui-role="advanced-table-card-recharge"]').data('view');
-			listView.searchQuery = '{"cardIds":"'+0+'"}';
+			listView.searchQuery = '{"cardIds":""}';
    			listView.curPage = 1;
     		listView.load(true);
 		}
 		function cancle_select_card(){
 			var another_list = $('.modal-footer').attr('data-list');
-			card_list = JSON.parse(another_list);
+			if(another_list.length!=0){
+				card_list = JSON.parse(another_list);
+			}else{
+				card_list = []
+			}
 			selected_or_not();
 		}
 		function card_recharge_delete(that){
