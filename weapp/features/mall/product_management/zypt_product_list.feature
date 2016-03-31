@@ -14,6 +14,7 @@ Feature: 自营平台在售商品列表页
 #特殊说明：jobs，nokia表示自营平台，bill，tom表示商家,tom1表示用户
 Background:
 	#商家bill的商品信息
+	Given 添加bill店铺名称为'bill商家'
 	Given bill登录系统
 	When bill已添加支付方式
 		"""
@@ -260,6 +261,7 @@ Background:
 		"""
 
 	#商家tom的商品信息
+	Given 添加tom店铺名称为'tom商家'
 	Given tom登录系统
 	When tom已添加支付方式
 		"""
@@ -492,7 +494,9 @@ Background:
 			"status": "在售"
 		}]
 		"""
+
 	#自营平台jobs登录
+	Given 设置jobs为自营平台账号
 	Given jobs登录系统
 	When jobs已添加支付方式
 		"""
@@ -553,7 +557,9 @@ Background:
 			"actions": ["放入待售"]
 		}]
 		"""
+
 	#自营平台nokia登录
+	Given 设置nokia为自营平台账号
 	Given nokia登录系统
 	When nokia已添加支付方式
 		"""
@@ -617,7 +623,6 @@ Background:
 
 
 Scenario:1 自营平台把商品从商品池放入待售商品列表上架商品，获取在售商品列表
-
 
 	#自营平台jobs登录
 	Given jobs登录系统
@@ -899,7 +904,6 @@ Scenario:1 自营平台把商品从商品池放入待售商品列表上架商品
 		}]
 		"""
 
-
 Scenario:2 自营平台把商品从商品池放入待售商品列表上架后，商户(供货商)下架商品和删除商品
 
 
@@ -1174,7 +1178,6 @@ Scenario:2 自营平台把商品从商品池放入待售商品列表上架后，
 			"actions": ["修改", "下架", "彻底删除"]
 		}]
 		"""
-
 
 Scenario:3 自营平台把商品从商品池放入待售商品列表上架后，商户(供货商)修改商品为多规格
 
@@ -1457,7 +1460,6 @@ Scenario:3 自营平台把商品从商品池放入待售商品列表上架后，
 			"actions": ["修改", "下架", "彻底删除"]
 		}]
 		"""
-
 
 Scenario:4 自营平台把商品从商品池放入待售商品列表上架后，商户(供货商)修改商品为多规格
 
@@ -1821,7 +1823,6 @@ Scenario:4 自营平台把商品从商品池放入待售商品列表上架后，
 			"actions": ["修改", "下架", "彻底删除"]
 		}]
 		"""
-
 
 Scenario:5 在售商品列表查询
 

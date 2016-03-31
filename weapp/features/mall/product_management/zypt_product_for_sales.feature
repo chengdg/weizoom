@@ -23,6 +23,7 @@ Feature: 自营平台待售商品列表页
 #特殊说明：jobs，nokia表示自营平台，bill，tom表示商家
 Background:
 	#商家bill的商品信息
+	Given 添加bill店铺名称为'bill商家'
 	Given bill登录系统
 	When bill已添加支付方式
 		"""
@@ -61,27 +62,12 @@ Background:
 	And bill已添加商品规格
 		"""
 		[{
-			"name": "颜色",
-			"type": "图片",
-			"values": [{
-				"name": "红色",
-				"image": "/standard_static/test_resource_img/icon_color/icon_1.png"
-			}, {
-				"name": "黄色",
-				"image": "/standard_static/test_resource_img/icon_color/icon_5.png"
-			}, {
-				"name": "蓝色",
-				"image": "/standard_static/test_resource_img/icon_color/icon_9.png"
-			}]
-		},{
 			"name": "尺寸",
 			"type": "文字",
 			"values": [{
 				"name": "M"
 			}, {
 				"name": "S"
-			}, {
-				"name": "L"
 			}]
 		}]
 		"""
@@ -232,14 +218,14 @@ Background:
 			"is_enable_model": "启用规格",
 			"model": {
 				"models": {
-					"红色 M": {
+					"M": {
 						"price": 44.12,
 						"user_code":"4412",
 						"weight":1.0,
 						"stock_type": "有限",
 						"stocks":100
 					},
-					"黄色 L": {
+					"S": {
 						"price": 44.13,
 						"user_code":"4413",
 						"weight":1.0,
@@ -269,6 +255,7 @@ Background:
 		"""
 
 	#商家tom的商品信息
+	Given 添加tom店铺名称为'tom商家'
 	Given tom登录系统
 	When tom已添加支付方式
 		"""
@@ -301,27 +288,12 @@ Background:
 	And tom已添加商品规格
 		"""
 		[{
-			"name": "颜色",
-			"type": "图片",
-			"values": [{
-				"name": "红色",
-				"image": "/standard_static/test_resource_img/icon_color/icon_1.png"
-			}, {
-				"name": "黄色",
-				"image": "/standard_static/test_resource_img/icon_color/icon_5.png"
-			}, {
-				"name": "蓝色",
-				"image": "/standard_static/test_resource_img/icon_color/icon_9.png"
-			}]
-		},{
 			"name": "尺寸",
 			"type": "文字",
 			"values": [{
 				"name": "M"
 			}, {
 				"name": "S"
-			}, {
-				"name": "L"
 			}]
 		}]
 		"""
@@ -467,14 +439,14 @@ Background:
 			"is_enable_model": "启用规格",
 			"model": {
 				"models": {
-					"红色 M": {
+					"M": {
 						"price": 44.12,
 						"user_code":"4412",
 						"weight":1.0,
 						"stock_type": "有限",
 						"stocks":100
 					},
-					"黄色 L": {
+					"S": {
 						"price": 44.13,
 						"user_code":"4413",
 						"weight":1.0,
@@ -501,7 +473,9 @@ Background:
 			"status": "在售"
 		}]
 		"""
+
 	#自营平台jobs登录
+	Given 设置jobs为自营平台账号
 	Given jobs登录系统
 	When jobs已添加支付方式
 		"""
@@ -526,43 +500,9 @@ Background:
 			"name": "分组3"
 		}]
 		"""
-	Then jobs获得商品池商品列表
-		"""
-		[{
-			"name": "tom无规格商品3",
-			"user_code": "3312",
-			"supplier":"tom商家",
-			"stocks":100,
-			"status":"未选择",
-			"sync_time":"",
-			"actions": ["放入待售"]
-		},{
-			"name": "bill无规格商品3",
-			"user_code":"3312",
-			"supplier":"bill商家",
-			"stocks":100,
-			"status":"未选择",
-			"sync_time":"",
-			"actions": ["放入待售"]
-		},{
-			"name": "tom无规格商品1",
-			"user_code":"1112",
-			"supplier":"tom商家",
-			"stock_type": "无限",
-			"status":"未选择",
-			"sync_time":"",
-			"actions": ["放入待售"]
-		},{
-			"name": "bill无规格商品1",
-			"user_code":"1112",
-			"supplier":"bill商家",
-			"stock_type": "无限",
-			"status":"未选择",
-			"sync_time":"",
-			"actions": ["放入待售"]
-		}]
-		"""
+
 	#自营平台nokia登录
+	Given 设置nokia为自营平台账号
 	Given nokia登录系统
 	When nokia已添加支付方式
 		"""
@@ -587,43 +527,6 @@ Background:
 			"name": "分组3"
 		}]
 		"""
-	Then nokia获得商品池商品列表
-		"""
-		[{
-			"name": "tom无规格商品3",
-			"user_code": "3312",
-			"supplier":"tom商家",
-			"stocks":100,
-			"status":"未选择",
-			"sync_time":"",
-			"actions": ["放入待售"]
-		},{
-			"name": "bill无规格商品3",
-			"user_code":"3312",
-			"supplier":"bill商家",
-			"stocks":100,
-			"status":"未选择",
-			"sync_time":"",
-			"actions": ["放入待售"]
-		},{
-			"name": "tom无规格商品1",
-			"user_code":"1112",
-			"supplier":"tom商家",
-			"stock_type": "无限",
-			"status":"未选择",
-			"sync_time":"",
-			"actions": ["放入待售"]
-		},{
-			"name": "bill无规格商品1",
-			"user_code":"1112",
-			"supplier":"bill商家",
-			"stock_type": "无限",
-			"status":"未选择",
-			"sync_time":"",
-			"actions": ["放入待售"]
-		}]
-		"""
-
 
 Scenario:1 自营平台把商品从商品池放入待售商品列表，获取待售商品列表
 	jobs把商品放入待售列表，nokia把商品放入待售列表
@@ -636,49 +539,12 @@ Scenario:1 自营平台把商品从商品池放入待售商品列表，获取待
 	Given jobs登录系统
 	When jobs将商品'bill无规格商品1'放入待售于'2015-08-02 10:30'
 	And jobs将商品'tom无规格商品1'放入待售于'2015-08-02 11:30'
-	And jobs批量将商品放入待售于'2015-08-02 12:30'
+	And jobs将商品池商品批量放入待售于'2015-08-02 12:30'
 		"""
-		[{
-			"name": "tom无规格商品3"
-		}, {
-			"name": "bill无规格商品3"
-		}]
-		"""
-	Then jobs获得商品池商品列表
-		"""
-		[{
-			"name": "tom无规格商品3",
-			"user_code": "3312",
-			"supplier":"tom商家",
-			"stocks":100,
-			"status":"已选择",
-			"sync_time":"2015-08-02 12:30",
-			"actions": ["无更新"]
-		},{
-			"name": "bill无规格商品3",
-			"user_code":"3312",
-			"supplier":"bill商家",
-			"stocks":100,
-			"status":"已选择",
-			"sync_time":"2015-08-02 12:30",
-			"actions": ["无更新"]
-		},{
-			"name": "tom无规格商品1",
-			"user_code":"1112",
-			"supplier":"tom商家",
-			"stock_type": "无限",
-			"status":"已选择",
-			"sync_time":"2015-08-02 11:30",
-			"actions": ["无更新"]
-		},{
-			"name": "bill无规格商品1",
-			"user_code":"1112",
-			"supplier":"bill商家",
-			"stock_type": "无限",
-			"status":"已选择",
-			"sync_time":"2015-08-02 10:30",
-			"actions": ["无更新"]
-		}]
+		{
+			"tom无规格商品3",
+			"bill无规格商品3"
+		}
 		"""
 	Then jobs能获得'待售'商品列表
 		"""
@@ -727,49 +593,12 @@ Scenario:1 自营平台把商品从商品池放入待售商品列表，获取待
 
 	#自营平台nokia登录
 	Given nokia登录系统
-	When nokia批量将商品放入待售于'2015-08-02 12:30'
+	When nokia将商品池商品批量放入待售于'2015-08-02 12:30'
 		"""
-		[{
-			"name": "tom无规格商品3"
-		}, {
-			"name": "bill无规格商品3"
-		}]
-		"""
-	Then nokia获得商品池商品列表
-		"""
-		[{
-			"name": "tom无规格商品1",
-			"user_code":"1112",
-			"supplier":"tom商家",
-			"stock_type": "无限",
-			"status":"未选择",
-			"sync_time":"2015-08-02 11:30",
-			"actions": ["放入待售"]
-		},{
-			"name": "bill无规格商品1",
-			"user_code":"1112",
-			"supplier":"bill商家",
-			"stock_type": "无限",
-			"status":"未选择",
-			"sync_time":"2015-08-02 10:30",
-			"actions": ["放入待售"]
-		},{
-			"name": "tom无规格商品3",
-			"user_code": "3312",
-			"supplier":"tom商家",
-			"stocks":100,
-			"status":"已选择",
-			"sync_time":"2015-08-02 12:30",
-			"actions": ["无更新"]
-		},{
-			"name": "bill无规格商品3",
-			"user_code":"3312",
-			"supplier":"bill商家",
-			"stocks":100,
-			"status":"已选择",
-			"sync_time":"2015-08-02 12:30",
-			"actions": ["无更新"]
-		}]
+		{
+			"tom无规格商品3",
+			"bill无规格商品3"
+		}
 		"""
 	Then nokia能获得'待售'商品列表
 		"""
@@ -796,20 +625,18 @@ Scenario:1 自营平台把商品从商品池放入待售商品列表，获取待
 		}]
 		"""
 
-
 Scenario:2 自营平台修改待售列表的商品
 
 	#自营平台jobs登录
 	Given jobs登录系统
 	When jobs将商品'bill无规格商品1'放入待售于'2015-08-02 10:30'
 	And jobs将商品'tom无规格商品1'放入待售于'2015-08-02 11:30'
-	And jobs批量将商品放入待售于'2015-08-02 12:30'
+	And jobs将商品池商品批量放入待售于'2015-08-02 12:30'
 		"""
-		[{
-			"name": "tom无规格商品3"
-		}, {
-			"name": "bill无规格商品3"
-		}]
+		{
+			"tom无规格商品3",
+			"bill无规格商品3"
+		}
 		"""
 	#(1.分组信息 2.会员折扣 3.运费设置 4.总销量 5.支付方式 6.发票设置 7.配送时间)这些信息不同步,更新后库存不同步
 	Then jobs能获取商品'tom无规格商品3'
@@ -937,52 +764,15 @@ Scenario:2 自营平台修改待售列表的商品
 			"actions": ["修改", "上架", "彻底删除"]
 		}]
 		"""
-	Then jobs获得商品池商品列表
-		"""
-		[{
-			"name": "tom无规格商品3",
-			"user_code": "3312",
-			"supplier":"tom商家",
-			"stocks":100,
-			"status":"已选择",
-			"sync_time":"2015-08-02 12:30",
-			"actions": ["无更新"]
-		},{
-			"name": "bill无规格商品3",
-			"user_code":"3312",
-			"supplier":"bill商家",
-			"stocks":100,
-			"status":"已选择",
-			"sync_time":"2015-08-02 12:30",
-			"actions": ["无更新"]
-		},{
-			"name": "tom无规格商品1",
-			"user_code":"1112",
-			"supplier":"tom商家",
-			"stock_type": "无限",
-			"status":"已选择",
-			"sync_time":"2015-08-02 11:30",
-			"actions": ["无更新"]
-		},{
-			"name": "bill无规格商品1",
-			"user_code":"1112",
-			"supplier":"bill商家",
-			"stock_type": "无限",
-			"status":"已选择",
-			"sync_time":"2015-08-02 10:30",
-			"actions": ["无更新"]
-		}]
-		"""
 
 	#自营平台nokia登录
 	Given nokia登录系统
-	When nokia批量将商品放入待售于'2015-08-02 12:30'
+	When nokia将商品池商品批量放入待售于'2015-08-02 12:30'
 		"""
-		[{
-			"name": "tom无规格商品3"
-		}, {
-			"name": "bill无规格商品3"
-		}]
+		{
+			"tom无规格商品3",
+			"bill无规格商品3"
+		}
 		"""
 	#(1.分组信息 2.会员折扣 3.运费设置 4.总销量 5.支付方式 6.发票设置)这些信息不同步,更新后库存不同步
 	Then nokia能获取商品'bill无规格商品3'
@@ -1088,43 +878,6 @@ Scenario:2 自营平台修改待售列表的商品
 			"actions": ["修改", "上架", "彻底删除"]
 		}]
 		"""
-	Then nokia获得商品池商品列表
-		"""
-		[{
-			"name": "tom无规格商品1",
-			"user_code":"1112",
-			"supplier":"tom商家",
-			"stock_type": "无限",
-			"status":"未选择",
-			"sync_time":"2015-08-02 11:30",
-			"actions": ["放入待售"]
-		},{
-			"name": "bill无规格商品1",
-			"user_code":"1112",
-			"supplier":"bill商家",
-			"stock_type": "无限",
-			"status":"未选择",
-			"sync_time":"2015-08-02 10:30",
-			"actions": ["放入待售"]
-		},{
-			"name": "tom无规格商品3",
-			"user_code": "3312",
-			"supplier":"tom商家",
-			"stocks":100,
-			"status":"已选择",
-			"sync_time":"2015-08-02 12:30",
-			"actions": ["无更新"]
-		},{
-			"name": "bill无规格商品3",
-			"user_code":"3312",
-			"supplier":"bill商家",
-			"stocks":100,
-			"status":"已选择",
-			"sync_time":"2015-08-02 12:30",
-			"actions": ["无更新"]
-		}]
-		"""
-
 
 Scenario:3 自营平台把商品从商品池放入待售商品列表后，商户(供货商)修改商品
 	bill修改商品后，tom修改商品后
@@ -1135,14 +888,14 @@ Scenario:3 自营平台把商品从商品池放入待售商品列表后，商户
 	Given jobs登录系统
 	When jobs将商品'bill无规格商品1'放入待售于'2015-08-02 10:30'
 	And jobs将商品'tom无规格商品1'放入待售于'2015-08-02 11:30'
-	And jobs批量将商品放入待售于'2015-08-02 12:30'
+	And jobs将商品池商品批量放入待售于'2015-08-02 12:30'
 		"""
-		[{
-			"name": "tom无规格商品3"
-		}, {
-			"name": "bill无规格商品3"
-		}]
+		{
+			"tom无规格商品3",
+			"bill无规格商品3"
+		}
 		"""
+
 	#商家bill的商品信息
 	Given bill登录系统
 	#商户修改商品，商品池显示更新
@@ -1192,81 +945,10 @@ Scenario:3 自营平台把商品从商品池放入待售商品列表后，商户
 			"status": "在售"
 		}
 		"""
+
 	#自营平台jobs登录
 	Given jobs登录系统
-	Then jobs获得商品池商品列表
-		"""
-		[{
-			"name": "bill无规格商品1",
-			"user_code":"1112",
-			"supplier":"bill商家",
-			"stock_type": "无限",
-			"status":"待更新",
-			"sync_time":"2015-08-02 10:30",
-			"actions": ["更新"]
-		},{
-			"name": "tom无规格商品3",
-			"user_code": "3312",
-			"supplier":"tom商家",
-			"stocks":100,
-			"status":"已选择",
-			"sync_time":"2015-08-02 12:30",
-			"actions": ["无更新"]
-		},{
-			"name": "bill无规格商品3",
-			"user_code":"3312",
-			"supplier":"bill商家",
-			"stocks":100,
-			"status":"已选择",
-			"sync_time":"2015-08-02 12:30",
-			"actions": ["无更新"]
-		},{
-			"name": "tom无规格商品1",
-			"user_code":"1112",
-			"supplier":"tom商家",
-			"stock_type": "无限",
-			"status":"已选择",
-			"sync_time":"2015-08-02 11:30",
-			"actions": ["无更新"]
-		}]
-		"""
 	When jobs更新商品池商品'bill无规格商品1'于'2015-08-03 10:30'
-	Then jobs获得商品池商品列表
-		"""
-		[{
-			"name": "bill商品1",
-			"user_code":"1112",
-			"supplier":"bill商家",
-			"stock_type": "无限",
-			"status":"已选择",
-			"sync_time":"2015-08-03 10:30",
-			"actions": ["无更新"]
-		},{
-			"name": "tom无规格商品3",
-			"user_code": "3312",
-			"supplier":"tom商家",
-			"stocks":100,
-			"status":"已选择",
-			"sync_time":"2015-08-02 12:30",
-			"actions": ["无更新"]
-		},{
-			"name": "bill无规格商品3",
-			"user_code":"3312",
-			"supplier":"bill商家",
-			"stocks":100,
-			"status":"已选择",
-			"sync_time":"2015-08-02 12:30",
-			"actions": ["无更新"]
-		},{
-			"name": "tom无规格商品1",
-			"user_code":"1112",
-			"supplier":"tom商家",
-			"stock_type": "无限",
-			"status":"已选择",
-			"sync_time":"2015-08-02 11:30",
-			"actions": ["无更新"]
-		}]
-		"""
 	#同步时间-以每次更新的时间为主
 	Then jobs能获得'待售'商品列表
 		"""
@@ -1353,6 +1035,7 @@ Scenario:3 自营平台把商品从商品池放入待售商品列表后，商户
 			"detail": "商品描述信息"
 		}
 		"""
+
 	#商家tom的商品信息
 	Given tom登录系统
 	#修改商品金额
@@ -1396,6 +1079,7 @@ Scenario:3 自营平台把商品从商品池放入待售商品列表后，商户
 			"status": "在售"
 		}
 		"""
+
 	#自营平台jobs登录
 	Given jobs登录系统
 	When jobs更新商品池商品'tom无规格商品3'于'2015-08-03 12:30'
@@ -1485,7 +1169,6 @@ Scenario:3 自营平台把商品从商品池放入待售商品列表后，商户
 		}
 		"""
 
-
 Scenario:4 自营平台把商品从商品池放入待售商品列表后，商户(供货商)下架商品和删除商品
 	商户下架商品和删除商品
 	1.自营平台的商品池和待售列表自动删除此商品
@@ -1494,13 +1177,12 @@ Scenario:4 自营平台把商品从商品池放入待售商品列表后，商户
 	Given jobs登录系统
 	When jobs将商品'bill无规格商品1'放入待售于'2015-08-02 10:30'
 	And jobs将商品'tom无规格商品1'放入待售于'2015-08-02 11:30'
-	And jobs批量将商品放入待售于'2015-08-02 12:30'
+	And jobs将商品池商品批量放入待售于'2015-08-02 12:30'
 		"""
-		[{
-			"name": "tom无规格商品3"
-		}, {
-			"name": "bill无规格商品3"
-		}]
+		{
+			"tom无规格商品3",
+			"bill无规格商品3"
+		}
 		"""
 	#商家tom的商品信息
 	Given tom登录系统
@@ -1512,26 +1194,6 @@ Scenario:4 自营平台把商品从商品池放入待售商品列表后，商户
 
 	#自营平台jobs登录
 	Given jobs登录系统
-	Then jobs获得商品池商品列表
-		"""
-		[{
-			"name": "tom无规格商品1",
-			"user_code":"1112",
-			"supplier":"tom商家",
-			"stock_type": "无限",
-			"status":"已选择",
-			"sync_time":"2015-08-02 11:30",
-			"actions": ["无更新"]
-		},{
-			"name": "bill无规格商品1",
-			"user_code":"1112",
-			"supplier":"bill商家",
-			"stock_type": "无限",
-			"status":"已选择",
-			"sync_time":"2015-08-02 10:30",
-			"actions": ["无更新"]
-		}]
-		"""
 	Then jobs能获得'待售'商品列表
 		"""
 		[{
@@ -1557,7 +1219,6 @@ Scenario:4 自营平台把商品从商品池放入待售商品列表后，商户
 		}]
 		"""
 
-
 Scenario:5 自营平台把商品从商品池放入待售商品列表后，商户(供货商)修改商品为多规格
 	商户修改商品为多规格
 	1.自营平台的商品池和待售列表自动删除此商品
@@ -1566,13 +1227,12 @@ Scenario:5 自营平台把商品从商品池放入待售商品列表后，商户
 	Given jobs登录系统
 	When jobs将商品'bill无规格商品1'放入待售于'2015-08-02 10:30'
 	And jobs将商品'tom无规格商品1'放入待售于'2015-08-02 11:30'
-	And jobs批量将商品放入待售于'2015-08-02 12:30'
+	And jobs将商品池商品批量放入待售于'2015-08-02 12:30'
 		"""
-		[{
-			"name": "tom无规格商品3"
-		}, {
-			"name": "bill无规格商品3"
-		}]
+		{
+			"tom无规格商品3",
+			"bill无规格商品3"
+		}
 		"""
 
 	#商家tom的商品信息
@@ -1625,34 +1285,6 @@ Scenario:5 自营平台把商品从商品池放入待售商品列表后，商户
 			"status": "在售"
 		}
 		"""
-	Then jobs获得商品池商品列表
-		"""
-		[{
-			"name": "bill无规格商品3",
-			"user_code":"3312",
-			"supplier":"bill商家",
-			"stocks":100,
-			"status":"已选择",
-			"sync_time":"2015-08-02 12:30",
-			"actions": ["无更新"]
-		},{
-			"name": "tom无规格商品1",
-			"user_code":"1112",
-			"supplier":"tom商家",
-			"stock_type": "无限",
-			"status":"已选择",
-			"sync_time":"2015-08-02 11:30",
-			"actions": ["无更新"]
-		},{
-			"name": "bill无规格商品1",
-			"user_code":"1112",
-			"supplier":"bill商家",
-			"stock_type": "无限",
-			"status":"已选择",
-			"sync_time":"2015-08-02 10:30",
-			"actions": ["无更新"]
-		}]
-		"""
 	Then jobs能获得'待售'商品列表
 		"""
 		[{
@@ -1688,21 +1320,17 @@ Scenario:5 自营平台把商品从商品池放入待售商品列表后，商户
 		}]
 		"""
 
-
 Scenario:6 自营平台把商品从商品池放入待售商品列表后，上架商品再下架
-
-
 	#自营平台jobs登录
 	Given jobs登录系统
 	When jobs将商品'bill无规格商品1'放入待售于'2015-08-02 10:30'
 	And jobs将商品'tom无规格商品1'放入待售于'2015-08-02 11:30'
-	And jobs批量将商品放入待售于'2015-08-02 12:30'
+	And jobs将商品池商品批量放入待售于'2015-08-02 12:30'
 		"""
-		[{
-			"name": "tom无规格商品3"
-		}, {
-			"name": "bill无规格商品3"
-		}]
+		{
+			"tom无规格商品3",
+			"bill无规格商品3"
+		}
 		"""
 	#修改商品名称，分组，采购价，商品编码，库存
 	#供货商和属性不可修改
@@ -1865,21 +1493,17 @@ Scenario:6 自营平台把商品从商品池放入待售商品列表后，上架
 		}]
 		"""
 
-
 Scenario:7 自营平台把商品从商品池放入待售商品列表上架商品后，商户修改商品
-
-
 	#自营平台jobs登录
 	Given jobs登录系统
 	When jobs将商品'bill无规格商品1'放入待售于'2015-08-02 10:30'
 	And jobs将商品'tom无规格商品1'放入待售于'2015-08-02 11:30'
-	And jobs批量将商品放入待售于'2015-08-02 12:30'
+	And jobs将商品池商品批量放入待售于'2015-08-02 12:30'
 		"""
-		[{
-			"name": "tom无规格商品3"
-		}, {
-			"name": "bill无规格商品3"
-		}]
+		{
+			"tom无规格商品3",
+			"bill无规格商品3"
+		}
 		"""
 	#修改商品名称，分组，采购价，商品编码，库存
 	#供货商和属性不可修改
@@ -2049,7 +1673,6 @@ Scenario:7 自营平台把商品从商品池放入待售商品列表上架商品
 		}]
 		"""
 
-
 Scenario:8 自营平台把商品从商品池放入待售商品列表后，删除商品
 	自营平台删除商品，不影响商户
 
@@ -2057,13 +1680,12 @@ Scenario:8 自营平台把商品从商品池放入待售商品列表后，删除
 	Given jobs登录系统
 	When jobs将商品'bill无规格商品1'放入待售于'2015-08-02 10:30'
 	And jobs将商品'tom无规格商品1'放入待售于'2015-08-02 11:30'
-	And jobs批量将商品放入待售于'2015-08-02 12:30'
+	And jobs将商品池商品批量放入待售于'2015-08-02 12:30'
 		"""
-		[{
-			"name": "tom无规格商品3"
-		}, {
-			"name": "bill无规格商品3"
-		}]
+		{
+			"tom无规格商品3",
+			"bill无规格商品3"
+		}
 		"""
 	And jobs'永久删除'商品'bill无规格商品3'
 	Then jobs能获得'待售'商品列表
@@ -2100,42 +1722,6 @@ Scenario:8 自营平台把商品从商品池放入待售商品列表后，删除
 			"actions": ["修改", "上架", "彻底删除"]
 		}]
 		"""
-	Then jobs获得商品池商品列表
-		"""
-		[{
-			"name": "tom无规格商品3",
-			"user_code": "3312",
-			"supplier":"tom商家",
-			"stocks":100,
-			"status":"已选择",
-			"sync_time":"2015-08-02 12:30",
-			"actions": ["无更新"]
-		},{
-			"name": "bill无规格商品3",
-			"user_code":"3312",
-			"supplier":"bill商家",
-			"stocks":100,
-			"status":"已选择",
-			"sync_time":"2015-08-02 12:30",
-			"actions": ["无更新"]
-		},{
-			"name": "tom无规格商品1",
-			"user_code":"1112",
-			"supplier":"tom商家",
-			"stock_type": "无限",
-			"status":"已选择",
-			"sync_time":"2015-08-02 11:30",
-			"actions": ["无更新"]
-		},{
-			"name": "bill无规格商品1",
-			"user_code":"1112",
-			"supplier":"bill商家",
-			"stock_type": "无限",
-			"status":"已选择",
-			"sync_time":"2015-08-02 10:30",
-			"actions": ["无更新"]
-		}]
-		"""
 	Given bill登录系统
 	Then bill能获得'在售'商品列表
 		"""
@@ -2147,7 +1733,6 @@ Scenario:8 自营平台把商品从商品池放入待售商品列表后，删除
 			"name": "bill无规格商品1"
 		}]
 		"""
-
 	Then bill能获得'待售'商品列表
 		"""
 		[{
@@ -2155,21 +1740,17 @@ Scenario:8 自营平台把商品从商品池放入待售商品列表后，删除
 		}]
 		"""
 
-
 Scenario:9 自营平台把商品从商品池放入待售商品列表后，自营平台创建商品
-
-
 	#自营平台jobs登录
 	Given jobs登录系统
 	When jobs将商品'bill无规格商品1'放入待售于'2015-08-02 10:30'
 	And jobs将商品'tom无规格商品1'放入待售于'2015-08-02 11:30'
-	And jobs批量将商品放入待售于'2015-08-02 12:30'
+	And jobs将商品池商品批量放入待售于'2015-08-02 12:30'
 		"""
-		[{
-			"name": "tom无规格商品3"
-		}, {
-			"name": "bill无规格商品3"
-		}]
+		{
+			"tom无规格商品3",
+			"bill无规格商品3"
+		}
 		"""
 	And jobs已添加供货商
 		"""
@@ -2353,21 +1934,17 @@ Scenario:9 自营平台把商品从商品池放入待售商品列表后，自营
 		}]
 		"""
 
-
 Scenario:10 待售商品列表查询
-
-
 	#自营平台jobs登录
 	Given jobs登录系统
 	When jobs将商品'bill无规格商品1'放入待售于'2015-08-02 10:30'
 	And jobs将商品'tom无规格商品1'放入待售于'2015-08-02 11:30'
-	And jobs批量将商品放入待售于'2015-08-02 12:30'
+	And jobs将商品池商品批量放入待售于'2015-08-02 12:30'
 		"""
-		[{
-			"name": "tom无规格商品3"
-		}, {
-			"name": "bill无规格商品3"
-		}]
+		{
+			"tom无规格商品3",
+			"bill无规格商品3"
+		}
 		"""
 	Then jobs能获得'待售'商品列表
 		"""
@@ -2503,5 +2080,3 @@ Scenario:10 待售商品列表查询
 			"name": "bill无规格商品1"
 		}]
 		"""
-
-
