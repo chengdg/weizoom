@@ -561,7 +561,7 @@ class MemberDetail(resource.Resource):
 		shared_url_lead_number = fans_count.count() - qrcode_friends
 
 		if purchased_fans:
-			conversion_rate = "%.2f" % (float(buy_count) / float(fans_count.count()) * 100)
+			conversion_rate = "%.2f" % (float(purchased_fans) / float(fans_count.count()) * 100)
 		else:
 			conversion_rate = 0
 		#微众卡使用金额
