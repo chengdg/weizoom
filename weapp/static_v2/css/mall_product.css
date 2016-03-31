@@ -408,6 +408,10 @@
  	padding-top: 12px;
  	padding-left: 30px;
  }
+ .xui-editProductPage input[name="buy_in_supplier"]{
+ 	margin: 0 3px 0 0;
+    vertical-align: middle;
+ }
  .xui-editProductPage section:first-child header{
  	height: 81px;
  	line-height: 81px;
