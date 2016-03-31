@@ -101,7 +101,7 @@ Background:
 	When bill访问jobs的webapp
 
 
-@yanhaonan
+@mall2 @yanhaonan
 Scenario:1 会员(未使用,已使用,已过期)优惠券明细
 	jobs查看日期为当前日期
 
@@ -212,7 +212,7 @@ Scenario:1 会员(未使用,已使用,已过期)优惠券明细
 #		}]
 #		"""
 
-@yanhaonan
+@mall2 @yanhaonan
 Scenario:3 按优惠券状态进行筛选
 
 
