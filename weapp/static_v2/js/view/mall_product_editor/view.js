@@ -25,6 +25,7 @@ W.view.mall.ProductEditor = Backbone.View.extend({
 
 	initialize: function(options) {
 		this.$el = $(this.el);
+		this.productId = options.productId;
 		this.imageTemplate = this.getImageTemplate();
 		this.propertyTemplate = this.getPropertyTemplate();
 		this.propertiesTemplate = this.getPropertiesTemplate();
@@ -37,7 +38,7 @@ W.view.mall.ProductEditor = Backbone.View.extend({
 		'mouseenter .xa-image': 'onEnterImage',
 		'mouseleave .xa-image': 'onLeaveImage',
 		'click .xa-deleteImage': 'onDeleteImage',
-		'submit .xa-addProductForm': 'onSubmit',
+		'click #submitBtn': 'onSubmit',
 		'click .xa-unifiedPostageInput': 'onClickUnifiedPostageInput',
 		'change .xa-customPostageSelector': 'onSelectCustomPostage',
 		'click .xa-customPostageSelectorLabel': 'onClickCustomPostageLabel',
@@ -158,8 +159,33 @@ W.view.mall.ProductEditor = Backbone.View.extend({
 		$node.editable();
 		this.$('div.xa-customProperties ul').append($node);
 	},
-
-	onSubmit: function(event) {
+	onSubmit:function(){
+		var buy_in_supplier = parseInt(this.$("input[name='buy_in_supplier']:checked").val());
+		var _this = this;
+		// 验证是否选中供应商
+		if (buy_in_supplier == 1) {
+				W.resource.mall2.CheckProductHasPromotion.get({
+					data: {
+						'product_id': this.productId,
+						'buy_in_supplier': buy_in_supplier
+					},
+					success: function(){
+						if (_this.beforeOnSubmit()){
+							_this.$('.xa-addProductForm').submit();
+						}
+					},
+					error: function(){
+						W.showHint('error', '请先停止该商品参与的活动!')
+						return false;
+					}
+				});
+			} else {
+				if (_this.beforeOnSubmit()){
+					_this.$('.xa-addProductForm').submit();
+				}
+			}
+	},
+	beforeOnSubmit: function(event) {
 		//收集custom model信息
 		var customModels = this.customModelEditor.getData();
 		this.$('[name="customModels"]').val(JSON.stringify(customModels));
@@ -211,6 +237,7 @@ W.view.mall.ProductEditor = Backbone.View.extend({
 		}else{
 			// 防止连续点击保存
 			$('.xa-submit').attr('disabled','disabled');
+			return true;
 		}
 	}
 });

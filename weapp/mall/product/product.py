@@ -24,6 +24,7 @@ from . import utils
 from mall import export
 from weixin.user.module_api import get_all_active_mp_user_ids
 from mall.promotion.utils import stop_promotion
+from apps.customerized_apps.group import models as group_models
 
 import logging
 
@@ -1591,3 +1592,27 @@ class GroupProductListWoid(resource.Resource):
             'data': data
         }
         return response.get_jsonp_response(request)
+
+class CheckProductHasPromotion(resource.Resource):
+    app = 'mall2'
+    resource = 'check_product_has_promotion'
+
+    @login_required
+    def api_get(request):
+        product_id = request.GET.get('product_id', 0)
+        buy_in_supplier = request.GET.get('buy_in_supplier', 0)
+        if not buy_in_supplier:
+            return create_response(200).get_response()
+        if product_id:
+            promotion_relation = promotion_model.ProductHasPromotion.objects.filter(product_id=product_id, promotion__status__in=[promotion_model.PROMOTION_STATUS_STARTED, promotion_model.PROMOTION_STATUS_NOT_START])
+            group_records = group_models.Group.objects(product_id=product_id,status__lte=1)
+            forbidden_coupon_product_relation = promotion_model.ForbiddenCouponProduct.objects.filter(
+                    product_id=product_id,
+                    status__in=[promotion_model.FORBIDDEN_STATUS_NOT_START, promotion_model.FORBIDDEN_STATUS_STARTED]
+                )
+            if promotion_relation.count() + group_records.count() + forbidden_coupon_product_relation.count() > 0:
+                return create_response(500).get_response()
+            else:
+                return create_response(200).get_response()
+        else:
+            return create_response(500).get_response()
