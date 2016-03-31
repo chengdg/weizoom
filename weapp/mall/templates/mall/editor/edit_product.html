@@ -159,8 +159,8 @@
 			<div class="form-group">
 				<label class="control-label fl" for="min_limit">下单位置：</label>
 				<div class="fl w700 pl5 pr">
-					<label class="mr20" style="line-height:22px;"><input type="radio" name="buy_in_supplier" value="0" {% if not product.buy_in_supplier %}checked{% endif %}>商城</label>
-					<label style="line-height:22px;"><input type="radio" name="buy_in_supplier" value="1" {% if product.buy_in_supplier %}checked{% endif %}>供货商</label>
+					<label class="mr20" style="line-height:22px;"><input type="radio" name="buy_in_supplier" value="0" {% if not product.buy_in_supplier %}checked{% endif %} >商城</label>
+					<label style="line-height:22px;"><input type="radio" name="buy_in_supplier" value="1" {% if product.buy_in_supplier %}checked{% endif %} >供货商</label>
 				</div>
 			</div>
 			{% endif%}
@@ -458,7 +458,7 @@
 				<div class="xui-fontGary" style="line-height:48px;">创建好的商品会显示在待售列表中，需要您手动上架销售。</div>
 				<div>
                     {% if request.manager.id == product.owner.id or not product %}
-					<input type="submit" class="xa-submit btn btn-primary mr40" id="submitBtn" value="保存" />
+					<input type="button" class="xa-submit btn btn-primary mr40" id="submitBtn" value="保存" />
 					{% else %}
 					{% if request.GET.source == 'onshelf' %}
 					<input type="button" onclick="history.go(-1)" class="btn btn-primary mr40 xa-weshop" value="返回" />
@@ -578,10 +578,10 @@ $('.xa-selectImage').click(function(){return false;})
 		}
 	}
 
-
 	$(document).ready(function() {
 		var view = new W.view.mall.ProductEditor({
-			el: '.xui-editProductPage'
+			el: '.xui-editProductPage',
+			productId:'{{product.id}}'
 		});
 		view.render();
 		if(location.search.indexOf('no_custom_model=1')>0||$('#supplier').length>0){
@@ -601,7 +601,6 @@ $('.xa-selectImage').click(function(){return false;})
 			html : true,
 			placement : "bottom"
 		});
-
 
 	});
 
