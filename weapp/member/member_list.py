@@ -1039,14 +1039,13 @@ class MemberSpread(resource.Resource):
 	@login_required
 	def api_get(request):
 		webapp_id = request.user_profile.webapp_id
-		member_id = request.GET.get('id', None)
+		member_id = request.GET.get('member_id', None)
 		cur_page = int(request.GET.get('page', '1'))
 		count = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
 		shared_url_infos = []
 		if member_id:
 			member = Member.objects.get(id=member_id, webapp_id=webapp_id)
 			shared_url_infos = get_member_shared_urls(member)
-		
 		pageinfo, shared_url_infos = paginator.paginate(shared_url_infos, cur_page, count)
 		items = []
 		for shared_url_info in shared_url_infos:
