@@ -85,7 +85,7 @@
 									<span class="discountTypeText">全部会员：</span>抵扣上限
 									<input type="text" style="width: 60px;" class="formColor xa-discount" data-validate="require-float"/> % <label style="width: 80px;" for="discount_money">抵扣金额：</label>
 									<span class="xa-discount-money">0.0</span>元
-									<div class="errorHint ml110 mt5 discountError" data-error-hint='请设置1-100之间数，保留小数点后2位'></div>
+									<div class="errorHint ml110 mt5 discountError" data-error-hint='请设置1-100之间的整数'></div>
 								</div>
 							</div>
 						</div>
@@ -97,7 +97,7 @@
 									<span class="discountTypeText">{{member_grade.name}}：</span>抵扣上限
 									<input type="text" style="width: 60px;" class="formColor xa-discount" value="{% if promotion %}{{promotion.detail.discount}}{% endif %}" disabled="disabled"/> % <label style="width: 80px;" for="discount_money" >抵扣金额：</label>
 									<span class="xa-discount-money">0.0</span>元
-									<div class="errorHint ml110 mt5 discountError" data-error-hint='请设置1-100之间的数，保留小数点后2位'></div>
+									<div class="errorHint ml110 mt5 discountError" data-error-hint='请设置1-100之间的整数'></div>
 								</div>
 								{% endfor %}
 							</div>
@@ -245,7 +245,7 @@ var changeAllDiscountedMoney = function() {
 			return;
 		}
 
-		var discountMoney = (parseFloat(discount)+0.0)/100 * currentProduct.display_price;
+		var discountMoney = (parseInt(discount)+0.0)/100 * currentProduct.display_price;
 		if (discountMoney) {
 			$(input).next().next().text(discountMoney.toFixed(2));
 		}
@@ -263,7 +263,7 @@ var changeDiscountedMoney = function(_this) {
 		return;
 	}
 
-	var discountMoney = (parseFloat(discount)+0.0)/100 * currentProduct.display_price;
+	var discountMoney = (parseInt(discount)+0.0)/100 * currentProduct.display_price;
 	if (discountMoney) {
 		$input.next().next().text(discountMoney.toFixed(2));
 	}
@@ -343,7 +343,7 @@ $(document).ready(function() {
 			var $rule = $(this);
 			if ($rule.parent().prev().prev()[0].checked) {
 				var memberGradeId = $rule.data('memberGradeId') || -1;
-				var discount = parseFloat($rule.find('.xa-discount').val());
+				var discount = parseInt($rule.find('.xa-discount').val());
 				var discount_money = $rule.find('.xa-discount-money').text()
 				rules.push({
 					member_grade_id: memberGradeId,
