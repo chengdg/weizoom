@@ -50,7 +50,7 @@
 <!--推荐人数、下单人数、成交金额-->
 <div>
 	{{if data.data_value != 'purchase'}}
-		<div class="mr50 xui-fontGary fl cursor-text"><strong>推荐人数：${data.population}</strong></div>
+		<div class="mr50 xui-fontGary fl cursor-text"><strong>推荐人数：${data.only_fans}</strong></div>
 	{{/if}}
 	<div class="mr50 xui-fontGary fl cursor-text"><strong>下单人数：${data.population_order}</strong></div>
 	<div class="xui-fontGary fl cursor-text"><strong>成交金额：￥${data.amount}</strong></div>
@@ -69,27 +69,6 @@
 	</thead>
 
 	<tbody>
-	<!--
-		<tr data-id="${id}">
-			<td>
-				<div style="display:table ;line-height:42px; margin-left:10px;">
-					<a target="_blank" href="/member/detail/?id=${id}" class="pr" style="display: table-cell;vertical-align:top">
-					<div class="xui-cancelCover tc">已取消</div>
-					<img src="{{if user_icon}}${user_icon}{{else}}/static/aa.jpg{{/if}}" onerror="this.src='/static/img/user-1.jpg'"style="width:42px;" />
-					</a>
-					<div style="display: table-cell;vertical-align:top;padding-left:8px; line-height:21px;text-align:left;">
-						<a target="_blank" href="/member/detail/?id=${id}">erterter{{html username}}</a>
-						<div>${grade_name}普通会员</div>
-					</div>
-				</div>
-			</td>
-		    <td>1000</td>
-		    <td>56223</td>
-		    <td>66996</td>
-		    <td>直接关注</td>
-		    <td >2015-59-58</td>
-		</tr>
-	-->
  	{{if items.length}}
 		{{each(i, member) items}}
 		<tr data-id="${id}">
@@ -107,26 +86,26 @@
 					</div>
 				</div>
 			</td>
-		    <td>${log.pay_count} </td>
-		    <td>${log.pay_money} </td>
-		    <td>${log.integral} </td>
+		    <td>${pay_times} </td>
+		    <td>${pay_money} </td>
+		    <td>${integral} </td>
 		    <td style="color:#333333;">
 	    		<span><span style="">
-				{{if log.source == 0}}
+				{{if source == 0}}
 					直接关注
 				{{/if}}
-				{{if log.source == 1}}
+				{{if source == 1}}
 					推广扫码
 				{{/if}}
-				{{if log.source == 2}}
+				{{if source == 2}}
 					会员分享
 				{{/if}}
-				{{if log.source == -1}}
+				{{if source == -1}}
 					直接关注
 				{{/if}}
 				</span></span>
 		    </td>
-		    <td >${log.created_at} </td>
+		    <td >${created_at} </td>
 		</tr>
 		{{/each}}
 	{{else}}
