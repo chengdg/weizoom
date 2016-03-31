@@ -712,6 +712,7 @@ class Integral(resource.Resource):
 		response = create_response(200)
 		return response.get_response()
 
+
 class MemberFriends(resource.Resource):
 	app='member'
 	resource='follow_relations'
@@ -730,15 +731,17 @@ class MemberFriends(resource.Resource):
 		if data_value:
 			if data_value == 'shared':
 				follow_members = MemberFollowRelation.get_follow_members_for_shred_url(member_id)
-			elif  data_value == 'qrcode' or data_value == 'purchase':
+			elif  data_value == 'qrcode':
 				follow_members=  MemberFollowRelation.get_follow_members_for(member_id, '1', True)
+			elif data_value == 'purchase':
+				follow_members=  MemberFollowRelation.get_follow_members_purchase_for(member_id)
 			else:
 				follow_members = []
 		else:
 			follow_members = MemberFollowRelation.get_follow_members_for(member_id, only_fans)
 
 		#增加计算follow_members的人数、下单人数、成交金额
-		population = len(follow_members)
+		population = follow_members.count()
 		population_order  = get_purchased_fans(follow_members)
 		# for follow_member in follow_members:
 		# 	user_orders = Order.get_orders_from_webapp_user_ids(follow_member.get_webapp_user_ids)
