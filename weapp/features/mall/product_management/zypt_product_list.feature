@@ -53,27 +53,12 @@ Background:
 	And bill已添加商品规格
 		"""
 		[{
-			"name": "颜色",
-			"type": "图片",
-			"values": [{
-				"name": "红色",
-				"image": "/standard_static/test_resource_img/icon_color/icon_1.png"
-			}, {
-				"name": "黄色",
-				"image": "/standard_static/test_resource_img/icon_color/icon_5.png"
-			}, {
-				"name": "蓝色",
-				"image": "/standard_static/test_resource_img/icon_color/icon_9.png"
-			}]
-		},{
 			"name": "尺寸",
 			"type": "文字",
 			"values": [{
 				"name": "M"
 			}, {
 				"name": "S"
-			}, {
-				"name": "L"
 			}]
 		}]
 		"""
@@ -224,14 +209,14 @@ Background:
 			"is_enable_model": "启用规格",
 			"model": {
 				"models": {
-					"红色 M": {
+					"M": {
 						"price": 44.12,
 						"user_code":"4412",
 						"weight":1.0,
 						"stock_type": "有限",
 						"stocks":100
 					},
-					"黄色 L": {
+					"S": {
 						"price": 44.13,
 						"user_code":"4413",
 						"weight":1.0,
@@ -294,27 +279,12 @@ Background:
 	And tom已添加商品规格
 		"""
 		[{
-			"name": "颜色",
-			"type": "图片",
-			"values": [{
-				"name": "红色",
-				"image": "/standard_static/test_resource_img/icon_color/icon_1.png"
-			}, {
-				"name": "黄色",
-				"image": "/standard_static/test_resource_img/icon_color/icon_5.png"
-			}, {
-				"name": "蓝色",
-				"image": "/standard_static/test_resource_img/icon_color/icon_9.png"
-			}]
-		},{
 			"name": "尺寸",
 			"type": "文字",
 			"values": [{
 				"name": "M"
 			}, {
 				"name": "S"
-			}, {
-				"name": "L"
 			}]
 		}]
 		"""
@@ -460,14 +430,14 @@ Background:
 			"is_enable_model": "启用规格",
 			"model": {
 				"models": {
-					"红色 M": {
+					"M": {
 						"price": 44.12,
 						"user_code":"4412",
 						"weight":1.0,
 						"stock_type": "有限",
 						"stocks":100
 					},
-					"黄色 L": {
+					"S": {
 						"price": 44.13,
 						"user_code":"4413",
 						"weight":1.0,
@@ -521,43 +491,7 @@ Background:
 			"name": "分组3"
 		}]
 		"""
-	Then jobs获得商品池商品列表
-		"""
-		[{
-			"name": "tom无规格商品3",
-			"user_code": "3312",
-			"supplier":"tom商家",
-			"stocks":100,
-			"status":"未选择",
-			"sync_time":"",
-			"actions": ["放入待售"]
-		},{
-			"name": "bill无规格商品3",
-			"user_code":"3312",
-			"supplier":"bill商家",
-			"stocks":100,
-			"status":"未选择",
-			"sync_time":"",
-			"actions": ["放入待售"]
-		},{
-			"name": "tom无规格商品1",
-			"user_code":"1112",
-			"supplier":"tom商家",
-			"stock_type": "无限",
-			"status":"未选择",
-			"sync_time":"",
-			"actions": ["放入待售"]
-		},{
-			"name": "bill无规格商品1",
-			"user_code":"1112",
-			"supplier":"bill商家",
-			"stock_type": "无限",
-			"status":"未选择",
-			"sync_time":"",
-			"actions": ["放入待售"]
-		}]
-		"""
-
+		
 	#自营平台nokia登录
 	Given 设置nokia为自营平台账号
 	Given nokia登录系统
@@ -584,101 +518,18 @@ Background:
 			"name": "分组3"
 		}]
 		"""
-	Then nokia获得商品池商品列表
-		"""
-		[{
-			"name": "tom无规格商品3",
-			"user_code": "3312",
-			"supplier":"tom商家",
-			"stocks":100,
-			"status":"未选择",
-			"sync_time":"",
-			"actions": ["放入待售"]
-		},{
-			"name": "bill无规格商品3",
-			"user_code":"3312",
-			"supplier":"bill商家",
-			"stocks":100,
-			"status":"未选择",
-			"sync_time":"",
-			"actions": ["放入待售"]
-		},{
-			"name": "tom无规格商品1",
-			"user_code":"1112",
-			"supplier":"tom商家",
-			"stock_type": "无限",
-			"status":"未选择",
-			"sync_time":"",
-			"actions": ["放入待售"]
-		},{
-			"name": "bill无规格商品1",
-			"user_code":"1112",
-			"supplier":"bill商家",
-			"stock_type": "无限",
-			"status":"未选择",
-			"sync_time":"",
-			"actions": ["放入待售"]
-		}]
-		"""
-
 
 Scenario:1 自营平台把商品从商品池放入待售商品列表上架商品，获取在售商品列表
-
 	#自营平台jobs登录
 	Given jobs登录系统
 	When jobs将商品'bill无规格商品1'放入待售于'2015-08-02 10:30'
 	And jobs将商品'tom无规格商品1'放入待售于'2015-08-02 11:30'
-	And jobs批量将商品放入待售于'2015-08-02 12:30'
+	And jobs将商品池商品批量放入待售于'2015-08-02 12:30'
 		"""
-		[{
-			"name": "tom无规格商品3"
-		}, {
+		{
+			"tom无规格商品3",
 			"name": "bill无规格商品3"
-		}]
-		"""
-	Then jobs能获得'待售'商品列表
-		"""
-		[{
-			"name": "tom无规格商品3",
-			"user_code": "3312",
-			"supplier":"tom商家",
-			"categories": "",
-			"price": 33.12,
-			"stocks":100,
-			"sales": 0,
-			"sync_time":"2015-08-02 12:30",
-			"actions": ["修改", "上架", "彻底删除"]
-		},{
-			"name": "bill无规格商品3",
-			"user_code":"3312",
-			"supplier":"bill商家",
-			"categories": "",
-			"price": 33.12,
-			"stocks":100,
-			"sales": 0,
-			"sync_time":"2015-08-02 12:30",
-			"actions": ["修改", "上架", "彻底删除"]
-		},{
-			"name": "tom无规格商品1",
-			"user_code":"1112",
-			"supplier":"tom商家",
-			"categories": "",
-			"price": 11.12,
-			"stock_type": "无限",
-			"sales": 0,
-			"sync_time":"2015-08-02 11:30",
-			"actions": ["修改", "上架", "彻底删除"]
-		},{
-			"name": "bill无规格商品1",
-			"user_code":"1112",
-			"supplier":"bill商家",
-			"categories": "",
-			"price": 11.12,
-			"stock_type": "无限",
-			"sales": 0,
-			"sync_time":"2015-08-02 10:30",
-			"actions": ["修改", "上架", "彻底删除"]
-		}]
+		}
 		"""
 	When jobs更新商品'tom无规格商品3'
 		"""
@@ -845,15 +696,12 @@ Scenario:1 自营平台把商品从商品池放入待售商品列表上架商品
 		"""
 	And jobs批量上架商品
 		"""
-		[{
-			"name": "tom商品3"
-		}, {
-			"name": "tom商品1"
-		}, {
-			"name": "bill商品3"
-		},{
-			"name": "bill商品1"
-		}]
+		[
+			"tom商品3",
+			"tom商品1",
+			"bill商品3",
+			"bill商品1"
+		]
 		"""
 	Then jobs能获得'在售'商品列表
 		"""
@@ -905,19 +753,16 @@ Scenario:1 自营平台把商品从商品池放入待售商品列表上架商品
 		"""
 
 Scenario:2 自营平台把商品从商品池放入待售商品列表上架后，商户(供货商)下架商品和删除商品
-
-
 	#自营平台jobs登录
 	Given jobs登录系统
 	When jobs将商品'bill无规格商品1'放入待售于'2015-08-02 10:30'
 	And jobs将商品'tom无规格商品1'放入待售于'2015-08-02 11:30'
-	And jobs批量将商品放入待售于'2015-08-02 12:30'
+	And jobs将商品池商品批量放入待售于'2015-08-02 12:30'
 		"""
-		[{
-			"name": "tom无规格商品3"
-		}, {
+		{
+			"tom无规格商品3",
 			"name": "bill无规格商品3"
-		}]
+		}
 		"""
 	And jobs更新商品'tom无规格商品3'
 		"""
@@ -1084,15 +929,12 @@ Scenario:2 自营平台把商品从商品池放入待售商品列表上架后，
 		"""
 	And jobs批量上架商品
 		"""
-		[{
-			"name": "tom商品3"
-		}, {
-			"name": "tom商品1"
-		}, {
-			"name": "bill商品3"
-		},{
-			"name": "bill商品1"
-		}]
+		[
+			"tom商品3",
+			"tom商品1",
+			"bill商品3",
+			"bill商品1"
+		]
 		"""
 	Then jobs能获得'在售'商品列表
 		"""
@@ -1142,6 +984,7 @@ Scenario:2 自营平台把商品从商品池放入待售商品列表上架后，
 			"actions": ["修改", "下架", "彻底删除"]
 		}]
 		"""
+
 	#商家tom的商品信息
 	Given tom登录系统
 	When tom'下架'商品'tom无规格商品3'
@@ -1180,19 +1023,16 @@ Scenario:2 自营平台把商品从商品池放入待售商品列表上架后，
 		"""
 
 Scenario:3 自营平台把商品从商品池放入待售商品列表上架后，商户(供货商)修改商品为多规格
-
-
 	#自营平台jobs登录
 	Given jobs登录系统
 	When jobs将商品'bill无规格商品1'放入待售于'2015-08-02 10:30'
 	And jobs将商品'tom无规格商品1'放入待售于'2015-08-02 11:30'
-	And jobs批量将商品放入待售于'2015-08-02 12:30'
+	And jobs将商品池商品批量放入待售于'2015-08-02 12:30'
 		"""
-		[{
-			"name": "tom无规格商品3"
-		}, {
-			"name": "bill无规格商品3"
-		}]
+		{
+			"tom无规格商品3",
+			"bill无规格商品3"
+		}
 		"""
 	And jobs更新商品'tom无规格商品3'
 		"""
@@ -1359,15 +1199,12 @@ Scenario:3 自营平台把商品从商品池放入待售商品列表上架后，
 		"""
 	And jobs批量上架商品
 		"""
-		[{
-			"name": "tom商品3"
-		}, {
-			"name": "tom商品1"
-		}, {
-			"name": "bill商品3"
-		},{
-			"name": "bill商品1"
-		}]
+		[
+			"tom商品3", 
+			"tom商品1",
+			"bill商品3",
+			"bill商品1"
+		}
 		"""
 
 	#商家tom的商品信息
@@ -1461,20 +1298,17 @@ Scenario:3 自营平台把商品从商品池放入待售商品列表上架后，
 		}]
 		"""
 
-Scenario:4 自营平台把商品从商品池放入待售商品列表上架后，商户(供货商)修改商品为多规格
-
-
+Scenario:4 自营平台把商品从商品池放入待售商品列表上架后，用户购买商品,商户(供货商)修改商品，自营平台更新商品再上架
 	#自营平台jobs登录
 	Given jobs登录系统
 	When jobs将商品'bill无规格商品1'放入待售于'2015-08-02 10:30'
 	And jobs将商品'tom无规格商品1'放入待售于'2015-08-02 11:30'
-	And jobs批量将商品放入待售于'2015-08-02 12:30'
+	And jobs将商品池商品批量放入待售于'2015-08-02 12:30'
 		"""
-		[{
-			"name": "tom无规格商品3"
-		}, {
-			"name": "bill无规格商品3"
-		}]
+		{
+			"tom无规格商品3",
+			"bill无规格商品3"
+		}
 		"""
 	And jobs更新商品'tom无规格商品3'
 		"""
@@ -1641,16 +1475,14 @@ Scenario:4 自营平台把商品从商品池放入待售商品列表上架后，
 		"""
 	And jobs批量上架商品
 		"""
-		[{
-			"name": "tom商品3"
-		}, {
-			"name": "tom商品1"
-		}, {
-			"name": "bill商品3"
-		},{
-			"name": "bill商品1"
-		}]
+		[
+			"tom商品3",
+			"tom商品1",
+			"bill商品3",
+			"bill商品1"
+		}
 		"""
+
 	#tom1用户登录
 	Given tom1关注jobs的公众号
 	When tom1访问jobs的webapp
@@ -1713,6 +1545,7 @@ Scenario:4 自营平台把商品从商品池放入待售商品列表上架后，
 			"actions": ["修改", "下架", "彻底删除"]
 		}]
 		"""
+
 	#商家tom的商品信息
 	Given tom登录系统
 	#修改商品金额
@@ -1756,6 +1589,7 @@ Scenario:4 自营平台把商品从商品池放入待售商品列表上架后，
 			"status": "在售"
 		}
 		"""
+
 	#自营平台jobs登录
 	Given jobs登录系统
 	When jobs更新商品池商品'tom无规格商品3'于'2015-08-03 12:30'
@@ -1825,19 +1659,16 @@ Scenario:4 自营平台把商品从商品池放入待售商品列表上架后，
 		"""
 
 Scenario:5 在售商品列表查询
-
-
 	#自营平台jobs登录
 	Given jobs登录系统
 	When jobs将商品'bill无规格商品1'放入待售于'2015-08-02 10:30'
 	And jobs将商品'tom无规格商品1'放入待售于'2015-08-02 11:30'
-	And jobs批量将商品放入待售于'2015-08-02 12:30'
+	And jobs将商品池商品批量放入待售于'2015-08-02 12:30'
 		"""
-		[{
-			"name": "tom无规格商品3"
-		}, {
-			"name": "bill无规格商品3"
-		}]
+		{
+			"tom无规格商品3",
+			"bill无规格商品3"
+		}
 		"""
 	When jobs更新商品'tom无规格商品3'
 		"""
@@ -2004,15 +1835,12 @@ Scenario:5 在售商品列表查询
 		"""
 	And jobs批量上架商品
 		"""
-		[{
-			"name": "tom商品3"
-		}, {
-			"name": "tom商品1"
-		}, {
-			"name": "bill商品3"
-		},{
-			"name": "bill商品1"
-		}]
+		[
+			"tom商品3",
+			"tom商品1",
+			"bill商品3",
+			"bill商品1"
+		]
 		"""
 	Then jobs能获得'在售'商品列表
 		"""
@@ -2062,6 +1890,7 @@ Scenario:5 在售商品列表查询
 			"actions": ["修改", "下架", "彻底删除"]
 		}]
 		"""
+
 	#供货商模糊查询
 	When jobs设置商品查询条件
 		"""
@@ -2077,6 +1906,7 @@ Scenario:5 在售商品列表查询
 			"name": "tom商品1"
 		}]
 		"""
+
 	#供货商精确查询
 	When jobs设置商品查询条件
 		"""
@@ -2092,6 +1922,7 @@ Scenario:5 在售商品列表查询
 			"name": "bill商品1"
 		}]
 		"""
+
 	#输入错误供货商查询
 	When jobs设置商品查询条件
 		"""
@@ -2103,6 +1934,7 @@ Scenario:5 在售商品列表查询
 		"""
 		[]
 		"""
+
 	#同步时间查询
 	When jobs设置商品查询条件
 		"""
@@ -2123,6 +1955,7 @@ Scenario:5 在售商品列表查询
 			"name": "bill商品1"
 		}]
 		"""
+
 	#同步时间查询
 	When jobs设置商品查询条件
 		"""
@@ -2135,6 +1968,7 @@ Scenario:5 在售商品列表查询
 		"""
 		[]
 		"""
+		
 	#供货商和同步时间查询
 	When jobs设置商品查询条件
 		"""
