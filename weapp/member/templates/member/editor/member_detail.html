@@ -183,13 +183,13 @@
 	      </p>
 	      <div
           data-ui-role="advanced-table"
-          data-app="mall2"
-          data-resource="order_list"
+          data-app="member"
+          data-resource="spread"
           data-enable-paginator="true"
           data-template-id="#mall-member-transmission-view"
           data-item-count-per-page="6"
           data-selectable = "false"
-          data-args='{"id": {{show_member.id}}}'
+          data-args='{"member_id": {{show_member.id}}}'
         >
         </div>
 	   	</div>
@@ -622,25 +622,18 @@
 			<th width="250">购买转化</th>
 		</thead>
 		<tbody>
+		{{if items.length}}
+			{{each(i, item) items}}
 			<tr>
-				<td class="tl pl50">blah~blah~~</td>
-				<td>10</td>
-				<td>20</td>
-				<td>0</td>
+				<td class="tl pl50">${title}</td>
+				<td>${pv}</td>
+				<td>${followers}</td>
+				<td>${leadto_buy_count}</td>
 			</tr>
-			<tr>
-				<td class="tl pl50">blah~blah~~</td>
-				<td>10</td>
-				<td>20</td>
-				<td>0</td>
-			</tr>
-			<tr>
-				<td class="tl pl50">blah~blah~~</td>
-				<td>10</td>
-				<td>20</td>
-				<td>0</td>
-			</tr>
-			<!-- <tr rowspan='6' ><td colspan='4' class="h130 xui-fontGary" >暂无数据</td></tr> -->
+			{{/each}}
+		{{else}}
+			<tr rowspan='6' ><td colspan='4' class="h130 xui-fontGary" >暂无数据</td></tr>
+		{{/if }}
 		</tbody>
 	</table>
 </script>

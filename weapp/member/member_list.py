@@ -1017,7 +1017,7 @@ class MemberOrders(resource.Resource):
 			items.append({
 				"id": order.id,
 				"order_id": order.order_id,
-				"final_price": order.final_price,
+				"final_price": float('%.2f' % order.final_price),
 				"created_at": datetime.strftime(order.created_at, '%Y-%m-%d %H:%M:%S'),
 				"order_status": order.status,
 				})
