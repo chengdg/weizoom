@@ -6,6 +6,9 @@ from mall.models import Order,ORDER_STATUS_SUCCESSED
 from utils.dateutil import now,get_date_after_days
 
 import datetime
+'''
+该task暂时不使用
+'''
 
 @task
 def update_member_purchase_frequency(webapp_id):
