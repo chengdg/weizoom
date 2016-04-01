@@ -657,7 +657,7 @@ class DeletedProductList(resource.Resource):
                 )
 
 
-        relations = models.WeizoomHasMallProductRelation.objects.filter(**params).order_by('-delete_time')
+        relations = models.WeizoomHasMallProductRelation.objects.filter(**params).order_by('-id')
 
         COUNT_PER_PAGE = 8
         #进行分页
@@ -1047,7 +1047,6 @@ class Product(resource.Resource):
 
             # 处理商品规格
             standard_model, custom_models = utils.extract_product_model(request)
-
             # 处理standard商品规格
             has_product_model = models.ProductModel.objects.filter(
                 product_id=product_id,

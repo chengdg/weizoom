@@ -1847,7 +1847,7 @@ Scenario:6 自营平台同步商品在"在售列表",商家更新被自营平台
 			}
 			"""
 
-@product @product_pool @eugene @eugeneTMP
+@product @product_pool @eugene
 Scenario:7 自营平台同步商品参与限时抢购或买赠活动,商家更新被自营平台同步商品的【商品单价】【商品编码】
 	#同步到自营平台上的商品,上架之后再更新,自动下架到待售列表,参与的活动自动结束
 	#更新同步商品时,不同更新的字段保留自营平台修改后的值不变
@@ -2181,6 +2181,8 @@ Scenario:7 自营平台同步商品参与限时抢购或买赠活动,商家更�
 				}],
 				"postage":5.00,
 				"pay_interfaces":[{
+						"type": "在线支付"
+					},{
 						"type": "货到付款"
 					}],
 				"properties": [{
@@ -2241,7 +2243,7 @@ Scenario:7 自营平台同步商品参与限时抢购或买赠活动,商家更�
 			[{
 				"name": "bill无规格商品1限时抢购",
 				"product_name": "bill无规格商品1",
-				"product_price": 11.12,
+				"product_price": 110.12,
 				"promotion_price": 5.00,
 				"status":"已结束",
 				"start_date": "今天",
@@ -2262,6 +2264,7 @@ Scenario:7 自营平台同步商品参与限时抢购或买赠活动,商家更�
 			}]
 			"""
 
+@product @product_pool @eugene
 Scenario:8 自营平台同步商品参与积分应用或优惠券活动,商家更新被自营平台同步商品的【商品重量】【商品图片】
 	#同步到自营平台上的商品,上架之后再更新,自动下架到待售列表,参与的活动自动结束
 	#更新同步商品时,不同更新的字段保留自营平台修改后的值不变
@@ -2388,7 +2391,7 @@ Scenario:8 自营平台同步商品参与积分应用或优惠券活动,商家�
 			"""
 
 		#商品'jobs修改-tom无规格商品1'参与单品优惠券
-		When jobs已添加了优惠券规则
+		Given jobs已添加了优惠券规则
 			"""
 			[{
 				"name": "tom无规格商品1单品券",
@@ -2411,8 +2414,7 @@ Scenario:8 自营平台同步商品参与积分应用或优惠券活动,商家�
 				"limit_counts": 2,
 				"use_count": 0,
 				"start_date": "今天",
-				"end_date": "1天后",
-				"status":"进行中"
+				"end_date": "1天后"
 			}]
 			"""
 
@@ -2582,6 +2584,8 @@ Scenario:8 自营平台同步商品参与积分应用或优惠券活动,商家�
 				}],
 				"postage":5.00,
 				"pay_interfaces":[{
+						"type": "在线支付"
+					},{
 						"type": "货到付款"
 					}],
 				"properties": [{
@@ -2602,7 +2606,7 @@ Scenario:8 自营平台同步商品参与积分应用或优惠券活动,商家�
 				"purchase_price": 10.00,
 				"promotion_title": "促销的东坡肘子",
 				"categories": "",
-				"bar_code":"000112233",
+				"bar_code":"112233",
 				"min_limit":2,
 				"is_member_product":"off",
 				"model": {
@@ -2655,15 +2659,15 @@ Scenario:8 自营平台同步商品参与积分应用或优惠券活动,商家�
 				"name": "tom无规格商品1单品券",
 				"type": "单品券",
 				"money": 10.00,
-				"remained_count": 10,
+				"remained_count": 0,
 				"limit_counts": 2,
 				"use_count": 0,
 				"start_date": "今天",
-				"end_date": "1天后",
-				"status":"已结束"
+				"end_date": "1天后"
 			}]
 			"""
 
+@product @product_pool @eugene
 Scenario:9 自营平台同步商品,商家更新被自营平台同步商品的【商品描述】
 	#同步到自营平台上的商品,上架之后再更新,自动下架到待售列表
 	#更新同步商品时,不同更新的字段保留自营平台修改后的值不变
@@ -2778,7 +2782,7 @@ Scenario:9 自营平台同步商品,商家更新被自营平台同步商品的�
 				"purchase_price": 10.00,
 				"promotion_title": "促销的东坡肘子",
 				"categories": "",
-				"bar_code":"000112233",
+				"bar_code":"112233",
 				"min_limit":2,
 				"is_member_product":"off",
 				"model": {
@@ -2786,7 +2790,7 @@ Scenario:9 自营平台同步商品,商家更新被自营平台同步商品的�
 						"standard": {
 							"price": 11.12,
 							"bar_code":"1112",
-							"weight": 1.0,
+							"weight": 5.0,
 							"stock_type": "无限"
 						}
 					}
@@ -2813,6 +2817,7 @@ Scenario:9 自营平台同步商品,商家更新被自营平台同步商品的�
 			}
 			"""
 
+@product @product_pool @eugene
 Scenario:10 商家更新被自营平台同步商品的【店铺分组】【会员折扣】【运费设置】【支付方式】【商品发票】【配送时间】【库存】,不触发自营平台商品的更新
 	#jobs自营平台同步商品池中的商品
 		Given jobs登录系统
@@ -2897,13 +2902,14 @@ Scenario:10 商家更新被自营平台同步商品的【店铺分组】【会�
 				"name": "bill无规格商品1",
 				"user_code":"1112",
 				"supplier":"bill商家",
-				"stocks": "无限",
+				"stocks": "200",
 				"status":"已选择",
 				"sync_time":"2015-08-02 10:30",
 				"actions": ["无更新"]
 			}]
 			"""
 
+@product @product_pool @eugene
 Scenario:11 商家更新被自营平台同步商品的规格为多规格,自营平台的对应商品被删除
 	#jobs自营平台同步商品池中的商品
 		Given jobs登录系统
@@ -2963,6 +2969,7 @@ Scenario:11 商家更新被自营平台同步商品的规格为多规格,自营�
 				"bar_code":"112233",
 				"min_limit":2,
 				"is_member_product":"on",
+				"is_enable_model": "启用规格",
 				"model": {
 					"models": {
 						"M": {
@@ -3040,6 +3047,7 @@ Scenario:11 商家更新被自营平台同步商品的规格为多规格,自营�
 			[]
 			"""
 
+@product @product_pool @eugene
 Scenario:12 商家下架或删除被自营平台同步商品,自营平台的对应商品被删除,商品参加的活动结束
 	#jobs自营平台同步商品池中的商品
 		Given jobs登录系统
@@ -3162,6 +3170,8 @@ Scenario:12 商家下架或删除被自营平台同步商品,自营平台的对�
 				}],
 				"postage":5.00,
 				"pay_interfaces":[{
+						"type": "在线支付"
+					},{
 						"type": "货到付款"
 					}],
 				"properties": [{
@@ -3269,8 +3279,8 @@ Scenario:12 商家下架或删除被自营平台同步商品,自营平台的对�
 			"""
 			[{
 				"name": "tom无规格商品1买一赠一",
-				"product_name": "tom无规格商品1",
-				"product_price":11.12,
+				"product_name": "jobs修改-tom无规格商品1",
+				"product_price":110.12,
 				"status":"进行中",
 				"start_date": "今天",
 				"end_date": "1天后",
@@ -3334,8 +3344,8 @@ Scenario:12 商家下架或删除被自营平台同步商品,自营平台的对�
 			"""
 			[{
 				"name": "tom无规格商品1买一赠一",
-				"product_name": "bill",
-				"product_price":11.12,
+				"product_name": "jobs修改-tom无规格商品1",
+				"product_price":110.12,
 				"status":"已结束",
 				"start_date": "今天",
 				"end_date": "1天后",
@@ -3343,6 +3353,7 @@ Scenario:12 商家下架或删除被自营平台同步商品,自营平台的对�
 			}]
 			"""
 
+@product @product_pool @eugene
 Scenario:13 自营平台删除同步的商品,商品池中的对应商品变为未同步模式,可以再同步
 	#jobs自营平台同步商品池中的商品,删除商品
 		Given jobs登录系统
@@ -3386,7 +3397,7 @@ Scenario:13 自营平台删除同步的商品,商品池中的对应商品变为�
 		When jobs将商品'bill无规格商品1'放入待售于'2015-08-02 10:30'
 		When jobs将商品'tom无规格商品1'放入待售于'2015-08-03 10:30'
 
-		When jobs'永久删除'商品'jobs修改-tom无规格商品1'
+		When jobs'永久删除'商品'tom无规格商品1'
 
 	#再次同步自营平台删除的商家的商品
 		When jobs将商品'tom无规格商品1'放入待售于'2015-08-04 10:30'
@@ -3512,15 +3523,16 @@ Scenario:13 自营平台删除同步的商品,商品池中的对应商品变为�
 			}
 			"""
 
+@product @product_pool @eugene
 Scenario:14 自营平台对商家商品"批量放入待售"
 	Given jobs登录系统
 
 	#批量放入一个商品到待售
 		When jobs将商品池商品批量放入待售于'2015-08-02 10:30'
 			"""
-			{
+			[
 				"bill无规格商品1"
-			}
+			]
 			"""
 		Then jobs获得商品池商品列表
 			"""
@@ -3562,11 +3574,11 @@ Scenario:14 自营平台对商家商品"批量放入待售"
 	#批量放入多个商品到待售
 		When jobs将商品池商品批量放入待售于'2015-08-03 10:30'
 			"""
-			{
+			[
 				"tom无规格商品3",
 				"bill无规格商品3",
 				"tom无规格商品1"
-			}
+			]
 			"""
 		Then jobs获得商品池商品列表
 			"""
@@ -3605,6 +3617,7 @@ Scenario:14 自营平台对商家商品"批量放入待售"
 			}]
 			"""
 
+@product @product_pool @eugene
 Scenario:15 "查看失效商品"功能
 	#jobs自营平台同步商品池中的商品
 		Given jobs登录系统
@@ -3661,7 +3674,7 @@ Scenario:15 "查看失效商品"功能
 		When jobs更新商品'tom无规格商品1'
 			"""
 			{
-				"name": " ",
+				"name": "tom无规格商品1",
 				"supplier": "tom商家",
 				"purchase_price": 10.00,
 				"created_at": "2015-08-03 10:30",
@@ -3719,16 +3732,17 @@ Scenario:15 "查看失效商品"功能
 				"bar_code":"3123456",
 				"min_limit":2,
 				"is_member_product":"off",
+				"is_enable_model": "启用规格",
 				"model": {
 					"models": {
-						"红色 M": {
+						"M": {
 							"price": 33.12,
 							"user_code":"3312",
 							"weight":1.0,
 							"stock_type": "有限",
 							"stocks":100
 						},
-						"黄色 L": {
+						"S": {
 							"price": 34.12,
 							"user_code":"3412",
 							"weight":2.0,
@@ -3789,7 +3803,7 @@ Scenario:15 "查看失效商品"功能
 				"name":"tom无规格商品3",
 				"delete_time":"今天"
 			},{
-				"name":"jobs修改-tom无规格商品1",
+				"name":"tom无规格商品1",
 				"delete_time":"今天"
 			},{
 				"name":"bill无规格商品1",
@@ -3811,7 +3825,7 @@ Scenario:15 "查看失效商品"功能
 				"name":"tom无规格商品3",
 				"delete_time":"今天"
 			},{
-				"name":"jobs修改-tom无规格商品1",
+				"name":"tom无规格商品1",
 				"delete_time":"今天"
 			},{
 				"name":"bill无规格商品1",
@@ -3832,7 +3846,7 @@ Scenario:15 "查看失效商品"功能
 			"""
 
 	#查看失效商品列表分页
-		When jobs设置分页查询参数
+		Given jobs设置分页查询参数
 			"""
 			{
 				"count_per_page":1
@@ -3845,11 +3859,11 @@ Scenario:15 "查看失效商品"功能
 				"delete_time":"今天"
 			}]
 			"""
-		When jobs浏览下一页
+		When jobs浏览失效商品列表下一页
 		Then jobs获得失效商品列表
 			"""
 			[{
-				"name":"jobs修改-tom无规格商品1",
+				"name":"tom无规格商品1",
 				"delete_time":"今天"
 			}]
 			"""
@@ -3861,15 +3875,16 @@ Scenario:15 "查看失效商品"功能
 				"delete_time":"今天"
 			}]
 			"""
-		When jobs浏览上一页
+		When jobs浏览失效商品列表上一页
 		Then jobs获得失效商品列表
 			"""
 			[{
-				"name":"jobs修改-tom无规格商品1",
+				"name":"tom无规格商品1",
 				"delete_time":"今天"
 			}]
 			"""
 
+@product @product_pool @eugene
 Scenario:16 商品池的搜索功能
 	#jobs自营平台同步商品池中的商品
 		Given jobs登录系统
@@ -4227,11 +4242,11 @@ Scenario:16 商品池的搜索功能
 				"actions": ["放入待售"]
 			}]
 			"""
-
+@product @product_pool @eugene
 Scenario:17 商品池的分页功能
 	#商品池列表分页
 		Given jobs登录系统
-		When jobs设置分页查询参数
+		And jobs设置分页查询参数
 			"""
 			{
 				"count_per_page":1
@@ -4244,7 +4259,7 @@ Scenario:17 商品池的分页功能
 				"name": "tom无规格商品3"
 			}]
 			"""
-		When jobs浏览下一页
+		When jobs浏览商品池列表下一页
 		Then jobs获得商品池商品列表
 			"""
 			[{
@@ -4258,7 +4273,7 @@ Scenario:17 商品池的分页功能
 				"name": "tom无规格商品1"
 			}]
 			"""
-		When jobs浏览上一页
+		When jobs浏览商品池列表上一页
 		Then jobs获得商品池商品列表
 			"""
 			[{

@@ -345,7 +345,6 @@ def __update_prducts_by_name(context, product_name, action, user):
             product_id = mall_models.Product.objects.get(owner_id=user_id, name=product_name).id
             data['ids'].append(product_id)
     else:
-        print user_id, product_name, ">>>>>>>>>"
         data['ids'] = mall_models.Product.objects.get(owner_id=user_id, name=product_name).id
         context.product_name = product_name
 

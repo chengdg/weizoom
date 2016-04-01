@@ -39,6 +39,7 @@ def step_terminate_promotion(context, user, action):
 
 @when(u"{user}创建积分应用活动")
 def step_impl(context, user):
+		user_id = User.objects.get(username=user)
 		if context.table:
 			promotions = [promotion.as_dict() for promotion in context.table]
 		else:
@@ -48,7 +49,7 @@ def step_impl(context, user):
 				promotions = [promotions]
 
 		for promotion in promotions:
-				db_product = ProductFactory(name=promotion['product_name'])
+				db_product = Product.objects.get(owner_id=user_id, name=promotion['product_name'])
 				product_ids = [{
 						'id': db_product.id
 				}]
