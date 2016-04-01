@@ -529,7 +529,7 @@ Scenario:3 带参数二维码[关联会员]-推荐详情页-[扫码人数][会�
 			}
 			"""
 
-@mall2 @senior @bandParameterCode
+@mall2 @senior @bandParameterCode @gyct
 Scenario:4 带参数二维码[关联会员]-推荐详情页-[下单人数][成交金额]
 	Given jobs登录系统
 
@@ -735,7 +735,7 @@ Scenario:4 带参数二维码[关联会员]-推荐详情页-[下单人数][成�
 		Then nokia获得推荐详情页
 			"""
 			{
-				"pay_member_number": 3,
+				"pay_member_number": 2,
 				"order_money": 275.00
 			}
 			"""
@@ -748,7 +748,7 @@ Scenario:4 带参数二维码[关联会员]-推荐详情页-[下单人数][成�
 		Then nokia获得推荐详情页
 			"""
 			{
-				"pay_member_number": 2,
+				"pay_member_number": 1,
 				"order_money": 165.00
 			}
 			"""
