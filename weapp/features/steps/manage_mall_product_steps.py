@@ -3,7 +3,7 @@ from __future__ import absolute_import
 import copy
 import json, time
 from behave import when, then, given
-from mall.models import ProductCategory
+from mall.models import ProductCategory, Product
 from webapp.models import WebApp
 from django.contrib.auth.models import User
 
@@ -120,7 +120,8 @@ def step_get_product_stock(context, user, product_name):
 
 @when(u"{user}更新商品'{product_name}'")
 def step_update_product(context, user, product_name):
-    existed_product = ProductFactory(name=product_name)
+    user_id = User.objects.get(username=user).id
+    existed_product = Product.objects.get(owner_id=user_id, name=product_name)
 
     if hasattr(context, 'caller_step_json'):
         product = context.caller_step_json
@@ -136,7 +137,8 @@ def step_update_product(context, user, product_name):
     for index, property in enumerate(product.get('properties', [])):
         # if index > existed_product_properties.count():
         #     tmp_property['id'] = existed_product_properties[index].id
-        tmp_property['id'] = existed_product_properties[index].id
+        if existed_product_properties:
+            tmp_property['id'] = existed_product_properties[index].id
         tmp_property['name'] = property['name']
         tmp_property['value'] = property['description']
         tmp_properties.append(tmp_property)

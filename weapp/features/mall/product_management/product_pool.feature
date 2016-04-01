@@ -1175,8 +1175,7 @@ Scenario:5 自营平台同步的商品在"待售列表",商家更新被自营平
 						"name": "内存",
 						"description": "内存描述"
 					}],
-				"detail": "商品描述信息",
-				"status": "在售"
+				"detail": "商品描述信息"
 			}
 			"""
 
@@ -1275,8 +1274,6 @@ Scenario:5 自营平台同步的商品在"待售列表",商家更新被自营平
 				"name": "jobs修改-tom无规格商品1",
 				"supplier": "tom商家",
 				"purchase_price": 10.00,
-				"created_at": "2015-08-03 10:30",
-				"sync_time":"2015-08-03 10:30",
 				"promotion_title": "jobs修改-促销的东坡肘子",
 				"categories": "jobs分类2",
 				"bar_code":"77112233",
@@ -1286,7 +1283,7 @@ Scenario:5 自营平台同步的商品在"待售列表",商家更新被自营平
 					"models": {
 						"standard": {
 							"price": 110.12,
-							"user_code":"11012",
+							"bar_code":"11012",
 							"weight": 1.0,
 							"stock_type": "无限"
 						}
@@ -1355,12 +1352,10 @@ Scenario:5 自营平台同步的商品在"待售列表",商家更新被自营平
 		#除部分字段（【店内分组】【会员折扣】【运费设置】【支付方式】【总销量】【库存】）保留jobs更改值,其他的都更新成与商家同步
 		Then jobs能获取商品'tom无规格商品1'
 			"""
-			[{
+			{
 				"name": "tom无规格商品1",
 				"supplier": "tom商家",
 				"purchase_price": 10.00,
-				"created_at": "2015-08-03 10:30",
-				"sync_time":"2015-08-06 10:30",
 				"promotion_title": "tom修改-促销的东坡肘子",
 				"categories": "jobs分类2",
 				"bar_code":"112233",
@@ -1370,7 +1365,7 @@ Scenario:5 自营平台同步的商品在"待售列表",商家更新被自营平
 					"models": {
 						"standard": {
 							"price": 11.12,
-							"user_code":"1112",
+							"bar_code":"1112",
 							"weight": 5.0,
 							"stock_type": "无限"
 						}
@@ -1394,18 +1389,15 @@ Scenario:5 自营平台同步的商品在"待售列表",商家更新被自营平
 						"name": "内存",
 						"description": "内存描述"
 					}],
-				"detail": "商品描述信息",
-				"status": "待售"
-			}]
+				"detail": "商品描述信息"
+			}
 			"""
 		Then jobs能获取商品'修改名称-bill无规格商品1'
 			"""
-			[{
+			{
 				"name": "修改名称-bill无规格商品1",
 				"supplier": "bill商家",
 				"purchase_price": "",
-				"created_at": "2015-08-02 10:30",
-				"sync_time":"2015-08-05 10:30",
 				"promotion_title": "促销的东坡肘子",
 				"categories": "",
 				"bar_code":"112233",
@@ -1415,7 +1407,7 @@ Scenario:5 自营平台同步的商品在"待售列表",商家更新被自营平
 					"models": {
 						"standard": {
 							"price": 11.12,
-							"user_code":"1112",
+							"bar_code":"1112",
 							"weight": 5.0,
 							"stock_type": "无限"
 						}
@@ -1436,9 +1428,8 @@ Scenario:5 自营平台同步的商品在"待售列表",商家更新被自营平
 						"name": "内存",
 						"description": "内存描述"
 					}],
-				"detail": "商品描述信息",
-				"status": "待售"
-			}]
+				"detail": "商品描述信息"
+			}
 			"""
 
 Scenario:6 自营平台同步商品在"在售列表",商家更新被自营平台同步商品的【商品条码】【起购数量】
