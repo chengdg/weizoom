@@ -17,6 +17,6 @@ def update_member_purchase_frequency(webapp_id):
 	logging.info('start')
 	for member in members:
 		webapp_user_ids = member.get_webapp_user_ids
-		purchase_count_30days = orders.filter(webapp_user_id__in=webapp_user_ids, payment_time__gte=date_before_30,status=ORDER_STATUS_SUCCESSED).count()
+		purchase_count_30days = Order.objects.filter(webapp_user_id__in=webapp_user_ids, payment_time__gte=date_before_30,status=ORDER_STATUS_SUCCESSED).count()
 		Member.objects.filter(id=member.id).update(purchase_frequency=purchase_count_30days)
 	logging.info('end')
