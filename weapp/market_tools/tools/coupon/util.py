@@ -288,7 +288,7 @@ def award_coupon_for_member(coupon_rule_info, member):
 
 
 def get_member_coupons(member, status=-1):
-	orders = Order.objects.filter(webapp_user_id__in=member.get_webapp_user_ids, coupon_id__gt=0).filter(~Q(status=ORDER_STATUS_CANCEL))
+	orders = Order.objects.filter(webapp_user_id__in=member.get_webapp_user_ids, coupon_id__gt=1).filter(status__in=[ORDER_STATUS_NOT, ORDER_STATUS_PAYED_SUCCESSED, ORDER_STATUS_PAYED_NOT_SHIP, ORDER_STATUS_PAYED_SHIPED, ORDER_STATUS_SUCCESSED])
 	coupon_ids = [order.coupon_id for order in orders]
 
 	if status == -1:
