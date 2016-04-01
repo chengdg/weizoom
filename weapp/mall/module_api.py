@@ -3321,9 +3321,14 @@ def update_user_paymoney(id):
 	user_orders = Order.get_orders_from_webapp_user_ids(member.get_webapp_user_ids)
 	pay_money = 0
 	pay_times = 0
+
+	if user_orders.filter(status__gte=mall_models.ORDER_STATUS_PAYED_SUCCESSED).count() > 0:
+		payment_time = user_orders.order_by('-payment_time')[0].payment_time
+		member.last_pay_time = payment_time
+
 	for user_order in user_orders:
 		user_order.final_price = user_order.final_price + user_order.weizoom_card_money
-		if user_order.status > 2:
+		if user_order.status == mall_models.ORDER_STATUS_SUCCESSED:
 			pay_money += user_order.final_price
 			pay_times += 1
 
