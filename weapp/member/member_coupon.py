@@ -95,7 +95,15 @@ class MemberCouponInfo(resource.Resource):
 			item = dict()
 			whereabouts = dict()
 			coupon_ids.append(coupon.id)
-			item['provided_time'] = coupon.provided_time.strftime("%Y/%m/%d %H:%M")
+			if coupon.member_id == 0 and coupon.provided_time == DEFAULT_DATETIME:
+				try:
+					order = Order.objects.filter(coupon_id=coupon.id)[0]
+					item['provided_time'] = order.created_at.strftime("%Y/%m/%d %H:%M")
+				except:
+					item['provided_time'] = coupon.provided_time.strftime("%Y/%m/%d %H:%M")
+			else:
+				item['provided_time'] = coupon.provided_time.strftime("%Y/%m/%d %H:%M")
+			
 			item['coupon_id'] = coupon.coupon_id
 			item['coupon_name'] = coupon_rule.name
 			if coupon_rule.limit_product:

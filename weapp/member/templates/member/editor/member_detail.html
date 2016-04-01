@@ -101,11 +101,11 @@
       		<label>性别：</label>
       		<div class="xui-value">
 	      		<span class="xa-isEdited hidden">
-	      			<input name="sex_type" type="radio" value="1" {% ifequal show_member_info.sex 1 %}checked {% endifequal %}/><span class="ml5">男</span>
-							<input name="sex_type" type="radio" value="2" {% ifequal show_member_info.sex 2 %}checked {% endifequal %} class="ml20"/>	<span class="ml5">女</span>
-							<input class="ml20" name="sex_type" type="radio" value="0" {% ifequal show_member_info.sex 0 %}checked {% endifequal %}/><span class="ml5">未知</span>
+	      			<input name="sex_type" type="radio" value="1" {% ifequal show_member.sex 1 %}checked {% endifequal %}/><span class="ml5">男</span>
+							<input name="sex_type" type="radio" value="2" {% ifequal show_member.sex 2 %}checked {% endifequal %} class="ml20"/>	<span class="ml5">女</span>
+							<input class="ml20" name="sex_type" type="radio" value="0" {% ifequal show_member.sex 0 %}checked {% endifequal %}/><span class="ml5">未知</span>
 						</span>
-						<span class="xa-display">{% if show_member_info.sex == 1 %}男{% elif show_member_info.sex == 2 %}女{% else %}未知{% endif %}</span>
+						<span class="xa-display">{% if show_member.sex == 1 %}男{% elif show_member.sex == 2 %}女{% else %}未知{% endif %}</span>
 					</div>
 				</div>
 				<div class="xui-fieldwrap">
