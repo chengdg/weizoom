@@ -3,10 +3,12 @@ import json
 from behave import when, then
 
 from mall.promotion import models
+from mall.models import Product
 from mall.promotion.models import Promotion, ForbiddenCouponProduct
 from modules.member.models import MemberGrade
 from features.testenv.model_factory import ProductFactory
 from test import bdd_util
+from django.contrib.auth.models import User
 
 
 @when(u"{user}'{action}'促销活动'{promotion_name}'")
@@ -165,6 +167,7 @@ def step_create_premium_sale(context, user):
 
 @when(u"{user}创建限时抢购活动")
 def step_create_flash_sales(context, user):
+		user_id = User.objects.get(username=user)
 		if context.table:
 			promotions = [promotion.as_dict() for promotion in context.table]
 		else:
@@ -175,9 +178,9 @@ def step_create_flash_sales(context, user):
 		for promotion in promotions:
 				if promotion.has_key('products'):
 						products = promotion['products']
-						product_ids = [{'id': ProductFactory(name=product_name).id} for product_name in products]
+						product_ids = [{'id': Product.objects.get(name=product_name, owner_id=user_id).id} for product_name in products]
 				else:
-						db_product = ProductFactory(name=promotion['product_name'])
+						db_product = Product.objects.get(name=promotion['product_name'], owner_id=user_id)
 						product_ids =[{
 								'id': db_product.id
 						}]
@@ -439,10 +442,10 @@ def step_impl(context, user):
 
 
 activity2filter_type = {
-	u'限时抢购': 'flash_sale', 
-	u'积分应用': 'integral_sale', 
-	u'买赠': 'all', 
-	u'单品券': 'all', 
+	u'限时抢购': 'flash_sale',
+	u'积分应用': 'integral_sale',
+	u'买赠': 'all',
+	u'单品券': 'all',
 	u'禁用优惠券商品': 'forbidden_coupon'
 }
 
@@ -522,10 +525,10 @@ def step_impl(context, user):
 		if start_date and end_date:
 			data['start_date'] = start_date
 			data['end_date'] = end_date
-		
+
 		url = '/mall2/api/forbidden_coupon_product/?_method=put'
 		response = context.client.post(url, data)
-		
+
 		bdd_util.assert_api_call_success(response)
 
 
@@ -583,7 +586,7 @@ def step_impl(context, user):
 				status = 1
 			elif context.query_param['status'] == u'进行中':
 				status = 2
-	
+
 	response = context.client.get(url)
 	actual = []
 	for item in json.loads(response.content)['data']['items']:

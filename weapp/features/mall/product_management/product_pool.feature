@@ -1034,7 +1034,7 @@ Scenario:4 自营平台同步商品池中的商品
 			}
 			"""
 
-@product @product_pool @eugene @eugeneTMP
+@product @product_pool @eugene
 Scenario:5 自营平台同步的商品在"待售列表",商家更新被自营平台同步商品的【商品名称】【促销标题】
 	#1 商家修改被自营平台同步的商品,自营平台商品池对应商品【状态】字段变为"待更新",商品的【操作】字段变为"更新"
 	#2 更新商品除部分字段（【店内分组】【会员折扣】【运费设置】【支付方式】【总销量】【库存】）保留自营平台更改值,其他的都更新成与商家同步
@@ -1434,6 +1434,7 @@ Scenario:5 自营平台同步的商品在"待售列表",商家更新被自营平
 			}
 			"""
 
+@product @product_pool @eugene
 Scenario:6 自营平台同步商品在"在售列表",商家更新被自营平台同步商品的【商品条码】【起购数量】
 	#同步到自营平台上架的在"在售列表"商品,商品池中更新,自动下架到待售列表
 
@@ -1530,16 +1531,14 @@ Scenario:6 自营平台同步商品在"在售列表",商家更新被自营平台
 			"""
 
 		When jobs'上架'商品'bill无规格商品1'
-		When jobs'上架'商品'tom无规格商品1'
+		When jobs'上架'商品'jobs修改-tom无规格商品1'
 
 		Then jobs能获取商品'jobs修改-tom无规格商品1'
 			"""
-			[{
+			{
 				"name": "jobs修改-tom无规格商品1",
 				"supplier": "tom商家",
 				"purchase_price": 10.00,
-				"created_at": "2015-08-03 10:30",
-				"sync_time":"2015-08-03 10:30",
 				"promotion_title": "jobs修改-促销的东坡肘子",
 				"categories": "jobs分类2",
 				"bar_code":"77112233",
@@ -1549,7 +1548,7 @@ Scenario:6 自营平台同步商品在"在售列表",商家更新被自营平台
 					"models": {
 						"standard": {
 							"price": 110.12,
-							"user_code":"11012",
+							"bar_code":"11012",
 							"weight": 1.0,
 							"stock_type": "无限"
 						}
@@ -1560,6 +1559,8 @@ Scenario:6 自营平台同步商品在"在售列表",商家更新被自营平台
 				}],
 				"postage":5.00,
 				"pay_interfaces":[{
+						"type": "在线支付"
+					},{
 						"type": "货到付款"
 					}],
 				"properties": [{
@@ -1569,18 +1570,15 @@ Scenario:6 自营平台同步商品在"在售列表",商家更新被自营平台
 						"name": "内存",
 						"description": "内存描述"
 					}],
-				"detail": "jobs修改-商品描述信息",
-				"status": "在售"
-			}]
+				"detail": "jobs修改-商品描述信息"
+			}
 			"""
 		Then jobs能获取商品'bill无规格商品1'
 			"""
-			[{
+			{
 				"name": "bill无规格商品1",
 				"supplier": "bill商家",
 				"purchase_price": 10.00,
-				"created_at": "2015-08-02 10:30",
-				"sync_time":"2015-08-02 10:30",
 				"promotion_title": "促销的东坡肘子",
 				"categories": "",
 				"bar_code":"112233",
@@ -1590,7 +1588,7 @@ Scenario:6 自营平台同步商品在"在售列表",商家更新被自营平台
 					"models": {
 						"standard": {
 							"price": 11.12,
-							"user_code":"1112",
+							"bar_code":"1112",
 							"weight": 5.0,
 							"stock_type": "无限"
 						}
@@ -1614,9 +1612,8 @@ Scenario:6 自营平台同步商品在"在售列表",商家更新被自营平台
 						"name": "内存",
 						"description": "内存描述"
 					}],
-				"detail": "商品描述信息",
-				"status": "在售"
-			}]
+				"detail": "商品描述信息"
+			}
 			"""
 
 	#更新【商品条码】【起购数量】触发更新
@@ -1765,12 +1762,10 @@ Scenario:6 自营平台同步商品在"在售列表",商家更新被自营平台
 			"""
 		Then jobs能获取商品'tom无规格商品1'
 			"""
-			[{
+			{
 				"name": "tom无规格商品1",
 				"supplier": "tom商家",
 				"purchase_price": 10.00,
-				"created_at": "2015-08-03 10:30",
-				"sync_time":"2015-08-06 10:30",
 				"promotion_title": "促销的东坡肘子",
 				"categories": "jobs分类2",
 				"bar_code":"112233",
@@ -1780,7 +1775,7 @@ Scenario:6 自营平台同步商品在"在售列表",商家更新被自营平台
 					"models": {
 						"standard": {
 							"price": 11.12,
-							"user_code":"1112",
+							"bar_code":"1112",
 							"weight": 5.0,
 							"stock_type": "无限"
 						}
@@ -1795,6 +1790,8 @@ Scenario:6 自营平台同步商品在"在售列表",商家更新被自营平台
 				}],
 				"postage":5.00,
 				"pay_interfaces":[{
+						"type": "在线支付"
+					},{
 						"type": "货到付款"
 					}],
 				"properties": [{
@@ -1804,18 +1801,15 @@ Scenario:6 自营平台同步商品在"在售列表",商家更新被自营平台
 						"name": "内存",
 						"description": "内存描述"
 					}],
-				"detail": "商品描述信息",
-				"status": "待售"
-			}]
+				"detail": "商品描述信息"
+			}
 			"""
 		Then jobs能获取商品'bill无规格商品1'
 			"""
-			[{
+			{
 				"name": "bill无规格商品1",
 				"supplier": "bill商家",
 				"purchase_price": 10.00,
-				"created_at": "2015-08-02 10:30",
-				"sync_time":"2015-08-05 10:30",
 				"promotion_title": "促销的东坡肘子",
 				"categories": "",
 				"bar_code":"000112233",
@@ -1825,7 +1819,7 @@ Scenario:6 自营平台同步商品在"在售列表",商家更新被自营平台
 					"models": {
 						"standard": {
 							"price": 11.12,
-							"user_code":"1112",
+							"bar_code":"1112",
 							"weight": 5.0,
 							"stock_type": "无限"
 						}
@@ -1849,11 +1843,11 @@ Scenario:6 自营平台同步商品在"在售列表",商家更新被自营平台
 						"name": "内存",
 						"description": "内存描述"
 					}],
-				"detail": "商品描述信息",
-				"status": "待售"
-			}]
+				"detail": "商品描述信息"
+			}
 			"""
 
+@product @product_pool @eugene @eugeneTMP
 Scenario:7 自营平台同步商品参与限时抢购或买赠活动,商家更新被自营平台同步商品的【商品单价】【商品编码】
 	#同步到自营平台上的商品,上架之后再更新,自动下架到待售列表,参与的活动自动结束
 	#更新同步商品时,不同更新的字段保留自营平台修改后的值不变
@@ -1925,7 +1919,7 @@ Scenario:7 自营平台同步商品参与限时抢购或买赠活动,商家更�
 				"model": {
 					"models": {
 						"standard": {
-							"price": 110.12,
+							"price": 11.12,
 							"user_code":"11012",
 							"weight": 1.0,
 							"stock_type": "无限"
@@ -2117,7 +2111,7 @@ Scenario:7 自营平台同步商品参与限时抢购或买赠活动,商家更�
 			"""
 			[{
 				"name": "tom无规格商品1",
-				"user_code":"1112",
+				"user_code":"0001112",
 				"supplier":"tom商家",
 				"stocks": "无限",
 				"status":"待更新",

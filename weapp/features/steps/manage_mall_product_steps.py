@@ -270,7 +270,7 @@ def step_impl(context, user, product_name):
 
 @when(u"{user}将商品'{product_name}'放入回收站")
 def step_impl(context, user, product_name):
-    __update_prducts_by_name(context, product_name, u'回收站')
+    __update_prducts_by_name(context, product_name, u'回收站', user)
 
 
 @when(u"{user}将商品批量放入回收站")
@@ -280,12 +280,12 @@ def step_impl(context, user):
 
 @when(u"{user}'{action}'商品'{product_name}'")
 def update_product(context, user, action, product_name):
-    __update_prducts_by_name(context, product_name, action)
+    __update_prducts_by_name(context, product_name, action, user)
 
 
 @when(u"{user}批量{action}商品")
 def update_products(context, user, action):
-    __update_prducts_by_name(context, json.loads(context.text), action)
+    __update_prducts_by_name(context, json.loads(context.text), action, user)
 
 @when(u"{user}更新'{product_name}'商品排序{pos}")
 def update_product_display_index(context, user, product_name, pos):
@@ -324,7 +324,7 @@ def step_impl(context, product_info, user):
     delattr(context, "product_name")
     context.tc.assertEquals(actual_is_group_buying, expected__is_group_buying)
 
-def __update_prducts_by_name(context, product_name, action):
+def __update_prducts_by_name(context, product_name, action, user):
     ACTION2TYPE = {
         u'上架': 'onshelf',
         u'下架': 'offshelf',
@@ -338,12 +338,15 @@ def __update_prducts_by_name(context, product_name, action):
         'shelve_type': action
     }
 
+    user_id = User.objects.get(username=user).id
     if isinstance(product_name, list):
         data['ids'] = []
         for product_name in product_name:
-            data['ids'].append(ProductFactory(name=product_name).id)
+            product_id = mall_models.Product.objects.get(owner_id=user_id, name=product_name).id
+            data['ids'].append(product_id)
     else:
-        data['ids'] = ProductFactory(name=product_name).id
+        print user_id, product_name, ">>>>>>>>>"
+        data['ids'] = mall_models.Product.objects.get(owner_id=user_id, name=product_name).id
         context.product_name = product_name
 
     response = context.client.post('/mall2/api/product_list/?_method=post', data)
