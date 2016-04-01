@@ -104,6 +104,15 @@
 					{% endif %}
 				</div>
 			</div>
+			
+			{% if promotion.detail.count_per_purchase > -1 and promotion.detail.count_per_purchase < 9999999 %}
+			<div class="form-group">
+				<label class="col-sm-2 xui-i-label fn">购买次数：</label>
+				<div class="col-sm-8 xui-i-content">
+					{{promotion.detail.count_per_purchase}}次					
+				</div>
+			</div>
+			{% endif %}
 
 			<div class="form-group">
 				<label class="col-sm-2 xui-i-label fn">限购价格：</label>
