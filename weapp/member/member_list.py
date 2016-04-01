@@ -610,7 +610,7 @@ class MemberDetail(resource.Resource):
 				member.grade = MemberGrade.objects.get(id=grade_id)
 				member.save()
 			member_info_update = {}
-			if member_remarks:
+			if member_remarks != None:
 				member_info_update['member_remarks'] = member_remarks
 			if name:
 				member_info_update['name'] = name
@@ -632,6 +632,7 @@ class MemberDetail(resource.Resource):
 
 			if sex != None:
 				member_info_update['sex'] = sex
+				member.sex = sex
 			member.is_for_buy_test = is_for_buy_test
 			member.save()
 			if member_info_update:
