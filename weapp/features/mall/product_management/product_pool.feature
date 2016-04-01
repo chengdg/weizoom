@@ -1380,6 +1380,8 @@ Scenario:5 自营平台同步的商品在"待售列表",商家更新被自营平
 				}],
 				"postage":5.00,
 				"pay_interfaces":[{
+						"type": "在线支付"
+					},{
 						"type": "货到付款"
 					}],
 				"properties": [{

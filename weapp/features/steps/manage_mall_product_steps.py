@@ -2,6 +2,7 @@
 from __future__ import absolute_import
 import copy
 import json, time
+import logging
 from behave import when, then, given
 from mall.models import ProductCategory, Product
 from webapp.models import WebApp
@@ -132,11 +133,9 @@ def step_update_product(context, user, product_name):
         product['name'] = existed_product.name
 
     existed_product_properties = mall_models.ProductProperty.objects.filter(product_id=existed_product.id)
-    tmp_property = {}
     tmp_properties = []
     for index, property in enumerate(product.get('properties', [])):
-        # if index > existed_product_properties.count():
-        #     tmp_property['id'] = existed_product_properties[index].id
+        tmp_property = {}
         if existed_product_properties:
             tmp_property['id'] = existed_product_properties[index].id
         tmp_property['name'] = property['name']
