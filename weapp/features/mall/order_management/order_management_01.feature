@@ -24,7 +24,7 @@ Feature:商家后台查看自营平台同步过来的订单列表及订单详情
 
 Background:
 	#自营平台jobs的信息
-		Given 添加bill店铺名称为'bill商家'
+		Given 设置jobs为自营平台账号
 		Given jobs登录系统
 		And jobs已添加供货商
 			"""
@@ -72,7 +72,7 @@ Background:
 			"""
 		Given jobs已创建微众卡
 			"""
-			[{
+			{
 				"cards": [{
 					"id": "0000001",
 					"password": "1234567",
@@ -84,7 +84,7 @@ Background:
 					"status": "未使用",
 					"price": 200
 				}]
-			}]
+			}
 			"""
 		And jobs已添加商品
 			"""
@@ -118,7 +118,7 @@ Background:
 			"""
 
 	#自营平台nokia的信息
-		Given 添加tom店铺名称为'tom商家'
+		Given 设置nokia为自营平台账号
 		Given nokia登录系统
 		And nokia已添加支付方式
 			"""
@@ -147,6 +147,7 @@ Background:
 			"""
 
 	#商家bill的信息
+		Given 添加bill店铺名称为'bill商家'
 		Given bill登录系统
 		And bill已添加支付方式
 			"""
@@ -181,6 +182,7 @@ Background:
 			"""
 			[{
 				"name":"bill商品1",
+				"created_at": "2015-05-02",
 				"model": {
 					"models": {
 						"standard": {
@@ -194,6 +196,7 @@ Background:
 				"postage":10.0
 			},{
 				"name":"bill商品2",
+				"created_at": "2015-05-03",
 				"model": {
 					"models": {
 						"standard": {
@@ -203,9 +206,10 @@ Background:
 							"stock_type": "无限"
 						}
 					}
-				},
+				}
 			},{
 				"name":"bill商品3",
+				"created_at": "2015-04-03",
 				"is_enable_model": "启用规格",
 				"model": {
 					"models": {
@@ -226,6 +230,7 @@ Background:
 			"""
 
 	#商家tom的信息
+		Given 添加tom店铺名称为'tom商家'
 		Given tom登录系统
 		And tom已添加支付方式
 			"""
@@ -250,6 +255,7 @@ Background:
 			"""
 			[{
 				"name":"tom商品1",
+				"created_at": "2015-05-04",
 				"is_member_product":"off",
 				"model": {
 					"models": {
@@ -264,6 +270,7 @@ Background:
 				"status":"在售"
 			},{
 				"name":"tom商品2",
+				"created_at":"2015-05-05",
 				"is_member_product":"off",
 				"model": {
 					"models": {
@@ -279,6 +286,7 @@ Background:
 				"status":"在售"
 			},{
 				"name":"tom商品3",
+				"created_at": "2015-05-06",
 				"is_enable_model": "启用规格",
 				"model": {
 					"models": {
@@ -300,7 +308,6 @@ Background:
 			"""
 
 	#jobs后台商品信息
-		Given 设置jobs为自营平台账号
 		Given jobs登录系统
 		Then jobs获得商品池商品列表
 			"""
@@ -316,7 +323,7 @@ Background:
 				"name": "tom商品1",
 				"user_code":"0201",
 				"supplier":"tom商家",
-				"stock_type":"无限",
+				"stocks":"无限",
 				"status":"未选择",
 				"sync_time":"",
 				"actions": ["放入待售"]
@@ -324,7 +331,7 @@ Background:
 				"name": "bill商品2",
 				"user_code":"0102",
 				"supplier":"bill商家",
-				"stock_type": "无限",
+				"stocks": "无限",
 				"status":"未选择",
 				"sync_time":"",
 				"actions": ["放入待售"]
@@ -332,23 +339,20 @@ Background:
 				"name": "bill商品1",
 				"user_code":"0101",
 				"supplier":"bill商家",
-				"stock_type": "无限",
+				"stocks": "无限",
 				"status":"未选择",
 				"sync_time":"",
 				"actions": ["放入待售"]
 			}]
 			"""
-		When jobs批量将商品放入待售
+		When jobs将商品池商品批量放入待售于'2015-08-02 10:30'
 			"""
-			[{
-				"name": "tom商品2"
-			}, {
-				"name": "tom商品1"
-			}, {
-				"name": "bill商品2"
-			}, {
-				"name": "bill商品1"
-			}]
+			[
+				"tom商品2",
+				"tom商品1",
+				"bill商品2",
+				"bill商品1"
+			]
 			"""
 
 		#jobs修改商品名称(bill商品1-bill商品11)
@@ -463,7 +467,7 @@ Background:
 				"name": "tom商品1",
 				"user_code":"0201",
 				"supplier":"tom商家",
-				"stock_type":"无限",
+				"stocks":"无限",
 				"status":"未选择",
 				"sync_time":"",
 				"actions": ["放入待售"]
@@ -471,7 +475,7 @@ Background:
 				"name": "bill商品2",
 				"user_code":"0102",
 				"supplier":"bill商家",
-				"stock_type": "无限",
+				"stocks": "无限",
 				"status":"未选择",
 				"sync_time":"",
 				"actions": ["放入待售"]
@@ -479,23 +483,20 @@ Background:
 				"name": "bill商品1",
 				"user_code":"0101",
 				"supplier":"bill商家",
-				"stock_type": "无限",
+				"stocks": "无限",
 				"status":"未选择",
 				"sync_time":"",
 				"actions": ["放入待售"]
 			}]
 			"""
-		When nokia批量将商品放入待售
+		When nokia将商品池商品批量放入待售于'2015-08-03 10:30'
 			"""
-			[{
-				"name": "tom商品2"
-			}, {
-				"name": "tom商品1"
-			}, {
-				"name": "bill商品2"
-			}, {
-				"name": "bill商品1"
-			}]
+			[
+				"tom商品2",
+				"tom商品1",
+				"bill商品2",
+				"bill商品1"
+			]
 			"""
 		When nokia更新商品'bill商品2'
 			"""
@@ -725,7 +726,8 @@ Background:
 					}]
 				}
 				"""
-			When jack使用支付方式'微信支付'进行支付订单'009'
+			When jack使用支付方式'微信支付'进行支付
+
 
 Scenario:1 商家后台查看订单列表,包含自营平台同步过来的订单
 	Given bill登录系统
