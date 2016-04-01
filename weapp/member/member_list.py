@@ -737,6 +737,9 @@ class Integral(resource.Resource):
 
 				update_member_integral(member_id, None, int(integral), event_type, 0, reason, request.user.username)
 
+		response.data = {
+			'integral': Member.objects.get(webapp_id=webapp_id, id=member_id).integral
+		}
 		response = create_response(200)
 		return response.get_response()
 

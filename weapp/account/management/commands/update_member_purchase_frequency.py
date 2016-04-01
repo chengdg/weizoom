@@ -17,5 +17,5 @@ class Command(BaseCommand):
 	
 	def handle(self,*args, **options):
 		for user_profile in UserProfile.objects.filter(is_active=True):
-			update_member_purchase_frequency.delay(user_profile.webapp_id)
+			update_member_purchase_frequency(user_profile.webapp_id)
 			logging.info(user_profile.webapp_id)
