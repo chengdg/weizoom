@@ -83,10 +83,10 @@ class RepeatBuyAnalysis(resource.Resource):
 			all_rebuy_fans = rebuy_fans.count()
 			return create_pie_chart_response('',
 				{
-					u"消费金额：{}-{} \n人数:{}\n占比:{}".format(search_pay_list[0],search_pay_list[1],rebuy_fans_1,format( float(Decimal(rebuy_fans_1)/Decimal(all_rebuy_fans)),'.2%')): rebuy_fans_1,
-					u"消费金额：{}-{} \n人数:{}\n占比:{}".format(search_pay_list[2],search_pay_list[3],rebuy_fans_2,format( float(Decimal(rebuy_fans_2)/Decimal(all_rebuy_fans)),'.2%')): rebuy_fans_2,
-					u"消费金额：{}-{} \n人数:{}\n占比:{}".format(search_pay_list[4],search_pay_list[5],rebuy_fans_3,format( float(Decimal(rebuy_fans_3)/Decimal(all_rebuy_fans)),'.2%')): rebuy_fans_3,
-					u"其他 \n人数:{}\n占比:{}".format(other_rebug_fans,format( float(Decimal(other_rebug_fans)/Decimal(all_rebuy_fans)),'.2%')): other_rebug_fans
+					u"消费金额：{}-{} \n人数:{}\n占比:{}".format(search_pay_list[0],search_pay_list[1],rebuy_fans_1,format( float(Decimal(rebuy_fans_1)/Decimal(all_rebuy_fans)),'.2%') if all_rebuy_fans!=0 else '0%'): rebuy_fans_1,
+					u"消费金额：{}-{} \n人数:{}\n占比:{}".format(search_pay_list[2],search_pay_list[3],rebuy_fans_2,format( float(Decimal(rebuy_fans_2)/Decimal(all_rebuy_fans)),'.2%') if all_rebuy_fans!=0 else '0%'): rebuy_fans_2,
+					u"消费金额：{}-{} \n人数:{}\n占比:{}".format(search_pay_list[4],search_pay_list[5],rebuy_fans_3,format( float(Decimal(rebuy_fans_3)/Decimal(all_rebuy_fans)),'.2%') if all_rebuy_fans!=0 else '0%'): rebuy_fans_3,
+					u"其他 \n人数:{}\n占比:{}".format(other_rebug_fans,format( float(Decimal(other_rebug_fans)/Decimal(all_rebuy_fans)),'.2%') if all_rebuy_fans!=0 else '0%'): other_rebug_fans
 				}
 			)
 		else:
@@ -146,9 +146,9 @@ class BuyPercent(resource.Resource):
 		all_buy_fnas = bought_fans_1+bought_fans_2+bought_fans_3_5+bought_fans_5_after
 		return create_pie_chart_response('',
 				{
-					u"购买1次的会员\n人数:{}\n占比:{}".format(bought_fans_1,format( float(Decimal(bought_fans_1)/Decimal(all_buy_fnas)),'.2%')):bought_fans_1,
-					u"购买2次的会员\n人数:{}\n占比:{}".format(bought_fans_2,format(float(Decimal(bought_fans_2)/Decimal(all_buy_fnas)),'.2%')):bought_fans_2,
-					u"购买3-5次的会员\n人数:{}\n占比:{}".format(bought_fans_3_5,format(float(Decimal(bought_fans_3_5)/Decimal(all_buy_fnas)),'.2%')):bought_fans_3_5,
-					u"购买5次以上的会员\n人数:{}\n占比:{}".format(bought_fans_5_after,format(float(Decimal(bought_fans_5_after)/Decimal(all_buy_fnas)),'.2%')):bought_fans_5_after
+					u"购买1次的会员\n人数:{}\n占比:{}".format(bought_fans_1,format( float(Decimal(bought_fans_1)/Decimal(all_buy_fnas)),'.2%') if all_buy_fnas!=0 else '0%'):bought_fans_1,
+					u"购买2次的会员\n人数:{}\n占比:{}".format(bought_fans_2,format(float(Decimal(bought_fans_2)/Decimal(all_buy_fnas)),'.2%') if all_buy_fnas!=0 else '0%'):bought_fans_2,
+					u"购买3-5次的会员\n人数:{}\n占比:{}".format(bought_fans_3_5,format(float(Decimal(bought_fans_3_5)/Decimal(all_buy_fnas)),'.2%') if all_buy_fnas!=0 else '0%'):bought_fans_3_5,
+					u"购买5次以上的会员\n人数:{}\n占比:{}".format(bought_fans_5_after,format(float(Decimal(bought_fans_5_after)/Decimal(all_buy_fnas)),'.2%') if all_buy_fnas!=0 else '0%'):bought_fans_5_after
 				}
 			)

@@ -24,6 +24,7 @@
         <div class="xui-charWrap fl" style="height:400px;">
             <div class="xui-i-title"> <div class="xui-i-block"></div><span class="ml5">会员购买占比</span></div>
             <div id="memberPurchaseScale" class="pr" style="height:400px;top:-60px;"></div>
+
         </div>
         <div class="xui-charWrap fr" style="height:400px;">
             <div class="xui-i-title"> 
@@ -111,23 +112,35 @@
                 },
                 scope: this,
                 success: function(data) {
-                    option = {
+
+                    var all = 0;
+                    for(var i in data.series[0].data){
+
+                        all+= data.series[0].data[i].value;
+                    }
+
+                    if(all!=0){
+                        option = {
                         // tooltip : {
                         //     trigger: 'item',
                         //     formatter: "{a} <br/>{b} : {c} ({d}%)"
                         // },
-                        calculable : true,
-                        series : [
-                            {
-                                type:'pie',
-                                radius : '40%',
-                                center: ['50%', '60%'],
-                                data: data.series[0].data
-                            }
-                        ]
-                    };
-                    var theChart = echarts.init(document.getElementById('memberPurchaseScale'));  
-                    theChart.setOption(option); 
+                            calculable : true,
+                            series : [
+                                {
+                                    type:'pie',
+                                    radius : '40%',
+                                    center: ['50%', '60%'],
+                                    data: data.series[0].data
+                                }
+                            ]
+                        };
+                        var theChart = echarts.init(document.getElementById('memberPurchaseScale'));
+                        theChart.setOption(option);
+                    }else{
+{#                        $("#memberPurchaseScale").innerHTML = "还没有会员复购"#}
+                    }
+
                 },
                 error: function(resp) {
                     alert('获取统计数据失败!');
@@ -148,23 +161,33 @@
                 },
                 scope: this,
                 success: function(data) {
-                    option = {
+                    var all = 0;
+                    for(var i in data.series[0].data){
+
+                        all+= data.series[0].data[i].value;
+                    }
+                    if(all!=0){
+                        option = {
                         // tooltip : {
                         //     trigger: 'item',
                         //     formatter: "{a} <br/>{b} : {c} ({d}%)"
                         // },
-                        calculable : true,
-                        series : [
-                            {
-                                type:'pie',
-                                radius : '40%',
-                                center: ['50%', '60%'],
-                                data: data.series[0].data
-                            }
-                        ]
-                    };
-                    var theChart = echarts.init(document.getElementById('rePurchaseAnalysis'));  
-                    theChart.setOption(option); 
+                            calculable : true,
+                            series : [
+                                {
+                                    type:'pie',
+                                    radius : '40%',
+                                    center: ['50%', '60%'],
+                                    data: data.series[0].data
+                                }
+                            ]
+                        };
+                        var theChart = echarts.init(document.getElementById('rePurchaseAnalysis'));
+                        theChart.setOption(option);
+                    }else{
+                        //没有数据的提示
+                    }
+
                 },
                 error: function(resp) {
                     alert('获取统计数据失败!');
