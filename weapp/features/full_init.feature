@@ -446,6 +446,14 @@ Scenario: 安装完整测试数据
 		"""
 	#bill收货地址
 	And bill设置jobs的webapp的默认收货地址
+	"""
+		{
+			"ship_name": "收货人B",
+			"ship_tel": "13811223355",
+			"area": "北京市,北京市,朝阳区",
+			"ship_address": "泰兴大厦"
+		}
+	"""
 	
 	# bill发消息
 	And bill在微信中向jobs的公众号发送消息'你好，这是bill发给jobs的消息01'
