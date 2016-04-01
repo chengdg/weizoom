@@ -9,7 +9,7 @@ from django.db.models import F, Q
 from mall.promotion import models as promotion_models
 from mall.promotion.models import Coupon
 from mall.promotion.utils import coupon_id_maker
-from mall.models import Order
+from mall.models import *
 
 from market_tools.tools.coupon.tasks import send_message_to_member
 
@@ -288,7 +288,7 @@ def award_coupon_for_member(coupon_rule_info, member):
 
 
 def get_member_coupons(member, status=-1):
-	orders = Order.objects.filter(webapp_user_id__in=member.get_webapp_user_ids, coupon_id__gt=0)
+	orders = Order.objects.filter(webapp_user_id__in=member.get_webapp_user_ids, coupon_id__gt=0).filter(~Q(status=ORDER_STATUS_CANCEL))
 	coupon_ids = [order.coupon_id for order in orders]
 
 	if status == -1:
