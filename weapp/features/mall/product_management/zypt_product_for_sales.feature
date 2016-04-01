@@ -1945,7 +1945,7 @@ Scenario:9 自营平台把商品从商品池放入待售商品列表后，自营
 		}]
 		"""
 
-@eugene @product_pool @eugeneTMP
+@eugene @product_pool
 Scenario:10 待售商品列表查询
 	#自营平台jobs登录
 	Given jobs登录系统
