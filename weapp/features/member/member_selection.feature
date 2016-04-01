@@ -1,5 +1,6 @@
 #author: 王丽
 #editor: 张三香 2015.10.16
+#editor: 冯雪静 2016.03.30
 
 Feature: 筛选会员列表
 	"""
@@ -210,8 +211,8 @@ Scenario:1 默认条件和空条件查询
 			| tom7  |   金牌会员  |       0      |     0    |   0.00    |    0.00    |      0    |      2014-10-01   | 直接关注 | 未分组      |
 			| tom6  |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |      2014-10-01   | 推广扫码 | 未分组      |
 			| tom5  |   金牌会员  |       0      |     0    |   0.00    |    0.00    |      0    |      2014-08-06   | 会员分享 | 分组3       |
-			| tom3  |   银牌会员  |       1      |    100   |   335.00  |    111.67  |      3    |      2014-08-05   | 会员分享 | 分组1,分组3 |
-			| tom1  |   银牌会员  |       2      |     0    |   110.00  |    110.00  |      1    |      2014-08-04   | 直接关注 | 分组1       |
+			| tom3  |   银牌会员  |       1      |    100   |   110.00  |    110.00  |      1    |      2014-08-05   | 会员分享 | 分组1,分组3 |
+			| tom1  |   银牌会员  |       2      |     0    |   0.00    |    0.00    |      0    |      2014-08-04   | 直接关注 | 分组1       |
 
 	#空调条件查询，“重置”查询条件，空调间查询所有数据
 		When jobs设置会员查询条件
@@ -235,9 +236,9 @@ Scenario:1 默认条件和空条件查询
 			| tom6  | 普通会员    |       0      |     0    |   0.00    |    0.00    |    0      |     2014-10-01 | 推广扫码 | 未分组      |
 			| tom5  | 金牌会员    |       0      |     0    |   0.00    |    0.00    |    0      |     2014-08-06 | 会员分享 | 分组3       |
 			| tom4  | 金牌会员    |       0      |     20   |   0.00    |    0.00    |    0      |     2014-08-05 | 会员分享 | 分组3       |
-			| tom3  | 银牌会员    |       1      |    100   |   335.00  |    111.67  |    3      |     2014-08-05 | 会员分享 | 分组1,分组3 |
-			| tom2  | 普通会员    |       0      |     50   |   325.00  |    162.50  |    2      |     2014-08-05 | 推广扫码 | 分组1       |
-			| tom1  | 银牌会员    |       2      |     0    |   110.00  |    110.00  |    1      |     2014-08-04 | 直接关注 | 分组1       |
+			| tom3  | 银牌会员    |       1      |    100   |   110.00  |    110.00  |    1      |     2014-08-05 | 会员分享 | 分组1,分组3 |
+			| tom2  | 普通会员    |       0      |     50   |   110.00  |    110.00  |    1      |     2014-08-05 | 推广扫码 | 分组1       |
+			| tom1  | 银牌会员    |       2      |     0    |   0.00    |    0.00    |    0      |     2014-08-04 | 直接关注 | 分组1       |
 
 @mall2 @member @memberList
 Scenario:2 过滤条件"会员名称"
@@ -582,42 +583,40 @@ Scenario:8 过滤条件"消费总额"
 			"""
 			[{
 				"status":"全部",
-				"pay_money_start":"110",
-				"pay_money_end":"335"
+				"pay_money_start":"1",
+				"pay_money_end":"200"
 			}]
 			"""
 		Then jobs获得刷选结果人数
 			"""
 			[{
-				"result_quantity":3
+				"result_quantity":2
 			}]
 			"""
 		Then jobs可以获得会员列表
 			| name  | member_rank | pay_money | unit_price | pay_times |
-			| tom3  | 银牌会员    |   335.00  |   111.67   |     3     |
-			| tom2  | 普通会员    |   325.00  |   162.50   |     2     |
-			| tom1  | 银牌会员    |   110.00  |   110.00   |     1     |
+			| tom3  | 银牌会员    |   110.00  |   110.00   |     1     |
+			| tom2  | 普通会员    |   110.00  |   110.00   |     1     |
 
 	#区间查询，包含开始和结束数值，开始数值大于结束数值
 		When jobs设置会员查询条件
 			"""
 			[{
 				"status":"全部",
-				"pay_money_start":"335.123456",
-				"pay_money_end":"100.2356"
+				"pay_money_start":"110.123456",
+				"pay_money_end":"109.2356"
 			}]
 			"""
 		Then jobs获得刷选结果人数
 			"""
 			[{
-				"result_quantity":3
+				"result_quantity":2
 			}]
 			"""
 		Then jobs可以获得会员列表
 			| name  | member_rank | pay_money | unit_price | pay_times |
-			| tom3  | 银牌会员    |   335.00  |   111.67   |     3     |
-			| tom2  | 普通会员    |   325.00  |   162.50   |     2     |
-			| tom1  | 银牌会员    |   110.00  |   110.00   |     1     |
+			| tom3  | 银牌会员    |   110.00  |   110.00   |     1     |
+			| tom2  | 普通会员    |   110.00  |   110.00   |     1     |
 
 	#开始结束数值相同
 		When jobs设置会员查询条件
@@ -631,12 +630,13 @@ Scenario:8 过滤条件"消费总额"
 		Then jobs获得刷选结果人数
 			"""
 			[{
-				"result_quantity":1
+				"result_quantity":2
 			}]
 			"""
 		Then jobs可以获得会员列表
 			| name  | member_rank | pay_money | unit_price | pay_times |
-			| tom1  | 银牌会员    |   110.00  |   110.00   |     1     |
+			| tom3  | 银牌会员    |   110.00  |   110.00   |     1     |
+			| tom2  | 普通会员    |   110.00  |   110.00   |     1     |
 
 	#特殊数据查询
 		When jobs设置会员查询条件
@@ -650,7 +650,7 @@ Scenario:8 过滤条件"消费总额"
 		Then jobs获得刷选结果人数
 			"""
 			[{
-				"result_quantity":7
+				"result_quantity":8
 			}]
 			"""
 		Then jobs可以获得会员列表
@@ -662,6 +662,7 @@ Scenario:8 过滤条件"消费总额"
 			| tom6  | 普通会员    |   0.00    |    0.00    |     0     |
 			| tom5  | 金牌会员    |   0.00    |    0.00    |     0     |
 			| tom4  | 金牌会员    |   0.00    |    0.00    |     0     |
+			| tom1  | 银牌会员    |   0.00    |    0.00    |     0     |
 
 	#无查询结果
 		When jobs设置会员查询条件
@@ -698,14 +699,13 @@ Scenario:9 过滤条件"购买次数"
 		Then jobs获得刷选结果人数
 			"""
 			[{
-				"result_quantity":3
+				"result_quantity":2
 			}]
 			"""
 		Then jobs可以获得会员列表
 			| name  | member_rank | pay_times |
-			| tom3  | 银牌会员    |     3     |
-			| tom2  | 普通会员    |     2     |
-			| tom1  | 银牌会员    |     1     |
+			| tom3  | 银牌会员    |     1     |
+			| tom2  | 普通会员    |     1     |
 
 	#区间查询，包含开始和结束数值, 开始至大于结束值
 		When jobs设置会员查询条件
@@ -719,14 +719,13 @@ Scenario:9 过滤条件"购买次数"
 		Then jobs获得刷选结果人数
 			"""
 			[{
-				"result_quantity":3
+				"result_quantity":2
 			}]
 			"""
 		Then jobs可以获得会员列表
 			| name  | member_rank | pay_times |
-			| tom3  | 银牌会员    |     3     |
-			| tom2  | 普通会员    |     2     |
-			| tom1  | 银牌会员    |     1     |
+			| tom3  | 银牌会员    |     1     |
+			| tom2  | 普通会员    |     1     |
 
 	#开始结束数值相同
 		When jobs设置会员查询条件
@@ -740,12 +739,13 @@ Scenario:9 过滤条件"购买次数"
 		Then jobs获得刷选结果人数
 			"""
 			[{
-				"result_quantity":1
+				"result_quantity":0
 			}]
 			"""
 		Then jobs可以获得会员列表
-			| name  | member_rank | pay_times |
-			| tom2  | 普通会员    |     2     |
+			"""
+			[]
+			"""
 
 	#特殊数据查询
 		When jobs设置会员查询条件
@@ -759,7 +759,7 @@ Scenario:9 过滤条件"购买次数"
 		Then jobs获得刷选结果人数
 			"""
 			[{
-				"result_quantity":9
+				"result_quantity":10
 			}]
 			"""
 		Then jobs可以获得会员列表
@@ -771,8 +771,9 @@ Scenario:9 过滤条件"购买次数"
 			| tom6  | 普通会员    |    0      |
 			| tom5  | 金牌会员    |    0      |
 			| tom4  | 金牌会员    |    0      |
-			| tom2  | 普通会员    |    2      |
-			| tom1  | 银牌会员    |    1      |
+			| tom3  | 银牌会员    |    1      |
+			| tom2  | 普通会员    |    1      |
+			| tom1  | 银牌会员    |    0      |
 
 	#无查询结果
 		When jobs设置会员查询条件
@@ -802,21 +803,20 @@ Scenario:10 过滤条件"最后购买时间"
 			"""
 			[{
 				"status":"全部",
-				"last_buy_start_time":"今天",
-				"last_buy_end_time":"1天后"
+				"last_buy_start_time":"2015-01-01 00:00",
+				"last_buy_end_time":"2015-04-01 00:00"
 			}]
 			"""
 		Then jobs获得刷选结果人数
 			"""
 			[{
-				"result_quantity":3
+				"result_quantity":2
 			}]
 			"""
 		Then jobs可以获得会员列表
 			| name  | member_rank | pay_money | unit_price | pay_times |
-			| tom3  | 银牌会员    |   335.00  |   111.67   |     3     |
-			| tom2  | 普通会员    |   325.00  |   162.50   |     2     |
-			| tom1  | 银牌会员    |   110.00  |   110.00   |     1     |
+			| tom3  | 银牌会员    |   110.00  |   110.00   |     1     |
+			| tom2  | 普通会员    |   110.00  |   110.00   |     1     |
 
 	#无查询结果
 		When jobs设置会员查询条件
@@ -962,7 +962,7 @@ Scenario:12 过滤条件"条件组合查询"
 			"""
 		Then jobs可以获得会员列表
 			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times | attention_time | source   |  tags   |
-			| tom2  | 普通会员    |       0      |     50   |   325.00  |   162.50   |     2     |   2014-08-05   | 推广扫码 | 分组1   |
+			| tom2  | 普通会员    |       0      |     50   |   110.00  |   110.00   |     1     |   2014-08-05   | 推广扫码 | 分组1   |
 
 @mall2 @member @memberList
 Scenario:13 会员列表分页
