@@ -24,17 +24,26 @@ def step_impl(context, user):
 	is_subscribed = json.loads(context.text)
 	if is_subscribed == u'全部':
 		context.is_subscribed ='all'
+	print "zl------------------------------------------------------"
 
 @then(u'{user}获得会员购买占比统计数据')
 def step_impl(context, user):
 	client = context.client
-	url = 'stats/buy_percent/?is_subscribed='+context.is_subscribed
-
+	url = '/stats/api/buy_percent/?is_subscribed=all'
+	print "zl--------------------------------------------------------"
 	response = client.get(url)
-	print response.read()
-	 # coupon_info = json.loads(context.text)
-	# bdd_util.assert_list(expected_data, actual_data)
-	pass
+	content = json.loads(response.content)
+	print "zl---------------------------",content
+	print "zl---------------------------",content['data'][u'series'][0]['data']
+	actual_real_list =content['data'][u'series'][0]['data']
+	actual_list = []
+	for actual_dict in actual_real_list:
+		actual_list.append(actual_dict['name'])
+	expected_data = json.loads(context.text)
+	print "zl-----------------",expected_data
+	print "zl-----------------",actual_list
+	print bdd_util.assert_list(expected_data, actual_list)
+
 
 @then(u'{user}获得复购会员分析统计数据')
 def step_impl(context, user):
