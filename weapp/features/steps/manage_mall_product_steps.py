@@ -368,7 +368,6 @@ def __get_products(context, type_name=u'在售'):
     if hasattr(context, 'query_param'):
         for key in context.query_param.keys():
             url += '&%s=%s' % (key, context.query_param[key])
-        print url , ">>>>>>>>>>>>>>>"
     response = context.client.get(url)
 
     data = json.loads(response.content)['data']

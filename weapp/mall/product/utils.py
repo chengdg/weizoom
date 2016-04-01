@@ -329,8 +329,8 @@ def weizoom_filter_products(request, products):
                 owner=request.manager,
                 mall_id__in=owner_ids,
                 is_deleted=False,
-                delete_time__gte=start_date,
-                delete_time__lte=end_date
+                sync_time__gte=start_date,
+                sync_time__lte=end_date
             )
         params1 = dict(
                 owner=request.manager,
