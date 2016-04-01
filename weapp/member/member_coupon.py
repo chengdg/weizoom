@@ -113,7 +113,7 @@ class MemberCouponInfo(resource.Resource):
 			item['coupon_state'] = COUPONSTATUS[coupon.status]['name']
 
 			if coupon.status == COUPON_STATUS_USED:
-				order = Order.objects.get(coupon_id=coupon.id)
+				order = Order.objects.filter(coupon_id=coupon.id)[0]
 				whereabouts['type'] = COUPON_STATUS_USED  # 去处 1
 				whereabouts['content'] = order.order_id
 				whereabouts['orderid'] = order.id
