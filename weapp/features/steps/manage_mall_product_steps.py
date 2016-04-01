@@ -197,6 +197,11 @@ def step_impl(context, user, type_name):
                 expected.append(product)
         else:
             expected = json.loads(context.text)
+
+    # for i in range(len(expected)):
+    #     print expected[i]['name'], "-----", actual[i]['name']
+    #     print expected[i]['user_code'], "-----", actual[i]['user_code']
+
     bdd_util.assert_list(expected, actual)
 
 @then(u"{user}能获取商品规格详情'{product_name}'")
@@ -363,12 +368,15 @@ def __get_products(context, type_name=u'在售'):
     if hasattr(context, 'query_param'):
         for key in context.query_param.keys():
             url += '&%s=%s' % (key, context.query_param[key])
+        print url , ">>>>>>>>>>>>>>>"
     response = context.client.get(url)
 
     data = json.loads(response.content)['data']
     context.pageinfo = data['pageinfo']
+    mall_type = data['data']['mall_type']
 
     for product in data["items"]:
+        actions = []
         product['is_member_product'] = 'on' if product.get('is_member_product', False) else 'off'
         #价格
         product['price'] = product['display_price']
@@ -408,6 +416,14 @@ def __get_products(context, type_name=u'在售'):
                 }
             }
             product['stock_type'] = standard_model['stock_type']
+
+        if product['is_self']:
+            actions.append(u'修改')
+        if not(product['purchase_price'] == "0" and mall_type == 1):
+            actions.append(u'上架')
+        actions.append(u'彻底删除')
+        product['actions'] = actions
+        product['supplier'] = product['store_name']
 
     return data["items"]
 

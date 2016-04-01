@@ -71,7 +71,11 @@ def step_impl(context, user, product_name, sync_time):
 def step_impl(context, user, sync_time):
     _put_product_will_sale(context, user, json.loads(context.text), sync_time)
 
-def _put_product_will_sale(context, user, product_names, sync_time):
+@when(u'{user}批量将商品放入待售')
+def step_impl(context, user):
+    _put_product_will_sale(context, user, json.loads(context.text))
+
+def _put_product_will_sale(context, user, product_names, sync_time=None):
     user_id = User.objects.get(username=user).id
     product_name2product_id = dict([(product.name, product.id) for product in Product.objects.filter(name__in=product_names, supplier_user_id=0, is_deleted=False)])
 
@@ -82,20 +86,21 @@ def _put_product_will_sale(context, user, product_names, sync_time):
     }
     response = context.client.post(url, args)
     bdd_util.assert_api_call_success(response)
-    for product_name, product_id in product_name2product_id.items():
-        sync_product = Product.objects.get(name=product_name, owner_id=user_id, is_deleted=False)
-        sync_product_id = sync_product.id
-        sync_product.created_at = sync_time
-        sync_product.save()
+    if sync_time:
+        for product_name, product_id in product_name2product_id.items():
+            sync_product = Product.objects.get(name=product_name, owner_id=user_id, is_deleted=False)
+            sync_product_id = sync_product.id
+            sync_product.created_at = sync_time
+            sync_product.save()
 
-        WeizoomHasMallProductRelation.objects.filter(
-            mall_product_id=product_id,
-            weizoom_product_id=sync_product_id).update(sync_time=sync_time)
+            WeizoomHasMallProductRelation.objects.filter(
+                mall_product_id=product_id,
+                weizoom_product_id=sync_product_id).update(sync_time=sync_time)
 
 @when(u"{user}更新商品池商品'{product_name}'于'{sync_time}'")
 def step_impl(context, user, product_name, sync_time):
     url = '/mall2/api/product_pool/'
-    product_id = Product.objects.get(name=product_name, supplier_user_id=0).id
+    product_id = Product.objects.get(name=product_name, supplier_user_id=0, is_deleted=False).id
     args = {
         'product_id': product_id,
         '_method': 'post'
@@ -183,3 +188,4 @@ def step_impl(context, user):
 @when(u"{user}浏览商品池列表第'{page_num}'页")
 def step_impl(context, user, page_num):
     context.page_num = page_num
+
