@@ -7,8 +7,8 @@ from utils.dateutil import now,get_date_after_days
 
 import datetime
 
-@task
-def update_member_purchase_frequency(webapp_id):
+@task(bind=True, time_limit=7200, max_retries=1)
+def update_member_purchase_frequency(self, webapp_id):
 	now = datetime.datetime.now()
 	members = Member.objects.filter(webapp_id=webapp_id, status__in=[SUBSCRIBED, CANCEL_SUBSCRIBED])
 	date_before_30 = get_date_after_days(now,-30)

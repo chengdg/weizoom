@@ -1,0 +1,127 @@
+2016-04-01 15:30:35,772 INFO: init celery
+2016-04-01 15:30:35,772 INFO: loaded `celeryconfig`
+WEAPP_DIR: /Users/guoyucheng/node_project/Weapp
+in run_celery.py
+fname: run_celery.py
+Traceback (most recent call last):
+  File "run_celery.py", line 275, in <module>
+    cmdline = getcmd()
+  File "run_celery.py", line 229, in getcmd
+    all_files = os.listdir(WEAPP_CELERY_LOG_DIR)
+OSError: [Errno 2] No such file or directory: '/Users/guoyucheng/node_project/Weapp/log/celery'
+2016-04-01 15:31:15,305 INFO: init celery
+2016-04-01 15:31:15,306 INFO: loaded `celeryconfig`
+2016-04-01 15:31:15,333 INFO: develop mode, no celery asynchronous behaviors
+2016-04-01 15:31:16,874 INFO: function: <function get at 0x10b087758>
+2016-04-01 15:31:16,874 INFO: function: <function inner at 0x10b087b90>
+WEAPP_DIR: /Users/guoyucheng/node_project/Weapp
+in run_celery.py
+fname: run_celery.py
+celery worker -E -A weapp  --pidfile=/Users/guoyucheng/node_project/Weapp/log/celery/celery-%i.pid  --logfile=/Users/guoyucheng/node_project/Weapp/log/celery/celery-%i.log -l warning
+Traceback (most recent call last):
+  File "run_celery.py", line 280, in <module>
+    sys.exit(entry())
+  File "/Library/Python/2.7/site-packages/celery-3.1.18-py2.7.egg/celery/__main__.py", line 30, in main
+    main()
+  File "/Library/Python/2.7/site-packages/celery-3.1.18-py2.7.egg/celery/bin/celery.py", line 81, in main
+    cmd.execute_from_commandline(argv)
+  File "/Library/Python/2.7/site-packages/celery-3.1.18-py2.7.egg/celery/bin/celery.py", line 769, in execute_from_commandline
+    super(CeleryCommand, self).execute_from_commandline(argv)))
+  File "/Library/Python/2.7/site-packages/celery-3.1.18-py2.7.egg/celery/bin/base.py", line 311, in execute_from_commandline
+    return self.handle_argv(self.prog_name, argv[1:])
+  File "/Library/Python/2.7/site-packages/celery-3.1.18-py2.7.egg/celery/bin/celery.py", line 761, in handle_argv
+    return self.execute(command, argv)
+  File "/Library/Python/2.7/site-packages/celery-3.1.18-py2.7.egg/celery/bin/celery.py", line 693, in execute
+    ).run_from_argv(self.prog_name, argv[1:], command=argv[0])
+  File "/Library/Python/2.7/site-packages/celery-3.1.18-py2.7.egg/celery/bin/worker.py", line 179, in run_from_argv
+    return self(*args, **options)
+  File "/Library/Python/2.7/site-packages/celery-3.1.18-py2.7.egg/celery/bin/base.py", line 274, in __call__
+    ret = self.run(*args, **kwargs)
+  File "/Library/Python/2.7/site-packages/celery-3.1.18-py2.7.egg/celery/bin/worker.py", line 212, in run
+    state_db=self.node_format(state_db, hostname), **kwargs
+  File "/Library/Python/2.7/site-packages/celery-3.1.18-py2.7.egg/celery/worker/__init__.py", line 95, in __init__
+    self.app.loader.init_worker()
+  File "/Library/Python/2.7/site-packages/celery-3.1.18-py2.7.egg/celery/loaders/base.py", line 128, in init_worker
+    self.import_default_modules()
+  File "/Library/Python/2.7/site-packages/celery-3.1.18-py2.7.egg/celery/loaders/base.py", line 116, in import_default_modules
+    signals.import_modules.send(sender=self.app)
+  File "/Library/Python/2.7/site-packages/celery-3.1.18-py2.7.egg/celery/utils/dispatch/signal.py", line 166, in send
+    response = receiver(signal=self, sender=sender, **named)
+  File "/Library/Python/2.7/site-packages/amqp-1.4.6-py2.7.egg/amqp/utils.py", line 42, in __call__
+    self.set_error_state(exc)
+  File "/Library/Python/2.7/site-packages/amqp-1.4.6-py2.7.egg/amqp/utils.py", line 39, in __call__
+    **dict(self.kwargs, **kwargs) if self.kwargs else kwargs
+  File "/Library/Python/2.7/site-packages/celery-3.1.18-py2.7.egg/celery/app/base.py", line 329, in _autodiscover_tasks
+    self.loader.autodiscover_tasks(packages, related_name)
+  File "/Library/Python/2.7/site-packages/celery-3.1.18-py2.7.egg/celery/loaders/base.py", line 251, in autodiscover_tasks
+    related_name) if mod)
+  File "/Library/Python/2.7/site-packages/celery-3.1.18-py2.7.egg/celery/loaders/base.py", line 272, in autodiscover_tasks
+    return [find_related_module(pkg, related_name) for pkg in packages]
+  File "/Library/Python/2.7/site-packages/celery-3.1.18-py2.7.egg/celery/loaders/base.py", line 298, in find_related_module
+    return importlib.import_module('{0}.{1}'.format(package, related_name))
+  File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/importlib/__init__.py", line 37, in import_module
+    __import__(name)
+  File "/Users/guoyucheng/node_project/Weapp/weapp/member/tasks.py", line 11, in <module>
+    import xlsxwriter
+ImportError: No module named xlsxwriter
+2016-04-01 15:32:09,873 INFO: init celery
+2016-04-01 15:32:09,874 INFO: loaded `celeryconfig`
+2016-04-01 15:32:09,895 INFO: develop mode, no celery asynchronous behaviors
+2016-04-01 15:32:11,283 INFO: function: <function get at 0x1091bc6e0>
+2016-04-01 15:32:11,283 INFO: function: <function inner at 0x1091bcb18>
+/Library/Python/2.7/site-packages/celery-3.1.18-py2.7.egg/celery/fixups/django.py:265: UserWarning: Using settings.DEBUG leads to a memory leak, never use this setting in production environments!
+  warnings.warn('Using settings.DEBUG leads to a memory leak, never '
+
+2016-04-01 15:32:54,292 INFO: init celery
+2016-04-01 15:32:54,292 INFO: loaded `celeryconfig`
+
+SIGHUP not supported: Restarting with SIGHUP is unstable on this platform!
+WEAPP_DIR: /Users/guoyucheng/node_project/Weapp
+in run_celery.py
+fname: run_celery.py
+PIDFILE(/Users/guoyucheng/node_project/Weapp/log/celery/celery-0.pid)存在：， 请确认是否Celery已停止运行（ps aux | grep celery）
+
+worker: Warm shutdown (MainProcess)
+WEAPP_DIR: /Users/guoyucheng/node_project/Weapp
+in run_celery.py
+fname: run_celery.py
+celery worker -E -A weapp  --pidfile=/Users/guoyucheng/node_project/Weapp/log/celery/celery-%i.pid  --logfile=/Users/guoyucheng/node_project/Weapp/log/celery/celery-%i.log -l warning
+ 
+ -------------- celery@guoyuchengdeMacBook-Pro.local v3.1.18 (Cipater)
+---- **** ----- 
+--- * ***  * -- Darwin-15.3.0-x86_64-i386-64bit
+-- * - **** --- 
+- ** ---------- [config]
+- ** ---------- .> app:         weapp:0x105d152d0
+- ** ---------- .> transport:   redis://redis.weapp.com:6379//
+- ** ---------- .> results:     redis://redis.weapp.com/3/
+- *** --- * --- .> concurrency: 15 (prefork)
+-- ******* ---- 
+--- ***** ----- [queues]
+ -------------- .> default          exchange=default(direct) key=default
+                .> example.example_echo exchange=celery(direct) key=example.example_echo
+                .> market_tools.tools.shake exchange=celery(direct) key=market_tools.tools.shake
+                .> member           exchange=celery(direct) key=member
+                .> modules.member   exchange=celery(direct) key=modules.member
+                .> services.analysis_message_service exchange=celery(direct) key=services.analysis_message_service
+                .> services.cancel_not_pay_order_service exchange=celery(direct) key=services.cancel_not_pay_order_service
+                .> services.count_keyword_service exchange=celery(direct) key=services.count_keyword_service
+                .> services.daily_page_visit_statistic_service exchange=celery(direct) key=services.daily_page_visit_statistic_service
+                .> services.example_service exchange=celery(direct) key=services.example_service
+                .> services.finish_promotion_service exchange=celery(direct) key=services.finish_promotion_service
+                .> services.oauth_shared_url_service exchange=celery(direct) key=services.oauth_shared_url_service
+                .> services.page_visit_service exchange=celery(direct) key=services.page_visit_service
+                .> services.post_pay_order_service exchange=celery(direct) key=services.post_pay_order_service
+                .> services.post_save_order_service exchange=celery(direct) key=services.post_save_order_service
+                .> services.send_express_poll_service exchange=celery(direct) key=services.send_express_poll_service
+                .> services.send_order_email_service exchange=celery(direct) key=services.send_order_email_service
+                .> services.shared_url_page_visit_service exchange=celery(direct) key=services.shared_url_page_visit_service
+                .> services.start_promotion_service exchange=celery(direct) key=services.start_promotion_service
+                .> services.update_mp_token_service exchange=celery(direct) key=services.update_mp_token_service
+                .> tools.express    exchange=celery(direct) key=tools.express
+                .> watchdog         exchange=celery(direct) key=watchdog
+                .> weixin.message.message_handler exchange=celery(direct) key=weixin.message.message_handler
+                .> weixin.message.qa exchange=celery(direct) key=weixin.message.qa
+                .> weixin.statistics exchange=celery(direct) key=weixin.statistics
+                .> weixin2          exchange=celery(direct) key=weixin2
+
