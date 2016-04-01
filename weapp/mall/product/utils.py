@@ -21,6 +21,7 @@ import logging
 import urllib
 from django.db.models import F
 DING_GROUP_ID = '93756731'
+TEST_DING_GROUP_ID = '80035247'
 
 def process_custom_model(custom_model_str):
     """处理custommodels字符串
@@ -217,19 +218,31 @@ def delete_weizoom_mall_sync_product(request, product, reason):
     try:
         relations = models.WeizoomHasMallProductRelation.objects.filter(mall_product_id=product.id, is_deleted=False)
         if relations.count() > 0:
-            weizoom_product_ids = [relation.weizoom_product_id for relation in relations]
+            weizoom_store_user_ids = []
+            weizoom_product_ids = []
+            weizoom_product_id2user_id = dict()
+            for relation in relations:
+                weizoom_store_user_ids.append(relation.owner_id)
+                weizoom_product_ids.append(relation.weizoom_product_id)
+                weizoom_product_id2user_id[relation.weizoom_product_id] = relation.owner_id
+
+            use_id2store_name = dict([(profile.user_id, profile.store_name)for profile in UserProfile.objects.filter(user_id__in=weizoom_store_user_ids)])
             products = models.Product.objects.filter(id__in=weizoom_product_ids)
             products.update(is_deleted=True)
             relations.update(is_deleted=True)
             stop_promotion(request, weizoom_product_ids)
 
             text = u'商品删除提示：\n'
-            text += u'账号：%s\n' % request.user.username
-            text += u'商品名称：%s\n' % products[0].name
-            text += u'商品位置：%s\n' % (u'在售' if products[0].shelve_type else u'待售')
+            text += u'商品位置：\n'
+            for product in products:
+                text += (use_id2store_name[weizoom_product_id2user_id[product.id]] if use_id2store_name[weizoom_product_id2user_id[product.id]] else '') + '-' + (u'在售' if product.shelve_type else u'待售') + '-' + product.name + '\n'
+            text += u'供货商：%s\n' % request.user_profile.store_name
             text += u'删除原因：%s\n' % DELETED_WEIZOOM_PRODUCT_REASON[reason]
             text += u'请及时处理！'
-            ding_util.send_to_ding(text, DING_GROUP_ID)
+            if request.user.username in ['test02', 'ceshi01', 'tom']:
+                ding_util.send_to_ding(text, TEST_DING_GROUP_ID)
+            else:
+                ding_util.send_to_ding(text, DING_GROUP_ID)
     except:
         error_msg = u"delete_weizoom_mall_sync_product error, cause:\n{}".format(unicode_full_stack())
         watchdog_error(error_msg)
@@ -238,15 +251,28 @@ def update_weizoom_mall_sync_product_status(request, product, update_data):
     try:
         relations = models.WeizoomHasMallProductRelation.objects.filter(mall_product_id=product.id, is_deleted=False)
         if relations.count() > 0:
-            weizoom_product = models.Product.objects.get(id=relations[0].weizoom_product_id)
+            weizoom_store_user_ids = []
+            weizoom_product_ids = []
+            weizoom_product_id2user_id = dict()
+            for relation in relations:
+                weizoom_store_user_ids.append(relation.owner_id)
+                weizoom_product_ids.append(relation.weizoom_product_id)
+                weizoom_product_id2user_id[relation.weizoom_product_id] = relation.owner_id
+
+            use_id2store_name = dict([(profile.user_id, profile.store_name)for profile in UserProfile.objects.filter(user_id__in=weizoom_store_user_ids)])
+            products = models.Product.objects.filter(id__in=weizoom_product_ids)
             text = u'商品更新提示：\n'
-            text += u'账号：%s\n' % request.user.username
-            text += u'商品名称：%s\n' % product.name
-            text += u'商品位置：%s\n' % (u'在售' if weizoom_product.shelve_type else u'待售')
+            text += u'商品位置：\n'
+            for product in products:
+                text += (use_id2store_name[weizoom_product_id2user_id[product.id]] if use_id2store_name[weizoom_product_id2user_id[product.id]] else '') + '-' + (u'在售' if product.shelve_type else u'待售') + '-' + product.name + '\n'
+            text += u'供货商：%s\n' % request.user_profile.store_name
             text += u'更新内容：%s\n' % u'，'.join(update_data)
             text += u'请及时处理！'
             relations.update(is_updated=True)
-            ding_util.send_to_ding(text, DING_GROUP_ID)
+            if request.user.username in ['test02', 'ceshi01', 'tom']:
+                ding_util.send_to_ding(text, TEST_DING_GROUP_ID)
+            else:
+                ding_util.send_to_ding(text, DING_GROUP_ID)
     except:
         error_msg = u"update_weizoom_mall_sync_product_status error, cause:\n{}".format(unicode_full_stack())
         watchdog_error(error_msg)

@@ -167,11 +167,17 @@ def get_settings_detail(request):
     sid = request.GET.get('sid', 0)
     member = request.member
     user_id = request.webapp_owner_id
+    startDate = request.GET.get('startDate', '')
+    endDate = request.GET.get('endDate', '')
     if sid:
         setting = ChannelQrcodeSettings.objects.get(id=sid)
 
         if setting.bing_member_id == request.member.id:
             relations = ChannelQrcodeHasMember.objects.filter(channel_qrcode_id=setting.id)
+            if startDate and endDate:
+                start_date = startDate.replace('/','-') + ' 00:00:00'
+                end_date = endDate.replace('/','-')  + ' 23:59:59'
+                relations = relations.filter(created_at__gte = start_date,created_at__lte = end_date)
             payed_count = 0
             pay_money = 0
             payed_member = []
@@ -236,7 +242,10 @@ def get_settings_detail(request):
                     'channel_qrcode_members_count':relations.count(),
                     'pay_money': '%.2f' %  pay_money,
                     'payed_count': len(set(payed_member)),
-                    'bind_phone_members_count': len(bind_phone_members)
+                    'bind_phone_members_count': len(bind_phone_members),
+                    'startDate': startDate,
+                    'endDate': endDate,
+
                 })
             return render_to_response('%s/channel_qrcode/webapp/channel_qrcode_members.html' % TEMPLATE_DIR, c)
 

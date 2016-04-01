@@ -253,13 +253,12 @@ MALL_ORDER_SECOND_NAV = {
             'name': ORDER_BATCH_DELIVERY,
             'title': u'批量发货',
             'url': 'javascript:void(0);',
-            'permission': 'manage_order_batch_delivery'
-        # },{
-        #     'name': ORDER_MONEY,
-        #     'title': u'结算管理',
-        #     'url': MONEY_HOST + '/weapp/orders_to_money/',
-        #     'permission': 'manage_order_batch_delivery',
-        #     'need_token': True
+            'permission': 'manage_order_batch_delirvery'
+        },{
+            'name': ORDER_MONEY,
+            'title': u'结算管理',
+            'url': '/mall2/orders_to_money/',
+            'permission': 'manage_order_batch_delivery',
         }
     ]
 }
@@ -440,7 +439,7 @@ MALL_PROMOTION_AND_APPS_SECOND_NAV = {
                     'title': u'用户反馈',
                     'url': '/apps/exsurvey/exsurveies/',
                     'permission': '',
-                    'users': ['njtest','ceshi01', 'wzjx001', 'weizoomxs', 'weizoommm', 'weshop', 'weizoomclub', 'weizoomshop'] #这些帐号可以显示用户反馈
+                    'users': ['jobs','njtest','ceshi01', 'wzjx001', 'weizoomxs', 'weizoommm', 'weshop', 'weizoomclub', 'weizoomshop'] #这些帐号可以显示用户反馈
                 },{
                     'name': MALL_APPS_GROUP_NAV,
                     'title': u'团购',

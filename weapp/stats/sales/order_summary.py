@@ -266,7 +266,11 @@ def _get_stats_data(user, start_time, end_time):
 	for order in qualified_orders:
 		# debug
 		# order_id_str += order.order_id + "\n"
-		tmp_paid_amount = float(order.final_price) + float(order.weizoom_card_money)
+		if order.origin_order_id > 0:
+			#商户从微众自营商城同步的子订单需要计算采购价
+			tmp_paid_amount = order.total_purchase_price
+		else:
+			tmp_paid_amount = order.final_price + order.weizoom_card_money
 		paid_amount += tmp_paid_amount
 
 		for r in order.orderhasproduct_set.all():

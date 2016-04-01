@@ -116,7 +116,11 @@ class ManageSummary(resource.Resource):
 		transaction_money = 0.00
 		transaction_nums = get_transaction_orders(webapp_id,low_date,high_date)
 		for transaction in transaction_nums:
-			tmp_transaction_money = round(transaction.final_price,2) + round(transaction.weizoom_card_money,2)
+			if transaction.origin_order_id > 0:
+				#商户从微众自营商城同步的子订单需要计算采购价
+				tmp_transaction_money = round(transaction.total_purchase_price,2)
+			else:
+				tmp_transaction_money = round(transaction.final_price,2) + round(transaction.weizoom_card_money,2)
 			transaction_money += tmp_transaction_money
 
 		#成交订单

@@ -29,7 +29,9 @@ class Command(BaseCommand):
 			all_groups = app_models.Group.objects.all()
 			all_group_details_has_paid = app_models.GroupDetail.objects(is_already_paid=True)
 			all_running_group_relations = app_models.GroupRelations.objects(group_status=app_models.GROUP_RUNNING)
+			all_not_start_group_relations = app_models.GroupRelations.objects(group_status=app_models.GROUP_NOT_START)
 			all_running_group_ids = []
+			all_not_start_group_ids = []
 			for group_relation in all_running_group_relations:
 				all_running_group_ids.append(group_relation.belong_to)
 				timing = (group_relation.created_at + timedelta(days=int(group_relation.group_days)) - datetime.today()).total_seconds()
@@ -61,18 +63,55 @@ class Command(BaseCommand):
 						print e
 						print '------template--------------------------------'
 						print(u'读取拼团模板消息数据失败')
+			"""
+			所有已到15分钟还未开团成功的团购，删除团购记录
+			"""
+			for group_relation in all_not_start_group_relations:
+				all_not_start_group_ids.append(group_relation.belong_to)
+				timing_minutes = (datetime.today() - group_relation.created_at).total_seconds() / 60
+				if timing_minutes >= 15 :
+					group_relation.delete()
+
+			"""
+			所有已到15分钟还未完成支付的参与他人团购，删除团购参与记录
+			"""
+			all_unpaid_group_details = app_models.GroupDetail.objects(is_already_paid=False)
+			for group_detail in all_unpaid_group_details:
+				timing_minutes = (datetime.today() - group_detail.created_at).total_seconds() / 60
+				if timing_minutes >= 15 :
+					try:
+						all_running_group_relations.get(id=group_detail.relation_belong_to).update(
+							dec__grouped_number=1,
+							pop__grouped_member_ids=group_detail.grouped_member_id
+						)
+						group_detail.delete()
+					except:
+						#该团已被删除掉了
+						pass
 
 			"""
 			所有团购活动已结束的团购活动，置为团购失败
 			"""
 			all_end_group_ids = []
+			all_end_not_start_group_ids = []
 			now_time = datetime.today().strftime('%Y-%m-%d %H:%M')
 			all_activities_with_running_groups = app_models.Group.objects(id__in=all_running_group_ids)
+			all_activities_with_not_start_groups = app_models.Group.objects(id__in=all_not_start_group_ids)
 			for group in all_activities_with_running_groups:
 				data_end_time = group.end_time.strftime('%Y-%m-%d %H:%M')
 				if now_time >= data_end_time:
 					all_end_group_ids.append(str(group.id))
+			for group in all_activities_with_not_start_groups:
+				data_end_time = group.end_time.strftime('%Y-%m-%d %H:%M')
+				if now_time >= data_end_time:
+					all_end_not_start_group_ids.append(str(group.id))
 			all_end_group_relations = all_running_group_relations.filter(belong_to__in=all_end_group_ids)
+			all_end_not_start_group_relations = all_not_start_group_relations.filter(belong_to__in=all_end_not_start_group_ids)
+			for group_relation in all_end_not_start_group_relations: #团长未支付的的开团订单需要取消掉
+				group_id = group_relation.id
+				has_placed_order = all_unpaid_group_details.filter(relation_belong_to=str(group_id),order_id__not='')
+				if has_placed_order.count() > 0:
+					update_order_status_by_group_status(group_id,'failure')
 			for group_relation in all_end_group_relations:
 				group_id = group_relation.id
 				group_relation.update(set__group_status=app_models.GROUP_FAILURE)
@@ -102,31 +141,7 @@ class Command(BaseCommand):
 					print '------template--------------------------------'
 					print(u'读取拼团模板消息数据失败')
 
-			"""
-			所有已到15分钟还未开团成功的团购，删除团购记录
-			"""
-			all_not_start_group_relations = app_models.GroupRelations.objects(group_status=app_models.GROUP_NOT_START)
-			for group_relation in all_not_start_group_relations:
-				timing_minutes = (datetime.today() - group_relation.created_at).total_seconds() / 60
-				if timing_minutes >= 15 :
-					group_relation.delete()
 
-			"""
-			所有已到15分钟还未完成支付的参与他人团购，删除团购参与记录
-			"""
-			all_unpaid_group_details = app_models.GroupDetail.objects(is_already_paid=False)
-			for group_detail in all_unpaid_group_details:
-				timing_minutes = (datetime.today() - group_detail.created_at).total_seconds() / 60
-				if timing_minutes >= 15 :
-					try:
-						all_running_group_relations.get(id=group_detail.relation_belong_to).update(
-							dec__grouped_number=1,
-							pop__grouped_member_ids=group_detail.grouped_member_id
-						)
-						group_detail.delete()
-					except:
-						#该团已被删除掉了
-						pass
 			"""
 			发送拼团失败模板消息
 			"""
