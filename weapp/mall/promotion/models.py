@@ -224,6 +224,7 @@ class FlashSale(models.Model):
 	limit_period = models.IntegerField(default=0) #限购周期
 	promotion_price = models.FloatField(default=0.0) #限购价格
 	count_per_purchase = models.IntegerField(default=1) #单人限购数量每次
+	count_per_period = models.IntegerField(default=0)
 
 	class Meta(object):
 		db_table = 'mallpromotion_flash_sale'
@@ -235,7 +236,8 @@ class FlashSale(models.Model):
 			'id': self.id,
 			'limit_period': self.limit_period,
 			'promotion_price': self.promotion_price,
-			'count_per_purchase': self.count_per_purchase
+			'count_per_purchase': self.count_per_purchase,
+			'count_per_period': self.count_per_period
 		}
 
 
