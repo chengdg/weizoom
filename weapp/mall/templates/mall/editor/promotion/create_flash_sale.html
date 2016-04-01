@@ -74,7 +74,7 @@
 					  	<input type="checkbox" class="xa-is-pay-count" name="">
 					  	<span style="display: block;float: right;margin: 3px;">购买次数</span>
 					  </label>
-					  <input type="text" class="form-control w70 xa-promotion-pay-count hide" id="promotion-pay-count" name="promotion-pay-count" value="{% if promotion %}{{promotion.detail.pay_count}}{% endif %}" data-validate="require-notempty,,require-price::请输入数字" data-validate-function="validatePromotionPrice"/>
+					  <input type="text" class="form-control w70 xa-promotion-pay-count hide" id="count_per_purchase" name="count_per_purchase" value="{% if promotion %}{{promotion.detail.pay_count}}{% endif %}" data-validate="require-notempty,,require-price::请输入数字" data-validate-function="validatePromotionPrice"/>
 
 					  <div class="errorHint ml110 xa-promotion-pay-count-errorHint"></div>
 				</div>
