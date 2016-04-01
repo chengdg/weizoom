@@ -17,6 +17,14 @@
 	display:block;white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
 	width:135px!important;
 }
+.xui-member-brief-remark {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 260px!important;
+  border: 0px;
+}
 </style>
 {% endblock %}
 {% block content-panel %}
@@ -150,7 +158,9 @@
       		<label class="vt">备注信息：</label>
       		<div class="xui-value f14">
       			<textarea class="xui-textarea-mark xa-isEdited hidden" id="member_remarks" name="member_remarks" placeholder="" rows=4 value="{{ show_member_info.member_remarks }}">{{ show_member_info.member_remarks }}</textarea>
-						<span class="xa-display f12">{% if show_member_info.member_remarks %}{{show_member_info.member_remarks}}{% else %}-{% endif %}</span>
+            <span class="xui-member-brief-remark xa-display f12" title="{% if show_member_info.member_remarks %}{{show_member_info.member_remarks}}{% else %}-{% endif %}">
+              {% if show_member_info.member_remarks %}{{show_member_info.member_remarks}}{% else %}-{% endif %}
+            </span>
 					</div>
 				</div>
 			</div>
