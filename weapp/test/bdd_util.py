@@ -84,6 +84,15 @@ def login(user, password=None, **kwargs):
 	return client
 
 
+def get_openid(member_id, webapp_owner_id):
+	"""
+	获取openid
+	"""
+	webapp_id = get_webapp_id_via_owner_id(webapp_owner_id)
+	m = member_models.MemberHasSocialAccount.objects.get(member_id=member_id, webapp_id=webapp_id)
+	return m.account.openid
+
+
 def get_webapp_id_for(username):
 	"""
 	获取user对应的webapp id
