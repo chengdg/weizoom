@@ -113,33 +113,25 @@
                 scope: this,
                 success: function(data) {
 
-                    var all = 0;
-                    for(var i in data.series[0].data){
 
-                        all+= data.series[0].data[i].value;
-                    }
+                    option = {
+                    // tooltip : {
+                    //     trigger: 'item',
+                    //     formatter: "{a} <br/>{b} : {c} ({d}%)"
+                    // },
+                        calculable : true,
+                        series : [
+                            {
+                                type:'pie',
+                                radius : '40%',
+                                center: ['50%', '60%'],
+                                data: data.series[0].data
+                            }
+                        ]
+                    };
+                    var theChart = echarts.init(document.getElementById('memberPurchaseScale'));
+                    theChart.setOption(option);
 
-                    if(all!=0){
-                        option = {
-                        // tooltip : {
-                        //     trigger: 'item',
-                        //     formatter: "{a} <br/>{b} : {c} ({d}%)"
-                        // },
-                            calculable : true,
-                            series : [
-                                {
-                                    type:'pie',
-                                    radius : '40%',
-                                    center: ['50%', '60%'],
-                                    data: data.series[0].data
-                                }
-                            ]
-                        };
-                        var theChart = echarts.init(document.getElementById('memberPurchaseScale'));
-                        theChart.setOption(option);
-                    }else{
-{#                        $("#memberPurchaseScale").innerHTML = "还没有会员复购"#}
-                    }
 
                 },
                 error: function(resp) {
@@ -161,33 +153,23 @@
                 },
                 scope: this,
                 success: function(data) {
-                    var all = 0;
-                    for(var i in data.series[0].data){
-
-                        all+= data.series[0].data[i].value;
-                    }
-                    if(all!=0){
-                        option = {
+                    option = {
                         // tooltip : {
                         //     trigger: 'item',
                         //     formatter: "{a} <br/>{b} : {c} ({d}%)"
                         // },
-                            calculable : true,
-                            series : [
-                                {
-                                    type:'pie',
-                                    radius : '40%',
-                                    center: ['50%', '60%'],
-                                    data: data.series[0].data
-                                }
-                            ]
-                        };
-                        var theChart = echarts.init(document.getElementById('rePurchaseAnalysis'));
-                        theChart.setOption(option);
-                    }else{
-                        //没有数据的提示
-                    }
-
+                        calculable : true,
+                        series : [
+                            {
+                                type:'pie',
+                                radius : '40%',
+                                center: ['50%', '60%'],
+                                data: data.series[0].data
+                            }
+                        ]
+                    };
+                    var theChart = echarts.init(document.getElementById('rePurchaseAnalysis'));
+                    theChart.setOption(option);
                 },
                 error: function(resp) {
                     alert('获取统计数据失败!');
