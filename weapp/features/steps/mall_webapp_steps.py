@@ -220,7 +220,8 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 		if len(promotions) > 0 and (promotions[0].member_grade_id <= 0 or \
 				promotions[0].member_grade_id == member_grade_id):
 			# 存在促销信息，且促销设置等级对该会员开放
-			return promotions[0].id
+			if promotions[0].type != PROMOTION_TYPE_INTEGRAL_SALE:
+				return promotions[0].id
 		return 0
 
 	settings = IntegralStrategySttings.objects.filter(webapp_id=context.webapp_id)
@@ -323,7 +324,8 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 		"card_pass": '',
 		"xa-choseInterfaces": PAYNAME2ID.get(args.get("pay_type",u"微信支付"),-1)
 	}
-	if 'integral' in args and args['integral'] > 0:
+
+	if 'product_integral' in args and args['product_integral'] > 0:
 		# 整单积分抵扣
 		# orderIntegralInfo:{"integral":20,"money":"10.00"}"
 		orderIntegralInfo = dict()
@@ -389,7 +391,7 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 	else:
 		context.created_order_id = -1
 		context.response_json = response_json
-		context.server_error_msg = response_json['data']['msg']
+		context.server_error_msg = response_json['innerErrMsg']
 		print("buy_error----------------------------",context.server_error_msg,response)
 	if context.created_order_id != -1:
 		if 'date' in args:
@@ -466,7 +468,8 @@ def step_impl(context, webapp_owner_name):
 				# 先为会员赋予积分,再使用积分
 				# TODO 修改成jobs修改bill积分
 				context.execute_steps(u"When %s获得%s的%s会员积分" % (webapp_user_name, webapp_owner_name, row['integral']))
-			data['products'][0]['integral'] = tmp
+			# data['products'][0]['integral'] = tmp  #duhao 20160405注释掉，改用product_integral，用来区分整单抵扣积分和积分应用抵扣积分
+			data['products'][0]['product_integral'] = tmp
 
 		if row.get('coupon', '') != '':
 			if ',' in row['coupon']:
