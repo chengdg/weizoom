@@ -3,6 +3,16 @@
 {% load account_filter %}
 
 {% block content-panel %}
+<style>
+#userAnalysis {
+	width: 200px;
+	height: 200px;
+	background-color: #FFF3F3; /* Can be set to transparent */
+    border: 5px #FFC6C8 solid;
+	-webkit-border-radius: 100px;
+}
+
+</style>
 <div class="xui-wepage-BIPage xui-rePurchaseAnalyzePage">
     <div class="relative">
         <ul class="breadcrumb">
@@ -20,6 +30,40 @@
                 <option value="1">已关注</option>
                 <option value="0">取消关注</option>
             </select>
+        </div>
+        <div class="xui-charWrap" style="height:400px;">
+            <div class="xui-i-title">
+                <div class="xui-i-block"></div>
+                <span class="ml5">
+                    用户分析
+                </span>
+                <span class="fr f12 xui-setConsumption pr">
+                    <span class="xui-setConsumptionBtn2 xa-setConsumptionBtn2 mr10 pr">条件设置</span>
+                    <div class="pa xui-consumptionBox xa-consumptionBox2 xui-hide">
+                        <div class="">
+                            <span>购买次数：</span>
+                            <input type="text" placeholder="请输入整数" class="xui-comsumptionNum xui-comsumptionuserNum0">&nbsp;-&nbsp;
+                            <input type="text" placeholder="请输入整数" class="xui-comsumptionNum xui-comsumptionuserNum1">
+                            <div class="errorHint"></div>
+                        </div>
+                        <div class="">
+                            <span>消费金额：</span>
+                            <input type="text" placeholder="请输入整数" class="xui-comsumptionNum xui-comsumptionuserNum2">&nbsp;-&nbsp;
+                            <input type="text" placeholder="请输入整数" class="xui-comsumptionNum xui-comsumptionuserNum3">
+                            <div class="errorHint"></div>
+                        </div>
+                        <div class="fr btn btn-primary m0 xui-confirm xa-confirmuserBtn">确认</div>
+                        <div class="cRed fr mr5 xui-hide xa-crossuserHint">格式不正确，请输入整数</div>
+                    </div>
+                </span>
+            </div>
+            <div id="userAnalysis" class="pr" style="top:60px;text-align: center;margin:0 auto;vertical-align:middle;">
+                <span id="user_buy_count" style="font-size: 40px;line-height: 200px;color: red;">0</span>
+
+            </div>
+            <div  class="pr" style="top:60px;text-align: center;margin:0 auto;vertical-align:middle;font-size: 20px; font: bold;">
+                已圈养用户
+            </div>
         </div>
         <div class="xui-charWrap fl" style="height:400px;">
             <div class="xui-i-title"> <div class="xui-i-block"></div><span class="ml5">会员购买占比</span></div>
@@ -176,6 +220,8 @@
                 }
             });
         }
+
+
         rePurchaseAnalysis();
 
         var $setConsumptionBtn = $('.xui-setConsumptionBtn');
@@ -186,6 +232,15 @@
         $setConsumptionBtn.click(function() {
             // $consumptionBox.show();
             $consumptionBox.toggleClass('xui-hide');
+        });
+        var $setConsumptionBtn2 = $('.xui-setConsumptionBtn2');
+        var $confirmuserBtn = $('.xa-confirmuserBtn');
+        var $consumptionBox2 = $('.xa-consumptionBox2');
+        var $comsumptionuserNum = $('.xui-comsumptionuserNum');
+        var $crossuserHint = $('.xa-crossuserHint');
+        $setConsumptionBtn2.click(function() {
+            // $consumptionBox.show();
+            $consumptionBox2.toggleClass('xui-hide');
         });
     
         console.log('$comsumptionNum',$comsumptionNum);
@@ -246,6 +301,73 @@
                 // console.log('search_pay_list',search_pay_list)
                 localStorage.setItem('k',search_pay_list)
                 rePurchaseAnalysis();
+            }
+        });
+        {#我不会写前端        #}
+
+        //复购会员
+        search_pay_m_list = [];
+        search_pay_times_list = [];
+        function userAnalysis(){
+            W.getApi().call({
+                app: 'stats',
+                resource: 'user_analysis',
+                method: 'get',
+                args: {
+                    is_subscribed: is_subscribed,
+                    pay_times:search_pay_times_list,
+                    pay_money:search_pay_m_list
+                },
+                scope: this,
+                success: function(data) {
+
+                   $("#user_buy_count")[0].innerHTML = data.fans_num;
+                },
+                error: function(resp) {
+                    alert('获取统计数据失败!');
+                }
+            });
+        }
+        userAnalysis();
+        $confirmuserBtn.click(function(){
+            var is_checked = true;
+            search_pay_m_list = [];
+            search_pay_times_list = [];
+            $comsumptionuserNum.map(function(i,val){
+                console.log(i,val.value)
+                $('.xui-comsumptionuserNum'+i).css('border','1px solid #ccc');
+                var value = Number(val.value);
+
+                var re =  /^[1-9]+[0-9]*]*$/;
+                console.log('re.test(value)',re.test(value))
+                if(re.test(value) === false){
+
+                    $crossHint.text('格式不正确，请输入整数').show();
+                    $('.xui-comsumptionuserNum'+i).css('border','1px solid #DB4343');
+                    is_checked = false;
+                }
+                if(i==2 || i==3){
+                    search_pay_m_list.push(value);
+                }else{
+                    search_pay_times_list.push(value);
+                }
+
+            });
+            console.log('search_pay_list>>>>',search_pay_list)
+            console.log('search_pay_times_list>>>>',search_pay_times_list)
+
+            if(search_pay_times_list[0]>search_pay_times_list[1]){
+                $crossuserHint.text('购买次数区间需逐渐递增，不能交叉').show();
+            }
+            if(search_pay_m_list[0]>search_pay_m_list[1]){
+                $crossuserHint.text('消费额区间需逐渐递增，不能交叉').show();
+            }
+
+            if(is_checked){
+                $consumptionBox.hide();
+{#                // console.log('search_pay_list',search_pay_list)#}
+{#                localStorage.setItem('k',search_pay_list)#}
+                userAnalysis();
             }
         });
 
