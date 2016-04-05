@@ -200,7 +200,7 @@ def step_impl(context, user, type_name):
 
     # for i in range(len(expected)):
     #     print expected[i]['name'], "-----", actual[i]['name']
-    #     print expected[i]['user_code'], "-----", actual[i]['user_code']
+    #     print expected[i]['actions'], "-----", actual[i]['actions']
 
     bdd_util.assert_list(expected, actual)
 
@@ -418,7 +418,10 @@ def __get_products(context, type_name=u'在售'):
 
         if product['is_self']:
             actions.append(u'修改')
-        if not(product['purchase_price'] == "0" and mall_type == 1):
+
+        if type_name == u"在售":
+            actions.append(u'下架')
+        elif type_name == u"待售":
             actions.append(u'上架')
         actions.append(u'彻底删除')
         product['actions'] = actions

@@ -269,10 +269,10 @@ def update_weizoom_mall_sync_product_status(request, product, update_data):
             text += u'更新内容：%s\n' % u'，'.join(update_data)
             text += u'请及时处理！'
             relations.update(is_updated=True)
-            # if settings.MODE in ['develop', 'test'] or request.user.username == 'ceshi01':
-            #     ding_util.send_to_ding(text, TEST_DING_GROUP_ID)
-            # else:
-            #     ding_util.send_to_ding(text, DING_GROUP_ID)
+            if settings.MODE in ['develop', 'test'] or request.user.username == 'ceshi01':
+                ding_util.send_to_ding(text, TEST_DING_GROUP_ID)
+            else:
+                ding_util.send_to_ding(text, DING_GROUP_ID)
     except:
         error_msg = u"update_weizoom_mall_sync_product_status error, cause:\n{}".format(unicode_full_stack())
         watchdog_error(error_msg)
