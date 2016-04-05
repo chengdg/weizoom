@@ -521,6 +521,7 @@ INSTALLED_TASKS = [
     'services.analysis_message_service',
     'services.count_keyword_service',
     'services.send_express_poll_service',
+    'services.update_member_purchase_frequency'
 ]
 
 

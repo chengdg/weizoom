@@ -2,21 +2,19 @@
 	<div class="modal">
 	<div class="modal-dialog xui-memberOrderPayDialog">
 	<div class="modal-content">
-			<div class="modal-header">
-				<button aria-hidden="true" data-dismiss="modal" class="close" type="button"><span aria-hidden="true">&times;</span></button>
-				<h3 class="modal-title">
-				好友列表
+		<div class="modal-header">
+			<button aria-hidden="true" data-dismiss="modal" class="close" type="button"><span aria-hidden="true">&times;</span></button>
+			<h3 class="modal-title">
+			好友列表
 
-				<span style="margin-left: 220px;">好友：<font class="friend_count"></font>
-				</span>
-				<span> 贡献：<font class="fans_count"></font></span>
-				<input type="checkbox" class="show_fans" name="show_fans" style="margin-right:5px;margin-top:2px;vertical-align: sub;">只看贡献
-				</h3>
-			</div>
-			<div class="modal-body" style="height: 500px;overflow: auto;">
-			</div>
-
-
+			<span style="margin-left: 220px;">好友：<font class="friend_count"></font>
+			</span>
+			<span> 贡献：<font class="fans_count"></font></span>
+			<input type="checkbox" class="show_fans" name="show_fans" style="margin-right:5px;margin-top:2px;vertical-align: sub;">只看贡献
+			</h3>
+		</div>
+		<div class="modal-body" style="height: 500px;overflow: auto;">
+		</div>
 	</div>
 	</div>
 	</div>
@@ -25,82 +23,148 @@
 <script id="member-detail-relations-dialog-tmpl-src" type="text/x-jquery-tmpl">
 	<div class="modal">
 	<div class="modal-dialog xui-memberOrderPayDialog">
-	<div class="modal-content">
-			<div class="modal-header">
-				<button aria-hidden="true" data-dismiss="modal" class="close" type="button"><span aria-hidden="true">&times;</span></button>
-				<h3 class="modal-title">
-				好友列表
-
-				</h3>
-			</div>
-			<div class="modal-body" 
-				data-ui-role="advanced-table"
-				data-app="member"
-				data-resource="follow_relations"
-				data-template-id="#member-relations-dialog-one-relation-tmpl-src"
-				data-enable-paginator="true"
-				data-enable-sort="true"
-				data-init-sort="-created_at"
-				data-selectable="false"
-				data-item-count-per-page="6"
-				data-auto-load="false">
-			</div>
-
-
+	<div class="modal-content w700">
+		<div class="modal-header">
+			<button aria-hidden="true" data-dismiss="modal" class="close" type="button"><span aria-hidden="true">&times;</span></button>
+			<h3 class="modal-title">
+			二维码引流会员
+			</h3>
+		</div>
+		<div class="modal-body p20 pt0" 
+			data-ui-role="advanced-table"
+			data-app="member"
+			data-resource="follow_relations"
+			data-template-id="#member-relations-dialog-one-relation-tmpl-src"
+			data-enable-paginator="true"
+			data-init-sort="-created_at"
+			data-selectable="false"
+			data-item-count-per-page="8"
+			data-auto-load="false">
+		</div>
 	</div>
 	</div>
 	</div>
 </script>
 
 <script id="member-relations-dialog-one-relation-tmpl-src" type="text/x-jquery-tmpl">
-	{{each(i, member) items}}
-	<div data-id="${id}" style="overflow: hidden; margin-top:10px">
-		<div style="background-color:red;">
-			<div class="column_block xui-memberHeader">
-				<a href="/member/detail/?id=${id}" class="pr" style="float: left;margin-left: 25px">
-				{{if is_subscribed == 0}}
-					<div class="xui-cancelCover tc">
-					已取消
+<!--推荐人数、下单人数、成交金额-->
+<div>
+	{{if data.data_value != 'purchase'}}
+		<div class="mr50 xui-fontGary fl cursor-text"><strong>推荐人数：${data.population}</strong></div>
+	{{/if}}
+	<div class="mr50 xui-fontGary fl cursor-text"><strong>下单人数：${data.population_order}</strong></div>
+	<div class="xui-fontGary fl cursor-text"><strong>成交金额：￥${data.amount}</strong></div>
+</div>
+<div class="cb mb5"></div>
+<table style="width:100%;border:1px solid #ddd; table-layout: fixed;" class="table xb-stripedTable xb-noBorder">
+	<thead style="background:#c8d2e5;">
+	<tr class="">
+		<th width="150">会员</th>
+		<th width="94" class="tx_sortable xui-colorBlue" data-sort-attr='pay_count' data-sort-direction="up">购买次数</th>
+		<th width="100" class="tx_sortable xui-colorBlue" data-sort-attr='pay_money' data-sort-direction="up">消费金额</th>
+		<th width="100" class="tx_sortable xui-colorBlue" data-sort-attr='integral' data-sort-direction="up">积分</th>
+		<th width="90">来源</th>
+		<th width="90" class="tx_sortable xui-colorBlue" data-sort-attr='created_at' data-init-sort="-created_at" data-sort-direction="up">时间</th>
+	</tr>
+	</thead>
+
+	<tbody>
+ 	{{if items.length}}
+		{{each(i, member) items}}
+		<tr data-id="${id}">
+			<td class="pl15">
+				<div style="display:table ;line-height:42px; margin-left:10px;">
+					<a target="_blank" href="/member/detail/?id=${id}" style="display: table-cell;vertical-align:top">
+					<div class="pr">
+						{{if is_subscribed == 0}}
+						<div class="xui-cancelCover tc">已取消</div>
+						{{/if}}
+						<img src="{{if user_icon}}${user_icon}{{else}}/static/aa.jpg{{/if}}" onerror="this.src='/static/img/user-1.jpg'"style="width:42px;" />
 					</div>
+					</a>
+					<div style="display: table-cell;vertical-align:top;padding-left:8px; line-height:21px;text-align:left;">
+						<a target="_blank" href="/member/detail/?id=${id}" >{{html username}}</a>
+						<div>${grade_name}</div>
+					</div>
+				</div>
+			</td>
+		    <td>${pay_times} </td>
+		    <td>${pay_money} </td>
+		    <td>${integral} </td>
+		    <td style="color:#333333;">
+	    		<span><span style="">
+				{{if source == 0}}
+					直接关注
 				{{/if}}
-				<img src="{{if user_icon}}${user_icon}{{else}}/static/aa.jpg{{/if}}" onerror="this.src='/static/img/user-1.jpg'"style="width: 60px;" />
-				</a>
-			</div>
-			<div style="float: left;  margin-left: 12px;margin-top: 1px;">
-				<a href="/member/detail/?id=${id}" class="xi-member-name">{{html username}}</a><br>
-				<div style="margin-top: 15px;">${grade_name}</span>&nbsp;&nbsp;&nbsp;&nbsp;</div>
-			</div>
-		</div>
-
-		<div style="width:350px;float:right;margin-right: -170px;">
-			<div>积分: ${integral}</div>
-			<div style="margin-top: 5px;">
-				<span>来源：<span style="{{if is_fans}}padding:4px 3px;background-color:#008000;color:#fff;border-radius:3px;{{/if}}{{if is_father}}padding:4px 3px;background-color:#FF0000;color:#fff;border-radius:3px;{{/if}}">
-					{{if source == 0}}
-						直接关注
-					{{/if}}
-					{{if source == 1}}
-						推广扫码
-					{{/if}}
-					{{if source == 2}}
-						会员分享
-					{{/if}}
-					{{if source == -1}}
-						直接关注
-					{{/if}}
-					</span>
-				</span>
-			</div>
-			<div style="margin-top: 4px;" class="relation-block">
-			<span style="color:#808080;">${created_at}</span>
-		</div>
-		</div>
-
-		
-	</div>
-	{{/each}}
+				{{if source == 1}}
+					推广扫码
+				{{/if}}
+				{{if source == 2}}
+					会员分享
+				{{/if}}
+				{{if source == -1}}
+					直接关注
+				{{/if}}
+				</span></span>
+		    </td>
+		    <td >${created_at} </td>
+		</tr>
+		{{/each}}
+	{{else}}
+		<tr rowspan='6' ><td colspan='6' class="h130 xui-fontGary" >暂无数据</td></tr>
+	{{/if }}
+	</tbody>
+</table>
 
 </script>
+
+<!--
+
+{{each(i, member) items}}
+<div data-id="${id}" style="overflow: hidden; margin-top:10px">
+	<div style="background-color:red;">
+		<div class="column_block xui-memberHeader">
+			<a href="/member/detail/?id=${id}" class="pr" style="float: left;margin-left: 25px">
+			{{if is_subscribed == 0}}
+				<div class="xui-cancelCover tc">
+				已取消
+				</div>
+			{{/if}}
+			<img src="{{if user_icon}}${user_icon}{{else}}/static/aa.jpg{{/if}}" onerror="this.src='/static/img/user-1.jpg'"style="width: 60px;" />
+			</a>
+		</div>
+		<div style="float: left;  margin-left: 12px;margin-top: 1px;">
+			<a href="/member/detail/?id=${id}" class="xi-member-name">{{html username}}</a><br>
+			<div style="margin-top: 15px;">${grade_name}</span>&nbsp;&nbsp;&nbsp;&nbsp;</div>
+		</div>
+	</div>
+
+	<div style="width:350px;float:right;margin-right: -170px;">
+		<div>积分: ${integral}</div>
+		<div style="margin-top: 5px;">
+			<span>来源：<span style="{{if is_fans}}padding:4px 3px;background-color:#008000;color:#fff;border-radius:3px;{{/if}}{{if is_father}}padding:4px 3px;background-color:#FF0000;color:#fff;border-radius:3px;{{/if}}">
+				{{if source == 0}}
+					直接关注
+				{{/if}}
+				{{if source == 1}}
+					推广扫码
+				{{/if}}
+				{{if source == 2}}
+					会员分享
+				{{/if}}
+				{{if source == -1}}
+					直接关注
+				{{/if}}
+				</span>
+			</span>
+		</div>
+		<div style="margin-top: 4px;" class="relation-block">
+		<span style="color:#808080;">${created_at}</span>
+	</div>
+	</div>		
+</div>
+{{/each}}
+-->
 
 <!-- <script id="member-relations-dialog-one-relation-tmpl-src" type="text/x-jquery-tmpl">
 	{{each(i, member) items}}

@@ -4,11 +4,12 @@
 import random
 from datetime import timedelta, datetime
 from django.db import IntegrityError, transaction
-from django.db.models import F
+from django.db.models import F, Q
 
 from mall.promotion import models as promotion_models
 from mall.promotion.models import Coupon
 from mall.promotion.utils import coupon_id_maker
+from mall.models import *
 
 from market_tools.tools.coupon.tasks import send_message_to_member
 
@@ -284,3 +285,19 @@ def award_coupon_for_member(coupon_rule_info, member):
 	"""
 	rule = promotion_models.CouponRule.objects.get(id=coupon_rule_info.id)
 	coupons = consume_coupon(rule.owner, rule.id, member.id)
+
+
+def get_member_coupons(member, status=-1):
+	orders = Order.objects.filter(webapp_user_id__in=member.get_webapp_user_ids, coupon_id__gt=1).filter(status__in=[ORDER_STATUS_NOT, ORDER_STATUS_PAYED_SUCCESSED, ORDER_STATUS_PAYED_NOT_SHIP, ORDER_STATUS_PAYED_SHIPED, ORDER_STATUS_SUCCESSED])
+	coupon_ids = [order.coupon_id for order in orders]
+
+	if status == -1:
+		member_coupons = Coupon.objects.filter(Q(member_id=member.id)| Q(id__in=coupon_ids)).order_by('-provided_time', '-coupon_record_id', '-id')
+	else:
+		member_coupons = Coupon.objects.filter(Q(member_id=member.id)| Q(id__in=coupon_ids)).filter(status=status).order_by('-provided_time', '-coupon_record_id', '-id')
+
+	return member_coupons
+
+
+
+

@@ -1,0 +1,100 @@
+<script id="member-detail-coupons-dialog-tmpl-src" type="text/x-jquery-tmpl">
+	<div class="modal">
+	<div class="modal-dialog xui-memberOrderPayDialog">
+	<div class="modal-content w700">
+		<div class="modal-header">
+			<button aria-hidden="true" data-dismiss="modal" class="close" type="button"><span aria-hidden="true">&times;</span></button>
+			<h3 class="modal-title">
+			优惠劵明细
+			</h3>
+		</div>
+		<div class="modal-body p20 pt0" 
+			data-ui-role="advanced-table"
+			data-app="member"
+			data-resource="member_coupon"
+			data-template-id="#member-coupons-dialog-one-coupon-tmpl-src"
+			data-enable-paginator="true"
+			data-init-sort="-created_at"
+			data-selectable="false"
+			data-item-count-per-page="10"
+			data-auto-load="false">
+		</div>
+	</div>
+	</div>
+	</div>
+</script>
+
+<script id="member-coupons-dialog-one-coupon-tmpl-src" type="text/x-jquery-tmpl">
+<table style="width:100%;border:1px solid #ddd; table-layout: fixed;" class="table xb-stripedTable xb-noBorder">
+	<thead style="background:#c8d2e5;">
+	<tr class="">
+		<th width="13%">领取时间</th>
+		<th width="15%">优惠劵名称</th>
+		<th width="16%">明细</th>
+	    <th width="10%" class="tx_filterable" data-is-select="false">
+	    	<div class="dropdown pr">
+				<p class="m0 dropdown-toggle xui-colorBlue" data-toggle="dropdown">
+				{{if data.status == -1}}
+					全部
+				{{/if}}
+				{{if data.status == 0}}
+					未使用
+				{{/if}}
+				{{if data.status == 1}}
+					已使用
+				{{/if}}
+				{{if data.status == 2}}
+					已过期
+				{{/if}}
+				</p>
+				<ul class="dropdown-menu" style="min-width: 100px!important;">
+	                <li><a href="javascript:void(0);" data-attr='status' data-value="-1" style="line-height:28px">
+	                	全部
+	                </a></li>
+					<li><a href="javascript:void(0);" data-attr='status' data-value="0" style="line-height:28px">
+						未使用
+					</a></li>
+					<li><a href="javascript:void(0);" data-attr='status' data-value="1" style="line-height:28px">
+						已使用
+					</a></li>
+					<li><a href="javascript:void(0);" data-attr='status' data-value="2" style="line-height:28px">
+						已过期
+					</a></li>
+				</ul>
+			</div>
+	    </th>
+		<th width="20%">去处</th>
+	</tr>
+	</thead>
+
+	<tbody>
+ 	{{if items.length}}
+		{{each(i, coupon) items}}		
+		<tr data-id="">
+			<td>${provided_time}</td>
+		    <td class="coupon_name_in_dialog">
+		    	${coupon_name}
+		    </td>
+		    <td>${coupon_detail}</td>
+		    <td>
+		    	{{if coupon_state == '已过期'}}
+		    	<span style="color: red;">${coupon_state}</span>
+		    	{{else}}${coupon_state}
+		    	{{/if}}
+		    </td>
+		    <td>
+		    	{{if coupon_whereabouts.type == 1}}
+		    	<a href="/mall2/order/?order_id=${coupon_whereabouts.orderid}" target="_blank">${coupon_whereabouts.content}</a>
+		    	{{else}}
+		    	${coupon_whereabouts.content}
+		    	{{/if}}
+		    </td>
+		</tr>
+		{{/each}}
+	{{else}}
+		<tr rowspan='6' ><td colspan='5' class="h130 xui-fontGary" >暂无数据</td></tr>
+	{{/if }}
+	</tbody>
+</table>
+
+</script>

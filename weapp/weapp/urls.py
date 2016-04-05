@@ -111,6 +111,11 @@ urlpatterns = patterns('',
     url(r'^openapi/', restful_url2('openapi')),
 
     url(r'^cloud_housekeeper/', restful_url2('cloud_housekeeper')),
+
+	# 会员收货地址信息
+    url(r'^member_shipinfo/', restful_url2('member_shipinfo')),
+	url(r'^member_browse_record/', restful_url2('member_browse_record')),
+	url(r'^member_coupon/', restful_url2('member_coupon')),
 )
 
 urlpatterns += staticfiles_urlpatterns()

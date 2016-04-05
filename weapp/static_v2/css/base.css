@@ -598,6 +598,9 @@ select{
 .xui-mainPanel .xui-sideBar-employeeManagement{
 	background-position: -144px -40px;
 }
+.xui-mainPanel .xui-sideBar-orderMoney{
+	background-position: -144px -63px;
+}
 .xui-mainPanel .xui-sideBar > ul{
 	margin-top:10px;
 }

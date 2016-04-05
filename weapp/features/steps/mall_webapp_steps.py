@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import json
+import requests
 from urllib import unquote
 from datetime import datetime, timedelta
 
@@ -181,10 +182,10 @@ def step_impl(context, webapp_user_name):
 
 
 
-
 @when(u"{webapp_user_name}购买{webapp_owner_name}的商品")
 def step_impl(context, webapp_user_name, webapp_owner_name):
-	"""最近修改: yanzhao
+	"""最近修改: duhao 20160401
+	weapp中一些BDD仍然需要购买相关的测试场景，在这里调用apiserver的接口实现购买操作
 	e.g.:
 		{
 			"order_id": "" # 订单号
@@ -208,11 +209,7 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 			]
 		}
 	"""
-	url = '/webapp/api/project_api/call/'
-	if hasattr(context, 'caller_step_purchase_info') and context.caller_step_purchase_info:
-		args = context.caller_step_purchase_info
-	else:
-		args = json.loads(context.text)
+	args = json.loads(context.text)
 
 	def __get_current_promotion_id_for_product(product, member_grade_id):
 		promotion_ids = [r.promotion_id for r in ProductHasPromotion.objects.filter(product_id=product.id)]
@@ -295,7 +292,7 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 		# 		"money": round(integral / integral_each_yuan, 2)
 		# 	}
 
-	order_type = args.get('type', 'normal')
+	order_type = args.get('type', 'object')
 
 	# 处理中文地区转化为id，如果数据库不存在的地区则自动添加该地区
 	ship_area = get_area_ids(args.get('ship_area'))
@@ -321,7 +318,7 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 		"group2integralinfo": json.JSONEncoder().encode(group2integralinfo),
 		"card_name": '',
 		"card_pass": '',
-		"xa-choseInterfaces": PAYNAME2ID.get(args.get("pay_type",""),-1)
+		"xa-choseInterfaces": PAYNAME2ID.get(args.get("pay_type",u"微信支付"),-1)
 	}
 	if 'integral' in args and args['integral'] > 0:
 		# 整单积分抵扣
@@ -335,6 +332,8 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 		data["orderIntegralInfo"] = json.JSONEncoder().encode(orderIntegralInfo)
 	if order_type == u'测试购买':
 		data['order_type'] = PRODUCT_TEST_TYPE
+	else:
+		data['order_type'] = order_type
 	if u'weizoom_card' in args:
 		for card in args[u'weizoom_card']:
 			data['card_name'] += card[u'card_name'] + ','
@@ -352,16 +351,38 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 		data['is_use_coupon'] = 'true'
 		data['coupon_id'] = coupon
 
-	response = context.client.post(url, data)
-	context.response = response
+	access_token = bdd_util.get_access_token(member.id, webapp_owner_id)
+
+	url = 'http://api.weapp.com/wapi/mall/order/?_method=put'
+	data['access_token'] = access_token
+	response = requests.post(url, data=data)
 	#response结果为: {"errMsg": "", "code": 200, "data": {"msg": null, "order_id": "20140620180559"}}
 
-	response_json = json.loads(context.response.content)
+	response_json = json.loads(response.text)
+	context.response = response_json
 
 	# raise '----------------debug test----------------------'
 	if response_json['code'] == 200:
 		# context.created_order_id为订单ID
 		context.created_order_id = response_json['data']['order_id']
+
+		#访问支付结果链接
+		pay_url_info = response_json['data']['pay_url_info']
+		pay_type = pay_url_info['type']
+		del pay_url_info['type']
+		if pay_type == 'cod':
+			pay_url = 'http://api.weapp.com/wapi/pay/pay_result/?_method=put'
+			data = {
+				'pay_interface_type': pay_url_info['pay_interface_type'],
+				'order_id': pay_url_info['order_id'],
+				'access_token': access_token
+			}
+			pay_response = requests.post(url, data=data)
+			pay_response_json = json.loads(pay_response.text)
+
+		#同步更新支付时间
+		if Order.objects.get(order_id=context.created_order_id).status > ORDER_STATUS_CANCEL and args.has_key('payment_time'):
+			Order.objects.filter(order_id=context.created_order_id).update(payment_time=bdd_util.get_datetime_str(args['payment_time']))
 	else:
 		context.created_order_id = -1
 		context.response_json = response_json
@@ -1006,11 +1027,14 @@ def _get_shopping_cart_parameters(webapp_user_id, context):
 
 @when(u"{webapp_user_name}设置{webapp_owner_name}的webapp的默认收货地址")
 def step_impl(context, webapp_user_name, webapp_owner_name):
+	expected = json.loads(context.text)
+	area_str = expected['area'].replace(',', ' ')
+	area_id = bdd_util.get_ship_area_id_for(area_str)
 	data = {
-		'area': '1_1_8',
-		'ship_address': '泰兴大厦',
-		'ship_name': webapp_user_name,
-		'ship_tel': '13811223344'
+		'area': area_id,
+		'ship_address': expected['ship_address'],
+		'ship_name': expected['ship_name'],
+		'ship_tel': expected['ship_tel']
 	}
 
 	#from modules.member.models import ShipInfo

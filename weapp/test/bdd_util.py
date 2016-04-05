@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import json
-#import time
+import requests
 from datetime import datetime, timedelta
 import re
 
@@ -82,6 +82,22 @@ def login(user, password=None, **kwargs):
 		context.webapp_id = client.user.profile.webapp_id
 
 	return client
+
+
+def get_openid(member_id, webapp_owner_id):
+	"""
+	获取openid
+	"""
+	webapp_id = get_webapp_id_via_owner_id(webapp_owner_id)
+	m = member_models.MemberHasSocialAccount.objects.get(member_id=member_id, webapp_id=webapp_id)
+	return m.account.openid
+
+def get_access_token(member_id, webapp_owner_id):
+	url = 'http://api.weapp.com/wapi/user/access_token/?_method=put'
+	openid = get_openid(member_id, webapp_owner_id)
+	response = requests.post(url, data={'woid': webapp_owner_id, 'openid': openid})
+	r_data = json.loads(response.text)
+	access_token = r_data['data']['access_token']
 
 
 def get_webapp_id_for(username):
@@ -466,3 +482,11 @@ def escape_date_string(str):
 	str = re.sub(ur"\$\(今天\)", get_current_date(), str)
 	#str = re.sub(r'\$\(今天\+1\)', get_current_date(), str)
 	return str
+
+
+def judge_date_today_for_meanning(str):
+	local_date = time.strftime('%Y-%m-%d', time.localtime(time.time()))
+	if local_date == str:
+		return u'今天'
+	else:
+		return  u'其他'
