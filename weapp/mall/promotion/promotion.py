@@ -135,7 +135,8 @@ class Promotion(resource.Resource):
             buy_in_supplier_products = models.Product.objects.filter(owner=request.manager, buy_in_supplier=True)
             buy_in_supplier_product_ids = [product.id for product in buy_in_supplier_products]
             for product_id in buy_in_supplier_product_ids:
-                id2product.pop(product_id)
+                if id2product.has_key(product_id):
+                    id2product.pop(product_id)
 
             # 将已选择的商品id改为 can_select 改为 False
             for product_id in selectedProductIds:
