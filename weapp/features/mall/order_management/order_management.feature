@@ -136,7 +136,7 @@ Background:
 		}
 		"""
 
-@mall2 @order @editMoney @duhao
+@mall2 @order @editMoney
 Scenario: 1 修改待支付订单的价格，减少订单金额
 	bill创建订单后
 	1.jobs修改订单'001'的价格

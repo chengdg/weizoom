@@ -209,7 +209,10 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 			]
 		}
 	"""
-	args = json.loads(context.text)
+	if hasattr(context, 'caller_step_purchase_info') and context.caller_step_purchase_info:
+		args = context.caller_step_purchase_info
+	else:
+		args = json.loads(context.text)
 
 	def __get_current_promotion_id_for_product(product, member_grade_id):
 		promotion_ids = [r.promotion_id for r in ProductHasPromotion.objects.filter(product_id=product.id)]
