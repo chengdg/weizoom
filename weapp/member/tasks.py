@@ -8,21 +8,23 @@ from watchdog.utils import watchdog_error
 from core.exceptionutil import unicode_full_stack
 from django.conf import settings
 from mall.models import Order, STATUS2TEXT,ORDER_STATUS_SUCCESSED
-import xlwt
+import xlsxwriter
 import os
 import time
 
-@task(bind=True, max_retries=2)
+@task(bind=True, time_limit=7200, max_retries=2)
 def send_export_job_task(self, exportjob_id, filter_data_args, sort_attr, type, filename):
 
 	export_jobs = ExportJob.objects.filter(id=exportjob_id)
 	if type == 0:
+		filename = "member_{}.xlsx".format(exportjob_id)
+		dir_path_excel = "excel"
+		dir_path = os.path.join(settings.UPLOAD_DIR, dir_path_excel)
+		file_path = "{}/{}".format(dir_path,filename)
+		workbook   = xlsxwriter.Workbook(file_path)
+		table = workbook.add_worksheet()
 		try:
 			members = Member.objects.filter(**filter_data_args).order_by(sort_attr)
-			file = xlwt.Workbook(encoding='utf-8')
-			table = file.add_sheet('name',cell_overwrite_ok=True)
-
-
 
 			members_info = [u'ID', u'昵称',u'性别',u'备注名',
 				 u'姓名',u'绑定手机号',u'备注',u'积分',u'会员等级',u'好友数',u'好友关系',
@@ -213,22 +215,17 @@ def send_export_job_task(self, exportjob_id, filter_data_args, sort_attr, type, 
 					for i in range(len(info_list)):
 						table.write(tmp_count, i, info_list[i])
 				member_count_write += 1
-				export_jobs.update(processed_count=member_count_write)
-			filename = "member_{}.xls".format(exportjob_id)
-			dir_path_excel = "excel"
-			dir_path = os.path.join(settings.UPLOAD_DIR, dir_path_excel)
-
-			file_path = "{}/{}".format(dir_path,filename)
-			file.save(file_path)
-			
+				export_jobs.update(processed_count=member_count_write,update_at=datetime.now())
+			workbook.close()
 			upyun_path = '/upload/excel/{}'.format(filename)
 			yun_url = upyun_util.upload_image_to_upyun(file_path, upyun_path)
-			export_jobs.update(status=1,file_path=yun_url)
+			export_jobs.update(status=1,file_path=yun_url,update_at=datetime.now())
 
 			 
 		except:
 			notify_message = "导出会员任务失败,response:{}".format(unicode_full_stack())
 			export_jobs.update(status=2,is_download=1)
 			watchdog_error(notify_message)
+
 
 

@@ -380,6 +380,7 @@ class Member(models.Model):
 	country = models.CharField(default='', max_length=50)
 	sex = models.IntegerField(default=0, verbose_name='性别')
 	status = models.IntegerField(default=1, db_index=True)
+	purchase_frequency =  models.IntegerField(default=0) #30天购买次数
 
 	class Meta(object):
 		db_table = 'member_member'
@@ -826,6 +827,16 @@ class MemberFollowRelation(models.Model):
 			except:
 				return None
 		return None
+
+	@staticmethod
+	def get_follow_members_purchase_for(member_id):
+		try:
+			follow_relations = MemberFollowRelation.objects.filter(member_id=member_id, is_fans=True).order_by('-id')
+			follow_member_ids = [relation.follower_member_id for relation in follow_relations]
+			return Member.objects.filter(id__in=follow_member_ids, status__in=[SUBSCRIBED, CANCEL_SUBSCRIBED], pay_times__gt=0)
+		except:
+			return []
+
 
 class MemberSharedUrlInfo(models.Model):
 	member = models.ForeignKey(Member)

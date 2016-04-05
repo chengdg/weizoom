@@ -145,25 +145,37 @@ def step_impl(context, user, member):
     bdd_util.assert_dict(actual, expected)
 
 
+STATUS2TEXT = {
+    0: u'待支付',
+    1: u'已取消',
+    2: u'已支付',
+    3: u'待发货',
+    4: u'已发货',
+    5: u'已完成',
+    6: u'退款中',
+    7: u'退款成功',
+    8: u'退款中',
+    9: u'退款成功',
+}
 @then(u"{user}获得'{member}'的订单列表")
 def step_impl(context, user, member):
-    response = _get_member_info(context, member)
-    orders = response.context['orders']
-    actual = []
-    for order in orders:
-        actual.append(dict(
-                order_id = order.order_id,
-                order_amount = "%.2f" % order.final_price,
-                date = order.created_at.strftime("%Y-%m-%d"),
-                order_status = STATUS2TEXT[order.status]
-            ))
-    if context.table:
-        expected = []
-        for order in context.table:
-            order = order.as_dict()
-            expected.append(dict(order))
+    url = '/member/api/order_list/'
+    response = context.client.get(url, {'id': context.member_id})
+    items = json.loads(response.content)['data']['items']
+    for item in items:
+        item["order_amount"] = float(item["final_price"])
+        item["date"] = item["created_at"].split()[0]
+        item["order_status"]=STATUS2TEXT[item["order_status"]]
 
-    bdd_util.assert_list(actual, expected)
+    expected = []
+    if context.table:
+        for row in context.table:
+            cur_p = row.as_dict()
+            cur_p["order_amount"] = float(cur_p["order_amount"])
+            expected.append(cur_p)
+
+    bdd_util.assert_list(expected, items)
+
 
 @when(u"{webapp_user_name}访问{share_member}分享{webapp_owner_name}的微站链接")
 def step_impl(context, webapp_user_name, share_member, webapp_owner_name):
@@ -196,16 +208,17 @@ def step_impl(context, user, member):
 
 @then(u"{user}获得'{member}'的浏览轨迹")
 def step_impl(context, user, member):
-    response = _get_member_info(context, member)
+    member_id = bdd_util.get_member_by_username(member, context.webapp_id).id
+    url = '/member/api/member_browse_record/?id='+str(member_id)
+    response = context.client.get(bdd_util.nginx(url))
+    items = json.loads(response.content)['data']['items']
     expected = json.loads(context.text)
 
-    member_browse_records = response.context['member_browse_records']
-
     actual = []
-    for record in member_browse_records:
+    for record in items:
         actual.append(dict(
-            date_time = record.created_at.strftime("%Y-%m-%d"),
-            link = record.title
+            date_time = record['create_at'].split()[0],
+            link = record['tittle']
         ))
 
     for item in expected:
@@ -298,15 +311,26 @@ def step_impl(context):
 
 @Then(u"{user}获得'{member}'的收货信息列表")
 def step_impl(context, user, member):
+    member_id = bdd_util.get_member_by_username(member, context.webapp_id).id
+    url = '/member/api/member_shipinfo/?id='+str(member_id)
     expected = json.loads(context.text)
-    response = _get_member_info(context, member)
+    response = context.client.get(bdd_util.nginx(url))
+    items = json.loads(response.content)['data']['items']
     actual = []
-    for ship_info in response.context['ship_infos']:
-        ship = {}
-        ship['area'] = regional_util.get_str_value_by_string_ids(ship_info.area)
-        ship['area'] = ','.join(ship['area'].split())
-        ship['ship_address'] = ship_info.ship_address
-        ship['ship_name'] = ship_info.ship_name
-        ship['ship_tel'] = ship_info.ship_tel
-        actual.append(ship)
+    for record in items:
+		# detail = record['coupon_detail'].split()[0]
+		actual.append(dict(
+			ship_name=record['ship_name'],
+			ship_tel=record['ship_tel'],
+			area=','.join(record['area'].split()),
+			ship_address=record['ship_address'],
+		))
+    # for ship_info in response.context['ship_infos']:
+    #     ship = {}
+    #     ship['area'] = regional_util.get_str_value_by_string_ids(ship_info.area)
+    #     ship['area'] = ','.join(ship['area'].split())
+    #     ship['ship_address'] = ship_info.ship_address
+    #     ship['ship_name'] = ship_info.ship_name
+    #     ship['ship_tel'] = ship_info.ship_tel
+    #     actual.append(ship)
     bdd_util.assert_list(actual, expected)

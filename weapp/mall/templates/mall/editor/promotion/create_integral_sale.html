@@ -83,7 +83,7 @@
 							<div class="oversetting">
 								<div class="xa-rule mt10 ml20" data-member-grade-id="-1">
 									<span class="discountTypeText">全部会员：</span>抵扣上限
-									<input type="text" style="width: 60px;" class="formColor xa-discount" data-validate="require-percent"/> % <label style="width: 80px;" for="discount_money">抵扣金额：</label>
+									<input type="text" style="width: 60px;" class="formColor xa-discount" data-validate="require-float"/> % <label style="width: 80px;" for="discount_money">抵扣金额：</label>
 									<span class="xa-discount-money">0.0</span>元
 									<div class="errorHint ml110 mt5 discountError" data-error-hint='请设置1-100之间的整数'></div>
 								</div>
@@ -274,7 +274,7 @@ $(document).ready(function() {
 		function(o){
 			if (this.value == 0) {
 				$(".oversetting").find("input").removeAttr("disabled");
-				$(".oversetting").find("input").attr("data-validate","require-percent");
+				$(".oversetting").find("input").attr("data-validate","require-float");
 				var inputs = $(".membersetting").find("input");
 				for(var i = 0; i < inputs.length; i++) {
 					$(inputs[i]).attr("disabled","disabled");

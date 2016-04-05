@@ -64,7 +64,10 @@ W.view.member.MemberUpdateIntegralView = W.view.common.DropBox.extend({
                 if (_this.dataView){
                     _this.dataView.reload();
                 }else{
-                    window.location.reload();
+                    //window.location.reload();
+                    if ($('#J_Integral')) {
+                      $('#J_Integral').text(data.integral);
+                    }
                 }
                 
             },

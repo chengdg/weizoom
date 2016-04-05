@@ -53,7 +53,8 @@ class ProductList(resource.Resource):
           如果shelve_type没有被提供， 将触发TypeError异常
         """
         mall_type = request.user_profile.webapp_type
-        shelve_type = int(request.GET.get("shelve_type", 1))
+        shelve_type_get = request.GET.get("shelve_type", 1)
+        shelve_type = int(shelve_type_get if shelve_type_get.isdigit() else 1)
         has_product = models.Product.objects.filter(
             owner=request.manager,
             shelve_type=shelve_type,

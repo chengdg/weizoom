@@ -1030,11 +1030,14 @@ def _get_shopping_cart_parameters(webapp_user_id, context):
 
 @when(u"{webapp_user_name}设置{webapp_owner_name}的webapp的默认收货地址")
 def step_impl(context, webapp_user_name, webapp_owner_name):
+	expected = json.loads(context.text)
+	area_str = expected['area'].replace(',', ' ')
+	area_id = bdd_util.get_ship_area_id_for(area_str)
 	data = {
-		'area': '1_1_8',
-		'ship_address': '泰兴大厦',
-		'ship_name': webapp_user_name,
-		'ship_tel': '13811223344'
+		'area': area_id,
+		'ship_address': expected['ship_address'],
+		'ship_name': expected['ship_name'],
+		'ship_tel': expected['ship_tel']
 	}
 
 	#from modules.member.models import ShipInfo

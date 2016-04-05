@@ -127,7 +127,7 @@ Background:
 			}
 			"""
 
-@mall2 @send_coupon @eugene
+@mall2 @send_coupon @eugene @tht
 Scenario:1 发优惠券-优惠券发送记录按照[优惠券名称]查询
 	Given jobs登录系统
 

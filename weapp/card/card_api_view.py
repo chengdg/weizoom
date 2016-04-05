@@ -570,9 +570,9 @@ def create_weizoom_cards(request):
         response.errMsg = u'您填写的名称已存在，请修改后再提交!'
     return response.get_response()
 
-@api(app='card', resource='all_cards', action='get')
+@api(app='card', resource='all_cards', action='post')
 @login_required
-def get_all_cards(request):
+def post_all_cards(request):
     count_per_page = int(15)
     cur_page = int(request.GET.get('page', '1'))
     search_query = request.GET.get('query','')
@@ -597,9 +597,10 @@ def get_all_cards(request):
     if len(card_ids_need_expire) > 0:
         WeizoomCard.objects.filter(id__in=card_ids_need_expire).update(is_expired=True)
     pageinfo, weizoom_cards = paginator.paginate(weizoom_cards, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
-
-    weizoom_card_rule = WeizoomCardRule.objects.all()
-    card_recharge = WeizoomCardRecharge.objects.all()
+    rule_card_ids = set([weizoom_card.weizoom_card_rule_id for weizoom_card in weizoom_cards])
+    w_card_ids = set([weizoom_card.id for weizoom_card in weizoom_cards])
+    weizoom_card_rule = WeizoomCardRule.objects.filter(id__in=rule_card_ids)
+    card_recharge = WeizoomCardRecharge.objects.filter(card_id__in=w_card_ids)
     id2recharge_money = {}
     for card in card_recharge:
         if card.card_id not in id2recharge_money:
