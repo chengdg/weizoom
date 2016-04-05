@@ -185,13 +185,7 @@ Background:
 			"""
 		When jobs批量将商品放入待售
 			"""
-			[{
-				"name": "tom商品1"
-			}, {
-				"name": "bill商品2"
-			}, {
-				"name": "bill商品1"
-			}]
+			["name": "tom商品1","name": "bill商品2","name": "bill商品1"]
 			"""
 		When jobs更新商品'bill商品1'
 			"""
