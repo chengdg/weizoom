@@ -82,7 +82,7 @@ Scenario:1 创建限时抢购活动,设置购买次数限制
 			"count_per_purchase":"",
 			"promotion_price": 80.00,
 			"limit_period":"",
-			"buy_counts":1
+			"count_per_period":1
 		},{
 			"name": "商品2限时抢购",
 			"promotion_title":"",
@@ -93,7 +93,7 @@ Scenario:1 创建限时抢购活动,设置购买次数限制
 			"count_per_purchase":2,
 			"promotion_price": 80.00,
 			"limit_period":1,
-			"buy_counts":2
+			"count_per_period":2
 		}]
 		"""
 	Then jobs获取限时抢购活动列表
