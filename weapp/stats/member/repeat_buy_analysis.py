@@ -152,3 +152,49 @@ class BuyPercent(resource.Resource):
 					u"购买5次以上的会员\n人数:{}\n占比:{}".format(bought_fans_5_after,format(float(Decimal(bought_fans_5_after)/Decimal(all_buy_fnas)),'.2%') if all_buy_fnas!=0 else '0%'):bought_fans_5_after
 				}
 			)
+
+class UserAnalysis(resource.Resource):
+	"""
+	会员购买占比
+	"""
+	app = 'stats'
+	resource = 'user_analysis'
+
+	@login_required
+	def api_get(request):
+		"""
+		会员购买占比数据
+		默认会员分为1、2、3-5、5以上 几个阶段 显示人数、占比
+		, pay_times__gte=2
+		"""
+
+		webapp_id = request.user_profile.webapp_id
+		# all 全部， 1 关注 0 取消关注
+		is_subscribed = request.GET.get('is_subscribed','all') # 会员是否关注
+		pay_times = request.GET.get('pay_times','') # 会员是否关注
+		pay_money = request.GET.get('pay_money','') # 会员是否关注
+
+		if is_subscribed == 'all':
+			is_subscribed = [0,1]
+		elif is_subscribed == '1':
+			is_subscribed = [1]
+		elif is_subscribed == '0':
+			is_subscribed = [0]
+
+		if pay_times !='' and pay_money!='':
+			pay_times_arr = pay_times.split(',')
+			pay_money_arr = pay_money.split(',')
+			buy_fans_count = Member.objects.filter(webapp_id=webapp_id, is_for_test=False,is_subscribed__in=is_subscribed,status__in=[0,1])\
+				.filter(pay_times__gte=pay_times_arr[0],pay_times__lte=pay_times_arr[1]).filter(pay_money__gte=pay_money_arr[0],pay_money__lt=pay_money_arr[1]).count()
+
+		else:
+			buy_fans_count = Member.objects.filter(webapp_id=webapp_id, is_for_test=False,is_subscribed__in=is_subscribed,status__in=[0,1])\
+				.filter(pay_times__gte=1).count()
+
+		response = create_response(200)
+		response.data = {
+			"fans_num":buy_fans_count
+		}
+		return response.get_response()
+
+
