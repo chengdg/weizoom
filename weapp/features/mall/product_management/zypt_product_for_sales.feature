@@ -528,7 +528,7 @@ Background:
 		}]
 		"""
 
-@eugene @product_pool
+@mall2 @product_pool @eugene
 Scenario:1 自营平台把商品从商品池放入待售商品列表，获取待售商品列表
 	jobs把商品放入待售列表，nokia把商品放入待售列表
 	1.jobs获得商品池商品列表
@@ -626,7 +626,7 @@ Scenario:1 自营平台把商品从商品池放入待售商品列表，获取待
 		}]
 		"""
 
-@eugene @product_pool
+@mall2 @product_pool @eugene
 Scenario:2 自营平台修改待售列表的商品
 
 	#自营平台jobs登录
@@ -881,7 +881,7 @@ Scenario:2 自营平台修改待售列表的商品
 		}]
 		"""
 
-@eugene @product_pool
+@mall2 @product_pool @eugene
 Scenario:3 自营平台把商品从商品池放入待售商品列表后，商户(供货商)修改商品
 	bill修改商品后，tom修改商品后
 	1.已放入待售列表，商品池更新，同步时间变更
@@ -1172,7 +1172,7 @@ Scenario:3 自营平台把商品从商品池放入待售商品列表后，商户
 		}
 		"""
 
-@eugene @product_pool
+@mall2 @product_pool @eugene
 Scenario:4 自营平台把商品从商品池放入待售商品列表后，商户(供货商)下架商品和删除商品
 	商户下架商品和删除商品
 	1.自营平台的商品池和待售列表自动删除此商品
@@ -1223,7 +1223,7 @@ Scenario:4 自营平台把商品从商品池放入待售商品列表后，商户
 		}]
 		"""
 
-@eugene @product_pool
+@mall2 @product_pool @eugene
 Scenario:5 自营平台把商品从商品池放入待售商品列表后，商户(供货商)修改商品为多规格
 	商户修改商品为多规格
 	1.自营平台的商品池和待售列表自动删除此商品
@@ -1326,7 +1326,7 @@ Scenario:5 自营平台把商品从商品池放入待售商品列表后，商户
 		}]
 		"""
 
-@eugene @product_pool
+@mall2 @product_pool @eugene
 Scenario:6 自营平台把商品从商品池放入待售商品列表后，上架商品再下架
 	#自营平台jobs登录
 	Given jobs登录系统
@@ -1500,7 +1500,7 @@ Scenario:6 自营平台把商品从商品池放入待售商品列表后，上架
 		}]
 		"""
 
-@eugene @product_pool
+@mall2 @product_pool @eugene
 Scenario:7 自营平台把商品从商品池放入待售商品列表上架商品后，商户修改商品
 	#自营平台jobs登录
 	Given jobs登录系统
@@ -1681,7 +1681,7 @@ Scenario:7 自营平台把商品从商品池放入待售商品列表上架商品
 		}]
 		"""
 
-@eugene @product_pool
+@mall2 @product_pool @eugene
 Scenario:8 自营平台把商品从商品池放入待售商品列表后，删除商品
 	自营平台删除商品，不影响商户
 
@@ -1749,7 +1749,7 @@ Scenario:8 自营平台把商品从商品池放入待售商品列表后，删除
 		}]
 		"""
 
-@eugene @product_pool
+@mall2 @product_pool @eugene
 Scenario:9 自营平台把商品从商品池放入待售商品列表后，自营平台创建商品
 	#自营平台jobs登录
 	Given jobs登录系统
@@ -1783,6 +1783,7 @@ Scenario:9 自营平台把商品从商品池放入待售商品列表后，自营
 		[{
 			"name": "jobs商品1",
 			"supplier":"土小宝",
+			"user_code":"1",
 			"purchase_price": 9.00,
 			"created_at": "2015-08-03 12:30",
 			"model": {
@@ -1945,7 +1946,7 @@ Scenario:9 自营平台把商品从商品池放入待售商品列表后，自营
 		}]
 		"""
 
-@eugene @product_pool
+@mall2 @product_pool @eugene
 Scenario:10 待售商品列表查询
 	#自营平台jobs登录
 	Given jobs登录系统
