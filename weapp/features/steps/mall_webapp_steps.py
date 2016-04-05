@@ -351,11 +351,7 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 		data['is_use_coupon'] = 'true'
 		data['coupon_id'] = coupon
 
-	url = 'http://api.weapp.com/wapi/user/access_token/?_method=put'
-	openid = bdd_util.get_openid(member.id, webapp_owner_id)
-	response = requests.post(url, data={'woid': webapp_owner_id, 'openid': openid})
-	r_data = json.loads(response.text)
-	access_token = r_data['data']['access_token']
+	access_token = bdd_util.get_access_token(member.id, webapp_owner_id)
 
 	url = 'http://api.weapp.com/wapi/mall/order/?_method=put'
 	data['access_token'] = access_token
@@ -381,7 +377,8 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 				'order_id': pay_url_info['order_id'],
 				'access_token': access_token
 			}
-			context.client.post(pay_url, data)
+			pay_response = requests.post(url, data=data)
+			pay_response_json = json.loads(pay_response.text)
 
 		#同步更新支付时间
 		if Order.objects.get(order_id=context.created_order_id).status > ORDER_STATUS_CANCEL and args.has_key('payment_time'):
