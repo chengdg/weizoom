@@ -567,7 +567,7 @@ Background:
 			}]
 			"""
 
-@product @product_pool @eugene
+@mall2 @product @product_pool @eugene
 Scenario:1 有效商家的"无规格"的上架的"待售商品管理"中的商品展示到商品池
 	#自营平台商品池,只可以浏览到商家在售商品列表中无规格的商品
 		Given jobs登录系统
@@ -646,7 +646,7 @@ Scenario:1 有效商家的"无规格"的上架的"待售商品管理"中的商�
 			}]
 			"""
 
-@product @product_pool @eugene
+@mall2 @product @product_pool @eugene
 Scenario:2 有效商家上下架"无规格"的没有同步的商品,商品池中展示的商品变化
 	#商家bill上下架无规格的没有同步的商品
 		Given bill登录系统
@@ -691,7 +691,7 @@ Scenario:2 有效商家上下架"无规格"的没有同步的商品,商品池中
 			}]
 			"""
 
-@product @product_pool @eugene
+@mall2 @product @product_pool @eugene
 Scenario:3 有效商家修改未同步商品的【库存】【商品名称】【商品编码】,商品池中展示的商品变化
 	#商家bill修改在售商品的【库存】【商品名称】【商品编码】,商品池中展示的商品对应字段对应更新变化
 		Given bill登录系统
@@ -781,7 +781,7 @@ Scenario:3 有效商家修改未同步商品的【库存】【商品名称】【
 			}]
 			"""
 
-@product @product_pool @eugene
+@mall2 @product @product_pool @eugene
 Scenario:4 自营平台同步商品池中的商品
 	#1 不同的自营平台同步商家商品,对商品池中的商品的"商品信息","供货商","库存"没有影响,同步的商品放入待售列表
 	#2 同步商品的如下字段：除了【店内分组】,【会员折扣】,【运费设置】,【支付方式】,【商品发票】,【配送时间】,【总销量】,【采购价】其他字段都同步
@@ -1034,7 +1034,7 @@ Scenario:4 自营平台同步商品池中的商品
 			}
 			"""
 
-@product @product_pool @eugene
+@mall2 @product @product_pool @eugene
 Scenario:5 自营平台同步的商品在"待售列表",商家更新被自营平台同步商品的【商品名称】【促销标题】
 	#1 商家修改被自营平台同步的商品,自营平台商品池对应商品【状态】字段变为"待更新",商品的【操作】字段变为"更新"
 	#2 更新商品除部分字段（【店内分组】【会员折扣】【运费设置】【支付方式】【总销量】【库存】）保留自营平台更改值,其他的都更新成与商家同步
@@ -1434,7 +1434,7 @@ Scenario:5 自营平台同步的商品在"待售列表",商家更新被自营平
 			}
 			"""
 
-@product @product_pool @eugene
+@mall2 @product @product_pool @eugene
 Scenario:6 自营平台同步商品在"在售列表",商家更新被自营平台同步商品的【商品条码】【起购数量】
 	#同步到自营平台上架的在"在售列表"商品,商品池中更新,自动下架到待售列表
 
@@ -1847,7 +1847,7 @@ Scenario:6 自营平台同步商品在"在售列表",商家更新被自营平台
 			}
 			"""
 
-@product @product_pool @eugene
+@mall2 @product @product_pool @eugene
 Scenario:7 自营平台同步商品参与限时抢购或买赠活动,商家更新被自营平台同步商品的【商品单价】【商品编码】
 	#同步到自营平台上的商品,上架之后再更新,自动下架到待售列表,参与的活动自动结束
 	#更新同步商品时,不同更新的字段保留自营平台修改后的值不变
@@ -2264,7 +2264,7 @@ Scenario:7 自营平台同步商品参与限时抢购或买赠活动,商家更�
 			}]
 			"""
 
-@product @product_pool @eugene
+@mall2 @product @product_pool @eugene
 Scenario:8 自营平台同步商品参与积分应用或优惠券活动,商家更新被自营平台同步商品的【商品重量】【商品图片】
 	#同步到自营平台上的商品,上架之后再更新,自动下架到待售列表,参与的活动自动结束
 	#更新同步商品时,不同更新的字段保留自营平台修改后的值不变
@@ -2667,7 +2667,7 @@ Scenario:8 自营平台同步商品参与积分应用或优惠券活动,商家�
 			}]
 			"""
 
-@product @product_pool @eugene
+@mall2 @product @product_pool @eugene
 Scenario:9 自营平台同步商品,商家更新被自营平台同步商品的【商品描述】
 	#同步到自营平台上的商品,上架之后再更新,自动下架到待售列表
 	#更新同步商品时,不同更新的字段保留自营平台修改后的值不变
@@ -2817,7 +2817,7 @@ Scenario:9 自营平台同步商品,商家更新被自营平台同步商品的�
 			}
 			"""
 
-@product @product_pool @eugene
+@mall2 @product @product_pool @eugene
 Scenario:10 商家更新被自营平台同步商品的【店铺分组】【会员折扣】【运费设置】【支付方式】【商品发票】【配送时间】【库存】,不触发自营平台商品的更新
 	#jobs自营平台同步商品池中的商品
 		Given jobs登录系统
@@ -2909,7 +2909,7 @@ Scenario:10 商家更新被自营平台同步商品的【店铺分组】【会�
 			}]
 			"""
 
-@product @product_pool @eugene
+@mall2 @product @product_pool @eugene
 Scenario:11 商家更新被自营平台同步商品的规格为多规格,自营平台的对应商品被删除
 	#jobs自营平台同步商品池中的商品
 		Given jobs登录系统
@@ -3047,7 +3047,7 @@ Scenario:11 商家更新被自营平台同步商品的规格为多规格,自营�
 			[]
 			"""
 
-@product @product_pool @eugene
+@mall2 @product @product_pool @eugene
 Scenario:12 商家下架或删除被自营平台同步商品,自营平台的对应商品被删除,商品参加的活动结束
 	#jobs自营平台同步商品池中的商品
 		Given jobs登录系统
@@ -3353,7 +3353,7 @@ Scenario:12 商家下架或删除被自营平台同步商品,自营平台的对�
 			}]
 			"""
 
-@product @product_pool @eugene
+@mall2 @product @product_pool @eugene
 Scenario:13 自营平台删除同步的商品,商品池中的对应商品变为未同步模式,可以再同步
 	#jobs自营平台同步商品池中的商品,删除商品
 		Given jobs登录系统
@@ -3523,7 +3523,7 @@ Scenario:13 自营平台删除同步的商品,商品池中的对应商品变为�
 			}
 			"""
 
-@product @product_pool @eugene
+@mall2 @product @product_pool @eugene
 Scenario:14 自营平台对商家商品"批量放入待售"
 	Given jobs登录系统
 
@@ -3617,7 +3617,7 @@ Scenario:14 自营平台对商家商品"批量放入待售"
 			}]
 			"""
 
-@product @product_pool @eugene
+@mall2 @product @product_pool @eugene
 Scenario:15 "查看失效商品"功能
 	#jobs自营平台同步商品池中的商品
 		Given jobs登录系统
@@ -3884,7 +3884,7 @@ Scenario:15 "查看失效商品"功能
 			}]
 			"""
 
-@product @product_pool @eugene
+@mall2 @product @product_pool @eugene
 Scenario:16 商品池的搜索功能
 	#jobs自营平台同步商品池中的商品
 		Given jobs登录系统
@@ -4242,7 +4242,8 @@ Scenario:16 商品池的搜索功能
 				"actions": ["放入待售"]
 			}]
 			"""
-@product @product_pool @eugene
+
+@mall2 @product @product_pool @eugene
 Scenario:17 商品池的分页功能
 	#商品池列表分页
 		Given jobs登录系统
