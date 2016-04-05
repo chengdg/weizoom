@@ -193,6 +193,7 @@ def step_create_flash_sales(context, user):
 						'limit_period': promotion.get('limit_period', 0),
 						'promotion_price': promotion.get('promotion_price', 1),
 						'count_per_purchase': promotion.get('count_per_purchase', 9999999),
+						'count_per_period': promotion.get('count_per_period', 0),
 				}
 
 				url = '/mall2/api/flash_sale/?_method=put'
