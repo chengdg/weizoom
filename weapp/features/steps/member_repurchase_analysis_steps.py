@@ -48,9 +48,26 @@ def step_impl(context, user):
 @then(u'{user}获得复购会员分析统计数据')
 def step_impl(context, user):
 
-	 # coupon_info = json.loads(context.text)
-	# bdd_util.assert_list(expected_data, actual_data)
-	pass
+	client = context.client
+
+
+	url = '/stats/api/repeat_buy_analysis/?is_subscribed=all'
+	if hasattr(context,'search_pay_list'):
+		url += '&search_pay_list='+context.search_pay_list
+	print "zl--------------------------------------------------------"
+	response = client.get(url)
+	content = json.loads(response.content)
+	print "zl---------------------------",content
+	print "zl---------------------------",content['data'][u'series'][0]['data']
+	actual_real_list =content['data'][u'series'][0]['data']
+	actual_list = []
+	for actual_dict in actual_real_list:
+		actual_list.append(actual_dict['name'])
+	expected_data = json.loads(context.text)
+	print "zl-----------------",expected_data
+	print "zl-----------------",actual_list
+	print bdd_util.assert_list(expected_data, actual_list)
+
 
 @when(u'{user}设置筛选条件')
 def step_impl(context, member_a, user):
@@ -63,18 +80,40 @@ def step_impl(context, member_a, user):
 
 @when(u'{user}设置消费总额')
 def step_impl(context, member_a, user):
-	# if hasattr(context, 'client'):
-	# 	context.client.logout()
-	# context.client = bdd_util.login(user)
+	"""
+		{
+			"one_interval_mini":0,
+			"one_interval_max":180,
+			"two_interval_mini":190,
+			"two_interval_max":700,
+			"three_interval_mini":701,
+			"three_interval_max":900
+		}
+
+	"""
+	context.search_pay_list =",".join(json.loads(context.text).values())
+
+
+
+
+@then(u'{user}获得用户分析统计数据')
+def step_impl(context, user):
 	client = context.client
-	user = UserFactory(username=user)
-	# user = context.client.user
-	user_profile = user.get_profile()
-	openid = '%s_%s' % (member_a, user)
-	url = '/simulator/api/mp_user/unsubscribe/?version=2'
-	data = {
-		"timestamp": "1402211023857",
-		"webapp_id": user_profile.webapp_id,
-		"from_user": openid
-	}
-	response = client.post(url, data)
+	url = '/stats/api/buy_percent/?is_subscribed=all'
+	print "zl--------------------------------------------------------"
+	response = client.get(url)
+	content = json.loads(response.content)
+	print "zl---------------------------",content
+	print "zl---------------------------",content['data'][u'series'][0]['data']
+	actual_real_list =content['data'][u'series'][0]['data']
+	actual_list = []
+	for actual_dict in actual_real_list:
+		actual_list.append(actual_dict['name'])
+	expected_data = json.loads(context.text)
+	print "zl-----------------",expected_data
+	print "zl-----------------",actual_list
+	print bdd_util.assert_list(expected_data, actual_list)
+
+@when(u"{user}设置筛选条件")
+def step_impl(context, user):
+	pass

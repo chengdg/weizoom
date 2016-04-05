@@ -250,7 +250,7 @@ Scenario:1 复购分析,查看'用户分析'数据
 			"member_counts":8
 		}
 		"""
-	When jobs填写条件设置
+
 		"""
 		{
 			"pay_times_start":1,
