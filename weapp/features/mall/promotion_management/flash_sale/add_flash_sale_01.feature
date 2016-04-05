@@ -67,7 +67,7 @@ Background:
 		}]
 		"""
 
-@promotion @flash_sale @mall3
+@promotion @flash_sale @mall2 
 Scenario:1 创建限时抢购活动,设置购买次数限制
 	Given jobs登录系统
 	When jobs创建限时抢购活动
