@@ -274,7 +274,7 @@ Scenario:1 复购分析,查看'用户分析'数据
 		}
 		"""
 
-@stats @stats.member
+@stats @stats.member @zhaoleixxx
 Scenario:2 复购分析,查看'会员购买占比'数据
 	Given jobs登录系统
 	#会员状态-全部(默认条件-全部)
@@ -325,7 +325,7 @@ Scenario:2 复购分析,查看'会员购买占比'数据
 		]
 		"""
 
-@stats @stats.member @zhaoleixxx
+@stats @stats.member
 Scenario:3 复购分析,查看'复购会员分析'数据
 	Given jobs登录系统
 	#会员状态-全部(默认条件-全部)
