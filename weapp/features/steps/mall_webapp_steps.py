@@ -302,10 +302,10 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 	ship_area = get_area_ids(args.get('ship_area'))
 
 	data = {
+		"webapp_user_name": webapp_user_name,
+		"webapp_owner_name": webapp_owner_name,  #参数中携带webapp_user_name和webapp_owner_name，方便apiserver处理
 		"woid": webapp_owner_id,
-		"module": 'mall',
 		"is_order_from_shopping_cart": is_order_from_shopping_cart,
-		"target_api": "order/save",
 		"product_ids": '_'.join(product_ids),
 		"promotion_ids": '_'.join(promotion_ids),
 		"product_counts": '_'.join(product_counts),
@@ -357,9 +357,12 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 		data['coupon_id'] = coupon
 
 	access_token = bdd_util.get_access_token(member.id, webapp_owner_id)
+	openid = bdd_util.get_openid(member.id, webapp_owner_id)
 
 	url = 'http://api.weapp.com/wapi/mall/order/?_method=put'
 	data['access_token'] = access_token
+	data['openid'] = openid
+	data['woid'] = webapp_owner_id
 	response = requests.post(url, data=data)
 	#response结果为: {"errMsg": "", "code": 200, "data": {"msg": null, "order_id": "20140620180559"}}
 
@@ -375,15 +378,15 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 		pay_url_info = response_json['data']['pay_url_info']
 		pay_type = pay_url_info['type']
 		del pay_url_info['type']
-		if pay_type == 'cod':
-			pay_url = 'http://api.weapp.com/wapi/pay/pay_result/?_method=put'
-			data = {
-				'pay_interface_type': pay_url_info['pay_interface_type'],
-				'order_id': pay_url_info['order_id'],
-				'access_token': access_token
-			}
-			pay_response = requests.post(url, data=data)
-			pay_response_json = json.loads(pay_response.text)
+		# if pay_type == 'cod':
+		# 	pay_url = 'http://api.weapp.com/wapi/pay/pay_result/?_method=put'
+		# 	data = {
+		# 		'pay_interface_type': pay_url_info['pay_interface_type'],
+		# 		'order_id': pay_url_info['order_id'],
+		# 		'access_token': access_token
+		# 	}
+		# 	pay_response = requests.post(url, data=data)
+		# 	pay_response_json = json.loads(pay_response.text)
 
 		#同步更新支付时间
 		if Order.objects.get(order_id=context.created_order_id).status > ORDER_STATUS_CANCEL and args.has_key('payment_time'):
