@@ -186,7 +186,7 @@ class UserAnalysis(resource.Resource):
 			pay_times_arr = pay_times.split(',')
 			pay_money_arr = pay_money.split(',')
 			buy_fans_count = Member.objects.filter(webapp_id=webapp_id, is_for_test=False,is_subscribed__in=is_subscribed,status__in=[0,1])\
-				.filter(pay_times__gte=pay_times_arr[0],pay_times__lte=pay_times_arr[1]).filter(pay_money__gte=pay_money_arr[0],pay_money__lt=pay_money_arr[1]).count()
+				.filter(pay_times__gte=pay_times_arr[0],pay_times__lte=pay_times_arr[1]).filter(pay_money__gte=pay_money_arr[0],pay_money__lte=pay_money_arr[1]).count()
 
 		else:
 			buy_fans_count = Member.objects.filter(webapp_id=webapp_id, is_for_test=False,is_subscribed__in=is_subscribed,status__in=[0,1])\
