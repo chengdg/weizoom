@@ -735,7 +735,7 @@ def __process_product_data(product, user=None):
         product_category = ''
         for category_name in product['categories'].split(','):
             if user:
-                category = ProductCategoryFactory(name=category_name, owner_id=user_id)
+                category = mall_models.ProductCategory.objects.get(name=category_name, owner_id=user_id)
             else:
                 category = ProductCategoryFactory(name=category_name)
             product_category += "%s," % str(category.id)
