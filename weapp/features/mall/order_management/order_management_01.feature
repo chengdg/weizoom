@@ -728,7 +728,6 @@ Background:
 				"""
 			When jack使用支付方式'微信支付'进行支付
 
-@eugeneTMP
 Scenario:1 商家后台查看订单列表,包含自营平台同步过来的订单
 	Given bill登录系统
 	Then bill可以看到订单列表
