@@ -53,10 +53,11 @@ class RepeatBuyAnalysis(resource.Resource):
 		webapp_id = request.user_profile.webapp_id
 		# all 全部， 1 关注 0 取消关注
 		is_subscribed = request.GET.get('is_subscribed','all') # 会员是否关注
-		search_pay_list = request.GET.get('search_pay_list',[])
+		search_pay_list = request.GET.get('search_pay_list','')
 		if search_pay_list!='':
 			search_pay_list = search_pay_list.split(',')
-
+		else:
+			search_pay_list = []
 
 		# 校验数据是否正确 [1,2,3,4,5,6]
 		if is_subscribed == 'all':
