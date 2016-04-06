@@ -143,12 +143,12 @@ def receiveauthcode(request):
 			user_id=request.user.id
 			from weixin.user.util import get_component_info_from
 			component_info = get_component_info_from(request) # 获取第三方开放平台的基本信息
-			component_authed_appid = ComponentAuthedAppid.objects.get(component_info=component_info, user_id=user_id) # 获取用户委托的账户记录
 
 			from core.wxapi.agent_weixin_api import WeixinApi, WeixinHttpClient
 			weixin_http_client = WeixinHttpClient()
 			weixin_api = WeixinApi(component_info.component_access_token, weixin_http_client)
 			return_msg, mp_user = get_query_auth(component_info, weixin_api, auth_code, user_id)
+			component_authed_appid = ComponentAuthedAppid.objects.get(component_info=component_info, user_id=user_id) # 获取用户委托的账户记录
 
 			# 每个api请求如果失败就重试一次
 			if return_msg == "success":
