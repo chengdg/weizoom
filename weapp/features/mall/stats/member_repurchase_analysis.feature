@@ -52,6 +52,7 @@ Background:
 		"""
 		{
 			"be_member_increase_count":200,
+			"use_ceiling": 20,
 			"integral_each_yuan":10
 		}
 		"""
@@ -115,32 +116,6 @@ Background:
 			"price":10.0
 		}]
 		"""
-	When jobs创建积分应用活动
-		"""
-		[{
-			"name": "商品1积分应用",
-			"start_date": "今天",
-			"end_date": "10天后",
-			"product_name": "商品1",
-			"is_permanant_active": "true",
-			"rules": [{
-				"member_grade": "全部",
-					"discount": 20,
-					"discount_money": 20.0
-				}]
-		},{
-			"name": "商品2积分应用",
-			"start_date": "今天",
-			"end_date": "10天后",
-			"product_name": "商品2",
-			"is_permanant_active": "true",
-			"rules": [{
-				"member_grade": "全部",
-				"discount": 20,
-				"discount_money": 20.0
-			}]
-		}]
-		"""
 	And jobs添加优惠券规则
 		"""
 		[{
@@ -185,7 +160,7 @@ Background:
 		"""
 
 	When 微信用户批量消费jobs的商品
-		| order_id |   date     | consumer | product  | payment | pay_type | postage*| price* | product_integral |       coupon         | paid_amount*|  weizoom_card   | alipay*| wechat*| cash*|   action    | order_status*|
+		| order_id |   date     | consumer | product  | payment | pay_type | postage*| price* | integral         |       coupon         | paid_amount*|  weizoom_card   | alipay*| wechat*| cash*|   action    | order_status*|
 		|   1001   | 2014-08-05 | bill     | 商品1,1  | 支付    | 支付宝   | 10      | 100    |                  |                      | 110         | 0000001,1234567 | 0      | 0      | 0    |  jobs,完成  | 已完成       |
 
 		|   2000   | 2014-08-06 | bill2    | 商品1,1  |         |          | 10      | 100    |                  |                      | 115         |                 | 0      | 0      | 0    |  jobs,取消  | 已取消       |    
