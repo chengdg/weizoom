@@ -5,6 +5,7 @@ __author__ = 'liupeiyu'
 
 import json
 from datetime import timedelta, datetime
+import requests
 
 from mall.models import Product, ProductCategory, PRODUCT_SHELVE_TYPE_ON
 from mall.promotion.models import CouponRule, Promotion, PROMOTION_TYPE_COUPON
@@ -26,6 +27,82 @@ from market_tools.tools.channel_qrcode.export import get_channel_qrcode_webapp_l
 from mall.promotion.models import RedEnvelopeRule
 
 from apps.customerized_apps.sign.export import get_sign_webapp_link
+from weapp import settings
+
+def get_marketapp_links(webapp_owner_id, extends_data):
+	"""
+	@return: [
+				{
+					'name': '抽奖',
+					'type': 'lottery',
+					'add_btn_title': '新建抽奖',
+					'add_link': '/apps/lottery/lottery/'
+				},{
+					'name': '优惠券',
+					'type': 'coupon',
+					'add_btn_title': '新建优惠券',
+					'add_link': '/mall2/coupon_rule/'
+				}, {
+					'name': '微信投票',
+					'type': 'vote',
+					'add_btn_title': '新建投票',
+					'add_link': '/apps/vote/vote/'
+				}, {
+					'name': '用户调研',
+					'type': 'survey',
+					'add_btn_title': '新建调研',
+					'add_link': '/apps/survey/survey'
+				}, {
+					'name': '活动报名',
+					'type': 'event',
+					'add_btn_title': '新建活动报名',
+					'add_link': '/apps/event/event'
+				},{
+					'name': '分享红包',
+					'type': 'red_envelope',
+					'add_btn_title': '新建分享红包',
+					'add_link': '/apps/red_envelope/red_envelope_rule/'
+				},{
+					'name': '微助力',
+					'type': 'powerme',
+					'add_btn_title': '新建微助力',
+					'add_link': '/apps/powerme/powerme/'
+				},{
+					'name': '用户反馈',
+					'type': 'exsurvey',
+					'add_btn_title': '新建用户反馈',
+					'add_link': '/apps/exsurvey/exsurvey/',
+					'users': ['jobs','njtest','ceshi01', 'wzjx001', 'weizoomxs', 'weizoommm', 'weshop', 'weizoomclub', 'weizoomshop'] #这些帐号可以显示用户反馈
+
+				},{
+					'name': '团购',
+					'type': 'group',
+					'add_btn_title': '新建团购',
+					'add_link': '/apps/group/group/'
+				},
+				# {
+				# 	'name': '拼红包',
+				# 	'type': 'red_packet',
+				# 	'add_btn_title': '新建拼红包',
+				# 	'add_link': '/apps/red_packet/red_packet/'
+				# }
+			]
+
+	"""
+	URL = "http://%s/apps/export/api/get_app_link/" % (settings.MARKETAPP_DOMAIN)
+	args = {'webapp_owner_id': webapp_owner_id}
+	api_resp_text = requests.get(URL, args).text
+	print URL, 'marketapp get_app_link===============>>>', api_resp_text
+	api_resp = json.loads(api_resp_text)
+
+	extends_data.extend([{
+		'name': d['name'],
+		'type': d['type'],
+		'add_btn_title': d['add_btn_title'],
+		'add_link': d['add_link'],
+		'users': d['users']
+	} for d in api_resp['data']])
+	return extends_data
 
 def get_webapp_link_menu_objectes(request):
 	"""
@@ -77,80 +154,12 @@ def get_webapp_link_menu_objectes(request):
 		'marketPage': {
 			'id': 6,
 			'name': '营销推广',
-			'title': [
-			{
-				'name': '抽奖',
-				'type': 'lottery',
-				'add_btn_title': '新建抽奖',
-				'add_link': '/apps/lottery/lottery/'
-			},
-			# {
-			# 	'name': '红包',
-			# 	'type': 'red',
-			# 	'add_btn_title': '新建红包',
-			# 	'add_link': '/market_tools/red_envelope/edit/0/'
-			# },
-				{
+			'title': get_marketapp_links(webapp_owner_id, [{
 				'name': '优惠券',
 				'type': 'coupon',
 				'add_btn_title': '新建优惠券',
 				'add_link': '/mall2/coupon_rule/'
-			}, {
-				'name': '微信投票',
-				'type': 'vote',
-				'add_btn_title': '新建投票',
-				'add_link': '/apps/vote/vote/'
-			}, {
-				'name': '用户调研',
-				'type': 'survey',
-				'add_btn_title': '新建调研',
-				'add_link': '/apps/survey/survey'
-			}, {
-				'name': '活动报名',
-				'type': 'event',
-				'add_btn_title': '新建活动报名',
-				'add_link': '/apps/event/event'
-			},{
-				'name': '分享红包',
-				'type': 'red_envelope',
-				'add_btn_title': '新建分享红包',
-				'add_link': '/apps/red_envelope/red_envelope_rule/'
-			},{
-				'name': '微助力',
-				'type': 'powerme',
-				'add_btn_title': '新建微助力',
-				'add_link': '/apps/powerme/powerme/'
-			},{
-				'name': '用户反馈',
-				'type': 'exsurvey',
-				'add_btn_title': '新建用户反馈',
-				'add_link': '/apps/exsurvey/exsurvey/',
-				'users': ['jobs','njtest','ceshi01', 'wzjx001', 'weizoomxs', 'weizoommm', 'weshop', 'weizoomclub', 'weizoomshop'] #这些帐号可以显示用户反馈
-
-			},{
-				'name': '团购',
-				'type': 'group',
-				'add_btn_title': '新建团购',
-				'add_link': '/apps/group/group/'
-			},
-			# {
-			# 	'name': '拼红包',
-			# 	'type': 'red_packet',
-			# 	'add_btn_title': '新建拼红包',
-			# 	'add_link': '/apps/red_packet/red_packet/'
-			# }
-			# {
-			# 	'name': '趣味测试',
-			# 	'type': 'test_game',
-			# 	'add_btn_title': '新建趣味测试',
-			# 	'add_link': '/market_tools/test_game/test_game/create/'
-			# }, {
-			# 	'name': '摇一摇',
-			# 	'type': 'shake',
-			# 	'add_btn_title': '新建摇一摇',
-			# 	'add_link': '/market_tools/shake/edit/0/'
-			# }
-			]
+			}])
 		},
 		'memberQrcode': {
 			'id': 7,
