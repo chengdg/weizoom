@@ -61,14 +61,15 @@ def step_impl(context, user):
 	response = client.get(url)
 	content = json.loads(response.content)
 	print "zl---------------------------",content
-	print "zl---------------------------",content['data'][u'series'][0]['data']
-	actual_real_list =content['data'][u'series'][0]['data']
+	print "zl---------------------------",content['data']['series'][0]['data']
+	actual_real_list =content['data']['series'][0]['data']
 	actual_list = []
 	for actual_dict in actual_real_list:
 		actual_list.append(actual_dict['name'])
 	expected_data = json.loads(context.text)
 	print "zl-----------------",expected_data
 	print "zl-----------------",actual_list
+
 	print bdd_util.assert_list(expected_data, actual_list)
 
 
@@ -84,7 +85,7 @@ def step_impl(context, user):
 		context.is_subscribed ='0'
 
 @when(u'{user}设置消费总额')
-def step_impl(context, member_a, user):
+def step_impl(context, user):
 	"""
 		{
 			"one_interval_mini":0,
@@ -96,7 +97,12 @@ def step_impl(context, member_a, user):
 		}
 
 	"""
-	context.search_pay_list =",".join(json.loads(context.text).values())
+	val = []
+	for itemx,itemy in json.loads(context.text).items():
+		val.append(itemy)
+	val = sorted(val)
+	val = [str(v) for v in val]
+	context.search_pay_list =",".join(val)
 
 
 @then(u'{user}获得用户分析统计数据')
@@ -108,13 +114,15 @@ def step_impl(context, user):
 	content = json.loads(response.content)
 	print "zl---------------------------",content
 	print "zl---------------------------",content['data'][u'series'][0]['data']
-	actual_real_list =content['data'][u'series'][0]['data']
+	actual_real_list =content['data']['series'][0]['data']
 	actual_list = []
 	for actual_dict in actual_real_list:
 		actual_list.append(actual_dict['name'])
 	expected_data = json.loads(context.text)
 	print "zl-----------------",expected_data
 	print "zl-----------------",actual_list
+	expected_data = sorted(expected_data)
+	actual_list = sorted(actual_list)
 	print bdd_util.assert_list(expected_data, actual_list)
 
 # @when(u'{user}设置筛选条件')

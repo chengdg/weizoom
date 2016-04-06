@@ -67,7 +67,7 @@ class RepeatBuyAnalysis(resource.Resource):
 		elif is_subscribed == '0':
 			is_subscribed = [0]
 
-
+		print "zl---------------------",search_pay_list
 		if len(search_pay_list)>0:
 			if not RepeatBuyAnalysis._check_pay_money(search_pay_list):
 				response = create_response(201)
@@ -84,10 +84,10 @@ class RepeatBuyAnalysis(resource.Resource):
 			all_rebuy_fans = rebuy_fans.count()
 			return create_pie_chart_response('',
 				{
-					u"消费金额：{}-{} \n人数:{}\n占比:{}".format(search_pay_list[0],search_pay_list[1],rebuy_fans_1,format( float(Decimal(rebuy_fans_1)/Decimal(all_rebuy_fans)),'.2%') if all_rebuy_fans!=0 else '0%'): rebuy_fans_1,
-					u"消费金额：{}-{} \n人数:{}\n占比:{}".format(search_pay_list[2],search_pay_list[3],rebuy_fans_2,format( float(Decimal(rebuy_fans_2)/Decimal(all_rebuy_fans)),'.2%') if all_rebuy_fans!=0 else '0%'): rebuy_fans_2,
-					u"消费金额：{}-{} \n人数:{}\n占比:{}".format(search_pay_list[4],search_pay_list[5],rebuy_fans_3,format( float(Decimal(rebuy_fans_3)/Decimal(all_rebuy_fans)),'.2%') if all_rebuy_fans!=0 else '0%'): rebuy_fans_3,
-					u"其他 \n人数:{}\n占比:{}".format(other_rebug_fans,format( float(Decimal(other_rebug_fans)/Decimal(all_rebuy_fans)),'.2%') if all_rebuy_fans!=0 else '0%'): other_rebug_fans
+					u"消费金额:{}-{}\n人数:{}\n占比:{}".format(search_pay_list[0],search_pay_list[1],rebuy_fans_1,format( float(Decimal(rebuy_fans_1)/Decimal(all_rebuy_fans)),'.2%') if all_rebuy_fans!=0 else '0%'): rebuy_fans_1,
+					u"消费金额:{}-{}\n人数:{}\n占比:{}".format(search_pay_list[2],search_pay_list[3],rebuy_fans_2,format( float(Decimal(rebuy_fans_2)/Decimal(all_rebuy_fans)),'.2%') if all_rebuy_fans!=0 else '0%'): rebuy_fans_2,
+					u"消费金额:{}-{}\n人数:{}\n占比:{}".format(search_pay_list[4],search_pay_list[5],rebuy_fans_3,format( float(Decimal(rebuy_fans_3)/Decimal(all_rebuy_fans)),'.2%') if all_rebuy_fans!=0 else '0%'): rebuy_fans_3,
+					u"其他\n人数:{}\n占比:{}".format(other_rebug_fans,format( float(Decimal(other_rebug_fans)/Decimal(all_rebuy_fans)),'.2%') if all_rebuy_fans!=0 else '0%'): other_rebug_fans
 				}
 			)
 		else:
@@ -96,7 +96,7 @@ class RepeatBuyAnalysis(resource.Resource):
 			count = rebuy_fans.count()
 			return create_pie_chart_response('',
 				{
-					u"消费金额：0-{} \n人数:{}\n占比:100%".format(max_pay_money['pay_money__max'],count): count,
+					u"消费金额:0-{}\n人数:{}\n占比:100%".format(max_pay_money['pay_money__max'],count): count,
 				}
 			)
 
