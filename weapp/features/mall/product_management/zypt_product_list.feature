@@ -519,7 +519,7 @@ Background:
 		}]
 		"""
 
-@product_pool @eugene
+@mall2 @product_pool @eugene
 Scenario:1 自营平台把商品从商品池放入待售商品列表上架商品，获取在售商品列表
 	#自营平台jobs登录
 	Given jobs登录系统
@@ -752,7 +752,7 @@ Scenario:1 自营平台把商品从商品池放入待售商品列表上架商品
 		}]
 		"""
 
-@product_pool @eugene
+@mall2 @product_pool @eugene
 Scenario:2 自营平台把商品从商品池放入待售商品列表上架后，商户(供货商)下架商品和删除商品
 	#自营平台jobs登录
 	Given jobs登录系统
@@ -1022,7 +1022,7 @@ Scenario:2 自营平台把商品从商品池放入待售商品列表上架后，
 		}]
 		"""
 
-@product_pool @eugene
+@mall2 @product_pool @eugene
 Scenario:3 自营平台把商品从商品池放入待售商品列表上架后，商户(供货商)修改商品为多规格
 	#自营平台jobs登录
 	Given jobs登录系统
@@ -1299,7 +1299,7 @@ Scenario:3 自营平台把商品从商品池放入待售商品列表上架后，
 		}]
 		"""
 
-@product_pool @eugene
+@mall2 @product_pool @eugene
 Scenario:4 自营平台把商品从商品池放入待售商品列表上架后，用户购买商品,商户(供货商)修改商品，自营平台更新商品再上架
 	#自营平台jobs登录
 	Given jobs登录系统
@@ -1661,7 +1661,7 @@ Scenario:4 自营平台把商品从商品池放入待售商品列表上架后，
 		}]
 		"""
 
-@product_pool @eugene
+@mall2 @product_pool @eugene
 Scenario:5 在售商品列表查询
 	#自营平台jobs登录
 	Given jobs登录系统
