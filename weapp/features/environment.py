@@ -718,6 +718,9 @@ def after_scenario(context, scenario):
 		print('[after scenario]: close webapp browser driver')
 		context.webapp_driver.quit()
 
+	if UserProfile.objects.filter(webapp_type=1).count() > 0:
+		UserProfile.objects.filter(webapp_type=1).update(webapp_type=0)
+
 
 def enhance_django_model_class():
 	"""
