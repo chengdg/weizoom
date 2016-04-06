@@ -68,6 +68,16 @@
 
 					  <div class="errorHint ml110"></div>
 				</div>
+
+				<div class="xui-i-item pa" style="top:100px;" >					  
+					  <label>
+					  	<input type="checkbox" class="xa-is-pay-count" name="">
+					  	<span style="display: block;float: right;margin: 3px;">购买次数</span>
+					  </label>
+					  <input type="text" class="form-control w70 xa-promotion-pay-count hide" id="count_per_period" name="count_per_period" value="" data-validate="require-notempty,,require-price::请输入数字" data-validate-function="validatePromotionPrice"/>
+
+					  <div class="errorHint ml110 xa-promotion-pay-count-errorHint"></div>
+				</div>
 			</div>
 
 			<div class="xui-i-col pr">
@@ -211,6 +221,11 @@ $(document).ready(function() {
 			$(this).attr("disabled",false);
 			return false;
 		}
+		var isChecked = $('.xa-is-pay-count').attr('checked') === 'checked';
+		if (!isChecked) {
+			$('.xa-promotion-pay-count').val('0');
+		}
+
 		var args = $('.xa-form').serializeObject();
 		args.products = productSelector.getData();
 		W.getApi().call({
@@ -230,6 +245,18 @@ $(document).ready(function() {
 				$(this).attr("disabled",false);
 			}
 		})
+	});
+
+	$('.xa-is-pay-count').click(function (event) {
+		var isChecked = $(this).attr('checked') === 'checked';
+		if (isChecked) {
+			$('.xa-promotion-pay-count').removeClass('hide');
+			$('.xa-promotion-pay-count-errorHint').removeClass('hide');
+		} else {
+			$('.xa-promotion-pay-count').addClass('hide');
+			$('.xa-promotion-pay-count-errorHint').addClass('hide');
+		}
+		console.log(isChecked);
 	});
 });
 </script>
