@@ -44,8 +44,8 @@ class ProductCategoryFactory(factory.django.DjangoModelFactory):
 	ProductCategoryFactory
 	"""
 	FACTORY_FOR = webapp_models.ProductCategory
-	FACTORY_DJANGO_GET_OR_CREATE = ('name',)
-
+	FACTORY_DJANGO_GET = ('name', 'owner_id')
+	FACTORY_DJANGO_CREATE = ('name',)
 	@factory.post_generation
 	def update_created_at(self, create, extracted, **kwargs):
 		if not create:
@@ -150,4 +150,3 @@ class OrderFactory(factory.django.DjangoModelFactory):
 		new_created_at = datetime.strptime('2014-10-15 00:00:00', '%Y-%m-%d %H:%M:%S') + timedelta(seconds=self.id)
 		self.created_at = new_created_at
 		self.save()
-		

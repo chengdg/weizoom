@@ -222,6 +222,7 @@ def __clear_all_app_data():
 	mall_models.ProductReviewPicture.objects.all().delete()
 	AccountHasWeizoomCardPermissions.objects.all().delete()
 	mall_models.Supplier.objects.all().delete()
+	mall_models.WeizoomHasMallProductRelation.objects.all().delete()
 
 	# 快递数据
 	express_model.ExpressHasOrderPushStatus.objects.all().delete()

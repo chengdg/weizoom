@@ -415,7 +415,7 @@ def step_impl(context, webapp_owner_name):
 			product, model, count = product_infos
 		data = {
 			"date": row['date'].strip(),
-			"products": [{	
+			"products": [{
 				"name": product,
 				"count": count,
 				"model": model

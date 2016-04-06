@@ -239,7 +239,7 @@ def delete_weizoom_mall_sync_product(request, product, reason):
             text += u'供货商：%s\n' % request.user_profile.store_name
             text += u'删除原因：%s\n' % DELETED_WEIZOOM_PRODUCT_REASON[reason]
             text += u'请及时处理！'
-            if request.user.username in ['test02', 'ceshi01', 'tom']:
+            if settings.MODE in ['develop', 'test'] or request.user.username == 'ceshi01':
                 ding_util.send_to_ding(text, TEST_DING_GROUP_ID)
             else:
                 ding_util.send_to_ding(text, DING_GROUP_ID)
@@ -269,7 +269,7 @@ def update_weizoom_mall_sync_product_status(request, product, update_data):
             text += u'更新内容：%s\n' % u'，'.join(update_data)
             text += u'请及时处理！'
             relations.update(is_updated=True)
-            if request.user.username in ['test02', 'ceshi01', 'tom']:
+            if settings.MODE in ['develop', 'test'] or request.user.username == 'ceshi01':
                 ding_util.send_to_ding(text, TEST_DING_GROUP_ID)
             else:
                 ding_util.send_to_ding(text, DING_GROUP_ID)
@@ -329,8 +329,8 @@ def weizoom_filter_products(request, products):
                 owner=request.manager,
                 mall_id__in=owner_ids,
                 is_deleted=False,
-                delete_time__gte=start_date,
-                delete_time__lte=end_date
+                sync_time__gte=start_date,
+                sync_time__lte=end_date
             )
         params1 = dict(
                 owner=request.manager,

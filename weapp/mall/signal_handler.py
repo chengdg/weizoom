@@ -1061,7 +1061,7 @@ def send_request_to_kuaidi(order, **kwargs):
     # if settings.IS_UNDER_BDD:
     #     # BDD 暂时不测试快递100信息
     #     return
-    
+
     print u'------------ send_request_to_kuaidi order.status:{}'.format(order.status)
     express_configs = ExpressServiceConfig.objects.filter(value=1)
     if express_configs.count() > 0:

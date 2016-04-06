@@ -80,7 +80,8 @@ def get_custom_model_name_from_id(webapp_owner_id, model_id):
 def get_product_response_from_web_page(context, product_name):
     existed_product = Product.objects.get(
         owner_id=context.webapp_owner_id,
-        name=product_name)
+        name=product_name,
+        is_deleted=False)
     response = context.client.get('/mall2/product/?id=%d' % existed_product.id)
 
     return response
