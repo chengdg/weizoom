@@ -34,14 +34,14 @@
                     <div class="pa xui-conditionBox xa-conditionBox xui-hide">
                         <div class="lh26">
                             <span>购买次数：</span>
-                            <input type="text" placeholder="" class="xa-buyNum xa-buyNum0" data-validate="require-int">&nbsp;-&nbsp;
-                            <input type="text" placeholder="" class="xa-buyNum xa-buyNum1" data-validate="require-int">
+                            <input type="text" placeholder="" class="xa-conditionNum xa-buyNum xa-buyNum0">&nbsp;-&nbsp;
+                            <input type="text" placeholder="" class="xa-conditionNum xa-buyNum xa-buyNum1">
                             <div class="errorHint"></div>
                         </div>
                         <div class="lh26">
                             <span>消费金额：</span>
-                            <input type="text" placeholder="" class="xa-userMoney xa-userMoney0" data-validate="require-float">&nbsp;-&nbsp;
-                            <input type="text" placeholder="" class="xa-userMoney xa-userMoney1" data-validate="require-float">
+                            <input type="text" placeholder="" class="xa-conditionNum xa-userMoney xa-userMoney0">&nbsp;-&nbsp;
+                            <input type="text" placeholder="" class="xa-conditionNum xa-userMoney xa-userMoney1">
                             <div class="errorHint"></div>
                         </div>
                         <div class="fr xui-confirm xa-confirmuserBtn">确认</div>
@@ -106,7 +106,7 @@
     $(document).ready(function(){
         // title提示框
         $('#consumption_help').popover({
-            content : "<div class='xui-i-alert'>若区间设为（A，B），则取值包含A,但不包含B</div><div>例如：消费额区间1（元）：<span class='xui-rangeBox'>10</span>-<span class='xui-rangeBox'>100</span>则取值包含10，但不包含100</div>",
+            content : "<div class='xui-i-alert'>若区间设为（A，B），则取值包含A，但不包含B</div><div>例如：消费额区间1（元）：<span class='xui-rangeBox'>10</span>-<span class='xui-rangeBox'>100</span>则取值包含10，但不包含100</div>",
             trigger : "hover",
             html : true,
             placement : "bottom"
@@ -114,8 +114,10 @@
 
         var is_subscribed = 'all';
         var search_pay_list = [];
+        var user_condition_list = [];
         //  本地存储
         var local_search_pay_list = localStorage.getItem('k');
+        var local_user_condition_list = localStorage.getItem('condition')
         if(local_search_pay_list){
             search_pay_list = local_search_pay_list.split(',');
             console.log('search_pay_list111111111',search_pay_list)
@@ -126,6 +128,16 @@
             rePurchaseAnalysis();
         }
 
+        if(local_user_condition_list){
+            user_condition_list = local_user_condition_list.split(',');
+            // console.log('local_user_condition_list111111111',local_user_condition_list)
+            user_condition_list.map(function(val,i){
+                console.log("^^^^^^^^^",i,val)
+                $('.xa-conditionBox input').eq(i).val(val);
+            });
+            userAnalysis();
+        }
+
         // 改变会员状态
         $('.xa-memberStateSelect').change(function(){
             var memberState = $(this).children('option:selected').val();
@@ -133,6 +145,7 @@
             is_subscribed = memberState;
             memberBuyPercent();
             rePurchaseAnalysis();
+            userAnalysis();
         });
 
         // 会员购买占比
@@ -226,6 +239,10 @@
 
         rePurchaseAnalysis();
 
+        // 判断数字格式
+        var require_int = /^\d+$/;
+        var require_float = /^\d{1,5}(\.\d{1,2})?$/;
+
         var $setConsumptionBtn = $('.xui-setConsumptionBtn');
         var $confirmBtn = $('.xa-confirmBtn');
         var $consumptionBox = $('.xa-consumptionBox');
@@ -243,11 +260,8 @@
                 console.log(i,val.value)
                 $('.xui-comsumptionNum'+i).css('border','1px solid #ccc');
                 var value = Number(val.value);
-                // console.log('value',value);
-                var re =  /^[1-9]+[0-9]*]*$/;
-                // var re =  /^-?\d+$/g;
-                console.log('re.test(value)',re.test(value))
-                if(re.test(value) === false){
+                console.log('require_int.test(value)',require_int.test(value),value,parseInt(val.value))
+                if(!require_int.test(value)){
                     console.log("false~~~~~~~~~~~")
                     $crossHint.text('格式不正确，请输入整数').show();
                     $('.xui-comsumptionNum'+i).css('border','1px solid #DB4343');
@@ -292,7 +306,7 @@
             if(is_checked){
                 $consumptionBox.addClass('xui-hide');
                 // console.log('search_pay_list',search_pay_list)
-                localStorage.setItem('k',search_pay_list)
+                localStorage.setItem('k',search_pay_list);
                 rePurchaseAnalysis();
             }
         });
@@ -349,12 +363,12 @@
                 var thisNum = Number(thisVal);
                 if( thisVal == '' && siblingsVal == ''){
                     is_buyTimeCondition =true;                    
-                }else if(thisVal != '' && siblingsVal != '' && buyNum0 < buyNum1){
+                }else if(thisVal != '' && siblingsVal != '' && buyNum0 < buyNum1 && require_int.test(buyNum0) && require_int.test(buyNum1)){
                     search_pay_times_list.push(thisNum);
                     is_buyTimeCondition =true;
                 }else{
                     is_buyTimeCondition =false;
-                    $errorConditionHint.text('请输入正确的次数区间')
+                    $errorConditionHint.text('请输入正确的次数区间');
                 }
             });
             $userMoney.map(function(val,i){
@@ -363,9 +377,10 @@
                 var thisNum = Number(thisVal);
                 var siblingsNum = Number(siblingsVal);
                 console.log('thisNum',thisNum,siblingsNum)
+                console.log('thisNum',require_float.test(userMoney0) ,require_float.test(userMoney1))
                 if( thisVal == '' && siblingsVal == ''){
                     is_moneyCondition =true;
-                }else if(thisVal != '' && siblingsVal != '' && userMoney0 < userMoney1){
+                }else if(thisVal != '' && siblingsVal != '' && userMoney0 < userMoney1 && require_float.test(userMoney0) && require_float.test(userMoney1)){
                     search_pay_m_list.push(thisNum);
                     is_moneyCondition =true;
                 }else{
@@ -376,8 +391,11 @@
             if( is_buyTimeCondition && is_moneyCondition){
                 $errorConditionHint.hide();
                 $conditionBox.addClass('xui-hide');
-                console.log('search_pay_times_list',search_pay_times_list)
-                console.log('search_pay_m_list',search_pay_m_list)
+                // console.log('search_pay_times_list',search_pay_times_list)
+                // console.log('search_pay_m_list',search_pay_m_list);
+                var conditionArr = search_pay_times_list.concat(search_pay_m_list);
+                console.log('conditionArr',conditionArr)
+                localStorage.setItem('condition',conditionArr);
                 userAnalysis();
             }else{
                 $errorConditionHint.show();
