@@ -116,7 +116,7 @@ Background:
 			"price":10.0
 		}]
 		"""
-	And jobs添加优惠券规则
+	And jobs已添加了优惠券规则
 		"""
 		[{
 			"name": "全体券1",

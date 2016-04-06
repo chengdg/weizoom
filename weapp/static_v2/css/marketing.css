@@ -790,15 +790,20 @@
 }
 
 /*复购分析页面*/
-.xui-rePurchaseAnalyzePage .xui-setConsumption{
+.xui-rePurchaseAnalyzePage .xui-setConsumption,.xui-rePurchaseAnalyzePage .xui-setCondition{
 	font-weight: normal;
 }
-.xui-rePurchaseAnalyzePage .xui-setConsumptionBtn{
+.xui-rePurchaseAnalyzePage  .xui-memberStateSelect{
+	width: 101px;
+	height: 24px;
+	border:1px solid #C3DBF0;
+}
+.xui-rePurchaseAnalyzePage .xui-setConsumptionBtn,.xui-rePurchaseAnalyzePage .xui-setConditionBtn{
 	color: #1261B7;
 	cursor: pointer;
 	z-index: 9999;
 }
-.xui-rePurchaseAnalyzePage .xui-consumptionBox{
+.xui-rePurchaseAnalyzePage .xui-consumptionBox,.xui-rePurchaseAnalyzePage .xui-conditionBox{
 	background: #fff;
 	border: 1px solid #DDDDDD;
 	padding: 15px 10px 5px;
@@ -810,10 +815,29 @@
     top: 30px;
     /*display: none;*/
 }
-.xui-rePurchaseAnalyzePage .xui-consumptionBox  input{
+.xui-rePurchaseAnalyzePage .xui-conditionBox{
+	width: 222px;
+}
+.xui-rePurchaseAnalyzePage .xui-consumptionBox  input,.xui-rePurchaseAnalyzePage .xui-conditionBox input{
 	height: 22px;
 	line-height: 22px;
 	width: 90px;
+	border: 1px solid #E6E6E6;
+}
+.xui-rePurchaseAnalyzePage .xui-conditionBox input{
+	width: 60px;
+}
+.xui-rePurchaseAnalyzePage .xui-consumptionBox .xui-confirm,.xui-rePurchaseAnalyzePage .xui-conditionBox .xui-confirm{
+	min-width: 60px;
+	height: 30px;
+	background: #1F7BBD;
+	line-height: 30px;
+	text-align: center;
+	font-size: 12px;
+	font-weight: bold;
+	color: #fff;
+	border-radius: 4px;
+	cursor: pointer;
 }
 /*.xui-rePurchaseAnalyzePage .errorHint{
 	line-height: 0px;
@@ -828,4 +852,30 @@
 	border:1px solid #ccc;
 	text-align: center;
 	line-height: 22px;
+}
+.xui-rePurchaseAnalyzePage .xui-userAnalysisBox{
+	/*text-align: center;*/
+}
+.xui-rePurchaseAnalyzePage .xui-userAnalysis{
+	width: 150px;
+	height: 150px;
+	line-height: 150px;
+	text-align: center;
+	background-color: #FFF3F3; /* Can be set to transparent */
+    border: 4px #FFC7C7 solid;
+	-webkit-border-radius: 100px;
+	color: #FE3D3D;
+	margin-top: 27px;
+	margin-left: 158px;
+	margin-bottom: 10px;
+}
+.xui-rePurchaseAnalyzePage .xui-noData{
+	width: 224px;
+	height: 81px;
+	background: url(/static_v2/img/editor/noData.gif) no-repeat;
+	margin-top: 197px;
+	margin-left: 135px;
+}
+.popover {
+	width: 1000px!important;
 }

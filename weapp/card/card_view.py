@@ -19,7 +19,7 @@ WEIZOOM_CARD_BELONG_TO_OWNER = ["guo","bill","yunhanchundai","weizoomshop", "job
                                 "bohaotong","chalushui","tide","huajitang","heruntiancheng","chexiaomi","dgposy","weizoommm","weizoomxs","huachilemei",
                                 "miaochaojiaonang","baoyangong","mkmj","suqinweizhen","leyun","guangyou","ertongshazi","yangxinkeji","haoainiguopin","weizoomclub",
                                 "zhongbida","xingke","bailingda","shenzhoumuye","beimiaomei","sanqitang","daxuan","saihanshiye","maibeier","wancheng","yulei","aiyue",
-                                "zhongtulvan","liangfeng","yanqiang","zhongjie","guangruishipin","depingshangmao","mileke","tianyunzhen","zhenwutang"]
+                                "zhongtulvan","liangfeng","yanqiang","zhongjie","guangruishipin","depingshangmao","mileke","tianyunzhen","zhenwutang","shengcheng"]
 @view(app='card', resource='cards', action='get')
 @login_required 
 def get_cards(request):

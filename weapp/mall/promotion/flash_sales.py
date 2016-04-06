@@ -113,7 +113,8 @@ class FlashSale(resource.Resource):
             owner=request.manager,
             limit_period=limit_period,
             promotion_price=request.POST.get('promotion_price', 0.0),
-            count_per_purchase=count_per_purchase
+            count_per_purchase=count_per_purchase,
+            count_per_period=int(request.POST.get('count_per_period', 0))
         )
         now = datetime.today()
         start_date = datetime.strptime(
