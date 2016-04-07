@@ -288,7 +288,7 @@
                 // console.log('require_int.test(value)',require_int.test(value),value,parseInt(val.value))
                 // 数据格式
                 if(!require_int.test(value)){
-                    console.log("false~~~~~~~~~~~")
+                    // console.log("false~~~~~~~~~~~")
                     $crossHint.text('格式不正确，请输入整数').show();
                     $('.xui-comsumptionNum'+i).css('border','1px solid #DB4343');
                     is_checked = false;
@@ -405,7 +405,7 @@
                 console.log('thisNum',require_float.test(userMoney0) ,require_float.test(userMoney1))
                 if( thisVal == '' && siblingsVal == ''){
                     is_moneyCondition =true;
-                }else if(thisVal != '' && siblingsVal != '' && userMoney0 < userMoney1 && require_float.test(userMoney0) && require_float.test(userMoney1)){
+                }else if(thisVal != '' && siblingsVal != '' && userMoney0 <= userMoney1 && require_float.test(userMoney0) && require_float.test(userMoney1)){
                     search_pay_m_list.push(thisNum);
                     is_moneyCondition =true;
                 }else{
