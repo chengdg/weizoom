@@ -267,6 +267,8 @@
         var $crossHint = $('.xa-crossHint');
         $setConsumptionBtn.click(function() {
             getLocalPayList();
+            $crossHint.hide();
+            $('.xui-comsumptionNum').css('border','1px solid #ccc');
             $consumptionBox.toggleClass('xui-hide');
         });
     
@@ -274,55 +276,59 @@
         $confirmBtn.click(function(){
             var is_checked = true;
             search_pay_list = [];
-            $comsumptionNum.map(function(i,val){
+            console.log('search_pay_list>>>>',search_pay_list)
+            if($comsumptionNum[0].value == '' && $comsumptionNum[1].value == '' && $comsumptionNum[2].value == '' && $comsumptionNum[3].value == '' && $comsumptionNum[4].value == '' && $comsumptionNum[5].value == ''){
+                search_pay_list = [];
+                is_checked = true;
+            }else{
+                $comsumptionNum.map(function(i,val){
                 console.log(i,val.value)
                 $('.xui-comsumptionNum'+i).css('border','1px solid #ccc');
                 var value = Number(val.value);
-                console.log('require_int.test(value)',require_int.test(value),value,parseInt(val.value))
+                // console.log('require_int.test(value)',require_int.test(value),value,parseInt(val.value))
+                // 数据格式
                 if(!require_int.test(value)){
-                    console.log("false~~~~~~~~~~~")
+                    // console.log("false~~~~~~~~~~~")
                     $crossHint.text('格式不正确，请输入整数').show();
                     $('.xui-comsumptionNum'+i).css('border','1px solid #DB4343');
                     is_checked = false;
                 }
                 search_pay_list.push(value);
             });
-            console.log('search_pay_list>>>>',search_pay_list)
-    
-            var minusArr = [];
-            for(var i=5; i>=0; i--){
-                console.log('>>>>>>>>>>',i,search_pay_list[i]);
-                if(i > 0){
-                    var minus = search_pay_list[i] - search_pay_list[i-1];
-                    console.log('minus',minus);
-                    minusArr[i-1] = minus;
+                var minusArr = [];
+                for(var i=5; i>=0; i--){
+                    if(i > 0){
+                        var minus = search_pay_list[i] - search_pay_list[i-1];
+                        console.log('minus',minus);
+                        minusArr[i-1] = minus;
+                    }
                 }
+                var is_error = false;
+                minusArr.map(function(item, idx){
+                    if (idx % 2 == 0) {
+                      if (item <= 0) {
+                          is_error = true;
+                          is_checked = false;
+                          $crossHint.text('消费额区间需逐渐递增，不能交叉').show();
+                      }
+                    } else {
+                      if (item < 0) {
+                          is_error = true;
+                          is_checked = false;
+                          $crossHint.text('消费额区间需逐渐递增，不能交叉').show();
+                      }
+                    }
+                    var nextIndex = idx + 1;
+                    if(is_error){
+                        console.log('idx')
+                        $('.xui-comsumptionNum'+idx).css('border','1px solid #DB4343'); 
+                        $('.xui-comsumptionNum'+nextIndex).css('border','1px solid #DB4343'); 
+                        is_error = false;
+                    }       
+                });
             }
-            var is_error = false;
-            minusArr.map(function(item, idx){
-                if (idx % 2 == 0) {
-                  if (item <= 0) {
-                      is_error = true;
-                      is_checked = false;
-                      $crossHint.text('消费额区间需逐渐递增，不能交叉').show();
-                  }
-                } else {
-                  if (item < 0) {
-                      is_error = true;
-                      is_checked = false;
-                      $crossHint.text('消费额区间需逐渐递增，不能交叉').show();
-                  }
-                }
-                var nextIndex = idx + 1;
-                if(is_error){
-                    console.log('idx')
-                    $('.xui-comsumptionNum'+idx).css('border','1px solid #DB4343'); 
-                    $('.xui-comsumptionNum'+nextIndex).css('border','1px solid #DB4343'); 
-                    is_error = false;
-                }       
-            });
             if(is_checked){
-                $crossHint.hide();
+                // $crossHint.hide();
                 $consumptionBox.addClass('xui-hide');
                 // console.log('search_pay_list',search_pay_list)
                 localStorage.setItem('k',search_pay_list);
@@ -337,6 +343,7 @@
         var $errorConditionHint = $('.xa-errorConditionHint');
         $setConditionBtn.click(function() {
             getUserConditionList();
+            $errorConditionHint.hide();
             $conditionBox.toggleClass('xui-hide');
         });
 
@@ -381,7 +388,7 @@
                 var thisNum = Number(thisVal);
                 if( thisVal == '' && siblingsVal == ''){
                     is_buyTimeCondition =true;                    
-                }else if(thisVal != '' && siblingsVal != '' && buyNum0 < buyNum1 && require_int.test(buyNum0) && require_int.test(buyNum1)){
+                }else if(thisVal != '' && siblingsVal != '' && buyNum0 <= buyNum1 && require_int.test(buyNum0) && require_int.test(buyNum1)){
                     search_pay_times_list.push(thisNum);
                     is_buyTimeCondition =true;
                 }else{
@@ -398,16 +405,16 @@
                 console.log('thisNum',require_float.test(userMoney0) ,require_float.test(userMoney1))
                 if( thisVal == '' && siblingsVal == ''){
                     is_moneyCondition =true;
-                }else if(thisVal != '' && siblingsVal != '' && userMoney0 < userMoney1 && require_float.test(userMoney0) && require_float.test(userMoney1)){
+                }else if(thisVal != '' && siblingsVal != '' && userMoney0 <= userMoney1 && require_float.test(userMoney0) && require_float.test(userMoney1)){
                     search_pay_m_list.push(thisNum);
                     is_moneyCondition =true;
                 }else{
                     is_moneyCondition =false;
-                    $errorConditionHint.text('请输入正确的消费区间')
+                    $errorConditionHint.text('请输入正确的消费区间');
                 }
             })
             if( is_buyTimeCondition && is_moneyCondition){
-                $errorConditionHint.hide();
+                // $errorConditionHint.hide();
                 $conditionBox.addClass('xui-hide');
                 localStorage.setItem('pay_times_arr',search_pay_times_list);
                 localStorage.setItem('pay_money_arr',search_pay_m_list);
@@ -429,6 +436,10 @@
                 $consumptionBox.addClass('xui-hide');
             }
         });
+        // document.body.addEventListener('click', 'bodyClick', true);
+        // function bodyClick(){
+        //     console.log("XXXXX")
+        // }
     });
 </script>
 {% endblock %}

@@ -121,7 +121,17 @@ def step_impl(context, webapp_user_name, pay_interface_name):
 		'woid': context.webapp_owner_id
 	}
 	pay_response = requests.post(pay_url, data=data)
-	pay_response_json = json.loads(pay_response.text)
+
+	pay_result_url = 'http://api.weapp.com/wapi/pay/pay_result/?_method=get'
+	data = {
+		'order_id': context.created_order_id, 
+		'access_token': access_token,
+		'openid': openid,
+		'woid': context.webapp_owner_id
+	}
+	pay_result_response = requests.get(pay_result_url, params=data)
+	pay_result = json.loads(pay_result_response.text)
+	context.pay_result = pay_result['data']
 
 
 	# url = '/webapp/api/project_api/call/'
