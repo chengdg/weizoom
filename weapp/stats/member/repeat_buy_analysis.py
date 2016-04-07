@@ -188,7 +188,8 @@ class UserAnalysis(resource.Resource):
 		if pay_money!='':
 			pay_money_arr = pay_money.split(',')
 			buy_fans_ =buy_fans_.filter(pay_money__gte=pay_money_arr[0],pay_money__lte=pay_money_arr[1])
-
+		if  pay_times =='' and pay_money=='':
+			buy_fans_ = buy_fans_.filter(pay_times__gte=1)
 		buy_fans_count = buy_fans_.count()
 
 		response = create_response(200)
