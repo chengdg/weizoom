@@ -165,7 +165,7 @@ Scenario:1 获得店铺首页经营概况的未读消息信息
 		}
 		"""
 
-@mall2 @homePage @statistics  @mall.outline
+@mall2 @homePage @statistics  @mall.outline @duhao
 Scenario:2 获得商铺首页经营概况的订单数量信息
 	jobs的用户购买商品后，jobs能获得正确的待发货订单列表
 

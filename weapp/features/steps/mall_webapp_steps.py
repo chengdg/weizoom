@@ -442,6 +442,10 @@ def step_impl(context, webapp_owner_name):
 		webapp_user_name = row['consumer']
 		if webapp_user_name[0] == u'-':
 			webapp_user_name = webapp_user_name[1:]
+			#先关注再取消关注，模拟非会员购买  duhao  20160407
+			context.execute_steps(u"When %s关注%s的公众号" % (webapp_user_name, webapp_owner_name))
+			context.execute_steps(u"When %s取消关注%s的公众号" % (webapp_user_name, webapp_owner_name))
+			
 			#clear last member's info in cookie and context
 			context.execute_steps(u"When 清空浏览器")
 		else:
