@@ -230,7 +230,6 @@ var currentProduct = null;
 
 var validatePrice =function(input){
 	var isValidate = parseFloat($(input).val()) <= parseFloat($('.xa-product-price').text());
-	console.log('1111111111',parseFloat($(input).val()),'222222222',parseFloat($('.xa-product-price').text()))
 	if(isValidate){
 		$(input).parent().find('.errorHint').hide();
 	}
@@ -254,8 +253,8 @@ var changeAllDiscountedMoney = function() {
 		if (!discountMoney) {
 			return;
 		}
-		var discount = discountMoney/currentProduct.display_price*100;
-		if (parseInt(discount)==discount) {
+		var discount = (discountMoney*1000)/(currentProduct.display_price*1000)*100;
+		if (parseInt(discount) == discount) {
 			$(input).next().next().text(discount);
 		}else{
 			$(input).next().next().text(discount.toFixed(2));
@@ -273,12 +272,8 @@ var changeDiscountedMoney = function(_this) {
 	if (!discountMoney || isNaN(discountMoney)) {
 		return;
 	}
-	// if (discountMoney > currentProduct.display_price) {
-	// 	console.log(111111111);
-	// 	W.validate($input)
-	// }
-	var discount = discountMoney/currentProduct.display_price*100;
-		if (parseInt(discount)==discount) {
+	var discount = (discountMoney*1000)/(currentProduct.display_price*1000)*100;
+		if (parseInt(discount) == discount) {
 			$input.next().next().text(discount);
 		}else{
 			$input.next().next().text(discount.toFixed(2));
