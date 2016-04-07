@@ -114,10 +114,17 @@
 
         var is_subscribed = 'all';
         var search_pay_list = [];
+
+        // 用户分析
         var user_condition_list = [];
+        var search_pay_times_list = [];
+        var search_pay_m_list = [];
         //  本地存储
         var local_search_pay_list = localStorage.getItem('k');
-        var local_user_condition_list = localStorage.getItem('condition')
+        var local_user_condition_list = localStorage.getItem('condition');
+        var local_user_pay_times_list = localStorage.getItem('pay_times_arr');
+        var local_user_pay_money_list = localStorage.getItem('pay_money_arr');
+        // console.log('local_user_pay_times_list',local_user_pay_times_list,local_user_pay_money_list)
         if(local_search_pay_list){
             search_pay_list = local_search_pay_list.split(',');
             console.log('search_pay_list111111111',search_pay_list)
@@ -129,7 +136,10 @@
         }
 
         if(local_user_condition_list){
+            search_pay_times_list = local_user_pay_times_list.split(',');
+            search_pay_m_list = local_user_pay_money_list.split(',');
             user_condition_list = local_user_condition_list.split(',');
+            // console.log('search_pay_times_list',search_pay_times_list,search_pay_m_list)
             // console.log('local_user_condition_list111111111',local_user_condition_list)
             user_condition_list.map(function(val,i){
                 console.log("^^^^^^^^^",i,val)
@@ -165,16 +175,11 @@
                     }
                     if(all != 0){
                         option = {
-                            // tooltip : {
-                            //     trigger: 'item',
-                            //     formatter: "{a} <br/>{b} : {c} ({d}%)"
-                            // },
-                            calculable : true,
                             series : [
                                 {
                                     type:'pie',
-                                    radius : '40%',
-                                    center: ['50%', '60%'],
+                                    radius : '50%',
+                                    center: ['50%','60%'],
                                     data: data.series[0].data
                                 }
                             ]
@@ -211,16 +216,11 @@
                     }
                     if( all != 0){
                         option = {
-                            // tooltip : {
-                            //     trigger: 'item',
-                            //     formatter: "{a} <br/>{b} : {c} ({d}%)"
-                            // },
-                            calculable : true,
                             series : [
                                 {
                                     type:'pie',
-                                    radius : '40%',
-                                    center: ['50%', '60%'],
+                                    radius : '50%',
+                                    center: ['50%','60%'],
                                     data: data.series[0].data
                                 }
                             ]
@@ -304,6 +304,7 @@
                 }       
             });
             if(is_checked){
+                $crossHint.hide();
                 $consumptionBox.addClass('xui-hide');
                 // console.log('search_pay_list',search_pay_list)
                 localStorage.setItem('k',search_pay_list);
@@ -320,8 +321,6 @@
             $conditionBox.toggleClass('xui-hide');
         });
 
-        var search_pay_times_list = [];
-        var search_pay_m_list = [];
 
         function userAnalysis(){
             W.getApi().call({
@@ -396,13 +395,26 @@
                 var conditionArr = search_pay_times_list.concat(search_pay_m_list);
                 console.log('conditionArr',conditionArr)
                 localStorage.setItem('condition',conditionArr);
+                localStorage.setItem('pay_times_arr',search_pay_times_list);
+                localStorage.setItem('pay_money_arr',search_pay_m_list);
                 userAnalysis();
             }else{
                 $errorConditionHint.show();
             }
         });
+        
+        // 点击任意非btn处，弹窗消失
+        $('body').click(function(event) {
+            var $target = $(event.target);
+            // console.log('$target',$target)
+            if (!$target.hasClass('xa-setConditionBtn') && !$target.hasClass('xa-conditionBox') && !$target.parents().hasClass('xa-conditionBox') && !$conditionBox.hasClass('xui-hide')){
+                $conditionBox.addClass('xui-hide');
+            }
 
-
+            if (!$target.hasClass('xa-setConsumptionBtn') && !$target.hasClass('xa-consumptionBox') && !$target.parents().hasClass('xa-consumptionBox') && !$consumptionBox.hasClass('xui-hide')){
+                $consumptionBox.addClass('xui-hide');
+            }
+        });
     });
 </script>
 {% endblock %}
