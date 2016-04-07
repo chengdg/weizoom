@@ -181,16 +181,15 @@ class UserAnalysis(resource.Resource):
 			is_subscribed = [1]
 		elif is_subscribed == '0':
 			is_subscribed = [0]
-
-		if pay_times !='' and pay_money!='':
+		buy_fans_ = Member.objects.filter(webapp_id=webapp_id, is_for_test=False,is_subscribed__in=is_subscribed,status__in=[0,1])
+		if pay_times !='':
 			pay_times_arr = pay_times.split(',')
+			buy_fans_ = buy_fans_.filter(pay_times__gte=pay_times_arr[0],pay_times__lte=pay_times_arr[1])
+		if pay_money!='':
 			pay_money_arr = pay_money.split(',')
-			buy_fans_count = Member.objects.filter(webapp_id=webapp_id, is_for_test=False,is_subscribed__in=is_subscribed,status__in=[0,1])\
-				.filter(pay_times__gte=pay_times_arr[0],pay_times__lte=pay_times_arr[1]).filter(pay_money__gte=pay_money_arr[0],pay_money__lte=pay_money_arr[1]).count()
+			buy_fans_ =buy_fans_.filter(pay_money__gte=pay_money_arr[0],pay_money__lte=pay_money_arr[1])
 
-		else:
-			buy_fans_count = Member.objects.filter(webapp_id=webapp_id, is_for_test=False,is_subscribed__in=is_subscribed,status__in=[0,1])\
-				.filter(pay_times__gte=1).count()
+		buy_fans_count = buy_fans_.count()
 
 		response = create_response(200)
 		response.data = {
