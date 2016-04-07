@@ -121,11 +121,11 @@
         var search_pay_m_list = [];
         //  本地存储
         var local_search_pay_list = localStorage.getItem('k');
-        var local_user_condition_list = localStorage.getItem('condition');
         var local_user_pay_times_list = localStorage.getItem('pay_times_arr');
         var local_user_pay_money_list = localStorage.getItem('pay_money_arr');
 
         function getLocalPayList(){
+            local_search_pay_list = localStorage.getItem('k');
             if(local_search_pay_list){
                 search_pay_list = local_search_pay_list.split(',');
                 console.log('search_pay_list111111111',search_pay_list)
@@ -140,16 +140,27 @@
         getLocalPayList();
 
         function getUserConditionList(){
-            if(local_user_condition_list){
+            local_user_pay_times_list = localStorage.getItem('pay_times_arr');
+            local_user_pay_money_list = localStorage.getItem('pay_money_arr');
+
+            if(local_user_pay_times_list){
                 search_pay_times_list = local_user_pay_times_list.split(',');
-                search_pay_m_list = local_user_pay_money_list.split(',');
-                user_condition_list = local_user_condition_list.split(',');
-                user_condition_list.map(function(val,i){
+                search_pay_times_list.map(function(val,i){
                     console.log("^^^^^^^^^",i,val)
-                    $('.xa-conditionBox input').eq(i).val(val);
+                    $('.xa-buyNum').eq(i).val(val);
                 });
             }else{
-                $('.xa-conditionBox input').val('')
+                $('.xa-buyNum').val('')
+            }
+
+            if(local_user_pay_money_list){
+                search_pay_m_list = local_user_pay_money_list.split(',');
+                search_pay_m_list.map(function(val,i){
+                    console.log("^^^^^^^^^",i,val)
+                    $('.xa-userMoney').eq(i).val(val);
+                });
+            }else{
+                $('.xa-userMoney').val('')
             }
         }
         getUserConditionList();
@@ -398,11 +409,6 @@
             if( is_buyTimeCondition && is_moneyCondition){
                 $errorConditionHint.hide();
                 $conditionBox.addClass('xui-hide');
-                // console.log('search_pay_times_list',search_pay_times_list)
-                // console.log('search_pay_m_list',search_pay_m_list);
-                var conditionArr = search_pay_times_list.concat(search_pay_m_list);
-                console.log('conditionArr',conditionArr)
-                localStorage.setItem('condition',conditionArr);
                 localStorage.setItem('pay_times_arr',search_pay_times_list);
                 localStorage.setItem('pay_money_arr',search_pay_m_list);
                 userAnalysis();
