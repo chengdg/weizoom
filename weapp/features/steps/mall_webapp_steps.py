@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import json
+import requests
 from urllib import unquote
 from datetime import datetime, timedelta
 
@@ -181,10 +182,10 @@ def step_impl(context, webapp_user_name):
 
 
 
-
 @when(u"{webapp_user_name}购买{webapp_owner_name}的商品")
 def step_impl(context, webapp_user_name, webapp_owner_name):
-	"""最近修改: yanzhao
+	"""最近修改: duhao 20160401
+	weapp中一些BDD仍然需要购买相关的测试场景，在这里调用apiserver的接口实现购买操作
 	e.g.:
 		{
 			"order_id": "" # 订单号
@@ -208,7 +209,6 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 			]
 		}
 	"""
-	url = '/webapp/api/project_api/call/'
 	if hasattr(context, 'caller_step_purchase_info') and context.caller_step_purchase_info:
 		args = context.caller_step_purchase_info
 	else:
@@ -220,7 +220,8 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 		if len(promotions) > 0 and (promotions[0].member_grade_id <= 0 or \
 				promotions[0].member_grade_id == member_grade_id):
 			# 存在促销信息，且促销设置等级对该会员开放
-			return promotions[0].id
+			if promotions[0].type != PROMOTION_TYPE_INTEGRAL_SALE:
+				return promotions[0].id
 		return 0
 
 	settings = IntegralStrategySttings.objects.filter(webapp_id=context.webapp_id)
@@ -282,29 +283,31 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 				promotion_ids.append(str(__get_current_promotion_id_for_product(product_obj, member.grade_id)))
 			_product_model_name = _get_product_model_ids_from_name(webapp_owner_id, product.get('model', None))
 			product_model_names.append(_product_model_name)
-			if 'integral' in product and product['integral'] > 0:
-				# integral += product['integral']
-				# integral_group_items.append('%s_%s' % (product_obj.id, _product_model_name))
-				group2integralinfo['%s_%s' % (product_obj.id, _product_model_name)] = {
-					"integral": product['integral'],
-					"money": round(product['integral'] / integral_each_yuan, 2)
-				}
+
+			if __has_active_integral_sale(product_obj.id):
+				if 'integral' in product and product['integral'] > 0:
+					# integral += product['integral']
+					# integral_group_items.append('%s_%s' % (product_obj.id, _product_model_name))
+					group2integralinfo['%s_%s' % (product_obj.id, _product_model_name)] = {
+						"integral": product['integral'],
+						"money": round(product['integral'] / integral_each_yuan, 2)
+					}
 		# if integral:
 		# 	group2integralinfo['-'.join(integral_group_items)] = {
 		# 		"integral": integral,
 		# 		"money": round(integral / integral_each_yuan, 2)
 		# 	}
 
-	order_type = args.get('type', 'normal')
+	order_type = args.get('type', 'object')
 
 	# 处理中文地区转化为id，如果数据库不存在的地区则自动添加该地区
 	ship_area = get_area_ids(args.get('ship_area'))
 
 	data = {
+		"webapp_user_name": webapp_user_name,
+		"webapp_owner_name": webapp_owner_name,  #参数中携带webapp_user_name和webapp_owner_name，方便apiserver处理
 		"woid": webapp_owner_id,
-		"module": 'mall',
 		"is_order_from_shopping_cart": is_order_from_shopping_cart,
-		"target_api": "order/save",
 		"product_ids": '_'.join(product_ids),
 		"promotion_ids": '_'.join(promotion_ids),
 		"product_counts": '_'.join(product_counts),
@@ -321,20 +324,25 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 		"group2integralinfo": json.JSONEncoder().encode(group2integralinfo),
 		"card_name": '',
 		"card_pass": '',
-		"xa-choseInterfaces": PAYNAME2ID.get(args.get("pay_type",""),-1)
+		"xa-choseInterfaces": PAYNAME2ID.get(args.get("pay_type",u"微信支付"),-1)
 	}
-	if 'integral' in args and args['integral'] > 0:
-		# 整单积分抵扣
-		# orderIntegralInfo:{"integral":20,"money":"10.00"}"
-		orderIntegralInfo = dict()
-		orderIntegralInfo['integral'] = args['integral']
-		if 'integral_money' in args:
-			orderIntegralInfo['money'] = args['integral_money']
-		else:
-			orderIntegralInfo['money'] = round(int(args['integral'])/integral_each_yuan, 2)
-		data["orderIntegralInfo"] = json.JSONEncoder().encode(orderIntegralInfo)
+
+	if not group2integralinfo:
+		if 'integral' in args and int(args['integral'] > 0):
+			# 整单积分抵扣
+			# orderIntegralInfo:{"integral":20,"money":"10.00"}"
+			orderIntegralInfo = dict()
+			orderIntegralInfo['integral'] = args['integral']
+			if 'integral_money' in args:
+				orderIntegralInfo['money'] = args['integral_money']
+			else:
+				orderIntegralInfo['money'] = round(int(args['integral'])/integral_each_yuan, 2)
+			data["orderIntegralInfo"] = json.JSONEncoder().encode(orderIntegralInfo)
+
 	if order_type == u'测试购买':
 		data['order_type'] = PRODUCT_TEST_TYPE
+	else:
+		data['order_type'] = order_type
 	if u'weizoom_card' in args:
 		for card in args[u'weizoom_card']:
 			data['card_name'] += card[u'card_name'] + ','
@@ -352,20 +360,45 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 		data['is_use_coupon'] = 'true'
 		data['coupon_id'] = coupon
 
-	response = context.client.post(url, data)
-	context.response = response
+	access_token = bdd_util.get_access_token(member.id, webapp_owner_id)
+	openid = bdd_util.get_openid(member.id, webapp_owner_id)
+
+	url = 'http://api.weapp.com/wapi/mall/order/?_method=put'
+	data['access_token'] = access_token
+	data['openid'] = openid
+	data['woid'] = webapp_owner_id
+	response = requests.post(url, data=data)
 	#response结果为: {"errMsg": "", "code": 200, "data": {"msg": null, "order_id": "20140620180559"}}
 
-	response_json = json.loads(context.response.content)
+	response_json = json.loads(response.text)
+	context.response = response_json
 
 	# raise '----------------debug test----------------------'
 	if response_json['code'] == 200:
 		# context.created_order_id为订单ID
 		context.created_order_id = response_json['data']['order_id']
+
+		#访问支付结果链接
+		pay_url_info = response_json['data']['pay_url_info']
+		pay_type = pay_url_info['type']
+		del pay_url_info['type']
+		# if pay_type == 'cod':
+		# 	pay_url = 'http://api.weapp.com/wapi/pay/pay_result/?_method=put'
+		# 	data = {
+		# 		'pay_interface_type': pay_url_info['pay_interface_type'],
+		# 		'order_id': pay_url_info['order_id'],
+		# 		'access_token': access_token
+		# 	}
+		# 	pay_response = requests.post(url, data=data)
+		# 	pay_response_json = json.loads(pay_response.text)
+
+		#同步更新支付时间
+		if Order.objects.get(order_id=context.created_order_id).status > ORDER_STATUS_CANCEL and args.has_key('payment_time'):
+			Order.objects.filter(order_id=context.created_order_id).update(payment_time=bdd_util.get_datetime_str(args['payment_time']))
 	else:
 		context.created_order_id = -1
 		context.response_json = response_json
-		context.server_error_msg = response_json['data']['msg']
+		context.server_error_msg = response_json['innerErrMsg']
 		print("buy_error----------------------------",context.server_error_msg,response)
 	if context.created_order_id != -1:
 		if 'date' in args:
@@ -385,6 +418,15 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 	context.product_model_names = product_model_names
 	context.webapp_owner_name = webapp_owner_name
 
+def __has_active_integral_sale(product_id):
+	relations = ProductHasPromotion.objects.filter(product_id=product_id)
+	for r in relations:
+		promotion = r.promotion
+		if promotion.type_name == u'积分抵扣' and promotion.is_active:
+			return True
+
+	return False
+
 OPERATION2STEPID = {
 	u'支付': u"When %s'支付'最新订单",
 	u'发货': u"When %s对最新订单进行发货",
@@ -400,6 +442,10 @@ def step_impl(context, webapp_owner_name):
 		webapp_user_name = row['consumer']
 		if webapp_user_name[0] == u'-':
 			webapp_user_name = webapp_user_name[1:]
+			#先关注再取消关注，模拟非会员购买  duhao  20160407
+			context.execute_steps(u"When %s关注%s的公众号" % (webapp_user_name, webapp_owner_name))
+			context.execute_steps(u"When %s取消关注%s的公众号" % (webapp_user_name, webapp_owner_name))
+			
 			#clear last member's info in cookie and context
 			context.execute_steps(u"When 清空浏览器")
 		else:
@@ -430,10 +476,10 @@ def step_impl(context, webapp_owner_name):
 		# 	data['type'] = purchase_type
 		# TODO 统计BDD使用，需要删掉
 		# data['ship_name'] = webapp_user_name
-		if row.get('product_integral', None):
+		if row.get('integral', None):
 			tmp = 0
 			try:
-				tmp = int(row['product_integral'])
+				tmp = int(row['integral'])
 			except:
 				pass
 

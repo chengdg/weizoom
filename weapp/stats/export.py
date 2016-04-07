@@ -19,6 +19,8 @@ SALES_ORDER_SUMMARY_NAV = 'order_summary'
 # SALES_ORDER_LIST_NAV = 'order_list'
 PRODUCT_SUMMARY_NAV = 'product_summary'
 MARKETING_ACTIVITY_NAV = 'activity_analysis'
+MEMBER_SUMMARY_NAV = 'member_summary'
+REPEAT_BUY_ANALISIS_NAV = 'repeat_buy_analysis'
 
 STATS_SECOND_NAV = {
     'navs': [
@@ -59,7 +61,20 @@ STATS_SECOND_NAV = {
             'name': STATS_MEMBER_SECOND_NAV,
             'title': u'会员分析',
             'url': '/stats/member_summary/',
-            'permission': 'member_summary'
+            'permission': 'member_summary',
+            'third_navs': [
+                {
+                    'name': MEMBER_SUMMARY_NAV,
+                    'title': u'会员概况分析',
+                    'url': '/stats/member_summary/',
+                    'permission': ''
+                }, {
+                    'name': REPEAT_BUY_ANALISIS_NAV,
+                    'title': u'复购分析',
+                    'url': '/stats/repeat_buy_analysis/',
+                    'permission': ''
+                }
+            ]
         }
     ]
 }

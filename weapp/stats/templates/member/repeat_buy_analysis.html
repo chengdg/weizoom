@@ -1,0 +1,445 @@
+{% extends "content_base_v2.html" %}
+{% load project_filter %}
+{% load account_filter %}
+
+{% block content-panel %}
+<style>
+
+
+</style>
+<div class="xui-wepage-BIPage xui-rePurchaseAnalyzePage">
+    <div class="relative">
+        <ul class="breadcrumb">
+            <li>您当前所在位置</li>
+            <li><a href="/stats/order_summary/">会员分析</a></li>
+            <li class="active">复购分析</li>
+        </ul>
+    </div>
+    
+    <div class="xb-rightPanel pl10 pr10 pb30">
+        <div class="xui-filter xui-filterPanel pl40" style="padding-top:22px;">
+            会员状态：
+            <select name="" id="" class="xa-memberStateSelect xui-memberStateSelect">
+                <option value="all">全部</option>
+                <option value="1">已关注</option>
+                <option value="0">取消关注</option>
+            </select>
+        </div>
+        <div class="xui-charWrap xui-userAnalysisBox" style="height:271px;">
+            <div class="xui-i-title">
+                <div class="xui-i-block"></div>
+                <span class="ml5">用户分析</span>
+                <div class="fr f12 xui-setCondition pr">
+                    <span class="xui-setConditionBtn xa-setConditionBtn mr10 pr">条件设置</span>
+                    <div class="pa xui-conditionBox xa-conditionBox xui-hide">
+                        <div class="lh26">
+                            <span>购买次数：</span>
+                            <input type="text" placeholder="" class="xa-conditionNum xa-buyNum xa-buyNum0">&nbsp;-&nbsp;
+                            <input type="text" placeholder="" class="xa-conditionNum xa-buyNum xa-buyNum1">
+                            <div class="errorHint"></div>
+                        </div>
+                        <div class="lh26">
+                            <span>消费金额：</span>
+                            <input type="text" placeholder="" class="xa-conditionNum xa-userMoney xa-userMoney0">&nbsp;-&nbsp;
+                            <input type="text" placeholder="" class="xa-conditionNum xa-userMoney xa-userMoney1">
+                            <div class="errorHint"></div>
+                        </div>
+                        <div class="fr xui-confirm xa-confirmuserBtn">确认</div>
+                        <div class="cRed fr mr5 xui-hide xa-errorConditionHint">请输入正确的次数区间</div>
+                    </div>
+                </div>
+            </div>
+            <div id="userAnalysis" class="xui-userAnalysis">
+                <span id="user_buy_count" style="font-size: 42px;">0</span>
+            </div>
+            <div  class="f14 xui-bold tc">
+                <span>已圈养用户</span>
+            </div>
+        </div>
+        <div class="xui-charWrap fl" style="height:400px;">
+            <div class="xui-i-title"> <div class="xui-i-block"></div><span class="ml5">会员购买占比</span></div>
+            <div id="memberPurchaseScale" class="pr" style="height:400px;top:-60px;"></div>
+
+        </div>
+        <div class="xui-charWrap fr" style="height:400px;">
+            <div class="xui-i-title"> 
+                <div class="xui-i-block"></div>
+                <span class="ml5">
+                    复购会员分析
+                    <img class="xui-i-img xui-consumptionHelp pr" id="consumption_help" src="/static_v2/img/editor/help.png"/>
+                </span>
+                <span class="fr f12 xui-setConsumption pr">
+                    <span class="xui-setConsumptionBtn xa-setConsumptionBtn mr10 pr">设置消费总额</span>
+                    <div class="pa xui-consumptionBox xa-consumptionBox xui-hide">
+                        <div class="lh26">
+                            <span>消费额区间1（元）：</span>
+                            <input type="text" placeholder="请输入整数" class="xui-comsumptionNum xui-comsumptionNum0">&nbsp;-&nbsp;
+                            <input type="text" placeholder="请输入整数" class="xui-comsumptionNum xui-comsumptionNum1">
+                            <div class="errorHint"></div>
+                        </div>
+                        <div class="lh26">
+                            <span>消费额区间2（元）：</span>
+                            <input type="text" placeholder="请输入整数" class="xui-comsumptionNum xui-comsumptionNum2">&nbsp;-&nbsp;
+                            <input type="text" placeholder="请输入整数" class="xui-comsumptionNum xui-comsumptionNum3">
+                            <div class="errorHint"></div>
+                        </div>
+                        <div class="lh26">
+                            <span>消费额区间3（元）：</span>
+                            <input type="text" placeholder="请输入整数" class="xui-comsumptionNum xui-comsumptionNum4">&nbsp;-&nbsp;
+                            <input type="text" placeholder="请输入整数" class="xui-comsumptionNum xui-comsumptionNum5">
+                            <div class="errorHint"></div>
+                        </div>
+                        <div class="fr xui-confirm xa-confirmBtn">确认</div>
+                        <div class="cRed fr mr5 xui-hide xa-crossHint">格式不正确，请输入整数</div>
+                        <!-- <div class="cRed fr mr5 xui-hide xa-crossHint">消费额区间需逐渐递增，不能交叉</div> -->
+                    </div>
+                </span>
+            </div>
+            <div id="rePurchaseAnalysis" class="pr" style="height:400px;top:-60px;"></div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+    $(document).ready(function(){
+        // title提示框
+        $('#consumption_help').popover({
+            content : "<div class='xui-i-alert'>若区间设为（A，B），则取值包含A，但不包含B</div><div>例如：消费额区间1（元）：<span class='xui-rangeBox'>10</span>-<span class='xui-rangeBox'>100</span>则取值包含10，但不包含100</div>",
+            trigger : "hover",
+            html : true,
+            placement : "bottom"
+        });
+
+        var is_subscribed = 'all';
+        var search_pay_list = [];
+
+        // 用户分析
+        var user_condition_list = [];
+        var search_pay_times_list = [];
+        var search_pay_m_list = [];
+        //  本地存储
+        var local_search_pay_list = localStorage.getItem('k');
+        var local_user_pay_times_list = localStorage.getItem('pay_times_arr');
+        var local_user_pay_money_list = localStorage.getItem('pay_money_arr');
+
+        function getLocalPayList(){
+            local_search_pay_list = localStorage.getItem('k');
+            if(local_search_pay_list){
+                search_pay_list = local_search_pay_list.split(',');
+                console.log('search_pay_list111111111',search_pay_list)
+                search_pay_list.map(function(val,i){
+                    console.log("^^^^^^^^^",i,val)
+                    $('.xui-comsumptionNum'+i).val(val);
+                });
+            }else{
+                $('.xa-consumptionBox input').val('');
+            }
+        }
+        getLocalPayList();
+
+        function getUserConditionList(){
+            local_user_pay_times_list = localStorage.getItem('pay_times_arr');
+            local_user_pay_money_list = localStorage.getItem('pay_money_arr');
+
+            if(local_user_pay_times_list){
+                search_pay_times_list = local_user_pay_times_list.split(',');
+                search_pay_times_list.map(function(val,i){
+                    console.log("^^^^^^^^^",i,val)
+                    $('.xa-buyNum').eq(i).val(val);
+                });
+            }else{
+                $('.xa-buyNum').val('')
+            }
+
+            if(local_user_pay_money_list){
+                search_pay_m_list = local_user_pay_money_list.split(',');
+                search_pay_m_list.map(function(val,i){
+                    console.log("^^^^^^^^^",i,val)
+                    $('.xa-userMoney').eq(i).val(val);
+                });
+            }else{
+                $('.xa-userMoney').val('')
+            }
+        }
+        getUserConditionList();
+
+        // 改变会员状态
+        $('.xa-memberStateSelect').change(function(){
+            var memberState = $(this).children('option:selected').val();
+            // alert(memberState)
+            is_subscribed = memberState;
+            memberBuyPercent();
+            rePurchaseAnalysis();
+            userAnalysis();
+        });
+
+        // 会员购买占比
+        function memberBuyPercent(){
+            W.getApi().call({
+                app: 'stats',
+                resource: 'buy_percent',
+                method: 'get',
+                args: {
+                    is_subscribed: is_subscribed
+                },
+                scope: this,
+                success: function(data) {
+                    var all = 0;
+                    for(var i in data.series[0].data){
+                        all += data.series[0].data[i].value;
+                    }
+                    if(all != 0){
+                        option = {
+                            series : [
+                                {
+                                    type:'pie',
+                                    radius : '50%',
+                                    center: ['50%','60%'],
+                                    data: data.series[0].data
+                                }
+                            ]
+                        };
+                        var theChart = echarts.init(document.getElementById('memberPurchaseScale'));
+                        theChart.setOption(option);
+                    }else{
+                        $('#memberPurchaseScale')[0].innerHTML ='<div class="xui-noData"></div>';
+                    }
+
+                },
+                error: function(resp) {
+                    alert('获取统计数据失败!');
+                }
+            });
+        }
+        memberBuyPercent();
+
+        //复购会员 
+        function rePurchaseAnalysis(){
+            W.getApi().call({
+                app: 'stats',
+                resource: 'repeat_buy_analysis',
+                method: 'get',
+                args: {
+                    is_subscribed: is_subscribed,
+                    search_pay_list:search_pay_list
+                },
+                scope: this,
+                success: function(data) {
+                    var all = 0;
+                    for(var i in data.series[0].data){
+                        all += data.series[0].data[i].value;
+                    }
+                    if( all != 0){
+                        option = {
+                            series : [
+                                {
+                                    type:'pie',
+                                    radius : '50%',
+                                    center: ['50%','60%'],
+                                    data: data.series[0].data
+                                }
+                            ]
+                        };
+                        var theChart = echarts.init(document.getElementById('rePurchaseAnalysis'));
+                        theChart.setOption(option);
+                    }else{
+                       $('#rePurchaseAnalysis')[0].innerHTML ='<div class="xui-noData"></div>';
+                    }
+                },
+                error: function(resp) {
+                    alert('获取统计数据失败!');
+                }
+            });
+        };
+
+        rePurchaseAnalysis();
+
+        // 判断数字格式
+        var require_int = /^\d+$/;
+        var require_float = /^\d{1,5}(\.\d{1,2})?$/;
+
+        var $setConsumptionBtn = $('.xui-setConsumptionBtn');
+        var $confirmBtn = $('.xa-confirmBtn');
+        var $consumptionBox = $('.xa-consumptionBox');
+        var $comsumptionNum = $('.xui-comsumptionNum');
+        var $crossHint = $('.xa-crossHint');
+        $setConsumptionBtn.click(function() {
+            getLocalPayList();
+            $crossHint.hide();
+            $('.xui-comsumptionNum').css('border','1px solid #ccc');
+            $consumptionBox.toggleClass('xui-hide');
+        });
+    
+        console.log('$comsumptionNum',$comsumptionNum);
+        $confirmBtn.click(function(){
+            var is_checked = true;
+            search_pay_list = [];
+            console.log('search_pay_list>>>>',search_pay_list)
+            if($comsumptionNum[0].value == '' && $comsumptionNum[1].value == '' && $comsumptionNum[2].value == '' && $comsumptionNum[3].value == '' && $comsumptionNum[4].value == '' && $comsumptionNum[5].value == ''){
+                search_pay_list = [];
+                is_checked = true;
+            }else{
+                $comsumptionNum.map(function(i,val){
+                console.log(i,val.value)
+                $('.xui-comsumptionNum'+i).css('border','1px solid #ccc');
+                var value = Number(val.value);
+                // console.log('require_int.test(value)',require_int.test(value),value,parseInt(val.value))
+                // 数据格式
+                if(!require_int.test(value)){
+                    // console.log("false~~~~~~~~~~~")
+                    $crossHint.text('格式不正确，请输入整数').show();
+                    $('.xui-comsumptionNum'+i).css('border','1px solid #DB4343');
+                    is_checked = false;
+                }
+                search_pay_list.push(value);
+            });
+                var minusArr = [];
+                for(var i=5; i>=0; i--){
+                    if(i > 0){
+                        var minus = search_pay_list[i] - search_pay_list[i-1];
+                        console.log('minus',minus);
+                        minusArr[i-1] = minus;
+                    }
+                }
+                var is_error = false;
+                minusArr.map(function(item, idx){
+                    if (idx % 2 == 0) {
+                      if (item <= 0) {
+                          is_error = true;
+                          is_checked = false;
+                          $crossHint.text('消费额区间需逐渐递增，不能交叉').show();
+                      }
+                    } else {
+                      if (item < 0) {
+                          is_error = true;
+                          is_checked = false;
+                          $crossHint.text('消费额区间需逐渐递增，不能交叉').show();
+                      }
+                    }
+                    var nextIndex = idx + 1;
+                    if(is_error){
+                        console.log('idx')
+                        $('.xui-comsumptionNum'+idx).css('border','1px solid #DB4343'); 
+                        $('.xui-comsumptionNum'+nextIndex).css('border','1px solid #DB4343'); 
+                        is_error = false;
+                    }       
+                });
+            }
+            if(is_checked){
+                // $crossHint.hide();
+                $consumptionBox.addClass('xui-hide');
+                // console.log('search_pay_list',search_pay_list)
+                localStorage.setItem('k',search_pay_list);
+                rePurchaseAnalysis();
+            }
+        });
+
+        // 用户分析
+        var $setConditionBtn = $('.xa-setConditionBtn');
+        var $confirmuserBtn = $('.xa-confirmuserBtn');
+        var $conditionBox = $('.xa-conditionBox');
+        var $errorConditionHint = $('.xa-errorConditionHint');
+        $setConditionBtn.click(function() {
+            getUserConditionList();
+            $errorConditionHint.hide();
+            $conditionBox.toggleClass('xui-hide');
+        });
+
+
+        function userAnalysis(){
+            W.getApi().call({
+                app: 'stats',
+                resource: 'user_analysis',
+                method: 'get',
+                args: {
+                    is_subscribed: is_subscribed,
+                    pay_times:search_pay_times_list,
+                    pay_money:search_pay_m_list
+                },
+                scope: this,
+                success: function(data) {
+
+                   $("#user_buy_count")[0].innerHTML = data.fans_num;
+                },
+                error: function(resp) {
+                    alert('获取统计数据失败!');
+                }
+            });
+        };
+        userAnalysis();
+
+        var $buyNum = $('.xa-buyNum');
+        var $userMoney = $('.xa-userMoney');
+        $confirmuserBtn.click(function(event) {
+            var is_buyTimeCondition = true;
+            var is_moneyCondition = true;
+            search_pay_times_list = [];
+            search_pay_m_list = [];
+            var buyNum0 = Number($buyNum[0].value);
+            var buyNum1 = Number($buyNum[1].value);
+            var userMoney0 = Number($userMoney[0].value);
+            var userMoney1 = Number($userMoney[1].value);
+            $buyNum.map(function(val,i){
+                // console.log($(this),2222)
+                var thisVal = $(this)[0].value;
+                var siblingsVal = $(this).siblings('input')[0].value;
+                var thisNum = Number(thisVal);
+                if( thisVal == '' && siblingsVal == ''){
+                    is_buyTimeCondition =true;                    
+                }else if(thisVal != '' && siblingsVal != '' && buyNum0 <= buyNum1 && require_int.test(buyNum0) && require_int.test(buyNum1)){
+                    search_pay_times_list.push(thisNum);
+                    is_buyTimeCondition =true;
+                }else{
+                    is_buyTimeCondition =false;
+                    $errorConditionHint.text('请输入正确的次数区间');
+                }
+            });
+            $userMoney.map(function(val,i){
+                var thisVal = $(this)[0].value;
+                var siblingsVal = $(this).siblings('input')[0].value;
+                var thisNum = Number(thisVal);
+                var siblingsNum = Number(siblingsVal);
+                console.log('thisNum',thisNum,siblingsNum)
+                console.log('thisNum',require_float.test(userMoney0) ,require_float.test(userMoney1))
+                if( thisVal == '' && siblingsVal == ''){
+                    is_moneyCondition =true;
+                }else if(thisVal != '' && siblingsVal != '' && userMoney0 <= userMoney1 && require_float.test(userMoney0) && require_float.test(userMoney1)){
+                    search_pay_m_list.push(thisNum);
+                    is_moneyCondition =true;
+                }else{
+                    is_moneyCondition =false;
+                    $errorConditionHint.text('请输入正确的消费区间');
+                }
+            })
+            if( is_buyTimeCondition && is_moneyCondition){
+                // $errorConditionHint.hide();
+                $conditionBox.addClass('xui-hide');
+                localStorage.setItem('pay_times_arr',search_pay_times_list);
+                localStorage.setItem('pay_money_arr',search_pay_m_list);
+                userAnalysis();
+            }else{
+                $errorConditionHint.show();
+            }
+        });
+        
+        // 点击任意非btn处，弹窗消失
+        $('body').click(function(event) {
+            var $target = $(event.target);
+            // console.log('$target',$target)
+            if (!$target.hasClass('xa-setConditionBtn') && !$target.hasClass('xa-conditionBox') && !$target.parents().hasClass('xa-conditionBox') && !$conditionBox.hasClass('xui-hide')){
+                $conditionBox.addClass('xui-hide');
+            }
+
+            if (!$target.hasClass('xa-setConsumptionBtn') && !$target.hasClass('xa-consumptionBox') && !$target.parents().hasClass('xa-consumptionBox') && !$consumptionBox.hasClass('xui-hide')){
+                $consumptionBox.addClass('xui-hide');
+            }
+        });
+        // document.body.addEventListener('click', 'bodyClick', true);
+        // function bodyClick(){
+        //     console.log("XXXXX")
+        // }
+    });
+</script>
+{% endblock %}
