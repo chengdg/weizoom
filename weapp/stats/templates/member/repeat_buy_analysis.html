@@ -133,6 +133,8 @@
                     console.log("^^^^^^^^^",i,val)
                     $('.xui-comsumptionNum'+i).val(val);
                 });
+            }else{
+                $('.xa-consumptionBox input').val('');
             }
         }
         getLocalPayList();
@@ -146,6 +148,8 @@
                     console.log("^^^^^^^^^",i,val)
                     $('.xa-conditionBox input').eq(i).val(val);
                 });
+            }else{
+                $('.xa-conditionBox input').val('')
             }
         }
         getUserConditionList();
