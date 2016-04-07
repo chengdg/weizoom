@@ -167,13 +167,13 @@ Background:
 		| order_id |   date     | consumer | product  | payment | pay_type | postage*| price* | integral         |       coupon         | paid_amount*|  weizoom_card   | alipay*| wechat*| cash*|   action    | order_status*|
 		|   1001   | 2014-08-05 | bill     | 商品1,1  | 支付    | 支付宝   | 10      | 100    |                  |                      | 110         | 0000001,1234567 | 0      | 0      | 0    |  jobs,完成  | 已完成       |
 
-		|   2000   | 2014-08-06 | bill2    | 商品1,1  |         |          | 10      | 100    |                  |                      | 115         |                 | 0      | 0      | 0    |  jobs,取消  | 已取消       |    
+		|   2000   | 2014-08-06 | bill2    | 商品1,1  |         |          | 10      | 100    |                  |                      | 110         |                 | 0      | 0      | 0    |  jobs,取消  | 已取消       |    
 		|   2001   | 2014-08-06 | bill2    | 商品1,1  | 支付    | 微信支付 | 10      | 100    | 200              |                      | 90          |                 | 0      | 90     | 0    |  jobs,完成  | 已完成       |
 		|   2002   | 2014-08-06 | bill2    | 商品1,1  | 支付    | 支付宝   | 10      | 100    |                  | 全体券1,coupon1_id_1 | 100         |                 | 100    | 0      | 0    |  jobs,完成  | 已完成       |
 
 		|   3000   | 2014-08-07 | bill3    | 商品2,1  | 支付    | 货到付款 | 15      | 200    |                  |                      | 215         |                 | 0      | 0      | 215  |             | 待发货       |
 		|   3001   | 2014-08-07 | bill3    | 商品2,1  | 支付    | 微信支付 | 15      | 200    |                  | 全体券1,coupon1_id_2 | 185         | 0000002,1234567 | 0      | 185    | 0    |  jobs,完成  | 已完成       |
-		|   3002   | 2014-08-07 | bill3    | 商品2,1  | 支付    | 微信支付 | 15      | 200    |                  |                      | 110         |                 | 0      | 110    | 0    |  jobs,完成  | 已完成       |
+		|   3002   | 2014-08-07 | bill3    | 商品2,1  | 支付    | 微信支付 | 15      | 200    |                  |                      | 215         |                 | 0      | 215    | 0    |  jobs,完成  | 已完成       |
 		|   3003   | 2014-08-07 | bill3    | 商品3,1  | 支付    | 微信支付 | 0       | 10     |                  | 全体券1,coupon1_id_3 |  0          |                 | 0      | 0      | 0    |  jobs,完成  | 已完成       |
 
 
@@ -215,11 +215,11 @@ Background:
 	#	|  bill6   |     200    |   660.00  |    6      | 已关注 |
 	#	|  bill5   |     200    |   950.00  |    5      | 已关注 |
 	#	|  bill4   |     200    |   840.00  |    4      | 已关注 |
-	#	|  bill3   |     0      |   295.00  |    3      | 已关注 |
+	#	|  bill3   |     200    |   420.00  |    3      | 已关注 |
 	#	|  bill2   |     0      |   190.00  |    2      | 已关注 |
 	#	|  bill    |     200    |   110.00  |    1      | 已关注 |
 
-@stats @stats.member @zhaoleixxx
+@mall2 @stats @stats.member @zhaolei
 Scenario:1 复购分析,查看'用户分析'数据
 	Given jobs登录系统
 	#会员状态-全部(默认条件-全部)
@@ -229,8 +229,8 @@ Scenario:1 复购分析,查看'用户分析'数据
 			"member_counts":8
 		}
 		"""
-  	When jobs设置条件设置
-
+	#'购买次数'边界值在筛选时都包括
+	When jobs设置条件设置
 		"""
 		{
 			"pay_times_start":1,
@@ -279,7 +279,30 @@ Scenario:1 复购分析,查看'用户分析'数据
 		}
 		"""
 
-@stats @stats.member
+	#'消费金额'边界值在筛选时都包括
+	When jobs设置条件设置
+		"""
+		{
+			"pay_times_start":1,
+			"pay_times_end":5,
+			"pay_money_start":110,
+			"pay_money_end":420
+		}
+		"""
+	When jobs设置筛选条件
+		"""
+		{
+			"member_status":"全部"
+		}
+		"""
+	Then jobs获得用户分析统计数据
+		"""
+		{
+			"member_counts":4
+		}
+		"""
+
+@mall2 @stats @stats.member @zhaolei
 Scenario:2 复购分析,查看'会员购买占比'数据
 	Given jobs登录系统
 	#会员状态-全部(默认条件-全部)
@@ -331,7 +354,7 @@ Scenario:2 复购分析,查看'会员购买占比'数据
 		]
 		"""
 
-@stats @stats.member
+@mall2 @stats @stats.member @zhaolei
 Scenario:3 复购分析,查看'复购会员分析'数据
 	Given jobs登录系统
 	#会员状态-全部(默认条件-全部)
@@ -406,3 +429,4 @@ Scenario:3 复购分析,查看'复购会员分析'数据
 
 		]
 		"""
+
