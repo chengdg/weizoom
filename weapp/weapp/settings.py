@@ -828,7 +828,7 @@ hack_django.hack(DJANGO_HACK_PARAMS)
 
 if MODE == 'develop' or MODE == 'test':
     APPS_H5_DOMAIN = 'h5.red.weapp.weizzz.com'
-    MARKETAPP_DOMAIN = 'marketapp.weapp.com'
 else:
     APPS_H5_DOMAIN = 'h5.weapp.com'
-    MARKETAPP_DOMAIN = 'marketapp.weapp.com'
+
+MARKETAPP_DOMAIN = 'marketapp.weapp.com'
