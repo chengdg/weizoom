@@ -283,13 +283,15 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 				promotion_ids.append(str(__get_current_promotion_id_for_product(product_obj, member.grade_id)))
 			_product_model_name = _get_product_model_ids_from_name(webapp_owner_id, product.get('model', None))
 			product_model_names.append(_product_model_name)
-			if 'integral' in product and product['integral'] > 0:
-				# integral += product['integral']
-				# integral_group_items.append('%s_%s' % (product_obj.id, _product_model_name))
-				group2integralinfo['%s_%s' % (product_obj.id, _product_model_name)] = {
-					"integral": product['integral'],
-					"money": round(product['integral'] / integral_each_yuan, 2)
-				}
+
+			if __has_active_integral_sale(product_obj.id):
+				if 'integral' in product and product['integral'] > 0:
+					# integral += product['integral']
+					# integral_group_items.append('%s_%s' % (product_obj.id, _product_model_name))
+					group2integralinfo['%s_%s' % (product_obj.id, _product_model_name)] = {
+						"integral": product['integral'],
+						"money": round(product['integral'] / integral_each_yuan, 2)
+					}
 		# if integral:
 		# 	group2integralinfo['-'.join(integral_group_items)] = {
 		# 		"integral": integral,
@@ -325,16 +327,18 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 		"xa-choseInterfaces": PAYNAME2ID.get(args.get("pay_type",u"微信支付"),-1)
 	}
 
-	if 'product_integral' in args and args['product_integral'] > 0:
-		# 整单积分抵扣
-		# orderIntegralInfo:{"integral":20,"money":"10.00"}"
-		orderIntegralInfo = dict()
-		orderIntegralInfo['integral'] = args['integral']
-		if 'integral_money' in args:
-			orderIntegralInfo['money'] = args['integral_money']
-		else:
-			orderIntegralInfo['money'] = round(int(args['integral'])/integral_each_yuan, 2)
-		data["orderIntegralInfo"] = json.JSONEncoder().encode(orderIntegralInfo)
+	if not group2integralinfo:
+		if 'integral' in args and int(args['integral'] > 0):
+			# 整单积分抵扣
+			# orderIntegralInfo:{"integral":20,"money":"10.00"}"
+			orderIntegralInfo = dict()
+			orderIntegralInfo['integral'] = args['integral']
+			if 'integral_money' in args:
+				orderIntegralInfo['money'] = args['integral_money']
+			else:
+				orderIntegralInfo['money'] = round(int(args['integral'])/integral_each_yuan, 2)
+			data["orderIntegralInfo"] = json.JSONEncoder().encode(orderIntegralInfo)
+
 	if order_type == u'测试购买':
 		data['order_type'] = PRODUCT_TEST_TYPE
 	else:
@@ -414,6 +418,15 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 	context.product_model_names = product_model_names
 	context.webapp_owner_name = webapp_owner_name
 
+def __has_active_integral_sale(product_id):
+	relations = ProductHasPromotion.objects.filter(product_id=product_id)
+	for r in relations:
+		promotion = r.promotion
+		if promotion.type_name == u'积分抵扣' and promotion.is_active:
+			return True
+
+	return False
+
 OPERATION2STEPID = {
 	u'支付': u"When %s'支付'最新订单",
 	u'发货': u"When %s对最新订单进行发货",
@@ -459,10 +472,10 @@ def step_impl(context, webapp_owner_name):
 		# 	data['type'] = purchase_type
 		# TODO 统计BDD使用，需要删掉
 		# data['ship_name'] = webapp_user_name
-		if row.get('product_integral', None):
+		if row.get('integral', None):
 			tmp = 0
 			try:
-				tmp = int(row['product_integral'])
+				tmp = int(row['integral'])
 			except:
 				pass
 
@@ -471,8 +484,7 @@ def step_impl(context, webapp_owner_name):
 				# 先为会员赋予积分,再使用积分
 				# TODO 修改成jobs修改bill积分
 				context.execute_steps(u"When %s获得%s的%s会员积分" % (webapp_user_name, webapp_owner_name, row['integral']))
-			# data['products'][0]['integral'] = tmp  #duhao 20160405注释掉，改用product_integral，用来区分整单抵扣积分和积分应用抵扣积分
-			data['products'][0]['product_integral'] = tmp
+			data['products'][0]['integral'] = tmp
 
 		if row.get('coupon', '') != '':
 			if ',' in row['coupon']:
