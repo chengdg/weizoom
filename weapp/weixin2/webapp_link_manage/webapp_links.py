@@ -21,6 +21,8 @@ from core import resource
 from core import paginator
 from core.jsonresponse import create_response
 import utils as webapp_link_utils
+from core.exceptionutil import unicode_full_stack
+from watchdog.utils import watchdog_error
 
 
 COUNT_PER_PAGE = 20
@@ -186,9 +188,14 @@ class WebappItemLinks(resource.Resource):
 			"link_type": link_type,
 			"query": query
 		}
-		api_resp_text = requests.get(URL, args).text
-		print URL, 'marketapp get_app_items===============>>>', api_resp_text
-		api_resp = json.loads(api_resp_text)
+		try:
+			api_resp_text = requests.get(URL, args).text
+			print URL, 'marketapp get_app_items===============>>>', api_resp_text
+			api_resp = json.loads(api_resp_text)
+		except:
+			api_resp = {}
+			notify_message = u"api request marketapp get_app_link failed:::: ".format(unicode_full_stack())
+			watchdog_error(notify_message)
 
 		if api_resp.get('data', None):
 			api_data = api_resp['data']

@@ -28,6 +28,8 @@ from mall.promotion.models import RedEnvelopeRule
 
 from apps.customerized_apps.sign.export import get_sign_webapp_link
 from weapp import settings
+from core.exceptionutil import unicode_full_stack
+from watchdog.utils import watchdog_error
 
 def get_marketapp_links(webapp_owner_id, extends_data):
 	"""
@@ -91,17 +93,21 @@ def get_marketapp_links(webapp_owner_id, extends_data):
 	"""
 	URL = "http://%s/apps/export/api/get_app_link/" % (settings.MARKETAPP_DOMAIN)
 	args = {'webapp_owner_id': webapp_owner_id}
-	api_resp_text = requests.get(URL, args).text
-	print URL, 'marketapp get_app_link===============>>>', api_resp_text
-	api_resp = json.loads(api_resp_text)
+	try:
+		api_resp_text = requests.get(URL, args).text
+		print URL, 'marketapp get_app_link===============>>>', api_resp_text
+		api_resp = json.loads(api_resp_text)
 
-	extends_data.extend([{
-		'name': d['name'],
-		'type': d['type'],
-		'add_btn_title': d['add_btn_title'],
-		'add_link': d['add_link'],
-		'users': d['users']
-	} for d in api_resp['data']])
+		extends_data.extend([{
+			'name': d['name'],
+			'type': d['type'],
+			'add_btn_title': d['add_btn_title'],
+			'add_link': d['add_link'],
+			'users': d['users']
+		} for d in api_resp['data']])
+	except:
+		notify_message = u"api request marketapp get_app_link failed:::: ".format(unicode_full_stack())
+		watchdog_error(notify_message)
 	return extends_data
 
 def get_webapp_link_menu_objectes(request):
