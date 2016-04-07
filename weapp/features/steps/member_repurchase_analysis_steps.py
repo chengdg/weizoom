@@ -75,6 +75,8 @@ def step_impl(context, user):
 		context.is_subscribed ='1'
 	elif is_subscribed == u'取消关注':
 		context.is_subscribed ='0'
+	elif is_subscribed == u'全部':
+		context.is_subscribed ='all'
 
 @when(u'{user}设置消费总额')
 def step_impl(context, user):
