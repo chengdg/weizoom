@@ -876,6 +876,7 @@
 	margin-top: 197px;
 	margin-left: 135px;
 }
-.popover {
-	width: 1000px!important;
+.xui-rePurchaseAnalyzePage .popover {
+	max-width: 455px;
+	font-size: 12px;
 }
