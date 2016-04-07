@@ -7,7 +7,22 @@ W.view.member.memberFilterView = Backbone.View.extend({
         'click .recently-week-day': 'setDateText',
         'click .export-btn': 'exportBtn',
         'click .xa-more-filter': 'onClickMoreFilterButton',
-        'click .xa-reset': 'onClickReset'
+        'click .xa-reset': 'onClickReset',
+        'change #status': 'onChangeStatus'
+    },
+
+    onChangeStatus: function(event){
+      this.toggleCancelSubscribeDate();      
+    },
+
+    toggleCancelSubscribeDate: function() {
+      var $tag = $('#cancel_subscribe_start_time').parent();
+      var status = $('#status').val();
+      if (status == '0') {
+        $tag.show();
+      } else {
+        $tag.hide();
+      }
     },
 
     // 点击‘最近7天’或‘最近30天’
@@ -75,6 +90,26 @@ W.view.member.memberFilterView = Backbone.View.extend({
             W.getErrorHintView().show('关注开始日期不能大于关注结束日期！');
             return false;
         }
+
+        if ($('#status').val() == '0') {
+          var cancelSubscribeStartDate = $('#cancel_subscribe_start_time').val();
+          var cancelSubscribeEndDate = $('#cancel_subscribe_end_time').val();
+          if (cancelSubscribeStartDate.length > 0 && cancelSubscribeEndDate.length == 0) {
+              W.getErrorHintView().show('请输入取消关注时间！');
+              return false;
+          }
+          if (cancelSubscribeEndDate.length > 0 && cancelSubscribeStartDate.length == 0) {
+              W.getErrorHintView().show('请输入取消关注时间！');
+              return false;
+          }
+          var start = new Date(cancelSubscribeStartDate.replace("-", "/").replace("-", "/"));
+          var end = new Date(cancelSubscribeEndDate.replace("-", "/").replace("-", "/"));
+          if ((cancelSubscribeStartDate.length > 0 || cancelSubscribeEndDate.length > 0) && start > end){
+              W.getErrorHintView().show('取消关注时间的开始时间不能大于其结束时间！');
+              return false;
+          }
+        }
+
         if ($('.m_unit_price').length == 2){
             var mUnitPrice_1 = $('.m_unit_price')[0];
             var mUnitPrice_2 = $('.m_unit_price')[1];
@@ -223,7 +258,7 @@ W.view.member.memberFilterView = Backbone.View.extend({
         var firstPayEndDate = $('#first_pay_end_date').val();
 
         if (firstPayStartDate && firstPayEndDate) {
-            dataValue.push("first_pay:"+firstPayStartDate+"--"+firstPayEndDate)
+            dataValue.push("first_pay:"+firstPayStartDate+"--"+firstPayEndDate);
         }
 
         var subStartDate = $('#sub_start_date').val();
@@ -235,9 +270,14 @@ W.view.member.memberFilterView = Backbone.View.extend({
         var messageStartDate = $('#last_message_start_time').val();
         var messageEndDate = $('#last_message_end_time').val();
         if (messageStartDate && messageEndDate) {
-            dataValue.push("last_message_time:"+ messageStartDate+"--"+messageEndDate)
+            dataValue.push("last_message_time:"+ messageStartDate+"--"+messageEndDate);
         }
 
+        var cancelSubscribeStartDate = $('#cancel_subscribe_start_time').val();
+        var cancelSubscribeEndDate = $('#cancel_subscribe_end_time').val();
+        if (cancelSubscribeStartDate && cancelSubscribeEndDate) {
+            dataValue.push("cancel_subscribe:"+ cancelSubscribeStartDate+"--"+cancelSubscribeEndDate);
+        }
 
         var args = [];
         var name = $('#name').val().trim();
@@ -307,6 +347,7 @@ W.view.member.memberFilterView = Backbone.View.extend({
             $('.more-filter').hide();
             $('.xa-more-filter').html('<span  class="mr20">>>展开</span>');
         }
+        this.toggleCancelSubscribeDate();
     },
     getTemplate: function() {
         $('#member-filter-view-tmpl-src').template('member-filter-view-tmpl');
@@ -469,6 +510,9 @@ W.view.member.memberFilterView = Backbone.View.extend({
         $('#source').val('-1');
         $('#last_message_start_time').val('');
         $('#last_message_end_time').val('');
+        $('#cancel_subscribe_start_time').val('');
+        $('#cancel_subscribe_end_time').val('');
+        this.toggleCancelSubscribeDate();
     },
 
     onClickReset:function(){
