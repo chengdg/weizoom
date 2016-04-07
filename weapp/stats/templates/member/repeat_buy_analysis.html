@@ -124,29 +124,31 @@
         var local_user_condition_list = localStorage.getItem('condition');
         var local_user_pay_times_list = localStorage.getItem('pay_times_arr');
         var local_user_pay_money_list = localStorage.getItem('pay_money_arr');
-        // console.log('local_user_pay_times_list',local_user_pay_times_list,local_user_pay_money_list)
-        if(local_search_pay_list){
-            search_pay_list = local_search_pay_list.split(',');
-            console.log('search_pay_list111111111',search_pay_list)
-            search_pay_list.map(function(val,i){
-                console.log("^^^^^^^^^",i,val)
-                $('.xui-comsumptionNum'+i).val(val);
-            });
-            rePurchaseAnalysis();
-        }
 
-        if(local_user_condition_list){
-            search_pay_times_list = local_user_pay_times_list.split(',');
-            search_pay_m_list = local_user_pay_money_list.split(',');
-            user_condition_list = local_user_condition_list.split(',');
-            // console.log('search_pay_times_list',search_pay_times_list,search_pay_m_list)
-            // console.log('local_user_condition_list111111111',local_user_condition_list)
-            user_condition_list.map(function(val,i){
-                console.log("^^^^^^^^^",i,val)
-                $('.xa-conditionBox input').eq(i).val(val);
-            });
-            userAnalysis();
+        function getLocalPayList(){
+            if(local_search_pay_list){
+                search_pay_list = local_search_pay_list.split(',');
+                console.log('search_pay_list111111111',search_pay_list)
+                search_pay_list.map(function(val,i){
+                    console.log("^^^^^^^^^",i,val)
+                    $('.xui-comsumptionNum'+i).val(val);
+                });
+            }
         }
+        getLocalPayList();
+
+        function getUserConditionList(){
+            if(local_user_condition_list){
+                search_pay_times_list = local_user_pay_times_list.split(',');
+                search_pay_m_list = local_user_pay_money_list.split(',');
+                user_condition_list = local_user_condition_list.split(',');
+                user_condition_list.map(function(val,i){
+                    console.log("^^^^^^^^^",i,val)
+                    $('.xa-conditionBox input').eq(i).val(val);
+                });
+            }
+        }
+        getUserConditionList();
 
         // 改变会员状态
         $('.xa-memberStateSelect').change(function(){
@@ -249,6 +251,7 @@
         var $comsumptionNum = $('.xui-comsumptionNum');
         var $crossHint = $('.xa-crossHint');
         $setConsumptionBtn.click(function() {
+            getLocalPayList();
             $consumptionBox.toggleClass('xui-hide');
         });
     
@@ -318,6 +321,7 @@
         var $conditionBox = $('.xa-conditionBox');
         var $errorConditionHint = $('.xa-errorConditionHint');
         $setConditionBtn.click(function() {
+            getUserConditionList();
             $conditionBox.toggleClass('xui-hide');
         });
 
