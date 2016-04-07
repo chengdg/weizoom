@@ -86,7 +86,7 @@ W.dialog.member.ExportFileView = Backbone.View.extend({
 			this.$el = options["this"];
 		}
 		var _this = this.$el;
-		
+		this.type = options.type
 		this.jobId = options.jobId;
 		this.url = options.url;
 		this.filter_value = options.filter_value;
@@ -107,12 +107,16 @@ W.dialog.member.ExportFileView = Backbone.View.extend({
 		this.downloadLink.hide();
 		var url = this.url;
 		var filter_value = this.filter_value
+		var type = this.type
+		console.log("type>>>>>>>>>>>",type,type===0)
+		
 		W.getApi().call({
 			app: 'member',
 			resource: 'export_file_param',
 			method: 'get',
 			args: {
 				filter_value: filter_value,
+				type: type,
 			},
 			success: function(data) {
 				view.jobId = data["exportjob_id"];
@@ -194,6 +198,7 @@ W.dialog.member.ExportFileView = Backbone.View.extend({
 		});
 		event.stopPropagation();
 		event.preventDefault();
+		window.location.reload();
 	}
 });
 
@@ -212,7 +217,7 @@ W.CustomersView = Backbone.View.extend({
 
 	exportFile: function() {
 		//创建导出数据的view
-		this.exportFileView = new W.dialog.member.ExportFileView({type:'customer', "url": this.options.url, "filter_value":this.options.filter_value});
+		this.exportFileView = new W.dialog.member.ExportFileView({type:this.options.type, "url": this.options.url, "filter_value":this.options.filter_value});
 		
 		if(this.options.isAlreadyExport) {
 			this.exportFileView.doExport();

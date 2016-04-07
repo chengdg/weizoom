@@ -492,8 +492,8 @@ class AccessToken(models.Model):
 		verbose_name_plural = 'ACCESS_TOKEN'
 
 
-#status:0,1 0未完成，1完成,2失败
-#type:0,1 0会员，1订单
+#status:0,1 0未完成,1完成,2失败
+#type:0,1,2 0会员,1订单 2商品评价导出
 #当query_processed_count和processed_count相等,wait+1
 #########################################################################
 # ExportJob: 导出任务

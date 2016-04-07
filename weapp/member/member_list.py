@@ -1037,7 +1037,11 @@ class MemberGetFile(resource.Resource):
 		now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 		#判断用户是否存在导出数据任务
 		filename = "{}_{}".format("member",now)
-		param ,sort_attr = get_request_members_list(request, True)
+		if type == 0:
+			param ,sort_attr = get_request_members_list(request, True)
+		if type == 2:
+			pass
+			
 		exportjob = ExportJob.objects.create(
 									woid = woid,
 									type = type,
@@ -1129,7 +1133,7 @@ class MemberListIsDownload(resource.Resource):
 
 	def api_get(request):
 		woid = request.GET.get('woid', 0)
-		type = 0
+		type = request.GET.get('type', 0)
 		
 		try:
 			export_jobs = ExportJob.objects.filter(woid=woid,type=type,is_download=0).order_by("-id")

@@ -15,7 +15,7 @@ from modules.member.module_api import get_member_by_id_list
 from core import paginator
 from core.jsonresponse import create_response
 from core import search_util
-
+from account.models import ExportJob
 FIRST_NAV_NAME = export.PRODUCT_FIRST_NAV
 COUNT_PER_PAGE = 50
 
@@ -45,6 +45,49 @@ REVIEW_FILTERS = {
     ],
 }
 
+def get_request_reviews_list(request, export=False):
+    name = request.GET.get('name', '')
+    user_code = request.GET.get('userCode', '')
+    review_status = request.GET.get('reviewStatus', 'all')
+    start_date = request.GET.get('startDate', '')
+    end_date = request.GET.get('endDate', '')
+    product_score = request.GET.get('productScore', '-1')
+
+    is_fetch_all_reviews = (not name) and (not user_code) and (not start_date) and (not end_date) and (
+        review_status == 'all') and (product_score == 'all')
+
+    # 当前用户
+    owner = request.manager
+    all_reviews = mall_models.ProductReview.objects.filter(owner_id=owner.id).order_by("-created_at")
+
+    if is_fetch_all_reviews:
+        # 分页
+        count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
+        current_page = int(request.GET.get('page', '1'))
+        pageinfo, product_reviews = paginator.paginate(all_reviews, current_page, count_per_page,
+                                                       query_string=request.META['QUERY_STRING'])
+    else:
+        all_reviews = _filter_reviews(request, all_reviews)
+
+        # 处理商品编码
+        product_reviews = []
+        if user_code:
+            for review in all_reviews:
+                from cache import webapp_cache
+
+                review_product = mall_models.OrderHasProduct.objects.get(id=review.order_has_product_id)
+                product = webapp_cache.get_webapp_product_detail(request.webapp_owner_id, review.product_id)
+                product.fill_specific_model(review_product.product_model_name)
+                if product.model.user_code == user_code:
+                    review.product_user_code = user_code
+                    product_reviews.append(review)
+        else:
+            product_reviews = all_reviews
+
+        count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
+        current_page = int(request.GET.get('page', '1'))
+        pageinfo, product_reviews = paginator.paginate(product_reviews, current_page, count_per_page,
+                                                       query_string=request.META['QUERY_STRING'])
 
 def _filter_reviews(request, reviews):
     # 处理商品名称、评论时间、审核状态、商品星级
@@ -195,11 +238,30 @@ class ProductReviewList(resource.Resource):
         """
         商品评价列表页面
         """
+        woid = request.webapp_owner_id
+        export_jobs = ExportJob.objects.filter(woid=woid,type=2,is_download=0).order_by("-id")
+        if export_jobs:
+            export2data = {
+                "woid":int(export_jobs[0].woid) ,#
+                "status":1 if export_jobs[0].status else 0,
+                "is_download":1 if export_jobs[0].is_download else 0,
+                "id":int(export_jobs[0].id),
+                # "file_path": export_jobs[0].file_path,
+                }
+        else:
+            export2data = {
+                "woid":0,
+                "status":1,
+                "is_download":1,
+                "id":0,
+                "file_path":0,
+                }
         c = RequestContext(request,
                            {
                                'first_nav_name': FIRST_NAV_NAME,
                                'second_navs': export.get_mall_product_second_navs(request),
                                'second_nav_name': export.PRODUCT_REVIEW_NAV,
+                               'export2data': export2data,
                            })
 
         return render_to_response('mall/editor/product_review_list.html', c)
@@ -253,7 +315,7 @@ class ProductReviewList(resource.Resource):
             current_page = int(request.GET.get('page', '1'))
             pageinfo, product_reviews = paginator.paginate(product_reviews, current_page, count_per_page,
                                                            query_string=request.META['QUERY_STRING'])
-
+        print "query_string>>>>>>>>>>>>>>>",request.META['QUERY_STRING']
 
         # 处理商品
         product_ids = [review.product_id for review in product_reviews]
