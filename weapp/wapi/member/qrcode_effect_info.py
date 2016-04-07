@@ -36,18 +36,12 @@ class QrcodeEffectInfo(api_resource.ApiResource):
 		"""
 		setting_ids = args['setting_ids'].split(',')
 
-		start_date = None
-		end_date = None
-		if args.get('start_date', None) and args.get('end_date', None):
-			start_date = args['start_date'] + ' 00:00:00'
-			end_date = args['end_date'] + ' 23:59:59'
-
 		if setting_ids and len(setting_ids) > 0:
 			params = {
 				'channel_qrcode_id__in': setting_ids
 			}
-			if start_date and end_date:
-				params['created_at__range'] = [start_date, end_date]
+			if args.get('start_date', None) and args.get('end_date', None):
+				params['created_at__range'] = [args['start_date'], args['end_date']]
 			relations = ChannelQrcodeHasMember.objects.filter(**params)
 			setting_id2member_id = {}
 			setting_id2count = {}
