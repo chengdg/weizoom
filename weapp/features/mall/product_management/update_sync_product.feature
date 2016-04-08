@@ -169,16 +169,16 @@ Background:
 				"sync_time":"",
 				"actions": ["放入待售"]
 			},{
-				"name": "bill商品1",
-				"user_code":"0101",
+				"name": "bill商品2",
+				"user_code":"0102",
 				"supplier":"bill商家",
 				"stocks": "无限",
 				"status":"未选择",
 				"sync_time":"",
 				"actions": ["放入待售"]
 			},{
-				"name": "bill商品2",
-				"user_code":"0102",
+				"name": "bill商品1",
+				"user_code":"0101",
 				"supplier":"bill商家",
 				"stocks": "无限",
 				"status":"未选择",
@@ -188,7 +188,7 @@ Background:
 			"""
 		When jobs批量将商品放入待售
 			"""
-			["name": "tom商品1","name": "bill商品2","name": "bill商品1"]
+			["tom商品1","bill商品2","bill商品1"]
 			"""
 		When jobs更新商品'bill商品1'
 			"""
@@ -258,7 +258,7 @@ Background:
 			["bill商品1下单位置商城","bill商品2下单位置商城","tom商品1下单位置供货商"]
 			"""
 
-@product @eugene @eugeneTMP
+@product @eugene @product_pool
 Scenario:1 商品参与限时抢购活动（未开始）,修改下单位置为'供货商'
 	#bill商品1-下单位置选择'商城'
 	#bill商品1-参与限时抢购活动
@@ -272,7 +272,7 @@ Scenario:1 商品参与限时抢购活动（未开始）,修改下单位置为'�
 			"promotion_title":"",
 			"start_date": "明天",
 			"end_date": "1天后",
-			"product_name":"bill商品1下单位置供货商",
+			"product_name":"bill商品1下单位置商城",
 			"member_grade": "全部会员",
 			"count_per_purchase": 2,
 			"promotion_price": 8.00,
@@ -300,9 +300,9 @@ Scenario:1 商品参与限时抢购活动（未开始）,修改下单位置为'�
 				"postage":10.00
 			}
 			"""
-	# Then jobs获得提示'请先停止该商品参与的活动'
+	Then jobs获得提示"请先停止该商品参与的活动"
 
-@product @eugene
+@product @eugene @product_pool
 Scenario:2 商品参与买赠活动,修改下单位置为'供货商'
 	#bill商品1-下单位置选择'商城'
 	#bill商品1-参与买赠活动
@@ -348,9 +348,9 @@ Scenario:2 商品参与买赠活动,修改下单位置为'供货商'
 				"postage":10.00
 			}
 			"""
-	#Then jobs获得提示'请先停止该商品参与的活动'
+	Then jobs获得提示"请先停止该商品参与的活动"
 
-@product
+@product @eugene @product_pool
 Scenario:3 商品参与积分应用活动,修改下单位置为'供货商'
 	#bill商品1-下单位置选择'商城'
 	#bill商品1-参与积分应用活动
@@ -390,9 +390,9 @@ Scenario:3 商品参与积分应用活动,修改下单位置为'供货商'
 				"postage":10.00
 			}
 			"""
-	Then jobs获得提示'请先停止该商品参与的活动'
+	Then jobs获得提示"请先停止该商品参与的活动"
 
-@product
+@product @eugene @product_pool
 Scenario:4 商品参与单品券,修改下单位置为'供货商'
 	#bill商品1-下单位置选择'商城'
 	#bill商品1-参与单品券
@@ -432,9 +432,9 @@ Scenario:4 商品参与单品券,修改下单位置为'供货商'
 				"postage":10.00
 			}
 			"""
-	Then jobs获得提示'请先停止该商品参与的活动'
+	Then jobs获得提示"请先停止该商品参与的活动"
 
-@product
+@product @eugene @product_pool
 Scenario:5 商品参与禁用优惠券商品,修改下单位置为'供货商'
 	#bill商品1-下单位置选择'商城'
 	#bill商品1-参与禁用优惠券商品
@@ -473,4 +473,4 @@ Scenario:5 商品参与禁用优惠券商品,修改下单位置为'供货商'
 				"postage":10.00
 			}
 			"""
-	Then jobs获得提示'请先停止该商品参与的活动'
+	Then jobs获得提示"请先停止该商品参与的活动"
