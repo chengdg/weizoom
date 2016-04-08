@@ -16,6 +16,7 @@ Feature:自营平台-新建促销活动页面的商品查询
 
 Background:
 	#自营平台jobs的信息
+		Given 设置jobs为自营平台账号
 		Given jobs登录系统
 		And jobs已添加支付方式
 			"""
@@ -47,6 +48,7 @@ Background:
 		"""
 
 	#商家bill的信息
+		Given 添加bill店铺名称为'bill商家'
 		Given bill登录系统
 		And bill已添加支付方式
 			"""
@@ -64,7 +66,7 @@ Background:
 					"name": "黑色",
 					"image": "/standard_static/test_resource_img/icon_color/icon_1.png"
 				}, {
-					"name": "白色色",
+					"name": "白色",
 					"image": "/standard_static/test_resource_img/icon_color/icon_5.png"
 				}]
 			},{
@@ -103,7 +105,7 @@ Background:
 							"stock_type": "无限"
 						}
 					}
-				},
+				}
 			},{
 				"name":"bill商品3",
 				"is_enable_model": "启用规格",
@@ -126,6 +128,8 @@ Background:
 			"""
 
 	#商家tom的信息
+		When tom暂停1秒
+		Given 添加tom店铺名称为'tom商家'
 		Given tom登录系统
 		And tom已添加支付方式
 			"""
@@ -161,15 +165,7 @@ Background:
 				"name": "tom商品1",
 				"user_code":"0201",
 				"supplier":"tom商家",
-				"stock_type":"无限",
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			},{
-				"name": "bill商品2",
-				"user_code":"0102",
-				"supplier":"bill商家",
-				"stock_type": "无限",
+				"stocks":"无限",
 				"status":"未选择",
 				"sync_time":"",
 				"actions": ["放入待售"]
@@ -177,7 +173,15 @@ Background:
 				"name": "bill商品1",
 				"user_code":"0101",
 				"supplier":"bill商家",
-				"stock_type": "无限",
+				"stocks": "无限",
+				"status":"未选择",
+				"sync_time":"",
+				"actions": ["放入待售"]
+			},{
+				"name": "bill商品2",
+				"user_code":"0102",
+				"supplier":"bill商家",
+				"stocks": "无限",
 				"status":"未选择",
 				"sync_time":"",
 				"actions": ["放入待售"]
@@ -185,12 +189,12 @@ Background:
 			"""
 		When jobs批量将商品放入待售
 			"""
-			["name": "tom商品1","name": "bill商品2","name": "bill商品1"]
+			["tom商品1","bill商品2","bill商品1"]
 			"""
 		When jobs更新商品'bill商品1'
 			"""
 			{
-				"name":"bill商品1-下单位置商城",
+				"name":"bill商品1下单位置商城",
 				"supplier":"bill商家",
 				"purchase_price": 9.00,
 				"buy_position":"商城",
@@ -255,7 +259,7 @@ Background:
 			["bill商品1下单位置商城","bill商品2下单位置商城","tom商品1下单位置供货商"]
 			"""
 
-@promotion
+@mall2 @promotion @eugene @product_pool
 Scenario:1 促销活动-新建活动页面的商品查询
 
 	#限时抢购
@@ -305,6 +309,6 @@ Scenario:1 促销活动-新建活动页面的商品查询
 				"name":"tom商品1下单位置供货商"
 			}
 			"""
-		Then jobs新建禁用优惠券商品时能获得已上架商品列表
+		Then jobs新建禁用优惠券商品活动时能获得已上架商品列表
 			| name     | price | stocks | have_promotion | actions |
 

@@ -147,6 +147,18 @@ def step_update_product(context, user, product_name):
     product = __supplement_product(context.webapp_owner_id, product)
     print("POST DATA: {}".format(product))
 
+    if product['buy_in_supplier']:
+        url = '/mall2/api/check_product_has_promotion/'
+        data = {
+            'product_id': existed_product.id,
+            'buy_in_supplier': product['buy_in_supplier']
+        }
+        response = context.client.get(url, data)
+        response_json = json.loads(response.content)
+        if response_json['code'] == 500:
+            context.event_hint = u"请先停止该商品参与的活动"
+            return
+
     # url = '/mall2/product/?id=%d&source=offshelf' % existed_product.id
     url = '/mall2/product/?id=%d&?shelve_type=%d' % (
         existed_product.id, existed_product.shelve_type, )
@@ -615,6 +627,7 @@ def __supplement_product(webapp_owner_id, product):
         "is_enable_cod_pay_interface": True,
         "is_enable_online_pay_interface": True,
         "is_delivery": False,
+        "buy_in_supplier": 0
     }
     # 支付方式
     pay_interface_online, pay_interface_cod = __pay_interface(
@@ -650,6 +663,10 @@ def __supplement_product(webapp_owner_id, product):
     # 积分商品
     if is_integral_type:
         product['price'] = product.get('integral', 0)
+
+    # 下单位置
+    if product.get('buy_position', "") == u'供货商':
+        product['buy_in_supplier'] = 1
 
     #商品图
     pic_url = product.get('pic_url', None)
