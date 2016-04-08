@@ -66,7 +66,7 @@ def get_many(keys):
 def delete_cache(key):
 	delete_count = cache.delete(key)
 	delete_api_count = cache.delete("api"+key)
-	logging.info(u"function delete_cache: delete key %s record" % key)
+	logging.info(u"function delete_cache: delete key %s record; delete_count:%s;delete_api_count" % (key, delete_count, delete_api_count))
 	if not delete_count or not delete_api_count:
 		raise DeleteCacheException('delete_cache return 0')
 
@@ -74,7 +74,7 @@ def delete_cache(key):
 def delete_pattern(key):
 	delete_count = cache.delete_pattern(key)
 	delete_api_count = cache.delete_pattern("api"+key)
-	logging.info(u"function delete_pattern: delete key %s record" % key)
+	logging.info(u"function delete_cache: delete key %s record; delete_count:%s;delete_api_count" % (key, delete_count, delete_api_count))
 	if not delete_count or not delete_api_count:
 		raise DeleteCacheException('delete_pattern return 0')
 
