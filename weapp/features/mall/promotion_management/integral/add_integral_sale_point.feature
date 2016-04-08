@@ -1,4 +1,5 @@
 # __author__ : "宋温馨"
+@mall3 @ztq
 Feature: 创建积分应用活动
 
 Background:
