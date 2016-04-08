@@ -1,0 +1,15 @@
+{% extends "page.html" %}
+
+{% block js %}
+<script type="text/javascript">
+	W.breadcrumb = [{
+		name: '微众卡',
+		href: '/outline/datas/'
+	}, {
+		name: '通用卡',
+		href: '#'
+	}];
+
+	W.pageContentComponent = './card/ordinary_rules/OrdinaryCardPage.react';
+</script>
+{% endblock %}
