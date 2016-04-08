@@ -459,6 +459,7 @@ def __get_can_select(value):
 def step_impl(context, user, type):
 	if hasattr(context, 'query_param'):
 		query_param = context.query_param
+		delattr(context, 'query_param')
 	else:
 		query_param = {}
 	url = '/mall2/api/promotion/?type=usable_promotion_products&filter_type=%s&name=%s&barCode=%s' % (activity2filter_type[type], query_param.get('name', ''), query_param.get('bar_code', ''))
