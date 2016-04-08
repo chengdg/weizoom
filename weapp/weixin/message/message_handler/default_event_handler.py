@@ -18,7 +18,7 @@ from mall.models import Product
 from account.social_account.models import SocialAccount
 
 from weixin.message.message_handler import tasks 
-
+import datetime
 
 """
 默认的事件处理实现，主要是对关注和取消关注事件的处理
@@ -128,7 +128,7 @@ class DefaultEventHandler(EventMessageHandler):
 		try:
 			WeixinUser.objects.filter(username=from_weixin_username).update(
 				is_subscribed = False
-				)
+				) 
 
 			self.__handle_member_unsubscribe_event(context)
 		finally:
@@ -139,6 +139,7 @@ class DefaultEventHandler(EventMessageHandler):
 		if context.member is not None:
 			context.member.is_subscribed = False
 			context.member.status = 0
+			context.member.cancel_subscribe_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 			context.member.save()
 
 	# def __remove_member_info(self, context, from_weixin_username):
