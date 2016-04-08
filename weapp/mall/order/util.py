@@ -803,19 +803,23 @@ def get_detail_response(request):
                 supplier_user_ids.append(child_order.supplier_user_id)
 
         # 商城自己添加的供货商
+        supplier_product_ids = []
         if supplier_ids:
             # 获取<供货商，订单状态文字显示>，因为子订单的状态是跟随供货商走的 在这个场景下
-            supplier2status = dict([(tmp_order.supplier, tmp_order.get_status_text()) for tmp_order in child_orders])
+            supplier2status = dict([(tmp_order.supplier, tmp_order.get_status_text()) for tmp_order in filter(lambda o: o.supplier > 0, child_orders)])
             order.products.sort(lambda x, y: cmp(x['supplier'], y['supplier']))
             for product in order.products:
                 product['order_status'] = supplier2status.get(product['supplier'], '')
+                if product['supplier']:
+                    supplier_product_ids.append(product['id'])
 
         if supplier_user_ids:
             # 获取<供货商，订单状态文字显示>，因为子订单的状态是跟随供货商走的 在这个场景下
-            supplier_user_id2status = dict([(tmp_order.supplier_user_id, tmp_order.get_status_text()) for tmp_order in child_orders])
+            supplier_user_id2status = dict([(tmp_order.supplier_user_id, tmp_order.get_status_text()) for tmp_order in filter(lambda o: o.supplier_user_id > 0, child_orders)])
             order.products.sort(lambda x, y: cmp(x['supplier_user_id'], y['supplier_user_id']))
             for product in order.products:
-                product['order_status'] = supplier_user_id2status.get(product['supplier_user_id'], '')
+                if product['id'] not in supplier_product_ids:
+                    product['order_status'] = supplier_user_id2status.get(product['supplier_user_id'], '')
 
         name = request.GET.get('name', None)
         if not name:
@@ -833,6 +837,11 @@ def get_detail_response(request):
                 if child_order.order_id == log.order_id:
                     log.leader_name = child_order.leader_name
 
+        if (not request.user_profile.webapp_type and order.supplier_user_id > 0) or \
+            (request.user_profile.webapp_type and order.supplier):
+            is_sync = True
+        else:
+            is_sync = False
 
         c = RequestContext(request, {
             'first_nav_name': FIRST_NAV,
@@ -849,7 +858,7 @@ def get_detail_response(request):
             'order_status_logs': order_status_logs,
             'log_count': log_count,
             'show_first': show_first,
-            'is_sync': True if (not request.user_profile.webapp_type and order.supplier_user_id > 0) else False,
+            'is_sync': is_sync,
             'is_show_order_status': True if len(supplier_ids) + len(supplier_user_ids) > 1 else False,
             'is_group_buying': is_group_buying
             })
