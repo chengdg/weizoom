@@ -49,7 +49,6 @@ def step_impl(context, user):
         data['count_per_page'] = context.count_per_page
     response = context.client.get(url, data)
     products = json.loads(response.content)['data']['items']
-    products = sorted(products, key=lambda p: p['id'], reverse=True)
     actual = []
     for product in products:
         actual.append({

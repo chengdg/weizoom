@@ -128,6 +128,7 @@ Background:
 			"""
 
 	#商家tom的信息
+		When tom暂停1秒
 		Given 添加tom店铺名称为'tom商家'
 		Given tom登录系统
 		And tom已添加支付方式
@@ -169,16 +170,16 @@ Background:
 				"sync_time":"",
 				"actions": ["放入待售"]
 			},{
-				"name": "bill商品2",
-				"user_code":"0102",
+				"name": "bill商品1",
+				"user_code":"0101",
 				"supplier":"bill商家",
 				"stocks": "无限",
 				"status":"未选择",
 				"sync_time":"",
 				"actions": ["放入待售"]
 			},{
-				"name": "bill商品1",
-				"user_code":"0101",
+				"name": "bill商品2",
+				"user_code":"0102",
 				"supplier":"bill商家",
 				"stocks": "无限",
 				"status":"未选择",
