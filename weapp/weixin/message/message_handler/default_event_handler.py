@@ -139,7 +139,7 @@ class DefaultEventHandler(EventMessageHandler):
 		if context.member is not None:
 			context.member.is_subscribed = False
 			context.member.status = 0
-			context.member.cancel_subscribe_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+			context.member.cancel_subscribe_time = datetime.datetime.now()
 			context.member.save()
 
 	# def __remove_member_info(self, context, from_weixin_username):
