@@ -142,6 +142,9 @@ Scenario:2 购买商品后，管理员通过后台管理系统可以查看订单
 	And bill购买jobs的商品
 		"""
 		{
+			"order_id":"0001",
+			"date":"2015-10-11 00:00:00",
+			"pay_type":"微信支付",
 			"ship_name": "bill",
 			"ship_tel": "13811223344",
 			"ship_area": "北京市 北京市 海淀区",
@@ -154,56 +157,117 @@ Scenario:2 购买商品后，管理员通过后台管理系统可以查看订单
 		}
 		"""
 	Given jobs登录系统
-	Then jobs可以获得最新订单详情
+	Then jobs能获得订单'0001'
 		"""
 		{
-			"order_type": "普通订单",
-			"status": "待支付",
+			"order_no": "0001",
+			"order_time":"2015-10-11 00:00:00",
+			"methods_of_payment":"微信支付",
+			"status":"待支付",
 			"actions": ["修改价格", "取消订单", "支付"],
-			"total_price": 9.9,
-			"ship_name": "bill",
-			"ship_tel": "13811223344",
-			"ship_area": "北京市 北京市 海淀区",
+			"final_price": 9.9,
+			"ship_name":"bill",
+			"ship_tel":"13811223344",
 			"ship_address": "泰兴大厦",
-			"customer_message": "bill的订单备注1",
 			"products": [{
 				"name": "商品1",
-				"count": 1,
-				"total_price": 9.9
-			}]
+				"price": 9.9,
+				"count": 1
+			}],
+			"customer_message": "bill的订单备注1"
 		}
 		"""
-	When jobs'支付'最新订单
-	Then jobs可以获得最新订单详情
+	When jobs'支付'订单'0001'
+	Then jobs能获得订单'0001'
 		"""
 		{
-			"status": "待发货",
-			"actions": ["发货", "取消订单"]
+			"order_no": "0001",
+			"order_time":"2015-10-11 00:00:00",
+			"methods_of_payment":"微信支付",
+			"status":"待发货",
+			"actions": ["发货", "申请退款"],
+			"final_price": 9.9,
+			"ship_name":"bill",
+			"ship_tel":"13811223344",
+			"ship_address": "泰兴大厦",
+			"products": [{
+				"name": "商品1",
+				"price": 9.9,
+				"count": 1
+			}],
+			"customer_message": "bill的订单备注1"
 		}
 		"""
-	When jobs对最新订单进行发货
-	Then jobs可以获得最新订单详情
+	When bill对订单进行发货
 		"""
 		{
-			"status": "已发货",
-			"actions": ["标记完成", "修改物流", "取消订单"]
+			"order_no": "0001",
+			"logistics": "申通快递",
+			"number": "1122006",
+			"shipper": "发货员"
 		}
 		"""
-	When jobs'完成'最新订单
-	Then jobs可以获得最新订单详情
+	Then jobs能获得订单'0001'
 		"""
 		{
-			"status": "已完成",
-			"actions": ["取消订单"]
+			"order_no": "0001",
+			"order_time":"2015-10-11 00:00:00",
+			"methods_of_payment":"微信支付",
+			"status":"已发货",
+			"actions": ["标记完成", "修改物流", "申请退款"],
+			"final_price": 9.9,
+			"ship_name":"bill",
+			"ship_tel":"13811223344",
+			"ship_address": "泰兴大厦",
+			"products": [{
+				"name": "商品1",
+				"price": 9.9,
+				"count": 1
+			}],
+			"customer_message": "bill的订单备注1"
 		}
 		"""
-	When jobs'取消'最新订单
+	When jobs'完成'订单'0001'
+	Then jobs能获得订单'0001'
+		"""
+		{
+			"order_no": "0001",
+			"order_time":"2015-10-11 00:00:00",
+			"methods_of_payment":"微信支付",
+			"status":"已完成",
+			"actions": ["申请退款"],
+			"final_price": 9.9,
+			"ship_name":"bill",
+			"ship_tel":"13811223344",
+			"ship_address": "泰兴大厦",
+			"products": [{
+				"name": "商品1",
+				"price": 9.9,
+				"count": 1
+			}],
+			"customer_message": "bill的订单备注1"
+		}
+		"""
+	When jobs'申请退款'订单'0001'
 
-	Then jobs可以获得最新订单详情
+	Then jobs能获得订单'0001'
 		"""
 		{
-			"status": "已取消",
-			"actions": []
+			"order_no": "0001",
+			"order_time":"2015-10-11 00:00:00",
+			"methods_of_payment":"微信支付",
+			"status":"退款中",
+			"actions": [],
+			"final_price": 9.9,
+			"ship_name":"bill",
+			"ship_tel":"13811223344",
+			"ship_address": "泰兴大厦",
+			"products": [{
+				"name": "商品1",
+				"price": 9.9,
+				"count": 1
+			}],
+			"customer_message": "bill的订单备注1"
 		}
 		"""
 

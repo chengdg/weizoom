@@ -384,7 +384,6 @@ def __Create_Group(context,text,user):
     }
 
     #step1：登录页面，获得分配的project_id
-    print context
     get_pw_response = context.client.get("/apps/group/group/")
     pw_args_response = get_pw_response.context
     project_id = pw_args_response['project_id']#(str){new_app:group:0}
@@ -620,8 +619,6 @@ def __Search_Group(context,search_dic):
             page,
             enable_paginate)
 
-    print 111111111111111111111
-    print search_url
     search_response = context.client.get(search_url)
     bdd_util.assert_api_call_success(search_response)
     return search_response

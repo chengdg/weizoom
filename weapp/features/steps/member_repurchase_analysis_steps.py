@@ -39,7 +39,7 @@ def step_impl(context, user):
 	for actual_dict in actual_real_list:
 		actual_list.append(actual_dict['name'])
 	expected_data = json.loads(context.text)
-	print bdd_util.assert_list(expected_data, actual_list)
+	bdd_util.assert_list(expected_data, actual_list)
 
 
 @then(u'{user}获得复购会员分析统计数据')
@@ -55,7 +55,6 @@ def step_impl(context, user):
 		url+='all'
 	if hasattr(context,'search_pay_list'):
 		url += '&search_pay_list='+context.search_pay_list
-	print "zl--------------------------------------------------------"
 	response = client.get(url)
 	content = json.loads(response.content)
 	actual_real_list =content['data']['series'][0]['data']
@@ -64,7 +63,7 @@ def step_impl(context, user):
 		actual_list.append(actual_dict['name'])
 	expected_data = json.loads(context.text)
 
-	print bdd_util.assert_list(expected_data, actual_list)
+	bdd_util.assert_list(expected_data, actual_list)
 
 
 @when(u'{user}设置筛选条件')
