@@ -63,44 +63,20 @@ def get_many(keys):
 	return cache.get_many(keys)
 
 @retry_delete(attempt=3)
-def delete_weapp_cache(key):
-	delete_count = cache.delete(key)
-	logging.info(u"function delete_weapp_cache: delete key %s record; delete_count:%s" % (key, delete_count))
-	if not delete_count :
-		raise DeleteCacheException('delete_cache:delete_weapp_cache return 0')
-
-@retry_delete(attempt=3)
-def delete_api_cache(key):
-	delete_api_count = cache.delete("api"+key)
-	logging.info(u"function delete_api_cache: delete key %s record; delete_api_count:%s" % (key, delete_api_count))
-	if not delete_api_count :
-		raise DeleteCacheException('delete_cache:delete_api_cache return 0')
-
-#@retry_delete(attempt=3)
 def delete_cache(key):
-	delete_weapp_cache(key)
-	delete_api_cache("api"+key)
-
-
-@retry_delete(attempt=3)
-def delete_pattern_weapp_cache(key):
-	delete_count = cache.delete_pattern(key)
-	logging.info(u"function delete_pattern_weapp_cache: delete key %s record; delete_count:%s" % (key, delete_count))
-	if not delete_count :
-		raise DeleteCacheException('delete_cache:delete_pattern_weapp_cache return 0')
+	delete_count = cache.delete(key)
+	delete_api_count = cache.delete("api"+key)
+	logging.info(u"function delete_cache: delete key %s record; delete_count:%s;delete_api_count:%s" % (key, delete_count, delete_api_count))
+	if not delete_count or not delete_api_count:
+		raise DeleteCacheException('delete_cache return 0')
 
 @retry_delete(attempt=3)
-def delete_pattern_api_cache(key):
-	delete_api_count = cache.delete_pattern("api"+key)
-	logging.info(u"function delete_pattern_api_cache: delete key %s record; delete_api_count:%s" % (key, delete_api_count))
-	if not delete_api_count :
-		raise DeleteCacheException('delete_cache:delete_pattern_api_cache return 0')
-
-#@retry_delete(attempt=3)
 def delete_pattern(key):
-	delete_pattern_weapp_cache(key)
-	delete_pattern_api_cache("api"+key)
-
+	delete_count = cache.delete_pattern(key)
+	delete_api_count = cache.delete_pattern("api"+key)
+	logging.info(u"function delete_cache: delete key %s record; delete_count:%s;delete_api_count:%s" % (key, delete_count, delete_api_count))
+	if not delete_count or not delete_api_count:
+		raise DeleteCacheException('delete_pattern return 0')
 
 def clear_db():
 	cache.clear()
