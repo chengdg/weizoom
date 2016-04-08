@@ -13,6 +13,26 @@ from core.exceptionutil import unicode_full_stack
 from django.conf import settings
 
 
+class DeleteCacheException(Exception):
+	def __init__(self, value):
+		self.value = value
+	def __str__(self):
+		return repr(self.value)
+
+def retry_delete(attempt):
+	def decorator(func):
+		def wrapper(*args, **kw):
+			att = 0
+			while att < attempt:
+				try:
+					logging.info(u"function delete_cache: delete key %s record" % args[0])
+					return func(*args, **kw)
+				except DeleteCacheException as e:
+					logging.info(u"function delete_cache error: delete key %s record, error:%s" % (args[0], e))
+					att += 1
+		return wrapper
+	return decorator
+
 #add by likunlun
 #初始化CACHE_QUERIES
 try:
@@ -38,20 +58,25 @@ def set_cache(key, value, timeout=0):
 def get_cache(key):
 	return cache.get(key)
 
+
 def get_many(keys):
 	return cache.get_many(keys)
 
+@retry_delete(attempt=3)
 def delete_cache(key):
-	# logging.info(u"function delete_cache: delete key %s record" % key)
-	cache.delete(key)
+	delete_count = cache.delete(key)
+	delete_api_count = cache.delete("api"+key)
+	logging.info(u"function delete_cache: delete key %s record" % key)
+	if not delete_count or not delete_api_count:
+		raise DeleteCacheException('delete_cache return 0')
 
-	cache.delete("api"+key)
-
+@retry_delete(attempt=3)
 def delete_pattern(key):
-	# logging.info(u"function delete_pattern: delete key %s record" % key)
-	cache.delete_pattern(key)
-	cache.delete_pattern("api"+key)
-
+	delete_count = cache.delete_pattern(key)
+	delete_api_count = cache.delete_pattern("api"+key)
+	logging.info(u"function delete_pattern: delete key %s record" % key)
+	if not delete_count or not delete_api_count:
+		raise DeleteCacheException('delete_pattern return 0')
 
 def clear_db():
 	cache.clear()
