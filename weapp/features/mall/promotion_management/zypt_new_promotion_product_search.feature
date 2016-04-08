@@ -259,7 +259,7 @@ Background:
 			["bill商品1下单位置商城","bill商品2下单位置商城","tom商品1下单位置供货商"]
 			"""
 
-@promotion @eugene @product_pool
+@mall2 @promotion @eugene @product_pool
 Scenario:1 促销活动-新建活动页面的商品查询
 
 	#限时抢购
