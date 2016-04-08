@@ -21,6 +21,7 @@ cnpm install
 答：初次搭建环境，按如下步骤：
 1. 在mysql中创建`card`数据库: `create database card`;
 1. 将`card`数据库授权给`card`用户：`grant all on card.* to 'card'@localhost identified by 'weizoom'`
+1. 增加hosts 127.0.0.1 db.card.com
 1. 执行 `rebuild.bat`，初始化数据库
 1. 启动 `start_bundle_server.bat`
 1. 启动 `start_service.bat | bunyan`
