@@ -62,17 +62,17 @@ var cardRuleOrderList = React.createClass({
 	render: function() {
 		_this=this;
 		var cardRuleOrder = this.state.cardRuleOrder;
-		console.log(cardRuleOrder);
 		var cardRechargesNodes = cardRuleOrder.map(function(card_rule_order,index){
 			if (card_rule_order.is_activation ==0){
-				var card_is_activation =<div><a style={{display:'block'}} onClick={_this.onClickActivation.bind(_this,card_rule_order.id,card_rule_order.is_activation)} >卡激活{card_rule_order.is_activation}</a><a style={{display:'block'}}>编辑订单</a><a style={{display:'block'}}>备注</a></div>
+				var card_is_activation =<div><a style={{display:'block'}} onClick={_this.onClickActivation.bind(_this,card_rule_order.id,card_rule_order.is_activation)} >卡激活{card_rule_order.is_activation}</a><a style={{display:'block'}}>编辑订单</a><a style={{display:'block'}} onClick={_this.onClickActivation.bind(_this,card_rule_order.id,-1)}>取消订单</a><a style={{display:'block'}}>备注</a></div>
+				var card_rule_order_is_click=<div>{card_rule_order.order_number}</div>
 			}else{
-				var card_is_activation =<div><a style={{display:'block'}} onClick={_this.onClickActivation.bind(_this,card_rule_order.id,card_rule_order.is_activation)} >停用{card_rule_order.is_activation}</a><a style={{display:'block'}}>编辑订单</a><a style={{display:'block'}} onClick={_this.onClickActivation.bind(_this,card_rule_order.id,-1)}>取消订单</a><a style={{display:'block'}}>备注</a></div>
+				var card_is_activation =<div><a style={{display:'block'}} onClick={_this.onClickActivation.bind(_this,card_rule_order.id,card_rule_order.is_activation)} >停用{card_rule_order.is_activation}</a><a style={{display:'block'}}>编辑订单</a><a style={{display:'block'}}>备注</a></div>
+				var card_rule_order_is_click=<div style={{cursor:'pointer'}}><a>{card_rule_order.order_number}</a></div>
 			}
-			
 			return (
 				<tr key={index}>
-					<td>{card_rule_order.order_number}</td>
+					<td>{card_rule_order_is_click}</td>
 					<td>{card_rule_order.name}</td>
 					<td>{card_rule_order.money}</td>
 					<td>{card_rule_order.weizoom_card_order_item_num}</td>

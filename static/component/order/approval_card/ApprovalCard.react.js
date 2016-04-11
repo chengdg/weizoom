@@ -106,13 +106,13 @@ var ApprovalCard = React.createClass({
 						</span>
 					</header>
 					<legend className="pl10 pt10 pb10"><a href="javascript:void(0);">添加卡库</a></legend>
+					<div className="fl pl20 pr20" style={{display:'none'}}>
+		                	<a>选择卡库</a>
+		            </div>
 					<fieldset style={{marginLeft:'95px'}}>
 		                <div>
 	                		<label>卡名称：</label>
 							<SelectRuleCard  ruleOrder={this.state.card_rule_order} cardRuleList={this.state.card_rule_list} />
-		                </div>
-		                <div className="fl pl20 pr20" style={{display:'none'}}>
-		                	<a>选择卡库</a>
 		                </div>
 		                <FormInput label="出库数量:" type="text" name="CardRuleNum" ref="CardRuleNum" validate="require-string" value={this.state.CardRuleNum} onChange={this.onChange}/>
 						<FormInput
