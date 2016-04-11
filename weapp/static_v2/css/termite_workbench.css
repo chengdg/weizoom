@@ -539,6 +539,8 @@ body {
 }
 .propertyGroup_property_textareaField .propertyGroup_property_input textarea {
 	height: 100px;
+	width: 395px;
+    margin-left: -5px;
 }
 .propertyGroup_property_dynamicControlField h3 {
 	position: relative;
