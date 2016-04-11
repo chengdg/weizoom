@@ -62,7 +62,7 @@ class ShvoteRegistrators(resource.Resource):
 		# 	params['created_at__gte'] = start_time
 		# if end_time:
 		# 	params['created_at__lte'] = end_time
-		datas = app_models.ShvoteParticipance.objects(**params).order_by('-id')#筛选后参与者集合
+		datas = app_models.ShvoteParticipance.objects(**params).order_by('-id').order_by('status')#筛选后参与者集合
 
 		#进行分页
 		count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))

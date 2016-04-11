@@ -111,13 +111,19 @@
 					${item.serial_number}
 				</td>
 				<td>
-					${item.status}
+					{{if (item.status === 0)}}
+						待审核
+					{{/if}}
+					{{if (item.status === 1)}}
+						审核通过
+					{{/if}}
+
 				</td>
 				<td>
 					${item.created_at}
 				</td>
 				<td>
-					{{if (items.status == '0')}}
+					{{if (item.status === 0)}}
 						<a href="javascript:void(0);" class="ml5 xa-review">审核通过</a>
 						<a href="javascript:void(0);" class="ml5 xa-delete">删除</a>
 					{{/if}}
@@ -163,6 +169,7 @@ $(document).ready(function() {
 	});
 
 	$('body').delegate('.xa-delete', 'click', function(event) {
+		var table = $('div[data-ui-role="advanced-table"]').data('view');
 		var $el = $(event.target)
 		var id = $el.parents('tr').data('id')
 		W.requireConfirm({
@@ -193,6 +200,7 @@ $(document).ready(function() {
 	});
 
 	$('body').delegate('.xa-review', 'click', function(event) {
+		var table = $('div[data-ui-role="advanced-table"]').data('view');
 		var id = $(event.target).parents('tr').data('id')
 		W.getApi().call({
 			app: 'apps/shvote',

@@ -47,6 +47,7 @@ class Shvote(models.Document):
 	participant_count = models.IntField(default=0) #参与者数量
 	related_page_id = models.StringField(default="", max_length=100) #termite page的id
 	created_at = models.DateTimeField() #创建时间
+	visits = models.LongField(default=0) #访问人数
 	
 	meta = {
 		'collection': 'shvote_shvote'
