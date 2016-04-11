@@ -60,7 +60,7 @@ Scenario:1.新建通用卡-通用卡
 		}]
 		"""
 	Then 'test'能获得通用卡'微众卡'的库存列表
-		| card_number |status| money |rest_money|comments|apply_person|apply_dep| 
+		| card_number |status| money |rest_money|comments|apply_person|apply_department| 
 		|  888000001  |待出库| 10.00 |  10.00   |        |            |         |
 		|  888000002  |待出库| 10.00 |  10.00   |        |            |         |
 		|  888000003  |待出库| 10.00 |  10.00   |        |            |         |
@@ -73,7 +73,7 @@ Scenario:1.新建通用卡-通用卡
 		|  888000010  |待出库| 10.00 |  10.00   |        |            |         |
 
 	Then 'test'能获得通用卡'10元卡'的库存列表
-		| card_number |status| money |rest_money|comments|apply_person|apply_dep|
+		| card_number |status| money |rest_money|comments|apply_person|apply_department|
 		|  999000001  |待出库| 10.00 |  10.00   |        |            |         |
 		|  999000002  |待出库| 10.00 |  10.00   |        |            |         |
 		|  999000003  |待出库| 10.00 |  10.00   |        |            |         |

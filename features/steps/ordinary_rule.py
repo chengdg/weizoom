@@ -44,8 +44,8 @@ def expected_weizoom_cards(context,user,rule_name,card_class):
 			"money": card["rule_money"],
 			"rest_money": card["money"],
 			"comments": card["remark"],
-			"apply_per": card["activated_to"],
-			"apply_dep": card["department"]
+			"apply_person": card["activated_to"],
+			"apply_department": card["department"]
 		})
 	logging.info(card_list)
 	

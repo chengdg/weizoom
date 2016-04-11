@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 @then(u"'{user}'批量激活订单'{order_number}'卡片")
 def step_impl(context,user):
 	weizoomcardorder = WeizoomCardOrder(order_number=order_number)
