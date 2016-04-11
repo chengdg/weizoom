@@ -428,7 +428,7 @@
 }
 
 #exportProgress_bar {
-	width: 90px;
+	width: 100px;
     height: 30px;
     float: right;
     border: solid 1px #ccc;
@@ -445,6 +445,7 @@
 	float: right;
 	margin-left: 5px;
 	margin-right: 20px;
+	line-height: 30px;
 }
 /*
 *会员详情页面
