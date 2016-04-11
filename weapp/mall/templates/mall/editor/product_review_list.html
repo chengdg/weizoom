@@ -1,8 +1,8 @@
 {% extends "content_base_v2.html" %}
 {% block css %}
 <style type="text/css">
-.exportProgress_msg{
-    margin-right:0;
+.exportProgress_msg,#downloadLink{
+    margin-right:0!important;
 }
 </style>
 {% endblock %}
@@ -109,9 +109,8 @@ $(document).ready(function(){
 
     
     $('.panel-body').delegate('.xa-export', 'click', function(event){
-        // console.log(view.filterView.filterValue)
         W.getApi().call({
-            app: 'member',
+            app: 'export_job',
             resource: 'export_is_download',
             method: 'get',
             args: {
@@ -140,6 +139,7 @@ $(document).ready(function(){
                         jobId:0,
                         filter_value:filter_value,
                         isAlreadyExport : true,
+                        app: 'mall2',
                         timelinesOptions: {
                             
                         }
@@ -171,8 +171,8 @@ $(document).ready(function(){
                 timelinesOptions: {
                 }
             }
-            var memberExportFileView = new W.dialog.member.ExportFileView(options);
-            memberExportFileView.finish();
+            var exportFileView = new W.dialog.ExportFileView(options);
+            exportFileView.finish();
         };
     }
     else if(export2data["status"] ===0 && export2data["is_download"] ===0 ){
@@ -189,8 +189,8 @@ $(document).ready(function(){
                 timelinesOptions: {
                 }
             }
-            var memberExportFileView = new W.dialog.member.ExportFileView(options);
-            memberExportFileView.doExportAfterApi();
+            var exportFileView = new W.dialog.ExportFileView(options);
+            exportFileView.doExportAfterApi();
         };
     };
   })

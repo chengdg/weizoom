@@ -2,11 +2,10 @@
  * 用于显示导出数据进度的view
  *
  */
-ensureNS('W.dialog.member.ExportFileJobView');
-W.dialog.member.ExportFileJobView = Backbone.Model.extend({
+ensureNS('W.dialog.ExportFileJobView');
+W.dialog.ExportFileJobView = Backbone.Model.extend({
 	initialize: function(options) {
 		this.jobId = options; 
-		this.saveUrl = '/member/export/file_param/';
 		this.statusUrl = '/member/export/process/?exportjob_id=' + this.jobId;
 		this.updateProgressEvent = 'updateProgress';
 		this.finishEvent = 'finish';
@@ -28,7 +27,7 @@ W.dialog.member.ExportFileJobView = Backbone.Model.extend({
 		var inner_func = function() {
 			var thisFunction = arguments.callee;
 			W.getApi().call({
-				app: 'member',
+				app: 'export_job',
 				resource: 'export_process',
 				method: 'get',
 				args: {
@@ -69,16 +68,14 @@ EXPORT_PGOGRESS_TMPL = "<div id='exportProgress'>" +
 		"<div class='exportProgress_msg'>0%</div>" +
 		"<div id='exportProgress_bar'><div class='exportProgress_progress'></div></div>" +
 		"</div>" +
-		"<a id='downloadLink' class='btn fr btn-default mr20' href='#'>下载导出文件</a>";
+		"<a id='downloadLink' class='btn fr btn-default mr20' href='javascript:void(0)'>下载导出文件</a>";
 
-ensureNS('W.dialog.member.ExportFileView');
-W.dialog.member.ExportFileView = Backbone.View.extend({
+ensureNS('W.dialog.ExportFileView');
+W.dialog.ExportFileView = Backbone.View.extend({
 	el: '.div_export',
-	events: {
-		'click #downloadLink': 'download',
-	},
 	
 	initialize: function(options) {
+		var _output = this;
 		xlog('export file view initialize');
 		if ($(this.el)) {
 			this.$el = $(this.el);
@@ -89,6 +86,7 @@ W.dialog.member.ExportFileView = Backbone.View.extend({
 		this.type = options.type
 		this.jobId = options.jobId;
 		this.url = options.url;
+		this.app = options.app;
 		this.filter_value = options.filter_value;
 		this.exportLink = _this.find('.xa-export');
 		if(_this.find("#exportProgress_bar").length == 0){
@@ -98,6 +96,10 @@ W.dialog.member.ExportFileView = Backbone.View.extend({
 		this.progressMsg = _this.find('.exportProgress_msg');
 		this.progressBar = _this.find('.exportProgress_progress');
 		this.downloadLink = _this.find('#downloadLink');
+
+		$('#downloadLink').bind('click', function(){
+			_output.download()
+		});
 	},
 
 	doExport: function(event) {
@@ -108,10 +110,9 @@ W.dialog.member.ExportFileView = Backbone.View.extend({
 		var url = this.url;
 		var filter_value = this.filter_value
 		var type = this.type
-		console.log("type>>>>>>>>>>>",type,type===0)
-		
+		var app = this.app
 		W.getApi().call({
-			app: 'member',
+			app: app,
 			resource: 'export_file_param',
 			method: 'get',
 			args: {
@@ -120,7 +121,8 @@ W.dialog.member.ExportFileView = Backbone.View.extend({
 			},
 			success: function(data) {
 				view.jobId = data["exportjob_id"];
-				view.job = new W.dialog.member.ExportFileJobView(view.jobId);
+				console.log("view.jobId>>>>>>>>>>",view.jobId)
+				view.job = new W.dialog.ExportFileJobView(view.jobId);
 				view.job.bind(view.job.updateProgressEvent, view.updateProgress, view);
 				view.job.bind(view.job.finishEvent, view.finish, view);
 				view.job.startMonitorStatus();
@@ -129,7 +131,6 @@ W.dialog.member.ExportFileView = Backbone.View.extend({
 				console.log("export file param fail!");
 			}
 		});
-		// return false;
 	},
 	
 	doExportAfterApi: function() {
@@ -137,7 +138,7 @@ W.dialog.member.ExportFileView = Backbone.View.extend({
 		this.exportLink.hide();
 		this.progressDiv.show();
 		this.downloadLink.hide();
-		view.job = new W.dialog.member.ExportFileJobView(view.jobId);
+		view.job = new W.dialog.ExportFileJobView(view.jobId);
 		view.job.bind(view.job.updateProgressEvent, view.updateProgress, view);
 		view.job.bind(view.job.finishEvent, view.finish, view);
 		view.job.startMonitorStatus();
@@ -155,13 +156,13 @@ W.dialog.member.ExportFileView = Backbone.View.extend({
 		this.downloadLink.show();
 	},
 
-	download: function(event) {
+	download: function() {
 		this.progressDiv.hide();
 		this.downloadLink.hide();
 		this.exportLink.show();
-
+		var tt_id = this.jobId
 		W.getApi().call({
-			app: 'member',
+			app: 'export_job',
 			resource: 'export_process',
 			method: 'get',
 			args: {
@@ -171,34 +172,28 @@ W.dialog.member.ExportFileView = Backbone.View.extend({
 				var url = data["download_url"];
 				console.log("url over!",url);
 				window.open(url);
+				W.getApi().call({
+					app: 'export_job',
+					resource: 'export_download_over',
+					method: 'get',
+					args: {
+						id: tt_id
+					},
+					success: function(data) {
+						console.log("download over!");
+					},
+					error: function(response) {
+						console.log("download over,but push database fail!");
+					}
+				});
 			},
 			error: function(response) {
-				var url = "/static/upload/excel/member_"+this.jobId+".xls";
-				console.log("url,but push database fail!",url);
-				window.open(url);
+				console.log("url,but push database fail!",this.jobId);
 			}
 			
 		});
 		
-		
-		var download_url = '/member/export/download_over/?id='+this.jobId;
-		W.getApi().call({
-			app: 'member',
-			resource: 'export_download_over',
-			method: 'get',
-			args: {
-				id: this.jobId
-			},
-			success: function(data) {
-				console.log("download over!");
-			},
-			error: function(response) {
-				console.log("download over,but push database fail!");
-			}
-		});
-		event.stopPropagation();
-		event.preventDefault();
-		window.location.reload();
+		$('#downloadLink').unbind('click');
 	}
 });
 
@@ -217,7 +212,7 @@ W.CustomersView = Backbone.View.extend({
 
 	exportFile: function() {
 		//创建导出数据的view
-		this.exportFileView = new W.dialog.member.ExportFileView({type:this.options.type, "url": this.options.url, "filter_value":this.options.filter_value});
+		this.exportFileView = new W.dialog.ExportFileView({type:this.options.type, "url": this.options.url, "filter_value":this.options.filter_value, 'app':this.options.app});
 		
 		if(this.options.isAlreadyExport) {
 			this.exportFileView.doExport();

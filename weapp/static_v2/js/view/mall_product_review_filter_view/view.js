@@ -78,7 +78,7 @@ W.view.mall.ProductReviewFilterView = Backbone.View.extend({
         }
         //商品评星
         var productScore = $.trim(this.$('#product_score').val());
-        if(reviewStatus!='all'){
+        if(productScore!='all'){
             args.push("productScore:"+productScore);
         }
         this.filterValue = args;

@@ -15,7 +15,7 @@ from modules.member.module_api import get_member_by_id_list
 from core import paginator
 from core.jsonresponse import create_response
 from core import search_util
-from account.models import ExportJob
+from export_job.models import ExportJob
 FIRST_NAV_NAME = export.PRODUCT_FIRST_NAV
 COUNT_PER_PAGE = 50
 
@@ -44,50 +44,6 @@ REVIEW_FILTERS = {
         }
     ],
 }
-
-def get_request_reviews_list(request, export=False):
-    name = request.GET.get('name', '')
-    user_code = request.GET.get('userCode', '')
-    review_status = request.GET.get('reviewStatus', 'all')
-    start_date = request.GET.get('startDate', '')
-    end_date = request.GET.get('endDate', '')
-    product_score = request.GET.get('productScore', '-1')
-
-    is_fetch_all_reviews = (not name) and (not user_code) and (not start_date) and (not end_date) and (
-        review_status == 'all') and (product_score == 'all')
-
-    # 当前用户
-    owner = request.manager
-    all_reviews = mall_models.ProductReview.objects.filter(owner_id=owner.id).order_by("-created_at")
-
-    if is_fetch_all_reviews:
-        # 分页
-        count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
-        current_page = int(request.GET.get('page', '1'))
-        pageinfo, product_reviews = paginator.paginate(all_reviews, current_page, count_per_page,
-                                                       query_string=request.META['QUERY_STRING'])
-    else:
-        all_reviews = _filter_reviews(request, all_reviews)
-
-        # 处理商品编码
-        product_reviews = []
-        if user_code:
-            for review in all_reviews:
-                from cache import webapp_cache
-
-                review_product = mall_models.OrderHasProduct.objects.get(id=review.order_has_product_id)
-                product = webapp_cache.get_webapp_product_detail(request.webapp_owner_id, review.product_id)
-                product.fill_specific_model(review_product.product_model_name)
-                if product.model.user_code == user_code:
-                    review.product_user_code = user_code
-                    product_reviews.append(review)
-        else:
-            product_reviews = all_reviews
-
-        count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
-        current_page = int(request.GET.get('page', '1'))
-        pageinfo, product_reviews = paginator.paginate(product_reviews, current_page, count_per_page,
-                                                       query_string=request.META['QUERY_STRING'])
 
 def _filter_reviews(request, reviews):
     # 处理商品名称、评论时间、审核状态、商品星级
@@ -315,7 +271,6 @@ class ProductReviewList(resource.Resource):
             current_page = int(request.GET.get('page', '1'))
             pageinfo, product_reviews = paginator.paginate(product_reviews, current_page, count_per_page,
                                                            query_string=request.META['QUERY_STRING'])
-        print "query_string>>>>>>>>>>>>>>>",request.META['QUERY_STRING']
 
         # 处理商品
         product_ids = [review.product_id for review in product_reviews]
@@ -362,5 +317,62 @@ class ProductReviewList(resource.Resource):
             'pageinfo': paginator.to_dict(pageinfo),
             'sortAttr': '',
             'data': {}
+        }
+        return response.get_response()
+
+class ProductGetFile(resource.Resource):
+    """
+    获取参数，构建成文件，上传到u盘运
+    """
+    app = "mall2"
+    resource ="export_file_param"
+    
+    @login_required
+    def api_get(request):
+        woid = request.webapp_owner_id
+        type = int(request.GET.get('type', 0))
+
+        now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        #判断用户是否存在导出数据任务
+        if type == 2:
+            filter_value = request.GET.get("filter_value",'')
+            param = {}
+            if filter_value:
+                for filter_data_item in filter_value.split(','):
+                    try:
+                        key, value = filter_data_item.split(":")
+                    except:
+                        key = filter_data_item[:filter_data_item.find(':')]
+                        value = filter_data_item[filter_data_item.find(':')+1:]
+                    if key == 'name':
+                        param["product_name"] = value
+                    elif key == 'userCode':
+                        param["product_user_code"] = value
+                    elif key == 'reviewStatus':
+                        param["status"] = value
+                    elif key == 'startDate':
+                        param["created_at__gte"] = value
+                    elif key == 'endDate':
+                        param["created_at__lte"] = value
+                    elif key == 'productScore':
+                        param["product_score"] = value
+            param["owner_id"] = woid
+            sort_attr = ''
+        exportjob = ExportJob.objects.create(
+                                    woid = woid,
+                                    type = type,
+                                    status = 0,
+                                    param = param,
+                                    created_at = now,
+                                    processed_count =0,
+                                    count =0,
+                                    )
+        from mall.product.tasks import send_review_export_job_task
+        send_review_export_job_task.delay(exportjob.id, param, sort_attr, type)
+
+        response = create_response(200)
+        response.data = {
+            'ok':'ok',
+            "exportjob_id":exportjob.id,
         }
         return response.get_response()
