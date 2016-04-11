@@ -12,6 +12,7 @@ from django.shortcuts import render_to_response
 from core import resource
 from mall import export
 import util
+from tools.regional import views as regional_util
 from core.jsonresponse import create_response
 from core import paginator
 from mall.models import *
@@ -22,6 +23,7 @@ from core.exceptionutil import unicode_full_stack
 from modules.member.models import WebAppUser
 from account.models import UserProfile
 from mall.module_api import update_order_status
+from weixin.user.module_api import get_mp_qrcode_img
 
 COUNT_PER_PAGE = 20
 FIRST_NAV = export.ORDER_FIRST_NAV
@@ -423,4 +425,75 @@ class GroupOrderRefunded(resource.Resource):
         else:
             response.updated_order_ids = []
             response.not_update_order_ids = order_ids
+        return response.get_response()
+
+class PrintOrder(resource.Resource):
+    app = 'mall2'
+    resource = 'print_order'
+
+    @login_required
+    def api_get(request):
+        store_name = UserProfile.objects.get(user_id=request.manager.id).store_name
+        qrcode_url = get_mp_qrcode_img(request.manager.id)
+
+        order_ids = json.loads(request.GET.get('order_ids', '[]'))
+        #order_ids = request.GET.get('order_ids', '')
+        orders = Order.objects.filter(id__in=order_ids)
+        webapp_user_ids = set([order.webapp_user_id for order in orders])
+        from modules.member.models import Member
+        webappuser2member = Member.members_from_webapp_user_ids(webapp_user_ids)
+
+        order_ids = [order.id for order in orders]
+        # 获得order对应的商品数量
+        order2productcount = {}
+        for relation in OrderHasProduct.objects.filter(order_id__in=order_ids).order_by('id'):
+            order_id = relation.order_id
+            if order_id in order2productcount:
+                order2productcount[order_id] = order2productcount[order_id] + 1
+            else:
+                order2productcount[order_id] = 1
+
+        # 构造返回的order数据
+        for order in orders:
+            # 获取order对应的member的显示名
+            member = webappuser2member.get(order.webapp_user_id, None)
+            if member:
+                order.buyer_name = member.username_for_html
+            else:
+                order.buyer_name = u'未知'
+            order.product_count = order2productcount.get(order.id, 0)
+
+        # 构造返回的order数据
+        items = []
+        for order in orders:
+            products = mall_api.get_order_products(order)
+
+            items.append({
+                'id': order.id,
+                'order_id': order.order_id,
+                'supplier_user_id': order.supplier_user_id,
+                'products': products,
+                'total_price': float(
+                    '%.2f' % order.final_price) if order.pay_interface_type != 9 or order.status == 5 else 0,
+                'order_total_price': float('%.2f' % order.get_total_price()),
+                'ship_name': order.ship_name,
+                'ship_address': '%s %s' % (regional_util.get_str_value_by_string_ids(order.area), order.ship_address),
+                'ship_tel': order.ship_tel,
+                'buyer_name': order.buyer_name,
+                'created_at': datetime.strftime(order.created_at, '%Y-%m-%d %H:%M:%S'),
+                'product_count': order.product_count,
+                'postage': '%.2f' % order.postage,
+                'save_money': float(Order.get_order_has_price_number(order)) + float(order.postage) - float(
+                    order.final_price) - float(order.weizoom_card_money),
+                'pay_money': order.final_price + order.weizoom_card_money,
+                'total_purchase_price': order.total_purchase_price
+            })
+
+        response = create_response(200)
+        response.data = {
+            'items': items,
+            'store_name': store_name,
+            'qrcode_url': qrcode_url,
+            'order_count': len(order_ids)
+        }
         return response.get_response()
