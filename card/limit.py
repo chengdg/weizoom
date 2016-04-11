@@ -13,9 +13,9 @@ import json
 import nav
 import util
 
-class createWeizoomCardRule(resource.Resource):
+class CreateWeizoomCardRule(resource.Resource):
 	app = 'card'
-	resource = 'create_limit'
+	resource = 'limit'
 
 	def get(request):
 		"""
@@ -26,7 +26,7 @@ class createWeizoomCardRule(resource.Resource):
 			'second_navs': nav.get_second_navs(),
 			'second_nav_name': nav.CARD_LIMIT_NAV
 		})
-		return render_to_response('card/create_limit.html', c)
+		return render_to_response('card/limit.html', c)
 
 	@login_required
 	def api_put(request):

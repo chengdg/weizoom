@@ -40,6 +40,7 @@ class RuleOrder(resource.Resource):
 			order_number = now_day,
 			order_attribute = order_attributes,
 			company = company_info,
+			discount_money = 3.14,
 			responsible_person = responsible_person,
 			contact = contact,
 			sale_name = sale_name,
