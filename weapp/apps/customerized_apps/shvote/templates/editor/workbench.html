@@ -194,7 +194,7 @@
               "description": description,
               "permission": permission,
               "rule": rule,
-              "groups": groups.join(',')
+              "groups": JSON.stringify(groups)
           };
           if (isCreateNewData) {
             var method = 'put';

@@ -147,11 +147,11 @@ W.registerUIRole('[data-ui-role="apps-prize-keyword-pane"]', function() {
     var $el = $(this);
 	var view = view = new W.view.apps.PrizeKeywordPane({
 		el:'.xa-keywordBoxDiv-v2',
-		add_keyword_btn:'.xa-add-keyword-btn'
+		add_keyword_btn:'.xa-add-badge-btn'
 	});
 	view.delegateCloseSingleBadge($el);
 	$el.data('view', view);
-	$(this).delegate('.xa-add-keyword-btn', 'click', function(){
+	$(this).delegate('.xa-add-badge-btn', 'click', function(){
 		view.show();
 	});
 	var that = this;

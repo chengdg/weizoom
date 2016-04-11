@@ -6,7 +6,7 @@ ensureNS('W.component.appkit');
 W.component.appkit.ShvoteDescription = W.component.Component.extend({
 	type: 'appkit.shvotedescription',
 	selectable: 'yes',
-	propertyViewTitle: '调研简介',
+	propertyViewTitle: '投票',
 
 	properties: [{
 		group: '文本调研项',
@@ -30,14 +30,17 @@ W.component.appkit.ShvoteDescription = W.component.Component.extend({
 			validate: 'data-validate="require-notempty::投票规则不能为空,,require-word"',
 			placeholder: '每组每人每天可被投票1次(最多可输入50字)',
 			default: ""
-		}, {
+		},{
 			name: 'groups',
-			type: 'title_with_nothing',
+			type: 'badge',
 			displayName: '选手分组',
-			maxLength: 50,
+			plugin: 'apps_badge_tools',
+			uirole: 'apps-badge-tools-pane',
+			btnName: '+添加',
+			maxcount: 5,
+			maxlen: 5,
 			isUserProperty: true,
-			annotation: '小学组',
-			default: ['small']
+			default: []
 		},{
 			name: 'description',
 			type: 'rich_text',
@@ -132,7 +135,7 @@ W.component.appkit.ShvoteDescription = W.component.Component.extend({
                     }
                 })
             }
-            this.refresh($node, {refreshPropertyView: true, resize:true});
+            this.refresh($node, {refreshPropertyView: true});
 		}
 	},
 

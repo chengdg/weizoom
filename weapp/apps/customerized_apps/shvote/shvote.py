@@ -77,6 +77,22 @@ class shvote(resource.Resource):
 		})
 
 		return render_to_response('shvote/templates/editor/workbench.html', c)
+
+	@login_required
+	def api_get(request):
+		record_id = request.GET.get('record_id', None)
+		response = create_response(200)
+		if not record_id or 'new_app' in record_id:
+			response.data = []
+		else:
+			record = app_models.Shvote.objects(id=record_id)
+			if record.count() <= 0:
+				response.data = []
+			else:
+				record = record.first()
+				response.data = record.groups
+		print '999999999999999', response.data
+		return response.get_response()
 	
 	@login_required
 	def api_put(request):
@@ -84,7 +100,8 @@ class shvote(resource.Resource):
 		响应PUT
 		"""
 		data = request_util.get_fields_to_be_save(request)
-		data['groups'] = data['groups'].split(',')
+		data['permission'] = False if data['permission'] == 'member' else True
+		data['groups'] = json.loads(data['groups'])
 		shvote = app_models.Shvote(**data)
 		shvote.save()
 		
@@ -100,6 +117,8 @@ class shvote(resource.Resource):
 		响应POST
 		"""
 		data = request_util.get_fields_to_be_save(request)
+		data['permission'] = False if data['permission'] == 'member' else True
+		data['groups'] = json.loads(data['groups'])
 		update_data = {}
 		update_fields = set(['name', 'start_time', 'end_time', 'groups', 'description', 'permission', 'rule'])
 		for key, value in data.items():
