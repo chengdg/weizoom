@@ -41,12 +41,12 @@ class ShvoteRegistrators(resource.Resource):
 
 	@staticmethod
 	def get_datas(request):
-		name = request.GET.get('participant_name', '')
+		name = request.GET.get('participant_name', '')#搜索
 		webapp_id = request.user_profile.webapp_id
 		member_ids = []
 		if name:
 			hexstr = byte_to_hex(name)
-			members = member_models.Member.objects.filter(webapp_id=webapp_id,username_hexstr__contains=hexstr)
+			members = member_models.Member.objects.filter(webapp_id=webapp_id,username_hexstr__contains=hexstr)#模糊搜索
 			member_ids = [member.id for member in members]
 		start_time = request.GET.get('start_time', '')
 		end_time = request.GET.get('end_time', '')
@@ -58,7 +58,7 @@ class ShvoteRegistrators(resource.Resource):
 			params['created_at__gte'] = start_time
 		if end_time:
 			params['created_at__lte'] = end_time
-		datas = app_models.ShvoteParticipance.objects(**params).order_by('-id')
+		datas = app_models.ShvoteParticipance.objects(**params).order_by('-id')#筛选后参与者集合
 
 		#进行分页
 		count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
@@ -72,13 +72,14 @@ class ShvoteRegistrators(resource.Resource):
 		"""
 		响应API GET
 		"""
-		pageinfo, datas = ShvoteRegistrators.get_datas(request)
+		pageinfo, datas = ShvoteParticipances.get_datas(request)
 
 		tmp_member_ids = []
+		# data = one_ShvoteParticipance
 		for data in datas:
 			tmp_member_ids.append(data.member_id)
 		members = member_models.Member.objects.filter(id__in=tmp_member_ids)
-		member_id2member = {member.id: member for member in members}
+		member_id2member = {member.id: member for member in members} #会员
 
 		items = []
 		for data in datas:
