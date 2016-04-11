@@ -76,7 +76,7 @@ class ShvoteRegistrators(resource.Resource):
 		"""
 		响应API GET
 		"""
-		pageinfo, datas = ShvoteParticipances.get_datas(request)
+		pageinfo, datas = ShvoteRegistrators.get_datas(request)
 
 		tmp_member_ids = []
 		# data = one_ShvoteParticipance

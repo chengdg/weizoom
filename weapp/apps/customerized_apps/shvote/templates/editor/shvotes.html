@@ -9,7 +9,7 @@
 			<li class="active">上海投票</li>
 		</ul>
 	</div>
-	
+
 	<div class="xui-filterPanel mb15">
 		<div class="xui-form disT">
 			<div class="xui-col disTc">
@@ -66,25 +66,25 @@
 			<a class="btn btn-default xa-reset xui-fontBold" href="javascript:void(0);">重&nbsp;&nbsp;&nbsp;置</a>
 		</div>
 	</div>
-	
+
 	<div class="panel panel-default xui-tableBox">
 		<div class="panel-header clearfix">
 			<a href="/apps/shvote/shvote/" class="btn btn-success fr">
 				<span class="xui-plusBoldermr5 xui-plus-sign pr" style="">+</span> 新建上海投票
 			</a>
 		</div>
-		
-		<div 
+
+		<div
 			class="panel-body panel-table p0"
-			data-ui-role="advanced-table" 
-			data-app="apps/shvote" 
-			data-resource="shvotes" 
-			data-template-id="#table" 
-			data-enable-paginator="true" 
-			data-enable-sort="false" 
-			data-selectable="false" 
-			data-disable-header-select="true" 
-			data-item-count-per-page="10" 
+			data-ui-role="advanced-table"
+			data-app="apps/shvote"
+			data-resource="shvotes"
+			data-template-id="#table"
+			data-enable-paginator="true"
+			data-enable-sort="false"
+			data-selectable="false"
+			data-disable-header-select="true"
+			data-item-count-per-page="10"
 		>
 		</div>
 	</div>
@@ -110,14 +110,14 @@
 		<tbody>
 		  {{each(i, item) items}}
 			<tr data-id="${item.id}">
-				<td 
+				<td
 					class="tl pl25"
-					style="width:250px; height:60px;" 
+					style="width:250px; height:60px;"
 					title="${item.name}"
 				>
-				   <a 
-					class="xui-ellipsisFox" 
-					limit="15" 
+				   <a
+					class="xui-ellipsisFox"
+					limit="15"
 					href="/apps/shvote/shvote/?id=${item.id}&related_page_id=${item.related_page_id}"
 					style="text-overflow: -o-ellipsis-lastline;overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;"
 					>
@@ -144,6 +144,7 @@
 					<a href="javascript:void(0)" class="xa-close" data-id=${item.id}>关闭</a>
 					{{/if}}
 					<a href="javascript:void(0);" class="ml5 xa-preview" data-id=${item.id}>预览</a>
+					<a href="/apps/shvote/shvote_registrators/?id=${item.id}" class="ml5">报名详情</a>
 					<a href="/apps/shvote/shvote_participances/?id=${item.id}" class="ml5">查看结果</a>
 				</td>
 			</tr>
@@ -164,7 +165,7 @@
 <script type="text/javascript">
 $(document).ready(function() {
     var table = $('div[data-ui-role="advanced-table"]').data('view');
-	
+
 	$('body').delegate('.xa-delete', 'click', function(event) {
 		var $el = $(event.target);
 		var id = $el.data('id');
@@ -194,7 +195,7 @@ $(document).ready(function() {
 			}
 		});
 	});
-	
+
 	$('body').delegate('.xa-close', 'click', function(event) {
 		var $el = $(event.target);
 		var id = $el.data('id');
@@ -215,14 +216,14 @@ $(document).ready(function() {
 			}
 		});
 	});
-	
+
 	$('body').delegate('.xa-preview', 'click', function(event) {
 		var $el = $(event.target);
 		var id = $el.data('id');
 		var previewUrl = '/m/apps/shvote/m_shvote/?woid='+W.uid+'&id='+id;
 		window.open('/termite2/app_preview/?preview_url='+encodeURIComponent(previewUrl), '_tab');
 	});
-	
+
 	$('.xa-search').click(function(event) {
 		var name = $.trim($('[name="name"]').val());
 		var status = $.trim($('[name="status"]').val());
@@ -237,7 +238,7 @@ $(document).ready(function() {
 			emptyDataHint: '没有符合条件的数据'
 		});
 	});
-	
+
 	$('.xa-reset').click(function(event) {
 		$('[name="name"]').val('');
 		$('[name="status"]').val('0');
