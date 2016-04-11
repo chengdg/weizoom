@@ -1128,3 +1128,73 @@
 .xui-redEnvelope-page .xui-operation a{
     margin:0 5px 0 0;
 }
+/*打印订单样式 start*/
+.print－all-orders-row {
+    height: 38px;
+    line-height: 38px;
+}
+#order-print-pages-box{
+    position: absolute;
+    height:1px;
+    overflow: scroll;
+    width: 100%;
+    top:-3px;
+    background-color: #fff;
+    /*top:100%;*/
+    /*left:-300%;*/
+}
+#order-print-pages{
+    width:790px;
+    margin:0 auto;
+    background-color: #fff;
+}
+.order-print-title {
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.order-print-info-table.table>tbody>tr>td{
+    text-align: left;
+    border:0;
+}
+.order-print-info-table.table>tbody>tr>td.order-print-info-odd {
+    width: 42%;
+}
+.order-print-info-row {
+    line-height: 17px;
+    margin-bottom: 10px;
+}
+.order-print-page {
+    padding: 0 20px;
+}
+.table.order-print-product-attr-names {
+    border: 1px solid #ddd;
+}
+table.table.order-print-summary-sec>tbody>tr>td{
+    border-top:0;
+    text-align: left;
+    vertical-align: baseline;
+}
+
+table.table.order-print-summary-sec>tbody>tr>td.order-print-summary-cost{
+    text-align: right;
+}
+.order-print-footer{
+    width: 100%;
+    text-align: right;
+}
+.order-print-footer img{
+    width: 80px;
+    height: 80px;
+
+}
+@media print {
+    @page { margin: 0; }
+    .order-print-page { padding: 1.6cm; }
+}
+.order-print-page:not(:last-child){
+    page-break-after: always;
+}
+/*打印订单样式 end*/
