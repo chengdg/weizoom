@@ -22,74 +22,115 @@ import weixin.user.models as weixin_models
 class MShvote(resource.Resource):
 	app = 'apps/shvote'
 	resource = 'm_shvote'
+
+	def api_get(request):
+		"""
+		加载动态数据
+		"""
+		record_id = request.GET.get('recordId', None)
+		member = request.member
+		response = create_response(500)
+
+		if not record_id or not member:
+			response.errMsg = u'活动信息出错'
+			return response.get_response()
+
+		record = app_models.Shvote.objects(id=record_id)
+		if record.count() <= 0:
+			response.errMsg = 'is_deleted'
+			return response.get_response()
+
+		record = record.first()
+		member_id = member.id
+		isMember = member.is_subscribed
+		activity_status, record = update_shvote_status(record)
+
+		#获取已报名人数
+		member_datas = app_models.ShvoteParticipance.objects(belong_to=record_id, status=app_models.MEMBER_STATUS['PASSED'])
+		total_parted = member_datas.count()
+		total_counts = member_datas.sum('count')
+		total_visits = record.visits
+
+		#获取当前会员可投票的次数(默认每人每天每组可投票一次)
+
+
+		member_info = {}
+		record_info = {
+			'total_parted': total_parted,
+			'total_counts': total_counts,
+			'total_visits': total_visits
+		}
+
+		response = create_response(200)
+		response.data = {
+			'activity_status': activity_status,
+			'member_info': member_info,
+			'record_info': record_info
+		}
+		return response.get_response()
+
 	
 	def get(request):
 		"""
 		响应GET
 		"""
-		if 'id' in request.GET:
-			id = request.GET['id']
-			isPC = request.GET.get('isPC',0)
-			participance_data_count = 0
-			isMember = False
-			auth_appid_info = None
-			if not isPC:
-				isMember = request.member and request.member.is_subscribed
-			if 'new_app:' in id:
-				project_id = id
-				activity_status = u"未开启"
-				record = None
-			else:
-				#termite类型数据
-				try:
-					record = app_models.Shvote.objects.get(id=id)
-				except:
-					c = RequestContext(request,{
-						'is_deleted_data': True
-					})
-					return render_to_response('shvote/templates/webapp/m_shvote.html', c)
-				activity_status = record.status_text
-				
-				now_time = datetime.today().strftime('%Y-%m-%d %H:%M')
-				data_start_time = record.start_time.strftime('%Y-%m-%d %H:%M')
-				data_end_time = record.end_time.strftime('%Y-%m-%d %H:%M')
-				if data_start_time <= now_time and now_time < data_end_time:
-					record.update(set__status=app_models.STATUS_RUNNING)
-					activity_status = u'进行中'
-				elif now_time >= data_end_time:
-					record.update(set__status=app_models.STATUS_STOPED)
-					activity_status = u'已结束'
-				
-				project_id = 'new_app:shvote:%s' % record.related_page_id
-				
-				if request.member:
-					participance_data_count = app_models.ShvoteParticipance.objects(belong_to=id, member_id=request.member.id).count()
-			
-			request.GET._mutable = True
-			request.GET.update({"project_id": project_id})
-			request.GET._mutable = False
-			html = pagecreater.create_page(request, return_html_snippet=True)
-			
-			c = RequestContext(request, {
-				'record_id': id,
-				'activity_status': activity_status,
-				'is_already_participanted': (participance_data_count > 0),
-				'page_title': record.name if record else u"投票",
-				'page_html_content': html,
-				'app_name': "shvote",
-				'resource': "shvote",
-				'hide_non_member_cover': True, #非会员也可使用该页面
-				'isPC': isPC,
-				'isMember': isMember,
-				'auth_appid_info': auth_appid_info
-			})
-			
-			return render_to_response('shvote/templates/webapp/m_shvote.html', c)
+		id = request.GET['id']
+		isPC = request.GET.get('isPC',0)
+		isMember = False
+		share_page_desc = ""
+		auth_appid_info = None
+		record = None
+		if not isPC:
+			isMember = request.member and request.member.is_subscribed
+		if 'new_app:' in id:
+			project_id = id
+			activity_status = u"未开启"
 		else:
-			record = None
-			c = RequestContext(request, {
-				'record': record
-			});
-			
-			return render_to_response('shvote/templates/webapp/m_shvote.html', c)
+			try:
+				record = app_models.Shvote.objects.get(id=id)
+			except:
+				c = RequestContext(request,{
+					'is_deleted_data': True
+				})
+				return render_to_response('shvote/templates/webapp/m_shvote.html', c)
 
+			activity_status, record = update_shvote_status(record)
+			share_page_desc = record.name
+			project_id = 'new_app:shvote:%s' % record.related_page_id
+
+		request.GET._mutable = True
+		request.GET.update({"project_id": project_id})
+		request.GET._mutable = False
+		html = pagecreater.create_page(request, return_html_snippet=True)
+
+		c = RequestContext(request, {
+			'record_id': id,
+			'activity_status': activity_status,
+			'page_title': record.name if record else u"投票",
+			'page_html_content': html,
+			'app_name': "shvote",
+			'resource': "shvote",
+			'hide_non_member_cover': True, #非会员也可使用该页面
+			'isPC': True if isPC else False,
+			'isMember': isMember,
+			'auth_appid_info': auth_appid_info,
+			"share_page_desc": share_page_desc
+		})
+
+		return render_to_response('shvote/templates/webapp/m_shvote.html', c)
+
+def update_shvote_status(shvote):
+	activity_status = shvote.status_text
+	now_time = datetime.today().strftime('%Y-%m-%d %H:%M')
+	data_start_time = shvote.start_time.strftime('%Y-%m-%d %H:%M')
+	data_end_time = shvote.end_time.strftime('%Y-%m-%d %H:%M')
+	data_status = shvote.status
+	if data_status <= 1:
+		if data_start_time <= now_time and now_time < data_end_time:
+			shvote.update(set__status=app_models.STATUS_RUNNING)
+			activity_status = u'进行中'
+		elif now_time >= data_end_time:
+			shvote.update(set__status=app_models.STATUS_STOPED)
+			activity_status = u'已结束'
+		shvote.reload()
+	return activity_status, shvote
