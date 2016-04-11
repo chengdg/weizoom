@@ -19,14 +19,14 @@ COUNT_PER_PAGE = 20
 class Shvotes(resource.Resource):
 	app = 'apps/shvote'
 	resource = 'shvotes'
-	
+
 	@login_required
 	def get(request):
 		"""
 		响应GET
 		"""
 		has_data = app_models.Shvote.objects.count()
-		
+
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
 			'second_navs': mall_export.get_promotion_and_apps_second_navs(request),
@@ -34,16 +34,16 @@ class Shvotes(resource.Resource):
 			'third_nav_name': "shvotes",
 			'has_data': has_data
 		});
-		
+
 		return render_to_response('shvote/templates/editor/shvotes.html', c)
-	
+
 	@staticmethod
 	def get_datas(request):
 		name = request.GET.get('name', '')
 		status = int(request.GET.get('status', -1))
 		start_time = request.GET.get('start_time', '')
 		end_time = request.GET.get('end_time', '')
-		
+
 		now_time = datetime.today().strftime('%Y-%m-%d %H:%M')
 		params = {'owner_id':request.manager.id}
 		datas_datas = app_models.Shvote.objects(**params)
@@ -62,22 +62,22 @@ class Shvotes(resource.Resource):
 			params['start_time__gte'] = start_time
 		if end_time:
 			params['end_time__lte'] = end_time
-		datas = app_models.Shvote.objects(**params).order_by('-id')	
-		
+		datas = app_models.Shvote.objects(**params).order_by('-id')
+
 		#进行分页
 		count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
 		cur_page = int(request.GET.get('page', '1'))
 		pageinfo, datas = paginator.paginate(datas, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
-		
+
 		return pageinfo, datas
-	
+
 	@login_required
 	def api_get(request):
 		"""
 		响应API GET
 		"""
 		pageinfo, datas = Shvotes.get_datas(request)
-		
+
 		items = []
 		for data in datas:
 			items.append({
@@ -98,5 +98,5 @@ class Shvotes(resource.Resource):
 		}
 		response = create_response(200)
 		response.data = response_data
-		return response.get_response()		
+		return response.get_response()
 

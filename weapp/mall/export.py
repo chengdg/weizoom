@@ -298,7 +298,7 @@ MALL_APPS_RED_ENVELOPE_NAV = 'red_envelopes'
 MALL_APPS_POWERME_NAV = 'powerme'
 MALL_APPS_REDPACKET_NAV = 'red_packet'
 MALL_APPS_GROUP_NAV = 'groups'
-MALL_APPS_SHVOTE_NAV = 'shvote'
+MALL_APPS_SHVOTE_NAV = 'shvotes'
 
 #
 # 应用和营销左侧垂直方向二级导航信息
