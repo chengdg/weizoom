@@ -162,7 +162,8 @@ $(document).ready(function() {
 	});
 
 	$('body').delegate('.xa-delete', 'click', function(event) {
-		var id = $(event.currentTarget).parents('tr').data('id')
+		var $el = $(event.target)
+		var id = $el.parents('tr').data('id')
 		W.requireConfirm({
 			$el: $el,
 			width: 420,
@@ -191,7 +192,7 @@ $(document).ready(function() {
 	});
 
 	$('body').delegate('.xa-review', 'click', function(event) {
-		var id = $(event.currentTarget).parents('tr').data('id')
+		var id = $(event.target).parents('tr').data('id')
 		W.getApi().call({
 			app: 'apps/shvote',
 			resource: 'shvote_registrators',

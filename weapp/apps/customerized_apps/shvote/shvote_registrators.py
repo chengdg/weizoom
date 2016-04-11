@@ -13,6 +13,7 @@ import models as app_models
 import export
 from mall import export as mall_export
 from utils.string_util import byte_to_hex
+from apps import request_util
 
 FIRST_NAV = mall_export.MALL_PROMOTION_AND_APPS_FIRST_NAV
 COUNT_PER_PAGE = 20
@@ -104,7 +105,10 @@ class ShvoteRegistrators(resource.Resource):
 		"""
 		响应POST
 		"""
-		app_models.ShvoteParticipance.objects(id=request.POST['id']).update(status = 1)
+		data = request_util.get_fields_to_be_save(request)
+		update_data = {}
+		update_data['set__status'] = 1
+		app_models.ShvoteParticipance.objects(id=request.POST['id']).update(**update_data)
 		
 		response = create_response(200)
 		return response.get_response()
