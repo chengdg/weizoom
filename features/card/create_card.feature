@@ -39,7 +39,7 @@ Scenario:1.新建通用卡-通用卡
 			"comments":"微众卡"
 		}]
 		"""
-	Then 'test'能获得通用卡规则列表
+	Then test能获得通用卡规则列表
 		"""
 		[{
 			"name":"微众卡",
@@ -59,7 +59,7 @@ Scenario:1.新建通用卡-通用卡
 			"comments":""
 		}]
 		"""
-	Then 'test'能获得通用卡'微众卡'的库存列表
+	Then test能获得通用卡'微众卡'的库存列表
 		| card_number |status| money |rest_money|comments|apply_person|apply_department| 
 		|  888000001  |待出库| 10.00 |  10.00   |        |            |                |
 		|  888000002  |待出库| 10.00 |  10.00   |        |            |                |
@@ -72,7 +72,7 @@ Scenario:1.新建通用卡-通用卡
 		|  888000009  |待出库| 10.00 |  10.00   |        |            |                |
 		|  888000010  |待出库| 10.00 |  10.00   |        |            |                |
 
-	Then 'test'能获得通用卡'10元卡'的库存列表
+	Then test能获得通用卡'10元卡'的库存列表
 		| card_number |status| money |rest_money|comments|apply_person|apply_department|
 		|  999000001  |待出库| 10.00 |  10.00   |        |            |                |
 		|  999000002  |待出库| 10.00 |  10.00   |        |            |                |
@@ -135,7 +135,7 @@ Scenario:2.新建微众卡-限制卡
 			"comments":"专属卡"
 		}]
 		"""
-	Then 'test'能获得限制卡规则列表
+	Then test能获得限制卡规则列表
 		"""
 		[{
 			"name":"测试卡4",
@@ -183,20 +183,20 @@ Scenario:2.新建微众卡-限制卡
 			"comments":""
 		}]
 		"""
-	Then 'test'能获得限制卡'测试卡4'的库存列表
+	Then test能获得限制卡'测试卡4'的库存列表
 		|  card_number | status| money |rest_money|comments|apply_person|apply_department|
 		|   444000001  | 待出库| 25.00 |  25.00   |        |            |                |
 		
-	Then 'test'能获得限制卡'测试卡3'的库存列表
+	Then test能获得限制卡'测试卡3'的库存列表
 		| card_number | status| money |rest_money|comments|apply_person|apply_department|
 		|  555000001  | 待出库| 10.00 |  10.00   |        |            |                | 
 		|  555000002  | 待出库| 10.00 |  10.00   |        |            |                | 
 
-	Then 'test'能获得限制卡'测试卡2'的库存列表
+	Then test能获得限制卡'测试卡2'的库存列表
 		| card_number | status| money |rest_money|comments|apply_person|apply_department| 
 		|  666000001  | 待出库| 10.00 |  10.00   |        |            |                |
 	
-	Then 'test'能获得限制卡'测试卡1'的库存列表
+	Then test能获得限制卡'测试卡1'的库存列表
 		| card_number | status| money |rest_money|comments|apply_person|apply_department|
 		|  777000001  | 待出库| 10.00 |  10.00   |        |            |                |
 		|  777000002  | 待出库| 10.00 |  10.00   |        |            |                |
