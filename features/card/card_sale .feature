@@ -76,13 +76,13 @@ Scenario:1.发放发售卡
 		"card_info":[{
 			"name":"测试卡",
 			"order_num":"4",
-			"start_date":"2016-04-07",
-			"end_date":"2016-10-07"
+			"start_date":"2016-04-07 00:00",
+			"end_date":"2016-10-07 00:00"
 		},{
 			"name":"测试卡1",
 			"order_num":"5",
-			"start_date":"2016-04-07",
-			"end_date":"2016-10-07"
+			"start_date":"2016-04-07 00:00",
+			"end_date":"2016-10-07 00:00"
 		}],
 		"order_info":{
 			"order_attribute":"发售卡",

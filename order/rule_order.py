@@ -88,25 +88,25 @@ class RuleOrder(resource.Resource):
 				order2is_activation[cur_weizoom_card_orders_id] =1
 			else:
 				order2is_activation[cur_weizoom_card_orders_id] =0
-		print card_rules,999999999999999999666666
 		card_order_list = []
 		for card_order in weizoom_card_orders:
 			card_order_dic = {}
-			rule_id = order_id2rule_id[card_order.id]
-			count = id2weizoom_card_order_item[card_order.id].weizoom_card_order_item_num
-			card_order_dic['id'] = card_order.id
-			card_order_dic['order_number'] = card_order.order_number
-			card_order_dic['name'] ='' if rule_id not in id2card_rule else id2card_rule[rule_id].name
-			card_order_dic['money'] = '%.2f' %id2card_rule[rule_id].money
-			card_order_dic['total_money'] = '%.2f' %(id2card_rule[rule_id].money * count)
-			card_order_dic['weizoom_card_order_item_num'] = count
-			card_order_dic['card_kind'] = WEIZOOM_CARD_KIND2TEXT[id2card_rule[rule_id].card_kind]
-			card_order_dic['order_attribute'] = WEIZOOM_CARD_ORDER_ATTRIBUTE2TEXT[card_order.order_attribute]
-			card_order_dic['responsible_person'] = card_order.responsible_person
-			card_order_dic['company'] = card_order.company
-			card_order_dic['created_at'] = card_order.created_at.strftime("%Y-%m-%d")
-			card_order_dic['is_activation'] ='' if card_order.id not in order2is_activation else order2is_activation[card_order.id]
-			card_order_list.append(card_order_dic)
+			if card_order.id in order_id2rule_id:
+				rule_id = order_id2rule_id[card_order.id]
+				count = id2weizoom_card_order_item[card_order.id].weizoom_card_order_item_num
+				card_order_dic['id'] = card_order.id
+				card_order_dic['order_number'] = card_order.order_number
+				card_order_dic['name'] ='' if rule_id not in id2card_rule else id2card_rule[rule_id].name
+				card_order_dic['money'] = '%.2f' %id2card_rule[rule_id].money
+				card_order_dic['total_money'] = '%.2f' %(id2card_rule[rule_id].money * count)
+				card_order_dic['weizoom_card_order_item_num'] = count
+				card_order_dic['card_kind'] = WEIZOOM_CARD_KIND2TEXT[id2card_rule[rule_id].card_kind]
+				card_order_dic['order_attribute'] = WEIZOOM_CARD_ORDER_ATTRIBUTE2TEXT[card_order.order_attribute]
+				card_order_dic['responsible_person'] = card_order.responsible_person
+				card_order_dic['company'] = card_order.company
+				card_order_dic['created_at'] = card_order.created_at.strftime("%Y-%m-%d")
+				card_order_dic['is_activation'] ='' if card_order.id not in order2is_activation else order2is_activation[card_order.id]
+				card_order_list.append(card_order_dic)
 
 		data = {
 			'card_order_list': json.dumps(card_order_list)

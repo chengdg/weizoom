@@ -136,7 +136,7 @@ class WeizoomCardOrder(models.Model):
 	sale_name = models.CharField(max_length=32,null=True)  #销售员姓名
 	sale_departent = models.CharField(max_length=32,null=True)  #销售部门
 	discount_way = models.IntegerField(default=0) #折扣方式
-	discount_money = models.DecimalField(max_digits=65, decimal_places=2,default=0) #减免金额
+	discount_money = models.DecimalField(max_digits=65, decimal_places=2,null=True) #减免金额
 	is_invoice = models.IntegerField(default=0) #是否需要发票
 	invoice_title = models.CharField(max_length=64,null=True)  #发票抬头
 	invoice_content = models.CharField(max_length=64,null=True)  #发票内容
