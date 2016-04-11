@@ -29,11 +29,24 @@ class ShvoteParticipance(resource.Resource):
 	app = 'apps/shvote'
 	resource = 'shvote_participance'
 
+
+
 	def get(request):
 		"""
 		响应GET
 		"""
 		record = None
+
+		def __itemName2item(itemName):
+			itemName_dic={'small':u"初中组"}
+			itemName_List = []
+			for item in itemName:
+				if item in itemName_dic:
+					itemName_List.append(itemName_dic[item])
+				else:
+					itemName_List.append(item)
+			return itemName_List
+
 		if 'id' in request.GET:
 			participance_data_count = 0
 			id = request.GET['id']
@@ -49,7 +62,7 @@ class ShvoteParticipance(resource.Resource):
 			c = RequestContext(request, {
 				'record_id': id,
 				'page_title': record.name if record else u"投票",
-				'groups': record.groups,
+				'groups': __itemName2item(record.groups),
 				'is_already_participanted': (participance_data_count > 0),
 				'is_hide_weixin_option_menu':True,
 				'app_name': "shvote",
