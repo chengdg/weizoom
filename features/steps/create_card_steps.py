@@ -65,7 +65,7 @@ def step_impl(context, user):
 			"remark": rule.get("comments","")
 		}
 
-		response = context.client.put('/card/api/create_ordinary/', rule_dict)
+		response = context.client.put('/card/api/ordinary/', rule_dict)
 		bdd_util.assert_api_call_success(response)
 
 @then(u"{user}能获得通用卡规则列表")
@@ -140,7 +140,7 @@ def step_impl(context,user):
 			"remark":  rule.get("comments","")
 		}
 
-		response = context.client.put('/card/api/create_limit/', rule_dict)
+		response = context.client.put('/card/api/limit/', rule_dict)
 		bdd_util.assert_api_call_success(response)
 
 @then(u"{user}能获得限制卡规则列表")
