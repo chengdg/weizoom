@@ -46,16 +46,16 @@ class ShvoteRegistrators(resource.Resource):
 		status = int(request.GET.get('participant_status', -1))
 		webapp_id = request.user_profile.webapp_id
 		member_ids = []
-		if name:
-			hexstr = byte_to_hex(name)
-			members = member_models.Member.objects.filter(webapp_id=webapp_id,username_hexstr__contains=hexstr)#模糊搜索
-			member_ids = [member.id for member in members]
-		start_time = request.GET.get('start_time', '')
-		end_time = request.GET.get('end_time', '')
+		# if name:
+		# 	hexstr = byte_to_hex(name)
+		# 	members = member_models.Member.objects.filter(webapp_id=webapp_id,username_hexstr__contains=hexstr)#模糊搜索
+		# 	member_ids = [member.id for member in members]
+		# start_time = request.GET.get('start_time', '')
+		# end_time = request.GET.get('end_time', '')
 
 		params = {'belong_to':request.GET['id']}
 		if name:
-			params['webapp_user_id__in'] = member_ids
+			params['name__icontains'] = name
 		if status != -1:
 			params['status'] = status
 		# if start_time:
@@ -89,8 +89,10 @@ class ShvoteRegistrators(resource.Resource):
 		for data in datas:
 			items.append({
 				'id': str(data.id),
-				'participant_name': member_id2member[data.member_id].username_size_ten if member_id2member.get(data.member_id) else u'未知',
-				'participant_icon': member_id2member[data.member_id].user_icon if member_id2member.get(data.member_id) else '/static/img/user-1.jpg',
+				'icon':data.icon,
+				'name':data.name,
+				# 'participant_name': member_id2member[data.member_id].username_size_ten if member_id2member.get(data.member_id) else u'未知',
+				# 'participant_icon': member_id2member[data.member_id].user_icon if member_id2member.get(data.member_id) else '/static/img/user-1.jpg',
 				'count':data.count,
 				'serial_number':data.serial_number,
 				'status':data.status,
