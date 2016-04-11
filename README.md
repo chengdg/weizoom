@@ -27,3 +27,9 @@ cnpm install
 1. 启动 `start_service.bat | bunyan`
 1. 访问 `http://127.0.0.1:4180/account/login/`
 1. 以 `manager:test`登陆系统
+
+### 如何进行BDD测试？ ###
+
+答：初次搭建环境，按如下步骤：
+1. bdd相关文件放在features目录下：每一个app的feature文件放在独立目录下，如card，所有的step实现放在steps目录下，数据库清理文件放在clean目录下。
+1. 运行 behave -k 测试所有；运行behave -k -t @wip 测试wip标签（安装pip install behave）
