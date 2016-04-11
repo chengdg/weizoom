@@ -95,7 +95,7 @@ Scenario:1.发放发售卡
 		}]		
 	}]
 	"""
-	Then 'test'能获得订单列表
+	Then test能获得订单列表
 	"""
 	[{
 		"card_info":[{
@@ -124,7 +124,7 @@ Scenario:1.发放发售卡
 			"real_pay":"90.00"
 	}]
 	"""
-	Then 'test'能获得通用卡'10元卡'的库存列表
+	Then test能获得通用卡'10元卡'的库存列表
 	
 		| card_number  |status| money |rest_money|comments|apply_person|apply_department| 
 		|  000000001   |已出库| 10.00 |  10.00   | 微众卡 |    研发    |    窝夫小子    |
@@ -132,7 +132,7 @@ Scenario:1.发放发售卡
 		|  000000003   |已出库| 10.00 |  10.00   | 微众卡 |    研发    |    窝夫小子    |
 		|  000000004   |已出库| 10.00 |  10.00   | 微众卡 |    研发    |    窝夫小子    |
 		|  000000005   |待出库| 10.00 |  10.00   | 微众卡 |    研发    |    窝夫小子    |
-	Then 'test'能获得限制卡'测试卡1'的库存列表
+	Then test能获得限制卡'测试卡1'的库存列表
 		| card_number  |status| money |rest_money|comments|apply_person|apply_department| 
 		|  020000001   |已出库| 10.00 |  10.00   | weizoom|    研发    |    窝夫小子    |
 		|  020000002   |已出库| 10.00 |  10.00   | weizoom|    研发    |    窝夫小子    |
@@ -167,7 +167,7 @@ Scenario:2.创建多条订单，按创建订单时间倒序排列
 		}]
 	}]
 	"""
-	Then 'test'能获得订单列表
+	Then test能获得订单列表
 	"""
 	[{
 		"order_id":"2"

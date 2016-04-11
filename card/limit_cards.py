@@ -21,12 +21,12 @@ class ordinaryCardList(resource.Resource):
 		"""
 		显示某一规则下的卡列表
 		"""
-		rule_id = request.GET.get('rule_id', '-1')
-		rule = WeizoomCardRule.objects.get(id=rule_id)
+		weizoom_card_rule_id = request.GET.get('weizoom_card_rule_id', '-1')
 		c = RequestContext(request, {
 			'first_nav_name': nav.FIRST_NAV,
 			'second_navs': nav.get_second_navs(),
 			'second_nav_name': nav.CARD_LIMIT_NAV,
+			'weizoom_card_rule_id': weizoom_card_rule_id
 		})
 		return render_to_response('card/limit_cards.html', c)
 
