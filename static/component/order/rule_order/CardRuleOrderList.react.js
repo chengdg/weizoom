@@ -9,6 +9,9 @@ var Action = require('./Action');
 var ReactDOM = require('react-dom');
 
 var Reactman = require('reactman');
+var PageAction = Reactman.PageAction;
+var Dispatcher = Reactman.Dispatcher;
+var Resource = Reactman.Resource;
 var cardRuleOrderList = React.createClass({
 	displayName: 'cardRuleOrderList',
 
@@ -29,6 +32,23 @@ var cardRuleOrderList = React.createClass({
 		this.setState({
 			cardRuleOrder:Store.getCardRuleOrder()
 		})
+	},
+	rowFormatter: function(field, value, data) {
+		if (field === 'name') {
+			return (
+				<a href={'/card/ordinary_cards/?weizoom_card_rule_id='+data.id}>{value}</a>
+			)
+		}else if (field === 'action') {
+			return (
+			<div>
+				<a className="btn btn-link btn-xs">导出</a>
+				<a className="btn btn-link btn-xs mt5">追加</a>
+				<a className="btn btn-link btn-xs">备注</a>
+			</div>
+			);
+		} else {
+			return value;
+		}
 	},
 	onClickActivation:function(orderId,is_activation){
 		console.log(orderId,'sssssss')
@@ -107,6 +127,7 @@ var cardRuleOrderList = React.createClass({
 
 				</div>
 				<div style={{clear: "both"}}></div>
+				
 			</div>
 		)
 		

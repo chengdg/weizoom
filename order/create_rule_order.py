@@ -35,7 +35,9 @@ class createRuleOrder(resource.Resource):
 		remark = post.get('remark','')
 		rule_order = json.loads(rule_order)
 
+		print "gggggggggggggg"
 		now_day = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S").replace('-','').replace(':','').replace(' ','')
+		print "gggggggggggggg"
 		weizoom_card_order = WeizoomCardOrder.objects.create(
 			owner_id = request.user.id,
 			order_number = now_day,
@@ -47,6 +49,7 @@ class createRuleOrder(resource.Resource):
 			sale_departent = sale_departent,
 			remark=remark
 		)
+		print "gggggggggggggg"
 		for rule in rule_order:
 			rule_id = int(rule['rule_id'])
 			weizoom_card_order_items = WeizoomCardOrderItem.objects.create(

@@ -21,7 +21,7 @@ Background:
 	When  test新建通用卡
 	"""
 		[{
-			"name":"",
+			"name":"测试卡",
 			"prefix_value":"000",
 			"type":"entity",
 			"money":"10.00",
@@ -66,7 +66,7 @@ Background:
 
 
 
-@weizoom_card @card_order
+@weizoom_card @card_order @hj
 Scenario:1.发放发售卡
         #发放通用卡和限制卡
 	Given test登录管理系统
@@ -74,7 +74,7 @@ Scenario:1.发放发售卡
 	"""
 	[{
 		"card_info":[{
-			"name":"10元卡",
+			"name":"测试卡",
 			"order_num":"4",
 			"start_date":"2016-04-07",
 			"end_date":"2016-10-07"
@@ -84,7 +84,7 @@ Scenario:1.发放发售卡
 			"start_date":"2016-04-07",
 			"end_date":"2016-10-07"
 		}],
-		order_info:[{
+		"order_info":{
 			"order_attribute":"发售卡",
 			"company":"窝夫小子",
 			"responsible_person":"研发",
@@ -92,7 +92,7 @@ Scenario:1.发放发售卡
 			"sale_name":"姜晓明",
 			"sale_deparment":"销售",
 			"comments":""
-		}]		
+		}
 	}]
 	"""
 	Then test能获得订单列表

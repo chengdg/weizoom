@@ -15,24 +15,38 @@ from django.contrib.auth.models import User
 @when(u"{user}下订单")
 def step_impl(context, user):
 	context.infos = json.loads(context.text)
-	order_info = context.infos.order_info
-	rule_order_info = {
-		'order_attribute':order_info["name"],
-		'company':order_info["company"],
-		'responsible_person':order_info["responsible_person"],
-		'contact':order_info["contact"],
-		'sale_name':order_info["sale_name"],
-		'sale_deparment':order_info["sale_deparment"],
-		'comments':order_info["comments"],
-		'card_info':[]
-	}
-	for rule in context.infos.card_info:
-		rule_order_info['card_info'].append({
-			"name": rule["name"],
-			"order_num": rule["order_num"],
-			"start_date": rule["start_date"],
-			"end_date": rule["end_date"],
-		})
-	rule_order_list.append(rule_order_info)
-	response = context.client.put('/order/api/create_rule_order/', rule_order_info)
-	bdd_util.assert_api_call_success(response)
+	name2rule_id = {}
+	for rule in card_models.WeizoomCardRule.objects.all():
+		if rule.name:
+			name = rule.name
+		else:
+			name = u'%.f元卡' % rule.money
+			print name,"gggggggggggggg"
+		name2rule_id[name] = rule.id
+	print name2rule_id,"dddddddddddddd"
+	for info in context.infos:
+		order_info = info["order_info"]
+		rule_order_info = {
+			'order_attributes':order_info["order_attribute"],
+			'company_info':order_info["company"],
+			'responsible_person':order_info["responsible_person"],
+			'contact':order_info["contact"],
+			'sale_name':order_info["sale_name"],
+			'sale_deparment':order_info["sale_deparment"],
+			'remark':order_info["comments"],
+			'rule_order':[]
+		}
+		print rule_order_info,99999999999999999999999999999
+		for rule in info["card_info"]:
+			name = rule["name"]
+			print name,666666666666666666666666666666
+			rule_order_info["rule_order"].append({
+				"rule_id": name2rule_id[name],
+				"card_rule_num": rule["order_num"],
+				"valid_time_from": rule["start_date"],
+				"valid_time_to": rule["end_date"],
+			})
+		rule_order_info["rule_order"] = json.dumps(rule_order_info["rule_order"])
+		print rule_order_info,"hhhhhhhhh"
+		response = context.client.post('/order/api/create_rule_order/', rule_order_info)
+		bdd_util.assert_api_call_success(response)
