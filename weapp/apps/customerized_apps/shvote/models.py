@@ -12,7 +12,7 @@ class ShvoteParticipance(models.Document):
 	"""
 	参与投票的选手信息记录表
 	"""
-	member_id= models.LongField(default=0) #参与者id
+	member_id= models.LongField(default=0, unique_with=['belong_to']) #参与者id
 	belong_to = models.StringField(default="", max_length=100) #对应的活动id
 	icon = models.StringField(default="", max_length=2048) #头像url
 	name = models.StringField(default="", max_length=100) #名称

@@ -35,9 +35,12 @@ class ShvoteParticipance(resource.Resource):
 		"""
 		record = None
 		if 'id' in request.GET:
+			participance_data_count = 0
 			id = request.GET['id']
 			try:
 				record = app_models.Shvote.objects.get(id=id)
+				if request.member:
+					participance_data_count = app_models.ShvoteParticipance.objects(belong_to=id, member_id=request.member.id).count()
 			except:
 				c = RequestContext(request,{
 					'is_deleted_data': True
@@ -47,6 +50,7 @@ class ShvoteParticipance(resource.Resource):
 				'record_id': id,
 				'page_title': record.name if record else u"投票",
 				'groups': record.groups,
+				'is_already_participanted': (participance_data_count > 0),
 				'is_hide_weixin_option_menu':True,
 				'app_name': "shvote",
 				'resource': "shvote",
@@ -76,25 +80,25 @@ class ShvoteParticipance(resource.Resource):
 					pureName : v['value']
 				}
 				result_list.append(result_list_temp)
-				# elif v['type'] == 'appkit.uploadimg':
-				# 	item_data['type'] = []
-				# 	item_data['item_name'] = pureName
-				# 	item_data['item_value'] = v['value']
 			print('result_list!!!!!!!!!!!')
 			print(result_list)
-			sh_participance = app_models.ShvoteParticipance(
-					belong_to = id,
-					member_id = member_id,
-					icon = '',
-					name = result_list[0]['name'],
-					group = 'small',
-					serial_number = result_list[1]['number'],
-					details = result_list[2]['details'],
-					pics = list(result_list[3]['detail-pic']) if result_list[3]['detail-pic']!='[]' else [],
-					created_at = datetime.now()
-				)
-			sh_participance.save()
-			response = create_response(200)
+			try:
+				sh_participance = app_models.ShvoteParticipance(
+						belong_to = id,
+						member_id = member_id,
+						icon = '',
+						name = result_list[0]['name'],
+						group = 'small',
+						serial_number = result_list[1]['number'],
+						details = result_list[2]['details'],
+						pics = list(result_list[3]['detail-pic']) if result_list[3]['detail-pic']!='[]' else [],
+						created_at = datetime.now()
+					)
+				sh_participance.save()
+				response = create_response(200)
+			except:
+				response = create_response(500)
+				response.errMsg = u'只能报名一次'
 			return response.get_response()
 		except Exception,e:
 			print(e)
