@@ -438,7 +438,7 @@ class PrintOrder(resource.Resource):
 
         order_ids = json.loads(request.GET.get('order_ids', '[]'))
         #order_ids = request.GET.get('order_ids', '')
-        orders = Order.objects.filter(id__in=order_ids)
+        orders = Order.objects.filter(id__in=[int(id) for id in order_ids])
         webapp_user_ids = set([order.webapp_user_id for order in orders])
         from modules.member.models import Member
         webappuser2member = Member.members_from_webapp_user_ids(webapp_user_ids)
@@ -468,13 +468,24 @@ class PrintOrder(resource.Resource):
         for order in orders:
             products = mall_api.get_order_products(order)
 
+            for product in products:
+                property_values = []
+                if product['custom_model_properties']:
+                    for model in product['custom_model_properties']:
+                        property_values.append(model['property_value'])
+                product['property_values'] = '/'.join(property_values)
+
+                if order.supplier_user_id:
+                    product['price'] = product['purchase_price']
+                    product['total_price'] = product['purchase_price'] * product['count']
+
+
             items.append({
                 'id': order.id,
                 'order_id': order.order_id,
                 'supplier_user_id': order.supplier_user_id,
                 'products': products,
-                'total_price': float(
-                    '%.2f' % order.final_price) if order.pay_interface_type != 9 or order.status == 5 else 0,
+                'total_price': order.total_purchase_price if order.supplier_user_id else float('%.2f' % order.get_total_price()),
                 'order_total_price': float('%.2f' % order.get_total_price()),
                 'ship_name': order.ship_name,
                 'ship_address': '%s %s' % (regional_util.get_str_value_by_string_ids(order.area), order.ship_address),
@@ -482,11 +493,10 @@ class PrintOrder(resource.Resource):
                 'buyer_name': order.buyer_name,
                 'created_at': datetime.strftime(order.created_at, '%Y-%m-%d %H:%M:%S'),
                 'product_count': order.product_count,
-                'postage': '%.2f' % order.postage,
-                'save_money': float(Order.get_order_has_price_number(order)) + float(order.postage) - float(
+                'postage': 0 if order.supplier_user_id else '%.2f' % order.postage,
+                'save_money': 0 if order.supplier_user_id else float(Order.get_order_has_price_number(order)) + float(order.postage) - float(
                     order.final_price) - float(order.weizoom_card_money),
-                'pay_money': order.final_price + order.weizoom_card_money,
-                'total_purchase_price': order.total_purchase_price
+                'pay_money': order.total_purchase_price if order.supplier_user_id else order.final_price + order.weizoom_card_money,
             })
 
         response = create_response(200)
