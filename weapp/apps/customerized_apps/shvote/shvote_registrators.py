@@ -46,16 +46,16 @@ class ShvoteRegistrators(resource.Resource):
 		status = int(request.GET.get('participant_status', -1))
 		webapp_id = request.user_profile.webapp_id
 		member_ids = []
-		if name:
-			hexstr = byte_to_hex(name)
-			members = member_models.Member.objects.filter(webapp_id=webapp_id,username_hexstr__contains=hexstr)#模糊搜索
-			member_ids = [member.id for member in members]
-		start_time = request.GET.get('start_time', '')
-		end_time = request.GET.get('end_time', '')
+		# if name:
+		# 	hexstr = byte_to_hex(name)
+		# 	members = member_models.Member.objects.filter(webapp_id=webapp_id,username_hexstr__contains=hexstr)#模糊搜索
+		# 	member_ids = [member.id for member in members]
+		# start_time = request.GET.get('start_time', '')
+		# end_time = request.GET.get('end_time', '')
 
 		params = {'belong_to':request.GET['id']}
 		if name:
-			params['webapp_user_id__in'] = member_ids
+			params['name__icontains'] = name
 		if status != -1:
 			params['status'] = status
 		# if start_time:
