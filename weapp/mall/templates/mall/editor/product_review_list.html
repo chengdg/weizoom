@@ -109,6 +109,7 @@ $(document).ready(function(){
 
     
     $('.panel-body').delegate('.xa-export', 'click', function(event){
+        // console.log(view.filterView.filterValue)
         W.getApi().call({
             app: 'member',
             resource: 'export_is_download',
@@ -128,8 +129,8 @@ $(document).ready(function(){
                 else{
                     var url ='';
                     var filter_value = '';
-                    if (view.filter_value) {
-                        filter_value = view.filter_value;
+                    if (view.filterView.filterValue) {
+                        filter_value = view.filterView.filterValue;
                     };
                     var options = {
                         el: '.panel-body',

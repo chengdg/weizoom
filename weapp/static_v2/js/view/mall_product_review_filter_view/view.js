@@ -13,6 +13,7 @@ W.view.mall.ProductReviewFilterView = Backbone.View.extend({
     initialize: function(options) {
         this.options = options || {};
         this.$el = $(options.el);
+        this.filterValue = "";
     },
 
     render: function() {
@@ -39,6 +40,7 @@ W.view.mall.ProductReviewFilterView = Backbone.View.extend({
     // 获取条件数据
     getFilterData: function(){
         //起止时间
+        var args=[];
         var startDate = $.trim(this.$('#start_date').val());
         var endDate = $.trim(this.$('#end_date').val());
         if (startDate.length === 0 && endDate.length > 0) {
@@ -53,20 +55,33 @@ W.view.mall.ProductReviewFilterView = Backbone.View.extend({
             W.showHint('error', '开始日期不能大于结束日期！');
             return false;
         }
-
+        if(startDate){
+            args.push("startDate:"+startDate);
+        }
+        if(endDate){
+            args.push("endDate:"+endDate);
+        }
         //商品名
         var name = $.trim(this.$('#name').val());
-
+        if(name){
+            args.push("name:"+name);
+        }
         //审核状态
         var reviewStatus = this.$('#review_status').val();
-
+        if(reviewStatus!="all"){
+            args.push("reviewStatus:"+reviewStatus);
+        }
         //商品编码
         var userCode = $.trim(this.$('#user_code').val());
-
+        if(userCode){
+            args.push("userCode:"+userCode);
+        }
         //商品评星
         var productScore = $.trim(this.$('#product_score').val());
-
-
+        if(reviewStatus!='all'){
+            args.push("productScore:"+productScore);
+        }
+        this.filterValue = args;
         return {
             name: name,
             reviewStatus: reviewStatus,
