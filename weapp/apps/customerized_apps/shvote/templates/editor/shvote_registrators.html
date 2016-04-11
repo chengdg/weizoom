@@ -56,7 +56,7 @@
 			class="panel-body panel-table p0 mt10"
 			data-ui-role="advanced-table"
 			data-app="apps/shvote"
-			data-resource="shvote_participances"
+			data-resource="shvote_registrators"
 			data-args='{"id": "{{activity_id}}"}'
 			data-template-id="#table"
 			data-enable-paginator="true"
@@ -117,8 +117,10 @@
 					${item.created_at}
 				</td>
 				<td>
-					<a href="javascript:void(0);" class="ml5 xa-review">审核通过</a>
-					<a href="javascript:void(0);" class="ml5 xa-delete">删除</a>
+					{{if (items.status == '0')}}
+						<a href="javascript:void(0);" class="ml5 xa-review">审核通过</a>
+						<a href="javascript:void(0);" class="ml5 xa-delete">删除</a>
+					{{/if}}
 					<a href="javascript:void(0);" class="ml5 xa-viewData">查看</a>
 				</td>
 			</tr>
