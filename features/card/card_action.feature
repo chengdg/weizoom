@@ -39,15 +39,15 @@ Background:
 @weizoom_card @card_option
 Scenario: 1.批量激活卡操作
 	When test登录管理系统
-	Then 'test'能获得订单列表
+	Then test能获得订单列表
 		"""
 		[{
 			"order_id":"1",
 			"status":"未激活"
 		}]
 		"""
-	When 'test'批量激活订单'1'的卡
-	Then 'test'能获得订单列表
+	When test批量激活订单'1'的卡
+	Then test能获得订单列表
 		"""
 		[{
 			"order_id":"1",
@@ -59,15 +59,15 @@ Scenario: 1.批量激活卡操作
 Scenario: 2.批量停用卡操作
 	When test登录管理系统
 	And test批量激活订单'1'的卡
-	Then 'test'能获得订单列表
+	Then test能获得订单列表
 		"""
 		[{
 			"order_id":"1",
 			"status":"已激活"
 		}]
 		"""
-	When 'test'批量停用订单'1'的卡
-	Then 'test'能获得订单列表
+	When test批量停用订单'1'的卡
+	Then test能获得订单列表
 		"""
 		[{
 			"order_id":"1",
@@ -78,15 +78,15 @@ Scenario: 2.批量停用卡操作
 @weizoom_card @card_option
 Scenario: 3.取消订单卡操作
 	When test登录管理系统
-	Then 'test'能获得订单列表
+	Then test能获得订单列表
 		"""
 		[{
 			"order_id":"1",
 			"status":"未激活"
 		}]
 		"""
-	When 'test'取消订单'1'
-	Then 'test'能获得订单列表
+	When test取消订单'1'
+	Then test能获得订单列表
 		"""
 		[{
 			"order_id":"1",
