@@ -28,6 +28,40 @@
 
 {% block content-panel %}
 	{{ page_html_content|safe }}
+    <div class="wa-mobile none">
+        <div class="wa-dynamic-info">
+            <div>
+                <span>
+                    <p>已报名</p>
+                    <p class="wa-total-parted">123312</p>
+                </span>
+                <span>
+                    <p>投票数</p>
+                    <p class="wa-total-counts">122112</p>
+                </span>
+                <span>
+                    <p>访问数</p>
+                    <p class="wa-total-visits">1212</p>
+                </span>
+            </div>
+            <div>
+                <p>截止日期：<b class="wa-enddate">2016-07-18</b> 可投：<b class="wa-left-chance">2</b></p>
+                <a>排行>></a>
+            </div>
+        </div>
+        <div class="wa-search-panel">
+            <span>选手</span>
+            <input class="wa-search-text">
+            <button class="wa-search">搜索</button>
+            <span>选手列表是根据选手票数由多到少排列，显示前100名。
+                如果需要查找100名以外的选手请在搜索栏输入选手编号
+                或选手名称即可
+            </span>
+        </div>
+        <div class="wa-groups"></div>
+        <div class="wa-rank-list"></div>
+    </div>
+
 {% endblock %}
 
 {% block js %}
@@ -49,6 +83,44 @@
 
     });
 
+    $(function(){
+        if(W.isPC){
+            showDesc();
+            return false;
+        }
+        //展示参与统计
+        getDynamicData();
+    });
+
+    //获取已报名人数、总投票数、页面总访问数、本次可投票机会、排行、分组信息
+    function getDynamicData(){
+        W.getApi().call({
+            app: 'm/apps/shvote',
+            resource: 'm_shvote',
+            method: 'get',
+            args: {
+                webapp_owner_id: W.webappOwnerId,
+                recordId: W.appRecordId
+            },
+            success: function(data) {
+                console.log(data);
+            },
+            error: function(data){
+                if(data.errMsg == 'is_deleted'){
+                    deletedRecord();
+                }else{
+                    wuiAlert(data.errMsg);
+                }
+            }
+        });
+    }
+
+    function showDesc(){
+        $('.wa-shvote-desc').removeClass('none');
+    }
+    function showDynamic(){
+        $('.wa-mobile').removeClass('none');
+    }
 </script>
 {% endblock %}
 

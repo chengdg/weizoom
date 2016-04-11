@@ -10,20 +10,23 @@
     <div>
         <img src="{{ component.model.material_image }}">
     </div>
-	<h1 class="wui-i-title xa-title">{{component.model.title}}</h1>
-	<h5>活动时间：</h5>
-    <p class="wui-i-time">
-        {{component.model.start_time}}至{{component.model.end_time}}
-    </p>
-    <div class="wui-i-rule">
-		{{component.model.rule}}
-	</div>
-	<div class="wui-i-description">
-		{{component.model.description|safe}}
-	</div>
-    <div>
-        <button class="wa-imark">我要报名</button>
-        <button class="wa-getback">返回投票</button>
+    <div class="wa-shvote-desc none">
+        <h1 class="wui-i-title xa-title">{{component.model.title}}</h1>
+        <h5>活动时间：</h5>
+        <p class="wui-i-time">
+            {{component.model.start_time}}至{{component.model.end_time}}
+        </p>
+        <div class="wui-i-rule">
+            {{component.model.rule}}
+        </div>
+        <div class="wui-i-description">
+            {{component.model.description|safe}}
+        </div>
+        <div>
+            <button class="wa-imark">我要报名</button>
+            <button class="wa-getback">返回投票</button>
+        </div>
     </div>
+
 </div>
 {% endifequal %}
