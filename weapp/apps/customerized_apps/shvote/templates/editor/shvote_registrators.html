@@ -21,39 +21,18 @@
 	<div class="xui-formPanel pb10 mb15">
 		<div class="xui-i-col">
 			<div class="xui-i-item">
-				<label class="">用户名：</label>
+				<label class="">选手名称：</label>
 				<input type="text" class="form-control" id="participant_name" name="participant_name" value="" />
 			</div>
 		</div>
 		<div class="xui-i-col">
-			<div class="xui-i-item ml10">
-				<label>活动时间
-				：</label>
-				<input
-					type="text"
-					class="form-control xui-datePicker"
-					id="start_time"
-					name="start_time"
-					style=""
-					value=""
-					readonly="readonly"
-					data-enable-select-time="true"
-					data-validate="require-notempty"
-					data-ui-role="date-picker"
-					data-format="yy-mm-dd HH:MM" />
-				至
-				<input
-					type="text"
-					class="form-control xui-datePicker"
-					id="end_time"
-					name="end_time"
-					value=""
-					readonly="readonly"
-					data-enable-select-time="true"
-					data-validate="require-notempty"
-					data-ui-role="date-picker"
-					data-format="yy-mm-dd HH:MM"
-					data-min-el="#start_time"/>
+			<div class="xui-i-item ml20">
+				<label>状态：</label>
+				<select class="" id="status" name="status">
+					<option value="-1">全部</option>
+					<option value="0">待审核</option>
+					<option value="1">审核通过</option>
+				</select>
 			</div>
 		</div>
 		<div class="xui-i-col">
@@ -65,6 +44,14 @@
 	</div>
 
 	<div class="panel panel-default xui-tableBox">
+		<div class="panel-header clearfix">
+			<button type="button" class="btn btn-default fl mr10 xa-batch_pass">批量审核通过
+			</button>
+			<button type="button" class="btn btn-default fl mr10 xa-batch_remove">批量删除
+			</button>
+			<button type="button" class="btn btn-success fr mr10 xa-create_member">创建选手
+			</button>
+		</div>
 		<div
 			class="panel-body panel-table p0 mt10"
 			data-ui-role="advanced-table"
@@ -99,8 +86,11 @@
 	<table class="table table-bordered xb-stripedTable xb-noTdBorder xb-noBottom xb-noBorder xb-theadBg mb10">
 		<thead>
 			<tr>
-				<th>用户名</th>
-				<th>参与时间</th>
+				<th>选手</th>
+				<th>票数</th>
+				<th>编号</th>
+				<th>状态</th>
+				<th>报名时间</th>
 				<th>操作</th>
 			</tr>
 		</thead>
@@ -115,10 +105,21 @@
 					${item.participant_name}
 				</td>
 				<td>
+					${item.count}
+				</td>
+				<td>
+					${item.serial_number}
+				</td>
+				<td>
+					${item.status}
+				</td>
+				<td>
 					${item.created_at}
 				</td>
 				<td>
-					<a href="javascript:void(0);" class="ml5 xa-viewData">查看结果</a>
+					<a href="javascript:void(0);" class="ml5 xa-review">审核通过</a>
+					<a href="javascript:void(0);" class="ml5 xa-delete">删除</a>
+					<a href="javascript:void(0);" class="ml5 xa-viewData">查看</a>
 				</td>
 			</tr>
 			{{/each}}
@@ -149,13 +150,11 @@ $(document).ready(function() {
 
 	$('.xa-search').click(function(event) {
 		var participant_name = $.trim($('[name="participant_name"]').val());
-		var startTime = $.trim($('[name="start_time"]').val());
-		var endTime = $.trim($('[name="end_time"]').val());
+		var participant_status = $.trim($('[name="status"]').val());
 		var table = $('[data-ui-role="advanced-table"]').data('view');
 		table.reload({
 			participant_name: participant_name,
-			start_time: startTime,
-			end_time: endTime
+			participant_status:participant_status
 		}, {
 			emptyDataHint: '没有符合条件的数据'
 		});
