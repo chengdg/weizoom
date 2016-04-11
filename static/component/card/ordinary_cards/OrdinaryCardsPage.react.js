@@ -47,7 +47,6 @@ var OrdinaryCardsPage = React.createClass({
 		return (
 		<div className="mt15">
 			<Reactman.TablePanel>
-				
 				<Reactman.TableActionBar>
 					<Reactman.TableActionButton text="导出" icon="plus" href="#" />
 					<Reactman.TableActionButton text="创建新卡" icon="plus" href="/card/create_ordinary/" />
@@ -56,10 +55,12 @@ var OrdinaryCardsPage = React.createClass({
 					<Reactman.TableColumn name="卡号" field="weizoom_card_id" />
 					<Reactman.TableColumn name="密码" field="password" />
 					<Reactman.TableColumn name="状态" field="storage_status_text" />
-					<Reactman.TableColumn name="面额/余额" field="rule_money/money"/>
+					<Reactman.TableColumn name="面额" field="rule_money"/>
+					<Reactman.TableColumn name="余额" field="money" />
 					<Reactman.TableColumn name="出库时间" field="storage_time" />
 					<Reactman.TableColumn name="备注" field="remark"/>
-					<Reactman.TableColumn name="领用人申请部门/公司" field="activated_to/department" />
+					<Reactman.TableColumn name="领用人" field="activated_to" />
+					<Reactman.TableColumn name="申请部门/公司" field="department" />
 					<Reactman.TableColumn name="操作" field="action" width="80px" />
 				</Reactman.Table>
 			</Reactman.TablePanel>
