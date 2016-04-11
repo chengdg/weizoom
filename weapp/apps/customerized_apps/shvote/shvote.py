@@ -70,7 +70,7 @@ class shvote(resource.Resource):
 			'first_nav_name': FIRST_NAV,
 			'second_navs': export.get_promotion_and_apps_second_navs(request),
 			'second_nav_name': export.MALL_APPS_SECOND_NAV,
-			'third_nav_name': export.MALL_APPS_VOTE_NAV,
+			'third_nav_name': export.MALL_APPS_SHVOTE_NAV,
 			'shvote': shvote,
 			'is_create_new_data': is_create_new_data,
 			'project_id': project_id,
@@ -92,7 +92,7 @@ class shvote(resource.Resource):
 				record = record.first()
 				response.data = record.groups
 		return response.get_response()
-	
+
 	@login_required
 	def api_put(request):
 		"""
