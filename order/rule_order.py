@@ -75,7 +75,7 @@ class RuleOrder(resource.Resource):
 		weizoom_card_orders = WeizoomCardOrder.objects.filter(status=0)
 		weizoom_card_order_items = WeizoomCardOrderItem.objects.all()
 		w_cards = WeizoomCard.objects.filter(storage_status=WEIZOOM_CARD_STORAGE_STATUS_OUT)
-		rule_ids = set([w_card.weizoom_card_id for w_card in w_cards])
+		rule_ids = set([w_card.weizoom_card_rule_id for w_card in w_cards])
 		card_rules = WeizoomCardRule.objects.filter(id__in=rule_ids)
 		order_id2rule_id = {order_item.weizoom_card_order_id:order_item.weizoom_card_rule_id for order_item in weizoom_card_order_items}
 		id2weizoom_card_order_item = {weizoom_card_order_item.id:weizoom_card_order_item for weizoom_card_order_item in weizoom_card_order_items}
