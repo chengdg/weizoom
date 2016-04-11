@@ -99,3 +99,22 @@ class ShvoteRegistrators(resource.Resource):
 		response.data = response_data
 		return response.get_response()
 
+	@login_required
+	def api_post(request):
+		"""
+		响应POST
+		"""
+		app_models.ShvoteParticipance.objects(id=request.POST['id']).update(status = 1)
+		
+		response = create_response(200)
+		return response.get_response()
+
+	@login_required
+	def api_delete(request):
+		"""
+		响应DELETE
+		"""
+		app_models.ShvoteParticipance.objects(id=request.POST['id']).delete()
+		
+		response = create_response(200)
+		return response.get_response()
