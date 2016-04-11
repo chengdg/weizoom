@@ -13,12 +13,10 @@ Background:
 	When test新建通用卡
 		"""
 		[{
-			"name":"",
 			"prefix_value":"999",
 			"type":"virtual",
 			"money":"10.00",
-			"num":"5",
-			"comments":""
+			"num":"5"
 		}]
 		"""
 	And test新建限制卡
