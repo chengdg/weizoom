@@ -5,6 +5,9 @@
 	h1 {
 		color: #00F;
 	}
+	div{
+		box-sizing: border-box;
+	}
 	.xui-record {
 		margin: 10px 15px;
 		padding: 5px;
@@ -23,11 +26,135 @@
 		background-color: rgba(0, 125, 255, 0.5);
 		border-radius: 10px;
 	}
+	.xui-group{
+		overflow: hidden;
+		border-bottom: 1px solid #8E8E8E;
+	}
+	.xui-group > div{
+		float: left;
+		font-size: 18px;
+		text-align: center;
+		width: 33.33%;
+		padding: 10px 0;
+	}
+	.xui-group > div.active{
+		color: #FF8000;
+	}
+	.xui-rank{
+		background: #fff;
+		font-size: 14px;
+	}
+	.xui-rankList-wrap{
+		padding: 0 10px;
+	}
+	.xui-rankList{
+		overflow: hidden;
+		position: relative;
+		margin-top: 10px;
+	}
+	.xui-search{
+		border-bottom: 1px solid #8E8E8E;
+		padding: 5px 10px;
+		overflow: hidden;
+		line-height: 29px;
+	}
+	.xui-search span{
+		font-size: 16px;
+	}
+	.xui-searchBox{
+		float: right;
+		width: 70%;
+		position: relative;
+	}
+	.xui-search-input{
+		height: 25px;
+		width: 90%;
+		border: 1px solid #8E8E8E;
+		border-radius: 5px;
+		outline: none;
+		padding-left: 5px;
+	}
+	.xui-searchBtn{
+		height: 29px;
+		border-radius: 5px;
+		border: 1px solid #8E8E8E;
+		background: #fff;
+		position: absolute;
+		right: 0;
+		top: 0;
+		padding: 0 10px;
+		outline: none;
+	}
+	.xui-rank-item{
+		border:1px solid #8E8E8E;
+		width: 49%;
+		float: left;
+		margin-bottom: 10px;
+	}
+	.xui-rank-item:nth-child(even){
+		float: right;
+	}
+	.xui-rank-pic{
+		height:100px;
+		border-bottom: 1px solid #8E8E8E;
+	}
+	.xui-rank-name{
+		border-bottom: 1px solid #8E8E8E;
+		text-align: center;
+		padding: 2px 0;
+	}
+	.xui-rank-vote{
+		overflow: hidden;
+	}
+	.xui-rank-vote > div{
+		float: left;
+		width: 50%;
+		text-align: center;
+		padding: 3px 0;
+	}
+	.xui-rank-voteLef{
+		border-right: 1px solid #8E8E8E;
+	}
 </style>
 {% endblock %}
 
 {% block content-panel %}
 	{{ page_html_content|safe }}
+	<div class="xui-rank">
+		<div class="xui-rankList-wrap">
+			<div class="xui-search">
+				<span>选手</span>
+				<div class="xui-searchBox">
+					<input type="text" class="xui-search-input">
+					<button type="button" class="xui-searchBtn">搜索</button>
+				</div>
+			</div>
+			<div class="xui-group">
+				<div class="active">初中组</div>
+				<div>高中组</div>
+				<div>大学组</div>
+			</div>
+			<div class="xui-rankList">
+
+				<div class="xui-rank-item">
+					<div class="xui-rank-pic"></div> 
+					<div class="xui-rank-name">
+						<span>001</span> 
+						<span>王思辰</span>
+					</div> 
+					<div class="xui-rank-vote">
+						<div class="xui-rank-voteLef">
+							18票
+						</div>
+						<div class="xui-rank-voteRig">
+							投票
+						</div>
+					</div> 
+				</div>
+
+			</div>
+		</div>
+	</div>
 {% endblock %}
 
 {% block js %}
@@ -46,7 +173,7 @@
 		});
         //展示参与统计
 //        getDynamicData();
-
+		
     });
 
 </script>
