@@ -12,7 +12,7 @@ SECOND_NAVS = [{
 }, {
 	'name': CARD_LIMIT_NAV,
 	'displayName': '限制卡',
-	'href': '#'
+	'href': '/card/limit_rules/'
 }]
 
 def get_second_navs():

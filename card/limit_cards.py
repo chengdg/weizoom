@@ -6,15 +6,15 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from core import resource
 from core.jsonresponse import JsonResponse, create_response
-from weapp import export
 from django.contrib.auth.decorators import login_required
 from core import paginator
-from weapp.card_models import *
-from weapp.order.userprofile_models import *
+from models import *
+from weapp.models import *
+import nav
 
 class ordinaryCardList(resource.Resource):
-	app = 'weapp'
-	resource = 'limit_card_list'
+	app = 'card'
+	resource = 'limit_cards'
 
 	@login_required
 	def get(request):
@@ -24,14 +24,11 @@ class ordinaryCardList(resource.Resource):
 		rule_id = request.GET.get('rule_id', '-1')
 		rule = WeizoomCardRule.objects.get(id=rule_id)
 		c = RequestContext(request, {
-			'first_nav_name': export.MONEY_CARD_FIRST_NAV,
-			'second_navs': export.get_card_second_navs(request),
-			'second_nav_name': export.MONEY_CARD_MANAGER_NAV,
-			'third_nav_name': export.MONEY_CARD_LIMIT_CREATE_NAV,
-			'weizoom_card_rule': rule,
-			'rule_id':rule_id,
+			'first_nav_name': nav.FIRST_NAV,
+			'second_navs': nav.get_second_navs(),
+			'second_nav_name': nav.CARD_LIMIT_NAV,
 		})
-		return render_to_response('templates/editor/list_weizoom_card_detail.html', c)
+		return render_to_response('card/limit_cards.html', c)
 
 	@login_required
 	def api_get(request):
@@ -78,9 +75,8 @@ class ordinaryCardList(resource.Resource):
 			})
 
 		response = create_response(200)
-		response.data.items = cur_weizoom_cards
-		response.data.sortAttr = request.GET.get('sort_attr', '-created_at')
-		response.data.pageinfo = paginator.to_dict(pageinfo)
+		response.data.rows = cur_weizoom_cards
+		response.data.pageinfo = pageinfo.to_dict()
 		return response.get_response()
 
 

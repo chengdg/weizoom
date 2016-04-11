@@ -16,7 +16,7 @@ var Resource = Reactman.Resource;
 // var Constant = require('./Constant');
 // var Action = require('./Action');
 
-var OrdinaryCardPage = React.createClass({
+var LimitRulesPage = React.createClass({
 	onClickDelete: function(event) {
 		var productId = parseInt(event.target.getAttribute('data-product-id'));
 		Action.deleteProduct(productId, this.refs.table.refresh);
@@ -42,9 +42,10 @@ var OrdinaryCardPage = React.createClass({
 
 	render:function(){
 		var productsResource = {
-			resource: 'card.ordinary_rules',
+			resource: 'card.limit_rules',
 			data: {
-				page: 1
+				page: 1,
+				count_per_page: 15
 			}
 		};
 
@@ -53,9 +54,9 @@ var OrdinaryCardPage = React.createClass({
 			<Reactman.TablePanel>
 				
 				<Reactman.TableActionBar>
-					<Reactman.TableActionButton text="创建新卡" icon="plus" href="/card/create_ordinary/" />
+					<Reactman.TableActionButton text="创建新卡" icon="plus" href="/card/create_limit/" />
 				</Reactman.TableActionBar>
-				<Reactman.Table resource={productsResource} formatter={this.rowFormatter} pagination={true} countPerPage={2} ref="table">
+				<Reactman.Table resource={productsResource} formatter={this.rowFormatter} pagination={true} ref="table">
 					<Reactman.TableColumn name="卡名称" field="name" />
 					<Reactman.TableColumn name="面值" field="money" />
 					<Reactman.TableColumn name="数量" field="count" />
@@ -70,4 +71,4 @@ var OrdinaryCardPage = React.createClass({
 		)
 	}
 })
-module.exports = OrdinaryCardPage;
+module.exports = LimitRulesPage;

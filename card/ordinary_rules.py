@@ -33,7 +33,7 @@ class ordinaryRuleList(resource.Resource):
 		"""
 		通用卡卡规则列表
 		"""
-		count_per_page = int(request.GET.get('count_per_page', 1))
+		count_per_page = int(request.GET.get('count_per_page', 15))
 		cur_page = int(request.GET.get('page', 1))
 		card_calss = WEIZOOM_CARD_ORDINARY
 		pageinfo, cur_weizoom_card_rules = util.get_rule_list(card_calss, cur_page, count_per_page, request)

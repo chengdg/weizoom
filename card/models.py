@@ -93,8 +93,8 @@ class WeizoomCard(models.Model):
 	activated_at = models.DateTimeField(null=True) #激活时间
 	created_at = models.DateTimeField(auto_now_add=True) #添加时间
 	remark = models.CharField(max_length=20,db_index=True) #备注
-	activated_to = models.CharField(max_length=20,null=True) #申请人
-	department = models.CharField(max_length=20,null=True) #申请部门
+	activated_to = models.CharField(max_length=20, default="") #申请人
+	department = models.CharField(max_length=20,default="") #申请部门
 	active_card_user_id = models.IntegerField(default=0) #激活卡片人（最后操作人）
 	weizoom_card_order_item_id = models.IntegerField(max_length=64, null=True) #所属订单的条目 id
 	weizoom_card_order_id = models.CharField(max_length=64, null=True)  #对应发售订单号

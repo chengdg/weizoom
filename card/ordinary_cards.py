@@ -9,26 +9,23 @@ from core.jsonresponse import JsonResponse, create_response
 from django.contrib.auth.decorators import login_required
 from core import paginator
 from card.models import *
-# from weapp.order.userprofile_models import *
 import nav
 
 class ordinaryCardList(resource.Resource):
-	app = 'weapp'
-	resource = 'ordinary_card_list'
+	app = 'card'
+	resource = 'ordinary_cards'
 
 	@login_required
 	def get(request):
 		"""
 		显示某一规则下的卡列表
 		"""
-		rule_id = request.GET.get('rule_id', '-1')
-		rule = WeizoomCardRule.objects.get(id=rule_id)
+		weizoom_card_rule_id = int(request.GET.get('weizoom_card_rule_id', '-1'))
 		c = RequestContext(request, {
 			'first_nav_name': nav.FIRST_NAV,
 			'second_navs': nav.get_second_navs(),
 			'second_nav_name': nav.CARD_ORDINARY_NAV,
-			'weizoom_card_rule': rule,
-			'rule_id': rule_id
+			'weizoom_card_rule_id': weizoom_card_rule_id
 		})
 		return render_to_response('card/ordinary_cards.html', c)
 
@@ -53,6 +50,7 @@ class ordinaryCardList(resource.Resource):
 			WeizoomCard.objects.filter(id__in=card_ids_need_expire).update(is_expired=True)
 		pageinfo, weizoom_cards = paginator.paginate(weizoom_cards, 1, 10, query_string=request.META['QUERY_STRING'])
 
+		print weizoom_card_rule_id,"pppppppppppp"
 		weizoom_card_rule = WeizoomCardRule.objects.get(id=weizoom_card_rule_id)
 		cur_weizoom_cards = []
 		for c in weizoom_cards:
@@ -77,9 +75,8 @@ class ordinaryCardList(resource.Resource):
 			})
 
 		response = create_response(200)
-		response.data.items = cur_weizoom_cards
-		response.data.sortAttr = request.GET.get('sort_attr', '-created_at')
-		response.data.pageinfo = paginator.to_dict(pageinfo)
+		response.data.rows = cur_weizoom_cards
+		response.data.pagination_info = pageinfo.to_dict()
 		return response.get_response()
 
 

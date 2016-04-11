@@ -6,6 +6,7 @@ from core.jsonresponse import JsonResponse, create_response
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 
+import random
 from core import resource
 from models import *
 import json
@@ -14,25 +15,25 @@ import util
 
 class createWeizoomCardRule(resource.Resource):
 	app = 'card'
-	resource = 'create_ordinary'
+	resource = 'create_limit'
 
 	def get(request):
 		"""
-		创建通用卡规则的页面
+		创建限制规则的页面
 		"""
 		c = RequestContext(request, {
 			'first_nav_name': nav.FIRST_NAV,
 			'second_navs': nav.get_second_navs(),
-			'second_nav_name': nav.CARD_ORDINARY_NAV
+			'second_nav_name': nav.CARD_LIMIT_NAV
 		})
-		return render_to_response('card/create_ordinary.html', c)
+		return render_to_response('card/create_limit.html', c)
 
 	@login_required
 	def api_put(request):
 		"""
-		创建通用卡规则
+		创建限制卡规则
 		"""
-		card_class = WEIZOOM_CARD_ORDINARY  #卡的种类为通用卡
+		card_class = WEIZOOM_CARD_LIMIT  #卡的种类为限制卡
 		try:
 			util.create_weizoom_card_rule(card_class,request)
 			response = create_response(200)
