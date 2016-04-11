@@ -68,7 +68,7 @@ def step_impl(context, user):
 		response = context.client.put('/card/api/create_ordinary/', rule_dict)
 		bdd_util.assert_api_call_success(response)
 
-@then(u"'{user}'能获得通用卡规则列表")
+@then(u"{user}能获得通用卡规则列表")
 def step_impl(context, user):
 	expected = json.loads(context.text)
 	response = context.client.get('/card/api/ordinary_rules/')
@@ -88,7 +88,7 @@ def step_impl(context, user):
 	
 	bdd_util.assert_list(expected, rule_list)
 
-@then(u"'{user}'能获得通用卡'{rule_name}'的库存列表")
+@then(u"{user}能获得通用卡'{rule_name}'的库存列表")
 def step_impl(context, user,rule_name):
 	expected_weizoom_cards(context,user,rule_name,'ordinary_cards')
 	
@@ -143,7 +143,7 @@ def step_impl(context,user):
 		response = context.client.put('/card/api/create_limit/', rule_dict)
 		bdd_util.assert_api_call_success(response)
 
-@then(u"'{user}'能获得限制卡规则列表")
+@then(u"{user}能获得限制卡规则列表")
 def step_impl(context, user):
 	expected = json.loads(context.text)
 	response = context.client.get('/card/api/limit_rules/')
@@ -166,6 +166,6 @@ def step_impl(context, user):
 	
 	bdd_util.assert_list(expected, rule_list)
 
-@then(u"'{user}'能获得限制卡'{rule_name}'的库存列表")
+@then(u"{user}能获得限制卡'{rule_name}'的库存列表")
 def step_impl(context, user,rule_name):
 	expected_weizoom_cards(context,user,rule_name,'limit_cards')
