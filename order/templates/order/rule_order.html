@@ -1,0 +1,15 @@
+{% extends "page.html" %}
+
+{% block js %}
+<script type="text/javascript">
+	W.breadcrumb = [{
+		name: '审批发卡',
+		href: '/order/rule_order/'
+	}, {
+		name: '出库列表',
+		href: '#'
+	}];
+
+	W.pageContentComponent = './order/rule_order/CardRuleOrderList.react';
+</script>
+{% endblock %}

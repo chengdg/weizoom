@@ -22,6 +22,7 @@ urlpatterns = patterns('',
 	url(r'^account/', restful_url('account')),
 	url(r'^outline/', restful_url('outline')),
 	url(r'^card/', restful_url('card')),
+	url(r'^order/', restful_url('order')),
 )
 
 urlpatterns += staticfiles_urlpatterns()
