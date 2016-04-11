@@ -54,7 +54,7 @@ var LimitRulesPage = React.createClass({
 			<Reactman.TablePanel>
 				
 				<Reactman.TableActionBar>
-					<Reactman.TableActionButton text="创建新卡" icon="plus" href="/card/create_limit/" />
+					<Reactman.TableActionButton text="创建新卡" icon="plus" href="/card/limit/" />
 				</Reactman.TableActionBar>
 				<Reactman.Table resource={productsResource} formatter={this.rowFormatter} pagination={true} ref="table">
 					<Reactman.TableColumn name="卡名称" field="name" />

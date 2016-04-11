@@ -11,7 +11,11 @@ from card import models as card_models
 from weapp import models as weapp_models
 from django.contrib.auth.models import User
 
-
+WEIZOOM_CARD_ORDER_TEXT2ATTRIBUTE = {
+	u'发售卡':0,
+	u'内部领用卡':1,
+	u'返点卡':2
+}
 @when(u"{user}下订单")
 def step_impl(context, user):
 	context.infos = json.loads(context.text)
@@ -26,8 +30,9 @@ def step_impl(context, user):
 	print name2rule_id,"dddddddddddddd"
 	for info in context.infos:
 		order_info = info["order_info"]
+		order_attributes = WEIZOOM_CARD_ORDER_TEXT2ATTRIBUTE[order_info["order_attribute"]]
 		rule_order_info = {
-			'order_attributes':order_info["order_attribute"],
+			'order_attributes':order_attributes,
 			'company_info':order_info["company"],
 			'responsible_person':order_info["responsible_person"],
 			'contact':order_info["contact"],

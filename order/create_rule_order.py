@@ -12,7 +12,7 @@ from core.jsonresponse import create_response
 from core import paginator
 from card.models import *
 
-class createRuleOrder(resource.Resource):
+class RuleOrder(resource.Resource):
 	app = 'order'
 	resource = 'create_rule_order'
 
@@ -36,6 +36,7 @@ class createRuleOrder(resource.Resource):
 		rule_order = json.loads(rule_order)
 
 		print "gggggggggggggg"
+		print 'order_attributes, ', order_attributes
 		now_day = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S").replace('-','').replace(':','').replace(' ','')
 		print "gggggggggggggg"
 		weizoom_card_order = WeizoomCardOrder.objects.create(
@@ -43,6 +44,7 @@ class createRuleOrder(resource.Resource):
 			order_number = now_day,
 			order_attribute = order_attributes,
 			company = company_info,
+			discount_money = 3.14,
 			responsible_person = responsible_person,
 			contact = contact,
 			sale_name = sale_name,
