@@ -298,6 +298,7 @@ MALL_APPS_RED_ENVELOPE_NAV = 'red_envelopes'
 MALL_APPS_POWERME_NAV = 'powerme'
 MALL_APPS_REDPACKET_NAV = 'red_packet'
 MALL_APPS_GROUP_NAV = 'groups'
+MALL_APPS_SHVOTE_NAV = 'shvote'
 
 #
 # 应用和营销左侧垂直方向二级导航信息
@@ -444,6 +445,11 @@ MALL_PROMOTION_AND_APPS_SECOND_NAV = {
                     'name': MALL_APPS_GROUP_NAV,
                     'title': u'团购',
                     'url': '/apps/group/groups/',
+                    'permission': '',
+                },{
+                    'name': MALL_APPS_SHVOTE_NAV,
+                    'title': u'上海投票',
+                    'url': '/apps/shvote/shvotes/',
                     'permission': '',
                 },
                 # {
