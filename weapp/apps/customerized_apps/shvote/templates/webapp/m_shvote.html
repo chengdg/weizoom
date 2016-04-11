@@ -27,56 +27,28 @@
 {% endblock %}
 
 {% block content-panel %}
-<div>
-	<h1 class="tc">Shvote({{record.id}})</h1>
-	<div>
-		<div class="xui-recordContainer">
-			{% for item in record.items %}
-			<div class="xui-record">
-				<h3>{{item.0}}</h3>
-				<p class="xui-inner-content">{{item.1}}</p>
-			</div>
-			{% endfor %}
-			<div class="xui-record">
-				<h3>电话</h3>
-				<input name="tel" type="text" placeholder="请输入电话号码" />
-			</div>
-		</div>
-		<div>
-			<a href="javascript:void(0);" class="xa-join xui-button" data-id="{{record.id}}">参与活动</a>
-		</div>
-	</div>
-</div>
+	{{ page_html_content|safe }}
 {% endblock %}
 
 {% block js %}
 <script type="text/javascript">
 	W.pageId = "{{request.GET.page_id}}";
-	$(document).ready(function() {
-		$('.xa-join').click(function(event) {
-			event.stopPropagation();
-			event.preventDefault();
-			var $link = $(event.currentTarget);
-			var id = $link.attr('data-id');
-			var tel = $.trim($('[name="tel"]').val());
-			W.getApi().call({
-				app: 'm/apps/shvote',
-				resource: 'shvote_participance',
-				method: 'put',
-				args: {
-					woid: W.webappOwnerId,
-					belong_to: id,
-					tel: tel
-				},
-				success: function(data) {
-					alert('参与成功');
-				},
-				error: function(data) {
-					alert('参与失败');
-				}
-			})
+
+	$(function(){
+        if(W.isPC){
+            return false;
+        }
+
+		// 我要报名
+		$('.wa-imark').click(function(){
+			var link = window.location.origin + '/m/apps/shvote/shvote_participance/?webapp_owner_id='+W.webappOwnerId+'&id='+W.appRecordId;
+			window.location.href = link;
 		});
-	});
+        //展示参与统计
+//        getDynamicData();
+
+    });
+
 </script>
 {% endblock %}
 

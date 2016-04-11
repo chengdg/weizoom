@@ -6,4 +6,5 @@ import shvote_participances
 import m_shvote
 import shvote_status
 import shvotes
+import shvote_registrators
 

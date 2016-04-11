@@ -35,10 +35,10 @@ class MShvote(resource.Resource):
 			auth_appid_info = None
 			if not isPC:
 				isMember = request.member and request.member.is_subscribed
-			
 			if 'new_app:' in id:
 				project_id = id
 				activity_status = u"未开启"
+				record = None
 			else:
 				#termite类型数据
 				try:
@@ -47,7 +47,7 @@ class MShvote(resource.Resource):
 					c = RequestContext(request,{
 						'is_deleted_data': True
 					})
-					return render_to_response('workbench/wepage_webapp_page.html', c)
+					return render_to_response('shvote/templates/webapp/m_shvote.html', c)
 				activity_status = record.status_text
 				
 				now_time = datetime.today().strftime('%Y-%m-%d %H:%M')
@@ -74,7 +74,7 @@ class MShvote(resource.Resource):
 				'record_id': id,
 				'activity_status': activity_status,
 				'is_already_participanted': (participance_data_count > 0),
-				'page_title': "上海投票",
+				'page_title': record.name if record else u"投票",
 				'page_html_content': html,
 				'app_name': "shvote",
 				'resource': "shvote",
@@ -84,7 +84,7 @@ class MShvote(resource.Resource):
 				'auth_appid_info': auth_appid_info
 			})
 			
-			return render_to_response('workbench/wepage_webapp_page.html', c)
+			return render_to_response('shvote/templates/webapp/m_shvote.html', c)
 		else:
 			record = None
 			c = RequestContext(request, {

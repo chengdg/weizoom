@@ -26,7 +26,7 @@ COUNT_PER_PAGE = 20
 class shvote(resource.Resource):
 	app = 'apps/shvote'
 	resource = 'shvote'
-	
+
 	@login_required
 	def get(request):
 		"""
@@ -41,7 +41,7 @@ class shvote(resource.Resource):
 					'first_nav_name': FIRST_NAV,
 					'second_navs': export.get_promotion_and_apps_second_navs(request),
 					'second_nav_name': export.MALL_APPS_SECOND_NAV,
-					'third_nav_name': export.MALL_APPS_VOTE_NAV,
+					'third_nav_name': export.MALL_APPS_SHVOTE_NAV,
 					'is_deleted_data': True
 				})
 				return render_to_response('shvote/templates/editor/workbench.html', c)
@@ -65,7 +65,7 @@ class shvote(resource.Resource):
 					'is_deleted_data': True
 				})
 				return render_to_response('shvote/templates/editor/workbench.html', c)
-		
+
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
 			'second_navs': export.get_promotion_and_apps_second_navs(request),
@@ -91,7 +91,6 @@ class shvote(resource.Resource):
 			else:
 				record = record.first()
 				response.data = record.groups
-		print '999999999999999', response.data
 		return response.get_response()
 	
 	@login_required
@@ -104,13 +103,13 @@ class shvote(resource.Resource):
 		data['groups'] = json.loads(data['groups'])
 		shvote = app_models.Shvote(**data)
 		shvote.save()
-		
+
 		data = json.loads(shvote.to_json())
 		data['id'] = data['_id']['$oid']
 		response = create_response(200)
 		response.data = data
 		return response.get_response()
-	
+
 	@login_required
 	def api_post(request):
 		"""
@@ -125,17 +124,17 @@ class shvote(resource.Resource):
 			if key in update_fields:
 				update_data['set__'+key] = value
 		app_models.Shvote.objects(id=request.POST['id']).update(**update_data)
-		
+
 		response = create_response(200)
 		return response.get_response()
-	
+
 	@login_required
 	def api_delete(request):
 		"""
 		响应DELETE
 		"""
 		app_models.Shvote.objects(id=request.POST['id']).delete()
-		
+
 		response = create_response(200)
 		return response.get_response()
 

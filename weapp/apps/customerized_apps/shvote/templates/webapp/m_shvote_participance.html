@@ -1,0 +1,206 @@
+{% extends "webapp_content_base_v4.html" %}
+
+{% block css %}
+<style type="text/css">
+    .xui-backToVote {
+        float: right;
+    }
+    .xui-dropmenu{
+        background: #fff none repeat scroll 0 0;
+        position: absolute;
+        width: 100%;
+        z-index: 999;
+    }
+    .xui-dropmenu >ul >li{
+        border-bottom: 1px solid #eee;
+        height: 45px;
+        line-height: 45px;
+        padding-left: 35px !important;
+    }
+    .xui-dropmenu >ul >li >a{
+        display: block;
+        color: #000;
+        width: 100%;
+        height: 100%;
+    }
+    .xui-shvoteParticipance-Page label {
+        float: right;
+        margin-right: 10px;
+        vertical-align: bottom;
+        margin-top: 10px;
+    }
+    select#choose_group {
+        width: 156px;
+        height: 40px;
+        margin-bottom: 5px;
+    }
+</style>
+{% endblock %}
+
+{% block content-panel %}
+    {{ page_html_content|safe }}
+    <div class="xui-page xui-shvoteParticipance-Page">
+        <span>我要报名</span>
+        <span class="xui-backToVote xa-backToVote">返回投票>></span>
+        <div class="wui-i-uploadimg">
+            <div class="xui-uploadHeadImg xa-uploadHeadImg xui-productPhoto" data-control-type="appkit.uploadimg">
+                <label class="">头像</label>
+                <div class="xui-addPhoto xa-addPhoto mb10 fl pr">
+                    <input
+                        id="1"
+                        name="1"
+                        data-ui-role="uploadImage"
+                        type="file"
+                        style="opacity:0;top:0;left:0;width:45px;height:45px;"
+                    />
+                </div>
+            </div>
+        </div>
+        <div class="xa-inputControl" data-input-type="textarea" data-input-name="name" data-control-type="appkit.qa">
+            <textarea class="wui-i-input" data-validate="require-notempty::请填写名称"></textarea>
+            <label class="">名称</label>
+        </div>
+        <div>
+            <select class="" id="choose_group" data-input-name="choose_group">
+                {% for group in groups %}
+                <option value="{{group}}">{{group}}</option>
+                {% endfor %}
+            </select>
+            <label class="">分组选择</label>
+        </div>
+        <div class="xa-inputControl" data-input-type="textarea" data-input-name="number" data-control-type="appkit.qa">
+            <textarea class="wui-i-input" data-validate="require-notempty::请输入编号"></textarea>
+            <label class="">输入编号</label>
+        </div>
+        <div class="xa-inputControl" data-input-type="textarea" data-input-name="details" data-control-type="appkit.qa">
+            <textarea style="height: 150px;width: 90%;" class="wui-i-input" data-validate="require-notempty::请输入详情"></textarea>
+            <label class="">详情</label>
+        </div>
+        <div class="wui-UploadImg" data-component-cid="5" style="">
+            <div class="xui-productReviewCreatePage wui-i-uploadimg xa-inputControl" data-input-type="imgarea" data-input-name="detail-pic" data-control-type="appkit.uploadimg">
+                <div class="xui-productPhoto mt10"><ul class="xui-imgList xa-imgList"></ul>
+                    <div class="xui-addPhoto xa-addPhoto mb10 fl pr">
+                        <input name="imgFile123" data-ui-role="uploadImage" type="file" style="opacity:0;top:0;left:0;width:45px;height:45px;" class="pa" multiple="">
+                    </div>
+                    <div class="xui-deletePhoto xa-deletePhoto" style="display:none;"></div>
+                    <span class="cRed em95 none xa-finishEdit xui-finishEdit ml10">完成</span>
+                    <span class="em75 xa-text xui-text">最多可上传5张图片</span>
+                </div>
+            </div>
+        </div>
+        <div class="wui-submitButton xui-hide xa-submitButtonContainer" style="display: block; transform-origin: 0px 0px 0px; opacity: 1; transform: scale(1, 1);">
+            <a class="xui-btn xui-btn-danger xa-submitTermite" data-role="button" href="javascript:void(0);" style="">提交</a>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+$(document).ready(function() {
+    //绑定提交按钮
+    $('.xa-submitTermite').click(function() {
+        if (!W.is_pic_up){
+            wuiAlert('图片还未上传成功，请稍等！');
+            return;
+        }
+        if (!W.validate()) {
+            return;
+        }
+        var data = {};
+        var $controls = $('.xa-inputControl');
+        for (var i = 0; i < $controls.length; ++i) {
+            var $control = $controls.eq(i);
+            var inputType = $control.attr('data-input-type');
+            var controlType = $control.attr('data-control-type');
+            var name = $control.attr('data-input-name');
+            var cid = i.toString();
+            cid = cid.length<2 ? '0'+cid : cid;
+            name = cid+'_'+name;
+            if (inputType === 'text') {
+                var value = $.trim($control.find('input[type="text"]').val());
+            } else if (inputType === 'textarea') {
+                var value = $.trim($control.find('textarea').val());
+            } else if (inputType === 'selection') {
+                var $spans = $control.find('span[span-type="selection"]');
+                var value = {};
+                var selectionInputType = $spans.eq(0).attr('data-type');
+                for (var j = 0; j < $spans.length; ++j) {
+                    var $span = $spans.eq(j);
+                    var selectionCid = $span.parents('li').eq(0).attr('data-component-cid');
+                    selectionCid = selectionCid.length<2 ? '0'+selectionCid : selectionCid;
+                    var selectionInputName = $span.attr('data-input-name');
+                    selectionInputName = selectionCid+'_'+selectionInputName;
+                    var class_name;
+                    if (selectionInputType === 'radio'){
+                        class_name = 'radio-select';
+                    }else if(selectionInputType === 'checkbox'){
+                        class_name = 'checkbox-select';
+                    }
+                    var isSelect = $span.hasClass(class_name);
+                    value[selectionInputName] = {
+                        type: selectionInputType,
+                        isSelect: isSelect
+                    };
+                }
+            }else if (inputType === 'imgarea') {
+                var picture_list = [];
+                $control.find('img').each(function(){
+                    picture_list.push($(this).attr('data-src'));
+                });
+                var value = JSON.stringify(picture_list);
+            }else if (inputType === 'producttype') {
+                var value = $control.find('.type_name').attr('data-product')=='' ? "" : JSON.parse($control.find('.type_name').attr('data-product'));
+            }
+
+            data[name] = {
+                type: controlType,
+                value: value
+            };
+        }
+        participanceData = {
+            webapp_owner_id: W.webappOwnerId,
+            belong_to: W.appRecordId,
+            termite_data: JSON.stringify(data)
+        };
+
+        var $submitButtonContainer = $('.xa-submitButtonContainer');
+        getParticipance(participanceData,$submitButtonContainer);
+    });
+
+    function getParticipance(participanceData,$submitButtonContainer){
+        if (!slag){return;}
+        slag = false;
+        $('body').alert({
+            isShow: true,
+            info: '玩命传输中请等待...',
+            speed: 50000,
+            callBack: function() {
+            }
+        });
+        W.getApi().call({
+            app: 'm/apps/shvote',
+            resource: 'shvote_participance',
+            method: 'put',
+            args: participanceData,
+            success: function(data) {
+                $('body').alert({
+                    isShow: false
+                });
+                $('body').alertParticipantResult({prize: data.prize,actionButtons: data.actionButtons});
+                $submitButtonContainer.hide();
+            },
+            error: function(resp) {
+                $('body').alert({
+                    isShow: true,
+                    isSlide: true,
+                    info: '参与失败，请稍后再试！',
+                    speed: 3000
+                });
+                slag = true;
+                submitControl = false;
+            }
+        });
+    }
+});
+</script>
+{% endblock %}
