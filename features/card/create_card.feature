@@ -60,25 +60,25 @@ Scenario:1.新建通用卡-通用卡
 		}]
 		"""
 	Then 'test'能获得通用卡'微众卡'的库存列表
-		| card_number |status| money |rest_money|comments|apply_per|apply_dep| 
-		|  888000001  |待出库| 10.00 |  10.00   |        |         |         |
-		|  888000002  |待出库| 10.00 |  10.00   |        |         |         |
-		|  888000003  |待出库| 10.00 |  10.00   |        |         |         |
-		|  888000004  |待出库| 10.00 |  10.00   |        |         |         |
-		|  888000005  |待出库| 10.00 |  10.00   |        |         |         |
-		|  888000006  |待出库| 10.00 |  10.00   |        |         |         |
-		|  888000007  |待出库| 10.00 |  10.00   |        |         |         |
-		|  888000008  |待出库| 10.00 |  10.00   |        |         |         |
-		|  888000009  |待出库| 10.00 |  10.00   |        |         |         |
-		|  888000010  |待出库| 10.00 |  10.00   |        |         |         |
+		| card_number |status| money |rest_money|comments|apply_person|apply_dep| 
+		|  888000001  |待出库| 10.00 |  10.00   |        |            |         |
+		|  888000002  |待出库| 10.00 |  10.00   |        |            |         |
+		|  888000003  |待出库| 10.00 |  10.00   |        |            |         |
+		|  888000004  |待出库| 10.00 |  10.00   |        |            |         |
+		|  888000005  |待出库| 10.00 |  10.00   |        |            |         |
+		|  888000006  |待出库| 10.00 |  10.00   |        |            |         |
+		|  888000007  |待出库| 10.00 |  10.00   |        |            |         |
+		|  888000008  |待出库| 10.00 |  10.00   |        |            |         |
+		|  888000009  |待出库| 10.00 |  10.00   |        |            |         |
+		|  888000010  |待出库| 10.00 |  10.00   |        |            |         |
 
 	Then 'test'能获得通用卡'10元卡'的库存列表
-		| card_number |status| money |rest_money|comments|apply_per|apply_dep|
-		|  999000001  |待出库| 10.00 |  10.00   |        |         |         |
-		|  999000002  |待出库| 10.00 |  10.00   |        |         |         |
-		|  999000003  |待出库| 10.00 |  10.00   |        |         |         |
-		|  999000004  |待出库| 10.00 |  10.00   |        |         |         |
-		|  999000005  |待出库| 10.00 |  10.00   |        |         |         |
+		| card_number |status| money |rest_money|comments|apply_person|apply_dep|
+		|  999000001  |待出库| 10.00 |  10.00   |        |            |         |
+		|  999000002  |待出库| 10.00 |  10.00   |        |            |         |
+		|  999000003  |待出库| 10.00 |  10.00   |        |            |         |
+		|  999000004  |待出库| 10.00 |  10.00   |        |            |         |
+		|  999000005  |待出库| 10.00 |  10.00   |        |            |         |
 		
 
 
@@ -184,19 +184,19 @@ Scenario:2.新建微众卡-限制卡
 		}]
 		"""
 	Then 'test'能获得限制卡'测试卡4'的库存列表
-		|  card_number | status| money |rest_money|comments|apply_per|apply_dep|
-		|   444000001  | 待出库| 25.00 |  25.00   |        |         |         |
+		|  card_number | status| money |rest_money|comments|apply_person|apply_department|
+		|   444000001  | 待出库| 25.00 |  25.00   |        |            |                |
 		
 	Then 'test'能获得限制卡'测试卡3'的库存列表
-		| card_number | status| money |rest_money|comments|apply_per|apply_dep|
-		|  555000001  | 待出库| 10.00 |  10.00   |        |         |         | 
-		|  555000002  | 待出库| 10.00 |  10.00   |        |         |         | 
+		| card_number | status| money |rest_money|comments|apply_person|apply_department|
+		|  555000001  | 待出库| 10.00 |  10.00   |        |            |                | 
+		|  555000002  | 待出库| 10.00 |  10.00   |        |            |                | 
 
 	Then 'test'能获得限制卡'测试卡2'的库存列表
-		| card_number | status| money |rest_money|comments|apply_per|apply_dep| 
-		|  666000001  | 待出库| 10.00 |  10.00   |        |         |         |
+		| card_number | status| money |rest_money|comments|apply_person|apply_department| 
+		|  666000001  | 待出库| 10.00 |  10.00   |        |            |                |
 	
 	Then 'test'能获得限制卡'测试卡1'的库存列表
-		| card_number | status| money |rest_money|comments|apply_per|apply_dep|
-		|  777000001  | 待出库| 10.00 |  10.00   |        |         |         |
-		|  777000002  | 待出库| 10.00 |  10.00   |        |         |         |
+		| card_number | status| money |rest_money|comments|apply_person|apply_department|
+		|  777000001  | 待出库| 10.00 |  10.00   |        |            |                |
+		|  777000002  | 待出库| 10.00 |  10.00   |        |            |                |
