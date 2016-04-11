@@ -26,7 +26,7 @@ class ShvoteRegistrators(resource.Resource):
 		"""
 		响应GET
 		"""
-		has_data = app_models.ShvoteParticipance.objects(belong_to=request.GET['id']).count()
+		has_data = app_models.ShvoteParticipance.objects(belong_to=request.GET['id']).count()#count<->是否有数据
 
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
@@ -42,6 +42,7 @@ class ShvoteRegistrators(resource.Resource):
 	@staticmethod
 	def get_datas(request):
 		name = request.GET.get('participant_name', '')#搜索
+		status = int(request.GET.get('participant_status', -1))
 		webapp_id = request.user_profile.webapp_id
 		member_ids = []
 		if name:
@@ -54,10 +55,12 @@ class ShvoteRegistrators(resource.Resource):
 		params = {'belong_to':request.GET['id']}
 		if name:
 			params['webapp_user_id__in'] = member_ids
-		if start_time:
-			params['created_at__gte'] = start_time
-		if end_time:
-			params['created_at__lte'] = end_time
+		if status != -1:
+			params['status'] = status
+		# if start_time:
+		# 	params['created_at__gte'] = start_time
+		# if end_time:
+		# 	params['created_at__lte'] = end_time
 		datas = app_models.ShvoteParticipance.objects(**params).order_by('-id')#筛选后参与者集合
 
 		#进行分页
@@ -87,7 +90,11 @@ class ShvoteRegistrators(resource.Resource):
 				'id': str(data.id),
 				'participant_name': member_id2member[data.member_id].username_size_ten if member_id2member.get(data.member_id) else u'未知',
 				'participant_icon': member_id2member[data.member_id].user_icon if member_id2member.get(data.member_id) else '/static/img/user-1.jpg',
-				'created_at': data.created_at.strftime("%Y-%m-%d %H:%M:%S")
+				'count':data.count,
+				'serial_number':data.serial_number,
+				'status':data.status,
+				'created_at': data.created_at.strftime("%Y/%m/%d %H:%M")
+				# 'created_at': data.created_at.strftime("%Y-%m-%d %H:%M:%S")
 			})
 		response_data = {
 			'items': items,
@@ -105,7 +112,7 @@ class ShvoteRegistrators(resource.Resource):
 		响应POST
 		"""
 		app_models.ShvoteParticipance.objects(id=request.POST['id']).update(status = 1)
-		
+
 		response = create_response(200)
 		return response.get_response()
 
@@ -115,6 +122,6 @@ class ShvoteRegistrators(resource.Resource):
 		响应DELETE
 		"""
 		app_models.ShvoteParticipance.objects(id=request.POST['id']).delete()
-		
+
 		response = create_response(200)
 		return response.get_response()
