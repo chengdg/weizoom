@@ -27,20 +27,21 @@ COUNT_PER_PAGE = 20
 class ShvoteParticipance(resource.Resource):
 	app = 'apps/shvote'
 	resource = 'shvote_participance'
-	
-	@login_required
-	def api_get(request):
+
+	def get(request):
 		"""
-		响应GET api
+		响应GET
 		"""
-		if 'id' in request.GET:
-			shvote_participance = app_models.ShvoteParticipance.objects.get(id=request.GET['id'])
-			data = shvote_participance.to_json()
-		else:
-			data = {}
-		response = create_response(200)
-		response.data = data
-		return response.get_response()
+		id = request.GET['id']
+		c = RequestContext(request, {
+			'page_title': u'上海投票',
+			'is_hide_weixin_option_menu':True,
+			'app_name': "shvote",
+			'resource': "shvote_participance",
+			'hide_non_member_cover': True, #非会员也可使用该页面
+			'share_to_timeline_use_desc': True  #分享到朋友圈的时候信息变成分享给朋友的描述
+		})
+		return render_to_response('shvote/templates/webapp/m_shvote_participance.html', c)
 	
 	def api_put(request):
 		"""

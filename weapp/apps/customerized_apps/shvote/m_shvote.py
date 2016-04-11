@@ -47,7 +47,7 @@ class MShvote(resource.Resource):
 					c = RequestContext(request,{
 						'is_deleted_data': True
 					})
-					return render_to_response('workbench/wepage_webapp_page.html', c)
+					return render_to_response('shvote/templates/webapp/m_shvote.html', c)
 				activity_status = record.status_text
 				
 				now_time = datetime.today().strftime('%Y-%m-%d %H:%M')
@@ -84,7 +84,7 @@ class MShvote(resource.Resource):
 				'auth_appid_info': auth_appid_info
 			})
 			
-			return render_to_response('workbench/wepage_webapp_page.html', c)
+			return render_to_response('shvote/templates/webapp/m_shvote.html', c)
 		else:
 			record = None
 			c = RequestContext(request, {
