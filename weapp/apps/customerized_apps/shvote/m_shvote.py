@@ -52,22 +52,43 @@ class MShvote(resource.Resource):
 		total_visits = record.visits
 
 		#获取当前会员可投票的次数(默认每人每天每组可投票一次)
+		groups = record.groups
+		group_name2member = {}
+		for m in member_datas:
+			if group_name2member.has_key(m.group):
+				group_name2member[m.group].append(m.vote_log)
+			else:
+				group_name2member[m.group] = [m.vote_log]
+		now_date_str = datetime.now().strftime('%Y-%m-%d')
+		#判断当前会员每个组的可投票情况
+		group_name2canplay = {}
+		for g, log in group_name2member.items():
+			if log.has_key(now_date_str) and member_id in log[now_date_str]:
+				group_name2canplay[g] = True
+			else:
+				group_name2canplay[g] = False
 
-
-		member_info = {}
+		member_info = {
+			'can_play_info': group_name2canplay,
+			'isMember': isMember
+		}
 		record_info = {
 			'total_parted': total_parted,
 			'total_counts': total_counts,
-			'total_visits': total_visits
+			'total_visits': total_visits,
+			'groups': groups
 		}
+		rank_info = get_rank_list(record_id) #获取排名信息
 
 		response = create_response(200)
 		response.data = {
 			'activity_status': activity_status,
 			'member_info': member_info,
-			'record_info': record_info
+			'record_info': record_info,
+			'rank_info': rank_info
 		}
 		return response.get_response()
+
 
 	
 	def get(request):
@@ -134,3 +155,35 @@ def update_shvote_status(shvote):
 			activity_status = u'已结束'
 		shvote.reload()
 	return activity_status, shvote
+
+def get_rank_list(record_id):
+	"""
+	获取排名信息，取前100名
+	@param record_id: 活动id
+	@return: list
+	"""
+	datas = app_models.ShvoteParticipance.objects(belong_to=record_id, status=app_models.MEMBER_STATUS['PASSED']).order_by('-count')[:100]
+	i = 0
+	result_list = []
+	for data in datas:
+		i += 1
+		result_list.append({
+			'rank': i,
+			'name': data.name,
+			'icon': data.icon,
+			'count': data.count,
+			'group': data.group,
+			'serial_number': data.serial_number,
+			'details': data.details,
+			'pics': data.pics
+		})
+	return result_list
+
+def left_pad(num):
+	"""
+	三位数，不够在左侧加0 ，例如 001，032，100
+	@param str:
+	@return:
+	"""
+	num = int(num)
+	return num if num >= 100 else '0%d'%num if num >= 10 else '00%d'%num

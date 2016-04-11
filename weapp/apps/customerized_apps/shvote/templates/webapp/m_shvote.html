@@ -123,18 +123,18 @@
 <div class="wa-mobile">
     <div class="wa-dynamic-info">
         <div>
-            <span>
-                <p>已报名</p>
-                <p class="wa-total-parted">123312</p>
-            </span>
-            <span>
-                <p>投票数</p>
-                <p class="wa-total-counts">122112</p>
-            </span>
-            <span>
-                <p>访问数</p>
-                <p class="wa-total-visits">1212</p>
-            </span>
+            <p>
+                <span>已报名</span>
+                <span class="wa-total-parted">123312</span>
+            </p>
+            <p>
+                <span>投票数</span>
+                <span class="wa-total-counts">122112</span>
+            </p>
+            <p>
+                <span>访问数</span>
+                <span class="wa-total-visits">1212</span>
+            </p>
         </div>
         <div>
             <p>截止日期：<b class="wa-enddate">2016-07-18</b> 可投：<b class="wa-left-chance">2</b></p>
@@ -219,6 +219,15 @@
             },
             success: function(data) {
                 console.log(data);
+                //更新活动信息
+                var record_info = data.record_info;
+                update_record_info(record_info);
+                //更新会员信息
+                var member_info = data.member_info;
+                update_member_info(member_info);
+                //更新排名信息
+                var rank_info = data.rank_info;
+                update_rank_info(rank_info);
             },
             error: function(data){
                 if(data.errMsg == 'is_deleted'){
@@ -235,6 +244,15 @@
     }
     function showDynamic(){
         $('.wa-mobile').removeClass('none');
+    }
+    function update_record_info(record_info){
+
+    }
+    function update_member_info(member_info){
+
+    }
+    function update_rank_info(rank_info){
+
     }
 </script>
 {% endblock %}
