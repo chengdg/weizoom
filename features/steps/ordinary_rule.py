@@ -9,6 +9,7 @@ import bdd_util
 
 from card import models as card_models
 from weapp import models as weapp_models
+from django.contrib.auth.models import User
 
 CARD_KIND_TEXT2INDEX = {
 	"entity": card_models.WEIZOOM_CARD_ENTITY,
@@ -40,12 +41,11 @@ def expected_weizoom_cards(context,user,rule_name,card_class):
 		card_list.append({
 			"card_number": card["weizoom_card_id"],
 			"status": card["storage_status_text"],
-			"total_money": card["rule_money"],
+			"money": card["rule_money"],
 			"rest_money": card["money"],
-			"order_time": card["storage_time"],
 			"comments": card["remark"],
-			"apply_per": card["activated_to"],
-			"apply_dep": card["department"]
+			"apply_person": card["activated_to"],
+			"apply_department": card["department"]
 		})
 	logging.info(card_list)
 	
@@ -97,8 +97,20 @@ def step_impl(context, user,rule_name):
 def step_impl(context,user):
 	context.rules = json.loads(context.text)
 
+	store_name_list = []
+	for rule in context.rules:
+		if rule.has_key("vip_shop"):
+			store_name_list = rule["vip_shop"].split(',')
+	
+	user_id2username = {user.id: user.username for user in User.objects.using('weapp').filter(username__in=store_name_list)}
+	userProfiles = weapp_models.UserProfile.objects.using('weapp').filter(user_id__in=user_id2username.keys())
+
+	if userProfiles.count() > 0:
+		for userprofile in userProfiles:
+			weapp_models.UserProfile.objects.using('weapp').filter(user_id=userprofile.user_id).update(store_name=user_id2username[userprofile.user_id])
+
 	user_id2store_name = {}
-	for user_profile in weapp_models.UserProfile.objects.using('weapp').exclude(store_name=""):
+	for user_profile in weapp_models.UserProfile.objects.using('weapp').filter(store_name__in=store_name_list):
 		user_id2store_name[user_profile.store_name] = user_profile.user_id
 	
 	for rule in context.rules:
