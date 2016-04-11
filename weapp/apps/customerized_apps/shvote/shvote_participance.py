@@ -20,6 +20,7 @@ from modules.member import integral as integral_api
 from mall.promotion import utils as mall_api
 from mall import export as mall_export
 import termite.pagestore as pagestore_manager
+from core.exceptionutil import unicode_full_stack
 
 FIRST_NAV = mall_export.MALL_PROMOTION_AND_APPS_FIRST_NAV
 COUNT_PER_PAGE = 20
@@ -32,55 +33,73 @@ class ShvoteParticipance(resource.Resource):
 		"""
 		响应GET
 		"""
-		id = request.GET['id']
-		c = RequestContext(request, {
-			'page_title': u'上海投票',
-			'is_hide_weixin_option_menu':True,
-			'app_name': "shvote",
-			'resource': "shvote_participance",
-			'hide_non_member_cover': True, #非会员也可使用该页面
-			'share_to_timeline_use_desc': True  #分享到朋友圈的时候信息变成分享给朋友的描述
-		})
-		return render_to_response('shvote/templates/webapp/m_shvote_participance.html', c)
+		record = None
+		if 'id' in request.GET:
+			id = request.GET['id']
+			try:
+				record = app_models.Shvote.objects.get(id=id)
+			except:
+				c = RequestContext(request,{
+					'is_deleted_data': True
+				})
+				return render_to_response('shvote/templates/webapp/m_shvote.html', c)
+			c = RequestContext(request, {
+				'record_id': id,
+				'page_title': record.name if record else u"投票",
+				'groups': record.groups,
+				'is_hide_weixin_option_menu':True,
+				'app_name': "shvote",
+				'resource': "shvote",
+				'hide_non_member_cover': True, #非会员也可使用该页面
+				'share_to_timeline_use_desc': True  #分享到朋友圈的时候信息变成分享给朋友的描述
+			})
+			return render_to_response('shvote/templates/webapp/m_shvote_participance.html', c)
+		else:
+			c = RequestContext(request, {
+				'record': record
+			})
+			return render_to_response('shvote/templates/webapp/m_shvote.html', c)
 	
 	def api_put(request):
 		"""
 		响应PUT
 		"""
-		data = request_util.get_fields_to_be_save(request)
-		shvote_participance = app_models.ShvoteParticipance(**data)
-		shvote_participance.save()
-		error_msg = None
-		
-		#调整参与数量
-		app_models.Shvote.objects(id=data['belong_to']).update(**{"inc__participant_count":1})
-		
-		#活动奖励
-		prize = data.get('prize', None)
-		if prize:
-			prize_type = prize['type']
-			if prize_type == 'no_prize':
-				pass #不进行奖励
-			elif prize_type == 'integral':
-				if not request.member:
-					pass #非会员，不进行积分奖励
-				else:
-					value = int(prize['data'])
-					integral_api.increase_member_integral(request.member, value, u'参与活动奖励积分')
-			elif prize_type == 'coupon':
-				if not request.member:
-					pass #非会员，不进行优惠券发放
-				else:
-					coupon_rule_id = int(prize['data']['id'])
-					coupon, msg = mall_api.consume_coupon(request.webapp_owner_id, coupon_rule_id, request.member.id)
-					if not coupon:
-						error_msg = msg
-		
-		data = json.loads(shvote_participance.to_json())
-		data['id'] = data['_id']['$oid']
-		if error_msg:
-			data['error_msg'] = error_msg
-		response = create_response(200)
-		response.data = data
-		return response.get_response()
+		try:
+			result_list = []
+			member_id = request.member.id
+			id = request.POST['belong_to']
+			termite_data = json.loads(request.POST['termite_data'])
+			for k in sorted(termite_data.keys()):
+				v = termite_data[k]
+				pureName = k.split('_')[1]
+				result_list_temp = {
+					pureName : v['value']
+				}
+				result_list.append(result_list_temp)
+				# elif v['type'] == 'appkit.uploadimg':
+				# 	item_data['type'] = []
+				# 	item_data['item_name'] = pureName
+				# 	item_data['item_value'] = v['value']
+			print('result_list!!!!!!!!!!!')
+			print(result_list)
+			sh_participance = app_models.ShvoteParticipance(
+					belong_to = id,
+					member_id = member_id,
+					icon = '',
+					name = result_list[0]['name'],
+					group = 'small',
+					serial_number = result_list[1]['number'],
+					details = result_list[2]['details'],
+					pics = list(result_list[3]['detail-pic']) if result_list[3]['detail-pic']!='[]' else [],
+					created_at = datetime.now()
+				)
+			sh_participance.save()
+			response = create_response(200)
+			return response.get_response()
+		except Exception,e:
+			print(e)
+			response = create_response(500)
+			response.errMsg = u'参与失败'
+			response.inner_errMsg = unicode_full_stack()
+			return response.get_response()
 
