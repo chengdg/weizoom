@@ -57,12 +57,12 @@ def step_impl(context, user):
 	
 	for rule in context.rules:
 		rule_dict = {
-			"name": rule["name"],
-			"weizoom_card_id_prefix": rule["prefix_value"],
-			"card_kind": CARD_KIND_TEXT2INDEX[rule["type"]],
-			"money": rule["money"],
-			"count": rule["num"],
-			"remark": rule["comments"]
+			"name": rule.get("name",""),
+			"weizoom_card_id_prefix": rule.get("prefix_value","123"),
+			"card_kind": CARD_KIND_TEXT2INDEX[rule.get("type","entity")],
+			"money": rule.get("money","5"),
+			"count": rule.get("num","100"),
+			"remark": rule.get("comments","")
 		}
 
 		response = context.client.put('/card/api/create_ordinary/', rule_dict)
@@ -129,15 +129,15 @@ def step_impl(context,user):
 			if rule["new_member"] == "on":
 				is_new_member_special = 1
 		rule_dict = {
-			"name": rule["name"],
-			"weizoom_card_id_prefix": rule["prefix_value"],
-			"card_kind": CARD_KIND_TEXT2INDEX[rule["type"]],
+			"name": rule.get("name",""),
+			"weizoom_card_id_prefix": rule.get("prefix_value","123"),
+			"card_kind": CARD_KIND_TEXT2INDEX[rule.get("type","condition")],
 			"valid_restrictions": valid_restrictions,
 			"shop_limit_list": ",".join(user_ids),
 			"is_new_member_special": is_new_member_special,
-			"money": rule["money"],
-			"count": rule["num"],
-			"remark": rule["comments"]
+			"money": rule.get("money","5"),
+			"count": rule.get("num","100"),
+			"remark":  rule.get("comments","")
 		}
 
 		response = context.client.put('/card/api/create_limit/', rule_dict)

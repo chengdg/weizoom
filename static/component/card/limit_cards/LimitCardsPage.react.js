@@ -16,22 +16,16 @@ var Resource = Reactman.Resource;
 // var Constant = require('./Constant');
 // var Action = require('./Action');
 
-var LimitRulesPage = React.createClass({
+var OrdinaryCardsPage = React.createClass({
 	onClickDelete: function(event) {
 		var productId = parseInt(event.target.getAttribute('data-product-id'));
 		Action.deleteProduct(productId, this.refs.table.refresh);
 	},
 
 	rowFormatter: function(field, value, data) {
-		if (field === 'name') {
-			return (
-				<a href={'/card/limit_cards/?weizoom_card_rule_id='+data.id}>{value}</a>
-			)
-		}else if (field === 'action') {
+		if (field === 'action') {
 			return (
 			<div>
-				<a className="btn btn-link btn-xs">导出</a>
-				<a className="btn btn-link btn-xs mt5">追加</a>
 				<a className="btn btn-link btn-xs">备注</a>
 			</div>
 			);
@@ -42,8 +36,9 @@ var LimitRulesPage = React.createClass({
 
 	render:function(){
 		var productsResource = {
-			resource: 'card.limit_rules',
+			resource: 'card.ordinary_cards',
 			data: {
+				weizoom_card_rule_id: W.weizoom_card_rule_id,
 				page: 1,
 				count_per_page: 15
 			}
@@ -52,18 +47,20 @@ var LimitRulesPage = React.createClass({
 		return (
 		<div className="mt15">
 			<Reactman.TablePanel>
-				
 				<Reactman.TableActionBar>
+					<Reactman.TableActionButton text="导出" icon="plus" href="#" />
 					<Reactman.TableActionButton text="创建新卡" icon="plus" href="/card/create_limit/" />
 				</Reactman.TableActionBar>
 				<Reactman.Table resource={productsResource} formatter={this.rowFormatter} pagination={true} ref="table">
-					<Reactman.TableColumn name="卡名称" field="name" />
-					<Reactman.TableColumn name="面值" field="money" />
-					<Reactman.TableColumn name="数量" field="count" />
-					<Reactman.TableColumn name="库存" field="count"/>
-					<Reactman.TableColumn name="卡类型" field="card_kind" />
-					<Reactman.TableColumn name="卡号区间" field="card_range"/>
-					<Reactman.TableColumn name="备注" field="remark" />
+					<Reactman.TableColumn name="卡号" field="weizoom_card_id" />
+					<Reactman.TableColumn name="密码" field="password" />
+					<Reactman.TableColumn name="状态" field="storage_status_text" />
+					<Reactman.TableColumn name="面额" field="rule_money"/>
+					<Reactman.TableColumn name="余额" field="money" />
+					<Reactman.TableColumn name="出库时间" field="storage_time" />
+					<Reactman.TableColumn name="备注" field="remark"/>
+					<Reactman.TableColumn name="领用人" field="activated_to" />
+					<Reactman.TableColumn name="申请部门/公司" field="department" />
 					<Reactman.TableColumn name="操作" field="action" width="80px" />
 				</Reactman.Table>
 			</Reactman.TablePanel>
@@ -71,4 +68,4 @@ var LimitRulesPage = React.createClass({
 		)
 	}
 })
-module.exports = LimitRulesPage;
+module.exports = OrdinaryCardsPage;
