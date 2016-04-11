@@ -8,7 +8,7 @@ Feature: 在卡订单页面对订单中微众卡执行批量卡激活操作
 """
 
 Background:
-	Given test登录系统
+	Given test登录管理系统
 	When test新建通用卡
 		"""
 		[{
