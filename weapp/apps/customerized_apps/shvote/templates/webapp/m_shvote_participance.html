@@ -29,7 +29,7 @@
         vertical-align: bottom;
         margin-top: 10px;
     }
-    select#choose_group {
+    select#choose-group {
         width: 156px;
         height: 40px;
         margin-bottom: 5px;
@@ -42,26 +42,26 @@
     <div class="xui-page xui-shvoteParticipance-Page">
         <span>我要报名</span>
         <span class="xui-backToVote xa-backToVote">返回投票>></span>
-        <div class="wui-i-uploadimg">
-            <div class="xui-uploadHeadImg xa-uploadHeadImg xui-productPhoto" data-control-type="appkit.uploadimg">
-                <label class="">头像</label>
-                <div class="xui-addPhoto xa-addPhoto mb10 fl pr">
-                    <input
-                        id="1"
-                        name="1"
-                        data-ui-role="uploadImage"
-                        type="file"
-                        style="opacity:0;top:0;left:0;width:45px;height:45px;"
-                    />
-                </div>
-            </div>
-        </div>
+        <!--<div class="wui-i-uploadimg">-->
+            <!--<div class="xui-uploadHeadImg xa-uploadHeadImg xui-productPhoto" data-control-type="appkit.uploadimg">-->
+                <!--<label class="">头像</label>-->
+                <!--<div class="xui-addPhoto xa-addPhoto mb10 fl pr">-->
+                    <!--<input-->
+                        <!--id="uploadHeadImg"-->
+                        <!--name="uploadHeadImg"-->
+                        <!--data-ui-role="uploadImage"-->
+                        <!--type="file"-->
+                        <!--style="opacity:0;top:0;left:0;width:45px;height:45px;"-->
+                    <!--/>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
         <div class="xa-inputControl" data-input-type="textarea" data-input-name="name" data-control-type="appkit.qa">
             <textarea class="wui-i-input" data-validate="require-notempty::请填写名称"></textarea>
             <label class="">名称</label>
         </div>
-        <div>
-            <select class="" id="choose_group" data-input-name="choose_group">
+        <div class="xa-inputControl" data-input-type="choose-group" data-input-name="choose-group" data-control-type="choose-group">
+            <select class="" id="choose-group" data-input-name="choose-group">
                 {% for group in groups %}
                 <option value="{{group}}">{{group}}</option>
                 {% endfor %}
@@ -76,9 +76,9 @@
             <textarea style="height: 150px;width: 90%;" class="wui-i-input" data-validate="require-notempty::请输入详情"></textarea>
             <label class="">详情</label>
         </div>
-        <div class="wui-UploadImg" data-component-cid="5" style="">
+        <div class="wui-UploadImg" style="">
             <div class="xui-productReviewCreatePage wui-i-uploadimg xa-inputControl" data-input-type="imgarea" data-input-name="detail-pic" data-control-type="appkit.uploadimg">
-                <div class="xui-productPhoto mt10"><ul class="xui-imgList xa-imgList"></ul>
+                <div class="xui-productPhoto mt10">
                     <div class="xui-addPhoto xa-addPhoto mb10 fl pr">
                         <input name="imgFile123" data-ui-role="uploadImage" type="file" style="opacity:0;top:0;left:0;width:45px;height:45px;" class="pa" multiple="">
                     </div>
@@ -116,53 +116,29 @@ $(document).ready(function() {
             var cid = i.toString();
             cid = cid.length<2 ? '0'+cid : cid;
             name = cid+'_'+name;
-            if (inputType === 'text') {
-                var value = $.trim($control.find('input[type="text"]').val());
-            } else if (inputType === 'textarea') {
+            if (inputType === 'textarea') {
                 var value = $.trim($control.find('textarea').val());
-            } else if (inputType === 'selection') {
-                var $spans = $control.find('span[span-type="selection"]');
-                var value = {};
-                var selectionInputType = $spans.eq(0).attr('data-type');
-                for (var j = 0; j < $spans.length; ++j) {
-                    var $span = $spans.eq(j);
-                    var selectionCid = $span.parents('li').eq(0).attr('data-component-cid');
-                    selectionCid = selectionCid.length<2 ? '0'+selectionCid : selectionCid;
-                    var selectionInputName = $span.attr('data-input-name');
-                    selectionInputName = selectionCid+'_'+selectionInputName;
-                    var class_name;
-                    if (selectionInputType === 'radio'){
-                        class_name = 'radio-select';
-                    }else if(selectionInputType === 'checkbox'){
-                        class_name = 'checkbox-select';
-                    }
-                    var isSelect = $span.hasClass(class_name);
-                    value[selectionInputName] = {
-                        type: selectionInputType,
-                        isSelect: isSelect
-                    };
-                }
             }else if (inputType === 'imgarea') {
                 var picture_list = [];
                 $control.find('img').each(function(){
                     picture_list.push($(this).attr('data-src'));
                 });
                 var value = JSON.stringify(picture_list);
-            }else if (inputType === 'producttype') {
-                var value = $control.find('.type_name').attr('data-product')=='' ? "" : JSON.parse($control.find('.type_name').attr('data-product'));
+            }else if(inputType === 'choose-group'){
+                var value = $.trim($('#choose-group').val());
             }
-
             data[name] = {
                 type: controlType,
                 value: value
             };
         }
+        console.log(data);
         participanceData = {
             webapp_owner_id: W.webappOwnerId,
             belong_to: W.appRecordId,
             termite_data: JSON.stringify(data)
         };
-
+        console.log(participanceData);
         var $submitButtonContainer = $('.xa-submitButtonContainer');
         getParticipance(participanceData,$submitButtonContainer);
     });

@@ -80,20 +80,22 @@ class ShvoteParticipance(resource.Resource):
 					pureName : v['value']
 				}
 				result_list.append(result_list_temp)
-			print('result_list!!!!!!!!!!!')
-			print(result_list)
+			if result_list[4]['detail-pic']!='[]':
+				detailPic = json.loads(result_list[4]['detail-pic'])
+			else:
+				detailPic = []
 			try:
 				sh_participance = app_models.ShvoteParticipance(
-						belong_to = id,
-						member_id = member_id,
-						icon = '',
-						name = result_list[0]['name'],
-						group = 'small',
-						serial_number = result_list[1]['number'],
-						details = result_list[2]['details'],
-						pics = list(result_list[3]['detail-pic']) if result_list[3]['detail-pic']!='[]' else [],
-						created_at = datetime.now()
-					)
+					belong_to = id,
+					member_id = member_id,
+					icon = '',
+					name = result_list[0]['name'],
+					group = 'small',
+					serial_number = result_list[2]['number'],
+					details = result_list[3]['details'],
+					pics = detailPic,
+					created_at = datetime.now()
+				)
 				sh_participance.save()
 				response = create_response(200)
 			except:
