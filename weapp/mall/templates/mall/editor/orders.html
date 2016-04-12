@@ -684,8 +684,6 @@ $(document).ready(function() {
 			isBusy = 1;
 
 			getData(function (data) {
-				console.log('getData');
-				console.log(data);
 				$('#order-print-pages-box').empty().append($.tmpl( "order-print-tmpl-src", data ));
 				$('#order-print-pages-box').show();
 				$('.order-print-page').printArea({});
