@@ -20,37 +20,10 @@ class RuleOrder(resource.Resource):
 
 	@login_required
 	def get(request):
-		# weizoom_card_orders = WeizoomCardOrder.objects.filter(status=0)
-		# weizoom_card_order_items = WeizoomCardOrderItem.objects.all()
-		# w_cards = WeizoomCard.objects.filter(storage_status=WEIZOOM_CARD_STORAGE_STATUS_OUT)
-		# rule_ids = set([w_card.weizoom_card_id for w_card in w_cards])
-		# card_rules = WeizoomCardRule.objects.filter(id__in=rule_ids)
-		# order_id2rule_id = {order_item.weizoom_card_order_id:order_item.weizoom_card_rule_id for order_item in weizoom_card_order_items}
-		# id2weizoom_card_order_item = {weizoom_card_order_item.id:weizoom_card_order_item for weizoom_card_order_item in weizoom_card_order_items}
-		# id2card_rule = {card_rule.id:card_rule for card_rule in card_rules}
-		# card_order_list = []
-		# for card_order in weizoom_card_orders:
-		# 	card_order_dic = {}
-		# 	rule_id = order_id2rule_id[card_order.id]
-		# 	count = id2weizoom_card_order_item[card_order.id].weizoom_card_order_item_num
-		# 	card_order_dic['id'] = card_order.id
-		# 	card_order_dic['order_number'] = card_order.order_number
-		# 	card_order_dic['name'] = id2card_rule[rule_id].name
-		# 	card_order_dic['money'] = '%.2f' %id2card_rule[rule_id].money
-		# 	card_order_dic['total_money'] = '%.2f' %(id2card_rule[rule_id].money * count)
-		# 	card_order_dic['weizoom_card_order_item_num'] = count
-		# 	card_order_dic['card_kind'] = WEIZOOM_CARD_KIND2TEXT[id2card_rule[rule_id].card_kind]
-		# 	card_order_dic['order_attribute'] = WEIZOOM_CARD_ORDER_ATTRIBUTE2TEXT[card_order.order_attribute]
-		# 	card_order_dic['responsible_person'] = card_order.responsible_person
-		# 	card_order_dic['company'] = card_order.company
-		# 	card_order_dic['created_at'] = card_order.created_at.strftime("%Y-%m-%d")
-		# 	card_order_list.append(card_order_dic)
-
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
 			'second_navs': nav.get_second_navs(),
 			'second_nav_name': SECOND_NAV,
-			# 'card_order_list':json.dumps(card_order_list)
 		})
 		return render_to_response('order/rule_order.html', c)
 
