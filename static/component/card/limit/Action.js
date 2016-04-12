@@ -35,6 +35,13 @@ var Action = {
 			data: data
 		});
 	},
+	deleteShop: function(data){
+		console.log(data,"gggdddddddddd")
+		Dispatcher.dispatch({
+			actionType: Constant.CARD_DELETE_SHOP,
+			data: data
+		});
+	},
 	saveOrdinaryRule: function(data) {
 		Resource.put({
 			resource: 'card.limit',

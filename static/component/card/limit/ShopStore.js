@@ -18,6 +18,7 @@ var ShopStore = StoreUtil.createStore(Dispatcher, {
 	actions: {
 		'handleShowShops': Constant.CARD_SHOW_SHOPS,
 		'handleAddShops': Constant.CARD_ADD_SHOP,
+		'handleDeleteShop': Constant.CARD_DELETE_SHOP
 	},
 
 	init: function() {
@@ -52,6 +53,28 @@ var ShopStore = StoreUtil.createStore(Dispatcher, {
 		}
 		this.user_ids = user_ids;
 		this.checked = checked;
+		this.__emitChange();
+	},
+	handleDeleteShop: function(action){
+		var user_id = action.data;
+		var user_ids = this.user_ids;
+		for(var i in user_ids){
+			if (user_id == user_ids[i]){
+				user_ids.splice(i,1)
+			}
+		}
+		var shops = this.shops
+		var checked = []
+		for (var i in shops){
+			for(var j in user_ids){
+				if (shops[i]["user_id"] == user_ids[j]){
+					checked.push(shops[i])
+				}
+			}
+		}
+		this.user_ids = user_ids;
+		this.checked = checked;
+		this.__emitChange();
 	},
 	getcheckedOptions: function(){
 		return this.user_ids;
