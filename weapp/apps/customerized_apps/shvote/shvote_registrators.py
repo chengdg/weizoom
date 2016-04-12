@@ -148,7 +148,7 @@ class ShvoteRegistrators(resource.Resource):
 		return response.get_response()
 
 
-class ShvoteParticipances_Export(resource.Resource):
+class ShvoteRegistrators_Export(resource.Resource):
 	'''
 	批量导出
 	'''
