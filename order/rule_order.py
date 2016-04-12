@@ -54,12 +54,13 @@ class RuleOrder(resource.Resource):
 				order_item_id2weizoom_card_id[w_card.weizoom_card_order_item_id].append(w_card.weizoom_card_id)
 			else:
 				order_item_id2weizoom_card_id[w_card.weizoom_card_order_item_id] = [w_card.weizoom_card_id]
-
+		print order_item_id2weizoom_card_id,777777777
 		rule_ids = set([w_card.weizoom_card_rule_id for w_card in w_cards])
 		card_rules = WeizoomCardRule.objects.filter(id__in=rule_ids)
 		card_order_id2id = {order_item.weizoom_card_order_id:order_item.id for order_item in weizoom_card_order_items}
 		order_id2rule_id = {order_item.weizoom_card_order_id:order_item.weizoom_card_rule_id for order_item in weizoom_card_order_items}
-		id2weizoom_card_order_item = {weizoom_card_order_item.id:weizoom_card_order_item for weizoom_card_order_item in weizoom_card_order_items}
+		id2weizoom_card_order_item = {weizoom_card_order_item.weizoom_card_order_id:weizoom_card_order_item for weizoom_card_order_item in weizoom_card_order_items}
+		print id2weizoom_card_order_item,44444444444
 		id2card_rule = {card_rule.id:card_rule for card_rule in card_rules}
 		order2is_activation={}
 		weizoom_card_orders_ids =[W.id for W in weizoom_card_orders]
@@ -69,18 +70,21 @@ class RuleOrder(resource.Resource):
 				order2is_activation[cur_weizoom_card_orders_id] =1
 			else:
 				order2is_activation[cur_weizoom_card_orders_id] =0
-
+		pageinfo, weizoom_card_orders = paginator.paginate(weizoom_card_orders, 1, 10, query_string=request.META['QUERY_STRING'])	
 		card_order_list = []
 		for card_order in weizoom_card_orders:
 			card_order_dic = {}
+			print 99999999
 			if (card_order.id in order_id2rule_id) and (card_order.id in card_order_id2id):
 				rule_id = order_id2rule_id[card_order.id]
 				order_item_id = card_order_id2id[card_order.id]
+				print order_item_id,988888888888
 				if order_item_id in order_item_id2weizoom_card_id:
 					weizoom_card_ids = sorted(order_item_id2weizoom_card_id[order_item_id])
 					weizoom_card_id_first = weizoom_card_ids[0]
 					weizoom_card_id_last = weizoom_card_ids[-1]
-					count = id2weizoom_card_order_item[card_order.id].weizoom_card_order_item_num
+					print card_order.id,888888888888888888
+					count = 0 if card_order.id not in id2weizoom_card_order_item else id2weizoom_card_order_item[card_order.id].weizoom_card_order_item_num
 					card_order_dic['id'] = card_order.id
 					card_order_dic['weizoom_card_id_first'] = weizoom_card_id_first
 					card_order_dic['weizoom_card_id_last'] = weizoom_card_id_last

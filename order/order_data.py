@@ -46,11 +46,15 @@ class RuleOrder(resource.Resource):
 			sale_departent = sale_departent,
 			remark=remark
 		)
+
 		for rule in rule_order:
 			rule_id = int(rule['rule_id'])
 			if not valid_time_from:
 				valid_time_from = rule['valid_time_from']
 				valid_time_to = rule['valid_time_to']
+			if not card_rule_num:
+				card_rule_num = rule['card_rule_num']
+			print card_rule_num,7777777777777777
 			weizoom_card_order_items = WeizoomCardOrderItem.objects.create(
 				weizoom_card_rule_id = rule_id,
 				valid_time_from = valid_time_from,
@@ -65,12 +69,12 @@ class RuleOrder(resource.Resource):
 				weizoom_card.weizoom_card_order_id = weizoom_card_order
 				weizoom_card.storage_time = weizoom_card_order_items.created_at
 				weizoom_card.save()
-
 			# WeizoomCard.objects.filter(weizoom_card_rule=rule_id,storage_status=WEIZOOM_CARD_STORAGE_STATUS_IN).update(
 			# 	storage_status = WEIZOOM_CARD_STORAGE_STATUS_OUT,
 			# 	weizoom_card_order_item_id = weizoom_card_order_items,
 			# 	weizoom_card_order_id = weizoom_card_order,
 			# 	storage_time = weizoom_card_order_items.created_at
 			# )
+			card_rule_num = 0
 		response = create_response(200)
 		return response.get_response()

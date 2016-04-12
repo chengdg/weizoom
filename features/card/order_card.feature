@@ -27,9 +27,9 @@ Background:
 			"name":"测试卡1",
 			"prefix_value":"777",
 			"type":"condition",
-			"use_limit":[{
+			"use_limit":{
 					"is_limit":"off"
-			}],
+			},
 			"money":"10.00",
 			"num":"10",
 			"comments":""
@@ -49,7 +49,7 @@ Background:
 				"start_date":"2016-05-01",
 				"end_date":"2016-08-01"
 			}],
-			"order_info":[{
+			"order_info":{
 				"order_attribute":"发售卡",
 				"company":"a",
 				"reponsible_person":"b",
@@ -57,11 +57,11 @@ Background:
 				"sale_name":"c",
 				"sale_department":"南京分公司",
 				"comments":""
-				}]
+				}
 		}]
 		"""
 	
-@weizoom_card @card_option
+@weizoom_card @order_card
 
 Scenario: 1.查看订单详情
 	Given test登录管理系统
@@ -73,9 +73,9 @@ Scenario: 1.查看订单详情
 			"num":"2",
 			"total_money":"20.00",
 			"type":"condition",
-			"use_limit":[{
+			"use_limit":{
 					"is_limit":"off"
-			}],
+			},
 			"card_range":"777000001-777000010"
 		},{
 			"name":"10元卡",
