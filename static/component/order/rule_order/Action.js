@@ -62,15 +62,26 @@ var Action = {
 			actionType:Constant.ADD_CARD_LINES,
 		})
 	},
-	getCardRuleOrder: function(filter){
+	getCardRuleOrder: function(){
 		Resource.get({
 			resource: 'order.rule_order',
-			data: filter,
 			dispatch: {
 				dispatcher: Dispatcher,
 				actionType: Constant.CARD_RULE_ORDER,
 			}
 		});
 	},
+	updateOrderStaus:function(filter){
+		console.log(filter,222222222)
+		var that = this
+		Resource.post({
+			resource: 'order.rule_order',
+			data: filter,
+			success: function(data) {
+				that.getCardRuleOrder()
+			}
+
+		})
+	}
 }
 module.exports = Action;

@@ -31,21 +31,43 @@ class RuleOrder(resource.Resource):
 		contact = post.get('contact','')
 		sale_name = post.get('sale_name','')
 		sale_departent = post.get('sale_departent','')
-		order_attributes = post.get('order_attributes','')
+		order_attributes = post.get('order_attributes',-1)
+
+		use_departent = post.get('use_departent','')
+		project_name = post.get('project_name','')
+		appliaction = post.get('appliaction','')
+		use_persion = post.get('use_persion','')
+
 		remark = post.get('remark','')
+		order_id = post.get('order_id',-1)
 		rule_order = json.loads(rule_order)
-		now_day = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S").replace('-','').replace(':','').replace(' ','')
-		weizoom_card_order = WeizoomCardOrder.objects.create(
-			owner_id = request.user.id,
-			order_number = now_day,
-			order_attribute = order_attributes,
-			company = company_info,
-			responsible_person = responsible_person,
-			contact = contact,
-			sale_name = sale_name,
-			sale_departent = sale_departent,
-			remark=remark
-		)
+		if order_id != -1:
+			now_day = order_id
+		else:
+			now_day = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S").replace('-','').replace(':','').replace(' ','')
+		print order_attributes,WEIZOOM_CARD_ORDER_ATTRIBUTE_SALE,WEIZOOM_CARD_ORDER_ATTRIBUTE_INTERNAL,8888888888888888
+		if int(order_attributes) == WEIZOOM_CARD_ORDER_ATTRIBUTE_SALE:
+			weizoom_card_order = WeizoomCardOrder.objects.create(
+				owner_id = request.user.id,
+				order_number = now_day,
+				order_attribute = order_attributes,
+				company = company_info,
+				responsible_person = responsible_person,
+				contact = contact,
+				sale_name = sale_name,
+				sale_departent = sale_departent,
+				remark = remark
+			)
+		if int(order_attributes) == WEIZOOM_CARD_ORDER_ATTRIBUTE_INTERNAL:
+			weizoom_card_order = WeizoomCardOrder.objects.create(
+				owner_id = request.user.id,
+				order_attribute = order_attributes,
+				use_departent = use_departent,
+				project_name = project_name,
+				appliaction = appliaction,
+				use_persion = use_persion,
+				remark = remark
+			)
 
 		for rule in rule_order:
 			rule_id = int(rule['rule_id'])
@@ -54,7 +76,6 @@ class RuleOrder(resource.Resource):
 				valid_time_to = rule['valid_time_to']
 			if not card_rule_num:
 				card_rule_num = rule['card_rule_num']
-			print card_rule_num,7777777777777777
 			weizoom_card_order_items = WeizoomCardOrderItem.objects.create(
 				weizoom_card_rule_id = rule_id,
 				valid_time_from = valid_time_from,

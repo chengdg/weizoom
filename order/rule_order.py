@@ -29,22 +29,7 @@ class RuleOrder(resource.Resource):
 
 	@login_required
 	def api_get(request):
-		status_orderId = request.GET.get('orderId','')
-		status_is_activation = request.GET.get('is_activation','')
-		if status_orderId and status_is_activation:
-			cur_cards = WeizoomCard.objects.filter(storage_status=WEIZOOM_CARD_STORAGE_STATUS_OUT,weizoom_card_order_id=status_orderId)
-			if int(status_is_activation) ==1:			
-				for cur_card in cur_cards:
-					cur_card.operate_status=2
-					cur_card.save()
-			elif int(status_is_activation) ==0:
-				for cur_card in cur_cards:
-					cur_card.operate_status=1
-					cur_card.save()
-			elif int(status_is_activation) ==-1:
-				WeizoomCardOrder.objects.filter(id=status_orderId).update(status=1)
-
-		weizoom_card_orders = WeizoomCardOrder.objects.filter(status=0)
+		weizoom_card_orders = WeizoomCardOrder.objects.filter(status=0).order_by('-order_number')
 		weizoom_card_order_items = WeizoomCardOrderItem.objects.all()
 		w_cards = WeizoomCard.objects.filter(storage_status=WEIZOOM_CARD_STORAGE_STATUS_OUT)
 		order_item_id2weizoom_card_id = {}
@@ -100,7 +85,6 @@ class RuleOrder(resource.Resource):
 						order_item_dic['is_activation'] =u'' if card_order.id not in order2is_activation else order2is_activation[card_order.id]
 						order_item_dic['shop_limit_list'] = id2card_rule[rule_id].shop_limit_list
 						order_item_dic['valid_restrictions'] = u'满%.f使用' % valid_restrictions if valid_restrictions != -1 else u'不限制'
-						print u'' if rule_id not in id2card_rule else id2card_rule[rule_id].name,"==================="
 						order_item_list.append(order_item_dic)
 				# if order_item_id in order_item_id2weizoom_card_id:
 				# 	weizoom_card_ids = sorted(order_item_id2weizoom_card_id[order_item_id])
@@ -123,7 +107,12 @@ class RuleOrder(resource.Resource):
 					card_order_dic['order_attribute'] = WEIZOOM_CARD_ORDER_ATTRIBUTE2TEXT[card_order.order_attribute]
 					card_order_dic['responsible_person'] = card_order.responsible_person
 					card_order_dic['company'] = card_order.company
+					card_order_dic['use_departent'] = card_order.use_departent
+					card_order_dic['project_name'] = card_order.project_name
+					card_order_dic['appliaction'] = card_order.appliaction
+					card_order_dic['use_persion'] = card_order.use_persion
 					card_order_dic['created_at'] = card_order.created_at.strftime("%Y-%m-%d")
+					card_order_dic['is_activation'] =u'' if card_order.id not in order2is_activation else order2is_activation[card_order.id]
 					card_order_dic['order_item_list'] = json.dumps(order_item_list)
 					card_order_list.append(card_order_dic)
 		data = {
@@ -132,4 +121,25 @@ class RuleOrder(resource.Resource):
 		response = create_response(200)
 		response.data = data
 
+		return response.get_response()
+
+	@login_required
+	def api_post(request):
+		status_orderId = request.POST.get('orderId','')
+		status_is_activation = request.POST.get('is_activation','')
+		if status_orderId and status_is_activation:
+			cur_cards = WeizoomCard.objects.filter(storage_status=WEIZOOM_CARD_STORAGE_STATUS_OUT,weizoom_card_order_id=status_orderId)
+			if int(status_is_activation) ==1:			
+				for cur_card in cur_cards:
+					cur_card.operate_status=2
+					cur_card.save()
+			elif int(status_is_activation) ==0:
+				for cur_card in cur_cards:
+					cur_card.operate_status=1
+					cur_card.save()
+			elif int(status_is_activation) ==-1:
+				WeizoomCardOrder.objects.filter(id=status_orderId).update(status=1)
+		cur_filter={"orderId":status_orderId,"is_activation":status_is_activation}
+		response = create_response(200)
+		response.data.filter = cur_filter
 		return response.get_response()

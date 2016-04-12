@@ -7,7 +7,6 @@ var debug = require('debug')('m:outline.data:DataPage');
 var Store = require('./Store');
 var Action = require('./Action');
 var ReactDOM = require('react-dom');
-
 var Reactman = require('reactman');
 var PageAction = Reactman.PageAction;
 var Dispatcher = Reactman.Dispatcher;
@@ -28,7 +27,6 @@ var cardRuleOrderList = React.createClass({
 		Store.addListener(this.getCardRuleOrder);
 	},
 	getCardRuleOrder: function(){
-		console.log(Store.getCardRuleOrder());
 		this.setState({
 			cardRuleOrder:Store.getCardRuleOrder()
 		})
@@ -57,7 +55,7 @@ var cardRuleOrderList = React.createClass({
 			is_activation:is_activation,
 		};
 		console.log(cur_filter,66666)
-		Action.getCardRuleOrder(cur_filter);
+		Action.updateOrderStaus(cur_filter);
 	},
 	render: function() {
 		_this=this;
