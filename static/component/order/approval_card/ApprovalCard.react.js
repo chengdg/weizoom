@@ -95,20 +95,6 @@ var ApprovalCard = React.createClass({
 		}
 		Action.saveCardRuleOrder(date);
 	},
-	choiceCard: function() {
-		Reactman.PageAction.showDialog({
-			title: "创建备注", 
-			component: ApprovalDialog, 
-			// data: {
-			// 	product: product
-			// },
-			// success: function(inputData, dialogState) {
-			// 	var product = inputData.product;
-			// 	var comment = dialogState.comment;
-			// 	Action.updateProductComment(product, comment);
-			// }
-		});
-	},
 	addCardLines:function() {
 		Action.addCardLines();
 	},
@@ -256,12 +242,27 @@ var CardListLabel = React.createClass({
 		var property = event.target.getAttribute('name');
 		Action.updateAddProduct(index, property, value);
 	},
+	choiceCard: function() {
+		Reactman.PageAction.showDialog({
+			title: "创建备注", 
+			component: ApprovalDialog, 
+			// data: {
+			// 	product: product
+			// },
+			// success: function(inputData, dialogState) {
+			// 	var product = inputData.product;
+			// 	var comment = dialogState.comment;
+			// 	Action.updateProductComment(product, comment);
+			// }
+		});
+	},
 	render: function() {
 		var _this=this;
 		var cardlines=this.state.cardlist.map(function(card,index) {
 			return (
 			<fieldset className="form-inline" key={index}>
 				<FormInput label="卡名称:" type="text" name="CardName" ref="CardName" value={_this.state.cardlist[index].CardName} validate="require-notempty" onChange={_this.onChange.bind(_this,index)}/>
+				<a href="javascript:void(0);" style={{display:'inline-block',textAlign:'center',width:'80px'}} onClick={_this.choiceCard.bind(_this,index)}>选择卡库</a>
 				<FormInput label="出库数量:" type="text" name="CardRuleNum" ref="CardRuleNum" value={_this.state.cardlist[index].CardRuleNum} validate="require-positive-int" onChange={_this.onChange.bind(_this,index)}/>
 				<FormInput label="有效期:" type="text" name="CardRuleTimeStart" ref="CardRuleTimeStart" value={_this.state.cardlist[index].CardRuleTimeStart} validate="require-date" onChange={_this.onChange.bind(_this,index)}/>
 				<FormInput type="text" name="CardRuleTimeEnd" ref="CardRuleTimeEnd" value={_this.state.cardlist[index].CardRuleTimeEnd} validate="require-date" onChange={_this.onChange.bind(_this,index)}/>
