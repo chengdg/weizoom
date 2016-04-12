@@ -68,19 +68,6 @@ W.component.appkit.ShvoteDescription = W.component.Component.extend({
 			validateIgnoreDefaultValue: true,
 			default: ''
 		}, {
-			name: 'permission',
-			type: 'radio',
-			displayName: '活动权限',
-			isUserProperty: true,
-			source: [{
-				name: '无需关注即可参与',
-				value: 'no_member'
-			}, {
-				name: '必须关注才可参与',
-				value: 'member'
-			}],
-			default: 'member'
-		}, {
 			name: 'material_image',
 			type: 'image_dialog_select_v2',
 			displayName: '活动图片',

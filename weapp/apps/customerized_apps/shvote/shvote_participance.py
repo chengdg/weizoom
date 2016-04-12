@@ -14,12 +14,8 @@ from core import paginator
 from core.jsonresponse import create_response
 
 import models as app_models
-import export
-from apps import request_util
-from modules.member import integral as integral_api
-from mall.promotion import utils as mall_api
 from mall import export as mall_export
-import termite.pagestore as pagestore_manager
+from modules.member.models import Member
 from core.exceptionutil import unicode_full_stack
 
 FIRST_NAV = mall_export.MALL_PROMOTION_AND_APPS_FIRST_NAV
@@ -131,3 +127,44 @@ class ShvoteParticipance(resource.Resource):
 			response.inner_errMsg = unicode_full_stack()
 			return response.get_response()
 
+	def api_post(request):
+		"""
+		投票
+		"""
+		vote_to = request.POST.get('vote_to', None)
+		member = request.member
+		response = create_response(500)
+		if not vote_to or not member:
+			response.errMsg = u'会员信息出错'
+			return response.get_response()
+		record_id = request.POST.get('recordId', None)
+		member_id = member.id
+		#非会员不能投票
+		if not member.is_subscribed:
+			response.errMsg = 'none_member'
+			return response.get_response()
+		#不能给取消关注的会员投票
+		try:
+			target_member = Member.objects.get(id=vote_to)
+			if not target_member.is_subscribed:
+				response.errMsg = u'该用户已退出投票活动'
+				return response.get_response()
+		except:
+			response.errMsg = u'不存在该用户'
+			return response.get_response()
+
+		target = None
+		now_date_str = datetime.now().strftime('%Y-%m-%d')
+		try:
+			target = app_models.ShvoteParticipance.objects.get(belong_to=record_id, member_id=long(vote_to), status=app_models.MEMBER_STATUS['PASSED'])
+		except:
+			response.errMsg = u'用户信息出错'
+			return response.get_response()
+
+		result = target.modify(query={'vote_log__'+now_date_str+'__not__exists': member}, inc__count=1)
+		if not result:
+			response.errMsg = u'只能投票一次'
+			return response.get_response()
+
+		response = create_response(200)
+		return response.get_response()
