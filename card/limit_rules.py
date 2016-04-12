@@ -44,24 +44,3 @@ class OrdinaryRuleList(resource.Resource):
 		response.data.pagination_info = pageinfo.to_dict()
 
 		return response.get_response()
-
-def _get_type_value(filter_value):
-	if filter_value == '-1':
-		return -1
-	try:
-		for item in filter_value.split('|'):
-			if item.split(':')[0] == 'cardType':
-				return int(item.split(':')[1])
-		return -1
-	except:
-		return -1
-def _get_attr_value(filter_value):
-	if filter_value == '-1':
-		return -1
-	try:
-		for item in filter_value.split('|'):
-			if item.split(':')[0] == 'cardAttr':
-				return int(item.split(':')[1])
-		return -1
-	except:
-		return -1
