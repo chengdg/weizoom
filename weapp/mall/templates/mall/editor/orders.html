@@ -384,7 +384,10 @@
 			 {{if info.isOdd}}
 			    <tr>
               {{/if}}
-              	<td class="${'order-print-info-'+(info.isOdd ? 'odd':'even')}">${info.title}：${info.value}</span>
+              	<td class="${' order-print-info-'+(info.isOdd ? 'odd':'even')}">
+              	<div class="order-print-info-row">
+              		<span class="order-print-info-label">${info.title}：</span><span class="order-print-info-value">${info.value}</span>
+              	</div>
               {{if !info.isOdd}}
 			    </tr>
               {{/if}}

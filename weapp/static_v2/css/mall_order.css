@@ -1150,6 +1150,20 @@
     background-color: #fff;
 
 }
+.order-print-info-row{
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+}
+.order-print-info-label{
+
+}
+
+.order-print-info-value{
+    -webkit-box-flex: 1;
+    -webkit-flex:  1;
+    flex:  1;
+}
 .order-print-title {
     font-size: 17px;
     font-weight: bold;
@@ -1164,6 +1178,7 @@
     text-align: left;
     border:0;
 }
+
 .order-print-info-table.table>tbody>tr>td.order-print-info-odd {
     width: 42%;
     vertical-align: baseline;
@@ -1186,7 +1201,7 @@ table.table.order-print-summary-sec>tbody>tr>td{
     vertical-align: baseline;
 }
 
-table.table.order-print-summary-sec>tbody>tr>td.order-print-summary-cost{
+table.table.order-print-summary-sec>tbody>tr>td.order-print-summary-pay_money{
     text-align: right;
 }
 .order-print-footer{
