@@ -308,20 +308,20 @@
 		}
 		//获取message_count
 		if(localStorage.getItem('message_count') ==null){
-			$.ajax({
-			url:'{{fans_host}}/count/message_count/',
-			type:'post',
-			dataType:'jsonp',
-			success:function(response) {
-				if (response.code == 200) {
-					localStorage.message_count=response.data.message_count;
-					$("#message_count").html(localStorage.message_count)
-					$("#message_count").css('display','inline');
-				}else{
-					xlog("获取message_count失败")
-				}
-			}
-		});
+{#			$.ajax({#}
+{#			url:'{{fans_host}}/count/message_count/',#}
+{#			type:'post',#}
+{#			dataType:'jsonp',#}
+{#			success:function(response) {#}
+{#				if (response.code == 200) {#}
+{#					localStorage.message_count=response.data.message_count;#}
+{#					$("#message_count").html(localStorage.message_count)#}
+{#					$("#message_count").css('display','inline');#}
+{#				}else{#}
+{#					xlog("获取message_count失败")#}
+{#				}#}
+{#			}#}
+{#		});#}
 		}else{
 			$("#message_count").html(localStorage.message_count)
 			$("#message_count").css('display','inline');
