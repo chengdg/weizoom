@@ -1,12 +1,15 @@
 {% extends "content_base_v2.html" %}
 {% load apps_filter %}
 
-    <style>
-        .tl.pl25 img{
-            height: 60px;
-            width: 60px;
-        }
-    </style>
+{% block css%}
+	<style>
+		.tl.pl25 img{
+			height: 60px;
+			width: 60px;
+		}
+	</style>
+{% endblock%}
+
 {% block content-panel %}
 <div class="xui-ShvoteParticipancesAppPage xui-appPage-commonStyle">
 	<div class="relative">
@@ -111,8 +114,7 @@
 					class="tl pl25"
 					style="width:250px; height:60px;"
 				>
-					<img src="${item.participant_icon}"
-						style="width:60px; height:60px;" />
+					<img src="${item.participant_icon}" />
 					${item.participant_name}
 				</td>
 				<td>
