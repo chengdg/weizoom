@@ -191,7 +191,6 @@ var toggleErrorHint = function(el, isValidate, hint) {
 }
 
 $(document).delegate('input[data-validate]', 'blur', function(event) {
-    console.log(event.currentTarget,"gggggggggggg")
     validate($(event.currentTarget).parent());
 });
 })(jQuery);

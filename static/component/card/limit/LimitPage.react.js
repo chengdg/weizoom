@@ -52,7 +52,7 @@ var LimitPage = React.createClass({
 					<FormSelect label="卡类型:" name="crad_kind" options={[{"value": "-1", "text": "请选择"},{"value": "2", "text": "条件卡"},{"value": "3", "text": "专属卡"}]} validate="require-select" onChange={this.onChange} />
 					<div  className="form-group ml15">
 						<label className="control-label fl"  htmlFor="parents_name">专属商家：</label>
-						<span >添加商家</span>             
+						<a href="javascript:void(0)" className="ml15">+添加商家</a> <input className="ml15" type="checkbox" name="is_new_member_special" ref="is_new_member_special"/> 新会员专属            
 					</div>
 					<div className="form-group ml15">
 						<label className="col-sm-2 control-label" htmlFor="full_use" >使用限制:</label>

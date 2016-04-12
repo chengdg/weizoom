@@ -20,26 +20,33 @@ var Store = StoreUtil.createStore(Dispatcher,{
 	actions:{
 		'handleCreateCardRuleOrderResponse':Constant.CREATE_CRAD_RULE_ORDER,
 		'handleUpdateProduct': Constant.CARD_DATA_UPDATE_PRODUCT,
+		'handleUpdateAddProduct': Constant.CARD_DATA_UPDATE_ADD_PRODUCT,
 		'handleGetRuleOrderList':Constant.CARD_RULE_ORDER,
+		'handleAddCardLines':Constant.ADD_CARD_LINES,
 	},
 	init: function() {
 		this.data = {};
 		this.data.card_order_list = {};
+		this.data.cardlines = [{CardName:'',CardRuleNum:'',CardRuleTimeStart:'',CardRuleTimeEnd:''}];
 	},
 	handleUpdateProduct: function(action) {
 		this.data[action.data.property] = action.data.value;
 		this.__emitChange();
 	},
+	handleUpdateAddProduct: function(action) {
+		this.data.cardlines[action.data.index][action.data.property] = action.data.value;
+		this.__emitChange();
+	},
 	handleCreateCardRuleOrderResponse: function(action){
-		console.log(action);
-		console.log("=========");
 		window.location.href="/order/rule_order/";
 		this.__emitChange();
 	},
 	handleGetRuleOrderList: function(action){
-		console.log(action.data.card_order_list);
-		console.log("=========");
 		this.data.card_order_list = JSON.parse(action.data.card_order_list);
+		this.__emitChange();
+	},
+	handleAddCardLines:function() {
+		this.data.cardlines.push({CardName:'',CardRuleNum:'',CardRuleTimeStart:'',CardRuleTimeEnd:''});
 		this.__emitChange();
 	},
 	getData: function() {

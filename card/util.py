@@ -120,7 +120,7 @@ def get_rule_list(card_class, cur_page, count_per_page, request):
 	for r_id in card_rule_ids:
 		if r_id in rule_id2cards:
 			weizoom_cards = rule_id2cards[r_id]
-			weizoom_card_ids = [int(weizoom_cards[0].weizoom_card_id), int(weizoom_cards[::-1][0].weizoom_card_id)]
+			weizoom_card_ids = [weizoom_cards[0].weizoom_card_id, weizoom_cards[::-1][0].weizoom_card_id]
 			rule_id2card_ids[r_id] = weizoom_card_ids
 
 	cur_weizoom_card_rules = []

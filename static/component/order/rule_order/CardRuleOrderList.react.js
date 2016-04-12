@@ -69,28 +69,52 @@ var cardRuleOrderList = React.createClass({
 				var card_is_activation =<div><a style={{display:'block'}} onClick={_this.onClickActivation.bind(_this,card_rule_order.id,card_rule_order.is_activation)} >停用{card_rule_order.is_activation}</a><a style={{display:'block'}}>编辑订单</a><a style={{display:'block'}}>备注</a></div>
 				var card_rule_order_is_click=<div style={{cursor:'pointer'}}><a>{card_rule_order.order_number}</a></div>
 			}
+			var order_item_list = JSON.parse(card_rule_order.order_item_list).map(function(order_item,index){
+				return(
+					<tr data-order-id="" key={index}>
+						<td>{card_rule_order_is_click}</td>
+						<td width="75">
+							{order_item.name}
+						</td>
+						<td width="75">
+							{order_item.money}
+						</td>
+						<td width="75">
+							{order_item.weizoom_card_order_item_num}
+						</td>
+						<td width="100">
+							{order_item.total_money}
+						</td>
+						<td>
+							<div>{order_item.card_kind}</div>
+							<div>{order_item.card_class}</div>
+						</td>
+						<td></td>
+						<td>{order_item.weizoom_card_id_first}-{order_item.weizoom_card_id_last}</td>
+
+						<td>
+							<div>{card_rule_order.order_attribute}</div>
+							<div>无</div>
+						</td>
+						<td>
+							<div>{card_rule_order.responsible_person}</div>
+							<div>{card_rule_order.company}</div>
+						</td>
+						<td>{card_rule_order.created_at}</td>
+						<td>
+							{card_is_activation}
+						</td>
+					</tr>
+				)
+			});
+			console.log(order_item_list);
+			console.log("===========");
 			return (
-				<tr key={index}>
-					<td>{card_rule_order_is_click}</td>
-					<td>{card_rule_order.name}</td>
-					<td>{card_rule_order.money}</td>
-					<td>{card_rule_order.weizoom_card_order_item_num}</td>
-					<td>{card_rule_order.total_money}</td>
-					<td>{card_rule_order.card_kind}</td>
-					<td>{card_rule_order.weizoom_card_id_first}-{card_rule_order.weizoom_card_id_last}</td>
-					<td>
-						<div>{card_rule_order.order_attribute}</div>
-						<div>无</div>
-					</td>
-					<td>
-						<div>{card_rule_order.responsible_person}</div>
-						<div>{card_rule_order.company}</div>
-					</td>
-					<td>{card_rule_order.created_at}</td>
-					<td>
-						{card_is_activation}
-					</td>
-				</tr>
+				<tbody>
+					{order_item_list}
+					
+					
+				</tbody>
 			)
 		});
 		
@@ -105,7 +129,13 @@ var cardRuleOrderList = React.createClass({
 								<th>面值</th>
 								<th>数量</th>
 								<th>总额</th>
-								<th>卡类型</th>
+								<th>
+									<div>卡类型</div>
+									<div>使用限制</div>
+								</th>
+								<th>
+									专属商家
+								</th>
 								<th>卡号区间</th>
 								<th>
 									<div>订单属性</div>
@@ -119,9 +149,9 @@ var cardRuleOrderList = React.createClass({
 								<th>操作</th>
 							</tr>
 						</thead>
-						<tbody>
-							{cardRechargesNodes}
-						</tbody>
+						
+						{cardRechargesNodes}
+						
 					</table>
 
 				</div>
