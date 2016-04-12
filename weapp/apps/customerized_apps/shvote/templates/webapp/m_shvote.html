@@ -160,7 +160,7 @@
 		</div>
 	</div>
 </div>
-
+<button class="wa-ivote">我要投票</button>
 <script type="text/plain" id="tpl">
 	<div class="wui-rank-item">
 		<div class="wui-rank-pic"></div> 
@@ -202,9 +202,9 @@
         $('.wa-ivote').on('click', function(){
             if(voteLock) return false;
             voteLock = true;
-            vote_to = 1;
+            var vote_to = 6;
             W.getApi().call({
-                app: 'apps/shvote',
+                app: 'm/apps/shvote',
                 resource: 'shvote_participance',
                 method: 'post',
                 args: {
@@ -213,10 +213,14 @@
                     vote_to: vote_to
                 },
                 success: function(data){
-
+                    //TODO 修改被投票用户的票数，和投票用户的可投票次数
                 },
                 error: function(data){
-
+                    if(data.errMsg == 'none_member'){
+                        //TODO 弹出二维码窗口
+                    }else{
+                        wuiAlert(data.errMsg);
+                    }
                 }
             });
         });
