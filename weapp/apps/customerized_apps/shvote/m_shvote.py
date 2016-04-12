@@ -211,3 +211,15 @@ class GetRankList(resource.Resource):
 			'result_list': result_list
 		}
 		return response.get_response()
+
+class MShvoteRank(resource.Resource):
+	app = 'apps/shvote'
+	resource = 'm_shvote_rank'
+
+	def get(request):
+		print 44444444444444444444
+		c = RequestContext(request, {
+
+		})
+
+		return render_to_response('shvote/templates/webapp/m_shvote_rank.html', c)
