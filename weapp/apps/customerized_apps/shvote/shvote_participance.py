@@ -127,7 +127,7 @@ class ShvoteParticipance(resource.Resource):
 		except Exception,e:
 			print(e)
 			response = create_response(500)
-			response.errMsg = u'参与失败'
+			response.errMsg = u'报名失败'
 			response.inner_errMsg = unicode_full_stack()
 			return response.get_response()
 
