@@ -176,8 +176,19 @@ class GetRankList(resource.Resource):
 		@param record_id: 活动id
 		@return: list
 		"""
-		record_id = request.GET.get('recordId', None)
-		datas = app_models.ShvoteParticipance.objects(belong_to=record_id, status=app_models.MEMBER_STATUS['PASSED']).order_by('-count')[:100]
+
+		params = {
+			'belong_to' : request.GET['recordId'],
+			'group' : request.GET['current_group'],
+			'status' : app_models.MEMBER_STATUS['PASSED']
+		}
+
+		if request.GET.get('search_name') != '':
+			search_name = request.GET.get('search_name')
+			params['name__icontains'] = search_name
+
+		datas = app_models.ShvoteParticipance.objects(**params).order_by('-count')[:100]
+		print(datas)
 		i = 0
 		result_list = []
 		for data in datas:
