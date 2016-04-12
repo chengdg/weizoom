@@ -57,20 +57,30 @@ def step_impl(context, user):
 	expected = json.loads(context.text)
 	response = context.client.get('/order/api/rule_order/')
 	actual = json.loads(response.content)['data']['card_order_list']
+	print type(json.loads(actual)),9999999999
+	print json.loads(response.content)['data'],888888888888
 	actual_list = []
 	rule_list = []
 	order_money = 0
-	for rule in actual:
-		order_money += int(rule["total_money"])
+	for rule in json.loads(actual):
+		print rule,6666666666666666
+		print rule["name"],7777777777777777
+		order_money += float(rule["total_money"])
 		order_attribute = rule["order_attribute"]
-		apply_person = rule["apply_person"]
+		apply_person = rule["responsible_person"]
 		company = rule["company"]
+		weizoom_card_id_first = rule["weizoom_card_id_first"]
+		weizoom_card_id_last = rule["weizoom_card_id_last"]
+		card_range = weizoom_card_id_first + "-" + weizoom_card_id_last
+		print card_range,77777
 		rule_list.append({
 			"name": rule["name"],
 			"money": rule["money"],
 			"num": str(rule["weizoom_card_order_item_num"]),
 			"total_money": rule["total_money"],
 			"type": rule["card_kind"],
+			"card_range": card_range,
+			"order_id": rule["id"]
 		})
 	rule_order = {
 		"card_info" : rule_list,
