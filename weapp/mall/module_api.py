@@ -2019,7 +2019,10 @@ def get_order_products(order):
 	order.session_data = dict()
 	order_id = order.id
 	relations = list(OrderHasProduct.objects.filter(order_id=order_id).order_by('id'))
-
+	if order.supplier_user_id:
+		user_profile = UserProfile.objects.get(user_id=order.supplier_user_id)
+	else:
+		user_profile = UserProfile.objects.get(webapp_id=order.webapp_id)
 	product_ids = [r.product_id for r in relations]
 	#products = mall_api.get_product_details_with_model(request.webapp_owner_id, request.webapp_user, product_infos)
 	id2product = dict([(product.id, product) for product in Product.objects.filter(id__in=product_ids)])
@@ -2062,7 +2065,7 @@ def get_order_products(order):
 		}
 
 		# 更换商品名称为供货商的商品名称
-		if UserProfile.objects.get(user_id=product.owner_id).webapp_type == 0 and WeizoomHasMallProductRelation.objects.filter(
+		if user_profile.webapp_type == 0 and WeizoomHasMallProductRelation.objects.filter(
 							owner_id=product.owner_id,
 							weizoom_product_id=relation.product_id
 							).count() > 0:

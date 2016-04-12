@@ -85,6 +85,13 @@
 	{{/if}}
 	</ul>
 	{{if data.pageinfo.object_count != 0}}
+  <!-- 订单打印 2016.04.08 start -->
+    <div class="print－all-orders-row">
+		<input type="checkBox" name="selectAllPrintOrders">
+		<span class="ml5 mr10">全选</span>
+		<a title="批量打印发货单" class="xa-order-print" href="javascript:void(0);">批量打印发货单</a> 
+    </div>
+  <!-- 订单打印 2016.04.08 end -->
 	<table class="table table-condensed mb0 xui-tableHead">
 		<thead>
 			<tr>
@@ -110,6 +117,8 @@
 			</tr>
 		</thead>
 	</table>
+
+ 
 	{{/if}}
 
 	{{if data.pageinfo.object_count == 0}}
@@ -123,6 +132,7 @@
 				<tr class="xui-order-firstTr">
 					<td colspan="8">
 						<p class="ml15 fl">
+						<input type="checkBox" class="mr5" name="selectPrintOrder">
 						订单编号：
 						<a title="查看" class="xt-orderLink" href="/mall2/order/?order_id=${order.id}" target="_blank">${order.order_id}{{if order.edit_money}}-${order.edit_money}{{/if}}</a>
 						</p>
@@ -352,8 +362,71 @@
 		</li>
 		{{/each}}
 	</ul>
+<!-- 订单打印 2016.04.08 start -->
+	{{if data.pageinfo.object_count != 0}}
+	    <div class="print－all-orders-row">
+			<input  type="checkBox" name="selectAllPrintOrders">
+			<span class="ml5 mr10">全选</span>
+			<a title="批量打印发货单" class="xa-order-print" href="javascript:void(0);">批量打印发货单</a> 
+	    </div>
+	{{/if}}
 </script>
+<script id="order-print-tmpl-src" type="text/x-jquery-tmpl">
+    <div id="order-print-pages">
+	{{each(i, order) orderList}}
+		 <div id="${'page'+(i+1)}" class="order-print-page">
+		     <div class="order-print-title">
+		     	${order.orderTitle}
+		     </div>
+		   <table class="table table-condensed  mb5 order-print-info-table">
+		    {{each(j, info) order.orderAttrs}}
+			  ${( info.isOdd = ((j+1)%2== 1) ),''}
+			 {{if info.isOdd}}
+			    <tr>
+              {{/if}}
+              	<td class="${' order-print-info-'+(info.isOdd ? 'odd':'even')}">
+              	<div class="order-print-info-row">
+              		<span class="order-print-info-label">${info.title}：</span><span class="order-print-info-value">${info.value}</span>
+              	</div>
+              {{if !info.isOdd}}
+			    </tr>
+              {{/if}}
+			 {{/each}}
+		   </table>
+		   <table class="table table-condensed mb0 order-print-product-attr-names">
+		    <thead>
+		    	<tr>
+		    	{{each(i, title) productAttrTitles}}
+		    		<th {{if title.width }} width="${title.width}" {{/if}} >${title.label}</th>
+		   		{{/each}}
+		       </tr>
+		     </thead>
+		     <tbody>
+		     	{{each(j, detail) order.products}}
+				<tr>
+				 	{{each(k, label) detail.items}}
+		    		<td >${label}</th>
+		   			{{/each}}
+				</tr>
+		   		{{/each}}
+			 </tbody>
+		   </table>
+		   <table class="table table-condensed mb0 order-print-summary-sec">
+			   <tr>
+					{{each(j, info) order.orderSumInfos}}
+					<td class="${'order-print-summary-'+info.name}"><span>${info.title}</span>：<span>${info.value}</span></td>
+					{{/each}}
+				</tr>
+		   </table>
+ 		<div class="order-print-footer mt20">
+		      <img src="${QRCode}" class="mr20">
+		 </div>
+		 </div>
+	 {{/each}}
 
+	 </div>
+</script>
+  <!-- 订单打印 2016.04.08 end -->
 <script id="order-products-table-tmpl-src" type="text/x-jquery-tmpl">
 	<table class="table table-bordered table-condensed" id='xx' style="margin: 5px auto; background-color: #FAFAFA; width: 94%;">
 	{{if products}}
@@ -398,6 +471,9 @@
 	</table>
 </script>
 {% endverbatim %}
+<!-- 订单打印 2016.04.11 start -->
+<script src="/static_v2/lib/jquery/jquery.PrintArea.js"></script>
+<!-- 订单打印 2016.04.11 end -->
 <script type="text/javascript">
 function formatOrderStatus(status) {
 	var color = '#333333';
@@ -588,6 +664,133 @@ $(document).ready(function() {
 	$('body').delegate('.xa-buyerHintImg','mouseleave',function(){
 		$('.xa-buyerHintDropBox').hide();
 	});
+	<!-- 订单打印 2016.04.08 start -->
+	(function () {
+		var isBusy = 0;
+		$('#order-print-tmpl-src').template("order-print-tmpl-src");
+		$('<div id="order-print-pages-box"></div>').appendTo($(document.body));
+		$('#order-print-pages-box').hide();
+		$('body').delegate('[name="selectAllPrintOrders"]','change',toggleSelectAll).
+		delegate('[name="selectPrintOrder"]','change',toggleSelect).
+		delegate('.xa-order-print','click',print);
+		function toggleSelectAll(evt) {
+			var $el = $(evt.currentTarget);
+			$('[name="selectPrintOrder"],[name="selectAllPrintOrders"]').prop('checked', $el.is(':checked'));
+		}
+		function toggleSelect() {
+			$('[name="selectAllPrintOrders"]').prop('checked',!$('[name="selectPrintOrder"]:not(:checked)').length);
+		}
+		function print(evt) {
+			if(isBusy){
+				return;
+			}
+			if(!$('[name="selectPrintOrder"]:checked').length){
+				W.showHint('error', '请选择需要打印的订单！');
+				return;
+			}
+			isBusy = 1;
+
+			getData(function (data) {
+				$('#order-print-pages-box').empty().append($.tmpl( "order-print-tmpl-src", data ));
+				$('#order-print-pages-box').show();
+				$('.order-print-page').printArea({mode:'popup',popWd:649,popHt:978,popTitle:data.orderList[0].orderTitle});
+				isBusy = 0;
+			},function () {
+				isBusy = 0;
+			});
+		}
+		function formatPrice(input) {
+			return Number(input || 0).toFixed(2);
+		}
+		function formatOrder(item,otherInfo) {
+			var data = {};
+			var orderAttrs;
+			var products;
+			var orderSumInfos;
+			products = item.products.map(function (t) {
+				return {items:[
+					t.name,
+					t.property_values || '',
+					formatPrice(t.price),
+					t.count,
+					formatPrice(t.total_price)
+				]};
+			});
+			orderAttrs = [
+				{title:"订单号",value:item.order_id},
+				{title:"下单时间",value:item.created_at},
+				{title:"买家昵称",value:item.buyer_name},
+				{title:"买家姓名",value:item.ship_name},
+				{title:"买家电话",value:item.ship_tel},
+				{title:"买家地址",value:item.ship_address}
+			];
+			orderSumInfos = [
+				{name:"count",title:"商品数量",value:item.product_count},
+				{name:"totalPrice",title:"总价",value:formatPrice(item.total_price)},
+				{name:"saveMoney",title:"优惠金额",value:formatPrice(Math.abs(item.save_money || 0))},
+				{name:"postage",title:"运费",value:formatPrice(item.postage)},
+				{name:"pay_money",title:"实付金额",value:formatPrice(item.pay_money)}
+			];
+
+			data.orderAttrs = orderAttrs;
+			data.orderSumInfos = orderSumInfos;
+			data.products = products;
+			data.orderTitle = otherInfo.store_name+'销售发货单';
+			return data;
+
+		}
+		function formatData(data) {
+			var viewData = {
+				orderList:data.items.map(function (item) {
+					return formatOrder(item, data);
+				}),
+				productAttrTitles:[
+					{width:0,label:"商品名称"},
+					{width:0,label:"规格"},
+					{width:0,label:"单价"},
+					{width:0,label:"数量"},
+					{width:0,label:"总价"}
+				],
+				QRCode:data.qrcode_url || 'http://dev.weapp.com/static_v2/img/editor/sys_QRcode.jpg'
+			};
+
+			return viewData;
+		}
+		function getData(success, error) {
+			//
+//			return;
+			var orderIds = [];
+			$('[name="selectPrintOrder"]:checked').each(function (i,el) {
+				var $el = $(el);
+				var $orderEl = $el.siblings('a');
+				var orderId = $orderEl.attr('href').match(/[\?&]order\_id=([^&]*)/)[1];
+				orderIds.push(orderId);
+			});
+			if(!orderIds.length){
+				error(0);
+				return;
+			}
+			var args = {order_ids:JSON.stringify(orderIds)};
+			W.getApi().call({
+				app: 'mall2',
+				resource: 'print_order',
+				method: 'get',
+				args: args,
+				success: function(ret) {
+					success(formatData(ret));
+				},
+				error: function(resp) {
+					W.showHint('error', '加载订单数据失败！');
+					error();
+				}
+			});
+
+
+		}
+
+
+	})();
+	<!-- 订单打印 2016.04.08 end -->
 });
 </script>
 {% endblock %}
