@@ -196,7 +196,7 @@
         </div>
         <div>
             <p>截止日期：<b class="wa-enddate"></b> 可投：<b class="wa-left-chance"></b></p>
-            <a>排行>></a>
+            <span class="wa-rank-link">排行>></span>
         </div>
     </div>
 	<div class="wui-rank">
@@ -274,6 +274,11 @@
 			var link = window.location.origin + '/m/apps/shvote/shvote_participance/?webapp_owner_id='+W.webappOwnerId+'&id='+W.appRecordId;
 			window.location.href = link;
 		});
+
+		$('.wa-rank-link').click(function(){
+			var link = window.location.origin + '/m/apps/shvote/m_shvote_rank/?webapp_owner_id='+W.webappOwnerId+'&id='+W.appRecordId;
+			window.location.href = link;
+		})
         //展示参与统计
 //        getDynamicData();
 
