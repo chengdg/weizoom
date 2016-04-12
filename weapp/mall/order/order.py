@@ -476,7 +476,7 @@ class PrintOrder(resource.Resource):
                         product['name'] = u"【限时抢购】" + product['name']
                     elif product['promotion']['type'] == "premium_sale:premium_product":
                         product['name'] = u"【赠品】" + product['name']
-                if product['grade_discounted_money']:
+                if product.has_key('product') and product['grade_discounted_money']:
                         product['name'] = u"【会员优惠】" + product['name']
 
 
