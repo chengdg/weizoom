@@ -26,47 +26,47 @@
 		background-color: rgba(0, 125, 255, 0.5);
 		border-radius: 10px;
 	}
-	.xui-group{
+	.wui-group{
 		overflow: hidden;
 		border-bottom: 1px solid #8E8E8E;
 	}
-	.xui-group > div{
+	.wui-group > div{
 		float: left;
 		font-size: 18px;
 		text-align: center;
 		width: 33.33%;
 		padding: 10px 0;
 	}
-	.xui-group > div.active{
+	.wui-group > div.active{
 		color: #FF8000;
 	}
-	.xui-rank{
+	.wui-rank{
 		background: #fff;
 		font-size: 14px;
 	}
-	.xui-rankList-wrap{
+	.wui-rankList-wrap{
 		padding: 0 10px;
 	}
-	.xui-rank-list{
+	.wui-rank-list{
 		overflow: hidden;
 		position: relative;
 		margin-top: 10px;
 	}
-	.xui-search{
+	.wui-search{
 		border-bottom: 1px solid #8E8E8E;
 		padding: 5px 10px;
 		overflow: hidden;
 		line-height: 29px;
 	}
-	.xui-search span{
+	.wui-search span{
 		font-size: 16px;
 	}
-	.xui-searchBox{
+	.wui-searchBox{
 		float: right;
 		width: 70%;
 		position: relative;
 	}
-	.xui-search-input{
+	.wui-search-input{
 		height: 25px;
 		width: 90%;
 		border: 1px solid #8E8E8E;
@@ -74,7 +74,7 @@
 		outline: none;
 		padding-left: 5px;
 	}
-	.xui-searchBtn{
+	.wui-searchBtn{
 		height: 29px;
 		border-radius: 5px;
 		border: 1px solid #8E8E8E;
@@ -85,34 +85,34 @@
 		padding: 0 10px;
 		outline: none;
 	}
-	.xui-rank-item{
+	.wui-rank-item{
 		border:1px solid #8E8E8E;
 		width: 49%;
 		float: left;
 		margin-bottom: 10px;
 	}
-	.xui-rank-item:nth-child(even){
+	.wui-rank-item:nth-child(even){
 		float: right;
 	}
-	.xui-rank-pic{
+	.wui-rank-pic{
 		height:100px;
 		border-bottom: 1px solid #8E8E8E;
 	}
-	.xui-rank-name{
+	.wui-rank-name{
 		border-bottom: 1px solid #8E8E8E;
 		text-align: center;
 		padding: 2px 0;
 	}
-	.xui-rank-vote{
+	.wui-rank-vote{
 		overflow: hidden;
 	}
-	.xui-rank-vote > div{
+	.wui-rank-vote > div{
 		float: left;
 		width: 50%;
 		text-align: center;
 		padding: 3px 0;
 	}
-	.xui-rank-voteLef{
+	.wui-rank-voteLef{
 		border-right: 1px solid #8E8E8E;
 	}
 </style>
@@ -120,63 +120,64 @@
 
 {% block content-panel %}
 	{{ page_html_content|safe }}
-<div class="wa-mobile">
+<div class="wa-mobile none">
     <div class="wa-dynamic-info">
         <div>
             <p>
                 <span>已报名</span>
-                <span class="wa-total-parted">123312</span>
+                <span class="wa-total-parted"></span>
             </p>
             <p>
                 <span>投票数</span>
-                <span class="wa-total-counts">122112</span>
+                <span class="wa-total-counts"></span>
             </p>
             <p>
                 <span>访问数</span>
-                <span class="wa-total-visits">1212</span>
+                <span class="wa-total-visits"></span>
             </p>
         </div>
         <div>
-            <p>截止日期：<b class="wa-enddate">2016-07-18</b> 可投：<b class="wa-left-chance">2</b></p>
+            <p>截止日期：<b class="wa-enddate"></b> 可投：<b class="wa-left-chance"></b></p>
             <a>排行>></a>
         </div>
     </div>
-	<div class="xui-rank">
-		<div class="xui-rankList-wrap">
-			<div class="xui-search wa-search-panel">
+	<div class="wui-rank">
+		<div class="wui-rankList-wrap">
+			<div class="wui-search wa-search-panel">
 				<span>选手</span>
-				<div class="xui-searchBox">
-					<input type="text" class="xui-search-input wa-search-text">
-					<button type="button" class="xui-searchBtn wa-search">搜索</button>
+				<div class="wui-searchBox">
+					<input type="text" class="wui-search-input wa-search-text">
+					<button type="button" class="wui-searchBtn wa-search">搜索</button>
 				</div>
 			</div>
-			<div class="xui-group wa-groups">
+			<div class="wui-group wa-groups">
 				<div class="active">初中组</div>
 				<div>高中组</div>
 				<div>大学组</div>
 			</div>
-			<div class="xui-rank-list wa-rank-list">
-
-				<div class="xui-rank-item">
-					<div class="xui-rank-pic"></div> 
-					<div class="xui-rank-name">
-						<span>001</span> 
-						<span>王思辰</span>
-					</div> 
-					<div class="xui-rank-vote">
-						<div class="xui-rank-voteLef">
-							18票
-						</div>
-						<div class="xui-rank-voteRig">
-							投票
-						</div>
-					</div> 
-				</div>
-
+			<div class="wui-rank-list wa-rank-list">		
 			</div>
 		</div>
 	</div>
 </div>
+
+<script type="text/plain" id="tpl">
+	<div class="wui-rank-item">
+		<div class="wui-rank-pic"></div> 
+		<div class="wui-rank-name">
+			<span>{ result_list_serial_number }</span> 
+			<span>{ result_list_name }</span>
+		</div> 
+		<div class="wui-rank-vote">
+			<div class="wui-rank-voteLef">
+				<span>{ result_list_count }</span>票
+			</div>
+			<div class="wui-rank-voteRig">
+				投票
+			</div>
+		</div> 
+	</div>
+</script>
 {% endblock %}
 
 {% block js %}
@@ -245,10 +246,12 @@
         $('.wa-mobile').removeClass('none');
     }
     function update_record_info(record_info){
-
+    	$('.wa-total-parted').html(record_info['total_parted']);
+    	$('.wa-total-counts').html(record_info['total_counts']);
+    	$('.wa-total-visits').html(record_info['total_visits']);
     }
     function update_member_info(member_info){
-
+    	
     }
 
     //获取排名信息
@@ -258,16 +261,55 @@
             resource: 'get_rank_list',
             method: 'get',
             args: {
+				webapp_owner_id: W.webappOwnerId,
                 recordId: W.appRecordId
             },
             success: function(data) {
                 console.log(data.result_list);
+                var result = data.result_list;
+                var tpl = new Template($('#tpl').html());
+                for(var i=0;i<result.length;i++){               	
+	                var s = tpl.render({
+	                    result_list_serial_number : result[i].serial_number,
+	                    result_list_name : result[i].name,
+	                    result_list_count : result[i].count
+	                });
+	                $('.wa-rank-list').append(s);
+           		}
             },
             error: function(data){
 				wuiAlert(data.errMsg);
             }
         });
     }
+
+    function Template(tpl) {
+    var
+        fn,
+        match,
+        code = ['var r=[];\nvar _html = function (str) { return str.replace(/&/g, \'&amp;\').replace(/"/g, \'&quot;\').replace(/\'/g, \'&#39;\').replace(/</g, \'&lt;\').replace(/>/g, \'&gt;\'); };'],
+        re = /\{\s*([a-zA-Z\.\_0-9()]+)(\s*\|\s*safe)?\s*\}/m,
+        addLine = function (text) {
+            code.push('r.push(\'' + text.replace(/\'/g, '\\\'').replace(/\n/g, '\\n').replace(/\r/g, '\\r') + '\');');
+        };
+    while (match = re.exec(tpl)) {
+        if (match.index > 0) {
+            addLine(tpl.slice(0, match.index));
+        }
+        if (match[2]) {
+            code.push('r.push(String(this.' + match[1] + '));');
+        }
+        else {
+            code.push('r.push(_html(String(this.' + match[1] + ')));');
+        }
+        tpl = tpl.substring(match.index + match[0].length);
+    }
+    addLine(tpl);
+    code.push('return r.join(\'\');');
+    fn = new Function(code.join('\n'));
+    this.render = function (model) {
+        return fn.apply(model);
+    };
+}
 </script>
 {% endblock %}
-

@@ -54,19 +54,22 @@ class MShvote(resource.Resource):
 		#获取当前会员可投票的次数(默认每人每天每组可投票一次)
 		groups = record.groups
 		group_name2member = {}
-		for m in member_datas:
-			if group_name2member.has_key(m.group):
-				group_name2member[m.group].append(m.vote_log)
-			else:
-				group_name2member[m.group] = [m.vote_log]
 		now_date_str = datetime.now().strftime('%Y-%m-%d')
+		for m in member_datas:
+			tmp_list = m.vote_log.get(now_date_str, None)
+			if tmp_list:
+				if group_name2member.has_key(m.group):
+					group_name2member[m.group].extend(tmp_list)
+				else:
+					group_name2member[m.group] = tmp_list
+
 		#判断当前会员每个组的可投票情况
 		group_name2canplay = {}
 		for g, log in group_name2member.items():
-			if log.has_key(now_date_str) and member_id in log[now_date_str]:
-				group_name2canplay[g] = True
+			if member_id in log:
+				group_name2canplay[g] = 0
 			else:
-				group_name2canplay[g] = False
+				group_name2canplay[g] = 1
 
 		member_info = {
 			'can_play_info': group_name2canplay,
@@ -78,19 +81,15 @@ class MShvote(resource.Resource):
 			'total_visits': total_visits,
 			'groups': groups
 		}
-		# rank_info = get_rank_list(record_id) #获取排名信息
 
 		response = create_response(200)
 		response.data = {
 			'activity_status': activity_status,
 			'member_info': member_info,
 			'record_info': record_info
-			# 'rank_info': rank_info
 		}
 		return response.get_response()
 
-
-	
 	def get(request):
 		"""
 		响应GET
