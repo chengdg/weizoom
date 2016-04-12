@@ -141,7 +141,11 @@ class ShvoteParticipance(resource.Resource):
 			response.errMsg = u'用户信息出错'
 			return response.get_response()
 
-		result = target.modify(query={'vote_log__'+now_date_str+'__not__exists': member}, inc__count=1)
+		result = target.modify(query={'vote_log__'+now_date_str+'__not__exists': member_id},
+							   **{
+								   'inc__count': 1,
+								   'push__vote_log__'+now_date_str: member_id
+							   })
 		if not result:
 			response.errMsg = u'只能投票一次'
 			return response.get_response()
