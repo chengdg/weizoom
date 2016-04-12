@@ -1,0 +1,41 @@
+# -*- coding: utf-8 -*-
+
+from core import api_resource
+from wapi.decorators import param_required
+
+from mall import models as mall_models
+from django.db.models import Count
+from datetime import datetime
+class ProductSupplierStatics(api_resource.ApiResource):
+	"""
+	商品-供应商
+	"""
+	app = 'mall'
+	resource = 'product_statics'
+
+	def get(args):
+		"""
+		获取商品和供应商信息
+
+		@param product_id 商品ID
+		@param supplier_id 供应商ID
+		@param supplier_user_id 同步商品的所属商家ID
+		"""
+		product_ids = args.get('product_ids', None)
+		return_list = {}
+		if product_ids:
+			order_has_products =mall_models.OrderHasProduct.objects.filter(product_id__in=product_ids.split(','))
+			if order_has_products.count()>0:
+				order_dot_ids = [order.order_id for order in order_has_products]
+				orders_list = mall_models.Order.objects.filter(id__in=order_dot_ids,status__in=[3,4,5]).values('payment_time').annotate(today_order_num=Count('payment_time'))
+				print "zl--------------------------",orders_list
+
+				return_list['date_list'] = []
+				return_list['values_list'] = []
+				for order in orders_list:
+					return_list['date_list'].append(datetime.strftime(order['payment_time'],'%Y-%m-%d'))
+					return_list['values_list'].append(str(order['today_order_num']))
+		print "zl----------------------",return_list
+		return {
+					'data':return_list
+				}
