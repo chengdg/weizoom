@@ -11,7 +11,7 @@ import util
 from models import *
 import nav
 
-class ordinaryRuleList(resource.Resource):
+class OrdinaryRuleList(resource.Resource):
 	app = 'card'
 	resource = 'ordinary_rules'
 

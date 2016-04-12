@@ -11,7 +11,7 @@ from core import paginator
 from card.models import *
 import nav
 
-class ordinaryCardList(resource.Resource):
+class OrdinaryCardList(resource.Resource):
 	app = 'card'
 	resource = 'ordinary_cards'
 

@@ -15,7 +15,7 @@ from card.models import *
 FIRST_NAV = 'rule_order'
 SECOND_NAV = 'approval_card'
 
-class approvalCard(resource.Resource):
+class ApprovalCard(resource.Resource):
 	app = 'order'
 	resource = 'approval_card'
 

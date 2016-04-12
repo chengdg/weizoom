@@ -15,9 +15,9 @@ from card.models import *
 FIRST_NAV = 'rule_order'
 SECOND_NAV = 'approval_card'
 
-class getCardRule(resource.Resource):
+class CardRule(resource.Resource):
 	app = 'order'
-	resource = 'get_card_cule'
+	resource = 'card_rule'
 
 	@login_required
 	def api_get(request):
@@ -34,7 +34,6 @@ class getCardRule(resource.Resource):
 		data = {
 			'card_rule_list': card_rule_list
 		}
-
 		response = create_response(200)
 		response.data = data
 

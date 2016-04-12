@@ -12,7 +12,7 @@ from models import *
 from weapp.models import *
 import nav
 
-class ordinaryRuleList(resource.Resource):
+class OrdinaryRuleList(resource.Resource):
 	app = 'card'
 	resource = 'limit_rules'
 

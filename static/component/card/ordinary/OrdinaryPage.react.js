@@ -3,7 +3,7 @@
  */
 "use strict";
 
-var debug = require('debug')('m:card.create_limit:CreateLimitPage');
+var debug = require('debug')('m:card.create_ordinary:CreateOrindaryPage');
 var React = require('react');
 var ReactDOM = require('react-dom');
 
@@ -17,7 +17,7 @@ var Action = require('./Action');
 var Store = require('./Store');
 
 
-var CreateLimitPage = React.createClass({
+var OrindaryPage = React.createClass({
 	getInitialState: function() {
 		Store.addListener(this.onChangeStore);
 		return Store.getData();
@@ -42,7 +42,6 @@ var CreateLimitPage = React.createClass({
 					<div className="pl10 pt10 pb10"><span style={{fontWeight: 'bold'}}>基本信息</span>（<span style={{color: 'red'}}>*</span>表示必填）</div>
 					<FormInput label="卡名称:" type="text" name="name" value={this.state.name} placeholder="1-20个字，中英文、数字特殊符合均可" onChange={this.onChange} />
 					<FormInput label="卡段号:" type="text" name="weizoom_card_id_prefix" value={this.state.weizoom_card_id_prefix} validate="require-three-number" placeholder="请输入3位数组" onChange={this.onChange} autoFocus={true}/>
-					<FormInput label="使用限制:" type="radio" name="money" value={this.state.money} validate="require-price" placeholder="" onChange={this.onChange} />
 					<FormInput label="面值:" type="text" name="money" value={this.state.money} validate="require-price" placeholder="" onChange={this.onChange} />
 					<FormInput label="数量:" type="text" name="count" value={this.state.count} validate="require-positive-int" placeholder="" onChange={this.onChange} />
 					<FormInput label="备注:" type="text" name="remark" value={this.state.remark} placeholder="" onChange={this.onChange} />
@@ -55,4 +54,4 @@ var CreateLimitPage = React.createClass({
 		)
 	}
 })
-module.exports = CreateLimitPage;
+module.exports = OrindaryPage;
