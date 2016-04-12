@@ -219,8 +219,6 @@ SelectRuleCard = React.createClass({
 		ruleOrder.push(rule_obj);
 	},
 	render: function(){
-		console.log(this.props.cardRuleList);
-		console.log("-------");
 		var card_rule_list = this.props.cardRuleList.map(function(rule_list,index){
 			return(
 				<option ref="ruleName" data-rule-id={rule_list.id} key={index}>{rule_list.name}</option>
@@ -236,34 +234,40 @@ SelectRuleCard = React.createClass({
 		)
 	}
 })
-
+//
 var CardListLabel = React.createClass({
 	getInitialState: function() {
 		return ({
-			
+			cardlist:[{CardName:'',CardRuleNum:'',CardRuleTimeStart:'',CardRuleTimeEnd:''}]
 		})
 	},
 	onChangeStore: function() {
-		this.setState(
-			Store.getData()
-		)
+		this.setState({
+			cardlist:Store.getData().cardlines
+		})
 	},
 	componentDidMount: function(){
 		Store.addListener(this.onChangeStore);
 	},
-	onChange: function(value, event) {
+	onChange: function(index,value,event) {
 		var property = event.target.getAttribute('name');
-		Action.updateProduct(property, value);
+		Action.updateAddProduct(index, property, value);
 	},
 	render: function() {
+		var _this=this;
+		var cardlines=this.state.cardlist.map(function(card,index) {
+			return (
+			<fieldset className="form-inline" key={index}>
+				<FormInput label="卡名称:" type="text" name="CardName" ref="CardName" value={_this.state.cardlist[index].CardName} validate="require-notempty" onChange={_this.onChange.bind(_this,index)}/>
+				<FormInput label="出库数量:" type="text" name="CardRuleNum" ref="CardRuleNum" value={_this.state.cardlist[index].CardRuleNum} validate="require-positive-int" onChange={_this.onChange.bind(_this,index)}/>
+				<FormInput label="有效期:" type="text" name="CardRuleTimeStart" ref="CardRuleTimeStart" value={_this.state.cardlist[index].CardRuleTimeStart} validate="require-date" onChange={_this.onChange.bind(_this,index)}/>
+				<FormInput type="text" name="CardRuleTimeEnd" ref="CardRuleTimeEnd" value={_this.state.cardlist[index].CardRuleTimeEnd} validate="require-date" onChange={_this.onChange.bind(_this,index)}/>
+			</fieldset>
+			)
+		})
 		return (
 			<div className="CardListLabel">
-				<fieldset className="form-inline">
-					<FormInput label="卡名称:" type="text" name="CardName" ref="CardName" value={this.state.CardName} validate="require-notempty" onChange={this.onChange}/>
-					<FormInput label="出库数量:" type="text" name="CardRuleNum" ref="CardRuleNum" value={this.state.CardRuleNum} validate="require-positive-int" onChange={this.onChange}/>
-					<FormInput label="有效期:" type="text" name="CardRuleTimeStart" ref="CardRuleTimeStart" value={this.state.CardRuleTimeStart} validate="require-date" onChange={this.onChange}/>
-					<FormInput type="text" name="CardRuleTimeEnd" ref="CardRuleTimeEnd" value={this.state.CardRuleTimeEnd} validate="require-date" onChange={this.onChange}/>
-				</fieldset>
+				{cardlines}
 			</div>
 		);
 	}

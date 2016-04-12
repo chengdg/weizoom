@@ -47,6 +47,16 @@ var Action = {
 			}
 		});
 	},
+	updateAddProduct: function(index, property, value) {
+		Dispatcher.dispatch({
+			actionType: Constant.CARD_DATA_UPDATE_ADD_PRODUCT,
+			data: {
+				index: index,
+				property: property,
+				value: value
+			}
+		});
+	},
 	getCardRuleOrder: function(filter){
 		console.log(filter,12345)
 		Resource.get({

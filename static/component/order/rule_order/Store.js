@@ -20,14 +20,20 @@ var Store = StoreUtil.createStore(Dispatcher,{
 	actions:{
 		'handleCreateCardRuleOrderResponse':Constant.CREATE_CRAD_RULE_ORDER,
 		'handleUpdateProduct': Constant.CARD_DATA_UPDATE_PRODUCT,
+		'handleUpdateAddProduct': Constant.CARD_DATA_UPDATE_ADD_PRODUCT,
 		'handleGetRuleOrderList':Constant.CARD_RULE_ORDER,
 	},
 	init: function() {
 		this.data = {};
 		this.data.card_order_list = {};
+		this.data.cardlines = [{CardName:'',CardRuleNum:'',CardRuleTimeStart:'',CardRuleTimeEnd:''}];
 	},
 	handleUpdateProduct: function(action) {
 		this.data[action.data.property] = action.data.value;
+		this.__emitChange();
+	},
+	handleUpdateAddProduct: function(action) {
+		this.data.cardlines[action.data.index][action.data.property] = action.data.value;
 		this.__emitChange();
 	},
 	handleCreateCardRuleOrderResponse: function(action){
