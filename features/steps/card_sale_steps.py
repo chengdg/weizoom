@@ -80,7 +80,6 @@ def step_impl(context, user):
 			"total_money": rule["total_money"],
 			"type": rule["card_kind"],
 			"card_range": card_range,
-			"order_id": rule["id"]
 		})
 	rule_order = {
 		"card_info" : rule_list,
