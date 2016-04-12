@@ -185,10 +185,12 @@ class GetRankList(resource.Resource):
 
 		if request.GET.get('search_name') != '':
 			search_name = request.GET.get('search_name')
-			params['name__icontains'] = search_name
+			if search_name.isdigit():
+				params['serial_number__icontains'] = search_name
+			else:
+				params['name__icontains'] = search_name
 
 		datas = app_models.ShvoteParticipance.objects(**params).order_by('-count')[:100]
-		print(datas)
 		i = 0
 		result_list = []
 		for data in datas:

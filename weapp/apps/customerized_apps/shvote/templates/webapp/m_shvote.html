@@ -283,6 +283,8 @@
 			var search_name = $('.wa-search-text').val();
 			if(search_name != ''){
 				getRankInfo(current_group,search_name);
+			}else{
+				getRankInfo(current_group,'');
 			}
 		});
         //展示参与统计
