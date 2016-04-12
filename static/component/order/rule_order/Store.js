@@ -25,6 +25,7 @@ var Store = StoreUtil.createStore(Dispatcher,{
 		'handleAddCardLines':Constant.ADD_CARD_LINES,
 	},
 	init: function() {
+		this.filter = {};
 		this.data = {};
 		this.data.card_order_list = {};
 		this.data.cardlines = [{CardName:'',CardRuleNum:'',CardRuleTimeStart:'',CardRuleTimeEnd:''}];
@@ -54,6 +55,7 @@ var Store = StoreUtil.createStore(Dispatcher,{
 	},
 	getCardRuleOrder: function() {
 		return this.data.card_order_list;
-	}
+	},
+
 });
 module.exports = Store;
