@@ -7,3 +7,4 @@ import products_categories
 import product_hint
 import orders
 import product_supplier
+import product_supplier_statics
