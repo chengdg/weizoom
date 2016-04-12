@@ -264,6 +264,9 @@
 <script type="text/javascript">
 	W.pageId = "{{request.GET.page_id}}";
 
+	//当前分组，切换时候需要改变值，用于查找
+	var current_group = '';
+
 	$(function(){
         if(W.isPC){
             return false;
@@ -275,10 +278,20 @@
 			window.location.href = link;
 		});
 
+
 		$('.wa-rank-link').click(function(){
 			var link = window.location.origin + '/m/apps/shvote/m_shvote_rank/?webapp_owner_id='+W.webappOwnerId+'&id='+W.appRecordId;
 			window.location.href = link;
 		})
+
+		// 搜索
+		$('.wa-search').click(function(){
+			var search_name = $('.wa-search-text').val();
+			if(search_name != ''){
+				getRankInfo(current_group,search_name);
+			}
+		});
+
         //展示参与统计
 //        getDynamicData();
 
@@ -342,7 +355,8 @@
                 var member_info = data.member_info;
                 update_member_info(member_info);
                 //更新排名信息
-                getRankInfo();
+				current_group = $('.active').html();
+                getRankInfo(current_group,'');
             },
             error: function(data){
                 if(data.errMsg == 'is_deleted'){
@@ -376,16 +390,19 @@
     }
 
     //获取排名信息
-    function getRankInfo(arg){
+    function getRankInfo(current_group,search_name){
         W.getApi().call({
             app: 'm/apps/shvote',
             resource: 'get_rank_list',
             method: 'get',
             args: {
 				webapp_owner_id: W.webappOwnerId,
-                recordId: W.appRecordId
+                recordId: W.appRecordId,
+				current_group: current_group,
+				search_name: search_name
             },
             success: function(data) {
+				$('.wui-rank-list').html('');
                 var result = data.result_list;
                 var tpl = new Template($('#tpl').html());
                 for(var i=0;i<result.length;i++){
