@@ -57,8 +57,12 @@ var Action = {
 			}
 		});
 	},
+	addCardLines:function() {
+		Dispatcher.dispatch({
+			actionType:Constant.ADD_CARD_LINES,
+		})
+	},
 	getCardRuleOrder: function(filter){
-		console.log(filter,12345)
 		Resource.get({
 			resource: 'order.rule_order',
 			data: filter,

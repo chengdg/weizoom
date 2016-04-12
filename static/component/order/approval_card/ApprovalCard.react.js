@@ -109,6 +109,9 @@ var ApprovalCard = React.createClass({
 			// }
 		});
 	},
+	addCardLines:function() {
+		Action.addCardLines();
+	},
 	render: function(){
 		return (
 			<div className="xui-outlineData-page xui-formPage">
@@ -122,7 +125,7 @@ var ApprovalCard = React.createClass({
 					</header>
 
 					<CardListLabel />{/*.卡库.*/}
-					<legend className="pl10 pt10 pb10"><a href="javascript:void(0);">添加卡库</a></legend>
+					<legend className="pl10 pt10 pb10"><a href="javascript:void(0);" onClick={this.addCardLines}>添加卡库</a></legend>
 
 					<fieldset style={{marginLeft:'95px'}}>
 		                <div>
