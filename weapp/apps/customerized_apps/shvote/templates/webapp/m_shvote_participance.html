@@ -126,9 +126,8 @@ $(document).ready(function() {
                 value: value
             };
         }
-        var participanceData = {};
         var group = $.trim($('#choose-group').val());
-        participanceData = {
+        var participanceData = {
             webapp_owner_id: W.webappOwnerId,
             belong_to: W.appRecordId,
             termite_data: JSON.stringify(data),
@@ -164,7 +163,7 @@ $(document).ready(function() {
                 $('body').alert({
                     isShow: true,
                     isSlide: true,
-                    info: '参与失败，请稍后再试！',
+                    info: data.errMsg,
                     speed: 3000
                 });
                 slag = true;

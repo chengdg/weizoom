@@ -176,8 +176,21 @@ class GetRankList(resource.Resource):
 		@param record_id: 活动id
 		@return: list
 		"""
-		record_id = request.GET.get('recordId', None)
-		datas = app_models.ShvoteParticipance.objects(belong_to=record_id, status=app_models.MEMBER_STATUS['PASSED']).order_by('-count')[:100]
+
+		params = {
+			'belong_to' : request.GET['recordId'],
+			'group' : request.GET['current_group'],
+			'status' : app_models.MEMBER_STATUS['PASSED']
+		}
+
+		if request.GET.get('search_name') != '':
+			search_name = request.GET.get('search_name')
+			if search_name.isdigit():
+				params['serial_number__icontains'] = search_name
+			else:
+				params['name__icontains'] = search_name
+
+		datas = app_models.ShvoteParticipance.objects(**params).order_by('-count')[:100]
 		i = 0
 		result_list = []
 		for data in datas:
@@ -198,3 +211,15 @@ class GetRankList(resource.Resource):
 			'result_list': result_list
 		}
 		return response.get_response()
+
+class MShvoteRank(resource.Resource):
+	app = 'apps/shvote'
+	resource = 'm_shvote_rank'
+
+	def get(request):
+		print 44444444444444444444
+		c = RequestContext(request, {
+
+		})
+
+		return render_to_response('shvote/templates/webapp/m_shvote_rank.html', c)
