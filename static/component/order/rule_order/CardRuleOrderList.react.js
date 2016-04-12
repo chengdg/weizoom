@@ -7,7 +7,6 @@ var debug = require('debug')('m:outline.data:DataPage');
 var Store = require('./Store');
 var Action = require('./Action');
 var ReactDOM = require('react-dom');
-
 var Reactman = require('reactman');
 var cardRuleOrderList = React.createClass({
 	displayName: 'cardRuleOrderList',
