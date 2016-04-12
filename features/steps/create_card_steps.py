@@ -114,10 +114,12 @@ def step_impl(context,user):
 		user_id2store_name[user_profile.store_name] = user_profile.user_id
 	
 	for rule in context.rules:
-		use_limit = rule["use_limit"]
+		use_limit = rule.get("use_limit","")
 		valid_restrictions = -1
-		if use_limit["is_limit"] == "on":
-			valid_restrictions = use_limit["limit_money"]
+		if use_limit:
+			if use_limit["is_limit"] == "on":
+				valid_restrictions = use_limit["limit_money"]
+
 		user_ids = []
 		if rule.has_key("vip_shop"):
 			for shop in rule["vip_shop"].split(','):
