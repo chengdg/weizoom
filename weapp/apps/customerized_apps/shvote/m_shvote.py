@@ -79,7 +79,8 @@ class MShvote(resource.Resource):
 			'total_parted': total_parted,
 			'total_counts': total_counts,
 			'total_visits': total_visits,
-			'groups': groups
+			'groups': groups,
+			'end_date': record.end_time.strftime('%Y-%m-%d')
 		}
 
 		response = create_response(200)

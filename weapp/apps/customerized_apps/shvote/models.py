@@ -21,7 +21,7 @@ class ShvoteParticipance(models.Document):
 	details = models.StringField(default="", max_length=10000) #详情
 	pics = models.ListField() #详情中的图片链接
 	count = models.LongField(default=0) #票数
-	vote_log = models.DynamicField() #投票记录 结构为{"2016-04-10": [32,5432,234,123], "2016-04-11": [33,52432,2314,1223], ...}
+	vote_log = models.DynamicField(default={}) #投票记录 结构为{"2016-04-10": [32,5432,234,123], "2016-04-11": [33,52432,2314,1223], ...}
 	created_at = models.DateTimeField() #创建时间
 	participate_time = models.DateTimeField() #审核通过时间
 	status = models.IntField(default=MEMBER_STATUS['ASKING'])
@@ -38,7 +38,6 @@ class Shvote(models.Document):
 	owner_id = models.LongField() #创建人id
 	name = models.StringField(default="", max_length=100) #名称
 	rule = models.StringField(default="", max_length=200) #投票规则
-	permission = models.BooleanField(default=False) #是否允许非会员参与 默认不允许
 	groups = models.ListField() #分组
 	description = models.StringField(default="", max_length=10000) #活动描述
 	start_time = models.DateTimeField() #开始时间

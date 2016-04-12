@@ -183,7 +183,6 @@
           var startTime = descriptionModel.get('start_time')+":00";
           var endTime = descriptionModel.get('end_time')+":00";
             var description = descriptionModel.get('description');
-            var permission = descriptionModel.get('permission');
             var rule = descriptionModel.get('rule');
             var groups = descriptionModel.get('groups');
           var relatedPageId = data['project_id'];
@@ -192,7 +191,6 @@
             "start_time": startTime,
             "end_time": endTime,
               "description": description,
-              "permission": permission,
               "rule": rule,
               "groups": JSON.stringify(groups)
           };

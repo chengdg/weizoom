@@ -195,6 +195,30 @@
 		});
         //展示参与统计
 //        getDynamicData();
+
+        //参与投票
+        var voteLock = false;
+        $('.wa-ivote').on('click', function(){
+            if(voteLock) return false;
+            voteLock = true;
+            vote_to = 1;
+            W.getApi().call({
+                app: 'apps/shvote',
+                resource: 'shvote_participance',
+                method: 'post',
+                args: {
+                    webapp_owner_id: W.webappOwnerId,
+                    recordId: W.appRecordId,
+                    vote_to: vote_to
+                },
+                success: function(data){
+
+                },
+                error: function(data){
+
+                }
+            });
+        });
 		
     });
 
