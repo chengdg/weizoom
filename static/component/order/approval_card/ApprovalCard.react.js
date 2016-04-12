@@ -120,11 +120,10 @@ var ApprovalCard = React.createClass({
 							表示必填)
 						</span>
 					</header>
+
+					<CardListLabel />{/*.卡库.*/}
 					<legend className="pl10 pt10 pb10"><a href="javascript:void(0);">添加卡库</a></legend>
 
-					<div className="fl pl20 pr20" style={{display:'none'}}>
-		                	<a>选择卡库</a>
-		            </div>
 					<fieldset style={{marginLeft:'95px'}}>
 		                <div>
 	                		<label>卡名称：</label>
@@ -237,4 +236,36 @@ SelectRuleCard = React.createClass({
 		)
 	}
 })
+
+var CardListLabel = React.createClass({
+	getInitialState: function() {
+		return ({
+			
+		})
+	},
+	onChangeStore: function() {
+		this.setState(
+			Store.getData()
+		)
+	},
+	componentDidMount: function(){
+		Store.addListener(this.onChangeStore);
+	},
+	onChange: function(value, event) {
+		var property = event.target.getAttribute('name');
+		Action.updateProduct(property, value);
+	},
+	render: function() {
+		return (
+			<div className="CardListLabel">
+				<fieldset className="form-inline">
+					<FormInput label="卡名称:" type="text" name="CardName" ref="CardName" value={this.state.CardName} validate="require-notempty" onChange={this.onChange}/>
+					<FormInput label="出库数量:" type="text" name="CardRuleNum" ref="CardRuleNum" value={this.state.CardRuleNum} validate="require-positive-int" onChange={this.onChange}/>
+					<FormInput label="有效期:" type="text" name="CardRuleTimeStart" ref="CardRuleTimeStart" value={this.state.CardRuleTimeStart} validate="require-date" onChange={this.onChange}/>
+					<FormInput type="text" name="CardRuleTimeEnd" ref="CardRuleTimeEnd" value={this.state.CardRuleTimeEnd} validate="require-date" onChange={this.onChange}/>
+				</fieldset>
+			</div>
+		);
+	}
+});
 module.exports = ApprovalCard;
