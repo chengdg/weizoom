@@ -258,8 +258,12 @@ var CardListLabel = React.createClass({
 	render: function() {
 		return (
 			<div className="CardListLabel">
-				<FormInput label="卡名称:" type="text" name="CardName" ref="CardName" value={this.state.CardName} validate="require-notempty" onChange={this.onChange}/>
-				<FormInput label="出库数量:" type="text" name="CardRuleNum" ref="CardRuleNum" value={this.state.CardRuleNum} validate="require-string" onChange={this.onChange}/>
+				<fieldset className="form-inline">
+					<FormInput label="卡名称:" type="text" name="CardName" ref="CardName" value={this.state.CardName} validate="require-notempty" onChange={this.onChange}/>
+					<FormInput label="出库数量:" type="text" name="CardRuleNum" ref="CardRuleNum" value={this.state.CardRuleNum} validate="require-positive-int" onChange={this.onChange}/>
+					<FormInput label="有效期:" type="text" name="CardRuleTimeStart" ref="CardRuleTimeStart" value={this.state.CardRuleTimeStart} validate="require-date" onChange={this.onChange}/>
+					<FormInput type="text" name="CardRuleTimeEnd" ref="CardRuleTimeEnd" value={this.state.CardRuleTimeEnd} validate="require-date" onChange={this.onChange}/>
+				</fieldset>
 			</div>
 		);
 	}
