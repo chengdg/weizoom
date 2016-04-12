@@ -30,9 +30,9 @@ Background:
 			},{
 				"name":"10元卡"
 			}],
-			"order_info":[{
+			"order_info":{
 				"order_id":"1"
-				}]
+				}
 		}]
 		"""
 		
