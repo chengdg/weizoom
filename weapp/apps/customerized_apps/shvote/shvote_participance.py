@@ -32,17 +32,6 @@ class ShvoteParticipance(resource.Resource):
 		响应GET
 		"""
 		record = None
-
-		def __itemName2item(itemName):
-			itemName_dic={'small':u"初中组"}
-			itemName_List = []
-			for item in itemName:
-				if item in itemName_dic:
-					itemName_List.append(itemName_dic[item])
-				else:
-					itemName_List.append(item)
-			return itemName_List
-
 		if 'id' in request.GET:
 			participance_data_count = 0
 			id = request.GET['id']
@@ -58,7 +47,7 @@ class ShvoteParticipance(resource.Resource):
 			c = RequestContext(request, {
 				'record_id': id,
 				'page_title': record.name if record else u"投票",
-				'groups': __itemName2item(record.groups),
+				'groups': record.groups,
 				'is_already_participanted': (participance_data_count > 0),
 				'is_hide_weixin_option_menu':True,
 				'app_name': "shvote",
@@ -77,29 +66,20 @@ class ShvoteParticipance(resource.Resource):
 		"""
 		响应PUT
 		"""
-		def __itemName2item(itemName):
-			itemName_dic = {u"初中组":'small'}
-			if itemName:
-				return itemName_dic[itemName]
-			else:
-				return itemName
 		try:
 			result_list = []
 			member_id = request.member.id
 			id = request.POST['belong_to']
 			termite_data = json.loads(request.POST['termite_data'])
-			print(termite_data)
 			for k in sorted(termite_data.keys()):
 				v = termite_data[k]
 				pureName = k.split('_')[1]
-				print(v['value'])
-				print('---------------------')
 				result_list_temp = {
 					pureName : v['value']
 				}
 				result_list.append(result_list_temp)
-			if result_list[5]['detail-pic']!='[]':
-				detailPic = json.loads(result_list[5]['detail-pic'])
+			if result_list[4]['detail-pic']!='[]':
+				detailPic = json.loads(result_list[4]['detail-pic'])
 			else:
 				detailPic = []
 			try:
@@ -108,9 +88,9 @@ class ShvoteParticipance(resource.Resource):
 					member_id = member_id,
 					icon = json.loads(result_list[0]['headImg'])[0],
 					name = result_list[1]['name'],
-					group = 'small',
-					serial_number = result_list[3]['number'],
-					details = result_list[4]['details'],
+					group = request.POST['group'],
+					serial_number = result_list[2]['number'],
+					details = result_list[3]['details'],
 					pics = detailPic,
 					created_at = datetime.now()
 				)

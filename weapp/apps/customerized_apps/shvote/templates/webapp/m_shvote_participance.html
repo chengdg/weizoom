@@ -56,7 +56,7 @@
             <textarea class="wui-i-input" data-validate="require-notempty::请填写名称"></textarea>
             <label class="">名称</label>
         </div>
-        <div class="xa-inputControl" data-input-type="choose-group" data-input-name="choose-group" data-control-type="choose-group">
+        <div>
             <select class="" id="choose-group" data-input-name="choose-group">
                 {% for group in groups %}
                 <option value="{{group}}">{{group}}</option>
@@ -85,7 +85,7 @@
             </div>
         </div>
         <div class="wui-submitButton xui-hide xa-submitButtonContainer" style="display: block; transform-origin: 0px 0px 0px; opacity: 1; transform: scale(1, 1);">
-            <a class="xui-btn xui-btn-danger xa-submitTermite" data-role="button" href="javascript:void(0);" style="">提交</a>
+            <a class="xui-btn xui-btn-danger xa-submitShvote" data-role="button" href="javascript:void(0);" style="">提交</a>
         </div>
     </div>
 {% endblock %}
@@ -94,7 +94,7 @@
 <script type="text/javascript">
 $(document).ready(function() {
     //绑定提交按钮
-    $('.xa-submitTermite').click(function() {
+    $('.xa-submitShvote').click(function() {
         if (!W.is_pic_up){
             wuiAlert('图片还未上传成功，请稍等！');
             return;
@@ -120,23 +120,22 @@ $(document).ready(function() {
                     picture_list.push($(this).attr('data-src'));
                 });
                 var value = JSON.stringify(picture_list);
-            }else if(inputType === 'choose-group'){
-                var value = $.trim($('#choose-group').val());
             }
             data[name] = {
                 type: controlType,
                 value: value
             };
         }
+        var participanceData = {};
+        var group = $.trim($('#choose-group').val());
         participanceData = {
             webapp_owner_id: W.webappOwnerId,
             belong_to: W.appRecordId,
-            termite_data: JSON.stringify(data)
+            termite_data: JSON.stringify(data),
+            group: group
         };
         var $submitButtonContainer = $('.xa-submitButtonContainer');
         getParticipance(participanceData,$submitButtonContainer);
-        console.log('22222222222222');
-        console.log(participanceData);
     });
 
     function getParticipance(participanceData,$submitButtonContainer){
@@ -162,7 +161,12 @@ $(document).ready(function() {
                 $submitButtonContainer.hide();
             },
             error: function(data) {
-                wuiAlert(data.errMsg);
+                $('body').alert({
+                    isShow: true,
+                    isSlide: true,
+                    info: '参与失败，请稍后再试！',
+                    speed: 3000
+                });
                 slag = true;
             }
         });
