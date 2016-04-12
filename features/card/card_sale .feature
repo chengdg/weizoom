@@ -114,7 +114,7 @@ Scenario:1.发放发售卡
 			"num":"5",
 			"total_money":"50.00",
 			"type":"条件卡",
-			"limit_money":"不限制",
+			"is_limit":"不限制",
 			"vip_shop":"",
 			"card_range":"020000001-020000005"
 		}],

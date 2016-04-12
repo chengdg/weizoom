@@ -31,7 +31,6 @@ class RuleOrder(resource.Resource):
 	def api_get(request):
 		status_orderId = request.GET.get('orderId','')
 		status_is_activation = request.GET.get('is_activation','')
-		print status_is_activation,555555555555555555555
 		if status_orderId and status_is_activation:
 			cur_cards = WeizoomCard.objects.filter(storage_status=WEIZOOM_CARD_STORAGE_STATUS_OUT,weizoom_card_order_id=status_orderId)
 			if int(status_is_activation) ==1:			
@@ -54,11 +53,15 @@ class RuleOrder(resource.Resource):
 				order_item_id2weizoom_card_id[w_card.weizoom_card_order_item_id].append(w_card.weizoom_card_id)
 			else:
 				order_item_id2weizoom_card_id[w_card.weizoom_card_order_item_id] = [w_card.weizoom_card_id]
-
 		rule_ids = set([w_card.weizoom_card_rule_id for w_card in w_cards])
 		card_rules = WeizoomCardRule.objects.filter(id__in=rule_ids)
-		card_order_id2id = {order_item.weizoom_card_order_id:order_item.id for order_item in weizoom_card_order_items}
-		order_id2rule_id = {order_item.weizoom_card_order_id:order_item.weizoom_card_rule_id for order_item in weizoom_card_order_items}
+		card_order_id2id = {}
+		for order_item in weizoom_card_order_items:
+			if order_item.weizoom_card_order_id in card_order_id2id:
+				card_order_id2id[order_item.weizoom_card_order_id].append(order_item.id)
+			else:
+				card_order_id2id[order_item.weizoom_card_order_id] = [order_item.id]
+		order_id2rule_id = {order_item.id:order_item.weizoom_card_rule_id for order_item in weizoom_card_order_items}
 		id2weizoom_card_order_item = {weizoom_card_order_item.id:weizoom_card_order_item for weizoom_card_order_item in weizoom_card_order_items}
 		id2card_rule = {card_rule.id:card_rule for card_rule in card_rules}
 		order2is_activation={}
@@ -69,38 +72,62 @@ class RuleOrder(resource.Resource):
 				order2is_activation[cur_weizoom_card_orders_id] =1
 			else:
 				order2is_activation[cur_weizoom_card_orders_id] =0
-
+		pageinfo, weizoom_card_orders = paginator.paginate(weizoom_card_orders, 1, 10, query_string=request.META['QUERY_STRING'])	
 		card_order_list = []
 		for card_order in weizoom_card_orders:
 			card_order_dic = {}
-			if (card_order.id in order_id2rule_id) and (card_order.id in card_order_id2id):
-				rule_id = order_id2rule_id[card_order.id]
-				order_item_id = card_order_id2id[card_order.id]
-				if order_item_id in order_item_id2weizoom_card_id:
-					weizoom_card_ids = sorted(order_item_id2weizoom_card_id[order_item_id])
-					weizoom_card_id_first = weizoom_card_ids[0]
-					weizoom_card_id_last = weizoom_card_ids[-1]
-					count = id2weizoom_card_order_item[card_order.id].weizoom_card_order_item_num
+			if card_order.id in card_order_id2id:
+				order_items = card_order_id2id[card_order.id]
+				order_item_list = []
+				for order_item_id in order_items:
+					if order_item_id in order_item_id2weizoom_card_id:
+						order_item_dic = {}
+						rule_id = order_id2rule_id[order_item_id]
+						weizoom_card_ids = sorted(order_item_id2weizoom_card_id[order_item_id])
+						weizoom_card_id_first = weizoom_card_ids[0]
+						weizoom_card_id_last = weizoom_card_ids[-1]
+						valid_restrictions = id2card_rule[rule_id].valid_restrictions
+
+						count = 0 if order_item_id not in id2weizoom_card_order_item else id2weizoom_card_order_item[order_item_id].weizoom_card_order_item_num
+						order_item_dic['weizoom_card_id_first'] = weizoom_card_id_first
+						order_item_dic['weizoom_card_id_last'] = weizoom_card_id_last
+						order_item_dic['name'] =u'' if rule_id not in id2card_rule else id2card_rule[rule_id].name
+						order_item_dic['money'] = u'%.2f' %id2card_rule[rule_id].money
+						order_item_dic['total_money'] = u'%.2f' %(id2card_rule[rule_id].money * count)
+						order_item_dic['weizoom_card_order_item_num'] = count
+						order_item_dic['card_kind'] = WEIZOOM_CARD_KIND2TEXT[id2card_rule[rule_id].card_kind]
+						order_item_dic['card_class'] = WEIZOOM_CARD_CLASS2TEXT[id2card_rule[rule_id].card_class]
+						order_item_dic['is_activation'] =u'' if card_order.id not in order2is_activation else order2is_activation[card_order.id]
+						order_item_dic['shop_limit_list'] = id2card_rule[rule_id].shop_limit_list
+						order_item_dic['valid_restrictions'] = u'满%.f使用' % valid_restrictions if valid_restrictions != -1 else u'不限制'
+						order_item_list.append(order_item_dic)
+				# if order_item_id in order_item_id2weizoom_card_id:
+				# 	weizoom_card_ids = sorted(order_item_id2weizoom_card_id[order_item_id])
+				# 	weizoom_card_id_first = weizoom_card_ids[0]
+				# 	weizoom_card_id_last = weizoom_card_ids[-1]
+				# 	count = 0 if card_order.id not in id2weizoom_card_order_item else id2weizoom_card_order_item[card_order.id].weizoom_card_order_item_num
+				# 	card_order_dic['id'] = card_order.id
+				# 	card_order_dic['weizoom_card_id_first'] = weizoom_card_id_first
+				# 	card_order_dic['weizoom_card_id_last'] = weizoom_card_id_last
+				# 	card_order_dic['order_number'] = card_order.order_number
+					# card_order_dic['name'] ='' if rule_id not in id2card_rule else id2card_rule[rule_id].name
+					# card_order_dic['money'] = '%.2f' %id2card_rule[rule_id].money
+					# card_order_dic['total_money'] = '%.2f' %(id2card_rule[rule_id].money * count)
+					# card_order_dic['weizoom_card_order_item_num'] = count
+					# card_order_dic['card_kind'] = WEIZOOM_CARD_KIND2TEXT[id2card_rule[rule_id].card_kind]
+					# card_order_dic['card_class'] = WEIZOOM_CARD_CLASS2TEXT[id2card_rule[rule_id].card_class]
+				if order_item_list:
 					card_order_dic['id'] = card_order.id
-					card_order_dic['weizoom_card_id_first'] = weizoom_card_id_first
-					card_order_dic['weizoom_card_id_last'] = weizoom_card_id_last
 					card_order_dic['order_number'] = card_order.order_number
-					card_order_dic['name'] ='' if rule_id not in id2card_rule else id2card_rule[rule_id].name
-					card_order_dic['money'] = '%.2f' %id2card_rule[rule_id].money
-					card_order_dic['total_money'] = '%.2f' %(id2card_rule[rule_id].money * count)
-					card_order_dic['weizoom_card_order_item_num'] = count
-					card_order_dic['card_kind'] = WEIZOOM_CARD_KIND2TEXT[id2card_rule[rule_id].card_kind]
 					card_order_dic['order_attribute'] = WEIZOOM_CARD_ORDER_ATTRIBUTE2TEXT[card_order.order_attribute]
 					card_order_dic['responsible_person'] = card_order.responsible_person
 					card_order_dic['company'] = card_order.company
 					card_order_dic['created_at'] = card_order.created_at.strftime("%Y-%m-%d")
-					card_order_dic['is_activation'] ='' if card_order.id not in order2is_activation else order2is_activation[card_order.id]
+					card_order_dic['order_item_list'] = json.dumps(order_item_list)
 					card_order_list.append(card_order_dic)
-
 		data = {
 			'card_order_list': json.dumps(card_order_list)
 		}
-
 		response = create_response(200)
 		response.data = data
 
