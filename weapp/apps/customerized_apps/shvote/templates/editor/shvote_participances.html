@@ -17,7 +17,7 @@
 			<li class="active">查看结果</li>
 		</ul>
 	</div>
-	
+
 	<div class="xui-formPanel pb10 mb15">
 		<div class="xui-i-col">
 			<div class="xui-i-item">
@@ -63,20 +63,20 @@
 			</div>
 		</div>
 	</div>
-	
+
 	<div class="panel panel-default xui-tableBox">
-		<div 
+		<div
 			class="panel-body panel-table p0 mt10"
-			data-ui-role="advanced-table" 
-			data-app="apps/shvote" 
-			data-resource="shvote_participances" 
+			data-ui-role="advanced-table"
+			data-app="apps/shvote"
+			data-resource="shvote_participances"
 			data-args='{"id": "{{activity_id}}"}'
-			data-template-id="#table" 
-			data-enable-paginator="true" 
-			data-enable-sort="false" 
-			data-selectable="false" 
-			data-disable-header-select="true" 
-			data-item-count-per-page="10" 
+			data-template-id="#table"
+			data-enable-paginator="true"
+			data-enable-sort="false"
+			data-selectable="false"
+			data-disable-header-select="true"
+			data-item-count-per-page="10"
 		>
 		</div>
 	</div>
@@ -86,7 +86,7 @@
 
 {% block js %}
 <!-- *start_prunt_task* -->
-	<!-- [prunt_task] 
+	<!-- [prunt_task]
 	  {
 	    "task": "weizoom-load-app-views-dialogs"
 	  }
@@ -107,11 +107,12 @@
 		<tbody>
 		  {{each(i, item) items}}
 			<tr data-id="${item.id}">
-				<td 
+				<td
 					class="tl pl25"
-					style="width:250px; height:60px;" 
+					style="width:250px; height:60px;"
 				>
-					<img src="${item.participant_icon}" />
+					<img src="${item.participant_icon}"
+						style="width:60px; height:60px;" />
 					${item.participant_name}
 				</td>
 				<td>
@@ -146,7 +147,7 @@ $(document).ready(function() {
 			}
 		});
 	});
-	
+
 	$('.xa-search').click(function(event) {
 		var participant_name = $.trim($('[name="participant_name"]').val());
 		var startTime = $.trim($('[name="start_time"]').val());
