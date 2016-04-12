@@ -139,7 +139,6 @@
 	}
 	.wui-detail-user-pic{
 		border-bottom: 1px solid #000;
-		padding-top: 36%;
 	}
 	.wui-detail-user-name{
 		padding: 2% 0px;
@@ -223,7 +222,7 @@
 			<img src={ result_list_icon }>
 		</div> 
 		<div class="wui-rank-name">
-			<span>{ result_list_serial_number }</span> 
+			<span class="wui-rank-serial-number">{ result_list_serial_number }</span> 
 			<span>{ result_list_name }</span>
 		</div> 
 		<div class="wui-rank-vote">
@@ -240,9 +239,11 @@
 <div id="userDetailDialog" class="wui-detail-dialog">
 	<div class="wui-detail-top">
 		<div class="wui-detail-user">
-			<div class="wui-detail-user-pic">img-url</div>
+			<div class="wui-detail-user-pic wa-detail-user-pic">
+				<img src="">
+			</div>
 			<div class="wui-detail-user-name wa-detail-user-name">
-				<span>vito</span>
+				<span></span>
 			</div>
 		</div>
 		<div class="wui-detail-btn">
@@ -251,12 +252,10 @@
 		</div>
 	</div>
 	<div class="wui-detail-middle">
-		<span>编号：300</span>
-		<span class="wui-detail-vote-count">3000票</span>
+		<span class="wa-detail-serial-number"></span>
+		<span class="wui-detail-vote-count wa-detail-vote-count"></span>
 	</div>
-	<div class="wui-detail-bottom">
-		报名详情：1111111111111111122222222
-	</div>
+	<div class="wui-detail-bottom wa-detail-bottom"></div>
 	<img class="wui-detail-close wa-detail-close" src="/static_v2/img/shvote_close.png">
 </div>
 {% endblock %}
@@ -404,8 +403,24 @@
     查看选手详情
      */
 	$('body').delegate('.wa-rank-pic', 'click', function(event) {
-		console.log(8888888888888)
-		console.log(user_datail)
+		var serial_number = $(event.target).parent().find('.wui-rank-serial-number').text();
+		for(var i=0;i<user_datail.length;i++){
+			if(user_datail[i].serial_number == serial_number){
+				var icon = user_datail[i].icon;
+				var name = user_datail[i].name;
+				var count = user_datail[i].count;
+				var details = user_datail[i].details;
+				var pics = user_datail[i].pics;
+				$('.wa-detail-user-pic img').attr('src',icon);
+				$('.wa-detail-user-name span').text(name);
+				$('.wa-detail-serial-number').text('编号：' + serial_number);
+				$('.wa-detail-vote-count').text(count + ' 票');
+				$('.wa-detail-bottom').text(details);
+				for (var i=0;i<pics.length;i++){
+					$('.wa-detail-bottom').append('<img src='+pics[i]+'>');
+				}
+			}
+		}
 		mask('show');
 		$('#userDetailDialog').show();
 	});
