@@ -58,7 +58,7 @@
 				<th>商品信息</th>
 				<th width="120">商品价格（元）</th>
 				<th width="100">抵扣上限</th>
-				<th width="100">抵扣金额</th>
+				<th width="100">金额占比</th>
 				<th width="80">状态</th>
 				<th width="180">起止时间</th>
 				<th width="120">操作</th>
@@ -112,10 +112,10 @@
 						${promotion.product.display_price_range}
 					</td>
 					<td>
-						${promotion.detail.discount}
+						${promotion.detail.discount_money}
 					</td>
 					<td>
-						${promotion.detail.discount_money}
+						${promotion.detail.discount}
 					</td>
 					<td>${promotion.status}</td>
 					<td>
