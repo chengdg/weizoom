@@ -27,7 +27,6 @@ var cardRuleOrderList = React.createClass({
 		Store.addListener(this.getCardRuleOrder);
 	},
 	getCardRuleOrder: function(){
-		console.log(Store.getCardRuleOrder());
 		this.setState({
 			cardRuleOrder:Store.getCardRuleOrder()
 		})
@@ -56,7 +55,7 @@ var cardRuleOrderList = React.createClass({
 			is_activation:is_activation,
 		};
 		console.log(cur_filter,66666)
-		Action.getCardRuleOrder(cur_filter);
+		Action.updateOrderStaus(cur_filter);
 	},
 	render: function() {
 		_this=this;
