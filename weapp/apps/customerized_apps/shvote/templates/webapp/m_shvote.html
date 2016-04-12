@@ -97,6 +97,7 @@
 	.wui-rank-pic{
 		height:100px;
 		border-bottom: 1px solid #8E8E8E;
+		height: auto;
 	}
 	.wui-rank-name{
 		border-bottom: 1px solid #8E8E8E;
@@ -209,9 +210,6 @@
 				</div>
 			</div>
 			<div class="wui-group wa-groups">
-				<div class="active wa-group-item">初中组</div>
-				<div class="wa-group-item">高中组</div>
-				<div class="wa-group-item">大学组</div>
 			</div>
 			<div class="wui-rank-list wa-rank-list">		
 			</div>
@@ -221,7 +219,9 @@
 <button class="wa-ivote">我要投票</button>
 <script type="text/plain" id="tpl">
 	<div class="wui-rank-item">
-		<div class="wui-rank-pic wa-rank-pic"></div> 
+		<div class="wui-rank-pic wa-rank-pic">
+			<img src={ result_list_icon }>
+		</div> 
 		<div class="wui-rank-name">
 			<span>{ result_list_serial_number }</span> 
 			<span>{ result_list_name }</span>
@@ -269,24 +269,6 @@
         if(W.isPC){
             return false;
         }
-        $('.wa-group-item').click(function(){
-        	var arg;
-        	var group = $(this).html();
-        	switch(group)
-        	{
-        	case '高中组':
-        		arg = 'high';
-        		break;
-        	case '大学组':
-        		arg = 'college';
-        		break;
-        	default:
-        		arg = 'small';
-        	}
-        	$('.wa-rank-list').html('');
-        	getRankInfo(arg);
-        	$(this).addClass('active').siblings().removeClass('active');
-        })
 
 		// 我要报名
 		$('.wa-imark').click(function(){
@@ -379,6 +361,11 @@
     	$('.wa-total-counts').html(record_info['total_counts']);
     	$('.wa-total-visits').html(record_info['total_visits']);
     	$('.wa-enddate').html(record_info['end_date']);
+    	for(var i=0;i < record_info.groups.length;i++){
+    		var group = $('<div>'+record_info.groups[i]+'</div');
+    		$('.wa-groups').append(group);
+    		$('.wa-groups div').eq(0).addClass('active');
+    	}
     }
     function update_member_info(member_info){
     	
@@ -396,19 +383,16 @@
             },
             success: function(data) {
                 var result = data.result_list;
-                user_datail = result;
                 var tpl = new Template($('#tpl').html());
-                if(!arg) arg='small';
                 for(var i=0;i<result.length;i++){
-                	if(result[i].group == arg){               	
-		                var s = tpl.render({
-		                    result_list_serial_number : result[i].serial_number,
-		                    result_list_name : result[i].name,
-		                    result_list_count : result[i].count
-		                });
-		                $('.wa-rank-list').append(s);
-	            	}
-           		}
+        		    var s = tpl.render({
+		                result_list_serial_number : result[i].serial_number,
+		                result_list_name : result[i].name,
+		                result_list_count : result[i].count,
+		                result_list_icon : result[i].icon
+		            });
+		        $('.wa-rank-list').append(s);
+	        	}
             },
             error: function(data){
 				wuiAlert(data.errMsg);
