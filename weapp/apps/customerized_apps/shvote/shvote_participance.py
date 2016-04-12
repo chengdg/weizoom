@@ -81,11 +81,18 @@ class ShvoteParticipance(resource.Resource):
 		"""
 		响应PUT
 		"""
+		def __itemName2item(itemName):
+			itemName_dic = {u"初中组":'small'}
+			if itemName:
+				return itemName_dic[itemName]
+			else:
+				return itemName
 		try:
 			result_list = []
 			member_id = request.member.id
 			id = request.POST['belong_to']
 			termite_data = json.loads(request.POST['termite_data'])
+			print(termite_data)
 			for k in sorted(termite_data.keys()):
 				v = termite_data[k]
 				pureName = k.split('_')[1]
