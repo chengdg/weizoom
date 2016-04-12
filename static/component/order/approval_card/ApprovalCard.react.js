@@ -95,7 +95,7 @@ var ApprovalCard = React.createClass({
 		}
 		Action.saveCardRuleOrder(date);
 	},
-	addCard: function() {
+	choiceCard: function() {
 		Reactman.PageAction.showDialog({
 			title: "创建备注", 
 			component: ApprovalDialog, 
@@ -120,7 +120,7 @@ var ApprovalCard = React.createClass({
 							表示必填)
 						</span>
 					</header>
-					<legend className="pl10 pt10 pb10"><a href="javascript:void(0);" onClick={this.addCard}>添加卡库</a></legend>
+					<legend className="pl10 pt10 pb10"><a href="javascript:void(0);">添加卡库</a></legend>
 
 					<div className="fl pl20 pr20" style={{display:'none'}}>
 		                	<a>选择卡库</a>
