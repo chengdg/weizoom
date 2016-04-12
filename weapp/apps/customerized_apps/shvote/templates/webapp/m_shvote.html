@@ -115,6 +115,57 @@
 	.wui-rank-voteLef{
 		border-right: 1px solid #8E8E8E;
 	}
+	.wui-detail-dialog{
+		border:1px solid black;
+		width:80%;
+		height:80%;
+		display:none;
+		z-index:99999999;
+		margin:0 auto;
+		background-color:#FFF;
+		border-radius: 6px;
+		position: absolute;
+		top: 30%;
+		left: 10%;
+	}
+	.wui-detail-top{
+		margin: 6% 0 0 6%;
+	}
+	.wui-detail-user{
+		border: 1px solid #000;
+		width: 60%;
+		display: inline-block;
+	}
+	.wui-detail-user-pic{
+		border-bottom: 1px solid #000;
+		padding-top: 36%;
+	}
+	.wui-detail-user-name{
+		padding: 2% 0px;
+		text-align: center;
+	}
+	.wui-detail-btn{
+		display: inline-block;
+		width: 22%;
+		margin-left: 14%;
+	}
+	.wui-detail-btn button{
+		width: 50%;
+	}
+	.wui-detail-middle{
+		width: 57%;
+		margin: 5% 0px 5% 6%;
+	}
+	.wui-detail-middle .wui-detail-vote-count{
+		float: right;
+	}
+	.wui-detail-bottom{
+		border: 1px solid #000;
+		margin: 0 auto;
+		height: 55%;
+		width: 90%;
+		margin-left: 5%;
+	}
 </style>
 {% endblock %}
 
@@ -160,10 +211,10 @@
 		</div>
 	</div>
 </div>
-
+<button class="wa-ivote">我要投票</button>
 <script type="text/plain" id="tpl">
 	<div class="wui-rank-item">
-		<div class="wui-rank-pic"></div> 
+		<div class="wui-rank-pic wa-rank-pic"></div> 
 		<div class="wui-rank-name">
 			<span>{ result_list_serial_number }</span> 
 			<span>{ result_list_name }</span>
@@ -178,6 +229,28 @@
 		</div> 
 	</div>
 </script>
+
+<div id="userDetailDialog" class="wui-detail-dialog">
+	<div class="wui-detail-top">
+		<div class="wui-detail-user">
+			<div class="wui-detail-user-pic">img-url</div>
+			<div class="wui-detail-user-name wa-detail-user-name">
+				<span>vito</span>
+			</div>
+		</div>
+		<div class="wui-detail-btn">
+			<button>投票</button>
+			<button>拉票</button>
+		</div>
+	</div>
+	<div class="wui-detail-middle">
+		<span>编号：300</span>
+		<span class="wui-detail-vote-count">3000票</span>
+	</div>
+	<div class="wui-detail-bottom">
+		报名详情：1111111111111111122222222
+	</div>
+</div>
 {% endblock %}
 
 {% block js %}
@@ -220,9 +293,9 @@
         $('.wa-ivote').on('click', function(){
             if(voteLock) return false;
             voteLock = true;
-            vote_to = 1;
+            var vote_to = 6; //需要获取投票对象的member_id
             W.getApi().call({
-                app: 'apps/shvote',
+                app: 'm/apps/shvote',
                 resource: 'shvote_participance',
                 method: 'post',
                 args: {
@@ -231,10 +304,16 @@
                     vote_to: vote_to
                 },
                 success: function(data){
-
+                    voteLock = false;
+                    //TODO 修改被投票用户的票数，和投票用户的可投票次数
                 },
                 error: function(data){
-
+                    voteLock = false;
+                    if(data.errMsg == 'none_member'){
+                        //TODO 弹出二维码窗口
+                    }else{
+                        wuiAlert(data.errMsg);
+                    }
                 }
             });
         });
@@ -328,33 +407,24 @@
         });
     }
 
-    function Template(tpl) {
-    var
-        fn,
-        match,
-        code = ['var r=[];\nvar _html = function (str) { return str.replace(/&/g, \'&amp;\').replace(/"/g, \'&quot;\').replace(/\'/g, \'&#39;\').replace(/</g, \'&lt;\').replace(/>/g, \'&gt;\'); };'],
-        re = /\{\s*([a-zA-Z\.\_0-9()]+)(\s*\|\s*safe)?\s*\}/m,
-        addLine = function (text) {
-            code.push('r.push(\'' + text.replace(/\'/g, '\\\'').replace(/\n/g, '\\n').replace(/\r/g, '\\r') + '\');');
-        };
-    while (match = re.exec(tpl)) {
-        if (match.index > 0) {
-            addLine(tpl.slice(0, match.index));
-        }
-        if (match[2]) {
-            code.push('r.push(String(this.' + match[1] + '));');
-        }
-        else {
-            code.push('r.push(_html(String(this.' + match[1] + ')));');
-        }
-        tpl = tpl.substring(match.index + match[0].length);
+    /*
+    查看选手详情
+     */
+    function DetailDialog(selector){
+    	this.$el = $(selector || '#userDetailDialog');
+    	this.$name = this.$el.find('.wa-detail-user-name span');
     }
-    addLine(tpl);
-    code.push('return r.join(\'\');');
-    fn = new Function(code.join('\n'));
-    this.render = function (model) {
-        return fn.apply(model);
+    DetailDialog.prototype.render = function(data){
+    	if (data) {
+    		this.$name.text('sun');
+    		console.log(data)
+    	}
+    	mask('show');
+        this.$el.show();
     };
-}
+	$('body').delegate('.wa-rank-pic', 'click', function(event) {
+		resultDialog = new DetailDialog();
+		resultDialog.render(123);
+	});
 </script>
 {% endblock %}
