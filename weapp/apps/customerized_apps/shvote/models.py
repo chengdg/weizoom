@@ -43,15 +43,15 @@ class Shvote(models.Document):
 	start_time = models.DateTimeField() #开始时间
 	end_time = models.DateTimeField() #结束时间
 	status = models.IntField(default=0) #状态
-	participant_count = models.IntField(default=0) #参与者数量
+	# participant_count = models.IntField(default=0) #参与者数量
 	related_page_id = models.StringField(default="", max_length=100) #termite page的id
 	created_at = models.DateTimeField() #创建时间
 	visits = models.LongField(default=0) #访问人数
-	
+
 	meta = {
 		'collection': 'shvote_shvote'
 	}
-	
+
 	@property
 	def status_text(self):
 		if self.status == STATUS_NOT_START:
@@ -66,7 +66,7 @@ class Shvote(models.Document):
 			return u'已结束'
 		else:
 			return u'未知'
-	
+
 	@property
 	def is_finished(self):
 		status_text = self.status_text

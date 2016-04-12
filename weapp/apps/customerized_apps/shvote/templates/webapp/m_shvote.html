@@ -151,6 +151,7 @@
 	}
 	.wui-detail-btn button{
 		width: 50%;
+		cursor: pointer;
 	}
 	.wui-detail-middle{
 		width: 57%;
@@ -166,12 +167,18 @@
 		width: 90%;
 		margin-left: 5%;
 	}
+	.wui-detail-close{
+		position: absolute;
+		top: -3%;
+		right: -3%;
+		cursor: pointer;
+	}
 </style>
 {% endblock %}
 
 {% block content-panel %}
 	{{ page_html_content|safe }}
-<div class="wa-mobile none">
+<div class="wa-mobile">
     <div class="wa-dynamic-info">
         <div>
             <p>
@@ -250,6 +257,7 @@
 	<div class="wui-detail-bottom">
 		报名详情：1111111111111111122222222
 	</div>
+	<img class="wui-detail-close wa-detail-close" src="/static_v2/img/shvote_close.png">
 </div>
 {% endblock %}
 
@@ -388,6 +396,7 @@
             },
             success: function(data) {
                 var result = data.result_list;
+                user_datail = result;
                 var tpl = new Template($('#tpl').html());
                 if(!arg) arg='small';
                 for(var i=0;i<result.length;i++){
@@ -410,21 +419,15 @@
     /*
     查看选手详情
      */
-    function DetailDialog(selector){
-    	this.$el = $(selector || '#userDetailDialog');
-    	this.$name = this.$el.find('.wa-detail-user-name span');
-    }
-    DetailDialog.prototype.render = function(data){
-    	if (data) {
-    		this.$name.text('sun');
-    		console.log(data)
-    	}
-    	mask('show');
-        this.$el.show();
-    };
 	$('body').delegate('.wa-rank-pic', 'click', function(event) {
-		resultDialog = new DetailDialog();
-		resultDialog.render(123);
+		console.log(8888888888888)
+		console.log(user_datail)
+		mask('show');
+		$('#userDetailDialog').show();
+	});
+	$('body').delegate('.wa-detail-close', 'click', function(event) {
+		mask('hide');
+		$('#userDetailDialog').hide();
 	});
 </script>
 {% endblock %}

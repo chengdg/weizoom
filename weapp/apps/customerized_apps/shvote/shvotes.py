@@ -78,6 +78,19 @@ class Shvotes(resource.Resource):
 		"""
 		pageinfo, datas = Shvotes.get_datas(request)
 
+		#后端审核通过，计入参与人数
+		ids = [str(data.id) for data in datas]
+		participances = app_models.ShvoteParticipance.objects(belong_to__in=ids)
+		id2participant_count = {str(one_id):0 for one_id in ids}
+		for participance in participances:
+			belong_to = str(participance.belong_to)
+			review_status = participance.status
+			if belong_to in id2participant_count:
+				if review_status == 1:
+					id2participant_count[belong_to] += 1
+
+
+
 		items = []
 		for data in datas:
 			items.append({
@@ -85,7 +98,7 @@ class Shvotes(resource.Resource):
 				'name': data.name,
 				'start_time': data.start_time.strftime('%Y-%m-%d %H:%M'),
 				'end_time': data.end_time.strftime('%Y-%m-%d %H:%M'),
-				'participant_count': data.participant_count,
+				'participant_count': id2participant_count[str(data.id)],
 				'related_page_id': data.related_page_id,
 				'status': data.status_text,
 				'created_at': data.created_at.strftime("%Y-%m-%d %H:%M:%S")
