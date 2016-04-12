@@ -20,6 +20,21 @@ var Action = {
 			data: data
 		});
 	},
+	showShops: function(){
+		Resource.get({
+			resource: 'card.shops',
+			dispatch: {
+				dispatcher: Dispatcher,
+				actionType: Constant.CARD_SHOW_SHOPS,
+			}
+		});
+	},
+	addCheckedShops: function(data){
+		Dispatcher.dispatch({
+			actionType: Constant.CARD_ADD_SHOP,
+			data: data
+		});
+	},
 	saveOrdinaryRule: function(data) {
 		Resource.put({
 			resource: 'card.limit',

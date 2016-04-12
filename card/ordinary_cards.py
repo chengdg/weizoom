@@ -78,26 +78,3 @@ class OrdinaryCardList(resource.Resource):
 		response.data.rows = cur_weizoom_cards
 		response.data.pagination_info = pageinfo.to_dict()
 		return response.get_response()
-
-
-def _get_cardNumber_value(filter_value):
-	if filter_value == '-1':
-		return -1
-	try:
-		for item in filter_value.split('|'):
-			if item.split(':')[0] == 'card_number':
-				return item.split(':')[1]
-		return -1
-	except:
-		return -1
-
-def _get_status_value(filter_value):
-	if filter_value == '-1':
-		return -1
-	try:
-		for item in filter_value.split('|'):
-			if item.split(':')[0] == 'cardStatus':
-				return int(item.split(':')[1])
-		return -1
-	except:
-		return -1

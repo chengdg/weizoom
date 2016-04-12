@@ -21,12 +21,19 @@ var Store = StoreUtil.createStore(Dispatcher, {
 	},
 
 	init: function() {
-		this.data = {'id':-1, 'models':[]};
+		this.data = {"shopsVisible": false,shops:[]};
 	},
 
 	handleOrdinaryAddRuleInfo: function(action) {
 		this.data = action.data;
 		this.__emitChange();
+	},
+	handleShowShops: function(action){
+		this.data.shops = action.data.shops;
+		this.__emitChange();
+	},
+	getShops: function(){
+		return this.data.shops;
 	},
 
 	handleSaveOrdinaryRule: function() {

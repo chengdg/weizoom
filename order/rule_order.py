@@ -29,7 +29,7 @@ class RuleOrder(resource.Resource):
 
 	@login_required
 	def api_get(request):
-		weizoom_card_orders = WeizoomCardOrder.objects.filter(status=0)
+		weizoom_card_orders = WeizoomCardOrder.objects.filter(status=0).order_by('-order_number')
 		weizoom_card_order_items = WeizoomCardOrderItem.objects.all()
 		w_cards = WeizoomCard.objects.filter(storage_status=WEIZOOM_CARD_STORAGE_STATUS_OUT)
 		order_item_id2weizoom_card_id = {}

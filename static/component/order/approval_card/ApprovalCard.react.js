@@ -118,33 +118,6 @@ var ApprovalCard = React.createClass({
 	                		<label>卡名称：</label>
 							<SelectRuleCard  ruleOrder={this.state.card_rule_order} cardRuleList={this.state.card_rule_list} />
 		                </div>
-		                <FormInput label="出库数量:" type="text" name="CardRuleNum" ref="CardRuleNum" validate="require-string" value={this.state.CardRuleNum} onChange={this.onChange}/>
-						<FormInput
-							value={this.state.valid_time_from} 
-							onChange={this.onChange}
-							label="有效期:"
-	                        type="text" 
-	                        data-min="now"
-	                        className="valid_time_from"
-	                        ref="validTimeFrom" 
-	                        id="valid_time_from" 
-	                        name="valid_time_from"  
-	                        data-enable-select-time="true"
-	                        data-ui-role="date_time_picker"
-	                        data-format="yy-mm-dd" />
-
-	                   <FormInput
-	                   		value={this.state.valid_time_to} 
-							onChange={this.onChange}
-	                        type="text" 
-	                        data-min="now"
-	                        className="valid_time_to"
-	                        ref="validTimeTo" 
-	                        id="valid_time_to" 
-	                        name="valid_time_to" 
-	                        data-enable-select-time="true"
-	                        data-ui-role="date_time_picker"
-	                        data-format="yy-mm-dd" />
 					</fieldset>
 
 			        <fieldset style={{background:'#FFF',marginLeft:'95px'}}>
@@ -242,18 +215,17 @@ var CardListLabel = React.createClass({
 		var property = event.target.getAttribute('name');
 		Action.updateAddProduct(index, property, value);
 	},
-	choiceCard: function() {
+	choiceCard: function(index) {
 		Reactman.PageAction.showDialog({
-			title: "创建备注", 
+			title: "选择卡库", 
 			component: ApprovalDialog, 
-			// data: {
-			// 	product: product
-			// },
-			// success: function(inputData, dialogState) {
-			// 	var product = inputData.product;
-			// 	var comment = dialogState.comment;
-			// 	Action.updateProductComment(product, comment);
-			// }
+			data: {
+				index: index
+			},
+			success: function(inputData, dialogState) {
+				console.log(inputData, dialogState,66666666666)
+				// Action.updateProductComment(product, comment);
+			}
 		});
 	},
 	render: function() {
@@ -264,8 +236,8 @@ var CardListLabel = React.createClass({
 				<FormInput label="卡名称:" type="text" name="CardName" ref="CardName" value={_this.state.cardlist[index].CardName} validate="require-notempty" onChange={_this.onChange.bind(_this,index)}/>
 				<a href="javascript:void(0);" style={{display:'inline-block',textAlign:'center',width:'80px'}} onClick={_this.choiceCard.bind(_this,index)}>选择卡库</a>
 				<FormInput label="出库数量:" type="text" name="CardRuleNum" ref="CardRuleNum" value={_this.state.cardlist[index].CardRuleNum} validate="require-positive-int" onChange={_this.onChange.bind(_this,index)}/>
-				<FormInput label="有效期:" type="text" name="CardRuleTimeStart" ref="CardRuleTimeStart" value={_this.state.cardlist[index].CardRuleTimeStart} validate="require-date" onChange={_this.onChange.bind(_this,index)}/>
-				<FormInput type="text" name="CardRuleTimeEnd" ref="CardRuleTimeEnd" value={_this.state.cardlist[index].CardRuleTimeEnd} validate="require-date" onChange={_this.onChange.bind(_this,index)}/>
+				<FormInput label="有效期:" type="text" name="valid_time_from" ref="valid_time_from" value={_this.state.cardlist[index].valid_time_from} validate="require-date" onChange={_this.onChange.bind(_this,index)}/>
+				<FormInput type="text" name="valid_time_to" ref="valid_time_to" value={_this.state.cardlist[index].valid_time_to} validate="require-date" onChange={_this.onChange.bind(_this,index)}/>
 			</fieldset>
 			)
 		})

@@ -12,6 +12,9 @@ var Reactman = require('reactman');
 
 var ApprovalDialog = Reactman.createDialog({
 	getInitialState: function() {
+		Reactman.Resource.get({
+			resource:'order.approval_card',
+		})
 		// var product = this.props.data.product;
 		return {
 			// comment: product.comment
@@ -29,6 +32,7 @@ var ApprovalDialog = Reactman.createDialog({
 		if (this.state.comment === 'error') {
 			Reactman.PageAction.showHint('error', '不能关闭对话框');
 		} else {
+			console.log(this.props.data.index,4444444444444444)
 			// var product = this.props.data.product;
 			// Reactman.Resource.post({
 			// 	resource: 'outline.data_comment',
