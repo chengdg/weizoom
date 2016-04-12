@@ -34,6 +34,20 @@
         height: 40px;
         margin-bottom: 5px;
     }
+    .xui-i-uploadHeadImg{
+        background: #fff;
+        width: 90px;
+        height: 90px;
+        margin-bottom: 10px;
+    }
+    .wui-i-uploadimg.xui-uploadHeadImg .xui-imgList li {
+        width: 90px;
+        height: 90px;
+    }
+    .wui-i-uploadimg.xui-uploadHeadImg .xui-imgList li img {
+        width: 90px;
+        height: 90px;
+    }
 </style>
 {% endblock %}
 
@@ -42,20 +56,20 @@
     <div class="xui-page xui-shvoteParticipance-Page">
         <span>我要报名</span>
         <span class="xui-backToVote xa-backToVote">返回投票>></span>
-        <!--<div class="wui-i-uploadimg">-->
-            <!--<div class="xui-uploadHeadImg xa-uploadHeadImg xui-productPhoto" data-control-type="appkit.uploadimg">-->
-                <!--<label class="">头像</label>-->
-                <!--<div class="xui-addPhoto xa-addPhoto mb10 fl pr">-->
-                    <!--<input-->
-                        <!--id="uploadHeadImg"-->
-                        <!--name="uploadHeadImg"-->
-                        <!--data-ui-role="uploadImage"-->
-                        <!--type="file"-->
-                        <!--style="opacity:0;top:0;left:0;width:45px;height:45px;"-->
-                    <!--/>-->
-                <!--</div>-->
-            <!--</div>-->
-        <!--</div>-->
+        <div class="wui-i-uploadimg xui-uploadHeadImg">
+            <div class="xui-productPhoto xa-inputControl" data-input-type="imgarea" data-input-name="headImg" data-control-type="appkit.uploadimg" data-validate='require-upload-img::请上传头像'>
+                <label class="">头像</label>
+                <div class="xui-i-uploadHeadImg xa-uploadHeadImg">
+                    <input
+                        id="uploadHeadImg"
+                        name="uploadHeadImg"
+                        data-ui-role="uploadImage"
+                        type="file"
+                        style="opacity: 0;top: 0;left: 0;width: 90px;height: 90px;"
+                    />
+                </div>
+            </div>
+        </div>
         <div class="xa-inputControl" data-input-type="textarea" data-input-name="name" data-control-type="appkit.qa">
             <textarea class="wui-i-input" data-validate="require-notempty::请填写名称"></textarea>
             <label class="">名称</label>

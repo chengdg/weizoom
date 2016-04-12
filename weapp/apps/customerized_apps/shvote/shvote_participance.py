@@ -92,23 +92,25 @@ class ShvoteParticipance(resource.Resource):
 			for k in sorted(termite_data.keys()):
 				v = termite_data[k]
 				pureName = k.split('_')[1]
+				print(v['value'])
+				print('---------------------')
 				result_list_temp = {
 					pureName : v['value']
 				}
 				result_list.append(result_list_temp)
-			if result_list[4]['detail-pic']!='[]':
-				detailPic = json.loads(result_list[4]['detail-pic'])
+			if result_list[5]['detail-pic']!='[]':
+				detailPic = json.loads(result_list[5]['detail-pic'])
 			else:
 				detailPic = []
 			try:
 				sh_participance = app_models.ShvoteParticipance(
 					belong_to = id,
 					member_id = member_id,
-					icon = '',
-					name = result_list[0]['name'],
+					icon = json.loads(result_list[0]['headImg'])[0],
+					name = result_list[1]['name'],
 					group = 'small',
-					serial_number = result_list[2]['number'],
-					details = result_list[3]['details'],
+					serial_number = result_list[3]['number'],
+					details = result_list[4]['details'],
 					pics = detailPic,
 					created_at = datetime.now()
 				)

@@ -117,7 +117,12 @@ class ShvoteRegistrators(resource.Resource):
 		data = request_util.get_fields_to_be_save(request)
 		update_data = {}
 		update_data['set__status'] = app_models.MEMBER_STATUS['PASSED']
-		app_models.ShvoteParticipance.objects(id=request.POST['id']).update(**update_data)
+		if request.POST.get('ids'):
+			ids = json.loads(request.POST['ids'])
+			app_models.ShvoteParticipance.objects(id__in=ids).update(**update_data)
+		elif request.POST.get('id'):
+			id = request.POST['id']
+			app_models.ShvoteParticipance.objects(id = id).update(**update_data)
 
 		response = create_response(200)
 		return response.get_response()
@@ -127,7 +132,12 @@ class ShvoteRegistrators(resource.Resource):
 		"""
 		响应DELETE
 		"""
-		app_models.ShvoteParticipance.objects(id=request.POST['id']).delete()
+		if request.POST.get('ids'):
+			ids = json.loads(request.POST['ids'])
+			app_models.ShvoteParticipance.objects(id__in=ids).delete()
+		elif request.POST.get('id'):
+			id = request.POST.get('id')
+			app_models.ShvoteParticipance.objects(id=request.POST['id']).delete()
 
 		response = create_response(200)
 		return response.get_response()
