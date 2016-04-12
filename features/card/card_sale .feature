@@ -143,7 +143,7 @@ Scenario:1.发放发售卡
 		
 
 
-@weizoom_card @card_order 
+@weizoom_card @card_order @hj_q
 Scenario:2.创建多条订单，按创建订单时间倒序排列
 	When test下订单
 	"""
@@ -153,7 +153,7 @@ Scenario:2.创建多条订单，按创建订单时间倒序排列
 		},{
 			"name":"测试卡1"
 		}],
-		order_info:{
+		"order_info":{
 			"order_id":"1"
 		}	
 	},{
@@ -163,7 +163,7 @@ Scenario:2.创建多条订单，按创建订单时间倒序排列
 		},{
 			"name":"测试卡2"
 		}],
-		order_info:{
+		"order_info":{
 			"order_id":"2"
 		}
 	}]
