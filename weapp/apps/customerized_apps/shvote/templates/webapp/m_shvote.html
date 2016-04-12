@@ -151,9 +151,9 @@
 				</div>
 			</div>
 			<div class="wui-group wa-groups">
-				<div class="active">初中组</div>
-				<div>高中组</div>
-				<div>大学组</div>
+				<div class="active wa-group-item">初中组</div>
+				<div class="wa-group-item">高中组</div>
+				<div class="wa-group-item">大学组</div>
 			</div>
 			<div class="wui-rank-list wa-rank-list">		
 			</div>
@@ -188,6 +188,24 @@
         if(W.isPC){
             return false;
         }
+        $('.wa-group-item').click(function(){
+        	var arg;
+        	var group = $(this).html();
+        	switch(group)
+        	{
+        	case '高中组':
+        		arg = 'high';
+        		break;
+        	case '大学组':
+        		arg = 'college';
+        		break;
+        	default:
+        		arg = 'small';
+        	}
+        	$('.wa-rank-list').html('');
+        	getRankInfo(arg);
+        	$(this).addClass('active').siblings().removeClass('active');
+        })
 
 		// 我要报名
 		$('.wa-imark').click(function(){
@@ -277,13 +295,14 @@
     	$('.wa-total-parted').html(record_info['total_parted']);
     	$('.wa-total-counts').html(record_info['total_counts']);
     	$('.wa-total-visits').html(record_info['total_visits']);
+    	$('.wa-enddate').html(record_info['end_date']);
     }
     function update_member_info(member_info){
     	
     }
 
     //获取排名信息
-    function getRankInfo(){
+    function getRankInfo(arg){
         W.getApi().call({
             app: 'm/apps/shvote',
             resource: 'get_rank_list',
@@ -293,16 +312,18 @@
                 recordId: W.appRecordId
             },
             success: function(data) {
-                console.log(data.result_list);
                 var result = data.result_list;
                 var tpl = new Template($('#tpl').html());
-                for(var i=0;i<result.length;i++){               	
-	                var s = tpl.render({
-	                    result_list_serial_number : result[i].serial_number,
-	                    result_list_name : result[i].name,
-	                    result_list_count : result[i].count
-	                });
-	                $('.wa-rank-list').append(s);
+                if(!arg) arg='small';
+                for(var i=0;i<result.length;i++){
+                	if(result[i].group == arg){               	
+		                var s = tpl.render({
+		                    result_list_serial_number : result[i].serial_number,
+		                    result_list_name : result[i].name,
+		                    result_list_count : result[i].count
+		                });
+		                $('.wa-rank-list').append(s);
+	            	}
            		}
             },
             error: function(data){
