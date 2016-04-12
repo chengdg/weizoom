@@ -78,7 +78,7 @@ var cardRuleOrderList = React.createClass({
 					<td>{card_rule_order.weizoom_card_order_item_num}</td>
 					<td>{card_rule_order.total_money}</td>
 					<td>{card_rule_order.card_kind}</td>
-					<td>001-002</td>
+					<td>{card_rule_order.weizoom_card_id_first}-{card_rule_order.weizoom_card_id_last}</td>
 					<td>
 						<div>{card_rule_order.order_attribute}</div>
 						<div>无</div>

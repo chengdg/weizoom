@@ -40,7 +40,6 @@ class RuleOrder(resource.Resource):
 			order_number = now_day,
 			order_attribute = order_attributes,
 			company = company_info,
-			discount_money = 3.14,
 			responsible_person = responsible_person,
 			contact = contact,
 			sale_name = sale_name,
@@ -59,11 +58,19 @@ class RuleOrder(resource.Resource):
 				weizoom_card_order_item_num = card_rule_num,
 				weizoom_card_order = weizoom_card_order
 			)
-			WeizoomCard.objects.filter(weizoom_card_rule=rule_id).update(
-				storage_status = WEIZOOM_CARD_STORAGE_STATUS_OUT,
-				weizoom_card_order_item_id = weizoom_card_order_items,
-				weizoom_card_order_id = weizoom_card_order,
-				storage_time = weizoom_card_order_items.created_at
-			)
+			weizoom_cards = WeizoomCard.objects.filter(weizoom_card_rule=rule_id,storage_status=WEIZOOM_CARD_STORAGE_STATUS_IN)[:card_rule_num]
+			for weizoom_card in weizoom_cards:
+				weizoom_card.storage_status = WEIZOOM_CARD_STORAGE_STATUS_OUT
+				weizoom_card.weizoom_card_order_item_id = weizoom_card_order_items
+				weizoom_card.weizoom_card_order_id = weizoom_card_order
+				weizoom_card.storage_time = weizoom_card_order_items.created_at
+				weizoom_card.save()
+
+			# WeizoomCard.objects.filter(weizoom_card_rule=rule_id,storage_status=WEIZOOM_CARD_STORAGE_STATUS_IN).update(
+			# 	storage_status = WEIZOOM_CARD_STORAGE_STATUS_OUT,
+			# 	weizoom_card_order_item_id = weizoom_card_order_items,
+			# 	weizoom_card_order_id = weizoom_card_order,
+			# 	storage_time = weizoom_card_order_items.created_at
+			# )
 		response = create_response(200)
 		return response.get_response()

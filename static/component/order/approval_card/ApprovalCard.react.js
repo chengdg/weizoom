@@ -8,6 +8,7 @@ var Store = require('.././rule_order/Store');
 var getCardRuleStore = require('.././rule_order/getCardRuleStore');
 var Action = require('.././rule_order/Action');
 var ReactDOM = require('react-dom');
+var ApprovalDialog = require('./ApprovalDialog.react');
 
 var Reactman = require('reactman');
 var FormInput = Reactman.FormInput;
@@ -94,6 +95,20 @@ var ApprovalCard = React.createClass({
 		}
 		Action.saveCardRuleOrder(date);
 	},
+	choiceCard: function() {
+		Reactman.PageAction.showDialog({
+			title: "创建备注", 
+			component: ApprovalDialog, 
+			// data: {
+			// 	product: product
+			// },
+			// success: function(inputData, dialogState) {
+			// 	var product = inputData.product;
+			// 	var comment = dialogState.comment;
+			// 	Action.updateProductComment(product, comment);
+			// }
+		});
+	},
 	render: function(){
 		return (
 			<div className="xui-outlineData-page xui-formPage">
@@ -106,6 +121,7 @@ var ApprovalCard = React.createClass({
 						</span>
 					</header>
 					<legend className="pl10 pt10 pb10"><a href="javascript:void(0);">添加卡库</a></legend>
+
 					<div className="fl pl20 pr20" style={{display:'none'}}>
 		                	<a>选择卡库</a>
 		            </div>
