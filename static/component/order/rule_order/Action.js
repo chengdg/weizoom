@@ -47,8 +47,22 @@ var Action = {
 			}
 		});
 	},
+	updateAddProduct: function(index, property, value) {
+		Dispatcher.dispatch({
+			actionType: Constant.CARD_DATA_UPDATE_ADD_PRODUCT,
+			data: {
+				index: index,
+				property: property,
+				value: value
+			}
+		});
+	},
+	addCardLines:function() {
+		Dispatcher.dispatch({
+			actionType:Constant.ADD_CARD_LINES,
+		})
+	},
 	getCardRuleOrder: function(filter){
-		console.log(filter,12345)
 		Resource.get({
 			resource: 'order.rule_order',
 			data: filter,
