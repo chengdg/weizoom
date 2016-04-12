@@ -162,8 +162,8 @@ class ShvoteRegistrators_Export(resource.Resource):
 		"""
 		export_id = request.GET.get('id',0)
 		pageinfo, datas = ShvoteRegistrators.get_datas(request)
-		download_excel_file_name = u'上海报名详情.xls'
-		excel_file_name = 'shvote_details_'+datetime.now().strftime('%H_%M_%S')+'.xls'
+		download_excel_file_name = u'上海投票报名详情.xls'
+		excel_file_name = 'shvote_registrators_'+datetime.now().strftime('%H_%M_%S')+'.xls'
 		dir_path_suffix = '%d_%s' % (request.user.id, date.today())
 		dir_path = os.path.join(settings.UPLOAD_DIR, dir_path_suffix)
 
