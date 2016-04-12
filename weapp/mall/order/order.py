@@ -479,13 +479,12 @@ class PrintOrder(resource.Resource):
                     product['price'] = product['purchase_price']
                     product['total_price'] = product['purchase_price'] * product['count']
 
-
             items.append({
                 'id': order.id,
                 'order_id': order.order_id,
                 'supplier_user_id': order.supplier_user_id,
                 'products': products,
-                'total_price': order.total_purchase_price if order.supplier_user_id else float('%.2f' % order.get_total_price()),
+                'total_price': order.total_purchase_price if order.supplier_user_id else Order.get_order_has_price_number(order),
                 'order_total_price': float('%.2f' % order.get_total_price()),
                 'ship_name': order.ship_name,
                 'ship_address': '%s %s' % (regional_util.get_str_value_by_string_ids(order.area), order.ship_address),
