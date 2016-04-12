@@ -1140,18 +1140,18 @@
     width: 100%;
     top:-3px;
     background-color: #fff;
-    font-family: "Microsoft YaHei","STXihei";
+
     /*top:100%;*/
     /*left:-300%;*/
 }
 #order-print-pages{
     width:790px;
     margin:0 auto;
-    font-size: 14px;
     background-color: #fff;
+
 }
 .order-print-title {
-    font-size: 16px;
+    font-size: 17px;
     font-weight: bold;
     text-align: center;
     margin-bottom: 20px;
@@ -1173,6 +1173,8 @@
     margin-bottom: 10px;
 }
 .order-print-page {
+    font-family: "Microsoft YaHei","STXihei";
+    font-size: 14px;
     padding: 0 20px;
 }
 .table.order-print-product-attr-names {
