@@ -62,11 +62,11 @@ class MShvote(resource.Resource):
 		now_date_str = datetime.now().strftime('%Y-%m-%d')
 		#判断当前会员每个组的可投票情况
 		group_name2canplay = {}
-		for g, log in group_name2member.items():
-			if log.has_key(now_date_str) and member_id in log[now_date_str]:
-				group_name2canplay[g] = True
-			else:
-				group_name2canplay[g] = False
+		# for g, log in group_name2member.items():
+		# 	if log.has_key(now_date_str) and member_id in log[now_date_str]:
+		# 		group_name2canplay[g] = True
+		# 	else:
+		# 		group_name2canplay[g] = False
 
 		member_info = {
 			'can_play_info': group_name2canplay,
