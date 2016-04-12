@@ -29,13 +29,16 @@ class ProductSupplierStatics(api_resource.ApiResource):
 				order_dot_ids = [order.order_id for order in order_has_products]
 				orders_list = mall_models.Order.objects.filter(id__in=order_dot_ids,status__in=[3,4,5]).values('payment_time').annotate(today_order_num=Count('payment_time'))
 				print "zl--------------------------",orders_list
-
-				return_list['date_list'] = []
-				return_list['values_list'] = []
+				data = {}
 				for order in orders_list:
-					return_list['date_list'].append(datetime.strftime(order['payment_time'],'%Y-%m-%d'))
-					return_list['values_list'].append(str(order['today_order_num']))
-		print "zl----------------------",return_list
+					order_pay_time = datetime.strftime(order['payment_time'],'%Y-%m-%d')
+					if order_pay_time in data:
+						data[order_pay_time] += order['today_order_num']
+					else:
+						data[order_pay_time] = order['today_order_num']
+
+
+		print "zl----------------------",data
 		return {
-					'data':return_list
+					'data':data
 				}
