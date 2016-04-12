@@ -84,7 +84,7 @@ Scenario:1.发放发售卡
 			"start_date":"2016-04-07",
 			"end_date":"2016-10-07"
 		}],
-		order_info:[{
+		order_info:{
 			"order_attribute":"发售卡",
 			"company":"窝夫小子",
 			"responsible_person":"研发",
@@ -92,7 +92,7 @@ Scenario:1.发放发售卡
 			"sale_name":"姜晓明",
 			"sale_deparment":"销售",
 			"comments":""
-		}]		
+		}		
 	}]
 	"""
 	Then 'test'能获得订单列表
@@ -152,9 +152,9 @@ Scenario:2.创建多条订单，按创建订单时间倒序排列
 		},{
 			"name":"测试卡1"
 		}],
-		order_info:[{
+		order_info:{
 			"order_id":"1"
-		}]		
+		}	
 	},{
 
 		"card_info":[{
@@ -162,9 +162,9 @@ Scenario:2.创建多条订单，按创建订单时间倒序排列
 		},{
 			"name":"测试卡2"
 		}],
-		order_info:[{
+		order_info:{
 			"order_id":"2"
-		}]
+		}
 	}]
 	"""
 	Then 'test'能获得订单列表
