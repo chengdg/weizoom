@@ -473,11 +473,11 @@ class PrintOrder(resource.Resource):
 
                 if product['promotion']:
                     if product['promotion']['type'] == "flash_sale":
-                        product['name'] += u"【限时抢购】"
+                        product['name'] = u"【限时抢购】" + product['name']
                     elif product['promotion']['type'] == "premium_sale:premium_product":
-                        product['name'] += u"【赠品】"
+                        product['name'] = u"【赠品】" + product['name']
                 if product['grade_discounted_money']:
-                        product['name'] += u"【会员优惠】"
+                        product['name'] = u"【会员优惠】" + product['name']
 
 
                 if product['custom_model_properties']:
