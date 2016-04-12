@@ -1,12 +1,12 @@
 {% extends "content_base_v2.html" %}
 {% load apps_filter %}
 
-    <style>
-        .tl.pl25 img{
-            height: 60px;
-            width: 60px;
-        }
-    </style>
+	<style>
+		.tl.pl25 img{
+			height: 60px;
+			width: 60px;
+		}
+	</style>
 {% block content-panel %}
 <div class="xui-ShvoteParticipancesAppPage xui-appPage-commonStyle">
 	<div class="relative">
@@ -45,10 +45,11 @@
 
 	<div class="panel panel-default xui-tableBox">
 		<div class="panel-header clearfix">
-			<button type="button" class="btn btn-default fl mr10 xa-batch_pass">批量审核通过
-			</button>
-			<button type="button" class="btn btn-default fl mr10 xa-batch_remove">批量删除
-			</button>
+			<label for="bottomSelectAll" class="xui-selectAll ml12">
+				<input type="checkbox" id="bottomSelectAll" class="xa-selectAll">全选
+			</label>
+			<a href="javascript:void(0);" class="btn btn-default ml10 xa-batchReview">批量审核通过</a>
+			<a href="javascript:void(0);" class="btn btn-default ml10 xa-batchDelete">批量删除</a>
 			<button type="button" class="btn btn-success fr mr10 xa-create_member">创建选手
 			</button>
 		</div>
@@ -61,9 +62,11 @@
 			data-template-id="#table"
 			data-enable-paginator="true"
 			data-enable-sort="false"
-			data-selectable="false"
-			data-disable-header-select="true"
+			data-selectable="true"
 			data-item-count-per-page="10"
+			data-disable-header-select="true"
+			data-outer-selecter='.xa-selectAll'
+			data-selecttable-tr='xa-selectTr'
 		>
 		</div>
 	</div>
@@ -75,7 +78,7 @@
 <!-- *start_prunt_task* -->
 	<!-- [prunt_task]
 	  {
-	    "task": "weizoom-load-app-views-dialogs"
+		"task": "weizoom-load-app-views-dialogs"
 	  }
 	-->
 {{ "shvote"|load_app_views_and_dialogs|safe }}
@@ -96,7 +99,7 @@
 		</thead>
 		<tbody>
 		  {{each(i, item) items}}
-			<tr data-id="${item.id}">
+			<tr data-id="${item.id}" class="xa-selectTr">
 				<td
 					class="tl pl25"
 					style="width:250px; height:60px;"
@@ -218,6 +221,72 @@ $(document).ready(function() {
 			}
 		});
 	});
+
+
+	//全选js
+	$('.xa-selectAll').click(function(event) {
+		var $checkbox = $(event.currentTarget);
+		var isChecked = $checkbox.is(':checked');
+		$('tbody .xa-select').prop('checked', isChecked);
+		$('.xa-selectAll').prop('checked', isChecked);
+	});
+
+	//批量通过
+	$('.xa-batchReview').click(function(event) {
+		var table = $('div[data-ui-role="advanced-table"]').data('view');
+		var ids = table.getAllSelectedDataIds();
+		W.getApi().call({
+			app: 'apps/shvote',
+			resource: 'shvote_registrators',
+			method: 'post',
+			args: {
+				"ids":JSON.stringify(ids),
+			},
+			success: function(data) {
+				W.showHint('success', '审核成功！');
+				table.reload();
+			},
+			error: function(response) {
+				W.showHint('error', '审核失败，请稍后再试！');
+			}
+		});
+
+	});
+
+	//批量删除
+	$('.xa-batchDelete').click(function(event) {
+		var table = $('div[data-ui-role="advanced-table"]').data('view');
+		var $el = $(event.target)
+		var ids = table.getAllSelectedDataIds();
+		xwarn('****** DD*******');
+		xwarn(ids);
+		W.requireConfirm({
+			$el: $el,
+			width: 420,
+			height: 55,
+			position: 'right-middle',
+			isTitle: false,
+			msg: '确定删除？',
+			confirm: function() {
+				W.getApi().call({
+					app: 'apps/shvote',
+					resource: 'shvote_registrators',
+					method: 'delete',
+					args: {
+						ids: JSON.stringify(ids)
+					},
+					success: function(data) {
+						W.showHint('success', '删除成功！');
+						table.reload();
+					},
+					error: function(response) {
+						W.showHint('error', '删除失败，请稍后再试！');
+					}
+				});
+			}
+		});
+	});
+
 });
 </script>
 {% endblock %}
