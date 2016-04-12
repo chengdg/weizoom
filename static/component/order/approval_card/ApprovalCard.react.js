@@ -215,18 +215,17 @@ var CardListLabel = React.createClass({
 		var property = event.target.getAttribute('name');
 		Action.updateAddProduct(index, property, value);
 	},
-	choiceCard: function() {
+	choiceCard: function(index) {
 		Reactman.PageAction.showDialog({
 			title: "选择卡库", 
 			component: ApprovalDialog, 
-			// data: {
-			// 	product: product
-			// },
-			// success: function(inputData, dialogState) {
-			// 	var product = inputData.product;
-			// 	var comment = dialogState.comment;
-			// 	Action.updateProductComment(product, comment);
-			// }
+			data: {
+				index: index
+			},
+			success: function(inputData, dialogState) {
+				console.log(inputData, dialogState,66666666666)
+				// Action.updateProductComment(product, comment);
+			}
 		});
 	},
 	render: function() {
