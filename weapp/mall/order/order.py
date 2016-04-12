@@ -458,7 +458,7 @@ class PrintOrder(resource.Resource):
             # 获取order对应的member的显示名
             member = webappuser2member.get(order.webapp_user_id, None)
             if member:
-                order.buyer_name = member.username_for_html
+                order.buyer_name = member.username_for_print
             else:
                 order.buyer_name = u'未知'
             order.product_count = order2productcount.get(order.id, 0)
@@ -470,6 +470,16 @@ class PrintOrder(resource.Resource):
 
             for product in products:
                 property_values = []
+
+                if product['promotion']:
+                    if product['promotion']['type'] == "flash_sale":
+                        product['name'] += u"【限时抢购】"
+                    elif product['promotion']['type'] == "premium_sale:premium_product":
+                        product['name'] += u"【赠品】"
+                if product['grade_discounted_money']:
+                        product['name'] += u"【会员优惠】"
+
+
                 if product['custom_model_properties']:
                     for model in product['custom_model_properties']:
                         property_values.append(model['property_value'])
