@@ -480,7 +480,7 @@ class PrintOrder(resource.Resource):
                         product['name'] = u"【会员优惠】" + product['name']
 
 
-                if product['custom_model_properties']:
+                if product.has_key('custom_model_properties') and product['custom_model_properties']:
                     for model in product['custom_model_properties']:
                         property_values.append(model['property_value'])
                 product['property_values'] = '/'.join(property_values)
