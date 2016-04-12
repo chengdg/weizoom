@@ -680,8 +680,12 @@ $(document).ready(function() {
 		function toggleSelect() {
 			$('[name="selectAllPrintOrders"]').prop('checked',!$('[name="selectPrintOrder"]:not(:checked)').length);
 		}
-		function print() {
+		function print(evt) {
 			if(isBusy){
+				return;
+			}
+			if(!$('[name="selectPrintOrder"]:checked').length){
+				W.showHint('error', '请选择需要打印的订单！');
 				return;
 			}
 			isBusy = 1;
@@ -754,7 +758,6 @@ $(document).ready(function() {
 		}
 		function getData(success, error) {
 			//
-//			success(formatData({"errMsg": "", "code": 200, "data": {"items": [{"postage": "0.00", "pay_money": 58.0, "total_price": 58.0, "buyer_name": "bill", "order_id": "20160408140603870^6u", "created_at": "2016-04-08 14:06:03", "save_money": -38.0, "ship_name": "bill", "total_purchase_price": 20.0, "product_count": 2, "ship_address": "\u5317\u4eac\u5e02 \u5317\u4eac\u5e02 \u6d77\u6dc0\u533a \u6cf0\u5174\u5927\u53a6", "products": [{"supplier_length": 2, "price": "10.00", "supplier_name": "", "supplier_user_length": 2, "custom_model_properties": null, "thumbnails_url": "/static/upload/6_20160308/1457416092055_838.jpg", "supplier_user_id": 6, "integral_money": 0, "id": 20, "physical_unit": "", "count": 1, "total_price": "10.00", "is_deleted": false, "name": "\u8001\u5317\u4eac\u70b8\u9171\u97621111111", "grade_discounted_money": 0.0, "user_code": "4444", "supplier_store_name": "\u5317\u4eac\u7279\u4ea7", "product_model_name": "standard", "supplier": 0, "promotion": null, "purchase_price": 10.0, "integral_count": 0}, {"supplier_length": 2, "price": "10.00", "supplier_name": "", "supplier_user_length": 2, "custom_model_properties": null, "thumbnails_url": "/static/upload/6_20160308/1457416063058_111.jpg", "supplier_user_id": 6, "integral_money": 0, "id": 19, "physical_unit": "", "count": 1, "total_price": "10.00", "is_deleted": false, "name": "\u5317\u4eac\u70e4\u9e2d", "grade_discounted_money": 0.0, "user_code": "333333", "supplier_store_name": "\u5317\u4eac\u7279\u4ea7", "product_model_name": "standard", "supplier": 0, "promotion": null, "purchase_price": 10.0, "integral_count": 0}], "supplier_user_id": 6, "ship_tel": "13811223344", "order_total_price": 0.0, "id": 102}], "qrcode_url": null, "store_name": "", "order_count": 1}, "success": true, "innerErrMsg": ""}));
 //			return;
 			var orderIds = [];
 			$('[name="selectPrintOrder"]:checked').each(function (i,el) {
@@ -777,6 +780,7 @@ $(document).ready(function() {
 					success(formatData(ret));
 				},
 				error: function(resp) {
+					W.showHint('error', '加载订单数据失败！');
 					error();
 				}
 			});
