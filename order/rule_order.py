@@ -75,6 +75,12 @@ class RuleOrder(resource.Resource):
 		weizoom_card_orders = WeizoomCardOrder.objects.filter(status=0)
 		weizoom_card_order_items = WeizoomCardOrderItem.objects.all()
 		w_cards = WeizoomCard.objects.filter(storage_status=WEIZOOM_CARD_STORAGE_STATUS_OUT)
+		rule_id2weizoom_card_id = {}
+		for w_card in w_cards:
+			if w_card.weizoom_card_rule_id in rule_id2weizoom_card_id:
+				rule_id2weizoom_card_id[w_card.weizoom_card_rule_id].append(w_card.weizoom_card_id)
+			else:
+				rule_id2weizoom_card_id[w_card.weizoom_card_rule_id] = [w_card.weizoom_card_id]
 		rule_ids = set([w_card.weizoom_card_rule_id for w_card in w_cards])
 		card_rules = WeizoomCardRule.objects.filter(id__in=rule_ids)
 		order_id2rule_id = {order_item.weizoom_card_order_id:order_item.weizoom_card_rule_id for order_item in weizoom_card_order_items}
@@ -93,8 +99,13 @@ class RuleOrder(resource.Resource):
 			card_order_dic = {}
 			if card_order.id in order_id2rule_id:
 				rule_id = order_id2rule_id[card_order.id]
+				weizoom_card_ids = sorted(rule_id2weizoom_card_id[rule_id])
+				weizoom_card_id_first = weizoom_card_ids[0]
+				weizoom_card_id_last = weizoom_card_ids[-1]
 				count = id2weizoom_card_order_item[card_order.id].weizoom_card_order_item_num
 				card_order_dic['id'] = card_order.id
+				card_order_dic['weizoom_card_id_first'] = weizoom_card_id_first
+				card_order_dic['weizoom_card_id_last'] = weizoom_card_id_last
 				card_order_dic['order_number'] = card_order.order_number
 				card_order_dic['name'] ='' if rule_id not in id2card_rule else id2card_rule[rule_id].name
 				card_order_dic['money'] = '%.2f' %id2card_rule[rule_id].money
