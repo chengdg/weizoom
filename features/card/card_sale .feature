@@ -176,7 +176,7 @@ Scenario:2.创建多条订单，按创建订单时间倒序排列
 		"order_id":"1"
 	}]
 	"""
-@weizoom_card @card_order 
+@weizoom_card @card_order  @hj_w
 Scenario:3.发放内部领用卡
         #发放通用卡内部领用卡
 	Given test登录管理系统
@@ -195,7 +195,7 @@ Scenario:3.发放内部领用卡
 			"apply_department":"爱昵咖啡",
 			"project_name":"咖啡领导者",
 			"purpose":"做咖啡",
-			"apply_person":"大宝"
+			"apply_person":"大宝",
 			"comments":""
 		}		
 	}]

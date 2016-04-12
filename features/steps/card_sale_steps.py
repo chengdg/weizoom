@@ -31,17 +31,29 @@ def step_impl(context, user):
 		order_info = info["order_info"]
 		# order_id = '' if not order_info["order_id"] else order_info["order_id"]
 		order_attributes = WEIZOOM_CARD_ORDER_TEXT2ATTRIBUTE[u'发售卡' if not "order_attribute" in order_info.keys() else order_info["order_attribute"]]
-		rule_order_info = {
-			'order_id': -1 if not "order_id" in order_info.keys() else order_info["order_id"],
-			'order_attributes': 0 if not order_attributes else order_attributes,
-			'company_info': u'窝夫小子' if not "company" in order_info.keys() else order_info["company"],
-			'responsible_person':u'窝夫小子' if not "responsible_person" in order_info.keys() else order_info["responsible_person"],
-			'contact':u'7777777' if not "contact" in order_info.keys() else order_info["contact"],
-			'sale_name':u'7777777' if not "sale_name" in order_info.keys() else order_info["sale_name"],
-			'sale_deparment':u'7777777' if not "sale_deparment" in order_info.keys() else order_info["sale_deparment"],
-			'remark':u'7777777' if not "comments" in order_info.keys() else order_info["comments"],
-			'rule_order':[]
-		}
+		if order_attributes == card_models.WEIZOOM_CARD_ORDER_ATTRIBUTE_SALE:
+			rule_order_info = {
+				'order_id': -1 if not "order_id" in order_info.keys() else order_info["order_id"],
+				'order_attributes': 0 if not order_attributes else order_attributes,
+				'company_info': u'窝夫小子' if not "company" in order_info.keys() else order_info["company"],
+				'responsible_person':u'窝夫小子' if not "responsible_person" in order_info.keys() else order_info["responsible_person"],
+				'contact':u'7777777' if not "contact" in order_info.keys() else order_info["contact"],
+				'sale_name':u'7777777' if not "sale_name" in order_info.keys() else order_info["sale_name"],
+				'sale_deparment':u'7777777' if not "sale_deparment" in order_info.keys() else order_info["sale_deparment"],
+				'remark':u'备注' if not "comments" in order_info.keys() else order_info["comments"],
+				'rule_order':[]
+			}
+		if order_attributes == card_models.WEIZOOM_CARD_ORDER_ATTRIBUTE_INTERNAL:
+			rule_order_info = {
+				'order_id': -1 if not "order_id" in order_info.keys() else order_info["order_id"],
+				'order_attributes': 1 if not order_attributes else order_attributes,
+				'use_departent': u'部门' if not "apply_department" in order_info.keys() else order_info["apply_department"],
+				'project_name': u'项目' if not "project_name" in order_info.keys() else order_info["project_name"],
+				'appliaction':u'目的' if not "purpose" in order_info.keys() else order_info["purpose"],
+				'use_persion':u'领用人' if not "apply_person" in order_info.keys() else order_info["apply_person"],
+				'remark':u'备注' if not "comments" in order_info.keys() else order_info["comments"],
+				'rule_order':[]
+			}
 		for rule in info["card_info"]:
 			name = rule["name"]
 			rule_order_info["rule_order"].append({
@@ -67,6 +79,10 @@ def step_impl(context, user):
 		order_item_list = json.loads(rules['order_item_list'])
 		order_attribute = rules["order_attribute"]
 		apply_person = rules["responsible_person"]
+
+		use_departent = rules["use_departent"]
+		use_persion = rules["use_persion"]
+		order_attribute_num = WEIZOOM_CARD_ORDER_TEXT2ATTRIBUTE[order_attribute]
 		company = rules["company"]
 		for order_item in order_item_list:
 			real_pay += float(order_item["total_money"])
@@ -87,17 +103,30 @@ def step_impl(context, user):
 				"type": order_item["card_kind"],
 				"card_range": card_range,
 				"is_limit": order_item["valid_restrictions"],
-				"vip_shop": "",
+				"vip_shop": ""
 			})
-		rule_order = {
-			"order_id": rules["order_number"],
-			"card_info" : rule_list,
-			"order_attribute": order_attribute,
-			"apply_person": apply_person,
-			"apply_department": company,
-			"real_pay": '%.2f' % real_pay,
-			"order_money": '%.2f' % real_pay
-		}
+		if order_attribute_num == card_models.WEIZOOM_CARD_ORDER_ATTRIBUTE_SALE:
+			print "555555555555555"
+			rule_order = {
+				"order_id": rules["order_number"],
+				"card_info" : rule_list,
+				"order_attribute": order_attribute,
+				"apply_person": apply_person,
+				"apply_department": company,
+				"real_pay": '%.2f' % real_pay,
+				"order_money": '%.2f' % real_pay
+			}
+		if order_attribute_num == card_models.WEIZOOM_CARD_ORDER_ATTRIBUTE_INTERNAL:
+			print use_persion,66666666666666
+			rule_order = {
+				"order_id": rules["order_number"],
+				"card_info" : rule_list,
+				"order_attribute": order_attribute,
+				"apply_person": use_persion,
+				"apply_department": use_departent,
+				"real_pay": '%.2f' % real_pay,
+				"order_money": '%.2f' % real_pay
+			}
 		actual_list.append(rule_order)
 
 	print actual_list,"++++++++++++++="
