@@ -22,7 +22,7 @@ var Action = {
 	},
 	saveOrdinaryRule: function(data) {
 		Resource.put({
-			resource: 'card.create_ordinary',
+			resource: 'card.ordinary',
 			data: data,
 			dispatch: {
 				dispatcher: Dispatcher,
