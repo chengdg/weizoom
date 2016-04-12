@@ -1161,6 +1161,7 @@
 }
 .order-print-info-table.table>tbody>tr>td.order-print-info-odd {
     width: 42%;
+    vertical-align: baseline;
 }
 .order-print-info-row {
     line-height: 17px;
