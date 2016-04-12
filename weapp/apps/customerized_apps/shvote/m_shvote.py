@@ -78,14 +78,14 @@ class MShvote(resource.Resource):
 			'total_visits': total_visits,
 			'groups': groups
 		}
-		rank_info = get_rank_list(record_id) #获取排名信息
+		# rank_info = get_rank_list(record_id) #获取排名信息
 
 		response = create_response(200)
 		response.data = {
 			'activity_status': activity_status,
 			'member_info': member_info,
-			'record_info': record_info,
-			'rank_info': rank_info
+			'record_info': record_info
+			# 'rank_info': rank_info
 		}
 		return response.get_response()
 
@@ -156,29 +156,6 @@ def update_shvote_status(shvote):
 		shvote.reload()
 	return activity_status, shvote
 
-def get_rank_list(record_id):
-	"""
-	获取排名信息，取前100名
-	@param record_id: 活动id
-	@return: list
-	"""
-	datas = app_models.ShvoteParticipance.objects(belong_to=record_id, status=app_models.MEMBER_STATUS['PASSED']).order_by('-count')[:100]
-	i = 0
-	result_list = []
-	for data in datas:
-		i += 1
-		result_list.append({
-			'rank': i,
-			'name': data.name,
-			'icon': data.icon,
-			'count': data.count,
-			'group': data.group,
-			'serial_number': data.serial_number,
-			'details': data.details,
-			'pics': data.pics
-		})
-	return result_list
-
 def left_pad(num):
 	"""
 	三位数，不够在左侧加0 ，例如 001，032，100
@@ -187,3 +164,37 @@ def left_pad(num):
 	"""
 	num = int(num)
 	return num if num >= 100 else '0%d'%num if num >= 10 else '00%d'%num
+
+
+class GetRankList(resource.Resource):
+	app = 'apps/shvote'
+	resource = 'get_rank_list'
+
+	def api_get(request):
+		"""
+		获取排名信息，取前100名
+		@param record_id: 活动id
+		@return: list
+		"""
+		record_id = request.GET.get('recordId', None)
+		datas = app_models.ShvoteParticipance.objects(belong_to=record_id, status=app_models.MEMBER_STATUS['PASSED']).order_by('-count')[:100]
+		i = 0
+		result_list = []
+		for data in datas:
+			i += 1
+			result_list.append({
+				'rank': i,
+				'name': data.name,
+				'icon': data.icon,
+				'count': data.count,
+				'group': data.group,
+				'serial_number': data.serial_number,
+				'details': data.details,
+				'pics': data.pics
+			})
+
+		response = create_response(200)
+		response.data = {
+			'result_list': result_list
+		}
+		return response.get_response()

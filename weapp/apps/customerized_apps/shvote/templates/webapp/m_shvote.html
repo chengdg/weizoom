@@ -226,8 +226,7 @@
                 var member_info = data.member_info;
                 update_member_info(member_info);
                 //更新排名信息
-                var rank_info = data.rank_info;
-                update_rank_info(rank_info);
+                getRankInfo();
             },
             error: function(data){
                 if(data.errMsg == 'is_deleted'){
@@ -251,8 +250,23 @@
     function update_member_info(member_info){
 
     }
-    function update_rank_info(rank_info){
 
+    //获取排名信息
+    function getRankInfo(){
+        W.getApi().call({
+            app: 'm/apps/shvote',
+            resource: 'get_rank_list',
+            method: 'get',
+            args: {
+                recordId: W.appRecordId
+            },
+            success: function(data) {
+                console.log(data.result_list);
+            },
+            error: function(data){
+				wuiAlert(data.errMsg);
+            }
+        });
     }
 </script>
 {% endblock %}

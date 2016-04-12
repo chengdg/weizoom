@@ -132,15 +132,15 @@ $(document).ready(function() {
                 value: value
             };
         }
-        console.log(data);
         participanceData = {
             webapp_owner_id: W.webappOwnerId,
             belong_to: W.appRecordId,
             termite_data: JSON.stringify(data)
         };
-        console.log(participanceData);
         var $submitButtonContainer = $('.xa-submitButtonContainer');
         getParticipance(participanceData,$submitButtonContainer);
+        console.log('22222222222222');
+        console.log(participanceData);
     });
 
     function getParticipance(participanceData,$submitButtonContainer){
