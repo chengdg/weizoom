@@ -9,6 +9,9 @@ var Action = require('./Action');
 var ReactDOM = require('react-dom');
 
 var Reactman = require('reactman');
+var PageAction = Reactman.PageAction;
+var Dispatcher = Reactman.Dispatcher;
+var Resource = Reactman.Resource;
 var cardRuleOrderList = React.createClass({
 	displayName: 'cardRuleOrderList',
 
@@ -30,6 +33,23 @@ var cardRuleOrderList = React.createClass({
 			cardRuleOrder:Store.getCardRuleOrder()
 		})
 	},
+	rowFormatter: function(field, value, data) {
+		if (field === 'name') {
+			return (
+				<a href={'/card/ordinary_cards/?weizoom_card_rule_id='+data.id}>{value}</a>
+			)
+		}else if (field === 'action') {
+			return (
+			<div>
+				<a className="btn btn-link btn-xs">导出</a>
+				<a className="btn btn-link btn-xs mt5">追加</a>
+				<a className="btn btn-link btn-xs">备注</a>
+			</div>
+			);
+		} else {
+			return value;
+		}
+	},
 	onClickActivation:function(orderId,is_activation){
 		console.log(orderId,'sssssss')
 		var cur_filter = {
@@ -42,23 +62,23 @@ var cardRuleOrderList = React.createClass({
 	render: function() {
 		_this=this;
 		var cardRuleOrder = this.state.cardRuleOrder;
-		console.log(cardRuleOrder);
 		var cardRechargesNodes = cardRuleOrder.map(function(card_rule_order,index){
 			if (card_rule_order.is_activation ==0){
-				var card_is_activation =<div><a style={{display:'block'}} onClick={_this.onClickActivation.bind(_this,card_rule_order.id,card_rule_order.is_activation)} >卡激活{card_rule_order.is_activation}</a><a style={{display:'block'}}>编辑订单</a><a style={{display:'block'}}>备注</a></div>
+				var card_is_activation =<div><a style={{display:'block'}} onClick={_this.onClickActivation.bind(_this,card_rule_order.id,card_rule_order.is_activation)} >卡激活{card_rule_order.is_activation}</a><a style={{display:'block'}}>编辑订单</a><a style={{display:'block'}} onClick={_this.onClickActivation.bind(_this,card_rule_order.id,-1)}>取消订单</a><a style={{display:'block'}}>备注</a></div>
+				var card_rule_order_is_click=<div>{card_rule_order.order_number}</div>
 			}else{
-				var card_is_activation =<div><a style={{display:'block'}} onClick={_this.onClickActivation.bind(_this,card_rule_order.id,card_rule_order.is_activation)} >停用{card_rule_order.is_activation}</a><a style={{display:'block'}}>编辑订单</a><a style={{display:'block'}} onClick={_this.onClickActivation.bind(_this,card_rule_order.id,-1)}>取消订单</a><a style={{display:'block'}}>备注</a></div>
+				var card_is_activation =<div><a style={{display:'block'}} onClick={_this.onClickActivation.bind(_this,card_rule_order.id,card_rule_order.is_activation)} >停用{card_rule_order.is_activation}</a><a style={{display:'block'}}>编辑订单</a><a style={{display:'block'}}>备注</a></div>
+				var card_rule_order_is_click=<div style={{cursor:'pointer'}}><a>{card_rule_order.order_number}</a></div>
 			}
-			
 			return (
 				<tr key={index}>
-					<td>{card_rule_order.order_number}</td>
+					<td>{card_rule_order_is_click}</td>
 					<td>{card_rule_order.name}</td>
 					<td>{card_rule_order.money}</td>
 					<td>{card_rule_order.weizoom_card_order_item_num}</td>
 					<td>{card_rule_order.total_money}</td>
 					<td>{card_rule_order.card_kind}</td>
-					<td>001-002</td>
+					<td>{card_rule_order.weizoom_card_id_first}-{card_rule_order.weizoom_card_id_last}</td>
 					<td>
 						<div>{card_rule_order.order_attribute}</div>
 						<div>无</div>
@@ -107,6 +127,7 @@ var cardRuleOrderList = React.createClass({
 
 				</div>
 				<div style={{clear: "both"}}></div>
+				
 			</div>
 		)
 		

@@ -13,10 +13,12 @@ Background:
 	When test新建通用卡
 		"""
 		[{
+			"name":"",
 			"prefix_value":"999",
 			"type":"virtual",
 			"money":"10.00",
-			"num":"5"
+			"num":"5",
+			"comments":""
 		}]
 		"""
 	And test新建限制卡
@@ -63,7 +65,7 @@ Background:
 
 Scenario: 1.查看订单详情
 	Given test登录管理系统
-	Then test能获得订单详情列表
+	Then 'test'能获得订单详情列表
 		"""
 		[{
 			"name":"测试卡1",
@@ -84,7 +86,7 @@ Scenario: 1.查看订单详情
 			"card_range":"999000001-999000010"
 		}]
 		"""	
-	Then test能获得'测试卡1'微众卡列表
+	Then 'test'能获得'测试卡1'微众卡列表
 		"""
 		[{
 			"name":"测试卡1"，

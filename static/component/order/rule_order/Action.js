@@ -9,7 +9,7 @@ var Resource = Reactman.Resource;
 var Action = {
 	saveCardRuleOrder: function(filter) {
 		Resource.post({
-			resource: 'order.create_rule_order',
+			resource: 'order.order_data',
 			data: {
 				rule_order: filter.rule_order,
 				card_rule_num: filter.card_rule_num,
@@ -31,7 +31,7 @@ var Action = {
 	},
 	getCardRule: function(){
 		Resource.get({
-			resource: 'order.get_card_cule',
+			resource: 'order.card_rule',
 			dispatch: {
 				dispatcher: Dispatcher,
 				actionType: Constant.GET_CARD_RULE,
