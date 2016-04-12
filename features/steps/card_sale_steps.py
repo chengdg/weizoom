@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 
 from behave import *
 import bdd_util
-
+import string
 from card import models as card_models
 from weapp import models as weapp_models
 from django.contrib.auth.models import User
@@ -73,10 +73,16 @@ def step_impl(context, user):
 			weizoom_card_id_first = order_item["weizoom_card_id_first"]
 			weizoom_card_id_last = order_item["weizoom_card_id_last"]
 			card_range = weizoom_card_id_first + "-" + weizoom_card_id_last
-			print order_item["name"],order_item["card_kind"],card_range,77777777777
-			print order_item["money"],order_item["weizoom_card_order_item_num"],real_pay,88888888888
+
+			if order_item["name"]:
+				name = order_item["name"]
+			else:
+				name = order_item["money"].replace('.00',u'元卡')
+				# name = u'%s元卡' % order_item["money"]
+			print type(name),88888888888
+			print name
 			rule_list.append({
-				"name": order_item["name"],
+				"name": name,
 				"money": str(order_item["money"]),
 				"num": str(order_item["weizoom_card_order_item_num"]),
 				"total_money": order_item["total_money"],
@@ -90,8 +96,11 @@ def step_impl(context, user):
 			"order_attribute": order_attribute,
 			"apply_person": apply_person,
 			"apply_department": company,
-			"real_pay": '%.2f' % real_pay
+			"real_pay": '%.2f' % real_pay,
+			"order_money": '%.2f' % real_pay
 		}
 	actual_list.append(rule_order)
+
+	print expected
 	print actual_list,"++++++++++++++="
 	bdd_util.assert_list(expected, actual_list)

@@ -21,7 +21,7 @@ Background:
 	When  test新建通用卡
 	"""
 		[{
-			"name":"测试卡",
+			"name":"",
 			"prefix_value":"000",
 			"type":"entity",
 			"money":"10.00",
@@ -74,7 +74,7 @@ Scenario:1.发放发售卡
 	"""
 	[{
 		"card_info":[{
-			"name":"测试卡",
+			"name":"10元卡",
 			"order_num":"4",
 			"start_date":"2016-04-07 00:00",
 			"end_date":"2016-10-07 00:00"

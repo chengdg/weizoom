@@ -100,6 +100,7 @@ class RuleOrder(resource.Resource):
 						order_item_dic['is_activation'] =u'' if card_order.id not in order2is_activation else order2is_activation[card_order.id]
 						order_item_dic['shop_limit_list'] = id2card_rule[rule_id].shop_limit_list
 						order_item_dic['valid_restrictions'] = u'满%.f使用' % valid_restrictions if valid_restrictions != -1 else u'不限制'
+						print u'' if rule_id not in id2card_rule else id2card_rule[rule_id].name,"==================="
 						order_item_list.append(order_item_dic)
 				# if order_item_id in order_item_id2weizoom_card_id:
 				# 	weizoom_card_ids = sorted(order_item_id2weizoom_card_id[order_item_id])
