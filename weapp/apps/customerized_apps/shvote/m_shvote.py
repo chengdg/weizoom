@@ -78,14 +78,12 @@ class MShvote(resource.Resource):
 			'total_visits': total_visits,
 			'groups': groups
 		}
-		# rank_info = get_rank_list(record_id) #获取排名信息
 
 		response = create_response(200)
 		response.data = {
 			'activity_status': activity_status,
 			'member_info': member_info,
 			'record_info': record_info
-			# 'rank_info': rank_info
 		}
 		return response.get_response()
 
