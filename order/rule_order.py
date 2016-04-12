@@ -31,7 +31,6 @@ class RuleOrder(resource.Resource):
 	def api_get(request):
 		status_orderId = request.GET.get('orderId','')
 		status_is_activation = request.GET.get('is_activation','')
-		print status_is_activation,555555555555555555555
 		if status_orderId and status_is_activation:
 			cur_cards = WeizoomCard.objects.filter(storage_status=WEIZOOM_CARD_STORAGE_STATUS_OUT,weizoom_card_order_id=status_orderId)
 			if int(status_is_activation) ==1:			
@@ -63,7 +62,7 @@ class RuleOrder(resource.Resource):
 			else:
 				card_order_id2id[order_item.weizoom_card_order_id] = [order_item.id]
 		order_id2rule_id = {order_item.id:order_item.weizoom_card_rule_id for order_item in weizoom_card_order_items}
-		id2weizoom_card_order_item = {weizoom_card_order_item.weizoom_card_order_id:weizoom_card_order_item for weizoom_card_order_item in weizoom_card_order_items}
+		id2weizoom_card_order_item = {weizoom_card_order_item.id:weizoom_card_order_item for weizoom_card_order_item in weizoom_card_order_items}
 		id2card_rule = {card_rule.id:card_rule for card_rule in card_rules}
 		order2is_activation={}
 		weizoom_card_orders_ids =[W.id for W in weizoom_card_orders]
@@ -77,31 +76,31 @@ class RuleOrder(resource.Resource):
 		card_order_list = []
 		for card_order in weizoom_card_orders:
 			card_order_dic = {}
-			print order_item_id2weizoom_card_id,99999999
 			if card_order.id in card_order_id2id:
 				order_items = card_order_id2id[card_order.id]
 				order_item_list = []
 				for order_item_id in order_items:
-					print order_item_id,7777777777
 					if order_item_id in order_item_id2weizoom_card_id:
 						order_item_dic = {}
 						rule_id = order_id2rule_id[order_item_id]
 						weizoom_card_ids = sorted(order_item_id2weizoom_card_id[order_item_id])
 						weizoom_card_id_first = weizoom_card_ids[0]
 						weizoom_card_id_last = weizoom_card_ids[-1]
-						count = 0 if card_order.id not in id2weizoom_card_order_item else id2weizoom_card_order_item[card_order.id].weizoom_card_order_item_num
+						valid_restrictions = id2card_rule[rule_id].valid_restrictions
+
+						count = 0 if order_item_id not in id2weizoom_card_order_item else id2weizoom_card_order_item[order_item_id].weizoom_card_order_item_num
 						order_item_dic['weizoom_card_id_first'] = weizoom_card_id_first
 						order_item_dic['weizoom_card_id_last'] = weizoom_card_id_last
-						order_item_dic['name'] ='' if rule_id not in id2card_rule else id2card_rule[rule_id].name
-						order_item_dic['money'] = '%.2f' %id2card_rule[rule_id].money
-						order_item_dic['total_money'] = '%.2f' %(id2card_rule[rule_id].money * count)
+						order_item_dic['name'] =u'' if rule_id not in id2card_rule else id2card_rule[rule_id].name
+						order_item_dic['money'] = u'%.2f' %id2card_rule[rule_id].money
+						order_item_dic['total_money'] = u'%.2f' %(id2card_rule[rule_id].money * count)
 						order_item_dic['weizoom_card_order_item_num'] = count
 						order_item_dic['card_kind'] = WEIZOOM_CARD_KIND2TEXT[id2card_rule[rule_id].card_kind]
 						order_item_dic['card_class'] = WEIZOOM_CARD_CLASS2TEXT[id2card_rule[rule_id].card_class]
-						order_item_dic['is_activation'] ='' if card_order.id not in order2is_activation else order2is_activation[card_order.id]
+						order_item_dic['is_activation'] =u'' if card_order.id not in order2is_activation else order2is_activation[card_order.id]
 						order_item_dic['shop_limit_list'] = id2card_rule[rule_id].shop_limit_list
+						order_item_dic['valid_restrictions'] = u'满%.f使用' % valid_restrictions if valid_restrictions != -1 else u'不限制'
 						order_item_list.append(order_item_dic)
-						print order_item_list,88888888888
 				# if order_item_id in order_item_id2weizoom_card_id:
 				# 	weizoom_card_ids = sorted(order_item_id2weizoom_card_id[order_item_id])
 				# 	weizoom_card_id_first = weizoom_card_ids[0]
@@ -123,14 +122,12 @@ class RuleOrder(resource.Resource):
 					card_order_dic['order_attribute'] = WEIZOOM_CARD_ORDER_ATTRIBUTE2TEXT[card_order.order_attribute]
 					card_order_dic['responsible_person'] = card_order.responsible_person
 					card_order_dic['company'] = card_order.company
-					print order_item_list,666666666666
 					card_order_dic['created_at'] = card_order.created_at.strftime("%Y-%m-%d")
 					card_order_dic['order_item_list'] = json.dumps(order_item_list)
 					card_order_list.append(card_order_dic)
 		data = {
 			'card_order_list': json.dumps(card_order_list)
 		}
-
 		response = create_response(200)
 		response.data = data
 

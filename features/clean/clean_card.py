@@ -7,3 +7,5 @@ def clean():
 	logging.info('clean database for outline app')
 	card_models.WeizoomCardRule.objects.all().delete()
 	card_models.WeizoomCard.objects.all().delete()
+	card_models.WeizoomCardOrder.objects.all().delete()
+	card_models.WeizoomCardOrderItem.objects.all().delete()
