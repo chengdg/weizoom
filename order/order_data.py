@@ -31,7 +31,13 @@ class RuleOrder(resource.Resource):
 		contact = post.get('contact','')
 		sale_name = post.get('sale_name','')
 		sale_departent = post.get('sale_departent','')
-		order_attributes = post.get('order_attributes','')
+		order_attributes = post.get('order_attributes',-1)
+
+		use_departent = post.get('use_departent','')
+		project_name = post.get('project_name','')
+		appliaction = post.get('appliaction','')
+		use_persion = post.get('use_persion','')
+
 		remark = post.get('remark','')
 		order_id = post.get('order_id',-1)
 		rule_order = json.loads(rule_order)
@@ -39,17 +45,30 @@ class RuleOrder(resource.Resource):
 			now_day = order_id
 		else:
 			now_day = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S").replace('-','').replace(':','').replace(' ','')
-		weizoom_card_order = WeizoomCardOrder.objects.create(
-			owner_id = request.user.id,
-			order_number = now_day,
-			order_attribute = order_attributes,
-			company = company_info,
-			responsible_person = responsible_person,
-			contact = contact,
-			sale_name = sale_name,
-			sale_departent = sale_departent,
-			remark=remark
-		)
+			print now_day,7777777777777
+		if int(order_attributes) == WEIZOOM_CARD_ORDER_ATTRIBUTE_SALE:
+			weizoom_card_order = WeizoomCardOrder.objects.create(
+				owner_id = request.user.id,
+				order_number = now_day,
+				order_attribute = order_attributes,
+				company = company_info,
+				responsible_person = responsible_person,
+				contact = contact,
+				sale_name = sale_name,
+				sale_departent = sale_departent,
+				remark = remark
+			)
+		if int(order_attributes) == WEIZOOM_CARD_ORDER_ATTRIBUTE_INTERNAL:
+			weizoom_card_order = WeizoomCardOrder.objects.create(
+				owner_id = request.user.id,
+				order_number = now_day,
+				order_attribute = order_attributes,
+				use_departent = use_departent,
+				project_name = project_name,
+				appliaction = appliaction,
+				use_persion = use_persion,
+				remark = remark
+			)
 
 		for rule in rule_order:
 			rule_id = int(rule['rule_id'])
@@ -71,8 +90,9 @@ class RuleOrder(resource.Resource):
 				weizoom_card.weizoom_card_order_item_id = weizoom_card_order_items
 				weizoom_card.weizoom_card_order_id = weizoom_card_order
 				weizoom_card.storage_time = weizoom_card_order_items.created_at
-				weizoom_card.activated_to = responsible_person
-				weizoom_card.department = company_info
+				weizoom_card.activated_to = responsible_person if responsible_person else use_persion
+				weizoom_card.department = company_info if company_info else use_departent
+
 				weizoom_card.save()
 			# WeizoomCard.objects.filter(weizoom_card_rule=rule_id,storage_status=WEIZOOM_CARD_STORAGE_STATUS_IN).update(
 			# 	storage_status = WEIZOOM_CARD_STORAGE_STATUS_OUT,

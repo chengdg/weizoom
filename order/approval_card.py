@@ -43,17 +43,12 @@ class ApprovalCard(resource.Resource):
 		"""
 		获取卡规则列表
 		"""
-		common_cur_page = request.GET.get('common_cur_page',1)
-		limit_cur_page = request.GET.get('limit_cur_page',1)
-		common_count_per_page = request.GET.get('common_count_per_page',8)
-		limit_count_per_page = request.GET.get('limit_count_per_page',8)
-		card_rule={}
-		card_rule['common_card_rule']={}
-		card_rule['limit_card_rule'] = {}
-		card_rule['common_card_rule']['pageinfo'],card_rule['common_card_rule']['data'] = get_rule_list(0,common_cur_page, common_count_per_page, request) #通用卡
-		card_rule['limit_card_rule']['pageinfo'],card_rule['limit_card_rule']['data'] = get_rule_list(1,limit_cur_page, limit_count_per_page, request) #限制卡
-		card_rule['common_card_rule']['pageinfo'] = card_rule['common_card_rule']['pageinfo'].to_dict()
-		card_rule['limit_card_rule']['pageinfo'] = card_rule['limit_card_rule']['pageinfo'].to_dict()
+		cardruletype = request.GET.get('cardruletype','common')
+		if cardruletype=='common':
+			pageinfo, weizoom_card = get_rule_list(0,request)
+		else:
+			pageinfo, weizoom_card = get_rule_list(1,request)
 		response = create_response(200)
-		response.data=card_rule
+		response.data.rows = weizoom_card
+		response.data.pagination_info = pageinfo.to_dict()
 		return response.get_response()

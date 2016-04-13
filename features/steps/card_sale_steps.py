@@ -67,21 +67,24 @@ def step_impl(context, user):
 		order_item_list = json.loads(rules['order_item_list'])
 		order_attribute = rules["order_attribute"]
 		apply_person = rules["responsible_person"]
+
+		use_departent = rules["use_departent"]
+		use_persion = rules["use_persion"]
+		order_attribute_num = WEIZOOM_CARD_ORDER_TEXT2ATTRIBUTE[order_attribute]
 		company = rules["company"]
 		status =u'未激活'
-		order_status = u'未激活'
 		print rules['is_activation'],88888888888
 		if rules['is_activation'] ==1:
 			status =u'已激活'
 		print rules['status'] ,777777777777777777777777
-		if  rules['status'] ==1 and rules['is_activation'] ==0:
+		if  rules['status'] ==1 and rules['is_activation'] == 0:
 			status = u'已取消'
 		for order_item in order_item_list:
 			real_pay += float(order_item["total_money"])
 			weizoom_card_id_first = order_item["weizoom_card_id_first"]
 			weizoom_card_id_last = order_item["weizoom_card_id_last"]
 			card_range = weizoom_card_id_first + "-" + weizoom_card_id_last
-			print order_item,999999999999
+
 			if order_item["name"]:
 				name = order_item["name"]
 			else:
@@ -95,20 +98,31 @@ def step_impl(context, user):
 				"type": order_item["card_kind"],
 				"card_range": card_range,
 				"is_limit": order_item["valid_restrictions"],
-				"vip_shop": "",
+				"vip_shop": ""
 			})
-		rule_order = {
-			"order_id": rules["order_number"],
-			"card_info" : rule_list,
-			"order_attribute": order_attribute,
-			"apply_person": apply_person,
-			"apply_department": company,
-			"real_pay": '%.2f' % real_pay,
-			"order_money": '%.2f' % real_pay,
-			"status": status,
-		}
+		if order_attribute_num == card_models.WEIZOOM_CARD_ORDER_ATTRIBUTE_SALE:
+			rule_order = {
+				"order_id": rules["order_number"],
+				"card_info" : rule_list,
+				"order_attribute": order_attribute,
+				"apply_person": apply_person,
+				"apply_department": company,
+				"real_pay": '%.2f' % real_pay,
+				"order_money": '%.2f' % real_pay,
+				"status": status,
+			}
+		if order_attribute_num == card_models.WEIZOOM_CARD_ORDER_ATTRIBUTE_INTERNAL:
+			rule_order = {
+				"order_id": rules["order_number"],
+				"card_info" : rule_list,
+				"order_attribute": order_attribute,
+				"apply_person": use_persion,
+				"apply_department": use_departent,
+				"real_pay": '%.2f' % real_pay,
+				"order_money": '%.2f' % real_pay,
+				"status": status,
+			}
 		actual_list.append(rule_order)
-
 	print actual_list,"++++++++++++++="
 	print expected,"-------------="
 	bdd_util.assert_list(expected, actual_list)

@@ -79,7 +79,7 @@ def step_impl(context, user):
 			"name": rule["name"],
 			"money": rule["money"],
 			"num": str(rule["count"]),
-			"stock": str(rule["count"]),
+			"stock": str(rule["storage_count"]),
 			"type": rule["card_kind"],
 			"card_range": rule["card_range"],
 			"comments": rule['remark']
@@ -156,7 +156,7 @@ def step_impl(context, user):
 			"name": rule["name"],
 			"money": rule["money"],
 			"num": str(rule["count"]),
-			"stock": str(rule["count"]),
+			"stock": str(rule["storage_count"]),
 			"type": rule["card_kind"],
 			"is_limit": rule["valid_restrictions"],
 			"vip_shop": ",".join(rule["shop_limit_list"]),

@@ -1,0 +1,41 @@
+input[name="name"], input[name="remark"]{
+	width: 300px;
+}
+fieldset div:nth-child(3){
+	display: inline-block;
+}
+.note{
+	position: absolute;
+	display: inline-block;
+	height: 34px;
+	line-height: 34px;
+	margin-bottom: 15px;
+	margin-left: 15px;
+	color: #aaa;;
+}
+
+input[name="weizoom_card_id_prefix"],
+input[name="money"],
+input[name="count"]{
+	width: 200px;
+}
+select[name="card_kind"]{
+	width: 120px;
+}
+fieldset div:nth-child(6){
+	display: inline-block;
+}
+fieldset div:nth-child(9){
+	display: inline-block;
+}
+.money_note, .count_note{
+	position: absolute;
+	display: inline-block;
+	height: 34px;
+	line-height: 34px;
+	margin-bottom: 15px;
+	margin-left: 15px;
+}
+.errorHint{
+	width: 200px;
+}

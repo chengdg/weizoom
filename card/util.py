@@ -10,6 +10,7 @@ from core import paginator
 from models import *
 from weapp.models import *
 import random
+from datetime import datetime
 
 #创建微众卡
 def create_weizoom_card_rule(card_class,request):
@@ -85,8 +86,11 @@ def create_weizoom_card_password(passwords):
 
 
 #获取卡规则的信息
-def get_rule_list(card_class, cur_page, count_per_page, request):
+def get_rule_list(card_class, request):
 	weizoom_card_rules = WeizoomCardRule.objects.filter(card_class=card_class).order_by('-id')
+
+	count_per_page = int(request.GET.get('count_per_page', 15))
+	cur_page = int(request.GET.get('page', 1))
 	#分页的数据
 	pageinfo, weizoom_card_rules = paginator.paginate(weizoom_card_rules, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
 
@@ -110,12 +114,18 @@ def get_rule_list(card_class, cur_page, count_per_page, request):
 	rule_id2card_ids = {}
 	rule_id2cards = {}
 
+	rule_id2storage_out_count = {}
 	for c in all_cards:
 		card_rule_id = c.weizoom_card_rule_id
 		if card_rule_id not in rule_id2cards:
 			rule_id2cards[card_rule_id] = [c]
 		else:
 			rule_id2cards[card_rule_id].append(c)
+
+		if card_rule_id not in rule_id2storage_out_count:
+			rule_id2storage_out_count[card_rule_id] = 0
+		if c.storage_status == WEIZOOM_CARD_STORAGE_STATUS_OUT:
+			rule_id2storage_out_count[card_rule_id] += 1
 
 	for r_id in card_rule_ids:
 		if r_id in rule_id2cards:
@@ -132,15 +142,16 @@ def get_rule_list(card_class, cur_page, count_per_page, request):
 				shop_limit_list_name.append(user_id2store_name[int(user_id)])
 		cur_weizoom_card_rule = {
 			"id": rule.id,
-			"name": rule.name if rule.name else '%.f元卡' % rule.money,
+			"name": rule.name if rule.name else u'%.f元卡' % rule.money,
 			"count": rule.count,
+			"storage_count": rule.count - rule_id2storage_out_count[rule.id],
 			"remark": rule.remark,
-			"money": '%.2f' % rule.money,
+			"money": u'%.2f' % rule.money,
 			"card_kind": WEIZOOM_CARD_KIND2TEXT[rule.card_kind],
-			"is_new_member_special": u"新会员" if rule.is_new_member_special else "",
+			"is_new_member_special": u"新会员" if rule.is_new_member_special else u"",
 			"card_class": rule.card_class,
 			"shop_limit_list": shop_limit_list_name,
-			"valid_restrictions": '满%.f使用' % rule.valid_restrictions if rule.valid_restrictions != -1 else u'不限制'
+			"valid_restrictions": u'满%.f使用' % rule.valid_restrictions if rule.valid_restrictions != -1 else u'不限制'
 		}
 
 		#卡号区间
@@ -148,9 +159,56 @@ def get_rule_list(card_class, cur_page, count_per_page, request):
 			weizoom_card_ids = rule_id2card_ids[cur_weizoom_card_rule["id"]]
 			weizoom_card_id_start = weizoom_card_ids[0]
 			weizoom_card_id_end = weizoom_card_ids[1]
-			card_num_range = '%s-%s'%(weizoom_card_id_start,weizoom_card_id_end)
+			card_num_range = u'%s-%s'%(weizoom_card_id_start,weizoom_card_id_end)
 			cur_weizoom_card_rule["card_range"] = card_num_range
 		except:
 			pass
 		cur_weizoom_card_rules.append(cur_weizoom_card_rule)
 	return pageinfo, cur_weizoom_card_rules
+
+
+
+#获取卡库存的信息
+def get_card_list(request):
+	weizoom_card_rule_id = int(request.GET.get('weizoom_card_rule_id', '-1'))
+	weizoom_cards = WeizoomCard.objects.filter(weizoom_card_rule_id=weizoom_card_rule_id)
+	is_export = False
+
+	#获得已经过期的微众卡id
+	today = datetime.today()
+	card_ids_need_expire = []
+	for card in weizoom_cards:
+		#记录过期并且是未使用的微众卡id
+		if card.expired_time:
+			if card.expired_time < today:
+				card_ids_need_expire.append(card.id)
+	if len(card_ids_need_expire) > 0:
+		WeizoomCard.objects.filter(id__in=card_ids_need_expire).update(is_expired=True)
+
+	count_per_page = int(request.GET.get('count_per_page', 15))
+	cur_page = int(request.GET.get('page', 1))
+	pageinfo, weizoom_cards = paginator.paginate(weizoom_cards, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
+
+	weizoom_card_rule = WeizoomCardRule.objects.get(id=weizoom_card_rule_id)
+	cur_weizoom_cards = []
+	for c in weizoom_cards:
+		money = '%.2f' % c.money  #余额
+		rule_money = '%.2f' % weizoom_card_rule.money  #面值
+
+		cur_weizoom_cards.append({
+			"id": c.id,
+			"storage_status": c.storage_status,
+			"storage_status_text": WEIZOOM_CARD_STORAGE_STATUS2TEXT[c.storage_status],
+			"weizoom_card_id": c.weizoom_card_id,
+			"password": c.password,
+			"active_card_user_id": c.active_card_user_id,#激活卡用户的id
+			"user_id": request.user.id,#当前用户的id
+			"money": money, # 余额
+			"storage_time": c.storage_time.strftime('%Y-%m-%d %H:%M:%S') if c.storage_time else u"",
+			"is_expired": c.is_expired,
+			"department": c.department,
+			"activated_to": c.activated_to,
+			"remark": c.remark if c.remark else u"",
+			"rule_money": rule_money
+		})
+	return pageinfo, cur_weizoom_cards

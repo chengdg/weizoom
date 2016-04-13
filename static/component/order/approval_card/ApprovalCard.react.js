@@ -19,12 +19,13 @@ var ApprovalCard = React.createClass({
 		return ({
 			card_rule_order: [],
 			card_rule_list: [],
+			orderInfo :{}
 		})
 	},
 	onChangeStore: function() {
-		this.setState(
-			Store.getData()
-		)
+		this.setState({
+			orderInfo : Store.getData()
+		});
 	},
 	componentWillMount: function() {
 		Action.getCardRule();
@@ -43,6 +44,7 @@ var ApprovalCard = React.createClass({
 		Action.updateProduct(property, value);
 	},
 	onChooseOrderAttribute: function(){
+		Action.resetProduct();
 		var value = this.refs.orderAttributes.value;
 		if(value == 0){
 			this.refs.saleCard.style.display='block';
@@ -60,38 +62,29 @@ var ApprovalCard = React.createClass({
 		}
 	},
 	onCardOrderSave: function(){
-		console.log(Store.getData());
+		var card_list = Store.getDataCardlines();
+		var order_infos = this.state.orderInfo;
 		var ruleStore = Store.getData();
 		var rule_order = this.state.card_rule_order;
-		// rule_order.push({
-		// 	'card_rule_num'
-		// })
 		var value = this.refs.orderAttributes.value;
 		var remark = this.refs.remark.value;
-		if(value == 0){
-			var date = {
-				'rule_order':JSON.stringify(rule_order),
-				'card_rule_num': ruleStore.CardRuleNum,
-				'valid_time_from': ruleStore.valid_time_from,
-				'valid_time_to': ruleStore.valid_time_to,
-				'company_info': ruleStore.company_info,
-				'responsible_person': ruleStore.responsible_person,
-				'contact': ruleStore.contact,
-				'sale_name': ruleStore.saleName,
-				'sale_departent': ruleStore.sale_departent,
-				'order_attributes':value,
-				'remark':remark
-			}
-			console.log("========");
-			console.log(date);
-		}else if(value == 1){
-			this.refs.useDepartent.value;
-			this.refs.projectName.value;
-			this.refs.appliaction.value;
-			this.refs.usePersion.value;
-		}
-		else if(value == 2){
-			this.refs.orderNumber.value;
+		var date = {
+			'rule_order':JSON.stringify(card_list),
+			'card_rule_num': order_infos['card_rule_num'],
+			'valid_time_from': order_infos['valid_time_from'],
+			'valid_time_to': order_infos['valid_time_to'],
+			'company_info': order_infos['company_info'],
+			'responsible_person': order_infos['responsible_person'],
+			'contact': order_infos['contact'],
+			'sale_name': order_infos['sale_name'],
+			'sale_departent': order_infos['sale_departent'],
+			'use_departent': order_infos['use_departent'],
+			'project_name': order_infos['project_name'],
+			'appliaction': order_infos['appliaction'],
+			'use_persion': order_infos['use_persion'],
+			'order_number': order_infos['order_number'],
+			'order_attributes':value,
+			'remark':remark
 		}
 		Action.saveCardRuleOrder(date);
 	},
@@ -113,13 +106,6 @@ var ApprovalCard = React.createClass({
 					<CardListLabel />{/*.卡库.*/}
 					<legend className="pl10 pt10 pb10"><a href="javascript:void(0);" onClick={this.addCardLines}>添加卡库</a></legend>
 
-					<fieldset style={{marginLeft:'95px'}}>
-		                <div>
-	                		<label>卡名称：</label>
-							<SelectRuleCard  ruleOrder={this.state.card_rule_order} cardRuleList={this.state.card_rule_list} />
-		                </div>
-					</fieldset>
-
 			        <fieldset style={{background:'#FFF',marginLeft:'95px'}}>
 		        		<div className="">
 							<label>订单属性：</label>
@@ -131,20 +117,20 @@ var ApprovalCard = React.createClass({
 							</select>
 						</div>
 						<div ref="saleCard" className="sale_card">
-							<FormInput label="客户企业信息:" type="text" name="company_info" ref="companyInfo" value={this.state.company_info} onChange={this.onChange} />
-							<FormInput label="客户经办人信息:" type="text" name="responsible_person" ref="responsiblePerson" value={this.state.responsible_person} onChange={this.onChange} />
-							<FormInput label="客户联系方式:" type="text" name="contact" ref="contact" value={this.state.contact} onChange={this.onChange}/>
-							<FormInput label="销售员姓名:" type="text" name="sale_name" ref="saleName" value={this.state.sale_name} onChange={this.onChange}/>
-							<FormInput label="销售部门:" type="text" name="sale_departent" ref="saleDepartent" value={this.state.sale_departent} onChange={this.onChange}/>
+							<FormInput label="客户企业信息:" type="text" name="company_info" ref="companyInfo" value={this.state.orderInfo.company_info} onChange={this.onChange} />
+							<FormInput label="客户经办人信息:" type="text" name="responsible_person" ref="responsiblePerson" value={this.state.orderInfo.responsible_person} onChange={this.onChange} />
+							<FormInput label="客户联系方式:" type="text" name="contact" ref="contact" value={this.state.orderInfo.contact} onChange={this.onChange}/>
+							<FormInput label="销售员姓名:" type="text" name="sale_name" ref="saleName" value={this.state.orderInfo.sale_name} onChange={this.onChange}/>
+							<FormInput label="销售部门:" type="text" name="sale_departent" ref="saleDepartent" value={this.state.orderInfo.sale_departent} onChange={this.onChange}/>
 						</div>
 						<div ref="internalCard" className="internal_card" style={{display:'none'}}>
-							<FormInput label="领用部门:" type="text" name="use_departent" ref="useDepartent" value={this.state.use_departent} onChange={this.onChange}/>
-							<FormInput label="项目名称:" type="text" name="project_name" ref="projectName" value={this.state.project_name} onChange={this.onChange}/>
-							<FormInput label="用途:" type="text" name="appliaction" ref="appliaction" value={this.state.appliaction} onChange={this.onChange}/>
-							<FormInput label="领用人:" type="text" name="use_persion" ref="usePersion" value={this.state.use_persion} onChange={this.onChange}/>
+							<FormInput label="领用部门:" type="text" name="use_departent" ref="useDepartent" value={this.state.orderInfo.use_departent} onChange={this.onChange}/>
+							<FormInput label="项目名称:" type="text" name="project_name" ref="projectName" value={this.state.orderInfo.project_name} onChange={this.onChange}/>
+							<FormInput label="用途:" type="text" name="appliaction" ref="appliaction" value={this.state.orderInfo.appliaction} onChange={this.onChange}/>
+							<FormInput label="领用人:" type="text" name="use_persion" ref="usePersion" value={this.state.orderInfo.use_persion} onChange={this.onChange}/>
 						</div>
 						<div ref="discountCard" className="discount_card" style={{display:'none'}}>
-							<FormInput label="对应发单号:" type="text" name="order_number" ref="orderNumber" value={this.state.order_number} onChange={this.onChange}/>
+							<FormInput label="对应发单号:" type="text" name="order_number" ref="orderNumber" value={this.state.orderInfo.order_number} onChange={this.onChange}/>
 						</div>
 						<div >
 							<label className="">备注：</label>
@@ -165,47 +151,15 @@ var ApprovalCard = React.createClass({
 	}
 });
 
-SelectRuleCard = React.createClass({
-	onSaveCardRule: function(){
-		var rule_name = this.refs.chooseRuleName.value;
-		var select_node = this.refs.chooseRuleName.getDOMNode();
-		var selected_index = select_node.selectedIndex;
-		var rule_id = select_node.options[selected_index].getAttribute('data-rule-id');
-		var rule_obj ={
-			'rule_name':rule_name,
-			'rule_id':rule_id
-		}
-		var ruleOrder = this.props.ruleOrder;
-		console.log(ruleOrder.length);
-		ruleOrder.splice(0,1);
-		ruleOrder.push(rule_obj);
-	},
-	render: function(){
-		var card_rule_list = this.props.cardRuleList.map(function(rule_list,index){
-			return(
-				<option ref="ruleName" data-rule-id={rule_list.id} key={index}>{rule_list.name}</option>
-			)
-		});
-		return(
-			<div>
-				<select onChange={this.onSaveCardRule} ref="chooseRuleName" >
-					<option ref="ruleName" data-rule-id='0'>请选择</option>
-					{card_rule_list}
-				</select>
-			</div>
-		)
-	}
-})
-//
 var CardListLabel = React.createClass({
 	getInitialState: function() {
 		return ({
-			cardlist:[{CardName:'',CardRuleNum:'',CardRuleTimeStart:'',CardRuleTimeEnd:''}]
+			cardlist:[{card_name:'',card_rule_num:'',valid_time_from:'',valid_time_to:''}]
 		})
 	},
 	onChangeStore: function() {
 		this.setState({
-			cardlist:Store.getData().cardlines
+			cardlist:Store.getDataCardlines()
 		})
 	},
 	componentDidMount: function(){
@@ -233,11 +187,11 @@ var CardListLabel = React.createClass({
 		var cardlines=this.state.cardlist.map(function(card,index) {
 			return (
 			<fieldset className="form-inline" key={index}>
-				<FormInput label="卡名称:" type="text" name="CardName" ref="CardName" value={_this.state.cardlist[index].CardName} validate="require-notempty" onChange={_this.onChange.bind(_this,index)}/>
+				<FormInput label="卡名称:" type="text" name="card_name" ref="CardName" value={_this.state.cardlist[index].card_name} validate="require-notempty" onChange={_this.onChange.bind(_this,index)}/>
 				<a href="javascript:void(0);" style={{display:'inline-block',textAlign:'center',width:'80px'}} onClick={_this.choiceCard.bind(_this,index)}>选择卡库</a>
-				<FormInput label="出库数量:" type="text" name="CardRuleNum" ref="CardRuleNum" value={_this.state.cardlist[index].CardRuleNum} validate="require-positive-int" onChange={_this.onChange.bind(_this,index)}/>
-				<FormInput label="有效期:" type="text" name="valid_time_from" ref="valid_time_from" value={_this.state.cardlist[index].valid_time_from} validate="require-date" onChange={_this.onChange.bind(_this,index)}/>
-				<FormInput type="text" name="valid_time_to" ref="valid_time_to" value={_this.state.cardlist[index].valid_time_to} validate="require-date" onChange={_this.onChange.bind(_this,index)}/>
+				<FormInput label="出库数量:" type="text" name="card_rule_num" ref="CardRuleNum" value={_this.state.cardlist[index].card_rule_num} validate="require-positive-int" onChange={_this.onChange.bind(_this,index)}/>
+				<FormInput label="有效期:" type="text" name="valid_time_from" ref="valid_time_from" value={_this.state.cardlist[index].valid_time_from} validate="require-notempty" onChange={_this.onChange.bind(_this,index)}/>
+				<FormInput type="text" name="valid_time_to" ref="valid_time_to" value={_this.state.cardlist[index].valid_time_to} validate="require-notempty" onChange={_this.onChange.bind(_this,index)}/>
 			</fieldset>
 			)
 		})

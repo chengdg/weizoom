@@ -113,6 +113,10 @@ class RuleOrder(resource.Resource):
 					card_order_dic['order_attribute'] = WEIZOOM_CARD_ORDER_ATTRIBUTE2TEXT[card_order.order_attribute]
 					card_order_dic['responsible_person'] = card_order.responsible_person
 					card_order_dic['company'] = card_order.company
+					card_order_dic['use_departent'] = card_order.use_departent
+					card_order_dic['project_name'] = card_order.project_name
+					card_order_dic['appliaction'] = card_order.appliaction
+					card_order_dic['use_persion'] = card_order.use_persion
 					card_order_dic['created_at'] = card_order.created_at.strftime("%Y-%m-%d")
 					card_order_dic['is_activation'] =u'' if card_order.id not in order2is_activation else order2is_activation[card_order.id]
 					card_order_dic['order_item_list'] = json.dumps(order_item_list)

@@ -32,7 +32,6 @@ var CommentDialog = Reactman.createDialog({
 		if (this.state.checkedOptions.length == 0){
 			Reactman.PageAction.showHint('error', '请至少选择一个');
 		}else{
-			Action.addCheckedShops(this.state.checkedOptions);
 			this.closeDialog();
 		}
 	},

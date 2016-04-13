@@ -10,7 +10,7 @@ var ValidaterClass = function() {
         'require-three-number': {
             type: 'regex',
             extract: 'value',
-            regex: /^\d{1,3}?$/g,
+            regex: /^\d{3,3}?$/g,
             errorHint: '格式不正确，请输入3位数'
         },
 	};
