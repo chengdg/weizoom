@@ -1,0 +1,15 @@
+{% extends "page.html" %}
+
+{% block js %}
+<script type="text/javascript">
+	W.breadcrumb = [{
+		name: '出库列表',
+		href: '/order/rule_order/'
+	}, {
+		name: '订单列表详情',
+		href: '#'
+	}];
+	W.card_rule_order_id = "{{card_rule_order_id}}";
+	W.pageContentComponent = './order/order_detail/CardRuleOrderDetail.react';
+</script>
+{% endblock %}

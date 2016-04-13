@@ -33,7 +33,7 @@ var cardRuleOrderList = React.createClass({
 				)
 			}else if (value == 'name'){
 				return (
-					<span key={index}><a href={'/order/detail?order_id='+data['id']}>{order_item['name']}</a><br></br></span>
+					<span key={index}><a href={'/order/order_detail?order_id='+data['id']}>{order_item['name']}</a><br></br></span>
 				)
 			}else{
 				return (

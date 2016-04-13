@@ -13,5 +13,5 @@ module.exports = keyMirror({
 	GET_LIMIT_AND_COMMON_CARD: null,
 	ORDER_STATUS:null,
 	UPDATE_CARD_LINES:null,
-	CARD_DATA_RESET_PRODUCT: null
+	CARD_DATA_RESET_PRODUCT: null,
 });

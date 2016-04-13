@@ -101,6 +101,18 @@ var Action = {
 			}
 
 		})
+	},
+	getRuleId: function(order_id){
+		Resource.get({
+			resource: 'order.order_detail',
+			data: {
+				'order_id':order_id
+			},
+			dispatch: {
+				dispatcher: Dispatcher,
+				actionType: Constant.GET_RULE_ID,
+			}
+		})
 	}
 }
 module.exports = Action;

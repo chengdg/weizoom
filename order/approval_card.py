@@ -25,17 +25,10 @@ class ApprovalCard(resource.Resource):
 		"""
 		显示卡规则列表
 		"""
-		# card_rules = WeizoomCardRule.objects.all()
-		# card_rule_list = [{
-		# 	'id':card_rule.id,
-		# 	'name':card_rule.name,
-		# 	'count':card_rule.count
-		# }for card_rule in card_rules]
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
 			'second_navs': nav.get_second_navs(),
 			'second_nav_name': SECOND_NAV,
-			# 'card_rule_list':json.dumps(card_rule_list)
 		})
 		return render_to_response('order/approval_card.html', c)
 
