@@ -1,14 +1,13 @@
-#_author_:邓成龙 2016.04.12
+#_author_:邓成龙 2016.04.13
 
-Feature: 微信用户查看排行信息
+Feature: 微信用户查看高级投票主页中的排行榜
 	"""
 		微信用户进入高级投票主页
-		微信用户点击“排行”链接进入排行页面
-		查看排行榜列表
 	"""
 Background:
 	Given jobs登录系统
 	When jobs新建微信高级投票活动
+		When jobs新建微信高级投票活动
 		"""
 		[{
 			"title":"微信高级投票-进行中",
@@ -46,7 +45,6 @@ Background:
 					"reply_content":"微信高级投票",
 					"reply_type":"text_picture"
 				}]
-		
 		}]
 		"""
 	When bill关注jobs的公众号
@@ -80,9 +78,8 @@ Background:
 		}
 	"""
 
-@mall2 @apps @shvote @shvote_rank
+@mall2 @apps @shvote @shvote_top
 Scenario:1 没有有微信用户报名参与活动和有微信用户报名参与活动，但是均未通过审核
-	#选手分组-无分组
 	Given jobs登录系统
 	When jobs审核不通过'bill'
 	When bill关注jobs的公众号
@@ -96,7 +93,7 @@ Scenario:1 没有有微信用户报名参与活动和有微信用户报名参与
 		[]
 		"""
 
-@mall2 @apps @shvote @shvote_rank
+@mall2 @apps @shvote @shvote_top
 Scenario:2 有微信用户报名参与活动并通过审核
 	Given jobs登录系统
 	When jobs审核通过'bill'
@@ -112,26 +109,23 @@ Scenario:2 有微信用户报名参与活动并通过审核
 		"""
 		[{
 			"group":"初中组",
-			"ranking":1,
+			"number":"003",
 			"player":"bill",
-			"votes":1,
-			"number":"003"
+			"votes":1
 		},{
 			"group":"初中组",
-			"ranking":2,
+			"number":"002",
 			"player":"dill",
-			"votes":0,
-			"number":"002"
+			"votes":0
 		}]
 		"""
 	Then tom获得微信高级投票活动内容'高中组'
 		"""
 		[{
 			"group":"高中组",
-			"ranking":1,
+			"number":"001",
 			"player":"leo",
-			"votes":0,
-			"number":"001"
+			"votes":0
 		}]
 		"""
 	When tom在高级投票中为'dill'投票
@@ -139,15 +133,13 @@ Scenario:2 有微信用户报名参与活动并通过审核
 		"""
 		[{
 			"group":"初中组",
-			"ranking":1,
+			"number":"003",
 			"player":"bill",
-			"votes":1,
-			"number":"003"
+			"votes":1
 		},{
 			"group":"初中组",
-			"ranking":2,
+			"number":"002",
 			"player":"dill",
-			"votes":1,
-			"number":"002"
+			"votes":1
 		}]
 		"""
