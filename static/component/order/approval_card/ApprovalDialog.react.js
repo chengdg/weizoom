@@ -6,15 +6,13 @@
 var debug = require('debug')('m:outline.datas:CommentDialog');
 var React = require('react');
 var ReactDOM = require('react-dom');
-
+var Action = require('.././rule_order/Action');
 var Reactman = require('reactman');
 
 
 var ApprovalDialog = Reactman.createDialog({
 	getInitialState: function() {
-		Reactman.Resource.get({
-			resource:'order.approval_card',
-		})
+		Action.getLimitAndCommonCard();
 		// var product = this.props.data.product;
 		return {
 			// comment: product.comment

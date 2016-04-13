@@ -27,6 +27,20 @@ var LimitRulesPage = React.createClass({
 			return (
 				<a href={'/card/limit_cards/?weizoom_card_rule_id='+data.id}>{value}</a>
 			)
+		}else if (field == "shop_limit_list"){
+			var nodes = value.map(function(data,index){
+				return (
+					<span className="mr10">{data}</span>
+				)
+			})
+			return (
+				<div>{nodes}</div>
+			)
+			// var shop_name = value.toString();
+			// return (
+			// 	<div>{shop_name}</div>
+			// )
+
 		}else if (field === 'action') {
 			return (
 			<div>
@@ -62,6 +76,8 @@ var LimitRulesPage = React.createClass({
 					<Reactman.TableColumn name="数量" field="count" />
 					<Reactman.TableColumn name="库存" field="count"/>
 					<Reactman.TableColumn name="卡类型" field="card_kind" />
+					<Reactman.TableColumn name="使用限制" field="valid_restrictions" />
+					<Reactman.TableColumn name="专属卡" field="shop_limit_list" />
 					<Reactman.TableColumn name="卡号区间" field="card_range"/>
 					<Reactman.TableColumn name="备注" field="remark" />
 					<Reactman.TableColumn name="操作" field="action" width="80px" />
