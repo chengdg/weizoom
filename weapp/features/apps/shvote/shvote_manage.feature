@@ -16,7 +16,7 @@ Feature: 新建微信高级投票活动
 	"""
 
 
-@mall2 @apps @shvote @add_shvote
+@mall2 @apps @shvote @add_shvote @aix2
 Scenario:1 新建微信投票活动,无分组，活动未开始
 	#选手分组-无分组
 	#状态-未开始
@@ -38,11 +38,11 @@ Scenario:1 新建微信投票活动,无分组，活动未开始
 		[{
 			"name":"微信高级投票-未开始",
 			"vote_count":0,
-			"participant_count":"0",
+			"participant_count":0,
 			"start_date":"2天后",
 			"end_date":"3天后",
 			"status":"未开始",
-			"actions": ["链接","预览","报名详情","查看结果"]
+			"actions": ["删除","链接","预览","报名详情","查看结果"]
 		}]
 		"""
 	When jobs编辑高级投票活动'微信高级投票-未开始'
@@ -61,7 +61,7 @@ Scenario:1 新建微信投票活动,无分组，活动未开始
 		[{
 			"name":"微信高级投票-未开始",
 			"vote_count":0,
-			"participant_count":"0",
+			"participant_count":0,
 			"start_date":"今天",
 			"end_date":"6天后",
 			"status":"进行中",
@@ -90,7 +90,7 @@ Scenario:2 新建微信投票活动,活动已结束
 		[{
 			"name":"微信高级投票-已结束",
 			"vote_count":0,
-			"participant_count":"0",
+			"participant_count":0,
 			"start_date":"2天前",
 			"end_date":"昨天",
 			"status":"已结束",
@@ -98,7 +98,7 @@ Scenario:2 新建微信投票活动,活动已结束
 		}]
 		"""
 
-@mall2 @apps @shvote @add_shvote
+@mall2 @apps @shvote @add_shvote @aix
 Scenario:3 新建微信投票活动，多个分组，多个活动进行中
 	#选手分组-多分组
 	#状态-进行中
@@ -126,7 +126,7 @@ Scenario:3 新建微信投票活动，多个分组，多个活动进行中
 		[{
 			"name":"微信高级投票-进行中",
 			"vote_count":0,
-			"participant_count":"0",
+			"participant_count":0,
 			"start_date":"2天前",
 			"end_date":"2天后",
 			"status":"进行中",
@@ -134,7 +134,7 @@ Scenario:3 新建微信投票活动，多个分组，多个活动进行中
 		},{
 			"name":"微信高级投票-进行中",
 			"vote_count":0,
-			"participant_count":"0",
+			"participant_count":0,
 			"start_date":"2天前",
 			"end_date":"2天后",
 			"status":"进行中",

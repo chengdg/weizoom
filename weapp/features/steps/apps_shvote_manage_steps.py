@@ -160,7 +160,7 @@ def __name2status(name):
     高级投票： 文字 转 状态值
     """
     if name:
-        name2status_dic = {u"全部":-1,u"未开启":0,u"进行中":1,u"已结束":2}
+        name2status_dic = {u"全部":-1,u"未开始":0,u"进行中":1,u"已结束":2}
         return name2status_dic[name]
     else:
         return -1
@@ -174,7 +174,7 @@ def __get_actions(status):
     if status in [u"已结束", u"未开始"]:
         actions_list.append(u"删除")
     elif status==u"进行中":
-        actions_list.append(u"结束")
+        actions_list.append(u"关闭")
     actions_list.extend([u'链接', u'预览', u'报名详情', u'查看结果'])
     return actions_list
 
@@ -248,7 +248,7 @@ def __Create_Shvote(context,text,user):
     shvote_url ="/apps/shvote/api/shvote/?design_mode={}&project_id={}&version={}&_method=put".format(design_mode,context.project_id,version)
     context.client.post(shvote_url,post_shvote_args)
 
-def __Update_Group(context,text,page_id,group_id):
+def __Update_Group(context,text,page_id,shvote_id):
     """
     模拟用户登录页面
     编辑高级投票项目
@@ -261,7 +261,7 @@ def __Update_Group(context,text,page_id,group_id):
     version=1
     project_id = "new_app:group:"+page_id
 
-    name = text.get("group_name","")
+    name = text.get("title","")
 
     cr_start_date = text.get('start_date', u'今天')
     start_time = "{} 00:00".format(bdd_util.get_date_str(cr_start_date))
@@ -306,7 +306,7 @@ def __Update_Group(context,text,page_id,group_id):
         "groups":json.dumps(groups),
         "rule":rule,
         "desc":desc,
-        "id":group_id#updated的差别
+        "id":shvote_id#updated的差别
     }
 
     #page 更新Page
@@ -314,8 +314,8 @@ def __Update_Group(context,text,page_id,group_id):
     context.client.post(update_page_url,update_page_args)
 
     #更新Shvote
-    update_group_url ="/apps/group/api/group/?design_mode={}&project_id={}&version={}".format(design_mode,project_id,version)
-    context.client.post(update_group_url,update_shvote_args)
+    update_shvote_url ="/apps/shvote/api/shvote/?design_mode={}&project_id={}&version={}".format(design_mode,project_id,version)
+    context.client.post(update_shvote_url,update_shvote_args)
 
 
 #
@@ -502,13 +502,12 @@ def step_impl(context,user):
             }
             tmp["actions"] = __get_actions(item['status'])
             actual_list.append(tmp)
-        print("actual_data: {}".format(actual_list))
         bdd_util.assert_list(expected,actual_list)
 
-@when(u"{user}编辑高级投票活动'{group_name}'")
-def step_impl(context,user,group_name):
+@when(u"{user}编辑高级投票活动'{shvote_name}'")
+def step_impl(context,user,shvote_name):
     expect = json.loads(context.text)
-    shvote_page_id,shvote_id = __shvote_name2id(group_name)#纯数字
+    shvote_page_id,shvote_id = __shvote_name2id(shvote_name)#纯数字
     __Update_Group(context,expect,shvote_page_id,shvote_id)
 
 
