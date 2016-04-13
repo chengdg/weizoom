@@ -70,16 +70,20 @@ var LimitPage = React.createClass({
 		Action.addOrdinaryRuleInfo(data);
 	},
 	onSubmit: function() {
-		Action.saveOrdinaryRule(Store.getData());
+		var name_value = this.refs.name_input.refs.input.value;
+		if (name_value.length >20){
+			Reactman.PageAction.showHint('error', '名称最多输入20个字符！');
+		}else{
+			Action.saveOrdinaryRule(Store.getData());
+		}
 	},
-
 	render:function(){
 		return (
 		<div className="xui-outlineData-page xui-formPage">
 			<form className="form-horizontal mt15">
 				<fieldset>
 					<div className="pl10 pt10 pb10"><span style={{fontWeight: 'bold'}}>基本信息</span>（<span style={{color: 'red'}}>*</span>表示必填）</div>
-					<FormInput label="卡名称:" type="text" name="name" value={this.state.name} placeholder="1-20个字，中英文、数字特殊符合均可" onChange={this.onChange} />
+					<FormInput label="卡名称:" type="text" name="name" value={this.state.name} placeholder="1-20个字，中英文、数字特殊符合均可" onChange={this.onChange} ref="name_input" />
 					<FormInput label="卡段号:" type="text" name="weizoom_card_id_prefix" value={this.state.weizoom_card_id_prefix} validate="require-three-number" placeholder="请输入3位数组" onChange={this.onChange} />
 					<span className="note">
 						注：请输入卡号前3位数，以此数组为该批次卡的起始数。
