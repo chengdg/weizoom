@@ -12,17 +12,17 @@
     <div class="wa-shvote-desc wui-i-details">
         <h1 class="wui-i-title xa-title">{{component.model.title}}</h1>
         <p class="wui-i-time">
-            活动时间：{{component.model.start_time|space_split_0}}-{{component.model.end_time|space_split_0}}
+            活动时间：{{component.model.start_time|space_split_0}}~{{component.model.end_time|space_split_0}}
         </p>
         <div class="wui-i-rule">
-            {{component.model.rule}}
+            <span>投票规则</span><p>{{component.model.rule}}</p>
         </div>
         <div class="wui-i-description">
-            {{component.model.description|safe}}
+            <span>活动介绍</span><p>{{component.model.description|safe}}</p>
         </div>
-        <div>
-            <button class="wa-imark">我要报名</button>
-            <button class="wa-getback">返回投票</button>
+        <div class="wui-i-btn">
+            <button class="wa-getback wui-i-getback">返回投票&gt;&gt;</button>
+            <button class="wa-imark wui-i-imark">我要报名</button>
         </div>
     </div>
 

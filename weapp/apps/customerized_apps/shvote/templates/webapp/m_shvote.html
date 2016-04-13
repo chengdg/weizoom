@@ -61,13 +61,17 @@
 		overflow: hidden;
 		line-height: 29px;
 	}
-	.wui-search span{
+	.wui-search > span{
 		font-size: 16px;
 	}
 	.wui-searchBox{
 		float: right;
-		width: 70%;
+		width: 80%;
 		position: relative;
+	}
+	.wui-searchBox p{
+		line-height: 100%;
+		text-indent: 30px;
 	}
 	.wui-search-input{
 		height: 25px;
@@ -214,8 +218,10 @@
 				<div class="wui-searchBox">
 					<input type="text" class="wui-search-input wa-search-text">
 					<button type="button" class="wui-searchBtn wa-search">搜索</button>
-				</div>
+					<p>选手列表是根据选手票数由多到少排列，显示前100名。如果需要查找100名以外的选手请在搜索栏输入选手编号或选手名称即可。</p>							
+				</div>												
 			</div>
+
 			<div class="wui-group wa-groups">
 			</div>
 			<div class="wui-rank-list wa-rank-list">		
