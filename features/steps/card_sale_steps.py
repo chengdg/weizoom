@@ -106,7 +106,6 @@ def step_impl(context, user):
 				"vip_shop": ""
 			})
 		if order_attribute_num == card_models.WEIZOOM_CARD_ORDER_ATTRIBUTE_SALE:
-			print "555555555555555"
 			rule_order = {
 				"order_id": rules["order_number"],
 				"card_info" : rule_list,
@@ -117,7 +116,6 @@ def step_impl(context, user):
 				"order_money": '%.2f' % real_pay
 			}
 		if order_attribute_num == card_models.WEIZOOM_CARD_ORDER_ATTRIBUTE_INTERNAL:
-			print use_persion,66666666666666
 			rule_order = {
 				"order_id": rules["order_number"],
 				"card_info" : rule_list,
@@ -129,5 +127,4 @@ def step_impl(context, user):
 			}
 		actual_list.append(rule_order)
 
-	print actual_list,"++++++++++++++="
 	bdd_util.assert_list(expected, actual_list)

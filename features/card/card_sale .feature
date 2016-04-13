@@ -143,7 +143,7 @@ Scenario:1.发放发售卡
 		
 
 
-@weizoom_card @card_order @hj_q
+@weizoom_card @card_order @hj
 Scenario:2.创建多条订单，按创建订单时间倒序排列
 	When test下订单
 	"""
@@ -176,7 +176,7 @@ Scenario:2.创建多条订单，按创建订单时间倒序排列
 		"order_id":"1"
 	}]
 	"""
-@weizoom_card @card_order  @hj_w
+@weizoom_card @card_order  @hj
 Scenario:3.发放内部领用卡
         #发放通用卡内部领用卡
 	Given test登录管理系统
