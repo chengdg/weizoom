@@ -53,10 +53,11 @@ var LimitPage = React.createClass({
 		if (property == "card_kind"){
 			if (value == "3"){
 				Action.showShops();
+				this.refs.Shops.showShops(true);
 			}else{
-				this.setState({
-					"shopsVisible": false
-				});
+				Action.addCheckedShops(["-1"]);
+				this.onChangeShops();
+				this.refs.Shops.showShops(false);
 			}
 		}
 		var data = Store.getData();
@@ -84,7 +85,7 @@ var LimitPage = React.createClass({
 						注：请输入卡号前3位数，以此数组为该批次卡的起始数。
 					</span>
 					<FormSelect label="卡类型:" name="card_kind" options={[{"value": "-1", "text": "请选择"},{"value": "2", "text": "条件卡"},{"value": "3", "text": "专属卡"}]} validate="require-select" onChange={this.onChange} />
-					<Shops visible={this.state.shopsVisible} shops={this.state.shops} onChangeShops={this.onChangeShops} />
+					<Shops visible={this.state.shopsVisible} shops={this.state.shops} onChangeShops={this.onChangeShops} ref="Shops" />
 					<Restriction />
 					<FormInput label="面值:" type="text" name="money" value={this.state.money} validate="require-price" placeholder="" onChange={this.onChange} />
 					<span className="money_note">
