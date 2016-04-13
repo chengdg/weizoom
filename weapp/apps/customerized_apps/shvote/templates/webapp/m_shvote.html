@@ -371,7 +371,7 @@
 		//切换分组
 		$('.wa-groups').on('click','div',function(){
 			$(this).addClass('active').siblings().removeClass('active');
-			var current_group = $(this).html();
+			current_group = $(this).html();
 			$('.wa-left-chance').html(can_play_info[current_group]);
 			getRankInfo(current_group,'');
 		})
@@ -401,7 +401,8 @@
                 success: function(data){
                 	wuiAlert('投票成功');
                     voteLock = false;
-                    can_play_info -= 1;
+                    can_play_info[current_group] -= 1;
+                    $('.wa-left-chance').html(can_play_info[current_group]);
                 },
                 error: function(data){
                     voteLock = false;
