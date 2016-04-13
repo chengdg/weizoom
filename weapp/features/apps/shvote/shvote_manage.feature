@@ -37,7 +37,7 @@ Scenario:1 新建微信投票活动,无分组，活动未开始
 		"""
 		[{
 			"name":"微信高级投票-未开始",
-			"vote_num":0,
+			"vote_count":0,
 			"participant_count":"0",
 			"start_date":"2天后",
 			"end_date":"3天后",
@@ -60,8 +60,8 @@ Scenario:1 新建微信投票活动,无分组，活动未开始
 		"""
 		[{
 			"name":"微信高级投票-未开始",
-			"participant_count":0,
-			"asking_count":"0",
+			"vote_count":0,
+			"participant_count":"0",
 			"start_date":"今天",
 			"end_date":"6天后",
 			"status":"进行中",
@@ -89,7 +89,7 @@ Scenario:2 新建微信投票活动,活动已结束
 		"""
 		[{
 			"name":"微信高级投票-已结束",
-			"vote_num":0,
+			"vote_count":0,
 			"participant_count":"0",
 			"start_date":"2天前",
 			"end_date":"昨天",
@@ -125,16 +125,16 @@ Scenario:3 新建微信投票活动，多个分组，多个活动进行中
 		"""
 		[{
 			"name":"微信高级投票-进行中",
-			"vote_num":0,
-			"participant_countt":"0",
+			"vote_count":0,
+			"participant_count":"0",
 			"start_date":"2天前",
 			"end_date":"2天后",
 			"status":"进行中",
 			"actions": ["关闭","链接","预览","报名详情","查看结果"]
 		},{
 			"name":"微信高级投票-进行中",
-			"participant_count":0,
-			"asking_count":"0",
+			"vote_count":0,
+			"participant_count":"0",
 			"start_date":"2天前",
 			"end_date":"2天后",
 			"status":"进行中",
