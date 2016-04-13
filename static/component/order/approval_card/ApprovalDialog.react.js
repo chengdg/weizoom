@@ -33,22 +33,17 @@ var ApprovalDialog = Reactman.createDialog({
 		if (this.state.comment === 'error') {
 			Reactman.PageAction.showHint('error', '不能关闭对话框');
 		} else {
-			console.log(this.props.data.index,4444444444444444)
-			// var product = this.props.data.product;
-			// Reactman.Resource.post({
-			// 	resource: 'outline.data_comment',
-			// 	data: {
-			// 		product_id: product.id,
-			// 		comment: this.state.comment
-			// 	},
-			// 	success: function() {
-			// 		this.closeDialog();
-			// 	},
-			// 	error: function() {
-			// 		Reactman.PageAction.showHint('error', '评论失败!');
-			// 	},
-			// 	scope: this
-			// })
+			var card = this.refs.CardTable.state;
+			if (card==null) {
+				Reactman.PageAction.showHint('error', '请选择一张卡!');
+			}else if(!card.id){
+				Reactman.PageAction.showHint('error', '请选择一张卡!');
+			}else{
+				this.setState({
+					choiced_card:card ,
+				});
+				this.closeDialog();
+			}
 		}
 	},
 	tabchange:function(status) {

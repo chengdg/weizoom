@@ -15,6 +15,8 @@ var CardTable = React.createClass({
 	handleChoice:function(event) {
 		var newState = {};
 		newState['id'] = event.target.getAttribute('data-cardrule-id');
+		newState['name'] = event.target.getAttribute('data-cardrule-name');
+		newState['countlimit'] = event.target.getAttribute('data-cardrule-countlimit');
 		var is_cancel = event.target.getAttribute('data-cancel')
 		if (is_cancel) {
 			this.setState({id:''});
@@ -57,12 +59,12 @@ var CardTable = React.createClass({
 					)
 				} else {
 					return (
-					<a className="btn btn-link btn-xs mt5" onClick={this.handleChoice} data-cardrule-id={data.id}>选择</a>
+					<a className="btn btn-link btn-xs mt5" onClick={this.handleChoice} data-cardrule-id={data.id} data-cardrule-name={data.name} data-cardrule-countlimit={data.storage_count} >选择</a>
 					)
 				}
 			} else {
 				return (
-				<a className="btn btn-link btn-xs mt5" onClick={this.handleChoice} data-cardrule-id={data.id}>选择</a>
+				<a className="btn btn-link btn-xs mt5" onClick={this.handleChoice} data-cardrule-id={data.id} data-cardrule-name={data.name} data-cardrule-countlimit={data.storage_count}>选择</a>
 				)
 			}
 			
