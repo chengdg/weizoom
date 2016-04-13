@@ -122,15 +122,17 @@
 	.wui-detail-dialog{
 		border:1px solid black;
 		width:80%;
-		height:80%;
+		height:100%;
 		display:none;
 		z-index:99999999;
 		margin:0 auto;
 		background-color:#FFF;
 		border-radius: 6px;
 		position: absolute;
-		top: 30%;
+		top: 5%;
 		left: 10%;
+		overflow-x: hidden;
+   		overflow-y: auto;
 	}
 	.wui-detail-top{
 		margin: 6% 0 0 6%;
@@ -149,11 +151,10 @@
 	}
 	.wui-detail-btn{
 		display: inline-block;
-		width: 22%;
-		margin-left: 14%;
+		width: 33%;
 	}
 	.wui-detail-btn button{
-		width: 50%;
+		width: 80%;
 		cursor: pointer;
 	}
 	.wui-detail-middle{
@@ -166,15 +167,18 @@
 	.wui-detail-bottom{
 		border: 1px solid #000;
 		margin: 0 auto;
-		height: 55%;
+		/*min-height: 55%;*/
 		width: 90%;
 		margin-left: 5%;
 	}
 	.wui-detail-close{
+		display: none;
 		position: absolute;
-		top: -3%;
-		right: -3%;
+		top: 1%;
+		right: 6%;
 		cursor: pointer;
+	    z-index: 999999999;
+	    width: 10%;
 	}
 </style>
 {% endblock %}
@@ -221,7 +225,7 @@
 </div>
 
 <script type="text/plain" id="tpl">
-	<div class="wui-rank-item">
+	<div class="wui-rank-item wa-rank-item" data-id={ result_list_member_id }>
 		<div class="wui-rank-pic wa-rank-pic">
 			<img src={ result_list_icon }>
 		</div> 
@@ -239,28 +243,29 @@
 		</div> 
 	</div>
 </script>
-
-<div id="userDetailDialog" class="wui-detail-dialog">
-	<div class="wui-detail-top">
-		<div class="wui-detail-user">
-			<div class="wui-detail-user-pic wa-detail-user-pic">
-				<img src="">
-			</div>
-			<div class="wui-detail-user-name wa-detail-user-name">
-				<span></span>
-			</div>
-		</div>
-		<div class="wui-detail-btn">
-			<button class="wa-ivote">投票</button>
-			<button>拉票</button>
-		</div>
-	</div>
-	<div class="wui-detail-middle">
-		<span class="wa-detail-serial-number"></span>
-		<span class="wui-detail-vote-count wa-detail-vote-count"></span>
-	</div>
-	<div class="wui-detail-bottom wa-detail-bottom"></div>
+<div>	
 	<img class="wui-detail-close wa-detail-close" src="/static_v2/img/shvote_close.png">
+	<div id="userDetailDialog" class="wui-detail-dialog">
+		<div class="wui-detail-top">
+			<div class="wui-detail-user">
+				<div class="wui-detail-user-pic wa-detail-user-pic">
+					<img src="">
+				</div>
+				<div class="wui-detail-user-name wa-detail-user-name">
+					<span></span>
+				</div>
+			</div>
+			<div class="wui-detail-btn">
+				<button>投票</button>
+				<button>拉票</button>
+			</div>
+		</div>
+		<div class="wui-detail-middle">
+			<span class="wa-detail-serial-number"></span>
+			<span class="wui-detail-vote-count wa-detail-vote-count"></span>
+		</div>
+		<div class="wui-detail-bottom wa-detail-bottom"></div>
+	</div>
 </div>
 {% endblock %}
 
@@ -425,6 +430,7 @@
             success: function(data) {
 				$('.wui-rank-list').html('');
                 var result = data.result_list;
+                user_detail = result;
                 var tpl = new Template($('#tpl').html());
                 for(var i=0;i<result.length;i++){
         		    var s = tpl.render({
@@ -432,7 +438,8 @@
 		                result_list_name : result[i].name,
 		                result_list_count : result[i].count,
 		                result_list_icon : result[i].icon,
-		                member_id : result[i].member_id
+		                member_id : result[i].member_id,
+		                result_list_member_id : result[i].member_id
 		            });
 		        $('.wa-rank-list').append(s);
 	        	}
@@ -447,14 +454,15 @@
     查看选手详情
      */
 	$('body').delegate('.wa-rank-pic', 'click', function(event) {
-		var serial_number = $(event.target).parent().find('.wui-rank-serial-number').text();
-		for(var i=0;i<user_datail.length;i++){
-			if(user_datail[i].serial_number == serial_number){
-				var icon = user_datail[i].icon;
-				var name = user_datail[i].name;
-				var count = user_datail[i].count;
-				var details = user_datail[i].details;
-				var pics = user_datail[i].pics;
+		var member_id = $(event.target).parents('.wa-rank-item').data('id');
+		for(var i=0;i<user_detail.length;i++){
+			if(user_detail[i].member_id == member_id){
+				var icon = user_detail[i].icon;
+				var name = user_detail[i].name;
+				var count = user_detail[i].count;
+				var details = user_detail[i].details;
+				var pics = user_detail[i].pics;
+				var serial_number = user_detail[i].serial_number;
 				$('.wa-detail-user-pic img').attr('src',icon);
 				$('.wa-detail-user-name span').text(name);
 				$('.wa-detail-serial-number').text('编号：' + serial_number);
@@ -467,10 +475,12 @@
 		}
 		mask('show');
 		$('#userDetailDialog').show();
+		$('.wa-detail-close').show();
 	});
 	$('body').delegate('.wa-detail-close', 'click', function(event) {
 		mask('hide');
 		$('#userDetailDialog').hide();
+		$('.wa-detail-close').hide();
 	});
 </script>
 {% endblock %}
