@@ -14,9 +14,14 @@ var Reactman = require('reactman');
 var CardTable = React.createClass({
 	handleChoice:function(event) {
 		var newState = {};
-		var id = event.target.getAttribute('data-cardrule-id')
-		newState[id] = true;
-		this.setState(newState);
+		newState['id'] = event.target.getAttribute('data-cardrule-id');
+		var is_cancel = event.target.getAttribute('data-cancel')
+		if (is_cancel) {
+			this.setState({id:''});
+		} else {
+			this.setState(newState);
+		}
+		
 	},
 	rowFormatter: function(field, value, data) {
 		// if (field === 'models') {
@@ -45,10 +50,16 @@ var CardTable = React.createClass({
 		// 	return value;
 		// }
 		if (field=='action') {
-			if (this.state.choiced.id==data.id) {
-				return (
-				<a className="btn btn-link btn-xs mt5" onClick={this.handleChoice} data-cardrule-id={data.id}>已选择</a>
-				)
+			if (this.state!=null) {
+				if (this.state.id==data.id) {
+					return (
+					<a className="btn btn-link btn-xs mt5" onClick={this.handleChoice} data-cardrule-id={data.id} data-cancel='true'>已选择</a>
+					)
+				} else {
+					return (
+					<a className="btn btn-link btn-xs mt5" onClick={this.handleChoice} data-cardrule-id={data.id}>选择</a>
+					)
+				}
 			} else {
 				return (
 				<a className="btn btn-link btn-xs mt5" onClick={this.handleChoice} data-cardrule-id={data.id}>选择</a>
