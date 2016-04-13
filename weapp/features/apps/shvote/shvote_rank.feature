@@ -78,9 +78,9 @@ Scenario:1 没有有微信用户报名参与活动和有微信用户报名参与
 	When jobs审核不通过'bill'
 	When bill关注jobs的公众号
 	When bill访问jobs的webapp
-	When bill在微信中向jobs的公众号发送消息'微信高级投票-非会员参与'
-	Then bill收到自动回复'微信高级投票-非会员参与'
-	When bill点击图文"微信高级投票-非会员参与"进入高级投票活动页面
+	When bill在微信中向jobs的公众号发送消息'微信高级投票'
+	Then bill收到自动回复'微信高级投票'
+	When bill点击图文"微信高级投票"进入高级投票活动页面
 	When bill参加高级投票报名活动
 	Then bill获得微信高级投票活动排行榜列表
 		"""
