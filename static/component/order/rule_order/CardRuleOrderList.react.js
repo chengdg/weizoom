@@ -15,10 +15,14 @@ var cardRuleOrderList = React.createClass({
 	displayName: 'cardRuleOrderList',
 
 	getInitialState: function() {
+		Store.addListener(this.onChangeStore);
 		return ({
 			CardRecharges: [],
 			cardRuleOrder:[]
 		})
+	},
+	onChangeStore: function(event) {
+		this.refs.table.refresh();
 	},
 	getAttributeValue :function(value,data){
 		var order_item_list = JSON.parse(data['order_item_list']);
@@ -104,8 +108,8 @@ var cardRuleOrderList = React.createClass({
 					return(
 						<div>
 							<a style={{display:'block'}} onClick={this.onClickActivation.bind(this,data.id,data.is_activation,-1)} >卡激活</a>
-							<a style={{display:'block'}} onClick={this.onClickActivation.bind(this,data.id,-1,0)}>取消订单</a>
 							<a className="btn btn-link btn-xs mt5">编辑订单</a>
+							<a style={{display:'block'}} onClick={this.onClickActivation.bind(this,data.id,-1,0)}>取消订单</a>
 							<a className="btn btn-link btn-xs">备注</a>
 
 						</div>
@@ -115,8 +119,8 @@ var cardRuleOrderList = React.createClass({
 					return(
 						<div>
 							<a style={{display:'block'}} onClick={this.onClickActivation.bind(this,data.id,data.is_activation,-1)} >停用</a>
-							<a style={{display:'none'}} onClick={this.onClickActivation.bind(this,data.id,-1,0)}>取消订单</a>
 							<a className="btn btn-link btn-xs mt5">编辑订单</a>
+							<a style={{display:'none'}} onClick={this.onClickActivation.bind(this,data.id,-1,0)}>取消订单</a>
 							<a className="btn btn-link btn-xs">备注</a>
 						</div>
 					)
@@ -125,9 +129,9 @@ var cardRuleOrderList = React.createClass({
 			}else{
 				return(
 						<div>
+							<a className="btn btn-link btn-xs mt5">编辑订单</a>
 							<a style={{display:'none'}} onClick={this.onClickActivation.bind(this,data.id,data.is_activation,-1)} >卡激活</a>
 							<a style={{display:'block'}} >订单已取消</a>
-							<a className="btn btn-link btn-xs mt5">编辑订单</a>
 							<a className="btn btn-link btn-xs">备注</a>
 						</div>
 					)

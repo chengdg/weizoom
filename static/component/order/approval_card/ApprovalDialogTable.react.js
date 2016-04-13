@@ -78,12 +78,14 @@ var CardTable = React.createClass({
 			resource: 'order.approval_card',
 			data: {
 				cardruletype:cardruletype,
+				count_per_page:6,
+				page:1
 			}
 		};
 		return (
 			<Reactman.TablePanel>
 				<Reactman.TableActionBar></Reactman.TableActionBar>
-				<Reactman.Table resource={cardrulesResource} formatter={this.rowFormatter} pagination={true} countPerPage={2} ref="table">
+				<Reactman.Table resource={cardrulesResource} formatter={this.rowFormatter} pagination={true} countPerPage={6} ref="table">
 					<Reactman.TableColumn name="卡名称" field="name" width="120px" />
 					<Reactman.TableColumn name="面值" field="money" />
 					<Reactman.TableColumn name="库存" field="storage_count" width="120px"/>
