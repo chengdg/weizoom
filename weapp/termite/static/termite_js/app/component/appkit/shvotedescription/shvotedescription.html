@@ -3,18 +3,16 @@
 
 {% ifequal component.type 'appkit.shvotedescription' %}
 <div  
-    class="wui-surveyDescription"
-    data-component-cid="{{component.cid}}" 
-    style="min-height:100px; background-color:#FFF;margin-top: -16px;"
+    class="wui-shvoteDescription"
+    data-component-cid="{{component.cid}}"
 >
     <div>
         <img src="{{ component.model.material_image }}">
     </div>
-    <div class="wa-shvote-desc">
+    <div class="wa-shvote-desc wui-i-details">
         <h1 class="wui-i-title xa-title">{{component.model.title}}</h1>
-        <h5>活动时间：</h5>
         <p class="wui-i-time">
-            {{component.model.start_time}}至{{component.model.end_time}}
+            活动时间：{{component.model.start_time|space_split_0}}-{{component.model.end_time|space_split_0}}
         </p>
         <div class="wui-i-rule">
             {{component.model.rule}}

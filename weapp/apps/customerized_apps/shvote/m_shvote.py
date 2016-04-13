@@ -176,25 +176,62 @@ class GetRankList(resource.Resource):
 		@param record_id: 活动id
 		@return: list
 		"""
-		record_id = request.GET.get('recordId', None)
-		datas = app_models.ShvoteParticipance.objects(belong_to=record_id, status=app_models.MEMBER_STATUS['PASSED']).order_by('-count')[:100]
-		i = 0
-		result_list = []
-		for data in datas:
-			i += 1
-			result_list.append({
-				'rank': i,
-				'name': data.name,
-				'icon': data.icon,
-				'count': data.count,
-				'group': data.group,
-				'serial_number': data.serial_number,
-				'details': data.details,
-				'pics': data.pics
-			})
+
+		params = {
+			'belong_to' : request.GET['recordId'],
+			'group' : request.GET['current_group'],
+			'status' : app_models.MEMBER_STATUS['PASSED']
+		}
+
+		if request.GET.get('search_name') != '':
+			search_name = request.GET.get('search_name')
+			if search_name.isdigit():
+				params['serial_number__icontains'] = search_name
+			else:
+				params['name__icontains'] = search_name
 
 		response = create_response(200)
 		response.data = {
-			'result_list': result_list
+			'result_list': get_rank_data(params)
 		}
 		return response.get_response()
+
+class MShvoteRank(resource.Resource):
+	app = 'apps/shvote'
+	resource = 'm_shvote_rank'
+
+	def get(request):
+		print 44444444444444444444
+		params = {
+			"belong_to": request.GET["id"],
+			"status": app_models.MEMBER_STATUS['PASSED']
+		}
+		c = RequestContext(request, {
+			"rank_list": get_rank_data(params)
+		})
+
+		return render_to_response('shvote/templates/webapp/m_shvote_rank.html', c)
+
+def get_rank_data(params):
+	"""
+	查询前100排名
+	@param params:
+	@return:
+	"""
+	datas = app_models.ShvoteParticipance.objects(**params).order_by('-count')[:100]
+	i = 0
+	result_list = []
+	for data in datas:
+		i += 1
+		result_list.append({
+			'rank': i,
+			'name': data.name,
+			'icon': data.icon,
+			'count': data.count,
+			'group': data.group,
+			'serial_number': data.serial_number,
+			'member_id': data.member_id,
+			'details': data.details,
+			'pics': data.pics
+		})
+	return result_list

@@ -26,6 +26,9 @@
 		background-color: rgba(0, 125, 255, 0.5);
 		border-radius: 10px;
 	}
+	.wui-surveyDescription{
+		padding: 10px;
+	}
 	.wui-group{
 		overflow: hidden;
 		border-bottom: 1px solid #8E8E8E;
@@ -119,15 +122,17 @@
 	.wui-detail-dialog{
 		border:1px solid black;
 		width:80%;
-		height:80%;
+		height:100%;
 		display:none;
 		z-index:99999999;
 		margin:0 auto;
 		background-color:#FFF;
 		border-radius: 6px;
 		position: absolute;
-		top: 30%;
+		top: 5%;
 		left: 10%;
+		overflow-x: hidden;
+   		overflow-y: auto;
 	}
 	.wui-detail-top{
 		margin: 6% 0 0 6%;
@@ -139,7 +144,6 @@
 	}
 	.wui-detail-user-pic{
 		border-bottom: 1px solid #000;
-		padding-top: 36%;
 	}
 	.wui-detail-user-name{
 		padding: 2% 0px;
@@ -147,11 +151,10 @@
 	}
 	.wui-detail-btn{
 		display: inline-block;
-		width: 22%;
-		margin-left: 14%;
+		width: 33%;
 	}
 	.wui-detail-btn button{
-		width: 50%;
+		width: 80%;
 		cursor: pointer;
 	}
 	.wui-detail-middle{
@@ -164,15 +167,18 @@
 	.wui-detail-bottom{
 		border: 1px solid #000;
 		margin: 0 auto;
-		height: 55%;
+		/*min-height: 55%;*/
 		width: 90%;
 		margin-left: 5%;
 	}
 	.wui-detail-close{
+		display: none;
 		position: absolute;
-		top: -3%;
-		right: -3%;
+		top: 1%;
+		right: 6%;
 		cursor: pointer;
+	    z-index: 999999999;
+	    width: 10%;
 	}
 </style>
 {% endblock %}
@@ -197,7 +203,8 @@
         </div>
         <div>
             <p>截止日期：<b class="wa-enddate"></b> 可投：<b class="wa-left-chance"></b></p>
-            <a>排行>></a>
+            <span class="wa-rank-link">排行>></span>
+            <span class="wa-event-details">活动介绍>></span>
         </div>
     </div>
 	<div class="wui-rank">
@@ -216,48 +223,49 @@
 		</div>
 	</div>
 </div>
-<button class="wa-ivote">我要投票</button>
+
 <script type="text/plain" id="tpl">
-	<div class="wui-rank-item">
+	<div class="wui-rank-item wa-rank-item" data-id={ result_list_member_id }>
 		<div class="wui-rank-pic wa-rank-pic">
 			<img src={ result_list_icon }>
 		</div> 
 		<div class="wui-rank-name">
-			<span>{ result_list_serial_number }</span> 
+			<span class="wui-rank-serial-number">{ result_list_serial_number }</span> 
 			<span>{ result_list_name }</span>
 		</div> 
 		<div class="wui-rank-vote">
 			<div class="wui-rank-voteLef">
 				<span>{ result_list_count }</span>票
 			</div>
-			<div class="wui-rank-voteRig">
+			<div class="wui-rank-voteRig wa-ivote" data-member="{ member_id }">
 				投票
 			</div>
 		</div> 
 	</div>
 </script>
-
-<div id="userDetailDialog" class="wui-detail-dialog">
-	<div class="wui-detail-top">
-		<div class="wui-detail-user">
-			<div class="wui-detail-user-pic">img-url</div>
-			<div class="wui-detail-user-name wa-detail-user-name">
-				<span>vito</span>
+<div>	
+	<img class="wui-detail-close wa-detail-close" src="/static_v2/img/shvote_close.png">
+	<div id="userDetailDialog" class="wui-detail-dialog">
+		<div class="wui-detail-top">
+			<div class="wui-detail-user">
+				<div class="wui-detail-user-pic wa-detail-user-pic">
+					<img src="">
+				</div>
+				<div class="wui-detail-user-name wa-detail-user-name">
+					<span></span>
+				</div>
+			</div>
+			<div class="wui-detail-btn">
+				<button>投票</button>
+				<button>拉票</button>
 			</div>
 		</div>
-		<div class="wui-detail-btn">
-			<button>投票</button>
-			<button>拉票</button>
+		<div class="wui-detail-middle">
+			<span class="wa-detail-serial-number"></span>
+			<span class="wui-detail-vote-count wa-detail-vote-count"></span>
 		</div>
+		<div class="wui-detail-bottom wa-detail-bottom"></div>
 	</div>
-	<div class="wui-detail-middle">
-		<span>编号：300</span>
-		<span class="wui-detail-vote-count">3000票</span>
-	</div>
-	<div class="wui-detail-bottom">
-		报名详情：1111111111111111122222222
-	</div>
-	<img class="wui-detail-close wa-detail-close" src="/static_v2/img/shvote_close.png">
 </div>
 {% endblock %}
 
@@ -265,25 +273,59 @@
 <script type="text/javascript">
 	W.pageId = "{{request.GET.page_id}}";
 
+	//当前分组，切换时候需要改变值，用于查找
+	var current_group = '';
+
 	$(function(){
         if(W.isPC){
             return false;
         }
-
+        $('.wa-shvote-desc').hide();
 		// 我要报名
 		$('.wa-imark').click(function(){
 			var link = window.location.origin + '/m/apps/shvote/shvote_participance/?webapp_owner_id='+W.webappOwnerId+'&id='+W.appRecordId;
 			window.location.href = link;
 		});
+
+		$('.wa-getback').click(function(){
+			$('.wa-shvote-desc').hide();
+			$('.wa-mobile').show();
+		});
+
+		$('.wa-rank-link').click(function(){
+			var link = window.location.origin + '/m/apps/shvote/m_shvote_rank/?webapp_owner_id='+W.webappOwnerId+'&id='+W.appRecordId;
+			window.location.href = link;
+		})
+
+		// 搜索
+		$('.wa-search').click(function(){
+			var search_name = $('.wa-search-text').val();
+			if(search_name != ''){
+				getRankInfo(current_group,search_name);
+			}else{
+				getRankInfo(current_group,'');
+			}
+		});
+
+		$('.wa-groups').on('click','div',function(){
+			$(this).addClass('active').siblings().removeClass('active');
+			var current_group = $(this).html();
+			getRankInfo(current_group,'');
+		})
+
+		$('.wa-event-details').click(function(){
+			$('.wa-shvote-desc').show();
+			$('.wa-mobile').hide();
+		})
         //展示参与统计
 //        getDynamicData();
 
         //参与投票
         var voteLock = false;
-        $('.wa-ivote').on('click', function(){
+        $('.wa-rank-list').on('click','.wa-ivote', function(){
             if(voteLock) return false;
             voteLock = true;
-            var vote_to = 6; //需要获取投票对象的member_id
+            var vote_to = $(this).attr('data-member'); 
             W.getApi().call({
                 app: 'm/apps/shvote',
                 resource: 'shvote_participance',
@@ -336,9 +378,10 @@
                 update_record_info(record_info);
                 //更新会员信息
                 var member_info = data.member_info;
-                update_member_info(member_info);
+                update_member_info(member_info,'');
                 //更新排名信息
-                getRankInfo();
+				current_group = $('.active').html();
+                getRankInfo(current_group,'');
             },
             error: function(data){
                 if(data.errMsg == 'is_deleted'){
@@ -362,34 +405,41 @@
     	$('.wa-total-visits').html(record_info['total_visits']);
     	$('.wa-enddate').html(record_info['end_date']);
     	for(var i=0;i < record_info.groups.length;i++){
-    		var group = $('<div>'+record_info.groups[i]+'</div');
+    		var group = $('<div>'+record_info.groups[i]+'</div>');
     		$('.wa-groups').append(group);
     		$('.wa-groups div').eq(0).addClass('active');
     	}
     }
-    function update_member_info(member_info){
-    	
+    function update_member_info(member_info,group){
+    	if(group == ''){group = '初中组'};
+    	$('.wa-left-chance').html(member_info.can_play_info[group]);
     }
 
     //获取排名信息
-    function getRankInfo(arg){
+    function getRankInfo(current_group,search_name){
         W.getApi().call({
             app: 'm/apps/shvote',
             resource: 'get_rank_list',
             method: 'get',
             args: {
 				webapp_owner_id: W.webappOwnerId,
-                recordId: W.appRecordId
+                recordId: W.appRecordId,
+				current_group: current_group,
+				search_name: search_name
             },
             success: function(data) {
+				$('.wui-rank-list').html('');
                 var result = data.result_list;
+                user_detail = result;
                 var tpl = new Template($('#tpl').html());
                 for(var i=0;i<result.length;i++){
         		    var s = tpl.render({
 		                result_list_serial_number : result[i].serial_number,
 		                result_list_name : result[i].name,
 		                result_list_count : result[i].count,
-		                result_list_icon : result[i].icon
+		                result_list_icon : result[i].icon,
+		                member_id : result[i].member_id,
+		                result_list_member_id : result[i].member_id
 		            });
 		        $('.wa-rank-list').append(s);
 	        	}
@@ -404,14 +454,33 @@
     查看选手详情
      */
 	$('body').delegate('.wa-rank-pic', 'click', function(event) {
-		console.log(8888888888888)
-		console.log(user_datail)
+		var member_id = $(event.target).parents('.wa-rank-item').data('id');
+		for(var i=0;i<user_detail.length;i++){
+			if(user_detail[i].member_id == member_id){
+				var icon = user_detail[i].icon;
+				var name = user_detail[i].name;
+				var count = user_detail[i].count;
+				var details = user_detail[i].details;
+				var pics = user_detail[i].pics;
+				var serial_number = user_detail[i].serial_number;
+				$('.wa-detail-user-pic img').attr('src',icon);
+				$('.wa-detail-user-name span').text(name);
+				$('.wa-detail-serial-number').text('编号：' + serial_number);
+				$('.wa-detail-vote-count').text(count + ' 票');
+				$('.wa-detail-bottom').text(details);
+				for (var i=0;i<pics.length;i++){
+					$('.wa-detail-bottom').append('<img src='+pics[i]+'>');
+				}
+			}
+		}
 		mask('show');
 		$('#userDetailDialog').show();
+		$('.wa-detail-close').show();
 	});
 	$('body').delegate('.wa-detail-close', 'click', function(event) {
 		mask('hide');
 		$('#userDetailDialog').hide();
+		$('.wa-detail-close').hide();
 	});
 </script>
 {% endblock %}

@@ -2153,3 +2153,20 @@ li.wui-selectBox-display-table {
 	background-position: 0 -48px;
 }
 /*百宝箱 团购CSS ---- end */
+
+/*百宝箱 shvote CSS ---- start */
+
+.wui-shvoteDescription{
+	background-color:#FFF;
+	margin-top: -16px;
+}
+.wui-shvoteDescription .wui-i-details{
+	padding: 15px 20px;
+}
+.wui-shvoteDescription .wui-i-title{
+	font-size: 1.2rem;
+    text-align: center;
+	margin-bottom: 15px;
+}
+
+/*百宝箱 shvote CSS ---- end */

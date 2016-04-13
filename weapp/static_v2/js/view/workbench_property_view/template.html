@@ -189,7 +189,7 @@
 								data-enable-select-time="true"
 								data-validate="require-notempty"
 								data-ui-role="date-picker"
-								data-format="yy-mm-dd HH:MM"
+								data-format="{{if field.format}}${field.format}{{else}}yy-mm-dd{{/if}}"
                                 data-max-el="#end_time"
                                 data-min="now"/>
 							至
@@ -205,7 +205,7 @@
 								data-enable-select-time="true"
 								data-validate="require-notempty"
 								data-ui-role="date-picker"
-								data-format="yy-mm-dd HH:MM"
+								data-format="{{if field.format}}${field.format}{{else}}yy-mm-dd{{/if}}"
 								data-min-el="#start_time" />
 							<div class="errorHint pl5"></div>
 						</div>
