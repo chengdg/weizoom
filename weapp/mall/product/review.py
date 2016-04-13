@@ -349,7 +349,11 @@ class ProductGetFile(resource.Resource):
                     elif key == 'userCode':
                         param["product_user_code"] = value
                     elif key == 'reviewStatus':
-                        param["status"] = value
+                        if int(value) == 1:
+                            param["status__gte"] = value
+                        else:
+                            param["status"] = value
+
                     elif key == 'startDate':
                         param["created_at__gte"] = value
                     elif key == 'endDate':
