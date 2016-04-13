@@ -32,12 +32,18 @@
 	.wui-dynamic-info{
 		background: #fff;
 	}
+	.wui-dynamic-top{
+		padding: 10px 0;
+	}
 	.wui-dynamic-top p{
 		display: inline-block;
 		width: 32%;
 		text-align: center;
-		height: 50px;
-		line-height: 50px;
+		line-height: 25px;
+		border-right: 1px solid #e1e1e1;
+	}
+	.wui-dynamic-top p span{
+		display: block;
 	}
 	.wui-dynamic-bottom p{
 		text-align: center;
@@ -45,6 +51,7 @@
 	}
 	.wui-rank-link{
 		border-bottom: 1px solid #e1e1e1;
+		margin-top: 10px;
 	}
 	.wui-event-details,.wui-rank-link{
 		height: 30px;
@@ -206,6 +213,9 @@
 	    z-index: 999999999;
 	    width: 10%;
 	}
+	p.wui-noborder{
+		border: none;
+	}
 </style>
 {% endblock %}
 
@@ -222,13 +232,16 @@
                 <span>投票数</span>
                 <span class="wa-total-counts"></span>
             </p>
-            <p>
+            <p class="wui-noborder">
                 <span>访问数</span>
                 <span class="wa-total-visits"></span>
             </p>
         </div>
         <div class="wui-dynamic-bottom">
-            <p>截止日期：<b class="wa-enddate"></b> 可投：<b class="wa-left-chance"></b></p>
+            <p>
+            	截止日期：<b class="wa-enddate"></b> &nbsp;&nbsp;
+            	可投：<b class="wa-left-chance"></b>
+            </p>
             <div class="wa-rank-link wui-rank-link">排行榜>></div>
             <div class="wa-event-details wui-event-details">活动介绍>></div>
         </div>
