@@ -24,14 +24,15 @@ var Store = StoreUtil.createStore(Dispatcher,{
 		'handleGetRuleOrderList':Constant.CARD_RULE_ORDER,
 		'handleAddCardLines':Constant.ADD_CARD_LINES,
 		'handleGetLimitAndCommonCard':Constant.GET_LIMIT_AND_COMMON_CARD,
-		'handleResetProduct':Constant.CARD_DATA_RESET_PRODUCT
+		'handleResetProduct':Constant.CARD_DATA_RESET_PRODUCT,
+		'handleUpdateCardLines':Constant.UPDATE_CARD_LINES
 	},
 	init: function() {
 		this.filter = {};
 		this.data = {};
 		this.data.card_order_list = {};
 		this.data.limit_and_common_card_list = {};
-		this.data.cardlines = [{card_name:'',card_rule_num:'',valid_time_from:'',valid_time_to:'',rule_id:973}];
+		this.data.cardlines = [{rule_id:'',card_name:'',card_rule_num:'',valid_time_from:'',valid_time_to:''}];
 		this.resetValue = {};
 	},
 	handleUpdateProduct: function(action) {
@@ -40,6 +41,11 @@ var Store = StoreUtil.createStore(Dispatcher,{
 	},
 	handleUpdateAddProduct: function(action) {
 		this.data.cardlines[action.data.index][action.data.property] = action.data.value;
+		this.__emitChange();
+	},
+	handleUpdateCardLines:function(action) {
+		this.data.cardlines[action.data.index]['id'] = action.data.inputdata.id;
+		this.data.cardlines[action.data.index]['card_name'] = action.data.inputdata.name;
 		this.__emitChange();
 	},
 	handleGetLimitAndCommonCard: function(action) {
@@ -61,7 +67,7 @@ var Store = StoreUtil.createStore(Dispatcher,{
 		this.__emitChange();
 	},
 	handleAddCardLines:function() {
-		this.data.cardlines.push({card_name:'',card_rule_num:'',valid_time_from:'',valid_time_to:'',rule_id:973});
+		this.data.cardlines.push({card_name:'',card_rule_num:'',valid_time_from:'',valid_time_to:'',rule_id:''});
 		this.__emitChange();
 	},
 	handleResetProduct: function() {

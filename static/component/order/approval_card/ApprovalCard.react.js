@@ -150,11 +150,11 @@ var ApprovalCard = React.createClass({
 		)
 	}
 });
-
+//
 var CardListLabel = React.createClass({
 	getInitialState: function() {
 		return ({
-			cardlist:[{card_name:'',card_rule_num:'',valid_time_from:'',valid_time_to:''}]
+			cardlist:[{rule_id:'',card_name:'',card_rule_num:'',valid_time_from:'',valid_time_to:''}]
 		})
 	},
 	onChangeStore: function() {
@@ -177,8 +177,7 @@ var CardListLabel = React.createClass({
 				index: index
 			},
 			success: function(inputData, dialogState) {
-				console.log(inputData, dialogState,66666666666)
-				// Action.updateProductComment(product, comment);
+				Action.updateCardLines(inputData.index, dialogState.choiced_card);
 			}
 		});
 	},
@@ -187,6 +186,7 @@ var CardListLabel = React.createClass({
 		var cardlines=this.state.cardlist.map(function(card,index) {
 			return (
 			<fieldset className="form-inline" key={index}>
+				<input name='rule_id' type="text" style={{display:'none'}} value={_this.state.cardlist[index].rule_id}/>
 				<FormInput label="卡名称:" type="text" name="card_name" ref="CardName" value={_this.state.cardlist[index].card_name} validate="require-notempty" onChange={_this.onChange.bind(_this,index)}/>
 				<a href="javascript:void(0);" style={{display:'inline-block',textAlign:'center',width:'80px'}} onClick={_this.choiceCard.bind(_this,index)}>选择卡库</a>
 				<FormInput label="出库数量:" type="text" name="card_rule_num" ref="CardRuleNum" value={_this.state.cardlist[index].card_rule_num} validate="require-positive-int" onChange={_this.onChange.bind(_this,index)}/>
