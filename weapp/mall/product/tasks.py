@@ -90,10 +90,8 @@ def send_review_export_job_task(self, exportjob_id, filter_data_args, sort_attr,
                 product_user_code = filter_data_args.pop("product_user_code")
             product_reviews = models.ProductReview.objects.filter(**filter_data_args).order_by("-created_at")
             if product_name:
-                product_reviews = product_reviews.filter(order_has_product__product__name=product_name)
+                product_reviews = product_reviews.filter(order_has_product__product__name__contains=product_name)
             if product_user_code:
-                # product_reviews = product_reviews.filter(order_has_product__product=product_user_code)
-                # product_reviews = product_reviews.filter(order_has_product__product__user_code=product_user_code)
                 product_review_list = []
                 for product_review in product_reviews:
                     product_model = models.ProductModel.objects.filter(name=product_review.order_has_product.product_model_name,product_id=product_review.product_id)[0]
