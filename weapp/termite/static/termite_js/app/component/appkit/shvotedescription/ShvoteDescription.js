@@ -66,6 +66,7 @@ W.component.appkit.ShvoteDescription = W.component.Component.extend({
 			isUserProperty: true,
 			validate: 'data-validate="require-notempty::有效时间不能为空"',
 			validateIgnoreDefaultValue: true,
+			format: 'yy.mm.dd',
 			default: ''
 		}, {
 			name: 'material_image',
