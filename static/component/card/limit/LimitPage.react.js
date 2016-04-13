@@ -21,6 +21,8 @@ var Action = require('./Action');
 var Store = require('./Store');
 var ShopStore = require('./ShopStore');
 
+require('./limit.css');
+
 
 var LimitPage = React.createClass({
 	getInitialState: function() {
@@ -70,6 +72,9 @@ var LimitPage = React.createClass({
 					<div className="pl10 pt10 pb10"><span style={{fontWeight: 'bold'}}>基本信息</span>（<span style={{color: 'red'}}>*</span>表示必填）</div>
 					<FormInput label="卡名称:" type="text" name="name" value={this.state.name} placeholder="1-20个字，中英文、数字特殊符合均可" onChange={this.onChange} />
 					<FormInput label="卡段号:" type="text" name="weizoom_card_id_prefix" value={this.state.weizoom_card_id_prefix} validate="require-three-number" placeholder="请输入3位数组" onChange={this.onChange} />
+					<div>
+						注：请输入卡号前3位数，以此数组为该批次卡的起始数。
+					</div>
 					<FormSelect label="卡类型:" name="card_kind" options={[{"value": "-1", "text": "请选择"},{"value": "2", "text": "条件卡"},{"value": "3", "text": "专属卡"}]} validate="require-select" onChange={this.onChange} />
 					<Shops visible={this.state.shopsVisible} shops={this.state.shops} onChangeShops={this.onChangeShops} />
 					<Restriction />

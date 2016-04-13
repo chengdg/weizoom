@@ -208,7 +208,7 @@ Scenario:3.发放内部领用卡
 			"money":"10.00",
 			"num":"4",
 			"total_money":"40.00",
-			"type":"实体卡",
+			"type":"电子卡",
 			"is_limit":"不限制",
 			"vip_shop":"",
 			"card_range":"010000001-010000004"

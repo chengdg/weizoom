@@ -89,8 +89,9 @@ class RuleOrder(resource.Resource):
 				weizoom_card.weizoom_card_order_item_id = weizoom_card_order_items
 				weizoom_card.weizoom_card_order_id = weizoom_card_order
 				weizoom_card.storage_time = weizoom_card_order_items.created_at
-				weizoom_card.activated_to = responsible_person
-				weizoom_card.department = company_info
+				weizoom_card.activated_to = responsible_person if responsible_person else use_persion
+				weizoom_card.department = company_info if company_info else use_departent
+
 				weizoom_card.save()
 			# WeizoomCard.objects.filter(weizoom_card_rule=rule_id,storage_status=WEIZOOM_CARD_STORAGE_STATUS_IN).update(
 			# 	storage_status = WEIZOOM_CARD_STORAGE_STATUS_OUT,

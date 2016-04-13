@@ -1,0 +1,11 @@
+
+input[name="name"], input[name="remark"]{
+	width: 300px;
+}
+fieldset div:nth-child(3){
+	display: inline-block;
+	/*width: 450px;*/
+}
+input[name="weizoom_card_id_prefix"]{
+	width: 120px;
+}
