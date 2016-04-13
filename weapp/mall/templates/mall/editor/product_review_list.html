@@ -1,5 +1,11 @@
 {% extends "content_base_v2.html" %}
-
+{% block css %}
+<style type="text/css">
+.exportProgress_msg,#downloadLink{
+    margin-right:0!important;
+}
+</style>
+{% endblock %}
 {% block content-panel %}
 <div class="xui-productsPage">
     <div class="relative">
@@ -44,28 +50,32 @@
 {% block js %}
 {% verbatim %}
 <script id="products-review" type="text/x-jquery-tmpl">
+    <div class=" div_export clearfix xb-rightPanel pb10">
+        <a href="javascript:void(0);" class="btn fr btn-default xa-export" id="export_data_file">导出结果</a>
+        
+    </div>
     <table id="productReviewListTable" class="table table-bordered table-condensed xb-stripedTable xb-noTdBorder xb-noBottom xb-noBorder xb-theadBg">
         ${data.stickied_count}
         <thead>
-          <th width="90">商品编码<th>
-          <th width="130" style="text-align:left;">商品名称<th>
-          <th width="95" style="text-align:left;">用户名<th>
-          <th width="150" >评价时间<th>
-          <th width="190" style="text-align:left;">评价内容<th>
-          <th width="65">商品评星<th>
-          <th width="100">状态<th>
-          <th width="80">操作<th>
+          <th width="90">商品编码</th>
+          <th width="130" style="text-align:left;">商品名称</th>
+          <th width="95" style="text-align:left;">用户名</th>
+          <th width="150" >评价时间</th>
+          <th width="190" style="text-align:left;">评价内容</th>
+          <th width="65">商品评星</th>
+          <th width="100">状态</th>
+          <th width="80">操作</th>
         </thead>
         <tbody id='product_review_list'>
         {{each(i, review) items}}
         <tr data-id="${review.id}">
-            <td width="90">${review.product_user_code}<td>
-            <td width="130" style="text-align:left;">${review.product_name}<td>
-            <td width="95" style="text-align:left;">{{html review.user_name}}<td>
-            <td width="150">${review.created_at}<td>
-            <td width="190" style="text-align:left;"><div style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;width:190px;">${review.content}</div><td>
-            <td width="65">${review.product_score}星<td>
-            <td width="100">${review.status.name}<td>
+            <td width="90">${review.product_user_code}</td>
+            <td width="130" style="text-align:left;">${review.product_name}</td>
+            <td width="95" style="text-align:left;">{{html review.user_name}}</td>
+            <td width="150">${review.created_at}</td>
+            <td width="190" style="text-align:left;"><div style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;width:190px;">${review.content}</div></td>
+            <td width="65">${review.product_score}星</td>
+            <td width="100">${review.status.name}</td>
             <td width="80">
                 {{if review.status.value === '0'}}
                     <a href="/mall2/product_review/?id=${review.id}">审核</a>
@@ -96,6 +106,93 @@ $(document).ready(function(){
         el: '.xui-productsPage'
     });
     view.render();
+
+    
+    $('.panel-body').delegate('.xa-export', 'click', function(event){
+        W.getApi().call({
+            app: 'export_job',
+            resource: 'export_is_download',
+            method: 'get',
+            args: {
+                woid: woid,
+                type: 2,
+            },
+            success: function(data) {
+                if (data["status"] === 1 && data["is_download"] === 0){
+                    W.showHint('error', '导出的文件尚未下载，请刷新页面进行下载！');
+                }
+                else if(data["status"] === 0 && data["is_download"] === 0){
+                    W.showHint('success', '文件正在导出，请刷新页面进行查看！');
+                    
+                }
+                else{
+                    var url ='';
+                    var filter_value = '';
+                    if (view.filterView.filterValue) {
+                        filter_value = view.filterView.filterValue;
+                    };
+                    var options = {
+                        el: '.panel-body',
+                        topic_id: '',
+                        type: 2,
+                        url: url,
+                        jobId:0,
+                        filter_value:filter_value,
+                        isAlreadyExport : true,
+                        app: 'mall2',
+                        timelinesOptions: {
+                            
+                        }
+                    }
+                    var customersView = new W.CustomersView(options);
+                }
+            },
+            error: function(response) {
+                W.showHint('error', '网络超时，导出中断，请重试！');
+            }
+        });
+        
+    });
+    
+    var table = $('div[data-ui-role="advanced-table"]').data('view');
+    
+
+    var export2data = {{export2data|safe}};
+    var woid = "{{ request.manager.id }}";
+    if(export2data["status"] ===1 && export2data["is_download"] ===0 ){
+        table.afterload = function(){
+            var options = {
+                el: '.div_export',
+                topic_id: '',
+                type: 2,
+                url: "",
+                jobId:export2data["id"],
+                isAlreadyExport : true,
+                timelinesOptions: {
+                }
+            }
+            var exportFileView = new W.dialog.ExportFileView(options);
+            exportFileView.finish();
+        };
+    }
+    else if(export2data["status"] ===0 && export2data["is_download"] ===0 ){
+        table.afterload = function(){
+
+            var jobId = export2data["id"];
+            var options = {
+                el: '.div_export',
+                topic_id: '',
+                type: 2,
+                url: "",
+                jobId:export2data["id"],
+                isAlreadyExport : true,
+                timelinesOptions: {
+                }
+            }
+            var exportFileView = new W.dialog.ExportFileView(options);
+            exportFileView.doExportAfterApi();
+        };
+    };
   })
 </script>
 {% endblock %}
