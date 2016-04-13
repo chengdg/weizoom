@@ -41,7 +41,6 @@ var ShopStore = StoreUtil.createStore(Dispatcher, {
 		this.__emitChange();
 	},
 	handleAddShops: function(action){
-		console.log(action.data,"gggggggggggggg")
 		var user_ids = action.data
 		var shops = this.shops
 		var checked = []
