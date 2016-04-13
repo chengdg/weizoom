@@ -27,10 +27,10 @@ Scenario:1 新建微信投票活动,无分组，活动未开始
 			"title":"微信高级投票-未开始",
 			"groups":[],
 			"rule": "高级投票规则",
-			"description":"高级投票活动介绍",
+			"desc":"高级投票活动介绍",
 			"start_date":"2天后",
 			"end_date":"3天后",
-			"material_image":"3.jpg"
+			"pic":"3.jpg"
 		}]
 		"""
 	Then jobs获得微信高级投票活动列表
@@ -50,10 +50,10 @@ Scenario:1 新建微信投票活动,无分组，活动未开始
 		{
 			"title":"微信高级投票-未开始",
 			"groups":[],
-			"description":"高级投票活动介绍",
+			"desc":"高级投票活动介绍",
 			"start_date":"今天",
 			"end_date":"6天后",
-			"material_image":"3.jpg"
+			"pic":"3.jpg"
 		}
 		"""
 	Then jobs获得微信高级投票活动列表
@@ -79,10 +79,10 @@ Scenario:2 新建微信投票活动,活动已结束
 		[{
 			"title":"微信高级投票-已结束",
 			"groups":[],
-			"description":"高级投票活动介绍",
+			"desc":"高级投票活动介绍",
 			"start_date":"2天前",
 			"end_date":"昨天",
-			"material_image":"3.jpg"
+			"pic":"3.jpg"
 		}]
 		"""
 	Then jobs获得微信高级投票活动列表
@@ -108,17 +108,17 @@ Scenario:3 新建微信投票活动，多个分组，多个活动进行中
 		[{
 			"title":"微信高级投票-进行中",
 			"groups":["初中组"],
-			"description":"高级投票活动介绍",
+			"desc":"高级投票活动介绍",
 			"start_date":"2天前",
 			"end_date":"2天后",
-			"material_image":"3.jpg"
+			"pic":"3.jpg"
 		},{
 			"title":"微信高级投票-进行中",
 			"groups":["高中组"],
-			"description":"高级投票活动介绍",
+			"desc":"高级投票活动介绍",
 			"start_date":"2天前",
 			"end_date":"2天后",
-			"material_image":"3.jpg"
+			"pic":"3.jpg"
 		}]
 		"""
 	Then jobs获得微信高级投票活动列表
