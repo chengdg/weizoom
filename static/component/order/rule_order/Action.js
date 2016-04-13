@@ -79,15 +79,15 @@ var Action = {
 			}
 		});
 	},
-	getLimitAndCommonCard:function(argument) {
-		Resource.get({
-			resource:'order.approval_card',
-			dispatch: {
-				dispatcher: Dispatcher,
-				actionType: Constant.GET_LIMIT_AND_COMMON_CARD,
-			}
-		})
-	},
+	// getLimitAndCommonCard:function(argument) {
+	// 	Resource.get({
+	// 		resource:'order.approval_card',
+	// 		dispatch: {
+	// 			dispatcher: Dispatcher,
+	// 			actionType: Constant.GET_LIMIT_AND_COMMON_CARD,
+	// 		}
+	// 	})
+	// },
 	updateOrderStaus:function(filter){
 		var that = this
 		Resource.post({
