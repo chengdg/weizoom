@@ -62,6 +62,7 @@ var ApprovalDialog = Reactman.createDialog({
 			common_status:common_status,
 			limit_status:limit_status 
 		});
+		setTimeout(this.refs.CardTable.refs.table.refresh,0);
 	},
 	render:function(){
 		var common_status = this.state.common_status;
@@ -72,8 +73,7 @@ var ApprovalDialog = Reactman.createDialog({
 				<fieldset>
 					<a href="javascript:void(0);" style={{cursor:common_status?'default':'pointer'}} onClick={this.tabchange.bind(this,'common_status')}>通用卡</a>&nbsp;&nbsp;
 					<a href="javascript:void(0);" style={{cursor:limit_status?'default':'pointer'}} onClick={this.tabchange.bind(this,'limit_status')}>限制卡</a>
-					<div style={{display:common_status?'block':'none'}}><CardTable cardruletype='common'/></div>
-					<div style={{display:limit_status?'block':'none'}}><CardTable cardruletype='limit'/></div>
+					<CardTable cardruletype={common_status?'common':'limit'} ref='CardTable'/>
 				</fieldset>
 			</form>
 		</div>
