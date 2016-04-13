@@ -37,7 +37,6 @@
 		float: left;
 		font-size: 18px;
 		text-align: center;
-		width: 33.33%;
 		padding: 10px 0;
 	}
 	.wui-group > div.active{
@@ -415,6 +414,9 @@
     		$('.wa-groups').append(group);
     		$('.wa-groups div').eq(0).addClass('active');
     	}
+    	var wid = 100/record_info.groups.length;
+
+    	$('.wa-groups div').css("width",wid+'%');    	
     }
     function update_member_info(member_info,group){
     	if(group == ''){group = '初中组'};
