@@ -16,9 +16,11 @@ fieldset div:nth-child(3){
 }
 
 input[name="weizoom_card_id_prefix"],
-select[name="card_kind"],
 input[name="money"],
 input[name="count"]{
+	width: 200px;
+}
+select[name="card_kind"]{
 	width: 120px;
 }
 fieldset div:nth-child(8){
@@ -34,4 +36,7 @@ fieldset div:nth-child(11){
 	line-height: 34px;
 	margin-bottom: 15px;
 	margin-left: 15px;
+}
+.errorHint{
+	width: 200px;
 }

@@ -38,7 +38,7 @@ class OrdinaryRuleList(resource.Resource):
 		count_per_page = int(request.GET.get('count_per_page', 15))
 		cur_page = int(request.GET.get('page', 1))
 		card_calss = WEIZOOM_CARD_LIMIT
-		pageinfo, cur_weizoom_card_rules = util.get_rule_list(card_calss, cur_page, count_per_page, request)
+		pageinfo, cur_weizoom_card_rules = util.get_rule_list(card_calss, request)
 		response = create_response(200)
 		response.data.rows = cur_weizoom_card_rules
 		response.data.pagination_info = pageinfo.to_dict()

@@ -24,6 +24,7 @@ var Store = require('./Store');
 var ShopStore = require('./ShopStore');
 
 require('./limit.css');
+require('../../../js/validate.js');
 
 
 var LimitPage = React.createClass({

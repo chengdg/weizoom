@@ -74,7 +74,7 @@ var LimitRulesPage = React.createClass({
 					<Reactman.TableColumn name="卡名称" field="name" />
 					<Reactman.TableColumn name="面值" field="money" />
 					<Reactman.TableColumn name="数量" field="count" />
-					<Reactman.TableColumn name="库存" field="count"/>
+					<Reactman.TableColumn name="库存" field="storage_count"/>
 					<Reactman.TableColumn name="卡类型" field="card_kind" />
 					<Reactman.TableColumn name="使用限制" field="valid_restrictions" />
 					<Reactman.TableColumn name="专属卡" field="shop_limit_list" />
