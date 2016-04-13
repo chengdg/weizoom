@@ -182,13 +182,18 @@
 		width: 10rem;
 		height: 8rem;
 		display: inline-block;
+	    overflow: hidden;
+	    position: relative;
 	}
-	.wui-detail-user-pic{
-		border-bottom: 1px solid #000;
-	}
-	.wui-detail-user-name{
-		padding: 2% 0px;
+	.wui-detail-user .wui-detail-user-name{
 		text-align: center;
+		position: absolute;
+        left: 0;
+   	 	bottom: 0;
+	    display: inline-block;
+	    width: 100%;
+        background: rgba(0,0,0,0.5);
+        color: #FFF;
 	}
 	.wui-detail-btn{
 		float: right;
@@ -309,13 +314,9 @@
 	<img class="wui-detail-close wa-detail-close" src="/static_v2/img/shvote_close.png">
 	<div id="userDetailDialog" class="wui-detail-dialog">
 		<div class="wui-detail-top">
-			<div class="wui-detail-user">
-				<div class="wui-detail-user-pic wa-detail-user-pic">
-					<img src="">
-				</div>
-				<div class="wui-detail-user-name wa-detail-user-name">
-					<span></span>
-				</div>
+			<div class="wui-detail-user wa-detail-user">
+				<img src="" class="wui-detail-user-pic">
+				<span class="wui-detail-user-name"></span>
 			</div>
 			<div class="wui-detail-btn">
 				<button>投票</button>
@@ -534,8 +535,8 @@
 				var details = user_detail[i].details;
 				var pics = user_detail[i].pics;
 				var serial_number = user_detail[i].serial_number;
-				$('.wa-detail-user-pic img').attr('src',icon);
-				$('.wa-detail-user-name span').text(name);
+				$('.wui-detail-user-pic').attr('src',icon);
+				$('.wui-detail-user-name').text(name);
 				$('.wa-detail-serial-number').text('编号: ' + serial_number);
 				$('.wa-detail-vote-count span').text(count);
 				$('.wa-detail-bottom').text(details);
