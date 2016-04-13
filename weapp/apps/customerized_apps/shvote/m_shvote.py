@@ -66,10 +66,9 @@ class MShvote(resource.Resource):
 		#判断当前会员每个组的可投票情况
 		group_name2canplay = {}
 		for g, log in group_name2member.items():
+			group_name2canplay[g] = 1
 			if member_id in log:
 				group_name2canplay[g] = 0
-			else:
-				group_name2canplay[g] = 1
 
 		member_info = {
 			'can_play_info': group_name2canplay,
