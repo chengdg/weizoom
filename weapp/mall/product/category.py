@@ -175,7 +175,9 @@ class CategoryList(resource.Resource):
             category_has_product.move_to_position(position)
             response = create_response(200)
             return response.get_response()
-        except:
+        except BaseException as e:
+            print('---------e',e)
+            print('------traceback',unicode_full_stack())
             watchdog_warning(
                 u"更新商品分组商品排序失败, cause:\n{}".format(unicode_full_stack())
             )
