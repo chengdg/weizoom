@@ -53,6 +53,9 @@
 		border-bottom: 1px solid #e1e1e1;
 		margin-top: 10px;
 	}
+	.wui-total-info{
+		color: #ff4200;
+	}
 	.wui-event-details,.wui-rank-link{
 		height: 30px;
 		line-height: 30px;
@@ -69,7 +72,7 @@
 		padding: 10px 0;
 	}
 	.wui-group > div.active{
-		color: #FF8000;
+		color: #ff4200;
 	}
 	.wui-rank{
 		background: #fff;
@@ -101,6 +104,7 @@
 	.wui-searchBox p{
 		line-height: 100%;
 		text-indent: 30px;
+		padding-top: 5px;
 	}
 	.wui-search-input{
 		height: 25px;
@@ -252,15 +256,15 @@
         <div class="wui-dynamic-top">
             <p>
                 <span>已报名</span>
-                <span class="wa-total-parted"></span>
+                <span class="wa-total-parted wui-total-info"></span>
             </p>
             <p>
                 <span>投票数</span>
-                <span class="wa-total-counts"></span>
+                <span class="wa-total-counts wui-total-info"></span>
             </p>
             <p class="wui-noborder">
                 <span>访问数</span>
-                <span class="wa-total-visits"></span>
+                <span class="wa-total-visits wui-total-info"></span>
             </p>
         </div>
         <div class="wui-dynamic-bottom">
