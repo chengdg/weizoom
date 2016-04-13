@@ -23,11 +23,13 @@ var Store = StoreUtil.createStore(Dispatcher,{
 		'handleUpdateAddProduct': Constant.CARD_DATA_UPDATE_ADD_PRODUCT,
 		'handleGetRuleOrderList':Constant.CARD_RULE_ORDER,
 		'handleAddCardLines':Constant.ADD_CARD_LINES,
+		'handleGetLimitAndCommonCard':Constant.GET_LIMIT_AND_COMMON_CARD,
 	},
 	init: function() {
 		this.filter = {};
 		this.data = {};
 		this.data.card_order_list = {};
+		this.data.limit_and_common_card_list = {};
 		this.data.cardlines = [{CardName:'',CardRuleNum:'',CardRuleTimeStart:'',CardRuleTimeEnd:''}];
 	},
 	handleUpdateProduct: function(action) {
@@ -36,6 +38,10 @@ var Store = StoreUtil.createStore(Dispatcher,{
 	},
 	handleUpdateAddProduct: function(action) {
 		this.data.cardlines[action.data.index][action.data.property] = action.data.value;
+		this.__emitChange();
+	},
+	handleGetLimitAndCommonCard: function(action) {
+		this.data.limit_and_common_card_list = action.data;
 		this.__emitChange();
 	},
 	handleCreateCardRuleOrderResponse: function(action){
