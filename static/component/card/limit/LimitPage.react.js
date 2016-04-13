@@ -24,8 +24,13 @@ var Store = require('./Store');
 var ShopStore = require('./ShopStore');
 
 require('./limit.css');
-require('../../../js/validate.js');
 
+Reactman.Validater.addRule('require-three-number', {
+	type: 'regex',
+	extract: 'value',
+	regex: /^\d{3,3}?$/g,
+	errorHint: '格式不正确，请输入3位数'
+});
 
 var LimitPage = React.createClass({
 	getInitialState: function() {

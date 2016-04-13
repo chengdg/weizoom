@@ -36,7 +36,7 @@ var Store = StoreUtil.createStore(Dispatcher, {
 		return this.data.shops;
 	},
 
-	handleSaveOrdinaryRule: function() {
+	handleSaveOrdinaryRule: function(action) {
 		window.location.href = '/card/limit_rules/'
 	},
 

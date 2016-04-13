@@ -142,7 +142,8 @@ TEMPLATE_CONTEXT_PROCESSORS = [
     'django.core.context_processors.request',
     'django.contrib.messages.context_processors.messages',
     
-    'core.context_processors.top_navs'
+    'core.context_processors.top_navs',
+    'core.context_processors.bundle_host'
 ]
 
 TEMPLATE_DIRS = [
@@ -225,7 +226,8 @@ LOGIN_URL = '/account/login/'
 if 'develop' == MODE:
     import logging
     logging.basicConfig(format='%(asctime)s %(levelname)s: %(message)s', level=logging.INFO)
+    BUNDLE_HOST = 'http://127.0.0.1:4188/static'
 elif 'test' == MODE:
-    pass
+    BUNDLE_HOST = '/static/build'
 else:
-    pass
+    BUNDLE_HOST = '/static/build'

@@ -19,6 +19,12 @@ var Action = require('./Action');
 var Store = require('./Store');
 require('./ordinary.css');
 
+Reactman.Validater.addRule('require-three-number', {
+	type: 'regex',
+	extract: 'value',
+	regex: /^\d{3,3}?$/g,
+	errorHint: '格式不正确，请输入3位数'
+});
 
 var OrindaryPage = React.createClass({
 	getInitialState: function() {

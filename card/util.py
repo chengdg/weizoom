@@ -23,23 +23,22 @@ def create_weizoom_card_rule(card_class,request):
 	shop_limit_list = request.POST.get('shop_limit_list','-1')
 	is_new_member_special = int(request.POST.get('is_new_member_special', 0))
 	valid_restrictions = request.POST.get('valid_restrictions', -1)
-	
-	if weizoom_card_id_prefix not in [card_rule.weizoom_card_id_prefix for card_rule in WeizoomCardRule.objects.all()]:
-		rule = WeizoomCardRule.objects.create(
-			owner_id=request.user.id,
-			name=name,
-			weizoom_card_id_prefix=weizoom_card_id_prefix,
-			money=money,
-			remark=remark,
-			count=count,
-			card_class=card_class,
-			card_kind=card_kind,
-			shop_limit_list=shop_limit_list,
-			is_new_member_special=is_new_member_special,
-			valid_restrictions=valid_restrictions if valid_restrictions else -1
-			)
-		#生成微众卡
-		create_weizoom_card(rule, count, request)
+
+	rule = WeizoomCardRule.objects.create(
+		owner_id=request.user.id,
+		name=name,
+		weizoom_card_id_prefix=weizoom_card_id_prefix,
+		money=money,
+		remark=remark,
+		count=count,
+		card_class=card_class,
+		card_kind=card_kind,
+		shop_limit_list=shop_limit_list,
+		is_new_member_special=is_new_member_special,
+		valid_restrictions=valid_restrictions if valid_restrictions else -1
+		)
+	#生成微众卡
+	create_weizoom_card(rule, count, request)
 
 
 def create_weizoom_card(rule,count,request,is_append=False):

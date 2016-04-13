@@ -86,7 +86,7 @@ var __call = function(options) {
 				W.getLoadingView().hide();
 			}
 			if (resp.code !== 200) {
-				_this.reportError(url, resp.innerErrMsg);
+				reportError(url, resp.innerErrMsg);
 				if (onError) {
 					onError.call(scope, resp);
 				}

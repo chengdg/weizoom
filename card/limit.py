@@ -34,10 +34,11 @@ class CreateWeizoomCardRule(resource.Resource):
 		创建限制卡规则
 		"""
 		card_class = WEIZOOM_CARD_LIMIT  #卡的种类为限制卡
-		try:
+		weizoom_card_id_prefix = request.POST.get('weizoom_card_id_prefix', '')
+		if weizoom_card_id_prefix not in [card_rule.weizoom_card_id_prefix for card_rule in WeizoomCardRule.objects.all()]:
 			util.create_weizoom_card_rule(card_class,request)
 			response = create_response(200)
-		except:
+		else:
 			response = create_response(500)
-			response.errMsg = u'您填写的卡的前缀已存在，请修改后再提交!'
+			response.errMg = u'您填写的卡的前缀已存在，请修改后再提交!'
 		return response.get_response()

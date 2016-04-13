@@ -10,7 +10,7 @@ module.exports = {
 		path.resolve(__dirname, 'static/index.js')
 	],
 	output: {
-		path: path.resolve(__dirname, 'build'),
+		path: path.resolve(__dirname, 'static/build'),
 		filename: 'bundle.js',
 		publicPath: '/static/'
 	},
