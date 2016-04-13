@@ -110,7 +110,10 @@ def send_review_export_job_task(self, exportjob_id, filter_data_args, sort_attr,
             review_count_write = 0
             for product_review in product_reviews:
                 member_id = product_review.member_id
-                member = Member.objects.filter(id=member_id)[0]
+                try:
+                   member = Member.objects.filter(id=member_id)[0]
+                except:
+                    continue
                 nike_name = member.username
                 try:
                     nike_name = nike_name.decode('utf8')
