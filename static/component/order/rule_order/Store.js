@@ -44,7 +44,7 @@ var Store = StoreUtil.createStore(Dispatcher,{
 		this.__emitChange();
 	},
 	handleUpdateCardLines:function(action) {
-		this.data.cardlines[action.data.index]['id'] = action.data.inputdata.id;
+		this.data.cardlines[action.data.index]['rule_id'] = action.data.inputdata.id;
 		this.data.cardlines[action.data.index]['card_name'] = action.data.inputdata.name;
 		this.__emitChange();
 	},
