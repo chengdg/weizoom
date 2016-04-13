@@ -48,25 +48,49 @@ var cardRuleOrderList = React.createClass({
 			return value;
 		}
 	},
-	onClickActivation:function(orderId,is_activation){
-		console.log(orderId,'sssssss')
+	onClickActivation:function(orderId,is_activation,status,event){
 		var cur_filter = {
 			orderId:orderId,
 			is_activation:is_activation,
+			status:status,
 		};
-		console.log(cur_filter,66666)
-		Action.updateOrderStaus(cur_filter);
+		console.log(cur_filter,66666666666)
+		console.log(is_activation ==0,66666666666777)
+		var title='确认取消订单吗?'
+		if (is_activation ==0){
+			title='是否确定激活?'
+		}
+		if (is_activation == 1){
+			title='是否确定停用?'
+		}
+		Reactman.PageAction.showConfirm({
+			target: event.target, 
+			title: title,
+			confirm: _.bind(function() {
+				Action.updateOrderStaus(cur_filter);
+			}, this)
+		});	
 	},
 	render: function() {
 		_this=this;
 		var cardRuleOrder = this.state.cardRuleOrder;
 		var cardRechargesNodes = cardRuleOrder.map(function(card_rule_order,index){
-			if (card_rule_order.is_activation ==0){
-				var card_is_activation =<div><a style={{display:'block'}} onClick={_this.onClickActivation.bind(_this,card_rule_order.id,card_rule_order.is_activation)} >卡激活{card_rule_order.is_activation}</a><a style={{display:'block'}}>编辑订单</a><a style={{display:'block'}} onClick={_this.onClickActivation.bind(_this,card_rule_order.id,-1)}>取消订单</a><a style={{display:'block'}}>备注</a></div>
-				var card_rule_order_is_click=<div>{card_rule_order.order_number}</div>
+			if(card_rule_order.status ==0){
+				if (card_rule_order.is_activation ==0){
+					var card_is_activation =<div><a style={{display:'block'}} onClick={_this.onClickActivation.bind(_this,card_rule_order.id,card_rule_order.is_activation,-1)} >卡激活{card_rule_order.is_activation}</a><a style={{display:'block'}}>编辑订单{card_rule_order.status}</a><a style={{display:'block'}} onClick={_this.onClickActivation.bind(_this,card_rule_order.id,-1,0)}>取消订单</a></div>
+					var card_rule_order_is_click=<div>{card_rule_order.order_number}</div>
+				}else{
+					var card_is_activation =<div><a style={{display:'block'}} onClick={_this.onClickActivation.bind(_this,card_rule_order.id,card_rule_order.is_activation,-1)} >停用{card_rule_order.is_activation}</a><a style={{display:'block'}}>编辑订单</a></div>
+					var card_rule_order_is_click=<div style={{cursor:'pointer'}}><a>{card_rule_order.order_number}</a></div>
+				}
 			}else{
-				var card_is_activation =<div><a style={{display:'block'}} onClick={_this.onClickActivation.bind(_this,card_rule_order.id,card_rule_order.is_activation)} >停用{card_rule_order.is_activation}</a><a style={{display:'block'}}>编辑订单</a><a style={{display:'block'}}>备注</a></div>
-				var card_rule_order_is_click=<div style={{cursor:'pointer'}}><a>{card_rule_order.order_number}</a></div>
+				if (card_rule_order.is_activation ==0){
+					var card_is_activation =<div><a style={{display:'block'}}>编辑订单{card_rule_order.status}</a><a style={{display:'block'}} >订单已取消</a></div>
+					var card_rule_order_is_click=<div>{card_rule_order.order_number}</div>
+				}else{
+					var card_is_activation =<div><a style={{display:'block'}}>编辑订单</a><div style={{display:'block'}} >订单已取消</div></div>
+					var card_rule_order_is_click=<div style={{cursor:'pointer'}}><a>{card_rule_order.order_number}</a></div>
+				}
 			}
 			var order_item_list = JSON.parse(card_rule_order.order_item_list).map(function(order_item,index){
 				return(
@@ -102,6 +126,7 @@ var cardRuleOrderList = React.createClass({
 						<td>{card_rule_order.created_at}</td>
 						<td>
 							{card_is_activation}
+							<a style={{display:'block'}}>备注</a>
 						</td>
 					</tr>
 				)

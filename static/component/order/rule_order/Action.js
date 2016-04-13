@@ -94,6 +94,7 @@ var Action = {
 			resource: 'order.rule_order',
 			data: filter,
 			success: function(data) {
+				console.log('ttttttttttttttttttttttttt')
 				that.getCardRuleOrder()
 			}
 

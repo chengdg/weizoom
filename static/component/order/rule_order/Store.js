@@ -31,7 +31,7 @@ var Store = StoreUtil.createStore(Dispatcher,{
 		this.data = {};
 		this.data.card_order_list = {};
 		this.data.limit_and_common_card_list = {};
-		this.data.cardlines = [{card_name:'',card_rule_num:'',valid_time_from:'',valid_time_to:'',rule_id:937}];
+		this.data.cardlines = [{card_name:'',card_rule_num:'',valid_time_from:'',valid_time_to:'',rule_id:1}];
 		this.resetValue = {};
 	},
 	handleUpdateProduct: function(action) {
