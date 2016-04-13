@@ -296,7 +296,7 @@
 			</div> 			
 		</div> 
 		<div class="wui-rank-vote">
-			<div class="wui-rank-voteLef">
+			<div class="wui-rank-voteLef wa-vote-left">
 				<span>{ result_list_count }</span>票
 			</div>
 			<div class="wui-rank-voteRig wa-ivote" data-member="{ member_id }">
@@ -386,6 +386,7 @@
         //参与投票
         var voteLock = false;
         $('.wa-rank-list').on('click','.wa-ivote', function(){
+        	var that = $(this);
             if(voteLock) return false;
             voteLock = true;
             var vote_to = $(this).attr('data-member'); 
@@ -400,6 +401,8 @@
                 },
                 success: function(data){
                 	wuiAlert('投票成功');
+                	var cur_vote = parseInt(that.siblings().find('span').html()) + 1;
+                	that.siblings().find('span').html(cur_vote);
                     voteLock = false;
                     can_play_info[current_group] -= 1;
                     $('.wa-left-chance').html(can_play_info[current_group]);
