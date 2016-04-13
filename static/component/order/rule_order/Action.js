@@ -47,6 +47,14 @@ var Action = {
 			}
 		});
 	},
+	resetProduct: function() {
+		Dispatcher.dispatch({
+			actionType: Constant.CARD_DATA_RESET_PRODUCT,
+			data: {
+
+			}
+		});
+	},
 	updateAddProduct: function(index, property, value) {
 		Dispatcher.dispatch({
 			actionType: Constant.CARD_DATA_UPDATE_ADD_PRODUCT,

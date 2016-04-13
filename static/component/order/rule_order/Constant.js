@@ -11,5 +11,6 @@ module.exports = keyMirror({
 	CARD_RULE_ORDER: null,
 	ADD_CARD_LINES: null,
 	GET_LIMIT_AND_COMMON_CARD: null,
-	ORDER_STATUS:null
+	ORDER_STATUS:null,
+	CARD_DATA_RESET_PRODUCT: null
 });
