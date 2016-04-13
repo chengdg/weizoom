@@ -52,14 +52,16 @@
 		</tr>
 	</thead>
 	<tbody>
+		{% for item in rank_list %}
 		<tr>
-			<td>1</td>			
-			<td>对，你没有看错！是史上最长的</td>
+			<td>{{ item.rank }}</td>			
+			<td>{{ item.name }}</td>
 			<td>
-				<div>2169票</div>
-				<div>编号:021</div>
+				<div>{{ item.count }}票</div>
+				<div>编号:{{ item.serial_number }}</div>
 			</td>
 		</tr>
+		{% endfor %}
 	</tbody>
 </table>
 {% endblock %}
