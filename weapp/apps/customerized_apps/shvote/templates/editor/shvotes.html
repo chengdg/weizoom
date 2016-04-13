@@ -99,11 +99,12 @@
 	<table class="table table-bordered xb-stripedTable xb-noTdBorder xb-noBottom xb-noBorder xb-theadBg mb10">
 		<thead>
 			<tr>
-				<th>名称</th>
+				<th>活动名称</th>
+				<th>参与人数</th>
+				<th>报名人数</th>
 				<th>开始时间</th>
 				<th>结束时间</th>
 				<th>状态</th>
-				<th>参与人数</th>
 				<th>操作</th>
 			</tr>
 		</thead>
@@ -125,6 +126,12 @@
 					</a>
 				</td>
 				<td>
+					${item.asking_count}
+				</td>
+				<td>
+					${item.participant_count}
+				</td>
+				<td>
 					${item.start_time}
 				</td>
 				<td>
@@ -143,6 +150,7 @@
 					{{if (item.status === '进行中')}}
 					<a href="javascript:void(0)" class="xa-close" data-id=${item.id}>关闭</a>
 					{{/if}}
+					<a href="javascript:void(0);" class="ml5 xa-link-copy" data-clipboard-text="/m/apps/shvote/m_shvote/?webapp_owner_id=${item.owner_id}&id=${item.id}">链接</a>
 					<a href="javascript:void(0);" class="ml5 xa-preview" data-id=${item.id}>预览</a>
 					<a href="/apps/shvote/shvote_registrators/?id=${item.id}" class="ml5">报名详情</a>
 					<a href="/apps/shvote/shvote_participances/?id=${item.id}" class="ml5">查看结果</a>
@@ -165,6 +173,19 @@
 <script type="text/javascript">
 $(document).ready(function() {
     var table = $('div[data-ui-role="advanced-table"]').data('view');
+
+    table.afterload = function(){
+        $(".xa-link-copy").each(function(){
+            var $this = $(this);
+            $this.attr('data-clipboard-text', window.location.origin + $this.attr('data-clipboard-text'));
+        });
+        var client = new ZeroClipboard( $(".xa-link-copy") , {
+            moviePath: "/static_v2/zero_clipboard.swf"
+        });
+        client.on('complete', function(client, args) {
+            W.showHint('success', '已经将链接复制到剪贴板');
+        });
+    };
 
 	$('body').delegate('.xa-delete', 'click', function(event) {
 		var $el = $(event.target);
