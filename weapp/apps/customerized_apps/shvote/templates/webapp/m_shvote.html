@@ -131,14 +131,20 @@
 		float: right;
 	}
 	.wui-rank-pic{
-		height:100px;
+		height:120px;
 		border-bottom: 1px solid #8E8E8E;
-		height: auto;
+		overflow: hidden;
+		position: relative;
 	}
 	.wui-rank-name{
-		border-bottom: 1px solid #8E8E8E;
+		background: rgba(0,0,0,0.5);
+		width: 100%;
+		color: #fff;
 		text-align: center;
 		padding: 2px 0;
+		position: absolute;
+		left: 0;
+		bottom: 0;
 	}
 	.wui-rank-vote{
 		overflow: hidden;
@@ -269,10 +275,10 @@
 	<div class="wui-rank-item wa-rank-item" data-id={ result_list_member_id }>
 		<div class="wui-rank-pic wa-rank-pic">
 			<img src={ result_list_icon }>
-		</div> 
-		<div class="wui-rank-name">
-			<span class="wui-rank-serial-number">{ result_list_serial_number }</span> 
-			<span>{ result_list_name }</span>
+			<div class="wui-rank-name">
+				<span class="wui-rank-serial-number">{ result_list_serial_number }</span> 
+				<span>{ result_list_name }</span>
+			</div> 			
 		</div> 
 		<div class="wui-rank-vote">
 			<div class="wui-rank-voteLef">
@@ -347,10 +353,11 @@
 				getRankInfo(current_group,'');
 			}
 		});
-
+		//切换分组
 		$('.wa-groups').on('click','div',function(){
 			$(this).addClass('active').siblings().removeClass('active');
 			var current_group = $(this).html();
+			$('.wa-left-chance').html(can_play_info[current_group]);
 			getRankInfo(current_group,'');
 		})
 
@@ -377,8 +384,9 @@
                     vote_to: vote_to
                 },
                 success: function(data){
+                	wuiAlert('投票成功');
                     voteLock = false;
-                    //TODO 修改被投票用户的票数，和投票用户的可投票次数
+                    can_play_info -= 1;
                 },
                 error: function(data){
                     voteLock = false;
@@ -419,9 +427,10 @@
                 update_record_info(record_info);
                 //更新会员信息
                 var member_info = data.member_info;
-                update_member_info(member_info,'');
-                //更新排名信息
-				current_group = $('.active').html();
+                current_group = $('.active').html();
+                can_play_info = member_info.can_play_info;
+                update_member_info(member_info,current_group);
+                //更新排名信息				
                 getRankInfo(current_group,'');
             },
             error: function(data){
@@ -453,11 +462,10 @@
     	var wid = 100/record_info.groups.length;
 
     	$('.wa-groups div').css("width",wid+'%');    	
-    }
-    function update_member_info(member_info,group){
-    	if(group == ''){group = '初中组'};
-    	$('.wa-left-chance').html(member_info.can_play_info[group]);
-    }
+    };
+    function update_member_info(member_info){
+    	$('.wa-left-chance').html(member_info.can_play_info[current_group]);
+    };
 
     //获取排名信息
     function getRankInfo(current_group,search_name){
