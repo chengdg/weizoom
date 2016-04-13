@@ -596,8 +596,8 @@ class ProductPool(resource.Resource):
         weizoom_product.save()
 
         # 商品规格
-        mall_product_model = models.ProductModel.objects.get(product=mall_product)
-        weizoom_product_model = models.ProductModel.objects.get(product=weizoom_product)
+        mall_product_model = models.ProductModel.objects.get(product=mall_product, is_standard=True, is_deleted=False)
+        weizoom_product_model = models.ProductModel.objects.get(product=weizoom_product, is_standard=True, is_deleted=False)
         weizoom_product_model.price = mall_product_model.price
         weizoom_product_model.weight = mall_product_model.weight
         weizoom_product_model.user_code = mall_product_model.user_code
