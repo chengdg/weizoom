@@ -83,6 +83,7 @@ from apps.customerized_apps.survey import models as apps_survey_models
 from apps.customerized_apps.vote import models as apps_vote_models
 from apps.customerized_apps.red_packet import models as redpacket_models
 from apps.customerized_apps.group import models as group_models
+from apps.customerized_apps.shvote import models as shvote_models
 
 
 from django.core.cache import cache
@@ -343,6 +344,10 @@ def __clear_all_app_data():
 	#apps投票
 	apps_vote_models.vote.objects.all().delete()
 	apps_vote_models.voteParticipance.objects.all().delete()
+
+	#apps高级投票
+	shvote_models.Shvote.objects.all().delete()
+	shvote_models.ShvoteParticipance.objects.all().delete()
 
 	#apps拼红包
 	redpacket_models.RedPacket.objects.all().delete()

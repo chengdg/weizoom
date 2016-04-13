@@ -65,13 +65,13 @@ Scenario:1.微信用户可以进行高级投票报名
 	When bill关注jobs的公众号
 	When bill访问jobs的webapp
 	When bill在微信中向jobs的公众号发送消息'微信高级投票'
-	Then bill收到自动回复'微信高级投票'
-	When bill点击图文"微信高级投票"进入高级投票活动页面
+	Then bill收到自动回复'高级投票活动1单图文'
+	When bill点击图文"高级投票活动1单图文"进入高级投票活动页面
 	When bill参加高级投票报名活动
 	"""
 		{
 			"name":"bill",
-			"group":[],
+			"group":["初中组"],
 			"number":"001",
 			"details":"bill的产品好"
 		}
@@ -85,3 +85,15 @@ Scenario:1.微信用户可以进行高级投票报名
 			"status":"待审核"
 		}]
 	"""
+	Then jobs获得微信高级投票活动列表
+		"""
+		[{
+			"name":"微信高级投票",
+			"participant_count":0,
+			"sign_count":"1",
+			"start_date":"今天",
+			"end_date":"2天后",
+			"status":"进行中",
+			"actions": ["删除","链接","预览","报名详情","查看结果"]
+		}]
+		"""

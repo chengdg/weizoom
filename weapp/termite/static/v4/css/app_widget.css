@@ -2168,5 +2168,37 @@ li.wui-selectBox-display-table {
     text-align: center;
 	margin-bottom: 15px;
 }
-
+.wui-shvoteDescription .wui-i-rule,.wui-shvoteDescription .wui-i-time{
+	border-bottom: 1px solid #FF8000;
+	padding: 5px;
+}
+.wui-shvoteDescription .wui-i-description{
+	padding: 5px;
+}
+.wui-shvoteDescription .wui-i-rule p,.wui-shvoteDescription .wui-i-description p{
+	text-indent: 20px;
+	padding: 5px;
+}
+.wui-shvoteDescription .wui-i-getback{
+	display: block;
+	float: right;
+	margin-bottom: 10px;
+	background: #adadad;
+	color: #fff;
+	border: none;
+	padding: 5px;
+}
+.wui-shvoteDescription .wui-i-btn{
+	overflow: hidden;
+}
+.wui-shvoteDescription .wui-i-imark{
+	display: block;
+	width: 100%;
+	background: #ff4200;
+	color: #fff;
+	border: none;
+	height: 40px;
+	font-size: 15px;
+	font-family: '黑体';
+}
 /*百宝箱 shvote CSS ---- end */

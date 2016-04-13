@@ -16,39 +16,40 @@ Feature: 新建微信高级投票活动
 	"""
 
 
-@mall2 @apps @shvote @add_shvote
+@mall2 @apps @shvote @add_shvote @aix2
 Scenario:1 新建微信投票活动,无分组，活动未开始
 	#选手分组-无分组
 	#状态-未开始
 	Given jobs登录系统
 	When jobs新建高级微信投票活动
 		"""
-		{
+		[{
 			"title":"微信高级投票-未开始",
-			"group":[],
+			"groups":[],
+			"rule": "高级投票规则",
 			"desc":"高级投票活动介绍",
 			"start_date":"2天后",
 			"end_date":"3天后",
 			"pic":"3.jpg"
-		}
+		}]
 		"""
 	Then jobs获得微信高级投票活动列表
 		"""
 		[{
 			"name":"微信高级投票-未开始",
+			"vote_count":0,
 			"participant_count":0,
-			"sign_count":"0",
 			"start_date":"2天后",
 			"end_date":"3天后",
 			"status":"未开始",
-			"actions": ["删除","链接","预览","报名详情"]
+			"actions": ["删除","链接","预览","报名详情","查看结果"]
 		}]
 		"""
-	When jobs编辑投票活动'微信高级投票-未开始'
-	"""
+	When jobs编辑高级投票活动'微信高级投票-未开始'
+		"""
 		{
 			"title":"微信高级投票-未开始",
-			"group":[],
+			"groups":[],
 			"desc":"高级投票活动介绍",
 			"start_date":"今天",
 			"end_date":"6天后",
@@ -59,15 +60,14 @@ Scenario:1 新建微信投票活动,无分组，活动未开始
 		"""
 		[{
 			"name":"微信高级投票-未开始",
+			"vote_count":0,
 			"participant_count":0,
-			"sign_count":"0",
 			"start_date":"今天",
 			"end_date":"6天后",
 			"status":"进行中",
-			"actions": ["删除","预览","报名详情","查看结果"]
+			"actions": ["关闭","链接","预览","报名详情","查看结果"]
 		}]
 		"""
-
 
 @mall2 @apps @shvote @add_shvote
 Scenario:2 新建微信投票活动,活动已结束
@@ -76,65 +76,69 @@ Scenario:2 新建微信投票活动,活动已结束
 	Given jobs登录系统
 	When jobs新建高级微信投票活动
 		"""
-		{
+		[{
 			"title":"微信高级投票-已结束",
-			"group":[],
+			"groups":[],
 			"desc":"高级投票活动介绍",
 			"start_date":"2天前",
 			"end_date":"昨天",
 			"pic":"3.jpg"
-		}
+		}]
 		"""
 	Then jobs获得微信高级投票活动列表
 		"""
 		[{
 			"name":"微信高级投票-已结束",
+			"vote_count":0,
 			"participant_count":0,
-			"sign_count":"0",
 			"start_date":"2天前",
 			"end_date":"昨天",
 			"status":"已结束",
-			"actions": ["删除","预览","报名详情","查看结果"]
+			"actions": ["删除","链接","预览","报名详情","查看结果"]
 		}]
 		"""
 
-
-
-
-@mall2 @apps @shvote @add_shvote
-Scenario:3 新建微信投票活动，多个分组，活动进行中
+@mall2 @apps @shvote @add_shvote @aix
+Scenario:3 新建微信投票活动，多个分组，多个活动进行中
 	#选手分组-多分组
 	#状态-进行中
 	Given jobs登录系统
 	When jobs新建高级微信投票活动
 		"""
-		{
+		[{
 			"title":"微信高级投票-进行中",
-			"group":["初中组","高中组"],
+			"groups":["初中组"],
 			"desc":"高级投票活动介绍",
 			"start_date":"2天前",
 			"end_date":"2天后",
 			"pic":"3.jpg"
-		}
+		},{
+			"title":"微信高级投票-进行中",
+			"groups":["高中组"],
+			"desc":"高级投票活动介绍",
+			"start_date":"2天前",
+			"end_date":"2天后",
+			"pic":"3.jpg"
+		}]
 		"""
 	Then jobs获得微信高级投票活动列表
 		"""
 		[{
 			"name":"微信高级投票-进行中",
+			"vote_count":0,
 			"participant_count":0,
-			"sign_count":"0",
 			"start_date":"2天前",
 			"end_date":"2天后",
 			"status":"进行中",
-			"actions": ["删除","预览","报名详情","查看结果"]
+			"actions": ["关闭","链接","预览","报名详情","查看结果"]
 		},{
 			"name":"微信高级投票-进行中",
+			"vote_count":0,
 			"participant_count":0,
-			"sign_count":"0",
 			"start_date":"2天前",
 			"end_date":"2天后",
 			"status":"进行中",
-			"actions": ["删除","预览","报名详情","查看结果"]
+			"actions": ["关闭","链接","预览","报名详情","查看结果"]
 
 		}]
 		"""

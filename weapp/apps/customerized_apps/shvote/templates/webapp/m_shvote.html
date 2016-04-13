@@ -29,6 +29,38 @@
 	.wui-surveyDescription{
 		padding: 10px;
 	}
+	.wui-dynamic-info{
+		background: #fff;
+	}
+	.wui-dynamic-top{
+		padding: 10px 0;
+	}
+	.wui-dynamic-top p{
+		display: inline-block;
+		width: 32%;
+		text-align: center;
+		line-height: 25px;
+		border-right: 1px solid #e1e1e1;
+	}
+	.wui-dynamic-top p span{
+		display: block;
+	}
+	.wui-dynamic-bottom p{
+		text-align: center;
+		font-size: 14px;
+	}
+	.wui-rank-link{
+		border-bottom: 1px solid #e1e1e1;
+		margin-top: 10px;
+	}
+	.wui-total-info{
+		color: #ff4200;
+	}
+	.wui-event-details,.wui-rank-link{
+		height: 30px;
+		line-height: 30px;
+		padding-left: 15px;
+	}
 	.wui-group{
 		overflow: hidden;
 		border-bottom: 1px solid #8E8E8E;
@@ -37,15 +69,15 @@
 		float: left;
 		font-size: 18px;
 		text-align: center;
-		width: 33.33%;
 		padding: 10px 0;
 	}
 	.wui-group > div.active{
-		color: #FF8000;
+		color: #ff4200;
 	}
 	.wui-rank{
 		background: #fff;
 		font-size: 14px;
+		margin-top: 10px;
 	}
 	.wui-rankList-wrap{
 		padding: 0 10px;
@@ -61,13 +93,18 @@
 		overflow: hidden;
 		line-height: 29px;
 	}
-	.wui-search span{
+	.wui-search > span{
 		font-size: 16px;
 	}
 	.wui-searchBox{
 		float: right;
-		width: 70%;
+		width: 80%;
 		position: relative;
+	}
+	.wui-searchBox p{
+		line-height: 100%;
+		text-indent: 30px;
+		padding-top: 5px;
 	}
 	.wui-search-input{
 		height: 25px;
@@ -98,14 +135,20 @@
 		float: right;
 	}
 	.wui-rank-pic{
-		height:100px;
+		height:120px;
 		border-bottom: 1px solid #8E8E8E;
-		height: auto;
+		overflow: hidden;
+		position: relative;
 	}
 	.wui-rank-name{
-		border-bottom: 1px solid #8E8E8E;
+		background: rgba(0,0,0,0.5);
+		width: 100%;
+		color: #fff;
 		text-align: center;
 		padding: 2px 0;
+		position: absolute;
+		left: 0;
+		bottom: 0;
 	}
 	.wui-rank-vote{
 		overflow: hidden;
@@ -120,14 +163,13 @@
 		border-right: 1px solid #8E8E8E;
 	}
 	.wui-detail-dialog{
-		border:1px solid black;
 		width:80%;
-		height:100%;
+		height:90%;
 		display:none;
 		z-index:99999999;
 		margin:0 auto;
-		background-color:#FFF;
-		border-radius: 6px;
+		background-color:#f0f0f0;
+		border-radius: 4px;
 		position: absolute;
 		top: 5%;
 		left: 10%;
@@ -135,50 +177,74 @@
    		overflow-y: auto;
 	}
 	.wui-detail-top{
-		margin: 6% 0 0 6%;
+		margin: 5% 0 3% 0;
+		padding: 5% 0 1% 6%;
+		background-color: #FFF;
 	}
 	.wui-detail-user{
-		border: 1px solid #000;
-		width: 60%;
+		border: 7px solid #fff7e7;
+		width: 10rem;
+		height: 8rem;
 		display: inline-block;
+	    overflow: hidden;
+	    position: relative;
 	}
-	.wui-detail-user-pic{
-		border-bottom: 1px solid #000;
-	}
-	.wui-detail-user-name{
-		padding: 2% 0px;
+	.wui-detail-user .wui-detail-user-name{
 		text-align: center;
+		position: absolute;
+        left: 0;
+   	 	bottom: 0;
+	    display: inline-block;
+	    width: 100%;
+        background: rgba(0,0,0,0.5);
+        color: #FFF;
 	}
 	.wui-detail-btn{
-		display: inline-block;
-		width: 33%;
+		float: right;
+		width: 40%;
 	}
 	.wui-detail-btn button{
-		width: 80%;
-		cursor: pointer;
+		width: 5rem;
+		height: 2.5rem;
+		background-color: #ff4200;
+		color: #FFF;
+		border: none;
+	    margin-top: 1rem;
+        border-radius: 4px;
+        box-shadow: 0 3px 0px #b62f00;
+        font-family: SimHei;
+        font-size: 1rem;
 	}
 	.wui-detail-middle{
-		width: 57%;
-		margin: 5% 0px 5% 6%;
+		width: 45%;
+	    margin: 5% 0 1% 3%;
 	}
 	.wui-detail-middle .wui-detail-vote-count{
 		float: right;
 	}
+	.wui-detail-middle .wui-detail-vote-count span{
+		color: #ff4200;
+	}
 	.wui-detail-bottom{
-		border: 1px solid #000;
 		margin: 0 auto;
-		/*min-height: 55%;*/
-		width: 90%;
-		margin-left: 5%;
+		background-color: #FFF;
+		padding: 5% 4% 5% 5%;
+		text-indent: 2rem;
+		font-family: SimHei;
+        font-size: 1rem;
+        line-height: 1.5rem;
 	}
 	.wui-detail-close{
 		display: none;
 		position: absolute;
-		top: 1%;
+		top: 3%;
 		right: 6%;
 		cursor: pointer;
 	    z-index: 999999999;
 	    width: 10%;
+	}
+	p.wui-noborder{
+		border: none;
 	}
 </style>
 {% endblock %}
@@ -186,25 +252,28 @@
 {% block content-panel %}
 	{{ page_html_content|safe }}
 <div class="wa-mobile">
-    <div class="wa-dynamic-info">
-        <div>
+    <div class="wa-dynamic-info wui-dynamic-info">
+        <div class="wui-dynamic-top">
             <p>
                 <span>已报名</span>
-                <span class="wa-total-parted"></span>
+                <span class="wa-total-parted wui-total-info"></span>
             </p>
             <p>
                 <span>投票数</span>
-                <span class="wa-total-counts"></span>
+                <span class="wa-total-counts wui-total-info"></span>
             </p>
-            <p>
+            <p class="wui-noborder">
                 <span>访问数</span>
-                <span class="wa-total-visits"></span>
+                <span class="wa-total-visits wui-total-info"></span>
             </p>
         </div>
-        <div>
-            <p>截止日期：<b class="wa-enddate"></b> 可投：<b class="wa-left-chance"></b></p>
-            <span class="wa-rank-link">排行>></span>
-            <span class="wa-event-details">活动介绍>></span>
+        <div class="wui-dynamic-bottom">
+            <p>
+            	截止日期：<b class="wa-enddate"></b> &nbsp;&nbsp;
+            	可投：<b class="wa-left-chance"></b>
+            </p>
+            <div class="wa-rank-link wui-rank-link">排行榜>></div>
+            <div class="wa-event-details wui-event-details">活动介绍>></div>
         </div>
     </div>
 	<div class="wui-rank">
@@ -214,8 +283,10 @@
 				<div class="wui-searchBox">
 					<input type="text" class="wui-search-input wa-search-text">
 					<button type="button" class="wui-searchBtn wa-search">搜索</button>
-				</div>
+					<p>选手列表是根据选手票数由多到少排列，显示前100名。如果需要查找100名以外的选手请在搜索栏输入选手编号或选手名称即可。</p>							
+				</div>												
 			</div>
+
 			<div class="wui-group wa-groups">
 			</div>
 			<div class="wui-rank-list wa-rank-list">		
@@ -228,13 +299,13 @@
 	<div class="wui-rank-item wa-rank-item" data-id={ result_list_member_id }>
 		<div class="wui-rank-pic wa-rank-pic">
 			<img src={ result_list_icon }>
-		</div> 
-		<div class="wui-rank-name">
-			<span class="wui-rank-serial-number">{ result_list_serial_number }</span> 
-			<span>{ result_list_name }</span>
+			<div class="wui-rank-name">
+				<span class="wui-rank-serial-number">{ result_list_serial_number }</span> 
+				<span>{ result_list_name }</span>
+			</div> 			
 		</div> 
 		<div class="wui-rank-vote">
-			<div class="wui-rank-voteLef">
+			<div class="wui-rank-voteLef wa-vote-left">
 				<span>{ result_list_count }</span>票
 			</div>
 			<div class="wui-rank-voteRig wa-ivote" data-member="{ member_id }">
@@ -247,22 +318,18 @@
 	<img class="wui-detail-close wa-detail-close" src="/static_v2/img/shvote_close.png">
 	<div id="userDetailDialog" class="wui-detail-dialog">
 		<div class="wui-detail-top">
-			<div class="wui-detail-user">
-				<div class="wui-detail-user-pic wa-detail-user-pic">
-					<img src="">
-				</div>
-				<div class="wui-detail-user-name wa-detail-user-name">
-					<span></span>
-				</div>
+			<div class="wui-detail-user wa-detail-user">
+				<img src="" class="wui-detail-user-pic">
+				<span class="wui-detail-user-name"></span>
 			</div>
 			<div class="wui-detail-btn">
 				<button>投票</button>
 				<button>拉票</button>
 			</div>
-		</div>
-		<div class="wui-detail-middle">
-			<span class="wa-detail-serial-number"></span>
-			<span class="wui-detail-vote-count wa-detail-vote-count"></span>
+			<div class="wui-detail-middle">
+				<span class="wa-detail-serial-number"></span>
+				<span class="wui-detail-vote-count wa-detail-vote-count"><span></span>&nbsp;票</span>
+			</div>
 		</div>
 		<div class="wui-detail-bottom wa-detail-bottom"></div>
 	</div>
@@ -306,10 +373,11 @@
 				getRankInfo(current_group,'');
 			}
 		});
-
+		//切换分组
 		$('.wa-groups').on('click','div',function(){
 			$(this).addClass('active').siblings().removeClass('active');
-			var current_group = $(this).html();
+			current_group = $(this).html();
+			$('.wa-left-chance').html(can_play_info[current_group]);
 			getRankInfo(current_group,'');
 		})
 
@@ -323,6 +391,7 @@
         //参与投票
         var voteLock = false;
         $('.wa-rank-list').on('click','.wa-ivote', function(){
+        	var that = $(this);
             if(voteLock) return false;
             voteLock = true;
             var vote_to = $(this).attr('data-member'); 
@@ -336,8 +405,12 @@
                     vote_to: vote_to
                 },
                 success: function(data){
+                	wuiAlert('投票成功');
+                	var cur_vote = parseInt(that.siblings().find('span').html()) + 1;
+                	that.siblings().find('span').html(cur_vote);
                     voteLock = false;
-                    //TODO 修改被投票用户的票数，和投票用户的可投票次数
+                    can_play_info[current_group] -= 1;
+                    $('.wa-left-chance').html(can_play_info[current_group]);
                 },
                 error: function(data){
                     voteLock = false;
@@ -378,9 +451,10 @@
                 update_record_info(record_info);
                 //更新会员信息
                 var member_info = data.member_info;
-                update_member_info(member_info,'');
-                //更新排名信息
-				current_group = $('.active').html();
+                current_group = $('.active').html();
+                can_play_info = member_info.can_play_info;
+                update_member_info(member_info,current_group);
+                //更新排名信息				
                 getRankInfo(current_group,'');
             },
             error: function(data){
@@ -409,11 +483,13 @@
     		$('.wa-groups').append(group);
     		$('.wa-groups div').eq(0).addClass('active');
     	}
-    }
-    function update_member_info(member_info,group){
-    	if(group == ''){group = '初中组'};
-    	$('.wa-left-chance').html(member_info.can_play_info[group]);
-    }
+    	var wid = 100/record_info.groups.length;
+
+    	$('.wa-groups div').css("width",wid+'%');    	
+    };
+    function update_member_info(member_info){
+    	$('.wa-left-chance').html(member_info.can_play_info[current_group]);
+    };
 
     //获取排名信息
     function getRankInfo(current_group,search_name){
@@ -463,10 +539,10 @@
 				var details = user_detail[i].details;
 				var pics = user_detail[i].pics;
 				var serial_number = user_detail[i].serial_number;
-				$('.wa-detail-user-pic img').attr('src',icon);
-				$('.wa-detail-user-name span').text(name);
-				$('.wa-detail-serial-number').text('编号：' + serial_number);
-				$('.wa-detail-vote-count').text(count + ' 票');
+				$('.wui-detail-user-pic').attr('src',icon);
+				$('.wui-detail-user-name').text(name);
+				$('.wa-detail-serial-number').text('编号: ' + serial_number);
+				$('.wa-detail-vote-count span').text(count);
 				$('.wa-detail-bottom').text(details);
 				for (var i=0;i<pics.length;i++){
 					$('.wa-detail-bottom').append('<img src='+pics[i]+'>');
