@@ -159,14 +159,13 @@
 		border-right: 1px solid #8E8E8E;
 	}
 	.wui-detail-dialog{
-		border:1px solid black;
 		width:80%;
-		height:100%;
+		height:90%;
 		display:none;
 		z-index:99999999;
 		margin:0 auto;
-		background-color:#FFF;
-		border-radius: 6px;
+		background-color:#f0f0f0;
+		border-radius: 4px;
 		position: absolute;
 		top: 5%;
 		left: 10%;
@@ -174,11 +173,14 @@
    		overflow-y: auto;
 	}
 	.wui-detail-top{
-		margin: 6% 0 0 6%;
+		margin: 5% 0 3% 0;
+		padding: 5% 0 1% 6%;
+		background-color: #FFF;
 	}
 	.wui-detail-user{
-		border: 1px solid #000;
-		width: 60%;
+		border: 7px solid #fff7e7;
+		width: 10rem;
+		height: 8rem;
 		display: inline-block;
 	}
 	.wui-detail-user-pic{
@@ -189,31 +191,44 @@
 		text-align: center;
 	}
 	.wui-detail-btn{
-		display: inline-block;
-		width: 33%;
+		float: right;
+		width: 40%;
 	}
 	.wui-detail-btn button{
-		width: 80%;
-		cursor: pointer;
+		width: 5rem;
+		height: 2.5rem;
+		background-color: #ff4200;
+		color: #FFF;
+		border: none;
+	    margin-top: 1rem;
+        border-radius: 4px;
+        box-shadow: 0 3px 0px #b62f00;
+        font-family: SimHei;
+        font-size: 1rem;
 	}
 	.wui-detail-middle{
-		width: 57%;
-		margin: 5% 0px 5% 6%;
+		width: 45%;
+	    margin: 5% 0 1% 3%;
 	}
 	.wui-detail-middle .wui-detail-vote-count{
 		float: right;
 	}
+	.wui-detail-middle .wui-detail-vote-count span{
+		color: #ff4200;
+	}
 	.wui-detail-bottom{
-		border: 1px solid #000;
 		margin: 0 auto;
-		/*min-height: 55%;*/
-		width: 90%;
-		margin-left: 5%;
+		background-color: #FFF;
+		padding: 5% 4% 5% 5%;
+		text-indent: 2rem;
+		font-family: SimHei;
+        font-size: 1rem;
+        line-height: 1.5rem;
 	}
 	.wui-detail-close{
 		display: none;
 		position: absolute;
-		top: 1%;
+		top: 3%;
 		right: 6%;
 		cursor: pointer;
 	    z-index: 999999999;
@@ -306,10 +321,10 @@
 				<button>投票</button>
 				<button>拉票</button>
 			</div>
-		</div>
-		<div class="wui-detail-middle">
-			<span class="wa-detail-serial-number"></span>
-			<span class="wui-detail-vote-count wa-detail-vote-count"></span>
+			<div class="wui-detail-middle">
+				<span class="wa-detail-serial-number"></span>
+				<span class="wui-detail-vote-count wa-detail-vote-count"><span></span>&nbsp;票</span>
+			</div>
 		</div>
 		<div class="wui-detail-bottom wa-detail-bottom"></div>
 	</div>
@@ -517,8 +532,8 @@
 				var serial_number = user_detail[i].serial_number;
 				$('.wa-detail-user-pic img').attr('src',icon);
 				$('.wa-detail-user-name span').text(name);
-				$('.wa-detail-serial-number').text('编号：' + serial_number);
-				$('.wa-detail-vote-count').text(count + ' 票');
+				$('.wa-detail-serial-number').text('编号: ' + serial_number);
+				$('.wa-detail-vote-count span').text(count);
 				$('.wa-detail-bottom').text(details);
 				for (var i=0;i<pics.length;i++){
 					$('.wa-detail-bottom').append('<img src='+pics[i]+'>');
