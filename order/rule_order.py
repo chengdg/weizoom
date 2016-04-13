@@ -29,6 +29,7 @@ class RuleOrder(resource.Resource):
 
 	@login_required
 	def api_get(request):
+		cur_page = request.GET.get('page', 1)
 		weizoom_card_orders = WeizoomCardOrder.objects.filter(status=0).order_by('-order_number')
 		weizoom_card_order_items = WeizoomCardOrderItem.objects.all()
 		w_cards = WeizoomCard.objects.filter(storage_status=WEIZOOM_CARD_STORAGE_STATUS_OUT)
@@ -57,13 +58,14 @@ class RuleOrder(resource.Resource):
 				order2is_activation[cur_weizoom_card_orders_id] =1
 			else:
 				order2is_activation[cur_weizoom_card_orders_id] =0
-		pageinfo, weizoom_card_orders = paginator.paginate(weizoom_card_orders, 1, 10, query_string=request.META['QUERY_STRING'])	
+		pageinfo, weizoom_card_orders = paginator.paginate(weizoom_card_orders, cur_page, 10, query_string=request.META['QUERY_STRING'])	
 		card_order_list = []
 		for card_order in weizoom_card_orders:
 			card_order_dic = {}
 			if card_order.id in card_order_id2id:
 				order_items = card_order_id2id[card_order.id]
 				order_item_list = []
+				order_money = 0
 				for order_item_id in order_items:
 					if order_item_id in order_item_id2weizoom_card_id:
 						order_item_dic = {}
@@ -72,8 +74,8 @@ class RuleOrder(resource.Resource):
 						weizoom_card_id_first = weizoom_card_ids[0]
 						weizoom_card_id_last = weizoom_card_ids[-1]
 						valid_restrictions = id2card_rule[rule_id].valid_restrictions
-
 						count = 0 if order_item_id not in id2weizoom_card_order_item else id2weizoom_card_order_item[order_item_id].weizoom_card_order_item_num
+						order_money += id2card_rule[rule_id].money * count
 						order_item_dic['weizoom_card_id_first'] = weizoom_card_id_first
 						order_item_dic['weizoom_card_id_last'] = weizoom_card_id_last
 						order_item_dic['name'] =u'' if rule_id not in id2card_rule else id2card_rule[rule_id].name
@@ -102,6 +104,12 @@ class RuleOrder(resource.Resource):
 					# card_order_dic['card_kind'] = WEIZOOM_CARD_KIND2TEXT[id2card_rule[rule_id].card_kind]
 					# card_order_dic['card_class'] = WEIZOOM_CARD_CLASS2TEXT[id2card_rule[rule_id].card_class]
 				if order_item_list:
+					if card_order.order_attribute == WEIZOOM_CARD_ORDER_ATTRIBUTE_INTERNAL:
+						apply_people = card_order.use_persion
+						apply_departent = card_order.use_departent
+					else:
+						apply_people = card_order.responsible_person
+						apply_departent = card_order.company
 					card_order_dic['id'] = card_order.id
 					card_order_dic['order_number'] = card_order.order_number
 					card_order_dic['order_attribute'] = WEIZOOM_CARD_ORDER_ATTRIBUTE2TEXT[card_order.order_attribute]
@@ -111,6 +119,9 @@ class RuleOrder(resource.Resource):
 					card_order_dic['project_name'] = card_order.project_name
 					card_order_dic['appliaction'] = card_order.appliaction
 					card_order_dic['use_persion'] = card_order.use_persion
+					card_order_dic['apply_people'] = apply_people
+					card_order_dic['apply_departent'] = apply_departent
+					card_order_dic['order_money'] = '%s' %order_money
 					card_order_dic['created_at'] = card_order.created_at.strftime("%Y-%m-%d")
 					card_order_dic['is_activation'] =u'' if card_order.id not in order2is_activation else order2is_activation[card_order.id]
 					card_order_dic['order_item_list'] = json.dumps(order_item_list)
@@ -120,7 +131,8 @@ class RuleOrder(resource.Resource):
 		}
 		response = create_response(200)
 		response.data = data
-
+		response.data['rows'] = card_order_list
+		response.data['pagination_info'] = pageinfo.to_dict()
 		return response.get_response()
 
 	@login_required
