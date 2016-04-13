@@ -29,6 +29,28 @@
 	.wui-surveyDescription{
 		padding: 10px;
 	}
+	.wui-dynamic-info{
+		background: #fff;
+	}
+	.wui-dynamic-top p{
+		display: inline-block;
+		width: 32%;
+		text-align: center;
+		height: 50px;
+		line-height: 50px;
+	}
+	.wui-dynamic-bottom p{
+		text-align: center;
+		font-size: 14px;
+	}
+	.wui-rank-link{
+		border-bottom: 1px solid #e1e1e1;
+	}
+	.wui-event-details,.wui-rank-link{
+		height: 30px;
+		line-height: 30px;
+		padding-left: 15px;
+	}
 	.wui-group{
 		overflow: hidden;
 		border-bottom: 1px solid #8E8E8E;
@@ -45,6 +67,7 @@
 	.wui-rank{
 		background: #fff;
 		font-size: 14px;
+		margin-top: 10px;
 	}
 	.wui-rankList-wrap{
 		padding: 0 10px;
@@ -189,8 +212,8 @@
 {% block content-panel %}
 	{{ page_html_content|safe }}
 <div class="wa-mobile">
-    <div class="wa-dynamic-info">
-        <div>
+    <div class="wa-dynamic-info wui-dynamic-info">
+        <div class="wui-dynamic-top">
             <p>
                 <span>已报名</span>
                 <span class="wa-total-parted"></span>
@@ -204,10 +227,10 @@
                 <span class="wa-total-visits"></span>
             </p>
         </div>
-        <div>
+        <div class="wui-dynamic-bottom">
             <p>截止日期：<b class="wa-enddate"></b> 可投：<b class="wa-left-chance"></b></p>
-            <span class="wa-rank-link">排行>></span>
-            <span class="wa-event-details">活动介绍>></span>
+            <div class="wa-rank-link wui-rank-link">排行榜>></div>
+            <div class="wa-event-details wui-event-details">活动介绍>></div>
         </div>
     </div>
 	<div class="wui-rank">
