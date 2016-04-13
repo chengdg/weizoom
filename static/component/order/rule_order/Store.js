@@ -24,16 +24,18 @@ var Store = StoreUtil.createStore(Dispatcher,{
 		'handleGetRuleOrderList':Constant.CARD_RULE_ORDER,
 		'handleAddCardLines':Constant.ADD_CARD_LINES,
 		'handleGetLimitAndCommonCard':Constant.GET_LIMIT_AND_COMMON_CARD,
+		'handleResetProduct':Constant.CARD_DATA_RESET_PRODUCT
 	},
 	init: function() {
 		this.filter = {};
 		this.data = {};
 		this.data.card_order_list = {};
 		this.data.limit_and_common_card_list = {};
-		this.data.cardlines = [{CardName:'',CardRuleNum:'',CardRuleTimeStart:'',CardRuleTimeEnd:''}];
+		this.data.cardlines = [{card_name:'',card_rule_num:'',valid_time_from:'',valid_time_to:'',rule_id:937}];
+		this.resetValue = {};
 	},
 	handleUpdateProduct: function(action) {
-		this.data[action.data.property] = action.data.value;
+		this.resetValue[action.data.property] = action.data.value;
 		this.__emitChange();
 	},
 	handleUpdateAddProduct: function(action) {
@@ -59,11 +61,18 @@ var Store = StoreUtil.createStore(Dispatcher,{
 		this.__emitChange();
 	},
 	handleAddCardLines:function() {
-		this.data.cardlines.push({CardName:'',CardRuleNum:'',CardRuleTimeStart:'',CardRuleTimeEnd:''});
+		this.data.cardlines.push({card_name:'',card_rule_num:'',valid_time_from:'',valid_time_to:''});
+		this.__emitChange();
+	},
+	handleResetProduct: function() {
+		this.resetValue = {};
 		this.__emitChange();
 	},
 	getData: function() {
-		return this.data;
+		return this.resetValue;
+	},
+	getDataCardlines: function() {
+		return this.data.cardlines;
 	},
 	getCardRuleOrder: function() {
 		return this.data.card_order_list;

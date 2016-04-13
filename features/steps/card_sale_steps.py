@@ -31,29 +31,17 @@ def step_impl(context, user):
 		order_info = info["order_info"]
 		# order_id = '' if not order_info["order_id"] else order_info["order_id"]
 		order_attributes = WEIZOOM_CARD_ORDER_TEXT2ATTRIBUTE[u'发售卡' if not "order_attribute" in order_info.keys() else order_info["order_attribute"]]
-		if order_attributes == card_models.WEIZOOM_CARD_ORDER_ATTRIBUTE_SALE:
-			rule_order_info = {
-				'order_id': -1 if not "order_id" in order_info.keys() else order_info["order_id"],
-				'order_attributes': 0 if not order_attributes else order_attributes,
-				'company_info': u'窝夫小子' if not "company" in order_info.keys() else order_info["company"],
-				'responsible_person':u'窝夫小子' if not "responsible_person" in order_info.keys() else order_info["responsible_person"],
-				'contact':u'7777777' if not "contact" in order_info.keys() else order_info["contact"],
-				'sale_name':u'7777777' if not "sale_name" in order_info.keys() else order_info["sale_name"],
-				'sale_deparment':u'7777777' if not "sale_deparment" in order_info.keys() else order_info["sale_deparment"],
-				'remark':u'备注' if not "comments" in order_info.keys() else order_info["comments"],
-				'rule_order':[]
-			}
-		if order_attributes == card_models.WEIZOOM_CARD_ORDER_ATTRIBUTE_INTERNAL:
-			rule_order_info = {
-				'order_id': -1 if not "order_id" in order_info.keys() else order_info["order_id"],
-				'order_attributes': 1 if not order_attributes else order_attributes,
-				'use_departent': u'部门' if not "apply_department" in order_info.keys() else order_info["apply_department"],
-				'project_name': u'项目' if not "project_name" in order_info.keys() else order_info["project_name"],
-				'appliaction':u'目的' if not "purpose" in order_info.keys() else order_info["purpose"],
-				'use_persion':u'领用人' if not "apply_person" in order_info.keys() else order_info["apply_person"],
-				'remark':u'备注' if not "comments" in order_info.keys() else order_info["comments"],
-				'rule_order':[]
-			}
+		rule_order_info = {
+			'order_id': -1 if not "order_id" in order_info.keys() else order_info["order_id"],
+			'order_attributes': 0 if not order_attributes else order_attributes,
+			'company_info': u'窝夫小子' if not "company" in order_info.keys() else order_info["company"],
+			'responsible_person':u'窝夫小子' if not "responsible_person" in order_info.keys() else order_info["responsible_person"],
+			'contact':u'7777777' if not "contact" in order_info.keys() else order_info["contact"],
+			'sale_name':u'7777777' if not "sale_name" in order_info.keys() else order_info["sale_name"],
+			'sale_deparment':u'7777777' if not "sale_deparment" in order_info.keys() else order_info["sale_deparment"],
+			'remark':u'7777777' if not "comments" in order_info.keys() else order_info["comments"],
+			'rule_order':[]
+		}
 		for rule in info["card_info"]:
 			name = rule["name"]
 			rule_order_info["rule_order"].append({
@@ -84,6 +72,13 @@ def step_impl(context, user):
 		use_persion = rules["use_persion"]
 		order_attribute_num = WEIZOOM_CARD_ORDER_TEXT2ATTRIBUTE[order_attribute]
 		company = rules["company"]
+		status =u'未激活'
+		print rules['is_activation'],88888888888
+		if rules['is_activation'] ==1:
+			status =u'已激活'
+		print rules['status'] ,777777777777777777777777
+		if  rules['status'] ==1 and rules['is_activation'] == 0:
+			status = u'已取消'
 		for order_item in order_item_list:
 			real_pay += float(order_item["total_money"])
 			weizoom_card_id_first = order_item["weizoom_card_id_first"]
@@ -113,7 +108,8 @@ def step_impl(context, user):
 				"apply_person": apply_person,
 				"apply_department": company,
 				"real_pay": '%.2f' % real_pay,
-				"order_money": '%.2f' % real_pay
+				"order_money": '%.2f' % real_pay,
+				"status": status,
 			}
 		if order_attribute_num == card_models.WEIZOOM_CARD_ORDER_ATTRIBUTE_INTERNAL:
 			rule_order = {
@@ -123,8 +119,10 @@ def step_impl(context, user):
 				"apply_person": use_persion,
 				"apply_department": use_departent,
 				"real_pay": '%.2f' % real_pay,
-				"order_money": '%.2f' % real_pay
+				"order_money": '%.2f' % real_pay,
+				"status": status,
 			}
 		actual_list.append(rule_order)
-
+	print actual_list,"++++++++++++++="
+	print expected,"-------------="
 	bdd_util.assert_list(expected, actual_list)

@@ -12,7 +12,7 @@ var Reactman = require('reactman');
 
 var ApprovalDialog = Reactman.createDialog({
 	getInitialState: function() {
-		Action.getLimitAndCommonCard();
+		// Action.getLimitAndCommonCard();
 		// var product = this.props.data.product;
 		return {
 			common_status:true,
@@ -72,12 +72,71 @@ var ApprovalDialog = Reactman.createDialog({
 				<fieldset>
 					<a href="javascript:void(0);" style={{cursor:common_status?'default':'pointer'}} onClick={this.tabchange.bind(this,'common_status')}>通用卡</a>&nbsp;&nbsp;
 					<a href="javascript:void(0);" style={{cursor:limit_status?'default':'pointer'}} onClick={this.tabchange.bind(this,'limit_status')}>限制卡</a>
-					<div style={{display:common_status?'block':'none'}}>1</div>
-					<div style={{display:limit_status?'block':'none'}}>2</div>
+					<div style={{display:common_status?'block':'none'}}><CardTable cardruletype='common'/></div>
+					<div style={{display:limit_status?'block':'none'}}><CardTable cardruletype='limit'/></div>
 				</fieldset>
 			</form>
 		</div>
 		)
 	}
 })
+//
+var CardTable = React.createClass({
+	rowFormatter: function(field, value, data) {
+		// if (field === 'models') {
+		// 	var models = value;
+		// 	var modelEls = models.map(function(model, index) {
+		// 		return (
+		// 			<div key={"model"+index}>{model.name} - {model.stocks}</div>
+		// 		)
+		// 	});
+		// 	return (
+		// 		<div style={{color:'red'}}>{modelEls}</div>
+		// 	);
+		// } else if (field === 'name') {
+		// 	return (
+		// 		<a href={'/outline/data/?id='+data.id}>{value}</a>
+		// 	)
+		// }else if (field === 'action') {
+		// 	return (
+		// 	<div>
+		// 		<a className="btn btn-link btn-xs" onClick={this.onClickDelete} data-product-id={data.id}>删除</a>
+		// 		<a className="btn btn-link btn-xs mt5" href={'/outline/data/?id='+data.id}>编辑</a>
+		// 		<a className="btn btn-link btn-xs mt5" onClick={this.onClickComment} data-product-id={data.id}>备注</a>
+		// 	</div>
+		// 	);
+		// } else {
+		// 	return value;
+		// }
+		if (field=='action') {
+			return (
+				<a className="btn btn-link btn-xs mt5" onClick={this.handleChoice}>选择</a>
+				)
+		} else {
+			return value;
+		}
+	},
+	render: function() {
+		var cardruletype = this.props.cardruletype;
+		var cardrulesResource= {
+			resource: 'order.approval_card',
+			data: {
+				cardruletype:cardruletype,
+			}
+		};
+		return (
+			<Reactman.TablePanel>
+				<Reactman.TableActionBar></Reactman.TableActionBar>
+				<Reactman.Table resource={cardrulesResource} formatter={this.rowFormatter} pagination={true} countPerPage={2} ref="table">
+					<Reactman.TableColumn name="卡名称" field="name" width="120px" />
+					<Reactman.TableColumn name="面值" field="money" />
+					<Reactman.TableColumn name="库存" field="storage_count" width="120px"/>
+					<Reactman.TableColumn name="卡类型" field="card_kind" width="80px" />
+					<Reactman.TableColumn name="卡号区间" field="card_range" />
+					<Reactman.TableColumn name="操作" field="action" width="80px" />
+				</Reactman.Table>
+			</Reactman.TablePanel>
+		);
+	}
+});
 module.exports = ApprovalDialog;

@@ -45,7 +45,7 @@ class RuleOrder(resource.Resource):
 			now_day = order_id
 		else:
 			now_day = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S").replace('-','').replace(':','').replace(' ','')
-		print order_attributes,WEIZOOM_CARD_ORDER_ATTRIBUTE_SALE,WEIZOOM_CARD_ORDER_ATTRIBUTE_INTERNAL,8888888888888888
+			print now_day,7777777777777
 		if int(order_attributes) == WEIZOOM_CARD_ORDER_ATTRIBUTE_SALE:
 			weizoom_card_order = WeizoomCardOrder.objects.create(
 				owner_id = request.user.id,
@@ -61,6 +61,7 @@ class RuleOrder(resource.Resource):
 		if int(order_attributes) == WEIZOOM_CARD_ORDER_ATTRIBUTE_INTERNAL:
 			weizoom_card_order = WeizoomCardOrder.objects.create(
 				owner_id = request.user.id,
+				order_number = now_day,
 				order_attribute = order_attributes,
 				use_departent = use_departent,
 				project_name = project_name,
