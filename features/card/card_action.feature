@@ -88,10 +88,7 @@ Scenario: 3.取消订单卡操作
 	When test取消订单'1'
 	Then test能获得订单列表
 		"""
-		[{
-			"order_id":"1",
-			"status":"已取消"
-		}]
+		[]
 		"""
 
 	

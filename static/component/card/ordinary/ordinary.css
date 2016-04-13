@@ -1,4 +1,3 @@
-
 input[name="name"], input[name="remark"]{
 	width: 300px;
 }
@@ -23,10 +22,10 @@ input[name="count"]{
 select[name="card_kind"]{
 	width: 120px;
 }
-fieldset div:nth-child(8){
+fieldset div:nth-child(6){
 	display: inline-block;
 }
-fieldset div:nth-child(11){
+fieldset div:nth-child(9){
 	display: inline-block;
 }
 .money_note, .count_note{

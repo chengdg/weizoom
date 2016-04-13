@@ -11,6 +11,8 @@ var Reactman = require('reactman');
 var FormInput = Reactman.FormInput;
 var FormSelect = Reactman.FormSelect;
 var FormRadio = Reactman.FormRadio;
+var FormText = Reactman.FormText;
+
 var FormSubmit = Reactman.FormSubmit;
 var Dispatcher = Reactman.Dispatcher;
 var Resource = Reactman.Resource;
@@ -22,6 +24,7 @@ var Store = require('./Store');
 var ShopStore = require('./ShopStore');
 
 require('./limit.css');
+require('../../../js/validate.js');
 
 
 var LimitPage = React.createClass({
@@ -72,15 +75,22 @@ var LimitPage = React.createClass({
 					<div className="pl10 pt10 pb10"><span style={{fontWeight: 'bold'}}>基本信息</span>（<span style={{color: 'red'}}>*</span>表示必填）</div>
 					<FormInput label="卡名称:" type="text" name="name" value={this.state.name} placeholder="1-20个字，中英文、数字特殊符合均可" onChange={this.onChange} />
 					<FormInput label="卡段号:" type="text" name="weizoom_card_id_prefix" value={this.state.weizoom_card_id_prefix} validate="require-three-number" placeholder="请输入3位数组" onChange={this.onChange} />
-					<div>
+					<span className="note">
 						注：请输入卡号前3位数，以此数组为该批次卡的起始数。
-					</div>
+					</span>
 					<FormSelect label="卡类型:" name="card_kind" options={[{"value": "-1", "text": "请选择"},{"value": "2", "text": "条件卡"},{"value": "3", "text": "专属卡"}]} validate="require-select" onChange={this.onChange} />
 					<Shops visible={this.state.shopsVisible} shops={this.state.shops} onChangeShops={this.onChangeShops} />
 					<Restriction />
 					<FormInput label="面值:" type="text" name="money" value={this.state.money} validate="require-price" placeholder="" onChange={this.onChange} />
+					<span className="money_note">
+						元
+					</span>
+					<div></div>
 					<FormInput label="数量:" type="text" name="count" value={this.state.count} validate="require-positive-int" placeholder="" onChange={this.onChange} />
-					<FormInput label="备注:" type="text" name="remark" value={this.state.remark} placeholder="" onChange={this.onChange} />
+					<span className="count_note">
+						张
+					</span>
+					<FormText label="备注:" type="text" name="remark" value={this.state.remark} width="300" height="150" placeholder="" onChange={this.onChange} />
 				</fieldset>
 				<fieldset>
 					<FormSubmit onClick={this.onSubmit} />

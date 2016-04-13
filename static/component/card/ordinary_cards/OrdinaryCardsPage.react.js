@@ -41,13 +41,6 @@ var OrdinaryCardsPage = React.createClass({
 					<span>{data.rule_money}</span>/<span>{data.money}</span>
 				</div>
 			)
-		}else if (field=="activated_to-department"){
-			return (
-				<div>
-					<div>{data.activated_to}</div>
-					<div>{data.department}</div>
-				</div>
-			);
 		}else if (field === 'action') {
 			return (
 			<div>
@@ -82,7 +75,8 @@ var OrdinaryCardsPage = React.createClass({
 					<Reactman.TableColumn name="面额/余额" field="rule_money/money"/>
 					<Reactman.TableColumn name="出库时间" field="storage_time" />
 					<Reactman.TableColumn name="备注" field="remark"/>
-					<Reactman.TableColumn name="领用人</br>申请部门/公司" field="activated_to-department" />
+					<Reactman.TableColumn name="领用人" field="activated_to" />
+					<Reactman.TableColumn name="申请部门/公司" field="department" />
 					<Reactman.TableColumn name="操作" field="action" width="80px" />
 				</Reactman.Table>
 			</Reactman.TablePanel>

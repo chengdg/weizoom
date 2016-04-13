@@ -60,7 +60,7 @@ var OrdinaryRulesPage = React.createClass({
 					<Reactman.TableColumn name="卡名称" field="name" />
 					<Reactman.TableColumn name="面值" field="money" />
 					<Reactman.TableColumn name="数量" field="count" />
-					<Reactman.TableColumn name="库存" field="count"/>
+					<Reactman.TableColumn name="库存" field="storage_count"/>
 					<Reactman.TableColumn name="卡类型" field="card_kind" />
 					<Reactman.TableColumn name="卡号区间" field="card_range"/>
 					<Reactman.TableColumn name="备注" field="remark" />

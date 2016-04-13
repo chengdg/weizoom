@@ -11,6 +11,7 @@ from core import paginator
 from models import *
 from weapp.models import *
 import nav
+import util
 
 class OrdinaryCardList(resource.Resource):
 	app = 'card'
@@ -66,7 +67,7 @@ class OrdinaryCardList(resource.Resource):
 				"active_card_user_id": c.active_card_user_id,#激活卡用户的id
 				"user_id": request.user.id,#当前用户的id
 				"money": money, # 余额
-				"storage_time": c.storage_time.strftime('%Y-%m-%d %H:%M:%S') if c.activated_at else "",
+				"storage_time": c.storage_time.strftime('%Y-%m-%d %H:%M:%S') if c.storage_time else "",
 				"is_expired": c.is_expired,
 				"department": c.department,
 				"activated_to": c.activated_to,
