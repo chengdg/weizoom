@@ -26,6 +26,9 @@
 		background-color: rgba(0, 125, 255, 0.5);
 		border-radius: 10px;
 	}
+	.wui-surveyDescription{
+		padding: 10px;
+	}
 	.wui-group{
 		overflow: hidden;
 		border-bottom: 1px solid #8E8E8E;
@@ -197,6 +200,7 @@
         <div>
             <p>截止日期：<b class="wa-enddate"></b> 可投：<b class="wa-left-chance"></b></p>
             <span class="wa-rank-link">排行>></span>
+            <span class="wa-event-details">活动介绍>></span>
         </div>
     </div>
 	<div class="wui-rank">
@@ -215,7 +219,7 @@
 		</div>
 	</div>
 </div>
-<button class="wa-ivote">我要投票</button>
+
 <script type="text/plain" id="tpl">
 	<div class="wui-rank-item">
 		<div class="wui-rank-pic wa-rank-pic">
@@ -229,7 +233,7 @@
 			<div class="wui-rank-voteLef">
 				<span>{ result_list_count }</span>票
 			</div>
-			<div class="wui-rank-voteRig">
+			<div class="wui-rank-voteRig wa-ivote" data-member="{ member_id }">
 				投票
 			</div>
 		</div> 
@@ -247,7 +251,7 @@
 			</div>
 		</div>
 		<div class="wui-detail-btn">
-			<button>投票</button>
+			<button class="wa-ivote">投票</button>
 			<button>拉票</button>
 		</div>
 	</div>
@@ -271,13 +275,17 @@
         if(W.isPC){
             return false;
         }
-
+        $('.wa-shvote-desc').hide();
 		// 我要报名
 		$('.wa-imark').click(function(){
 			var link = window.location.origin + '/m/apps/shvote/shvote_participance/?webapp_owner_id='+W.webappOwnerId+'&id='+W.appRecordId;
 			window.location.href = link;
 		});
 
+		$('.wa-getback').click(function(){
+			$('.wa-shvote-desc').hide();
+			$('.wa-mobile').show();
+		});
 
 		$('.wa-rank-link').click(function(){
 			var link = window.location.origin + '/m/apps/shvote/m_shvote_rank/?webapp_owner_id='+W.webappOwnerId+'&id='+W.appRecordId;
@@ -294,15 +302,25 @@
 			}
 		});
 
+		$('.wa-groups').on('click','div',function(){
+			$(this).addClass('active').siblings().removeClass('active');
+			var current_group = $(this).html();
+			getRankInfo(current_group,'');
+		})
+
+		$('.wa-event-details').click(function(){
+			$('.wa-shvote-desc').show();
+			$('.wa-mobile').hide();
+		})
         //展示参与统计
 //        getDynamicData();
 
         //参与投票
         var voteLock = false;
-        $('.wa-ivote').on('click', function(){
+        $('.wa-rank-list').on('click','.wa-ivote', function(){
             if(voteLock) return false;
             voteLock = true;
-            var vote_to = 6; //需要获取投票对象的member_id
+            var vote_to = $(this).attr('data-member'); 
             W.getApi().call({
                 app: 'm/apps/shvote',
                 resource: 'shvote_participance',
@@ -355,7 +373,7 @@
                 update_record_info(record_info);
                 //更新会员信息
                 var member_info = data.member_info;
-                update_member_info(member_info);
+                update_member_info(member_info,'');
                 //更新排名信息
 				current_group = $('.active').html();
                 getRankInfo(current_group,'');
@@ -382,13 +400,14 @@
     	$('.wa-total-visits').html(record_info['total_visits']);
     	$('.wa-enddate').html(record_info['end_date']);
     	for(var i=0;i < record_info.groups.length;i++){
-    		var group = $('<div>'+record_info.groups[i]+'</div');
+    		var group = $('<div>'+record_info.groups[i]+'</div>');
     		$('.wa-groups').append(group);
     		$('.wa-groups div').eq(0).addClass('active');
     	}
     }
-    function update_member_info(member_info){
-    	
+    function update_member_info(member_info,group){
+    	if(group == ''){group = '初中组'};
+    	$('.wa-left-chance').html(member_info.can_play_info[group]);
     }
 
     //获取排名信息
@@ -412,7 +431,8 @@
 		                result_list_serial_number : result[i].serial_number,
 		                result_list_name : result[i].name,
 		                result_list_count : result[i].count,
-		                result_list_icon : result[i].icon
+		                result_list_icon : result[i].icon,
+		                member_id : result[i].member_id
 		            });
 		        $('.wa-rank-list').append(s);
 	        	}
