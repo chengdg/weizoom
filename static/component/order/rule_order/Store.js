@@ -41,7 +41,13 @@ var Store = StoreUtil.createStore(Dispatcher,{
 		this.__emitChange();
 	},
 	handleGetLimitAndCommonCard: function(action) {
-		this.data.limit_and_common_card_list = action.data;
+		if (action.data.common_card_rule) {
+			this.data.limit_and_common_card_list['common_card_rule'] = action.data.common_card_rule;
+		}
+		if (action.data.limit_card_rule) {
+			this.data.limit_and_common_card_list['limit_card_rule'] = action.data.limit_card_rule;
+		}
+		
 		this.__emitChange();
 	},
 	handleCreateCardRuleOrderResponse: function(action){

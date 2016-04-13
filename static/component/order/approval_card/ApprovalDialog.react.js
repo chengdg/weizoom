@@ -15,6 +15,8 @@ var ApprovalDialog = Reactman.createDialog({
 		Action.getLimitAndCommonCard();
 		// var product = this.props.data.product;
 		return {
+			common_status:true,
+			limit_status:false
 			// comment: product.comment
 		}
 	},
@@ -50,11 +52,14 @@ var ApprovalDialog = Reactman.createDialog({
 	},
 
 	render:function(){
+		var common_status = this.state.common_status;
+		var limit_status = this.state.limit_status;
 		return (
 		<div className="xui-formPage">
 			<form className="form-horizontal mt15">
 				<fieldset>
-					<Reactman.FormText label="备注:" type="text" name="comment" validate="require-string" placeholder="输入'error'体验评论失败场景，其他内容体验评论成功场景" value={this.state.comment} onChange={this.onChange} autoFocus={true} inDialog={true} width={300} height={200}/>
+					<div style={{display:common_status?'block':'none'}}>1</div>
+					<div style={{display:limit_status?'block':'none'}}>2</div>
 				</fieldset>
 			</form>
 		</div>
