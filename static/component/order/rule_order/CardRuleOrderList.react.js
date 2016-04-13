@@ -56,7 +56,7 @@ var cardRuleOrderList = React.createClass({
 		};
 		console.log(cur_filter,66666666666)
 		console.log(is_activation ==0,66666666666777)
-		var title='确认取消订单吗?'
+		var title='是否确定激活订单?'
 		if (is_activation ==0){
 			title='是否确定激活?'
 		}
@@ -77,10 +77,10 @@ var cardRuleOrderList = React.createClass({
 		var cardRechargesNodes = cardRuleOrder.map(function(card_rule_order,index){
 			if(card_rule_order.status ==0){
 				if (card_rule_order.is_activation ==0){
-					var card_is_activation =<div><a style={{display:'block'}} onClick={_this.onClickActivation.bind(_this,card_rule_order.id,card_rule_order.is_activation,-1)} >卡激活{card_rule_order.is_activation}</a><a style={{display:'block'}}>编辑订单{card_rule_order.status}</a><a style={{display:'block'}} onClick={_this.onClickActivation.bind(_this,card_rule_order.id,-1,0)}>取消订单</a></div>
+					var card_is_activation =<div><a style={{display:'block'}} onClick={_this.onClickActivation.bind(_this,card_rule_order.id,card_rule_order.is_activation,-1)} >卡激活</a><a style={{display:'block'}}>编辑订单</a><a style={{display:'block'}} onClick={_this.onClickActivation.bind(_this,card_rule_order.id,-1,0)}>取消订单</a></div>
 					var card_rule_order_is_click=<div>{card_rule_order.order_number}</div>
 				}else{
-					var card_is_activation =<div><a style={{display:'block'}} onClick={_this.onClickActivation.bind(_this,card_rule_order.id,card_rule_order.is_activation,-1)} >停用{card_rule_order.is_activation}</a><a style={{display:'block'}}>编辑订单</a></div>
+					var card_is_activation =<div><a style={{display:'block'}} onClick={_this.onClickActivation.bind(_this,card_rule_order.id,card_rule_order.is_activation,-1)} >停用</a><a style={{display:'block'}}>编辑订单</a></div>
 					var card_rule_order_is_click=<div style={{cursor:'pointer'}}><a>{card_rule_order.order_number}</a></div>
 				}
 			}else{
