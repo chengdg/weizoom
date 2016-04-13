@@ -68,12 +68,20 @@ def step_impl(context, user):
 		order_attribute = rules["order_attribute"]
 		apply_person = rules["responsible_person"]
 		company = rules["company"]
+		status =u'未激活'
+		order_status = u'未激活'
+		print rules['is_activation'],88888888888
+		if rules['is_activation'] ==1:
+			status =u'已激活'
+		print rules['status'] ,777777777777777777777777
+		if  rules['status'] ==1 and rules['is_activation'] ==0:
+			status = u'已取消'
 		for order_item in order_item_list:
 			real_pay += float(order_item["total_money"])
 			weizoom_card_id_first = order_item["weizoom_card_id_first"]
 			weizoom_card_id_last = order_item["weizoom_card_id_last"]
 			card_range = weizoom_card_id_first + "-" + weizoom_card_id_last
-
+			print order_item,999999999999
 			if order_item["name"]:
 				name = order_item["name"]
 			else:
@@ -96,9 +104,11 @@ def step_impl(context, user):
 			"apply_person": apply_person,
 			"apply_department": company,
 			"real_pay": '%.2f' % real_pay,
-			"order_money": '%.2f' % real_pay
+			"order_money": '%.2f' % real_pay,
+			"status": status,
 		}
 		actual_list.append(rule_order)
 
 	print actual_list,"++++++++++++++="
+	print expected,"-------------="
 	bdd_util.assert_list(expected, actual_list)

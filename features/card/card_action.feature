@@ -19,7 +19,15 @@ Background:
 	And test新建限制卡
 		"""
 		[{
-			"name":"测试卡1"
+			"name":"测试卡1",
+			"prefix_value":"777",
+			"type":"condition",
+			"use_limit":{
+					"is_limit":"off"
+			},
+			"money":"10.00",
+			"num":"10",
+			"comments":""
 		}]
 		"""
 	And test下订单
@@ -75,7 +83,7 @@ Scenario: 2.批量停用卡操作
 		}]
 		"""
 
-@weizoom_card @card_option
+@weizoom_card @card_option  @zph
 Scenario: 3.取消订单卡操作
 	When test登录管理系统
 	Then test能获得订单列表
@@ -93,9 +101,7 @@ Scenario: 3.取消订单卡操作
 			"status":"已取消"
 		}]
 		"""
-
 	
-
 		
 
 
