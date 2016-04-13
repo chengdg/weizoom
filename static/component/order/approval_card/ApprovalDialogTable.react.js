@@ -78,6 +78,8 @@ var CardTable = React.createClass({
 			resource: 'order.approval_card',
 			data: {
 				cardruletype:cardruletype,
+				count_per_page:6,
+				page:1
 			}
 		};
 		return (
