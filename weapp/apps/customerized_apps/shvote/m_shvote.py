@@ -54,6 +54,7 @@ class MShvote(resource.Resource):
 		#获取当前会员可投票的次数(默认每人每天每组可投票一次)
 		groups = record.groups
 		group_name2member = {}
+		group_name2canplay = {g: 1 for g in record.groups}
 		now_date_str = datetime.now().strftime('%Y-%m-%d')
 		for m in member_datas:
 			tmp_list = m.vote_log.get(now_date_str, None)
@@ -64,9 +65,7 @@ class MShvote(resource.Resource):
 					group_name2member[m.group] = tmp_list
 
 		#判断当前会员每个组的可投票情况
-		group_name2canplay = {}
 		for g, log in group_name2member.items():
-			group_name2canplay[g] = 1
 			if member_id in log:
 				group_name2canplay[g] = 0
 

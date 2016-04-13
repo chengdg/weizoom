@@ -87,13 +87,10 @@ class Shvotes(resource.Resource):
 		id2asking_count = id2participant_count = {str(one_id):0 for one_id in ids}
 		for participance in participances:
 			belong_to = str(participance.belong_to)
-			review_status = participance.status
 			if record_id2memberinfo.has_key(belong_to):
-				record_id2memberinfo[belong_to].append(participance)
-			else:
-				record_id2memberinfo[belong_to] = [participance]
+				record_id2memberinfo[belong_to] += participance.count
 
-			if belong_to in id2participant_count:
+			if id2participant_count.has_key(belong_to):
 				id2asking_count[belong_to] += 1
 
 		items = []
@@ -104,8 +101,8 @@ class Shvotes(resource.Resource):
 				'name': data.name,
 				'start_time': data.start_time.strftime('%Y-%m-%d %H:%M'),
 				'end_time': data.end_time.strftime('%Y-%m-%d %H:%M'),
-				'asking_count': id2asking_count[],
-				'participant_count': id2participant_count[id_str],
+				'vote_count': id2participant_count[id_str],
+				'participant_count': id2asking_count[id_str],
 				'related_page_id': data.related_page_id,
 				'status': data.status_text,
 				'created_at': data.created_at.strftime("%Y-%m-%d %H:%M:%S")

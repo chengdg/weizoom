@@ -68,7 +68,7 @@ def __get_shvotePageJson(args):
             "background": ""
         },
         "components": [{
-            "type": "appkit.shvotedescription",
+            "type": "appkit.shvotedesc",
             "cid": 2,
             "pid": 1,
             "auto_select": False,
@@ -92,8 +92,8 @@ def __get_shvotePageJson(args):
                 "end_time": args.get("end_time"),
                 "valid_time": args.get("valid_time"),
                 "groups": args.get('groups'),
-                "description": args.get('description'),
-                "material_image": args.get('material_image'),
+                "desc": args.get('desc'),
+                "pic": args.get('pic'),
             },
             "components": []
         }]
@@ -200,10 +200,10 @@ def __Create_Shvote(context,text,user):
 
     groups = text.get('groups',[])
 
-    description = text.get('description','')
+    desc = text.get('desc','')
 
     rule = text.get("rule","")
-    material_image = text.get("material_image","")
+    pic = text.get("pic","")
 
     page_args = {
         "name":name,
@@ -212,8 +212,8 @@ def __Create_Shvote(context,text,user):
         "valid_time":valid_time,
         "groups":groups,
         "rule":rule,
-        "description": description,
-        "material_image":material_image
+        "desc": desc,
+        "pic":pic
     }
 
     #step2: 编辑页面获得右边的page_json
@@ -242,7 +242,7 @@ def __Create_Shvote(context,text,user):
         "valid_time":valid_time,
         "groups":json.dumps(groups),
         "rule":rule,
-        "description":description,
+        "desc":desc,
         "related_page_id":related_page_id
     }
     shvote_url ="/apps/shvote/api/shvote/?design_mode={}&project_id={}&version={}&_method=put".format(design_mode,context.project_id,version)
@@ -273,10 +273,10 @@ def __Update_Group(context,text,page_id,group_id):
 
     groups = text.get('groups',[])
 
-    description = text.get('description','')
+    desc = text.get('desc','')
 
     rule = text.get("rule","")
-    material_image = text.get("material_image","")
+    pic = text.get("pic","")
 
     page_args = {
         "name":name,
@@ -285,8 +285,8 @@ def __Update_Group(context,text,page_id,group_id):
         "valid_time":valid_time,
         "groups":groups,
         "rule":rule,
-        "description": description,
-        "material_image":material_image
+        "desc": desc,
+        "pic":pic
     }
 
     page_json = __get_shvotePageJson(page_args)
@@ -305,7 +305,7 @@ def __Update_Group(context,text,page_id,group_id):
         "valid_time":valid_time,
         "groups":json.dumps(groups),
         "rule":rule,
-        "description":description,
+        "desc":desc,
         "id":group_id#updated的差别
     }
 
@@ -495,7 +495,7 @@ def step_impl(context,user):
             tmp = {
                 "name":item['name'],
                 "participant_count":item['participant_count'],
-                "asking_count":item['asking_count'],
+                "vote_count":item['vote_count'],
                 "status":item['status'],
                 "start_time":item['start_time'],
                 "end_time":item['end_time'],
