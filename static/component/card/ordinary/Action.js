@@ -24,9 +24,14 @@ var Action = {
 		Resource.put({
 			resource: 'card.ordinary',
 			data: data,
-			dispatch: {
-				dispatcher: Dispatcher,
-				actionType: Constant.CARD_DATA_SAVE_ORDINARY_RULE
+			success: function() {
+				Dispatcher.dispatch({
+					actionType: Constant.CARD_DATA_SAVE_ORDINARY_RULE,
+					data: data
+				});
+			},
+			error: function(data) {
+				Reactman.PageAction.showHint('error', data.errMg);
 			}
 		});	
 	}

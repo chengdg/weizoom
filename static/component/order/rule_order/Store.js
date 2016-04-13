@@ -31,7 +31,7 @@ var Store = StoreUtil.createStore(Dispatcher,{
 		this.data = {};
 		this.data.card_order_list = {};
 		this.data.limit_and_common_card_list = {};
-		this.data.cardlines = [{card_name:'',card_rule_num:'',valid_time_from:'',valid_time_to:'',rule_id:949}];
+		this.data.cardlines = [{card_name:'',card_rule_num:'',valid_time_from:'',valid_time_to:'',rule_id:973}];
 		this.resetValue = {};
 	},
 	handleUpdateProduct: function(action) {
@@ -61,7 +61,7 @@ var Store = StoreUtil.createStore(Dispatcher,{
 		this.__emitChange();
 	},
 	handleAddCardLines:function() {
-		this.data.cardlines.push({card_name:'',card_rule_num:'',valid_time_from:'',valid_time_to:'',rule_id:949});
+		this.data.cardlines.push({card_name:'',card_rule_num:'',valid_time_from:'',valid_time_to:'',rule_id:973});
 		this.__emitChange();
 	},
 	handleResetProduct: function() {

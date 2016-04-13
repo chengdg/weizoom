@@ -17,6 +17,7 @@ var Shops = React.createClass({
 	getInitialState: function(){
 		ShopStore.addListener(this.onChangeShop);
 		return({
+			visible: false,
 			checkedShops: []
 		})
 	},
@@ -46,11 +47,16 @@ var Shops = React.createClass({
 			checkedShops: ShopStore.getCheckedShops()
 		})
 	},
+	showShops: function(visible){
+		this.setState({
+			visible: visible
+		})
+	},
 	render:function(){
 		var style = {
 			display: "none"
 		}
-		if (this.props.visible){
+		if (this.state.visible){
 			style["display"] = "block"
 		}
 		var checkedShops = this.state.checkedShops;

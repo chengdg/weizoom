@@ -36,7 +36,6 @@ var Action = {
 		});
 	},
 	deleteShop: function(data){
-		console.log(data,"gggdddddddddd")
 		Dispatcher.dispatch({
 			actionType: Constant.CARD_DELETE_SHOP,
 			data: data
@@ -46,10 +45,15 @@ var Action = {
 		Resource.put({
 			resource: 'card.limit',
 			data: data,
-			dispatch: {
-				dispatcher: Dispatcher,
-				actionType: Constant.CARD_DATA_SAVE_LIMIT_RULE
-			}
+			success: function() {
+				Dispatcher.dispatch({
+					actionType: Constant.CARD_DATA_SAVE_LIMIT_RULE,
+					data: data
+				});
+			},
+			error: function(data) {
+				Reactman.PageAction.showHint('error', data.errMg);
+			},
 		});	
 	}
 }

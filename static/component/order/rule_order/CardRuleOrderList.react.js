@@ -41,25 +41,8 @@ var cardRuleOrderList = React.createClass({
 				)
 			}
 		})
-
-		
-		console.log(value);
-		console.log("---------");
-		console.log(JSON.parse(data['order_item_list']));
-		
 		return order_items;
 	},
-	// componentWillMount: function() {
-	// 	Action.getCardRuleOrder();
-	// },
-	// componentDidMount: function(){
-	// 	Store.addListener(this.getCardRuleOrder);
-	// },
-	// getCardRuleOrder: function(){
-	// 	this.setState({
-	// 		cardRuleOrder:Store.getCardRuleOrder()
-	// 	})
-	// },
 	rowFormatter: function(field, value, data) {
 		if (field === 'name') {
 			var order_items = this.getAttributeValue('name',data);
@@ -116,37 +99,64 @@ var cardRuleOrderList = React.createClass({
 			)
 		}
 		else if (field === 'action') {
-			if(data.is_activation ==0){
-				return (
-					<div>
-						<a className="btn btn-link btn-xs" onClick={this.onClickActivation.bind(this,data.id,data.is_activation)}>卡激活</a>
-						<a className="btn btn-link btn-xs mt5">编辑订单</a>
-						<a className="btn btn-link btn-xs" onClick={this.onClickActivation.bind(this,data.id,-1)}>取消订单</a>
-						<a className="btn btn-link btn-xs">备注</a>
-					</div>
-				)
+			if(data.status ==0){
+				if (data.is_activation ==0){
+					return(
+						<div>
+							<a style={{display:'block'}} onClick={this.onClickActivation.bind(this,data.id,data.is_activation,-1)} >卡激活</a>
+							<a style={{display:'block'}} onClick={this.onClickActivation.bind(this,data.id,-1,0)}>取消订单</a>
+							<a className="btn btn-link btn-xs mt5">编辑订单</a>
+							<a className="btn btn-link btn-xs">备注</a>
+
+						</div>
+					)
+					
+				}else{
+					return(
+						<div>
+							<a style={{display:'block'}} onClick={this.onClickActivation.bind(this,data.id,data.is_activation,-1)} >停用</a>
+							<a style={{display:'none'}} onClick={this.onClickActivation.bind(this,data.id,-1,0)}>取消订单</a>
+							<a className="btn btn-link btn-xs mt5">编辑订单</a>
+							<a className="btn btn-link btn-xs">备注</a>
+						</div>
+					)
+					
+				}
 			}else{
-				return (
-					<div>
-						<a className="btn btn-link btn-xs" onClick={this.onClickActivation.bind(this,data.id,data.is_activation)}>停用</a>
-						<a className="btn btn-link btn-xs mt5">编辑订单</a>
-						<a className="btn btn-link btn-xs">取消订单</a>
-						<a className="btn btn-link btn-xs">备注</a>
-					</div>
-				)
+				return(
+						<div>
+							<a style={{display:'none'}} onClick={this.onClickActivation.bind(this,data.id,data.is_activation,-1)} >卡激活</a>
+							<a style={{display:'block'}} >订单已取消</a>
+							<a className="btn btn-link btn-xs mt5">编辑订单</a>
+							<a className="btn btn-link btn-xs">备注</a>
+						</div>
+					)
+				
 			}
 		} else {
 			return value;
 		}
 	},
-	onClickActivation:function(orderId,is_activation){
-		console.log(orderId,'sssssss')
+	onClickActivation:function(orderId,is_activation,status,event){
 		var cur_filter = {
 			orderId:orderId,
 			is_activation:is_activation,
+			status:status,
 		};
-		console.log(cur_filter,66666)
-		Action.updateOrderStaus(cur_filter);
+		var title='是否确定激活订单?'
+		if (is_activation ==0){
+			title='是否确定激活?'
+		}
+		if (is_activation == 1){
+			title='是否确定停用?'
+		}
+		Reactman.PageAction.showConfirm({
+			target: event.target, 
+			title: title,
+			confirm: _.bind(function() {
+				Action.updateOrderStaus(cur_filter);
+			}, this)
+		});	
 	},
 	render: function() {
 		var productsResource = {
@@ -156,66 +166,8 @@ var cardRuleOrderList = React.createClass({
 				count_per_page: 15
 			}
 		};
-		// var cardRechargesNodes = cardRuleOrder.map(function(card_rule_order,index){
-		// 	if (card_rule_order.is_activation ==0){
-		// 		var card_is_activation =<div><a style={{display:'block'}} onClick={_this.onClickActivation.bind(_this,card_rule_order.id,card_rule_order.is_activation)} >卡激活{card_rule_order.is_activation}</a><a style={{display:'block'}}>编辑订单</a><a style={{display:'block'}} onClick={_this.onClickActivation.bind(_this,card_rule_order.id,-1)}>取消订单</a><a style={{display:'block'}}>备注</a></div>
-		// 		var card_rule_order_is_click=<div>{card_rule_order.order_number}</div>
-		// 	}else{
-		// 		var card_is_activation =<div><a style={{display:'block'}} onClick={_this.onClickActivation.bind(_this,card_rule_order.id,card_rule_order.is_activation)} >停用{card_rule_order.is_activation}</a><a style={{display:'block'}}>编辑订单</a><a style={{display:'block'}}>备注</a></div>
-		// 		var card_rule_order_is_click=<div style={{cursor:'pointer'}}><a>{card_rule_order.order_number}</a></div>
-		// 	}
-		// 	var order_item_list = JSON.parse(card_rule_order.order_item_list).map(function(order_item,index){
-		// 		return(
-		// 			<tr data-order-id="" key={index}>
-		// 				<td>{card_rule_order_is_click}</td>
-		// 				<td width="75">
-		// 					{order_item.name}
-		// 				</td>
-		// 				<td width="75">
-		// 					{order_item.money}
-		// 				</td>
-		// 				<td width="75">
-		// 					{order_item.weizoom_card_order_item_num}
-		// 				</td>
-		// 				<td width="100">
-		// 					{order_item.total_money}
-		// 				</td>
-		// 				<td>
-		// 					<div>{order_item.card_kind}</div>
-		// 					<div>{order_item.card_class}</div>
-		// 				</td>
-		// 				<td></td>
-		// 				<td>{order_item.weizoom_card_id_first}-{order_item.weizoom_card_id_last}</td>
-
-		// 				<td>
-		// 					<div>{card_rule_order.order_attribute}</div>
-		// 					<div>无</div>
-		// 				</td>
-		// 				<td>
-		// 					<div>{card_rule_order.responsible_person}</div>
-		// 					<div>{card_rule_order.company}</div>
-		// 				</td>
-		// 				<td>{card_rule_order.created_at}</td>
-		// 				<td>
-		// 					{card_is_activation}
-		// 				</td>
-		// 			</tr>
-		// 		)
-		// 	});
-		// 	console.log(order_item_list);
-		// 	console.log("===========");
-		// 	return (
-		// 		<tbody>
-		// 			{order_item_list}
-					
-					
-		// 		</tbody>
-		// 	)
-		// });
-		
 		return (
-			<div>
-					
+			<div>		
 				<Reactman.TablePanel>
 					<Reactman.TableActionBar>
 						<Reactman.TableActionButton text="创建新卡" icon="plus" href="/card/ordinary/" />
@@ -236,7 +188,6 @@ var cardRuleOrderList = React.createClass({
 				</Reactman.TablePanel>
 			</div>
 		)
-		
 	}
 });
 module.exports = cardRuleOrderList;
