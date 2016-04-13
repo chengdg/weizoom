@@ -11,18 +11,12 @@ Background:
 	When jobs新建微信高级投票活动
 		"""
 		[{
-			"title":"微信高级投票-非会员参与",
-			"rule":[{
-				"content":"微信高级投票活动",
-				"cycle":"daily",
-				"vote_times":"1"
-			}],
-			"group":"初中组",
-			"player_num":"报名输入",
+			"title":"微信高级投票-进行中",
+			"group":["初中组","高中组"],
 			"desc":"高级投票活动介绍",
-			"start_date":"今天",
+			"start_date":"2天前",
 			"end_date":"2天后",
-			"pic":"1.jpg"
+			"pic":"3.jpg"
 		}]
 		"""
 	When jobs已添加单图文
@@ -33,9 +27,9 @@ Background:
 				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
 			}],
 			"cover_in_the_text":"true",
-			"summary":"微信高级投票-非会员参与",
-			"content":"微信高级投票-非会员参与",
-			"jump_url":"微信高级投票-非会员参与"
+			"summary":"微信高级投票",
+			"content":"微信高级投票",
+			"jump_url":"微信高级投票"
 		}]
 		"""
 	When jobs已添加关键词自动回复规则
@@ -44,12 +38,12 @@ Background:
 			"rules_name":"规则1",
 			"keyword": 
 				[{
-					"keyword": "微信高级投票-非会员参与",
+					"keyword": "微信高级投票",
 					"type": "equal"
 				}],
 			"keyword_reply": 
 				[{
-					"reply_content":"微信高级投票-非会员参与",
+					"reply_content":"微信高级投票",
 					"reply_type":"text_picture"
 				}]
 		
