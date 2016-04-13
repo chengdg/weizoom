@@ -72,8 +72,8 @@ var ApprovalDialog = Reactman.createDialog({
 				<fieldset>
 					<a href="javascript:void(0);" style={{cursor:common_status?'default':'pointer'}} onClick={this.tabchange.bind(this,'common_status')}>通用卡</a>&nbsp;&nbsp;
 					<a href="javascript:void(0);" style={{cursor:limit_status?'default':'pointer'}} onClick={this.tabchange.bind(this,'limit_status')}>限制卡</a>
-					<div style={{display:common_status?'block':'none'}}>1</div>
-					<div style={{display:limit_status?'block':'none'}}>2</div>
+					<div style={{display:common_status?'block':'none'}}><CardTable cardruletype='common'/></div>
+					<div style={{display:limit_status?'block':'none'}}><CardTable cardruletype='limit'/></div>
 				</fieldset>
 			</form>
 		</div>
@@ -126,12 +126,13 @@ var CardTable = React.createClass({
 		};
 		return (
 			<Reactman.TablePanel>
+				<Reactman.TableActionBar></Reactman.TableActionBar>
 				<Reactman.Table resource={cardrulesResource} formatter={this.rowFormatter} pagination={true} countPerPage={2} ref="table">
-					<Reactman.TableColumn name="卡名称" field="name" width="40px" />
+					<Reactman.TableColumn name="卡名称" field="name" width="120px" />
 					<Reactman.TableColumn name="面值" field="money" />
-					<Reactman.TableColumn name="库存" field="storage_count" width="200px"/>
+					<Reactman.TableColumn name="库存" field="storage_count" width="120px"/>
 					<Reactman.TableColumn name="卡类型" field="card_kind" width="80px" />
-					<Reactman.TableColumn name="卡号区间" field="card_range" width="100px" />
+					<Reactman.TableColumn name="卡号区间" field="card_range" />
 					<Reactman.TableColumn name="操作" field="action" width="80px" />
 				</Reactman.Table>
 			</Reactman.TablePanel>
