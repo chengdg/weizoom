@@ -236,8 +236,8 @@ var CardListLabel = React.createClass({
 				<FormInput label="卡名称:" type="text" name="CardName" ref="CardName" value={_this.state.cardlist[index].CardName} validate="require-notempty" onChange={_this.onChange.bind(_this,index)}/>
 				<a href="javascript:void(0);" style={{display:'inline-block',textAlign:'center',width:'80px'}} onClick={_this.choiceCard.bind(_this,index)}>选择卡库</a>
 				<FormInput label="出库数量:" type="text" name="CardRuleNum" ref="CardRuleNum" value={_this.state.cardlist[index].CardRuleNum} validate="require-positive-int" onChange={_this.onChange.bind(_this,index)}/>
-				<FormInput label="有效期:" type="text" name="valid_time_from" ref="valid_time_from" value={_this.state.cardlist[index].valid_time_from} validate="require-date" onChange={_this.onChange.bind(_this,index)}/>
-				<FormInput type="text" name="valid_time_to" ref="valid_time_to" value={_this.state.cardlist[index].valid_time_to} validate="require-date" onChange={_this.onChange.bind(_this,index)}/>
+				<FormInput label="有效期:" type="text" name="valid_time_from" ref="valid_time_from" value={_this.state.cardlist[index].valid_time_from} validate="require-notempty" onChange={_this.onChange.bind(_this,index)}/>
+				<FormInput type="text" name="valid_time_to" ref="valid_time_to" value={_this.state.cardlist[index].valid_time_to} validate="require-notempty" onChange={_this.onChange.bind(_this,index)}/>
 			</fieldset>
 			)
 		})
