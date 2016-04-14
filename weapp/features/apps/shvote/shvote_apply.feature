@@ -82,15 +82,15 @@ Scenario:1.微信用户可以进行高级投票报名
 			"actions":["审核通过","删除","查看"]
 		}]
 	"""
-	# Then jobs获得微信高级微信投票活动列表
-	# 	"""
-	# 	[{
-	# 		"name":"微信高级投票",
-	# 		"participant_count":0,
-	# 		"sign_count":"1",
-	# 		"start_date":"今天",
-	# 		"end_date":"2天后",
-	# 		"status":"进行中",
-	# 		"actions": ["删除","链接","预览","报名详情","查看结果"]
-	# 	}]
-	# 	"""
+	Then jobs获得微信高级投票活动列表
+		"""
+		[{
+			"name":"微信高级投票",
+			"participant_count":1,
+			"vote_count":1,
+			"start_date":"今天",
+			"end_date":"2天后",
+			"status":"进行中",
+			"actions": ["关闭","链接","预览","报名详情","查看结果"]
+		}]
+		"""
