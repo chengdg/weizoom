@@ -40,7 +40,7 @@ Background:
 		[{
 			"card_info":[{
 				"name":"测试卡1",
-				"order_num":"10",
+				"order_num":"2",
 				"start_date":"2016-04-07",
 				"end_date":"2016-10-07"
 			},{
@@ -65,7 +65,7 @@ Background:
 
 Scenario: 1.查看订单详情
 	Given test登录管理系统
-	Then test能获得订单详情列表
+	Then test能获得"测试卡1"订单详情列表
 		"""
 		[{
 			"name":"测试卡1",
@@ -74,7 +74,7 @@ Scenario: 1.查看订单详情
 			"total_money":"20.00",
 			"type":"条件卡",
 			"is_limit":"不限制",
-			"card_range":"777000001-777000010"
+			"card_range":"777000001-777000002"
 		},{
 			"name":"10元卡",
 			"money":"10.00",
