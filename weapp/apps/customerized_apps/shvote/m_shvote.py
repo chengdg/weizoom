@@ -191,7 +191,8 @@ class MShvoteRank(resource.Resource):
 		except:
 			pass
 		c = RequestContext(request, {
-			"groups": shvote.groups if shvote else []
+			"groups": shvote.groups if shvote else [],
+			"record_id": request.GET["id"]
 		})
 
 		return render_to_response('shvote/templates/webapp/m_shvote_rank.html', c)

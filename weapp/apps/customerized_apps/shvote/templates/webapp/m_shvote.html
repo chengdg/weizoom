@@ -26,14 +26,18 @@
 		background-color: rgba(0, 125, 255, 0.5);
 		border-radius: 10px;
 	}
-	.wui-surveyDescription{
-		padding: 10px;
+	.wui-shvoteDescription{
+		background: #f0f0f0;
+	}
+	.wui-shvoteDescription div img{
+		width: 100%;
 	}
 	.wui-dynamic-info{
 		background: #fff;
 	}
 	.wui-dynamic-top{
 		padding: 10px 0;
+		border-top: 1px solid #f0f0f0;
 	}
 	.wui-dynamic-top p{
 		display: inline-block;
@@ -45,21 +49,25 @@
 	.wui-dynamic-top p span{
 		display: block;
 	}
+	.wui-dynamic-bottom{
+		border-bottom: 5px solid #f0f0f0;
+	}
 	.wui-dynamic-bottom p{
 		text-align: center;
 		font-size: 14px;
+		border-bottom: 5px solid #f0f0f0;	
+		padding-bottom: 5px;	
 	}
 	.wui-rank-link{
 		border-bottom: 1px solid #e1e1e1;
-		margin-top: 10px;
 	}
 	.wui-total-info{
 		color: #ff4200;
 	}
 	.wui-event-details,.wui-rank-link{
-		height: 30px;
-		line-height: 30px;
-		padding-left: 15px;
+		padding: 10px 15px;
+		background: url(/static_v2/img/vote_arrow.png) no-repeat 96%;
+		background-size: 16px 16px;
 	}
 	.wui-group{
 		overflow: hidden;
@@ -74,10 +82,12 @@
 	.wui-group > div.active{
 		color: #ff4200;
 	}
+	.wui-link{
+		padding:0 10px;
+	}
 	.wui-rank{
 		background: #fff;
 		font-size: 14px;
-		margin-top: 10px;
 	}
 	.wui-rankList-wrap{
 		padding: 0 10px;
@@ -88,8 +98,8 @@
 		padding-top: 10px;
 	}
 	.wui-search{
-		border-bottom: 1px solid #8E8E8E;
-		padding: 5px 10px;
+		border-bottom: 5px solid #f0f0f0;
+		padding: 5px 15px;
 		overflow: hidden;
 		line-height: 29px;
 	}
@@ -107,23 +117,25 @@
 		padding-top: 5px;
 	}
 	.wui-search-input{
-		height: 25px;
+		height: 30px;
 		width: 90%;
-		border: 1px solid #8E8E8E;
-		border-radius: 5px;
+		border: 1px solid #ff4200;
+		border-radius: 2px;
 		outline: none;
 		padding-left: 5px;
 	}
 	.wui-searchBtn{
-		height: 29px;
-		border-radius: 5px;
-		border: 1px solid #8E8E8E;
-		background: #fff;
+		height: 34px;
+		border-radius: 2px;
+		color: #fff;
+		border: none;
+		background: #ff4200;
 		position: absolute;
 		right: 0;
 		top: 0;
-		padding: 0 10px;
+		padding: 0 15px;
 		outline: none;
+		font-family: '黑体'
 	}
 	.wui-rank-item{
 		border:1px solid #8E8E8E;
@@ -316,11 +328,13 @@
         </div>
         <div class="wui-dynamic-bottom">
             <p>
-            	截止日期：<b class="wa-enddate"></b> &nbsp;&nbsp;
-            	可投：<b class="wa-left-chance"></b>
+            	截止日期：<span class="wa-enddate"></span> &nbsp;&nbsp;
+            	可投：<span class="wa-left-chance"></span>票
             </p>
-            <div class="wa-rank-link wui-rank-link">排行榜>></div>
-            <div class="wa-event-details wui-event-details">活动介绍>></div>
+            <div class="wui-link">
+           		<div class="wa-rank-link wui-rank-link">排行榜</div>
+            	<div class="wa-event-details wui-event-details">活动介绍</div>
+            </div>
         </div>
     </div>
 	<div class="wui-rank">
