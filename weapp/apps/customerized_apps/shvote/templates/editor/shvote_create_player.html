@@ -27,10 +27,34 @@
    			border-bottom: 1px solid #000;
 		}
 		.wui-upload-img{
-			height: 77px;
+			width: 100px;
+			height: 100px;
+			display: none;
+			float: right;
+			margin-right: 65%;
+		}
+		.wui-upload-img-div{
+			height: 100px;
 		}
 		.edui-default .edui-editor{
 			margin-left: 134px;
+		}
+		#swipe_images-queue{
+			display: none;
+		}
+		#swipe_images-button{
+			background-image: url('/static_v2/img/editor/addProduct.png');
+			height :69px !important;
+		}
+		.uploadify-button-text{
+			display: none;
+		}
+		.uploadify-button{
+		    box-shadow: 0px 0px 0 #989797;
+		    background-color: #E9EDF5;
+		}
+		#imgSelect{
+			width: 90px;
 		}
 	</style>
 {% endblock%}
@@ -46,15 +70,11 @@
 	</div>
 	<div class="panel panel-default wui-create-player">
 		<div class="wui-create">创建选手</div>
-		<div class="form-group wui-upload-img">
+		<img class="wui-upload-img wa-upload-img" src="">
+		<div class="form-group wui-upload-img-div">
 			<label class="control-label fl" for="swipe_images">上传头像</label>
 			<div id="imgSelect" class="col-sm-9">
 		        <input id="swipe_images" name="swipe_images" type='hidden' />
-				<!-- <ul class="xui-i-images clearfix">
-					<li class="xui-i-image xa-selectImage">
-         				 <img src="/static_v2/img/editor/addProduct.png"/>
-					</li>
-				</ul> -->
 			</div>
 		</div>
 		<div class="form-group">
@@ -157,13 +177,14 @@ $(document).ready(function() {
         overrideEvents = ['onError', 'onUploadSuccess'],
         multi = false,
         removeCompleted = false,
-        uploader = '/apps/api/upload_file/get',
+        uploader = '/apps/shvote/api/upload_img/',
         cancelImg = '/static/img/cancel.png',
         buttonText = '上传头像',
         fileTypeExts = '*.jpg',
         method = 'post',
         removeTimeout = 0.0,
-        width = 85,
+        width = 80,
+        height = 80,
         formData = {
             'owner_id': '{{ request.webapp_owner_id }}'
         },
@@ -178,6 +199,7 @@ $(document).ready(function() {
             overrideEvents: overrideEvents,
             swf: swf,
             width: width,
+            height: height,
             multi: multi,
             removeCompleted: removeCompleted,
             uploader: uploader,
@@ -191,7 +213,6 @@ $(document).ready(function() {
                 'cat': 'swipe_images'
             }),
             onUploadStart: function(file){
-            	console.log(file,22222222222222)
                 if(file && file.name.substring(file.name.length - 3,file.name.length) == 'jpg'){}else{
                     W.showHint('error', '请上传jpg类型的图片');
                     $("#swipe_images").uploadify('cancel', '*');
@@ -202,7 +223,8 @@ $(document).ready(function() {
                 response = JSON.parse(response);
                 if(response.code == 200){
                     $("#swipe_images").find('.uploadify-button-text').html('重新选择');
-                    $('.xa-cert-name').html('  (文件名：'+file.name+')');
+                    // $('.xa-cert-name').html('  (文件名：'+file.name+')');
+                    $('.wa-upload-img').attr('src',response.data).show().css('display','inline-block');
                     cert_done = true;
                 }else{
                     console.log(response.errMsg);

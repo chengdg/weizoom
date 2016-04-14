@@ -286,3 +286,56 @@ class ShvoteCreatePlayer(resource.Resource):
 		});
 
 		return render_to_response('shvote/templates/editor/shvote_create_player.html', c)
+
+class ShvoteUpload(resource.Resource):
+	app = 'apps/shvote'
+	resource = 'upload_img'
+
+	def api_post(request):
+		"""
+		上传头像
+		"""
+		upload_file = request.FILES.get('Filedata', None)
+		owner_id = request.POST.get('owner_id', None)
+		response = create_response(500)
+		if upload_file:
+			try:
+				now = datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
+				upload_file.name = now + upload_file.name
+				file_path = ShvoteUpload.__save_player_pic(upload_file, owner_id)
+			except:
+				response.errMsg = u'保存文件出错'
+				return response.get_response()
+			
+			response = create_response(200)
+			response.data = file_path
+		else:
+			response.errMsg = u'文件错误'
+		return response.get_response()
+
+		response = create_response(500)
+		return response.get_response()
+
+	@staticmethod
+	def __save_player_pic(file, owner_id):
+		"""
+		@param file: 文件
+		@param owner_id: webapp_owner_id
+		@return: 文件保存路径
+		"""
+		content = []
+		curr_dir = os.path.dirname(os.path.abspath(__file__))
+		if file:
+			for chunk in file.chunks():
+				content.append(chunk)
+
+		dir_path = os.path.join(curr_dir, '../../../','static', 'upload', 'owner_id'+owner_id)
+		if not os.path.exists(dir_path):
+			os.makedirs(dir_path)
+		file_path = os.path.join(dir_path, file.name)
+
+		dst_file = open(file_path, 'wb')
+		print >> dst_file, ''.join(content)
+		dst_file.close()
+		file_path = os.path.join('\standard_static', 'upload', 'owner_id'+owner_id, file.name)
+		return file_path
