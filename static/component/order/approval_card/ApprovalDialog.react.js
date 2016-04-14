@@ -19,28 +19,17 @@ var ApprovalDialog = Reactman.createDialog({
 		}
 	},
 
-	onChange: function(value, event) {
-		var property = event.target.getAttribute('name');
-		var newState = {};
-		newState[property] = value;
-		this.setState(newState);
-	},
-
 	onBeforeCloseDialog: function() {
-		if (this.state.comment === 'error') {
-			Reactman.PageAction.showHint('error', '不能关闭对话框');
-		} else {
-			var card = this.refs.CardTable.state;
-			if (card==null) {
-				Reactman.PageAction.showHint('error', '请选择一张卡!');
-			}else if(!card.id){
-				Reactman.PageAction.showHint('error', '请选择一张卡!');
-			}else{
-				this.setState({
-					choiced_card:card ,
-				});
-				this.closeDialog();
-			}
+		var card = this.refs.CardTable.state;
+		if (card==null) {
+			Reactman.PageAction.showHint('error', '请选择一张卡!');
+		}else if(!card.id){
+			Reactman.PageAction.showHint('error', '请选择一张卡!');
+		}else{
+			this.setState({
+				choiced_card:card ,
+			});
+			this.closeDialog();
 		}
 	},
 	tabchange:function(status) {
