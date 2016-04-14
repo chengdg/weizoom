@@ -45,6 +45,10 @@ class MShvote(resource.Resource):
 		isMember = member.is_subscribed
 		activity_status, record = update_shvote_status(record)
 
+		#增加访问数
+		record.visits += 1
+		record.save()
+
 		#获取已报名人数
 		member_datas = app_models.ShvoteParticipance.objects(belong_to=record_id, status=app_models.MEMBER_STATUS['PASSED'])
 		total_parted = member_datas.count()
