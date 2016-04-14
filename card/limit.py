@@ -42,3 +42,4 @@ class CreateWeizoomCardRule(resource.Resource):
 			response = create_response(500)
 			response.errMg = u'您填写的卡的前缀已存在，请修改后再提交!'
 		return response.get_response()
+

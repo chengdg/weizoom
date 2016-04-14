@@ -33,7 +33,7 @@ var LimitRulesPage = React.createClass({
 		// })
 		var node_strings = '';
 		for (var i in shop_limit_list){
-			node_strings +='<div class="fl">'+shop_limit_list[i]+'</div>'
+			node_strings +='<div class="mr10 fl">'+shop_limit_list[i]+'</div>'
 		}
 
 		Reactman.PageAction.showPopover({
@@ -47,6 +47,14 @@ var LimitRulesPage = React.createClass({
 			return (
 				<a href={'/card/limit_cards/?weizoom_card_rule_id='+data.id}>{value}</a>
 			)
+		}else if(field == "card_kind"){
+			return (
+				<div>
+				<div>{data.card_kind}</div>
+				<div>{data.is_new_member_special}</div>
+				</div>
+			)
+
 		}else if (field == "shop_limit_list"){
 			if (value.length >0){
 				return (

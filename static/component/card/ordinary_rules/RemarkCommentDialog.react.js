@@ -17,7 +17,7 @@ var RemarkCommentDialog = Reactman.createDialog({
 	getInitialState: function() {
 		var rule = this.props.data.rule;
 		return {
-			comment: rule
+			remark: rule.remark
 		}
 	},
 
@@ -30,20 +30,20 @@ var RemarkCommentDialog = Reactman.createDialog({
 
 	onBeforeCloseDialog: function() {
 		var rule = this.props.data.rule;
-		// Reactman.Resource.post({
-		// 	resource: 'outline.data_comment',
-		// 	data: {
-		// 		product_id: product.id,
-		// 		comment: this.state.comment
-		// 	},
-		// 	success: function() {
-		// 		this.closeDialog();
-		// 	},
-		// 	error: function() {
-		// 		Reactman.PageAction.showHint('error', '评论失败!');
-		// 	},
-		// 	scope: this
-		// })
+		Reactman.Resource.post({
+			resource: 'card.ordinary',
+			data: {
+				rule_id: rule.id,
+				remark: this.state.remark
+			},
+			success: function() {
+				this.closeDialog();
+			},
+			error: function() {
+				Reactman.PageAction.showHint('error', '备注失败!');
+			},
+			scope: this
+		})
 	},
 
 	render:function(){
@@ -51,7 +51,7 @@ var RemarkCommentDialog = Reactman.createDialog({
 		<div className="xui-formPage">
 			<form className="form-horizontal mt15">
 				<fieldset>
-					<Reactman.FormText label="备注:" name="remark" placeholder="" value={this.state.comment} onChange={this.onChange} autoFocus={true} inDialog={true} width={350} height={200}/>
+					<Reactman.FormText label="备注:" name="remark" placeholder="" value={this.state.remark} onChange={this.onChange} autoFocus={true} inDialog={true} width={350} height={200}/>
 				</fieldset>
 			</form>
 		</div>

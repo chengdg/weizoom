@@ -32,7 +32,7 @@ class WeizoomCardRule(models.Model):
 	weizoom_card_id_prefix = models.CharField(max_length=3)  #卡号前缀，不重复
 	money = models.DecimalField(max_digits=65, decimal_places=2)  #微众卡面值
 	count = models.IntegerField(default=0)  #发放总数量
-	remark = models.CharField(max_length=20)  #备注
+	remark = models.CharField(max_length=2048)  #备注
 	valid_time_from = models.DateTimeField(null=True)  #有效范围开始时间
 	valid_time_to = models.DateTimeField(null=True)  #有效范围结束时间(即过期时间)
 	created_at = models.DateTimeField(auto_now_add=True)  #添加时间
