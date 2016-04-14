@@ -2164,22 +2164,48 @@ li.wui-selectBox-display-table {
 	padding: 15px 20px;
 	background: #fff;
 }
+.wui-shvoteDescription .wui-i-header{
+	position: relative;
+	margin-bottom: 25px;
+}
+.wui-shvoteDescription .wui-i-header .wui-i-gradient{
+	position: absolute;
+	top:50%;
+	left:0;
+	z-index: 0;
+}
 .wui-shvoteDescription .wui-i-title{
 	font-size: 1.2rem;
     text-align: center;
-	margin-bottom: 15px;
 	color: #000;
+	display: block;
+	background: #fff;
+	z-index: 9999;
+	position: relative;
+	width: 60%;
+	margin: 0 auto;
 }
-.wui-shvoteDescription .wui-i-rule,.wui-shvoteDescription .wui-i-time{
-	border-bottom: 1px solid #FF8000;
-	padding: 5px;
+.wui-shvoteDescription .wui-i-rule{
+	padding-top: 10px;
+}
+.wui-shvoteDescription .wui-i-time{
+	margin-bottom: 15px;
+}
+.wui-shvoteDescription .wui-i-time span{
+	font-size: 0.95rem;
+}
+.wui-shvoteDescription .wui-i-gradient{
+	width: 100%;
+	height: 1px;
+	background: -webkit-radial-gradient(#ffc5b1,#fff);
 }
 .wui-shvoteDescription .wui-i-description{
-	padding: 5px;
+	padding: 10px 5px;
 }
 .wui-shvoteDescription .wui-i-rule p,.wui-shvoteDescription .wui-i-description p{
 	text-indent: 20px;
-	padding: 5px;
+	margin-bottom: 15px;
+	margin-top: 8px;
 }
 .wui-shvoteDescription .wui-i-getback{
 	display: block;
@@ -2188,7 +2214,10 @@ li.wui-selectBox-display-table {
 	background: #adadad;
 	color: #fff;
 	border: none;
-	padding: 5px;
+	padding: 8px;
+	font-size: .9rem;
+	border-radius: 3px;
+	font-family: '黑体';
 }
 .wui-shvoteDescription .wui-i-btn{
 	overflow: hidden;
@@ -2200,7 +2229,7 @@ li.wui-selectBox-display-table {
 	color: #fff;
 	border: none;
 	height: 40px;
-	font-size: 15px;
+	font-size: 1rem;
 	font-family: '黑体';
 }
 /*百宝箱 shvote CSS ---- end */

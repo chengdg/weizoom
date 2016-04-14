@@ -111,15 +111,18 @@
 	.wui-searchBox p{
 		line-height: 100%;
 		text-indent: 30px;
-		padding-top: 5px;
+		padding-top: 7px;
+		padding-bottom: 7px;
 	}
 	.wui-search-input{
 		height: 30px;
-		width: 90%;
+		width: 80%;
 		border: 1px solid #ff4200;
 		border-radius: 2px;
 		outline: none;
-		padding-left: 5px;
+		padding-left: 26px;
+		background: url(/static_v2/img/search.png) no-repeat 1% 50%;
+		background-size: 20px;
 	}
 	.wui-searchBtn{
 		height: 34px;
@@ -166,7 +169,7 @@
 	.wui-rank-vote{
 		overflow: hidden;
 		text-align: center;
-		padding-bottom: 5px;
+		padding: 3px 0 6px;
 	}
 	.wui-rank-voteLef{
 		float: left;
@@ -343,7 +346,7 @@
 			<div class="wui-search wa-search-panel">
 				<span>选手</span>
 				<div class="wui-searchBox">
-					<input type="text" class="wui-search-input wa-search-text">
+					<input type="text" class="wui-search-input wa-search-text" placeholder="请输入关键字" maxlength="20">
 					<button type="button" class="wui-searchBtn wa-search">搜索</button>
 					<p>选手列表是根据选手票数由多到少排列，显示前100名。如果需要查找100名以外的选手请在搜索栏输入选手编号或选手名称即可。</p>							
 				</div>												
@@ -483,6 +486,8 @@
                 success: function(data){
                 	wuiAlert('投票成功');
                 	var cur_vote = parseInt(that.siblings().find('span').html()) + 1;
+                	var cur_count = parseInt($('.wa-total-counts').html()) + 1;
+                	$('.wa-total-counts').html(cur_count);
                 	that.siblings().find('span').html(cur_vote);
                     voteLock = false;
                     can_play_info[current_group] -= 1;
