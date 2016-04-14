@@ -17,7 +17,8 @@ var CardRuleOrderDetail = React.createClass({
 	getInitialState: function() {
 		return ({
 			order_id: W.card_rule_order_id,
-			rule_id: 0
+			rule_id: 0,
+			order_item_id: 0
 		})
 	},
 	componentWillMount: function() {
@@ -25,14 +26,16 @@ var CardRuleOrderDetail = React.createClass({
 		Store.addListener(this.getRuleId);
 	},
 	getRuleId: function() {
-		rule_id = Store.getRuleId();
+		rule_order = Store.getRuleId();
 		this.setState({
-			rule_id: rule_id
+			rule_id: rule_order.rule_id,
+			order_item_id: rule_order.order_item_id
 		})
 	},
-	chooseRuleId: function(rule_id) {
+	chooseRuleId: function(rule_id,order_item_id) {
 		this.setState({
-			rule_id: rule_id
+			rule_id: rule_id,
+			order_item_id: order_item_id
 		})
 	},
 	render: function(){
@@ -40,8 +43,8 @@ var CardRuleOrderDetail = React.createClass({
 		if(rule_id >0 ){
 			return(
 				<div>
-					<CardRuleOrderList orderId={this.state.order_id} chooseRuleId={this.chooseRuleId}/>
-					<CardOrderDetailList ruleId={this.state.rule_id}/>
+					<CardRuleOrderList orderId={this.state.order_id}/>
+					<CardOrderDetailList ruleId={this.state.rule_id} orderItemId={this.state.order_item_id}/>
 				</div>
 			)
 		}else{
@@ -58,15 +61,16 @@ var CardRuleOrderDetail = React.createClass({
 var CardRuleOrderList = React.createClass({
 	displayName: 'CardRuleOrderList',
 
-	getCardList: function(rule_id){
-		this.props.chooseRuleId(rule_id);
+	getCardList: function(rule_id,order_item_id){
+		this.props.chooseRuleId(rule_id,order_item_id);
 	},
 	rowFormatter: function(field, value, data) {
 		var _this = this;
 		if (field === 'action') {
 			var rule_id = data['rule_id'];
+			var order_item_id = data['order_item_id'];
 			return (
-				<div><a onClick={_this.getCardList.bind(_this,rule_id)}>选取</a></div>
+				<div><a onClick={_this.getCardList.bind(_this,rule_id,order_item_id)}>选取</a></div>
 			);
 		}else if (field == 'card_kind/valid_restrictions'){
 			return (
@@ -136,12 +140,14 @@ var CardOrderDetailList = React.createClass({
 	},
 	render: function() {
 		var rule_id = this.props.ruleId;
+		var order_item_id = this.props.orderItemId;
 		if(rule_id >=0 ){
 			var productsResource = {
 				resource: 'order.card_detail',
 				data: {
 					page: 1,
 					rule_id: rule_id,
+					order_item_id: order_item_id,
 					count_per_page: 15
 				}
 			};

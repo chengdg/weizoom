@@ -63,6 +63,7 @@ class OrderDatail(resource.Resource):
 			weizoom_card_id_first = weizoom_card_ids[0]
 			weizoom_card_id_last = weizoom_card_ids[-1]
 			order_item_list.append({
+				'order_item_id': '%s' % order_item.id,
 				'rule_id': '%s' % rule_id,
 				'name': u'' if rule_id not in rule_id2rule else rule_id2rule[rule_id].name,
 				'money': '%s' % money,
