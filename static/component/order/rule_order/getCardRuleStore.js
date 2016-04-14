@@ -20,17 +20,21 @@ var Store = StoreUtil.createStore(Dispatcher,{
 	actions:{
 		'handleGetCardRuleResponse':Constant.GET_CARD_RULE
 	},
+
 	init: function() {
 		this.data = {};
 	},
+
 	handleGetCardRuleResponse: function(action){
 		console.log(action.data.card_rule_list);
 		console.log("=========");
 		this.data = action.data.card_rule_list;
 		this.__emitChange();
 	},
+
 	getCardRule: function(){
 		return this.data;
 	}
+	
 });
 module.exports = Store;

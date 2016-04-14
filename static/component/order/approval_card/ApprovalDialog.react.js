@@ -32,6 +32,7 @@ var ApprovalDialog = Reactman.createDialog({
 			this.closeDialog();
 		}
 	},
+
 	tabchange:function(status) {
 		if (status=='common_status') {
 			var common_status=true;
@@ -46,6 +47,7 @@ var ApprovalDialog = Reactman.createDialog({
 		});
 		setTimeout(this.refs.CardTable.refs.table.refresh,0);
 	},
+	
 	render:function(){
 		var common_status = this.state.common_status;
 		var limit_status = this.state.limit_status;

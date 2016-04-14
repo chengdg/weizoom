@@ -23,9 +23,11 @@ var cardRuleOrderList = React.createClass({
 			cardRuleOrder:[]
 		})
 	},
+
 	onChangeStore: function(event) {
 		this.refs.table.refresh();
 	},
+
 	onClickShops: function(shop_limit_list,event){
 		var node_strings = '';
 		for (var i in shop_limit_list){
@@ -36,6 +38,7 @@ var cardRuleOrderList = React.createClass({
 			content: node_strings
 		});
 	},
+
 	getAttributeValue :function(value,data){
 		var _this = this;
 		var order_item_list = JSON.parse(data['order_item_list']);
@@ -67,6 +70,7 @@ var cardRuleOrderList = React.createClass({
 		})
 		return order_items;
 	},
+
 	rowFormatter: function(field, value, data) {
 		if (field === 'name') {
 			var order_items = this.getAttributeValue('name',data);
@@ -168,6 +172,7 @@ var cardRuleOrderList = React.createClass({
 			return value;
 		}
 	},
+
 	onClickActivation:function(orderId,is_activation,status,event){
 		var cur_filter = {
 			orderId:orderId,
@@ -189,6 +194,7 @@ var cardRuleOrderList = React.createClass({
 			}, this)
 		});	
 	},
+	
 	render: function() {
 		var productsResource = {
 			resource: 'order.rule_order',

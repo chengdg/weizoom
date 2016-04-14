@@ -27,6 +27,7 @@ var Store = StoreUtil.createStore(Dispatcher,{
 		'handleResetProduct':Constant.CARD_DATA_RESET_PRODUCT,
 		'handleUpdateCardLines':Constant.UPDATE_CARD_LINES
 	},
+
 	init: function() {
 		this.filter = {};
 		this.data = {};
@@ -35,19 +36,23 @@ var Store = StoreUtil.createStore(Dispatcher,{
 		this.data.cardlines = [{rule_id:985,card_name:'',card_rule_num:'',valid_time_from:'',valid_time_to:''}];
 		this.resetValue = {};
 	},
+
 	handleUpdateProduct: function(action) {
 		this.resetValue[action.data.property] = action.data.value;
 		this.__emitChange();
 	},
+
 	handleUpdateAddProduct: function(action) {
 		this.data.cardlines[action.data.index][action.data.property] = action.data.value;
 		this.__emitChange();
 	},
+
 	handleUpdateCardLines:function(action) {
 		this.data.cardlines[action.data.index]['rule_id'] = action.data.inputdata.id;
 		this.data.cardlines[action.data.index]['card_name'] = action.data.inputdata.name;
 		this.__emitChange();
 	},
+
 	handleGetLimitAndCommonCard: function(action) {
 		if (action.data.common_card_rule) {
 			this.data.limit_and_common_card_list['common_card_rule'] = action.data.common_card_rule;
@@ -58,28 +63,35 @@ var Store = StoreUtil.createStore(Dispatcher,{
 		
 		this.__emitChange();
 	},
+
 	handleCreateCardRuleOrderResponse: function(action){
 		window.location.href="/order/rule_order/";
 		this.__emitChange();
 	},
+
 	handleGetRuleOrderList: function(action){
 		this.data.card_order_list = JSON.parse(action.data.card_order_list);
 		this.__emitChange();
 	},
+
 	handleAddCardLines:function() {
 		this.data.cardlines.push({card_name:'',card_rule_num:'',valid_time_from:'',valid_time_to:'',rule_id:985});
 		this.__emitChange();
 	},
+
 	handleResetProduct: function() {
 		this.resetValue = {};
 		this.__emitChange();
 	},
+
 	getData: function() {
 		return this.resetValue;
 	},
+
 	getDataCardlines: function() {
 		return this.data.cardlines;
 	},
+	
 	getCardRuleOrder: function() {
 		return this.data.card_order_list;
 	},

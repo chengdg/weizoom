@@ -20,17 +20,20 @@ var Store = StoreUtil.createStore(Dispatcher,{
 	actions:{
 		'handleGetRuleIdResponse':Constant.GET_RULE_ID,
 	},
+
 	init: function() {
 		this.data = {
 			'rule_id' :0,
 			'order_item_id': 0
 		}
 	},
+
 	handleGetRuleIdResponse: function(action) {
 		this.data.rule_id = action.data.rule_id;
 		this.data.order_item_id = action.data.order_item_id;
 		this.__emitChange();
 	},
+	
 	getRuleId: function() {
 		return this.data;
 	},

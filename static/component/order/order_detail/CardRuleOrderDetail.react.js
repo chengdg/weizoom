@@ -21,10 +21,12 @@ var CardRuleOrderDetail = React.createClass({
 			order_item_id: 0
 		})
 	},
+
 	componentWillMount: function() {
 		Action.getRuleId(this.state.order_id);
 		Store.addListener(this.getRuleId);
 	},
+
 	getRuleId: function() {
 		rule_order = Store.getRuleId();
 		this.setState({
@@ -32,12 +34,14 @@ var CardRuleOrderDetail = React.createClass({
 			order_item_id: rule_order.order_item_id
 		})
 	},
+
 	chooseRuleId: function(rule_id,order_item_id) {
 		this.setState({
 			rule_id: rule_id,
 			order_item_id: order_item_id
 		})
 	},
+
 	render: function(){
 		var rule_id = this.state.rule_id;
 		if(rule_id >0 ){
@@ -64,6 +68,7 @@ var CardRuleOrderList = React.createClass({
 	getCardList: function(rule_id,order_item_id){
 		this.props.chooseRuleId(rule_id,order_item_id);
 	},
+
 	onClickShops: function(shop_limit_list,event){
 		var node_strings = '';
 		for (var i in shop_limit_list){
@@ -74,6 +79,7 @@ var CardRuleOrderList = React.createClass({
 			content: node_strings
 		});
 	},
+
 	rowFormatter: function(field, value, data) {
 		var _this = this;
 		if (field === 'action') {
@@ -98,6 +104,7 @@ var CardRuleOrderList = React.createClass({
 			return value;
 		}
 	},
+
 	render: function() {
 		var order_id = this.props.orderId;
 		var productsResource = {
@@ -156,6 +163,7 @@ var CardOrderDetailList = React.createClass({
 			return value;
 		}
 	},
+	
 	render: function() {
 		var rule_id = this.props.ruleId;
 		var order_item_id = this.props.orderItemId;

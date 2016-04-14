@@ -196,18 +196,22 @@ var CardListLabel = React.createClass({
 			cardlist:[{rule_id:'',card_name:'',card_rule_num:'',valid_time_from:'',valid_time_to:''}]
 		})
 	},
+
 	onChangeStore: function() {
 		this.setState({
 			cardlist:Store.getDataCardlines()
 		})
 	},
+
 	componentDidMount: function(){
 		Store.addListener(this.onChangeStore);
 	},
+
 	onChange: function(index,value,event) {
 		var property = event.target.getAttribute('name');
 		Action.updateAddProduct(index, property, value);
 	},
+
 	choiceCard: function(index) {
 		Reactman.PageAction.showDialog({
 			title: "选择卡库", 
@@ -220,6 +224,7 @@ var CardListLabel = React.createClass({
 			}
 		});
 	},
+	
 	render: function() {
 		var _this=this;
 		var cardlines=this.state.cardlist.map(function(card,index) {

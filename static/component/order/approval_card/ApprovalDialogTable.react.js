@@ -25,6 +25,7 @@ var CardTable = React.createClass({
 		}
 		
 	},
+
 	onClickShops: function(event){
 		var ruleId = parseInt(event.target.getAttribute('data-rule-id'));
 		var shop_limit_list = this.refs.table.getData(ruleId).shop_limit_list;
@@ -38,6 +39,7 @@ var CardTable = React.createClass({
 			content: node_strings
 		});
 	},
+
 	rowFormatter: function(field, value, data) {
 		if (field=='action') {
 			if (this.state!=null) {
@@ -66,6 +68,7 @@ var CardTable = React.createClass({
 			return value;
 		}
 	},
+	
 	render: function() {
 		var cardruletype = this.props.cardruletype;
 		var cardrulesResource= {

@@ -34,6 +34,7 @@ var Action = {
 			}
 		});
 	},
+
 	getCardRule: function(){
 		Resource.get({
 			resource: 'order.card_rule',
@@ -43,6 +44,7 @@ var Action = {
 			}
 		});
 	},
+
 	updateProduct: function(property, value) {
 		Dispatcher.dispatch({
 			actionType: Constant.CARD_DATA_UPDATE_PRODUCT,
@@ -52,6 +54,7 @@ var Action = {
 			}
 		});
 	},
+
 	resetProduct: function() {
 		Dispatcher.dispatch({
 			actionType: Constant.CARD_DATA_RESET_PRODUCT,
@@ -60,6 +63,7 @@ var Action = {
 			}
 		});
 	},
+
 	updateAddProduct: function(index, property, value) {
 		Dispatcher.dispatch({
 			actionType: Constant.CARD_DATA_UPDATE_ADD_PRODUCT,
@@ -70,11 +74,13 @@ var Action = {
 			}
 		});
 	},
+
 	addCardLines:function() {
 		Dispatcher.dispatch({
 			actionType:Constant.ADD_CARD_LINES,
 		})
 	},
+
 	getCardRuleOrder: function(){
 		Resource.get({
 			resource: 'order.rule_order',
@@ -84,6 +90,7 @@ var Action = {
 			}
 		});
 	},
+
 	updateCardLines:function(index,data) {
 		if (data) {
 			Dispatcher.dispatch({
@@ -95,18 +102,19 @@ var Action = {
 			})
 		}
 	},
+
 	updateOrderStaus:function(filter){
 		var that = this
 		Resource.post({
 			resource: 'order.rule_order',
 			data: filter,
 			success: function(data) {
-				console.log('ttttttttttttttttttttttttt')
 				that.getCardRuleOrder()
 			}
 
 		})
 	},
+	
 	getRuleId: function(order_id){
 		Resource.get({
 			resource: 'order.order_detail',
