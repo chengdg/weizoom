@@ -168,7 +168,7 @@ def get_rule_list(card_class, request):
 
 
 #获取卡库存的信息
-def get_card_list(request):
+def get_card_list(request,is_filter=False,is_export=False):
 	weizoom_card_rule_id = int(request.GET.get('weizoom_card_rule_id', '-1'))
 	weizoom_cards = WeizoomCard.objects.filter(weizoom_card_rule_id=weizoom_card_rule_id)
 	is_export = False

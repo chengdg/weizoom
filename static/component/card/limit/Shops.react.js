@@ -13,6 +13,22 @@ var Action = require('./Action');
 var Store = require('./Store');
 var ShopStore = require('./ShopStore');
 
+Reactman.Validater.addRule('require-div-notempty', {
+	type: 'function',
+	extract: 'element',
+	check: function(element) {
+		var trimedValue = $.trim(element.html());
+
+		if (trimedValue.length == 0) {
+			this.errorHint = '请至少选择一个专属商家';
+			return false;
+		} else {
+			return true;
+		}
+	},
+	errorHint: ''
+});
+
 var Shops = React.createClass({
 	getInitialState: function(){
 		ShopStore.addListener(this.onChangeShop);
@@ -52,6 +68,11 @@ var Shops = React.createClass({
 			visible: visible
 		})
 	},
+	onChange: function(event){
+		var value = this.refs.is_new_member_special.checked ? 1 : 0;
+		console.log(value,"gd")
+		this.props.onChange(value, event);
+	},
 	render:function(){
 		var style = {
 			display: "none"
@@ -75,13 +96,14 @@ var Shops = React.createClass({
 			<div>
 				<div  className="form-group ml15" style={style}>
 					<label className="col-sm-2 control-label"  htmlFor="parents_name">专属商家:</label>
-					<a href="javascript:void(0)" className="ml15" onClick={this.onClickComment}>+添加商家</a> <input className="ml15" type="checkbox" name="is_new_member_special" ref="is_new_member_special"/> 新会员专属            
+					<a href="javascript:void(0)" className="ml15" onClick={this.onClickComment}>+添加商家</a> <input className="ml15" type="checkbox" name="is_new_member_special" ref="is_new_member_special" onChange={this.onChange}/> 新会员专属            
 				</div>
-				<div className="form-group ml15">
+				<div className="form-group ml15" style={style}>
 					<label className="col-sm-2 control-label"></label>
-					<div className="col-sm-5">
+					<div className="col-sm-5" data-validate="require-div-notempty">
 						{checkedNodes}
 					</div>
+					<div className="ml120 errorHint" style={{clear: 'both', display: 'block !important', width: '300px'}}></div>
 				</div>
 			</div>
 		

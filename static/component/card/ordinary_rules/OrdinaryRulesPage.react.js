@@ -26,7 +26,6 @@ var OrdinaryRulesPage = React.createClass({
 				<a href={'/card/ordinary_cards/?weizoom_card_rule_id='+data.id}>{value}</a>
 			)
 		}else if (field === 'action') {
-			console.log(data.id,"pppppppppppppps")
 			return (
 				<div>
 					<a className="btn btn-link btn-xs">导出</a>
@@ -38,7 +37,7 @@ var OrdinaryRulesPage = React.createClass({
 			return value;
 		}
 	},
-	onClickRemarkComment: function(evnet){
+	onClickRemarkComment: function(event){
 		var ruleId = parseInt(event.target.getAttribute('data-rule-id'));
 		var rule = this.refs.table.getData(ruleId);
 		Reactman.PageAction.showDialog({
@@ -47,9 +46,9 @@ var OrdinaryRulesPage = React.createClass({
 				rule: rule
 			},
 			success: function(inputData, dialogState) {
-				// var product = inputData.product;
-				// var comment = dialogState.comment;
-				// Action.updateProductComment(product, comment);
+				var rule = inputData.rule;
+				var remark = dialogState.remark;
+				// Action.updateOrdinaryRemark(rule, remark);
 			}
 		});
 	},

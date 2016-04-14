@@ -41,3 +41,23 @@ class CreateWeizoomCardRule(resource.Resource):
 			response = create_response(500)
 			response.errMg = u'您填写的卡的前缀已存在，请修改后再提交!'
 		return response.get_response()
+
+	@login_required
+	def api_post(request):
+		"""
+		更新卡规则信息
+		"""
+		rule_id = request.POST.get('rule_id',0)
+		remark = request.POST.get('remark','')
+		count = int(request.POST.get('count',0))
+		rule = WeizoomCardRule.objects.filter(id=rule_id)
+		print rule_id,remark,"gggggggggg"
+		if remark:
+			rule.update(remark=remark)
+		elif count:
+			cur_count = rule[0].count
+			count = cur_count + count
+			rule.update(count=count)
+		response = create_response(200)
+		return response.get_response()
+
