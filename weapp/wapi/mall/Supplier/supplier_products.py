@@ -42,7 +42,7 @@ class SupplierProducts(api_resource.ApiResource):
 			else:
 				products_orders[order_has_product.product_id] = [order_has_product.order_id]
 		order_has_product_orderids = [order_has_product.order_id for order_has_product in order_has_products]
-		orders = mall_models.Order.objects.filter(id__in=order_has_product_orderids)
+		orders = mall_models.Order.objects.filter(id__in=order_has_product_orderids).exclude(order_id__icontains="s")
 		order_id_order = dict([(order.id,order) for order in orders ])
 
 		# 计算商品的金额相关
@@ -56,13 +56,14 @@ class SupplierProducts(api_resource.ApiResource):
 			integral_money = 0
 			order_num = 0
 			for order_id in order_ids:
-				order = order_id_order[order_id]
-				if order.status in [3,4,5]:
-					cash +=order.final_price
-					card +=order.weizoom_card_money
-					coupon_money+=order.coupon_money
-					integral_money+=order.integral_money
-					order_num += 1
+				if order_id in order_id_order:
+					order = order_id_order[order_id]
+					if order.status in [3,4,5]:
+						cash +=order.final_price
+						card +=order.weizoom_card_money
+						coupon_money+=order.coupon_money
+						integral_money+=order.integral_money
+						order_num += 1
 			supplier_product[product_id]['cash'] = cash
 			supplier_product[product_id]['card'] = card
 			supplier_product[product_id]['coupon_money'] = coupon_money
