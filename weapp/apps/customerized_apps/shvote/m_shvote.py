@@ -209,7 +209,7 @@ class MShvoteRank(resource.Resource):
 		except:
 			pass
 		c = RequestContext(request, {
-			"rank_list": get_rank_data(params)
+			"rank_list": get_rank_data(params),
 			"groups": shvote.groups if shvote else []
 		})
 
