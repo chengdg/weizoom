@@ -37,7 +37,7 @@ class RuleOrder(resource.Resource):
 		project_name = post.get('project_name','')
 		appliaction = post.get('appliaction','')
 		use_persion = post.get('use_persion','')
-
+		print responsible_person,company_info,use_departent,use_persion,888888888888888888
 		remark = post.get('remark','')
 		order_id = post.get('order_id',-1)
 		rule_order = json.loads(rule_order)
@@ -45,7 +45,7 @@ class RuleOrder(resource.Resource):
 			now_day = order_id
 		else:
 			now_day = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S").replace('-','').replace(':','').replace(' ','')
-			print now_day,7777777777777
+
 		if int(order_attributes) == WEIZOOM_CARD_ORDER_ATTRIBUTE_SALE:
 			weizoom_card_order = WeizoomCardOrder.objects.create(
 				owner_id = request.user.id,

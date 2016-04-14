@@ -20,8 +20,13 @@ var Action = {
 				contact: filter.contact,
 				sale_name: filter.sale_name,
 				sale_departent: filter.sale_departent,
-				order_attributes: filter.order_attributes,
-				remark:filter.remark
+				use_departent: filter.use_departent,
+				project_name: filter.project_name,
+				appliaction: filter.appliaction,
+				use_persion: filter.use_persion,
+				order_number: filter.order_number,
+				order_attributes:filter.order_attributes,
+				remark: filter.remark
 			},
 			dispatch: {
 				dispatcher: Dispatcher,

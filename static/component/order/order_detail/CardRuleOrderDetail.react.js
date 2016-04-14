@@ -41,7 +41,7 @@ var CardRuleOrderDetail = React.createClass({
 			return(
 				<div>
 					<CardRuleOrderList orderId={this.state.order_id} chooseRuleId={this.chooseRuleId}/>
-
+					<CardOrderDetailList ruleId={this.state.rule_id}/>
 				</div>
 			)
 		}else{
@@ -59,7 +59,6 @@ var CardRuleOrderList = React.createClass({
 	displayName: 'CardRuleOrderList',
 
 	getCardList: function(rule_id){
-		console.log(rule_id);
 		this.props.chooseRuleId(rule_id);
 	},
 	rowFormatter: function(field, value, data) {

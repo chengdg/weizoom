@@ -25,6 +25,19 @@ var CardTable = React.createClass({
 		}
 		
 	},
+	onClickShops: function(event){
+		var ruleId = parseInt(event.target.getAttribute('data-rule-id'));
+		var shop_limit_list = this.refs.table.getData(ruleId).shop_limit_list;
+		var node_strings = '';
+		for (var i in shop_limit_list){
+			node_strings +='<div class="fl">'+shop_limit_list[i]+'</div>'
+		}
+
+		Reactman.PageAction.showPopover({
+			target: event.target,
+			content: node_strings
+		});
+	},
 	rowFormatter: function(field, value, data) {
 		if (field=='action') {
 			if (this.state!=null) {
@@ -43,7 +56,13 @@ var CardTable = React.createClass({
 				)
 			}
 			
-		} else {
+		} else if (field=='shop_limit_list') {
+			if (value.length >0){
+				return (
+					<a className="btn btn-success" href='javascript:void(0);' onClick={this.onClickShops} data-rule-id={data.id}>查看专属商家</a>
+				)
+			}
+		}else {
 			return value;
 		}
 	},
@@ -65,6 +84,8 @@ var CardTable = React.createClass({
 					<Reactman.TableColumn name="面值" field="money" />
 					<Reactman.TableColumn name="库存" field="storage_count" width="120px"/>
 					<Reactman.TableColumn name="卡类型" field="card_kind" width="80px" />
+					<Reactman.TableColumn name="使用限制" field="valid_restrictions" width="80px" />
+					<Reactman.TableColumn name="专属商家" field="shop_limit_list" width="80px" />
 					<Reactman.TableColumn name="卡号区间" field="card_range" />
 					<Reactman.TableColumn name="操作" field="action" width="80px" />
 				</Reactman.Table>
