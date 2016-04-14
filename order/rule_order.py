@@ -71,6 +71,11 @@ class RuleOrder(resource.Resource):
 					if order_item_id in order_item_id2weizoom_card_id:
 						order_item_dic = {}
 						rule_id = order_id2rule_id[order_item_id]
+						name = '' if rule_id not in id2card_rule else id2card_rule[rule_id].name
+						if name:
+							name = name
+						else:
+							name = u'%.f元卡' % id2card_rule[rule_id].money
 						weizoom_card_ids = sorted(order_item_id2weizoom_card_id[order_item_id])
 						weizoom_card_id_first = weizoom_card_ids[0]
 						weizoom_card_id_last = weizoom_card_ids[-1]
@@ -79,7 +84,7 @@ class RuleOrder(resource.Resource):
 						order_money += id2card_rule[rule_id].money * count
 						order_item_dic['weizoom_card_id_first'] = weizoom_card_id_first
 						order_item_dic['weizoom_card_id_last'] = weizoom_card_id_last
-						order_item_dic['name'] =u'' if rule_id not in id2card_rule else id2card_rule[rule_id].name
+						order_item_dic['name'] =name
 						order_item_dic['money'] = u'%.2f' %id2card_rule[rule_id].money
 						order_item_dic['total_money'] = u'%.2f' %(id2card_rule[rule_id].money * count)
 						order_item_dic['weizoom_card_order_item_num'] = count

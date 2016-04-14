@@ -77,6 +77,7 @@ class OrderDatail(resource.Resource):
 		response = create_response(200)
 		response.data = {
 			'rows' : order_item_list,
-			'pagination_info': pageinfo.to_dict()
+			'pagination_info': pageinfo.to_dict(),
+			'order_item_list': json.dumps(order_item_list)
 		}
 		return response.get_response()

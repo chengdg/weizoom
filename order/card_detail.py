@@ -50,6 +50,7 @@ class CardDatail(resource.Resource):
 		response = create_response(200)
 		response.data = {
 			'rows' : weizoom_card_list,
+			'weizoom_card_list' : json.dumps(weizoom_card_list),
 			'pagination_info': pageinfo.to_dict()
 		}
 		return response.get_response()

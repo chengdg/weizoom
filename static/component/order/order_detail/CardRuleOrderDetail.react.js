@@ -41,7 +41,7 @@ var CardRuleOrderDetail = React.createClass({
 			return(
 				<div>
 					<CardRuleOrderList orderId={this.state.order_id} chooseRuleId={this.chooseRuleId}/>
-
+					<CardOrderDetailList ruleId={this.state.rule_id}/>
 				</div>
 			)
 		}else{

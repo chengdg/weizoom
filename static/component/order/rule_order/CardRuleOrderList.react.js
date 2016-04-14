@@ -54,7 +54,7 @@ var cardRuleOrderList = React.createClass({
 				<div>{order_items}</div>
 			);
 		}else if (field === 'money') {
-			var order_items = this.getAttributeValue('name',data);
+			var order_items = this.getAttributeValue('money',data);
 			return (
 				<div>{order_items}</div>
 			);
@@ -147,7 +147,7 @@ var cardRuleOrderList = React.createClass({
 			is_activation:is_activation,
 			status:status,
 		};
-		var title='是否确定激活订单?'
+		var title='是否确定取消订单?'
 		if (is_activation ==0){
 			title='是否确定激活?'
 		}

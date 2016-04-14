@@ -61,32 +61,31 @@ Background:
 		}]
 		"""
 	
-@weizoom_card @order_card
+@weizoom_card @order_card @hj_v
 
 Scenario: 1.查看订单详情
 	Given test登录管理系统
-	Then 'test'能获得订单详情列表
+	Then test能获得订单详情列表
 		"""
 		[{
 			"name":"测试卡1",
 			"money":"10.00",
 			"num":"2",
 			"total_money":"20.00",
-			"type":"condition",
-			"use_limit":{
-					"is_limit":"off"
-			},
+			"type":"条件卡",
+			"is_limit":"不限制",
 			"card_range":"777000001-777000010"
 		},{
 			"name":"10元卡",
 			"money":"10.00",
 			"num":"5",
 			"total_money":"50.00",
-			"type":"virtual",
+			"is_limit": "不限制",
+			"type":"电子卡",
 			"card_range":"999000001-999000010"
 		}]
 		"""	
-	Then 'test'能获得'测试卡1'微众卡列表
+	Then test能获得'测试卡1'微众卡列表
 		"""
 		[{
 			"name":"测试卡1"，
@@ -97,9 +96,10 @@ Scenario: 1.查看订单详情
 			"end_date":"2016-10-07",
 			"comments":""
 		},{
-			"name":"测试卡1"，
+			"card_num":""，
 			"status":"未激活",
 			"money":"10.00",
+			"rest_money":"10.00",
 			"start_date":"2016-04-07",
 			"end_date":"2016-10-07",
 			"comments":""
