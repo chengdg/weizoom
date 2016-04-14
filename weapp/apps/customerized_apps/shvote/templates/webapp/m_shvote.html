@@ -71,7 +71,6 @@
 	}
 	.wui-group{
 		overflow: hidden;
-		border-bottom: 1px solid #8E8E8E;
 	}
 	.wui-group > div{
 		float: left;
@@ -89,13 +88,11 @@
 		background: #fff;
 		font-size: 14px;
 	}
-	.wui-rankList-wrap{
-		padding: 0 10px;
-	}
 	.wui-rank-list{
 		overflow: hidden;
 		position: relative;
-		padding-top: 10px;
+		padding: 10px;
+		background: #ffe145;
 	}
 	.wui-search{
 		border-bottom: 5px solid #f0f0f0;
@@ -138,10 +135,14 @@
 		font-family: '黑体'
 	}
 	.wui-rank-item{
-		border:1px solid #8E8E8E;
 		width: 49%;
 		float: left;
 		margin-bottom: 10px;
+	}
+	.wui-item-content{
+		padding: 7px;
+		padding-bottom: 0;
+		background: #fff7e7;
 	}
 	.wui-rank-item:nth-child(even){
 		float: right;
@@ -358,21 +359,23 @@
 
 <script type="text/plain" id="tpl">
 	<div class="wui-rank-item wa-rank-item" data-id={ result_list_member_id }>
-		<div class="wui-rank-pic wa-rank-pic">
-			<img src={ result_list_icon }>
-			<div class="wui-rank-name">
-				<span class="wui-rank-serial-number">{ result_list_serial_number }</span> 
-				<span>{ result_list_name }</span>
-			</div> 			
-		</div> 
-		<div class="wui-rank-vote">
-			<div class="wui-rank-voteLef wa-vote-left">
-				<span>{ result_list_count }</span>票
-			</div>
-			<div class="wui-rank-voteRig wa-ivote" data-member="{ member_id }">
-				<button type="button" class="wui-vote-btn">投票</button>
-			</div>
-		</div> 
+		<div class="wui-item-content">
+			<div class="wui-rank-pic wa-rank-pic">
+				<img src={ result_list_icon }>
+				<div class="wui-rank-name">
+					<span class="wui-rank-serial-number">{ result_list_serial_number }</span> 
+					<span>{ result_list_name }</span>
+				</div> 			
+			</div> 
+			<div class="wui-rank-vote">
+				<div class="wui-rank-voteLef wa-vote-left">
+					<span>{ result_list_count }</span>票
+				</div>
+				<div class="wui-rank-voteRig wa-ivote" data-member="{ member_id }">
+					<button type="button" class="wui-vote-btn">投票</button>
+				</div>
+			</div> 
+		</div>
 	</div>
 </script>
 <div>	
@@ -475,7 +478,7 @@
                     webapp_owner_id: W.webappOwnerId,
                     recordId: W.appRecordId,
                     vote_to: vote_to,
-                    voted_group: can_play_info[current_group]
+                    voted_group: current_group
                 },
                 success: function(data){
                 	wuiAlert('投票成功');

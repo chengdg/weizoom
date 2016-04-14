@@ -34,7 +34,7 @@ class ShvoteControl(models.Document):
 	"""
 	投票控制表 默认每人每天每组只能投1票
 	"""
-	member_id= models.LongField(default=0, unique_with=['belong_to']) #参与者id
+	member_id= models.LongField(default=0) #参与者id
 	belong_to = models.StringField(default="", max_length=100) #对应的活动id
 	voted_group = models.StringField(max_length=50) #投票分组
 	voted_to= models.LongField(default=0) #被投票人
