@@ -159,7 +159,7 @@ class RuleOrder(resource.Resource):
 			
 			if int(status_is_activation) ==1:			
 				for cur_card in cur_cards:
-					cur_card.operate_status=WEIZOOM_CARD_OPERATE_STATUS_EDACTIVED
+					cur_card.operate_status=WEIZOOM_CARD_OPERATE_STATUS_INACTIVE
 					cur_card.save()
 			elif int(status_is_activation) ==0:
 				for cur_card in cur_cards:

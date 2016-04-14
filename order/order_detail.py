@@ -11,6 +11,7 @@ from core.jsonresponse import create_response
 from core import paginator
 import nav
 from card.models import *
+from weapp.models import *
 from card.util import get_rule_list
 
 FIRST_NAV = 'rule_order'
@@ -53,6 +54,19 @@ class OrderDatail(resource.Resource):
 				rule_id2weizoom_card_id[w_card.weizoom_card_rule_id] = [w_card.weizoom_card_id]
 		
 		pageinfo, weizoom_card_order_items = paginator.paginate(weizoom_card_order_items, cur_page, 10, query_string=request.META['QUERY_STRING'])
+		
+		user_ids = []
+		for r in card_rules:
+			shop_limit_list = str(r.shop_limit_list).split(',')
+			for a in shop_limit_list:
+				if a != '-1':
+					user_ids.append(a)
+		user_id2store_name = {}
+		user_profiles = UserProfile.objects.using('weapp').filter(user_id__in=user_ids)
+		for user_profile in user_profiles:
+			if user_profile.store_name:
+				user_id2store_name[user_profile.user_id] = user_profile.store_name
+
 		order_item_list = []
 		for order_item in weizoom_card_order_items:
 			rule_id = order_item.weizoom_card_rule_id
@@ -62,7 +76,16 @@ class OrderDatail(resource.Resource):
 			weizoom_card_ids = [] if rule_id not in rule_id2weizoom_card_id else sorted(rule_id2weizoom_card_id[rule_id])
 			weizoom_card_id_first = weizoom_card_ids[0]
 			weizoom_card_id_last = weizoom_card_ids[-1]
+
+			shop_limit_list = rule_id2rule[rule_id].shop_limit_list.split(',')
+			shop_limit_list_name = []
+			for user_id in shop_limit_list:
+				if user_id != "-1" and user_id2store_name.has_key(int(user_id)):
+					shop_limit_list_name.append(user_id2store_name[int(user_id)])
+
+
 			order_item_list.append({
+				'order_item_id': '%s' % order_item.id,
 				'rule_id': '%s' % rule_id,
 				'name': u'' if rule_id not in rule_id2rule else rule_id2rule[rule_id].name,
 				'money': '%s' % money,
@@ -70,7 +93,7 @@ class OrderDatail(resource.Resource):
 				'total_money' : '%.2f' %(money*count),
 				'card_kind': WEIZOOM_CARD_CLASS2TEXT[rule_id2rule[rule_id].card_class],
 				'valid_restrictions': u'满%.f使用' % valid_restrictions if valid_restrictions != -1 else u'不限制',
-				'shop_limit_list': rule_id2rule[rule_id].shop_limit_list,
+				'shop_limit_list': shop_limit_list_name,
 				'card_range': u'%s-%s' % (weizoom_card_id_first, weizoom_card_id_last)
 			})
 		print order_item_list,7777777777777777

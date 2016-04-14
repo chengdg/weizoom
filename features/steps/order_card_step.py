@@ -43,8 +43,8 @@ def step_impl(context, user):
 			'status': ard_list.card_status,
 			'money': ard_list.money,
 			'rest_money': ard_list.balance,
-			'start_date':	ard_list.activated_at,
-			'end_date':	ard_list.activated_at,
+			'start_date':	ard_list.validate_from,
+			'end_date':	ard_list.validate_to,
 			'comments': ard_list.remark,
 		})
 	print actual_list,7777777777

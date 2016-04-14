@@ -25,9 +25,11 @@ class RuleIdList(resource.Resource):
 		weizoom_card_order_items = WeizoomCardOrderItem.objects.filter(weizoom_card_order_id=order_id)
 		
 		rule_ids = sorted([order_item.weizoom_card_rule_id for order_item in weizoom_card_order_items])
-		
+		order_item_ids = sorted([order_item.id for order_item in weizoom_card_order_items])
+
 		response = create_response(200)
 		response.data = {
 			'rule_id' : rule_ids[0],
+			'order_item_id' : order_item_ids[0]
 		}
 		return response.get_response()
