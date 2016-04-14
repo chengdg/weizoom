@@ -72,8 +72,22 @@ Background:
 		}]
 	"""
 
+
 @mall2 @apps @shvote @shvote_vote
-Scenario:1 微信用户可以给参与者投票
+Scenario:1 管理员查看选手详情
+	Given jobs登录系统
+	When jobs审核通过"bill"
+	Then jobs获得'bill'的详情
+		"""
+		[{
+			"player":"bill",
+			"number":"001",
+			"votes":0,
+			"detail":"123456789"
+		}]
+		"""
+@mall2 @apps @shvote @shvote_vote
+Scenario:2 微信用户可以给参与者投票
 	Given jobs登录系统
 	When jobs审核通过'bill'
 	When jobs审核通过'dill'

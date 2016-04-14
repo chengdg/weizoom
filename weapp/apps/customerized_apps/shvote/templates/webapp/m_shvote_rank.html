@@ -25,6 +25,9 @@
     	border-spacing: 0;
     	border-top: 1px solid #e1e1e1;
 	}
+	.wui-rank-table thead{
+		background: #f5f5f5;
+	}
 	.wui-rank-table td,.wui-rank-table th{
 		text-align: center;
 		border-bottom: 1px solid #e1e1e1;
@@ -33,15 +36,20 @@
 	.wui-rank-table tbody tr td:nth-child(2){
 		width: 60%;
 	}
+	.wui-count{
+		color: #ff4200;
+		font-size: 1.1rem;
+	}
+	.wui-number{
+		font-size: 0.9rem;
+		color: #999999;
+	}
 </style>
 {% endblock %}
 
 {% block content-panel %}
 <div class="wui-rank-groups">
-	<div class="active">大学组</div>
-	<div>大学组</div>
-	<div>大学组</div>
-	<div>大学组</div>
+	
 </div>
 <table class="wui-rank-table">
 	<thead>
@@ -52,14 +60,19 @@
 		</tr>
 	</thead>
 	<tbody>
+		{% for item in rank_list %}
 		<tr>
-			<td>1</td>			
-			<td>对，你没有看错！是史上最长的</td>
+			<td>{{ item.rank }}</td>			
+			<td>{{ item.name }}</td>
 			<td>
-				<div>2169票</div>
-				<div>编号:021</div>
+				<div>
+					<span class="wui-count">{{ item.count }}</span>
+					票
+				</div>
+				<div class="wui-number">编号:{{ item.serial_number }}</div>
 			</td>
 		</tr>
+		{% endfor %}
 	</tbody>
 </table>
 {% endblock %}

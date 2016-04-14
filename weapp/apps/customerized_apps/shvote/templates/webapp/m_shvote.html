@@ -85,7 +85,7 @@
 	.wui-rank-list{
 		overflow: hidden;
 		position: relative;
-		margin-top: 10px;
+		padding-top: 10px;
 	}
 	.wui-search{
 		border-bottom: 1px solid #8E8E8E;
@@ -152,15 +152,19 @@
 	}
 	.wui-rank-vote{
 		overflow: hidden;
-	}
-	.wui-rank-vote > div{
-		float: left;
-		width: 50%;
 		text-align: center;
-		padding: 3px 0;
+		padding-bottom: 5px;
 	}
 	.wui-rank-voteLef{
-		border-right: 1px solid #8E8E8E;
+		float: left;
+		line-height: 2rem;
+		color: #ff4200;
+		font-size: 1.1rem;
+		padding-left: 5px;
+	}
+	.wui-rank-voteRig button{
+		float: right;
+		outline: none;
 	}
 	.wui-detail-dialog{
 		width:80%;
@@ -246,6 +250,49 @@
 	p.wui-noborder{
 		border: none;
 	}
+	.wui-vote-btn{
+		width: 3rem;
+		height: 2rem;
+		background-color: #ff4200;
+		color: #FFF;
+		border: none;
+        border-radius: 4px;
+        box-shadow: 0 3px 0px #b62f00;
+        font-family: SimHei;
+        font-size: 0.9rem;	
+    }	
+	.wui-share-mask{
+		z-index: 9999999999 !important;
+		display: none;
+	}
+	.wui-share-mask .wui-share-arrow{
+		width: 33%;
+		position: absolute;
+		top: 0;
+	    right: 4%;
+	}
+	.wui-share-mask .wui-share-invite{
+		color: #FFF;
+		font-family: SimHei;
+	    font-size: 1.5rem;
+	    position: absolute;
+	    top: 33%;
+        left: 17%;
+	}
+	.wui-share-mask .wui-share-close{
+		width: 10%;
+	    position: absolute;
+	    top: 60%;
+        left: 45%;
+	}
+	.wui-share-mask .wui-share-known{
+		color: #FFF;
+		font-family: SimHei;
+	    font-size: 1.5rem;
+	    position: absolute;
+	    top: 68%;
+        left: 42%;
+	}
 </style>
 {% endblock %}
 
@@ -309,7 +356,7 @@
 				<span>{ result_list_count }</span>票
 			</div>
 			<div class="wui-rank-voteRig wa-ivote" data-member="{ member_id }">
-				投票
+				<button type="button" class="wui-vote-btn">投票</button>
 			</div>
 		</div> 
 	</div>
@@ -324,7 +371,7 @@
 			</div>
 			<div class="wui-detail-btn">
 				<button>投票</button>
-				<button>拉票</button>
+				<button class="wa-detail-share">拉票</button>
 			</div>
 			<div class="wui-detail-middle">
 				<span class="wa-detail-serial-number"></span>
@@ -333,6 +380,12 @@
 		</div>
 		<div class="wui-detail-bottom wa-detail-bottom"></div>
 	</div>
+</div>
+<div class="wui-share-mask">
+	<img class="wui-share-arrow" src="/static_v2/img/shvote_arrow.png">
+	<span class="wui-share-invite">邀请你的小伙伴,帮你投票</span>
+	<img class="wui-share-close wa-share-close" src="/static_v2/img/shvote_share_close.png">
+	<span class="wui-share-known">知道了</span>
 </div>
 {% endblock %}
 
@@ -391,6 +444,10 @@
         //参与投票
         var voteLock = false;
         $('.wa-rank-list').on('click','.wa-ivote', function(){
+        	var left_chance = parseInt($('.wa-left-chance').html());
+        	if( !left_chance > 0) {
+        		return
+        	}
         	var that = $(this);
             if(voteLock) return false;
             voteLock = true;
@@ -425,7 +482,7 @@
 		
     });
 
-    $(function(){
+    $(function(){	
         if(W.isPC){
             showDesc();
             return false;
@@ -558,5 +615,19 @@
 		$('#userDetailDialog').hide();
 		$('.wa-detail-close').hide();
 	});
+	$('body').delegate('.wa-detail-share', 'click', function(event) {
+		shareMask('show');
+	});
+	$('body').delegate('.wa-share-close', 'click', function(event) {
+		shareMask('hide');
+	});
+	//拉票遮罩
+    function shareMask(action){
+        if('show' == action){
+            $('.wui-share-mask').swipeMask('show');
+        }else if('hide' == action){
+            $('.wui-share-mask').swipeMask('hide');
+        }
+    }
 </script>
 {% endblock %}

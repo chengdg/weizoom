@@ -1,14 +1,15 @@
-#_author_:邓成龙 2016.04.12
+#_author_:邓成龙 2016.04.13
 
-Feature: 微信用户查看排行信息
+Feature: 微信用户搜索选手
 	"""
-		微信用户进入高级投票主页
-		微信用户点击“排行”链接进入排行页面
-		查看排行榜列表
+		微信用户进入投票活动主页
+		微信用户输入关键词搜索选手
+		选手列表中展示名字包含关键词与编号包含关键词的选手信息，按照得票数由高到底排列
 	"""
 Background:
 	Given jobs登录系统
 	When jobs新建微信高级投票活动
+		When jobs新建微信高级投票活动
 		"""
 		[{
 			"title":"微信高级投票-进行中",
@@ -69,85 +70,52 @@ Background:
 			"number":"002"	
 		}
 	"""
-	When leo关注jobs的公众号
-	When leo访问jobs的webapp
-	When leo参加高级投票报名活动
-	"""
-		{
-			"name":"leo",
-			"group":"高中组",
-			"number":"001"	
-		}
-	"""
 
-@mall2 @apps @shvote @shvote_rank
-Scenario:1 没有有微信用户报名参与活动和有微信用户报名参与活动，但是均未通过审核
-	#选手分组-无分组
-	Given jobs登录系统
-	When jobs审核不通过'bill'
-	When bill关注jobs的公众号
-	When bill访问jobs的webapp
-	When bill在微信中向jobs的公众号发送消息'微信高级投票'
-	Then bill收到自动回复'高级投票活动1单图文'
-	When bill点击图文'高级投票活动1单图文'进入高级投票活动页面
-	When bill参加高级投票报名活动
-	Then bill获得微信高级投票活动排行榜列表
-		"""
-		[]
-		"""
 
-@mall2 @apps @shvote @shvote_rank
-Scenario:2 有微信用户报名参与活动并通过审核
+@mall2 @apps @shvote @shvote_top
+Scenario:1 微信用户搜索选手
+		#模糊查询
 	Given jobs登录系统
 	When jobs审核通过'bill'
 	When jobs审核通过'dill'
-	When jobs审核通过'leo'
 	When tom关注jobs的公众号
 	When tom访问jobs的webapp
 	When tom在微信中向jobs的公众号发送消息'微信高级投票'
 	Then tom收到自动回复'高级投票活动1单图文'
 	When tom点击图文'高级投票活动1单图文'进入高级投票活动页面
 	When tom在高级投票中为'bill'投票
-	Then tom获得微信高级投票活动内容'初中组'
+	Then tom获得微信高级投票活动内容
+	When tom搜索选手'dill'
+	Then tom获得微信高级投票活动排行榜列表
+		"""
+		[{
+			"group":"初中组",
+			"ranking":2,
+			"number":"002",
+			"player":"dill",
+			"votes":0
+		}]
+		"""
+	When tom搜索选手'ill'
+	Then tom获得微信高级投票活动排行榜列表
 		"""
 		[{
 			"group":"初中组",
 			"ranking":1,
+			"number":"003",
 			"player":"bill",
-			"votes":1,
-			"number":"003"
+			"votes":1
 		},{
 			"group":"初中组",
 			"ranking":2,
+			"number":"002",
 			"player":"dill",
-			"votes":0,
-			"number":"002"
+			"votes":0
 		}]
 		"""
-	Then tom获得微信高级投票活动内容'高中组'
+	When tom搜索选手'tom'
+	Then tom获得微信高级投票活动排行榜列表
 		"""
-		[{
-			"group":"高中组",
-			"ranking":1,
-			"player":"leo",
-			"votes":0,
-			"number":"001"
-		}]
+		[]
 		"""
-	When tom在高级投票中为'dill'投票
-	Then tom获得微信高级投票活动内容'初中组'
-		"""
-		[{
-			"group":"初中组",
-			"ranking":1,
-			"player":"bill",
-			"votes":1,
-			"number":"003"
-		},{
-			"group":"初中组",
-			"ranking":2,
-			"player":"dill",
-			"votes":1,
-			"number":"002"
-		}]
-		"""
+	
