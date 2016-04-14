@@ -22,16 +22,42 @@ Feature:促销管理-新建活动页面的商品查询
 
 Background:
 	Given jobs登录系统
+	When jobs添加商品分类
+		"""
+		[{
+			"name": "分类1"
+		}, {
+			"name": "分类2"
+		}, {
+			"name": "分类3"
+		}]
+		"""
 	And jobs已添加商品
 		"""
 		[{
 			"name":"商品0",
+			"categories": "分类1,分类2,分类3",
+			"price":100.00,
+			"stock_type": "无限",
+			"min_limit": 2,
+			"status":"在售"
+		},{
+			"name":"商品1",
+			"categories": "分类1,分类2,分类3",
+			"price":100.00,
+			"stock_type": "无限",
+			"min_limit": 2,
+			"status":"在售"
+		},{
+			"name":"商品2",
+			"categories": "分类1,分类2,分类3",
 			"price":100.00,
 			"stock_type": "无限",
 			"min_limit": 2,
 			"status":"在售"
 		},{
 			"name":"限时抢购",
+			"categories": "分类1",
 			"price":100.00,
 			"stock_type": "无限",
 			"status":"在售"
@@ -43,6 +69,7 @@ Background:
 			"status":"在售"
 		},{
 			"name":"单品券",
+			"categories": "分类2",
 			"price":100.00,
 			"stock_type": "无限",
 			"status":"在售"
@@ -53,11 +80,13 @@ Background:
 			"status":"在售"
 		},{
 			"name":"积分应用",
+			"categories": "分类2,分类3",
 			"price":100.00,
 			"stock_type": "无限",
 			"status":"在售"
 		},{
 			"name":"单品失效",
+			"categories": "分类2,分类3",
 			"price":100.00,
 			"stock_type": "无限",
 			"status":"在售"
@@ -114,7 +143,7 @@ Background:
 			"start_date": "2天前",
 			"end_date": "1天前",
 			"coupon_id_prefix": "coupon1_id_",
-			"coupon_product": "单品券"
+			"coupon_product": "单品券,商品2",
 		},{
 			"name": "单品券02",
 			"money": 5,
@@ -135,7 +164,7 @@ Background:
 			"start_date": "今天",
 			"end_date": "1天后",
 			"coupon_id_prefix": "coupon4_id_",
-			"coupon_product": "单品失效"
+			"coupon_product": "单品失效,商品1"
 		}]
 		"""
 	When jobs失效优惠券'单品失效活动'
@@ -210,9 +239,17 @@ Scenario: 4 单品券-新建活动页面的商品查询
 	Then jobs新建单品券活动时能获得已上架商品列表
 		| name     | price | stocks | have_promotion | actions |
 		| 商品0    |100.00 | 无限   |                | 选取    |
+		| 商品1    |100.00 | 无限   |                | 选取    |
+		| 商品2    |100.00 | 无限   | 单品券         | 选取    |
 		| 限时抢购 |100.00 | 无限   | 限时抢购活动   |         |
 		| 买赠     |100.00 | 20     | 买赠活动       |         |
 		| 单品券   |100.00 | 无限   | 单品券         | 选取    |
 		| 赠品     |100.00 | 无限   |                | 选取    |
 		| 积分应用 |100.00 | 无限   |                | 选取    |
 		| 单品失效 |100.00 | 无限   | 单品券         | 选取    |
+		
+	Then jobs新建单品券活动时能获得商品分组列表
+		| name     | created_at | actions |
+		| 分类3    |    今天    |   选取  |
+		| 分类2    |    今天    |   选取  |
+		| 分类1    |    今天    |   选取  |
