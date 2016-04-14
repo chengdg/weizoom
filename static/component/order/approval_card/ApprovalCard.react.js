@@ -18,51 +18,37 @@ var FormText =  Reactman.FormText;
 var Dispatcher = Reactman.Dispatcher;
 require('./ApprovalCard.css');
 var ApprovalCard = React.createClass({
+
 	getInitialState: function() {
 		return ({
 			card_rule_order: [],
 			card_rule_list: [],
-			orderInfo :{}
+			orderInfo:{},
+			attribute: 0
 		})
 	},
+
 	onChangeStore: function() {
 		this.setState({
 			orderInfo : Store.getData()
 		});
 	},
+
 	componentWillMount: function() {
 		Action.getCardRule();
 	},
+
 	componentDidMount: function(){
 		getCardRuleStore.addListener(this.getCardRule);
 		Store.addListener(this.onChangeStore);
 	},
+
 	getCardRule: function(){
 		this.setState({
 			card_rule_list:getCardRuleStore.getCardRule()
 		})
 	},
-	onChange: function(value, event) {
-		var property = event.target.getAttribute('name');
-		if (property =="orderAttributes"){				
-			Action.resetProduct();	
-			if(value == 0){
-				this.refs.saleCard.style.display='block';
-				this.refs.internalCard.style.display='none';
-				this.refs.discountCard.style.display='none';
-			}else if(value == 1){
-				this.refs.internalCard.style.display='block';
-				this.refs.saleCard.style.display='none';
-				this.refs.discountCard.style.display='none';
-			}
-			else if(value == 2){
-				this.refs.discountCard.style.display='block';
-				this.refs.internalCard.style.display='none';
-				this.refs.saleCard.style.display='none';
-			}
-		}
-		Action.updateProduct(property, value);
-	},
+
 	onCardOrderSave: function(){
 		var card_list = Store.getDataCardlines();
 		rule_id_list = []
@@ -94,14 +80,23 @@ var ApprovalCard = React.createClass({
 			'appliaction': order_infos['appliaction'],
 			'use_persion': order_infos['use_persion'],
 			'order_number': order_infos['order_number'],
-			'order_attributes':value,
+			'order_attributes':this.state.attribute,
 			'remark':remark
 		}
 		Action.saveCardRuleOrder(date);
 	},
+
 	addCardLines:function() {
 		Action.addCardLines();
 	},
+
+	ChooseOrderAttribute: function(value, event){
+		Action.resetProduct();
+		this.setState({
+			attribute : value
+		})
+	},
+
 	render: function(){
 		return (
 			<div className="xui-outlineData-page xui-formPage xui-cardruleOrder">
@@ -118,26 +113,8 @@ var ApprovalCard = React.createClass({
 					<legend className="pl10 pt10 pb10"><a href="javascript:void(0);" onClick={this.addCardLines}>添加卡库</a></legend>
 
 			        <fieldset style={{background:'#FFF'}}>
-						<FormSelect label="卡类型:" name="orderAttributes" options={[{"value": "-1", "text": "请选择"},{"value": "0", "text": "发售卡"},{"value": "1", "text": "内部使用卡"},{"value": "2", "text": "返点卡"}]} validate="require-select" onChange={this.onChange} ref="orderAttributes" />
-						<div ref="saleCard" className="sale_card">
-							<FormInput label="客户企业信息:" type="text" name="company_info" ref="companyInfo" validate="require-string" placeholder="" value={this.state.orderInfo.company_info} onChange={this.onChange} />
-							<FormInput label="客户经办人信息:" type="text" name="responsible_person" validate="require-string" placeholder="" ref="responsiblePerson" value={this.state.orderInfo.responsible_person} onChange={this.onChange} />
-							<FormInput label="客户联系方式:" type="text" name="contact" ref="contact" validate="require-notempty" placeholder="" value={this.state.orderInfo.contact} onChange={this.onChange}/>
-							<FormInput label="销售员姓名:" type="text" name="sale_name" ref="saleName" validate="require-string" placeholder="" value={this.state.orderInfo.sale_name} onChange={this.onChange}/>
-							<FormInput label="销售部门:" type="text" name="sale_departent" ref="saleDepartent" validate="require-string" placeholder="" value={this.state.orderInfo.sale_departent} onChange={this.onChange}/>
-						</div>
-						<div ref="internalCard" className="internal_card" style={{display:'none'}}>
-							<FormInput label="领用部门:" type="text" name="use_departent" ref="useDepartent" validate="require-string" placeholder="" value={this.state.orderInfo.use_departent} onChange={this.onChange}/>
-							<FormInput label="项目名称:" type="text" name="project_name" ref="projectName" validate="require-string" placeholder="" value={this.state.orderInfo.project_name} onChange={this.onChange}/>
-							<FormInput label="用途:" type="text" name="appliaction" ref="appliaction" validate="require-string" placeholder="" value={this.state.orderInfo.appliaction} onChange={this.onChange}/>
-							<FormInput label="领用人:" type="text" name="use_persion" ref="usePersion" validate="require-string" placeholder="" value={this.state.orderInfo.use_persion} onChange={this.onChange}/>
-						</div>
-						<div ref="discountCard" className="discount_card" style={{display:'none'}}>
-							<FormInput label="对应发单号:" type="text" name="order_number" ref="orderNumber" validate="require-string" placeholder="" value={this.state.orderInfo.order_number} onChange={this.onChange}/>
-						</div>
-						<div >
-							<FormText label="备注:" type="text" name="remark" value={this.state.orderInfo.remark} width="300" height="150" placeholder="" onChange={this.onChange} />
-						</div>
+						<FormSelect label="卡类型:" name="orderAttributes" options={[{"value": "-1", "text": "请选择"},{"value": "0", "text": "发售卡"},{"value": "1", "text": "内部使用卡"},{"value": "2", "text": "返点卡"}]} validate="require-select" onChange={this.ChooseOrderAttribute} ref="orderAttributes" />
+						<div> <OrderInfoInput chooseOrderAttribute={this.state.attribute} orderInfo={this.state.orderInfo}/> </div>
 			        </fieldset>
 			        <div style={{marginTop:'20px'}}>
 			            <div className="control-group">
@@ -149,7 +126,70 @@ var ApprovalCard = React.createClass({
 		)
 	}
 });
-//
+
+var OrderInfoInput = React.createClass({
+	getInitialState: function() {
+		return ({
+			orderInfo:{},
+		})
+	},
+
+	onChange: function(value, event) {
+		var property = event.target.getAttribute('name');
+		Action.updateProduct(property, value);
+	},
+
+	componentWillMount: function() {
+		Action.getCardRule();
+	},
+
+	componentDidMount: function(){
+		Store.addListener(this.onChangeStore);
+	},
+
+	onChangeStore: function() {
+		this.setState({
+			orderInfo : Store.getData()
+		});
+		this.props.orderInfo = this.state.orderInfo;
+	},
+
+	render: function() {
+		var _this=this;
+		var chooseOrderAttribute = this.props.chooseOrderAttribute;
+
+		if (chooseOrderAttribute == '0'){
+			return(
+				<div ref="saleCard" className="sale_card">
+					<FormInput label="客户企业信息:" type="text" name="company_info" ref="companyInfo" validate="require-string" placeholder="" value={this.state.orderInfo.company_info} onChange={this.onChange} />
+					<FormInput label="客户经办人信息:" type="text" name="responsible_person" validate="require-string" placeholder="" ref="responsiblePerson" value={this.state.orderInfo.responsible_person} onChange={this.onChange} />
+					<FormInput label="客户联系方式:" type="text" name="contact" ref="contact" validate="require-notempty" placeholder="" value={this.state.orderInfo.contact} onChange={this.onChange}/>
+					<FormInput label="销售员姓名:" type="text" name="sale_name" ref="saleName" validate="require-string" placeholder="" value={this.state.orderInfo.sale_name} onChange={this.onChange}/>
+					<FormInput label="销售部门:" type="text" name="sale_departent" ref="saleDepartent" validate="require-string" placeholder="" value={this.state.orderInfo.sale_departent} onChange={this.onChange}/>
+					<FormText label="备注:" type="text" name="remark" value={this.state.orderInfo.remark} width="300" height="150" placeholder="" onChange={this.onChange} />
+				</div>
+			)
+		}else if(chooseOrderAttribute == '1'){
+			return(
+				<div ref="internalCard" className="internal_card">
+					<FormInput label="领用部门:" type="text" name="use_departent" ref="useDepartent" validate="require-string" placeholder="" value={this.state.orderInfo.use_departent} onChange={this.onChange}/>
+					<FormInput label="项目名称:" type="text" name="project_name" ref="projectName" validate="require-string" placeholder="" value={this.state.orderInfo.project_name} onChange={this.onChange}/>
+					<FormInput label="用途:" type="text" name="appliaction" ref="appliaction" validate="require-string" placeholder="" value={this.state.orderInfo.appliaction} onChange={this.onChange}/>
+					<FormInput label="领用人:" type="text" name="use_persion" ref="usePersion" validate="require-string" placeholder="" value={this.state.orderInfo.use_persion} onChange={this.onChange}/>
+					<FormText label="备注:" type="text" name="remark" value={this.state.orderInfo.remark} width="300" height="150" placeholder="" onChange={this.onChange} />
+				</div>
+			)
+		}else {
+			return(
+				<div ref="discountCard" className="discount_card">
+					<FormInput label="对应发单号:" type="text" name="order_number" ref="orderNumber" validate="require-string" placeholder="" value={this.state.orderInfo.order_number} onChange={this.onChange}/>
+					<FormText label="备注:" type="text" name="remark" value={this.state.orderInfo.remark} width="300" height="150" placeholder="" onChange={this.onChange} />
+				</div>
+			)
+		}
+	}
+})
+
 var CardListLabel = React.createClass({
 	getInitialState: function() {
 		return ({

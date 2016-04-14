@@ -37,7 +37,7 @@ class RuleOrder(resource.Resource):
 		project_name = post.get('project_name','')
 		appliaction = post.get('appliaction','')
 		use_persion = post.get('use_persion','')
-		print responsible_person,company_info,use_departent,use_persion,888888888888888888
+
 		remark = post.get('remark','')
 		order_id = post.get('order_id',-1)
 		rule_order = json.loads(rule_order)
@@ -92,14 +92,8 @@ class RuleOrder(resource.Resource):
 				weizoom_card.storage_time = weizoom_card_order_items.created_at
 				weizoom_card.activated_to = responsible_person if responsible_person else use_persion
 				weizoom_card.department = company_info if company_info else use_departent
-
 				weizoom_card.save()
-			# WeizoomCard.objects.filter(weizoom_card_rule=rule_id,storage_status=WEIZOOM_CARD_STORAGE_STATUS_IN).update(
-			# 	storage_status = WEIZOOM_CARD_STORAGE_STATUS_OUT,
-			# 	weizoom_card_order_item_id = weizoom_card_order_items,
-			# 	weizoom_card_order_id = weizoom_card_order,
-			# 	storage_time = weizoom_card_order_items.created_at
-			# )
+
 			card_rule_num = 0
 		response = create_response(200)
 		return response.get_response()
