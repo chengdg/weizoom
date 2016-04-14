@@ -24,8 +24,6 @@ var Store = StoreUtil.createStore(Dispatcher,{
 		this.rule_id = 0;
 	},
 	handleGetRuleIdResponse: function(action) {
-		console.log(action.data.rule_id);
-		console.log("777777777777");
 		this.rule_id = action.data.rule_id;
 		this.__emitChange();
 	},

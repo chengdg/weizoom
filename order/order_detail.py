@@ -73,6 +73,7 @@ class OrderDatail(resource.Resource):
 				'shop_limit_list': rule_id2rule[rule_id].shop_limit_list,
 				'card_range': u'%s-%s' % (weizoom_card_id_first, weizoom_card_id_last)
 			})
+		print order_item_list,7777777777777777
 		response = create_response(200)
 		response.data = {
 			'rows' : order_item_list,
