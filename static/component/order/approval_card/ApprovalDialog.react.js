@@ -13,12 +13,9 @@ var CardTable = require('./ApprovalDialogTable.react');
 
 var ApprovalDialog = Reactman.createDialog({
 	getInitialState: function() {
-		// Action.getLimitAndCommonCard();
-		// var product = this.props.data.product;
 		return {
 			common_status:true,
 			limit_status:false
-			// comment: product.comment
 		}
 	},
 
