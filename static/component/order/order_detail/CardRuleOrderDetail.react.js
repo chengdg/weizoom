@@ -62,10 +62,11 @@ var CardRuleOrderList = React.createClass({
 		this.props.chooseRuleId(rule_id);
 	},
 	rowFormatter: function(field, value, data) {
+		var _this = this;
 		if (field === 'action') {
 			var rule_id = data['rule_id'];
 			return (
-				<div><a onClick={this.getCardList.bind(this,rule_id)}>选取</a></div>
+				<div><a onClick={_this.getCardList.bind(_this,rule_id)}>选取</a></div>
 			);
 		}else if (field == 'card_kind/valid_restrictions'){
 			return (
@@ -112,8 +113,8 @@ var CardOrderDetailList = React.createClass({
 		if (field === 'action') {
 			return (
 				<div>
-					<span>激活</span>
-					<span>备注</span>
+					<span>激活</span><br></br>
+					<span>备注</span><br></br>
 					<span>有效期</span>
 				</div>
 			);
@@ -121,6 +122,12 @@ var CardOrderDetailList = React.createClass({
 			return (
 				<div>
 					<span>{data["money"]}/{data["balance"]}</span>
+				</div>
+			);
+		}else if (field === 'validate_from/validate_to') {
+			return (
+				<div>
+					<span>{data["validate_from"]}<br></br>{data["validate_to"]}</span>
 				</div>
 			);
 		}else {
@@ -147,10 +154,10 @@ var CardOrderDetailList = React.createClass({
 							<Reactman.TableColumn name="密码" field="password" />
 							<Reactman.TableColumn name="状态" field="card_status" />
 							<Reactman.TableColumn name="面值/余额" field="money/balance" />
-							<Reactman.TableColumn name="有效期" field="validate"/>
+							<Reactman.TableColumn name="有效期" field="validate_from/validate_to"/>
 							<Reactman.TableColumn name="激活时间" field="activated_at" />
 							<Reactman.TableColumn name="备注" field="remark"/>
-							<Reactman.TableColumn name="操作" field="action" width="80px" />
+							<Reactman.TableColumn name="操作" field="action" width="100px" />
 						</Reactman.Table>
 					</Reactman.TablePanel>
 				</div>
