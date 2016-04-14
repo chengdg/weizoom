@@ -6,12 +6,11 @@ Feature: 查看三维数据
 	"""
 Background:
 	Given jobs登录系统
-	When jobs新建微信高级投票活动
-		When jobs新建微信高级投票活动
+	When jobs新建高级微信投票活动
 		"""
 		[{
 			"title":"微信高级投票-进行中",
-			"group":["初中组","高中组"],
+			"groups":["初中组","高中组"],
 			"desc":"高级投票活动介绍",
 			"start_date":"2天前",
 			"end_date":"2天后",
@@ -50,29 +49,29 @@ Background:
 		"""
 	When bill关注jobs的公众号
 	When bill访问jobs的webapp
-	When bill参加高级投票报名活动
-	"""
-		{
-			"name":"bill",
-			"group":"初中组",
-			"number":"003"	
-		}
-	"""
-	When dill关注jobs的公众号
-	When dill访问jobs的webapp
-	When dill参加高级投票报名活动
-	"""
-		{
-			"name":"dill",
-			"group":"高中组",
-			"number":"002"	
-		}
-	"""
+#	When bill参加高级投票报名活动
+#	"""
+#		{
+#			"name":"bill",
+#			"group":"初中组",
+#			"number":"003"
+#		}
+#	"""
+#	When dill关注jobs的公众号
+#	When dill访问jobs的webapp
+#	When dill参加高级投票报名活动
+#	"""
+#		{
+#			"name":"dill",
+#			"group":"高中组",
+#			"number":"002"
+#		}
+#	"""
 
 @mall2 @apps @shvote @shvote_top
 Scenario:1 微信用户浏览高级投票活动主页
 	Given jobs登录系统
-	When jobs审核通过'bill'
+#	When jobs审核通过'bill'
 	When bill关注jobs的公众号
 	When bill访问jobs的webapp
 	When bill在微信中向jobs的公众号发送消息'微信高级投票'
