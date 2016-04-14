@@ -126,7 +126,7 @@ var ApprovalCard = React.createClass({
 					<CardListLabel />{/*.卡库.*/}
 					<legend className="pl10 pt10 pb10"><a href="javascript:void(0);" onClick={this.addCardLines}>添加卡库</a></legend>
 
-			        <fieldset style={{background:'#FFF',marginLeft:'95px'}}>
+			        <fieldset style={{background:'#FFF'}}>
 						<FormSelect label="卡类型:" name="orderAttributes" options={[{"value": "-1", "text": "请选择"},{"value": "0", "text": "发售卡"},{"value": "1", "text": "内部使用卡"},{"value": "2", "text": "返点卡"}]} validate="require-select" onChange={this.onChange} ref="orderAttributes" />
 						<div ref="saleCard" className="sale_card">
 							<FormInput label="客户企业信息:" type="text" name="company_info" ref="companyInfo" value={this.state.orderInfo.company_info} onChange={this.onChange} />
