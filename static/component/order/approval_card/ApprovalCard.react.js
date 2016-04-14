@@ -13,7 +13,10 @@ var ApprovalDialog = require('./ApprovalDialog.react');
 var Reactman = require('reactman');
 var FormInput = Reactman.FormInput;
 var FormSubmit = Reactman.FormSubmit;
+var FormSelect = Reactman.FormSelect;
+var FormText =  Reactman.FormText;
 var Dispatcher = Reactman.Dispatcher;
+require('./ApprovalCard.css');
 var ApprovalCard = React.createClass({
 	getInitialState: function() {
 		return ({
@@ -41,33 +44,50 @@ var ApprovalCard = React.createClass({
 	},
 	onChange: function(value, event) {
 		var property = event.target.getAttribute('name');
+		if (property =="orderAttributes"){				
+			Action.resetProduct();	
+			if(value == 0){
+				this.refs.saleCard.style.display='block';
+				this.refs.internalCard.style.display='none';
+				this.refs.discountCard.style.display='none';
+			}else if(value == 1){
+				this.refs.internalCard.style.display='block';
+				this.refs.saleCard.style.display='none';
+				this.refs.discountCard.style.display='none';
+			}
+			else if(value == 2){
+				this.refs.discountCard.style.display='block';
+				this.refs.internalCard.style.display='none';
+				this.refs.saleCard.style.display='none';
+			}
+		}
 		Action.updateProduct(property, value);
 	},
-	onChooseOrderAttribute: function(){
-		Action.resetProduct();
-		var value = this.refs.orderAttributes.value;
-		if(value == 0){
-			this.refs.saleCard.style.display='block';
-			this.refs.internalCard.style.display='none';
-			this.refs.discountCard.style.display='none';
-		}else if(value == 1){
-			this.refs.internalCard.style.display='block';
-			this.refs.saleCard.style.display='none';
-			this.refs.discountCard.style.display='none';
-		}
-		else if(value == 2){
-			this.refs.discountCard.style.display='block';
-			this.refs.internalCard.style.display='none';
-			this.refs.saleCard.style.display='none';
-		}
-	},
+	// onChooseOrderAttribute: function(){
+	// 	Action.resetProduct();
+	// 	var value = this.refs.orderAttributes.value;
+	// 	if(value == 0){
+	// 		this.refs.saleCard.style.display='block';
+	// 		this.refs.internalCard.style.display='none';
+	// 		this.refs.discountCard.style.display='none';
+	// 	}else if(value == 1){
+	// 		this.refs.internalCard.style.display='block';
+	// 		this.refs.saleCard.style.display='none';
+	// 		this.refs.discountCard.style.display='none';
+	// 	}
+	// 	else if(value == 2){
+	// 		this.refs.discountCard.style.display='block';
+	// 		this.refs.internalCard.style.display='none';
+	// 		this.refs.saleCard.style.display='none';
+	// 	}
+	// },
 	onCardOrderSave: function(){
 		var card_list = Store.getDataCardlines();
 		var order_infos = this.state.orderInfo;
 		var ruleStore = Store.getData();
 		var rule_order = this.state.card_rule_order;
-		var value = this.refs.orderAttributes.value;
-		var remark = this.refs.remark.value;
+		var value =  ruleStore.orderAttributes;
+		var remark = ruleStore.remark;
 		var date = {
 			'rule_order':JSON.stringify(card_list),
 			'card_rule_num': order_infos['card_rule_num'],
@@ -93,7 +113,7 @@ var ApprovalCard = React.createClass({
 	},
 	render: function(){
 		return (
-			<div className="xui-outlineData-page xui-formPage">
+			<div className="xui-outlineData-page xui-formPage xui-cardruleOrder">
 				<form className="form-horizontal mt15">
 					<header  className="cui-header">
 						<span className="xui-fontBold">基本信息</span>
@@ -107,15 +127,7 @@ var ApprovalCard = React.createClass({
 					<legend className="pl10 pt10 pb10"><a href="javascript:void(0);" onClick={this.addCardLines}>添加卡库</a></legend>
 
 			        <fieldset style={{background:'#FFF',marginLeft:'95px'}}>
-		        		<div className="">
-							<label>订单属性：</label>
-							<select name="orderAttributes" className="w120 m0" ref="orderAttributes" onChange={this.onChooseOrderAttribute}>
-								<option value="-1">请选择</option>
-								<option value="0">发售卡</option>
-								<option value="1">内部使用卡</option>
-								<option value="2">返点卡</option>
-							</select>
-						</div>
+						<FormSelect label="卡类型:" name="orderAttributes" options={[{"value": "-1", "text": "请选择"},{"value": "0", "text": "发售卡"},{"value": "1", "text": "内部使用卡"},{"value": "2", "text": "返点卡"}]} validate="require-select" onChange={this.onChange} ref="orderAttributes" />
 						<div ref="saleCard" className="sale_card">
 							<FormInput label="客户企业信息:" type="text" name="company_info" ref="companyInfo" value={this.state.orderInfo.company_info} onChange={this.onChange} />
 							<FormInput label="客户经办人信息:" type="text" name="responsible_person" ref="responsiblePerson" value={this.state.orderInfo.responsible_person} onChange={this.onChange} />
@@ -133,8 +145,7 @@ var ApprovalCard = React.createClass({
 							<FormInput label="对应发单号:" type="text" name="order_number" ref="orderNumber" value={this.state.orderInfo.order_number} onChange={this.onChange}/>
 						</div>
 						<div >
-							<label className="">备注：</label>
-							<textarea style={{width:'250px',verticalAlign: 'top'}} className="" name="remark" ref="remark" ></textarea>
+							<FormText label="备注:" type="text" name="remark" value={this.state.orderInfo.remark} width="300" height="150" placeholder="" onChange={this.onChange} />
 						</div>
 			        </fieldset>
 			        <div style={{marginTop:'20px',marginLeft:'158px'}}>
