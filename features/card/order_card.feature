@@ -80,15 +80,15 @@ Scenario: 1.查看订单详情
 			"money":"10.00",
 			"num":"5",
 			"total_money":"50.00",
-			"is_limit": "不限制",
 			"type":"电子卡",
+			"is_limit": "不限制",
 			"card_range":"999000001-999000010"
 		}]
 		"""	
 	Then test能获得'测试卡1'微众卡列表
 		"""
 		[{
-			"name":"测试卡1"，
+			"card_num":"777000001"，
 			"status":"未激活",
 			"money":"10.00",
 			"rest_money":"10.00",
@@ -96,7 +96,7 @@ Scenario: 1.查看订单详情
 			"end_date":"2016-10-07",
 			"comments":""
 		},{
-			"card_num":""，
+			"card_num":"777000002"，
 			"status":"未激活",
 			"money":"10.00",
 			"rest_money":"10.00",

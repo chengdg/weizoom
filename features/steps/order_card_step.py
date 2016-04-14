@@ -27,7 +27,7 @@ def step_impl(context, user):
 			"is_limit": order_item.valid_restrictions,
 			'card_range': order_item.card_range,
 		})
-	print actual_list,7777777777
+	print actual_list,88888888888
 	bdd_util.assert_list(expected, actual_list)
 
 
@@ -39,13 +39,13 @@ def step_impl(context, user):
 	actual_list = []
 	for ard_list in actual:
 		actual_list.append({
-			'name':	ard_list.name,
-			'status': ard_list.money,
-			'money': ard_list.count,
-			'rest_money': ard_list.total_money,
-			'start_date':	ard_list.card_kind,
-			'end_date':	ard_list.card_kind,
-			'comments': ard_list.card_range,
+			'card_num':	ard_list.card_num,
+			'status': ard_list.card_status,
+			'money': ard_list.money,
+			'rest_money': ard_list.balance,
+			'start_date':	ard_list.activated_at,
+			'end_date':	ard_list.activated_at,
+			'comments': ard_list.remark,
 		})
 	print actual_list,7777777777
 	bdd_util.assert_list(expected, actual_list)

@@ -11,6 +11,7 @@ from core.jsonresponse import create_response
 from core import paginator
 import nav
 from card.models import *
+from weapp.models import *
 FIRST_NAV = 'rule_order'
 SECOND_NAV = 'rule_order'
 
@@ -58,7 +59,21 @@ class RuleOrder(resource.Resource):
 				order2is_activation[cur_weizoom_card_orders_id] =1
 			else:
 				order2is_activation[cur_weizoom_card_orders_id] =0
+		
 		pageinfo, weizoom_card_orders = paginator.paginate(weizoom_card_orders, cur_page, 10, query_string=request.META['QUERY_STRING'])	
+		
+		user_ids = []
+		for r in card_rules:
+			shop_limit_list = str(r.shop_limit_list).split(',')
+			for a in shop_limit_list:
+				if a != '-1':
+					user_ids.append(a)
+		user_id2store_name = {}
+		user_profiles = UserProfile.objects.using('weapp').filter(user_id__in=user_ids)
+		for user_profile in user_profiles:
+			if user_profile.store_name:
+				user_id2store_name[user_profile.user_id] = user_profile.store_name
+
 		card_order_list = []
 		for card_order in weizoom_card_orders:
 			card_order_dic = {}
@@ -76,6 +91,13 @@ class RuleOrder(resource.Resource):
 							name = name
 						else:
 							name = u'%.f元卡' % id2card_rule[rule_id].money
+
+						shop_limit_list = id2card_rule[rule_id].shop_limit_list.split(',')
+						shop_limit_list_name = []
+						for user_id in shop_limit_list:
+							if user_id != "-1" and user_id2store_name.has_key(int(user_id)):
+								shop_limit_list_name.append(user_id2store_name[int(user_id)])
+
 						weizoom_card_ids = sorted(order_item_id2weizoom_card_id[order_item_id])
 						weizoom_card_id_first = weizoom_card_ids[0]
 						weizoom_card_id_last = weizoom_card_ids[-1]
@@ -85,12 +107,13 @@ class RuleOrder(resource.Resource):
 						order_item_dic['weizoom_card_id_first'] = weizoom_card_id_first
 						order_item_dic['weizoom_card_id_last'] = weizoom_card_id_last
 						order_item_dic['name'] =name
+						order_item_dic['id'] =rule_id
 						order_item_dic['money'] = u'%.2f' %id2card_rule[rule_id].money
 						order_item_dic['total_money'] = u'%.2f' %(id2card_rule[rule_id].money * count)
 						order_item_dic['weizoom_card_order_item_num'] = count
 						order_item_dic['card_kind'] = WEIZOOM_CARD_KIND2TEXT[id2card_rule[rule_id].card_kind]
 						order_item_dic['card_class'] = WEIZOOM_CARD_CLASS2TEXT[id2card_rule[rule_id].card_class]
-						order_item_dic['shop_limit_list'] = id2card_rule[rule_id].shop_limit_list
+						order_item_dic['shop_limit_list'] = shop_limit_list_name
 						order_item_dic['valid_restrictions'] = u'满%.f使用' % valid_restrictions if valid_restrictions != -1 else u'不限制'
 						order_item_list.append(order_item_dic)
 				if order_item_list:

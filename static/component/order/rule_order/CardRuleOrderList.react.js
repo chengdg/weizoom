@@ -6,6 +6,8 @@ var debug = require('debug')('m:outline.data:DataPage');
 
 var Store = require('./Store');
 var Action = require('./Action');
+require('./rule_order.css');
+
 var ReactDOM = require('react-dom');
 var Reactman = require('reactman');
 var PageAction = Reactman.PageAction;
@@ -24,24 +26,42 @@ var cardRuleOrderList = React.createClass({
 	onChangeStore: function(event) {
 		this.refs.table.refresh();
 	},
+	onClickShops: function(shop_limit_list,event){
+		var node_strings = '';
+		for (var i in shop_limit_list){
+			node_strings +='<div class="fl">'+shop_limit_list[i]+'&nbsp;</div>'
+		}
+		Reactman.PageAction.showPopover({
+			target: event.target,
+			content: node_strings
+		});
+	},
 	getAttributeValue :function(value,data){
+		var _this = this;
 		var order_item_list = JSON.parse(data['order_item_list']);
 		var order_items = order_item_list.map(function(order_item,index){
 			if (value == 'card_kind/valid_restrictions'){
 				return (
-					<span key={index}>{order_item["card_kind"]}/{order_item["valid_restrictions"]}<br></br></span>
+					<span key={index} className="xi-td-span">{order_item["card_kind"]}/{order_item["valid_restrictions"]}<br></br></span>
 				)
 			}else if (value == 'weizoom_card_id_first/weizoom_card_id_last'){
 				return (
-					<span key={index}>{order_item["weizoom_card_id_first"]}-{order_item["weizoom_card_id_last"]}<br></br></span>
+					<span key={index} className="xi-td-span">{order_item["weizoom_card_id_first"]}-{order_item["weizoom_card_id_last"]}<br></br></span>
 				)
 			}else if (value == 'name'){
 				return (
-					<span key={index}><a href={'/order/order_detail?order_id='+data['id']}>{order_item['name']}</a><br></br></span>
+					<span key={index} className="xi-td-span"><a href={'/order/order_detail?order_id='+data['id']}>{order_item['name']}</a><br></br></span>
 				)
+			}else if (value == 'shop_limit_list'){
+				var shop_limit_list = order_item['shop_limit_list'];
+				if(order_item['shop_limit_list'].length>0){
+					return (
+						<span className="xi-td-span" key={index}><a className="btn btn-success" href='javascript:void(0);' onClick={_this.onClickShops.bind(_this,shop_limit_list)} data-rule-id={order_item.id}>查看专属商家</a><br></br></span>
+					)
+				}
 			}else{
 				return (
-					<span key={index}>{order_item[value]}<br></br></span>
+					<span className="xi-td-span" key={index}>{order_item[value]}<br></br></span>
 				)
 			}
 		})
@@ -82,6 +102,13 @@ var cardRuleOrderList = React.createClass({
 					<span>{card_range}</span>
 				</div>
 			);
+		}else if (field === 'shop_limit_list') {
+			var shop_limit_list = this.getAttributeValue('shop_limit_list',data);
+			return (
+				<div>
+					<span>{shop_limit_list}</span>
+				</div>
+			)
 		}else if (field === 'apply_people/apply_departent') {
 			var apply_people = data['apply_people'];
 			var apply_departent = data['apply_departent'];
@@ -174,7 +201,7 @@ var cardRuleOrderList = React.createClass({
 			<div>		
 				<Reactman.TablePanel>
 					<Reactman.TableActionBar>
-						<Reactman.TableActionButton text="创建新卡" icon="plus" href="/card/ordinary/" />
+						<Reactman.TableActionButton text="审批发卡" icon="plus" href="/order/approval_card/" />
 					</Reactman.TableActionBar>
 					<Reactman.Table resource={productsResource} formatter={this.rowFormatter} pagination={true} expandRow={true} ref="table">
 						<Reactman.TableColumn name="卡名称" field="name" />
@@ -182,7 +209,7 @@ var cardRuleOrderList = React.createClass({
 						<Reactman.TableColumn name="数量" field="weizoom_card_order_item_num" />
 						<Reactman.TableColumn name="总额" field="total_money" />
 						<Reactman.TableColumn name="卡类型/使用限制" field="card_kind/valid_restrictions"/>
-						<Reactman.TableColumn name="专属商家" field="storage_time" />
+						<Reactman.TableColumn name="专属商家" field="shop_limit_list" />
 						<Reactman.TableColumn name="卡号区间" field="weizoom_card_id_first/weizoom_card_id_last"/>
 						<Reactman.TableColumn name="订单属性/折扣方式" field="order_attribute"/>
 						<Reactman.TableColumn name="领用人/申请部门" field="apply_people/apply_departent" />

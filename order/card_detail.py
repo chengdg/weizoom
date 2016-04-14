@@ -26,6 +26,7 @@ class CardDatail(resource.Resource):
 		rule_id = int(request.GET.get('rule_id', 0))
 		card_rules = WeizoomCardRule.objects.filter(id=int(rule_id))
 		w_cards = WeizoomCard.objects.filter(weizoom_card_order_item_id__gte=1,weizoom_card_rule_id=rule_id)
+		weizoom_card_order_item = WeizoomCardOrderItem.objects.filter(id__in=[w_card.weizoom_card_order_item_id for w_card in w_cards])
 		rule_id2rule = {rule.id:rule for rule in card_rules}
 		pageinfo, w_cards = paginator.paginate(w_cards, cur_page, 10, query_string=request.META['QUERY_STRING'])
 		weizoom_card_list = []

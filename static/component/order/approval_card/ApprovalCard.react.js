@@ -148,7 +148,7 @@ var ApprovalCard = React.createClass({
 							<FormText label="备注:" type="text" name="remark" value={this.state.orderInfo.remark} width="300" height="150" placeholder="" onChange={this.onChange} />
 						</div>
 			        </fieldset>
-			        <div style={{marginTop:'20px',marginLeft:'158px'}}>
+			        <div style={{marginTop:'20px'}}>
 			            <div className="control-group">
 			                <div style={{margin: '40px 0 40px 102px'}}>
 								<button type="button" className="btn btn-success" onClick={this.onCardOrderSave}>确定</button>
