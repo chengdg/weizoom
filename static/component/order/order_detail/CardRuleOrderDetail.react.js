@@ -59,7 +59,6 @@ var CardRuleOrderList = React.createClass({
 	displayName: 'CardRuleOrderList',
 
 	getCardList: function(rule_id){
-		console.log(rule_id);
 		this.props.chooseRuleId(rule_id);
 	},
 	rowFormatter: function(field, value, data) {

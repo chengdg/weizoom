@@ -63,44 +63,17 @@ var ApprovalCard = React.createClass({
 		}
 		Action.updateProduct(property, value);
 	},
-	// onChooseOrderAttribute: function(){
-	// 	Action.resetProduct();
-	// 	var value = this.refs.orderAttributes.value;
-	// 	if(value == 0){
-	// 		this.refs.saleCard.style.display='block';
-	// 		this.refs.internalCard.style.display='none';
-	// 		this.refs.discountCard.style.display='none';
-	// 	}else if(value == 1){
-	// 		this.refs.internalCard.style.display='block';
-	// 		this.refs.saleCard.style.display='none';
-	// 		this.refs.discountCard.style.display='none';
-	// 	}
-	// 	else if(value == 2){
-	// 		this.refs.discountCard.style.display='block';
-	// 		this.refs.internalCard.style.display='none';
-	// 		this.refs.saleCard.style.display='none';
-	// 	}
-	// },
 	onCardOrderSave: function(){
 		var card_list = Store.getDataCardlines();
-		console.log(card_list,"===========");
-		console.log(typeof(card_list),"===========");
 		rule_id_list = []
-		var is_true = true;
 		for(index in card_list){
-			console.log(card_list[index]);
 			rule_id = card_list[index].rule_id
-			
 			if (rule_id_list.indexOf(rule_id) != -1){
-				console.log("======11");
-				is_true = false;
 				Reactman.PageAction.showHint('error', '卡库不能为空且不能重复！');
 				return;
 			}
 			rule_id_list.push(rule_id)
-			console.log("+++++++++");
 		}
-		console.log(is_true);
 		var order_infos = this.state.orderInfo;
 		var ruleStore = Store.getData();
 		var rule_order = this.state.card_rule_order;
