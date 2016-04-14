@@ -83,11 +83,11 @@ class OrderDatail(resource.Resource):
 				if user_id != "-1" and user_id2store_name.has_key(int(user_id)):
 					shop_limit_list_name.append(user_id2store_name[int(user_id)])
 
-
+			name = '' if rule_id not in rule_id2rule else rule_id2rule[rule_id].name
 			order_item_list.append({
 				'order_item_id': '%s' % order_item.id,
 				'rule_id': '%s' % rule_id,
-				'name': u'' if rule_id not in rule_id2rule else rule_id2rule[rule_id].name,
+				'name': name if name else u'%.f元卡' % rule_id2rule[rule_id].money,
 				'money': '%s' % money,
 				'count': count,
 				'total_money' : '%.2f' %(money*count),

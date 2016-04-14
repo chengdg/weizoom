@@ -65,7 +65,7 @@ Background:
 
 Scenario: 1.查看订单详情
 	Given test登录管理系统
-	Then test能获得"测试卡1"订单详情列表
+	Then test能获得'测试卡1'订单详情列表
 		"""
 		[{
 			"name":"测试卡1",
