@@ -199,13 +199,18 @@ class MShvoteRank(resource.Resource):
 	resource = 'm_shvote_rank'
 
 	def get(request):
-		print 44444444444444444444
 		params = {
 			"belong_to": request.GET["id"],
 			"status": app_models.MEMBER_STATUS['PASSED']
 		}
+		shvote = None
+		try:
+			shvote = app_models.Shvote.objects.get(id=request.GET["id"])
+		except:
+			pass
 		c = RequestContext(request, {
 			"rank_list": get_rank_data(params)
+			"groups": shvote.groups if shvote else []
 		})
 
 		return render_to_response('shvote/templates/webapp/m_shvote_rank.html', c)

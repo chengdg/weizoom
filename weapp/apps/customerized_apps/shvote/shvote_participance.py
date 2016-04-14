@@ -134,21 +134,43 @@ class ShvoteParticipance(resource.Resource):
 			return response.get_response()
 
 		target = None
+		control = None
 		now_date_str = datetime.now().strftime('%Y-%m-%d')
 		try:
-			target = app_models.ShvoteParticipance.objects.get(belong_to=record_id, member_id=long(vote_to), status=app_models.MEMBER_STATUS['PASSED'])
+			control = app_models.ShvoteControl(
+				created_at_str = now_date_str,
+				member_id = member_id,
+				belong_to = record_id,
+				voted_to = long(vote_to)
+			)
+			control.save()
 		except:
+			response.errMsg = u'只能投票一次'
+			return response.get_response()
+
+		try:
+			target = app_models.ShvoteParticipance.objects.get(belong_to=record_id, member_id=long(vote_to), status=app_models.MEMBER_STATUS['PASSED'])
+			target.count += 1
+			if target.vote_log.has_key(now_date_str):
+				target.vote_log[now_date_str].append(member_id)
+			else:
+				target.vote_log[now_date_str] = [member_id]
+			target.save()
+			control.delete()
+		except:
+			if control:
+				control.delete()
 			response.errMsg = u'用户信息出错'
 			return response.get_response()
 
-		result = target.modify(query={'vote_log__'+now_date_str+'__not__exists': member_id},
-							   **{
-								   'inc__count': 1,
-								   'push__vote_log__'+now_date_str: member_id
-							   })
-		if not result:
-			response.errMsg = u'只能投票一次'
-			return response.get_response()
+		# result = target.modify(query={'vote_log__'+now_date_str+'__not__exists': member_id},
+		# 					   **{
+		# 						   'inc__count': 1,
+		# 						   'push__vote_log__'+now_date_str: member_id
+		# 					   })
+		# if not result:
+		# 	response.errMsg = u'只能投票一次'
+		# 	return response.get_response()
 
 		response = create_response(200)
 		return response.get_response()

@@ -98,6 +98,7 @@ class Shvotes(resource.Resource):
 			id_str = str(data.id)
 			items.append({
 				'id': id_str,
+				'owner_id': request.manager.id,
 				'name': data.name,
 				'start_time': data.start_time.strftime('%Y-%m-%d %H:%M'),
 				'end_time': data.end_time.strftime('%Y-%m-%d %H:%M'),
