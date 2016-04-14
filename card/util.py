@@ -193,6 +193,8 @@ def get_card_list(request):
 	for c in weizoom_cards:
 		money = '%.2f' % c.money  #余额
 		rule_money = '%.2f' % weizoom_card_rule.money  #面值
+		#判断是否出库
+		is_storage = c.storage_status == WEIZOOM_CARD_STORAGE_STATUS_OUT
 
 		cur_weizoom_cards.append({
 			"id": c.id,
@@ -203,10 +205,10 @@ def get_card_list(request):
 			"active_card_user_id": c.active_card_user_id,#激活卡用户的id
 			"user_id": request.user.id,#当前用户的id
 			"money": money, # 余额
-			"storage_time": c.storage_time.strftime('%Y-%m-%d %H:%M:%S') if c.storage_time else u"",
+			"storage_time": c.storage_time.strftime('%Y-%m-%d %H:%M:%S') if c.storage_time and is_storage else u"",
 			"is_expired": c.is_expired,
-			"department": c.department,
-			"activated_to": c.activated_to,
+			"department": c.department if is_storage else u"",
+			"activated_to": c.activated_to if is_storage else u"",
 			"remark": c.remark if c.remark else u"",
 			"rule_money": rule_money
 		})
