@@ -1,0 +1,223 @@
+{% extends "content_base_v2.html" %}
+{% load apps_filter %}
+
+{% block css%}
+	<style>
+		.tl.pl25 img{
+			height: 60px;
+			width: 60px;
+		}
+		.wui-create-player{
+			height: 810px;
+		    background-color: #E9EDF5;
+		}
+		.wui-create-player label{
+			text-align: right;
+			margin-right: 20px;
+		}    
+		.wui-create-player input[type='text'],.wui-create-player select{
+			width: 150px;
+		}  
+		.wui-create{
+			height: 34px;
+			width: 90%;
+		    margin: 20px 0 34px 43px;
+	        font-size: 16px;
+   			font-weight: bold;
+   			border-bottom: 1px solid #000;
+		}
+		.wui-upload-img{
+			height: 77px;
+		}
+		.edui-default .edui-editor{
+			margin-left: 134px;
+		}
+	</style>
+{% endblock%}
+
+{% block content-panel %}
+<div class="xui-ShvoteParticipancesAppPage xui-appPage-commonStyle">
+	<div class="relative">
+		<ul class="breadcrumb">
+			<li>您当前所在位置</li>
+			<li><a href="/apps/">百宝箱</a></li>
+			<li class="active">微信投票</li>
+		</ul>
+	</div>
+	<div class="panel panel-default wui-create-player">
+		<div class="wui-create">创建选手</div>
+		<div class="form-group wui-upload-img">
+			<label class="control-label fl" for="swipe_images">上传头像</label>
+			<div id="imgSelect" class="col-sm-9">
+		        <input id="swipe_images" name="swipe_images" type='hidden' />
+				<!-- <ul class="xui-i-images clearfix">
+					<li class="xui-i-image xa-selectImage">
+         				 <img src="/static_v2/img/editor/addProduct.png"/>
+					</li>
+				</ul> -->
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label fl" for="player_name">名称</label>
+			<input type="text" class="form-control" name="player_name"/>
+		</div>
+		<div class="form-group">
+			<label class="control-label fl" for="group">选择分组</label>
+			<select name="group" class="form-control">
+				<option>11</option>
+				<option>22</option>
+			</select>
+		</div>
+		<div class="form-group">
+			<label class="control-label fl" for="serial_number">输入编号</label>
+			<input type="text" class="form-control" name="serial_number"/>
+		</div>
+		<div class="form-group">
+			<label class="control-label" for="details">详情</label>
+			<span class="xui-fontGary" style="font-weight: lighter;">（上传图片要求宽度在480-620之间,高度小于等于960,大小不超过500K）</span>
+			<textarea class="xui-hide" id="detail" name="detail" data-ui-role="richtext-editor" data-type="full" data-height="300" data-width="650">
+			</textarea>
+		</div>
+		<div>
+			<button class="btn btn-primary">提交</button>
+			<button class="btn btn-primary">取消</button>
+		</div>
+		
+	</div>
+</div>
+{% endblock %}
+
+
+{% block js %}
+{{ "shvote"|load_app_views_and_dialogs|safe }}
+{% verbatim %}
+{% endverbatim %}
+
+<script type="text/javascript">
+$(document).ready(function() {
+	$('body').delegate('.xa-viewData', 'click', function(event) {
+		var activityId = $(event.currentTarget).parents('tr').data('id');
+		W.dialog.showDialog('W.dialog.app.shvote.ViewParticipanceDataDialog', {
+			activityId: activityId,
+			success: function(data) {
+				alert(data);
+			}
+		});
+	});
+
+	$('.xa-search').click(function(event) {
+		var participant_name = $.trim($('[name="participant_name"]').val());
+		var startTime = $.trim($('[name="start_time"]').val());
+		var endTime = $.trim($('[name="end_time"]').val());
+		var table = $('[data-ui-role="advanced-table"]').data('view');
+		table.reload({
+			participant_name: participant_name,
+			start_time: startTime,
+			end_time: endTime
+		}, {
+			emptyDataHint: '没有符合条件的数据'
+		});
+	});
+
+	//export
+	$('.xa-export').click(function(event){
+		W.getLoadingView();
+		var participant_name = $.trim($('[name="participant_name"]').val());
+        var startTime = $.trim($('[name="start_time"]').val());
+        var endTime = $.trim($('[name="end_time"]').val());
+		var export_id =window.location.search.split('?id=')[1];
+		W.getApi().call({
+			method: 'get',
+			app: 'apps/shvote',
+			resource: 'shvote_participances_export',
+			args: {
+				'id': export_id,
+				'participant_name': participant_name,
+				'start_time': startTime,
+				'end_time': endTime
+			},
+			success: function(resp){
+				if(resp.code == 200){
+					$('#export_href').prop({
+						'href': resp.download_path,
+						'download': resp.filename
+					}).get(0).click();
+
+				}
+				console.log("导出成功");
+			},
+			error: function(error){
+				console.log('导出失败');
+			}
+		});
+	});
+
+	 //初始化上传组件参数
+    var swf = '/static/uploadify.swf',
+        overrideEvents = ['onError', 'onUploadSuccess'],
+        multi = false,
+        removeCompleted = false,
+        uploader = '/apps/api/upload_file/get',
+        cancelImg = '/static/img/cancel.png',
+        buttonText = '上传头像',
+        fileTypeExts = '*.jpg',
+        method = 'post',
+        removeTimeout = 0.0,
+        width = 85,
+        formData = {
+            'owner_id': '{{ request.webapp_owner_id }}'
+        },
+        onError = function(errorType,file) {
+            xlog(errorType);
+            xlog(file.name);
+        };
+
+    $(function(){
+    	//初始化上传组件
+        $("#swipe_images").uploadify({
+            overrideEvents: overrideEvents,
+            swf: swf,
+            width: width,
+            multi: multi,
+            removeCompleted: removeCompleted,
+            uploader: uploader,
+            cancelImg: cancelImg,
+            buttonText: buttonText,
+            fileTypeDesc: '上传头像',
+            fileTypeExts: fileTypeExts,
+            method: method,
+            removeTimeout: removeTimeout,
+            formData: $.extend(formData, {
+                'cat': 'swipe_images'
+            }),
+            onUploadStart: function(file){
+            	console.log(file,22222222222222)
+                if(file && file.name.substring(file.name.length - 3,file.name.length) == 'jpg'){}else{
+                    W.showHint('error', '请上传jpg类型的图片');
+                    $("#swipe_images").uploadify('cancel', '*');
+                    $("#swipe_images").uploadify('stop');
+                }
+            },
+            onUploadSuccess : function(file, response, status) {
+                response = JSON.parse(response);
+                if(response.code == 200){
+                    $("#swipe_images").find('.uploadify-button-text').html('重新选择');
+                    $('.xa-cert-name').html('  (文件名：'+file.name+')');
+                    cert_done = true;
+                }else{
+                    console.log(response.errMsg);
+                }
+            },
+            onSelect: function(file) {
+                var $queues = $('#swipe_images-queue').children();
+                if($queues.length > 1){
+                    $queues.eq(0).remove();
+                }
+            },
+            onError: onError
+        });
+    })
+});
+</script>
+{% endblock %}
+

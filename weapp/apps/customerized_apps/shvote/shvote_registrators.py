@@ -267,3 +267,22 @@ class ShvoteRegistrators_Export(resource.Resource):
 			response.innerErrMsg = unicode_full_stack()
 
 		return response.get_response()
+
+class ShvoteCreatePlayer(resource.Resource):
+	app = 'apps/shvote'
+	resource = 'shvote_create_player'
+
+	@login_required
+	def get(request):
+		"""
+		响应GET
+		"""
+		print 222222222222222222222224444
+		c = RequestContext(request, {
+			'first_nav_name': FIRST_NAV,
+			'second_navs': mall_export.get_promotion_and_apps_second_navs(request),
+			'second_nav_name': mall_export.MALL_APPS_SECOND_NAV,
+			'third_nav_name': "shvotes",
+		});
+
+		return render_to_response('shvote/templates/editor/shvote_create_player.html', c)
