@@ -141,6 +141,7 @@ class ShvoteParticipance(resource.Resource):
 				created_at_str = now_date_str,
 				member_id = member_id,
 				belong_to = record_id,
+				voted_group = request.POST['voted_group'],
 				voted_to = long(vote_to)
 			)
 			control.save()
@@ -156,7 +157,6 @@ class ShvoteParticipance(resource.Resource):
 			else:
 				target.vote_log[now_date_str] = [member_id]
 			target.save()
-			control.delete()
 		except:
 			if control:
 				control.delete()
