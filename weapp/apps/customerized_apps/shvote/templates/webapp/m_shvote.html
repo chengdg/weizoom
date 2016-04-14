@@ -446,12 +446,12 @@
 			current_group = $(this).html();
 			$('.wa-left-chance').html(can_play_info[current_group]);
 			getRankInfo(current_group,'');
-		})
+		});
 
 		$('.wa-event-details').click(function(){
 			$('.wa-shvote-desc').show();
 			$('.wa-mobile').hide();
-		})
+		});
         //展示参与统计
 //        getDynamicData();
 
@@ -474,7 +474,8 @@
                 args: {
                     webapp_owner_id: W.webappOwnerId,
                     recordId: W.appRecordId,
-                    vote_to: vote_to
+                    vote_to: vote_to,
+                    voted_group: can_play_info[current_group]
                 },
                 success: function(data){
                 	wuiAlert('投票成功');
