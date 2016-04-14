@@ -16,7 +16,7 @@ Feature: 新建微信高级投票活动
 	"""
 
 
-@mall2 @apps @shvote @add_shvote @aix2
+@mall2 @apps @shvote @add_shvote
 Scenario:1 新建微信投票活动,无分组，活动未开始
 	#选手分组-无分组
 	#状态-未开始

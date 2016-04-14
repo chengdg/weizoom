@@ -45,6 +45,10 @@ class MShvote(resource.Resource):
 		isMember = member.is_subscribed
 		activity_status, record = update_shvote_status(record)
 
+		#增加访问数
+		record.visits += 1
+		record.save()
+
 		#获取已报名人数
 		member_datas = app_models.ShvoteParticipance.objects(belong_to=record_id, status=app_models.MEMBER_STATUS['PASSED'])
 		total_parted = member_datas.count()
@@ -174,23 +178,9 @@ class GetRankList(resource.Resource):
 		@param record_id: 活动id
 		@return: list
 		"""
-
-		params = {
-			'belong_to' : request.GET['recordId'],
-			'group' : request.GET['current_group'],
-			'status' : app_models.MEMBER_STATUS['PASSED']
-		}
-
-		if request.GET.get('search_name') != '':
-			search_name = request.GET.get('search_name')
-			if search_name.isdigit():
-				params['serial_number__icontains'] = search_name
-			else:
-				params['name__icontains'] = search_name
-
 		response = create_response(200)
 		response.data = {
-			'result_list': get_rank_data(params)
+			'result_list': get_rank_data(request.GET)
 		}
 		return response.get_response()
 
@@ -199,42 +189,61 @@ class MShvoteRank(resource.Resource):
 	resource = 'm_shvote_rank'
 
 	def get(request):
-		params = {
-			"belong_to": request.GET["id"],
-			"status": app_models.MEMBER_STATUS['PASSED']
-		}
 		shvote = None
 		try:
 			shvote = app_models.Shvote.objects.get(id=request.GET["id"])
 		except:
 			pass
 		c = RequestContext(request, {
-			"rank_list": get_rank_data(params),
-			"groups": shvote.groups if shvote else []
+			"groups": shvote.groups if shvote else [],
+			"record_id": request.GET["id"]
 		})
 
 		return render_to_response('shvote/templates/webapp/m_shvote_rank.html', c)
 
-def get_rank_data(params):
+	def api_get(request):
+		"""
+		列表排名
+		@return:
+		"""
+		response = create_response(200)
+		response.data = {
+			'result_list': get_rank_data(request.GET)
+		}
+		return response.get_response()
+
+def get_rank_data(data):
 	"""
 	查询前100排名
 	@param params:
 	@return:
 	"""
+	params = {
+		'belong_to' : data['recordId'],
+		'group' : data['current_group'],
+		'status' : app_models.MEMBER_STATUS['PASSED']
+	}
+
+	if data.get('search_name') != '':
+		search_name = data.get('search_name')
+		if search_name.isdigit():
+			params['serial_number__icontains'] = search_name
+		else:
+			params['name__icontains'] = search_name
 	datas = app_models.ShvoteParticipance.objects(**params).order_by('-count')[:100]
 	i = 0
 	result_list = []
-	for data in datas:
+	for d in datas:
 		i += 1
 		result_list.append({
 			'rank': i,
-			'name': data.name,
-			'icon': data.icon,
-			'count': data.count,
-			'group': data.group,
-			'serial_number': data.serial_number,
-			'member_id': data.member_id,
-			'details': data.details,
-			'pics': data.pics
+			'name': d.name,
+			'icon': d.icon,
+			'count': d.count,
+			'group': d.group,
+			'serial_number': d.serial_number,
+			'member_id': d.member_id,
+			'details': d.details,
+			'pics': d.pics
 		})
 	return result_list

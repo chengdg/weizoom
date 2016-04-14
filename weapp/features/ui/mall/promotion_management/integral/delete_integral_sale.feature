@@ -91,7 +91,7 @@ Background:
 		}]
 		"""
 
-@mall2 @promotion @promotionIntegral @integral @aix
+@mall2 @promotion @promotionIntegral @integral
 Scenario: 1 删除状态为'已结束'的积分应用活动
 		Given jobs登录系统
 		When jobs"删除"促销活动"商品1积分应用"
