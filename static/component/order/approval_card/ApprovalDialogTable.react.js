@@ -65,6 +65,8 @@ var CardTable = React.createClass({
 					<Reactman.TableColumn name="面值" field="money" />
 					<Reactman.TableColumn name="库存" field="storage_count" width="120px"/>
 					<Reactman.TableColumn name="卡类型" field="card_kind" width="80px" />
+					<Reactman.TableColumn name="使用限制" field="valid_restrictions" width="80px" />
+					<Reactman.TableColumn name="专属商家" field="shop_limit_list" width="80px" />
 					<Reactman.TableColumn name="卡号区间" field="card_range" />
 					<Reactman.TableColumn name="操作" field="action" width="80px" />
 				</Reactman.Table>
