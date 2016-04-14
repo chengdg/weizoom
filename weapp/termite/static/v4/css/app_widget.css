@@ -2162,11 +2162,13 @@ li.wui-selectBox-display-table {
 }
 .wui-shvoteDescription .wui-i-details{
 	padding: 15px 20px;
+	background: #fff;
 }
 .wui-shvoteDescription .wui-i-title{
 	font-size: 1.2rem;
     text-align: center;
 	margin-bottom: 15px;
+	color: #000;
 }
 .wui-shvoteDescription .wui-i-rule,.wui-shvoteDescription .wui-i-time{
 	border-bottom: 1px solid #FF8000;
