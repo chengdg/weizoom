@@ -32,16 +32,12 @@ class CardDatail(resource.Resource):
 		for w_card in w_cards:
 			if w_card.weizoom_card_rule_id in rule_id2rule:
 				rule = rule_id2rule[w_card.weizoom_card_rule_id]
-				if rule.name:
-					name = rule.name
-				else:
-					name = u'%.f元卡' % rule.money
 				if w_card.operate_status == WEIZOOM_CARD_OPERATE_STATUS_ACTIVED:
 					card_status = WEIZOOM_CARD_USE_STATUS2TEXT[w_card.use_status]
 				else:
 					card_status = WEIZOOM_CARD_OPERATE_STATUS2TEXT[w_card.operate_status]
 				weizoom_card_list.append({
-					'name': name,
+					'card_num': w_card.weizoom_card_id,
 					'password': w_card.password,
 					'card_status': card_status,
 					'money': '%.2f' % rule.money,
@@ -50,7 +46,7 @@ class CardDatail(resource.Resource):
 					'activated_at': '' if not w_card.activated_at else w_card.activated_at.strftime("%Y-%m-%d %H:%M:%S"),
 					'remark': w_card.remark
 				})
-		
+		print weizoom_card_list,66666666666
 		response = create_response(200)
 		response.data = {
 			'rows' : weizoom_card_list,
