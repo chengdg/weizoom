@@ -33,8 +33,21 @@
 		border-bottom: 1px solid #e1e1e1;
 		padding: 5px 0;
 	}
+	.wui-rank-table tbody tr td:nth-child(1) span{
+		display: inline-block;
+		width: 25px;
+		height: 25px;
+		line-height: 25px;
+		background: rgba(0,0,0,0.4);
+		border-radius: 15px;
+		color: #fff;
+	}	
 	.wui-rank-table tbody tr td:nth-child(2){
 		width: 60%;
+	}
+	.wui-rank-table tbody tr td:nth-child(2) img{
+		vertical-align: middle;
+		margin-right: 10px;
 	}
 	.wui-count{
 		color: #ff4200;
@@ -44,12 +57,18 @@
 		font-size: 0.9rem;
 		color: #999999;
 	}
+	.active{
+		font-size: 1.1rem;
+		color:  #ff4200;
+	}
 </style>
 {% endblock %}
 
 {% block content-panel %}
-<div class="wui-rank-groups">
-	
+<div class="wui-rank-groups wa-rank-groups">
+	{% for group in groups %}
+	<div>{{group}}</div>
+	{% endfor %}
 </div>
 <table class="wui-rank-table">
 	<thead>
@@ -59,26 +78,76 @@
 			<th>票数</th>
 		</tr>
 	</thead>
-	<tbody>
-		{% for item in rank_list %}
-		<tr>
-			<td>{{ item.rank }}</td>			
-			<td>{{ item.name }}</td>
-			<td>
-				<div>
-					<span class="wui-count">{{ item.count }}</span>
-					票
-				</div>
-				<div class="wui-number">编号:{{ item.serial_number }}</div>
-			</td>
-		</tr>
-		{% endfor %}
+	<tbody class="wa-rank-list">
+
 	</tbody>
 </table>
+
+<script type="text/plain" id="tpl">
+	<tr>
+		<td>
+			<span>{ rank }</span>
+		</td>			
+		<td>
+			<img src={ icon } width="50px" height="50px">
+			<span>{ name }</span>
+		</td>
+		<td>
+			<div>
+				<span class="wui-count">{ count }</span>
+				票
+			</div>
+			<div class="wui-number">编号:{ serial_number }</div>
+		</td>
+	</tr> 
+</script>
 {% endblock %}
 
 {% block js %}
 <script type="text/javascript">
 
+//当前分组，切换时候需要改变值，用于查找
+var current_group = '';
+
+$(function(){
+	var wid = 100/$('.wa-rank-groups div').length;
+	$('.wa-rank-groups div').css("width",wid+'%');
+	$('.wa-rank-groups div').eq(0).addClass('active');
+	current_group = $('.active').html();
+	getRankInfo(current_group,'');
+})
+
+
+function getRankInfo(current_group,search_name){
+        W.getApi().call({
+            app: 'm/apps/shvote',
+            resource: 'm_shvote_rank',
+            method: 'get',
+            args: {
+				webapp_owner_id: W.webappOwnerId,
+                recordId: W.appRecordId,
+				current_group: current_group,
+				search_name: search_name
+            },
+            success: function(data) {
+				$('.wa-rank-list').html('');
+                var result = data.result_list;
+                var tpl = new Template($('#tpl').html());
+                for(var i=0;i<result.length;i++){
+        		    var s = tpl.render({
+        		    	rank : i+1,
+		               	serial_number : result[i].serial_number,
+		                name : result[i].name,
+		                count : result[i].count,
+		                icon : result[i].icon,
+		            });
+		        $('.wa-rank-list').append(s);
+	        	}
+            },
+            error: function(data){
+				wuiAlert(data.errMsg);
+            }
+        });
+    }
 </script>
 {% endblock %}

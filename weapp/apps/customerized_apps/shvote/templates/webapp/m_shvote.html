@@ -446,6 +446,7 @@
         $('.wa-rank-list').on('click','.wa-ivote', function(){
         	var left_chance = parseInt($('.wa-left-chance').html());
         	if( !left_chance > 0) {
+        		wuiAlert('每天每组只可投票一次');
         		return
         	}
         	var that = $(this);
@@ -561,7 +562,7 @@
 				search_name: search_name
             },
             success: function(data) {
-				$('.wui-rank-list').html('');
+				$('.wa-rank-list').html('');
                 var result = data.result_list;
                 user_detail = result;
                 var tpl = new Template($('#tpl').html());
