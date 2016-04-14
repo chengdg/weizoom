@@ -12,6 +12,8 @@ var PageAction = Reactman.PageAction;
 var Dispatcher = Reactman.Dispatcher;
 var Resource = Reactman.Resource;
 
+require('./style.css')
+
 // var Store = require('./Store');
 // var Constant = require('./Constant');
 // var Action = require('./Action');
@@ -31,7 +33,7 @@ var LimitRulesPage = React.createClass({
 		// })
 		var node_strings = '';
 		for (var i in shop_limit_list){
-			node_strings +='<span class="mr10">'+shop_limit_list[i]+'</span>'
+			node_strings +='<div class="fl">'+shop_limit_list[i]+'</div>'
 		}
 
 		Reactman.PageAction.showPopover({
@@ -76,7 +78,6 @@ var LimitRulesPage = React.createClass({
 		return (
 		<div className="mt15">
 			<Reactman.TablePanel>
-				
 				<Reactman.TableActionBar>
 					<Reactman.TableActionButton text="创建新卡" icon="plus" href="/card/limit/" />
 				</Reactman.TableActionBar>

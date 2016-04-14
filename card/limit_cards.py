@@ -36,46 +36,9 @@ class OrdinaryCardList(resource.Resource):
 		"""
 		卡列表
 		"""
-		weizoom_card_rule_id = int(request.GET.get('weizoom_card_rule_id', '-1'))
-		weizoom_cards = WeizoomCard.objects.filter(weizoom_card_rule_id=weizoom_card_rule_id)
-		is_export = False
-
-		#获得已经过期的微众卡id
-		today = datetime.today()
-		card_ids_need_expire = []
-		for card in weizoom_cards:
-			#记录过期并且是未使用的微众卡id
-			if card.expired_time:
-				if card.expired_time < today:
-					card_ids_need_expire.append(card.id)
-		if len(card_ids_need_expire) > 0:
-			WeizoomCard.objects.filter(id__in=card_ids_need_expire).update(is_expired=True)
-		pageinfo, weizoom_cards = paginator.paginate(weizoom_cards, 1, 10, query_string=request.META['QUERY_STRING'])
-
-		weizoom_card_rule = WeizoomCardRule.objects.get(id=weizoom_card_rule_id)
-		cur_weizoom_cards = []
-		for c in weizoom_cards:
-			money = '%.2f' % c.money  #余额
-			rule_money = '%.2f' % weizoom_card_rule.money  #面值
-
-			cur_weizoom_cards.append({
-				"id": c.id,
-				"storage_status": c.storage_status,
-				"storage_status_text": WEIZOOM_CARD_STORAGE_STATUS2TEXT[c.storage_status],
-				"weizoom_card_id": c.weizoom_card_id,
-				"password": c.password,
-				"active_card_user_id": c.active_card_user_id,#激活卡用户的id
-				"user_id": request.user.id,#当前用户的id
-				"money": money, # 余额
-				"storage_time": c.storage_time.strftime('%Y-%m-%d %H:%M:%S') if c.storage_time else "",
-				"is_expired": c.is_expired,
-				"department": c.department,
-				"activated_to": c.activated_to,
-				"remark": c.remark if c.remark else '',
-				"rule_money": rule_money
-			})
+		pageinfo, cur_weizoom_cards = util.get_card_list(request)
 
 		response = create_response(200)
 		response.data.rows = cur_weizoom_cards
-		response.data.pageinfo = pageinfo.to_dict()
+		response.data.pagination_info = pageinfo.to_dict()
 		return response.get_response()
