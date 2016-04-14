@@ -78,7 +78,6 @@ var LimitRulesPage = React.createClass({
 		return (
 		<div className="mt15">
 			<Reactman.TablePanel>
-				
 				<Reactman.TableActionBar>
 					<Reactman.TableActionButton text="创建新卡" icon="plus" href="/card/limit/" />
 				</Reactman.TableActionBar>

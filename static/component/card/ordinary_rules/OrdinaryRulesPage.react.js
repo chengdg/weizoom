@@ -12,15 +12,13 @@ var PageAction = Reactman.PageAction;
 var Dispatcher = Reactman.Dispatcher;
 var Resource = Reactman.Resource;
 
+var RemarkCommentDialog = require('./RemarkCommentDialog.react');
+
 // var Store = require('./Store');
 // var Constant = require('./Constant');
 // var Action = require('./Action');
 
 var OrdinaryRulesPage = React.createClass({
-	onClickDelete: function(event) {
-		var productId = parseInt(event.target.getAttribute('data-product-id'));
-		Action.deleteProduct(productId, this.refs.table.refresh);
-	},
 
 	rowFormatter: function(field, value, data) {
 		if (field === 'name') {
@@ -28,16 +26,32 @@ var OrdinaryRulesPage = React.createClass({
 				<a href={'/card/ordinary_cards/?weizoom_card_rule_id='+data.id}>{value}</a>
 			)
 		}else if (field === 'action') {
+			console.log(data.id,"pppppppppppppps")
 			return (
-			<div>
-				<a className="btn btn-link btn-xs">导出</a>
-				<a className="btn btn-link btn-xs mt5">追加</a>
-				<a className="btn btn-link btn-xs">备注</a>
-			</div>
+				<div>
+					<a className="btn btn-link btn-xs">导出</a>
+					<a className="btn btn-link btn-xs mt5">追加</a>
+					<a className="btn btn-link btn-xs mt5" onClick={this.onClickRemarkComment} data-rule-id={data.id} >备注</a>
+				</div>
 			);
 		} else {
 			return value;
 		}
+	},
+	onClickRemarkComment: function(evnet){
+		var ruleId = parseInt(event.target.getAttribute('data-rule-id'));
+		var rule = this.refs.table.getData(ruleId);
+		Reactman.PageAction.showDialog({
+			component: RemarkCommentDialog, 
+			data: {
+				rule: rule
+			},
+			success: function(inputData, dialogState) {
+				// var product = inputData.product;
+				// var comment = dialogState.comment;
+				// Action.updateProductComment(product, comment);
+			}
+		});
 	},
 
 	render:function(){
@@ -52,7 +66,6 @@ var OrdinaryRulesPage = React.createClass({
 		return (
 		<div className="mt15">
 			<Reactman.TablePanel>
-				
 				<Reactman.TableActionBar>
 					<Reactman.TableActionButton text="创建新卡" icon="plus" href="/card/ordinary/" />
 				</Reactman.TableActionBar>
