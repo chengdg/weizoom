@@ -14,11 +14,19 @@ var Resource = Reactman.Resource;
 
 var RemarkCommentDialog = require('./RemarkCommentDialog.react');
 
-// var Store = require('./Store');
+var Store = require('./Store');
 // var Constant = require('./Constant');
-// var Action = require('./Action');
+var Action = require('./Action');
 
 var OrdinaryRulesPage = React.createClass({
+	getInitialState: function() {
+		Store.addListener(this.onChangeStore);
+		return Store.getData();
+	},
+
+	onChangeStore: function(event) {
+		this.refs.table.refresh();
+	},
 
 	rowFormatter: function(field, value, data) {
 		if (field === 'name') {
@@ -37,6 +45,7 @@ var OrdinaryRulesPage = React.createClass({
 			return value;
 		}
 	},
+	
 	onClickRemarkComment: function(event){
 		var ruleId = parseInt(event.target.getAttribute('data-rule-id'));
 		var rule = this.refs.table.getData(ruleId);
@@ -48,7 +57,7 @@ var OrdinaryRulesPage = React.createClass({
 			success: function(inputData, dialogState) {
 				var rule = inputData.rule;
 				var remark = dialogState.remark;
-				// Action.updateOrdinaryRemark(rule, remark);
+				Action.updateOrdinaryRemark(rule, remark);
 			}
 		});
 	},

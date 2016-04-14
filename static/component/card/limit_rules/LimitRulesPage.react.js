@@ -12,17 +12,24 @@ var PageAction = Reactman.PageAction;
 var Dispatcher = Reactman.Dispatcher;
 var Resource = Reactman.Resource;
 
+var RemarkCommentDialog = require('./RemarkCommentDialog.react');
+
 require('./style.css')
 
-// var Store = require('./Store');
-// var Constant = require('./Constant');
-// var Action = require('./Action');
+var Store = require('./Store');
+var Constant = require('./Constant');
+var Action = require('./Action');
 
 var LimitRulesPage = React.createClass({
-	onClickDelete: function(event) {
-		var productId = parseInt(event.target.getAttribute('data-product-id'));
-		Action.deleteProduct(productId, this.refs.table.refresh);
+	getInitialState: function() {
+		Store.addListener(this.onChangeStore);
+		return Store.getData();
 	},
+
+	onChangeStore: function(event) {
+		this.refs.table.refresh();
+	},
+
 	onClickShops: function(event){
 		var ruleId = parseInt(event.target.getAttribute('data-rule-id'));
 		var shop_limit_list = this.refs.table.getData(ruleId).shop_limit_list;
@@ -66,12 +73,28 @@ var LimitRulesPage = React.createClass({
 			<div>
 				<a className="btn btn-link btn-xs">导出</a>
 				<a className="btn btn-link btn-xs mt5">追加</a>
-				<a className="btn btn-link btn-xs">备注</a>
+				<a className="btn btn-link btn-xs mt5" onClick={this.onClickRemarkComment} data-rule-id={data.id} >备注</a>
 			</div>
 			);
 		} else {
 			return value;
 		}
+	},
+
+	onClickRemarkComment: function(event){
+		var ruleId = parseInt(event.target.getAttribute('data-rule-id'));
+		var rule = this.refs.table.getData(ruleId);
+		Reactman.PageAction.showDialog({
+			component: RemarkCommentDialog, 
+			data: {
+				rule: rule
+			},
+			success: function(inputData, dialogState) {
+				var rule = inputData.rule;
+				var remark = dialogState.remark;
+				Action.updateLimitRemark(rule, remark);
+			}
+		});
 	},
 
 	render:function(){

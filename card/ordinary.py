@@ -51,7 +51,6 @@ class CreateWeizoomCardRule(resource.Resource):
 		remark = request.POST.get('remark','')
 		count = int(request.POST.get('count',0))
 		rule = WeizoomCardRule.objects.filter(id=rule_id)
-		print rule_id,remark,"gggggggggg"
 		if remark:
 			rule.update(remark=remark)
 		elif count:

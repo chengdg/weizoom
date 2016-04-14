@@ -3,7 +3,7 @@
  */
 "use strict";
 
-var debug = require('debug')('m:card.ordinary_rules::Store');
+var debug = require('debug')('m:card.limit_rules::Store');
 var EventEmitter = require('events').EventEmitter
 var assign = require('object-assign');
 var _ = require('underscore');
@@ -16,7 +16,7 @@ var Constant = require('./Constant');
 
 var Store = StoreUtil.createStore(Dispatcher, {
 	actions: {
-		'handleUpdateOrdinaryRemark': Constant.CARD_ORDINARY_UPDATE_REMARK,
+		'handleUpdateLimitRemark': Constant.CARD_LIMIT_UPDATE_REMARK,
 	},
 
 	init: function() {
@@ -24,7 +24,7 @@ var Store = StoreUtil.createStore(Dispatcher, {
 		}
 	},
 
-	handleUpdateOrdinaryRemark: function(action) {
+	handleUpdateLimitRemark: function(action) {
 		this.__emitChange();
 	},
 	getData: function(){
