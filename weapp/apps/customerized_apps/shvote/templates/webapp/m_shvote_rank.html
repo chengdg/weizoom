@@ -115,7 +115,14 @@ $(function(){
 	$('.wa-rank-groups div').eq(0).addClass('active');
 	current_group = $('.active').html();
 	getRankInfo(current_group,'');
-})
+
+	//切换分组
+	$('.wa-rank-groups').on('click','div',function(){
+		$(this).addClass('active').siblings().removeClass('active');
+		current_group = $(this).html();
+		getRankInfo(current_group,'');
+	});	
+});
 
 
 function getRankInfo(current_group,search_name){
