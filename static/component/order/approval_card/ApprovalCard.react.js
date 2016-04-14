@@ -83,6 +83,24 @@ var ApprovalCard = React.createClass({
 	// },
 	onCardOrderSave: function(){
 		var card_list = Store.getDataCardlines();
+		console.log(card_list,"===========");
+		console.log(typeof(card_list),"===========");
+		rule_id_list = []
+		var is_true = true;
+		for(index in card_list){
+			console.log(card_list[index]);
+			rule_id = card_list[index].rule_id
+			
+			if (rule_id_list.indexOf(rule_id) != -1){
+				console.log("======11");
+				is_true = false;
+				Reactman.PageAction.showHint('error', '卡库不能为空且不能重复！');
+				return;
+			}
+			rule_id_list.push(rule_id)
+			console.log("+++++++++");
+		}
+		console.log(is_true);
 		var order_infos = this.state.orderInfo;
 		var ruleStore = Store.getData();
 		var rule_order = this.state.card_rule_order;
@@ -129,20 +147,20 @@ var ApprovalCard = React.createClass({
 			        <fieldset style={{background:'#FFF'}}>
 						<FormSelect label="卡类型:" name="orderAttributes" options={[{"value": "-1", "text": "请选择"},{"value": "0", "text": "发售卡"},{"value": "1", "text": "内部使用卡"},{"value": "2", "text": "返点卡"}]} validate="require-select" onChange={this.onChange} ref="orderAttributes" />
 						<div ref="saleCard" className="sale_card">
-							<FormInput label="客户企业信息:" type="text" name="company_info" ref="companyInfo" value={this.state.orderInfo.company_info} onChange={this.onChange} />
-							<FormInput label="客户经办人信息:" type="text" name="responsible_person" ref="responsiblePerson" value={this.state.orderInfo.responsible_person} onChange={this.onChange} />
-							<FormInput label="客户联系方式:" type="text" name="contact" ref="contact" value={this.state.orderInfo.contact} onChange={this.onChange}/>
-							<FormInput label="销售员姓名:" type="text" name="sale_name" ref="saleName" value={this.state.orderInfo.sale_name} onChange={this.onChange}/>
-							<FormInput label="销售部门:" type="text" name="sale_departent" ref="saleDepartent" value={this.state.orderInfo.sale_departent} onChange={this.onChange}/>
+							<FormInput label="客户企业信息:" type="text" name="company_info" ref="companyInfo" validate="require-string" placeholder="" value={this.state.orderInfo.company_info} onChange={this.onChange} />
+							<FormInput label="客户经办人信息:" type="text" name="responsible_person" validate="require-string" placeholder="" ref="responsiblePerson" value={this.state.orderInfo.responsible_person} onChange={this.onChange} />
+							<FormInput label="客户联系方式:" type="text" name="contact" ref="contact" validate="require-notempty" placeholder="" value={this.state.orderInfo.contact} onChange={this.onChange}/>
+							<FormInput label="销售员姓名:" type="text" name="sale_name" ref="saleName" validate="require-string" placeholder="" value={this.state.orderInfo.sale_name} onChange={this.onChange}/>
+							<FormInput label="销售部门:" type="text" name="sale_departent" ref="saleDepartent" validate="require-string" placeholder="" value={this.state.orderInfo.sale_departent} onChange={this.onChange}/>
 						</div>
 						<div ref="internalCard" className="internal_card" style={{display:'none'}}>
-							<FormInput label="领用部门:" type="text" name="use_departent" ref="useDepartent" value={this.state.orderInfo.use_departent} onChange={this.onChange}/>
-							<FormInput label="项目名称:" type="text" name="project_name" ref="projectName" value={this.state.orderInfo.project_name} onChange={this.onChange}/>
-							<FormInput label="用途:" type="text" name="appliaction" ref="appliaction" value={this.state.orderInfo.appliaction} onChange={this.onChange}/>
-							<FormInput label="领用人:" type="text" name="use_persion" ref="usePersion" value={this.state.orderInfo.use_persion} onChange={this.onChange}/>
+							<FormInput label="领用部门:" type="text" name="use_departent" ref="useDepartent" validate="require-string" placeholder="" value={this.state.orderInfo.use_departent} onChange={this.onChange}/>
+							<FormInput label="项目名称:" type="text" name="project_name" ref="projectName" validate="require-string" placeholder="" value={this.state.orderInfo.project_name} onChange={this.onChange}/>
+							<FormInput label="用途:" type="text" name="appliaction" ref="appliaction" validate="require-string" placeholder="" value={this.state.orderInfo.appliaction} onChange={this.onChange}/>
+							<FormInput label="领用人:" type="text" name="use_persion" ref="usePersion" validate="require-string" placeholder="" value={this.state.orderInfo.use_persion} onChange={this.onChange}/>
 						</div>
 						<div ref="discountCard" className="discount_card" style={{display:'none'}}>
-							<FormInput label="对应发单号:" type="text" name="order_number" ref="orderNumber" value={this.state.orderInfo.order_number} onChange={this.onChange}/>
+							<FormInput label="对应发单号:" type="text" name="order_number" ref="orderNumber" validate="require-string" placeholder="" value={this.state.orderInfo.order_number} onChange={this.onChange}/>
 						</div>
 						<div >
 							<FormText label="备注:" type="text" name="remark" value={this.state.orderInfo.remark} width="300" height="150" placeholder="" onChange={this.onChange} />
@@ -150,10 +168,7 @@ var ApprovalCard = React.createClass({
 			        </fieldset>
 			        <div style={{marginTop:'20px'}}>
 			            <div className="control-group">
-			                <div style={{margin: '40px 0 40px 102px'}}>
-								<button type="button" className="btn btn-success" onClick={this.onCardOrderSave}>确定</button>
-								<button className="btn btn-cancel" style={{marginLeft: '20px'}} onClick={this.props.cancleCardRecharge}>取消</button>
-							</div>
+			                <FormSubmit className="btn btn-success" onClick={this.onCardOrderSave} />
 			            </div>
 			        </div>
 		       </form>
@@ -201,8 +216,8 @@ var CardListLabel = React.createClass({
 				<FormInput label="卡名称:" type="text" name="card_name" ref="CardName" value={_this.state.cardlist[index].card_name} validate="require-notempty" onChange={_this.onChange.bind(_this,index)}/>
 				<a href="javascript:void(0);" style={{display:'inline-block',textAlign:'center',width:'80px'}} onClick={_this.choiceCard.bind(_this,index)}>选择卡库</a>
 				<FormInput label="出库数量:" type="text" name="card_rule_num" ref="CardRuleNum" value={_this.state.cardlist[index].card_rule_num} validate="require-positive-int" onChange={_this.onChange.bind(_this,index)}/>
-				<FormInput label="有效期:" type="text" name="valid_time_from" ref="valid_time_from" value={_this.state.cardlist[index].valid_time_from} validate="require-notempty" onChange={_this.onChange.bind(_this,index)}/>
-				<FormInput type="text" name="valid_time_to" ref="valid_time_to" value={_this.state.cardlist[index].valid_time_to} validate="require-notempty" onChange={_this.onChange.bind(_this,index)}/>
+				<FormInput label="有效期:" type="text" name="valid_time_from" ref="valid_time_from" value={_this.state.cardlist[index].valid_time_from} validate="require-notempty" placeholder="请输入有效期开始时间" onChange={_this.onChange.bind(_this,index)}/>
+				<FormInput type="text" name="valid_time_to" ref="valid_time_to" value={_this.state.cardlist[index].valid_time_to} validate="require-notempty" placeholder="请输入有效期结束时间" onChange={_this.onChange.bind(_this,index)}/>
 			</fieldset>
 			)
 		})
