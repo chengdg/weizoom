@@ -240,7 +240,7 @@ MALL_ORDER_SECOND_NAV = {
         {
             'name': ORDER_EXPIRED_TIME,
             'title': u'订单设置',
-            'url': '/mall2/expired_time/',
+            'url': '/mall2/order_config/',
             'permission': 'manage_order_expired_time'
         },
         {
@@ -523,12 +523,10 @@ def get_config_second_navs(request):
     if request.user.username == 'manager':
         pass
     else:
-        user_list_for_supplier_list = ('devceshi', 'wzjx001', 'ceshi001', 'weizoomxs', 'weizoommm', 'weshop', 'weizoomclub', 'weizoomshop', 'weizoombfm',
-            'jobs', 'wz01', 'wz02', 'wz03', 'test003', 'fulilaile')
-        if request.user.username not in user_list_for_supplier_list:
+        if request.user_profile.webapp_type:
+            second_navs = [CONFIG_NAV]
+        else:
             nav = {"navs":CONFIG_NAV['navs'][:-1]}
             second_navs = [nav]
-        else:
-            second_navs = [CONFIG_NAV]
 
     return second_navs
