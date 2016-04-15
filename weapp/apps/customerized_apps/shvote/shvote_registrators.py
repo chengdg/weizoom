@@ -307,6 +307,7 @@ class ShvoteCreatePlayer(resource.Resource):
 		id = app_models.Shvote.objects().get(owner_id = webapp_owner_id).id
 		vote_participance_created = app_models.ShvoteParticipance.objects().filter(member_id__lte = 0)
 		
+		member_id = 0
 		if vote_participance_created:
 			vote_participance_created_list = []
 			for p in vote_participance_created:
