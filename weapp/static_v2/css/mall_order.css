@@ -441,7 +441,7 @@
 
 }
 /*订单过期时间*/
-.xui-expiredTime-page section span{
+.xui-expiredTime-page .xui-timeSection span{
 	line-height: 24px;
 }
 .xui-expiredTime-page .xui-mall-addProductForm section{
@@ -516,6 +516,9 @@
     width: 83%;
     height: 60px;
     border: 1px solid #cececf;
+}
+.xui-expiredTime-page .wui-newses .wui-i-news:first-child{
+    border-color:#cececf;
 }
 /*.xui-expiredTime-page .xui-setShareSection .xui-i-title{
     height:40px;

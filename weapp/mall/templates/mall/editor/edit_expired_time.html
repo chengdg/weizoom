@@ -15,7 +15,7 @@
 
 	<form class="xui-mall-addProductForm" method="post" id="editForm" data-id="{% if product %}{{ product.id }}{% else %}0{% endif %}">
 		<section>
-			<div class="clearfix mt30">
+			<div class="clearfix mt30 xui-timeSection">
 				<span class="fl" for="order_expired_day">1.&nbsp;&nbsp;未付款订单：</span>
 					<input type="text" class="form-control fl xa-expiredTime" style="width:85px;" id="order_expired_day" name="order_expired_day" placeholder="" value="{% if mall_config %}{{ mall_config.order_expired_day }}{% endif %}" data-validate="norequire,,require-positive-int" maxlength="100"/>
 				<span class="fl">小时内未付款，自动取消该订单</span><span class="fl ml10 xui-color-mark">注：空为不设置</span>
@@ -47,7 +47,9 @@
 						<tr>
 							<td>选择要分享的图文：<br/><span class="c9">（仅显示正文内容）</span></td>
 							<td>
-
+								<div class="xa-wxMessageSection">
+									<a href="javascript:void(0);" class="xa-wxMessage">添加</a>
+								</div>
 							</td>
 						</tr>
 						<tr>
@@ -61,7 +63,7 @@
 						<tr>
 							<td>分享描述：</td>
 							<td>
-								<textarea class="xa-share-vali xui-shareInfo" data-validate="require-notempty::不能为空" data-force-validate="true" name="shareInfo"></textarea>
+								<textarea class="xa-share-vali xui-shareInfo" data-validate="require-notempty::不能为空" data-force-validate="true" name="shareInfo" value="">{{ share_page_config.share_describe }}</textarea>
 							</td>
 						</tr>
 					</table>
@@ -112,6 +114,19 @@
 				}
 			});
 		})
+		$('.xa-wxMessage').click(function(event) {
+			W.dialog.showDialog('W.dialog.weixin.SelectMaterialDialog',{
+				handleHideBtn:true,
+				success:function(material){
+					// this.setNewsesTitles(material.newses);
+					var newsView = new W.view.weixin.NewsView({
+						material: material
+					});
+					var $el = newsView.render();
+					$('.xa-wxMessageSection').html($el);
+				}
+			});
+		});
 	});
 </script>
 {% endblock %}

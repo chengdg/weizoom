@@ -533,7 +533,7 @@ class orderConfig(resource.Resource):
         mall_config = MallConfig.objects.filter(owner=request.manager)[0]
         share_page_config = MallShareOrderPageConfig.objects.filter(owner=request.manager)
         if share_page_config.count() == 0:
-            share_page_config = MallShareOrderPageConfig.objects.create(is_share_page=False)
+            share_page_config = MallShareOrderPageConfig.objects.create(owner=request.user, is_share_page=False)
         else:
             share_page_config = share_page_config[0]
         c = RequestContext(request, {
@@ -571,8 +571,7 @@ class orderConfig(resource.Resource):
                     is_share_page=is_share_page,
                     background_image=share_background_image,
                     share_image=share_image,
-                    share_describe=share_describe,
-                    material_id=share_material_id
+                    share_describe=share_describe
                 )
                 share_page_config = share_page_config[0]
             else:
