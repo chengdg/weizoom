@@ -516,3 +516,79 @@ class PrintOrder(resource.Resource):
             'order_count': len(order_ids)
         }
         return response.get_response()
+
+
+class orderConfig(resource.Resource):
+    """
+    订单配置
+    """
+    app = "mall2"
+    resource = "order_config"
+
+    @login_required
+    def get(request):
+        if MallConfig.objects.filter(owner=request.manager).count() == 0:
+            MallConfig.objects.create(owner=request.user, order_expired_day=24)
+
+        mall_config = MallConfig.objects.filter(owner=request.manager)[0]
+        share_page_config = MallShareOrderPageConfig.objects.filter(owner=request.manager)
+        if share_page_config.count() == 0:
+            share_page_config = MallShareOrderPageConfig.objects.create(is_share_page=False)
+        else:
+            share_page_config = share_page_config[0]
+        c = RequestContext(request, {
+            'first_nav_name': FIRST_NAV,
+            'second_navs': export.get_mall_order_second_navs(request),
+            'second_nav_name': export.ORDER_EXPIRED_TIME,
+            'mall_config': mall_config,
+            'share_page_config': share_page_config
+        })
+        return render_to_response('mall/editor/edit_expired_time.html', c)
+
+    @login_required
+    def post(request):
+        if not request.POST.get('order_expired_day', 24):
+            order_expired_day = 0
+        else:
+            order_expired_day = int(request.POST.get('order_expired_day', 24))
+        if MallConfig.objects.filter(owner=request.manager).count() > 0:
+            MallConfig.objects.filter(owner=request.manager).update(order_expired_day=order_expired_day)
+        else:
+            MallConfig.objects.create(owner=request.user, order_expired_day=24)
+
+        logging.info(u"user_id:%s, expired_time:%d" % (request.manager.id, order_expired_day))
+
+        is_share_page = request.POST.get('is_share_page', False)
+        share_background_image = request.POST.get('share_background_image', '')
+        share_material_id = request.POST.get('share_material_id', '')
+        share_image = request.POST.get('share_image', '')
+        share_describe = request.POST.get('share_describe', '')
+
+        share_page_config = MallShareOrderPageConfig.objects.filter(owner=request.manager)
+        if share_page_config.count() > 0:
+            share_page_config.update(
+                is_share_page=is_share_page,
+                background_image=share_background_image,
+                share_image=share_image,
+                share_describe=share_describe,
+                material_id=share_material_id
+            )
+            share_page_config = share_page_config[0]
+        else:
+            share_page_config = MallShareOrderPageConfig.objects.create(
+                is_share_page=is_share_page,
+                background_image=share_background_image,
+                share_image=share_image,
+                share_describe=share_describe,
+                material_id=share_material_id
+            )
+
+        mall_config = MallConfig.objects.filter(owner=request.manager)[0]
+        c = RequestContext(request, {
+            'first_nav_name': FIRST_NAV,
+            'second_navs': export.get_mall_order_second_navs(request),
+            'second_nav_name': export.ORDER_EXPIRED_TIME,
+            'mall_config': mall_config,
+            'share_page_config': share_page_config
+        })
+        return render_to_response('mall/editor/edit_expired_time.html', c)

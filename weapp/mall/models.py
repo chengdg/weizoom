@@ -96,12 +96,10 @@ class MallShareOrderPageConfig(models.Model):
 	订单完成分享挣积分信息配置
 	"""
 	owner = models.ForeignKey(User)
-	is_share_page = models.BooleanField(default=False)
-	page_title = models.CharField(max_length=1024, default='')
+	is_share_page = models.BooleanField(default=False) # 是否提示分享挣积分
 	background_image = models.CharField(max_length=1024, default='')
-	share_content = models.TextField(default='')
 	share_image = models.CharField(max_length=1024, default='')
-	share_abstract = models.TextField(default='')
+	share_describe = models.TextField(default='')
 	material_id = models.IntegerField(default=0) #图文领取记录图文id
 	created_at = models.DateTimeField(auto_now_add=True)
 

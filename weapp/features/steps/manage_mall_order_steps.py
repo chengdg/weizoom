@@ -82,7 +82,7 @@ def step_impl(context, action, user, order_code, payment_time):
 # @when(u"{user}设置订单过期时间{order_expired_day}天")
 @when(u"{user}设置未付款订单过期时间{order_expired_hour}小时")
 def step_impl(context, user, order_expired_hour):
-    url = '/mall2/expired_time/'
+    url = '/mall2/order_config/'
     data = {
         "order_expired_day": order_expired_hour
     }
