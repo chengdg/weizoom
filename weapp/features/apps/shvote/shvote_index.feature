@@ -69,7 +69,7 @@ Background:
 #		}
 #	"""
 
-@mall2 @apps @shvote @shvote_top @aix
+@mall2 @apps @shvote @shvote_top
 Scenario:1 微信用户浏览高级投票活动主页
 	Given jobs登录系统
 #	When jobs审核通过'bill'

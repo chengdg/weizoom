@@ -413,7 +413,7 @@ def __Update_Group(context,text,page_id,shvote_id):
 #     return search_response
 
 
-@when(u'{user}新建高级微信投票活动')
+@when(u'{user}新建微信高级投票活动')
 def create_Shvote(context,user):
     text_list = json.loads(context.text)
     #访问页面，获得分配的project_id

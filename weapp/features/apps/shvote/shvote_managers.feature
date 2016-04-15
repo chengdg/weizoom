@@ -276,7 +276,7 @@ Scenario:5 有微信用户报名参与活动并通过审核
 		}]
 		"""
 
-@mall2 @apps @shvote @shvote_top @aix
+@mall2 @apps @shvote @shvote_top
 Scenario:6 微信用户浏览高级投票活动主页
 	Given jobs登录系统
 	When jobs审核通过'bill'

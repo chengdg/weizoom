@@ -98,7 +98,7 @@ Scenario:2 新建微信投票活动,活动已结束
 		}]
 		"""
 
-@mall2 @apps @shvote @add_shvote @aix
+@mall2 @apps @shvote @add_shvote
 Scenario:3 新建微信投票活动，多个分组，多个活动进行中
 	#选手分组-多分组
 	#状态-进行中
