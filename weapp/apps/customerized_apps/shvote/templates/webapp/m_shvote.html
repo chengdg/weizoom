@@ -396,7 +396,7 @@
 				<div class="wui-rank-voteLef wa-vote-left">
 					<span>{ result_list_count }</span>票
 				</div>
-				<div class="wui-rank-voteRig wa-ivote" data-id="{ member_id }">
+				<div class="wui-rank-voteRig wa-ivote" data-id={ id }>
 					<button type="button" class="wui-vote-btn">投票</button>
 				</div>
 			</div> 
@@ -494,7 +494,8 @@
         	var that = $(this);
             if(voteLock) return false;
             voteLock = true;
-            var vote_to = $(this).attr('data-member'); 
+            var vote_to = $(this).attr('data-id'); 
+            console.log(vote_to);
             W.getApi().call({
                 app: 'm/apps/shvote',
                 resource: 'shvote_participance',
@@ -617,7 +618,6 @@
 		                result_list_name : result[i].name,
 		                result_list_count : result[i].count,
 		                result_list_icon : result[i].icon,
-		                member_id : result[i].member_id,
 		                id : result[i].id
 		            });   
 		        $('.wa-rank-list').append(s);
