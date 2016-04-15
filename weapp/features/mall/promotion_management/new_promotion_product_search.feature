@@ -143,7 +143,7 @@ Background:
 			"start_date": "2天前",
 			"end_date": "1天前",
 			"coupon_id_prefix": "coupon1_id_",
-			"coupon_product": "单品券,商品2",
+			"coupon_product": "单品券,商品2"
 		},{
 			"name": "单品券02",
 			"money": 5,
