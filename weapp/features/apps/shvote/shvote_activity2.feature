@@ -42,11 +42,11 @@ Feature: 高级投票活动
 Background:
 	Given jobs登录系统
 	When jobs新建微信高级投票活动
-		When jobs新建微信高级投票活动
 		"""
 		[{
 			"title":"微信高级投票-进行中",
-			"group":["初中组","高中组"],
+			"groups":["初中组","高中组"],
+			"rule": "高级投票规则",
 			"desc":"高级投票活动介绍",
 			"start_date":"2天前",
 			"end_date":"2天后",
@@ -82,53 +82,78 @@ Background:
 				}]
 		}]
 		"""
+
 	When bill关注jobs的公众号
 	When bill访问jobs的webapp
+	When bill在微信中向jobs的公众号发送消息'微信高级投票'
+	Then bill收到自动回复'高级微信投票活动1单图文'
+	When bill点击图文"高级微信投票活动1单图文"进入高级微信投票活动页面
 	When bill参加高级投票报名活动
 	"""
 		{
 			"headImg":"bill_head.jpg",
 			"name":"bill",
-			"group":"初中组",
-			"number":"003"	
+			"group":["初中组"],
+			"number":"003",	
+			"details":"bill的产品好",
+			"detail_pic":["pic1.jpg","pic2.jpg"]
 		}
 	"""
-	When dill关注jobs的公众号
-	When dill访问jobs的webapp
-	When dill参加高级投票报名活动
+	When tom关注jobs的公众号
+	When tom访问jobs的webapp
+	When tom在微信中向jobs的公众号发送消息'微信高级投票'
+	Then tom收到自动回复'高级微信投票活动1单图文'
+	When tom点击图文"高级微信投票活动1单图文"进入高级微信投票活动页面
+	When tom参加高级投票报名活动
 	"""
 		{
-			"headImg":"dill_head.jpg",
-			"name":"dill",
-			"group":"初中组",
-			"number":"002"	
+			"headImg":"tom_head.jpg",
+			"name":"tom",
+			"group":["初中组"],
+			"number":"002",	
+			"details":"tom的产品好",
+			"detail_pic":["pic3.jpg","pic4.jpg"]
 		}
 	"""
-	When leo关注jobs的公众号
-	When leo访问jobs的webapp
-	When leo参加高级投票报名活动
+	When zhouxun关注jobs的公众号
+	When zhouxun访问jobs的webapp
+	When zhouxun参加高级投票报名活动
 	"""
 		{
-			"headImg":"leo_head.jpg",
-			"name":"leo",
-			"group":"高中组",
-			"number":"001"	
+			"headImg":"zhouxun_head.jpg",
+			"name":"zhouxun",
+			"group":["高中组"],
+			"number":"003",	
+			"details":"zhouxun的产品好",
+			"detail_pic":["pic5.jpg","pic6.jpg"]
 		}
 	"""
 
 
-@mall2 @apps @shvote @shvote_activity
+@mall2 @apps @shvote @shvote_activity @yang
 Scenario:1 管理员删除微信用户提交高级投票申请，列表中消失
 	Given jobs登录系统
-	When jobs审核通过'bill'
-	When jobs删除'dill'
+	When jobs于高级微信投票活动审核通过'bill'
+	When jobs于高级微信投票活动删除'tom'
 	Then jobs能获得报名详情列表
 		"""
 		[{
+			"headImg":"bill_head.jpg",
 			"player":"bill",
 			"votes":0,
 			"number":"001",
-			"status":"审核通过"
+			"start_date":"今天",
+			"status":"审核通过",
+			"actions":["查看"]
+		},{
+			"headImg":"zhouxun_head.jpg",
+			"player":"zhouxun",
+			"votes":0,
+			"number":"003",
+			"start_date":"今天",
+			"status":"待审核",
+			"actions":["审核通过","删除","查看"]
+
 		}]
 		"""
 	Then jobs获得微信高级投票活动列表
@@ -136,7 +161,7 @@ Scenario:1 管理员删除微信用户提交高级投票申请，列表中消失
 		[{
 			"name":"微信高级投票-进行中",
 			"vote_count":0,
-			"participant_count":1,
+			"participant_count":2,
 			"start_date":"2天前",
 			"end_date":"2天后",
 			"status":"进行中",
@@ -147,7 +172,7 @@ Scenario:1 管理员删除微信用户提交高级投票申请，列表中消失
 @mall2 @apps @shvote @shvote_activity
 Scenario:2 没有有微信用户报名参与活动和有微信用户报名参与活动，但是均未通过审核
 	Given jobs登录系统
-	When jobs审核不通过'bill'
+	When jobs于高级微信投票活动删除'bill'
 	When bill关注jobs的公众号
 	When bill访问jobs的webapp
 	When bill在微信中向jobs的公众号发送消息'微信高级投票'
@@ -166,9 +191,9 @@ Scenario:3 微信用户报名参与活动并通过审核在活动主页的显示
 	#审核通过的用户
 
 	Given jobs登录系统
-	When jobs审核通过'bill'
-	When jobs审核通过'dill'
-	When jobs审核通过'leo'
+	When jobs于高级微信投票活动审核通过'bill'
+	When jobs于高级微信投票活动审核通过'tom'
+	When jobs于高级微信投票活动审核通过'zhouxun'
 	When tom关注jobs的公众号
 	When tom访问jobs的webapp
 	When tom在微信中向jobs的公众号发送消息'微信高级投票'
@@ -177,23 +202,23 @@ Scenario:3 微信用户报名参与活动并通过审核在活动主页的显示
 	Then tom获得微信高级投票活动主页内容'初中组'
 		"""
 		[{
-			"group":"初中组",
+			"groups":"初中组",
 			"number":"003",
 			"player":"bill",
 			"votes":0
 		},{
-			"group":"初中组",
+			"groups":"初中组",
 			"number":"002",
-			"player":"dill",
+			"player":"tom",
 			"votes":0
 		}]
 		"""
 	Then tom获得微信高级投票活动主页内容'高中组'
 		"""
 		[{
-			"group":"高中组",
+			"groups":"高中组",
 			"number":"001",
-			"player":"leo",
+			"player":"zhouxun",
 			"votes":0
 		}]
 		"""
@@ -205,7 +230,7 @@ Scenario:4 微信用户浏览高级投票活动主页，获得三维数据
 	#多增加一个人为其中的选手投票，三维数据的变化
 	#删除选手三维数据变化
 	Given jobs登录系统
-	When jobs审核通过'bill'
+	When jobs于高级微信投票活动审核通过'bill'
 	When bill关注jobs的公众号
 	When bill访问jobs的webapp
 	When bill在微信中向jobs的公众号发送消息'微信高级投票'
@@ -235,14 +260,14 @@ Scenario:4 微信用户浏览高级投票活动主页，获得三维数据
 			"end_date":"2天后"
 		}
 		"""
-	When jobs删除'dill'
-	When guo关注jobs的公众号
-	When guo访问jobs的webapp
-	When guo在微信中向jobs的公众号发送消息'微信高级投票'
-	Then guo收到自动回复'高级投票活动1单图文'
-	When guo点击图文'高级投票活动1单图文'进入高级投票活动页面
-	When guo在高级投票中为'bill'投票
-	Then guo获得微信高级投票活动内容
+	When jobs于高级微信投票活动删除'tom'
+	When zhouxun关注jobs的公众号
+	When zhouxun访问jobs的webapp
+	When zhouxun在微信中向jobs的公众号发送消息'微信高级投票'
+	Then zhouxun收到自动回复'高级投票活动1单图文'
+	When zhouxun点击图文'高级投票活动1单图文'进入高级投票活动页面
+	When zhouxun在高级投票中为'bill'投票
+	Then zhouxun获得微信高级投票活动内容
 		"""
 		{
 			"total_participanted_count":2,
@@ -253,7 +278,7 @@ Scenario:4 微信用户浏览高级投票活动主页，获得三维数据
 		"""
 
 
-@mall2 @apps @shvote @shvote_activity
+@mall2 @apps @shvote @shvote_activity 
 Scenario:5 微信用户可以给参与者投票
 	#用户可以对参与者进行投票
 	#该用户再次对参与者进行投票，无法进行第二次投票，获取到的是原来的数据
@@ -262,15 +287,15 @@ Scenario:5 微信用户可以给参与者投票
 	#不同用户获得票数相同的排名，谁先报名谁排在第一位
 	#不同的人为同一个选手进行投票票数会加1
 	Given jobs登录系统
-	When jobs审核通过'bill'
-	When jobs审核通过'dill'
+	When jobs于高级微信投票活动审核通过'bill'
+	When jobs于高级微信投票活动审核通过'tom'
 	When tom关注jobs的公众号
 	When tom访问jobs的webapp
 	When tom在微信中向jobs的公众号发送消息'微信高级投票'
 	Then tom收到自动回复'高级投票活动1单图文'
 	When tom点击图文'高级投票活动1单图文'进入高级投票活动页面
 	When tom在高级投票中为'bill'投票
-	Then jobs获得微信高级投票活动主页排行榜列表
+	Then tom获得微信高级投票活动主页排行榜列表
 	"""
 		[{
 			"number":"001",
@@ -278,24 +303,28 @@ Scenario:5 微信用户可以给参与者投票
 			"votes":1
 		},{
 			"number":"002",
-			"name":"dill",
+			"name":"tom",
+			"votes":0
+		},{
+			"number":"003",
+			"name":"zhouxun",
 			"votes":0
 		}]
 	"""
-	Then jobs获得微信高级投票活动单独页面排行榜
+	Then tom获得微信高级投票活动单独页面排行榜
 		"""
 		[{
-			"group":"初中组",
-			"ranking":1,
-			"number":"002",
-			"player":"bill",
-			"votes":0
+			"number":"001",
+			"name":"bill",
+			"votes":1
 		},{
-			"group":"初中组",
-			"ranking":2,
 			"number":"002",
-			"player":"dill",
-			"votes":0
+			"name":"tom",
+			"votes":1
+		},{
+			"number":"003",
+			"name":"zhouxun",
+			"votes":1
 		}]
 		"""
 	Then jobs获得微信高级投票活动列表
@@ -311,7 +340,7 @@ Scenario:5 微信用户可以给参与者投票
 		}]
 		"""
 	When tom在高级投票中再次为'bill'投票
-	Then jobs获得微信高级投票活动主页排行榜列表
+	Then tom获得微信高级投票活动主页排行榜列表
 	"""
 		[{
 			"number":"001",
@@ -319,12 +348,16 @@ Scenario:5 微信用户可以给参与者投票
 			"votes":1
 		},{
 			"number":"002",
-			"name":"dill",
-			"votes":0
+			"name":"tom",
+			"votes":1
+		},{
+			"number":"003",
+			"name":"zhouxun",
+			"votes":1
 		}]
 	"""
 
-	Then jobs获得微信高级投票活动列表
+	Then tom获得微信高级投票活动列表
 		"""
 		[{
 			"name":"微信高级投票-进行中",
@@ -336,12 +369,13 @@ Scenario:5 微信用户可以给参与者投票
 			"actions": ["关闭","链接","预览","报名详情","查看结果"]
 		}]
 		"""
-	When guo访问jobs的webapp
-	When guo在微信中向jobs的公众号发送消息'微信高级投票'
-	Then guo收到自动回复'高级投票活动1单图文'
-	When guo点击图文'高级投票活动1单图文'进入高级投票活动页面
-	When guo在高级投票中为'dill'投票
-	Then jobs获得微信高级投票活动主页排行榜列表
+	When zhouxun关注jobs的公众号
+	When zhouxun访问jobs的webapp
+	When zhouxun在微信中向jobs的公众号发送消息'微信高级投票'
+	Then zhouxun收到自动回复'高级投票活动1单图文'
+	When zhouxun点击图文'高级投票活动1单图文'进入高级投票活动页面
+	When zhouxun在高级投票中为'tom'投票
+	Then zhouxun获得微信高级投票活动主页排行榜列表
 	"""
 		[{
 			"number":"001",
@@ -349,27 +383,32 @@ Scenario:5 微信用户可以给参与者投票
 			"votes":1
 		},{
 			"number":"002",
-			"name":"dill",
+			"name":"tom",
+			"votes":1
+		},{
+			"number":"003",
+			"name":"zhouxun",
 			"votes":1
 		}]
 	"""
-	Then jobs获得微信高级投票活动单独页面排行榜
+	Then zhouxun获得微信高级投票活动单独页面排行榜
 		"""
 		[{
-			"group":"初中组",
+			"groups":"初中组",
 			"ranking":1,
 			"number":"002",
 			"player":"bill",
 			"votes":1
 		},{
-			"group":"初中组",
+			"groups":"初中组",
 			"ranking":2,
 			"number":"002",
-			"player":"dill",
+			"player":"tom",
 			"votes":1
 		}]
 		"""
 
+	jobs登录系统
 	Then jobs获得微信高级投票活动列表
 		"""
 		[{
@@ -382,12 +421,13 @@ Scenario:5 微信用户可以给参与者投票
 			"actions": ["关闭","链接","预览","报名详情","查看结果"]
 		}]
 		"""
-	When lily访问jobs的webapp
-	When lily在微信中向jobs的公众号发送消息'微信高级投票'
-	Then lily收到自动回复'高级投票活动1单图文'
-	When lily点击图文'高级投票活动1单图文'进入高级投票活动页面
-	When lily在高级投票中为'bill'投票
-	Then jobs获得微信高级投票活动主页排行榜列表
+	When mayun关注jobs的公众号
+	When mayun访问jobs的webapp
+	When mayun在微信中向jobs的公众号发送消息'微信高级投票'
+	Then mayun收到自动回复'高级投票活动1单图文'
+	When mayun点击图文'高级投票活动1单图文'进入高级投票活动页面
+	When mayun在高级投票中为'bill'投票
+	Then mayun获得微信高级投票活动主页排行榜列表
 	"""
 		[{
 			"number":"001",
@@ -395,10 +435,12 @@ Scenario:5 微信用户可以给参与者投票
 			"votes":2
 		},{
 			"number":"002",
-			"name":"dill",
+			"name":"tom",
 			"votes":1
 		}]
 	"""
+
+
 	Then jobs获得微信高级投票活动列表
 		"""
 		[{
@@ -420,8 +462,8 @@ Scenario:6 微信用户搜索选手
 		#模糊搜索
 		#不相关用户的搜索
 	Given jobs登录系统
-	When jobs审核通过'bill'
-	When jobs审核通过'dill'
+	When jobs于高级微信投票活动审核通过'bill'
+	When jobs于高级微信投票活动审核通过'tom'
 	When tom关注jobs的公众号
 	When tom访问jobs的webapp
 	When tom在微信中向jobs的公众号发送消息'微信高级投票'
@@ -437,19 +479,16 @@ Scenario:6 微信用户搜索选手
 		}]
 	"""
 
-	When tom搜索选手'ill'
+	When tom搜索选手'u'
 	"""
 		[{
 			"number":"001",
-			"name":"bill",
+			"name":"zhouxun",
 			"votes":0
-		},{
-			"number":"002",
-			"name":"dill",
-			"votes":0
+
 		}]
 	"""
-	When tom搜索选手'tom'
+	When tom搜索选手'bigs'
 	Then tom获得微信高级投票活动排行榜列表
 	"""
 		[]
@@ -459,7 +498,7 @@ Scenario:6 微信用户搜索选手
 @mall2 @apps @shvote @shvote_activity
 Scenario:7 管理员查看选手详情
 	Given jobs登录系统
-	When jobs审核通过"bill"
+	When jobs于高级微信投票活动审核通过"bill"
 	Then jobs获得'bill'的详情
 		"""
 		[{
@@ -475,31 +514,12 @@ Scenario:7 管理员查看选手详情
 	Then tom收到自动回复'高级投票活动1单图文'
 	When tom点击图文'高级投票活动1单图文'
 	When tom在高级投票中为'bill'投票
-	Then jobs获得'bill'的详情
+	Then tom获得'bill'的详情
 		"""
 		[{
 			"player":"bill",
 			"number":"001",
 			"votes":1,
 			"detail":"123456789"
-		}]
-		"""
-
-
-@mall2 @apps @shvote @shvote_activity
-Scenario:8 管理员通过微信用户提交高级投票申请
-	When bill关注jobs的公众号
-	When bill访问jobs的webapp
-	When bill在微信中向jobs的公众号发送消息'微信高级投票'
-	Then bill收到自动回复'高级投票活动1单图文'
-	When bill点击图文"高级投票活动1单图文"进入高级投票活动页面
-	Then bill能获得微信高级投票活动介绍
-		"""
-		[{
-			"title":"微信高级投票1",
-			"start_date":"2天前",
-			"end_date":"2天后",
-			"desc":"高级投票活动介绍",
-			"pic":"1.jpg"
 		}]
 		"""
