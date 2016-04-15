@@ -168,12 +168,14 @@ $(document).ready(function() {
 				img_des_srcs: JSON.stringify(img_arr)
 			},
 			success: function(resp){
-				console.log("创建成功");
+				W.showHint('success', '创建选手成功！');
 				href = "/apps/shvote/shvote_registrators/?id={{id}}";
-				window.location.href = href;
+				setTimeout(function(){
+					window.location.href = href
+				},3000);
 			},
 			error: function(error){
-				console.log('创建失败');
+				W.showHint('error', '创建选手失败！');
 			}
 		});
 	});
