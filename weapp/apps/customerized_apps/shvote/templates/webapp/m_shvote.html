@@ -117,6 +117,7 @@
 		padding-bottom: 7px;
 	}
 	.wui-search-input{
+		padding: 1px;		
 		height: 30px;
 		width: 80%;
 		border: 1px solid #ff4200;
@@ -127,17 +128,16 @@
 		background-size: 20px;
 	}
 	.wui-searchBtn{
+		border: none;
 		height: 34px;
 		border-radius: 2px;
 		color: #fff;
-		border: none;
 		background: #ff4200;
 		position: absolute;
 		right: 0;
 		top: 0;
 		padding: 0 15px;
-		outline: none;
-	
+		outline: none;	
 	}
 	.wui-rank-item{
 		width: 48%;
@@ -268,7 +268,7 @@
 		border: none;
 	}
 	.wui-vote-btn{
-		width: 3rem;
+		width: 3.8rem;
 		height: 2rem;
 		background-color: #ff4200;
 		color: #FFF;
@@ -586,7 +586,7 @@
 				search_name: search_name
             },
             success: function(data) {
-				$('.wa-rank-list').html('');
+           		$('.wa-rank-list').html('');  	
                 var result = data.result_list;
                 user_detail = result;
                 var tpl = new Template($('#tpl').html());
@@ -598,7 +598,7 @@
 		                result_list_icon : result[i].icon,
 		                member_id : result[i].member_id,
 		                result_list_member_id : result[i].member_id
-		            });
+		            });   
 		        $('.wa-rank-list').append(s);
 	        	}
             },
