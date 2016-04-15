@@ -23,20 +23,20 @@ def step_impl(context, user, rule_name):
 	response = context.client.get('/order/api/order_detail/?order_id={}'.format(order_id))
 	actual = json.loads(response.content)['data']['order_item_list']
 	actual_list = []
-	print type(json.loads(actual))
-	print actual,888888888
 	for order_item in json.loads(actual):
 		actual_list.append({
 			'name':	order_item.get('name'),
-			'money': "%.2f"%(float(order_item.get('money'))),
+			'money': u"%.2f"%(float(order_item.get('money'))),
 			'num':	u"%d"%int(order_item.get('count')),
-			'total_money':	"%.2f"%(float(order_item.get('total_money'))),
+			'total_money':	u"%.2f"%(float(order_item.get('total_money'))),
 			'type':	order_item.get('card_kind'),
 			"is_limit": order_item.get('valid_restrictions'),
 			'card_range': order_item.get('card_range'),
 		})
 	print actual_list,7777777777
+	print expected,999999999
 	bdd_util.assert_list(expected, actual_list)
+	print "==================="
 
 
 @Then(u"{user}能获得'{rule_name}'微众卡列表")
