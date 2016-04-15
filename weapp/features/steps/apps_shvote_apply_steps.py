@@ -67,7 +67,7 @@ def __get_actions(status):
 
 def __get_into_shvote_pages(context,webapp_owner_id,shvote_id,openid):
 	#进入高级微信投票活动页面
-	url = '/m/apps/shvote/m_shvote/?webapp_owner_id=%s&id=%s&fmt=%s&opid=%s' % (webapp_owner_id, shvote_id, context.member.token,openid)
+	url = '/m/apps/shvote/m_shvote/?webapp_owner_id=%s&id=%s&opid=%s' % (webapp_owner_id, shvote_id,openid)
 	url = bdd_util.nginx(url)
 	context.link_url = url
 	response = context.client.get(url)
@@ -90,7 +90,7 @@ def __get_into_shvote_pages(context,webapp_owner_id,shvote_id,openid):
 
 def __get_into_shvote_signup_pages(context,webapp_owner_id,shvote_id,openid):
 	#进入高级微信投票-- 报名，填写个人资料页面
-	url = '/m/apps/shvote/shvote_participance/?webapp_owner_id=%s&id=%s&fmt=%s&opid=%s' % (webapp_owner_id, shvote_id, context.member.token,openid)
+	url = '/m/apps/shvote/shvote_participance/?webapp_owner_id=%s&id=%s&opid=%s' % (webapp_owner_id, shvote_id,openid)
 	url = bdd_util.nginx(url)
 	context.link_url = url
 	response = context.client.get(url)#模拟获取填写资料页面
@@ -155,24 +155,18 @@ def step_impl(context, webapp_user_name, title):
 	print ">>>> Get Into Shvote Mobile Page [start]>>>>"
 	print "webapp_owner_id:"+webapp_owner_id
 	print "shvote_id:"+shvote_id
-	print "Response[record_id]:"+response.context['record_id']
 	print "<<<< Get Into Shvote Mobile Page [ end ] <<<<"
-	record_id = str(response.context['record_id'])
-	context.record_id = record_id
-	context.webapp_owner_id = webapp_owner_id
 	context.shvote_id = shvote_id
 	context.openid = openid
 
 @When(u'{webapp_user_name}参加高级投票报名活动')
 def step_impl(context, webapp_user_name):
-	record_id = context.record_id
-	webapp_owner_id = context.webapp_owner_id
+	webapp_owner_id = str(context.webapp_owner_id)
 	shvote_id = context.shvote_id
 	openid = context.openid
 	print ">>>> Shvote Mobile Page --- Sign Up ----[start]>>>>"
 	print "webapp_owner_id:"+webapp_owner_id
 	print "shvote_id:"+shvote_id
-	print "record_id:"+record_id
 	print "<<<< Shvote Mobile Page --- Sign Up ----[ end ] <<<<"
 	response = __get_into_shvote_signup_pages(context,webapp_owner_id,shvote_id,openid)#resp.context=> data ; resp.content => Http Text
 
@@ -270,7 +264,7 @@ def step_impl(context,webapp_user_name):
 
 
 		#针对后端的 request.GET['id']在url里把id当做参数传过去，id为活动id
-		url ="/apps/shvote/api/shvote_registrators/?&id={}&design_mode={}&version={}&count_per_page={}&page={}&enable_paginate={}&fmd={}&fmt={}".format(shvote_id,design_mode,version,count_per_page,page,enable_paginate,openid,context.member.token)
+		url ="/apps/shvote/api/shvote_registrators/?&id={}&design_mode={}&version={}&count_per_page={}&page={}&enable_paginate={}&fmd={}".format(shvote_id,design_mode,version,count_per_page,page,enable_paginate,openid)
 		response = context.client.get(url)
 		items = json.loads(response.content)['data']['items']#[::-1]
 
