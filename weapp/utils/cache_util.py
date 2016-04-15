@@ -25,10 +25,12 @@ def retry_delete(attempt):
 			att = 0
 			while att < attempt:
 				try:
-					logging.info(u"function delete_cache: delete key %s record" % args[0])
+					if not settings.IS_UNDER_BDD:
+						logging.info(u"function delete_cache: delete key %s record" % args[0])
 					return func(*args, **kw)
 				except DeleteCacheException as e:
-					logging.info(u"function delete_cache error: delete key %s record, error:%s" % (args[0], e))
+					if not settings.IS_UNDER_BDD:
+						logging.info(u"function delete_cache error: delete key %s record, error:%s" % (args[0], e))
 					att += 1
 		return wrapper
 	return decorator
@@ -66,7 +68,8 @@ def get_many(keys):
 def delete_cache(key):
 	delete_count = cache.delete(key)
 	delete_api_count = cache.delete("api"+key)
-	logging.info(u"function delete_cache: delete key %s record; delete_count:%s;delete_api_count:%s" % (key, delete_count, delete_api_count))
+	if not settings.IS_UNDER_BDD:
+		logging.info(u"function delete_cache: delete key %s record; delete_count:%s;delete_api_count:%s" % (key, delete_count, delete_api_count))
 	if not delete_count or not delete_api_count:
 		raise DeleteCacheException('delete_cache return 0')
 
@@ -74,7 +77,8 @@ def delete_cache(key):
 def delete_pattern(key):
 	delete_count = cache.delete_pattern(key)
 	delete_api_count = cache.delete_pattern("api"+key)
-	logging.info(u"function delete_cache: delete key %s record; delete_count:%s;delete_api_count:%s" % (key, delete_count, delete_api_count))
+	if not settings.IS_UNDER_BDD:
+		logging.info(u"function delete_cache: delete key %s record; delete_count:%s;delete_api_count:%s" % (key, delete_count, delete_api_count))
 	if not delete_count or not delete_api_count:
 		raise DeleteCacheException('delete_pattern return 0')
 

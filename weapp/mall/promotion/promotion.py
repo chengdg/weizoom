@@ -119,7 +119,7 @@ class Promotion(resource.Resource):
                 if promotion:
                     # 单品券是否可选更具促销名，弹窗模板使用mall_select_coupon_product_dialog
                     if promotion.type == models.PROMOTION_TYPE_COUPON:
-                        product_data['promotion_name'] = u'单品券'
+                        product_data['promotion_name'] = u'多商品券'
                     else:
                         product_data['promotion_name'] = promotion.name
 
