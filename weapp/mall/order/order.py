@@ -558,30 +558,31 @@ class orderConfig(resource.Resource):
 
         logging.info(u"user_id:%s, expired_time:%d" % (request.manager.id, order_expired_day))
 
-        is_share_page = request.POST.get('is_share_page', False)
-        share_background_image = request.POST.get('share_background_image', '')
+        is_share_page = request.POST.get('isShowPage', False)
+        share_background_image = request.POST.get('backgroundImage', '')
         share_material_id = request.POST.get('share_material_id', '')
-        share_image = request.POST.get('share_image', '')
-        share_describe = request.POST.get('share_describe', '')
+        share_image = request.POST.get('shareImage', '')
+        share_describe = request.POST.get('shareInfo', '')
 
         share_page_config = MallShareOrderPageConfig.objects.filter(owner=request.manager)
-        if share_page_config.count() > 0:
-            share_page_config.update(
-                is_share_page=is_share_page,
-                background_image=share_background_image,
-                share_image=share_image,
-                share_describe=share_describe,
-                material_id=share_material_id
-            )
-            share_page_config = share_page_config[0]
-        else:
-            share_page_config = MallShareOrderPageConfig.objects.create(
-                is_share_page=is_share_page,
-                background_image=share_background_image,
-                share_image=share_image,
-                share_describe=share_describe,
-                material_id=share_material_id
-            )
+        if is_share_page:
+            if share_page_config.count() > 0:
+                share_page_config.update(
+                    is_share_page=is_share_page,
+                    background_image=share_background_image,
+                    share_image=share_image,
+                    share_describe=share_describe,
+                    material_id=share_material_id
+                )
+                share_page_config = share_page_config[0]
+            else:
+                share_page_config = MallShareOrderPageConfig.objects.create(
+                    is_share_page=is_share_page,
+                    background_image=share_background_image,
+                    share_image=share_image,
+                    share_describe=share_describe,
+                    material_id=share_material_id
+                )
 
         mall_config = MallConfig.objects.filter(owner=request.manager)[0]
         c = RequestContext(request, {
