@@ -105,6 +105,8 @@ class QrcodeEffectInfo(api_resource.ApiResource):
 			else:
 				items.append({
 					'setting_id': setting_id,
+					'weapp_name': setting.name,
+					'weapp_created_at': datetime.strftime(setting.created_at, "%Y-%m-%d %H:%M:%S"),
 					'pay_money': '%.2f' % 0,
 					'count': 0,
 					'cash': '%.2f' % 0,
