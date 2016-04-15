@@ -157,6 +157,17 @@
 		overflow: hidden;
 		position: relative;
 	}
+	.wui-rank-pic img{
+		position: relative;
+		z-index: 1;
+	}
+	.wui-rank-pic .wui-img-mask{
+		width: 100%;
+		height: 100%;
+		position: absolute;
+		background: transparent;
+		z-index: 99;
+	}
 	.wui-rank-name{
 		background: rgba(0,0,0,0.5);
 		width: 100%;
@@ -166,6 +177,7 @@
 		position: absolute;
 		left: 0;
 		bottom: 0;
+		z-index: 100;
 	}
 	.wui-rank-vote{
 		overflow: hidden;
@@ -373,6 +385,7 @@
 	<div class="wui-rank-item wa-rank-item" data-id={ id }>
 		<div class="wui-item-content">
 			<div class="wui-rank-pic wa-rank-pic">
+				<div class="wui-img-mask"></div>
 				<img src={ result_list_icon }>
 				<div class="wui-rank-name">
 					<span class="wui-rank-serial-number">{ result_list_serial_number }</span> 
