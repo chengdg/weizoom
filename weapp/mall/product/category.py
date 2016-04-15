@@ -69,11 +69,11 @@ class CategoryProducts(resource.Resource):
         products = list(mall_models.Product.objects.filter(
             owner=request.manager, is_deleted=False, shelve_type=mall_models.PRODUCT_SHELVE_TYPE_ON,id__in=product_ids))
 
-
-        mall_models.Product.fill_display_price(products)
         mall_models.Product.fill_details(request.manager,
                                          products,
-                                         {'with_sales': True})
+                                         {"with_product_model": True,
+                                          "with_model_property_info": True,
+                                          'with_sales': True})
         result_products = []
         for product in products:
             result_products.append({
