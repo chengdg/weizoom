@@ -23,18 +23,6 @@ import json
 import copy
 
 
-
-def __shvote_name2id(name, title=None):
-    """
-    给高级投票项目的名字，返回id元祖
-    返回（related_page_id,group_group中id）
-    """
-    if title:
-        name = material_models.News.objects.get(title=title).url
-    shvote = shvote_models.Shvote.objects.get(name=name)
-    return shvote.related_page_id,shvote.id
-
-
 def __name2status(name):
     """
     高级投票： 文字 转 状态值
@@ -45,38 +33,6 @@ def __name2status(name):
     else:
         return -1
 
-@When(u"{webapp_user_name}在高级投票中为'{target_user_name}'投票")
-def step_impl(context, webapp_user_name, target_user_name):
-    user = User.objects.get(id=context.webapp_owner_id)
-    openid = "%s_%s" % (webapp_user_name, user.username)
-    _, record_id = __shvote_name2id('', title)
-    url = '/m/apps/shvote/m_shvote/?webapp_owner_id=%s&id=%s&fmt=%s&opid=%s' % (context.webapp_owner_id, str(record_id), context.member.token, openid)
+# @When(u"{webapp_user_name}在高级投票中为'{target_user_name}'投票")
+# def step_impl(context, webapp_user_name, target_user_name):
 
-    #获取页面
-    response = context.client.get(url)
-    while response.status_code == 302:
-        redirect_url = response['Location']
-        response = context.client.get(redirect_url)
-
-@then(u"{webapp_user_name}获得微信高级投票活动'{name}'的内容")
-def step_impl(context, webapp_user_name, name):
-    #获取动态数据
-    _, record_id = __shvote_name2id(name)
-    dynamic_url = '/m/apps/shvote/api/m_shvote/?_method=get'
-    param = {
-        "webapp_owner_id": context.webapp_owner_id,
-        "recordId": record_id,
-        "fmt": context.member.token
-    }
-    response = context.client.get(dynamic_url, param)
-    while response.status_code == 302:
-        redirect_url = response['Location']
-        response = context.client.get(redirect_url)
-
-    expected_data = json.loads(context.text)
-    result_data = json.loads(response.content)['data']['record_info']
-    expected_data['end_date'] = bdd_util.get_date_str(expected_data['end_date'])
-
-    actual_data = {k: v for k, v in result_data.items() if k in expected_data.keys()}
-
-    bdd_util.assert_dict(expected_data,actual_data)
