@@ -18,8 +18,7 @@ from core.exceptionutil import unicode_full_stack
 from core.upyun_util import *
 from core.jsonresponse import create_response
 from core import search_util
-from mall.promotion.utils import create_coupons
-
+from mall.promotion.utils import create_coupons, verification_multi_product_coupon
 
 COUNT_PER_PAGE = 20
 PROMOTION_TYPE_COUPON = 4
@@ -131,8 +130,16 @@ class CouponRuleInfo(resource.Resource):
         limit_product = request.POST.get('limit_product', '0')
         limit_product_id = request.POST.get('product_ids', '-1')
         if limit_product == '1':
-            limit_product_ids = limit_product_id.split(',')
-            # todo 校验
+            limit_product_ids = list(set(map(lambda x: int(x), limit_product_id.split(','))))
+            save_success, error_product_ids = verification_multi_product_coupon(request.manager, limit_product_ids)
+            if not save_success:
+                response = create_response(200)
+                response.data = {
+                    'save_success': False,
+                    'error_product_ids': error_product_ids
+                }
+                return response.get_response()
+
 
         else:
             limit_product_id = 0
@@ -184,7 +191,11 @@ class CouponRuleInfo(resource.Resource):
             promotion.status = PROMOTION_STATUS_STARTED
             promotion.save()
         create_coupons(couponRule, count, promotion)
-        return create_response(200).get_response()
+        response = create_response(200)
+        response.data = {
+            'save_success': True
+        }
+        return response.get_response()
 
 
 class CouponRuleList(resource.Resource):
