@@ -101,7 +101,8 @@ class ShvoteRegistrators(resource.Resource):
 				'count':data.count,
 				'serial_number':data.serial_number,
 				'status':data.status,
-				'created_at': data.created_at.strftime("%Y/%m/%d %H:%M")
+				'created_at': data.created_at.strftime("%Y/%m/%d %H:%M"),
+				'activity_id': data.belong_to
 				# 'created_at': data.created_at.strftime("%Y-%m-%d %H:%M:%S")
 			})
 		response_data = {
@@ -277,7 +278,15 @@ class ShvoteCreatePlayer(resource.Resource):
 		"""
 		响应GET
 		"""
+		print 44333333333333333333
+		player_id = request.GET.get('player_id',None)
 		activity_id = request.GET['id']
+
+		#查看选手
+		cur_player_info = {}
+		if player_id:
+			cur_player_info = app_models.ShvoteParticipance.objects().get(id = player_id)
+
 		shvotes = app_models.Shvote.objects().all()
 		group_list = []
 		for v in shvotes:
@@ -289,13 +298,15 @@ class ShvoteCreatePlayer(resource.Resource):
 			'second_nav_name': mall_export.MALL_APPS_SECOND_NAV,
 			'third_nav_name': "shvotes",
 			'groups': group_list,
-			'id': activity_id
+			'id': activity_id,
+			'cur_player_info': cur_player_info
 		});
 
 		return render_to_response('shvote/templates/editor/shvote_create_player.html', c)
 
 	@login_required
 	def api_post(request):
+		print 777777777777777777
 		head_img_src = request.POST['head_img_src']
 		player_name = request.POST['player_name']
 		group = request.POST['group']
