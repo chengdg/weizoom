@@ -86,7 +86,7 @@ Background:
 	When bill关注jobs的公众号
 	When bill访问jobs的webapp
 	When bill在微信中向jobs的公众号发送消息'微信高级投票'
-	When bill收到自动回复'高级微信投票活动1单图文'
+	Then bill收到自动回复'高级微信投票活动1单图文'
 	When bill点击图文'高级微信投票活动1单图文'进入高级微信投票活动页面
 	When bill参加高级投票报名活动
 	"""
@@ -102,8 +102,8 @@ Background:
 	When tom关注jobs的公众号
 	When tom访问jobs的webapp
 	When tom在微信中向jobs的公众号发送消息'微信高级投票'
-	When tom收到自动回复'高级微信投票活动1单图文'
-	When tom点击图文"高级微信投票活动1单图文"进入高级微信投票活动页面
+	Then tom收到自动回复'高级微信投票活动1单图文'
+	When tom点击图文'高级微信投票活动1单图文'进入高级微信投票活动页面
 	When tom参加高级投票报名活动
 	"""
 		{
@@ -117,9 +117,9 @@ Background:
 	"""
 	When zhouxun关注jobs的公众号
 	When zhouxun访问jobs的webapp
-	When tom在微信中向jobs的公众号发送消息'微信高级投票'
-	When tom收到自动回复'高级微信投票活动1单图文'
-	When tom点击图文"高级微信投票活动1单图文"进入高级微信投票活动页面
+	When zhouxun在微信中向jobs的公众号发送消息'微信高级投票'
+	Then zhouxun收到自动回复'高级微信投票活动1单图文'
+	When zhouxun点击图文'高级微信投票活动1单图文'进入高级微信投票活动页面
 	When zhouxun参加高级投票报名活动
 	"""
 		{
@@ -131,6 +131,7 @@ Background:
 			"detail_pic":["pic5.jpg","pic6.jpg"]
 		}
 	"""
+
 
 
 @mall2 @apps @shvote @shvote_activity @yang
