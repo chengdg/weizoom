@@ -427,3 +427,26 @@ def _get_create_coupon_qrcode(coupon_url, coupon_id):
             return '/static/coupon_qrcode/%s' % file_name
         else:
             return image_path % (BUCKETNAME, '/coupon_qrcode/%s' % file_name)
+
+
+class CouponRuleProducts(resource.Resource):
+    """
+    多商品优惠券对应的商品
+    """
+
+    app = "mall2"
+    resource = "coupon_rule_products"
+
+    def api_get(request):
+        promotion_id = request.GET.get("id", None)
+        promotion = Promotion.objects.get(id=promotion_id)
+        Promotion.fill_details(request.manager, [promotion], {
+            'with_product': True,
+            'with_concrete_promotion': True
+        })
+
+        response = create_response(200)
+        response.data = {
+            'promotion': promotion
+        }
+        return response.get_response()
