@@ -89,9 +89,13 @@ class QrcodeEffectInfo(api_resource.ApiResource):
 		for setting_id in setting_ids:
 			setting_id = int(setting_id)
 			if setting_id in setting_id2count:
-
+				setting = ChannelQrcodeSettings.objects.filter(id=setting_id)
+				if setting.count()>0:
+					setting = setting.get()
 				items.append({
 					'setting_id': setting_id,
+					'weapp_name': setting.name,
+					'weapp_created_at': datetime.strftime(setting.created_at,"%Y-%m-%d %H:%M:%S"),
 					'pay_money': '%.2f' % setting_id2count[setting_id]['pay_money'],
 					'count': setting_id2count[setting_id]['count'],
 					'cash': '%.2f' % setting_id2count[setting_id]['cash'],
