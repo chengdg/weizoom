@@ -8,7 +8,7 @@
 			width: 60px;
 		}
 		.wui-create-player{
-			height: 810px;
+			min-height: 810px;
 		    background-color: #E9EDF5;
 		}
 		.wui-create-player label{
@@ -35,14 +35,15 @@
 		}
 		.wui-upload-img-div{
 			height: 100px;
+		    margin-top: 30px;
 		}
 		.edui-default .edui-editor{
 			margin-left: 134px;
 		}
-		#swipe_images-queue{
+		#swipe_images-queue,#swipe_images_des-queue{
 			display: none;
 		}
-		#swipe_images-button{
+		#swipe_images-button,#swipe_images_des-button{
 			background-image: url('/static_v2/img/editor/addProduct.png');
 			height :69px !important;
 		}
@@ -60,6 +61,20 @@
 			width: 50%;
 			height: 200px !important;
 			vertical-align: text-top;
+		}
+		.wui-img-container{
+			margin-left: 140px;
+		}
+		.wui-img-container .wui-upload-img-des{
+			width: 200px;
+			margin-right: 10px;
+		}
+		.wui-btn-container{
+			width: 206px;
+		    margin-left: 275px;
+		}
+		.wui-btn-container .wui-submit{
+			margin-right: 10px;
 		}
 	</style>
 {% endblock%}
@@ -89,8 +104,9 @@
 		<div class="form-group">
 			<label class="control-label fl" for="group">选择分组</label>
 			<select id="group" name="group" class="form-control">
-				<option>11</option>
-				<option>22</option>
+				{% for group in groups%}
+				<option>{{group}}</option>
+				{% endfor %}
 			</select>
 		</div>
 		<div class="form-group">
@@ -103,8 +119,15 @@
 			<textarea class="wui-details" id="details" name="details">
 			</textarea>
 		</div>
-		<div>
-			<button class="btn btn-primary wa-submit">提交</button>
+		<div class="form-group wui-upload-img-div">
+			<label class="control-label fl" for="swipe_images_des">上传图片</label>
+			<div id="imgSelect" class="col-sm-9">
+		        <input id="swipe_images_des" name="swipe_images_des" type='hidden' />
+			</div>
+		</div>
+		<div class="wui-img-container wa-img-container"></div>
+		<div class="wui-btn-container">
+			<button class="btn btn-primary wui-submit wa-submit">提交</button>
 			<button class="btn btn-primary">取消</button>
 		</div>
 		
@@ -126,7 +149,11 @@ $(document).ready(function() {
 		var group = $.trim($('#group').val());
 		var serial_number = $.trim($('#serial_number').val());
 		var details = $.trim($('#details').val());
-
+		var img_arr = [];
+		$('.wa-upload-img-des').each(function(index, el) {
+			var src = $(el).attr('src');
+			img_arr.push(src);
+		});
 		W.getApi().call({
 			method: 'post',
 			app: 'apps/shvote',
@@ -137,7 +164,8 @@ $(document).ready(function() {
 				player_name: player_name,
 				group: group,
 				serial_number: serial_number,
-				details: details
+				details: details,
+				img_des_srcs: JSON.stringify(img_arr)
 			},
 			success: function(resp){
 				console.log("创建成功");
@@ -199,7 +227,46 @@ $(document).ready(function() {
                 response = JSON.parse(response);
                 if(response.code == 200){
                     $('.wa-upload-img').attr('src',response.data).show().css('display','inline-block');
-                    cert_done = true;
+                }else{
+                     W.showHint('error', response.errMsg);
+                }
+            },
+            onSelect: function(file) {
+                var $queues = $('#swipe_images-queue').children();
+                if($queues.length > 1){
+                    $queues.eq(0).remove();
+                }
+            },
+            onError: onError
+        });
+        $("#swipe_images_des").uploadify({
+            overrideEvents: overrideEvents,
+            swf: swf,
+            width: width,
+            height: height,
+            multi: multi,
+            removeCompleted: removeCompleted,
+            uploader: uploader,
+            cancelImg: cancelImg,
+            buttonText: buttonText,
+            fileTypeDesc: '上传图片',
+            fileTypeExts: fileTypeExts,
+            method: method,
+            removeTimeout: removeTimeout,
+            formData: $.extend(formData, {
+                'cat': 'swipe_images_des'
+            }),
+            onUploadStart: function(file){
+                if(file && file.name.substring(file.name.length - 3,file.name.length) == 'jpg'){}else{
+                    W.showHint('error', '请上传jpg类型的图片');
+                    $("#swipe_images_des").uploadify('cancel', '*');
+                    $("#swipe_images_des").uploadify('stop');
+                }
+            },
+            onUploadSuccess : function(file, response, status) {
+                response = JSON.parse(response);
+                if(response.code == 200){
+                    $('.wa-img-container').append('<img class="wui-upload-img-des wa-upload-img-des" src='+response.data+'>')
                 }else{
                      W.showHint('error', response.errMsg);
                 }

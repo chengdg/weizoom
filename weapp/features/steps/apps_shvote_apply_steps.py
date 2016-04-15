@@ -180,7 +180,7 @@ def step_impl(context, webapp_user_name):
 
 
 #后端的
-@Then(u'{webapp_user_name}获得报名详情列表')
+@Then(u'{webapp_user_name}能获得报名详情列表')
 def step_impl(context,webapp_user_name):
 	design_mode = 0
 	count_per_page = 10
