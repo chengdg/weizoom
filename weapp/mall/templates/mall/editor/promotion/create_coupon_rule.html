@@ -303,6 +303,7 @@ margin-top: -29px;"></div>
 </script>
 {% endverbatim %}
 <script type="text/javascript">
+var products_data = [];   // 选择的商品
 var is_need_check_limit_product=false;
 window.checkLimitProduct=function($el){
   if(is_need_check_limit_product && $('.xa-product').html().trim().length==0){
@@ -380,22 +381,34 @@ $(function(){
   // 添加商品
   $('.xa-addProduct').click(function(){
     W.dialog.showDialog('W.dialog.mall.SelectCouponProductDialog', {
-      enableMultiSelection: false,
-      name: '',
-      userCode: '',
+      enableMultiSelection: true,
+      title: [{
+          'add_link': "/mall2/product/",
+          'name': "已上架商品", 
+          'type': "product",
+          
+      }, {            
+          'add_link': "/mall2/category_list/",
+          'name': "商品分组",
+          'type': "category"
+      }],
       success: function(data) {
         if (data.length == 0) {
-          return;
+            return;
         }
-        xlog(data);
-        var $node = $.tmpl($('#selected-promotion-products-view-tmpl-src'), {products: data});
+        // 合并数组，并且按照id去重
+        products_data = _.uniq(_.union(products_data, data), false, 'id');
+        console.log(products_data, data);
+
+        var $node = $.tmpl($('#selected-promotion-products-view-tmpl-src'), {products: products_data});
         $('.xa-product').empty().append($node);
         var ids = '';
-        $.each(data, function(i,n){
-          ids += ',' + n.id
+        $.each(products_data, function(i,n){
+            ids += ',' + n.id;
         });
-        if(ids.length > 0)
-          ids = ids.substring(1)
+        if(ids.length > 0){
+            ids = ids.substring(1);          
+        }
         xlog(ids)
         $('[name="product_ids"]').val(ids)
       }

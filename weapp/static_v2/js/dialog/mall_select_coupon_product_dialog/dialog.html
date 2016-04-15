@@ -9,17 +9,22 @@
 			</h3>
 		</div>
 		<div class="modal-body" style="min-height: 300px;">
-		<div
-			data-ui-role="advanced-table"
-			data-app="mall2"
-			data-api="promotion"
-			data-args='{"type": "usable_promotion_products", "filter_type": "${filter_type}"}'
-			data-template-id="#coupon-products-view"
-			data-enable-paginator="true"
-			data-enable-sort="false"
-			data-item-count-per-page="8"
-			data-auto-load="false"
-		></div>
+			<div class="mb10 clearfix xa-add-box">
+				<div class="fr">
+					<input class="form-control xa-query xui-search-text" value=""><span class="xa-search xui-searchBtn cursor-pointer btn w80">搜索</span>
+				</div>
+			</div>
+			<div
+				data-ui-role="advanced-table"
+				data-app="mall2"
+				data-api="promotion"
+				data-args='{"type": "usable_promotion_products", "filter_type": "${filter_type}"}'
+				data-template-id="#coupon-products-view"
+				data-enable-paginator="true"
+				data-enable-sort="false"
+				data-item-count-per-page="8"
+				data-auto-load="false"
+			></div>
 
 		</div>
 		<div class="modal-footer modal-footerBg">

@@ -9,7 +9,10 @@ Copyright (c) 2011-2012 Weizoom Inc
 ensureNS('W.dialog.mall');
 W.dialog.mall.SelectCouponProductDialog = W.dialog.Dialog.extend({
     events: _.extend({
-        'click .xa-selectProduct': 'onSelectProduct'
+        'click .xa-selectProduct': 'onSelectProduct',
+        'click .xa-search': 'onSearch',
+        'keypress .xa-query': 'onPressKey',
+        'click .xa-titleNav': 'onClickTitle'
     }, W.dialog.Dialog.prototype.events),
 
     getTemplate: function() {
@@ -19,6 +22,20 @@ W.dialog.mall.SelectCouponProductDialog = W.dialog.Dialog.extend({
 
     onInitialize: function(options) {
         this.table = this.$('[data-ui-role="advanced-table"]').data('view');
+        this.titles = options.title;
+        this.setItemType(this.titles);
+    },
+
+    setItemType: function(title, index){
+        if (index) {
+            this.selectedItem = title[index];
+            this.itemType = this.selectedItem.type;
+            this.titleName = this.selectedItem.name;
+        }else{
+            this.selectedItem = title[0];
+            this.itemType = this.selectedItem.type;
+            this.titleName = this.selectedItem.name;
+        }
     },
 
     beforeShow: function() {
@@ -26,22 +43,42 @@ W.dialog.mall.SelectCouponProductDialog = W.dialog.Dialog.extend({
     },
 
     onShow: function(options) {
-        this.name = options.name;
-        this.barCode = options.barCode;
-        this.dialogType = options.dialogType;
         this.enableMultiSelection = false;
         this.selectedProductIds = options.selectedProductIds || [];
         if (options.hasOwnProperty('enableMultiSelection')) {
             this.enableMultiSelection = options.enableMultiSelection;
-        }
+        };
+        this.$el.find('.xa-query').val("");
     },
 
     afterShow: function(options) {
+        this.table.reload({});
+    },
+
+    onPressKey: function(event) {
+        var keyCode = event.keyCode;
+        if (keyCode == 13) {
+            this.onSearch(event);
+        }
+    },
+
+    onSearch: function(event) {
+        var query = $.trim(this.$el.find('.xa-query').val());
         this.table.reload({
-            "name": this.name,
-            "barCode": this.barCode || "",
-            "selectedProductIds": this.selectedProductIds.join('_')
-        });
+            filter_name: query
+        })
+    },
+
+    onClickTitle: function(event){
+        var $el = $(event.currentTarget);
+        this.itemType = $el.attr('data-nav');
+        this.$el.find('.xa-query').val();
+
+        console.log(this.itemType);
+
+        this.selectedItem = this.getItemByType(this.itemType);
+
+        this.onSearch();
     },
 
     onSelectProduct: function(event) {
