@@ -93,25 +93,25 @@ class QrcodeEffectInfo(api_resource.ApiResource):
 				if setting.count()>0:
 					setting = setting.get()
 				items.append({
-					'setting_id': setting_id,
-					'weapp_name': setting.name,
-					'weapp_created_at': datetime.strftime(setting.created_at,"%Y-%m-%d %H:%M:%S"),
-					'pay_money': '%.2f' % setting_id2count[setting_id]['pay_money'],
-					'count': setting_id2count[setting_id]['count'],
-					'cash': '%.2f' % setting_id2count[setting_id]['cash'],
-					'card': '%.2f' % setting_id2count[setting_id]['card'],
-					'order_num': setting_id2count[setting_id]['order_num']
+					"setting_id": setting_id,
+					"weapp_name": setting.name,
+					"weapp_created_at": datetime.strftime(setting.created_at,"%Y-%m-%d %H:%M:%S"),
+					"pay_money": "%.2f" % setting_id2count[setting_id]['pay_money'],
+					"count": setting_id2count[setting_id]['count'],
+					"cash": "%.2f" % setting_id2count[setting_id]['cash'],
+					"card": "%.2f" % setting_id2count[setting_id]['card'],
+					"order_num": setting_id2count[setting_id]['order_num']
 				})
 			else:
 				items.append({
-					'setting_id': setting_id,
-					'weapp_name': setting.name,
-					'weapp_created_at': datetime.strftime(setting.created_at, "%Y-%m-%d %H:%M:%S"),
-					'pay_money': '%.2f' % 0,
-					'count': 0,
-					'cash': '%.2f' % 0,
-					'card': '%.2f' % 0,
-					'order_num': 0
+					"setting_id": setting_id,
+					"weapp_name": setting.name,
+					"weapp_created_at": datetime.strftime(setting.created_at, "%Y-%m-%d %H:%M:%S"),
+					"pay_money": "%.2f" % 0,
+					"count": 0,
+					"cash": "%.2f" % 0,
+					"card": "%.2f" % 0,
+					"order_num": 0
 				})
 
 		# if is_all == 0 :
