@@ -482,6 +482,7 @@ INSTALLED_APPS = [
     'cloud_housekeeper',
 
     'openapi',
+    'cache'
     # Third-party apps
     # 'django_extensions',
 

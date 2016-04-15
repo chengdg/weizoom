@@ -42,13 +42,14 @@ def get_many(keys):
 	return cache.get_many(keys)
 
 def delete_cache(key):
-	# logging.info(u"function delete_cache: delete key %s record" % key)
-	cache.delete(key)
-
+	logging.info(u"function delete_cache: delete key %s record" % key)
+	x = cache.delete(key)
+	print x
 	cache.delete("api"+key)
 
 def delete_pattern(key):
-	# logging.info(u"function delete_pattern: delete key %s record" % key)
+	logging.info(u"function delete_pattern: delete key %s record" % key)
+	print "ssss"
 	cache.delete_pattern(key)
 	cache.delete_pattern("api"+key)
 

@@ -46,12 +46,46 @@ def get_accounts(openid, webapp_id):
 
 	return webapp_user, social_account, member
 
+from kafka import SimpleProducer, KafkaClient  ,SimpleClient,KafkaProducer
+import json
 
+#producer = KafkaProducer(bootstrap_servers=['localhost:9092'],value_serializer=json.loads)
+# kafka = KafkaClient('localhost:9092')  
+# producer = SimpleProducer(kafka)
+# client = SimpleClient('localhost:9092')
+#producer = SimpleProducer(client, async=True)
+client = SimpleClient('localhost:9092')
+producer = SimpleProducer(client, async=False)
+#producer = SimpleProducer(client, async=True)
+
+# producer = KafkaProducer()
+import logging
 def delete_member_cache(openid, webapp_id):
 	today = datetime.today()
 	date_str = datetime.today().strftime('%Y-%m-%d') 
 
 	key = 'member_{webapp:%s}_{openid:%s}' % (webapp_id, openid)
+
+	print dir(client)	
+	x = json.dumps({'w':'1'})
+	
+	#try:
+	print '>>>>>>>>>>>>>A'
+	future = producer.send_messages(b'member', x)
+	record_metadata = future.get(timeout=10)
+	print '>>>>>>>>>>>>>B'
+	# except KafkaError:
+	# 	# Decide what to do if produce request failed...
+	# 	print "sfsdf>>>>>>"
+	# 	log.exception()
+	# 	pass
+
+	# Successful result returns assigned partition and offset
+	print '111?>>>>>>'
+	print logging.info(record_metadata.topic)
+	print logging.info(record_metadata.partition)
+	print logging.info(record_metadata.offset)
+	print "222>>>>>>"
 	cache_util.delete_pattern(key)
 
 # zhaolei 2015-11-9
@@ -74,15 +108,20 @@ def update_member_cache(instance, **kwargs):
 
 
 	"""
-	#print("in update_webapp_order_cache(), kwargs: %s" % kwargs)
+	print("in update_webapp_order_cache(), ------------------------kwargs: %s" % kwargs)
 	if isinstance(instance, member_models.Member):
+		print '111111>>>>>>>>>>1'
 		try:
 			openid = member_models.MemberHasSocialAccount.objects.filter(member=instance)[0].account.openid
+			print '111111>>>>>>>>>>2'
 			delete_member_cache(openid, instance.webapp_id)
+			print '111111>>>>>>>>>>3'
 			#get_accounts(openid, webapp_id)
 		except:
+			print '111111>>>>>>>>>>5'
 			pass
 	else:
+		print '111111>>>>>>>>>22222'
 		instances = list(instance)
 		for member in instances:
 			try:
@@ -94,7 +133,7 @@ def update_member_cache(instance, **kwargs):
 				pass
 	return
 
-post_update_signal.connect(update_member_cache, sender=member_models.Member, dispatch_uid = "members.update")
+post_update_signal.connect(update_member_cache, sender=member_models.Member, dispatch_uid = "member.updates")
 signals.post_save.connect(update_member_cache, sender=member_models.Member, dispatch_uid = "member.save")
 #signals.post_save.connect(update_webapp_product_cache, sender=mall_models.ProductCategory, dispatch_uid = "product_category.save")
 #signals.post_save.connect(update_webapp_product_cache, sender=mall_models.CategoryHasProduct, dispatch_uid = "category_has_product.save")
