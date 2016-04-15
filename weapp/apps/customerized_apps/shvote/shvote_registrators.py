@@ -32,7 +32,6 @@ class ShvoteRegistrators(resource.Resource):
 		"""
 		响应GET
 		"""
-		print 7888888888888888
 		has_data = app_models.ShvoteParticipance.objects(belong_to=request.GET['id']).count()#count<->是否有数据
 
 		c = RequestContext(request, {
@@ -278,6 +277,7 @@ class ShvoteCreatePlayer(resource.Resource):
 		"""
 		响应GET
 		"""
+		activity_id = request.GET['id']
 		shvotes = app_models.Shvote.objects().all()
 		group_list = []
 		for v in shvotes:
@@ -288,7 +288,8 @@ class ShvoteCreatePlayer(resource.Resource):
 			'second_navs': mall_export.get_promotion_and_apps_second_navs(request),
 			'second_nav_name': mall_export.MALL_APPS_SECOND_NAV,
 			'third_nav_name': "shvotes",
-			'groups': group_list
+			'groups': group_list,
+			'id': activity_id
 		});
 
 		return render_to_response('shvote/templates/editor/shvote_create_player.html', c)
