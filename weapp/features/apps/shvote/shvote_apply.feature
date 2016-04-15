@@ -86,8 +86,8 @@ Scenario:1.微信用户可以进行高级投票报名
 		"""
 		[{
 			"name":"微信高级投票",
-			"participant_count":1,
 			"vote_count":1,
+			"participant_count":1,
 			"start_date":"今天",
 			"end_date":"2天后",
 			"status":"进行中",
