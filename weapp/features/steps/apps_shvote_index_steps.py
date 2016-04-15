@@ -101,7 +101,7 @@ def __name2status(name):
     else:
         return -1
 
-@When(u"{webapp_user_name}点击图文'{title}'")
+@When(u"{webapp_user_name}点击图文'{title}'进入高级微信投票活动页面")
 def step_impl(context, webapp_user_name, title):
     user = User.objects.get(id=context.webapp_owner_id)
     openid = "%s_%s" % (webapp_user_name, user.username)
@@ -114,7 +114,7 @@ def step_impl(context, webapp_user_name, title):
         redirect_url = response['Location']
         response = context.client.get(redirect_url)
 
-@then(u"{webapp_user_name}获得微信高级投票活动'{name}'的内容")
+@then(u"{webapp_user_name}获得微信高级投票活动'{name}'主页的内容")
 def step_impl(context, webapp_user_name, name):
     #获取动态数据
     _, record_id = __shvote_name2id(name)
