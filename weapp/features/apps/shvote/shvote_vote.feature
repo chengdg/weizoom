@@ -8,12 +8,13 @@ Feature: 微信用户给参与者投票
 	"""
 Background:
 	Given jobs登录系统
-	When jobs新建微信高级投票活动
+	When jobs新建高级微信投票活动
 		"""
 		[{
 			"title":"微信高级投票-进行中",
-			"group":["初中组"],
+			"groups":["初中组"],
 			"desc":"高级投票活动介绍",
+			"rule":"高级投票活动规则",
 			"start_date":"2天前",
 			"end_date":"2天后",
 			"pic":"3.jpg"
@@ -29,7 +30,7 @@ Background:
 			"cover_in_the_text":"true",
 			"summary":"微信高级投票",
 			"content":"微信高级投票",
-			"jump_url":"微信高级投票"
+			"jump_url":"微信高级投票-进行中"
 		}]
 		"""
 	When jobs已添加关键词自动回复规则
@@ -43,7 +44,7 @@ Background:
 				}],
 			"keyword_reply": 
 				[{
-					"reply_content":"微信高级投票",
+					"reply_content":"高级投票活动1单图文",
 					"reply_type":"text_picture"
 				}]
 		
