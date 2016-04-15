@@ -113,6 +113,8 @@ def step_impl(context, webapp_user_name, title):
     while response.status_code == 302:
         redirect_url = response['Location']
         response = context.client.get(redirect_url)
+    context.shvote_id = str(record_id)
+    context.openid = openid
 
 @then(u"{webapp_user_name}获得微信高级投票活动'{name}'主页的内容")
 def step_impl(context, webapp_user_name, name):

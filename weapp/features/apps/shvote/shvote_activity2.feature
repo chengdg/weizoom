@@ -53,10 +53,10 @@ Background:
 			"pic":"3.jpg"
 		}]
 		"""
-	When jobs已添加单图文
+	And jobs已添加单图文
 		"""
 		[{
-			"title":"高级投票活动1单图文",
+			"title":"高级微信投票活动1单图文",
 			"cover": [{
 				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
 			}],
@@ -66,67 +66,69 @@ Background:
 			"jump_url":"微信高级投票-进行中"
 		}]
 		"""
-	When jobs已添加关键词自动回复规则
+	And jobs已添加关键词自动回复规则
 		"""
 		[{
 			"rules_name":"规则1",
-			"keyword": 
+			"keyword":
 				[{
 					"keyword": "微信高级投票",
 					"type": "equal"
 				}],
-			"keyword_reply": 
+			"keyword_reply":
 				[{
-					"reply_content":"高级投票活动1单图文",
+					"reply_content":"高级微信投票活动1单图文",
 					"reply_type":"text_picture"
 				}]
 		}]
 		"""
-
-	When bill关注jobs的公众号
-	When bill访问jobs的webapp
-	When bill在微信中向jobs的公众号发送消息'微信高级投票'
+	And 清空浏览器
+	And bill关注jobs的公众号
+	And bill访问jobs的webapp
+	And bill在微信中向jobs的公众号发送消息'微信高级投票'
 	Then bill收到自动回复'高级微信投票活动1单图文'
 	When bill点击图文'高级微信投票活动1单图文'进入高级微信投票活动页面
-	When bill参加高级投票报名活动
+	And bill参加高级投票报名活动
 	"""
 		{
 			"headImg":"bill_head.jpg",
 			"name":"bill",
 			"group":["初中组"],
-			"number":"003",	
+			"number":"003",
 			"details":"bill的产品好",
 			"detail_pic":["pic1.jpg","pic2.jpg"]
 		}
 	"""
-	When tom关注jobs的公众号
-	When tom访问jobs的webapp
-	When tom在微信中向jobs的公众号发送消息'微信高级投票'
+	And 清空浏览器
+	And tom关注jobs的公众号
+	And tom访问jobs的webapp
+	And tom在微信中向jobs的公众号发送消息'微信高级投票'
 	Then tom收到自动回复'高级微信投票活动1单图文'
 	When tom点击图文'高级微信投票活动1单图文'进入高级微信投票活动页面
-	When tom参加高级投票报名活动
+	And tom参加高级投票报名活动
 	"""
 		{
 			"headImg":"tom_head.jpg",
 			"name":"tom",
 			"group":["初中组"],
-			"number":"002",	
+			"number":"002",
 			"details":"tom的产品好",
 			"detail_pic":["pic3.jpg","pic4.jpg"]
 		}
 	"""
-	When zhouxun关注jobs的公众号
-	When zhouxun访问jobs的webapp
-	When zhouxun在微信中向jobs的公众号发送消息'微信高级投票'
+	And 清空浏览器
+	And zhouxun关注jobs的公众号
+	And zhouxun访问jobs的webapp
+	And zhouxun在微信中向jobs的公众号发送消息'微信高级投票'
 	Then zhouxun收到自动回复'高级微信投票活动1单图文'
 	When zhouxun点击图文'高级微信投票活动1单图文'进入高级微信投票活动页面
-	When zhouxun参加高级投票报名活动
+	And zhouxun参加高级投票报名活动
 	"""
 		{
 			"headImg":"zhouxun_head.jpg",
 			"name":"zhouxun",
 			"group":["高中组"],
-			"number":"003",	
+			"number":"003",
 			"details":"zhouxun的产品好",
 			"detail_pic":["pic5.jpg","pic6.jpg"]
 		}
@@ -134,7 +136,7 @@ Background:
 
 
 
-@mall2 @apps @shvote @shvote_activity @yang
+@mall2 @apps @shvote @shvote_activity @aix
 Scenario:1 管理员删除微信用户提交高级投票申请，列表中消失
 	Given jobs登录系统
 	When jobs于高级微信投票活动审核通过'bill'
@@ -281,7 +283,7 @@ Scenario:4 微信用户浏览高级投票活动主页，获得三维数据
 		"""
 
 
-@mall2 @apps @shvote @shvote_activity 
+@mall2 @apps @shvote @shvote_activity
 Scenario:5 微信用户可以给参与者投票
 	#用户可以对参与者进行投票
 	#该用户再次对参与者进行投票，无法进行第二次投票，获取到的是原来的数据

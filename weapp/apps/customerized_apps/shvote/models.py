@@ -37,7 +37,7 @@ class ShvoteControl(models.Document):
 	member_id= models.LongField(default=0) #参与者id
 	belong_to = models.StringField(default="", max_length=100) #对应的活动id
 	voted_group = models.StringField(max_length=50) #投票分组
-	voted_to= models.LongField(default=0) #被投票人
+	voted_to= models.StringField(default="", max_length=100) #被投票人
 	created_at_str = models.StringField(max_length=24, unique_with=["member_id", "belong_to", "voted_group"]) #投票时间
 	meta = {
 		'collection': 'shvote_shvote_control'

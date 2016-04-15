@@ -114,7 +114,7 @@ class ShvoteParticipance(resource.Resource):
 		vote_to = request.POST.get('vote_to', None)
 		member = request.member
 		response = create_response(500)
-		if not vote_to or not member:
+		if not member:
 			response.errMsg = u'会员信息出错'
 			return response.get_response()
 		record_id = request.POST.get('recordId', None)
@@ -125,10 +125,12 @@ class ShvoteParticipance(resource.Resource):
 			return response.get_response()
 		#不能给取消关注的会员投票
 		try:
-			target_member = Member.objects.get(id=vote_to)
-			if not target_member.is_subscribed:
-				response.errMsg = u'该用户已退出投票活动'
-				return response.get_response()
+			sh = app_models.ShvoteParticipance.objects.get(id=vote_to)
+			if sh.member_id > 0:
+				target_member = Member.objects.get(id=sh.member_id)
+				if not target_member.is_subscribed:
+					response.errMsg = u'该用户已退出投票活动'
+					return response.get_response()
 		except:
 			response.errMsg = u'不存在该用户'
 			return response.get_response()
@@ -142,7 +144,7 @@ class ShvoteParticipance(resource.Resource):
 				member_id = member_id,
 				belong_to = record_id,
 				voted_group = request.POST['voted_group'],
-				voted_to = long(vote_to)
+				voted_to = vote_to
 			)
 			control.save()
 		except:
@@ -150,7 +152,7 @@ class ShvoteParticipance(resource.Resource):
 			return response.get_response()
 
 		try:
-			target = app_models.ShvoteParticipance.objects.get(belong_to=record_id, member_id=long(vote_to), status=app_models.MEMBER_STATUS['PASSED'])
+			target = app_models.ShvoteParticipance.objects.get(belong_to=record_id, id=vote_to, status=app_models.MEMBER_STATUS['PASSED'])
 			target.count += 1
 			if target.vote_log.has_key(now_date_str):
 				target.vote_log[now_date_str].append(member_id)

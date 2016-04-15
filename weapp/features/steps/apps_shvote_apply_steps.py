@@ -143,25 +143,25 @@ def __get_into_shvote_signup_pages(context,webapp_owner_id,shvote_id,openid):
 
 
 
-@When(u'{webapp_user_name}点击图文"{title}"进入高级微信投票活动页面')
-def step_impl(context, webapp_user_name, title):
-	webapp_owner_id = str(context.webapp_owner_id)
-	user = User.objects.get(id=webapp_owner_id)
-	openid = "%s_%s" % (webapp_user_name, user.username)
-
-	shvote = Shvote.objects.get(owner_id=context.webapp_owner_id)
-	shvote_id = str(shvote.id)
-	response = __get_into_shvote_pages(context,webapp_owner_id,shvote_id,openid)#resp.context=> data ; resp.content => Http Text
-	print ">>>> Get Into Shvote Mobile Page [start]>>>>"
-	print "webapp_owner_id:"+webapp_owner_id
-	print "shvote_id:"+shvote_id
-	print "Response[record_id]:"+response.context['record_id']
-	print "<<<< Get Into Shvote Mobile Page [ end ] <<<<"
-	record_id = str(response.context['record_id'])
-	context.record_id = record_id
-	context.webapp_owner_id = webapp_owner_id
-	context.shvote_id = shvote_id
-	context.openid = openid
+# @When(u'{webapp_user_name}点击图文"{title}"进入高级微信投票活动页面')
+# def step_impl(context, webapp_user_name, title):
+# 	webapp_owner_id = str(context.webapp_owner_id)
+# 	user = User.objects.get(id=webapp_owner_id)
+# 	openid = "%s_%s" % (webapp_user_name, user.username)
+#
+# 	shvote = Shvote.objects.get(owner_id=context.webapp_owner_id)
+# 	shvote_id = str(shvote.id)
+# 	response = __get_into_shvote_pages(context,webapp_owner_id,shvote_id,openid)#resp.context=> data ; resp.content => Http Text
+# 	print ">>>> Get Into Shvote Mobile Page [start]>>>>"
+# 	print "webapp_owner_id:"+webapp_owner_id
+# 	print "shvote_id:"+shvote_id
+# 	print "Response[record_id]:"+response.context['record_id']
+# 	print "<<<< Get Into Shvote Mobile Page [ end ] <<<<"
+# 	record_id = str(response.context['record_id'])
+# 	context.record_id = record_id
+# 	context.webapp_owner_id = webapp_owner_id
+# 	context.shvote_id = shvote_id
+# 	context.openid = openid
 
 @When(u'{webapp_user_name}参加高级投票报名活动')
 def step_impl(context, webapp_user_name):
