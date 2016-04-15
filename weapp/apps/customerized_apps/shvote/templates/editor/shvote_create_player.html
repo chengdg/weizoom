@@ -56,6 +56,11 @@
 		#imgSelect{
 			width: 90px;
 		}
+		.wui-details{
+			width: 50%;
+			height: 200px !important;
+			vertical-align: text-top;
+		}
 	</style>
 {% endblock%}
 
@@ -79,27 +84,27 @@
 		</div>
 		<div class="form-group">
 			<label class="control-label fl" for="player_name">名称</label>
-			<input type="text" class="form-control" name="player_name"/>
+			<input type="text" class="form-control" name="player_name" id="player_name"/>
 		</div>
 		<div class="form-group">
 			<label class="control-label fl" for="group">选择分组</label>
-			<select name="group" class="form-control">
+			<select id="group" name="group" class="form-control">
 				<option>11</option>
 				<option>22</option>
 			</select>
 		</div>
 		<div class="form-group">
 			<label class="control-label fl" for="serial_number">输入编号</label>
-			<input type="text" class="form-control" name="serial_number"/>
+			<input type="text" class="form-control" name="serial_number" id="serial_number"/>
 		</div>
 		<div class="form-group">
 			<label class="control-label" for="details">详情</label>
-			<span class="xui-fontGary" style="font-weight: lighter;">（上传图片要求宽度在480-620之间,高度小于等于960,大小不超过500K）</span>
-			<textarea class="xui-hide" id="detail" name="detail" data-ui-role="richtext-editor" data-type="full" data-height="300" data-width="650">
+			<!-- <span class="xui-fontGary" style="font-weight: lighter;">（上传图片要求宽度在480-620之间,高度小于等于960,大小不超过500K）</span> -->
+			<textarea class="wui-details" id="details" name="details">
 			</textarea>
 		</div>
 		<div>
-			<button class="btn btn-primary">提交</button>
+			<button class="btn btn-primary wa-submit">提交</button>
 			<button class="btn btn-primary">取消</button>
 		</div>
 		
@@ -115,64 +120,35 @@
 
 <script type="text/javascript">
 $(document).ready(function() {
-	$('body').delegate('.xa-viewData', 'click', function(event) {
-		var activityId = $(event.currentTarget).parents('tr').data('id');
-		W.dialog.showDialog('W.dialog.app.shvote.ViewParticipanceDataDialog', {
-			activityId: activityId,
-			success: function(data) {
-				alert(data);
-			}
-		});
-	});
+	$('.wa-submit').click(function(event) {
+		var head_img_src = $('.wa-upload-img').attr('src');
+		var player_name = $.trim($('#player_name').val());
+		var group = $.trim($('#group').val());
+		var serial_number = $.trim($('#serial_number').val());
+		var details = $.trim($('#details').val());
 
-	$('.xa-search').click(function(event) {
-		var participant_name = $.trim($('[name="participant_name"]').val());
-		var startTime = $.trim($('[name="start_time"]').val());
-		var endTime = $.trim($('[name="end_time"]').val());
-		var table = $('[data-ui-role="advanced-table"]').data('view');
-		table.reload({
-			participant_name: participant_name,
-			start_time: startTime,
-			end_time: endTime
-		}, {
-			emptyDataHint: '没有符合条件的数据'
-		});
-	});
-
-	//export
-	$('.xa-export').click(function(event){
-		W.getLoadingView();
-		var participant_name = $.trim($('[name="participant_name"]').val());
-        var startTime = $.trim($('[name="start_time"]').val());
-        var endTime = $.trim($('[name="end_time"]').val());
-		var export_id =window.location.search.split('?id=')[1];
 		W.getApi().call({
-			method: 'get',
+			method: 'post',
 			app: 'apps/shvote',
-			resource: 'shvote_participances_export',
+			resource: 'shvote_create_player',
 			args: {
-				'id': export_id,
-				'participant_name': participant_name,
-				'start_time': startTime,
-				'end_time': endTime
+				webapp_owner_id: W.webappOwnerId,
+				head_img_src: head_img_src,
+				player_name: player_name,
+				group: group,
+				serial_number: serial_number,
+				details: details
 			},
 			success: function(resp){
-				if(resp.code == 200){
-					$('#export_href').prop({
-						'href': resp.download_path,
-						'download': resp.filename
-					}).get(0).click();
-
-				}
-				console.log("导出成功");
+				console.log("创建成功");
 			},
 			error: function(error){
-				console.log('导出失败');
+				console.log('创建失败');
 			}
 		});
 	});
 
-	 //初始化上传组件参数
+	//初始化上传组件参数
     var swf = '/static/uploadify.swf',
         overrideEvents = ['onError', 'onUploadSuccess'],
         multi = false,
@@ -222,12 +198,10 @@ $(document).ready(function() {
             onUploadSuccess : function(file, response, status) {
                 response = JSON.parse(response);
                 if(response.code == 200){
-                    $("#swipe_images").find('.uploadify-button-text').html('重新选择');
-                    // $('.xa-cert-name').html('  (文件名：'+file.name+')');
                     $('.wa-upload-img').attr('src',response.data).show().css('display','inline-block');
                     cert_done = true;
                 }else{
-                    console.log(response.errMsg);
+                     W.showHint('error', response.errMsg);
                 }
             },
             onSelect: function(file) {

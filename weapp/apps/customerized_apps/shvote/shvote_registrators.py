@@ -287,6 +287,46 @@ class ShvoteCreatePlayer(resource.Resource):
 
 		return render_to_response('shvote/templates/editor/shvote_create_player.html', c)
 
+	@login_required
+	def api_post(request):
+		head_img_src = request.POST.get('head_img_src', None)
+		player_name = request.POST.get('player_name', None)
+		group = request.POST.get('group', None)
+		serial_number = request.POST.get('serial_number', None)
+		details = request.POST.get('details', None)
+		webapp_owner_id = request.webapp_owner_id
+
+		id = app_models.Shvote.objects().get(owner_id = webapp_owner_id).id
+		vote_participance_created = app_models.ShvoteParticipance.objects().filter(member_id__lte = 0)
+		
+		if vote_participance_created:
+			vote_participance_created_list = []
+			for p in vote_participance_created:
+				vote_participance_created_list.append(p.member_id)
+			min_member_id = min(vote_participance_created_list)
+			member_id = min_member_id - 1
+		try:
+			sh_participance = app_models.ShvoteParticipance(
+				belong_to = str(id),
+				icon = head_img_src.replace('\\','/'),
+				name = player_name,
+				group = group,
+				serial_number = serial_number,
+				details = details,
+				created_at = datetime.now(),
+				status = 1,
+				member_id = member_id
+			)
+			sh_participance.save()
+
+			response = create_response(200)
+		except Exception,e:
+			print e,'-----2222222-------'
+			response = create_response(500)
+			response.errMsg = u'创建选手失败'
+
+		return response.get_response()
+
 class ShvoteUpload(resource.Resource):
 	app = 'apps/shvote'
 	resource = 'upload_img'
