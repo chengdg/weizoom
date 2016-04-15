@@ -27,7 +27,7 @@ SHORTCUTS_TEXT={
 class Msurvey(resource.Resource):
 	app = 'apps/exsurvey'
 	resource = 'm_exsurvey'
-	
+
 	def get(request):
 		"""
 		响应GET
@@ -142,7 +142,7 @@ class Msurvey(resource.Resource):
 				end_date = cur_time.strftime("%Y-%m-%d 23:59:59")
 
 				#获取当前会员2个月内所下单已发货和已完成的id
-				orders = Order.objects.filter(webapp_user_id__in=webapp_user_ids,created_at__gte=start_date, created_at__lte=end_date,status__in=[ORDER_STATUS_PAYED_SHIPED,ORDER_STATUS_SUCCESSED,ORDER_STATUS_PAYED_NOT_SHIP])
+				orders = Order.objects.filter(webapp_user_id__in=webapp_user_ids,origin_order_id__in=[0,-1], created_at__gte=start_date, created_at__lte=end_date,status__in=[ORDER_STATUS_PAYED_SHIPED,ORDER_STATUS_SUCCESSED,ORDER_STATUS_PAYED_NOT_SHIP])
 				webapp = WebApp.objects.filter(owner_id=webapp_owner_id)
 				if webapp.count()>0:
 					orders.filter(webapp_id=webapp[0].appid)
