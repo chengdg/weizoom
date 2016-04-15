@@ -88,7 +88,7 @@ Background:
 		}
 	"""
 
-@mall2 @apps @shvote @shvote_delete @yang2
+@mall2 @apps @shvote @shvote_delete
 Scenario:1 管理员删除微信用户提交高级投票申请，列表中消失
 	Given jobs登录系统
 	When jobs于高级微信投票活动审核通过'bill'

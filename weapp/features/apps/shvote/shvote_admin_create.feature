@@ -6,22 +6,33 @@ Feature: 管理员增加选手
 
 Background:
 	Given jobs登录系统
-	When jobs新建高级投票活动
-	#新建高级微信投票活动,无分组
+	When jobs新建微信高级投票活动
 	"""
 		[{
 			"title":"新建微信高级投票活动",
 			"groups":[],
-			"rule":"高级投票规则",,
+			"rule":"高级投票规则",
 			"desc":"高级投票活动介绍",
 			"start_date":"今天",
 			"end_date":"2天后",
 			"pic":"1.jpg"
 		}]
 	"""
-@mall2 @apps @shvote @shvote_admin_create @yang33
+@mall2 @apps @shvote @shvote_admin_create
 Scenario:1.管理员创建选手
-	When jobs登录系统
+	Given jobs登录系统
+	Then jobs获得微信高级投票活动列表
+		"""
+		[{
+			"name":"新建微信高级投票活动",
+			"vote_count":0,
+			"participant_count":0,
+			"start_date":"今天",
+			"end_date":"2天后",
+			"status":"进行中",
+			"actions": ["关闭","链接","预览","报名详情","查看结果"]
+		}]
+		"""
 	When jobs于"新建微信高级投票活动"高级投票活动后台创建选手
 	"""
 		{
@@ -47,12 +58,12 @@ Scenario:1.管理员创建选手
 	Then jobs获得微信高级投票活动列表
 		"""
 		[{
-			"name":"微信高级投票",
+			"name":"新建微信高级投票活动",
 			"vote_count":1,
 			"participant_count":"1",
 			"start_date":"今天",
 			"end_date":"2天后",
 			"status":"进行中",
-			"actions": ["删除","链接","预览","报名详情","查看结果"]
+			"actions": ["关闭","链接","预览","报名详情","查看结果"]
 		}]
 		"""

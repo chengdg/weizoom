@@ -10,7 +10,7 @@ Feature: 微信用户提交高级投票申请
 
 Background:
 	Given jobs登录系统
-	When jobs新建高级微信投票活动
+	When jobs新建微信高级投票活动
 	"""
 		[{
 			"title":"微信高级投票",
@@ -51,7 +51,7 @@ Background:
 		}]
 		"""
 
-@mall2 @apps @shvote @shvote_apply @yang
+@mall2 @apps @shvote @shvote_apply
 Scenario:1.微信用户可以进行高级投票报名
 	When 清空浏览器
 	When bill关注jobs的公众号
@@ -71,7 +71,7 @@ Scenario:1.微信用户可以进行高级投票报名
 
 		}
 	"""
-	Then jobs获得报名详情列表
+	Then jobs能获得报名详情列表
 	"""
 		[{	"headImg":"head.jpg",
 			"player":"bill",

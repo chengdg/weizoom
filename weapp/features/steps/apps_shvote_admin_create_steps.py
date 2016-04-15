@@ -24,16 +24,47 @@ from django.core.management.base import BaseCommand, CommandError
 from utils.cache_util import SET_CACHE
 from modules.member.models import Member
 
+def __CreatePlayer(context,webapp_user_name,webapp_owner_id,shvote_name,shvote_id,openid):
+	'''
+	后台创建选手报名
+	'''
+	design_mode = 0
+	version = 1
+
+	text = json.loads(context.text)
+	headImg = text.get('headImg')
+	name = text.get('name','')
+	group = text.get('group',[""])[0]
+	number = text.get('number')
+	details = text.get('details','')
+	detail_pic = json.dumps(text.get('detail_pic'))
+
+	termite_post_args = {
+		'webapp_owner_id':webapp_owner_id,
+		'head_img_src':headImg,
+		'player_name':name,
+		'group':group,
+		'serial_number':number,
+		'details':details,
+		'img_des_srcs':detail_pic,
+	}
+
+	post_url = '/apps/shvote/api/shvote_create_player/?_method=post&id={}&opid={}'.format(shvote_id,openid)
+	post_termite_response = context.client.post(post_url,termite_post_args)
+	while post_termite_response.status_code==302:
+		redirect_url = post_termite_response['Location']
+		post_termite_response = context.client.post(redirect_url,termite_post_args)
+
+
 
 @When(u'{webapp_user_name}于"{shvote_name}"高级投票活动后台创建选手')
 def step_impl(context, webapp_user_name,shvote_name):
-	record_id = context.record_id
-	webapp_owner_id = context.webapp_owner_id
-	shvote_id = context.shvote_id
-	openid = context.openid
-	print ">>>> Shvote Mobile Page --- Sign Up ----[start]>>>>"
-	print "webapp_owner_id:"+webapp_owner_id
-	print "shvote_id:"+shvote_id
-	print "record_id:"+record_id
-	print "<<<< Shvote Mobile Page --- Sign Up ----[ end ] <<<<"
-	response = __get_into_shvote_signup_pages(context,webapp_owner_id,shvote_id,openid)#resp.context=> data ; resp.content => Http Text
+	webapp_owner_id = str(context.webapp_owner_id)
+	user = User.objects.get(id=webapp_owner_id)
+	openid = "%s_%s" % (webapp_user_name, user.username)
+	shvote = Shvote.objects.get(owner_id=context.webapp_owner_id)
+	shvote_id = str(shvote.id)
+
+	create_respone = __CreatePlayer(context,webapp_user_name,webapp_owner_id,shvote_name,shvote_id,openid)
+	context.openid = openid
+	context.shvote_id = shvote_id
