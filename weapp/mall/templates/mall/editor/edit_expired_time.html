@@ -15,16 +15,59 @@
 
 	<form class="xui-mall-addProductForm" method="post" id="editForm" data-id="{% if product %}{{ product.id }}{% else %}0{% endif %}">
 		<section>
-			<div class="clearfix mt30 fl">
-				<span class="fl" for="order_expired_day">未付款订单：</span>
+			<div class="clearfix mt30">
+				<span class="fl" for="order_expired_day">1.&nbsp;&nbsp;未付款订单：</span>
 					<input type="text" class="form-control fl xa-expiredTime" style="width:85px;" id="order_expired_day" name="order_expired_day" placeholder="" value="{% if mall_config %}{{ mall_config.order_expired_day }}{% endif %}" data-validate="norequire,,require-positive-int" maxlength="100"/>
-
 				<span class="fl">小时内未付款，自动取消该订单</span><span class="fl ml10 xui-color-mark">注：空为不设置</span>
 				<div style="clear: both;"></div>
 				<div class="errorHint" style="margin-top: 10px;margin-left: 90px;"></div>
 			</div>
-
-			<div class="xui-btn-group tc fr">
+			<div>
+				<p>2.&nbsp;&nbsp;<input type="checkbox" class="xa-switchShare" style="">订单提交成功后提示分享赚积分：<span class="c9">（注：开启前请确认首页-积分规则已正确设置）</span></p>
+				<!-- <div class="xa-setShareSection xui-setShareSection">
+					<div class="xui-panel">
+						<div class="xui-i-title"><label class="mr10">上传弹层背景图片</label><span class="c6 f12">格式：建议jpg,png 尺寸：500*680 不超过1M</span></div>
+						<section class="xui-i-content">
+							<input data-field="image" name="image" type="hidden" value="" data-validate="require-notempty::请添加一张图片" data-force-validate="true">
+							<div class="xui-imgDisplayBtn xa-dialogTrigger" data-target-dialog="W.dialog.termite.SelectImagesDialog" data-dialog-parameter="{&quot;multiSelection&quot;: false}" data-target-name="image" style="background: url(/static_v2/img/editor/addProduct.png) no-repeat;width: 50px!important;height:50px!important;"></div>
+						</li>
+						</section>
+					</div>
+				</div> -->
+				<div class="xa-setShareSection xui-setShareSection">
+					<table>
+						<tr>
+							<td>上传弹层背景图片：</td>
+							<td>
+								<input data-field="image" name="backgroundImage" type="hidden" value="" data-validate="require-notempty::请添加一张图片" data-force-validate="true" class="xa-share-vali">
+								<div class="xui-imageSection"><div class="xui-imgDisplayBtn xa-dialogTrigger"></div></div>
+								<span class="c9 ml10">格式：建议jpg/png  尺寸：500*680  不超过1M</span>
+							</td>
+						</tr>
+						<tr>
+							<td>选择要分享的图文：<br/><span class="c9">（仅显示正文内容）</span></td>
+							<td>
+								
+							</td>
+						</tr>
+						<tr>
+							<td>分享图片：</td>
+							<td>
+								<input data-field="image" name="shareImage" type="hidden" value="" data-validate="require-notempty::请添加一张图片" data-force-validate="true" class="xa-share-vali">
+								<div class="xui-imageSection"><div class="xui-imgDisplayBtn xa-dialogTrigger"></div></div>
+								<span class="c9 ml10">建议尺寸90*90，仅支持jpg/png</span>
+							</td>
+						</tr>
+						<tr>
+							<td>分享描述：</td>
+							<td>
+								<textarea class="xa-share-vali xui-shareInfo" data-validate="require-notempty::不能为空" data-force-validate="true" name="shareInfo"></textarea>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<div class="xui-btn-group tc">  
 				<input type="submit" class="btn btn-primary" id="submitBtn" value="保存" />
 			</div>
 		</section>
@@ -52,6 +95,23 @@
 
 
 		});
+		$('.xa-dialogTrigger').click(function(event){
+			W.dialog.showDialog('W.dialog.termite.SelectImagesDialog',{
+				"multiSelection": false,
+				help:' ',
+				success:function(data){
+					var images = data.images;
+					var $imgContainer = $(event.target);
+					var src;
+					console.log(data)
+					_.each(images, function(image) {
+						src = image.url;
+					});
+					$(event.target).removeClass('xui-imgDisplayBtn').addClass('xui-dialogSelectedBtn').html('重新上传').parent().append("<img src="+ src +">");
+					$(event.target).parents('td').find('.xa-share-vali').val(src);
+				}
+			});
+		})
 	});
 </script>
 {% endblock %}
