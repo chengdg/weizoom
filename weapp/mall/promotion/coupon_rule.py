@@ -130,8 +130,10 @@ class CouponRuleInfo(resource.Resource):
         count = int(request.POST.get('count', '1'))
         limit_product = request.POST.get('limit_product', '0')
         limit_product_id = request.POST.get('product_ids', '-1')
-        if limit_product == '1' and limit_product_id.isdigit():
-            limit_product_id = int(limit_product_id)
+        if limit_product == '1':
+            limit_product_ids = limit_product_id.split(',')
+            # todo 校验
+
         else:
             limit_product_id = 0
 
@@ -171,8 +173,7 @@ class CouponRuleInfo(resource.Resource):
         )
 
         if limit_product == '1':
-            product_ids = request.POST.get('product_ids', '-1').split(',')
-            for product_id in product_ids:
+            for product_id in limit_product_ids:
                 ProductHasPromotion.objects.create(
                     product_id=product_id,
                     promotion=promotion
