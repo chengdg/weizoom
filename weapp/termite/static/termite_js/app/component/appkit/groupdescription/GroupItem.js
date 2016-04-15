@@ -28,7 +28,7 @@ W.component.appkit.GroupItem = W.component.Component.extend({
         },{
 			name:'group_days',
 			type:'text_with_annotation',
-			displayName:'团拼时间：',
+			displayName:'拼团时间：',
 			annotation:'天',
 			size:'35px',
 			// validate:'data-validate="require-notempty::选项不能为空',
