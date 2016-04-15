@@ -29,7 +29,7 @@ W.dialog.termite.SelectImagesDialog = W.dialog.Dialog.extend({
             width: 640,
             sizeLimit: 1024,
             autoShowHelp: true,
-            help: '图片格式：支持jpg, png, gif<br/>图片大小：最大支持1M图片，超过1M不能上传',
+            help: options.help || '图片格式：支持jpg, png, gif<br/>图片大小：最大支持1M图片，超过1M不能上传',
             autoShowImage: false,
             isMulti: true,
             isNeedSizeInfo: true
