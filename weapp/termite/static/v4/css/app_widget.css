@@ -2158,7 +2158,8 @@ li.wui-selectBox-display-table {
 
 .wui-shvoteDescription{
 	background-color:#FFF;
-	margin-top: -18px;
+	margin-top: -19px;
+	width: 100%;
 }
 .wui-shvoteDescription .wui-i-details{
 	padding: 15px 20px;
