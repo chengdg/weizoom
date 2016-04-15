@@ -126,10 +126,8 @@ class MGroup(resource.Resource):
 								member_info_list = [{"member_id": group_detail.grouped_member_id, "order_id": group_detail.order_id} for group_detail in group_details]
 								send_group_template_message(activity_info, member_info_list)
 							except Exception, e:
-								print(u'发送拼团失败模板消息失败')
-								print 'template----------------------------------'
 								print e
-								print 'template----------------------------------'
+								pass
 
 						# 获取该主页帮助者列表
 						helpers = app_models.GroupDetail.objects(relation_belong_to=str(group_relation_id), owner_id=fid, order_id__ne='').order_by('created_at')
@@ -162,8 +160,7 @@ class MGroup(resource.Resource):
 						except:
 							pass
 					except Exception,e:
-						print(u'该团购已不存在!!!!!!!!!!!!!!!!!')
-						print(e)
+						print e
 						response = create_response(500)
 						response.errMsg = u'该团购已不存在！'
 						return response.get_response()
@@ -320,7 +317,7 @@ class MGroup(resource.Resource):
 			'isPC': False if request.member else True,
 			'share_page_title': mpUserPreviewName,
 			'share_img_url': record.material_image if record else '',
-			'share_page_desc': record.name if record else u"团购",
+			'share_page_desc': record.share_description if record else u"团购",
 			'share_to_timeline_use_desc': True,  #分享到朋友圈的时候信息变成分享给朋友的描述
 			'settings_domain': settings.APPS_H5_DOMAIN
 		})

@@ -98,7 +98,7 @@ urlpatterns = patterns('',
    #url(r'^member/', restful_url('member')),
     url(r'^member/', restful_url2('member')),
     url(r'^messages/', restful_url('message')),
-
+    url(r'^export_job/', restful_url2('export_job')),
     #微信支付模拟api
     url(r'^sns/oauth2/access_token', pay_simulator_views.access_token),
     url(r'^pay/unifiedorder', pay_simulator_views.pay_unifiedorder),

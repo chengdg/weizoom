@@ -482,6 +482,7 @@ INSTALLED_APPS = [
     'cloud_housekeeper',
 
     'openapi',
+    'export_job',
     # Third-party apps
     # 'django_extensions',
 
@@ -503,6 +504,7 @@ INSTALLED_TASKS = [
     'tools.express',
 
     'member',
+    'mall.product',
     # for services
     'services.example_service',
     'services.send_order_email_service',

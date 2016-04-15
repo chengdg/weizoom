@@ -74,10 +74,10 @@ Background:
 	"""
 
 
-@mall2 @apps @shvote @shvote_vote
+@mall2 @apps @shvote @shvote_vote @we
 Scenario:1 管理员查看选手详情
 	Given jobs登录系统
-	When jobs审核通过"bill"
+	When jobs审核通过'bill'
 	Then jobs获得'bill'的详情
 		"""
 		[{
