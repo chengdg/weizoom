@@ -157,6 +157,17 @@
 		overflow: hidden;
 		position: relative;
 	}
+	.wui-rank-pic img{
+		position: relative;
+		z-index: 1;
+	}
+	.wui-rank-pic .wui-img-mask{
+		width: 100%;
+		height: 100%;
+		position: absolute;
+		background: transparent;
+		z-index: 99;
+	}
 	.wui-rank-name{
 		background: rgba(0,0,0,0.5);
 		width: 100%;
@@ -166,6 +177,7 @@
 		position: absolute;
 		left: 0;
 		bottom: 0;
+		z-index: 100;
 	}
 	.wui-rank-vote{
 		overflow: hidden;
@@ -370,9 +382,10 @@
 </div>
 
 <script type="text/plain" id="tpl">
-	<div class="wui-rank-item wa-rank-item" data-id={ result_list_member_id }>
+	<div class="wui-rank-item wa-rank-item" data-id={ id }>
 		<div class="wui-item-content">
 			<div class="wui-rank-pic wa-rank-pic">
+				<div class="wui-img-mask"></div>
 				<img src={ result_list_icon }>
 				<div class="wui-rank-name">
 					<span class="wui-rank-serial-number">{ result_list_serial_number }</span> 
@@ -383,7 +396,7 @@
 				<div class="wui-rank-voteLef wa-vote-left">
 					<span>{ result_list_count }</span>票
 				</div>
-				<div class="wui-rank-voteRig wa-ivote" data-member="{ member_id }">
+				<div class="wui-rank-voteRig wa-ivote" data-id={ id }>
 					<button type="button" class="wui-vote-btn">投票</button>
 				</div>
 			</div> 
@@ -481,7 +494,8 @@
         	var that = $(this);
             if(voteLock) return false;
             voteLock = true;
-            var vote_to = $(this).attr('data-member'); 
+            var vote_to = $(this).attr('data-id'); 
+            console.log(vote_to);
             W.getApi().call({
                 app: 'm/apps/shvote',
                 resource: 'shvote_participance',
@@ -604,8 +618,7 @@
 		                result_list_name : result[i].name,
 		                result_list_count : result[i].count,
 		                result_list_icon : result[i].icon,
-		                member_id : result[i].member_id,
-		                result_list_member_id : result[i].member_id
+		                id : result[i].id
 		            });   
 		        $('.wa-rank-list').append(s);
 	        	}
@@ -620,9 +633,9 @@
     查看选手详情
      */
 	$('body').delegate('.wa-rank-pic', 'click', function(event) {
-		var member_id = $(event.target).parents('.wa-rank-item').data('id');
+		var id = $(event.target).parents('.wa-rank-item').data('id');
 		for(var i=0;i<user_detail.length;i++){
-			if(user_detail[i].member_id == member_id){
+			if(user_detail[i].id == id){
 				var icon = user_detail[i].icon;
 				var name = user_detail[i].name;
 				var count = user_detail[i].count;
@@ -634,7 +647,7 @@
 				$('.wa-detail-serial-number').text('编号: ' + serial_number);
 				$('.wa-detail-vote-count span').text(count);
 				$('.wa-detail-bottom').text(details);
-				for (var i=0;i<pics.length;i++){
+				for (var j=0;j<pics.length;j++){
 					$('.wa-detail-bottom').append('<img src='+pics[i]+'>');
 				}
 			}

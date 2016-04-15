@@ -244,6 +244,7 @@ def get_rank_data(data):
 			'serial_number': d.serial_number,
 			'member_id': d.member_id,
 			'details': d.details,
-			'pics': d.pics
+			'pics': d.pics,
+			'id': str(d.id)
 		})
 	return result_list
