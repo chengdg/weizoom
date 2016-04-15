@@ -89,7 +89,7 @@
     <div class="print－all-orders-row">
 		<input type="checkBox" name="selectAllPrintOrders">
 		<span class="ml5 mr10">全选</span>
-		<a title="批量打印发货单" class="xa-order-print" href="javascript:void(0);">批量打印发货单</a> 
+		<a title="批量打印发货单" class="xa-order-print" href="javascript:void(0);">批量打印发货单</a>
     </div>
   <!-- 订单打印 2016.04.08 end -->
 	<table class="table table-condensed mb0 xui-tableHead">
@@ -118,7 +118,7 @@
 		</thead>
 	</table>
 
- 
+
 	{{/if}}
 
 	{{if data.pageinfo.object_count == 0}}
@@ -252,12 +252,12 @@
 						{{if order.member_id > 0}}
 							{{if order.member_is_subscribed > 0}}
 								{{if data.mall_type}}
-									<a target="_blank" href="/member/detail/?id=${ order.member_id }">{{html order.buyer_name}}</a>
+									<a target="_blank" href="/member/detail/?id=${ order.member_id }">{{html order.buyer_name}}</a>(${order.ship_name})
 								{{else}}
 									{{if order.supplier_user_id > 0}}
-										{{html order.buyer_name}}
+										{{html order.buyer_name}}(${order.ship_name})
 									{{else}}
-										<a target="_blank" href="/member/detail/?id=${ order.member_id }">{{html order.buyer_name}}</a>
+										<a target="_blank" href="/member/detail/?id=${ order.member_id }">{{html order.buyer_name}}</a>(${order.ship_name})
 									{{/if}}
 								{{/if}}
 							{{else}}
@@ -285,7 +285,7 @@
 								</i>
 							</span>
 						{{else}}
-							{{html order.buyer_name}}
+							{{html order.buyer_name}}(${order.ship_name})
 						{{/if}}
 						{{if order.customer_message}}
 							<p class="pt5 tc"><a class="xa-costomerMessage xui-costomerMessage" data-content="${order.customer_message}"></a></p>
@@ -367,7 +367,7 @@
 	    <div class="print－all-orders-row">
 			<input  type="checkBox" name="selectAllPrintOrders">
 			<span class="ml5 mr10">全选</span>
-			<a title="批量打印发货单" class="xa-order-print" href="javascript:void(0);">批量打印发货单</a> 
+			<a title="批量打印发货单" class="xa-order-print" href="javascript:void(0);">批量打印发货单</a>
 	    </div>
 	{{/if}}
 </script>
