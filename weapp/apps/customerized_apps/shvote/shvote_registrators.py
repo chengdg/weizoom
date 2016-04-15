@@ -32,6 +32,7 @@ class ShvoteRegistrators(resource.Resource):
 		"""
 		响应GET
 		"""
+		print 7888888888888888
 		has_data = app_models.ShvoteParticipance.objects(belong_to=request.GET['id']).count()#count<->是否有数据
 
 		c = RequestContext(request, {
@@ -277,23 +278,29 @@ class ShvoteCreatePlayer(resource.Resource):
 		"""
 		响应GET
 		"""
-		print 222222222222222222222224444
+		shvotes = app_models.Shvote.objects().all()
+		group_list = []
+		for v in shvotes:
+			group_list = group_list + (v.groups)
+
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
 			'second_navs': mall_export.get_promotion_and_apps_second_navs(request),
 			'second_nav_name': mall_export.MALL_APPS_SECOND_NAV,
 			'third_nav_name': "shvotes",
+			'groups': group_list
 		});
 
 		return render_to_response('shvote/templates/editor/shvote_create_player.html', c)
 
 	@login_required
 	def api_post(request):
-		head_img_src = request.POST.get('head_img_src', None)
-		player_name = request.POST.get('player_name', None)
-		group = request.POST.get('group', None)
-		serial_number = request.POST.get('serial_number', None)
-		details = request.POST.get('details', None)
+		head_img_src = request.POST['head_img_src']
+		player_name = request.POST['player_name']
+		group = request.POST['group']
+		serial_number = request.POST['serial_number']
+		details = request.POST['details']
+		img_des_srcs = json.loads(request.POST['img_des_srcs'])
 		webapp_owner_id = request.webapp_owner_id
 
 		id = app_models.Shvote.objects().get(owner_id = webapp_owner_id).id
@@ -308,14 +315,15 @@ class ShvoteCreatePlayer(resource.Resource):
 		try:
 			sh_participance = app_models.ShvoteParticipance(
 				belong_to = str(id),
-				icon = head_img_src.replace('\\','/'),
+				icon = head_img_src,
 				name = player_name,
 				group = group,
 				serial_number = serial_number,
 				details = details,
 				created_at = datetime.now(),
 				status = 1,
-				member_id = member_id
+				member_id = member_id,
+				pics = img_des_srcs
 			)
 			sh_participance.save()
 
@@ -377,5 +385,5 @@ class ShvoteUpload(resource.Resource):
 		dst_file = open(file_path, 'wb')
 		print >> dst_file, ''.join(content)
 		dst_file.close()
-		file_path = os.path.join('\standard_static', 'upload', 'owner_id'+owner_id, file.name)
+		file_path = os.path.join('\standard_static', 'upload', 'owner_id'+owner_id, file.name).replace('\\','/')
 		return file_path
