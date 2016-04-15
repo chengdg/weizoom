@@ -54,6 +54,45 @@ class Categories(resource.Resource):
         return response.get_response()
 
 
+class CategoryProducts(resource.Resource):
+    app = 'mall2'
+    resource = 'category_products'
+
+    @login_required
+    def api_get(request):
+        category_ids = request.GET.get('category_ids', '').split(',')
+        relations = mall_models.CategoryHasProduct.objects.filter(
+            category_id__in=category_ids)
+
+        product_ids = set([relation.product_id for relation in relations])
+
+        products = list(mall_models.Product.objects.filter(
+            owner=request.manager, is_deleted=False, shelve_type=mall_models.PRODUCT_SHELVE_TYPE_ON,id__in=product_ids))
+
+
+        mall_models.Product.fill_display_price(products)
+        mall_models.Product.fill_details(request.manager,
+                                         products,
+                                         {'with_sales': True})
+        result_products = []
+        for product in products:
+            result_products.append({
+                "id": product.id,
+                "name": product.name,
+                "display_price": product.display_price,
+                "status": product.status,
+                "sales": product.sales if product.sales else -1,
+                "update_time": product.update_time.strftime("%Y-%m-%d")
+            })
+
+        response = create_response(200)
+        response.data = {
+            'products': result_products
+        }
+        return response.get_response()
+
+
+
 class CategoryList(resource.Resource):
     app = 'mall2'
     resource = 'category_list'

@@ -34,10 +34,17 @@ class Promotion(resource.Resource):
             filter_type = request.GET.get('filter_type', "all")
             selectedProductIds = request.GET.get("selectedProductIds", "").split('_')
 
+            filter_name = request.GET.get('filter_name', '')
+
             products = models.Product.objects.filter(
                 owner=request.manager,
                 shelve_type=PRODUCT_SHELVE_TYPE_ON,
                 is_deleted=False)
+
+            if filter_name:
+                products = products.filter(name__contains=filter_name)
+
+
             if name:
                 products = products.filter(name__contains=name)
             if barCode:
