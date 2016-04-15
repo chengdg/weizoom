@@ -15,6 +15,41 @@ from core.exceptionutil import unicode_full_stack
 from watchdog.utils import watchdog_warning
 
 
+class Categories(resource.Resource):
+    """
+    分组列表通用类，只返回分组本身信息
+    """
+    app = 'mall2'
+    resource = 'categories'
+
+    @login_required
+    def api_get(request):
+        categories = mall_models.ProductCategory.objects.filter(
+            owner=request.manager)
+        count_per_page = int(request.GET.get('count_per_page', 10))
+        cur_page = int(request.GET.get('page', '1'))
+        pageinfo, categories = paginator.paginate(
+            categories, cur_page, count_per_page,
+            query_string=request.META['QUERY_STRING'])
+
+        items = []
+        for category in categories:
+            data = {
+                'id': category.id,
+                'name': category.name
+            }
+            items.append(data)
+
+        response = create_response(200)
+        response.data = {
+            'items': items,
+            'pageinfo': paginator.to_dict(pageinfo),
+            'sortAttr': '',
+            'data': {}
+        }
+        return response.get_response()
+
+
 class CategoryList(resource.Resource):
     app = 'mall2'
     resource = 'category_list'
