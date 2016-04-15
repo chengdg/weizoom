@@ -399,7 +399,7 @@ Scenario:3 购买商品后并支付,管理员通过后台管理系统点击'取�
 #补充：张三香 2016.04.15
 #新增需求：订单列表买家后面增加收货人姓名，买家（收货人）
 
-@order @allOrder 
+@mall2 @order @allOrder @eugene
 Scenario:4 订单列表显示收货人姓名
 	When bill访问jobs的webapp
 	And bill购买jobs的商品
