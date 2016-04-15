@@ -96,7 +96,7 @@ def __get_into_shvote_signup_pages(context,webapp_owner_id,shvote_id,openid):
 	response = context.client.get(url)#模拟获取填写资料页面
 
 	text = json.loads(context.text)
-	headImg = json.dumps(text.get('headImg'))
+	headImg = json.dumps([text.get('headImg')])
 	name = text.get('name','')
 	group = text.get('group',[""])[0]
 	number = text.get('number')
@@ -197,7 +197,7 @@ def step_impl(context,webapp_user_name):
 	raw_expected = json.loads(context.text)
 	expected = []
 	for expect in raw_expected:
-		icon = expect['headImg'][0]
+		icon = expect['headImg']
 		name = expect['player']
 		count = expect['votes']
 		serial_number = expect['number']

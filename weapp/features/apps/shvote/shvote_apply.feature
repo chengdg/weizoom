@@ -62,7 +62,7 @@ Scenario:1.微信用户可以进行高级投票报名
 	When bill参加高级投票报名活动
 	"""
 		{
-			"headImg":["head.jpg"],
+			"headImg":"head.jpg",
 			"name":"bill",
 			"group":["初中组"],
 			"number":"001",
@@ -73,7 +73,7 @@ Scenario:1.微信用户可以进行高级投票报名
 	"""
 	Then jobs获得报名详情列表
 	"""
-		[{	"headImg":["head.jpg"],
+		[{	"headImg":"head.jpg",
 			"player":"bill",
 			"votes":0,
 			"number":"001",
