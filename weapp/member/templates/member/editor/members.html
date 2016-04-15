@@ -741,11 +741,12 @@ $(document).ready(function() {
 	
 	$('.panel-body').delegate('.xa-export', 'click', function(event){
 		W.getApi().call({
-			app: 'member',
+			app: 'export_job',
 			resource: 'export_is_download',
 			method: 'get',
 			args: {
-				woid: woid
+				woid: woid,
+				type: 0,
 			},
 			success: function(data) {
 				if (data["status"] === 1 && data["is_download"] === 0){
@@ -764,15 +765,17 @@ $(document).ready(function() {
 					var options = {
 						el: '.panel-body',
 						topic_id: '',
-						type: '',
+						type: 0,
 						url: url,
 						jobId:0,
 						filter_value:filter_value,
 						isAlreadyExport : true,
+						app: 'member',
 						timelinesOptions: {
 							
 						}
 					}
+
 					var customersView = new W.CustomersView(options);
 				}
 			},
@@ -797,10 +800,11 @@ $(document).ready(function() {
 				url: "",
 				jobId:export2data["id"],
 				isAlreadyExport : true,
+				app: 'member',
 				timelinesOptions: {
 				}
 			}
-			var memberExportFileView = new W.dialog.member.ExportFileView(options);
+			var memberExportFileView = new W.dialog.ExportFileView(options);
 			memberExportFileView.finish();
 		};
 	}
@@ -815,10 +819,11 @@ $(document).ready(function() {
 				url: "",
 				jobId:export2data["id"],
 				isAlreadyExport : true,
+				app: 'member',
 				timelinesOptions: {
 				}
 			}
-			var memberExportFileView = new W.dialog.member.ExportFileView(options);
+			var memberExportFileView = new W.dialog.ExportFileView(options);
 			memberExportFileView.doExportAfterApi();
 		};
 	}

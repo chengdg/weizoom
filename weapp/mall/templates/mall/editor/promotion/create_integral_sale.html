@@ -83,9 +83,9 @@
 							<div class="oversetting">
 								<div class="xa-rule mt10 ml20" data-member-grade-id="-1">
 									<span class="discountTypeText">全部会员：</span>抵扣上限
-									<input type="text" style="width: 60px;" class="formColor xa-discount" data-validate="require-float"/> % <label style="width: 80px;" for="discount_money">抵扣金额：</label>
-									<span class="xa-discount-money">0.0</span>元
-									<div class="errorHint ml110 mt5 discountError" data-error-hint='请设置1-100之间的整数'></div>
+									<input type="text" style="width: 60px;" class="formColor xa-discount-money" data-validate="require-float::请输入最多2位小数的正数,,require-custom-function::不可高于商品价钱" data-validate-function="validatePrice"/> 元 <label style="width: 80px;" for="discount_money">金额占比：</label>
+									<span class="xa-discount">0</span>%
+									<div class="errorHint ml110 mt5 discountError"></div>
 								</div>
 							</div>
 						</div>
@@ -95,9 +95,9 @@
 								{% for member_grade in member_grades %}
 								<div class="xa-rule mt10 ml20" data-member-grade-id="{{member_grade.id}}">
 									<span class="discountTypeText">{{member_grade.name}}：</span>抵扣上限
-									<input type="text" style="width: 60px;" class="formColor xa-discount" value="{% if promotion %}{{promotion.detail.discount}}{% endif %}" disabled="disabled"/> % <label style="width: 80px;" for="discount_money" >抵扣金额：</label>
-									<span class="xa-discount-money">0.0</span>元
-									<div class="errorHint ml110 mt5 discountError" data-error-hint='请设置1-100之间的整数'></div>
+									<input type="text" style="width: 60px;" class="formColor xa-discount-money" data-validate-function="validatePrice"  disabled="disabled"/> 元<label style="width: 80px;" for="discount_money" >金额占比：</label>
+									<span class="xa-discount">0</span>%
+									<div class="errorHint ml110 mt5 discountError"></div>
 								</div>
 								{% endfor %}
 							</div>
@@ -208,7 +208,7 @@
 						{{/if}}
 					</div>
 				</td>
-				<td>
+				<td class="xa-product-price">
 					${product.display_price}
 				</td>
 				<td>
@@ -228,26 +228,36 @@
 var promotionId = {% if promotion %}{{promotion.id}}{% else %}0{% endif %};
 var currentProduct = null;
 
+var validatePrice =function(input){
+	var isValidate = parseFloat($(input).val()) <= parseFloat($('.xa-product-price').text());
+	if(isValidate){
+		$(input).parent().find('.errorHint').hide();
+	}
+	return {
+		isValidate: isValidate,
+	}
+}
 var onSelectProduct = function(products) {
 	currentProduct = this.products[0];
 	changeAllDiscountedMoney();
 }
-
 var changeAllDiscountedMoney = function() {
 	if (!currentProduct) {
 		return;
 	}
-	var $inputs = $('.xa-discount');
+	var $inputs = $('input.xa-discount-money[data-validate]');
 	for (var i = 0; i < $inputs.length; i++) {
 		var input = $inputs[i];
-		var discount = $(input).val();
-		if (!discount) {
+		validatePrice(input);
+		var discountMoney = $(input).val();
+		if (!discountMoney) {
 			return;
 		}
-
-		var discountMoney = (parseInt(discount)+0.0)/100 * currentProduct.display_price;
-		if (discountMoney) {
-			$(input).next().next().text(discountMoney.toFixed(2));
+		var discount = (discountMoney*1000)/(currentProduct.display_price*1000)*100;
+		if (parseInt(discount) == discount) {
+			$(input).next().next().text(discount);
+		}else{
+			$(input).next().next().text(discount.toFixed(2));
 		}
 	}
 }
@@ -258,15 +268,16 @@ var changeDiscountedMoney = function(_this) {
 	}
 
 	var $input = $(_this);
-	var discount = $input.val();
-	if (!discount) {
+	var discountMoney = $input.val();
+	if (!discountMoney || isNaN(discountMoney)) {
 		return;
 	}
-
-	var discountMoney = (parseInt(discount)+0.0)/100 * currentProduct.display_price;
-	if (discountMoney) {
-		$input.next().next().text(discountMoney.toFixed(2));
-	}
+	var discount = (discountMoney*1000)/(currentProduct.display_price*1000)*100;
+		if (parseInt(discount) == discount) {
+			$input.next().next().text(discount);
+		}else{
+			$input.next().next().text(discount.toFixed(2));
+		}
 }
 
 $(document).ready(function() {
@@ -274,7 +285,7 @@ $(document).ready(function() {
 		function(o){
 			if (this.value == 0) {
 				$(".oversetting").find("input").removeAttr("disabled");
-				$(".oversetting").find("input").attr("data-validate","require-float");
+				$(".oversetting").find("input").attr("data-validate","require-float::请输入最多2位小数的正数,,require-custom-function::不可高于商品价钱");
 				var inputs = $(".membersetting").find("input");
 				for(var i = 0; i < inputs.length; i++) {
 					$(inputs[i]).attr("disabled","disabled");
@@ -287,7 +298,7 @@ $(document).ready(function() {
 				var inputs = $(".membersetting").find("input");
 				for(var i = 0; i < inputs.length; i++) {
 					$(inputs[i]).removeAttr("disabled");
-					$(inputs[i]).attr("data-validate","require-percent");
+					$(inputs[i]).attr("data-validate","require-float::请输入最多2位小数的正数,,require-custom-function::不可高于商品价钱");
 				}
 				$(".discountError").text("");
 			}
@@ -316,8 +327,8 @@ $(document).ready(function() {
 	productSelector.on('finish-select-products', onSelectProduct);
 	productSelector.render();
 
-	$('.xa-discount').blur(function(event) {
-		changeDiscountedMoney(this);
+	$('.xa-discount-money').blur(function(event) {
+		changeDiscountedMoney(event.target);
 	});
 
 	$('.xa-type').change(function(event) {
@@ -343,8 +354,8 @@ $(document).ready(function() {
 			var $rule = $(this);
 			if ($rule.parent().prev().prev()[0].checked) {
 				var memberGradeId = $rule.data('memberGradeId') || -1;
-				var discount = parseInt($rule.find('.xa-discount').val());
-				var discount_money = $rule.find('.xa-discount-money').text()
+				var discount_money = $rule.find('.xa-discount-money').val();
+				var discount = $rule.find('.xa-discount').text();
 				rules.push({
 					member_grade_id: memberGradeId,
 					discount: discount,
@@ -352,7 +363,6 @@ $(document).ready(function() {
 				})
 			}
 		});
-
 		var args = $('.xa-form').serializeObject();
 		args.products = productSelector.getData();
 		args.rules = rules;

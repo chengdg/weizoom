@@ -73,7 +73,7 @@ W.view.common.ConfirmView = W.view.common.DropBox.extend({
     },
 
     submit: function() {
-        this.$('.xa-submit').bottonLoading({status:'show'});
+        this.$('.xa-submit,.xa-confirm').bottonLoading({status:'show'});
         this.trigger(this.SUBMIT_EVENT);
     },
 

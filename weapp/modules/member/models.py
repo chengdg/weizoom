@@ -496,6 +496,15 @@ class Member(models.Model):
 			return self.username_for_html
 
 	@cached_property
+	def username_for_print(self):
+		try:
+			username = unicode(self.username_for_html, 'utf8')
+			username = re.sub('<[^<]+?>', '*', username)
+			return username
+		except:
+			return self.username_for_html
+
+	@cached_property
 	def username_truncated(self):
 		try:
 			username = unicode(self.username_for_html, 'utf8')

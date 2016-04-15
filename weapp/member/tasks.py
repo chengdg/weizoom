@@ -1,19 +1,19 @@
 #coding:utf8
 from celery import task
-from account.models import ExportJob
+from export_job.models import ExportJob
 from modules.member.models import *
 from core import upyun_util
 from member_list import get_member_orders
 from watchdog.utils import watchdog_error
 from core.exceptionutil import unicode_full_stack
 from django.conf import settings
-from mall.models import Order, STATUS2TEXT,ORDER_STATUS_SUCCESSED
+from mall.models import Order, STATUS2TEXT,ORDER_STATUS_SUCCESSED,ProductReview,PRODUCT_REVIEW_STATUS,ProductReviewPicture,Product,ProductModel
 import xlsxwriter
 import os
 import time
 
 @task(bind=True, time_limit=7200, max_retries=2)
-def send_export_job_task(self, exportjob_id, filter_data_args, sort_attr, type, filename):
+def send_export_job_task(self, exportjob_id, filter_data_args, sort_attr, type):
 
 	export_jobs = ExportJob.objects.filter(id=exportjob_id)
 	if type == 0:
@@ -226,6 +226,4 @@ def send_export_job_task(self, exportjob_id, filter_data_args, sort_attr, type, 
 			notify_message = "导出会员任务失败,response:{}".format(unicode_full_stack())
 			export_jobs.update(status=2,is_download=1)
 			watchdog_error(notify_message)
-
-
 
