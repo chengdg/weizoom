@@ -24,8 +24,11 @@ class Categories(resource.Resource):
 
     @login_required
     def api_get(request):
+        filter_name = request.GET.get('filter_name', '')
         categories = mall_models.ProductCategory.objects.filter(
             owner=request.manager)
+        if filter_name:
+            categories = categories.filter(name__contains=filter_name)
         count_per_page = int(request.GET.get('count_per_page', 10))
         cur_page = int(request.GET.get('page', '1'))
         pageinfo, categories = paginator.paginate(
@@ -36,7 +39,8 @@ class Categories(resource.Resource):
         for category in categories:
             data = {
                 'id': category.id,
-                'name': category.name
+                'name': category.name,
+                'created_at': category.created_at.strftime("%Y-%m-%d %H:%M")
             }
             items.append(data)
 
