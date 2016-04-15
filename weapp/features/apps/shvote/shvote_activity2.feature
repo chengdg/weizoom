@@ -42,7 +42,6 @@ Feature: 高级投票活动
 Background:
 	Given jobs登录系统
 	When jobs新建微信高级投票活动
-		When jobs新建微信高级投票活动
 		"""
 		[{
 			"title":"微信高级投票-进行中",
