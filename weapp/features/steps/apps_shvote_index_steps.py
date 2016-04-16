@@ -47,15 +47,29 @@ def step_impl(context, webapp_user_name, title):
     user = User.objects.get(id=context.webapp_owner_id)
     openid = "%s_%s" % (webapp_user_name, user.username)
     _, record_id = __shvote_name2id('', title)
-    url = '/m/apps/shvote/m_shvote/?webapp_owner_id=%s&id=%s&fmt=%s&opid=%s' % (context.webapp_owner_id, str(record_id), context.member.token, openid)
-
-    #获取页面
-    response = context.client.get(url)
-    while response.status_code == 302:
-        redirect_url = response['Location']
-        response = context.client.get(redirect_url)
     context.shvote_id = str(record_id)
     context.openid = openid
+
+    #获取页面
+    view_mobile_main_page(context)
+
+
+def view_mobile_main_page(context):
+    """
+    进入活动主页
+    @param context:
+    @return:
+    """
+    return apps_util.get_response(context, {
+        "app": "m/apps/shvote",
+        "resource": "m_shvote",
+        "method": "get",
+        "type": "get",
+        "args": {
+            "webapp_owner_id": context.webapp_owner_id,
+            "id": context.shvote_id
+        }
+    })
 
 def get_dynamic_data(context):
     return apps_util.get_response(context, {
