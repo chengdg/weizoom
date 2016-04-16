@@ -107,7 +107,7 @@
                                     </li>
                                     {% endif %}
                                 {% elif third_nav.name == 'groups' %}
-                                	{% if request.user_profile.account_type != 0 %}
+                                	{% if request.user_profile.webapp_type != 1 %}
                                     <li class="xui-sideBar-third {% ifequal third_nav_name third_nav.name %}active_third{% endifequal %}">
                                         <a href="{{third_nav.url}}" title="{{third_nav.title}}" name="{{third_nav.name}}">
                                             &nbsp;&nbsp;&nbsp;&nbsp;{{third_nav.title|safe}}
