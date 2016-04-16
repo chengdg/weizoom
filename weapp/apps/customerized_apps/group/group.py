@@ -140,7 +140,7 @@ class Group(resource.Resource):
 							'product_img',
 							'product_price',
 							'product_socks',
-							'product_barcode',
+							'product_usercode',
 							'product_create_at',
 							'rules',
 							'material_image',

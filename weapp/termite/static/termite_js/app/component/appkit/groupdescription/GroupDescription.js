@@ -56,7 +56,7 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
 			dialog: 'W.dialog.termite.SelectProductDialog',
 			dialogParameter: '{"multiSelection": false}',
             validate:'data-validate=""',
-			default: {productId:'',productImg:'',productName:'',productPrice:'',productSocks:'',productSales:'',productCreate_at:'',productBarcode:''}
+			default: {productId:'',productImg:'',productName:'',productPrice:'',productSocks:'',productSales:'',productCreate_at:'',productUsercode:''}
 		}]},{
 
         group: '',//团购标题
@@ -216,7 +216,7 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
 					productPrice:product.display_price,
                     productSocks:product.stocks,
 					productSales:product.sales,
-                    productBarcode:product.bar_code
+                    productUsercode:product.user_code
 				}
 			}, {silent: true});
 
@@ -229,7 +229,7 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
 				var $target = $propertyViewNode.find($('table.xa-productList')).removeClass('xui-hide');
 				$target.find('.productImg').attr('src',product.thumbnails_url);
 				$target.find('.productName').html(product.name);
-				$target.find('.productBarCode').html('商品编码:'+product.bar_code);
+				$target.find('.productUserCode').html('商品编码:'+product.user_code);
 				$target.find('.productPrice').html(product.display_price);
 				$target.find('.productSocks').html(product.sales);
 
