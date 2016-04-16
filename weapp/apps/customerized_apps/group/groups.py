@@ -143,7 +143,7 @@ class Groups(resource.Resource):
 					r_id2details[r_id].append(detail)
 				else:
 					r_id2details[r_id]=[detail]
-#####################
+		##### 开团支付个数 start ################
 		g_id2details = {}
 		for g_id in group_ids:
 			detail_list = []
@@ -159,10 +159,7 @@ class Groups(resource.Resource):
 			else:
 				g_id2details[g_id] = []+detail_list
 
-		print 1111
-		print g_id2details
 		g_id2pay = {}
-
 		for g_id in group_ids:
 			pay_num = 0
 			if g_id in g_id2details:
@@ -174,9 +171,7 @@ class Groups(resource.Resource):
 				g_id2pay[g_id] = pay_num
 			else:
 				g_id2pay[g_id] = pay_num
-		print 22222
-		print g_id2pay
-#######################
+		###### 开团支付个数 end #################
 
 		for data in datas:
 			g_id = unicode(data.id)
