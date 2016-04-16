@@ -59,7 +59,7 @@
 			<span class="ml15">欢迎您：{{ request.user.username }}</span>
 			<a href="javascript:void(0)" onclick="logout()" title="{{ request.user.username }}" class="ml10">退出</a>
 			</span>
-				
+
 		</div>
 	</div>
 	<div class="xui-navBar xa-navBar">
@@ -74,7 +74,7 @@
 					{% endfor %}
 				{% endif %}
 			</ul>
-			
+
 		</div>
 	</div>
 </div>
@@ -106,6 +106,16 @@
                                         </a>
                                     </li>
                                     {% endif %}
+                                {% elif third_nav.name == 'groups' %}
+                                	{% if request.user_profile.account_type != 0 %}
+                                    <li class="xui-sideBar-third {% ifequal third_nav_name third_nav.name %}active_third{% endifequal %}">
+                                        <a href="{{third_nav.url}}" title="{{third_nav.title}}" name="{{third_nav.name}}">
+                                            &nbsp;&nbsp;&nbsp;&nbsp;{{third_nav.title|safe}}
+                                            <i class="xui-icon-arrow"></i>
+                                            {% if third_nav.class_name %}<i class="xui-noticyTip {{third_nav.class_name}}"></i>{% endif %}
+                                        </a>
+                                    </li>
+                               		{% endif %}
                                 {% else %}
                                     <li class="xui-sideBar-third {% ifequal third_nav_name third_nav.name %}active_third{% endifequal %}">
                                         <a href="{{third_nav.url}}" title="{{third_nav.title}}" name="{{third_nav.name}}">
@@ -220,10 +230,10 @@
 		});
 	}
 
-	
+
 
 	$(document).ready(function($) {
-		
+
 		setTimeout(function(){
 			common_interval_check_func();
 			{% if not under_develop %}
@@ -315,7 +325,7 @@
 				var oldPassword = $('#old_password').val();
 				var newPassword = $('#new_password').val();
 				var confirmPassword = $('#confirm_password').val();
-			
+
 				if (oldPassword.length == 0) {
 					$('.edit_password').text("请输入初始密码").css('display', 'block');
 					return false;
@@ -357,7 +367,7 @@
 							$('#confirm_password').val('');
 						}
 						else{
-							$('.edit_password').text("初始密码不正确").css('display', 'block');	
+							$('.edit_password').text("初始密码不正确").css('display', 'block');
 						}
 					}
 				});
