@@ -4,6 +4,7 @@
 """
 from datetime import datetime, timedelta
 import time
+import logging
 
 from django.core.management.base import BaseCommand, CommandError
 
@@ -36,12 +37,13 @@ class Command(BaseCommand):
             orders = mall_models.Order.objects.filter(
                     order_id__in=[r.order_id for r in relations],
                     status=mall_models.ORDER_STATUS_NOT,
-                    created_at__lte=datetime.now() - timedelta(minutes=15)
+                    created_at__lte=datetime.now() - timedelta(minutes=5)
                 )
             for order in orders:
                 try:
                     update_order_status(webapp_id2user[order.webapp_id], 'cancel', order)
-                    relations.filter(order_id=order.order_id).update(status=mall_models.GROUP_STATUS_failure)
+                    relations.filter(order_id=order.order_id).update(group_status=mall_models.GROUP_STATUS_failure)
+                    logging.info(u"团购15分钟未支付订单order_id:%s取消成功" % order.order_id)
                 except:
                     notify_msg = u"团购未支付订单{}，取消失败, cause:\n{}".format(order.order_id, unicode_full_stack())
                     watchdog_error(notify_msg)

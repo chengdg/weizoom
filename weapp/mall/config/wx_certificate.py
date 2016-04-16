@@ -9,7 +9,7 @@ from django.http import HttpResponseRedirect
 from core.jsonresponse import create_response, JsonResponse
 from mall import export
 from mall.models import WxCertSettings
-
+from core.upyun_util import upload_static_file
 from datetime import datetime
 
 import os,sys
@@ -54,7 +54,7 @@ class WXCertificate(resource.Resource):
         response = create_response(500)
         if upload_file:
             try:
-                file_path = WXCertificate.__save_cert_file( upload_file, owner_id)
+                file_path,up_path = WXCertificate.__save_cert_file( upload_file, owner_id)
             except:
                 response.errMsg = u'保存文件出错'
                 return response.get_response()
@@ -63,9 +63,11 @@ class WXCertificate(resource.Resource):
                 cert_setting = cert_setting.first()
                 if 'cert_file' == file_cat:
                     cert_setting.cert_path=file_path
+                    cert_setting.up_cert_path=up_path
                     cert_setting.save()
                 elif 'key_file' == file_cat:
                     cert_setting.key_path=file_path
+                    cert_setting.up_key_path=up_path
                     cert_setting.save()
             else:
                 cert_setting = WxCertSettings.objects.create(
@@ -73,8 +75,10 @@ class WXCertificate(resource.Resource):
                 )
                 if 'cert_file' == file_cat:
                     cert_setting.cert_path = file_path
+                    cert_setting.up_cert_path=up_path
                 elif 'key_file' == file_cat:
                     cert_setting.key_path = file_path
+                    cert_setting.up_key_path=up_path
                 cert_setting.save()
             response = create_response(200)
             response.data = file_path
@@ -98,6 +102,8 @@ class WXCertificate(resource.Resource):
                 content.append(chunk)
 
         dir_path = os.path.join(curr_dir,'upload','weixin_cert', 'owner_id'+owner_id)
+
+
         if not os.path.exists(dir_path):
             os.makedirs(dir_path)
         file_path = os.path.join(dir_path, file.name)
@@ -105,4 +111,9 @@ class WXCertificate(resource.Resource):
         dst_file = open(file_path, 'wb')
         print >> dst_file, ''.join(content)
         dst_file.close()
-        return file_path
+         # upload_static_file(file_path, upyun_path, check_exist=False):
+        try:
+            up_path = upload_static_file(file_path,"/cert_files/owner_id"+ owner_id +"/"+ file.name,False)
+        except:
+            up_path = upload_static_file(file_path,"/cert_files/owner_id"+ owner_id +"/"+ file.name,False)
+        return file_path,up_path

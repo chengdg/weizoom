@@ -1715,7 +1715,7 @@ def belong_to(webapp_id):
             cancel_group_order_ids = [order.order_id for order in Order.objects.filter(
                 order_id__in=[
                     r.order_id for r in group_order_relations.filter(
-                    group_status=GROUP_STATUS_failure)
+                    group_status__in=[GROUP_STATUS_OK, GROUP_STATUS_failure])
                     ],
                     status=ORDER_STATUS_CANCEL,
                     pay_interface_type=PAY_INTERFACE_WEIXIN_PAY
@@ -2610,7 +2610,10 @@ class WxCertSettings(models.Model):
 	"""
 	owner = models.ForeignKey(User) #活动所有者
 	cert_path = models.CharField(default="", max_length=1024) #证书
+	up_cert_path = models.CharField(default="", max_length=2048) #证书
+
 	key_path = models.CharField(default="", max_length=1024) #证书key
+	up_key_path = models.CharField(default="", max_length=2048) #证书key
 
 	class Meta(object):
 		verbose_name = "微信证书文件地址"
