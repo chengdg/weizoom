@@ -138,7 +138,7 @@ class GroupParticipances(resource.Resource):
 			if pass_tag:
 				members_count = "0"
 				if r_id2pay_memebers:
-					members_count = '%d/%s'%(len(r_id2pay_memebers[str(data.id)]),data.group_type)
+					members_count = '%d/%s'%(int(len(r_id2pay_memebers[str(data.id)])),data.group_type)
 
 
 				items.append({
