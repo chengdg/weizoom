@@ -67,31 +67,19 @@ class ShvoteParticipance(resource.Resource):
 		响应PUT
 		"""
 		try:
-			result_list = []
 			member_id = request.member.id
-			id = request.POST['belong_to']
-			termite_data = json.loads(request.POST['termite_data'])
-			for k in sorted(termite_data.keys()):
-				v = termite_data[k]
-				pureName = k.split('_')[1]
-				result_list_temp = {
-					pureName : v['value']
-				}
-				result_list.append(result_list_temp)
-			if result_list[4]['detail-pic']!='[]':
-				detailPic = json.loads(result_list[4]['detail-pic'])
-			else:
-				detailPic = []
+			record_id = request.POST['belong_to']
+			post = request.POST
 			try:
 				sh_participance = app_models.ShvoteParticipance(
-					belong_to = id,
+					belong_to = record_id,
 					member_id = member_id,
-					icon = json.loads(result_list[0]['headImg'])[0],
-					name = result_list[1]['name'],
-					group = request.POST['group'],
-					serial_number = result_list[2]['number'],
-					details = result_list[3]['details'],
-					pics = detailPic,
+					icon = post["icon"],
+					name = post["name"],
+					group = post["group"],
+					serial_number = post["serial_number"],
+					details = post["details"],
+					pics = json.loads(post["pics"]),
 					created_at = datetime.now()
 				)
 				sh_participance.save()
@@ -100,8 +88,7 @@ class ShvoteParticipance(resource.Resource):
 				response = create_response(500)
 				response.errMsg = u'只能报名一次'
 			return response.get_response()
-		except Exception,e:
-			print(e)
+		except:
 			response = create_response(500)
 			response.errMsg = u'报名失败'
 			response.inner_errMsg = unicode_full_stack()

@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from features.steps.apps_shvote_index_steps import get_dynamic_data
+
 __author__ = 'mark24'
 
 from behave import *
@@ -23,6 +25,7 @@ import time
 from django.core.management.base import BaseCommand, CommandError
 from utils.cache_util import SET_CACHE
 from modules.member.models import Member
+import apps_step_utils as apps_util
 
 
 def __date2time(date_str):
@@ -88,58 +91,33 @@ def __get_into_shvote_pages(context,webapp_owner_id,shvote_id,openid):
 	return response
 
 
-def __get_into_shvote_signup_pages(context,webapp_owner_id,shvote_id,openid):
+def __get_into_shvote_signup_pages(context):
 	#进入高级微信投票-- 报名，填写个人资料页面
-	url = '/m/apps/shvote/shvote_participance/?webapp_owner_id=%s&id=%s&opid=%s' % (webapp_owner_id, shvote_id,openid)
-	url = bdd_util.nginx(url)
-	context.link_url = url
-	response = context.client.get(url)#模拟获取填写资料页面
+	webapp_owner_id = context.webapp_owner_id
+	shvote_id = context.shvote_id
+	url = '/m/apps/shvote/shvote_participance/?webapp_owner_id=%s&id=%s&opid=%s' % (webapp_owner_id, shvote_id,context.openid)
+	#模拟获取填写资料页面
+	apps_util.get_response(context, url)
 
 	text = json.loads(context.text)
-	headImg = json.dumps([text.get('headImg')])
-	name = text.get('name','')
-	group = text.get('group',[""])[0]
-	number = text.get('number')
-	details = text.get('details','')
-	detail_pic = json.dumps(text.get('detail_pic'))
-
-	termite_data = {
-		"00_headImg":{
-			"type":"appkit.uploadimg",
-			"value":headImg
-		},
-		"01_name":{
-			"type":"appkit.qa",
-			"value":name
-		},
-		"02_number":{
-			"type":"appkit.qa",
-			"value":number
-		},
-		"03_details":{
-			"type":"appkit.qa",
-			"value":"details"
-		},
-		"04_detail-pic":{
-			"type":"appkit.uploadimg",
-			"value":detail_pic
-		}
-	}
-	termite_data_json = json.dumps(termite_data)
 
 	termite_post_args = {
 		'webapp_owner_id':webapp_owner_id,
 		'belong_to':shvote_id,
-		'termite_data':termite_data_json,
-		'group':group
+		'icon': text.get('icon'),
+		'name': text.get('name',''),
+		'group':text.get('group',""),
+		'serial_number': text.get('serial_number'),
+		'details': text.get('details',''),
+		'pics': json.dumps(text.get('pics'))
 	}
-
-	post_url = '/m/apps/shvote/api/shvote_participance/?_method=put&opid=%s'%(openid)
-	post_termite_response = context.client.post(post_url,termite_post_args)
-
-	while post_termite_response.status_code==302:
-		redirect_url = post_termite_response['Location']
-		post_termite_response = context.client.post(redirect_url,termite_post_args)
+	return apps_util.get_response(context, {
+		"app": "m/apps/shvote",
+		"resource": "shvote_participance",
+		"type": "api",
+		"method": "put",
+		"args": termite_post_args
+	}, termite_post_args)
 
 
 
@@ -167,13 +145,14 @@ def __get_into_shvote_signup_pages(context,webapp_owner_id,shvote_id,openid):
 def step_impl(context, webapp_user_name):
 	webapp_owner_id = str(context.webapp_owner_id)
 	shvote_id = context.shvote_id
-	openid = context.openid
 	print ">>>> Shvote Mobile Page --- Sign Up ----[start]>>>>"
 	print "webapp_owner_id:"+webapp_owner_id
 	print "shvote_id:"+shvote_id
 	print "<<<< Shvote Mobile Page --- Sign Up ----[ end ] <<<<"
-	response = __get_into_shvote_signup_pages(context,webapp_owner_id,shvote_id,openid)#resp.context=> data ; resp.content => Http Text
+	#获取动态数据
+	get_dynamic_data(context)
 
+	response = __get_into_shvote_signup_pages(context)#resp.context=> data ; resp.content => Http Text
 
 
 

@@ -111,3 +111,50 @@ def get_actions(status, exist=[]):
 
 def username2user(webapp_user_name):
     return User.objects.get(username=webapp_user_name)
+
+def get_response(context, options, param=None):
+    """
+    apps的api请求可能出现302
+    @param context
+    @param options {
+                "app": 'm/apps/shvote',
+                "resource": "get_rank_list",
+                "method": "get",
+                "args": {
+                    "webapp_owner_id": 2,
+                    "recordId": "asfas123adsfcagf"
+                }
+                "type": "api" 代表是api请求还是普通get请求
+            }
+    @return:
+    """
+    def __call(method, url, param):
+        response = getattr(context.client, method)(url, param)
+        req_count = 0
+        while response.status_code == 302:
+            req_count += 1
+            redirect_url = response['Location']
+            debug_print(redirect_url)
+            param = param if method == 'post' else {}
+            response = getattr(context.client, method)(redirect_url, param)
+            if req_count >= 5:
+                break
+        return response
+
+    if isinstance(options, (str, unicode)):
+        param = param if param else {}
+        url = options
+        return __call("get", url, param)
+
+    type = options.get("type", "get")
+
+    type_str = "/api/" if type == "api" else "/"
+
+    param = options.get("args", {})
+
+    _method = options.get("method", "get")
+
+    url = "/{}{}{}/?_method={}&opid={}".format(options.get("app",""), type_str, options.get("resource", ""), _method, context.openid)
+    method = "post" if _method in ["post", "put"] else "get"
+    debug_print(url)
+    return __call(method, url, param)

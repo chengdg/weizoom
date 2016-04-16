@@ -1,4 +1,4 @@
-{% extends "webapp_content_base_v4.html" %}
+{% extends "apps_base.html" %}
 
 {% block css %}
 <style type="text/css">
@@ -41,7 +41,7 @@
         <div class="wui-i-uploadimg xui-uploadHeadImg">
             <div class="xui-productPhoto xa-inputControl" data-input-type="imgarea" data-input-name="headImg" data-control-type="appkit.uploadimg" data-validate='require-upload-img::请上传头像'>
                 <label class="">头像</label>
-                <div class="xui-i-uploadHeadImg xa-uploadHeadImg">
+                <div class="xui-i-uploadHeadImg wa-uploadHeadImg">
                     <input
                         id="uploadHeadImg"
                         name="uploadHeadImg"
@@ -53,11 +53,11 @@
             </div>
         </div>
         <div class="xa-inputControl" data-input-type="textarea" data-input-name="name" data-control-type="appkit.qa">
-            <textarea class="wui-i-input" data-validate="require-notempty::请填写名称"></textarea>
+            <textarea class="wui-i-input wa-name" data-validate="require-notempty::请填写名称"></textarea>
             <label class="">名称</label>
         </div>
         <div>
-            <select class="" id="choose-group" data-input-name="choose-group">
+            <select class="wa-group" data-input-name="choose-group">
                 {% for group in groups %}
                 <option value="{{group}}">{{group}}</option>
                 {% endfor %}
@@ -65,17 +65,17 @@
             <label class="">分组选择</label>
         </div>
         <div class="xa-inputControl" data-input-type="textarea" data-input-name="number" data-control-type="appkit.qa">
-            <textarea class="wui-i-input" data-validate="require-notempty::请输入编号"></textarea>
+            <textarea class="wui-i-input wa-serial" data-validate="require-notempty::请输入编号"></textarea>
             <label class="">输入编号</label>
         </div>
         <div class="xa-inputControl" data-input-type="textarea" data-input-name="details" data-control-type="appkit.qa">
-            <textarea style="height: 150px;width: 90%;" class="wui-i-input" data-validate="require-notempty::请输入详情"></textarea>
+            <textarea style="height: 150px;width: 90%;" class="wui-i-input wa-details" data-validate="require-notempty::请输入详情"></textarea>
             <label class="">详情</label>
         </div>
         <div class="wui-UploadImg" style="">
             <div class="xui-productReviewCreatePage wui-i-uploadimg xa-inputControl" data-input-type="imgarea" data-input-name="detail-pic" data-control-type="appkit.uploadimg">
                 <div class="xui-productPhoto mt10">
-                    <div class="xui-addPhoto xa-addPhoto mb10 fl pr">
+                    <div class="xui-addPhoto wa-pics mb10 fl pr">
                         <input name="imgFile123" data-ui-role="uploadImage" type="file" style="opacity:0;top:0;left:0;width:45px;height:45px;" class="pa" multiple="">
                     </div>
                     <div class="xui-deletePhoto xa-deletePhoto" style="display:none;"></div>
@@ -102,74 +102,41 @@ $(document).ready(function() {
         if (!W.validate()) {
             return;
         }
-        var data = {};
-        var $controls = $('.xa-inputControl');
-        for (var i = 0; i < $controls.length; ++i) {
-            var $control = $controls.eq(i);
-            var inputType = $control.attr('data-input-type');
-            var controlType = $control.attr('data-control-type');
-            var name = $control.attr('data-input-name');
-            var cid = i.toString();
-            cid = cid.length<2 ? '0'+cid : cid;
-            name = cid+'_'+name;
-            if (inputType === 'textarea') {
-                var value = $.trim($control.find('textarea').val());
-            }else if (inputType === 'imgarea') {
-                var picture_list = [];
-                $control.find('img').each(function(){
-                    picture_list.push($(this).attr('data-src'));
-                });
-                var value = JSON.stringify(picture_list);
-            }
-            data[name] = {
-                type: controlType,
-                value: value
-            };
-        }
-        var group = $.trim($('#choose-group').val());
-        var participanceData = {
-            webapp_owner_id: W.webappOwnerId,
-            belong_to: W.appRecordId,
-            termite_data: JSON.stringify(data),
-            group: group
-        };
-        var $submitButtonContainer = $('.xa-submitButtonContainer');
-        getParticipance(participanceData,$submitButtonContainer);
-    });
+        loadingStatus(true);
 
-    function getParticipance(participanceData,$submitButtonContainer){
-        if (!slag){return;}
-        slag = false;
-        $('body').alert({
-            isShow: true,
-            info: '玩命传输中请等待...',
-            speed: 50000,
-            callBack: function() {
-            }
+        //图片
+        var pics = [];
+        $('.wa-pics').siblings("ul").find('img').each(function(){
+            pics.push($(this).attr('data-src'));
         });
+        var $submitButtonContainer = $('.xa-submitButtonContainer');
         W.getApi().call({
             app: 'm/apps/shvote',
             resource: 'shvote_participance',
             method: 'put',
-            args: participanceData,
+            args: {
+                webapp_owner_id: W.webappOwnerId,
+                belong_to: W.appRecordId,
+                icon: $('.wa-uploadHeadImg').siblings("ul").find('img').eq(0).attr("data-src"),
+                name: $('.wa-name').val(),
+                group: $.trim($('.wa-group').val()),
+                serial_number: $('.wa-serial').val(),
+                details: $('.wa-details').val(),
+                pics: JSON.stringify(pics)
+            },
             success: function(data) {
-                $('body').alert({
-                    isShow: false
-                });
-                $('body').alertParticipantResult({prize: data.prize,actionButtons: data.actionButtons});
+                if(data.code == 200){
+                    wuiAlert("报名成功", 5000);
+                }
+                loadingStatus();
                 $submitButtonContainer.hide();
             },
             error: function(data) {
-                $('body').alert({
-                    isShow: true,
-                    isSlide: true,
-                    info: data.errMsg,
-                    speed: 3000
-                });
-                slag = true;
+                loadingStatus();
+                wuiAlert(data.errMsg, 5000);
             }
         });
-    }
+    });
 });
 </script>
 {% endblock %}

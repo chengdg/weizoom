@@ -81,7 +81,7 @@ def __ReviewShvoteApply(context,player):
 	# update_data = {}
 	# update_data['set__status'] = MEMBER_STATUS['PASSED']
 	# shvote_participance = ShvoteParticipance.objects(**params).update(**update_data)
-	one_shvote_participance = ShvoteParticipance.objects(**params)[0]
+	one_shvote_participance = ShvoteParticipance.objects.get(**params)
 	participance_id = str(one_shvote_participance.id)
 
 
