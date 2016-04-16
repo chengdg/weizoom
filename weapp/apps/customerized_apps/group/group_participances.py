@@ -86,20 +86,20 @@ class GroupParticipances(resource.Resource):
 		cur_page = int(request.GET.get('page', '1'))
 		datas = app_models.GroupRelations.objects(**params).order_by('-created_at')#.order_by('group_days')
 
-		# ### 过滤支付 start
-		# r_id2pay_memebers = {}
-		# r_ids = [ str(data.id) for data in datas]
-		# all_details = app_models.GroupDetail.objects.filter(relation_belong_to__in=r_ids)
-		# for a_detail in all_details:
-		# 	r_id_tmp = str(a_detail.relation_belong_to)
-		# 	is_pay = a_detail.is_already_paid
-		# 	if is_pay:
-		# 		if r_id_tmp in r_id2pay_memebers:
-		# 			r_id2pay_memebers[r_id_tmp].append(a_detail.grouped_member_id)
-		# 		else:
-		# 			r_id2pay_memebers[r_id_tmp] = [a_detail.grouped_member_id]
-        #
-		# ### 过滤支付 end
+		### 过滤支付 start
+		r_id2pay_memebers = {}
+		r_ids = [ str(data.id) for data in datas]
+		all_details = app_models.GroupDetail.objects.filter(relation_belong_to__in=r_ids)
+		for a_detail in all_details:
+			r_id_tmp = str(a_detail.relation_belong_to)
+			is_pay = a_detail.is_already_paid
+			if is_pay:
+				if r_id_tmp in r_id2pay_memebers:
+					r_id2pay_memebers[r_id_tmp].append(a_detail.grouped_member_id)
+				else:
+					r_id2pay_memebers[r_id_tmp] = [a_detail.grouped_member_id]
+
+		### 过滤支付 end
 		items = []
 		for data in datas:
 			pass_tag = True
@@ -251,8 +251,8 @@ class GroupParticipancesDialog(resource.Resource):
 		relation = app_models.GroupRelations.objects(id=relation_id)[0]
 		group_price = relation.group_price
 
-		group_details = app_models.GroupDetail.objects(relation_belong_to = relation_id)
-		# group_details = app_models.GroupDetail.objects(relation_belong_to = relation_id,is_already_paid=True)### 过滤支付
+		# group_details = app_models.GroupDetail.objects(relation_belong_to = relation_id)
+		group_details = app_models.GroupDetail.objects(relation_belong_to = relation_id,is_already_paid=True)### 过滤支付
 		tmp_member_ids = [unicode(group_detail.grouped_member_id) for group_detail in group_details]
 		members = member_models.Member.objects.filter(id__in=tmp_member_ids)
 		member_id2member = {unicode(member.id): member for member in members}
