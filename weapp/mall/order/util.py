@@ -177,7 +177,7 @@ def export_orders_json(request):
     model_value_ids = []
     # print 'begin step 2.5 order_list - '+str(time.time() - begin_time)
     # product_ids =
-    for relation in OrderHasProduct.objects.filter(order__id__in=order_ids):
+    for relation in OrderHasProduct.objects.filter(order_id__in=order_ids):
         # if test_index % pre_page == pre_page - 1:
         #   print str(test_index) + 's-' +str(time.time() - begin_time)
         #   print relation.order_id
