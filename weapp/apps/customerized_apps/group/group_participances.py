@@ -137,7 +137,7 @@ class GroupParticipances(resource.Resource):
 				pass_tag = False
 			if pass_tag:
 				members_count = "0"
-				if r_id2pay_memebers:
+				if str(data.id) in r_id2pay_memebers:
 					members_count = '%d/%s'%(int(len(r_id2pay_memebers[str(data.id)])),data.group_type)
 
 
