@@ -22,7 +22,7 @@ class Command(BaseCommand):
 		try:
 			print ('group timer task start...')
 			start_time = time.time()
-
+			template_message_list = []
 			"""
 			所有已到时间还未完成的团购，置为团购失败
 			"""
@@ -36,7 +36,7 @@ class Command(BaseCommand):
 				if timing <= 0:
 					group_relation.update(set__group_status=app_models.GROUP_FAILURE)
 					update_order_status_by_group_status(group_relation.id,'failure')
-					#发送拼团失败模板消息
+					#收集拼团失败模板消息数据
 					try:
 						group_details = all_group_details_has_paid.filter(relation_belong_to=str(group_id))
 						group_info = all_groups.get(id=group_relation.belong_to)
@@ -54,11 +54,10 @@ class Command(BaseCommand):
 							"status" : 'fail',
 							"miss": str(miss)
 						}
-
 						member_info_list = [{"member_id": group_detail.grouped_member_id, "order_id": group_detail.order_id} for group_detail in group_details]
-						send_group_template_message(activity_info, member_info_list)
+						template_message_list.append({'activity_info':activity_info,'member_info_list':member_info_list})
 					except:
-						print(u'发送拼团成功模板消息失败')
+						print(u'读取拼团模板消息数据失败')
 
 			"""
 			所有团购活动已结束的团购活动，置为团购失败
@@ -74,7 +73,7 @@ class Command(BaseCommand):
 			for group_relation in all_end_group_relations:
 				group_relation.update(set__group_status=app_models.GROUP_FAILURE)
 				update_order_status_by_group_status(group_relation.id,'failure')
-				#发送拼团失败模板消息
+				#收集拼团失败模板消息数据
 				try:
 					group_details = all_group_details_has_paid.filter(relation_belong_to=str(group_id))
 					group_info = all_groups.get(id=group_relation.belong_to)
@@ -93,9 +92,9 @@ class Command(BaseCommand):
 						"miss": str(miss)
 					}
 					member_info_list = [{"member_id": group_detail.grouped_member_id, "order_id": group_detail.order_id} for group_detail in group_details]
-					send_group_template_message(activity_info, member_info_list)
+					template_message_list.append({'activity_info':activity_info,'member_info_list':member_info_list})
 				except:
-					print(u'发送拼团成功模板消息失败')
+					print(u'读取拼团模板消息数据失败')
 
 			"""
 			所有已到15分钟还未开团成功的团购，删除团购记录
@@ -122,6 +121,15 @@ class Command(BaseCommand):
 					except:
 						#该团已被删除掉了
 						pass
+			"""
+			发送拼团失败模板消息
+			"""
+			for template_message in template_message_list:
+				try:
+					send_group_template_message(template_message['activity_info'], template_message['member_info_list'])
+				except:
+					print(u'发送模板消息失败!!!!')
+					print(template_message)
 
 			end_time = time.time()
 			diff = (end_time-start_time)*1000
