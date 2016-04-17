@@ -238,7 +238,19 @@
         $('.wui-i-body').append($(detail_content));
 
         //下拉到底显示商品详情
-        document.addEventListener('touchend',function (ev) {
+//        window.onscroll = function(){
+//            var $win = $(window);
+//            var $top = $('.wui-i-product-description');
+//            var rect = $top[0].getBoundingClientRect();
+//            var djage = function(){
+//                return rect.top<0 || rect.top >= 0 && ($win.height()-rect.top>=0);
+//            };
+//            if(rect && djage()){
+//                showProductDetails();
+//            }
+//        };
+        
+        document.addEventListener('touchend',function () {
             var $win = $(window);
             var $top = $('.wui-i-product-description');
             var rect = $top[0].getBoundingClientRect();
@@ -336,6 +348,9 @@
         order_id = member_info.order_id;
         is_from_pay_result = member_info.is_from_pay_result;
         is_helper_unpaid = member_info.is_helper_unpaid;
+        if(member_info.group_relation_id !=''){
+            group_relation_id = member_info.group_relation_id;
+        }
         if (W.group_status == '团购进行中' && is_from_pay_result == true){
             showSuccessPaidWin()
         }
