@@ -163,3 +163,35 @@ class ShvoteParticipance(resource.Resource):
 
 		response = create_response(200)
 		return response.get_response()
+
+	def api_get(request):
+		"""
+		响应GET
+		"""
+		items_list = []
+		items = {}
+		if 'id' in request.GET:
+			try:
+				player_details = app_models.ShvoteParticipance.objects.get(id=request.GET['id'])
+			except:
+				response = create_response(500)
+				response.errMsg = u'选手信息出错，请稍后再试！'
+				return response.get_response()
+			vote_log = player_details.vote_log
+			if vote_log:
+				for created_at,member_ids in vote_log.items():
+					for member_id in member_ids:
+						try:
+							member = Member.objects.get(id = member_id)
+							member_name = member.username_for_html
+						except:
+							member_name = u'未知'
+						items_list.append({
+							'created_at': created_at,
+							'name': member_name	
+						})
+				items['items'] = items_list
+
+		response = create_response(200)
+		response.data = items
+		return response.get_response()

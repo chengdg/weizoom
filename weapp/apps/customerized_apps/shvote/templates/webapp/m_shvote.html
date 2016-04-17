@@ -496,7 +496,6 @@
             if(voteLock) return false;
             voteLock = true;
             var vote_to = $(this).attr('data-id'); 
-            console.log(vote_to);
             W.getApi().call({
                 app: 'm/apps/shvote',
                 resource: 'shvote_participance',
