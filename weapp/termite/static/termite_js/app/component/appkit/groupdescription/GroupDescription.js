@@ -233,7 +233,7 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
 
 			if (value[0]) {
 				//更新propertyView中的图片
-				console.log(value[0]);
+				// console.log(value[0]);
 
 				var $target = $propertyViewNode.find($('table.xa-productList')).removeClass('xui-hide');
 				$target.find('.productImg').attr('src',product.thumbnails_url);
