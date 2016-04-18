@@ -182,17 +182,19 @@
           var name = descriptionModel.get('title');
           var startTime = descriptionModel.get('start_time')+":00";
           var endTime = descriptionModel.get('end_time')+":00";
-            var description = descriptionModel.get('description');
-            var rule = descriptionModel.get('rule');
-            var groups = descriptionModel.get('groups');
+          var description = descriptionModel.get('description');
+          var rule = descriptionModel.get('rule');
+          var groups = descriptionModel.get('groups');
+          var votecount_per_one = descriptionModel.get('votecount_per_one');
           var relatedPageId = data['project_id'];
           var args = {
             "name": name,
             "start_time": startTime,
             "end_time": endTime,
-              "description": description,
-              "rule": rule,
-              "groups": JSON.stringify(groups)
+            "description": description,
+            "rule": rule,
+            "groups": JSON.stringify(groups),
+            "votecount_per_one":votecount_per_one
           };
           if (isCreateNewData) {
             var method = 'put';
