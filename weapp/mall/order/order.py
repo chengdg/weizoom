@@ -538,8 +538,8 @@ class orderConfig(resource.Resource):
         else:
             share_page_config = share_page_config[0]
 
-        if share_page_config.news_id:
-            news = News.objects.get(id=share_page_config.news_id)
+        if share_page_config.material_id:
+            news = News.objects.get(material_id=share_page_config.material_id)
         else:
             news = None
 
@@ -568,7 +568,7 @@ class orderConfig(resource.Resource):
 
         is_share_page = request.POST.get('isShowPage', False)
         share_background_image = request.POST.get('backgroundImage', '')
-        news_id = request.POST.get('newsId', '')
+        material_id = request.POST.get('materialId', '')
         share_image = request.POST.get('shareImage', '')
         share_describe = request.POST.get('shareInfo', '')
 
@@ -578,7 +578,7 @@ class orderConfig(resource.Resource):
                 share_page_config.update(
                     is_share_page=is_share_page,
                     background_image=share_background_image,
-                    news_id=news_id,
+                    material_id=material_id,
                     share_image=share_image,
                     share_describe=share_describe
                 )
@@ -590,14 +590,14 @@ class orderConfig(resource.Resource):
                     background_image=share_background_image,
                     share_image=share_image,
                     share_describe=share_describe,
-                    news_id=news_id
+                    material_id=material_id
                 )
         else:
             share_page_config.update(is_share_page=is_share_page)
             share_page_config = share_page_config[0]
 
-        if share_page_config.news_id:
-            news = News.objects.get(id=share_page_config.news_id)
+        if share_page_config.material_id:
+            news = News.objects.get(material_id=share_page_config.material_id)
         else:
             news = None
 
