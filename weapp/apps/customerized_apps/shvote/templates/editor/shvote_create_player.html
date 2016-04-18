@@ -70,7 +70,7 @@
 			margin-right: 10px;
 		}
 		.wui-btn-container{
-			width: 206px;
+			width: 311px;
 		    margin-left: 275px;
 		}
 		.wui-btn-container .wui-submit{
@@ -132,7 +132,10 @@
 			{% endfor %}
 		</div>
 		<div class="wui-btn-container">
-<!-- 			<button class="btn btn-primary wui-submit wa-submit">提交</button> -->
+			{% if status == 0 %}
+				<button class="btn btn-primary xa-review">审核通过</button>
+				<button class="btn btn-primary xa-delete">删除</button>
+			{% endif %}
 			<button class="btn btn-primary">取消</button>
 		</div>
 	</div>
@@ -178,7 +181,7 @@
 		<div class="wui-img-container wa-img-container"></div>
 		<div class="wui-btn-container">
 			<button class="btn btn-primary wui-submit wa-submit">提交</button>
-			<button class="btn btn-primary">取消</button>
+			<button class="btn btn-primary wa-cancel">取消</button>
 		</div>
 	</div>
 	{% endif %}
@@ -207,7 +210,6 @@ $(document).ready(function() {
 			app: 'apps/shvote',
 			resource: 'shvote_create_player',
 			args: {
-				webapp_owner_id: W.webappOwnerId,
 				head_img_src: head_img_src,
 				player_name: player_name,
 				group: group,
@@ -220,11 +222,71 @@ $(document).ready(function() {
 				W.showHint('success', '创建选手成功！');
 				href = "/apps/shvote/shvote_registrators/?id={{id}}";
 				setTimeout(function(){
-					window.location.href = href
+					window.location.href = href;
 				},3000);
 			},
 			error: function(error){
 				W.showHint('error', '创建选手失败！');
+			}
+		});
+	});
+
+	$('.wa-cancel').click(function(event) {
+		href = "/apps/shvote/shvote_registrators/?id={{id}}";
+		window.location.href = href;
+	});
+
+	$('body').delegate('.xa-review', 'click', function(event) {
+		var table = $('div[data-ui-role="advanced-table"]').data('view');
+		var id = '{{player_id}}';
+		W.getApi().call({
+			app: 'apps/shvote',
+			resource: 'shvote_registrators',
+			method: 'post',
+			args: {
+				id: id,
+			},
+			success: function(data) {
+				W.showHint('success', '审核成功！');
+				setTimeout(function(){
+					window.location.reload();
+				},2000);
+			},
+			error: function(response) {
+				W.showHint('error', '审核失败，请稍后再试！');
+			}
+		});
+	});
+
+	$('body').delegate('.xa-delete', 'click', function(event) {
+		var $el = $(event.target);
+		var id = '{{player_id}}';
+		W.requireConfirm({
+			$el: $el,
+			width: 420,
+			height: 55,
+			position: 'right-middle',
+			isTitle: false,
+			msg: '确定删除？',
+			confirm: function() {
+				W.getApi().call({
+					app: 'apps/shvote',
+					resource: 'shvote_registrators',
+					method: 'delete',
+					args: {
+						id: id
+					},
+					success: function(data) {
+						W.showHint('success', '删除成功！');
+						href = "/apps/shvote/shvote_registrators/?id={{id}}";
+						setTimeout(function(){
+							window.location.href = href;
+						},1000);
+					},
+					error: function(response) {
+						W.showHint('error', '删除失败，请稍后再试！');
+					}
+				});
 			}
 		});
 	});

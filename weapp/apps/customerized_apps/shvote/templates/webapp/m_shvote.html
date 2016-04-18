@@ -435,8 +435,8 @@
 				<img src="" class="wui-detail-user-pic">
 				<span class="wui-detail-user-name"></span>
 			</div>
-			<div class="wui-detail-btn">
-				<button class="wa-ivote">投票</button>
+			<div class="wui-detail-btn wa-detail-btn">
+				<button class="wa-ivote" data-id="">投票</button>
 				<button class="wa-detail-share">拉票</button>
 			</div>
 			<div class="wui-detail-middle">
@@ -681,6 +681,7 @@
 				$('.wa-detail-serial-number').text('编号: ' + serial_number);
 				$('.wa-detail-vote-count span').text(count);
 				$('.wa-detail-bottom').text(details);
+				$('.wa-detail-btn .wa-ivote').attr('data-id',user_detail[i].id);
 				for (var j=0;j<pics.length;j++){
 					$('.wa-detail-bottom').append('<img src='+pics[j]+'>');
 				}

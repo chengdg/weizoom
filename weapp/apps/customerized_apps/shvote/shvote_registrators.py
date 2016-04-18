@@ -283,8 +283,13 @@ class ShvoteCreatePlayer(resource.Resource):
 
 		#查看选手
 		cur_player_info = {}
+		status = 0
 		if player_id:
-			cur_player_info = app_models.ShvoteParticipance.objects().get(id = player_id)
+			try:
+				cur_player_info = app_models.ShvoteParticipance.objects().get(id = player_id)
+				status = cur_player_info.status
+			except:
+				pass
 
 		shvotes = app_models.Shvote.objects().all()
 		group_list = []
@@ -298,7 +303,9 @@ class ShvoteCreatePlayer(resource.Resource):
 			'third_nav_name': "shvotes",
 			'groups': group_list,
 			'id': activity_id,
-			'cur_player_info': cur_player_info
+			'cur_player_info': cur_player_info,
+			'status': status,
+			'player_id': player_id
 		});
 
 		return render_to_response('shvote/templates/editor/shvote_create_player.html', c)
