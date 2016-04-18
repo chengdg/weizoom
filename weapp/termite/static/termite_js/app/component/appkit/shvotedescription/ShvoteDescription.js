@@ -28,7 +28,7 @@ W.component.appkit.ShvoteDescription = W.component.Component.extend({
 			maxLength: 50,
 			isUserProperty: true,
 			validate: 'data-validate="require-notempty::投票规则不能为空,,require-word"',
-			placeholder: '每组每人每天可被投票1次(最多可输入50字)',
+			placeholder: '最多可输入50字',
 			default: ""
 		},{
 			name: 'votecount_per_one',
@@ -38,7 +38,7 @@ W.component.appkit.ShvoteDescription = W.component.Component.extend({
 			maxLength: 35,
 			validate: 'data-validate="require-notempty::请输入正整数,,require-positive-int"',
 			validateIgnoreDefaultValue: true,
-			default: '',
+			default: 0,
 			placeholder: '每个选手只能投一票'
 		},{
 			name: 'groups',

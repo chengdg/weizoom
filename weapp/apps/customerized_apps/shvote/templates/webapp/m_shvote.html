@@ -488,11 +488,11 @@
         var voteLock = false;
         $('.wa-rank-list').on('click','.wa-ivote', function(){
         	var left_chance = parseInt($('.wa-left-chance').html());
-        	if( !left_chance > 0) {
-        		wuiAlert('每天每组只可投票一次');
-        		return
+        	if(left_chance <= 0) {
+        		wuiAlert('今天该分组的投票次数已用完');
+        		return false;
         	}
-        	var that = $(this);
+        	var $this = $(this);
             if(voteLock) return false;
             voteLock = true;
             var vote_to = $(this).attr('data-id'); 
@@ -507,14 +507,14 @@
                     voted_group: current_group
                 },
                 success: function(data){
-                	wuiAlert('投票成功');
-                	var cur_vote = parseInt(that.siblings().find('span').html()) + 1;
+                	var cur_vote = parseInt($this.siblings().find('span').html()) + 1;
                 	var cur_count = parseInt($('.wa-total-counts').html()) + 1;
                 	$('.wa-total-counts').html(cur_count);
-                	that.siblings().find('span').html(cur_vote);
-                    voteLock = false;
+                	$this.siblings().find('span').html(cur_vote);
                     can_play_info[current_group] -= 1;
                     $('.wa-left-chance').html(can_play_info[current_group]);
+                    voteLock = false;
+                    wuiAlert('投票成功');
                 },
                 error: function(data){
                     voteLock = false;

@@ -115,18 +115,7 @@ def step_impl(context, webapp_user_name):
 def step_impl(context, webapp_user_name, group):
     #获取动态数据
     get_dynamic_data(context)
-    response = apps_util.get_response(context, {
-        "app": "m/apps/shvote",
-        "resource": "get_rank_list",
-        "method": "get",
-        "type": "api",
-        "args": {
-            "webapp_owner_id": context.webapp_owner_id,
-            "recordId": context.shvote_id,
-            "current_group": group,
-            "search_name": ""
-        }
-    })
+    response = __get_rank_data(context, group)
     expected_data = json.loads(context.text)
 
     result_data = json.loads(response.content)['data']['result_list']
@@ -145,3 +134,51 @@ def step_impl(context, webapp_user_name, group):
     apps_util.debug_print(expected_data)
     apps_util.debug_print(actual_data)
     bdd_util.assert_list(expected_data,actual_data)
+
+@Then(u"{webapp_user_name}获得微信高级投票活动单独页面排行榜'{group}'列表")
+def step_impl(context, webapp_user_name, group):
+    #获取页面
+    apps_util.get_response(context, {
+        "app": "m/apps/shvote",
+        "resource": "m_shvote_rank",
+        "method": "get",
+        "args": {
+            "webapp_owner_id": context.webapp_owner_id,
+            "id": context.shvote_id
+        }
+    })
+
+    #获取排行数据
+    response = __get_rank_data(context, group)
+    expected_data = json.loads(context.text)
+
+    result_data = json.loads(response.content)['data']['result_list']
+    expected_keys = actual_data = []
+
+    if len(expected_data) > 0:
+        expected_keys = expected_data[0].keys()
+
+    for data in result_data:
+        expected_keys = expected_keys if expected_keys else data.keys()
+        tmp_dict = {}
+        for k, v in data.items():
+            if k in expected_keys:
+                tmp_dict[k] = v
+        actual_data.append(tmp_dict)
+    apps_util.debug_print(expected_data)
+    apps_util.debug_print(actual_data)
+    bdd_util.assert_list(expected_data,actual_data)
+
+def __get_rank_data(context, group, search=""):
+        return apps_util.get_response(context, {
+            "app": "m/apps/shvote",
+            "resource": "m_shvote_rank",
+            "method": "get",
+            "type": "api",
+            "args": {
+                "webapp_owner_id": context.webapp_owner_id,
+                "recordId": context.shvote_id,
+                "current_group": group,
+                "search_name": search
+            }
+        })

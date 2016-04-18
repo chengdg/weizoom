@@ -44,6 +44,7 @@ class MShvote(resource.Resource):
 		member_id = member.id
 		isMember = member.is_subscribed
 		activity_status, record = update_shvote_status(record)
+		votecount_per_one = record.votecount_per_one
 
 		#增加访问数
 		record.visits += 1
@@ -58,7 +59,7 @@ class MShvote(resource.Resource):
 		#获取当前会员可投票的次数(默认每人每天每组可投票一次)
 		groups = record.groups
 		group_name2member = {}
-		group_name2canplay = {g: 1 for g in record.groups}
+		group_name2canplay = {g: votecount_per_one for g in record.groups}
 		now_date_str = datetime.now().strftime('%Y-%m-%d')
 		for m in member_datas:
 			tmp_list = m.vote_log.get(now_date_str, None)
@@ -69,9 +70,10 @@ class MShvote(resource.Resource):
 					group_name2member[m.group] = tmp_list
 
 		#判断当前会员每个组的可投票情况
-		for g, log in group_name2member.items():
-			if member_id in log:
-				group_name2canplay[g] = 0
+		for g, logs in group_name2member.items():
+			for log in logs:
+				if member_id == log and group_name2canplay[g] != 0:
+					group_name2canplay[g] -= 1
 
 		member_info = {
 			'can_play_info': group_name2canplay,
@@ -225,6 +227,8 @@ def get_rank_data(data):
 		'group' : data['current_group'],
 		'status' : app_models.MEMBER_STATUS['PASSED']
 	}
+
+	print "current_group================", data['current_group']
 
 	if data.get('search_name') != '':
 		search_name = data.get('search_name')

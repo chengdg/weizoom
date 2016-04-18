@@ -69,7 +69,7 @@ W.view.apps.BadgeToolsPane = Backbone.View.extend({
 			return false;
 		}
 		//替换相邻多个空格为一个
-		var keyword = this.$el.find('.xa-app-add').val();
+		var keyword = $.trim(this.$el.find('.xa-app-add').val());
 		if(keyword == '') {
 			W.showHint('error','关键字不能为空！');
 			return false;

@@ -135,7 +135,7 @@ class ShvoteParticipance(resource.Resource):
 			)
 			control.save()
 		except:
-			response.errMsg = u'只能投票一次'
+			response.errMsg = u'今天只能投票一次'
 			return response.get_response()
 
 		try:
