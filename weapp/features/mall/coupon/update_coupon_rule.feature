@@ -47,13 +47,13 @@ Scenario:1 更改优惠券规则名和使用说明
 		"""
 		{
 			"name": "单品券",
-			"description":"使用说明单品券-修改",
+			"description":"使用说明单品券-修改"
 		}
 		"""
 	Then jobs获得优惠券规则'单品券'
 		"""
 		{
-			"name": "单品券2",
+			"name": "单品券",
 			"money": 10.00,
 			"limit_counts": 10,
 			"count": 4,
@@ -67,7 +67,7 @@ Scenario:1 更改优惠券规则名和使用说明
 		"""
 		{
 			"name": "全体券",
-			"description":"使用说明全体券-修改",
+			"description":"使用说明全体券-修改"
 		}
 		"""
 	Then jobs获得优惠券规则'全体券'

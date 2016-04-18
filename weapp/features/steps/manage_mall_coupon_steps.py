@@ -86,10 +86,14 @@ def step_impl(context, user_name, coupon_rule_name):
     coupon_rule = CouponRule.objects.get(owner_id=user_id, name=coupon_rule_name, is_active=True)
     url = '/mall2/api/coupon_rule/'
 
-    name = json.loads(context.text)['name']
+
+    new_one = json.loads(context.text)
+    name = new_one['name']
+    description = new_one['description']
     data = {
         "rule_id": coupon_rule.id,
-        "name": name
+        "name": name,
+        "remark":description
     }
 
     response = context.client.post(url, data)
