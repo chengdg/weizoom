@@ -378,6 +378,25 @@ $(function(){
       is_need_check_limit_product=true;
     }
   });
+
+  var addSelectedProduct = function(new_products) {
+      // 合并数组，并且按照id去重
+      products_data = _.uniq(_.union(products_data, new_products), false, 'id');
+      console.log(products_data, new_products);
+
+      var $node = $.tmpl($('#selected-promotion-products-view-tmpl-src'), {products: products_data});
+      $('.xa-product').empty().append($node);
+      var ids = '';
+      $.each(products_data, function(i,n){
+          ids += ',' + n.id;
+      });
+      if(ids.length > 0){
+          ids = ids.substring(1);          
+      }
+      xlog(ids)
+      $('[name="product_ids"]').val(ids)
+  };
+
   // 添加商品
   $('.xa-addProduct').click(function(){
     W.dialog.showDialog('W.dialog.mall.SelectCouponProductDialog', {
@@ -386,38 +405,52 @@ $(function(){
           'add_link': "/mall2/product/",
           'name': "已上架商品", 
           'type': "product",
-          
+          'api': "promotion",
+          'template': "#coupon-products-view"
       }, {            
           'add_link': "/mall2/category_list/",
           'name': "商品分组",
-          'type': "category"
+          'type': "category",
+          'api': "categories",
+          'template': "#coupon-categories-view"
       }],
       success: function(data) {
-        if (data.length == 0) {
+        console.log('categoryIds', data)
+        if (data.data.length == 0) {
             return;
         }
-        // 合并数组，并且按照id去重
-        products_data = _.uniq(_.union(products_data, data), false, 'id');
-        console.log(products_data, data);
 
-        var $node = $.tmpl($('#selected-promotion-products-view-tmpl-src'), {products: products_data});
-        $('.xa-product').empty().append($node);
-        var ids = '';
-        $.each(products_data, function(i,n){
-            ids += ',' + n.id;
-        });
-        if(ids.length > 0){
-            ids = ids.substring(1);          
+        if (data.type === 'product') {
+          addSelectedProduct(data.data);
+        } else {
+          var new_products = [];
+
+          W.getApi().call({
+              method: 'get',
+              app: 'mall2',
+              resource: 'category_products',
+              args: {
+                category_ids: data.data.join(','),
+              },
+              scope: this,
+              success: function(successData) { 
+                  addSelectedProduct(successData.products);
+              },
+              error: function() {
+                  W.showHint('error','获取分组中的商品失败，请稍后重试！');
+              }
+          });
         }
-        xlog(ids)
-        $('[name="product_ids"]').val(ids)
       }
     });
   });
 
   $('.xa-product').delegate('.xa-delete', 'click', function(event) {
-    var $tr = $(event.currentTarget).parents('table').eq(0);
+    var $tr = $(event.currentTarget).parents('tr').eq(0);
+    var product_id = parseInt($tr.data('id'));
     $tr.remove();
+    console.log(product_id, $tr);
+    products_data = _.filter(products_data, function(product){ return product.id !== product_id; });
   });
 
   var msg = '添加';

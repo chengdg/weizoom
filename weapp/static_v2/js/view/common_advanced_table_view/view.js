@@ -21,6 +21,20 @@ W.view.common.AdvancedTable = Backbone.View.extend({
     },
 
     /**
+     * setTemplate: 动态改变template
+     */
+    setTemplate: function (template) {
+        this.template = this.getTemplate({template: template});
+    },
+
+    /**
+     * setApi: 动态改变api地址
+     */
+    setApi: function (api) {
+        this.options.api = api;
+    },
+    
+    /**
      * getTemplate: 将options.template指定的模板源码编译为名为${options.template}-tmpl的模板
      */
     getTemplate: function(options) {
