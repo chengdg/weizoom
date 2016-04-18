@@ -570,7 +570,7 @@ class orderConfig(resource.Resource):
                 share_page_config.update(
                     is_share_page=is_share_page,
                     background_image=share_background_image,
-                    news_id=int(news_id),
+                    news_id=news_id,
                     share_image=share_image,
                     share_describe=share_describe
                 )
@@ -582,7 +582,7 @@ class orderConfig(resource.Resource):
                     background_image=share_background_image,
                     share_image=share_image,
                     share_describe=share_describe,
-                    news_id=int(news_id)
+                    news_id=news_id
                 )
 
         mall_config = MallConfig.objects.filter(owner=request.manager)[0]
