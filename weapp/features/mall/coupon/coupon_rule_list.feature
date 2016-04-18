@@ -42,7 +42,7 @@ Background:
 			"name": "商品3",
 			"price": 200.00
 		},{
-			"name": "商品3",
+			"name": "商品4",
 			"price": 200.00
 		}]
 		"""
