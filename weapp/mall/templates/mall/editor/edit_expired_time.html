@@ -48,7 +48,7 @@
 							<td>选择要分享的图文：<br/><span class="c9">（仅显示正文内容）</span></td>
 							<td>
 								<div class="xa-wxMessageSection">
-									<a href="javascript:void(0);" class="xa-wxMessage">添加</a>
+									<a href="javascript:void(0);" class="xa-wxMessage xui-inlineblock mb15">添加</a>
 								</div>
 							</td>
 						</tr>
@@ -114,8 +114,8 @@
 				}
 			});
 		})
-		$('.xa-wxMessage').click(function(event) {
-			W.dialog.showDialog('W.dialog.weixin.SelectMaterialDialog',{
+		var showDialog = function(){
+			W.dialog.showDialog('W.dialog.weixin.SelectSingleMaterialDialog',{
 				handleHideBtn:true,
 				success:function(material){
 					// this.setNewsesTitles(material.newses);
@@ -123,9 +123,12 @@
 						material: material
 					});
 					var $el = newsView.render();
-					$('.xa-wxMessageSection').html($el);
+					$('.xa-wxMessageSection').html($el).append('<a href="javascript:void(0);" class="xa-changeNews mt10 ml10 xui-inlineblock">更换</a>');
 				}
 			});
+		}
+		$('body').delegate('.xa-wxMessage,.xa-changeNews','click',function(){
+			showDialog();
 		});
 	});
 </script>
