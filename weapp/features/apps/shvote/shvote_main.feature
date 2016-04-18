@@ -46,7 +46,7 @@ Background:
 		[{
 			"title":"微信高级投票-进行中",
 			"groups":["初中组","高中组"],
-			"daily_vote":3
+			"daily_vote":2
 			"rule": "高级投票规则",
 			"desc":"高级投票活动介绍",
 			"start_date":"2天前",
@@ -673,4 +673,169 @@ Scenario:5 微信用户搜索选手
 			[]
 		"""
 
+@mall2 @apps @shvote @shvote_activity
+Scenario:6 每人每天可以为不同的人投票
+		#同一人有两次机会为别人投票
+	Given jobs登录系统
+	When jobs于高级微信投票活动审核通过'bill'
+	When jobs于高级微信投票活动审核通过'tom'
+	When jobs于高级微信投票活动审核通过'zhouxun'
+	When tom关注jobs的公众号
+	When tom访问jobs的webapp
+	When tom在微信中向jobs的公众号发送消息'微信高级投票'
+	Then tom收到自动回复'高级微信投票活动1单图文'
+	When tom点击图文'高级微信投票活动1单图文'进入高级微信投票活动页面
+	When tom在高级投票中为'bill'投票
+	Then tom获得微信高级投票活动主页排行榜'初中组'列表
+		"""
+			[{
+				"icon": "bill_head.jpg",
+				"name":"bill",
+				"group":"初中组",
+				"serial_number":"001",
+				"details": "bill的产品好",
+				"pics": ["pic1.jpg","pic2.jpg"],
+				"count":1
+			},{
+				"name":"tom",
+				"icon": "tom_head.jpg",
+				"group":"初中组",
+				"serial_number":"002",
+				"details":"tom的产品好",
+				"pics": ["pic3.jpg","pic4.jpg"],
+				"count":0
+			}]
+		"""
+	Then tom获得微信高级投票活动主页排行榜'高中组'列表
+		"""
+			[{
+				"icon": "zhouxun_head.jpg",
+				"name":"zhouxun",
+				"group":"高中组",
+				"serial_number":"003",
+				"details":"zhouxun的产品好",
+				"pics": ["pic5.jpg","pic6.jpg"],
+				"count":0
+			}]
+		"""
+	
+	Then jobs获得微信高级投票活动列表
+		"""
+		[{
+			"name":"微信高级投票-进行中",
+			"total_vote_count":1,
+			"total_participant_count":3,
+			"start_date":"2天前",
+			"end_date":"2天后",
+			"status":"进行中",
+			"actions": ["关闭","链接","预览","报名详情","查看结果"]
+		}]
+		"""
+	When tom关注jobs的公众号
+	When tom访问jobs的webapp
+	When tom在微信中向jobs的公众号发送消息'微信高级投票'
+	Then tom收到自动回复'高级微信投票活动1单图文'
+	When tom点击图文'高级微信投票活动1单图文'进入高级微信投票活动页面
+	When tom在高级投票中为'tom'投票
+	Thentom获得微信高级投票活动主页排行榜'初中组'列表
+		"""
+			[{
+				"icon": "bill_head.jpg",
+				"name":"bill",
+				"group":"初中组",
+				"serial_number":"001",
+				"details": "bill的产品好",
+				"pics": ["pic1.jpg","pic2.jpg"],
+				"count":1
+			},{
+				"name":"tom",
+				"icon": "tom_head.jpg",
+				"group":"初中组",
+				"serial_number":"002",
+				"details":"tom的产品好",
+				"pics": ["pic3.jpg","pic4.jpg"],
+				"count":1
+			}]
+		"""
+	Then tom获得微信高级投票活动主页排行榜'高中组'列表
+		"""
+			[{
+				"icon": "zhouxun_head.jpg",
+				"name":"zhouxun",
+				"group":"高中组",
+				"serial_number":"003",
+				"details":"zhouxun的产品好",
+				"pics": ["pic5.jpg","pic6.jpg"],
+				"count":0
+			}]
+		"""
+
+	Then jobs获得微信高级投票活动列表
+		"""
+		[{
+			"name":"微信高级投票-进行中",
+			"total_vote_count":2,
+			"total_participant_count":3,
+			"start_date":"2天前",
+			"end_date":"2天后",
+			"status":"进行中",
+			"actions": ["关闭","链接","预览","报名详情","查看结果"]
+		}]
+		"""
+
+	When tom关注jobs的公众号
+	When tom访问jobs的webapp
+	When tom在微信中向jobs的公众号发送消息'微信高级投票'
+	Then tom收到自动回复'高级微信投票活动1单图文'
+	When tom点击图文'高级微信投票活动1单图文'进入高级微信投票活动页面
+	When tom在高级投票中为'tom'投票
+	Then tom获得微信高级投票活动主页排行榜'初中组'列表
+		"""
+			[{
+				"icon": "bill_head.jpg",
+				"name":"bill",
+				"group":"初中组",
+				"serial_number":"001",
+				"details": "bill的产品好",
+				"pics": ["pic1.jpg","pic2.jpg"],
+				"count":1
+			},{
+				"name":"tom",
+				"icon": "tom_head.jpg",
+				"group":"初中组",
+				"serial_number":"002",
+				"details":"tom的产品好",
+				"pics": ["pic3.jpg","pic4.jpg"],
+				"count":1
+			}]
+		"""
+	Then tom获得微信高级投票活动主页排行榜'高中组'列表
+		"""
+			[{
+				"icon": "zhouxun_head.jpg",
+				"name":"zhouxun",
+				"group":"高中组",
+				"serial_number":"003",
+				"details":"zhouxun的产品好",
+				"pics": ["pic5.jpg","pic6.jpg"],
+				"count":0
+			}]
+		"""
+	
+
+
+
+
+	Then jobs获得微信高级投票活动列表
+		"""
+		[{
+			"name":"微信高级投票-进行中",
+			"total_vote_count":2,
+			"total_participant_count":3,
+			"start_date":"2天前",
+			"end_date":"2天后",
+			"status":"进行中",
+			"actions": ["关闭","链接","预览","报名详情","查看结果"]
+		}]
+		"""
 
