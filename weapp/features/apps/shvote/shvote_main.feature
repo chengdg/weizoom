@@ -46,6 +46,7 @@ Background:
 		[{
 			"title":"微信高级投票-进行中",
 			"groups":["初中组","高中组"],
+			"daily_vote":3
 			"rule": "高级投票规则",
 			"desc":"高级投票活动介绍",
 			"start_date":"2天前",
@@ -596,7 +597,7 @@ Scenario:4 微信用户可以给参与者投票
 				"count":1
 			}]
 		"""
-	Then tom获得微信高级投票活动单独页面排行榜'高中组'列表
+	Then mayun获得微信高级投票活动单独页面排行榜'高中组'列表
 		"""
 			[{
 				"icon": "zhouxun_head.jpg",

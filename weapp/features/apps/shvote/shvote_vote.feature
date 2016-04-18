@@ -13,6 +13,7 @@ Background:
 		[{
 			"title":"微信高级投票-进行中",
 			"groups":["初中组"],
+			"daily_vote":2
 			"desc":"高级投票活动介绍",
 			"rule":"高级投票活动规则",
 			"start_date":"2天前",
@@ -44,7 +45,7 @@ Background:
 				}],
 			"keyword_reply": 
 				[{
-					"reply_content":"高级投票活动1单图文",
+					"reply_content":"高级微信投票活动1单图文",
 					"reply_type":"text_picture"
 				}]
 		
