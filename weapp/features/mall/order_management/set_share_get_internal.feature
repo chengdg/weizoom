@@ -26,6 +26,7 @@ Feature:后台设置'订单提交成功后提示分享赚积分'功能
 
 	"""
 
+@shareOrder @order @eugene
 Scenario:1 后台设置'订单提交成功后提示分享赚积分'功能
 	Given jobs登录系统
 	And jobs设定会员积分策略
