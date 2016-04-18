@@ -24,6 +24,7 @@ from modules.member.models import WebAppUser
 from account.models import UserProfile
 from mall.module_api import update_order_status
 from weixin.user.module_api import get_mp_qrcode_img
+from weixin2.models import News
 
 COUNT_PER_PAGE = 20
 FIRST_NAV = export.ORDER_FIRST_NAV
@@ -536,12 +537,19 @@ class orderConfig(resource.Resource):
             share_page_config = MallShareOrderPageConfig.objects.create(owner=request.user, is_share_page=False)
         else:
             share_page_config = share_page_config[0]
+
+        if share_page_config.news_id:
+            news = News.objects.get(id=share_page_config.news_id)
+        else:
+            news = None
+
         c = RequestContext(request, {
             'first_nav_name': FIRST_NAV,
             'second_navs': export.get_mall_order_second_navs(request),
             'second_nav_name': export.ORDER_EXPIRED_TIME,
             'mall_config': mall_config,
-            'share_page_config': share_page_config
+            'share_page_config': share_page_config,
+            'news': news
         })
         return render_to_response('mall/editor/edit_expired_time.html', c)
 
@@ -584,6 +592,13 @@ class orderConfig(resource.Resource):
                     share_describe=share_describe,
                     news_id=news_id
                 )
+        else:
+            share_page_config = share_page_config[0]
+
+        if share_page_config.news_id:
+            news = News.objects.get(id=share_page_config.news_id)
+        else:
+            news = None
 
         mall_config = MallConfig.objects.filter(owner=request.manager)[0]
         c = RequestContext(request, {
@@ -591,6 +606,7 @@ class orderConfig(resource.Resource):
             'second_navs': export.get_mall_order_second_navs(request),
             'second_nav_name': export.ORDER_EXPIRED_TIME,
             'mall_config': mall_config,
-            'share_page_config': share_page_config
+            'share_page_config': share_page_config,
+            'news': news
         })
         return render_to_response('mall/editor/edit_expired_time.html', c)
