@@ -560,7 +560,7 @@ class orderConfig(resource.Resource):
 
         is_share_page = request.POST.get('isShowPage', False)
         share_background_image = request.POST.get('backgroundImage', '')
-        share_material_id = request.POST.get('share_material_id', '')
+        news_id = request.POST.get('newsId', '')
         share_image = request.POST.get('shareImage', '')
         share_describe = request.POST.get('shareInfo', '')
 
@@ -570,17 +570,19 @@ class orderConfig(resource.Resource):
                 share_page_config.update(
                     is_share_page=is_share_page,
                     background_image=share_background_image,
+                    news_id=int(news_id),
                     share_image=share_image,
                     share_describe=share_describe
                 )
                 share_page_config = share_page_config[0]
             else:
                 share_page_config = MallShareOrderPageConfig.objects.create(
+                    owner=request.user,
                     is_share_page=is_share_page,
                     background_image=share_background_image,
                     share_image=share_image,
                     share_describe=share_describe,
-                    material_id=share_material_id
+                    news_id=int(news_id)
                 )
 
         mall_config = MallConfig.objects.filter(owner=request.manager)[0]
