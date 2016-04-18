@@ -104,7 +104,7 @@ Background:
 		"""
 	When jobs失效优惠券'通用券-已失效'
 
-@promotion @promotionCoupon @online_bug
+@promotion @promotionCoupon @online_bug @ztqb
 Scenario:1 优惠券规则列表按照添加顺序倒序排列
 	Given jobs登录系统
 	Then jobs能获得优惠券规则列表

@@ -445,9 +445,17 @@ class CouponRuleProducts(resource.Resource):
             'with_concrete_promotion': True
         })
 
+        products = promotion.products
+
+        count_per_page = int(request.GET.get('count_per_page', 10))
+        cur_page = int(request.GET.get('page', '1'))
+        pageinfo, products = paginator.paginate(
+            products, cur_page, count_per_page,
+            query_string=request.META['QUERY_STRING'])
+
         items = []
 
-        for product in promotion.products:
+        for product in products:
             item = {
                 "name": product.name,
                 "bar_code": product.bar_code,
@@ -459,6 +467,9 @@ class CouponRuleProducts(resource.Resource):
             items.append(item)
         response = create_response(200)
         response.data = {
-            'items': items
+            'items': items,
+            'pageinfo': paginator.to_dict(pageinfo),
+            'sortAttr': 'id',
+            'data': {}
         }
         return response.get_response()
