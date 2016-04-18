@@ -55,16 +55,10 @@ def step_impl(context, user_name):
     response = context.client.get(url)
     coupon_rules = json.loads(response.content)['data']['items']
 
-    print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~1')
-    print(coupon_rules)
-    print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~2')
-
     actual = []
     for coupon_rule in coupon_rules:
-        print('----------------------------c',coupon_rule['detail'])
         rule = {}
         rule["name"] = coupon_rule["name"]
-        rule["type"] = "多商品券" if coupon_rule["detail"]["limit_product"] else "通用券"
         rule["money"] = coupon_rule["detail"]["money"]
         rule["remained_count"] = coupon_rule["detail"]["remained_count"]
         rule["limit_counts"] = coupon_rule["detail"]["limit_counts"] if coupon_rule["detail"]["limit_counts"] != -1 else "无限"
@@ -73,7 +67,15 @@ def step_impl(context, user_name):
         rule["end_date"] = coupon_rule["end_date"]
         rule["get_person_count"] = coupon_rule["detail"]["get_person_count"]
         rule["get_number"] = coupon_rule["detail"]["get_count"]
-        rule['status'] = coupon_rule['detail']['status']
+        rule['status'] = coupon_rule['status']
+
+        if coupon_rule["detail"]["limit_product"]:
+            rule["type"] = "多商品券"
+            rule['special_product'] = u"查看专属商品"
+        else:
+            rule["type"] = "通用券"
+            rule['special_product'] = u"全部"
+        print('!~~~~~~',coupon_rule["detail"]["limit_product"],rule["name"],rule['type'],rule['special_product'])
         actual.append(rule)
 
     expected = json.loads(context.text)
