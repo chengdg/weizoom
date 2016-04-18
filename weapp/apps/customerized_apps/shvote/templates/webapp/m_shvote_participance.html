@@ -2,16 +2,61 @@
 
 {% block css %}
 <style type="text/css">
-    .xui-backToVote {
-        float: right;
+    .wui-i-getback {
+        background: #adadad;
+        color: #fff;
+        padding: 8px;
+        font-size: .9rem;
+        border-radius: 3px;
+        font-family: '黑体';
+        position: absolute;
+        right: 0;
     }
-    .xui-shvoteParticipance-Page label {
-        float: right;
-        margin-right: 10px;
-        vertical-align: bottom;
-        margin-top: 10px;
+    .xui-uploadHeadImg {
+        margin-top: 15px;
+        margin-bottom: 10px;
     }
-    select#choose-group {
+    .xui-productPhoto {
+        text-align: center;
+        width: 100%;
+    }
+    .wui-i-uploadimg.xui-uploadHeadImg .xui-imgList li {
+        width: 90px;
+        height: 90px;
+        position: absolute;
+        float: none;
+        margin-left: 38%;
+        box-shadow: none;
+    }
+    .wui-i-uploadimg.xui-uploadHeadImg .xui-imgList li img {
+        width: 90px;
+        height: 90px;
+        border-radius: 45px;
+    }
+    .wui-i-shvoteParticipance-content{
+        background: #ffffff;
+    }
+    .wui-i-shvoteParticipance-content-line {
+        padding: 5px 0 5px 10px;
+        width: 95%;
+        border-bottom: 1px solid #f0f0f0;
+        margin-left: 2%;
+    }
+    input.wui-i-input {
+        border: none;
+        height: 35px;
+        padding: 5px;
+        font-family: '黑体';
+        font-size: 1rem;
+    }
+    .wui-i-shvoteParticipance-content-lable {
+        margin-bottom: 10px;
+        display: inline-block;
+        width: 65px;
+        text-align: right;
+        color: #333333;
+    }
+    .wui-group {
         width: 156px;
         height: 40px;
         margin-bottom: 5px;
@@ -21,14 +66,23 @@
         width: 90px;
         height: 90px;
         margin-bottom: 10px;
+        display: inline-block;
+        border-radius: 45px;
+        background: url("/termite_static/img/component/group/defalut_icon.jpg");
+        background-size: 100%;
     }
-    .wui-i-uploadimg.xui-uploadHeadImg .xui-imgList li {
-        width: 90px;
-        height: 90px;
+    .wa-details{
+        background: #f0f0f0;
+        border: none;
+        font-family: '黑体';
+        font-size: 1rem;
+        padding: 5px;
     }
-    .wui-i-uploadimg.xui-uploadHeadImg .xui-imgList li img {
-        width: 90px;
-        height: 90px;
+    .wui-UploadImg {
+        padding: 0 0 0 20px;
+    }
+    .xui-btn-danger.xa-submitShvote {
+        background: #ff4200;
     }
 </style>
 {% endblock %}
@@ -36,11 +90,9 @@
 {% block content-panel %}
     {{ page_html_content|safe }}
     <div class="xui-page xui-shvoteParticipance-Page">
-        <span>我要报名</span>
-        <span class="xui-backToVote xa-backToVote">返回投票>></span>
+        <span class="wa-getback wui-i-getback">返回投票&nbsp>></span>
         <div class="wui-i-uploadimg xui-uploadHeadImg">
             <div class="xui-productPhoto xa-inputControl" data-input-type="imgarea" data-input-name="headImg" data-control-type="appkit.uploadimg" data-validate='require-upload-img::请上传头像'>
-                <label class="">头像</label>
                 <div class="xui-i-uploadHeadImg wa-uploadHeadImg">
                     <input
                         id="uploadHeadImg"
@@ -50,42 +102,44 @@
                         style="opacity: 0;top: 0;left: 0;width: 90px;height: 90px;"
                     />
                 </div>
+                <div style="color: #747474">头像</div>
             </div>
         </div>
-        <div class="xa-inputControl" data-input-type="textarea" data-input-name="name" data-control-type="appkit.qa">
-            <textarea class="wui-i-input wa-name" data-validate="require-notempty::请填写名称"></textarea>
-            <label class="">名称</label>
-        </div>
-        <div>
-            <select class="wa-group" data-input-name="choose-group">
-                {% for group in groups %}
-                <option value="{{group}}">{{group}}</option>
-                {% endfor %}
-            </select>
-            <label class="">分组选择</label>
-        </div>
-        <div class="xa-inputControl" data-input-type="textarea" data-input-name="number" data-control-type="appkit.qa">
-            <textarea class="wui-i-input wa-serial" data-validate="require-notempty::请输入编号"></textarea>
-            <label class="">输入编号</label>
-        </div>
-        <div class="xa-inputControl" data-input-type="textarea" data-input-name="details" data-control-type="appkit.qa">
-            <textarea style="height: 150px;width: 90%;" class="wui-i-input wa-details" data-validate="require-notempty::请输入详情"></textarea>
-            <label class="">详情</label>
-        </div>
-        <div class="wui-UploadImg" style="">
-            <div class="xui-productReviewCreatePage wui-i-uploadimg xa-inputControl" data-input-type="imgarea" data-input-name="detail-pic" data-control-type="appkit.uploadimg">
-                <div class="xui-productPhoto mt10">
-                    <div class="xui-addPhoto wa-pics mb10 fl pr">
-                        <input name="imgFile123" data-ui-role="uploadImage" type="file" style="opacity:0;top:0;left:0;width:45px;height:45px;" class="pa" multiple="">
+        <div class="wui-i-shvoteParticipance-content">
+            <div class="wui-i-shvoteParticipance-content-line">
+                <div class="wui-i-shvoteParticipance-content-lable">名称</div>
+                <input class="wui-i-input wa-name" data-validate="require-notempty::请填写名称" placeholder="输入标题/名称"/>
+            </div>
+            <div class="wui-i-shvoteParticipance-content-line">
+                <div class="wui-i-shvoteParticipance-content-lable">分组选择</div>
+                <select class="wui-group wa-group">
+                    {% for group in groups %}
+                    <option value="{{group}}">{{group}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="wui-i-shvoteParticipance-content-line">
+                <div class="wui-i-shvoteParticipance-content-lable">输入编号</div>
+                <input class="wui-i-input wa-serial" data-validate="require-notempty::请输入编号" placeholder="输入指定编号"/>
+            </div>
+            <div style="padding: 10px 0 0 10px;width: 95%;margin-left: 2%;">
+                <div class="wui-i-shvoteParticipance-content-lable">内容简介</div>
+                <textarea style="height: 150px;width: 90%;" class="wui-i-input wa-details" data-validate="require-notempty::请输入内容简介" placeholder="输入简介"></textarea>
+            </div>
+            <div class="wui-UploadImg" style="">
+                <div class="xui-productReviewCreatePage wui-i-uploadimg xa-inputControl" data-input-type="imgarea" data-input-name="detail-pic" data-control-type="appkit.uploadimg">
+                    <div class="xui-productPhoto mt10">
+                        <div class="xui-addPhoto wa-pics mb10 fl pr">
+                            <input name="imgFile123" data-ui-role="uploadImage" type="file" style="opacity:0;top:0;left:0;width:45px;height:45px;" class="pa" multiple="">
+                        </div>
+                        <div class="xui-deletePhoto xa-deletePhoto" style="display:none;"></div>
+                        <span class="cRed em95 none xa-finishEdit xui-finishEdit ml10">完成</span>
                     </div>
-                    <div class="xui-deletePhoto xa-deletePhoto" style="display:none;"></div>
-                    <span class="cRed em95 none xa-finishEdit xui-finishEdit ml10">完成</span>
-                    <span class="em75 xa-text xui-text">最多可上传5张图片</span>
                 </div>
             </div>
         </div>
         <div class="wui-submitButton xui-hide xa-submitButtonContainer" style="display: block; transform-origin: 0px 0px 0px; opacity: 1; transform: scale(1, 1);">
-            <a class="xui-btn xui-btn-danger xa-submitShvote" data-role="button" href="javascript:void(0);" style="">提交</a>
+            <a class="xui-btn xui-btn-danger xa-submitShvote" data-role="button" href="javascript:void(0);" style="">提&nbsp&nbsp&nbsp交</a>
         </div>
     </div>
 {% endblock %}
@@ -93,10 +147,29 @@
 {% block js %}
 <script type="text/javascript">
 $(document).ready(function() {
+    var isMember = {% if isMember %}true{% else %}false{% endif %};
+    if(!isMember){
+        showQrcode(W.qrcodeUrl);
+    }
+    var $submitButtonContainer = $('.xa-submitButtonContainer');
+    if ($submitButtonContainer.length > 0) {
+        var $button = $submitButtonContainer.find('.xa-submitShvote');
+        if (W.activityStatus === '已结束') {
+            $button.text('活动已结束');
+            $button.removeClass('xa-submitTermite').removeClass('xui-btn-danger').addClass('xui-btn-disable');
+        } else if (W.isAlreadyParticipanted) {
+            $button.text('您已参加过该活动');
+            $button.removeClass('xa-submitTermite').removeClass('xui-btn-danger').addClass('xui-btn-disable');
+        } else if (W.activityStatus === '未开始') {
+            $button.text('请等待活动开始...');
+            $button.removeClass('xa-submitTermite').removeClass('xui-btn-danger').addClass('xui-btn-disable');
+        }
+        $submitButtonContainer.show();
+    }
     //绑定提交按钮
     $('.xa-submitShvote').click(function() {
         if (!W.is_pic_up){
-            wuiAlert('图片还未上传成功，请稍等！');
+            wuiAlert('头像还未上传！');
             return;
         }
         if (!W.validate()) {
@@ -109,7 +182,6 @@ $(document).ready(function() {
         $('.wa-pics').siblings("ul").find('img').each(function(){
             pics.push($(this).attr('data-src'));
         });
-        var $submitButtonContainer = $('.xa-submitButtonContainer');
         W.getApi().call({
             app: 'm/apps/shvote',
             resource: 'shvote_participance',
@@ -124,18 +196,20 @@ $(document).ready(function() {
                 details: $('.wa-details').val(),
                 pics: JSON.stringify(pics)
             },
-            success: function(data) {
-                if(data.code == 200){
-                    wuiAlert("报名成功", 5000);
-                }
+            success: function() {
+                wuiAlert("报名成功", 5000);
                 loadingStatus();
-                $submitButtonContainer.hide();
             },
             error: function(data) {
                 loadingStatus();
                 wuiAlert(data.errMsg, 5000);
             }
         });
+    });
+
+    $('.wa-getback').click(function(){
+        var link = window.location.origin + '/m/apps/shvote/m_shvote/?webapp_owner_id='+W.webappOwnerId+'&id='+W.appRecordId;
+        window.location.href = link;
     });
 });
 </script>
