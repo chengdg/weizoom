@@ -6,7 +6,13 @@
 		background: #fff !important;
 	}
 	.wui-rank-groups{
-		font-size : 0;
+		position: relative;
+		overflow-x: auto;
+		overflow-y: hidden;
+		height: 43px;
+		line-height: 43px;
+		font-size: 0;
+		white-space:nowrap;
 	}
 	.wui-rank-groups div{
 		font-size: 1rem;
@@ -14,6 +20,11 @@
 		width: 25%;
 		text-align: center;
 		line-height: 200%;
+	}
+	.wui-rank-groups div.grad{
+		background-image: -webkit-linear-gradient(left,#000 35%, #fff);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
 	}
 	.wui-rank-groups div.active{
 		color: red;
@@ -84,6 +95,9 @@
 		font-size: 1.1rem;
 		color:  #ff4200;
 	}
+	::-webkit-scrollbar{
+		width:0;
+	}
 </style>
 {% endblock %}
 
@@ -133,19 +147,34 @@
 var current_group = '';
 
 $(function(){
-	var wid = 100/$('.wa-rank-groups div').length;
-	$('.wa-rank-groups div').css("width",wid+'%');
-	$('.wa-rank-groups div').eq(0).addClass('active');
+    if($('.wa-rank-groups div') < 4){ 
+		var wid = 100/$('.wa-rank-groups div').length;
+		$('.wa-rank-groups div').css("width",wid+'%');
+		$('.wa-rank-groups div').eq(0).addClass('active');
+	    }else{
+	    	var w_wid = $(window).width();
+	    	var d_wid = $(window).width()/4;
+	    	$('.wa-rank-groups div').css("width",d_wid);
+	    	$('.wa-rank-groups div').eq(3).addClass('grad');
+			$('.wa-rank-groups div').eq(0).addClass('active');	    	
+    };
+
 	current_group = $('.active').html();
 	getRankInfo(current_group,'');
 
 	//切换分组
 	$('.wa-rank-groups').on('click','div',function(){
 		$(this).addClass('active').siblings().removeClass('active');
+		$(this).removeClass('grad');
 		current_group = $(this).html();
 		getRankInfo(current_group,'');
 	});	
+
+	$('.wa-rank-groups').scroll(function(){
+		$('.wa-rank-groups div').eq(3).removeClass('grad');
+	})	
 });
+
 
 function getRankInfo(current_group,search_name){
         W.getApi().call({

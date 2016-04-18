@@ -79,7 +79,6 @@
 		white-space:nowrap;
 	}
 	.wui-group > div.grad{
-	 	color: green;
 		background-image: -webkit-linear-gradient(left,#000 35%, #fff);
 		-webkit-background-clip: text;
 		-webkit-text-fill-color: transparent;
@@ -485,7 +484,7 @@
 		//切换分组
 		$('.wa-groups').on('click','div',function(){
 			$(this).addClass('active').siblings().removeClass('active');
-			$(this).removeClass('grad')
+			$(this).removeClass('grad');
 			current_group = $(this).html();
 			$('.wa-left-chance').html(can_play_info[current_group]);
 			getRankInfo(current_group,'');
@@ -498,7 +497,6 @@
 
 		$('.wa-groups').scroll(function(){
 			$('.wa-groups div').eq(3).removeClass('grad');
-			console.log($('.wa-groups div').eq(3).scrollLeft());
 		})
         //展示参与统计
 //        getDynamicData();
