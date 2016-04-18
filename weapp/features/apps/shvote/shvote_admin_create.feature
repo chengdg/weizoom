@@ -11,6 +11,7 @@ Background:
 		[{
 			"title":"新建微信高级投票活动",
 			"groups":[],
+			"daily_vote":3
 			"rule":"高级投票规则",
 			"desc":"高级投票活动介绍",
 			"start_date":"今天",
@@ -33,20 +34,20 @@ Scenario:1.管理员创建选手
 			"actions": ["关闭","链接","预览","报名详情","查看结果"]
 		}]
 		"""
-	When jobs于"新建微信高级投票活动"高级投票活动后台创建选手
+	When jobs在"新建微信高级投票活动"高级投票活动后台创建选手
 	"""
 		{
-			"headImg":"head.jpg",
+			"icon":"bill_head.jpg",
 			"name":"bill",
-			"group":["初中组"],
-			"number":"001",
+			"group":"初中组",
+			"serial_number":"001",
 			"details":"bill的产品好",
-			"detail_pic":["pic1.jpg","pic2.jpg"]
+			"pics":["pic1.jpg","pic2.jpg"]
 		}
 	"""
 	Then jobs能获得报名详情列表
 	"""
-		[{	"headImg":"head.jpg",
+		[{	"headImg":"bill_head.jpg",
 			"player":"bill",
 			"votes":0,
 			"number":"001",
