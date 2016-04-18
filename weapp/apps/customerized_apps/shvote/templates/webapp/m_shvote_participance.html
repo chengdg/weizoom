@@ -37,7 +37,7 @@
         background: #ffffff;
     }
     .wui-i-shvoteParticipance-content-line {
-        padding: 10px 0 10px 10px;
+        padding: 5px 0 5px 10px;
         width: 95%;
         border-bottom: 1px solid #f0f0f0;
         margin-left: 2%;
@@ -46,12 +46,15 @@
         border: none;
         height: 35px;
         padding: 5px;
+        font-family: '黑体';
+        font-size: 1rem;
     }
     .wui-i-shvoteParticipance-content-lable {
         margin-bottom: 10px;
         display: inline-block;
         width: 65px;
         text-align: right;
+        color: #333333;
     }
     .wui-group {
         width: 156px;
@@ -71,6 +74,12 @@
     .wa-details{
         background: #f0f0f0;
         border: none;
+        font-family: '黑体';
+        font-size: 1rem;
+        padding: 5px;
+    }
+    .wui-UploadImg {
+        padding: 0 0 0 20px;
     }
     .xui-btn-danger.xa-submitShvote {
         background: #ff4200;
@@ -81,7 +90,7 @@
 {% block content-panel %}
     {{ page_html_content|safe }}
     <div class="xui-page xui-shvoteParticipance-Page">
-        <span class="wa-getback wui-i-getback">返回投票>></span>
+        <span class="wa-getback wui-i-getback">返回投票&nbsp>></span>
         <div class="wui-i-uploadimg xui-uploadHeadImg">
             <div class="xui-productPhoto xa-inputControl" data-input-type="imgarea" data-input-name="headImg" data-control-type="appkit.uploadimg" data-validate='require-upload-img::请上传头像'>
                 <div class="xui-i-uploadHeadImg wa-uploadHeadImg">
@@ -93,7 +102,7 @@
                         style="opacity: 0;top: 0;left: 0;width: 90px;height: 90px;"
                     />
                 </div>
-                <div>头像</div>
+                <div style="color: #747474">头像</div>
             </div>
         </div>
         <div class="wui-i-shvoteParticipance-content">
@@ -113,7 +122,7 @@
                 <div class="wui-i-shvoteParticipance-content-lable">输入编号</div>
                 <input class="wui-i-input wa-serial" data-validate="require-notempty::请输入编号" placeholder="输入指定编号"/>
             </div>
-            <div style="padding: 10px 0 10px 10px;width: 95%;margin-left: 2%;">
+            <div style="padding: 10px 0 0 10px;width: 95%;margin-left: 2%;">
                 <div class="wui-i-shvoteParticipance-content-lable">内容简介</div>
                 <textarea style="height: 150px;width: 90%;" class="wui-i-input wa-details" data-validate="require-notempty::请输入内容简介" placeholder="输入简介"></textarea>
             </div>
@@ -138,6 +147,10 @@
 {% block js %}
 <script type="text/javascript">
 $(document).ready(function() {
+    var isMember = {% if isMember %}true{% else %}false{% endif %};
+    if(!isMember){
+        showQrcode(W.qrcodeUrl);
+    }
     var $submitButtonContainer = $('.xa-submitButtonContainer');
     if ($submitButtonContainer.length > 0) {
         var $button = $submitButtonContainer.find('.xa-submitShvote');

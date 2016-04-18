@@ -33,14 +33,17 @@ class ShvoteParticipance(resource.Resource):
 		响应GET
 		"""
 		record = None
+		isMember = False
+		member = request.member
 		if 'id' in request.GET:
 			participance_data_count = 0
 			id = request.GET['id']
 			try:
 				record = app_models.Shvote.objects.get(id=id)
 				activity_status, record = update_shvote_status(record)
-				if request.member:
-					participance_data_count = app_models.ShvoteParticipance.objects(belong_to=id, member_id=request.member.id).count()
+				if member:
+					isMember =member.is_subscribed
+					participance_data_count = app_models.ShvoteParticipance.objects(belong_to=id, member_id=member.id).count()
 			except:
 				c = RequestContext(request,{
 					'is_deleted_data': True
@@ -52,6 +55,7 @@ class ShvoteParticipance(resource.Resource):
 				'groups': record.groups,
 				'activity_status': activity_status,
 				'is_already_participanted': (participance_data_count > 0),
+				'isMember': isMember,
 				'is_hide_weixin_option_menu':True,
 				'app_name': "shvote",
 				'resource': "shvote",
