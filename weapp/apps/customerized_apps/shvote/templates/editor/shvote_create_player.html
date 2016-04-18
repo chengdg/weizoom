@@ -201,6 +201,7 @@ $(document).ready(function() {
 			var src = $(el).attr('src');
 			img_arr.push(src);
 		});
+		var activity_id = '{{id}}';
 		W.getApi().call({
 			method: 'post',
 			app: 'apps/shvote',
@@ -212,7 +213,8 @@ $(document).ready(function() {
 				group: group,
 				serial_number: serial_number,
 				details: details,
-				img_des_srcs: JSON.stringify(img_arr)
+				img_des_srcs: JSON.stringify(img_arr),
+				activity_id: activity_id
 			},
 			success: function(resp){
 				W.showHint('success', '创建选手成功！');
