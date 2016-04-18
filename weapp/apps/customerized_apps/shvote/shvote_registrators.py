@@ -278,7 +278,6 @@ class ShvoteCreatePlayer(resource.Resource):
 		"""
 		响应GET
 		"""
-		print 44333333333333333333
 		player_id = request.GET.get('player_id',None)
 		activity_id = request.GET['id']
 
@@ -306,18 +305,15 @@ class ShvoteCreatePlayer(resource.Resource):
 
 	@login_required
 	def api_post(request):
-		print 777777777777777777
 		head_img_src = request.POST['head_img_src']
 		player_name = request.POST['player_name']
 		group = request.POST['group']
 		serial_number = request.POST['serial_number']
 		details = request.POST['details']
 		img_des_srcs = json.loads(request.POST['img_des_srcs'])
-		webapp_owner_id = request.webapp_owner_id
+		activity_id = request.POST['activity_id']
 
-		id = app_models.Shvote.objects().get(owner_id = webapp_owner_id).id
 		vote_participance_created = app_models.ShvoteParticipance.objects().filter(member_id__lte = 0)
-		
 		member_id = 0
 		if vote_participance_created:
 			vote_participance_created_list = []
@@ -327,7 +323,7 @@ class ShvoteCreatePlayer(resource.Resource):
 			member_id = min_member_id - 1
 		try:
 			sh_participance = app_models.ShvoteParticipance(
-				belong_to = str(id),
+				belong_to = activity_id,
 				icon = head_img_src,
 				name = player_name,
 				group = group,
@@ -341,8 +337,7 @@ class ShvoteCreatePlayer(resource.Resource):
 			sh_participance.save()
 
 			response = create_response(200)
-		except Exception,e:
-			print e,'-----2222222-------'
+		except:
 			response = create_response(500)
 			response.errMsg = u'创建选手失败'
 

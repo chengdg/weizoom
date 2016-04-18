@@ -136,7 +136,7 @@
         <script type="text/javascript" src="/termite_static/v3/system/system.js"></script>
         <script type="text/javascript" src="/termite_static/backbone/underscore-1.4.4.min.js"></script>
         <script type="text/javascript" src="/termite_static/v3/gmu/widget/swipeMask.js"></script>
-        <script type="text/javascript" src="/termite_static/v3/system/validate.js"></script>
+        <script type="text/javascript" src="/termite_static/v3/system/apps_validate.js"></script>
         <script type="text/javascript" src="/termite_static/v3/gmu/widget/swipeImage.js"></script>
 
         <script type="text/javascript" src="/termite_static/v3/system/api.js"></script>
@@ -180,12 +180,13 @@
         <!--<script src="http://192.168.2.76:8080/target/target-script-min.js"></script> -->
         <script type="text/javascript">
             var isHideWeixinOptionMenu = {% if is_hide_weixin_option_menu %}true{% else %}false{% endif %};
+            W.isAlreadyParticipanted = {% if is_already_participanted %}true{% else %}false{% endif %};
             W.currentPageName = "{{current_page_name}}";
             W.projectId = "{{request.project.id}}";
             W.webappOwnerId = "{{request.webapp_owner_id}}";
             W.curRequestMemberToken = "{{ cur_request_member.token }}";
             W.pageTitle = "{{page_title}}";
-
+            W.activityStatus = "{{activity_status}}";
             W.appRecordId = "{{ record_id }}";
             W.appName = "{{ app_name }}";
             W.resource = "{{ resource }}";

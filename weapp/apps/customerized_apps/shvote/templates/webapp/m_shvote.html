@@ -70,12 +70,21 @@
 		background-size: 16px 16px;
 	}
 	.wui-group{
-		overflow: hidden;
+		position: relative;
+		overflow-x: auto;
+		overflow-y: hidden;
 		height: 43px;
 		line-height: 43px;
+		font-size: 0;
+		white-space:nowrap;
+	}
+	.wui-group > div.grad{
+		background-image: -webkit-linear-gradient(left,#000 35%, #fff);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
 	}
 	.wui-group > div{
-		float: left;
+		display: inline-block;
 		font-size: 16px;
 		text-align: center;
 	}
@@ -196,21 +205,21 @@
 		outline: none;
 	}
 	.wui-detail-dialog{
-		width:80%;
-		height:90%;
+		width:92%;
+		height:92%;
 		display:none;
-		z-index:99999999;
+		z-index:99999;
 		margin:0 auto;
 		background-color:#f0f0f0;
 		border-radius: 4px;
-		position: absolute;
-		top: 5%;
-		left: 10%;
+		position: fixed;
+		top: 4%;
+		left: 4%;
 		overflow-x: hidden;
    		overflow-y: auto;
 	}
 	.wui-detail-top{
-		margin: 5% 0 3% 0;
+		margin: 3% 0 3% 0;
 		padding: 5% 0 1% 6%;
 		background-color: #FFF;
 	}
@@ -269,12 +278,14 @@
 	}
 	.wui-detail-close{
 		background-image:url('/static_v2/img/shvote_close.png');
-		width:67px;
-		height:67px;
-		z-index:999999999;
-		position:absolute;
-		top: 3%;
-		right: 6%;
+		background-repeat: no-repeat;
+	    background-size: cover;
+		width: 46px;
+		height: 46px;
+		z-index: 100000;
+		position: fixed;
+		top: 2%;
+		right: 2%;
 		display: none;
 	}
 	p.wui-noborder{
@@ -292,36 +303,45 @@
         font-size: 0.9rem;	
     }	
 	.wui-share-mask{
-		z-index: 9999999999 !important;
+		z-index: 100001 !important;
 		display: none;
 	}
 	.wui-share-mask .wui-share-arrow{
-		width: 33%;
-		position: absolute;
-		top: 0;
-	    right: 4%;
+		background-image: url('/static_v2/img/shvote_arrow.png');
+		background-repeat: no-repeat;
+	    background-size: cover;
+        width: 33%;
+   		height: 29%;
+   		margin: 0 0 0 60%;
 	}
 	.wui-share-mask .wui-share-invite{
 		color: #FFF;
 		font-family: SimHei;
 	    font-size: 1.5rem;
-	    position: absolute;
-	    top: 33%;
-        left: 17%;
+        width: 100%;
+	    display: inline-block;
+	    text-align: center;
+	    margin-top: 6%;
 	}
 	.wui-share-mask .wui-share-close{
-		width: 10%;
-	    position: absolute;
-	    top: 60%;
-        left: 45%;
+		background-image: url('/static_v2/img/shvote_share_close.png');
+		background-repeat: no-repeat;
+	    background-size: cover;
+	    width: 57px;
+	    height: 57px;
+        margin: 32% auto 0 auto;
 	}
 	.wui-share-mask .wui-share-known{
 		color: #FFF;
 		font-family: SimHei;
 	    font-size: 1.5rem;
-	    position: absolute;
-	    top: 68%;
-        left: 42%;
+        width: 100%;
+	    display: inline-block;
+	    text-align: center;
+	    margin-top: 5%;
+	}
+	::-webkit-scrollbar{
+		width:0;
 	}
 	@media only screen and (max-width: 320px){
 		.wui-vote-btn{
@@ -331,6 +351,9 @@
 	    	height: 36px;
 	    }*/
 	}
+	.wui-apps-alert{
+        z-index: 100001;
+    }
 </style>
 {% endblock %}
 
@@ -413,7 +436,7 @@
 				<span class="wui-detail-user-name"></span>
 			</div>
 			<div class="wui-detail-btn">
-				<button>投票</button>
+				<button class="wa-ivote">投票</button>
 				<button class="wa-detail-share">拉票</button>
 			</div>
 			<div class="wui-detail-middle">
@@ -425,9 +448,9 @@
 	</div>
 </div>
 <div class="wui-share-mask">
-	<img class="wui-share-arrow" src="/static_v2/img/shvote_arrow.png">
+	<div class="wui-share-arrow"></div>
 	<span class="wui-share-invite">邀请你的小伙伴,帮你投票</span>
-	<img class="wui-share-close wa-share-close" src="/static_v2/img/shvote_share_close.png">
+	<div class="wui-share-close wa-share-close"></div>
 	<span class="wui-share-known">知道了</span>
 </div>
 {% endblock %}
@@ -472,6 +495,7 @@
 		//切换分组
 		$('.wa-groups').on('click','div',function(){
 			$(this).addClass('active').siblings().removeClass('active');
+			$(this).removeClass('grad');
 			current_group = $(this).html();
 			$('.wa-left-chance').html(can_play_info[current_group]);
 			getRankInfo(current_group,'');
@@ -481,12 +505,16 @@
 			$('.wa-shvote-desc').show();
 			$('.wa-mobile').hide();
 		});
+
+		$('.wa-groups').scroll(function(){
+			$('.wa-groups div').eq(3).removeClass('grad');
+		})
         //展示参与统计
 //        getDynamicData();
 
         //参与投票
         var voteLock = false;
-        $('.wa-rank-list').on('click','.wa-ivote', function(){
+        $('body').on('click','.wa-ivote', function(){
         	var left_chance = parseInt($('.wa-left-chance').html());
         	if( !left_chance > 0) {
         		wuiAlert('每天每组只可投票一次');
@@ -582,14 +610,20 @@
     	$('.wa-total-counts').html(record_info['total_counts']);
     	$('.wa-total-visits').html(record_info['total_visits']);
     	$('.wa-enddate').html(record_info['end_date']);
-    	for(var i=0;i < record_info.groups.length;i++){
-    		var group = $('<div>'+record_info.groups[i]+'</div>');
-    		$('.wa-groups').append(group);
-    		$('.wa-groups div').eq(0).addClass('active');
-    	}
-    	var wid = 100/record_info.groups.length;
-
-    	$('.wa-groups div').css("width",wid+'%');    	
+	    for(var i=0;i < record_info.groups.length;i++){
+	    	var group = $('<div>'+record_info.groups[i]+'</div>');
+	    	$('.wa-groups').append(group);
+	    }
+	    $('.wa-groups div').eq(0).addClass('active');
+	    if(record_info.groups.length < 4){ 
+	   		var wid = 100/record_info.groups.length;
+	   		$('.wa-groups div').css("width",wid+'%');   
+	    }else{
+	    	var w_wid = $(window).width();
+	    	var d_wid = $(window).width()/4;
+	    	$('.wa-groups div').css("width",d_wid);
+	    	$('.wa-groups div').eq(3).addClass('grad');
+	    }
     };
     function update_member_info(member_info){
     	$('.wa-left-chance').html(member_info.can_play_info[current_group]);
@@ -653,11 +687,13 @@
 			}
 		}
 		mask('show');
+		$('body').css('overflow','hidden');
 		$('#userDetailDialog').show();
 		$('.wa-detail-close').show();
 	});
 	$('body').delegate('.wa-detail-close', 'click', function(event) {
 		mask('hide');
+		$('body').css('overflow','auto');
 		$('#userDetailDialog').hide();
 		$('.wa-detail-close').hide();
 	});
