@@ -51,7 +51,7 @@ Background:
 		}]
 		"""
 
-@promotion @promotionCoupon
+@promotion @promotionCoupon @ztqb
 Scenario:1 添加优惠券规则-添加通用券
 	Given jobs登录系统
 	When jobs添加优惠券规则

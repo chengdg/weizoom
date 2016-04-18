@@ -74,20 +74,22 @@ class CategoryProducts(resource.Resource):
                                          {"with_product_model": True,
                                           "with_model_property_info": True,
                                           'with_sales': True})
-        result_products = []
-        for product in products:
-            result_products.append({
-                "id": product.id,
-                "name": product.name,
-                "display_price": product.display_price,
-                "status": product.status,
-                "sales": product.sales if product.sales else -1,
-                "update_time": product.update_time.strftime("%Y-%m-%d")
-            })
 
+        mall_models.Product.fill_details(request.manager,
+                             products,
+                                    {"with_product_model": True,
+                                     "with_model_property_info": True,
+                                     'with_sales': True})
+
+        id2product = {}
+        for product in products:
+            data = product.format_to_dict()
+            id2product[product.id] = data
+        items = id2product.values()
+        items.sort(lambda x, y: cmp(x['id'], y['id']))
         response = create_response(200)
         response.data = {
-            'products': result_products
+            'products': items
         }
         return response.get_response()
 

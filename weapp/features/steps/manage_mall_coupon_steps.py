@@ -239,6 +239,13 @@ def step_impl(context, webapp_owner_name, coupon_rule_name):
                 index = index - 1
 
 
+
+@then(u"{user}获得优惠券规则'{rule_name}'")
+def step_impl(context, user, rule_name):
+    promotion_id = Promotion.objects.get(name=rule_name).id
+    pass
+
+
 @then(u'{user}能获得优惠券状态列表')
 def step_impl(context, user):
     url = "/mall2/api/promotion_list/?type=coupon"
@@ -272,13 +279,15 @@ def __add_coupon_rule(context, webapp_owner_name):
         start_date = "{} 00:00".format(bdd_util.get_date_str(cr_start_date))
         cr_end_date = coupon_rule.get('end_date', u'1天后')
         end_date = "{} 00:00".format(bdd_util.get_date_str(cr_end_date))
+        remark = coupon_rule['remark']
         post_data = {
             'name': cr_name,
             'money': cr_money,
             'count': cr_count,
             'limit_counts': -1 if cr_limit_counts == u'无限' else cr_limit_counts,
             'start_date': start_date,
-            'end_date': end_date
+            'end_date': end_date,
+            'remark': remark
         }
         if not "using_limit" in coupon_rule:
             post_data['is_valid_restrictions'] = '0'
