@@ -5,9 +5,9 @@ from datetime import datetime, timedelta
 
 from behave import given, then, when
 
-from test import bdd_util
 from mall.models import Product
 from mall.promotion.models import Promotion, Coupon, CouponRule
+from test import bdd_util
 
 
 @when(u'{user_name}添加优惠券规则')
@@ -277,10 +277,12 @@ def step_impl(context, user, rule_name):
         "description": coupon_rule.remark
     }
 
-    print('-----------------1')
-    print(response.context['coupon_rule'])
-    print('-----------------2')
-    bdd_util.assert_dict(expected,actual)
+    actual['coupon_product'] = ','.join([p.name for p in promotion.products])
+    actual['products_status'] = map(
+        lambda x: {"name": x['name'], "status": x['status']} if x['status'] != u'在售' else  {"name": x['name'], "status": ""},
+        [{"name": p.name, "status": p.status} for p in promotion.products])
+
+    bdd_util.assert_dict(expected, actual)
 
 
 @then(u'{user}能获得优惠券状态列表')
@@ -338,13 +340,19 @@ def __add_coupon_rule(context, webapp_owner_name):
                 post_data['valid_restrictions'] = int(using_limit[1:end])
         if "coupon_product" in coupon_rule:
             post_data['limit_product'] = 1
-            post_data['product_ids'] = Product.objects.get(
-                owner_id=webapp_owner_id,
-                name=coupon_rule['coupon_product']).id
+
+            product_ids = []
+            for product_name in coupon_rule['coupon_product'].split(','):
+                product_ids.append(Product.objects.get(
+                    owner_id=webapp_owner_id,
+                    name=product_name).id)
+
+            post_data['product_ids'] = ','.join(map(lambda x: str(x), product_ids))
+
         url = '/mall2/api/coupon_rule/'
         response = context.client.post(url, post_data)
         context.tc.assertEquals(200, response.status_code)
-        if "coupon_id_prefix" in coupon_rule:
+        if json.loads(response.content)['data']['save_success'] and "coupon_id_prefix" in coupon_rule:
             latest_coupon_rule = CouponRule.objects.all().order_by('-id')[0]
             index = 1
             coupon_id_prefix = coupon_rule['coupon_id_prefix']
@@ -352,3 +360,11 @@ def __add_coupon_rule(context, webapp_owner_name):
                 coupon_id = "%s%d" % (coupon_id_prefix, index)
                 Coupon.objects.filter(id=coupon.id).update(coupon_id=coupon_id)
                 index += 1
+
+        context.response = response
+
+
+@then(u"{user}获得优惠券规则添加失败提示'{info}'")
+def step_impl(context, user, info):
+    save_success = json.loads(context.response.content)['data']['save_success']
+    assert not save_success

@@ -51,7 +51,7 @@ Background:
 		}]
 		"""
 
-@promotion @promotionCoupon @ztqb
+@promotion @promotionCoupon @mall2
 Scenario:1 添加优惠券规则-添加通用券
 	Given jobs登录系统
 	When jobs添加优惠券规则
@@ -82,7 +82,7 @@ Scenario:1 添加优惠券规则-添加通用券
 		}
 		"""
 
-@promotion @promotionCoupon
+@promotion @promotionCoupon @mall2
 Scenario:2 添加优惠券规则-多商品券(一个商品)
 	Given jobs登录系统
 	When jobs添加优惠券规则
@@ -115,12 +115,11 @@ Scenario:2 添加优惠券规则-多商品券(一个商品)
 			"products_status":[{
 				"name": "商品1",
 				"status": ""
-				}],
-			"coupon_id_prefix": "coupon1_id_"
+				}]
 		}
 		"""
 
-@promotion @promotionCoupon
+@promotion @promotionCoupon @mall2
 Scenario:3 添加优惠券规则-多商品券(多个商品)
 	Given jobs登录系统
 	When jobs添加优惠券规则
@@ -159,12 +158,11 @@ Scenario:3 添加优惠券规则-多商品券(多个商品)
 				},{
 				"name": "商品3",
 				"status": ""
-			}],
-			"coupon_id_prefix": "coupon1_id_"
+			}]
 		}
 		"""
 
-@promotion @promotionCoupon
+@promotion @promotionCoupon @mall2
 Scenario:4 添加多商品券-多个商品中保存时有不符合条件的商品，给出错误提示
 	Given jobs登录系统
 
