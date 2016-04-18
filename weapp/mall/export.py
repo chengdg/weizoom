@@ -240,7 +240,7 @@ MALL_ORDER_SECOND_NAV = {
         {
             'name': ORDER_EXPIRED_TIME,
             'title': u'订单设置',
-            'url': '/mall2/order_config/',
+            'url': '/mall2/expired_time/',
             'permission': 'manage_order_expired_time'
         },
         {
