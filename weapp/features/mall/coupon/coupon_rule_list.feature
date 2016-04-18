@@ -121,8 +121,7 @@ Scenario:1 优惠券规则列表按照添加顺序倒序排列
 			"get_person_count": 0,
 			"get_number": 0,
 			"use_count": 0,
-			"status": "未开始",
-			"actions": ["码库","链接","编辑","查看","使失效"]
+			"status": "未开始"
 		},{
 			"name": "多商品券-进行中",
 			"type": "多商品券",
@@ -135,8 +134,7 @@ Scenario:1 优惠券规则列表按照添加顺序倒序排列
 			"get_person_count": 0,
 			"get_number": 0,
 			"use_count": 0,
-			"status": "进行中",
-			"actions": ["码库","链接","编辑","查看","使失效"]
+			"status": "进行中"
 		},{
 			"name": "通用券-已过期",
 			"type": "通用券",
@@ -149,8 +147,7 @@ Scenario:1 优惠券规则列表按照添加顺序倒序排列
 			"get_person_count": 0,
 			"get_number": 0,
 			"use_count": 0,
-			"status": "已过期",
-			"actions": ["码库","删除"]
+			"status": "已过期"
 		},{
 			"name": "通用券-进行中",
 			"type": "通用券",
@@ -163,8 +160,7 @@ Scenario:1 优惠券规则列表按照添加顺序倒序排列
 			"get_person_count": 0,
 			"get_number": 0,
 			"use_count": 0,
-			"status": "进行中",
-			"actions": ["码库","链接","编辑","查看","使失效"]
+			"status": "进行中"
 		},{
 			"name": "通用券-已失效",
 			"type": "通用券",
@@ -177,8 +173,7 @@ Scenario:1 优惠券规则列表按照添加顺序倒序排列
 			"get_person_count": 0,
 			"get_number": 0,
 			"use_count": 0,
-			"status": "已失效",
-			"actions": ["码库"]
+			"status": "已失效"
 		}]
 		"""
 
@@ -226,8 +221,7 @@ Scenario:2 优惠券规则列表-多商品券(一个商品)商品下架、删除
 			"get_person_count": 0,
 			"get_number": 0,
 			"use_count": 0,
-			"status": "未开始",
-			"actions": ["码库","链接","编辑","查看","使失效"]
+			"status": "未开始"
 		},{
 			"name": "多商品券-进行中",
 			"type": "多商品券",
@@ -240,8 +234,7 @@ Scenario:2 优惠券规则列表-多商品券(一个商品)商品下架、删除
 			"get_person_count": 0,
 			"get_number": 0,
 			"use_count": 0,
-			"status": "进行中",
-			"actions": ["码库","链接","编辑","查看","使失效"]
+			"status": "进行中"
 		},{
 			"name": "通用券-已过期",
 			"type": "通用券",
@@ -254,8 +247,7 @@ Scenario:2 优惠券规则列表-多商品券(一个商品)商品下架、删除
 			"get_person_count": 0,
 			"get_number": 0,
 			"use_count": 0,
-			"status": "已过期",
-			"actions": ["码库","删除"]
+			"status": "已过期"
 		},{
 			"name": "通用券-进行中",
 			"type": "通用券",
@@ -268,8 +260,7 @@ Scenario:2 优惠券规则列表-多商品券(一个商品)商品下架、删除
 			"get_person_count": 0,
 			"get_number": 0,
 			"use_count": 0,
-			"status": "进行中",
-			"actions": ["码库","链接","编辑","查看","使失效"]
+			"status": "进行中"
 		},{
 			"name": "通用券-已失效",
 			"type": "通用券",
@@ -282,8 +273,7 @@ Scenario:2 优惠券规则列表-多商品券(一个商品)商品下架、删除
 			"get_person_count": 0,
 			"get_number": 0,
 			"use_count": 0,
-			"status": "已失效",
-			"actions": ["码库"]
+			"status": "已失效"
 		}]
 		"""
 	Then jobs查看优惠券'多商品券-进行中'专属商品
@@ -311,8 +301,7 @@ Scenario:2 优惠券规则列表-多商品券(一个商品)商品下架、删除
 			"get_person_count": 0,
 			"get_number": 0,
 			"use_count": 0,
-			"status": "未开始",
-			"actions": ["码库","链接","编辑","查看","使失效"]
+			"status": "未开始"
 		},{
 			"name": "多商品券-进行中",
 			"type": "多商品券",
@@ -325,8 +314,7 @@ Scenario:2 优惠券规则列表-多商品券(一个商品)商品下架、删除
 			"get_person_count": 0,
 			"get_number": 0,
 			"use_count": 0,
-			"status": "已失效",
-			"actions": ["码库"]
+			"status": "已失效"
 		},{
 			"name": "通用券-已过期",
 			"type": "通用券",
@@ -339,8 +327,7 @@ Scenario:2 优惠券规则列表-多商品券(一个商品)商品下架、删除
 			"get_person_count": 0,
 			"get_number": 0,
 			"use_count": 0,
-			"status": "已过期",
-			"actions": ["码库","删除"]
+			"status": "已过期"
 		},{
 			"name": "通用券-进行中",
 			"type": "通用券",
@@ -353,8 +340,7 @@ Scenario:2 优惠券规则列表-多商品券(一个商品)商品下架、删除
 			"get_person_count": 0,
 			"get_number": 0,
 			"use_count": 0,
-			"status": "进行中",
-			"actions": ["码库","链接","编辑","查看","使失效"]
+			"status": "进行中"
 		},{
 			"name": "通用券-已失效",
 			"type": "通用券",
@@ -367,8 +353,7 @@ Scenario:2 优惠券规则列表-多商品券(一个商品)商品下架、删除
 			"get_person_count": 0,
 			"get_number": 0,
 			"use_count": 0,
-			"status": "已失效",
-			"actions": ["码库"]
+			"status": "已失效"
 		}]
 		"""
 	Then jobs查看优惠券'多商品券-进行中'专属商品
@@ -429,8 +414,7 @@ Scenario:3 优惠券规则列表-多商品券(多个商品)商品下架、删除
 			"get_person_count": 0,
 			"get_number": 0,
 			"use_count": 0,
-			"status": "未开始",
-			"actions": ["码库","链接","编辑","查看","使失效"]
+			"status": "未开始"
 		},{
 			"name": "多商品券-进行中",
 			"type": "多商品券",
@@ -443,8 +427,7 @@ Scenario:3 优惠券规则列表-多商品券(多个商品)商品下架、删除
 			"get_person_count": 0,
 			"get_number": 0,
 			"use_count": 0,
-			"status": "进行中",
-			"actions": ["码库","链接","编辑","查看","使失效"]
+			"status": "进行中"
 		},{
 			"name": "通用券-已过期",
 			"type": "通用券",
@@ -457,8 +440,7 @@ Scenario:3 优惠券规则列表-多商品券(多个商品)商品下架、删除
 			"get_person_count": 0,
 			"get_number": 0,
 			"use_count": 0,
-			"status": "已过期",
-			"actions": ["码库","删除"]
+			"status": "已过期"
 		},{
 			"name": "通用券-进行中",
 			"type": "通用券",
@@ -471,8 +453,7 @@ Scenario:3 优惠券规则列表-多商品券(多个商品)商品下架、删除
 			"get_person_count": 0,
 			"get_number": 0,
 			"use_count": 0,
-			"status": "进行中",
-			"actions": ["码库","链接","编辑","查看","使失效"]
+			"status": "进行中"
 		},{
 			"name": "通用券-已失效",
 			"type": "通用券",
@@ -485,8 +466,7 @@ Scenario:3 优惠券规则列表-多商品券(多个商品)商品下架、删除
 			"get_person_count": 0,
 			"get_number": 0,
 			"use_count": 0,
-			"status": "已失效",
-			"actions": ["码库"]
+			"status": "已失效"
 		}]
 		"""
 	Then jobs查看优惠券'多商品券-进行中'专属商品
@@ -546,8 +526,7 @@ Scenario:3 优惠券规则列表-多商品券(多个商品)商品下架、删除
 			"get_person_count": 0,
 			"get_number": 0,
 			"use_count": 0,
-			"status": "未开始",
-			"actions": ["码库","链接","编辑","查看","使失效"]
+			"status": "未开始"
 		},{
 			"name": "多商品券-进行中",
 			"type": "多商品券",
@@ -560,8 +539,7 @@ Scenario:3 优惠券规则列表-多商品券(多个商品)商品下架、删除
 			"get_person_count": 0,
 			"get_number": 0,
 			"use_count": 0,
-			"status": "进行中",
-			"actions": ["码库","链接","编辑","查看","使失效"]
+			"status": "进行中"
 		},{
 			"name": "通用券-已过期",
 			"type": "通用券",
@@ -574,8 +552,7 @@ Scenario:3 优惠券规则列表-多商品券(多个商品)商品下架、删除
 			"get_person_count": 0,
 			"get_number": 0,
 			"use_count": 0,
-			"status": "已过期",
-			"actions": ["码库","删除"]
+			"status": "已过期"
 		},{
 			"name": "通用券-进行中",
 			"type": "通用券",
@@ -588,8 +565,7 @@ Scenario:3 优惠券规则列表-多商品券(多个商品)商品下架、删除
 			"get_person_count": 0,
 			"get_number": 0,
 			"use_count": 0,
-			"status": "进行中",
-			"actions": ["码库","链接","编辑","查看","使失效"]
+			"status": "进行中"
 		},{
 			"name": "通用券-已失效",
 			"type": "通用券",
@@ -602,8 +578,7 @@ Scenario:3 优惠券规则列表-多商品券(多个商品)商品下架、删除
 			"get_person_count": 0,
 			"get_number": 0,
 			"use_count": 0,
-			"status": "已失效",
-			"actions": ["码库"]
+			"status": "已失效"
 		}]
 		"""
 	Then jobs查看优惠券'多商品券-进行中'专属商品
@@ -662,8 +637,7 @@ Scenario:3 优惠券规则列表-多商品券(多个商品)商品下架、删除
 			"get_person_count": 0,
 			"get_number": 0,
 			"use_count": 0,
-			"status": "未开始",
-			"actions": ["码库","链接","编辑","查看","使失效"]
+			"status": "未开始"
 		},{
 			"name": "多商品券-进行中",
 			"type": "多商品券",
@@ -676,8 +650,7 @@ Scenario:3 优惠券规则列表-多商品券(多个商品)商品下架、删除
 			"get_person_count": 0,
 			"get_number": 0,
 			"use_count": 0,
-			"status": "进行中",
-			"actions": ["码库","链接","编辑","查看","使失效"]
+			"status": "进行中"
 		},{
 			"name": "通用券-已过期",
 			"type": "通用券",
@@ -690,8 +663,7 @@ Scenario:3 优惠券规则列表-多商品券(多个商品)商品下架、删除
 			"get_person_count": 0,
 			"get_number": 0,
 			"use_count": 0,
-			"status": "已过期",
-			"actions": ["码库","删除"]
+			"status": "已过期"
 		},{
 			"name": "通用券-进行中",
 			"type": "通用券",
@@ -704,8 +676,7 @@ Scenario:3 优惠券规则列表-多商品券(多个商品)商品下架、删除
 			"get_person_count": 0,
 			"get_number": 0,
 			"use_count": 0,
-			"status": "进行中",
-			"actions": ["码库","链接","编辑","查看","使失效"]
+			"status": "进行中"
 		},{
 			"name": "通用券-已失效",
 			"type": "通用券",
@@ -718,8 +689,7 @@ Scenario:3 优惠券规则列表-多商品券(多个商品)商品下架、删除
 			"get_person_count": 0,
 			"get_number": 0,
 			"use_count": 0,
-			"status": "已失效",
-			"actions": ["码库"]
+			"status": "已失效"
 		}]
 		"""
 	Then jobs查看优惠券'多商品券-进行中'专属商品
@@ -754,8 +724,7 @@ Scenario:3 优惠券规则列表-多商品券(多个商品)商品下架、删除
 			"get_person_count": 0,
 			"get_number": 0,
 			"use_count": 0,
-			"status": "已失效",
-			"actions": ["码库"]
+			"status": "已失效"
 		},{
 			"name": "多商品券-进行中",
 			"type": "多商品券",
@@ -768,8 +737,7 @@ Scenario:3 优惠券规则列表-多商品券(多个商品)商品下架、删除
 			"get_person_count": 0,
 			"get_number": 0,
 			"use_count": 0,
-			"status": "进行中",
-			"actions": ["码库","链接","编辑","查看","使失效"]
+			"status": "进行中"
 		},{
 			"name": "通用券-已过期",
 			"type": "通用券",
@@ -782,8 +750,7 @@ Scenario:3 优惠券规则列表-多商品券(多个商品)商品下架、删除
 			"get_person_count": 0,
 			"get_number": 0,
 			"use_count": 0,
-			"status": "已过期",
-			"actions": ["码库","删除"]
+			"status": "已过期"
 		},{
 			"name": "通用券-进行中",
 			"type": "通用券",
@@ -796,8 +763,7 @@ Scenario:3 优惠券规则列表-多商品券(多个商品)商品下架、删除
 			"get_person_count": 0,
 			"get_number": 0,
 			"use_count": 0,
-			"status": "进行中",
-			"actions": ["码库","链接","编辑","查看","使失效"]
+			"status": "进行中"
 		},{
 			"name": "通用券-已失效",
 			"type": "通用券",
@@ -810,8 +776,7 @@ Scenario:3 优惠券规则列表-多商品券(多个商品)商品下架、删除
 			"get_person_count": 0,
 			"get_number": 0,
 			"use_count": 0,
-			"status": "已失效",
-			"actions": ["码库"]
+			"status": "已失效"
 		}]
 		"""
 	Then jobs查看优惠券'多商品券-进行中'专属商品
@@ -854,8 +819,7 @@ Scenario:4 优惠券规则列表查询
 				"get_person_count": 0,
 				"get_number": 0,
 				"use_count": 0,
-				"status": "未开始",
-				"actions": ["码库","链接","编辑","查看","使失效"]
+				"status": "未开始"
 			},{
 				"name": "多商品券-进行中",
 				"type": "多商品券",
@@ -868,8 +832,7 @@ Scenario:4 优惠券规则列表查询
 				"get_person_count": 0,
 				"get_number": 0,
 				"use_count": 0,
-				"status": "进行中",
-				"actions": ["码库","链接","编辑","查看","使失效"]
+				"status": "进行中"
 			},{
 				"name": "通用券-已过期",
 				"type": "通用券",
@@ -882,8 +845,7 @@ Scenario:4 优惠券规则列表查询
 				"get_person_count": 0,
 				"get_number": 0,
 				"use_count": 0,
-				"status": "已过期",
-				"actions": ["码库","删除"]
+				"status": "已过期"
 			},{
 				"name": "通用券-进行中",
 				"type": "通用券",
@@ -896,8 +858,7 @@ Scenario:4 优惠券规则列表查询
 				"get_person_count": 0,
 				"get_number": 0,
 				"use_count": 0,
-				"status": "进行中",
-				"actions": ["码库","链接","编辑","查看","使失效"]
+				"status": "进行中"
 			},{
 				"name": "通用券-已失效",
 				"type": "通用券",
@@ -910,8 +871,7 @@ Scenario:4 优惠券规则列表查询
 				"get_person_count": 0,
 				"get_number": 0,
 				"use_count": 0,
-				"status": "已失效",
-				"actions": ["码库"]
+				"status": "已失效"
 			}]
 			"""
 
@@ -936,8 +896,7 @@ Scenario:4 优惠券规则列表查询
 				"get_person_count": 0,
 				"get_number": 0,
 				"use_count": 0,
-				"status": "未开始",
-				"actions": ["码库","链接","编辑","查看","使失效"]
+				"status": "未开始"
 			},{
 				"name": "多商品券-进行中",
 				"type": "多商品券",
@@ -950,8 +909,7 @@ Scenario:4 优惠券规则列表查询
 				"get_person_count": 0,
 				"get_number": 0,
 				"use_count": 0,
-				"status": "进行中",
-				"actions": ["码库","链接","编辑","查看","使失效"]
+				"status": "进行中"
 			}]
 			"""
 
@@ -989,8 +947,7 @@ Scenario:4 优惠券规则列表查询
 				"get_person_count": 0,
 				"get_number": 0,
 				"use_count": 0,
-				"status": "未开始",
-				"actions": ["码库","链接","编辑","查看","使失效"]
+				"status": "未开始"
 			},{
 				"name": "多商品券-进行中",
 				"type": "多商品券",
@@ -1003,8 +960,7 @@ Scenario:4 优惠券规则列表查询
 				"get_person_count": 0,
 				"get_number": 0,
 				"use_count": 0,
-				"status": "进行中",
-				"actions": ["码库","链接","编辑","查看","使失效"]
+				"status": "进行中"
 			},{
 				"name": "通用券-已过期",
 				"type": "通用券",
@@ -1017,8 +973,7 @@ Scenario:4 优惠券规则列表查询
 				"get_person_count": 0,
 				"get_number": 0,
 				"use_count": 0,
-				"status": "已过期",
-				"actions": ["码库","删除"]
+				"status": "已过期"
 			},{
 				"name": "通用券-进行中",
 				"type": "通用券",
@@ -1031,8 +986,7 @@ Scenario:4 优惠券规则列表查询
 				"get_person_count": 0,
 				"get_number": 0,
 				"use_count": 0,
-				"status": "进行中",
-				"actions": ["码库","链接","编辑","查看","使失效"]
+				"status": "进行中"
 			},{
 				"name": "通用券-已失效",
 				"type": "通用券",
@@ -1045,8 +999,7 @@ Scenario:4 优惠券规则列表查询
 				"get_person_count": 0,
 				"get_number": 0,
 				"use_count": 0,
-				"status": "已失效",
-				"actions": ["码库"]
+				"status": "已失效"
 			}]
 			"""
 
@@ -1071,8 +1024,7 @@ Scenario:4 优惠券规则列表查询
 				"get_person_count": 0,
 				"get_number": 0,
 				"use_count": 0,
-				"status": "已失效",
-				"actions": ["码库"]
+				"status": "已失效"
 			}]
 			"""
 
@@ -1110,8 +1062,7 @@ Scenario:4 优惠券规则列表查询
 				"get_person_count": 0,
 				"get_number": 0,
 				"use_count": 0,
-				"status": "未开始",
-				"actions": ["码库","链接","编辑","查看","使失效"]
+				"status": "未开始"
 			},{
 				"name": "多商品券-进行中",
 				"type": "多商品券",
@@ -1124,8 +1075,7 @@ Scenario:4 优惠券规则列表查询
 				"get_person_count": 0,
 				"get_number": 0,
 				"use_count": 0,
-				"status": "进行中",
-				"actions": ["码库","链接","编辑","查看","使失效"]
+				"status": "进行中"
 			},{
 				"name": "通用券-已过期",
 				"type": "通用券",
@@ -1138,8 +1088,7 @@ Scenario:4 优惠券规则列表查询
 				"get_person_count": 0,
 				"get_number": 0,
 				"use_count": 0,
-				"status": "已过期",
-				"actions": ["码库","删除"]
+				"status": "已过期"
 			},{
 				"name": "通用券-进行中",
 				"type": "通用券",
@@ -1152,8 +1101,7 @@ Scenario:4 优惠券规则列表查询
 				"get_person_count": 0,
 				"get_number": 0,
 				"use_count": 0,
-				"status": "进行中",
-				"actions": ["码库","链接","编辑","查看","使失效"]
+				"status": "进行中"
 			},{
 				"name": "通用券-已失效",
 				"type": "通用券",
@@ -1166,8 +1114,7 @@ Scenario:4 优惠券规则列表查询
 				"get_person_count": 0,
 				"get_number": 0,
 				"use_count": 0,
-				"status": "已失效",
-				"actions": ["码库"]
+				"status": "已失效"
 			}]
 			"""
 
@@ -1192,8 +1139,7 @@ Scenario:4 优惠券规则列表查询
 				"get_person_count": 0,
 				"get_number": 0,
 				"use_count": 0,
-				"status": "已过期",
-				"actions": ["码库","删除"]
+				"status": "已过期"
 			},{
 				"name": "通用券-进行中",
 				"type": "通用券",
@@ -1206,8 +1152,7 @@ Scenario:4 优惠券规则列表查询
 				"get_person_count": 0,
 				"get_number": 0,
 				"use_count": 0,
-				"status": "进行中",
-				"actions": ["码库","链接","编辑","查看","使失效"]
+				"status": "进行中"
 			},{
 				"name": "通用券-已失效",
 				"type": "通用券",
@@ -1220,8 +1165,7 @@ Scenario:4 优惠券规则列表查询
 				"get_person_count": 0,
 				"get_number": 0,
 				"use_count": 0,
-				"status": "已失效",
-				"actions": ["码库"]
+				"status": "已失效"
 			}]
 			"""
 
@@ -1246,8 +1190,7 @@ Scenario:4 优惠券规则列表查询
 				"get_person_count": 0,
 				"get_number": 0,
 				"use_count": 0,
-				"status": "未开始",
-				"actions": ["码库","链接","编辑","查看","使失效"]
+				"status": "未开始"
 			},{
 				"name": "多商品券-进行中",
 				"type": "多商品券",
@@ -1260,8 +1203,7 @@ Scenario:4 优惠券规则列表查询
 				"get_person_count": 0,
 				"get_number": 0,
 				"use_count": 0,
-				"status": "进行中",
-				"actions": ["码库","链接","编辑","查看","使失效"]
+				"status": "进行中"
 			}]
 			"""
 
@@ -1287,8 +1229,7 @@ Scenario:4 优惠券规则列表查询
 				"get_person_count": 0,
 				"get_number": 0,
 				"use_count": 0,
-				"status": "未开始",
-				"actions": ["码库","链接","编辑","查看","使失效"]
+				"status": "未开始"
 			},{
 				"name": "多商品券-进行中",
 				"type": "多商品券",
@@ -1301,8 +1242,7 @@ Scenario:4 优惠券规则列表查询
 				"get_person_count": 0,
 				"get_number": 0,
 				"use_count": 0,
-				"status": "进行中",
-				"actions": ["码库","链接","编辑","查看","使失效"]
+				"status": "进行中"
 			},{
 				"name": "通用券-已过期",
 				"type": "通用券",
@@ -1315,8 +1255,7 @@ Scenario:4 优惠券规则列表查询
 				"get_person_count": 0,
 				"get_number": 0,
 				"use_count": 0,
-				"status": "已过期",
-				"actions": ["码库","删除"]
+				"status": "已过期"
 			},{
 				"name": "通用券-进行中",
 				"type": "通用券",
@@ -1329,8 +1268,7 @@ Scenario:4 优惠券规则列表查询
 				"get_person_count": 0,
 				"get_number": 0,
 				"use_count": 0,
-				"status": "进行中",
-				"actions": ["码库","链接","编辑","查看","使失效"]
+				"status": "进行中"
 			},{
 				"name": "通用券-已失效",
 				"type": "通用券",
@@ -1343,8 +1281,7 @@ Scenario:4 优惠券规则列表查询
 				"get_person_count": 0,
 				"get_number": 0,
 				"use_count": 0,
-				"status": "已失效",
-				"actions": ["码库"]
+				"status": "已失效"
 			}]
 			"""
 
@@ -1369,8 +1306,7 @@ Scenario:4 优惠券规则列表查询
 				"get_person_count": 0,
 				"get_number": 0,
 				"use_count": 0,
-				"status": "未开始",
-				"actions": ["码库","链接","编辑","查看","使失效"]
+				"status": "未开始"
 			}]
 			"""
 
@@ -1395,8 +1331,7 @@ Scenario:4 优惠券规则列表查询
 				"get_person_count": 0,
 				"get_number": 0,
 				"use_count": 0,
-				"status": "进行中",
-				"actions": ["码库","链接","编辑","查看","使失效"]
+				"status": "进行中"
 			},{
 				"name": "通用券-进行中",
 				"type": "通用券",
@@ -1409,8 +1344,7 @@ Scenario:4 优惠券规则列表查询
 				"get_person_count": 0,
 				"get_number": 0,
 				"use_count": 0,
-				"status": "进行中",
-				"actions": ["码库","链接","编辑","查看","使失效"]
+				"status": "进行中"
 			}]
 			"""
 
@@ -1435,8 +1369,7 @@ Scenario:4 优惠券规则列表查询
 				"get_person_count": 0,
 				"get_number": 0,
 				"use_count": 0,
-				"status": "已过期",
-				"actions": ["码库","删除"]
+				"status": "已过期"
 			}]
 			"""
 
@@ -1461,8 +1394,7 @@ Scenario:4 优惠券规则列表查询
 				"get_person_count": 0,
 				"get_number": 0,
 				"use_count": 0,
-				"status": "已失效",
-				"actions": ["码库"]
+				"status": "已失效"
 			}]
 			"""
 
@@ -1489,8 +1421,7 @@ Scenario:4 优惠券规则列表查询
 				"get_person_count": 0,
 				"get_number": 0,
 				"use_count": 0,
-				"status": "未开始",
-				"actions": ["码库","链接","编辑","查看","使失效"]
+				"status": "未开始"
 			},{
 				"name": "多商品券-进行中",
 				"type": "多商品券",
@@ -1503,8 +1434,7 @@ Scenario:4 优惠券规则列表查询
 				"get_person_count": 0,
 				"get_number": 0,
 				"use_count": 0,
-				"status": "进行中",
-				"actions": ["码库","链接","编辑","查看","使失效"]
+				"status": "进行中"
 			},{
 				"name": "通用券-已过期",
 				"type": "通用券",
@@ -1517,8 +1447,7 @@ Scenario:4 优惠券规则列表查询
 				"get_person_count": 0,
 				"get_number": 0,
 				"use_count": 0,
-				"status": "已过期",
-				"actions": ["码库","删除"]
+				"status": "已过期"
 			},{
 				"name": "通用券-进行中",
 				"type": "通用券",
@@ -1531,8 +1460,7 @@ Scenario:4 优惠券规则列表查询
 				"get_person_count": 0,
 				"get_number": 0,
 				"use_count": 0,
-				"status": "进行中",
-				"actions": ["码库","链接","编辑","查看","使失效"]
+				"status": "进行中"
 			},{
 				"name": "通用券-已失效",
 				"type": "通用券",
@@ -1545,8 +1473,7 @@ Scenario:4 优惠券规则列表查询
 				"get_person_count": 0,
 				"get_number": 0,
 				"use_count": 0,
-				"status": "已失效",
-				"actions": ["码库"]
+				"status": "已失效"
 			}]
 			"""
 
@@ -1573,8 +1500,7 @@ Scenario:4 优惠券规则列表查询
 				"get_person_count": 0,
 				"get_number": 0,
 				"use_count": 0,
-				"status": "进行中",
-				"actions": ["码库","链接","编辑","查看","使失效"]
+				"status": "进行中"
 			},{
 				"name": "通用券-进行中",
 				"type": "通用券",
@@ -1587,8 +1513,7 @@ Scenario:4 优惠券规则列表查询
 				"get_person_count": 0,
 				"get_number": 0,
 				"use_count": 0,
-				"status": "进行中",
-				"actions": ["码库","链接","编辑","查看","使失效"]
+				"status": "进行中"
 			},{
 				"name": "通用券-已失效",
 				"type": "通用券",
@@ -1601,8 +1526,7 @@ Scenario:4 优惠券规则列表查询
 				"get_person_count": 0,
 				"get_number": 0,
 				"use_count": 0,
-				"status": "已失效",
-				"actions": ["码库"]
+				"status": "已失效"
 			}]
 			"""
 
@@ -1632,7 +1556,6 @@ Scenario:4 优惠券规则列表查询
 				"get_person_count": 0,
 				"get_number": 0,
 				"use_count": 0,
-				"status": "进行中",
-				"actions": ["码库","链接","编辑","查看","使失效"]
+				"status": "进行中"
 			}]
 			"""
