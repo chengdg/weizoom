@@ -194,6 +194,16 @@ Scenario:2 没有有微信用户报名参与活动和有微信用户报名参与
 		"""
 		[]
 		"""
+	Then bill能获得微信高级投票活动介绍
+		"""
+		[{
+			"title":"微信高级投票",
+			"start_date":"2天前",
+			"end_date":"2天后",
+			"rule": "高级投票规则",
+			"desc":"高级投票活动介绍"
+		}]
+		"""
 
 @mall2 @apps @shvote @shvote_activity
 Scenario:3 微信用户报名参与活动并通过审核在活动主页的显示
