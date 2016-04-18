@@ -144,12 +144,28 @@
 				success:function(data){
 					var images = data.images;
 					var $imgContainer = $(event.target);
-					var src;
+					var src,width,height;
 					_.each(images, function(image) {
 						src = image.url;
+						width = image.width;
+						height = image.height;
 					});
 					$(event.target).removeClass('xui-imgDisplayBtn').addClass('xui-dialogSelectedBtn').html('重新上传').parent().find('.xa-imgContainer').html("<img src="+ src +">");
 					$(event.target).parents('td').find('.xa-forceVali').val(src);
+					console.log("srcsrcsrcsrcsrc",src)
+          W.resource.termite2.Image.put({
+              data: {
+              	url:src,
+              	width:width,
+              	height:height
+              },
+              success: function(data) {
+
+              },
+              error: function(resp) {
+
+              }
+          })
 				}
 			});
 		})
