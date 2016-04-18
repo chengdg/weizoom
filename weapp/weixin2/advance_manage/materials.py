@@ -63,7 +63,7 @@ class Materials(resource.Resource):
 			materials = weixin_models.Material.objects.filter(owner=request.manager, is_deleted=False)
 
 		if request.GET.get('from', '') == 'share_page_config':
-			materials = materials.filter(type=SINGLE_NEWS_TYPE)
+			materials = materials.filter(type=weixin_models.SINGLE_NEWS_TYPE)
 
 		order_by = request.GET.get('sort_attr', '-id')
 		materials = materials.order_by(order_by)
