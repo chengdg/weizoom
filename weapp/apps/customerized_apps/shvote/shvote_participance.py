@@ -17,6 +17,7 @@ import models as app_models
 from mall import export as mall_export
 from modules.member.models import Member
 from core.exceptionutil import unicode_full_stack
+from apps.customerized_apps.shvote.m_shvote import update_shvote_status
 
 FIRST_NAV = mall_export.MALL_PROMOTION_AND_APPS_FIRST_NAV
 COUNT_PER_PAGE = 20
@@ -37,6 +38,7 @@ class ShvoteParticipance(resource.Resource):
 			id = request.GET['id']
 			try:
 				record = app_models.Shvote.objects.get(id=id)
+				activity_status, record = update_shvote_status(record)
 				if request.member:
 					participance_data_count = app_models.ShvoteParticipance.objects(belong_to=id, member_id=request.member.id).count()
 			except:
@@ -48,6 +50,7 @@ class ShvoteParticipance(resource.Resource):
 				'record_id': id,
 				'page_title': record.name if record else u"投票",
 				'groups': record.groups,
+				'activity_status': activity_status,
 				'is_already_participanted': (participance_data_count > 0),
 				'is_hide_weixin_option_menu':True,
 				'app_name': "shvote",
