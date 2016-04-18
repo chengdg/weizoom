@@ -524,10 +524,10 @@ Scenario:3 优惠券规则列表-多商品券(多个商品)商品下架、删除
 				"status": "已下架"
 				},{
 				"name": "商品3",
-				"status": ""
+				"status": "已下架"
 				},{
 				"name": "商品4",
-				"status": ""
+				"status": "已下架"
 			}],
 			"coupon_id_prefix": "coupon1_id_"
 		}
@@ -637,13 +637,13 @@ Scenario:3 优惠券规则列表-多商品券(多个商品)商品下架、删除
 			"coupon_product": "商品2,商品3,商品4",
 			"products_status":[{
 				"name": "商品2",
-				"status": "已下架"
+				"status": "已删除"
 				},{
 				"name": "商品3",
-				"status": ""
+				"status": "已下架"
 				},{
 				"name": "商品4",
-				"status": ""
+				"status": "已下架"
 			}],
 			"coupon_id_prefix": "coupon1_id_"
 		}
