@@ -51,6 +51,7 @@ class Shvote(models.Document):
 	owner_id = models.LongField() #创建人id
 	name = models.StringField(default="", max_length=100) #名称
 	rule = models.StringField(default="", max_length=200) #投票规则
+	votecount_per_one = models.IntField(default=10)#用户每天可投票的次数（每个选手只能投一票）
 	groups = models.ListField() #分组
 	description = models.StringField(default="", max_length=10000) #活动描述
 	start_time = models.DateTimeField() #开始时间

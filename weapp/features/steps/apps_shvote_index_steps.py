@@ -20,59 +20,7 @@ from apps.customerized_apps.shvote import models as shvote_models
 import termite.pagestore as pagestore_manager
 import json
 import copy
-
-def __debug_print(content,type_tag=True):
-    """
-    debug工具函数
-    """
-    print('++++++++++++++++++  START ++++++++++++++++++++++++++++++++++++')
-    if type_tag:
-        print("====== Type ======")
-        print(type(content))
-        print("===================")
-    print(content)
-    print('++++++++++++++++++++  END  ++++++++++++++++++++++++++++++++++')
-
-
-
-def __bool2Bool(bo):
-    """
-    JS字符串布尔值转化为Python布尔值
-    """
-    bool_dic = {'true':True,'false':False,'True':True,'False':False}
-    if bo:
-        result = bool_dic[bo]
-    else:
-        result = None
-    return result
-
-def __date_delta(start,end):
-    """
-    获得日期，相差天数，返回int
-    格式：
-        start:(str){2015-11-23}
-        end :(str){2015-11-30}
-    """
-    start = dt.datetime.strptime(start, "%Y-%m-%d").date()
-    end = dt.datetime.strptime(end, "%Y-%m-%d").date()
-    return (end-start).days
-
-def __date2time(date_str):
-    """
-    字符串 今天/明天……
-    转化为字符串 "%Y-%m-%d %H:%M"
-    """
-    cr_date = date_str
-    p_time = "{} 00:00".format(bdd_util.get_date_str(cr_date))
-    return p_time
-
-def __datetime2str(dt_time):
-    """
-    datetime型数据，转为字符串型，日期
-    转化为字符串 "%Y-%m-%d %H:%M"
-    """
-    dt_time = dt.datetime.strftime(dt_time, "%Y-%m-%d %H:%M")
-    return dt_time
+import apps_step_utils as apps_util
 
 def __shvote_name2id(name, title=None):
     """
@@ -83,13 +31,6 @@ def __shvote_name2id(name, title=None):
         name = material_models.News.objects.get(title=title).url
     shvote = shvote_models.Shvote.objects.get(name=name)
     return shvote.related_page_id,shvote.id
-
-# def __status2name(status_num):
-#     """
-#     高级投票：状态值 转 文字
-#     """
-#     status2name_dic = {-1:u"全部",0:u"未开始",1:u"进行中",2:u"已结束"}
-#     return status2name_dic[status_num]
 
 def __name2status(name):
     """
@@ -106,35 +47,101 @@ def step_impl(context, webapp_user_name, title):
     user = User.objects.get(id=context.webapp_owner_id)
     openid = "%s_%s" % (webapp_user_name, user.username)
     _, record_id = __shvote_name2id('', title)
-    url = '/m/apps/shvote/m_shvote/?webapp_owner_id=%s&id=%s&fmt=%s&opid=%s' % (context.webapp_owner_id, str(record_id), context.member.token, openid)
-
-    #获取页面
-    response = context.client.get(url)
-    while response.status_code == 302:
-        redirect_url = response['Location']
-        response = context.client.get(redirect_url)
     context.shvote_id = str(record_id)
     context.openid = openid
 
-@then(u"{webapp_user_name}获得微信高级投票活动'{name}'主页的内容")
-def step_impl(context, webapp_user_name, name):
+    #获取页面
+    view_mobile_main_page(context)
+
+
+def view_mobile_main_page(context):
+    """
+    进入活动主页
+    @param context:
+    @return:
+    """
+    return apps_util.get_response(context, {
+        "app": "m/apps/shvote",
+        "resource": "m_shvote",
+        "method": "get",
+        "type": "get",
+        "args": {
+            "webapp_owner_id": context.webapp_owner_id,
+            "id": context.shvote_id
+        }
+    })
+
+def get_dynamic_data(context):
+    return apps_util.get_response(context, {
+        "app": "m/apps/shvote",
+        "resource": "m_shvote",
+        "type": "api",
+        "method": "get",
+        "args": {
+            "webapp_owner_id": context.webapp_owner_id,
+            "recordId": context.shvote_id
+        }
+    })
+
+@then(u"{webapp_user_name}获得微信高级投票活动主页的内容")
+def step_impl(context, webapp_user_name):
     #获取动态数据
-    _, record_id = __shvote_name2id(name)
-    dynamic_url = '/m/apps/shvote/api/m_shvote/?_method=get'
-    param = {
-        "webapp_owner_id": context.webapp_owner_id,
-        "recordId": record_id,
-        "fmt": context.member.token
-    }
-    response = context.client.get(dynamic_url, param)
-    while response.status_code == 302:
-        redirect_url = response['Location']
-        response = context.client.get(redirect_url)
+    response = get_dynamic_data(context)
 
     expected_data = json.loads(context.text)
     result_data = json.loads(response.content)['data']['record_info']
     expected_data['end_date'] = bdd_util.get_date_str(expected_data['end_date'])
 
-    actual_data = {k: v for k, v in result_data.items() if k in expected_data.keys()}
+    actual_data = {
+        "total_participanted_count": 0,
+        "total_voted_count": 0,
+        "total_visits": 0,
+        "end_date": ""
+    }
+
+    for k, v in result_data.items():
+        if k == "total_parted":
+            actual_data["total_participanted_count"] = v
+        if k == "total_counts":
+            actual_data["total_voted_count"] = v
+        if k == "total_visits":
+            actual_data["total_visits"] = v
+        if k == "end_date":
+            actual_data["end_date"] = v
 
     bdd_util.assert_dict(expected_data,actual_data)
+
+@Then(u"{webapp_user_name}获得微信高级投票活动主页排行榜'{group}'列表")
+def step_impl(context, webapp_user_name, group):
+    #获取动态数据
+    get_dynamic_data(context)
+    response = apps_util.get_response(context, {
+        "app": "m/apps/shvote",
+        "resource": "get_rank_list",
+        "method": "get",
+        "type": "api",
+        "args": {
+            "webapp_owner_id": context.webapp_owner_id,
+            "recordId": context.shvote_id,
+            "current_group": group,
+            "search_name": ""
+        }
+    })
+    expected_data = json.loads(context.text)
+
+    result_data = json.loads(response.content)['data']['result_list']
+    expected_keys = actual_data = []
+
+    if len(expected_data) > 0:
+        expected_keys = expected_data[0].keys()
+
+    for data in result_data:
+        expected_keys = expected_keys if expected_keys else data.keys()
+        tmp_dict = {}
+        for k, v in data.items():
+            if k in expected_keys:
+                tmp_dict[k] = v
+        actual_data.append(tmp_dict)
+    apps_util.debug_print(expected_data)
+    apps_util.debug_print(actual_data)
+    bdd_util.assert_list(expected_data,actual_data)

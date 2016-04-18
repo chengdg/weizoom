@@ -494,8 +494,8 @@ def step_impl(context,user):
         for item in rec_group_list:
             tmp = {
                 "name":item['name'],
-                "participant_count":item['participant_count'],
-                "vote_count":item['vote_count'],
+                "total_participanted_count":item['total_participanted_count'],
+                "total_voted_count":item['total_voted_count'],
                 "status":item['status'],
                 "start_time":item['start_time'],
                 "end_time":item['end_time'],

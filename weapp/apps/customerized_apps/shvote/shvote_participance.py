@@ -67,31 +67,19 @@ class ShvoteParticipance(resource.Resource):
 		响应PUT
 		"""
 		try:
-			result_list = []
 			member_id = request.member.id
-			id = request.POST['belong_to']
-			termite_data = json.loads(request.POST['termite_data'])
-			for k in sorted(termite_data.keys()):
-				v = termite_data[k]
-				pureName = k.split('_')[1]
-				result_list_temp = {
-					pureName : v['value']
-				}
-				result_list.append(result_list_temp)
-			if result_list[4]['detail-pic']!='[]':
-				detailPic = json.loads(result_list[4]['detail-pic'])
-			else:
-				detailPic = []
+			record_id = request.POST['belong_to']
+			post = request.POST
 			try:
 				sh_participance = app_models.ShvoteParticipance(
-					belong_to = id,
+					belong_to = record_id,
 					member_id = member_id,
-					icon = json.loads(result_list[0]['headImg'])[0],
-					name = result_list[1]['name'],
-					group = request.POST['group'],
-					serial_number = result_list[2]['number'],
-					details = result_list[3]['details'],
-					pics = detailPic,
+					icon = post["icon"],
+					name = post["name"],
+					group = post["group"],
+					serial_number = post["serial_number"],
+					details = post["details"],
+					pics = json.loads(post["pics"]),
 					created_at = datetime.now()
 				)
 				sh_participance.save()
@@ -100,8 +88,7 @@ class ShvoteParticipance(resource.Resource):
 				response = create_response(500)
 				response.errMsg = u'只能报名一次'
 			return response.get_response()
-		except Exception,e:
-			print(e)
+		except:
 			response = create_response(500)
 			response.errMsg = u'报名失败'
 			response.inner_errMsg = unicode_full_stack()
@@ -175,4 +162,36 @@ class ShvoteParticipance(resource.Resource):
 		# 	return response.get_response()
 
 		response = create_response(200)
+		return response.get_response()
+
+	def api_get(request):
+		"""
+		响应GET
+		"""
+		items_list = []
+		items = {}
+		if 'id' in request.GET:
+			try:
+				player_details = app_models.ShvoteParticipance.objects.get(id=request.GET['id'])
+			except:
+				response = create_response(500)
+				response.errMsg = u'选手信息出错，请稍后再试！'
+				return response.get_response()
+			vote_log = player_details.vote_log
+			if vote_log:
+				for created_at,member_ids in vote_log.items():
+					for member_id in member_ids:
+						try:
+							member = Member.objects.get(id = member_id)
+							member_name = member.username_for_html
+						except:
+							member_name = u'未知'
+						items_list.append({
+							'created_at': created_at,
+							'name': member_name	
+						})
+				items['items'] = items_list
+
+		response = create_response(200)
+		response.data = items
 		return response.get_response()

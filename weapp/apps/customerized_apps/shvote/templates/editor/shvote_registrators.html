@@ -157,16 +157,6 @@
 
 <script type="text/javascript">
 $(document).ready(function() {
-	$('body').delegate('.xa-viewData', 'click', function(event) {
-		var activityId = $(event.currentTarget).parents('tr').data('id');
-		W.dialog.showDialog('W.dialog.app.shvote.ViewParticipanceDataDialog', {
-			activityId: activityId,
-			success: function(data) {
-				alert(data);
-			}
-		});
-	});
-
 	$('.xa-search').click(function(event) {
 		var participant_name = $.trim($('[name="participant_name"]').val());
 		var participant_status = $.trim($('[name="status"]').val());

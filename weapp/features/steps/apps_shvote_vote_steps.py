@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from features.steps.apps_shvote_index_steps import get_dynamic_data
+
 __author__ = 'aix'
 
 from behave import *
@@ -22,17 +24,22 @@ import termite.pagestore as pagestore_manager
 import json
 import copy
 
-
-def __name2status(name):
-    """
-    高级投票： 文字 转 状态值
-    """
-    if name:
-        name2status_dic = {u"全部":-1,u"未开始":0,u"进行中":1,u"已结束":2}
-        return name2status_dic[name]
-    else:
-        return -1
-
-# @When(u"{webapp_user_name}在高级投票中为'{target_user_name}'投票")
-# def step_impl(context, webapp_user_name, target_user_name):
-
+@When(u"{webapp_user_name}在高级投票中为'{target_user_name}'投票")
+def step_impl(context, webapp_user_name, target_user_name):
+    #获取动态数据
+    get_dynamic_data(context)
+    record_id = context.shvote_id
+    shp = shvote_models.ShvoteParticipance.objects.get(belong_to=record_id, name=target_user_name)
+    response = app_utils.get_response(context, {
+        "app": "m/apps/shvote",
+        "resource": "shvote_participance",
+        "method": "post",
+        "type": "api",
+        "args": {
+            "webapp_owner_id": context.webapp_owner_id,
+            "recordId": record_id,
+            "vote_to": shp.id,
+            "voted_group": shp.group
+        }
+    })
+    bdd_util.assert_api_call_success(response)

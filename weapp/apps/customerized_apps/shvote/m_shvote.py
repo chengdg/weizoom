@@ -178,10 +178,12 @@ class GetRankList(resource.Resource):
 		@param record_id: 活动id
 		@return: list
 		"""
+		print "start----------111111111222222333334555555645746867978978089-089-5673465237897899847366"
 		response = create_response(200)
 		response.data = {
 			'result_list': get_rank_data(request.GET)
 		}
+		print "end----------111111111222222333334555555645746867978978089-089-5673465237897899847366"
 		return response.get_response()
 
 class MShvoteRank(resource.Resource):

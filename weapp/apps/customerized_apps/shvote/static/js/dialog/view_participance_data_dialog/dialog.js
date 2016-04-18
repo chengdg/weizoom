@@ -11,7 +11,8 @@ W.dialog.app.shvote.ViewParticipanceDataDialog = W.dialog.Dialog.extend({
 	}, W.dialog.Dialog.prototype.events),
 	
 	templates: {
-		dialogTmpl: '#app-shvote-viewParticipanceDataDialog-dialog-tmpl'
+		dialogTmpl: '#app-shvote-viewParticipanceDataDialog-dialog-tmpl',
+		resultTmpl: '#app-shvote-viewParticipanceResultDialog-dialog-tmpl'
 	},
 	
 	onInitialize: function(options) {
@@ -21,22 +22,26 @@ W.dialog.app.shvote.ViewParticipanceDataDialog = W.dialog.Dialog.extend({
 	},
 	
 	onShow: function(options) {
-		this.activityId = options.activityId;
+		this.playerId = options.playerId;
 	},
 	
 	afterShow: function(options) {
-		if (this.activityId) {
+		var that = this;
+		if (this.playerId) {
 			W.getApi().call({
 				app: 'apps/shvote',
 				resource: 'shvote_participance',
 				scope: this,
 				args: {
-					id: this.activityId
+					id: this.playerId
 				},
 				success: function(data) {
 					this.$dialog.find('.modal-body').text(data);
+					var template = Handlebars.compile($(that.templates['resultTmpl']).html());
+					$('.xui-app_shvote-Dialog .modal-body').html(template(data));
 				},
 				error: function(resp) {
+					W.showHint('error', resp.errMsg);
 				}
 			})
 		}

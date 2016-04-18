@@ -142,11 +142,11 @@
 <script type="text/javascript">
 $(document).ready(function() {
 	$('body').delegate('.xa-viewData', 'click', function(event) {
-		var activityId = $(event.currentTarget).parents('tr').data('id');
+		var playerId = $(event.currentTarget).parents('tr').data('id');
 		W.dialog.showDialog('W.dialog.app.shvote.ViewParticipanceDataDialog', {
-			activityId: activityId,
+			playerId: playerId,
 			success: function(data) {
-				alert(data);
+				// alert(data);
 			}
 		});
 	});

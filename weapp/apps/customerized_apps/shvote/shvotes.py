@@ -102,8 +102,8 @@ class Shvotes(resource.Resource):
 				'name': data.name,
 				'start_time': data.start_time.strftime('%Y-%m-%d %H:%M'),
 				'end_time': data.end_time.strftime('%Y-%m-%d %H:%M'),
-				'vote_count': id2participant_count[id_str],
-				'participant_count': id2asking_count[id_str],
+				'total_voted_count': record_id2memberinfo.get(id_str, 0),
+				'total_participanted_count': id2asking_count[id_str],
 				'related_page_id': data.related_page_id,
 				'status': data.status_text,
 				'created_at': data.created_at.strftime("%Y-%m-%d %H:%M:%S")

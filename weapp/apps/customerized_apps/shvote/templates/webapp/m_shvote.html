@@ -278,13 +278,14 @@
         line-height: 1.5rem;
 	}
 	.wui-detail-close{
-		display: none;
-		position: absolute;
+		background-image:url('/static_v2/img/shvote_close.png');
+		width:67px;
+		height:67px;
+		z-index:999999999;
+		position:absolute;
 		top: 3%;
 		right: 6%;
-		cursor: pointer;
-	    z-index: 999999999;
-	    width: 10%;
+		display: none;
 	}
 	p.wui-noborder{
 		border: none;
@@ -416,8 +417,8 @@
 		</div>
 	</div>
 </script>
-<div>	
-	<img class="wui-detail-close wa-detail-close" src="/static_v2/img/shvote_close.png">
+<div>
+	<div class="wui-detail-close wa-detail-close"></div>	
 	<div id="userDetailDialog" class="wui-detail-dialog">
 		<div class="wui-detail-top">
 			<div class="wui-detail-user wa-detail-user">
@@ -514,7 +515,6 @@
             if(voteLock) return false;
             voteLock = true;
             var vote_to = $(this).attr('data-id'); 
-            console.log(vote_to);
             W.getApi().call({
                 app: 'm/apps/shvote',
                 resource: 'shvote_participance',
@@ -673,7 +673,7 @@
 				$('.wa-detail-vote-count span').text(count);
 				$('.wa-detail-bottom').text(details);
 				for (var j=0;j<pics.length;j++){
-					$('.wa-detail-bottom').append('<img src='+pics[i]+'>');
+					$('.wa-detail-bottom').append('<img src='+pics[j]+'>');
 				}
 			}
 		}
