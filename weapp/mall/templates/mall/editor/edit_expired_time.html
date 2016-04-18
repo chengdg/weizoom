@@ -48,9 +48,21 @@
 						<tr>
 							<td>选择要分享的图文：<br/><span class="c9">（仅显示正文内容）</span></td>
 							<td>
-								<input type="hidden" name="newsId" class="xa-forceVali"  data-validate="require-notempty">
+								<input type="hidden" name="newsId" class="xa-forceVali"  data-validate="require-notempty" value="{{news.id}}">
+
 								<div class="xa-wxMessageSection">
+								{% if news %}
+								<ul class="wui-newses">
+									<a href="/new_weixin/news_preview/?id={{news.id}}" target="_blank">
+									<li class="wui-i-news">
+										<span class="wui-i-header">图文</span>
+										<span class="wui-i-title" title="${news.title}">{{news.title}}</span>
+									</li>
+									</a>
+								</ul>
+								{% else %}
 									<a href="javascript:void(0);" class="xa-wxMessage xui-inlineblock mb15">添加</a>
+								{% endif %}
 								</div>
 								<div class="errorHint" data-error-hint="请添加图文"></div>
 							</td>
