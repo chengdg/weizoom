@@ -70,12 +70,22 @@
 		background-size: 16px 16px;
 	}
 	.wui-group{
-		overflow: hidden;
+		position: relative;
+		overflow-x: auto;
+		overflow-y: hidden;
 		height: 43px;
 		line-height: 43px;
+		font-size: 0;
+		white-space:nowrap;
+	}
+	.wui-group > div.grad{
+	 	color: green;
+		background-image: -webkit-linear-gradient(left,#000 35%, #fff);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
 	}
 	.wui-group > div{
-		float: left;
+		display: inline-block;
 		font-size: 16px;
 		text-align: center;
 	}
@@ -322,6 +332,9 @@
 	    top: 68%;
         left: 42%;
 	}
+	::-webkit-scrollbar{
+		width:0;
+	}
 	@media only screen and (max-width: 320px){
 		.wui-vote-btn{
 			width: 3.8rem;
@@ -471,6 +484,7 @@
 		//切换分组
 		$('.wa-groups').on('click','div',function(){
 			$(this).addClass('active').siblings().removeClass('active');
+			$(this).removeClass('grad')
 			current_group = $(this).html();
 			$('.wa-left-chance').html(can_play_info[current_group]);
 			getRankInfo(current_group,'');
@@ -480,6 +494,11 @@
 			$('.wa-shvote-desc').show();
 			$('.wa-mobile').hide();
 		});
+
+		$('.wa-groups').scroll(function(){
+			$('.wa-groups div').eq(3).removeClass('grad');
+			console.log($('.wa-groups div').eq(3).scrollLeft());
+		})
         //展示参与统计
 //        getDynamicData();
 
@@ -582,14 +601,20 @@
     	$('.wa-total-counts').html(record_info['total_counts']);
     	$('.wa-total-visits').html(record_info['total_visits']);
     	$('.wa-enddate').html(record_info['end_date']);
-    	for(var i=0;i < record_info.groups.length;i++){
-    		var group = $('<div>'+record_info.groups[i]+'</div>');
-    		$('.wa-groups').append(group);
-    		$('.wa-groups div').eq(0).addClass('active');
-    	}
-    	var wid = 100/record_info.groups.length;
-
-    	$('.wa-groups div').css("width",wid+'%');    	
+	    for(var i=0;i < record_info.groups.length;i++){
+	    	var group = $('<div>'+record_info.groups[i]+'</div>');
+	    	$('.wa-groups').append(group);
+	    }
+	    $('.wa-groups div').eq(0).addClass('active');
+	    if(record_info.groups.length < 4){ 
+	   		var wid = 100/record_info.groups.length;
+	   		$('.wa-groups div').css("width",wid+'%');   
+	    }else{
+	    	var w_wid = $(window).width();
+	    	var d_wid = $(window).width()/4;
+	    	$('.wa-groups div').css("width",d_wid);
+	    	$('.wa-groups div').eq(3).addClass('grad');
+	    }
     };
     function update_member_info(member_info){
     	$('.wa-left-chance').html(member_info.can_play_info[current_group]);
