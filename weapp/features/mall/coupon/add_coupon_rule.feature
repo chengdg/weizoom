@@ -166,5 +166,76 @@ Scenario:3 添加优惠券规则-多商品券(多个商品)
 
 @promotion @promotionCoupon
 Scenario:4 添加多商品券-多个商品中保存时有不符合条件的商品，给出错误提示
+	Given jobs登录系统
 
+	#下架商品
+	When jobs'下架'商品'商品1'
+	When jobs添加优惠券规则
+		"""
+		[{
+			"name": "多商品券1",
+			"money": 100.00,
+			"limit_counts": 1,
+			"using_limit": "满50元可以使用",
+			"count": 5,
+			"start_date": "今天",
+			"end_date": "1天后",
+			"description":"使用说明",
+			"coupon_product": "商品1,商品2,商品3",
+			"coupon_id_prefix": "coupon1_id_"
+		}]
+		"""
+	Then jobs获得优惠券规则添加失败提示'部分商品已发生其他操作，请查证后再操作'
 
+	#删除商品
+	When jobs'上架'商品'商品1'
+	When jobs'删除'商品'商品2'
+	When jobs添加优惠券规则
+		"""
+		[{
+			"name": "多商品券1",
+			"money": 100.00,
+			"limit_counts": 1,
+			"using_limit": "满50元可以使用",
+			"count": 5,
+			"start_date": "今天",
+			"end_date": "1天后",
+			"description":"使用说明",
+			"coupon_product": "商品1,商品2,商品3",
+			"coupon_id_prefix": "coupon1_id_"
+		}]
+		"""
+	Then jobs获得优惠券规则添加失败提示'部分商品已发生其他操作，请查证后再操作'
+
+	#添加优惠券的商品参与了其他与优惠券互斥的活动
+	When jobs创建限时抢购活动
+		"""
+		[{
+			"name": "商品3限时抢购",
+			"promotion_title":"",
+			"start_date": "今天",
+			"end_date": "5天后",
+			"product_name":"商品1",
+			"member_grade": "全部会员",
+			"count_per_purchase":"",
+			"promotion_price": 80.00,
+			"limit_period":"",
+			"count_per_period":1
+		}]
+		"""
+	When jobs添加优惠券规则
+		"""
+		[{
+			"name": "多商品券1",
+			"money": 100.00,
+			"limit_counts": 1,
+			"using_limit": "满50元可以使用",
+			"count": 5,
+			"start_date": "今天",
+			"end_date": "1天后",
+			"description":"使用说明",
+			"coupon_product": "商品1,商品3",
+			"coupon_id_prefix": "coupon1_id_"
+		}]
+		"""
+	Then jobs获得优惠券规则添加失败提示'部分商品已发生其他操作，请查证后再操作'
