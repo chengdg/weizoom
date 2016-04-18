@@ -445,8 +445,20 @@ class CouponRuleProducts(resource.Resource):
             'with_concrete_promotion': True
         })
 
+        items = []
+
+        for product in promotion.products:
+            item = {
+                "name": product.name,
+                "bar_code": product.bar_code,
+                'detail_link': product.detail_link,
+                'price': product.display_price_range,
+                'total_socks': product.total_stocks,
+                'status': product.status
+            }
+            items.append(item)
         response = create_response(200)
         response.data = {
-            'promotion': promotion
+            'items': items
         }
         return response.get_response()

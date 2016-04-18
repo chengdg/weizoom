@@ -242,8 +242,45 @@ def step_impl(context, webapp_owner_name, coupon_rule_name):
 
 @then(u"{user}获得优惠券规则'{rule_name}'")
 def step_impl(context, user, rule_name):
-    promotion_id = Promotion.objects.get(name=rule_name).id
-    pass
+
+
+    expected = json.loads(context.text)
+
+
+    # expected["start_date"] = "{} 00:00:00".format(bdd_util.get_date_str(expected["start_date"]))
+    # expected["end_date"] = "{} 00:00:00".format(bdd_util.get_date_str(expected["end_date"]))
+
+    # todo
+    del expected["start_date"]
+    del expected["end_date"]
+
+    promotion = Promotion.objects.get(name=rule_name)
+
+    url = '/mall2/coupon_rule?id=%d' % promotion.id
+    response = context.client.get(url)
+
+    # bdd_util.assert_api_call_success(response)
+
+    coupon_rule = response.context['coupon_rule']
+    promotion = response.context['promotion']
+
+    actual = {
+        "name": promotion.name,
+        "money": coupon_rule.money,
+        "limit_counts": coupon_rule.limit_counts,
+        "using_limit": "满{}元可以使用".format(coupon_rule.valid_restrictions),
+        "count": coupon_rule.count,
+        # "cr_start_date":coupon_rule.get('start_date', u'今天'),
+        # "start_date":"{} 00:00".format(bdd_util.get_date_str(cr_start_date)),
+        # "cr_end_date": coupon_rule.get('end_date', u'1天后'),
+        # "end_date ":"{} 00:00".format(bdd_util.get_date_str(cr_end_date))
+        "description": coupon_rule.remark
+    }
+
+    print('-----------------1')
+    print(response.context['coupon_rule'])
+    print('-----------------2')
+    bdd_util.assert_dict(expected,actual)
 
 
 @then(u'{user}能获得优惠券状态列表')
@@ -279,7 +316,7 @@ def __add_coupon_rule(context, webapp_owner_name):
         start_date = "{} 00:00".format(bdd_util.get_date_str(cr_start_date))
         cr_end_date = coupon_rule.get('end_date', u'1天后')
         end_date = "{} 00:00".format(bdd_util.get_date_str(cr_end_date))
-        remark = coupon_rule['remark']
+        remark = coupon_rule['description']
         post_data = {
             'name': cr_name,
             'money': cr_money,
