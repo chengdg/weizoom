@@ -25,8 +25,8 @@ Scenario:1.管理员创建选手
 		"""
 		[{
 			"name":"新建微信高级投票活动",
-			"vote_count":0,
-			"participant_count":0,
+			"total_voted_count":0,
+			"total_participanted_count":0,
 			"start_date":"今天",
 			"end_date":"2天后",
 			"status":"进行中",
@@ -59,8 +59,8 @@ Scenario:1.管理员创建选手
 		"""
 		[{
 			"name":"新建微信高级投票活动",
-			"vote_count":1,
-			"participant_count":"1",
+			"total_voted_count":0,
+			"total_participanted_count":"1",
 			"start_date":"今天",
 			"end_date":"2天后",
 			"status":"进行中",
