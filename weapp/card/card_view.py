@@ -14,14 +14,14 @@ from excel_response import ExcelResponse
 
 from weixin.user.models import WeixinMpUser, MpuserPreviewInfo, ComponentAuthedAppidInfo, ComponentAuthedAppid
 
-WEIZOOM_CARD_BELONG_TO_OWNER = ["yufengwuliu","guo","bill","yunhanchundai","weizoomshop", "jobs","njtest","ceshi01","dftj","ainicoffee","hongfan","changjiufangzhi","tianreyifang","fengzhenkeji","dongfangwodeming","weizoombfm","liangfeng","fuwa",
+WEIZOOM_CARD_BELONG_TO_OWNER = ["yufengwuliu","guo","bill","yunhanchundai","weshop", "jobs","njtest","ceshi01","dftj","ainicoffee","hongfan","changjiufangzhi","tianreyifang","fengzhenkeji","dongfangwodeming","weizoombfm","liangfeng","fuwa",
                                 "gangshanxigu","boniya","danhonghu","yingguan","wubao","wzjx001","heshibaineng","tianmashengwu","judou","zhonghaitou","wugutang",
                                 "bohaotong","chalushui","tide","huajitang","heruntiancheng","chexiaomi","dgposy","weizoommm","weizoomxs","huachilemei",
                                 "miaochaojiaonang","baoyangong","mkmj","suqinweizhen","leyun","guangyou","ertongshazi","yangxinkeji","haoainiguopin","weizoomclub",
                                 "zhongbida","xingke","bailingda","shenzhoumuye","beimiaomei","sanqitang","daxuan","saihanshiye","maibeier","wancheng","yulei","aiyue",
                                 "zhongtulvan","liangfeng","yanqiang","zhongjie","guangruishipin","depingshangmao","mileke","tianyunzhen","zhenwutang","shengcheng"]
 @view(app='card', resource='cards', action='get')
-@login_required 
+@login_required
 def get_cards(request):
     """
     显示卡规则列表
@@ -42,7 +42,7 @@ def get_cards(request):
 
 
 @view(app='card', resource='card_create', action='get')
-@login_required 
+@login_required
 def get_card_create(request):
     """
     显示创建卡规则
@@ -89,13 +89,13 @@ def get_card_detail(request):
             'weizoom_card_rule': rule,
             'can_batch_active_card': can_batch_active_card,
             'can_batch_stop_card': can_batch_stop_card,
-            'can_add_card': can_add_card,      
-            'can_export_batch_card': can_export_batch_card 
+            'can_add_card': can_add_card,
+            'can_export_batch_card': can_export_batch_card
         })
         return render_to_response('card/editor/list_weizoom_card_detail.html', c)
 
 @view(app='card', resource='recharge', action='get')
-@login_required 
+@login_required
 def get_cards(request):
     """
     显示卡充值表
@@ -110,7 +110,7 @@ def get_cards(request):
     return render_to_response('card/editor/card_recharge.html', c)
 
 @view(app='card', resource='recharge_detail', action='get')
-@login_required 
+@login_required
 def get_cards(request):
     """
     显示卡充值明细表
@@ -231,16 +231,16 @@ def export_weizoom_cards(request):
             password = '*******'
         info = [
             c.weizoom_card_id,
-            password, 
+            password,
             status_str,
-            c.total_and_balance_money, 
-            c.used_money, 
-            activated_at, 
+            c.total_and_balance_money,
+            c.used_money,
+            activated_at,
             c.time,
             remark,
             c.activated_to,
             c.department
         ]
         weizoom_cards_table.append(info)
-    
+
     return ExcelResponse(weizoom_cards_table,output_name=card_name.encode('utf8'),force_csv=False)
