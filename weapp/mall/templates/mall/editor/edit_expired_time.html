@@ -23,8 +23,8 @@
 				<div class="errorHint" style="margin-left: 108px;"></div>
 			</div>
 			<div class="mt15">
-				<p>2.&nbsp;&nbsp;<label for="" class="vm mr5 mb0"><input type="checkbox" class="xa-switchShare" style="" name="isShowPage" {% if share_page_condig.is_share_page %}checked{% endif %}></label>订单提交成功后提示分享赚积分：<span class="c9">（注：开启前请确认首页-积分规则已正确设置）</span></p>
-				<div class="xa-setShareSection xui-setShareSection xa-validateController" style="display:none">
+				<p>2.&nbsp;&nbsp;<label for="" class="vm mr5 mb0"><input type="checkbox" class="xa-switchShare" style="" name="isShowPage" {% if share_page_config.is_share_page %}checked{% endif %}></label>订单提交成功后提示分享赚积分：<span class="c9">（注：开启前请确认首页-积分规则已正确设置）</span></p>
+				<div class="xa-setShareSection xui-setShareSection xa-validateController" style="{% if not share_page_config.is_share_page %}display:none{% endif %}">
 					<table>
 						<tr>
 							<td>上传弹层背景图片：</td>
