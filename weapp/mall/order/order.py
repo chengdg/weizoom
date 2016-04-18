@@ -593,6 +593,7 @@ class orderConfig(resource.Resource):
                     news_id=news_id
                 )
         else:
+            share_page_config.update(is_share_page=is_share_page)
             share_page_config = share_page_config[0]
 
         if share_page_config.news_id:
