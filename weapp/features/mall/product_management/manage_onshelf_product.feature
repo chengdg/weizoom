@@ -185,3 +185,147 @@ Scenario:2 下架商品
 			"name": "东坡肘子"
 		}]
 		"""
+
+@product @saleingProduct
+Scenario:3 修改商品价格
+	Given jobs登录系统
+	Then jobs能获得'在售'商品列表
+		"""
+		[{
+			"name": "水晶虾仁",
+			"is_enable_model": "启用规格",
+			"categories": [],
+			"model": {
+				"models": {
+					"白色 M": {
+						"user_code": "4",
+						"price": 7.1,
+						"stock_type": "无限"
+					}
+				}
+			}
+		}, {
+			"name": "叫花鸡",
+			"is_enable_model": "启用规格",
+			"categories": ["分类1"],
+			"model": {
+				"models": {
+					"黑色 M": {
+						"user_code": "2",
+						"price": 8.1,
+						"stock_type": "有限",
+						"stocks": 3
+					},
+					"白色 M": {
+						"user_code": "3",
+						"price": 8.2,
+						"stock_type": "有限",
+						"stocks": 2
+					}
+				}
+			}
+		}, {
+			"name": "东坡肘子",
+			"is_enable_model": "不启用规格",
+			"categories": ["分类1", "分类2", "分类3"],
+			"model": {
+				"models": {
+					"standard": {
+						"user_code": "1",
+						"price": 11.0,
+						"stock_type": "无限"
+					}
+				}
+			}
+		}]
+		"""
+	When jobs修改商品'水晶虾仁'的价格为
+		"""
+		[{
+			"price": 7.0
+		}]
+		"""
+	When jobs修改商品'东坡肘子'的价格为
+		"""
+		[{
+			"price": 14.0
+		}]
+		"""
+	When jobs修改商品'叫花鸡'的价格为
+		"""
+		[{
+			"user_code": "2",
+			"price": 8.0,
+			"stock_type": "有限",
+			"stocks": 3
+		}, {
+			"user_code": "3",
+			"price": 8.0,
+			"stock_type": "有限",
+			"stocks": 2
+		}]
+		"""
+	Then jobs能获得'在售'商品列表
+		"""
+		[{
+			"name": "水晶虾仁",
+			"is_enable_model": "启用规格",
+			"categories": [],
+			"model": {
+				"models": {
+					"白色 M": {
+						"user_code": "4",
+						"price": 7.0,
+						"stock_type": "无限"
+					}
+				}
+			}
+		}, {
+			"name": "叫花鸡",
+			"is_enable_model": "启用规格",
+			"categories": ["分类1"],
+			"model": {
+				"models": {
+					"黑色 M": {
+						"user_code": "2",
+						"price": 8.0,
+						"stock_type": "有限",
+						"stocks": 3
+					},
+					"白色 M": {
+						"user_code": "3",
+						"price": 8.0,
+						"stock_type": "有限",
+						"stocks": 2
+					}
+				}
+			}
+		}, {
+			"name": "东坡肘子",
+			"is_enable_model": "不启用规格",
+			"categories": ["分类1", "分类2", "分类3"],
+			"model": {
+				"models": {
+					"standard": {
+						"user_code": "1",
+						"price": 14.0,
+						"stock_type": "无限"
+					}
+				}
+			}
+		}]
+		"""
+	When jobs查看商品'叫花鸡'的规格为
+		"""
+		[{
+			"name": "黑色 M",
+			"user_code": "2",
+			"price": 8.0,
+			"stocks": 3
+		}, {
+			"name": "白色 M",
+			"user_code": "3",
+			"price": 8.0,
+			"stocks": 2
+		}]
+		"""
