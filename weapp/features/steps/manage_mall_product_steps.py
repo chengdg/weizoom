@@ -4,9 +4,10 @@ import copy
 import json, time
 import logging
 from behave import when, then, given
-from mall.models import ProductCategory, Product
+from mall.models import ProductCategory, Product, ProductModel
 from webapp.models import WebApp
 from django.contrib.auth.models import User
+from django.db.models import Q
 
 from mall import models as mall_models  # 注意不要覆盖此module
 from test import bdd_util
@@ -257,6 +258,29 @@ def step_impl(context, user, product_name):
 
     response = context.client.post('/mall2/api/product_model/?_method=post', data)
     bdd_util.assert_api_call_success(response)
+
+
+@when(u"{user}修改商品'{product_name}'的价格为")
+def step_impl(context, user, product_name):
+    price_infos = json.loads(context.text)
+
+    model_infos = []
+    for price_info in price_infos:
+        product = bdd_util.get_product_by(product_name)
+        if price_info.get('user_code', None) is not None:
+            product_model = ProductModel.objects.get(product_id=product.id, user_code=price_info['user_code'])
+        else:
+            product_model = ProductModel.objects.filter(Q(product_id=product.id) & ~Q(user_code=''))[0]
+        price_info['id'] = product_model.id
+        model_infos.append(price_info)
+
+    data = {
+      'model_infos': json.dumps(model_infos)
+    }
+
+    response = context.client.post('/mall2/api/product_model_price', data)
+    bdd_util.assert_api_call_success(response)
+    # bdd_util.assert_list([], [])
 
 
 @when(u"{user}查看商品'{product_name}'的规格为")

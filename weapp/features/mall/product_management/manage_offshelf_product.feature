@@ -374,7 +374,7 @@ Scenario:4 修改商品规格
 		}]
 		"""
 
-@product @toSaleProduct @saleingProduct
+@product @toSaleProduct @saleingProduct @yanhaonan @mall2
 Scenario:5 修改商品价格
 	Given jobs登录系统
 	Then jobs能获得'待售'商品列表

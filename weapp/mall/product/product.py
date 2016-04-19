@@ -1447,6 +1447,34 @@ class ProductModel(resource.Resource):
         return response.get_response()
 
 
+class ProductModelPrice(resource.Resource):
+    app = 'mall2'
+    resource = 'product_model_price'
+
+    # @login_required
+    def api_post(request):
+        """更新商品规格价格
+        """
+        model_infos = json.loads(request.POST.get('model_infos', '[]'))
+        for model_info in model_infos:
+            if not model_info.get('id', None):
+                # 商品没有规格的情况, 避免报错
+                response = create_response(400)
+                response.errMsg = '商品规格错误请重新编辑商品'
+                return response.get_response()
+            product_model_id = model_info['id']
+            price = model_info['price']
+
+            product_model = models.ProductModel.objects.filter(
+                id=product_model_id
+            )
+
+            product_model.update(price=price)
+
+        response = create_response(200)
+        return response.get_response()
+
+
 class GroupProductList(resource.Resource):
     app = 'mall2'
     resource = 'group_product_list'
