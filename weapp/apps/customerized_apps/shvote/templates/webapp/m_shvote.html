@@ -345,7 +345,7 @@
 			$(this).addClass('active').siblings().removeClass('active');
 			$(this).removeClass('grad');
 			current_group = $(this).html();
-			$('.wa-left-chance').html(can_play_info[current_group]);
+			$('.wa-left-chance').html(can_play_info);
 			getRankInfo(current_group,'');
 		});
 
@@ -390,8 +390,8 @@
                 	var cur_count = parseInt($('.wa-total-counts').html()) + 1;
                 	$('.wa-total-counts').html(cur_count);
                 	$this.siblings().find('span').html(cur_vote);
-                    can_play_info[current_group] -= 1;
-                    $('.wa-left-chance').html(can_play_info[current_group]);
+                    can_play_info --;
+                    $('.wa-left-chance').html(can_play_info);
                     voteLock = false;
                     wuiAlert('投票成功');
                 },
@@ -477,7 +477,7 @@
 	    }
     };
     function update_member_info(member_info){
-    	$('.wa-left-chance').html(member_info.can_play_info[current_group]);
+    	$('.wa-left-chance').html(member_info.can_play_info);
     };
 
     //获取排名信息
