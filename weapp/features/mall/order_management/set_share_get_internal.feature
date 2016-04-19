@@ -26,7 +26,6 @@ Feature:后台设置'订单提交成功后提示分享赚积分'功能
 
 	"""
 
-
 Background:
 	Given jobs登录系统
 	And jobs设定会员积分策略
@@ -69,7 +68,7 @@ Background:
 		}]
 		"""
 
-@shareOrder @order @eugene
+@mall2 @shareOrder @order @eugene 
 Scenario:1 后台设置'订单提交成功后提示分享赚积分'功能
 	Given jobs登录系统
 	When jobs设置订单提交成功后提示分享赚积分信息
@@ -110,7 +109,7 @@ Scenario:1 后台设置'订单提交成功后提示分享赚积分'功能
 		}
 		"""
 
-@shareOrder @order @eugene
+@mall2 @shareOrder @order @eugene 
 Scenario:2 后台设置'订单提交成功后提示分享赚积分',选择图文弹窗
 	Given jobs登录系统
 	Then jobs设置订单提交成功后提示分享赚积分信息时能获得图文管理列表
