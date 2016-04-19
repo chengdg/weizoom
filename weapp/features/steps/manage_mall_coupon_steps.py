@@ -62,6 +62,8 @@ def step_impl(context, user_name):
         rule["money"] = coupon_rule["detail"]["money"]
         rule["remained_count"] = coupon_rule["detail"]["remained_count"]
         rule["limit_counts"] = coupon_rule["detail"]["limit_counts"] if coupon_rule["detail"]["limit_counts"] != -1 else "无限"
+        if coupon_rule['status'] == '已结束':
+            rule["limit_counts"] = 0
         rule["use_count"] = coupon_rule["detail"]["use_count"]
         rule["start_date"] = coupon_rule["start_date"]
         rule["end_date"] = coupon_rule["end_date"]
@@ -75,13 +77,14 @@ def step_impl(context, user_name):
         else:
             rule["type"] = "通用券"
             rule['special_product'] = u"全部"
-        print('!~~~~~~',coupon_rule["detail"]["limit_product"],rule["name"],rule['type'],rule['special_product'])
         actual.append(rule)
 
     expected = json.loads(context.text)
     for item in expected:
         item["start_date"] = "{} 00:00:00".format(bdd_util.get_date_str(item["start_date"]))
         item["end_date"] = "{} 00:00:00".format(bdd_util.get_date_str(item["end_date"]))
+        if item['status'] == "已过期":
+            item['status'] = "已结束"
 
 
 
