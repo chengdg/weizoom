@@ -183,13 +183,13 @@ $(document).ready(function() {
         var $button = $submitButtonContainer.find('.xa-submitShvote');
         if (W.activityStatus === '已结束') {
             $button.text('活动已结束');
-            $button.removeClass('xa-submitTermite').removeClass('xui-btn-danger').addClass('xui-btn-disable');
+            $button.removeClass('xa-submitShvote').removeClass('xui-btn-danger').addClass('xui-btn-disable');
         } else if (W.isAlreadyParticipanted) {
             $button.text('您已参加过该活动');
-            $button.removeClass('xa-submitTermite').removeClass('xui-btn-danger').addClass('xui-btn-disable');
+            $button.removeClass('xa-submitShvote').removeClass('xui-btn-danger').addClass('xui-btn-disable');
         } else if (W.activityStatus === '未开始') {
             $button.text('请等待活动开始...');
-            $button.removeClass('xa-submitTermite').removeClass('xui-btn-danger').addClass('xui-btn-disable');
+            $button.removeClass('xa-submitShvote').removeClass('xui-btn-danger').addClass('xui-btn-disable');
         }
         $submitButtonContainer.show();
     }
@@ -236,7 +236,6 @@ $(document).ready(function() {
         $li.parents('.xui-dropmenu').hide();
         $li.parents('.wui-i-inputContainer').find('.icon').addClass('arrow_down').removeClass('arrow_up')
     });
-    $('.xa-submitShvote').unbind('click');
 
     //绑定提交按钮
     $('.xa-submitShvote').click(function() {
