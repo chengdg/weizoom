@@ -38,11 +38,11 @@
 	}
 	.wui-rank-table tbody tr td:nth-child(1) span{
 		display: inline-block;
-		width: 25px;
-		height: 25px;
-		line-height: 25px;
-		background: rgba(0,0,0,0.3);
-		border-radius: 15px;
+		width: 27px;
+		height: 27px;
+		line-height: 27px;
+		background: url(/static_v2/img/bg_grey.png) no-repeat;
+		background-size: 100% 100%;
 		color: #fff;
 	}	
 	.wui-rank-table tbody tr:nth-child(1) td:nth-child(1){
@@ -188,7 +188,7 @@ function getRankInfo(current_group,search_name){
 		                count : result[i].count,
 		                icon : result[i].icon,
 		            });
-		        $('.wa-rank-list').append(s);
+		       		$('.wa-rank-list').append(s);
 	        	}
             },
             error: function(data){

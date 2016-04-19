@@ -55,8 +55,8 @@
 	.wui-dynamic-bottom p{
 		text-align: center;
 		font-size: 14px;
-		border-bottom: 5px solid #f0f0f0;	
-		padding-bottom: 5px;	
+		border-bottom: 5px solid #f0f0f0;
+		padding-bottom: 5px;
 	}
 	.wui-rank-link{
 		border-bottom: 1px solid #e1e1e1;
@@ -72,6 +72,11 @@
 	.wui-group{
 		position: relative;
 		overflow-x: scroll;
+		overflow-y: hidden;
+		/*overflow-y:scroll;*/
+		-webkit-overflow-scrolling: touch;
+		height: 43px;
+		line-height: 43px;
 		font-size: 0;
 		white-space:nowrap;
 	}
@@ -119,7 +124,7 @@
 		padding-bottom: 7px;
 	}
 	.wui-search-input{
-		padding: 1px;		
+		padding: 1px;
 		height: 30px;
 		width: 80%;
 		border: 1px solid #ff4200;
@@ -139,7 +144,7 @@
 		right: 0;
 		top: 0;
 		padding: 0 15px;
-		outline: none;	
+		outline: none;
 	}
 	.wui-rank-item{
 		width: 48%;
@@ -293,8 +298,8 @@
         border-radius: 4px;
         box-shadow: 0 3px 0px #b62f00;
         font-family: SimHei;
-        font-size: 0.9rem;	
-    }	
+        font-size: 0.9rem;
+    }
 	.wui-share-mask{
 		z-index: 100001 !important;
 		display: none;
@@ -339,7 +344,7 @@
 	@media only screen and (max-width: 320px){
 		.wui-vote-btn{
 			width: 3.8rem;
-	    }	
+	    }
 /*	    .wui-searchBtn{
 	    	height: 36px;
 	    }*/
@@ -386,13 +391,13 @@
 				<div class="wui-searchBox">
 					<input type="text" class="wui-search-input wa-search-text" placeholder="请输入关键字" maxlength="20">
 					<button type="button" class="wui-searchBtn wa-search">搜索</button>
-					<p>选手列表是根据选手票数由多到少排列，显示前100名。如果需要查找100名以外的选手请在搜索栏输入选手编号或选手名称即可。</p>							
-				</div>												
+					<p>选手列表是根据选手票数由多到少排列，显示前100名。如果需要查找100名以外的选手请在搜索栏输入选手编号或选手名称即可。</p>
+				</div>
 			</div>
 
 			<div class="wui-group wa-groups">
 			</div>
-			<div class="wui-rank-list wa-rank-list">		
+			<div class="wui-rank-list wa-rank-list">
 			</div>
 		</div>
 	</div>
@@ -405,10 +410,10 @@
 				<div class="wui-img-mask"></div>
 				<img src={ result_list_icon }>
 				<div class="wui-rank-name">
-					<span class="wui-rank-serial-number">{ result_list_serial_number }</span> 
+					<span class="wui-rank-serial-number">{ result_list_serial_number }</span>
 					<span>{ result_list_name }</span>
-				</div> 			
-			</div> 
+				</div>
+			</div>
 			<div class="wui-rank-vote">
 				<div class="wui-rank-voteLef wa-vote-left">
 					<span>{ result_list_count }</span>票
@@ -416,12 +421,12 @@
 				<div class="wui-rank-voteRig wa-ivote" data-id={ id }>
 					<button type="button" class="wui-vote-btn">投票</button>
 				</div>
-			</div> 
+			</div>
 		</div>
 	</div>
 </script>
 <div>
-	<div class="wui-detail-close wa-detail-close"></div>	
+	<div class="wui-detail-close wa-detail-close"></div>
 	<div id="userDetailDialog" class="wui-detail-dialog">
 		<div class="wui-detail-top">
 			<div class="wui-detail-user wa-detail-user">
@@ -520,7 +525,7 @@
         	var $this = $(this);
             if(voteLock) return false;
             voteLock = true;
-            var vote_to = $(this).attr('data-id'); 
+            var vote_to = $(this).attr('data-id');
             W.getApi().call({
                 app: 'm/apps/shvote',
                 resource: 'shvote_participance',
@@ -552,10 +557,10 @@
                 }
             });
         });
-		
+
     });
 
-    $(function(){	
+    $(function(){
         if(W.isPC){
             showDesc();
             return false;
@@ -584,7 +589,7 @@
                 current_group = $('.active').html();
                 can_play_info = member_info.can_play_info;
                 update_member_info(member_info,current_group);
-                //更新排名信息				
+                //更新排名信息
                 getRankInfo(current_group,'');
             },
             error: function(data){
@@ -613,9 +618,9 @@
 	    	$('.wa-groups').append(group);
 	    }
 	    $('.wa-groups div').eq(0).addClass('active');
-	    if(record_info.groups.length < 4){ 
+	    if(record_info.groups.length < 4){
 	   		var wid = 100/record_info.groups.length;
-	   		$('.wa-groups div').css("width",wid+'%');   
+	   		$('.wa-groups div').css("width",wid+'%');
 	    }else{
 	    	var w_wid = $(window).width();
 	    	var d_wid = $(window).width()/4;
@@ -640,7 +645,7 @@
 				search_name: search_name
             },
             success: function(data) {
-           		$('.wa-rank-list').html('');  	
+           		$('.wa-rank-list').html('');
                 var result = data.result_list;
                 user_detail = result;
                 var tpl = new Template($('#tpl').html());
@@ -651,7 +656,7 @@
 		                result_list_count : result[i].count,
 		                result_list_icon : result[i].icon,
 		                id : result[i].id
-		            });   
+		            });
 		        $('.wa-rank-list').append(s);
 	        	}
             },
