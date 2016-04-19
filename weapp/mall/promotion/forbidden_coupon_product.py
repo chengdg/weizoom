@@ -1,15 +1,22 @@
 # -*- coding: utf-8 -*-
+from __future__ import absolute_import
 import json
+import logging
 from datetime import datetime
+
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.contrib.auth.decorators import login_required
 
 from core import resource, paginator
+from core.exceptionutil import unicode_full_stack
 from core.jsonresponse import create_response
 from mall import export
 from mall.promotion import models as promotion_models
 
+from watchdog.utils import watchdog_alert
+
+import utils
 
 class ForbiddenCouponProduct(resource.Resource):
 	app = 'mall2'
@@ -106,6 +113,14 @@ class ForbiddenCouponProduct(resource.Resource):
 					is_permanant_active=is_permanant_active
 				)
 			response = create_response(200)
+			try:
+				webapp_owner_id = owner.id
+				key = 'forbidden_coupon_products_%s' % webapp_owner_id
+				utils.cache_util.delete_cache(key)
+				logging.info(u"'del forbidden_coupon_products cache,key:{}".format(key))
+			except:
+				watchdog_alert(u'del forbidden_coupon_products cache error:{}'.format(unicode_full_stack()))
+
 		except:
 			response = create_response(500)
 
