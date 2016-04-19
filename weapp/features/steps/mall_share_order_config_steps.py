@@ -20,12 +20,12 @@ def step_impl(context, user):
     user = User.objects.get(username=user)
     data = json.loads(context.text)
     news_title = data['text_picture']
-    news_id = News.objects.get(title=news_title).id
+    material_id = News.objects.get(title=news_title).material_id
 
     args = {
         'isShowPage': True,
         'backgroundImage': data['logo_pic'],
-        'newsId': news_id,
+        'materialId': material_id,
         'shareImage': data['share_pic'],
         'shareInfo': data['share_description']
     }
@@ -47,7 +47,7 @@ def step_impl(context, user):
     actual['logo_pic'] = share_order_config.background_image
     actual['share_pic'] = share_order_config.share_image
     actual['share_description'] = share_order_config.share_describe
-    actual['text_picture'] = News.objects.get(id=share_order_config.news_id).title
+    actual['text_picture'] = News.objects.get(material_id=share_order_config.material_id).title
 
     bdd_util.assert_dict(expected, actual)
 
