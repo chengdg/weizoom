@@ -38,7 +38,9 @@ class ShvoteControl(models.Document):
 	belong_to = models.StringField(default="", max_length=100) #对应的活动id
 	voted_group = models.StringField(max_length=50) #投票分组
 	voted_to= models.StringField(default="", max_length=100) #被投票人
-	created_at_str = models.StringField(max_length=24, unique_with=["member_id", "belong_to", "voted_group"]) #投票时间
+	can_vote_count = models.IntField(default=0) #可投票次数限制
+	default_per_one = models.IntField(default=0) #每个选手可被投票次数限制 最大次数1
+	created_at_str = models.StringField(max_length=24, unique_with=["member_id", "belong_to", "voted_to"]) #投票时间
 	meta = {
 		'collection': 'shvote_shvote_control'
 	}

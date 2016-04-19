@@ -26,11 +26,9 @@ import copy
 
 @When(u"{webapp_user_name}在高级投票中为'{target_user_name}'投票")
 def step_impl(context, webapp_user_name, target_user_name):
-    #获取动态数据
-    get_dynamic_data(context)
     record_id = context.shvote_id
     shp = shvote_models.ShvoteParticipance.objects.get(belong_to=record_id, name=target_user_name)
-    response = app_utils.get_response(context, {
+    app_utils.get_response(context, {
         "app": "m/apps/shvote",
         "resource": "shvote_participance",
         "method": "post",
@@ -42,4 +40,3 @@ def step_impl(context, webapp_user_name, target_user_name):
             "voted_group": shp.group
         }
     })
-    bdd_util.assert_api_call_success(response)
