@@ -73,12 +73,15 @@
 		position: relative;
 		overflow-x: scroll;
 		overflow-y: hidden;
-		/*overflow-y:scroll;*/
 		-webkit-overflow-scrolling: touch;
+		/*overflow-y:scroll;*/
 		height: 43px;
 		line-height: 43px;
 		font-size: 0;
 		white-space:nowrap;
+	}
+	::-webkit-scrollbar {
+	        width: 2px;
 	}
 	.wui-group > div{
 		display: inline-block;
@@ -202,90 +205,6 @@
 		float: right;
 		outline: none;
 	}
-	.wui-detail-dialog{
-		width:92%;
-		height:92%;
-		display:none;
-		z-index:99999;
-		margin:0 auto;
-		background-color:#f0f0f0;
-		border-radius: 4px;
-		position: fixed;
-		top: 4%;
-		left: 4%;
-		overflow-x: hidden;
-   		overflow-y: auto;
-	}
-	.wui-detail-top{
-		margin: 3% 0 3% 0;
-		padding: 5% 0 1% 6%;
-		background-color: #FFF;
-	}
-	.wui-detail-user{
-		border: 7px solid #fff7e7;
-		width: 10rem;
-		height: 8rem;
-		display: inline-block;
-	    overflow: hidden;
-	    position: relative;
-	}
-	.wui-detail-user .wui-detail-user-name{
-		text-align: center;
-		position: absolute;
-        left: 0;
-   	 	bottom: 0;
-	    display: inline-block;
-	    width: 100%;
-        background: rgba(0,0,0,0.5);
-        color: #FFF;
-	}
-	.wui-detail-btn{
-		float: right;
-		width: 40%;
-	}
-	.wui-detail-btn button{
-		width: 5rem;
-		height: 2.5rem;
-		background-color: #ff4200;
-		color: #FFF;
-		border: none;
-	    margin-top: 1rem;
-        border-radius: 4px;
-        box-shadow: 0 3px 0px #b62f00;
-        font-family: SimHei;
-        font-size: 1rem;
-	}
-	.wui-detail-middle{
-		width: 45%;
-	    margin: 5% 0 1% 3%;
-	}
-	.wui-detail-middle .wui-detail-vote-count{
-		float: right;
-	}
-	.wui-detail-middle .wui-detail-vote-count span{
-		color: #ff4200;
-	}
-	.wui-detail-bottom{
-		margin: 0 auto;
-		background-color: #FFF;
-		padding: 5% 4% 5% 5%;
-		text-indent: 2rem;
-		font-family: SimHei;
-        font-size: 1rem;
-        line-height: 1.5rem;
-	}
-	.wui-detail-close{
-		background-image:url('/static_v2/img/shvote_close.png');
-		background-repeat: no-repeat;
-	    background-size: cover;
-		width: 46px;
-		height: 46px;
-		z-index: 100000;
-		position: fixed;
-		top: 2%;
-		right: 2%;
-		display: none;
-	}
 	p.wui-noborder{
 		border: none;
 	}
@@ -300,54 +219,10 @@
         font-family: SimHei;
         font-size: 0.9rem;
     }
-	.wui-share-mask{
-		z-index: 100001 !important;
-		display: none;
-	}
-	.wui-share-mask .wui-share-arrow{
-		background-image: url('/static_v2/img/shvote_arrow.png');
-		background-repeat: no-repeat;
-	    background-size: cover;
-        width: 33%;
-   		height: 29%;
-   		margin: 0 0 0 60%;
-	}
-	.wui-share-mask .wui-share-invite{
-		color: #FFF;
-		font-family: SimHei;
-	    font-size: 1.5rem;
-        width: 100%;
-	    display: inline-block;
-	    text-align: center;
-	    margin-top: 6%;
-	}
-	.wui-share-mask .wui-share-close{
-		background-image: url('/static_v2/img/shvote_share_close.png');
-		background-repeat: no-repeat;
-	    background-size: cover;
-	    width: 57px;
-	    height: 57px;
-        margin: 32% auto 0 auto;
-	}
-	.wui-share-mask .wui-share-known{
-		color: #FFF;
-		font-family: SimHei;
-	    font-size: 1.5rem;
-        width: 100%;
-	    display: inline-block;
-	    text-align: center;
-	    margin-top: 5%;
-	}
-/*	::-webkit-scrollbar{
-		width:0;
-	}*/
 	@media only screen and (max-width: 320px){
 		.wui-vote-btn{
 			width: 3.8rem;
 	    }
-/*	    .wui-searchBtn{
-	    	height: 36px;
-	    }*/
 	}
 	.wui-apps-alert{
         z-index: 100001;
@@ -412,7 +287,7 @@
 				<div class="wui-rank-name">
 					<span class="wui-rank-serial-number">{ result_list_serial_number }</span>
 					<span>{ result_list_name }</span>
-				</div>
+				</div>		
 			</div>
 			<div class="wui-rank-vote">
 				<div class="wui-rank-voteLef wa-vote-left">
@@ -425,32 +300,6 @@
 		</div>
 	</div>
 </script>
-<div>
-	<div class="wui-detail-close wa-detail-close"></div>
-	<div id="userDetailDialog" class="wui-detail-dialog">
-		<div class="wui-detail-top">
-			<div class="wui-detail-user wa-detail-user">
-				<img src="" class="wui-detail-user-pic">
-				<span class="wui-detail-user-name"></span>
-			</div>
-			<div class="wui-detail-btn wa-detail-btn">
-				<button class="wa-ivote" data-id="">投票</button>
-				<button class="wa-detail-share">拉票</button>
-			</div>
-			<div class="wui-detail-middle">
-				<span class="wa-detail-serial-number"></span>
-				<span class="wui-detail-vote-count wa-detail-vote-count"><span></span>&nbsp;票</span>
-			</div>
-		</div>
-		<div class="wui-detail-bottom wa-detail-bottom"></div>
-	</div>
-</div>
-<div class="wui-share-mask">
-	<div class="wui-share-arrow"></div>
-	<span class="wui-share-invite">邀请你的小伙伴,帮你投票</span>
-	<div class="wui-share-close wa-share-close"></div>
-	<span class="wui-share-known">知道了</span>
-</div>
 {% endblock %}
 
 {% block js %}
@@ -491,8 +340,8 @@
 				getRankInfo(current_group,'');
 			}
 		});
-		//切换分组
-		$('.wa-groups').on('click','div',function(){
+		// 切换分组taphold
+		$('.wa-groups').on('tap','div',function(){
 			$(this).addClass('active').siblings().removeClass('active');
 			$(this).removeClass('grad');
 			current_group = $(this).html();
@@ -500,7 +349,7 @@
 			getRankInfo(current_group,'');
 		});
 
-		$('.wa-event-details').click(function(){
+		$('.wa-event-details').on('tap',function(){
 			$('.wa-shvote-desc').show();
 			$('.wa-mobile').hide();
 		});
@@ -541,7 +390,6 @@
                 	var cur_count = parseInt($('.wa-total-counts').html()) + 1;
                 	$('.wa-total-counts').html(cur_count);
                 	$this.siblings().find('span').html(cur_vote);
-                	$('.wa-detail-vote-count span').text(cur_vote);
                     can_play_info[current_group] -= 1;
                     $('.wa-left-chance').html(can_play_info[current_group]);
                     voteLock = false;
@@ -647,7 +495,6 @@
             success: function(data) {
            		$('.wa-rank-list').html('');
                 var result = data.result_list;
-                user_detail = result;
                 var tpl = new Template($('#tpl').html());
                 for(var i=0;i<result.length;i++){
         		    var s = tpl.render({
@@ -670,50 +517,9 @@
     查看选手详情
      */
 	$('body').delegate('.wa-rank-pic', 'click', function(event) {
-		var id = $(event.target).parents('.wa-rank-item').data('id');
-		for(var i=0;i<user_detail.length;i++){
-			if(user_detail[i].id == id){
-				var icon = user_detail[i].icon;
-				var name = user_detail[i].name;
-				var count = user_detail[i].count;
-				var details = user_detail[i].details;
-				var pics = user_detail[i].pics;
-				var serial_number = user_detail[i].serial_number;
-				$('.wui-detail-user-pic').attr('src',icon);
-				$('.wui-detail-user-name').text(name);
-				$('.wa-detail-serial-number').text('编号: ' + serial_number);
-				$('.wa-detail-vote-count span').text(count);
-				$('.wa-detail-bottom').text(details);
-				$('.wa-detail-btn .wa-ivote').attr('data-id',user_detail[i].id);
-				for (var j=0;j<pics.length;j++){
-					$('.wa-detail-bottom').append('<img src='+pics[j]+'>');
-				}
-			}
-		}
-		mask('show');
-		$('body').css('overflow','hidden');
-		$('#userDetailDialog').show();
-		$('.wa-detail-close').show();
+		var player_id = $(event.target).parents('.wa-rank-item').data('id');
+		var link = window.location.origin + '/m/apps/shvote/m_player_details/?webapp_owner_id='+W.webappOwnerId+'&id='+W.appRecordId+'&player_id='+player_id;
+		window.location.href = link;
 	});
-	$('body').delegate('.wa-detail-close', 'click', function(event) {
-		mask('hide');
-		$('body').css('overflow','auto');
-		$('#userDetailDialog').hide();
-		$('.wa-detail-close').hide();
-	});
-	$('body').delegate('.wa-detail-share', 'click', function(event) {
-		shareMask('show');
-	});
-	$('body').delegate('.wa-share-close', 'click', function(event) {
-		shareMask('hide');
-	});
-	//拉票遮罩
-    function shareMask(action){
-        if('show' == action){
-            $('.wui-share-mask').swipeMask('show');
-        }else if('hide' == action){
-            $('.wui-share-mask').swipeMask('hide');
-        }
-    }
 </script>
 {% endblock %}

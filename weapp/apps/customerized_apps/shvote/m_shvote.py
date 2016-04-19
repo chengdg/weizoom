@@ -237,3 +237,21 @@ def get_rank_data(data):
 			'id': str(d.id)
 		})
 	return result_list
+
+class MShvotePlayerDetails(resource.Resource):
+	app = 'apps/shvote'
+	resource = 'm_player_details'
+
+	def get(request):
+		player_id = request.GET.get('player_id',None) 
+		player_details = {}
+		if player_id:
+			try:
+				player_details = app_models.ShvoteParticipance.objects().get(id = player_id)
+			except:
+				pass
+		c = RequestContext(request, {
+			'player_details': player_details
+		})
+
+		return render_to_response('shvote/templates/webapp/m_player_details.html', c)
