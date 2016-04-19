@@ -244,15 +244,55 @@ class MShvotePlayerDetails(resource.Resource):
 	resource = 'm_player_details'
 
 	def get(request):
-		player_id = request.GET.get('player_id',None) 
+		player_id = request.GET['player_id'] 
+		id = request.GET['id'] 
 		player_details = {}
+		record = None
+		isPC = request.GET.get('isPC',0)
+		isMember = False
+		share_page_desc = ""
+		can_vote_count = 0
+		member = request.member
+		member_id = member.id
+		if not isPC:
+			isMember = request.member and request.member.is_subscribed
+		if 'new_app:' in id:
+			project_id = id
+			activity_status = u"未开启"
+		else:
+			try:
+				record = app_models.Shvote.objects.get(id=id)
+				votecount_per_one = record.votecount_per_one
+				control = app_models.ShvoteControl.objects(member_id=member_id, belong_to=id, created_at_str=datetime.now().strftime('%Y-%m-%d'))
+				if control.count() > 0:
+					can_vote_count = votecount_per_one - control.first().vote_count
+				else:
+					can_vote_count = votecount_per_one
+			except:
+				c = RequestContext(request,{
+					'is_deleted_data': True
+				})
+				return render_to_response('shvote/templates/webapp/m_player_details.html', c)
+
+			activity_status, record = update_shvote_status(record)
+			share_page_desc = record.name
+
 		if player_id:
 			try:
 				player_details = app_models.ShvoteParticipance.objects().get(id = player_id)
 			except:
 				pass
+
 		c = RequestContext(request, {
-			'player_details': player_details
+			'record_id': id,
+			'player_details': player_details,
+			'activity_status': activity_status,
+			'page_title': record.name if record else u"投票",
+			'hide_non_member_cover': True, #非会员也可使用该页面
+			'isPC': True if isPC else False,
+			'isMember': isMember,
+			"share_page_desc": share_page_desc,
+			"can_vote_count": can_vote_count
 		})
 
 		return render_to_response('shvote/templates/webapp/m_player_details.html', c)
