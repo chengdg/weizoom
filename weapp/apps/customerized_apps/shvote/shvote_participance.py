@@ -52,7 +52,7 @@ class ShvoteParticipance(resource.Resource):
 			c = RequestContext(request, {
 				'record_id': id,
 				'page_title': record.name if record else u"投票",
-				'groups': record.groups,
+				'groups': json.dumps(record.groups),
 				'activity_status': activity_status,
 				'is_already_participanted': (participance_data_count > 0),
 				'isMember': isMember,
