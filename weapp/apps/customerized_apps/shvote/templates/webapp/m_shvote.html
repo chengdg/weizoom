@@ -1,6 +1,7 @@
 {% extends "apps_base.html" %}
 
 {% block css %}
+<link type="text/css" rel="stylesheet" href="/termite_static/v4/css/swiper.min.css">
 <style type="text/css">
 	h1 {
 		color: #00F;
@@ -70,28 +71,38 @@
 		background-size: 16px 16px;
 	}
 	.wui-group{
-		position: relative;
-		overflow-x: scroll;
-		overflow-y: hidden;
-		-webkit-overflow-scrolling: touch;
-		/*overflow-y:scroll;*/
 		height: 43px;
-		line-height: 43px;
-		font-size: 0;
-		white-space:nowrap;
+		width: 100%;
 	}
-	::-webkit-scrollbar {
-	        width: 2px;
-	}
-	.wui-group > div{
+    .swiper-slide {
+    	font-size: 1rem;
+        text-align: center;
+        background: #fff;
+        width: 100px;
+
+        /* Center slide text vertically */
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: -webkit-flex;
+        display: flex;
+        -webkit-box-pack: center;
+        -ms-flex-pack: center;
+        -webkit-justify-content: center;
+        justify-content: center;
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+        -webkit-align-items: center;
+        align-items: center;
+    }
+	.wui-group div> div{
 		display: inline-block;
 		font-size: 16px;
 		text-align: center;
 		line-height: 43px;
 	}
-	.wui-group > div.active{
+	.wui-group div> div.active{
 		color: #ff4200;
-		font-size: 20px;
+		font-size: 18px;
 	}
 	.wui-link{
 		padding:0 10px;
@@ -227,6 +238,17 @@
 	.wui-apps-alert{
         z-index: 100001;
     }
+	.wui-swiper-mask{
+		display: inline-block;
+		position: absolute;
+		right: 0;
+		top: 0;
+		height: 100%;
+		width: 30px;
+		background: #fff;
+		opacity: 0.5;
+		z-index: 1;
+	}
 </style>
 {% endblock %}
 
@@ -270,7 +292,13 @@
 				</div>
 			</div>
 
-			<div class="wui-group wa-groups">
+			<div class="wui-group wa-groups swiper-container">
+				<div class="swiper-wrapper">
+					{% for group in groups %}
+					<div class="swiper-slide">{{group}}</div>
+					{% endfor %}
+				</div>
+				<span class="wui-swiper-mask"></span>
 			</div>
 			<div class="wui-rank-list wa-rank-list">
 			</div>
@@ -303,6 +331,7 @@
 {% endblock %}
 
 {% block js %}
+<script type="text/javascript" src="/termite_static/v3/lib/swiper.min.js"></script>
 <script type="text/javascript">
 	W.pageId = "{{request.GET.page_id}}";
 
@@ -313,7 +342,9 @@
         if(W.isPC){
             return false;
         }
-
+        var swiper = new Swiper('.swiper-container', {
+        	slidesPerView: 'auto',
+   		});
         $('.wa-shvote-desc').hide();
 		// 我要报名
 		$('.wa-imark').click(function(){
@@ -341,7 +372,7 @@
 			}
 		});
 		// 切换分组taphold
-		$('.wa-groups').on('tap','div',function(){
+		$('.wa-groups .swiper-wrapper').on('tap','div',function(){
 			$(this).addClass('active').siblings().removeClass('active');
 			$(this).removeClass('grad');
 			current_group = $(this).html();
@@ -461,19 +492,10 @@
     	$('.wa-total-counts').html(record_info['total_counts']);
     	$('.wa-total-visits').html(record_info['total_visits']);
     	$('.wa-enddate').html(record_info['end_date']);
-	    for(var i=0;i < record_info.groups.length;i++){
-	    	var group = $('<div>'+record_info.groups[i]+'</div>');
-	    	$('.wa-groups').append(group);
-	    }
-	    $('.wa-groups div').eq(0).addClass('active');
+	    $('.wa-groups .swiper-wrapper div').eq(0).addClass('active');
 	    if(record_info.groups.length < 4){
 	   		var wid = 100/record_info.groups.length;
-	   		$('.wa-groups div').css("width",wid+'%');
-	    }else{
-	    	var w_wid = $(window).width();
-	    	var d_wid = $(window).width()/4;
-	    	$('.wa-groups div').css("width",d_wid);
-	    	$('.wa-groups div').eq(3).addClass('grad');
+	   		$('.wa-groups .swiper-wrapper div').css("width",wid+'%');
 	    }
     };
     function update_member_info(member_info){

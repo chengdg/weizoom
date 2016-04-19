@@ -1,26 +1,41 @@
 {% extends "apps_base.html" %}
 
 {% block css %}
+<link type="text/css" rel="stylesheet" href="/termite_static/v4/css/swiper.min.css">
 <style type="text/css">
 	body{
 		background: #fff !important;
 	}
-	.wui-rank-groups{
-		position: relative;
-		overflow-x: auto;
+	.swiper-container{
+		height: 43px;
+		width: 100%;
+/*		overflow-x: auto;
 		font-size: 0;
-		white-space:nowrap;
+		white-space:nowrap;*/
 	}
-	.wui-rank-groups div{
-		font-size: 1rem;
-		display: inline-block;
-		width: 25%;
-		text-align: center;
-		line-height: 43px;
-	}
-	.wui-rank-groups div.active{
+    .swiper-slide {
+    	font-size: 1rem;
+        text-align: center;
+        background: #fff;
+        width: 100px;
+
+        /* Center slide text vertically */
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: -webkit-flex;
+        display: flex;
+        -webkit-box-pack: center;
+        -ms-flex-pack: center;
+        -webkit-justify-content: center;
+        justify-content: center;
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+        -webkit-align-items: center;
+        align-items: center;
+    }
+	.wui-rank-groups div div.active{
 		color: red;
-		font-size: 1.2rem;
+		font-size: 1.1rem;
 	}
 	.wui-rank-table{
 		width: 100%;
@@ -43,7 +58,7 @@
 		line-height: 27px;
 		background: url(/static_v2/img/bg_grey.png) no-repeat;
 		background-size: 100% 100%;
-		color: #fff;
+		color: #fff;	
 	}	
 	.wui-rank-table tbody tr:nth-child(1) td:nth-child(1){
 		background: url(/static_v2/img/no1.png) no-repeat 50% 50%;
@@ -86,18 +101,28 @@
 		font-size: 0.9rem;
 		color: #999999;
 	}
-	.active{
-		font-size: 1.1rem;
-		color:  #ff4200;
+	.wui-swiper-mask{
+		display: inline-block;
+		position: absolute;
+		right: 0;
+		top: 0;
+		height: 100%;
+		width: 30px;
+		background: #fff;
+		opacity: 0.5;
+		z-index: 1;
 	}
 </style>
 {% endblock %}
 
 {% block content-panel %}
-<div class="wui-rank-groups wa-rank-groups">
-	{% for group in groups %}
-	<div>{{group}}</div>
-	{% endfor %}
+<div class="wui-rank-groups wa-rank-groups swiper-container">
+	<div class="swiper-wrapper">
+		{% for group in groups %}
+		<div class="swiper-slide">{{group}}</div>
+		{% endfor %}
+	</div>
+	<span class="wui-swiper-mask"></span>
 </div>
 <table class="wui-rank-table wa-rank-table">
 	<thead>
@@ -135,28 +160,36 @@
 {% endblock %}
 
 {% block js %}
+<script type="text/javascript" src="/termite_static/v3/lib/swiper.min.js"></script>
 <script type="text/javascript">
 
 //当前分组，切换时候需要改变值，用于查找
 var current_group = '';
 
 $(function(){
-    if($('.wa-rank-groups div').length < 4){ 
-		var wid = 100/$('.wa-rank-groups div').length;
-		$('.wa-rank-groups div').css("width",wid+'%');
-		$('.wa-rank-groups div').eq(0).addClass('active');
+    var swiper = new Swiper('.swiper-container', {
+        slidesPerView: 'auto',
+    });
+
+    if($('.wa-rank-groups div div').length < 4){ 
+		var wid = 100/$('.wa-rank-groups div div').length;
+		$('.wa-rank-groups div div').css("width",wid+'%');
+		$('.wa-rank-groups div div').eq(0).addClass('active');
 	    }else{
-	    	var w_wid = $(window).width();
-	    	var d_wid = $(window).width()/4;
-	    	$('.wa-rank-groups div').css("width",d_wid);
-			$('.wa-rank-groups div').eq(0).addClass('active');	    	
+	    	// var w_wid = $(window).width();
+	    	// var d_wid = $(window).width()/4;
+	    	// $('.wa-rank-groups div div').css("width",d_wid);
+			$('.wa-rank-groups div div').eq(0).addClass('active');
+			$('.wa-rank-groups div div').each(function(){
+				$(this).addClass('swiper-slide');
+			})	    	
     };
 
 	current_group = $('.active').html();
 	getRankInfo(current_group,'');
 
 	//切换分组
-	$('.wa-rank-groups').on('click','div',function(){
+	$('.wa-rank-groups div').on('click','div',function(){
 		$(this).addClass('active').siblings().removeClass('active');
 		current_group = $(this).html();
 		getRankInfo(current_group,'');

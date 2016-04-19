@@ -126,7 +126,8 @@ class MShvote(resource.Resource):
 			'isPC': True if isPC else False,
 			'isMember': isMember,
 			'auth_appid_info': auth_appid_info,
-			"share_page_desc": share_page_desc
+			"share_page_desc": share_page_desc,
+			"groups": record.groups if record else []
 		})
 
 		return render_to_response('shvote/templates/webapp/m_shvote.html', c)
