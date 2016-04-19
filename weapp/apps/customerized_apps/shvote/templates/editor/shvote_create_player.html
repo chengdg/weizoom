@@ -152,7 +152,7 @@
 		</div>
 		<div class="form-group">
 			<label class="control-label fl" for="player_name">名称</label>
-			<input type="text" class="form-control" name="player_name" id="player_name"/>
+			<input type="text" class="form-control wa-validate" name="player_name" id="player_name"/>
 		</div>
 		<div class="form-group">
 			<label class="control-label fl" for="group">选择分组</label>
@@ -164,12 +164,12 @@
 		</div>
 		<div class="form-group">
 			<label class="control-label fl" for="serial_number">输入编号</label>
-			<input type="text" class="form-control" name="serial_number" id="serial_number"/>
+			<input type="text" class="form-control wa-validate" name="serial_number" id="serial_number"/>
 		</div>
 		<div class="form-group">
 			<label class="control-label" for="details">详情</label>
 			<!-- <span class="xui-fontGary" style="font-weight: lighter;">（上传图片要求宽度在480-620之间,高度小于等于960,大小不超过500K）</span> -->
-			<textarea class="wui-details" id="details" name="details">
+			<textarea class="wui-details wa-validate" id="details" name="details">
 			</textarea>
 		</div>
 		<div class="form-group wui-upload-img-div">
@@ -194,6 +194,24 @@
 <script type="text/javascript">
 $(document).ready(function() {
 	$('.wa-submit').click(function(event) {
+		if(!$('.wa-upload-img').attr('src')){
+			W.showHint('error', '上传头像不能为空！');
+			return
+		}
+		if(!$('.wa-img-container').html()){
+			W.showHint('error', '上传图片不能为空！');
+			return
+		}
+		var flag = true;
+		$('.wa-validate').each(function(index, el) {
+			if($.trim($(el).val()) == ''){
+				flag = false;
+			}
+		});
+		if(!flag){
+			W.showHint('error', '输入不能为空！');
+			return
+		}
 		var head_img_src = $('.wa-upload-img').attr('src');
 		var player_name = $.trim($('#player_name').val());
 		var group = $.trim($('#group').val());
