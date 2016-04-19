@@ -326,8 +326,8 @@ def stop_promotion(request, product_ids):
 #             promotion_product_ids = filter(lambda k,v:)
 
 
-def verification_multi_product_coupon(webapp_owner, product_ids):
-
+def verification_multi_product_coupon(webapp_owner, product_ids, get_all_error_product_ids=False):
+    all_error_product_ids =[]
     # 检测商品拥有者、删除、下架、
     products = models.Product.objects.filter(
             owner=webapp_owner,
@@ -341,8 +341,10 @@ def verification_multi_product_coupon(webapp_owner, product_ids):
 
     error_product_ids = list(set(product_ids).difference(set(usable_product_ids)))  # b中有而a中没有的
 
-    if error_product_ids:
+    if error_product_ids and get_all_error_product_ids:
         return False, error_product_ids
+    else:
+        all_error_product_ids.extend(error_product_ids)
 
     # 检测活动互斥，优惠券和其他活动（状态为“未开始”和“进行中”）是互斥的
     error_products = promotion_models.ProductHasPromotion.objects.filter(product_id__in=usable_product_ids,
@@ -351,15 +353,22 @@ def verification_multi_product_coupon(webapp_owner, product_ids):
                                                                              promotion_models.PROMOTION_STATUS_STARTED]).exclude(
         promotion__type=promotion_models.PROMOTION_TYPE_COUPON)
 
-    if error_products:
-        return False, [p.id for p in error_products]
+    if error_products and get_all_error_product_ids:
+        return False, [p.product_id for p in error_products]
+    else:
+        all_error_product_ids.extend([p.product_id for p in error_products])
 
     # 检测团购
     group_records = group_models.Group.objects(owner_id=webapp_owner.id, status__lte=1)
     group_product_ids = [record.product_id for record in group_records]
 
     error_product_ids = list(set(product_ids).intersection(set(group_product_ids)))
-    if error_product_ids:
+    if error_product_ids and get_all_error_product_ids:
         return False, error_product_ids
+    else:
+        all_error_product_ids.extend(error_product_ids)
 
-    return True, []
+    if all_error_product_ids:
+        return False, all_error_product_ids
+    else:
+        return True, []
