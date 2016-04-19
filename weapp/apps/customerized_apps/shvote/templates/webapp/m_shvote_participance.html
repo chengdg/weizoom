@@ -240,11 +240,11 @@ $(document).ready(function() {
 
     //绑定提交按钮
     $('.xa-submitShvote').click(function() {
-        if (!W.is_pic_up){
-            wuiAlert('头像还未上传！');
+        if (!W.validate()) {
             return;
         }
-        if (!W.validate()) {
+        if (!W.is_pic_up){
+            wuiAlert('图像还未上传成功，请稍后！');
             return;
         }
         loadingStatus(true);

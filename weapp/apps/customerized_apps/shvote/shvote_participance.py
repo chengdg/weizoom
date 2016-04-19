@@ -56,7 +56,6 @@ class ShvoteParticipance(resource.Resource):
 				'activity_status': activity_status,
 				'is_already_participanted': (participance_data_count > 0),
 				'isMember': isMember,
-				'is_hide_weixin_option_menu':True,
 				'app_name': "shvote",
 				'resource': "shvote",
 				'hide_non_member_cover': True, #非会员也可使用该页面
