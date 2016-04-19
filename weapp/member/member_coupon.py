@@ -107,9 +107,9 @@ class MemberCouponInfo(resource.Resource):
 			item['coupon_id'] = coupon.coupon_id
 			item['coupon_name'] = coupon_rule.name
 			if coupon_rule.limit_product:
-				item['coupon_detail'] = '￥'+str(coupon.money)+' 单品券'
+				item['coupon_detail'] = '￥'+str(coupon.money)+' 多商品优惠券'
 			else:
-				item['coupon_detail'] = '￥'+str(coupon.money)+' 全店通用券'
+				item['coupon_detail'] = '￥'+str(coupon.money)+' 通用券'
 			item['coupon_state'] = COUPONSTATUS[coupon.status]['name']
 
 			if coupon.status == COUPON_STATUS_USED:
