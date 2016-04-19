@@ -71,22 +71,16 @@
 	}
 	.wui-group{
 		position: relative;
-		overflow-x: auto;
-		overflow-y: hidden;
-		height: 43px;
-		line-height: 43px;
+		overflow-x: scroll;
 		font-size: 0;
 		white-space:nowrap;
-	}
-	.wui-group > div.grad{
-		background-image: -webkit-linear-gradient(left,#000 35%, #fff);
-		-webkit-background-clip: text;
-		-webkit-text-fill-color: transparent;
 	}
 	.wui-group > div{
 		display: inline-block;
 		font-size: 16px;
 		text-align: center;
+		line-height: 40px;
+
 	}
 	.wui-group > div.active{
 		color: #ff4200;
@@ -466,6 +460,10 @@
         if(W.isPC){
             return false;
         }
+   		var isMember = {% if isMember %}true{% else %}false{% endif %};
+	   		if(!isMember){
+	        showQrcode(W.qrcodeUrl);
+	   		}
         $('.wa-shvote-desc').hide();
 		// 我要报名
 		$('.wa-imark').click(function(){
