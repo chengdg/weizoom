@@ -117,7 +117,7 @@ def __get_into_shvote_signup_pages(context):
 		"type": "api",
 		"method": "put",
 		"args": termite_post_args
-	}, termite_post_args)
+	})
 
 
 
@@ -149,10 +149,9 @@ def step_impl(context, webapp_user_name):
 	print "webapp_owner_id:"+webapp_owner_id
 	print "shvote_id:"+shvote_id
 	print "<<<< Shvote Mobile Page --- Sign Up ----[ end ] <<<<"
-	#获取动态数据
-	get_dynamic_data(context)
 
 	response = __get_into_shvote_signup_pages(context)#resp.context=> data ; resp.content => Http Text
+	apps_util.debug_print(response.content)
 
 
 

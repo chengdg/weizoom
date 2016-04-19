@@ -91,6 +91,7 @@ def __get_shvotePageJson(args):
                 "start_time":  args.get("start_time"),
                 "end_time": args.get("end_time"),
                 "valid_time": args.get("valid_time"),
+                "votecount_per_one": args.get("votecount_per_one"),
                 "groups": args.get('groups'),
                 "desc": args.get('desc'),
                 "pic": args.get('pic'),
@@ -198,6 +199,8 @@ def __Create_Shvote(context,text,user):
 
     valid_time = "%s~%s"%(start_time,end_time)
 
+    votecount_per_one = text.get('daily_vote',0)
+
     groups = text.get('groups',[])
 
     desc = text.get('desc','')
@@ -210,6 +213,7 @@ def __Create_Shvote(context,text,user):
         "start_time":start_time,
         "end_time":end_time,
         "valid_time":valid_time,
+        "votecount_per_one": votecount_per_one,
         "groups":groups,
         "rule":rule,
         "desc": desc,
@@ -243,6 +247,7 @@ def __Create_Shvote(context,text,user):
         "groups":json.dumps(groups),
         "rule":rule,
         "desc":desc,
+        "votecount_per_one": votecount_per_one,
         "related_page_id":related_page_id
     }
     shvote_url ="/apps/shvote/api/shvote/?design_mode={}&project_id={}&version={}&_method=put".format(design_mode,context.project_id,version)
@@ -271,6 +276,8 @@ def __Update_Group(context,text,page_id,shvote_id):
 
     valid_time = "%s~%s"%(start_time,end_time)
 
+    votecount_per_one = text.get('daily_vote',0)
+
     groups = text.get('groups',[])
 
     desc = text.get('desc','')
@@ -283,6 +290,7 @@ def __Update_Group(context,text,page_id,shvote_id):
         "start_time":start_time,
         "end_time":end_time,
         "valid_time":valid_time,
+        "votecount_per_one": votecount_per_one,
         "groups":groups,
         "rule":rule,
         "desc": desc,
@@ -303,6 +311,7 @@ def __Update_Group(context,text,page_id,shvote_id):
         "start_time":start_time,
         "end_time":end_time,
         "valid_time":valid_time,
+        "votecount_per_one": votecount_per_one,
         "groups":json.dumps(groups),
         "rule":rule,
         "desc":desc,

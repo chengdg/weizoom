@@ -23,6 +23,7 @@ import time
 from django.core.management.base import BaseCommand, CommandError
 from utils.cache_util import SET_CACHE
 from modules.member.models import Member
+import apps_step_utils as app_utils
 
 
 def __date2time(date_str):
@@ -87,7 +88,7 @@ def __ReviewShvoteApply(context,player):
 
 
 
-	review_url = "/apps/shvote/api/shvote_registrators/?design_mode={}&version={}".format(design_mode,version)
+	review_url = "/apps/shvote/api/shvote_registrators/?_method=post&design_mode={}&version={}".format(design_mode,version)
 	review_args = {
 		"id":participance_id
 	}
@@ -96,7 +97,7 @@ def __ReviewShvoteApply(context,player):
 
 def __DeleteShvoteApply(context,player):
 	'''
-	审核通过
+	审核不通过
 	'''
 	design_mode = 0
 	version = 1

@@ -129,17 +129,25 @@ def get_response(context, options, param=None):
     @return:
     """
     def __call(method, url, param):
-        response = getattr(context.client, method)(url, param)
+        response = __get_response(method, url, param)
         req_count = 0
+        context.link_url = url
         while response.status_code == 302:
             req_count += 1
             redirect_url = response['Location']
-            debug_print(redirect_url)
+            context.last_url = redirect_url
             param = param if method == 'post' else {}
-            response = getattr(context.client, method)(redirect_url, param)
+            debug_print("method====="+method+"redirect_url======"+redirect_url)
+            debug_print(param)
+            response = __get_response(method, redirect_url, param)
             if req_count >= 5:
                 break
         return response
+    def __get_response(method, url, param):
+        if method == "get":
+            return context.client.get(url)
+        else:
+            return context.client.post(url, param)
 
     if isinstance(options, (str, unicode)):
         param = param if param else {}
@@ -152,9 +160,12 @@ def get_response(context, options, param=None):
 
     param = options.get("args", {})
 
-    _method = options.get("method", "get")
+    _method = "" if options.get("method", "get") == "get" and not type == "api" else "_method={}&".format(options.get("method"))
 
-    url = "/{}{}{}/?_method={}&opid={}".format(options.get("app",""), type_str, options.get("resource", ""), _method, context.openid)
-    method = "post" if _method in ["post", "put"] else "get"
-    debug_print(url)
+    url = "/{}{}{}/?{}opid={}&fmt={}".format(options.get("app",""), type_str, options.get("resource", ""), _method, context.openid, context.member.token)
+    method = "post" if options.get("method", "get") in ["post", "put"] else "get"
+    if method == "get":
+        for k, v in param.items():
+            url = "{}&{}={}".format(url, k, v)
+    debug_print("url==== "+url)
     return __call(method, url, param)

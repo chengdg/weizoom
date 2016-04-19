@@ -30,7 +30,6 @@ class MShvote(resource.Resource):
 		record_id = request.GET.get('recordId', None)
 		member = request.member
 		response = create_response(500)
-
 		if not record_id or not member:
 			response.errMsg = u'活动信息出错'
 			return response.get_response()
@@ -180,12 +179,10 @@ class GetRankList(resource.Resource):
 		@param record_id: 活动id
 		@return: list
 		"""
-		print "start----------111111111222222333334555555645746867978978089-089-5673465237897899847366"
 		response = create_response(200)
 		response.data = {
 			'result_list': get_rank_data(request.GET)
 		}
-		print "end----------111111111222222333334555555645746867978978089-089-5673465237897899847366"
 		return response.get_response()
 
 class MShvoteRank(resource.Resource):
@@ -228,15 +225,13 @@ def get_rank_data(data):
 		'status' : app_models.MEMBER_STATUS['PASSED']
 	}
 
-	print "current_group================", data['current_group']
-
 	if data.get('search_name') != '':
 		search_name = data.get('search_name')
 		if search_name.isdigit():
 			params['serial_number__icontains'] = search_name
 		else:
 			params['name__icontains'] = search_name
-	datas = app_models.ShvoteParticipance.objects(**params).order_by('-count')[:100]
+	datas = app_models.ShvoteParticipance.objects(**params).order_by('-count', 'created_at')[:100]
 	i = 0
 	result_list = []
 	for d in datas:

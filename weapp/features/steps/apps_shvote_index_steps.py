@@ -52,7 +52,10 @@ def step_impl(context, webapp_user_name, title):
 
     #获取页面
     view_mobile_main_page(context)
-
+    #获取动态数据
+    response = get_dynamic_data(context)
+    result_data = json.loads(response.content)['data']['record_info']
+    context.record_info = result_data
 
 def view_mobile_main_page(context):
     """
@@ -85,11 +88,9 @@ def get_dynamic_data(context):
 
 @then(u"{webapp_user_name}获得微信高级投票活动主页的内容")
 def step_impl(context, webapp_user_name):
-    #获取动态数据
-    response = get_dynamic_data(context)
+    result_data = context.record_info
 
     expected_data = json.loads(context.text)
-    result_data = json.loads(response.content)['data']['record_info']
     expected_data['end_date'] = bdd_util.get_date_str(expected_data['end_date'])
 
     actual_data = {
@@ -111,13 +112,7 @@ def step_impl(context, webapp_user_name):
 
     bdd_util.assert_dict(expected_data,actual_data)
 
-@Then(u"{webapp_user_name}获得微信高级投票活动主页排行榜'{group}'列表")
-def step_impl(context, webapp_user_name, group):
-    #获取动态数据
-    get_dynamic_data(context)
-    response = __get_rank_data(context, group)
-    expected_data = json.loads(context.text)
-
+def __compare_rank_data(expected_data, response):
     result_data = json.loads(response.content)['data']['result_list']
     expected_keys = actual_data = []
 
@@ -134,6 +129,13 @@ def step_impl(context, webapp_user_name, group):
     apps_util.debug_print(expected_data)
     apps_util.debug_print(actual_data)
     bdd_util.assert_list(expected_data,actual_data)
+
+@Then(u"{webapp_user_name}获得微信高级投票活动主页排行榜'{group}'列表")
+def step_impl(context, webapp_user_name, group):
+    response = __get_rank_data(context, group)
+    expected_data = json.loads(context.text)
+    __compare_rank_data(expected_data, response)
+
 
 @Then(u"{webapp_user_name}获得微信高级投票活动单独页面排行榜'{group}'列表")
 def step_impl(context, webapp_user_name, group):
@@ -169,7 +171,11 @@ def step_impl(context, webapp_user_name, group):
     apps_util.debug_print(actual_data)
     bdd_util.assert_list(expected_data,actual_data)
 
-def __get_rank_data(context, group, search=""):
+@When(u"{webapp_user_name}搜索选手'{search}'")
+def step_impl(context, webapp_user_name, search):
+    context.search = search
+
+def __get_rank_data(context, group):
         return apps_util.get_response(context, {
             "app": "m/apps/shvote",
             "resource": "m_shvote_rank",
@@ -179,6 +185,6 @@ def __get_rank_data(context, group, search=""):
                 "webapp_owner_id": context.webapp_owner_id,
                 "recordId": context.shvote_id,
                 "current_group": group,
-                "search_name": search
+                "search_name": context.search if hasattr(context, 'search') else ""
             }
         })

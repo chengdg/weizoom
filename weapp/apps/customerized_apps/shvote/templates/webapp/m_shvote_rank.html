@@ -8,9 +8,6 @@
 	.wui-rank-groups{
 		position: relative;
 		overflow-x: auto;
-		overflow-y: hidden;
-		height: 43px;
-		line-height: 43px;
 		font-size: 0;
 		white-space:nowrap;
 	}
@@ -19,12 +16,7 @@
 		display: inline-block;
 		width: 25%;
 		text-align: center;
-		line-height: 200%;
-	}
-	.wui-rank-groups div.grad{
-		background-image: -webkit-linear-gradient(left,#000 35%, #fff);
-		-webkit-background-clip: text;
-		-webkit-text-fill-color: transparent;
+		line-height: 43px;
 	}
 	.wui-rank-groups div.active{
 		color: red;
@@ -75,12 +67,15 @@
 		display: none;
 	}
 	.wui-rank-table tbody tr td:nth-child(2){
-		width: 45%;	
+		text-align: center;
+		width: 75px;
+	}
+	.wui-rank-table tbody tr td:nth-child(3){
 		text-align: left;
+		width: 40%;
 	}
 	.wui-rank-table tbody tr td:nth-child(2) img{
 		vertical-align: middle;
-		margin-right: 15px;
 		border-radius: 25px;
 	}
 	.wui-count{
@@ -95,9 +90,6 @@
 		font-size: 1.1rem;
 		color:  #ff4200;
 	}
-	::-webkit-scrollbar{
-		width:0;
-	}
 </style>
 {% endblock %}
 
@@ -111,7 +103,7 @@
 	<thead>
 		<tr>
 			<th>排名</th>
-			<th>选手</th>
+			<th colspan='2'>选手</th>
 			<th>票数</th>
 		</tr>
 	</thead>
@@ -124,9 +116,11 @@
 	<tr>
 		<td>
 			<span>{ rank }</span>
-		</td>			
+		</td>	
 		<td>
 			<img src={ icon } width="50px" height="50px">
+		</td>		
+		<td>
 			<span>{ name }</span>
 		</td>
 		<td>
@@ -147,7 +141,7 @@
 var current_group = '';
 
 $(function(){
-    if($('.wa-rank-groups div') < 4){ 
+    if($('.wa-rank-groups div').length < 4){ 
 		var wid = 100/$('.wa-rank-groups div').length;
 		$('.wa-rank-groups div').css("width",wid+'%');
 		$('.wa-rank-groups div').eq(0).addClass('active');
@@ -155,7 +149,6 @@ $(function(){
 	    	var w_wid = $(window).width();
 	    	var d_wid = $(window).width()/4;
 	    	$('.wa-rank-groups div').css("width",d_wid);
-	    	$('.wa-rank-groups div').eq(3).addClass('grad');
 			$('.wa-rank-groups div').eq(0).addClass('active');	    	
     };
 
@@ -165,14 +158,10 @@ $(function(){
 	//切换分组
 	$('.wa-rank-groups').on('click','div',function(){
 		$(this).addClass('active').siblings().removeClass('active');
-		$(this).removeClass('grad');
 		current_group = $(this).html();
 		getRankInfo(current_group,'');
 	});	
 
-	$('.wa-rank-groups').scroll(function(){
-		$('.wa-rank-groups div').eq(3).removeClass('grad');
-	})	
 });
 
 
