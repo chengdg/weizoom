@@ -6,6 +6,7 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.contrib.auth.decorators import login_required
 
+from mall.promotion.utils import verification_multi_product_coupon
 from .. import models as mall_models
 from .. import export
 from . import utils as category_ROA_utils
@@ -65,6 +66,10 @@ class CategoryProducts(resource.Resource):
             category_id__in=category_ids)
 
         product_ids = set([relation.product_id for relation in relations])
+
+        _, error_product_ids = verification_multi_product_coupon(request.manager, product_ids)
+
+        product_ids = list(set(product_ids) - set(error_product_ids))
 
         products = list(mall_models.Product.objects.filter(
             owner=request.manager, is_deleted=False, shelve_type=mall_models.PRODUCT_SHELVE_TYPE_ON,id__in=product_ids))
