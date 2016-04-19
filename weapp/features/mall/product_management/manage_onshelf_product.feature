@@ -186,7 +186,7 @@ Scenario:2 下架商品
 		}]
 		"""
 
-@product @saleingProduct
+@product @saleingProduct @yanhaonan @mall2
 Scenario:3 修改商品价格
 	Given jobs登录系统
 	Then jobs能获得'在售'商品列表
