@@ -32,15 +32,13 @@ class ShvoteParticipance(models.Document):
 
 class ShvoteControl(models.Document):
 	"""
-	投票控制表 默认每人每天每组只能投1票
+	投票控制表 默认每人每天每组只能投0票
 	"""
 	member_id= models.LongField(default=0) #参与者id
 	belong_to = models.StringField(default="", max_length=100) #对应的活动id
-	voted_group = models.StringField(max_length=50) #投票分组
-	voted_to= models.StringField(default="", max_length=100) #被投票人
-	can_vote_count = models.IntField(default=0) #可投票次数限制
-	default_per_one = models.IntField(default=0) #每个选手可被投票次数限制 最大次数1
-	created_at_str = models.StringField(max_length=24, unique_with=["member_id", "belong_to", "voted_to"]) #投票时间
+	vote_to_list= models.ListField(default=[]) #被投票人
+	vote_count = models.IntField(default=0) #投票次数
+	created_at_str = models.StringField(max_length=24) #投票时间
 	meta = {
 		'collection': 'shvote_shvote_control'
 	}
