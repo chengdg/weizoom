@@ -1,5 +1,5 @@
 #_author_:张三香
-
+@ztqb
 Feature:促销管理-新建活动页面的商品查询
 
 	#说明：
@@ -169,7 +169,7 @@ Background:
 		"""
 	When jobs失效优惠券'多商品失效活动'
 
-@mall2 @promotion @promotionFlash
+@mall2 @promotion @promotionFlash @ztqb1
 Scenario: 1 限时抢购-新建活动页面的商品查询
 	Given jobs登录系统
 	#起购数量大于1的商品不在在售列表中（不能参与限时抢购）

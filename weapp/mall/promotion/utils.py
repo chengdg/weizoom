@@ -206,7 +206,17 @@ def stop_promotion(request, product_ids):
     promotions = promotion_models.Promotion.objects.filter(id__in=promotionIds).filter(~Q(status = promotion_models.PROMOTION_STATUS_DELETED))
     if not promotions.count():
         return
-    for promotion in promotions:
+    # need_stop_coupon_rule = False
+    # for promotion in promotions:
+    #
+    #     coupon_rule = promotion_models.CouponRule.objects.get(id=promotion.detail_id)
+    #     coupon_rule_phps = promotion_models.ProductHasPromotion.objects.filter(promotion=promotion)
+    #     coupon_rule_product_ids = [php.product_id for php in coupon_rule_phps]
+    #
+    #     deleting_product_ids_in_coupon_rule = list(set(coupon_rule_product_ids) & set(product_ids))
+    #     del
+
+
         promotion.status=promotion_models.PROMOTION_STATUS_FINISHED
         promotion.save()
         if promotion.type == promotion_models.PROMOTION_TYPE_COUPON:
@@ -351,7 +361,7 @@ def verification_multi_product_coupon(webapp_owner, product_ids, get_all_error_p
                                                                          promotion__status__in=[
                                                                              promotion_models.PROMOTION_STATUS_NOT_START,
                                                                              promotion_models.PROMOTION_STATUS_STARTED]).exclude(
-        promotion__type=promotion_models.PROMOTION_TYPE_COUPON)
+        promotion__type=promotion_models.PROMOTION_TYPE_COUPON).exclude(promotion__type=promotion_models.PROMOTION_TYPE_INTEGRAL_SALE)
 
     if error_products and get_all_error_product_ids:
         return False, [p.product_id for p in error_products]
