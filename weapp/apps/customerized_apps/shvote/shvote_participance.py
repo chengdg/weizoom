@@ -52,11 +52,10 @@ class ShvoteParticipance(resource.Resource):
 			c = RequestContext(request, {
 				'record_id': id,
 				'page_title': record.name if record else u"投票",
-				'groups': record.groups,
+				'groups': json.dumps(record.groups),
 				'activity_status': activity_status,
 				'is_already_participanted': (participance_data_count > 0),
 				'isMember': isMember,
-				'is_hide_weixin_option_menu':True,
 				'app_name': "shvote",
 				'resource': "shvote",
 				'hide_non_member_cover': True, #非会员也可使用该页面
