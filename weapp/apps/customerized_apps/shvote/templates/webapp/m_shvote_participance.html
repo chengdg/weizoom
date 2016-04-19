@@ -41,6 +41,7 @@
         width: 95%;
         border-bottom: 1px solid #f0f0f0;
         margin-left: 2%;
+        height: 45px;
     }
     input.wui-i-input {
         border: none;
@@ -56,12 +57,6 @@
         text-align: right;
         color: #333333;
     }
-    .wui-group {
-        width: 75%;
-        height: 40px;
-        margin-bottom: 5px;
-        border: none;
-    }
     .xui-i-uploadHeadImg{
         background: #fff;
         width: 90px;
@@ -71,6 +66,31 @@
         border-radius: 45px;
         background: url("/termite_static/img/component/group/defalut_icon.jpg");
         background-size: 100%;
+    }
+    .group_type {
+        position: relative;
+        background: #fff none repeat scroll 0 0;
+        color: #000;
+        display: block;
+        height: 45px;
+        line-height: 45px;
+        padding-left: 5px;
+        padding-right: 33px;
+        text-align: left;
+    }
+    .group_type .type_name {
+        color: #666;
+        margin-left: 10px;
+        position: relative;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        font-size: 1rem;
+    }
+    .wui-DropDownBox {
+        display: inline-block;
+        width: 75%;
+        padding-top: 0;
     }
     .wa-details{
         background: #f0f0f0;
@@ -113,11 +133,17 @@
             </div>
             <div class="wui-i-shvoteParticipance-content-line">
                 <div class="wui-i-shvoteParticipance-content-lable">分组选择</div>
-                <select class="wui-group wa-group">
-                    {% for group in groups %}
-                    <option value="{{group}}">{{group}}</option>
-                    {% endfor %}
-                </select>
+                <div class="wui-DropDownBox">
+                    <div class="wui-i-inputContainer xa-inputControl">
+                        <a class="group_type" data-role="button">
+                            <span class="type_name" data-product="" data-validate="require-notempty-span::请选择分组" style="width: 953px;">请选择分组</span>
+                            <span class="icon arrow_down"></span>
+                        </a>
+                        <div class="xui-dropmenu" style="transform-origin: 0px 0px 0px; opacity: 1; transform: scale(1, 1); display: none;">
+                            <ul class="ui-dropmenu-items xa-select-type" style="-webkit-tap-highlight-color: rgba(255, 255, 255, 0);"></ul>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="wui-i-shvoteParticipance-content-line">
                 <div class="wui-i-shvoteParticipance-content-lable">输入编号</div>
@@ -167,13 +193,58 @@ $(document).ready(function() {
         }
         $submitButtonContainer.show();
     }
+
+    var group_dict_json = JSON.stringify({{ groups|safe }});
+	var group_dict = JSON.parse(group_dict_json);
+    var $group_type = $('.group_type');
+    if ($group_type.length > 0){
+        $group_type.each(function(){
+            var $this = $(this);
+            var type_title_width  =  $this.find('.wui-i-title').width();
+            var padding_width = Number($this.css('padding-left').split('px')[0]) + Number($this.css('padding-right').split('px')[0]);
+            var group_type_width =  $this.width()-padding_width-2;
+            $this.find('.type_name').width(group_type_width-type_title_width-15);
+        });
+    }
+	var html_str = "";
+	for (var i=0; i<group_dict.length;++i){
+		html_str += "<li style='text-overflow:ellipsis;overflow: hidden;white-space: nowrap'><a href='javascript:void(0);' data-type='"+JSON.stringify(group_dict[i])+"'>"+group_dict[i]+"</a></li>";
+	}
+    $('.xa-select-type').html(html_str);
+    if (html_str == ""){
+        $('.type_name').html("您还没有可选择的分组");
+    }else{
+        $('.type_name').html("请选择分组信息");
+        $('.group_type').click(function(){
+            var $dropmenu = $(this).next();
+            if ($dropmenu.css('display') == 'none'){
+                $dropmenu.show();
+                $(this).find('.icon').addClass('arrow_up').removeClass('arrow_down');
+            }
+            else{
+                $dropmenu.hide();
+                $(this).find('.icon').addClass('arrow_down').removeClass('arrow_up');
+            }
+        });
+    }
+    $('.xa-select-type li').click(function(event){
+        var $li= $(event.currentTarget);
+        var type_name = $li.find('a').text();
+		var $type_name = $li.parents('.wui-i-inputContainer').find('.group_type').find('span[class="type_name"]');
+        $type_name.text(type_name);
+        $type_name.attr('data-product',$li.find('a').attr('data-type'));
+        $li.parents('.xui-dropmenu').hide();
+        $li.parents('.wui-i-inputContainer').find('.icon').addClass('arrow_down').removeClass('arrow_up')
+    });
+    $('.xa-submitShvote').unbind('click');
+
     //绑定提交按钮
     $('.xa-submitShvote').click(function() {
-        if (!W.is_pic_up){
-            wuiAlert('头像还未上传！');
+        if (!W.validate()) {
             return;
         }
-        if (!W.validate()) {
+        if (!W.is_pic_up){
+            wuiAlert('图像还未上传成功，请稍后！');
             return;
         }
         loadingStatus(true);
@@ -192,7 +263,7 @@ $(document).ready(function() {
                 belong_to: W.appRecordId,
                 icon: $('.wa-uploadHeadImg').siblings("ul").find('img').eq(0).attr("data-src"),
                 name: $('.wa-name').val(),
-                group: $.trim($('.wa-group').val()),
+                group: $.trim($('.type_name').html()),
                 serial_number: $('.wa-serial').val(),
                 details: $('.wa-details').val(),
                 pics: JSON.stringify(pics)

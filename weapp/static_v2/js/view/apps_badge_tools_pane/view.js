@@ -78,7 +78,7 @@ W.view.apps.BadgeToolsPane = Backbone.View.extend({
 			W.showHint('error','单个关键词字数不能超过' + this.maxlen + '个字');
 			return false;
 		}
-		if(keyword in this.badgeArr){
+		if(this.badgeArr.includes(keyword)){
 			W.showHint('error','关键字不能重复');
 			return false;
 		}

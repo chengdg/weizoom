@@ -89,6 +89,8 @@ class Shvotes(resource.Resource):
 			belong_to = str(participance.belong_to)
 			if record_id2memberinfo.has_key(belong_to):
 				record_id2memberinfo[belong_to] += participance.count
+			else:
+				record_id2memberinfo[belong_to] = participance.count
 
 			if id2participant_count.has_key(belong_to):
 				id2asking_count[belong_to] += 1

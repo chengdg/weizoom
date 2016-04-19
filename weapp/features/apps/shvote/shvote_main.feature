@@ -46,7 +46,7 @@ Background:
 		[{
 			"title":"微信高级投票-进行中",
 			"groups":["初中组","高中组"],
-			"daily_vote":2
+			"daily_vote":2,
 			"rule": "高级投票规则",
 			"desc":"高级投票活动介绍",
 			"start_date":"2天前",
@@ -253,7 +253,7 @@ Scenario:3 微信用户浏览高级投票活动主页，获得三维数据
 	Then tom收到自动回复'高级微信投票活动1单图文'
 	When tom点击图文'高级微信投票活动1单图文'进入高级微信投票活动页面
 	When tom在高级投票中为'bill'投票
-	when tom点击图文'高级微信投票活动1单图文'进入高级微信投票活动页面
+	When tom点击图文'高级微信投票活动1单图文'进入高级微信投票活动页面
 	Then tom获得微信高级投票活动主页的内容
 		"""
 		{
@@ -270,7 +270,7 @@ Scenario:3 微信用户浏览高级投票活动主页，获得三维数据
 	Then zhouxun收到自动回复'高级微信投票活动1单图文'
 	When zhouxun点击图文'高级微信投票活动1单图文'进入高级微信投票活动页面
 	When zhouxun在高级投票中为'bill'投票
-	when zhouxun点击图文'高级微信投票活动1单图文'进入高级微信投票活动页面
+	When zhouxun点击图文'高级微信投票活动1单图文'进入高级微信投票活动页面
 	Then zhouxun获得微信高级投票活动主页的内容
 		"""
 		{
@@ -281,7 +281,7 @@ Scenario:3 微信用户浏览高级投票活动主页，获得三维数据
 		}
 		"""
 
-@mall2 @apps @shvote @shvote_activity @aix
+@mall2 @apps @shvote @shvote_activity
 Scenario:4 微信用户可以给参与者投票
 	#用户可以对参与者进行投票
 	#该用户再次对参与者进行投票，无法进行第二次投票，获取到的是原来的数据
@@ -372,7 +372,7 @@ Scenario:4 微信用户可以给参与者投票
 			"start_date":"2天前",
 			"end_date":"2天后",
 			"status":"进行中",
-			"actions": ["删除","链接","预览","报名详情","查看结果"]
+			"actions": ["关闭","链接","预览","报名详情","查看结果"]
 		}]
 		"""
 	When tom在高级投票中为'bill'投票
@@ -446,7 +446,7 @@ Scenario:4 微信用户可以给参与者投票
 		[{
 			"name":"微信高级投票-进行中",
 			"total_voted_count":1,
-			"total_participant_count":3,
+			"total_participanted_count":3,
 			"start_date":"2天前",
 			"end_date":"2天后",
 			"status":"进行中",
@@ -530,8 +530,8 @@ Scenario:4 微信用户可以给参与者投票
 		"""
 		[{
 			"name":"微信高级投票-进行中",
-			"total_vote_count":2,
-			"total_participant_count":3,
+			"total_voted_count":2,
+			"total_participanted_count":3,
 			"start_date":"2天前",
 			"end_date":"2天后",
 			"status":"进行中",
@@ -609,22 +609,18 @@ Scenario:4 微信用户可以给参与者投票
 				"count":1
 			}]
 		"""
-
-
-
 	Then jobs获得微信高级投票活动列表
 		"""
 		[{
 			"name":"微信高级投票-进行中",
-			"total_vote_count":4,
-			"total_participant_count":3,
+			"total_voted_count":4,
+			"total_participanted_count":3,
 			"start_date":"2天前",
 			"end_date":"2天后",
 			"status":"进行中",
 			"actions": ["关闭","链接","预览","报名详情","查看结果"]
 		}]
 		"""
-
 
 @mall2 @apps @shvote @shvote_activity
 Scenario:5 微信用户搜索选手
@@ -634,6 +630,7 @@ Scenario:5 微信用户搜索选手
 	Given jobs登录系统
 	When jobs于高级微信投票活动审核通过'bill'
 	When jobs于高级微信投票活动审核通过'tom'
+	When jobs于高级微信投票活动审核通过'zhouxun'
 	When tom关注jobs的公众号
 	When tom访问jobs的webapp
 	When tom在微信中向jobs的公众号发送消息'微信高级投票'
@@ -652,28 +649,31 @@ Scenario:5 微信用户搜索选手
 				"count":0
 			}]
 		"""
-	
 	When tom搜索选手'u'
 	Then tom获得微信高级投票活动主页排行榜'高中组'列表
 		"""
 			[{
 				"icon": "zhouxun_head.jpg",
 				"name":"zhouxun",
-				"group":"初中组",
+				"group":"高中组",
 				"serial_number":"003",
 				"details": "zhouxun的产品好",
-				"pics": ["pic1.jpg","pic2.jpg"],
+				"pics": ["pic5.jpg","pic6.jpg"],
 				"count":0
 			}]
 		"""
-			
+
 	When tom搜索选手'bigs'
-	Then tom获得微信高级投票活动排行榜列表
+	Then tom获得微信高级投票活动主页排行榜'高中组'列表
+		"""
+			[]
+		"""
+	And tom获得微信高级投票活动主页排行榜'初中组'列表
 		"""
 			[]
 		"""
 
-@mall2 @apps @shvote @shvote_activity
+@mall2 @apps @shvote @shvote_activity @aix
 Scenario:6 每人每天可以为不同的人投票
 		#同一人有两次机会为别人投票
 	Given jobs登录系统
@@ -718,13 +718,13 @@ Scenario:6 每人每天可以为不同的人投票
 				"count":0
 			}]
 		"""
-	
+
 	Then jobs获得微信高级投票活动列表
 		"""
 		[{
 			"name":"微信高级投票-进行中",
-			"total_vote_count":1,
-			"total_participant_count":3,
+			"total_voted_count":1,
+			"total_participanted_count":3,
 			"start_date":"2天前",
 			"end_date":"2天后",
 			"status":"进行中",
@@ -737,7 +737,7 @@ Scenario:6 每人每天可以为不同的人投票
 	Then tom收到自动回复'高级微信投票活动1单图文'
 	When tom点击图文'高级微信投票活动1单图文'进入高级微信投票活动页面
 	When tom在高级投票中为'tom'投票
-	Thentom获得微信高级投票活动主页排行榜'初中组'列表
+	Then tom获得微信高级投票活动主页排行榜'初中组'列表
 		"""
 			[{
 				"icon": "bill_head.jpg",
@@ -772,15 +772,15 @@ Scenario:6 每人每天可以为不同的人投票
 
 	Then jobs获得微信高级投票活动列表
 		"""
-		[{
-			"name":"微信高级投票-进行中",
-			"total_vote_count":2,
-			"total_participant_count":3,
-			"start_date":"2天前",
-			"end_date":"2天后",
-			"status":"进行中",
-			"actions": ["关闭","链接","预览","报名详情","查看结果"]
-		}]
+			[{
+				"name":"微信高级投票-进行中",
+				"total_voted_count":2,
+				"total_participanted_count":3,
+				"start_date":"2天前",
+				"end_date":"2天后",
+				"status":"进行中",
+				"actions": ["关闭","链接","预览","报名详情","查看结果"]
+			}]
 		"""
 
 	When tom关注jobs的公众号
@@ -821,21 +821,15 @@ Scenario:6 每人每天可以为不同的人投票
 				"count":0
 			}]
 		"""
-	
-
-
-
-
 	Then jobs获得微信高级投票活动列表
 		"""
-		[{
-			"name":"微信高级投票-进行中",
-			"total_vote_count":2,
-			"total_participant_count":3,
-			"start_date":"2天前",
-			"end_date":"2天后",
-			"status":"进行中",
-			"actions": ["关闭","链接","预览","报名详情","查看结果"]
-		}]
+			[{
+				"name":"微信高级投票-进行中",
+				"total_voted_count":2,
+				"total_participanted_count":3,
+				"start_date":"2天前",
+				"end_date":"2天后",
+				"status":"进行中",
+				"actions": ["关闭","链接","预览","报名详情","查看结果"]
+			}]
 		"""
-

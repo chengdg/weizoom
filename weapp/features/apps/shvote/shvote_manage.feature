@@ -21,12 +21,12 @@ Scenario:1 新建微信投票活动,无分组，活动未开始
 	#选手分组-无分组
 	#状态-未开始
 	Given jobs登录系统
-	When jobs新建高级微信投票活动
+	When jobs新建微信高级投票活动
 		"""
 		[{
 			"title":"微信高级投票-未开始",
 			"groups":[],
-			"daily_vote":3
+			"daily_vote":3,
 			"rule": "高级投票规则",
 			"desc":"高级投票活动介绍",
 			"start_date":"2天后",
@@ -51,7 +51,7 @@ Scenario:1 新建微信投票活动,无分组，活动未开始
 		{
 			"title":"微信高级投票-未开始",
 			"groups":[],
-			"daily_vote":3
+			"daily_vote":3,
 			"desc":"高级投票活动介绍",
 			"start_date":"今天",
 			"end_date":"6天后",
@@ -76,12 +76,12 @@ Scenario:2 新建微信投票活动,活动已结束
 	#选手分组-无分组
 	#状态-已结束
 	Given jobs登录系统
-	When jobs新建高级微信投票活动
+	When jobs新建微信高级投票活动
 		"""
 		[{
 			"title":"微信高级投票-已结束",
 			"groups":[],
-			"daily_vote":3
+			"daily_vote":3,
 			"desc":"高级投票活动介绍",
 			"start_date":"2天前",
 			"end_date":"昨天",
@@ -106,12 +106,12 @@ Scenario:3 新建微信投票活动，多个分组，多个活动进行中
 	#选手分组-多分组
 	#状态-进行中
 	Given jobs登录系统
-	When jobs新建高级微信投票活动
+	When jobs新建微信高级投票活动
 		"""
 		[{
 			"title":"微信高级投票-进行中",
 			"groups":["初中组"],
-			"daily_vote":3
+			"daily_vote":3,
 			"desc":"高级投票活动介绍",
 			"start_date":"2天前",
 			"end_date":"2天后",
@@ -119,7 +119,7 @@ Scenario:3 新建微信投票活动，多个分组，多个活动进行中
 		},{
 			"title":"微信高级投票-进行中",
 			"groups":["高中组"],
-			"daily_vote":2
+			"daily_vote":2,
 			"desc":"高级投票活动介绍",
 			"start_date":"2天前",
 			"end_date":"2天后",

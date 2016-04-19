@@ -52,11 +52,10 @@ class ShvoteParticipance(resource.Resource):
 			c = RequestContext(request, {
 				'record_id': id,
 				'page_title': record.name if record else u"投票",
-				'groups': record.groups,
+				'groups': json.dumps(record.groups),
 				'activity_status': activity_status,
 				'is_already_participanted': (participance_data_count > 0),
 				'isMember': isMember,
-				'is_hide_weixin_option_menu':True,
 				'app_name': "shvote",
 				'resource': "shvote",
 				'hide_non_member_cover': True, #非会员也可使用该页面
@@ -92,10 +91,12 @@ class ShvoteParticipance(resource.Resource):
 				sh_participance.save()
 				response = create_response(200)
 			except:
+				print unicode_full_stack()
 				response = create_response(500)
 				response.errMsg = u'只能报名一次'
 			return response.get_response()
 		except:
+			print unicode_full_stack()
 			response = create_response(500)
 			response.errMsg = u'报名失败'
 			response.inner_errMsg = unicode_full_stack()
@@ -129,20 +130,42 @@ class ShvoteParticipance(resource.Resource):
 			response.errMsg = u'不存在该用户'
 			return response.get_response()
 
+		record = app_models.Shvote.objects(id=record_id)
+		if record.count() > 0:
+			can_vote_count = record.first().votecount_per_one
+		else:
+			response.errMsg = u'该投票活动已被删除'
+			return response.get_response()
+
 		target = None
 		control = None
 		now_date_str = datetime.now().strftime('%Y-%m-%d')
 		try:
-			control = app_models.ShvoteControl(
+			control = app_models.ShvoteControl.objects(
 				created_at_str = now_date_str,
 				member_id = member_id,
 				belong_to = record_id,
 				voted_group = request.POST['voted_group'],
 				voted_to = vote_to
 			)
-			control.save()
+			if control.count() > 0:
+				control = control.first()
+			else:
+				control = app_models.ShvoteControl(
+					created_at_str = now_date_str,
+					member_id = member_id,
+					belong_to = record_id,
+					voted_group = request.POST['voted_group'],
+					voted_to = vote_to
+				)
+				control.save()
 		except:
-			response.errMsg = u'今天只能投票一次'
+			response.errMsg = u'每天只能给同一个人投一票'
+			return response.get_response()
+		result = control.modify(query={"default_per_one__lt":1, "can_vote_count__lt": can_vote_count},
+					   **{"inc__can_vote_count": 1, "inc__default_per_one": 1})
+		if not result:
+			response.errMsg = u'今日投票次数已用完'
 			return response.get_response()
 
 		try:
@@ -154,8 +177,8 @@ class ShvoteParticipance(resource.Resource):
 				target.vote_log[now_date_str] = [member_id]
 			target.save()
 		except:
-			if control:
-				control.delete()
+			control.can_vote_count -= 1
+			control.save()
 			response.errMsg = u'用户信息出错'
 			return response.get_response()
 
