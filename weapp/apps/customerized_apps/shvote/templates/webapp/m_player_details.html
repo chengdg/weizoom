@@ -183,7 +183,7 @@
 			<span class="wui-detail-user-name">{{player_details.name}}</span>
 		</div>
 		<div class="wui-detail-btn wa-detail-btn">
-			<button class="wa-ivote" data-id="">投票</button>
+			<button class="wa-ivote" data-id="{{player_details.id}}" data-count="{{can_vote_count}}">投票</button>
 			<button class="wa-detail-share">拉票</button>
 		</div>
 		<div class="wui-detail-middle">
@@ -219,15 +219,14 @@
         if(W.isPC){
             return false;
         }
-   		var isMember = {% if isMember %}true{% else %}false{% endif %};
-	   		if(!isMember){
-	        showQrcode(W.qrcodeUrl);
-	   		}
-
         //参与投票
         var voteLock = false;
         $('body').on('click','.wa-ivote', function(){
-        	var left_chance = parseInt($('.wa-left-chance').html());
+        	var isMember = {% if isMember %}true{% else %}false{% endif %};
+	   		if(!isMember){
+	       		showQrcode(W.qrcodeUrl);
+	   		}
+        	var left_chance = parseInt($(this).attr('data-count'));
         	if(left_chance <= 0) {
         		wuiAlert('今天该分组的投票次数已用完');
         		return false;
@@ -235,7 +234,7 @@
         	var $this = $(this);
             if(voteLock) return false;
             voteLock = true;
-            var vote_to = $(this).attr('data-id'); 
+            var vote_to = $(this).attr('data-id');
             W.getApi().call({
                 app: 'm/apps/shvote',
                 resource: 'shvote_participance',
