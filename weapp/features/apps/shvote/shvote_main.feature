@@ -673,7 +673,7 @@ Scenario:5 微信用户搜索选手
 			[]
 		"""
 
-@mall2 @apps @shvote @shvote_activity @aix
+@mall2 @apps @shvote @shvote_activity
 Scenario:6 每人每天可以为不同的人投票
 		#同一人有两次机会为别人投票
 	Given jobs登录系统
@@ -788,7 +788,7 @@ Scenario:6 每人每天可以为不同的人投票
 	When tom在微信中向jobs的公众号发送消息'微信高级投票'
 	Then tom收到自动回复'高级微信投票活动1单图文'
 	When tom点击图文'高级微信投票活动1单图文'进入高级微信投票活动页面
-	When tom在高级投票中为'tom'投票
+	When tom在高级投票中为'zhouxun'投票
 	Then tom获得微信高级投票活动主页排行榜'初中组'列表
 		"""
 			[{
