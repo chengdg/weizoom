@@ -55,27 +55,15 @@ class MShvote(resource.Resource):
 		total_counts = member_datas.sum('count')
 		total_visits = record.visits
 
-		#获取当前会员可投票的次数(默认每人每天每组可投票一次)
+		#获取当前会员可投票的次数(默认每人每天可投票次数)
 		groups = record.groups
-		group_name2member = {}
-		group_name2canplay = {g: votecount_per_one for g in record.groups}
-		now_date_str = datetime.now().strftime('%Y-%m-%d')
-		for m in member_datas:
-			tmp_list = m.vote_log.get(now_date_str, None)
-			if tmp_list:
-				if group_name2member.has_key(m.group):
-					group_name2member[m.group].extend(tmp_list)
-				else:
-					group_name2member[m.group] = tmp_list
-
-		#判断当前会员每个组的可投票情况
-		for g, logs in group_name2member.items():
-			for log in logs:
-				if member_id == log and group_name2canplay[g] != 0:
-					group_name2canplay[g] -= 1
-
+		control = app_models.ShvoteControl.objects(member_id=member_id, belong_to=record_id, created_at_str=datetime.now().strftime('%Y-%m-%d'))
+		if control.count() > 0:
+			can_vote_count = votecount_per_one - control.first().vote_count
+		else:
+			can_vote_count = votecount_per_one
 		member_info = {
-			'can_play_info': group_name2canplay,
+			'can_play_info': can_vote_count,
 			'isMember': isMember
 		}
 		record_info = {
