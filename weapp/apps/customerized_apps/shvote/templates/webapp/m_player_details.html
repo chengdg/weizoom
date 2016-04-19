@@ -246,13 +246,10 @@
                     voted_group: current_group
                 },
                 success: function(data){
-                	var cur_vote = parseInt($this.siblings().find('span').html()) + 1;
-                	var cur_count = parseInt($('.wa-total-counts').html()) + 1;
-                	$('.wa-total-counts').html(cur_count);
-                	$this.siblings().find('span').html(cur_vote);
-                	$('.wa-detail-vote-count span').text(cur_vote);
-                    can_play_info[current_group] -= 1;
-                    $('.wa-left-chance').html(can_play_info[current_group]);
+                	var vote_count = parseInt($('.wa-detail-vote-count span').text());
+                	$('.wa-detail-vote-count span').text(vote_count+1);
+                	var left_chance = parseInt($('.wa-ivote').attr('data-count'));
+                	$('.wa-ivote').attr('data-count',left_chance-1);
                     voteLock = false;
                     wuiAlert('投票成功');
                 },
