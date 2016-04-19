@@ -50,12 +50,12 @@ html,body{
 				<ul class="disT w mt10">
 					<li class="disTc" style="width:41.836%;">
 						<!-- 2优惠券超过限额 显示 3优惠券过期 显示-->
-						<a href="./?woid={{request.webapp_owner_id}}&module=mall&model=products&action=list" class="xui-btn xui-goShopping-btn">随便逛逛</a>
+						<a href="{{h5_host}}/mall/products/?woid={{request.webapp_owner_id}}&category_id=0&fmt={{ cur_request_member.token }}" class="xui-btn xui-goShopping-btn">随便逛逛</a>
 						<!-- 1.优惠券领取成功 显示 -->
-						{% if rule.limit_product_id %}
-						<a href="./?woid={{request.webapp_owner_id}}&module=mall&model=product&rid={{ rule.limit_product_id }}&action=get" class="xui-btn xui-toUse-btn hidden">立即使用</a>
+						{% if rule.limit_product %}
+						<a href="{{h5_host}}/mall/coupon_products/?woid={{request.webapp_owner_id}}&coupon_id={{rule.id}}&coupon_name={{rule.name}}&fmt={{ cur_request_member.token }}" class="xui-btn xui-toUse-btn hidden">立即使用</a>
 						{% else %}
-						<a href="./?woid={{request.webapp_owner_id}}&module=mall&model=products&action=list" class="xui-btn xui-toUse-btn hidden">立即使用</a>
+						<a href="{{h5_host}}/mall/products/?woid={{request.webapp_owner_id}}&category_id=0&fmt={{ cur_request_member.token }}" class="xui-btn xui-toUse-btn hidden">立即使用</a>
 						{% endif %}
 					</li>
 					<li class="disTc" style="width:14px;"></li>
@@ -74,17 +74,20 @@ html,body{
 
     $('body').delegate('.xa-myCoupon', 'click', function(event){
         if('{{ is_subscribed }}' == 'True'){
-            window.location.href = "./?module=market_tool:coupon&model=usage&action=get&workspace_id=market_tool:coupon&webapp_owner_id={{request.webapp_owner_id}}&project_id=0"
+            // window.location.href = "./?module=market_tool:coupon&model=usage&action=get&workspace_id=market_tool:coupon&webapp_owner_id={{request.webapp_owner_id}}&project_id=0";
+            
+            window.location.href = "{{h5_host}}/mall/my_coupons/?woid={{request.webapp_owner_id}}&fmt={{ cur_request_member.token }}";
+            
         }else{
             $('.wa-guideAttention').click();
         }
 	});
 
 	$('.xa-getCoupon').click(function(){
-        if('{{user.is_from_weixin}}'!='True'){
-            $('.wa-guideAttention').click();
-            return;
-        }
+        // if('{{user.is_from_weixin}}'!='True'){
+        //     $('.wa-guideAttention').click();
+        //     return;
+        // }
 		W.getApi().call({
             app: 'webapp',
             api: 'project_api/call',
