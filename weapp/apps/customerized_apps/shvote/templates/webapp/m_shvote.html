@@ -537,6 +537,7 @@
                 	var cur_count = parseInt($('.wa-total-counts').html()) + 1;
                 	$('.wa-total-counts').html(cur_count);
                 	$this.siblings().find('span').html(cur_vote);
+                	$('.wa-detail-vote-count span').text(cur_vote);
                     can_play_info[current_group] -= 1;
                     $('.wa-left-chance').html(can_play_info[current_group]);
                     voteLock = false;
