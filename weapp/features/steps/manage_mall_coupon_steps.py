@@ -333,7 +333,7 @@ def __add_coupon_rule(context, webapp_owner_name):
         start_date = "{} 00:00".format(bdd_util.get_date_str(cr_start_date))
         cr_end_date = coupon_rule.get('end_date', u'1天后')
         end_date = "{} 00:00".format(bdd_util.get_date_str(cr_end_date))
-        remark = coupon_rule['description']
+        remark = coupon_rule.get('description', '')
         post_data = {
             'name': cr_name,
             'money': cr_money,
