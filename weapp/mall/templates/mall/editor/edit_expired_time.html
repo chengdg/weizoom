@@ -41,7 +41,7 @@
 									<div class="xa-imgContainer"></div>
 								{% endif %}
 								</div>
-								<span class="c9 ml10">格式：建议jpg/png  尺寸：500*680  不超过1M</span>
+								<span class="c9 ml10">格式：建议jpg/png  尺寸：520*680  不超过1M</span>
 								<div class="errorHint" data-error-hint="请添加一张图片"></div>
 							</td>
 						</tr>
@@ -152,20 +152,21 @@
 					});
 					$(event.target).removeClass('xui-imgDisplayBtn').addClass('xui-dialogSelectedBtn').html('重新上传').parent().find('.xa-imgContainer').html("<img src="+ src +">");
 					$(event.target).parents('td').find('.xa-forceVali').val(src);
-					console.log("srcsrcsrcsrcsrc",src)
-          W.resource.termite2.Image.put({
-              data: {
-              	url:src,
-              	width:width,
-              	height:height
-              },
-              success: function(data) {
+					if (data.type === 'newImage') {
+						W.resource.termite2.Image.put({
+							data: {
+								url:src,
+								width:width,
+								height:height
+							},
+							success: function(data) {
 
-              },
-              error: function(resp) {
+							},
+							error: function(resp) {
 
-              }
-          })
+							}
+						})
+					}
 				}
 			});
 		})
