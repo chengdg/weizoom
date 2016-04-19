@@ -73,12 +73,15 @@
 		position: relative;
 		overflow-x: scroll;
 		overflow-y: hidden;
-		/*overflow-y:scroll;*/
 		-webkit-overflow-scrolling: touch;
+		/*overflow-y:scroll;*/
 		height: 43px;
 		line-height: 43px;
 		font-size: 0;
 		white-space:nowrap;
+	}
+	::-webkit-scrollbar {
+	        width: 2px;
 	}
 	.wui-group > div{
 		display: inline-block;
@@ -491,8 +494,8 @@
 				getRankInfo(current_group,'');
 			}
 		});
-		//切换分组
-		$('.wa-groups').on('click','div',function(){
+		// 切换分组taphold
+		$('.wa-groups').on('tap','div',function(){
 			$(this).addClass('active').siblings().removeClass('active');
 			$(this).removeClass('grad');
 			current_group = $(this).html();
@@ -500,7 +503,7 @@
 			getRankInfo(current_group,'');
 		});
 
-		$('.wa-event-details').click(function(){
+		$('.wa-event-details').on('tap',function(){
 			$('.wa-shvote-desc').show();
 			$('.wa-mobile').hide();
 		});
