@@ -119,7 +119,11 @@ class CouponRuleInfo(resource.Resource):
             Promotion.objects.filter(detail_id=couponRole[0].id, type=PROMOTION_TYPE_COUPON).update(
                 name=request.POST.get('name', ''),
             )
-            return create_response(200).get_response()
+            response = create_response(200)
+            response.data = {
+                'save_success': True,
+            }
+            return response.get_response()
         # 优惠券限制条件
         is_valid_restrictions = request.POST.get('is_valid_restrictions', '0')
         if is_valid_restrictions == '0':
