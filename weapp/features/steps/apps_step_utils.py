@@ -160,10 +160,17 @@ def get_response(context, options, param=None):
 
     param = options.get("args", {})
 
-    _method = "" if options.get("method", "get") == "get" and not type == "api" else "_method={}&".format(options.get("method"))
+    app = options.get("app","")
+    resource = options.get("resource", "")
 
-    url = "/{}{}{}/?{}opid={}&fmt={}".format(options.get("app",""), type_str, options.get("resource", ""), _method, context.openid, context.member.token)
-    method = "post" if options.get("method", "get") in ["post", "put"] else "get"
+    _method = "" if options.get("method", "get") == "get" and not type == "api" else "_method={}&".format(options.get("method"))
+    pc_method = "" if options.get("method", "get") == "get" and not type == "api" else "?_method={}".format(options.get("method"))
+    #区分手机端请求和pc端请求
+    if app.startswith("m"):
+        url = "/{}{}{}/?{}opid={}&fmt={}".format(app, type_str, resource, _method, context.openid, context.member.token)
+    else:
+        url = "/{}{}{}/{}".format(app, type_str, resource, pc_method)
+    method = "post" if options.get("method", "get") in ["post", "put", "delete"] else "get"
     if method == "get":
         for k, v in param.items():
             url = "{}&{}={}".format(url, k, v)

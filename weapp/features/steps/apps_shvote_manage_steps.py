@@ -20,6 +20,7 @@ from apps.customerized_apps.shvote import models as shvote_models
 import termite.pagestore as pagestore_manager
 import json
 import copy
+import apps_step_utils as app_utils
 
 def __debug_print(content,type_tag=True):
     """
@@ -348,38 +349,38 @@ def __Update_Group(context,text,page_id,shvote_id):
 #     return open_group_response
 #
 #
-# def __Delete_Group(context,group_id):
-#     """
-#     删除高级投票活动
-#     写入mongo表：
-#         1.group_group表
-#
-#     注释：page表在原后台，没有被删除
-#     """
-#     design_mode = 0
-#     version = 1
-#     del_group_url = "/apps/group/api/group/?design_mode={}&version={}&_method=delete".format(design_mode,version)
-#     del_args ={
-#         "id":group_id
-#     }
-#     del_group_response = context.client.post(del_group_url,del_args)
-#     return del_group_response
-#
-# def __Stop_Group(context,group_id):
-#   """
-#   关闭高级投票活动
-#   """
-#
-#   design_mode = 0
-#   version = 1
-#   stop_group_url = "/apps/group/api/group_status/?design_mode={}&version={}".format(design_mode,version)
-#   stop_args ={
-#       "id":group_id,
-#       "target":'stoped',
-#       "is_test": True
-#   }
-#   stop_group_response = context.client.post(stop_group_url,stop_args)
-#   return stop_group_response
+def __Delete_Shvote(context,shvote_id):
+    """
+    删除高级投票活动
+
+    注释：page表在原后台，没有被删除
+    """
+
+    return app_utils.get_response(context, {
+        "app": "apps/shvote",
+        "resource": "shvote",
+        "method": "delete",
+        "type": "api",
+        "args": {
+            "id": shvote_id
+        }
+    })
+
+def __Stop_Shvote(context,shvote_id):
+  """
+  关闭高级投票活动
+  """
+  return app_utils.get_response(context, {
+      "app": "apps/shvote",
+      "resource": "shvote_status",
+      "method": "post",
+      "type": "api",
+      "args": {
+          "id":shvote_id,
+          "target":'stoped',
+          "is_test": True
+      }
+  })
 #
 # def __Search_Group(context,search_dic):
 #     """
@@ -443,7 +444,7 @@ def step_impl(context,user):
     expected = json.loads(context.text)
 
     #搜索查看结果
-    if hasattr(context,"search_group"):
+    if hasattr(context,"search_shvote"):
         pass
     #     rec_search_list = context.search_group
     #     for item in rec_search_list:
@@ -521,13 +522,13 @@ def step_impl(context,user,shvote_name):
 
 
 
-# @when(u"{user}删除高级投票活动'{group_name}'")
-# def step_impl(context,user,group_name):
-#     group_page_id,group_id = __group_name2id(group_name)#纯数字
-#     del_response = __Delete_Group(context,group_id)
-#     bdd_util.assert_api_call_success(del_response)
-#
-#
+@when(u"{user}删除微信高级投票活动'{shvote_name}'")
+def step_impl(context,user,shvote_name):
+    shvote_page_id, shvote_id = app_utils.app_name2id(shvote_models.Shvote, shvote_name)#纯数字
+    del_response = __Delete_Shvote(context,shvote_id)
+    bdd_util.assert_api_call_success(del_response)
+
+
 # @when(u"{user}开启高级投票活动'{group_name}'")
 # def step_impl(context,user,group_name):
 #     group_page_id,group_id = __group_name2id(group_name)#纯数字
@@ -535,12 +536,12 @@ def step_impl(context,user,shvote_name):
 #     bdd_util.assert_api_call_success(open_response)
 #
 #
-# @when(u"{user}关闭高级投票活动'{group_name}'")
-# def step_impl(context,user,group_name):
-#   group_page_id,group_id = __group_name2id(group_name)#纯数字
-#   stop_response = __Stop_Group(context,group_id)
-#   bdd_util.assert_api_call_success(stop_response)
-#
+@when(u"{user}关闭微信高级投票活动'{shvote_name}'")
+def step_impl(context,user,shvote_name):
+  shvote_page_id,shvote_id = app_utils.app_name2id(shvote_models.Shvote, shvote_name)#纯数字
+  stop_response = __Stop_Shvote(context,shvote_id)
+  bdd_util.assert_api_call_success(stop_response)
+
 # @when(u"{user}设置高级投票活动列表查询条件")
 # def step_impl(context,user):
 #     expect = json.loads(context.text)
