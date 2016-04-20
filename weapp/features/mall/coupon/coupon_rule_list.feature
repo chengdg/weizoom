@@ -104,7 +104,7 @@ Background:
 		"""
 	When jobs失效优惠券'通用券-已失效'
 
-@promotion @promotionCoupon @online_bug @mall2 @ztq
+@mall2 @promotion @promotionCoupon @online_bug @ztq
 Scenario:1 优惠券规则列表按照添加顺序倒序排列
 	Given jobs登录系统
 	Then jobs能获得优惠券规则列表
@@ -239,7 +239,7 @@ Scenario:2 优惠券规则列表-多商品券(一个商品)商品下架、删除
 			"type": "通用券",
 			"money": 100.00,
 			"limit_counts": 1,
-			"remained_count": 5,
+			"remained_count": 0,
 			"start_date": "2天前",
 			"end_date": "1天前",
 			"special_product": "全部",
@@ -265,7 +265,7 @@ Scenario:2 优惠券规则列表-多商品券(一个商品)商品下架、删除
 			"type": "通用券",
 			"money": 100.00,
 			"limit_counts": 1,
-			"remained_count": 5,
+			"remained_count": 0,
 			"start_date": "今天",
 			"end_date": "1天后",
 			"special_product": "全部",
@@ -306,7 +306,7 @@ Scenario:2 优惠券规则列表-多商品券(一个商品)商品下架、删除
 			"type": "多商品券",
 			"money": 100.00,
 			"limit_counts": 1,
-			"remained_count": 5,
+			"remained_count": 0,
 			"start_date": "今天",
 			"end_date": "1天后",
 			"special_product": "查看专属商品",
@@ -319,7 +319,7 @@ Scenario:2 优惠券规则列表-多商品券(一个商品)商品下架、删除
 			"type": "通用券",
 			"money": 100.00,
 			"limit_counts": 1,
-			"remained_count": 5,
+			"remained_count": 0,
 			"start_date": "2天前",
 			"end_date": "1天前",
 			"special_product": "全部",
@@ -345,7 +345,7 @@ Scenario:2 优惠券规则列表-多商品券(一个商品)商品下架、删除
 			"type": "通用券",
 			"money": 100.00,
 			"limit_counts": 1,
-			"remained_count": 5,
+			"remained_count": 0,
 			"start_date": "今天",
 			"end_date": "1天后",
 			"special_product": "全部",
@@ -371,6 +371,21 @@ Scenario:3 优惠券规则列表-多商品券(多个商品)商品下架、删除
 	#多商品券商品部分删除，多商品券依然可用
 	#多商品券商品全部删除，多商品券失效
 
+	Given jobs登录系统
+	Then jobs查看优惠券'多商品券-未开始'专属商品
+		"""
+		[{
+			"name":"商品2",
+			"status":"在售"
+		},{
+			"name":"商品3",
+			"status":"在售"
+		},{
+			"name":"商品4",
+			"status":"在售"
+		}]
+		""" 
+
 	#多商品券(多个商品)部分商品下架
 	#优惠券不变，优惠券中的对应商品变为"待售"
 	When jobs'下架'商品'商品2'
@@ -395,8 +410,7 @@ Scenario:3 优惠券规则列表-多商品券(多个商品)商品下架、删除
 				},{
 				"name": "商品4",
 				"status": ""
-			}],
-			"coupon_id_prefix": "coupon1_id_"
+			}]
 		}
 		"""
 	Then jobs能获得优惠券规则列表
@@ -432,7 +446,7 @@ Scenario:3 优惠券规则列表-多商品券(多个商品)商品下架、删除
 			"type": "通用券",
 			"money": 100.00,
 			"limit_counts": 1,
-			"remained_count": 5,
+			"remained_count": 0,
 			"start_date": "2天前",
 			"end_date": "1天前",
 			"special_product": "全部",
@@ -458,7 +472,7 @@ Scenario:3 优惠券规则列表-多商品券(多个商品)商品下架、删除
 			"type": "通用券",
 			"money": 100.00,
 			"limit_counts": 1,
-			"remained_count": 5,
+			"remained_count": 0,
 			"start_date": "今天",
 			"end_date": "1天后",
 			"special_product": "全部",
@@ -468,7 +482,7 @@ Scenario:3 优惠券规则列表-多商品券(多个商品)商品下架、删除
 			"status": "已失效"
 		}]
 		"""
-	Then jobs查看优惠券'多商品券-进行中'专属商品
+	Then jobs查看优惠券'多商品券-未开始'专属商品
 		"""
 		[{
 			"name":"商品2",
@@ -507,8 +521,7 @@ Scenario:3 优惠券规则列表-多商品券(多个商品)商品下架、删除
 				},{
 				"name": "商品4",
 				"status": "待售"
-			}],
-			"coupon_id_prefix": "coupon1_id_"
+			}]
 		}
 		"""
 	Then jobs能获得优惠券规则列表
@@ -544,7 +557,7 @@ Scenario:3 优惠券规则列表-多商品券(多个商品)商品下架、删除
 			"type": "通用券",
 			"money": 100.00,
 			"limit_counts": 1,
-			"remained_count": 5,
+			"remained_count": 0,
 			"start_date": "2天前",
 			"end_date": "1天前",
 			"special_product": "全部",
@@ -570,7 +583,7 @@ Scenario:3 优惠券规则列表-多商品券(多个商品)商品下架、删除
 			"type": "通用券",
 			"money": 100.00,
 			"limit_counts": 1,
-			"remained_count": 5,
+			"remained_count": 0,
 			"start_date": "今天",
 			"end_date": "1天后",
 			"special_product": "全部",
@@ -580,7 +593,7 @@ Scenario:3 优惠券规则列表-多商品券(多个商品)商品下架、删除
 			"status": "已失效"
 		}]
 		"""
-	Then jobs查看优惠券'多商品券-进行中'专属商品
+	Then jobs查看优惠券'多商品券-未开始'专属商品
 		"""
 		[{
 			"name":"商品2",
@@ -618,8 +631,7 @@ Scenario:3 优惠券规则列表-多商品券(多个商品)商品下架、删除
 				},{
 				"name": "商品4",
 				"status": "待售"
-			}],
-			"coupon_id_prefix": "coupon1_id_"
+			}]
 		}
 		"""
 	Then jobs能获得优惠券规则列表
@@ -655,7 +667,7 @@ Scenario:3 优惠券规则列表-多商品券(多个商品)商品下架、删除
 			"type": "通用券",
 			"money": 100.00,
 			"limit_counts": 1,
-			"remained_count": 5,
+			"remained_count": 0,
 			"start_date": "2天前",
 			"end_date": "1天前",
 			"special_product": "全部",
@@ -681,7 +693,7 @@ Scenario:3 优惠券规则列表-多商品券(多个商品)商品下架、删除
 			"type": "通用券",
 			"money": 100.00,
 			"limit_counts": 1,
-			"remained_count": 5,
+			"remained_count": 0,
 			"start_date": "今天",
 			"end_date": "1天后",
 			"special_product": "全部",
@@ -691,7 +703,7 @@ Scenario:3 优惠券规则列表-多商品券(多个商品)商品下架、删除
 			"status": "已失效"
 		}]
 		"""
-	Then jobs查看优惠券'多商品券-进行中'专属商品
+	Then jobs查看优惠券'多商品券-未开始'专属商品
 		"""
 		[{
 			"name":"商品2",
@@ -742,7 +754,7 @@ Scenario:3 优惠券规则列表-多商品券(多个商品)商品下架、删除
 			"type": "通用券",
 			"money": 100.00,
 			"limit_counts": 1,
-			"remained_count": 5,
+			"remained_count": 0,
 			"start_date": "2天前",
 			"end_date": "1天前",
 			"special_product": "全部",
@@ -768,7 +780,7 @@ Scenario:3 优惠券规则列表-多商品券(多个商品)商品下架、删除
 			"type": "通用券",
 			"money": 100.00,
 			"limit_counts": 1,
-			"remained_count": 5,
+			"remained_count": 0,
 			"start_date": "今天",
 			"end_date": "1天后",
 			"special_product": "全部",
@@ -778,7 +790,7 @@ Scenario:3 优惠券规则列表-多商品券(多个商品)商品下架、删除
 			"status": "已失效"
 		}]
 		"""
-	Then jobs查看优惠券'多商品券-进行中'专属商品
+	Then jobs查看优惠券'多商品券-未开始'专属商品
 		"""
 		[{
 			"name":"商品2",
@@ -837,7 +849,7 @@ Scenario:4 优惠券规则列表查询
 				"type": "通用券",
 				"money": 100.00,
 				"limit_counts": 1,
-				"remained_count": 5,
+				"remained_count": 0,
 				"start_date": "2天前",
 				"end_date": "1天前",
 				"special_product": "全部",
@@ -863,7 +875,7 @@ Scenario:4 优惠券规则列表查询
 				"type": "通用券",
 				"money": 100.00,
 				"limit_counts": 1,
-				"remained_count": 5,
+				"remained_count": 0,
 				"start_date": "今天",
 				"end_date": "1天后",
 				"special_product": "全部",
@@ -965,7 +977,7 @@ Scenario:4 优惠券规则列表查询
 				"type": "通用券",
 				"money": 100.00,
 				"limit_counts": 1,
-				"remained_count": 5,
+				"remained_count": 0,
 				"start_date": "2天前",
 				"end_date": "1天前",
 				"special_product": "全部",
@@ -991,7 +1003,7 @@ Scenario:4 优惠券规则列表查询
 				"type": "通用券",
 				"money": 100.00,
 				"limit_counts": 1,
-				"remained_count": 5,
+				"remained_count": 0,
 				"start_date": "今天",
 				"end_date": "1天后",
 				"special_product": "全部",
@@ -1016,7 +1028,7 @@ Scenario:4 优惠券规则列表查询
 				"type": "通用券",
 				"money": 100.00,
 				"limit_counts": 1,
-				"remained_count": 5,
+				"remained_count": 0,
 				"start_date": "今天",
 				"end_date": "1天后",
 				"special_product": "全部",
@@ -1080,7 +1092,7 @@ Scenario:4 优惠券规则列表查询
 				"type": "通用券",
 				"money": 100.00,
 				"limit_counts": 1,
-				"remained_count": 5,
+				"remained_count": 0,
 				"start_date": "2天前",
 				"end_date": "1天前",
 				"special_product": "全部",
@@ -1106,7 +1118,7 @@ Scenario:4 优惠券规则列表查询
 				"type": "通用券",
 				"money": 100.00,
 				"limit_counts": 1,
-				"remained_count": 5,
+				"remained_count": 0,
 				"start_date": "今天",
 				"end_date": "1天后",
 				"special_product": "全部",
@@ -1131,7 +1143,7 @@ Scenario:4 优惠券规则列表查询
 				"type": "通用券",
 				"money": 100.00,
 				"limit_counts": 1,
-				"remained_count": 5,
+				"remained_count": 0,
 				"start_date": "2天前",
 				"end_date": "1天前",
 				"special_product": "全部",
@@ -1157,7 +1169,7 @@ Scenario:4 优惠券规则列表查询
 				"type": "通用券",
 				"money": 100.00,
 				"limit_counts": 1,
-				"remained_count": 5,
+				"remained_count": 0,
 				"start_date": "今天",
 				"end_date": "1天后",
 				"special_product": "全部",
@@ -1247,7 +1259,7 @@ Scenario:4 优惠券规则列表查询
 				"type": "通用券",
 				"money": 100.00,
 				"limit_counts": 1,
-				"remained_count": 5,
+				"remained_count": 0,
 				"start_date": "2天前",
 				"end_date": "1天前",
 				"special_product": "全部",
@@ -1273,7 +1285,7 @@ Scenario:4 优惠券规则列表查询
 				"type": "通用券",
 				"money": 100.00,
 				"limit_counts": 1,
-				"remained_count": 5,
+				"remained_count": 0,
 				"start_date": "今天",
 				"end_date": "1天后",
 				"special_product": "全部",
@@ -1361,7 +1373,7 @@ Scenario:4 优惠券规则列表查询
 				"type": "通用券",
 				"money": 100.00,
 				"limit_counts": 1,
-				"remained_count": 5,
+				"remained_count": 0,
 				"start_date": "2天前",
 				"end_date": "1天前",
 				"special_product": "全部",
@@ -1386,7 +1398,7 @@ Scenario:4 优惠券规则列表查询
 				"type": "通用券",
 				"money": 100.00,
 				"limit_counts": 1,
-				"remained_count": 5,
+				"remained_count": 0,
 				"start_date": "今天",
 				"end_date": "1天后",
 				"special_product": "全部",
@@ -1439,7 +1451,7 @@ Scenario:4 优惠券规则列表查询
 				"type": "通用券",
 				"money": 100.00,
 				"limit_counts": 1,
-				"remained_count": 5,
+				"remained_count": 0,
 				"start_date": "2天前",
 				"end_date": "1天前",
 				"special_product": "全部",
@@ -1465,7 +1477,7 @@ Scenario:4 优惠券规则列表查询
 				"type": "通用券",
 				"money": 100.00,
 				"limit_counts": 1,
-				"remained_count": 5,
+				"remained_count": 0,
 				"start_date": "今天",
 				"end_date": "1天后",
 				"special_product": "全部",
@@ -1518,7 +1530,7 @@ Scenario:4 优惠券规则列表查询
 				"type": "通用券",
 				"money": 100.00,
 				"limit_counts": 1,
-				"remained_count": 5,
+				"remained_count": 0,
 				"start_date": "今天",
 				"end_date": "1天后",
 				"special_product": "全部",
