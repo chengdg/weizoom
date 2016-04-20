@@ -46,7 +46,7 @@ class Materials(resource.Resource):
 		})
 
 		return render_to_response('weixin/advance_manage/materials.html', c)
-	
+
 	@login_required
 	@mp_required
 	def api_get(request):
@@ -61,10 +61,13 @@ class Materials(resource.Resource):
 			materials = weixin_models.Material.objects.filter(owner=request.manager, is_deleted=False, id__in=target_material_ids)
 		else:
 			materials = weixin_models.Material.objects.filter(owner=request.manager, is_deleted=False)
-		
+
+		if request.GET.get('from', '') == 'share_page_config':
+			materials = materials.filter(type=weixin_models.SINGLE_NEWS_TYPE)
+
 		order_by = request.GET.get('sort_attr', '-id')
 		materials = materials.order_by(order_by)
-		
+
 		count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
 		cur_page = int(request.GET.get('page', '1'))
 		pageinfo, materials = paginator.paginate(materials, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
@@ -75,7 +78,7 @@ class Materials(resource.Resource):
 			material_ids.append(material.id)
 			material.newses = []
 			id2material[material.id] = material
-		
+
 		for news in weixin_models.News.objects.filter(material_id__in=material_ids):
 			id2material[news.material_id].newses.append({
 				"id": news.id,

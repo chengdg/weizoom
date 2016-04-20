@@ -285,7 +285,7 @@ W.validate = function(el, checkDynamicElement) {
             xlog('------------------ new element ----------------');
             var $el = $(this);
             xlog('el name: ' + $el.attr('name'));
-            if (!$el.is(":visible") || $el.css('visibility') == 'hidden') {
+            if (!$el.is(":visible") || $el.css('visibility') == 'hidden' || $el.parents('.xa-validateController').css('display') == 'none') {
                 if ($el.data('forceValidate')) {
                     //we don't break even the $el is invisible if use force-validate
                 } else {

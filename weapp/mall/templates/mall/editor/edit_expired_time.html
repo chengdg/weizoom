@@ -15,16 +15,89 @@
 
 	<form class="xui-mall-addProductForm" method="post" id="editForm" data-id="{% if product %}{{ product.id }}{% else %}0{% endif %}">
 		<section>
-			<div class="clearfix mt30 fl">
-				<span class="fl" for="order_expired_day">未付款订单：</span>
-					<input type="text" class="form-control fl xa-expiredTime" style="width:85px;" id="order_expired_day" name="order_expired_day" placeholder="" value="{% if mall_config %}{{ mall_config.order_expired_day }}{% endif %}" data-validate="norequire,,require-positive-int" maxlength="100"/>
-
+			<div class="clearfix mt30 xui-timeSection">
+				<span class="fl" for="order_expired_day">1.&nbsp;&nbsp;未付款订单：</span>
+					<input type="text" class="form-control fl xa-expiredTime" style="width:85px;" id="order_expired_day" name="order_expired_day" placeholder="" value="{% if mall_config %}{{ mall_config.order_expired_day }}{% endif %}" data-validate="norequire,,require-nonnegative" maxlength="100"/>
 				<span class="fl">小时内未付款，自动取消该订单</span><span class="fl ml10 xui-color-mark">注：空为不设置</span>
 				<div style="clear: both;"></div>
-				<div class="errorHint" style="margin-top: 10px;margin-left: 90px;"></div>
+				<div class="errorHint" style="margin-left: 108px;"></div>
 			</div>
+			<div class="mt15">
+				<p>2.&nbsp;&nbsp;<label for="" class="vm mr5 mb0"><input type="checkbox" class="xa-switchShare" style="" name="isShowPage" {% if share_page_config.is_share_page %}checked{% endif %}></label>订单提交成功后提示分享赚积分：<span class="c9">（注：开启前请确认首页-积分规则已正确设置）</span></p>
+				<div class="xa-setShareSection xui-setShareSection xa-validateController" style="{% if not share_page_config.is_share_page %}display:none{% endif %}">
+					<table>
+						<tr>
+							<td>上传弹层背景图片：</td>
+							<td>
+								<input data-field="image" name="backgroundImage" type="hidden" value="{{share_page_config.background_image}}" data-validate="require-notempty" class="xa-forceVali">
+								<div class="xui-imageSection">
+								{% if share_page_config.background_image %}
+									<div class="xa-dialogTrigger xui-dialogSelectedBtn">重新上传</div>
+									<div class="xa-imgContainer">
+										<img src="{{share_page_config.background_image}}">
+									</div>
+								{% else %}
+									<div class="xui-imgDisplayBtn xa-dialogTrigger"></div>
+									<div class="xa-imgContainer"></div>
+								{% endif %}
+								</div>
+								<span class="c9 ml10">格式：建议jpg/png  尺寸：520*680  不超过1M</span>
+								<div class="errorHint" data-error-hint="请添加一张图片"></div>
+							</td>
+						</tr>
+						<tr>
+							<td>选择要分享的图文：<br/><span class="c9">（仅显示正文内容）</span></td>
+							<td>
+								<input type="hidden" name="materialId" class="xa-forceVali"  data-validate="require-notempty" value="{{news.material_id}}">
 
-			<div class="xui-btn-group tc fr">
+								<div class="xa-wxMessageSection">
+								{% if news %}
+								<ul class="wui-newses">
+									<a href="/new_weixin/news_preview/?id={{news.material_id}}" target="_blank">
+									<li class="wui-i-news">
+										<span class="wui-i-header">图文</span>
+										<span class="wui-i-title" title="${news.title}">{{news.title}}</span>
+									</li>
+									</a>
+								</ul>
+								<a href="javascript:void(0);" class="xa-changeNews mt10 ml10 xui-inlineblock">更换</a>
+								{% else %}
+									<a href="javascript:void(0);" class="xa-wxMessage xui-inlineblock mb15">添加</a>
+								{% endif %}
+								</div>
+								<div class="errorHint" data-error-hint="请添加图文"></div>
+							</td>
+						</tr>
+						<tr>
+							<td>分享图片：</td>
+							<td>
+								<input data-field="image" name="shareImage" type="hidden" value="{{share_page_config.share_image}}" data-validate="require-notempty" class="xa-forceVali">
+								<div class="xui-imageSection">
+								{% if share_page_config.share_image %}
+									<div class="xa-dialogTrigger xui-dialogSelectedBtn">重新上传</div>
+									<div class="xa-imgContainer">
+										<img src="{{share_page_config.share_image}}">
+									</div>
+								{% else %}
+									<div class="xui-imgDisplayBtn xa-dialogTrigger"></div>
+									<div class="xa-imgContainer"></div>
+								{% endif %}
+								</div>
+								<span class="c9 ml10">建议尺寸90*90，仅支持jpg/png</span>
+								<div class="errorHint" data-error-hint="请添加一张图片"></div>
+							</td>
+						</tr>
+						<tr>
+							<td>分享描述：</td>
+							<td>
+								<textarea class="xui-shareInfo" data-validate="require-notempty::不能为空" name="shareInfo" value="">{{ share_page_config.share_describe }}</textarea>
+								<div class="errorHint"></div>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<div class="xui-btn-group tc">
 				<input type="submit" class="btn btn-primary" id="submitBtn" value="保存" />
 			</div>
 		</section>
@@ -35,6 +108,18 @@
 {% block js %}
 <script type="text/javascript">
 	$(document).ready(function() {
+		$('.xa-switchShare').change(function(event) {
+			if($(event.target).is(':checked')){
+				$('.xa-setShareSection').show();
+				$('.xa-forceVali').attr({
+					'data-validate': 'require-notempty',
+					'data-force-validate': 'true'
+				});
+			}else{
+				$('.xa-forceVali').removeAttr('data-validate');
+				$('.xa-setShareSection').hide();
+			}
+		});
 		//提交
 		$('#editForm').submit(function() {
 			if (!W.validate()) {
@@ -51,6 +136,52 @@
 			}
 
 
+		});
+		$('.xa-dialogTrigger').click(function(event){
+			W.dialog.showDialog('W.dialog.termite.SelectImagesDialog',{
+				"multiSelection": false,
+				help:' ',
+				success:function(data){
+					var images = data.images;
+					var $imgContainer = $(event.target);
+					var src,width,height;
+					_.each(images, function(image) {
+						src = image.url;
+						width = image.width;
+						height = image.height;
+					});
+					$(event.target).removeClass('xui-imgDisplayBtn').addClass('xui-dialogSelectedBtn').html('重新上传').parent().find('.xa-imgContainer').html("<img src="+ src +">");
+					$(event.target).parents('td').find('.xa-forceVali').val(src);
+					if (data.type === 'newImage') {
+						W.resource.termite2.Image.put({
+							data: {
+								url:src,
+								width:width,
+								height:height
+							},
+							success: function(data) {
+
+							},
+							error: function(resp) {
+
+							}
+						})
+					}
+				}
+			});
+		})
+		$('body').delegate('.xa-wxMessage,.xa-changeNews','click',function(){
+			W.dialog.showDialog('W.dialog.weixin.SelectSingleMaterialDialog',{
+				handleHideBtn:true,
+				success:function(material){
+					// this.setNewsesTitles(material.newses);
+					var newsView = new W.view.weixin.NewsView({
+						material: material
+					});
+					var $el = newsView.render();
+					$('.xa-wxMessageSection').html($el).append('<a href="javascript:void(0);" class="xa-changeNews mt10 ml10 xui-inlineblock">更换</a>').parent().find('.xa-forceVali').val(material.id);
+				}
+			});
 		});
 	});
 </script>
