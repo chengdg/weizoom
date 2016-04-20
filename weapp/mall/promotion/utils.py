@@ -238,6 +238,8 @@ def stop_promotion(request, product_ids, shelve_type):
                     coupon_rule_id__in=ruleIds,
                     status=promotion_models.COUPON_STATUS_UNGOT
                 ).update(status=promotion_models.COUPON_STATUS_Expired)
+        elif promotion.type == promotion_models.PROMOTION_TYPE_COUPON:
+            pass
         else:
             promotion.status = promotion_models.PROMOTION_STATUS_FINISHED
             promotion.save()
