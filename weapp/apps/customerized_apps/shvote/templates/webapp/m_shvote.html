@@ -339,16 +339,20 @@
 
 	$(function(){
         if(W.isPC){
+            showDesc();
             return false;
         }
-        var swiper = new Swiper('.swiper-container', {
-        	slidesPerView: 'auto',
-   		});
         $('.wa-shvote-desc').hide();
+        //展示参与统计
+        getDynamicData();
+
+        var swiper = new Swiper('.swiper-container', {
+        	slidesPerView: 'auto'
+   		});
+
 		// 我要报名
 		$('.wa-imark').click(function(){
-			var link = window.location.origin + '/m/apps/shvote/shvote_participance/?webapp_owner_id='+W.webappOwnerId+'&id='+W.appRecordId;
-			window.location.href = link;
+			window.location.href = window.location.origin + '/m/apps/shvote/shvote_participance/?webapp_owner_id='+W.webappOwnerId+'&id='+W.appRecordId;
 		});
 
 		$('.wa-getback').click(function(){
@@ -359,7 +363,7 @@
 		$('.wa-rank-link').click(function(){
 			var link = window.location.origin + '/m/apps/shvote/m_shvote_rank/?webapp_owner_id='+W.webappOwnerId+'&id='+W.appRecordId;
 			window.location.href = link;
-		})
+		});
 
 		// 搜索
 		$('.wa-search').click(function(){
@@ -384,9 +388,11 @@
 			$('.wa-mobile').hide();
 		});
 
-
-        //展示参与统计
-//        getDynamicData();
+        //查看选手详情
+        $('.wa-rank-list').delegate('.wa-rank-pic', 'click', function(event) {
+            var player_id = $(event.target).parents('.wa-rank-item').data('id');
+            window.location.href = '/m/apps/shvote/m_player_details/?webapp_owner_id='+W.webappOwnerId+'&id='+W.appRecordId+'&player_id='+player_id;
+        });
 
         //参与投票
         var voteLock = false;
@@ -401,6 +407,7 @@
         		wuiAlert('今天该分组的投票次数已用完');
         		return false;
         	}
+            loadingStatus(true);
         	var $this = $(this);
             if(voteLock) return false;
             voteLock = true;
@@ -423,6 +430,7 @@
                     can_play_info --;
                     $('.wa-left-chance').html(can_play_info);
                     voteLock = false;
+                    loadingStatus();
                     wuiAlert('投票成功');
                 },
                 error: function(data){
@@ -432,23 +440,16 @@
                     }else{
                         wuiAlert(data.errMsg);
                     }
+                    loadingStatus();
                 }
             });
         });
 
     });
 
-    $(function(){
-        if(W.isPC){
-            showDesc();
-            return false;
-        }
-        //展示参与统计
-        getDynamicData();
-    });
-
     //获取已报名人数、总投票数、页面总访问数、本次可投票机会、排行、分组信息
     function getDynamicData(){
+        loadingStatus(true);
         W.getApi().call({
             app: 'm/apps/shvote',
             resource: 'm_shvote',
@@ -476,6 +477,7 @@
                 }else{
                     wuiAlert(data.errMsg);
                 }
+                loadingStatus();
             }
         });
     }
@@ -514,9 +516,11 @@
 				search_name: search_name
             },
             success: function(data) {
-           		$('.wa-rank-list').html('');
+                var $list = $('.wa-rank-list');
+           		$list.html('');
                 var result = data.result_list;
                 var tpl = new Template($('#tpl').html());
+                var tmp_html = "";
                 for(var i=0;i<result.length;i++){
         		    var s = tpl.render({
 		                result_list_serial_number : result[i].serial_number,
@@ -525,22 +529,15 @@
 		                result_list_icon : result[i].icon,
 		                id : result[i].id
 		            });
-		        $('.wa-rank-list').append(s);
+                    tmp_html += s;
 	        	}
+                $list.append(tmp_html);
+                loadingStatus();
             },
             error: function(data){
 				wuiAlert(data.errMsg);
             }
         });
     }
-
-    /*
-    查看选手详情
-     */
-	$('.wa-rank-list').delegate('.wa-rank-pic', 'click', function(event) {
-		var player_id = $(event.target).parents('.wa-rank-item').data('id');
-		var link = '/m/apps/shvote/m_player_details/?webapp_owner_id='+W.webappOwnerId+'&id='+W.appRecordId+'&player_id='+player_id;
-		window.location.href = link;
-	});
 </script>
 {% endblock %}
