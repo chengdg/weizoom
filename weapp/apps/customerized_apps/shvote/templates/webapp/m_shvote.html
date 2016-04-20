@@ -114,7 +114,7 @@
 	}
 	.wui-mark{
 		padding: 5px;
-		border-radius: 2px;
+		border-radius: 1px;
 		background: rgba(0,0,0,0.6);
 		color: #fff;
 		position: fixed;
@@ -269,6 +269,7 @@
 		color: #ff4200;
 		position: relative;
 		width: 100%;
+		display: none;
 	}
 	.wui-loading p{
    	    text-align: center;
@@ -356,7 +357,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="wui-loading">
+	<div class="wui-loading wa-loading">
 		<p>加载更多</p>
 		<div></div>
 	</div>	
@@ -412,6 +413,7 @@
         })
 
         document.addEventListener('touchstart',function () {
+        	$('.wa-loading').show();
             var $win = $(window);
             var $top = $('.wui-loading');
             var rect = $top[0].getBoundingClientRect();
@@ -466,7 +468,8 @@
 			$(this).removeClass('grad');
 			current_group = $(this).html();
 			$('.wa-left-chance').html(can_play_info);
-			getRankInfo(current_group,'');
+			var search_name = $('.wa-search-text').val();
+			getRankInfo(current_group,search_name);
 		});
 
 		$('.wa-event-details').on('tap',function(){
