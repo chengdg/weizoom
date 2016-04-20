@@ -6,7 +6,19 @@
 			<button aria-hidden="true" data-dismiss="modal" class="close" type="button"><span class="xui-closeColor" aria-hidden="true">&times;</span></button>
 			<h3 class="modal-title" >查看结果</h3>
 		</div>
-		<div class="modal-body">			
+		<div class="modal-body">	
+			<div
+                data-ui-role="advanced-table"
+                data-app="apps/shvote"
+                data-resource="shvote_participances_dialog"
+                data-args=''
+                data-template-id="#app-shvote-viewParticipanceResultDialog-dialog-tmpl"
+                data-enable-paginator="true"
+                data-enable-sort="false"
+                data-item-count-per-page="1"
+                data-auto-load="false"
+                class="mt10 mb20">
+            </div>		
 		</div>
 		<div class="modal-footer">
 			<button class="btn btn-primary xa-submit-dialog">确认</button>
@@ -24,10 +36,10 @@
     		</tr>
     	</thead>
     	<tbody>
-	        {{#each items}}
+	        {{each(i, item) items}}
 				<tr>
-					<td>{{name}}</td>
-					<td>{{created_at}}</td>
+					<td>${item.name}</td>
+					<td>${item.created_at}</td>
 				</tr>
 	        {{/each}}
         </tbody>

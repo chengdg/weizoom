@@ -183,12 +183,16 @@ class ShvoteParticipance(resource.Resource):
 		response = create_response(200)
 		return response.get_response()
 
+
+class ShvoteParticipancesDialog(resource.Resource):
+	app = 'apps/shvote'
+	resource = 'shvote_participances_dialog'
+
 	def api_get(request):
 		"""
 		响应GET
 		"""
-		items_list = []
-		items = {}
+		items = []
 		if 'id' in request.GET:
 			try:
 				player_details = app_models.ShvoteParticipance.objects.get(id=request.GET['id'])
@@ -205,12 +209,19 @@ class ShvoteParticipance(resource.Resource):
 							member_name = member.username_for_html
 						except:
 							member_name = u'未知'
-						items_list.append({
+						items.append({
 							'created_at': created_at,
 							'name': member_name	
 						})
-				items['items'] = items_list
 
+		count_per_page = int(request.GET.get('count_per_page', 1))
+		cur_page = int(request.GET.get('page', '1'))
+		pageinfo, items = paginator.paginate(items, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
+
+		response_data = {
+			'items': items,
+			'pageinfo': paginator.to_dict(pageinfo),
+		}
 		response = create_response(200)
-		response.data = items
+		response.data = response_data
 		return response.get_response()
