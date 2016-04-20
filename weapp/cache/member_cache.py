@@ -60,9 +60,6 @@ def delete_member_cache(openid, webapp_id):
 	# x = json.dumps({'w':'1'})
 	
 	message = {"webapp": webapp_id, "openid": openid}
-
-	#Kafka_producer = kafka_client.KafkaProducerClient()
-	print '<><><><><><><><>>>>>>>>>PPPPPPPPP'
 	kafka_client.send_message('member', message)
 
 

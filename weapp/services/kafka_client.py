@@ -13,7 +13,6 @@ class KafkaProducerClient(object):
 		super(KafkaProducerClient, self).__init__()
 		try:
 			self.producer = KafkaProducer(bootstrap_servers=bootstrap_servers, retries=retries)
-			print "asdfasdfkllksfjlksjdf<><><><><>",dir(self.producer)
 		except Exception, e:
 			logging.error(e)
 	
@@ -23,12 +22,10 @@ class KafkaProducerClient(object):
 		#except Exception, e:
 		#	raise e
 		
-
-
 kafkaProducerClient = KafkaProducerClient()
 
-
 def send_message(topic, message, partition=None):
+	#TODO :异常收集
 	#try:
 	kafkaProducerClient.send_message(topic, message, partition)
 	#except Exception, e:
