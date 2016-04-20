@@ -5,7 +5,7 @@ import operator
 from datetime import datetime
 from itertools import chain
 from django.conf import settings
-from django.db.models import F
+from django.db.models import F, Q
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import render_to_response
@@ -443,7 +443,10 @@ class ProductPool(resource.Resource):
         product_ids = [product['id'] for product in products]
         relations = models.WeizoomHasMallProductRelation.objects.filter(mall_product_id__in=product_ids, is_deleted=False)
         mall_product_id2weizoom_product_id = dict([(r.mall_product_id, r.weizoom_product_id) for r in relations])
-        promotionrelations = promotion_model.ProductHasPromotion.objects.filter(product_id__in=mall_product_id2weizoom_product_id.values())
+        promotionrelations = promotion_model.ProductHasPromotion.objects.filter(
+                product_id__in=mall_product_id2weizoom_product_id.values()
+            ).exclude(promotion__type=promotion_model.PROMOTION_TYPE_COUPON)
+
         product_id2relation = dict([(relation.product_id, relation)for relation in promotionrelations])
 
         #构造返回数据
