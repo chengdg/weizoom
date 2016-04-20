@@ -8,6 +8,11 @@ MEMBER_STATUS = {
 	"ASKING": 0,
 	"PASSED": 1
 }
+
+MEMBER_IS_USE = {
+	"NO": 0,
+	"YES": 1
+}
 class ShvoteParticipance(models.Document):
 	"""
 	参与投票的选手信息记录表
@@ -25,6 +30,7 @@ class ShvoteParticipance(models.Document):
 	created_at = models.DateTimeField() #创建时间
 	participate_time = models.DateTimeField() #审核通过时间
 	status = models.IntField(default=MEMBER_STATUS['ASKING'])
+	is_use = models.IntField(default=MEMBER_IS_USE['YES'])#逻辑删除
 
 	meta = {
 		'collection': 'shvote_shvote_participance'

@@ -58,7 +58,7 @@ class ShvoteRegistrators(resource.Resource):
 		# start_time = request.GET.get('start_time', '')
 		# end_time = request.GET.get('end_time', '')
 
-		params = {'belong_to':request.GET['id']}
+		params = {'belong_to':request.GET['id'],'is_use':app_models.MEMBER_IS_USE['YES']}
 		if name:
 			params['name__icontains'] = name
 		if status != -1:
@@ -138,12 +138,14 @@ class ShvoteRegistrators(resource.Resource):
 		"""
 		响应DELETE
 		"""
+		update_data = {}
+		update_data['set__is_use'] = app_models.MEMBER_IS_USE['NO']
 		if request.POST.get('ids'):
 			ids = json.loads(request.POST['ids'])
-			app_models.ShvoteParticipance.objects(id__in=ids).delete()
+			app_models.ShvoteParticipance.objects(id__in=ids).update(**update_data)
 		elif request.POST.get('id'):
 			id = request.POST.get('id')
-			app_models.ShvoteParticipance.objects(id=request.POST['id']).delete()
+			app_models.ShvoteParticipance.objects(id=request.POST['id']).update(**update_data)
 
 		response = create_response(200)
 		return response.get_response()
