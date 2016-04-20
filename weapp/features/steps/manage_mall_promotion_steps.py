@@ -467,9 +467,9 @@ def step_impl(context, user, type):
 	bdd_util.assert_api_call_success(response)
 	actual = json.loads(response.content)['data']['items']
 	# 单品券是否可选根据名字判定
-	if type == u'单品券':
+	if type == u'多商品券':
 		for item in actual:
-			if 'promotion_name' in item and item['promotion_name'] == u'单品券':
+			if 'promotion_name' in item and item['promotion_name'] == u'多商品券':
 				item['can_select'] = True
 
 	expected = []

@@ -216,7 +216,7 @@ def stop_promotion(request, product_ids):
     #     deleting_product_ids_in_coupon_rule = list(set(coupon_rule_product_ids) & set(product_ids))
     #     del
 
-
+    for promotion in promotions:
         promotion.status=promotion_models.PROMOTION_STATUS_FINISHED
         promotion.save()
         if promotion.type == promotion_models.PROMOTION_TYPE_COUPON:
