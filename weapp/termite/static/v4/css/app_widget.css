@@ -1923,7 +1923,11 @@ li.wui-selectBox-display-table {
 }
 .wui-group-container .wui-i-choose_group_box{
     color:#333333;
+    margin-top:10px;
 
+}
+.wui-group-container .wui-i-choose_group_box .wui-i-choose_title_box{
+	padding-bottom: 22px;
 }
 .wui-group-container .wui-i-choose_group_box .wui-i-choose_items_box{
     margin-top: 5px;
@@ -1935,9 +1939,11 @@ li.wui-selectBox-display-table {
 .wui-group-container .wui-i-choose_group_box .wui-i-choose_title{
     float: left;
 	font-weight: bold;
+	line-height: 1.4rem;
 }
 .wui-group-container .wui-i-choose_group_box .wui-i-end_time {
     font-size: 0.8rem;
+	font-weight: bold;
     float: right;
     line-height: 1.4rem;
 }
@@ -2002,7 +2008,7 @@ li.wui-selectBox-display-table {
 
 .wui-group-container .wui-i-btngroup{
     text-align: center;
-    margin-top: 5px;
+    margin-top: 10px;
 }
 .wui-group-container .wui-i-btngroup button{
     text-align: center;
