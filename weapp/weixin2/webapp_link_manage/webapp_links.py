@@ -141,7 +141,7 @@ class WebappItemLinks(resource.Resource):
 
 						if link_type == 'coupon':
 							# 优惠券
-							data['type'] = '部分商品' if item.detail['limit_product'] else '全店通用'
+							data['type'] = '多商品劵' if item.detail['limit_product'] else '通用劵'
 							data['end_date'] = item.end_date if isinstance(item.end_date, str) else item.end_date.strftime('%Y-%m-%d %H:%M')
 							data['created_at'] = data['created_at'][:16] if len(data['created_at']) > 16 else data['created_at']
 							data['end_date'] = data['end_date'][:16] if len(data['end_date']) > 16 else data['end_date']
