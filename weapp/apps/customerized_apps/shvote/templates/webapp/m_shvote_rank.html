@@ -179,8 +179,9 @@ $(function(){
     	$('.wa-rank-groups').hide();
     }
     $('.wa-rank-groups div div').eq(0).addClass('active');	
-
-	current_group = $('.active').html();
+    if( $('.active').length == 1){
+        current_group = $('.active').html();
+    };	
 	getRankInfo(current_group,'');
 
 	//切换分组
