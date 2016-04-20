@@ -1,6 +1,6 @@
 #author:张三香
 #editor: 王丽 2016.04.15
-@ztqb
+
 Feature:优惠券规则列表中,操作列信息的验证
 		#说明：
 			#针对线上"bug3854"补充feature
@@ -363,7 +363,7 @@ Scenario:2 优惠券规则列表-多商品券(一个商品)商品下架、删除
 		}]
 		"""
 
-@promotion @promotionCoupon @ztq3
+@mall2 @promotion @promotionCoupon @ztq
 Scenario:3 优惠券规则列表-多商品券(多个商品)商品下架、删除
 	#添加多商品券-多个商品
 	#多商品券商品部分下架，多商品券依然可用
@@ -728,7 +728,7 @@ Scenario:3 优惠券规则列表-多商品券(多个商品)商品下架、删除
 			"type": "多商品券",
 			"money": 100.00,
 			"limit_counts": 1,
-			"remained_count": 5,
+			"remained_count": 0,
 			"start_date": "1天后",
 			"end_date": "3天后",
 			"special_product": "查看专属商品",
@@ -804,7 +804,7 @@ Scenario:3 优惠券规则列表-多商品券(多个商品)商品下架、删除
 		}]
 		"""
 
-@promotion @promotionCoupon
+@mall2 @promotion @promotionCoupon @ztq
 Scenario:4 优惠券规则列表查询
 	Given jobs登录系统
 
@@ -1014,30 +1014,30 @@ Scenario:4 优惠券规则列表查询
 			}]
 			"""
 
-		#模糊匹配
-		When jobs设置优惠券规则列表查询条件
-			"""
-			{
-				"coupon_code":"coupon1_id_"
-			}
-			"""
-		Then jobs能获得优惠券规则列表
-			"""
-			[{
-				"name": "通用券-已失效",
-				"type": "通用券",
-				"money": 100.00,
-				"limit_counts": 1,
-				"remained_count": 0,
-				"start_date": "今天",
-				"end_date": "1天后",
-				"special_product": "全部",
-				"get_person_count": 0,
-				"get_number": 0,
-				"use_count": 0,
-				"status": "已失效"
-			}]
-			"""
+#		#模糊匹配
+#		When jobs设置优惠券规则列表查询条件
+#			"""
+#			{
+#				"coupon_code":"coupon1_id_"
+#			}
+#			"""
+#		Then jobs能获得优惠券规则列表
+#			"""
+#			[{
+#				"name": "通用券-已失效",
+#				"type": "通用券",
+#				"money": 100.00,
+#				"limit_counts": 1,
+#				"remained_count": 0,
+#				"start_date": "今天",
+#				"end_date": "1天后",
+#				"special_product": "全部",
+#				"get_person_count": 0,
+#				"get_number": 0,
+#				"use_count": 0,
+#				"status": "已失效"
+#			}]
+#			"""
 
 		#查询结果为空
 		When jobs设置优惠券规则列表查询条件
@@ -1056,7 +1056,7 @@ Scenario:4 优惠券规则列表查询
 		When jobs设置优惠券规则列表查询条件
 			"""
 			{
-				"coupon_type":"全部"
+				"coupon_promotion_type":"全部"
 			}
 			"""
 		Then jobs能获得优惠券规则列表
@@ -1133,7 +1133,7 @@ Scenario:4 优惠券规则列表查询
 		When jobs设置优惠券规则列表查询条件
 			"""
 			{
-				"coupon_type":"通用券"
+				"coupon_promotion_type":"通用券"
 			}
 			"""
 		Then jobs能获得优惠券规则列表
@@ -1184,7 +1184,7 @@ Scenario:4 优惠券规则列表查询
 		When jobs设置优惠券规则列表查询条件
 			"""
 			{
-				"coupon_type":"多商品券"
+				"coupon_promotion_type":"多商品券"
 			}
 			"""
 		Then jobs能获得优惠券规则列表
@@ -1300,7 +1300,7 @@ Scenario:4 优惠券规则列表查询
 		When jobs设置优惠券规则列表查询条件
 			"""
 			{
-				"status":"未开始"
+				"promotion_status":"未开始"
 			}
 			"""
 		Then jobs能获得优惠券规则列表
@@ -1325,7 +1325,7 @@ Scenario:4 优惠券规则列表查询
 		When jobs设置优惠券规则列表查询条件
 			"""
 			{
-				"status":"进行中"
+				"promotion_status":"进行中"
 			}
 			"""
 		Then jobs能获得优惠券规则列表
@@ -1363,7 +1363,7 @@ Scenario:4 优惠券规则列表查询
 		When jobs设置优惠券规则列表查询条件
 			"""
 			{
-				"status":"已过期"
+				"promotion_status":"已过期"
 			}
 			"""
 		Then jobs能获得优惠券规则列表
@@ -1388,7 +1388,7 @@ Scenario:4 优惠券规则列表查询
 		When jobs设置优惠券规则列表查询条件
 			"""
 			{
-				"status":"已失效"
+				"promotion_status":"已失效"
 			}
 			"""
 		Then jobs能获得优惠券规则列表
@@ -1414,8 +1414,8 @@ Scenario:4 优惠券规则列表查询
 		When jobs设置优惠券规则列表查询条件
 			"""
 			{
-				"start_time":"",
-				"end_time":""
+				"start_date":"",
+				"end_date":""
 			}
 			"""
 		Then jobs能获得优惠券规则列表
@@ -1493,8 +1493,8 @@ Scenario:4 优惠券规则列表查询
 		When jobs设置优惠券规则列表查询条件
 			"""
 			{
-				"start_time":"1天前",
-				"end_time":"1天后"
+				"start_date":"1天前",
+				"end_date":"1天后"
 			}
 			"""
 		Then jobs能获得优惠券规则列表
@@ -1546,11 +1546,10 @@ Scenario:4 优惠券规则列表查询
 			"""
 			{
 				"name":"多商品券",
-				"coupon_code":"coupon",
-				"coupon_type":"多商品券",
+				"coupon_promotion_type":"多商品券",
 				"status":"进行中",
-				"start_time":"1天前",
-				"end_time":"1天后"
+				"start_date":"1天前",
+				"end_date":"1天后"
 			}
 			"""
 		Then jobs能获得优惠券规则列表

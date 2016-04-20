@@ -20,6 +20,12 @@ def step_impl(context, user_name):
     __add_coupon_rule(context, user_name)
 
 
+@when(u"{user}设置优惠券规则列表查询条件")
+def step_imple(context, user):
+    query_param = json.loads(context.text)
+
+    context.query_param = query_param
+
 @then(u'{user_name}能获得优惠券规则列表')
 def step_impl(context, user_name):
     url = '/mall2/api/promotion_list/?design_mode=0&version=1&type=coupon&count_per_page=10&page=1'
@@ -28,10 +34,12 @@ def step_impl(context, user_name):
             url += '&name=' + context.query_param['name']
         if context.query_param.get('coupon_id'):
             url += '&couponId='+ context.query_param['coupon_id']
+        if context.query_param.get('coupon_code'):
+            url += '&couponId='+ context.query_param['coupon_code']
         if context.query_param.get('coupon_promotion_type', None):
-            if context.query_param['coupon_promotion_type'] == u'全店通用券':
+            if context.query_param['coupon_promotion_type'] == u'通用券':
                 coupon_promotion_type = 1
-            elif context.query_param['coupon_promotion_type'] == u'单品券':
+            elif context.query_param['coupon_promotion_type'] == u'多商品券':
                 coupon_promotion_type = 2
             elif context.query_param['coupon_promotion_type'] == u'全部':
                 coupon_promotion_type = -1
