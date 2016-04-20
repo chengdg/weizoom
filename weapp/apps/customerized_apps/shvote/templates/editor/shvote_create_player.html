@@ -9,7 +9,7 @@
 		}
 		.wui-create-player{
 			min-height: 810px;
-		    background-color: #E9EDF5;
+		    background-color: #eaeef6;
 		}
 		.wui-create-player label{
 			text-align: right;
@@ -39,6 +39,7 @@
 		.wui-upload-img-div{
 			height: 100px;
 		    margin-top: 30px;
+	        margin-bottom: -8px !important;
 		}
 		.edui-default .edui-editor{
 			margin-left: 134px;
@@ -59,6 +60,7 @@
 		}
 		#imgSelect{
 			width: 90px;
+		    margin-left: -21px;
 		}
 		.wui-details{
 			width: 50%;
@@ -319,7 +321,7 @@ $(document).ready(function() {
         uploader = '/apps/shvote/api/upload_img/',
         cancelImg = '/static/img/cancel.png',
         buttonText = '上传头像',
-        fileTypeExts = '*.jpg',
+        fileTypeExts = '*.jpg;*.png',
         method = 'post',
         removeTimeout = 0.0,
         width = 80,
@@ -351,8 +353,8 @@ $(document).ready(function() {
             'cat': 'swipe_images'
         }),
         onUploadStart: function(file){
-            if(file && file.name.substring(file.name.length - 3,file.name.length) == 'jpg'){}else{
-                W.showHint('error', '请上传jpg类型的图片');
+            if(file && (file.name.substring(file.name.length - 3,file.name.length) == 'jpg' || file.name.substring(file.name.length - 3,file.name.length) == 'png')){}else{
+                W.showHint('error', '请上传jpg和png类型的图片');
                 $("#swipe_images").uploadify('cancel', '*');
                 $("#swipe_images").uploadify('stop');
             }
@@ -391,8 +393,8 @@ $(document).ready(function() {
             'cat': 'swipe_images_des'
         }),
         onUploadStart: function(file){
-            if(file && file.name.substring(file.name.length - 3,file.name.length) == 'jpg'){}else{
-                W.showHint('error', '请上传jpg类型的图片');
+            if(file && (file.name.substring(file.name.length - 3,file.name.length) == 'jpg' || file.name.substring(file.name.length - 3,file.name.length) == 'png')){}else{
+                W.showHint('error', '请上传jpg和png类型的图片');
                 $("#swipe_images_des").uploadify('cancel', '*');
                 $("#swipe_images_des").uploadify('stop');
             }
