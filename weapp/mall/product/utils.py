@@ -11,6 +11,7 @@ from mall import signals as mall_signals
 from account.models import UserProfile
 from mall.promotion import models as promotion_model
 from core import search_util
+from mall.signal_handler import products_not_online_handler_for_promotions
 from utils import ding_util
 from mall.promotion.utils import stop_promotion
 
@@ -230,7 +231,7 @@ def delete_weizoom_mall_sync_product(request, product, reason):
             products = models.Product.objects.filter(id__in=weizoom_product_ids)
             products.update(is_deleted=True)
             relations.update(is_deleted=True)
-            stop_promotion(request, weizoom_product_ids, shelve_type='delete')
+            products_not_online_handler_for_promotions(weizoom_product_ids, request)
 
             text = u'商品删除提示：\n'
             text += u'商品位置：\n'

@@ -11,6 +11,7 @@ from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from mall.promotion import models as promotion_model
+from mall.signal_handler import products_not_online_handler_for_promotions
 from watchdog.utils import watchdog_warning, watchdog_error
 from account.models import UserProfile
 
@@ -572,7 +573,7 @@ class ProductPool(resource.Resource):
             is_deleted=False)
 
         # 微众系列商品参加的促销活动
-        stop_promotion(request, [relation.weizoom_product_id], shelve_type='offshelf')
+        products_not_online_handler_for_promotions([relation.weizoom_product_id], request)
 
         weizoom_product = models.Product.objects.get(id=relation.weizoom_product_id)
         mall_product = models.Product.objects.get(id=relation.mall_product_id)
