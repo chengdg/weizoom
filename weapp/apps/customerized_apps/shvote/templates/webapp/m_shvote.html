@@ -248,14 +248,6 @@
 		opacity: 0.5;
 		z-index: 1;
 	}
-    .wui-i-product-description-title{
-        text-align: center;
-        color: #E6E6E6;
-        height: 50px;
-        background: url("/termite_static/img/component/group/detail_bg.png") no-repeat;
-        background-position-y: 90%;
-        background-position-x: 50%;
-    }
 </style>
 {% endblock %}
 
@@ -311,7 +303,6 @@
 			</div>
 		</div>
 	</div>
-	<div class="wui-i-product-description-title pt10"></div>
 </div>
 
 <script type="text/plain" id="tpl">
@@ -360,17 +351,7 @@
         var swiper = new Swiper('.swiper-container', {
         	slidesPerView: 'auto'
    		});
-        document.addEventListener('touchstart',function () {
-            var $win = $(window);
-            var $top = $('.wui-i-product-description-title');
-            var rect = $top[0].getBoundingClientRect();
-            var djage = function(){
-                return rect.top<0 || rect.top >= 0 && ($win.height()-rect.top>=0);
-            };
-            if(rect && djage()){
-                showPlayers();
-            }
-        });
+
 		// 我要报名
 		$('.wa-imark').click(function(){
 			window.location.href = window.location.origin + '/m/apps/shvote/shvote_participance/?webapp_owner_id='+W.webappOwnerId+'&id='+W.appRecordId;
@@ -486,7 +467,7 @@
                 update_record_info(record_info);
                 //更新会员信息
                 var member_info = data.member_info;
-                if( $('.active').length == 1){
+                if( $('.active').length ==1){
                 	current_group = $('.active').html();
                 };
                 can_play_info = member_info.can_play_info;
@@ -559,19 +540,11 @@
 	        	}
                 $list.append(tmp_html);
                 loadingStatus();
-              	var players = $('.wa-rank-list > div');
-              	players.each(function(){
-              		$(this).hide();
-              	})
             },
             error: function(data){
 				wuiAlert(data.errMsg);
             }
         });
-    }
-
-    function showPlayers(){
-    	 $('.wa-rank-list > div').show();
     }
 </script>
 {% endblock %}
