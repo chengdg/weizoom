@@ -171,21 +171,14 @@ $(function(){
         slidesPerView: 'auto',
     });
 
-    var $groups = $('.wa-rank-groups div div');
-
-    if($groups.length < 4){
-		var wid = 100/$groups.length;
-		$groups.css("width",wid+'%');
-		$groups.eq(0).addClass('active');
-    }else{
-        // var w_wid = $(window).width();
-        // var d_wid = $(window).width()/4;
-        // $('.wa-rank-groups div div').css("width",d_wid);
-        $groups.eq(0).addClass('active');
-        $groups.each(function(){
-            $(this).addClass('swiper-slide');
-        });
+    if($('.wa-rank-groups div div').length < 4){ 
+		var wid = 100/$('.wa-rank-groups div div').length;
+		$('.wa-rank-groups div div').css("width",wid+'%');
+    };
+    if($('.wa-rank-groups div div').length == 0){
+    	$('.wa-rank-groups').hide();
     }
+    $('.wa-rank-groups div div').eq(0).addClass('active');	
 
 	current_group = $('.active').html();
 	getRankInfo(current_group,'');
