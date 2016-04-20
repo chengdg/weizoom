@@ -6,7 +6,7 @@ Feature:新建团购活动
 		1.【团购名称】：必填项，限制字数为10个字
 		2.【起止时间】：必填项
 		3.【选择商品】：必填项，只能添加无规格的上架商品
-		4.【拼团人数】：必填项，可以设置5人团和10人团
+		4.【拼团人数】：必填项，可以设置3人团和10人团
 		5.【团购说明】：必填项
 		6.【分享图片】：必填项，不上传使用默认图片，推荐尺寸90px*90px，仅支持jpg、png
 		7.【分享描述】：必填项，最多可输入26个字
@@ -371,7 +371,7 @@ Scenario:2 新建未开启,已结束团购活动
 			"product_name":"酱牛肉",
 			"group_dict":{
 				"0":{
-					"group_type":"5",
+					"group_type":"3",
 					"group_days":"1",
 					"group_price":"45"
 					}
@@ -388,7 +388,7 @@ Scenario:2 新建未开启,已结束团购活动
 			"product_name":"花生酱",
 			"group_dict":{
 				"0":{
-					"group_type":"5",
+					"group_type":"3",
 					"group_days":"1",
 					"group_price":"11"
 					},
@@ -438,7 +438,7 @@ Scenario:3 开启团购活动
 			"product_name":"酱牛肉",
 			"group_dict":{
 				"0":{
-					"group_type":"5",
+					"group_type":"3",
 					"group_days":"1",
 					"group_price":"45"
 				},
@@ -526,7 +526,7 @@ Scenario:4 编辑未开启团购活动
 			"product_name":"花生酱",
 			"group_dict":{
 				"0":{
-						"group_type":"5",
+						"group_type":"3",
 						"group_days":"1",
 						"group_price":"10"
 				},
@@ -567,7 +567,7 @@ Scenario:5 删除已结束团购活动
 			"product_name":"酱牛肉",
 			"group_dict":{
 				"0":{
-					"group_type":"5",
+					"group_type":"3",
 					"group_days":"1",
 					"group_price":"42"
 				}

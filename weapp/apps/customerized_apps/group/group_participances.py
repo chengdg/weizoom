@@ -106,6 +106,7 @@ class GroupParticipances(resource.Resource):
 			success_time = data.success_time
 			created_at = data.created_at
 			group_days = data.group_days
+			group_price = data.group_price
 			rest_days = 0
 
 			if data.status_text == u'团购成功' and data.success_time:
@@ -145,6 +146,7 @@ class GroupParticipances(resource.Resource):
 					'id': str(data.id),
 					'group_leader_name':data.group_leader_name,
 					'rest_days':rest_days,
+					'group_price':group_price,
 					'start_time_date': start_time_date,
 					'start_time_time': start_time_time,
 					'start_time':start_time,
@@ -340,7 +342,8 @@ class GroupParticipances_Export(resource.Resource):
 			#from sample to get fields4excel_file
 			fields_pure.append(u'id')
 			fields_pure.append(u'团长')
-			fields_pure.append(u'团购时间')
+			fields_pure.append(u'团购价格')
+			# fields_pure.append(u'团购时间')
 			fields_pure.append(u'团购开始时间')
 			fields_pure.append(u'团购结束时间')
 			fields_pure.append(u'团购状态')
@@ -351,9 +354,10 @@ class GroupParticipances_Export(resource.Resource):
 			for data in datas:
 				export_record = []
 				num = num+1
-				g_id = data["id"]
+				g_id = data["member_id"]
 				group_leader_name = data["group_leader_name"]
-				rest_days = data["rest_days"]
+				# rest_days = data["rest_days"]
+				group_price = data["group_price"]
 				start_time = data["start_time"]
 				end_time = data["end_time"]
 				status = data['status']
@@ -361,7 +365,8 @@ class GroupParticipances_Export(resource.Resource):
 
 				export_record.append(g_id)
 				export_record.append(group_leader_name)
-				export_record.append(rest_days)
+				export_record.append(group_price)
+				# export_record.append(rest_days)
 				export_record.append(start_time)
 				export_record.append(end_time)
 				export_record.append(status)
