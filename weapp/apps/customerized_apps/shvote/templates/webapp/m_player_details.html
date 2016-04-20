@@ -171,6 +171,10 @@
 	.wui-apps-alert{
         z-index: 100001;
     }
+    .wui-details-img{
+	    margin: 0 auto 10px auto;
+    	display: inherit;
+    }
 </style>
 {% endblock %}
 
@@ -195,7 +199,7 @@
 		<div class="wui-details">{{player_details.details}}</div>
 		<div>
 		{% for pic in player_details.pics %}
-			<img src="{{pic}}">
+			<img class="wui-details-img" src="{{pic}}">
 		{% endfor %}
 		</div>
 	</div>
