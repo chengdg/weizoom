@@ -229,6 +229,7 @@
         	var isMember = {% if isMember %}true{% else %}false{% endif %};
 	   		if(!isMember){
 	       		showQrcode(W.qrcodeUrl);
+	       		return;
 	   		}
         	var left_chance = parseInt($(this).attr('data-count'));
         	if(left_chance <= 0) {

@@ -253,6 +253,7 @@ class MShvotePlayerDetails(resource.Resource):
 		id = request.GET['id'] 
 		player_details = {}
 		record = None
+		mpUserPreviewName = None
 		isPC = request.GET.get('isPC',0)
 		isMember = False
 		share_page_desc = ""
@@ -267,6 +268,8 @@ class MShvotePlayerDetails(resource.Resource):
 		else:
 			try:
 				record = app_models.Shvote.objects.get(id=id)
+				#获取公众号昵称
+				mpUserPreviewName = request.webapp_owner_info.auth_appid_info.nick_name
 				votecount_per_one = record.votecount_per_one
 				control = app_models.ShvoteControl.objects(member_id=member_id, belong_to=id, created_at_str=datetime.now().strftime('%Y-%m-%d'))
 				if control.count() > 0:
@@ -292,12 +295,14 @@ class MShvotePlayerDetails(resource.Resource):
 			'record_id': id,
 			'player_details': player_details,
 			'activity_status': activity_status,
-			'page_title': record.name if record else u"投票",
+			'page_title': u"投票活动",
 			'hide_non_member_cover': True, #非会员也可使用该页面
 			'isPC': True if isPC else False,
 			'isMember': isMember,
+			"can_vote_count": can_vote_count,
+			'share_page_title': mpUserPreviewName if mpUserPreviewName else record.name,
+			'share_img_url': record.share_image if record else '',
 			"share_page_desc": share_page_desc,
-			"can_vote_count": can_vote_count
 		})
 
 		return render_to_response('shvote/templates/webapp/m_player_details.html', c)
