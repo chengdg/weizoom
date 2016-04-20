@@ -1097,9 +1097,12 @@ def products_not_online_handler_for_promotions(product_ids, request, **kwargs):
         if promotion.type != promotion_models.PROMOTION_TYPE_COUPON:
             target_promotion_ids.append(str(promotion.id))
         elif disable_coupon:
-            promotion.status = promotion_models.PROMOTION_STATUS_DISABLE
-            promotion.save()
-            promotion_models.CouponRule.objects.filter(id=promotion.detail_id).update(is_active=False)
+            not_deleted_promotion_product_count = promotion_models.ProductHasPromotion.objects.filter(promotion=promotion,
+                                                                                                  product__is_deleted=False).count()
+            if not_deleted_promotion_product_count == 0:
+                promotion.status = promotion_models.PROMOTION_STATUS_DISABLE
+                promotion.save()
+                promotion_models.CouponRule.objects.filter(id=promotion.detail_id).update(is_active=False)
     if len(target_promotion_ids) > 0:
         event_data = {
             "id": ','.join(target_promotion_ids)

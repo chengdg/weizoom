@@ -197,7 +197,7 @@ def filter_promotions(request, promotions):
     return filtered_promotions
 
 
-def stop_promotion(request, product_ids):
+def stop_promotion(request, product_ids, shelve_type):
     """
     结束促销活动
     """
@@ -217,25 +217,30 @@ def stop_promotion(request, product_ids):
     #     del
 
     for promotion in promotions:
-        promotion.status=promotion_models.PROMOTION_STATUS_FINISHED
-        promotion.save()
-        if promotion.type == promotion_models.PROMOTION_TYPE_COUPON:
+        if promotion.type == promotion_models.PROMOTION_TYPE_COUPON and shelve_type == 'delete':
             # 处理优惠券相关状态
-            ruleIds = [i.detail_id for i in promotion_models.Promotion.objects.filter(
-                owner=request.manager,
-                id=promotion.id)
-            ]
-            promotion_models.CouponRule.objects.filter(
-                owner=request.manager,
-                id__in=ruleIds
-            ).update(is_active=False, remained_count=0)
 
-            promotion_models.Coupon.objects.filter(
-                owner=request.manager,
-                coupon_rule_id__in=ruleIds,
-                status=promotion_models.COUPON_STATUS_UNGOT
-            ).update(status=promotion_models.COUPON_STATUS_Expired)
+            not_deleted_promotion_product_count = promotion_models.ProductHasPromotion.objects.filter(
+                promotion=promotion,
+                product__is_deleted=False).count()
+            if not_deleted_promotion_product_count == 0:
+                ruleIds = [i.detail_id for i in promotion_models.Promotion.objects.filter(
+                    owner=request.manager,
+                    id=promotion.id)
+                ]
+                promotion_models.CouponRule.objects.filter(
+                    owner=request.manager,
+                    id__in=ruleIds
+                ).update(is_active=False, remained_count=0)
 
+                promotion_models.Coupon.objects.filter(
+                    owner=request.manager,
+                    coupon_rule_id__in=ruleIds,
+                    status=promotion_models.COUPON_STATUS_UNGOT
+                ).update(status=promotion_models.COUPON_STATUS_Expired)
+        else:
+            promotion.status = promotion_models.PROMOTION_STATUS_FINISHED
+            promotion.save()
 
         #发送finish_promotion event
         from webapp.handlers import event_handler_util

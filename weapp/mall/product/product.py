@@ -569,7 +569,7 @@ class ProductPool(resource.Resource):
             is_deleted=False)
 
         # 微众系列商品参加的促销活动
-        stop_promotion(request, [relation.weizoom_product_id])
+        stop_promotion(request, [relation.weizoom_product_id], shelve_type='offshelf')
 
         weizoom_product = models.Product.objects.get(id=relation.weizoom_product_id)
         mall_product = models.Product.objects.get(id=relation.mall_product_id)
