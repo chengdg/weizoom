@@ -182,7 +182,7 @@ Scenario: 1 会员访问团购活动首页能进行开团
 		}]
 		"""
 
-	#bill开“团购5人团”，团购活动只能使用微信支付，有配送时间，运费0元
+	#bill开“团购3人团”，团购活动只能使用微信支付，有配送时间，运费0元
 	#支付完成后跳转到活动详情页-显示邀请好友参团
 	When bill参加jobs的团购活动"团购1"进行开团
 		"""
@@ -191,7 +191,7 @@ Scenario: 1 会员访问团购活动首页能进行开团
 			"group_leader": "bill",
 			"group_dict":
 				{
-					"group_type":5,
+					"group_type":"3",
 					"group_days":1,
 					"group_price":20.00
 				},
@@ -235,7 +235,7 @@ Scenario: 2 会员可以通过分享链接直接参加团购活动
 			"group_leader": "bill",
 			"group_dict":
 				{
-					"group_type":5,
+					"group_type":"3",
 					"group_days":1,
 					"group_price":21.00
 				},
@@ -283,7 +283,7 @@ Scenario: 2 会员可以通过分享链接直接参加团购活动
 			"group_leader": "bill",
 			"group_dict":
 				{
-					"group_type":5,
+					"group_type":"3",
 					"group_days":1,
 					"group_price":21.00
 				},
@@ -351,7 +351,7 @@ Scenario: 2 会员可以通过分享链接直接参加团购活动
 #			"group_leader": "bill",
 #			"group_dict":
 #				[{
-#					"group_type":5,
+#					"group_type":"3",
 #					"group_days":1,
 #					"group_price":21.00,
 #					"offered":[{
@@ -370,7 +370,7 @@ Scenario: 2 会员可以通过分享链接直接参加团购活动
 #			"group_leader": "bill",
 #			"group_dict":
 #				{
-#					"group_type":5,
+#					"group_type":"3",
 #					"group_days":1,
 #					"group_price":21.00
 #				},
@@ -421,7 +421,7 @@ Scenario: 3 会员开团后团购活动成功
 			"group_leader": "bill",
 			"group_dict":
 				{
-					"group_type":5,
+					"group_type":"3",
 					"group_days":1,
 					"group_price":21.00
 				},
@@ -442,7 +442,7 @@ Scenario: 3 会员开团后团购活动成功
 			"group_leader": "bill",
 			"group_dict":
 				[{
-					"group_type":5,
+					"group_type":"3",
 					"group_days":1,
 					"group_price":21.00,
 					"offered":[{
@@ -459,7 +459,7 @@ Scenario: 3 会员开团后团购活动成功
 			"group_leader": "bill",
 			"group_dict":
 				{
-					"group_type":5,
+					"group_type":"3",
 					"group_days":1,
 					"group_price":21.00
 				},
@@ -480,7 +480,7 @@ Scenario: 3 会员开团后团购活动成功
 			"group_leader": "bill",
 			"group_dict":
 				[{
-					"group_type":5,
+					"group_type":"3",
 					"group_days":1,
 					"group_price":21.00,
 					"offered":[{
@@ -497,7 +497,7 @@ Scenario: 3 会员开团后团购活动成功
 			"group_leader": "bill",
 			"group_dict":
 				{
-					"group_type":5,
+					"group_type":"3",
 					"group_days":1,
 					"group_price":21.00
 				},
@@ -518,7 +518,7 @@ Scenario: 3 会员开团后团购活动成功
 			"group_leader": "bill",
 			"group_dict":
 				[{
-					"group_type":5,
+					"group_type":"3",
 					"group_days":1,
 					"group_price":21.00,
 					"offered":[{
@@ -535,7 +535,7 @@ Scenario: 3 会员开团后团购活动成功
 			"group_leader": "bill",
 			"group_dict":
 				{
-					"group_type":5,
+					"group_type":"3",
 					"group_days":1,
 					"group_price":21.00
 				},
@@ -556,7 +556,7 @@ Scenario: 3 会员开团后团购活动成功
 			"group_leader": "bill",
 			"group_dict":
 				[{
-					"group_type":5,
+					"group_type":"3",
 					"group_days":1,
 					"group_price":21.00,
 					"offered":[{
@@ -573,7 +573,7 @@ Scenario: 3 会员开团后团购活动成功
 			"group_leader": "bill",
 			"group_dict":
 				{
-					"group_type":5,
+					"group_type":"3",
 					"group_days":1,
 					"group_price":21.00
 				},
@@ -609,7 +609,7 @@ Scenario: 4 会员开团后团购活动失败
 			"group_leader": "bill",
 			"group_dict":
 				{
-					"group_type":5,
+					"group_type":"3",
 					"group_days":1,
 					"group_price":21.00
 				},
@@ -689,7 +689,7 @@ Scenario: 5 会员开团不进行支付，开团不成功
 			"group_leader": "bill",
 			"group_dict":
 				{
-					"group_type":5,
+					"group_type":"3",
 					"group_days":1,
 					"group_price":21.00
 				},
@@ -735,7 +735,7 @@ Scenario: 6 一个会员可以参加多个会员开启的团购活动
 			"group_leader": "bill",
 			"group_dict":
 				{
-					"group_type":5,
+					"group_type":"3",
 					"group_days":1,
 					"group_price":21.00
 				},
@@ -755,7 +755,7 @@ Scenario: 6 一个会员可以参加多个会员开启的团购活动
 			"group_leader": "tom",
 			"group_dict":
 				{
-					"group_type":5,
+					"group_type":"3",
 					"group_days":1,
 					"group_price":21.00
 				},
@@ -776,7 +776,7 @@ Scenario: 6 一个会员可以参加多个会员开启的团购活动
 			"group_leader": "tom",
 			"group_dict":
 				[{
-					"group_type":5,
+					"group_type":"3",
 					"group_days":1,
 					"group_price":21.00,
 					"offered":[{
@@ -789,7 +789,7 @@ Scenario: 6 一个会员可以参加多个会员开启的团购活动
 			"group_leader": "bill",
 			"group_dict":
 				[{
-					"group_type":5,
+					"group_type":"3",
 					"group_days":1,
 					"group_price":21.00,
 					"offered":[{
@@ -806,7 +806,7 @@ Scenario: 6 一个会员可以参加多个会员开启的团购活动
 			"group_leader": "bill",
 			"group_dict":
 				{
-					"group_type":5,
+					"group_type":"3",
 					"group_days":1,
 					"group_price":21.00
 				},
@@ -824,7 +824,7 @@ Scenario: 6 一个会员可以参加多个会员开启的团购活动
 			"group_leader": "tom",
 			"group_dict":
 				{
-					"group_type":5,
+					"group_type":"3",
 					"group_days":1,
 					"group_price":21.00
 				},
@@ -844,7 +844,7 @@ Scenario: 6 一个会员可以参加多个会员开启的团购活动
 			"group_leader": "bill",
 			"group_dict":
 				[{
-					"group_type":5,
+					"group_type":"3",
 					"group_days":1,
 					"group_price":21.00,
 					"offered":[{
@@ -861,7 +861,7 @@ Scenario: 6 一个会员可以参加多个会员开启的团购活动
 			"group_leader": "bill",
 			"group_dict":
 				{
-					"group_type":5,
+					"group_type":"3",
 					"group_days":1,
 					"group_price":21.00
 				},
@@ -880,7 +880,7 @@ Scenario: 6 一个会员可以参加多个会员开启的团购活动
 			"group_leader": "bill",
 			"group_dict":
 				{
-					"group_type":5,
+					"group_type":"3",
 					"group_days":1,
 					"group_price":21.00
 				},
@@ -901,7 +901,7 @@ Scenario: 6 一个会员可以参加多个会员开启的团购活动
 			"group_leader": "bill",
 			"group_dict":
 				[{
-					"group_type":5,
+					"group_type":"3",
 					"group_days":1,
 					"group_price":21.00,
 					"offered":[{
@@ -914,7 +914,7 @@ Scenario: 6 一个会员可以参加多个会员开启的团购活动
 			"group_leader": "tom",
 			"group_dict":
 				[{
-					"group_type":5,
+					"group_type":"3",
 					"group_days":1,
 					"group_price":21.00,
 					"offered":[{
@@ -961,7 +961,7 @@ Scenario: 7 会员把商品添加购物车后，后台把这个商品创建成�
 			"product_name":"商品3",
 			"group_dict":
 				[{
-					"group_type":5,
+					"group_type":"3",
 					"group_days":1,
 					"group_price":20.00
 				},{
