@@ -57,7 +57,11 @@ class ShvoteParticipances(resource.Resource):
 		start_time = request.GET.get('start_time', '')
 		end_time = request.GET.get('end_time', '')
 
-		params = {'belong_to':request.GET['id']}
+		params = {
+					'belong_to':request.GET['id'],
+					'status':app_models.MEMBER_STATUS['PASSED'],
+					'is_use':app_models.MEMBER_IS_USE['YES']
+				}
 		if name:
 			params['name__icontains'] = name
 			# params['webapp_user_id__in'] = member_ids
