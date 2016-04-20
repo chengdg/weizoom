@@ -219,7 +219,7 @@ Scenario: 2 买赠-新建活动页面的商品查询
 		| 积分应用   |100.00 | 无限   |                | 选取    |
 		| 多商品失效 |100.00 | 无限   | 多商品券       |         |
 
-@mall2 @promotion @promotionIntegral
+@mall2 @promotion @promotionIntegral @ztq
 Scenario: 3 积分应用-新建活动页面的商品查询
 	When jobs新建活动时设置参与活动的商品查询条件
 		"""
@@ -239,7 +239,7 @@ Scenario: 3 积分应用-新建活动页面的商品查询
 		| 积分应用   |100.00 | 无限   | 积分应用活动   |         |
 		| 多商品失效 |100.00 | 无限   |                | 选取    |
 
-@mall2 @promotion @promotionCoupon
+@mall2 @promotion @promotionCoupon @ztqb
 Scenario: 4 多商品券-新建活动页面的商品查询
 	Given jobs登录系统
 	Then jobs新建多商品券活动时能获得已上架商品列表
@@ -256,11 +256,11 @@ Scenario: 4 多商品券-新建活动页面的商品查询
 
 	Then jobs新建多商品券活动时能获得商品分组列表
 		| name     | created_at | actions |
-		| 分类3    |    今天    |   选取  |
-		| 分类2    |    今天    |   选取  |
 		| 分类1    |    今天    |   选取  |
+		| 分类2    |    今天    |   选取  |
+		| 分类3    |    今天    |   选取  |
 
-	When jobs新建多商品券设置商品查询条件
+	When jobs设置新建多商品券商品查询条件
 		"""
 		{
 			"name":"商品"
