@@ -1,6 +1,6 @@
 #author:张三香
 #editor: 王丽 2016.04.15
-
+@ztqb
 Feature:优惠券规则列表中,操作列信息的验证
 		#说明：
 			#针对线上"bug3854"补充feature
@@ -104,7 +104,7 @@ Background:
 		"""
 	When jobs失效优惠券'通用券-已失效'
 
-@promotion @promotionCoupon @online_bug
+@promotion @promotionCoupon @online_bug @mall2 @ztq
 Scenario:1 优惠券规则列表按照添加顺序倒序排列
 	Given jobs登录系统
 	Then jobs能获得优惠券规则列表
@@ -177,7 +177,7 @@ Scenario:1 优惠券规则列表按照添加顺序倒序排列
 		}]
 		"""
 
-@promotion @promotionCoupon
+@promotion @promotionCoupon @ztq2
 Scenario:2 优惠券规则列表-多商品券(一个商品)商品下架、删除
 	#添加多商品券-一个商品
 	#多商品券商品全部下架，多商品券依然可用
@@ -203,8 +203,7 @@ Scenario:2 优惠券规则列表-多商品券(一个商品)商品下架、删除
 			"products_status":[{
 				"name": "商品1",
 				"status": "待售"
-				}],
-			"coupon_id_prefix": "coupon1_id_"
+				}]
 		}
 		"""
 	Then jobs能获得优惠券规则列表

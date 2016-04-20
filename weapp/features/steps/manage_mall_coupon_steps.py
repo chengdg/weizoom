@@ -63,7 +63,7 @@ def step_impl(context, user_name):
         rule["remained_count"] = coupon_rule["detail"]["remained_count"]
         rule["limit_counts"] = coupon_rule["detail"]["limit_counts"] if coupon_rule["detail"]["limit_counts"] != -1 else "无限"
         if coupon_rule['status'] == '已结束':
-            rule["limit_counts"] = 0
+            rule["remained_count"] = 0
         rule["use_count"] = coupon_rule["detail"]["use_count"]
         rule["start_date"] = coupon_rule["start_date"]
         rule["end_date"] = coupon_rule["end_date"]
@@ -383,3 +383,15 @@ def __add_coupon_rule(context, webapp_owner_name):
 def step_impl(context, user, info):
     save_success = json.loads(context.response.content)['data']['save_success']
     assert not save_success
+
+@then(u"{user}查看优惠券'{coupon_rule_name}'专属商品")
+def step_impl(context,user,coupon_rule_name):
+    promotion = Promotion.objects.get(name=coupon_rule_name)
+
+    url = '/mall2/api/coupon_rule_products?id=%d' % promotion.id
+    response = context.client.get(url)
+    actual = json.loads(response.content)['data']['items']
+
+    expected = json.loads(context.text)
+
+    bdd_util.assert_list(expected, actual)
