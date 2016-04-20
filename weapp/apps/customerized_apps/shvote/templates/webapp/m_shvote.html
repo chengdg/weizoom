@@ -248,6 +248,32 @@
 		opacity: 0.5;
 		z-index: 1;
 	}
+	.wui-loading{
+		height: 50px;
+		line-height: 50px;
+		text-align: center;
+		background: #ffe145;
+		color: #ff4200;
+		position: relative;
+		width: 100%;
+	}
+	.wui-loading p{
+   	    text-align: center;
+    	background: #ffe145;
+    	z-index: 9999;
+   	 	position: relative;
+    	width: 22%;
+    	margin: 0 auto;
+	}
+	.wui-loading div{
+    	position: absolute;
+    	top: 50%;
+    	left: 0;
+   		z-index: 1;
+   		width: 100%;
+   		height: 1px;
+   		background: #ff4200;
+	}
 </style>
 {% endblock %}
 
@@ -303,6 +329,10 @@
 			</div>
 		</div>
 	</div>
+	<div class="wui-loading">
+		<p>加载更多</p>
+		<div></div>
+	</div>	
 </div>
 
 <script type="text/plain" id="tpl">
@@ -337,12 +367,25 @@
 	//当前分组，切换时候需要改变值，用于查找
 	var current_group = '';
 	var record_info;
+	var players_num = 20;
 
 	$(function(){
         if(W.isPC){
             showDesc();
             return false;
         }
+
+        document.addEventListener('touchstart',function () {
+            var $win = $(window);
+            var $top = $('.wui-loading');
+            var rect = $top[0].getBoundingClientRect();
+            var djage = function(){
+                return rect.top<0 || rect.top >= 0 && ($win.height()-rect.top>=0);
+            };
+            if(rect && djage()){
+                showPlayers();
+            }
+        });
 
         $('.wa-shvote-desc').hide();
         //展示参与统计
@@ -539,12 +582,26 @@
                     tmp_html += s;
 	        	}
                 $list.append(tmp_html);
+                $('.wa-rank-list div').each(function(){
+                	if($('.wa-rank-list > div').index(this) > 19){
+                		$(this).hide();
+                	}
+                });         
                 loadingStatus();
             },
             error: function(data){
 				wuiAlert(data.errMsg);
             }
         });
+    }
+
+    function showPlayers(){
+   		players_num += 20;
+        $('.wa-rank-list > div').each(function(){
+            if($('.wa-rank-list > div').index(this) < players_num){
+                $(this).show();
+            }
+        });   
     }
 </script>
 {% endblock %}
