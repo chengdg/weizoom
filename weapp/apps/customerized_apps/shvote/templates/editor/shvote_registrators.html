@@ -269,6 +269,15 @@ $(document).ready(function() {
 		var table = $('div[data-ui-role="advanced-table"]').data('view');
 		var $el = $(event.target)
 		var ids = table.getAllSelectedDataIds();
+		for(var index in ids){
+			var id = ids[index];
+			var $tr = $('div[data-ui-role="advanced-table"]').find("tr[data-id="+id+"]");
+			var item_status = $tr.find("td.item_status").attr('item_status');
+			if(item_status==1){
+				W.showHint('error', '包含已通过审核的选手！');
+				return false;
+			}
+		}
 		if(ids.length==0){
 			W.showHint('error', '请选择选手！');
 			return false;
