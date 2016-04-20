@@ -18,6 +18,7 @@
             line-height: 30px;
             margin-left: 85px !important;
             color:#888 !important;
+            margin-top: 10px;
         }
         div.xui-addDynamicComponent span{
             color:#888 !important;
@@ -33,7 +34,7 @@
             margin-bottom: 10px;
         }
         .xui-propertyView-app-GroupInfo textarea{
-            height: 100px;
+            height: 180px !important;
             width: 80% !important;
             margin-left: 80px;
         }
@@ -107,6 +108,12 @@
 
         .mmg30{
             margin-bottom: -30px;
+        }
+        .xui-propertyView-app-GroupInfo .propertyGroup_property_textField .propertyGroup_property_input div{
+            color: #cf0404 !important;
+        }
+        .propertyGroup_property_label.mr5.star_show:before {
+            content: "";
         }
     </style>
 {% endblock %}
@@ -219,7 +226,6 @@
     }
 
     $(document).ready(function() {
-
 
       var windowHeight = $(window).height();
       var height = windowHeight - 350;
@@ -420,8 +426,8 @@
       var validate_group_type = undefined;
       var product = $('#propertyEditor').find('input[data-field="product"]').val();
       var material_image = $('#propertyEditor').find('input[data-field="material_image"]').val();
-      var rules = $('#propertyEditor').find('textarea[data-field="rules"]').val().replace(/\n/g,'').replace(/(^\s+)|(\s+$)/g,"");
-      var rules_sample = "1.开团和拼团的顾客需要先已团购价支付商品2.到达团购人数上限或到达团购指定时间后，团购结束。到达团购人数上限 - 团购成功。成功后,在该商品团购结束【20】天内进行发货。在指定时间未到达团购人数上线 - 团购失败。失败后, 【5~7】个工作日完成退款3.本次活动商品数量为【100】份，售完活动结束。开团截止日期【201x-0x-xx】4.已关注的用户可在 个人中心 - 全部订单 中找到支付的团购订单和进入团购活动的入口。";
+      var rules = $('#propertyEditor').find('textarea[data-field="rules"]').val().replace(/\n/g,'');
+      var rules_sample = "1.开团和拼团的顾客需要先以团购价支付商品2.到达团购人数上限或到达团购指定时间后，团购结束。    到达团购人数上限 - 团购成功。    成功后，在该商品团购结束(        )天内进行发货。    在指定时间未到达团购人数上线 - 团购失败。    失败后, 5~7个工作日完成退款3.本次活动商品数量为(        )份，售完活动结束。开团截止日期(                )4.已关注的用户可在 个人中心 - 全部订单 中找到支付的团购订单和进入团购活动的入口。";
 
       var GroupArray = $('#propertyEditor').find('.propertyGroup_property_dynamicControlField_control');
 
