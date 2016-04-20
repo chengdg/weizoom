@@ -222,7 +222,8 @@ def get_rank_data(data):
 	"""
 	params = {
 		'belong_to' : data['recordId'],
-		'status' : app_models.MEMBER_STATUS['PASSED']
+		'status' : app_models.MEMBER_STATUS['PASSED'],
+		'is_use': app_models.MEMBER_IS_USE['YES']
 	}
 
 	if data['current_group'] != '':

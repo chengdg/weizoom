@@ -98,12 +98,10 @@ class ShvoteParticipance(resource.Resource):
 				sh_participance.save()
 				response = create_response(200)
 			except:
-				print unicode_full_stack()
 				response = create_response(500)
 				response.errMsg = u'只能报名一次'
 			return response.get_response()
 		except:
-			print unicode_full_stack()
 			response = create_response(500)
 			response.errMsg = u'报名失败'
 			response.inner_errMsg = unicode_full_stack()
