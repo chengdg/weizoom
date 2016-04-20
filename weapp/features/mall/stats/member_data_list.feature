@@ -141,9 +141,9 @@ Background:
 		|   0005   | 今天   | tom      | 商品1,1 | 支付    | 支付宝   | 10      | 100      | 110         | 0      |    0   | 110  | jobs,退款     |    退款中     |
 		|   0006   | 今天   | tom1     | 商品1,1 | 支付    | 支付宝   | 10      | 100      | 110         | 110    |    0   | 0    | jobs,完成     |    已完成     |
 		|   0007   | 今天   | tom1     | 商品2,1 | 支付    | 微信支付 | 15      | 100      | 115         | 0      |   115  | 0    | jobs,发货     |    已发货     |
-		|   0008   | 今天   | -lilei   | 商品2,1 | 支付    | 微信支付 | 15      | 100      | 115         | 0      |   115  | 0    | jobs,发货     |    已发货     |
+		#|   0008   | 今天   | -lilei   | 商品2,1 | 支付    | 微信支付 | 15      | 100      | 115         | 0      |   115  | 0    | jobs,发货     |    已发货     |
 		|   0009   | 今天   | mary     | 商品2,2 | 支付    | 支付宝   | 15      | 100      | 215         | 215    |    0   | 0    | jobs,发货     |    已发货     |
-		|   0010   | 今天   | -lisi    | 商品2,2 | 支付    | 支付宝   | 15      | 100      | 215         | 215    |    0   | 0    | jobs,发货     |    已发货     |
+		#|   0010   | 今天   | -lisi    | 商品2,2 | 支付    | 支付宝   | 15      | 100      | 215         | 215    |    0   | 0    | jobs,发货     |    已发货     |
 
 @mall2 @bi @memberAnalysis   @stats @wip.member1
 Scenario: 1  会员概况：会员详细数据
@@ -158,6 +158,6 @@ Scenario: 1  会员概况：会员详细数据
 
 	Then job获得会员详细数据
 		|  date | new_member | mobile_phone_member | launch_share_link_member | share_link_new_member | launch_spreading_code_member | spreading_code_new_member | order_member |
-		|  今天 |     4      |          0          |            2             |           2           |               0              |              0            |       4      |
+		|  今天 |     4      |          0          |            2             |           2           |               0              |              0            |       2      |
 		| 1天前 |     1      |          0          |            0             |           0           |               0              |              0            |       1      |
 		| 2天前 |     1      |          0          |            0             |           0           |               0              |              0            |       0      |

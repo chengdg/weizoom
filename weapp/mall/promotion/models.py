@@ -134,7 +134,7 @@ class Promotion(models.Model):
 
 		self.__update_status_if_necessary()
 
-		now = datetime.today().strftime('%Y-%m-%d %H:%M:%S')
+		now = datetime.today()#.strftime('%Y-%m-%d %H:%M:%S')
 		if self.start_date > now:
 			return False
 		if self.end_date < now:
