@@ -9,7 +9,7 @@
 		}
 		.wui-create-player{
 			min-height: 810px;
-		    background-color: #E9EDF5;
+		    background-color: #eaeef6;
 		}
 		.wui-create-player label{
 			text-align: right;
@@ -19,23 +19,28 @@
 			width: 150px;
 		}  
 		.wui-create{
-			height: 34px;
-			width: 90%;
-		    margin: 20px 0 34px 43px;
-	        font-size: 16px;
+			height: 28px;
+			width: 100%;
+   			background-color: #d8eafb;
+		}
+		.wui-create span{
    			font-weight: bold;
-   			border-bottom: 1px solid #000;
+		    display: inline-block;
+		    margin-left: 57px;
+		    vertical-align: -webkit-baseline-middle;
 		}
 		.wui-upload-img{
 			width: 100px;
 			height: 100px;
 			display: none;
 			float: right;
-			margin-right: 65%;
+		    margin-right: 68%;
+    		margin-top: 13px;
 		}
 		.wui-upload-img-div{
 			height: 100px;
 		    margin-top: 30px;
+	        margin-bottom: -8px !important;
 		}
 		.edui-default .edui-editor{
 			margin-left: 134px;
@@ -56,6 +61,7 @@
 		}
 		#imgSelect{
 			width: 90px;
+		    margin-left: -21px;
 		}
 		.wui-details{
 			width: 50%;
@@ -85,13 +91,13 @@
 		<ul class="breadcrumb">
 			<li>您当前所在位置</li>
 			<li><a href="/apps/">百宝箱</a></li>
-			<li class="active">微信投票</li>
+			<li class="active">高级投票</li>
 		</ul>
 	</div>
 	<!--查看选手-->
 	{% if cur_player_info %}
 	<div class="panel panel-default wui-create-player">
-		<div class="wui-create">选手详情</div>
+		<div class="wui-create"><span>查看选手</span></div>
 		<img class="wui-upload-img wa-upload-img" src="{{cur_player_info.icon}}" style="display:block">
 		<div class="form-group wui-upload-img-div">
 			<label class="control-label fl" for="swipe_images">上传头像</label>
@@ -142,7 +148,7 @@
 	<!--创建选手-->
 	{% else %}
 	<div class="panel panel-default wui-create-player">
-		<div class="wui-create">创建选手</div>
+		<div class="wui-create"><span>创建选手</span></div>
 		<img class="wui-upload-img wa-upload-img" src="">
 		<div class="form-group wui-upload-img-div">
 			<label class="control-label fl" for="swipe_images">上传头像</label>
@@ -152,7 +158,7 @@
 		</div>
 		<div class="form-group">
 			<label class="control-label fl" for="player_name">名称</label>
-			<input type="text" class="form-control wa-validate" name="player_name" id="player_name"/>
+			<input type="text" class="form-control wa-validate" name="player_name" id="player_name" placeholder="输入标题名称"/>
 		</div>
 		<div class="form-group">
 			<label class="control-label fl" for="group">选择分组</label>
@@ -164,13 +170,12 @@
 		</div>
 		<div class="form-group">
 			<label class="control-label fl" for="serial_number">输入编号</label>
-			<input type="text" class="form-control wa-validate" name="serial_number" id="serial_number"/>
+			<input type="text" class="form-control wa-validate" name="serial_number" id="serial_number" placeholder="输入指定编号"/>
 		</div>
 		<div class="form-group">
 			<label class="control-label" for="details">详情</label>
 			<!-- <span class="xui-fontGary" style="font-weight: lighter;">（上传图片要求宽度在480-620之间,高度小于等于960,大小不超过500K）</span> -->
-			<textarea class="wui-details wa-validate" id="details" name="details">
-			</textarea>
+			<textarea class="wui-details wa-validate" id="details" name="details"></textarea>
 		</div>
 		<div class="form-group wui-upload-img-div">
 			<label class="control-label fl" for="swipe_images_des">上传图片</label>
@@ -317,7 +322,7 @@ $(document).ready(function() {
         uploader = '/apps/shvote/api/upload_img/',
         cancelImg = '/static/img/cancel.png',
         buttonText = '上传头像',
-        fileTypeExts = '*.jpg',
+        fileTypeExts = '*.jpg;*.png',
         method = 'post',
         removeTimeout = 0.0,
         width = 80,
@@ -349,8 +354,8 @@ $(document).ready(function() {
             'cat': 'swipe_images'
         }),
         onUploadStart: function(file){
-            if(file && file.name.substring(file.name.length - 3,file.name.length) == 'jpg'){}else{
-                W.showHint('error', '请上传jpg类型的图片');
+            if(file && (file.name.substring(file.name.length - 3,file.name.length) == 'jpg' || file.name.substring(file.name.length - 3,file.name.length) == 'png')){}else{
+                W.showHint('error', '请上传jpg和png类型的图片');
                 $("#swipe_images").uploadify('cancel', '*');
                 $("#swipe_images").uploadify('stop');
             }
@@ -389,8 +394,8 @@ $(document).ready(function() {
             'cat': 'swipe_images_des'
         }),
         onUploadStart: function(file){
-            if(file && file.name.substring(file.name.length - 3,file.name.length) == 'jpg'){}else{
-                W.showHint('error', '请上传jpg类型的图片');
+            if(file && (file.name.substring(file.name.length - 3,file.name.length) == 'jpg' || file.name.substring(file.name.length - 3,file.name.length) == 'png')){}else{
+                W.showHint('error', '请上传jpg和png类型的图片');
                 $("#swipe_images_des").uploadify('cancel', '*');
                 $("#swipe_images_des").uploadify('stop');
             }

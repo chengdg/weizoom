@@ -6,7 +6,7 @@
 		<ul class="breadcrumb">
 			<li>您当前所在位置</li>
 			<li><a href="/apps/">百宝箱</a></li>
-			<li class="active">上海投票</li>
+			<li class="active">高级投票</li>
 		</ul>
 	</div>
 
@@ -70,7 +70,7 @@
 	<div class="panel panel-default xui-tableBox">
 		<div class="panel-header clearfix">
 			<a href="/apps/shvote/shvote/" class="btn btn-success fr">
-				<span class="xui-plusBoldermr5 xui-plus-sign pr" style="">+</span> 新建上海投票
+				<span class="xui-plusBoldermr5 xui-plus-sign pr" style="">+</span> 新建高级投票
 			</a>
 		</div>
 
@@ -100,7 +100,7 @@
 		<thead>
 			<tr>
 				<th>活动名称</th>
-				<th>参与人数</th>
+				<th>投票人数</th>
 				<th>报名人数</th>
 				<th>开始时间</th>
 				<th>结束时间</th>
@@ -259,7 +259,7 @@ $(document).ready(function() {
 
 	$('.xa-reset').click(function(event) {
 		$('[name="name"]').val('');
-		$('[name="status"]').val('0');
+		$('[name="status"]').val('-1');
 		$('[name="start_time"]').val('');
 		$('[name="end_time"]').val('');
 	});

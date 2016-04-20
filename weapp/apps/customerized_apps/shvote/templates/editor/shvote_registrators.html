@@ -16,7 +16,7 @@
 		<ul class="breadcrumb">
 			<li>您当前所在位置</li>
 			<li><a href="/apps/">百宝箱</a></li>
-			<li><a href="/apps/shvote/shvotes/">上海投票</a></li>
+			<li><a href="/apps/shvote/shvotes/">高级投票</a></li>
 			<li class="active">报名详情</li>
 		</ul>
 	</div>
@@ -76,7 +76,7 @@
 			<label for="bottomSelectAll" class="xui-selectAll ml12">
 				<input type="checkbox" id="bottomSelectAll" class="xa-selectAll">本页全选
 			</label>
-		</div>		
+		</div>
 	</div>
 </div>
 {% endblock %}
@@ -233,6 +233,10 @@ $(document).ready(function() {
 	$('.xa-batchReview').click(function(event) {
 		var table = $('div[data-ui-role="advanced-table"]').data('view');
 		var ids = table.getAllSelectedDataIds();
+		if(ids.length==0){
+			W.showHint('error', '请选择选手！');
+			return false;
+		}
 		W.getApi().call({
 			app: 'apps/shvote',
 			resource: 'shvote_registrators',
@@ -256,6 +260,10 @@ $(document).ready(function() {
 		var table = $('div[data-ui-role="advanced-table"]').data('view');
 		var $el = $(event.target)
 		var ids = table.getAllSelectedDataIds();
+		if(ids.length==0){
+			W.showHint('error', '请选择选手！');
+			return false;
+		}
 		W.requireConfirm({
 			$el: $el,
 			width: 420,

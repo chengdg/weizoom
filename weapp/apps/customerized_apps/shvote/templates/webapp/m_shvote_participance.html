@@ -131,12 +131,12 @@
                 <div class="wui-i-shvoteParticipance-content-lable">名称</div>
                 <input class="wui-i-input wa-name" data-validate="require-notempty::请填写名称" placeholder="输入标题/名称"/>
             </div>
-            <div class="wui-i-shvoteParticipance-content-line">
+            <div class="wui-i-shvoteParticipance-content-line wui-i-shvoteParticipance-content-choose-group">
                 <div class="wui-i-shvoteParticipance-content-lable">分组选择</div>
                 <div class="wui-DropDownBox">
                     <div class="wui-i-inputContainer xa-inputControl">
                         <a class="group_type" data-role="button">
-                            <span class="type_name" data-product="" data-validate="require-notempty-span::请选择分组" style="width: 953px;">请选择分组</span>
+                            <span class="type_name" data-product="" data-validate="require-notempty-span::请选择分组" style="width: 953px;"></span>
                             <span class="icon arrow_down"></span>
                         </a>
                         <div class="xui-dropmenu" style="transform-origin: 0px 0px 0px; opacity: 1; transform: scale(1, 1); display: none;">
@@ -212,7 +212,7 @@ $(document).ready(function() {
 	}
     $('.xa-select-type').html(html_str);
     if (html_str == ""){
-        $('.type_name').html("您还没有可选择的分组");
+        $('.wui-i-shvoteParticipance-content-choose-group').hide();
     }else{
         $('.type_name').html("请选择分组信息");
         $('.group_type').click(function(){
