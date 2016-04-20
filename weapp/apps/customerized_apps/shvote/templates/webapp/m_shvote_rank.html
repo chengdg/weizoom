@@ -174,16 +174,11 @@ $(function(){
     if($('.wa-rank-groups div div').length < 4){ 
 		var wid = 100/$('.wa-rank-groups div div').length;
 		$('.wa-rank-groups div div').css("width",wid+'%');
-		$('.wa-rank-groups div div').eq(0).addClass('active');
-	    }else{
-	    	// var w_wid = $(window).width();
-	    	// var d_wid = $(window).width()/4;
-	    	// $('.wa-rank-groups div div').css("width",d_wid);
-			$('.wa-rank-groups div div').eq(0).addClass('active');
-			$('.wa-rank-groups div div').each(function(){
-				$(this).addClass('swiper-slide');
-			})	    	
     };
+    if($('.wa-rank-groups div div').length == 0){
+    	$('.wa-rank-groups').hide();
+    }
+    $('.wa-rank-groups div div').eq(0).addClass('active');	
 
 	current_group = $('.active').html();
 	getRankInfo(current_group,'');

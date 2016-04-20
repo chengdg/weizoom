@@ -336,11 +336,13 @@
 
 	//当前分组，切换时候需要改变值，用于查找
 	var current_group = '';
+	var record_info;
 
 	$(function(){
         if(W.isPC){
             return false;
         }
+
         var swiper = new Swiper('.swiper-container', {
         	slidesPerView: 'auto',
    		});
@@ -460,7 +462,7 @@
             success: function(data) {
                 console.log(data);
                 //更新活动信息
-                var record_info = data.record_info;
+                record_info = data.record_info;
                 update_record_info(record_info);
                 //更新会员信息
                 var member_info = data.member_info;
@@ -495,7 +497,10 @@
 	    if(record_info.groups.length < 4){
 	   		var wid = 100/record_info.groups.length;
 	   		$('.wa-groups .swiper-wrapper div').css("width",wid+'%');
-	    }
+	    };
+	    if(record_info.groups.length == 0){
+	    	$('.wa-groups').hide();
+	    };
     };
     function update_member_info(member_info){
     	$('.wa-left-chance').html(member_info.can_play_info);
