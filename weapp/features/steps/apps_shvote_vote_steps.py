@@ -27,7 +27,7 @@ import copy
 @When(u"{webapp_user_name}在高级投票中为'{target_user_name}'投票")
 def step_impl(context, webapp_user_name, target_user_name):
     record_id = context.shvote_id
-    shp = shvote_models.ShvoteParticipance.objects.get(belong_to=record_id, name=target_user_name)
+    shp = shvote_models.ShvoteParticipance.objects.get(belong_to=record_id, name=target_user_name, is_use=shvote_models.MEMBER_IS_USE['YES'])
     app_utils.get_response(context, {
         "app": "m/apps/shvote",
         "resource": "shvote_participance",
