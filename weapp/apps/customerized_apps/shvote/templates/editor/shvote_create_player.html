@@ -30,12 +30,7 @@
 		    vertical-align: -webkit-baseline-middle;
 		}
 		.wui-upload-img{
-			width: 100px;
-			height: 100px;
-			display: none;
-			float: right;
-		    margin-right: 68%;
-    		margin-top: 13px;
+			width: 108px;
 		}
 		.wui-upload-img-div{
 			height: 100px;
@@ -59,7 +54,7 @@
 		    box-shadow: 0px 0px 0 #989797;
 		    background-color: #E9EDF5;
 		}
-		#imgSelect{
+		.imgSelect{
 			width: 90px;
 		    margin-left: -21px;
 		}
@@ -76,11 +71,37 @@
 			margin-right: 10px;
 		}
 		.wui-btn-container{
-			width: 311px;
-		    margin-left: 275px;
+			width: 350px;
+	        margin: 24px 0 24px 132px;
 		}
-		.wui-btn-container .wui-submit{
-			margin-right: 10px;
+		.wui-submit,.wui-review{
+			background-color: #207cbe;
+			color: #FFF;
+			margin-right: 24px;
+		}
+		.wui-submit:hover,.wui-review:hover{
+			color: #FFF;
+		}
+		.wui-delete,.wui-cancel{
+			color: #000;
+			background-color: #FFF;
+			margin-right: 24px;
+		}
+		.wui-upload-info{
+			margin: 52px 0 0 20px;
+   			display: inline-block;
+		}
+		.wui-create-head-img,.wui-view-head-img{
+			width: 108px;
+			height: 80px;
+			overflow: hidden;
+			position: absolute;
+		    top: 108px;
+    		left: 130px;
+		}
+		.wui-sign-time{
+			margin-left: 337px;
+			font-weight: bold;
 		}
 	</style>
 {% endblock%}
@@ -98,37 +119,49 @@
 	{% if cur_player_info %}
 	<div class="panel panel-default wui-create-player">
 		<div class="wui-create"><span>查看选手</span></div>
-		<img class="wui-upload-img wa-upload-img" src="{{cur_player_info.icon}}" style="display:block">
+		<div class="wui-view-head-img wa-view-head-img">
+			<img class="wui-upload-img wa-upload-img" src="{{cur_player_info.icon}}" style="display:block">
+		</div>
 		<div class="form-group wui-upload-img-div">
 			<label class="control-label fl" for="swipe_images">上传头像</label>
-			<div id="imgSelect" class="col-sm-9">
+			<div class="col-sm-9 imgSelect" style="display:none">
 		        <input id="swipe_images" name="swipe_images" type='hidden' />
 			</div>
+			<span class="wui-sign-time">报名时间：{{cur_player_info.created_at}}</span>
 		</div>
 		<div class="form-group">
 			<label class="control-label fl" for="player_name">名称</label>
-			<input type="text" class="form-control" name="player_name" id="player_name" value="{{cur_player_info.name}}"/>
+			<input type="text" class="form-control" name="player_name" id="player_name" value="{{cur_player_info.name}}" disabled />
 		</div>
 		<div class="form-group">
 			<label class="control-label fl" for="group">选择分组</label>
-			<select id="group" name="group" class="form-control">
+			<select id="group" name="group" class="form-control" disabled>
 				<option>{{cur_player_info.group}}</option>
 			</select>
 		</div>
 		<div class="form-group">
 			<label class="control-label fl" for="serial_number">输入编号</label>
-			<input type="text" class="form-control" name="serial_number" id="serial_number" value="{{cur_player_info.serial_number}}"/>
+			<input type="text" class="form-control" name="serial_number" id="serial_number" value="{{cur_player_info.serial_number}}" disabled/>
 		</div>
+		{% if status == 1 %}
+			<div class="form-group">
+				<label class="control-label fl" for="rank">排名</label>
+				<input type="text" class="form-control" name="rank" id="rank" value="{{cur_player_info.rank}}" disabled/>
+			</div>
+			<div class="form-group">
+				<label class="control-label fl" for="vote_count">票数</label>
+				<input type="text" class="form-control" name="vote_count" id="vote_count" value="{{cur_player_info.count}}" disabled/>
+			</div>
+		{% endif %}
 		<div class="form-group">
 			<label class="control-label" for="details">详情</label>
-			<!-- <span class="xui-fontGary" style="font-weight: lighter;">（上传图片要求宽度在480-620之间,高度小于等于960,大小不超过500K）</span> -->
-			<textarea class="wui-details" id="details" name="details">
+			<textarea class="wui-details" id="details" name="details" readonly>
 				{{cur_player_info.details}}
 			</textarea>
 		</div>
 		<div class="form-group wui-upload-img-div">
 			<label class="control-label fl" for="swipe_images_des">上传图片</label>
-			<div id="imgSelect" class="col-sm-9">
+			<div class="col-sm-9 imgSelect" style="display:none">
 		        <input id="swipe_images_des" name="swipe_images_des" type='hidden' />
 			</div>
 		</div>
@@ -139,22 +172,25 @@
 		</div>
 		<div class="wui-btn-container">
 			{% if status == 0 %}
-				<button class="btn btn-primary xa-review">审核通过</button>
-				<button class="btn btn-primary xa-delete">删除</button>
+				<button class="btn wui-review xa-review">审核通过</button>
+				<button class="btn wui-delete xa-delete">删除</button>
 			{% endif %}
-			<button class="btn btn-primary">取消</button>
+			<button class="btn wui-cancel">取消</button>
 		</div>
 	</div>
 	<!--创建选手-->
 	{% else %}
 	<div class="panel panel-default wui-create-player">
 		<div class="wui-create"><span>创建选手</span></div>
-		<img class="wui-upload-img wa-upload-img" src="">
+		<div class="wui-create-head-img wa-create-head-img">
+			<img class="wui-upload-img wa-upload-img" src="{{cur_player_info.icon}}" style="display:block">
+		</div>
 		<div class="form-group wui-upload-img-div">
 			<label class="control-label fl" for="swipe_images">上传头像</label>
-			<div id="imgSelect" class="col-sm-9">
+			<div class="col-sm-9 imgSelect">
 		        <input id="swipe_images" name="swipe_images" type='hidden' />
 			</div>
+			<span class="wui-upload-info">注：推荐尺寸：540*400，仅支持png、jpg</span>
 		</div>
 		<div class="form-group">
 			<label class="control-label fl" for="player_name">名称</label>
@@ -174,19 +210,19 @@
 		</div>
 		<div class="form-group">
 			<label class="control-label" for="details">详情</label>
-			<!-- <span class="xui-fontGary" style="font-weight: lighter;">（上传图片要求宽度在480-620之间,高度小于等于960,大小不超过500K）</span> -->
 			<textarea class="wui-details wa-validate" id="details" name="details"></textarea>
 		</div>
 		<div class="form-group wui-upload-img-div">
 			<label class="control-label fl" for="swipe_images_des">上传图片</label>
-			<div id="imgSelect" class="col-sm-9">
+			<span class="xui-fontGary" style="font-weight: lighter;margin-top: 52px;display: inline-block;">（上传图片要求宽度在480-620之间,高度小于等于960,大小不超过500K）</span>
+			<div class="col-sm-9 imgSelect">
 		        <input id="swipe_images_des" name="swipe_images_des" type='hidden' />
 			</div>
 		</div>
 		<div class="wui-img-container wa-img-container"></div>
 		<div class="wui-btn-container">
-			<button class="btn btn-primary wui-submit wa-submit">提交</button>
-			<button class="btn btn-primary wa-cancel">取消</button>
+			<button class="btn wui-submit wa-submit">提交</button>
+			<button class="btn wui-cancel wa-cancel">取消</button>
 		</div>
 	</div>
 	{% endif %}
@@ -325,7 +361,7 @@ $(document).ready(function() {
         fileTypeExts = '*.jpg;*.png',
         method = 'post',
         removeTimeout = 0.0,
-        width = 80,
+        width = 100,
         height = 80,
         formData = {
             'owner_id': '{{ request.webapp_owner_id }}'
@@ -364,6 +400,8 @@ $(document).ready(function() {
             response = JSON.parse(response);
             if(response.code == 200){
                 $('.wa-upload-img').attr('src',response.data).show().css('display','inline-block');
+                $('.wui-upload-info').hide();
+                $('#swipe_images-button').css('opacity',0);
             }else{
                  W.showHint('error', response.errMsg);
             }
