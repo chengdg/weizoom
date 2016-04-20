@@ -222,9 +222,11 @@ def get_rank_data(data):
 	"""
 	params = {
 		'belong_to' : data['recordId'],
-		'group' : data['current_group'],
 		'status' : app_models.MEMBER_STATUS['PASSED']
 	}
+
+	if data['current_group'] != '':
+		params['group'] = data['current_group']
 
 	if data.get('search_name') != '':
 		search_name = data.get('search_name')
