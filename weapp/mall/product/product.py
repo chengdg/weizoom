@@ -1451,7 +1451,7 @@ class ProductModelPrice(resource.Resource):
     app = 'mall2'
     resource = 'product_model_price'
 
-    # @login_required
+    @login_required
     def api_post(request):
         """更新商品规格价格
         """
