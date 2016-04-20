@@ -103,7 +103,7 @@ W.view.common.DatePicker = Backbone.View.extend({
 
 W.registerUIRole('[data-ui-role="date-picker"]', function() {
     var $input = $(this);
-    var dateFormat = $input.attr('data-format');
+    var dateFormat = $input.attr('data-format-c'); //专为appkit组件设计
     var view = new W.view.common.DatePicker({
         el: $input.get(0),
         dateFormat: dateFormat

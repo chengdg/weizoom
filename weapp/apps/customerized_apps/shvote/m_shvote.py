@@ -92,6 +92,7 @@ class MShvote(resource.Resource):
 		share_page_desc = ""
 		auth_appid_info = None
 		record = None
+		recordName = ""
 		mpUserPreviewName = None
 		if not isPC:
 			isMember = request.member and request.member.is_subscribed
@@ -101,6 +102,7 @@ class MShvote(resource.Resource):
 		else:
 			try:
 				record = app_models.Shvote.objects.get(id=id)
+				recordName = record.name
 				#获取公众号昵称
 				mpUserPreviewName = request.webapp_owner_info.auth_appid_info.nick_name
 			except:
@@ -129,7 +131,7 @@ class MShvote(resource.Resource):
 			'isPC': True if isPC else False,
 			'isMember': isMember,
 			'auth_appid_info': auth_appid_info,
-			'share_page_title': mpUserPreviewName if mpUserPreviewName else record.name,
+			'share_page_title': mpUserPreviewName if mpUserPreviewName else recordName,
 			'share_img_url': record.share_image if record else '',
 			"share_page_desc": share_page_desc,
 			"groups": record.groups if record else []
@@ -184,12 +186,17 @@ class MShvoteRank(resource.Resource):
 	resource = 'm_shvote_rank'
 
 	def get(request):
-		shvote = None
+		shvote = mpUserPreviewName = None
 		try:
 			shvote = app_models.Shvote.objects.get(id=request.GET["id"])
+			#获取公众号昵称
+			mpUserPreviewName = request.webapp_owner_info.auth_appid_info.nick_name
 		except:
 			pass
 		c = RequestContext(request, {
+			'share_page_title': mpUserPreviewName if mpUserPreviewName else shvote.name,
+			'share_img_url': shvote.share_image if shvote else '',
+			"share_page_desc": shvote.name if shvote else '',
 			"groups": shvote.groups if shvote else [],
 			"record_id": request.GET["id"]
 		})

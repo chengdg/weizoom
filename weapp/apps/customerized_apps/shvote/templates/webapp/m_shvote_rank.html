@@ -171,19 +171,21 @@ $(function(){
         slidesPerView: 'auto',
     });
 
-    if($('.wa-rank-groups div div').length < 4){ 
-		var wid = 100/$('.wa-rank-groups div div').length;
-		$('.wa-rank-groups div div').css("width",wid+'%');
-		$('.wa-rank-groups div div').eq(0).addClass('active');
-	    }else{
-	    	// var w_wid = $(window).width();
-	    	// var d_wid = $(window).width()/4;
-	    	// $('.wa-rank-groups div div').css("width",d_wid);
-			$('.wa-rank-groups div div').eq(0).addClass('active');
-			$('.wa-rank-groups div div').each(function(){
-				$(this).addClass('swiper-slide');
-			})	    	
-    };
+    var $groups = $('.wa-rank-groups div div');
+
+    if($groups.length < 4){
+		var wid = 100/$groups.length;
+		$groups.css("width",wid+'%');
+		$groups.eq(0).addClass('active');
+    }else{
+        // var w_wid = $(window).width();
+        // var d_wid = $(window).width()/4;
+        // $('.wa-rank-groups div div').css("width",d_wid);
+        $groups.eq(0).addClass('active');
+        $groups.each(function(){
+            $(this).addClass('swiper-slide');
+        });
+    }
 
 	current_group = $('.active').html();
 	getRankInfo(current_group,'');
@@ -197,38 +199,43 @@ $(function(){
 
 });
 
-
 function getRankInfo(current_group,search_name){
-        W.getApi().call({
-            app: 'm/apps/shvote',
-            resource: 'm_shvote_rank',
-            method: 'get',
-            args: {
-				webapp_owner_id: W.webappOwnerId,
-                recordId: W.appRecordId,
-				current_group: current_group,
-				search_name: search_name
-            },
-            success: function(data) {
-				$('.wa-rank-list').html('');
-                var result = data.result_list;
-                var tpl = new Template($('#tpl').html());
-                for(var i=0;i<result.length;i++){
-        		    var s = tpl.render({
-        		    	rank : i+1,
-		               	serial_number : result[i].serial_number,
-		                name : result[i].name,
-		                count : result[i].count,
-		                icon : result[i].icon,
-		            });
-		       		$('.wa-rank-list').append(s);
-	        	}
-            },
-            error: function(data){
-				wuiAlert(data.errMsg);
+    loadingStatus(true);
+    W.getApi().call({
+        app: 'm/apps/shvote',
+        resource: 'm_shvote_rank',
+        method: 'get',
+        args: {
+            webapp_owner_id: W.webappOwnerId,
+            recordId: W.appRecordId,
+            current_group: current_group,
+            search_name: search_name
+        },
+        success: function(data) {
+            var $list = $('.wa-rank-list');
+            var tmp_html = "";
+            $list.html('');
+            var result = data.result_list;
+            var tpl = new Template($('#tpl').html());
+            for(var i=0;i<result.length;i++){
+                var s = tpl.render({
+                    rank : i+1,
+                    serial_number : result[i].serial_number,
+                    name : result[i].name,
+                    count : result[i].count,
+                    icon : result[i].icon,
+                });
+                tmp_html += s;
             }
-        });
-    }
+            $list.append(tmp_html);
+            loadingStatus();
+        },
+        error: function(data){
+            loadingStatus();
+            wuiAlert(data.errMsg);
+        }
+    });
+}
 
 </script>
 {% endblock %}
