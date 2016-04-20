@@ -12,39 +12,27 @@ W.dialog.app.shvote.ViewParticipanceDataDialog = W.dialog.Dialog.extend({
 	
 	templates: {
 		dialogTmpl: '#app-shvote-viewParticipanceDataDialog-dialog-tmpl',
-		resultTmpl: '#app-shvote-viewParticipanceResultDialog-dialog-tmpl'
 	},
+
+	getTemplate: function() {
+        $('#app-shvote-viewParticipanceDataDialog-dialog-tmpl').template('app-shvote-viewParticipanceResultDialog-dialog-tmpl');
+        return "app-shvote-viewParticipanceDataDialog-dialog-tmpl";
+    },
 	
 	onInitialize: function(options) {
+		this.table = this.$('[data-ui-role="advanced-table"]').data('view');
 	},
 	
 	beforeShow: function(options) {
+		this.playerId = options.playerId;
+        this.table.reset();
 	},
 	
 	onShow: function(options) {
-		this.playerId = options.playerId;
 	},
 	
 	afterShow: function(options) {
-		var that = this;
-		if (this.playerId) {
-			W.getApi().call({
-				app: 'apps/shvote',
-				resource: 'shvote_participance',
-				scope: this,
-				args: {
-					id: this.playerId
-				},
-				success: function(data) {
-					this.$dialog.find('.modal-body').text(data);
-					var template = Handlebars.compile($(that.templates['resultTmpl']).html());
-					$('.xui-app_shvote-Dialog .modal-body').html(template(data));
-				},
-				error: function(resp) {
-					W.showHint('error', resp.errMsg);
-				}
-			})
-		}
+		this.table.reload({"id": this.playerId});
 	},
 	
 	/**

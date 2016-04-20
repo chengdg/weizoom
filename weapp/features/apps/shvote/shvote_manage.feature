@@ -152,9 +152,7 @@ Scenario:3 新建微信投票活动,活动进行中，关闭进行中的活动
 			"name":"微信高级投票-进行中",
 			"total_voted_count":0,
 			"total_participanted_count":0,
-			"start_date":"2天前",
-			"end_date":"2天后",
-			"status":"进行中",
+			"status":"已结束",
 			"actions": ["删除","链接","预览","报名详情","查看结果"]
 		}]
 		"""
