@@ -133,12 +133,14 @@
 			<label class="control-label fl" for="player_name">名称</label>
 			<input type="text" class="form-control" name="player_name" id="player_name" value="{{cur_player_info.name}}" disabled />
 		</div>
+		{% if cur_player_info.group %}
 		<div class="form-group">
 			<label class="control-label fl" for="group">选择分组</label>
 			<select id="group" name="group" class="form-control" disabled>
 				<option>{{cur_player_info.group}}</option>
 			</select>
 		</div>
+		{% endif %}
 		<div class="form-group">
 			<label class="control-label fl" for="serial_number">输入编号</label>
 			<input type="text" class="form-control" name="serial_number" id="serial_number" value="{{cur_player_info.serial_number}}" disabled/>
@@ -175,7 +177,7 @@
 				<button class="btn wui-review xa-review">审核通过</button>
 				<button class="btn wui-delete xa-delete">删除</button>
 			{% endif %}
-			<button class="btn wui-cancel">取消</button>
+			<button class="btn wui-cancel wa-cancel">取消</button>
 		</div>
 	</div>
 	<!--创建选手-->
@@ -196,14 +198,16 @@
 			<label class="control-label fl" for="player_name">名称</label>
 			<input type="text" class="form-control wa-validate" name="player_name" id="player_name" placeholder="输入标题名称"/>
 		</div>
-		<div class="form-group">
-			<label class="control-label fl" for="group">选择分组</label>
-			<select id="group" name="group" class="form-control">
-				{% for group in groups%}
-				<option>{{group}}</option>
-				{% endfor %}
-			</select>
-		</div>
+		{% if groups %}
+			<div class="form-group">
+				<label class="control-label fl" for="group">选择分组</label>
+				<select id="group" name="group" class="form-control">
+					{% for group in groups%}
+					<option>{{group}}</option>
+					{% endfor %}
+				</select>
+			</div>
+		{% endif %}
 		<div class="form-group">
 			<label class="control-label fl" for="serial_number">输入编号</label>
 			<input type="text" class="form-control wa-validate" name="serial_number" id="serial_number" placeholder="输入指定编号"/>
