@@ -13,7 +13,6 @@ from mall.promotion import models as promotion_model
 from core import search_util
 from mall.signal_handler import products_not_online_handler_for_promotions
 from utils import ding_util
-from mall.promotion.utils import stop_promotion
 
 from watchdog.utils import watchdog_fatal, watchdog_error
 from core.exceptionutil import unicode_full_stack

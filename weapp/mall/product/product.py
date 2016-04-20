@@ -24,7 +24,6 @@ from mall import signals as mall_signals
 from . import utils
 from mall import export
 from weixin.user.module_api import get_all_active_mp_user_ids
-from mall.promotion.utils import stop_promotion
 from apps.customerized_apps.group import models as group_models
 
 import logging

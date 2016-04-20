@@ -177,7 +177,7 @@ Scenario:1 优惠券规则列表按照添加顺序倒序排列
 		}]
 		"""
 
-@promotion @promotionCoupon @ztq2
+@mall2 @promotion @promotionCoupon @ztq
 Scenario:2 优惠券规则列表-多商品券(一个商品)商品下架、删除
 	#添加多商品券-一个商品
 	#多商品券商品全部下架，多商品券依然可用
@@ -363,7 +363,7 @@ Scenario:2 优惠券规则列表-多商品券(一个商品)商品下架、删除
 		}]
 		"""
 
-@promotion @promotionCoupon
+@promotion @promotionCoupon @ztq3
 Scenario:3 优惠券规则列表-多商品券(多个商品)商品下架、删除
 	#添加多商品券-多个商品
 	#多商品券商品部分下架，多商品券依然可用

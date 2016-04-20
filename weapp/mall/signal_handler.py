@@ -1102,7 +1102,7 @@ def products_not_online_handler_for_promotions(product_ids, request, **kwargs):
             if not_deleted_promotion_product_count == 0:
                 promotion.status = promotion_models.PROMOTION_STATUS_DISABLE
                 promotion.save()
-                promotion_models.CouponRule.objects.filter(id=promotion.detail_id).update(is_active=False)
+                promotion_models.CouponRule.objects.filter(id=promotion.detail_id).update(is_active=False, remained_count=0)
 
                 promotion_models.Coupon.objects.filter(
                     owner=request.manager,
