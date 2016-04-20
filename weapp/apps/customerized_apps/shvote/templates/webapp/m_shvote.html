@@ -467,7 +467,9 @@
                 update_record_info(record_info);
                 //更新会员信息
                 var member_info = data.member_info;
-                current_group = $('.active').html();
+                if( $('.active').length ==1){
+                	current_group = $('.active').html();
+                };
                 can_play_info = member_info.can_play_info;
                 update_member_info(member_info,current_group);
                 //更新排名信息
