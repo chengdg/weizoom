@@ -340,7 +340,7 @@ class GroupParticipances_Export(resource.Resource):
 			#from sample to get fields4excel_file
 			fields_pure.append(u'id')
 			fields_pure.append(u'团长')
-			fields_pure.append(u'团购时间')
+			# fields_pure.append(u'团购时间')
 			fields_pure.append(u'团购开始时间')
 			fields_pure.append(u'团购结束时间')
 			fields_pure.append(u'团购状态')
@@ -353,7 +353,7 @@ class GroupParticipances_Export(resource.Resource):
 				num = num+1
 				g_id = data["id"]
 				group_leader_name = data["group_leader_name"]
-				rest_days = data["rest_days"]
+				# rest_days = data["rest_days"]
 				start_time = data["start_time"]
 				end_time = data["end_time"]
 				status = data['status']
@@ -361,7 +361,7 @@ class GroupParticipances_Export(resource.Resource):
 
 				export_record.append(g_id)
 				export_record.append(group_leader_name)
-				export_record.append(rest_days)
+				# export_record.append(rest_days)
 				export_record.append(start_time)
 				export_record.append(end_time)
 				export_record.append(status)
