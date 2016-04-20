@@ -614,7 +614,7 @@ Scenario:4 微信用户可以给参与者投票
 		"""
 		[{
 			"name":"微信高级投票-进行中",
-			"total_voted_count":4,
+			"total_voted_count":3,
 			"total_participanted_count":3,
 			"start_date":"2天前",
 			"end_date":"2天后",
@@ -775,7 +775,7 @@ Scenario:6 每人每天可以为不同的人投票
 		"""
 			[{
 				"name":"微信高级投票-进行中",
-				"total_voted_count":2,
+				"total_voted_count":1,
 				"total_participanted_count":3,
 				"start_date":"2天前",
 				"end_date":"2天后",
@@ -826,7 +826,7 @@ Scenario:6 每人每天可以为不同的人投票
 		"""
 			[{
 				"name":"微信高级投票-进行中",
-				"total_voted_count":2,
+				"total_voted_count":1,
 				"total_participanted_count":3,
 				"start_date":"2天前",
 				"end_date":"2天后",

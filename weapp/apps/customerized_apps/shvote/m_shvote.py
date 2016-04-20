@@ -198,7 +198,8 @@ class MShvoteRank(resource.Resource):
 			'share_img_url': shvote.share_image if shvote else '',
 			"share_page_desc": shvote.name if shvote else '',
 			"groups": shvote.groups if shvote else [],
-			"record_id": request.GET["id"]
+			"record_id": request.GET["id"],
+			"is_hide_weixin_option_menu":True
 		})
 
 		return render_to_response('shvote/templates/webapp/m_shvote_rank.html', c)
