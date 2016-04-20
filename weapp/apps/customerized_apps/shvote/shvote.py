@@ -117,7 +117,7 @@ class shvote(resource.Resource):
 		data = request_util.get_fields_to_be_save(request)
 		data['groups'] = json.loads(data['groups'])
 		update_data = {}
-		update_fields = set(['name', 'start_time', 'end_time', 'groups', 'description', 'rule', 'votecount_per_one'])
+		update_fields = set(['name', 'start_time', 'end_time', 'groups', 'description', 'rule', 'votecount_per_one', 'share_image'])
 		for key, value in data.items():
 			if key in update_fields:
 				update_data['set__'+key] = value

@@ -47,8 +47,8 @@ W.component.appkit.ShvoteDescription = W.component.Component.extend({
 			plugin: 'apps_badge_tools',
 			uirole: 'apps-badge-tools-pane',
 			btnName: '+添加',
-			maxcount: 5,
-			maxlen: 5,
+			maxcount: 10,
+			maxlen: 4,
 			isUserProperty: true,
 			default: []
 		},{
@@ -89,6 +89,19 @@ W.component.appkit.ShvoteDescription = W.component.Component.extend({
 			dialog: 'W.dialog.termite.SelectImagesDialog',
 			dialogParameter: '{"multiSelection": false}',
 			help: '提示:图片格式jpg/png, 图片宽度640px, 高度自定义, 请上传风格与背景配色协调的图片',
+			validate: 'data-validate="require-notempty::请添加一张图片"',
+			default: ""
+		},{
+			name: 'share_image',
+			type: 'image_dialog_select',
+			displayName: '分享图标',
+			isUserProperty: true,
+			isShowCloseButton: false,
+			triggerButton: {nodata:'选择图片', hasdata:'修改'},
+			selectedButton: '选择图片',
+			dialog: 'W.dialog.termite.SelectImagesDialog',
+			dialogParameter: '{"multiSelection": false}',
+			help: '提示：建议图片长宽100px*100px，正方形图片',
 			validate: 'data-validate="require-notempty::请添加一张图片"',
 			default: ""
 		}]
@@ -134,6 +147,33 @@ W.component.appkit.ShvoteDescription = W.component.Component.extend({
                 })
             }
             this.refresh($node, {refreshPropertyView: true});
+		},
+		share_image: function($node, model, value, $propertyViewNode) {
+			var image = {url:''};
+			var data = {type:null};
+			if (value !== '') {
+				data = $.parseJSON(value);
+				image = data.images[0];
+			}
+			model.set({
+				share_image: image.url
+			}, {silent: true});
+
+			if (data.type === 'newImage') {
+				W.resource.termite2.Image.put({
+					data: image,
+					success: function(data) {
+					},
+					error: function(resp) {
+					}
+				})
+			}
+			if (value) {
+				//更新propertyView中的图片
+				var $target = $propertyViewNode.find($('[data-field-anchor="share_image"]'));
+				$target.find('.propertyGroup_property_dialogSelectField .xa-dynamicComponentControlImgBox').removeClass('xui-hide').find('img').attr('src',image.url);
+				$target.find('.propertyGroup_property_dialogSelectField .propertyGroup_property_input').find('.xui-i-triggerButton').text('修改');
+			}
 		}
 	},
 

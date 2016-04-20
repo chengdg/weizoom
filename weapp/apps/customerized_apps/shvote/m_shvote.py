@@ -92,6 +92,7 @@ class MShvote(resource.Resource):
 		share_page_desc = ""
 		auth_appid_info = None
 		record = None
+		mpUserPreviewName = None
 		if not isPC:
 			isMember = request.member and request.member.is_subscribed
 		if 'new_app:' in id:
@@ -100,6 +101,8 @@ class MShvote(resource.Resource):
 		else:
 			try:
 				record = app_models.Shvote.objects.get(id=id)
+				#获取公众号昵称
+				mpUserPreviewName = request.webapp_owner_info.auth_appid_info.nick_name
 			except:
 				c = RequestContext(request,{
 					'is_deleted_data': True
@@ -118,7 +121,7 @@ class MShvote(resource.Resource):
 		c = RequestContext(request, {
 			'record_id': id,
 			'activity_status': activity_status,
-			'page_title': record.name if record else u"投票",
+			'page_title': u"投票活动",
 			'page_html_content': html,
 			'app_name': "shvote",
 			'resource': "shvote",
@@ -126,6 +129,8 @@ class MShvote(resource.Resource):
 			'isPC': True if isPC else False,
 			'isMember': isMember,
 			'auth_appid_info': auth_appid_info,
+			'share_page_title': mpUserPreviewName if mpUserPreviewName else record.name,
+			'share_img_url': record.share_image if record else '',
 			"share_page_desc": share_page_desc,
 			"groups": record.groups if record else []
 		})

@@ -61,6 +61,7 @@ class Shvote(models.Document):
 	related_page_id = models.StringField(default="", max_length=100) #termite page的id
 	created_at = models.DateTimeField() #创建时间
 	visits = models.LongField(default=0) #访问人数
+	share_image = models.StringField(default="", max_length=1024) #分享的图片链接
 
 	meta = {
 		'collection': 'shvote_shvote'

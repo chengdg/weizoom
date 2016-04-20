@@ -186,6 +186,7 @@
           var rule = descriptionModel.get('rule');
           var groups = descriptionModel.get('groups');
           var votecount_per_one = descriptionModel.get('votecount_per_one');
+          var share_image = descriptionModel.get('share_image');
           var relatedPageId = data['project_id'];
           var args = {
             "name": name,
@@ -194,7 +195,8 @@
             "description": description,
             "rule": rule,
             "groups": JSON.stringify(groups),
-            "votecount_per_one":votecount_per_one
+            "votecount_per_one":votecount_per_one,
+              "share_image": share_image
           };
           if (isCreateNewData) {
             var method = 'put';
