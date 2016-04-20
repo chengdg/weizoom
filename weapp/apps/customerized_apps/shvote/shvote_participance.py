@@ -35,12 +35,15 @@ class ShvoteParticipance(resource.Resource):
 		record = None
 		isMember = False
 		member = request.member
+		mpUserPreviewName = None
 		if 'id' in request.GET:
 			participance_data_count = 0
 			id = request.GET['id']
 			try:
 				record = app_models.Shvote.objects.get(id=id)
 				activity_status, record = update_shvote_status(record)
+				#获取公众号昵称
+				mpUserPreviewName = request.webapp_owner_info.auth_appid_info.nick_name
 				if member:
 					isMember =member.is_subscribed
 					participance_data_count = app_models.ShvoteParticipance.objects(belong_to=id, member_id=member.id).count()
@@ -58,6 +61,9 @@ class ShvoteParticipance(resource.Resource):
 				'isMember': isMember,
 				'app_name': "shvote",
 				'resource': "shvote",
+				'share_page_title': mpUserPreviewName if mpUserPreviewName else record.name,
+				'share_img_url': record.share_image if record else '',
+				"share_page_desc": record.name if record else '',
 				'hide_non_member_cover': True, #非会员也可使用该页面
 				'share_to_timeline_use_desc': True  #分享到朋友圈的时候信息变成分享给朋友的描述
 			})
