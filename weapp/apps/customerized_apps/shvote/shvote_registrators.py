@@ -290,10 +290,16 @@ class ShvoteCreatePlayer(resource.Resource):
 			try:
 				cur_player_info = app_models.ShvoteParticipance.objects().get(id = player_id)
 				status = cur_player_info.status
+				if status == app_models.MEMBER_STATUS['PASSED']:
+					vote_count = cur_player_info.count
+					vote_count_bigger = app_models.ShvoteParticipance.objects(belong_to = activity_id,count__gt = vote_count)
+					cur_player_info.rank = vote_count_bigger.count() + 1
+				cur_player_info.created_at = cur_player_info.created_at.strftime('%Y-%m-%d %H:%M')
 			except:
 				pass
 
-		shvotes = app_models.Shvote.objects().all()
+		shvotes = app_models.Shvote.objects(id = activity_id,status__ne = app_models.STATUS_STOPED)
+
 		group_list = []
 		for v in shvotes:
 			group_list = group_list + (v.groups)
