@@ -109,6 +109,19 @@
 		background: #fff;
 		font-size: 14px;
 	}
+	.wui-rankList-wrap{
+		position: relative;
+	}
+	.wui-mark{
+		padding: 5px;
+		border-radius: 2px;
+		background: rgba(0,0,0,0.6);
+		color: #fff;
+		position: fixed;
+		top: 30%;
+		right: 0;
+		z-index: 666;
+	}
 	.wui-rank-list{
 		overflow: hidden;
 		position: relative;
@@ -274,6 +287,16 @@
    		height: 1px;
    		background: #ff4200;
 	}
+	.wui-to-top{
+		width: 40px;
+		background: rgba(0,0,0,0.6);
+		position: fixed;
+		right: 4px;
+		text-align: center;
+		z-index: 999;
+		padding: 7px 0;
+		display: none;
+	}
 </style>
 {% endblock %}
 
@@ -308,6 +331,10 @@
     </div>
 	<div class="wui-rank">
 		<div class="wui-rankList-wrap">
+			<div class="wui-mark wa-imark wa-mark">我 要<br />报 名</div>
+			<a class="wui-to-top wa-to-top" href="#top">
+				<img src="/static_v2/img/top_arrow.png" width="30px">
+			</a>
 			<div class="wui-search wa-search-panel">
 				<span>选手</span>
 				<div class="wui-searchBox">
@@ -325,7 +352,7 @@
 				</div>
 				<span class="wui-swiper-mask"></span>
 			</div>
-			<div class="wui-rank-list wa-rank-list">
+			<div class="wui-rank-list wa-rank-list" id="top">
 			</div>
 		</div>
 	</div>
@@ -375,6 +402,15 @@
             return false;
         }
 
+        document.addEventListener('scroll',function () {
+        	var top_dis = $('.wa-rank-list').offset().top;
+        	if(document.body.scrollTop > top_dis){
+        		$('.wa-to-top').show();
+        	}else{
+        		$('.wa-to-top').hide();
+        	}
+        })
+
         document.addEventListener('touchstart',function () {
             var $win = $(window);
             var $top = $('.wui-loading');
@@ -397,6 +433,11 @@
 
 		// 我要报名
 		$('.wa-imark').click(function(){
+           	var isMember = {% if isMember %}true{% else %}false{% endif %};
+		   		if(!isMember){
+		        showQrcode(W.qrcodeUrl);
+		        return;
+	   		}		
 			window.location.href = window.location.origin + '/m/apps/shvote/shvote_participance/?webapp_owner_id='+W.webappOwnerId+'&id='+W.appRecordId;
 		});
 
