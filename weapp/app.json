@@ -1,9 +1,9 @@
-{	
+{
 	"name": "shvote",
 	"resources": [{
 		"name": "Shvote",
 		"need_user_participant": true,
-		"display_name": "上海投票",
+		"display_name": "高级投票",
 		"enable_termite": true
 	}]
 }

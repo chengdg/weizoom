@@ -5,14 +5,14 @@
 	<ul class="breadcrumb" style="margin-bottom:-12px;">
 		<li>您当前所在位置</li>
 		<li><a href="/apps/">百宝箱</a></li>
-		<li><a href="/apps/shvote/shvotes/">上海投票</a></li>
-		<li class="active">新建上海投票</li>
+		<li><a href="/apps/shvote/shvotes/">高级投票</a></li>
+		<li class="active">新建高级投票</li>
 	</ul>
-	
-	<form 
-		class="form-horizontal xui-app-form pl20 pr20" 
-		method="post" 
-		id="editForm" 
+
+	<form
+		class="form-horizontal xui-app-form pl20 pr20"
+		method="post"
+		id="editForm"
 		data-id="{% if shvote_participance %}{{ shvote_participance.id }}{% else %}0{% endif %}"
 	>
 		<fieldset >
@@ -22,9 +22,9 @@
 			<div class="form-group ">
 				<label class="control-label fl" for="name">name：</label>
 				<div class="fl">
-					<input 
-						type="text" 
-						class="form-control w490 mr20 ml5" 
+					<input
+						type="text"
+						class="form-control w490 mr20 ml5"
 						id="name" name="name"
 						placeholder=""
 						value="{% if shvote_participance %}{{ shvote_participance.name }}{% endif %}"
@@ -49,7 +49,7 @@
 						data-enable-select-time="true"
 						data-validate="require-notempty"
 						data-ui-role="date-picker"
-					    data-format="yy-mm-dd HH:MM" 
+					    data-format="yy-mm-dd HH:MM"
 					/>
 					至
 					<input
@@ -67,9 +67,9 @@
 					    data-min-el="#start_time"
 					/>
 				</div>
-			</div>	
+			</div>
 		</fieldset>
-		
+
 		<div class="mt20 xui-i-buttons">
 			<a class="btn btn-primary mr40 xa-submit xui-fontBold" href="javascript:void(0);">保存</a>
 			<!--

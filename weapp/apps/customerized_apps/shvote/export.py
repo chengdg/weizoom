@@ -6,7 +6,7 @@ NAV = {
 	'navs': [
 		{
 			'name': "shvotes",
-			'title': "上海投票",
+			'title': "高级投票",
 			'url': '/apps/shvote/shvotes/',
 			'need_permissions': []
 		},

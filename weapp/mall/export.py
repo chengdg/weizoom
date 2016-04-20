@@ -448,7 +448,7 @@ MALL_PROMOTION_AND_APPS_SECOND_NAV = {
                     'permission': '',
                 },{
                     'name': MALL_APPS_SHVOTE_NAV,
-                    'title': u'上海投票',
+                    'title': u'高级投票',
                     'url': '/apps/shvote/shvotes/',
                     'permission': '',
                 },
