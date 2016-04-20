@@ -598,6 +598,8 @@ class orderConfig(resource.Resource):
 
         if share_page_config.material_id:
             news = News.objects.get(material_id=share_page_config.material_id)
+            share_page_config.news_id = news.id
+            share_page_config.save()
         else:
             news = None
 
