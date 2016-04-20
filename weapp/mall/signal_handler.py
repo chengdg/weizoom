@@ -1103,6 +1103,14 @@ def products_not_online_handler_for_promotions(product_ids, request, **kwargs):
                 promotion.status = promotion_models.PROMOTION_STATUS_DISABLE
                 promotion.save()
                 promotion_models.CouponRule.objects.filter(id=promotion.detail_id).update(is_active=False)
+
+                promotion_models.Coupon.objects.filter(
+                    owner=request.manager,
+                    coupon_rule_id=promotion.detail_id,
+                    status=promotion_models.COUPON_STATUS_UNGOT
+                ).update(status=promotion_models.COUPON_STATUS_Expired)
+
+
     if len(target_promotion_ids) > 0:
         event_data = {
             "id": ','.join(target_promotion_ids)
