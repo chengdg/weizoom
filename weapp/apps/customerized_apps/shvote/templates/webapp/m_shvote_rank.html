@@ -171,7 +171,6 @@ $(function(){
         slidesPerView: 'auto',
     });
 
-<<<<<<< HEAD
     if($('.wa-rank-groups div div').length < 4){ 
 		var wid = 100/$('.wa-rank-groups div div').length;
 		$('.wa-rank-groups div div').css("width",wid+'%');
@@ -180,23 +179,6 @@ $(function(){
     	$('.wa-rank-groups').hide();
     }
     $('.wa-rank-groups div div').eq(0).addClass('active');	
-=======
-    var $groups = $('.wa-rank-groups div div');
-
-    if($groups.length < 4){
-		var wid = 100/$groups.length;
-		$groups.css("width",wid+'%');
-		$groups.eq(0).addClass('active');
-    }else{
-        // var w_wid = $(window).width();
-        // var d_wid = $(window).width()/4;
-        // $('.wa-rank-groups div div').css("width",d_wid);
-        $groups.eq(0).addClass('active');
-        $groups.each(function(){
-            $(this).addClass('swiper-slide');
-        });
-    }
->>>>>>> 6e197b558bc0bbc012555b1cf76218e9605259ec
 
 	current_group = $('.active').html();
 	getRankInfo(current_group,'');
