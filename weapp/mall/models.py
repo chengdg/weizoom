@@ -221,9 +221,12 @@ class Product(models.Model):
 		obj_bs = Product.objects.filter(owner_id=self.owner_id , display_index=pos)
 		if obj_bs.exists():
 			# obj_bs.update(display_index=0) 为了监听到display index的改变 zhaolei
-			ele = obj_bs.get()
-			ele.display_index=0
-			ele.save()
+			# ele = obj_bs.get()
+			# ele.display_index=0
+			# ele.save()
+
+			# 2016-04-20 update by Eugene
+			obj_bs.update(display_index=0)
 
 		self.display_index = pos
 		self.save()

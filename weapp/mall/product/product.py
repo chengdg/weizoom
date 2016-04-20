@@ -503,7 +503,6 @@ class ProductPool(resource.Resource):
                 pic_url = product.pic_url,
                 detail = product.detail,
                 remark = product.remark,
-                display_index = product.display_index,
                 shelve_type = models.PRODUCT_SHELVE_TYPE_OFF,
                 stock_type = product.stock_type,
                 stocks = product.stocks,
@@ -583,7 +582,6 @@ class ProductPool(resource.Resource):
         weizoom_product.pic_url = mall_product.pic_url
         weizoom_product.detail = mall_product.detail
         weizoom_product.remark = mall_product.remark
-        weizoom_product.display_index = mall_product.display_index
         weizoom_product.shelve_type = models.PRODUCT_SHELVE_TYPE_OFF
         weizoom_product.stock_type = mall_product.stock_type
         weizoom_product.stocks = mall_product.stocks
