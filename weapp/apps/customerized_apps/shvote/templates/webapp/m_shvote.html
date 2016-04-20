@@ -539,7 +539,7 @@
      */
 	$('body').delegate('.wa-rank-pic', 'click', function(event) {
 		var player_id = $(event.target).parents('.wa-rank-item').data('id');
-		var link = window.location.origin + '/m/apps/shvote/m_player_details/?webapp_owner_id='+W.webappOwnerId+'&id='+W.appRecordId+'&player_id='+player_id;
+		var link = '/m/apps/shvote/m_player_details/?webapp_owner_id='+W.webappOwnerId+'&id='+W.appRecordId+'&player_id='+player_id;
 		window.location.href = link;
 	});
 </script>
