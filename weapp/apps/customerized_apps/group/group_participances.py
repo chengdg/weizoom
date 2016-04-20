@@ -106,6 +106,7 @@ class GroupParticipances(resource.Resource):
 			success_time = data.success_time
 			created_at = data.created_at
 			group_days = data.group_days
+			group_price = data.group_price
 			rest_days = 0
 
 			if data.status_text == u'团购成功' and data.success_time:
@@ -364,6 +365,7 @@ class GroupParticipances_Export(resource.Resource):
 
 				export_record.append(g_id)
 				export_record.append(group_leader_name)
+				export_record.append(group_price)
 				# export_record.append(rest_days)
 				export_record.append(start_time)
 				export_record.append(end_time)
