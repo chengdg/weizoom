@@ -54,13 +54,14 @@ class ShvoteParticipance(resource.Resource):
 				return render_to_response('shvote/templates/webapp/m_shvote.html', c)
 			c = RequestContext(request, {
 				'record_id': id,
-				'page_title': record.name if record else u"投票",
+				'page_title': u"投票活动",
 				'groups': json.dumps(record.groups),
 				'activity_status': activity_status,
 				'is_already_participanted': (participance_data_count > 0),
 				'isMember': isMember,
 				'app_name': "shvote",
 				'resource': "shvote",
+				'is_hide_weixin_option_menu':True,
 				'share_page_title': mpUserPreviewName if mpUserPreviewName else record.name,
 				'share_img_url': record.share_image if record else '',
 				"share_page_desc": record.name if record else '',
