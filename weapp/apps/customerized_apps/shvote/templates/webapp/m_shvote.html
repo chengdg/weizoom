@@ -406,7 +406,7 @@
 	//当前分组，切换时候需要改变值，用于查找
 	var current_group = '';
 	var record_info;
-	var players_num = 2;
+	var players_num = 20;
 
 	$(function(){
         if(W.isPC){
@@ -646,7 +646,7 @@
 	        	}
                 $list.append(tmp_html);
                 $('.wa-rank-list div').each(function(){
-                	if($('.wa-rank-list > div').index(this) > 1){
+                	if($('.wa-rank-list > div').index(this) > 19){
                 		$(this).hide();
                 	}
                 });         
@@ -665,7 +665,7 @@
     }
 
     function showPlayers(){
-   		players_num += 2;
+   		players_num += 20;
         $('.wa-rank-list > div').each(function(){
             if($('.wa-rank-list > div').index(this) < players_num){
                 $(this).show();
