@@ -333,7 +333,7 @@
 	<div class="wui-rank">
 		<div class="wui-rankList-wrap">
 			<div class="wui-mark wa-imark wa-mark">我 要<br />报 名</div>
-			<a class="wui-to-top wa-to-top" href="#top">
+			<a class="wui-to-top wa-to-top">
 				<img src="/static_v2/img/top_arrow.png" width="34px">
 			</a>
 			<div class="wui-search wa-search-panel">
@@ -353,7 +353,7 @@
 				</div>
 				<span class="wui-swiper-mask"></span>
 			</div>
-			<div class="wui-rank-list wa-rank-list" id="top">
+			<div class="wui-rank-list wa-rank-list">
 			</div>
 		</div>
 	</div>
@@ -402,6 +402,10 @@
             showDesc();
             return false;
         }
+
+        $('.wa-to-top').click(function(){
+        	$('body').scrollTop(0);
+        })
 
         document.addEventListener('scroll',function () {
         	var top_dis = $('.wa-rank-list').offset().top;
