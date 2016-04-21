@@ -299,12 +299,12 @@ def _get_host(user_profile):
 def _get_send_message_dict(user_profile, member_id, model, template_message):
 	template_data = dict()
 	social_account = member_model_api.get_social_account_by_member_id(member_id)
-
+	member = member_model_api.get_member_by_id(member_id)
 	if social_account and social_account.openid:
 		template_data['touser'] = social_account.openid
 		template_data['template_id'] = template_message.template_id
 		template_data['topcolor'] = "#FF0000"
-		template_data['url'] = __get_template_url(template_message.send_point, user_profile, social_account, model)
+		template_data['url'] = __get_template_url(template_message.send_point, user_profile, member, model)
 
 		detail_data = {}
 		detail_data["first"] = {"value" : template_message.first_text, "color" : "#000000"}
@@ -316,10 +316,10 @@ def _get_send_message_dict(user_profile, member_id, model, template_message):
 		template_data['data'] = detail_data
 	return template_data
 
-def __get_template_url(send_point, user_profile, social_account, model):
+def __get_template_url(send_point, user_profile, member, model):
 	host = _get_host(user_profile)
 	if send_point == COUPON_ARRIVAL_NOTIFY or send_point == COUPON_EXPIRED_REMIND:
-		return u'{}/workbench/jqm/preview/?module=market_tool:coupon&model=usage&action=get&workspace_id=market_tool:coupon&webapp_owner_id={}&project_id=0&sct={}'.format(host, user_profile.user.id, social_account.token)
+		return u'{}/mall/my_coupons/?woid={}&fmt={}'.format(settings.H5_HOST, user_profile.user_id, member.token)
 
 	return u''
 
