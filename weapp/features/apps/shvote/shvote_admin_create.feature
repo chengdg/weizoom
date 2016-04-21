@@ -10,8 +10,8 @@ Background:
 	"""
 		[{
 			"title":"新建微信高级投票活动",
-			"groups":[],
-			"daily_vote":3
+			"groups":["初中组"],
+			"daily_vote":3,
 			"rule":"高级投票规则",
 			"desc":"高级投票活动介绍",
 			"start_date":"今天",

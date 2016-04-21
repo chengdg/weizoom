@@ -32,19 +32,19 @@ def __CreatePlayer(context,webapp_user_name,webapp_owner_id,shvote_name,shvote_i
 	version = 1
 
 	text = json.loads(context.text)
-	headImg = text.get('headImg')
+	icon = text.get('icon')
 	name = text.get('name','')
-	group = text.get('group',[""])[0]
-	number = text.get('number')
+	group = text.get('group','')
+	serial_number = text.get('serial_number')
 	details = text.get('details','')
 	detail_pic = json.dumps(text.get('detail_pic'))
 
 	termite_post_args = {
-		'webapp_owner_id':webapp_owner_id,
-		'head_img_src':headImg,
+		'activity_id':shvote_id,
+		'head_img_src':icon,
 		'player_name':name,
 		'group':group,
-		'serial_number':number,
+		'serial_number':serial_number,
 		'details':details,
 		'img_des_srcs':detail_pic,
 	}
@@ -57,7 +57,7 @@ def __CreatePlayer(context,webapp_user_name,webapp_owner_id,shvote_name,shvote_i
 
 
 
-@When(u'{webapp_user_name}于"{shvote_name}"高级投票活动后台创建选手')
+@When(u'{webapp_user_name}在"{shvote_name}"高级投票活动后台创建选手')
 def step_impl(context, webapp_user_name,shvote_name):
 	webapp_owner_id = str(context.webapp_owner_id)
 	user = User.objects.get(id=webapp_owner_id)
