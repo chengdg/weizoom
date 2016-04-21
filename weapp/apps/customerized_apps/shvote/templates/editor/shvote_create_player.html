@@ -237,8 +237,13 @@
 <script type="text/javascript">
 $(document).ready(function() {
     var action = {% if action %}true{% else %}false{% endif %};
+    var record_status = {% if record_status %}true{% else %}false{% endif %};
     if(!action){
         W.showHint('error', '选手信息出错~');
+        return false;
+    }
+    if(!record_status){
+        W.showHint('error', '活动信息出错~');
         return false;
     }
 	$('.wa-submit').click(function(event) {

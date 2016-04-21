@@ -287,13 +287,16 @@ class ShvoteCreatePlayer(resource.Resource):
 		shvote = cur_player_info = None
 		status = 0
 		action = True
+		record_status = True
+		try:
+			shvote = app_models.Shvote.objects.get(id = activity_id,status__ne = app_models.STATUS_STOPED)
+		except:
+			record_status = False
 		if player_id:
 			try:
 				cur_player_info = app_models.ShvoteParticipance.objects.get(id = player_id)
 				status = cur_player_info.status
 				cur_player_info.created_at = cur_player_info.created_at.strftime('%Y-%m-%d %H:%M')
-				shvote = app_models.Shvote.objects.get(id = activity_id,status__ne = app_models.STATUS_STOPED)
-
 				cur_player_info.rank = 0
 				for s in app_models.ShvoteParticipance.objects(belong_to=activity_id, status=app_models.MEMBER_STATUS['PASSED'], is_use=app_models.MEMBER_IS_USE['YES']).order_by('-count', 'created_at'):
 					cur_player_info.rank += 1
@@ -312,7 +315,8 @@ class ShvoteCreatePlayer(resource.Resource):
 			'cur_player_info': cur_player_info,
 			'status': status,
 			'player_id': player_id,
-			'action': action
+			'action': action,
+			'record_status': record_status
 		})
 
 		return render_to_response('shvote/templates/editor/shvote_create_player.html', c)
