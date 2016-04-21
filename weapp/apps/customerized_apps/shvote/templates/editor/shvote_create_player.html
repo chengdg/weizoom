@@ -236,6 +236,11 @@
 
 <script type="text/javascript">
 $(document).ready(function() {
+    var action = {% if action %}true{% else %}false{% endif %};
+    if(!action){
+        W.showHint('error', '选手信息出错~');
+        return false;
+    }
 	$('.wa-submit').click(function(event) {
 		if(!$('.wa-upload-img').attr('src')){
 			W.showHint('error', '上传头像不能为空！');

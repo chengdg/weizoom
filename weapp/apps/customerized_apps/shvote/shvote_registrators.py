@@ -286,25 +286,22 @@ class ShvoteCreatePlayer(resource.Resource):
 		#查看选手
 		shvote = cur_player_info = None
 		status = 0
+		action = True
 		if player_id:
 			try:
 				cur_player_info = app_models.ShvoteParticipance.objects.get(id = player_id)
 				status = cur_player_info.status
-				# if status == app_models.MEMBER_STATUS['PASSED']:
-				# 	vote_count = cur_player_info.count
-					# vote_count_bigger = app_models.ShvoteParticipance.objects(belong_to = activity_id,count__gt = vote_count)
-					# cur_player_info.rank = vote_count_bigger.count() + 1
 				cur_player_info.created_at = cur_player_info.created_at.strftime('%Y-%m-%d %H:%M')
 				shvote = app_models.Shvote.objects.get(id = activity_id,status__ne = app_models.STATUS_STOPED)
-			except:
-				pass
 
-		rank = 0
-		for s in app_models.ShvoteParticipance.objects(belong_to=activity_id, status=app_models.MEMBER_STATUS['PASSED'], is_use=app_models.MEMBER_IS_USE['YES']).order_by('-count', 'created_at'):
-			rank += 1
-			if str(s.member_id) == player_id:
-				cur_player_info.rank = rank
-				break
+				cur_player_info.rank = 0
+				for s in app_models.ShvoteParticipance.objects(belong_to=activity_id, status=app_models.MEMBER_STATUS['PASSED'], is_use=app_models.MEMBER_IS_USE['YES']).order_by('-count', 'created_at'):
+					cur_player_info.rank += 1
+					if str(s.member_id) == player_id:
+						break
+			except:
+				action = False
+
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
 			'second_navs': mall_export.get_promotion_and_apps_second_navs(request),
@@ -314,7 +311,8 @@ class ShvoteCreatePlayer(resource.Resource):
 			'id': activity_id,
 			'cur_player_info': cur_player_info,
 			'status': status,
-			'player_id': player_id
+			'player_id': player_id,
+			'action': action
 		})
 
 		return render_to_response('shvote/templates/editor/shvote_create_player.html', c)
