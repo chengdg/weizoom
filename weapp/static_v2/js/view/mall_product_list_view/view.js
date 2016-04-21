@@ -36,6 +36,12 @@ W.view.mall.ProductListView = Backbone.View.extend({
         'click .xa-modifyCustomModelStocks': 'onClickModifyCustomModelStocksLink',
         'blur .xa-stockInput': 'onConfirmStockInput',
         'keypress .xa-stockInput': 'onPressKeyInStockInput',
+
+        'click .xa-modifyStandardModelPrice': 'onClickModifyStandardModelPriceLink',
+        'click .xa-modifyCustomModelPrice': 'onClickModifyCustomModelPriceLink',
+        'blur .xa-priceInput': 'onConfirmPriceInput',
+        'keypress .xa-priceInput': 'onPressKeyInPriceInput',
+
         'blur .xa-rank': 'onBlurRank',
         'keypress .xa-rank': 'onPressKeyRank',
         'click .xa-showAllModels': 'onClickShowAllModelsButton',
@@ -253,6 +259,117 @@ W.view.mall.ProductListView = Backbone.View.extend({
         });
     },
 
+    /**
+     * onClickModifyCustomModelPriceLink: 鼠标点击多规格商品价格列“修改”区域的响应函数
+     */
+    onClickModifyCustomModelPriceLink:function(event){
+        var $target = $(event.currentTarget);
+        var $td = $target.parents('td');
+        var $tr = $target.parents('tr');
+        var id = $tr.data('id');
+        var product = this.table.getDataItem(id);
+        var models = product.get('models');
+        W.dialog.showDialog('W.dialog.mall.UpdateProductModelPriceDialog', {
+            models: models,
+            success: function(data) {
+                var newModelInfos = data;
+                W.getApi().call({
+                method: 'post',
+                app: 'mall2',
+                resource: 'product_model_price',
+                args: W.toFormData({'model_infos': newModelInfos}),
+                scope: this,
+                success: function(data) {
+                    //遍历table中的model，如果该model在newModelInfos中出现，则:
+                    var id2newModelInfo = {};
+                    for (i = 0; i < newModelInfos.length; ++i) {
+                        var newModelInfo = newModelInfos[i];
+                        id2newModelInfo[newModelInfo.id] = newModelInfo;
+                    }
+                    var __sum = 0;  // 库存计数
+                    for (i = 0; i < models.length; ++i) {
+                        var model = models[i];
+                        var newModelInfo = id2newModelInfo[model.id]
+                        model.price = newModelInfo.price;
+                    }
+
+                    var sortedModels = _.sortBy(models, function(model) {
+                        return model.price*1; 
+                    });
+                    $td.find('.xa-priceText').text(sortedModels[0].price +' ~ '+sortedModels[sortedModels.length-1].price);
+                },
+                error: function(resp) {
+                    var msg = '更新价格失败!';
+                    if(resp.errMsg.length > 0)
+                        msg = resp.errMsg;
+                    W.showHint('error', msg);
+                }
+            })
+            }
+        });
+    },
+    /**
+     * onClickModifyStandardModelPriceLink: 鼠标点击商品价格列“修改”区域的响应函数
+     */
+     onClickModifyStandardModelPriceLink:function(event){
+        var $link = $(event.currentTarget);
+        var $td = $link.parents('td');
+        var $priceText = $td.find('.xa-priceText');
+        var priceText = $.trim($priceText.text());
+        var $priceInput = $td.find('.xa-priceInput');
+        $priceText.hide();
+        $priceInput.show().focus().val(priceText);
+     },
+    /**
+     * onConfirmPriceInput: 鼠标失焦移出价格编辑框是的响应函数
+     */
+     onConfirmPriceInput:function(event){
+
+        var $td = $(event.currentTarget).parent();
+        var $tr = $td.parent();
+        var productId = $tr.data('id');
+        var $priceText = $td.find('.xa-priceText');
+        var $priceInput = $td.find('.xa-priceInput');
+        var priceText = $.trim($priceInput.val());
+        if(!$priceInput.val().match(/^\d+(\.\d{0,2})?$/g)){
+            $priceInput.focus().select();
+            W.showHint('error', '请输入正确的价格');
+            return false;
+        };
+        var productData = this.table.getDataItem(productId);
+        var data = {
+            'model_infos': [{
+                id: productData.get('standard_model').id,
+                price: priceText
+            }]
+        };
+        W.getApi().call({
+            method: 'post',
+            app: 'mall2',
+            resource: 'product_model_price',
+            args: W.toFormData(data),
+            scope: this,
+            success: function(data) {
+                $priceInput.hide();
+                $priceText.text(priceText).show();
+            },
+            error: function(resp) {
+                var msg = '更新价格失败!';
+                if(resp.errMsg.length > 0)
+                    msg = resp.errMsg;
+                W.showHint('error', msg);
+            }
+        })
+     },
+     /**
+     * onPressKeyInStockInput: 在价格编辑框中输入回车时的响应函数
+     */
+     onPressKeyInPriceInput: function(event){
+        var keyCode = event.keyCode;
+        if(keyCode === 13) {
+            this.onConfirmPriceInput(event);
+        }
+     },
     /**
      * onClickShowAllModelsButton: 鼠标点击“查看规格”区域的响应函数
      */
