@@ -153,9 +153,12 @@
 					{{if (field.type == 'badge')}}
 					<div class="propertyGroup_property_sliderField propertyGroup_property_horizontalField">
 						<div class="propertyGroup_property_label mr5 {{if field.validate}}star_show{{/if}}">${field.displayName}：</div>
-						<div class="propertyGroup_property_input pl5 xa-thirdPartyPlugin" data-plugin="apps_prize_keywordpane" data-field="${field.name}">
-							<div data-ui-role="apps-prize-keyword-pane" >
-                                <div class="xa-add-keyword-btn xui-add-keyword-btn">+ 添加</div>
+						<div class="propertyGroup_property_input pl5 xa-thirdPartyPlugin" data-plugin="${field.plugin}" data-field="${field.name}">
+							<div data-ui-role="${field.uirole}"
+							    data-maxlen="{{if field.maxlen }}${field.maxlen}{{else}}15{{/if}}"
+							    data-maxcount="{{if field.maxcount }}${field.maxcount}{{else}}5{{/if}}"
+							>
+                                <div class="xa-add-badge-btn xui-add-badge-btn">${field.btnName}</div>
 						    </div>
 
 						</div>
@@ -186,7 +189,8 @@
 								data-enable-select-time="true"
 								data-validate="require-notempty"
 								data-ui-role="date-picker"
-								data-format="yy-mm-dd HH:MM"
+								data-format-c="{{if field.format}}${field.format}{{else}}yy-mm-dd{{/if}}"
+								data-format="yy-mm-dd"
                                 data-max-el="#end_time"
                                 data-min="now"/>
 							至
@@ -202,7 +206,8 @@
 								data-enable-select-time="true"
 								data-validate="require-notempty"
 								data-ui-role="date-picker"
-								data-format="yy-mm-dd HH:MM"
+								data-format-c="{{if field.format}}${field.format}{{else}}yy-mm-dd{{/if}}"
+								data-format="yy-mm-dd"
 								data-min-el="#start_time" />
 							<div class="errorHint pl5"></div>
 						</div>
@@ -222,11 +227,11 @@
 					{{/if}}
 
 					{{if (field.type == 'textarea')}}
-					<div class="propertyGroup_property_textareaField">
+					<div class="propertyGroup_property_textareaField propertyGroup_property_horizontalField">
 						{{if field.displayName}}
 						<div class="propertyGroup_property_label {{if field.validate}}star_show{{/if}}">${field.displayName}</div>
 						{{/if}}
-						<div class="propertyGroup_property_input pl5" style="width: 90%; margin: 5px auto;">
+						<div class="propertyGroup_property_input pl5">
 							<textarea class="" style="${field.style}" {{if field.placeholder}}placeholder="${field.placeholder}"{{/if}}
 							style="height: 100px; width: 95%;" data-field="${field.name}"
 							{{if field.validate}}{{html field.validate}}{{/if}}
@@ -460,11 +465,11 @@
 					{{if (field.type == 'image_dialog_select_v2')}}
 					<div class="propertyGroup_property_dialogSelectField propertyGroup_property_horizontalField">
 					    <div class="propertyGroup_property_label {{if field.validate}}star_show{{/if}}">${field.displayName}</div>
-					    <div class="propertyGroup_property_input" style="position:relative;">
+					    <div class="propertyGroup_property_input" style="position:relative;width:60%;">
 					        {{html W.data.getDynamicComponentDataForDialogSelectControl(component, field)}}
 					        <input data-field="${field.name}" name="${field.name}" type="hidden" value="{{if component.model.get(field.name)}}${component.model.get(field.name)}{{else}}{{/if}}"/>
 					        {{if !component.model.get(field.name)}}
-					           <div class="btn btn-small xui-image-dialog-trigger {{if component.model.get(field.name)}}xui-triggerButton-hasdata{{/if}}" data-target-dialog="${field.dialog}" data-dialog-parameter="${field.dialogParameter}"></div>
+					           <div class="btn btn-small xui-image-dialog-trigger component.model.get(field.name) {{if component.model.get(field.name)}}xui-triggerButton-hasdata{{/if}}" data-target-dialog="${field.dialog}" data-dialog-parameter="${field.dialogParameter}"></div>
 					        {{else}}
 					            <button class="btn btn-small xui-i-triggerButton {{if component.model.get(field.name)}}xui-triggerButton-hasdata{{/if}}" data-target-dialog="${field.dialog}" data-dialog-parameter="${field.dialogParameter}">
 					                ${field.triggerButton.hasdata}

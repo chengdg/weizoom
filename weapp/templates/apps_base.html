@@ -136,7 +136,7 @@
         <script type="text/javascript" src="/termite_static/v3/system/system.js"></script>
         <script type="text/javascript" src="/termite_static/backbone/underscore-1.4.4.min.js"></script>
         <script type="text/javascript" src="/termite_static/v3/gmu/widget/swipeMask.js"></script>
-        <script type="text/javascript" src="/termite_static/v3/system/validate.js"></script>
+        <script type="text/javascript" src="/termite_static/v3/system/apps_validate.js"></script>
         <script type="text/javascript" src="/termite_static/v3/gmu/widget/swipeImage.js"></script>
 
         <script type="text/javascript" src="/termite_static/v3/system/api.js"></script>
@@ -146,7 +146,7 @@
         <script type="text/javascript" src="/termite_static/v3/system/weixinapi.js"></script>
         <script type="text/javascript" src="/termite_static/v3/system/preview_imges.js"></script>
         <script type="text/javascript" src="/termite_static/v3/gmu/widget/appalert.js"></script>
-        <script type="text/javascript" src="/termite_static/v3/gmu/widget/addImg.js"></script>
+        <script type="text/javascript" src="/termite_static/v3/gmu/widget/apps_addImg.js"></script>
 
         <!-- *end_prunt_task* -->
 
@@ -180,12 +180,13 @@
         <!--<script src="http://192.168.2.76:8080/target/target-script-min.js"></script> -->
         <script type="text/javascript">
             var isHideWeixinOptionMenu = {% if is_hide_weixin_option_menu %}true{% else %}false{% endif %};
+            W.isAlreadyParticipanted = {% if is_already_participanted %}true{% else %}false{% endif %};
             W.currentPageName = "{{current_page_name}}";
             W.projectId = "{{request.project.id}}";
             W.webappOwnerId = "{{request.webapp_owner_id}}";
             W.curRequestMemberToken = "{{ cur_request_member.token }}";
             W.pageTitle = "{{page_title}}";
-
+            W.activityStatus = "{{activity_status}}";
             W.appRecordId = "{{ record_id }}";
             W.appName = "{{ app_name }}";
             W.resource = "{{ resource }}";
@@ -287,6 +288,40 @@
                         'top': 0
                     });
                 }, time);
+            }
+            /**mini js模板引擎
+             * 用法：  var tpl = new Template(html片段);
+             *        result_html_str = tpl.render(data{})
+             *        $html.append(result_html_str)
+             * @param tpl html片段
+             */
+            function Template(tpl) {
+                var
+                    fn,
+                    match,
+                    code = ['var r=[];\nvar _html = function (str) { return str.replace(/&/g, \'&amp;\').replace(/"/g, \'&quot;\').replace(/\'/g, \'&#39;\').replace(/</g, \'&lt;\').replace(/>/g, \'&gt;\'); };'],
+                    re = /\{\s*([a-zA-Z\.\_0-9()]+)(\s*\|\s*safe)?\s*\}/m,
+                    addLine = function (text) {
+                        code.push('r.push(\'' + text.replace(/\'/g, '\\\'').replace(/\n/g, '\\n').replace(/\r/g, '\\r') + '\');');
+                    };
+                while (match = re.exec(tpl)) {
+                    if (match.index > 0) {
+                        addLine(tpl.slice(0, match.index));
+                    }
+                    if (match[2]) {
+                        code.push('r.push(String(this.' + match[1] + '));');
+                    }
+                    else {
+                        code.push('r.push(_html(String(this.' + match[1] + ')));');
+                    }
+                    tpl = tpl.substring(match.index + match[0].length);
+                }
+                addLine(tpl);
+                code.push('return r.join(\'\');');
+                fn = new Function(code.join('\n'));
+                this.render = function (model) {
+                    return fn.apply(model);
+                };
             }
         </script>
 

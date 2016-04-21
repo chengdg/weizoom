@@ -75,6 +75,9 @@ W.component.appkit.SignDescription = W.component.Component.extend({
 			type: 'badge',
 			displayName: '关键字',
 			isUserProperty: true,
+			plugin: 'apps_prize_keywordpane',
+			uirole: 'apps-prize-keyword-pane',
+			'btnName': '+ 添加',
 			default: {}
 
 		},{

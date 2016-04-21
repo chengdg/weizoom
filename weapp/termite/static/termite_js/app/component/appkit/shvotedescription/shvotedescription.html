@@ -1,0 +1,36 @@
+﻿{% load workbench_filter %}
+
+
+{% ifequal component.type 'appkit.shvotedescription' %}
+<div  
+    class="wui-shvoteDescription"
+    data-component-cid="{{component.cid}}"
+>
+    <div>
+        <img src="{{ component.model.material_image }}">
+    </div>
+    <div class="wa-shvote-desc wui-i-details">
+        <div class="wui-i-header">
+            <h1 class="wui-i-title xa-title">{{component.model.title}}</h1>
+            <div class="wui-i-gradient"></div>            
+        </div>
+        <p class="wui-i-time">
+            活动时间：<span>{{component.model.start_time|space_split_0}} - {{component.model.end_time|space_split_0}}</span>
+            <div class="wui-i-gradient"></div>
+        </p>
+        <div class="wui-i-rule">
+            <span>投票规则</span><p>{{component.model.rule}}</p>
+            <div class="wui-i-gradient"></div>
+        </div>
+        <div class="wui-i-description">
+            <span>活动介绍</span>
+            {{component.model.description|safe}}
+        </div>
+        <div class="wui-i-btn">
+            <button class="wa-getback wui-i-getback">返回投票&nbsp>></button>
+            <button class="wa-imark wui-i-imark">我要报名</button>
+        </div>
+    </div>
+
+</div>
+{% endifequal %}

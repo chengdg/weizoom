@@ -21,6 +21,7 @@ W.view.common.DatePicker = Backbone.View.extend({
         this.$minEl = $(this.$el.attr('data-min-el'));
         this.max = this.$el.attr('data-max');
         this.$maxEl = $(this.$el.attr('data-max-el'));
+        this.dateFormat = options.dateFormat;
 
         this.isEnableTimePicker = !!this.$el.data('enableSelectTime');
     },
@@ -36,7 +37,7 @@ W.view.common.DatePicker = Backbone.View.extend({
             showButtonPanel: this.isEnableTimePicker,
             defaultDate: new Date(),
             numberOfMonths: 1,
-            dateFormat: 'yy-mm-dd',
+            dateFormat: this.dateFormat || 'yy-mm-dd',
             closeText: '确定',
             prevText: '&#x3c;上月',
             nextText: '下月&#x3e;',
@@ -102,8 +103,10 @@ W.view.common.DatePicker = Backbone.View.extend({
 
 W.registerUIRole('[data-ui-role="date-picker"]', function() {
     var $input = $(this);
+    var dateFormat = $input.attr('data-format-c'); //专为appkit组件设计
     var view = new W.view.common.DatePicker({
-        el: $input.get(0)
+        el: $input.get(0),
+        dateFormat: dateFormat
     });
     view.render();
 

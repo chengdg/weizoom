@@ -1,0 +1,48 @@
+<script id="app-shvote-viewParticipanceDataDialog-dialog-tmpl" type="text/x-handlebar-tmpl">
+	<div class="xui-app_shvote-Dialog modal fade">
+	<div class="modal-dialog modal-lg">
+	<div class="modal-content">
+		<div class="modal-header">
+			<button aria-hidden="true" data-dismiss="modal" class="close" type="button"><span class="xui-closeColor" aria-hidden="true">&times;</span></button>
+			<h3 class="modal-title" >查看结果</h3>
+		</div>
+		<div class="modal-body">
+			<div
+                data-ui-role="advanced-table"
+                data-app="apps/shvote"
+                data-resource="shvote_participances_dialog"
+                data-args=''
+                data-template-id="#app-shvote-viewParticipanceResultDialog-dialog-tmpl"
+                data-enable-paginator="true"
+                data-enable-sort="false"
+                data-item-count-per-page="10"
+                data-auto-load="false"
+                class="mt10 mb20">
+            </div>
+		</div>
+		<div class="modal-footer">
+			<button class="btn btn-primary xa-submit-dialog">确认</button>
+		</div>
+	</div>
+	</div>
+	</div>
+</script>
+<script id="app-shvote-viewParticipanceResultDialog-dialog-tmpl" type="text/x-jquery-tmpl">
+    <table class="table table-bordered">
+    	<thead>
+    		<tr>
+    			<td style="width:50%">投票人</td>
+    			<td>投票时间</td>
+    		</tr>
+    	</thead>
+    	<tbody>
+	        {{each(i, item) items}}
+				<tr>
+					<td>{{html item.name}}</td>
+					<td>${item.created_at}</td>
+				</tr>
+	        {{/each}}
+        </tbody>
+    </table>
+</script>
+

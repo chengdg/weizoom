@@ -1,9 +1,9 @@
-{	
-	"name": "group",
+{
+	"name": "shvote",
 	"resources": [{
-		"name": "Group",
+		"name": "Shvote",
 		"need_user_participant": true,
-		"display_name": "团购",
+		"display_name": "高级投票",
 		"enable_termite": true
 	}]
 }

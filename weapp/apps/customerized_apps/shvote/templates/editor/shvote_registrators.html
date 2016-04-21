@@ -1,0 +1,348 @@
+{% extends "content_base_v2.html" %}
+{% load apps_filter %}
+
+{% block css%}
+	<style>
+		.tl.pl25 img{
+			height: 60px;
+			width: 60px;
+		}
+	</style>
+{% endblock%}
+
+{% block content-panel %}
+<div class="xui-ShvoteParticipancesAppPage xui-appPage-commonStyle">
+	<div class="relative">
+		<ul class="breadcrumb">
+			<li>您当前所在位置</li>
+			<li><a href="/apps/lottery/lotteries/">百宝箱</a></li>
+			<li><a href="/apps/shvote/shvotes/">高级投票</a></li>
+			<li class="active">报名详情</li>
+		</ul>
+	</div>
+
+	<div class="xui-formPanel pb10 mb15">
+		<div class="xui-i-col">
+			<div class="xui-i-item">
+				<label class="">选手名称：</label>
+				<input type="text" class="form-control" id="participant_name" name="participant_name" value="" />
+			</div>
+		</div>
+		<div class="xui-i-col">
+			<div class="xui-i-item ml20">
+				<label>状态：</label>
+				<select class="" id="status" name="status">
+					<option value="-1">全部</option>
+					<option value="0">待审核</option>
+					<option value="1">审核通过</option>
+				</select>
+			</div>
+		</div>
+		<div class="xui-i-col">
+			<div class="ml80">
+				<a class="btn btn-primary mr30 xa-search xui-fontBold" href="javascript:void(0);">查&nbsp;&nbsp;&nbsp;&nbsp;询</a>
+				<a class="btn btn-default xa-export xui-fontBold" href="javascript:void(0);">批量导出</a>
+				<a id="export_href" style="display: none ">DownloadXLS</a>
+			</div>
+		</div>
+	</div>
+
+	<div class="panel panel-default xui-tableBox">
+		<div class="panel-header clearfix">
+			<label for="bottomSelectAll" class="xui-selectAll ml12">
+				<input type="checkbox" id="bottomSelectAll" class="xa-selectAll">本页全选
+			</label>
+			<a href="javascript:void(0);" class="btn btn-default ml10 xa-batchReview">批量审核通过</a>
+			<a href="javascript:void(0);" class="btn btn-default ml10 xa-batchDelete">批量删除</a>
+			<a href="/apps/shvote/shvote_create_player/?id={{activity_id}}"><button type="button" class="btn btn-success fr mr10 xa-create_member">创建选手</button></a>
+		</div>
+		<div
+			class="panel-body panel-table p0 mt10"
+			data-ui-role="advanced-table"
+			data-app="apps/shvote"
+			data-resource="shvote_registrators"
+			data-args='{"id": "{{activity_id}}"}'
+			data-template-id="#table"
+			data-enable-paginator="true"
+			data-enable-sort="false"
+			data-selectable="true"
+			data-item-count-per-page="10"
+			data-disable-header-select="true"
+			data-outer-selecter='.xa-selectAll'
+			data-selecttable-tr='xa-selectTr'
+		>
+		</div>
+		<div class="panel-header clearfix xui-batchbtn">
+			<label for="bottomSelectAll" class="xui-selectAll ml12">
+				<input type="checkbox" id="bottomSelectAll" class="xa-selectAll">本页全选
+			</label>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+
+{% block js %}
+<!-- *start_prunt_task* -->
+	<!-- [prunt_task]
+	  {
+		"task": "weizoom-load-app-views-dialogs"
+	  }
+	-->
+{{ "shvote"|load_app_views_and_dialogs|safe }}
+<!-- *end_prunt_task* -->
+{% verbatim %}
+<script id="table" type="text/x-jquery-tmpl">
+	{{if items!='' }}
+	<table class="table table-bordered xb-stripedTable xb-noTdBorder xb-noBottom xb-noBorder xb-theadBg mb10">
+		<thead>
+			<tr>
+				<th>选手</th>
+				<th>票数</th>
+				<th>编号</th>
+				<th>状态</th>
+				<th>报名时间</th>
+				<th>操作</th>
+			</tr>
+		</thead>
+		<tbody>
+		  {{each(i, item) items}}
+			<tr data-id="${item.id}" class="xa-selectTr">
+				<td
+					class="tl pl25"
+					style="width:250px; height:60px;"
+				>
+					<img src="${item.icon}" />
+					${item.name}
+				</td>
+				<td>
+					${item.count}
+				</td>
+				<td>
+					${item.serial_number}
+				</td>
+				<td class="item_status" item_status= ${item.status}>
+					{{if (item.status === 0)}}
+						待审核
+					{{/if}}
+					{{if (item.status === 1)}}
+						审核通过
+					{{/if}}
+
+				</td>
+				<td>
+					${item.created_at}
+				</td>
+				<td>
+					{{if (item.status === 0)}}
+						<a href="javascript:void(0);" class="ml5 xa-review">审核通过</a>
+						<a href="javascript:void(0);" class="ml5 xa-delete">删除</a>
+					{{/if}}
+					<a href="/apps/shvote/shvote_create_player/?id=${item.activity_id}&player_id=${item.id}" class="ml5">查看</a>
+				</td>
+			</tr>
+			{{/each}}
+		</tbody>
+		<div class="cb"></div>
+	</table>
+	{{else}}
+		<div class="xui-emptyBox m10">
+			<img src="/static_v2/img/editor/empty.png">
+			<span class="ml20">您还没有相关数据！</span>
+		</div>
+	{{/if}}
+	<br>
+</script>
+{% endverbatim %}
+
+<script type="text/javascript">
+$(document).ready(function() {
+	$('.xa-search').click(function(event) {
+		var participant_name = $.trim($('[name="participant_name"]').val());
+		var participant_status = $.trim($('[name="status"]').val());
+		var table = $('[data-ui-role="advanced-table"]').data('view');
+		table.reload({
+			participant_name: participant_name,
+			participant_status:participant_status
+		}, {
+			emptyDataHint: '没有符合条件的数据'
+		});
+	});
+
+	$('body').delegate('.xa-delete', 'click', function(event) {
+		var table = $('div[data-ui-role="advanced-table"]').data('view');
+		var $el = $(event.target)
+		var id = $el.parents('tr').data('id')
+		W.requireConfirm({
+			$el: $el,
+			width: 420,
+			height: 55,
+			position: 'right-middle',
+			isTitle: false,
+			msg: '确定删除？',
+			confirm: function() {
+				W.getApi().call({
+					app: 'apps/shvote',
+					resource: 'shvote_registrators',
+					method: 'delete',
+					args: {
+						id: id
+					},
+					success: function(data) {
+						W.showHint('success', '删除成功！');
+						table.reload();
+					},
+					error: function(response) {
+						W.showHint('error', '删除失败，请稍后再试！');
+					}
+				});
+			}
+		});
+	});
+
+	$('body').delegate('.xa-review', 'click', function(event) {
+		var table = $('div[data-ui-role="advanced-table"]').data('view');
+		var id = $(event.target).parents('tr').data('id')
+		W.getApi().call({
+			app: 'apps/shvote',
+			resource: 'shvote_registrators',
+			method: 'post',
+			args: {
+				id: id,
+			},
+			success: function(data) {
+				W.showHint('success', '审核成功！');
+				table.reload();
+			},
+			error: function(response) {
+				W.showHint('error', '审核失败，请稍后再试！');
+			}
+		});
+	});
+
+
+	//全选js
+	$('.xa-selectAll').click(function(event) {
+		var $checkbox = $(event.currentTarget);
+		var isChecked = $checkbox.is(':checked');
+		$('tbody .xa-select').prop('checked', isChecked);
+		$('.xa-selectAll').prop('checked', isChecked);
+	});
+
+	//批量通过
+	$('.xa-batchReview').click(function(event) {
+		var table = $('div[data-ui-role="advanced-table"]').data('view');
+		var ids = table.getAllSelectedDataIds();
+		for(var index in ids){
+			var id = ids[index];
+			var $tr = $('div[data-ui-role="advanced-table"]').find("tr[data-id="+id+"]");
+			var item_status = $tr.find("td.item_status").attr('item_status');
+			if(item_status==1){
+				W.showHint('error', '包含已通过审核的选手！');
+				return false;
+			}
+		}
+		if(ids.length==0){
+			W.showHint('error', '请选择选手！');
+			return false;
+		}
+		W.getApi().call({
+			app: 'apps/shvote',
+			resource: 'shvote_registrators',
+			method: 'post',
+			args: {
+				"ids":JSON.stringify(ids),
+			},
+			success: function(data) {
+				W.showHint('success', '审核成功！');
+				table.reload();
+			},
+			error: function(response) {
+				W.showHint('error', '审核失败，请稍后再试！');
+			}
+		});
+
+	});
+
+	//批量删除
+	$('.xa-batchDelete').click(function(event) {
+		var table = $('div[data-ui-role="advanced-table"]').data('view');
+		var $el = $(event.target)
+		var ids = table.getAllSelectedDataIds();
+		for(var index in ids){
+			var id = ids[index];
+			var $tr = $('div[data-ui-role="advanced-table"]').find("tr[data-id="+id+"]");
+			var item_status = $tr.find("td.item_status").attr('item_status');
+			if(item_status==1){
+				W.showHint('error', '包含已通过审核的选手！');
+				return false;
+			}
+		}
+		if(ids.length==0){
+			W.showHint('error', '请选择选手！');
+			return false;
+		}
+		W.requireConfirm({
+			$el: $el,
+			width: 420,
+			height: 55,
+			position: 'right-middle',
+			isTitle: false,
+			msg: '确定删除？',
+			confirm: function() {
+				W.getApi().call({
+					app: 'apps/shvote',
+					resource: 'shvote_registrators',
+					method: 'delete',
+					args: {
+						ids: JSON.stringify(ids)
+					},
+					success: function(data) {
+						W.showHint('success', '删除成功！');
+						table.reload();
+					},
+					error: function(response) {
+						W.showHint('error', '删除失败，请稍后再试！');
+					}
+				});
+			}
+		});
+	});
+
+	//export
+	$('.xa-export').click(function(event){
+		W.getLoadingView();
+		var participant_name = $.trim($('[name="participant_name"]').val());
+		var status = $.trim($('[name="status"]').val());
+		var export_id =window.location.search.split('?id=')[1];
+		W.getApi().call({
+			method: 'get',
+			app: 'apps/shvote',
+			resource: 'shvote_registrators_export',
+			args: {
+				'id': export_id,
+				'participant_name': participant_name,
+				'status':status
+			},
+			success: function(resp){
+				if(resp.code == 200){
+					$('#export_href').prop({
+						'href': resp.download_path,
+						'download': resp.filename
+					}).get(0).click();
+
+				}
+				console.log("导出成功");
+			},
+			error: function(error){
+				console.log('导出失败');
+			}
+		});
+	});
+
+
+
+});
+</script>
+{% endblock %}
+
