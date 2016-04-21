@@ -467,6 +467,11 @@ class Product(models.Model):
 						if low_price == high_price:
 							display_price_range = low_price
 						else:
+							# 更改: 如果格式为X.0则变为整数X @延昊南
+							if round(low_price) == float(low_price):
+								low_price = '%.0f' % low_price
+							if round(high_price) == float(high_price):
+								high_price = '%.0f' % high_price
 							display_price_range = '%s ~ %s' % (low_price, high_price)
 				else:
 					product._is_use_custom_model = False
