@@ -305,15 +305,18 @@ Scenario: 4 删除已过期的优惠券规则
 		[{
 			"name": "单品券4",
 			"start_date": "今天",
-			"end_date": "2天后"
+			"end_date": "2天后",
+			"status": "进行中"
 		}, {
 			"name": "全体券3",
 			"start_date": "今天",
-			"end_date": "2天后"
+			"end_date": "2天后",
+			"status": "进行中"
 		}, {
 			"name": "单品券2",
 			"start_date": "今天",
-			"end_date": "1天后"
+			"end_date": "1天后",
+			"status": "进行中"
 		}]
 		"""
 	When bill访问jobs的webapp
@@ -344,7 +347,7 @@ Scenario: 4 删除已过期的优惠券规则
 @mall2 @promotion @promotionCoupon
 Scenario: 5 在按"优惠券名称"查询的查询结果下删除优惠券
 	Given jobs登录系统
-	When jobs设置查询条件
+	When jobs设置优惠券规则列表查询条件
 		"""
 		{
 			"name":"全体券1"
@@ -355,7 +358,8 @@ Scenario: 5 在按"优惠券名称"查询的查询结果下删除优惠券
 		[{
 			"name": "全体券1",
 			"start_date": "2天前",
-			"end_date": "1天前"
+			"end_date": "1天前",
+			"status": "已过期"
 		}]
 		"""
 	When jobs删除优惠券'全体券1'
@@ -367,10 +371,10 @@ Scenario: 5 在按"优惠券名称"查询的查询结果下删除优惠券
 @mall2 @promotion @promotionCoupon
 Scenario: 6 在按"优惠码"查询的查询结果下删除优惠券
 	Given jobs登录系统
-	When jobs设置查询条件
+	When jobs设置优惠券规则列表查询条件
 		"""
 		{
-			"coupon_id":"coupon1_id_1"
+			"coupon_code":"coupon1_id_1"
 		}
 		"""
 	Then jobs能获得优惠券规则列表
@@ -378,7 +382,8 @@ Scenario: 6 在按"优惠码"查询的查询结果下删除优惠券
 		[{
 			"name": "全体券1",
 			"start_date": "2天前",
-			"end_date": "1天前"
+			"end_date": "1天前",
+			"status": "已过期"
 		}]
 		"""
 	When jobs删除优惠券'全体券1'
@@ -409,29 +414,32 @@ Scenario: 7 在按"优惠券类型"查询的查询结果下删除优惠券
 			"coupon_product": "商品3"
 		}]
 		"""
-	When jobs设置查询条件
+	When jobs设置优惠券规则列表查询条件
 		"""
 		{
-			"coupon_promotion_type":"单品券"
+			"coupon_promotion_type":"多商品券"
 		}
 		"""
 	Then jobs能获得优惠券规则列表
 		"""
 		[{
 			"name": "单品券a",
-			"type": "单品券",
+			"type": "多商品券",
 			"start_date": "4天前",
-			"end_date": "3天前"
+			"end_date": "3天前",
+			"status": "已过期"
 		},{
 			"name": "单品券4",
-			"type": "单品券",
+			"type": "多商品券",
 			"start_date": "今天",
-			"end_date": "2天后"
+			"end_date": "2天后",
+			"status": "进行中"
 		},{
 			"name": "单品券2",
-			"type": "单品券",
+			"type": "多商品券",
 			"start_date": "今天",
-			"end_date": "1天后"
+			"end_date": "1天后",
+			"status": "进行中"
 		}]
 		"""
 	When jobs删除优惠券'单品券a'
@@ -439,21 +447,23 @@ Scenario: 7 在按"优惠券类型"查询的查询结果下删除优惠券
 		"""
 		[{
 			"name":"单品券4",
-			"type":"单品券",
+			"type":"多商品券",
 			"start_date":"今天",
-			"end_date":"2天后"
+			"end_date":"2天后",
+			"status": "进行中"
 		},{
 			"name":"单品券2",
-			"type":"单品券",
+			"type":"多商品券",
 			"start_date":"今天",
-			"end_date":"1天后"
+			"end_date":"1天后",
+			"status": "进行中"
 		}]
 		"""
 
 @mall2 @promotion @promotionCoupon
 Scenario: 8 在按"促销状态"查询的查询结果下删除优惠券
 	Given jobs登录系统
-	When jobs设置查询条件
+	When jobs设置优惠券规则列表查询条件
 		"""
 		{
 			"promotion_status":"已过期"
@@ -464,7 +474,8 @@ Scenario: 8 在按"促销状态"查询的查询结果下删除优惠券
 		[{
 			"name": "全体券1",
 			"start_date": "2天前",
-			"end_date": "1天前"
+			"end_date": "1天前",
+			"status": "已过期"
 		}]
 		"""
 	When jobs删除优惠券'全体券1'
@@ -476,7 +487,7 @@ Scenario: 8 在按"促销状态"查询的查询结果下删除优惠券
 @mall2 @promotion @promotionCoupon
 Scenario: 9 在按"活动时间"查询的查询结果下删除优惠券
 	Given jobs登录系统
-	When jobs设置查询条件
+	When jobs设置优惠券规则列表查询条件
 		"""
 		{
 			"start_date":"2天前",
@@ -488,11 +499,13 @@ Scenario: 9 在按"活动时间"查询的查询结果下删除优惠券
 		[{
 			"name": "单品券2",
 			"start_date": "今天",
-			"end_date": "1天后"
+			"end_date": "1天后",
+			"status": "进行中"
 		}, {
 			"name": "全体券1",
 			"start_date": "2天前",
-			"end_date": "1天前"
+			"end_date": "1天前",
+			"status": "已过期"
 		}]
 		"""
 	When jobs删除优惠券'全体券1'
@@ -500,13 +513,14 @@ Scenario: 9 在按"活动时间"查询的查询结果下删除优惠券
 		"""
 		[{
 			"name": "单品券2",
-			"type": "单品券",
+			"type": "多商品券",
 			"money": 10.00,
 			"remained_count": 2,
 			"limit_counts": 10,
 			"use_count": 0,
 			"start_date": "今天",
-			"end_date": "1天后"
+			"end_date": "1天后",
+			"status": "进行中"
 		}]
 		"""
 
