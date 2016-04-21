@@ -409,7 +409,7 @@
         }
 
         $('.wa-to-top').click(function(){
-        	goTop();
+        	goTop(0.1,1);
         })
 
         document.addEventListener('scroll',function () {
@@ -646,7 +646,10 @@
                 });         
                 if(!$('.wa-rank-list div:hidden').length == 0){
         			$('.wa-loading-more').show();
-        }
+       			}
+       			if($('.wa-rank-list > div').length == 0){
+					wuiAlert('当前分组没有选手');
+				}
                 loadingStatus();
             },
             error: function(data){
