@@ -1,0 +1,52 @@
+<script id="mall-update-product-model-price-dialog-tmpl-src" type="text/x-jquery-tmpl">
+	<div class="modal fade xui-updateProductModelPriceDialog" id="mallUpdateProductModelPriceDialog">
+	<div class="modal-dialog modal-lg">
+	<div class="modal-content">
+		<div class="modal-header">
+			<button aria-hidden="true" data-dismiss="modal" class="close" type="button"><span class="xui-closeColor" aria-hidden="true">&times;</span></button>
+			<h3 class="modal-title">
+				修改价格
+			</h3>
+		</div>
+		<div class="modal-body">
+		</div>
+		<div class="modal-footer xb-modalFooterBg">
+			<button class="btn btn-primary xa-submit-dialog">确认修改</button>
+		</div>
+	</div>
+	</div>
+	</div>
+</script>
+
+
+<script id="mall-update-product-model-price-dialog-table-tmpl-src" type="text/x-jquery-tmpl">
+	<table class="table table-bordered xb-stripedTable">
+		<thead>
+			<tr>
+				{{each(i, property) properties}}
+				<th>${property}</th>
+				{{/each}}
+				<th>价格</th>
+			</tr>
+		</thead>
+		<tbody>
+			{{each(i, model) models}}
+			<tr data-property-value-id="${model.id}">
+				{{each(j, property_value) model.property_values}}
+				<td>${property_value.name}</td>
+				{{/each}}
+				<td>
+							<input
+								type="text"
+								name="propertyValue-${id}"
+								value="${model.price}"
+								style="width:80px;margin-left: 20px;margin-right: 20px;"
+								data-validate="require-price"
+								/>
+					<div class="errorHint pt0" data-error-hint="请输入正确的价格"></div>
+				</td>
+			</tr>
+			{{/each}}
+		</tbody>
+	</table>
+</script>
