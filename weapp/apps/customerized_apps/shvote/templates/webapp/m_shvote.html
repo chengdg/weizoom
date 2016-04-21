@@ -269,7 +269,6 @@
 		color: #ff4200;
 		position: relative;
 		width: 100%;
-		display: none;
 	}
 	.wui-loading p{
    	    text-align: center;
@@ -293,6 +292,7 @@
 		background: rgba(0,0,0,0.6);
 		position: fixed;
 		right: 4px;
+		top: 70%;
 		text-align: center;
 		z-index: 999;
 		padding: 7px 0;
@@ -358,8 +358,8 @@
 		</div>
 	</div>
 	<div class="wui-loading wa-loading">
-		<p>加载更多</p>
-		<div></div>
+			<p>加载更多</p>
+			<div></div>
 	</div>	
 </div>
 
@@ -412,8 +412,10 @@
         	}
         })
 
-        document.addEventListener('touchstart',function () {
-        	$('.wa-loading').show();
+        document.addEventListener('touchstart',function(){
+        	if($('.wa-rank-list div:hidden').length == 0){
+        		$('.wa-loading').hide();
+        	}
             var $win = $(window);
             var $top = $('.wui-loading');
             var rect = $top[0].getBoundingClientRect();
