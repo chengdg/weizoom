@@ -174,12 +174,24 @@
 	    margin: 0 auto 10px auto;
     	display: inherit;
     }
+    .wui-details-return{
+    	background: #adadad;
+        color: #fff;
+        padding: 8px;
+        font-size: .9rem;
+        border-radius: 3px;
+        font-family: '黑体';
+        position: absolute;
+        right: 0;
+        top: 24%;
+    }
 </style>
 {% endblock %}
 
 {% block content-panel %}
 	{{ page_html_content|safe }}
 <div id="userDetailDialog" class="wui-detail-dialog">
+	<span class="wa-details-return wui-details-return">返回首页>></span>
 	<div class="wui-detail-top">
 		<div class="wui-detail-user wa-detail-user">
 			<img src="{{player_details.icon}}" class="wui-detail-user-pic">
@@ -283,5 +295,9 @@
             $('.wui-share-mask').swipeMask('hide');
         }
     }
+    $('.wa-details-return').click(function(event) {
+    	var link = '/m/apps/shvote/m_shvote/?webapp_owner_id='+W.webappOwnerId+'&id='+W.appRecordId
+    	window.location.href = link;
+    });
 </script>
 {% endblock %}
