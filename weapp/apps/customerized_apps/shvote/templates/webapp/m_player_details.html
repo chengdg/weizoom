@@ -80,6 +80,7 @@
 	.wui-detail-middle{
 		width: 9.5rem;
 	    margin: 5% 0 1% 2%;
+	    display: inline-block;
 	}
 	.wui-detail-middle .wui-detail-vote-count{
 		float: right;
@@ -181,9 +182,8 @@
         font-size: .9rem;
         border-radius: 3px;
         font-family: '黑体';
-        position: absolute;
-        right: 0;
-        top: 24%;
+        display: inline-block;
+        float: right;
     }
 </style>
 {% endblock %}
@@ -191,7 +191,6 @@
 {% block content-panel %}
 	{{ page_html_content|safe }}
 <div id="userDetailDialog" class="wui-detail-dialog">
-	<span class="wa-details-return wui-details-return">返回首页>></span>
 	<div class="wui-detail-top">
 		<div class="wui-detail-user wa-detail-user">
 			<img src="{{player_details.icon}}" class="wui-detail-user-pic">
@@ -202,9 +201,10 @@
 			<button class="wa-ivote" data-id="{{player_details.id}}" data-count="{{can_vote_count}}">投票</button>
 		</div>
 		<div class="wui-detail-middle">
-			<span class="wa-detail-serial-number">编号：{{player_details.serial_number}}</span>
+			<span class="wa-detail-serial-number">序号：{{player_details.serial_number}}</span>
 			<span class="wui-detail-vote-count wa-detail-vote-count"><span>{{player_details.count}}</span>&nbsp;票</span>
 		</div>
+		<span class="wa-details-return wui-details-return">返回首页>></span>
 	</div>
 	<div class="wui-detail-bottom wa-detail-bottom">
 		<div class="wui-details">{{player_details.details}}</div>
