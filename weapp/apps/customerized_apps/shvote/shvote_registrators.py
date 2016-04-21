@@ -290,7 +290,7 @@ class ShvoteCreatePlayer(resource.Resource):
 		if player_id:
 			try:
 				cur_player_info = app_models.ShvoteParticipance.objects.get(id = player_id)
-				# status = cur_player_info.status
+				status = cur_player_info.status
 				# if status == app_models.MEMBER_STATUS['PASSED']:
 				# 	vote_count = cur_player_info.count
 					# vote_count_bigger = app_models.ShvoteParticipance.objects(belong_to = activity_id,count__gt = vote_count)
