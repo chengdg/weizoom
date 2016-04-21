@@ -651,8 +651,8 @@
                 if(!$('.wa-rank-list div:hidden').length == 0){
         			$('.wa-loading-more').show();
        			}
-       			if($('.wa-rank-list > div').length == 0){
-					wuiAlert('暂无选手参与');
+       			if($('.wa-rank-list > div').length == 0 && (search_name || search_name != '')){
+					wuiAlert('该分组无选手');
 				}
                 loadingStatus();
             },
