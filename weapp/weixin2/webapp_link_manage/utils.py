@@ -136,7 +136,8 @@ def get_webapp_link_menu_objectes(request):
 				'name': '高级投票',
 				'type': 'shvote',
 				'add_btn_title': '新建投票',
-				'add_link': '/apps/shvote/shvote/'
+				'add_link': '/apps/shvote/shvote/',
+				'users': ['jobs','jierunda']
 			},
 			# {
 			# 	'name': '拼红包',
