@@ -86,7 +86,10 @@ def get_str_value_by_string_ids(str_ids):
 						curren_area = District.objects.get(id=int(area))
 					except ValueError:
 						pass
-				ship_address =  ship_address + ' ' + curren_area.name
+				if isinstance(curren_area, str):
+					pass
+				else:
+					ship_address =  ship_address + ' ' + curren_area.name
 			cache.set(str_ids, ship_address)
 		return u'{}'.format(ship_address.strip())
 	else:
