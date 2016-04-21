@@ -179,12 +179,15 @@
 	.wui-rank-item{
 		width: 48%;
 		float: left;
-		margin-top: 10px;
+		margin-bottom: 10px;
 	}
 	.wui-item-content{
 		padding: 7px;
 		padding-bottom: 0;
 		background: #fff7e7;
+	}
+	.wui-rank-item:nth-child(1),.wui-rank-item:nth-child(2){
+		margin-top: 10px;
 	}
 	.wui-rank-item:nth-child(even){
 		float: right;
@@ -266,8 +269,9 @@
 		z-index: 1;
 	}
 	.wui-loading-more{
-		height: 50px;
-		line-height: 50px;
+		font-size: .9rem;
+		height: 30px;
+		line-height: 30px;
 		text-align: center;
 		background: #ffe145;
 		color: #ff4200;
@@ -282,6 +286,7 @@
    	 	position: relative;
     	width: 22%;
     	margin: 0 auto;
+     	font-family: '黑体';
 	}
 	.wui-loading-more div{
     	position: absolute;
@@ -407,11 +412,10 @@
             showDesc();
             return false;
         }
-
+        //返回顶部
         $('.wa-to-top').click(function(){
-        	goTop();
+        	goTop(0.1,1);
         })
-
         document.addEventListener('scroll',function () {
         	var top_dis = $('.wa-rank-list').offset().top;
         	if(document.body.scrollTop > top_dis){
@@ -420,7 +424,7 @@
         		$('.wa-to-top').hide();
         	}
         })
-
+        //上拉加载
         document.addEventListener('touchstart',function(){
         	if($('.wa-rank-list div:hidden').length == 0){
         		$('.wa-loading-more').hide();
@@ -646,7 +650,10 @@
                 });         
                 if(!$('.wa-rank-list div:hidden').length == 0){
         			$('.wa-loading-more').show();
-        }
+       			}
+       			if($('.wa-rank-list > div').length == 0){
+					wuiAlert('当前分组没有选手');
+				}
                 loadingStatus();
             },
             error: function(data){
