@@ -60,7 +60,8 @@ Scenario:1 后台给会员发放优惠券，查看优惠列表中的"领取人/�
 			"get_person_count":0,
 			"get_number":0,
 			"start_date": "今天",
-			"end_date": "1天后"
+			"end_date": "1天后",
+			"status": "进行中"
 		}, {
 			"name": "优惠券1",
 			"remained_count": 5,
@@ -68,7 +69,8 @@ Scenario:1 后台给会员发放优惠券，查看优惠列表中的"领取人/�
 			"get_person_count":0,
 			"get_number":0,
 			"start_date": "今天",
-			"end_date": "1天后"
+			"end_date": "1天后",
+			"status": "进行中"
 		}]
 		"""
 	When jobs为会员发放优惠券
@@ -89,7 +91,8 @@ Scenario:1 后台给会员发放优惠券，查看优惠列表中的"领取人/�
 			"get_person_count":0,
 			"get_number":0,
 			"start_date": "今天",
-			"end_date": "1天后"
+			"end_date": "1天后",
+			"status": "进行中"
 		}, {
 			"name": "优惠券1",
 			"remained_count": 4,
@@ -97,7 +100,8 @@ Scenario:1 后台给会员发放优惠券，查看优惠列表中的"领取人/�
 			"get_person_count":1,
 			"get_number":1,
 			"start_date": "今天",
-			"end_date": "1天后"
+			"end_date": "1天后",
+			"status": "进行中"
 		}]
 		"""
 	When jobs为会员发放优惠券
@@ -118,7 +122,8 @@ Scenario:1 后台给会员发放优惠券，查看优惠列表中的"领取人/�
 			"get_person_count":0,
 			"get_number":0,
 			"start_date": "今天",
-			"end_date": "1天后"
+			"end_date": "1天后",
+			"status": "进行中"
 		}, {
 			"name": "优惠券1",
 			"remained_count": 2,
@@ -126,7 +131,8 @@ Scenario:1 后台给会员发放优惠券，查看优惠列表中的"领取人/�
 			"get_person_count":2,
 			"get_number":3,
 			"start_date": "今天",
-			"end_date": "1天后"
+			"end_date": "1天后",
+			"status": "进行中"
 		}]
 		"""
 
@@ -149,7 +155,8 @@ Scenario:1 后台给会员发放优惠券，查看优惠列表中的"领取人/�
 			"get_person_count":2,
 			"get_number":2,
 			"start_date": "今天",
-			"end_date": "1天后"
+			"end_date": "1天后",
+			"status": "进行中"
 		}, {
 			"name": "优惠券1",
 			"remained_count": 2,
@@ -157,7 +164,8 @@ Scenario:1 后台给会员发放优惠券，查看优惠列表中的"领取人/�
 			"get_person_count":2,
 			"get_number":3,
 			"start_date": "今天",
-			"end_date": "1天后"
+			"end_date": "1天后",
+			"status": "进行中"
 		}]
 		"""
 	When jobs为会员发放优惠券
@@ -178,7 +186,8 @@ Scenario:1 后台给会员发放优惠券，查看优惠列表中的"领取人/�
 			"get_person_count":2,
 			"get_number":2,
 			"start_date": "今天",
-			"end_date": "1天后"
+			"end_date": "1天后",
+			"status": "进行中"
 		}, {
 			"name": "优惠券1",
 			"remained_count": 2,
@@ -186,7 +195,8 @@ Scenario:1 后台给会员发放优惠券，查看优惠列表中的"领取人/�
 			"get_person_count":2,
 			"get_number":3,
 			"start_date": "今天",
-			"end_date": "1天后"
+			"end_date": "1天后",
+			"status": "进行中"
 		}]
 		"""
 
@@ -202,7 +212,8 @@ Scenario:2 会员购买时输入未领取的优惠券码后，查看优惠列表
 			"get_person_count":0,
 			"get_number":0,
 			"start_date": "今天",
-			"end_date": "1天后"
+			"end_date": "1天后",
+			"status": "进行中"
 		}, {
 			"name": "优惠券1",
 			"remained_count": 5,
@@ -210,7 +221,8 @@ Scenario:2 会员购买时输入未领取的优惠券码后，查看优惠列表
 			"get_person_count":0,
 			"get_number":0,
 			"start_date": "今天",
-			"end_date": "1天后"
+			"end_date": "1天后",
+			"status": "进行中"
 		}]
 		"""
 
@@ -238,7 +250,8 @@ Scenario:2 会员购买时输入未领取的优惠券码后，查看优惠列表
 			"get_person_count":0,
 			"get_number":0,
 			"start_date": "今天",
-			"end_date": "1天后"
+			"end_date": "1天后",
+			"status": "进行中"
 		}, {
 			"name": "优惠券1",
 			"remained_count": 4,
@@ -246,7 +259,8 @@ Scenario:2 会员购买时输入未领取的优惠券码后，查看优惠列表
 			"get_person_count":0,
 			"get_number":0,
 			"start_date": "今天",
-			"end_date": "1天后"
+			"end_date": "1天后",
+			"status": "进行中"
 		}]
 		"""
 
@@ -274,7 +288,8 @@ Scenario:2 会员购买时输入未领取的优惠券码后，查看优惠列表
 			"get_person_count":0,
 			"get_number":0,
 			"start_date": "今天",
-			"end_date": "1天后"
+			"end_date": "1天后",
+			"status": "进行中"
 		}, {
 			"name": "优惠券1",
 			"remained_count": 3,
@@ -282,7 +297,8 @@ Scenario:2 会员购买时输入未领取的优惠券码后，查看优惠列表
 			"get_person_count":0,
 			"get_number":0,
 			"start_date": "今天",
-			"end_date": "1天后"
+			"end_date": "1天后",
+			"status": "进行中"
 		}]
 		"""
 
@@ -310,7 +326,8 @@ Scenario:2 会员购买时输入未领取的优惠券码后，查看优惠列表
 			"get_person_count":0,
 			"get_number":0,
 			"start_date": "今天",
-			"end_date": "1天后"
+			"end_date": "1天后",
+			"status": "进行中"
 		}, {
 			"name": "优惠券1",
 			"remained_count": 2,
@@ -318,7 +335,8 @@ Scenario:2 会员购买时输入未领取的优惠券码后，查看优惠列表
 			"get_person_count":0,
 			"get_number":0,
 			"start_date": "今天",
-			"end_date": "1天后"
+			"end_date": "1天后",
+			"status": "进行中"
 		}]
 		"""
 
@@ -365,7 +383,8 @@ Scenario:3 通过分享红包（下单领取）领取优惠券后,查看优惠�
 			"get_person_count":0,
 			"get_number":0,
 			"start_date": "今天",
-			"end_date": "1天后"
+			"end_date": "1天后",
+			"status": "进行中"
 		}, {
 			"name": "优惠券1",
 			"remained_count": 4,
@@ -373,7 +392,8 @@ Scenario:3 通过分享红包（下单领取）领取优惠券后,查看优惠�
 			"get_person_count":1,
 			"get_number":1,
 			"start_date": "今天",
-			"end_date": "1天后"
+			"end_date": "1天后",
+			"status": "进行中"
 		}]
 		"""
 
@@ -389,7 +409,8 @@ Scenario:3 通过分享红包（下单领取）领取优惠券后,查看优惠�
 			"get_person_count":0,
 			"get_number":0,
 			"start_date": "今天",
-			"end_date": "1天后"
+			"end_date": "1天后",
+			"status": "进行中"
 		}, {
 			"name": "优惠券1",
 			"remained_count": 3,
@@ -397,7 +418,8 @@ Scenario:3 通过分享红包（下单领取）领取优惠券后,查看优惠�
 			"get_person_count":2,
 			"get_number":2,
 			"start_date": "今天",
-			"end_date": "1天后"
+			"end_date": "1天后",
+			"status": "进行中"
 		}]
 		"""
 
@@ -424,7 +446,8 @@ Scenario:3 通过分享红包（下单领取）领取优惠券后,查看优惠�
 			"get_person_count":0,
 			"get_number":0,
 			"start_date": "今天",
-			"end_date": "1天后"
+			"end_date": "1天后",
+			"status": "进行中"
 		}, {
 			"name": "优惠券1",
 			"remained_count": 2,
@@ -432,7 +455,8 @@ Scenario:3 通过分享红包（下单领取）领取优惠券后,查看优惠�
 			"get_person_count":2,
 			"get_number":3,
 			"start_date": "今天",
-			"end_date": "1天后"
+			"end_date": "1天后",
+			"status": "进行中"
 		}]
 		"""
 
@@ -448,7 +472,8 @@ Scenario:3 通过分享红包（下单领取）领取优惠券后,查看优惠�
 			"get_person_count":0,
 			"get_number":0,
 			"start_date": "今天",
-			"end_date": "1天后"
+			"end_date": "1天后",
+			"status": "进行中"
 		}, {
 			"name": "优惠券1",
 			"remained_count": 1,
@@ -456,7 +481,8 @@ Scenario:3 通过分享红包（下单领取）领取优惠券后,查看优惠�
 			"get_person_count":2,
 			"get_number":4,
 			"start_date": "今天",
-			"end_date": "1天后"
+			"end_date": "1天后",
+			"status": "进行中"
 		}]
 		"""
 
@@ -517,14 +543,16 @@ Scenario:4 通过分享红包（图文领取）领取优惠券后,查看优惠�
 			"get_person_count":0,
 			"get_number":0,
 			"start_date": "今天",
-			"end_date": "1天后"
+			"end_date": "1天后",
+			"status": "进行中"
 		}, {
 			"name": "优惠券1",
 			"remained_count": 4,
 			"get_person_count":1,
 			"get_number":1,
 			"start_date": "今天",
-			"end_date": "1天后"
+			"end_date": "1天后",
+			"status": "进行中"
 		}]
 		"""
 	When bill把jobs的分享红包链接分享到朋友圈
@@ -550,13 +578,15 @@ Scenario:4 通过分享红包（图文领取）领取优惠券后,查看优惠�
 			"get_person_count":0,
 			"get_number":0,
 			"start_date": "今天",
-			"end_date": "1天后"
+			"end_date": "1天后",
+			"status": "进行中"
 		}, {
 			"name": "优惠券1",
 			"remained_count": 3,
 			"get_person_count":2,
 			"get_number":2,
 			"start_date": "今天",
-			"end_date": "1天后"
+			"end_date": "1天后",
+			"status": "进行中"
 		}]
 		"""

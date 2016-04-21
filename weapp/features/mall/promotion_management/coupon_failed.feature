@@ -42,7 +42,7 @@ Background:
 		"""
 
 
-@mall2 @promotion @promotionCoupon @promotionFlash 
+@mall2 @promotion @promotionCoupon @promotionFlash
 Scenario: 1 先建优惠券，不能参加促销活动
 	When jobs添加优惠券规则
 		"""
@@ -98,22 +98,24 @@ Scenario: 1 先建优惠券，不能参加促销活动
 		"""
 		[{
 			"name": "优惠券5",
-			"type": "单品券",
+			"type": "多商品券",
 			"money": 10.00,
-			"remained_count": 5,
+			"remained_count": 0,
 			"limit_counts": 1,
 			"use_count": 0,
 			"start_date": "2天前",
-			"end_date": "1天前"
+			"end_date": "1天前",
+			"status": "已过期"
 		}, {
 			"name": "优惠券4",
-			"type": "单品券",
+			"type": "多商品券",
 			"money": 10.00,
 			"remained_count": 5,
 			"limit_counts": 1,
 			"use_count": 0,
 			"start_date": "今天",
-			"end_date": "2天后"
+			"end_date": "2天后",
+			"status": "进行中"
 		}]
 		"""
 	And jobs获取上架商品查询列表
@@ -135,7 +137,6 @@ Scenario: 1 先建优惠券，不能参加促销活动
 			"price": 200.00
 		}]
 		"""
-
 
 @mall2 @wip.cp2 @promotion @promotionCoupon @promotionFlash
 Scenario: 2 先建优惠券，不能参加促销活动
@@ -174,8 +175,6 @@ Scenario: 2 先建优惠券，不能参加促销活动
 			"price": 200.00
 		}]
 		"""
-
-
 
 @mall2 @wip.cp4 @promotion.promotionCoupon @promotion.promotionPremium
 Scenario: 3 先建立买赠活动，不能建立该商品的单品券

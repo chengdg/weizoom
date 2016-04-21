@@ -1014,30 +1014,30 @@ Scenario:4 优惠券规则列表查询
 			}]
 			"""
 
-#		#模糊匹配
-#		When jobs设置优惠券规则列表查询条件
-#			"""
-#			{
-#				"coupon_code":"coupon1_id_"
-#			}
-#			"""
-#		Then jobs能获得优惠券规则列表
-#			"""
-#			[{
-#				"name": "通用券-已失效",
-#				"type": "通用券",
-#				"money": 100.00,
-#				"limit_counts": 1,
-#				"remained_count": 0,
-#				"start_date": "今天",
-#				"end_date": "1天后",
-#				"special_product": "全部",
-#				"get_person_count": 0,
-#				"get_number": 0,
-#				"use_count": 0,
-#				"status": "已失效"
-#			}]
-#			"""
+		#精确匹配
+		When jobs设置优惠券规则列表查询条件
+			"""
+			{
+				"coupon_code":"coupon1_id_1"
+			}
+			"""
+		Then jobs能获得优惠券规则列表
+			"""
+			[{
+				"name": "通用券-已失效",
+				"type": "通用券",
+				"money": 100.00,
+				"limit_counts": 1,
+				"remained_count": 0,
+				"start_date": "今天",
+				"end_date": "1天后",
+				"special_product": "全部",
+				"get_person_count": 0,
+				"get_number": 0,
+				"use_count": 0,
+				"status": "已失效"
+			}]
+			"""
 
 		#查询结果为空
 		When jobs设置优惠券规则列表查询条件
