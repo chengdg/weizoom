@@ -451,7 +451,7 @@ MALL_PROMOTION_AND_APPS_SECOND_NAV = {
                     'title': u'高级投票',
                     'url': '/apps/shvote/shvotes/',
                     'permission': '',
-                    'users': ['jobs','jierunda']
+                    'users': ['jobs','jierunda', 'ceshi01']
                 },
                 # {
                 #     'name': MALL_APPS_REDPACKET_NAV,
