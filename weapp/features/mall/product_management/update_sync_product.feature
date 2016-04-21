@@ -159,34 +159,6 @@ Background:
 
 	#jobs后台商品信息
 		Given jobs登录系统
-		Then jobs获得商品池商品列表
-			"""
-			[{
-				"name": "tom商品1",
-				"user_code":"0201",
-				"supplier":"tom商家",
-				"stocks":"无限",
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			},{
-				"name": "bill商品1",
-				"user_code":"0101",
-				"supplier":"bill商家",
-				"stocks": "无限",
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			},{
-				"name": "bill商品2",
-				"user_code":"0102",
-				"supplier":"bill商家",
-				"stocks": "无限",
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			}]
-			"""
 		When jobs批量将商品放入待售
 			"""
 			["tom商品1","bill商品2","bill商品1"]
