@@ -91,7 +91,7 @@ def step_impl(context, user_name):
     for item in expected:
         item["start_date"] = "{} 00:00:00".format(bdd_util.get_date_str(item["start_date"]))
         item["end_date"] = "{} 00:00:00".format(bdd_util.get_date_str(item["end_date"]))
-        if item['status'] == "已过期":
+        if 'status' in item and item['status'] == "已过期":
             item['status'] = "已结束"
 
 
