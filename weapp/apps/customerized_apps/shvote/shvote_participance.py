@@ -83,8 +83,10 @@ class ShvoteParticipance(resource.Resource):
 			member_id = request.member.id
 			record_id = request.POST['belong_to']
 			post = request.POST
-			try:
-				sh_participance = app_models.ShvoteParticipance(
+			#如果曾经报名过，但是审核不通过，可以再次报名
+			sh_participance_is_use = app_models.ShvoteParticipance.objects(belong_to=record_id,member_id=member_id,is_use=app_models.MEMBER_IS_USE['NO'])
+			if sh_participance_is_use.count() > 0 :
+				sh_participance_is_use.first().update(
 					belong_to = record_id,
 					member_id = member_id,
 					icon = post["icon"],
@@ -93,13 +95,28 @@ class ShvoteParticipance(resource.Resource):
 					serial_number = post["serial_number"],
 					details = post["details"],
 					pics = json.loads(post["pics"]),
+					is_use = app_models.MEMBER_IS_USE['YES'],
 					created_at = datetime.now()
 				)
-				sh_participance.save()
 				response = create_response(200)
-			except:
-				response = create_response(500)
-				response.errMsg = u'只能报名一次'
+			else:
+				try:
+					sh_participance = app_models.ShvoteParticipance(
+						belong_to = record_id,
+						member_id = member_id,
+						icon = post["icon"],
+						name = post["name"],
+						group = post["group"],
+						serial_number = post["serial_number"],
+						details = post["details"],
+						pics = json.loads(post["pics"]),
+						created_at = datetime.now()
+					)
+					sh_participance.save()
+					response = create_response(200)
+				except:
+					response = create_response(500)
+					response.errMsg = u'只能报名一次'
 			return response.get_response()
 		except:
 			response = create_response(500)
