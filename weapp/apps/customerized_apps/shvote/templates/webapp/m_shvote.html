@@ -415,7 +415,7 @@
         //返回顶部
         $('.wa-to-top').click(function(){
         	goTop(0.1,1);
-        })
+        });
         document.addEventListener('scroll',function () {
         	var top_dis = $('.wa-rank-list').offset().top;
         	if(document.body.scrollTop > top_dis){
@@ -423,7 +423,7 @@
         	}else{
         		$('.wa-to-top').hide();
         	}
-        })
+        });
         //上拉加载
         document.addEventListener('touchstart',function(){
         	if($('.wa-rank-list div:hidden').length == 0){
@@ -510,7 +510,7 @@
 	   		}
         	var left_chance = parseInt($('.wa-left-chance').html());
         	if(left_chance <= 0) {
-        		wuiAlert('今天该分组的投票次数已用完');
+        		wuiAlert('今天的投票次数已用完');
         		return false;
         	}
             loadingStatus(true);
@@ -581,6 +581,7 @@
             },
             error: function(data){
                 if(data.errMsg == 'is_deleted'){
+                    $('.wa-mark').hide();
                     deletedRecord();
                 }else{
                     wuiAlert(data.errMsg);
@@ -608,11 +609,11 @@
 	    };
 	    if(record_info.groups.length == 0){
 	    	$('.wa-groups').hide();
-	    };
-    };
+	    }
+    }
     function update_member_info(member_info){
     	$('.wa-left-chance').html(member_info.can_play_info);
-    };
+    }
 
     //获取排名信息
     function getRankInfo(current_group,search_name){
