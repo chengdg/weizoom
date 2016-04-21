@@ -230,7 +230,7 @@ def delete_weizoom_mall_sync_product(request, product, reason):
             products = models.Product.objects.filter(id__in=weizoom_product_ids)
             products.update(is_deleted=True)
             relations.update(is_deleted=True)
-            products_not_online_handler_for_promotions(weizoom_product_ids, request)
+            products_not_online_handler_for_promotions(weizoom_product_ids, request,shelve_type='delete')
 
             text = u'商品删除提示：\n'
             text += u'商品位置：\n'
