@@ -324,7 +324,7 @@ def update_webapp_product_cache(**kwargs):
         elif instance and sender==mall_models.ProductCategory:
             categories_key = '{wo:%s}_categories' % (webapp_owner_id)
             cache_util.delete_cache(categories_key)
-        elif instance and isinstance(instance, mall.ProductModel):
+        elif instance and isinstance(instance, mall_models.ProductModel):
             product_id = instance.product_id
             key = 'webapp_product_detail_{wo:%s}_{pid:%s}' % (webapp_owner_id, product_id)
             cache_util.delete_pattern(key)
