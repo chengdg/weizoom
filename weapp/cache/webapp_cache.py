@@ -324,6 +324,10 @@ def update_webapp_product_cache(**kwargs):
         elif instance and sender==mall_models.ProductCategory:
             categories_key = '{wo:%s}_categories' % (webapp_owner_id)
             cache_util.delete_cache(categories_key)
+        elif instance and isinstance(instance, mall.ProductModel):
+            product_id = instance.product_id
+            key = 'webapp_product_detail_{wo:%s}_{pid:%s}' % (webapp_owner_id, product_id)
+            cache_util.delete_pattern(key)
 
         pattern_categories = "webapp_products_categories_{wo:%s}" % webapp_owner_id
         cache_util.delete_pattern(pattern_categories)
@@ -387,6 +391,8 @@ signals.post_save.connect(update_webapp_product_cache, sender=promotion_models.P
                           dispatch_uid="update_webapp_product_cache_by_promotion.save")
 post_update_signal.connect(update_webapp_product_cache, sender=promotion_models.Promotion,
                            dispatch_uid="update_webapp_product_cache_by_promotion.update")
+post_update_signal.connect(update_webapp_product_cache, sender=mall_models.ProductModel,
+                           dispatch_uid="update_webapp_product_cache_by_product_model.update")
 
 
 def get_webapp_products_detail(webapp_owner_id, product_ids, member_grade_id=None):
