@@ -169,7 +169,7 @@ Background:
 		"""
 	When jobs失效优惠券'多商品失效活动'
 
-@mall2 @promotion @promotionFlash
+@ztqb                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   @mall2 @promotion @promotionFlash
 Scenario: 1 限时抢购-新建活动页面的商品查询
 	Given jobs登录系统
 	#起购数量大于1的商品不在在售列表中（不能参与限时抢购）
@@ -239,7 +239,7 @@ Scenario: 3 积分应用-新建活动页面的商品查询
 		| 积分应用   |100.00 | 无限   | 积分应用活动   |         |
 		| 多商品失效 |100.00 | 无限   |                | 选取    |
 
-@mall2 @promotion @promotionCoupon @ztqb
+@mall2 @promotion @promotionCoupon
 Scenario: 4 多商品券-新建活动页面的商品查询
 	Given jobs登录系统
 	Then jobs新建多商品券活动时能获得已上架商品列表

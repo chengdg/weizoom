@@ -1084,22 +1084,30 @@ def send_request_to_kuaidi(order, **kwargs):
 #############################################################################################
 @receiver(mall_signals.products_not_online, sender=Product)
 def products_not_online_handler_for_promotions(product_ids, request, **kwargs):
+    print('-------------x0')
     from mall.promotion import models as promotion_models
     from webapp.handlers import event_handler_util
     disable_coupon = False
     shelve_type = request.POST.get('shelve_type')
     if shelve_type and shelve_type == 'delete':
         disable_coupon = True
+
+    print('---------------shelve_type',shelve_type)
     target_promotion_ids = []
     promotionIds =[relation.promotion_id for relation in promotion_models.ProductHasPromotion.objects.filter(
         product_id__in=product_ids)]
     for promotion in promotion_models.Promotion.objects.filter(id__in=promotionIds).filter(~Q(status = promotion_models.PROMOTION_STATUS_DELETED)):
+        print('-------------x1')
         if promotion.type != promotion_models.PROMOTION_TYPE_COUPON:
+            print('-------------x2')
             target_promotion_ids.append(str(promotion.id))
         elif disable_coupon:
+            print('-------------x3')
             not_deleted_promotion_product_count = promotion_models.ProductHasPromotion.objects.filter(promotion=promotion,
                                                                                                   product__is_deleted=False).count()
+            print('--------not_deleted_promotion_product_count',not_deleted_promotion_product_count)
             if not_deleted_promotion_product_count == 0:
+                print('-------------x4')
                 promotion.status = promotion_models.PROMOTION_STATUS_DISABLE
                 promotion.save()
                 promotion_models.CouponRule.objects.filter(id=promotion.detail_id).update(is_active=False, remained_count=0)
