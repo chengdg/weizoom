@@ -297,7 +297,7 @@ class ShvoteCreatePlayer(resource.Resource):
 				cur_player_info.rank = 0
 				for s in app_models.ShvoteParticipance.objects(belong_to=activity_id, status=app_models.MEMBER_STATUS['PASSED'], is_use=app_models.MEMBER_IS_USE['YES']).order_by('-count', 'created_at'):
 					cur_player_info.rank += 1
-					if str(s.member_id) == player_id:
+					if str(s.id) == player_id:
 						break
 			except:
 				action = False
