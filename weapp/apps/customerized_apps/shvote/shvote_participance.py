@@ -34,6 +34,7 @@ class ShvoteParticipance(resource.Resource):
 		"""
 		record = None
 		isMember = False
+		is_already_participanted = False
 		member = request.member
 		mpUserPreviewName = None
 		if 'id' in request.GET:
@@ -46,7 +47,12 @@ class ShvoteParticipance(resource.Resource):
 				mpUserPreviewName = request.webapp_owner_info.auth_appid_info.nick_name
 				if member:
 					isMember =member.is_subscribed
-					participance_data_count = app_models.ShvoteParticipance.objects(belong_to=id, member_id=member.id).count()
+					participance_data = app_models.ShvoteParticipance.objects(belong_to=id, member_id=member.id)
+					if participance_data.count() > 0:
+						participance_data = participance_data.first()
+						if participance_data.is_use == app_models.MEMBER_IS_USE['YES']:
+							is_already_participanted = True
+
 			except:
 				c = RequestContext(request,{
 					'is_deleted_data': True
@@ -57,7 +63,7 @@ class ShvoteParticipance(resource.Resource):
 				'page_title': u"投票活动",
 				'groups': json.dumps(record.groups),
 				'activity_status': activity_status,
-				'is_already_participanted': (participance_data_count > 0),
+				'is_already_participanted': is_already_participanted,
 				'isMember': isMember,
 				'app_name': "shvote",
 				'resource': "shvote",
