@@ -6,6 +6,7 @@ from datetime import datetime
 from django.http import HttpResponseRedirect, HttpResponse
 from django.template import RequestContext
 from django.shortcuts import render_to_response
+from django.template.loader import render_to_string
 from django.db.models import F
 from django.contrib.auth.decorators import login_required
 
@@ -18,6 +19,7 @@ import export
 from apps import request_util
 from termite2 import pagecreater
 import weixin.user.models as weixin_models
+from utils.cache_util import GET_CACHE, SET_CACHE
 
 class MShvote(resource.Resource):
 	app = 'apps/shvote'
@@ -50,7 +52,7 @@ class MShvote(resource.Resource):
 		record.save()
 
 		#获取已报名人数
-		member_datas = app_models.ShvoteParticipance.objects(belong_to=record_id, status=app_models.MEMBER_STATUS['PASSED'])
+		member_datas = app_models.ShvoteParticipance.objects(belong_to=record_id, status=app_models.MEMBER_STATUS['PASSED'], is_use=app_models.MEMBER_IS_USE['YES'])
 		total_parted = member_datas.count()
 		total_counts = member_datas.aggregate_sum('count')
 		total_visits = record.visits
@@ -100,6 +102,12 @@ class MShvote(resource.Resource):
 			project_id = id
 			activity_status = u"未开启"
 		else:
+			cache_key = 'apps_shvote_%s_html' % request.GET['id']
+			#从redis缓存获取静态页面
+			cache_data = GET_CACHE(cache_key)
+			if cache_data:
+				print 'redis---return'
+				return HttpResponse(cache_data)
 			try:
 				record = app_models.Shvote.objects.get(id=id)
 				recordName = record.name
@@ -136,8 +144,10 @@ class MShvote(resource.Resource):
 			"share_page_desc": share_page_desc,
 			"groups": record.groups if record else []
 		})
-
-		return render_to_response('shvote/templates/webapp/m_shvote.html', c)
+		response = render_to_string('shvote/templates/webapp/m_shvote.html', c)
+		if request.member:
+			SET_CACHE(cache_key, response)
+		return HttpResponse(response)
 
 def update_shvote_status(shvote):
 	activity_status = shvote.status_text

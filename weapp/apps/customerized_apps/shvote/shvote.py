@@ -19,6 +19,7 @@ from apps import request_util
 from modules.member import integral as integral_api
 from mall.promotion import utils as mall_api
 import termite.pagestore as pagestore_manager
+from utils.cache_util import delete_cache
 
 FIRST_NAV = export.MALL_PROMOTION_AND_APPS_FIRST_NAV
 COUNT_PER_PAGE = 20
@@ -122,6 +123,10 @@ class shvote(resource.Resource):
 			if key in update_fields:
 				update_data['set__'+key] = value
 		app_models.Shvote.objects(id=request.POST['id']).update(**update_data)
+
+		#更新后清除缓存
+		cache_key = 'apps_shvote_%s_html' % request.POST['id']
+		delete_cache(cache_key)
 
 		response = create_response(200)
 		return response.get_response()
