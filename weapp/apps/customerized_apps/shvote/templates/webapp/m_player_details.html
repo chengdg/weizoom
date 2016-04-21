@@ -80,6 +80,7 @@
 	.wui-detail-middle{
 		width: 9.5rem;
 	    margin: 5% 0 1% 2%;
+	    display: inline-block;
 	}
 	.wui-detail-middle .wui-detail-vote-count{
 		float: right;
@@ -174,6 +175,16 @@
 	    margin: 0 auto 10px auto;
     	display: inherit;
     }
+    .wui-details-return{
+    	background: #adadad;
+        color: #fff;
+        padding: 8px;
+        font-size: .9rem;
+        border-radius: 3px;
+        font-family: '黑体';
+        display: inline-block;
+        float: right;
+    }
 </style>
 {% endblock %}
 
@@ -190,9 +201,10 @@
 			<button class="wa-ivote" data-id="{{player_details.id}}" data-count="{{can_vote_count}}">投票</button>
 		</div>
 		<div class="wui-detail-middle">
-			<span class="wa-detail-serial-number">编号：{{player_details.serial_number}}</span>
+			<span class="wa-detail-serial-number">序号：{{player_details.serial_number}}</span>
 			<span class="wui-detail-vote-count wa-detail-vote-count"><span>{{player_details.count}}</span>&nbsp;票</span>
 		</div>
+		<span class="wa-details-return wui-details-return">返回首页>></span>
 	</div>
 	<div class="wui-detail-bottom wa-detail-bottom">
 		<div class="wui-details">{{player_details.details}}</div>
@@ -283,5 +295,9 @@
             $('.wui-share-mask').swipeMask('hide');
         }
     }
+    $('.wa-details-return').click(function(event) {
+    	var link = '/m/apps/shvote/m_shvote/?webapp_owner_id='+W.webappOwnerId+'&id='+W.appRecordId
+    	window.location.href = link;
+    });
 </script>
 {% endblock %}
