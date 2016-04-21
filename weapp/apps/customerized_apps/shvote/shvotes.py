@@ -81,8 +81,9 @@ class Shvotes(resource.Resource):
 		record_id2memberinfo = {}
 		for c in app_models.ShvoteControl.objects():
 			belong_to = c.belong_to
-			if record_id2memberinfo.has_key(belong_to) and c.member_id not in record_id2memberinfo[belong_to]:
-				record_id2memberinfo[belong_to].append(c.member_id)
+			if record_id2memberinfo.has_key(belong_to):
+				if c.member_id not in record_id2memberinfo[belong_to]:
+					record_id2memberinfo[belong_to].append(c.member_id)
 			else:
 				record_id2memberinfo[belong_to] = [c.member_id]
 
