@@ -52,7 +52,7 @@ class MShvote(resource.Resource):
 		record.save()
 
 		#获取已报名人数
-		member_datas = app_models.ShvoteParticipance.objects(belong_to=record_id, status=app_models.MEMBER_STATUS['PASSED'], is_use=app_models.MEMBER_IS_USE['YES'])
+		member_datas = app_models.ShvoteParticipance.objects(belong_to=record_id, is_use=app_models.MEMBER_IS_USE['YES'])
 		total_parted = member_datas.count()
 		total_counts = member_datas.aggregate_sum('count')
 		total_visits = record.visits
