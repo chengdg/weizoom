@@ -43,7 +43,7 @@ class WebappLinkMenus(resource.Resource):
 		#用户反馈只在指定的帐号下显示
 		titles = memus['marketPage']['title']
 		for title in titles:
-			if title['type'] == 'exsurvey' and not request.manager.username in title['users']:
+			if title['type'] in ['exsurvey', 'shvote'] and not request.manager.username in title['users']:
 				memus['marketPage']['title'].remove(title)
 
 		response = create_response(200)
