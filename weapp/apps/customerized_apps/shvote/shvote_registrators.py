@@ -331,6 +331,17 @@ class ShvoteCreatePlayer(resource.Resource):
 		img_des_srcs = json.loads(request.POST['img_des_srcs'])
 		activity_id = request.POST['activity_id']
 
+		try:
+			shvote = app_models.Shvote.objects.get(id=activity_id)
+			if shvote.status != app_models.STATUS_RUNNING:
+				response = create_response(500)
+				response.errMsg = u'只有进行中的活动才能创建选手'
+				return response.get_response()
+		except:
+			response = create_response(500)
+			response.errMsg = u'活动信息出错'
+			return response.get_response()
+
 		vote_participance_created = app_models.ShvoteParticipance.objects().filter(member_id__lte = 0)
 		member_id = 0
 		if vote_participance_created:

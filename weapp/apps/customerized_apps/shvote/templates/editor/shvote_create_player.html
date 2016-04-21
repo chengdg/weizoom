@@ -142,8 +142,8 @@
 		</div>
 		{% endif %}
 		<div class="form-group">
-			<label class="control-label fl" for="serial_number">输入编号</label>
-			<input type="text" class="form-control" name="serial_number" id="serial_number" value="{{cur_player_info.serial_number}}" disabled/>
+			<label class="control-label fl" for="serial_number">输入序号</label>
+			<input type="number" style="width:150px;" class="form-control" name="serial_number" id="serial_number" value="{{cur_player_info.serial_number}}" disabled/>
 		</div>
 		{% if status == 1 %}
 			<div class="form-group">
@@ -207,8 +207,8 @@
 			</div>
 		{% endif %}
 		<div class="form-group">
-			<label class="control-label fl" for="serial_number">输入编号</label>
-			<input type="text" class="form-control wa-validate" name="serial_number" id="serial_number" placeholder="输入指定编号"/>
+			<label class="control-label fl" for="serial_number">输入序号</label>
+			<input type="number" style="width:150px;" class="form-control wa-validate" name="serial_number" id="serial_number" placeholder="输入指定编号"/>
 		</div>
 		<div class="form-group">
 			<label class="control-label" for="details">详情</label>
@@ -265,10 +265,14 @@ $(document).ready(function() {
 			W.showHint('error', '输入不能为空！');
 			return
 		}
+        var serial_number = $.trim($('#serial_number').val());
+        if(!/^\d+$/.test(serial_number)){
+			W.showHint('error', '序号只能输入数字！');
+			return
+		}
 		var head_img_src = $('.wa-upload-img').attr('src');
 		var player_name = $.trim($('#player_name').val());
 		var group = $.trim($('#group').val());
-		var serial_number = $.trim($('#serial_number').val());
 		var details = $.trim($('#details').val());
 		var img_arr = [];
 		$('.wa-upload-img-des').each(function(index, el) {
@@ -297,7 +301,11 @@ $(document).ready(function() {
 				},3000);
 			},
 			error: function(error){
-				W.showHint('error', '创建选手失败！');
+                if(error.errMsg){
+                    W.showHint('error', error.errMsg);
+                }else{
+                    W.showHint('error', '创建选手失败！');
+                }
 			}
 		});
 	});
