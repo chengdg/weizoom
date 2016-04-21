@@ -735,6 +735,8 @@ def get_detail_response(request):
         coupon = order.get_coupon()
         if coupon:
             coupon_rule = CouponRule.objects.get(id=coupon.coupon_rule_id)
+            coupon.limit_product = coupon_rule.limit_product
+
             promotion = Promotion.objects.get(detail_id=coupon_rule.id, type=PROMOTION_TYPE_COUPON)
             relation = ProductHasPromotion.objects.filter(promotion_id=promotion.id)
             if len(relation) > 0:

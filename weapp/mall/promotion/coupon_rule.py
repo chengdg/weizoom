@@ -18,8 +18,7 @@ from core.exceptionutil import unicode_full_stack
 from core.upyun_util import *
 from core.jsonresponse import create_response
 from core import search_util
-from mall.promotion.utils import create_coupons
-
+from mall.promotion.utils import create_coupons, verification_multi_product_coupon
 
 COUNT_PER_PAGE = 20
 PROMOTION_TYPE_COUPON = 4
@@ -120,7 +119,11 @@ class CouponRuleInfo(resource.Resource):
             Promotion.objects.filter(detail_id=couponRole[0].id, type=PROMOTION_TYPE_COUPON).update(
                 name=request.POST.get('name', ''),
             )
-            return create_response(200).get_response()
+            response = create_response(200)
+            response.data = {
+                'save_success': True,
+            }
+            return response.get_response()
         # 优惠券限制条件
         is_valid_restrictions = request.POST.get('is_valid_restrictions', '0')
         if is_valid_restrictions == '0':
@@ -130,8 +133,18 @@ class CouponRuleInfo(resource.Resource):
         count = int(request.POST.get('count', '1'))
         limit_product = request.POST.get('limit_product', '0')
         limit_product_id = request.POST.get('product_ids', '-1')
-        if limit_product == '1' and limit_product_id.isdigit():
-            limit_product_id = int(limit_product_id)
+        if limit_product == '1':
+            limit_product_ids = list(set(map(lambda x: int(x), limit_product_id.split(','))))
+            save_success, error_product_ids = verification_multi_product_coupon(request.manager, limit_product_ids)
+            if not save_success:
+                response = create_response(200)
+                response.data = {
+                    'save_success': False,
+                    'error_product_ids': error_product_ids
+                }
+                return response.get_response()
+
+
         else:
             limit_product_id = 0
 
@@ -171,8 +184,7 @@ class CouponRuleInfo(resource.Resource):
         )
 
         if limit_product == '1':
-            product_ids = request.POST.get('product_ids', '-1').split(',')
-            for product_id in product_ids:
+            for product_id in limit_product_ids:
                 ProductHasPromotion.objects.create(
                     product_id=product_id,
                     promotion=promotion
@@ -183,7 +195,11 @@ class CouponRuleInfo(resource.Resource):
             promotion.status = PROMOTION_STATUS_STARTED
             promotion.save()
         create_coupons(couponRule, count, promotion)
-        return create_response(200).get_response()
+        response = create_response(200)
+        response.data = {
+            'save_success': True
+        }
+        return response.get_response()
 
 
 class CouponRuleList(resource.Resource):
@@ -415,3 +431,49 @@ def _get_create_coupon_qrcode(coupon_url, coupon_id):
             return '/static/coupon_qrcode/%s' % file_name
         else:
             return image_path % (BUCKETNAME, '/coupon_qrcode/%s' % file_name)
+
+
+class CouponRuleProducts(resource.Resource):
+    """
+    多商品优惠券对应的商品
+    """
+
+    app = "mall2"
+    resource = "coupon_rule_products"
+
+    def api_get(request):
+        promotion_id = request.GET.get("id", None)
+        promotion = Promotion.objects.get(id=promotion_id)
+        Promotion.fill_details(request.manager, [promotion], {
+            'with_product': True,
+            'with_concrete_promotion': True
+        })
+
+        products = promotion.products
+
+        count_per_page = int(request.GET.get('count_per_page', 10))
+        cur_page = int(request.GET.get('page', '1'))
+        pageinfo, products = paginator.paginate(
+            products, cur_page, count_per_page,
+            query_string=request.META['QUERY_STRING'])
+
+        items = []
+
+        for product in products:
+            item = {
+                "name": product.name,
+                "bar_code": product.bar_code,
+                'detail_link': product.detail_link,
+                'price': product.display_price_range,
+                'total_socks': product.total_stocks,
+                'status': product.status
+            }
+            items.append(item)
+        response = create_response(200)
+        response.data = {
+            'items': items,
+            'pageinfo': paginator.to_dict(pageinfo),
+            'sortAttr': 'id',
+            'data': {}
+        }
+        return response.get_response()

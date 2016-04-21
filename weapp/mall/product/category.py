@@ -6,6 +6,7 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.contrib.auth.decorators import login_required
 
+from mall.promotion.utils import verification_multi_product_coupon
 from .. import models as mall_models
 from .. import export
 from . import utils as category_ROA_utils
@@ -13,6 +14,90 @@ from core import resource, paginator
 from core.jsonresponse import create_response
 from core.exceptionutil import unicode_full_stack
 from watchdog.utils import watchdog_warning
+
+
+class Categories(resource.Resource):
+    """
+    分组列表通用类，只返回分组本身信息
+    """
+    app = 'mall2'
+    resource = 'categories'
+
+    @login_required
+    def api_get(request):
+        filter_name = request.GET.get('filter_name', '')
+        categories = mall_models.ProductCategory.objects.filter(
+            owner=request.manager)
+        if filter_name:
+            categories = categories.filter(name__contains=filter_name)
+        count_per_page = int(request.GET.get('count_per_page', 10))
+        cur_page = int(request.GET.get('page', '1'))
+        pageinfo, categories = paginator.paginate(
+            categories, cur_page, count_per_page,
+            query_string=request.META['QUERY_STRING'])
+
+        items = []
+        for category in categories:
+            data = {
+                'id': category.id,
+                'name': category.name,
+                'created_at': category.created_at.strftime("%Y-%m-%d %H:%M")
+            }
+            items.append(data)
+
+        response = create_response(200)
+        response.data = {
+            'items': items,
+            'pageinfo': paginator.to_dict(pageinfo),
+            'sortAttr': '',
+            'data': {}
+        }
+        return response.get_response()
+
+
+class CategoryProducts(resource.Resource):
+    app = 'mall2'
+    resource = 'category_products'
+
+    @login_required
+    def api_get(request):
+        category_ids = request.GET.get('category_ids', '').split(',')
+        relations = mall_models.CategoryHasProduct.objects.filter(
+            category_id__in=category_ids)
+
+        product_ids = set([relation.product_id for relation in relations])
+
+        _, error_product_ids = verification_multi_product_coupon(request.manager, product_ids)
+
+        product_ids = list(set(product_ids) - set(error_product_ids))
+
+        products = list(mall_models.Product.objects.filter(
+            owner=request.manager, is_deleted=False, shelve_type=mall_models.PRODUCT_SHELVE_TYPE_ON,id__in=product_ids))
+
+        mall_models.Product.fill_details(request.manager,
+                                         products,
+                                         {"with_product_model": True,
+                                          "with_model_property_info": True,
+                                          'with_sales': True})
+
+        mall_models.Product.fill_details(request.manager,
+                             products,
+                                    {"with_product_model": True,
+                                     "with_model_property_info": True,
+                                     'with_sales': True})
+
+        id2product = {}
+        for product in products:
+            data = product.format_to_dict()
+            id2product[product.id] = data
+        items = id2product.values()
+        items.sort(lambda x, y: cmp(x['id'], y['id']))
+        response = create_response(200)
+        response.data = {
+            'products': items
+        }
+        return response.get_response()
+
 
 
 class CategoryList(resource.Resource):

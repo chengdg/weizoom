@@ -268,7 +268,7 @@
                 <th class="xui-td-img"></th>
                 <th class="xui-td-first">商品信息</th>
                 <th class="xui-td-second">单价（元）/数量</th>
-                <th class="xui-td-third">单品优惠</th>
+                <th class="xui-td-third"></th>
                 {% if mall_type and is_show_order_status %}<th class="xui-td-third">订单状态</th>{% endif %}
                 <th class="xui-td-fourth" style="width:160px;">整单优惠</th>
                 <th class="xui-td-fifth" style="width:120px;">微众卡支付金额</th>
@@ -323,6 +323,8 @@
               <br>
               （{{ product.count }}件）
               </td>
+              <td class="xui-td-third"></td>
+              <!-- 
               <td class="xui-td-third"{% if product.noline %} style="border-top:none;"{% endif %}>
               {% if not is_sync %}
                 {% if product.promotion.type == 'flash_sale' %}
@@ -338,7 +340,7 @@
                   会员优惠：{{ product.grade_discounted_money }}
                 {% endif %}
               {% endif %}
-              </td>
+              </td> -->
 
                 {% if mall_type and is_show_order_status %}
                   {% if product.supplier %}
@@ -355,8 +357,14 @@
               {% if forloop.first %}
               <td class="xui-td-fourth" rowspan="{{ forloop.revcounter }}" {% if product.noline %} style="border-top:none;"{% endif %}>
                 {% if not is_sync %}
-                  {% if order.coupon_id and coupon.product_id == -1 %}
-                  <p> 优惠券:{{order.coupon_money|floatformat:"2"}}</p> <p>（{{ coupon.coupon_id }}）</p>
+                  {% if order.coupon_id %}
+                  <p>
+                    {% if coupon.coupon_rule.limit_product %}
+                      多商品劵
+                    {% else %}
+                      通用劵
+                    {% endif%}
+                    :{{order.coupon_money|floatformat:"2"}}</p> <p>（{{ coupon.coupon_id }}）</p>
                   {% endif %}
                   {% if order.integral %}
                     <p>{{order.integral}}积分，抵扣{{order.integral_money}}</p>

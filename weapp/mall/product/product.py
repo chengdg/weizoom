@@ -5,12 +5,13 @@ import operator
 from datetime import datetime
 from itertools import chain
 from django.conf import settings
-from django.db.models import F
+from django.db.models import F, Q
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from mall.promotion import models as promotion_model
+from mall.signal_handler import products_not_online_handler_for_promotions
 from watchdog.utils import watchdog_warning, watchdog_error
 from account.models import UserProfile
 
@@ -23,7 +24,6 @@ from mall import signals as mall_signals
 from . import utils
 from mall import export
 from weixin.user.module_api import get_all_active_mp_user_ids
-from mall.promotion.utils import stop_promotion
 from apps.customerized_apps.group import models as group_models
 
 import logging
@@ -443,7 +443,10 @@ class ProductPool(resource.Resource):
         product_ids = [product['id'] for product in products]
         relations = models.WeizoomHasMallProductRelation.objects.filter(mall_product_id__in=product_ids, is_deleted=False)
         mall_product_id2weizoom_product_id = dict([(r.mall_product_id, r.weizoom_product_id) for r in relations])
-        promotionrelations = promotion_model.ProductHasPromotion.objects.filter(product_id__in=mall_product_id2weizoom_product_id.values())
+        promotionrelations = promotion_model.ProductHasPromotion.objects.filter(
+                product_id__in=mall_product_id2weizoom_product_id.values()
+            ).exclude(promotion__type=promotion_model.PROMOTION_TYPE_COUPON)
+
         product_id2relation = dict([(relation.product_id, relation)for relation in promotionrelations])
 
         #构造返回数据
@@ -568,7 +571,7 @@ class ProductPool(resource.Resource):
             is_deleted=False)
 
         # 微众系列商品参加的促销活动
-        stop_promotion(request, [relation.weizoom_product_id])
+        products_not_online_handler_for_promotions([relation.weizoom_product_id], request)
 
         weizoom_product = models.Product.objects.get(id=relation.weizoom_product_id)
         mall_product = models.Product.objects.get(id=relation.mall_product_id)

@@ -5,9 +5,9 @@ from datetime import datetime, timedelta
 
 from behave import given, then, when
 
-from test import bdd_util
 from mall.models import Product
 from mall.promotion.models import Promotion, Coupon, CouponRule
+from test import bdd_util
 
 
 @when(u'{user_name}添加优惠券规则')
@@ -20,6 +20,12 @@ def step_impl(context, user_name):
     __add_coupon_rule(context, user_name)
 
 
+@when(u"{user}设置优惠券规则列表查询条件")
+def step_imple(context, user):
+    query_param = json.loads(context.text)
+
+    context.query_param = query_param
+
 @then(u'{user_name}能获得优惠券规则列表')
 def step_impl(context, user_name):
     url = '/mall2/api/promotion_list/?design_mode=0&version=1&type=coupon&count_per_page=10&page=1'
@@ -28,10 +34,12 @@ def step_impl(context, user_name):
             url += '&name=' + context.query_param['name']
         if context.query_param.get('coupon_id'):
             url += '&couponId='+ context.query_param['coupon_id']
+        if context.query_param.get('coupon_code'):
+            url += '&couponId='+ context.query_param['coupon_code']
         if context.query_param.get('coupon_promotion_type', None):
-            if context.query_param['coupon_promotion_type'] == u'全店通用券':
+            if context.query_param['coupon_promotion_type'] == u'通用券':
                 coupon_promotion_type = 1
-            elif context.query_param['coupon_promotion_type'] == u'单品券':
+            elif context.query_param['coupon_promotion_type'] == u'多商品券':
                 coupon_promotion_type = 2
             elif context.query_param['coupon_promotion_type'] == u'全部':
                 coupon_promotion_type = -1
@@ -59,21 +67,32 @@ def step_impl(context, user_name):
     for coupon_rule in coupon_rules:
         rule = {}
         rule["name"] = coupon_rule["name"]
-        rule["type"] = "单品券" if coupon_rule["detail"]["limit_product"] else "全店通用券"
         rule["money"] = coupon_rule["detail"]["money"]
         rule["remained_count"] = coupon_rule["detail"]["remained_count"]
         rule["limit_counts"] = coupon_rule["detail"]["limit_counts"] if coupon_rule["detail"]["limit_counts"] != -1 else "无限"
+        if coupon_rule['status'] == '已结束':
+            rule["remained_count"] = 0
         rule["use_count"] = coupon_rule["detail"]["use_count"]
         rule["start_date"] = coupon_rule["start_date"]
         rule["end_date"] = coupon_rule["end_date"]
         rule["get_person_count"] = coupon_rule["detail"]["get_person_count"]
         rule["get_number"] = coupon_rule["detail"]["get_count"]
+        rule['status'] = coupon_rule['status']
+
+        if coupon_rule["detail"]["limit_product"]:
+            rule["type"] = "多商品券"
+            rule['special_product'] = u"查看专属商品"
+        else:
+            rule["type"] = "通用券"
+            rule['special_product'] = u"全部"
         actual.append(rule)
 
     expected = json.loads(context.text)
     for item in expected:
         item["start_date"] = "{} 00:00:00".format(bdd_util.get_date_str(item["start_date"]))
         item["end_date"] = "{} 00:00:00".format(bdd_util.get_date_str(item["end_date"]))
+        if item['status'] == "已过期":
+            item['status'] = "已结束"
 
 
 
@@ -86,10 +105,14 @@ def step_impl(context, user_name, coupon_rule_name):
     coupon_rule = CouponRule.objects.get(owner_id=user_id, name=coupon_rule_name, is_active=True)
     url = '/mall2/api/coupon_rule/'
 
-    name = json.loads(context.text)['name']
+
+    new_one = json.loads(context.text)
+    name = new_one['name']
+    description = new_one['description']
     data = {
         "rule_id": coupon_rule.id,
-        "name": name
+        "name": name,
+        "remark":description
     }
 
     response = context.client.post(url, data)
@@ -239,6 +262,52 @@ def step_impl(context, webapp_owner_name, coupon_rule_name):
                 index = index - 1
 
 
+
+@then(u"{user}获得优惠券规则'{rule_name}'")
+def step_impl(context, user, rule_name):
+
+
+    expected = json.loads(context.text)
+
+
+    # expected["start_date"] = "{} 00:00:00".format(bdd_util.get_date_str(expected["start_date"]))
+    # expected["end_date"] = "{} 00:00:00".format(bdd_util.get_date_str(expected["end_date"]))
+
+    # todo
+    del expected["start_date"]
+    del expected["end_date"]
+
+    promotion = Promotion.objects.get(name=rule_name)
+
+    url = '/mall2/coupon_rule?id=%d' % promotion.id
+    response = context.client.get(url)
+
+    # bdd_util.assert_api_call_success(response)
+
+    coupon_rule = response.context['coupon_rule']
+    promotion = response.context['promotion']
+
+    actual = {
+        "name": promotion.name,
+        "money": coupon_rule.money,
+        "limit_counts": coupon_rule.limit_counts,
+        "using_limit": "满{}元可以使用".format(coupon_rule.valid_restrictions),
+        "count": coupon_rule.count,
+        # "cr_start_date":coupon_rule.get('start_date', u'今天'),
+        # "start_date":"{} 00:00".format(bdd_util.get_date_str(cr_start_date)),
+        # "cr_end_date": coupon_rule.get('end_date', u'1天后'),
+        # "end_date ":"{} 00:00".format(bdd_util.get_date_str(cr_end_date))
+        "description": coupon_rule.remark
+    }
+
+    actual['coupon_product'] = ','.join([p.name for p in promotion.products])
+    actual['products_status'] = map(
+        lambda x: {"name": x['name'], "status": x['status']} if x['status'] != u'在售' else  {"name": x['name'], "status": ""},
+        [{"name": p.name, "status": p.status} for p in promotion.products])
+
+    bdd_util.assert_dict(expected, actual)
+
+
 @then(u'{user}能获得优惠券状态列表')
 def step_impl(context, user):
     url = "/mall2/api/promotion_list/?type=coupon"
@@ -272,13 +341,15 @@ def __add_coupon_rule(context, webapp_owner_name):
         start_date = "{} 00:00".format(bdd_util.get_date_str(cr_start_date))
         cr_end_date = coupon_rule.get('end_date', u'1天后')
         end_date = "{} 00:00".format(bdd_util.get_date_str(cr_end_date))
+        remark = coupon_rule.get('description', '')
         post_data = {
             'name': cr_name,
             'money': cr_money,
             'count': cr_count,
             'limit_counts': -1 if cr_limit_counts == u'无限' else cr_limit_counts,
             'start_date': start_date,
-            'end_date': end_date
+            'end_date': end_date,
+            'remark': remark
         }
         if not "using_limit" in coupon_rule:
             post_data['is_valid_restrictions'] = '0'
@@ -292,13 +363,19 @@ def __add_coupon_rule(context, webapp_owner_name):
                 post_data['valid_restrictions'] = int(using_limit[1:end])
         if "coupon_product" in coupon_rule:
             post_data['limit_product'] = 1
-            post_data['product_ids'] = Product.objects.get(
-                owner_id=webapp_owner_id,
-                name=coupon_rule['coupon_product']).id
+
+            product_ids = []
+            for product_name in coupon_rule['coupon_product'].split(','):
+                product_ids.append(Product.objects.get(
+                    owner_id=webapp_owner_id,
+                    name=product_name).id)
+
+            post_data['product_ids'] = ','.join(map(lambda x: str(x), product_ids))
+
         url = '/mall2/api/coupon_rule/'
         response = context.client.post(url, post_data)
         context.tc.assertEquals(200, response.status_code)
-        if "coupon_id_prefix" in coupon_rule:
+        if json.loads(response.content)['data']['save_success'] and "coupon_id_prefix" in coupon_rule:
             latest_coupon_rule = CouponRule.objects.all().order_by('-id')[0]
             index = 1
             coupon_id_prefix = coupon_rule['coupon_id_prefix']
@@ -306,3 +383,23 @@ def __add_coupon_rule(context, webapp_owner_name):
                 coupon_id = "%s%d" % (coupon_id_prefix, index)
                 Coupon.objects.filter(id=coupon.id).update(coupon_id=coupon_id)
                 index += 1
+
+        context.response = response
+
+
+@then(u"{user}获得优惠券规则添加失败提示'{info}'")
+def step_impl(context, user, info):
+    save_success = json.loads(context.response.content)['data']['save_success']
+    assert not save_success
+
+@then(u"{user}查看优惠券'{coupon_rule_name}'专属商品")
+def step_impl(context,user,coupon_rule_name):
+    promotion = Promotion.objects.get(name=coupon_rule_name)
+
+    url = '/mall2/api/coupon_rule_products?id=%d' % promotion.id
+    response = context.client.get(url)
+    actual = json.loads(response.content)['data']['items']
+
+    expected = json.loads(context.text)
+
+    bdd_util.assert_list(expected, actual)

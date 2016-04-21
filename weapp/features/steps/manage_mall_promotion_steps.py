@@ -447,7 +447,7 @@ activity2filter_type = {
 	u'限时抢购': 'flash_sale',
 	u'积分应用': 'integral_sale',
 	u'买赠': 'all',
-	u'单品券': 'all',
+	u'多商品券': 'all',
 	u'禁用优惠券商品': 'forbidden_coupon'
 }
 
@@ -467,9 +467,9 @@ def step_impl(context, user, type):
 	bdd_util.assert_api_call_success(response)
 	actual = json.loads(response.content)['data']['items']
 	# 单品券是否可选根据名字判定
-	if type == u'单品券':
+	if type == u'多商品券':
 		for item in actual:
-			if 'promotion_name' in item and item['promotion_name'] == u'单品券':
+			if 'promotion_name' in item and item['promotion_name'] == u'多商品券':
 				item['can_select'] = True
 
 	expected = []
@@ -619,5 +619,36 @@ def step_impl(context, user):
 			item['start_date'] = bdd_util.get_datetime_str(item['start_date'])
 		if item.get('end_date', None):
 			item['end_date'] = bdd_util.get_datetime_str(item['end_date'])
+
+	bdd_util.assert_list(expected, actual)
+
+
+@when(u"{user}设置新建多商品券商品查询条件")
+def step_impl(context, user):
+	context.query_param = json.loads(context.text)
+
+@when(u"{user}新建多商品券设置商品分组查询条件")
+def step_impl(context, user):
+	context.query_param = json.loads(context.text)
+
+
+@then(u"{user}新建多商品券活动时能获得商品分组列表")
+def step_impl(context, user):
+	url = '/mall2/api/categories/'
+	if context.query_param:
+		if context.query_param.get('name'):
+			url += '&filter_name=' + context.query_param['name']
+	response = context.client.get(url)
+	bdd_util.assert_api_call_success(response)
+	actual = json.loads(response.content)['data']['items']
+
+	if context.table:
+		expected = [item.as_dict() for item in context.table]
+	else:
+		expected = json.loads(context.text)
+
+	for item in expected:
+		del item['actions']
+		del item['created_at']
 
 	bdd_util.assert_list(expected, actual)

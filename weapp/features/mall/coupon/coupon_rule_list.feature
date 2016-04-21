@@ -1,4 +1,5 @@
 #author:张三香
+#editor: 王丽 2016.04.15
 
 Feature:优惠券规则列表中,操作列信息的验证
 		#说明：
@@ -9,6 +10,23 @@ Feature:优惠券规则列表中,操作列信息的验证
 				#进行中：码库 链接 编辑 查看 使失效
 				#已失效：码库
 				#已过期：码库 删除
+		补充需求修改 2016.04.15
+		1 查询字段【优惠券类型】："全部","通用券","多商品券"
+		2 优惠券规则列表
+			（1）【类型】字段值修改成"通用券"或"多商品券"
+			（2）【有效期】字段折行显示
+			（3）增加【专属商品】字段
+					类型为“通用券”时，“专属商品”显示“全部”
+					类型为“多商品券”时，“专属商品”显示“查看专属商品”按钮
+
+		3 “查看专属商品”按钮
+			查看对应的多商品券的商品列表
+				【商品条码】：商品详情中的"商品条码"
+				【商品名称】：商品详情中的"商品名称"
+				【商品价格(元)】：商品详情中的"商品价格"
+				【商品库存】：商品详情中的"商品库存"
+				【状态】："在售"或"待售"或"已删除"；当为"待售"或"已删除"时，红色高亮显示
+		4 优惠券规则列表按照优惠券规则的添加顺序倒序排列
 
 Background:
 	Given jobs登录系统
@@ -17,59 +35,1537 @@ Background:
 		[{
 			"name": "商品1",
 			"price": 200.00
+		},{
+			"name": "商品2",
+			"price": 200.00
+		},{
+			"name": "商品3",
+			"price": 200.00
+		},{
+			"name": "商品4",
+			"price": 200.00
 		}]
 		"""
 	When jobs添加优惠券规则
 		"""
 		[{
-			"name": "优惠券1",
-			"money": 10.00, 
-			"limit_counts": 10,
-			"start_date": "明天",
-			"end_date": "4天后",
-			"coupon_id_prefix": "coupon1_id_",
-			"coupon_product": "商品1"
-		}, {
-			"name": "优惠券2",
-			"money": 10.00,
-			"limit_counts": 10,
+			"name": "通用券-已失效",
+			"money": 100.00,
+			"limit_counts": 1,
+			"using_limit": "满50元可以使用",
+			"count": 5,
 			"start_date": "今天",
-			"end_date": "2天后",
+			"end_date": "1天后",
+			"description":"使用说明",
+			"coupon_id_prefix": "coupon1_id_"
+		},{
+			"name": "通用券-进行中",
+			"money": 100.00,
+			"limit_counts": 1,
+			"using_limit": "满50元可以使用",
+			"count": 5,
+			"start_date": "今天",
+			"end_date": "1天后",
+			"description":"使用说明",
 			"coupon_id_prefix": "coupon2_id_"
-		}, {
-			"name": "优惠券3",
-			"money": 10.00,
-			"limit_counts": 10,
-			"start_date": "今天",
-			"end_date": "2天后",
-			"coupon_id_prefix": "coupon3_id_"
-		}, {
-			"name": "优惠券4",
-			"money": 10.00,
-			"limit_counts": 10,
-			"start_date": "3天前",
+		},{
+			"name": "通用券-已过期",
+			"money": 100.00,
+			"limit_counts": 1,
+			"using_limit": "满50元可以使用",
+			"count": 5,
+			"start_date": "2天前",
 			"end_date": "1天前",
+			"description":"使用说明",
+			"coupon_id_prefix": "coupon3_id_"
+		},{
+			"name": "多商品券-进行中",
+			"money": 100.00,
+			"limit_counts": 1,
+			"using_limit": "满50元可以使用",
+			"count": 5,
+			"start_date": "今天",
+			"end_date": "1天后",
+			"description":"使用说明",
+			"coupon_product": "商品1",
 			"coupon_id_prefix": "coupon4_id_"
+		},{
+			"name": "多商品券-未开始",
+			"money": 100.00,
+			"limit_counts": 1,
+			"using_limit": "满50元可以使用",
+			"count": 5,
+			"start_date": "1天后",
+			"end_date": "3天后",
+			"description":"使用说明",
+			"coupon_product": "商品2,商品3,商品4",
+			"coupon_id_prefix": "coupon5_id_"
+		}]
+		"""
+	When jobs失效优惠券'通用券-已失效'
+
+@mall2 @promotion @promotionCoupon @online_bug @ztq
+Scenario:1 优惠券规则列表按照添加顺序倒序排列
+	Given jobs登录系统
+	Then jobs能获得优惠券规则列表
+		"""
+		[{
+			"name": "多商品券-未开始",
+			"type": "多商品券",
+			"money": 100.00,
+			"limit_counts": 1,
+			"remained_count": 5,
+			"start_date": "1天后",
+			"end_date": "3天后",
+			"special_product": "查看专属商品",
+			"get_person_count": 0,
+			"get_number": 0,
+			"use_count": 0,
+			"status": "未开始"
+		},{
+			"name": "多商品券-进行中",
+			"type": "多商品券",
+			"money": 100.00,
+			"limit_counts": 1,
+			"remained_count": 5,
+			"start_date": "今天",
+			"end_date": "1天后",
+			"special_product": "查看专属商品",
+			"get_person_count": 0,
+			"get_number": 0,
+			"use_count": 0,
+			"status": "进行中"
+		},{
+			"name": "通用券-已过期",
+			"type": "通用券",
+			"money": 100.00,
+			"limit_counts": 1,
+			"remained_count": 0,
+			"start_date": "2天前",
+			"end_date": "1天前",
+			"special_product": "全部",
+			"get_person_count": 0,
+			"get_number": 0,
+			"use_count": 0,
+			"status": "已过期"
+		},{
+			"name": "通用券-进行中",
+			"type": "通用券",
+			"money": 100.00,
+			"limit_counts": 1,
+			"remained_count": 5,
+			"start_date": "今天",
+			"end_date": "1天后",
+			"special_product": "全部",
+			"get_person_count": 0,
+			"get_number": 0,
+			"use_count": 0,
+			"status": "进行中"
+		},{
+			"name": "通用券-已失效",
+			"type": "通用券",
+			"money": 100.00,
+			"limit_counts": 1,
+			"remained_count": 0,
+			"start_date": "今天",
+			"end_date": "1天后",
+			"special_product": "全部",
+			"get_person_count": 0,
+			"get_number": 0,
+			"use_count": 0,
+			"status": "已失效"
 		}]
 		"""
 
-@mall2 @promotion @promotionCoupon @online_bug
-Scenario: 不同状态的优惠券规则,其操作列显示不同
+@mall2 @promotion @promotionCoupon @ztq
+Scenario:2 优惠券规则列表-多商品券(一个商品)商品下架、删除
+	#添加多商品券-一个商品
+	#多商品券商品全部下架，多商品券依然可用
+	#多商品券商品全部删除，多商品券失效
+
 	Given jobs登录系统
-	When jobs失效优惠券'优惠券3'
-	Then jobs能获得优惠券状态列表
+
+	#多商品券(一个商品)商品下架
+	#优惠券不变，优惠券中的对应商品变为"待售"
+	When jobs'下架'商品'商品1'
+	Then jobs获得优惠券规则'多商品券-进行中'
+		"""
+		{
+			"name": "多商品券-进行中",
+			"money": 100.00,
+			"limit_counts": 1,
+			"using_limit": "满50元可以使用",
+			"count": 5,
+			"start_date": "今天",
+			"end_date": "1天后",
+			"description":"使用说明",
+			"coupon_product": "商品1",
+			"products_status":[{
+				"name": "商品1",
+				"status": "待售"
+				}]
+		}
+		"""
+	Then jobs能获得优惠券规则列表
 		"""
 		[{
-			"name": "优惠券4",
-			"status":"已过期"
+			"name": "多商品券-未开始",
+			"type": "多商品券",
+			"money": 100.00,
+			"limit_counts": 1,
+			"remained_count": 5,
+			"start_date": "1天后",
+			"end_date": "3天后",
+			"special_product": "查看专属商品",
+			"get_person_count": 0,
+			"get_number": 0,
+			"use_count": 0,
+			"status": "未开始"
 		},{
-			"name": "优惠券3",
-			"status":"已失效"
+			"name": "多商品券-进行中",
+			"type": "多商品券",
+			"money": 100.00,
+			"limit_counts": 1,
+			"remained_count": 5,
+			"start_date": "今天",
+			"end_date": "1天后",
+			"special_product": "查看专属商品",
+			"get_person_count": 0,
+			"get_number": 0,
+			"use_count": 0,
+			"status": "进行中"
 		},{
-			"name": "优惠券2",
-			"status":"进行中"
+			"name": "通用券-已过期",
+			"type": "通用券",
+			"money": 100.00,
+			"limit_counts": 1,
+			"remained_count": 0,
+			"start_date": "2天前",
+			"end_date": "1天前",
+			"special_product": "全部",
+			"get_person_count": 0,
+			"get_number": 0,
+			"use_count": 0,
+			"status": "已过期"
 		},{
-			"name": "优惠券1",
-			"status":"未开始"
+			"name": "通用券-进行中",
+			"type": "通用券",
+			"money": 100.00,
+			"limit_counts": 1,
+			"remained_count": 5,
+			"start_date": "今天",
+			"end_date": "1天后",
+			"special_product": "全部",
+			"get_person_count": 0,
+			"get_number": 0,
+			"use_count": 0,
+			"status": "进行中"
+		},{
+			"name": "通用券-已失效",
+			"type": "通用券",
+			"money": 100.00,
+			"limit_counts": 1,
+			"remained_count": 0,
+			"start_date": "今天",
+			"end_date": "1天后",
+			"special_product": "全部",
+			"get_person_count": 0,
+			"get_number": 0,
+			"use_count": 0,
+			"status": "已失效"
 		}]
 		"""
+	Then jobs查看优惠券'多商品券-进行中'专属商品
+		"""
+		[{
+			"name":"商品1",
+			"status":"待售"
+		}]
+		"""
+
+	#多商品券(一个商品)商品删除
+	#优惠券活动失效，优惠券中的对应商品变为"已删除"
+	When jobs'删除'商品'商品1'
+	Then jobs能获得优惠券规则列表
+		"""
+		[{
+			"name": "多商品券-未开始",
+			"type": "多商品券",
+			"money": 100.00,
+			"limit_counts": 1,
+			"remained_count": 5,
+			"start_date": "1天后",
+			"end_date": "3天后",
+			"special_product": "查看专属商品",
+			"get_person_count": 0,
+			"get_number": 0,
+			"use_count": 0,
+			"status": "未开始"
+		},{
+			"name": "多商品券-进行中",
+			"type": "多商品券",
+			"money": 100.00,
+			"limit_counts": 1,
+			"remained_count": 0,
+			"start_date": "今天",
+			"end_date": "1天后",
+			"special_product": "查看专属商品",
+			"get_person_count": 0,
+			"get_number": 0,
+			"use_count": 0,
+			"status": "已失效"
+		},{
+			"name": "通用券-已过期",
+			"type": "通用券",
+			"money": 100.00,
+			"limit_counts": 1,
+			"remained_count": 0,
+			"start_date": "2天前",
+			"end_date": "1天前",
+			"special_product": "全部",
+			"get_person_count": 0,
+			"get_number": 0,
+			"use_count": 0,
+			"status": "已过期"
+		},{
+			"name": "通用券-进行中",
+			"type": "通用券",
+			"money": 100.00,
+			"limit_counts": 1,
+			"remained_count": 5,
+			"start_date": "今天",
+			"end_date": "1天后",
+			"special_product": "全部",
+			"get_person_count": 0,
+			"get_number": 0,
+			"use_count": 0,
+			"status": "进行中"
+		},{
+			"name": "通用券-已失效",
+			"type": "通用券",
+			"money": 100.00,
+			"limit_counts": 1,
+			"remained_count": 0,
+			"start_date": "今天",
+			"end_date": "1天后",
+			"special_product": "全部",
+			"get_person_count": 0,
+			"get_number": 0,
+			"use_count": 0,
+			"status": "已失效"
+		}]
+		"""
+	Then jobs查看优惠券'多商品券-进行中'专属商品
+		"""
+		[{
+			"name":"商品1",
+			"status":"已删除"
+		}]
+		"""
+
+@mall2 @promotion @promotionCoupon @ztq
+Scenario:3 优惠券规则列表-多商品券(多个商品)商品下架、删除
+	#添加多商品券-多个商品
+	#多商品券商品部分下架，多商品券依然可用
+	#多商品券商品全部下架，多商品券依然可用、
+	#多商品券商品部分删除，多商品券依然可用
+	#多商品券商品全部删除，多商品券失效
+
+	Given jobs登录系统
+	Then jobs查看优惠券'多商品券-未开始'专属商品
+		"""
+		[{
+			"name":"商品2",
+			"status":"在售"
+		},{
+			"name":"商品3",
+			"status":"在售"
+		},{
+			"name":"商品4",
+			"status":"在售"
+		}]
+		""" 
+
+	#多商品券(多个商品)部分商品下架
+	#优惠券不变，优惠券中的对应商品变为"待售"
+	When jobs'下架'商品'商品2'
+	Then jobs获得优惠券规则'多商品券-未开始'
+		"""
+		{
+			"name": "多商品券-未开始",
+			"money": 100.00,
+			"limit_counts": 1,
+			"using_limit": "满50元可以使用",
+			"count": 5,
+			"start_date": "1天后",
+			"end_date": "3天后",
+			"description":"使用说明",
+			"coupon_product": "商品2,商品3,商品4",
+			"products_status":[{
+				"name": "商品2",
+				"status": "待售"
+				},{
+				"name": "商品3",
+				"status": ""
+				},{
+				"name": "商品4",
+				"status": ""
+			}]
+		}
+		"""
+	Then jobs能获得优惠券规则列表
+		"""
+		[{
+			"name": "多商品券-未开始",
+			"type": "多商品券",
+			"money": 100.00,
+			"limit_counts": 1,
+			"remained_count": 5,
+			"start_date": "1天后",
+			"end_date": "3天后",
+			"special_product": "查看专属商品",
+			"get_person_count": 0,
+			"get_number": 0,
+			"use_count": 0,
+			"status": "未开始"
+		},{
+			"name": "多商品券-进行中",
+			"type": "多商品券",
+			"money": 100.00,
+			"limit_counts": 1,
+			"remained_count": 5,
+			"start_date": "今天",
+			"end_date": "1天后",
+			"special_product": "查看专属商品",
+			"get_person_count": 0,
+			"get_number": 0,
+			"use_count": 0,
+			"status": "进行中"
+		},{
+			"name": "通用券-已过期",
+			"type": "通用券",
+			"money": 100.00,
+			"limit_counts": 1,
+			"remained_count": 0,
+			"start_date": "2天前",
+			"end_date": "1天前",
+			"special_product": "全部",
+			"get_person_count": 0,
+			"get_number": 0,
+			"use_count": 0,
+			"status": "已过期"
+		},{
+			"name": "通用券-进行中",
+			"type": "通用券",
+			"money": 100.00,
+			"limit_counts": 1,
+			"remained_count": 5,
+			"start_date": "今天",
+			"end_date": "1天后",
+			"special_product": "全部",
+			"get_person_count": 0,
+			"get_number": 0,
+			"use_count": 0,
+			"status": "进行中"
+		},{
+			"name": "通用券-已失效",
+			"type": "通用券",
+			"money": 100.00,
+			"limit_counts": 1,
+			"remained_count": 0,
+			"start_date": "今天",
+			"end_date": "1天后",
+			"special_product": "全部",
+			"get_person_count": 0,
+			"get_number": 0,
+			"use_count": 0,
+			"status": "已失效"
+		}]
+		"""
+	Then jobs查看优惠券'多商品券-未开始'专属商品
+		"""
+		[{
+			"name":"商品2",
+			"status":"待售"
+		},{
+			"name":"商品3",
+			"status":"在售"
+		},{
+			"name":"商品4",
+			"status":"在售"
+		}]
+		"""
+
+	#多商品券(多个商品)全部商品下架
+	#优惠券不变，优惠券中的对应商品变为"待售"
+	When jobs'下架'商品'商品3'
+	When jobs'下架'商品'商品4'
+	Then jobs获得优惠券规则'多商品券-未开始'
+		"""
+		{
+			"name": "多商品券-未开始",
+			"money": 100.00,
+			"limit_counts": 1,
+			"using_limit": "满50元可以使用",
+			"count": 5,
+			"start_date": "1天后",
+			"end_date": "3天后",
+			"description":"使用说明",
+			"coupon_product": "商品2,商品3,商品4",
+			"products_status":[{
+				"name": "商品2",
+				"status": "待售"
+				},{
+				"name": "商品3",
+				"status": "待售"
+				},{
+				"name": "商品4",
+				"status": "待售"
+			}]
+		}
+		"""
+	Then jobs能获得优惠券规则列表
+		"""
+		[{
+			"name": "多商品券-未开始",
+			"type": "多商品券",
+			"money": 100.00,
+			"limit_counts": 1,
+			"remained_count": 5,
+			"start_date": "1天后",
+			"end_date": "3天后",
+			"special_product": "查看专属商品",
+			"get_person_count": 0,
+			"get_number": 0,
+			"use_count": 0,
+			"status": "未开始"
+		},{
+			"name": "多商品券-进行中",
+			"type": "多商品券",
+			"money": 100.00,
+			"limit_counts": 1,
+			"remained_count": 5,
+			"start_date": "今天",
+			"end_date": "1天后",
+			"special_product": "查看专属商品",
+			"get_person_count": 0,
+			"get_number": 0,
+			"use_count": 0,
+			"status": "进行中"
+		},{
+			"name": "通用券-已过期",
+			"type": "通用券",
+			"money": 100.00,
+			"limit_counts": 1,
+			"remained_count": 0,
+			"start_date": "2天前",
+			"end_date": "1天前",
+			"special_product": "全部",
+			"get_person_count": 0,
+			"get_number": 0,
+			"use_count": 0,
+			"status": "已过期"
+		},{
+			"name": "通用券-进行中",
+			"type": "通用券",
+			"money": 100.00,
+			"limit_counts": 1,
+			"remained_count": 5,
+			"start_date": "今天",
+			"end_date": "1天后",
+			"special_product": "全部",
+			"get_person_count": 0,
+			"get_number": 0,
+			"use_count": 0,
+			"status": "进行中"
+		},{
+			"name": "通用券-已失效",
+			"type": "通用券",
+			"money": 100.00,
+			"limit_counts": 1,
+			"remained_count": 0,
+			"start_date": "今天",
+			"end_date": "1天后",
+			"special_product": "全部",
+			"get_person_count": 0,
+			"get_number": 0,
+			"use_count": 0,
+			"status": "已失效"
+		}]
+		"""
+	Then jobs查看优惠券'多商品券-未开始'专属商品
+		"""
+		[{
+			"name":"商品2",
+			"status":"待售"
+		},{
+			"name":"商品3",
+			"status":"待售"
+		},{
+			"name":"商品4",
+			"status":"待售"
+		}]
+		"""
+
+	#多商品券(多个商品)部分商品删除
+	#优惠券不变，优惠券中的对应商品变为"已删除"
+	When jobs'删除'商品'商品2'
+	Then jobs获得优惠券规则'多商品券-未开始'
+		"""
+		{
+			"name": "多商品券-未开始",
+			"money": 100.00,
+			"limit_counts": 1,
+			"using_limit": "满50元可以使用",
+			"count": 5,
+			"start_date": "1天后",
+			"end_date": "3天后",
+			"description":"使用说明",
+			"coupon_product": "商品2,商品3,商品4",
+			"products_status":[{
+				"name": "商品2",
+				"status": "已删除"
+				},{
+				"name": "商品3",
+				"status": "待售"
+				},{
+				"name": "商品4",
+				"status": "待售"
+			}]
+		}
+		"""
+	Then jobs能获得优惠券规则列表
+		"""
+		[{
+			"name": "多商品券-未开始",
+			"type": "多商品券",
+			"money": 100.00,
+			"limit_counts": 1,
+			"remained_count": 5,
+			"start_date": "1天后",
+			"end_date": "3天后",
+			"special_product": "查看专属商品",
+			"get_person_count": 0,
+			"get_number": 0,
+			"use_count": 0,
+			"status": "未开始"
+		},{
+			"name": "多商品券-进行中",
+			"type": "多商品券",
+			"money": 100.00,
+			"limit_counts": 1,
+			"remained_count": 5,
+			"start_date": "今天",
+			"end_date": "1天后",
+			"special_product": "查看专属商品",
+			"get_person_count": 0,
+			"get_number": 0,
+			"use_count": 0,
+			"status": "进行中"
+		},{
+			"name": "通用券-已过期",
+			"type": "通用券",
+			"money": 100.00,
+			"limit_counts": 1,
+			"remained_count": 0,
+			"start_date": "2天前",
+			"end_date": "1天前",
+			"special_product": "全部",
+			"get_person_count": 0,
+			"get_number": 0,
+			"use_count": 0,
+			"status": "已过期"
+		},{
+			"name": "通用券-进行中",
+			"type": "通用券",
+			"money": 100.00,
+			"limit_counts": 1,
+			"remained_count": 5,
+			"start_date": "今天",
+			"end_date": "1天后",
+			"special_product": "全部",
+			"get_person_count": 0,
+			"get_number": 0,
+			"use_count": 0,
+			"status": "进行中"
+		},{
+			"name": "通用券-已失效",
+			"type": "通用券",
+			"money": 100.00,
+			"limit_counts": 1,
+			"remained_count": 0,
+			"start_date": "今天",
+			"end_date": "1天后",
+			"special_product": "全部",
+			"get_person_count": 0,
+			"get_number": 0,
+			"use_count": 0,
+			"status": "已失效"
+		}]
+		"""
+	Then jobs查看优惠券'多商品券-未开始'专属商品
+		"""
+		[{
+			"name":"商品2",
+			"status":"已删除"
+		},{
+			"name":"商品3",
+			"status":"待售"
+		},{
+			"name":"商品4",
+			"status":"待售"
+		}]
+		"""
+
+	#多商品券(多个商品)全部商品删除
+	#优惠券活动失效，优惠券中的对应商品变为"已删除"
+	When jobs'删除'商品'商品3'
+	When jobs'删除'商品'商品4'
+	Then jobs能获得优惠券规则列表
+		"""
+		[{
+			"name": "多商品券-未开始",
+			"type": "多商品券",
+			"money": 100.00,
+			"limit_counts": 1,
+			"remained_count": 0,
+			"start_date": "1天后",
+			"end_date": "3天后",
+			"special_product": "查看专属商品",
+			"get_person_count": 0,
+			"get_number": 0,
+			"use_count": 0,
+			"status": "已失效"
+		},{
+			"name": "多商品券-进行中",
+			"type": "多商品券",
+			"money": 100.00,
+			"limit_counts": 1,
+			"remained_count": 5,
+			"start_date": "今天",
+			"end_date": "1天后",
+			"special_product": "查看专属商品",
+			"get_person_count": 0,
+			"get_number": 0,
+			"use_count": 0,
+			"status": "进行中"
+		},{
+			"name": "通用券-已过期",
+			"type": "通用券",
+			"money": 100.00,
+			"limit_counts": 1,
+			"remained_count": 0,
+			"start_date": "2天前",
+			"end_date": "1天前",
+			"special_product": "全部",
+			"get_person_count": 0,
+			"get_number": 0,
+			"use_count": 0,
+			"status": "已过期"
+		},{
+			"name": "通用券-进行中",
+			"type": "通用券",
+			"money": 100.00,
+			"limit_counts": 1,
+			"remained_count": 5,
+			"start_date": "今天",
+			"end_date": "1天后",
+			"special_product": "全部",
+			"get_person_count": 0,
+			"get_number": 0,
+			"use_count": 0,
+			"status": "进行中"
+		},{
+			"name": "通用券-已失效",
+			"type": "通用券",
+			"money": 100.00,
+			"limit_counts": 1,
+			"remained_count": 0,
+			"start_date": "今天",
+			"end_date": "1天后",
+			"special_product": "全部",
+			"get_person_count": 0,
+			"get_number": 0,
+			"use_count": 0,
+			"status": "已失效"
+		}]
+		"""
+	Then jobs查看优惠券'多商品券-未开始'专属商品
+		"""
+		[{
+			"name":"商品2",
+			"status":"已删除"
+		},{
+			"name":"商品3",
+			"status":"已删除"
+		},{
+			"name":"商品4",
+			"status":"已删除"
+		}]
+		"""
+
+@mall2 @promotion @promotionCoupon @ztq
+Scenario:4 优惠券规则列表查询
+	Given jobs登录系统
+
+	#按照"优惠券名称"查询
+		#空查询
+		When jobs设置优惠券规则列表查询条件
+			"""
+			{
+				"name":""
+			}
+			"""
+		Then jobs能获得优惠券规则列表
+			"""
+			[{
+				"name": "多商品券-未开始",
+				"type": "多商品券",
+				"money": 100.00,
+				"limit_counts": 1,
+				"remained_count": 5,
+				"start_date": "1天后",
+				"end_date": "3天后",
+				"special_product": "查看专属商品",
+				"get_person_count": 0,
+				"get_number": 0,
+				"use_count": 0,
+				"status": "未开始"
+			},{
+				"name": "多商品券-进行中",
+				"type": "多商品券",
+				"money": 100.00,
+				"limit_counts": 1,
+				"remained_count": 5,
+				"start_date": "今天",
+				"end_date": "1天后",
+				"special_product": "查看专属商品",
+				"get_person_count": 0,
+				"get_number": 0,
+				"use_count": 0,
+				"status": "进行中"
+			},{
+				"name": "通用券-已过期",
+				"type": "通用券",
+				"money": 100.00,
+				"limit_counts": 1,
+				"remained_count": 0,
+				"start_date": "2天前",
+				"end_date": "1天前",
+				"special_product": "全部",
+				"get_person_count": 0,
+				"get_number": 0,
+				"use_count": 0,
+				"status": "已过期"
+			},{
+				"name": "通用券-进行中",
+				"type": "通用券",
+				"money": 100.00,
+				"limit_counts": 1,
+				"remained_count": 5,
+				"start_date": "今天",
+				"end_date": "1天后",
+				"special_product": "全部",
+				"get_person_count": 0,
+				"get_number": 0,
+				"use_count": 0,
+				"status": "进行中"
+			},{
+				"name": "通用券-已失效",
+				"type": "通用券",
+				"money": 100.00,
+				"limit_counts": 1,
+				"remained_count": 0,
+				"start_date": "今天",
+				"end_date": "1天后",
+				"special_product": "全部",
+				"get_person_count": 0,
+				"get_number": 0,
+				"use_count": 0,
+				"status": "已失效"
+			}]
+			"""
+
+		#模糊匹配
+		When jobs设置优惠券规则列表查询条件
+			"""
+			{
+				"name":"多商品券"
+			}
+			"""
+		Then jobs能获得优惠券规则列表
+			"""
+			[{
+				"name": "多商品券-未开始",
+				"type": "多商品券",
+				"money": 100.00,
+				"limit_counts": 1,
+				"remained_count": 5,
+				"start_date": "1天后",
+				"end_date": "3天后",
+				"special_product": "查看专属商品",
+				"get_person_count": 0,
+				"get_number": 0,
+				"use_count": 0,
+				"status": "未开始"
+			},{
+				"name": "多商品券-进行中",
+				"type": "多商品券",
+				"money": 100.00,
+				"limit_counts": 1,
+				"remained_count": 5,
+				"start_date": "今天",
+				"end_date": "1天后",
+				"special_product": "查看专属商品",
+				"get_person_count": 0,
+				"get_number": 0,
+				"use_count": 0,
+				"status": "进行中"
+			}]
+			"""
+
+		#查询结果为空
+		When jobs设置优惠券规则列表查询条件
+			"""
+			{
+				"name":"33"
+			}
+			"""
+		Then jobs能获得优惠券规则列表
+			"""
+			[]
+			"""
+
+	#按照"优惠券码"查询
+		#空查询
+		When jobs设置优惠券规则列表查询条件
+			"""
+			{
+				"coupon_code":""
+			}
+			"""
+		Then jobs能获得优惠券规则列表
+			"""
+			[{
+				"name": "多商品券-未开始",
+				"type": "多商品券",
+				"money": 100.00,
+				"limit_counts": 1,
+				"remained_count": 5,
+				"start_date": "1天后",
+				"end_date": "3天后",
+				"special_product": "查看专属商品",
+				"get_person_count": 0,
+				"get_number": 0,
+				"use_count": 0,
+				"status": "未开始"
+			},{
+				"name": "多商品券-进行中",
+				"type": "多商品券",
+				"money": 100.00,
+				"limit_counts": 1,
+				"remained_count": 5,
+				"start_date": "今天",
+				"end_date": "1天后",
+				"special_product": "查看专属商品",
+				"get_person_count": 0,
+				"get_number": 0,
+				"use_count": 0,
+				"status": "进行中"
+			},{
+				"name": "通用券-已过期",
+				"type": "通用券",
+				"money": 100.00,
+				"limit_counts": 1,
+				"remained_count": 0,
+				"start_date": "2天前",
+				"end_date": "1天前",
+				"special_product": "全部",
+				"get_person_count": 0,
+				"get_number": 0,
+				"use_count": 0,
+				"status": "已过期"
+			},{
+				"name": "通用券-进行中",
+				"type": "通用券",
+				"money": 100.00,
+				"limit_counts": 1,
+				"remained_count": 5,
+				"start_date": "今天",
+				"end_date": "1天后",
+				"special_product": "全部",
+				"get_person_count": 0,
+				"get_number": 0,
+				"use_count": 0,
+				"status": "进行中"
+			},{
+				"name": "通用券-已失效",
+				"type": "通用券",
+				"money": 100.00,
+				"limit_counts": 1,
+				"remained_count": 0,
+				"start_date": "今天",
+				"end_date": "1天后",
+				"special_product": "全部",
+				"get_person_count": 0,
+				"get_number": 0,
+				"use_count": 0,
+				"status": "已失效"
+			}]
+			"""
+
+#		#模糊匹配
+#		When jobs设置优惠券规则列表查询条件
+#			"""
+#			{
+#				"coupon_code":"coupon1_id_"
+#			}
+#			"""
+#		Then jobs能获得优惠券规则列表
+#			"""
+#			[{
+#				"name": "通用券-已失效",
+#				"type": "通用券",
+#				"money": 100.00,
+#				"limit_counts": 1,
+#				"remained_count": 0,
+#				"start_date": "今天",
+#				"end_date": "1天后",
+#				"special_product": "全部",
+#				"get_person_count": 0,
+#				"get_number": 0,
+#				"use_count": 0,
+#				"status": "已失效"
+#			}]
+#			"""
+
+		#查询结果为空
+		When jobs设置优惠券规则列表查询条件
+			"""
+			{
+				"coupon_code":"33"
+			}
+			"""
+		Then jobs能获得优惠券规则列表
+			"""
+			[]
+			"""
+
+	#按照"优惠券类型"查询
+		#全部
+		When jobs设置优惠券规则列表查询条件
+			"""
+			{
+				"coupon_promotion_type":"全部"
+			}
+			"""
+		Then jobs能获得优惠券规则列表
+			"""
+			[{
+				"name": "多商品券-未开始",
+				"type": "多商品券",
+				"money": 100.00,
+				"limit_counts": 1,
+				"remained_count": 5,
+				"start_date": "1天后",
+				"end_date": "3天后",
+				"special_product": "查看专属商品",
+				"get_person_count": 0,
+				"get_number": 0,
+				"use_count": 0,
+				"status": "未开始"
+			},{
+				"name": "多商品券-进行中",
+				"type": "多商品券",
+				"money": 100.00,
+				"limit_counts": 1,
+				"remained_count": 5,
+				"start_date": "今天",
+				"end_date": "1天后",
+				"special_product": "查看专属商品",
+				"get_person_count": 0,
+				"get_number": 0,
+				"use_count": 0,
+				"status": "进行中"
+			},{
+				"name": "通用券-已过期",
+				"type": "通用券",
+				"money": 100.00,
+				"limit_counts": 1,
+				"remained_count": 0,
+				"start_date": "2天前",
+				"end_date": "1天前",
+				"special_product": "全部",
+				"get_person_count": 0,
+				"get_number": 0,
+				"use_count": 0,
+				"status": "已过期"
+			},{
+				"name": "通用券-进行中",
+				"type": "通用券",
+				"money": 100.00,
+				"limit_counts": 1,
+				"remained_count": 5,
+				"start_date": "今天",
+				"end_date": "1天后",
+				"special_product": "全部",
+				"get_person_count": 0,
+				"get_number": 0,
+				"use_count": 0,
+				"status": "进行中"
+			},{
+				"name": "通用券-已失效",
+				"type": "通用券",
+				"money": 100.00,
+				"limit_counts": 1,
+				"remained_count": 0,
+				"start_date": "今天",
+				"end_date": "1天后",
+				"special_product": "全部",
+				"get_person_count": 0,
+				"get_number": 0,
+				"use_count": 0,
+				"status": "已失效"
+			}]
+			"""
+
+		#通用券
+		When jobs设置优惠券规则列表查询条件
+			"""
+			{
+				"coupon_promotion_type":"通用券"
+			}
+			"""
+		Then jobs能获得优惠券规则列表
+			"""
+			[{
+				"name": "通用券-已过期",
+				"type": "通用券",
+				"money": 100.00,
+				"limit_counts": 1,
+				"remained_count": 0,
+				"start_date": "2天前",
+				"end_date": "1天前",
+				"special_product": "全部",
+				"get_person_count": 0,
+				"get_number": 0,
+				"use_count": 0,
+				"status": "已过期"
+			},{
+				"name": "通用券-进行中",
+				"type": "通用券",
+				"money": 100.00,
+				"limit_counts": 1,
+				"remained_count": 5,
+				"start_date": "今天",
+				"end_date": "1天后",
+				"special_product": "全部",
+				"get_person_count": 0,
+				"get_number": 0,
+				"use_count": 0,
+				"status": "进行中"
+			},{
+				"name": "通用券-已失效",
+				"type": "通用券",
+				"money": 100.00,
+				"limit_counts": 1,
+				"remained_count": 0,
+				"start_date": "今天",
+				"end_date": "1天后",
+				"special_product": "全部",
+				"get_person_count": 0,
+				"get_number": 0,
+				"use_count": 0,
+				"status": "已失效"
+			}]
+			"""
+
+		#多商品券
+		When jobs设置优惠券规则列表查询条件
+			"""
+			{
+				"coupon_promotion_type":"多商品券"
+			}
+			"""
+		Then jobs能获得优惠券规则列表
+			"""
+			[{
+				"name": "多商品券-未开始",
+				"type": "多商品券",
+				"money": 100.00,
+				"limit_counts": 1,
+				"remained_count": 5,
+				"start_date": "1天后",
+				"end_date": "3天后",
+				"special_product": "查看专属商品",
+				"get_person_count": 0,
+				"get_number": 0,
+				"use_count": 0,
+				"status": "未开始"
+			},{
+				"name": "多商品券-进行中",
+				"type": "多商品券",
+				"money": 100.00,
+				"limit_counts": 1,
+				"remained_count": 5,
+				"start_date": "今天",
+				"end_date": "1天后",
+				"special_product": "查看专属商品",
+				"get_person_count": 0,
+				"get_number": 0,
+				"use_count": 0,
+				"status": "进行中"
+			}]
+			"""
+
+	#按照"促销状态"查询
+		#全部
+		When jobs设置优惠券规则列表查询条件
+			"""
+			{
+				"status":"全部"
+			}
+			"""
+		Then jobs能获得优惠券规则列表
+			"""
+			[{
+				"name": "多商品券-未开始",
+				"type": "多商品券",
+				"money": 100.00,
+				"limit_counts": 1,
+				"remained_count": 5,
+				"start_date": "1天后",
+				"end_date": "3天后",
+				"special_product": "查看专属商品",
+				"get_person_count": 0,
+				"get_number": 0,
+				"use_count": 0,
+				"status": "未开始"
+			},{
+				"name": "多商品券-进行中",
+				"type": "多商品券",
+				"money": 100.00,
+				"limit_counts": 1,
+				"remained_count": 5,
+				"start_date": "今天",
+				"end_date": "1天后",
+				"special_product": "查看专属商品",
+				"get_person_count": 0,
+				"get_number": 0,
+				"use_count": 0,
+				"status": "进行中"
+			},{
+				"name": "通用券-已过期",
+				"type": "通用券",
+				"money": 100.00,
+				"limit_counts": 1,
+				"remained_count": 0,
+				"start_date": "2天前",
+				"end_date": "1天前",
+				"special_product": "全部",
+				"get_person_count": 0,
+				"get_number": 0,
+				"use_count": 0,
+				"status": "已过期"
+			},{
+				"name": "通用券-进行中",
+				"type": "通用券",
+				"money": 100.00,
+				"limit_counts": 1,
+				"remained_count": 5,
+				"start_date": "今天",
+				"end_date": "1天后",
+				"special_product": "全部",
+				"get_person_count": 0,
+				"get_number": 0,
+				"use_count": 0,
+				"status": "进行中"
+			},{
+				"name": "通用券-已失效",
+				"type": "通用券",
+				"money": 100.00,
+				"limit_counts": 1,
+				"remained_count": 0,
+				"start_date": "今天",
+				"end_date": "1天后",
+				"special_product": "全部",
+				"get_person_count": 0,
+				"get_number": 0,
+				"use_count": 0,
+				"status": "已失效"
+			}]
+			"""
+
+		#未开始
+		When jobs设置优惠券规则列表查询条件
+			"""
+			{
+				"promotion_status":"未开始"
+			}
+			"""
+		Then jobs能获得优惠券规则列表
+			"""
+			[{
+				"name": "多商品券-未开始",
+				"type": "多商品券",
+				"money": 100.00,
+				"limit_counts": 1,
+				"remained_count": 5,
+				"start_date": "1天后",
+				"end_date": "3天后",
+				"special_product": "查看专属商品",
+				"get_person_count": 0,
+				"get_number": 0,
+				"use_count": 0,
+				"status": "未开始"
+			}]
+			"""
+
+		#进行中
+		When jobs设置优惠券规则列表查询条件
+			"""
+			{
+				"promotion_status":"进行中"
+			}
+			"""
+		Then jobs能获得优惠券规则列表
+			"""
+			[{
+				"name": "多商品券-进行中",
+				"type": "多商品券",
+				"money": 100.00,
+				"limit_counts": 1,
+				"remained_count": 5,
+				"start_date": "今天",
+				"end_date": "1天后",
+				"special_product": "查看专属商品",
+				"get_person_count": 0,
+				"get_number": 0,
+				"use_count": 0,
+				"status": "进行中"
+			},{
+				"name": "通用券-进行中",
+				"type": "通用券",
+				"money": 100.00,
+				"limit_counts": 1,
+				"remained_count": 5,
+				"start_date": "今天",
+				"end_date": "1天后",
+				"special_product": "全部",
+				"get_person_count": 0,
+				"get_number": 0,
+				"use_count": 0,
+				"status": "进行中"
+			}]
+			"""
+
+		#已过期
+		When jobs设置优惠券规则列表查询条件
+			"""
+			{
+				"promotion_status":"已过期"
+			}
+			"""
+		Then jobs能获得优惠券规则列表
+			"""
+			[{
+				"name": "通用券-已过期",
+				"type": "通用券",
+				"money": 100.00,
+				"limit_counts": 1,
+				"remained_count": 0,
+				"start_date": "2天前",
+				"end_date": "1天前",
+				"special_product": "全部",
+				"get_person_count": 0,
+				"get_number": 0,
+				"use_count": 0,
+				"status": "已过期"
+			}]
+			"""
+
+		#已失效
+		When jobs设置优惠券规则列表查询条件
+			"""
+			{
+				"promotion_status":"已失效"
+			}
+			"""
+		Then jobs能获得优惠券规则列表
+			"""
+			[{
+				"name": "通用券-已失效",
+				"type": "通用券",
+				"money": 100.00,
+				"limit_counts": 1,
+				"remained_count": 0,
+				"start_date": "今天",
+				"end_date": "1天后",
+				"special_product": "全部",
+				"get_person_count": 0,
+				"get_number": 0,
+				"use_count": 0,
+				"status": "已失效"
+			}]
+			"""
+
+	#按活动时间查询
+		#空查询
+		When jobs设置优惠券规则列表查询条件
+			"""
+			{
+				"start_date":"",
+				"end_date":""
+			}
+			"""
+		Then jobs能获得优惠券规则列表
+			"""
+			[{
+				"name": "多商品券-未开始",
+				"type": "多商品券",
+				"money": 100.00,
+				"limit_counts": 1,
+				"remained_count": 5,
+				"start_date": "1天后",
+				"end_date": "3天后",
+				"special_product": "查看专属商品",
+				"get_person_count": 0,
+				"get_number": 0,
+				"use_count": 0,
+				"status": "未开始"
+			},{
+				"name": "多商品券-进行中",
+				"type": "多商品券",
+				"money": 100.00,
+				"limit_counts": 1,
+				"remained_count": 5,
+				"start_date": "今天",
+				"end_date": "1天后",
+				"special_product": "查看专属商品",
+				"get_person_count": 0,
+				"get_number": 0,
+				"use_count": 0,
+				"status": "进行中"
+			},{
+				"name": "通用券-已过期",
+				"type": "通用券",
+				"money": 100.00,
+				"limit_counts": 1,
+				"remained_count": 0,
+				"start_date": "2天前",
+				"end_date": "1天前",
+				"special_product": "全部",
+				"get_person_count": 0,
+				"get_number": 0,
+				"use_count": 0,
+				"status": "已过期"
+			},{
+				"name": "通用券-进行中",
+				"type": "通用券",
+				"money": 100.00,
+				"limit_counts": 1,
+				"remained_count": 5,
+				"start_date": "今天",
+				"end_date": "1天后",
+				"special_product": "全部",
+				"get_person_count": 0,
+				"get_number": 0,
+				"use_count": 0,
+				"status": "进行中"
+			},{
+				"name": "通用券-已失效",
+				"type": "通用券",
+				"money": 100.00,
+				"limit_counts": 1,
+				"remained_count": 0,
+				"start_date": "今天",
+				"end_date": "1天后",
+				"special_product": "全部",
+				"get_person_count": 0,
+				"get_number": 0,
+				"use_count": 0,
+				"status": "已失效"
+			}]
+			"""
+
+		#时间区间查询
+		#空查询
+		When jobs设置优惠券规则列表查询条件
+			"""
+			{
+				"start_date":"1天前",
+				"end_date":"1天后"
+			}
+			"""
+		Then jobs能获得优惠券规则列表
+			"""
+			[{
+				"name": "多商品券-进行中",
+				"type": "多商品券",
+				"money": 100.00,
+				"limit_counts": 1,
+				"remained_count": 5,
+				"start_date": "今天",
+				"end_date": "1天后",
+				"special_product": "查看专属商品",
+				"get_person_count": 0,
+				"get_number": 0,
+				"use_count": 0,
+				"status": "进行中"
+			},{
+				"name": "通用券-进行中",
+				"type": "通用券",
+				"money": 100.00,
+				"limit_counts": 1,
+				"remained_count": 5,
+				"start_date": "今天",
+				"end_date": "1天后",
+				"special_product": "全部",
+				"get_person_count": 0,
+				"get_number": 0,
+				"use_count": 0,
+				"status": "进行中"
+			},{
+				"name": "通用券-已失效",
+				"type": "通用券",
+				"money": 100.00,
+				"limit_counts": 1,
+				"remained_count": 0,
+				"start_date": "今天",
+				"end_date": "1天后",
+				"special_product": "全部",
+				"get_person_count": 0,
+				"get_number": 0,
+				"use_count": 0,
+				"status": "已失效"
+			}]
+			"""
+
+	#条件组合查询
+		When jobs设置优惠券规则列表查询条件
+			"""
+			{
+				"name":"多商品券",
+				"coupon_promotion_type":"多商品券",
+				"status":"进行中",
+				"start_date":"1天前",
+				"end_date":"1天后"
+			}
+			"""
+		Then jobs能获得优惠券规则列表
+			"""
+			[{
+				"name": "多商品券-进行中",
+				"type": "多商品券",
+				"money": 100.00,
+				"limit_counts": 1,
+				"remained_count": 5,
+				"start_date": "今天",
+				"end_date": "1天后",
+				"special_product": "查看专属商品",
+				"get_person_count": 0,
+				"get_number": 0,
+				"use_count": 0,
+				"status": "进行中"
+			}]
+			"""

@@ -58,6 +58,7 @@
 			<th>价值</th>
 			<th>领取限制</th>
 			<th>有效期</th>
+			<th>专属商品</th>
 			<th>领取人/次</th>
 			<th>已使用</th>
 			<th>操作</th>
@@ -70,9 +71,9 @@
 			<td>${ promotion.detail.name }</td>
 			<td>
 				{{if promotion.detail.limit_product}}
-				单品券
+				多商品券
 				{{else}}
-				全店通用券
+				通用券
 				{{/if}}
 			</td>
 			<td>${ promotion.detail.money }</td>
@@ -81,7 +82,14 @@
 				{{if promotion.detail.limit_counts<=0}}无限{{/if}}<br/>
 				<p class="xui-greyColor xa-remained-count">库存{{if promotion.status != '已结束'}}${promotion.detail.remained_count}{{else}}0{{/if}}</p>
 			</td>
-			<td>${ promotion.start_date} 至 ${ promotion.end_date}
+			<td>${ promotion.start_date}<br/>${ promotion.end_date}
+			</td>
+			<td>
+				{{if promotion.detail.limit_product}}
+				<span class="label label-info xa-showAllProducts cursor-pointer pl10 pr10" style="font-size: 1.0em;">查看专属商品</span>
+				{{else}}
+				全部
+				{{/if}}
 			</td>
 			<td>${ promotion.detail.get_person_count }/${promotion.detail.get_count}
 			</td>
@@ -162,6 +170,14 @@ $(document).ready(function() {
 			urlLink: urlLink
 		})
 
+	});
+
+	$('body').delegate('.xa-showAllProducts', 'click', function(event) {
+		var promotionId = $(event.currentTarget).parents('tr').data('id');
+		console.log(promotionId);
+		W.dialog.showDialog('W.dialog.mall.ShowCouponProductsDialog', {
+			promotionId: promotionId
+		});
 	});
 });
 </script>

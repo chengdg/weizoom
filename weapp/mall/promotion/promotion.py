@@ -34,10 +34,17 @@ class Promotion(resource.Resource):
             filter_type = request.GET.get('filter_type', "all")
             selectedProductIds = request.GET.get("selectedProductIds", "").split('_')
 
+            filter_name = request.GET.get('filter_name', '')
+
             products = models.Product.objects.filter(
                 owner=request.manager,
                 shelve_type=PRODUCT_SHELVE_TYPE_ON,
                 is_deleted=False)
+
+            if filter_name:
+                products = products.filter(name__contains=filter_name)
+
+
             if name:
                 products = products.filter(name__contains=name)
             if barCode:
@@ -112,7 +119,7 @@ class Promotion(resource.Resource):
                 if promotion:
                     # 单品券是否可选更具促销名，弹窗模板使用mall_select_coupon_product_dialog
                     if promotion.type == models.PROMOTION_TYPE_COUPON:
-                        product_data['promotion_name'] = u'单品券'
+                        product_data['promotion_name'] = u'多商品券'
                     else:
                         product_data['promotion_name'] = promotion.name
 

@@ -1083,13 +1083,15 @@ def send_request_to_kuaidi(order, **kwargs):
 # post_update_product_model_property_handler: post_update_product_model_property的handler
 #############################################################################################
 @receiver(mall_signals.products_not_online, sender=Product)
-def products_not_online_handler_for_promotions(product_ids, request, **kwargs):
+def products_not_online_handler_for_promotions(product_ids, request, shelve_type=None,**kwargs):
     from mall.promotion import models as promotion_models
     from webapp.handlers import event_handler_util
     disable_coupon = False
-    shelve_type = request.POST.get('shelve_type')
+    if not shelve_type:
+        shelve_type = request.POST.get('shelve_type')
     if shelve_type and shelve_type == 'delete':
         disable_coupon = True
+
     target_promotion_ids = []
     promotionIds =[relation.promotion_id for relation in promotion_models.ProductHasPromotion.objects.filter(
         product_id__in=product_ids)]
@@ -1097,9 +1099,21 @@ def products_not_online_handler_for_promotions(product_ids, request, **kwargs):
         if promotion.type != promotion_models.PROMOTION_TYPE_COUPON:
             target_promotion_ids.append(str(promotion.id))
         elif disable_coupon:
-            promotion.status = promotion_models.PROMOTION_STATUS_DISABLE
-            promotion.save()
-            promotion_models.CouponRule.objects.filter(id=promotion.detail_id).update(is_active=False)
+            not_deleted_promotion_product_count = promotion_models.ProductHasPromotion.objects.filter(promotion=promotion,
+                                                                                                  product__is_deleted=False).count()
+
+            if not_deleted_promotion_product_count == 0:
+                promotion.status = promotion_models.PROMOTION_STATUS_DISABLE
+                promotion.save()
+                promotion_models.CouponRule.objects.filter(id=promotion.detail_id).update(is_active=False, remained_count=0)
+
+                promotion_models.Coupon.objects.filter(
+                    owner=request.manager,
+                    coupon_rule_id=promotion.detail_id,
+                    status=promotion_models.COUPON_STATUS_UNGOT
+                ).update(status=promotion_models.COUPON_STATUS_Expired)
+
+
     if len(target_promotion_ids) > 0:
         event_data = {
             "id": ','.join(target_promotion_ids)

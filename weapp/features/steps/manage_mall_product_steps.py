@@ -347,6 +347,8 @@ def __update_prducts_by_name(context, product_name, action, user):
         u'下架': 'offshelf',
         u'回收站': 'recycled',
         u'永久删除': 'delete',
+        u'删除': 'delete',
+        u'彻底删除': 'delete',
     }
     action = ACTION2TYPE[action]
     if action == 'offshelf':

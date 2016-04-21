@@ -523,7 +523,7 @@
                                         </div>
                                         <div class="em75 tl xui-couponInfo">
                                             <p>使用期限：{{coupon.start_date |date:"Y/m/j H:i:s"}} - {{coupon.expired_time |date:"Y/m/j H:i:s"}}</p>
-                                            <p>使用范围：{% if coupon.limit_product_id %}单品券{% else %}全店通用券{% endif %}</p>
+                                            <p>使用范围：{% if coupon.limit_product_id %}多商品券{% else %}通用券{% endif %}</p>
                                             <p>使用条件：{% if coupon.valid_restrictions > 0 %}
                                                 {% if coupon.limit_product_id %}商品{% else %}订单{% endif %}金额满{{ coupon.valid_restrictions }}元可用
                                                 {% else %}不限制{% endif %}</p>
@@ -558,7 +558,7 @@
                                         </div>
                                         <div class="em75 tl xui-couponInfo">
                                             <p>使用期限：{{coupon.start_date |date:"Y/m/j H:i:s"}} - {{coupon.expired_time |date:"y/m/j H:i:s"}}</p>
-                                            <p>使用范围：{% if coupon.limit_product_id %}单品券{% else %}全店通用券{% endif %}</p>
+                                            <p>使用范围：{% if coupon.limit_product_id %}多商品券{% else %}通用券{% endif %}</p>
                                             <p>使用条件：{% if coupon.valid_restrictions > 0 %}
                                                 {% if coupon.limit_product_id %}商品{% else %}订单{% endif %}金额满{{ coupon.valid_restrictions }}元可用
                                                 {% else %}不限制{% endif %}</p>

@@ -9,18 +9,23 @@
 			</h3>
 		</div>
 		<div class="modal-body" style="min-height: 300px;">
-		<div
-			data-ui-role="advanced-table"
-			data-app="mall2"
-			data-api="promotion"
-			data-args='{"type": "usable_promotion_products", "filter_type": "${filter_type}"}'
-			data-template-id="#coupon-products-view"
-			data-enable-paginator="true"
-			data-enable-sort="false"
-			data-item-count-per-page="8"
-			data-auto-load="false"
-		></div>
-
+			<div class="mb10 clearfix xa-add-box">
+				<div class="fr">
+					<input class="form-control xa-query xui-search-text" value=""><span class="xa-search xui-searchBtn cursor-pointer btn w80">搜索</span>
+				</div>
+			</div>
+			<div
+				class="xa-advanced-table-products"
+				data-ui-role="advanced-table"
+				data-app="mall2"
+				data-api="promotion"
+				data-args='{"type": "usable_promotion_products", "filter_type": "${filter_type}"}'
+				data-template-id="#coupon-products-view"
+				data-enable-paginator="true"
+				data-enable-sort="false"
+				data-item-count-per-page="8"
+				data-auto-load="false"
+			></div>
 		</div>
 		<div class="modal-footer modal-footerBg">
 			<button class="btn btn-success xui-btnStyle" style="width:110px;height:36px;background:#1F7BBD; color:#ffffff;">完成选择</button>
@@ -63,7 +68,7 @@
 					    ${product.promotion_name}
 					</td>
 					<td>
-						{{if !product.promotion_name || product.promotion_name == '单品券'}}
+						{{if !product.promotion_name || product.promotion_name == '多商品券'}}
 							<label class="btn btn-primary" style="border-radius:3px;">
 								<input type="checkbox" autocomplete="off" class="xa-selectProduct" ><span>选取</span>
 							</label>
@@ -77,6 +82,41 @@
 		</tbody>
 	</table>
 </script>
+
+
+<script id="coupon-categories-view" type="text/x-jquery-tmpl">
+	<table id="categoriesTable" class="table table-bordered table-condensed xb-stripedTable xui-tablePosition">
+		<thead style="background:#c8d2e5;">
+			<tr>
+				<th width="200">标题</th>
+				<th>创建时间</th>
+				<th width="120">操作</th>
+			</tr>
+		</thead>
+		<tbody id='category_list'>
+            {{if items.length}}
+	            {{each(i, category) items}}
+				<tr class="" data-id="${category.id}">
+					<td>
+						${category.name}
+					</td>
+					<td>
+					    ${category.created_at}
+					</td>
+					<td>
+						<label class="btn btn-primary" style="border-radius:3px;">
+							<input type="checkbox" autocomplete="off" class="xa-selectCategory" ><span>选取</span>
+						</label>
+					</td>
+				</tr>
+				{{/each}}
+            {{else}}
+                <tr><td colspan='3'>还没有数据</td></tr>
+            {{/if}}
+		</tbody>
+	</table>
+</script>
+
 <script id="mall-select-forbiddenCoupon-product-dialog-tmpl-src" type="text/x-jquery-tmpl">
 	<div class="modal fade xui-selectPromotionProductDialog" id="mallSelectPromotionProductDialog">
 	<div class="modal-dialog modal-lg" style="width: 800px;">
