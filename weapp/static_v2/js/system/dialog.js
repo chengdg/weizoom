@@ -61,7 +61,6 @@ W.dialog.Dialog = Backbone.View.extend({
             var template = this.getTemplate();
             $node = $.tmpl(template, options);
         }
-
         $('body').append($node);
         this.el = $node.get(0);
         this.$el = $(this.el);

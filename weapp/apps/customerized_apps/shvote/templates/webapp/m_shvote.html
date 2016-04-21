@@ -1,0 +1,709 @@
+{% extends "apps_base.html" %}
+
+{% block css %}
+<link type="text/css" rel="stylesheet" href="/termite_static/v4/css/swiper.min.css">
+<style type="text/css">
+	h1 {
+		color: #00F;
+	}
+	div{
+		box-sizing: border-box;
+	}
+	.xui-record {
+		margin: 10px 15px;
+		padding: 5px;
+		box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+		border-radius: 5px;
+	}
+	.xui-record .xui-inner-content {
+		color: #8F8F8F;
+	}
+	a.xui-button {
+		padding: 10px;
+		display: block;
+		text-align: center;
+		color: #FFF;
+		margin: 10px 15px;
+		background-color: rgba(0, 125, 255, 0.5);
+		border-radius: 10px;
+	}
+	.wui-shvoteDescription{
+		background: #f0f0f0;
+	}
+	.wui-shvoteDescription div img{
+		width: 100%;
+	}
+	.wui-dynamic-info{
+		background: #fff;
+	}
+	.wui-dynamic-top{
+		padding: 10px 0;
+		border-top: 1px solid #f0f0f0;
+	}
+	.wui-dynamic-top p{
+		display: inline-block;
+		width: 32%;
+		text-align: center;
+		line-height: 25px;
+		border-right: 1px solid #e1e1e1;
+	}
+	.wui-dynamic-top p span{
+		display: block;
+	}
+	.wui-dynamic-bottom{
+		border-bottom: 5px solid #f0f0f0;
+	}
+	.wui-dynamic-bottom p{
+		text-align: center;
+		font-size: 14px;
+		border-bottom: 5px solid #f0f0f0;
+		padding-bottom: 5px;
+	}
+	.wui-rank-link{
+		border-bottom: 1px solid #e1e1e1;
+	}
+	.wui-total-info{
+		color: #ff4200;
+	}
+	.wui-event-details,.wui-rank-link{
+		padding: 10px 15px;
+		background: url(/static_v2/img/vote_arrow.png) no-repeat 96%;
+		background-size: 16px 16px;
+	}
+	.wui-group{
+		height: 43px;
+		width: 100%;
+	}
+    .swiper-slide {
+    	font-size: 1rem;
+        text-align: center;
+        background: #fff;
+        width: 100px;
+
+        /* Center slide text vertically */
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: -webkit-flex;
+        display: flex;
+        -webkit-box-pack: center;
+        -ms-flex-pack: center;
+        -webkit-justify-content: center;
+        justify-content: center;
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+        -webkit-align-items: center;
+        align-items: center;
+    }
+	.wui-group div> div{
+		font-size: 16px;
+		line-height: 43px;
+	}
+	.wui-group div> div.active{
+		color: #ff4200;
+		font-size: 18px;
+	}
+	.wui-link{
+		padding:0 10px;
+	}
+	.wui-rank{
+		background: #fff;
+		font-size: 14px;
+	}
+	.wui-rankList-wrap{
+		position: relative;
+	}
+	.wui-mark{
+		padding: 5px;
+		border-radius: 1px;
+		background: rgba(0,0,0,0.7);
+		color: #fff;
+		position: fixed;
+		top: 30%;
+		right: 0;
+		z-index: 666;
+		display: none;
+	}
+	.wui-rank-list{
+		overflow: hidden;
+		position: relative;
+		padding: 0 10px;
+		background: #ffe145;
+	}
+	.wui-search{
+		border-bottom: 5px solid #f0f0f0;
+		padding: 5px 15px;
+		overflow: hidden;
+		line-height: 29px;
+	}
+	.wui-search > span{
+		font-size: 16px;
+		margin-left: 10px;
+	}
+	.wui-searchBox{
+		float: right;
+		width: 80%;
+		position: relative;
+	}
+	.wui-searchBox p{
+		line-height: 17px;
+		text-indent: 30px;
+		padding-top: 7px;
+		padding-bottom: 7px;
+	}
+	.wui-search-input{
+		padding: 1px;
+		height: 30px;
+		width: 80%;
+		border: 1px solid #ff4200;
+		border-radius: 2px;
+		outline: none;
+		padding-left: 29px;
+		background: url(/static_v2/img/search.png) no-repeat 2% 50%;
+		font-size: 0.9rem;
+		font-family: "黑体";
+		background-size: 20px;
+	}
+	.wui-searchBtn{
+		border: none;
+		height: 34px;
+		border-radius: 2px;
+		color: #fff;
+		background: #ff4200;
+		position: absolute;
+		right: 0;
+		top: 0;
+		padding: 0 15px;
+		outline: none;
+		font-family: "黑体";
+		font-size: 0.9rem;	
+	}
+	.wui-rank-item{
+		width: 48%;
+		float: left;
+		margin-bottom: 10px;
+	}
+	.wui-item-content{
+		padding: 7px;
+		padding-bottom: 0;
+		background: #fff7e7;
+	}
+	.wui-rank-item:nth-child(1),.wui-rank-item:nth-child(2){
+		margin-top: 10px;
+	}
+	.wui-rank-item:nth-child(even){
+		float: right;
+	}
+	.wui-rank-pic{
+		height:130px;
+		overflow: hidden;
+		position: relative;
+	}
+	.wui-rank-pic img{
+		position: relative;
+		z-index: 1;
+	}
+	.wui-rank-pic .wui-img-mask{
+		width: 100%;
+		height: 100%;
+		position: absolute;
+		background: transparent;
+		z-index: 99;
+	}
+	.wui-rank-name{
+		background: rgba(0,0,0,0.5);
+		width: 100%;
+		color: #fff;
+		text-align: center;
+		padding: 4px 0;
+		position: absolute;
+		left: 0;
+		bottom: 0;
+		z-index: 100;
+	}
+	.wui-rank-vote{
+		overflow: hidden;
+		text-align: center;
+		padding: 3px 0 6px;
+	}
+	.wui-rank-voteLef{
+		float: left;
+		line-height: 2rem;
+		color: #ff4200;
+		font-size: 1.1rem;
+		padding-left: 5px;
+	}
+	.wui-rank-voteRig button{
+		float: right;
+		outline: none;
+	}
+	p.wui-noborder{
+		border: none;
+	}
+	.wui-vote-btn{
+		width: 3.6rem;
+		height: 2rem;
+		background-color: #ff4200;
+		color: #FFF;
+		border: none;
+        border-radius: 4px;
+        box-shadow: 0 3px 0px #b62f00;
+        font-family: SimHei;
+        font-size: 0.9rem;
+    }
+	@media only screen and (max-width: 320px){
+		.wui-vote-btn{
+			width: 3.8rem;
+	    }
+	}
+	.wui-apps-alert{
+        z-index: 100001;
+    }
+	.wui-swiper-mask{
+		display: inline-block;
+		position: absolute;
+		right: 0;
+		top: 0;
+		height: 100%;
+		width: 30px;
+		background: #fff;
+		opacity: 0.5;
+		z-index: 1;
+	}
+	.wui-loading-more{
+		font-size: .9rem;
+		height: 30px;
+		line-height: 30px;
+		text-align: center;
+		background: #ffe145;
+		color: #ff4200;
+		position: relative;
+		width: 100%;
+		display: none;
+	}
+	.wui-loading-more p{
+   	    text-align: center;
+    	background: #ffe145;
+    	z-index: 9999;
+   	 	position: relative;
+    	width: 22%;
+    	margin: 0 auto;
+     	font-family: '黑体';
+	}
+	.wui-loading-more div{
+    	position: absolute;
+    	top: 50%;
+    	left: 0;
+   		z-index: 1;
+   		width: 100%;
+   		height: 1px;
+   		background: #ff4200;
+	}
+	.wui-to-top{
+		width: 46px;
+		background: rgba(193,193,193,0.9);
+		position: fixed;
+		right: 4px;
+		top: 80%;
+		text-align: center;
+		z-index: 999;
+		padding: 9px 0;
+		display: none;
+	}
+</style>
+{% endblock %}
+
+{% block content-panel %}
+	{{ page_html_content|safe }}
+<div class="wa-mobile">
+    <div class="wa-dynamic-info wui-dynamic-info">
+        <div class="wui-dynamic-top">
+            <p>
+                <span>已报名</span>
+                <span class="wa-total-parted wui-total-info"></span>
+            </p>
+            <p>
+                <span>投票数</span>
+                <span class="wa-total-counts wui-total-info"></span>
+            </p>
+            <p class="wui-noborder">
+                <span>访问数</span>
+                <span class="wa-total-visits wui-total-info"></span>
+            </p>
+        </div>
+        <div class="wui-dynamic-bottom">
+            <p>
+            	截止日期：<span class="wa-enddate"></span> &nbsp;&nbsp;
+            	可投：<span class="wa-left-chance"></span>票
+            </p>
+            <div class="wui-link">
+           		<div class="wa-rank-link wui-rank-link">排行榜</div>
+            	<div class="wa-event-details wui-event-details">活动介绍</div>
+            </div>
+        </div>
+    </div>
+	<div class="wui-rank">
+		<div class="wui-rankList-wrap">
+			<div class="wui-mark wa-imark wa-mark">我 要<br />报 名</div>
+			<a class="wui-to-top wa-to-top">
+				<img src="/static_v2/img/top_arrow.png" width="34px">
+			</a>
+			<div class="wui-search wa-search-panel">
+				<span>选手</span>
+				<div class="wui-searchBox">
+					<input type="text" class="wui-search-input wa-search-text" placeholder="请输入关键字" maxlength="20">
+					<button type="button" class="wui-searchBtn wa-search">搜索</button>
+					<p>选手列表是根据选手票数由多到少排列，显示前100名。如果需要查找100名以外的选手请在搜索栏输入选手报名序号或选手名称即可。</p>
+				</div>
+			</div>
+
+			<div class="wui-group wa-groups swiper-container">
+				<div class="swiper-wrapper">
+					{% for group in groups %}
+					<div class="swiper-slide">{{group}}</div>
+					{% endfor %}
+				</div>
+				<span class="wui-swiper-mask"></span>
+			</div>
+			<div class="wui-rank-list wa-rank-list">
+			</div>
+		</div>
+	</div>
+	<div class="wui-loading-more wa-loading-more">
+		<p>加载更多</p>
+		<div></div>
+	</div>	
+</div>
+
+<script type="text/plain" id="tpl">
+	<div class="wui-rank-item wa-rank-item" data-id={ id }>
+		<div class="wui-item-content">
+			<div class="wui-rank-pic wa-rank-pic">
+				<div class="wui-img-mask"></div>
+				<img src={ result_list_icon }>
+				<div class="wui-rank-name">
+					<span class="wui-rank-serial-number">{ result_list_serial_number }</span>
+					<span>{ result_list_name }</span>
+				</div>		
+			</div>
+			<div class="wui-rank-vote">
+				<div class="wui-rank-voteLef wa-vote-left">
+					<span>{ result_list_count }</span>票
+				</div>
+				<div class="wui-rank-voteRig wa-ivote" data-id={ id }>
+					<button type="button" class="wui-vote-btn">投票</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</script>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript" src="/termite_static/v3/lib/swiper.min.js"></script>
+<script type="text/javascript">
+	W.pageId = "{{request.GET.page_id}}";
+
+	//当前分组，切换时候需要改变值，用于查找
+	var current_group = '';
+	var record_info;
+	var players_num = 20;
+
+	$(function(){
+        if(W.isPC){
+            showDesc();
+            return false;
+        }
+        //返回顶部
+        $('.wa-to-top').click(function(){
+        	goTop(0.1,1);
+        });
+        document.addEventListener('scroll',function () {
+        	var top_dis = $('.wa-rank-list').offset().top;
+        	if(document.body.scrollTop > top_dis){
+        		$('.wa-to-top').show();
+        	}else{
+        		$('.wa-to-top').hide();
+        	}
+        });
+        //上拉加载
+        document.addEventListener('touchstart',function(){
+        	if($('.wa-rank-list div:hidden').length == 0){
+        		$('.wa-loading-more').hide();
+        	}else{
+        		$('.wa-loading-more').show();
+        	}
+            var $win = $(window);
+            var $top = $('.wui-loading-more');
+            var rect = $top[0].getBoundingClientRect();
+            var djage = function(){
+                return rect.top<0 || rect.top >= 0 && ($win.height()-rect.top>=0);
+            };
+            if(rect && djage()){
+                showPlayers();
+            }
+        });
+
+        $('.wa-shvote-desc').hide();
+        //展示参与统计
+        getDynamicData();
+
+        var swiper = new Swiper('.swiper-container', {
+        	slidesPerView: 'auto'
+   		});
+
+		// 我要报名
+		$('.wa-imark').click(function(){
+           	var isMember = {% if isMember %}true{% else %}false{% endif %};
+		   		if(!isMember){
+		        showQrcode(W.qrcodeUrl);
+		        return;
+	   		}		
+			window.location.href = window.location.origin + '/m/apps/shvote/shvote_participance/?webapp_owner_id='+W.webappOwnerId+'&id='+W.appRecordId;
+		});
+
+		$('.wa-getback').click(function(){
+			$('.wa-shvote-desc').hide();
+			$('.wa-mobile').show();
+		});
+
+		$('.wa-rank-link').click(function(){
+			var link = window.location.origin + '/m/apps/shvote/m_shvote_rank/?webapp_owner_id='+W.webappOwnerId+'&id='+W.appRecordId;
+			window.location.href = link;
+		});
+
+		// 搜索
+		$('.wa-search').click(function(){
+			var search_name = $('.wa-search-text').val();
+			if(search_name != ''){
+				getRankInfo(current_group,search_name);
+			}else{
+				getRankInfo(current_group,'');
+			}
+		});
+		// 切换分组taphold
+		$('.wa-groups .swiper-wrapper').on('tap','div',function(){
+			$(this).addClass('active').siblings().removeClass('active');
+			$(this).removeClass('grad');
+			current_group = $(this).html();
+			$('.wa-left-chance').html(can_play_info);
+			var search_name = $('.wa-search-text').val();
+			getRankInfo(current_group,search_name);
+		});
+
+		$('.wa-event-details').on('tap',function(){
+			$('.wa-shvote-desc').show();
+			$('.wa-mobile').hide();
+		});
+
+        //查看选手详情
+        $('.wa-rank-list').delegate('.wa-rank-pic', 'click', function(event) {
+            var player_id = $(event.target).parents('.wa-rank-item').data('id');
+            window.location.href = '/m/apps/shvote/m_player_details/?webapp_owner_id='+W.webappOwnerId+'&id='+W.appRecordId+'&player_id='+player_id;
+        });
+
+        //参与投票
+        var voteLock = false;
+        $('body').on('click','.wa-ivote', function(){
+           	var isMember = {% if isMember %}true{% else %}false{% endif %};
+		   		if(!isMember){
+		        showQrcode(W.qrcodeUrl);
+		        return;
+	   		}
+        	var left_chance = parseInt($('.wa-left-chance').html());
+        	if(left_chance <= 0) {
+        		wuiAlert('今天的投票次数已用完');
+        		return false;
+        	}
+            loadingStatus(true);
+        	var $this = $(this);
+            if(voteLock) return false;
+            voteLock = true;
+            var vote_to = $(this).attr('data-id');
+            W.getApi().call({
+                app: 'm/apps/shvote',
+                resource: 'shvote_participance',
+                method: 'post',
+                args: {
+                    webapp_owner_id: W.webappOwnerId,
+                    recordId: W.appRecordId,
+                    vote_to: vote_to,
+                    voted_group: current_group
+                },
+                success: function(data){
+                	var cur_vote = parseInt($this.siblings().find('span').html()) + 1;
+                	var cur_count = parseInt($('.wa-total-counts').html()) + 1;
+                	$('.wa-total-counts').html(cur_count);
+                	$this.siblings().find('span').html(cur_vote);
+                    can_play_info --;
+                    $('.wa-left-chance').html(can_play_info);
+                    voteLock = false;
+                    loadingStatus();
+                    wuiAlert('投票成功');
+                },
+                error: function(data){
+                    voteLock = false;
+                    if(data.errMsg == 'none_member'){
+                        //TODO 弹出二维码窗口
+                    }else{
+                        wuiAlert(data.errMsg);
+                    }
+                    loadingStatus();
+                }
+            });
+        });
+
+    });
+
+    //获取已报名人数、总投票数、页面总访问数、本次可投票机会、排行、分组信息
+    function getDynamicData(){
+        loadingStatus(true);
+        W.getApi().call({
+            app: 'm/apps/shvote',
+            resource: 'm_shvote',
+            method: 'get',
+            args: {
+                webapp_owner_id: W.webappOwnerId,
+                recordId: W.appRecordId
+            },
+            success: function(data) {
+                console.log(data);
+                //更新活动信息
+                record_info = data.record_info;
+                update_record_info(record_info);
+                //更新会员信息
+                var member_info = data.member_info;
+                if( $('.active').length ==1){
+                	current_group = $('.active').html();
+                };
+                can_play_info = member_info.can_play_info;
+                update_member_info(member_info,current_group);
+                //更新排名信息
+                getRankInfo(current_group,'');
+                $('.wa-mark').show();
+            },
+            error: function(data){
+                if(data.errMsg == 'is_deleted'){
+                    deletedRecord();
+                }else{
+                    wuiAlert(data.errMsg);
+                }
+                loadingStatus();
+            }
+        });
+    }
+
+    function showDesc(){
+        $('.wa-shvote-desc').removeClass('none');
+    }
+    function showDynamic(){
+        $('.wa-mobile').removeClass('none');
+    }
+    function update_record_info(record_info){
+    	$('.wa-total-parted').html(record_info['total_parted']);
+    	$('.wa-total-counts').html(record_info['total_counts']);
+    	$('.wa-total-visits').html(record_info['total_visits']);
+    	$('.wa-enddate').html(record_info['end_date']);
+	    $('.wa-groups .swiper-wrapper div').eq(0).addClass('active');
+	    if(record_info.groups.length < 4){
+	   		var wid = 100/record_info.groups.length;
+	   		$('.wa-groups .swiper-wrapper div').css("width",wid+'%');
+	    };
+	    if(record_info.groups.length == 0){
+	    	$('.wa-groups').hide();
+	    }
+    }
+    function update_member_info(member_info){
+    	$('.wa-left-chance').html(member_info.can_play_info);
+    }
+
+    //获取排名信息
+    function getRankInfo(current_group,search_name){
+        W.getApi().call({
+            app: 'm/apps/shvote',
+            resource: 'get_rank_list',
+            method: 'get',
+            args: {
+				webapp_owner_id: W.webappOwnerId,
+                recordId: W.appRecordId,
+				current_group: current_group,
+				search_name: search_name
+            },
+            success: function(data) {
+                var $list = $('.wa-rank-list');
+           		$list.html('');
+                var result = data.result_list;
+                var tpl = new Template($('#tpl').html());
+                var tmp_html = "";
+                for(var i=0;i<result.length;i++){
+        		    var s = tpl.render({
+		                result_list_serial_number : result[i].serial_number,
+		                result_list_name : result[i].name,
+		                result_list_count : result[i].count,
+		                result_list_icon : result[i].icon,
+		                id : result[i].id
+		            });
+                    tmp_html += s;
+	        	}
+                $list.append(tmp_html);
+                $('.wa-rank-list div').each(function(){
+                	if($('.wa-rank-list > div').index(this) > 19){
+                		$(this).hide();
+                	}
+                });         
+                if(!$('.wa-rank-list div:hidden').length == 0){
+        			$('.wa-loading-more').show();
+       			}
+       			if($('.wa-rank-list > div').length == 0){
+					wuiAlert('暂无选手');
+				}
+                loadingStatus();
+            },
+            error: function(data){
+				wuiAlert(data.errMsg);
+            }
+        });
+    }
+
+    function showPlayers(){
+   		players_num += 20;
+        $('.wa-rank-list > div').each(function(){
+            if($('.wa-rank-list > div').index(this) < players_num){
+                $(this).show();
+            }
+        });   
+    }
+
+    function goTop(acceleration, time) {
+		acceleration = acceleration || 0.1;
+		time = time || 16;
+		var x1 = 0;
+		var y1 = 0;
+		var x2 = 0;
+		var y2 = 0;
+		var x3 = 0;
+		var y3 = 0;
+		if (document.documentElement) {
+			x1 = document.documentElement.scrollLeft || 0;
+			y1 = document.documentElement.scrollTop || 0;
+		}
+		if (document.body) {
+			x2 = document.body.scrollLeft || 0;
+			y2 = document.body.scrollTop || 0;
+		}
+		var x3 = window.scrollX || 0;
+		var y3 = window.scrollY || 0;
+		// 滚动条到页面顶部的水平距离
+		var x = Math.max(x1, Math.max(x2, x3));
+		// 滚动条到页面顶部的垂直距离
+		var y = Math.max(y1, Math.max(y2, y3));
+		// 滚动距离 = 目前距离 / 速度, 因为距离原来越小, 速度是大于 1 的数, 所以滚动距离会越来越小
+		var speed = 1 + acceleration;
+		window.scrollTo(Math.floor(x / speed), Math.floor(y / speed));
+		// 如果距离不为零, 继续调用迭代本函数
+		if (x > 0 || y > 0) {
+		var invokeFunction = "goTop(" + acceleration + ", " + time + ")";
+		window.setTimeout(invokeFunction, time);
+		}
+	}
+</script>
+{% endblock %}

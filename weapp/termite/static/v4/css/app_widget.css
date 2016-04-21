@@ -2153,3 +2153,84 @@ li.wui-selectBox-display-table {
 	background-position: 0 -48px;
 }
 /*百宝箱 团购CSS ---- end */
+
+/*百宝箱 shvote CSS ---- start */
+
+.wui-shvoteDescription{
+	background-color:#FFF;
+	margin-top: -19px;
+	width: 100%;
+}
+.wui-shvoteDescription .wui-i-details{
+	padding: 15px 20px;
+	background: #fff;
+}
+.wui-shvoteDescription .wui-i-header{
+	position: relative;
+	margin-bottom: 25px;
+}
+.wui-shvoteDescription .wui-i-header .wui-i-gradient{
+	position: absolute;
+	top:50%;
+	left:0;
+	z-index: 0;
+}
+.wui-shvoteDescription .wui-i-title{
+	font-size: 1.2rem;
+    text-align: center;
+	color: #000;
+	display: block;
+	background: #fff;
+	z-index: 9999;
+	position: relative;
+	width: 60%;
+	margin: 0 auto;
+}
+.wui-shvoteDescription .wui-i-rule{
+	padding-top: 10px;
+}
+.wui-shvoteDescription .wui-i-time{
+	margin-bottom: 15px;
+}
+.wui-shvoteDescription .wui-i-time span{
+	font-size: 0.95rem;
+}
+.wui-shvoteDescription .wui-i-gradient{
+	width: 100%;
+	height: 1px;
+	background: -webkit-radial-gradient(#ffc5b1,#fff);
+}
+.wui-shvoteDescription .wui-i-description{
+	padding: 10px 0;
+}
+.wui-shvoteDescription .wui-i-rule p,.wui-shvoteDescription .wui-i-description p{
+	text-indent: 20px;
+	margin-bottom: 15px;
+	margin-top: 8px;
+}
+.wui-shvoteDescription .wui-i-getback{
+	display: block;
+	float: right;
+	margin-bottom: 12px;
+	background: #adadad;
+	color: #fff;
+	border: none;
+	padding: 8px;
+	font-size: .9rem;
+	border-radius: 3px;
+	font-family: '黑体';
+}
+.wui-shvoteDescription .wui-i-btn{
+	overflow: hidden;
+}
+.wui-shvoteDescription .wui-i-imark{
+	display: block;
+	width: 100%;
+	background: #ff4200;
+	color: #fff;
+	border: none;
+	height: 43px;
+	font-size: 1rem;
+	font-family: '黑体';
+}
+/*百宝箱 shvote CSS ---- end */

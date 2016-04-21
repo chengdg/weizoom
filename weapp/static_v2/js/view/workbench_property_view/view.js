@@ -91,6 +91,7 @@ W.workbench.PropertyView = Backbone.View.extend({
             "prize_selector_v3": _.bind(this.initPrizeSelectorV3, this),
             "prize_selector_v4": _.bind(this.initPrizeSelectorV4, this),
             "apps_prize_keywordpane": _.bind(this.initPrizeKeywordPane, this),
+            "apps_badge_tools": _.bind(this.initBadgeToolsPane, this),
             "moneyrange": _.bind(this.initMoneyRange, this)
         };
 
@@ -909,11 +910,20 @@ W.workbench.PropertyView = Backbone.View.extend({
         W.createWidgets($el);
 
         var view = $el.find('[data-ui-role="apps-prize-keyword-pane"]').data('view');
-        console.log(view);
         var _this = this;
         view.on('add_keywords', function(keywords) {
             var attr = $el.attr('data-field');
             _this.getTargetComponent($el).model.set(attr, keywords);
+        });
+    },
+    initBadgeToolsPane: function($el){
+        W.createWidgets($el);
+
+        var view = $el.find('[data-ui-role="apps-badge-tools-pane"]').data('view');
+        var _this = this;
+        view.on('add_badges', function(badges) {
+            var attr = $el.attr('data-field');
+            _this.getTargetComponent($el).model.set(attr, badges);
         });
     },
     initProductsView: function($el){

@@ -1,0 +1,26 @@
+<script id="apps-badge-tools-pane-src" type="text/x-handlebar-tmpl">
+    <div class="xui-newKeyView pa xa-badge-box xui-badge-box xui-hide">
+        <div class="xui-key">
+             <div class="xui-i-left"><span class="xui-colorRed">*</span> 分组名称：</div>
+             <div class="xui-i-right">
+                <input type="text"  maxlength=15  data-validate="require-string" data-maxlength="5" data-minlength="1" class="xa-app-add lh24"/>
+             </div>
+        </div>
+
+        <div class="tc pb10 pt10 cb">
+            <span class="btn btn-success xa-add-badge xui-delete">添&nbsp;&nbsp;加</span>
+            <span class="btn btn-default xa-cancel xui-delete">取&nbsp;&nbsp;消</span>
+        </div>
+    </div>
+</script>
+
+<script id="apps-badge-src" type="text/x-handlebar-tmpl">
+    {{#each badges}}
+        <div  class="xui-patterns xui-keywordpane-patterns xa-data-patterns fl mt10 ">
+            <span class="data-keyword" data-keyword="{{this}}">{{this}}</span>
+            <img  class="fr xui-close xa-close xui-remove-btn" src="/static_v2/img/editor/icon_delete.png" />
+        </div>
+    {{/each}}
+</script>
+
+

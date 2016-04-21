@@ -1,0 +1,235 @@
+{% extends "apps_base.html" %}
+
+{% block css %}
+<link type="text/css" rel="stylesheet" href="/termite_static/v4/css/swiper.min.css">
+<style type="text/css">
+	body{
+		background: #fff !important;
+	}
+	.swiper-container{
+		height: 43px;
+		width: 100%;
+/*		overflow-x: auto;
+		font-size: 0;
+		white-space:nowrap;*/
+	}
+    .swiper-slide {
+    	font-size: 1rem;
+        text-align: center;
+        background: #fff;
+        width: 100px;
+
+        /* Center slide text vertically */
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: -webkit-flex;
+        display: flex;
+        -webkit-box-pack: center;
+        -ms-flex-pack: center;
+        -webkit-justify-content: center;
+        justify-content: center;
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+        -webkit-align-items: center;
+        align-items: center;
+    }
+	.wui-rank-groups div div.active{
+		color: red;
+		font-size: 1.1rem;
+	}
+	.wui-rank-table{
+		width: 100%;
+		border-collapse: collapse;
+    	border-spacing: 0;
+    	border-top: 1px solid #e1e1e1;
+	}
+	.wui-rank-table thead{
+		background: #f5f5f5;
+	}
+	.wui-rank-table td,.wui-rank-table th{
+		text-align: center;
+		border-bottom: 1px solid #e1e1e1;
+		padding: 5px 0;
+	}
+	.wui-rank-table tbody tr td:nth-child(1) span{
+		display: inline-block;
+		width: 27px;
+		height: 27px;
+		line-height: 27px;
+		background: url(/static_v2/img/bg_grey.png) no-repeat;
+		background-size: 100% 100%;
+		color: #fff;	
+	}	
+	.wui-rank-table tbody tr:nth-child(1) td:nth-child(1){
+		background: url(/static_v2/img/no1.png) no-repeat 50% 50%;
+		background-size: 31px 33px;
+	}
+	.wui-rank-table tbody tr:nth-child(2) td:nth-child(1){
+		background: url(/static_v2/img/no2.png) no-repeat 50% 50%;
+		background-size: 27px 33px;
+	}
+	.wui-rank-table tbody tr:nth-child(3) td:nth-child(1){
+		background: url(/static_v2/img/no3.png) no-repeat 50% 50%;
+		background-size: 27px 33px;
+	}
+	.wui-rank-table tbody tr:nth-child(1) td:nth-child(1) span{
+		display: none;
+	}
+	.wui-rank-table tbody tr:nth-child(2) td:nth-child(1) span{
+		display: none;
+	}
+	.wui-rank-table tbody tr:nth-child(3) td:nth-child(1) span{
+		display: none;
+	}
+	.wui-rank-table tbody tr td:nth-child(2){
+		text-align: center;
+		width: 75px;
+	}
+	.wui-rank-table tbody tr td:nth-child(3){
+		text-align: left;
+		width: 40%;
+	}
+	.wui-rank-table tbody tr td:nth-child(2) img{
+		vertical-align: middle;
+		border-radius: 25px;
+	}
+	.wui-count{
+		color: #ff4200;
+		font-size: 1.1rem;
+	}
+	.wui-number{
+		font-size: 0.9rem;
+		color: #999999;
+	}
+	.wui-swiper-mask{
+		display: inline-block;
+		position: absolute;
+		right: 0;
+		top: 0;
+		height: 100%;
+		width: 30px;
+		background: #fff;
+		opacity: 0.5;
+		z-index: 1;
+	}
+</style>
+{% endblock %}
+
+{% block content-panel %}
+<div class="wui-rank-groups wa-rank-groups swiper-container">
+	<div class="swiper-wrapper">
+		{% for group in groups %}
+		<div class="swiper-slide">{{group}}</div>
+		{% endfor %}
+	</div>
+	<span class="wui-swiper-mask"></span>
+</div>
+<table class="wui-rank-table wa-rank-table">
+	<thead>
+		<tr>
+			<th>排名</th>
+			<th colspan='2'>选手</th>
+			<th>票数</th>
+		</tr>
+	</thead>
+	<tbody class="wa-rank-list">
+
+	</tbody>
+</table>
+
+<script type="text/plain" id="tpl">
+	<tr>
+		<td>
+			<span>{ rank }</span>
+		</td>	
+		<td>
+			<img src={ icon } width="50px" height="50px">
+		</td>		
+		<td>
+			<span>{ name }</span>
+		</td>
+		<td>
+			<div>
+				<span class="wui-count">{ count }</span>
+				票
+			</div>
+			<div class="wui-number">编号:{ serial_number }</div>
+		</td>
+	</tr> 
+</script>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript" src="/termite_static/v3/lib/swiper.min.js"></script>
+<script type="text/javascript">
+
+//当前分组，切换时候需要改变值，用于查找
+var current_group = '';
+
+$(function(){
+    var swiper = new Swiper('.swiper-container', {
+        slidesPerView: 'auto',
+    });
+
+    if($('.wa-rank-groups div div').length < 4){ 
+		var wid = 100/$('.wa-rank-groups div div').length;
+		$('.wa-rank-groups div div').css("width",wid+'%');
+    };
+    if($('.wa-rank-groups div div').length == 0){
+    	$('.wa-rank-groups').hide();
+    }
+    $('.wa-rank-groups div div').eq(0).addClass('active');	
+    if( $('.active').length == 1){
+        current_group = $('.active').html();
+    };	
+	getRankInfo(current_group,'');
+
+	//切换分组
+	$('.wa-rank-groups div').on('click','div',function(){
+		$(this).addClass('active').siblings().removeClass('active');
+		current_group = $(this).html();
+		getRankInfo(current_group,'');
+	});	
+
+});
+
+function getRankInfo(current_group,search_name){
+    loadingStatus(true);
+    W.getApi().call({
+        app: 'm/apps/shvote',
+        resource: 'm_shvote_rank',
+        method: 'get',
+        args: {
+            webapp_owner_id: W.webappOwnerId,
+            recordId: W.appRecordId,
+            current_group: current_group,
+            search_name: search_name
+        },
+        success: function(data) {
+            var $list = $('.wa-rank-list');
+            var tmp_html = "";
+            $list.html('');
+            var result = data.result_list;
+            var tpl = new Template($('#tpl').html());
+            for(var i=0;i<result.length;i++){
+                var s = tpl.render({
+                    rank : i+1,
+                    serial_number : result[i].serial_number,
+                    name : result[i].name,
+                    count : result[i].count,
+                    icon : result[i].icon,
+                });
+                tmp_html += s;
+            }
+            $list.append(tmp_html);
+            loadingStatus();
+        },
+        error: function(data){
+            loadingStatus();
+            wuiAlert(data.errMsg);
+        }
+    });
+}
+
+</script>
+{% endblock %}

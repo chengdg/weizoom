@@ -132,6 +132,12 @@ def get_webapp_link_menu_objectes(request):
 				'type': 'group',
 				'add_btn_title': '新建团购',
 				'add_link': '/apps/group/group/'
+			},{
+				'name': '高级投票',
+				'type': 'shvote',
+				'add_btn_title': '新建投票',
+				'add_link': '/apps/shvote/shvote/',
+				'users': ['jobs','jierunda', 'ceshi01']
 			},
 			# {
 			# 	'name': '拼红包',
