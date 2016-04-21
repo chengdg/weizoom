@@ -994,8 +994,8 @@ Scenario:13 会员列表分页
 		When jobs访问会员列表第3页
 		Then jobs可以获得会员列表
 			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times | attention_time | source   |    tags     |
-			| tom3  | 银牌会员    |       1      |    100   |   335.00  |    111.67  |    3      |   2014-08-05   | 会员分享 | 分组1,分组3 |
-			| tom1  | 银牌会员    |       2      |     0    |   110.00  |    110.00  |    1      |   2014-08-04   | 直接关注 | 分组1       |
+			| tom3  | 银牌会员    |       1      |    100   |   110.00  |    110.00  |    1      |   2014-08-05   | 会员分享 | 分组1,分组3 |
+			| tom1  | 银牌会员    |       2      |     0    |    0.00   |     0.00   |    0      |   2014-08-04   | 直接关注 | 分组1       |
 
 		When jobs访问会员列表第2页
 		Then jobs可以获得会员列表
