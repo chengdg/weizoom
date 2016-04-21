@@ -296,7 +296,11 @@ W.view.mall.ProductListView = Backbone.View.extend({
                     var sortedModels = _.sortBy(models, function(model) {
                         return model.price*1; 
                     });
-                    $td.find('.xa-priceText').text(sortedModels[0].price +' ~ '+sortedModels[sortedModels.length-1].price);
+                    if(sortedModels[0].price == sortedModels[sortedModels.length-1].price){
+                        $td.find('.xa-priceText').text(sortedModels[0].price);
+                    }else{
+                        $td.find('.xa-priceText').text(sortedModels[0].price +' ~ '+sortedModels[sortedModels.length-1].price);
+                    }
                 },
                 error: function(resp) {
                     var msg = '更新价格失败!';
