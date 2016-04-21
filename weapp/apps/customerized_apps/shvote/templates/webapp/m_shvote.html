@@ -121,6 +121,7 @@
 		top: 30%;
 		right: 0;
 		z-index: 666;
+		display: none;
 	}
 	.wui-rank-list{
 		overflow: hidden;
@@ -578,10 +579,10 @@
                 update_member_info(member_info,current_group);
                 //更新排名信息
                 getRankInfo(current_group,'');
+                $('.wa-mark').show();
             },
             error: function(data){
                 if(data.errMsg == 'is_deleted'){
-                    $('.wa-mark').hide();
                     deletedRecord();
                 }else{
                     wuiAlert(data.errMsg);
