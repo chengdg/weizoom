@@ -284,8 +284,7 @@ class ShvoteCreatePlayer(resource.Resource):
 		activity_id = request.GET['id']
 
 		#查看选手
-		cur_player_info = {}
-		shvote = None
+		shvote = cur_player_info = None
 		status = 0
 		if player_id:
 			try:
@@ -300,10 +299,11 @@ class ShvoteCreatePlayer(resource.Resource):
 			except:
 				pass
 
-		cur_player_info.rank = 0
+		rank = 0
 		for s in app_models.ShvoteParticipance.objects(belong_to=activity_id, status=app_models.MEMBER_STATUS['PASSED'], is_use=app_models.MEMBER_IS_USE['YES']).order_by('-count', 'created_at'):
-			cur_player_info.rank += 1
+			rank += 1
 			if str(s.member_id) == player_id:
+				cur_player_info.rank = rank
 				break
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
