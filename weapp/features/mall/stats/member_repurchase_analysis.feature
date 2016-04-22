@@ -164,7 +164,7 @@ Background:
 		"""
 
 	When 微信用户批量消费jobs的商品
-		| order_id |   date     | consumer | product  | payment | pay_type | postage*   | price*    .00| integral         |       coupon         | paid_amount*|  weizoom_card   | alipay*   | wechat*   | cash*   |   action    | order_status*|
+		| order_id |   date     | consumer | product  | payment | pay_type | postage*   | price*    | integral         |       coupon         | paid_amount*   |  weizoom_card   | alipay*   | wechat*   | cash*   |   action    | order_status*|
 		|   1001   | 2014-08-05 | bill     | 商品1,1  | 支付    | 支付宝   | 10.00      | 100.00    |                  |                      | 110.00         | 0000001,1234567 | 0.00      | 0.00      | 0.00    |  jobs,完成  | 已完成       |
 
 		|   2000   | 2014-08-06 | bill2    | 商品1,1  |         |          | 10.00      | 100.00    |                  |                      | 110.00         |                 | 0.00      | 0.00      | 0.00    |  jobs,取消  | 已取消       |    
