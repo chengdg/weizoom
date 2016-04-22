@@ -104,6 +104,7 @@
 				<th>用户名</th>
 				<th>助力值</th>
 				<th>参与时间</th>
+				<th>操作</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -115,10 +116,13 @@
 					{{html item.participant_name}}
 				</td>
 				<td>
-				    ${item.power}<a class="btn btn-primary hidden-btn" style="display: none;" href="/apps/powerme/powerme_participance_detail/?member_id=${item.member_id}&belong_to=${item.belong_to}" target="_blank">查看详情</a>
+				    ${item.power}
 				</td>
 				<td>
 					${item.created_at}
+				</td>
+				<td>
+					<a class="btn btn-primary" style="border: none;border-radius: 0;margin: 0;" href="/apps/powerme/powerme_participance_detail/?member_id=${item.member_id}&belong_to=${item.belong_to}" target="_blank">查看详情</a>
 				</td>
 			</tr>
 			{{/each}}
