@@ -29,19 +29,19 @@ Background:
 		[{
 			"name": "商品1可单行显示",
 			"shelve_type":"上架",
-			"price": 1.0
+			"price": 1.00
 		},{
 			"name": "商品2可两行显示",
 			"shelve_type":"上架",
-			"price": 2.0
+			"price": 2.00
 		},{
 			"name": "商品3不可两行显示",
 			"shelve_type":"上架",
-			"price": 3.0
+			"price": 3.00
 		},{
 			"name": "商品4",
 			"shelve_type":"下架",
-			"price": 4.0
+			"price": 4.00
 		}]
 		"""
 
@@ -58,13 +58,13 @@ Scenario:1 商品管理'下架'、'删除'商品
 				"index": 1,
 				"items":[{
 					"name":"商品3不可两行显示",
-					"price": 3.0
+					"price": 3.00
 				},{
 					"name":"商品1可单行显示",
-					"price": 1.0
+					"price": 1.00
 				},{
 					"name":"商品2可两行显示",
-					"price": 2.0
+					"price": 2.00
 				}],
 				"list_style1":"大图",
 				"list_style2":"默认样式",
@@ -83,13 +83,13 @@ Scenario:1 商品管理'下架'、'删除'商品
 				"index": 1,
 				"items": [{
 					"name":"商品3不可两行显示",
-					"price": 3.0
+					"price": 3.00
 				},{
 					"name":"商品1可单行显示",
-					"price": 1.0
+					"price": 1.00
 				},{
 					"name":"商品2可两行显示",
-					"price": 2.0
+					"price": 2.00
 				}],
 				"list_style1":"大图",
 				"list_style2":"默认样式",
@@ -109,10 +109,10 @@ Scenario:1 商品管理'下架'、'删除'商品
 				"index": 1,
 				"items": [{
 					"name":"商品1可单行显示",
-					"price": 1.0
+					"price": 1.00
 				},{
 					"name":"商品2可两行显示",
-					"price": 2.0
+					"price": 2.00
 				}],
 				"list_style1":"大图",
 				"list_style2":"默认样式",
@@ -133,7 +133,7 @@ Scenario:1 商品管理'下架'、'删除'商品
 				"index": 1,
 				"items": [{
 					"name":"商品1可单行显示",
-					"price": 1.0
+					"price": 1.00
 				}],
 				"list_style1":"大图",
 				"list_style2":"默认样式",
@@ -155,13 +155,13 @@ Scenario:2 商品管理'修改'商品
 				"index": 1,
 				"items": [{
 					"name":"商品3不可两行显示",
-					"price": 3.0
+					"price": 3.00
 				},{
 					"name":"商品1可单行显示",
-					"price": 1.0
+					"price": 1.00
 				},{
 					"name":"商品2可两行显示",
-					"price": 2.0
+					"price": 2.00
 				}],
 				"list_style1":"大图",
 				"list_style2":"默认样式",
@@ -180,13 +180,13 @@ Scenario:2 商品管理'修改'商品
 				"index": 1,
 				"items": [{
 					"name":"商品3不可两行显示",
-					"price": 3.0
+					"price": 3.00
 				},{
 					"name":"商品1可单行显示",
-					"price": 1.0
+					"price": 1.00
 				},{
 					"name":"商品2可两行显示",
-					"price": 2.0
+					"price": 2.00
 				}],
 				"list_style1":"大图",
 				"list_style2":"默认样式",
@@ -200,7 +200,7 @@ Scenario:2 商品管理'修改'商品
 		"""
 		{
 			"name":"修改后——商品2可两行显示",
-			"price":"20.0"
+			"price":"20.00"
 		}
 		"""
 	Then jobs能获取'微页面标题1'
@@ -213,13 +213,13 @@ Scenario:2 商品管理'修改'商品
 				"index": 1,
 				"items": [{
 					"name":"商品3不可两行显示",
-					"price": 3.0
+					"price": 3.00
 				},{
 					"name":"商品1可单行显示",
-					"price": 1.0
+					"price": 1.00
 				},{
 					"name":"修改后——商品2可两行显示",
-					"price": 20.0
+					"price": 20.00
 				}],
 				"list_style1":"大图",
 				"list_style2":"默认样式",
@@ -241,13 +241,13 @@ Scenario:3 商品修改，删除
 				"index": 1,
 				"items": [{
 					"name":"商品3不可两行显示",
-					"price": 3.0
+					"price": 3.00
 				},{
 					"name":"商品1可单行显示",
-					"price": 1.0
+					"price": 1.00
 				},{
 					"name":"商品2可两行显示",
-					"price": 2.0
+					"price": 2.00
 				}],
 				"list_style1":"大图",
 				"list_style2":"默认样式",
@@ -266,13 +266,13 @@ Scenario:3 商品修改，删除
 				"index": 1,
 				"items": [{
 					"name":"商品3不可两行显示",
-					"price": 3.0
+					"price": 3.00
 				},{
 					"name":"商品1可单行显示",
-					"price": 1.0
+					"price": 1.00
 				},{
 					"name":"商品2可两行显示",
-					"price": 2.0
+					"price": 2.00
 				}],
 				"list_style1":"大图",
 				"list_style2":"默认样式",
@@ -292,10 +292,10 @@ Scenario:3 商品修改，删除
 				"index": 1,
 				"items": [{
 					"name":"商品3不可两行显示",
-					"price": 3.0
+					"price": 3.00
 				},{
 					"name":"商品2可两行显示",
-					"price": 2.0
+					"price": 2.00
 				}],
 				"list_style1":"大图",
 				"list_style2":"默认样式",
@@ -314,10 +314,10 @@ Scenario:3 商品修改，删除
 				"index": 1,
 				"items": [{
 					"name":"商品3不可两行显示",
-					"price": 3.0
+					"price": 3.00
 				},{
 					"name":"商品2可两行显示",
-					"price": 2.0
+					"price": 2.00
 				}],
 				"list_style1":"大图",
 				"list_style2":"默认样式",
@@ -337,10 +337,10 @@ Scenario:3 商品修改，删除
 				"index": 1,
 				"items": [{
 					"name":"商品3不可两行显示",
-					"price": 3.0
+					"price": 3.00
 				},{
 					"name":"商品2可两行显示",
-					"price": 2.0
+					"price": 2.00
 				}],
 				"list_style1":"小图",
 				"list_style2":"简洁样式",
@@ -358,10 +358,10 @@ Scenario:3 商品修改，删除
 				"index": 1,
 				"items": [{
 					"name":"商品3不可两行显示",
-					"price": 3.0
+					"price": 3.00
 				},{
 					"name":"商品2可两行显示",
-					"price": 2.0
+					"price": 2.00
 				}],
 				"list_style1":"小图",
 				"list_style2":"简洁样式",
