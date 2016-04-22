@@ -258,7 +258,7 @@ Background:
 Scenario:1  经营概况：店铺经营概况
 
     When 微信用户批量消费jobs的商品
-        | order_id |    date    | consumer |    product   | payment | pay_type |postage*   |price*   | product_integral |       coupon         | paid_amount* |  weizoom_card     | alipay* | wechat* | cash* |   action      | order_status* |
+        | order_id |    date    | consumer |    product   | payment | pay_type |postage*   |price*   | product_integral |       coupon         | paid_amount*    |  weizoom_card     | alipay* | wechat* | cash* |   action      | order_status* |
         |   0001   | 2014-08-05 |   jack   | 商品1,1      |         | 支付宝   |   10.00   | 100.00  |       200        |                      |     90.00       |                   |   90    |    0    |   0   |               |    待支付     |
         |   0002   | 5天前      |   tom    | 商品1,1      |         | 支付宝   |   10.00   | 100.00  |       200        |                      |     90.00       |                   |   90    |    0    |   0   |  jobs,取消    |    已取消     |
         |   0003   | 4天前      |   tom    | 商品2,黑色,2 |   支付  | 微信支付 |   15.00   | 100.00  |        0         | 全体券1,coupon1_id_1 |     205.00      |                   |    0    |   205   |   0   |  jobs,发货    |    已发货     |
