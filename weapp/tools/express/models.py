@@ -41,6 +41,14 @@ EXPRESS_NOT_PULL_STATUSES = [
 	EXPRESS_PULL_INFO_ERROR_STATUS,
 	EXPRESS_PULL_REPEAT_STATUS
 ]
+
+'''
+快递服务商编号
+'''
+EXPRESS_100 = 0 			#快递100
+KDNIAO = 1 					#快递鸟
+
+
 class ExpressHasOrderPushStatus(models.Model):
 	order_id = models.IntegerField(verbose_name="订单id，以后暂不使用", default=-1)
 	express_company_name = models.CharField(max_length=50, default='', verbose_name="快递公司名称")
@@ -54,6 +62,8 @@ class ExpressHasOrderPushStatus(models.Model):
 	# abort_receive_message 第一次接收 "status":"abort"而且message中包含“3天”关键字的数据
 	abort_receive_at = models.DateTimeField(null=True, blank=True, verbose_name="接收信息时间")
 	abort_receive_message = models.TextField(verbose_name="接收的信息")
+	service_type = models.IntegerField(default=0, verbose_name="快递服务类型")
+	webapp_id = models.CharField(max_length=20, default='', db_index=True, verbose_name='店铺ID')  # webapp
 
 	class Meta(object):
 		db_table = 'tool_express_has_order_push_status'

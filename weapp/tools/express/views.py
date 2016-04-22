@@ -215,7 +215,7 @@ def test_kdniao_push_data(request):
 			"LogisticCode": "5042260908504",
 			"Success": True,
 			"Reason": "",
-			"State": "3",
+			"State": "2",
 			"CallBack": express_ids[0],
 			"Traces": [
 				{
@@ -267,7 +267,7 @@ def test_kdniao_push_data(request):
 			"LogisticCode": "5042260943004",
 			"Success": True,
 			"Reason": "",
-			"State": "3",
+			"State": "2",
 			"CallBack": express_ids[1],
 			"Traces": [
 				{

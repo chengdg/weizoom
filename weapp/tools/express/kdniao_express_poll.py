@@ -70,6 +70,7 @@ class KdniaoExpressPoll(object):
 		self.area = order.get_str_area
 		self.express = None
 		self.express_config = KdniaoExpressConfig()
+		self.webapp_id = order.webapp_id
 
 		# 伪造
 		# self.express_company_name = 'EMS'
@@ -159,7 +160,10 @@ class KdniaoExpressPoll(object):
 				order_id = -1,
 				status = EXPRESS_PULL_NOT_STATUS,
 				express_company_name = self.order.express_company_name,
-				express_number = self.order.express_number
+				express_number = self.order.express_number,
+				service_type = KDNIAO,
+				webapp_id = self.webapp_id
+
 			)
 			return express
 
