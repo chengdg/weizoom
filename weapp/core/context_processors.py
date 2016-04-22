@@ -362,7 +362,7 @@ def weapp_views(request):
 		version = '1'
 	for view in resource_util.get_web_views(version):
 		items.append(view['template_source'])
-		items.append('<script type="text/javascript" src="%s"></script>' % view['js_url_path'])
+		items.append('<script type="text/javascript" src="%s?v=1.00"></script>' % view['js_url_path'])
 		items.append('\n')
 
 	return {'weapp_views': '\n'.join(items)}
@@ -378,7 +378,7 @@ def weapp_models(request):
 	else:
 		version = '1'
 	for model in resource_util.get_web_models(version):
-		items.append('<script type="text/javascript" src="%s"></script>' % model['js_url_path'])
+		items.append('<script type="text/javascript" src="%s?v=1.00"></script>' % model['js_url_path'])
 		items.append('\n')
 
 	return {'weapp_models': '\n'.join(items)}
