@@ -41,7 +41,7 @@ Scenario:1 添加拥有单属性商品规格的商品
 			"model": {
 				"models": {
 					"黑色": {
-						"price": 10.0,
+						"price": 10.00,
 						"weight": 3.1,
 						"stock_type": "有限",
 						"stocks": 3
@@ -57,7 +57,7 @@ Scenario:1 添加拥有单属性商品规格的商品
 			"model": {
 				"models": {
 					"黑色": {
-						"price": 10.0,
+						"price": 10.00,
 						"weight": 3.1,
 						"stock_type": "有限",
 						"stocks": 3
@@ -80,13 +80,13 @@ Scenario:2 添加拥有复合属性商品规格的商品
 			"model": {
 				"models": {
 					"黑色 S": {
-						"price": 10.0,
+						"price": 10.00,
 						"weight": 3.1,
 						"stock_type": "有限",
 						"stocks": 3
 					},
 					"白色 S": {
-						"price": 9.1,
+						"price": 9.10,
 						"weight": 1.0,
 						"stock_type": "无限"
 					}
@@ -101,13 +101,13 @@ Scenario:2 添加拥有复合属性商品规格的商品
 			"model": {
 				"models": {
 					"黑色 S": {
-						"price": 10.0,
+						"price": 10.00,
 						"weight": 3.1,
 						"stock_type": "有限",
 						"stocks": 3
 					},
 					"白色 S": {
-						"price": 9.1,
+						"price": 9.10,
 						"weight": 1.0,
 						"stock_type": "无限"
 					}

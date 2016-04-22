@@ -46,7 +46,7 @@ Background:
 			"model": {
 				"models": {
 					"standard": {
-						"price": 12.0,
+						"price": 12.00,
 						"stock_type": "有限",
 						"stocks": 3
 					}
@@ -59,7 +59,7 @@ Background:
 			"model": {
 				"models": {
 					"standard": {
-						"price": 3.0
+						"price": 3.00
 					}
 				}
 			}
@@ -166,11 +166,11 @@ Scenario:4 向分类中添加商品
 		"""
 		[{
 			"name": "水晶虾仁",
-			"display_price": 3.0,
+			"display_price": 3.00,
 			"status": "待售"
 		}, {
 			"name": "叫花鸡",
-			"display_price": 12.0,
+			"display_price": 12.00,
 			"status": "待售"
 		}, {
 			"name": "东坡肘子",
@@ -182,11 +182,11 @@ Scenario:4 向分类中添加商品
 		"""
 		[{
 			"name": "水晶虾仁",
-			"display_price": 3.0,
+			"display_price": 3.00,
 			"status": "待售"
 		}, {
 			"name": "叫花鸡",
-			"display_price": 12.0,
+			"display_price": 12.00,
 			"status": "待售"
 		}]
 		"""
@@ -194,7 +194,7 @@ Scenario:4 向分类中添加商品
 		"""
 		[{
 			"name": "水晶虾仁",
-			"display_price": 3.0,
+			"display_price": 3.00,
 			"status": "待售"
 		}]
 		"""
@@ -220,7 +220,7 @@ Scenario:4 向分类中添加商品
 		"""
 		[{
 			"name": "叫花鸡",
-			"display_price": 12.0,
+			"display_price": 12.00,
 			"status": "待售"
 		}]
 		"""
@@ -228,7 +228,7 @@ Scenario:4 向分类中添加商品
 		"""
 		[{
 			"name": "水晶虾仁",
-			"display_price": 3.0,
+			"display_price": 3.00,
 			"status": "待售"
 		}]
 		"""
@@ -243,11 +243,11 @@ Scenario:5 向分类中添加商品排序
 		"""
 		[{
 			"name":"商品1",
-			"price":9.0,
+			"price":9.00,
 			"status":"在售"
 		},{
 			"name":"商品2",
-			"price":9.9,
+			"price":9.90,
 			"status":"在售"
 		},{
 			"name":"商品3",
@@ -255,11 +255,11 @@ Scenario:5 向分类中添加商品排序
 			"status":"在售"
 		},{
 			"name":"商品4",
-			"price":11.0,
+			"price":11.00,
 			"status":"在售"
 		},{
 			"name":"商品5",
-			"price":13.0,
+			"price":13.00,
 			"status":"在售"
 		}]
 		"""
@@ -291,12 +291,12 @@ Scenario:5 向分类中添加商品排序
 			"name": "分类3",
 			"products": [{
 				"name": "商品5",
-				"display_price": 13.0,
+				"display_price": 13.00,
 				"status": "在售",
 				"display_index": 0
 			}, {
 				"name": "商品4",
-				"display_price": 11.0,
+				"display_price": 11.00,
 				"status": "在售",
 				"display_index": 0
 			}, {
@@ -306,22 +306,22 @@ Scenario:5 向分类中添加商品排序
 				"display_index": 0
 			}, {
 				"name": "商品2",
-				"display_price": 9.9,
+				"display_price": 9.90,
 				"status": "在售",
 				"display_index": 0
 			}, {
 				"name": "商品1",
-				"display_price": 9.0,
+				"display_price": 9.00,
 				"status": "在售",
 				"display_index": 0
 			}, {
 				"name": "水晶虾仁",
-				"display_price": 3.0,
+				"display_price": 3.00,
 				"status": "待售",
 				"display_index": 0
 			}, {
 				"name": "叫花鸡",
-				"display_price": 12.0,
+				"display_price": 12.00,
 				"status": "待售",
 				"display_index": 0
 			}, {
@@ -361,7 +361,7 @@ Scenario:5 向分类中添加商品排序
 			"name": "分类3",
 			"products": [{
 				"name": "商品1",
-				"display_price": 9.0,
+				"display_price": 9.00,
 				"status": "在售",
 				"display_index": 1
 			}, {
@@ -371,27 +371,27 @@ Scenario:5 向分类中添加商品排序
 				"display_index": 2
 			}, {
 				"name": "商品2",
-				"display_price": 9.9,
+				"display_price": 9.90,
 				"status": "在售",
 				"display_index": 3
 			}, {
 				"name": "商品5",
-				"display_price": 13.0,
+				"display_price": 13.00,
 				"status": "在售",
 				"display_index": 0
 			}, {
 				"name": "商品4",
-				"display_price": 11.0,
+				"display_price": 11.00,
 				"status": "在售",
 				"display_index": 0
 			}, {
 				"name": "水晶虾仁",
-				"display_price": 3.0,
+				"display_price": 3.00,
 				"status": "待售",
 				"display_index": 0
 			}, {
 				"name": "叫花鸡",
-				"display_price": 12.0,
+				"display_price": 12.00,
 				"status": "待售",
 				"display_index": 0
 			}, {
