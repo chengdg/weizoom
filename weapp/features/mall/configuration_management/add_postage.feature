@@ -58,14 +58,14 @@ Scenario:1 添加邮费配置
 	Then jobs能获取添加的邮费配置
 		"""
 		[{
-			"name" : "免运费"
+			"name": "免运费"
 		},{
-			"name" : "圆通"
+			"name": "圆通"
 		},{
-			"name" : "顺丰"
+			"name": "顺丰"
 		},{
-			"name" : "EMS"
+			"name": "EMS"
 		},{
-			"name" : "韵达"
+			"name": "韵达"
 		}]
 		"""
