@@ -93,7 +93,7 @@ Scenario:1 对签到活动内容进行修改，会员访问活动页面
 			}
 			"""
 		When bill访问jobs的webapp
-  		When 清空浏览器
+		When 清空浏览器
 		When bill在微信中向jobs的公众号发送消息'签到2'
 		Then bill获得系统回复的消息
 		"""
@@ -138,7 +138,7 @@ Scenario:1 对签到活动内容进行修改，会员访问活动页面
 			}
 			"""
 		When bill访问jobs的webapp
-  		When 清空浏览器
+		When 清空浏览器
 		When bill在微信中向jobs的公众号发送消息'签到3'
 		Then bill获得系统回复的消息
 		"""
