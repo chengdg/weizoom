@@ -6,3 +6,15 @@
 {% block content-panel %}
 {{ page_html_content|safe }}
 {% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+    $(function(){
+        if ($('[data-url]')) {
+            $('[data-url]').lazyload({ data_attribute:"url", effect : "fadeIn", placeholder: "/static_v2/img/webapp/mall/info_placeholder.png" });
+        }
+    });
+</script>
+{% endblock %}
+
+
