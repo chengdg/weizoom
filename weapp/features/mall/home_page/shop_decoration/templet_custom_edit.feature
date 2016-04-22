@@ -179,19 +179,19 @@ Scenario:2 编辑自定义模块-删除
 		[{
 			"name": "商品1可单行显示",
 			"shelve_type":"上架",
-			"price": 1.0
+			"price": 1.00
 		},{
 			"name": "商品2可两行显示",
 			"shelve_type":"上架",
-			"price": 2.0
+			"price": 2.00
 		},{
 			"name": "商品3不可两行显示",
 			"shelve_type":"上架",
-			"price": 3.0
+			"price": 3.00
 		},{
 			"name": "商品4",
 			"shelve_type":"下架",
-			"price": 4.0
+			"price": 4.00
 		}]
 		"""
 	When jobs创建微页面
@@ -228,13 +228,13 @@ Scenario:2 编辑自定义模块-删除
 				"index": 3,
 				"items": [{
 					"name":"商品2可两行显示",
-					"price":"2.0"
+					"price":"2.00"
 				}, {
 					"name":"商品1可单行显示",
-					"price":"1.0"
+					"price":"1.00"
 				}, {
 					"name":"商品3不可两行显示",
-					"price":"3.0"
+					"price":"3.00"
 				}],
 				"list_style1":"大图",
 				"list_style2":"默认样式",
@@ -277,13 +277,13 @@ Scenario:2 编辑自定义模块-删除
 				"index": 3,
 				"items": [{
 					"name":"商品2可两行显示",
-					"price":"2.0"
+					"price":"2.00"
 				}, {
 					"name":"商品1可单行显示",
-					"price":"1.0"
+					"price":"1.00"
 				}, {
 					"name":"商品3不可两行显示",
-					"price":"3.0"
+					"price":"3.00"
 				}],
 				"list_style1":"大图",
 				"list_style2":"默认样式",
@@ -324,13 +324,13 @@ Scenario:2 编辑自定义模块-删除
 				"index": 2,
 				"items": [{
 					"name":"商品2可两行显示",
-					"price":"2.0"
+					"price":"2.00"
 				}, {
 					"name":"商品1可单行显示",
-					"price":"1.0"
+					"price":"1.00"
 				}, {
 					"name":"商品3不可两行显示",
-					"price":"3.0"
+					"price":"3.00"
 				}],
 				"list_style1":"大图",
 				"list_style2":"默认样式",
@@ -369,13 +369,13 @@ Scenario:2 编辑自定义模块-删除
 				"index": 2,
 				"items": [{
 					"name":"商品2可两行显示",
-					"price":"2.0"
+					"price":"2.00"
 				}, {
 					"name":"商品1可单行显示",
-					"price":"1.0"
+					"price":"1.00"
 				}, {
 					"name":"商品3不可两行显示",
-					"price":"3.0"
+					"price":"3.00"
 				}],
 				"list_style1":"大图",
 				"list_style2":"默认样式",
@@ -415,10 +415,10 @@ Scenario:2 编辑自定义模块-删除
 				"index": 2,
 				"items": [{
 					"name":"商品2可两行显示",
-					"price":"2.0"
+					"price":"2.00"
 				}, {
 					"name":"商品1可单行显示",
-					"price":"1.0"
+					"price":"1.00"
 				}, {
 					"name":"商品3不可两行显示",
 					"price":"3.0"
@@ -464,13 +464,13 @@ Scenario:2 编辑自定义模块-删除
 				"index": 2,
 				"items": [{
 					"name":"商品2可两行显示",
-					"price":"2.0"
+					"price":"2.00"
 				}, {
 					"name":"商品1可单行显示",
-					"price":"1.0"
+					"price":"1.00"
 				}, {
 					"name":"商品3不可两行显示",
-					"price":"3.0"
+					"price":"3.00"
 				}],
 				"list_style1":"大图",
 				"list_style2":"默认样式",
@@ -557,15 +557,15 @@ Scenario: 3 添加模块
 		[{
 			"name": "商品1可单行显示",
 			"shelve_type":"上架",
-			"price": 1.0
+			"price": 1.00
 		},{
 			"name": "商品2可两行显示",
 			"shelve_type":"上架",
-			"price": 2.0
+			"price": 2.00
 		},{
 			"name": "商品3不可两行显示",
 			"shelve_type":"上架",
-			"price": 3.0
+			"price": 3.00
 		}]
 		"""
 	When jobs创建微页面
@@ -589,7 +589,7 @@ Scenario: 3 添加模块
 			"multy_text_content": {
 				"index": 1,
 				"text": "富文本标题文字，换行显示图片，换行显示3行3列的表格"
-			}	
+			}
 		}
 		"""
 
@@ -607,13 +607,13 @@ Scenario: 3 添加模块
 				"index": 2,
 				"items": [{
 					"name":"商品2可两行显示",
-					"price":"2.0"
+					"price":"2.00"
 				}, {
 					"name":"商品1可单行显示",
-					"price":"1.0"
+					"price":"1.00"
 				}, {
 					"name":"商品3不可两行显示",
-					"price":"3.0"
+					"price":"3.00"
 				}],
 				"list_style1": "大图",
 				"list_style2": "默认样式",
@@ -637,13 +637,13 @@ Scenario: 3 添加模块
 				"index": 2,
 				"items": [{
 					"name":"商品2可两行显示",
-					"price":"2.0"
+					"price":"2.00"
 				}, {
 					"name":"商品1可单行显示",
-					"price":"1.0"
+					"price":"1.00"
 				}, {
 					"name":"商品3不可两行显示",
-					"price":"3.0"
+					"price":"3.00"
 				}],
 				"list_style1": "大图",
 				"list_style2": "默认样式",
@@ -667,13 +667,13 @@ Scenario: 3 添加模块
 				"index": 2,
 				"items": [{
 					"name":"商品2可两行显示",
-					"price":"2.0"
+					"price":"2.00"
 				}, {
 					"name":"商品1可单行显示",
-					"price":"1.0"
+					"price":"1.00"
 				}, {
 					"name":"商品3不可两行显示",
-					"price":"3.0"
+					"price":"3.00"
 				}],
 				"list_style1":"大图",
 				"list_style2":"默认样式",
@@ -717,13 +717,13 @@ Scenario: 3 添加模块
 				"index": 2,
 				"items": [{
 					"name":"商品2可两行显示",
-					"price":"2.0"
+					"price":"2.00"
 				}, {
 					"name":"商品1可单行显示",
-					"price":"1.0"
+					"price":"1.00"
 				}, {
 					"name":"商品3不可两行显示",
-					"price":"3.0"
+					"price":"3.00"
 				}],
 				"list_style1":"大图",
 				"list_style2":"默认样式",
