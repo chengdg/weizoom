@@ -63,6 +63,7 @@ class ExpressPoll(object):
 		self.order_id = order.id
 		self.area = order.get_str_area
 		self.express = None
+		self.webapp_id = order.webapp_id
 
 		self.express_config = ExpressConfig()
 		self.express_params = ExpressRequestParams
@@ -200,7 +201,9 @@ class ExpressPoll(object):
 				order_id = -1,
 				status = EXPRESS_PULL_NOT_STATUS,
 				express_company_name = self.order.express_company_name,
-				express_number = self.order.express_number
+				express_number = self.order.express_number,
+				service_type = EXPRESS_100,
+				webapp_id = self.webapp_id
 			)
 			return express
 
