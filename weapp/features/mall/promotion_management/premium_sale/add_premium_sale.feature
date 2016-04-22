@@ -78,19 +78,19 @@ Background:
 			[{
 				"member_grade": "普通会员",
 				"discount": 100,
-				"discount_money": 100.0
+				"discount_money": 100.00
 			},{
 				"member_grade": "铜牌会员",
 				"discount": 90,
-				"discount_money": 90.0
+				"discount_money": 90.00
 			},{
 				"member_grade": "银牌会员",
 				"discount": 80,
-				"discount_money": 80.0
+				"discount_money": 80.00
 			},{
 				"member_grade": "金牌会员",
 				"discount": 70,
-				"discount_money": 70.0
+				"discount_money": 70.00
 			}]
 		}]
 		"""
@@ -156,7 +156,7 @@ Scenario: 2 主商品为多规格，赠品为无规格商品，创建买赠活�
 			"name": "商品2买一赠一",
 			"promotion_title": "买一赠一啦",
 			"product_name": "商品2",
-			"product_price":"100.0 ~ 200.0",
+			"product_price":"100.00 ~ 200.00",
 			"status":"未开始",
 			"start_date": "明天",
 			"end_date": "3天后",
