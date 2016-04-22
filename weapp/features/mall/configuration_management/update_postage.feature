@@ -51,7 +51,7 @@ Scenario:1 更新邮费配置
 		{
 			"name" : "圆通",
 			"first_weight":1,
-			"first_weight_price":10.0,
+			"first_weight_price":10.00,
 			"special_area": [{
 				"to_the":"上海市",
 				"first_weight_price":40.00
@@ -85,7 +85,7 @@ Scenario:1 更新邮费配置
 		{
 			"name" : "圆通",
 			"first_weight":1,
-			"first_weight_price":10.0,
+			"first_weight_price":10.00,
 			"special_area": [{
 				"to_the":"上海",
 				"first_weight_price":40.00

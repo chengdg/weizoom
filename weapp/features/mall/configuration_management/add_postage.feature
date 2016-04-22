@@ -10,46 +10,46 @@ Scenario:1 添加邮费配置
 	When jobs添加邮费配置
 		"""
 		[{
-			"name" : "圆通",
+			"name": "圆通",
 			"first_weight": 40,
-			"first_weight_price": 4,
+			"first_weight_price": 4.00,
 			"added_weight": 1,
-			"added_weight_price": 6
+			"added_weight_price": 6.00
 		},{
-			"name" : "顺丰",
-			"first_weight" : 41,
-			"first_weight_price" : 5
+			"name": "顺丰",
+			"first_weight": 41,
+			"first_weight_price": 5.00
 		},{
-			"name" : "EMS",
-			"first_weight":1,
-			"first_weight_price":15.00,
-			"added_weight":1,
-			"added_weight_price":5.00,
+			"name": "EMS",
+			"first_weight": 1,
+			"first_weight_price": 15.00,
+			"added_weight": 1,
+			"added_weight_price": 5.00,
 			"special_area": [{
-				"to_the":"北京市",
+				"to_the": "北京市",
 				"first_weight": 1.0,
-				"first_weight_price":20.00,
+				"first_weight_price": 20.00,
 				"added_weight": 1.0,
 				"added_weight_price": 10.00
 			},{
-				"to_the":"上海市,重庆市,江苏省",
+				"to_the": "上海市,重庆市,江苏省",
 				"first_weight": 1.0,
-				"first_weight_price":30.00,
+				"first_weight_price": 30.00,
 				"added_weight": 1.0,
-				"added_weight_price":20.00
+				"added_weight_price": 20.00
 			}]
 		},{
-			"name" : "韵达",
-			"first_weight":1,
-			"first_weight_price":12.00,
-			"added_weight":1,
-			"added_weight_price":2.00,
+			"name": "韵达",
+			"first_weight": 1,
+			"first_weight_price": 12.00,
+			"added_weight": 1,
+			"added_weight_price": 2.00,
 			"free_postages": [{
-				"to_the":"上海市",
+				"to_the": "上海市",
 				"condition": "count",
 				"value": 1
 			},{
-				"to_the":"北京市,重庆市,江苏省",
+				"to_the": "北京市,重庆市,江苏省",
 				"condition": "money",
 				"value": 2.0
 			}]
@@ -58,14 +58,14 @@ Scenario:1 添加邮费配置
 	Then jobs能获取添加的邮费配置
 		"""
 		[{
-			"name" : "免运费"
+			"name": "免运费"
 		},{
-			"name" : "圆通"
+			"name": "圆通"
 		},{
-			"name" : "顺丰"
+			"name": "顺丰"
 		},{
-			"name" : "EMS"
+			"name": "EMS"
 		},{
-			"name" : "韵达"
+			"name": "韵达"
 		}]
 		"""
