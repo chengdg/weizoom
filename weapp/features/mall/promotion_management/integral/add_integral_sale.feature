@@ -117,14 +117,14 @@ Background:
 			"product_name": "商品4",
 			"member_grade": "全部",
 			"count_per_purchase": 2,
-			"promotion_price": 90
+			"promotion_price": 90.00
 		},{
 			"name": "商品5限时抢购",
 			"start_date": "今天",
 			"end_date": "1天后",
 			"product_name": "商品5",
 			"member_grade": "全部",
-			"promotion_price": 90,
+			"promotion_price": 90.00,
 			"limit_period": 1
 			}]
 		"""
@@ -160,14 +160,14 @@ Background:
 		"""
 		[{
 			"name": "单品券商品8",
-			"money": 1,
+			"money": 1.00,
 			"start_date": "今天",
 			"end_date": "1天后",
 			"coupon_id_prefix": "coupon1_id_",
 			"coupon_product": "商品8"
 		},{
 			"name": "单品券商品9",
-			"money": 10,
+			"money": 10.00,
 			"start_date": "今天",
 			"end_date": "2天后",
 			"using_limit": "满50元可以使用",
@@ -215,7 +215,7 @@ Scenario: 1 选取普通商品，创建统一设置积分应用活动
 			"product_name": "商品1",
 			"is_permanant_active": false,
 			"discount": 50,
-			"discount_money": 50.0
+			"discount_money": 50.00
 		}]
 		"""
 	Then jobs获取积分应用活动列表
@@ -225,7 +225,7 @@ Scenario: 1 选取普通商品，创建统一设置积分应用活动
 			"product_name": "商品1",
 			"product_price":100.00,
 			"discount": "50.0%",
-			"discount_money": 50.0,
+			"discount_money": 50.00,
 			"status":"进行中"
 		}]
 		"""
@@ -245,11 +245,11 @@ Scenario: 2 选取多规格商品，创建分级设置积分应用活动
 				[{
 					"member_grade": "普通会员",
 					"discount": 100,
-					"discount_money": 100.0
+					"discount_money": 100.00
 				},{
 					"member_grade": "铜牌会员",
 					"discount": 90,
-					"discount_money": 90.0
+					"discount_money": 90.00
 				}]
 		}]
 		"""
@@ -258,9 +258,9 @@ Scenario: 2 选取多规格商品，创建分级设置积分应用活动
 		[{
 			"name":"商品2积分应用",
 			"product_name": "商品2",
-			"product_price": "100.0 ~ 200.0",
+			"product_price": "100.00 ~ 200.00",
 			"discount": "90.0%~100.0%",
-			"discount_money": "90.0~100.0",
+			"discount_money": "90.00~100.00",
 			"status":"进行中"
 		}]
 		"""
@@ -280,11 +280,11 @@ Scenario: 3 选取有会员价的商品，创建分级设置积分应用活动�
 				[{
 					"member_grade": "普通会员",
 					"discount": 100,
-					"discount_money": 100.0
+					"discount_money": 100.00
 				},{
 					"member_grade": "铜牌会员",
 					"discount": 90,
-					"discount_money": 90.0
+					"discount_money": 90.00
 				}]
 		}]
 		"""
@@ -295,7 +295,7 @@ Scenario: 3 选取有会员价的商品，创建分级设置积分应用活动�
 			"product_name": "商品3",
 			"product_price":100.00,
 			"discount": "90.0%~100.0%",
-			"discount_money": "90.0~100.0",
+			"discount_money": "90.00~100.00",
 			"status":"进行中"
 		}]
 		"""
@@ -315,11 +315,11 @@ Scenario: 4 选取无会员价且已参与'限时抢购'活动的商品，创建
 				[{
 					"member_grade": "普通会员",
 					"discount": 100,
-					"discount_money": 100.0
+					"discount_money": 100.00
 				},{
 					"member_grade": "铜牌会员",
 					"discount": 90,
-					"discount_money": 90.0
+					"discount_money": 90.00
 				}]
 		}]
 		"""
@@ -330,7 +330,7 @@ Scenario: 4 选取无会员价且已参与'限时抢购'活动的商品，创建
 			"product_name": "商品4",
 			"product_price":100.00,
 			"discount": "90.0%~100.0%",
-			"discount_money": "90.0~100.0",
+			"discount_money": "90.00~100.00",
 			"status":"进行中"
 		}]
 		"""
@@ -351,7 +351,7 @@ Scenario: 5 选取有会员价且已参与'限时抢购'活动的商品，创建
 				[{
 					"member_grade": "全部",
 					"discount": 50,
-					"discount_money": 50.0
+					"discount_money": 50.00
 				}]
 		}]
 		"""
@@ -362,7 +362,7 @@ Scenario: 5 选取有会员价且已参与'限时抢购'活动的商品，创建
 			"product_name": "商品5",
 			"product_price":100.00,
 			"discount": "50.0%",
-			"discount_money": 50.0,
+			"discount_money": 50.00,
 			"status":"进行中"
 		}]
 		"""
@@ -382,7 +382,7 @@ Scenario: 6 选取无会员价且已参与'买赠'活动的商品，创建积分
 				[{
 					"member_grade": "全部",
 					"discount": 50,
-					"discount_money": 50.0
+					"discount_money": 50.00
 				}]
 		}]
 		"""
@@ -393,7 +393,7 @@ Scenario: 6 选取无会员价且已参与'买赠'活动的商品，创建积分
 			"product_name": "商品6",
 			"product_price":100.00,
 			"discount": "50.0%",
-			"discount_money": 50.0,
+			"discount_money": 50.00,
 			"status":"进行中"
 		}]
 		"""
@@ -413,7 +413,7 @@ Scenario: 7 选取有会员价且已参与'买赠'活动的商品，创建积分
 				[{
 					"member_grade": "全部",
 					"discount": 50,
-					"discount_money": 50.0
+					"discount_money": 50.00
 				}]
 		}]
 		"""
@@ -424,7 +424,7 @@ Scenario: 7 选取有会员价且已参与'买赠'活动的商品，创建积分
 			"product_name": "商品7",
 			"product_price":100.00,
 			"discount": "50.0%",
-			"discount_money": 50.0,
+			"discount_money": 50.00,
 			"status":"进行中"
 		}]
 		"""
@@ -444,7 +444,7 @@ Scenario: 8 选取无会员价且已设置单品券的商品，创建积分应�
 				[{
 					"member_grade": "全部",
 					"discount": 50,
-					"discount_money": 50.0
+					"discount_money": 50.00
 				}]
 		}]
 		"""
@@ -455,7 +455,7 @@ Scenario: 8 选取无会员价且已设置单品券的商品，创建积分应�
 			"product_name": "商品8",
 			"product_price":100.00,
 			"discount": "50.0%",
-			"discount_money": 50.0,
+			"discount_money": 50.00,
 			"status":"进行中"
 		}]
 		"""
@@ -475,7 +475,7 @@ Scenario: 9 选取有会员价且已设置单品券的商品，创建积分应�
 				[{
 					"member_grade": "全部",
 					"discount": 50,
-					"discount_money": 50.0
+					"discount_money": 50.00
 				}]
 		}]
 		"""
@@ -486,7 +486,7 @@ Scenario: 9 选取有会员价且已设置单品券的商品，创建积分应�
 			"product_name": "商品9",
 			"product_price":100.00,
 			"discount": "50.0%",
-			"discount_money": 50.0,
+			"discount_money": 50.00,
 			"status":"进行中"
 		}]
 		"""

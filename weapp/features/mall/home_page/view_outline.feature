@@ -32,7 +32,7 @@ Background:
 			"model": {
 				"models": {
 					"standard": {
-						"price": 11.1,
+						"price": 11.10,
 						"stock_type": "无限"
 					}
 				}
@@ -43,7 +43,7 @@ Background:
 			"model": {
 				"models": {
 					"standard": {
-						"price": 12.0,
+						"price": 12.00,
 						"stock_type": "有限",
 						"stocks": 3
 					}
@@ -55,7 +55,7 @@ Background:
 			"model": {
 				"models": {
 					"standard": {
-						"price": 3.0
+						"price": 3.00
 					}
 				}
 			}
@@ -82,7 +82,7 @@ Background:
 			"model": {
 				"models": {
 					"standard": {
-						"price": 22.2,
+						"price": 22.20,
 						"stock_type": "无限"
 					}
 				}
@@ -191,7 +191,7 @@ Scenario:2 获得商铺首页经营概况的订单数量信息
 		"""
 		{
 			"order_count_for_yesterday": 3,
-			"order_money_for_yesterday": 28.2
+			"order_money_for_yesterday": 28.20
 		}
 		"""
 
@@ -252,10 +252,10 @@ Scenario:4 获得店铺首页的购买趋势
 	Given jobs登录系统
 	#当今天为最后一天时不显示今天的数据，所以只有六天
 	Then jobs能获取'7天'购买趋势
-		| date  | product_count | money |
-		| 6天前 | 1             | 11.1  |
-		| 5天前 | 2             | 22.2  |
-		| 4天前 | 3             | 33.3  |
-		| 3天前 | 2             | 22.2  |
-		| 2天前 | 0             | 0.0   |
-		| 1天前 | 3             | 33.3  |
+		| date  | product_count | money  |
+		| 6天前 | 1             | 11.10  |
+		| 5天前 | 2             | 22.20  |
+		| 4天前 | 3             | 33.30  |
+		| 3天前 | 2             | 22.20  |
+		| 2天前 | 0             | 0.00   |
+		| 1天前 | 3             | 33.30  |

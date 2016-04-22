@@ -131,7 +131,7 @@ Background:
 			"rules": [{
 				"member_grade": "全部会员",
 				"discount": 50,
-				"discount_money": 50.0
+				"discount_money": 50.00
 			}]
 		}]
 		"""
@@ -139,28 +139,28 @@ Background:
 		"""
 		[{
 			"name": "多商品券01",
-			"money": 1,
+			"money": 1.00,
 			"start_date": "2天前",
 			"end_date": "1天前",
 			"coupon_id_prefix": "coupon1_id_",
 			"coupon_product": "多商品券,商品2"
 		},{
 			"name": "多商品券02",
-			"money": 5,
+			"money": 5.00,
 			"start_date": "今天",
 			"end_date": "1天后",
 			"coupon_id_prefix": "coupon2_id_",
 			"coupon_product": "多商品券"
 		},{
 			"name": "多商品券03",
-			"money": 10,
+			"money": 10.00,
 			"start_date": "今天",
 			"end_date": "2天后",
 			"coupon_id_prefix": "coupon3_id_",
 			"coupon_product": "多商品券"
 		},{
 			"name": "多商品失效活动",
-			"money": 1,
+			"money": 1.00,
 			"start_date": "今天",
 			"end_date": "1天后",
 			"coupon_id_prefix": "coupon4_id_",

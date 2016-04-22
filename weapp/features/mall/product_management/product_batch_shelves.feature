@@ -12,38 +12,38 @@ Background:
 		"""
 		[{
 			"name": "东坡肘子",
-			"price": 20.0,
+			"price": 20.00,
 			"stock_type": "有限",
 			"stocks": 3,
 			"display_index": 0,
 			"shelve_type": "上架"
 		}, {
 			"name": "叫花鸡",
-			"price": 30.0,
+			"price": 30.00,
 			"stock_type": "无限",
 			"display_index":1,
 			"shelve_type": "上架"
 		}, {
 			"name": "红烧肉",
-			"price": 20.0,
+			"price": 20.00,
 			"stock_type": "有限",
 			"stocks": 3,
 			"display_index":2,
 			"shelve_type": "上架"
 		}, {
 			"name": "武昌鱼",
-			"price": 30.0,
+			"price": 30.00,
 			"stock_type": "有限",
 			"stocks": 3,
 			"shelve_type": "下架"
 		}, {
 			"name": "水煮肉",
-			"price": 20.0,
+			"price": 20.00,
 			"stock_type": "无限",
 			"shelve_type": "下架"
 		}, {
 			"name": "梅菜扣肉",
-			"price": 20.0,
+			"price": 20.00,
 			"stock_type": "有限",
 			"stocks": 3,
 			"display_index": 0,
@@ -58,21 +58,21 @@ Scenario:1 对上架商品进行批量下架
 		"""
 		[{
 			"name": "叫花鸡",
-			"price": 30.0,
+			"price": 30.00,
 			"stock_type": "无限",
 			"display_index":1
 		}, {
 			"name": "红烧肉",
-			"price": 20.0,
+			"price": 20.00,
 			"stocks": 3,
 			"display_index":2
 		}, {
 			"name": "梅菜扣肉",
-			"price": 20.0,
+			"price": 20.00,
 			"stocks": 3
 		}, {
 			"name": "东坡肘子",
-			"price": 20.0,
+			"price": 20.00,
 			"stocks": 3,
 			"display_index": 0
 		}]
@@ -91,30 +91,30 @@ Scenario:1 对上架商品进行批量下架
 		"""
 		[{
 			"name": "梅菜扣肉",
-			"price": 20.0,
+			"price": 20.00,
 			"stock_type": "有限",
 			"stocks": 3
 		}, {
 			"name": "红烧肉",
-			"price": 20.0,
+			"price": 20.00,
 			"stock_type": "有限",
 			"stocks": 3
 		}, {
 			"name": "叫花鸡",
-			"price": 30.0,
+			"price": 30.00,
 			"stock_type": "无限"
 		}, {
 			"name": "东坡肘子",
-			"price": 20.0,
+			"price": 20.00,
 			"stock_type": "有限",
 			"stocks": 3
 		}, {
 			"name": "水煮肉",
-			"price": 20.0,
+			"price": 20.00,
 			"stock_type": "无限"
 		}, {
 			"name": "武昌鱼",
-			"price": 30.0,
+			"price": 30.00,
 			"stock_type": "有限"
 		}]
 		"""
@@ -126,11 +126,11 @@ Scenario:2 对下架商品进行批量上架
 		"""
 		[{
 			"name": "水煮肉",
-			"price": 20.0,
+			"price": 20.00,
 			"stock_type": "无限"
 		}, {
 			"name": "武昌鱼",
-			"price": 30.0,
+			"price": 30.00,
 			"stocks": 3
 		}]
 		"""
@@ -145,35 +145,35 @@ Scenario:2 对下架商品进行批量上架
 		"""
 		[{
 			"name": "叫花鸡",
-			"price": 30.0,
+			"price": 30.00,
 			"stock_type": "无限",
 			"display_index":1
 		}, {
 			"name": "红烧肉",
-			"price": 20.0,
+			"price": 20.00,
 			"stock_type": "有限",
 			"stocks": 3,
 			"display_index":2
 		}, {
 			"name": "梅菜扣肉",
-			"price": 20.0,
+			"price": 20.00,
 			"stock_type": "有限",
 			"stocks": 3,
 			"display_index": 0
 		}, {
 			"name": "水煮肉",
-			"price": 20.0,
+			"price": 20.00,
 			"stock_type": "无限",
 			"display_index": 0
 		}, {
 			"name": "武昌鱼",
-			"price": 30.0,
+			"price": 30.00,
 			"stock_type": "有限",
 			"stocks": 3,
 			"display_index": 0
 		}, {
 			"name": "东坡肘子",
-			"price": 20.0,
+			"price": 20.00,
 			"stock_type": "有限",
 			"stocks": 3,
 			"display_index": 0
@@ -187,7 +187,7 @@ Scenario:3 待售商品上架后，排序重复，自动变为0
 		"""
 		{
 			"name": "东坡肘子",
-			"price": 20.0,
+			"price": 20.00,
 			"display_index": 1,
 			"stocks": 3
 		}
@@ -196,19 +196,19 @@ Scenario:3 待售商品上架后，排序重复，自动变为0
 		"""
 		[{
 			"name": "东坡肘子",
-			"price": 20.0,
+			"price": 20.00,
 			"stock_type": "有限",
 			"stocks": 3,
 			"display_index": 1
 		}, {
 			"name": "红烧肉",
-			"price": 20.0,
+			"price": 20.00,
 			"stock_type": "有限",
 			"stocks": 3,
 			"display_index":2
 		}, {
 			"name": "梅菜扣肉",
-			"price": 20.0,
+			"price": 20.00,
 			"stock_type": "有限",
 			"stocks": 3,
 			"display_index": 0
@@ -225,30 +225,30 @@ Scenario:3 待售商品上架后，排序重复，自动变为0
 		"""
 		[{
 			"name": "东坡肘子",
-			"price": 20.0,
+			"price": 20.00,
 			"stock_type": "有限",
 			"stocks": 3,
 			"display_index": 1
 		}, {
 			"name": "红烧肉",
-			"price": 20.0,
+			"price": 20.00,
 			"stock_type": "有限",
 			"stocks": 3,
 			"display_index":2
 		}, {
 			"name": "梅菜扣肉",
-			"price": 20.0,
+			"price": 20.00,
 			"stock_type": "有限",
 			"stocks": 3,
 			"display_index": 0
 		}, {
 			"name": "水煮肉",
-			"price": 20.0,
+			"price": 20.00,
 			"stock_type": "无限",
 			"display_index":0
 		}, {
 			"name": "武昌鱼",
-			"price": 30.0,
+			"price": 30.00,
 			"stock_type": "有限",
 			"stocks": 3,
 			"display_index":0

@@ -61,7 +61,7 @@ Background:
 			"model": {
 				"models": {
 					"standard": {
-						"price": 12.0,
+						"price": 12.00,
 						"weight": 1.0,
 						"stock_type": "有限",
 						"stocks": 12

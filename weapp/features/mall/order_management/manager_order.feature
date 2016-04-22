@@ -17,7 +17,7 @@ Background:
 			"model": {
 				"models": {
 					"standard": {
-						"price": 9.9,
+						"price": 9.90,
 						"stock_type": "有限",
 						"stocks": 100
 					}
@@ -28,7 +28,7 @@ Background:
 			"model": {
 				"models": {
 					"standard": {
-						"price": 10,
+						"price": 10.00,
 						"stock_type": "有限",
 						"stocks": 100
 					}
@@ -43,7 +43,7 @@ Background:
 				"id": "0000001",
 				"password": "1234567",
 				"status": "未激活",
-				"price": 8.7
+				"price": 8.70
 			}]
 		}
 		"""
@@ -62,7 +62,7 @@ Background:
 		"""
 		[{
 			"name": "优惠券规则1",
-			"money": "1",
+			"money": "1.00",
 			"count": 1,
 			"expire_days": "1",
 			"using_limit": "无限制",
@@ -121,7 +121,7 @@ Scenario:1 购买商品后，可以获得订单列表
 			}]
 		}, {
 			"status": "待支付",
-			"price": 9.9,
+			"price": 9.90,
 			"customer_message": "bill的订单备注1",
 			"buyer": "bill",
 			"products": [{
@@ -165,13 +165,13 @@ Scenario:2 购买商品后，管理员通过后台管理系统可以查看订单
 			"methods_of_payment":"微信支付",
 			"status":"待支付",
 			"actions": ["修改价格", "取消订单", "支付"],
-			"final_price": 9.9,
+			"final_price": 9.90,
 			"ship_name":"bill",
 			"ship_tel":"13811223344",
 			"ship_address": "泰兴大厦",
 			"products": [{
 				"name": "商品1",
-				"price": 9.9,
+				"price": 9.90,
 				"count": 1
 			}],
 			"customer_message": "bill的订单备注1"
@@ -186,13 +186,13 @@ Scenario:2 购买商品后，管理员通过后台管理系统可以查看订单
 			"methods_of_payment":"微信支付",
 			"status":"待发货",
 			"actions": ["发货", "申请退款"],
-			"final_price": 9.9,
+			"final_price": 9.90,
 			"ship_name":"bill",
 			"ship_tel":"13811223344",
 			"ship_address": "泰兴大厦",
 			"products": [{
 				"name": "商品1",
-				"price": 9.9,
+				"price": 9.90,
 				"count": 1
 			}],
 			"customer_message": "bill的订单备注1"
@@ -215,13 +215,13 @@ Scenario:2 购买商品后，管理员通过后台管理系统可以查看订单
 			"methods_of_payment":"微信支付",
 			"status":"已发货",
 			"actions": ["标记完成", "修改物流", "申请退款"],
-			"final_price": 9.9,
+			"final_price": 9.90,
 			"ship_name":"bill",
 			"ship_tel":"13811223344",
 			"ship_address": "泰兴大厦",
 			"products": [{
 				"name": "商品1",
-				"price": 9.9,
+				"price": 9.90,
 				"count": 1
 			}],
 			"customer_message": "bill的订单备注1"
@@ -236,13 +236,13 @@ Scenario:2 购买商品后，管理员通过后台管理系统可以查看订单
 			"methods_of_payment":"微信支付",
 			"status":"已完成",
 			"actions": ["申请退款"],
-			"final_price": 9.9,
+			"final_price": 9.90,
 			"ship_name":"bill",
 			"ship_tel":"13811223344",
 			"ship_address": "泰兴大厦",
 			"products": [{
 				"name": "商品1",
-				"price": 9.9,
+				"price": 9.90,
 				"count": 1
 			}],
 			"customer_message": "bill的订单备注1"
@@ -258,13 +258,13 @@ Scenario:2 购买商品后，管理员通过后台管理系统可以查看订单
 			"methods_of_payment":"微信支付",
 			"status":"退款中",
 			"actions": [],
-			"final_price": 9.9,
+			"final_price": 9.90,
 			"ship_name":"bill",
 			"ship_tel":"13811223344",
 			"ship_address": "泰兴大厦",
 			"products": [{
 				"name": "商品1",
-				"price": 9.9,
+				"price": 9.90,
 				"count": 1
 			}],
 			"customer_message": "bill的订单备注1"
@@ -326,7 +326,7 @@ Scenario:3 购买商品后并支付,管理员通过后台管理系统点击'取�
 		"""
 		{
 			"coupon_1": {
-				"money": 1.0,
+				"money": 1.00,
 				"status": "已使用",
 				"consumer": "bill",
 				"target": "bill"
@@ -337,7 +337,7 @@ Scenario:3 购买商品后并支付,管理员通过后台管理系统点击'取�
 		"""
 		{
 			"status": "已用完",
-			"price": 0
+			"price": 0.00
 		}
 		"""
 
@@ -370,7 +370,7 @@ Scenario:3 购买商品后并支付,管理员通过后台管理系统点击'取�
 		"""
 		{
 			"coupon_1": {
-				"money": 1.0,
+				"money": 1.00,
 				"status": "未使用",
 				"consumer": "",
 				"target": "bill"
@@ -381,15 +381,15 @@ Scenario:3 购买商品后并支付,管理员通过后台管理系统点击'取�
 		"""
 		{
 			"status": "已使用",
-			"price": 8.7,
+			"price": 8.70,
 			"log": [{
 				"merchant": "jobs",
 				"order_id": "使用",
-				"price": 8.7
+				"price": 8.70
 			}, {
 				"merchant": "jobs",
 				"order_id": "返还",
-				"price": -8.7
+				"price": -8.70
 			}]
 		}
 		"""
@@ -424,14 +424,14 @@ Scenario:4 订单列表显示收货人姓名
 		[{
 			"order_no":"004",
 			"status": "待支付",
-			"final_price":9.9,
+			"final_price":9.90,
 			"customer_message": "bill的订单备注4",
 			"buyer": "bill",
 			"ship_name": "张大大",
 			"products": [{
 				"product_name": "商品1",
 				"count": 1,
-				"price":9.9
+				"price":9.90
 			}]
 		}]
 		"""

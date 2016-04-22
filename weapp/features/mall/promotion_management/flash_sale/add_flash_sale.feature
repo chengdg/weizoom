@@ -102,7 +102,7 @@ Background:
 			"rules": [{
 				"member_grade": "全部",
 				"discount": 50,
-				"discount_money": 50.0
+				"discount_money": 50.00
 			}]
 		},{
 			"name": "商品5积分应用",
@@ -113,7 +113,7 @@ Background:
 			"rules": [{
 				"member_grade": "全部",
 				"discount": 50,
-				"discount_money": 50.0
+				"discount_money": 50.00
 			}]
 		}]
 		"""
@@ -181,7 +181,7 @@ Scenario: 2 选取多规格商品，创建限时抢购活动（广告语非空�
 			"name": "商品2限时抢购",
 			"promotion_title":"抢购抢购啦",
 			"product_name": "商品2",
-			"product_price": "100.0 ~ 200.0",
+			"product_price": "100.00 ~ 200.00",
 			"promotion_price": 80.00,
 			"status": "进行中",
 			"start_date": "今天",

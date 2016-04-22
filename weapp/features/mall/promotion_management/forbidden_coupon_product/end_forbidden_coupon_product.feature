@@ -64,18 +64,18 @@ Scenario: 1 手动结束单个禁用优惠券商品
 		"""
 		[{
 			"product_name": "商品3",
-			"product_price": 100.0,
+			"product_price": 100.00,
 			"status": "进行中",
 			"is_permanant_active": 1
 		},{
 			"product_name": "商品2",
-			"product_price": 100.0,
+			"product_price": 100.00,
 			"status": "进行中",
 			"start_date": "今天",
 			"end_date": "1天后"
 		},{
 			"product_name": "商品1",
-			"product_price": 100.0,
+			"product_price": 100.00,
 			"status": "未开始",
 			"start_date": "明天",
 			"end_date": "2天后"
@@ -113,18 +113,18 @@ Scenario: 2 批量结束多个禁用优惠券商品
 		"""
 		[{
 			"product_name": "商品3",
-			"product_price": 100.0,
+			"product_price": 100.00,
 			"status": "进行中",
 			"is_permanant_active": 1
 		},{
 			"product_name": "商品2",
-			"product_price": 100.0,
+			"product_price": 100.00,
 			"status": "进行中",
 			"start_date": "今天",
 			"end_date": "1天后"
 		},{
 			"product_name": "商品1",
-			"product_price": 100.0,
+			"product_price": 100.00,
 			"status": "未开始",
 			"start_date": "明天",
 			"end_date": "2天后"
