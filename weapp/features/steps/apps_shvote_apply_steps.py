@@ -145,10 +145,10 @@ def __get_into_shvote_signup_pages(context):
 def step_impl(context, webapp_user_name):
 	webapp_owner_id = str(context.webapp_owner_id)
 	shvote_id = context.shvote_id
-	print ">>>> Shvote Mobile Page --- Sign Up ----[start]>>>>"
-	print "webapp_owner_id:"+webapp_owner_id
-	print "shvote_id:"+shvote_id
-	print "<<<< Shvote Mobile Page --- Sign Up ----[ end ] <<<<"
+	print (">>>> Shvote Mobile Page --- Sign Up ----[start]>>>>")
+	print ("webapp_owner_id:"+webapp_owner_id)
+	print ("shvote_id:"+shvote_id)
+	print ("<<<< Shvote Mobile Page --- Sign Up ----[ end ] <<<<")
 
 	response = __get_into_shvote_signup_pages(context)#resp.context=> data ; resp.content => Http Text
 	apps_util.debug_print(response.content)
