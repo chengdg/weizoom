@@ -8,7 +8,7 @@ Background:
 		"""
 		[{
 			"name":"商品1",
-			"price":10.0
+			"price":10.00
 		}]
 		"""
 	When jobs添加优惠券规则
@@ -49,7 +49,7 @@ Background:
 			"start_date": "今天",
 			"end_date": "2天后",
 			"receive_method":"下单领取",
-			"limit_money": 100,
+			"limit_money": 100.00,
 			"detail": "下订单领红包1",
 			"share_pic": "/static/upload/6_20140710/1404981209095_5.jpg",
 			"remark":"分享描述1"
