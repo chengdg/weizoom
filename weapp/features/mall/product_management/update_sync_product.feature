@@ -93,7 +93,7 @@ Background:
 						}
 					}
 				},
-				"postage":10.0
+				"postage":10.00
 			},{
 				"name":"bill商品2",
 				"model": {
@@ -112,13 +112,13 @@ Background:
 				"model": {
 					"models": {
 						"黑色 S": {
-							"price": 30.0,
+							"price": 30.00,
 							"weight": 1,
 							"stock_type": "有限",
 							"stocks": 100
 						},
 						"白色 S": {
-							"price": 30.0,
+							"price": 30.00,
 							"weight": 2,
 							"stock_type": "无限"
 						}
@@ -339,7 +339,7 @@ Scenario:3 商品参与积分应用活动,修改下单位置为'供货商'
 			"product_name": "bill商品1下单位置商城",
 			"is_permanant_active": false,
 			"discount": 50,
-			"discount_money": 50.0
+			"discount_money": 50.00
 		}]
 		"""
 	When jobs更新商品'bill商品1下单位置商城'

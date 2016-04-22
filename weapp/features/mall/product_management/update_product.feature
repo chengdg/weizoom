@@ -73,7 +73,7 @@ Background:
 			"model": {
 				"models": {
 					"standard": {
-						"price": 11.0,
+						"price": 11.00,
 						"weight": 5,
 						"stock_type": "无限"
 					}
@@ -94,7 +94,7 @@ Background:
 			"model": {
 				"models": {
 					"standard": {
-						"price": 12.0,
+						"price": 12.00,
 						"weight": 5,
 						"stock_type": "有限",
 						"stocks": 3
@@ -104,7 +104,7 @@ Background:
 			"pay_interfaces":[{
 				"type": "在线支付"
 			}],
-			"postage": 10.0
+			"postage": 10.00
 		}]
 		"""
 	Then jobs能获取商品列表
@@ -131,7 +131,7 @@ Scenario:1 更新商品
 			"model": {
 				"models": {
 					"standard": {
-						"price": 111.0,
+						"price": 111.00,
 						"weight": 15.0,
 						"stock_type": "有限",
 						"stocks": 5
@@ -163,7 +163,7 @@ Scenario:1 更新商品
 			"model": {
 				"models": {
 					"standard": {
-						"price": 111.0,
+						"price": 111.00,
 						"weight": 15.0,
 						"stock_type": "有限",
 						"stocks": 5
@@ -190,7 +190,7 @@ Scenario:1 更新商品
 			"model": {
 				"models": {
 					"standard": {
-						"price": 12.0,
+						"price": 12.00,
 						"weight": 5,
 						"stock_type": "有限",
 						"stocks": 3
@@ -224,7 +224,7 @@ Scenario:1 更新商品
 			"model": {
 				"models": {
 					"standard": {
-						"price": 12.0,
+						"price": 12.00,
 						"weight": 5,
 						"stock_type": "有限",
 						"stocks": 3
@@ -273,6 +273,6 @@ Scenario:2 切换邮费配置
 		"""
 		{
 			"name": "商品2",
-			"postage": 10.0
+			"postage": 10.00
 		}
 		"""
