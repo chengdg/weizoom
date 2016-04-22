@@ -102,7 +102,7 @@ Scenario:1 添加商品
 			"model": {
 				"models": {
 					"standard": {
-						"price": 12.0,
+						"price": 12.00,
 						"weight": 5.5,
 						"stock_type": "有限",
 						"stocks": 3
@@ -153,7 +153,7 @@ Scenario:1 添加商品
 			"model": {
 				"models": {
 					"standard": {
-						"price": 12.0,
+						"price": 12.00,
 						"weight": 5.5,
 						"stock_type": "有限",
 						"stocks": 3
@@ -178,7 +178,7 @@ Scenario:2 添加'免运费'配置的商品
 		[{
 			"name": "红烧肉",
 			"category": "",
-			"price": 12.0,
+			"price": 12.00,
 			"pic_url": "/standard_static/test_resource_img/hangzhou2.jpg",
 			"introduction": "红烧肉的简介",
 			"detail": "红烧肉的详情",
@@ -191,7 +191,7 @@ Scenario:2 添加'免运费'配置的商品
 			"model": {
 				"models": {
 					"standard": {
-						"price": 12.0,
+						"price": 12.00,
 						"weight": 5.5,
 						"stock_type": "有限",
 						"stocks": 3
@@ -218,7 +218,7 @@ Scenario:2 添加'免运费'配置的商品
 			"model": {
 				"models": {
 					"standard": {
-						"price": 12.0,
+						"price": 12.00,
 						"weight": 5.5,
 						"stock_type": "有限",
 						"stocks": 3
@@ -312,11 +312,11 @@ Scenario:4 添加有会员折扣的商品
 			"model": {
 				"models":{
 					"M": {
-						"price": 300,
+						"price": 300.00,
 						"stock_type": "无限"
 					},
 					"S": {
-						"price": 300,
+						"price": 300.00,
 						"stock_type": "无限"
 					}
 				}
@@ -348,11 +348,11 @@ Scenario:4 添加有会员折扣的商品
 			"model": {
 				"models":{
 					"M": {
-						"price": 300,
+						"price": 300.00,
 						"stock_type": "无限"
 					},
 					"S": {
-						"price": 300,
+						"price": 300.00,
 						"stock_type": "无限"
 					}
 				}
@@ -371,7 +371,7 @@ Scenario:5 添加'配送时间'配置的商品
 		[{
 			"name": "红烧肉",
 			"category": "",
-			"price": 12.0,
+			"price": 12.00,
 			"pic_url": "/standard_static/test_resource_img/hangzhou2.jpg",
 			"introduction": "红烧肉的简介",
 			"detail": "红烧肉的详情",
@@ -384,7 +384,7 @@ Scenario:5 添加'配送时间'配置的商品
 			"model": {
 				"models": {
 					"standard": {
-						"price": 12.0,
+						"price": 12.00,
 						"weight": 5.5,
 						"stock_type": "有限",
 						"stocks": 3
@@ -412,7 +412,7 @@ Scenario:5 添加'配送时间'配置的商品
 			"model": {
 				"models": {
 					"standard": {
-						"price": 12.0,
+						"price": 12.00,
 						"weight": 5.5,
 						"stock_type": "有限",
 						"stocks": 3
@@ -434,7 +434,7 @@ Scenario:5 添加'配送时间'配置的商品
 		[{
 			"name": "红烧肉-无配送时间",
 			"category": "",
-			"price": 12.0,
+			"price": 12.00,
 			"pic_url": "/standard_static/test_resource_img/hangzhou2.jpg",
 			"introduction": "红烧肉的简介",
 			"detail": "红烧肉的详情",
@@ -447,7 +447,7 @@ Scenario:5 添加'配送时间'配置的商品
 			"model": {
 				"models": {
 					"standard": {
-						"price": 12.0,
+						"price": 12.00,
 						"weight": 5.5,
 						"stock_type": "有限",
 						"stocks": 3
@@ -475,7 +475,7 @@ Scenario:5 添加'配送时间'配置的商品
 			"model": {
 				"models": {
 					"standard": {
-						"price": 12.0,
+						"price": 12.00,
 						"weight": 5.5,
 						"stock_type": "有限",
 						"stocks": 3
@@ -507,7 +507,7 @@ Scenario:6 添加无规格新商品,支持开票
 			"model": {
 					"models": {
 						"standard": {
-							"price": 12.0,
+							"price": 12.00,
 							"weight": 5.5,
 							"stock_type": "有限",
 							"stocks": 3
@@ -527,7 +527,7 @@ Scenario:6 添加无规格新商品,支持开票
 			"model": {
 					"models": {
 						"standard": {
-							"price": 12.0,
+							"price": 12.00,
 							"weight": 5.5,
 							"stock_type": "有限",
 							"stocks": 3
@@ -549,13 +549,13 @@ Scenario:7 添加多规格新商品,支持开票
 			"model": {
 				"models": {
 					"黑色 S": {
-						"price": 10.0,
+						"price": 10.00,
 						"weight": 3.1,
 						"stock_type": "有限",
 						"stocks": 3
 					},
 					"白色 S": {
-						"price": 9.1,
+						"price": 9.10,
 						"weight": 1.0,
 						"stock_type": "无限"
 					}
@@ -571,13 +571,13 @@ Scenario:7 添加多规格新商品,支持开票
 			"model": {
 				"models": {
 					"黑色 S": {
-						"price": 10.0,
+						"price": 10.00,
 						"weight": 3.1,
 						"stock_type": "有限",
 						"stocks": 3
 					},
 					"白色 S": {
-						"price": 9.1,
+						"price": 9.10,
 						"weight": 1.0,
 						"stock_type": "无限"
 					}
@@ -600,7 +600,7 @@ Scenario:8 添加新商品,不支持开票
 			"model": {
 					"models": {
 						"standard": {
-							"price": 12.0,
+							"price": 12.00,
 							"weight": 5.5,
 							"stock_type": "有限",
 							"stocks": 3
@@ -620,7 +620,7 @@ Scenario:8 添加新商品,不支持开票
 			"model": {
 					"models": {
 						"standard": {
-							"price": 12.0,
+							"price": 12.00,
 							"weight": 5.5,
 							"stock_type": "有限",
 							"stocks": 3

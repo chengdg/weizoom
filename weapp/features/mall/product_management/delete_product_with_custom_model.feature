@@ -39,13 +39,13 @@ Background:
 			"model": {
 				"models": {
 					"黑色 S": {
-						"price": 10.0,
+						"price": 10.00,
 						"weight": 3.1,
 						"stock_type": "有限",
 						"stocks": 3
 					},
 					"白色 S": {
-						"price": 9.1,
+						"price": 9.10,
 						"weight": 1.0,
 						"stock_type": "无限"
 					}
@@ -79,13 +79,13 @@ Scenario:1 删除单条商品规格
 			"model": {
 				"models": {
 					"黑色 S": {
-						"price": 10.0,
+						"price": 10.00,
 						"weight": 3.1,
 						"stock_type": "有限",
 						"stocks": 3
 					},
 					"白色 S": {
-						"price": 9.1,
+						"price": 9.10,
 						"weight": 1.0,
 						"stock_type": "无限"
 					}
@@ -101,7 +101,7 @@ Scenario:1 删除单条商品规格
 			"model": {
 				"models": {
 					"白色 S": {
-						"price": 9.1,
+						"price": 9.10,
 						"weight": 1.0,
 						"stock_type": "无限"
 					}
@@ -116,7 +116,7 @@ Scenario:1 删除单条商品规格
 			"model": {
 				"models": {
 					"白色 S": {
-						"price": 9.1,
+						"price": 9.10,
 						"weight": 1.0,
 						"stock_type": "无限"
 					}
@@ -139,7 +139,7 @@ Scenario:2 删除所有商品规格
 			"model": {
 				"models": {
 					"白色 S": {
-						"price": 9.1,
+						"price": 9.10,
 						"weight": 1.0,
 						"stock_type": "无限"
 					}
@@ -154,7 +154,7 @@ Scenario:2 删除所有商品规格
 			"model": {
 				"models": {
 					"standard": {
-						"price": 111.0,
+						"price": 111.00,
 						"weight": 15.0,
 						"stock_type": "有限",
 						"stocks": 5
@@ -170,7 +170,7 @@ Scenario:2 删除所有商品规格
 			"model": {
 				"models": {
 					"standard": {
-						"price": 111.0,
+						"price": 111.00,
 						"weight": 15.0,
 						"stock_type": "有限",
 						"stocks": 5
@@ -210,7 +210,7 @@ Scenario:3 禁用与启用商品规格
 			"model": {
 				"models": {
 					"黑色 S": {
-						"price": 10.0,
+						"price": 10.00,
 						"weight": 3.1,
 						"stock_type": "有限",
 						"stocks": 3
@@ -226,7 +226,7 @@ Scenario:3 禁用与启用商品规格
 			"model": {
 				"models": {
 					"黑色 S": {
-						"price": 10.0,
+						"price": 10.00,
 						"weight": 3.1,
 						"stock_type": "有限",
 						"stocks": 3
@@ -242,7 +242,7 @@ Scenario:3 禁用与启用商品规格
 			"model": {
 				"models": {
 					"standard": {
-						"price": 9.9,
+						"price": 9.90,
 						"weight": 1.0,
 						"stock_type": "有限",
 						"stocks": 1
@@ -258,7 +258,7 @@ Scenario:3 禁用与启用商品规格
 			"model": {
 				"models": {
 					"standard": {
-						"price": 9.9,
+						"price": 9.90,
 						"weight": 1.0,
 						"stock_type": "有限",
 						"stocks": 1
