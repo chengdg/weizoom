@@ -40,7 +40,7 @@ Background:
 			"rules": [{
 				"member_grade": "全部会员",
 				"discount": 50,
-				"discount_money": 50.0
+				"discount_money": 50.00
 			}]
 		}, {
 			"name": "商品2积分应用",
@@ -52,7 +52,7 @@ Background:
 			"rules": [{
 				"member_grade": "全部会员",
 				"discount": 50,
-				"discount_money": 50.0
+				"discount_money": 50.00
 			}]
 		}, {
 			"name": "商品3积分应用",
@@ -64,7 +64,7 @@ Background:
 			"rules": [{
 				"member_grade": "全部会员",
 				"discount": 50,
-				"discount_money": 50.0
+				"discount_money": 50.00
 			}]
 		}, {
 			"name": "商品4积分应用",
@@ -76,7 +76,7 @@ Background:
 			"rules": [{
 				"member_grade": "全部会员",
 				"discount": 50,
-				"discount_money": 50.0
+				"discount_money": 50.00
 			}]
 		}]
 		"""
