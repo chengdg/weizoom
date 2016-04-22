@@ -34,37 +34,37 @@ Background:
 			"name": "商品1可单行显示",
 			"categories": "分组1,分组2,分组3",
 			"status":"上架",
-			"price": 1.0
+			"price": 1.00
 		},{
 			"name": "商品2可两行显示",
 			"categories": "分组1,分组2,分组3",
 			"status":"上架",
-			"price": 2.0
+			"price": 2.00
 		},{
 			"name": "商品3不可两行显示",
 			"categories": "分组1,分组2,分组3",
 			"status":"上架",
-			"price": 3.0
+			"price": 3.00
 		},{
 			"name": "商品4",
 			"categories": "分组1,分组2,分组3",
 			"status":"上架",
-			"price": 4.0
+			"price": 4.00
 		},{
 			"name": "商品5",
 			"categories": "分组1,分组2,分组3",
 			"status":"上架",
-			"price": 5.0
+			"price": 5.00
 		},{
 			"name": "商品6",
 			"categories": "分组1,分组2,分组3",
 			"status":"上架",
-			"price": 6.0
+			"price": 6.00
 		},{
 			"name": "商品7",
 			"categories": "分组1,分组2,分组3",
 			"status":"下架",
-			"price": 7.0
+			"price": 7.00
 		}]
 		"""
 
@@ -263,25 +263,25 @@ Scenario:3 分类管理修改商品名，商品列表中使用该分类的商品
 				"index": 1,
 				"items":[{
 					"name":"商品7",
-					"price": 7.0
+					"price": 7.00
 				},{
 					"name":"商品6",
-					"price": 6.0
+					"price": 6.00
 				},{
 					"name":"商品5",
-					"price": 5.0
+					"price": 5.00
 				},{
 					"name":"商品4",
-					"price": 4.0
+					"price": 4.00
 				},{
 					"name":"商品3不可两行显示",
-					"price": 3.0
+					"price": 3.00
 				},{
 					"name":"商品2可两行显示",
-					"price": 2.0
+					"price": 2.00
 				},{
 					"name":"商品1可单行显示",
-					"price": 1.0
+					"price": 1.00
 				}],
 				"list_style1":"列表",
 				"list_style2":"默认样式"
