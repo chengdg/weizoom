@@ -77,12 +77,12 @@ Background:
 					"id": "0000001",
 					"password": "1234567",
 					"status": "未使用",
-					"price": 100
+					"price": 100.00
 				},{
 					"id": "0000002",
 					"password": "1",
 					"status": "未使用",
-					"price": 200
+					"price": 200.00
 				}]
 			}
 			"""
@@ -193,7 +193,7 @@ Background:
 						}
 					}
 				},
-				"postage":10.0
+				"postage":10.00
 			},{
 				"name":"bill商品2",
 				"created_at": "2015-05-03",
@@ -214,13 +214,13 @@ Background:
 				"model": {
 					"models": {
 						"黑色 S": {
-							"price": 30.0,
+							"price": 30.00,
 							"weight": 1,
 							"stock_type": "有限",
 							"stocks": 100
 						},
 						"白色 S": {
-							"price": 30.0,
+							"price": 30.00,
 							"weight": 2,
 							"stock_type": "无限"
 						}
@@ -291,13 +291,13 @@ Background:
 				"model": {
 					"models": {
 						"M": {
-							"price": 30.0,
+							"price": 30.00,
 							"weight": 1,
 							"stock_type": "有限",
 							"stocks": 100
 						},
 						"S": {
-							"price": 30.0,
+							"price": 30.00,
 							"weight": 2,
 							"stock_type": "无限"
 						}
@@ -753,14 +753,14 @@ Scenario:1 商家后台查看订单列表,包含自营平台同步过来的订�
 				"buyer":"lily",
 				"status": "待支付",
 				"final_price": 20.00,
-				"postage":10.0,
+				"postage":10.00,
 				"save_money":"",
 				"methods_of_payment": "微信支付",
 				"actions": ["支付","修改价格","取消订单"],
 				"products":
 					[{
 						"name":"bill商品1",
-						"price":10.0,
+						"price":10.00,
 						"count":1
 					}]
 			},{
@@ -873,14 +873,14 @@ Scenario:1 商家后台查看订单列表,包含自营平台同步过来的订�
 					"buyer":"lily",
 					"status": "待支付",
 					"final_price": 20.00,
-					"postage":10.0,
+					"postage":10.00,
 					"save_money":"",
 					"methods_of_payment": "微信支付",
 					"actions": ["支付","修改价格","取消订单"],
 					"products":
 						[{
 							"name":"bill商品1",
-							"price":10.0,
+							"price":10.00,
 							"count":1
 						}]
 				},{
@@ -976,14 +976,14 @@ Scenario:1 商家后台查看订单列表,包含自营平台同步过来的订�
 					"buyer":"lily",
 					"status": "待支付",
 					"final_price": 20.00,
-					"postage":10.0,
+					"postage":10.00,
 					"save_money":"",
 					"methods_of_payment": "微信支付",
 					"actions": ["支付","修改价格","取消订单"],
 					"products":
 						[{
 							"name":"bill商品1",
-							"price":10.0,
+							"price":10.00,
 							"count":1
 						}]
 				},{
@@ -1062,27 +1062,27 @@ Scenario:2 自营平台进行订单相关操作后,查看对应商家后台订�
 				"buyer":"lily",
 				"status": "待发货",
 				"final_price":42.00,
-				"postage":2.0,
+				"postage":2.00,
 				"save_money":0.00,
 				"methods_of_payment": "货到付款",
 				"actions": ["发货",取消订单"],
 				"products":[{
 						"name":"商品1a",
-						"price":10.0,
+						"price":10.00,
 						"count":1,
 						"supplier": "供货商1",
 						"status": "待发货",
 						"actions": ["发货"]
 					},{
 						"name":"bill商品2",
-						"price":20.0,
+						"price":20.00,
 						"count":1,
 						"supplier": "bill商家",
 						"status": "待发货",
 						"actions": ["发货"]
 					},{
 						"name":"tom商品1",
-						"price":10.0,
+						"price":10.00,
 						"count":1,
 						"supplier": "tom商家",
 						"status": "待发货",
@@ -1100,14 +1100,14 @@ Scenario:2 自营平台进行订单相关操作后,查看对应商家后台订�
 				"products":
 					[{
 						"name":"bill商品2",
-						"price":20.0,
+						"price":20.00,
 						"count":1,
 						"supplier": "bill商家",
 						"status": "待发货",
 						"actions": ["发货"]
 					},{
 						"name":"tom商品1",
-						"price":10.0,
+						"price":10.00,
 						"count":1,
 						"supplier": "tom商家",
 						"status": "待发货",
@@ -1125,7 +1125,7 @@ Scenario:2 自营平台进行订单相关操作后,查看对应商家后台订�
 				"products":
 					[{
 						"name":"bill商品11",
-						"price":10.0,
+						"price":10.00,
 						"count":5,
 						"supplier": "bill商家"
 					}]
@@ -1141,12 +1141,12 @@ Scenario:2 自营平台进行订单相关操作后,查看对应商家后台订�
 				"products":
 					[{
 						"name":"bill商品11",
-						"price":10.0,
+						"price":10.00,
 						"count":1,
 						"supplier": "bill商家"
 					},{
 						"name":"bill商品2",
-						"price":20.0,
+						"price":20.00,
 						"count":1,
 						"supplier": "bill商家"
 					}]
@@ -1160,12 +1160,12 @@ Scenario:2 自营平台进行订单相关操作后,查看对应商家后台订�
 				"products":
 					[{
 						"name":"商品1a",
-						"price":10.0,
+						"price":10.00,
 						"count":1,
 						"supplier": "供货商1"
 					},{
 						"name":"商品2a",
-						"price":20.0,
+						"price":20.00,
 						"count":1,
 						"supplier": "供货商2"
 					}]
@@ -1179,12 +1179,12 @@ Scenario:2 自营平台进行订单相关操作后,查看对应商家后台订�
 				"products":
 					[{
 						"name":"商品1a",
-						"price":10.0,
+						"price":10.00,
 						"count":1,
 						"supplier": "供货商1"
 					},{
 						"name":"商品1b",
-						"price":20.0,
+						"price":20.00,
 						"count":1,
 						"supplier": "供货商1"
 					}]
@@ -1198,7 +1198,7 @@ Scenario:2 自营平台进行订单相关操作后,查看对应商家后台订�
 				"products":
 					[{
 						"name":"bill商品11",
-						"price":10.0,
+						"price":10.00,
 						"count":1
 					}]
 		}]
@@ -1237,14 +1237,14 @@ Scenario:2 自营平台进行订单相关操作后,查看对应商家后台订�
 					"buyer":"lily",
 					"status": "待支付",
 					"final_price": 20.00,
-					"postage":10.0,
+					"postage":10.00,
 					"save_money":"",
 					"methods_of_payment": "微信支付",
 					"actions": ["支付","修改价格","取消订单"],
 					"products":
 						[{
 							"name":"bill商品1",
-							"price":10.0,
+							"price":10.00,
 							"count":1
 						}]
 				},{
@@ -1343,14 +1343,14 @@ Scenario:2 自营平台进行订单相关操作后,查看对应商家后台订�
 					"buyer":"lily",
 					"status": "待支付",
 					"final_price": 20.00,
-					"postage":10.0,
+					"postage":10.00,
 					"save_money":"",
 					"methods_of_payment": "微信支付",
 					"actions": ["支付","修改价格","取消订单"],
 					"products":
 						[{
 							"name":"bill商品1",
-							"price":10.0,
+							"price":10.00,
 							"count":1
 						}]
 				},{
@@ -1450,14 +1450,14 @@ Scenario:2 自营平台进行订单相关操作后,查看对应商家后台订�
 					"buyer":"lily",
 					"status": "待支付",
 					"final_price": 20.00,
-					"postage":10.0,
+					"postage":10.00,
 					"save_money":"",
 					"methods_of_payment": "微信支付",
 					"actions": ["支付","修改价格","取消订单"],
 					"products":
 						[{
 							"name":"bill商品1",
-							"price":10.0,
+							"price":10.00,
 							"count":1
 						}]
 				},{
@@ -1511,7 +1511,7 @@ Scenario:3 商家后台查看订单详情页,自营平台同步过来的订单
 				"products":
 					[{
 						"name":"bill商品2",
-						"price":19.0,
+						"price":19.00,
 						"count":2
 					}]
 			}
@@ -1576,7 +1576,7 @@ Scenario:3 商家后台查看订单详情页,自营平台同步过来的订单
 				"products":
 					[{
 						"name":"tom商品1",
-						"price":9.0,
+						"price":9.00,
 						"count":1
 					}]
 			}
