@@ -114,15 +114,15 @@ Scenario:1 添加禁用商品时商品查询弹框信息校验
 				[{
 					"member_grade": "普通会员",
 					"discount": 100,
-					"discount_money": 100.0
+					"discount_money": 100.00
 				},{
 					"member_grade": "铜牌会员",
 					"discount": 90,
-					"discount_money": 90.0
+					"discount_money": 90.00
 				},{
 					"member_grade": "银牌会员",
 					"discount": 80,
-					"discount_money": 80.0
+					"discount_money": 80.00
 				}]
 		}]
 		"""
