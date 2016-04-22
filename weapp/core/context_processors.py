@@ -345,7 +345,7 @@ def weapp_dialogs(request):
 		version = '1'
 	for dialog in resource_util.get_web_dialogs(version):
 		items.append(dialog['template_source'])
-		items.append('<script type="text/javascript" src="%s"></script>' % dialog['js_url_path'])
+		items.append('<script type="text/javascript" src="%s?v=1.00"></script>' % dialog['js_url_path'])
 		items.append('\n')
 
 	return {'weapp_dialogs': '\n'.join(items)}
