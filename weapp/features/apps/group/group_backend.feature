@@ -99,7 +99,7 @@ Background:
 			"model": {
 				"models": {
 					"standard": {
-						"price": 5,
+						"price": 5.00,
 						"weight": 1.0,
 						"stock_type": "无限"
 					}
@@ -115,7 +115,7 @@ Background:
 			}],
 			"model":{"models": {
 					"standard": {
-						"price": 12.0,
+						"price": 12.00,
 						"weight": 2.5,
 						"stock_type": "无限"
 					}
@@ -140,7 +140,7 @@ Background:
 			"model": {
 				"models": {
 					"standard": {
-						"price": 1.5,
+						"price": 1.50,
 						"weight": 0.5,
 						"stock_type": "有限",
 						"stocks": 50
@@ -166,7 +166,7 @@ Background:
 			"model": {
 				"models": {
 					"黑色 S": {
-						"price": 10.0,
+						"price": 10.00,
 						"weight": 3.1,
 						"stock_type": "有限",
 						"stocks": 3
@@ -191,7 +191,7 @@ Background:
 			"model": {
 				"models": {
 					"standard": {
-						"price": 50.0,
+						"price": 50.00,
 						"weight": 5.0,
 						"stock_type": "无限"
 					}
@@ -216,7 +216,7 @@ Background:
 			"model": {
 				"models": {
 					"standard": {
-						"price": 12.5,
+						"price": 12.50,
 						"weight": 1.5,
 						"stock_type": "有限",
 						"stocks": 200
@@ -241,7 +241,7 @@ Background:
 			"model": {
 				"models": {
 					"standard": {
-						"price": 20,
+						"price": 20.00,
 						"weight": 5,
 						"stock_type": "有限",
 						"stocks": 100
@@ -324,7 +324,7 @@ Background:
 			"rules": [{
 				"member_grade": "全部会员",
 				"discount": 50,
-				"discount_money": 50.0
+				"discount_money": 50.00
 			}]
 		}]
 		"""
@@ -351,12 +351,12 @@ Scenario:1 新建团购活动页面,查询商品列表
 		}
 		"""
 	Then job获得团购活动可以访问的已上架商品列表
-		|  name         | price | stocks | have_promotion | actions |
-		| 促销商品      | 5    |  无限   |                |  选取   |
-		| 酱牛肉        | 50    |  无限  |                |  选取   |
-		| 花生酱        | 12.5  |  200   |                |  选取   |
-		| 番茄酱        | 20    |  100   |                |  选取   |
-		| 起购数量商品  | 15    |  200   |                |  选取   |
+		|  name         | price    | stocks | have_promotion | actions |
+		| 促销商品      | 5.00     |  无限   |                |  选取   |
+		| 酱牛肉        | 50.00    |  无限  |                |  选取   |
+		| 花生酱        | 12.50    |  200   |                |  选取   |
+		| 番茄酱        | 20.00    |  100   |                |  选取   |
+		| 起购数量商品  | 15.00    |  200   |                |  选取   |
 
 
 @mall2 @apps_group @apps_group_backend @apps_group_backend_base
@@ -373,7 +373,7 @@ Scenario:2 新建未开启,已结束团购活动
 				"0":{
 					"group_type":"3",
 					"group_days":"1",
-					"group_price":"45"
+					"group_price":"45.00"
 					}
 			},
 			"ship_date":"20",
@@ -390,12 +390,12 @@ Scenario:2 新建未开启,已结束团购活动
 				"0":{
 					"group_type":"3",
 					"group_days":"1",
-					"group_price":"11"
+					"group_price":"11.00"
 					},
 				"1":{
 					"group_type":"10",
 					"group_days":"2",
-					"group_price":9.5
+					"group_price":9.50
 			}},
 			"ship_date":"15",
 			"product_counts":"200",
@@ -440,12 +440,12 @@ Scenario:3 开启团购活动
 				"0":{
 					"group_type":"3",
 					"group_days":"1",
-					"group_price":"45"
+					"group_price":"45.00"
 				},
 				"1":{
 					"group_type":"10",
 					"group_days":"2",
-					"group_price":"40"
+					"group_price":"40.00"
 				}},
 			"ship_date":"10",
 			"product_counts":"200",
@@ -495,7 +495,7 @@ Scenario:4 编辑未开启团购活动
 				"0":{
 						"group_type":10,
 						"group_days":3,
-						"group_price":45
+						"group_price":45.00
 					}
 			},
 			"ship_date":"15",
@@ -528,12 +528,12 @@ Scenario:4 编辑未开启团购活动
 				"0":{
 						"group_type":"3",
 						"group_days":"1",
-						"group_price":"10"
+						"group_price":"10.00"
 				},
 				"1":{
 						"group_type":"10",
 						"group_days":"2",
-						"group_price":"8"
+						"group_price":"8.00"
 			}},
 			"ship_date":"20",
 			"product_counts":"200",
@@ -569,7 +569,7 @@ Scenario:5 删除已结束团购活动
 				"0":{
 					"group_type":"3",
 					"group_days":"1",
-					"group_price":"42"
+					"group_price":"42.00"
 				}
 			},
 			"ship_date":"20",
@@ -585,7 +585,7 @@ Scenario:5 删除已结束团购活动
 				"0":{
 					"group_type":"10",
 					"group_days":"2",
-					"group_price":"10"
+					"group_price":"10.00"
 					}
 			},
 			"ship_date":"20",

@@ -96,7 +96,7 @@ Background:
 			"model": {
 				"models": {
 					"standard": {
-						"price": 5,
+						"price": 5.00,
 						"weight": 1.0,
 						"stock_type": "无限"
 					}
@@ -112,7 +112,7 @@ Background:
 			}],
 			"model":{"models": {
 					"standard": {
-						"price": 12.0,
+						"price": 12.00,
 						"weight": 2.5,
 						"stock_type": "无限"
 					}
@@ -137,7 +137,7 @@ Background:
 			"model": {
 				"models": {
 					"standard": {
-						"price": 1.5,
+						"price": 1.50,
 						"weight": 0.5,
 						"stock_type": "有限",
 						"stocks": 50
@@ -163,7 +163,7 @@ Background:
 			"model": {
 				"models": {
 					"黑色 S": {
-						"price": 10.0,
+						"price": 10.00,
 						"weight": 3.1,
 						"stock_type": "有限",
 						"stocks": 3
@@ -188,7 +188,7 @@ Background:
 			"model": {
 				"models": {
 					"standard": {
-						"price": 50.0,
+						"price": 50.00,
 						"weight": 5.0,
 						"stock_type": "无限"
 					}
@@ -213,7 +213,7 @@ Background:
 			"model": {
 				"models": {
 					"standard": {
-						"price": 12.5,
+						"price": 12.50,
 						"weight": 1.5,
 						"stock_type": "有限",
 						"stocks": 200
@@ -238,7 +238,7 @@ Background:
 			"model": {
 				"models": {
 					"standard": {
-						"price": 20,
+						"price": 20.00,
 						"weight": 5,
 						"stock_type": "有限",
 						"stocks": 100
@@ -321,7 +321,7 @@ Background:
 			"rules": [{
 				"member_grade": "全部会员",
 				"discount": 50,
-				"discount_money": 50.0
+				"discount_money": 50.00
 			}]
 		}]
 		"""
@@ -353,7 +353,7 @@ Background:
 				"1":{
 						"group_type":"10",
 						"group_days":"2",
-						"group_price":"30"
+						"group_price":"30.00"
 				}},
 			"ship_date":"10",
 			"product_counts":"200",
@@ -368,7 +368,7 @@ Background:
 				"0":{
 					"group_type":"10",
 					"group_days":"2",
-					"group_price":"8.5"
+					"group_price":"8.50"
 				}},
 			"ship_date":"20",
 			"product_counts":"150",
@@ -383,7 +383,7 @@ Background:
 				"0":{
 					"group_type":"5",
 					"group_days":"1",
-					"group_price":"40.5"
+					"group_price":"40.50"
 			}},
 			"ship_date":"5",
 			"product_counts":"100",

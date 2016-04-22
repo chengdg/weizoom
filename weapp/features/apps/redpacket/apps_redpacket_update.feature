@@ -40,7 +40,7 @@ Background:
 			"is_show_countdown":"true",
 			"red_packet":{
 				"red_packet_type":"random",
-				"random_total_money":"200",
+				"random_total_money":"200.00",
 				"random_packets_number":"20",
 				"regular_packets_number":"",
 				"regular_per_money":""
@@ -63,7 +63,7 @@ Background:
 				"random_total_money":"",
 				"random_packets_number":"",
 				"regular_packets_number":"10",
-				"regular_per_money":"10"
+				"regular_per_money":"10.00"
 			},
 			"contribution_start_range":"1.0",
 			"contribution_end_range":"2.0",
@@ -81,7 +81,7 @@ Background:
 			"is_show_countdown":"true",
 			"red_packet":{
 				"red_packet_type":"random",
-				"random_total_money":"20",
+				"random_total_money":"20.00",
 				"random_packets_number":"10",
 				"regular_packets_number":"",
 				"regular_per_money":""
@@ -112,7 +112,7 @@ Scenario:1 编辑"未开始"的拼红包活动
 				"random_total_money":"",
 				"random_packets_number":"",
 				"regular_packets_number":"5",
-				"regular_per_money":"10"
+				"regular_per_money":"10.00"
 			},
 			"contribution_start_range":"1.5",
 			"contribution_end_range":"2.0",
