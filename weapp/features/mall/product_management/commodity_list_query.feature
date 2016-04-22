@@ -42,16 +42,13 @@ Background:
 		"""
 		[{
 			"type": "货到付款",
-			"description": "我的货到付款",
 			"is_active": "启用"
 		},{
 			"type": "微信支付",
-			"description": "我的微信支付",
-			"is_active": "启用",
-			"weixin_appid": "12345",
-			"weixin_partner_id": "22345",
-			"weixin_partner_key": "32345",
-			"weixin_sign": "42345"
+			"is_active": "启用"
+		},{
+			"type": "支付宝",
+			"is_active": "启用"
 		}]
 		"""
 
