@@ -101,8 +101,8 @@ Scenario:1 创建限时抢购活动,设置购买次数限制
 		[{
 			"name": "商品2限时抢购",
 			"product_name": "商品2",
-			"product_price":"100.0 ~ 200.0",
-			"promotion_price": 80,
+			"product_price":"100.00 ~ 200.00",
+			"promotion_price": 80.00,
 			"status":"进行中",
 			"start_date": "今天",
 			"end_date": "5天后",
@@ -110,8 +110,8 @@ Scenario:1 创建限时抢购活动,设置购买次数限制
 		},{
 			"name": "商品1限时抢购",
 			"product_name": "商品1",
-			"product_price": 100,
-			"promotion_price": 80,
+			"product_price": 100.00,
+			"promotion_price": 80.00,
 			"status":"进行中",
 			"start_date": "今天",
 			"end_date": "5天后",
