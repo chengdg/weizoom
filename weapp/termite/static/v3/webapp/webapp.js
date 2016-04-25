@@ -54,6 +54,27 @@ W.showVisitHistory = function(title, url) {
 }
 
 
+W.preloadImgsOnPage = function(ele) {
+    $(function(){
+        if (!ele) {
+            console.log(ele)
+            return;
+        }
+        var $itemsImg = $(ele);
+        $itemsImg.map(function(idx, item) {
+            $item = $(item);
+            $item.attr('data-url', $item.attr('src'));
+            $item.removeAttr('src');
+        });
+        $lazyImgs = $('[data-url]');
+        $lazyImgs.lazyload({
+            data_attribute:"url",
+            effect : "fadeIn",
+            placeholder: "/static_v2/img/webapp/mall/info_placeholder.png"
+        });
+    });
+}
+
 function redirectTo(newHref) {
     var originalNewHref = newHref;
     var memberTokenQueryStrKey = 'fmt';

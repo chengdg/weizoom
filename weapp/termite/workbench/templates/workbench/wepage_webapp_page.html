@@ -9,11 +9,7 @@
 
 {% block js %}
 <script type="text/javascript">
-    $(function(){
-        if ($('[data-url]')) {
-            $('[data-url]').lazyload({ data_attribute:"url", effect : "fadeIn", placeholder: "/static_v2/img/webapp/mall/info_placeholder.png" });
-        }
-    });
+W.preloadImgsOnPage('.xa-products-box ul li img');
 </script>
 {% endblock %}
 

@@ -16,7 +16,7 @@
                 >
                     <div class="wui-inner-pic">
                         {% if product.thumbnails_url %}
-                        <img data-url="{{product.thumbnails_url}}" />
+                        <img src="{{product.thumbnails_url}}" />
                         {% else %}
                         <p class="xui-productTitle">{% firstof product.name '商品列表' %}</p>
                         {% endif %}
