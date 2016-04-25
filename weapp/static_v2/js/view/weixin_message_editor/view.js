@@ -42,7 +42,7 @@ W.view.weixin.MessageEditor = Backbone.View.extend({
 
 		if (this.material && this.materialId) {
 			this.material.id = this.materialId;
-		};
+		}
 
 		this.render();
 		this.$textMessageTab = this.$('a[href="#weixinMessageEditer-textMessageZone"]');
@@ -59,6 +59,7 @@ W.view.weixin.MessageEditor = Backbone.View.extend({
 			width: width,
 			height: height,
 			autoHeight:false,
+			pasteplain: !!options.pasteplain
 		});
 		// this.editor.bind('contentchange', function() {
 		// 	this.textMessage.set('text', this.editor.getHtmlContent());
