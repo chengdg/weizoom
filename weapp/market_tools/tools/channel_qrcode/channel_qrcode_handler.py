@@ -28,7 +28,8 @@ from watchdog.utils import watchdog_fatal, watchdog_error
 from weixin.message.handler.event_handler import *
 
 from channel_qrcode_util import *
-
+from mall.promotion import models as promotion_models
+from market_tools.tools.channel_qrcode import models
 
 """
 """
@@ -67,7 +68,23 @@ class ChannelQrcodeHandler(MessageHandler):
 
 		if user_profile.user_id in [467,154] and \
 			check_new_channel_qrcode_ticket(ticket, user_profile):
-			if member.is_new:
+
+			#用户可以重复领取不同的优惠券
+			can_has_coupon = True
+			qrcode_award = MemberChannelQrcodeAwardContent.objects.get(owner_id=user_profile.user_id)
+			award_type = qrcode_award.scanner_award_type
+			award_content = qrcode_award.scanner_award_content
+			coupon_rule_ids = []
+			if award_type == AWARD_COUPON:
+				# rules = promotion_models.CouponRule.objects.filter(id=award_content, owner_id=user_profile.user_id)
+				member_has_coupons = promotion_models.Coupon.objects.filter(member_id = member.id)
+				if member_has_coupons:
+					for coupon in member_has_coupons:
+						coupon_rule_ids.append(coupon.coupon_rule_id)
+					if award_content in coupon_rule_ids:
+						can_has_coupon = False
+
+			if member.is_new and can_has_coupon:
 				create_new_channel_qrcode_has_memeber(user_profile, context.member, ticket, member.is_new)
 			return None
 

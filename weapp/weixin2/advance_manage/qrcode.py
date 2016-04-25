@@ -886,21 +886,3 @@ def _get_filter_qrcode_items(request):
 
 		items.append(current_setting)
 	return items
-
-class QrcodeLot(resource.Resource):
-	app = 'new_weixin'
-	resource = 'qrcode_lot'
-
-	@login_required
-	@mp_required
-	def get(request):
-		"""
-		批量修改二维码页面
-		"""
-		c = RequestContext(request, {
-			'first_nav_name': FIRST_NAV,
-			'second_navs': export.get_weixin_second_navs(request),
-			'second_nav_name': export.WEIXIN_ADVANCE_SECOND_NAV,
-			'third_nav_name': export.ADVANCE_MANAGE_QRCODE_NAV,
-		})
-		return render_to_response('weixin/advance_manage/lot_edit_qrcodes.html', c)
