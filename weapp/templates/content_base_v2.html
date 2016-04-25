@@ -21,8 +21,11 @@
 					<a href="{{ fans_host }}/auth/account_help/" target="_blank"><i class="xui-toolIcon"></i>权限管理</a>
 					<a href="javascript:void(0);" data-toggle="popover" id="mf"><i class="xui-toolIcon"></i>修改密码</a>
 				{% endif %}
+					<a href="javascript:void(0);" id="mf_message"  data-toggle="popover" target="_blank" id="message_href"><i class="xui-toolIcon"></i>系统通知<i class="xui-noticyTip" style="display:none" id ="message_count"></i></a>
+					<div class="popover bottom in" role="tooltip" id="popover838423" style="left: 132.594px; top: 16px; display: block;"><div class="popover-content" style="min-height:30px;width:170px;line-height:30px;text-algin:center;padding:1px 0px 0px 15px">
+						<span id="message_count_inner"></span>条新消息通知 <a href="http://fans.dev.com/message/message_list/?from=portal" target="_blank" style="color:blue;">查看</a>
+					</div></div>
 				{% if request.user.username == 'malla' or request.user.username == 'ceshi01' or request.user.username == 'jobs' %}
-					<a href="{{ fans_host }}/message/message_list/?from=portal" target="_blank"><i class="xui-toolIcon"></i>系统通知<i class="xui-noticyTip" style="display:none" id ="message_count"></i></a>
 					<a href="{{ fans_host }}/help_center/outline/" target="_blank"><i class="xui-toolIcon"></i>帮助中心</a>
 				{% endif %}
 				<div id='popover_tmpl' style="display:none;">
@@ -315,16 +318,28 @@
 			success:function(response) {
 				if (response.code == 200) {
 					localStorage.message_count=response.data.message_count;
-					$("#message_count").html(localStorage.message_count)
-					$("#message_count").css('display','inline');
+					if(localStorage.message_count!=0){
+						$("#message_count").html(localStorage.message_count);
+						$("#message_count_inner").html(localStorage.message_count);
+						$("#popover838423").css('display','inline');
+						$("#message_count").css('display','inline');
+						$("#message_href").attr("href","javascript:void(0);");
+					}
+
 				}else{
 					xlog("获取message_count失败")
 				}
 			}
 		});
 		}else{
-			$("#message_count").html(localStorage.message_count)
-			$("#message_count").css('display','inline');
+			if(localStorage.message_count!=0){
+				$("#message_count").html(localStorage.message_count)
+				$("#message_count_inner").html(localStorage.message_count)
+				$("#message_count").css('display','inline');
+				$("#popover838423").css('display','inline');
+				$("#message_href").attr("href","javascript:void(0);");
+			}
+
 		}
 
 		function initSubmit(){
