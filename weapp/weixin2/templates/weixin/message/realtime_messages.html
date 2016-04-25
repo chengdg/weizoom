@@ -340,7 +340,8 @@ $(document).ready(function() {
 				richTextEditorHeight: 130,
 				position: 'static',
 				submitBtnText: '发&nbsp;&nbsp;送',
-				cancelBtnText: '收&nbsp;&nbsp;起'
+				cancelBtnText: '收&nbsp;&nbsp;起',
+                pasteplain: true //无格式粘贴
 			});
 			messageEditorPopup.bind('finish-edit', function(message) {
 				var openid = $current.attr('data-openid');

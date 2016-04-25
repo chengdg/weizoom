@@ -251,11 +251,12 @@ $(document).ready(function() {
 		width: 487,
 		offset_Y:12,
 		offset_X:-31,
+        pasteplain: true
 	});
 
 	messageEditorPopup.bind('cancel-edit', function(message) {
 		messageEditorPopup.setContent('');
-	})
+	});
 
 	messageEditorPopup.bind('finish-edit', function(message) {
 		messageEditorPopup.setContent('');
