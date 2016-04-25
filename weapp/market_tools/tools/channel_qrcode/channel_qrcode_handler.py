@@ -70,21 +70,18 @@ class ChannelQrcodeHandler(MessageHandler):
 			check_new_channel_qrcode_ticket(ticket, user_profile):
 
 			#用户可以重复领取不同的优惠券
-			can_has_coupon = True
+			can_has_coupon = False
 			qrcode_award = MemberChannelQrcodeAwardContent.objects.get(owner_id=user_profile.user_id)
 			award_type = qrcode_award.scanner_award_type
 			award_content = qrcode_award.scanner_award_content
-			coupon_rule_ids = []
 			if award_type == AWARD_COUPON:
-				# rules = promotion_models.CouponRule.objects.filter(id=award_content, owner_id=user_profile.user_id)
-				member_has_coupons = promotion_models.Coupon.objects.filter(member_id = member.id)
-				if member_has_coupons:
-					for coupon in member_has_coupons:
-						coupon_rule_ids.append(coupon.coupon_rule_id)
-					if award_content in coupon_rule_ids:
-						can_has_coupon = False
+				if ChannelQrcodeSettings.objects.filter(ticket=ticket, owner_id=user_profile.user_id).count() > 0:
+					channel_qrcode = ChannelQrcodeSettings.objects.filter(ticket=ticket, owner_id=user_profile.user_id)[0]
+					coupon_ids = ChannelQrcodeToMemberLog.objects.filter(channel_qrcode=channel_qrcode, member=member)[0].coupon_ids
+					if award_content not in coupon_ids:
+						can_has_coupon = True
 
-			if member.is_new and can_has_coupon:
+			if member.is_new or can_has_coupon:
 				create_new_channel_qrcode_has_memeber(user_profile, context.member, ticket, member.is_new)
 			return None
 

@@ -68,6 +68,7 @@ class ChannelQrcodeHasMember(models.Model):
 class ChannelQrcodeToMemberLog(models.Model):
 	channel_qrcode = models.ForeignKey(ChannelQrcodeSettings)
 	member = models.ForeignKey(Member)
+	coupon_ids = models.TextField() #优惠券id
 	created_at = models.DateTimeField(auto_now_add=True) #添加时间
 
 	class Meta(object):
