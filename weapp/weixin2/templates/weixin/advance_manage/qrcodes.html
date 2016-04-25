@@ -37,6 +37,15 @@
 	.xui-weixin-qrcodePage .xui-userData p:last-child{
 		margin:0;
 	}
+	.breadcrumRightButton > div.fr {
+		margin-top: 2px;
+	}
+	.xui-selcetBox > input{
+		vertical-align: sub;
+	}
+	.xui-advancedTableContent table thead input{
+		display: none;
+	}
 </style>
 {% endblock%}
 {% block content-panel %}
@@ -63,10 +72,14 @@
 	</div>
 
 	<span class="breadcrumRightButton">
-		<a class="btn btn-success lh20 xui-i-btnWidth xa-addQrcode" href="/new_weixin/qrcode/"><span class="xui-add-btn-icon">+</span>新建二维码</a>&nbsp;&nbsp;
-		<a class="btn btn-default lh20 xui-i-btnWidth xa-exportQrcode" href="javascript:void(0);" style="width:100px!important;">导出</a>
 		<div class="fr">
 			<input class="xui-searchInput  w250 xa-search-title h30" type="text"><a class="xui-searchBtn btn btn-default xa-searchBtn xa-search h30 ml0 mr5" style="min-width:50px!important;background: #f2f2f2;border-left-width: 0px; border-radius:0px;">搜索</a>
+		</div>
+		<a class="btn btn-default lh20 xui-i-btnWidth xa-exportQrcode fr mr20" href="javascript:void(0);" style="width:100px!important;">导出</a>
+		<a class="btn btn-success lh20 xui-i-btnWidth xa-addQrcode fr mr10" href="/new_weixin/qrcode/"><span class="xui-add-btn-icon">+</span>新建二维码</a>
+		<div class="xui-selcetBox ml20 mt10">
+			<input type="checkbox" class="xa-selcetAll">&nbsp;全选		
+			<a class="xa-editQrcodes ml20" href="javascript:void(0);" style="width:100px!important;">批量修改</a>
 		</div>
 	</span>
 	</div>
@@ -80,7 +93,8 @@
 			<table class="table table-condensed xb-stripedTable xb-theadBg">
 				<thead>
 					<tr>
-						<th style="width:20%;">
+						<th style="width:4%;"></th>
+						<th style="width:16%;">
 							<p class=" m0">
 								<span class="">二维码名称</span>
 							</p>
@@ -98,7 +112,10 @@
 				<tbody>
 					{{if items.length}}
 						{{each(i, qrcode) items}}
-							<tr class="h40" data-id="${qrcode.qrcode_id}">
+							<tr class="h40" data-id="${qrcode.qrcode_id}" data-setting="${qrcode.id}">
+								<td>
+									<input type="checkbox" class="xa-select">
+								</td>
 								<td style="word-break:break-all; overflow:auto;padding:0 20px;text-align:left;170px;">
 									<a href="/new_weixin/qrcode/?setting_id=${qrcode.id}">${qrcode.name}</a>
 								</td>
@@ -146,7 +163,7 @@
 							</tr>
 						{{/each}}
 					{{else}}
-						<tr><td colspan='6'>还没有数据</td></tr>
+						<tr><td colspan='9'>还没有数据</td></tr>
 					{{/if}}
 				</tbody>
 			</table>
@@ -167,6 +184,39 @@
 			}
 			var qrcodeView = new W.view.weixin.QrcodeView({
 				el: $("body"),
+			});
+			$('.xa-selcetAll').click(function(){
+				if($(this).is(':checked')){
+					$('.xa-content').find('input').prop('checked',true);
+				}else{
+					$('.xa-content').find('input').prop('checked',false);
+				}
+			});
+			$('body').on('click','.xa-select',function(){
+				var isChecked = $('.xa-content table tbody').find('input:checked');
+				if(isChecked.length == $('.xa-content table tbody').find('input').length){
+					$('.xa-selcetAll').prop('checked',true);
+				}else{
+					$('.xa-selcetAll').prop('checked',false);
+				}
+			});
+			$('.xa-editQrcodes').click(function(){
+				var isChecked = $('.xa-content table tbody').find('input:checked');
+				if( isChecked.length == 0 ){
+					W.showHint('error','请选择至少一个二维码');
+					return
+				}else if( isChecked.length == 1 ){
+					var qrcode = isChecked.parents('tr').attr('data-setting');
+					var link = window.location.origin + "/new_weixin/qrcode/?setting_id=" + qrcode;
+					window.location.href = link;
+				}else{
+					var qrcodes = [];				
+					isChecked.each(function(){
+						qrcodes.push($(this).parents('tr').attr('data-setting'));
+					});
+					var link = window.location.origin + "/new_weixin/qrcode/?setting_ids=" + qrcodes.toString();
+					window.location.href = link;
+				}
 			});
 		});
 		$('body').delegate('.relation-text','click',function(event) {

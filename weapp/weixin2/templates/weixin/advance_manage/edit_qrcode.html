@@ -1,7 +1,6 @@
 {% extends "content_base_v2.html" %}
 {% load common_tag %}
 {% load account_filter %}
-
 {% block content-panel %}
 <div class="xui-weixin-qrcodePage xa-weixin-materialsPage">
 	<div class="xui-rightPanel pr" style="border:0;">
@@ -16,13 +15,22 @@
 
 <form class="form-horizontal" method="post" id="editForm" action="/new_weixin/api/qrcode/">
 	<fieldset>
-		<input id="qrcode_id" name="qrcode_id" class="hide" value="{% if qrcode %}{{qrcode.id}}{% else %}0{% endif %}">
+		<input id="qrcode_id" name="qrcode_id" class="hide" value="{% if qrcodes %}{% for item in qrcodes %}{{item.id}}{% if not forloop.last %}, {% endif %}{% endfor %}{% else %}{% if qrcode %}{{ qrcode.id }}{% else %}0{% endif %}{% endif %}">
 		<div class="control-group mt20 mb15 pl10" >
+			{% if qrcodes %}
+			<div class="xui-qrcodeName" for="parents_name" style="font-weight:normal;display: inline-block;vertical-align: top;">二维码名称：</div>
+			<div class="xui-qrcodeGroups" style="display: inline-block;width: 67%">
+				{% for item in qrcodes %}
+				<a class="mr20 mb10" style="display: inline-block;" href="/new_weixin/qrcode/?setting_id={{item.id}}" target="_blank">{{ item.name }}</a>
+				{% endfor %}
+			</div>
+			{% else %}
 			<label class="control-label fl mr10" for="parents_name" style="font-weight:normal">二维码名称</label>
 			<div class="controls">
 				<input type="text" class="input-xlarge mt3" id="name" name="name" placeholder="输入名称" value="{% if qrcode %}{{ qrcode.name }}{% endif %}" data-validate="required-none" data-validate-name="{{ qrcode.id }}" />
 				<div class="errorHint"></div>
-			</div>
+			</div>			
+			{% endif %}
 		</div>
 		<div class="xui-setting ml10 mr10 clearfix">
 				<div class="xui-row pr" style="border-bottom: none;">
@@ -39,7 +47,7 @@
 						{% for group in groups %}
 							<option value="{{group.id}}"{% if qrcode.grade_id == group.id %}selected="selected"{% endif%}>{{group.name}}</option>
 						{% endfor %}
-				</select>
+						</select>
 					</div>
 				</div>
 				<div class="xui-row">
@@ -66,6 +74,7 @@
 						<input style="width:448px;" type="text" id="remark" name="remark" value="{% if qrcode %}{{ qrcode.remark }}{% endif %}">
 					</div>
 				</div>
+				{% if not qrcodes %}
 				<div class="xui-row xa-bingMember" style="border-bottom: none; {% if qrcode %}{% ifequal qrcode.is_bing_member 1 %}height: 240px;{% endifequal %}{% else %}{% endif %}">
 					<div class="xui-i-left fl lh1"> 关联会员： </div>
 					<div class="fl mt18 ml20" style="text-align:left;">
@@ -98,6 +107,7 @@
 						</div>
 					</div>
 				</div>
+				{% endif %}
 			</div>
 <!-- 			<div class="xui-setting ml10 mr10 mt80"> -->
 			<div class="xui-Sweep1 mt20 disT" style="float:none;">
@@ -199,12 +209,17 @@
 		//提交二维码表单
 		$(".xa-footerBtn").delegate('.xa-submit','click',function() {
 			$('.xa-submit').attr('disabled','disabled');
-			var name = $.trim($('[name="name"]').val());
-			if(name==''){
-				W.showHint('error', '二维码名称不能为空');
-				$('.xa-submit').removeAttr('disabled');
-				return false;
+			if(!('{{ qrcodes }}' == 'None')){
+				var name = '';
+			}else{
+				var name = $.trim($('[name="name"]').val());
+				if(name==''){
+					W.showHint('error', '二维码名称不能为空');
+					$('.xa-submit').removeAttr('disabled');
+					return false;
+				}
 			}
+
 			var selectVal = $.trim($('[name="prize_type"]').val());
 			var jifen = $.trim($('[name="prize_score"]').val());
 			if(selectVal == "积分"){
@@ -382,6 +397,7 @@
 		var editor = new W.view.weixin.MessageEditor(options);
 		$(document).delegate('.xa-choseCoupon', 'click', function(event) {
         W.dialog.showDialog('W.dialog.mall.SelectCouponDialog', {
+        	is_channel_qrcode: true,
             success: function(data) {
                 var couponType = '';
                 if(data[0].limit_product) {
