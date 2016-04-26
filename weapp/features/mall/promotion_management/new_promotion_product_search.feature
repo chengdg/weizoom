@@ -196,6 +196,7 @@ Background:
 				"share_description":"团购活动分享描述"
 		}]
 		"""
+	When jobs开启团购活动'团购活动'
 
 @ztqb                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   @mall2 @promotion @promotionFlash
 Scenario: 1 限时抢购-新建活动页面的商品查询

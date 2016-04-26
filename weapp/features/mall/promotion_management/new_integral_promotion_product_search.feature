@@ -156,6 +156,7 @@ Background:
 				"share_description":"团购活动分享描述"
 		}]
 		"""
+	When jobs开启团购活动'团购活动'
 
 @mall2 @promotion @promotionIntegral @ztq
 Scenario: 1 积分应用-新建活动页面的商品查询
