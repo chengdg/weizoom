@@ -478,7 +478,8 @@ class Product(models.Model):
 					product.models.extend(custom_models)
 					if len(custom_models) == 1:
 						target_model = custom_models[0]
-						display_price_range = target_model['price']
+						# 格式: X.00
+						display_price_range = '%.2f' % target_model['price']
 					else:
 						# 列表页部分显示商品的最小价格那个model的信息
 						custom_models.sort(lambda x, y: cmp(x['price'], y['price']))
@@ -486,19 +487,18 @@ class Product(models.Model):
 						low_price = target_model['price']
 						high_price = custom_models[-1]['price']
 						if low_price == high_price:
-							display_price_range = low_price
+							# 格式: X.00
+							display_price_range = '%.2f' % low_price
 						else:
-							# 更改: 如果格式为X.0则变为整数X @延昊南
-							if round(low_price) == float(low_price):
-								low_price = '%.0f' % low_price
-							if round(high_price) == float(high_price):
-								high_price = '%.0f' % high_price
+							# 更改 格式: X.00 @延昊南
+							low_price = '%.2f' % low_price
+							high_price = '%.2f' % high_price
 							display_price_range = '%s ~ %s' % (low_price, high_price)
 				else:
 					product._is_use_custom_model = False
 					target_model = models['standard_model']
 					product.standard_model = target_model
-					display_price_range = target_model['price']
+					display_price_range = '%.2f' % target_model['price']
 
 				product.current_used_model = target_model
 				product.display_price = target_model['price']
@@ -513,7 +513,7 @@ class Product(models.Model):
 				product._is_use_custom_model = False
 				product.current_used_model = {}
 				product.display_price = product.price
-				product.display_price_range = product.price
+				product.display_price_range = '%.2f' % product.price
 				product.user_code = product.user_code
 				product.stock_type = PRODUCT_STOCK_TYPE_LIMIT
 				product.stocks = 0
