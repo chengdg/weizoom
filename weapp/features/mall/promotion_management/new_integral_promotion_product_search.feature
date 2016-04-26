@@ -4,6 +4,7 @@ Feature:促销管理-新建积分活动页面的商品查询
 
 Background:
 	Given jobs登录系统
+	When jobs添加微信证书
 	When jobs添加商品分类
 		"""
 		[{
@@ -152,7 +153,7 @@ Background:
 				"ship_date":20,
 				"product_counts":100,
 				"material_image":"1.jpg",
-				"share_description":"团购活动1分享描述"
+				"share_description":"团购活动分享描述"
 		}]
 		"""
 
