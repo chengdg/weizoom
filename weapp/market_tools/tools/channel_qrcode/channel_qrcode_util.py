@@ -151,6 +151,8 @@ def create_channel_qrcode_has_memeber_restructure(channel_qrcode, user_profile, 
 		# 	coupon_id = award_content
 		# else:
 		# 	coupon_id = ''
+		print channel_qrcode,'==============channel_qrcode========='
+		print member.id,'==============member.id========='
 		award_prize_info = json.loads(channel_qrcode.award_prize_info)
 		award_type = award_prize_info['type']
 		if award_type == u'优惠券':
@@ -162,7 +164,8 @@ def create_channel_qrcode_has_memeber_restructure(channel_qrcode, user_profile, 
 		else:
 			coupon_ids = ''
 		coupon_ids_list = coupon_ids.split(',')
-
+		print coupon_id,'==========coupon_id==========='
+		print coupon_ids,'==========coupon_ids==========='
 		if (is_new_member is False) and channel_qrcode.re_old_member == 0:
 			print '=====444444444444====='
 			if coupon_id and (coupon_id in coupon_ids_list):
@@ -198,7 +201,8 @@ def create_channel_qrcode_has_memeber_restructure(channel_qrcode, user_profile, 
 			try:
 				print '=====6666666666666====='
 				ChannelQrcodeToMemberLog.objects.create(channel_qrcode=channel_qrcode, member=member, coupon_ids=coupon_id)
-			except:
+			except Exception,e:
+				print e,'======create log==========='
 				pass
 		else:
 			print '==========777777777777=========='
