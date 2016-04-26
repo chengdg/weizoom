@@ -189,7 +189,7 @@ def create_channel_qrcode_has_memeber_restructure(channel_qrcode, user_profile, 
 			award(prize_info, member, CHANNEL_QRCODE)
 
 		if coupon_id:
-			coupon_id = coupon_id + ','
+			coupon_id = str(coupon_id) + ','
 
 		if ChannelQrcodeToMemberLog.objects.filter(channel_qrcode=channel_qrcode, member=member).count() == 0:
 			try:
