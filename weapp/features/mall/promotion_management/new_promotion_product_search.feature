@@ -198,7 +198,7 @@ Background:
 		"""
 	When jobs开启团购活动'团购活动'
 
-@ztqb                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   @mall2 @promotion @promotionFlash
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              @mall2 @promotion @promotionFlash
 Scenario: 1 限时抢购-新建活动页面的商品查询
 	Given jobs登录系统
 	#起购数量大于1的商品不在在售列表中（不能参与限时抢购）
