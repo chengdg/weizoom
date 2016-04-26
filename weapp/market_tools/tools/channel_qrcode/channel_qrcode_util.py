@@ -182,7 +182,10 @@ def create_channel_qrcode_has_memeber_restructure(channel_qrcode, user_profile, 
 			except:
 				notify_message = u"渠道扫描异常update_member_grade error, cause:\n{}".format(unicode_full_stack())
 				watchdog_warning(notify_message)
-			return
+
+			if coupon_id and (coupon_id in coupon_ids_list):
+				print '=========0000000========'
+				return
 
 		if member:
 			prize_info = PrizeInfo.from_json(channel_qrcode.award_prize_info)
