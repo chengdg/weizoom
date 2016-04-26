@@ -294,7 +294,6 @@ class Qrcode(resource.Resource):
 		"""
 		setting_id = int(request.GET.get('setting_id', '-1'))
 		setting_ids = request.GET.get('setting_ids', None)
-		print setting_ids,444444444
 		answer_content = {}
 		webapp_id = request.user_profile.webapp_id
 		groups = MemberGrade.get_all_grades_list(webapp_id)
@@ -312,51 +311,49 @@ class Qrcode(resource.Resource):
 		if setting_ids:
 			setting_ids = setting_ids.split(',')
 			qrcodes = ChannelQrcodeSettings.objects.filter(id__in=setting_ids, owner=request.manager)
-			print 1111111111
-			print qrcodes.count(),222222
-
-		from mall.promotion.models import CouponRule
-		if setting_id > 0:
-			try:
-				qrcode = ChannelQrcodeSettings.objects.get(id=setting_id, owner=request.manager)
-			except Exception, e:
-				print 'get qrcode failed,id:',setting_id
-
-			if qrcode:
-				#获取优惠券剩余个数
-				award_prize_info = qrcode.award_prize_info
+		else:
+			from mall.promotion.models import CouponRule
+			if setting_id > 0:
 				try:
-					info_dict = json.loads(award_prize_info)
-					if info_dict['type'] == u'优惠券':
-						coupon_rule = CouponRule.objects.get(id = info_dict['id'])
-						info_dict['remained_count'] = coupon_rule.remained_count
-						if coupon_rule.limit_product:
-							info_dict['coupon_type'] = u'单品券'
-						else:
-							info_dict['coupon_type'] = u'全店通用券'
-						qrcode.award_prize_info = json.dumps(info_dict)
+					qrcode = ChannelQrcodeSettings.objects.get(id=setting_id, owner=request.manager)
 				except Exception, e:
-					print 'qrcode获取优惠券剩余个数失败：', e
+					print 'get qrcode failed,id:',setting_id
 
-				if qrcode.reply_material_id > 0:
-					answer_content['type'] = 'news'
-					answer_content['newses'] = []
-					answer_content['content'] = qrcode.reply_material_id
-					newses = News.get_news_by_material_id(qrcode.reply_material_id)
+				if qrcode:
+					#获取优惠券剩余个数
+					award_prize_info = qrcode.award_prize_info
+					try:
+						info_dict = json.loads(award_prize_info)
+						if info_dict['type'] == u'优惠券':
+							coupon_rule = CouponRule.objects.get(id = info_dict['id'])
+							info_dict['remained_count'] = coupon_rule.remained_count
+							if coupon_rule.limit_product:
+								info_dict['coupon_type'] = u'单品券'
+							else:
+								info_dict['coupon_type'] = u'全店通用券'
+							qrcode.award_prize_info = json.dumps(info_dict)
+					except Exception, e:
+						print 'qrcode获取优惠券剩余个数失败：', e
 
-					news_array = []
-					for news in newses:
-						news_dict = {}
-						news_dict['id'] = news.id
-						news_dict['title'] = news.title
-						answer_content['newses'].append(news_dict)
-				else:
-					answer_content['type'] = 'text'
-					answer_content['content'] = emotion.change_emotion_to_img(qrcode.reply_detail)
+					if qrcode.reply_material_id > 0:
+						answer_content['type'] = 'news'
+						answer_content['newses'] = []
+						answer_content['content'] = qrcode.reply_material_id
+						newses = News.get_news_by_material_id(qrcode.reply_material_id)
 
-				if qrcode.bing_member_id:
-					bing_member = get_member_by_id(int(qrcode.bing_member_id))
-					qrcode.bing_member_name = bing_member.username_for_html
+						news_array = []
+						for news in newses:
+							news_dict = {}
+							news_dict['id'] = news.id
+							news_dict['title'] = news.title
+							answer_content['newses'].append(news_dict)
+					else:
+						answer_content['type'] = 'text'
+						answer_content['content'] = emotion.change_emotion_to_img(qrcode.reply_detail)
+
+					if qrcode.bing_member_id:
+						bing_member = get_member_by_id(int(qrcode.bing_member_id))
+						qrcode.bing_member_name = bing_member.username_for_html
 
 		settings = ChannelQrcodeSettings.objects.filter(owner=request.manager, bing_member_id__gt=0)
 		selectedMemberIds = [setting.bing_member_id for setting in settings]
@@ -469,8 +466,8 @@ class Qrcode(resource.Resource):
 	@login_required
 	@mp_required
 	def api_post(request):
-		setting_id = int(request.POST.get('setting_id', '-1'))
-		if not setting_id > 0:
+		setting_id = request.POST.get('setting_id', None)
+		if not setting_id:
 			return create_response(400).get_response()
 
 		name = request.POST["name"]
@@ -502,6 +499,21 @@ class Qrcode(resource.Resource):
 			reply_material_id = 0
 		elif reply_type == 2:
 			reply_detail = ''
+
+		#批量修改
+		if len(setting_id.split(',')) > 1:
+			settings = ChannelQrcodeSettings.objects.filter(owner=request.manager, id__in=setting_id.split(','))
+			settings.update(
+				award_prize_info=award_prize_info,
+				reply_type=reply_type,
+				reply_detail=reply_detail,
+				reply_material_id=reply_material_id,
+				remark=remark,
+				grade_id=grade_id,
+				tag_id=tag_id,
+				re_old_member=re_old_member,
+			)
+			return create_response(200).get_response()
 
 		setting = ChannelQrcodeSettings.objects.filter(owner=request.manager, id=setting_id)
 		if setting[0].bing_member_id and is_bing_member == 'false':
