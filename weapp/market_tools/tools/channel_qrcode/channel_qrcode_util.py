@@ -159,16 +159,16 @@ def create_channel_qrcode_has_memeber_restructure(channel_qrcode, user_profile, 
 			coupon_id = str(award_prize_info['id'])
 		else:
 			coupon_id = ''
-		if ChannelQrcodeToMemberLog.objects.filter(channel_qrcode=channel_qrcode, member=member).count() > 0:
-			coupon_ids = ChannelQrcodeToMemberLog.objects.filter(channel_qrcode=channel_qrcode, member=member)[0].coupon_ids
+		log = ChannelQrcodeToMemberLog.objects.filter(channel_qrcode=channel_qrcode, member=member)
+		if log.count() > 0:
+			coupon_ids_list = log.first().coupon_ids.split(',')
+			coupon_ids_list = [] if coupon_ids_list[0] == '' else coupon_ids_list
 		else:
-			coupon_ids = ''
-		coupon_ids_list = coupon_ids.split(',')
-		print coupon_id,'==========coupon_id==========='
-		print coupon_ids,'==========coupon_ids==========='
+			coupon_ids_list = []
+		print coupon_ids_list,'==========coupon_ids_list==========='
 		if (is_new_member is False) and channel_qrcode.re_old_member == 0:
 			print '=====444444444444====='
-			if coupon_id and (coupon_id in coupon_ids_list):
+			if not coupon_id or (coupon_id in coupon_ids_list):
 				print '=====5555555555555====='
 				return
 
@@ -194,10 +194,7 @@ def create_channel_qrcode_has_memeber_restructure(channel_qrcode, user_profile, 
 			prize_info = PrizeInfo.from_json(channel_qrcode.award_prize_info)
 			award(prize_info, member, CHANNEL_QRCODE)
 
-		# if coupon_id:
-		# 	coupon_id = str(coupon_id) + ','
-
-		if ChannelQrcodeToMemberLog.objects.filter(channel_qrcode=channel_qrcode, member=member).count() == 0:
+		if log.count() == 0:
 			try:
 				print '=====6666666666666====='
 				ChannelQrcodeToMemberLog.objects.create(channel_qrcode=channel_qrcode, member=member, coupon_ids=coupon_id)
@@ -206,13 +203,12 @@ def create_channel_qrcode_has_memeber_restructure(channel_qrcode, user_profile, 
 				pass
 		else:
 			print '==========777777777777=========='
-			member_log = ChannelQrcodeToMemberLog.objects.filter(channel_qrcode=channel_qrcode, member=member)[0]
-			member_log.channel_qrcode = channel_qrcode
-			member_log.member = member
-			cur_coupon_ids = member_log.coupon_ids.split(',')
-			cur_coupon_ids.append(coupon_id)
-			member_log.coupon_ids = ','.join(cur_coupon_ids)
-			member_log.save()
+			if coupon_id:
+				member_log = log.first()
+				cur_coupon_ids = member_log.coupon_ids.split(',')
+				cur_coupon_ids.append(coupon_id)
+				member_log.coupon_ids = ','.join(cur_coupon_ids)
+				member_log.save()
 
 		try:
 			if channel_qrcode.grade_id > 0:
