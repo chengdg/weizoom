@@ -91,8 +91,8 @@
             {{if items.length}}
 	            {{each(i, product) items}}
 				<tr data-id="${product.id}"
-					data-purchase-price="${product.purchase_price}" 
-					data-mall-type="${mall_type}" 
+					data-purchase-price="${product.purchase_price}"
+					data-mall-type="${mall_type}"
 					data-is-sync=${product.is_sync}
 					{{if !product.is_group_buying }}class="xa-selectTr"{{/if}}
 					data-is-group-buying="${product.is_group_buying}">
@@ -122,7 +122,13 @@
 						</div>
 					</td>
 					<td>
-					{{if data.data.mall_type == 1 }}${product.store_name}{{else}}${product.bar_code}${product.store_name}{{/if}}</td>
+					{{if data.data.mall_type == 1 }}
+						{{if product.is_sync }} 同- {{/if}}
+						${product.store_name}
+					{{else}}
+						${product.bar_code}
+					{{/if}}
+					</td>
 					<td>
 						<ul>
 							{{each(i, category) product.categories}}

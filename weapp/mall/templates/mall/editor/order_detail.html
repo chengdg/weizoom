@@ -284,7 +284,7 @@
                   {% endif %}
                   {% if product.supplier_user_id %}
                     {% ifchanged product.supplier_user_id %}
-                        <td rowspan="{{product.supplier_user_length}}" style="text-align:center;border-right:1px solid #ddd;" width="80">{{ product.supplier_store_name }}</td>
+                        <td rowspan="{{product.supplier_user_length}}" style="text-align:center;border-right:1px solid #ddd;" width="80">同-{{ product.supplier_store_name }}</td>
                     {% endifchanged %}
                   {% endif %}
               {% endif %}
@@ -324,7 +324,7 @@
               （{{ product.count }}件）
               </td>
               <td class="xui-td-third"></td>
-              <!-- 
+              <!--
               <td class="xui-td-third"{% if product.noline %} style="border-top:none;"{% endif %}>
               {% if not is_sync %}
                 {% if product.promotion.type == 'flash_sale' %}
