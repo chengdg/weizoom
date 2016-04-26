@@ -144,11 +144,17 @@ def create_channel_qrcode_has_memeber_restructure(channel_qrcode, user_profile, 
 		if channel_qrcode.bing_member_id == member.id:
 			return
 
-		qrcode_award = MemberChannelQrcodeAwardContent.objects.get(owner_id=user_profile.user_id)
-		award_type = qrcode_award.scanner_award_type
-		award_content = qrcode_award.scanner_award_content
-		if award_type == AWARD_COUPON:
-			coupon_id = award_content
+		# qrcode_award = MemberChannelQrcodeAwardContent.objects.get(owner_id=user_profile.user_id)
+		# award_type = qrcode_award.scanner_award_type
+		# award_content = qrcode_award.scanner_award_content
+		# if award_type == AWARD_COUPON:
+		# 	coupon_id = award_content
+		# else:
+		# 	coupon_id = ''
+		award_prize_info = json.loads(qrcode_award.award_prize_info)
+		award_type = award_prize_info['type']
+		if award_type == u'优惠券'：
+			coupon_id = award_prize_info['id']
 		else:
 			coupon_id = ''
 
