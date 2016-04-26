@@ -156,7 +156,7 @@ def create_channel_qrcode_has_memeber_restructure(channel_qrcode, user_profile, 
 		award_prize_info = json.loads(channel_qrcode.award_prize_info)
 		award_type = award_prize_info['type']
 		if award_type == u'优惠券':
-			coupon_id = award_prize_info['id']
+			coupon_id = str(award_prize_info['id'])
 		else:
 			coupon_id = ''
 		if ChannelQrcodeToMemberLog.objects.filter(channel_qrcode=channel_qrcode, member=member).count() > 0:
