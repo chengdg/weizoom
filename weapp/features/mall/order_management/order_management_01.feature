@@ -1,8 +1,9 @@
 # watcher: zhangsanxiang@weizoom.com,benchi@weizoom.com
 #_author_:张三香 2016.01.19
 
-Feature:商家后台查看自营平台同步过来的订单列表及订单详情信息
+Feature:商家和自营平台后台查看同步过来的订单列表及订单详情信息
 	"""
+	商家：
 		订单列表显示:
 			1.只同步微众系列自营平台中的有效订单,待发货、已发货和已完成
 			2.微众系列自营平台同步过来的有效订单显示规则:
@@ -15,10 +16,24 @@ Feature:商家后台查看自营平台同步过来的订单列表及订单详情
 				g.所有与买赠相关的订单，本期暂不处理
 				h.同步过来的订单,卖家和买家备注信息不同步到商家,订单列表中的'买家'不能点击
 				i.拆单之后，自营平台的订单列表，在同步的商家名称前添加‘同’标签;自建供货商只显示供货商名称
+			筛选条件：
+				1.保留现有的"订单来源",不显示"供货商类型"
 		订单详情页显示:
 			1.同步过来的订单,订单详情页不显示单品优惠、优惠和微众卡支付金额;只显示"支付金额:xx"
 			2.支付信息中的支付方式,全部显示为'微信支付'
 			3.订单详情页中单价显示的是商品的采购价
+	自营平台：
+		订单列表：
+			1.购买多个商家的订单，支付后拆单，在订单列表和订单详情，对应显示商家名称和商家类型标签；在同步的商家名称前添加‘同’标签;自建供货商只显示供货商名称
+			2.筛选条件去掉"订单来源"，更换成"供货商类型"：全部、同步供货商、自建供货商；默认"全部"
+				筛选规则
+				（1）选择"全部"时，显示全部订单；
+				（2）选择"同步供货商"时，显示整单商品都是同步供货商的订单和订单中包含同步供货商商品的订单
+					（包含同步供货商的订单，商品只列出供货商是同步供货商的商品，其他字段值不变）
+				（3）选择"自建供货商"时，显示整单商品都是自建供货商的订单和订单中包含自建供货商商品的订单
+					（包含自建供货商的订单，商品只列出供货商是自建供货商的商品，其他字段值不变）
+		订单详情：
+			1.购买多个商家的订单，支付后拆单，订单详情，对应显示商家名称和商家类型标签；在同步的商家名称前添加‘同’标签;自建供货商只显示供货商名称
 	"""
 
 #特殊说明：jobs、Nokia表示自营平台;bill、tom表示商家;lily、jack表示会员
@@ -1628,4 +1643,352 @@ Scenario:4 查看对应自营平台订单列表和订单详情，标记同步供
 						"is_sync_supplier": "true"
 					}]
 		}
+		"""
+
+Scenario:5 自营平台订单列表按照"供货商类型"查询
+	Given jobs登录系统
+
+	#订单类型：全部
+	when jobs根据给定条件查询订单
+		"""
+		{
+			"supplier_type":"全部"
+		}
+		"""
+	Then jobs可以看到订单列表
+		"""
+		[{
+			"order_no":"007",
+			"buyer":"lily",
+			"status": "待发货",
+			"final_price":42.00,
+			"postage":2.0,
+			"save_money":0.00,
+			"methods_of_payment": "货到付款",
+			"actions": ["发货",取消订单"],
+			"products":[{
+					"name":"商品1a",
+					"price":10.0,
+					"count":1,
+					"supplier": "供货商1",
+					"is_sync_supplier": "false",
+					"status": "待发货",
+					"actions": ["发货"]
+				},{
+					"name":"bill商品2",
+					"price":20.0,
+					"count":1,
+					"supplier": "bill商家",
+					"is_sync_supplier": "true",
+					"status": "待发货",
+					"actions": ["发货"]
+				},{
+					"name":"tom商品1",
+					"price":10.0,
+					"count":1,
+					"supplier": "tom商家",
+					"is_sync_supplier": "true",
+					"status": "待发货",
+					"actions": ["发货"]
+				}]
+		},{
+			"order_no":"006",
+			"buyer":"lily",
+			"status": "待发货",
+			"final_price":32.00,
+			"save_money":"",
+			"postage":2.00,
+			"methods_of_payment": "货到付款",
+			"actions": ["取消订单"],
+			"products":
+				[{
+					"name":"bill商品2",
+					"price":20.0,
+					"count":1,
+					"supplier": "bill商家",
+					"is_sync_supplier": "true",
+					"status": "待发货",
+					"actions": ["发货"]
+				},{
+					"name":"tom商品1",
+					"price":10.0,
+					"count":1,
+					"supplier": "tom商家",
+					"is_sync_supplier": "true",
+					"status": "待发货",
+					"actions": ["发货"]
+				}]
+		},{
+			"order_no":"005",
+			"buyer":"lily",
+			"status": "待发货",
+			"final_price":25.00,
+			"integral_money":25.00,
+			"save_money":25.00,
+			"methods_of_payment": "优惠抵扣",
+			"actions": ["发货","取消订单"],
+			"products":
+				[{
+					"name":"bill商品11",
+					"price":10.0,
+					"count":5,
+					"supplier": "bill商家"
+					"is_sync_supplier": "true"
+				}]
+		},{
+			"order_no":"004",
+			"buyer":"lily",
+			"status": "待发货",
+			"final_price":27.00,
+			"postage":2.00,
+			"save_money":5.00,
+			"methods_of_payment": "微信支付",
+			"actions": ["发货","申请退款"],
+			"products":
+				[{
+					"name":"bill商品11",
+					"price":10.0,
+					"count":1,
+					"supplier": "bill商家",
+					"is_sync_supplier": "true"
+				},{
+					"name":"bill商品2",
+					"price":20.0,
+					"count":1,
+					"supplier": "bill商家",
+					"is_sync_supplier": "true"
+				}]
+		},{
+			"order_no":"003",
+			"buyer":"lily",
+			"status": "待发货",
+			"final_price":30.00,
+			"methods_of_payment": "货到付款",
+			"actions": ["发货","取消订单"],
+			"products":
+				[{
+					"name":"商品1a",
+					"price":10.0,
+					"count":1,
+					"supplier": "供货商1",
+					"is_sync_supplier": "false"
+				},{
+					"name":"商品2a",
+					"price":20.0,
+					"count":1,
+					"supplier": "供货商2",
+					"is_sync_supplier": "false"
+				}]
+		},{
+			"order_no":"002",
+			"buyer":"lily",
+			"status": "待发货",
+			"final_price":30.00,
+			"methods_of_payment": "微信支付",
+			"actions": ["发货","申请退款"],
+			"products":
+				[{
+					"name":"商品1a",
+					"price":10.0,
+					"count":1,
+					"supplier": "供货商1",
+					"is_sync_supplier": "false"
+				},{
+					"name":"商品1b",
+					"price":20.0,
+					"count":1,
+					"supplier": "供货商1",
+					"is_sync_supplier": "false"
+				}]
+		},{
+			"order_no":"001",
+			"buyer":"lily",
+			"status": "待支付",
+			"final_price":10.00,
+			"methods_of_payment": "微信支付",
+			"actions": ["支付","修改价格","取消订单"],
+			"products":
+				[{
+					"name":"bill商品11",
+					"price":10.0,
+					"count":1
+				}]
+		}]
+		"""
+
+	#订单类型：同步供货商
+	when jobs根据给定条件查询订单
+		"""
+		{
+			"supplier_type":"同步供货商"
+		}
+		"""
+	Then jobs可以看到订单列表
+		"""
+		[{
+			"order_no":"007",
+			"buyer":"lily",
+			"status": "待发货",
+			"final_price":42.00,
+			"postage":2.0,
+			"save_money":0.00,
+			"methods_of_payment": "货到付款",
+			"actions": ["发货",取消订单"],
+			"products":[{
+					"name":"bill商品2",
+					"price":20.0,
+					"count":1,
+					"supplier": "bill商家",
+					"is_sync_supplier": "true",
+					"status": "待发货",
+					"actions": ["发货"]
+				},{
+					"name":"tom商品1",
+					"price":10.0,
+					"count":1,
+					"supplier": "tom商家",
+					"is_sync_supplier": "true",
+					"status": "待发货",
+					"actions": ["发货"]
+				}]
+		},{
+			"order_no":"006",
+			"buyer":"lily",
+			"status": "待发货",
+			"final_price":32.00,
+			"save_money":"",
+			"postage":2.00,
+			"methods_of_payment": "货到付款",
+			"actions": ["取消订单"],
+			"products":
+				[{
+					"name":"bill商品2",
+					"price":20.0,
+					"count":1,
+					"supplier": "bill商家",
+					"is_sync_supplier": "true",
+					"status": "待发货",
+					"actions": ["发货"]
+				},{
+					"name":"tom商品1",
+					"price":10.0,
+					"count":1,
+					"supplier": "tom商家",
+					"is_sync_supplier": "true",
+					"status": "待发货",
+					"actions": ["发货"]
+				}]
+		},{
+			"order_no":"005",
+			"buyer":"lily",
+			"status": "待发货",
+			"final_price":25.00,
+			"integral_money":25.00,
+			"save_money":25.00,
+			"methods_of_payment": "优惠抵扣",
+			"actions": ["发货","取消订单"],
+			"products":
+				[{
+					"name":"bill商品11",
+					"price":10.0,
+					"count":5,
+					"supplier": "bill商家"
+					"is_sync_supplier": "true"
+				}]
+		},{
+			"order_no":"004",
+			"buyer":"lily",
+			"status": "待发货",
+			"final_price":27.00,
+			"postage":2.00,
+			"save_money":5.00,
+			"methods_of_payment": "微信支付",
+			"actions": ["发货","申请退款"],
+			"products":
+				[{
+					"name":"bill商品11",
+					"price":10.0,
+					"count":1,
+					"supplier": "bill商家",
+					"is_sync_supplier": "true"
+				},{
+					"name":"bill商品2",
+					"price":20.0,
+					"count":1,
+					"supplier": "bill商家",
+					"is_sync_supplier": "true"
+				}]
+		}]
+		"""
+
+	#订单类型：自建供货商
+	when jobs根据给定条件查询订单
+		"""
+		{
+			"supplier_type":"自建供货商"
+		}
+		"""
+	Then jobs可以看到订单列表
+		"""
+		[{
+			"order_no":"007",
+			"buyer":"lily",
+			"status": "待发货",
+			"final_price":42.00,
+			"postage":2.0,
+			"save_money":0.00,
+			"methods_of_payment": "货到付款",
+			"actions": ["发货",取消订单"],
+			"products":[{
+					"name":"商品1a",
+					"price":10.0,
+					"count":1,
+					"supplier": "供货商1",
+					"is_sync_supplier": "false",
+					"status": "待发货",
+					"actions": ["发货"]
+				}]
+		},{
+				"order_no":"003",
+				"buyer":"lily",
+				"status": "待发货",
+				"final_price":30.00,
+				"methods_of_payment": "货到付款",
+				"actions": ["发货","取消订单"],
+				"products":
+					[{
+						"name":"商品1a",
+						"price":10.0,
+						"count":1,
+						"supplier": "供货商1",
+						"is_sync_supplier": "false"
+					},{
+						"name":"商品2a",
+						"price":20.0,
+						"count":1,
+						"supplier": "供货商2",
+						"is_sync_supplier": "false"
+					}]
+		},{
+			"order_no":"002",
+			"buyer":"lily",
+			"status": "待发货",
+			"final_price":30.00,
+			"methods_of_payment": "微信支付",
+			"actions": ["发货","申请退款"],
+			"products":
+				[{
+					"name":"商品1a",
+					"price":10.0,
+					"count":1,
+					"supplier": "供货商1",
+					"is_sync_supplier": "false"
+				},{
+					"name":"商品1b",
+					"price":20.0,
+					"count":1,
+					"supplier": "供货商1",
+					"is_sync_supplier": "false"
+				}]
+		}]
 		"""
