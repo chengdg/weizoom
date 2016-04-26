@@ -209,7 +209,9 @@ def create_channel_qrcode_has_memeber_restructure(channel_qrcode, user_profile, 
 			member_log = ChannelQrcodeToMemberLog.objects.filter(channel_qrcode=channel_qrcode, member=member)[0]
 			member_log.channel_qrcode = channel_qrcode
 			member_log.member = member
-			member_log.coupon_ids = ','.join(member_log.coupon_ids.split(',').append(coupon_id))
+			cur_coupon_ids = member_log.coupon_ids.split(',')
+			cur_coupon_ids.append(coupon_id)
+			member_log.coupon_ids = ','.join(cur_coupon_ids)
 			member_log.save()
 
 		try:
