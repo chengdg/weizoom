@@ -176,7 +176,7 @@ Background:
 		"""
 	When jobs失效优惠券'多商品失效活动'
 	
-	And jobs创建团购活动
+	And jobs新建团购活动
 		"""
 		[{
 			"group_name":"团购活动",
