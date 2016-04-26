@@ -93,6 +93,7 @@ def check_new_channel_qrcode_ticket(ticket, user_profile):
 
 def create_new_channel_qrcode_has_memeber(user_profile, member, ticket, is_new_member):
 	try:
+		print '==========999999999999=========='
 		new_channel_qrcodes = MemberChannelQrcode.objects.filter(ticket=ticket, owner_id=user_profile.user_id)
 		if new_channel_qrcodes.count() > 0:
 			new_channel_qrcode = new_channel_qrcodes[0]
@@ -139,21 +140,10 @@ def _add_award_to_member(user_profile, award_type, award_content, member, integr
 
 def create_channel_qrcode_has_memeber_restructure(channel_qrcode, user_profile, member, ticket, is_new_member):
 	try:
+		print '=====33333333333333====='
 		if channel_qrcode.bing_member_id == member.id:
 			return
 
-		if (is_new_member is False) and channel_qrcode.re_old_member == 0:
-			return
-
-		# award_prize_info = channel_qrcode.award_prize_info
-		# award_type = award_prize_info['type']
-		# coupon_id = ''
-		# if award_type == u'优惠券'：
-		# 	conpon_name = award_prize_info['name']
-		# 	try:
-		# 		coupon_id = promotion_models.Coupon.objects.get(name = conpon_name).id
-		# 	except:
-		# 		coupon_id = ''
 		qrcode_award = MemberChannelQrcodeAwardContent.objects.get(owner_id=user_profile.user_id)
 		award_type = qrcode_award.scanner_award_type
 		award_content = qrcode_award.scanner_award_content
@@ -164,9 +154,13 @@ def create_channel_qrcode_has_memeber_restructure(channel_qrcode, user_profile, 
 
 		coupon_ids = ChannelQrcodeToMemberLog.objects.filter(channel_qrcode=channel_qrcode, member=member)[0].coupon_ids
 		coupon_ids_list = coupon_ids.split(',')
-		if coupon_id and coupon_id in coupon_ids_list:
-			return
-		
+
+		if (is_new_member is False) and channel_qrcode.re_old_member == 0:
+			print '=====444444444444====='
+			if coupon_id and (coupon_id in coupon_ids_list):
+				print '=====5555555555555====='
+				return
+
 		if ChannelQrcodeHasMember.objects.filter(channel_qrcode=channel_qrcode, member=member).count() == 0:
 			ChannelQrcodeHasMember.objects.filter(member=member).delete()
 			ChannelQrcodeHasMember.objects.create(channel_qrcode=channel_qrcode, member=member, is_new=is_new_member)
@@ -191,10 +185,12 @@ def create_channel_qrcode_has_memeber_restructure(channel_qrcode, user_profile, 
 
 		if ChannelQrcodeToMemberLog.objects.filter(channel_qrcode=channel_qrcode, member=member).count() == 0:
 			try:
+				print '=====6666666666666====='
 				ChannelQrcodeToMemberLog.objects.create(channel_qrcode=channel_qrcode, member=member, coupon_ids=coupon_id)
 			except:
 				pass
 		else:
+			print '==========777777777777=========='
 			ChannelQrcodeToMemberLog.objects.update(channel_qrcode=channel_qrcode, member=member, coupon_ids=F('coupon_ids')+coupon_id)
 
 		try:
@@ -208,7 +204,8 @@ def create_channel_qrcode_has_memeber_restructure(channel_qrcode, user_profile, 
 		except:
 			notify_message = u"渠道扫描异常update_member_grade error, cause:\n{}".format(unicode_full_stack())
 			watchdog_warning(notify_message)
-	except:
+	except Exception,e:
+		print e,'-------------------'
 		notify_message = u"渠道扫描异常create_channel_qrcode_has_memeber error, cause:\n{}".format(unicode_full_stack())
 		watchdog_warning(notify_message)
 
