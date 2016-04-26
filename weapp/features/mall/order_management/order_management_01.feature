@@ -463,6 +463,12 @@ Background:
 				"end_date": "10天后",
 				"coupon_id_prefix": "coupon1_id_",
 				"coupon_product": "bill商品11"
+			},{
+				"name": "全体券",
+				"money": 50,
+				"start_date": "今天",
+				"end_date": "10天后",
+				"coupon_id_prefix": "coupon2_id_"
 			}]
 			"""
 
@@ -688,7 +694,7 @@ Background:
 					When lily购买jobs的商品
 						"""
 						{
-							"order_id":"006",
+							"order_id":"007",
 							"pay_type":"货到付款",
 							"products":[{
 								"name":"商品1a",
@@ -1614,7 +1620,7 @@ Scenario:4 查看对应自营平台订单列表和订单详情，标记同步供
 		}]
 		"""
 
-	Then tom能获得订单'007'
+	Then jobs能获得订单'007'
 		"""
 		{
 			"order_no":"007",
@@ -1643,7 +1649,7 @@ Scenario:4 查看对应自营平台订单列表和订单详情，标记同步供
 						"is_sync_supplier": "true"
 					}]
 		}
-		"""
+		"""		
 
 Scenario:5 自营平台订单列表按照"供货商类型"查询
 	Given jobs登录系统
@@ -1992,3 +1998,437 @@ Scenario:5 自营平台订单列表按照"供货商类型"查询
 				}]
 		}]
 		"""
+
+Scenario:6 自营平台订单列表优惠券抵扣的订单，拆单后又取消订单，取消后的订单列表和订单详情，无标记同步供货商标签
+	Given jobs登录系统
+	Given jobs已添加了优惠券规则
+		"""
+		[{
+			"name": "全体券",
+			"money": 50,
+			"start_date": "今天",
+			"end_date": "10天后",
+			"coupon_id_prefix": "coupon2_id_"
+		}]
+		"""
+
+	When lily关注jobs的公众号
+	When lily访问jobs的webapp
+	When lily领取jobs的优惠券
+		"""
+		[{
+			"name": "全体券",
+			"coupon_ids": ["coupon2_id_1"]
+		}]
+		"""
+
+	#支付之后又取消的同步订单，支付之后显示同步商家标签，订单取消之后不显示同步商家标签
+		When lily购买jobs的商品
+			"""
+			{
+				"order_id":"0010",
+				"pay_type":"微信支付",
+				"products":[{
+					"name":"bill11",
+					"count":1
+				}],
+				"coupon":"coupon2_id_1"
+			}
+			"""
+
+		Given jobs登录系统
+		Then jobs可以看到订单列表
+			"""
+			[{
+				"order_no":"0010",
+				"buyer":"lily",
+				"status": "待发货",
+				"final_price":0.00,
+				"postage":0.0,
+				"save_money":10.00,
+				"methods_of_payment": "优惠抵扣",
+				"actions": ["发货",取消订单"],
+				"products":[{
+						"name":"bill11",
+						"price":10.0,
+						"count":1,
+						"supplier": "bill",
+						"is_sync_supplier": "true",
+						"status": "待发货",
+						"actions": ["发货"]
+					}]
+			},{
+				"order_no":"007",
+				"buyer":"lily",
+				"status": "待发货",
+				"final_price":42.00,
+				"postage":2.0,
+				"save_money":0.00,
+				"methods_of_payment": "货到付款",
+				"actions": ["发货",取消订单"],
+				"products":[{
+						"name":"商品1a",
+						"price":10.0,
+						"count":1,
+						"supplier": "供货商1",
+						"is_sync_supplier": "false",
+						"status": "待发货",
+						"actions": ["发货"]
+					},{
+						"name":"bill商品2",
+						"price":20.0,
+						"count":1,
+						"supplier": "bill商家",
+						"is_sync_supplier": "true",
+						"status": "待发货",
+						"actions": ["发货"]
+					},{
+						"name":"tom商品1",
+						"price":10.0,
+						"count":1,
+						"supplier": "tom商家",
+						"is_sync_supplier": "true",
+						"status": "待发货",
+						"actions": ["发货"]
+					}]
+			},{
+				"order_no":"006",
+				"buyer":"lily",
+				"status": "待发货",
+				"final_price":32.00,
+				"save_money":"",
+				"postage":2.00,
+				"methods_of_payment": "货到付款",
+				"actions": ["取消订单"],
+				"products":
+					[{
+						"name":"bill商品2",
+						"price":20.0,
+						"count":1,
+						"supplier": "bill商家",
+						"is_sync_supplier": "true",
+						"status": "待发货",
+						"actions": ["发货"]
+					},{
+						"name":"tom商品1",
+						"price":10.0,
+						"count":1,
+						"supplier": "tom商家",
+						"is_sync_supplier": "true",
+						"status": "待发货",
+						"actions": ["发货"]
+					}]
+			},{
+				"order_no":"005",
+				"buyer":"lily",
+				"status": "待发货",
+				"final_price":25.00,
+				"integral_money":25.00,
+				"save_money":25.00,
+				"methods_of_payment": "优惠抵扣",
+				"actions": ["发货","取消订单"],
+				"products":
+					[{
+						"name":"bill商品11",
+						"price":10.0,
+						"count":5,
+						"supplier": "bill商家"
+						"is_sync_supplier": "true"
+					}]
+			},{
+				"order_no":"004",
+				"buyer":"lily",
+				"status": "待发货",
+				"final_price":27.00,
+				"postage":2.00,
+				"save_money":5.00,
+				"methods_of_payment": "微信支付",
+				"actions": ["发货","申请退款"],
+				"products":
+					[{
+						"name":"bill商品11",
+						"price":10.0,
+						"count":1,
+						"supplier": "bill商家",
+						"is_sync_supplier": "true"
+					},{
+						"name":"bill商品2",
+						"price":20.0,
+						"count":1,
+						"supplier": "bill商家",
+						"is_sync_supplier": "true"
+					}]
+			},{
+				"order_no":"003",
+				"buyer":"lily",
+				"status": "待发货",
+				"final_price":30.00,
+				"methods_of_payment": "货到付款",
+				"actions": ["发货","取消订单"],
+				"products":
+					[{
+						"name":"商品1a",
+						"price":10.0,
+						"count":1,
+						"supplier": "供货商1",
+						"is_sync_supplier": "false"
+					},{
+						"name":"商品2a",
+						"price":20.0,
+						"count":1,
+						"supplier": "供货商2",
+						"is_sync_supplier": "false"
+					}]
+			},{
+				"order_no":"002",
+				"buyer":"lily",
+				"status": "待发货",
+				"final_price":30.00,
+				"methods_of_payment": "微信支付",
+				"actions": ["发货","申请退款"],
+				"products":
+					[{
+						"name":"商品1a",
+						"price":10.0,
+						"count":1,
+						"supplier": "供货商1",
+						"is_sync_supplier": "false"
+					},{
+						"name":"商品1b",
+						"price":20.0,
+						"count":1,
+						"supplier": "供货商1",
+						"is_sync_supplier": "false"
+					}]
+			},{
+				"order_no":"001",
+				"buyer":"lily",
+				"status": "待支付",
+				"final_price":10.00,
+				"methods_of_payment": "微信支付",
+				"actions": ["支付","修改价格","取消订单"],
+				"products":
+					[{
+						"name":"bill商品11",
+						"price":10.0,
+						"count":1
+					}]
+			}]
+			"""
+		Then jobs能获得订单'0010'
+			"""
+			{
+				"order_no":"0010",
+				"status": "待发货",
+				"final_price":0.00,
+				"methods_of_payment": "优惠抵扣",
+				"actions": ["发货"],
+				"products":
+					[{
+						"name":"bill11",
+						"price":10.0,
+						"count":1,
+						"supplier": "bill",
+						"is_sync_supplier": "true"
+					}]
+			}
+			"""	
+
+		When jobs'取消'订单'0010'
+		Then jobs可以看到订单列表
+			"""
+			[{
+				"order_no":"0010",
+				"buyer":"lily",
+				"status": "已取消",
+				"final_price":0.00,
+				"postage":0.0,
+				"save_money":10.00,
+				"methods_of_payment": "优惠抵扣",
+				"actions": [],
+				"products":[{
+						"name":"bill11",
+						"price":10.0,
+						"count":1,
+						"supplier": "",
+						"is_sync_supplier": "",
+						"status": "待发货",
+						"actions": ["发货"]
+					}]
+			},{
+				"order_no":"007",
+				"buyer":"lily",
+				"status": "待发货",
+				"final_price":42.00,
+				"postage":2.0,
+				"save_money":0.00,
+				"methods_of_payment": "货到付款",
+				"actions": ["发货",取消订单"],
+				"products":[{
+						"name":"商品1a",
+						"price":10.0,
+						"count":1,
+						"supplier": "供货商1",
+						"is_sync_supplier": "false",
+						"status": "待发货",
+						"actions": ["发货"]
+					},{
+						"name":"bill商品2",
+						"price":20.0,
+						"count":1,
+						"supplier": "bill商家",
+						"is_sync_supplier": "true",
+						"status": "待发货",
+						"actions": ["发货"]
+					},{
+						"name":"tom商品1",
+						"price":10.0,
+						"count":1,
+						"supplier": "tom商家",
+						"is_sync_supplier": "true",
+						"status": "待发货",
+						"actions": ["发货"]
+					}]
+			},{
+				"order_no":"006",
+				"buyer":"lily",
+				"status": "待发货",
+				"final_price":32.00,
+				"save_money":"",
+				"postage":2.00,
+				"methods_of_payment": "货到付款",
+				"actions": ["取消订单"],
+				"products":
+					[{
+						"name":"bill商品2",
+						"price":20.0,
+						"count":1,
+						"supplier": "bill商家",
+						"is_sync_supplier": "true",
+						"status": "待发货",
+						"actions": ["发货"]
+					},{
+						"name":"tom商品1",
+						"price":10.0,
+						"count":1,
+						"supplier": "tom商家",
+						"is_sync_supplier": "true",
+						"status": "待发货",
+						"actions": ["发货"]
+					}]
+			},{
+				"order_no":"005",
+				"buyer":"lily",
+				"status": "待发货",
+				"final_price":25.00,
+				"integral_money":25.00,
+				"save_money":25.00,
+				"methods_of_payment": "优惠抵扣",
+				"actions": ["发货","取消订单"],
+				"products":
+					[{
+						"name":"bill商品11",
+						"price":10.0,
+						"count":5,
+						"supplier": "bill商家"
+						"is_sync_supplier": "true"
+					}]
+			},{
+				"order_no":"004",
+				"buyer":"lily",
+				"status": "待发货",
+				"final_price":27.00,
+				"postage":2.00,
+				"save_money":5.00,
+				"methods_of_payment": "微信支付",
+				"actions": ["发货","申请退款"],
+				"products":
+					[{
+						"name":"bill商品11",
+						"price":10.0,
+						"count":1,
+						"supplier": "bill商家",
+						"is_sync_supplier": "true"
+					},{
+						"name":"bill商品2",
+						"price":20.0,
+						"count":1,
+						"supplier": "bill商家",
+						"is_sync_supplier": "true"
+					}]
+			},{
+				"order_no":"003",
+				"buyer":"lily",
+				"status": "待发货",
+				"final_price":30.00,
+				"methods_of_payment": "货到付款",
+				"actions": ["发货","取消订单"],
+				"products":
+					[{
+						"name":"商品1a",
+						"price":10.0,
+						"count":1,
+						"supplier": "供货商1",
+						"is_sync_supplier": "false"
+					},{
+						"name":"商品2a",
+						"price":20.0,
+						"count":1,
+						"supplier": "供货商2",
+						"is_sync_supplier": "false"
+					}]
+			},{
+				"order_no":"002",
+				"buyer":"lily",
+				"status": "待发货",
+				"final_price":30.00,
+				"methods_of_payment": "微信支付",
+				"actions": ["发货","申请退款"],
+				"products":
+					[{
+						"name":"商品1a",
+						"price":10.0,
+						"count":1,
+						"supplier": "供货商1",
+						"is_sync_supplier": "false"
+					},{
+						"name":"商品1b",
+						"price":20.0,
+						"count":1,
+						"supplier": "供货商1",
+						"is_sync_supplier": "false"
+					}]
+			},{
+				"order_no":"001",
+				"buyer":"lily",
+				"status": "待支付",
+				"final_price":10.00,
+				"methods_of_payment": "微信支付",
+				"actions": ["支付","修改价格","取消订单"],
+				"products":
+					[{
+						"name":"bill商品11",
+						"price":10.0,
+						"count":1
+					}]
+			}]
+			"""
+		Then jobs能获得订单'0010'
+			"""
+			{
+				"order_no":"0010",
+				"status": "已取消",
+				"final_price":0.00,
+				"methods_of_payment": "优惠抵扣",
+				"actions": [""],
+				"products":
+					[{
+						"name":"bill11",
+						"price":10.0,
+						"count":1,
+						"supplier": "",
+						"is_sync_supplier": ""
+					}]
+			}
+			"""		
+
