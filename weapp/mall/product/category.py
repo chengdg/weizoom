@@ -76,7 +76,7 @@ class CategoryProducts(resource.Resource):
 
         product_ids = set([relation.product_id for relation in relations])
 
-        _, error_product_ids = verification_multi_product_promotion(request.manager, product_ids, promotion_type=promotion_type)
+        _, error_product_ids = verification_multi_product_promotion(request.manager, product_ids, promotion_type)
 
         product_ids = list(set(product_ids) - set(error_product_ids))
 

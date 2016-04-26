@@ -11,6 +11,7 @@ from core import resource
 from core.jsonresponse import create_response
 from mall import export
 from mall.promotion import models as promotion_models  # 注意：不要覆盖此module
+from mall.promotion.utils import string_ids2int_ids, verification_multi_product_promotion
 from modules.member.models import MemberGrade, IntegralStrategySttings
 
 
@@ -76,19 +77,23 @@ class IntegralSales(resource.Resource):
 
     @login_required
     def api_put(request):
-        integral_sale_type = promotion_models.INTEGRAL_SALE_TYPE_PARTIAL
-        if integral_sale_type == promotion_models.INTEGRAL_SALE_TYPE_PARTIAL:
-            discount = request.POST.get('discount', 100)
-            discount_money = request.POST.get('discount_money', 0.0)
-            integral_price = 0.0
-        else:
-            discount = 100
-            discount_money = 0.0
-            integral_price = request.POST.get('integral_price', 0.0)
+        products = json.loads(request.POST.get('products', '[]'))
+        product_ids = list(set([product['id'] for product in products]))
+        # product_ids = string_ids2int_ids(product_ids)
+
+        # 保存时校验商品
+        save_success, error_product_ids = verification_multi_product_promotion(request.manager, product_ids, 'integral_sale')
+        if not save_success:
+            response = create_response(200)
+            response.data = {
+                'save_success': False,
+                'error_product_ids': error_product_ids
+            }
+            return response.get_response()
 
         integral_sale = promotion_models.IntegralSale.objects.create(
             owner = request.manager,
-            type = integral_sale_type,
+            type = promotion_models.INTEGRAL_SALE_TYPE_PARTIAL,
             discount = 0,
             discount_money = 0.0,
             integral_price = 0,
@@ -124,8 +129,6 @@ class IntegralSales(resource.Resource):
             detail_id = integral_sale.id
         )
 
-        products = json.loads(request.POST.get('products', '[]'))
-        product_ids = set([product['id'] for product in products])
         for product_id in product_ids:
             promotion_models.ProductHasPromotion.objects.create(
                 product_id = product_id,
@@ -135,9 +138,12 @@ class IntegralSales(resource.Resource):
         if start_date <= now:
             promotion.status = promotion_models.PROMOTION_STATUS_STARTED
             promotion.save()
-        response = create_response(200)
-        return response.get_response()
 
+        response = create_response(200)
+        response.data = {
+            'save_success': True
+        }
+        return response.get_response()
 
 
 class IntegralSaleList(resource.Resource):

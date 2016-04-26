@@ -345,16 +345,15 @@ def filter_promotions(request, promotions):
 #             promotion_product_ids = filter(lambda k,v:)
 
 
-def verification_multi_product_promotion(webapp_owner, product_ids, get_all_error_product_ids=False, promotion_type=''):
+def verification_multi_product_promotion(webapp_owner, product_ids, promotion_type):
     """
     创建多商品活动时的检测
     @param webapp_owner:
     @param product_ids: 要检测的商品id列表
-    @param get_all_error_product_ids:是否需要所有错误id
-    @param promotion_type:
-    @return:BOOL, error_product_ids
+    @param promotion_type:接受'integral_sale','coupon'
+    @return:BOOL, error_product_ids错误商品id列表
     """
-    all_error_product_ids =[]
+    all_error_product_ids = []
     # 检测商品拥有者、删除、下架、
     products = models.Product.objects.filter(
             owner=webapp_owner,
@@ -366,12 +365,9 @@ def verification_multi_product_promotion(webapp_owner, product_ids, get_all_erro
 
     usable_product_ids = [p.id for p in products]
 
-    error_product_ids = list(set(product_ids).difference(set(usable_product_ids)))  # b中有而a中没有的
+    not_on_shelve_error_product_ids = list(set(product_ids).difference(set(usable_product_ids)))  # b中有而a中没有的
 
-    if error_product_ids and get_all_error_product_ids:
-        return False, error_product_ids
-    else:
-        all_error_product_ids.extend(error_product_ids)
+    all_error_product_ids.extend(not_on_shelve_error_product_ids)
 
     # 检测活动互斥,状态为“未开始”和“进行中”的活动属于检测互斥范围
     error_products = promotion_models.ProductHasPromotion.objects.filter(product_id__in=usable_product_ids,
@@ -380,30 +376,35 @@ def verification_multi_product_promotion(webapp_owner, product_ids, get_all_erro
                                                                              promotion_models.PROMOTION_STATUS_STARTED])
 
     if promotion_type == 'coupon':
+        # 多品券不和多品券、积分应用互斥
         error_products = error_products.exclude(promotion__type=promotion_models.PROMOTION_TYPE_COUPON).exclude(promotion__type=promotion_models.PROMOTION_TYPE_INTEGRAL_SALE)
     elif promotion_type == 'integral_sale':
         # 创建积分应用只和积分应用本身互斥
         error_products = error_products.filter(promotion__type=promotion_models.PROMOTION_TYPE_INTEGRAL_SALE)
-
     else:
         error_products = []
 
-    if error_products and get_all_error_product_ids:
-        return False, [p.product_id for p in error_products]
-    else:
-        all_error_product_ids.extend([p.product_id for p in error_products])
+    all_error_product_ids.extend([p.product_id for p in error_products])
 
     # 检测团购
     group_records = group_models.Group.objects(owner_id=webapp_owner.id, status__lte=1)
     group_product_ids = [record.product_id for record in group_records]
 
-    error_product_ids = list(set(product_ids).intersection(set(group_product_ids)))
-    if error_product_ids and get_all_error_product_ids:
-        return False, error_product_ids
-    else:
-        all_error_product_ids.extend(error_product_ids)
+    group_error_product_ids = list(set(product_ids).intersection(set(group_product_ids)))
 
-    if all_error_product_ids:
-        return False, all_error_product_ids
-    else:
-        return True, []
+    all_error_product_ids.extend(group_error_product_ids)
+
+    return len(all_error_product_ids) == 0, all_error_product_ids
+
+
+def string_ids2int_ids(string_ids, need_sorted=True):
+    """
+    @param string_ids:
+    @param need_sorted:
+    @return:
+    """
+    int_ids = list(set(map(lambda x: int(x), string_ids.split(','))))
+    if need_sorted:
+        int_ids = sorted(int_ids)
+
+    return int_ids
