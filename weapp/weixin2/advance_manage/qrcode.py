@@ -293,6 +293,8 @@ class Qrcode(resource.Resource):
 		带参数二维码
 		"""
 		setting_id = int(request.GET.get('setting_id', '-1'))
+		setting_ids = request.GET.get('setting_ids', None)
+		print setting_ids,444444444
 		answer_content = {}
 		webapp_id = request.user_profile.webapp_id
 		groups = MemberGrade.get_all_grades_list(webapp_id)
@@ -305,6 +307,14 @@ class Qrcode(resource.Resource):
 			else:
 				tags.append(tag)
 		qrcode = None
+		#批量修改
+		qrcodes = None
+		if setting_ids:
+			setting_ids = setting_ids.split(',')
+			qrcodes = ChannelQrcodeSettings.objects.filter(id__in=setting_ids, owner=request.manager)
+			print 1111111111
+			print qrcodes.count(),222222
+
 		from mall.promotion.models import CouponRule
 		if setting_id > 0:
 			try:
@@ -370,7 +380,8 @@ class Qrcode(resource.Resource):
 			'tags': tags,
 			'tag_is_del': False if MemberTag.objects.filter(id=tag_id).count() > 0 else True,
 			'selectedMemberIds': json.dumps(selectedMemberIds),
-			'jsons': jsons
+			'jsons': jsons,
+			'qrcodes': qrcodes
 		})
 		return render_to_response('weixin/advance_manage/edit_qrcode.html', c)
 

@@ -27,11 +27,11 @@
 			0
 		{% endif %}">
 		<div class="control-group mt20 mb15 pl10" >
-			{% if qrcode.length  %}
+			{% if qrcodes %}
 			<div class="xui-qrcodeName" for="parents_name" style="font-weight:normal;display: inline-block;vertical-align: top;">二维码名称：</div>
 			<div class="xui-qrcodeGroups" style="display: inline-block;width: 67%">
-				{% for item in qrcode %}
-				<a class="mr20 mb10" style="display: inline-block;" href="/new_weixin/qrcode/?setting_id=${item.id}">{{ item.name }}</a>
+				{% for item in qrcodes %}
+				<a class="mr20 mb10" style="display: inline-block;" href="/new_weixin/qrcode/?setting_id={{item.id}}">{{ item.name }}</a>
 				{% endfor %}
 			</div>
 			{% else %}
@@ -84,6 +84,7 @@
 						<input style="width:448px;" type="text" id="remark" name="remark" value="{% if qrcode %}{{ qrcode.remark }}{% endif %}">
 					</div>
 				</div>
+				{% if not qrcodes %}
 				<div class="xui-row xa-bingMember" style="border-bottom: none; {% if qrcode %}{% ifequal qrcode.is_bing_member 1 %}height: 240px;{% endifequal %}{% else %}{% endif %}">
 					<div class="xui-i-left fl lh1"> 关联会员： </div>
 					<div class="fl mt18 ml20" style="text-align:left;">
@@ -116,6 +117,7 @@
 						</div>
 					</div>
 				</div>
+				{% endif %}
 			</div>
 <!-- 			<div class="xui-setting ml10 mr10 mt80"> -->
 			<div class="xui-Sweep1 mt20 disT" style="float:none;">
