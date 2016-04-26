@@ -6,7 +6,7 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.contrib.auth.decorators import login_required
 
-from mall.promotion.utils import verification_multi_product_coupon
+from mall.promotion.utils import verification_multi_product_promotion
 from .. import models as mall_models
 from .. import export
 from . import utils as category_ROA_utils
@@ -56,18 +56,27 @@ class Categories(resource.Resource):
 
 
 class CategoryProducts(resource.Resource):
+    """
+    促销选择分组时返回该分组的可用商品
+    """
     app = 'mall2'
     resource = 'category_products'
 
     @login_required
     def api_get(request):
+        """
+        @param category_ids:分组id列表
+        @param promotion_type:支持coupon,integral_sale
+        @return promotion_type: 促销类型
+        """
         category_ids = request.GET.get('category_ids', '').split(',')
+        promotion_type = request.GET.get('promotion_type', 'coupon')
         relations = mall_models.CategoryHasProduct.objects.filter(
             category_id__in=category_ids)
 
         product_ids = set([relation.product_id for relation in relations])
 
-        _, error_product_ids = verification_multi_product_coupon(request.manager, product_ids)
+        _, error_product_ids = verification_multi_product_promotion(request.manager, product_ids, promotion_type=promotion_type)
 
         product_ids = list(set(product_ids) - set(error_product_ids))
 

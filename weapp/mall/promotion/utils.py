@@ -345,7 +345,15 @@ def filter_promotions(request, promotions):
 #             promotion_product_ids = filter(lambda k,v:)
 
 
-def verification_multi_product_coupon(webapp_owner, product_ids, get_all_error_product_ids=False):
+def verification_multi_product_promotion(webapp_owner, product_ids, get_all_error_product_ids=False, promotion_type=''):
+    """
+    创建多商品活动时的检测
+    @param webapp_owner:
+    @param product_ids: 要检测的商品id列表
+    @param get_all_error_product_ids:是否需要所有错误id
+    @param promotion_type:
+    @return:BOOL, error_product_ids
+    """
     all_error_product_ids =[]
     # 检测商品拥有者、删除、下架、
     products = models.Product.objects.filter(
@@ -365,12 +373,20 @@ def verification_multi_product_coupon(webapp_owner, product_ids, get_all_error_p
     else:
         all_error_product_ids.extend(error_product_ids)
 
-    # 检测活动互斥，优惠券和其他活动（状态为“未开始”和“进行中”）是互斥的
+    # 检测活动互斥,状态为“未开始”和“进行中”的活动属于检测互斥范围
     error_products = promotion_models.ProductHasPromotion.objects.filter(product_id__in=usable_product_ids,
                                                                          promotion__status__in=[
                                                                              promotion_models.PROMOTION_STATUS_NOT_START,
-                                                                             promotion_models.PROMOTION_STATUS_STARTED]).exclude(
-        promotion__type=promotion_models.PROMOTION_TYPE_COUPON).exclude(promotion__type=promotion_models.PROMOTION_TYPE_INTEGRAL_SALE)
+                                                                             promotion_models.PROMOTION_STATUS_STARTED])
+
+    if promotion_type == 'coupon':
+        error_products = error_products.exclude(promotion__type=promotion_models.PROMOTION_TYPE_COUPON).exclude(promotion__type=promotion_models.PROMOTION_TYPE_INTEGRAL_SALE)
+    elif promotion_type == 'integral_sale':
+        # 创建积分应用只和积分应用本身互斥
+        error_products = error_products.filter(promotion__type=promotion_models.PROMOTION_TYPE_INTEGRAL_SALE)
+
+    else:
+        error_products = []
 
     if error_products and get_all_error_product_ids:
         return False, [p.product_id for p in error_products]
