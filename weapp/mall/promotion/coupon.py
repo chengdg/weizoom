@@ -130,7 +130,7 @@ class CouponList(resource.Resource):
                 page = 1
             can_add_coupon = 1
             if rule_id:
-                coupon_rule = CouponRule.objects.get(id=rule_id)
+                coupon_rule = CouponRule.objects.get(owner=request.manager, id=rule_id)
                 if not coupon_rule.is_active or coupon_rule.end_date < datetime.now():
                     can_add_coupon = 0
 
@@ -300,7 +300,7 @@ class CouponInfo(resource.Resource):
         添加库存页面
         """
         rule_id = request.GET.get('rule_id', '0')
-        rules = CouponRule.objects.filter(id=rule_id)
+        rules = CouponRule.objects.filter(owner=request.manager, id=rule_id)
 
         c = RequestContext(request, {
             'first_nav_name': FIRST_NAV_NAME,

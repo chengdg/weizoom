@@ -709,7 +709,7 @@ class Product(resource.Resource):
 
         if has_product_id:
             try:
-                product = models.Product.objects.get(id=has_product_id)
+                product = models.Product.objects.get(owner=request.manager, id=has_product_id)
             except models.Product.DoesNotExist:
                 return Http404
             products = [product]

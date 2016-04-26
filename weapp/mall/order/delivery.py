@@ -23,9 +23,9 @@ class BulkShipment(resource.Resource):
         file_url = request.POST.get('file_url', '')
         # 读取文件
         json_data, error_rows = _read_file(file_url[1:])
-
+        webapp_id = request.user_profile.webapp_id
         # 批量处理订单
-        success_data, error_items = mall_api.batch_handle_order(json_data, request.manager)
+        success_data, error_items = mall_api.batch_handle_order(json_data, request.manager,webapp_id)
         response.data = {
             'success_count': len(success_data),
             'error_count': len(error_rows) + len(error_items),

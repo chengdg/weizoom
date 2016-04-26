@@ -80,7 +80,7 @@ class ProductReviewInfo(resource.Resource):
         商品评价详情页面
         """
         product_review_id = int(request.GET.get('id'))
-        product_review = ProductReview.objects.get(id=product_review_id)
+        product_review = ProductReview.objects.get(id=product_review_id, owner_id=request.manager.id)
         product_review.product_name = Product.objects.get(id=product_review.product_id).name
         member = Member.objects.filter(id=product_review.member_id)
         if len(member):

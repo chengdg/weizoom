@@ -43,7 +43,7 @@ class CouponRuleInfo(resource.Resource):
             查看优惠券信息
             """
 
-            promotion = Promotion.objects.get(id=promotion_id)
+            promotion = Promotion.objects.get(owner=request.manager, id=promotion_id)
             Promotion.fill_details(request.manager, [promotion], {
                 'with_product': True,
                 'with_concrete_promotion': True
@@ -69,7 +69,7 @@ class CouponRuleInfo(resource.Resource):
 
 
         elif promotion_id:
-            promotion = Promotion.objects.get(id=promotion_id)
+            promotion = Promotion.objects.get(owner=request.manager, id=promotion_id)
             Promotion.fill_details(request.manager, [promotion], {
                 'with_product': True,
                 'with_concrete_promotion': True
