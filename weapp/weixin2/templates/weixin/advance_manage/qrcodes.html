@@ -190,8 +190,13 @@
 				}
 			});
 			$('.xa-editQrcodes').click(function(){
+				var isChecked = $('.xa-content table tbody').find('input:checked');
+				if( isChecked.length == 0){
+					W.showHint('error','请选择至少一个二维码');
+					return
+				}
 				var qrcodes = [];				
-				$('.xa-content table tbody').find('input:checked').each(function(){
+				isChecked.each(function(){
 					qrcodes.push($(this).parents('tr').attr('data-setting'));
 				});
 				var link = window.location.origin + "/new_weixin/qrcode/?setting_ids=" + qrcodes.toString();
