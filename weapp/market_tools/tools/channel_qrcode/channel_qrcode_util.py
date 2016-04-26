@@ -194,8 +194,8 @@ def create_channel_qrcode_has_memeber_restructure(channel_qrcode, user_profile, 
 			prize_info = PrizeInfo.from_json(channel_qrcode.award_prize_info)
 			award(prize_info, member, CHANNEL_QRCODE)
 
-		if coupon_id:
-			coupon_id = str(coupon_id) + ','
+		# if coupon_id:
+		# 	coupon_id = str(coupon_id) + ','
 
 		if ChannelQrcodeToMemberLog.objects.filter(channel_qrcode=channel_qrcode, member=member).count() == 0:
 			try:
@@ -209,10 +209,7 @@ def create_channel_qrcode_has_memeber_restructure(channel_qrcode, user_profile, 
 			member_log = ChannelQrcodeToMemberLog.objects.filter(channel_qrcode=channel_qrcode, member=member)[0]
 			member_log.channel_qrcode = channel_qrcode
 			member_log.member = member
-			if member_log.coupon_ids:
-				member_log.coupon_ids += coupon_id
-			else:
-				member_log.coupon_ids = coupon_id
+			member_log.coupon_ids = ','.join(member_log.coupon_ids.split(',').append(coupon_id))
 			member_log.save()
 
 		try:
