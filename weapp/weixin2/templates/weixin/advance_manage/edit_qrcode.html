@@ -16,13 +16,31 @@
 
 <form class="form-horizontal" method="post" id="editForm" action="/new_weixin/api/qrcode/">
 	<fieldset>
-		<input id="qrcode_id" name="qrcode_id" class="hide" value="{% if qrcode %}{{qrcode.id}}{% else %}0{% endif %}">
+		<input id="qrcode_id" name="qrcode_id" class="hide" value="
+		{% if qrcode %}
+			{% if qrcode.length %}
+				{% for item in qrcode %}{{qrcode.id}}{% if not forloop.last %}, {% endif %}{% endfor %}
+			{% else %}
+				{{qrcode.id}}
+			{% endif %}
+		{% else %}
+			0
+		{% endif %}">
 		<div class="control-group mt20 mb15 pl10" >
+			{% if qrcode.length  %}
+			<div class="xui-qrcodeName" for="parents_name" style="font-weight:normal;display: inline-block;vertical-align: top;">二维码名称：</div>
+			<div class="xui-qrcodeGroups" style="display: inline-block;width: 67%">
+				{% for item in qrcode %}
+				<a class="mr20 mb10" style="display: inline-block;" href="/new_weixin/qrcode/?setting_id=${item.id}">{{ item.name }}</a>
+				{% endfor %}
+			</div>
+			{% else %}
 			<label class="control-label fl mr10" for="parents_name" style="font-weight:normal">二维码名称</label>
 			<div class="controls">
 				<input type="text" class="input-xlarge mt3" id="name" name="name" placeholder="输入名称" value="{% if qrcode %}{{ qrcode.name }}{% endif %}" data-validate="required-none" data-validate-name="{{ qrcode.id }}" />
 				<div class="errorHint"></div>
-			</div>
+			</div>			
+			{% endif %}
 		</div>
 		<div class="xui-setting ml10 mr10 clearfix">
 				<div class="xui-row pr" style="border-bottom: none;">
@@ -39,7 +57,7 @@
 						{% for group in groups %}
 							<option value="{{group.id}}"{% if qrcode.grade_id == group.id %}selected="selected"{% endif%}>{{group.name}}</option>
 						{% endfor %}
-				</select>
+						</select>
 					</div>
 				</div>
 				<div class="xui-row">
