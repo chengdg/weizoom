@@ -155,7 +155,6 @@
 {% block js %}
 <script type="text/javascript">
 	$(document).ready(function() {
-		console.log('{{ qrcodes }}');
 		$("#prize_selector").delegate('.xa-selectPrizeType','change',function() {
 			$('.has-error').find($('.errorHint')).hide();
 		});
@@ -211,11 +210,10 @@
 		//提交二维码表单
 		$(".xa-footerBtn").delegate('.xa-submit','click',function() {
 			$('.xa-submit').attr('disabled','disabled');
-			if(!'{{ qrcodes }}' == 'None'){
+			if(!('{{ qrcodes }}' == 'None')){
 				var name = '';
 			}else{
 				var name = $.trim($('[name="name"]').val());
-				console.log(name);
 				if(name==''){
 					W.showHint('error', '二维码名称不能为空');
 					$('.xa-submit').removeAttr('disabled');
