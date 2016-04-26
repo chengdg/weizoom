@@ -501,7 +501,7 @@ class Product(models.Model):
 					display_price_range = '%.2f' % target_model['price']
 
 				product.current_used_model = target_model
-				product.display_price = target_model['price']
+				product.display_price = '%.2f' % target_model['price']
 				product.display_price_range = display_price_range
 				product.user_code = target_model['user_code']
 				product.stock_type = target_model['stock_type']
@@ -512,7 +512,7 @@ class Product(models.Model):
 				# 所有规格都已经被删除
 				product._is_use_custom_model = False
 				product.current_used_model = {}
-				product.display_price = product.price
+				product.display_price = '%.2f' % product.price
 				product.display_price_range = '%.2f' % product.price
 				product.user_code = product.user_code
 				product.stock_type = PRODUCT_STOCK_TYPE_LIMIT
