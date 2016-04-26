@@ -207,6 +207,8 @@ def create_channel_qrcode_has_memeber_restructure(channel_qrcode, user_profile, 
 		else:
 			print '==========777777777777=========='
 			member_log = ChannelQrcodeToMemberLog.objects.filter(channel_qrcode=channel_qrcode, member=member)[0]
+			member_log.channel_qrcode = channel_qrcode
+			member_log.member = member
 			if member_log.coupon_ids:
 				member_log.coupon_ids += coupon_id
 			else:
