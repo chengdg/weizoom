@@ -126,8 +126,9 @@ class GroupParticipances(resource.Resource):
 				group_end_time = data.created_at+timedelta(days=int(group_days))
 				end_time_date = group_end_time.strftime('%Y/%m/%d')
 				end_time_time = group_end_time.strftime('%H:%M')
-
-				rest_days = int(group_days)
+				rest_days = (group_end_time - datetime.today()).days
+				if rest_days < 1:
+					rest_days = u'不足1'
 
 				start_time = data.created_at.strftime('%Y-%m-%d %H:%M')
 				end_time = group_end_time.strftime('%Y-%m-%d %H:%M')
