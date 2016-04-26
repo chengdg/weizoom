@@ -35,6 +35,7 @@ class ChannelQrcodeSettings(models.Model):
 	bing_member_title = models.CharField(max_length=512) #关联会员头衔
 	qrcode_desc = models.TextField() #二维码描述
 	created_at = models.DateTimeField(auto_now_add=True) #添加时间
+	coupon_ids = models.TextField() #配置过的优惠券id集合
 
 	class Meta(object):
 		db_table = 'market_tool_channel_qrcode_setting'
