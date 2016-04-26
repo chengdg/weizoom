@@ -17,15 +17,16 @@
 <form class="form-horizontal" method="post" id="editForm" action="/new_weixin/api/qrcode/">
 	<fieldset>
 		<input id="qrcode_id" name="qrcode_id" class="hide" value="
-		{% if qrcode %}
-			{% if qrcode.length %}
-				{% for item in qrcode %}{{qrcode.id}}{% if not forloop.last %}, {% endif %}{% endfor %}
-			{% else %}
-				{{qrcode.id}}
-			{% endif %}
+		{% if qrcodes %}
+			{% for item in qrcodes %}{{item.id}}{% if not forloop.last %}, {% endif %}{% endfor %}
 		{% else %}
-			0
-		{% endif %}">
+			{% if qrcode %}
+				{{ qrcode.id }}
+			{% else %}
+				0
+			{% endif %}
+		{% endif %}
+		">
 		<div class="control-group mt20 mb15 pl10" >
 			{% if qrcodes %}
 			<div class="xui-qrcodeName" for="parents_name" style="font-weight:normal;display: inline-block;vertical-align: top;">二维码名称：</div>
@@ -219,12 +220,17 @@
 		//提交二维码表单
 		$(".xa-footerBtn").delegate('.xa-submit','click',function() {
 			$('.xa-submit').attr('disabled','disabled');
-			var name = $.trim($('[name="name"]').val());
-			if(name==''){
-				W.showHint('error', '二维码名称不能为空');
-				$('.xa-submit').removeAttr('disabled');
-				return false;
+			if('{{ qrcodes }}'){
+				var name = '';
+			}else{
+				var name = $.trim($('[name="name"]').val());
+				if(name==''){
+					W.showHint('error', '二维码名称不能为空');
+					$('.xa-submit').removeAttr('disabled');
+					return false;
+				}
 			}
+
 			var selectVal = $.trim($('[name="prize_type"]').val());
 			var jifen = $.trim($('[name="prize_score"]').val());
 			if(selectVal == "积分"){
