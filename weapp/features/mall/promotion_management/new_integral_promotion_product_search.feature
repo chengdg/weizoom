@@ -159,7 +159,7 @@ Background:
 @mall2 @promotion @promotionIntegral @ztq
 Scenario: 1 积分应用-新建活动页面的商品查询
 	Given jobs登录系统
-	When jobs新建活动时设置参与活动的商品查询条件4
+	When jobs新建活动时设置参与活动的商品查询条件
 		"""
 		{
 			"name":""
