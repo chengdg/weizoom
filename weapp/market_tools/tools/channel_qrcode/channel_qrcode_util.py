@@ -159,11 +159,10 @@ def create_channel_qrcode_has_memeber_restructure(channel_qrcode, user_profile, 
 		print channel_qrcode.re_old_member,'=========channel_qrcode.re_old_member========='
 		log = ChannelQrcodeToMemberLog.objects.filter(channel_qrcode=channel_qrcode, member=member)
 		if log.count() > 0:
-			coupon_ids_list = log.first().coupon_ids.split(',')
-			coupon_ids_list = [] if coupon_ids_list[0] == '' else coupon_ids_list
+			coupon_ids = log.first().coupon_ids
 		else:
-			coupon_ids_list = []
-		print coupon_ids_list,'==========coupon_ids_list==========='
+			coupon_ids = ""
+		print coupon_ids,'==========coupon_ids==========='
 
 		if ChannelQrcodeHasMember.objects.filter(channel_qrcode=channel_qrcode, member=member).count() == 0:
 			ChannelQrcodeHasMember.objects.filter(member=member).delete()
@@ -179,7 +178,7 @@ def create_channel_qrcode_has_memeber_restructure(channel_qrcode, user_profile, 
 				notify_message = u"渠道扫描异常update_member_grade error, cause:\n{}".format(unicode_full_stack())
 				watchdog_warning(notify_message)
 
-			if not coupon_id or (coupon_id and (coupon_id in coupon_ids_list)):
+			if not coupon_id or (coupon_id and (coupon_id in coupon_ids.split(","))):
 				print '=========0000000========'
 				return
 
@@ -196,15 +195,16 @@ def create_channel_qrcode_has_memeber_restructure(channel_qrcode, user_profile, 
 		else:
 			print '==========777777777777=========='
 			if coupon_id:
-				if coupon_id not in coupon_ids_list:
+				if coupon_id not in coupon_ids.split(","):
 					if member:
 						print '============prize=========='
 						prize_info = PrizeInfo.from_json(channel_qrcode.award_prize_info)
 						award(prize_info, member, CHANNEL_QRCODE)
 					member_log = log.first()
-					cur_coupon_ids = member_log.coupon_ids.split(',')
-					cur_coupon_ids.append(coupon_id)
-					member_log.coupon_ids = ','.join(cur_coupon_ids)
+					if member_log.coupon_ids == "":
+						member_log.coupon_ids = coupon_id
+					else:
+						member_log.coupon_ids += (','+coupon_id)
 					member_log.save()
 
 		try:
