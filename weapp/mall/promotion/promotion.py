@@ -404,7 +404,8 @@ class PromotionList(resource.Resource):
                         'standard_model': product.standard_model,
                         'current_used_model': product.current_used_model,
                         'created_at': datetime.strftime(product.created_at, '%Y-%m-%d %H:%M'),
-                        "detail_link": '/mall2/product/?id=%d&source=onshelf' % product.id
+                        "detail_link": '/mall2/product/?id=%d&source=onshelf' % product.id,
+                        'status': product.status
                     })
 
                 if len(data['products']) == 1:
