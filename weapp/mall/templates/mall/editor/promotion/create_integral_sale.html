@@ -243,10 +243,13 @@ var onSelectProduct = function(products) {
 	currentProduct = products[0];
 	// console.log(currentProduct, products);
 	products.forEach(function (product) {
-		if (currentProduct.display_price > product.display_price) {
+		if (parseFloat(currentProduct.display_price) > parseFloat(product.display_price)) {
 			currentProduct = product;
 		}
 	});
+	if (currentProduct) {
+		currentProduct.display_price = parseFloat(currentProduct.display_price);
+	};
 	changeAllDiscountedMoney();
 }
 var changeAllDiscountedMoney = function() {
