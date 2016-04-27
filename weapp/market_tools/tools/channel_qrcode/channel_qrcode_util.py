@@ -198,6 +198,7 @@ def create_channel_qrcode_has_memeber_restructure(channel_qrcode, user_profile, 
 			if coupon_id:
 				if coupon_id not in coupon_ids_list:
 					if member:
+						print '============prize=========='
 						prize_info = PrizeInfo.from_json(channel_qrcode.award_prize_info)
 						award(prize_info, member, CHANNEL_QRCODE)
 					member_log = log.first()
