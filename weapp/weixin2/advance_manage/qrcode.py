@@ -946,7 +946,7 @@ class GetCanUseCoupon(resource.Resource):
 				coupon_ids = s.coupon_ids.split(',')
 				if coupon_id and (coupon_id in coupon_ids):
 					response = create_response(500)
-					response.errMsg = u'%s之前使用过该优惠券！' % s.name
+					response.errMsg = u'该优惠券已被选用过！'
 					return response.get_response()
 
 		response = create_response(200)

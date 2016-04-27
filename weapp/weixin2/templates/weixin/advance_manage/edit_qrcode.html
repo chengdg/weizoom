@@ -1,6 +1,13 @@
 {% extends "content_base_v2.html" %}
 {% load common_tag %}
 {% load account_filter %}
+{% block css %}
+    <style>
+        .alert-warning{
+            background-color: #EFD061 !important;
+        }
+    </style>
+{% endblock %}
 {% block content-panel %}
 <div class="xui-weixin-qrcodePage xa-weixin-materialsPage">
 	<div class="xui-rightPanel pr" style="border:0;">
