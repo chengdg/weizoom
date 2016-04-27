@@ -29,7 +29,7 @@
 				<tr data-id="{{product.promotion.id}}" style="background:#fff;">
 					<td class="tl_important pl50 pt10 pb10">
 						<div class="imgBox disTc pr fl" style="width: auto;border:solid 1px #ccc;">
-							<a href="{{product.detail_link}}" target="_blank">
+							<a href="{% if product.is_deleted %}javascript:void(0);{% else %}{{product.detail_link}}{% endif %}" target="_blank">
 								<img src="{{product.thumbnails_url}}" width="60" height="60"/>
 							</a>
 							
@@ -44,7 +44,7 @@
 						</div>
 						<div class="ml10 fl">
 							<div class="mb25">
-								<a href="{{product.detail_link}}" target="_blank">{{product.name}}</a>
+								<a href="{{product.detail_link}}" target="_blank" class=" {% if product.is_deleted %}xui-cursor-disabled{% endif %}">{{product.name}}</a>
 							</div>
 							{% if product.is_use_custom_model %}
 							<span class="label label-info xa-showAllModels cursor-pointer" style="font-size: 1.0em;">查看{{product.models|length}}个规格详情</span>
