@@ -1094,12 +1094,10 @@ def products_not_online_handler_for_promotions(product_ids, request, shelve_type
     """
     from mall.promotion import models as promotion_models
     from webapp.handlers import event_handler_util
-    disable_coupon = False
     if not shelve_type:
         shelve_type = request.POST.get('shelve_type')
-    if shelve_type and shelve_type == 'delete':
-        disable_coupon = True
 
+    # 多商品券、积分应用删除所有活动商品时才结束活动
     types_finish_after_delete_all_products = (promotion_models.PROMOTION_TYPE_INTEGRAL_SALE, promotion_models.PROMOTION_TYPE_COUPON)
 
     target_promotion_ids = []
@@ -1107,7 +1105,7 @@ def products_not_online_handler_for_promotions(product_ids, request, shelve_type
         product_id__in=product_ids)]
     for promotion in promotion_models.Promotion.objects.filter(id__in=promotionIds).filter(~Q(status = promotion_models.PROMOTION_STATUS_DELETED)):
 
-        if promotion.type in types_finish_after_delete_all_products:
+        if shelve_type == 'delete' and promotion.type in types_finish_after_delete_all_products:
             # 该promotion未删除的商品数
             not_deleted_promotion_product_count = promotion_models.ProductHasPromotion.objects.filter(
                 promotion=promotion,
