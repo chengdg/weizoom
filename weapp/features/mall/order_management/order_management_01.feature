@@ -728,7 +728,7 @@ Background:
 			When jack关注nokia的公众号
 			Given nokia登录系统
 			When nokia给"jack"设等级
-				"""
+				"""005
 				{
 					"member_rank":"铜牌会员"
 				}
@@ -750,6 +750,7 @@ Background:
 				"""
 			When jack使用支付方式'微信支付'进行支付
 
+@product_pool @eugene @eugeneTMP
 Scenario:1 商家后台查看订单列表,包含自营平台同步过来的订单
 	Given bill登录系统
 	Then bill可以看到订单列表
@@ -1649,7 +1650,7 @@ Scenario:4 查看对应自营平台订单列表和订单详情，标记同步供
 						"is_sync_supplier": "true"
 					}]
 		}
-		"""		
+		"""
 
 Scenario:5 自营平台订单列表按照"供货商类型"查询
 	Given jobs登录系统
@@ -2232,7 +2233,7 @@ Scenario:6 自营平台订单列表优惠券抵扣的订单，拆单后又取消
 						"is_sync_supplier": "true"
 					}]
 			}
-			"""	
+			"""
 
 		When jobs'取消'订单'0010'
 		Then jobs可以看到订单列表
@@ -2430,5 +2431,5 @@ Scenario:6 自营平台订单列表优惠券抵扣的订单，拆单后又取消
 						"is_sync_supplier": ""
 					}]
 			}
-			"""		
+			"""
 
