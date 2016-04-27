@@ -114,7 +114,7 @@ Background:
 		}]
 		"""
 
-@mall2 @promotion @promotionPremium
+@promotion @promotionPremium
 Scenario: 1 主商品和赠品均为无规格商品，创建买赠活动
 	Given jobs登录系统
 	When jobs创建买赠活动
@@ -148,7 +148,7 @@ Scenario: 1 主商品和赠品均为无规格商品，创建买赠活动
 		}]
 		"""
 
-@mall2 @promotion @promotionPremium
+@promotion @promotionPremium
 Scenario: 2 主商品为多规格，赠品为无规格商品，创建买赠活动
 	Given jobs登录系统
 	When jobs创建买赠活动
@@ -183,7 +183,7 @@ Scenario: 2 主商品为多规格，赠品为无规格商品，创建买赠活�
 		}]
 		"""
 
-@mall2 @promotion @promotionPremium
+@promotion @promotionPremium
 Scenario: 3 主商品为会员价商品，赠品为无规格，创建买赠活动
 	Given jobs登录系统
 	When jobs创建买赠活动
@@ -218,7 +218,7 @@ Scenario: 3 主商品为会员价商品，赠品为无规格，创建买赠活�
 		}]
 		"""
 
-@mall2 @promotion @promotionPremium
+@promotion @promotionPremium
 Scenario: 4 主商品为会员价和积分应用商品，赠品为无规格，创建买赠活动
 	Given jobs登录系统
 	When jobs创建买赠活动
@@ -253,7 +253,7 @@ Scenario: 4 主商品为会员价和积分应用商品，赠品为无规格，�
 		}]
 		"""
 
-@mall2 @promotion @promotionPremium
+@promotion @promotionPremium
 Scenario: 5 主商品和赠品为同一个商品，创建买赠活动
 	Given jobs登录系统
 	When jobs创建买赠活动
@@ -287,7 +287,7 @@ Scenario: 5 主商品和赠品为同一个商品，创建买赠活动
 			}]
 		"""
 
-@mall2 @promotion @promotionPremium
+@promotion @promotionPremium
 Scenario: 6 选取多个赠品，创建买赠活动
 	Given jobs登录系统
 	When jobs创建买赠活动
