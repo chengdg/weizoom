@@ -55,15 +55,16 @@ W.showVisitHistory = function(title, url) {
 
 
 W.preloadImgsOnPage = function(option) {
+    if (!option) return;
     $(function(){
         option.map(function(ele){
-            var module = ele.moduleName;
-            var tagId = ele.tagId;
-            if (!ele) {
+            var module = ele['moduleName'];
+            var tagId = ele['tagId'];
+            var $itemsImg = $(tagId);
+            if (_.isEmpty($itemsImg)) {
                 console.error('preloadImgsOnPage %o is not found', ele)
                 return;
             }
-            var $itemsImg = $(tagId);
             switch(module) {
                 case 'productList':
                     $itemsImg.map(function(idx, item) {
@@ -80,11 +81,14 @@ W.preloadImgsOnPage = function(option) {
                         $item.removeAttr('src');
                     });
                     break;
+                default:
+                    break;
             }
             $lazyImgs = $('[data-url]');
             if ($lazyImgs) {
                 $lazyImgs.lazyload({
                     data_attribute:"url",
+                    skip_invisible : false,
                     effect : "fadeIn",
                     placeholder: "/static_v2/img/webapp/mall/info_placeholder.png"
                 });
