@@ -191,8 +191,12 @@ class CouponRuleInfo(resource.Resource):
                 )
         now = datetime.today()
         start_date = datetime.strptime(start_date, '%Y-%m-%d %H:%M')
+        end_date = datetime.strptime(end_date, '%Y-%m-%d %H:%M')
         if start_date <= now:
             promotion.status = PROMOTION_STATUS_STARTED
+            promotion.save()
+        if end_date <= now:
+            promotion.status = PROMOTION_STATUS_FINISHED
             promotion.save()
         create_coupons(couponRule, count, promotion)
         response = create_response(200)

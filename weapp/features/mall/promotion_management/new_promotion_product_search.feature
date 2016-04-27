@@ -198,7 +198,7 @@ Background:
 		"""
 	When jobs开启团购活动'团购活动'
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              @mall2 @promotion @promotionFlash
+@mall2 @ztq                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               @mall2 @promotion @promotionFlash
 Scenario: 1 限时抢购-新建活动页面的商品查询
 	Given jobs登录系统
 	#起购数量大于1的商品不在在售列表中（不能参与限时抢购）
@@ -229,7 +229,7 @@ Scenario: 1 限时抢购-新建活动页面的商品查询
 		| 多商品失效 |100.00 | 无限   | 多商品券       |         |
 		| 团购商品   |100.00 | 无限   | 团购活动       |         |
 
-@mall2 @promotion @promotionPremium
+@mall2 @promotion @promotionPremium @ztq
 Scenario: 2 买赠-新建活动页面的商品查询
 	When jobs新建活动时设置参与活动的商品查询条件
 		"""
@@ -278,7 +278,7 @@ Scenario: 3 积分应用-新建活动页面的商品查询
 		| 分类2    |    今天    |   选取  |
 		| 分类3    |    今天    |   选取  |
 
-@mall2 @promotion @promotionCoupon
+@mall2 @promotion @promotionCoupon @ztqb
 Scenario: 4 多商品券-新建活动页面的商品查询
 	Given jobs登录系统
 	Then jobs新建多商品券活动时能获得已上架商品列表

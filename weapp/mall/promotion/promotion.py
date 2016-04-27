@@ -137,6 +137,7 @@ class Promotion(resource.Resource):
                 record = product_id2record.get(product_id, None)
                 if record:
                     product_data['promotion_name'] = record.name
+                    product_data['can_select'] = False
 
             # 过滤下单位置为供货商的商品
             buy_in_supplier_products = models.Product.objects.filter(owner=request.manager, buy_in_supplier=True)

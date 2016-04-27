@@ -432,7 +432,6 @@ def step_disable_coupon(context, user, coupon_name):
 	data['ids[]'] = promotion.id
 
 	url = '/mall2/api/promotion/'
-	print("data: {}".format(data))
 	response = context.client.post(url, data)
 	bdd_util.assert_api_call_success(response)
 
@@ -636,10 +635,14 @@ def step_impl(context, user):
 def step_impl(context, user):
 	url = '/mall2/api/categories/'
 	if hasattr(context, 'query_param'):
-		if context.query_param.get('name'):
-			url += '&filter_name=' + context.query_param['name']
+		query_param = context.query_param
+		delattr(context, 'query_param')
+	else:
+		query_param = {}
+	if query_param.get('name', ''):
+		url += '?filter_name=' + query_param.get('name', '')
+
 	response = context.client.get(url)
-	bdd_util.assert_api_call_success(response)
 	actual = json.loads(response.content)['data']['items']
 
 	if context.table:
