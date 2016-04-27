@@ -199,7 +199,7 @@ Scenario:4 批量结束积分应用活动（不包含已结束状态）
 
 #补充：张三香 2016.04.27
 
-@promotionIntegral @integral
+@mall2 @promotionIntegral @integral @ztq
 Scenario:5 手动结束多商品积分应用活动
 	Given jobs登录系统
 	And jobs已添加商品
@@ -254,22 +254,28 @@ Scenario:5 手动结束多商品积分应用活动
 		"""
 		[{
 			"name": "多商品积分应用2-进行中",
-			"status":"已结束"
+			"status":"已结束",
+			"is_permanant_active": false
 		}, {
 			"name": "多商品积分应用1-未开始",
-			"status":"已结束"
+			"status":"已结束",
+			"is_permanant_active": false
 		}, {
 			"name": "商品1积分应用",
-			"status":"已结束"
+			"status":"已结束",
+			"is_permanant_active": false
 		}, {
 			"name": "商品2积分应用",
-			"status":"进行中"
+			"status":"进行中",
+			"is_permanant_active": true
 		}, {
 			"name": "商品3积分应用",
-			"status":"进行中"
+			"status":"进行中",
+			"is_permanant_active": false
 		}, {
 			"name": "商品4积分应用",
-			"status":"未开始"
+			"status":"未开始",
+			"is_permanant_active": false
 		}]
 		"""
 

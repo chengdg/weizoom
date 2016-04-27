@@ -93,7 +93,7 @@ def step_impl(context, user):
 
 
 
-@then(u"{user}获取积分应用活动{promotion_name}")
+@then(u"{user}获取积分应用活动{promotion_name}详情")
 def step_impl(context, user,promotion_name):
 	excepted = json.loads(context.text)
 
