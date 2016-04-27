@@ -396,6 +396,7 @@
 		var editor = new W.view.weixin.MessageEditor(options);
 		$(document).delegate('.xa-choseCoupon', 'click', function(event) {
         W.dialog.showDialog('W.dialog.mall.SelectCouponDialog', {
+        	is_channel_qrcode: true,
             success: function(data) {
                 var couponType = '';
                 if(data[0].limit_product) {
