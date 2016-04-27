@@ -708,7 +708,8 @@ def get_detail_response(request):
     if not request.GET.get('order_id', None):
         return HttpResponseRedirect('/mall2/order_list/')
     else:
-        order = mall.models.Order.objects.get(id=request.GET['order_id'])
+        webapp_id = request.user_profile.webapp_id
+        order = mall.models.Order.objects.get(id=request.GET['order_id'], webapp_id=webapp_id)
 
     if request.method == 'GET':
         mall_type = request.user_profile.webapp_type
