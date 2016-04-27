@@ -92,6 +92,23 @@ def step_impl(context, user):
 			bdd_util.assert_api_call_success(response)
 
 
+
+@then(u"{user}获取积分应用活动{promotion_name}")
+def step_impl(context, user,promotion_name):
+	excepted = json.loads(context.text)
+
+	promotion = Promotion.objects.get(name=promotion_name)
+	url = "http://docker.test.weizzz.com/mall2/integral_sale/?id=" + str(promotion.id)
+	response = context.client.get(url)
+	promotion = response.context['promotion']
+	jsons = response.context['jsons']
+	actual = {
+		'name': promotion['name'],
+		'promotion_title': promotion['promotion_title'],
+	}
+	bdd_util.assert_dict(excepted,actual)
+
+
 @when(u"{user}创建满减活动")
 def step_impl(context, user):
 		if context.table:
