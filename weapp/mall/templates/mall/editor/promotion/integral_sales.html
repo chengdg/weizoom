@@ -82,7 +82,7 @@
 					<tr class="xui-trborder" data-id="${promotion.id}">
 						<td class="tl_important" style="width:263px!important;">
 							<div class="clearfix xui-i-cell2">
-								<div class="imgBox fl" style="width: auto; border:solid 1px #cfcfcf;">
+								<div class="imgBox fl pr" style="width: auto; border:solid 1px #cfcfcf;">
 									<a href="${product.detail_link}" target="_blank">
 									{{if product.thumbnails_url.search('http://weappimg') != -1}}
 									 <img src="${product.thumbnails_url + '!60'}" width="60" height="60"/>
@@ -90,6 +90,9 @@
 									 <img src="${product.thumbnails_url}" width="60" height="60"/>
 									{{/if}}
 									</a>
+									{{if product.status != "在售"}}
+									<div class="xui-i-sellout">${product.status}</div>
+									{{/if}}
 								</div>
 								<div class="ml10 fl h60">
 									<div class="xui-commodityName">
@@ -103,7 +106,7 @@
 								</div>
 							</div>
 						</td>
-						 <td>
+						 <td {{if promotion.products.length > 1}}style="border-right:1px solid #ccc;"{{/if}}>
 							${product.display_price_range}
 						</td>
 						{{if j == 0 }}
