@@ -68,7 +68,6 @@
 		data-item-count-per-page="20"
 		data-enable-paginator="true"
 		class="panel-body mt40"
-		data-selectable ="true"
 		>
 	</div>
 
@@ -94,7 +93,8 @@
 			<table class="table table-condensed xb-stripedTable xb-theadBg">
 				<thead>
 					<tr>
-						<th style="width:20%;">
+						<th style="width:4%;"></th>
+						<th style="width:16%;">
 							<p class=" m0">
 								<span class="">二维码名称</span>
 							</p>
@@ -113,6 +113,9 @@
 					{{if items.length}}
 						{{each(i, qrcode) items}}
 							<tr class="h40" data-id="${qrcode.qrcode_id}" data-setting="${qrcode.id}">
+								<td>
+									<input type="checkbox" class="xa-select">
+								</td>
 								<td style="word-break:break-all; overflow:auto;padding:0 20px;text-align:left;170px;">
 									<a href="/new_weixin/qrcode/?setting_id=${qrcode.id}">${qrcode.name}</a>
 								</td>
