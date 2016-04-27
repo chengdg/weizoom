@@ -268,7 +268,7 @@ class Project(resource.Resource):
 		pagestore.remove_project_pages(str(project_id))
 
 		#删除project本身
-		webapp_models.Project.objects.filter(id=project_id).delete()
+		webapp_models.Project.objects.filter(owner=request.manager, id=project_id).delete()
 
 		#清除webapp page cache
 		Project.delete_webapp_page_cache(request.manager.id, project_id)

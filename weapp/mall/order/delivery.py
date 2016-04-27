@@ -96,8 +96,9 @@ class Delivery(resource.Resource):
         is_100 = request.POST.get('is_100','true')
         is_100 = True if is_100 == 'true' else False
         is_update_express = True if is_update_express == 'true' else False
+        webapp_id = request.user_profile.webapp_id
 
-        order = Order.objects.get(id=order_id)
+        order = Order.objects.get(id=order_id, webapp_id=webapp_id)
         err_msg = None
         # 修改物流信息且信息未变不发送消息
         if is_update_express and order.express_company_name == express_company_name and order.express_number == express_number:

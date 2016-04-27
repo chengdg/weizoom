@@ -294,7 +294,7 @@ class ProductList(resource.Resource):
                 is_deleted = True
                 reason = utils.MALL_PRODUCT_DELETED
 
-            products = models.Product.objects.filter(id__in=ids)
+            products = models.Product.objects.filter(owner=request.manager, id__in=ids)
             product_id2product = {}
             for product in products:
                 product_id2product[product.id] = product
@@ -1020,6 +1020,7 @@ class Product(resource.Resource):
         else:
             is_group_buying = False
         has_product_model = models.ProductModel.objects.filter(
+                owner_id=woid,
                 product_id=product_id,
                 name='standard').exists()
 
@@ -1032,7 +1033,7 @@ class Product(resource.Resource):
 
             if not request.user_profile.webapp_type:
                 from .tasks import update_sync_product_status
-                products = models.Product.objects.filter(id=product_id)
+                products = models.Product.objects.filter(owner_id=woid, id=product_id)
                 models.Product.fill_details(request.manager, products, {
                     'with_product_model': True,
                     'with_image': True,
@@ -1046,12 +1047,13 @@ class Product(resource.Resource):
             # 处理商品排序
             display_index = int(request.POST.get('display_index', '0'))
             if display_index > 0:
-                models.Product.objects.get(id=product_id).move_to_position(display_index)
+                models.Product.objects.get(owner_id=woid, id=product_id).move_to_position(display_index)
 
             # 处理商品规格
             standard_model, custom_models = utils.extract_product_model(request)
             # 处理standard商品规格
             has_product_model = models.ProductModel.objects.filter(
+                owner_id=woid,
                 product_id=product_id,
                 name='standard').exists()
             if not has_product_model:
@@ -1069,6 +1071,7 @@ class Product(resource.Resource):
             elif standard_model.get('is_deleted', None):
                 # 多规格的情况
                 db_standard_model = models.ProductModel.objects.filter(
+                    owner_id=woid,
                     product_id=product_id,
                     name='standard'
                 )
@@ -1090,7 +1093,7 @@ class Product(resource.Resource):
                         event_handler_util.handle(event_data, 'finish_promotion')
             else:
                 models.ProductModel.objects.filter(
-                    product_id=product_id, name='standard'
+                    owner_id=woid, product_id=product_id, name='standard'
                 ).update(
                     price=standard_model['price'],
                     weight=standard_model['weight'],
@@ -1177,7 +1180,7 @@ class Product(resource.Resource):
             property_ids = set([property['id'] for property in properties])
             existed_property_ids = set([
                 property.id for property in models.ProductProperty.objects.filter(
-                    product_id=product_id)
+                    owner_id=woid, product_id=product_id)
                 ])
             for property in properties:
                 if property['id'] < 0:
@@ -1189,7 +1192,7 @@ class Product(resource.Resource):
                     )
                 else:
                     models.ProductProperty.objects.filter(
-                        id=property['id']
+                        owner_id=woid, id=property['id']
                     ).update(name=property['name'], value=property['value'])
             property_ids_to_be_delete = existed_property_ids - property_ids
             models.ProductProperty.objects.filter(
@@ -1436,6 +1439,7 @@ class ProductModel(resource.Resource):
             if stock_type == models.PRODUCT_STOCK_TYPE_UNLIMIT:
                 stocks = 0
             product_model = models.ProductModel.objects.filter(
+                owner=request.manager,
                 id=product_model_id
             )
             if len(product_model) == 1 and product_model[0].stock_type == models.PRODUCT_STOCK_TYPE_LIMIT and product_model[0].stocks < 1:
@@ -1467,6 +1471,7 @@ class ProductModelPrice(resource.Resource):
             price = model_info['price']
 
             product_model = models.ProductModel.objects.filter(
+                owner=request.manager,
                 id=product_model_id
             )
 
