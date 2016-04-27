@@ -21,7 +21,7 @@
 			<div class="xui-qrcodeName" for="parents_name" style="font-weight:normal;display: inline-block;vertical-align: top;">二维码名称：</div>
 			<div class="xui-qrcodeGroups" style="display: inline-block;width: 67%">
 				{% for item in qrcodes %}
-				<a class="mr20 mb10" style="display: inline-block;" href="/new_weixin/qrcode/?setting_id={{item.id}}">{{ item.name }}</a>
+				<a class="mr20 mb10" style="display: inline-block;" href="/new_weixin/qrcode/?setting_id={{item.id}}" target="_blank">{{ item.name }}</a>
 				{% endfor %}
 			</div>
 			{% else %}
