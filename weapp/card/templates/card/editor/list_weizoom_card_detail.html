@@ -29,6 +29,7 @@
     </div>
 
     <div class=" " style="position: absolute;clear: both;margin-top: 27px;right:0px;z-index: 10;">
+        <a class="btn btn-primary xa-batch-delay" operate_style="inactive" href="javascript:void(0)">批量延期</a>
         {% if can_add_card %}
         <a id="appendBtn" rule-id="{{weizoom_card_rule.id}}" class="btn btn-primary" href="javascript:void(0)" style="margin:0px">追加</a>
         {% endif %}
@@ -173,9 +174,7 @@ $(document).ready(function() {
     });
      $('#exportBtn').click(function(event) {
         var card_num_min = $('#card_num_min').val().trim();
-        console.log(card_num_min,'ffffffffffff')
         var card_num_max = $('#card_num_max').val().trim();
-        console.log(card_num_min,'ffffffffffff')
         var url = '/card/weizoom_cards/export/?card_id='+{{weizoom_card_rule.id}};
         if (filterBox.filter_value) {
             url = url + '&filter_value='+filterBox.filter_value;
@@ -186,7 +185,6 @@ $(document).ready(function() {
         if(card_num_max){
             url=url+'&card_num_max='+card_num_max;
         }
-        console.log(url,22222222)
         window.open(url);
     });
 });
@@ -543,6 +541,43 @@ $(document).ready(function() {
         })
     });
 
+    $('.xa-batch-delay').click(function(event){
+        var rule_id = {{weizoom_card_rule.id}};
+        var card_ids =[];
+
+        $('input[name="xa-select"]:checked').parents('tr').each(function(){
+            card_ids.push($(this).attr('tr-id'));
+        });
+        if(card_ids.length == 0){
+            W.showHint('error','请先选择要延期的微众卡！');
+            return;
+        }
+        W.dialog.showDialog('W.weapp.dialog.AppendWeizoomCardTimeDialog', {
+            success: function(data) {
+                data.rule_id = rule_id;
+                data.card_ids = card_ids.join(",");
+                W.getLoadingView().show();
+                W.getApi().call({
+                    app: 'card',
+                    api: 'card_expired_time/append',
+                    method: 'post',
+                    args: data,
+                    success: function(){
+                        W.showHint('success','卡延期成功！');
+                        $('div[data-ui-role="advanced-table"]').data('view').reload();
+                    },
+                    error: function(resp) {
+                        console.log(resp);
+                        if(resp.code==500){
+                            W.showHint('error','有效期结束时间不能小于开始时间！');
+                        }else{
+                            W.showHint('error','卡延期失败！');
+                        }    
+                    }
+                })
+            }
+        })
+    })
 
   var CardRule = W.view.common.AdvancedTable.extend({
     load: function(from_goto, options) {
@@ -613,7 +648,6 @@ $(document).ready(function() {
                     'userWebappId': _this.userWebappId
                 });
                 xwarn('====== advance table =====');
-                xwarn($node.html());
                 if (this.enableSelect) {
                     if (this.disableHeaderSelect) {
                         $node.find('thead tr').prepend('<th width="30"></th>');
