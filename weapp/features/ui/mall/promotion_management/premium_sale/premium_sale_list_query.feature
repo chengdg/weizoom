@@ -34,7 +34,7 @@ Background:
 		|买赠5   | 商品5    |   进行中  |  2015-08-06  | 明天         |
 		|买赠6   | 商品6    |   未开始  |  明天        |3天后        |
 
-@mall2 @promotion @promotionFlash
+@promotion @promotionFlash
 Scenario:买赠活动列表查询
 	#空查询、默认查询
 		When jobs设置查询条件

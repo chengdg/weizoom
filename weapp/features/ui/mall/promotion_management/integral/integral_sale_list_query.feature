@@ -34,7 +34,7 @@ Background:
 		|积分应用5   | 商品5    |   进行中  |              |             |      true            | 昨天        |
 		|积分应用6   | 商品2    |   未开始  |  明天        |3天后        |      false           | 今天        |
 
-@mall2 @promotionIntegral @integral
+@promotionIntegral @integral
 Scenario: 积分应用活动列表查询
 	#空查询（默认查询）
 		When jobs设置查询条件

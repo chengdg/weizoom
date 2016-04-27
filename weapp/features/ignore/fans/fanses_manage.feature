@@ -53,7 +53,7 @@ Scenario: 修改分组
 	Then '木杆粉丝'粉丝组中没有diana
 
 
-@mall2 @weixin2 @weixin2.fans
+@weixin2 @weixin2.fans
 Scenario: 粉丝列表中添加分组
 	在【粉丝管理】粉丝列表中添加分组
 
@@ -77,7 +77,7 @@ Scenario: 粉丝列表中添加分组
 	"""
 
 
-@mall2 @weixin2 @weixin2.fans
+@weixin2 @weixin2.fans
 Scenario: 粉丝列表中添加分组，添加重名的分组
 	在【粉丝管理】粉丝列表中添加分组
 

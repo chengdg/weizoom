@@ -139,7 +139,7 @@ Background:
 			}]
 		"""
 
-@mall2 @promotion @promotionPremium
+@promotion @promotionPremium
 Scenario: 1 删除状态为'已结束'的买赠活动
 	Given jobs登录系统
 	When jobs"删除"促销活动"活动名称:商品3买赠"
@@ -172,7 +172,7 @@ Scenario: 1 删除状态为'已结束'的买赠活动
 			}]
 		"""
 
-@mall2 @promotion @promotionPremium
+@promotion @promotionPremium
 Scenario: 2 批量删除买赠活动（不包括未结束状态的）
 	Given jobs登录系统
 	When jobs批量'删除'促销活动

@@ -232,7 +232,7 @@ Scenario: 0 整单抵扣上限设置开启时，创建积分应用活动
 	When jobs 创建积分应用活动
 	Then jobs获得系统提示'请先关闭整单抵扣上限设置！'
 
-@mall2 @promotion @promotionIntegral @integral
+@promotion @promotionIntegral @integral
 Scenario: 1 选取普通商品，创建统一设置积分应用活动
 	Given jobs登录系统
 	When jobs创建积分应用活动
@@ -259,7 +259,7 @@ Scenario: 1 选取普通商品，创建统一设置积分应用活动
 		}]
 		"""
 
-@mall2 @promotion @promotionIntegral @integral
+@promotion @promotionIntegral @integral
 Scenario: 2 选取多规格商品，创建分级设置积分应用活动
 	Given jobs登录系统
 	When jobs创建积分应用活动
@@ -294,7 +294,7 @@ Scenario: 2 选取多规格商品，创建分级设置积分应用活动
 		}]
 		"""
 
-@mall2 @promotion @promotionIntegral @integral
+@promotion @promotionIntegral @integral
 Scenario: 3 选取有会员价的商品，创建分级设置积分应用活动（后台抵扣金额按照商品原价进行计算显示，手机端购买时按照会员价进行计算）
 	Given jobs登录系统
 	When jobs创建积分应用活动
@@ -329,7 +329,7 @@ Scenario: 3 选取有会员价的商品，创建分级设置积分应用活动�
 		}]
 		"""
 
-@mall2 @promotion @promotionIntegral @integral
+@promotion @promotionIntegral @integral
 Scenario: 4 选取无会员价且已参与'限时抢购'活动的商品，创建积分应用活动（后台抵扣金额按照商品原价进行计算显示，手机端购买时显示限购价格，）
 	Given jobs登录系统
 	When jobs创建积分应用活动
@@ -364,7 +364,7 @@ Scenario: 4 选取无会员价且已参与'限时抢购'活动的商品，创建
 		}]
 		"""
 
-@mall2 @promotion @promotionIntegral @integral
+@promotion @promotionIntegral @integral
 Scenario: 5 选取有会员价且已参与'限时抢购'活动的商品，创建积分应用活动
 	#（后台抵扣金额按照商品原价进行计算显示，限时抢购优先，手机端抵扣金额按照当前页面显示的商品价格进行计算）
 	Given jobs登录系统
@@ -396,7 +396,7 @@ Scenario: 5 选取有会员价且已参与'限时抢购'活动的商品，创建
 		}]
 		"""
 
-@mall2 @promotion @promotionIntegral @integral
+@promotion @promotionIntegral @integral
 Scenario: 6 选取无会员价且已参与'买赠'活动的商品，创建积分应用活动（后台抵扣金额按照商品原价进行计算显示）
 	Given jobs登录系统
 	When jobs创建积分应用活动
@@ -427,7 +427,7 @@ Scenario: 6 选取无会员价且已参与'买赠'活动的商品，创建积分
 		}]
 		"""
 
-@mall2 @promotion @promotionIntegral @integral
+@promotion @promotionIntegral @integral
 Scenario: 7 选取有会员价且已参与'买赠'活动的商品，创建积分应用活动 （后台抵扣金额按照商品原价进行计算显示，买赠优先，手机端抵扣金额按照当前页面显示的商品价格进行计算）
 	Given jobs登录系统
 	When jobs创建积分应用活动
@@ -458,7 +458,7 @@ Scenario: 7 选取有会员价且已参与'买赠'活动的商品，创建积分
 		}]
 		"""
 
-@mall2 @promotion @promotionIntegral @integral
+@promotion @promotionIntegral @integral
 Scenario: 8 选取无会员价且已设置单品券的商品，创建积分应用活动（后台抵扣金额按照商品原价进行计算显示，手机端购买时积分和优惠券不能同时使用）
 	Given jobs登录系统
 	When jobs创建积分应用活动
@@ -489,7 +489,7 @@ Scenario: 8 选取无会员价且已设置单品券的商品，创建积分应�
 		}]
 		"""
 
-@mall2 @promotion @promotionIntegral @integral
+@promotion @promotionIntegral @integral
 Scenario: 9 选取有会员价且已设置单品券的商品，创建积分应用活动（后台抵扣金额按照商品原价进行计算显示，手机端购买时积分抵扣按照会员价计算，但积分和优惠券不能同时使用）
 	Given jobs登录系统
 	When jobs创建积分应用活动

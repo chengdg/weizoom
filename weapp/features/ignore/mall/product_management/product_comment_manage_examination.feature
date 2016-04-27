@@ -12,7 +12,7 @@ Feature: jobs在后台对已有评价进行审核
 """
 
 #后续修改.雪静
-@mall2 @mall.webapp.comment @ignore
+@mall.webapp.comment @ignore
 Scenario: 4置顶时间为15天，置顶周期结束后，恢复按评价时间倒序显示。
 
     Given jobs登录系统

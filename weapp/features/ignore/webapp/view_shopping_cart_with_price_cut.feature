@@ -87,7 +87,7 @@ Background:
 	And tom关注jobs的公众号
 
 
-@ignore @mall2 @mall.webapp @mall.webapp.shopping_cart
+@ignore @mall.webapp @mall.webapp.shopping_cart
 Scenario: 1购买单个满减商品，不满足价格阈值
 	
 	When bill访问jobs的webapp
@@ -114,7 +114,7 @@ Scenario: 1购买单个满减商品，不满足价格阈值
 		"""
 
 
-@ignore @mall2 @mall.webapp @mall.webapp.shopping_cart
+@ignore @mall.webapp @mall.webapp.shopping_cart
 Scenario: 2购买满减活动中的部分商品，金额等于满足价格阈值，不执行循环满减
 	商品2是"商品3满减"中的其中一个商品，测试部分商品累计金额满足满减的场景
 	
@@ -146,7 +146,7 @@ Scenario: 2购买满减活动中的部分商品，金额等于满足价格阈值
 		}
 		"""
 
-@ignore @mall2 @mall.webapp @mall.webapp.shopping_cart
+@ignore @mall.webapp @mall.webapp.shopping_cart
 Scenario: 3购买满减活动中的全部商品，金额大于满足价格阈值，并满足循环满减条件
 	
 	When bill访问jobs的webapp

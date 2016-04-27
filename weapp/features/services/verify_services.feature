@@ -48,7 +48,7 @@ Background:
 		"""
 	And bill关注jobs的公众号
 
-@wip.victor @mall2 
+@wip.victor @mall2
 Scenario: 测试订单发货时会发消息给'post_save_order_service'
 
 	Given jobs登录系统
