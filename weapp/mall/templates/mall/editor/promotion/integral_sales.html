@@ -83,7 +83,7 @@
 						<td class="tl_important" style="width:263px!important;">
 							<div class="clearfix xui-i-cell2">
 								<div class="imgBox fl pr" style="width: auto; border:solid 1px #cfcfcf;">
-									<a href="${product.detail_link}" target="_blank">
+									<a href={{if product.status == "已删除"}}"javascript:void(0);"{{else}}"${product.detail_link}" target="_blank"{{/if}} >
 									{{if product.thumbnails_url.search('http://weappimg') != -1}}
 									 <img src="${product.thumbnails_url + '!60'}" width="60" height="60"/>
 									{{else}}
@@ -96,7 +96,7 @@
 								</div>
 								<div class="ml10 fl h60">
 									<div class="xui-commodityName">
-										<a href="${promotion.product.detail_link}" target="_blank">${product.name}</a>
+										<a href={{if product.status == "已删除"}}"javascript:void(0);" class="xui-cursor-disabled"{{else}}"${promotion.product.detail_link}" target="_blank"{{/if}}>${product.name}</a>
 									</div>
 									{{if promotion.product.is_use_custom_model}}
 									<span class="label label-info xa-showAllModels cursor-pointer fn" style="font-size: 1.0em;background:#1183ca;padding-bottom:2px;">查看${promotion.product.models.length}个规格详情</span>
