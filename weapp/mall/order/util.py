@@ -1690,6 +1690,7 @@ def update_order_status_by_group_status(group_id=None, status=None, order_ids=No
         order_status = ORDER_STATUS_PAYED_NOT_SHIP
 
     if order_ids:
+        order_status = ORDER_STATUS_PAYED_NOT_SHIP
         orders = Order.objects.filter(order_id__in=order_ids)
     else:
         relations = OrderHasGroup.objects.filter(group_id=group_id)
