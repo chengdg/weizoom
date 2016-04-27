@@ -83,7 +83,8 @@ Background:
 			"""
 			{
 				"integral_each_yuan": 2,
-				"use_ceiling": 50
+				"use_ceiling": 50,
+				"be_member_increase_count": 100
 			}
 			"""
 		Given jobs已创建微众卡
