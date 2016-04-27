@@ -156,10 +156,12 @@
 						<a data-id={{cardId}} style="display:inline-block;marginLeft:20px;cursor:pointer" onClick="card_recharge_delete(this);">删除</a>
 					</div>
 				{{/each}}
+				{{#if card_list}}
 				<div style="margin: 40px 0 40px 102px;">
 					<button type="button" class="btn btn-success card_recharge_save" onClick="card_recharge_save();">确定</button>
 					<a href="/card/recharge_detail/get/"><button class="btn btn-cancel" style="margin-left: 20px;background:RGBA(242, 216, 216, 0.74);">取消</button></a>
 				</div>
+				{{/if }}
 			</div>
 		</script>
     {% endverbatim %}
@@ -181,13 +183,17 @@
 			var another_list = card_list;
 			$('.modal-footer').attr('data-list', JSON.stringify(another_list));
 			var listView = $('[data-ui-role="advanced-table-card-recharge"]').data('view');
-			listView.searchQuery = '{"cardIds":"'+0+'"}';
+			listView.searchQuery = '{"cardIds":""}';
    			listView.curPage = 1;
     		listView.load(true);
 		}
 		function cancle_select_card(){
 			var another_list = $('.modal-footer').attr('data-list');
-			card_list = JSON.parse(another_list);
+			if(another_list.length!=0){
+				card_list = JSON.parse(another_list);
+			}else{
+				card_list = []
+			}
 			selected_or_not();
 		}
 		function card_recharge_delete(that){
