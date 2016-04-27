@@ -172,6 +172,261 @@ Background:
 @order @supplier
 Scenario: 1 不同供货商订单导出
 	jobs可以导出订单
+
+	When bill访问jobs的webapp
+	When bill购买jobs的商品
+		"""
+		{
+			"order_id": "0000001",
+			"date": "今天",
+			"products": [{
+				"name": "商品1",
+				"count": 1
+			}, {
+				"name": "商品2",
+				"count": 1
+			}, {
+				"name": "商品3",
+				"count": 1
+			}],
+			"coupon": "coupon1_id_1"
+		}
+		"""
+	When bill使用支付方式'货到付款'进行支付订单'0000001'
+	Given jobs登录系统
+	When jobs对订单进行发货
+		"""
+		{
+			"order_no":"0000001-丹江湖",
+			"logistics":"顺丰速运",
+			"number":"123456789"
+		}
+		"""
+	When jobs'取消'订单'0000001'
+
+	When bill访问jobs的webapp
+	When bill购买jobs的商品
+		"""
+		{
+			"order_id": "0000002",
+			"date": "今天",
+			"ship_tel": "13811223344",
+			"products": [{
+				"name": "商品1",
+				"count": 1
+			}, {
+				"name": "商品2",
+				"count": 1
+			}, {
+				"name": "商品3",
+				"count": 1
+			}],
+			"integral": 50
+		}
+		"""
+	When bill使用支付方式'微信支付'进行支付订单'0000002'
+	Given jobs登录系统
+	When jobs对订单进行发货
+		"""
+		{
+			"order_no":"0000002-丹江湖",
+			"logistics":"顺丰速运",
+			"number":"123456789"
+		}
+		"""
+	When jobs对订单进行发货
+		"""
+		{
+			"order_no": "0000002-土小宝",
+			"logistics": "off",
+			"shipper": ""
+		}
+		"""
+	When jobs'申请退款'订单'0000002'
+
+	When bill访问jobs的webapp
+	When bill购买jobs的商品
+		"""
+		{
+			"order_id": "0000003",
+			"date": "今天",
+			"products": [{
+				"name": "商品3",
+				"count": 1
+			}, {
+				"name": "商品5",
+				"count": 1
+			}]
+		}
+		"""
+	When bill使用支付方式'货到付款'进行支付订单'0000003'
+	Given jobs登录系统
+	When jobs对订单进行发货
+		"""
+		{
+			"order_no":"0000003",
+			"logistics":"顺丰速运",
+			"number":"123456789"
+		}
+		"""
+	When jobs'完成'订单'0000003'
+
+	When bill访问jobs的webapp
+	When bill购买jobs的商品
+		"""
+		{
+			"order_id": "0000004",
+			"date": "今天",
+			"products": [{
+				"name": "商品4",
+				"count": 1
+			}, {
+				"name": "商品5",
+				"count": 1
+			}]
+		}
+		"""
+	When bill使用支付方式'货到付款'进行支付订单'0000004'
+	Given jobs登录系统
+	When jobs对订单进行发货
+		"""
+		{
+			"order_no":"0000004-丹江湖",
+			"logistics":"顺丰速运",
+			"number":"123456789"
+		}
+		"""
+	When jobs对订单进行发货
+		"""
+		{
+			"order_no":"0000004-土小宝",
+			"logistics":"顺丰速运",
+			"number":"123456789"
+		}
+		"""
+	When jobs'完成'订单'0000004'
+		"""
+		{
+			"order_no":"0000004",
+			"supplier":"土小宝"
+		}
+		"""
+
+	When bill访问jobs的webapp
+	When bill购买jobs的商品
+		"""
+		{
+			"order_id": "0000005",
+			"date": "今天",
+			"products": [{
+				"name": "商品3",
+				"count": 1
+			}, {
+				"name": "商品5",
+				"count": 1
+			}]
+		}
+		"""
+	When bill使用支付方式'货到付款'进行支付订单'0000005'
+	Given jobs登录系统
+	When jobs对订单进行发货
+		"""
+		{
+			"order_no": "0000005",
+			"logistics": "off",
+			"shipper": ""
+		}
+		"""
+
+	When bill访问jobs的webapp
+	When bill购买jobs的商品
+		"""
+		{
+			"order_id": "0000006",
+			"date": "今天",
+			"products": [{
+				"name": "商品3",
+				"count": 1
+			}, {
+				"name": "商品5",
+				"count": 1
+			}]
+		}
+		"""
+	When bill使用支付方式'货到付款'进行支付订单'0000006'
+	When bill购买jobs的商品
+		"""
+		{
+			"order_id": "0000007",
+			"date": "今天",
+			"products": [{
+				"name": "商品4",
+				"count": 1
+			}, {
+				"name": "商品5",
+				"count": 1
+			}]
+		}
+		"""
+	When bill使用支付方式'货到付款'进行支付订单'0000007'
+	Given jobs登录系统
+	When jobs对订单进行发货
+		"""
+		{
+			"order_no":"0000007-丹江湖",
+			"logistics":"顺丰速运",
+			"number":"123456789"
+		}
+		"""
+
+	When bill访问jobs的webapp
+	When bill购买jobs的商品
+		"""
+		{
+			"order_id": "0000008",
+			"date": "今天",
+			"products": [{
+				"name": "商品4",
+				"count": 1
+			}, {
+				"name": "商品5",
+				"count": 1
+			}]
+		}
+		"""
+	Given jobs登录系统
+	When jobs修改订单'0000008'的价格
+		"""
+		{
+			"order_no": "0000008",
+			"final_price": 210.00
+		}
+		"""
+
+	When bill访问jobs的webapp
+	When bill购买jobs的商品
+		"""
+		{
+			"order_id": "0000009",
+			"date": "今天",
+			"products": [{
+				"name": "商品3",
+				"count": 1
+			}, {
+				"name": "商品5",
+				"count": 1
+			}]
+		}
+		"""
+	Given jobs登录系统
+	When jobs修改订单'0000009'的价格
+		"""
+		{
+			"order_no": "0000009",
+			"final_price": 190.00
+		}
+		"""
+
 	Then jobs导出订单获取订单信息
 		| order_no           |  order_time |   pay_time    | product_name |  model | product_unit_price | count | sales_money | weight | methods_of_payment | money_total | money | money_wcard | postage | integral | coupon_money | coupon_name |  status   | member | ship_name |  ship_tele  | ship_province |        ship_address           | shipper | leader_remark | sources | supplier_type | logistics |   number  | delivery_time | remark | customer_message | customer_source | customer_recommender | is_qr_code | is_older_mermber | purchase_price | purchase_costs |
 		| 0000009-100        |  2016-02-01 |               |    商品3     |        |        100.00      |   1   |    100.00   |   2    |      微信支付      |     0.00    |  0.00 |             |  0.00   |          |              |             |  待支付   |  bill  |  未知姓名 | 11111111111 |    北京市     | 北京市 北京市 海淀区 长安大街 |         |               | tom商家 |   同步供货商  |           |           |               |        |                  |    直接关注     |                      |            |                  |                |                |
@@ -196,11 +451,12 @@ Scenario: 1 不同供货商订单导出
 		| 0000001-丹江湖     |     今天    |               |    商品2     |        |        100.00      |   1   |    100.00   |        |      货到付款      |             |       |             |  0.00   |          |              |             |  已取消   |  bill  |  未知姓名 | 11111111111 |    北京市     | 北京市 北京市 海淀区 长安大街 |         |               | 丹江湖  |   自建供货商  | 顺丰速运  | 123456789 |  2016-03-01   |        |                  |    直接关注     |                      |            |                  |      9.0       |      9.0       |
 		| 0000001-丹江湖     |     今天    |               | (赠品)商品3  |        |        100.00      |   1   |    100.00   |   1    |      货到付款      |             |       |             |  0.00   |          |              |             |  已取消   |  bill  |  未知姓名 | 11111111111 |    北京市     | 北京市 北京市 海淀区 长安大街 |         |               | 丹江湖  |   自建供货商  | 顺丰速运  | 123456789 |  2016-03-01   |        |                  |    直接关注     |                      |            |                  |                |                |
 		| 0000001-tom商家    |     今天    |               |    商品3     |        |        100.00      |   1   |    100.00   |        |      货到付款      |             |       |             |  0.00   |          |              |             |  已取消   |  bill  |  未知姓名 | 11111111111 |    北京市     | 北京市 北京市 海淀区 长安大街 |         |               | tom商家 |   同步供货商  |           |           |               |        |                  |    直接关注     |                      |            |                  |                |                |
-	Thenjobs导出订单获取订单统计信息
-		"""  
-		[{  
-			 "订单量":9, 
-			"已完成":2, 
+	
+	Then jobs导出订单获取订单统计信息
+		"""
+		[{
+			 "订单量":9,
+			"已完成":2,
 
 			"商品金额":1900.00,
 			"支付总额":1200.00,
