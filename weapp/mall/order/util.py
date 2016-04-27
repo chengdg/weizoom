@@ -1748,6 +1748,8 @@ def update_order_status_by_group_status(group_id=None, status=None, order_ids=No
                                 logging.info(u"订单退款异常,\n{}".format(unicode_full_stack()))
                                 watchdog_error(u"订单退款异常,\n{}".format(unicode_full_stack()))
                     if response['data'].get('is_success', ''):
+                        if order_ids:
+                            user = UserProfile.objects.get(webapp_id=order.webapp_id).user
                         update_order_status(user, 'return_pay', order)
                         order.status = ORDER_STATUS_GROUP_REFUNDING
                         order.save()
