@@ -28,10 +28,19 @@
 	            {% for product in promotion.products %}
 				<tr data-id="{{product.promotion.id}}" style="background:#fff;">
 					<td class="tl_important pl50 pt10 pb10">
-						<div class="imgBox fl" style="width: auto;border:solid 1px #ccc;">
+						<div class="imgBox disTc pr fl" style="width: auto;border:solid 1px #ccc;">
 							<a href="{{product.detail_link}}" target="_blank">
 								<img src="{{product.thumbnails_url}}" width="60" height="60"/>
 							</a>
+							
+			                {% if product.is_deleted %}
+			                <div class="xui-i-sellout">已删除</div>
+			                {% else %}
+			                  {% if product.shelve_type == 0 %}
+			                  <div class="xui-i-sellout">待售</div>
+			                  {% endif %}
+			                {% endif %}
+
 						</div>
 						<div class="ml10 fl">
 							<div class="mb25">

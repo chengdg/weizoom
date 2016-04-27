@@ -95,7 +95,6 @@ W.view.mall.PromotionSelectProductView = Backbone.View.extend({
 
 			products.push(data);
 		});
-
 		return products;
 	},
 
@@ -242,6 +241,9 @@ W.view.mall.PromotionSelectProductView = Backbone.View.extend({
 				this.selectedProductIds.splice(i, 1);
 			}
 		};
+		this.products = _.filter(this.products, function(product){ return product.id !== productId; });
+		
+		this.trigger('finish-select-products', this.products);
 	},
 	onClickBatchDelete:function(event){
 

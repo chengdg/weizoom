@@ -215,7 +215,7 @@
 					${product.sales}
 				</td>
 				<td>
-					<a href="javascript:void(0);" class="xa-delete" style="width: 50px;">删除</a>
+					<a href="javascript:void(0);" class="xa-delete xa-delete-id-${product.id}" style="width: 50px;">删除</a>
 				</td>
 			</tr>
 			{{/each}}
@@ -229,7 +229,8 @@ var promotionId = {% if promotion %}{{promotion.id}}{% else %}0{% endif %};
 var currentProduct = null;
 
 var validatePrice =function(input){
-	var isValidate = parseFloat($(input).val()) <= parseFloat($('.xa-product-price').text());
+	var minPrice = currentProduct ? currentProduct.display_price : 0;
+	var isValidate = parseFloat($(input).val()) <= parseFloat(minPrice);
 	if(isValidate){
 		$(input).parent().find('.errorHint').hide();
 	}
@@ -238,7 +239,14 @@ var validatePrice =function(input){
 	}
 }
 var onSelectProduct = function(products) {
-	currentProduct = this.products[0];
+	// 找到最低的价钱
+	currentProduct = products[0];
+	// console.log(currentProduct, products);
+	products.forEach(function (product) {
+		if (currentProduct.display_price > product.display_price) {
+			currentProduct = product;
+		}
+	});
 	changeAllDiscountedMoney();
 }
 var changeAllDiscountedMoney = function() {
@@ -387,13 +395,24 @@ $(document).ready(function() {
 			args: W.toFormData(args),
 			scope: this,
 			success: function(data) {
-				W.showHint('success', '创建积分应用成功');
-				_.delay(function() {
-					window.location.href = '/mall2/integral_sales_list/';
-				}, 500)
+				if (data.save_success) {
+					W.showHint('success', '创建积分应用成功');
+					_.delay(function() {
+						window.location.href = '/mall2/integral_sales_list/';
+					}, 500)
+				} else {
+					W.showHint('error', '部分商品已发生其他操作，请查证后再操作');
+					data.error_product_ids.forEach(function(id) {
+						var $el = $('.xa-delete-id-'+id);
+						$el.css("color", "red");
+					});
+					$(this).attr("disabled",false);
+				};
+
 			},
 			error: function(resp) {
-				W.showHint('error', '创建积分应用失败!')
+				W.showHint('error', '创建积分应用失败!');
+				$(this).attr("disabled",false);
 			}
 		})
 	});
