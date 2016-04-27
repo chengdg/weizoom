@@ -160,7 +160,7 @@
 							</tr>
 						{{/each}}
 					{{else}}
-						<tr><td colspan='6'>还没有数据</td></tr>
+						<tr><td colspan='8'>还没有数据</td></tr>
 					{{/if}}
 				</tbody>
 			</table>
@@ -187,6 +187,14 @@
 					$('.xa-content').find('input').prop('checked',true);
 				}else{
 					$('.xa-content').find('input').prop('checked',false);
+				}
+			});
+			$('body').on('click','.xa-select',function(){
+				var isChecked = $('.xa-content table tbody').find('input:checked');
+				if(isChecked.length == $('.xa-content table tbody').find('input').length){
+					$('.xa-selcetAll').prop('checked',true);
+				}else{
+					$('.xa-selcetAll').prop('checked',false);
 				}
 			});
 			$('.xa-editQrcodes').click(function(){
