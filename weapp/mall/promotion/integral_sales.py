@@ -41,7 +41,8 @@ class IntegralSales(resource.Resource):
 
             jsons = [{
                 "name": "product_models",
-                "content": promotion.products[0].models
+                # "content": promotion.products[0].models
+                "content": [p.models for p in promotion.products]
             }]
 
             for rule in promotion.detail['rules']:
