@@ -1741,8 +1741,8 @@ def update_order_status_by_group_status(group_id, status, order_ids=None, is_tes
                                 r = requests.get(URL, params=args)
                                 response = json.loads(r.text)
                             except:
-                                logging.info(u"订单退款异常%s" % unicode_full_stack())
-                                watchdog_error(u"订单退款异常%s" % unicode_full_stack())
+                                logging.info(u"订单退款异常,\n{}".format(unicode_full_stack()))
+                                watchdog_error(u"订单退款异常,\n{}".format(unicode_full_stack()))
                     if response['data'].get('is_success', ''):
                         update_order_status(user, 'return_pay', order)
                         order.status = ORDER_STATUS_GROUP_REFUNDING
