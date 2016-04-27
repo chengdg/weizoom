@@ -1084,6 +1084,14 @@ def send_request_to_kuaidi(order, **kwargs):
 #############################################################################################
 @receiver(mall_signals.products_not_online, sender=Product)
 def products_not_online_handler_for_promotions(product_ids, request, shelve_type=None,**kwargs):
+    """
+    多商品券、积分应用删除所有活动商品时才结束活动
+    @param product_ids:
+    @param request:
+    @param shelve_type:
+    @param kwargs:
+    @return:
+    """
     from mall.promotion import models as promotion_models
     from webapp.handlers import event_handler_util
     disable_coupon = False
@@ -1092,27 +1100,62 @@ def products_not_online_handler_for_promotions(product_ids, request, shelve_type
     if shelve_type and shelve_type == 'delete':
         disable_coupon = True
 
+    types_finish_after_delete_all_products = (promotion_models.PROMOTION_TYPE_INTEGRAL_SALE, promotion_models.PROMOTION_TYPE_COUPON)
+
     target_promotion_ids = []
     promotionIds =[relation.promotion_id for relation in promotion_models.ProductHasPromotion.objects.filter(
         product_id__in=product_ids)]
     for promotion in promotion_models.Promotion.objects.filter(id__in=promotionIds).filter(~Q(status = promotion_models.PROMOTION_STATUS_DELETED)):
-        if promotion.type != promotion_models.PROMOTION_TYPE_COUPON:
-            target_promotion_ids.append(str(promotion.id))
-        elif disable_coupon:
-            not_deleted_promotion_product_count = promotion_models.ProductHasPromotion.objects.filter(promotion=promotion,
-                                                                                                  product__is_deleted=False).count()
 
+        if promotion.type in types_finish_after_delete_all_products:
+            # 该promotion未删除的商品数
+            not_deleted_promotion_product_count = promotion_models.ProductHasPromotion.objects.filter(
+                promotion=promotion,
+                product__is_deleted=False).count()
             if not_deleted_promotion_product_count == 0:
-                promotion.status = promotion_models.PROMOTION_STATUS_DISABLE
-                promotion.save()
-                promotion_models.CouponRule.objects.filter(id=promotion.detail_id).update(is_active=False, remained_count=0)
+                if promotion.type == promotion_models.PROMOTION_TYPE_COUPON:
+                    # 处理多商品券
+                    promotion.status = promotion_models.PROMOTION_STATUS_DISABLE
+                    promotion.save()
+                    promotion_models.CouponRule.objects.filter(id=promotion.detail_id).update(is_active=False,
+                                                                                              remained_count=0)
 
-                promotion_models.Coupon.objects.filter(
-                    owner=request.manager,
-                    coupon_rule_id=promotion.detail_id,
-                    status=promotion_models.COUPON_STATUS_UNGOT
-                ).update(status=promotion_models.COUPON_STATUS_Expired)
+                    promotion_models.Coupon.objects.filter(
+                        owner=request.manager,
+                        coupon_rule_id=promotion.detail_id,
+                        status=promotion_models.COUPON_STATUS_UNGOT
+                    ).update(status=promotion_models.COUPON_STATUS_Expired)
+                else:
+                    target_promotion_ids.append(str(promotion.id))
 
+        else:
+            target_promotion_ids.append(str(promotion.id))
+
+        # if promotion.type != promotion_models.PROMOTION_TYPE_COUPON:
+        #     if promotion == promotion_models.PROMOTION_TYPE_INTEGRAL_SALE and shelve_type == 'delete':
+        #         # 处理积分应用
+        #         not_deleted_promotion_product_count = promotion_models.ProductHasPromotion.objects.filter(
+        #             promotion=promotion,
+        #             product__is_deleted=False).count()
+        #         if not_deleted_promotion_product_count == 0:
+        #             target_promotion_ids.append(str(promotion.id))
+        #     else:
+        #         # 处理其他促销
+        #         target_promotion_ids.append(str(promotion.id))
+        # elif disable_coupon:
+        #     # 处理多商品券
+        #     not_deleted_promotion_product_count = promotion_models.ProductHasPromotion.objects.filter(promotion=promotion,
+        #                                                                                           product__is_deleted=False).count()
+        #     if not_deleted_promotion_product_count == 0:  # not_deleted_promotion_product_count 该promotion未删除的商品数
+        #         promotion.status = promotion_models.PROMOTION_STATUS_DISABLE
+        #         promotion.save()
+        #         promotion_models.CouponRule.objects.filter(id=promotion.detail_id).update(is_active=False, remained_count=0)
+        #
+        #         promotion_models.Coupon.objects.filter(
+        #             owner=request.manager,
+        #             coupon_rule_id=promotion.detail_id,
+        #             status=promotion_models.COUPON_STATUS_UNGOT
+        #         ).update(status=promotion_models.COUPON_STATUS_Expired)
 
     if len(target_promotion_ids) > 0:
         event_data = {
