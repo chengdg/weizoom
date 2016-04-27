@@ -278,7 +278,7 @@ Scenario: 3 积分应用-新建活动页面的商品查询
 		| 分类2    |    今天    |   选取  |
 		| 分类3    |    今天    |   选取  |
 
-@mall2 @promotion @promotionCoupon @ztqb
+@mall2 @promotion @promotionCoupon
 Scenario: 4 多商品券-新建活动页面的商品查询
 	Given jobs登录系统
 	Then jobs新建多商品券活动时能获得已上架商品列表

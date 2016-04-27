@@ -519,7 +519,7 @@ Scenario: 9 选取有会员价且已设置单品券的商品，创建积分应�
 		"""
 
 #_补充:张三香 2016.04.27
-@promotion @promotionIntegral @integral
+@mall2 @promotion @promotionIntegral @integral @ztq
 Scenario:10 创建多商品的积分应用活动
 	Given jobs登录系统
 	When jobs创建积分应用活动
@@ -581,7 +581,7 @@ Scenario:10 创建多商品的积分应用活动
 		}]
 		"""
 
-@promotion @promotionIntegral @integral
+@mall2 @promotion @promotionIntegral @integral @ztq
 Scenario:11 创建多商品积分应用活动-多个商品中保存时有不符合条件的商品，给出错误提示
 	Given jobs登录系统
 	#下架商品

@@ -390,6 +390,7 @@ class PromotionList(resource.Resource):
                 "products": []
             }
             if hasattr(promotion, 'products'):
+                promotion.products = sorted(promotion.products,key=lambda x:x.id)
                 for product in promotion.products:
                     # if len(product.models) > 1:
                     #     total_stocks = 0

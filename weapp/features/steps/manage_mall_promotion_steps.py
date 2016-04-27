@@ -84,6 +84,7 @@ def step_impl(context, user):
 					data['end_date'] = bdd_util.get_datetime_no_second_str(promotion['end_date']),
 			url = '/mall2/api/integral_sale/?_method=put'
 			response = context.client.post(url, data)
+			context.response = response
 			if promotion.get('created_at'):
 					models.Promotion.objects.filter(
 					owner_id=context.webapp_owner_id,
@@ -269,6 +270,16 @@ def step_impl(context, user, promotion_type):
 
 		if promotion_type == 'integral_sale':
 			promotion['product_name'] = ','.join([p['name'] for p in promotion['products']])
+
+			product_price = []
+
+			for product in promotion['products']:
+				if product['display_price_range'] != '':
+					product_price.append(product['display_price_range'])
+				else:
+					product_price.append(product['display_price'])
+			promotion['product_price'] = ','.join(product_price)
+
 			promotion['is_permanant_active'] = str(promotion['detail']['is_permanant_active']).lower()
 			detail = promotion['detail']
 			rules = detail['rules']
@@ -662,3 +673,14 @@ def step_impl(context, user):
 		del item['created_at']
 
 	bdd_util.assert_list(expected, actual)
+
+
+@then(u"{user}获得积分应用活动创建失败提示'{info}'")
+def step_impl(context, user, info):
+	if hasattr(context, 'response'):
+		print('----response',json.loads(context.response.content)['data'])
+		save_success = json.loads(context.response.content)['data']['save_success']
+		delattr(context, 'response')
+		assert not save_success
+	else:
+		assert 0/1
