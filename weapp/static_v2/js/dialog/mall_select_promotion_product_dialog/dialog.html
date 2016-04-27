@@ -170,3 +170,36 @@
 		</tbody>
 	</table>
 </script>
+
+<script id="promotion-categories-view" type="text/x-jquery-tmpl">
+	<table id="categoriesTable" class="table table-bordered table-condensed xb-stripedTable xui-tablePosition">
+		<thead style="background:#c8d2e5;">
+			<tr>
+				<th width="200">标题</th>
+				<th>创建时间</th>
+				<th width="120">操作</th>
+			</tr>
+		</thead>
+		<tbody id='category_list'>
+            {{if items.length}}
+	            {{each(i, category) items}}
+				<tr class="" data-id="${category.id}">
+					<td>
+						${category.name}
+					</td>
+					<td>
+					    ${category.created_at}
+					</td>
+					<td>
+						<label class="btn btn-primary" style="border-radius:3px;">
+							<input type="checkbox" autocomplete="off" class="xa-selectData" ><span>选取</span>
+						</label>
+					</td>
+				</tr>
+				{{/each}}
+            {{else}}
+                <tr><td colspan='3'>还没有数据</td></tr>
+            {{/if}}
+		</tbody>
+	</table>
+</script>

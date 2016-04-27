@@ -65,11 +65,11 @@
 			</tr>
 		</thead>
 		<tbody id='product_list'>
-            {{if items.length}}
-	            {{each(i, promotion) items}}
-	            <tr class="xui-activeName xa-selectTr" data-id="${promotion.id}">
-	            	<td>
-	            		<div class="xui-i-promotionName mb5 text_nowrap">
+      {{if items.length}}
+        {{each(i, promotion) items}}
+        <tr class="xui-activeName xa-selectTr" data-id="${promotion.id}">
+        	<td colspan="7">
+        		<div class="xui-i-promotionName mb5 text_nowrap">
 							{{if promotion.promotionTitle}}
 							<p class="fn f12">广告语: ${promotion.promotionTitle}</p>
 							{{else}}
@@ -77,64 +77,65 @@
 							{{/if}}
 						</div>
 					</td>
-	            	<td></td>
-	            	<td></td>
-	            	<td></td>
-	            	<td></td>
-	            	<td></td>
-	            	<td></td>
-	            </tr>
-				<tr class="xui-trborder" data-id="${promotion.id}">
-					<td class="tl_important" style="width:263px!important;">
-						<div class="clearfix xui-i-cell2">
-							<div class="imgBox fl" style="width: auto; border:solid 1px #cfcfcf;">
-								<a href="${promotion.product.detail_link}" target="_blank">
-                                 {{if promotion.product.thumbnails_url.search('http://weappimg') != -1}}
-                                   <img src="${promotion.product.thumbnails_url + '!60'}" width="60" height="60"/>
-                                 {{else}}
-                                   <img src="${promotion.product.thumbnails_url}" width="60" height="60"/>
-                                 {{/if}}
-								</a>
-							</div>
-							<div class="ml10 fl h60">
-								<div class="xui-commodityName">
-									<a href="${promotion.product.detail_link}" target="_blank">${product.name}</a>
+        </tr>
+	        {{each(j, product) promotion.products}}
+					<tr class="xui-trborder" data-id="${promotion.id}">
+						<td class="tl_important" style="width:263px!important;">
+							<div class="clearfix xui-i-cell2">
+								<div class="imgBox fl pr" style="width: auto; border:solid 1px #cfcfcf;">
+									<a href={{if product.status == "已删除"}}"javascript:void(0);"{{else}}"${product.detail_link}" target="_blank"{{/if}} >
+									{{if product.thumbnails_url.search('http://weappimg') != -1}}
+									 <img src="${product.thumbnails_url + '!60'}" width="60" height="60"/>
+									{{else}}
+									 <img src="${product.thumbnails_url}" width="60" height="60"/>
+									{{/if}}
+									</a>
+									{{if product.status != "在售"}}
+									<div class="xui-i-sellout">${product.status}</div>
+									{{/if}}
 								</div>
-								{{if promotion.product.is_use_custom_model}}
-								<span class="label label-info xa-showAllModels cursor-pointer fn" style="font-size: 1.0em;background:#1183ca;padding-bottom:2px;">查看${promotion.product.models.length}个规格详情</span>
-								{{else}}
-								<p class="xui-greyColor">商品条码：${promotion.product.bar_code}</p>
-								{{/if}}
+								<div class="ml10 fl h60">
+									<div class="xui-commodityName">
+										<a href={{if product.status == "已删除"}}"javascript:void(0);" class="xui-cursor-disabled"{{else}}"${promotion.product.detail_link}" target="_blank"{{/if}}>${product.name}</a>
+									</div>
+									{{if promotion.product.is_use_custom_model}}
+									<span class="label label-info xa-showAllModels cursor-pointer fn" style="font-size: 1.0em;background:#1183ca;padding-bottom:2px;">查看${promotion.product.models.length}个规格详情</span>
+									{{else}}
+									<p class="xui-greyColor">商品条码：${promotion.product.bar_code}</p>
+									{{/if}}
+								</div>
 							</div>
-						</div>
-					</td>
-					<td>
-						${promotion.product.display_price_range}
-					</td>
-					<td>
-						${promotion.detail.discount_money}
-					</td>
-					<td>
-						${promotion.detail.discount}
-					</td>
-					<td>${promotion.status}</td>
-					<td>
-						{{if promotion.detail.is_permanant_active }}
-						永久有效
-						{{else}}
-						<span class="xui-i-date">${promotion.start_date}</span>-<span class="xui-i-date">${promotion.end_date}</span>
+						</td>
+						 <td {{if promotion.products.length > 1}}style="border-right:1px solid #ccc;"{{/if}}>
+							${product.display_price_range}
+						</td>
+						{{if j == 0 }}
+						<td rowspan="${promotion.products.length}">
+							${promotion.detail.discount_money}
+						</td>
+						<td rowspan="${promotion.products.length}">
+							${promotion.detail.discount}
+						</td>
+						<td rowspan="${promotion.products.length}">${promotion.status}</td>
+						<td rowspan="${promotion.products.length}">
+							{{if promotion.detail.is_permanant_active }}
+							永久有效
+							{{else}}
+							<span class="xui-i-date">${promotion.start_date}</span>-<span class="xui-i-date">${promotion.end_date}</span>
+							{{/if}}
+						</td>
+						<td rowspan="${promotion.products.length}">
+							{{if (promotion.status === '已结束')}}
+							<a href="/mall2/integral_sale/?id=${promotion.id}" class="fl" style="width: 40px;text-decoration:none;">详情</a>
+							<a href="javascript:void(0);" class="xa-delete fl" style="width: 40px;text-decoration:none;">|&nbsp;&nbsp;&nbsp;删除</a>
+							{{else}}
+							<a href="/mall2/integral_sale/?id=${promotion.id}" class="fl" style="width: 40px;text-decoration:none;">详情</a>
+							<a href="javascript:void(0);" class="xa-finish fl" style="width: 40px;text-decoration:none;">|&nbsp;&nbsp;&nbsp;结束</a>
+							{{/if}}
+						</td>
 						{{/if}}
-					</td>
-					<td>
-						{{if (promotion.status === '已结束')}}
-						<a href="/mall2/integral_sale/?id=${promotion.id}" class="fl" style="width: 40px;text-decoration:none;">详情</a>
-						<a href="javascript:void(0);" class="xa-delete fl" style="width: 40px;text-decoration:none;">|&nbsp;&nbsp;&nbsp;删除</a>
-						{{else}}
-						<a href="/mall2/integral_sale/?id=${promotion.id}" class="fl" style="width: 40px;text-decoration:none;">详情</a>
-						<a href="javascript:void(0);" class="xa-finish fl" style="width: 40px;text-decoration:none;">|&nbsp;&nbsp;&nbsp;结束</a>
-						{{/if}}
-					</td>
-				</tr>
+					</tr>
+					{{/each}}
 				{{/each}}
             {{else}}
                 <tr><td colspan='8'>还没有数据</td></tr>

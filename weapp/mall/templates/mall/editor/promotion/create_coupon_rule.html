@@ -210,9 +210,10 @@ margin-top: -29px;"></div>
 
                 {% if product.is_deleted %}
                 <div class="xui-i-sellout">已删除</div>
-                {% endif %}
-                {% if product.shelve_type == 0 %}
-                <div class="xui-i-sellout">待售</div>
+                {% else %}
+                  {% if product.shelve_type == 0 %}
+                  <div class="xui-i-sellout">待售</div>
+                  {% endif %}
                 {% endif %}
               </div>
               <div class="ml10 fl w400">
