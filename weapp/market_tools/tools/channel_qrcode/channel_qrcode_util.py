@@ -140,12 +140,10 @@ def _add_award_to_member(user_profile, award_type, award_content, member, integr
 
 def create_channel_qrcode_has_memeber_restructure(channel_qrcode, user_profile, member, ticket, is_new_member):
 	try:
-		print '=====33333333333333====='
 		if channel_qrcode.bing_member_id == member.id:
 			return
 
 		if (is_new_member is False) and channel_qrcode.re_old_member == 0:
-			print '=====444444444444====='
 			return
 
 		award_prize_info = json.loads(channel_qrcode.award_prize_info)
@@ -154,15 +152,12 @@ def create_channel_qrcode_has_memeber_restructure(channel_qrcode, user_profile, 
 			coupon_id = str(award_prize_info['id'])
 		else:
 			coupon_id = ''
-		print coupon_id,'==========coupon_id============'
-		print is_new_member,'==========is_new_member============'
-		print channel_qrcode.re_old_member,'=========channel_qrcode.re_old_member========='
+
 		log = ChannelQrcodeToMemberLog.objects.filter(channel_qrcode=channel_qrcode, member=member)
 		if log.count() > 0:
 			coupon_ids = log.first().coupon_ids
 		else:
 			coupon_ids = ""
-		print coupon_ids,'==========coupon_ids==========='
 
 		if ChannelQrcodeHasMember.objects.filter(channel_qrcode=channel_qrcode, member=member).count() == 0:
 			ChannelQrcodeHasMember.objects.filter(member=member).delete()
@@ -179,7 +174,6 @@ def create_channel_qrcode_has_memeber_restructure(channel_qrcode, user_profile, 
 				watchdog_warning(notify_message)
 
 			if not coupon_id or (coupon_id and (coupon_id in coupon_ids.split(","))):
-				print '=========0000000========'
 				return
 
 		if log.count() == 0:
@@ -187,17 +181,13 @@ def create_channel_qrcode_has_memeber_restructure(channel_qrcode, user_profile, 
 				prize_info = PrizeInfo.from_json(channel_qrcode.award_prize_info)
 				award(prize_info, member, CHANNEL_QRCODE)
 			try:
-				print '=====6666666666666====='
 				ChannelQrcodeToMemberLog.objects.create(channel_qrcode=channel_qrcode, member=member, coupon_ids=coupon_id)
-			except Exception,e:
-				print e,'======create log==========='
+			except:
 				pass
 		else:
-			print '==========777777777777=========='
 			if coupon_id:
 				if coupon_id not in coupon_ids.split(","):
 					if member:
-						print '============prize=========='
 						prize_info = PrizeInfo.from_json(channel_qrcode.award_prize_info)
 						award(prize_info, member, CHANNEL_QRCODE)
 					member_log = log.first()
@@ -218,8 +208,7 @@ def create_channel_qrcode_has_memeber_restructure(channel_qrcode, user_profile, 
 		except:
 			notify_message = u"渠道扫描异常update_member_grade error, cause:\n{}".format(unicode_full_stack())
 			watchdog_warning(notify_message)
-	except Exception,e:
-		print e,'-------------------'
+	except:
 		notify_message = u"渠道扫描异常create_channel_qrcode_has_memeber error, cause:\n{}".format(unicode_full_stack())
 		watchdog_warning(notify_message)
 

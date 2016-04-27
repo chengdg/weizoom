@@ -68,7 +68,6 @@ class ChannelQrcodeHandler(MessageHandler):
 
 		if user_profile.user_id in [467,154] and \
 			check_new_channel_qrcode_ticket(ticket, user_profile):
-			print '=====1111111111111====='
 			#用户可以重复领取不同的优惠券
 			can_has_coupon = False
 			qrcode_award = MemberChannelQrcodeAwardContent.objects.get(owner_id=user_profile.user_id)
@@ -82,14 +81,12 @@ class ChannelQrcodeHandler(MessageHandler):
 						can_has_coupon = True
 
 			if member.is_new or can_has_coupon:
-				print '=====2222222222222====='
 				create_new_channel_qrcode_has_memeber(user_profile, context.member, ticket, member.is_new)
 			return None
 
 		if ChannelQrcodeSettings.objects.filter(ticket=ticket, owner_id=user_profile.user_id).count() > 0:
 			channel_qrcode = ChannelQrcodeSettings.objects.filter(ticket=ticket, owner_id=user_profile.user_id)[0]
 			create_channel_qrcode_has_memeber_restructure(channel_qrcode, user_profile, context.member, ticket, member.is_new)
-			print '==========888888888888=========='
 			msg_type, detail = get_response_msg_info_restructure(channel_qrcode, user_profile)
 			if msg_type != None:
 				#from_weixin_user = self._get_from_weixin_user(message)
