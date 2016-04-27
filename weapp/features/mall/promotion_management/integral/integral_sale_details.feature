@@ -77,7 +77,12 @@ Background:
 			"discount": "8"
 		}]
 		"""
-
+	Given jobs设定会员积分策略
+		"""
+		{
+			"integral_each_yuan": 2
+		}
+		"""
 @promotion @promotionIntegral @integral
 Scenario:1 积分应用活动（单商品、统一设置）详情
 	Given jobs登录系统
