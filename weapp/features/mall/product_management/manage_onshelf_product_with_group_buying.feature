@@ -54,7 +54,7 @@ Background:
 					}
 				}
 			},
-			"postage":10.0,
+			"postage":10.00,
 			"distribution_time":"on"
 		},{
 			"name":"商品2",

@@ -43,7 +43,7 @@ Scenario:1 重新添加商品规格
 			"model": {
 				"models": {
 					"standard": {
-						"price": 11.0,
+						"price": 11.00,
 						"weight": 5.0,
 						"stock_type": "无限"
 					}
@@ -64,13 +64,13 @@ Scenario:1 重新添加商品规格
 			"model": {
 				"models": {
 					"黑色 S": {
-						"price": 10.0,
+						"price": 10.00,
 						"weight": 3.1,
 						"stock_type": "有限",
 						"stocks": 3
 					},
 					"白色 S": {
-						"price": 9.1,
+						"price": 9.10,
 						"weight": 1.0,
 						"stock_type": "无限"
 					}
@@ -85,13 +85,13 @@ Scenario:1 重新添加商品规格
 			"model": {
 				"models": {
 					"黑色 S": {
-						"price": 10.0,
+						"price": 10.00,
 						"weight": 3.1,
 						"stock_type": "有限",
 						"stocks": 3
 					},
 					"白色 S": {
-						"price": 9.1,
+						"price": 9.10,
 						"weight": 1.0,
 						"stock_type": "无限"
 					}
@@ -112,13 +112,13 @@ Scenario:2 更新已有商品规格
 			"model": {
 				"models": {
 					"黑色 S": {
-						"price": 10.0,
+						"price": 10.00,
 						"weight": 3.1,
 						"stock_type": "有限",
 						"stocks": 3
 					},
 					"白色 S": {
-						"price": 9.1,
+						"price": 9.10,
 						"weight": 1.0,
 						"stock_type": "无限"
 					}
@@ -133,22 +133,22 @@ Scenario:2 更新已有商品规格
 			"model": {
 				"models": {
 					"黑色 S": {
-						"price": 10.1,
+						"price": 10.10,
 						"weight": 3.2,
 						"stock_type": "无限"
 					},
 					"红色 S": {
-						"price": 1.0,
+						"price": 1.00,
 						"weight": 0.5,
 						"stock_type": "无限"
 					},
 					"黑色 M": {
-						"price": 1.0,
+						"price": 1.00,
 						"weight": 0.5,
 						"stock_type": "无限"
 					},
 					"红色 M": {
-						"price": 1.0,
+						"price": 1.00,
 						"weight": 0.5,
 						"stock_type": "无限"
 					}
@@ -163,22 +163,22 @@ Scenario:2 更新已有商品规格
 			"model": {
 				"models": {
 					"黑色 S": {
-						"price": 10.1,
+						"price": 10.10,
 						"weight": 3.2,
 						"stock_type": "无限"
 					},
 					"红色 S": {
-						"price": 1.0,
+						"price": 1.00,
 						"weight": 0.5,
 						"stock_type": "无限"
 					},
 					"黑色 M": {
-						"price": 1.0,
+						"price": 1.00,
 						"weight": 0.5,
 						"stock_type": "无限"
 					},
 					"红色 M": {
-						"price": 1.0,
+						"price": 1.00,
 						"weight": 0.5,
 						"stock_type": "无限"
 					}
@@ -199,7 +199,7 @@ Scenario:3 修改商品的商品规格
 			"model": {
 				"models": {
 					"黑色": {
-						"price": 10.0,
+						"price": 10.00,
 						"weight": 3.1,
 						"stock_type": "有限",
 						"stocks": 3
@@ -212,7 +212,7 @@ Scenario:3 修改商品的商品规格
 			"model": {
 				"models": {
 					"黑色": {
-						"price": 20.0,
+						"price": 20.00,
 						"weight": 3.1,
 						"stock_type": "有限",
 						"stocks": 3
@@ -229,7 +229,7 @@ Scenario:3 修改商品的商品规格
 			"model": {
 				"models": {
 					"白色": {
-						"price": 10.0,
+						"price": 10.00,
 						"weight": 3.1,
 						"stock_type": "有限",
 						"stocks": 3
@@ -245,7 +245,7 @@ Scenario:3 修改商品的商品规格
 			"model": {
 				"models": {
 					"白色": {
-						"price": 10.0,
+						"price": 10.00,
 						"weight": 3.1,
 						"stock_type": "有限",
 						"stocks": 3
@@ -262,7 +262,7 @@ Scenario:3 修改商品的商品规格
 			"model": {
 				"models": {
 					"黑色": {
-						"price": 20.0,
+						"price": 20.00,
 						"weight": 3.1,
 						"stock_type": "有限",
 						"stocks": 3

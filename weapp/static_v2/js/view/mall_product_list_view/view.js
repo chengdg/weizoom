@@ -297,9 +297,9 @@ W.view.mall.ProductListView = Backbone.View.extend({
                         return model.price*1; 
                     });
                     if(sortedModels[0].price == sortedModels[sortedModels.length-1].price){
-                        $td.find('.xa-priceText').text(sortedModels[0].price);
+                        $td.find('.xa-priceText').text(Number(sortedModels[0].price).toFixed(2));
                     }else{
-                        $td.find('.xa-priceText').text(sortedModels[0].price +' ~ '+sortedModels[sortedModels.length-1].price);
+                        $td.find('.xa-priceText').text(Number(sortedModels[0].price).toFixed(2) +' ~ '+Number(sortedModels[sortedModels.length-1].price).toFixed(2));
                     }
                 },
                 error: function(resp) {
@@ -355,7 +355,7 @@ W.view.mall.ProductListView = Backbone.View.extend({
             scope: this,
             success: function(data) {
                 $priceInput.hide();
-                $priceText.text(priceText).show();
+                $priceText.text(Number(priceText).toFixed(2)).show();
             },
             error: function(resp) {
                 var msg = '更新价格失败!';

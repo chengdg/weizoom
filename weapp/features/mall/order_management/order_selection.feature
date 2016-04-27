@@ -30,7 +30,7 @@ Background:
 		"""
 		[{
 			"name": "商品1",
-			"price": 9.9,
+			"price": 9.90,
 			"pay_interfaces":[{
 				"type": "在线支付"
 			}, {
@@ -38,7 +38,7 @@ Background:
 			}]
 		}, {
 			"name": "商品2",
-			"price": 9.9,
+			"price": 9.90,
 			"pay_interfaces":[{
 				"type": "在线支付"
 			}]

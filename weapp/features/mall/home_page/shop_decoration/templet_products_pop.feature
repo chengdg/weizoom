@@ -28,19 +28,19 @@ Background:
 		[{
 			"name": "商品1可单行显示",
 			"shelve_type":"上架",
-			"price": 1.0
+			"price": 1.00
 		},{
 			"name": "商品2可两行显示",
 			"shelve_type":"上架",
-			"price": 2.0
+			"price": 2.00
 		},{
 			"name": "商品3不可两行显示",
 			"shelve_type":"上架",
-			"price": 3.0
+			"price": 3.00
 		},{
 			"name": "商品4",
 			"shelve_type":"下架",
-			"price": 4.0
+			"price": 4.00
 		}]
 		"""
 
@@ -99,7 +99,7 @@ Scenario:1 选择在售商品窗体：在售商品列表、搜索、添加新商
 		[{
 			"name": "商品5",
 			"shelve_type":"上架",
-			"price": 5.0
+			"price": 5.00
 		}]
 		"""
 	Then jobs在微页面获取'在售'商品选择列表
@@ -122,27 +122,27 @@ Scenario:2 商品选择列表分页,每页显示8个商品
 		[{
 			"name": "商品5",
 			"shelve_type":"上架",
-			"price": 5.0
+			"price": 5.00
 		},{
 			"name": "商品6",
 			"shelve_type":"上架",
-			"price": 6.0
+			"price": 6.00
 		},{
 			"name": "商品7",
 			"shelve_type":"上架",
-			"price": 7.0
+			"price": 7.00
 		},{
 			"name": "商品8",
 			"shelve_type":"上架",
-			"price": 8.0
+			"price": 8.00
 		},{
 			"name": "商品9",
 			"shelve_type":"上架",
-			"price": 9.0
+			"price": 9.00
 		},{
 			"name": "商品10",
 			"shelve_type":"上架",
-			"price": 10.0
+			"price": 10.00
 		}]
 		"""
 	Then jobs商品模块商品选择列表显示'2'页
@@ -208,13 +208,13 @@ Scenario:3 一个商品可以被重复选择
 				"index": 1,
 				"items": [{
 					"name":"商品3不可两行显示",
-					"price": 3.0
+					"price": 3.00
 				},{
 					"name":"商品2可两行显示",
-					"price": 2.0
+					"price": 2.00
 				},{
 					"name":"商品1可单行显示",
-					"price": 1.0
+					"price": 1.00
 				}],
 				"list_style1":"大图",
 				"list_style2":"默认样式",
@@ -233,13 +233,13 @@ Scenario:3 一个商品可以被重复选择
 				"index": 1,
 				"items": [{
 					"name":"商品3不可两行显示",
-					"price": 3.0
+					"price": 3.00
 				},{
 					"name":"商品2可两行显示",
-					"price": 2.0
+					"price": 2.00
 				},{
 					"name":"商品1可单行显示",
-					"price": 1.0
+					"price": 1.00
 				}],
 				"list_style1":"大图",
 				"list_style2":"默认样式",
@@ -258,19 +258,19 @@ Scenario:3 一个商品可以被重复选择
 				"index": 1,
 				"items": [{
 					"name":"商品3不可两行显示",
-					"price": 3.0
+					"price": 3.00
 				},{
 					"name":"商品2可两行显示",
-					"price": 2.0
+					"price": 2.00
 				},{
 					"name":"商品1可单行显示",
-					"price": 1.0
+					"price": 1.00
 				},{
 					"name":"商品1可单行显示",
-					"price": 1.0
+					"price": 1.00
 				},{
 					"name":"商品2可两行显示",
-					"price": 2.0
+					"price": 2.00
 				}],
 				"list_style1":"小图",
 				"list_style2":"简洁样式",
@@ -290,19 +290,19 @@ Scenario:3 一个商品可以被重复选择
 				"index": 1,
 				"items": [{
 					"name":"商品3不可两行显示",
-					"price": 3.0
+					"price": 3.00
 				},{
 					"name":"商品2可两行显示",
-					"price": 2.0
+					"price": 2.00
 				},{
 					"name":"商品1可单行显示",
-					"price": 1.0
+					"price": 1.00
 				},{
 					"name":"商品1可单行显示",
-					"price": 1.0
+					"price": 1.00
 				},{
 					"name":"商品2可两行显示",
-					"price": 2.0
+					"price": 2.00
 				}],
 				"list_style1":"小图",
 				"list_style2":"简洁样式",

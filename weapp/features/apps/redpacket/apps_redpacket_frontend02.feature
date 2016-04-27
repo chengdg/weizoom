@@ -37,7 +37,7 @@ Background:
 			"is_show_countdown":"true",
 			"red_packet":{
 				"red_packet_type":"random",
-				"random_total_money":"10",
+				"random_total_money":"10.00",
 				"random_packets_number":"2",
 				"regular_packets_number":"",
 				"regular_per_money":""
@@ -49,8 +49,8 @@ Background:
 			"rules":"获奖条件必须要在活动时间内攒够红包金额<br />点赞达到红包金额，系统会自动发放",
 			"share_pic":"1.jpg",
 			"share_desc":"分享到朋友圈邀请好友点赞集齐红包金额即可获得现金奖励!"
-		   },{
-		    "name":"拼红包活动2",
+			},{
+			"name":"拼红包活动2",
 			"start_date":"昨天",
 			"end_date":"2天后",
 			"is_show_countdown":"false",
@@ -59,7 +59,7 @@ Background:
 				"random_total_money":"",
 				"random_packets_number":"",
 				"regular_packets_number":"3",
-				"regular_per_money":"5"
+				"regular_per_money":"5.00"
 			},
 			"contribution_start_range":"0.5",
 			"contribution_end_range":"1.5",
@@ -412,7 +412,7 @@ Scenario:6 会员参与'未开始'的拼红包活动
 			"is_show_countdown":"true",
 			"red_packet":{
 				"red_packet_type":"random",
-				"random_total_money":"10",
+				"random_total_money":"10.00",
 				"random_packets_number":"2",
 				"regular_packets_number":"",
 				"regular_per_money":""
@@ -486,7 +486,7 @@ Scenario:7 会员参与'已结束'的拼红包活动
 				"random_total_money":"",
 				"random_packets_number":"",
 				"regular_packets_number":"3",
-				"regular_per_money":"5"
+				"regular_per_money":"5.00"
 			},
 			"contribution_start_range":"0.5",
 			"contribution_end_range":"1.5",

@@ -82,11 +82,11 @@ Scenario: 1 购买同供货商单商品
 		"""
 		{
 			"status": "待支付",
-			"final_price": 20.0,
-			"product_price": 20.0,
+			"final_price": 20.00,
+			"product_price": 20.00,
 			"products": [{
 					"name": "花生",
-					"price": 10.0,
+					"price": 10.00,
 					"count": 2
 			}]
 		}
@@ -101,7 +101,7 @@ Scenario: 1 购买同供货商单商品
 			"member": "bill",
 			"products": [{
 				"name": "花生",
-				"price":10.0,
+				"price":10.00,
 				"count": 2,
 				"supplier":"土小宝"
 			}]
@@ -145,18 +145,18 @@ Scenario: 2 购买参与买赠的商品
 		"""
 		{
 			"status": "待支付",
-			"final_price": 10.0,
-			"product_price": 10.0,
+			"final_price": 10.00,
+			"product_price": 10.00,
 			"products": [{
 				"name": "花生",
-				"price": 10.0,
+				"price": 10.00,
 				"count": 1,
 				"promotion": {
 					"type": "premium_sale"
 				}
 			},{
 				"name": "鸭蛋",
-				"price": 0.0,
+				"price": 0.00,
 				"count": 1,
 				"promotion": {
 						"type": "premium_sale:premium_product"
@@ -203,15 +203,15 @@ Scenario: 3 购买同供货商多商品
 		"""
 		{
 			"status": "待支付",
-			"final_price": 20.0,
-			"product_price": 20.0,
+			"final_price": 20.00,
+			"product_price": 20.00,
 			"products": [{
 				"name": "花生",
-				"price": 10.0,
+				"price": 10.00,
 				"count": 1
 			},{
 				"name": "花生油",
-				"price": 10.0,
+				"price": 10.00,
 				"count": 1
 			}]
 		}
@@ -226,12 +226,12 @@ Scenario: 3 购买同供货商多商品
 			"member": "bill",
 			"products":[{
 				"name": "花生",
-				"price": 10.0,
+				"price": 10.00,
 				"supplier":"土小宝",
 				"count": 1
 			},{
 				"name": "花生油",
-				"price": 10.0,
+				"price": 10.00,
 				"supplier":"土小宝",
 				"count": 1
 			}]
@@ -263,20 +263,20 @@ Scenario: 4 购买多供货商多商品
 		"""
 		{
 			"status": "待支付",
-			"final_price": 30.0,
-			"product_price": 30.0,
+			"final_price": 30.00,
+			"product_price": 30.00,
 			"products": 
 				[{
 					"name": "花生",
-					"price": 10.0,
+					"price": 10.00,
 					"count": 1
 				},{
 					"name": "花生油",
-					"price": 10.0,
+					"price": 10.00,
 					"count": 1
 				},{
 					"name": "鸭蛋",
-					"price": 10.0,
+					"price": 10.00,
 					"count": 1
 				}]
 		}
@@ -292,17 +292,17 @@ Scenario: 4 购买多供货商多商品
 			"products": [{
 				"supplier":"",
 				"name": "花生",
-				"price": 10.0,
+				"price": 10.00,
 				"count": 1
 			},{
 				"supplier":"",
 				"name": "花生油",
-				"price": 10.0,
+				"price": 10.00,
 				"count": 1
 			},{
 				"supplier":"",
 				"name": "鸭蛋",
-				"price": 10.0,
+				"price": 10.00,
 				"count": 1
 			}]
 		}]
