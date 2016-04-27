@@ -12,6 +12,7 @@ W.dialog.mall.SelectCouponDialog = W.dialog.Dialog.extend({
 
     onInitialize: function(options) {
         this.table = this.$('[data-ui-role="advanced-table"]').data('view');
+        this.is_channel_qrcode = options.is_channel_qrcode || false;
     },
 
     beforeShow: function() {
@@ -31,29 +32,67 @@ W.dialog.mall.SelectCouponDialog = W.dialog.Dialog.extend({
 
     onSelectCoupon: function(event) {
         var $checkbox = $(event.currentTarget);
-        if (!this.enableMultiSelection) {
-            var $label = this.$('label.checked');
-            $label.find('input').prop('checked', false);
-            $label.removeClass('checked');
-            if($checkbox.parent().hasClass('checked')){
-                $checkbox.parent('.checked').find('span').text('已选择');
-            }else{
-                $checkbox.parents('tr').siblings().find('label span').text('选取');
+        var coupon_id = $checkbox.parents('tr').data('id');
+        if (this.is_channel_qrcode){
+            var search = location.search;
+            var index = search.indexOf('=');
+            var setting_id = search.substring(index+1);
+            W.getApi().call({
+                app: 'new_weixin',
+                api: 'coupon_can_use',
+                args: {
+                    coupon_id: coupon_id,
+                    setting_id: setting_id
+                },
+                scope: this,
+                success: function(data) {
+                    if (!this.enableMultiSelection) {
+                        var $label = this.$('label.checked');
+                        $label.find('input').prop('checked', false);
+                        $label.removeClass('checked');
+                        if($checkbox.parent().hasClass('checked')){
+                            $checkbox.parent('.checked').find('span').text('已选择');
+                        }else{
+                            $checkbox.parents('tr').siblings().find('label span').text('选取');
+                        }
+                    }
+                    if ($checkbox.is(':checked')) {
+                        $checkbox.parent().addClass('checked');
+                        $checkbox.parent('.checked').find('span').text('已选择');
+                    } else {
+                        $checkbox.parent().removeClass('checked');
+                        $checkbox.parent().find('span').text('选取');
+                    }
+                },
+                error: function(resp) {
+                    W.showHint('error', resp.errMsg);
+                    $('.xa-selectCoupon').prop('checked', false);
+                }
+            });
+        }else{
+            if (!this.enableMultiSelection) {
+                var $label = this.$('label.checked');
+                $label.find('input').prop('checked', false);
+                $label.removeClass('checked');
+                if($checkbox.parent().hasClass('checked')){
+                    $checkbox.parent('.checked').find('span').text('已选择');
+                }else{
+                    $checkbox.parents('tr').siblings().find('label span').text('选取');
+                }
             }
-        }
-        if ($checkbox.is(':checked')) {
-            $checkbox.parent().addClass('checked');
-            $checkbox.parent('.checked').find('span').text('已选择');
-        } else {
-            $checkbox.parent().removeClass('checked');
-            $checkbox.parent().find('span').text('选取');
+            if ($checkbox.is(':checked')) {
+                $checkbox.parent().addClass('checked');
+                $checkbox.parent('.checked').find('span').text('已选择');
+            } else {
+                $checkbox.parent().removeClass('checked');
+                $checkbox.parent().find('span').text('选取');
+            }
         }
     },
 
     onGetData: function(options) {
         var data = [];
         var _this = this;
-
         this.$('tbody tr').each(function() {
             var $tr = $(this);
             if ($tr.find('.xa-selectCoupon').is(':checked')) {

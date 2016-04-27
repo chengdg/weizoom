@@ -11,6 +11,8 @@ from core.exceptionutil import full_stack, unicode_full_stack
 from modules.member.models import *
 from modules.member.integral import increase_member_integral
 from market_tools.tools.coupon.util import consume_coupon
+from mall.promotion import models as promotion_models
+from django.db.models import F, Q
 
 def check_channel_qrcode_ticket(ticket, user_profile):
 	return True if ChannelQrcodeSettings.objects.filter(ticket=ticket, owner_id=user_profile.user_id).count() > 0 else False
@@ -91,6 +93,7 @@ def check_new_channel_qrcode_ticket(ticket, user_profile):
 
 def create_new_channel_qrcode_has_memeber(user_profile, member, ticket, is_new_member):
 	try:
+		print '==========999999999999=========='
 		new_channel_qrcodes = MemberChannelQrcode.objects.filter(ticket=ticket, owner_id=user_profile.user_id)
 		if new_channel_qrcodes.count() > 0:
 			new_channel_qrcode = new_channel_qrcodes[0]
@@ -143,6 +146,19 @@ def create_channel_qrcode_has_memeber_restructure(channel_qrcode, user_profile, 
 		if (is_new_member is False) and channel_qrcode.re_old_member == 0:
 			return
 
+		award_prize_info = json.loads(channel_qrcode.award_prize_info)
+		award_type = award_prize_info['type']
+		if award_type == u'优惠券':
+			coupon_id = str(award_prize_info['id'])
+		else:
+			coupon_id = ''
+
+		log = ChannelQrcodeToMemberLog.objects.filter(channel_qrcode=channel_qrcode, member=member)
+		if log.count() > 0:
+			coupon_ids = log.first().coupon_ids
+		else:
+			coupon_ids = ""
+
 		if ChannelQrcodeHasMember.objects.filter(channel_qrcode=channel_qrcode, member=member).count() == 0:
 			ChannelQrcodeHasMember.objects.filter(member=member).delete()
 			ChannelQrcodeHasMember.objects.create(channel_qrcode=channel_qrcode, member=member, is_new=is_new_member)
@@ -156,16 +172,31 @@ def create_channel_qrcode_has_memeber_restructure(channel_qrcode, user_profile, 
 			except:
 				notify_message = u"渠道扫描异常update_member_grade error, cause:\n{}".format(unicode_full_stack())
 				watchdog_warning(notify_message)
-			return
 
-		if ChannelQrcodeToMemberLog.objects.filter(channel_qrcode=channel_qrcode, member=member).count() == 0:
+			if not coupon_id or (coupon_id and (coupon_id in coupon_ids.split(","))):
+				return
+
+		if log.count() == 0:
 			if member:
 				prize_info = PrizeInfo.from_json(channel_qrcode.award_prize_info)
 				award(prize_info, member, CHANNEL_QRCODE)
 			try:
-				ChannelQrcodeToMemberLog.objects.create(channel_qrcode=channel_qrcode, member=member)
+				ChannelQrcodeToMemberLog.objects.create(channel_qrcode=channel_qrcode, member=member, coupon_ids=coupon_id)
 			except:
 				pass
+		else:
+			if coupon_id:
+				if coupon_id not in coupon_ids.split(","):
+					if member:
+						prize_info = PrizeInfo.from_json(channel_qrcode.award_prize_info)
+						award(prize_info, member, CHANNEL_QRCODE)
+					member_log = log.first()
+					if member_log.coupon_ids == "":
+						member_log.coupon_ids = coupon_id
+					else:
+						member_log.coupon_ids += (','+coupon_id)
+					member_log.save()
+
 		try:
 			if channel_qrcode.grade_id > 0:
 				# updated by zhu tianqi,修改为会员等级高于目标等级时不降级，member_id->member
