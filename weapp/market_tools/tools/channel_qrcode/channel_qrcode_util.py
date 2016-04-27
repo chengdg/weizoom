@@ -169,6 +169,10 @@ def create_channel_qrcode_has_memeber_restructure(channel_qrcode, user_profile, 
 		else:
 			coupon_ids_list = []
 		print coupon_ids_list,'==========coupon_ids_list==========='
+		if (is_new_member is False) and not coupon_id:
+			print '====100000001========'
+			return
+
 		if (is_new_member is False) and channel_qrcode.re_old_member == 0:
 			print '=====444444444444====='
 			if not coupon_id or (coupon_id in coupon_ids_list):
