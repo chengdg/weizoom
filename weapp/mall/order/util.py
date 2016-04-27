@@ -1674,7 +1674,7 @@ def get_order_actions(order, is_refund=False, is_detail_page=False, is_list_pare
     return result
 
 
-def update_order_status_by_group_status(group_id, status, order_ids=None, is_test=False):
+def update_order_status_by_group_status(group_id=None, status=None, order_ids=None, is_test=False):
     # TODO 退款
     KEY = 'MjExOWYwMzM5M2E4NmYwNWU4ZjI5OTI1YWFmM2RiMTg='
     if settings.MODE in ['develop', 'test']:
@@ -1689,18 +1689,21 @@ def update_order_status_by_group_status(group_id, status, order_ids=None, is_tes
         group_status = GROUP_STATUS_failure
         order_status = ORDER_STATUS_PAYED_NOT_SHIP
 
-    relations = OrderHasGroup.objects.filter(group_id=group_id)
-    user = UserProfile.objects.get(webapp_id=relations[0].webapp_id).user
-    relations.update(group_status=group_status)
-    orders = Order.objects.filter(
-            order_id__in=[r.order_id for r in relations],
-            status=order_status
-            )
-    if order_status == ORDER_STATUS_PAYED_NOT_SHIP:
+    if order_ids:
+        orders = Order.objects.filter(order_id__in=order_ids)
+    else:
+        relations = OrderHasGroup.objects.filter(group_id=group_id)
+        user = UserProfile.objects.get(webapp_id=relations[0].webapp_id).user
+        relations.update(group_status=group_status)
         orders = Order.objects.filter(
-            order_id__in=[r.order_id for r in relations],
-            status__in=[ORDER_STATUS_PAYED_NOT_SHIP, ORDER_STATUS_NOT]
-            )
+                order_id__in=[r.order_id for r in relations],
+                status=order_status
+                )
+        if order_status == ORDER_STATUS_PAYED_NOT_SHIP:
+            orders = Order.objects.filter(
+                order_id__in=[r.order_id for r in relations],
+                status__in=[ORDER_STATUS_PAYED_NOT_SHIP, ORDER_STATUS_NOT]
+                )
     from mall.module_api import update_order_status
     for order in orders:
         if order_status == ORDER_STATUS_NOT or order.status == ORDER_STATUS_NOT:
