@@ -29,7 +29,6 @@ from excel_response import ExcelResponse
 from modules.member.module_api import get_member_by_id_list, get_member_by_id
 from core.wxapi import get_weixin_api
 
-
 #COUNT_PER_PAGE = 2
 COUNT_PER_PAGE = 50
 FIRST_NAV = export.WEIXIN_HOME_FIRST_NAV
@@ -388,8 +387,11 @@ class Qrcode(resource.Resource):
 		cur_setting = None
 		name = request.POST["name"]
 		award_prize_info = request.POST['prize_info'].strip()
+		coupon_id = ''
 		try:
 			info_dict = json.loads(award_prize_info)
+			if info_dict['type'] == u'优惠券':
+				coupon_id = str(info_dict['id'])
 			if not (info_dict.has_key('id') and info_dict.has_key('name') and info_dict.has_key('type')):
 				1/0
 		except Exception, e:
@@ -431,7 +433,8 @@ class Qrcode(resource.Resource):
 			is_bing_member=True if is_bing_member == "true" else False,
 			bing_member_id=bing_member_id,
 			bing_member_title=bing_member_title,
-			qrcode_desc=qrcode_desc
+			qrcode_desc=qrcode_desc,
+			coupon_ids=coupon_id
 		)
 
 		if cur_setting.is_bing_member:
@@ -472,8 +475,11 @@ class Qrcode(resource.Resource):
 
 		name = request.POST["name"]
 		award_prize_info = request.POST['prize_info'].strip()
+		coupon_id = ''
 		try:
 			info_dict = json.loads(award_prize_info)
+			if info_dict['type'] == u'优惠券':
+				coupon_id = info_dict['id']
 			if not (info_dict.has_key('id') and info_dict.has_key('name') and info_dict.has_key('type')):
 				1/0
 		except Exception, e:
@@ -503,19 +509,24 @@ class Qrcode(resource.Resource):
 		#批量修改
 		if len(setting_id.split(',')) > 1:
 			settings = ChannelQrcodeSettings.objects.filter(owner=request.manager, id__in=setting_id.split(','))
-			settings.update(
-				award_prize_info=award_prize_info,
-				reply_type=reply_type,
-				reply_detail=reply_detail,
-				reply_material_id=reply_material_id,
-				remark=remark,
-				grade_id=grade_id,
-				tag_id=tag_id,
-				re_old_member=re_old_member,
-			)
+			for s in settings:
+				s.award_prize_info = award_prize_info
+				s.reply_type = reply_type
+				s.reply_detail = reply_detail
+				s.reply_material_id = reply_material_id
+				s.remark = remark
+				s.grade_id = grade_id
+				s.tag_id = tag_id
+				s.re_old_member = re_old_member
+				s.coupon_ids = s.coupon_ids + ',' + str(coupon_id)
+				s.save()
+	
 			return create_response(200).get_response()
 
 		setting = ChannelQrcodeSettings.objects.filter(owner=request.manager, id=setting_id)
+		coupon_ids = setting[0].coupon_ids.split(',')
+		coupon_ids.append(str(coupon_id))
+		coupon_ids = ','.join(coupon_ids)
 		if setting[0].bing_member_id and is_bing_member == 'false':
 			#取消关联
 			setting.update(
@@ -529,6 +540,7 @@ class Qrcode(resource.Resource):
 				tag_id=tag_id,
 				re_old_member=re_old_member,
 				is_bing_member=True if is_bing_member == "true" else False,
+				coupon_ids=coupon_ids
 			)
 			ChannelQrcodeBingMember.objects.filter(channel_qrcode=setting[0]).update(
 				cancel_bing_time=datetime.now()
@@ -552,7 +564,8 @@ class Qrcode(resource.Resource):
 				is_bing_member=True if is_bing_member == "true" else False,
 				bing_member_id=bing_member_id,
 				bing_member_title=bing_member_title,
-				qrcode_desc=qrcode_desc
+				qrcode_desc=qrcode_desc,
+				coupon_ids=coupon_ids
 			)
 
 		return create_response(200).get_response()
@@ -909,3 +922,29 @@ def _get_filter_qrcode_items(request):
 
 		items.append(current_setting)
 	return items
+
+class GetCanUseCoupon(resource.Resource):
+	app = 'new_weixin'
+	resource = 'coupon_can_use'
+
+	@login_required
+	@mp_required
+	def api_get(request):
+		"""
+		判断优惠券是否之前使用过
+		"""
+		coupon_id = request.GET.get('coupon_id',None)
+		setting_id = request.GET.get('setting_id',None)
+		if setting_id:
+			setting_ids = setting_id.split(',')
+			settings = ChannelQrcodeSettings.objects.filter(id__in = setting_ids)
+			for s in settings:
+				coupon_ids = s.coupon_ids.split(',')
+				if coupon_id and (coupon_id in coupon_ids):
+					response = create_response(500)
+					response.errMsg = u'%s之前使用过该优惠券！' % s.name
+					return response.get_response()
+
+		response = create_response(200)
+		return response.get_response()
+
