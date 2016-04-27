@@ -156,7 +156,7 @@ $(document).ready(function() {
 		var $target = $(event.currentTarget);
 		var models = productsModels[parseInt($target.data('index'))]
         var properties = _.pluck(models[0].property_values, 'propertyName');
-        console.log(models, parseInt($target.data('index')), properties);
+        // console.log(models, parseInt($target.data('index')), properties);
         var $node = $.tmpl('mall-product-list-view-model-info-tmpl', {properties: properties, models: models});
         W.popup({
             $el: $target,
