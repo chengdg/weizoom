@@ -9,7 +9,9 @@ Copyright (c) 2011-2012 Weizoom Inc
 ensureNS('W.dialog.mall');
 W.dialog.mall.SelectPromotionProductDialog = W.dialog.Dialog.extend({
     events: _.extend({
-        'click .xa-selectProduct': 'onSelectProduct'
+        'click .xa-selectProduct': 'onSelectProduct',
+        'click .xa-selectData': 'onSelectProduct',
+        'click .xa-titleNav': 'onClickTitle',
     }, W.dialog.Dialog.prototype.events),
 
     getTemplate: function() {
@@ -19,6 +21,10 @@ W.dialog.mall.SelectPromotionProductDialog = W.dialog.Dialog.extend({
 
     onInitialize: function(options) {
         this.table = this.$('[data-ui-role="advanced-table"]').data('view');
+        this.selectedProductIds = options.selectedProductIds || [];
+        this.itemType = 'product';
+        this.titles = options.title;
+        this.setItemType(this.titles);
     },
 
     beforeShow: function() {
@@ -36,6 +42,11 @@ W.dialog.mall.SelectPromotionProductDialog = W.dialog.Dialog.extend({
     },
 
     afterShow: function(options) {
+        this.setItemType(this.titles);
+        this.onSearch();
+    },
+
+    defaultLoad: function () {
         this.table.reload({
             "name": this.name,
             "barCode": this.barCode || "",
@@ -74,10 +85,58 @@ W.dialog.mall.SelectPromotionProductDialog = W.dialog.Dialog.extend({
                 var productId = $tr.data('id');
                 data.push(_this.table.getDataItem(productId).toJSON());
             }
+            if ($tr.find('.xa-selectData').is(':checked')) {
+                data.push($tr.data('id'));
+            }
         })
 
-        return data;
-    }
+        return {
+            type: this.itemType,
+            data: data
+        }
+    },
+
+/**
+ * 积分增加选择分组 by liupeiyu 
+ */
+    setItemType: function(title, index){
+        if (title) {
+            if (index) {
+                this.selectedItem = title[index];
+                this.itemType = this.selectedItem.type;
+            }else{
+                this.selectedItem = title[0];
+                this.itemType = this.selectedItem.type;
+            }
+        }
+    },
+
+    onClickTitle: function(event){
+        var $el = $(event.currentTarget);
+        this.itemType = $el.attr('data-nav');
+        this.selectedItem = this.getItemByType(this.itemType);
+        this.onSearch();
+    },
+
+    onSearch: function(event) {
+        this.table.curPage = 1;
+        if (this.selectedItem) {
+            this.table.setApi(this.selectedItem.api);
+            this.table.setTemplate(this.selectedItem.template);
+        }
+
+        if (this.itemType === 'product') {
+            this.defaultLoad();
+        } else {
+            this.table.reload({});            
+        }
+    },
+
+    getItemByType: function(type){
+        return _.filter(this.titles, function(item) {
+            return item.type == type;
+        }, this)[0];
+    },
 });
 
 W.dialog.mall.SelectForbiddenCouponProductDialog = W.dialog.mall.SelectPromotionProductDialog.extend({

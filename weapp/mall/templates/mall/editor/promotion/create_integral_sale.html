@@ -322,7 +322,21 @@ $(document).ready(function() {
 		el: '.xa-productSelector',
 		tableTemplate: 'selected-promotion-products-view-tmpl-src',
 		promotionId: promotionId,
-		filter_type: 'integral_sale'
+		filter_type: 'integral_sale',
+		enableMultiSelection: true,	
+		dialogTitles: [{
+			'add_link': "/mall2/promotion/",
+			'name': "已上架商品", 
+			'type': "product",
+			'api': "promotion",
+			'template': "#promotion-products-view"
+		}, {            
+			'add_link': "/mall2/category_list/",
+			'name': "商品分组",
+			'type': "category",
+			'api': "categories",
+			'template': "#promotion-categories-view"
+		}]
 	});
 	productSelector.on('finish-select-products', onSelectProduct);
 	productSelector.render();

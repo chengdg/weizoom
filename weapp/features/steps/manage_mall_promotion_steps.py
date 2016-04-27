@@ -635,7 +635,7 @@ def step_impl(context, user):
 @then(u"{user}新建多商品券活动时能获得商品分组列表")
 def step_impl(context, user):
 	url = '/mall2/api/categories/'
-	if context.query_param:
+	if hasattr(context, 'query_param'):
 		if context.query_param.get('name'):
 			url += '&filter_name=' + context.query_param['name']
 	response = context.client.get(url)
