@@ -597,6 +597,7 @@ class QrcodeMember(resource.Resource):
 		setting_id = int(request.GET['setting_id'])
 		start_date = request.GET.get('start_date', '')
 		end_date = request.GET.get('end_date', '')
+		member_status = request.GET.get('status', -1)
 		is_show = request.GET.get('is_show', '0')
 
 		sort_attr = request.GET.get('sort_attr', '-created_at')
@@ -616,6 +617,9 @@ class QrcodeMember(resource.Resource):
 
 		if end_date:
 			filter_data_args['created_at__lte'] = end_date
+
+		if member_status != '-1':
+			filter_data_args['status'] = member_status
 
 		channel_members = Member.objects.filter(**filter_data_args).order_by(sort_attr)
 		count_per_page = int(request.GET.get('count_per_page', 15))
