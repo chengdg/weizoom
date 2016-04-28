@@ -313,16 +313,14 @@ def step_impl(context, user, promotion_type):
 			promotion['promotion_title'] = promotion['promotionTitle']
 
 		if promotion_type == 'integral_sale':
-			promotion['product_name'] = ','.join([p['name'] for p in promotion['products']])
-
-			product_price = []
-
 			for product in promotion['products']:
 				if product['display_price_range'] != '':
-					product_price.append(product['display_price_range'])
+					product['price'] = product['display_price_range']
 				else:
-					product_price.append(product['display_price'])
-			promotion['product_price'] = ','.join(product_price)
+					product['price'] = product['display_price']
+
+				if product['status'] == '在售':
+					product['status'] = ''
 
 			promotion['is_permanant_active'] = str(promotion['detail']['is_permanant_active']).lower()
 			detail = promotion['detail']

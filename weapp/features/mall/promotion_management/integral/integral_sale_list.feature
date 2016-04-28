@@ -66,7 +66,7 @@ Background:
 		}
 		"""
 
-@promotionIntegral @integral 
+@mall2 @promotionIntegral @integral @ztq
 Scenario:1 积分应用活动（单商品），商品下架或下架后再上架，活动状态不变
 	Given jobs登录系统
 	#积分应用活动（单个商品）-商品下架,活动状态不变
@@ -127,7 +127,7 @@ Scenario:1 积分应用活动（单商品），商品下架或下架后再上架
 			}]
 			"""
 
-@promotionIntegral @integral
+@mall2 @promotionIntegral @integral @ztq
 Scenario:2 积分应用活动（多商品），商品部分或全部下架，活动状态不变
 	Given jobs登录系统
 	When jobs创建积分应用活动
@@ -212,7 +212,7 @@ Scenario:2 积分应用活动（多商品），商品部分或全部下架，活
 			}]
 			"""
 
-@promotionIntegral @integral
+@mall2 @promotionIntegral @integral @ztq
 Scenario:3 积分应用活动（多商品），商品部分或全部删除
 	#积分应用活动（多商品），商品部分删除，活动状态不变
 	#积分应用活动（多商品），商品全部删除，活动状态为已结束
@@ -292,7 +292,7 @@ Scenario:3 积分应用活动（多商品），商品部分或全部删除
 			}]
 			"""
 
-@promotionIntegral @integral
+@promotionIntegral @integral @ztqb
 Scenario:4 自营平台对商家同步的商品部分或全部进行【更新】操作，活动状态不变
 	#商家bill的商品信息
 		Given 添加bill店铺名称为'bill商家'
