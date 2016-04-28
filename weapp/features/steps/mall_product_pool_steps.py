@@ -35,9 +35,6 @@ def step_impl(context, user):
     user_id = User.objects.get(username=user).id
     UserProfile.objects.filter(user_id=user_id).update(webapp_type=1)
 
-@given(u"{user}输出日志")
-def step_impl(context, user):
-    print u"我是一一一一一一一条日志"
 
 @then(u"{user}获得商品池商品列表")
 def step_impl(context, user):

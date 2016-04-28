@@ -1296,12 +1296,3 @@ table.table.order-print-summary-sec>tbody>tr>td.order-print-summary-pay_money{
     page-break-after: always;
 }
 /*打印订单样式 end*/
-
-/*自营平台icon */
-.xui-icon-sync{
-    color:#fff;
-    background-color:#03376D;
-    padding: 2px 3px;
-    font-style: normal;
-    margin-right: 2px;
-}

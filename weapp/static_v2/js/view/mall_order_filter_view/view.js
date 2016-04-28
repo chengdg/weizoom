@@ -51,7 +51,6 @@ W.view.mall.order.orderFilter = Backbone.View.extend({
         var orderType = $('#orderType').val().trim();
         var payType = $('#payType').val();
         var orderSource = $('#orderSource').val();
-        var orderSupplierType = $('#orderSupplierType').val();
         var productName = $('#product_name').val().trim();
 
         var startDate = $("input[name='start_date']").val().trim();
@@ -103,10 +102,6 @@ W.view.mall.order.orderFilter = Backbone.View.extend({
         // order_source
         if (orderSource != '-1') {
             args.push('"order_source":"'+orderSource+'"')
-        }
-        // orderSupplierType
-        if (orderSupplierType != '-1'){
-            args.push('"orderSupplierType":"'+orderSupplierType+'"')
         }
         // order_status
         // if (orderStatus != '-1') {
@@ -329,7 +324,6 @@ W.view.mall.order.orderFilter = Backbone.View.extend({
         $('#payType').val(-1);
         $('#orderType').val(-1);
         $('#orderSource').val(-1);
-        $('#orderSupplierType').val(-1);
         $('#express_number').val('');
         $('#product_name').val('');
     }

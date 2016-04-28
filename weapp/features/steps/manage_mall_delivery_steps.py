@@ -7,7 +7,6 @@ from test import bdd_util
 from features.testenv.model_factory import *
 import steps_db_util
 from mall import module_api as mall_api
-from account.models import UserProfile
 from mall.models import Order, OrderOperationLog, Supplier
 from tools.express.models import ExpressHasOrderPushStatus
 
@@ -52,8 +51,7 @@ def step_impl(context, user):
     order_no = delivery_data['order_no']
     if '-' in order_no:
         order_no_info = order_no.split('-')
-
-        order_no = '%s^%su' % (order_no_info[0], UserProfile.objects.get(store_name = order_no_info[1]).user_id)
+        order_no = '%s^%s' % (order_no_info[0], Supplier.objects.get(name = order_no_info[1]).id)
     order_id = Order.objects.get(order_id=order_no).id
 
     logistics = delivery_data.get('logistics', 'off')

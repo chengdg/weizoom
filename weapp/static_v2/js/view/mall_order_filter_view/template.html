@@ -101,22 +101,15 @@
 			<a href="javascript:void(0);" class='xui-dateFilter ml20 recently-week-day' data-day=30>最近30天</a>
 		</div>
 		<div class="xui-i-item" style="margin-left:-48px;">
-			{{if mallType == 0}}
 			<label>订单来源：</label>
+			<span style="border solid #bfd7eb">
 			<select id="orderSource" name="orderSource" class="">
 				<option value="-1">全部</option>
 				{{each(i, orderSource) orderSources}}
 				<option value="${orderSource.value}" data-value="${orderSource.value}" data-name="${orderSource.name}">${orderSource.name}</option>
 				{{/each}}
 			</select>
-			{{else}}
-			<label>供货商类型：</label>
-			<select id="orderSupplierType" name="orderSupplierType">
-				<option value="-1">全部</option>
-				<option value="0">同步供货商</option>
-				<option value="1">自建供货商</option>
-			</select>
-			{{/if}}
+			</span>
 		</div>
 		<div class="xui-i-item" style="margin-left:-48px;">
 			<label>订单状态：</label>
