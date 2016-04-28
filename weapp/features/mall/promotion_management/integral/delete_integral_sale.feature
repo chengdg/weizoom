@@ -36,7 +36,7 @@ Background:
 			"end_date": "2015-08-10",
 			"status":"已结束",
 			"product_name": "商品1",
-			"is_permanant_active": false,
+			"is_permanent_active": false,
 			"rules": [{
 				"member_grade": "全部会员",
 				"discount": 50,
@@ -48,7 +48,7 @@ Background:
 			"end_date": "",
 			"status":"进行中",
 			"product_name": "商品2",
-			"is_permanant_active": true,
+			"is_permanent_active": true,
 			"rules": [{
 				"member_grade": "全部会员",
 				"discount": 50,
@@ -60,7 +60,7 @@ Background:
 			"end_date": "2天后",
 			"status":"进行中",
 			"product_name": "商品3",
-			"is_permanant_active": false,
+			"is_permanent_active": false,
 			"rules": [{
 				"member_grade": "全部会员",
 				"discount": 50,
@@ -72,7 +72,7 @@ Background:
 			"end_date": "3天后",
 			"status":"未开始",
 			"product_name": "商品4",
-			"is_permanant_active": false,
+			"is_permanent_active": false,
 			"rules": [{
 				"member_grade": "全部会员",
 				"discount": 50,
@@ -96,7 +96,7 @@ Scenario: 1 删除状态为'已结束'的积分应用活动
 			}, {
 				"name": "商品2积分应用",
 				"status":"进行中",
-				"is_permanant_active": true
+				"is_permanent_active": true
 			}]
 			"""
 

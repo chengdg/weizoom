@@ -39,7 +39,7 @@ Scenario: 1 创建统一设置积分活动（填写抵扣金额，积分抵扣�
 			"start_date": "今天",
 			"end_date": "1天后",
 			"product_name": "商品1",
-			"is_permanant_active": false,
+			"is_permanent_active": false,
 			"discount": 33.33,
 			"discount_money": 5.00
 			 
@@ -66,7 +66,7 @@ Scenario: 2 创建分级设置积分应用活动（填写抵扣金额，积分�
 			"start_date": "今天",
 			"end_date": "1天后",
 			"product_name": "商品2",
-			"is_permanant_active": false,
+			"is_permanent_active": false,
 			"rules": 
 				[{
 					"member_grade": "普通会员",
