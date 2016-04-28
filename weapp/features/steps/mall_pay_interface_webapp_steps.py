@@ -112,19 +112,19 @@ def step_impl(context, webapp_user_name, pay_interface_name):
 	openid = bdd_util.get_openid(member.id, context.webapp_owner_id)
 	access_token = bdd_util.get_access_token(member.id, context.webapp_owner_id)
 
-	pay_url = 'http://api.weapp.com/wapi/pay/pay_result/?_method=put'
+	pay_url = 'http://api.weapp.com/pay/pay_result/?_method=put'
 	data = {
 		'pay_interface_type': interface_type,
-		'order_id': context.created_order_id, 
+		'order_id': context.created_order_id,
 		'access_token': access_token,
 		'openid': openid,
 		'woid': context.webapp_owner_id
 	}
 	pay_response = requests.post(pay_url, data=data)
 
-	pay_result_url = 'http://api.weapp.com/wapi/pay/pay_result/?_method=get'
+	pay_result_url = 'http://api.weapp.com/pay/pay_result/?_method=get'
 	data = {
-		'order_id': context.created_order_id, 
+		'order_id': context.created_order_id,
 		'access_token': access_token,
 		'openid': openid,
 		'woid': context.webapp_owner_id

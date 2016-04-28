@@ -364,7 +364,7 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 	access_token = bdd_util.get_access_token(member.id, webapp_owner_id)
 	openid = bdd_util.get_openid(member.id, webapp_owner_id)
 
-	url = 'http://api.weapp.com/wapi/mall/order/?_method=put'
+	url = 'http://api.weapp.com/mall/order/?_method=put'
 	data['access_token'] = access_token
 	data['openid'] = openid
 	data['woid'] = webapp_owner_id

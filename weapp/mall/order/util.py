@@ -727,7 +727,7 @@ def get_detail_response(request):
         if success == False:
             response = create_response(404)
             return response.get_response()
-        
+
 
     if request.method == 'GET':
         mall_type = request.user_profile.webapp_type

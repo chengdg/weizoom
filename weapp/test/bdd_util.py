@@ -93,7 +93,7 @@ def get_openid(member_id, webapp_owner_id):
 	return m.account.openid
 
 def get_access_token(member_id, webapp_owner_id):
-	url = 'http://api.weapp.com/wapi/user/access_token/?_method=put'
+	url = 'http://api.weapp.com/user/access_token/?_method=put'
 	openid = get_openid(member_id, webapp_owner_id)
 	response = requests.post(url, data={'woid': webapp_owner_id, 'openid': openid})
 	r_data = json.loads(response.text)
