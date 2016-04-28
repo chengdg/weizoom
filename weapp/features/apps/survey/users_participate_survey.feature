@@ -6,6 +6,15 @@ Feature:手机端用户参加用户调研活动
 		2、针对某调研活动，在活动有效时间内用户只能参加一次
 		3、优惠券奖励：添加每人限领1张的优惠券时，若会员参加活动前已经领取过该优惠券，则参加活动不再获得奖励
 	"""
+Background:
+	Given jobs登录系统
+	When jobs添加会员分组
+		"""
+		{
+			"tag_id_1": "分组1",
+			"tag_id_2": "分组2"
+		}
+		"""
 @mall2 @apps @survey @users_participate_survey
 Scenario:1 参加调研活动,无需关注即可参与
 	Given jobs登录系统
@@ -33,6 +42,7 @@ Scenario:1 参加调研活动,无需关注即可参与
 			"permission":"无需关注即可参与",
 			"prize_type":"优惠券",
 			"coupon":"优惠券1",
+			"member_group":"分组1",
 			"answer":
 				[{
 					"title":"问答题标题",
@@ -40,6 +50,7 @@ Scenario:1 参加调研活动,无需关注即可参与
 				}]
 		}]
 		"""
+
 
 	When bill关注jobs的公众号
 	When bill访问jobs的webapp
@@ -101,6 +112,27 @@ Scenario:1 参加调研活动,无需关注即可参与
 				"prize_type":"优惠券"
 			}]
 			"""
+		Then jobs获得会员'bill'详情
+			"""
+			{	
+				"member_group":"分组1",
+				"coupon":1
+			}
+			"""
+		Then jobs获得会员'tom'详情
+			"""
+			{
+				"member_group":"分组1",
+				"coupon":1
+			}
+			"""
+		Then jobs获得会员'marry'详情
+			"""
+			{
+				"member_group":"分组1",
+				"coupon":1
+			}
+			"""	
 
 @mall2 @apps @survey @users_participate_survey
 Scenario:2 参加调研活动,必须关注才可参与
@@ -811,3 +843,101 @@ Scenario:5 参加'已结束'状态的用户调研活动
 			}]
 			"""
 
+@mall2 @apps @survey @users_participate_survey
+Scenario:6 参加调研活动,必须关注即可参与
+	Given jobs登录系统
+	When jobs添加优惠券规则
+		"""
+		[{
+			"name": "优惠券1",
+			"money": 100.00,
+			"count": 5,
+			"limit_counts": 1,
+			"using_limit": "满50元可以使用",
+			"start_date": "今天",
+			"end_date": "1天后",
+			"coupon_id_prefix": "coupon1_id_"
+		}]
+		"""
+	When jobs新建用户调研活动
+		"""
+		[{
+			"title":"用户调研01",
+			"subtitle":"",
+			"content":"欢迎参加调研",
+			"start_date":"今天",
+			"end_date":"2天后",
+			"permission":"无需关注即可参与",
+			"prize_type":"优惠券",
+			"coupon":"优惠券1",
+			"member_group":"分组2",
+			"answer":
+				[{
+					"title":"问答题标题",
+					"is_required":"是"
+				}]
+		}]
+		"""
+	When bill关注jobs的公众号
+	When tom关注jobs的公众号
+
+	When jobs访问会员列表
+	Then jobs可以获得会员列表
+		| name | member_rank | friend_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
+		| bill |   普通会员   |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-03    | 会员分享 | 未分组      |
+		| tom  |   普通会员   |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-02    | 会员分享 | 未分组      |
+	When jobs选择会员
+		| member_name | member_rank |    tags     |
+		| bill        |   普通会员  | 未分组      |
+		| tom         |   普通会员  | 未分组      |
+	
+	When jobs批量添加分组
+			"""
+			[{
+				"modification_method":"给筛选出来的所有人添加分组",
+				"grouping":"分组1"
+			}]
+			"""
+	When jobs访问会员列表
+	Then jobs可以获得会员列表
+		| name | member_rank |  tags   |
+		| bill |   普通会员  | 分组1   |
+		| tom  |   普通会员  | 分组1   |
+
+
+	When bill取消关注jobs的公众号	
+	
+	Then jobs获得会员'bill'详情
+		"""
+			{
+			"member_group":"分组1",
+			"coupon":1
+			}
+		"""
+	Then jobs获得会员'tom'详情
+		"""
+			{
+			"member_group":"分组1",
+			"coupon":1
+			}
+		"""
+
+	When bill关注jobs的公众号
+	When bill参加jobs的用户调研活动'用户调研01'
+			"""
+			{
+				"问答题":
+					[{
+						"title":"问答题标题",
+						"value":"bill填写内容"
+					}]
+			}
+			"""
+	Then jobs获得会员'bill'详情
+		"""
+			{
+			"member_group":["分组1","分组2"],
+			"coupon":1
+			}
+		"""
+	
