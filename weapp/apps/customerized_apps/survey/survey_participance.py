@@ -9,6 +9,7 @@ import models as app_models
 from apps import request_util
 from modules.member import integral as integral_api
 from mall.promotion import utils as mall_api
+from modules.member.models import *
 
 FIRST_NAV = 'apps'
 COUNT_PER_PAGE = 20
@@ -46,6 +47,8 @@ class surveyParticipance(resource.Resource):
 		"""
 		member_id = request.member.id
 		eventParticipance = app_models.surveyParticipance.objects.filter(belong_to=request.POST['belong_to'],member_id=member_id)
+		add_tag_ids = request.POST.get('add_tag_ids', None)
+
 		if eventParticipance.count() >0:
 			response = create_response(500)
 			response.data = u"您已参加过该活动！"
@@ -79,6 +82,16 @@ class surveyParticipance(resource.Resource):
 						coupon, msg = mall_api.consume_coupon(request.webapp_owner_id, coupon_rule_id, request.member.id)
 						if not coupon:
 							error_msg = msg
+
+			#分配到某个分组
+			# member = Member.objects.get(id=member_id)
+			# tag_ids = add_tag_ids.split('_')
+			# tag_ids = [id for id in tag_ids if id]
+			# if tag_ids:
+			# 	MemberHasTag.add_tag_member_relation(member, tag_ids)
+			# else:
+			# 	tag_ids.append(MemberTag.get_default_tag(webapp_id).id)
+			# 	MemberHasTag.add_tag_member_relation(member, tag_ids)
 
 			data = json.loads(survey_participance.to_json())
 			data['id'] = data['_id']['$oid']

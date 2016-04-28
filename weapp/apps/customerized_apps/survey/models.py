@@ -17,6 +17,17 @@ class surveyParticipance(models.Document):
 		'collection': 'survey_survey_participance'
 	}
 
+class surveyParticipanceLog(models.Document):
+	"""
+	非会员参与调研，记录参与记录，待关注之后加入分组后删除该条记录
+	"""
+	member_id= models.LongField(default=0) #参与者id
+	belong_to = models.StringField(default="", max_length=100) #对应的活动id
+	created_at = models.DateTimeField() #创建时间
+
+	meta = {
+		'collection': 'survey_survey_participance_log'
+	}
 
 STATUS_NOT_START = 0
 STATUS_RUNNING = 1
