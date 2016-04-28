@@ -83,7 +83,8 @@ Background:
 			"integral_each_yuan": 2
 		}
 		"""
-@mall3 @promotion @promotionIntegral @integral @ztq
+
+@mall2 @promotion @promotionIntegral @integral @ztq
 Scenario:1 积分应用活动（单商品、统一设置）详情
 	Given jobs登录系统
 	When jobs创建积分应用活动
@@ -123,7 +124,7 @@ Scenario:1 积分应用活动（单商品、统一设置）详情
 		}
 		"""
 
-@mall3 @promotion @promotionIntegral @integral @ztq
+@mall2 @promotion @promotionIntegral @integral @ztq
 Scenario:2 积分应用活动（多商品、分级设置）详情
 	Given jobs登录系统
 	When jobs创建积分应用活动
