@@ -319,7 +319,7 @@ def step_impl(context, user, promotion_type):
 				else:
 					product['price'] = product['display_price']
 
-				if product['status'] == '在售':
+				if product.get('status') and product['status'] == '在售':
 					product['status'] = ''
 
 			promotion['is_permanant_active'] = str(promotion['detail']['is_permanant_active']).lower()

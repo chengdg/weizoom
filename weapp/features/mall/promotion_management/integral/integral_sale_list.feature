@@ -292,7 +292,7 @@ Scenario:3 积分应用活动（多商品），商品部分或全部删除
 			}]
 			"""
 
-@promotionIntegral @integral @ztqb
+@mall2 @promotionIntegral @integral @ztq
 Scenario:4 自营平台对商家同步的商品部分或全部进行【更新】操作，活动状态不变
 	#商家bill的商品信息
 		Given 添加bill店铺名称为'bill商家'
@@ -456,8 +456,15 @@ Scenario:4 自营平台对商家同步的商品部分或全部进行【更新】
 			"""
 			[{
 				"name": "多商品积分应用1",
-				"product_name": "bill无规格商品1,bill无规格商品2",
-				"product_price":"10.00,20.00",
+
+
+				"products": [{
+						"name": "bill无规格商品1",
+						"price":10.00
+					},{
+						"name": "bill无规格商品2",
+						"price":20.00
+					}],
 				"is_permanant_active": true,
 				"discount": "50.0%",
 				"discount_money":5.00,
@@ -532,7 +539,7 @@ Scenario:4 自营平台对商家同步的商品部分或全部进行【更新】
 						"price":10.00,
 						"status":"待售"
 					},{
-						"name": "bill无规格商品2",
+						"name": "bill无规格商品02",
 						"price":20.00,
 						"status":"待售"
 						}],
