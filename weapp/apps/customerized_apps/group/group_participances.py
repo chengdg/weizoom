@@ -268,11 +268,13 @@ class GroupParticipancesDialog(resource.Resource):
 			member_status = member_status2name[str(member.status)]
 			member_grade = member.grade.name
 			member_icon = member.user_icon
+			member_name = member.username_for_html
 			id2info[unicode(member_id)]={'integral':integral,
 										 'source':source,
 										 'member_status':member_status,
 										 'member_grade':member_grade,
-										 'member_icon':member_icon}
+										 'member_icon':member_icon,
+										 'member_name':member_name}
 
 		items = []
 		for group_detail in group_details:
@@ -283,9 +285,9 @@ class GroupParticipancesDialog(resource.Resource):
 			info = id2info[member_id]
 
 			items.append({
-				'id':unicode(member.id),
+				'id':member_id,
 				'member_id':member_id,
-				'name':member.username_for_html,
+				'name':info['member_name'],
 				'money':"%.2f"%float(money),
 				'integral':info['integral'],
 				'source':info['source'],
