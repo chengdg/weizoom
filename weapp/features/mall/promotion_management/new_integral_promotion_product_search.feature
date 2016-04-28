@@ -1,10 +1,9 @@
 #_author_:宋温馨
-@mall3 @ztq
+
 Feature:促销管理-新建积分活动页面的商品查询
 
 Background:
 	Given jobs登录系统
-#	When jobs添加微信证书
 	When jobs添加商品分类
 		"""
 		[{
@@ -75,88 +74,6 @@ Background:
 			"status":"在售"
 		}]
 		"""
-#	When jobs创建限时抢购活动
-#		"""
-#		[{
-#			"name": "限时抢购活动",
-#			"start_date": "今天",
-#			"end_date": "1天后",
-#			"product_name": "限时抢购",
-#			"member_grade": "全部会员",
-#			"count_per_purchase": 2,
-#			"promotion_price": 90.00
-#		}]
-#		"""
-#	And jobs创建买赠活动
-#		"""
-#		[{
-#			"name": "买赠活动",
-#			"start_date": "今天",
-#			"end_date": "1天后",
-#			"product_name": "买赠",
-#			"premium_products":
-#			[{
-#				"name": "赠品",
-#				"count": 1
-#			}],
-#			"count": 2,
-#			"is_enable_cycle_mode": true
-#		}]
-#		"""
-#	And jobs添加优惠券规则
-#		"""
-#		[{
-#			"name": "多商品券01",
-#			"money": 1,
-#			"start_date": "2天前",
-#			"end_date": "1天前",
-#			"coupon_id_prefix": "coupon1_id_",
-#			"coupon_product": "多商品券,商品2"
-#		},{
-#			"name": "多商品券02",
-#			"money": 5,
-#			"start_date": "今天",
-#			"end_date": "1天后",
-#			"coupon_id_prefix": "coupon2_id_",
-#			"coupon_product": "多商品券"
-#		},{
-#			"name": "多商品券03",
-#			"money": 10,
-#			"start_date": "今天",
-#			"end_date": "2天后",
-#			"coupon_id_prefix": "coupon3_id_",
-#			"coupon_product": "多商品券"
-#		},{
-#			"name": "多商品失效活动",
-#			"money": 1,
-#			"start_date": "今天",
-#			"end_date": "1天后",
-#			"coupon_id_prefix": "coupon4_id_",
-#			"coupon_product": "多商品失效,商品1"
-#		}]
-#		"""
-#	When jobs失效优惠券'多商品失效活动'
-#
-#	And jobs新建团购活动
-#		"""
-#		[{
-#			"group_name":"团购活动",
-#			"start_date":"今天",
-#			"end_date":"2天后",
-#			"product_name":"团购商品",
-#			"group_dict":
-#				[{
-#					"group_type":5,
-#					"group_days":1,
-#					"group_price":90.00
-#				}],
-#				"ship_date":20,
-#				"product_counts":100,
-#				"material_image":"1.jpg",
-#				"share_description":"团购活动分享描述"
-#		}]
-#		"""
-#	When jobs开启团购活动'团购活动'
 
 @mall2 @promotion @promotionIntegral @ztq
 Scenario: 1 积分应用-新建活动页面的商品查询
