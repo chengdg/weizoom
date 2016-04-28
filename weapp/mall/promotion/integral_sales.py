@@ -28,7 +28,7 @@ class IntegralSales(resource.Resource):
                 'with_product': True,
                 'with_concrete_promotion': True
             })
-
+            promotion.products = sorted(promotion.products, key=lambda x: x.id)
             for product in promotion.products:
                 product.models = product.models[1:]
 
