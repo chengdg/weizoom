@@ -1,10 +1,10 @@
 /**
- * @class W.component.appkit.SurveyDescription
+ * @class W.component.appkit.CommonDescription
  *
  */
 ensureNS('W.component.appkit');
-W.component.appkit.SurveyDescription = W.component.Component.extend({
-	type: 'appkit.surveydescription',
+W.component.appkit.CommonDescription = W.component.Component.extend({
+	type: 'appkit.commondescription',
 	selectable: 'yes',
 	propertyViewTitle: '调研简介',
 
@@ -73,12 +73,6 @@ W.component.appkit.SurveyDescription = W.component.Component.extend({
 			displayName: '活动奖励',
 			isUserProperty: true,
 			default: {type:"no_prize", data:null}
-		}, {
-			name: 'tags',
-			type: 'tags_selector',
-			displayName: '添加到分组',
-			isUserProperty: true,
-			default: {}
 		}]
 	}],
 
@@ -99,9 +93,6 @@ W.component.appkit.SurveyDescription = W.component.Component.extend({
 			this.refresh($node, {resize:true});
 		},
 		prize: function($node, model, value) {
-			this.refresh($node, {resize:true});
-		},
-		tags: function($node, model, value) {
 			this.refresh($node, {resize:true});
 		}
 	},

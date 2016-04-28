@@ -340,6 +340,7 @@ def __clear_all_app_data():
 	#apps调研
 	apps_survey_models.survey.objects.all().delete()
 	apps_survey_models.surveyParticipance.objects.all().delete()
+	apps_survey_models.surveyParticipanceLog.objects.all().delete()
 
 	#apps投票
 	apps_vote_models.vote.objects.all().delete()

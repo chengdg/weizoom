@@ -88,6 +88,7 @@ W.workbench.PropertyView = Backbone.View.extend({
             "richtext": _.bind(this.initRichTextView, this),
             "daterange": _.bind(this.initDateRange, this),
             "prize_selector": _.bind(this.initPrizeSelector, this),
+            "tags_selector": _.bind(this.initTagsSelector, this),
             "prize_selector_v3": _.bind(this.initPrizeSelectorV3, this),
             "prize_selector_v4": _.bind(this.initPrizeSelectorV4, this),
             "apps_prize_keywordpane": _.bind(this.initPrizeKeywordPane, this),
@@ -869,7 +870,16 @@ W.workbench.PropertyView = Backbone.View.extend({
             _this.getTargetComponent($el).model.set(attr, prize);
         });
     },
+    initTagsSelector: function($el){
+        W.createWidgets($el);
 
+        var view = $el.find('[data-ui-role="apps-tags-selector"]').data('view');
+        var _this = this;
+        view.on('change-tags', function(tags) {
+            var attr = $el.attr('data-field');
+            _this.getTargetComponent($el).model.set(attr, tags);
+        })
+    },
     initProductDialogButton: function(event) {
         var $button = $(event.currentTarget);
         var dialog = $button.attr('data-target-dialog');

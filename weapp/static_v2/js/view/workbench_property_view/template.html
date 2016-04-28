@@ -226,6 +226,18 @@
 					</div>
 					{{/if}}
 
+					{{if (field.type == 'tags_selector')}}
+					<div class="propertyGroup_property_tagSelectorField propertyGroup_property_horizontalField">
+						<div class="propertyGroup_property_label mr5 {{if field.validate}}star_show{{/if}}">${field.displayName}</div>
+						<div class="propertyGroup_property_input pl5 xa-thirdPartyPlugin" data-plugin="tags_selector" data-field="${field.name}">
+							<div
+								data-ui-role="apps-tags-selector"
+								data-tags='${JSON.stringify(component.model.get(field.name))}'
+							></div>
+						</div>
+					</div>
+					{{/if}}
+
 					{{if (field.type == 'textarea')}}
 					<div class="propertyGroup_property_textareaField propertyGroup_property_horizontalField">
 						{{if field.displayName}}

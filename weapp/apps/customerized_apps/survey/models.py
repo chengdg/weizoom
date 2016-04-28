@@ -17,6 +17,17 @@ class surveyParticipance(models.Document):
 		'collection': 'survey_survey_participance'
 	}
 
+class surveyParticipanceLog(models.Document):
+	"""
+	非会员参与调研，记录参与记录，待关注之后加入分组后删除该条记录
+	"""
+	member_id = models.LongField(default=0) #参与者id
+	belong_to = models.StringField(default="", max_length=100) #对应的活动id
+	created_at = models.DateTimeField() #创建时间
+
+	meta = {
+		'collection': 'survey_survey_participance_log'
+	}
 
 STATUS_NOT_START = 0
 STATUS_RUNNING = 1
@@ -28,6 +39,7 @@ class survey(models.Document):
 	end_time = models.DateTimeField() #结束时间
 	status = models.IntField(default=0) #状态
 	participant_count = models.IntField(default=0) #参与者数量
+	tag_id = models.IntField(default=0) #添加到分组，默认为不添加
 	related_page_id = models.StringField(default="", max_length=100) #termite page的id
 	created_at = models.DateTimeField() #创建时间
 	

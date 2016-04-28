@@ -10,6 +10,7 @@ from core import resource
 from core import paginator
 from core.jsonresponse import create_response
 from termite import pagestore as pagestore_manager
+from modules.member.models import *
 
 import models as app_models
 from mall import export
@@ -134,3 +135,25 @@ class surveies(resource.Resource):
 		response.data = response_data
 		return response.get_response()		
 
+class ListTags(resource.Resource):
+	app = 'apps/survey'
+	resource = 'list_tags'
+
+	def api_get(request):
+		"""
+		响应API GET
+		"""
+		webapp_id = request.user_profile.webapp_id
+		member_tags = MemberTag.get_member_tags(webapp_id)
+		tags = []
+		for tag in member_tags:
+			tags.append({
+				'id' : tag.id,
+				'name': tag.name,
+			})
+		response_data = {
+			'tags': tags
+		}
+		response = create_response(200)
+		response.data = response_data
+		return response.get_response()

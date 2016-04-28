@@ -115,7 +115,7 @@ def step_tmpl(context, webapp_user_name, event_name, date):
 				event_info.update(set__created_at=date)
 
 			response_json = context.response_json
-			if response_json.context['code'] == 200:
+			if response_json['code'] == 200:
 				context.event_hint = u"提交成功"
 
 @then(u'{webapp_user_name}获得提示"{msg}"')

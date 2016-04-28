@@ -9,6 +9,7 @@ import models as app_models
 from apps import request_util
 from modules.member import integral as integral_api
 from mall.promotion import utils as mall_api
+from modules.member.models import *
 
 FIRST_NAV = 'apps'
 COUNT_PER_PAGE = 20
@@ -46,6 +47,7 @@ class surveyParticipance(resource.Resource):
 		"""
 		member_id = request.member.id
 		eventParticipance = app_models.surveyParticipance.objects.filter(belong_to=request.POST['belong_to'],member_id=member_id)
+
 		if eventParticipance.count() >0:
 			response = create_response(500)
 			response.data = u"您已参加过该活动！"
@@ -56,7 +58,9 @@ class surveyParticipance(resource.Resource):
 			survey_participance.save()
 
 			#调整参与数量
-			app_models.survey.objects(id=data['belong_to']).update(**{"inc__participant_count":1})
+			survey_record = app_models.survey.objects(id=data['belong_to'])
+			survey_record.update(**{"inc__participant_count":1})
+			add_tag_id = survey_record.first().tag_id if survey_record.first().tag_id !=0 else None
 
 			#活动奖励
 			prize = data.get('prize', None)
@@ -79,6 +83,21 @@ class surveyParticipance(resource.Resource):
 						coupon, msg = mall_api.consume_coupon(request.webapp_owner_id, coupon_rule_id, request.member.id)
 						if not coupon:
 							error_msg = msg
+
+			#分配到某个分组
+			member = Member.objects.get(id=member_id)
+			if member:
+				isMember = member.is_subscribed
+				if isMember and add_tag_id:
+					MemberHasTag.add_tag_member_relation(member, [add_tag_id])
+					if MemberHasTag.objects.filter(member=member, member_tag__name="未分组").count() > 0:
+						MemberHasTag.objects.filter(member=member, member_tag__name="未分组").delete()
+				elif not isMember:
+					survey_log = app_models.surveyParticipanceLog(
+						belong_to = request.POST['belong_to'],
+						member_id = member_id
+					)
+					survey_log.save()
 
 			data = json.loads(survey_participance.to_json())
 			data['id'] = data['_id']['$oid']

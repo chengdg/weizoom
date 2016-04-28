@@ -24,6 +24,13 @@ Background:
 			"coupon_id_prefix": "coupon1_id_"
 		}]
 		"""
+	When jobs添加会员分组
+	"""
+	{
+		"tag_id_1": "分组1",
+		"tag_id_2": "分组2"
+	}
+	"""
 	When jobs新建用户调研活动
 		"""
 		[{
@@ -34,6 +41,7 @@ Background:
 			"end_date":"2天后",
 			"permission":"无需关注即可参与",
 			"prize_type":"优惠券",
+			"member_group":"分组1",
 			"coupon":"优惠券1",
 			"answer":
 				[{
