@@ -285,7 +285,7 @@ class GroupParticipancesDialog(resource.Resource):
 			items.append({
 				'id':unicode(member.id),
 				'member_id':member_id,
-				'name':group_detail.grouped_member_name,
+				'name':member.username_for_html,
 				'money':"%.2f"%float(money),
 				'integral':info['integral'],
 				'source':info['source'],
