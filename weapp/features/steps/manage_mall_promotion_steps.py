@@ -105,14 +105,27 @@ def step_impl(context, user, promotion_name):
 	actual = {
 		'name': promotion.name,
 		'promotion_title': promotion.promotion_title,
+		'is_permanant_active': promotion.detail['is_permanant_active'],
+		'discount_money': promotion.detail['discount_money']
 	}
-	if promotion.detail.is_permanant_active:
+	if promotion.detail['is_permanant_active']:
 		actual['activity_time'] = u'永久有效'
 	else:
 		actual['activity_time'] = promotion.start_date+'至'+promotion.end_date
 
-	actual
+	discount_info = []
+	for rule in promotion.detail['rules']:
+		if rule['member_grade_name'] == '全部等级':
+			discount_info.append({'member_grade': u'全部会员', 'discount': str(rule['discount']) + "%"})
+		else:
+			discount_info.append({'member_grade': rule['member_grade_name'], 'discount': str(rule['discount']) + "%"})
 
+
+	actual['discount_info'] = discount_info
+
+	for p in promotion.products:
+		p.price = p.display_price
+	actual['products'] = promotion.products
 
 
 	bdd_util.assert_dict(excepted, actual)

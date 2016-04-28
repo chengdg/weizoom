@@ -83,7 +83,7 @@ Background:
 			"integral_each_yuan": 2
 		}
 		"""
-@promotion @promotionIntegral @integral @ztqb
+@mall3 @promotion @promotionIntegral @integral @ztq
 Scenario:1 积分应用活动（单商品、统一设置）详情
 	Given jobs登录系统
 	When jobs创建积分应用活动
@@ -108,7 +108,7 @@ Scenario:1 积分应用活动（单商品、统一设置）详情
 		{
 			"name": "单商品积分应用",
 			"promotion_title":"促销标题1",
-			"activity_time":"2016-04-10 00:00至2016-04-15 00:00",
+			"activity_time":"2016-04-10 00:00:00至2016-04-15 00:00:00",
 			"products":[{
 				"name": "商品1",
 				"price":100.00,
@@ -123,7 +123,7 @@ Scenario:1 积分应用活动（单商品、统一设置）详情
 		}
 		"""
 
-@promotion @promotionIntegral @integral
+@promotion @promotionIntegral @integral @ztqb
 Scenario:2 积分应用活动（多商品、分级设置）详情
 	Given jobs登录系统
 	When jobs创建积分应用活动
@@ -180,7 +180,7 @@ Scenario:2 积分应用活动（多商品、分级设置）详情
 				"member_grade": "银牌会员",
 				"discount":"80.0%"
 			}],
-			"discount_money": "50.00~80.00"
+			"discount_money": "50.00 ~ 80.00"
 		}
 		"""
 	#下架或删除活动中的商品后，积分应用活动详情页显示对应商品的状态（待售或已删除）
@@ -218,7 +218,7 @@ Scenario:2 积分应用活动（多商品、分级设置）详情
 				"member_grade": "银牌会员",
 				"discount":"80.0%"
 			}],
-			"discount_money": "50.00~80.00"
+			"discount_money": "50.00 ~ 80.00"
 		}
 		"""
 	#商品下架后再上架，积分应用活动详情页商品状态不再显示'待售'
@@ -254,6 +254,6 @@ Scenario:2 积分应用活动（多商品、分级设置）详情
 				"member_grade": "银牌会员",
 				"discount":"80.0%"
 			}],
-			"discount_money": "50.00~80.00"
+			"discount_money": "50.00 ~ 80.00"
 		}
 		"""
