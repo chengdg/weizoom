@@ -722,7 +722,12 @@ def get_detail_response(request):
         return HttpResponseRedirect('/mall2/order_list/')
     else:
         webapp_id = request.user_profile.webapp_id
-        order = mall.models.Order.objects.get(id=request.GET['order_id'], webapp_id=webapp_id)
+        order = mall.models.Order.objects.get(id=request.GET['order_id'])
+        success = assert_webapp_id(order, webapp_id)
+        if success == False:
+            response = create_response(404)
+            return response.get_response()
+        
 
     if request.method == 'GET':
         mall_type = request.user_profile.webapp_type
@@ -1812,3 +1817,19 @@ def cancel_group_buying(order_id):
     from mall.module_api import update_order_status
     update_order_status(user, 'cancel', order)
     OrderHasGroup.objects.filter(order_id=order.order_id).update(group_status=GROUP_STATUS_failure)
+
+def assert_webapp_id(order, webapp_id):
+    if order.origin_order_id > 0:
+            try:
+                webapp_id_user = UserProfile.objects.filter(user_id=order.supplier_user_id)[0].webapp_id
+                if webapp_id_user != webapp_id:
+                    return False
+                else:
+                    return True
+            except:
+                return False
+    else:
+        if webapp_id != order.webapp_id:
+            return False
+        else:
+            return True
