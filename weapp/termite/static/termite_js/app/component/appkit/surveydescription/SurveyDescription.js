@@ -1,6 +1,6 @@
 /**
  * @class W.component.appkit.SurveyDescription
- * 
+ *
  */
 ensureNS('W.component.appkit');
 W.component.appkit.SurveyDescription = W.component.Component.extend({
@@ -69,6 +69,12 @@ W.component.appkit.SurveyDescription = W.component.Component.extend({
 			default: 'member'
 		}, {
 			name: 'prize',
+			type: 'prize_selector',
+			displayName: '活动奖励',
+			isUserProperty: true,
+			default: {type:"no_prize", data:null}
+		}, {
+			name: 'prize2',
 			type: 'prize_selector',
 			displayName: '活动奖励',
 			isUserProperty: true,
