@@ -214,6 +214,7 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 	else:
 		args = json.loads(context.text)
 
+
 	def __get_current_promotion_id_for_product(product, member_grade_id):
 		promotion_ids = [r.promotion_id for r in ProductHasPromotion.objects.filter(product_id=product.id)]
 		promotions = Promotion.objects.filter(id__in=promotion_ids, status=PROMOTION_STATUS_STARTED).exclude(type__gt=3)
@@ -409,7 +410,7 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 			db_order.save()
 			if db_order.origin_order_id <0:
 				for order in Order.objects.filter(origin_order_id=db_order.id):
-					order.order_id = '%s^%s' % (args['order_id'], order.supplier)
+					order.order_id = '%s^%s' % (args['order_id'], order.order_id.split('^')[1])
 					order.save()
 			context.created_order_id = args['order_id']
 
@@ -445,7 +446,7 @@ def step_impl(context, webapp_owner_name):
 			#先关注再取消关注，模拟非会员购买  duhao  20160407
 			context.execute_steps(u"When %s关注%s的公众号" % (webapp_user_name, webapp_owner_name))
 			context.execute_steps(u"When %s取消关注%s的公众号" % (webapp_user_name, webapp_owner_name))
-			
+
 			#clear last member's info in cookie and context
 			context.execute_steps(u"When 清空浏览器")
 		else:

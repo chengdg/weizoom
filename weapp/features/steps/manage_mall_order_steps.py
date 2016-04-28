@@ -8,6 +8,7 @@ from test import bdd_util
 from mall.models import (ORDER_TYPE2TEXT, STATUS2TEXT, ORDER_STATUS_PAYED_SHIPED, ORDER_STATUS_SUCCESSED, express_util,
                          ORDERSTATUS2TEXT, Order, Supplier)
 from mall.models import Supplier
+from account.models import UserProfile
 from features.testenv.model_factory import timedelta, json, ORDER_STATUS_NOT
 from mall.promotion.models import datetime
 import steps_db_util
@@ -225,13 +226,20 @@ def step_impl(context, user):
 
     actual_orders = []
     source = {'mine_mall': u'本店', 'weizoom_mall': u'商城'}
+
     for order_item in items:
+        sync_order = False
+        if 'u' in order_item['order_id']:
+            sync_order = True
+            user_id = order_item['order_id'].split('^')[1][:-1]
+            store_name = UserProfile.objects.get(user_id=user_id).store_name
+            order_item['order_id'] = '%s-%s' % (order_item['order_id'].split('^')[0], store_name)
         actual_order = {}
         actual_order['order_no'] = order_item['order_id']
         actual_order['order_time'] = order_item['created_at']
         actual_order['ship_name'] = order_item['ship_name']
         actual_order['ship_tel'] = order_item['ship_tel']
-        actual_order["sources"] = source[order_item['come']]
+        actual_order["sources"] = u'商城' if sync_order else u'本店'
         actual_order["member"] = order_item['buyer_name'] if order_item['member_is_subscribed'] else '非会员'
         actual_order["methods_of_payment"] = order_item['pay_interface_name']
         actual_order["logistics"] = express_util.get_name_by_value(order_item['express_company_name'])
@@ -245,7 +253,7 @@ def step_impl(context, user):
         actual_order['customer_message'] = order_item['customer_message']
         actual_order['buyer'] = order_item['buyer_name']
         actual_order['postage'] = order_item['postage']
-        actual_order['save_money'] = order_item['save_money']
+        actual_order['save_money'] = '' if sync_order or not order_item['save_money'] else order_item['save_money']
         actual_order['is_first_order'] = 'true' if order_item['is_first_order'] else 'false'
         actual_order['is_group_buying'] = 'true' if order_item['is_group_buying'] else 'false'
 
@@ -253,10 +261,15 @@ def step_impl(context, user):
             actual_order["order_no"] = actual_order["order_no"] + "-" + str(order_item['edit_money']).replace('.',
                                                                                                               '').replace(
                 '-', '')
+
+        children_order_action = True
         if order_item['parent_action']:
             actual_order['actions'] = get_order_action_set(order_item['parent_action'])
         else:
             actual_order['actions'] = get_order_action_set(order_item['groups'][0]['fackorder']['actions'])
+
+        if len(order_item['groups']) <= 1 or order_item['status'] == 0:
+            children_order_action = False
 
         # order_list的接口数据返回格式已经更新，上面的代码可以改为如下代码：
         buy_product_results = []
@@ -269,13 +282,18 @@ def step_impl(context, user):
                 buy_product_result['name'] = buy_product['name']
                 buy_product_result['count'] = buy_product['count']
                 buy_product_result['total_price'] = total_price
-                buy_product_result['price'] = buy_product.get('price')
+                buy_product_result['price'] = '' if sync_order else buy_product.get('price')
                 buy_product_result['img_url'] = buy_product['thumbnails_url']
                 buy_product_result['promotion'] = buy_product['promotion']
+                if 'supplier_store_name' in buy_product:
+                    if buy_product['supplier_store_name']:
+                        buy_product_result['supplier'] = buy_product['supplier_store_name']
                 if 'supplier_name' in buy_product:
-                    buy_product_result['supplier'] = buy_product['supplier_name']
+                    if buy_product['supplier_name']:
+                        buy_product_result['supplier'] = buy_product['supplier_name']
                 buy_product_result['status'] = group['fackorder']['status']
-                buy_product_result['actions'] = get_order_action_set(group['fackorder']['actions'])
+                if children_order_action:
+                    buy_product_result['actions'] = get_order_action_set(group['fackorder']['actions'])
                 buy_product_results.append(buy_product_result)
         actual_order['products'] = buy_product_results
         actual_order['products_count'] = len(buy_product_results)
@@ -290,6 +308,16 @@ def step_impl(context, user):
                 del pro['supplier']
             if 'actions' in pro:
                 pro['actions'] = set(pro['actions'])
+            if 'is_sync_supplier' in pro:
+                del pro['is_sync_supplier']
+
+    # for i in range(len(expected)):
+    #     print expected[i]['order_no'], '++++', actual_orders[i]['order_no']
+    #     for j in range(len(expected[i]['products'])):
+    #         print expected[i]['products'][j].get('actions',""), '****', actual_orders[i]['products'][j].get('actions',"")
+    #         print expected[i]['products'][j].get('actions',"") == actual_orders[i]['products'][j].get('actions',"")
+    #     print expected[i]['status'], '++++', actual_orders[i]['status']
+    #     print expected[i]['actions'] == actual_orders[i]['actions']
 
     bdd_util.assert_list(expected, actual_orders)
 
@@ -479,6 +507,17 @@ def step_look_for_order(context, user):
     if query_params.get('isUseWeizoomCard'):
         query_params['isUseWeizoomCard'] = 1 if query_params['isUseWeizoomCard'] == 'true' else 0
 
+    if query_params.get('supplier_type'):
+        if query_params.get('supplier_type') == u'全部':
+            del query_params['supplier_type']
+            query_params['orderSupplierType'] = -1
+        elif query_params.get('supplier_type') == u'同步供货商':
+            del query_params['supplier_type']
+            query_params['orderSupplierType'] = 0
+        elif query_params.get('supplier_type') == u'自建供货商':
+            del query_params['supplier_type']
+            query_params['orderSupplierType'] = 1
+
     context.query_params = query_params
     context.export_query_params = query_params
 
@@ -652,6 +691,25 @@ def step_impl(context, user, order_id):
         actual_order.order_no = actual_order.order_no + "-" +\
             str(actual_order.edit_money).replace('.', '').replace('-', '')
 
+    for product in actual_order.products:
+        if 'supplier_store_name' in product:
+            if product['supplier_store_name']:
+                product['supplier'] = product['supplier_store_name']
+        if 'supplier_name' in product:
+            if product['supplier_name']:
+                product['supplier'] = product['supplier_name']
+
+    if '^' in actual_order.order_no:
+        user_id = actual_order.order_no.split('^')[1][:-1]
+        store_name = UserProfile.objects.get(user_id=user_id).store_name
+        actual_order.order_no = '%s-%s' % (actual_order.order_no.split('^')[0], store_name)
+        actual_order.sources = u'商城'
+        actual_order.final_price = actual_order.total_purchase_price
+    else:
+        actual_order.sources = u'本店'
+
+
+
     expected = []
     if context.table:
         for order in context.table:
@@ -663,6 +721,9 @@ def step_impl(context, user, order_id):
         expected['logistics'] = express_value
     if "actions" in expected:
         expected["actions"] = set(expected["actions"])
+    for product in expected['products']:
+        if 'is_sync_supplier' in product:
+            del product['is_sync_supplier']
 
     # 会员详情页无会员信息
     if "member" in expected:

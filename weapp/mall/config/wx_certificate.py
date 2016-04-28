@@ -3,6 +3,7 @@ __author__ = 'zhaolei'
 
 from core import resource
 from django.shortcuts import render_to_response
+from django.conf import settings
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
@@ -101,7 +102,10 @@ class WXCertificate(resource.Resource):
             for chunk in file.chunks():
                 content.append(chunk)
 
-        dir_path = os.path.join(curr_dir,'upload','weixin_cert', 'owner_id'+owner_id)
+        if settings.MODE == 'develop' or settings.MODE == 'test':
+            dir_path = os.path.join(curr_dir,'upload','weixin_cert', 'owner_id_test'+owner_id)
+        else:
+            dir_path = os.path.join(curr_dir,'upload','weixin_cert', 'owner_id'+owner_id)
 
 
         if not os.path.exists(dir_path):
