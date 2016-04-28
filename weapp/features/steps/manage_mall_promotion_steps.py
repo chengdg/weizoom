@@ -97,6 +97,11 @@ def step_impl(context, user):
 def step_impl(context, user, promotion_name):
 	excepted = json.loads(context.text)
 
+	# 在售商品不显示状态，actual中product的status是property
+	for p in excepted['products']:
+		if p['status'] == "":
+			p.pop('status')
+
 	promotion = Promotion.objects.get(name=promotion_name)
 	url = "/mall2/integral_sale/?id=" + str(promotion.id)
 	response = context.client.get(url)
