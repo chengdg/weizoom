@@ -23,9 +23,9 @@ class BulkShipment(resource.Resource):
         file_url = request.POST.get('file_url', '')
         # 读取文件
         json_data, error_rows = _read_file(file_url[1:])
-
+        webapp_id = request.user_profile.webapp_id
         # 批量处理订单
-        success_data, error_items = mall_api.batch_handle_order(json_data, request.manager)
+        success_data, error_items = mall_api.batch_handle_order(json_data, request.manager,webapp_id)
         response.data = {
             'success_count': len(success_data),
             'error_count': len(error_rows) + len(error_items),
@@ -96,8 +96,9 @@ class Delivery(resource.Resource):
         is_100 = request.POST.get('is_100','true')
         is_100 = True if is_100 == 'true' else False
         is_update_express = True if is_update_express == 'true' else False
+        webapp_id = request.user_profile.webapp_id
 
-        order = Order.objects.get(id=order_id)
+        order = Order.objects.get(id=order_id, webapp_id=webapp_id)
         err_msg = None
         # 修改物流信息且信息未变不发送消息
         if is_update_express and order.express_company_name == express_company_name and order.express_number == express_number:

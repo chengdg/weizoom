@@ -163,7 +163,7 @@ class ImageGroup(resource.Resource):
         name = request.POST['name']
         images = json.loads(request.POST.get('images', '[]'))
 
-        image_group = mall_models.ImageGroup.objects.get(id=id)
+        image_group = mall_models.ImageGroup.objects.get(owner=request.manager, id=id)
         if image_group.name != name:
             mall_models.ImageGroup.objects.filter(id=id).update(name=name)
 
