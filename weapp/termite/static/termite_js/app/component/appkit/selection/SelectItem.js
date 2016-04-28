@@ -1,6 +1,6 @@
 /**
  * @class W.component.appkit.SurveyDescription
- * 
+ *
  */
 ensureNS('W.component.appkit');
 W.component.appkit.SelectItem = W.component.Component.extend({
@@ -16,7 +16,7 @@ W.component.appkit.SelectItem = W.component.Component.extend({
 			type: 'text',
 			displayName: '选项',
 			isUserProperty: true,
-			maxLength: 20,
+			maxLength: 35,
 			validate: 'data-validate="require-notempty::选项不能为空,,require-word"',
 			validateIgnoreDefaultValue: true,
 			default: '',
