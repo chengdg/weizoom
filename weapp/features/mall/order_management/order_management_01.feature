@@ -1205,6 +1205,7 @@ Scenario:2 自营平台进行订单相关操作后,查看对应商家后台订�
 			"""
 
 	#自营平台jobs进行'标记完成'操作
+		Given jobs登录系统
 		When jobs'完成'订单'007-bill商家'
 		Given bill登录系统
 		Then bill可以看到订单列表
@@ -1311,6 +1312,7 @@ Scenario:2 自营平台进行订单相关操作后,查看对应商家后台订�
 			"""
 
 	#自营平台'取消订单'或'申通退款'后,查看对应商家后台订单列表的变化
+		Given jobs登录系统
 		When jobs'取消'订单'006'
 		When jobs'申请退款'订单'004'
 		Given bill登录系统
