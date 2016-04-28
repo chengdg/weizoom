@@ -77,7 +77,7 @@ W.preloadImgsOnPage = function(option) {
                     $itemsImg.map(function(idx, item) {
                         $item = $(item);
                         $item.attr('data-url', $item.attr('src'));
-                        $item.attr('src', [$item.attr('src'), '!/quality/60'].join(''));
+                        $item.attr('src', [$item.attr('src'), '!/quality/50'].join(''));
                         $item.removeAttr('src');
                     });
                     break;
