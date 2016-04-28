@@ -249,19 +249,17 @@
 					</td>
 					<td width="100" rowspan="${order.groups.length}">
 						{{if order.is_first_order }}<i class="xui-firstTag">首</i>{{/if}}
-						{{if order.member_id > 0}}
-							{{if order.member_is_subscribed > 0}}
-								{{if data.mall_type}}
-									<a target="_blank" href="/member/detail/?id=${ order.member_id }">{{html order.buyer_name}}</a>(${order.ship_name})
-								{{else}}
-									{{if order.supplier_user_id > 0}}
-										{{html order.buyer_name}}(${order.ship_name})
-									{{else}}
-										<a target="_blank" href="/member/detail/?id=${ order.member_id }">{{html order.buyer_name}}</a>(${order.ship_name})
-									{{/if}}
-								{{/if}}
+						{{if order.member_is_subscribed == 0 && order.buyer_name =="" }}
+							非会员(${order.ship_name})
+						{{else}}
+							{{if data.mall_type}}
+								<a target="_blank" href="/member/detail/?id=${ order.member_id }">{{html order.buyer_name}}</a>(${order.ship_name})
 							{{else}}
-								非会员(${order.ship_name})
+								{{if order.supplier_user_id > 0}}
+									{{html order.buyer_name}}(${order.ship_name})
+								{{else}}
+									<a target="_blank" href="/member/detail/?id=${ order.member_id }">{{html order.buyer_name}}</a>(${order.ship_name})
+								{{/if}}
 							{{/if}}
 							<span class="xui-buyerHint xa-buyerHint pr">
 								<i class="xa-buyerHintImg"
@@ -284,8 +282,6 @@
 								>
 								</i>
 							</span>
-						{{else}}
-							{{html order.buyer_name}}(${order.ship_name})
 						{{/if}}
 						{{if order.customer_message}}
 							<p class="pt5 tc"><a class="xa-costomerMessage xui-costomerMessage" data-content="${order.customer_message}"></a></p>
