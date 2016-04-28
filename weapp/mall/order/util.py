@@ -486,16 +486,21 @@ def export_orders_json(request):
             order_status = status[str(order.status if not fackorder else fackorder.status)].encode('utf8')
             # 订单发货时间
             postage_time = order2postage_time.get(order.order_id if not fackorder else fackorder.order_id, '')
+            supplier_type = ""
             if fackorder:
                 if fackorder.supplier and order2supplier.has_key(fackorder.supplier):
                     source = order2supplier[fackorder.supplier].name.encode("utf-8")
+                    supplier_type = u"自建供货商"
                 if fackorder.supplier_user_id and id2store.has_key(fackorder.supplier_user_id):
                     source = id2store[fackorder.supplier_user_id].store_name.encode("utf-8")
+                    supplier_type = u"同步供货商"
             else:
                 if order.supplier and order2supplier.has_key(order.supplier):
                     source = order2supplier[order.supplier].name.encode("utf-8")
+                    supplier_type = u"自建供货商"
                 if order.supplier_user_id and id2store.has_key(order.supplier_user_id):
                     source = id2store[order.supplier_user_id].store_name.encode("utf-8")
+                    supplier_type = u"同步供货商"
 
             if not mall_type and source != u"本店":
                 source = u"商城"
@@ -560,6 +565,8 @@ def export_orders_json(request):
                     u'首单' if order.is_first_order else u'非首单'
 
                 ]
+                if mall_type:
+                    tmp_order.insert(26, supplier_type)
                 if has_supplier:
                     tmp_order.append( u'-' if 0.0 == product.purchase_price else product.purchase_price)
                     tmp_order.append(u'-'  if 0.0 ==product.purchase_price else product.purchase_price*relation.number)
@@ -608,6 +615,8 @@ def export_orders_json(request):
                     u'首单' if order.is_first_order else u'非首单'
 
                 ]
+                if mall_type:
+                    tmp_order.insert(26, supplier_type)
                 if has_supplier:
                     tmp_order.append(u'' if 0.0 == product.purchase_price else product.purchase_price)
                     tmp_order.append(u'' if 0.0 ==product.purchase_price else product.purchase_price*relation.number)
@@ -660,6 +669,8 @@ def export_orders_json(request):
                         before_scanner_qrcode_is_member if before_scanner_qrcode_is_member else '-',
                         '-'
                     ]
+                    if mall_type:
+                        tmp_order.insert(26, supplier_type)
                     if has_supplier:
                         tmp_order.append( u'-' if 0.0 == premium_product['purchase_price'] else premium_product['purchase_price'])
                         tmp_order.append(u'-' if 0.0 ==premium_product['purchase_price'] else premium_product['purchase_price']*premium_product['count'])
@@ -674,6 +685,8 @@ def export_orders_json(request):
     if request.GET.get("bdd",None):
         mall_type = True
     if mall_type:
+        orders[0][26] = u"供货商"
+        orders[0].insert(26, u'供货商类型')
         for order in orders:
             del order[13]
         orders[0][12] = u"微众卡支付金额"
