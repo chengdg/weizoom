@@ -159,13 +159,13 @@ Scenario:2 积分应用活动（多商品、分级设置）详情
 			"is_permanant_active": true,
 			"discount_info": [{
 				"member_grade": "普通会员",
-				"discount": 50%
+				"discount":"50.0%"
 			},{
 				"member_grade": "铜牌会员",
-				"discount": 60%
+				"discount":"60.0%"
 			},{
 				"member_grade": "银牌会员",
-				"discount": 80%
+				"discount":"80.0%"
 			}],
 			"discount_money": "50.00~80.00"
 		}
@@ -192,13 +192,13 @@ Scenario:2 积分应用活动（多商品、分级设置）详情
 			"is_permanant_active": true,
 			"discount_info": [{
 				"member_grade": "普通会员",
-				"discount": 50%
+				"discount":"50.0%"
 			},{
 				"member_grade": "铜牌会员",
-				"discount": 60%
+				"discount":"60.0%"
 			},{
 				"member_grade": "银牌会员",
-				"discount": 80%
+				"discount":"80.0%"
 			}],
 			"discount_money": "50.00~80.00"
 		}
@@ -221,13 +221,13 @@ Scenario:2 积分应用活动（多商品、分级设置）详情
 			"is_permanant_active": true,
 			"discount_info": [{
 				"member_grade": "普通会员",
-				"discount": 50%
+				"discount":"50.0%"
 			},{
 				"member_grade": "铜牌会员",
-				"discount": 60%
+				"discount":"60.0%"
 			},{
 				"member_grade": "银牌会员",
-				"discount": 80%
+				"discount":"80.0%"
 			}],
 			"discount_money": "50.00~80.00"
 		}
