@@ -109,9 +109,11 @@ Scenario:1 积分应用活动（单商品、统一设置）详情
 			"name": "单商品积分应用",
 			"promotion_title":"促销标题1",
 			"activity_time":"2016-04-10 14:00:00至2016-04-15 14:20:00",
-			"product_name": "商品1",
-			"product_price":100.00,
-			"product_sales":0,
+			"products":[{
+				"name": "商品1",
+				"price":100.00,
+				"sales":0
+				}],
 			"is_permanent_active": false,
 			"discount_info": [{
 				"member_grade": "全部会员",
@@ -147,15 +149,26 @@ Scenario:2 积分应用活动（多商品、分级设置）详情
 			}]
 		}]
 		"""
+	#详情页，多规格商品的价格显示的是最小值，不显示区间
 	Then jobs获取积分应用活动'多商品积分应用'详情
 		"""
 		{
 			"name": "多商品积分应用",
 			"promotion_title":"促销标题1",
 			"activity_time":"永久有效",
-			"product_name": "商品1,商品2,商品3",
-			"product_price":"100.00,110.00,300.00",
-			"product_sales":"0,0,0",
+			"products":[{
+					"name": "商品1",
+					"price":100.00,
+					"sales":0
+				},{
+					"name": "商品2",
+					"price":110.00,
+					"sales":0
+				},{
+					"name": "商品3",
+					"price":300.00,
+					"sales":0
+				}],
 			"is_permanent_active": true,
 			"discount_info": [{
 				"member_grade": "普通会员",
@@ -179,15 +192,20 @@ Scenario:2 积分应用活动（多商品、分级设置）详情
 			"name": "多商品积分应用",
 			"promotion_title":"促销标题1",
 			"activity_time":"永久有效",
-			"product_name": "商品1,商品2,商品3",
-			"product_price":"100.00,110.00,300.00",
-			"product_sales":"0,0,0",
-			"products_status":[{
+			"products":[{
 					"name": "商品1",
+					"price":100.00,
+					"sales":0,
 					"status": "待售"
 				},{
 					"name": "商品2",
+					"price":110.00,
+					"sales":0,
 					"status": "已删除"
+				},{
+					"name": "商品3",
+					"price":300.00,
+					"sales":0
 				}],
 			"is_permanent_active": true,
 			"discount_info": [{
@@ -211,12 +229,19 @@ Scenario:2 积分应用活动（多商品、分级设置）详情
 			"name": "多商品积分应用",
 			"promotion_title":"促销标题1",
 			"activity_time":"永久有效",
-			"product_name": "商品1,商品2,商品3",
-			"product_price":"100.00,110.00,300.00",
-			"product_sales":"0,0,0",
-			"products_status":[{
+			"products":[{
+					"name": "商品1",
+					"price":100.00,
+					"sales":0
+				},{
 					"name": "商品2",
+					"price":110.00,
+					"sales":0,
 					"status": "已删除"
+				},{
+					"name": "商品3",
+					"price":300.00,
+					"sales":0
 				}],
 			"is_permanent_active": true,
 			"discount_info": [{
