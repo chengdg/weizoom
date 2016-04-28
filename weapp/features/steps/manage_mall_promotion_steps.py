@@ -93,20 +93,29 @@ def step_impl(context, user):
 
 
 
-@then(u"{user}获取积分应用活动{promotion_name}详情")
-def step_impl(context, user,promotion_name):
+@then(u"{user}获取积分应用活动'{promotion_name}'详情")
+def step_impl(context, user, promotion_name):
 	excepted = json.loads(context.text)
 
 	promotion = Promotion.objects.get(name=promotion_name)
-	url = "http://docker.test.weizzz.com/mall2/integral_sale/?id=" + str(promotion.id)
+	url = "/mall2/integral_sale/?id=" + str(promotion.id)
 	response = context.client.get(url)
 	promotion = response.context['promotion']
 	jsons = response.context['jsons']
 	actual = {
-		'name': promotion['name'],
-		'promotion_title': promotion['promotion_title'],
+		'name': promotion.name,
+		'promotion_title': promotion.promotion_title,
 	}
-	bdd_util.assert_dict(excepted,actual)
+	if promotion.detail.is_permanant_active:
+		actual['activity_time'] = u'永久有效'
+	else:
+		actual['activity_time'] = promotion.start_date+'至'+promotion.end_date
+
+	actual
+
+
+
+	bdd_util.assert_dict(excepted, actual)
 
 
 @when(u"{user}创建满减活动")

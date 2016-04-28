@@ -95,7 +95,7 @@ Scenario:1 积分应用活动（单商品、统一设置）详情
 			"end_date": "2016-04-15 14:20",
 			"status":"已结束",
 			"product_name": "商品1",
-			"is_permanant_active": false,
+			"is_permanent_active": false,
 			"rules": [{
 				"member_grade": "全部会员",
 				"discount": 50,
@@ -110,9 +110,9 @@ Scenario:1 积分应用活动（单商品、统一设置）详情
 			"promotion_title":"促销标题1",
 			"activity_time":"2016-04-10 14:00:00至2016-04-15 14:20:00",
 			"product_name": "商品1",
-			"procuct_price":100.00,
-			"procuct_sales":0,
-			"is_permanant_active": false,
+			"product_price":100.00,
+			"product_sales":0,
+			"is_permanent_active": false,
 			"discount_info": [{
 				"member_grade": "全部会员",
 				"discount": "50.0%"
@@ -131,7 +131,7 @@ Scenario:2 积分应用活动（多商品、分级设置）详情
 			"promotion_title":"促销标题1",
 			"status":"进行中",
 			"product_name": "商品1,商品2,商品3",
-			"is_permanant_active": true,
+			"is_permanent_active": true,
 			"rules": [{
 				"member_grade": "普通会员",
 				"discount": 50,
@@ -154,9 +154,9 @@ Scenario:2 积分应用活动（多商品、分级设置）详情
 			"promotion_title":"促销标题1",
 			"activity_time":"永久有效",
 			"product_name": "商品1,商品2,商品3",
-			"procuct_price":"100.00,110.00,300.00",
-			"procuct_sales":"0,0,0",
-			"is_permanant_active": true,
+			"product_price":"100.00,110.00,300.00",
+			"product_sales":"0,0,0",
+			"is_permanent_active": true,
 			"discount_info": [{
 				"member_grade": "普通会员",
 				"discount":"50.0%"
@@ -180,8 +180,8 @@ Scenario:2 积分应用活动（多商品、分级设置）详情
 			"promotion_title":"促销标题1",
 			"activity_time":"永久有效",
 			"product_name": "商品1,商品2,商品3",
-			"procuct_price":"100.00,110.00,300.00",
-			"procuct_sales":"0,0,0",
+			"product_price":"100.00,110.00,300.00",
+			"product_sales":"0,0,0",
 			"products_status":[{
 					"name": "商品1",
 					"status": "待售"
@@ -189,7 +189,7 @@ Scenario:2 积分应用活动（多商品、分级设置）详情
 					"name": "商品2",
 					"status": "已删除"
 				}],
-			"is_permanant_active": true,
+			"is_permanent_active": true,
 			"discount_info": [{
 				"member_grade": "普通会员",
 				"discount":"50.0%"
@@ -212,13 +212,13 @@ Scenario:2 积分应用活动（多商品、分级设置）详情
 			"promotion_title":"促销标题1",
 			"activity_time":"永久有效",
 			"product_name": "商品1,商品2,商品3",
-			"procuct_price":"100.00,110.00,300.00",
-			"procuct_sales":"0,0,0",
+			"product_price":"100.00,110.00,300.00",
+			"product_sales":"0,0,0",
 			"products_status":[{
 					"name": "商品2",
 					"status": "已删除"
 				}],
-			"is_permanant_active": true,
+			"is_permanent_active": true,
 			"discount_info": [{
 				"member_grade": "普通会员",
 				"discount":"50.0%"
