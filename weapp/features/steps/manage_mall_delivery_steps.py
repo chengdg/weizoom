@@ -78,6 +78,7 @@ def step_impl(context, user):
     if logistics == u'其他':
         data['is_100'] = 'false'
     response = context.client.post(url, data)
+
     if 'date' in delivery_data:
         OrderOperationLog.objects.filter(order_id=delivery_data['order_no'], action="订单发货").update(
             created_at=bdd_util.get_datetime_str(delivery_data['date']))

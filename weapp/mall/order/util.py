@@ -1819,23 +1819,21 @@ def cancel_group_buying(order_id):
     OrderHasGroup.objects.filter(order_id=order.order_id).update(group_status=GROUP_STATUS_failure)
 
 def assert_webapp_id(order, webapp_id):
-    if order.origin_order_id > 0:
-        if order.supplier_user_id > 0:
-            try:
-                webapp_id_user = UserProfile.objects.filter(user_id=order.supplier_user_id)[0].webapp_id
-                if webapp_id_user != webapp_id:
+    if order.webapp_id != webapp_id:
+        if order.origin_order_id > 0:
+            if order.supplier_user_id > 0:
+                try:
+                    webapp_id_user = UserProfile.objects.filter(user_id=order.supplier_user_id)[0].webapp_id
+                    if webapp_id_user != webapp_id:
+                        return False
+                    else:
+                        return True
+                except:
+                    return False
+            else:
+                if order.webapp_id != webapp_id:
                     return False
                 else:
                     return True
-            except:
-                return False
-        else:
-            if order.webapp_id != webapp_id:
-                return False
-            else:
-                return True
     else:
-        if webapp_id != order.webapp_id:
-            return False
-        else:
-            return True
+        return True
