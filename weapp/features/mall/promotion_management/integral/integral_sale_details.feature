@@ -83,7 +83,7 @@ Background:
 			"integral_each_yuan": 2
 		}
 		"""
-@promotion @promotionIntegral @integral
+@promotion @promotionIntegral @integral @ztqb
 Scenario:1 积分应用活动（单商品、统一设置）详情
 	Given jobs登录系统
 	When jobs创建积分应用活动
@@ -103,7 +103,7 @@ Scenario:1 积分应用活动（单商品、统一设置）详情
 			}]
 		}]
 		"""
-	Then jobs获取积分应用活动'单商品积分应用'
+	Then jobs获取积分应用活动'单商品积分应用'详情
 		"""
 		{
 			"name": "单商品积分应用",
@@ -115,7 +115,7 @@ Scenario:1 积分应用活动（单商品、统一设置）详情
 			"is_permanant_active": false,
 			"discount_info": [{
 				"member_grade": "全部会员",
-				"discount": 50.0%
+				"discount": "50.0%"
 			}],
 			"discount_money": 50.00
 		}
@@ -147,7 +147,7 @@ Scenario:2 积分应用活动（多商品、分级设置）详情
 			}]
 		}]
 		"""
-	Then jobs获取积分应用活动'多商品积分应用'
+	Then jobs获取积分应用活动'多商品积分应用'详情
 		"""
 		{
 			"name": "多商品积分应用",
@@ -173,7 +173,7 @@ Scenario:2 积分应用活动（多商品、分级设置）详情
 	#下架或删除活动中的商品后，积分应用活动详情页显示对应商品的状态（待售或已删除）
 	When jobs'下架'商品'商品1'
 	When jobs'删除'商品'商品2'
-	Then jobs获取积分应用活动'多商品积分应用'
+	Then jobs获取积分应用活动'多商品积分应用'详情
 		"""
 		{
 			"name": "多商品积分应用",
@@ -205,7 +205,7 @@ Scenario:2 积分应用活动（多商品、分级设置）详情
 		"""
 	#商品下架后再上架，积分应用活动详情页商品状态不再显示'待售'
 	When jobs'上架'商品'商品1'
-	Then jobs获取积分应用活动'多商品积分应用'
+	Then jobs获取积分应用活动'多商品积分应用'详情
 		"""
 		{
 			"name": "多商品积分应用",
