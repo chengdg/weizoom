@@ -2087,7 +2087,7 @@ Scenario:6 自营平台订单列表优惠券抵扣的订单，拆单后又取消
 				"postage":2.0,
 				"save_money":"",
 				"methods_of_payment": "货到付款",
-				"actions": ["发货",取消订单"],
+				"actions": ["取消订单"],
 				"products":[{
 						"name":"商品1a",
 						"price":10.0,
@@ -2153,7 +2153,7 @@ Scenario:6 自营平台订单列表优惠券抵扣的订单，拆单后又取消
 						"name":"bill商品11",
 						"price":10.0,
 						"count":5,
-						"supplier": "bill商家"
+						"supplier": "bill商家",
 						"is_sync_supplier": "true"
 					}]
 			},{
@@ -2192,13 +2192,15 @@ Scenario:6 自营平台订单列表优惠券抵扣的订单，拆单后又取消
 						"price":10.0,
 						"count":1,
 						"supplier": "供货商1",
-						"is_sync_supplier": "false"
+						"is_sync_supplier": "false",
+						"actions": ["发货"]
 					},{
 						"name":"商品2a",
 						"price":20.0,
 						"count":1,
 						"supplier": "供货商2",
-						"is_sync_supplier": "false"
+						"is_sync_supplier": "false",
+						"actions": ["发货"]
 					}]
 			},{
 				"order_no":"002",
