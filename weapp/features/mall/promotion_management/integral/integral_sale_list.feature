@@ -66,7 +66,7 @@ Background:
 		}
 		"""
 
-@promotionIntegral @integral
+@promotionIntegral @integral 
 Scenario:1 积分应用活动（单商品），商品下架或下架后再上架，活动状态不变
 	Given jobs登录系统
 	#积分应用活动（单个商品）-商品下架,活动状态不变
@@ -169,7 +169,8 @@ Scenario:2 积分应用活动（多商品），商品部分或全部下架，活
 					"name": "商品01",
 					"status": "待售"
 					}],
-				"status":"进行中"
+				"status":"进行中",
+				"is_permanant_active": true
 			}]
 			"""
 	#商品全部下架,活动状态不变
@@ -186,7 +187,8 @@ Scenario:2 积分应用活动（多商品），商品部分或全部下架，活
 						"name": "商品02",
 						"status": "待售"
 					}],
-				"status":"进行中"
+				"status":"进行中",
+				"is_permanant_active": true
 			}]
 			"""
 
@@ -359,8 +361,6 @@ Scenario:4 自营平台对商家同步的商品部分或全部进行【更新】
 				"integral_each_yuan": 2
 			}
 			"""
-		#When nokia将商品'bill无规格商品1'放入待售
-		#When nokia将商品'bill多规格商品2'放入待售
 		When nokia批量将商品放入待售
 			"""
 			["bill无规格商品1","bill无规格商品2"]
@@ -471,7 +471,7 @@ Scenario:4 自营平台对商家同步的商品部分或全部进行【更新】
 	#自营nokia对同步商品进行【更新】操作，查看活动状态
 		Given nokia登录系统
 		#更新全部商品，商品部分下架，活动状态不变
-		When nokia更新商品池商品'bill无规格商品01'
+		When nokia更新商品池商品'bill无规格商品01'于'2016-04-20 10:30'
 		Then nokia获取积分应用活动列表
 			"""
 			[{
@@ -481,11 +481,12 @@ Scenario:4 自营平台对商家同步的商品部分或全部进行【更新】
 					"name": "bill无规格商品01",
 					"status": "待售"
 					}],
+				"is_permanant_active": true,
 				"status":"进行中"
 			}]
 			"""
 		#更新全部商品，商品全部下架，活动状态不变
-		When nokia更新商品池商品'bill无规格商品02'
+		When nokia更新商品池商品'bill无规格商品02'于'2016-04-21 10:30'
 		Then nokia获取积分应用活动列表
 			"""
 			[{
@@ -498,6 +499,7 @@ Scenario:4 自营平台对商家同步的商品部分或全部进行【更新】
 					"name": "bill无规格商品02",
 					"status": "待售"
 				}],
+				"is_permanant_active": true,
 				"status":"进行中"
 			}]
 			"""
