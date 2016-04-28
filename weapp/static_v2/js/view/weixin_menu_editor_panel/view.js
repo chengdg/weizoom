@@ -49,7 +49,8 @@ W.view.weixin.MenuEditorPanel = Backbone.View.extend({
 			el: this.$el.find('textarea'),
 			type: 'text',
 			maxCount: 600,
-			width: width
+			width: width,
+			pasteplain: true
 		});
 		this.editor.setContent(this.answer);
 		this.editor.render();

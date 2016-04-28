@@ -9,7 +9,10 @@
 
 {% block js %}
 <script type="text/javascript">
-W.preloadImgsOnPage('.xa-products-box ul li img');
+    W.preloadImgsOnPage([
+        { moduleName: 'imageGroup', tagId: '.wui-imageGroup a img' },
+        { moduleName: 'productList', tagId: '.xa-products-box ul li img' },
+   ]);
 </script>
 {% endblock %}
 

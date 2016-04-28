@@ -2821,7 +2821,7 @@ def update_product_stock(product_id, product_model_id, stock):
 		ProductModel.objects.filter(product_id=product_id, id=product_model_id).update(stock_type=PRODUCT_STOCK_TYPE_LIMIT, stocks=stock)
 
 
-def batch_handle_order(json_data, user):
+def batch_handle_order(json_data, user, webapp_id=None):
 	"""
 	批量发货
 
@@ -2845,11 +2845,11 @@ def batch_handle_order(json_data, user):
 				order_id = order_id.strip()
 				if '-' in order_id:
 					new_order_id = order_id.split('-')[0]
-					order = Order.objects.get(order_id=new_order_id)
+					order = Order.objects.get(order_id=new_order_id, webapp_id=webapp_id)
 					if str(order.edit_money).replace('.', '').replace('-', '') != order_id.split('-')[1]:
 						raise
 				else:
-					order = Order.objects.get(order_id=order_id)
+					order = Order.objects.get(order_id=order_id, webapp_id=webapp_id)
 			except:
 				item["error_info"] = "订单号错误"
 				error_data.append(item)

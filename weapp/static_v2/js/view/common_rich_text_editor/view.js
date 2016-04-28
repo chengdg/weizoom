@@ -22,6 +22,7 @@ W.view.common.RichTextEditor = Backbone.View.extend({
         var height = options.height || 200;
         var isDebug = options.debug || false;
         var wordCount = true;
+        var pasteplain = !!options.pasteplain;
         if (options.hasOwnProperty('wordCount')) {
             wordCount = options.wordCount;
         }
@@ -48,7 +49,7 @@ W.view.common.RichTextEditor = Backbone.View.extend({
             initialContent: '',
             emotionLocalization:true,
             elementPathEnabled: false,
-            // pasteplain: true,
+            pasteplain: pasteplain,
             maximumWords: maxCount,
             wordCountMsg:'<span style="color:#333;">已输入{#count}个字符, 还可输入{#leave}个字符</span>',
             wordOverFlowMsg:'<span style="color:red;">已超出{#overflow}个字符！</span>',

@@ -126,8 +126,9 @@ class GroupParticipances(resource.Resource):
 				group_end_time = data.created_at+timedelta(days=int(group_days))
 				end_time_date = group_end_time.strftime('%Y/%m/%d')
 				end_time_time = group_end_time.strftime('%H:%M')
-
-				rest_days = int(group_days)
+				rest_days = (group_end_time - datetime.today()).days
+				if rest_days < 1:
+					rest_days = u'不足1'
 
 				start_time = data.created_at.strftime('%Y-%m-%d %H:%M')
 				end_time = group_end_time.strftime('%Y-%m-%d %H:%M')
@@ -267,11 +268,13 @@ class GroupParticipancesDialog(resource.Resource):
 			member_status = member_status2name[str(member.status)]
 			member_grade = member.grade.name
 			member_icon = member.user_icon
+			member_name = member.username_for_html
 			id2info[unicode(member_id)]={'integral':integral,
 										 'source':source,
 										 'member_status':member_status,
 										 'member_grade':member_grade,
-										 'member_icon':member_icon}
+										 'member_icon':member_icon,
+										 'member_name':member_name}
 
 		items = []
 		for group_detail in group_details:
@@ -282,9 +285,9 @@ class GroupParticipancesDialog(resource.Resource):
 			info = id2info[member_id]
 
 			items.append({
-				'id':unicode(member.id),
+				'id':member_id,
 				'member_id':member_id,
-				'name':group_detail.grouped_member_name,
+				'name':info['member_name'],
 				'money':"%.2f"%float(money),
 				'integral':info['integral'],
 				'source':info['source'],

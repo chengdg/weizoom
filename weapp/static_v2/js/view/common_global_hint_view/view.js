@@ -38,7 +38,7 @@ W.view.common.GlobalHintView = Backbone.View.extend({
      *   info: 提示信息模式 
      */ 
     setMode: function(mode) {
-        this.$el.removeClass('alert-danger alert-success alert-info').addClass('alert-'+mode);
+        this.$el.removeClass('alert-danger alert-success alert-info alert-warning').addClass('alert-'+mode);
     }
 });
 
@@ -84,12 +84,27 @@ W.getInfoHintView = function(options) {
     return view;
 };
 
+W.getWarnHintView = function(options) {
+    var view = W.registry['globalHintView'];
+    if (!view) {
+        xlog('create W.view.common.GlobalHintView');
+        view = new W.view.common.GlobalHintView(options);
+        view.render();
+        W.registry['globalHintView'] = view;
+    }
+
+    view.setMode('warning');
+    return view;
+};
+
 W.showHint = function(type, hint) {
     if (type === 'error') {
         W.getErrorHintView().show(hint);
     } else if (type === 'info') {
         W.getInfoHintView().show(hint);
-    } else {
+    } else if(type === 'warning'){
+        W.getWarnHintView().show(hint);
+    }else {
         W.getSuccessHintView().show(hint);
     }
 }

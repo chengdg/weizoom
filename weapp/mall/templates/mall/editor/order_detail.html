@@ -268,7 +268,7 @@
                 <th class="xui-td-img"></th>
                 <th class="xui-td-first">商品信息</th>
                 <th class="xui-td-second">单价（元）/数量</th>
-                <th class="xui-td-third"></th>
+                <th class="xui-td-third">单品优惠</th>
                 {% if mall_type and is_show_order_status %}<th class="xui-td-third">订单状态</th>{% endif %}
                 <th class="xui-td-fourth" style="width:160px;">整单优惠</th>
                 <th class="xui-td-fifth" style="width:120px;">微众卡支付金额</th>
@@ -323,16 +323,17 @@
               <br>
               （{{ product.count }}件）
               </td>
-              <td class="xui-td-third"></td>
-              <!--
+
               <td class="xui-td-third"{% if product.noline %} style="border-top:none;"{% endif %}>
               {% if not is_sync %}
                 {% if product.promotion.type == 'flash_sale' %}
                 直降{{product.promotion.promotion_saved_money|floatformat:"2" }}元
                 {% endif %}
+<!--
                 {% if product.has_coupon %}
                   <p> 优惠券:{{order.coupon_money|floatformat:"2"}}</p> <p>（{{ coupon.coupon_id }}）</p>
                 {% endif %}
+ -->
                 {% if product.integral_count %}
                   <p>{{ product.integral_count }}积分，抵扣{{ product.integral_money }}元</p>
                 {% endif %}
@@ -340,7 +341,7 @@
                   会员优惠：{{ product.grade_discounted_money }}
                 {% endif %}
               {% endif %}
-              </td> -->
+              </td>
 
                 {% if mall_type and is_show_order_status %}
                   {% if product.supplier %}

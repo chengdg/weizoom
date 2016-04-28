@@ -29,7 +29,6 @@ from excel_response import ExcelResponse
 from modules.member.module_api import get_member_by_id_list, get_member_by_id
 from core.wxapi import get_weixin_api
 
-
 #COUNT_PER_PAGE = 2
 COUNT_PER_PAGE = 50
 FIRST_NAV = export.WEIXIN_HOME_FIRST_NAV
@@ -293,6 +292,7 @@ class Qrcode(resource.Resource):
 		带参数二维码
 		"""
 		setting_id = int(request.GET.get('setting_id', '-1'))
+		setting_ids = request.GET.get('setting_ids', None)
 		answer_content = {}
 		webapp_id = request.user_profile.webapp_id
 		groups = MemberGrade.get_all_grades_list(webapp_id)
@@ -305,48 +305,54 @@ class Qrcode(resource.Resource):
 			else:
 				tags.append(tag)
 		qrcode = None
-		from mall.promotion.models import CouponRule
-		if setting_id > 0:
-			try:
-				qrcode = ChannelQrcodeSettings.objects.get(id=setting_id, owner=request.manager)
-			except Exception, e:
-				print 'get qrcode failed,id:',setting_id
-
-			if qrcode:
-				#获取优惠券剩余个数
-				award_prize_info = qrcode.award_prize_info
+		#批量修改
+		qrcodes = None
+		if setting_ids:
+			setting_ids = setting_ids.split(',')
+			qrcodes = ChannelQrcodeSettings.objects.filter(id__in=setting_ids, owner=request.manager)
+		else:
+			from mall.promotion.models import CouponRule
+			if setting_id > 0:
 				try:
-					info_dict = json.loads(award_prize_info)
-					if info_dict['type'] == u'优惠券':
-						coupon_rule = CouponRule.objects.get(id = info_dict['id'])
-						info_dict['remained_count'] = coupon_rule.remained_count
-						if coupon_rule.limit_product:
-							info_dict['coupon_type'] = u'单品券'
-						else:
-							info_dict['coupon_type'] = u'全店通用券'
-						qrcode.award_prize_info = json.dumps(info_dict)
+					qrcode = ChannelQrcodeSettings.objects.get(id=setting_id, owner=request.manager)
 				except Exception, e:
-					print 'qrcode获取优惠券剩余个数失败：', e
+					print 'get qrcode failed,id:',setting_id
 
-				if qrcode.reply_material_id > 0:
-					answer_content['type'] = 'news'
-					answer_content['newses'] = []
-					answer_content['content'] = qrcode.reply_material_id
-					newses = News.get_news_by_material_id(qrcode.reply_material_id)
+				if qrcode:
+					#获取优惠券剩余个数
+					award_prize_info = qrcode.award_prize_info
+					try:
+						info_dict = json.loads(award_prize_info)
+						if info_dict['type'] == u'优惠券':
+							coupon_rule = CouponRule.objects.get(id = info_dict['id'])
+							info_dict['remained_count'] = coupon_rule.remained_count
+							if coupon_rule.limit_product:
+								info_dict['coupon_type'] = u'单品券'
+							else:
+								info_dict['coupon_type'] = u'全店通用券'
+							qrcode.award_prize_info = json.dumps(info_dict)
+					except Exception, e:
+						print 'qrcode获取优惠券剩余个数失败：', e
 
-					news_array = []
-					for news in newses:
-						news_dict = {}
-						news_dict['id'] = news.id
-						news_dict['title'] = news.title
-						answer_content['newses'].append(news_dict)
-				else:
-					answer_content['type'] = 'text'
-					answer_content['content'] = emotion.change_emotion_to_img(qrcode.reply_detail)
+					if qrcode.reply_material_id > 0:
+						answer_content['type'] = 'news'
+						answer_content['newses'] = []
+						answer_content['content'] = qrcode.reply_material_id
+						newses = News.get_news_by_material_id(qrcode.reply_material_id)
 
-				if qrcode.bing_member_id:
-					bing_member = get_member_by_id(int(qrcode.bing_member_id))
-					qrcode.bing_member_name = bing_member.username_for_html
+						news_array = []
+						for news in newses:
+							news_dict = {}
+							news_dict['id'] = news.id
+							news_dict['title'] = news.title
+							answer_content['newses'].append(news_dict)
+					else:
+						answer_content['type'] = 'text'
+						answer_content['content'] = emotion.change_emotion_to_img(qrcode.reply_detail)
+
+					if qrcode.bing_member_id:
+						bing_member = get_member_by_id(int(qrcode.bing_member_id))
+						qrcode.bing_member_name = bing_member.username_for_html
 
 		settings = ChannelQrcodeSettings.objects.filter(owner=request.manager, bing_member_id__gt=0)
 		selectedMemberIds = [setting.bing_member_id for setting in settings]
@@ -370,7 +376,8 @@ class Qrcode(resource.Resource):
 			'tags': tags,
 			'tag_is_del': False if MemberTag.objects.filter(id=tag_id).count() > 0 else True,
 			'selectedMemberIds': json.dumps(selectedMemberIds),
-			'jsons': jsons
+			'jsons': jsons,
+			'qrcodes': qrcodes
 		})
 		return render_to_response('weixin/advance_manage/edit_qrcode.html', c)
 
@@ -380,8 +387,11 @@ class Qrcode(resource.Resource):
 		cur_setting = None
 		name = request.POST["name"]
 		award_prize_info = request.POST['prize_info'].strip()
+		coupon_id = ''
 		try:
 			info_dict = json.loads(award_prize_info)
+			if info_dict['type'] == u'优惠券':
+				coupon_id = str(info_dict['id'])
 			if not (info_dict.has_key('id') and info_dict.has_key('name') and info_dict.has_key('type')):
 				1/0
 		except Exception, e:
@@ -423,7 +433,8 @@ class Qrcode(resource.Resource):
 			is_bing_member=True if is_bing_member == "true" else False,
 			bing_member_id=bing_member_id,
 			bing_member_title=bing_member_title,
-			qrcode_desc=qrcode_desc
+			qrcode_desc=qrcode_desc,
+			coupon_ids=coupon_id
 		)
 
 		if cur_setting.is_bing_member:
@@ -458,14 +469,17 @@ class Qrcode(resource.Resource):
 	@login_required
 	@mp_required
 	def api_post(request):
-		setting_id = int(request.POST.get('setting_id', '-1'))
-		if not setting_id > 0:
+		setting_id = request.POST.get('setting_id', None)
+		if not setting_id:
 			return create_response(400).get_response()
 
 		name = request.POST["name"]
 		award_prize_info = request.POST['prize_info'].strip()
+		coupon_id = ''
 		try:
 			info_dict = json.loads(award_prize_info)
+			if info_dict['type'] == u'优惠券':
+				coupon_id = info_dict['id']
 			if not (info_dict.has_key('id') and info_dict.has_key('name') and info_dict.has_key('type')):
 				1/0
 		except Exception, e:
@@ -492,7 +506,27 @@ class Qrcode(resource.Resource):
 		elif reply_type == 2:
 			reply_detail = ''
 
+		#批量修改
+		if len(setting_id.split(',')) > 1:
+			settings = ChannelQrcodeSettings.objects.filter(owner=request.manager, id__in=setting_id.split(','))
+			for s in settings:
+				s.award_prize_info = award_prize_info
+				s.reply_type = reply_type
+				s.reply_detail = reply_detail
+				s.reply_material_id = reply_material_id
+				s.remark = remark
+				s.grade_id = grade_id
+				s.tag_id = tag_id
+				s.re_old_member = re_old_member
+				s.coupon_ids = s.coupon_ids + ',' + str(coupon_id)
+				s.save()
+	
+			return create_response(200).get_response()
+
 		setting = ChannelQrcodeSettings.objects.filter(owner=request.manager, id=setting_id)
+		coupon_ids = setting[0].coupon_ids.split(',')
+		coupon_ids.append(str(coupon_id))
+		coupon_ids = ','.join(coupon_ids)
 		if setting[0].bing_member_id and is_bing_member == 'false':
 			#取消关联
 			setting.update(
@@ -506,6 +540,7 @@ class Qrcode(resource.Resource):
 				tag_id=tag_id,
 				re_old_member=re_old_member,
 				is_bing_member=True if is_bing_member == "true" else False,
+				coupon_ids=coupon_ids
 			)
 			ChannelQrcodeBingMember.objects.filter(channel_qrcode=setting[0]).update(
 				cancel_bing_time=datetime.now()
@@ -529,7 +564,8 @@ class Qrcode(resource.Resource):
 				is_bing_member=True if is_bing_member == "true" else False,
 				bing_member_id=bing_member_id,
 				bing_member_title=bing_member_title,
-				qrcode_desc=qrcode_desc
+				qrcode_desc=qrcode_desc,
+				coupon_ids=coupon_ids
 			)
 
 		return create_response(200).get_response()
@@ -561,6 +597,7 @@ class QrcodeMember(resource.Resource):
 		setting_id = int(request.GET['setting_id'])
 		start_date = request.GET.get('start_date', '')
 		end_date = request.GET.get('end_date', '')
+		member_status = int(request.GET.get('status', -1))
 		is_show = request.GET.get('is_show', '0')
 
 		sort_attr = request.GET.get('sort_attr', '-created_at')
@@ -580,6 +617,9 @@ class QrcodeMember(resource.Resource):
 
 		if end_date:
 			filter_data_args['created_at__lte'] = end_date
+
+		if member_status != -1:
+			filter_data_args['status'] = member_status
 
 		channel_members = Member.objects.filter(**filter_data_args).order_by(sort_attr)
 		count_per_page = int(request.GET.get('count_per_page', 15))
@@ -886,3 +926,29 @@ def _get_filter_qrcode_items(request):
 
 		items.append(current_setting)
 	return items
+
+class GetCanUseCoupon(resource.Resource):
+	app = 'new_weixin'
+	resource = 'coupon_can_use'
+
+	@login_required
+	@mp_required
+	def api_get(request):
+		"""
+		判断优惠券是否之前使用过
+		"""
+		coupon_id = request.GET.get('coupon_id',None)
+		setting_id = request.GET.get('setting_id',None)
+		if setting_id:
+			setting_ids = setting_id.split(',')
+			settings = ChannelQrcodeSettings.objects.filter(id__in = setting_ids)
+			for s in settings:
+				coupon_ids = s.coupon_ids.split(',')
+				if coupon_id and (coupon_id in coupon_ids):
+					response = create_response(500)
+					response.errMsg = u'该优惠券已被选用过！'
+					return response.get_response()
+
+		response = create_response(200)
+		return response.get_response()
+

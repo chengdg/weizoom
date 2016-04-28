@@ -178,14 +178,14 @@
     {{ page_html_content|safe }}
     <div class="xui-page {% if not user.is_from_weixin %}notweixin{% endif %} xui-myActivityPage wui-swiper">
         <div class="wui-swiper-tabs" style="margin-top:-47px;">
-            <a href="javascript:void(0)" class="wui-inner-active xa-all_groups_can_open"><span class="wui-inner-tabTitle mt5 em85 c65">我要开团</span><i></i></a>
-            <a href="javascript:void(0)" class="xa-all_groups_can_join"><span class="wui-inner-tabTitle mt5 em85 c65">直接参团</span><i></i></a>
+            <a href="javascript:void(0)" class="xa-all_groups_can_open"><span class="wui-inner-tabTitle mt5 em85 c65">我要开团</span><i></i></a>
+            <a href="javascript:void(0)" class="wui-inner-active xa-all_groups_can_join"><span class="wui-inner-tabTitle mt5 em85 c65">直接参团</span><i></i></a>
         </div>
         <div class="wui-swiper-container" style="margin-top:47px;">
             <div class="wui-swiper-wrapper">
                 <div class="wui-swiper-slide" id="xa-wrapper">
                     <div class="wui-content-slide">
-                        <div class="xui-all_groups_can_open-slide">
+                        <div class="xui-all_groups_can_open-slide  none">
                         {% if all_groups_can_open %}
                             <ul class="xui-listItem">
                             {% for group_item in all_groups_can_open %}
@@ -217,7 +217,7 @@
                 </div>
                 <div class="wui-swiper-slide">
                     <div class="wui-content-slide">
-                        <div class="xui-all_groups_can_join-slide none">
+                        <div class="xui-all_groups_can_join-slide">
                         {% if all_groups_can_open %}
                             <ul class="xui-listItem">
                             {% for group_item in all_groups %}

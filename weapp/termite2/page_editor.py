@@ -31,7 +31,7 @@ class PageEditor(resource.Resource):
 			return HttpResponseRedirect('/termite2/pages/')
 
 		is_new_project = 'is_new_project' in request.GET
-		project = webapp_models.Project.objects.get(id=project_id)
+		project = webapp_models.Project.objects.get(owner=request.manager, id=project_id)
 
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
