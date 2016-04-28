@@ -295,7 +295,7 @@ Scenario:1 促销活动-新建活动页面的商品查询
 
 	#单品券
 		Given jobs登录系统
-		Then jobs新建单品券活动时能获得已上架商品列表
+		Then jobs新建多商品券活动时能获得已上架商品列表
 		| name                   | price | stocks | have_promotion | actions |
 		| jobs自建商品0          |10.00  | 无限   |                |  选取   |
 		| bill商品1下单位置商城  |10.00  | 无限   |                |  选取   |

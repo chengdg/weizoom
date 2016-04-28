@@ -1835,5 +1835,7 @@ def assert_webapp_id(order, webapp_id):
                     return False
                 else:
                     return True
+        else:
+            return False
     else:
         return True
