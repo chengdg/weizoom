@@ -42,7 +42,7 @@ Background:
 			"end_date": "3天后",
 			"status":"未开始",
 			"product_name": "商品4",
-			"is_permanent_active": false,
+			"is_permanant_active": false,
 			"rules": [{
 				"member_grade": "全部会员",
 				"discount": 50,
@@ -55,7 +55,7 @@ Background:
 			"end_date": "2天后",
 			"status":"进行中",
 			"product_name": "商品3",
-			"is_permanent_active": false,
+			"is_permanant_active": false,
 			"rules": [{
 				"member_grade": "全部会员",
 				"discount": 50,
@@ -66,7 +66,7 @@ Background:
 			"promotion_title":"",
 			"status":"进行中",
 			"product_name": "商品2",
-			"is_permanent_active": true,
+			"is_permanant_active": true,
 			"rules": [{
 				"member_grade": "全部会员",
 				"discount": 50,
@@ -79,7 +79,7 @@ Background:
 			"end_date": "2015-08-10",
 			"status":"已结束",
 			"product_name": "商品1",
-			"is_permanent_active": false,
+			"is_permanant_active": false,
 			"rules": [{
 				"member_grade": "全部会员",
 				"discount": 50,
@@ -100,7 +100,7 @@ Scenario:1 结束状态为'未开始'的积分应用活动
 		}, {
 			"name": "商品2积分应用",
 			"status":"进行中",
-			"is_permanent_active": true
+			"is_permanant_active": true
 		}, {
 			"name": "商品3积分应用",
 			"status":"进行中"
@@ -124,7 +124,7 @@ Scenario:2 结束状态为'进行中'，非永久有效的积分应用活动
 		}, {
 			"name": "商品2积分应用",
 			"status":"进行中",
-			"is_permanent_active": true
+			"is_permanant_active": true
 		}, {
 			"name": "商品3积分应用",
 			"start_date": "今天",
@@ -152,7 +152,7 @@ Scenario:3 结束状态为'进行中'，且为永久有效的积分应用活动
 		}, {
 			"name": "商品2积分应用",
 			"status":"已结束",
-			"is_permanent_active": true
+			"is_permanant_active": true
 		}, {
 			"name": "商品3积分应用",
 			"start_date": "今天",
@@ -187,7 +187,7 @@ Scenario:4 批量结束积分应用活动（不包含已结束状态）
 		}, {
 			"name": "商品2积分应用",
 			"status":"已结束",
-			"is_permanent_active": true
+			"is_permanant_active": true
 		}, {
 			"name": "商品3积分应用",
 			"status":"已结束"
@@ -226,7 +226,7 @@ Scenario:5 手动结束多商品积分应用活动
 			"start_date": "明天",
 			"end_date": "10天后",
 			"product_name": "商品01,商品02",
-			"is_permanent_active": false,
+			"is_permanant_active": false,
 			"rules": 
 				[{
 					"member_grade": "全部会员",
@@ -239,7 +239,7 @@ Scenario:5 手动结束多商品积分应用活动
 			"start_date": "今天",
 			"end_date": "10天后",
 			"product_name": "商品03,商品04",
-			"is_permanent_active": false,
+			"is_permanant_active": false,
 			"rules": 
 				[{
 					"member_grade": "全部会员",
@@ -255,27 +255,27 @@ Scenario:5 手动结束多商品积分应用活动
 		[{
 			"name": "多商品积分应用2-进行中",
 			"status":"已结束",
-			"is_permanent_active": false
+			"is_permanant_active": false
 		}, {
 			"name": "多商品积分应用1-未开始",
 			"status":"已结束",
-			"is_permanent_active": false
+			"is_permanant_active": false
 		}, {
 			"name": "商品1积分应用",
 			"status":"已结束",
-			"is_permanent_active": false
+			"is_permanant_active": false
 		}, {
 			"name": "商品2积分应用",
 			"status":"进行中",
-			"is_permanent_active": true
+			"is_permanant_active": true
 		}, {
 			"name": "商品3积分应用",
 			"status":"进行中",
-			"is_permanent_active": false
+			"is_permanant_active": false
 		}, {
 			"name": "商品4积分应用",
 			"status":"未开始",
-			"is_permanent_active": false
+			"is_permanant_active": false
 		}]
 		"""
 

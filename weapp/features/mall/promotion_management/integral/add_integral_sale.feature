@@ -240,7 +240,7 @@ Scenario: 1 选取普通商品，创建统一设置积分应用活动
 			"start_date": "今天",
 			"end_date": "1天后",
 			"product_name": "商品1",
-			"is_permanent_active": false,
+			"is_permanant_active": false,
 			"discount": 50,
 			"discount_money": 50.00
 		}]
@@ -267,7 +267,7 @@ Scenario: 2 选取多规格商品，创建分级设置积分应用活动
 			"start_date": "今天",
 			"end_date": "1天后",
 			"product_name": "商品2",
-			"is_permanent_active": false,
+			"is_permanant_active": false,
 			"rules": 
 				[{
 					"member_grade": "普通会员",
@@ -302,7 +302,7 @@ Scenario: 3 选取有会员价的商品，创建分级设置积分应用活动�
 			"start_date": "今天",
 			"end_date": "1天后",
 			"product_name": "商品3",
-			"is_permanent_active": false,
+			"is_permanant_active": false,
 			"rules": 
 				[{
 					"member_grade": "普通会员",
@@ -337,7 +337,7 @@ Scenario: 4 选取无会员价且已参与'限时抢购'活动的商品，创建
 			"start_date": "今天",
 			"end_date": "1天后",
 			"product_name": "商品4",
-			"is_permanent_active": false,
+			"is_permanant_active": false,
 			"rules": 
 				[{
 					"member_grade": "普通会员",
@@ -373,7 +373,7 @@ Scenario: 5 选取有会员价且已参与'限时抢购'活动的商品，创建
 			"start_date": "今天",
 			"end_date": "1天后",
 			"product_name": "商品5",
-			"is_permanent_active": false,
+			"is_permanant_active": false,
 			"rules": 
 				[{
 					"member_grade": "全部",
@@ -404,7 +404,7 @@ Scenario: 6 选取无会员价且已参与'买赠'活动的商品，创建积分
 			"start_date": "今天",
 			"end_date": "1天后",
 			"product_name": "商品6",
-			"is_permanent_active": false,
+			"is_permanant_active": false,
 			"rules": 
 				[{
 					"member_grade": "全部",
@@ -435,7 +435,7 @@ Scenario: 7 选取有会员价且已参与'买赠'活动的商品，创建积分
 			"start_date": "今天",
 			"end_date": "1天后",
 			"product_name": "商品7",
-			"is_permanent_active": false,
+			"is_permanant_active": false,
 			"rules": 
 				[{
 					"member_grade": "全部",
@@ -466,7 +466,7 @@ Scenario: 8 选取无会员价且已设置单品券的商品，创建积分应�
 			"start_date": "今天",
 			"end_date": "1天后",
 			"product_name": "商品8",
-			"is_permanent_active": false,
+			"is_permanant_active": false,
 			"rules": 
 				[{
 					"member_grade": "全部",
@@ -497,7 +497,7 @@ Scenario: 9 选取有会员价且已设置单品券的商品，创建积分应�
 			"start_date": "今天",
 			"end_date": "1天后",
 			"product_name": "商品9",
-			"is_permanent_active": false,
+			"is_permanant_active": false,
 			"rules": 
 				[{
 					"member_grade": "全部",
@@ -529,7 +529,7 @@ Scenario:10 创建多商品的积分应用活动
 			"start_date": "今天",
 			"end_date": "10天后",
 			"product_name": "商品1,商品2,商品3,商品4,赠品6",
-			"is_permanent_active": false,
+			"is_permanant_active": false,
 			"rules": 
 				[{
 					"member_grade": "全部",
@@ -541,7 +541,7 @@ Scenario:10 创建多商品的积分应用活动
 			"start_date": "今天",
 			"end_date": "10天后",
 			"product_name": "商品5,商品6,赠品7",
-			"is_permanent_active": false,
+			"is_permanant_active": false,
 			"rules": 
 				[{
 					"member_grade": "普通会员",
@@ -593,7 +593,7 @@ Scenario:11 创建多商品积分应用活动-多个商品中保存时有不符�
 			"start_date": "今天",
 			"end_date": "10天后",
 			"product_name": "商品1,商品2,商品3",
-			"is_permanent_active": false,
+			"is_permanant_active": false,
 			"rules": 
 				[{
 					"member_grade": "全部",
@@ -613,7 +613,7 @@ Scenario:11 创建多商品积分应用活动-多个商品中保存时有不符�
 			"start_date": "今天",
 			"end_date": "10天后",
 			"product_name": "商品1,商品2,商品3",
-			"is_permanent_active": false,
+			"is_permanant_active": false,
 			"rules": 
 				[{
 					"member_grade": "全部",
@@ -656,7 +656,7 @@ Scenario:11 创建多商品积分应用活动-多个商品中保存时有不符�
 			"start_date": "今天",
 			"end_date": "10天后",
 			"product_name": "商品1,商品2,商品3",
-			"is_permanent_active": false,
+			"is_permanant_active": false,
 			"rules": 
 				[{
 					"member_grade": "全部",
@@ -674,7 +674,7 @@ Scenario:11 创建多商品积分应用活动-多个商品中保存时有不符�
 			"start_date": "今天",
 			"end_date": "10天后",
 			"product_name": "商品1",
-			"is_permanent_active": false,
+			"is_permanant_active": false,
 			"rules": 
 				[{
 					"member_grade": "全部",
@@ -690,7 +690,7 @@ Scenario:11 创建多商品积分应用活动-多个商品中保存时有不符�
 			"start_date": "今天",
 			"end_date": "10天后",
 			"product_name": "商品1,商品2,商品3",
-			"is_permanent_active": false,
+			"is_permanant_active": false,
 			"rules": 
 				[{
 					"member_grade": "全部",

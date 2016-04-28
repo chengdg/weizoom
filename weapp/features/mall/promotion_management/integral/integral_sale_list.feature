@@ -78,7 +78,7 @@ Scenario:1 积分应用活动（单商品），商品下架或下架后再上架
 				"start_date": "今天",
 				"end_date": "10天后",
 				"product_name": "商品01",
-				"is_permanent_active": false,
+				"is_permanant_active": false,
 				"rules": 
 					[{
 						"member_grade": "全部会员",
@@ -128,7 +128,7 @@ Scenario:2 积分应用活动（多商品），商品部分或全部下架，活
 			"name": "多商品积分应用1",
 			"promotion_title":"",
 			"product_name": "商品01,商品02",
-			"is_permanent_active": true,
+			"is_permanant_active": true,
 			"rules": 
 				[{
 					"member_grade": "普通会员",
@@ -151,7 +151,7 @@ Scenario:2 积分应用活动（多商品），商品部分或全部下架，活
 			"name": "多商品积分应用1",
 			"product_name": "商品01,商品02",
 			"product_price":"10.00,10.00 ~ 20.00",
-			"is_permanent_active": true,
+			"is_permanant_active": true,
 			"discount": "50.0%~100.0%",
 			"discount_money":"5.00~10.00",
 			"status":"进行中"
@@ -170,7 +170,7 @@ Scenario:2 积分应用活动（多商品），商品部分或全部下架，活
 					"status": "待售"
 					}],
 				"status":"进行中",
-				"is_permanent_active": true
+				"is_permanant_active": true
 			}]
 			"""
 	#商品全部下架,活动状态不变
@@ -188,7 +188,7 @@ Scenario:2 积分应用活动（多商品），商品部分或全部下架，活
 						"status": "待售"
 					}],
 				"status":"进行中",
-				"is_permanent_active": true
+				"is_permanant_active": true
 			}]
 			"""
 
@@ -205,7 +205,7 @@ Scenario:3 积分应用活动（多商品），商品部分或全部删除
 			"start_date": "今天",
 			"end_date": "10天后",
 			"product_name": "商品01,商品02",
-			"is_permanent_active": false,
+			"is_permanant_active": false,
 			"rules": 
 				[{
 					"member_grade": "全部会员",
@@ -222,7 +222,7 @@ Scenario:3 积分应用活动（多商品），商品部分或全部删除
 			"product_price":"10.00,10.00 ~ 20.00",
 			"start_date": "今天",
 			"end_date": "10天后",
-			"is_permanent_active": false,
+			"is_permanant_active": false,
 			"discount": "50.0%",
 			"discount_money":5.00,
 			"status":"进行中"
@@ -411,7 +411,7 @@ Scenario:4 自营平台对商家同步的商品部分或全部进行【更新】
 				"name": "多商品积分应用1",
 				"promotion_title":"",
 				"product_name": "bill无规格商品1,bill无规格商品2",
-				"is_permanent_active": true,
+				"is_permanant_active": true,
 				"rules": 
 					[{
 						"member_grade": "全部会员",
@@ -426,7 +426,7 @@ Scenario:4 自营平台对商家同步的商品部分或全部进行【更新】
 				"name": "多商品积分应用1",
 				"product_name": "bill无规格商品1,bill无规格商品2",
 				"product_price":"10.00,20.00",
-				"is_permanent_active": true,
+				"is_permanant_active": true,
 				"discount": "50.0%",
 				"discount_money":5.00,
 				"status":"进行中"
@@ -481,7 +481,7 @@ Scenario:4 自营平台对商家同步的商品部分或全部进行【更新】
 					"name": "bill无规格商品01",
 					"status": "待售"
 					}],
-				"is_permanent_active": true,
+				"is_permanant_active": true,
 				"status":"进行中"
 			}]
 			"""
@@ -499,7 +499,7 @@ Scenario:4 自营平台对商家同步的商品部分或全部进行【更新】
 					"name": "bill无规格商品02",
 					"status": "待售"
 				}],
-				"is_permanent_active": true,
+				"is_permanant_active": true,
 				"status":"进行中"
 			}]
 			"""

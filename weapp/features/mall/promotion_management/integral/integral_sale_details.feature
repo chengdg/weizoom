@@ -95,7 +95,7 @@ Scenario:1 积分应用活动（单商品、统一设置）详情
 			"end_date": "2016-04-15 14:20",
 			"status":"已结束",
 			"product_name": "商品1",
-			"is_permanent_active": false,
+			"is_permanant_active": false,
 			"rules": [{
 				"member_grade": "全部会员",
 				"discount": 50,
@@ -114,7 +114,7 @@ Scenario:1 积分应用活动（单商品、统一设置）详情
 				"price":100.00,
 				"sales":0
 				}],
-			"is_permanent_active": false,
+			"is_permanant_active": false,
 			"discount_info": [{
 				"member_grade": "全部会员",
 				"discount": "50.0%"
@@ -133,7 +133,7 @@ Scenario:2 积分应用活动（多商品、分级设置）详情
 			"promotion_title":"促销标题1",
 			"status":"进行中",
 			"product_name": "商品1,商品2,商品3",
-			"is_permanent_active": true,
+			"is_permanant_active": true,
 			"rules": [{
 				"member_grade": "普通会员",
 				"discount": 50,
@@ -169,7 +169,7 @@ Scenario:2 积分应用活动（多商品、分级设置）详情
 					"price":300.00,
 					"sales":0
 				}],
-			"is_permanent_active": true,
+			"is_permanant_active": true,
 			"discount_info": [{
 				"member_grade": "普通会员",
 				"discount":"50.0%"
@@ -207,7 +207,7 @@ Scenario:2 积分应用活动（多商品、分级设置）详情
 					"price":300.00,
 					"sales":0
 				}],
-			"is_permanent_active": true,
+			"is_permanant_active": true,
 			"discount_info": [{
 				"member_grade": "普通会员",
 				"discount":"50.0%"
@@ -243,7 +243,7 @@ Scenario:2 积分应用活动（多商品、分级设置）详情
 					"price":300.00,
 					"sales":0
 				}],
-			"is_permanent_active": true,
+			"is_permanant_active": true,
 			"discount_info": [{
 				"member_grade": "普通会员",
 				"discount":"50.0%"
