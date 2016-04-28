@@ -2025,11 +2025,11 @@ Scenario:6 自营平台订单列表优惠券抵扣的订单，拆单后又取消
 	Given jobs已添加了优惠券规则
 		"""
 		[{
-			"name": "全体券",
-			"money": 50,
+			"name": "全体券3",
+			"money": 50.00,
 			"start_date": "今天",
 			"end_date": "10天后",
-			"coupon_id_prefix": "coupon2_id_"
+			"coupon_id_prefix": "coupon3_id_"
 		}]
 		"""
 
@@ -2038,8 +2038,8 @@ Scenario:6 自营平台订单列表优惠券抵扣的订单，拆单后又取消
 	When lily领取jobs的优惠券
 		"""
 		[{
-			"name": "全体券",
-			"coupon_ids": ["coupon2_id_1"]
+			"name": "全体券3",
+			"coupon_ids": ["coupon3_id_1"]
 		}]
 		"""
 
@@ -2053,7 +2053,7 @@ Scenario:6 自营平台订单列表优惠券抵扣的订单，拆单后又取消
 					"name":"bill11",
 					"count":1
 				}],
-				"coupon":"coupon2_id_1"
+				"coupon":"coupon3_id_1"
 			}
 			"""
 
