@@ -50,7 +50,7 @@ Scenario: 1 创建统一设置积分活动（填写抵扣金额，积分抵扣�
 		"""
 		[{
 			"name":"商品1积分应用",
-			"procucts":[{
+			"products":[{
 				"name": "商品1",
 				"price":15.00,
 				"status":""
@@ -88,7 +88,7 @@ Scenario: 2 创建分级设置积分应用活动（填写抵扣金额，积分�
 		"""
 		[{
 			"name":"商品2积分应用",
-			"procucts":[{
+			"products":[{
 				"name": "商品2",
 				"price":50.00,
 				"status":""

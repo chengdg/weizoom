@@ -91,7 +91,11 @@ Scenario:1 积分应用活动（单商品），商品下架或下架后再上架
 			"""
 			[{
 				"name":"单商品积分应用1",
-				"product_name": "商品01",
+				"products":[{
+					"name": "商品01",
+					"price":10.00,
+					"status":""
+					}],
 				"status":"进行中"
 			}]
 			"""
@@ -100,10 +104,10 @@ Scenario:1 积分应用活动（单商品），商品下架或下架后再上架
 			"""
 			[{
 				"name":"单商品积分应用1",
-				"product_name": "商品1",
-				"products_status":[{
+				"products":[{
 					"name": "商品01",
-					"status": "待售"
+					"price":10.00,
+					"status":"待售"
 					}],
 				"status":"进行中"
 			}]
@@ -114,7 +118,11 @@ Scenario:1 积分应用活动（单商品），商品下架或下架后再上架
 			"""
 			[{
 				"name":"单商品积分应用1",
-				"product_name": "商品01",
+				"products":[{
+					"name": "商品01",
+					"price":10.00,
+					"status":""
+					}],
 				"status":"进行中"
 			}]
 			"""
@@ -149,8 +157,15 @@ Scenario:2 积分应用活动（多商品），商品部分或全部下架，活
 		"""
 		[{
 			"name": "多商品积分应用1",
-			"product_name": "商品01,商品02",
-			"product_price":"10.00,10.00 ~ 20.00",
+			"products":[{
+					"name": "商品01",
+					"price":10.00,
+					"status":""
+				},{
+					"name": "商品02",
+					"price":"10.00 ~ 20.00",
+					"status":""
+					}],
 			"is_permanant_active": true,
 			"discount": "50.0%~100.0%",
 			"discount_money":"5.00~10.00",
@@ -164,11 +179,15 @@ Scenario:2 积分应用活动（多商品），商品部分或全部下架，活
 			"""
 			[{
 				"name": "多商品积分应用1",
-				"product_name": "商品01,商品02",
-				"products_status":[{
-					"name": "商品01",
-					"status": "待售"
-					}],
+				"products":[{
+						"name": "商品01",
+						"price":10.00,
+						"status":"待售"
+					},{
+						"name": "商品02",
+						"price":"10.00 ~ 20.00",
+						"status":""
+						}],
 				"status":"进行中",
 				"is_permanant_active": true
 			}]
@@ -179,14 +198,15 @@ Scenario:2 积分应用活动（多商品），商品部分或全部下架，活
 			"""
 			[{
 				"name": "多商品积分应用1",
-				"product_name": "商品01,商品02",
-				"products_status":[{
+				"products":[{
 						"name": "商品01",
-						"status": "待售"
+						"price":10.00,
+						"status":"待售"
 					},{
 						"name": "商品02",
-						"status": "待售"
-					}],
+						"price":"10.00 ~ 20.00",
+						"status":"待售"
+						}],
 				"status":"进行中",
 				"is_permanant_active": true
 			}]
@@ -218,8 +238,15 @@ Scenario:3 积分应用活动（多商品），商品部分或全部删除
 		"""
 		[{
 			"name": "多商品积分应用1",
-			"product_name": "商品01,商品02",
-			"product_price":"10.00,10.00 ~ 20.00",
+			"products":[{
+					"name": "商品01",
+					"price":10.00,
+					"status":""
+				},{
+					"name": "商品02",
+					"price":"10.00 ~ 20.00",
+					"status":""
+					}],
 			"start_date": "今天",
 			"end_date": "10天后",
 			"is_permanant_active": false,
@@ -234,11 +261,15 @@ Scenario:3 积分应用活动（多商品），商品部分或全部删除
 			"""
 			[{
 				"name": "多商品积分应用1",
-				"product_name": "商品01,商品02",
-				"products_status":[{
-					"name": "商品01",
-					"status": "已删除"
-					}],
+				"products":[{
+						"name": "商品01",
+						"price":10.00,
+						"status":"已删除"
+					},{
+						"name": "商品02",
+						"price":"10.00 ~ 20.00",
+						"status":""
+						}],
 				"status":"进行中"
 			}]
 			"""
@@ -248,14 +279,15 @@ Scenario:3 积分应用活动（多商品），商品部分或全部删除
 			"""
 			[{
 				"name": "多商品积分应用1",
-				"product_name": "商品01,商品02",
-				"products_status":[{
+				"products":[{
 						"name": "商品01",
-						"status": "已删除"
+						"price":10.00,
+						"status":"已删除"
 					},{
 						"name": "商品02",
-						"status": "已删除"
-					}],
+						"price":"10.00 ~ 20.00",
+						"status":"已删除"
+						}],
 				"status":"已结束"
 			}]
 			"""
@@ -476,11 +508,15 @@ Scenario:4 自营平台对商家同步的商品部分或全部进行【更新】
 			"""
 			[{
 				"name": "多商品积分应用1",
-				"product_name": "bill无规格商品01,bill无规格商品2",
-				"products_status":[{
-					"name": "bill无规格商品01",
-					"status": "待售"
-					}],
+				"products":[{
+						"name": "bill无规格商品01",
+						"price":10.00,
+						"status":"待售"
+					},{
+						"name": "bill无规格商品2",
+						"price":20.00,
+						"status":""
+						}],
 				"is_permanant_active": true,
 				"status":"进行中"
 			}]
@@ -491,14 +527,15 @@ Scenario:4 自营平台对商家同步的商品部分或全部进行【更新】
 			"""
 			[{
 				"name": "多商品积分应用1",
-				"product_name": "bill无规格商品01,bill无规格商品02",
-				"products_status":[{
-					"name": "bill无规格商品01",
-					"status": "待售"
-				},{
-					"name": "bill无规格商品02",
-					"status": "待售"
-				}],
+				"products":[{
+						"name": "bill无规格商品01",
+						"price":10.00,
+						"status":"待售"
+					},{
+						"name": "bill无规格商品2",
+						"price":20.00,
+						"status":"待售"
+						}],
 				"is_permanant_active": true,
 				"status":"进行中"
 			}]

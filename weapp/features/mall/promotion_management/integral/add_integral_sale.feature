@@ -249,7 +249,7 @@ Scenario: 1 选取普通商品，创建统一设置积分应用活动
 		"""
 		[{
 			"name":"商品1积分应用",
-			"procucts":[{
+			"products":[{
 				"name": "商品1",
 				"price":100.00,
 				"status":""
@@ -287,7 +287,7 @@ Scenario: 2 选取多规格商品，创建分级设置积分应用活动
 		"""
 		[{
 			"name":"商品2积分应用",
-			"procucts":[{
+			"products":[{
 				"name": "商品2",
 				"price":"100.00 ~ 200.00",
 				"status":""
@@ -325,7 +325,7 @@ Scenario: 3 选取有会员价的商品，创建分级设置积分应用活动�
 		"""
 		[{
 			"name":"商品3积分应用",
-			"procucts":[{
+			"products":[{
 				"name": "商品3",
 				"price":100.00,
 				"status":""
@@ -363,7 +363,7 @@ Scenario: 4 选取无会员价且已参与'限时抢购'活动的商品，创建
 		"""
 		[{
 			"name":"商品4积分应用",
-			"procucts":[{
+			"products":[{
 				"name": "商品4",
 				"price":100.00,
 				"status":""
@@ -398,7 +398,7 @@ Scenario: 5 选取有会员价且已参与'限时抢购'活动的商品，创建
 		"""
 		[{
 			"name":"商品5积分应用",
-			"procucts":[{
+			"products":[{
 				"name": "商品5",
 				"price":100.00,
 				"status":""
@@ -432,7 +432,7 @@ Scenario: 6 选取无会员价且已参与'买赠'活动的商品，创建积分
 		"""
 		[{
 			"name":"商品6积分应用",
-			"procucts":[{
+			"products":[{
 				"name": "商品6",
 				"price":100.00,
 				"status":""
@@ -466,7 +466,7 @@ Scenario: 7 选取有会员价且已参与'买赠'活动的商品，创建积分
 		"""
 		[{
 			"name":"商品7积分应用",
-			"procucts":[{
+			"products":[{
 				"name": "商品7",
 				"price":100.00,
 				"status":""
@@ -500,7 +500,7 @@ Scenario: 8 选取无会员价且已设置单品券的商品，创建积分应�
 		"""
 		[{
 			"name":"商品8积分应用",
-			"procucts":[{
+			"products":[{
 				"name": "商品8",
 				"price":100.00,
 				"status":""
@@ -534,7 +534,7 @@ Scenario: 9 选取有会员价且已设置单品券的商品，创建积分应�
 		"""
 		[{
 			"name":"商品9积分应用",
-			"procucts":[{
+			"products":[{
 				"name": "商品9",
 				"price":100.00,
 				"status":""
@@ -593,7 +593,7 @@ Scenario:10 创建多商品的积分应用活动
 		"""
 		[{
 			"name":"多商品积分应用2",
-			"procucts":[{
+			"products":[{
 					"name": "商品5",
 					"price":100.00,
 					"status":""
@@ -611,7 +611,7 @@ Scenario:10 创建多商品的积分应用活动
 			"status":"进行中"
 		},{
 			"name":"多商品积分应用1",
-			"procucts":[{
+			"products":[{
 					"name": "商品1",
 					"price":100.00,
 					"status":""
