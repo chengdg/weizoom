@@ -91,8 +91,8 @@ Scenario:1 积分应用活动（单商品、统一设置）详情
 		[{
 			"name": "单商品积分应用",
 			"promotion_title":"促销标题1",
-			"start_date": "2016-04-10 14:00",
-			"end_date": "2016-04-15 14:20",
+			"start_date": "2016-04-10",
+			"end_date": "2016-04-15",
 			"status":"已结束",
 			"product_name": "商品1",
 			"is_permanant_active": false,
@@ -108,7 +108,7 @@ Scenario:1 积分应用活动（单商品、统一设置）详情
 		{
 			"name": "单商品积分应用",
 			"promotion_title":"促销标题1",
-			"activity_time":"2016-04-10 14:00:00至2016-04-15 14:20:00",
+			"activity_time":"2016-04-10 00:00至2016-04-15 00:00",
 			"products":[{
 				"name": "商品1",
 				"price":100.00,
