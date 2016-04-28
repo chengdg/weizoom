@@ -111,7 +111,10 @@ Background:
 				"price": 10.00,
 				"purchase_price": 9.00,
 				"weight": 1.0,
-				"stock_type": "无限"
+				"stock_type": "无限",
+				"pay_interfaces":[{
+					"type": "货到付款"
+				}]
 			}, {
 				"supplier": "供货商1",
 				"name": "商品1b",
@@ -119,7 +122,10 @@ Background:
 				"purchase_price": 19.00,
 				"weight": 1.0,
 				"stock_type": "有限",
-				"stocks": 10
+				"stocks": 10,
+				"pay_interfaces":[{
+					"type": "货到付款"
+				}]
 			}, {
 				"supplier": "供货商2",
 				"name": "商品2a",
@@ -129,7 +135,7 @@ Background:
 				"stock_type": "有限",
 				"stocks": 10,
 				"pay_interfaces":[{
-					"type": "在线支付"
+					"type": "货到付款"
 				}]
 			}]
 			"""
@@ -325,6 +331,7 @@ Background:
 			"""
 
 	#jobs后台商品信息
+		Given 设置jobs为自营平台账号
 		Given jobs登录系统
 		Then jobs获得商品池商品列表
 			"""
@@ -727,9 +734,10 @@ Background:
 	#【nokia自营平台下单】-jack购买商品
 		#待发货-009（tom商品1,1 bill商品2,2）会员折扣和限时抢购商品
 			When jack关注nokia的公众号
+			Given 设置nokia为自营平台账号
 			Given nokia登录系统
 			When nokia给"jack"设等级
-				"""005
+				"""
 				{
 					"member_rank":"铜牌会员"
 				}
@@ -751,7 +759,7 @@ Background:
 				"""
 			When jack使用支付方式'微信支付'进行支付
 
-@product_pool @eugene @eugeneTMP
+@product_pool @eugene @order @eugeneTMP
 Scenario:1 商家后台查看订单列表,包含自营平台同步过来的订单
 	Given bill登录系统
 	Then bill可以看到订单列表
@@ -761,7 +769,7 @@ Scenario:1 商家后台查看订单列表,包含自营平台同步过来的订�
 			"sources": "商城",
 			"status": "待发货",
 			"buyer":"jack",
-			"final_price":38.00,
+			"final_price":19.00,
 			"save_money":"",
 			"methods_of_payment": "微信支付",
 			"actions": ["发货"],
@@ -769,7 +777,7 @@ Scenario:1 商家后台查看订单列表,包含自营平台同步过来的订�
 				[{
 					"name":"bill商品2",
 					"price":"",
-					"count":2
+					"count":1
 				}]
 			},{
 				"order_no":"008",
@@ -818,7 +826,7 @@ Scenario:1 商家后台查看订单列表,包含自营平台同步过来的订�
 						"count":1
 					}]
 			},{
-				"order_no":"005",
+				"order_no":"005-bill商家",
 				"sources": "商城",
 				"buyer":"lily",
 				"status": "待发货",
@@ -833,7 +841,7 @@ Scenario:1 商家后台查看订单列表,包含自营平台同步过来的订�
 						"count":5
 					}]
 			},{
-				"order_no":"004",
+				"order_no":"004-bill商家",
 				"sources": "商城",
 				"buyer":"lily",
 				"status": "待发货",
@@ -869,7 +877,7 @@ Scenario:1 商家后台查看订单列表,包含自营平台同步过来的订�
 		When bill对订单进行发货
 			"""
 			{
-				"order_no": "005",
+				"order_no": "005-bill商家",
 				"logistics":"off",
 				"shipper": ""
 			}
@@ -881,7 +889,7 @@ Scenario:1 商家后台查看订单列表,包含自营平台同步过来的订�
 				"sources": "商城",
 				"status": "已发货",
 				"buyer":"jack",
-				"final_price":38.00,
+				"final_price":19.00,
 				"save_money":"",
 				"methods_of_payment": "微信支付",
 				"actions": ["标记完成","修改物流"],
@@ -889,7 +897,7 @@ Scenario:1 商家后台查看订单列表,包含自营平台同步过来的订�
 					[{
 						"name":"bill商品2",
 						"price":"",
-						"count":2
+						"count":1
 					}]
 				},{
 					"order_no":"008",
@@ -938,7 +946,7 @@ Scenario:1 商家后台查看订单列表,包含自营平台同步过来的订�
 							"count":1
 						}]
 				},{
-					"order_no":"005",
+					"order_no":"005-bill商家",
 					"sources": "商城",
 					"buyer":"lily",
 					"status": "已发货",
@@ -953,7 +961,7 @@ Scenario:1 商家后台查看订单列表,包含自营平台同步过来的订�
 							"count":5
 						}]
 				},{
-					"order_no":"004",
+					"order_no":"004-bill商家",
 					"sources": "商城",
 					"buyer":"lily",
 					"status": "待发货",
@@ -984,7 +992,7 @@ Scenario:1 商家后台查看订单列表,包含自营平台同步过来的订�
 				"sources": "商城",
 				"status": "已完成",
 				"buyer":"jack",
-				"final_price":38.00,
+				"final_price":19.00,
 				"save_money":"",
 				"methods_of_payment": "微信支付",
 				"actions": [],
@@ -992,7 +1000,7 @@ Scenario:1 商家后台查看订单列表,包含自营平台同步过来的订�
 					[{
 						"name":"bill商品2",
 						"price":"",
-						"count":2
+						"count":1
 					}]
 				},{
 					"order_no":"008",
@@ -1041,7 +1049,7 @@ Scenario:1 商家后台查看订单列表,包含自营平台同步过来的订�
 							"count":1
 						}]
 				},{
-					"order_no":"005",
+					"order_no":"005-bill商家",
 					"sources": "商城",
 					"buyer":"lily",
 					"status": "已完成",
@@ -1056,7 +1064,7 @@ Scenario:1 商家后台查看订单列表,包含自营平台同步过来的订�
 							"count":5
 						}]
 				},{
-					"order_no":"004",
+					"order_no":"004-bill商家",
 					"sources": "商城",
 					"buyer":"lily",
 					"status": "待发货",
@@ -1077,7 +1085,9 @@ Scenario:1 商家后台查看订单列表,包含自营平台同步过来的订�
 			}]
 			"""
 
+@product_pool @eugene @order @eugeneTMP
 Scenario:2 自营平台进行订单相关操作后,查看对应商家后台订单列表的变化
+	Given 设置jobs为自营平台账号
 	Given jobs登录系统
 
 	#自营平台jobs进行'发货'操作
@@ -1098,7 +1108,7 @@ Scenario:2 自营平台进行订单相关操作后,查看对应商家后台订�
 				"sources": "商城",
 				"status": "待发货",
 				"buyer":"jack",
-				"final_price":38.00,
+				"final_price":19.00,
 				"save_money":"",
 				"methods_of_payment": "微信支付",
 				"actions": ["发货"],
@@ -1106,7 +1116,7 @@ Scenario:2 自营平台进行订单相关操作后,查看对应商家后台订�
 					[{
 						"name":"bill商品2",
 						"price":"",
-						"count":2
+						"count":1
 					}]
 				},{
 					"order_no":"008",
@@ -1158,7 +1168,7 @@ Scenario:2 自营平台进行订单相关操作后,查看对应商家后台订�
 							"count":1
 						}]
 				},{
-					"order_no":"005",
+					"order_no":"005-bill商家",
 					"sources": "商城",
 					"buyer":"lily",
 					"status": "待发货",
@@ -1173,7 +1183,7 @@ Scenario:2 自营平台进行订单相关操作后,查看对应商家后台订�
 							"count":5
 						}]
 				},{
-					"order_no":"004",
+					"order_no":"004-bill商家",
 					"sources": "商城",
 					"buyer":"lily",
 					"status": "待发货",
@@ -1204,7 +1214,7 @@ Scenario:2 自营平台进行订单相关操作后,查看对应商家后台订�
 				"sources": "商城",
 				"status": "待发货",
 				"buyer":"jack",
-				"final_price":38.00,
+				"final_price":19.00,
 				"save_money":"",
 				"methods_of_payment": "微信支付",
 				"actions": ["发货"],
@@ -1212,7 +1222,7 @@ Scenario:2 自营平台进行订单相关操作后,查看对应商家后台订�
 					[{
 						"name":"bill商品2",
 						"price":"",
-						"count":2
+						"count":1
 					}]
 				},{
 					"order_no":"008",
@@ -1264,7 +1274,7 @@ Scenario:2 自营平台进行订单相关操作后,查看对应商家后台订�
 							"count":1
 						}]
 				},{
-					"order_no":"005",
+					"order_no":"005-bill商家",
 					"sources": "商城",
 					"buyer":"lily",
 					"status": "待发货",
@@ -1279,7 +1289,7 @@ Scenario:2 自营平台进行订单相关操作后,查看对应商家后台订�
 							"count":5
 						}]
 				},{
-					"order_no":"004",
+					"order_no":"004-bill商家",
 					"sources": "商城",
 					"buyer":"lily",
 					"status": "待发货",
@@ -1311,7 +1321,7 @@ Scenario:2 自营平台进行订单相关操作后,查看对应商家后台订�
 				"sources": "商城",
 				"status": "待发货",
 				"buyer":"jack",
-				"final_price":38.00,
+				"final_price":19.00,
 				"save_money":"",
 				"methods_of_payment": "微信支付",
 				"actions": ["发货"],
@@ -1319,7 +1329,7 @@ Scenario:2 自营平台进行订单相关操作后,查看对应商家后台订�
 					[{
 						"name":"bill商品2",
 						"price":"",
-						"count":2
+						"count":1
 					}]
 				},{
 					"order_no":"008",
@@ -1356,7 +1366,7 @@ Scenario:2 自营平台进行订单相关操作后,查看对应商家后台订�
 							"count":1
 						}]
 				},{
-					"order_no":"005",
+					"order_no":"005-bill商家",
 					"sources": "商城",
 					"buyer":"lily",
 					"status": "待发货",
@@ -1373,6 +1383,7 @@ Scenario:2 自营平台进行订单相关操作后,查看对应商家后台订�
 			}]
 			"""
 
+@product_pool @eugene @order @eugeneTMP
 Scenario:3 商家后台查看订单详情页,自营平台同步过来的订单
 	Given bill登录系统
 	#参与'限时抢购'的商品,商家后台查看订单详情页信息
@@ -1382,23 +1393,23 @@ Scenario:3 商家后台查看订单详情页,自营平台同步过来的订单
 				"order_no":"009-bill商家",
 				"sources": "商城",
 				"status": "待发货",
-				"final_price":38.00,
+				"final_price":19.00,
 				"methods_of_payment": "微信支付",
 				"actions": ["发货"],
 				"products":
 					[{
 						"name":"bill商品2",
 						"price":19.0,
-						"count":2
+						"count":1
 					}]
 			}
 			"""
 
 	#订单详情页'商品名称'显示商家的,积分和微众卡使用的信息不显示
-		And bill能获得订单'005'
+		And bill能获得订单'005-bill商家'
 			"""
 			{
-				"order_no":"005",
+				"order_no":"005-bill商家",
 				"sources": "商城",
 				"status": "待发货",
 				"final_price":45.00,
@@ -1414,10 +1425,10 @@ Scenario:3 商家后台查看订单详情页,自营平台同步过来的订单
 			"""
 
 	#订单详情页'运费'不显示,优惠券使用信息不显示
-		And bill能获得订单'004'
+		And bill能获得订单'004-bill商家'
 			"""
 			{
-				"order_no":"004",
+				"order_no":"004-bill商家",
 				"sources": "商城",
 				"status": "待发货",
 				"final_price":28.00,
@@ -1459,8 +1470,10 @@ Scenario:3 商家后台查看订单详情页,自营平台同步过来的订单
 			}
 			"""
 
+@product_pool @eugene @order @eugeneTMP
 Scenario:4 查看对应自营平台订单列表和订单详情，标记同步供货商标签
 	Given jobs登录系统
+	Given 设置jobs为自营平台账号
 	Then jobs可以看到订单列表
 		"""
 		[{
@@ -1469,18 +1482,10 @@ Scenario:4 查看对应自营平台订单列表和订单详情，标记同步供
 				"status": "待发货",
 				"final_price":42.00,
 				"postage":2.0,
-				"save_money":0.00,
+				"save_money":"",
 				"methods_of_payment": "货到付款",
-				"actions": ["发货",取消订单"],
+				"actions": ["取消订单"],
 				"products":[{
-						"name":"商品1a",
-						"price":10.0,
-						"count":1,
-						"supplier": "供货商1",
-						"is_sync_supplier": "false",
-						"status": "待发货",
-						"actions": ["发货"]
-					},{
 						"name":"bill商品2",
 						"price":20.0,
 						"count":1,
@@ -1494,6 +1499,14 @@ Scenario:4 查看对应自营平台订单列表和订单详情，标记同步供
 						"count":1,
 						"supplier": "tom商家",
 						"is_sync_supplier": "true",
+						"status": "待发货",
+						"actions": ["发货"]
+					},{
+						"name":"商品1a",
+						"price":10.0,
+						"count":1,
+						"supplier": "供货商1",
+						"is_sync_supplier": "false",
 						"status": "待发货",
 						"actions": ["发货"]
 					}]
@@ -1529,7 +1542,6 @@ Scenario:4 查看对应自营平台订单列表和订单详情，标记同步供
 				"buyer":"lily",
 				"status": "待发货",
 				"final_price":25.00,
-				"integral_money":25.00,
 				"save_money":25.00,
 				"methods_of_payment": "优惠抵扣",
 				"actions": ["发货","取消订单"],
@@ -1538,7 +1550,7 @@ Scenario:4 查看对应自营平台订单列表和订单详情，标记同步供
 						"name":"bill商品11",
 						"price":10.0,
 						"count":5,
-						"supplier": "bill商家"
+						"supplier": "bill商家",
 						"is_sync_supplier": "true"
 					}]
 			},{
@@ -1570,20 +1582,22 @@ Scenario:4 查看对应自营平台订单列表和订单详情，标记同步供
 				"status": "待发货",
 				"final_price":30.00,
 				"methods_of_payment": "货到付款",
-				"actions": ["发货","取消订单"],
+				"actions": ["取消订单"],
 				"products":
 					[{
 						"name":"商品1a",
 						"price":10.0,
 						"count":1,
 						"supplier": "供货商1",
-						"is_sync_supplier": "false"
+						"is_sync_supplier": "false",
+						"actions": ["发货"]
 					},{
 						"name":"商品2a",
 						"price":20.0,
 						"count":1,
 						"supplier": "供货商2",
-						"is_sync_supplier": "false"
+						"is_sync_supplier": "false",
+						"actions": ["发货"]
 					}]
 			},{
 				"order_no":"002",
@@ -1629,31 +1643,33 @@ Scenario:4 查看对应自营平台订单列表和订单详情，标记同步供
 			"status": "待发货",
 			"final_price":42.00,
 			"methods_of_payment": "货到付款",
-			"actions": ["发货"],
+			"actions": ["取消订单"],
 			"products":
 				[{
-						"name":"商品1a",
-						"price":10.0,
-						"count":1,
-						"supplier": "供货商1",
-						"is_sync_supplier": "false"
-					},{
-						"name":"bill商品2",
-						"price":20.0,
-						"count":1,
-						"supplier": "bill商家",
-						"is_sync_supplier": "true"
-					},{
-						"name":"tom商品1",
-						"price":10.0,
-						"count":1,
-						"supplier": "tom商家",
-						"is_sync_supplier": "true"
-					}]
+					"name":"商品1a",
+					"price":10.0,
+					"count":1,
+					"supplier": "供货商1",
+					"is_sync_supplier": "false"
+				},{
+					"name":"bill商品2",
+					"price":20.0,
+					"count":1,
+					"supplier": "bill商家",
+					"is_sync_supplier": "true"
+				},{
+					"name":"tom商品1",
+					"price":10.0,
+					"count":1,
+					"supplier": "tom商家",
+					"is_sync_supplier": "true"
+				}]
 		}
 		"""
 
+@product_pool @eugene @order @eugeneTMP
 Scenario:5 自营平台订单列表按照"供货商类型"查询
+	Given 设置jobs为自营平台账号
 	Given jobs登录系统
 
 	#订单类型：全部
@@ -1671,18 +1687,10 @@ Scenario:5 自营平台订单列表按照"供货商类型"查询
 			"status": "待发货",
 			"final_price":42.00,
 			"postage":2.0,
-			"save_money":0.00,
+			"save_money":"",
 			"methods_of_payment": "货到付款",
-			"actions": ["发货",取消订单"],
+			"actions": ["取消订单"],
 			"products":[{
-					"name":"商品1a",
-					"price":10.0,
-					"count":1,
-					"supplier": "供货商1",
-					"is_sync_supplier": "false",
-					"status": "待发货",
-					"actions": ["发货"]
-				},{
 					"name":"bill商品2",
 					"price":20.0,
 					"count":1,
@@ -1696,6 +1704,14 @@ Scenario:5 自营平台订单列表按照"供货商类型"查询
 					"count":1,
 					"supplier": "tom商家",
 					"is_sync_supplier": "true",
+					"status": "待发货",
+					"actions": ["发货"]
+				},{
+					"name":"商品1a",
+					"price":10.0,
+					"count":1,
+					"supplier": "供货商1",
+					"is_sync_supplier": "false",
 					"status": "待发货",
 					"actions": ["发货"]
 				}]
@@ -1731,7 +1747,6 @@ Scenario:5 自营平台订单列表按照"供货商类型"查询
 			"buyer":"lily",
 			"status": "待发货",
 			"final_price":25.00,
-			"integral_money":25.00,
 			"save_money":25.00,
 			"methods_of_payment": "优惠抵扣",
 			"actions": ["发货","取消订单"],
@@ -1740,7 +1755,7 @@ Scenario:5 自营平台订单列表按照"供货商类型"查询
 					"name":"bill商品11",
 					"price":10.0,
 					"count":5,
-					"supplier": "bill商家"
+					"supplier": "bill商家",
 					"is_sync_supplier": "true"
 				}]
 		},{
@@ -1772,20 +1787,22 @@ Scenario:5 自营平台订单列表按照"供货商类型"查询
 			"status": "待发货",
 			"final_price":30.00,
 			"methods_of_payment": "货到付款",
-			"actions": ["发货","取消订单"],
+			"actions": ["取消订单"],
 			"products":
 				[{
 					"name":"商品1a",
 					"price":10.0,
 					"count":1,
 					"supplier": "供货商1",
-					"is_sync_supplier": "false"
+					"is_sync_supplier": "false",
+					"actions": ["发货"]
 				},{
 					"name":"商品2a",
 					"price":20.0,
 					"count":1,
 					"supplier": "供货商2",
-					"is_sync_supplier": "false"
+					"is_sync_supplier": "false",
+					"actions": ["发货"]
 				}]
 		},{
 			"order_no":"002",
@@ -1839,9 +1856,9 @@ Scenario:5 自营平台订单列表按照"供货商类型"查询
 			"status": "待发货",
 			"final_price":42.00,
 			"postage":2.0,
-			"save_money":0.00,
+			"save_money":"",
 			"methods_of_payment": "货到付款",
-			"actions": ["发货",取消订单"],
+			"actions": ["取消订单"],
 			"products":[{
 					"name":"bill商品2",
 					"price":20.0,
@@ -1891,7 +1908,6 @@ Scenario:5 自营平台订单列表按照"供货商类型"查询
 			"buyer":"lily",
 			"status": "待发货",
 			"final_price":25.00,
-			"integral_money":25.00,
 			"save_money":25.00,
 			"methods_of_payment": "优惠抵扣",
 			"actions": ["发货","取消订单"],
@@ -1900,7 +1916,7 @@ Scenario:5 自营平台订单列表按照"供货商类型"查询
 					"name":"bill商品11",
 					"price":10.0,
 					"count":5,
-					"supplier": "bill商家"
+					"supplier": "bill商家",
 					"is_sync_supplier": "true"
 				}]
 		},{
@@ -1944,17 +1960,16 @@ Scenario:5 自营平台订单列表按照"供货商类型"查询
 			"status": "待发货",
 			"final_price":42.00,
 			"postage":2.0,
-			"save_money":0.00,
+			"save_money":"",
 			"methods_of_payment": "货到付款",
-			"actions": ["发货",取消订单"],
+			"actions": ["发货"],
 			"products":[{
 					"name":"商品1a",
 					"price":10.0,
 					"count":1,
 					"supplier": "供货商1",
 					"is_sync_supplier": "false",
-					"status": "待发货",
-					"actions": ["发货"]
+					"status": "待发货"
 				}]
 		},{
 				"order_no":"003",
@@ -1962,20 +1977,22 @@ Scenario:5 自营平台订单列表按照"供货商类型"查询
 				"status": "待发货",
 				"final_price":30.00,
 				"methods_of_payment": "货到付款",
-				"actions": ["发货","取消订单"],
+				"actions": ["取消订单"],
 				"products":
 					[{
 						"name":"商品1a",
 						"price":10.0,
 						"count":1,
 						"supplier": "供货商1",
-						"is_sync_supplier": "false"
+						"is_sync_supplier": "false",
+						"actions": ["发货"]
 					},{
 						"name":"商品2a",
 						"price":20.0,
 						"count":1,
 						"supplier": "供货商2",
-						"is_sync_supplier": "false"
+						"is_sync_supplier": "false",
+						"actions": ["发货"]
 					}]
 		},{
 			"order_no":"002",
@@ -2001,7 +2018,9 @@ Scenario:5 自营平台订单列表按照"供货商类型"查询
 		}]
 		"""
 
+@product_pool @eugene @order
 Scenario:6 自营平台订单列表优惠券抵扣的订单，拆单后又取消订单，取消后的订单列表和订单详情，无标记同步供货商标签
+	Given 设置jobs为自营平台账号
 	Given jobs登录系统
 	Given jobs已添加了优惠券规则
 		"""
@@ -2038,6 +2057,7 @@ Scenario:6 自营平台订单列表优惠券抵扣的订单，拆单后又取消
 			}
 			"""
 
+		Given 设置jobs为自营平台账号
 		Given jobs登录系统
 		Then jobs可以看到订单列表
 			"""
@@ -2065,7 +2085,7 @@ Scenario:6 自营平台订单列表优惠券抵扣的订单，拆单后又取消
 				"status": "待发货",
 				"final_price":42.00,
 				"postage":2.0,
-				"save_money":0.00,
+				"save_money":"",
 				"methods_of_payment": "货到付款",
 				"actions": ["发货",取消订单"],
 				"products":[{
@@ -2125,7 +2145,6 @@ Scenario:6 自营平台订单列表优惠券抵扣的订单，拆单后又取消
 				"buyer":"lily",
 				"status": "待发货",
 				"final_price":25.00,
-				"integral_money":25.00,
 				"save_money":25.00,
 				"methods_of_payment": "优惠抵扣",
 				"actions": ["发货","取消订单"],
@@ -2323,7 +2342,6 @@ Scenario:6 自营平台订单列表优惠券抵扣的订单，拆单后又取消
 				"buyer":"lily",
 				"status": "待发货",
 				"final_price":25.00,
-				"integral_money":25.00,
 				"save_money":25.00,
 				"methods_of_payment": "优惠抵扣",
 				"actions": ["发货","取消订单"],

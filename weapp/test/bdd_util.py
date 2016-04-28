@@ -157,6 +157,9 @@ def get_member_by_username(username, webapp_id):
 		return None
 
 def get_order_by_order_no(order_no):
+	if '-' in order_no:
+		order_no_info = order_no.split('-')
+		order_no = '%s^%su' % (order_no_info[0], UserProfile.objects.get(store_name = order_no_info[1]).user_id)
 	return mall_models.Order.objects.get(order_id=order_no)
 
 

@@ -214,7 +214,6 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 	else:
 		args = json.loads(context.text)
 
-	print args['order_id']
 
 	def __get_current_promotion_id_for_product(product, member_grade_id):
 		promotion_ids = [r.promotion_id for r in ProductHasPromotion.objects.filter(product_id=product.id)]
@@ -224,8 +223,6 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 			# 存在促销信息，且促销设置等级对该会员开放
 			if promotions[0].type != PROMOTION_TYPE_INTEGRAL_SALE:
 				return promotions[0].id
-		print product.name
-		print "++++++++++++++++++++++++++++++22222222222222++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
 		return 0
 
 	settings = IntegralStrategySttings.objects.filter(webapp_id=context.webapp_id)
@@ -403,7 +400,6 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 		context.created_order_id = -1
 		context.response_json = response_json
 		context.server_error_msg = response_json['innerErrMsg']
-		print(response_json)
 		print("buy_error----------------------------",context.server_error_msg,response)
 	if context.created_order_id != -1:
 		if 'date' in args:
@@ -414,7 +410,7 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 			db_order.save()
 			if db_order.origin_order_id <0:
 				for order in Order.objects.filter(origin_order_id=db_order.id):
-					order.order_id = '%s^%s' % (args['order_id'], order.supplier)
+					order.order_id = '%s^%s' % (args['order_id'], order.order_id.split('^')[1])
 					order.save()
 			context.created_order_id = args['order_id']
 
