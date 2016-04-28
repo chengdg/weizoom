@@ -759,7 +759,7 @@ Background:
 				"""
 			When jack使用支付方式'微信支付'进行支付
 
-@product_pool @eugene @order @eugeneTMP
+@product_pool @eugene @order
 Scenario:1 商家后台查看订单列表,包含自营平台同步过来的订单
 	Given bill登录系统
 	Then bill可以看到订单列表
@@ -1085,7 +1085,7 @@ Scenario:1 商家后台查看订单列表,包含自营平台同步过来的订�
 			}]
 			"""
 
-@product_pool @eugene @order @eugeneTMP
+@product_pool @eugene @order
 Scenario:2 自营平台进行订单相关操作后,查看对应商家后台订单列表的变化
 	Given 设置jobs为自营平台账号
 	Given jobs登录系统
@@ -1383,7 +1383,7 @@ Scenario:2 自营平台进行订单相关操作后,查看对应商家后台订�
 			}]
 			"""
 
-@product_pool @eugene @order @eugeneTMP
+@product_pool @eugene @order
 Scenario:3 商家后台查看订单详情页,自营平台同步过来的订单
 	Given bill登录系统
 	#参与'限时抢购'的商品,商家后台查看订单详情页信息
@@ -1470,7 +1470,7 @@ Scenario:3 商家后台查看订单详情页,自营平台同步过来的订单
 			}
 			"""
 
-@product_pool @eugene @order @eugeneTMP
+@product_pool @eugene @order
 Scenario:4 查看对应自营平台订单列表和订单详情，标记同步供货商标签
 	Given jobs登录系统
 	Given 设置jobs为自营平台账号
@@ -1667,7 +1667,7 @@ Scenario:4 查看对应自营平台订单列表和订单详情，标记同步供
 		}
 		"""
 
-@product_pool @eugene @order @eugeneTMP
+@product_pool @eugene @order
 Scenario:5 自营平台订单列表按照"供货商类型"查询
 	Given 设置jobs为自营平台账号
 	Given jobs登录系统
@@ -2018,7 +2018,7 @@ Scenario:5 自营平台订单列表按照"供货商类型"查询
 		}]
 		"""
 
-@product_pool @eugene @order
+@product_pool @eugene @order @bill商品11
 Scenario:6 自营平台订单列表优惠券抵扣的订单，拆单后又取消订单，取消后的订单列表和订单详情，无标记同步供货商标签
 	Given 设置jobs为自营平台账号
 	Given jobs登录系统
@@ -2050,7 +2050,7 @@ Scenario:6 自营平台订单列表优惠券抵扣的订单，拆单后又取消
 				"order_id":"0010",
 				"pay_type":"微信支付",
 				"products":[{
-					"name":"bill11",
+					"name":"bill商品11",
 					"count":1
 				}],
 				"coupon":"coupon3_id_1"
@@ -2069,15 +2069,14 @@ Scenario:6 自营平台订单列表优惠券抵扣的订单，拆单后又取消
 				"postage":0.0,
 				"save_money":10.00,
 				"methods_of_payment": "优惠抵扣",
-				"actions": ["发货",取消订单"],
+				"actions": ["发货","取消订单"],
 				"products":[{
-						"name":"bill11",
+						"name":"bill商品11",
 						"price":10.0,
 						"count":1,
-						"supplier": "bill",
+						"supplier": "bill商家",
 						"is_sync_supplier": "true",
-						"status": "待发货",
-						"actions": ["发货"]
+						"status": "待发货"
 					}]
 			},{
 				"order_no":"007",
@@ -2089,14 +2088,6 @@ Scenario:6 自营平台订单列表优惠券抵扣的订单，拆单后又取消
 				"methods_of_payment": "货到付款",
 				"actions": ["取消订单"],
 				"products":[{
-						"name":"商品1a",
-						"price":10.0,
-						"count":1,
-						"supplier": "供货商1",
-						"is_sync_supplier": "false",
-						"status": "待发货",
-						"actions": ["发货"]
-					},{
 						"name":"bill商品2",
 						"price":20.0,
 						"count":1,
@@ -2110,6 +2101,14 @@ Scenario:6 自营平台订单列表优惠券抵扣的订单，拆单后又取消
 						"count":1,
 						"supplier": "tom商家",
 						"is_sync_supplier": "true",
+						"status": "待发货",
+						"actions": ["发货"]
+					},{
+						"name":"商品1a",
+						"price":10.0,
+						"count":1,
+						"supplier": "供货商1",
+						"is_sync_supplier": "false",
 						"status": "待发货",
 						"actions": ["发货"]
 					}]
@@ -2185,7 +2184,7 @@ Scenario:6 自营平台订单列表优惠券抵扣的订单，拆单后又取消
 				"status": "待发货",
 				"final_price":30.00,
 				"methods_of_payment": "货到付款",
-				"actions": ["发货","取消订单"],
+				"actions": ["取消订单"],
 				"products":
 					[{
 						"name":"商品1a",
@@ -2245,13 +2244,13 @@ Scenario:6 自营平台订单列表优惠券抵扣的订单，拆单后又取消
 				"status": "待发货",
 				"final_price":0.00,
 				"methods_of_payment": "优惠抵扣",
-				"actions": ["发货"],
+				"actions": ["发货", "取消订单"],
 				"products":
 					[{
-						"name":"bill11",
+						"name":"bill商品11",
 						"price":10.0,
 						"count":1,
-						"supplier": "bill",
+						"supplier": "bill商家",
 						"is_sync_supplier": "true"
 					}]
 			}
@@ -2270,13 +2269,12 @@ Scenario:6 自营平台订单列表优惠券抵扣的订单，拆单后又取消
 				"methods_of_payment": "优惠抵扣",
 				"actions": [],
 				"products":[{
-						"name":"bill11",
+						"name":"bill商品11",
 						"price":10.0,
 						"count":1,
-						"supplier": "",
+						"supplier": "bill商家",
 						"is_sync_supplier": "",
-						"status": "待发货",
-						"actions": ["发货"]
+						"status": "已取消"
 					}]
 			},{
 				"order_no":"007",
@@ -2284,18 +2282,10 @@ Scenario:6 自营平台订单列表优惠券抵扣的订单，拆单后又取消
 				"status": "待发货",
 				"final_price":42.00,
 				"postage":2.0,
-				"save_money":0.00,
+				"save_money":"",
 				"methods_of_payment": "货到付款",
-				"actions": ["发货",取消订单"],
+				"actions": ["取消订单"],
 				"products":[{
-						"name":"商品1a",
-						"price":10.0,
-						"count":1,
-						"supplier": "供货商1",
-						"is_sync_supplier": "false",
-						"status": "待发货",
-						"actions": ["发货"]
-					},{
 						"name":"bill商品2",
 						"price":20.0,
 						"count":1,
@@ -2309,6 +2299,14 @@ Scenario:6 自营平台订单列表优惠券抵扣的订单，拆单后又取消
 						"count":1,
 						"supplier": "tom商家",
 						"is_sync_supplier": "true",
+						"status": "待发货",
+						"actions": ["发货"]
+					},{
+						"name":"商品1a",
+						"price":10.0,
+						"count":1,
+						"supplier": "供货商1",
+						"is_sync_supplier": "false",
 						"status": "待发货",
 						"actions": ["发货"]
 					}]
@@ -2352,7 +2350,7 @@ Scenario:6 自营平台订单列表优惠券抵扣的订单，拆单后又取消
 						"name":"bill商品11",
 						"price":10.0,
 						"count":5,
-						"supplier": "bill商家"
+						"supplier": "bill商家",
 						"is_sync_supplier": "true"
 					}]
 			},{
@@ -2384,20 +2382,22 @@ Scenario:6 自营平台订单列表优惠券抵扣的订单，拆单后又取消
 				"status": "待发货",
 				"final_price":30.00,
 				"methods_of_payment": "货到付款",
-				"actions": ["发货","取消订单"],
+				"actions": ["取消订单"],
 				"products":
 					[{
 						"name":"商品1a",
 						"price":10.0,
 						"count":1,
 						"supplier": "供货商1",
-						"is_sync_supplier": "false"
+						"is_sync_supplier": "false",
+						"actions": ["发货"]
 					},{
 						"name":"商品2a",
 						"price":20.0,
 						"count":1,
 						"supplier": "供货商2",
-						"is_sync_supplier": "false"
+						"is_sync_supplier": "false",
+						"actions": ["发货"]
 					}]
 			},{
 				"order_no":"002",
@@ -2442,13 +2442,13 @@ Scenario:6 自营平台订单列表优惠券抵扣的订单，拆单后又取消
 				"status": "已取消",
 				"final_price":0.00,
 				"methods_of_payment": "优惠抵扣",
-				"actions": [""],
+				"actions": "",
 				"products":
 					[{
-						"name":"bill11",
+						"name":"bill商品11",
 						"price":10.0,
 						"count":1,
-						"supplier": "",
+						"supplier": "bill商家",
 						"is_sync_supplier": ""
 					}]
 			}

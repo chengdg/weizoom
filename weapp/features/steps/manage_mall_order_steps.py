@@ -316,7 +316,7 @@ def step_impl(context, user):
     #     for j in range(len(expected[i]['products'])):
     #         print expected[i]['products'][j].get('actions',""), '****', actual_orders[i]['products'][j].get('actions',"")
     #         print expected[i]['products'][j].get('actions',"") == actual_orders[i]['products'][j].get('actions',"")
-    #     print expected[i]['actions'], '++++', actual_orders[i]['actions']
+    #     print expected[i]['status'], '++++', actual_orders[i]['status']
     #     print expected[i]['actions'] == actual_orders[i]['actions']
 
     bdd_util.assert_list(expected, actual_orders)
