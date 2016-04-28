@@ -113,7 +113,8 @@ Scenario:1 积分应用活动（单商品、统一设置）详情
 			"products":[{
 				"name": "商品1",
 				"price":100.00,
-				"sales":0
+				"sales":0,
+				"status":""
 				}],
 			"is_permanant_active": false,
 			"discount_info": [{
@@ -160,15 +161,18 @@ Scenario:2 积分应用活动（多商品、分级设置）详情
 			"products":[{
 					"name": "商品1",
 					"price":100.00,
-					"sales":0
+					"sales":0,
+					"status":""
 				},{
 					"name": "商品2",
 					"price":110.00,
-					"sales":0
+					"sales":0,
+					"status":""
 				},{
 					"name": "商品3",
 					"price":300.00,
-					"sales":0
+					"sales":0,
+					"status":""
 				}],
 			"is_permanant_active": true,
 			"discount_info": [{
@@ -206,7 +210,8 @@ Scenario:2 积分应用活动（多商品、分级设置）详情
 				},{
 					"name": "商品3",
 					"price":300.00,
-					"sales":0
+					"sales":0,
+					"status": ""
 				}],
 			"is_permanant_active": true,
 			"discount_info": [{
@@ -233,7 +238,8 @@ Scenario:2 积分应用活动（多商品、分级设置）详情
 			"products":[{
 					"name": "商品1",
 					"price":100.00,
-					"sales":0
+					"sales":0,
+					"status": ""
 				},{
 					"name": "商品2",
 					"price":110.00,
@@ -242,7 +248,8 @@ Scenario:2 积分应用活动（多商品、分级设置）详情
 				},{
 					"name": "商品3",
 					"price":300.00,
-					"sales":0
+					"sales":0,
+					"status": ""
 				}],
 			"is_permanant_active": true,
 			"discount_info": [{
