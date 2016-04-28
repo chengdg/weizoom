@@ -322,6 +322,18 @@ Scenario:4 自营平台对商家同步的商品部分或全部进行【更新】
 						}
 					}
 				}
+			},{
+				"name": "bill无规格商品2",
+					"model": {
+						"models": {
+							"standard": {
+								"price": 20.00,
+								"user_code":"1112",
+								"weight": 5.0,
+								"stock_type": "无限"
+							}
+						}
+					}
 			}]
 			"""
 
@@ -347,8 +359,12 @@ Scenario:4 自营平台对商家同步的商品部分或全部进行【更新】
 				"integral_each_yuan": 2
 			}
 			"""
-		When nokia将商品'bill无规格商品1'放入待售
-		When nokia将商品'bill多规格商品2'放入待售
+		#When nokia将商品'bill无规格商品1'放入待售
+		#When nokia将商品'bill多规格商品2'放入待售
+		When nokia批量将商品放入待售
+			"""
+			["bill无规格商品1","bill无规格商品2"]
+			"""
 
 	#自营nokia更新商品并上架商品，创建多商品积分应用活动
 		When nokia更新商品'bill无规格商品1'
@@ -369,25 +385,18 @@ Scenario:4 自营平台对商家同步的商品部分或全部进行【更新】
 				}
 			}
 			"""
-		When nokia更新商品'bill多规格商品2'
+		When nokia更新商品'bill无规格商品2'
 			"""
 			{
-				"name": "bill多规格商品2",
+				"name": "bill无规格商品2",
 				"supplier": "bill商家",
-				"purchase_price": 9.00,
+				"purchase_price": 10.00,
 				"model": {
 					"models": {
-						"M": {
-							"price": 10.00,
-							"user_code":"4412",
-							"weight":1.0,
-							"stock_type": "有限",
-							"stocks":100
-						},
-						"S": {
+						"standard": {
 							"price": 20.00,
-							"user_code":"4413",
-							"weight":1.0,
+							"user_code":"1112",
+							"weight": 5.0,
 							"stock_type": "无限"
 						}
 					}
@@ -395,13 +404,13 @@ Scenario:4 自营平台对商家同步的商品部分或全部进行【更新】
 			}
 			"""
 		When nokia'上架'商品'bill无规格商品1'
-		When nokia'上架'商品'bill多规格商品2'
+		When nokia'上架'商品'bill无规格商品2'
 		When nokia创建积分应用活动
 			"""
 			[{
 				"name": "多商品积分应用1",
 				"promotion_title":"",
-				"product_name": "bill无规格商品1,bill多规格商品2",
+				"product_name": "bill无规格商品1,bill无规格商品2",
 				"is_permanant_active": true,
 				"rules": 
 					[{
@@ -415,8 +424,8 @@ Scenario:4 自营平台对商家同步的商品部分或全部进行【更新】
 			"""
 			[{
 				"name": "多商品积分应用1",
-				"product_name": "bill无规格商品1,bill多规格商品2",
-				"product_price":"10.00,10.00 ~ 20.00",
+				"product_name": "bill无规格商品1,bill无规格商品2",
+				"product_price":"10.00,20.00",
 				"is_permanant_active": true,
 				"discount": "50.0%",
 				"discount_money":5.00,
@@ -442,23 +451,16 @@ Scenario:4 自营平台对商家同步的商品部分或全部进行【更新】
 				}
 			}
 			"""
-		When bill更新商品'bill多规格商品2'
+		When bill更新商品'bill无规格商品2'
 			"""
 			{
-				"name": "bill多规格商品02",
+				"name": "bill无规格商品02",
 				"model": {
 					"models": {
-						"M": {
-							"price": 10.00,
-							"user_code":"4412",
-							"weight":1.0,
-							"stock_type": "有限",
-							"stocks":100
-						},
-						"S": {
+						"standard": {
 							"price": 20.00,
-							"user_code":"4413",
-							"weight":1.0,
+							"user_code":"1112",
+							"weight": 5.0,
 							"stock_type": "无限"
 						}
 					}
@@ -469,31 +471,31 @@ Scenario:4 自营平台对商家同步的商品部分或全部进行【更新】
 	#自营nokia对同步商品进行【更新】操作，查看活动状态
 		Given nokia登录系统
 		#更新全部商品，商品部分下架，活动状态不变
-		When nokia更新商品池商品'bill无规格商品1'
+		When nokia更新商品池商品'bill无规格商品01'
 		Then nokia获取积分应用活动列表
 			"""
 			[{
 				"name": "多商品积分应用1",
-				"product_name": "bill无规格商品1,bill多规格商品2",
+				"product_name": "bill无规格商品01,bill无规格商品2",
 				"products_status":[{
-					"name": "bill无规格商品1",
+					"name": "bill无规格商品01",
 					"status": "待售"
 					}],
 				"status":"进行中"
 			}]
 			"""
 		#更新全部商品，商品全部下架，活动状态不变
-		When nokia更新商品池商品'bill多规格商品2'
+		When nokia更新商品池商品'bill无规格商品02'
 		Then nokia获取积分应用活动列表
 			"""
 			[{
 				"name": "多商品积分应用1",
-				"product_name": "bill无规格商品1,bill多规格商品2",
+				"product_name": "bill无规格商品01,bill无规格商品02",
 				"products_status":[{
-					"name": "bill无规格商品1",
+					"name": "bill无规格商品01",
 					"status": "待售"
 				},{
-					"name": "bill多规格商品2",
+					"name": "bill无规格商品02",
 					"status": "待售"
 				}],
 				"status":"进行中"
