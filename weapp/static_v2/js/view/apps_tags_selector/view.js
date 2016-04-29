@@ -2,7 +2,7 @@ ensureNS('W.view.apps');
 
 W.view.apps.TagsSelector = Backbone.View.extend({
 	events: {
-		'change select': 'onChangeSelect',
+		'change select': 'onChangeSelect'
 	},
 
 	templates: {
@@ -44,13 +44,29 @@ W.view.apps.TagsSelector = Backbone.View.extend({
 
 W.registerUIRole('[data-ui-role="apps-tags-selector"]', function() {
     var $el = $(this);
-    var tags = $el.data('tags');
-    var view = new W.view.apps.TagsSelector({
-        el: $el.get(0),
-        tags: tags
-    });
-    view.render();
+	W.getApi().call({
+		method: 'get',
+		app: 'apps/survey',
+		resource: 'list_tags',
+		args: {
+		},
+		success: function(data){
+			console.log("success!!!!!!!!!!!!");
+			var tags = data.tags;
+			console.log(tags);
+			var view = new W.view.apps.TagsSelector({
+				el: $el.get(0),
+				tags: tags
+			});
+			view.render();
 
-    //缓存view
-    $el.data('view', view);
+			//缓存view
+			$el.data('view', view);
+		},
+		error: function(error){
+			console.log('error');
+		}
+	});
+    //var tags = $el.data('tags');
+
 });
