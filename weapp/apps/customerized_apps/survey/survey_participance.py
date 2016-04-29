@@ -89,9 +89,9 @@ class surveyParticipance(resource.Resource):
 			if member:
 				isMember = member.is_subscribed
 				if isMember and add_tag_id:
-					if MemberHasTag.objects.filter(member=member).count() > 1:
-						MemberHasTag.objects.filter(member=member, member_tag__name="未分组").delete()
 					MemberHasTag.add_tag_member_relation(member, [add_tag_id])
+					if MemberHasTag.objects.filter(member=member, member_tag__name="未分组").count() > 0:
+						MemberHasTag.objects.filter(member=member, member_tag__name="未分组").delete()
 				elif not isMember:
 					survey_log = app_models.surveyParticipanceLog(
 						belong_to = request.POST['belong_to'],
