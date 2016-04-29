@@ -26,7 +26,7 @@ COUNT_PER_PAGE = 20
 class survey(resource.Resource):
 	app = 'apps/survey'
 	resource = 'survey'
-	
+
 	@login_required
 	def get(request):
 		"""
@@ -74,9 +74,9 @@ class survey(resource.Resource):
 			'is_create_new_data': is_create_new_data,
 			'project_id': project_id,
 		})
-		
+
 		return render_to_response('survey/templates/editor/workbench.html', c)
-	
+
 	@login_required
 	def api_put(request):
 		"""
@@ -85,7 +85,7 @@ class survey(resource.Resource):
 		data = request_util.get_fields_to_be_save(request)
 		survey = app_models.survey(**data)
 		survey.save()
-		
+
 		data = json.loads(survey.to_json())
 		data['id'] = data['_id']['$oid']
 		# if error_msg:
@@ -93,7 +93,7 @@ class survey(resource.Resource):
 		response = create_response(200)
 		response.data = data
 		return response.get_response()
-	
+
 	@login_required
 	def api_post(request):
 		"""
@@ -101,22 +101,22 @@ class survey(resource.Resource):
 		"""
 		data = request_util.get_fields_to_be_save(request)
 		update_data = {}
-		update_fields = set(['name', 'start_time', 'end_time'])
+		update_fields = set(['name','tag_id','start_time', 'end_time'])
 		for key, value in data.items():
 			if key in update_fields:
 				update_data['set__'+key] = value
 		app_models.survey.objects(id=request.POST['id']).update(**update_data)
-		
+
 		response = create_response(200)
 		return response.get_response()
-	
+
 	@login_required
 	def api_delete(request):
 		"""
 		响应DELETE
 		"""
 		app_models.survey.objects(id=request.POST['id']).delete()
-		
+
 		response = create_response(200)
 		return response.get_response()
 

@@ -78,7 +78,7 @@ W.component.appkit.SurveyDescription = W.component.Component.extend({
 			type: 'tags_selector',
 			displayName: '添加到分组',
 			isUserProperty: true,
-			default: {type:"no_tags", data:null}
+			default: {taglist:[{id:'0',name:'无分组'}], selectId:''}
 		}]
 	}],
 

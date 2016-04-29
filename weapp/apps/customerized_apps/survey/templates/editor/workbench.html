@@ -72,7 +72,7 @@
 
 {% block base_js %}
   <!-- *start_prunt_task* -->
-    <!-- [prunt_task] 
+    <!-- [prunt_task]
       {
         "task": "weizoom-load-termite-components"
       }
@@ -90,7 +90,7 @@
     var isCreateNewData = {% if is_create_new_data %}true{% else %}false{% endif %};
     W.isSystemManager = {% if request.manager|is_system_manager %}true{% else %}false{% endif %};
     var bottomDistance = 110;
-    
+
     /* 是否页面验证 */
     W.isUserPageWalidate = true;
     /* 自动选中cid，当页面进来的时候 */
@@ -130,11 +130,11 @@
         }
       });
     }
-    
+
     $(document).ready(function() {
       var windowHeight = $(window).height();
       var height = windowHeight - 350;
-      
+
       $('#leftPanel').css('min-height' ,height+ 'px');
       $('#workbench').css('min-height' ,height+ 'px');
       $(window).bind('beforeunload', function() {
@@ -143,18 +143,18 @@
         } else {
         }
       })
-      
+
       var pageManagerView = new W.workbench.PageManagerView({
         el: '#leftPanel',
         isSystemManager: W.isSystemManager
       });
       pageManagerView.render();
-      
+
       var phoneView = new W.workbench.PhoneView({
         el: '#phonePanel'
       });
       phoneView.render();
-      
+
       var propertyViewLeft = phoneView.getRightBorderOffset() - $('#workbench').offset().left;
       var propertyView = new W.workbench.PropertyView({
         el: '#rightPanel',
@@ -162,13 +162,13 @@
         onlyShowUserProperty: true//!W.isSystemManager
       });
       propertyView.render();
-      
+
       var synchronizer = new W.workbench.PageSynchronizer();
       synchronizer.run();
       W.Synchronizer = synchronizer;
-      
+
       loadPages(pageManagerView);
-      
+
       $('.xa-save').click(function() {
           var that = this;
         // 保存model
@@ -181,7 +181,7 @@
           var startTime = descriptionModel.get('start_time')+":00";
           var endTime = descriptionModel.get('end_time')+":00";
           var relatedPageId = data['project_id'];
-          var tag_id = data['tag_id'];
+          var tag_id = descriptionModel.get('tags').selectId;
           var args = {
             "name": name,
             "start_time": startTime,
@@ -213,9 +213,9 @@
           });
         });
       });
-      
+
       W.isReady = true;
-      
+
       W.Broadcaster.on('designpage:reach_scroll_boundary', function(direction) {
         var $window = $(window);
         var scrollTop = $window.scrollTop();
@@ -226,19 +226,19 @@
         }
         $window.scrollTop(newScrollTop);
       });
-      
+
       $('[data-toggle="tooltip"]').tooltip();
-      
+
       $('.xa-preview').click(function(event){
         var page = pageManagerView.getCurrentActivePage();
-        
+
         // 验证
         if (!W.isSystemManager) {
             if(!page.validate()) {
                 return;
             }
         }
-        
+
         // 预览
         var pageJson = JSON.stringify(page.toJSON());
         projectId = W.projectId.split(':')[2];
@@ -255,7 +255,7 @@
           }
         });
       });
-      
+
       $(document).click(function() {
         // 点击空白处，触发事件
         W.Broadcaster.trigger('designpage:cancel_delete');

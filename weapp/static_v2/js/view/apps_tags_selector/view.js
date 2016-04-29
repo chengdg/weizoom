@@ -13,27 +13,32 @@ W.view.apps.TagsSelector = Backbone.View.extend({
 		this.$el = $(options.el);
 
 		this.options = options || {};
-		this.tags = options.tags || {id:'2'};
+        this.tags = {taglist:[{id:'0',name:'无分组'}], selectId:'0'};
+
 	},
 
-	render: function() {
-		var html = this.renderTmpl('viewTmpl', {tags:this.tags});
+	render: function(tags) {
+        this.tags = tags || this.tags;
+		var html = this.renderTmpl('viewTmpl', {taglist:this.tags.taglist,selectId:this.tags.selectId});
 		this.$el.append(html);
 	},
 
 	onChangeSelect: function(event) {
 		var $select = $(event.currentTarget);
 		var tagsId = $select.val();
-		console.log('!!!!!!!!!!!!!!');
-		console.log(tagsId);
-		this.tags['id'] = tagsId;
-		this.$('.errorHint').text("");
-		this.trigger('change-tags', _.deepClone(this.tags));
+        this.tags['selectId'] = tagsId;
+        this.$('.errorHint').text("");
+        this.trigger('change-tags', _.deepClone(this.tags));
 	}
 });
 
 W.registerUIRole('[data-ui-role="apps-tags-selector"]', function() {
     var $el = $(this);
+    var tags = $el.data('tags');
+    var view = new W.view.apps.TagsSelector({
+        el: $el.get(0),
+    });
+    $el.data('view', view);
 	W.getApi().call({
 		method: 'get',
 		app: 'apps/survey',
@@ -41,15 +46,10 @@ W.registerUIRole('[data-ui-role="apps-tags-selector"]', function() {
 		args: {
 		},
 		success: function(data){
-			var tags = data.tags;
-			var view = new W.view.apps.TagsSelector({
-				el: $el.get(0),
-				tags: tags
-			});
-			view.render();
+			var taglist = data.tags;
+            tags.taglist = taglist;
+			view.render(tags);
 
-			//缓存view
-			$el.data('view', view);
 		},
 		error: function(error){
 			console.log('error');
