@@ -15,6 +15,7 @@ import datetime as dt
 from mall.promotion.models import CouponRule
 from weixin.message.material import models as material_models
 from apps.customerized_apps.survey import models as survey_models
+from modules.member import models as member_models
 import termite.pagestore as pagestore_manager
 import json
 import copy
@@ -759,6 +760,13 @@ def __prize_settings_process(prize_type,integral,coupon):
 			pass
 	return prize
 
+def __tag_name2member_tag(tag_name):
+	tags = member_models.MemberTag.objects.filter(name=tag_name)
+	if tags:
+		return (tags[0].id,tags[0].name)
+	else:
+		return (0,"")
+
 def __Create_Survey(context,text,user):
 	"""
 	模拟用户登录页面
@@ -792,6 +800,9 @@ def __Create_Survey(context,text,user):
 	coupon = text.get("coupon","")
 	prize = __prize_settings_process(prize_type,integral,coupon)
 
+	tag_name = text.get("member_group","")
+	tag_id,tag_name = __tag_name2member_tag(tag_name)
+
 	qa = text.get("answer","")
 	selection = text.get("choose","")
 	textlist = text.get("participate_info","")
@@ -807,6 +818,8 @@ def __Create_Survey(context,text,user):
 		"valid_time":valid_time,
 		"permission":permission,
 		"prize":prize,
+		"tag_id":tag_id,
+		"tag_name":tag_name,
 		"qa":qa,
 		"selection":selection,
 		"textlist":textlist,
@@ -839,6 +852,7 @@ def __Create_Survey(context,text,user):
 	#step4:发送survey_args
 	post_survey_args = {
 		"name":title,
+		"tag_id":tag_id,
 		"start_time":start_time,
 		"end_time":end_time,
 		"related_page_id":related_page_id
@@ -886,6 +900,9 @@ def __Update_Survey(context,text,page_id,survey_id):
 	permission = text.get("permission")
 
 	prize_type = text.get("prize_type","")
+	tag_name = text.get("member_group","")
+	tag_id,tag_name = __tag_name2member_tag(tag_name)
+
 	integral = text.get("integral","")
 	coupon = text.get("coupon","")
 	prize = __prize_settings_process(prize_type,integral,coupon)
@@ -905,6 +922,8 @@ def __Update_Survey(context,text,page_id,survey_id):
 		"valid_time":valid_time,
 		"permission":permission,
 		"prize":prize,
+		"tag_id":tag_id,
+		"tag_name":tag_name,
 		"qa":qa,
 		"selection":selection,
 		"textlist":textlist,
@@ -923,6 +942,7 @@ def __Update_Survey(context,text,page_id,survey_id):
 	update_survey_args = {
 
 		"name":title,
+		"tag_id":tag_id,
 		"start_time":start_time,
 		"end_time":end_time,
 		"id":survey_id#updated的差别
