@@ -51,7 +51,6 @@ Scenario:1 参加调研活动,无需关注即可参与
 		}]
 		"""
 
-
 	When bill关注jobs的公众号
 	When bill访问jobs的webapp
 
@@ -114,10 +113,8 @@ Scenario:1 参加调研活动,无需关注即可参与
 			"""
 
 		Then jobs可以获得会员列表
-		| name | member_rank |  tags   |
-		| bill |   普通会员  | 分组1   |
-		| tom  |   普通会员  | 分组1   |
-		| marry|   普通会员  | 未分组   |
+		  | name | member_rank |  tags   |
+		  | bill |   普通会员  | 分组1   |
 
 @mall2 @apps @survey @users_participate_survey
 Scenario:2 参加调研活动,必须关注才可参与
