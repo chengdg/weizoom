@@ -39,7 +39,7 @@ class survey(models.Document):
 	end_time = models.DateTimeField() #结束时间
 	status = models.IntField(default=0) #状态
 	participant_count = models.IntField(default=0) #参与者数量
-	tag_id = models.IntField(default=2) #添加到分组，默认为未分组
+	tag_id = models.IntField(default=0) #添加到分组，默认为不添加
 	related_page_id = models.StringField(default="", max_length=100) #termite page的id
 	created_at = models.DateTimeField() #创建时间
 	

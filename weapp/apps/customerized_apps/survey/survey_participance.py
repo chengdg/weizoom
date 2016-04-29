@@ -47,7 +47,6 @@ class surveyParticipance(resource.Resource):
 		"""
 		member_id = request.member.id
 		eventParticipance = app_models.surveyParticipance.objects.filter(belong_to=request.POST['belong_to'],member_id=member_id)
-		add_tag_ids = request.POST.get('add_tag_ids', None)
 
 		if eventParticipance.count() >0:
 			response = create_response(500)
@@ -59,7 +58,9 @@ class surveyParticipance(resource.Resource):
 			survey_participance.save()
 
 			#调整参与数量
-			app_models.survey.objects(id=data['belong_to']).update(**{"inc__participant_count":1})
+			survey_record = app_models.survey.objects(id=data['belong_to'])
+			survey_record.update(**{"inc__participant_count":1})
+			add_tag_id = survey_record.first().tag_id if survey_record.first().tag_id !=0 else None
 
 			#活动奖励
 			prize = data.get('prize', None)
@@ -84,14 +85,19 @@ class surveyParticipance(resource.Resource):
 							error_msg = msg
 
 			#分配到某个分组
-			# member = Member.objects.get(id=member_id)
-			# tag_ids = add_tag_ids.split('_')
-			# tag_ids = [id for id in tag_ids if id]
-			# if tag_ids:
-			# 	MemberHasTag.add_tag_member_relation(member, tag_ids)
-			# else:
-			# 	tag_ids.append(MemberTag.get_default_tag(webapp_id).id)
-			# 	MemberHasTag.add_tag_member_relation(member, tag_ids)
+			member = Member.objects.get(id=member_id)
+			if member:
+				isMember = member.is_subscribed
+				if isMember and add_tag_id:
+					if MemberHasTag.objects.filter(member=member).count() > 1:
+						MemberHasTag.objects.filter(member=member, member_tag__name="未分组").delete()
+					MemberHasTag.add_tag_member_relation(member, [add_tag_id])
+				elif not isMember:
+					survey_log = app_models.surveyParticipanceLog(
+						belong_to = request.POST['belong_to'],
+						member_id = member_id
+					)
+					survey_log.save()
 
 			data = json.loads(survey_participance.to_json())
 			data['id'] = data['_id']['$oid']
