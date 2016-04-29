@@ -126,6 +126,37 @@
     top: 10px;
     width: 20px;
 }
+/**
+ * commin description样式
+ */
+.wui-commonDescription {
+    padding: 35px 20px 0;
+}
+.wui-commonDescription .wui-i-title {
+	font-size: 20px;
+    margin-top: 15px;
+	color: #333;
+}
+.wui-commonDescription .wui-i-subtitle {
+	color: #A0A0A0;
+    margin-top: 10px;
+    font-size: 18px;
+}
+.wui-commonDescription .wui-i-description {
+	margin-top: 10px;
+    color: #666;
+    padding-bottom: 20px;
+}
+.wui-commonDescription .wui-i-info {
+	border-top: solid 1px #E5E5E5;
+	font-size: 14px;
+	padding: 7px 0px 5px 0px;
+    color: #999;
+}
+.wui-commonDescription img{
+	padding-top:10px;
+	padding-bottom: 10px;
+}
 
 /**
  * 用户调研survey description样式

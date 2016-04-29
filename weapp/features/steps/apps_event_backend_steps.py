@@ -312,7 +312,7 @@ def __get_eventPageJson(args):
 		},
 		"components": [
 			{
-				"type": "appkit.surveydescription",
+				"type": "appkit.commondescription",
 				"cid": 2,
 				"pid": 1,
 				"auto_select": False,
