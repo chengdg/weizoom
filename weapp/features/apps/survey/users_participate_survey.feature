@@ -112,27 +112,12 @@ Scenario:1 参加调研活动,无需关注即可参与
 				"prize_type":"优惠券"
 			}]
 			"""
-		Then jobs获得会员'bill'详情
-			"""
-			{	
-				"member_group":"分组1",
-				"coupon":1
-			}
-			"""
-		Then jobs获得会员'tom'详情
-			"""
-			{
-				"member_group":"分组1",
-				"coupon":1
-			}
-			"""
-		Then jobs获得会员'marry'详情
-			"""
-			{
-				"member_group":"分组1",
-				"coupon":1
-			}
-			"""	
+
+		Then jobs可以获得会员列表
+		| name | member_rank |  tags   |
+		| bill |   普通会员  | 分组1   |
+		| tom  |   普通会员  | 分组1   |
+		| marry|   普通会员  | 未分组   |
 
 @mall2 @apps @survey @users_participate_survey
 Scenario:2 参加调研活动,必须关注才可参与
