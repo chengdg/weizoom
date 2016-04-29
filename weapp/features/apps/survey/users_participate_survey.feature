@@ -883,9 +883,9 @@ Scenario:6 参加调研活动,必须关注即可参与
 
 	When jobs访问会员列表
 	Then jobs可以获得会员列表
-		| name | member_rank | friend_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
-		| bill |   普通会员   |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-03    | 会员分享 | 未分组      |
-		| tom  |   普通会员   |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-02    | 会员分享 | 未分组      |
+		| name | member_rank  | friend_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
+		| bill |   普通会员   |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-03    | 直接关注 | 未分组      |
+		| tom  |   普通会员   |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-02    | 直接关注 | 未分组      |
 	When jobs选择会员
 		| member_name | member_rank |    tags     |
 		| bill        |   普通会员  | 未分组      |
@@ -907,20 +907,20 @@ Scenario:6 参加调研活动,必须关注即可参与
 
 	When bill取消关注jobs的公众号	
 	
-	Then jobs获得会员'bill'详情
+	Then jobs获得会员列表
 		"""
-			{
-			"member_group":"分组1",
-			"coupon":1
-			}
+			[{
+				"name": "bill",
+				"member_rank": "普通会员",
+				"tags": ["分组1"]
+			},{
+				"name": "tom",
+				"member_rank": "普通会员",
+				"tags": ["分组1"]
+			}]
 		"""
-	Then jobs获得会员'tom'详情
-		"""
-			{
-			"member_group":"分组1",
-			"coupon":1
-			}
-		"""
+	
+
 
 	When bill关注jobs的公众号
 	When bill参加jobs的用户调研活动'用户调研01'
@@ -933,11 +933,26 @@ Scenario:6 参加调研活动,必须关注即可参与
 					}]
 			}
 			"""
-	Then jobs获得会员'bill'详情
+	Then jobs获得会员列表
 		"""
-			{
-			"member_group":["分组1","分组2"],
-			"coupon":1
-			}
+			[{
+				"name": "bill",
+				"member_rank": "普通会员",
+				"pay_money": 0.00,
+				"unit_price": 0.00,
+				"pay_times": 0,
+				"source": "直接关注",
+				"tags": ["分组1","分组2"],
+				"status": "已关注"
+			},{
+				"name": "tom",
+				"member_rank": "普通会员",
+				"pay_money": 0.00,
+				"unit_price": 0.00,
+				"pay_times": 0,
+				"source": "直接关注",
+				"tags": ["分组1"],
+				"status": "已关注"
+			}]
 		"""
 	
