@@ -277,7 +277,7 @@ def __get_votePageJson(args):
 	#2.投票面板 pid:2
 
 	__votedescription_temple = {
-		"type": "appkit.surveydescription",
+		"type": "appkit.commondescription",
 		"cid": '',
 		"pid": '',
 		"auto_select": False,
