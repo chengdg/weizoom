@@ -905,9 +905,9 @@ Scenario:6 参加调研活动,必须关注即可参与
 		| tom  |   普通会员  | 分组1   |
 
 
-	When bill取消关注jobs的公众号	
-	
-	Then jobs获得会员列表
+	When bill取消关注jobs的公众号
+
+	Then jobs可以获得会员列表
 		"""
 			[{
 				"name": "bill",
@@ -919,21 +919,20 @@ Scenario:6 参加调研活动,必须关注即可参与
 				"tags": ["分组1"]
 			}]
 		"""
-	
-
 
 	When bill关注jobs的公众号
 	When bill参加jobs的用户调研活动'用户调研01'
-			"""
-			{
-				"问答题":
-					[{
-						"title":"问答题标题",
-						"value":"bill填写内容"
-					}]
-			}
-			"""
-	Then jobs获得会员列表
+		"""
+		{
+			"问答题":
+				[{
+					"title":"问答题标题",
+					"value":"bill填写内容"
+				}]
+		}
+		"""
+
+	Then jobs可以获得会员列表
 		"""
 			[{
 				"name": "bill",
@@ -955,4 +954,3 @@ Scenario:6 参加调研活动,必须关注即可参与
 				"status": "已关注"
 			}]
 		"""
-	
