@@ -1,20 +1,21 @@
 ensureNS('W.view.apps');
+
 W.view.apps.TagsSelector = Backbone.View.extend({
 	events: {
-		'change select': 'onChangeSelect'
+		'change select': 'onChangeSelect',
 	},
 
 	templates: {
 		viewTmpl: "#apps-tags-selector-tmpl"
 	},
-	
+
 	initialize: function(options) {
 		this.$el = $(options.el);
-		
-		this.options = options || {};		
+
+		this.options = options || {};
 		this.tags = options.tags || {type:'no_tags', data:null};
 	},
-	
+
 	render: function() {
 		var html = this.renderTmpl('viewTmpl', {tags:this.tags});
 		this.$el.append(html);
@@ -23,16 +24,16 @@ W.view.apps.TagsSelector = Backbone.View.extend({
 	onChangeSelect: function(event) {
 		var $select = $(event.currentTarget);
 		var tagsType = $select.val();
-		this.$('.xa-optionTarget').hide();
-		this.$('.xa-integral').val('');
-		if (tagsType === "coupon"){
-			this.$('.coupon_div').show().css('display', 'inline');
-			this.$('.coupon_div a').show();
+		// this.$('.xa-optionTarget').hide();
+		// this.$('.xa-integral').val('');
+		// if (tagsType === "coupon"){
+		// 	this.$('.coupon_div').show().css('display', 'inline');
+		// 	this.$('.coupon_div a').show();
 
-		}
-		else{
-			this.$('[data-target="'+tagsType+'"]').show();
-		}
+		// }
+		// else{
+			// this.$('[data-target="'+tagsType+'"]').show();
+		// }
 
 		this.tags['type'] = tagsType;
 		this.tags['data'] = null;
