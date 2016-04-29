@@ -174,16 +174,20 @@
         // 保存model
         W.Synchronizer.manualSync(function(page, data) {
             that.disabled = true;
+          console.log('data!!!!!!!!!!!!!');
+          console.log(data);
           var descriptionModel = page.components[0].model;
           var name = descriptionModel.get('title');
           var startTime = descriptionModel.get('start_time')+":00";
           var endTime = descriptionModel.get('end_time')+":00";
           var relatedPageId = data['project_id'];
+          var tag_id = data['tag_id'];
           var args = {
             "name": name,
             "start_time": startTime,
-            "end_time": endTime
-          }
+            "end_time": endTime,
+            "tag_id": tag_id
+          };
           if (isCreateNewData) {
             var method = 'put';
             args['related_page_id'] = relatedPageId;

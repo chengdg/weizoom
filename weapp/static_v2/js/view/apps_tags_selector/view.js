@@ -13,7 +13,7 @@ W.view.apps.TagsSelector = Backbone.View.extend({
 		this.$el = $(options.el);
 
 		this.options = options || {};
-		this.tags = options.tags || {type:'no_tags', data:null};
+		this.tags = options.tags || {id:'2'};
 	},
 
 	render: function() {
@@ -23,20 +23,10 @@ W.view.apps.TagsSelector = Backbone.View.extend({
 
 	onChangeSelect: function(event) {
 		var $select = $(event.currentTarget);
-		var tagsType = $select.val();
-		// this.$('.xa-optionTarget').hide();
-		// this.$('.xa-integral').val('');
-		// if (tagsType === "coupon"){
-		// 	this.$('.coupon_div').show().css('display', 'inline');
-		// 	this.$('.coupon_div a').show();
-
-		// }
-		// else{
-			// this.$('[data-target="'+tagsType+'"]').show();
-		// }
-
-		this.tags['type'] = tagsType;
-		this.tags['data'] = null;
+		var tagsId = $select.val();
+		console.log('!!!!!!!!!!!!!!');
+		console.log(tagsId);
+		this.tags['id'] = tagsId;
 		this.$('.errorHint').text("");
 		this.trigger('change-tags', _.deepClone(this.tags));
 	}
@@ -51,9 +41,7 @@ W.registerUIRole('[data-ui-role="apps-tags-selector"]', function() {
 		args: {
 		},
 		success: function(data){
-			console.log("success!!!!!!!!!!!!");
 			var tags = data.tags;
-			console.log(tags);
 			var view = new W.view.apps.TagsSelector({
 				el: $el.get(0),
 				tags: tags
@@ -67,6 +55,4 @@ W.registerUIRole('[data-ui-role="apps-tags-selector"]', function() {
 			console.log('error');
 		}
 	});
-    //var tags = $el.data('tags');
-
 });
