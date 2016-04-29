@@ -85,6 +85,7 @@ class IntegralSales(resource.Resource):
         # 保存时校验商品
         save_success, error_product_ids = verification_multi_product_promotion(request.manager, product_ids, 'integral_sale')
         if not save_success:
+            print('----------not success')
             response = create_response(200)
             response.data = {
                 'save_success': False,
@@ -138,6 +139,10 @@ class IntegralSales(resource.Resource):
 
         if start_date <= now:
             promotion.status = promotion_models.PROMOTION_STATUS_STARTED
+            promotion.save()
+
+        if end_date <= now:
+            promotion.status = promotion_models.PROMOTION_STATUS_FINISHED
             promotion.save()
 
         response = create_response(200)
