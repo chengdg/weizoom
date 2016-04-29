@@ -85,7 +85,6 @@ class IntegralSales(resource.Resource):
         # 保存时校验商品
         save_success, error_product_ids = verification_multi_product_promotion(request.manager, product_ids, 'integral_sale')
         if not save_success:
-            print('----------not success')
             response = create_response(200)
             response.data = {
                 'save_success': False,
@@ -93,13 +92,14 @@ class IntegralSales(resource.Resource):
             }
             return response.get_response()
 
+        is_permanant_active = (request.POST.get('is_permanant_active', 'false') == 'true')
         integral_sale = promotion_models.IntegralSale.objects.create(
             owner = request.manager,
             type = promotion_models.INTEGRAL_SALE_TYPE_PARTIAL,
             discount = 0,
             discount_money = 0.0,
             integral_price = 0,
-            is_permanant_active = (request.POST.get('is_permanant_active', 'false') == 'true')
+            is_permanant_active = is_permanant_active
         )
 
         #创建integral rule
@@ -141,7 +141,7 @@ class IntegralSales(resource.Resource):
             promotion.status = promotion_models.PROMOTION_STATUS_STARTED
             promotion.save()
 
-        if end_date <= now:
+        if end_date <= now and not is_permanant_active:
             promotion.status = promotion_models.PROMOTION_STATUS_FINISHED
             promotion.save()
 
