@@ -74,11 +74,11 @@ W.component.appkit.SurveyDescription = W.component.Component.extend({
 			isUserProperty: true,
 			default: {type:"no_prize", data:null}
 		}, {
-			name: 'prize2',
-			type: 'prize_selector',
-			displayName: '活动奖励',
+			name: 'tags',
+			type: 'tags_selector',
+			displayName: '添加到分组',
 			isUserProperty: true,
-			default: {type:"no_prize", data:null}
+			default: {type:"no_tags", data:null}
 		}]
 	}],
 
@@ -99,6 +99,9 @@ W.component.appkit.SurveyDescription = W.component.Component.extend({
 			this.refresh($node, {resize:true});
 		},
 		prize: function($node, model, value) {
+			this.refresh($node, {resize:true});
+		},
+		tags: function($node, model, value) {
 			this.refresh($node, {resize:true});
 		}
 	},

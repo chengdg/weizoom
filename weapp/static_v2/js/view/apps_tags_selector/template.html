@@ -1,0 +1,10 @@
+<script id="apps-tags-selector-tmpl" type="text/x-handlebar-tmpl">
+<div class="xui-apps-tagsSelector">
+	<select class="xui-i-select">
+		<option value="no_tags" selected>无奖励</option>
+		<option value="integral" {{#ifCond prize.type '===' 'integral'}}selected{{/ifCond}}>积分</option>
+		<option value="coupon" {{#ifCond prize.type '===' 'coupon'}}selected{{/ifCond}}>优惠券</option>
+	</select>
+
+</div>
+</script>
