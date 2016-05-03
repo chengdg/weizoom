@@ -137,6 +137,7 @@ class Promotion(resource.Resource):
                 record = product_id2record.get(product_id, None)
                 if record:
                     product_data['promotion_name'] = record.name
+                    product_data['can_select'] = False
 
             # 过滤下单位置为供货商的商品
             buy_in_supplier_products = models.Product.objects.filter(owner=request.manager, buy_in_supplier=True)
@@ -389,7 +390,17 @@ class PromotionList(resource.Resource):
                 "products": []
             }
             if hasattr(promotion, 'products'):
+                promotion.products = sorted(promotion.products,key=lambda x:x.id)
                 for product in promotion.products:
+                    # if len(product.models) > 1:
+                    #     total_stocks = 0
+                    #     for i in range(1, len(product.models)):
+                    #         total_stocks += product.models[i].get("stocks", 0)
+                    # else:
+                    #     total_stocks = product.stocks
+                    #
+                    # if total_stocks == 0 and product.status == u'在售':
+                    #     product.status = u'已售罄'
                     data["products"].append({
                         'id': product.id,
                         'name': product.name,
@@ -397,6 +408,7 @@ class PromotionList(resource.Resource):
                         'display_price': product.display_price,
                         'display_price_range': product.display_price_range,
                         'bar_code': product.bar_code,
+                        # 'stocks': total_stocks,
                         'stocks': product.stocks,
                         'sales': product.sales,
                         'is_use_custom_model': product.is_use_custom_model,
@@ -404,7 +416,8 @@ class PromotionList(resource.Resource):
                         'standard_model': product.standard_model,
                         'current_used_model': product.current_used_model,
                         'created_at': datetime.strftime(product.created_at, '%Y-%m-%d %H:%M'),
-                        "detail_link": '/mall2/product/?id=%d&source=onshelf' % product.id
+                        "detail_link": '/mall2/product/?id=%d&source=onshelf' % product.id,
+                        'status': product.status
                     })
 
                 if len(data['products']) == 1:

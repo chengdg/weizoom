@@ -47,7 +47,7 @@ Background:
 			"model": {
 				"models": {
 					"standard": {
-						"price": 10.0,
+						"price": 10.00,
 						"weight": 10.0,
 						"stock_type": "有限",
 						"stocks": 10
@@ -60,7 +60,7 @@ Background:
 			"model": {
 				"models": {
 					"S": {
-						"price": 10.0,
+						"price": 10.00,
 						"weight": 1.0,
 						"stock_type": "无限"
 						}
@@ -72,12 +72,12 @@ Background:
 			"model": {
 				"models": {
 					"黑色": {
-						"price": 10.0,
+						"price": 10.00,
 						"weight": 1.0,
 						"stock_type": "无限"
 					},
 					"白色": {
-						"price": 10.0,
+						"price": 10.00,
 						"weight": 1.0,
 						"stock_type": "无限"
 					}
@@ -89,12 +89,12 @@ Background:
 			"model": {
 				"models": {
 					"黑色 M": {
-						"price": 10.0,
+						"price": 10.00,
 						"weight": 1.0,
 						"stock_type": "无限"
 					},
 					"白色 M": {
-						"price": 10.0,
+						"price": 10.00,
 						"weight": 1.0,
 						"stock_type": "无限"
 					}
@@ -106,7 +106,7 @@ Background:
 			"model": {
 				"models": {
 					"白色 S": {
-						"price": 10.0,
+						"price": 10.00,
 						"weight": 1.0,
 						"stock_type": "无限"
 					}
@@ -118,22 +118,22 @@ Background:
 			"model": {
 				"models": {
 					"黑色 S": {
-						"price": 10.0,
+						"price": 10.00,
 						"weight": 1.0,
 						"stock_type": "无限"
 					},
 					"白色 S": {
-						"price": 10.0,
+						"price": 10.00,
 						"weight": 1.0,
 						"stock_type": "无限"
 					},
 					"黑色 M": {
-						"price": 10.0,
+						"price": 10.00,
 						"weight": 1.0,
 						"stock_type": "无限"
 					},
 						"白色 M": {
-						"price": 10.0,
+						"price": 10.00,
 						"weight": 1.0,
 						"stock_type": "无限"
 					}
@@ -155,7 +155,7 @@ Scenario:1 删除商品规格值'S'
 			"model": {
 				"models": {
 					"standard": {
-						"price": 0.0,
+						"price": 0.00,
 						"weight": 0.0,
 						"stock_type": "有限",
 						"stocks": 0
@@ -173,7 +173,7 @@ Scenario:1 删除商品规格值'S'
 			"model": {
 				"models": {
 					"standard": {
-						"price": 0.0,
+						"price": 0.00,
 						"weight": 0.0,
 						"stock_type": "有限",
 						"stocks": 0
@@ -191,12 +191,12 @@ Scenario:1 删除商品规格值'S'
 			"model": {
 				"models": {
 					"黑色 M": {
-						"price": 10.0,
+						"price": 10.00,
 						"weight": 1.0,
 						"stock_type": "无限"
 					},
 					"白色 M": {
-						"price": 10.0,
+						"price": 10.00,
 						"weight": 1.0,
 						"stock_type": "无限"
 					}
@@ -218,7 +218,7 @@ Scenario:2 删除商品规格'颜色'
 			"model": {
 				"models": {
 					"standard": {
-						"price": 0.0,
+						"price": 0.00,
 						"weight": 0.0,
 						"stock_type": "有限",
 						"stocks": 0
@@ -236,7 +236,7 @@ Scenario:2 删除商品规格'颜色'
 			"model": {
 				"models": {
 					"standard": {
-						"price": 0.0,
+						"price": 0.00,
 						"weight": 0.0,
 						"stock_type": "有限",
 						"stocks": 0
@@ -254,7 +254,7 @@ Scenario:2 删除商品规格'颜色'
 			"model": {
 				"models": {
 					"standard": {
-						"price": 0.0,
+						"price": 0.00,
 						"weight": 0.0,
 						"stock_type": "有限",
 						"stocks": 0
@@ -272,7 +272,7 @@ Scenario:2 删除商品规格'颜色'
 			"model": {
 				"models": {
 					"standard": {
-						"price": 0.0,
+						"price": 0.00,
 						"weight": 0.0,
 						"stock_type": "有限",
 						"stocks": 0
@@ -296,7 +296,7 @@ Scenario:3 删除商品规格值 '黑'和 'M'
 			"model": {
 				"models": {
 					"白色": {
-						"price": 10.0,
+						"price": 10.00,
 						"weight": 1.0,
 						"stock_type": "无限"
 					}
@@ -313,7 +313,7 @@ Scenario:3 删除商品规格值 '黑'和 'M'
 			"model": {
 				"models": {
 					"standard": {
-						"price": 0.0,
+						"price": 0.00,
 						"weight": 0.0,
 						"stock_type": "有限",
 						"stocks": 0
@@ -331,7 +331,7 @@ Scenario:3 删除商品规格值 '黑'和 'M'
 				"model": {
 					"models": {
 						"白色 S": {
-							"price":10.0,
+							"price":10.00,
 							"weight": 1.0,
 							"stock_type": "无限"
 						}
@@ -354,7 +354,7 @@ Scenario:4 删除商品规格'颜色'和'尺寸'
 			"model": {
 				"models": {
 					"standard": {
-						"price": 0.0,
+						"price": 0.00,
 						"weight": 0.0,
 						"stock_type": "有限",
 						"stocks": 0
@@ -372,7 +372,7 @@ Scenario:4 删除商品规格'颜色'和'尺寸'
 			"model": {
 				"models": {
 					"standard": {
-						"price": 0.0,
+						"price": 0.00,
 						"weight": 0.0,
 						"stock_type": "有限",
 						"stocks": 0
@@ -390,7 +390,7 @@ Scenario:4 删除商品规格'颜色'和'尺寸'
 			"model": {
 				"models": {
 					"standard": {
-						"price": 0.0,
+						"price": 0.00,
 						"weight": 0.0,
 						"stock_type": "有限",
 						"stocks": 0
@@ -408,7 +408,7 @@ Scenario:4 删除商品规格'颜色'和'尺寸'
 			"model": {
 				"models": {
 					"standard": {
-						"price": 0.0,
+						"price": 0.00,
 						"weight": 0.0,
 						"stock_type": "有限",
 						"stocks": 0
@@ -426,7 +426,7 @@ Scenario:4 删除商品规格'颜色'和'尺寸'
 			"model": {
 				"models": {
 					"standard": {
-						"price": 0.0,
+						"price": 0.00,
 						"weight": 0.0,
 						"stock_type": "有限",
 						"stocks": 0
@@ -450,12 +450,12 @@ Scenario:5 无规格商品修改成多规格后,再删除商品规格
 			"model": {
 				"models": {
 					"黑色": {
-						"price": 11.0,
+						"price": 11.00,
 						"weight": 11.0,
 						"stock_type": "无限"
 					},
 					"白色": {
-						"price": 11.0,
+						"price": 11.00,
 						"weight": 11.0,
 						"stock_type": "无限"
 					}
@@ -472,12 +472,12 @@ Scenario:5 无规格商品修改成多规格后,再删除商品规格
 			"model": {
 				"models": {
 					"黑色": {
-						"price": 11.0,
+						"price": 11.00,
 						"weight": 11.0,
 						"stock_type": "无限"
 					},
 					"白色": {
-						"price": 11.0,
+						"price": 11.00,
 						"weight": 11.0,
 						"stock_type": "无限"
 					}
@@ -495,7 +495,7 @@ Scenario:5 无规格商品修改成多规格后,再删除商品规格
 			"model": {
 				"models": {
 					"standard": {
-						"price": 10.0,
+						"price": 10.00,
 						"weight": 10.0,
 						"stock_type": "有限",
 						"stocks": 0
@@ -519,7 +519,7 @@ Scenario:6 无规格商品修改成多规格后,再删除商品规格值
 			"model": {
 				"models": {
 					"黑色": {
-						"price": 11.0,
+						"price": 11.00,
 						"weight": 11.0,
 						"stock_type": "无限"
 					}
@@ -535,7 +535,7 @@ Scenario:6 无规格商品修改成多规格后,再删除商品规格值
 				"model": {
 					"models": {
 						"黑色": {
-							"price": 11.0,
+							"price": 11.00,
 							"weight": 11.0,
 							"stock_type": "无限"
 						}
@@ -553,7 +553,7 @@ Scenario:6 无规格商品修改成多规格后,再删除商品规格值
 				"model": {
 					"models": {
 						"standard": {
-							"price": 10.0,
+							"price": 10.00,
 							"weight": 10.0,
 							"stock_type": "有限",
 							"stocks": 0

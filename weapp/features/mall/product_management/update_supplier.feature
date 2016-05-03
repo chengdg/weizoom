@@ -102,7 +102,7 @@ Scenario: 1 修改供货商影响商品
 		{
 			"supplier": "土小宝",
 			"name": "红烧肉",
-			"price": 12.0,
+			"price": 12.00,
 			"purchase_price": 9.99,
 			"stock_type": "有限",
 			"stocks": 3
@@ -145,7 +145,7 @@ Scenario: 1 修改供货商影响商品
 		{
 			"supplier": "土小宝",
 			"name": "红烧肉",
-			"price": 12.0,
+			"price": 12.00,
 			"purchase_price": 9.99,
 			"stock_type": "有限",
 			"stocks": 3
@@ -195,7 +195,7 @@ Scenario: 2 删除供货商影响商品
 		{
 			"supplier": "土小宝1",
 			"name": "红烧肉",
-			"price": 12.0,
+			"price": 12.00,
 			"purchase_price": 9.99,
 			"stock_type": "有限",
 			"stocks": 3
@@ -230,7 +230,7 @@ Scenario: 2 删除供货商影响商品
 		{
 			"supplier": "土小宝1",
 			"name": "红烧肉",
-			"price": 12.0,
+			"price": 12.00,
 			"purchase_price": 9.99,
 			"stock_type": "有限",
 			"stocks": 3

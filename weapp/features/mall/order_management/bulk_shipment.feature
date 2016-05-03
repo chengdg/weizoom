@@ -14,7 +14,7 @@ Background:
 		"""
 		[{
 			"name": "商品1",
-			"price": 100,
+			"price": 100.00,
 			"stocks": 4
 		}]
 		"""

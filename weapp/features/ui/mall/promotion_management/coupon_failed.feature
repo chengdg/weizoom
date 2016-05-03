@@ -59,7 +59,7 @@ Background:
 		}]
 		"""
 
-@mall2 @promotion @promotionCoupon @promotionFlash
+@promotion @promotionCoupon @promotionFlash
 Scenario: 1先建优惠券，不能参加促销活动
 	When jobs添加优惠券规则
 		"""
@@ -167,7 +167,7 @@ Scenario: 1先建优惠券，不能参加促销活动
 		"""
 
 
-@mall2 @wip.cp2 @promotion @promotionCoupon @promotionFlash
+@wip.cp2 @promotion @promotionCoupon @promotionFlash
 Scenario: 2先建优惠券，不能参加促销活动
 	When jobs添加优惠券规则
 		"""
@@ -237,7 +237,7 @@ Scenario: 2先建优惠券，不能参加促销活动
 		}]
 		"""
 
-@mall2 @wip.cp3 @promotion @promotionCoupon @promotion.promotionFlash
+@wip.cp3 @promotion @promotionCoupon @promotion.promotionFlash
 Scenario: 3先建立限时抢购活动，不能建立该商品的单品券
 	When jobs创建限时抢购活动
 		"""
@@ -289,7 +289,7 @@ Scenario: 3先建立限时抢购活动，不能建立该商品的单品券
 		}]
 		"""
 
-@mall2 @wip.cp4 @promotion.promotionCoupon @promotion.promotionPremium
+@wip.cp4 @promotion.promotionCoupon @promotion.promotionPremium
 Scenario: 4先建立买赠活动，不能建立该商品的单品券
 	When jobs创建买赠活动
 		"""

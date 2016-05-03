@@ -322,8 +322,8 @@ class IntegralSale(models.Model):
 		else:
 			max_discount = str(max(list(rule['discount'] for rule in self.rules)))
 			min_discount = str(min(list(rule['discount'] for rule in self.rules)))
-			max_discount_money = str(max(list(rule['discount_money'] for rule in self.rules)))
-			min_discount_money = str(min(list(rule['discount_money'] for rule in self.rules)))
+			max_discount_money = str("%.2f" % max(list(rule['discount_money'] for rule in self.rules)))
+			min_discount_money = str("%.2f" % min(list(rule['discount_money'] for rule in self.rules)))
 			if max_discount == min_discount:
 				discount = max_discount
 			else:

@@ -26,6 +26,7 @@ W.view.mall.PromotionSelectProductView = Backbone.View.extend({
 		this.products = null;
 		this.enableMultiSelection = false;
 		this.uniqueDialog = options.uniqueDialog ||'W.dialog.mall.SelectPromotionProductDialog';
+		this.dialogTitles = options.dialogTitles || null;
 		if (options.hasOwnProperty('enableMultiSelection')) {
 			this.enableMultiSelection = options.enableMultiSelection;
 		}
@@ -66,7 +67,6 @@ W.view.mall.PromotionSelectProductView = Backbone.View.extend({
 				success: function(data) {
                     alert(data);
 					this.addProducts(data);
-					this.trigger('finish-select-products', data);
 				},
 				error: function(resp) {
 					W.showHint('error', '获取促销的商品信息失败!');
@@ -95,7 +95,6 @@ W.view.mall.PromotionSelectProductView = Backbone.View.extend({
 
 			products.push(data);
 		});
-
 		return products;
 	},
 
@@ -111,38 +110,51 @@ W.view.mall.PromotionSelectProductView = Backbone.View.extend({
 		} else {
 			this.products = products;
 		}
+		// 按照id去重
+		this.products = _.uniq(this.products, false, 'id');
 
-		var $node = $.tmpl(this.tableTemplate, {products: products});
+		if (this.filter_type === 'integral_sale') {
+			// 积分应用
+			var $node = $.tmpl(this.tableTemplate, {products: this.products});
 
-		if (this.enableTableItemSelectable) {
-			$node.find('thead tr').prepend('<th width="30"><input type="checkbox" class="xa-selectAll" /></th>');
-			$node.find('tbody tr').each(function() {
-				var $tr = $(this);
-				$tr.prepend('<td><input type="checkbox" class="xa-select" /></td>');
-			});
-		}
-		if(this.tableOutAllSelectable){
-			$node.find('thead tr').prepend('<th width="30"></th>');
-			$node.find('tbody tr').each(function() {
-				var $tr = $(this);
-				$tr.prepend('<td><input type="checkbox" class="xa-select" /></td>');
-			});
-		}
-		if (this.enableMultiSelection) {
-			var $tbody = this.$('.xa-selectedProductList tbody');
-			if ($tbody.length > 0) {
-				$tbody.append($node.find('tbody tr'));
-			} else {
-				this.$('.xa-selectedProductList').empty().append($node);
-			}
-		} else {
 			this.$('.xa-selectedProductList').empty().append($node);
 			$node.find('input[type="text"]').eq(0).focus();
-		}
+		} else {			
+			var $node = $.tmpl(this.tableTemplate, {products: products});
 
-		for (var i = 0; i < products.length; i++) {
-			this.selectedProductIds.push(products[i].id);
+			if (this.enableTableItemSelectable) {
+				$node.find('thead tr').prepend('<th width="30"><input type="checkbox" class="xa-selectAll" /></th>');
+				$node.find('tbody tr').each(function() {
+					var $tr = $(this);
+					$tr.prepend('<td><input type="checkbox" class="xa-select" /></td>');
+				});
+			}
+			if(this.tableOutAllSelectable){
+				$node.find('thead tr').prepend('<th width="30"></th>');
+				$node.find('tbody tr').each(function() {
+					var $tr = $(this);
+					$tr.prepend('<td><input type="checkbox" class="xa-select" /></td>');
+				});
+			}
+			if (this.enableMultiSelection) {
+				var $tbody = this.$('.xa-selectedProductList tbody');
+				if ($tbody.length > 0) {
+					$tbody.append($node.find('tbody tr'));
+				} else {
+					this.$('.xa-selectedProductList').empty().append($node);
+				}
+			} else {
+				this.$('.xa-selectedProductList').empty().append($node);
+				$node.find('input[type="text"]').eq(0).focus();
+			}
+
+		}
+		this.selectedProductIds = [];
+		for (var i = 0; i < this.products.length; i++) {
+			this.selectedProductIds.push(this.products[i].id);
 		};
+
+		this.trigger('finish-select-products', this.products);
 	},
 	getAllSelectedItems: function() {
 		var $trs = [];
@@ -174,15 +186,39 @@ W.view.mall.PromotionSelectProductView = Backbone.View.extend({
 		var barCode  = $.trim(this.$('[name="bar_code"]').val());
 		var _this = this;
 		W.dialog.showDialog(this.uniqueDialog, {
-			enableMultiSelection: this.enableMultiSelection,
+			enableMultiSelection: _this.enableMultiSelection,
 			name: name,
 			barCode: barCode,
 			selectedProductIds: _this.selectedProductIds,
+			title: _this.dialogTitles,
 			success: function(data) {
-				_this.addProducts(data);
-				_this.trigger('finish-select-products', data);
+				if (data.type === 'product') {
+					_this.addProducts(data.data);
+				} else {
+					_this.addProductsHasCategory(data.data);
+				}
 			},
 			filter_type: _this.filter_type
+		});
+	},
+
+	addProductsHasCategory: function (category_ids) {
+		var _this = this;
+		W.getApi().call({
+			method: 'get',
+			app: 'mall2',
+			resource: 'category_products',
+			args: {
+				promotion_type: 'integral_sale',
+				category_ids: category_ids.join(','),
+			},
+			scope: this,
+			success: function(successData) { 
+				_this.addProducts(successData.products);
+			},
+			error: function() {
+				W.showHint('error','获取分组中的商品失败，请稍后重试！');
+			}
 		});
 	},
 
@@ -205,6 +241,9 @@ W.view.mall.PromotionSelectProductView = Backbone.View.extend({
 				this.selectedProductIds.splice(i, 1);
 			}
 		};
+		this.products = _.filter(this.products, function(product){ return product.id !== productId; });
+		
+		this.trigger('finish-select-products', this.products);
 	},
 	onClickBatchDelete:function(event){
 

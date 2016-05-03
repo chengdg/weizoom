@@ -49,42 +49,91 @@ def step_impl(context, user):
 				promotions = [promotions]
 
 		for promotion in promotions:
-				db_product = Product.objects.get(owner_id=user_id, name=promotion['product_name'])
-				product_ids = [{
-						'id': db_product.id
-				}]
-				if 'rules' in promotion:
-						rules = promotion['rules']
-						for rule in rules:
-								if rule.has_key('member_grade'):
-										rule['member_grade_id'] = __get_member_grade(rule, context.webapp_id)
-				else:
-						rules = [{
-								"member_grade_id": -1,
-								"discount": promotion.get('discount', 100),
-								"discount_money": promotion.get('discount_money', 0.0)
-						}]
-				data = {
-						'name': promotion['name'],
-						'promotion_title': promotion.get('promotion_title', ''),
-						'member_grade': __get_member_grade(promotion, context.webapp_id),
-						'products': json.dumps(product_ids),
-						'rules': json.dumps(rules),
-						'discount': promotion.get('discount', 100),
-						'discount_money': promotion.get('discount_money', 0.0),
-						'integral_price': promotion.get('integral_price', 0.0),
-						'is_permanant_active': str(promotion.get('is_permanant_active', False)).lower(),
-				}
-				if data['is_permanant_active'] != 'true':
-						data['start_date'] = bdd_util.get_datetime_no_second_str(promotion['start_date']),
-						data['end_date'] = bdd_util.get_datetime_no_second_str(promotion['end_date']),
-				url = '/mall2/api/integral_sale/?_method=put'
-				response = context.client.post(url, data)
-				if promotion.get('created_at'):
-						models.Promotion.objects.filter(
-						owner_id=context.webapp_owner_id,
-						name=data['name']).update(created_at=bdd_util.get_datetime_str(promotion['created_at']))
-				bdd_util.assert_api_call_success(response)
+			product_names = promotion['product_name'].split(',')
+			product_ids = []
+			for name in product_names:
+				db_product = Product.objects.get(owner_id=user_id, name=name)
+				product_ids.append({
+					'id': db_product.id
+				})
+
+			if 'rules' in promotion:
+					rules = promotion['rules']
+					for rule in rules:
+							if rule.has_key('member_grade'):
+									rule['member_grade_id'] = __get_member_grade(rule, context.webapp_id)
+			else:
+					rules = [{
+							"member_grade_id": -1,
+							"discount": promotion.get('discount', 100),
+							"discount_money": promotion.get('discount_money', 0.0)
+					}]
+			data = {
+					'name': promotion['name'],
+					'promotion_title': promotion.get('promotion_title', ''),
+					'member_grade': __get_member_grade(promotion, context.webapp_id),
+					'products': json.dumps(product_ids),
+					'rules': json.dumps(rules),
+					'discount': promotion.get('discount', 100),
+					'discount_money': promotion.get('discount_money', 0.0),
+					'integral_price': promotion.get('integral_price', 0.0),
+					'is_permanant_active': str(promotion.get('is_permanant_active', False)).lower(),
+			}
+			if data['is_permanant_active'] != 'true':
+					data['start_date'] = bdd_util.get_datetime_no_second_str(promotion['start_date']),
+					data['end_date'] = bdd_util.get_datetime_no_second_str(promotion['end_date']),
+			url = '/mall2/api/integral_sale/?_method=put'
+			response = context.client.post(url, data)
+			context.response = response
+			if promotion.get('created_at'):
+					models.Promotion.objects.filter(
+					owner_id=context.webapp_owner_id,
+					name=data['name']).update(created_at=bdd_util.get_datetime_str(promotion['created_at']))
+			bdd_util.assert_api_call_success(response)
+
+
+
+@then(u"{user}获取积分应用活动'{promotion_name}'详情")
+def step_impl(context, user, promotion_name):
+	excepted = json.loads(context.text)
+
+	# 在售商品不显示状态，actual中product的status是property
+	for p in excepted['products']:
+		if p['status'] == "":
+			p.pop('status')
+
+	promotion = Promotion.objects.get(name=promotion_name)
+	url = "/mall2/integral_sale/?id=" + str(promotion.id)
+	response = context.client.get(url)
+	promotion = response.context['promotion']
+	jsons = response.context['jsons']
+	actual = {
+		'name': promotion.name,
+		'promotion_title': promotion.promotion_title,
+		'is_permanant_active': promotion.detail['is_permanant_active'],
+		'discount_money': promotion.detail['discount_money']
+	}
+	if promotion.detail['is_permanant_active']:
+		actual['activity_time'] = u'永久有效'
+	else:
+		actual['activity_time'] = promotion.start_date+'至'+promotion.end_date
+
+	discount_info = []
+	for rule in promotion.detail['rules']:
+		if rule['member_grade_name'] == '全部等级':
+			discount_info.append({'member_grade': u'全部会员', 'discount': str(rule['discount']) + "%"})
+		else:
+			discount_info.append({'member_grade': rule['member_grade_name'], 'discount': str(rule['discount']) + "%"})
+
+
+	actual['discount_info'] = discount_info
+
+	for p in promotion.products:
+		p.price = p.display_price
+	actual['products'] = promotion.products
+
+
+	bdd_util.assert_dict(excepted, actual)
 
 
 @when(u"{user}创建满减活动")
@@ -263,40 +312,51 @@ def step_impl(context, user, promotion_type):
 			# 含有促销标题的
 			promotion['promotion_title'] = promotion['promotionTitle']
 
-		promotion['product_name'] = promotion['product']['name']
-		if promotion['product']['display_price_range'] != '':
-			promotion['product_price'] = promotion['product']['display_price_range']
-		else:
-			promotion['product_price'] = promotion['product']['display_price']
-		promotion['bar_code'] = promotion['product']['bar_code']
-		promotion['price'] = promotion['product']['display_price']
-		promotion['stocks'] = promotion['product']['stocks']
-
-		if promotion_type == "flash_sale":
-			promotion['promotion_price'] = promotion['detail']['promotion_price']
 		if promotion_type == 'integral_sale':
+			for product in promotion['products']:
+				if product['display_price_range'] != '':
+					product['price'] = product['display_price_range']
+				else:
+					product['price'] = product['display_price']
+
+				if product.get('status') and product['status'] == '在售':
+					product['status'] = ''
+
 			promotion['is_permanant_active'] = str(promotion['detail']['is_permanant_active']).lower()
 			detail = promotion['detail']
 			rules = detail['rules']
 			if len(rules) == 1 and rules[0]['member_grade_id'] < 1:
-					rule = rules[0]
-					rule['member_grade'] = u'全部会员'
-					promotion['discount'] = str(rule['discount']) + '%'
-					promotion['discount_money'] = rule['discount_money']
+				rule = rules[0]
+				rule['member_grade'] = u'全部会员'
+				promotion['discount'] = str(rule['discount']) + '%'
+				promotion['discount_money'] = rule['discount_money']
 			else:
-					promotion['discount'] = detail['discount'].replace(' ', '')
-					promotion['discount_money'] = detail['discount_money'].replace(' ', '')
-					for rule in rules:
-							rule['member_grade'] = MemberGrade.objects.get(id=rule['member_grade_id']).name
+				promotion['discount'] = detail['discount'].replace(' ', '')
+				promotion['discount_money'] = detail['discount_money'].replace(' ', '')
+				for rule in rules:
+					rule['member_grade'] = MemberGrade.objects.get(id=rule['member_grade_id']).name
 
 			promotion['rules'] = rules
 		else:
-			member_grade_id = Promotion.objects.get(id=promotion['id']).member_grade_id
-			try:
-				promotion['member_grade'] = MemberGrade.objects.get(id=member_grade_id).name
-			except MemberGrade.DoesNotExist:
-				webapp_id = bdd_util.get_webapp_id_for(user)
-				promotion['member_grade'] = MemberGrade.get_default_grade(webapp_id).name
+			promotion['product_name'] = promotion['product']['name']
+			if promotion['product']['display_price_range'] != '':
+				promotion['product_price'] = promotion['product']['display_price_range']
+			else:
+				promotion['product_price'] = promotion['product']['display_price']
+			promotion['bar_code'] = promotion['product']['bar_code']
+			promotion['price'] = promotion['product']['display_price']
+			promotion['stocks'] = promotion['product']['stocks']
+
+			if promotion_type == "flash_sale":
+				promotion['promotion_price'] = promotion['detail']['promotion_price']
+
+			else:
+				member_grade_id = Promotion.objects.get(id=promotion['id']).member_grade_id
+				try:
+					promotion['member_grade'] = MemberGrade.objects.get(id=member_grade_id).name
+				except MemberGrade.DoesNotExist:
+					webapp_id = bdd_util.get_webapp_id_for(user)
+					promotion['member_grade'] = MemberGrade.get_default_grade(webapp_id).name
 	expected = []
 	if context.table:
 		expected = [promotion.as_dict() for promotion in context.table]
@@ -432,7 +492,6 @@ def step_disable_coupon(context, user, coupon_name):
 	data['ids[]'] = promotion.id
 
 	url = '/mall2/api/promotion/'
-	print("data: {}".format(data))
 	response = context.client.post(url, data)
 	bdd_util.assert_api_call_success(response)
 
@@ -635,11 +694,15 @@ def step_impl(context, user):
 @then(u"{user}新建多商品券活动时能获得商品分组列表")
 def step_impl(context, user):
 	url = '/mall2/api/categories/'
-	if context.query_param:
-		if context.query_param.get('name'):
-			url += '&filter_name=' + context.query_param['name']
+	if hasattr(context, 'query_param'):
+		query_param = context.query_param
+		delattr(context, 'query_param')
+	else:
+		query_param = {}
+	if query_param.get('name', ''):
+		url += '?filter_name=' + query_param.get('name', '')
+
 	response = context.client.get(url)
-	bdd_util.assert_api_call_success(response)
 	actual = json.loads(response.content)['data']['items']
 
 	if context.table:
@@ -652,3 +715,14 @@ def step_impl(context, user):
 		del item['created_at']
 
 	bdd_util.assert_list(expected, actual)
+
+
+@then(u"{user}获得积分应用活动创建失败提示'{info}'")
+def step_impl(context, user, info):
+	if hasattr(context, 'response'):
+		print('----response',json.loads(context.response.content)['data'])
+		save_success = json.loads(context.response.content)['data']['save_success']
+		delattr(context, 'response')
+		assert not save_success
+	else:
+		assert 0/1

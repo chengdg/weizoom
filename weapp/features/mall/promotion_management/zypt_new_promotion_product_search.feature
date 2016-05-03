@@ -93,7 +93,7 @@ Background:
 						}
 					}
 				},
-				"postage":10.0
+				"postage":10.00
 			},{
 				"name":"bill商品2",
 				"model": {
@@ -112,13 +112,13 @@ Background:
 				"model": {
 					"models": {
 						"黑色 S": {
-							"price": 30.0,
+							"price": 30.00,
 							"weight": 1,
 							"stock_type": "有限",
 							"stocks": 100
 						},
 						"白色 S": {
-							"price": 30.0,
+							"price": 30.00,
 							"weight": 2,
 							"stock_type": "无限"
 						}

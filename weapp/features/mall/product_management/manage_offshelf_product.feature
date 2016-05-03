@@ -15,7 +15,7 @@ Background:
 			"name": "分类2"
 		}, {
 			"name": "分类3"
-		}]	
+		}]
 		"""
 	And jobs已添加商品规格
 		"""
@@ -49,7 +49,7 @@ Background:
 				"models": {
 					"standard": {
 						"user_code": "1",
-						"price": 11.0,
+						"price": 11.00,
 						"stock_type": "无限"
 					}
 				}
@@ -63,13 +63,13 @@ Background:
 				"models": {
 					"黑色 M": {
 						"user_code": "2",
-						"price": 8.1,
+						"price": 8.10,
 						"stock_type": "有限",
 						"stocks": 3
 					},
 					"白色 M": {
 						"user_code": "3",
-						"price": 8.2,
+						"price": 8.20,
 						"stock_type": "有限",
 						"stocks": 2
 					}
@@ -83,7 +83,7 @@ Background:
 				"models": {
 					"白色 M": {
 						"user_code": "4",
-						"price": 7.1,
+						"price": 7.10,
 						"stock_type": "无限"
 					}
 				}
@@ -104,7 +104,7 @@ Scenario:1 浏览待售商品
 				"models": {
 					"白色 M": {
 						"user_code": "4",
-						"price": 7.1,
+						"price": 7.10,
 						"stock_type": "无限"
 					}
 				}
@@ -117,13 +117,13 @@ Scenario:1 浏览待售商品
 				"models": {
 					"黑色 M": {
 						"user_code": "2",
-						"price": 8.1,
+						"price": 8.10,
 						"stock_type": "有限",
 						"stocks": 3
 					},
 					"白色 M": {
 						"user_code": "3",
-						"price": 8.2,
+						"price": 8.20,
 						"stock_type": "有限",
 						"stocks": 2
 					}
@@ -137,7 +137,7 @@ Scenario:1 浏览待售商品
 				"models": {
 					"standard": {
 						"user_code": "1",
-						"price": 11.0,
+						"price": 11.00,
 						"stock_type": "无限"
 					}
 				}
@@ -208,7 +208,7 @@ Scenario:3 查看商品规格
 		[{
 			"name": "白色 M",
 			"user_code": "4",
-			"price": 7.1,
+			"price": 7.10,
 			"stocks": "无限"
 		}]
 		"""
@@ -217,12 +217,12 @@ Scenario:3 查看商品规格
 		[{
 			"name": "黑色 M",
 			"user_code": "2",
-			"price": 8.1,
+			"price": 8.10,
 			"stocks": 3
 		}, {
 			"name": "白色 M",
 			"user_code": "3",
-			"price": 8.2,
+			"price": 8.20,
 			"stocks": 2
 		}]
 		"""
@@ -241,7 +241,7 @@ Scenario:4 修改商品规格
 				"models": {
 					"白色 M": {
 						"user_code": "4",
-						"price": 7.1,
+						"price": 7.10,
 						"stock_type": "无限"
 					}
 				}
@@ -254,13 +254,13 @@ Scenario:4 修改商品规格
 				"models": {
 					"黑色 M": {
 						"user_code": "2",
-						"price": 8.1,
+						"price": 8.10,
 						"stock_type": "有限",
 						"stocks": 3
 					},
 					"白色 M": {
 						"user_code": "3",
-						"price": 8.2,
+						"price": 8.20,
 						"stock_type": "有限",
 						"stocks": 2
 					}
@@ -274,7 +274,7 @@ Scenario:4 修改商品规格
 				"models": {
 					"standard": {
 						"user_code": "1",
-						"price": 11.0,
+						"price": 11.00,
 						"stock_type": "无限"
 					}
 				}
@@ -318,7 +318,7 @@ Scenario:4 修改商品规格
 				"models": {
 					"白色 M": {
 						"user_code": "4",
-						"price": 7.1,
+						"price": 7.10,
 						"stock_type": "有限",
 						"stocks": 1
 					}
@@ -332,13 +332,13 @@ Scenario:4 修改商品规格
 				"models": {
 					"黑色 M": {
 						"user_code": "2",
-						"price": 8.1,
+						"price": 8.10,
 						"stock_type": "有限",
 						"stocks": 30
 					},
 					"白色 M": {
 						"user_code": "3",
-						"price": 8.2,
+						"price": 8.20,
 						"stock_type": "无限"
 					}
 				}
@@ -351,7 +351,7 @@ Scenario:4 修改商品规格
 				"models": {
 					"standard": {
 						"user_code": "1",
-						"price": 11.0,
+						"price": 11.00,
 						"stock_type": "有限",
 						"stocks": 2
 					}
@@ -364,12 +364,12 @@ Scenario:4 修改商品规格
 		[{
 			"name": "黑色 M",
 			"user_code": "2",
-			"price": 8.1,
+			"price": 8.10,
 			"stocks": 30
 		}, {
 			"name": "白色 M",
 			"user_code": "3",
-			"price": 8.2,
+			"price": 8.20,
 			"stocks": "无限"
 		}]
 		"""
@@ -387,7 +387,7 @@ Scenario:5 修改商品价格
 				"models": {
 					"白色 M": {
 						"user_code": "4",
-						"price": 7.1,
+						"price": 7.10,
 						"stock_type": "无限"
 					}
 				}
@@ -400,13 +400,13 @@ Scenario:5 修改商品价格
 				"models": {
 					"黑色 M": {
 						"user_code": "2",
-						"price": 8.1,
+						"price": 8.10,
 						"stock_type": "有限",
 						"stocks": 3
 					},
 					"白色 M": {
 						"user_code": "3",
-						"price": 8.2,
+						"price": 8.20,
 						"stock_type": "有限",
 						"stocks": 2
 					}
@@ -420,7 +420,7 @@ Scenario:5 修改商品价格
 				"models": {
 					"standard": {
 						"user_code": "1",
-						"price": 11.0,
+						"price": 11.00,
 						"stock_type": "无限"
 					}
 				}
@@ -430,25 +430,25 @@ Scenario:5 修改商品价格
 	When jobs修改商品'水晶虾仁'的价格为
 		"""
 		[{
-			"price": 7.0
+			"price": 7.00
 		}]
 		"""
 	When jobs修改商品'东坡肘子'的价格为
 		"""
 		[{
-			"price": 14.0
+			"price": 14.00
 		}]
 		"""
 	When jobs修改商品'叫花鸡'的价格为
 		"""
 		[{
 			"user_code": "2",
-			"price": 8.0,
+			"price": 8.00,
 			"stock_type": "有限",
 			"stocks": 3
 		}, {
 			"user_code": "3",
-			"price": 8.0,
+			"price": 8.00,
 			"stock_type": "有限",
 			"stocks": 2
 		}]
@@ -463,7 +463,7 @@ Scenario:5 修改商品价格
 				"models": {
 					"白色 M": {
 						"user_code": "4",
-						"price": 7.0,
+						"price": 7.00,
 						"stock_type": "无限"
 					}
 				}
@@ -476,13 +476,13 @@ Scenario:5 修改商品价格
 				"models": {
 					"黑色 M": {
 						"user_code": "2",
-						"price": 8.0,
+						"price": 8.00,
 						"stock_type": "有限",
 						"stocks": 3
 					},
 					"白色 M": {
 						"user_code": "3",
-						"price": 8.0,
+						"price": 8.00,
 						"stock_type": "有限",
 						"stocks": 2
 					}
@@ -496,7 +496,7 @@ Scenario:5 修改商品价格
 				"models": {
 					"standard": {
 						"user_code": "1",
-						"price": 14.0,
+						"price": 14.00,
 						"stock_type": "无限"
 					}
 				}
@@ -508,12 +508,12 @@ Scenario:5 修改商品价格
 		[{
 			"name": "黑色 M",
 			"user_code": "2",
-			"price": 8.0,
+			"price": 8.00,
 			"stocks": 3
 		}, {
 			"name": "白色 M",
 			"user_code": "3",
-			"price": 8.0,
+			"price": 8.00,
 			"stocks": 2
 		}]
 		"""

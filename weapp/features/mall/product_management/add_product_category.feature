@@ -73,7 +73,7 @@ Scenario:2 添加商品时选择分类，能在分类中看到该商品
 			"model": {
 				"models": {
 					"standard": {
-						"price": 12.0,
+						"price": 12.00,
 						"stock_type": "有限",
 						"stocks": 3
 					}
@@ -86,7 +86,7 @@ Scenario:2 添加商品时选择分类，能在分类中看到该商品
 			"model": {
 				"models": {
 					"standard": {
-						"price": 3.0
+						"price": 3.00
 					}
 				}
 			}
@@ -98,7 +98,7 @@ Scenario:2 添加商品时选择分类，能在分类中看到该商品
 			"name": "分类1",
 			"products": [{
 				"name": "叫花鸡",
-				"display_price": 12.0,
+				"display_price": 12.00,
 				"status": "待售"
 			}, {
 				"name": "东坡肘子",

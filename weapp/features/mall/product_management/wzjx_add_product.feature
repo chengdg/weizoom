@@ -110,12 +110,12 @@ Scenario: 1 添加商品
 			"swipe_images": [{
 				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
 			}],
-			"price": 12.0,
+			"price": 12.00,
 			"purchase_price": 9.99,
 			"weight": 5.5,
 			"stock_type": "有限",
 			"stocks": 3,
-			"postage": 0.0
+			"postage": 0.00
 		}]
 		"""
 	Then jobs能获取商品'东坡肘子'
@@ -169,7 +169,7 @@ Scenario: 1 添加商品
 			"swipe_images": [{
 				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
 			}],
-			"price": 12.0,
+			"price": 12.00,
 			"purchase_price": 9.99,
 			"weight": 5.5,
 			"stock_type": "有限",
@@ -179,7 +179,7 @@ Scenario: 1 添加商品
 			},{
 				"type": "货到付款"
 			}],
-			"postage": 0.0
+			"postage": 0.00
 		}
 		"""
 	Given bill登录系统

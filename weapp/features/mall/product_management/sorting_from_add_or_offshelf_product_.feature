@@ -16,19 +16,19 @@ Background:
 		"""
 			[{
 				"name": "商品0",
-				"price": 20.0,
+				"price": 20.00,
 				"shelve_type": "上架"
 			},{
 				"name": "商品1",
-				"price": 20.0,
+				"price": 20.00,
 				"shelve_type": "下架"
 			}, {
 				"name": "商品2",
-				"price": 30.0,
+				"price": 30.00,
 				"shelve_type": "下架"
 			}, {
 				"name": "商品3",
-				"price": 20.0,
+				"price": 20.00,
 				"shelve_type": "下架"
 			}]
 		"""
@@ -40,20 +40,20 @@ Scenario: 1 新建商品,在待售商品列表中第一个显示
 		"""
 		[{
 			"name": "商品3",
-			"price": 20.0
+			"price": 20.00
 		}, {
 			"name": "商品2",
-			"price": 30.0
+			"price": 30.00
 		}, {
 			"name": "商品1",
-			"price": 20.0
+			"price": 20.00
 		}]
 		"""
 	When jobs已添加商品
 		"""
 		[{
 			"name": "商品4",
-			"price": 20.0,
+			"price": 20.00,
 			"shelve_type": "下架"
 		}]
 		"""
@@ -61,16 +61,16 @@ Scenario: 1 新建商品,在待售商品列表中第一个显示
 		"""
 		[{
 			"name": "商品4",
-			"price": 20.0
+			"price": 20.00
 		},{
 			"name": "商品3",
-			"price": 20.0
+			"price": 20.00
 		}, {
 			"name": "商品2",
-			"price": 30.0
+			"price": 30.00
 		}, {
 			"name": "商品1",
-			"price": 20.0
+			"price": 20.00
 		}]
 		"""
 
@@ -81,20 +81,20 @@ Scenario: 2 下架商品,在待售商品列表中第一个显示
 		"""
 		[{
 			"name": "商品3",
-			"price": 20.0
+			"price": 20.00
 		}, {
 			"name": "商品2",
-			"price": 30.0
+			"price": 30.00
 		}, {
 			"name": "商品1",
-			"price": 20.0
+			"price": 20.00
 		}]
 		"""
 	And jobs能获得'在售'商品列表
 		"""
 		[{
 			"name":"商品0",
-			"price":20.0
+			"price":20.00
 		}]
 		"""
 	When jobs'上架'商品'商品2'
@@ -102,20 +102,20 @@ Scenario: 2 下架商品,在待售商品列表中第一个显示
 		"""
 		[{
 			"name":"商品2",
-			"price":30.0
+			"price":30.00
 		},{
 			"name":"商品0",
-			"price":20.0
+			"price":20.00
 		}]
 		"""
 	And jobs能获得'待售'商品列表
 		"""
 		[{
 			"name": "商品3",
-			"price": 20.0
+			"price": 20.00
 		}, {
 			"name": "商品1",
-			"price": 20.0
+			"price": 20.00
 		}]
 		"""
 	When jobs'下架'商品'商品2'
@@ -123,12 +123,12 @@ Scenario: 2 下架商品,在待售商品列表中第一个显示
 		"""
 		[{
 			"name": "商品2",
-			"price": 30.0
+			"price": 30.00
 		},{
 			"name": "商品3",
-			"price": 20.0
+			"price": 20.00
 		}, {
 			"name": "商品1",
-			"price": 20.0
+			"price": 20.00
 		}]
 		"""

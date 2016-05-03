@@ -87,7 +87,7 @@ Background:
 			"is_permanant_active": false,
 			"start_date": "今天",
 			"end_date": "2天后",
-			"limit_money": "200",
+			"limit_money": "200.00",
 			"receive_method": "下单领取",
 			"detail": "活动说明",
 			"share_pic": "/static/upload/6_20140710/1404981209095_5.jpg",
