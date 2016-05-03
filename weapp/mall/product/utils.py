@@ -307,8 +307,8 @@ def weizoom_filter_products(request, products):
 
     # 同步商品
     from weixin.user.module_api import get_all_active_mp_user_ids
-    all_user_ids = get_all_active_mp_user_ids()
-    all_mall_userprofiles = UserProfile.objects.filter(user_id__in=all_user_ids, webapp_type=0)
+    #all_user_ids = get_all_active_mp_user_ids()
+    all_mall_userprofiles = UserProfile.objects.filter(webapp_type=0)
     if store_name:
         owner_ids = [profile.user_id for profile in all_mall_userprofiles.filter(store_name__contains=store_name)]
         # 手动添加供货商
