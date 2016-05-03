@@ -1,9 +1,8 @@
 <script id="apps-tags-selector-tmpl" type="text/x-handlebar-tmpl">
 <div class="xui-apps-tagsSelector">
     <select class="xui-i-select">
-    <option value="0" {{#ifequal ../selectId '' }}selected{{/ifequal}}>未分组</option>
     {{#each taglist}}
-        <option value="{{id}}" {{#ifequal ../selectId  id }}selected{{/ifequal}}>{{name}}</option>
+        <option value="{{id}}" {{#ifequal ../selectId id }}selected{{/ifequal}}>{{name}}</option>
     {{/each}}
 
     </select>

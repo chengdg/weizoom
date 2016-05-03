@@ -11,15 +11,13 @@ W.view.apps.TagsSelector = Backbone.View.extend({
 
 	initialize: function(options) {
 		this.$el = $(options.el);
-
 		this.options = options || {};
-        this.tags = {taglist:[{id:'0',name:'未分组'}], selectId:'0'};
-
 	},
 
 	render: function(tags) {
         this.tags = tags || this.tags;
-		var html = this.renderTmpl('viewTmpl', {taglist:this.tags.taglist,selectId:this.tags.selectId});
+		var selectId = this.tags.selectId || 0;
+		var html = this.renderTmpl('viewTmpl', {taglist:this.tags.taglist,selectId:selectId});
 		this.$el.append(html);
 	},
 
@@ -36,7 +34,7 @@ W.registerUIRole('[data-ui-role="apps-tags-selector"]', function() {
     var $el = $(this);
     var tags = $el.data('tags');
     var view = new W.view.apps.TagsSelector({
-        el: $el.get(0),
+        el: $el.get(0)
     });
     $el.data('view', view);
 	W.getApi().call({
@@ -46,13 +44,11 @@ W.registerUIRole('[data-ui-role="apps-tags-selector"]', function() {
 		args: {
 		},
 		success: function(data){
-			var taglist = data.tags;
-            tags.taglist = taglist;
+            tags.taglist = data.tags;
 			view.render(tags);
-
 		},
 		error: function(error){
-			console.log('error');
+			console.log(error);
 		}
 	});
 });
