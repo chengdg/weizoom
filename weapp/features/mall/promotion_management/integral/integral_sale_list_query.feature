@@ -48,7 +48,8 @@ Scenario: 积分应用活动列表查询
 		[{
 			"name":"积分应用6"
 		},{
-			"name":"积分应用5"
+			"name":"积分应用5",
+			"is_permanant_active":true
 		},{
 			"name":"积分应用4"
 		},{
@@ -88,7 +89,8 @@ Scenario: 积分应用活动列表查询
 		[{
 			"name":"积分应用6"
 		},{
-			"name":"积分应用5"
+			"name":"积分应用5",
+			"is_permanant_active":true
 		},{
 			"name":"积分应用4"
 		},{
@@ -123,7 +125,8 @@ Scenario: 积分应用活动列表查询
 	Then jobs获取积分应用活动列表
 		"""
 		[{
-			"name":"积分应用5"
+			"name":"积分应用5",
+			"is_permanant_active":true
 		}]
 		"""
 
@@ -194,7 +197,8 @@ Scenario: 积分应用活动列表查询
 	Then jobs获取积分应用活动列表
 		"""
 		[{
-			"name":"积分应用5"
+			"name":"积分应用5",
+			"is_permanant_active":true
 		},{
 			"name":"积分应用3"
 		}]
