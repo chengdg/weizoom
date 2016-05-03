@@ -62,7 +62,11 @@ def step_impl(context, user):
 def get_actual_members_data(context):
 	# 处理url
 	if not hasattr(context, 'url'):
-		context.url = '/member/api/member_list/?design_mode=0&version=1&status=1&enable_paginate=1'
+		context.url = '/member/api/member_list/?design_mode=0&version=1&enable_paginate=1'
+		if hasattr(context, 'status'):
+			context.url += '&status=' + str(context.status)
+		else:
+			context.url += '&status=1'
 		if hasattr(context, 'count_per_page'):
 			context.url += '&count_per_page=' + str(context.count_per_page)
 		else:
@@ -146,6 +150,43 @@ def get_members_dict_by_context(context):
 def step_impl(context, user):
 	Member.objects.all().update(is_for_test=False)
 	# 获得服务器的数据
+	actual_members = get_actual_members_data(context)
+
+	# 处理feature文件中数据
+	expected_data = get_members_dict_by_context(context)
+
+	# 我也不知道这段为什么会这样！！！
+	# 好像是根据不同的数据类型来组织actual_data
+	if context.text:
+		actual_data = actual_members
+	elif context.table:
+		actual_data = []
+		for row in actual_members:
+			adict = {}
+			adict['name'] = row['username']
+			adict['member_rank'] = row['grade_name']
+			adict['friend_count'] = row['friend_count']
+			adict['integral'] = row['integral']
+			adict['pay_money'] = row['pay_money']
+			adict['unit_price'] = row['unit_price']
+			adict['pay_times'] = row['pay_times']
+			adict['attention_time'] = row['attention_time']
+			adict['source'] = row['source']
+			adict['tags'] = ','.join(row['tags'])
+			actual_data.append(adict)
+
+	bdd_util.assert_list(expected_data, actual_data)
+
+@then(u'{user}可以获得{member_status}会员列表')
+def step_impl(context, user, member_status):
+	Member.objects.all().update(is_for_test=False)
+	# 获得服务器的数据
+	if member_status == u"取消关注":
+		context.status = 0
+	elif member_status == u"已关注":
+		context.status = 1
+	elif member_status == u"全部":
+		context.status = -1
 	actual_members = get_actual_members_data(context)
 
 	# 处理feature文件中数据

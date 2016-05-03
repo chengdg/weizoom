@@ -8,14 +8,14 @@ Feature:手机端用户参加用户调研活动
 	"""
 Background:
 	Given jobs登录系统
-	When jobs添加会员分组
+	And jobs已添加会员分组
 		"""
 		{
 			"tag_id_1": "分组1",
 			"tag_id_2": "分组2"
 		}
 		"""
-@mall2 @apps @survey @users_participate_survey 
+@mall2 @apps @survey @users_participate_survey @aix11
 Scenario:1 参加调研活动,无需关注即可参与
 	Given jobs登录系统
 	When jobs添加优惠券规则
@@ -67,10 +67,8 @@ Scenario:1 参加调研活动,无需关注即可参与
 		"""
 	#Then tom获得信息提示'您获得了一张优惠券<br />赶紧去个人中心查看吧'
 	When bill把jobs的用户调研活动'用户调研01'的活动链接分享到朋友圈
-
 	#非会员tom可参与
 	When tom关注jobs的公众号
-	When bill访问jobs的webapp
 	When tom取消关注jobs的公众号
 	When tom点击bill分享的用户调研活动'用户调研01'的活动链接
 	When tom参加jobs的用户调研活动'用户调研01'
@@ -112,11 +110,12 @@ Scenario:1 参加调研活动,无需关注即可参与
 		}]
 		"""
 
-	Then jobs可以获得会员列表
+	Then jobs可以获得全部会员列表
 	  | name | member_rank |  tags   |
+	  | mayun|   普通会员  | 未分组   |
+	  | tom  |   普通会员  | 未分组   |
 	  | bill |   普通会员  | 分组1   |
-	  | tom  |   普通会员  | 分组1   |
-	  | mayun|   普通会员  | 分组1   |
+
 @mall2 @apps @survey @users_participate_survey
 Scenario:2 参加调研活动,必须关注才可参与
 	Given jobs登录系统
@@ -833,7 +832,7 @@ Scenario:5 参加'已结束'状态的用户调研活动
 			"""
 
 @mall2 @apps @survey @users_participate_survey
-Scenario:6 参加调研活动,必须关注即可参与
+Scenario:6 参加调研活动,必须关注才可参与
 	Given jobs登录系统
 	When jobs添加优惠券规则
 		"""
@@ -856,7 +855,7 @@ Scenario:6 参加调研活动,必须关注即可参与
 			"content":"欢迎参加调研",
 			"start_date":"今天",
 			"end_date":"2天后",
-			"permission":"必须关注即可参与",
+			"permission":"必须关注才可参与",
 			"prize_type":"优惠券",
 			"coupon":"优惠券1",
 			"member_group":"分组2",
@@ -870,45 +869,21 @@ Scenario:6 参加调研活动,必须关注即可参与
 	When bill关注jobs的公众号
 	When tom关注jobs的公众号
 
-	When jobs访问会员列表
-	Then jobs可以获得会员列表
-		| name | member_rank  | friend_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
-		| bill |   普通会员   |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-03    | 直接关注 | 未分组      |
-		| tom  |   普通会员   |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-02    | 直接关注 | 未分组      |
+	Given jobs登录系统
+	When jobs访问会员列表第1页
 	When jobs选择会员
 		| member_name | member_rank |    tags     |
-		| bill        |   普通会员  | 未分组      |
 		| tom         |   普通会员  | 未分组      |
-	
+		| bill        |   普通会员  | 未分组      |
+
 	When jobs批量添加分组
-			"""
-			[{
-				"modification_method":"给筛选出来的所有人添加分组",
-				"grouping":"分组1"
-			}]
-			"""
-	When jobs访问会员列表
-	Then jobs可以获得会员列表
-		| name | member_rank |  tags   |
-		| bill |   普通会员  | 分组1   |
-		| tom  |   普通会员  | 分组1   |
-
-
-	When bill取消关注jobs的公众号
-	Then jobs可以获得会员列表
 		"""
-			[{
-				"name": "bill",
-				"member_rank": "普通会员",
-				"tags": ["分组1"]
-			},{
-				"name": "tom",
-				"member_rank": "普通会员",
-				"tags": ["分组1"]
-			}]
+		[{
+			"modification_method":"给选中的人添加分组",
+			"grouping":"分组1"
+		}]
 		"""
-
-	When bill关注jobs的公众号
+	When bill访问jobs的webapp
 	When bill参加jobs的用户调研活动'用户调研01'
 		"""
 		{
@@ -919,26 +894,14 @@ Scenario:6 参加调研活动,必须关注即可参与
 				}]
 		}
 		"""
-
+	Given jobs登录系统
 	Then jobs可以获得会员列表
 		"""
 			[{
-				"name": "bill",
-				"member_rank": "普通会员",
-				"pay_money": 0.00,
-				"unit_price": 0.00,
-				"pay_times": 0,
-				"source": "直接关注",
-				"tags": ["分组1","分组2"],
-				"status": "已关注"
-			},{
 				"name": "tom",
-				"member_rank": "普通会员",
-				"pay_money": 0.00,
-				"unit_price": 0.00,
-				"pay_times": 0,
-				"source": "直接关注",
-				"tags": ["分组1"],
-				"status": "已关注"
+				"tags": ["分组1"]
+			},{
+				"name": "bill",
+				"tags": ["分组1","分组2"]
 			}]
 		"""
