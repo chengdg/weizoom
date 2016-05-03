@@ -55,8 +55,7 @@ def __get_promotion_name(product):
 	  product -
 
 	Return:
-	  None - 商品没有促销
-	  'int_str' - 商品有促销
+	  None - 商品没有促销	  'int_str' - 商品有促销
 	"""
 	name = None
 	if product.promotion:
@@ -1447,6 +1446,7 @@ def ship_order(order_id, express_company_name,
 		# 需要修改的基本参数
 		# 只修改物流信息，不修改状态
 		order_params = dict()
+		express_number = express_number.replace(' ','')  #快递100服务器过滤空格,快递鸟不过滤空格
 		order_params['express_company_name'] = express_company_name
 		order_params['express_number'] = express_number
 		order_params['leader_name'] = leader_name
@@ -2821,7 +2821,7 @@ def update_product_stock(product_id, product_model_id, stock):
 		ProductModel.objects.filter(product_id=product_id, id=product_model_id).update(stock_type=PRODUCT_STOCK_TYPE_LIMIT, stocks=stock)
 
 
-def batch_handle_order(json_data, user):
+def batch_handle_order(json_data, user, webapp_id=None):
 	"""
 	批量发货
 
@@ -2830,6 +2830,7 @@ def batch_handle_order(json_data, user):
 	"""
 	error_data = []
 	success_data = []
+	from mall.order.util import assert_webapp_id
 	for item in json_data:
 		try:
 			order_id = item.get('order_id', '')
@@ -2850,6 +2851,11 @@ def batch_handle_order(json_data, user):
 						raise
 				else:
 					order = Order.objects.get(order_id=order_id)
+				success = assert_webapp_id(order, webapp_id)
+				if success == False:
+					item["error_info"] = "非该商城订单"
+					error_data.append(item)
+					continue
 			except:
 				item["error_info"] = "订单号错误"
 				error_data.append(item)

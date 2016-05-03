@@ -19,6 +19,7 @@ W.view.weixin.MessageEditorPopup = Backbone.View.extend({
 		this.offset_Y = options.offset_Y || 0;
 		this.offset_X = options.offset_X || 0;
 		this.width = options.width || 400;
+		this.pasteplain = !!options.pasteplain;
 		if (options && options.el) {
 			this.$editorBody = $(options.el);
 			this.width = options.width;
@@ -61,7 +62,8 @@ W.view.weixin.MessageEditorPopup = Backbone.View.extend({
 			cancelBtnText: this.cancelBtnText,
 			editorMaxCount: this.editorMaxCount,
 			richTextEditorWidth: this.richTextEditorWidth,
-			richTextEditorHeight: this.richTextEditorHeight
+			richTextEditorHeight: this.richTextEditorHeight,
+			pasteplain: this.pasteplain
 		});
 
 		this.editor.bind("finish-edit", function(message){

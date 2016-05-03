@@ -93,7 +93,7 @@ def get_openid(member_id, webapp_owner_id):
 	return m.account.openid
 
 def get_access_token(member_id, webapp_owner_id):
-	url = 'http://api.weapp.com/wapi/user/access_token/?_method=put'
+	url = 'http://api.weapp.com/user/access_token/?_method=put'
 	openid = get_openid(member_id, webapp_owner_id)
 	response = requests.post(url, data={'woid': webapp_owner_id, 'openid': openid})
 	r_data = json.loads(response.text)
@@ -157,6 +157,9 @@ def get_member_by_username(username, webapp_id):
 		return None
 
 def get_order_by_order_no(order_no):
+	if '-' in order_no:
+		order_no_info = order_no.split('-')
+		order_no = '%s^%su' % (order_no_info[0], UserProfile.objects.get(store_name = order_no_info[1]).user_id)
 	return mall_models.Order.objects.get(order_id=order_no)
 
 

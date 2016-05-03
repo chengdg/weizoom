@@ -319,7 +319,7 @@ class Category(resource.Resource):
         """
         category_id = request.POST['id']
         product_ids = request.POST.getlist('product_ids[]')
-        product_categorys = mall_models.ProductCategory.objects.filter(id=category_id)
+        product_categorys = mall_models.ProductCategory.objects.filter(owner=request.manager, id=category_id)
         if 0 != product_categorys.count():
             product_categorys.update(
             name=request.POST.get('name', '').strip(),

@@ -31,7 +31,7 @@
         	<img src="{{ pic_url }}" />
         </div>
         {% endif %}
-        <div class="newsDetail-detail mt10 rawHtml">
+        <div class="newsDetail-detail mt10 rawHtml wa-rawHtml">
             {{ detail|safe }}
         </div>
     </div>
@@ -39,4 +39,10 @@
 {% endblock %}
 
 {% block js %}
+    <script>
+        $(function(){
+            $(".wa-rawHtml img").parent().css("line-height", 0);
+        });
+    </script>
+
 {% endblock %}

@@ -152,6 +152,7 @@ class ModelProperty(resource.Resource):
         if 'name' == field:
             name = request.POST['name']
             mall_models.ProductModelProperty.objects.filter(
+                owner=request.manager,
                 id=id
             ).update(name=name)
         elif 'type' == field:
@@ -162,6 +163,7 @@ class ModelProperty(resource.Resource):
                 _type = mall_models.PRODUCT_MODEL_PROPERTY_TYPE_IMAGE
 
             mall_models.ProductModelProperty.objects.filter(
+                owner=request.manager,
                 id=id
             ).update(type=_type)
         response = create_response(200)
@@ -179,6 +181,7 @@ class ModelProperty(resource.Resource):
         """
         property_id = request.POST['id']
         model_property = mall_models.ProductModelProperty.objects.get(
+            owner=request.manager,
             id=property_id)
         signals.pre_delete_product_model_property.send(
             sender=mall_models.ProductModelProperty,

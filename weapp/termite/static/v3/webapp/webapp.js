@@ -54,23 +54,45 @@ W.showVisitHistory = function(title, url) {
 }
 
 
-W.preloadImgsOnPage = function(ele) {
+W.preloadImgsOnPage = function(option) {
+    if (!option) return;
     $(function(){
-        if (!ele) {
-            console.log(ele)
-            return;
-        }
-        var $itemsImg = $(ele);
-        $itemsImg.map(function(idx, item) {
-            $item = $(item);
-            $item.attr('data-url', $item.attr('src'));
-            $item.removeAttr('src');
-        });
-        $lazyImgs = $('[data-url]');
-        $lazyImgs.lazyload({
-            data_attribute:"url",
-            effect : "fadeIn",
-            placeholder: "/static_v2/img/webapp/mall/info_placeholder.png"
+        option.map(function(ele){
+            var module = ele['moduleName'];
+            var tagId = ele['tagId'];
+            var $itemsImg = $(tagId);
+            if (_.isEmpty($itemsImg)) {
+                console.error('preloadImgsOnPage %o is not found', ele)
+                return;
+            }
+            switch(module) {
+                case 'imageGroup':
+                    $itemsImg.map(function(idx, item) {
+                        $item = $(item);
+                        var src = $item.attr('src')
+                        $item.attr('src', [src, '!/noicc/true/compress/true/progressive/true/quality/20'].join(''));
+                        $item.attr('data-url', src);
+                    });
+                    break;
+                case 'productList':
+                    $itemsImg.map(function(idx, item) {
+                        $item = $(item);
+                        $item.attr('data-url', $item.attr('src'));
+                        $item.removeAttr('src');
+                    });
+                    break;
+                default:
+                    break;
+            }
+            $lazyImgs = $('[data-url]');
+            if ($lazyImgs) {
+                $lazyImgs.lazyload({
+                    data_attribute:"url",
+                    skip_invisible : false,
+                    effect : "fadeIn",
+                    placeholder: "/static_v2/img/webapp/mall/info_placeholder.png"
+                });
+            }
         });
     });
 }

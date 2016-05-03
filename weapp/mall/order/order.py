@@ -63,7 +63,13 @@ class OrderInfo(resource.Resource):
         remark = request.POST.get('remark', None)
         # 待支付状态下 修改价格  最终价格
         final_price = request.POST.get('final_price', None)
+        webapp_id = request.user_profile.webapp_id
         order = Order.objects.get(id=order_id)
+        success = util.assert_webapp_id(order, webapp_id)
+        if success == False:
+            response = create_response(404)
+            return response.get_response()
+
         if action:
             # 检查order的状态是否可以跳转，如果是非法跳转则报错
             if mall_type and Order.objects.filter(origin_order_id=order.origin_order_id).count() == 1:
@@ -210,7 +216,8 @@ class OrderProduct(resource.Resource):
     @login_required
     def api_get(request):
         order_id = request.GET['order_id']
-        order = Order.objects.get(id=order_id)
+        webapp_id = request.user_profile.webapp_id
+        order = Order.objects.get(id=order_id, webapp_id=webapp_id)
         response = create_response(200)
         response.data = {
             'products': mall_api.get_order_products(order),

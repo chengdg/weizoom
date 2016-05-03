@@ -285,10 +285,10 @@
 				{{if order_status == 5}}
 					已完成
 				{{/if}}
-				{{if order_status == 6}}
+				{{if order_status == 6 || order_status == 8}}
 					退款中
 				{{/if}}
-				{{if order_status == 7}}
+				{{if order_status == 7 || order_status == 9}}
 					退款成功
 				{{/if}}
 				</td>
@@ -359,7 +359,7 @@
 		</thead>
 		<tbody>
 		{{if items.length}}
-			{{each(i, item) items}}		
+			{{each(i, item) items}}
 			<tr>
 				<td>${create_at}</td>
 			  <td class="tl pl80">${tittle}</td>

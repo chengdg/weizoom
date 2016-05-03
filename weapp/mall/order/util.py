@@ -11,6 +11,7 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.conf import settings
 import requests
+from django.http import Http404
 
 from mall import export
 from tools.regional import views as regional_util
@@ -486,16 +487,21 @@ def export_orders_json(request):
             order_status = status[str(order.status if not fackorder else fackorder.status)].encode('utf8')
             # 订单发货时间
             postage_time = order2postage_time.get(order.order_id if not fackorder else fackorder.order_id, '')
+            supplier_type = ""
             if fackorder:
                 if fackorder.supplier and order2supplier.has_key(fackorder.supplier):
                     source = order2supplier[fackorder.supplier].name.encode("utf-8")
+                    supplier_type = u"自建供货商"
                 if fackorder.supplier_user_id and id2store.has_key(fackorder.supplier_user_id):
                     source = id2store[fackorder.supplier_user_id].store_name.encode("utf-8")
+                    supplier_type = u"同步供货商"
             else:
                 if order.supplier and order2supplier.has_key(order.supplier):
                     source = order2supplier[order.supplier].name.encode("utf-8")
+                    supplier_type = u"自建供货商"
                 if order.supplier_user_id and id2store.has_key(order.supplier_user_id):
                     source = id2store[order.supplier_user_id].store_name.encode("utf-8")
+                    supplier_type = u"同步供货商"
 
             if not mall_type and source != u"本店":
                 source = u"商城"
@@ -560,6 +566,8 @@ def export_orders_json(request):
                     u'首单' if order.is_first_order else u'非首单'
 
                 ]
+                if mall_type:
+                    tmp_order.insert(26, supplier_type)
                 if has_supplier:
                     tmp_order.append( u'-' if 0.0 == product.purchase_price else product.purchase_price)
                     tmp_order.append(u'-'  if 0.0 ==product.purchase_price else product.purchase_price*relation.number)
@@ -608,6 +616,8 @@ def export_orders_json(request):
                     u'首单' if order.is_first_order else u'非首单'
 
                 ]
+                if mall_type:
+                    tmp_order.insert(26, supplier_type)
                 if has_supplier:
                     tmp_order.append(u'' if 0.0 == product.purchase_price else product.purchase_price)
                     tmp_order.append(u'' if 0.0 ==product.purchase_price else product.purchase_price*relation.number)
@@ -660,6 +670,8 @@ def export_orders_json(request):
                         before_scanner_qrcode_is_member if before_scanner_qrcode_is_member else '-',
                         '-'
                     ]
+                    if mall_type:
+                        tmp_order.insert(26, supplier_type)
                     if has_supplier:
                         tmp_order.append( u'-' if 0.0 == premium_product['purchase_price'] else premium_product['purchase_price'])
                         tmp_order.append(u'-' if 0.0 ==premium_product['purchase_price'] else premium_product['purchase_price']*premium_product['count'])
@@ -674,6 +686,8 @@ def export_orders_json(request):
     if request.GET.get("bdd",None):
         mall_type = True
     if mall_type:
+        orders[0][26] = u"供货商"
+        orders[0].insert(26, u'供货商类型')
         for order in orders:
             del order[13]
         orders[0][12] = u"微众卡支付金额"
@@ -708,7 +722,12 @@ def get_detail_response(request):
     if not request.GET.get('order_id', None):
         return HttpResponseRedirect('/mall2/order_list/')
     else:
+        webapp_id = request.user_profile.webapp_id
         order = mall.models.Order.objects.get(id=request.GET['order_id'])
+        success = assert_webapp_id(order, webapp_id)
+        if success == False:
+            return Http404
+
 
     if request.method == 'GET':
         mall_type = request.user_profile.webapp_type
@@ -1020,6 +1039,11 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
     if sort_attr != 'created_at':
         orders = orders.order_by(sort_attr)
 
+    # 供货商类型
+    order_supplier_type = None
+    if query_dict.has_key('order_supplier_type'):
+        order_supplier_type = query_dict.get('order_supplier_type')
+
     # 除掉同步过来的订单中未支付的
     if not mall_type:
         pass
@@ -1189,6 +1213,12 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
                         "products": products
                     }
                 groups.append(group)
+
+            # 显示不同供货商类型订单的商品
+            if order_supplier_type == 0:
+                groups = filter(lambda group: group.has_key('supplier_user_id'), groups)
+            elif order_supplier_type == 1:
+                groups = filter(lambda group: group.has_key('id'), groups)
         else:
             if order.order_id in group_order_ids:
                 actions = get_order_actions(order, is_refund=is_refund, mall_type=mall_type, is_group_buying=True)
@@ -1298,6 +1328,7 @@ def __get_select_params(request):
     date_interval_type = request.GET.get('date_interval_type', '')
     is_first_order = request.GET.get('is_first_order', '').strip()
     order_type = request.GET.get('order_type', '').strip()
+    order_supplier_type = request.GET.get('orderSupplierType', '').strip()
 
     # 填充query
     query_dict = dict()
@@ -1313,7 +1344,7 @@ def __get_select_params(request):
         query_dict['product_name'] = product_name
     if len(pay_type):
         query_dict['pay_interface_type'] = int(pay_type)
-    if len(order_source) and order_source != '-1':
+    if len(order_source) and order_source != '-1' and order_source != 'undefined':
         query_dict['order_source'] = int(order_source)
     if len(order_status) and order_status != '-1':
         query_dict['status'] = int(order_status)
@@ -1323,6 +1354,8 @@ def __get_select_params(request):
         query_dict['is_first_order'] = int(is_first_order)
     if len(order_type) and order_type != '-1':
         query_dict['order_type'] = int(order_type)
+    if len(order_supplier_type) and order_supplier_type != '-1' and order_supplier_type != 'undefined':
+        query_dict['order_supplier_type'] = int(order_supplier_type)
 
     # 团购退款
     if query_dict.has_key('status') and query_dict['status'] == 8:
@@ -1355,6 +1388,9 @@ def __get_orders_by_params(query_dict, date_interval, date_interval_type, orders
     """
     # 商品名称
     mall_type = user_profile.webapp_type
+
+    all_order_ids = [order.id for order in orders]
+    orderHasProduct_list = OrderHasProduct.objects.filter(order_id__in=all_order_ids)
     if query_dict.get("product_name"):
         product_name = query_dict["product_name"]
         query_dict.pop("product_name")
@@ -1362,7 +1398,7 @@ def __get_orders_by_params(query_dict, date_interval, date_interval_type, orders
         product_list = Product.objects.filter(name__contains=product_name)
         product_ids = [product.id for product in product_list]
 
-        orderHasProduct_list = OrderHasProduct.objects.filter(product_id__in=product_ids)
+        orderHasProduct_list = orderHasProduct_list.filter(product_id__in=product_ids)
 
         order_ids = [orderHasProduct.order_id for orderHasProduct in orderHasProduct_list]
 
@@ -1399,6 +1435,18 @@ def __get_orders_by_params(query_dict, date_interval, date_interval_type, orders
     if query_dict.get('order_type'):
         order_type = query_dict.get('order_type')
         query_dict.pop("order_type")
+
+    #添加自营平台按照供货商查询
+    if query_dict.has_key('order_supplier_type'):
+        order_supplier_type = query_dict.get('order_supplier_type')
+        query_dict.pop("order_supplier_type")
+        if order_supplier_type == 0:
+            orderHasProduct_list = orderHasProduct_list.filter(product__supplier_user_id__gt=0)
+        elif order_supplier_type == 1:
+            orderHasProduct_list = orderHasProduct_list.filter(product__supplier__gt=0)
+        order_ids = [orderHasProduct.order_id for orderHasProduct in orderHasProduct_list]
+        orders = orders.filter(id__in=order_ids, status__gte=ORDER_STATUS_PAYED_SUCCESSED)
+
     #添加惠惠卡order_type
     if len(query_dict):
         orders = orders.filter(**query_dict)
@@ -1674,7 +1722,7 @@ def get_order_actions(order, is_refund=False, is_detail_page=False, is_list_pare
     return result
 
 
-def update_order_status_by_group_status(group_id, status, order_ids=None, is_test=False):
+def update_order_status_by_group_status(group_id=None, status=None, order_ids=None, is_test=False):
     # TODO 退款
     KEY = 'MjExOWYwMzM5M2E4NmYwNWU4ZjI5OTI1YWFmM2RiMTg='
     if settings.MODE in ['develop', 'test']:
@@ -1689,18 +1737,22 @@ def update_order_status_by_group_status(group_id, status, order_ids=None, is_tes
         group_status = GROUP_STATUS_failure
         order_status = ORDER_STATUS_PAYED_NOT_SHIP
 
-    relations = OrderHasGroup.objects.filter(group_id=group_id)
-    user = UserProfile.objects.get(webapp_id=relations[0].webapp_id).user
-    relations.update(group_status=group_status)
-    orders = Order.objects.filter(
-            order_id__in=[r.order_id for r in relations],
-            status=order_status
-            )
-    if order_status == ORDER_STATUS_PAYED_NOT_SHIP:
+    if order_ids:
+        order_status = ORDER_STATUS_PAYED_NOT_SHIP
+        orders = Order.objects.filter(order_id__in=order_ids)
+    else:
+        relations = OrderHasGroup.objects.filter(group_id=group_id)
+        user = UserProfile.objects.get(webapp_id=relations[0].webapp_id).user
+        relations.update(group_status=group_status)
         orders = Order.objects.filter(
-            order_id__in=[r.order_id for r in relations],
-            status__in=[ORDER_STATUS_PAYED_NOT_SHIP, ORDER_STATUS_NOT]
-            )
+                order_id__in=[r.order_id for r in relations],
+                status=order_status
+                )
+        if order_status == ORDER_STATUS_PAYED_NOT_SHIP:
+            orders = Order.objects.filter(
+                order_id__in=[r.order_id for r in relations],
+                status__in=[ORDER_STATUS_PAYED_NOT_SHIP, ORDER_STATUS_NOT]
+                )
     from mall.module_api import update_order_status
     for order in orders:
         if order_status == ORDER_STATUS_NOT or order.status == ORDER_STATUS_NOT:
@@ -1741,9 +1793,11 @@ def update_order_status_by_group_status(group_id, status, order_ids=None, is_tes
                                 r = requests.get(URL, params=args)
                                 response = json.loads(r.text)
                             except:
-                                logging.info(u"订单退款异常%s" % unicode_full_stack())
-                                watchdog_error(u"订单退款异常%s" % unicode_full_stack())
+                                logging.info(u"订单退款异常,\n{}".format(unicode_full_stack()))
+                                watchdog_error(u"订单退款异常,\n{}".format(unicode_full_stack()))
                     if response['data'].get('is_success', ''):
+                        if order_ids:
+                            user = UserProfile.objects.get(webapp_id=order.webapp_id).user
                         update_order_status(user, 'return_pay', order)
                         order.status = ORDER_STATUS_GROUP_REFUNDING
                         order.save()
@@ -1763,3 +1817,25 @@ def cancel_group_buying(order_id):
     from mall.module_api import update_order_status
     update_order_status(user, 'cancel', order)
     OrderHasGroup.objects.filter(order_id=order.order_id).update(group_status=GROUP_STATUS_failure)
+
+def assert_webapp_id(order, webapp_id):
+    if order.webapp_id != webapp_id:
+        if order.origin_order_id > 0:
+            if order.supplier_user_id > 0:
+                try:
+                    webapp_id_user = UserProfile.objects.filter(user_id=order.supplier_user_id)[0].webapp_id
+                    if webapp_id_user != webapp_id:
+                        return False
+                    else:
+                        return True
+                except:
+                    return False
+            else:
+                if order.webapp_id != webapp_id:
+                    return False
+                else:
+                    return True
+        else:
+            return False
+    else:
+        return True

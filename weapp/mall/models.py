@@ -1479,7 +1479,7 @@ class Order(models.Model):
 	origin_order_id = models.IntegerField(default=0) # 原始订单id，用于微众精选拆单
 	# origin_order_id=-1表示有子订单，>0表示有父母订单，=0为默认数据
 	supplier = models.IntegerField(default=0) # 订单供货商，用于微众精选拆单
-	is_100 = models.BooleanField(default=True) # 是否是快递100能够查询的快递
+	is_100 = models.BooleanField(default=True) # 是否是快递100能够查询的快递(是否使用快递查询服务,在订单点击发货时来更新is_100的状态)
 	delivery_time = models.CharField(max_length=50, default='')  # 配送时间字符串
 	is_first_order = models.BooleanField(default=False) # 是否是用户的首单
 	supplier_user_id = models.IntegerField(default=0) # 订单供货商user的id，用于系列拆单

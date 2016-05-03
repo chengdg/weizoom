@@ -7,6 +7,7 @@ from test import bdd_util
 from features.testenv.model_factory import *
 import steps_db_util
 from mall import module_api as mall_api
+from account.models import UserProfile
 from mall.models import Order, OrderOperationLog, Supplier
 from tools.express.models import ExpressHasOrderPushStatus
 
@@ -51,7 +52,8 @@ def step_impl(context, user):
     order_no = delivery_data['order_no']
     if '-' in order_no:
         order_no_info = order_no.split('-')
-        order_no = '%s^%s' % (order_no_info[0], Supplier.objects.get(name = order_no_info[1]).id)
+
+        order_no = '%s^%su' % (order_no_info[0], UserProfile.objects.get(store_name = order_no_info[1]).user_id)
     order_id = Order.objects.get(order_id=order_no).id
 
     logistics = delivery_data.get('logistics', 'off')
@@ -76,6 +78,7 @@ def step_impl(context, user):
     if logistics == u'其他':
         data['is_100'] = 'false'
     response = context.client.post(url, data)
+
     if 'date' in delivery_data:
         OrderOperationLog.objects.filter(order_id=delivery_data['order_no'], action="订单发货").update(
             created_at=bdd_util.get_datetime_str(delivery_data['date']))
@@ -85,7 +88,7 @@ def step_impl(context, user):
 def step_impl(context, user):
     orders = json.loads(context.text)
     orders = _handle_fahuo_data(orders)
-    context.result_dict = mall_api.batch_handle_order(orders, context.client.user)
+    context.result_dict = mall_api.batch_handle_order(orders, context.client.user, context.webapp_id)
 
 
 @when(u"{webapp_owner_user}填写发货信息")

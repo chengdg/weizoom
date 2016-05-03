@@ -18,6 +18,22 @@
 		background: url('/static_v2/img/weixin/storing.png') no-repeat;
 
 	}
+	.xui-filterPanel{
+		padding-bottom: 10px;
+	}
+	.xui-btnBox{
+		padding-left: 370px;
+		margin-top: 30px;
+	}
+	.mr130{
+		margin-right: 130px;
+	}
+	.xui-btnBox a{
+		width: 90px;
+	}
+	.xui-status{
+		padding: 0 5px;
+	}
 </style>
 {% endblock%}
 {% block content-panel %}
@@ -51,7 +67,7 @@
 			<span class="ml5 mr5">至</span>
 			<input
 				type="text"
-				class="form-control xui-datePicker"
+				class="form-control xui-datePicker mr130"
 				id="end_date"
 				name="end_date"
 			    value=""
@@ -62,9 +78,16 @@
 			    data-format="yy-mm-dd"
 			    data-max="now"
 			    data-min-el="#start_date"/>
-			
-			<a class="btn btn-primary xa-search xui-fontBold" href="javascript:void(0);">查询</a>
-			<a class="xa-reset btn btn-primary xui-fontBold" href="javascript:void(0);">重置</a>
+			<span>会员状态：</span>
+			<select style="background-color: #f2f2f2;width: 140px;" class="xa-status xui-status">
+				<option value="-1">全部</option>
+				<option value="1">已关注</option>
+				<option value="0">取消关注</option>
+			</select>
+			<div class="xui-btnBox">
+				<a class="btn btn-primary xa-search xui-fontBold mr30" href="javascript:void(0);">查询</a>
+				<a class="xa-reset btn btn-default xui-fontBold" href="javascript:void(0);">重置</a>
+			</div>
 		</div>
 
     </div>
@@ -164,12 +187,13 @@ $(document).ready(function() {
 		var start_date = $('#start_date').val();
 		var end_date = $('#end_date').val();
 		var is_checked = $('.is_show').is(':checked');
+		var status = $('.xa-status').val();
 		var dataView = $('[data-ui-role="advanced-table"]').data('view');
 		var is_show = 0;
 		if (is_checked == true){
 			is_show = 1;
 		}
-		var args= '{"start_date":"'+start_date+'","end_date":"'+end_date+'", "is_show":"'+is_show+'"}';
+		var args= '{"start_date":"'+start_date+'","end_date":"'+end_date+'", "is_show":"'+is_show+'","status":"'+status+'"}';
 		dataView.options.args =  args;//this.getFilterValueByDict(args);
 	    dataView.setPage(1);
 		dataView.reload();
@@ -181,6 +205,7 @@ $(document).ready(function() {
 	$('.xa-reset').click(function(){
 		$('#start_date').attr('value','');
 		$('#end_date').attr('value','');
+		$('option').eq(0).prop('selected',true);
 	})
 
 	$('.is_show').click(function(){

@@ -80,7 +80,7 @@ class ProductReviewInfo(resource.Resource):
         商品评价详情页面
         """
         product_review_id = int(request.GET.get('id'))
-        product_review = ProductReview.objects.get(id=product_review_id)
+        product_review = ProductReview.objects.get(id=product_review_id, owner_id=request.manager.id)
         product_review.product_name = Product.objects.get(id=product_review.product_id).name
         member = Member.objects.filter(id=product_review.member_id)
         if len(member):
@@ -114,7 +114,7 @@ class ProductReviewInfo(resource.Resource):
             from modules.member import models as member_models
 
             if product_review_id:
-                review = mall_models.ProductReview.objects.filter(id=product_review_id)
+                review = mall_models.ProductReview.objects.filter(owner_id=request.webapp_owner_id, id=product_review_id)
                 if status == '2' or status == '1':
                     if len(review) == 1 and int(review[0].status) == 0:
                         settings = member_models.IntegralStrategySttings.objects.get(
@@ -152,7 +152,7 @@ class ProductReviewInfo(resource.Resource):
 
             if action == 'pass':
                 try:
-                    reviews = mall_models.ProductReview.objects.filter(id__in=ids)
+                    reviews = mall_models.ProductReview.objects.filter(owner_id=request.webapp_owner_id, id__in=ids)
 
                     settings = member_models.IntegralStrategySttings.objects.get(
                         webapp_id=request.user_profile.webapp_id)
@@ -176,7 +176,7 @@ class ProductReviewInfo(resource.Resource):
                     return create_response(500).get_response()
             else:
                 try:
-                    mall_models.ProductReview.objects.filter(id__in=ids).update(status=-1)
+                    mall_models.ProductReview.objects.filter(owner_id=request.webapp_owner_id, id__in=ids).update(status=-1)
                     return create_response(200).get_response()
                 except:
                     return create_response(500).get_response()
