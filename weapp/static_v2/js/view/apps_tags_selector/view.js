@@ -13,7 +13,7 @@ W.view.apps.TagsSelector = Backbone.View.extend({
 		this.$el = $(options.el);
 
 		this.options = options || {};
-        this.tags = {taglist:[{id:'0',name:'无分组'}], selectId:'0'};
+        this.tags = {taglist:[{id:'0',name:'未分组'}], selectId:'0'};
 
 	},
 
