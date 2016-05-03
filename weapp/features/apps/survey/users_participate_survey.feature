@@ -15,7 +15,7 @@ Background:
 			"tag_id_2": "分组2"
 		}
 		"""
-@mall2 @apps @survey @users_participate_survey
+@mall2 @apps @survey @users_participate_survey @aix11
 Scenario:1 参加调研活动,无需关注即可参与
 	Given jobs登录系统
 	When jobs添加优惠券规则
@@ -55,66 +55,66 @@ Scenario:1 参加调研活动,无需关注即可参与
 	When bill访问jobs的webapp
 
 	#会员bill可参与
-		When bill参加jobs的用户调研活动'用户调研01'
-			"""
-			{
-				"问答题":
-					[{
-						"title":"问答题标题",
-						"value":"bill填写内容"
-					}]
-			}
-			"""
-  		#Then tom获得信息提示'您获得了一张优惠券<br />赶紧去个人中心查看吧'
-		When bill把jobs的用户调研活动'用户调研01'的活动链接分享到朋友圈
+	When bill参加jobs的用户调研活动'用户调研01'
+		"""
+		{
+			"问答题":
+				[{
+					"title":"问答题标题",
+					"value":"bill填写内容"
+				}]
+		}
+		"""
+	#Then tom获得信息提示'您获得了一张优惠券<br />赶紧去个人中心查看吧'
+	When bill把jobs的用户调研活动'用户调研01'的活动链接分享到朋友圈
 
 	#非会员tom可参与
-		When tom关注jobs的公众号
-		When tom取消关注jobs的公众号
-		When tom点击bill分享的用户调研活动'用户调研01'的活动链接
-		When tom参加jobs的用户调研活动'用户调研01'
-			"""
-			{
-				"问答题":
-					[{
-						"title":"问答题标题",
-						"value":"tom填写内容"
-					}]
-			}
-			"""
+	When tom关注jobs的公众号
+	When bill访问jobs的webapp
+	When tom取消关注jobs的公众号
+	When tom点击bill分享的用户调研活动'用户调研01'的活动链接
+	When tom参加jobs的用户调研活动'用户调研01'
+		"""
+		{
+			"问答题":
+				[{
+					"title":"问答题标题",
+					"value":"tom填写内容"
+				}]
+		}
+		"""
 		#Then tom获得信息提示'提交成功'
 
 	#取消关注会员marry可参与
-		When marry关注jobs的公众号
-		When marry访问jobs的webapp
-		When marry取消关注jobs的公众号
+	When marry关注jobs的公众号
+	When marry访问jobs的webapp
+	When marry取消关注jobs的公众号
 
-		When marry点击bill分享的用户调研活动'用户调研01'的活动链接
-		When marry参加jobs的用户调研活动'用户调研01'
-			"""
-			{
-				"问答题":
-					[{
-						"title":"问答题标题",
-						"value":"marry填写内容"
-					}]
-			}
-			"""
+	When marry点击bill分享的用户调研活动'用户调研01'的活动链接
+	When marry参加jobs的用户调研活动'用户调研01'
+		"""
+		{
+			"问答题":
+				[{
+					"title":"问答题标题",
+					"value":"marry填写内容"
+				}]
+		}
+		"""
 		#Then marry获得信息提示'您获得了一张优惠券<br />赶紧去个人中心查看吧'
+	Given jobs登录系统
+	Then jobs获得用户调研活动列表
+		"""
+		[{
+			"name":"用户调研01",
+			"participant_count":3,
+			"prize_type":"优惠券"
+		}]
+		"""
 
-		Given jobs登录系统
-		Then jobs获得用户调研活动列表
-			"""
-			[{
-				"name":"用户调研01",
-				"participant_count":3,
-				"prize_type":"优惠券"
-			}]
-			"""
-
-		Then jobs可以获得会员列表
-		  | name | member_rank |  tags   |
-		  | bill |   普通会员  | 分组1   |
+	Then jobs可以获得会员列表
+	  | name | member_rank |  tags   |
+	  | bill |   普通会员  | 分组1   |
 
 @mall2 @apps @survey @users_participate_survey
 Scenario:2 参加调研活动,必须关注才可参与
