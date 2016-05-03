@@ -2100,7 +2100,7 @@ Scenario:10 待售商品列表查询
 #补充：张三香 2016.05.03
 
 @product_pool
-Scenario:11 待售商品列表按供货商类型查询
+Scenario:11 待售商品列表按照'供货商类型'查询
 	#自营平台jobs登录
 	Given jobs登录系统
 	And jobs已添加供货商
@@ -2129,6 +2129,7 @@ Scenario:11 待售商品列表按供货商类型查询
 			"weight": 1.0,
 			"stock_type": "无限",
 			"created_at":"2015-07-01 08:00:00",
+			"status":"待售",
 			"pay_interfaces":[{
 				"type": "货到付款"
 			}]
@@ -2141,6 +2142,7 @@ Scenario:11 待售商品列表按供货商类型查询
 			"stock_type": "有限",
 			"stocks": 10,
 			"created_at":"2015-07-02 08:00:00",
+			"status":"待售",
 			"pay_interfaces":[{
 				"type": "货到付款"
 			}]
@@ -2153,6 +2155,7 @@ Scenario:11 待售商品列表按供货商类型查询
 			"stock_type": "有限",
 			"stocks": 10,
 			"created_at":"2015-07-03 08:00:00",
+			"status":"待售",
 			"pay_interfaces":[{
 				"type": "货到付款"
 			}]
