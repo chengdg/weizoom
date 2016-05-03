@@ -84,6 +84,7 @@ W.view.mall.ProductFilterView = Backbone.View.extend({
         $('#end_date').val('');
         $('#category').val('-1');
         $('#supplier').val('');
+        $('#orderSupplierType').val('-1');
     },
 
     // 获取条件数据
@@ -177,7 +178,8 @@ W.view.mall.ProductFilterView = Backbone.View.extend({
 
         //商品编码
         var barCode = $.trim(this.$('#bar_code').val());
-
+        //供货商类型
+        var orderSupplierType = this.$('#orderSupplierType').val();
 
         var data = {
             name: name,
@@ -197,7 +199,10 @@ W.view.mall.ProductFilterView = Backbone.View.extend({
             var supplier = $.trim(this.$('#supplier').val());
             data['supplier'] = supplier;
         }
-
+        // 筛选‘供货商类型’
+        if (orderSupplierType && orderSupplierType != '-1'){
+            data['orderSupplierType'] = orderSupplierType;
+        }
         this.trigger('search', data);
     },
 

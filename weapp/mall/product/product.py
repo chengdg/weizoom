@@ -157,8 +157,15 @@ class ProductList(resource.Resource):
 
         if mall_type:
             products = utils.weizoom_filter_products(request, products_not_0 + products_is_0)
+            supplier_type = request.GET.get('orderSupplierType', '')
+            if supplier_type == '0':
+                products = filter(lambda p: p.supplier_user_id > 0, products)
+            elif supplier_type == '1':
+                products = filter(lambda p: p.supplier > 0, products)
         else:
             products = utils.filter_products(request, products_not_0 + products_is_0)
+
+
 
         #进行分页
         count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
