@@ -1299,7 +1299,7 @@ Scenario:3 自营平台把商品从商品池放入待售商品列表上架后，
 		}]
 		"""
 
-@mall2 @product_pool @eugene
+@mall2 @product_pool @eugene @1122
 Scenario:4 自营平台把商品从商品池放入待售商品列表上架后，用户购买商品,商户(供货商)修改商品，自营平台更新商品再上架
 	#自营平台jobs登录
 	Given jobs登录系统
@@ -1995,7 +1995,7 @@ Scenario:5 在售商品列表查询
 	#1.'在售商品列表'中同步商品的供货商名称前添加‘同’标签;自建供货商只显示供货商名称
 	#2.增加筛选条件"供货商类型"：全部、同步供货商、自建供货商；默认"全部"
 
-@product_pool @eugene
+@mall2 @product_pool @eugene
 Scenario:6 在售商品列表按照'供货商类型'查询
 	#自营平台jobs登录
 	Given jobs登录系统
