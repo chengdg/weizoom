@@ -211,9 +211,14 @@ def step_impl(context, user, type_name):
         else:
             expected = json.loads(context.text)
 
+    for item in actual:
+        if item['is_sync']:
+            item['is_sync_supplier'] = 'true'
+        else:
+            item['is_sync_supplier'] = 'false'
     # for i in range(len(expected)):
     #     print expected[i]['name'], "-----", actual[i]['name']
-    #     print expected[i]['actions'], "-----", actual[i]['actions']
+    #     print expected[i]['is_sync_supplier'], "-----", actual[i]['is_sync_supplier']
 
     bdd_util.assert_list(expected, actual)
 
@@ -349,6 +354,16 @@ def step_impl(context,user):
             query_param['category'] = -1
         else:
             query_param['category'] = ProductCategory.objects.get(name=query_param['category']).id
+
+    supplier_type = query_param.get('supplier_type', None)
+    if supplier_type:
+        if supplier_type == u'全部':
+            query_param['orderSupplierType'] = '-1'
+        elif supplier_type == u'同步供货商':
+            query_param['orderSupplierType'] = '0'
+        elif supplier_type == u'自建供货商':
+            query_param['orderSupplierType'] = '1'
+        del query_param['supplier_type']
     context.query_param = query_param
 
 

@@ -2099,7 +2099,7 @@ Scenario:10 待售商品列表查询
 
 #补充：张三香 2016.05.03
 
-@product_pool
+@product_pool @eugene
 Scenario:11 待售商品列表按照'供货商类型'查询
 	#自营平台jobs登录
 	Given jobs登录系统
