@@ -721,9 +721,10 @@ def step_impl(context, user, order_id):
         expected['logistics'] = express_value
     if "actions" in expected:
         expected["actions"] = set(expected["actions"])
-    for product in expected['products']:
-        if 'is_sync_supplier' in product:
-            del product['is_sync_supplier']
+    if 'products' in expected:
+        for product in expected['products']:
+            if 'is_sync_supplier' in product:
+                del product['is_sync_supplier']
 
     # 会员详情页无会员信息
     if "member" in expected:
