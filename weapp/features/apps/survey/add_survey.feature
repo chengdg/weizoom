@@ -39,7 +39,7 @@ Scenario:1 新建用户调研活动,添加'问答'模块,无奖励
 			"end_date":"2天后",
 			"permission":"无需关注即可参与",
 			"prize_type":"无奖励",
-			"member_group":"分组1",
+			"member_group":"未分组",
 			"answer":
 				[{
 					"title":"问答题1",

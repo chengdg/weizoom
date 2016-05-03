@@ -130,7 +130,7 @@ Scenario:2 参加调研活动,必须关注才可参与
 			"permission":"必须关注才可参与",
 			"prize_type":"积分",
 			"integral":100,
-			"member_group":"",
+			"member_group":"未分组",
 			"choose":
 				[{
 					"title":"选择题1",
@@ -266,7 +266,7 @@ Scenario:3 参加调研活动,活动奖励的校验
 			"permission":"无需关注即可参与",
 			"prize_type":"积分",
 			"integral":100,
-			"member_group":"",
+			"member_group":"未分组",
 			"choose":
 				[{
 					"title":"选择题1",
@@ -300,7 +300,7 @@ Scenario:3 参加调研活动,活动奖励的校验
 			"permission":"无需关注即可参与",
 			"prize_type":"优惠券",
 			"coupon":"优惠券1",
-			"member_group":"",
+			"member_group":"未分组",
 			"answer":
 				[{
 					"title":"问答题1",
@@ -315,7 +315,7 @@ Scenario:3 参加调研活动,活动奖励的校验
 			"permission":"无需关注即可参与",
 			"prize_type":"优惠券",
 			"coupon":"优惠券1",
-			"member_group":"",
+			"member_group":"未分组",
 			"answer":
 				[{
 					"title":"问答题2",
@@ -438,7 +438,7 @@ Scenario:4 参加'未开始'状态的用户调研活动
 			"end_date":"2天后",
 			"permission":"无需关注即可参与",
 			"prize_type":"无奖励",
-			"member_group":"",
+			"member_group":"未分组",
 			"choose":
 				[{
 					"title":"选择题1",
@@ -642,7 +642,7 @@ Scenario:5 参加'已结束'状态的用户调研活动
 			"end_date":"昨天",
 			"permission":"无需关注即可参与",
 			"prize_type":"无奖励",
-			"member_group":"",
+			"member_group":"未分组",
 			"choose":
 				[{
 					"title":"选择题1",
