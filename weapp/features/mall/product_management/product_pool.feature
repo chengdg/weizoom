@@ -2381,8 +2381,11 @@ Scenario:8 自营平台同步商品参与积分应用或优惠券活动,商家�
 			"""
 			[{
 				"name":"bill无规格商品1积分应用",
-				"product_name": "bill无规格商品1",
-				"product_price":11.12,
+				"products":[{
+					"name": "bill无规格商品1",
+					"price":11.12,
+					"status":""
+					}],
 				"discount": "50.0%",
 				"discount_money": 5.56,
 				"status":"进行中",
@@ -2641,17 +2644,20 @@ Scenario:8 自营平台同步商品参与积分应用或优惠券活动,商家�
 				"detail": "商品描述信息"
 			}
 			"""
-		#被更新商品参与的活动自动结束，积分活动自动结束，商品券除外
+		#被更新商品参与的活动自动结束，积分活动状态不变，商品券除外
 		Then jobs获取积分应用活动列表
 			"""
 			[{
 				"name":"bill无规格商品1积分应用",
-				"product_name": "bill无规格商品1",
-				"product_price":11.12,
+				"products":[{
+					"name": "bill无规格商品1",
+					"price":11.12,
+					"status":"待售"
+					}],
 				"discount": "50.0%",
 				"discount_money": 5.56,
-				"status":"已结束",
-				"actions": ["详情","删除"]
+				"status":"进行中",
+				"actions": ["详情","结束"]
 			}]
 			"""
 		Then jobs能获得优惠券规则列表

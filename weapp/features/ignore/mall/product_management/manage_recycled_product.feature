@@ -92,7 +92,7 @@ Background:
 		}]	
 		"""
 
-@mall2 @product @productRecycle   @mall @mall.product_category
+@product @productRecycle   @mall @mall.product_category
 Scenario:1 浏览回收站商品
 	Given jobs登录系统
 	When jobs将商品批量放入回收站
@@ -154,7 +154,7 @@ Scenario:1 浏览回收站商品
 		}]
 		"""
 
-@mall2 @product @productRecycle   @mall @mall.product_category
+@product @productRecycle   @mall @mall.product_category
 Scenario:2 永久删除商品
 	jobs进行'批量永久删除'或'单个永久删除'后
 	1. jobs的回收站商品列表发生变化

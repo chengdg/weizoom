@@ -1,4 +1,13 @@
 @charset "utf-8";
+
+/*链接置灰*/
+.xui-cursor-disabled,
+.xui-cursor-disabled:hover,
+.xui-cursor-disabled:focus{
+    color: #666;
+    text-decoration: none;
+    cursor: default;
+}
 .xui-selectPromotionProductDialog input[type="checkbox"],.xui-selectCouponDialog input[type="checkbox"],
 .xui-selectQrcodeDialog input[type="checkbox"]{
 	position: absolute;

@@ -179,19 +179,19 @@ Scenario:3 创建促销活动时，设置单个会员等级，删除等级后，
 				[{
 					"member_grade": "普通会员",
 					"discount": 100,
-					"discount_money": 100.0
+					"discount_money": 100.00
 				}, {
 					"member_grade": "铜牌会员",
 					"discount": 90,
-					"discount_money": 90.0
+					"discount_money": 90.00
 				}, {
 					"member_grade": "银牌会员",
 					"discount": 80,
-					"discount_money": 80.0
+					"discount_money": 80.00
 				}, {
 					"member_grade": "金牌会员",
 					"discount": 70,
-					"discount_money": 70.0
+					"discount_money": 70.00
 				}]
 		}]
 		"""

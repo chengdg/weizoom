@@ -93,7 +93,7 @@ Background:
 		}]
 		"""
 
-@mall2 @promotionIntegral @integral
+@promotionIntegral @integral
 Scenario: 1 结束状态为'未开始'的积分应用活动
 	Given jobs登录系统
 	When jobs"结束"促销活动"商品4积分应用"
@@ -148,7 +148,7 @@ Scenario: 1 结束状态为'未开始'的积分应用活动
 		}]
 		"""
 
-@mall2 @promotionIntegral @integral
+@promotionIntegral @integral
 Scenario: 2 结束状态为'进行中'，非永久有效的积分应用活动
 	Given jobs登录系统
 	When jobs"结束"促销活动"商品3积分应用"
@@ -203,7 +203,7 @@ Scenario: 2 结束状态为'进行中'，非永久有效的积分应用活动
 		}]
 		"""
 
-@mall2 @promotionIntegral @integral
+@promotionIntegral @integral
 Scenario: 3 结束状态为'进行中'，且为永久有效的积分应用活动
 	Given jobs登录系统
 	When jobs"结束"促销活动"商品2积分应用"
@@ -315,7 +315,7 @@ Scenario: 4 批量结束积分应用活动（包含已结束状态）
 	#	}
 	#Then jobs获得系统提示'不能同时进行删除和结束操作'
 
-@mall2 @promotionIntegral @integral
+@promotionIntegral @integral
 Scenario: 5 批量结束积分应用活动（不包含已结束状态）
 	Given jobs登录系统
 	When jobs批量'结束'促销活动
@@ -407,7 +407,7 @@ Scenario: 5 批量结束积分应用活动（不包含已结束状态）
 		}]
 		"""
 
-@mall2 @promotionIntegral @integral
+@promotionIntegral @integral
 Scenario: 6 商品下架导致积分应用活动结束
 	Given jobs登录系统
 	When jobs批量下架商品

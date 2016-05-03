@@ -51,7 +51,7 @@ Scenario:1 新建拼手气红包活动，用户二维码为空
 			"is_show_countdown":"true",
 			"red_packet":{
 				"red_packet_type":"random",
-				"random_total_money":"500",
+				"random_total_money":"500.00",
 				"random_packets_number":"10",
 				"regular_packets_number":"",
 				"regular_per_money":""
@@ -96,7 +96,7 @@ Scenario:2 新建普通红包活动，用户二维码非空
 				"random_total_money":"",
 				"random_packets_number":"",
 				"regular_packets_number":"10",
-				"regular_per_money":"10"
+				"regular_per_money":"10.00"
 			},
 			"contribution_start_range":"0.5",
 			"contribution_end_range":"1.5",

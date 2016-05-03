@@ -1160,7 +1160,7 @@ Scenario:3 自营平台把商品从商品池放入待售商品列表后，商户
 			"swipe_images": [{
 				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
 			}],
-			"postage":0.0,
+			"postage":0.00,
 			"pay_interfaces":[{
 					"type": "在线支付"
 				}],
@@ -1369,7 +1369,7 @@ Scenario:6 自营平台把商品从商品池放入待售商品列表后，上架
 			"swipe_images": [{
 				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
 			}],
-			"postage":0.0,
+			"postage":0.00,
 			"pay_interfaces":[{
 					"type": "在线支付"
 				}],
@@ -1543,7 +1543,7 @@ Scenario:7 自营平台把商品从商品池放入待售商品列表上架商品
 			"swipe_images": [{
 				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
 			}],
-			"postage":0.0,
+			"postage":0.00,
 			"pay_interfaces":[{
 					"type": "在线支付"
 				}],
@@ -1880,7 +1880,7 @@ Scenario:9 自营平台把商品从商品池放入待售商品列表后，自营
 			"swipe_images": [{
 				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
 			}],
-			"postage":0.0,
+			"postage":0.00,
 			"pay_interfaces":[{
 					"type": "在线支付"
 				}],

@@ -86,7 +86,7 @@ Background:
 	And kate关注jobs的公众号
 	And bob关注jobs的公众号
 
-@mall2  @stats.marketing @wip.marketing1
+@stats.marketing @wip.marketing1
 Scenario: '微信抽奖'营销活动分析及分页
 	Given jobs登录系统
 

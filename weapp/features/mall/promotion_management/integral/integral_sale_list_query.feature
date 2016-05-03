@@ -1,5 +1,7 @@
 #_author_：张三香
-#editor:雪静 2015.10.15
+#_editor_:雪静 2015.10.15
+#_editor_:三香 2016.05.03
+
 Feature:积分应用活动的查询
 	Jobs能对积分应用活动列表进行查询
 
@@ -42,13 +44,22 @@ Scenario: 积分应用活动列表查询
 		{}
 		"""
 	Then jobs获取积分应用活动列表
-		|    name    |product_name| bar_code |   status  |  start_date  |   end_date  | is_permanant_active  | created_at  |
-		|积分应用6   |    商品2   | 1234561  |   未开始  |  明天        |3天后        |      false           | 今天        |
-		|积分应用5   |    商品5   | 1234564  |   进行中  |              |             |      true            | 昨天        |
-		|积分应用4   |    商品4   | 1234563  |   已结束  |  2015-08-01  |2015-08-05   |      false           | 2015-08-01  |
-		|积分应用3   |    商品3   | 1234562  |   进行中  |  2015-07-10  |明天         |      false           | 2015-07-10  |
-		|积分应用2   |    商品2   | 1234561  |   已结束  |  2015-06-10  |2015-08-10   |      false           | 2015-06-10  |
-		|积分应用1   |    商品1   |          |   已结束  |  2015-05-10  |2015-05-25   |      false           | 2015-05-10  |
+		"""
+		[{
+			"name":"积分应用6"
+		},{
+			"name":"积分应用5",
+			"is_permanant_active":true
+		},{
+			"name":"积分应用4"
+		},{
+			"name":"积分应用3"
+		},{
+			"name":"积分应用2"
+		},{
+			"name":"积分应用1"
+		}]
+		"""
 	#商品名称
 	#完全匹配
 	When jobs设置查询条件
@@ -58,9 +69,13 @@ Scenario: 积分应用活动列表查询
 		}
 		"""
 	Then jobs获取积分应用活动列表
-		|    name    | product_name | bar_code |   status  |  start_date  |   end_date  | is_permanant_active  | created_at  |
-		|积分应用6   |     商品2    | 1234561  |   未开始  |  明天        |3天后        |      false           | 今天        |
-		|积分应用2   |     商品2    | 1234561  |   已结束  |  2015-06-10  |2015-08-10   |      false           | 2015-06-10  |
+		"""
+		[{
+			"name":"积分应用6"
+		},{
+			"name":"积分应用2"
+		}]
+		"""
 
 	#部分匹配
 	When jobs设置查询条件
@@ -70,13 +85,22 @@ Scenario: 积分应用活动列表查询
 		}
 		"""
 	Then jobs获取积分应用活动列表
-		|    name    | product_name | bar_code |   status  |  start_date  |   end_date  | is_permanant_active  | created_at  |
-		|积分应用6   |     商品2    | 1234561  |   未开始  |  明天        |3天后        |      false           | 今天        |
-		|积分应用5   |     商品5    | 1234564  |   进行中  |              |             |      true            | 昨天        |
-		|积分应用4   |     商品4    | 1234563  |   已结束  |  2015-08-01  |2015-08-05   |      false           | 2015-08-01  |
-		|积分应用3   |     商品3    | 1234562  |   进行中  |  2015-07-10  |明天         |      false           | 2015-07-10  |
-		|积分应用2   |     商品2    | 1234561  |   已结束  |  2015-06-10  |2015-08-10   |      false           | 2015-06-10  |
-		|积分应用1   |     商品1    |          |   已结束  |  2015-05-10  |2015-05-25   |      false           | 2015-05-10  |
+		"""
+		[{
+			"name":"积分应用6"
+		},{
+			"name":"积分应用5",
+			"is_permanant_active":true
+		},{
+			"name":"积分应用4"
+		},{
+			"name":"积分应用3"
+		},{
+			"name":"积分应用2"
+		},{
+			"name":"积分应用1"
+		}]
+		"""
 
 	#查询结果为空
 	When jobs设置查询条件
@@ -99,8 +123,12 @@ Scenario: 积分应用活动列表查询
 		}
 		"""
 	Then jobs获取积分应用活动列表
-		|    name    | product_name |  bar_code |   status  |  start_date  |   end_date  | is_permanant_active  | created_at  |
-		|积分应用5   |    商品5     |  1234564  |   进行中  |              |             |      true            | 昨天        |
+		"""
+		[{
+			"name":"积分应用5",
+			"is_permanant_active":true
+		}]
+		"""
 
 	#查询结果为空
 	When jobs设置查询条件
@@ -123,8 +151,11 @@ Scenario: 积分应用活动列表查询
 		}
 		"""
 	Then jobs获取积分应用活动列表
-		|    name    | product_name |bar_code     |   status  |  start_date  |   end_date  | is_permanant_active  | created_at  |
-		|积分应用1   |    商品1     |             |   已结束  |  2015-05-10  |2015-05-25   |      false           | 2015-05-10  |
+		"""
+		[{
+			"name":"积分应用1"
+		}]
+		"""
 
 	When jobs设置查询条件
 		"""
@@ -134,11 +165,16 @@ Scenario: 积分应用活动列表查询
 		}
 		"""
 	Then jobs获取积分应用活动列表
-		|    name    | product_name | bar_code |   status  |  start_date  |   end_date  | is_permanant_active  | created_at  |
-		|积分应用4   |     商品4    | 1234563  |   已结束  |  2015-08-01  |2015-08-05   |      false           | 2015-08-01  |
-		|积分应用3   |     商品3    | 1234562  |   进行中  |  2015-07-10  |明天         |      false           | 2015-07-10  |
-		|积分应用2   |     商品2    | 1234561  |   已结束  |  2015-06-10  |2015-08-10   |      false           | 2015-06-10  |
-		
+		"""
+		[{
+			"name":"积分应用4"
+		},{
+			"name":"积分应用3"
+		},{
+			"name":"积分应用2"
+		}]
+		"""
+
 	#查询结果为空
 	When jobs设置查询条件
 		"""
@@ -159,9 +195,14 @@ Scenario: 积分应用活动列表查询
 		}
 		"""
 	Then jobs获取积分应用活动列表
-		|    name    | product_name | bar_code |   status  |  start_date  |   end_date  | is_permanant_active  | created_at  |
-		|积分应用5   |     商品5    | 1234564  |   进行中  |              |             |      true            | 昨天        |
-		|积分应用3   |     商品3    | 1234562  |   进行中  |  2015-07-10  |明天         |      false           | 2015-07-10  |
+		"""
+		[{
+			"name":"积分应用5",
+			"is_permanant_active":true
+		},{
+			"name":"积分应用3"
+		}]
+		"""
 
 	#组合查询
 	When jobs设置查询条件
@@ -175,5 +216,9 @@ Scenario: 积分应用活动列表查询
 		}
 		"""
 	Then jobs获取积分应用活动列表
-		|    name    | product_name | bar_code |   status  |  start_date  |   end_date  | is_permanant_active  | created_at  |
-		|积分应用4   |     商品4    | 1234563  |   已结束  |  2015-08-01  |2015-08-05   |      false           | 2015-08-01  |
+		"""
+		[{
+			"name":"积分应用4"
+		}]
+		"""
+

@@ -22,6 +22,7 @@ Feature:促销管理-新建活动页面的商品查询
 
 Background:
 	Given jobs登录系统
+	When jobs添加微信证书
 	When jobs添加商品分类
 		"""
 		[{
@@ -90,6 +91,12 @@ Background:
 			"price":100.00,
 			"stock_type": "无限",
 			"status":"在售"
+		},{
+			"name":"团购商品",
+			"categories": "分类1,分类2,分类3",
+			"price":100.00,
+			"stock_type": "无限",
+			"status":"在售"
 		}]
 		"""
 	When jobs创建限时抢购活动
@@ -131,36 +138,37 @@ Background:
 			"rules": [{
 				"member_grade": "全部会员",
 				"discount": 50,
-				"discount_money": 50.0
+				"discount_money": 50.00
 			}]
 		}]
 		"""
+
 	And jobs添加优惠券规则
 		"""
 		[{
 			"name": "多商品券01",
-			"money": 1,
+			"money": 1.00,
 			"start_date": "2天前",
 			"end_date": "1天前",
 			"coupon_id_prefix": "coupon1_id_",
 			"coupon_product": "多商品券,商品2"
 		},{
 			"name": "多商品券02",
-			"money": 5,
+			"money": 5.00,
 			"start_date": "今天",
 			"end_date": "1天后",
 			"coupon_id_prefix": "coupon2_id_",
 			"coupon_product": "多商品券"
 		},{
 			"name": "多商品券03",
-			"money": 10,
+			"money": 10.00,
 			"start_date": "今天",
 			"end_date": "2天后",
 			"coupon_id_prefix": "coupon3_id_",
 			"coupon_product": "多商品券"
 		},{
 			"name": "多商品失效活动",
-			"money": 1,
+			"money": 1.00,
 			"start_date": "今天",
 			"end_date": "1天后",
 			"coupon_id_prefix": "coupon4_id_",
@@ -168,8 +176,29 @@ Background:
 		}]
 		"""
 	When jobs失效优惠券'多商品失效活动'
+	
+	And jobs新建团购活动
+		"""
+		[{
+			"group_name":"团购活动",
+			"start_date":"今天",
+			"end_date":"2天后",
+			"product_name":"团购商品",
+			"group_dict":
+				[{
+					"group_type":5,
+					"group_days":1,
+					"group_price":90.00
+				}],
+				"ship_date":20,
+				"product_counts":100,
+				"material_image":"1.jpg",
+				"share_description":"团购活动分享描述"
+		}]
+		"""
+	When jobs开启团购活动'团购活动'
 
-@ztqb                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   @mall2 @promotion @promotionFlash
+@mall2 @promotion @promotionFlash @ztq
 Scenario: 1 限时抢购-新建活动页面的商品查询
 	Given jobs登录系统
 	#起购数量大于1的商品不在在售列表中（不能参与限时抢购）
@@ -198,8 +227,9 @@ Scenario: 1 限时抢购-新建活动页面的商品查询
 		| 赠品       |100.00 | 无限   |                | 选取    |
 		| 积分应用   |100.00 | 无限   |                | 选取    |
 		| 多商品失效 |100.00 | 无限   | 多商品券       |         |
+		| 团购商品   |100.00 | 无限   | 团购活动       |         |
 
-@mall2 @promotion @promotionPremium
+@mall2 @promotion @promotionPremium @ztq
 Scenario: 2 买赠-新建活动页面的商品查询
 	When jobs新建活动时设置参与活动的商品查询条件
 		"""
@@ -218,9 +248,11 @@ Scenario: 2 买赠-新建活动页面的商品查询
 		| 赠品       |100.00 | 无限   |                | 选取    |
 		| 积分应用   |100.00 | 无限   |                | 选取    |
 		| 多商品失效 |100.00 | 无限   | 多商品券       |         |
+		| 团购商品   |100.00 | 无限   | 团购活动       |         |
 
 @mall2 @promotion @promotionIntegral @ztq
 Scenario: 3 积分应用-新建活动页面的商品查询
+	Given jobs登录系统
 	When jobs新建活动时设置参与活动的商品查询条件
 		"""
 		{
@@ -238,6 +270,13 @@ Scenario: 3 积分应用-新建活动页面的商品查询
 		| 赠品       |100.00 | 无限   |                | 选取    |
 		| 积分应用   |100.00 | 无限   | 积分应用活动   |         |
 		| 多商品失效 |100.00 | 无限   |                | 选取    |
+		| 团购商品   |100.00 | 无限   | 团购活动       |         |
+
+	Then jobs新建多商品券活动时能获得商品分组列表
+		| name     | created_at | actions |
+		| 分类1    |    今天    |   选取  |
+		| 分类2    |    今天    |   选取  |
+		| 分类3    |    今天    |   选取  |
 
 @mall2 @promotion @promotionCoupon
 Scenario: 4 多商品券-新建活动页面的商品查询
@@ -253,6 +292,7 @@ Scenario: 4 多商品券-新建活动页面的商品查询
 		| 赠品       |100.00 | 无限   |                | 选取    |
 		| 积分应用   |100.00 | 无限   |                | 选取    |
 		| 多商品失效 |100.00 | 无限   | 多商品券       | 选取    |
+		| 团购商品   |100.00 | 无限   | 团购活动       |         |
 
 	Then jobs新建多商品券活动时能获得商品分组列表
 		| name     | created_at | actions |
@@ -273,6 +313,7 @@ Scenario: 4 多商品券-新建活动页面的商品查询
 		| 商品2      |100.00 | 无限   |                | 选取    |
 		| 多商品券   |100.00 | 无限   | 多商品券       | 选取    |
 		| 多商品失效 |100.00 | 无限   | 多商品券       | 选取    |
+		| 团购商品   |100.00 | 无限   | 团购活动       |         |
 
 	When jobs新建多商品券设置商品分组查询条件
 		"""

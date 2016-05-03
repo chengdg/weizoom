@@ -324,8 +324,10 @@ W.view.mall.PromotionListView = Backbone.View.extend({
 		if (!product || product.length === 0) {
 			//有多个product的promotion
 			var products = promotion.get('products');
-			var productId = parseInt($target.data('productId'));
-			var product = _.find(products, function(product) { return product.id == productId; });
+			var productId =$target.data('product-id');
+			var product = _.find(products, function(product) {
+				return product.id == productId; 
+			});
 		}
 		var models = product['models'];
 		var properties = _.pluck(models[0].property_values, 'propertyName');

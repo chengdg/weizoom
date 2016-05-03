@@ -56,7 +56,7 @@ Scenario:1 选取普通无规格商品,起止时间非永久有效,添加禁用�
 			"model": {
 				"models": {
 					"standard": {
-						"price": 10.0,
+						"price": 10.00,
 						"weight": 10.0,
 						"stock_type": "有限",
 						"stocks": 10
@@ -81,7 +81,7 @@ Scenario:1 选取普通无规格商品,起止时间非永久有效,添加禁用�
 		"""
 		[{
 			"product_name": "无规格",
-			"product_price": 10.0,
+			"product_price": 10.00,
 			"status": "进行中",
 			"start_date": "今天",
 			"end_date": "1天后"
@@ -99,22 +99,22 @@ Scenario:2 选取多规格商品,起止时间为永久有效,添加禁用优惠�
 			"model": {
 				"models": {
 					"黑色 S": {
-						"price": 10.0,
+						"price": 10.00,
 						"weight": 1.0,
 						"stock_type": "无限"
 					},
 					"白色 S": {
-						"price": 10.0,
+						"price": 10.00,
 						"weight": 1.0,
 						"stock_type": "无限"
 					},
 					"黑色 M": {
-						"price": 13.0,
+						"price": 13.00,
 						"weight": 1.0,
 						"stock_type": "无限"
 					},
 					"白色 M":{
-						"price": 13.0,
+						"price": 13.00,
 						"weight": 1.0,
 						"stock_type": "无限"
 					}
@@ -138,7 +138,7 @@ Scenario:2 选取多规格商品,起止时间为永久有效,添加禁用优惠�
 		"""
 		[{
 			"product_name": "多规格",
-			"product_price":"10.0 ~ 13.0",
+			"product_price":"10.00 ~ 13.00",
 			"status": "进行中",
 			"is_permanant_active": 1
 		}]
@@ -151,23 +151,23 @@ Scenario:3 选取多个参与促销活动的商品,添加禁用优惠券
 		"""
 		[{
 			"name":"限时抢购",
-			"price":100.0,
+			"price":100.00,
 			"status":"在售"
 		},{
 			"name":"买赠",
-			"price":100.0,
+			"price":100.00,
 			"status":"在售"
 		},{
 			"name":"积分应用",
-			"price":100.0,
+			"price":100.00,
 			"status":"在售"
 		},{
 			"name":"单品券",
-			"price":100.0,
+			"price":100.00,
 			"status":"在售"
 		},{
 			"name":"赠品",
-			"price":10.0,
+			"price":10.00,
 			"status":"在售"
 		}]
 		"""
@@ -214,15 +214,15 @@ Scenario:3 选取多个参与促销活动的商品,添加禁用优惠券
 				[{
 					"member_grade": "普通会员",
 					"discount": 100,
-					"discount_money": 100.0
+					"discount_money": 100.00
 				},{
 					"member_grade": "铜牌会员",
 					"discount": 90,
-					"discount_money": 90.0
+					"discount_money": 90.00
 				},{
 					"member_grade": "银牌会员",
 					"discount": 80,
-					"discount_money": 80.0
+					"discount_money": 80.00
 				}]
 		}]
 		"""
@@ -266,25 +266,25 @@ Scenario:3 选取多个参与促销活动的商品,添加禁用优惠券
 		"""
 		[{
 			"product_name": "单品券",
-			"product_price": 100.0,
+			"product_price": 100.00,
 			"status": "进行中",
 			"start_date": "今天",
 			"end_date": "2天后"
 		},{
 			"product_name": "积分应用",
-			"product_price": 100.0,
+			"product_price": 100.00,
 			"status": "进行中",
 			"start_date": "今天",
 			"end_date": "2天后"
 		},{
 			"product_name": "买赠",
-			"product_price": 100.0,
+			"product_price": 100.00,
 			"status": "未开始",
 			"start_date": "明天",
 			"end_date": "2天后"
 		},{
 			"product_name": "限时抢购",
-			"product_price": 100.0,
+			"product_price": 100.00,
 			"status": "未开始",
 			"start_date": "明天",
 			"end_date": "2天后"
