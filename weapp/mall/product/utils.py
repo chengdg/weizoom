@@ -299,6 +299,7 @@ def weizoom_filter_products(request, products):
     store_name = request.GET.get('supplier', '')
     start_date = request.GET.get('startDate', '')
     end_date = request.GET.get('endDate', '')
+    supplier_type = request.GET.get('orderSupplierType', '')
 
     from_supplier_product_ids = []
     from_store_product_ids = []
@@ -356,6 +357,10 @@ def weizoom_filter_products(request, products):
     filter_product_ids = from_store_product_ids + from_supplier_product_ids
 
     filtered_products = filter_products(request, products)
+    if supplier_type == '0':
+        filtered_products.filter(supplier_user_id>0)
+    elif supplier_type == '1':
+        filtered_products.filter(supplier>0)
     new_filtered_products = []
     for product in filtered_products:
         if product.id in filter_product_ids:
