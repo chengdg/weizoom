@@ -11,6 +11,7 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.conf import settings
 import requests
+from django.http import Http404
 
 from mall import export
 from tools.regional import views as regional_util
@@ -725,8 +726,7 @@ def get_detail_response(request):
         order = mall.models.Order.objects.get(id=request.GET['order_id'])
         success = assert_webapp_id(order, webapp_id)
         if success == False:
-            response = create_response(404)
-            return response.get_response()
+            return Http404
 
 
     if request.method == 'GET':
