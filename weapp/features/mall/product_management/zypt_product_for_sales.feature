@@ -19,6 +19,9 @@ Feature: 自营平台待售商品列表页
 		13.在商品池更新之后，(采购价，库存，总销量，分组，会员折扣，运费，支付方式，保留更新之前设置的数值)，别的修改项更新之后被覆盖
 		14.商品上架后，更新商品，商品回到待售列表
 		15.供货商查询，同步时间查询
+	补充：
+		16.列表中同步商品的供货商名称前添加‘同’标签;自建供货商只显示供货商名称
+		17.增加筛选条件"供货商类型"：全部、同步供货商、自建供货商；默认"全部"
 	"""
 #特殊说明：jobs，nokia表示自营平台，bill，tom表示商家
 Background:
@@ -2093,3 +2096,208 @@ Scenario:10 待售商品列表查询
 			"name": "bill无规格商品1"
 		}]
 		"""
+
+#补充：张三香 2016.05.03
+
+@product_pool
+Scenario:11 待售商品列表按照'供货商类型'查询
+	#自营平台jobs登录
+	Given jobs登录系统
+	And jobs已添加供货商
+		"""
+		[{
+			"name": "供货商1",
+			"responsible_person": "宝宝",
+			"supplier_tel": "13811223344",
+			"supplier_address": "北京市海淀区泰兴大厦",
+			"remark": "备注卖花生油"
+		}, {
+			"name": "供货商2",
+			"responsible_person": "陌陌",
+			"supplier_tel": "13811223344",
+			"supplier_address": "北京市海淀区泰兴大厦",
+			"remark": ""
+		}]
+		"""
+	And jobs已添加商品
+		"""
+		[{
+			"supplier": "供货商1",
+			"name": "商品1a",
+			"price": 10.00,
+			"purchase_price": 9.00,
+			"weight": 1.0,
+			"stock_type": "无限",
+			"created_at":"2015-07-01 08:00:00",
+			"status":"待售",
+			"pay_interfaces":[{
+				"type": "货到付款"
+			}]
+		}, {
+			"supplier": "供货商1",
+			"name": "商品1b",
+			"price": 20.00,
+			"purchase_price": 19.00,
+			"weight": 1.0,
+			"stock_type": "有限",
+			"stocks": 10,
+			"created_at":"2015-07-02 08:00:00",
+			"status":"待售",
+			"pay_interfaces":[{
+				"type": "货到付款"
+			}]
+		}, {
+			"supplier": "供货商2",
+			"name": "商品2a",
+			"price": 20.00,
+			"purchase_price": 19.00,
+			"weight": 1.0,
+			"stock_type": "有限",
+			"stocks": 10,
+			"created_at":"2015-07-03 08:00:00",
+			"status":"待售",
+			"pay_interfaces":[{
+				"type": "货到付款"
+			}]
+		}]
+		"""
+
+	When jobs将商品'bill无规格商品1'放入待售于'2015-08-02 10:30'
+	And jobs将商品'tom无规格商品1'放入待售于'2015-08-02 11:30'
+	Then jobs能获得'待售'商品列表
+		"""
+		[{
+			"name": "tom无规格商品1",
+			"user_code":"1112",
+			"supplier":"tom商家",
+			"is_sync_supplier": "true",
+			"categories": [],
+			"price": 11.12,
+			"stocks": "无限",
+			"sales": 0,
+			"sync_time":"2015-08-02 11:30",
+			"actions": ["修改", "上架", "彻底删除"]
+		},{
+			"name": "bill无规格商品1",
+			"user_code":"1112",
+			"supplier":"bill商家",
+			"is_sync_supplier": "true",
+			"categories": [],
+			"price": 11.12,
+			"stocks": "无限",
+			"sales": 0,
+			"sync_time":"2015-08-02 10:30",
+			"actions": ["修改", "上架", "彻底删除"]
+		},{
+			"name": "商品2a",
+			"user_code":"",
+			"supplier":"供货商2",
+			"is_sync_supplier": "false",
+			"categories": [],
+			"price": 20.00,
+			"stock_type": "有限",
+			"stocks": 10,
+			"sales": 0,
+			"sync_time":"2015-07-03 08:00",
+			"actions": ["修改", "上架", "彻底删除"]
+		},{
+			"name": "商品1b",
+			"user_code":"",
+			"supplier":"供货商1",
+			"is_sync_supplier": "false",
+			"categories": [],
+			"price": 20.00,
+			"stock_type": "有限",
+			"stocks": 10,
+			"sales": 0,
+			"sync_time":"2015-07-02 08:00",
+			"actions": ["修改", "上架", "彻底删除"]
+		},{
+			"name": "商品1a",
+			"user_code":"",
+			"supplier":"供货商1",
+			"is_sync_supplier": "false",
+			"categories": [],
+			"price": 10.00,
+			"stocks": "无限",
+			"sales": 0,
+			"sync_time":"2015-07-01 08:00",
+			"actions": ["修改", "上架", "彻底删除"]
+		}]
+		"""
+
+	#供货商类型查询-全部
+		When jobs设置商品查询条件
+			"""
+			{
+				"supplier_type": "全部"
+			}
+			"""
+		Then jobs能获得'待售'商品列表
+			"""
+			[{
+				"name": "tom无规格商品1",
+				"supplier":"tom商家",
+				"is_sync_supplier": "true"
+			},{
+				"name": "bill无规格商品1",
+				"supplier":"bill商家",
+				"is_sync_supplier": "true"
+			},{
+				"name": "商品2a",
+				"supplier":"供货商2",
+				"is_sync_supplier": "false"
+			},{
+				"name": "商品1b",
+				"supplier":"供货商1",
+				"is_sync_supplier": "false"
+			},{
+				"name": "商品1a",
+				"supplier":"供货商1",
+				"is_sync_supplier": "false"
+			}]
+			"""
+	#供货商类型查询-同步供货商
+		When jobs设置商品查询条件
+			"""
+			{
+				"supplier_type": "同步供货商"
+			}
+			"""
+		Then jobs能获得'待售'商品列表
+			"""
+			[{
+				"name": "tom无规格商品1",
+				"supplier":"tom商家",
+				"is_sync_supplier": "true"
+			},{
+				"name": "bill无规格商品1",
+				"supplier":"bill商家",
+				"is_sync_supplier": "true"
+			}]
+			"""
+
+	#供货商类型查询-自建供货商
+		When jobs设置商品查询条件
+			"""
+			{
+				"supplier_type": "自建供货商"
+			}
+			"""
+		Then jobs能获得'待售'商品列表
+			"""
+			[{
+				"name": "商品2a",
+				"supplier":"供货商2",
+				"is_sync_supplier": "false"
+			},{
+				"name": "商品1b",
+				"supplier":"供货商1",
+				"is_sync_supplier": "false"
+			},{
+				"name": "商品1a",
+				"supplier":"供货商1",
+				"is_sync_supplier": "false"
+			}]
+			"""
+
