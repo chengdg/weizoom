@@ -397,12 +397,12 @@ class Product(models.Model):
 			model_dict = {
 				"id": model.id,
 				"name": model.name,
-				"price": model.price,
+				"price": '%.2f' % model.price,
 				"weight": model.weight,
 				"stock_type": model.stock_type,
 				"stocks": model.stocks if model.stock_type == PRODUCT_STOCK_TYPE_LIMIT else u'无限',
 				"user_code": model.user_code,
-				"market_price": model.market_price}
+				"market_price": '%.2f' % model.market_price}
 
 			'''
 			获取model关联的property信息
@@ -479,7 +479,7 @@ class Product(models.Model):
 					if len(custom_models) == 1:
 						target_model = custom_models[0]
 						# 格式: X.00
-						display_price_range = '%.2f' % target_model['price']
+						display_price_range = target_model['price']
 					else:
 						# 列表页部分显示商品的最小价格那个model的信息
 						custom_models.sort(lambda x, y: cmp(x['price'], y['price']))
@@ -488,20 +488,20 @@ class Product(models.Model):
 						high_price = custom_models[-1]['price']
 						if low_price == high_price:
 							# 格式: X.00
-							display_price_range = '%.2f' % low_price
+							display_price_range = low_price
 						else:
 							# 更改 格式: X.00 @延昊南
-							low_price = '%.2f' % low_price
-							high_price = '%.2f' % high_price
+							low_price = low_price
+							high_price = high_price
 							display_price_range = '%s ~ %s' % (low_price, high_price)
 				else:
 					product._is_use_custom_model = False
 					target_model = models['standard_model']
 					product.standard_model = target_model
-					display_price_range = '%.2f' % target_model['price']
+					display_price_range = target_model['price']
 
 				product.current_used_model = target_model
-				product.display_price = '%.2f' % target_model['price']
+				product.display_price = target_model['price']
 				product.display_price_range = display_price_range
 				product.user_code = target_model['user_code']
 				product.stock_type = target_model['stock_type']
@@ -512,8 +512,8 @@ class Product(models.Model):
 				# 所有规格都已经被删除
 				product._is_use_custom_model = False
 				product.current_used_model = {}
-				product.display_price = '%.2f' % product.price
-				product.display_price_range = '%.2f' % product.price
+				product.display_price = product.price
+				product.display_price_range = product.price
 				product.user_code = product.user_code
 				product.stock_type = PRODUCT_STOCK_TYPE_LIMIT
 				product.stocks = 0
