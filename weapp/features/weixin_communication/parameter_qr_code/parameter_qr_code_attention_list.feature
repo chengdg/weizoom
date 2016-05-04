@@ -784,41 +784,30 @@ Scenario:8 带参数二维码[批量修改]
 				"prize_type": "无奖励",
 				"member_rank": "普通会员",
 				"tags": "分组1",
-				"is_attention_in": "true",
+				"is_attention_in": "false",
 				"remarks": "",
-				"is_relation_member": "false",
 				"reply_type": "文字",
-				"scan_code_reply": "扫码后回复文本"
+				"scan_code_reply": "扫码后回复批量修改"
 			}]
 		"""
-
-
-
-
-
-	When jobs选择二维码名称
+	Then jobs能获取二维码'带参数二维码-默认设置'
 		"""
-			[{
+			[{	
 				"code_name": "带参数二维码-默认设置",
 				"create_time": "2015-08-10 10:00:00",
 				"prize_type": "无奖励",
 				"member_rank": "普通会员",
-				"tags": "未分组",
-				"is_attention_in": "true",
+				"tags": "分组1",
+				"is_attention_in": "false",
 				"remarks": "",
 				"is_relation_member": "false",
 				"reply_type": "文字",
-				"scan_code_reply": "扫码后回复文本"
-			},{
-				"code_name": "带参数二维码-第二个二维码",
-				"create_time": "今天",
-				"prize_type": "无奖励",
-				"member_rank": "普通会员",
-				"tags": "未分组",
-				"is_attention_in": "true",
-				"remarks": "",
-				"is_relation_member": "false",
-				"reply_type": "文字",
-				"scan_code_reply": "扫码后回复文本"
+				"scan_code_reply": "扫码后回复批量修改"
 			}]
 		"""
+
+	When 
+
+
+
+
