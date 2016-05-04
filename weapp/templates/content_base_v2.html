@@ -22,12 +22,15 @@
 					<a href="javascript:void(0);" data-toggle="popover" id="mf"><i class="xui-toolIcon"></i>修改密码</a>
 				{% endif %}
 					<a href="javascript:void(0);" data-toggle="popover" target="_blank" style="margin-right:13px;" id="message_href"><i class="xui-toolIcon"></i>系统通知<i class="xui-noticyTip" style="display:none" id ="message_count"></i></a>
-					<div class="popover bottom in" role="tooltip" id="popover838423" style="left: 132.594px; top: 16px; display: none;"><div class="popover-content" style="min-height:30px;width:170px;line-height:30px;text-algin:center;padding:1px 0px 0px 15px">
-						<span id="message_count_inner"></span>条新消息通知 <a href="http://fans.dev.com/message/message_list/?from=portal" target="_blank" style="color:blue;">查看</a>
-					</div></div>
+
 				{% if request.user.username == 'malla' or request.user.username == 'ceshi01' or request.user.username == 'jobs' %}
 					<a href="{{ fans_host }}/help_center/outline/" target="_blank"><i class="xui-toolIcon"></i>帮助中心</a>
 				{% endif %}
+				<div class="popover bottom in" role="tooltip" id="popover838423" style="left: 132.594px; top: 16px; display: none;">
+						<div class="popover-content" style="min-height:30px;width:170px;line-height:30px;text-algin:center;padding:1px 0px 0px 15px">
+							<span id="message_count_inner"></span>条新消息通知 <a href="{{ fans_host }}/message/message_list/?from=portal" target="_blank" style="color:blue;">查看</a>
+						</div>
+				</div>
 				<div id='popover_tmpl' style="display:none;">
 					<form class="form-horizontal">
 						<div class="control-group">
@@ -337,7 +340,10 @@
 				$("#message_count_inner").html(localStorage.message_count)
 				$("#message_count").css('display','inline');
 				$("#popover838423").css('display','inline');
-				$("#message_href").attr("href","javascript:void(0);");
+
+			}else{
+
+				$("#message_href").attr("href","{{ fans_host }}/message/message_list/?from=portal");
 			}
 
 		}
