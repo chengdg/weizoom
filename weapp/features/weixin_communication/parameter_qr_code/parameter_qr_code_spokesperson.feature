@@ -302,7 +302,7 @@ Scenario:3 带参数二维码[关联会员]-推荐详情页-[扫码人数][会�
 				"is_relation_member": "true",
 				"relation_time": "2015-10-12 10:20:30",
 				"cancel_related_time": "",
-				"relation_member": "tom2",
+				"relation_member": "tom",
 				"title": "星级代言人",
 				"code_description": "星级代言人二维码描述",
 				"reply_type": "文字",
@@ -350,11 +350,11 @@ Scenario:3 带参数二维码[关联会员]-推荐详情页-[扫码人数][会�
 		#"已关注会员不可参与"的带参数二维码：取消关注会员扫码关注，已推荐扫码人数不增加
 			#取消关注会员marry扫码关注
 			When 清空浏览器
-			And marry关注jobs的公众号
-			And marry访问jobs的webapp
-			And marry取消关注jobs的公众号
+			And mayun关注jobs的公众号
+			And mayun访问jobs的webapp
+			And mayun取消关注jobs的公众号
 
-			And marry扫描带参数二维码"带参数二维码-代言人二维码页-已推荐扫码人数"
+			And mayun扫描带参数二维码"带参数二维码-代言人二维码页-已推荐扫码人数"
 
 			When 清空浏览器
 			And bill访问jobs的webapp
@@ -440,11 +440,11 @@ Scenario:3 带参数二维码[关联会员]-推荐详情页-[扫码人数][会�
 		#"已关注会员可参与"的带参数二维码：取消关注会员扫码关注，已推荐扫码人数增加
 			#取消关注会员marry扫码关注
 			When 清空浏览器
-			And marry关注jobs的公众号
-			And marry访问jobs的webapp
-			And marry取消关注jobs的公众号
+			And mayun关注jobs的公众号
+			And mayun访问jobs的webapp
+			And mayun取消关注jobs的公众号
 
-			And marry扫描带参数二维码"带参数二维码-代言人二维码页-已推荐扫码人数"
+			And mayun扫描带参数二维码"带参数二维码-代言人二维码页-已推荐扫码人数"
 
 			When 清空浏览器
 			And bill访问jobs的webapp
@@ -462,7 +462,7 @@ Scenario:3 带参数二维码[关联会员]-推荐详情页-[扫码人数][会�
 						"member_name": "jack",
 						"status": "已关注"
 					},{
-						"member_name": "marry",
+						"member_name": "mayun",
 						"status": "已关注"
 					}]
 				}
@@ -470,7 +470,7 @@ Scenario:3 带参数二维码[关联会员]-推荐详情页-[扫码人数][会�
 
 	#扫码会员取消关注不影响扫码人数和会员列表
 		When 清空浏览器
-		When marry取消关注jobs的公众号
+		When mayun取消关注jobs的公众号
 
 		When 清空浏览器
 		And bill访问jobs的webapp
@@ -488,7 +488,7 @@ Scenario:3 带参数二维码[关联会员]-推荐详情页-[扫码人数][会�
 					"member_name": "jack",
 					"status": "已关注"
 				},{
-					"member_name": "marry",
+					"member_name": "mayun",
 					"status": "已跑路"
 				}]
 			}
@@ -496,7 +496,7 @@ Scenario:3 带参数二维码[关联会员]-推荐详情页-[扫码人数][会�
 
 	#"已关注会员可参与"同一微信账号交替扫不同的码[扫码人数][会员列表]跳转
 		When 清空浏览器
-		When marry扫描带参数二维码"带参数二维码-代言人二维码页-已推荐扫码人数22"
+		When mayun扫描带参数二维码"带参数二维码-代言人二维码页-已推荐扫码人数22"
 
 		When 清空浏览器
 		And bill访问jobs的webapp
@@ -523,7 +523,7 @@ Scenario:3 带参数二维码[关联会员]-推荐详情页-[扫码人数][会�
 			{
 				"recommended_number": 1,
 				"members":[{
-					"member_name": "marry",
+					"member_name": "mayun",
 					"status": "已关注"
 				}]
 			}
@@ -655,7 +655,7 @@ Scenario:4 带参数二维码[关联会员]-推荐详情页-[下单人数][成�
 			"""
 
 		When nokia关注jobs的公众号于'2015-05-09 10:00:00'
-		When tom2关注jobs的公众号于'2015-05-09 10:00:00'
+		When mayun关注jobs的公众号于'2015-05-09 10:00:00'
 		When bill关注jobs的公众号于'2015-05-10 10:00:00'
 		And tom关注jobs的公众号于'2015-05-11 10:00:00'
 		And tom取消关注jobs的公众号
@@ -783,7 +783,7 @@ Scenario:4 带参数二维码[关联会员]-推荐详情页-[下单人数][成�
 @mall2 @senior @bandParameterCode @gyct
 Scenario:5 带参数二维码[从个人中心绑定手机号码]
 	When nokia关注jobs的公众号于'2015-05-09 10:00:00'
-	When zhouxun关注jobs的公众号于'2015-05-09 10:00:00'
+	When mayun关注jobs的公众号于'2015-05-09 10:00:00'
 	When bill关注jobs的公众号于'2015-05-10 10:00:00'
 	And tom关注jobs的公众号于'2015-05-11 10:00:00'
 	Given jobs登录系统
