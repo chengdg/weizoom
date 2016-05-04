@@ -759,7 +759,7 @@ Scenario:8 带参数二维码[批量修改]
 			[{
 				"name": "带参数二维码-第二个二维码",
 				"attention_number": 0,
-				"attention_money": 0.00
+				"attention_money": 0.00,
 				"create_time": "2015-08-10 10:00:00",
 				"scan_reward": ""
 			}, {
