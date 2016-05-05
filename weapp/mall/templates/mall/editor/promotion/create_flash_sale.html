@@ -267,7 +267,7 @@ function validatePromotionPrice($el){
   // 获取价格
   var productPrice = $.trim($('.xa-product-price').text()).split('~')[0];
   var promotionPrice = $.trim($('.xa-promotion-price').val());
-  var isValidate = parseFloat(promotionPrice) < parseFloat(productPrice);
+  var isValidate = parseFloat(promotionPrice) <= parseFloat(productPrice);
   return {
 	isValidate: isValidate,
 	errorHint: '限购价格应小于商品原价'
