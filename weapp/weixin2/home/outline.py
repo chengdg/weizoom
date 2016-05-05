@@ -87,7 +87,7 @@ def get_unread_message_count(user):
 	if sessions["unread_count__sum"] is not None:
 		unread_message_count = sessions["unread_count__sum"]
 
-	return unread_message_count;
+	return unread_message_count
 
 
 

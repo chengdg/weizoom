@@ -81,7 +81,7 @@
 								</div>
 							</div>
 							{{if message.unread_count}}
-								<span title="${message.unread_count}" class="xui-i-unreadMessageCount">${message.unread_count}</span>
+								<span title="${message.unread_count}" class="xui-i-unreadMessageCount xa-unreadMessageCountBdge">${message.unread_count}</span>
 							{{/if}}
 						</div>
 					</td>
@@ -253,7 +253,7 @@ function submitReply(message, openid, sessionId, $current) {
 		}
 	});
 }
-
+var is_editing = false;
 $(document).ready(function() {
 	$('.xa-select').attr('checked', false);
 	$('#xa-selectAll').attr('checked', false);
@@ -324,6 +324,7 @@ $(document).ready(function() {
 
 	var dataId = 0;
 	$('body').delegate('.xa-selectMessage', 'click', function(event){
+        is_editing = true;
 		event.stopPropagation();
 		event.preventDefault();
 
@@ -351,6 +352,10 @@ $(document).ready(function() {
 					return;
 				}
 				submitReply(message, openid, sessionId, $current);
+                is_editing = false;
+			});
+            messageEditorPopup.bind('cancel-edit', function(message) {
+				is_editing = false;
 			});
 
 			messageEditorPopup.render();

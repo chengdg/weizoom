@@ -47,8 +47,6 @@ class RealtimeMessagesDetail(resource.Resource):
 
         try:
             session = Session.objects.get(id=session_id)
-            session.unread_count = 0
-            session.save()
             if 'replied' not in request.GET:
                 member_latest_created_at = get_datetime_from_timestamp(int(session.member_latest_created_at))
                 datetime_before = get_datetime_before_by_hour(DATETIME_BEFORE_HOURS)
@@ -89,6 +87,10 @@ class RealtimeMessagesDetail(resource.Resource):
         #过滤条件
         session_id = request.GET.get('session_id', '')
         replied = int(request.GET.get('replied', 0))
+
+        session = Session.objects.get(id=session_id)
+        session.unread_count = 0
+        session.save()
 
         pageinfo, realtime_messages, member = get_messages(request.manager, request.user_profile, session_id, replied, cur_page, count_per_page, request.META['QUERY_STRING'])
 
