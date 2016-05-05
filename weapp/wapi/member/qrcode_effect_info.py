@@ -60,10 +60,10 @@ class QrcodeEffectInfo(api_resource.ApiResource):
 				if r.is_new:
 					if 'recomend_count' not in setting_id2count[r.channel_qrcode_id]:
 						member_new_ids[r.channel_qrcode_id] = []
-						member_new_ids[r.channel_qrcode_id].append(member.id)
+						member_new_ids[r.channel_qrcode_id].append(str(member.id))
 						setting_id2count[r.channel_qrcode_id]['recomend_count'] = 1
 					else:
-						member_new_ids[r.channel_qrcode_id].append(member.id)
+						member_new_ids[r.channel_qrcode_id].append(str(member.id))
 						setting_id2count[r.channel_qrcode_id]['recomend_count'] += 1
 
 
