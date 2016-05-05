@@ -10,6 +10,7 @@ Feature: 修改通用设置
 		4.购物车
 	"""
 
+@mall2 @eugene @mall_config
 Scenario:1 修改通用设置
 	jobs修改"通用设置"
 	1.商品销量
