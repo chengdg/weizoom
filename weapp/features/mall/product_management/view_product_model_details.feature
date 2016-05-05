@@ -101,7 +101,7 @@ Background:
 		}]
 		"""
 
-@mall2 @product @saleingProduct @online_bug
+@mall2 @product @saleingProduct @online_bug 
 Scenario:1 不设置查询条件,查看商品规格详情
 	Given jobs登录系统
 	When jobs设置商品查询条件
