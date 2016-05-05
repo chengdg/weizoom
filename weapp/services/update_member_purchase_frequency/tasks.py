@@ -11,7 +11,7 @@ import datetime
 def update_member_purchase_frequency(self, webapp_id):
 	now = datetime.datetime.now()
 	members = Member.objects.filter(webapp_id=webapp_id, status__in=[SUBSCRIBED, CANCEL_SUBSCRIBED])
-	date_before_30 = get_date_after_days(now,-30)
+	date_before_30 = get_date_after_days(now,-30).strftime("%Y-%m-%d")
 	info = "%s:%s" % (webapp_id, now)
 	logging.info(info)
 	logging.info('start')

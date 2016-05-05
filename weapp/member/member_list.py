@@ -31,6 +31,7 @@ from export_job.models import ExportJob
 from datetime import datetime
 import time
 #from modules.member.models import *
+from utils.dateutil import now,get_date_after_days
 
 
 COUNT_PER_PAGE = 20
@@ -476,6 +477,14 @@ class MemberDetail(resource.Resource):
 				member.friend_count = count_member_follow_relations(member)
 			except:
 				notify_message = u"更新会员好友数量失败:cause:\n{}".format(unicode_full_stack())
+				watchdog_error(notify_message)
+			try:
+				date_before_30 = get_date_after_days(now(),-30).strftime("%Y-%m-%d")
+				webapp_user_ids = member.get_webapp_user_ids
+				purchase_count_30days = Order.objects.filter(webapp_user_id__in=webapp_user_ids, payment_time__gte=date_before_30,status=ORDER_STATUS_SUCCESSED).count()
+				member.purchase_frequency = purchase_count_30days
+			except:
+				notify_message = u"更新会员30天购买次数失败:cause:\n{}".format(unicode_full_stack())
 				watchdog_error(notify_message)
 			member.save()
 		else:
