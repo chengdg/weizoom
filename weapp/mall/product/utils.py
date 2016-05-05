@@ -114,10 +114,10 @@ PRODUCT_FILTERS = {
         'query_string_field': 'endDate'
     }],
     'models': [{
-        'comparator': lambda model, filter_value: model['price'] >= float(filter_value),
+        'comparator': lambda model, filter_value: float(model['price']) >= float(filter_value),
         'query_string_field': 'lowPrice'
     }, {
-        'comparator': lambda model, filter_value: model['price'] <= float(filter_value),
+        'comparator': lambda model, filter_value: float(model['price']) <= float(filter_value),
         'query_string_field': 'highPrice'
     }, {
         'comparator': lambda model, filter_value: model['stock_type'] == models.PRODUCT_STOCK_TYPE_UNLIMIT or model['stocks'] >= int(filter_value),

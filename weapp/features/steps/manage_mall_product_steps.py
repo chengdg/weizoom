@@ -234,9 +234,15 @@ def get_product_model(context, user, product_name):
         else:
             title = row[u'颜色']
         if u'库存' in row.headings and u'无限' == row['库存']:
-            expect_dict[title] = {'price':int(row['价格(元)']),'stock_type':row['库存']}
+            try:
+                expect_dict[title] = {'price':int(row['价格(元)']),'stock_type':row['库存']}
+            except:
+                expect_dict[title] = {'price':float(row['价格(元)']),'stock_type':row['库存']}
         else:
-            expect_dict[title] = {'price':int(row['价格(元)']),'stocks':int(row['库存'])}
+            try:
+                expect_dict[title] = {'price':int(row['价格(元)']),'stocks':int(row['库存'])}
+            except:
+                expect_dict[title] = {'price':float(row['价格(元)']),'stocks':int(row['库存'])}
         if row[u'商品编码'] != u'':
             expect_dict[title]['user_code'] = row[u'商品编码']
 

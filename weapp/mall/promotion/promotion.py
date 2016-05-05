@@ -389,6 +389,8 @@ class PromotionList(resource.Resource):
                 "detail": promotion.detail,
                 "products": []
             }
+            # 促销-限时抢购中的促销价显示,小数点后两位
+            data['detail']['promotion_price'] = '%.2f' % promotion.detail.get('promotion_price', 0)
             if hasattr(promotion, 'products'):
                 promotion.products = sorted(promotion.products,key=lambda x:x.id)
                 for product in promotion.products:
