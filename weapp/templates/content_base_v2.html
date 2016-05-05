@@ -242,7 +242,7 @@
 					msgTip.text(unreadRealtimeCount);
                     //如果有新的消息，则reload table
                     var _table = $('[data-ui-role="advanced-table"]').data('view');
-                    if(timerCount!=0 && old_unread_count < parseInt(unreadRealtimeCount) && (window.location.href.indexOf('realtime_messages_detail')>=0 || $('.xa-count.active').text().indexOf('所有信息')>=0) && !is_editing && _table){
+                    if(timerCount!=0 && old_unread_count != parseInt(unreadRealtimeCount) && (window.location.href.indexOf('realtime_messages_detail')>=0 || $('.xa-count.active').text().indexOf('所有信息')>=0) && !is_editing && _table){
                         console.log('有新消息,reload~');
                         _table.reload({showLoading: false});
                     }
