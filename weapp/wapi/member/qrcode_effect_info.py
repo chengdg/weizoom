@@ -46,6 +46,7 @@ class QrcodeEffectInfo(api_resource.ApiResource):
 			setting_id2member_id = {}
 			setting_id2count = {}
 			member_id2relation = {}
+			member_new_ids = {}
 			for r in relations:
 
 				member = member_models.Member.objects.get(id=r.member_id)
@@ -56,6 +57,14 @@ class QrcodeEffectInfo(api_resource.ApiResource):
 				else:
 					setting_id2count[r.channel_qrcode_id] = {}
 					setting_id2count[r.channel_qrcode_id]['count'] = 1
+				if r.is_new:
+					if 'recomend_count' not in setting_id2count[r.channel_qrcode_id]:
+						member_new_ids[r.channel_qrcode_id] = []
+						member_new_ids[r.channel_qrcode_id].append(member.id)
+						setting_id2count[r.channel_qrcode_id]['recomend_count'] = 1
+					else:
+						member_new_ids[r.channel_qrcode_id].append(member.id)
+						setting_id2count[r.channel_qrcode_id]['recomend_count'] += 1
 
 
 				if r.channel_qrcode_id in setting_id2member_id:
@@ -100,6 +109,8 @@ class QrcodeEffectInfo(api_resource.ApiResource):
 					"weapp_created_at": datetime.strftime(setting.created_at,"%Y-%m-%d %H:%M:%S") if setting!=None else "",
 					"pay_money": "%.2f" % setting_id2count[setting_id]['pay_money'],
 					"count": setting_id2count[setting_id]['count'],
+					"recomend_count": setting_id2count[setting_id]['recomend_count'] if 'recomend_count' in setting_id2count[setting_id] else 0,
+					"member_new_ids":",".join(member_new_ids[setting_id]) if setting_id in member_new_ids and len(member_new_ids[setting_id])>0 else "",
 					"cash": "%.2f" % setting_id2count[setting_id]['cash'],
 					"card": "%.2f" % setting_id2count[setting_id]['card'],
 					"order_num": setting_id2count[setting_id]['order_num']
@@ -111,13 +122,13 @@ class QrcodeEffectInfo(api_resource.ApiResource):
 					"weapp_created_at": datetime.strftime(setting.created_at, "%Y-%m-%d %H:%M:%S") if setting!=None else "",
 					"pay_money": "%.2f" % 0,
 					"count": 0,
+					"recomend_count": 0,
+					"member_new_ids":"",
 					"cash": "%.2f" % 0,
 					"card": "%.2f" % 0,
 					"order_num": 0
 				})
 
-		# if is_all == 0 :
-		# pageinfo, datas = paginator.paginate(items, cur_page, count_per_page)
 		return {
 			'code' : 200,
 			'items': items
