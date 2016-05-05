@@ -233,6 +233,15 @@
                     old_unread_count += parseInt($(this).text());
                 });
 				var unreadRealtimeCount = data.unread_realtime_count;
+                //如果有新的消息，则reload table
+                var _table = $('[data-ui-role="advanced-table"]').data('view');
+                console.log('old_unread_count', old_unread_count);
+                console.log('unreadRealtimeCount', unreadRealtimeCount);
+                if(timerCount!=0 && old_unread_count != parseInt(unreadRealtimeCount) && (window.location.href.indexOf('realtime_messages_detail')>=0 || $('.xa-count.active').text().indexOf('所有信息')>=0) && !is_editing && _table){
+                    console.log('有新消息,reload~');
+                    _table.reload({showLoading: false});
+                }
+                if(!is_editing) old_unread_count = parseInt(unreadRealtimeCount);
 				var msgTip = $('.xa-msgTip');
 				if (unreadRealtimeCount > 0){
 					msgTip.show();
@@ -240,13 +249,6 @@
 						unreadRealtimeCount = '99+'
 					}
 					msgTip.text(unreadRealtimeCount);
-                    //如果有新的消息，则reload table
-                    var _table = $('[data-ui-role="advanced-table"]').data('view');
-                    if(timerCount!=0 && old_unread_count != parseInt(unreadRealtimeCount) && (window.location.href.indexOf('realtime_messages_detail')>=0 || $('.xa-count.active').text().indexOf('所有信息')>=0) && !is_editing && _table){
-                        console.log('有新消息,reload~');
-                        _table.reload({showLoading: false});
-                    }
-                    if(!is_editing) old_unread_count = parseInt(unreadRealtimeCount);
 				} else {
 					msgTip.hide();
 				}
@@ -262,9 +264,9 @@
 
 		setTimeout(function(){
 			common_interval_check_func();
-			{% if not under_develop %}
-				var common_interval_check = setInterval(common_interval_check_func, 10000);
-			{% endif %}
+{#			{% if not under_develop %}#}
+				var common_interval_check = setInterval(common_interval_check_func, 5000);
+{#			{% endif %}#}
 		}, 1500);
 
 		// 批量发货
