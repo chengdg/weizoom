@@ -62,6 +62,7 @@ W.view.mall.Weixin2MessageRemarkView = W.view.common.DropBox.extend({
                 // $botton.attr('title', '添加备注成功');     
             },
             error: function() {
+                is_editing = false;
             }
         })
     },
@@ -82,6 +83,7 @@ W.view.mall.Weixin2MessageRemarkView = W.view.common.DropBox.extend({
         this.message_remark = options.message_remark;
         this.$content.html($.tmpl(this.getTemplate()));
         $('input[name="message_remark"]').attr('value', this.message_remark);
+        is_editing = true;
 	},
 
     clickIsNeedLogistics: function(event){
@@ -91,6 +93,11 @@ W.view.mall.Weixin2MessageRemarkView = W.view.common.DropBox.extend({
         }else{
             $('.xa-ship-detail-from').hide();
         }
+    },
+    close: function(event) {
+        // console.log('close',this.$el)
+        this.$html.trigger('click.dropdown');
+        is_editing = false;
     }
 
 });

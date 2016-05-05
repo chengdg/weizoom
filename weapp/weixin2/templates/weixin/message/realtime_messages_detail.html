@@ -224,6 +224,7 @@
 {% endverbatim %}
 
 <script type="text/javascript">
+var is_editing = false;
 function submitReply(message, openid, sessionId) {
 	W.resource.new_weixin.RealtimeMessages.put({
 		data: {
@@ -466,8 +467,7 @@ $(document).ready(function() {
 			$action: $el,
 			message_id: message_id,
 			message_remark: message_remark
-		})
-
+		});
 	});
 });
 </script>
