@@ -132,11 +132,11 @@ Scenario:2 带参数二维码[关联会员]-代言人二维码页-已推荐扫�
 				}
 				"""
 		#"已关注会员不可参与"的带参数二维码：已关注会员扫码，已推荐扫码人数不增加
-			#已关注会员jack扫码
+			#已关注会员zhouxun扫码
 			When 清空浏览器
-			And jack关注jobs的公众号
-			And jack访问jobs的webapp
-			And jack扫描带参数二维码"带参数二维码-代言人二维码页-已推荐扫码人数"
+			And zhouxun关注jobs的公众号
+			And zhouxun访问jobs的webapp
+			And zhouxun扫描带参数二维码"带参数二维码-代言人二维码页-已推荐扫码人数"
 
 			When 清空浏览器
 			And bill访问jobs的webapp
@@ -210,11 +210,11 @@ Scenario:2 带参数二维码[关联会员]-代言人二维码页-已推荐扫�
 				}
 				"""
 		#"已关注会员可参与"的带参数二维码：已关注会员扫码，已推荐扫码人数增加
-			#已关注会员jack扫码
+			#已关注会员zhouxun扫码
 			When 清空浏览器
-			And jack关注jobs的公众号
-			And jack访问jobs的webapp
-			And jack扫描带参数二维码"带参数二维码-代言人二维码页-已推荐扫码人数"
+			And zhouxun关注jobs的公众号
+			And zhouxun访问jobs的webapp
+			And zhouxun扫描带参数二维码"带参数二维码-代言人二维码页-已推荐扫码人数"
 
 			When 清空浏览器
 			And bill访问jobs的webapp
@@ -329,11 +329,11 @@ Scenario:3 带参数二维码[关联会员]-推荐详情页-[扫码人数][会�
 				}
 				"""
 		#"已关注会员不可参与"的带参数二维码：已关注会员扫码，已推荐扫码人数不增加
-			#已关注会员jack扫码
+			#已关注会员zhouxun扫码
 			When 清空浏览器
-			And jack关注jobs的公众号
-			And jack访问jobs的webapp
-			And jack扫描带参数二维码"带参数二维码-代言人二维码页-已推荐扫码人数"
+			And zhouxun关注jobs的公众号
+			And zhouxun访问jobs的webapp
+			And zhouxun扫描带参数二维码"带参数二维码-代言人二维码页-已推荐扫码人数"
 
 			When 清空浏览器
 			And bill访问jobs的webapp
@@ -413,11 +413,11 @@ Scenario:3 带参数二维码[关联会员]-推荐详情页-[扫码人数][会�
 				}
 				"""
 		#"已关注会员可参与"的带参数二维码：已关注会员扫码，已推荐扫码人数增加
-			#已关注会员jack扫码
+			#已关注会员zhouxun扫码
 			When 清空浏览器
-			And jack关注jobs的公众号
-			And jack访问jobs的webapp
-			And jack扫描带参数二维码"带参数二维码-代言人二维码页-已推荐扫码人数"
+			And zhouxun关注jobs的公众号
+			And zhouxun访问jobs的webapp
+			And zhouxun扫描带参数二维码"带参数二维码-代言人二维码页-已推荐扫码人数"
 
 			When 清空浏览器
 			And bill访问jobs的webapp
@@ -432,7 +432,7 @@ Scenario:3 带参数二维码[关联会员]-推荐详情页-[扫码人数][会�
 						"member_name": "nokia",
 						"status": "已关注"
 					},{
-						"member_name": "jack",
+						"member_name": "zhouxun",
 						"status": "已关注"
 					}]
 				}
@@ -459,7 +459,7 @@ Scenario:3 带参数二维码[关联会员]-推荐详情页-[扫码人数][会�
 						"member_name": "nokia",
 						"status": "已关注"
 					},{
-						"member_name": "jack",
+						"member_name": "zhouxun",
 						"status": "已关注"
 					},{
 						"member_name": "mayun",
@@ -485,7 +485,7 @@ Scenario:3 带参数二维码[关联会员]-推荐详情页-[扫码人数][会�
 					"member_name": "nokia",
 					"status": "已关注"
 				},{
-					"member_name": "jack",
+					"member_name": "zhouxun",
 					"status": "已关注"
 				},{
 					"member_name": "mayun",
@@ -511,14 +511,14 @@ Scenario:3 带参数二维码[关联会员]-推荐详情页-[扫码人数][会�
 						"member_name": "nokia",
 						"status": "已关注"
 					},{
-						"member_name": "jack",
+						"member_name": "zhouxun",
 						"status": "已关注"
 					}]
 			}
 			"""
 		When 清空浏览器
-		And tom2访问jobs的webapp
-		Then tom2获得推荐详情页
+		And tom访问jobs的webapp
+		Then tom获得推荐详情页
 			"""
 			{
 				"recommended_number": 1,
@@ -701,8 +701,8 @@ Scenario:4 带参数二维码[关联会员]-推荐详情页-[下单人数][成�
 
 	#扫码关注成为会员
 		When 清空浏览器
-		And jack扫描带参数二维码"带参数二维码-代言人二维码页-已推荐扫码人数"于2015-10-20 10:00:00
-		And jack访问jobs的webapp
+		And zhouxun扫描带参数二维码"带参数二维码-代言人二维码页-已推荐扫码人数"于2015-10-20 10:00:00
+		And zhouxun访问jobs的webapp
 
 		When 清空浏览器
 		And mayun扫描带参数二维码"带参数二维码-代言人二维码页-已推荐扫码人数"于2015-10-21 10:00:00
@@ -724,9 +724,9 @@ Scenario:4 带参数二维码[关联会员]-推荐详情页-[下单人数][成�
 			|   0004   | 2天前      |     2天前    |   bill   | 商品1,1        |   支付  |  支付宝   |   10   | 100  |  50     |                      |     60       |                   |   60    |    0    |   0   |  jobs,退款    |    退款中     |
 			|   0005   | 2天前      |     2天前    |   tom    | 商品1,1        |   支付  |  支付宝   |   10   | 100  |  50     |                      |     60       |                   |   60    |    0    |   0   |  jobs,完成退款|   退款成功    |
 			|   0006   | 今天       |     今天     |  mayun   | 商品1,1        |   支付  |  支付宝   |   10   | 100  |  50     |                      |     60       |                   |   60    |    0    |   0   |               |    待发货     |
-			|   0007   | 今天       |     今天     |  jack    | 商品1,1        |   支付  |  货到付款 |   10   | 100  |   0     |                      |     110      |                   |    0    |    0    |   110 |               |    待发货     |
+			|   0007   | 今天       |     今天     |  zhouxun    | 商品1,1        |   支付  |  货到付款 |   10   | 100  |   0     |                      |     110      |                   |    0    |    0    |   110 |               |    待发货     |
 			|   0008   | 今天       |     今天     |  mayun   | 商品2,白色 S,1 |   支付  |  货到付款 |   15   | 100  |   0     | 全体券1,coupon1_id_2 |     105      |  0000002,1234567  |    0    |    0    |   15  |  jobs,取消    |    已取消     |
-			|   0009   | 今天       |     今天     |  jack    | 商品3,1        |   支付  |  微信支付 |   0    | 10   |   0     | 全体券1,coupon1_id_3 |     0        |                   |    0    |    0    |   0   |  jobs,发货    |    已发货     |
+			|   0009   | 今天       |     今天     |  zhouxun    | 商品3,1        |   支付  |  微信支付 |   0    | 10   |   0     | 全体券1,coupon1_id_3 |     0        |                   |    0    |    0    |   0   |  jobs,发货    |    已发货     |
 			|   0010   | 今天       |     今天     |   bill   | 商品2,白色 S,1 |   支付  |  货到付款 |   15   | 100  |   0     | 全体券1,coupon1_id_4 |     105      |  0000001,1234567  |    0    |    0    |   5   |  jobs,完成    |    已完成     |
 			|   0011   | 今天       |     今天     |   tom    | 商品2,白色 S,1 |   支付  |  微信支付 |   15   | 100  |   0     |                      |     115      |  0000003,1234567  |    0    |    0    |   15  |  jobs,退款    |    退款中     |
 
@@ -742,7 +742,7 @@ Scenario:4 带参数二维码[关联会员]-推荐详情页-[下单人数][成�
 			"""
 	#"已关注会员可参与"同一微信账号交替扫不同的码[下单人数][成交金额]跳转
 		When 清空浏览器
-		When jack扫描带参数二维码"带参数二维码-代言人二维码页-已推荐扫码人数22"于2015-10-23 10:00:00
+		When zhouxun扫描带参数二维码"带参数二维码-代言人二维码页-已推荐扫码人数22"于2015-10-23 10:00:00
 
 		When 清空浏览器
 		And nokia访问jobs的webapp
@@ -784,7 +784,7 @@ Scenario:4 带参数二维码[关联会员]-推荐详情页-[下单人数][成�
 @mall2 @senior @bandParameterCode @gyct
 Scenario:5 带参数二维码[从个人中心绑定手机号码]
 	When nokia关注jobs的公众号于'2015-05-09 10:00:00'
-	When mayun关注jobs的公众号于'2015-05-09 10:00:00'
+	When mayun关注jobs的公众号于'2015-05-09 10:00:00' 
 	When bill关注jobs的公众号于'2015-05-10 10:00:00'
 	And tom关注jobs的公众号于'2015-05-11 10:00:00'
 	Given jobs登录系统
@@ -825,7 +825,7 @@ Scenario:5 带参数二维码[从个人中心绑定手机号码]
 		}]
 		"""
 	When 清空浏览器
-	And jack扫描带参数二维码"带参数二维码-代言人二维码页-已推荐扫码人数"于2015-10-20 10:00:00
+	And zhouxun扫描带参数二维码"带参数二维码-代言人二维码页-已推荐扫码人数"于2015-10-20 10:00:00
 
 
 	When 清空浏览器
@@ -840,8 +840,8 @@ Scenario:5 带参数二维码[从个人中心绑定手机号码]
 	And tom扫描带参数二维码"带参数二维码-代言人二维码页-已推荐扫码人数"
 
 	When 清空浏览器
-	And jack访问jobs的webapp
-	And jack在jobs的webapp中绑定手机号码
+	And zhouxun访问jobs的webapp
+	And zhouxun在jobs的webapp中绑定手机号码
 	"""
 	{
 		"phone":"13563223667"
