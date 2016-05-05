@@ -100,6 +100,7 @@ MALL_HOME_INTEGRAL_NAV = 'integralRule'
 MALL_HOME_NOTICES_NAV = 'notices'
 MALL_HOME_WEPAGE_NAV = 'wepage'
 MALL_HOME_GLOBAL_NAVBAR_NAV = 'globalNavbar'
+MALL_HOME_CONFIG_PRODUCT_LIST_NAV = 'configProdcutList'
 
 MALL_HOME_SECOND_NAV = {
     'section': u'商城首页',
@@ -124,6 +125,12 @@ MALL_HOME_SECOND_NAV = {
             'title': u'店铺导航',
             'url': '/termite2/global_navbar/',
             'permission': 'manage_wepage_navbar'
+        }
+        , {
+            'name': MALL_HOME_CONFIG_PRODUCT_LIST_NAV,
+            'title': u'通用设置',
+            'url': '/mall2/config_product_list/',
+            'permission': 'manage_config_product_list_navbar'
         }
     ]
 }
