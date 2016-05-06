@@ -153,15 +153,15 @@
 					${item.first_buy_num}
 				</td>
 				<td>
-					${item.start_time}
+					${item.start_time}至
 					${item.end_time}
 				</td>
 				<td>
 					${item.status}
 				</td>
 				<td class="xui-operations">
-				    <a href="/apps/rebate/rebate_participances/?id=${item.id}" class="ml5">编辑</a>
-				    <a  class="ml5">查看二维码</a>
+				    <a href="/apps/rebate/rebate/?id=${item.id}" class="ml5">编辑</a>
+				    <a class="ml5">查看二维码</a>
 					{{if (item.status === '已结束')}}
 					<a href="javascript:void(0)" class="xa-delete" data-id=${item.id}>删除</a>
 					{{/if}}
@@ -185,18 +185,6 @@
 $(document).ready(function() {
 
     var table = $('div[data-ui-role="advanced-table"]').data('view');
-    table.afterload = function(){
-        $(".xa-link-copy").each(function(){
-            var $this = $(this);
-            $this.attr('data-clipboard-text', window.location.origin + $this.attr('data-clipboard-text'));
-        });
-        var client = new ZeroClipboard( $(".xa-link-copy") , {
-            moviePath: "/static_v2/zero_clipboard.swf"
-        });
-        client.on('complete', function(client, args) {
-            W.showHint('success', '已经将链接复制到剪贴板');
-        });
-    };
 
 	$('body').delegate('.xa-delete', 'click', function(event) {
 		var $el = $(event.target);
@@ -248,33 +236,6 @@ $(document).ready(function() {
 			}
 		});
 	});
-
-	$('body').delegate('.xa-preview', 'click', function(event) {
-		var $el = $(event.target);
-		var id = $el.data('id');
-		var previewUrl = '/m/apps/rebate/m_rebate/?woid='+W.mid+'&id='+id;
-		window.open('/termite2/app_preview/?preview_url='+encodeURIComponent(previewUrl), '_tab');
-	});
-
-    $('body').delegate('.xa-pause-to-clean-history', 'click', function(){
-        console.log(111);
-        var record_id = $(this).attr('data-id');
-        W.getApi().call({
-			app: 'apps/rebate',
-			resource: 'rebate_status',
-			method: 'put',
-			args: {
-				id: record_id
-			},
-			success: function(data) {
-				var page_id = data.page_id;
-                location.href = location.host+'/rebate/rebate/?id='+record_id+'&related_page_id='+page_id;
-			},
-			error: function(response) {
-				W.showHint('error', '更新状态失败！');
-			}
-		});
-    });
 
 	$('.xa-search').click(function(event) {
 		var name = $.trim($('[name="name"]').val());

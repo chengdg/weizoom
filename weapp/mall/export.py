@@ -458,6 +458,7 @@ MALL_PROMOTION_AND_APPS_SECOND_NAV = {
                     'title': u'返利活动',
                     'url': '/apps/rebate/rebates/',
                     'permission': '',
+                    'users': ['jobs','njtest', 'ceshi01', 'weshop']
                 },
                 # {
                 #     'name': MALL_APPS_REDPACKET_NAV,

@@ -8,6 +8,7 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.db.models import F
 from django.contrib.auth.decorators import login_required
+from django.conf import settings
 
 from core import resource
 from core import paginator
@@ -19,8 +20,10 @@ import export
 from apps import request_util
 from mall import export as mall_export
 from modules.member import integral as integral_api
-from mall.promotion import utils as mall_api
 import termite.pagestore as pagestore_manager
+from core.wxapi import get_weixin_api
+from account.util import get_binding_weixin_mpuser, get_mpuser_accesstoken
+from core.wxapi.api_create_qrcode_ticket import QrcodeTicket
 
 FIRST_NAV = mall_export.MALL_PROMOTION_AND_APPS_FIRST_NAV
 COUNT_PER_PAGE = 20
@@ -46,7 +49,6 @@ class RedPacket(resource.Resource):
 					'third_nav_name': mall_export.MALL_APPS_REBATE_NAV,
 					'is_deleted_data': True,
 				})
-
 				return render_to_response('rebate/templates/editor/create_rebate_rule.html', c)
 			is_create_new_data = False
 
@@ -93,13 +95,29 @@ class RedPacket(resource.Resource):
 		data = request_util.get_fields_to_be_save(request)
 		rebate = app_models.Rebate(**data)
 		rebate.save()
+
 		error_msg = None
-		
 		data = json.loads(rebate.to_json())
 		data['id'] = data['_id']['$oid']
+
 		if error_msg:
 			data['error_msg'] = error_msg
 
+		if settings.MODE != 'develop':
+			mp_user = get_binding_weixin_mpuser(request.manager)
+			mpuser_access_token = get_mpuser_accesstoken(mp_user)
+			weixin_api = get_weixin_api(mpuser_access_token)
+
+			try:
+				qrcode_ticket = weixin_api.create_qrcode_ticket(int(data['id']), QrcodeTicket.PERMANENT)
+				ticket = qrcode_ticket.ticket
+			except Exception, e:
+				print 'get qrcode_ticket fail:', e
+				ticket = ''
+		else:
+			ticket = ''
+		rebate.ticket = ticket
+		rebate.save()
 		response = create_response(200)
 		response.data = data
 		return response.get_response()
