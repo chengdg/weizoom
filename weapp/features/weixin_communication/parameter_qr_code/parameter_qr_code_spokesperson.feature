@@ -844,7 +844,7 @@ Scenario:5 带参数二维码[手机端绑定手机数]
 	Then nokia获得推荐详情页
 	"""
 	{
-		"bangding_phone_num":1
+		"bangding_phone_num":0
 	}
 	"""
 	When 清空浏览器
@@ -857,23 +857,38 @@ Scenario:5 带参数二维码[手机端绑定手机数]
 	"""
 
 	When 清空浏览器
-	And nokia访问jobs的webapp
-	When nokia筛选时间
+	When tom访问jobs的webapp
+	When tom获得推荐详情页
+	When tom筛选时间
 	"""
 	{
 		"start_date": "2015-10-18 10:00:00",
-		"end_date":"2015-10-21 12:00:00"
+		"end_date":"2015-10-23 12:00:00"
 	}
 	"""
-	When 清空浏览器
-	And nokia访问jobs的webapp
-	Then nokia获得推荐详情页
-
+	Then tom获得推荐详情页
 	"""
 	{
-		"bangding_phone_num": 1	
+		"bangding_phone_num":1
 	}
 	"""
+	When tom筛选时间
+	"""
+	{
+		"start_date": "2015-10-18 10:00:00",
+		"end_date":"2015-10-22 12:00:00"
+	}
+	"""
+	Then tom获得推荐详情页
+	"""
+	{
+		"bangding_phone_num":0
+	}
+	"""
+
+
+
+
 
 
 
