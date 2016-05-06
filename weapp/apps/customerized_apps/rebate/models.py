@@ -14,20 +14,14 @@ class Rebate(models.Document):
 	end_time = models.DateTimeField() #结束时间
 	status = models.IntField(default=0) #状态
 	related_page_id = models.StringField(default="", max_length=100) #termite page的id
-	timing = models.BooleanField(default=True) #是否显示倒计时
-	red_packet_type = models.StringField(default="random", max_length=10) #红包方式,默认为拼手气红包
-	random_total_money = models.StringField(default="", max_length=10) #拼手气红包总金额
-	random_packets_number = models.StringField(default="", max_length=10) #拼手气红包红包个数
-	random_random_number_list = models.ListField() #随机正负金额List
-	regular_packets_number = models.StringField(default="", max_length=10) #普通红包红包个数
-	regular_per_money = models.StringField(default="", max_length=10) #普通红包单个金额
-	money_range = models.StringField(default="", max_length=50) #好友贡献金额区间
-	reply_content = models.StringField(default="", max_length=50) #参与活动回复语
-	material_image = models.StringField(default="", max_length=1024) #分享的图片链接
-	share_description = models.StringField(default="", max_length=1024) #分享描述
-	wishing = models.StringField(default="", max_length=50) #开现金红包文字
-	qrcode = models.DynamicField() #带参数二维码ticket,name
-	red_packet_remain_amount = models.IntField(default=0) #剩余可领取的红包总量
+	permission = models.BooleanField() #已关注会员可参与
+	is_limit_first_buy = models.BooleanField() #订单返利条件是否限制首单
+	is_limit_cash = models.BooleanField() #订单金额是否为现金
+	rebate_order_price = models.FloatField() #订单返利需满多少元
+	rebate_money = models.FloatField() #返利返多少元
+	weizoom_card_id_from = models.StringField() #发放微众卡号段
+	weizoom_card_id_to = models.StringField() #发放微众卡号段
+	reply_content = models.DynamicField() #扫码后回复
 	created_at = models.DateTimeField() #创建时间
 	
 	meta = {

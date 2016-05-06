@@ -47,7 +47,7 @@ class RedPacket(resource.Resource):
 					'is_deleted_data': True,
 				})
 
-				return render_to_response('rebate/templates/editor/workbench.html', c)
+				return render_to_response('rebate/templates/editor/create_rebate_rule.html', c)
 			is_create_new_data = False
 
 			name = rebate.name
@@ -70,7 +70,7 @@ class RedPacket(resource.Resource):
 					'is_deleted_data': True,
 				})
 
-				return render_to_response('rebate/templates/editor/workbench.html', c)
+				return render_to_response('rebate/templates/editor/create_rebate_rule.html', c)
 		
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
@@ -83,7 +83,7 @@ class RedPacket(resource.Resource):
 			'project_id': project_id,
 		})
 		
-		return render_to_response('rebate/templates/editor/workbench.html', c)
+		return render_to_response('rebate/templates/editor/create_rebate_rule.html', c)
 	
 	@login_required
 	def api_put(request):
