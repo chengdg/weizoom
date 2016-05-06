@@ -12,7 +12,7 @@ from test import bdd_util
 from features.testenv.model_factory import *
 
 from mall.promotion.models import CouponRule
-from modules.member.models import Member, MemberGrade, MemberTag
+from modules.member.models import Member, MemberGrade, MemberTag, MemberInfo
 from weixin2.models import Material, News
 from market_tools.tools.channel_qrcode.models import ChannelQrcodeSettings, ChannelQrcodeBingMember, ChannelQrcodeHasMember
 from market_tools.tools.channel_qrcode.channel_qrcode_util import create_channel_qrcode_has_memeber, create_channel_qrcode_has_memeber_restructure
@@ -441,10 +441,15 @@ def _get_setting_data(context):
         response = context.client.get(bdd_util.nginx(response['Location']))
     return response
 
-@then(u"{user}获得推荐详情页")
-def step_impl(context, user):
+@then(u"{webapp_user_name}获得推荐详情页")
+def step_impl(context, webapp_user_name):
     response = _get_setting_data(context)
-    url = "/termite/workbench/jqm/preview/?module=market_tool:channel_qrcode&model=settings_detail&action=get&webapp_owner_id=%s&project_id=0&workspace_id=market_tool:channel_qrcode&sid=%s&fmt=%s" % (context.webapp_owner_id, response.context['setting'].id, response.context['member'].token)
+    startDate = ''
+    endDate = ''
+    if hasattr(context, 'filter_time'):
+        startDate = context.filter_time['start_date'][0:10]
+        endDate = context.filter_time['end_date'][0:10]
+    url = "/termite/workbench/jqm/preview/?module=market_tool:channel_qrcode&model=settings_detail&action=get&webapp_owner_id=%s&project_id=0&workspace_id=market_tool:channel_qrcode&sid=%s&fmt=%s&startDate=%s&endDate=%s" % (context.webapp_owner_id, response.context['setting'].id, response.context['member'].token, startDate, endDate)
     data = context.client.get(bdd_util.nginx(url))
     actual = {}
     actual['recommended_number'] = data.context['channel_qrcode_members_count']
@@ -457,7 +462,7 @@ def step_impl(context, user):
     actual['members'] = members
     actual['pay_member_number'] = data.context['payed_count']
     actual['order_money'] = data.context['pay_money']
-
+    actual['bangding_phone_num'] = data.context['bind_phone_members_count']
 
     expected = json.loads(context.text)
     bdd_util.assert_dict(expected, actual)
@@ -510,3 +515,26 @@ def step_impl(context, user):
         else:
             grade_id = MemberGrade.objects.get(webapp_id=context.webapp_id, name=data['member_rank']).id
             context.grade_id = grade_id
+
+@when(u"{user}绑定手机号'{phone_number}'")
+def step_impl(context,user,phone_number):
+    username_hexstr = byte_to_hex(user)
+    member_id = Member.objects.get(username_hexstr = username_hexstr).id
+    member_info = MemberInfo.objects.filter(member_id = member_id)
+    if member_info.count() > 0:
+        member_info[0].update(
+            phone_number = phone_number,
+            is_binded = True
+        )
+    else:
+        MemberInfo.objects.create(
+            member_id = member_id,
+            phone_number = phone_number,
+            is_binded = True,
+            sex = 0,
+            name = user
+        )
+
+@when(u'{user}筛选时间')
+def step_impl(context,user):
+    context.filter_time = json.loads(context.text)
