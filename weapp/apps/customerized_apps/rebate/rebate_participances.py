@@ -27,15 +27,15 @@ FIRST_NAV = mall_export.MALL_PROMOTION_AND_APPS_FIRST_NAV
 COUNT_PER_PAGE = 20
 
 class RedPacketParticipances(resource.Resource):
-	app = 'apps/red_packet'
-	resource = 'red_packet_participances'
+	app = 'apps/rebate'
+	resource = 'attention_participances'
 
 	@login_required
 	def get(request):
 		"""
 		响应GET
 		"""
-		has_data = app_models.RedPacketParticipance.objects(belong_to=request.GET['id']).count()
+		has_data = app_models.RebateParticipance.objects(belong_to=request.GET['id']).count()
 
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
@@ -44,9 +44,9 @@ class RedPacketParticipances(resource.Resource):
 			'third_nav_name': mall_export.MALL_APPS_REBATE_NAV,
 			'has_data': has_data,
 			'activity_id': request.GET['id']
-		});
+		})
 
-		return render_to_response('red_packet/templates/editor/red_packet_participances.html', c)
+		return render_to_response('rebate/templates/editor/rebate_participances.html', c)
 
 	@staticmethod
 	def get_datas(request):
