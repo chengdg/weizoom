@@ -86,7 +86,7 @@ class MassSentMessages(resource.Resource):
 
         items = []
 
-        member_group_id2name = {str(g.id): g.name for g in MemberTag.objects.filter(webapp_id=webapp_id)}
+        member_group_id2name = {g.id: g.name for g in MemberTag.objects.filter(webapp_id=webapp_id)}
         
         for message in messages:
             # message.created_at = message.created_at.strftime('%m月%d日')
@@ -104,7 +104,7 @@ class MassSentMessages(resource.Resource):
             message_item['message_content'] = emotion.change_emotion_to_img(message.message_content)
             message_item['created_at'] = message.created_at.strftime('%m月%d日')
             message_item['group_id'] = message.group_id
-            message_item['group_name'] = u"全部"if message.group_id == 0 else member_group_id2name[str(message.group_id)]
+            message_item['group_name'] = u"全部"if message.group_id == -1 else member_group_id2name[message.group_id]
 
             if message.message_type == 1:
                 newses = News.get_news_by_material_id(int(message.message_content))
