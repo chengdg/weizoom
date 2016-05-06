@@ -96,7 +96,7 @@
                 </td>
                 <td class="xui-massSentTableOtherColumn c9">${message.created_at}<br>分组：${message.group_name}</td>
                 <td class="xui-massSentTableOtherColumn">
-                    <span class="xa-update-tag c9" data-total="${message.total_count}" data-succ="${message.sent_count}" data-fail="${message.error_count}" data-status="${message.status}">
+                    <span class="xa-update-tag c9" data-status="${message.status}">
                         {{if message.status == 'send success'}}
                             成功：${message.sent_count} <br> <i class="xui-error-style">失败：${message.error_count}</i>
                         {{else}}

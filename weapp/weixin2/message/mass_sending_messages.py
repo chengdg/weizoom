@@ -258,8 +258,9 @@ class MassSendingMessages(resource.Resource):
         else:  #从群发消息页面过来的群发请求
             group_id = request.POST.get('group_id')
             group_type = request.POST.get('group_type')
-            if group_id is None or group_id == '':
+            if group_id is None or group_id == '' or int(group_id) == 0:
                 response = create_response(401)
+                response.errMsg = u'分组信息出错'
                 return response.get_response()
 
             group_id = int(group_id)
