@@ -856,9 +856,6 @@ Scenario:5 带参数二维码[手机端绑定手机数]
 	}
 	"""
 
-	When 清空浏览器
-	When tom访问jobs的webapp
-	When tom获得推荐详情页
 	When tom筛选时间
 	"""
 	{
