@@ -37,12 +37,13 @@
         </fieldset>
         <fieldset >
             <div class="form-group">
-                <label class="control-label col-sm-2 ml10 pt0 w110">商品排序：</label>
-                <label class="inline">
-                    <input type="radio" name='product_sales_sort' value="1" {% if mall_config.show_product_sales_sort %} checked {% endif %}><b style="vertical-align: text-bottom;font-weight:normal;display:inline-block;">&nbsp;&nbsp;开启</b>
+                <label class="control-label col-sm-2 col-sm-offset-1 pt0 w110">商品排序：</label>
+                <label class="w50 inline">
+                    <input type="radio" name='product_sort' value="1" {% if mall_config.show_product_sort %} checked {% endif %}><b style="vertical-align: text-bottom;font-weight:normal;display:inline-block;">&nbsp;&nbsp;开启</b>
                 </label>
-                <label class="ml15 inline">
-                    <input type="radio" name='product_sales_sort' value="0" {% if not mall_config.show_product_sales_sort %} checked {% endif %}><b style="vertical-align: text-bottom;font-weight:normal;display:inline-block;">&nbsp;&nbsp;关闭</b>
+                <label class="w70 inline">
+                    <input type="radio" name='product_sort' value="0" {% if not mall_config.show_product_sort %} checked {% endif %}><b style="vertical-align: text-bottom;font-weight:normal;display:inline-block;">&nbsp;&nbsp;关闭</b>
+
                 </label>
             </div>
         </fieldset>

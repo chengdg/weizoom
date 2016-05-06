@@ -29,13 +29,13 @@ class ConfigProductList(resource.Resource):
     @login_required
     def post(request):
         product_sales = int(request.POST.get('product_sales', '0'))
-        product_sales_sort = int(request.POST.get('product_sales_sort', '0'))
+        product_sort = int(request.POST.get('product_sort', '0'))
         product_search = int(request.POST.get('product_search', '0'))
         shopping_cart = int(request.POST.get('shopping_cart', '0'))
 
         MallConfig.objects.filter(owner=request.user).update(
                 show_product_sales=product_sales,
-                show_product_sales_sort=product_sales_sort,
+                show_product_sort=product_sort,
                 show_product_search=product_search,
                 show_shopping_cart=shopping_cart
             )
