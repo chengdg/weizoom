@@ -40,7 +40,10 @@ def update_sync_product_status(product, request):
     if product.promotion_title != request.POST.get('promotion_title', '').strip():
         is_update = True
         update_data.append(u'促销标题')
-    if product.min_limit != int(request.POST.get('min_limit', '0').strip()):
+    min_limit = request.POST.get('min_limit', '0').strip()
+    if not min_limit.isdigit():
+        min_limit = 0
+    if product.min_limit != int(min_limit):
         is_update = True
         update_data.append(u'起购数量')
     if product.bar_code != request.POST.get('bar_code', '').strip():
