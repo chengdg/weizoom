@@ -4,16 +4,15 @@
 Feature:个人中心（我的优惠券、微众卡余额查询）
 
 Background:
-	Given 重置weapp的bdd环境
-	Given jobs登录系统:weapp
-	And jobs已添加商品:weapp
+	Given jobs登录系统
+	And jobs已添加商品
 		"""
 		[{
 			"name": "商品1",
 			"price": 200.00
 		}]
 		"""
-	And jobs已添加了优惠券规则:weapp
+	And jobs已添加了优惠券规则
 		"""
 		[{
 			"name": "单品券1",
@@ -40,8 +39,8 @@ Background:
 			"coupon_id_prefix": "coupon3_id_"
 		}]
 		"""
-	And jobs已有微众卡支付权限:weapp
-	And jobs已添加支付方式:weapp
+	And jobs已有微众卡支付权限
+	And jobs已添加支付方式
 		"""
 		[{
 			"type": "微众卡支付"
@@ -56,14 +55,14 @@ Background:
 
 @personCenter @balance @wip.victor13
 Scenario:2 个人中心-微众卡余额查询
-	Given jobs登录系统:weapp
-	And jobs设定会员积分策略:weapp
+	Given jobs登录系统
+	And jobs设定会员积分策略
 		"""
 		{
 			"integral_each_yuan": 2
 		}
 		"""
-	And jobs已创建微众卡:weapp
+	And jobs已创建微众卡
 		"""
 		{
 			"cards":[{
