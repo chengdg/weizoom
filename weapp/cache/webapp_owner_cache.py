@@ -12,7 +12,7 @@ from webapp import models as webapp_models
 from account import models as account_models
 
 from core.exceptionutil import unicode_full_stack
-from watchdog.utils import watchdog_error, watchdog_warning
+from watchdog.utils import watchdog_error, watchdog_warning, watchdog_alert
 from market_tools.tools.weizoom_card.models import AccountHasWeizoomCardPermissions
 
 from weixin.user.models import ComponentAuthedAppidInfo, ComponentAuthedAppid
@@ -147,17 +147,23 @@ def __get_unship_order_count_from_db(key, webapp_id, user_id, mall_type):
     return inner_func
 
 
-def update_unship_order_count(instance, **kwargs):
-    webapp_id = None
-    if isinstance(instance, mall_models.Order):
-        webapp_id = instance.webapp_id
-    else:
-        for order in instance:
-            webapp_id = order.webapp_id
-            break
-    if webapp_id:
-        key = 'webapp_unread_order_count_{wa:%s}' % webapp_id
-        cache_util.delete_cache(key)
+# def update_unship_order_count(instance, webapp_id=None):
+#     if not webapp_id:
+#         if isinstance(instance, mall_models.Order):
+#             webapp_id = instance.webapp_id
+#         else:
+#             for order in instance:
+#                 webapp_id = order.webapp_id
+#                 break
+#     if webapp_id:
+#         key = 'webapp_unread_order_count_{wa:%s}' % webapp_id
+#         cache_util.delete_cache(key)
+#     else:
+#         watchdog_alert("no webapp_id in update_unship_order_count")
+
+def update_unship_order_count(webapp_id):
+    key = 'webapp_unread_order_count_{wa:%s}' % webapp_id
+    cache_util.delete_cache(key)
 
 
 def get_unship_order_count_from_cache(request):
@@ -259,10 +265,10 @@ post_update_signal.connect(update_webapp_owner_info_cache_with_login,
                            sender=AccountHasWeizoomCardPermissions,
                            dispatch_uid="accountwzcp.update")
 
-post_update_signal.connect(update_unship_order_count, sender=mall_models.Order,
-                           dispatch_uid="webapp_unread_order_count.update")
-signals.post_save.connect(update_unship_order_count, sender=mall_models.Order,
-                          dispatch_uid="webapp_unread_order_count.save")
+# post_update_signal.connect(update_unship_order_count, sender=mall_models.Order,
+#                            dispatch_uid="webapp_unread_order_count.update")
+# signals.post_save.connect(update_unship_order_count, sender=mall_models.Order,
+#                           dispatch_uid="webapp_unread_order_count.save")
 
 post_update_signal.connect(update_webapp_owner_info_cache_with_login, sender=termite2_models.TemplateGlobalNavbar,
                            dispatch_uid="termite2_models.TemplateGlobalNavbar.update")
