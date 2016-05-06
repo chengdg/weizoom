@@ -1180,6 +1180,9 @@ class UserSentMassMsgLog(models.Model):
 	message_content = models.CharField(default='', max_length=1024)
 	created_at = models.DateTimeField(auto_now_add=True)
 
+	#add by aix
+	group_id = models.IntegerField(default=0) #发放分组
+
 	class Meta(object):
 		db_table = 'user_sent_mass_msg_log'
 		verbose_name = '用户发送群发消息记录'
@@ -1199,12 +1202,13 @@ class UserSentMassMsgLog(models.Model):
 										)
 
 	@staticmethod
-	def create(webapp_id, msg_id, message_type, message_content):
+	def create(webapp_id, msg_id, message_type, message_content, group_id=0):
 		return UserSentMassMsgLog.objects.create(
 								webapp_id=webapp_id,
 								msg_id=msg_id,
 								message_type=message_type,
-								message_content=message_content
+								message_content=message_content,
+								group_id=group_id
 								)
 
 	@staticmethod

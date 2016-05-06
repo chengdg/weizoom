@@ -258,8 +258,9 @@ class MassSendingMessages(resource.Resource):
         else:  #从群发消息页面过来的群发请求
             group_id = request.POST.get('group_id')
             group_type = request.POST.get('group_type')
-            if group_id is None or group_id == '':
+            if group_id is None or group_id == '' or int(group_id) == 0:
                 response = create_response(401)
+                response.errMsg = u'分组信息出错'
                 return response.get_response()
 
             group_id = int(group_id)
@@ -298,7 +299,12 @@ class MassSendingMessages(resource.Resource):
         else:
             content = int(content)
             message_type = MESSAGE_TYPE_NEWS
-        msg_log = UserSentMassMsgLog.create(user_profile.webapp_id, '', message_type, content)
-        task_send_mass_message.delay(user_profile.webapp_id,msg_log.id, message_type, content, is_from_fans_list, group_id, id_array)        
+        if not request.POST.get("log_id", None):
+            msg_log = UserSentMassMsgLog.create(user_profile.webapp_id, '', message_type, content, int(group_id))
+            message_log_id = msg_log.id
+        else:
+            message_log_id = request.POST["log_id"]
+            UserSentMassMsgLog.objects.filter(id=message_log_id).update(status='') #重新发送消息则重置其状态
+        task_send_mass_message.delay(user_profile.webapp_id,message_log_id, message_type, content, is_from_fans_list, group_id, id_array)
         response = create_response(200)
         return response.get_response()

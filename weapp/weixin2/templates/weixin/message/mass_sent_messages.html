@@ -1,7 +1,19 @@
 {% extends "content_base_v2.html" %}
 {% load common_tag %}
 {% load account_filter %}
-
+{% block css %}
+    <style>
+        .xui-error-style{
+            font-style: normal;
+            color: red;
+        }
+        .xui-msg-des{
+            position: absolute;
+            bottom: 0;
+            margin: 0 0 20px 30px;
+        }
+    </style>
+{% endblock %}
 {% block content-panel %}
 <div class="xui-massSentPage">
     <ul class="breadcrumb">
@@ -31,8 +43,16 @@
         data-disable-header-select="true"
         class="panel-body"
     ></div>
-
-
+    <!-- 说明信息 -->
+    <div class="xui-msg-des">
+        温馨提示<br>
+        一、群发消息，用户一般没有接收到时，有以下几种情况：<br>
+            &emsp;&emsp;1：该用户本月接收次数已达到4次；<br>
+            &emsp;&emsp;2：该用户可能已经跑路，无法接收；<br>
+            &emsp;&emsp;3：因网络等特殊原因出现延迟；<br>
+            &emsp;&emsp;4：系统出错，接收失败；<br>
+        二、发送失败不会扣减用户接收次数<br>
+    </div>
 </div>
 {% endblock %}
 
@@ -44,8 +64,8 @@
         <thead>
             <tr>
                 <th>消息内容</th>
-                <th>消息概况</th>
-                <th>时间</th>
+                <th>时间/目标人群</th>
+                <th>状态结果</th>
             </tr>
         </thead>
         <tbody>
@@ -74,23 +94,27 @@
                         {{/if}}
                     </ul>
                 </td>
+                <td class="xui-massSentTableOtherColumn c9">${message.created_at}<br>分组：${message.group_name}</td>
                 <td class="xui-massSentTableOtherColumn">
-                    <span class="xa-update-tag c9" data-total="${message.total_count}" data-succ="${message.sent_count}" data-fail="${message.error_count}" data-status="${message.status}">
-                        {{if message.status == 'send success'}}发送成功
+                    <span class="xa-update-tag c9" data-status="${message.status}">
+                        {{if message.status == 'send success'}}
+                            成功：${message.sent_count} <br> <i class="xui-error-style">失败：${message.error_count}</i>
                         {{else}}
                             {{if message.status == 'delete'}}已删除
                             {{else}}
                                 {{if message.status == ''}}
-                                    发送中
+                                    微信处理中...
                                 {{else}}
-                                    发送失败
+                                    发送失败&nbsp;&nbsp;<a href="javascript:void 0" class="xa-resend"
+                                    data-group-id="${message.group_id}"
+                                    data-message-content="${message.message_content}"
+                                    data-message-type="${message.message_type}"
+                                    data-log-id="${message.id}">重发一次？</a>
                                 {{/if}}
                             {{/if}}
                         {{/if}}
-                        <i class="glyphicon glyphicon-triangle-bottom"></i>
                     </span>
                 </td>
-                <td class="xui-massSentTableOtherColumn c9">${message.created_at}</td>
             </tr>
             {{/each}}
         </tbody>
@@ -134,7 +158,36 @@ $(document).ready(function() {
         });
     });
 
+    //对于发送失败的消息，可以重新发送
+    $(document).delegate('.xa-resend', 'click', function(){
+        var $this = $(this);
+        var log_id = $this.attr("data-log-id");
+        var group_id = $this.attr('data-group-id');
+        var content = $this.attr('data-message-content');
+        var _type = $this.attr("data-message-type");
+        var send_type = _type==0? "text": "news";
+        W.getApi().call({
+            method: 'post',
+            app: 'new_weixin',
+            resource: 'mass_sending_messages',
 
+            args: {
+                log_id: log_id,
+                group_id: group_id,
+                group_type: "member",
+                content: content,
+                send_type: send_type
+            },
+            success: function(data) {
+                W.showHint('success', '群发成功');
+                setTimeout(function(){window.location.reload(true);},500);
+            },
+            error: function(resp) {
+                W.showHint('error', resp.errMsg || "发送失败~");
+            }
+        });
+    });
+/*
     $(document).delegate('.xa-update-tag', 'hover', function(event) {
         //鼠标经过时显示消息概况悬浮框
         var $el = $(event.currentTarget);
@@ -167,6 +220,7 @@ $(document).ready(function() {
     $(document).delegate('.xa-update-tag', 'mouseout', function(event) {
         $('.xui-massSentMessageDropBox').hide();
     });
+    */
 });
 </script>
 {% endblock %}
