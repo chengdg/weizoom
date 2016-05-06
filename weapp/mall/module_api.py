@@ -2242,6 +2242,8 @@ def update_order_status(user, action, order, request=None):
 	'action' : 'rship' 发货
 	"""
 	order_id = order.id
+	from cache.webapp_owner_cache import update_unship_order_count
+	update_unship_order_count(order.webapp_id)
 	# 快递100签收发送的finsh动作不记录日志，没有user
 	if user:
 		operation_name = user.username
