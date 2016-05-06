@@ -810,26 +810,22 @@ Scenario:5 带参数二维码[手机端绑定手机数]
 		"""
 	When 清空浏览器
 	And zhouxun扫描带参数二维码"带参数二维码-代言人二维码页-已推荐扫码人数"于2015-10-20 10:00:00
-
+	And zhouxun访问jobs的webapp
 
 	When 清空浏览器
 	And mayun扫描带参数二维码"带参数二维码-代言人二维码页-已推荐扫码人数"于2015-10-21 10:00:00
-
+	And mayun访问jobs的webapp
 
 
 	
 	When 清空浏览器
 	When bill扫描带参数二维码"带参数二维码-代言人二维码页-已推荐扫码人数"于2015-10-22 10:00:00
+	And bill访问jobs的webapp
 
 	When 清空浏览器
 	And tom扫描带参数二维码"带参数二维码-代言人二维码页-已推荐扫码人数"
+	And tom访问jobs的webapp
 
-	When 清空浏览器
-	And zhouxun访问jobs的webapp
-	
-	When 清空浏览器
-	And mayun访问jobs的webapp
-	
 	When 清空浏览器
 	And nokia访问jobs的webapp
 	Then nokia获得推荐详情页
@@ -852,6 +848,7 @@ Scenario:5 带参数二维码[手机端绑定手机数]
 	}
 	"""
 	When 清空浏览器
+	And tom访问jobs的webapp
 	Then tom获得推荐详情页
 	"""
 	{
@@ -860,6 +857,7 @@ Scenario:5 带参数二维码[手机端绑定手机数]
 	"""
 
 	When 清空浏览器
+	And nokia访问jobs的webapp
 	When nokia筛选时间
 	"""
 	{
@@ -868,6 +866,7 @@ Scenario:5 带参数二维码[手机端绑定手机数]
 	}
 	"""
 	When 清空浏览器
+	And nokia访问jobs的webapp
 	Then nokia获得推荐详情页
 
 	"""
