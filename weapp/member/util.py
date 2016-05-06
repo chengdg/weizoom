@@ -32,12 +32,12 @@ def send_mass_text_message(user_profile, group_id, content):
 	else:
 		openid_list = get_openid_list(group_id)
 	
-	return send_mass_text_message_with_openid_list(user_profile, openid_list, content)
+	return send_mass_text_message_with_openid_list(user_profile, openid_list, content, group_id)
 
 ##################################################################################
 # send_mass_text_message_with_openid_list: 直接使用已给的openid_list发送文本消息
 ##################################################################################
-def send_mass_text_message_with_openid_list(user_profile, openid_list, content, log_id=None):
+def send_mass_text_message_with_openid_list(user_profile, openid_list, content, log_id=None, group_id=0):
 	user = user_profile.user
 	if len(openid_list) > 0 and content != None and content != '' and user:
 		mpuser_access_token = _get_mpuser_access_token(user)
@@ -47,7 +47,7 @@ def send_mass_text_message_with_openid_list(user_profile, openid_list, content, 
 			if log_id:
 				sent_log = UserSentMassMsgLog.objects.filter(id=log_id).first()
 			else:
-				sent_log = UserSentMassMsgLog.create(user_profile.webapp_id, '', MESSAGE_TYPE_TEXT, content)
+				sent_log = UserSentMassMsgLog.create(user_profile.webapp_id, '', MESSAGE_TYPE_TEXT, content, group_id)
 			try:
 				result = weixin_api.send_mass_message(mesage, True)
 				#增加群发任务失败处理
@@ -83,13 +83,13 @@ def send_mass_new_message(user_profile, group_id, material_id):
 	else:
 		openid_list = get_openid_list(group_id)
 
-	return send_mass_news_message_with_openid_list(user_profile, openid_list, material_id)
+	return send_mass_news_message_with_openid_list(user_profile, openid_list, material_id, group_id)
 
 
 ####################################################################################
 # send_mass_news_message_with_openid_list: 直接使用已给的openid_list发送图文消息
 ####################################################################################
-def send_mass_news_message_with_openid_list(user_profile, openid_list, material_id, log_id=None):
+def send_mass_news_message_with_openid_list(user_profile, openid_list, material_id, log_id=None, group_id=0):
 
 
 	user = user_profile.user
@@ -123,7 +123,7 @@ def send_mass_news_message_with_openid_list(user_profile, openid_list, material_
 			if log_id:
 				sent_log = UserSentMassMsgLog.objects.filter(id=log_id).first()
 			else:
-				sent_log = UserSentMassMsgLog.create(user_profile.webapp_id, '', MESSAGE_TYPE_NEWS, material_id)
+				sent_log = UserSentMassMsgLog.create(user_profile.webapp_id, '', MESSAGE_TYPE_NEWS, material_id, group_id)
 			try:
 				article = Articles()
 				for new in news:

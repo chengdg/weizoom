@@ -85,6 +85,8 @@ class MassSentMessages(resource.Resource):
         pageinfo, messages = paginator.paginate(sent_messages, cur_page, count_per_page, None)
 
         items = []
+
+        member_group_id2name = {g.id: g.name for g in MemberTag.objects.filter(webapp_id=webapp_id)}
         
         for message in messages:
             # message.created_at = message.created_at.strftime('%m月%d日')
@@ -97,10 +99,12 @@ class MassSentMessages(resource.Resource):
             message_item['total_count'] = message.total_count
             message_item['filter_count'] = message.filter_count
             message_item['error_count'] = message.error_count
-            message_item['status'] = message.status
+            message_item['status'] = message.status if (datetime.now() - message.created_at).days < 1 else 'send failed'
             message_item['message_type'] = message.message_type
             message_item['message_content'] = emotion.change_emotion_to_img(message.message_content)
             message_item['created_at'] = message.created_at.strftime('%m月%d日')
+            message_item['group_id'] = message.group_id
+            message_item['group_name'] = u"全部"if message.group_id == 0 else member_group_id2name[message.group_id]
 
             if message.message_type == 1:
                 newses = News.get_news_by_material_id(int(message.message_content))
