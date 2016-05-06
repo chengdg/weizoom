@@ -751,62 +751,6 @@ Scenario:7 带参数二维码[关注数量]关注会员列表查询-代言人扫
 			"""
 
 
-@mall2 @senior @bandParameterCode
-Scenario:8 带参数二维码[批量修改]
-	When jobs登录系统
-	Then jobs能获取二维码列表
-		"""
-			[{
-				"name": "带参数二维码-第二个二维码",
-				"attention_number": 0,
-				"attention_money": 0.00,
-				"create_time": "2015-08-10 10:00:00",
-				"scan_reward": ""
-			}, {
-				"name": "带参数二维码-默认设置",
-				"attention_number": 0,
-				"attention_money": 0.00,
-				"create_time": "2015-08-10 10:00:00"
-				"scan_reward": ""
-			}]
-		"""
-	When jobs访问二维码列表
-	When jobs选择二维码
-		| name                      |attention_number |  create_time             |scan_reward|
-		| 带参数二维码-第二个二维码 |   0             | 2015-08-10 10:00:00      |           |
-		| 带参数二维码-默认设置     |   0             | 2015-08-10 10:00:00      |           |
-
-	When jobs批量修改二维码
-		"""
-			[{
-				"code_name": ["带参数二维码-默认设置","带参数二维码-第二个二维码"],
-				"create_time": "2015-08-10 10:00:00",
-				"prize_type": "无奖励",
-				"member_rank": "普通会员",
-				"tags": "分组1",
-				"is_attention_in": "false",
-				"remarks": "",
-				"reply_type": "文字",
-				"scan_code_reply": "扫码后回复批量修改"
-			}]
-		"""
-	Then jobs能获取二维码'带参数二维码-默认设置'
-		"""
-			[{	
-				"code_name": "带参数二维码-默认设置",
-				"create_time": "2015-08-10 10:00:00",
-				"prize_type": "无奖励",
-				"member_rank": "普通会员",
-				"tags": "分组1",
-				"is_attention_in": "false",
-				"remarks": "",
-				"is_relation_member": "false",
-				"reply_type": "文字",
-				"scan_code_reply": "扫码后回复批量修改"
-			}]
-		"""
-
-
 
 
 
