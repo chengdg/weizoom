@@ -299,6 +299,7 @@ MALL_APPS_POWERME_NAV = 'powerme'
 MALL_APPS_REDPACKET_NAV = 'red_packet'
 MALL_APPS_GROUP_NAV = 'groups'
 MALL_APPS_SHVOTE_NAV = 'shvotes'
+MALL_APPS_REBATE_NAV = 'rebate'
 
 #
 # 应用和营销左侧垂直方向二级导航信息
@@ -452,6 +453,11 @@ MALL_PROMOTION_AND_APPS_SECOND_NAV = {
                     'url': '/apps/shvote/shvotes/',
                     'permission': '',
                     'users': ['jobs','jierunda', 'ceshi01']
+                },{
+                    'name': MALL_APPS_REBATE_NAV,
+                    'title': u'返利活动',
+                    'url': '/apps/rebate/rebates/',
+                    'permission': '',
                 },
                 # {
                 #     'name': MALL_APPS_REDPACKET_NAV,
