@@ -79,33 +79,6 @@ class Rebates(resource.Resource):
 		响应API GET
 		"""
 		pageinfo, datas = Rebates.get_datas(request)
-
-		red_packet_ids = [str(p.id) for p in datas]
-
-		all_valid_participances = app_models.RebateParticipance.objects(belong_to__in=red_packet_ids, has_join=True)
-
-		red_packet_id2info = {}
-		for p in all_valid_participances:
-			if not p.belong_to in red_packet_id2info:
-				red_packet_id2info[p.belong_to] = {
-					"participant_count": 1,
-					"already_paid_money": p.current_money if (p.red_packet_status and p.is_already_paid) else 0
-				}
-			else:
-				red_packet_id2info[p.belong_to]["participant_count"] += 1
-				red_packet_id2info[p.belong_to]["already_paid_money"] += p.current_money if (p.red_packet_status and p.is_already_paid) else 0
-
-		all_unvalid_participances = app_models.RebateParticipance.objects(belong_to__in=red_packet_ids, is_valid=False)
-		for p in all_unvalid_participances:
-			if not p.belong_to in red_packet_id2info:
-				red_packet_id2info[p.belong_to] = {
-					"participant_count": 1,
-					"already_paid_money": p.current_money if (p.red_packet_status and p.is_already_paid) else 0
-				}
-			else:
-				red_packet_id2info[p.belong_to]["participant_count"] += 1
-				red_packet_id2info[p.belong_to]["already_paid_money"] += p.current_money if (p.red_packet_status and p.is_already_paid) else 0
-
 		items = []
 		for data in datas:
 			str_id = str(data.id)
@@ -116,6 +89,7 @@ class Rebates(resource.Resource):
 				'start_time': data.start_time.strftime('%Y-%m-%d %H:%M'),
 				'end_time': data.end_time.strftime('%Y-%m-%d %H:%M'),
 				'status': data.status_text,
+				'ticket': data.ticket,
 				'created_at': data.created_at.strftime("%Y-%m-%d %H:%M:%S")
 			})
 		response_data = {

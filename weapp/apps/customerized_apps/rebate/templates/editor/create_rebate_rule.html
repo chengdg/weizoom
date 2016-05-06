@@ -51,8 +51,8 @@
         <label class="control-label col-sm-2 pt0 star_show">已关注会员可参与</label>
         <div class="controls xa-errorHintContainer">
             <div style="margin-left: 120px;">
-                <input type="radio" value="1" {% ifequal rebate_rule.permission 1 %}checked{% endifequal %}checked style="vertical-align: sub;" class="permission" name="permission">是
-				<input type="radio" value="0" {% ifequal rebate_rule.permission 0 %}checked{% endifequal %} style="vertical-align: sub;" class="permission ml10" name="permission" class="m10 p20" value='0'>否
+                <input type="radio" value="1" {% if rebate_rule.permission %}checked{% endif %} class="permission" name="permission">是
+				<input type="radio" value="0" {% if not rebate_rule.permission %}checked{% endif %} class="permission ml10" name="permission" class="m10 p20" value='0'>否
             </div>
             <div class="errorHint" data-error-hint="请选择已关注会员是否可参与"></div>
         </div>
@@ -61,26 +61,26 @@
         <label class="control-label col-sm-2 pt0 star_show">订单返利条件</label>
         <div class="controls xa-errorHintContainer">
             <div style="margin-left: 120px;">购买次数：
-                <input type="radio" value="1" name="is_limit_first_buy" class="is_limit_first_buy" {%if not rebate_rule.is_limit_first_buy %}checked{% endif%}>首单
-                <input type="radio" value="0" name="is_limit_first_buy" class="is_limit_first_buy" {%if rebate_rule.is_limit_first_buy %}checked{% endif%}>不限
+                <input type="radio" value="1" name="is_limit_first_buy" class="is_limit_first_buy" {%if rebate_rule.is_limit_first_buy %}checked{% endif%}>首单
+                <input type="radio" value="0" name="is_limit_first_buy" class="is_limit_first_buy" {%if not rebate_rule.is_limit_first_buy %}checked{% endif%}>不限
             </div>
             <div class="errorHint" data-error-hint="请选择购买次数"></div>
         </div>
         <div class="controls xa-errorHintContainer">
             <div style="margin-left: 170px;">订单金额是否为现金：
-                <input type="radio" value="1" name="is_limit_cash" class="is_limit_cash" {%if not rebate_rule.is_limit_cash %}checked{% endif%}>是
-                <input type="radio" value="0" name="is_limit_cash" class="is_limit_cash" {%if rebate_rule.is_limit_cash %}checked{% endif%}>否
+                <input type="radio" value="1" name="is_limit_cash" class="is_limit_cash" {%if rebate_rule.is_limit_cash %}checked{% endif%}>是
+                <input type="radio" value="0" name="is_limit_cash" class="is_limit_cash" {%if not rebate_rule.is_limit_cash %}checked{% endif%}>否
             </div>
             <div class="errorHint" data-error-hint="请选择订单金额是否为现金"></div>
         </div>
         <div class="controls xa-errorHintContainer">
             <div style="margin-left: 170px;">订单返利：
                 <span>满</span>
-                <input type="text" class="form-control w70" id="rebate_order_price" name="rebate_order_price" value="{{rebate_rule.rebate_order_price}}" data-validate="require-notempty,,require-positive-int"/>元
+                <input type="text" class="form-control w70" id="rebate_order_price" name="rebate_order_price" value="{{rebate_rule.rebate_order_price}}" data-validate="require-notempty,,require-float"/>元
                 <span>返</span>
-                <input type="text" class="form-control w70" id="rebate_money" name="rebate_money" value="{{rebate_rule.rebate_money}}" data-validate="require-notempty,,require-positive-int"/>元
+                <input type="text" class="form-control w70" id="rebate_money" name="rebate_money" value="{{rebate_rule.rebate_money}}" data-validate="require-notempty,,require-float"/>元
             </div>
-            <div class="errorHint" data-error-hint="请输入正整数"></div>
+            <div class="errorHint" data-error-hint=""></div>
         </div>
     </div>
     <div class="form-group">

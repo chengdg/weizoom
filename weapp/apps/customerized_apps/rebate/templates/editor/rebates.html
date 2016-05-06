@@ -68,18 +68,6 @@
 				</div>
 			</div>
 		</div>
-		<div class="xui-form disT">
-			<div class="xui-col disTc">
-				<div class="xui-i-item">
-					<label>红包类型：</label>
-					<select class="" id="rebate_type" name="rebate_type">
-						<option value="all">全部</option>
-						<option value="random">拼手气</option>
-						<option value="regular">普通</option>
-					</select>
-				</div>
-			</div>
-		</div>
 		<div class="xui-btn-group">
 			<a class="btn btn-primary mr40 xa-search xui-fontBold" href="javascript:void(0);">查&nbsp;&nbsp;&nbsp;询</a>
 			<a class="btn btn-default xa-reset xui-fontBold" href="javascript:void(0);">重&nbsp;&nbsp;&nbsp;置</a>
@@ -119,7 +107,7 @@
 			<tr>
 				<th style="word-wrap: break-word;word-break: break-all;white-space: pre-wrap;">活动名称</th>
 				<th>关注人数</th>
-				<th>扫描后成交金额</th>
+				<th>扫码后成交金额</th>
 				<th>首次下单数</th>
 				<th>有效期</th>
 				<th>活动状态</th>
@@ -161,7 +149,7 @@
 				</td>
 				<td class="xui-operations">
 				    <a href="/apps/rebate/rebate/?id=${item.id}" class="ml5">编辑</a>
-				    <a class="ml5">查看二维码</a>
+				    <a target="_blank" href="https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=${item.ticket}">查看二维码</a>
 					{{if (item.status === '已结束')}}
 					<a href="javascript:void(0)" class="xa-delete" data-id=${item.id}>删除</a>
 					{{/if}}
