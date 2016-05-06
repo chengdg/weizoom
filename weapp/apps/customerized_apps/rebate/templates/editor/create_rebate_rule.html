@@ -4,58 +4,14 @@
 
 {% block css %}
 <style>
-  .xui-editProductPage .control-label{
-    margin-left: 10px;
+  .control-label{
+      font-weight: normal;
   }
-  .xui-create-redEnvelope-page .imageView-uploadZone{
-      position: absolute;
-        margin-top: 60px;
-      z-index: 99999;
+  .errorHint{
+      margin-left: 170px;
   }
-  .xui-create-redEnvelope-page .uploadify-button{
-    background-color: #fafafa;
-    border: 1px dashed #e5e5e5;
-    background-size: 91px 91px;
-    width:90px!important;
-    height:30px!important;
-    box-shadow: none;
-  }
-  .xui-create-redEnvelope-page .uploadify-button{
-      border: 0;
-      background-color:rgba(0,0,0,0.5);
-  }
-  .xui-create-redEnvelope-page .uploadify-button-text{
-    color:#fff;
-  }
-  .xui-imgTips{
-    position: absolute;
-    top: 46px;
-    left: 230px;
-    color:#999;
-  }
-  .xui-imgTips i{
-    font-style: normal;
-    display: inline-block;
-    border-radius: 50%;
-    background-color:#d0d8e2;
-    color:#fff;
-    width:18px;
-    height:18px;
-    line-height:18px;
-    text-align: center;
-  }
-  .xui-couponTip{
-    margin-left:120px!important;
-    color:#999;
-  }
-  .xui-unchangedCover{
-    background-color: rgba(0,0,0,0);
-    width:100%;
-    height: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 9999;
+  #edui1 {
+    width: 550px !important;
   }
   .popover{
     box-shadow: none;
@@ -68,7 +24,7 @@
 {% endblock %}
 
 {% block content-panel %}
-<div class="xui-editProductPage xui-create-redEnvelope-page">
+<div class="xui-create-rebate-rule-page">
 <ul class="breadcrumb">
     <li>您当前所在位置</li>
     <li><a href="/apps/lottery/lotteries/">百宝箱</a></li>
@@ -85,23 +41,68 @@
 {% else %}
 <form class="form-horizontal xui-formPanel xa-form pt0 pr" method="post">
 
-<div class="xui-unchangedCover{% if not red_envelope_rule %}hidden{% endif%}"></div>
 <section class="mt0" style="border:0;">
   <span class="xui-fontBold ml30 mt15" style="font-size:14px;display:inline-block;">返利设置</span>
   <hr class="ml30" style="border-color:#ccc;margin-top:8px;width:638px;">
   <fieldset class="mt30">
-    <div class="form-group h40">
-        <label class="control-label col-sm-2 col-sm-offset-1 pt0 w110">活动名称</label>
+    <div class="form-group">
+        <label class="control-label col-sm-2 pt0 ">二维码名称</label>
         <div class="controls">
-          <input type="text" class="input-xlarge" id="name" name="name" style="width: 150px" value="{{ red_envelope_rule.name }}" data-validate="require-notempty::活动名称不能为空,,require-string::最多可以输入18个字" maxlength="18" placeholder="最多可以输入18个字"/>
-          <div class="errorHint" style="margin-left:120px;"></div>
+          <input type="text" class="input-xlarge" id="name" name="name" style="width: 150px" value="{{ rebate_rule.name }}" data-validate="require-notempty::二维码名称不能为空,,require-string::最多可以输入18个字" maxlength="18" placeholder="输入名称"/>
+          <div class="errorHint"></div>
         </div>
     </div>
-
     <div class="form-group">
-        <label class="control-label col-sm-2 col-sm-offset-1 pt0 w110 star_show">奖励时间</label>
+        <label class="control-label col-sm-2 pt0 star_show">已关注会员可参与</label>
         <div class="controls xa-errorHintContainer">
-            <div class=""><input type="radio" class="xa-select-time" name="prize-time" {% if red_envelope_rule.limit_time %}{%else%}checked{%endif%}>
+            <div style="margin-left: 120px;">
+                <input type="radio" value="1" {% ifequal rebate_rule.permission 1 %}checked{% endifequal %}checked style="vertical-align: sub;" class="permission" name="permission" id="permission">是
+				<input type="radio" value="0" {% ifequal rebate_rule.permission 0 %}checked{% endifequal %} style="vertical-align: sub;" class="permission ml10" name="permission" id="not_permission" class="m10 p20" value='0'>否
+            </div>
+            <div class="errorHint" data-error-hint="请选择已关注会员是否可参与"></div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-sm-2 pt0 star_show">订单返利条件</label>
+        <div class="controls xa-errorHintContainer">
+            <div style="margin-left: 120px;">购买次数：
+                <input type="radio" name="is_limit_first_buy" class="is_limit_first_buy" {%if not rebate_rule.is_limit_first_buy %}checked{% endif%}>首单
+                <input type="radio" name="is_limit_first_buy" class="is_limit_first_buy" {%if rebate_rule.is_limit_first_buy %}checked{% endif%}>不限
+            </div>
+            <div class="errorHint" data-error-hint="请选择购买次数"></div>
+        </div>
+        <div class="controls xa-errorHintContainer">
+            <div style="margin-left: 170px;">订单金额是否为现金：
+                <input type="radio" name="is_limit_cash" class="is_limit_cash" {%if not rebate_rule.is_limit_cash %}checked{% endif%}>是
+                <input type="radio" name="is_limit_cash" class="is_limit_cash" {%if rebate_rule.is_limit_cash %}checked{% endif%}>否
+            </div>
+            <div class="errorHint" data-error-hint="请选择订单金额是否为现金"></div>
+        </div>
+        <div class="controls xa-errorHintContainer">
+            <div style="margin-left: 170px;">订单返利：
+                <span>满</span>
+                <input type="text" class="form-control w70" id="rebate_order_price" name="rebate_order_price" value="{{rebate_rule.rebate_order_price}}" data-validate="norequire,,require-positive-int"/>元
+                <span>返</span>
+                <input type="text" class="form-control w70" id="rebate_money" name="rebate_money" value="{{rebate_rule.rebate_money}}" data-validate="norequire,,require-positive-int"/>元
+            </div>
+            <div class="errorHint" data-error-hint="请输入正整数"></div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-sm-2 pt0 star_show">发放微众卡号段</label>
+        <div class="controls xa-errorHintContainer">
+            <div style="margin-left: 120px;">
+                <input type="text" class="form-control w70" id="weizoom_card_id_from" name="weizoom_card_id_from" value="{{rebate_rule.weizoom_card_id_from}}" data-validate="norequire,,require-positive-int"/>
+                -&nbsp
+                <input type="text" class="form-control w70" id="weizoom_card_id_to" name="weizoom_card_id_to" value="{{rebate_rule.weizoom_card_id_to}}" data-validate="norequire,,require-positive-int"/>
+            </div>
+            <div class="errorHint" data-error-hint="请输入正整数"></div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-sm-2 pt0 star_show">有效期</label>
+        <div class="controls xa-errorHintContainer">
+            <div class="">
                 <div style="display:inline-block; vertical-align:text-top;margin-top:-6px;">
                     <input
                     style="width:132px!important;cursor:pointer;"
@@ -109,7 +110,7 @@
                     class="form-control xui-datePicker xui-greyColor"
                     id="start_date"
                     name="start_date"
-                    value="{% if not red_envelope_rule.limit_time %}{{red_envelope_rule.start_time|date:"Y-m-d H:i"}}{%endif%}"
+                    value="{% if not rebate_rule.limit_time %}{{rebate_rule.start_time|date:"Y-m-d H:i"}}{%endif%}"
                     readonly="readonly"
                     data-validate="require-notempty"
                     data-enable-select-time="true"
@@ -129,7 +130,7 @@
                     class="form-control xui-datePicker xui-greyColor"
                     id="end_date"
                     name="end_date"
-                    value="{% if not red_envelope_rule.limit_time %}{{red_envelope_rule.end_time|date:"Y-m-d H:i"}}{%endif%}"
+                    value="{% if not rebate_rule.limit_time %}{{rebate_rule.end_time|date:"Y-m-d H:i"}}{%endif%}"
                     readonly="readonly"
                     data-validate="require-notempty"
                     data-ui-role="date-picker"
@@ -141,35 +142,37 @@
 
                 </div>
             </div>
-            <div class="" style="margin-left: 120px;">
-                <input type="radio" class="xa-forever" name="prize-time"  {%if red_envelope_rule.limit_time %}checked{% endif%}>&nbsp;&nbsp;永久
-            </div>
-            <div class="errorHint ml120" data-error-hint="请选择奖励时间"></div>
+            <div class="errorHint" data-error-hint="请选择有效期"></div>
         </div>
     </div>
     <div class="form-group">
-        <label class="control-label col-sm-2 col-sm-offset-1 pt0 w110 star_show">领取方式</label>
+        <label class="control-label col-sm-2 pt0 star_show">扫码后回复</label>
         <div class="controls xa-errorHintContainer">
-            <div class="receive-method" style="margin-left: 120px;">
-                <input type="radio" name="receive-method-order" class="xa-receive-method-order" {%if not red_envelope_rule.receive_method %}checked{% endif%}>下单领取
-                <input type="radio" name="receive-method-pic" class="xa-receive-method-pic" {%if red_envelope_rule.receive_method %}checked{% endif%}>图文领取
+            <div style="margin-left: 170px;" id="prize_qrcode">
+                <div id="edit-message-panel"></div>
             </div>
-            <div class="errorHint ml120" data-error-hint="请选择领取方式"></div>
+            <div class="tab-content" style="margin: 20px 0 5px 160px;">
+				<div id="weixinMessageEdite r-textMessageZone" style="width: 350px">
+					<div class="control-group mr5 mt5">
+						<div class="controls ml20">
+							<textarea class="input-xlarge hide xa-a" id="reply_detail" name="reply_detail" data-ui-role="richtext-editor" data-height="300" data-width="350">{% if qrcode %}{{ qrcode.reply_detail|format_emotion|safe }}{% endif %}</textarea>
+						</div>
+					</div>
+				</div>
+
+				<div id="weixinMessageEditer-newsMessageZone" style="width: 350px">
+					<input id="reply_material_id" name="reply_material_id" class="hide" value="">
+				</div>
+			</div>
         </div>
     </div>
-    <div class="form-group h40">
-        <label class="control-label col-sm-2 col-sm-offset-1 w110">奖励条件</label>
-        订单<span style="color:#cf0404;">满</span>
-        <input type="text" class="form-control w70" id="limit_money" name="limit_money" value="{{red_envelope_rule.limit_order_money}}" data-validate="norequire,,require-positive-int"/>元
-        <span class="xui-i-help ml5">注：空为不限制</span>
-        <div class="errorHint ml110 mt" data-error-hint="请输入正整数"></div>
-    </div>
+
   </fieldset>
   <hr style="border-color:#ccc;">
   <fieldset>
     <div class="form-group mt5 mr5 xa-operateBtns" id="operateBtns">
       <div class="controls ml20 tc">
-        {% if not red_envelope_rule %}
+        {% if not rebate_rule %}
         <a class="btn btn-primary xa-submit mr80">保&nbsp;存</a>
         {% endif %}
       </div>
@@ -181,28 +184,25 @@
 {% endblock %}
 {% block js %}
 <script type="text/javascript">
-W.registerUIRole('textarea[data-ui-role="richtext-editor-red"]', function() {
-    var $textarea = $(this);
-    var type = $textarea.attr('data-type');
-    var height = parseInt($textarea.attr('data-height'));
-    var width = parseInt($textarea.attr('data-width'));
-    var maxCount = parseInt($textarea.attr('data-maxCount'));
-    var editor = new W.view.common.RichTextEditor({
-        el: $textarea.get(),
-        type: type,
-        width: width,
-        height:height,
-        autoHeight:false,
-        imgSuffix: "uid="+W.mid,
-        wordCount: true,
-        maxCount: maxCount
-    });
-    editor.render();
 
-    $textarea.data('view', editor);
-});
 $(document).ready(function(){
-  // $('#coupon_rule').change()
+    var answerContent = W.loadJSON('qrcode_answer');
+    var options = {
+        el: '#edit-message-panel',
+        richTextEditorWidth: 800,
+        enableSubmitBtn: 'false',
+        enableCanelBtn: 'false',
+        pasteplain: true
+    };
+    if (answerContent) {
+        if (answerContent.type === 'text') {
+            options.answer = answerContent.content;
+        } else if (answerContent.type === 'news') {
+            options.materialId = answerContent.content;
+            options.material = answerContent;
+        }
+    }
+    var editor = new W.view.weixin.MessageEditor(options);
   $('.uploadify object').attr('height','90');
   $('.xa-select-time').on('click', function(e){
       var $input = $(e.target);
@@ -212,37 +212,6 @@ $(document).ready(function(){
       }
   });
 
-  $('.xa-forever').on('click', function(e){
-      var $input = $(e.target);
-      if($input.prop('checked')){
-          $('input[data-ui-role="date-picker"]').removeAttr('data-validate').attr('disabled', 'disabled').css('cursor','not-allowed').parent().removeClass('has-error');
-          $('input[data-ui-role="date-picker"]').val("");
-          $('.xa-errorHintContainer .errorHint').text("");
-      }
-  });
-    //下单领取
-  $('.xa-receive-method-order').on('click', function(e){
-      var $input = $(e.target);
-      if($input.prop('checked')){
-          $input.siblings().prop("checked", false);
-          var $limit_money = $('input[name="limit_money"]');
-          $limit_money.parent().removeClass('xui-i-help');
-          $limit_money.prev().css('color','#cf0404');
-          $limit_money.removeAttr('disabled');
-      }
-  });
-    //图文领取
-  $('.xa-receive-method-pic').on('click', function(e){
-      var $input = $(e.target);
-      if($input.prop('checked')){
-          $input.siblings().prop("checked", false);
-          var $limit_money = $('input[name="limit_money"]');
-          $limit_money.parent().addClass('xui-i-help');
-          $limit_money.prev().css('color','#8F8F8F');
-          $limit_money.attr('disabled', 'disabled');
-          $limit_money.val('');
-      }
-  });
 
   $('#coupon_rule').change(function(event){
       var coupon_rule_id = $('#coupon_rule').val();
@@ -277,21 +246,29 @@ $(document).ready(function(){
       $(this).attr('disabled',false);
       return false;
     }
+    var replyType = 0;
+    var activeLink = $('#edit-message-panel li[class="active"]').text();
+    if(activeLink === '图文消息' && materialId > 0) {
+        replyType = 2;
+        textContent = '';
+    } else {
+        replyType = 1;
+    }
     var args = $('.xa-form').serializeObject();
     W.getApi().call({
       method: 'put',
-      app: 'apps/red_envelope',
-      resource: 'red_envelope_rule',
+      app: 'apps/rebate',
+      resource: 'rebate',
       args: W.toFormData(args),
       scope: this,
       success: function() {
-        W.showHint('success', '创建红包成功！');
+        W.showHint('success', '创建返利活动成功！');
         _.delay(function() {
-          window.location.href = '/apps/red_envelope/red_envelope_rule_list/?is_create=1';
+          window.location.href = '/apps/rebate/rebate/';
         }, 500)
       },
       error: function() {
-        W.showHint('error','创建红包失败！');
+        W.showHint('error','创建返利活动失败！');
         $(this).attr('disabled',false);
       }
     });

@@ -25,15 +25,13 @@ class Rebates(resource.Resource):
 		响应GET
 		"""
 		has_data = app_models.Rebate.objects.count()
-		cert_ready = False
 
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
 			'second_navs': export.get_promotion_and_apps_second_navs(request),
 			'second_nav_name': export.MALL_APPS_SECOND_NAV,
             'third_nav_name': export.MALL_APPS_REBATE_NAV,
-			'has_data': has_data,
-			'cert_ready': cert_ready
+			'has_data': has_data
 		})
 		
 		return render_to_response('rebate/templates/editor/rebates.html', c)
@@ -75,4 +73,62 @@ class Rebates(resource.Resource):
 		
 		return pageinfo, datas
 
+	@login_required
+	def api_get(request):
+		"""
+		响应API GET
+		"""
+		pageinfo, datas = Rebates.get_datas(request)
 
+		red_packet_ids = [str(p.id) for p in datas]
+
+		all_valid_participances = app_models.RebateParticipance.objects(belong_to__in=red_packet_ids, has_join=True)
+
+		red_packet_id2info = {}
+		for p in all_valid_participances:
+			if not p.belong_to in red_packet_id2info:
+				red_packet_id2info[p.belong_to] = {
+					"participant_count": 1,
+					"already_paid_money": p.current_money if (p.red_packet_status and p.is_already_paid) else 0
+				}
+			else:
+				red_packet_id2info[p.belong_to]["participant_count"] += 1
+				red_packet_id2info[p.belong_to]["already_paid_money"] += p.current_money if (p.red_packet_status and p.is_already_paid) else 0
+
+		all_unvalid_participances = app_models.RebateParticipance.objects(belong_to__in=red_packet_ids, is_valid=False)
+		for p in all_unvalid_participances:
+			if not p.belong_to in red_packet_id2info:
+				red_packet_id2info[p.belong_to] = {
+					"participant_count": 1,
+					"already_paid_money": p.current_money if (p.red_packet_status and p.is_already_paid) else 0
+				}
+			else:
+				red_packet_id2info[p.belong_to]["participant_count"] += 1
+				red_packet_id2info[p.belong_to]["already_paid_money"] += p.current_money if (p.red_packet_status and p.is_already_paid) else 0
+
+		items = []
+		for data in datas:
+			str_id = str(data.id)
+			items.append({
+				'id': str_id,
+				'owner_id': data.owner_id,
+				'name': data.name,
+				'start_time': data.start_time.strftime('%Y-%m-%d %H:%M'),
+				'end_time': data.end_time.strftime('%Y-%m-%d %H:%M'),
+                'red_packet_type': u'拼手气' if data.red_packet_type == 'random' else u'普通',
+				'participant_count': red_packet_id2info[str_id]["participant_count"] if red_packet_id2info.get(str_id, None) else 0,
+				'total_money' : '%0.2f' %float(data.random_total_money) if data.red_packet_type == 'random' else '%0.2f' %(float(data.regular_packets_number)*float(data.regular_per_money)),
+				'already_paid_money' : '%0.2f' %float(red_packet_id2info[str_id]["already_paid_money"] if red_packet_id2info.get(str_id, None) else 0),
+				'related_page_id': data.related_page_id,
+				'status': data.status_text,
+				'created_at': data.created_at.strftime("%Y-%m-%d %H:%M:%S")
+			})
+		response_data = {
+			'items': items,
+			'pageinfo': paginator.to_dict(pageinfo),
+			'sortAttr': 'id',
+			'data': {}
+		}
+		response = create_response(200)
+		response.data = response_data
+		return response.get_response()

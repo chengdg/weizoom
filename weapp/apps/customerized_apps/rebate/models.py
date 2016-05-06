@@ -21,7 +21,9 @@ class Rebate(models.Document):
 	rebate_money = models.FloatField() #返利返多少元
 	weizoom_card_id_from = models.StringField() #发放微众卡号段
 	weizoom_card_id_to = models.StringField() #发放微众卡号段
-	reply_content = models.DynamicField() #扫码后回复
+	reply_type = models.IntField() #扫码后回复：1/文字，2/图文消息
+	reply_detail = models.DynamicField() #扫码后回复文字
+	reply_material_id = models.StringField() #扫码后回复图文id
 	created_at = models.DateTimeField() #创建时间
 	
 	meta = {
