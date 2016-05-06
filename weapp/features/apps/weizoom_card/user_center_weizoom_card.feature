@@ -124,8 +124,7 @@ Scenario:2 个人中心-微众卡余额查询
 	Then bill获得微众卡余额查询结果
 		"""
 		{
-			"card_remaining": 0.00,
-			"msg":"您的微众卡余额不足!"
+			"card_remaining": 0.00
 		}
 		"""
 		#	"can_exchange_integral":0,
