@@ -13,7 +13,6 @@ class Rebate(models.Document):
 	start_time = models.DateTimeField() #开始时间
 	end_time = models.DateTimeField() #结束时间
 	status = models.IntField(default=0) #状态
-	related_page_id = models.StringField(default="", max_length=100) #termite page的id
 	permission = models.BooleanField() #已关注会员可参与
 	is_limit_first_buy = models.BooleanField() #订单返利条件是否限制首单
 	is_limit_cash = models.BooleanField() #订单金额是否为现金

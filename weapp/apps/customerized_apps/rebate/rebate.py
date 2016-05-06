@@ -91,7 +91,6 @@ class RedPacket(resource.Resource):
 		响应PUT
 		"""
 		data = request_util.get_fields_to_be_save(request)
-		data['qrcode'] = json.loads(request.POST['qrcode'])
 		rebate = app_models.Rebate(**data)
 		rebate.save()
 		error_msg = None

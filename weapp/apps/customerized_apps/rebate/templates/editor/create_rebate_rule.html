@@ -13,13 +13,7 @@
   #edui1 {
     width: 550px !important;
   }
-  .popover{
-    box-shadow: none;
-    width:180px;
-    font-size: 12px;
-    border-radius:3px;
-    line-height: 20px;
-  }
+
 </style>
 {% endblock %}
 
@@ -45,6 +39,7 @@
   <span class="xui-fontBold ml30 mt15" style="font-size:14px;display:inline-block;">返利设置</span>
   <hr class="ml30" style="border-color:#ccc;margin-top:8px;width:638px;">
   <fieldset class="mt30">
+    <!--<input id="qrcode_id" name="qrcode_id" class="hide" value="{% if rebate_rule %}{{ rebate_rule.id }}{% else %}0{% endif %}">-->
     <div class="form-group">
         <label class="control-label col-sm-2 pt0 ">二维码名称</label>
         <div class="controls">
@@ -56,8 +51,8 @@
         <label class="control-label col-sm-2 pt0 star_show">已关注会员可参与</label>
         <div class="controls xa-errorHintContainer">
             <div style="margin-left: 120px;">
-                <input type="radio" value="1" {% ifequal rebate_rule.permission 1 %}checked{% endifequal %}checked style="vertical-align: sub;" class="permission" name="permission" id="permission">是
-				<input type="radio" value="0" {% ifequal rebate_rule.permission 0 %}checked{% endifequal %} style="vertical-align: sub;" class="permission ml10" name="permission" id="not_permission" class="m10 p20" value='0'>否
+                <input type="radio" value="1" {% ifequal rebate_rule.permission 1 %}checked{% endifequal %}checked style="vertical-align: sub;" class="permission" name="permission">是
+				<input type="radio" value="0" {% ifequal rebate_rule.permission 0 %}checked{% endifequal %} style="vertical-align: sub;" class="permission ml10" name="permission" class="m10 p20" value='0'>否
             </div>
             <div class="errorHint" data-error-hint="请选择已关注会员是否可参与"></div>
         </div>
@@ -66,24 +61,24 @@
         <label class="control-label col-sm-2 pt0 star_show">订单返利条件</label>
         <div class="controls xa-errorHintContainer">
             <div style="margin-left: 120px;">购买次数：
-                <input type="radio" name="is_limit_first_buy" class="is_limit_first_buy" {%if not rebate_rule.is_limit_first_buy %}checked{% endif%}>首单
-                <input type="radio" name="is_limit_first_buy" class="is_limit_first_buy" {%if rebate_rule.is_limit_first_buy %}checked{% endif%}>不限
+                <input type="radio" value="1" name="is_limit_first_buy" class="is_limit_first_buy" {%if not rebate_rule.is_limit_first_buy %}checked{% endif%}>首单
+                <input type="radio" value="0" name="is_limit_first_buy" class="is_limit_first_buy" {%if rebate_rule.is_limit_first_buy %}checked{% endif%}>不限
             </div>
             <div class="errorHint" data-error-hint="请选择购买次数"></div>
         </div>
         <div class="controls xa-errorHintContainer">
             <div style="margin-left: 170px;">订单金额是否为现金：
-                <input type="radio" name="is_limit_cash" class="is_limit_cash" {%if not rebate_rule.is_limit_cash %}checked{% endif%}>是
-                <input type="radio" name="is_limit_cash" class="is_limit_cash" {%if rebate_rule.is_limit_cash %}checked{% endif%}>否
+                <input type="radio" value="1" name="is_limit_cash" class="is_limit_cash" {%if not rebate_rule.is_limit_cash %}checked{% endif%}>是
+                <input type="radio" value="0" name="is_limit_cash" class="is_limit_cash" {%if rebate_rule.is_limit_cash %}checked{% endif%}>否
             </div>
             <div class="errorHint" data-error-hint="请选择订单金额是否为现金"></div>
         </div>
         <div class="controls xa-errorHintContainer">
             <div style="margin-left: 170px;">订单返利：
                 <span>满</span>
-                <input type="text" class="form-control w70" id="rebate_order_price" name="rebate_order_price" value="{{rebate_rule.rebate_order_price}}" data-validate="norequire,,require-positive-int"/>元
+                <input type="text" class="form-control w70" id="rebate_order_price" name="rebate_order_price" value="{{rebate_rule.rebate_order_price}}" data-validate="require-notempty,,require-positive-int"/>元
                 <span>返</span>
-                <input type="text" class="form-control w70" id="rebate_money" name="rebate_money" value="{{rebate_rule.rebate_money}}" data-validate="norequire,,require-positive-int"/>元
+                <input type="text" class="form-control w70" id="rebate_money" name="rebate_money" value="{{rebate_rule.rebate_money}}" data-validate="require-notempty,,require-positive-int"/>元
             </div>
             <div class="errorHint" data-error-hint="请输入正整数"></div>
         </div>
@@ -92,11 +87,11 @@
         <label class="control-label col-sm-2 pt0 star_show">发放微众卡号段</label>
         <div class="controls xa-errorHintContainer">
             <div style="margin-left: 120px;">
-                <input type="text" class="form-control w70" id="weizoom_card_id_from" name="weizoom_card_id_from" value="{{rebate_rule.weizoom_card_id_from}}" data-validate="norequire,,require-positive-int"/>
+                <input type="text" class="form-control w70" id="weizoom_card_id_from" name="weizoom_card_id_from" value="{{rebate_rule.weizoom_card_id_from}}" data-validate="require-notempty,,require-nonnegative"/>
                 -&nbsp
-                <input type="text" class="form-control w70" id="weizoom_card_id_to" name="weizoom_card_id_to" value="{{rebate_rule.weizoom_card_id_to}}" data-validate="norequire,,require-positive-int"/>
+                <input type="text" class="form-control w70" id="weizoom_card_id_to" name="weizoom_card_id_to" value="{{rebate_rule.weizoom_card_id_to}}" data-validate="require-notempty,,require-nonnegative"/>
             </div>
-            <div class="errorHint" data-error-hint="请输入正整数"></div>
+            <div class="errorHint" data-error-hint="请输入数字"></div>
         </div>
     </div>
     <div class="form-group">
@@ -108,8 +103,8 @@
                     style="width:132px!important;cursor:pointer;"
                     type="text"
                     class="form-control xui-datePicker xui-greyColor"
-                    id="start_date"
-                    name="start_date"
+                    id="start_time"
+                    name="start_time"
                     value="{% if not rebate_rule.limit_time %}{{rebate_rule.start_time|date:"Y-m-d H:i"}}{%endif%}"
                     readonly="readonly"
                     data-validate="require-notempty"
@@ -117,9 +112,9 @@
                     data-ui-role="date-picker"
                     data-format="yy-mm-dd HH:MM"
                     data-min="now"
-                    data-max-el="#end_date"
+                    data-max-el="#end_time"
                     width="132"
-                    {% if start_date %}disabled="disabled"{% endif %}/>
+                    {% if start_time %}disabled="disabled"{% endif %}/>
 
                 </div>
                 至
@@ -128,8 +123,8 @@
                     style="width:132px!important;cursor:pointer;"
                     type="text"
                     class="form-control xui-datePicker xui-greyColor"
-                    id="end_date"
-                    name="end_date"
+                    id="end_time"
+                    name="end_time"
                     value="{% if not rebate_rule.limit_time %}{{rebate_rule.end_time|date:"Y-m-d H:i"}}{%endif%}"
                     readonly="readonly"
                     data-validate="require-notempty"
@@ -137,8 +132,8 @@
                     data-enable-select-time="true"
                     data-format="yy-mm-dd HH:MM"
                     data-min="now"
-                    data-min-el="#start_date"
-                    {% if end_date %}disabled="disabled"{% endif %}/>
+                    data-min-el="#start_time"
+                    {% if end_time %}disabled="disabled"{% endif %}/>
 
                 </div>
             </div>
@@ -159,7 +154,6 @@
 						</div>
 					</div>
 				</div>
-
 				<div id="weixinMessageEditer-newsMessageZone" style="width: 350px">
 					<input id="reply_material_id" name="reply_material_id" class="hide" value="">
 				</div>
@@ -203,42 +197,7 @@ $(document).ready(function(){
         }
     }
     var editor = new W.view.weixin.MessageEditor(options);
-  $('.uploadify object').attr('height','90');
-  $('.xa-select-time').on('click', function(e){
-      var $input = $(e.target);
-      if($input.prop('checked')){
-          $('input[data-ui-role="date-picker"]').removeAttr('disabled').css('cursor','pointer');
-          $('input[data-ui-role="date-picker"]').attr('data-validate', 'require-notempty');
-      }
-  });
 
-
-  $('#coupon_rule').change(function(event){
-      var coupon_rule_id = $('#coupon_rule').val();
-      if (coupon_rule_id == "-1") {
-          $('#coupon_rule').next().addClass('hidden');
-          $('.xa-couponTip').addClass('hidden');
-          $('.xa-couponHelp').removeClass('hidden');
-      }else {
-          var count = $('option[value="'+coupon_rule_id+'"]').data('remained-count');
-          $('.xa-couponTip').removeClass('hidden');
-          $('.xa-couponHelp').addClass('hidden');
-          $('#coupon_rule').siblings('.errorHint').text('');
-          $('#coupon_rule').next().removeClass('hidden').children('a').attr('href', '/mall2/coupon/?rule_id='+coupon_rule_id);
-          $('#coupon_rule').next().children('span').text("库存："+count+"份");
-      }
-  });
-
-  $('.xa-tips').popover({
-    template:"<div class='popover'><div class='popover-content'></div></div>",
-    content : "分享图片和分享描述用于朋友圈查看时的展示内容",
-    trigger : "hover",
-    html : true,
-    placement : "bottom"
-  });
-  if($('#coupon_rule').val() > -1){
-    $('#coupon_rule').change();
-  }
 // 提交按钮
   $('.xa-submit').click(function(event) {
     $(this).attr('disabled',true);
@@ -246,6 +205,26 @@ $(document).ready(function(){
       $(this).attr('disabled',false);
       return false;
     }
+    var textContent = $.trim($('[name="text_content"]').val());
+	var materialId = 0;
+    var materialStr = $('.xa-newsMessageZone a').attr('href');
+    if (materialStr && materialStr.length > 0) {
+        var strs = materialStr.split("?");
+        var str = strs[1];
+        paramFields = str.split("=");
+        materialId = parseInt(paramFields[1]);
+    }
+    if (!textContent && materialId == 0) {
+        W.showHint('error', '扫码后回复内容不能为空');
+        $('.xa-submit').removeAttr('disabled');
+        return;
+    }
+    if(materialId == 0 && textContent.length > 600){
+        W.showHint('error', '扫码后回复内容不能超过600字');
+        $('.xa-submit').removeAttr('disabled');
+        return;
+    }
+
     var replyType = 0;
     var activeLink = $('#edit-message-panel li[class="active"]').text();
     if(activeLink === '图文消息' && materialId > 0) {
@@ -255,6 +234,11 @@ $(document).ready(function(){
         replyType = 1;
     }
     var args = $('.xa-form').serializeObject();
+    args['reply_type'] = replyType;
+    args['reply_detail'] = textContent;
+    args['reply_material_id'] = materialId;
+    console.log('args!!!!!!!!');
+    console.log(args);
     W.getApi().call({
       method: 'put',
       app: 'apps/rebate',
@@ -264,7 +248,7 @@ $(document).ready(function(){
       success: function() {
         W.showHint('success', '创建返利活动成功！');
         _.delay(function() {
-          window.location.href = '/apps/rebate/rebate/';
+          window.location.href = '/apps/rebate/rebates/';
         }, 500)
       },
       error: function() {

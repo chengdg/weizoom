@@ -115,11 +115,6 @@ class Rebates(resource.Resource):
 				'name': data.name,
 				'start_time': data.start_time.strftime('%Y-%m-%d %H:%M'),
 				'end_time': data.end_time.strftime('%Y-%m-%d %H:%M'),
-                'red_packet_type': u'拼手气' if data.red_packet_type == 'random' else u'普通',
-				'participant_count': red_packet_id2info[str_id]["participant_count"] if red_packet_id2info.get(str_id, None) else 0,
-				'total_money' : '%0.2f' %float(data.random_total_money) if data.red_packet_type == 'random' else '%0.2f' %(float(data.regular_packets_number)*float(data.regular_per_money)),
-				'already_paid_money' : '%0.2f' %float(red_packet_id2info[str_id]["already_paid_money"] if red_packet_id2info.get(str_id, None) else 0),
-				'related_page_id': data.related_page_id,
 				'status': data.status_text,
 				'created_at': data.created_at.strftime("%Y-%m-%d %H:%M:%S")
 			})
