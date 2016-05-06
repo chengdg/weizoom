@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
 from core.jsonresponse import create_response
 from mall.models import Order, ORDER_STATUS_PAYED_NOT_SHIP
 from market_tools.tools.channel_qrcode.models import *
@@ -25,6 +24,9 @@ class BulkShipment(resource.Resource):
         # 读取文件
         json_data, error_rows = _read_file(file_url[1:])
         webapp_id = request.user_profile.webapp_id
+        # 手动更新未发货订单计数
+        from cache.webapp_owner_cache import update_unship_order_count
+        update_unship_order_count(webapp_id)
         # 批量处理订单
         success_data, error_items = mall_api.batch_handle_order(json_data, request.manager,webapp_id)
         response.data = {
@@ -104,7 +106,10 @@ class Delivery(resource.Resource):
         if success == False:
             response = create_response(404)
             return response.get_response()
+        # 手动更新未发货订单计数
+        from cache.webapp_owner_cache import update_unship_order_count
 
+        update_unship_order_count(webapp_id)
         err_msg = None
         # 修改物流信息且信息未变不发送消息
         if is_update_express and order.express_company_name == express_company_name and order.express_number == express_number:
