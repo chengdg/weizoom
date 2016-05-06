@@ -1,300 +1,219 @@
 {% extends "content_base_v2.html" %}
-{% load apps_filter %}
-{% block css %}
+{% block css%}
 <style>
-.tl.pl10 img{
-	height: 60px;
-	width: 60px;
+.xa-list [class^="icon-"]{
+	display: inline-block;
+	width: 14px;
+	height: 14px;
+	margin-top: 1px;
+	line-height: 14px;
+	vertical-align: text-top;
 }
-input.xa-select {
-  margin-left: 10px;
-}
+	.xa-list .icon-arrow-up{
+		/*background: #000;*/
+		background: url('/static_v2/img/weixin/storingUp.png') no-repeat ;
+	}
+	.xa-list .icon-arrow-down{
+		/*background: #f00;*/
+		background: url('/static_v2/img/weixin/storing.png') no-repeat;
+
+	}
+	.xui-filterPanel{
+		padding-bottom: 10px;
+	}
+	.xui-btnBox{
+		padding-left: 370px;
+		margin-top: 30px;
+	}
+	.mr130{
+		margin-right: 130px;
+	}
+	.xui-btnBox a{
+		width: 90px;
+	}
+	.xui-status{
+		padding: 0 5px;
+	}
 </style>
-{% endblock %}
+{% endblock%}
 {% block content-panel %}
-<div class="xui-redEnvelopeParticipances-page xui-appPage-commonStyle">
+<div class="xui-memberListPage">
+
 	<div class="relative">
 		<ul class="breadcrumb">
 			<li>您当前所在位置</li>
-            <li><a href="/apps/lottery/lotteries/">百宝箱</a></li>
-            <li><a href="/apps/red_envelope/red_envelope_rule_list/">分享红包</a></li>
-			<li class="active">查看结果</li>
+			<li><a href="/new_weixin/materials/">促销管理</a></li>
+			<li class="active">积分应用</li>
 		</ul>
 	</div>
-	<div class="xa-redMemberFilterView xui-filterPanel pb10 mb15"></div>
-    <div class="panel panel-default xui-tableBox">
-		<div class="fans_data_title"><div class="fans_data_name ml10 mt10 mr5">{{ red_envelope_name }}分析</div>
-			{%if limit_time %}
-				(永久)
-			{%else%}
-				<div class="fans_data_date">(
-					{%if is_timeout and  not limit_time %}
-                        <span style="color:#cf0404;">{{ red_envelope_start_time }}至{{ red_envelope_end_time }}</span>
-                    {% else %}
-						{{ red_envelope_start_time }}至{{ red_envelope_end_time }}
-					{% endif %}
-					)</div>
-			{%endif%}
+	<div class="xui-filterPanel">
+        <div class="xui-form disT ml20">
+            <div class="xui-i-item">
+			<label>关注时间：</label>
+			<input
+				type="text"
+				class="form-control xui-datePicker"
+				id="start_date"
+				name="start_date"
+				style=""
+			    value=""
+			    readonly="readonly"
+				data-validate="require-notempty"
+				data-enable-select-time="true"
+				data-ui-role="datepicker"
+			    data-format="yy-mm-dd"
+			    data-max="now"/>
+			<span class="ml5 mr5">至</span>
+			<input
+				type="text"
+				class="form-control xui-datePicker mr130"
+				id="end_date"
+				name="end_date"
+			    value=""
+			    readonly="readonly"
+				data-validate="require-notempty"
+				data-ui-role="datepicker"
+				data-enable-select-time="true"
+			    data-format="yy-mm-dd"
+			    data-max="now"
+			    data-min-el="#start_date"/>
+			<span>会员状态：</span>
+			<select style="background-color: #f2f2f2;width: 140px;" class="xa-status xui-status">
+				<option value="-1">全部</option>
+				<option value="1">已关注</option>
+				<option value="0">取消关注</option>
+			</select>
+			<div class="xui-btnBox">
+				<a class="btn btn-primary xa-search xui-fontBold mr30" href="javascript:void(0);">查询</a>
+				<a class="xa-reset btn btn-default xui-fontBold" href="javascript:void(0);">重置</a>
+			</div>
 		</div>
-		<ul class="fans_data_ul xui-weixin-outlinePage ml10 mt10">
-			<li><em>{{ new_member_count }}</em><br>新关注人数</li>
-			<li><em>{{ received_count }}</em><br>领取人数</li>
-			<li><em>{{ consumption_sum }}</em><br>产生消费额</li>
-			<li><em>{{ total_use_count }}</em><br>使用人数<div style="margin-left: 120px;margin-top: -17px;text-decoration: underline;"><a href="/mall2/coupon_list/?id={{coupon_rule_id}}&is_max_page=1" target="_blank">使用记录</a></div></li>
-		</ul>
-		<div class="ml10 mt10" style="font-weight: bold">{% if receive_method %}通过图文方式领取{% else %}通过成交订单方式领取{% endif %}</div>
-        <div class="panel-heading">
-			<label for="topSelectAll" class="xui-selectAll ml15">
-				<input type="checkbox" id="topSelectAll" class="xa-selectAll">全选
-			</label>
-			<div class="fr mt5 ml10">筛选结果：{{received_count}}人</div>
-			<a href="javascript:void(0);" class="fr btn btn-default ml10 xa-export-all">导出结果</a>
-			<a href="javascript:void(0);" class="fr btn btn-default ml10 xa-export-selected">导出选中</a>
-			<a id="export_href" style="display: none ">DownloadXLS</a>
-		</div>
-		<div
-            class="panel-body panel-table p0 mt10"
-            data-ui-role="advanced-table"
-            data-app="apps/red_envelope"
-            data-resource="red_envelope_participances"
-            data-args='{"id": "{{red_envelope_id}}","receive_method": "{{receive_method}}"}'
-            data-template-id="#red_envelope_participances_view"
-            data-enable-paginator="true"
-            data-enable-sort="false"
-			data-selectable="true"
-            data-disable-header-select="true"
-			data-outer-selecter='.xa-selectAll'
-			data-selecttable-tr='xa-selectTr'
-            data-item-count-per-page="10"
-            id="redEnvelopeParticipancesList"
-        ></div>
-		<div class="xui-batchbtn">
-			<label for="bottomSelectAll" class="xui-selectAll ml12">
-				<input type="checkbox" id="bottomSelectAll" class="xa-selectAll">全选
-			</label>
-		</div>
+
     </div>
+    </div>
+	<div class="panel panel-default xb-rightPanel pr mt20 xa-list">
+		<div class="panel-heading">
+			<!-- <a class="xui-tipBox fr">
+			如何对数据排序<b class="xui-tip">?</b></a> -->
+			<input type="checkbox" class="is_show vs" checked value="0">&nbsp;&nbsp;仅显示通过二维码新关注会员
+			<a class="xa-reset btn btn-default xui-fontBold" href="javascript:void(0);">导出</a>
+		</div>
+
+		<div 
+			data-ui-role="advanced-table" 
+			data-app="new_weixin"
+			data-args='{"setting_id": {{ setting_id }}, "is_show":"1" }'
+			data-resource="qrcode_member"
+			data-template-id="#members-view"
+			data-enable-paginator="true" 
+			data-enable-sort="false" 
+			data-selectable="false" 
+			data-item-count-per-page="50" 
+			class="panel-body"
+		></div>
+	</div>
 </div>
 {% endblock %}
 
+
 {% block js %}
 {% verbatim %}
-<script id="red_envelope_participances_view" type="text/x-jquery-tmpl">
-	{{if items!='' }}
-	<table class="table table-bordered xb-stripedTable xb-noTdBorder xb-noBottom xb-noBorder xb-theadBg mb10">
-		<thead data-sort="${data.sortAttr}">
-			<tr>
-				<th width="80" style="text-align:left">
-					{{if items[0].receive_method == "True"}}
-						领取会员
-					{{else}}
-						下单会员
-					{{/if}}
-				</th>
-				<th class="tx_sortable xui-Blue" data-sort-attr='member__grade' data-sort-direction="up">会员状态</th>
-				<th class="tx_sortable xui-Blue" data-sort-attr='introduce_received_number' data-sort-direction="up">引入领取人数</th>
-				<th class="tx_sortable xui-Blue" data-sort-attr='introduce_used_number' data-sort-direction="up">引入使用人数</th>
-				<th class="tx_sortable xui-Blue" data-sort-attr='introduce_new_member' data-sort-direction="up">引入新关注</th>
-				<th class="tx_sortable xui-Blue" data-sort-attr='introduce_sales_number' data-sort-direction="up">引入消费额</th>
-				<th class="tx_sortable xui-Blue" data-sort-attr='created_at' data-init-sort="-created_at" data-sort-direction="up">领取时间</th>
-				<th class="tx_sortable xui-Blue" data-sort-attr='coupon__status' data-sort-direction="up">使用状态</th>
-				<th>操作</th>
-			</tr>
+<script id="members-view" type="text/x-jquery-tmpl">
+
+	<table class="table table-bordered xui-productList xb-stripedTable xb-noTdBorder xb-noBottom xb-noBorder xb-theadBg xui-qrcode-table" >
+		<thead>
+		<tr>
+			<th >会员</th>
+			<th class="tx_sortable" style="width:15%;text-align:center;" data-sort-attr='pay_times'><a>购买次数</a></th>
+			<th class="tx_sortable" style="width:15%" data-sort-attr='integral' ><a>积分</a></th>
+			<th class="tx_sortable" style="width:15%" data-sort-attr='pay_money'><a>消费总额</a></th>
+			<th style="width:20%"></th>
+			<th class="tx_sortable" style="width:20%" data-sort-attr='created_at' data-init-sort="-created_at" >关注时间</th>
+		</tr>
 		</thead>
 		<tbody>
-		  {{each(i, item) items}}
-			<tr data-id="${item.id}" class="xa-selectTr">
-				<td style="position:relative;" title='{{html item.username}}'>
-					<div style="text-align:left">
-						<a target="_blank" href="/member/detail/?id=${item.member_id}">
-							<img width="41" src="${item.participant_icon}" onerror="this.src='/static/img/user-1.jpg'"/>
-						</a>
-					</div>
-					<div style="text-align:left">
-						<div>
-						<a class="xui-Blue" target="_blank" href="/member/detail/?id=${item.member_id}" style="display:block;width:80px;" >{{html item.username_truncated}}</a>
-					</div>
-				</td>
-				<td>
-					{{if item.grade == "新会员"}}
-						<span style="color:#da0909">${item.grade}</span>
-					{{else}}
-						${item.grade}
+		
+		{{each(i, member) items}}
+		<tr class='h60' data-id="${member.id}">
+			<td style="position:relative;">
+				<div class="xui-memberHeader fl pl30">
+					{{if member.is_subscribed == 0}}
+                        <div class="xui-cancelCover tc pa">
+                        	<span>已跑路</span>
+                        </div>
 					{{/if}}
-				</td>
-				<td>
-                    ${item.introduce_received_number_count}
-				</td>
-				<td>
-                    ${item.introduce_used_number_count}
-				</td>
-				<td>
-                    ${item.introduce_new_member_count}
-				</td>
-				<td>
-                    ${item.introduce_sales_number}
-				</td>
-				<td>
-					${item.created_at}
-				</td>
-				<td>
-					{{if item.coupon_status==1}}
-						<b style="color:#5D8F17">${item.coupon_status_name}</b>
-					{{else}}
-						<b>未使用</b>
-					{{/if}}
-				</td>
-				<td>
-					<a
-						class="xa-detail"
-						href="javascript:void(0);"
-						data-member-name="${item.username}"
-						data-introduced-by="${item.member_id}"
-						data-reation-id="${item.id}"
-						data-introduce-received-number="${item.introduce_received_number_count}"
-						data-introduce-used-number="${item.introduce_used_number_count}"
-						data-introduce-new-member="${item.introduce_new_member_count}"
-						data-introduce-sales-number="${item.introduce_sales_number}"
-					>查看引入详情</a><br>
-					{{if item.coupon_status==1}}
-						<a href="/mall2/order/?order_id=${item.order_id}" target="_blank">查看使用订单</a>
-					{{/if}}
-				</td>
-			</tr>
-			{{/each}}
+					<a href="/member/detail/?id=${ member.id }" target='_blank'>
+						<img src="{{if member.user_icon}}${ member.user_icon }{{else}}/static/img/user-1.jpg{{/if}}" onerror="this.src='/static/img/user-1.jpg'"/>
+					</a>
+				</div>
+				<div class="fl xui-i-fansName">
+					<a class='lh26 xui-i-link' href="/member/detail/?id=${ member.id }" target='_blank'>
+						{{html member.username}}
+						{{if member.name !== ''}}
+							(${member.name})
+						{{/if}}
+					</a>
+				</div>
+			</td>
+			<td style="text-align:center">
+				<div class="centerAlign">${ member.pay_times }</div>
+			</td>
+			<td>
+				<div class="centerAlign">${ member.integral }</div>
+			</td>
+			<td>
+				<div class="centerAlign">${ member.pay_money }</div>
+			</td>
+			<td>
+				<div class="centerAlign"></div>
+			</td>
+			<td>
+				<div class="centerAlign">${ member.follow_time }</div>
+			</td>
+		</tr>
+		{{/each}}
 		</tbody>
-		<div class="cb"></div>
 	</table>
-	{{else}}
-		<div class="xui-emptyBox m10">
-			<img src="/static_v2/img/editor/empty.png">
-			<span class="ml20">您还没有相关数据！</span>
-		</div>
-	{{/if}}
-	<br>
+
 </script>
 {% endverbatim %}
 
-<script type="text/javascript">
+<script type="text/javascript">	
 $(document).ready(function() {
-    var export_sortAttr = '-created_at';
-	var export_id =window.location.search.split('?id=')[1];
-	var view = new W.view.mall.redMemberFilterView({
-        el: '.xa-redMemberFilterView',
-		dataView: $('[data-ui-role="advanced-table"]').data('view'),
-		status:''
-    });
-	$('.panel-body').delegate('.xa-detail', 'click', function(event){
-		var member_name = $(event.currentTarget).data('member-name');
-		var introduced_by = $(event.currentTarget).data('introduced-by');
-		var reation_id = $(event.currentTarget).data('reation-id');
-		var introduce_received_number = $(event.currentTarget).data('introduce-received-number');
-		var introduce_used_number = $(event.currentTarget).data('introduce-used-number');
-		var introduce_new_member = $(event.currentTarget).data('introduce-new-member');
-		var introduce_sales_number = $(event.currentTarget).data('introduce-sales-number');
-		var receive_method = "{{receive_method}}";
-		var dialog = W.dialog.RedShowDialog('W.dialog.mall.RedEnvelopeDetailDialog.'+reation_id+"'",{
-			receive_method: receive_method,
-			member_name: member_name,
-			relation_id: reation_id,
-			rule_id: export_id,
-			introduced_by: introduced_by,
-			introduce_received_number: introduce_received_number,
-			introduce_used_number: introduce_used_number,
-			introduce_new_member: introduce_new_member,
-			introduce_sales_number: introduce_sales_number,
-			success: function(data){
-			},
-			error: function(data){
-				W.showHint('error', '获取失败!');
-			}
-		});
-	});
+	$('#start_date').attr('value','');
+	$('#end_date').attr('value','');
 
-
-
-	var name,grade_id,coupon_status;
-	var selected_ids = [];
-    //导出选中
-	$('.xa-export-selected').click(function(event) {
-		selected_ids = [];//清空selected_ids
-        W.getLoadingView();
-		name = $.trim($('[name="name"]').val());
-		grade_id = $.trim($('[name="grade"]').val());
-		coupon_status = $.trim($('[name="coupon_status"]').val());
-		if (grade_id == -1){
-			grade_id = '';
+	function dateViewReload(){
+		var start_date = $('#start_date').val();
+		var end_date = $('#end_date').val();
+		var is_checked = $('.is_show').is(':checked');
+		var status = $('.xa-status').val();
+		var dataView = $('[data-ui-role="advanced-table"]').data('view');
+		var is_show = 0;
+		if (is_checked == true){
+			is_show = 1;
 		}
-		if (coupon_status == -1){
-			coupon_status = '';
-		}
-        $('tbody .xa-select').each(function() {
-            var $checkbox = $(this);
-            if ($checkbox.is(":checked")) {
-                var $tr = $checkbox.parents('tr');
-                selected_ids.push($tr.data('id'));
-            }
-        });
-		if(selected_ids==''){
-			W.getErrorHintView().show("请选择导出内容");
-		}else{
-			exportItem();
-		}
-    });
-	//批量导出
-	$('.xa-export-all').click(function(event) {
-		selected_ids = [];//清空selected_ids
-        W.getLoadingView();
-		name = $.trim($('[name="name"]').val());
-		grade_id = $.trim($('[name="grade"]').val());
-		coupon_status = $.trim($('[name="coupon_status"]').val());
-		if (grade_id == -1){
-			grade_id = '';
-		}
-		if (coupon_status == -1){
-			coupon_status = '';
-		}
-        exportItem();
-    });
-	//全选js
-	$('.xa-selectAll').click(function(event) {
-        var $checkbox = $(event.currentTarget);
-        var isChecked = $checkbox.is(':checked');
-        $('tbody .xa-select').prop('checked', isChecked);
-        $('.xa-selectAll').prop('checked', isChecked);
-    });
-
-	function exportItem(){
-        export_sortAttr = $('#redEnvelopeParticipancesList').find('thead').attr('data-sort');
-		W.getApi().call({
-			method: 'get',
-			app: 'apps/red_envelope',
-			resource: 'red_participances_export',
-			args: {
-				'is_export': 1,
-				'id':export_id,
-				'member_name': name,
-				'grade_id': grade_id,
-				'coupon_status': coupon_status,
-				'selected_ids': selected_ids,
-                'sort_attr': export_sortAttr
-			},
-			success: function(resp){
-				if(resp.code == 200){
-					$('#export_href').prop({
-						'href': resp.download_path,
-						'download': resp.filename
-					}).get(0).click();
-
-				}
-				console.log("导出成功");
-			},
-			error: function(error){
-				console.log('导出失败');
-			}
-		});
+		var args= '{"start_date":"'+start_date+'","end_date":"'+end_date+'", "is_show":"'+is_show+'","status":"'+status+'"}';
+		dataView.options.args =  args;//this.getFilterValueByDict(args);
+	    dataView.setPage(1);
+		dataView.reload();
 	}
+
+	$('.xa-search').click(function(){
+		dateViewReload();
+	})
+	$('.xa-reset').click(function(){
+		$('#start_date').attr('value','');
+		$('#end_date').attr('value','');
+		$('option').eq(0).prop('selected',true);
+	})
+
+	$('.is_show').click(function(){
+		dateViewReload();
+	})
+	
+    //var args = this.getFilterValue();
+    
 });
 </script>
 {% endblock %}
-
