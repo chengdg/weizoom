@@ -104,7 +104,7 @@ class MassSentMessages(resource.Resource):
             message_item['sent_count'] = message.sent_count
             message_item['total_count'] = message.total_count
             message_item['filter_count'] = message.filter_count
-            message_item['error_count'] = message.error_count
+            message_item['error_count'] = message.total_count - message.sent_count
             message_item['status'] = message.status if (datetime.now() - message.created_at).days < 1 else 'send failed'
             message_item['message_type'] = message.message_type
             message_item['message_content'] = emotion.change_emotion_to_img(message.message_content)
