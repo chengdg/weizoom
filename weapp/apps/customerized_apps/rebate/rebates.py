@@ -42,10 +42,9 @@ class Rebates(resource.Resource):
 		status = int(request.GET.get('status', -1))
 		start_time = request.GET.get('start_time', '')
 		end_time = request.GET.get('end_time', '')
-		rebate_type = request.GET.get('rebate_type','all')
 		
 		now_time = datetime.today().strftime('%Y-%m-%d %H:%M')
-		params = {'owner_id':request.manager.id}
+		params = {'owner_id':request.manager.id,'is_deleted': False}
 		datas_datas = app_models.Rebate.objects(**params)
 		for data_data in datas_datas:
 			data_start_time = data_data.start_time.strftime('%Y-%m-%d %H:%M')

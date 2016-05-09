@@ -157,7 +157,7 @@ class RedPacket(resource.Resource):
 		"""
 		响应DELETE
 		"""
-		app_models.Rebate.objects(id=request.POST['id']).delete()
+		app_models.Rebate.objects(id=request.POST['id']).update(is_deleted=True)
 		
 		response = create_response(200)
 		return response.get_response()
