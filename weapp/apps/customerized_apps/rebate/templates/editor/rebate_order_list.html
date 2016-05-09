@@ -1,5 +1,23 @@
 {% extends "content_base_v2.html" %}
-
+{% block css%}
+<style>
+.is_first{
+	vertical-align: sub;
+	margin-left: 30px!important;
+}
+.xui-export{
+	width: 100px;
+}
+.xui-money{
+	width: 130px;
+    border: 1px solid #b1dbf1;
+    background-color: #f2f2f2;
+}
+.ml13{
+	margin-left: 13px;
+}
+</style>
+{% endblock %}
 {% block content-panel %}
 <div class="relative">
 	<ul class="breadcrumb">
@@ -40,9 +58,16 @@
 			    data-format="yy-mm-dd"
 			    data-max="now"
 			    data-min-el="#start_date"/>
-
-			<a class="btn btn-primary xa-search xui-fontBold" href="javascript:void(0);">查询</a>
+			<input type="radio" name="is_first" value="1" class="is_first">首单
+			<input type="radio" name="is_first" value="0" class="is_first">非首单
+			<a class="btn btn-primary xa-search xui-fontBold ml60" href="javascript:void(0);">查询</a>
 			<a class="xa-reset btn btn-primary xui-fontBold" href="javascript:void(0);">重置</a>
+			<a class="xa-export btn btn-default xui-export ml40" href="javascript:void(0);">导出</a>
+		</div>
+		<div class="xui-i-item">
+			<label>实付金额</label>
+			<input type="text" class="ml13 mr10 xui-money" id="start_money">
+			<input type="text" class="xui-money" id="end_money">
 		</div>
 	</div>
 </div>
@@ -54,9 +79,9 @@
 		</div>
 		<div
 			data-ui-role="qrcode-order-advanced-table"
-			data-app="new_weixin"
-			data-resource="qrcode_order"
-			data-args='{"setting_id": "{{setting_id}}", "is_show":"1"}'
+			data-app="apps/rebate"
+			data-resource="rebate_order_list"
+			data-args='{"record_id": "{{record_id}}", "is_show":"1"}'
 			data-template-id="#promotions-view"
 			data-enable-paginator="true"
 			data-enable-sort="false"
@@ -79,19 +104,12 @@
 	<table class="table table-condensed mb0 xui-tableHead">
 		<thead>
 			<tr>
-				<th width="310">
-					商品
-				</th>
+				<th width="310">商品</th>
 				<th width="80">单价/数量</th>
 				<th width="140">优惠金额</th>
 				<th width="100">买家</th>
 				<th width="110">实付金额</th>
 				<th width="90">订单状态</th>
-				<!--<th>商品数</th>
-				<th>收货人</th>
-				<th class="tx_sortable" data-sort-attr='created_at'>下单时间</th>
-				<th class="tx_sortable" data-sort-attr='payment_time'>付款时间</th>
-				-->
 			</tr>
 		</thead>
 	</table>
@@ -247,13 +265,15 @@ $(document).ready(function() {
 	function dateViewReload(){
 		var start_date = $('#start_date').val();
 		var end_date = $('#end_date').val();
+		var start_money = $('#start_money').val();
+		var end_money = $('#end_money').val();		
 		var is_checked = $('.is_show').is(':checked');
 		var dataView = $('[data-ui-role="qrcode-order-advanced-table"]').data('view');
 		var is_show = 0;
 		if (is_checked == true){
 			is_show = 1;
 		}
-		var args= '{"start_date":"'+start_date+'","end_date":"'+end_date+'", "is_show":"'+is_show+'"}';
+		var args= '{"start_date":"'+start_date+'","end_date":"'+end_date+'","start_money":"'+start_money+'","end_money":"'+end_money+'","is_show":"'+is_show+'"}';
 		dataView.options.args =  args;//this.getFilterValueByDict(args);
 	    dataView.setPage(1);
 		dataView.reload();
@@ -265,6 +285,8 @@ $(document).ready(function() {
 	$('.xa-reset').click(function(){
 		$('#start_date').attr('value','');
 		$('#end_date').attr('value','');
+		$('#start_money').attr('value','');
+		$('#end_money').attr('value','');
 	});
 
 	$('.is_show').click(function(){
