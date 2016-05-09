@@ -56,19 +56,9 @@ class Rebate(models.Document):
 class RebateParticipance(models.Document):
 	member_id= models.LongField(default=0) #参与者id
 	belong_to = models.StringField(default="", max_length=100) #对应的活动id
-	created_at = models.DateTimeField() #创建时间
-	has_join = models.BooleanField(default=False) #是否已经参与拼红包
-	red_packet_money = models.FloatField(default=0) #拼红包目标金额
-	current_money = models.FloatField(default=0) #已获取金额
-	red_packet_status = models.BooleanField(default=False) #红包状态
-	is_already_paid = models.BooleanField(default=False) #红包发放状态
-	is_valid = models.BooleanField(default=True) #该条记录是否有效(针对取关后再次关注的情况)
-	helped_member_ids = models.ListField(models.LongField()) #帮他拼红包的会员id list
-	finished_time = models.DateTimeField() #完成时间
+	created_at = models.DateTimeField() #扫码时间
 
-	#存储api状态和结果
-	msg_api_status = models.BooleanField(default=False) #模板消息是否已成功发送
-	msg_api_failed_members_info = models.DynamicField() #模板消息发送失败的会员信息
+
 
 	meta = {
 		'collection': 'rebate_rebate_participance'
