@@ -12,7 +12,7 @@ Feature:参加返利活动
 
 Background:
 	Given jobs登录系统
-	When  jobs新建通用卡
+	When jobs已创建微众卡
 	"""
 		[{
 			"name":"",
@@ -22,7 +22,7 @@ Background:
 			"num":"50",
 			"comments":""
 		}]
-		"""	
+	"""
 	When jobs已添加商品
 	 """
 		[{
@@ -39,15 +39,15 @@ Background:
 	 """
 	And jobs开通使用微众卡权限
 	And jobs添加支付方式
-		"""
+	"""
 		[{
 			"type": "微众卡支付",
 			"description": "我的微众卡支付",
 			"is_active": "启用"
 		}]
-		"""
+	"""
 	And jobs已添加支付方式
-		"""
+	"""
 		[{
 			"type": "货到付款",
 			"is_active": "启用"
@@ -58,20 +58,18 @@ Background:
 			"type": "支付宝支付",
 			"is_active": "启用"
 		}]
-		"""	
+	"""
 	When jobs新建返利活动
-		"""
+	"""
 		[{
 			"code_name":"返利活动1",
 			"is_attention_in":"true",
-			"order_rebate_condition":{
-				"is_limit_first_buy	":"首单",
-				"is_limit_cash":"是",
-				"order_rebate":{
-					"rebate_order_price":"10.00",
-					"rebate_money":"5.00"
-					}
-			}
+			"is_limit_first_buy	":"true",
+			"is_limit_cash":"true",
+			"order_rebate":{
+				"rebate_order_price":"10.00",
+				"rebate_money":"5.00"
+				}
 			"weizoom_card_id_from":"000000001",
 			"weizoom_card_id_to":"000000005",
 			"card_counts":5,
@@ -82,14 +80,12 @@ Background:
 		},{
 			"code_name":"返利活动2",
 			"is_attention_in":"true",
-			"order_rebate_condition":{
-				"is_limit_first_buy	":"首单",
-				"is_limit_cash":"否",
-				"order_rebate":{
-					"rebate_order_price":"10.00",
-					"rebate_money":"5.00"
-					}
-			}
+			"is_limit_first_buy	":"true",
+			"is_limit_cash":"否",
+			"order_rebate":{
+				"rebate_order_price":"10.00",
+				"rebate_money":"5.00"
+				}
 			"weizoom_card_id_from":"000000006",
 			"weizoom_card_id_to":"000000010",
 			"card_counts":5,
@@ -101,14 +97,12 @@ Background:
 		},{
 			"code_name":"返利活动3",
 			"is_attention_in":"true",
-			"order_rebate_condition":{
-				"is_limit_first_buy	":"不限",
-				"is_limit_cash":"是",
-				"order_rebate":{
-					"rebate_order_price":"10.00",
-					"rebate_money":"5.00"
-					}
-			}
+			"is_limit_first_buy	":"false",
+			"is_limit_cash":"true",
+			"order_rebate":{
+				"rebate_order_price":"10.00",
+				"rebate_money":"5.00"
+				}
 			"weizoom_card_id_from":"000000011",
 			"weizoom_card_id_to":"000000015",
 			"card_counts":5,
@@ -119,14 +113,12 @@ Background:
 		},{
 			"code_name":"返利活动4",
 			"is_attention_in":"true",
-			"order_rebate_condition":{
-				"is_limit_first_buy	":"不限",
-				"is_limit_cash":"否",
-				"order_rebate":{
-					"rebate_order_price":"10.00",
-					"rebate_money":"5.00"
-					}
-			}
+			"is_limit_first_buy	":"false",
+			"is_limit_cash":"false",
+			"order_rebate":{
+				"rebate_order_price":"10.00",
+				"rebate_money":"5.00"
+				}
 			"weizoom_card_id_from":"000000016",
 			"weizoom_card_id_to":"000000020",
 			"card_counts":5,
@@ -137,14 +129,12 @@ Background:
 		},{
 			"code_name":"返利活动5",
 			"is_attention_in":"false",
-			"order_rebate_condition":{
-				"is_limit_first_buy	":"不限",
-				"is_limit_cash":"否",
-				"order_rebate":{
-					"rebate_order_price":"10.00",
-					"rebate_money":"5.00"
-					}
-			}
+			"is_limit_first_buy	":"false",
+			"is_limit_cash":"false",
+			"order_rebate":{
+				"rebate_order_price":"10.00",
+				"rebate_money":"5.00"
+				}
 			"weizoom_card_id_from":"000000021",
 			"weizoom_card_id_to":"000000025",
 			"card_counts":5,
@@ -155,14 +145,12 @@ Background:
 		},{
 			"code_name":"返利活动6",
 			"is_attention_in":"false",
-			"order_rebate_condition":{
-				"is_limit_first_buy	":"不限",
-				"is_limit_cash":"是",
-				"order_rebate":{
-					"rebate_order_price":"10.00",
-					"rebate_money":"5.00"
-					}
-			}
+			"is_limit_first_buy	":"false",
+			"is_limit_cash":"true",
+			"order_rebate":{
+				"rebate_order_price":"10.00",
+				"rebate_money":"5.00"
+				}
 			"weizoom_card_id_from":"000000026",
 			"weizoom_card_id_to":"000000030",
 			"card_counts":5,
@@ -173,14 +161,12 @@ Background:
 		},{
 			"code_name":"返利活动7",
 			"is_attention_in":"false",
-			"order_rebate_condition":{
-				"is_limit_first_buy	":"首单",
-				"is_limit_cash":"是",
-				"order_rebate":{
-					"rebate_order_price":"10.00",
-					"rebate_money":"5.00"
-					}
-			}
+			"is_limit_first_buy	":"true",
+			"is_limit_cash":"true",
+			"order_rebate":{
+				"rebate_order_price":"10.00",
+				"rebate_money":"5.00"
+				}
 			"weizoom_card_id_from":"000000031",
 			"weizoom_card_id_to":"000000035",
 			"card_counts":5,
@@ -191,14 +177,12 @@ Background:
 		},{
 			"code_name":"返利活动8",
 			"is_attention_in":"false",
-			"order_rebate_condition":{
-				"is_limit_first_buy	":"首单",
-				"is_limit_cash":"否",
-				"order_rebate":{
-					"rebate_order_price":"10.00",
-					"rebate_money":"5.00"
-					}
-			}
+			"is_limit_first_buy	":"true",
+			"is_limit_cash":"false",
+			"order_rebate":{
+				"rebate_order_price":"10.00",
+				"rebate_money":"5.00"
+				}
 			"weizoom_card_id_from":"000000036",
 			"weizoom_card_id_to":"000000040",
 			"card_counts":5,
@@ -207,9 +191,9 @@ Background:
 			"reply_type": "文字",
 			"scan_code_reply": "返利活动8"
 		}]
-		"""
+	"""
 	When jobs已添加单图文
-		"""
+	"""
 		[{
 			"title":"返利活动1单图文",
 			"cover": [{
@@ -283,9 +267,9 @@ Background:
 			"content":"单条图文8文本内容",
 			"jump_url":"返利活动-返利活动8"
 		}]
-		"""
-		When jobs已添加关键词自动回复规则
-		"""
+	"""
+	When jobs已添加关键词自动回复规则
+	"""
 		[{
 			"rules_name":"返利活动1",
 			"keyword": [{
@@ -367,40 +351,85 @@ Background:
 					"reply_type":"text_picture"
 				}]
 		}]
-		"""
+	"""
 
-		When tom关注jobs的公众号于'2016-05-05 10:00:00'
-		When bill关注jobs的公众号于'2016-05-06 10:00:00'
-		When bill取消关注jobs的公众号
-		When mayun关注jobs的公众号于'2016-05-10 10:00:00'
+	When tom关注jobs的公众号于'2016-05-05 10:00:00'
+	When bill关注jobs的公众号于'2016-05-06 10:00:00'
+	When bill取消关注jobs的公众号
+	When mayun关注jobs的公众号于'2016-05-10 10:00:00'
 
-		
 
-		#扫码关注成为会员
-		When 清空浏览器
-		And zhouxun扫描带参数返利活动"返利活动1"于2016-05-06 10:00:00
-		And zhouxun访问jobs的webapp
+
+	#扫码关注成为会员
+	When 清空浏览器
+	And zhouxun扫描带参数返利活动"返利活动1"于2016-05-06 10:00:00
+	And zhouxun访问jobs的webapp
 
 
 	#已关注或者取消关注的会员，扫码
-		When bill扫描带参数返利活动"返利活动1"于2016-05-06 10:00:00
-		When tom扫描带参数返利活动"返利活动1"于2016-05-06 10:00:00
-		When bigs扫描带参数返利活动"返利活动1"于2016-05-06 10:00:00
+	When bill扫描带参数返利活动"返利活动1"于2016-05-06 10:00:00
+	When tom扫描带参数返利活动"返利活动1"于2016-05-06 10:00:00
+	When bigs扫描带参数返利活动"返利活动1"于2016-05-06 10:00:00
 
 
-		#会员购买
-		When 微信用户批量消费jobs的商品
-			| order_id |    date    | consumer | product | payment | pay_type  |postage*   |price*   | paid_amount*    |  action      | order_status* |
-			|   0001   | 2015-06-01 |   bill   | 商品1,1 |         |  支付宝   |   10.00   | 100.00  |     110.00      |              |    待支付     |
-			|   0002   | 2015-06-02 |   bill   | 商品1,1 |         |  支付宝   |   10.00   | 100.00  |     110.00      | jobs,取消    |    已取消     |
-			|   0003   | 2015-06-03 |   bill   | 商品2,2 |   支付  |  微信支付 |   15.00   | 100.00  |     215.00      | jobs,发货    |    已发货     |
-			|   0004   | 2015-06-04 |   bill   | 商品2,1 |   支付  |  货到付款 |   15.00   | 100.00  |     115.00      | jobs,完成    |    已完成     |
-			|   0005   | 2015-06-05 |   bill   | 商品1,1 |   支付  |  支付宝   |   10.00   | 100.00  |     110.00      | jobs,退款    |    退款中     |
-			|   0006   | 今天       |  marry   | 商品1,1 |   支付  |  支付宝   |   10.00   | 100.00  |     110.00      | jobs,完成退款|   退款成功    |
-			|   0007   | 今天       |   jack   | 商品1,1 |   支付  |  货到付款 |   10.00   | 100.00  |     110.00      |              |    待发货     |
-			|   0008   | 今天       |   tom    | 商品1,1 |   支付  |  支付宝   |   10.00   | 100.00  |     110.00      |              |    待发货     |
-			|   0009   | 今天       |   tom    | 商品2,1 |   支付  |  货到付款 |   15.00   | 100.00  |     115.00      | jobs,取消    |    已取消     |
-			|   0010   | 今天       |   tom    | 商品2,1 |   支付  |  货到付款 |   15.00   | 100.00  |     115.00      | jobs,发货    |    已发货     |
+	#会员购买
+	When 微信用户批量消费jobs的商品
+		| order_id |    date    | consumer | product | payment | pay_type  |postage*   |price*   | paid_amount*    |  action      | order_status* |
+		|   0001   | 2015-06-01 |   bill   | 商品1,1 |         |  支付宝   |   10.00   | 100.00  |     110.00      |              |    待支付     |
+		|   0002   | 2015-06-02 |   bill   | 商品1,1 |         |  支付宝   |   10.00   | 100.00  |     110.00      | jobs,取消    |    已取消     |
+		|   0003   | 2015-06-03 |   bill   | 商品2,2 |   支付  |  微信支付 |   15.00   | 100.00  |     215.00      | jobs,发货    |    已发货     |
+		|   0004   | 2015-06-04 |   bill   | 商品2,1 |   支付  |  货到付款 |   15.00   | 100.00  |     115.00      | jobs,完成    |    已完成     |
+		|   0005   | 2015-06-05 |   bill   | 商品1,1 |   支付  |  支付宝   |   10.00   | 100.00  |     110.00      | jobs,退款    |    退款中     |
+		|   0006   | 今天       |  marry   | 商品1,1 |   支付  |  支付宝   |   10.00   | 100.00  |     110.00      | jobs,完成退款|   退款成功    |
+		|   0007   | 今天       |   jack   | 商品1,1 |   支付  |  货到付款 |   10.00   | 100.00  |     110.00      |              |    待发货     |
+		|   0008   | 今天       |   tom    | 商品1,1 |   支付  |  支付宝   |   10.00   | 100.00  |     110.00      |              |    待发货     |
+		|   0009   | 今天       |   tom    | 商品2,1 |   支付  |  货到付款 |   15.00   | 100.00  |     115.00      | jobs,取消    |    已取消     |
+		|   0010   | 今天       |   tom    | 商品2,1 |   支付  |  货到付款 |   15.00   | 100.00  |     115.00      | jobs,发货    |    已发货     |
 
 @mall @rebate
-Scenario:1 管理员能够查看到所有扫过该码并关注过的微信用户信息
+Scenario:1 管理员能够查看到所有扫过该码并关注过的微信用户信息，带参数返利活动[关注人数]-已关注的会员数量不增加
+	Given jobs登录系统
+	#未关注微信账号扫码关注，关注数量增加
+	When 清空浏览器
+	When bill扫描带参数二维码"带参数二维码-默认设置"
+	When bill访问jobs的webapp
+
+	Given jobs登录系统
+	Then jobs获得带参数二维码列表
+	"""
+		[{
+			"code_name": "带参数二维码-默认设置",
+			"attention_number": 1
+		}]
+	"""
+	#已关注会员扫码，关注数量不增加
+	When 清空浏览器
+	When tom关注jobs的公众号
+	When tom访问jobs的webapp
+	When tom扫描带参数二维码"带参数二维码-默认设置"
+
+	Given jobs登录系统
+	Then jobs获得带参数二维码列表
+	"""
+		[{
+			"code_name": "带参数二维码-默认设置",
+			"attention_number": 1
+		}]
+	"""
+	#取消关注的会员扫码，关注数量不增加
+	When 清空浏览器
+	When jack关注jobs的公众号
+	When jack访问jobs的webapp
+	When jack取消关注jobs的公众号
+
+	When jack扫描带参数二维码"带参数二维码-默认设置"
+
+	Given jobs登录系统
+	Then jobs获得带参数二维码列表
+	"""
+		[{
+			"code_name": "带参数二维码-默认设置",
+			"attention_number": 1
+		}]
+	"""
+
