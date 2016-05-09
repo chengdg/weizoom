@@ -918,7 +918,7 @@ Scenario:6 带参数二维码-扫码后回复
 			Then marry收到自动回复'图文1'
 
 
-@mall2 @senior @bandParameterCode
+@mall2 @senior @bandParameterCode @sun
 Scenario:7 带参数二维码的修改优惠券，继续扫码
 		#修改优惠券1奖励为优惠券2奖励，同一个用户只能领取一次优惠券奖励；
 		#修改优惠券2奖励为优惠券1奖励时，提示该优惠券已被选用过，但是依然可以使用，但是不能被同一用户领取
@@ -930,16 +930,17 @@ Scenario:7 带参数二维码的修改优惠券，继续扫码
 			"name": "优惠券2",
 			"money": 100.00,
 			"count": 5,
-			"limit_counts": 不限,
+			"limit_counts": 1,
 			"using_limit": "满5元可以使用",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"coupon_id_prefix": "coupon1_id_"
+			"coupon_id_prefix": "coupon2_id_"
 		}]
 	"""
+	When nokia关注jobs的公众号
 	When jobs添加带参数二维码
 	"""
-		{
+		[{
 			"code_name": "带参数二维码-优惠券奖励",
 			"create_time": "今天",
 			"prize_type": "优惠券",
@@ -955,8 +956,8 @@ Scenario:7 带参数二维码的修改优惠券，继续扫码
 			"code_description": "星级代言人二维码描述",
 			"reply_type": "图文",
 			"scan_code_reply": "图文1"
-		}
-		"""
+		}]
+	"""
 
 	#未关注的用户直接扫描二维码获得优惠券奖励
 	When 清空浏览器
