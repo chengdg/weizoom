@@ -170,7 +170,10 @@
   <fieldset>
     <div class="form-group mt5 mr5 xa-operateBtns" id="operateBtns">
       <div class="controls ml20 tc">
-        <a class="btn btn-primary xa-submit mr80">{% if not rebate_rule %}保&nbsp;存{% else %}编&nbsp;辑{% endif %}</a>
+        {% ifequal rebate_rule.status 2%}
+        {% else %}
+          <a class="btn btn-primary xa-submit mr80">{% if not rebate_rule %}保&nbsp;存{% else %}编&nbsp;辑{% endif %}</a>
+        {% endifequal %}
       </div>
     </div>
   </fieldset>

@@ -148,11 +148,13 @@
 					${item.status}
 				</td>
 				<td class="xui-operations">
-				    <a href="/apps/rebate/rebate/?id=${item.id}" class="ml5">编辑</a>
-				    <a target="_blank" href="https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=${item.ticket}">查看二维码</a>
 					{{if (item.status === '已结束')}}
-					<a href="javascript:void(0)" class="xa-delete" data-id=${item.id}>删除</a>
+						<a href="javascript:void(0)" class="xa-delete" data-id=${item.id}>删除</a>
 					{{/if}}
+					{{if (item.status != '已结束')}}
+						<a href="/apps/rebate/rebate/?id=${item.id}" class="ml5">编辑</a>
+					{{/if}}
+					<a target="_blank" href="https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=${item.ticket}">查看二维码</a>
 				</td>
 			</tr>
 			{{/each}}
