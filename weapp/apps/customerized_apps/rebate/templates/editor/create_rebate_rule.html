@@ -41,7 +41,7 @@
   <span class="xui-fontBold ml30 mt15" style="font-size:14px;display:inline-block;">返利设置</span>
   <hr class="ml30" style="border-color:#ccc;margin-top:8px;width:638px;">
   <fieldset class="mt30">
-    <!--<input id="qrcode_id" name="qrcode_id" class="hide" value="{% if rebate_rule %}{{ rebate_rule.id }}{% else %}0{% endif %}">-->
+    <input id="rebate_id" name="rebate_id" class="hide" value="{% if rebate_rule %}{{ rebate_rule.id }}{% else %}0{% endif %}">
     <div class="form-group">
         <label class="control-label col-sm-2 pt0 ">二维码名称</label>
         <div class="controls">
@@ -170,9 +170,7 @@
   <fieldset>
     <div class="form-group mt5 mr5 xa-operateBtns" id="operateBtns">
       <div class="controls ml20 tc">
-        {% if not rebate_rule %}
-        <a class="btn btn-primary xa-submit mr80">保&nbsp;存</a>
-        {% endif %}
+        <a class="btn btn-primary xa-submit mr80">{% if not rebate_rule %}保&nbsp;存{% else %}编&nbsp;辑{% endif %}</a>
       </div>
     </div>
   </fieldset>
@@ -184,8 +182,8 @@
 <script type="text/javascript">
 
 $(document).ready(function(){
+    var is_err = true;
     var answerContent = W.loadJSON('qrcode_answer');
-    console.log(answerContent);
     var options = {
         el: '#edit-message-panel',
         richTextEditorWidth: 800,
@@ -258,6 +256,11 @@ $(document).ready(function(){
           $(this).attr('disabled',false);
           return false;
         }
+        if(is_err){
+            W.showHint('error','该号段不存在，请重新输入');
+            $(this).attr('disabled',false);
+            return false;
+        }
         var textContent = $.trim($('[name="text_content"]').val());
         var materialId = 0;
         var materialStr = $('.xa-newsMessageZone a').attr('href');
@@ -286,26 +289,34 @@ $(document).ready(function(){
         } else {
             replyType = 1;
         }
+
         var args = $('.xa-form').serializeObject();
         args['reply_type'] = replyType;
         args['reply_detail'] = textContent;
         args['reply_material_id'] = materialId;
+        var rebate_id = $.trim($('#rebate_id').val());
+        if(rebate_id == "0"){
+            methodstr = "put";//新建
+        } else {
+            methodstr = "post";//编辑
+            args['id'] = rebate_id;
+        }
         console.log('args!!!!!!!!');
         console.log(args);
         W.getApi().call({
-            method: 'put',
+            method: methodstr,
             app: 'apps/rebate',
             resource: 'rebate',
             args: W.toFormData(args),
             scope: this,
             success: function() {
-                W.showHint('success', '创建返利活动成功！');
+                W.showHint('success', '保存成功！');
                 _.delay(function() {
                   window.location.href = '/apps/rebate/rebates/';
                 }, 500)
             },
             error: function() {
-                W.showHint('error','创建返利活动失败！');
+                W.showHint('error','保存失败！');
                 $(this).attr('disabled',false);
             }
         });

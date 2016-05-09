@@ -133,20 +133,21 @@ class RedPacket(resource.Resource):
 		响应POST
 		"""
 		data = request_util.get_fields_to_be_save(request)
-		data['qrcode'] = json.loads(request.POST['qrcode'])
-		pagestore = pagestore_manager.get_pagestore('mongo')
-		project_id = request.GET.get('project_id', 0)
-		_, app_name, real_project_id = project_id.split(':')
-		page = pagestore.get_page(real_project_id, 1)
+		data['permission'] = True if data['permission']=='1' else False
+		data['is_limit_first_buy'] = True if data['is_limit_first_buy']=='1' else False
+		data['is_limit_cash'] = True if data['is_limit_cash']=='1' else False
+
 		update_data = {}
-		update_fields = set(['name', 'start_time', 'end_time', 'timing', 'rebate_type', 'random_total_money','random_packets_number','regular_packets_number','regular_per_money','money_range','reply_content', 'material_image','share_description', 'qrcode'])
+		update_fields = set(['name', 'start_time', 'end_time', 'permission', 'is_limit_first_buy', 'is_limit_cash', 'rebate_order_price', 'rebate_money', 'weizoom_card_id_from', 'weizoom_card_id_to', 'reply_type', 'reply_detail', 'reply_material_id'])
+		for key, value in data.items():
+			if key in update_fields:
+				update_data['set__'+key] = value
 
 		app_models.Rebate.objects(id=request.POST['id']).update(**update_data)
 
-		pagestore.save_page(real_project_id, 1, page['component'])
 		#更新后清除缓存
-		cache_key = 'apps_rebate_%s_html' % request.POST['id']
-		delete_cache(cache_key)
+		# cache_key = 'apps_rebate_%s_html' % request.POST['id']
+		# delete_cache(cache_key)
 		response = create_response(200)
 		return response.get_response()
 	
