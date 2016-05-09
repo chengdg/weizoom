@@ -21,13 +21,32 @@ from apps import request_util
 from modules.member import integral as integral_api
 from mall.promotion import utils as mall_api
 from modules.member.models import Member
+from mall import export as mall_export
 
 FIRST_NAV = 'apps'
 COUNT_PER_PAGE = 20
 
-class RedPacketParticipance(resource.Resource):
-	app = 'apps/red_packet'
-	resource = 'red_packet_participance'
+class RebateOrderList(resource.Resource):
+	app = 'apps/rebate'
+	resource = 'rebate_order_list'
+
+	@login_required
+	def get(request):
+		"""
+        响应GET
+        """
+		# has_data = app_models.RebateParticipance.objects(belong_to=request.GET['id']).count()
+
+		c = RequestContext(request, {
+			'first_nav_name': FIRST_NAV,
+			'second_navs': mall_export.get_promotion_and_apps_second_navs(request),
+			'second_nav_name': mall_export.MALL_APPS_SECOND_NAV,
+			'third_nav_name': mall_export.MALL_APPS_REBATE_NAV,
+			# 'has_data': has_data,
+			# 'activity_id': request.GET['id']
+		})
+
+		return render_to_response('rebate/templates/editor/rebate_order_list.html', c)
 
 	@login_required
 	def api_get(request):
