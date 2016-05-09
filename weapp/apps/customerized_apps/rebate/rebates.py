@@ -80,12 +80,19 @@ class Rebates(resource.Resource):
 		"""
 		pageinfo, datas = Rebates.get_datas(request)
 		items = []
+		#TODO
+		attention_number = 0
+		order_money = 0.00
+		first_buy_num = 0
 		for data in datas:
 			str_id = str(data.id)
 			items.append({
 				'id': str_id,
 				'owner_id': data.owner_id,
 				'name': data.name,
+				'attention_number': attention_number,
+				'order_money': order_money,
+				'first_buy_num': first_buy_num,
 				'start_time': data.start_time.strftime('%Y-%m-%d %H:%M'),
 				'end_time': data.end_time.strftime('%Y-%m-%d %H:%M'),
 				'status': data.status_text,
