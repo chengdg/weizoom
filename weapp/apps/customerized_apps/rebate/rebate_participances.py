@@ -43,21 +43,18 @@ class RebateParticipances(resource.Resource):
 			'second_nav_name': mall_export.MALL_APPS_SECOND_NAV,
 			'third_nav_name': mall_export.MALL_APPS_REBATE_NAV,
 			'has_data': has_data,
-			'activity_id': request.GET['id']
+			'record_id': request.GET['id']
 		})
 
 		return render_to_response('rebate/templates/editor/rebate_participances.html', c)
 
 	@staticmethod
 	def get_datas(request):
-		name = request.GET.get('participant_name', '')
-		red_packet_status = request.GET.get('red_packet_status', '-1')
-		is_already_paid = request.GET.get('is_already_paid', '-1')
-		is_subscribed = request.GET.get('is_subscribed',-1)
+		member_status = request.GET.get('status', '-1')
 		webapp_id = request.user_profile.webapp_id
 		member_ids = []
-		if name:
-			members = member_models.Member.objects.filter(webapp_id=webapp_id,username_hexstr__contains = byte_to_hex(name))
+		if member_status != '-1':
+			members = member_models.Member.objects.filter(webapp_id=webapp_id,status = member_status)
 			temp_ids = [member.id for member in members]
 			member_ids = temp_ids  if temp_ids else [-1]
 		start_time = request.GET.get('start_time', '')
@@ -70,46 +67,18 @@ class RebateParticipances(resource.Resource):
 		else:
 			belong_to = export_id
 
-		# #检查所有当前参与用户是否取消关注，设置为未参与
-		# reset_member_helper_info(belong_to)
-		# reset_re_subscribed_member_helper_info(belong_to)
+		# rebate_info = app_models.Rebate.objects.get(id=belong_to)
 
-		red_packet_info = app_models.RedPacket.objects.get(id=belong_to)
-		red_packet_status_text = red_packet_info.status_text
-		#取消关注的参与者也算在列表中，但是一个人只算一次参与，所以取有效参与人的id与无效参与人（可能有多次）的id的并集
-		all_unvalid_participances = app_models.RedPacketParticipance.objects(belong_to=belong_to, is_valid=False)
-		all_unvalid_participance_ids = [un_p.member_id for un_p in all_unvalid_participances]
-		all_valid_participances = app_models.RedPacketParticipance.objects(belong_to=belong_to, has_join=True, is_valid=True)
-		all_valid_participance_ids = [v.member_id for v in all_valid_participances]
-		member_ids_for_show = list(set(all_valid_participance_ids).union(set(all_unvalid_participance_ids)))
-		params = {'belong_to': belong_to,'member_id__in': member_ids_for_show}
+		params = {'belong_to': belong_to}
 
 		if member_ids:
 			params['member_id__in'] = member_ids
 		if start_time:
 			params['created_at__gte'] = start_time
-		if red_packet_status !='-1':
-			if red_packet_status == '1':
-				params['red_packet_status'] = True
-			elif red_packet_status_text == u'已结束' and red_packet_status == '0':
-				params['red_packet_status'] = False
-			else:
-				params['red_packet_status'] = ''#进行中没有失败
-		if is_already_paid !='-1':
-			if is_already_paid == '1':
-				params['is_already_paid'] = True
-			elif red_packet_status_text == u'已结束' and is_already_paid == '0':
-				params['is_already_paid'] = False
-			else:
-				params['is_already_paid'] = ''#进行中没有失败
+		if end_time:
+			params['created_at__lte'] = end_time
 
-		member_id2subscribe = {m.id: m.is_subscribed for m in member_models.Member.objects.filter(id__in=member_ids_for_show)}
-		datas = app_models.RedPacketParticipance.objects(**params).order_by('-created_at')
-
-		if is_subscribed == '1':
-			datas = [d for d in datas if member_id2subscribe[d.member_id]]
-		elif is_subscribed == '0':
-			datas = [d for d in datas if not member_id2subscribe[d.member_id]]
+		datas = app_models.RebateParticipance.objects(**params).order_by('-created_at')
 
 		#进行分页
 		count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
@@ -133,12 +102,7 @@ class RebateParticipances(resource.Resource):
 					name = cur_member.username_hexstr
 			else:
 				name = u'未知'
-			#并发问题临时解决方案 ---start
-			if data.current_money > data.red_packet_money:
-				app_models.RedPacketParticipance.objects.get(belong_to=belong_to, member_id=data.member_id).update(
-					set__current_money=data.red_packet_money,set__red_packet_status=True)
-				data.reload()
-			#并发问题临时解决方案 ---end
+
 			items.append({
 				'id': str(data.id),
 				'member_id': data.member_id,
@@ -146,16 +110,9 @@ class RebateParticipances(resource.Resource):
 				'participant_name': member_id2member[data.member_id].username_size_ten if member_id2member.get(data.member_id) else u'未知',
 				'username': name,
 				'participant_icon': member_id2member[data.member_id].user_icon if member_id2member.get(data.member_id) else '/static/img/user-1.jpg',
-				'red_packet_money': '%.2f' % data.red_packet_money,
-				'current_money': '%.2f' % data.current_money,
-				'red_packet_status': u'成功' if data.red_packet_status else u'失败', #红包参与者状态
-				'is_already_paid': u'发放' if data.is_already_paid else u'未发放',
-				'msg_api_status': u'成功' if data.msg_api_status else u'失败',
-				'red_packet_status_text': red_packet_status_text, #红包状态
 				'created_at': data.created_at.strftime("%Y-%m-%d %H:%M:%S"),
-				'is_subscribed':member_id2subscribe[data.member_id]
-
 			})
+
 		if export_id:
 			return items
 		else:
@@ -166,7 +123,7 @@ class RebateParticipances(resource.Resource):
 		"""
 		响应API GET
 		"""
-		pageinfo, items = RedPacketParticipances.get_datas(request)
+		pageinfo, items = RebateParticipances.get_datas(request)
 		response_data = {
 			'items': items,
 			'pageinfo': paginator.to_dict(pageinfo),
@@ -181,8 +138,8 @@ class RedPacketParticipances_Export(resource.Resource):
 	'''
 	批量导出
 	'''
-	app = 'apps/red_packet'
-	resource = 'red_packet_participances_export'
+	app = 'apps/rebate'
+	resource = 'rebate_participances_export'
 
 	@login_required
 	def api_get(request):
@@ -201,7 +158,7 @@ class RedPacketParticipances_Export(resource.Resource):
 		#Excel Process Part
 		try:
 			import xlwt
-			datas =RedPacketParticipances.get_datas(request)
+			datas =RebateParticipances.get_datas(request)
 			fields_pure = []
 			export_data = []
 
@@ -292,39 +249,3 @@ class RedPacketParticipances_Export(resource.Resource):
 			response.innerErrMsg = unicode_full_stack()
 
 		return response.get_response()
-
-# class RedPacketDetail(resource.Resource):
-# 	'''
-# 	助力详情
-# 	'''
-# 	app = 'apps/red_packet'
-# 	resource = 'red_packet_detail'
-# 	def get(request):
-# 		"""
-# 		响应GET
-# 		"""
-# 		member_id = request.GET.get('member_id', None)
-# 		belong_to = request.GET.get('belong_to', None)
-# 		if member_id and belong_to:
-# 			items = app_models.PoweredDetail.objects(belong_to=belong_to, owner_id=int(member_id), has_powered=True).order_by('-created_at')
-# 			power_member_ids = [item.power_member_id for item in items]
-# 			member_id2info = {m.id: {'is_subscribed': m.is_subscribed, 'power_member_name': m.username_for_html} for m in Member.objects.filter(id__in=power_member_ids)}
-# 			returnDataList = []
-# 			for t in items:
-# 				returnDataDict = {
-# 					"power_member_id": t.power_member_id,
-# 					"power_member_name": member_id2info[t.power_member_id]['power_member_name'],
-# 					"created_at": t.created_at.strftime("%Y/%m/%d %H:%M"),
-# 					"status": u'关注' if member_id2info[t.power_member_id]['is_subscribed'] else u'跑路'
-# 				}
-# 				returnDataList.append(returnDataDict)
-# 			c = RequestContext(request, {
-# 				'items': returnDataList,
-# 				'errMsg': None
-# 			})
-# 		else:
-# 			c = RequestContext(request, {
-# 				'items': None,
-# 				'errMsg': u'member_id或者belong_to不存在'
-# 			})
-# 		return render_to_response('powerme/templates/editor/powerme_participance_detail.html', c)
