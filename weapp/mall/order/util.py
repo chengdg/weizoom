@@ -722,11 +722,15 @@ def get_detail_response(request):
     if not request.GET.get('order_id', None):
         return HttpResponseRedirect('/mall2/order_list/')
     else:
-        webapp_id = request.user_profile.webapp_id
-        order = mall.models.Order.objects.get(id=request.GET['order_id'])
-        success = assert_webapp_id(order, webapp_id)
-        if success == False:
-            return Http404
+        authorized = request.GET.get('authorized', 'auth')
+        if authorized == 'auth':
+            order = mall.models.Order.objects.get(id=request.GET['order_id'])
+        else:
+            webapp_id = request.user_profile.webapp_id
+            order = mall.models.Order.objects.get(id=request.GET['order_id'])
+            success = assert_webapp_id(order, webapp_id)
+            if success == False:
+                return Http404
 
 
     if request.method == 'GET':
