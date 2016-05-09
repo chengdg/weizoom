@@ -14,26 +14,36 @@ Background:
 	Given jobs登录系统
 	When jobs已创建微众卡
 	"""
-		[{
-			"name":"",
-			"prefix_value":"000",
-			"type":"entity",
-			"money":"15.00",
-			"num":"50",
-			"comments":""
+	{
+		"cards":[{
+			"id":"0000001",
+			"password":"1234567",
+			"status":"未使用",
+			"price":100.00
+		},{
+			"id":"0000002",
+			"password":"1234567",
+			"status":"未使用",
+			"price":90.00
+		},{
+			"id":"0000003",
+			"password":"1234567",
+			"status":"未使用",
+			"price":100.00
 		}]
+	}
 	"""
 	When jobs已添加商品
 	 """
 		[{
 			"name": "商品1",
 			"price": 10.00,
-			"postage":10,
+			"postage":100,
 			"synchronized_mall":"是"
 		}, {
 			"name": "商品2",
 			"price": 10.00,
-			"postage":10,
+			"postage":100,
 			"synchronized_mall":"是"
 		}]
 	 """
@@ -381,24 +391,30 @@ Background:
 		|   0004   | 2015-06-04 |   bill   | 商品2,1 |   支付  |  货到付款 |   15.00   | 100.00  |     115.00      | jobs,完成    |    已完成     |
 		|   0005   | 2015-06-05 |   bill   | 商品1,1 |   支付  |  支付宝   |   10.00   | 100.00  |     110.00      | jobs,退款    |    退款中     |
 		|   0006   | 今天       |  marry   | 商品1,1 |   支付  |  支付宝   |   10.00   | 100.00  |     110.00      | jobs,完成退款|   退款成功    |
-		|   0007   | 今天       |   jack   | 商品1,1 |   支付  |  货到付款 |   10.00   | 100.00  |     110.00      |              |    待发货     |
+		|   0007   | 今天       |   zhouxun   | 商品1,1 |   支付  |  货到付款 |   10.00   | 100.00  |     110.00      |              |    待发货     |
 		|   0008   | 今天       |   tom    | 商品1,1 |   支付  |  支付宝   |   10.00   | 100.00  |     110.00      |              |    待发货     |
 		|   0009   | 今天       |   tom    | 商品2,1 |   支付  |  货到付款 |   15.00   | 100.00  |     115.00      | jobs,取消    |    已取消     |
 		|   0010   | 今天       |   tom    | 商品2,1 |   支付  |  货到付款 |   15.00   | 100.00  |     115.00      | jobs,发货    |    已发货     |
 
 @mall @rebate
-Scenario:1 管理员能够查看到所有扫过该码并关注过的微信用户信息，带参数返利活动[关注人数]-已关注的会员数量不增加
+Scenario:1 管理员能够查看到所有扫过该码并关注过的微信用户信息，带参数返利活动[关注人数]-已关注的会员数量不增加；
+	#设置已关注会员可参与
+	#购买次数为首单
+	#订单金额为现金
+	#满10元返5元
 	Given jobs登录系统
 	#未关注微信账号扫码关注，关注数量增加
 	When 清空浏览器
-	When bill扫描带参数二维码"带参数二维码-默认设置"
+	When bill扫描返利活动"返利活动1"
 	When bill访问jobs的webapp
+	When bill扫描返利活动"返利活动1"
+	
 
 	Given jobs登录系统
-	Then jobs获得带参数二维码列表
+	Then jobs获得返利活动列表
 	"""
 		[{
-			"code_name": "带参数二维码-默认设置",
+			"code_name": "返利活动1",
 			"attention_number": 1
 		}]
 	"""
@@ -406,30 +422,79 @@ Scenario:1 管理员能够查看到所有扫过该码并关注过的微信用户
 	When 清空浏览器
 	When tom关注jobs的公众号
 	When tom访问jobs的webapp
-	When tom扫描带参数二维码"带参数二维码-默认设置"
-
+	When tom扫描返利活动"返利活动1"
+	
 	Given jobs登录系统
-	Then jobs获得带参数二维码列表
+	Then jobs获得返利活动列表
 	"""
 		[{
-			"code_name": "带参数二维码-默认设置",
+			"code_name": "返利活动1",
 			"attention_number": 1
 		}]
 	"""
-	#取消关注的会员扫码，关注数量不增加
+	#扫码之前取消关注的会员再次扫码返利活动，关注数量增加
 	When 清空浏览器
-	When jack关注jobs的公众号
-	When jack访问jobs的webapp
-	When jack取消关注jobs的公众号
-
-	When jack扫描带参数二维码"带参数二维码-默认设置"
+	When zhouxun关注jobs的公众号
+	When zhouxun访问jobs的webapp
+	When zhouxun取消关注jobs的公众号
+	When zhouxun扫描带参数二维码"返利活动1"
+	
 
 	Given jobs登录系统
 	Then jobs获得带参数二维码列表
 	"""
 		[{
-			"code_name": "带参数二维码-默认设置",
-			"attention_number": 1
+			"code_name": "返利活动1",
+			"attention_number": 2
 		}]
 	"""
 
+	When 微信用户批量消费jobs的商品
+		| order_id | date       | consumer | product | payment | pay_type  |postage*   |price*   | paid_amount*    | weizoom_card   | action     | order_status* |
+		|   0001   | 今天       |   bill   | 商品1,1 |   支付  |  支付宝   |   10.00   | 100.00  |     110.00      | 0000001,1234567| jobs,发货  |    已发货     |
+		|   0002   | 今天       |   tom    | 商品1,1 |   支付  |  支付宝   |   10.00   | 100.00  |     110.00      |                | jobs,发货  |    已发货     |
+		|   0003   | 今天       |  zhouxun | 商品1,1 |   支付  |  微众卡   |   10.00   | 100.00  |     110.00      |                | jobs,发货  |    已发货     |    
+		
+
+	When jobs对'返利活动1'的'关注人数'操作
+	#仅显示扫码后成交订单-勾选
+	Then jobs能获取'仅显示通过二维码新关注会员'列表
+	"""
+		[{
+			"fans_name": "zhouxun",
+			"buy_number": 1,
+			"integral": 0,
+			"price":110.00
+		}]
+	"""
+	#显示所有的的会员
+	#仅显示扫码后成交订单-勾选
+	Then jobs能获取会员列表
+	"""
+		[{
+			"fans_name": "zhouxun",
+			"buy_number": 1,
+			"integral": 0,
+			"price":110.00
+		},{
+			"fans_name": "tom",
+			"buy_number": 1,
+			"integral": 0,
+			"price":110.00
+		},{
+			"fans_name": "bill",
+			"buy_number": 1,
+			"integral": 0,
+			"price":110.00
+		}]
+	"""
+
+
+
+@mall @rebate
+Scenario:1 管理员能够查看到所有扫过该码并关注过的微信用户信息，带参数返利活动[关注人数]-已关注的会员数量不增加；
+
+
+	
+
+	
