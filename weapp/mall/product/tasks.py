@@ -15,7 +15,7 @@ import os
 import xlsxwriter
 
 @task(bing=True)
-def update_sync_product_status(product, request):
+def update_sync_product_status(product, request, is_group=False):
     is_update = None
     update_data = []
     # 规格
@@ -153,13 +153,13 @@ def send_review_export_job_task(self, exportjob_id, filter_data_args, sort_attr,
                 review_count_write += 1
                 for i in range(len(product_review_list)):
                     table.write(review_count_write, i, product_review_list[i])
-                
+
                 export_jobs.update(processed_count=review_count_write,update_at=datetime.now())
             workbook.close()
             upyun_path = '/upload/excel/{}'.format(filename)
             yun_url = upyun_util.upload_image_to_upyun(file_path, upyun_path)
             export_jobs.update(status=1,file_path=yun_url,update_at=datetime.now())
-             
+
         except:
             notify_message = "导出商品评论任务失败,response:{}".format(unicode_full_stack())
             export_jobs.update(status=2,is_download=1)

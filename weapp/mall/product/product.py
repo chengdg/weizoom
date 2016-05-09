@@ -1031,25 +1031,26 @@ class Product(resource.Resource):
                 product_id=product_id,
                 name='standard').exists()
 
+        # 更新对应同步的商品状态
+        if not request.user_profile.webapp_type:
+            from .tasks import update_sync_product_status
+            products = models.Product.objects.filter(owner_id=woid, id=product_id)
+            models.Product.fill_details(request.manager, products, {
+                'with_product_model': True,
+                'with_image': True,
+                'with_property': True,
+                'with_model_property_info': True,
+                'with_all_category': True,
+                'with_sales': True
+            })
+            update_sync_product_status(products[0], request, is_group_buying)
+
         if is_group_buying and has_product_model:
             #团购流程
             utils.handle_group_product(request, product_id, swipe_images, thumbnails_url)
         else:
             #标准流程
-        # 更新对应同步的商品状态
 
-            if not request.user_profile.webapp_type:
-                from .tasks import update_sync_product_status
-                products = models.Product.objects.filter(owner_id=woid, id=product_id)
-                models.Product.fill_details(request.manager, products, {
-                    'with_product_model': True,
-                    'with_image': True,
-                    'with_property': True,
-                    'with_model_property_info': True,
-                    'with_all_category': True,
-                    'with_sales': True
-                })
-                update_sync_product_status(products[0], request)
 
             # 处理商品排序
             display_index = int(request.POST.get('display_index', '0'))
