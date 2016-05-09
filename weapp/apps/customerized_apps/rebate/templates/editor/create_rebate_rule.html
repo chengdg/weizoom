@@ -13,7 +13,9 @@
   #edui1 {
     width: 550px !important;
   }
-
+  .xui-detail {
+    margin-left: 40px;
+  }
 </style>
 {% endblock %}
 
@@ -23,7 +25,7 @@
     <li>您当前所在位置</li>
     <li><a href="/apps/lottery/lotteries/">百宝箱</a></li>
     <li><a href="/apps/rebate/rebates/">返利活动</a></li>
-    <li class="active">新建返利活动</li>
+    <li class="active">{% if rebate_rule.id %}编辑{% else %}新建{% endif %}返利活动</li>
 </ul>
 {% if is_deleted_data %}
     <div style="background-color: #EAEEF7;" class="clearfix">
@@ -51,8 +53,8 @@
         <label class="control-label col-sm-2 pt0 star_show">已关注会员可参与</label>
         <div class="controls xa-errorHintContainer">
             <div style="margin-left: 120px;">
-                <input type="radio" value="1" {% if rebate_rule.permission %}checked{% endif %} class="permission" name="permission">是
-				<input type="radio" value="0" {% if not rebate_rule.permission %}checked{% endif %} class="permission ml10" name="permission" class="m10 p20" value='0'>否
+                <input type="radio" value="1" {% if rebate_rule %}{% if rebate_rule.permission %}checked{% endif %}{% else %}checked{% endif %} class="permission" name="permission">是
+				<input type="radio" value="0" {% if rebate_rule %}{% if not rebate_rule.permission %}checked{% endif %}{% else %}{% endif %} class="permission ml10" name="permission" class="m10 p20" value='0'>否
             </div>
             <div class="errorHint" data-error-hint="请选择已关注会员是否可参与"></div>
         </div>
@@ -61,15 +63,15 @@
         <label class="control-label col-sm-2 pt0 star_show">订单返利条件</label>
         <div class="controls xa-errorHintContainer">
             <div style="margin-left: 120px;">购买次数：
-                <input type="radio" value="1" name="is_limit_first_buy" class="is_limit_first_buy" {%if rebate_rule.is_limit_first_buy %}checked{% endif%}>首单
-                <input type="radio" value="0" name="is_limit_first_buy" class="is_limit_first_buy" {%if not rebate_rule.is_limit_first_buy %}checked{% endif%}>不限
+                <input type="radio" value="1" name="is_limit_first_buy" class="is_limit_first_buy" {% if rebate_rule %}{%if rebate_rule.is_limit_first_buy %}checked{% endif%}{% else %}checked{% endif %} >首单
+                <input type="radio" value="0" name="is_limit_first_buy" class="is_limit_first_buy" {% if rebate_rule %}{%if not rebate_rule.is_limit_first_buy %}checked{% endif%}{% else %}{% endif %} >不限
             </div>
             <div class="errorHint" data-error-hint="请选择购买次数"></div>
         </div>
         <div class="controls xa-errorHintContainer">
             <div style="margin-left: 170px;">订单金额是否为现金：
-                <input type="radio" value="1" name="is_limit_cash" class="is_limit_cash" {%if rebate_rule.is_limit_cash %}checked{% endif%}>是
-                <input type="radio" value="0" name="is_limit_cash" class="is_limit_cash" {%if not rebate_rule.is_limit_cash %}checked{% endif%}>否
+                <input type="radio" value="1" name="is_limit_cash" class="is_limit_cash" {% if rebate_rule %}{%if rebate_rule.is_limit_cash %}checked{% endif%}{% else %}checked{% endif %} >是
+                <input type="radio" value="0" name="is_limit_cash" class="is_limit_cash" {% if rebate_rule %}{%if not rebate_rule.is_limit_cash %}checked{% endif%}{% else %}{% endif %} >否
             </div>
             <div class="errorHint" data-error-hint="请选择订单金额是否为现金"></div>
         </div>
@@ -90,6 +92,8 @@
                 <input type="text" class="form-control w70" id="weizoom_card_id_from" name="weizoom_card_id_from" value="{{rebate_rule.weizoom_card_id_from}}" data-validate="require-notempty,,require-nonnegative"/>
                 -&nbsp
                 <input type="text" class="form-control w70" id="weizoom_card_id_to" name="weizoom_card_id_to" value="{{rebate_rule.weizoom_card_id_to}}" data-validate="require-notempty,,require-nonnegative"/>
+            <span>库存：</span>
+            <span><a target="_blank" href="/mall2/card_exchange_details/" class="xui-detail" title="发放详情">发放详情</a></span>
             </div>
             <div class="errorHint" data-error-hint="请输入数字"></div>
         </div>
@@ -181,6 +185,7 @@
 
 $(document).ready(function(){
     var answerContent = W.loadJSON('qrcode_answer');
+    console.log(answerContent);
     var options = {
         el: '#edit-message-panel',
         richTextEditorWidth: 800,
