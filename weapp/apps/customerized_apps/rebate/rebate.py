@@ -112,9 +112,8 @@ class RedPacket(resource.Resource):
 			mp_user = get_binding_weixin_mpuser(request.manager)
 			mpuser_access_token = get_mpuser_accesstoken(mp_user)
 			weixin_api = get_weixin_api(mpuser_access_token)
-
 			try:
-				qrcode_ticket = weixin_api.create_qrcode_ticket(int(data['id']), QrcodeTicket.PERMANENT)
+				qrcode_ticket = weixin_api.create_qrcode_ticket(data['id'], QrcodeTicket.PERMANENT)
 				ticket = qrcode_ticket.ticket
 			except Exception, e:
 				print 'get qrcode_ticket fail:', e
