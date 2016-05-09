@@ -53,72 +53,50 @@ def step_add_red_envelope_rule(context, user):
         response = context.client.post('/apps/rebate/api/rebate/?_method=put', params)
         bdd_util.assert_api_call_success(response)
 
-# @then(u'{user}获得返利活动列表')
-# def step_impl(context, user):
-#     param = {}
-#     if hasattr(context, 'query_param'):
-#         # 如果给定了query_param，则模拟按条件查询
-#         # print("query_param: {}".format(context.query_param))
-#         query_param = context.query_param
-#         param['name'] = query_param.get('name', '')
-#         coupon_name = query_param.get('prize_info', u"所有奖励")
-#         if coupon_name  == u"所有奖励":
-#             param['couponRule'] = 0
-#         else:
-#             owner_id = bdd_util.get_user_id_for(user)
-#             coupon_rule = CouponRule.objects.get(owner_id=owner_id, name=coupon_name)
-#             param['couponRule'] = coupon_rule.id
-#         start_date = query_param.get('start_date', '')
-#         if len(start_date)>0:
-#             param['startDate'] = bdd_util.get_date(query_param['start_date']).strftime('%Y-%m-%d 00:00')
-#         else:
-#             param['startDate'] = ''
-#         end_date = query_param.get('end_date', '')
-#         if len(end_date)>0:
-#             param['endDate'] = bdd_util.get_date(query_param['end_date']).strftime('%Y-%m-%d 00:00')
-#         else:
-#             param['endDate'] = ''
-#         #param.update(context.query_param)
-#     response = context.client.get('/apps/red_envelope/api/red_envelope_rule_list/?_method=get', param)
-#     rules = json.loads(response.content)['data']['items']
-#     status2name = {
-#         True: u'开启',
-#         False: u'关闭'
-#     }
-#
-#     # 构造实际数据
-#     actual = []
-#     for rule in rules:
-#         actual.append({
-#             'name': __get_name(rule),
-#             'status': status2name[rule['status']],
-#             'is_permanant_active': rule['limit_time'],
-#             'actions': __get_actions(rule),
-#             'start_date': __to_date(rule['start_time']),
-#             'end_date': __to_date(rule['end_time']),
-#             'prize_info': [ rule['coupon_rule_name'] ],
-#             'surplus': {
-#                 'surplus_count': rule['remained_count'],
-#                 'surplus_text': is_warring2text[rule['is_warring']]
-#             }
-#         })
-#     print("actual_data: {}".format(actual))
-#
-#     expected = json.loads(context.text)
-#     for expect in expected:
-#         if 'start_date' in expect:
-#             if expect['start_date'] == '':
-#                 expect['start_date'] = default_date
-#             else:
-#                 expect['start_date'] = bdd_util.get_date_str(expect['start_date'])
-#         if 'end_date' in expect:
-#             if expect['end_date'] == '':
-#                 expect['end_date'] = default_date
-#             else:
-#                 expect['end_date'] = bdd_util.get_date_str(expect['end_date'])
-#     print("expected: {}".format(expected))
-#
-#     bdd_util.assert_list(expected, actual)
+@then(u'{user}获得返利活动列表')
+def step_impl(context, user):
+    param = {}
+    if hasattr(context, 'query_param'):
+        # 如果给定了query_param，则模拟按条件查询
+        # print("query_param: {}".format(context.query_param))
+        query_param = context.query_param
+        param['name'] = query_param.get('name', '')
+        start_time = query_param.get('start_time', '')
+        if len(start_time)>0:
+            param['start_time'] = date2time(query_param['start_time'])
+        else:
+            param['start_time'] = ''
+        end_time = query_param.get('end_time', '')
+        if len(end_time)>0:
+            param['end_time'] = date2time(query_param['end_time'])
+        else:
+            param['end_time'] = ''
+        #param.update(context.query_param)
+    response = context.client.get('/apps/rebate/api/rebates/?_method=get', param)
+    rules = json.loads(response.content)['data']['items']
+
+    # 构造实际数据
+    actual = []
+    for rule in rules:
+        actual.append({
+            'code_name': rule['name'],
+            'attention_number': rule['attention_number'],
+            'order_money': rule['order_money'],
+            'first_buy_num': rule['first_buy_num'],
+            'start_time': rule['start_time'],
+            'end_time': rule['end_time']
+        })
+    print("actual_data: {}".format(actual))
+
+    expected = json.loads(context.text)
+    for expect in expected:
+        if 'start_time' in expect:
+            expect['start_time'] = date2time(expect['start_time'])
+        if 'end_time' in expect:
+            expect['end_time'] = date2time(expect['end_time'])
+    print("expected: {}".format(expected))
+
+    bdd_util.assert_list(expected, actual)
 
 # action2code = {
 #     u'开启': 'start',

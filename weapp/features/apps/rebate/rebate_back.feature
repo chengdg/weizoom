@@ -86,14 +86,14 @@ Scenario:1 创建返利活动
 			"scan_code_reply": "返利活动1"
 		}]
 		"""
-#	Then jobs获得返利活动列表
-#		"""
-#		[{
-#			"code_name": "返利活动1",
-#			"attention_number":0,
-#			"order_money": 0.00,
-#			"first_buy_num":0,
-#			"start_time":"今天",
-#			"end_time":"2天后"
-#		}]
-#		"""
+	Then jobs获得返利活动列表
+		"""
+		[{
+			"code_name": "返利活动1",
+			"attention_number":0,
+			"order_money": 0.00,
+			"first_buy_num":0,
+			"start_time":"今天",
+			"end_time":"2天后"
+		}]
+		"""

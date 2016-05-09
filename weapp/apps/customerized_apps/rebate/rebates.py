@@ -80,7 +80,7 @@ class Rebates(resource.Resource):
 		"""
 		pageinfo, datas = Rebates.get_datas(request)
 		items = []
-		#TODO
+		#TODO 三个数值
 		attention_number = 0
 		order_money = 0.00
 		first_buy_num = 0
