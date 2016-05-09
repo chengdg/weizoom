@@ -99,6 +99,8 @@ class RedPacket(resource.Resource):
 		data['is_limit_first_buy'] = True if data['is_limit_first_buy']=='1' else False
 		data['is_limit_cash'] = True if data['is_limit_cash']=='1' else False
 		rebate = app_models.Rebate(**data)
+		ticket_id = app_models.Rebate.objects.all().count() + 1
+		rebate.ticket_id = ticket_id
 		rebate.save()
 
 		error_msg = None
@@ -113,7 +115,7 @@ class RedPacket(resource.Resource):
 			mpuser_access_token = get_mpuser_accesstoken(mp_user)
 			weixin_api = get_weixin_api(mpuser_access_token)
 			try:
-				qrcode_ticket = weixin_api.create_qrcode_ticket(data['id'], QrcodeTicket.PERMANENT)
+				qrcode_ticket = weixin_api.create_qrcode_ticket(ticket_id, QrcodeTicket.PERMANENT)
 				ticket = qrcode_ticket.ticket
 			except Exception, e:
 				print 'get qrcode_ticket fail:', e

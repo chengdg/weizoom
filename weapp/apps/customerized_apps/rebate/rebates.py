@@ -62,8 +62,6 @@ class Rebates(resource.Resource):
 			params['start_time__gte'] = start_time
 		if end_time:
 			params['end_time__lte'] = end_time
-		if rebate_type != 'all':
-			params['rebate_type'] = rebate_type
 		datas = app_models.Rebate.objects(**params).order_by('-id')
 
 		#进行分页
