@@ -299,8 +299,11 @@ class MassSendingMessages(resource.Resource):
         else:
             content = int(content)
             message_type = MESSAGE_TYPE_NEWS
+        if group_id is None or group_id == '':
+            group_id = 0
+        group_id = int(group_id)
         if not request.POST.get("log_id", None):
-            msg_log = UserSentMassMsgLog.create(user_profile.webapp_id, '', message_type, content, int(group_id))
+            msg_log = UserSentMassMsgLog.create(user_profile.webapp_id, '', message_type, content, group_id)
             message_log_id = msg_log.id
         else:
             message_log_id = request.POST["log_id"]
