@@ -26,9 +26,9 @@ from weapp import settings
 FIRST_NAV = mall_export.MALL_PROMOTION_AND_APPS_FIRST_NAV
 COUNT_PER_PAGE = 20
 
-class RedPacketParticipances(resource.Resource):
+class RebateParticipances(resource.Resource):
 	app = 'apps/rebate'
-	resource = 'attention_participances'
+	resource = 'rebate_participances'
 
 	@login_required
 	def get(request):

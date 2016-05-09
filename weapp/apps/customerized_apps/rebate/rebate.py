@@ -12,9 +12,10 @@ from django.conf import settings
 
 from core import resource
 from core import paginator
+from core import emotion
 from core.jsonresponse import create_response
 from utils.cache_util import delete_cache
-
+from weixin2.models import News
 import models as app_models
 import export
 from apps import request_util
@@ -50,12 +51,32 @@ class RedPacket(resource.Resource):
 					'is_deleted_data': True,
 				})
 				return render_to_response('rebate/templates/editor/create_rebate_rule.html', c)
+			answer_content = {}
+			if int(rebate.reply_material_id) > 0:
+				answer_content['type'] = 'news'
+				answer_content['newses'] = []
+				answer_content['content'] = rebate.reply_material_id
+				newses = News.get_news_by_material_id(rebate.reply_material_id)
+
+				for news in newses:
+					news_dict = {}
+					news_dict['id'] = news.id
+					news_dict['title'] = news.title
+					answer_content['newses'].append(news_dict)
+			else:
+				answer_content['type'] = 'text'
+				answer_content['content'] = emotion.change_emotion_to_img(rebate.reply_detail)
+			jsons = [{
+				"name": "qrcode_answer",
+				"content": answer_content
+			}]
 			c = RequestContext(request, {
 				'first_nav_name': FIRST_NAV,
 				'second_navs': mall_export.get_promotion_and_apps_second_navs(request),
 				'second_nav_name': mall_export.MALL_APPS_SECOND_NAV,
 				'third_nav_name': mall_export.MALL_APPS_REBATE_NAV,
 				'rebate_rule': rebate,
+				'jsons': jsons
 			})
 			return render_to_response('rebate/templates/editor/create_rebate_rule.html', c)
 		else:
