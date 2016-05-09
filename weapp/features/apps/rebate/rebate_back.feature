@@ -97,3 +97,68 @@ Scenario:1 创建返利活动
 			"end_time":"2天后"
 		}]
 		"""
+
+@mall2 @rebate_back
+Scenario:2 编辑返利活动
+
+	Given jobs登录系统
+	When jobs新建返利活动
+		"""
+		[{
+			"code_name":"返利活动1",
+			"is_attention_in":"true",
+			"is_limit_first_buy":"true",
+			"is_limit_cash":"true",
+			"order_rebate":{
+				"rebate_order_price":"10.00",
+				"rebate_money":"5.00"
+			},
+			"weizoom_card_id_from":"0000001",
+			"weizoom_card_id_to":"0000005",
+			"start_time":"今天",
+			"end_time":"2天后",
+			"reply_type": "文字",
+			"scan_code_reply": "返利活动1"
+		}]
+		"""
+	Then jobs获得返利活动列表
+		"""
+		[{
+			"code_name": "返利活动1",
+			"attention_number":0,
+			"order_money": 0.00,
+			"first_buy_num":0,
+			"start_time":"今天",
+			"end_time":"2天后"
+		}]
+		"""
+	When jobs编辑返利活动"返利活动1"
+		"""
+		[{
+			"code_name":"返利活动2",
+			"is_attention_in":"false",
+			"is_limit_first_buy":"false",
+			"is_limit_cash":"false",
+			"order_rebate":{
+				"rebate_order_price":"20.00",
+				"rebate_money":"10.00"
+			},
+			"weizoom_card_id_from":"0000001",
+			"weizoom_card_id_to":"0000002",
+			"start_time":"今天",
+			"end_time":"3天后",
+			"reply_type": "文字",
+			"scan_code_reply": "返利活动2"
+		}]
+		"""
+	Then jobs获得返利活动列表
+		"""
+		[{
+			"code_name": "返利活动2",
+			"attention_number":0,
+			"order_money": 0.00,
+			"first_buy_num":0,
+			"start_time":"今天",
+			"end_time":"3天后"
+		}]
+		"""

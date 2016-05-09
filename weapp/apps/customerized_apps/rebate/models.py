@@ -23,7 +23,9 @@ class Rebate(models.Document):
 	reply_type = models.IntField() #扫码后回复：1/文字，2/图文消息
 	reply_detail = models.DynamicField() #扫码后回复文字
 	reply_material_id = models.StringField() #扫码后回复图文id
+	ticket_id = models.IntField() #唯一的字段，用于创建ticket时使用
 	ticket = models.StringField(default="", max_length=256)
+	is_deleted = models.BooleanField(default=False) #是否被删除
 	created_at = models.DateTimeField() #创建时间
 	
 	meta = {
