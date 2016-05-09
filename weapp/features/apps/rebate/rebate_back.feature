@@ -29,55 +29,71 @@ Feature:返利活动-添加和修改
 #scan_code_reply 		扫码后回复
 
 Background:
-	Given jobs登录管理系统
-	When  jobs新建通用卡
-	"""
-		[{
-			"name":"",
-			"prefix_value":"000",
-			"type":"entity",
-			"money":"15.00",
-			"num":"5",
-			"comments":""
-		}]
-		"""	
+	Given jobs登录系统
+	And jobs已创建微众卡
+		"""
+		{
+			"cards":[{
+				"id":"0000001",
+				"password":"1234567",
+				"status":"未使用",
+				"price":100.00
+			},{
+				"id":"0000002",
+				"password":"1234567",
+				"status":"未使用",
+				"price":100.00
+			},{
+				"id":"0000003",
+				"password":"1234567",
+				"status":"未使用",
+				"price":100.00
+			},{
+				"id":"0000004",
+				"password":"1234567",
+				"status":"未使用",
+				"price":100.00
+			},{
+				"id":"0000005",
+				"password":"1234567",
+				"status":"未使用",
+				"price":100.00
+			}]
+		}
+		"""
+	When jobs开通使用微众卡权限
 
-@mall2 @senior @rebate_back
+@mall2 @rebate_back
 Scenario:1 创建返利活动
-		#
+
 	Given jobs登录系统
 	When jobs新建返利活动
 		"""
 		[{
 			"code_name":"返利活动1",
 			"is_attention_in":"true",
-			"order_rebate_condition":{
-				"is_limit_first_buy	":"首单",
-				"is_limit_cash":"是",
-				"order_rebate":{
-					"rebate_order_price":"10.00",
-					"rebate_money":"5.00"
-					}
-			}
-			"weizoom_card_id_from":"000000001",
-			"weizoom_card_id_to":"000000005",
-			"card_counts":5,
+			"is_limit_first_buy":"true",
+			"is_limit_cash":"true",
+			"order_rebate":{
+				"rebate_order_price":"10.00",
+				"rebate_money":"5.00"
+			},
+			"weizoom_card_id_from":"0000001",
+			"weizoom_card_id_to":"0000005",
 			"start_time":"今天",
 			"end_time":"2天后",
 			"reply_type": "文字",
 			"scan_code_reply": "返利活动1"
 		}]
 		"""
-	Then jobs获得返利活动列表
-		"""
-		[{
-			"code_name": "返利活动1",
-			"attention_number":0,
-			"order_money": 0.00,
-			"first_buy_num":0,
-			"start_time":"今天",
-			"end_time":"2天后"
-		}]
-		""" 
-
-
+#	Then jobs获得返利活动列表
+#		"""
+#		[{
+#			"code_name": "返利活动1",
+#			"attention_number":0,
+#			"order_money": 0.00,
+#			"first_buy_num":0,
+#			"start_time":"今天",
+#			"end_time":"2天后"
+#		}]
+#		"""
