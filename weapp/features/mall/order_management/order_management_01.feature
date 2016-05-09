@@ -1588,7 +1588,6 @@ Scenario:3 商家后台查看订单详情页,自营平台同步过来的订单
 			}
 			"""
 
-<<<<<<< HEAD
 @mall2 @product_pool @eugene @order
 Scenario:4 查看对应自营平台订单列表和订单详情，标记同步供货商标签
 	Given jobs登录系统

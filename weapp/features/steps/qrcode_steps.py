@@ -12,7 +12,7 @@ from test import bdd_util
 from features.testenv.model_factory import *
 
 from mall.promotion.models import CouponRule
-from modules.member.models import Member, MemberGrade, MemberTag
+from modules.member.models import Member, MemberGrade, MemberTag, MemberInfo
 from weixin2.models import Material, News
 from market_tools.tools.channel_qrcode.models import ChannelQrcodeSettings, ChannelQrcodeBingMember, ChannelQrcodeHasMember
 from market_tools.tools.channel_qrcode.channel_qrcode_util import create_channel_qrcode_has_memeber, create_channel_qrcode_has_memeber_restructure
@@ -441,10 +441,15 @@ def _get_setting_data(context):
         response = context.client.get(bdd_util.nginx(response['Location']))
     return response
 
-@then(u"{user}获得推荐详情页")
-def step_impl(context, user):
+@then(u"{webapp_user_name}获得推荐详情页")
+def step_impl(context, webapp_user_name):
     response = _get_setting_data(context)
-    url = "/termite/workbench/jqm/preview/?module=market_tool:channel_qrcode&model=settings_detail&action=get&webapp_owner_id=%s&project_id=0&workspace_id=market_tool:channel_qrcode&sid=%s&fmt=%s" % (context.webapp_owner_id, response.context['setting'].id, response.context['member'].token)
+    startDate = ''
+    endDate = ''
+    if hasattr(context, 'filter_time'):
+        startDate = context.filter_time['start_date'][0:10]
+        endDate = context.filter_time['end_date'][0:10]
+    url = "/termite/workbench/jqm/preview/?module=market_tool:channel_qrcode&model=settings_detail&action=get&webapp_owner_id=%s&project_id=0&workspace_id=market_tool:channel_qrcode&sid=%s&fmt=%s&startDate=%s&endDate=%s" % (context.webapp_owner_id, response.context['setting'].id, response.context['member'].token, startDate, endDate)
     data = context.client.get(bdd_util.nginx(url))
     actual = {}
     actual['recommended_number'] = data.context['channel_qrcode_members_count']
@@ -457,7 +462,7 @@ def step_impl(context, user):
     actual['members'] = members
     actual['pay_member_number'] = data.context['payed_count']
     actual['order_money'] = data.context['pay_money']
-
+    actual['bangding_phone_num'] = data.context['bind_phone_members_count']
 
     expected = json.loads(context.text)
     bdd_util.assert_dict(expected, actual)
@@ -510,3 +515,72 @@ def step_impl(context, user):
         else:
             grade_id = MemberGrade.objects.get(webapp_id=context.webapp_id, name=data['member_rank']).id
             context.grade_id = grade_id
+
+@when(u"{user}绑定手机号'{phone_number}'")
+def step_impl(context,user,phone_number):
+    username_hexstr = byte_to_hex(user)
+    member_id = Member.objects.get(username_hexstr = username_hexstr).id
+    member_info = MemberInfo.objects.filter(member_id = member_id)
+    if member_info.count() > 0:
+        member_info[0].update(
+            phone_number = phone_number,
+            is_binded = True
+        )
+    else:
+        MemberInfo.objects.create(
+            member_id = member_id,
+            phone_number = phone_number,
+            is_binded = True,
+            sex = 0,
+            name = user
+        )
+
+@when(u'{user}筛选时间')
+def step_impl(context,user):
+    context.filter_time = json.loads(context.text)
+
+@when(u'{user}选择二维码')
+def step_impl(context,user):
+    setting_id_list = []
+    for row in context.table:
+        qrcode_name = row['name']
+        channel_setting = bdd_util.get_channel_qrcode_setting(qrcode_name)
+        setting_id_list.append(str(channel_setting.id))
+    setting_id = ','.join(setting_id_list)
+    context.setting_id = setting_id
+
+@when(u'{user}批量修改二维码')
+def step_impl(context,user):
+    data = json.loads(context.text)
+    if hasattr(context, 'setting_id'):
+        url = "/new_weixin/api/qrcode/?_method=post"
+        post_data = {'setting_id': context.setting_id}
+        post_data['name'] = data['code_name']
+        if data['prize_type'] == "无奖励":
+            post_data['prize_info'] = '{"id":-1,"name":"non-prize","type":"无奖励"}'
+        elif data['prize_type'] == "积分":
+            post_data['prize_info'] = '{"id":' + str(data['integral']) + ',"name":"_score-prize_","type":"积分"}'
+        elif data['prize_type'] == "优惠券":
+            coupon_name = data['coupon']
+            coupon_id = CouponRule.objects.get(owner_id=context.webapp_owner_id, name=coupon_name).id
+            post_data['prize_info'] = '{"id":' + str(coupon_id) + ',"name":"' + coupon_name + '","type":"优惠券"}'
+
+        grade_id = MemberGrade.objects.get(webapp_id=context.webapp_id, name=data['member_rank']).id
+        tag_id = MemberTag.objects.get(webapp_id=context.webapp_id, name=data['tags']).id
+        post_data['grade_id'] = grade_id
+        post_data['tag_id'] = tag_id
+        post_data['re_old_member'] = 1 if data['is_attention_in'] == 'true' else 0
+        post_data['remark'] = data['remarks']
+
+        if data['reply_type'] == "文字":
+            post_data['reply_type'] = 1
+            post_data['reply_detail'] = data['scan_code_reply']
+            post_data['reply_material_id'] = 0
+        else:
+            post_data['reply_type'] = 2
+            post_data['reply_detail'] = ''
+            material_ids = Material.objects.filter(owner_id=context.webapp_owner_id, is_deleted=False).values_list('id',                                                                                                   flat=True)
+            material_id = News.objects.get(material_id__in=material_ids, title=data['scan_code_reply']).material_id
+            post_data['reply_material_id'] = material_id
+
+        response = context.client.post(url, post_data)
