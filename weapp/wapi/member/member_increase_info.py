@@ -32,12 +32,14 @@ class MemberIncrease(api_resource.ApiResource):
 		fisrt_day_of_month = dateutil.get_first_day_of_month()
 
 		member_increase_info = {}
+		total_count = member_models.Member.objects.filter(webapp_id=webapp_id, is_subscribed=True).count()
 		today_count = member_models.Member.objects.filter(webapp_id=webapp_id, is_subscribed=True, created_at__gte=today).count()
 		week_count = member_models.Member.objects.filter(webapp_id=webapp_id, is_subscribed=True, created_at__range=(monday, sunday)).count()
 		month_count = member_models.Member.objects.filter(webapp_id=webapp_id, is_subscribed=True, created_at__gte=get_first_day_of_month).count()
 
 
 		return {
+				'total_count': total_count,
 				'today_count': today_count,
 				'week_count': week_count,
 				'month_count': month_count
