@@ -39,7 +39,7 @@
         data-enable-paginator="true"
         data-enable-sort="false"
         data-selectable="false"
-        data-item-count-per-page="20"
+        data-item-count-per-page="18"
         data-disable-header-select="true"
         class="panel-body"
     ></div>
@@ -98,7 +98,7 @@
                 <td class="xui-massSentTableOtherColumn">
                     <span class="xa-update-tag c9" data-status="${message.status}">
                         {{if message.status == 'send success'}}
-                            成功：${message.sent_count} <br> <i class="xui-error-style">失败：${message.error_count}</i>
+                            成功：${message.sent_count} <br> {{if message.error_count > 0}}<i class="xui-error-style">{{/if}}失败：${message.error_count}{{if message.error_count > 0}}</i>{{/if}}
                         {{else}}
                             {{if message.status == 'delete'}}已删除
                             {{else}}

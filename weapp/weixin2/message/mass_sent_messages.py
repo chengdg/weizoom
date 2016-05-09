@@ -97,6 +97,12 @@ class MassSentMessages(resource.Resource):
                 group_name = ""
             else:
                 group_name = member_group_id2name[message.group_id]
+
+            # 超过24小时算失败
+            if message.status == '' and (datetime.now() - message.created_at).days > 1:
+                status = 'send failed'
+            else:
+                status = message.status
             message_item = {}
             message_item['id'] = message.id
             message_item['webapp_id'] = message.webapp_id
@@ -105,7 +111,7 @@ class MassSentMessages(resource.Resource):
             message_item['total_count'] = message.total_count
             message_item['filter_count'] = message.filter_count
             message_item['error_count'] = message.total_count - message.sent_count
-            message_item['status'] = message.status if (datetime.now() - message.created_at).days < 1 else 'send failed'
+            message_item['status'] = status
             message_item['message_type'] = message.message_type
             message_item['message_content'] = emotion.change_emotion_to_img(message.message_content)
             message_item['created_at'] = message.created_at.strftime('%m月%d日')
