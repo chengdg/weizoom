@@ -34,18 +34,8 @@ Background:
 			"start_date": "今天",
 			"end_date": "1天后",
 			"coupon_id_prefix": "coupon1_id_"
-		},{
-			"name": "优惠券2",
-			"money": 100.00,
-			"count": 5,
-			"limit_counts": 不限,
-			"using_limit": "满5元可以使用",
-			"start_date": "今天",
-			"end_date": "1天后",
-			"coupon_id_prefix": "coupon1_id_"
 		}]
 		"""
-
 
 	And jobs添加会员等级
 		"""
@@ -934,6 +924,19 @@ Scenario:7 带参数二维码的修改优惠券，继续扫码
 		#修改优惠券2奖励为优惠券1奖励时，提示该优惠券已被选用过，但是依然可以使用，但是不能被同一用户领取
 
 	Given jobs登录系统
+	When jobs添加优惠券规则
+	"""
+		[{
+			"name": "优惠券2",
+			"money": 100.00,
+			"count": 5,
+			"limit_counts": 不限,
+			"using_limit": "满5元可以使用",
+			"start_date": "今天",
+			"end_date": "1天后",
+			"coupon_id_prefix": "coupon1_id_"
+		}]
+	"""
 	When jobs添加带参数二维码
 	"""
 		{
