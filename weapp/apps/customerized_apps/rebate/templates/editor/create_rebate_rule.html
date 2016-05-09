@@ -92,7 +92,7 @@
                 <input type="text" class="form-control w70" id="weizoom_card_id_from" name="weizoom_card_id_from" value="{{rebate_rule.weizoom_card_id_from}}" data-validate="require-notempty,,require-nonnegative"/>
                 -&nbsp
                 <input type="text" class="form-control w70" id="weizoom_card_id_to" name="weizoom_card_id_to" value="{{rebate_rule.weizoom_card_id_to}}" data-validate="require-notempty,,require-nonnegative"/>
-            <span>库存：</span>
+            <span class="xa-exchangeStock"></span>
             <span><a target="_blank" href="/mall2/card_exchange_details/" class="xui-detail" title="发放详情">发放详情</a></span>
             </div>
             <div class="errorHint" data-error-hint="请输入数字"></div>
@@ -202,66 +202,114 @@ $(document).ready(function(){
         }
     }
     var editor = new W.view.weixin.MessageEditor(options);
-
-// 提交按钮
-  $('.xa-submit').click(function(event) {
-    $(this).attr('disabled',true);
-    if (!W.validate()) {
-      $(this).attr('disabled',false);
-      return false;
-    }
-    var textContent = $.trim($('[name="text_content"]').val());
-	var materialId = 0;
-    var materialStr = $('.xa-newsMessageZone a').attr('href');
-    if (materialStr && materialStr.length > 0) {
-        var strs = materialStr.split("?");
-        var str = strs[1];
-        paramFields = str.split("=");
-        materialId = parseInt(paramFields[1]);
-    }
-    if (!textContent && materialId == 0) {
-        W.showHint('error', '扫码后回复内容不能为空');
-        $('.xa-submit').removeAttr('disabled');
-        return;
-    }
-    if(materialId == 0 && textContent.length > 600){
-        W.showHint('error', '扫码后回复内容不能超过600字');
-        $('.xa-submit').removeAttr('disabled');
-        return;
-    }
-
-    var replyType = 0;
-    var activeLink = $('#edit-message-panel li[class="active"]').text();
-    if(activeLink === '图文消息' && materialId > 0) {
-        replyType = 2;
-        textContent = '';
-    } else {
-        replyType = 1;
-    }
-    var args = $('.xa-form').serializeObject();
-    args['reply_type'] = replyType;
-    args['reply_detail'] = textContent;
-    args['reply_material_id'] = materialId;
-    console.log('args!!!!!!!!');
-    console.log(args);
-    W.getApi().call({
-      method: 'put',
-      app: 'apps/rebate',
-      resource: 'rebate',
-      args: W.toFormData(args),
-      scope: this,
-      success: function() {
-        W.showHint('success', '创建返利活动成功！');
-        _.delay(function() {
-          window.location.href = '/apps/rebate/rebates/';
-        }, 500)
-      },
-      error: function() {
-        W.showHint('error','创建返利活动失败！');
-        $(this).attr('disabled',false);
-      }
+    //更新库存
+    $(document).on("blur","#weizoom_card_id_to",function(){
+    	var snumData = $(this).siblings("#weizoom_card_id_from").val();
+	    var endnumData = $(this).val();
+	    if(snumData&&endnumData){
+            if(parseInt(snumData) > parseInt(endnumData)){
+                W.showHint('error','号段不合法');
+                return
+            }
+            var stockData = {
+                snum:snumData,
+                endnum:endnumData
+            };
+            checkStock(stockData);
+		}
     });
-  });
+    $(document).on("blur","#weizoom_card_id_from",function(){
+    	var endnumData = $(this).siblings("#weizoom_card_id_to").val();
+	    var snumData = $(this).val();
+	    if(snumData&&endnumData) {
+            if(parseInt(snumData) > parseInt(endnumData)){
+                W.showHint('error','号段不合法');
+                return
+            }
+            var stockData = {
+                snum:snumData,
+                endnum:endnumData
+            };
+            checkStock(stockData);
+		}
+    });
+    function checkStock(stockData){
+        W.getApi().call({
+            method: 'get',
+            app: 'mall2',
+            api: 'card_exchange',
+            args: stockData,
+            scope: this,
+            success: function(data) {
+                is_err = false;
+                $(".xa-exchangeStock").html("库存：" + data);
+            },
+            error: function(resp) {
+                is_err = true;
+                W.showHint('error',resp.errMsg);
+                $(".xa-exchangeStock").html("库存：" + 0);
+            }
+        })
+    }
+    // 提交按钮
+    $('.xa-submit').click(function(event) {
+        $(this).attr('disabled',true);
+        if (!W.validate()) {
+          $(this).attr('disabled',false);
+          return false;
+        }
+        var textContent = $.trim($('[name="text_content"]').val());
+        var materialId = 0;
+        var materialStr = $('.xa-newsMessageZone a').attr('href');
+        if (materialStr && materialStr.length > 0) {
+            var strs = materialStr.split("?");
+            var str = strs[1];
+            paramFields = str.split("=");
+            materialId = parseInt(paramFields[1]);
+        }
+        if (!textContent && materialId == 0) {
+            W.showHint('error', '扫码后回复内容不能为空');
+            $('.xa-submit').removeAttr('disabled');
+            return;
+        }
+        if(materialId == 0 && textContent.length > 600){
+            W.showHint('error', '扫码后回复内容不能超过600字');
+            $('.xa-submit').removeAttr('disabled');
+            return;
+        }
+
+        var replyType = 0;
+        var activeLink = $('#edit-message-panel li[class="active"]').text();
+        if(activeLink === '图文消息' && materialId > 0) {
+            replyType = 2;
+            textContent = '';
+        } else {
+            replyType = 1;
+        }
+        var args = $('.xa-form').serializeObject();
+        args['reply_type'] = replyType;
+        args['reply_detail'] = textContent;
+        args['reply_material_id'] = materialId;
+        console.log('args!!!!!!!!');
+        console.log(args);
+        W.getApi().call({
+            method: 'put',
+            app: 'apps/rebate',
+            resource: 'rebate',
+            args: W.toFormData(args),
+            scope: this,
+            success: function() {
+                W.showHint('success', '创建返利活动成功！');
+                _.delay(function() {
+                  window.location.href = '/apps/rebate/rebates/';
+                }, 500)
+            },
+            error: function() {
+                W.showHint('error','创建返利活动失败！');
+                $(this).attr('disabled',false);
+            }
+        });
+    });
 })
 </script>
 {% endblock %}
