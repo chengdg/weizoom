@@ -92,17 +92,16 @@
     </div>
     </div>
 	<div class="panel panel-default xb-rightPanel pr mt20 xa-list">
-		<div class="panel-heading">
-			<!-- <a class="xui-tipBox fr">
-			如何对数据排序<b class="xui-tip">?</b></a> -->
+		<div class="panel-heading clearfix">
 			<input type="checkbox" class="is_show vs" checked value="0">&nbsp;&nbsp;仅显示通过二维码新关注会员
-			<a class="xa-reset btn btn-default xui-fontBold" href="javascript:void(0);">导出</a>
+			<a class="xa-export btn btn-default xui-fontBold fr" href="javascript:void(0);">导出</a>
 		</div>
 
 		<div 
 			data-ui-role="advanced-table" 
-			data-app="new_weixin"
-			data-resource="qrcode_member"
+			data-app="apps/rebate"			
+			data-resource="rebate_participances"
+			data-args='{"record_id": "{{record_id}}", "is_show":"1"}'
 			data-template-id="#members-view"
 			data-enable-paginator="true" 
 			data-enable-sort="false" 
@@ -193,7 +192,7 @@ $(document).ready(function() {
 			is_show = 1;
 		}
 		var args= '{"start_date":"'+start_date+'","end_date":"'+end_date+'", "is_show":"'+is_show+'","status":"'+status+'"}';
-		dataView.options.args =  args;//this.getFilterValueByDict(args);
+		dataView.options.args = args;
 	    dataView.setPage(1);
 		dataView.reload();
 	}
