@@ -23,7 +23,7 @@ Feature:带参数二维码-扫码
 Background:
 	Given jobs登录系统
 
-	When jobs添加优惠券规则
+		When jobs添加优惠券规则
 		"""
 		[{
 			"name": "优惠券1",
@@ -34,8 +34,19 @@ Background:
 			"start_date": "今天",
 			"end_date": "1天后",
 			"coupon_id_prefix": "coupon1_id_"
+		},{
+			"name": "优惠券2",
+			"money": 100.00,
+			"count": 5,
+			"limit_counts": 不限,
+			"using_limit": "满5元可以使用",
+			"start_date": "今天",
+			"end_date": "1天后",
+			"coupon_id_prefix": "coupon1_id_"
 		}]
 		"""
+
+
 	And jobs添加会员等级
 		"""
 		[{
@@ -915,3 +926,141 @@ Scenario:6 带参数二维码-扫码后回复
 			#此不是想实现取消关注的会员扫码再关注，看一下怎么实现合适
 
 			Then marry收到自动回复'图文1'
+
+
+@mall2 @senior @bandParameterCode
+Scenario:7 带参数二维码的修改优惠券，继续扫码
+		#修改优惠券1奖励为优惠券2奖励，同一个用户只能领取一次优惠券奖励；
+		#修改优惠券2奖励为优惠券1奖励时，提示该优惠券已被选用过，但是依然可以使用，但是不能被同一用户领取
+
+	Given jobs登录系统
+	When jobs添加带参数二维码
+	"""
+		{
+			"code_name": "带参数二维码-优惠券奖励",
+			"create_time": "今天",
+			"prize_type": "优惠券",
+			"coupon":"优惠券1",
+			"member_rank": "金牌会员",
+			"tags": "分组1",
+			"is_attention_in": "true",
+			"remarks": "带参数二维码备注",
+			"is_relation_member": "true",
+			"relation_time": "今天",
+			"relation_member": "nokia",
+			"title": "星级代言人",
+			"code_description": "星级代言人二维码描述",
+			"reply_type": "图文",
+			"scan_code_reply": "图文1"
+		}
+		"""
+
+	#未关注的用户直接扫描二维码获得优惠券奖励
+	When 清空浏览器
+	When mayun扫描带参数二维码"带参数二维码-优惠券奖励"于'2016-05-09 10:00:00'
+	When mayun访问jobs的webapp
+
+	#扫码的用户获得奖励
+	When mayun访问jobs的webapp
+	Then mayun能获得webapp优惠券列表
+		"""
+		[{
+			"coupon_id": "coupon1_id_1",
+			"money": 100.00,
+			"status": "未使用"
+		}]
+		"""
+
+	#同一用户再次扫码没有获得奖励
+	When mayun扫描带参数二维码"带参数二维码-优惠券奖励"于'2016-05-09 11:00:00'
+	When mayun访问jobs的webapp
+	Then mayun能获得webapp优惠券列表
+		"""
+		[{
+			"coupon_id": "coupon1_id_1",
+			"money": 100.00,
+			"status": "未使用"
+		}]
+		"""
+	Given jobs登录系统
+	When jobs更新带参数二维码'带参数二维码-优惠券奖励'
+		"""
+		{
+			"code_name": "带参数二维码-优惠券奖励",
+			"create_time": "今天",
+			"prize_type": "优惠券",
+			"coupon":"优惠券2",
+			"member_rank": "金牌会员",
+			"tags": "分组1",
+			"is_attention_in": "true",
+			"remarks": "带参数二维码备注",
+			"is_relation_member": "true",
+			"relation_time": "今天",
+			"relation_member": "nokia",
+			"title": "星级代言人",
+			"code_description": "星级代言人二维码描述",
+			"reply_type": "图文",
+			"scan_code_reply": "图文1"
+		}
+		"""
+
+	When 清空浏览器
+	When mayun扫描带参数二维码"带参数二维码-优惠券奖励"于'2016-05-09 12:00:00'
+	When mayun访问jobs的webapp
+
+
+	When mayun访问jobs的webapp
+	Then mayun能获得webapp优惠券列表
+		"""
+		[{
+			"coupon_id": "coupon1_id_2",
+			"money": 100.00,
+			"status": "未使用"
+		}，{
+			"coupon_id": "coupon1_id_1",
+			"money": 100.00,
+			"status": "未使用"
+		}]
+		"""
+
+	Given jobs登录系统
+	When jobs更新带参数二维码'带参数二维码-优惠券奖励'
+		"""
+		{
+			"code_name": "带参数二维码-优惠券奖励",
+			"create_time": "今天",
+			"prize_type": "优惠券",
+			"coupon":"优惠券1",
+			"member_rank": "金牌会员",
+			"tags": "分组1",
+			"is_attention_in": "true",
+			"remarks": "带参数二维码备注",
+			"is_relation_member": "true",
+			"relation_time": "今天",
+			"relation_member": "nokia",
+			"title": "星级代言人",
+			"code_description": "星级代言人二维码描述",
+			"reply_type": "图文",
+			"scan_code_reply": "图文1"
+		}
+		"""
+
+	When 清空浏览器
+	When mayun扫描带参数二维码"带参数二维码-优惠券奖励"于'2016-05-09 13:00:00'
+	When mayun访问jobs的webapp
+
+
+	When mayun访问jobs的webapp
+	Then mayun能获得webapp优惠券列表
+		"""
+		[{
+			"coupon_id": "coupon1_id_2",
+			"money": 100.00,
+			"status": "未使用"
+		}，{
+			"coupon_id": "coupon1_id_1",
+			"money": 100.00,
+			"status": "未使用"
+		}]
+		"""
+
