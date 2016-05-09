@@ -27,7 +27,7 @@ class MemberIncrease(api_resource.ApiResource):
 		"""
 
 		webapp_id = args['webapp_id']
-		today = datetime.now()..strftime('%Y-%m-%d 00:00:00')
+		today = datetime.now().strftime('%Y-%m-%d 00:00:00')
 		monday, sunday = dateutil.get_week_bounds()
 		fisrt_day_of_month = dateutil.get_first_day_of_month()
 
@@ -35,7 +35,7 @@ class MemberIncrease(api_resource.ApiResource):
 		total_count = member_models.Member.objects.filter(webapp_id=webapp_id, is_subscribed=True).count()
 		today_count = member_models.Member.objects.filter(webapp_id=webapp_id, is_subscribed=True, created_at__gte=today).count()
 		week_count = member_models.Member.objects.filter(webapp_id=webapp_id, is_subscribed=True, created_at__range=(monday, sunday)).count()
-		month_count = member_models.Member.objects.filter(webapp_id=webapp_id, is_subscribed=True, created_at__gte=get_first_day_of_month).count()
+		month_count = member_models.Member.objects.filter(webapp_id=webapp_id, is_subscribed=True, created_at__gte=fisrt_day_of_month).count()
 
 
 		return {
