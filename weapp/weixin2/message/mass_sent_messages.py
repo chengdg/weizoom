@@ -92,11 +92,14 @@ class MassSentMessages(resource.Resource):
             # message.created_at = message.created_at.strftime('%m月%d日')
             # message.message_content = emotion.change_emotion_to_img(message.message_content)
             if message.group_id == -1:
-                group_name = u"全部"
+                group_name = u"全部用户"
             elif message.group_id == 0:
                 group_name = ""
             else:
                 group_name = member_group_id2name[message.group_id]
+
+            if message.member_ids != "":
+                group_name = u"自定义群发"
 
             # 超过24小时算失败
             if message.status == '' and (datetime.now() - message.created_at).days > 1:

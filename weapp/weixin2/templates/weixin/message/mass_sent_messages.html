@@ -97,7 +97,16 @@
                         {{/if}}
                     </ul>
                 </td>
-                <td class="xui-massSentTableOtherColumn c9">${message.created_at}<br>分组：${message.group_name}</td>
+                <td class="xui-massSentTableOtherColumn c9">${message.created_at}<br>
+                {{if message.group_name == '全部用户'}}
+                    全部用户
+                {{else}}
+                    {{if message.group_name == '自定义群发'}}
+                        自定义群发
+                    {{else}}
+                        分组：${message.group_name}</td>
+                    {{/if}}
+                {{/if}}
                 <td class="xui-massSentTableOtherColumn">
                     <span class="xa-update-tag c9" data-status="${message.status}">
                         {{if message.status == 'send success'}}

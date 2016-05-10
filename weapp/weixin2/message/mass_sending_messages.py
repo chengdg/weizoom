@@ -288,11 +288,11 @@ class MassSendingMessages(resource.Resource):
             #         openid_list.append(member.member_open_id)
         if is_more_than_two is False:
             response = create_response(405)
-            response.errMsg = u'群发目标用户数量不能少于2个'
+            response.errMsg = u'单次群发人数不能少于2个'
             return response.get_response()
         if is_below_w is False:
             response = create_response(405)
-            response.errMsg = u'群发目标用户数量不能多于10000个'
+            response.errMsg = u'单次群发人数不能超过10000'
             return response.get_response()
         if send_type != 'news':
             message_type = MESSAGE_TYPE_TEXT
