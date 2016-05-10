@@ -11,7 +11,7 @@ W.dialog.app.shvote.ViewParticipanceDataDialog = W.dialog.Dialog.extend({
 	}, W.dialog.Dialog.prototype.events),
 	
 	templates: {
-		dialogTmpl: '#app-shvote-viewParticipanceDataDialog-dialog-tmpl',
+		dialogTmpl: '#app-shvote-viewParticipanceDataDialog-dialog-tmpl'
 	},
 
 	getTemplate: function() {

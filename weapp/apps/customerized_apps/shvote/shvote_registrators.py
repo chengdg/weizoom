@@ -48,9 +48,10 @@ class ShvoteRegistrators(resource.Resource):
 	@staticmethod
 	def get_datas(request):
 		name = request.GET.get('participant_name', '')#搜索
+		serial_number = request.GET.get('serial_number', '')
 		status = int(request.GET.get('participant_status', -1))
-		webapp_id = request.user_profile.webapp_id
-		member_ids = []
+		# webapp_id = request.user_profile.webapp_id
+		# member_ids = []
 		# if name:
 		# 	hexstr = byte_to_hex(name)
 		# 	members = member_models.Member.objects.filter(webapp_id=webapp_id,username_hexstr__contains=hexstr)#模糊搜索
@@ -61,6 +62,8 @@ class ShvoteRegistrators(resource.Resource):
 		params = {'belong_to':request.GET['id'],'is_use':app_models.MEMBER_IS_USE['YES']}
 		if name:
 			params['name__icontains'] = name
+		if serial_number:
+			params['serial_number__icontains'] = serial_number
 		if status != -1:
 			params['status'] = status
 		# if start_time:
@@ -350,26 +353,71 @@ class ShvoteCreatePlayer(resource.Resource):
 				vote_participance_created_list.append(p.member_id)
 			min_member_id = min(vote_participance_created_list)
 			member_id = min_member_id - 1
-		try:
-			sh_participance = app_models.ShvoteParticipance(
-				belong_to = activity_id,
-				icon = head_img_src,
-				name = player_name,
-				group = group,
-				serial_number = serial_number,
-				details = details,
-				created_at = datetime.now(),
-				status = 1,
-				member_id = member_id,
-				pics = img_des_srcs
-			)
-			sh_participance.save()
 
-			response = create_response(200)
-		except:
+		all_participances = app_models.ShvoteParticipance.objects(belong_to=activity_id)
+		serial_number_valid = True
+		for participance in all_participances:
+			if serial_number == participance.serial_number:
+				serial_number_valid = False
+		if serial_number_valid:
+			try:
+				sh_participance = app_models.ShvoteParticipance(
+					belong_to = activity_id,
+					icon = head_img_src,
+					name = player_name,
+					group = group,
+					serial_number = serial_number,
+					details = details,
+					created_at = datetime.now(),
+					status = 1,
+					member_id = member_id,
+					pics = img_des_srcs
+				)
+				sh_participance.save()
+				response = create_response(200)
+			except:
+				response = create_response(500)
+				response.errMsg = u'创建选手失败！'
+		else:
 			response = create_response(500)
-			response.errMsg = u'创建选手失败'
+			response.errMsg = u'该选手编号已经存在！'
+		return response.get_response()
 
+	@login_required
+	#编辑选手
+	def api_put(request):
+		head_img_src = request.POST['head_img_src']
+		player_name = request.POST['player_name']
+		group = request.POST['group']
+		serial_number = request.POST['serial_number']
+		details = request.POST['details']
+		img_des_srcs = json.loads(request.POST['img_des_srcs'])
+		activity_id = request.POST['activity_id']
+		player_id = request.POST['player_id']
+
+		all_participances = app_models.ShvoteParticipance.objects(belong_to=activity_id)
+		serial_number_valid = True
+		for participance in all_participances:
+			if serial_number == participance.serial_number:
+				serial_number_valid = False
+		if serial_number_valid:
+			try:
+				app_models.ShvoteParticipance.objects.get(id=player_id).update(
+					belong_to = activity_id,
+					icon = head_img_src,
+					name = player_name,
+					group = group,
+					serial_number = serial_number,
+					details = details,
+					pics = img_des_srcs
+				)
+				response = create_response(200)
+			except:
+				response = create_response(500)
+				response.errMsg = u'编辑选手失败'
+		else:
+			response = create_response(500)
+			response.errMsg = u'该选手编号已经存在！'
 		return response.get_response()
 
 class ShvoteUpload(resource.Resource):

@@ -350,6 +350,7 @@ def __clear_all_app_data():
 	shvote_models.Shvote.objects.all().delete()
 	shvote_models.ShvoteParticipance.objects.all().delete()
 	shvote_models.ShvoteControl.objects.all().delete()
+	shvote_models.ShvoteDetail.objects.all().delete()
 
 	#apps拼红包
 	redpacket_models.RedPacket.objects.all().delete()

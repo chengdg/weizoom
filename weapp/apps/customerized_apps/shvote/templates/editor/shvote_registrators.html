@@ -20,30 +20,35 @@
 			<li class="active">报名详情</li>
 		</ul>
 	</div>
-
-	<div class="xui-formPanel pb10 mb15">
-		<div class="xui-i-col">
-			<div class="xui-i-item">
-				<label class="">选手名称：</label>
-				<input type="text" class="form-control" id="participant_name" name="participant_name" value="" />
+	<div class="xui-filterPanel pb10 mb15">
+		<div class="xui-form disT">
+			<div class="xui-col">
+				<div class="xui-i-item">
+					<label class="">选手名称：</label>
+					<input type="text" class="form-control" id="participant_name" name="participant_name" value="" />
+				</div>
+			</div>
+			<div class="xui-col">
+				<div class="xui-i-item ml20">
+					<label class="">选手编号：</label>
+					<input type="text" class="form-control" id="serial_number" name="serial_number" value="" />
+				</div>
+			</div>
+			<div class="xui-col">
+				<div class="xui-i-item ml20">
+					<label>状态：</label>
+					<select class="" id="status" name="status">
+						<option value="-1">全部</option>
+						<option value="0">待审核</option>
+						<option value="1">审核通过</option>
+					</select>
+				</div>
 			</div>
 		</div>
-		<div class="xui-i-col">
-			<div class="xui-i-item ml20">
-				<label>状态：</label>
-				<select class="" id="status" name="status">
-					<option value="-1">全部</option>
-					<option value="0">待审核</option>
-					<option value="1">审核通过</option>
-				</select>
-			</div>
-		</div>
-		<div class="xui-i-col">
-			<div class="ml80">
-				<a class="btn btn-primary mr30 xa-search xui-fontBold" href="javascript:void(0);">查&nbsp;&nbsp;&nbsp;&nbsp;询</a>
-				<a class="btn btn-default xa-export xui-fontBold" href="javascript:void(0);">批量导出</a>
-				<a id="export_href" style="display: none ">DownloadXLS</a>
-			</div>
+		<div class="xui-btn-group">
+			<a class="btn btn-primary mr30 xa-search xui-fontBold" href="javascript:void(0);">查&nbsp;&nbsp;&nbsp;&nbsp;询</a>
+			<a class="btn btn-default xa-export xui-fontBold" href="javascript:void(0);">批量导出</a>
+			<a id="export_href" style="display: none ">DownloadXLS</a>
 		</div>
 	</div>
 
@@ -136,9 +141,9 @@
 				<td>
 					{{if (item.status === 0)}}
 						<a href="javascript:void(0);" class="ml5 xa-review">审核通过</a>
-						<a href="javascript:void(0);" class="ml5 xa-delete">删除</a>
 					{{/if}}
 					<a href="/apps/shvote/shvote_create_player/?id=${item.activity_id}&player_id=${item.id}" class="ml5">查看</a>
+					<a href="javascript:void(0);" class="ml5 xa-delete">删除</a>
 				</td>
 			</tr>
 			{{/each}}
@@ -159,10 +164,12 @@
 $(document).ready(function() {
 	$('.xa-search').click(function(event) {
 		var participant_name = $.trim($('[name="participant_name"]').val());
+		var serial_number = $.trim($('[name="serial_number"]').val());
 		var participant_status = $.trim($('[name="status"]').val());
 		var table = $('[data-ui-role="advanced-table"]').data('view');
 		table.reload({
 			participant_name: participant_name,
+			serial_number: serial_number,
 			participant_status:participant_status
 		}, {
 			emptyDataHint: '没有符合条件的数据'
@@ -171,8 +178,8 @@ $(document).ready(function() {
 
 	$('body').delegate('.xa-delete', 'click', function(event) {
 		var table = $('div[data-ui-role="advanced-table"]').data('view');
-		var $el = $(event.target)
-		var id = $el.parents('tr').data('id')
+		var $el = $(event.target);
+		var id = $el.parents('tr').data('id');
 		W.requireConfirm({
 			$el: $el,
 			width: 420,
@@ -202,13 +209,13 @@ $(document).ready(function() {
 
 	$('body').delegate('.xa-review', 'click', function(event) {
 		var table = $('div[data-ui-role="advanced-table"]').data('view');
-		var id = $(event.target).parents('tr').data('id')
+		var id = $(event.target).parents('tr').data('id');
 		W.getApi().call({
 			app: 'apps/shvote',
 			resource: 'shvote_registrators',
 			method: 'post',
 			args: {
-				id: id,
+				id: id
 			},
 			success: function(data) {
 				W.showHint('success', '审核成功！');
@@ -219,7 +226,6 @@ $(document).ready(function() {
 			}
 		});
 	});
-
 
 	//全选js
 	$('.xa-selectAll').click(function(event) {
@@ -251,7 +257,7 @@ $(document).ready(function() {
 			resource: 'shvote_registrators',
 			method: 'post',
 			args: {
-				"ids":JSON.stringify(ids),
+				"ids":JSON.stringify(ids)
 			},
 			success: function(data) {
 				W.showHint('success', '审核成功！');
@@ -267,17 +273,17 @@ $(document).ready(function() {
 	//批量删除
 	$('.xa-batchDelete').click(function(event) {
 		var table = $('div[data-ui-role="advanced-table"]').data('view');
-		var $el = $(event.target)
+		var $el = $(event.target);
 		var ids = table.getAllSelectedDataIds();
-		for(var index in ids){
-			var id = ids[index];
-			var $tr = $('div[data-ui-role="advanced-table"]').find("tr[data-id="+id+"]");
-			var item_status = $tr.find("td.item_status").attr('item_status');
-			if(item_status==1){
-				W.showHint('error', '包含已通过审核的选手！');
-				return false;
-			}
-		}
+//		for(var index in ids){
+//			var id = ids[index];
+//			var $tr = $('div[data-ui-role="advanced-table"]').find("tr[data-id="+id+"]");
+//			var item_status = $tr.find("td.item_status").attr('item_status');
+//			if(item_status==1){
+//				W.showHint('error', '包含已通过审核的选手！');
+//				return false;
+//			}
+//		}
 		if(ids.length==0){
 			W.showHint('error', '请选择选手！');
 			return false;
@@ -313,6 +319,7 @@ $(document).ready(function() {
 	$('.xa-export').click(function(event){
 		W.getLoadingView();
 		var participant_name = $.trim($('[name="participant_name"]').val());
+		var serial_number = $.trim($('[name="serial_number"]').val());
 		var status = $.trim($('[name="status"]').val());
 		var export_id =window.location.search.split('?id=')[1];
 		W.getApi().call({
@@ -322,6 +329,7 @@ $(document).ready(function() {
 			args: {
 				'id': export_id,
 				'participant_name': participant_name,
+				'serial_number': serial_number,
 				'status':status
 			},
 			success: function(resp){
@@ -339,9 +347,6 @@ $(document).ready(function() {
 			}
 		});
 	});
-
-
-
 });
 </script>
 {% endblock %}

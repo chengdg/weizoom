@@ -90,7 +90,6 @@ class MShvote(resource.Resource):
 		"""
 		id = request.GET['id']
 		isPC = request.GET.get('isPC',0)
-		isMember = False
 		share_page_desc = ""
 		auth_appid_info = None
 		record = None
@@ -137,12 +136,12 @@ class MShvote(resource.Resource):
 			'resource': "shvote",
 			'hide_non_member_cover': True, #非会员也可使用该页面
 			'isPC': True if isPC else False,
-			'isMember': isMember,
 			'auth_appid_info': auth_appid_info,
 			'share_page_title': mpUserPreviewName if mpUserPreviewName else recordName,
 			'share_img_url': record.share_image if record else '',
 			"share_page_desc": share_page_desc,
-			"groups": record.groups if record else []
+			"groups": record.groups if record else [],
+			"advertisement": record.advertisement if record.advertisement !='' else None
 		})
 		response = render_to_string('shvote/templates/webapp/m_shvote.html', c)
 		if request.member:

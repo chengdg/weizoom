@@ -60,9 +60,9 @@ def __get_actions(status):
 	根据输入微助力状态
 	返回对于操作列表
 	"""
-	actions_list = [u"查看"]
+	actions_list = [u"查看","删除"]
 	if status == u"待审核":
-		actions_list = ["审核通过","删除"]+actions_list
+		actions_list = ["审核通过"]+actions_list
 	elif status=="审核通过":
 		pass
 	return actions_list
@@ -119,7 +119,38 @@ def __get_into_shvote_signup_pages(context):
 		"args": termite_post_args
 	})
 
+def __Search_ShVoteParticipance(context,search_dic):
+	"""
+	搜索高级投票报名详情
+	输入搜索字典
+	返回数据列表
+	"""
+	design_mode = 0
+	count_per_page = 10
+	version = 1
+	page = 1
+	enable_paginate = 1
+	openid = context.openid
 
+	participant_name = unicode(search_dic["name"])
+	serial_number = search_dic["serial_number"]
+	participant_status = __name2status(search_dic["status"])
+	shvote_id = str(context.shvote_id)
+	search_url = "/apps/shvote/api/shvote_registrators/?&id={}&design_mode={}&version={}&count_per_page={}&page={}&enable_paginate={}&fmd={}&participant_name={}&serial_number={}&participant_status={}".format(
+			shvote_id,
+			design_mode,
+			version,
+			count_per_page,
+			page,
+			enable_paginate,
+			openid,
+			participant_name,
+			serial_number,
+			participant_status)
+
+	search_response = context.client.get(search_url)
+	bdd_util.assert_api_call_success(search_response)
+	return search_response
 
 # @When(u'{webapp_user_name}点击图文"{title}"进入高级微信投票活动页面')
 # def step_impl(context, webapp_user_name, title):
@@ -151,9 +182,7 @@ def step_impl(context, webapp_user_name):
 	print ("<<<< Shvote Mobile Page --- Sign Up ----[ end ] <<<<")
 
 	response = __get_into_shvote_signup_pages(context)#resp.context=> data ; resp.content => Http Text
-	apps_util.debug_print(response.content)
-
-
+	# apps_util.debug_print(response.content)
 
 #后端的
 @Then(u'{webapp_user_name}能获得报名详情列表')
@@ -163,11 +192,9 @@ def step_impl(context,webapp_user_name):
 	version = 1
 	page = 1
 	enable_paginate = 1
-
 	openid = context.openid
 	webapp_owner_id = context.webapp_owner_id
 	shvote_id = str(context.shvote_id)
-
 
 	actual_list = []
 	raw_expected = json.loads(context.text)
@@ -191,42 +218,25 @@ def step_impl(context,webapp_user_name):
 		}
 		expected.append(tmp)
 
-
-
-#	 #搜索查看结果
-	if hasattr(context,"search_group"):
+	#搜索查看结果
+	if hasattr(context,"search_array"):
 		pass
-		# rec_search_list = context.search_group
-		# for item in rec_search_list:
-		#	 tmp = {
-		#		 "id":item['id'],
-		#		 "name":item['name'],
-		#		 "product_name":item["product_name"],
-		#		 "product_img":item["product_img"],
-		#		 "product_id":item["product_id"],
-		#		 "status":item['status'],
-		#		 "group_item_count":item['group_item_count'],
-		#		 "group_visitor_count":item['group_visitor_count'],
-		#		 "group_customer_count":item['group_customer_count'],
-		#		 "handle_status":item['handle_status'],
-		#		 "related_page_id":item['related_page_id'],
-		#		 "start_time":"%s %s"%(item['start_time_date'].replace('/','-'),item["start_time_time"]),
-		#		 "end_time":"%s %s"%(item['end_time_date'].replace('/','-'),item["end_time_time"]),
-		#		 "created_at":item["created_at"]
-		#	 }
-		#	 tmp["actions"] = __get_actions(item['status'],item['handle_status'])
-		#	 actual_list.append(tmp)
-
-		# for expect in expected:
-		#	 if 'start_date' in expect:
-		#		 expect['start_time'] = __date2time(expect['start_date'])
-		#		 del expect['start_date']
-		#	 if 'end_date' in expect:
-		#		 expect['end_time'] = __date2time(expect['end_date'])
-		#		 del expect['end_date']
-		# print("expected: {}".format(expected))
-
-		# bdd_util.assert_list(expected,actual_list)#assert_list(小集合，大集合)
+		rec_search_list = context.search_array
+		for item in rec_search_list:
+			tmp = {
+				"id":item['id'],
+				"icon":item['icon'],
+				"name":item['name'],
+				"count":item['count'],
+				"serial_number":item['serial_number'],
+				"status":__status2name(item['status']),
+				"created_at":"%s 00:00"%(item['created_at'].replace('/','-').split(' ')[0]),
+			}
+			tmp["actions"] = __get_actions(__status2name(item['status']))
+			actual_list.append(tmp)
+		print("expected: {}".format(expected))
+		print("actual_data: {}".format(actual_list))
+		bdd_util.assert_list(expected,actual_list)#assert_list(小集合，大集合)
 	#其他查看结果
 	else:
 		# #分页情况，更新分页参数
@@ -235,15 +245,6 @@ def step_impl(context,webapp_user_name):
 		#	 paging_dic = context.paging
 		#	 count_per_page = paging_dic['count_per_page']
 		#	 page = paging_dic['page_num']
-
-		# for expect in expected:
-		#	 if 'start_date' in expect:
-		#		 expect['start_time'] = __date2time(expect['start_date'])
-		#		 del expect['start_date']
-		#	 if 'end_date' in expect:
-		#		 expect['end_time'] = __date2time(expect['end_date'])
-		#		 del expect['end_date']
-
 
 		#针对后端的 request.GET['id']在url里把id当做参数传过去，id为活动id
 		url ="/apps/shvote/api/shvote_registrators/?&id={}&design_mode={}&version={}&count_per_page={}&page={}&enable_paginate={}&fmd={}".format(shvote_id,design_mode,version,count_per_page,page,enable_paginate,openid)
@@ -259,9 +260,20 @@ def step_impl(context,webapp_user_name):
 				"status":__status2name(item['status']),
 				"created_at":"%s 00:00"%(item['created_at'].replace('/','-').split(' ')[0]),
 			}
-			actions_array = __get_actions(__status2name(item['status']))
-			tmp["actions"] = actions_array
+			tmp["actions"] = __get_actions(__status2name(item['status']))
 			actual_list.append(tmp)
 		print("expected: {}".format(expected))
 		print("actual_data: {}".format(actual_list))
 		bdd_util.assert_list(expected,actual_list)
+
+@when(u"{user}设置高级投票报名详情查询条件")
+def step_impl(context,user):
+	expect = json.loads(context.text)
+	search_dic = {
+		"name": expect.get("name",""),
+		"serial_number": expect.get("serial_number",""),
+		"status": expect.get("status",u"全部")
+	}
+	search_response = __Search_ShVoteParticipance(context,search_dic)
+	search_array = json.loads(search_response.content)['data']['items']
+	context.search_array = search_array

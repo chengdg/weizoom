@@ -309,6 +309,10 @@
 		padding: 9px 0;
 		display: none;
 	}
+	.wui-advertisement {
+		border-bottom: 5px solid #f0f0f0;
+		padding: 5px 15px;
+	}
 </style>
 {% endblock %}
 
@@ -355,7 +359,11 @@
 					<p>选手列表是根据选手票数由多到少排列，显示前100名。如果需要查找100名以外的选手请在搜索栏输入选手报名序号。</p>
 				</div>
 			</div>
-
+			{% if advertisement %}
+				<div class="wui-advertisement wa-advertisement">
+					{{ advertisement|safe }}
+				</div>
+			{% endif %}
 			<div class="wui-group wa-groups swiper-container">
 				<div class="swiper-wrapper">
 					{% for group in groups %}
@@ -453,8 +461,7 @@
 
 		// 我要报名
 		$('.wa-imark').click(function(){
-           	var isMember = {% if isMember %}true{% else %}false{% endif %};
-		   		if(!isMember){
+		   	if(!W.isMember){
 		        showQrcode(W.qrcodeUrl);
 		        return;
 	   		}		
@@ -504,8 +511,7 @@
         //参与投票
         var voteLock = false;
         $('body').on('click','.wa-ivote', function(){
-           	var isMember = {% if isMember %}true{% else %}false{% endif %};
-		   		if(!isMember){
+			if(!W.isMember){
 		        showQrcode(W.qrcodeUrl);
 		        return;
 	   		}
@@ -551,7 +557,6 @@
                 }
             });
         });
-
     });
 
     //获取已报名人数、总投票数、页面总访问数、本次可投票机会、排行、分组信息
@@ -576,6 +581,7 @@
                 	current_group = $('.active').html();
                 };
                 can_play_info = member_info.can_play_info;
+				W.isMember = member_info.isMember;
                 update_member_info(member_info,current_group);
                 //更新排名信息
                 getRankInfo(current_group,'');

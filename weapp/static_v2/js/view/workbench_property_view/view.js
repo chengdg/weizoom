@@ -86,6 +86,7 @@ W.workbench.PropertyView = Backbone.View.extend({
             "colorpicker": _.bind(this.initColorPicker, this),
             "secondnav": _.bind(this.initSecondNav, this),
             "richtext": _.bind(this.initRichTextView, this),
+            "richtext2": _.bind(this.initRichTextView_2, this),
             "daterange": _.bind(this.initDateRange, this),
             "prize_selector": _.bind(this.initPrizeSelector, this),
             "tags_selector": _.bind(this.initTagsSelector, this),
@@ -803,19 +804,33 @@ W.workbench.PropertyView = Backbone.View.extend({
     },
 
     initRichTextView: function($el){
-        this.editor = new W.view.common.RichTextEditor({
+        this.editor_1 = new W.view.common.RichTextEditor({
             el: $el,
             maxCount: 10000,
             type: 'full',
             width:'100%',
             imgSuffix: "uid="+W.uid 
         });
-        this.editor.bind('contentchange', function() {
-            $el.val(this.editor.getHtmlContent()).trigger('input');
+        this.editor_1.bind('contentchange', function() {
+            $el.val(this.editor_1.getHtmlContent()).trigger('input');
             // this.textMessage.set('text', this.editor.getHtmlContent());
         }, this);
-        this.editor.render();
+        this.editor_1.render();
+    },
 
+    initRichTextView_2: function($el){
+        this.editor_2 = new W.view.common.RichTextEditor({
+            el: $el,
+            maxCount: 10000,
+            type: 'full',
+            width:'100%',
+            imgSuffix: "uid="+W.uid
+        });
+        this.editor_2.bind('contentchange', function() {
+            $el.val(this.editor_2.getHtmlContent()).trigger('input');
+            // this.textMessage.set('text', this.editor.getHtmlContent());
+        }, this);
+        this.editor_2.render();
     },
 
     initDateRange: function($el){

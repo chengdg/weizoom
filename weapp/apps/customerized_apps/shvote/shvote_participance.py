@@ -26,8 +26,6 @@ class ShvoteParticipance(resource.Resource):
 	app = 'apps/shvote'
 	resource = 'shvote_participance'
 
-
-
 	def get(request):
 		"""
 		响应GET
@@ -46,7 +44,7 @@ class ShvoteParticipance(resource.Resource):
 				#获取公众号昵称
 				mpUserPreviewName = request.webapp_owner_info.auth_appid_info.nick_name
 				if member:
-					isMember =member.is_subscribed
+					isMember = member.is_subscribed
 					participance_data = app_models.ShvoteParticipance.objects(belong_to=id, member_id=member.id)
 					if participance_data.count() > 0:
 						participance_data = participance_data.first()
@@ -89,25 +87,16 @@ class ShvoteParticipance(resource.Resource):
 			member_id = request.member.id
 			record_id = request.POST['belong_to']
 			post = request.POST
-			#如果曾经报名过，但是审核不通过，可以再次报名
-			sh_participance_is_use = app_models.ShvoteParticipance.objects(belong_to=record_id,member_id=member_id,is_use=app_models.MEMBER_IS_USE['NO'])
-			if sh_participance_is_use.count() > 0 :
-				sh_participance_is_use.first().update(
-					belong_to = record_id,
-					member_id = member_id,
-					icon = post["icon"],
-					name = post["name"],
-					group = post["group"],
-					serial_number = post["serial_number"],
-					details = post["details"],
-					pics = json.loads(post["pics"]),
-					is_use = app_models.MEMBER_IS_USE['YES'],
-					created_at = datetime.now()
-				)
-				response = create_response(200)
-			else:
-				try:
-					sh_participance = app_models.ShvoteParticipance(
+			all_participances = app_models.ShvoteParticipance.objects(belong_to=record_id)
+			serial_number_valid = True
+			for participance in all_participances:
+				if post["serial_number"] == participance.serial_number:
+					serial_number_valid = False
+			if serial_number_valid:
+				#如果曾经报名过，但是审核不通过，可以再次报名
+				sh_participance_is_use = app_models.ShvoteParticipance.objects(belong_to=record_id,member_id=member_id,is_use=app_models.MEMBER_IS_USE['NO'])
+				if sh_participance_is_use.count() > 0 :
+					sh_participance_is_use.first().update(
 						belong_to = record_id,
 						member_id = member_id,
 						icon = post["icon"],
@@ -116,14 +105,33 @@ class ShvoteParticipance(resource.Resource):
 						serial_number = post["serial_number"],
 						details = post["details"],
 						pics = json.loads(post["pics"]),
+						is_use = app_models.MEMBER_IS_USE['YES'],
 						created_at = datetime.now()
 					)
-					sh_participance.save()
 					response = create_response(200)
-				except:
-					response = create_response(500)
-					response.errMsg = u'只能报名一次'
-			return response.get_response()
+				else:
+					try:
+						sh_participance = app_models.ShvoteParticipance(
+							belong_to = record_id,
+							member_id = member_id,
+							icon = post["icon"],
+							name = post["name"],
+							group = post["group"],
+							serial_number = post["serial_number"],
+							details = post["details"],
+							pics = json.loads(post["pics"]),
+							created_at = datetime.now()
+						)
+						sh_participance.save()
+						response = create_response(200)
+					except:
+						response = create_response(500)
+						response.errMsg = u'您已报过名'
+				return response.get_response()
+			else:
+				response = create_response(500)
+				response.errMsg = u'该选手编号已经存在'
+				return response.get_response()
 		except:
 			response = create_response(500)
 			response.errMsg = u'报名失败'
@@ -177,7 +185,7 @@ class ShvoteParticipance(resource.Resource):
 			control = app_models.ShvoteControl(
 				created_at_str = now_date_str,
 				member_id = member_id,
-				belong_to = record_id,
+				belong_to = record_id
 			)
 			control.save()
 
@@ -195,7 +203,15 @@ class ShvoteParticipance(resource.Resource):
 			else:
 				target.vote_log[now_date_str] = [member_id]
 			target.save()
-		except:
+			vote_detail = app_models.ShvoteDetail(
+				member_id = member_id,
+				belong_to = record_id,
+				vote_to_member_id = vote_to,
+				created_at = datetime.now()
+			)
+			vote_detail.save()
+		except Exception,e:
+			print(e)
 			response.errMsg = u'用户信息出错'
 			return response.get_response()
 
@@ -223,24 +239,61 @@ class ShvoteParticipancesDialog(resource.Resource):
 		items = []
 		if 'id' in request.GET:
 			try:
-				player_details = app_models.ShvoteParticipance.objects.get(id=request.GET['id'])
+				# old_player_details是为了兼容旧数据的展示
+				old_player_details = app_models.ShvoteParticipance.objects.get(id=request.GET['id'])
+				player_details = app_models.ShvoteDetail.objects(vote_to_member_id=request.GET['id'])
 			except:
 				response = create_response(500)
 				response.errMsg = u'选手信息出错，请稍后再试！'
 				return response.get_response()
-			vote_log = player_details.vote_log
-			if vote_log:
-				for created_at,member_ids in vote_log.items():
-					for member_id in member_ids:
-						try:
-							member = Member.objects.get(id = member_id)
-							member_name = member.username_for_html
-						except:
-							member_name = u'未知'
-						items.append({
-							'created_at': created_at,
-							'name': member_name	
-						})
+
+			if player_details:
+				first_detail_time_str = player_details.first().created_at.strftime('%Y-%m-%d')
+			else:
+				first_detail_time_str = ''
+			if old_player_details:
+				vote_log = old_player_details.vote_log
+				if vote_log:
+					for created_at,member_ids in vote_log.items():
+						if first_detail_time_str!= '':
+							#有player_details记录，只取时间节点（first_detail_time_str）之前的部分
+							if created_at < first_detail_time_str:
+								old_player_member_info = Member.objects.filter(id__in=member_ids)
+								for member_id in member_ids:
+									try:
+										member = old_player_member_info.get(id=member_id)
+										member_name = member.username_for_html
+									except:
+										member_name = u'未知'
+									items.append({
+										'created_at': created_at,
+										'name': member_name
+									})
+						else:#没有player_details记录，全部取出
+							old_player_member_info = Member.objects.filter(id__in=member_ids)
+							for member_id in member_ids:
+								try:
+									member = old_player_member_info.get(id=member_id)
+									member_name = member.username_for_html
+								except:
+									member_name = u'未知'
+								items.append({
+									'created_at': created_at,
+									'name': member_name
+								})
+			if player_details:
+				member_ids = [p.member_id for p in player_details]
+				member_info = Member.objects.filter(id__in=member_ids)
+				for player_detail in player_details:
+					try:
+						member = member_info.get(id=player_detail.member_id)
+						member_name = member.username_for_html
+					except:
+						member_name = u'未知'
+					items.append({
+						'created_at': player_detail.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+						'name': member_name
+					})
 
 		count_per_page = int(request.GET.get('count_per_page', 1))
 		cur_page = int(request.GET.get('page', '1'))
