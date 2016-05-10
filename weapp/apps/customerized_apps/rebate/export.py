@@ -53,6 +53,7 @@ def grant_weizoom_card():
 def get_target_orders(record=None):
 	"""
 	筛选出扫码后已完成的符合要求的订单
+	@param record: 活动实例
 	@return: Orders
 	"""
 	if record:
@@ -69,3 +70,5 @@ def get_target_orders(record=None):
 			params["product_price__gte"] = rebate_order_price
 		params["status"] = mall_models.STATUS2TEXT[mall_models.ORDER_STATUS_SUCCESSED]
 		return mall_models.Order.objects.filter(**params)
+
+	apps_models.Rebate.objects(is_deleted=False)
