@@ -934,15 +934,19 @@ Scenario:7 带参数二维码的修改优惠券，继续扫码
 			"using_limit": "满5元可以使用",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"coupon_id_prefix": "coupon2_id_"
+			"coupon_id_prefix": "coupon1_id_2"
 		}]
 	"""
+	When 清空浏览器
 	When nokia关注jobs的公众号
+
+
+	Given jobs登录系统
 	When jobs添加带参数二维码
 	"""
 		[{
 			"code_name": "带参数二维码-优惠券奖励",
-			"create_time": "今天",
+			"create_time": "2016-05-10 10:00:00",
 			"prize_type": "优惠券",
 			"coupon":"优惠券1",
 			"member_rank": "金牌会员",
@@ -950,7 +954,7 @@ Scenario:7 带参数二维码的修改优惠券，继续扫码
 			"is_attention_in": "true",
 			"remarks": "带参数二维码备注",
 			"is_relation_member": "true",
-			"relation_time": "今天",
+			"relation_time": "2016-05-10 10:00:00",
 			"relation_member": "nokia",
 			"title": "星级代言人",
 			"code_description": "星级代言人二维码描述",
@@ -991,7 +995,7 @@ Scenario:7 带参数二维码的修改优惠券，继续扫码
 		"""
 		{
 			"code_name": "带参数二维码-优惠券奖励",
-			"create_time": "今天",
+			"create_time": "2016-05-10 10:00:00",
 			"prize_type": "优惠券",
 			"coupon":"优惠券2",
 			"member_rank": "金牌会员",
@@ -999,7 +1003,7 @@ Scenario:7 带参数二维码的修改优惠券，继续扫码
 			"is_attention_in": "true",
 			"remarks": "带参数二维码备注",
 			"is_relation_member": "true",
-			"relation_time": "今天",
+			"relation_time": "2016-05-10 10:00:00",
 			"relation_member": "nokia",
 			"title": "星级代言人",
 			"code_description": "星级代言人二维码描述",
@@ -1009,7 +1013,7 @@ Scenario:7 带参数二维码的修改优惠券，继续扫码
 		"""
 
 	When 清空浏览器
-	When mayun扫描带参数二维码"带参数二维码-优惠券奖励"于'2016-05-09 12:00:00'
+	When mayun扫描带参数二维码"带参数二维码-优惠券奖励"于'2016-05-10 11:00:00'
 	When mayun访问jobs的webapp
 
 
@@ -1050,7 +1054,7 @@ Scenario:7 带参数二维码的修改优惠券，继续扫码
 		"""
 
 	When 清空浏览器
-	When mayun扫描带参数二维码"带参数二维码-优惠券奖励"于'2016-05-09 13:00:00'
+	When mayun扫描带参数二维码"带参数二维码-优惠券奖励"于'2016-05-10 11:00:00'
 	When mayun访问jobs的webapp
 
 
