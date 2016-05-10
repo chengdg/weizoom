@@ -215,6 +215,7 @@ Background:
 			"password":"1234567",
 			"status":"未使用",
 			"price":100.00
+		}]
 	}
 	"""
 	When jobs已添加商品
@@ -222,12 +223,12 @@ Background:
 		[{
 			"name": "商品1",
 			"price": 10.00,
-			"postage":100,
+			"postage":10.00,
 			"synchronized_mall":"是"
 		}, {
 			"name": "商品2",
 			"price": 10.00,
-			"postage":100,
+			"postage":10.00,
 			"synchronized_mall":"是"
 		}]
 	 """
@@ -413,8 +414,8 @@ Scenario:1 管理员能够查看到所有扫过该码并关注过的微信用户
 	#已关注会员扫码，关注数量增加
 	When 清空浏览器
 	When tom关注jobs的公众号
-	When tom访问jobs的webapp
 	When tom扫描返利活动"返利活动1"
+	When tom访问jobs的webapp
 	
 	Given jobs登录系统
 	Then jobs获得返利活动列表
@@ -427,9 +428,9 @@ Scenario:1 管理员能够查看到所有扫过该码并关注过的微信用户
 	#扫码之前取消关注的会员再次扫码返利活动，关注数量增加
 	When 清空浏览器
 	When zhouxun关注jobs的公众号
-	When zhouxun访问jobs的webapp
 	When zhouxun取消关注jobs的公众号
 	When zhouxun扫描带参数二维码"返利活动1"
+	When zhouxun访问jobs的webapp
 	
 
 	Given jobs登录系统
@@ -442,10 +443,11 @@ Scenario:1 管理员能够查看到所有扫过该码并关注过的微信用户
 	"""
 
 	When 微信用户批量消费jobs的商品
-		| order_i  | date       | consumer | product | payment | pay_type  |postage*   |price*   | paid_amount*    | weizoom_card   | action     | order_status  |
-		|   0001   | 今天       |   bill   | 商品1,1 |   支付  |  支付宝   |   10.00   | 10.00   |     20.00       | 0000001,1234567| jobs,发货  |    已发货     |
-		|   0002   | 今天       |   tom    | 商品1,1 |   支付  |  支付宝   |   10.00   | 10.00   |     20.00       |                | jobs,发货  |    已发货     |
-		|   0003   | 今天       |  zhouxun | 商品1,1 |   支付  |  微众卡   |   10.00   | 10.00   |     20.00       |                | jobs,发货  |    已发货     |    
+		| order_id | date             | consumer | product | payment | pay_type  |postage*   |price*   | paid_amount*    | weizoom_card   | action     | order_status  |
+		|   0001   | 2016-04-09       |   bill   | 商品1,1 |   支付  |  支付宝   |   10.00   | 10.00   |     20.00       |                | jobs,发货  |    已发货     |
+		|   0002   | 2016-05-09       |   bill   | 商品1,1 |   支付  |  支付宝   |   10.00   | 10.00   |     20.00       |                | jobs,发货  |    已发货   |
+		|   0003   | 2016-05-09       |   tom    | 商品1,1 |   支付  |  支付宝   |   10.00   | 10.00   |     20.00       | 0000001,1234567| jobs,发货  |    已发货     |
+		|   0004   | 2016-05-09       |  zhouxun | 商品1,1 |   支付  |  微众卡   |   10.00   | 10.00   |     20.00       |                | jobs,发货  |    已发货     |    
 		
 
 	When jobs对"返利活动1"的"关注人数"操作
@@ -453,6 +455,11 @@ Scenario:1 管理员能够查看到所有扫过该码并关注过的微信用户
 	Then jobs能获取"仅显示通过二维码新关注会员"列表
 	"""
 		[{
+			"fans_name": "zhouxun",
+			"buy_number": 1,
+			"integral": 0,
+			"price":20.00
+		},{
 			"fans_name": "zhouxun",
 			"buy_number": 1,
 			"integral": 0,
@@ -506,23 +513,27 @@ Scenario:2 带参数返利活动[扫码后成交金额]-已关注会员可参与
 	Given jobs登录系统
 
 	When 清空浏览器
-	When bill关注jobs的公众号于"2016-04-09 10:00:00"
+	When bill关注jobs的公众号于"2016-05-09 10:00:00"
 	When bill扫描带参数二维码"返利活动2"
+	When bill访问jobs的webapp
+
 
 	When 清空浏览器
 	When tom关注jobs的公众号于"2016-05-09 10:00:00"
 	When tom扫描带参数二维码"返利活动2"
+	When tom访问jobs的webapp
 
-
+	#用户参加已结束的活动，不会获得返利
 	When 清空浏览器
-	When zhouxun关注jobs的公众号于"2016-05-09 10:00:00"
+	When zhouxun关注jobs的公众号于"2016-05-12 10:00:00"
 	When zouxun扫描带参数二维码"返利活动2"
+	When zhouxun访问jobs的webapp
 
 	When 微信用户批量消费jobs的商品
 		| order_id | date             | consumer | product | payment | pay_type  |postage*   |price*   | paid_amount*    | weizoom_card   | action     | order_status  |
-		|   0001   | 2016-04-09       |   bill   | 商品1,1 |   支付  |  支付宝   |   10.00   | 10.00   |     20.00       |                | jobs,发货  |    已发货     |
-		|   0002   | 2016-05-10       |   tom    | 商品2,1 |   支付  |  支付宝   |   10.00   | 10.00   |     20.00       |                | jobs,发货  |    已发货     |
-		|   0003   | 2016-05-10       |  zhouxun | 商品1,1 |   支付  |  微众卡   |   10.00   | 10.00   |     20.00       | 0000001,1234567| jobs,发货  |    已发货     |
+		|   0001   | 2016-05-09       |   bill   | 商品1,1 |   支付  |  支付宝   |   10.00   | 10.00   |     20.00       |                | jobs,发货  |    已发货     |
+		|   0002   | 2016-05-10       |   tom    | 商品2,1 |   支付  |  支付宝   |   10.00   | 10.00   |     20.00       | 0000001,1234567| jobs,发货  |    已发货     |
+		|   0003   | 2016-05-12       |  zhouxun | 商品1,1 |   支付  |  微众卡   |   10.00   | 10.00   |     20.00       |                | jobs,发货  |    已发货     |
 
 
 	Given jobs登录系统	
@@ -531,7 +542,15 @@ Scenario:2 带参数返利活动[扫码后成交金额]-已关注会员可参与
 	Then jobs显示"仅显示扫码后成交订单"
 	Then jobs能获取列表
 	"""
-		[{
+		[{	"order_id":"0001",
+			"status": "已发货",
+			"final_price": 20.00,
+			"products": [{
+				"name": "商品1",
+				"price": 10.00,
+				"count": 1
+			},{
+				"order_id":"0002",
 			"status": "已发货",
 			"final_price": 20.00,
 			"products": [{
@@ -559,43 +578,29 @@ Scenario:2 带参数返利活动[扫码后成交金额]-已关注会员可参与
 				"price": 10.00,
 				"count": 1
 			}]
-		},{
-			"status": "已发货",
-			"final_price": 20.00,
-			"products": [{
-				"name": "商品1",
-				"price": 10.00,
-				"count": 1
-			}]
 		}]
 	"""
 
 
 @mall @rebate
-Scenario:3 带参数返利活动[扫码后成交金额]-已关注会员；不限；现金
+Scenario:3 带参数返利活动[扫码后成交金额]-已关注会员可参与；不限；现金
 	#已关注会员可参与；
 	#必须是不限；
 	#现金支付；
 	Given jobs登录系统
 
-
-	When 清空浏览器
-	When bill关注jobs的公众号于"2016-04-09 10:00:00"
-	When bill扫描带参数二维码"返利活动2"
-
 	When 清空浏览器
 	When tom关注jobs的公众号于"2016-05-09 10:00:00"
-	When tom扫描带参数二维码"返利活动2"
+	When tom扫描带参数二维码"返利活动3"
 
 
 	When 清空浏览器
 	When zhouxun关注jobs的公众号于"2016-05-09 10:00:00"
-	When zouxun扫描带参数二维码"返利活动2"
+	When zouxun扫描带参数二维码"返利活动3"
 
 	When 微信用户批量消费jobs的商品
 		| order_id | date             | consumer | product | payment | pay_type  |postage*   |price*   | paid_amount*    | weizoom_card   | action     | order_status  |
-		|   0001   | 2016-04-09       |   bill   | 商品1,1 |   支付  |  支付宝   |   10.00   | 10.00   |     20.00       |                | jobs,发货  |    已发货     |
-		|   0002   | 2016-05-10       |   tom    | 商品2,1 |   支付  |  支付宝   |   10.00   | 10.00   |     20.00       |                | jobs,发货  |    已发货     |
+		|   0001   | 2016-05-10       |   tom    | 商品2,1 |   支付  |  支付宝   |   10.00   | 10.00   |     20.00       |                | jobs,发货  |    已发货     |
 		|   0002   | 2016-05-10       |   tom    | 商品2,1 |   支付  |  支付宝   |   10.00   | 10.00   |     20.00       |                | jobs,发货  |    已发货     |
 		|   0003   | 2016-05-10       |  zhouxun | 商品1,1 |   支付  |  微众卡   |   10.00   | 10.00   |     20.00       | 0000001,1234567| jobs,发货  |    已发货     |
 
@@ -607,6 +612,7 @@ Scenario:3 带参数返利活动[扫码后成交金额]-已关注会员；不限
 	Then jobs能获取列表
 	"""
 		[{
+			"order_id":"0001",
 			"status": "已发货",
 			"final_price": 20.00,
 			"products": [{
@@ -615,6 +621,7 @@ Scenario:3 带参数返利活动[扫码后成交金额]-已关注会员；不限
 				"count": 1
 			}]
 		},{
+			"order_id":"0002",
 			"status": "已发货",
 			"final_price": 20.00,
 			"products": [{
@@ -623,71 +630,35 @@ Scenario:3 带参数返利活动[扫码后成交金额]-已关注会员；不限
 				"count": 1
 		}]
 	"""
-	When jobs取消勾选'仅显示扫码后成交订单'
-	"""
-		[{
-			"status": "已发货",
-			"final_price": 20.00,
-			"products": [{
-				"name": "商品1",
-				"price": 10.00,
-				"count": 1
-			}]
-		},{
-			"status": "已发货",
-			"final_price": 20.00,
-			"products": [{
-				"name": "商品2",
-				"price": 10.00,
-				"count": 1
-			},{
-				"status": "已发货",
-			"final_price": 20.00,
-			"products": [{
-				"name": "商品1",
-				"price": 10.00,
-				"count": 1
-			}]
-		},{
-			"status": "已发货",
-			"final_price": 20.00,
-			"products": [{
-				"name": "商品1",
-				"price": 10.00,
-				"count": 1
-			}]
-		}]
-	"""
-
 
 
 @mall @rebate
-Scenario:4 带参数返利活动[扫码后成交金额]-已关注会员；不限；非现金
+Scenario:4 带参数返利活动[扫码后成交金额]-已关注会员可参与；不限；非现金
 	#已关注会员可参与；
 	#不限订单；
-	#f可使用非现金支付；
+	#可使用非现金支付；
 	Given jobs登录系统
 
 
 	When 清空浏览器
-	When bill关注jobs的公众号于"2016-05-09 10:00:00"
-	When bill扫描带参数二维码"返利活动2"
+	When bill关注jobs的公众号于"2016-05-05 10:00:00"
+	When bill扫描带参数二维码"返利活动4"
 
 	When 清空浏览器
 	When tom关注jobs的公众号于"2016-05-09 10:00:00"
-	When tom扫描带参数二维码"返利活动2"
+	When tom扫描带参数二维码"返利活动4"
 
 
 	When 清空浏览器
 	When zhouxun关注jobs的公众号于"2016-05-09 10:00:00"
-	When zouxun扫描带参数二维码"返利活动2"
+	When zouxun扫描带参数二维码"返利活动4"
 
 	When 微信用户批量消费jobs的商品
 		| order_id | date             | consumer | product | payment | pay_type  |postage*   |price*   | paid_amount*    | weizoom_card   | action     | order_status  |
-		|   0001   | 2016-04-09       |   bill   | 商品1,1 |   支付  |  支付宝   |   10.00   | 10.00   |     20.00       |                | jobs,发货  |    已发货     |
+		|   0001   | 2016-05-09       |   bill   | 商品1,1 |   支付  |  支付宝   |   10.00   | 10.00   |     20.00       |                | jobs,发货  |    已发货     |
 		|   0002   | 2016-05-10       |   tom    | 商品2,1 |   支付  |  支付宝   |   10.00   | 10.00   |     20.00       |                | jobs,发货  |    已发货     |
-		|   0002   | 2016-05-10       |   tom    | 商品2,1 |   支付  |  支付宝   |   10.00   | 10.00   |     20.00       |                | jobs,发货  |    已发货     |
-		|   0003   | 2016-05-10       |  zhouxun | 商品1,1 |   支付  |  微众卡   |   10.00   | 10.00   |     20.00       | 0000001,1234567| jobs,发货  |    已发货     |
+		|   0003   | 2016-05-10       |   tom    | 商品2,1 |   支付  |  支付宝   |   10.00   | 10.00   |     20.00       |                | jobs,发货  |    已发货     |
+		|   0004   | 2016-05-10       |  zhouxun | 商品1,1 |   支付  |  微众卡   |   10.00   | 10.00   |     20.00       | 0000001,1234567| jobs,发货  |    已发货     |
 
 
 	Given jobs登录系统	
@@ -697,6 +668,7 @@ Scenario:4 带参数返利活动[扫码后成交金额]-已关注会员；不限
 	Then jobs能获取列表
 	"""
 		[{
+			"order_id":"0001",
 			"status": "已发货",
 			"final_price": 20.00,
 			"products": [{
@@ -705,6 +677,7 @@ Scenario:4 带参数返利活动[扫码后成交金额]-已关注会员；不限
 				"count": 1
 			}]
 		},{
+			"order_id":"0002",
 			"status": "已发货",
 			"final_price": 20.00,
 			"products": [{
@@ -712,6 +685,15 @@ Scenario:4 带参数返利活动[扫码后成交金额]-已关注会员；不限
 				"price": 10.00,
 				"count": 1
 		},{
+			"order_id":"0003",
+			"status": "已发货",
+			"final_price": 20.00,
+			"products": [{
+				"name": "商品1",
+				"price": 10.00,
+				"count": 1
+		},{
+			"order_id":"0004",
 			"status": "已发货",
 			"final_price": 20.00,
 			"products": [{
@@ -720,34 +702,7 @@ Scenario:4 带参数返利活动[扫码后成交金额]-已关注会员；不限
 				"count": 1
 		}]
 	"""
-	When jobs取消勾选'仅显示扫码后成交订单'
-	"""
-		[{
-			"status": "已发货",
-			"final_price": 20.00,
-			"products": [{
-				"name": "商品1",
-				"price": 10.00,
-				"count": 1
-			}]
-		},{
-				"status": "已发货",
-			"final_price": 20.00,
-			"products": [{
-				"name": "商品1",
-				"price": 10.00,
-				"count": 1
-			}]
-		},{
-			"status": "已发货",
-			"final_price": 20.00,
-			"products": [{
-				"name": "商品1",
-				"price": 10.00,
-				"count": 1
-			}]
-		}]
-	"""
+
 
 @mall @rebate
 Scenario:5 带参数返利活动[扫码后成交金额]-已关注会员不可参与；不限；非现金
@@ -758,21 +713,22 @@ Scenario:5 带参数返利活动[扫码后成交金额]-已关注会员不可参
 
 
 	When 清空浏览器
-	When bill关注jobs的公众号于"2016-05-09 10:00:00"
-	When bill扫描带参数二维码"返利活动2"
+	When bill关注jobs的公众号于"2016-05-08 10:00:00"
+	When bill扫描带参数二维码"返利活动5"
 
 	When 清空浏览器
-	When tom扫描带参数二维码"返利活动2"
+	When tom扫描带参数二维码"返利活动5"
 
 
 	When 清空浏览器
-	When zouxun扫描带参数二维码"返利活动2"
+	When zouxun扫描带参数二维码"返利活动5"
 
 	When 微信用户批量消费jobs的商品
 		| order_id | date             | consumer | product | payment | pay_type  |postage*   |price*   | paid_amount*    | weizoom_card   | action     | order_status  |
 		|   0001   | 2016-05-09       |   bill   | 商品1,1 |   支付  |  支付宝   |   10.00   | 10.00   |     20.00       |                | jobs,发货  |    已发货     |
 		|   0002   | 2016-05-10       |   tom    | 商品2,1 |   支付  |  支付宝   |   10.00   | 10.00   |     20.00       |                | jobs,发货  |    已发货     |
-		|   0003   | 2016-05-10       |  zhouxun | 商品1,1 |   支付  |  微众卡   |   10.00   | 10.00   |     20.00       | 0000001,1234567| jobs,发货  |    已发货     |
+		|   0003   | 2016-05-10       |   tom    | 商品2,1 |   支付  |  支付宝   |   10.00   | 10.00   |     20.00       |                | jobs,发货  |    已发货     |
+		|   0004   | 2016-05-10       |  zhouxun | 商品1,1 |   支付  |  微众卡   |   10.00   | 10.00   |     20.00       | 0000001,1234567| jobs,发货  |    已发货     |
 
 
 	Given jobs登录系统	
@@ -782,6 +738,7 @@ Scenario:5 带参数返利活动[扫码后成交金额]-已关注会员不可参
 	Then jobs能获取列表
 	"""
 		[{
+			"order_id":"0002",
 			"status": "已发货",
 			"final_price": 20.00,
 			"products": [{
@@ -790,42 +747,24 @@ Scenario:5 带参数返利活动[扫码后成交金额]-已关注会员不可参
 				"count": 1
 			}]
 		},{
+			"order_id":"0003",
 			"status": "已发货",
 			"final_price": 20.00,
 			"products": [{
 				"name": "商品1",
 				"price": 10.00,
 				"count": 1
-		}]
-	"""
-	When jobs取消勾选'仅显示扫码后成交订单'
-	"""
-		[{
-			"status": "已发货",
-			"final_price": 20.00,
-			"products": [{
-				"name": "商品1",
-				"price": 10.00,
-				"count": 1
-			}]
 		},{
+			"order_id":"0004",
 			"status": "已发货",
-			"final_price": 20.00,
-			"products": [{
-				"name": "商品2",
-				"price": 10.00,
-				"count": 1
-			},{
-				"status": "已发货",
 			"final_price": 20.00,
 			"products": [{
 				"name": "商品1",
 				"price": 10.00,
 				"count": 1
-			}]
-	
 		}]
 	"""
+
 
 @mall @rebate
 Scenario:6 带参数返利活动[扫码后成交金额]-已关注会员不可参与；不限；现金
@@ -836,15 +775,15 @@ Scenario:6 带参数返利活动[扫码后成交金额]-已关注会员不可参
 
 	#未关注过的用户下单
 	When 清空浏览器
-	When bill关注jobs的公众号于"2016-05-09 10:00:00"
-	When bill扫描带参数二维码"返利活动2"
+	When bill关注jobs的公众号于"2016-05-05 10:00:00"
+	When bill扫描带参数二维码"返利活动6"
 
 	When 清空浏览器
-	When tom扫描带参数二维码"返利活动2"
+	When tom扫描带参数二维码"返利活动6"
 
 
 	When 清空浏览器
-	When zouxun扫描带参数二维码"返利活动2"
+	When zouxun扫描带参数二维码"返利活动6"
 
 	When 微信用户批量消费jobs的商品
 		| order_id | date             | consumer | product | payment | pay_type  |postage*   |price*   | paid_amount*    | weizoom_card   | action     | order_status  |
@@ -860,6 +799,7 @@ Scenario:6 带参数返利活动[扫码后成交金额]-已关注会员不可参
 	Then jobs能获取列表
 	"""
 		[{
+			"order_id":"0002",
 			"status": "已发货",
 			"final_price": 20.00,
 			"products": [{
@@ -869,34 +809,7 @@ Scenario:6 带参数返利活动[扫码后成交金额]-已关注会员不可参
 			}]
 		}]
 	"""
-	When jobs取消勾选'仅显示扫码后成交订单'
-	"""
-		[{
-			"status": "已发货",
-			"final_price": 20.00,
-			"products": [{
-				"name": "商品1",
-				"price": 10.00,
-				"count": 1
-			}]
-		},{
-			"status": "已发货",
-			"final_price": 20.00,
-			"products": [{
-				"name": "商品2",
-				"price": 10.00,
-				"count": 1
-			},{
-				"status": "已发货",
-			"final_price": 20.00,
-			"products": [{
-				"name": "商品1",
-				"price": 10.00,
-				"count": 1
-			}]
-	
-		}]
-	"""
+
 	
 @mall @rebate
 Scenario:7 带参数返利活动[扫码后成交金额]-已关注会员不可参与；首单；现金
@@ -908,21 +821,21 @@ Scenario:7 带参数返利活动[扫码后成交金额]-已关注会员不可参
 
 	When 清空浏览器
 	When bill关注jobs的公众号于"2016-05-09 10:00:00"
-	When bill扫描带参数二维码"返利活动2"
+	When bill扫描带参数二维码"返利活动7"
 
 	When 清空浏览器
-	When tom扫描带参数二维码"返利活动2"
+	When tom扫描带参数二维码"返利活动7"
 
 
 	When 清空浏览器
-	When zouxun扫描带参数二维码"返利活动2"
+	When zouxun扫描带参数二维码"返利活动7"
 
 	When 微信用户批量消费jobs的商品
 		| order_id | date             | consumer | product | payment | pay_type  |postage*   |price*   | paid_amount*    | weizoom_card   | action     | order_status  |
 		|   0001   | 2016-04-09       |   bill   | 商品1,1 |   支付  |  支付宝   |   10.00   | 10.00   |     20.00       |                | jobs,发货  |    已发货     |
-		|   0001   | 2016-05-10       |   bill   | 商品1,1 |   支付  |  支付宝   |   10.00   | 10.00   |     20.00       |                | jobs,发货  |    已发货     |
 		|   0002   | 2016-05-10       |   tom    | 商品2,1 |   支付  |  支付宝   |   10.00   | 10.00   |     20.00       |                | jobs,发货  |    已发货     |
-		|   0003   | 2016-05-10       |  zhouxun | 商品1,1 |   支付  |  微众卡   |   10.00   | 10.00   |     20.00       | 0000001,1234567| jobs,发货  |    已发货     |
+		|   0003   | 2016-05-10       |   tom    | 商品2,1 |   支付  |  支付宝   |   10.00   | 10.00   |     20.00       |                | jobs,发货  |    已发货     |
+		|   0004   | 2016-05-10       |  zhouxun | 商品1,1 |   支付  |  微众卡   |   10.00   | 10.00   |     20.00       | 0000001,1234567| jobs,发货  |    已发货     |
 
 
 	Given jobs登录系统	
@@ -932,6 +845,7 @@ Scenario:7 带参数返利活动[扫码后成交金额]-已关注会员不可参
 	Then jobs能获取列表
 	"""
 		[{
+			"order_id":"0003",
 			"status": "已发货",
 			"final_price": 20.00,
 			"products": [{
@@ -941,34 +855,7 @@ Scenario:7 带参数返利活动[扫码后成交金额]-已关注会员不可参
 			}]
 		}]
 	"""
-	When jobs取消勾选'仅显示扫码后成交订单'
-	"""
-		[{
-			"status": "已发货",
-			"final_price": 20.00,
-			"products": [{
-				"name": "商品1",
-				"price": 10.00,
-				"count": 1
-			}]
-		},{
-			"status": "已发货",
-			"final_price": 20.00,
-			"products": [{
-				"name": "商品2",
-				"price": 10.00,
-				"count": 1
-			},{
-				"status": "已发货",
-			"final_price": 20.00,
-			"products": [{
-				"name": "商品1",
-				"price": 10.00,
-				"count": 1
-			}]
-	
-		}]
-	"""
+
 
 @mall @rebate
 Scenario:8 带参数返利活动[扫码后成交金额]-已关注会员不可参与；首单；非现金
@@ -979,22 +866,22 @@ Scenario:8 带参数返利活动[扫码后成交金额]-已关注会员不可参
 
 
 	When 清空浏览器
-	When bill关注jobs的公众号于"2016-05-09 10:00:00"
-	When bill扫描带参数二维码"返利活动2"
+	When bill关注jobs的公众号于"2016-05-05 10:00:00"
+	When bill扫描带参数二维码"返利活动8"
 
 	When 清空浏览器
-	When tom扫描带参数二维码"返利活动2"
+	When tom扫描带参数二维码"返利活动8"
 
 
 	When 清空浏览器
-	When zouxun扫描带参数二维码"返利活动2"
+	When zouxun扫描带参数二维码"返利活动8"
 
 	When 微信用户批量消费jobs的商品
 		| order_id | date             | consumer | product | payment | pay_type  |postage*   |price*   | paid_amount*    | weizoom_card   | action     | order_status  |
-		|   0001   | 2016-04-09       |   bill   | 商品1,1 |   支付  |  支付宝   |   10.00   | 10.00   |     20.00       |                | jobs,发货  |    已发货     |
-		|   0001   | 2016-05-10       |   bill   | 商品1,1 |   支付  |  支付宝   |   10.00   | 10.00   |     20.00       |                | jobs,发货  |    已发货     |
-		|   0002   | 2016-05-10       |   tom    | 商品2,1 |   支付  |  支付宝   |   10.00   | 10.00   |     20.00       |                | jobs,发货  |    已发货     |
-		|   0003   | 2016-05-10       |  zhouxun | 商品1,1 |   支付  |  微众卡   |   10.00   | 10.00   |     20.00       | 0000001,1234567| jobs,发货  |    已发货     |
+		|   0001   | 2016-05-09       |   bill   | 商品1,1 |   支付  |  支付宝   |   10.00   | 10.00   |     20.00       |                | jobs,发货  |    已发货     |
+		|   0002   | 2016-05-10       |   bill   | 商品1,1 |   支付  |  支付宝   |   10.00   | 10.00   |     20.00       |                | jobs,发货  |    已发货     |
+		|   0003   | 2016-05-10       |   tom    | 商品2,1 |   支付  |  支付宝   |   10.00   | 10.00   |     20.00       |                | jobs,发货  |    已发货     |
+		|   0004   | 2016-05-10       |  zhouxun | 商品1,1 |   支付  |  微众卡   |   10.00   | 10.00   |     20.00       | 0000001,1234567| jobs,发货  |    已发货     |
 
 
 	Given jobs登录系统	
@@ -1004,18 +891,7 @@ Scenario:8 带参数返利活动[扫码后成交金额]-已关注会员不可参
 	Then jobs能获取列表
 	"""
 		[{
-			"status": "已发货",
-			"final_price": 20.00,
-			"products": [{
-				"name": "商品1",
-				"price": 10.00,
-				"count": 1
-			}]
-		}]
-	"""
-	When jobs取消勾选'仅显示扫码后成交订单'
-	"""
-		[{
+			"order_id":"0002",
 			"status": "已发货",
 			"final_price": 20.00,
 			"products": [{
@@ -1024,32 +900,20 @@ Scenario:8 带参数返利活动[扫码后成交金额]-已关注会员不可参
 				"count": 1
 			}]
 		},{
+			"order_id":"0004",
 			"status": "已发货",
-			"final_price": 20.00,
-			"products": [{
-				"name": "商品2",
-				"price": 10.00,
-				"count": 1
-			},{
-				"status": "已发货",
 			"final_price": 20.00,
 			"products": [{
 				"name": "商品1",
 				"price": 10.00,
 				"count": 1
-			}]
-	
 		}]
 	"""
 
-@mall @rebate
-Scenario:9 带参数返利活动-参加未开始或者已结束的返利活动不能获得返利
-	
-
 
 
 @mall @rebate
-Scenario:10 带参数返利活动-多个返利活动同时存在，并且同一个人扫多个返利活动的码且下单
+Scenario:9 带参数返利活动-多个返利活动同时存在，并且同一个人扫多个返利活动的码且下单
 	Given jobs登录系统
 
 	When 清空浏览器
