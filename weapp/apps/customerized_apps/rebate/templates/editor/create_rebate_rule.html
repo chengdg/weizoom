@@ -75,14 +75,23 @@
             </div>
             <div class="errorHint" data-error-hint="请选择订单金额是否为现金"></div>
         </div>
-        <div class="controls xa-errorHintContainer">
-            <div style="margin-left: 170px;">订单返利：
-                <span>满</span>
-                <input type="text" class="form-control w70" id="rebate_order_price" name="rebate_order_price" value="{{rebate_rule.rebate_order_price}}" data-validate="require-notempty,,require-float"/>元
-                <span>返</span>
-                <input type="text" class="form-control w70" id="rebate_money" name="rebate_money" value="{{rebate_rule.rebate_money}}" data-validate="require-notempty,,require-float"/>元
+        <div class="controls">
+            <div style="margin-left: 170px;display: inline-flex;">
+                <div class="controls xa-errorHintContainer">
+                    <div>
+                        <span>订单返利：满</span>
+                        <input type="text" class="form-control w70" id="rebate_order_price" name="rebate_order_price" value="{{rebate_rule.rebate_order_price}}" data-validate="require-notempty,,require-float::请输入不超过5位的正整数或小数"/>&nbsp元
+                    </div>
+                    <div style="margin-left: 15px;" class="errorHint" data-error-hint=""></div>
+                </div>
+                <div class="controls xa-errorHintContainer">
+                    <div>
+                        <span style="margin-left: 5px">返</span>
+                        <input type="text" class="form-control w70" id="rebate_money" name="rebate_money" value="{{rebate_rule.rebate_money}}" data-validate="require-notempty,,require-float::请输入不超过5位的正整数或小数"/>&nbsp元
+                    </div>
+                    <div style="margin-left: 15px;" class="errorHint" data-error-hint=""></div>
+                </div>
             </div>
-            <div class="errorHint" data-error-hint=""></div>
         </div>
     </div>
     <div class="form-group">
