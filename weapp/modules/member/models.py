@@ -1182,6 +1182,7 @@ class UserSentMassMsgLog(models.Model):
 
 	#add by aix
 	group_id = models.IntegerField(default=0) #发放分组
+	member_ids = models.CharField(max_length=2048, default='') #选取发放的会员id集合
 
 	class Meta(object):
 		db_table = 'user_sent_mass_msg_log'
@@ -1202,13 +1203,14 @@ class UserSentMassMsgLog(models.Model):
 										)
 
 	@staticmethod
-	def create(webapp_id, msg_id, message_type, message_content, group_id=0):
+	def create(webapp_id, msg_id, message_type, message_content, group_id=0, member_ids=""):
 		return UserSentMassMsgLog.objects.create(
 								webapp_id=webapp_id,
 								msg_id=msg_id,
 								message_type=message_type,
 								message_content=message_content,
-								group_id=group_id
+								group_id=group_id,
+								member_ids=member_ids
 								)
 
 	@staticmethod

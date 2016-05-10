@@ -203,7 +203,6 @@
 <script type="text/javascript">
 	document.addEventListener("visibilitychange", common_interval_check_func, false);
     var timerCount = -1;
-    var old_unread_count = 0;
 	function common_interval_check_func(){
 		if(document.visibilityState != 'visible'){
 			return
@@ -234,12 +233,7 @@
 				}
 
 				//微信未读消息计数
-                if($('.xa-unreadMessageCountBdge').length > 0){
-                    old_unread_count = 0;
-                }
-                $('.xa-unreadMessageCountBdge').each(function(){
-                    old_unread_count += parseInt($(this).text());
-                });
+                var old_unread_count = parseInt(window.localStorage.getItem("message_count")) || 0;
 				var unreadRealtimeCount = data.unread_realtime_count;
                 //如果有新的消息，则reload table
                 var _table = $('[data-ui-role="advanced-table"]').data('view');
@@ -247,7 +241,6 @@
                     console.log('有新消息,reload~');
                     _table.reload({showLoading: false});
                 }
-                if(!is_editing) old_unread_count = parseInt(unreadRealtimeCount);
 				var msgTip = $('.xa-msgTip');
 				if (unreadRealtimeCount > 0){
 					msgTip.show();
@@ -258,6 +251,7 @@
 				} else {
 					msgTip.hide();
 				}
+                if(!is_editing) window.localStorage.setItem("message_count", unreadRealtimeCount)
 			},error: function(resp) {
 				//TODO 进行错误通知
 			}

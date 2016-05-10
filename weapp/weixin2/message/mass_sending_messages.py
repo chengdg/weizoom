@@ -303,7 +303,7 @@ class MassSendingMessages(resource.Resource):
             group_id = 0
         group_id = int(group_id)
         if not request.POST.get("log_id", None):
-            msg_log = UserSentMassMsgLog.create(user_profile.webapp_id, '', message_type, content, group_id)
+            msg_log = UserSentMassMsgLog.create(user_profile.webapp_id, '', message_type, content, group_id, ','.join(id_array))
             message_log_id = msg_log.id
         else:
             message_log_id = request.POST["log_id"]
