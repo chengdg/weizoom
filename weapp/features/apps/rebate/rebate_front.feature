@@ -1043,10 +1043,128 @@ Scenario:8 带参数返利活动[扫码后成交金额]-已关注会员不可参
 	"""
 
 @mall @rebate
-Scenario:9 带参数返利活动-参加未开始的返利活动不能获得返利
+Scenario:9 带参数返利活动-参加未开始或者已结束的返利活动不能获得返利
+	
 
 
 
+@mall @rebate
+Scenario:10 带参数返利活动-多个返利活动同时存在，并且同一个人扫多个返利活动的码且下单
+	Given jobs登录系统
+
+	When 清空浏览器
+	When bill关注jobs的公众号于"2016-05-05 10:00:00"
+	When bill访问jobs的weapp
+	When bill购买jobs的商品
+		| order_id | date             | consumer | product | payment | pay_type  |postage*   |price*   | paid_amount*    | weizoom_card   | action     | order_status  |
+		|   0001   | 2016-05-05       |   bill   | 商品1,1 |   支付  |  支付宝   |   10.00   | 10.00   |     20.00       |                | jobs,发货  |    已发货     |
+
+
+	When 清空浏览器
+	When bill扫描带参数二维码"返利活动3"
+	When bill访问jobs的weapp
+	When bill购买jobs的商品
+		| order_id | date             | consumer | product | payment | pay_type  |postage*   |price*   | paid_amount*    | weizoom_card   | action     | order_status  |
+		|   0001   | 2016-05-09       |   bill   | 商品1,1 |   支付  |  支付宝   |   10.00   | 10.00   |     20.00       |                | jobs,发货  |    已发货     |
+
+	When bill扫描带参数二维码"返利活动4"
+	When bill访问jobs的weapp
+	When bill购买jobs的商品
+		| order_id | date             | consumer | product | payment | pay_type  |postage*   |price*   | paid_amount*    | weizoom_card   | action     | order_status  |
+		|   0001   | 2016-05-09       |   bill   | 商品1,1 |   支付  |  支付宝   |   10.00   | 10.00   |     20.00       |                | jobs,发货  |    已发货     |
+
+	When bill扫描带参数二维码"返利活动5"
+	When bill访问jobs的weapp
+	    | order_id | date             | consumer | product | payment | pay_type  |postage*   |price*   | paid_amount*    | weizoom_card   | action     | order_status  |
+		|   0001   | 2016-05-09       |   bill   | 商品1,1 |   支付  |  支付宝   |   10.00   | 10.00   |     20.00       |                | jobs,发货  |    已发货     |
+
+	
+
+	Given jobs登录系统	
+	When jobs对"返利活动3"的"扫码后成交金额"操作
+	#勾选仅显示扫码后的成交的订单
+	Then jobs显示"仅显示扫码后成交订单"
+	Then jobs能获取列表
+	"""
+		[{
+			"status": "已发货",
+			"final_price": 20.00,
+			"products": [{
+				"name": "商品1",
+				"price": 10.00,
+				"count": 1
+			}]
+		}]
+	"""
+	When jobs取消勾选'仅显示扫码后成交订单'
+	"""
+		[{
+			"status": "已发货",
+			"final_price": 20.00,
+			"products": [{
+				"name": "商品1",
+				"price": 10.00,
+				"count": 1
+			}]
+		}]
+	"""
+
+	
+	When jobs对"返利活动4"的"扫码后成交金额"操作
+	#勾选仅显示扫码后的成交的订单
+	Then jobs显示"仅显示扫码后成交订单"
+	Then jobs能获取列表
+	"""
+		[{
+			"status": "已发货",
+			"final_price": 20.00,
+			"products": [{
+				"name": "商品1",
+				"price": 10.00,
+				"count": 1
+			}]
+		}]
+	"""
+	When jobs取消勾选'仅显示扫码后成交订单'
+	"""
+		[{
+			"status": "已发货",
+			"final_price": 20.00,
+			"products": [{
+				"name": "商品1",
+				"price": 10.00,
+				"count": 1
+			}]
+		}]
+	"""
+
+	When jobs对"返利活动5"的"扫码后成交金额"操作
+	#勾选仅显示扫码后的成交的订单
+	Then jobs显示"仅显示扫码后成交订单"
+	Then jobs能获取列表
+	"""
+		[{
+			"status": "已发货",
+			"final_price": 20.00,
+			"products": [{
+				"name": "商品1",
+				"price": 10.00,
+				"count": 1
+			}]
+		}]
+	"""
+	When jobs取消勾选'仅显示扫码后成交订单'
+	"""
+		[{
+			"status": "已发货",
+			"final_price": 20.00,
+			"products": [{
+				"name": "商品1",
+				"price": 10.00,
+				"count": 1
+			}]
+		}]
+	"""
 
 
 	
