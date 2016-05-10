@@ -52,12 +52,11 @@ class RedPacket(resource.Resource):
 				})
 				return render_to_response('rebate/templates/editor/create_rebate_rule.html', c)
 			answer_content = {}
-			if int(rebate.reply_material_id) > 0:
+			if rebate.reply_type == 2:
 				answer_content['type'] = 'news'
 				answer_content['newses'] = []
 				answer_content['content'] = rebate.reply_material_id
 				newses = News.get_news_by_material_id(rebate.reply_material_id)
-
 				for news in newses:
 					news_dict = {}
 					news_dict['id'] = news.id
