@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import rebates
+import models as apps_models
 
 NAV = {
 	'section': u'',
@@ -39,3 +40,19 @@ def get_link_targets(request):
 			"created_at": data.created_at.strftime("%Y-%m-%d %H:%M:%S")
 		})
 	return pageinfo, link_targets
+
+def grant_weizoom_card():
+	"""
+	对于符合返利条件的订单，发放对应的微众卡
+	@return:
+	"""
+	#筛选出扫码后已完成的符合要求的订单
+	target_orders = get_target_orders()
+
+def get_target_orders(record_id=None):
+	"""
+	筛选出扫码后已完成的符合要求的订单
+	@return: Orders
+	"""
+	if record_id:
+		record = apps_models.Rebate.objects.get(id=record_id)
