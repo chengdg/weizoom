@@ -117,6 +117,7 @@ class MassSentMessages(resource.Resource):
             message_item['created_at'] = message.created_at.strftime('%m月%d日')
             message_item['group_id'] = message.group_id
             message_item['group_name'] = group_name
+            message_item['member_ids'] = message.member_ids
 
             if message.message_type == 1:
                 newses = News.get_news_by_material_id(int(message.message_content))

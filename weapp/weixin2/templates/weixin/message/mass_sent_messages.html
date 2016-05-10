@@ -110,6 +110,7 @@
                                 {{else}}
                                     发送失败&nbsp;&nbsp;<a href="javascript:void 0" class="xa-resend"
                                     data-group-id="${message.group_id}"
+                                    data-member-ids="${message.member_ids}"
                                     data-message-content="${message.message_content}"
                                     data-message-type="${message.message_type}"
                                     data-log-id="${message.id}">重发一次？</a>
@@ -169,6 +170,7 @@ $(document).ready(function() {
         var content = $this.attr('data-message-content');
         var _type = $this.attr("data-message-type");
         var send_type = _type==0? "text": "news";
+        var member_ids = $this.attr("data-member-ids");
         W.getApi().call({
             method: 'post',
             app: 'new_weixin',
@@ -179,7 +181,9 @@ $(document).ready(function() {
                 group_id: group_id,
                 group_type: "member",
                 content: content,
-                send_type: send_type
+                send_type: send_type,
+
+                ids: JSON.stringify(member_ids.split(','))
             },
             success: function(data) {
                 W.showHint('success', '群发成功');
