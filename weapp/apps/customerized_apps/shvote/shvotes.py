@@ -78,26 +78,23 @@ class Shvotes(resource.Resource):
 		"""
 		pageinfo, datas = Shvotes.get_datas(request)
 
+		ids = [str(data.id) for data in datas]
+
 		record_id2memberinfo = {}
-		for c in app_models.ShvoteControl.objects():
+		for c in app_models.ShvoteControl.objects(belong_to__in=ids):
 			belong_to = c.belong_to
 			if record_id2memberinfo.has_key(belong_to):
-				if c.member_id not in record_id2memberinfo[belong_to]:
-					record_id2memberinfo[belong_to].append(c.member_id)
+				record_id2memberinfo[belong_to].add(c.member_id)
 			else:
-				record_id2memberinfo[belong_to] = [c.member_id]
+				record_id2memberinfo[belong_to] = {c.member_id}
 
 		#后端审核通过，计入参与人数
-		ids = [str(data.id) for data in datas]
+
 		participances = app_models.ShvoteParticipance.objects(belong_to__in=ids, is_use=app_models.MEMBER_IS_USE['YES'])
 
 		id2asking_count = id2participant_count = {str(one_id):0 for one_id in ids}
 		for participance in participances:
 			belong_to = str(participance.belong_to)
-			# if record_id2memberinfo.has_key(belong_to):
-			# 	record_id2memberinfo[belong_to] += participance.count
-			# else:
-			# 	record_id2memberinfo[belong_to] = participance.count
 
 			if id2participant_count.has_key(belong_to):
 				id2asking_count[belong_to] += 1
