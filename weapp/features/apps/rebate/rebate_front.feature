@@ -581,7 +581,7 @@ Background:
 		|   0010   | 今天       |   tom    | 商品2,1 |   支付  |  货到付款 |   15.00   | 100.00  |     115.00      | jobs,发货    |    已发货     |
 
 @mall @rebate
-Scenario:1 管理员能够查看到所有扫过该码并关注过的微信用户信息，带参数返利活动[关注人数]-已关注的会员数量不增加；
+Scenario:1 管理员能够查看到所有扫过该码并关注过的微信用户信息，带参数返利活动[关注人数]-会员数量变化；
 	#设置已关注会员可参与
 	#购买次数为首单
 	#订单金额为现金
@@ -591,7 +591,6 @@ Scenario:1 管理员能够查看到所有扫过该码并关注过的微信用户
 	When 清空浏览器
 	When bill扫描返利活动"返利活动1"
 	When bill访问jobs的webapp
-	When bill扫描返利活动"返利活动1"
 	
 
 	Given jobs登录系统
@@ -613,7 +612,7 @@ Scenario:1 管理员能够查看到所有扫过该码并关注过的微信用户
 	"""
 		[{
 			"code_name": "返利活动1",
-			"attention_number": 1
+			"attention_number": 2
 		}]
 	"""
 	#扫码之前取消关注的会员再次扫码返利活动，关注数量增加
@@ -629,7 +628,7 @@ Scenario:1 管理员能够查看到所有扫过该码并关注过的微信用户
 	"""
 		[{
 			"code_name": "返利活动1",
-			"attention_number": 2
+			"attention_number": 3
 		}]
 	"""
 
@@ -673,7 +672,7 @@ Scenario:1 管理员能够查看到所有扫过该码并关注过的微信用户
 	"""
 
 	When 清空浏览器
-	When zhouxun关注jobs的公众号于"'"2016-05-09 10:00:00"'"
+	When zhouxun关注jobs的公众号于"2016-05-09 10:00:00"
 	When zhouxun绑定手机号"13563223667"
 
 	Given jobs登录系统
@@ -714,9 +713,11 @@ Scenario:2 带参数返利活动[扫码后成交金额]-已关注会员可参与
 	When 微信用户批量消费jobs的商品
 		| order_id | date             | consumer | product | payment | pay_type  |postage*   |price*   | paid_amount*    | weizoom_card   | action     | order_status  |
 		|   0001   | 2016-04-09       |   bill   | 商品1,1 |   支付  |  支付宝   |   10.00   | 10.00   |     20.00       |                | jobs,发货  |    已发货     |
-		|   0002   | 2016-05-10       |   tom    | 商品1,1 |   支付  |  支付宝   |   10.00   | 10.00   |     20.00       |                | jobs,发货  |    已发货     |
+		|   0002   | 2016-05-10       |   tom    | 商品2,1 |   支付  |  支付宝   |   10.00   | 10.00   |     20.00       |                | jobs,发货  |    已发货     |
 		|   0003   | 2016-05-10       |  zhouxun | 商品1,1 |   支付  |  微众卡   |   10.00   | 10.00   |     20.00       | 0000001,1234567| jobs,发货  |    已发货     |
 
+
+	Given jobs登录系统	
 	When jobs对"扫码后成交金额"操作
 	#勾选仅显示扫码后的成交的订单
 	Then jobs显示"仅显示扫码后成交订单"
@@ -724,25 +725,48 @@ Scenario:2 带参数返利活动[扫码后成交金额]-已关注会员可参与
 	"""
 		[{
 			"status": "已发货",
-			"final_price": 300.00,
+			"final_price": 20.00,
 			"products": [{
-				"name": "商品3",
-				"price": 300.00,
+				"name": "商品1",
+				"price": 10.00,
 				"count": 1
 			}]
 		}]
 	"""
 	When jobs取消勾选'仅显示扫码后成交订单'
-
-
-
-
-
-
+	"""
+		[{
+			"status": "已发货",
+			"final_price": 20.00,
+			"products": [{
+				"name": "商品1",
+				"price": 10.00,
+				"count": 1
+			}]
+		},{
+			"status": "已发货",
+			"final_price": 20.00,
+			"products": [{
+				"name": "商品2",
+				"price": 10.00,
+				"count": 1
+			}]
+		},{
+			"status": "已发货",
+			"final_price": 20.00,
+			"products": [{
+				"name": "商品1",
+				"price": 10.00,
+				"count": 1
+			}]
+		}]
+	"""
 
 
 @mall @rebate
 Scenario:3 带参数返利活动[扫码后成交金额]-已关注会员；不限；现金
+
+
 @mall @rebate
 Scenario:4 带参数返利活动[扫码后成交金额]-已关注会员；不限；非现金
 @mall @rebate
