@@ -22,6 +22,7 @@ import os
 
 from watchdog.utils import watchdog_error
 from weapp import settings
+from mall import models as mall_models
 
 FIRST_NAV = mall_export.MALL_PROMOTION_AND_APPS_FIRST_NAV
 COUNT_PER_PAGE = 20
@@ -50,46 +51,35 @@ class RebateParticipances(resource.Resource):
 
 	@staticmethod
 	def get_datas(request):
-		member_status = request.GET.get('status', '-1')
 		webapp_id = request.user_profile.webapp_id
-		member_ids = []
-		if member_status != '-1':
-			members = member_models.Member.objects.filter(webapp_id=webapp_id,status = member_status)
-			temp_ids = [member.id for member in members]
-			member_ids = temp_ids  if temp_ids else [-1]
-		start_time = request.GET.get('start_time', '')
-		end_time = request.GET.get('end_time', '')
-		id = request.GET.get('id',0)
-		#导出
-		export_id = request.GET.get('export_id',0)
-		if id:
-			belong_to = id
-		else:
-			belong_to = export_id
+		record_id = request.GET.get('record_id', 0)
 
-		# rebate_info = app_models.Rebate.objects.get(id=belong_to)
+		datas = app_models.RebateParticipance.objects(belong_to=record_id).order_by('-created_at')
 
-		params = {'belong_to': belong_to}
-
-		if member_ids:
-			params['member_id__in'] = member_ids
-		if start_time:
-			params['created_at__gte'] = start_time
-		if end_time:
-			params['created_at__lte'] = end_time
-
-		datas = app_models.RebateParticipance.objects(**params).order_by('-created_at')
-
-		#进行分页
+		# 进行分页
 		count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
 		cur_page = int(request.GET.get('page', '1'))
-		if not export_id:
-			pageinfo, datas = paginator.paginate(datas, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
+		pageinfo, datas = paginator.paginate(datas, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
 
-		tmp_member_ids = []
+		#查询
+		member_status = int(request.GET.get('status', '-1'))
+		start_date = request.GET.get('start_date', '')
+		end_date = request.GET.get('end_date', '')
+		params = {}
+		if member_status != -1:
+			params['status'] = member_status
+		if start_date:
+			params['created_at__gte'] = start_date
+		if end_date:
+			params['created_at__lte'] = end_date
+
+		member_ids = []
 		for data in datas:
-			tmp_member_ids.append(data.member_id)
-		members = member_models.Member.objects.filter(id__in=tmp_member_ids)
+			member_ids.append(data.member_id)
+
+		params['id__in'] = member_ids
+
+		members = member_models.Member.objects.filter(**params)
 		member_id2member = {member.id: member for member in members}
 
 		items = []
@@ -103,20 +93,20 @@ class RebateParticipances(resource.Resource):
 			else:
 				name = u'未知'
 
-			items.append({
-				'id': str(data.id),
-				'member_id': data.member_id,
-				'belong_to': data.belong_to,
-				'participant_name': member_id2member[data.member_id].username_size_ten if member_id2member.get(data.member_id) else u'未知',
-				'username': name,
-				'participant_icon': member_id2member[data.member_id].user_icon if member_id2member.get(data.member_id) else '/static/img/user-1.jpg',
-				'created_at': data.created_at.strftime("%Y-%m-%d %H:%M:%S"),
-			})
+			if cur_member and cur_member.status != member_models.NOT_SUBSCRIBED:
+				items.append({
+					'id': str(data.id),
+					'member_id': data.member_id,
+					'belong_to': data.belong_to,
+					'username': name,
+					'participant_icon': cur_member.user_icon,
+					'follow_time': cur_member.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+					'integral': cur_member.integral,
+					'pay_times': cur_member.pay_times,
+					'pay_money': '%.2f' % cur_member.pay_money
+				})
 
-		if export_id:
-			return items
-		else:
-			return pageinfo, items
+		return pageinfo, items
 
 	@login_required
 	def api_get(request):
@@ -124,6 +114,8 @@ class RebateParticipances(resource.Resource):
 		响应API GET
 		"""
 		pageinfo, items = RebateParticipances.get_datas(request)
+		print 11111111111111111111
+		print items
 		response_data = {
 			'items': items,
 			'pageinfo': paginator.to_dict(pageinfo),
