@@ -918,7 +918,7 @@ Scenario:6 带参数二维码-扫码后回复
 			Then marry收到自动回复'图文1'
 
 
-@mall2 @senior @bandParameterCode @sun
+@mall2 @senior @bandParameterCode
 Scenario:7 带参数二维码的修改优惠券，继续扫码
 		#修改优惠券1奖励为优惠券2奖励，同一个用户只能领取一次优惠券奖励；
 		#修改优惠券2奖励为优惠券1奖励时，提示该优惠券已被选用过，但是依然可以使用，但是不能被同一用户领取
@@ -934,7 +934,7 @@ Scenario:7 带参数二维码的修改优惠券，继续扫码
 			"using_limit": "满5元可以使用",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"coupon_id_prefix": "coupon1_id_2"
+			"coupon_id_prefix": "coupon2_id_"
 		}]
 	"""
 	When 清空浏览器
@@ -965,7 +965,7 @@ Scenario:7 带参数二维码的修改优惠券，继续扫码
 
 	#未关注的用户直接扫描二维码获得优惠券奖励
 	When 清空浏览器
-	When mayun扫描带参数二维码"带参数二维码-优惠券奖励"于'2016-05-09 10:00:00'
+	When mayun扫描带参数二维码"带参数二维码-优惠券奖励"于2016-05-09 10:00:00
 	When mayun访问jobs的webapp
 
 	#扫码的用户获得奖励
@@ -980,7 +980,7 @@ Scenario:7 带参数二维码的修改优惠券，继续扫码
 		"""
 
 	#同一用户再次扫码没有获得奖励
-	When mayun扫描带参数二维码"带参数二维码-优惠券奖励"于'2016-05-09 11:00:00'
+	When mayun扫描带参数二维码"带参数二维码-优惠券奖励"于2016-05-09 11:00:00
 	When mayun访问jobs的webapp
 	Then mayun能获得webapp优惠券列表
 		"""
@@ -1013,18 +1013,15 @@ Scenario:7 带参数二维码的修改优惠券，继续扫码
 		"""
 
 	When 清空浏览器
-	When mayun扫描带参数二维码"带参数二维码-优惠券奖励"于'2016-05-10 11:00:00'
-	When mayun访问jobs的webapp
-
-
+	When mayun扫描带参数二维码"带参数二维码-优惠券奖励"于2016-05-10 11:00:00
 	When mayun访问jobs的webapp
 	Then mayun能获得webapp优惠券列表
 		"""
 		[{
-			"coupon_id": "coupon1_id_2",
+			"coupon_id": "coupon2_id_1",
 			"money": 100.00,
 			"status": "未使用"
-		}，{
+		},{
 			"coupon_id": "coupon1_id_1",
 			"money": 100.00,
 			"status": "未使用"
@@ -1054,18 +1051,15 @@ Scenario:7 带参数二维码的修改优惠券，继续扫码
 		"""
 
 	When 清空浏览器
-	When mayun扫描带参数二维码"带参数二维码-优惠券奖励"于'2016-05-10 11:00:00'
-	When mayun访问jobs的webapp
-
-
+	When mayun扫描带参数二维码"带参数二维码-优惠券奖励"于2016-05-10 11:00:00
 	When mayun访问jobs的webapp
 	Then mayun能获得webapp优惠券列表
 		"""
 		[{
-			"coupon_id": "coupon1_id_2",
+			"coupon_id": "coupon2_id_1",
 			"money": 100.00,
 			"status": "未使用"
-		}，{
+		},{
 			"coupon_id": "coupon1_id_1",
 			"money": 100.00,
 			"status": "未使用"
