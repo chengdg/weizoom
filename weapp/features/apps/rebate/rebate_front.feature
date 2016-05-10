@@ -460,7 +460,7 @@ Scenario:2 带参数返利活动[扫码后成交金额]-已关注会员可参与
 
 	When 微信用户批量消费jobs的商品
 		| order_id | date             | consumer | product | payment | pay_type  |postage*   |price*   | paid_amount*    | weizoom_card   | action     | order_status  |
-		|   0001   | 2016-05-09       |   bill   | 商品1,1 |   支付  |  支付宝   |   10.00   | 10.00   |     20.00       |                | jobs,发货  |    已发货   |
+		|   0001   | 2016-05-09       |   bill   | 商品1,1 |   支付  |  支付宝   |   10.00   | 10.00   |     20.00       |                | jobs,发货  |    已发货     |
 		|   0002   | 2016-05-09       |   tom    | 商品1,1 |   支付  |  支付宝   |   10.00   | 10.00   |     20.00       | 0000041,1234567| jobs,发货  |    已发货     |
 		|   0003   | 2016-05-09       |  zhouxun | 商品1,1 |   支付  |  微众卡   |   10.00   | 10.00   |     20.00       |                | jobs,发货  |    已发货     |    
 		
@@ -470,12 +470,7 @@ Scenario:2 带参数返利活动[扫码后成交金额]-已关注会员可参与
 	Then jobs能获取"仅显示通过二维码新关注会员"列表
 	"""
 		[{
-			"fans_name": "zhouxun",
-			"buy_number": 1,
-			"integral": 0,
-			"price":20.00
-		},{
-			"fans_name": "zhouxun",
+			"fans_name": "bill",
 			"buy_number": 1,
 			"integral": 0,
 			"price":20.00
@@ -508,15 +503,8 @@ Scenario:2 带参数返利活动[扫码后成交金额]-已关注会员可参与
 	Then jobs显示"仅显示扫码后成交订单"
 	Then jobs能获取列表
 	"""
-		[{	"order_id":"0002",
-			"status": "已发货",
-			"final_price": 20.00,
-			"products": [{
-				"name": "商品1",
-				"price": 10.00,
-				"count": 1
-			},{
-				"order_id":"0004",
+		[{
+			"order_id":"0003",
 			"status": "已发货",
 			"final_price": 20.00,
 			"products": [{
@@ -542,6 +530,22 @@ Scenario:2 带参数返利活动[扫码后成交金额]-已关注会员可参与
 		}]
 
 	"""
+	When 清空浏览器
+	When bill关注jobs的公众号于"2016-05-09 10:00:00"
+	When bill绑定手机号"13563223668"
+
+	Given jobs登录系统
+	Then jobs发放返利微众卡
+
+	When 清空浏览器
+	Then bill能获得返利微众卡
+	"""
+		[{
+			"id":"0000002"
+		}]
+
+	"""
+
 
 	
 
@@ -1055,7 +1059,7 @@ Scenario:11 带参数返利活动-查看发放详情
 	Then bill能获得返利微众卡
 	"""
 		[{
-			"id":"0000002"
+			"id":"0000003"
 		}]
 
 	"""
@@ -1063,7 +1067,7 @@ Scenario:11 带参数返利活动-查看发放详情
 	Then jobs能获得发放详情页
 	"""
 		[{
-			"card_id":"0000002",
+			"card_id":"0000003",
 			"price":100.00,
 			"rest_money":0.00,
 			"used_money":0.00,
@@ -1074,13 +1078,13 @@ Scenario:11 带参数返利活动-查看发放详情
 	When bill访问jobs的weapp
 	When bill购买jobs的商品
 		| order_id | date             | consumer | product | payment | pay_type  |postage*   |price*   | paid_amount*    | weizoom_card    | action     | order_status  |
-		|   0001   | 2016-05-05       |   bill   | 商品1,1 |   支付  |  支付宝   |   10.00   | 10.00   |     20.00       | 0000002,1234567 | jobs,发货  |    已发货     |
+		|   0001   | 2016-05-12       |   bill   | 商品1,1 |   支付  |  支付宝   |   10.00   | 10.00   |     20.00       | 0000003,1234567 | jobs,发货  |    已发货     |
 
 	Given jobs登录系统
 	Then jobs能获得发放详情页
 	"""
 		[{
-			"card_id":"0000002",
+			"card_id":"0000003",
 			"price":100.00,
 			"rest_money":80.00,
 			"used_money":20.00,
