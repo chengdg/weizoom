@@ -417,7 +417,7 @@ Scenario:1 管理员能够查看到所有扫过该码并关注过的微信用户
 	When tom访问jobs的webapp
 	
 	Given jobs登录系统
-	Then jobs获得返利活动列表
+	Then jobs获得"返利活动1"列表
 	"""
 		[{
 			"code_name": "返利活动1",
@@ -426,24 +426,41 @@ Scenario:1 管理员能够查看到所有扫过该码并关注过的微信用户
 	"""
 	#扫码返利活动后取消关注的会员，关注数量减少1
 	When 清空浏览器
-	When zhouxun关注jobs的公众号
-	When zhouxun扫描带参数二维码"返利活动1"
-	When zhouxun访问jobs的webapp
-	When zhouxun取消关注jobs的公众号
-	
+	When tom取消关注jobs的公众号
 
 	Given jobs登录系统
-	Then jobs获得带参数二维码列表
+	Then jobs获得"返利活动1"列表
 	"""
 		[{
 			"code_name": "返利活动1",
-			"attention_number": 2
+			"attention_number": 1
 		}]
 	"""
+	
+
+@mall @rebate
+Scenario:2 带参数返利活动[扫码后成交金额]-已关注会员可参与；首单；现金
+
+	Given jobs登录系统
+	When 清空浏览器
+	When bill扫描返利活动"返利活动1"
+	When bill访问jobs的webapp
+
+
+	When 清空浏览器
+	When zhouxun关注jobs的公众号
+	When zhouxun扫描带参数二维码"返利活动1"
+	When zhouxun访问jobs的webapp
+
+	When 清空浏览器
+	When tom关注jobs的公众号
+	When tom扫描带参数二维码"返利活动1"
+	When tom访问jobs的webapp
+
 
 	When 微信用户批量消费jobs的商品
 		| order_id | date             | consumer | product | payment | pay_type  |postage*   |price*   | paid_amount*    | weizoom_card   | action     | order_status  |
-		|   0001   | 2016-05-09       |   bill   | 商品1,1 |   支付  |  支付宝   |   10.00   | 10.00   |     20.00       |                | jobs,发货  |    已发货   |
+		|   0001   | 2016-05-09       |   bill   | 商品1,1 |   支付  |  支付宝   |   10.00   | 10.00   |     20.00       |                | jobs,发货  |    已发货     |
 		|   0002   | 2016-05-09       |   tom    | 商品1,1 |   支付  |  支付宝   |   10.00   | 10.00   |     20.00       | 0000041,1234567| jobs,发货  |    已发货     |
 		|   0003   | 2016-05-09       |  zhouxun | 商品1,1 |   支付  |  微众卡   |   10.00   | 10.00   |     20.00       |                | jobs,发货  |    已发货     |    
 		
@@ -453,12 +470,7 @@ Scenario:1 管理员能够查看到所有扫过该码并关注过的微信用户
 	Then jobs能获取"仅显示通过二维码新关注会员"列表
 	"""
 		[{
-			"fans_name": "zhouxun",
-			"buy_number": 1,
-			"integral": 0,
-			"price":20.00
-		},{
-			"fans_name": "zhouxun",
+			"fans_name": "bill",
 			"buy_number": 1,
 			"integral": 0,
 			"price":20.00
@@ -491,15 +503,8 @@ Scenario:1 管理员能够查看到所有扫过该码并关注过的微信用户
 	Then jobs显示"仅显示扫码后成交订单"
 	Then jobs能获取列表
 	"""
-		[{	"order_id":"0002",
-			"status": "已发货",
-			"final_price": 20.00,
-			"products": [{
-				"name": "商品1",
-				"price": 10.00,
-				"count": 1
-			},{
-				"order_id":"0004",
+		[{
+			"order_id":"0003",
 			"status": "已发货",
 			"final_price": 20.00,
 			"products": [{
@@ -525,20 +530,29 @@ Scenario:1 管理员能够查看到所有扫过该码并关注过的微信用户
 		}]
 
 	"""
+	When 清空浏览器
+	When bill关注jobs的公众号于"2016-05-09 10:00:00"
+	When bill绑定手机号"13563223668"
 
-	Then jobs能获得发放详情页
+	Given jobs登录系统
+	Then jobs发放返利微众卡
+
+	When 清空浏览器
+	Then bill能获得返利微众卡
 	"""
 		[{
-			"card_id":"0000001",
-			"price":10.00,
-			""
-
+			"id":"0000002"
 		}]
-		"""
+
+	"""
+
+
+	
+
 
 
 @mall @rebate
-Scenario:2 带参数返利活动[扫码后成交金额]-已关注会员可参与；首单；非现金
+Scenario:3 带参数返利活动[扫码后成交金额]-已关注会员可参与；首单；非现金
 	#已关注会员可参与；
 	#必须是首单；
 	#可不用现金支付；
@@ -597,11 +611,20 @@ Scenario:2 带参数返利活动[扫码后成交金额]-已关注会员可参与
 	When jobs取消勾选'仅显示扫码后成交订单'
 	"""
 		[{
-			"order_id":"0003",
+			"order_id":"0001",
 			"status": "已发货",
 			"final_price": 20.00,
 			"products": [{
 				"name": "商品1",
+				"price": 10.00,
+				"count": 1
+			}]
+		},{
+			"order_id":"0003",
+			"status": "已发货",
+			"final_price": 20.00,
+			"products": [{
+				"name": "商品2",
 				"price": 10.00,
 				"count": 1
 			}]
@@ -613,7 +636,6 @@ Scenario:2 带参数返利活动[扫码后成交金额]-已关注会员可参与
 				"name": "商品2",
 				"price": 10.00,
 				"count": 1
-			}]
 		}]
 	"""
 
@@ -630,7 +652,7 @@ Scenario:2 带参数返利活动[扫码后成交金额]-已关注会员可参与
 
 
 @mall @rebate
-Scenario:3 带参数返利活动[扫码后成交金额]-已关注会员可参与；不限；现金
+Scenario:4 带参数返利活动[扫码后成交金额]-已关注会员可参与；不限；现金
 	#已关注会员可参与；
 	#必须是不限；
 	#现金支付；
@@ -680,7 +702,7 @@ Scenario:3 带参数返利活动[扫码后成交金额]-已关注会员可参与
 
 
 @mall @rebate
-Scenario:4 带参数返利活动[扫码后成交金额]-已关注会员可参与；不限；非现金
+Scenario:5 带参数返利活动[扫码后成交金额]-已关注会员可参与；不限；非现金
 	#已关注会员可参与；
 	#不限订单；
 	#可使用非现金支付；
@@ -752,7 +774,7 @@ Scenario:4 带参数返利活动[扫码后成交金额]-已关注会员可参与
 
 
 @mall @rebate
-Scenario:5 带参数返利活动[扫码后成交金额]-已关注会员不可参与；不限；非现金
+Scenario:6 带参数返利活动[扫码后成交金额]-已关注会员不可参与；不限；非现金
 	#已关注会员不可参与；
 	#不限订单；
 	#f可使用非现金支付；
@@ -814,7 +836,7 @@ Scenario:5 带参数返利活动[扫码后成交金额]-已关注会员不可参
 
 
 @mall @rebate
-Scenario:6 带参数返利活动[扫码后成交金额]-已关注会员不可参与；不限；现金
+Scenario:7 带参数返利活动[扫码后成交金额]-已关注会员不可参与；不限；现金
 	#已关注会员不可参与；
 	#不限订单；
 	#现金支付；
@@ -859,7 +881,7 @@ Scenario:6 带参数返利活动[扫码后成交金额]-已关注会员不可参
 
 	
 @mall @rebate
-Scenario:7 带参数返利活动[扫码后成交金额]-已关注会员不可参与；首单；现金
+Scenario:8 带参数返利活动[扫码后成交金额]-已关注会员不可参与；首单；现金
 	#已关注会员不可参与；
 	#首单；
 	#现金支付；
@@ -905,7 +927,7 @@ Scenario:7 带参数返利活动[扫码后成交金额]-已关注会员不可参
 
 
 @mall @rebate
-Scenario:8 带参数返利活动[扫码后成交金额]-已关注会员不可参与；首单；非现金
+Scenario:9 带参数返利活动[扫码后成交金额]-已关注会员不可参与；首单；非现金
 	#已关注会员不可参与；
 	#首单；
 	#非现金支付；
@@ -960,7 +982,7 @@ Scenario:8 带参数返利活动[扫码后成交金额]-已关注会员不可参
 
 
 @mall @rebate
-Scenario:9 带参数返利活动-多个返利活动同时存在，并且同一个人扫多个返利活动的码且下单
+Scenario:10 带参数返利活动-多个返利活动同时存在，并且同一个人扫多个返利活动的码且下单
 	Given jobs登录系统
 
 	When 清空浏览器
@@ -1014,6 +1036,62 @@ Scenario:9 带参数返利活动-多个返利活动同时存在，并且同一�
 			}]
 		}]
 	"""
+
+
+@mall @rebate
+Scenario:11 带参数返利活动-查看发放详情
+	Given jobs登录系统
+	When 清空浏览器
+	When bill关注jobs的公众号于"2016-05-05 10:00:00"
+	When bill扫描带参数二维码"返利活动1"
+	When bill访问jobs的weapp
+	When bill购买jobs的商品
+		| order_id | date             | consumer | product | payment | pay_type  |postage*   |price*   | paid_amount*    | weizoom_card   | action     | order_status  |
+		|   0001   | 2016-05-05       |   bill   | 商品1,1 |   支付  |  支付宝   |   10.00   | 10.00   |     20.00       |                | jobs,发货  |    已发货     |
+
+
+	When bill绑定手机号"13563223667"
+
+	Given jobs登录系统
+	Then jobs发放返利微众卡
+
+	When 清空浏览器
+	Then bill能获得返利微众卡
+	"""
+		[{
+			"id":"0000003"
+		}]
+
+	"""
+	Given jobs登录系统
+	Then jobs能获得发放详情页
+	"""
+		[{
+			"card_id":"0000003",
+			"price":100.00,
+			"rest_money":0.00,
+			"used_money":0.00,
+			"consumer":""
+		}]
+	"""
+	When 清空浏览器
+	When bill访问jobs的weapp
+	When bill购买jobs的商品
+		| order_id | date             | consumer | product | payment | pay_type  |postage*   |price*   | paid_amount*    | weizoom_card    | action     | order_status  |
+		|   0001   | 2016-05-12       |   bill   | 商品1,1 |   支付  |  支付宝   |   10.00   | 10.00   |     20.00       | 0000003,1234567 | jobs,发货  |    已发货     |
+
+	Given jobs登录系统
+	Then jobs能获得发放详情页
+	"""
+		[{
+			"card_id":"0000003",
+			"price":100.00,
+			"rest_money":80.00,
+			"used_money":20.00,
+			"consumer":"bill"
+		}]
+	"""
+
 
 
 

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import rebates
 import models as apps_models
+from mall import models as mall_models
 
 NAV = {
 	'section': u'',
@@ -49,10 +50,22 @@ def grant_weizoom_card():
 	#筛选出扫码后已完成的符合要求的订单
 	target_orders = get_target_orders()
 
-def get_target_orders(record_id=None):
+def get_target_orders(record=None):
 	"""
 	筛选出扫码后已完成的符合要求的订单
 	@return: Orders
 	"""
-	if record_id:
-		record = apps_models.Rebate.objects.get(id=record_id)
+	if record:
+		is_limit_cash = record.is_limit_cash #订单金额是否为现金
+		rebate_order_price = record.rebate_order_price #订单返利需满多少元
+		rebate_money = record.rebate_money #返利返多少元
+		weizoom_card_id_from = record.weizoom_card_id_from #发放微众卡号段
+		weizoom_card_id_to = record.weizoom_card_id_to
+
+		params = {}
+		if is_limit_cash:
+			params["final_price__gte"] = rebate_order_price
+		else:
+			params["product_price__gte"] = rebate_order_price
+		params["status"] = mall_models.STATUS2TEXT[mall_models.ORDER_STATUS_SUCCESSED]
+		return mall_models.Order.objects.filter(**params)
