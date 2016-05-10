@@ -136,7 +136,8 @@
     line-height: 25px;
     font-size: 12px;
 }*/
-.xui-mall-integralStrategyPage .xui-legend {
+.xui-mall-integralStrategyPage .xui-legend,
+.xui-mall-configProductListPage .xui-legend{
  height: 36px;
   width: 100%;
   background-color: #d8eafb;
@@ -220,4 +221,16 @@
 .xui-noticeDetail .xui-detailTime{
   font-size: 12px;
   text-align: center;
+}
+/*通用配置页*/
+.xui-mall-configProductListPage label{
+    font-weight: normal;
+    text-align: right;
+    line-height: 22px;
+}
+.xui-mall-configProductListPage .form-group{
+    margin-bottom: 0px;
+}
+.xui-mall-configProductListPage .xui-i-help {
+    color: #8F8F8F;
 }
