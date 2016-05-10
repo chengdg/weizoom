@@ -233,7 +233,7 @@
 				}
 
 				//微信未读消息计数
-                var old_unread_count = parseInt(window.localStorage.getItem("message_count")) || 0;
+                var old_unread_count = parseInt(window.localStorage.getItem("realtime_message_count")) || 0;
 				var unreadRealtimeCount = data.unread_realtime_count;
                 //如果有新的消息，则reload table
                 var _table = $('[data-ui-role="advanced-table"]').data('view');
@@ -251,7 +251,7 @@
 				} else {
 					msgTip.hide();
 				}
-                if(!is_editing) window.localStorage.setItem("message_count", unreadRealtimeCount)
+                if(!is_editing) window.localStorage.setItem("realtime_message_count", unreadRealtimeCount)
 			},error: function(resp) {
 				//TODO 进行错误通知
 			}
