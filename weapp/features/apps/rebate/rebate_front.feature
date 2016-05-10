@@ -598,13 +598,13 @@ Scenario:3 带参数返利活动[扫码后成交金额]-已关注会员可参与
 				"price": 10.00,
 				"count": 1
 			},{
-				"order_id":"0003",
-				"status": "已发货",
-				"final_price": 20.00,
-				"products": [{
-					"name": "商品1",
-					"price": 10.00,
-					"count": 1
+			"order_id":"0003",
+			"status": "已发货",
+			"final_price": 20.00,
+			"products": [{
+				"name": "商品1",
+				"price": 10.00,
+				"count": 1
 			}]
 		}]
 	"""
@@ -620,7 +620,7 @@ Scenario:3 带参数返利活动[扫码后成交金额]-已关注会员可参与
 				"count": 1
 			}]
 		},{
-			"order_id":"0003",
+			"order_id":"0002",
 			"status": "已发货",
 			"final_price": 20.00,
 			"products": [{
@@ -629,7 +629,15 @@ Scenario:3 带参数返利活动[扫码后成交金额]-已关注会员可参与
 				"count": 1
 			}]
 		},{
-			"order_id":"0004",
+			"order_id":"0003",
+			"status": "已发货",
+			"final_price": 20.00,
+			"products": [{
+				"name": "商品2",
+				"price": 10.00,
+				"count": 1
+		},{
+			"order_id":"0003",
 			"status": "已发货",
 			"final_price": 20.00,
 			"products": [{
@@ -644,10 +652,23 @@ Scenario:3 带参数返利活动[扫码后成交金额]-已关注会员可参与
 	Then jobs发放返利微众卡
 
 	When 清空浏览器
-	Then bill能获得返利微众卡手机号绑定页面
+	Then tom能获得返利微众卡手机号绑定页面
+
+	When tom绑定手机号"13562336987"
+
+	Given jobs登录系统
+	Then jobs发放返利微众卡
 
 	When 清空浏览器
-	Then tom能获得返利微众卡手机号绑定页面
+	Then tom能获得返利微众卡
+	"""
+		[{
+			"id":"0000006"
+		}]
+
+	"""
+
+
 	
 
 
@@ -674,30 +695,22 @@ Scenario:4 带参数返利活动[扫码后成交金额]-已关注会员可参与
 		|   0003   | 2016-05-10       |  zhouxun | 商品1,1 |   支付  |  微众卡   |   10.00   | 10.00   |     20.00       | 0000041,1234567| jobs,发货  |    已发货     |
 
 
-	Given jobs登录系统	
-	When jobs对"扫码后成交金额"操作
-	#勾选仅显示扫码后的成交的订单
-	Then jobs显示"仅显示扫码后成交订单"
-	Then jobs能获取列表
+	When 清空浏览器
+	When tom关注jobs的公众号于"2016-05-09 10:00:00"
+	When tom绑定手机号"13563223668"
+
+	Given jobs登录系统
+	Then jobs发放返利微众卡
+
+	When 清空浏览器
+	Then tom能获得返利微众卡
 	"""
 		[{
-			"order_id":"0001",
-			"status": "已发货",
-			"final_price": 20.00,
-			"products": [{
-				"name": "商品1",
-				"price": 10.00,
-				"count": 1
-			}]
+			"id":"0000011"
 		},{
-			"order_id":"0002",
-			"status": "已发货",
-			"final_price": 20.00,
-			"products": [{
-				"name": "商品1",
-				"price": 10.00,
-				"count": 1
+			"id":"0000012"
 		}]
+
 	"""
 
 
@@ -730,46 +743,45 @@ Scenario:5 带参数返利活动[扫码后成交金额]-已关注会员可参与
 		|   0004   | 2016-05-10       |  zhouxun | 商品1,1 |   支付  |  微众卡   |   10.00   | 10.00   |     20.00       | 0000041,1234567| jobs,发货  |    已发货     |
 
 
-	Given jobs登录系统	
-	When jobs对"扫码后成交金额"操作
-	#勾选仅显示扫码后的成交的订单
-	Then jobs显示"仅显示扫码后成交订单"
-	Then jobs能获取列表
+	When 清空浏览器
+	When bill绑定手机号"13563223668"
+
+	When 清空浏览器
+	When tom绑定手机号"13563223669"
+
+	When 清空浏览器
+	When zhouxun绑定手机号"13563223679"
+
+	Given jobs登录系统
+	Then jobs发放返利微众卡
+
+	When 清空浏览器
+	Then bill能获得返利微众卡
 	"""
 		[{
-			"order_id":"0001",
-			"status": "已发货",
-			"final_price": 20.00,
-			"products": [{
-				"name": "商品1",
-				"price": 10.00,
-				"count": 1
-			}]
-		},{
-			"order_id":"0002",
-			"status": "已发货",
-			"final_price": 20.00,
-			"products": [{
-				"name": "商品1",
-				"price": 10.00,
-				"count": 1
-		},{
-			"order_id":"0003",
-			"status": "已发货",
-			"final_price": 20.00,
-			"products": [{
-				"name": "商品1",
-				"price": 10.00,
-				"count": 1
-		},{
-			"order_id":"0004",
-			"status": "已发货",
-			"final_price": 20.00,
-			"products": [{
-				"name": "商品1",
-				"price": 10.00,
-				"count": 1
+			"id":"0000016"
 		}]
+
+	"""
+
+	When 清空浏览器
+	Then tom能获得返利微众卡
+	"""
+		[{
+			"id":"0000017"
+		},{
+			"id":"0000018"
+		}]
+
+	"""
+
+	When 清空浏览器
+	Then tom能获得返利微众卡
+	"""
+		[{
+			"id":"0000019"
+		}]
+
 	"""
 
 
@@ -790,7 +802,7 @@ Scenario:6 带参数返利活动[扫码后成交金额]-已关注会员不可参
 
 
 	When 清空浏览器
-	When zouxun扫描带参数二维码"返利活动5"
+	When zhouxun扫描带参数二维码"返利活动5"
 
 	When 微信用户批量消费jobs的商品
 		| order_id | date             | consumer | product | payment | pay_type  |postage*   |price*   | paid_amount*    | weizoom_card   | action     | order_status  |
@@ -799,40 +811,40 @@ Scenario:6 带参数返利活动[扫码后成交金额]-已关注会员不可参
 		|   0003   | 2016-05-10       |   tom    | 商品2,1 |   支付  |  支付宝   |   10.00   | 10.00   |     20.00       |                | jobs,发货  |    已发货     |
 		|   0004   | 2016-05-10       |  zhouxun | 商品1,1 |   支付  |  微众卡   |   10.00   | 10.00   |     20.00       | 0000041,1234567| jobs,发货  |    已发货     |
 
+	When 清空浏览器
+	When bill绑定手机号"13563223668"
 
-	Given jobs登录系统	
-	When jobs对"扫码后成交金额"操作
-	#勾选仅显示扫码后的成交的订单
-	Then jobs显示"仅显示扫码后成交订单"
-	Then jobs能获取列表
+	When 清空浏览器
+	When tom绑定手机号"13563223669"
+
+	When 清空浏览器
+	When zhouxun绑定手机号"13563223679"
+
+	Given jobs登录系统
+	Then jobs发放返利微众卡
+
+
+	When 清空浏览器
+	Then tom能获得返利微众卡
 	"""
 		[{
-			"order_id":"0002",
-			"status": "已发货",
-			"final_price": 20.00,
-			"products": [{
-				"name": "商品1",
-				"price": 10.00,
-				"count": 1
-			}]
+			"id":"0000021"
 		},{
-			"order_id":"0003",
-			"status": "已发货",
-			"final_price": 20.00,
-			"products": [{
-				"name": "商品1",
-				"price": 10.00,
-				"count": 1
-		},{
-			"order_id":"0004",
-			"status": "已发货",
-			"final_price": 20.00,
-			"products": [{
-				"name": "商品1",
-				"price": 10.00,
-				"count": 1
+			"id":"0000022"
 		}]
+
 	"""
+
+	When 清空浏览器
+	Then zhouxun能获得返利微众卡
+	"""
+		[{
+			"id":"0000023"
+		}]
+
+	"""
+
+
 
 
 @mall @rebate
@@ -861,24 +873,26 @@ Scenario:7 带参数返利活动[扫码后成交金额]-已关注会员不可参
 		|   0003   | 2016-05-10       |  zhouxun | 商品1,1 |   支付  |  微众卡   |   10.00   | 10.00   |     20.00       | 0000041,1234567| jobs,发货  |    已发货     |
 
 
-	Given jobs登录系统	
-	When jobs对"扫码后成交金额"操作
-	#勾选仅显示扫码后的成交的订单
-	Then jobs显示"仅显示扫码后成交订单"
-	Then jobs能获取列表
+	When 清空浏览器
+	When bill绑定手机号"13563223668"
+
+	When 清空浏览器
+	When tom绑定手机号"13563223669"
+
+	When 清空浏览器
+	When zhouxun绑定手机号"13563223679"
+
+	Given jobs登录系统
+	Then jobs发放返利微众卡
+
+	When 清空浏览器
+	Then tom能获得返利微众卡
 	"""
 		[{
-			"order_id":"0002",
-			"status": "已发货",
-			"final_price": 20.00,
-			"products": [{
-				"name": "商品1",
-				"price": 10.00,
-				"count": 1
-			}]
+			"id":"0000026"
 		}]
-	"""
 
+	"""
 	
 @mall @rebate
 Scenario:8 带参数返利活动[扫码后成交金额]-已关注会员不可参与；首单；现金
@@ -897,7 +911,7 @@ Scenario:8 带参数返利活动[扫码后成交金额]-已关注会员不可参
 
 
 	When 清空浏览器
-	When zouxun扫描带参数二维码"返利活动7"
+	When zhouxun扫描带参数二维码"返利活动7"
 
 	When 微信用户批量消费jobs的商品
 		| order_id | date             | consumer | product | payment | pay_type  |postage*   |price*   | paid_amount*    | weizoom_card   | action     | order_status  |
@@ -906,23 +920,26 @@ Scenario:8 带参数返利活动[扫码后成交金额]-已关注会员不可参
 		|   0003   | 2016-05-10       |   tom    | 商品2,1 |   支付  |  支付宝   |   10.00   | 10.00   |     20.00       |                | jobs,发货  |    已发货     |
 		|   0004   | 2016-05-10       |  zhouxun | 商品1,1 |   支付  |  微众卡   |   10.00   | 10.00   |     20.00       | 0000041,1234567| jobs,发货  |    已发货     |
 
+	When 清空浏览器
+	When bill绑定手机号"13563223668"
 
-	Given jobs登录系统	
-	When jobs对"扫码后成交金额"操作
-	#勾选仅显示扫码后的成交的订单
-	Then jobs显示"仅显示扫码后成交订单"
-	Then jobs能获取列表
+	When 清空浏览器
+	When tom绑定手机号"13563223669"
+
+	When 清空浏览器
+	When zhouxun绑定手机号"13563223679"
+
+	Given jobs登录系统
+	Then jobs发放返利微众卡
+
+
+	When 清空浏览器
+	Then tom能获得返利微众卡
 	"""
 		[{
-			"order_id":"0003",
-			"status": "已发货",
-			"final_price": 20.00,
-			"products": [{
-				"name": "商品1",
-				"price": 10.00,
-				"count": 1
-			}]
+			"id":"0000031"
 		}]
+
 	"""
 
 
@@ -953,30 +970,26 @@ Scenario:9 带参数返利活动[扫码后成交金额]-已关注会员不可参
 		|   0004   | 2016-05-10       |  zhouxun | 商品1,1 |   支付  |  微众卡   |   10.00   | 10.00   |     20.00       | 0000041,1234567| jobs,发货  |    已发货     |
 
 
-	Given jobs登录系统	
-	When jobs对"扫码后成交金额"操作
-	#勾选仅显示扫码后的成交的订单
-	Then jobs显示"仅显示扫码后成交订单"
-	Then jobs能获取列表
+	When 清空浏览器
+	When bill绑定手机号"13563223668"
+
+	When 清空浏览器
+	When tom绑定手机号"13563223669"
+
+	When 清空浏览器
+	When zhouxun绑定手机号"13563223679"
+
+	Given jobs登录系统
+	Then jobs发放返利微众卡
+
+
+	When 清空浏览器
+	Then tom能获得返利微众卡
 	"""
 		[{
-			"order_id":"0002",
-			"status": "已发货",
-			"final_price": 20.00,
-			"products": [{
-				"name": "商品1",
-				"price": 10.00,
-				"count": 1
-			}]
-		},{
-			"order_id":"0004",
-			"status": "已发货",
-			"final_price": 20.00,
-			"products": [{
-				"name": "商品1",
-				"price": 10.00,
-				"count": 1
+			"id":"0000036"
 		}]
+
 	"""
 
 
