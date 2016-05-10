@@ -4,10 +4,39 @@
 {% block css %}
 <link rel="stylesheet" href="/markettools_static/weizoom_card/css/wzcoin.css">
 <link rel="stylesheet" href="/webapp_static/backend_default_v3/css/default_v3.css">
+<style type="text/css">
+    .xui-tab{
+    	font-size: 0;
+    	height: 40px;
+    	line-height: 40px;
+    }
+    .xui-tab > div{
+    	display: inline-block;
+    	width: 50%;
+    	font-family: "黑体";
+    	box-sizing: border-box;
+    	background-color: #fff;
+    }
+    .xui-tab-active{
+    	font-size: 1.2rem;
+    	text-align: center;
+    	color: #cf0404;
+    	border-bottom: 2px solid #cf0404;
+    }
+    .xui-tab-normal{
+    	border-left: 1px solid #f5f5f5;
+    	font-size: 1rem;
+    	text-align: center;
+    }	
+</style>
 {% endblock %}
 
 {% block content-panel %}
 <div class="xui-wzcoinPay-page xui-page">
+	<div class="xui-tab">
+		<div class="xui-tab-active">微众卡余额查询</div>
+		<div class="xui-tab-normal"><a>微众卡钱包<a></div>
+	</div>
 	<div class="xui-container p30">
     	<form class="xui-form" method="post" action="" id="editForm">
 			<div class="xui-pageTitle tc xui-ffht c3">微众卡</div>

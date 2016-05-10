@@ -1,20 +1,23 @@
 {% extends "content_base_v2.html" %}
 {% block css%}
 <style>
-.is_first{
-	vertical-align: sub;
-	margin-left: 30px!important;
-}
 .xui-export{
 	width: 100px;
 }
+.xui-i-item .errorHint{
+	margin-left: 64px;
+}
 .xui-money{
 	width: 130px;
-    border: 1px solid #b1dbf1;
+    border: 1px solid #BFD7EB;;
     background-color: #f2f2f2;
+    padding: 0 5px;
 }
 .ml13{
 	margin-left: 13px;
+}
+.xui-filterPanel{
+	padding-bottom: 25px;
 }
 </style>
 {% endblock %}
@@ -22,14 +25,14 @@
 <div class="relative">
 	<ul class="breadcrumb">
 		<li>您当前所在位置</li>
-		<li><a href="/new_weixin/materials/">高级管理</a></li>
-		<li><a href="/new_weixin/qrcodes/">带参数二维码</a></li>
-		<li class="active">交易订单</li>
+		<li><a href="/apps/lottery/lotteries/">百宝箱</a></li>
+		<li><a href="/apps/rebate/rebates/">返利活动</a></li>
+		<li class="active">活动订单</li>
 	</ul>
 </div>
 <div class="xui-filterPanel" >
     <div class="xui-form disT ml20">
-        <div class="xui-i-item">
+        <div class="xui-i-item clearfix">
 			<label>下单时间：</label>
 			<input
 				type="text"
@@ -58,16 +61,18 @@
 			    data-format="yy-mm-dd"
 			    data-max="now"
 			    data-min-el="#start_date"/>
-			<input type="radio" name="is_first" value="1" class="is_first">首单
-			<input type="radio" name="is_first" value="0" class="is_first">非首单
-			<a class="btn btn-primary xa-search xui-fontBold ml60" href="javascript:void(0);">查询</a>
-			<a class="xa-reset btn btn-primary xui-fontBold" href="javascript:void(0);">重置</a>
-			<a class="xa-export btn btn-default xui-export ml40" href="javascript:void(0);">导出</a>
+			<input type="radio" value="1" class="vs ml30" name="firstOrder"  checked="checked">&nbsp;首单
+			<input type="radio" value="0" class="vs ml30" name="firstOrder">&nbsp;非首单
+			<div class="xui-btn-group fr">
+				<a class="btn btn-primary xa-search xui-fontBold ml60" href="javascript:void(0);">查询</a>
+				<a class="xa-reset btn btn-primary xui-fontBold" href="javascript:void(0);">重置</a>
+				<a class="xa-export btn btn-default xui-export ml40" href="javascript:void(0);">导出</a>
+			</div>
 		</div>
-		<div class="xui-i-item">
+		<div class="xui-i-item" style="margin-top: -15px;">
 			<label>实付金额</label>
-			<input type="text" class="ml13 mr10 xui-money" id="start_money">
-			<input type="text" class="xui-money" id="end_money">
+			<input type="text" class="ml13 mr10 xui-money" id="start_money" data-validate="require-notempty,,require-float">
+			<input type="text" class="xui-money" id="end_money"data-validate="require-notempty,,require-float">
 		</div>
 	</div>
 </div>
@@ -193,6 +198,7 @@
 						{{/if}}
 					</td>
 					<td width="100">
+						{{if order.is_first_order }}<i class="xui-firstTag">首</i>{{/if}}
 						{{if order.buyer_id > 0}}
 							<a href="/member/detail/?id=${ order.buyer_id }" target='_blank'>{{html order.buyer_name}}</a>
 						{{else}}
@@ -201,7 +207,6 @@
 						{{if order.customer_message}}
 
 						{{/if}}
-						<!--${order.customer_message}-->
 					</td>
 					<td width="110">
 						${ order.pay_money }
@@ -223,13 +228,6 @@
 	                        {{html formatOrderStatus(order.status)}}
 						</div>
 					</td>
-					<!--<td class="auto_wrap">
-						<div style="width:150px;" class="nowrap">
-							{{if order.customer_message}}
-									${order.customer_message}
-							{{/if}}
-						</div>
-					</td>-->
 				</tr>
 				{{if order.remark }}
 				<tr>
@@ -266,20 +264,31 @@ $(document).ready(function() {
 		var start_date = $('#start_date').val();
 		var end_date = $('#end_date').val();
 		var start_money = $('#start_money').val();
-		var end_money = $('#end_money').val();		
+		var end_money = $('#end_money').val();	
+		var is_first_order = $("input[type='radio']:checked").val();	
 		var is_checked = $('.is_show').is(':checked');
 		var dataView = $('[data-ui-role="qrcode-order-advanced-table"]').data('view');
 		var is_show = 0;
 		if (is_checked == true){
 			is_show = 1;
 		}
-		var args= '{"start_date":"'+start_date+'","end_date":"'+end_date+'","start_money":"'+start_money+'","end_money":"'+end_money+'","is_show":"'+is_show+'"}';
-		dataView.options.args =  args;//this.getFilterValueByDict(args);
+		var args= '{"start_date":"'+start_date+'","end_date":"'+end_date+'","start_money":"'+start_money+'","end_money":"'+end_money+'","is_show":"'+is_show+'","is_first_order":"'+is_first_order+'"}';
+		dataView.options.args = args;
 	    dataView.setPage(1);
 		dataView.reload();
 	}
 
 	$('.xa-search').click(function(){
+        if (!W.validate()) {
+        	W.showHint('error','请输入正确金额或下单时间');
+          	return false;
+        }
+		var s_money = parseInt($('#start_money').val());
+		var e_money = parseInt($('#end_money').val());	
+        if(s_money > e_money){
+            W.showHint('error','请输入正确金额');
+            return false;
+        }
 		dateViewReload();
 	});
 	$('.xa-reset').click(function(){

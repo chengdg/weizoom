@@ -10,13 +10,10 @@
 		vertical-align: text-top;
 	}
 	.xa-list .icon-arrow-up{
-		/*background: #000;*/
 		background: url('/static_v2/img/weixin/storingUp.png') no-repeat ;
 	}
 	.xa-list .icon-arrow-down{
-		/*background: #f00;*/
 		background: url('/static_v2/img/weixin/storing.png') no-repeat;
-
 	}
 	.xui-filterPanel{
 		padding-bottom: 10px;
@@ -37,6 +34,9 @@
 	.xui-export{
 		width: 100px;
 	}
+	.panel-heading{
+		padding: 10px 10px;
+	}
 </style>
 {% endblock%}
 {% block content-panel %}
@@ -44,9 +44,10 @@
 
 	<div class="relative">
 		<ul class="breadcrumb">
-			<li>您当前所在位置</li>
-			<li><a href="/new_weixin/materials/">促销管理</a></li>
-			<li class="active">积分应用</li>
+		    <li>您当前所在位置</li>
+		    <li><a href="/apps/lottery/lotteries/">百宝箱</a></li>
+		    <li><a href="/apps/rebate/rebates/">返利活动</a></li>
+		    <li class="active">关注会员</li>
 		</ul>
 	</div>
 	<div class="xui-filterPanel">
@@ -126,9 +127,9 @@
 			<th >会员</th>
 			<th class="tx_sortable" style="width:15%;text-align:center;" data-sort-attr='pay_times'><a>购买次数</a></th>
 			<th class="tx_sortable" style="width:15%" data-sort-attr='integral' ><a>积分</a></th>
-			<th class="tx_sortable" style="width:15%" data-sort-attr='pay_money'><a>消费总额</a></th>
+			<th style="width:15%">消费总额</th>
 			<th style="width:20%"></th>
-			<th class="tx_sortable" style="width:20%" data-sort-attr='created_at' data-init-sort="-created_at" >关注时间</th>
+			<th class="tx_sortable" style="width:20%" data-sort-attr='created_at' data-init-sort="-created_at" ><a>关注时间<a></th>
 		</tr>
 		</thead>
 		<tbody>
@@ -149,9 +150,6 @@
 				<div class="fl xui-i-fansName">
 					<a class='lh26 xui-i-link' href="/member/detail/?id=${ member.id }" target='_blank'>
 						{{html member.username}}
-						{{if member.name !== ''}}
-							(${member.name})
-						{{/if}}
 					</a>
 				</div>
 			</td>
@@ -193,6 +191,9 @@ $(document).ready(function() {
 	});
 	$('.is_show').click(function(){
 		dateViewReload();
+	});
+	$('.xa-export').click(function(){
+		// 导出
 	});
 
 	function dateViewReload(){
