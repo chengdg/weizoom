@@ -2,19 +2,9 @@
 #edit：张三香
 #editor:王丽  2015.10.19
 #editor:新新  2015.10.20
-#editor:三香  2016.05.10
 
 Feature: 销售概况-订单概况
 """
-    补充2016.05.10
-        同步订单中的数据计入到数据罗盘中
-            1、经营报告中的以下字段，统计同步订单的数据
-                成交金额、成交订单、购买总人数、客单价
-            2、销售分析-订单概况分析
-                成交金额、客单价、成交商品、支付金额饼图
-            3、销售分析-商品概况分析
-                购买总人数、下单单量、成交总件数、商品销售排行次数
-
     对店铺的订单进行不同维度的数据统计分析，订单的订单来源为'本店'和‘商城’
 
     备注：
@@ -380,12 +370,12 @@ Background:
         |   0012   | 2014-9-7 | tom1     | 商品2,1  | 支付    | 微信支付 | 15.00      | 100.00    | 200              |                      | 95.00          |                 | 0.00      | 95.00     | 0.00    |  jobs,完成  | 已完成       |
         |   0013   | 2014-9-8 | tom2     | 商品1,1  | 支付    | 支付宝   | 10.00      | 100.00    |                  | 全体券1,coupon1_id_3 | 100.00         |                 | 100.00    | 0.00      | 0.00    |  jobs,完成  | 已完成       |
         |   0014   | 2014-9-9 | tom3     | 商品2,1  | 支付    | 微信支付 | 15.00      | 100.00    | 200              |                      | 95.00          | 0000004,1234567 | 0.00      | 45.00     | 0.00    |  jobs,完成  | 已完成       |
-        #|   0015   | 2014-9-1 | -tom4    | 商品2,1  | 支付    | 货到付款 | 15.00      | 100.00    |                  |                      | 115.00         |                 | 0.00      | 0.00      | 115.00  |  jobs,完成  | 已完成       |
-        #|   0016   | 2014-9-1 | -tom4    | 商品2,1  | 支付    | 微信支付 | 15.00      | 100.00    |                  |                      | 115.00         |                 | 0.00      | 0.00      | 115.00  |jobs,完成退款| 退款成功     |
+       #|   0015   | 2014-9-1 | -tom4    | 商品2,1  | 支付    | 货到付款 | 15.00      | 100.00    |                  |                      | 115.00         |                 | 0.00      | 0.00      | 115.00  |  jobs,完成  | 已完成       |
+       #|   0016   | 2014-9-1 | -tom4    | 商品2,1  | 支付    | 微信支付 | 15.00      | 100.00    |                  |                      | 115.00         |                 | 0.00      | 0.00      | 115.00  |jobs,完成退款| 退款成功     |
         |   0017   | 今天     | bill     | 商品2,1  |         |          | 15.00      | 100.00    | 200              |                      | 95.00          |                 | 0.00      | 0.00      | 0.00    |             | 待支付       |
         |   0018   | 今天     | tom      | 商品2,1  | 支付    | 支付宝   | 15.00      | 100.00    | 200              |                      | 95.00          |                 | 95.00     | 0.00      | 0.00    |  jobs,发货  | 已发货       |            
 
-@mall2 @bi @salesAnalysis   @stats @stats.order_survey
+@mall2 @bi @salesAnalysis   @stats @stats.order_survey @112233
 Scenario:1 订单概况数据，查询区间
 
     Given jobs登录系统
@@ -470,217 +460,6 @@ Scenario:1 订单概况数据，查询区间
             "优惠抵扣订单总数":5
         }
         """
-
-#补充：张三香 2016.05.10
-#同步订单数据计入到数据罗盘的各个字段中
-@bi @salesAnalysis 
-Scenario:2 订单概况数据，支付金额统计（包含自营平台同步的订单）
-    #jobs为普通商家、nokia为自营平台
-    Given 添加jobs店铺名称为'jobs商家'
-    Given 设置nokia为自营平台账号
-    Given nokia登录系统
-    Given nokia设定会员积分策略
-        """
-        {
-            "integral_each_yuan": 1,
-            "use_ceiling": 100,
-            "be_member_increase_count": 300
-        }
-        """
-    And nokia已添加支付方式
-        """
-        [{
-            "type": "微信支付",
-            "is_active": "启用"
-        }, {
-            "type": "支付宝",
-            "is_active": "启用"
-        }, {
-            "type": "货到付款",
-            "is_active": "启用"
-        }]
-        """
-    When nokia开通使用微众卡权限
-    When nokia添加支付方式
-        """
-        [{
-            "type": "微众卡支付",
-            "is_active": "启用"
-        }]
-        """
-    Given nokia已添加供货商
-        """
-        [{
-            "name": "供货商1",
-            "responsible_person": "宝宝",
-            "supplier_tel": "13811223344",
-            "supplier_address": "北京市海淀区泰兴大厦",
-            "remark": "备注卖花生油""
-        }]
-        """
-    And nokia已添加商品
-        """
-        [{
-            "supplier": "供货商1",
-            "name": "nokia商品1",
-            "price": 10.00,
-            "purchase_price": 9.00,
-            "weight": 1.0,
-            "stock_type": "无限"
-        }]
-        """
-    When nokia将商品池商品批量放入待售于'2016-05-10 10:30'
-            """
-            [
-                "商品2",
-                "商品1"
-            ]
-            """
-    When nokia更新商品'商品2'
-        """
-        {
-            "name":"jobs商品2",
-            "supplier":"jobs商家",
-            "purchase_price": 90.00,
-            "is_member_product":"off",
-            "model": {
-                "models": {
-                    "standard": {
-                        "price": 200.00,
-                        "user_code":"0102",
-                        "weight":1.0,
-                        "stock_type": "无限"
-                    }
-                }
-            }
-        }
-        """
-    When nokia更新商品'商品1'
-        """
-        {
-            "name":"jobs商品1",
-            "supplier":"jobs商家",
-            "purchase_price": 80.00,
-            "is_member_product":"off",
-            "model": {
-                "models": {
-                    "standard": {
-                        "price": 100.00,
-                        "user_code":"0101",
-                        "weight":1.0,
-                        "stock_type": "无限"
-                    }
-                }
-            }
-        }
-        """
-    When nokia批量上架商品
-        """
-        ["jobs商品2","jobs商品1"]
-        """
-    When lily关注nokia的公众号
-    When lily访问nokia的webapp
-    #1001-微信支付-jobs商品1
-        When lily购买nokia的商品
-            """
-            {
-                "order_id":"1001",
-                "pay_type":"微信支付",
-                "products":[{
-                    "name":"jobs商品1",
-                    "count":1
-                }]
-            }
-            """
-        When lily使用支付方式'微信支付'进行支付订单'1001'
-    #1002-支付宝-jobs商品1，jobs商品2
-        When lily购买nokia的商品
-            """
-            {
-                "order_id":"1002",
-                "pay_type":"支付宝",
-                "products":[{
-                    "name":"jobs商品1",
-                    "count":1
-                },{
-                    "name":"jobs商品2",
-                    "count":1
-                }]
-            }
-            """
-        When lily使用支付方式'微信支付'进行支付订单'1002'
-    #1003-货到付款-jobs商品1，nokia商品1
-        When lily购买nokia的商品
-            """
-            {
-                "order_id":"1003",
-                "pay_type":"货到付款",
-                "products":[{
-                    "name":"jobs商品1",
-                    "count":1
-                },{
-                    "name":"nokia商品1",
-                    "count":1
-                }]
-            }
-            """
-    #1004-优惠抵扣-jobs商品2，nokia商品1
-        When lily购买nokia的商品
-            """
-            {
-                "order_id":"1004",
-                "pay_type":"货到付款",
-                "products":[{
-                    "name":"jobs商品2",
-                    "count":1
-                },{
-                    "name":"nokia商品1",
-                    "count":1
-                }],
-                    "integral":210,
-                    "integral_money": 210.00
-            }
-            """
-
-    Given jobs登录系统
-    When jobs设置筛选日期
-        """
-        {
-            "start_date":"2014-9-1",
-            "end_date":"今天"
-        }
-        """
-    #订单概况
-    Then jobs获得订单概况统计数据
-        """
-        {
-            "成交订单": 14,
-            "成交金额": 2095.00,
-            "客单价": 149.64,
-            "成交商品": 17,
-            "优惠抵扣": 30.00
-        }
-        """
-
-    #订单趋势
-    Then jobs获得订单趋势统计数据
-        """
-        {
-            "待发货":8,
-            "已发货":2,
-            "已完成":4
-        }
-        """
-    Then jobs获得支付金额统计数据
-        """
-        {
-            "支付宝":435.00,
-            "微信支付":810.00,
-            "货到付款":220.00,
-            "微众卡支付":240.00
-        }
-        """
-
 
 
 
