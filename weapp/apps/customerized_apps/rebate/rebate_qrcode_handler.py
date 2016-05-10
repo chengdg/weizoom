@@ -38,7 +38,7 @@ class RebateQrcodeHandler(MessageHandler):
 			return None
 
 		try:
-			rebate_record = apps_models.Rebate.objects.get(owner_id=user_profile.user_id, ticket=ticket)
+			rebate_record = apps_models.Rebate.objects.get(owner_id=user_profile.user_id, ticket=ticket, status=apps_models.STATUS_RUNNING)
 		except:
 			print unicode_full_stack()
 			return None
