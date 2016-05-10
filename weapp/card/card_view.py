@@ -14,7 +14,7 @@ from excel_response import ExcelResponse
 
 from weixin.user.models import WeixinMpUser, MpuserPreviewInfo, ComponentAuthedAppidInfo, ComponentAuthedAppid
 
-WEIZOOM_CARD_BELONG_TO_OWNER = ["yihumingjiu","yidianyuan","yufengwuliu","guo","bill","yunhanchundai","weshop", "jobs","njtest","ceshi01","dftj","ainicoffee","hongfan","changjiufangzhi","tianreyifang","fengzhenkeji","dongfangwodeming","weizoombfm","liangfeng","fuwa",
+WEIZOOM_CARD_BELONG_TO_OWNER = ["huiyou","yihumingjiu","yidianyuan","yufengwuliu","guo","bill","yunhanchundai","weshop", "jobs","njtest","ceshi01","dftj","ainicoffee","hongfan","changjiufangzhi","tianreyifang","fengzhenkeji","dongfangwodeming","weizoombfm","liangfeng","fuwa",
                                 "gangshanxigu","boniya","danhonghu","yingguan","wubao","wzjx001","heshibaineng","tianmashengwu","judou","zhonghaitou","wugutang",
                                 "bohaotong","chalushui","tide","huajitang","heruntiancheng","chexiaomi","dgposy","weizoommm","weizoomxs","huachilemei",
                                 "miaochaojiaonang","baoyangong","mkmj","suqinweizhen","leyun","guangyou","ertongshazi","yangxinkeji","haoainiguopin","weizoomclub",
