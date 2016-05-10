@@ -51,6 +51,7 @@ class RebateParticipances(resource.Resource):
 
 	@staticmethod
 	def get_datas(request):
+		sort_attr = request.GET.get('sort_attr', '-created_at')
 		webapp_id = request.user_profile.webapp_id
 		record_id = request.GET.get('record_id', 0)
 
@@ -79,31 +80,24 @@ class RebateParticipances(resource.Resource):
 
 		params['id__in'] = member_ids
 
-		members = member_models.Member.objects.filter(**params)
-		member_id2member = {member.id: member for member in members}
+		members = member_models.Member.objects.filter(**params).order_by(sort_attr)
 
 		items = []
-		for data in datas:
-			cur_member = member_id2member.get(data.member_id, None)
-			if cur_member:
-				try:
-					name = cur_member.username.decode('utf8')
-				except:
-					name = cur_member.username_hexstr
-			else:
+		for member in members:
+			try:
+				name = member.username_for_html
+			except:
 				name = u'未知'
 
-			if cur_member and cur_member.status != member_models.NOT_SUBSCRIBED:
+			if member.status != member_models.NOT_SUBSCRIBED:
 				items.append({
-					'id': str(data.id),
-					'member_id': data.member_id,
-					'belong_to': data.belong_to,
+					'member_id': member.id,
 					'username': name,
-					'participant_icon': cur_member.user_icon,
-					'follow_time': cur_member.created_at.strftime("%Y-%m-%d %H:%M:%S"),
-					'integral': cur_member.integral,
-					'pay_times': cur_member.pay_times,
-					'pay_money': '%.2f' % cur_member.pay_money
+					'participant_icon': member.user_icon,
+					'follow_time': member.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+					'integral': member.integral,
+					'pay_times': member.pay_times,
+					'pay_money': '%.2f' % member.pay_money
 				})
 
 		return pageinfo, items
@@ -114,8 +108,6 @@ class RebateParticipances(resource.Resource):
 		响应API GET
 		"""
 		pageinfo, items = RebateParticipances.get_datas(request)
-		print 11111111111111111111
-		print items
 		response_data = {
 			'items': items,
 			'pageinfo': paginator.to_dict(pageinfo),

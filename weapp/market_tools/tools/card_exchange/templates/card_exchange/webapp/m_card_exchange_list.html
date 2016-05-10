@@ -6,7 +6,7 @@
 <link rel="stylesheet" href="/webapp_static/backend_default_v3/css/default_v3.css">
 <style type="text/css">
 	body{
-		background: #f5f5f5!important;
+		background: -webkit-linear-gradient(top,#fbfbfb,#e1e1e1)!important;
 	}
 	.xui-detail-wrapper{
 		font-size: 0.9rem;
@@ -15,17 +15,22 @@
 	.xui-header{
 		background: #ee3715;
 		overflow: hidden;
-		padding: 15px 10px 15px 35px;
+		padding: 15px 0;
 		color: #fff;
+		margin-top: 2px;
+		font-size: 0;
+	}
+	.xui-header > div {
+		display: inline-block;
+		width: 50%;
+		box-sizing: border-box;
 	}
 	.xui-header-left{
-		float: left;
-		width: 45%;
 		border-right: 1px dotted #f3735c;
+		padding-left: 35px;
 	}
 	.xui-header-right{
-		float: right;
-		width: 44%;
+		padding-left: 30px;
 	}
 	.xui-large{
 		font-size: 1.7rem;
@@ -134,13 +139,192 @@
     .xui-num{
     	font-size: 1.5rem;
     }
+    .xui-tab{
+    	font-size: 0;
+    	height: 40px;
+    	line-height: 40px;
+    }
+    .xui-tab > div{
+    	display: inline-block;
+    	width: 50%;
+    	font-family: "黑体";
+    	box-sizing: border-box;
+    	background-color: #fff;
+    }
+    .xui-tab-active{
+    	font-size: 1.2rem;
+    	text-align: center;
+    	color: #cf0404;
+    	border-bottom: 2px solid #cf0404;
+    }
+    .xui-tab-normal{
+    	border-right: 1px solid #f5f5f5;
+    	font-size: 1rem;
+    	text-align: center;
+    }
+    h1{
+    	text-align: center;
+    	width: 100%;
+    	color: #ef3715;
+    	font-size: 2.0rem;
+    	margin-top: 30px;
+    	font-family: "黑体";
+    }
+    .xui-pocketLogo{
+    	text-align: center;
+    	margin-top: 30px;
+    }
+    .xui-bindPhone{
+    	margin-top: 30px;
+    	text-align: center;
+    }
+    .xui-bindPhone input{
+    	vertical-align: text-bottom;
+    	border:none;
+    	background: transparent;
+    	border-bottom: 1px solid #d7d7d7;
+    	font-size: 1.2rem;
+    	line-height: 2rem;
+    	margin-left: 10px;
+    	outline: none;
+    	width: 190px;
+    	color: #333333;
+    	font-family: "黑体";   	
+    }
+    .xui-bindPhone button{
+    	margin-left: 10px;
+    	vertical-align: text-bottom;
+    	color: #fff;
+    	background: #ef3715;
+    	border:none;
+    	border-radius: 3px;
+    	padding: 10px 13px;
+    	font-size: .9rem;
+    	font-family: "黑体";
+    	outline: none;
+    }
+    @media only screen and (max-width: 320px){
+	    .xui-bindPhone input{
+	    	width: 150px;
+	    	font-size: 1.1rem;
+	    }	
+    }
+    .xui-mask{
+    	width: 100%;
+    	height: 100%;
+    	background: rgba(0,0,0,0.5);
+    	position: fixed;
+    	z-index: 999;
+    	display: none;
+    }
+    .xui-code{
+    	background: #fff;
+    	width: 80%;
+    	margin: 0 auto;
+    	margin-top: 50%;
+    	text-align: center;
+    	border-radius: 5px;
+    	padding: 20px 0;
+    }
+    .xui-code input{
+    	border: 1px solid #dbdbdb;
+    	font-size: 1.1rem;
+    	height: 35px;
+    	line-height: 35px;
+    	width: 220px;
+    	padding-left: 10px;
+    	outline: none;
+    }
+    .xui-code p:first-child{
+    	font-family: "黑体";
+    }
+    .xui-code-time{
+    	color: #0091d5;
+    	font-size: .9rem;
+    	text-align: right;
+    }
+    .xui-codeBtn-group{
+    	margin-top: 20px;
+    }
+    .xui-codeBtn-group button{
+    	border:none;
+    	border-radius: 15px;
+    	padding: 5px 25px;
+    	font-size: 1rem;
+    	font-family: "黑体";
+    	outline: none;
+    }
+    .xui-confirmBtn{
+    	margin-right: 8px;
+    	background: #0091d5;
+    	color: #fff;
+    }
+    .xui-cancelBtn{
+    	background: #dbdbdb;
+    	color: #666666;
+    }
+    .xui-codeTime-container{
+    	width: 220px;
+    	margin: 8px auto 5px;
+    }
+    .xui-success{
+    	width: 77%;
+    	margin:  0 auto;
+    	text-align: left;
+    	display: none;
+    }
+    .xui-success p{
+    	margin: 5px 0;
+    	padding-left: 8px;
+    	color: #0091d5;
+    }
+    .xui-success button{
+    	width: 100%;
+    	background: #cf0404;
+    	font-size: 1.1rem;
+    }
+    button.xui-disabled{
+    	background: #dbdbdb;
+    }
 </style>
 {% endblock %}
 
 {% block content-panel %}
+<div class="xui-mask xa-mask">
+	<div class="xui-code">
+		<p>输入短信中的验证码</p>
+		<div class="xui-codeTime-container">
+			<p class="xui-code-time">(<span class="xa-countdown">60</span>s)后重新获取</p>
+		</div>
+		<input type="text">
+		<div class="xui-codeBtn-group">
+			<button type="button" class="xui-confirmBtn xa-confirmBtn">确&nbsp;认</button>
+			<button type="button" class="xui-cancelBtn xa-cancelBtn">取&nbsp;消</button>
+		</div>
+	</div>
+</div>
 <div data-role="page" data-theme="x" class="xui-detail-wrapper">
 	<div data-role="content" data-theme="x">
-		<div class="xui-header">
+		<div class="xui-notBind">
+			<div class="xui-tab">
+				<div class="xui-tab-normal"><a>微众卡余额查询</a></div>
+				<div class="xui-tab-active">微众卡钱包</div>
+			</div>
+			<h1>微众卡钱包</h1>
+			<div class="xui-pocketLogo">
+				<img src="/markettools_static/weizoom_card/img/pocket.png" alt="微众卡钱包" width="200px">
+			</div>
+			<div class="xui-bindPhone">
+				<i><img src="/markettools_static/weizoom_card/img/phone.png" width="20px"></i>
+				<input type="text" placeholder="请输入手机号码">
+				<button type="button" class="xa-recCode">获取验证码</button>
+				<div class="xui-success xa-success">
+					<p>手机号绑定成功</p>	
+					<button type="button">进入钱包</button>
+				<div>
+			</div>
+		</div>
+		<!-- <div class="xui-header">
 			<div class="xui-header-left">
 				<div class="xui-text xui-remain">账户余额</div>
 					<div>
@@ -240,7 +424,53 @@
 				{% endfor %}
 		    </div>
 		    {% endif %}
-	    </div>
+	    </div> -->
     </div>
 </div>
+{% endblock %}
+{% block js %}
+<script type="text/javascript">
+	$(function(){
+		$('.xa-recCode').click(function(){
+			var phone_number = $(this).siblings('input').val();
+			if(!validate_phone(phone_number)){
+				return false
+			}
+			$('.xa-mask').show();
+			count();
+		});
+		$('.xa-cancelBtn').click(function(){
+			$('.xa-mask').hide();
+		});
+		$('.xa-confirmBtn').click(function(){
+			$('.xa-mask').hide();
+			$('.xa-recCode').prop('disabled','true').addClass('xui-disabled');
+			$('.xa-success').show();
+		})
+	});
+	function validate_phone(phone_number){
+		var reg = /^1[3|4|5|8]\d{9}$/;
+		if(!reg.test(phone_number) || phone_number.length != 11){
+			$('body').alert({
+				isShow: true,
+				info: "请填写有效的手机号",
+				isSlide: true,
+				speed: 2000
+			});
+			return false;
+		}
+		return true;
+	}	
+
+	function count(){
+		var num = 60;
+		countdown = setInterval(function(){
+		if(num == 1){
+			clearInterval(countdown);
+		}					
+			num -= 1;
+			$('.xa-countdown').text(num);	
+		},1000);		
+	}
+</script>
 {% endblock %}
