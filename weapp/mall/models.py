@@ -2650,3 +2650,17 @@ class WxCertSettings(models.Model):
 		verbose_name = "微信证书文件地址"
 		verbose_name_plural = "微信证书文件地址"
 		db_table = "mall_weixin_cert"
+
+
+class ProductSearchRecord(models.Model):
+	woid = models.IntegerField()
+	webapp_user_id = models.IntegerField()
+	content = models.TextField()
+	is_deleted = models.BooleanField(default=False)
+	created_at = models.DateTimeField(auto_now_add=True)  # 添加时间
+
+	class Meta(object):
+		verbose_name = "商品搜索记录"
+		verbose_name_plural = "商品搜索记录"
+		db_table = "mall_product_search_record"
+
