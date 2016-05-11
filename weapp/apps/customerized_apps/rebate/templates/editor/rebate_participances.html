@@ -195,6 +195,7 @@ $(document).ready(function() {
 	});
 	$('.xa-export').click(function(){
 		W.getLoadingView();
+        var record_id = '{{ record_id }}';
 		var start_date = $('#start_date').val();
 		var end_date = $('#end_date').val();
 		var is_checked = $('.is_show').is(':checked');
@@ -212,7 +213,8 @@ $(document).ready(function() {
 				'end_date': end_date,
 				'is_show': is_show,
 				'status': status,
-				'export_id': 1
+				'export_id': 1,
+                'record_id': record_id
 			},
 			success: function(resp){
 				if(resp.code == 200){

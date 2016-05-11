@@ -50,25 +50,21 @@ class RebateParticipances(resource.Resource):
 		return render_to_response('rebate/templates/editor/rebate_participances.html', c)
 
 	@staticmethod
-	def get_datas(request):
+	def get_datas(request,export_id=0):
 		sort_attr = request.GET.get('sort_attr', '-created_at')
 		webapp_id = request.user_profile.webapp_id
 		record_id = request.GET.get('record_id', 0)
+		is_show = request.GET.get('is_show', '0')
 
 		datas = app_models.RebateParticipance.objects(belong_to=record_id).order_by('-created_at')
-
-		# 进行分页
-		count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
-		cur_page = int(request.GET.get('page', '1'))
-		pageinfo, datas = paginator.paginate(datas, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
 
 		#查询
 		member_status = int(request.GET.get('status', '-1'))
 		start_date = request.GET.get('start_date', '')
 		end_date = request.GET.get('end_date', '')
-		params = {}
+		params = {'status__in':[0,1]}
 		if member_status != -1:
-			params['status'] = member_status
+			params['status__in'] = [member_status]
 		if start_date:
 			params['created_at__gte'] = start_date
 		if end_date:
@@ -76,11 +72,24 @@ class RebateParticipances(resource.Resource):
 
 		member_ids = []
 		for data in datas:
-			member_ids.append(data.member_id)
+			if is_show == '1':
+				participent_time = data.created_at.strftime('%Y-%m-%d %H:%M:%S')
+				member_id = data.member_id
+				subscribe_time = member_models.Member.objects.get(id=member_id).created_at.strftime('%Y-%m-%d %H:%M:%S')
+				if subscribe_time >= participent_time:
+					member_ids.append(data.member_id)
+			else:
+				member_ids.append(data.member_id)
 
 		params['id__in'] = member_ids
 
 		members = member_models.Member.objects.filter(**params).order_by(sort_attr)
+
+		# 进行分页
+		count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
+		cur_page = int(request.GET.get('page', '1'))
+		if not export_id:
+			pageinfo, members = paginator.paginate(members, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
 
 		items = []
 		for member in members:
@@ -97,10 +106,14 @@ class RebateParticipances(resource.Resource):
 					'follow_time': member.created_at.strftime("%Y-%m-%d %H:%M:%S"),
 					'integral': member.integral,
 					'pay_times': member.pay_times,
-					'pay_money': '%.2f' % member.pay_money
+					'pay_money': '%.2f' % member.pay_money,
+					'is_subscribed': member.status
 				})
 
-		return pageinfo, items
+		if not export_id:
+			return pageinfo, items
+		else:
+			return items
 
 	@login_required
 	def api_get(request):
@@ -111,14 +124,14 @@ class RebateParticipances(resource.Resource):
 		response_data = {
 			'items': items,
 			'pageinfo': paginator.to_dict(pageinfo),
-			'sortAttr': '-id',
+			'sortAttr': request.GET.get('sort_attr', '-created_at'),
 			'data': {}
 		}
 		response = create_response(200)
 		response.data = response_data
 		return response.get_response()
 
-class RedPacketParticipances_Export(resource.Resource):
+class RebateParticipances_Export(resource.Resource):
 	'''
 	批量导出
 	'''
@@ -131,8 +144,8 @@ class RedPacketParticipances_Export(resource.Resource):
 		分析导出
 		"""
 		export_id = request.GET.get('export_id',0)
-		download_excel_file_name = u'拼红包详情.xls'
-		excel_file_name = 'red_packet_details_'+datetime.now().strftime('%H_%M_%S')+'.xls'
+		download_excel_file_name = u'返利活动关注会员.xls'
+		excel_file_name = 'rebate_participances_'+datetime.now().strftime('%H_%M_%S')+'.xls'
 		dir_path_suffix = '%d_%s' % (request.user.id, date.today())
 		dir_path = os.path.join(settings.UPLOAD_DIR, dir_path_suffix)
 
@@ -142,38 +155,35 @@ class RedPacketParticipances_Export(resource.Resource):
 		#Excel Process Part
 		try:
 			import xlwt
-			datas =RebateParticipances.get_datas(request)
+			datas =RebateParticipances.get_datas(request,export_id)
 			fields_pure = []
 			export_data = []
 
 			#from sample to get fields4excel_file
-			fields_pure.append(u'会员id')
+			# fields_pure.append(u'会员id')
 			fields_pure.append(u'用户名')
-			fields_pure.append(u'红包金额')
-			fields_pure.append(u'已获取金额')
-			fields_pure.append(u'红包状态')
-			fields_pure.append(u'系统发放状态')
+			fields_pure.append(u'购买次数')
+			fields_pure.append(u'积分')
+			fields_pure.append(u'消费总额')
 			fields_pure.append(u'参与时间')
 
 			#processing data
 			num = 0
 			for data in datas:
 				export_record = []
-				member_id = data["member_id"]
+				# member_id = data["member_id"]
 				participant_name = data["username"]
-				red_packet_money = data["red_packet_money"]
-				current_money = data["current_money"]
-				red_packet_status = data["red_packet_status"] if data["red_packet_status_text"] == u'已结束' else ''
-				is_already_paid = data["is_already_paid"] if data["red_packet_status_text"] == u'已结束' else ''
-				created_at = data["created_at"]
+				pay_times = data["pay_times"]
+				integral = data["integral"]
+				pay_money = data["pay_money"]
+				follow_time = data["follow_time"]
 
-				export_record.append(member_id)
+				# export_record.append(member_id)
 				export_record.append(participant_name)
-				export_record.append(red_packet_money)
-				export_record.append(current_money)
-				export_record.append(red_packet_status)
-				export_record.append(is_already_paid)
-				export_record.append(created_at)
+				export_record.append(pay_times)
+				export_record.append(integral)
+				export_record.append(pay_money)
+				export_record.append(follow_time)
 				export_data.append(export_record)
 			#workbook/sheet
 			wb = xlwt.Workbook(encoding='utf-8')
