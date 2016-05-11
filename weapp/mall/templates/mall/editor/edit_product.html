@@ -579,6 +579,11 @@ $('.xa-selectImage').click(function(){return false;})
 	}
 
 	$(document).ready(function() {
+
+		/*微众商城需求start 多规格开启*/
+		var webapp_id = '{{webapp_id}}';
+		/*微众商城需求end*/
+
 		var view = new W.view.mall.ProductEditor({
 			el: '.xui-editProductPage',
 			productId:'{{product.id}}'
@@ -590,7 +595,12 @@ $('.xa-selectImage').click(function(){return false;})
 			if($(':checkbox', $div).attr('checked')=='checked'){
 				$(':checkbox', $div).click();
 			}
-			$div.hide();
+
+			/*微众商城需求start 多规格开启 当webapp_id 非微众商城时，多规格按钮隐藏*/
+			if(webapp_id != '3394'){
+				$div.hide();
+			}
+			/*微众商城需求end*/
 		}
 
 
