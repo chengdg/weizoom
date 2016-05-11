@@ -48,7 +48,7 @@
 					{% else %}
 
 						{% for nav in first_navs %}
-						<li {% ifequal nav.name '商机挖掘监控系统' %}class="xui-i-bigDataTab"{% endifequal %}>
+						<li {% ifequal nav.name '商机监控系统' %}class="xui-i-bigDataTab"{% endifequal %}>
 							<a {% ifequal first_nav_name nav.inner_name %}class="active"{% endifequal %} href='{{nav.url}}' title='{{nav.name}}'>{{nav.name}}</a>
 						</li>
 						{% endfor %}

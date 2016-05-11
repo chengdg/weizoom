@@ -60,7 +60,7 @@ FIRST_NAVS = [{
     'inner_name': MALL_CONFIG_FIRST_NAV,
     'permission': 'config'
 }, {
-    'name': u'商机挖掘监控系统',
+    'name': u'商机监控系统',
     'url': 'http://weibo.weizoom.com/account/statistics/user_center/',
     'inner_name': BIG_DATA_HOME_FIRST_NAV,
     'permission': 'big_data',
