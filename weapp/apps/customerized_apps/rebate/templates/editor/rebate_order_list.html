@@ -266,13 +266,13 @@ $(document).ready(function() {
 		var end_date = $('#end_date').val();
 		var start_money = $('#start_money').val();
 		var end_money = $('#end_money').val();	
-		var is_first_order = false;
-		var not_first_order = false;
+		var is_first_order = 0;
+		var not_first_order = 0;
 		if($("input[name='firstOrder']").is(':checked')){
-			is_first_order = true;
+			is_first_order = 1;
 		}
 		if($("input[name='NotfirstOrder']").is(':checked')){
-			not_first_order = true;
+			not_first_order = 1;
 		}	
 		var is_checked = $('.is_show').is(':checked');
 		var dataView = $('[data-ui-role="qrcode-order-advanced-table"]').data('view');
@@ -293,13 +293,13 @@ $(document).ready(function() {
 		var end_date = $('#end_date').val();
 		var start_money = $('#start_money').val();
 		var end_money = $('#end_money').val();	
-		var is_first_order = false;
-		var not_first_order = false;
+		var is_first_order = 0;
+		var not_first_order = 0;
 		if($("input[name='firstOrder']").is(':checked')){
-			is_first_order = true;
+			is_first_order = 1;
 		}
 		if($("input[name='NotfirstOrder']").is(':checked')){
-			not_first_order = true;
+			not_first_order = 1;
 		}	
 		var is_checked = $('.is_show').is(':checked');
 		var is_show = 0;

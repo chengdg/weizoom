@@ -66,7 +66,8 @@ class RebateOrderList(resource.Resource):
 		end_date = request.GET.get('end_date', '')
 		start_money = request.GET.get('start_money', 0)
 		end_money = request.GET.get('end_money', 0)
-		is_first_order = request.GET.get('is_first_order', '')
+		is_first_order = int(request.GET.get('is_first_order', 0))
+		not_first_order = int(request.GET.get('not_first_order', 0))
 
 		if start_date:
 			params['created_at__gte'] = start_date
@@ -76,6 +77,11 @@ class RebateOrderList(resource.Resource):
 			params['final_price__gte'] = start_money
 		if end_money:
 			params['final_price__lte'] = end_money
+		if not (is_first_order and not_first_order):
+			if is_first_order:
+				params['is_first_order'] = 1
+			if not_first_order:
+				params['is_first_order'] = 0
 
 		orders = mall_models.Order.objects.filter(**params)
 		#统计微众卡支付总金额和现金支付总金额
@@ -140,7 +146,8 @@ class RebateOrderList(resource.Resource):
 				'postage': '%.2f' % order.postage,
 				'save_money': '%.2f' % (float(mall_models.Order.get_order_has_price_number(order)) + float(order.postage) - float(order.final_price) - float(order.weizoom_card_money)),
 				'weizoom_card_money': float('%.2f' % order.weizoom_card_money),
-				'pay_money': '%.2f' % order.final_price
+				'pay_money': '%.2f' % order.final_price,
+				'is_first_order': order.is_first_order
 			})
 		if not export_id:
 			return pageinfo, items, final_price, weizoom_card_money
