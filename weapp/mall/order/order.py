@@ -600,8 +600,11 @@ class orderConfig(resource.Resource):
                     material_id=material_id
                 )
         else:
-            share_page_config.update(is_share_page=is_share_page)
-            share_page_config = share_page_config[0]
+            if share_page_config.count() > 0:
+                share_page_config.update(is_share_page=is_share_page)
+                share_page_config = share_page_config[0]
+            else:
+                share_page_config = MallShareOrderPageConfig.objects.create(owner=request.user, is_share_page=False)
 
         if share_page_config.material_id:
             news = News.objects.get(material_id=share_page_config.material_id)

@@ -53,7 +53,7 @@ Background:
 			"order_time": "2014-10-03 12:00:00",
 			"payment_time":"2014-10-03 12:00:00",
 			"methods_of_payment": "货到付款",
-			"sources": "商城",
+			"sources": "本店",
 			"products": [{
 				"name": "商品1",
 				"count": 1
@@ -68,7 +68,7 @@ Background:
 			"order_time": "2014-10-04 12:00:00",
 			"payment_time":"2014-10-04 12:00:00",
 			"methods_of_payment": "优惠抵扣",
-			"sources": "商城",
+			"sources": "本店",
 			"products": [{
 				"name": "商品1",
 				"count": 1
@@ -83,7 +83,7 @@ Background:
 			"order_time": "2014-10-05 12:00:00",
 			"payment_time":"2014-10-05 13:00:00",
 			"methods_of_payment": "微信支付",
-			"sources": "商城",
+			"sources": "本店",
 			"products": [{
 				"name": "商品2",
 				"count": 1
@@ -101,7 +101,7 @@ Background:
 			"order_time": "2014-10-06 12:00:00",
 			"payment_time":"2014-10-06 12:00:00",
 			"methods_of_payment": "优惠抵扣",
-			"sources": "商城",
+			"sources": "本店",
 			"products": [{
 				"name": "商品2",
 				"count": 1
@@ -119,7 +119,7 @@ Background:
 			"order_time": "2014-10-07 12:00:00",
 			"payment_time":"2014-10-07 13:00:00",
 			"methods_of_payment": "支付宝",
-			"sources": "商城",
+			"sources": "本店",
 			"products": [{
 				"name": "商品1",
 				"count": 1
@@ -134,7 +134,7 @@ Background:
 			"order_time": "2014-10-08 12:00:00",
 			"payment_time":"",
 			"methods_of_payment": "微信支付",
-			"sources": "商城",
+			"sources": "本店",
 			"products": [{
 				"name": "商品2",
 				"count": 1
@@ -168,7 +168,7 @@ Scenario:1 选择订单筛选条件
 			"status": "待支付",
 			"order_time": "2014-10-08 12:00:00",
 			"methods_of_payment": "微信支付",
-			"sources": "商城",
+			"sources": "本店",
 			"ship_name": "bill",
 			"ship_tel": "13811223344"
 		}]
@@ -181,7 +181,7 @@ Scenario:1 选择订单筛选条件
 			"status": "待支付",
 			"order_time": "2014-10-08 12:00",
 			"methods_of_payment": "微信支付",
-			"sources": "商城",
+			"sources": "本店",
 			"product_name": "商品2",
 			"count": 1,
 			"ship_name": "bill",
@@ -208,7 +208,7 @@ Scenario:1 选择订单筛选条件
 			"status": "已发货",
 			"order_time": "2014-10-06 12:00:00",
 			"methods_of_payment": "优惠抵扣",
-			"sources": "商城",
+			"sources": "本店",
 			"ship_name": "tom",
 			"ship_tel": "13711223344",
 			"logistics": "顺丰",
@@ -220,7 +220,7 @@ Scenario:1 选择订单筛选条件
 			"status": "已完成",
 			"order_time": "2014-10-05 12:00:00",
 			"methods_of_payment": "微信支付",
-			"sources": "商城",
+			"sources": "本店",
 			"ship_name": "tom",
 			"ship_tel": "13711223344",
 			"logistics": "顺丰",
@@ -236,7 +236,7 @@ Scenario:1 选择订单筛选条件
 			"status": "已发货",
 			"order_time": "2014-10-06 12:00",
 			"methods_of_payment": "优惠抵扣",
-			"sources": "商城",
+			"sources": "本店",
 			"product_name": "商品2",
 			"count": 1,
 			"ship_name": "tom",
@@ -250,7 +250,7 @@ Scenario:1 选择订单筛选条件
 			"status": "已完成",
 			"order_time": "2014-10-05 12:00",
 			"methods_of_payment": "微信支付",
-			"sources": "商城",
+			"sources": "本店",
 			"product_name": "商品2",
 			"count": 1,
 			"ship_name": "tom",
@@ -276,7 +276,7 @@ Scenario:1 选择订单筛选条件
 			"status": "待发货",
 			"order_time": "2014-10-07 12:00:00",
 			"methods_of_payment": "支付宝",
-			"sources": "商城",
+			"sources": "本店",
 			"ship_name": "bill",
 			"ship_tel": "13811223344"
 		}]
@@ -289,7 +289,7 @@ Scenario:1 选择订单筛选条件
 			"status": "待发货",
 			"order_time": "2014-10-07 12:00",
 			"methods_of_payment": "支付宝",
-			"sources": "商城",
+			"sources": "本店",
 			"product_name": "商品1",
 			"count": 1,
 			"ship_name": "bill",
@@ -302,7 +302,7 @@ Scenario:1 选择订单筛选条件
 		{
 			"product_name": "商品1",
 			"ship_name": "bill",
-			"order_source": "商城"
+			"order_source": "本店"
 		}
 		"""
 	Then jobs可以看到订单列表
@@ -313,7 +313,7 @@ Scenario:1 选择订单筛选条件
 			"status": "待发货",
 			"order_time": "2014-10-07 12:00:00",
 			"methods_of_payment": "支付宝",
-			"sources": "商城",
+			"sources": "本店",
 			"ship_name": "bill",
 			"ship_tel": "13811223344"
 		}, {
@@ -322,7 +322,7 @@ Scenario:1 选择订单筛选条件
 			"status": "已取消",
 			"order_time": "2014-10-04 12:00:00",
 			"methods_of_payment": "优惠抵扣",
-			"sources": "商城",
+			"sources": "本店",
 			"ship_name": "bill",
 			"ship_tel": "13811223344"
 		}]
@@ -335,7 +335,7 @@ Scenario:1 选择订单筛选条件
 			"status": "待发货",
 			"order_time": "2014-10-07 12:00",
 			"methods_of_payment": "支付宝",
-			"sources": "商城",
+			"sources": "本店",
 			"product_name": "商品1",
 			"count": 1,
 			"ship_name": "bill",
@@ -346,7 +346,7 @@ Scenario:1 选择订单筛选条件
 			"status": "已取消",
 			"order_time": "2014-10-04 12:00",
 			"methods_of_payment": "优惠抵扣",
-			"sources": "商城",
+			"sources": "本店",
 			"product_name": "商品1",
 			"count": 1,
 			"ship_name": "bill",
@@ -370,7 +370,7 @@ Scenario:1 选择订单筛选条件
 			"status": "待发货",
 			"order_time": "2014-10-03 12:00:00",
 			"methods_of_payment": "货到付款",
-			"sources": "商城",
+			"sources": "本店",
 			"ship_name": "tom",
 			"ship_tel": "13711223344"
 		}]
@@ -383,7 +383,7 @@ Scenario:1 选择订单筛选条件
 			"status": "待发货",
 			"order_time": "2014-10-03 12:00",
 			"methods_of_payment": "货到付款",
-			"sources": "商城",
+			"sources": "本店",
 			"product_name": "商品1",
 			"count": 1,
 			"ship_name": "tom",
@@ -396,7 +396,7 @@ Scenario:1 选择订单筛选条件
 		{
 			"order_status": "已发货",
 			"express_number": "321",
-			"order_source": "商城"
+			"order_source": "本店"
 		}
 		"""
 	Then jobs可以看到订单列表
@@ -432,7 +432,7 @@ Scenario:1 选择订单筛选条件
 			"status": "已取消",
 			"order_time": "2014-10-04 12:00:00",
 			"methods_of_payment": "优惠抵扣",
-			"sources": "商城",
+			"sources": "本店",
 			"ship_name": "bill",
 			"ship_tel": "13811223344"
 		}]
@@ -445,7 +445,7 @@ Scenario:1 选择订单筛选条件
 			"status": "已取消",
 			"order_time": "2014-10-04 12:00",
 			"methods_of_payment": "优惠抵扣",
-			"sources": "商城",
+			"sources": "本店",
 			"product_name": "商品1",
 			"count": 1,
 			"ship_name": "bill",
@@ -478,7 +478,7 @@ Scenario:2 按照【订单类型】进行筛选
 			"order_time": "2014-10-08 12:00:00",
 			"payment_time":"",
 			"methods_of_payment": "微信支付",
-			"sources": "商城",
+			"sources": "本店",
 			"ship_name": "bill",
 			"ship_tel": "13811223344",
 			"is_first_order":"false"
@@ -489,7 +489,7 @@ Scenario:2 按照【订单类型】进行筛选
 			"order_time": "2014-10-07 12:00:00",
 			"payment_time":"2014-10-07 13:00:00",
 			"methods_of_payment": "支付宝",
-			"sources": "商城",
+			"sources": "本店",
 			"ship_name": "bill",
 			"ship_tel": "13811223344",
 			"is_first_order":"false"
@@ -500,7 +500,7 @@ Scenario:2 按照【订单类型】进行筛选
 			"order_time": "2014-10-06 12:00:00",
 			"payment_time":"2014-10-06 12:00:00",
 			"methods_of_payment": "优惠抵扣",
-			"sources": "商城",
+			"sources": "本店",
 			"ship_name": "tom",
 			"ship_tel": "13711223344",
 			"is_first_order":"false"
@@ -511,7 +511,7 @@ Scenario:2 按照【订单类型】进行筛选
 			"order_time": "2014-10-05 12:00:00",
 			"payment_time":"2014-10-05 13:00:00",
 			"methods_of_payment": "微信支付",
-			"sources": "商城",
+			"sources": "本店",
 			"ship_name": "tom",
 			"ship_tel": "13711223344",
 			"is_first_order":"false"
@@ -522,7 +522,7 @@ Scenario:2 按照【订单类型】进行筛选
 			"order_time": "2014-10-04 12:00:00",
 			"payment_time":"2014-10-04 12:00:00",
 			"methods_of_payment": "优惠抵扣",
-			"sources": "商城",
+			"sources": "本店",
 			"ship_name": "bill",
 			"ship_tel": "13811223344",
 			"is_first_order":"true"
@@ -533,7 +533,7 @@ Scenario:2 按照【订单类型】进行筛选
 			"order_time": "2014-10-03 12:00:00",
 			"payment_time":"2014-10-03 12:00:00",
 			"methods_of_payment": "货到付款",
-			"sources": "商城",
+			"sources": "本店",
 			"ship_name": "tom",
 			"ship_tel": "13711223344",
 			"is_first_order":"true"
@@ -557,7 +557,7 @@ Scenario:2 按照【订单类型】进行筛选
 			"order_time": "2014-10-08 12:00:00",
 			"payment_time":"",
 			"methods_of_payment": "微信支付",
-			"sources": "商城",
+			"sources": "本店",
 			"ship_name": "bill",
 			"ship_tel": "13811223344",
 			"is_first_order":"false"
@@ -568,7 +568,7 @@ Scenario:2 按照【订单类型】进行筛选
 			"order_time": "2014-10-07 12:00:00",
 			"payment_time":"2014-10-07 13:00:00",
 			"methods_of_payment": "支付宝",
-			"sources": "商城",
+			"sources": "本店",
 			"ship_name": "bill",
 			"ship_tel": "13811223344",
 			"is_first_order":"false"
@@ -579,7 +579,7 @@ Scenario:2 按照【订单类型】进行筛选
 			"order_time": "2014-10-06 12:00:00",
 			"payment_time":"2014-10-06 12:00:00",
 			"methods_of_payment": "优惠抵扣",
-			"sources": "商城",
+			"sources": "本店",
 			"ship_name": "tom",
 			"ship_tel": "13711223344",
 			"is_first_order":"false"
@@ -590,7 +590,7 @@ Scenario:2 按照【订单类型】进行筛选
 			"order_time": "2014-10-05 12:00:00",
 			"payment_time":"2014-10-05 13:00:00",
 			"methods_of_payment": "微信支付",
-			"sources": "商城",
+			"sources": "本店",
 			"ship_name": "tom",
 			"ship_tel": "13711223344",
 			"is_first_order":"false"
@@ -601,7 +601,7 @@ Scenario:2 按照【订单类型】进行筛选
 			"order_time": "2014-10-04 12:00:00",
 			"payment_time":"2014-10-04 12:00:00",
 			"methods_of_payment": "优惠抵扣",
-			"sources": "商城",
+			"sources": "本店",
 			"ship_name": "bill",
 			"ship_tel": "13811223344",
 			"is_first_order":"true"
@@ -612,7 +612,7 @@ Scenario:2 按照【订单类型】进行筛选
 			"order_time": "2014-10-03 12:00:00",
 			"payment_time":"2014-10-03 12:00:00",
 			"methods_of_payment": "货到付款",
-			"sources": "商城",
+			"sources": "本店",
 			"ship_name": "tom",
 			"ship_tel": "13711223344",
 			"is_first_order":"true"
@@ -636,7 +636,7 @@ Scenario:2 按照【订单类型】进行筛选
 			"order_time": "2014-10-04 12:00:00",
 			"payment_time":"2014-10-04 12:00:00",
 			"methods_of_payment": "优惠抵扣",
-			"sources": "商城",
+			"sources": "本店",
 			"ship_name": "bill",
 			"ship_tel": "13811223344",
 			"is_first_order":"true"
@@ -647,7 +647,7 @@ Scenario:2 按照【订单类型】进行筛选
 			"order_time": "2014-10-03 12:00:00",
 			"payment_time":"2014-10-03 12:00:00",
 			"methods_of_payment": "货到付款",
-			"sources": "商城",
+			"sources": "本店",
 			"ship_name": "tom",
 			"ship_tel": "13711223344",
 			"is_first_order":"true"
@@ -671,7 +671,7 @@ Scenario:2 按照【订单类型】进行筛选
 			"order_time": "2014-10-08 12:00:00",
 			"payment_time":"",
 			"methods_of_payment": "微信支付",
-			"sources": "商城",
+			"sources": "本店",
 			"ship_name": "bill",
 			"ship_tel": "13811223344",
 			"is_first_order":"false"
@@ -682,7 +682,7 @@ Scenario:2 按照【订单类型】进行筛选
 			"order_time": "2014-10-07 12:00:00",
 			"payment_time":"2014-10-07 13:00:00",
 			"methods_of_payment": "支付宝",
-			"sources": "商城",
+			"sources": "本店",
 			"ship_name": "bill",
 			"ship_tel": "13811223344",
 			"is_first_order":"false"
@@ -693,7 +693,7 @@ Scenario:2 按照【订单类型】进行筛选
 			"order_time": "2014-10-06 12:00:00",
 			"payment_time":"2014-10-06 12:00:00",
 			"methods_of_payment": "优惠抵扣",
-			"sources": "商城",
+			"sources": "本店",
 			"ship_name": "tom",
 			"ship_tel": "13711223344",
 			"is_first_order":"false"
@@ -704,7 +704,7 @@ Scenario:2 按照【订单类型】进行筛选
 			"order_time": "2014-10-05 12:00:00",
 			"payment_time":"2014-10-05 13:00:00",
 			"methods_of_payment": "微信支付",
-			"sources": "商城",
+			"sources": "本店",
 			"ship_name": "tom",
 			"ship_tel": "13711223344",
 			"is_first_order":"false"
@@ -741,7 +741,7 @@ Scenario:3 混合条件进行筛选
 			"status": "待发货",
 			"order_time": "2014-10-03 12:00:00",
 			"methods_of_payment": "货到付款",
-			"sources": "商城",
+			"sources": "本店",
 			"ship_name": "tom",
 			"ship_tel": "13711223344",
 			"is_first_order":"true"
