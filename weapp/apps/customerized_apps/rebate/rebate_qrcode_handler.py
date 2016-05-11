@@ -47,9 +47,9 @@ class RebateQrcodeHandler(MessageHandler):
 		except:
 			print unicode_full_stack()
 			return None
-		member_info = apps_models.RebateParticipance.objects(belong_to=rebate_record.id, member_id=member.id)
+		member_info = apps_models.RebateParticipance.objects(belong_to=str(rebate_record.id), member_id=member.id)
 		if member_info.count() <= 0:
-			member_info = apps_models.RebateParticipance(belong_to=rebate_record.id, member_id=member.id, created_at=datetime.now())
+			member_info = apps_models.RebateParticipance(belong_to=str(rebate_record.id), member_id=member.id, created_at=datetime.now())
 			member_info.save()
 
 		if rebate_record.reply_type == 1 and rebate_record.reply_detail:
