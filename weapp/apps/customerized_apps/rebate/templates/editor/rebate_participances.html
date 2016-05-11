@@ -98,6 +98,7 @@
 		<div class="panel-heading clearfix">
 			<input type="checkbox" class="is_show vs" checked value="0">&nbsp;&nbsp;仅显示通过二维码新关注会员
 			<a class="xui-export xa-export btn btn-default xui-fontBold fr" href="javascript:void(0);">导出</a>
+			<a id="export_href" style="display: none ">DownloadXLS</a>
 		</div>
 
 		<div 
@@ -214,6 +215,13 @@ $(document).ready(function() {
 				'export_id': 1
 			},
 			success: function(resp){
+				if(resp.code == 200){
+					$('#export_href').prop({
+						'href': resp.download_path,
+						'download': resp.filename
+					}).get(0).click();
+
+				}
 				console.log("导出成功");
 			},
 			error: function(error){
