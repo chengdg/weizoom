@@ -22,6 +22,9 @@ from modules.member import integral as integral_api
 from mall.promotion import utils as mall_api
 from modules.member.models import Member
 from mall import export as mall_export
+from modules.member import models as member_models
+from mall import models as mall_models
+from mall import module_api as mall_module_api
 
 FIRST_NAV = 'apps'
 COUNT_PER_PAGE = 20
@@ -48,213 +51,229 @@ class RebateOrderList(resource.Resource):
 
 		return render_to_response('rebate/templates/editor/rebate_order_list.html', c)
 
+	@staticmethod
+	def get_datas(request,export_id=0):
+		webapp_id = request.user_profile.webapp_id
+		record_id = request.GET.get('record_id', 0)
+
+		# record = app_models.Rebate.objects(id=record_id)[0]
+		# orders = export.get_target_orders(record)
+
+		is_show = request.GET.get('is_show', '0')
+
+		params = {'webapp_user_id__in': [1890]}
+		start_date = request.GET.get('start_date', '')
+		end_date = request.GET.get('end_date', '')
+		start_money = request.GET.get('start_money', '')
+		end_money = request.GET.get('end_money', '')
+
+		if start_date:
+			params['created_at__gte'] = start_date
+		if end_date:
+			params['created_at__lte'] = end_date
+
+		orders = mall_models.Order.objects.filter(**params)
+		#统计微众卡支付总金额和现金支付总金额
+		final_price = 0
+		weizoom_card_money = 0
+		for order in orders:
+			final_price += order.final_price
+			weizoom_card_money += order.weizoom_card_money
+
+		# 进行分页
+		count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
+		cur_page = int(request.GET.get('page', '1'))
+
+		if not export_id:
+			pageinfo, orders = paginator.paginate(orders, cur_page, count_per_page,query_string=request.META['QUERY_STRING'])
+
+		# 获取order对应的会员
+		webapp_user_ids = set([order.webapp_user_id for order in orders])
+		webappuser2member = Member.members_from_webapp_user_ids(webapp_user_ids)
+
+		# 获得order对应的商品数量
+		order_ids = [order.id for order in orders]
+		order2productcount = {}
+		for relation in mall_models.OrderHasProduct.objects.filter(order_id__in=order_ids):
+			order_id = relation.order_id
+			if order_id in order2productcount:
+				order2productcount[order_id] = order2productcount[order_id] + 1
+			else:
+				order2productcount[order_id] = 1
+
+		items = []
+
+		for order in orders:
+			# 获取order对应的member的显示名
+			member = webappuser2member.get(order.webapp_user_id, None)
+			if member:
+				order.buyer_name = member.username_for_html
+				order.buyer_id = member.id
+			else:
+				order.buyer_name = u'未知'
+
+			items.append({
+				'id': order.id,
+				'source': order.order_source,
+				'order_id': order.order_id,
+				'status': get_order_status_text(order.status),
+				'total_price': order.final_price,
+				'ship_name': order.ship_name,
+				'buyer_name': order.buyer_name,
+				'buyer_id': order.buyer_id,
+				'pay_interface_name': mall_models.PAYTYPE2NAME.get(order.pay_interface_type, u''),
+				'created_at': datetime.strftime(order.created_at, '%Y-%m-%d %H:%M'),
+				'payment_time': datetime.strftime(order.payment_time, '%Y-%m-%d %H:%M'),
+				'product_count': order2productcount.get(order.id, 0),
+				'products': mall_module_api.get_order_products(order),
+				'customer_message': order.customer_message,
+				'order_status': order.status,
+				'express_company_name': order.express_company_name,
+				'express_number': order.express_number,
+				'leader_name': order.leader_name,
+				'remark': order.remark,
+				'postage': '%.2f' % order.postage,
+				'save_money': '%.2f' % (float(mall_models.Order.get_order_has_price_number(order)) + float(order.postage) - float(order.final_price) - float(order.weizoom_card_money)),
+				'weizoom_card_money': float('%.2f' % order.weizoom_card_money),
+				'pay_money': '%.2f' % (order.final_price + order.weizoom_card_money)
+			})
+		if not export_id:
+			return pageinfo, items, final_price, weizoom_card_money
+		else:
+			return items
+
 	@login_required
 	def api_get(request):
 		"""
 		响应GET api
 		"""
-		if 'id' in request.GET:
-			rebate_participance = app_models.RebateParticipance.objects.get(id=request.GET['id'],is_valid=True)
-			data = rebate_participance.to_json()
-		else:
-			data = {}
+		pageinfo, items, final_price, weizoom_card_money = RebateOrderList.get_datas(request)
+		response_data = {
+			'items': items,
+			'final_price': '%.2f' % final_price,
+			'weizoom_card_money': '%.2f' % weizoom_card_money,
+			'pageinfo': paginator.to_dict(pageinfo),
+			'sortAttr': request.GET.get('sort_attr', '-created_at'),
+			'data': {}
+		}
 		response = create_response(200)
-		response.data = data
+		response.data = response_data
 		return response.get_response()
 
-# 	def api_put(request):
-# 		"""
-# 		响应PUT
-# 		"""
-# 		try:
-# 			member_id = request.member.id
-# 			red_packet_id = request.POST['id']
-# 			fid = request.POST['fid']
-# 			try:
-# 				fid_member = Member.objects.get(id=fid)
-# 				if not fid_member.is_subscribed:
-# 					response = create_response(500)
-# 					response.errMsg = u'该用户已取消关注，暂时不能点赞'
-# 					return response.get_response()
-# 			except:
-# 				response = create_response(500)
-# 				response.errMsg = u'不存在该会员'
-# 				return response.get_response()
-#
-# 			#被帮助者信息
-# 			helped_member_info = app_models.RedPacketParticipance.objects(belong_to=red_packet_id, member_id=int(fid)).first()
-# 			#调整参与数量(首先检测是否已参与)
-# 			# if not helped_member_info.has_join:
-# 			# 	helped_member_info.update(set__has_join=True)
-# 			if helped_member_info.red_packet_status: #如果已经完成拼红包
-# 				response = create_response(500)
-# 				response.errMsg = u'该用户已经完成拼红包'
-# 				return response.get_response()
-# 			if not helped_member_info.is_valid: #如果已经已退出活动
-# 				response = create_response(500)
-# 				response.errMsg = u'该用户已退出活动'
-# 				return response.get_response()
-# 			else:
-# 				#更新当前member的参与信息
-# 				# curr_member_red_packet_info = app_models.RedPacketParticipance.objects(belong_to=red_packet_id, member_id=member_id).first()
-# 				#并发问题临时解决方案 ---start
-# 				# control_data = {}
-# 				# control_data['belong_to'] = red_packet_id
-# 				# control_data['member_id'] = member_id
-# 				# control_data['helped_member_id'] = int(fid)
-# 				# control_data['red_packet_control'] = datetime.now().strftime('%Y-%m-%d')
-# 				# try:
-# 				# 	control = app_models.RedPacketControl(**control_data)
-# 				# 	control.save()
-# 				# except:
-# 				# 	response = create_response(500)
-# 				# 	response.errMsg = u'只能帮助一次'
-# 				# 	return response.get_response()
-# 				#并发问题临时解决方案 ---end
-# 				# curr_member_red_packet_info.update(add_to_set__helped_member_ids = long(fid))
-# 				try:
-# 					app_models.RedPacketRelations(
-# 						belong_to = red_packet_id,
-# 						member_id = str(member_id),
-# 						helped_member_id = fid
-# 					).save()
-# 				except:
-# 					response = create_response(500)
-# 					response.errMsg = u'只能帮助一次'
-# 					return response.get_response()
-# 				#随机区间中获得好友帮助的金额
-# 				red_packet_info = app_models.RedPacket.objects.get(id=red_packet_id)
-# 				money_range_min,money_range_max = red_packet_info.money_range.split('-')
-# 				random_money = round(random.uniform(float(money_range_min), float(money_range_max)),2)
-# 				temp_current_money = helped_member_info.current_money + random_money
-# 				#万一出现当前金额大于总红包金额的情况：
-# 				if helped_member_info.current_money > helped_member_info.red_packet_money:
-# 					helped_member_info.update(set__current_money=helped_member_info.red_packet_money)
-# 					response = create_response(500)
-# 					response.errMsg = u'该用户已经完成拼红包'
-# 					return response.get_response()
-# 				elif temp_current_money > helped_member_info.red_packet_money:
-# 					#如果这次随机的金额加上后，当前金额大于目标金额，则将目标金额与当前金额之差当做这次随机出来的数字
-# 					random_money = helped_member_info.red_packet_money - helped_member_info.current_money
-# 				#记录每一次未关注人给予的帮助,已关注的则直接计算帮助值
-# 				if not request.member.is_subscribed:
-# 					red_packet_log = app_models.RedPacketLog(
-# 						belong_to = red_packet_id,
-# 						helper_member_id = member_id,
-# 						help_money = round(random_money,2),
-# 						be_helped_member_id = int(fid)
-# 					)
-# 					red_packet_log.save()
-# 					has_helped = False
-# 					help_info = {}
-# 				else:
-# 					helped_member_info.update(inc__current_money=random_money)
-# 					helped_member_info.reload()
-# 					#完成目标金额，设置红包状态为成功
-# 					if helped_member_info.current_money == helped_member_info.red_packet_money:
-# 						helped_member_info.update(set__red_packet_status=True, set__finished_time=datetime.now())
-# 					has_helped = True
-# 					helper_member_info = Member.objects.get(id=member_id)
-# 					help_info = {
-# 						'red_packet_money':round(helped_member_info.red_packet_money,2),
-# 						'help_money': round(random_money,2),
-# 						'current_money': round(helped_member_info.current_money,2),
-# 						'user_icon': helper_member_info.user_icon,
-# 						'username': helper_member_info.username_size_ten
-# 					}
-# 				detail_log = app_models.RedPacketDetail(
-# 					belong_to = red_packet_id,
-# 					owner_id = int(fid),
-# 					helper_member_id = member_id,
-# 					helper_member_name = request.member.username_for_html,
-# 					help_money = round(random_money,2),
-# 					has_helped = has_helped,
-# 					created_at = datetime.now()
-# 				)
-# 				detail_log.save()
-# 		except:
-# 			response = create_response(500)
-# 			response.errMsg = u'帮助好友失败'
-# 			response.inner_errMsg = unicode_full_stack()
-# 			return response.get_response()
-#
-# 		response = create_response(200)
-# 		response.data = {
-# 			'help_info': help_info
-# 		}
-# 		return response.get_response()
-#
-# 	def api_post(request):
-# 		"""
-# 		响应POST
-# 		"""
-# 		red_packet_id = request.POST['id']
-# 		fid = request.POST['fid']
-# 		try:
-# 			response = create_response(200)
-#
-# 		except:
-# 			response = create_response(500)
-# 		return response.get_response()
-#
-# def participate_red_packet(record_id,member_id):
-# 	red_packet_info = app_models.RedPacket.objects.get(id=record_id)
-# 	packets_number = red_packet_info.random_packets_number if red_packet_info.red_packet_type =='random' else red_packet_info.regular_packets_number
-# 	all_participate = app_models.RedPacketParticipance.objects(belong_to=record_id,has_join=True,is_valid=True)
-# 	if int(packets_number) > all_participate.count():
-# 		participate_member_info = app_models.RedPacketParticipance.objects.get(belong_to=record_id, member_id=member_id)
-# 		if (not participate_member_info.is_valid) and (not participate_member_info.has_join): #该用户曾经关注参与过
-# 			print('participate_red_packet :180')
-# 			#未成功的红包需要将is_valid置为True
-# 			participate_member_info.update(set__is_valid=True,set__current_money=0)
-# 			# 将之前的点赞详情日志无效
-# 			app_models.RedPacketDetail.objects(belong_to=record_id, owner_id=member_id).update(set__is_valid=False)
-# 			# 参与者取关后再关注后参与活动，取关前帮助的会员还能再次帮助，所以清空control表,log表,并移除出各帮助者的helped_member_ids
-# 			# app_models.RedPacketControl.objects(belong_to=record_id, helped_member_id=member_id).delete()
-# 			app_models.RedPacketLog.objects(belong_to=record_id, be_helped_member_id=member_id).delete()
-# 			app_models.RedPacketRelations.objects(belong_to=record_id, helped_member_id=str(member_id)).delete()
-#
-# 		if not participate_member_info.has_join:
-# 			print('participate_red_packet :191')
-# 			sync_result = red_packet_info.modify(
-# 				query={'red_packet_remain_amount__gte': 1},
-# 				dec__red_packet_remain_amount=1
-# 			)
-# 			if sync_result:
-# 				# amount_control = app_models.RedPacketAmountControl.objects.filter(belong_to=record_id).first()
-# 				# amount_control.update(inc__red_packet_amount = 1)
-# 				if red_packet_info.red_packet_type == 'random':
-# 					random_total_money = float(red_packet_info.random_total_money)
-# 					random_packets_number = float(red_packet_info.random_packets_number)
-# 					random_average =  round(random_total_money/random_packets_number,2) #红包金额/红包个数
-# 					if all_participate.count() == 0:
-# 						#如果除不尽，把除不尽的分数加给第一个人
-# 						if random_average*random_packets_number != random_total_money:
-# 							need_fix_number = random_total_money-random_average*random_packets_number
-# 							random_average = random_average+need_fix_number
-# 					try:#防止万一红包random_random_number_list已经没了，无法pop
-# 						red_packet_money = random_average + float(red_packet_info.random_random_number_list.pop())
-# 						red_packet_info.update(set__random_random_number_list=red_packet_info.random_random_number_list)
-# 					except:
-# 						response = create_response(500)
-# 						response.errMsg = 'is_run_out'
-# 						return response.get_response()
-# 				else:
-# 					red_packet_money = red_packet_info.regular_per_money #普通红包领取定额金额
-# 				if red_packet_money <= 0:
-# 					response = create_response(500)
-# 					response.errMsg = u'抢红包的人太多啦，请稍后再试~'
-# 					return response.get_response()
-# 				else:
-# 					participate_member_info.update(set__has_join=True,set__created_at=datetime.now(),set__red_packet_money=red_packet_money)
-# 			else:
-# 				response = create_response(500)
-# 				response.errMsg = 'is_run_out'
-# 				return response.get_response()
-# 		response = create_response(200)
-# 		return response.get_response()
-# 	else:
-# 		response = create_response(500)
-# 		response.errMsg = 'is_run_out'
-# 		return response.get_response()
+class RebateOrder_Export(resource.Resource):
+	'''
+	批量导出
+	'''
+	app = 'apps/rebate'
+	resource = 'rebate_order_export'
 
+	@login_required
+	def api_get(request):
+		"""
+		分析导出
+		"""
+		export_id = request.GET.get('export_id', 0)
+		download_excel_file_name = u'返利活动订单.xls'
+		excel_file_name = 'rebate_order_' + datetime.now().strftime('%H_%M_%S') + '.xls'
+		dir_path_suffix = '%d_%s' % (request.user.id, date.today())
+		dir_path = os.path.join(settings.UPLOAD_DIR, dir_path_suffix)
+
+		if not os.path.exists(dir_path):
+			os.makedirs(dir_path)
+		export_file_path = os.path.join(dir_path, excel_file_name)
+		# Excel Process Part
+		try:
+			import xlwt
+			datas = RebateOrderList.get_datas(request, export_id)
+			fields_pure = []
+			export_data = []
+
+			# from sample to get fields4excel_file
+			# fields_pure.append(u'会员id')
+			fields_pure.append(u'用户名')
+			fields_pure.append(u'购买次数')
+			fields_pure.append(u'积分')
+			fields_pure.append(u'消费总额')
+			fields_pure.append(u'参与时间')
+
+			# processing data
+			num = 0
+			for data in datas:
+				export_record = []
+				# member_id = data["member_id"]
+				participant_name = data["username"]
+				pay_times = data["pay_times"]
+				integral = data["integral"]
+				pay_money = data["pay_money"]
+				follow_time = data["follow_time"]
+
+				# export_record.append(member_id)
+				export_record.append(participant_name)
+				export_record.append(pay_times)
+				export_record.append(integral)
+				export_record.append(pay_money)
+				export_record.append(follow_time)
+				export_data.append(export_record)
+			# workbook/sheet
+			wb = xlwt.Workbook(encoding='utf-8')
+			ws = wb.add_sheet('id%s' % export_id)
+			header_style = xlwt.XFStyle()
+
+			##write fields
+			row = col = 0
+			for h in fields_pure:
+				ws.write(row, col, h)
+				col += 1
+
+			##write data
+			if export_data:
+				row = 1
+				lens = len(export_data[0])
+				for record in export_data:
+					row_l = []
+					for col in range(lens):
+						record_col = record[col]
+						if type(record_col) == list:
+							row_l.append(len(record_col))
+							for n in range(len(record_col)):
+								data = record_col[n]
+								try:
+									ws.write(row + n, col, data)
+								except:
+									# '编码问题，不予导出'
+									print record
+									pass
+						else:
+							try:
+								ws.write(row, col, record[col])
+							except:
+								# '编码问题，不予导出'
+								print record
+								pass
+					if row_l:
+						row = row + max(row_l)
+					else:
+						row += 1
+				try:
+					wb.save(export_file_path)
+				except Exception, e:
+					print 'EXPORT EXCEL FILE SAVE ERROR'
+					print e
+					print '/static/upload/%s/%s' % (dir_path_suffix, excel_file_name)
+			else:
+				ws.write(1, 0, '')
+				wb.save(export_file_path)
+			response = create_response(200)
+			response.data = {'download_path': '/static/upload/%s/%s' % (dir_path_suffix, excel_file_name),
+							 'filename': download_excel_file_name, 'code': 200}
+		except Exception, e:
+			error_msg = u"导出文件失败, cause:\n{}".format(unicode_full_stack())
+			watchdog_error(error_msg)
+			response = create_response(500)
+			response.innerErrMsg = unicode_full_stack()
+
+		return response.get_response()
+
+def get_order_status_text(status):
+	from mall.models import STATUS2TEXT
+	return STATUS2TEXT[status]
