@@ -60,8 +60,18 @@ class RebateParticipance(models.Document):
 	belong_to = models.StringField(default="", max_length=100) #对应的活动id
 	created_at = models.DateTimeField() #扫码时间
 
-
-
 	meta = {
 		'collection': 'rebate_rebate_participance'
+	}
+
+class RebateWaitingAction(models.Document):
+	"""
+	存储暂未满足发放微众卡条件的记录
+	"""
+	webapp_id = models.StringField(default="", max_length=100)
+	record_id = models.StringField(default="", max_length=100) #对应的活动id
+	member_id = models.LongField(default=0)
+
+	meta = {
+		'collection': 'rebate_waiting_action'
 	}

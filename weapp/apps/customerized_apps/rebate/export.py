@@ -4,6 +4,7 @@ import models as apps_models
 from account.models import UserProfile
 from mall import models as mall_models
 from mall.promotion import models as promotion_models
+from mall.promotion.card_exchange import get_can_exchange_cards_list
 from modules.member import models as member_models
 
 NAV = {
@@ -58,13 +59,7 @@ def handle_rebate_core():
 
 	#判定每个订单属于哪个活动
 	#首先找到这个会员都参与过哪些活动，然后拿这些活动的生效日期范围与下单时间一一比较
-	# for order in all_orders:
-	# 	created_at = order.created_at
-	# 	webapp_user_id = order.webapp_user_id
-	# 	belong_to_member_id = webapp_user_id_belong_to_member_id[webapp_user_id]
-	# 	records = member_id2records[belong_to_member_id]
-	# 	for record in records:
-	# 		is_limit_first_buy = record.is_limit_first_buy
+
 	owner_id2webapp_id = {u.manager_id: u.webapp_id for u in UserProfile.objects.filter(is_mp_registered=True, is_active=True)}
 	member_id2member = {m.id: m for m in member_models.Member.objects.filter(id__in=member_id2records.keys())}
 	need_grant_info = []
@@ -92,33 +87,90 @@ def handle_rebate_core():
 					"weizoom_card_id_from": record.weizoom_card_id_from,
 					"weizoom_card_id_to": record.weizoom_card_id_to,
 					"target_member_info": member_id2member[member_id],
+					"record_id": str(record.id)
 				})
-
-
-
-
 	#根据每个活动的配置，发放对应的微众卡
+	grant_card(need_grant_info)
 
-def grant_card():
-	pass
-	# promotion_models.CardHasExchanged.objects.create(
-	# 				webapp_id = webapp_id,
-	# 				card_id = sorted(card_ids_list)[0],
-	# 				owner_id = member_id,
-	# 				owner_name = owner_name
-	# 			)
+def grant_card(need_grant_info):
+	"""
+	发卡
+	以下几种情况，会保留微众卡，知道满足条件后发放
+		1、微众卡库存不足
+		2、该微信用户未关注
+	@param need_grant_info:
+	@return:
+	"""
+	create_list = []	#需要发放的卡集合
+	not_ready_card_list = []	#暂未满足条件以后再发的卡集合
+	for info in need_grant_info:
+		member_id = info['target_member_info'].id
+		member_name = info['target_member_info'].username_hexstr
+		card_ids_list = get_can_exchange_cards_list(info['weizoom_card_id_from'],info['weizoom_card_id_to'])
+		if len(card_ids_list) <= 0:
+			not_ready_card_list.append(apps_models.RebateWaitingAction(
+				webapp_id = info['webapp_id'],
+				member_id = member_id,
+				record_id = info['record_id']
+			))
+			continue
+		create_list.append(promotion_models.CardHasExchanged(
+			webapp_id = info['webapp_id'],
+			card_id = sorted(card_ids_list)[0],
+			owner_id = member_id,
+			owner_name = member_name
+		))
+
+	if len(not_ready_card_list) > 0:
+		apps_models.RebateWaitingAction.objects.insert(not_ready_card_list)
+	if len(create_list) > 0:
+		promotion_models.CardHasExchanged.objects.bulk_create(create_list)
+
+def handle_wating_actions():
+	actions = apps_models.RebateWaitingAction.objects.all()
+	member_ids = [w.member_id for w in actions]
+	record_ids = [w.record_id for w in actions]
+	record_id2record = {str(r.id): r for r in apps_models.Rebate.objects(id__in=record_ids)}
+	member_id2member = {m.id: m for m in member_models.Member.objects.filter(id__in=member_ids)}
+	need_finish_actions = []
+	need_delete_ids = []
+	for action in actions:
+		curr_record = record_id2record[action.record_id]
+		card_ids_list = get_can_exchange_cards_list(curr_record.weizoom_card_id_from,curr_record.weizoom_card_id_to)
+		if len(card_ids_list) <= 0:
+			continue
+		member_id = action.member_id
+		if not member_id2member[member_id].is_subscribed:
+			continue
+		need_finish_actions.append(promotion_models.CardHasExchanged(
+			webapp_id = action.webapp_id,
+			card_id = sorted(card_ids_list)[0],
+			owner_id = member_id,
+			owner_name = member_id2member[member_id].username_hexstr
+		))
+		need_delete_ids.append(action.id)
+
+	if len(need_finish_actions) >0:
+		promotion_models.CardHasExchanged.objects.bulk_create(need_finish_actions)
+
+	apps_models.RebateWaitingAction.objects(id__in=need_delete_ids).delete()
 
 def get_target_orders(records=None):
 	"""
 	筛选出扫码后已完成的符合要求的订单
 	@param record: 活动实例
-	@return: {member_id: [order1, order2,...]}
+	@return:
+		webapp_user_id_belong_to_member_id: webapp_user_id相关联的member_id
+		id2record: 活动id和实例的映射
+		member_id2records: 会员id和其参与过的活动的映射
+		member_id2order_ids: 会员id和其所下订单id的映射
+		all_orders: 所有订单
 	"""
 
 	if not records:
 		records = apps_models.Rebate.objects(is_deleted=False,status__ne=apps_models.STATUS_NOT_START)
 
-	id2record = {r.id: r for r in records}
+	id2record = {str(r.id): r for r in records}
 	record_ids = id2record.keys()
 	all_partis = apps_models.RebateParticipance.objects(belong_to__in=record_ids).order_by('-created_at')
 	record_id2partis = {} #各活动的参与人member_id集合
