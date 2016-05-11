@@ -225,6 +225,7 @@
     	text-align: center;
     	border-radius: 5px;
     	padding: 20px 0;
+    	position: relative;
     }
     .xui-code input{
     	border: 1px solid #dbdbdb;
@@ -235,12 +236,13 @@
     	padding-left: 10px;
     	outline: none;
     }
-    .xui-code p:first-child{
+    .xui-codeTime-container p:first-child{
     	font-family: "黑体";
     }
     .xui-code-time{
+    	margin: 10px 0;
     	color: #0091d5;
-    	font-size: .9rem;
+    	font-size: .8em;
     	text-align: right;
     }
     .xui-codeBtn-group{
@@ -286,15 +288,22 @@
     button.xui-disabled{
     	background: #dbdbdb;
     }
+    .xui-close{
+    	position: absolute;
+    	right: -20px;
+    	top: -20px;
+    	width: 45px;
+    }
 </style>
 {% endblock %}
 
 {% block content-panel %}
 <div class="xui-mask xa-mask">
 	<div class="xui-code">
-		<p>输入短信中的验证码</p>
+		<img class="xui-close xa-cancelBtn" src="/markettools_static/weizoom_card/img/close.png">
 		<div class="xui-codeTime-container">
-			<p class="xui-code-time">(<span class="xa-countdown">60</span>s)后重新获取</p>
+			<p>输入短信中的验证码</p>
+			<p class="xui-code-time xa-code-time">(<span class="xa-countdown">60</span>s) 后重新获取</p>
 		</div>
 		<input type="text">
 		<div class="xui-codeBtn-group">
@@ -432,6 +441,7 @@
 <script type="text/javascript">
 	$(function(){
 		$('.xa-recCode').click(function(){
+			$('.xa-recCode').prop('disabled','true').addClass('xui-disabled');
 			var phone_number = $(this).siblings('input').val();
 			if(!validate_phone(phone_number)){
 				return false
@@ -441,12 +451,15 @@
 		});
 		$('.xa-cancelBtn').click(function(){
 			$('.xa-mask').hide();
+			clearInterval(countdown);
+			$('.xa-countdown').text(60);
 		});
 		$('.xa-confirmBtn').click(function(){
+			clearInterval(countdown);
 			$('.xa-mask').hide();
 			$('.xa-recCode').prop('disabled','true').addClass('xui-disabled');
 			$('.xa-success').show();
-		})
+		});
 	});
 	function validate_phone(phone_number){
 		var reg = /^1[3|4|5|8]\d{9}$/;
@@ -467,7 +480,8 @@
 		countdown = setInterval(function(){
 		if(num == 1){
 			clearInterval(countdown);
-		}					
+			$('.xa-recCode').prop('disabled','false').removeClass('xui-disabled');			
+		}			
 			num -= 1;
 			$('.xa-countdown').text(num);	
 		},1000);		
