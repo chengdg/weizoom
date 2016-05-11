@@ -290,7 +290,10 @@ def _get_stats_data(user, start_time, end_time):
 			if order.pay_interface_type == models.PAY_INTERFACE_ALIPAY:
 				alipay_amount += float(order.final_price)
 			elif order.pay_interface_type == models.PAY_INTERFACE_WEIXIN_PAY:
-				weixinpay_amount += float(order.final_price)
+				if order.origin_order_id >0: #判断同步订单
+					weixinpay_amount += float(order.total_purchase_price)
+				else:
+					weixinpay_amount += float(order.final_price)
 
 		wezoom_card_amount += float(order.weizoom_card_money)
 		

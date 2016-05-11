@@ -245,7 +245,7 @@ def _get_shop_hint_data(request):
     ).count()
     #退款中订单数
     refunding_order_count = mall_models.Order.objects.belong_to(request.user_profile.webapp_id).filter(
-        status=mall_models.ORDER_STATUS_REFUNDING
+        status__in=[mall_models.ORDER_STATUS_REFUNDING, mall_models.ORDER_STATUS_GROUP_REFUNDING]
     ).count()
 
     #即将到期的限时抢购活动数
