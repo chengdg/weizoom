@@ -154,7 +154,13 @@ ALIPAY_SIGN_TYPES = (
 		('MD5', 'MD5'),
 		('0001', '0001(RSA)')
 	)
+ALI_PAY_VERSION_V2 = '0'
+ALI_PAY_VERSION_V5 = '1'
 
+ALIPAY_PAY_VERSION = (
+		(ALI_PAY_VERSION_V2, 'v2'),
+		(ALI_PAY_VERSION_V5, 'v5')
+	)
 #===============================================================================
 # UserAlipayOrderConfig : 支付宝支付配置信息
 #===============================================================================
@@ -167,6 +173,7 @@ class UserAlipayOrderConfig(models.Model):
 	input_charset = models.CharField(max_length=8, default='utf-8', verbose_name='字符编码格式 目前支持utf-8')
 	sign_type = models.CharField(max_length=8, default='MD5', choices=ALIPAY_SIGN_TYPES, verbose_name='签名方式')
 	seller_email = models.CharField(max_length=64, blank=True)
+	pay_version = models.CharField(max_length=64, default=ALI_PAY_VERSION_V2,choices=ALIPAY_PAY_VERSION) # 0 代表v2 旧版本 1代表新版本v5
 
 	class Meta(object):
 		db_table = 'account_alipay_order_config'
