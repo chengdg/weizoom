@@ -85,6 +85,11 @@ class ChannelQrcodeHandler(MessageHandler):
 			return None
 
 		if ChannelQrcodeSettings.objects.filter(ticket=ticket, owner_id=user_profile.user_id).count() > 0:
+			print "==================qrcode ChannelQrcodeSettings==============="
+			print "==================qrcode==============="
+			print ticket
+			print "==================qrcode==============="
+			print "==================qrcode ChannelQrcodeSettings==============="
 			channel_qrcode = ChannelQrcodeSettings.objects.filter(ticket=ticket, owner_id=user_profile.user_id)[0]
 			create_channel_qrcode_has_memeber_restructure(channel_qrcode, user_profile, context.member, ticket, member.is_new)
 			msg_type, detail = get_response_msg_info_restructure(channel_qrcode, user_profile)

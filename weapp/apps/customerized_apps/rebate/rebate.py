@@ -102,12 +102,8 @@ class RedPacket(resource.Resource):
 		rebate.ticket_id = ticket_id
 		rebate.save()
 
-		error_msg = None
 		data = json.loads(rebate.to_json())
 		data['id'] = data['_id']['$oid']
-
-		if error_msg:
-			data['error_msg'] = error_msg
 
 		if settings.MODE != 'develop':
 			mp_user = get_binding_weixin_mpuser(request.manager)

@@ -63,9 +63,11 @@ def handle_rebate_core():
 	owner_id2webapp_id = {u.manager_id: u.webapp_id for u in UserProfile.objects.filter(is_mp_registered=True, is_active=True)}
 	member_id2member = {m.id: m for m in member_models.Member.objects.filter(id__in=member_id2records.keys())}
 	need_grant_info = []
+	order_before_qrcode = {}
 	for member_id, records in member_id2records.items():
 		target_order_ids = member_id2order_ids[member_id]
 		for record in records:
+			permission = record.permission
 			is_limit_first_buy = record.is_limit_first_buy
 			is_limit_cash = record.is_limit_cash
 			rebate_order_price = record.rebate_order_price
@@ -74,7 +76,13 @@ def handle_rebate_core():
 			for order_id in target_order_ids:
 				target_order = order_id2order[order_id]
 				order_created_time = target_order.created_at
+				#TODO 已关注会员是否可参与
+				if not permission:
+					continue	#老会员不可参与
+				if is_limit_first_buy and order_before_qrcode.get('member_id', None):
+					continue	#限制首单且该用户在扫码之前下过订单
 				if is_limit_first_buy and order_created_time < start_time:
+					order_before_qrcode[member_id] = True
 					continue	#返利活动限制首单且该订单在该活动之前就产生了，不算
 				if order_created_time < start_time or order_created_time > end_time:
 					continue	#不在该返利活动的有效期内，不算
@@ -155,7 +163,7 @@ def handle_wating_actions():
 
 	apps_models.RebateWaitingAction.objects(id__in=need_delete_ids).delete()
 
-def get_target_orders(records=None, is_show=0):
+def get_target_orders(records=None, is_show=None):
 	"""
 	筛选出扫码后已完成的符合要求的订单
 	@param record: 活动实例
@@ -213,7 +221,7 @@ def get_target_orders(records=None, is_show=0):
 		webapp_user_id_belong_to_member_id[webapp_user_id] = member_id
 		all_webapp_user_ids.append(webapp_user_id)
 
-	all_orders = mall_models.Order.objects.filter(webapp_user_id__in=all_webapp_user_ids)
+	all_orders = mall_models.Order.objects.filter(webapp_user_id__in=all_webapp_user_ids).order_by('created_at') #必须要按时间正序
 
 	member_id2order_ids = {} #会员所下的订单
 	for order in all_orders:
