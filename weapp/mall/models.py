@@ -22,7 +22,7 @@ from core.alipay.alipay_notify import AlipayNotify
 from core.tenpay.tenpay_submit import TenpaySubmit
 # from core import upyun_util
 from core.wxpay.wxpay_notify import WxpayNotify
-from account.models import UserAlipayOrderConfig
+from account.models import UserAlipayOrderConfig,UserProfile
 from core.exceptionutil import unicode_full_stack
 from watchdog.utils import *
 from tools.express import util as express_util
@@ -90,6 +90,24 @@ class MallCounter(models.Model):
 		MallCounter.objects.filter(
 			owner_id=webapp_owner_id).update(
 			unread_order_count=0)
+
+class MallShareOrderPageConfig(models.Model):
+	"""
+	订单完成分享挣积分信息配置
+	"""
+	owner = models.ForeignKey(User)
+	is_share_page = models.BooleanField(default=False) # 是否提示分享挣积分
+	background_image = models.CharField(max_length=1024, default='')
+	share_image = models.CharField(max_length=1024, default='')
+	share_describe = models.TextField(default='')
+	material_id = models.IntegerField(default=0) #图文素材id
+	news_id = models.IntegerField(default=0) #图文id
+	created_at = models.DateTimeField(auto_now_add=True)
+
+	class Meta(object):
+		db_table = 'mall_share_order_page_config'
+		verbose_name = '订单完成分享挣积分信息配置'
+		verbose_name_plural = '订单完成分享挣积分信息配置'
 
 
 def increase_unread_order(webapp_owner_id, count):
@@ -193,8 +211,11 @@ class Product(models.Model):
 	weshop_status = models.IntegerField(default=0)  # 0待售 1上架 2回收站			#已废弃
 	is_member_product = models.BooleanField(default=False)  # 是否参加会员折扣
 	supplier = models.IntegerField(default=0) # 供货商
-	supplier_user_id = models.IntegerField(default=0) # 供货商
+	supplier_user_id = models.IntegerField(default=0) # 供货商(非8千)
 	purchase_price = models.FloatField(default=0.0) # 进货价格
+	is_enable_bill = models.BooleanField(default=False)  # 商品是否开具发票
+	is_delivery = models.BooleanField(default=False) # 是否勾选配送时间
+	buy_in_supplier = models.BooleanField(default=False) # 记录下单位置是商城还是供货商，0是商城1是供货商
 
 	class Meta(object):
 		db_table = 'mall_product'
@@ -218,9 +239,12 @@ class Product(models.Model):
 		obj_bs = Product.objects.filter(owner_id=self.owner_id , display_index=pos)
 		if obj_bs.exists():
 			# obj_bs.update(display_index=0) 为了监听到display index的改变 zhaolei
-			ele = obj_bs.get()
-			ele.display_index=0
-			ele.save()
+			# ele = obj_bs.get()
+			# ele.display_index=0
+			# ele.save()
+
+			# 2016-04-20 update by Eugene
+			obj_bs.update(display_index=0)
 
 		self.display_index = pos
 		self.save()
@@ -373,12 +397,12 @@ class Product(models.Model):
 			model_dict = {
 				"id": model.id,
 				"name": model.name,
-				"price": model.price,
+				"price": '%.2f' % model.price,
 				"weight": model.weight,
 				"stock_type": model.stock_type,
 				"stocks": model.stocks if model.stock_type == PRODUCT_STOCK_TYPE_LIMIT else u'无限',
 				"user_code": model.user_code,
-				"market_price": model.market_price}
+				"market_price": '%.2f' % model.market_price}
 
 			'''
 			获取model关联的property信息
@@ -454,6 +478,7 @@ class Product(models.Model):
 					product.models.extend(custom_models)
 					if len(custom_models) == 1:
 						target_model = custom_models[0]
+						# 格式: X.00
 						display_price_range = target_model['price']
 					else:
 						# 列表页部分显示商品的最小价格那个model的信息
@@ -462,8 +487,12 @@ class Product(models.Model):
 						low_price = target_model['price']
 						high_price = custom_models[-1]['price']
 						if low_price == high_price:
+							# 格式: X.00
 							display_price_range = low_price
 						else:
+							# 更改 格式: X.00 @延昊南
+							low_price = low_price
+							high_price = high_price
 							display_price_range = '%s ~ %s' % (low_price, high_price)
 				else:
 					product._is_use_custom_model = False
@@ -1257,7 +1286,7 @@ class ProductModel(models.Model):
 	weight = models.FloatField(default=0.0)  # 重量
 	stock_type = models.IntegerField(
 		default=PRODUCT_STOCK_TYPE_UNLIMIT)  # 0:无限 1:有限
-	stocks = models.IntegerField(default=-1)  # 有限：数量
+	stocks = models.IntegerField(default=0)  # 有限：数量
 	is_deleted = models.BooleanField(default=False)  # 是否已删除
 	created_at = models.DateTimeField(auto_now_add=True)  # 添加时间
 	# v2
@@ -1343,6 +1372,8 @@ ORDER_STATUS_PAYED_SHIPED = 4  # 已发货：已付款，已发货
 ORDER_STATUS_SUCCESSED = 5  # 已完成：自下单10日后自动置为已完成状态
 ORDER_STATUS_REFUNDING = 6  # 退款中
 ORDER_STATUS_REFUNDED = 7  # 退款完成(回退销量)
+ORDER_STATUS_GROUP_REFUNDING = 8 #团购退款（没有退款完成按钮）
+ORDER_STATUS_GROUP_REFUNDED = 9 #团购退款完成
 
 ORDER_BILL_TYPE_NONE = 0  # 无发票
 ORDER_BILL_TYPE_PERSONAL = 1  # 个人发票
@@ -1356,16 +1387,19 @@ STATUS2TEXT = {
 	ORDER_STATUS_SUCCESSED: u'已完成',
 	ORDER_STATUS_REFUNDING: u'退款中',
 	ORDER_STATUS_REFUNDED: u'退款成功',
+	ORDER_STATUS_GROUP_REFUNDING: u'退款中',
+	ORDER_STATUS_GROUP_REFUNDED: u'退款成功',
 }
 
 AUDIT_STATUS2TEXT = {
 	ORDER_STATUS_REFUNDING: u'退款中',
 	ORDER_STATUS_REFUNDED: u'退款成功',
+	ORDER_STATUS_GROUP_REFUNDING: u'团购退款',
 }
 
 REFUND_STATUS2TEXT = {
 	ORDER_STATUS_REFUNDING: u'退款中',
-	ORDER_STATUS_REFUNDED: u'退款成功',
+	ORDER_STATUS_REFUNDED: u'退款成功'
 }
 
 ORDERSTATUS2TEXT = STATUS2TEXT
@@ -1416,6 +1450,7 @@ class Order(models.Model):
 	bill_type = models.IntegerField(default=ORDER_BILL_TYPE_NONE)  # 发票类型
 	bill = models.CharField(max_length=100, default='')  # 发票信息
 	remark = models.TextField()  # 备注
+	supplier_remark = models.TextField()  # 供应商备注
 	product_price = models.FloatField(default=0.0)  # 商品金额
 	coupon_id = models.IntegerField(default=0)  # 优惠券id，用于支持返还优惠券
 	coupon_money = models.FloatField(default=0.0)  # 优惠券金额
@@ -1444,7 +1479,11 @@ class Order(models.Model):
 	origin_order_id = models.IntegerField(default=0) # 原始订单id，用于微众精选拆单
 	# origin_order_id=-1表示有子订单，>0表示有父母订单，=0为默认数据
 	supplier = models.IntegerField(default=0) # 订单供货商，用于微众精选拆单
-	is_100 = models.BooleanField(default=True) # 是否是快递100能够查询的快递
+	is_100 = models.BooleanField(default=True) # 是否是快递100能够查询的快递(是否使用快递查询服务,在订单点击发货时来更新is_100的状态)
+	delivery_time = models.CharField(max_length=50, default='')  # 配送时间字符串
+	is_first_order = models.BooleanField(default=False) # 是否是用户的首单
+	supplier_user_id = models.IntegerField(default=0) # 订单供货商user的id，用于系列拆单
+	total_purchase_price = models.FloatField(default=0)  # 总订单采购价格
 
 	class Meta(object):
 		db_table = 'mall_order'
@@ -1669,7 +1708,49 @@ def belong_to(webapp_id):
 	webapp_id为request中的商铺id
 	返回输入该id的所有Order的QuerySet
 	"""
-	return Order.objects.filter(webapp_id=webapp_id, origin_order_id__lte=0)
+	# if user_id and not mall_type:
+	# 	return Order.objects.filter(Q(webapp_id=webapp_id)|Q(supplier_user_id=user_id))
+	# else:
+	# 	return Order.objects.filter(webapp_id=webapp_id, origin_order_id__lte=0)
+	sync_able_status_list = [ORDER_STATUS_PAYED_SUCCESSED,
+	                         ORDER_STATUS_PAYED_NOT_SHIP,
+	                         ORDER_STATUS_PAYED_SHIPED,
+	                         ORDER_STATUS_SUCCESSED]
+
+	profile = UserProfile.objects.get(webapp_id=webapp_id)
+	user_id = profile.user_id
+	webapp_type = profile.webapp_type
+	if webapp_type:
+		return Order.objects.filter(webapp_id=webapp_id, origin_order_id__lte=0)
+	else:
+		orders = Order.objects.filter(Q(webapp_id=webapp_id)|Q(supplier_user_id=user_id, origin_order_id__gt=0,status__in=sync_able_status_list)).exclude(order_id__contains='s')
+        group_order_relations = OrderHasGroup.objects.filter(webapp_id=webapp_id)
+        if group_order_relations.count() > 0:
+            group_order_ids = [r.order_id for r in group_order_relations]
+            not_pay_group_order_ids = [order.order_id for order in Order.objects.filter(
+                order_id__in=group_order_ids,
+                status=ORDER_STATUS_NOT
+                )
+            ]
+            not_ship_group_on_order_ids = [order.order_id for order in Order.objects.filter(
+                order_id__in=[
+                    r.order_id for r in group_order_relations.filter(
+                    group_status__in=[GROUP_STATUS_ON, GROUP_STATUS_failure])
+                    ],
+                    status=ORDER_STATUS_PAYED_NOT_SHIP
+                )]
+            cancel_group_order_ids = [order.order_id for order in Order.objects.filter(
+                order_id__in=[
+                    r.order_id for r in group_order_relations.filter(
+                    group_status__in=[GROUP_STATUS_OK, GROUP_STATUS_failure])
+                    ],
+                    status=ORDER_STATUS_CANCEL,
+                    pay_interface_type=PAY_INTERFACE_WEIXIN_PAY
+                )]
+            orders = orders.exclude(order_id__in=not_pay_group_order_ids+not_ship_group_on_order_ids+cancel_group_order_ids)
+        return orders
+
+
 	# 微众商城代码
 	# if webapp_id == '3394':
 	# 	return Order.objects.filter(webapp_id=webapp_id)
@@ -1719,6 +1800,8 @@ class OrderHasProduct(models.Model):
 	promotion_money = models.FloatField(default=0.0)  # 促销抵扣金额
 	grade_discounted_money = models.FloatField(default=0.0)  # 折扣金额
 	integral_sale_id = models.IntegerField(default=0) #使用的积分应用的id
+	origin_order_id = models.IntegerField(default=0) # 原始(母)订单id，用于微众精选拆单
+	purchase_price = models.FloatField(default=0)  # 采购单价
 
 	class Meta(object):
 		db_table = 'mall_order_has_product'
@@ -2476,7 +2559,7 @@ class ProductReviewPicture(models.Model):
         verbose_name_plural = "商品评价图片"
         db_table = "mall_product_review_picture"
 
-class MallOrderFromSharedRecord(models.Model):        
+class MallOrderFromSharedRecord(models.Model):
     """
     add by bert 记录通过分享链接下单 订单号和分享者信息
     """
@@ -2485,7 +2568,7 @@ class MallOrderFromSharedRecord(models.Model):
     url = models.CharField(default='', max_length=255)
     is_updated = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)  # 添加时间
-    
+
     class Meta:
         verbose_name = "通过分享链接订单"
         verbose_name_plural = "通过分享链接订单"
@@ -2506,3 +2589,61 @@ class Supplier(models.Model):
 		verbose_name = "供货商"
 		verbose_name_plural = "供货商操作"
 		db_table = "mall_supplier"
+
+
+
+# 订单与团购活动的关联
+GROUP_STATUS_ON = 0  # 团购进行中
+GROUP_STATUS_OK = 1  # 团购成功
+GROUP_STATUS_failure = 2  # 团购失败
+
+
+class OrderHasGroup(models.Model):
+	"""
+	<order, group>关联
+	"""
+	order_id = models.CharField(max_length=100)  # 订单号(order中的order_id
+	group_id = models.CharField(max_length=100)
+	activity_id = models.CharField(max_length=100)
+	group_status = models.IntegerField(default=GROUP_STATUS_ON)
+	webapp_user_id = models.IntegerField(default=0)
+	created_at = models.DateTimeField(auto_now_add=True) #创建时间
+	webapp_id = models.CharField(max_length=20, verbose_name='店铺ID')  # webapp,订单成交的店铺id
+
+	class Meta(object):
+		db_table = 'mall_order_has_group'
+
+class WeizoomHasMallProductRelation(models.Model):
+	owner = models.ForeignKey(User) # 微众系列的商户
+	mall_id = models.IntegerField() # 供货商的owner_id
+	mall_product_id = models.IntegerField() # 供货商商品
+	weizoom_product_id = models.IntegerField() # 微众系列上架供货商的商品
+	is_updated = models.BooleanField(default=False) # 是否需要更新
+	is_deleted = models.BooleanField(default=False) # 供货商是否下架了商品
+	sync_time = models.DateTimeField(auto_now_add=True) # 微众系列同步商品的时间
+	delete_time = models.DateTimeField(auto_now=True) # 商品的失效时间
+	delete_type = models.BooleanField(default=False) # 删除类型，True为自营平台自己删除，False为供货商操作商品连带删除
+	created_at = models.DateTimeField(auto_now_add=True) # 添加时间
+
+	class Meta(object):
+		verbose_name = "微众系列同步其他商户商品的关系记录表"
+		verbose_name_plural = "微众系列同步其他商户商品的关系"
+		db_table = "mall_weizoom_has_mall_product_relation"
+
+
+class WxCertSettings(models.Model):
+	"""
+		存储微信每个帐号的证书文件地址
+	"""
+	owner = models.ForeignKey(User) #活动所有者
+	cert_path = models.CharField(default="", max_length=1024) #证书
+	up_cert_path = models.CharField(default="", max_length=2048) #证书
+
+	key_path = models.CharField(default="", max_length=1024) #证书key
+	up_key_path = models.CharField(default="", max_length=2048) #证书key
+
+	class Meta(object):
+		verbose_name = "微信证书文件地址"
+		verbose_name_plural = "微信证书文件地址"
+		db_table = "mall_weixin_cert"
+
