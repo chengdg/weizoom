@@ -155,7 +155,7 @@ def handle_wating_actions():
 
 	apps_models.RebateWaitingAction.objects(id__in=need_delete_ids).delete()
 
-def get_target_orders(records=None):
+def get_target_orders(records=None, is_show=0):
 	"""
 	筛选出扫码后已完成的符合要求的订单
 	@param record: 活动实例
@@ -173,6 +173,12 @@ def get_target_orders(records=None):
 	id2record = {str(r.id): r for r in records}
 	record_ids = id2record.keys()
 	all_partis = apps_models.RebateParticipance.objects(belong_to__in=record_ids).order_by('-created_at')
+
+	if is_show:
+		member_ids = [p.member_id for p in all_partis]
+		members = member_models.Member.objects.filter(id__in=member_ids)
+		member_id2created_at = {m.id: m.created_at for m in members}
+
 	record_id2partis = {} #各活动的参与人member_id集合
 	member_id2records = {} #每个会员参与的所有活动
 	all_member_ids = set() #所有member_id
@@ -183,7 +189,17 @@ def get_target_orders(records=None):
 			record_id2partis[record_id] = [member_id]
 		else:
 			record_id2partis[record_id].append(member_id)
-		all_member_ids.add(member_id)
+
+		if is_show:
+			participent_time = part.created_at.strftime('%Y-%m-%d %H:%M:%S')
+			subscribe_time = member_id2created_at.get(member_id,None)
+			if subscribe_time:
+				subscribe_time = subscribe_time.strftime('%Y-%m-%d %H:%M:%S')
+				if subscribe_time >= participent_time:
+					all_member_ids.add(member_id)
+		else:
+			all_member_ids.add(member_id)
+
 		if not member_id2records.has_key(member_id):
 			member_id2records[member_id] = [record_id]
 		else:

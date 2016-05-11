@@ -58,6 +58,10 @@ class RebateParticipances(resource.Resource):
 
 		datas = app_models.RebateParticipance.objects(belong_to=record_id).order_by('-created_at')
 
+		member_ids = [d.member_id for d in datas]
+		all_members = member_models.Member.objects.filter(id__in=member_ids)
+		member_id2created_at = {m.id: m.created_at for m in all_members}
+
 		#查询
 		member_status = int(request.GET.get('status', '-1'))
 		start_date = request.GET.get('start_date', '')
@@ -75,9 +79,11 @@ class RebateParticipances(resource.Resource):
 			if is_show == '1':
 				participent_time = data.created_at.strftime('%Y-%m-%d %H:%M:%S')
 				member_id = data.member_id
-				subscribe_time = member_models.Member.objects.get(id=member_id).created_at.strftime('%Y-%m-%d %H:%M:%S')
-				if subscribe_time >= participent_time:
-					member_ids.append(data.member_id)
+				subscribe_time = member_id2created_at.get(member_id, None)
+				if subscribe_time:
+					subscribe_time = subscribe_time.strftime('%Y-%m-%d %H:%M:%S')
+					if subscribe_time >= participent_time:
+						member_ids.append(data.member_id)
 			else:
 				member_ids.append(data.member_id)
 

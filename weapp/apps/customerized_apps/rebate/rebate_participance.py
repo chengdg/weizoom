@@ -55,22 +55,27 @@ class RebateOrderList(resource.Resource):
 	def get_datas(request,export_id=0):
 		webapp_id = request.user_profile.webapp_id
 		record_id = request.GET.get('record_id', 0)
+		is_show = int(request.GET.get('is_show', 0))
 
-		# record = app_models.Rebate.objects(id=record_id)[0]
-		# orders = export.get_target_orders(record)
+		records = app_models.Rebate.objects(id=record_id)
+		webapp_user_id_belong_to_member_id, id2record, member_id2records, member_id2order_ids, all_orders = export.get_target_orders(records, is_show)
+		webapp_user_ids = webapp_user_id_belong_to_member_id.keys()
 
-		is_show = request.GET.get('is_show', '0')
-
-		params = {'webapp_user_id__in': [1890]}
+		params = {'webapp_user_id__in': webapp_user_ids}
 		start_date = request.GET.get('start_date', '')
 		end_date = request.GET.get('end_date', '')
-		start_money = request.GET.get('start_money', '')
-		end_money = request.GET.get('end_money', '')
+		start_money = request.GET.get('start_money', 0)
+		end_money = request.GET.get('end_money', 0)
+		is_first_order = request.GET.get('is_first_order', '')
 
 		if start_date:
 			params['created_at__gte'] = start_date
 		if end_date:
 			params['created_at__lte'] = end_date
+		if start_money:
+			params['final_price__gte'] = start_money
+		if end_money:
+			params['final_price__lte'] = end_money
 
 		orders = mall_models.Order.objects.filter(**params)
 		#统计微众卡支付总金额和现金支付总金额
@@ -135,7 +140,7 @@ class RebateOrderList(resource.Resource):
 				'postage': '%.2f' % order.postage,
 				'save_money': '%.2f' % (float(mall_models.Order.get_order_has_price_number(order)) + float(order.postage) - float(order.final_price) - float(order.weizoom_card_money)),
 				'weizoom_card_money': float('%.2f' % order.weizoom_card_money),
-				'pay_money': '%.2f' % (order.final_price + order.weizoom_card_money)
+				'pay_money': '%.2f' % order.final_price
 			})
 		if not export_id:
 			return pageinfo, items, final_price, weizoom_card_money
