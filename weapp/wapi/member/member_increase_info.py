@@ -12,6 +12,7 @@ from datetime import datetime
 from utils import dateutil
 import json
 
+VALID_STATUS = [mall_models.ORDER_STATUS_PAYED_NOT_SHIP, mall_models.ORDER_STATUS_PAYED_SHIPED, mall_models.ORDER_STATUS_SUCCESSED]
 
 class MemberIncrease(api_resource.ApiResource):
 	"""
@@ -37,10 +38,20 @@ class MemberIncrease(api_resource.ApiResource):
 		week_count = member_models.Member.objects.filter(webapp_id=webapp_id, is_subscribed=True, created_at__range=(monday, sunday)).count()
 		month_count = member_models.Member.objects.filter(webapp_id=webapp_id, is_subscribed=True, created_at__gte=fisrt_day_of_month).count()
 
+		#获取新增的购买用户数，暂时忽略买完就取关的情况
+		total_buy_member_count =  member_models.Member.objects.filter(webapp_id=webapp_id, is_subscribed=True, pay_times__gte=1).count()
+		today_buy_member_count = mall_models.Order.objects.filter(webapp_id=webapp_id, status__in=VALID_STATUS, is_first_order=True, created_at__gte=today).count()
+		week_buy_member_count = mall_models.Order.objects.filter(webapp_id=webapp_id, status__in=VALID_STATUS, is_first_order=True, created_at__range=(monday, sunday)).count()
+		month_buy_member_count = mall_models.Order.objects.filter(webapp_id=webapp_id, status__in=VALID_STATUS, is_first_order=True, created_at__gte=fisrt_day_of_month).count()
+
 
 		return {
 				'total_count': total_count,
 				'today_count': today_count,
 				'week_count': week_count,
-				'month_count': month_count
+				'month_count': month_count,
+				'total_buy_member_count': total_buy_member_count,
+				'today_buy_member_count': today_buy_member_count,
+				'week_buy_member_count': week_buy_member_count,
+				'month_buy_member_count': month_buy_member_count
 			}
