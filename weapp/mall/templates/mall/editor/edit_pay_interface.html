@@ -104,8 +104,17 @@
 		<div id="alipayConfig" class=" {% if pay_interface.type == 0 %} {% else %}hide{% endif %}" data-name="支付宝">
 			{% with pay_interface.related_config as alipay_config %}
 
+			<div class="form-group">
+					<label class="control-label col-sm-3" for="app_id" style="padding-top:5px;">接口版本：</label>
+					<div class="col-sm-4">
+						<select class="span2 form-control" value="{{alipay_config.pay_version}}" id="ali_pay_version" name="pay_version">
+							<option class = "pay_version_option" value="0" {% ifequal  alipay_config.pay_version 0 %}selected{% endifequal %}>V2</option>
+							<option class = "pay_version_option" value="1" {% ifequal  alipay_config.pay_version 1 %}selected{% endifequal %}>V5</option>
+						</select>
+					</div>
+			</div>
 			<div class="form-group mb0" style="height:50px;">
-				<label class="control-label col-sm-2 " style="width: 127px;margin-left: 115px;" for="partner">合作身份者ID：</label>
+				<label class="control-label col-sm-2 " style="width: 127px;margin-left: 128px;" for="partner">合作身份者ID：</label>
 				<div class="col-sm-4">
 					<input type="text"  data-validate="require-string" style="margin-left:-1px;" class="form-control" id="partner" name="partner" placeholder="以2088开头由16位纯数字组成的字符串" minLength="1" maxLength="16" value="{% if alipay_config %}{{ alipay_config.partner }}{% endif %}" />
 					<div class="errorHint"></div>
