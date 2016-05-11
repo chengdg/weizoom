@@ -60,8 +60,8 @@ FIRST_NAVS = [{
     'inner_name': MALL_CONFIG_FIRST_NAV,
     'permission': 'config'
 }, {
-    'name': u'粉丝招募平台',
-    'url': 'http://data.weizoom.com/',
+    'name': u'商机挖掘监控系统',
+    'url': 'http://lion.weizoom.com/account/statistics/user_center/',
     'inner_name': BIG_DATA_HOME_FIRST_NAV,
     'permission': 'big_data',
     'need_token': True

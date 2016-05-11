@@ -205,6 +205,17 @@ def logout(request):
 	redirect_url = '/logout/'
 	# http_host = request.META['HTTP_HOST']
 	# http_referer = request.META.get('HTTP_REFERER', '')
+
+	#add by 李昆伦 2016-05-11
+	#支持商机监控系统
+	login_at = request.COOKIES.get('login_at', 'fans')
+	c = RequestContext(request, {
+			'login_at': login_at
+		})
+	return render_to_response('account/customer_logout.html', c)
+
+
+
 	if settings.FAN_HOST:
 		redirect_url = '%s%s' % (settings.FAN_HOST, redirect_url)
 	return HttpResponseRedirect(redirect_url)
