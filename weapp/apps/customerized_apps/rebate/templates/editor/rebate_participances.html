@@ -193,8 +193,33 @@ $(document).ready(function() {
 		dateViewReload();
 	});
 	$('.xa-export').click(function(){
-		var url = '/apps/rebate/rebate_participances_export/?export_id=1'
-  		window.open(url);
+		W.getLoadingView();
+		var start_date = $('#start_date').val();
+		var end_date = $('#end_date').val();
+		var is_checked = $('.is_show').is(':checked');
+		var status = $('.xa-status').val();
+		var is_show = 0;
+		if (is_checked == true){
+			is_show = 1;
+		}
+		W.getApi().call({
+			method: 'get',
+			app: 'apps/rebate',
+			resource: 'rebate_participances_export',
+			args: {
+				'start_date': start_date,
+				'end_date': end_date,
+				'is_show': is_show,
+				'status': status,
+				'export_id': 1
+			},
+			success: function(resp){
+				console.log("导出成功");
+			},
+			error: function(error){
+				console.log('导出失败');
+			}
+		});
 	});
 
 	function dateViewReload(){

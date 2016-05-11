@@ -441,7 +441,6 @@
 <script type="text/javascript">
 	$(function(){
 		$('.xa-recCode').click(function(){
-			$('.xa-recCode').prop('disabled','true').addClass('xui-disabled');
 			var phone_number = $(this).siblings('input').val();
 			if(!validate_phone(phone_number)){
 				return false
