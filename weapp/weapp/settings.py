@@ -58,7 +58,8 @@ DATABASES = {
         'HOST': 'db.weapp.com',
         # Set to empty string for default. Not used with sqlite3.
         'PORT': '',
-        'CONN_MAX_AGE': 100
+        'CONN_MAX_AGE': 100,
+        'OPTIONS': {'charset':'utf8mb4'}
     },
     'watchdog': {
         # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
