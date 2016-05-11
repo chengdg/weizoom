@@ -187,9 +187,10 @@
     	line-height: 2rem;
     	margin-left: 10px;
     	outline: none;
-    	width: 190px;
+    	width: 170px;
     	color: #333333;
-    	font-family: "黑体";   	
+    	font-family: "黑体"; 
+    	padding: 0;  	
     }
     .xui-bindPhone button{
     	margin-left: 10px;
@@ -198,14 +199,15 @@
     	background: #ef3715;
     	border:none;
     	border-radius: 3px;
-    	padding: 10px 13px;
+    	padding: 10px 0;
+    	width: 98px;
     	font-size: .9rem;
     	font-family: "黑体";
     	outline: none;
     }
     @media only screen and (max-width: 320px){
 	    .xui-bindPhone input{
-	    	width: 150px;
+	    	width: 140px;
 	    	font-size: 1.1rem;
 	    }	
     }
@@ -221,7 +223,7 @@
     	background: #fff;
     	width: 80%;
     	margin: 0 auto;
-    	margin-top: 50%;
+    	margin-top: 55%;
     	text-align: center;
     	border-radius: 5px;
     	padding: 20px 0;
@@ -251,7 +253,7 @@
     .xui-codeBtn-group button{
     	border:none;
     	border-radius: 15px;
-    	padding: 5px 25px;
+    	padding: 7px 30px;
     	font-size: 1rem;
     	font-family: "黑体";
     	outline: none;
@@ -303,7 +305,9 @@
 		<img class="xui-close xa-cancelBtn" src="/markettools_static/weizoom_card/img/close.png">
 		<div class="xui-codeTime-container">
 			<p>输入短信中的验证码</p>
-			<p class="xui-code-time xa-code-time">(<span class="xa-countdown">60</span>s) 后重新获取</p>
+			<p class="xui-code-time xa-code-time">
+				<span> </span>
+			</p>
 		</div>
 		<input type="text">
 		<div class="xui-codeBtn-group">
@@ -325,7 +329,7 @@
 			</div>
 			<div class="xui-bindPhone">
 				<i><img src="/markettools_static/weizoom_card/img/phone.png" width="20px"></i>
-				<input type="text" placeholder="请输入手机号码">
+				<input type="text" placeholder="请输入手机号码" class="xa-phoneNum" maxlength="11">
 				<button type="button" class="xa-recCode">获取验证码</button>
 				<div class="xui-success xa-success">
 					<p>手机号绑定成功</p>	
@@ -445,21 +449,24 @@
 			if(!validate_phone(phone_number)){
 				return false
 			}
+			$('.xa-recCode').html('(<span class="xa-countdown">60</span>)重新获取');
+			$('.xa-code-time > span').html('(<span class="xa-countdown">60</span>s) 后重新获取');
+			$('.xa-recCode').prop('disabled','true').addClass('xui-disabled');
 			$('.xa-mask').show();
-			count();
+			countdown();
 		});
 		$('.xa-cancelBtn').click(function(){
 			$('.xa-mask').hide();
-			clearInterval(countdown);
-			$('.xa-countdown').text(60);
 		});
 		$('.xa-confirmBtn').click(function(){
-			clearInterval(countdown);
+			clearInterval(count);
 			$('.xa-mask').hide();
-			$('.xa-recCode').prop('disabled','true').addClass('xui-disabled');
+			$('.xa-recCode').prop('disabled',true).addClass('xui-disabled').text('获取验证码');	;
 			$('.xa-success').show();
+			$('.xa-phoneNum').prop('disabled',true);
 		});
 	});
+
 	function validate_phone(phone_number){
 		var reg = /^1[3|4|5|8]\d{9}$/;
 		if(!reg.test(phone_number) || phone_number.length != 11){
@@ -474,12 +481,13 @@
 		return true;
 	}	
 
-	function count(){
+	function countdown(){
 		var num = 60;
-		countdown = setInterval(function(){
+		count = setInterval(function(){
 		if(num == 1){
-			clearInterval(countdown);
-			$('.xa-recCode').prop('disabled','false').removeClass('xui-disabled');			
+			clearInterval(count);
+			$('.xa-code-time > span').text('请重新获取验证码');
+			$('.xa-recCode').prop('disabled',false).removeClass('xui-disabled').text('获取验证码');			
 		}			
 			num -= 1;
 			$('.xa-countdown').text(num);	
