@@ -1446,7 +1446,6 @@ def ship_order(order_id, express_company_name,
 		# 需要修改的基本参数
 		# 只修改物流信息，不修改状态
 		order_params = dict()
-		express_number = express_number.replace(' ','')  #快递100服务器过滤空格,快递鸟不过滤空格
 		order_params['express_company_name'] = express_company_name
 		order_params['express_number'] = express_number
 		order_params['leader_name'] = leader_name
@@ -2837,7 +2836,7 @@ def batch_handle_order(json_data, user, webapp_id=None):
 		try:
 			order_id = item.get('order_id', '')
 			express_company_name = item.get('express_company_name', '')
-			express_number = item.get('express_number', '')
+			express_number = item.get('express_number', '').replace(' ','')  #快递100服务器过滤空格,快递鸟不过滤空格
 			express_company_value = express_util.get_value_by_name(express_company_name)
 			# 快递公司 不符
 			if express_company_value == express_company_name:
@@ -2864,6 +2863,10 @@ def batch_handle_order(json_data, user, webapp_id=None):
 				continue
 			if not express_number:
 				raise
+			elif not express_number.isalnum():
+				item["error_info"] = "快递单号错误"
+				error_data.append(item)
+				continue
 			if order.status == ORDER_STATUS_PAYED_NOT_SHIP:
 				# 批量发货
 				if ship_order(order.id, express_company_value, express_number, user.username, u''):

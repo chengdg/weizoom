@@ -109,9 +109,16 @@ class KdniaoExpressPoll(object):
 				param_str,
 				verified_result.decode('utf-8')), type=self.express_config.watchdog_type)
 		except:
-			watchdog_error(u'发送快递鸟 订阅请求 失败，url:{},data:{},原因:{}'.format(KdniaoExpressConfig.req_url,
-				param_str,
-				unicode_full_stack()), type=self.express_config.watchdog_type)
+			try:
+				verified_result = post(KdniaoExpressConfig.req_url, param_str)
+				watchdog_info(u"发送快递鸟 订阅请求 url: {},/n param_data: {}, /n response: {}".format(
+					KdniaoExpressConfig.req_url, 
+					param_str,
+					verified_result.decode('utf-8')), type=self.express_config.watchdog_type)
+			except:
+				watchdog_error(u'发送快递鸟 订阅请求 失败，url:{},data:{},原因:{}'.format(KdniaoExpressConfig.req_url,
+					param_str,
+					unicode_full_stack()), type=self.express_config.watchdog_type)
 
 		return verified_result
 

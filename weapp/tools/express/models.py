@@ -105,7 +105,7 @@ ExpressServiceConfig 中的value说明：
 """
 class ExpressServiceConfig(models.Model):
 	name = models.CharField(max_length=100, verbose_name='快递服务商')
-	value = models.IntegerField(max_length=10, choices=((0,"关"),(1,"开")), verbose_name='服务开关')
+	value = models.IntegerField(max_length=10, choices=((0,"关"),(1,"开")), verbose_name='服务开关', default=0)
 
 	class Meta(object):
 		db_table = 'mall_express_service_config'
