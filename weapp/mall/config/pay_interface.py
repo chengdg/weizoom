@@ -108,6 +108,7 @@ class PayInterfaceList(resource.Resource):
             if pay_interface.type == PAY_INTERFACE_ALIPAY and pay_interface.related_config_id != 0:
                 related_config = UserAlipayOrderConfig.objects.get(owner=request.manager,
                                                                    id=pay_interface.related_config_id)
+                print "",related_config.get_pay_version_display()
                 configs = [
                            {
                                "name": u"接口版本", "value": related_config.get_pay_version_display()
@@ -282,7 +283,7 @@ def _add_alipay_config(request):
         private_key=request.POST.get('private_key', ''),
         ali_public_key=request.POST.get('ali_public_key', ''),
         seller_email=request.POST.get('seller_email', ''),
-        pay_version=request.POST.get('pay_version', '')
+        pay_version=request.POST.get('ali_pay_version', '')
     )
 
     return config.id
@@ -317,6 +318,6 @@ def _update_alipay_config(request, pay_interface):
         private_key=request.POST.get('private_key', ''),
         ali_public_key=request.POST.get('ali_public_key', ''),
         seller_email=request.POST.get('seller_email', ''),
-        pay_version=request.POST.get('pay_version', '')
+        pay_version=request.POST.get('ali_pay_version', '')
     )
 
