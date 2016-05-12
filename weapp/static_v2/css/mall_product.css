@@ -1271,6 +1271,10 @@
 	bottom: 0;
 	right: 0;
 }
+
+.xui-productsPage .xui-Blue{
+	color: #1262b7!important;
+}
 /*在售商品管理，多规格修改商品价钱弹窗*/
 .xui-updateProductModelPriceDialog .modal-dialog{
 	width: 500px;

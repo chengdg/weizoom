@@ -110,7 +110,8 @@ class ProductList(resource.Resource):
 
         #处理商品分类
         if _type == 'offshelf':
-            sort_attr = '-update_time'
+            if sort_attr == '-display_index':
+                sort_attr = '-update_time'
             products = models.Product.objects.filter(
                 owner=request.manager,
                 shelve_type=models.PRODUCT_SHELVE_TYPE_OFF,
@@ -145,15 +146,19 @@ class ProductList(resource.Resource):
         # products = products.order_by(sort_attr)
         if '-' in sort_attr:
             sort_attr = sort_attr.replace('-', '')
-            products = sorted(products, key=operator.attrgetter('id'), reverse=True)
+            # products = sorted(products, key=operator.attrgetter('id'), reverse=True)
             products = sorted(products, key=operator.attrgetter(sort_attr), reverse=True)
             sort_attr = '-' + sort_attr
         else:
-            products = sorted(products, key=operator.attrgetter('id'))
+            # products = sorted(products, key=operator.attrgetter('id'))
             products = sorted(products, key=operator.attrgetter(sort_attr))
-        products_is_0 = filter(lambda p: p.display_index == 0, products)
-        products_not_0 = filter(lambda p: p.display_index != 0, products)
-        products_not_0 = sorted(products_not_0, key=operator.attrgetter('display_index'))
+
+        products_is_0 = products
+        products_not_0 = []
+        if 'display_index' in sort_attr:
+            products_is_0 = filter(lambda p: p.display_index == 0, products)
+            products_not_0 = filter(lambda p: p.display_index != 0, products)
+            products_not_0 = sorted(products_not_0, key=operator.attrgetter('display_index'))
 
         if mall_type:
             products = utils.weizoom_filter_products(request, products_not_0 + products_is_0)
@@ -227,6 +232,7 @@ class ProductList(resource.Resource):
 
         data = dict()
         data['owner_id'] = request.manager.id
+        data['username'] = request.manager.username
         data['mall_type'] = mall_type
         response = create_response(200)
         response.data = {
