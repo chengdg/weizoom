@@ -568,10 +568,24 @@
 							</div>
 							{{/if}}
 						</div>
-
 					</div>
 					{{/if}}
 
+					{{if (field.type == 'rich_text2')}}
+					<div class="propertyGroup_property_richTextField propertyGroup_property_horizontalField">
+						{{if (field.displayName)}}
+						<div class="propertyGroup_property_label">${field.displayName}</div>
+						{{/if}}
+						<div class="propertyGroup_property_input" style="{{if (field.displayName)}}width:80%{{else}}width:100%{{/if}}; margin: 5px auto;">
+							<textarea class="xa-rich-text xa-thirdPartyPlugin" data-plugin="richtext2" style="height: 100px; width: 100%;" data-field="${field.name}">${model.get(field.name)}</textarea>
+							{{if field.help}}
+							<div style="color: #888;">
+								{{html field.help.replace(/\n/g, "<br/>")}}
+							</div>
+							{{/if}}
+						</div>
+					</div>
+					{{/if}}
 
 					{{if (field.type == 'select_link')}}
 					<div class="propertyGroup_property_linkSelectField propertyGroup_property_horizontalField">

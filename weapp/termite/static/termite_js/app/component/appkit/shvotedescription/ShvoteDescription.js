@@ -104,6 +104,11 @@ W.component.appkit.ShvoteDescription = W.component.Component.extend({
 			help: '提示：建议图片长宽100px*100px，正方形图片',
 			validate: 'data-validate="require-notempty::请添加一张图片"',
 			default: ""
+		},{
+			name: 'advertisement',
+			type: 'rich_text2',
+			displayName: '广告信息',
+			isUserProperty: true
 		}]
 	}],
 

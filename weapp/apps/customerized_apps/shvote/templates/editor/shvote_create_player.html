@@ -43,9 +43,12 @@
 		#swipe_images-queue,#swipe_images_des-queue{
 			display: none;
 		}
-		#swipe_images-button,#swipe_images_des-button{
+		.wui-upload-img-create #swipe_images-button,.wui-upload-img-create #swipe_images_des-button{
 			background-image: url('/static_v2/img/editor/addProduct.png');
 			height :69px !important;
+		}
+		.wui-upload-img-edit #swipe_images-button,.wui-upload-img-edit #swipe_images_des-button{
+			opacity: 0;
 		}
 		.uploadify-button-text{
 			display: none;
@@ -112,38 +115,42 @@
 		<ul class="breadcrumb">
 			<li>您当前所在位置</li>
 			<li><a href="/apps/lottery/lotteries/">百宝箱</a></li>
-			<li class="active">高级投票</li>
+			<li><a href="/apps/shvote/shvotes/">高级投票</a></li>
+			<li class="active">报名详情</li>
 		</ul>
 	</div>
 	<!--查看选手-->
 	{% if cur_player_info %}
 	<div class="panel panel-default wui-create-player">
 		<div class="wui-create"><span>查看选手</span></div>
+		<input type="text" class="hide" name="player_id" id="player_id" value="{{cur_player_info.id}}"/>
 		<div class="wui-view-head-img wa-view-head-img">
 			<img class="wui-upload-img wa-upload-img" src="{{cur_player_info.icon}}" style="display:block">
 		</div>
-		<div class="form-group wui-upload-img-div">
+		<div class="form-group wui-upload-img-div wui-upload-img-edit">
 			<label class="control-label fl" for="swipe_images">上传头像</label>
-			<div class="col-sm-9 imgSelect" style="display:none">
+			<div class="col-sm-9 imgSelect">
 		        <input id="swipe_images" name="swipe_images" type='hidden' />
 			</div>
 			<span class="wui-sign-time">报名时间：{{cur_player_info.created_at}}</span>
 		</div>
 		<div class="form-group">
 			<label class="control-label fl" for="player_name">名称</label>
-			<input type="text" class="form-control" name="player_name" id="player_name" value="{{cur_player_info.name}}" disabled />
+			<input type="text" class="form-control" name="player_name" id="player_name" value="{{cur_player_info.name}}"/>
 		</div>
 		{% if cur_player_info.group %}
 		<div class="form-group">
 			<label class="control-label fl" for="group">选择分组</label>
-			<select id="group" name="group" class="form-control" disabled>
-				<option>{{cur_player_info.group}}</option>
+			<select id="group" name="group" class="form-control">
+				{% for group in groups%}
+					<option {% ifequal cur_player_info.group group %} selected="selected" {% endifequal %}>{{group}}</option>
+				{% endfor %}
 			</select>
 		</div>
 		{% endif %}
 		<div class="form-group">
 			<label class="control-label fl" for="serial_number">输入序号</label>
-			<input type="number" style="width:150px;" class="form-control" name="serial_number" id="serial_number" value="{{cur_player_info.serial_number}}" disabled/>
+			<input type="number" style="width:150px;" class="form-control" name="serial_number" id="serial_number" value="{{cur_player_info.serial_number}}"/>
 		</div>
 		{% if status == 1 %}
 			<div class="form-group">
@@ -157,11 +164,12 @@
 		{% endif %}
 		<div class="form-group">
 			<label class="control-label" for="details">详情</label>
-			<textarea class="wui-details" id="details" name="details" readonly>{{cur_player_info.details}}</textarea>
+			<textarea class="wui-details" id="details" name="details">{{cur_player_info.details}}</textarea>
 		</div>
-		<div class="form-group wui-upload-img-div">
+		<div class="form-group wui-upload-img-div wui-upload-img-create">
 			<label class="control-label fl" for="swipe_images_des">上传图片</label>
-			<div class="col-sm-9 imgSelect" style="display:none">
+			<span class="xui-fontGary" style="font-weight: lighter;margin-top: 52px;display: inline-block;">（上传图片要求宽度在480-620之间,高度小于等于960,大小不超过500K）</span>
+			<div class="col-sm-9 imgSelect">
 		        <input id="swipe_images_des" name="swipe_images_des" type='hidden' />
 			</div>
 		</div>
@@ -173,9 +181,10 @@
 		<div class="wui-btn-container">
 			{% if status == 0 %}
 				<button class="btn wui-review xa-review">审核通过</button>
-				<button class="btn wui-delete xa-delete">删除</button>
 			{% endif %}
+			<button class="btn wui-submit wa-submit">保存</button>
 			<button class="btn wui-cancel wa-cancel">取消</button>
+			<button class="btn wui-delete xa-delete">删除</button>
 		</div>
 	</div>
 	<!--创建选手-->
@@ -185,7 +194,7 @@
 		<div class="wui-create-head-img wa-create-head-img">
 			<img class="wui-upload-img wa-upload-img" src="{{cur_player_info.icon}}" style="display:block">
 		</div>
-		<div class="form-group wui-upload-img-div">
+		<div class="form-group wui-upload-img-div wui-upload-img-create">
 			<label class="control-label fl" for="swipe_images">上传头像</label>
 			<div class="col-sm-9 imgSelect">
 		        <input id="swipe_images" name="swipe_images" type='hidden' />
@@ -214,7 +223,7 @@
 			<label class="control-label" for="details">详情</label>
 			<textarea class="wui-details wa-validate" id="details" name="details"></textarea>
 		</div>
-		<div class="form-group wui-upload-img-div">
+		<div class="form-group wui-upload-img-div wui-upload-img-create">
 			<label class="control-label fl" for="swipe_images_des">上传图片</label>
 			<span class="xui-fontGary" style="font-weight: lighter;margin-top: 52px;display: inline-block;">（上传图片要求宽度在480-620之间,高度小于等于960,大小不超过500K）</span>
 			<div class="col-sm-9 imgSelect">
@@ -280,8 +289,13 @@ $(document).ready(function() {
 			img_arr.push(src);
 		});
 		var activity_id = '{{id}}';
+		var player_id = $.trim($('#player_id').val());
+		var _method ='post'; //新建选手
+		if (player_id!=''){
+			_method = 'put';//编辑选手
+		}
 		W.getApi().call({
-			method: 'post',
+			method: _method,
 			app: 'apps/shvote',
 			resource: 'shvote_create_player',
 			args: {
@@ -291,10 +305,11 @@ $(document).ready(function() {
 				serial_number: serial_number,
 				details: details,
 				img_des_srcs: JSON.stringify(img_arr),
-				activity_id: activity_id
+				activity_id: activity_id,
+				player_id: player_id
 			},
 			success: function(resp){
-				W.showHint('success', '创建选手成功！');
+				W.showHint('success', '保存成功！');
 				href = "/apps/shvote/shvote_registrators/?id={{id}}";
 				setTimeout(function(){
 					window.location.href = href;
@@ -304,7 +319,7 @@ $(document).ready(function() {
                 if(error.errMsg){
                     W.showHint('error', error.errMsg);
                 }else{
-                    W.showHint('error', '创建选手失败！');
+                    W.showHint('error', '保存失败！');
                 }
 			}
 		});

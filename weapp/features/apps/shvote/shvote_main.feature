@@ -152,7 +152,7 @@ Scenario:1 管理员删除微信用户提交高级投票申请，列表中消失
 			"number":"003",
 			"start_date":"今天",
 			"status":"待审核",
-			"actions":["审核通过","删除","查看"]
+			"actions":["审核通过","查看","删除"]
 
 		},{
 			"headImg":"bill_head.jpg",
@@ -161,7 +161,7 @@ Scenario:1 管理员删除微信用户提交高级投票申请，列表中消失
 			"number":"001",
 			"start_date":"今天",
 			"status":"审核通过",
-			"actions":["查看"]
+			"actions":["查看","删除"]
 		}]
 		"""
 	Then jobs获得微信高级投票活动列表
@@ -176,8 +176,6 @@ Scenario:1 管理员删除微信用户提交高级投票申请，列表中消失
 			"actions": ["关闭","链接","预览","报名详情","查看结果"]
 		}]
 		"""
-
-
 
 @mall2 @apps @shvote @shvote_activity
 Scenario:2 微信用户报名参与活动并通过审核在活动主页的显示

@@ -225,7 +225,7 @@ def __clear_all_app_data():
 	WeizoomCard.objects.all().delete()
 	mall_models.Supplier.objects.all().delete()
 	mall_models.WeizoomHasMallProductRelation.objects.all().delete()
-
+	mall_models.ProductSearchRecord.objects.all().delete()
 	# 快递数据
 	express_model.ExpressHasOrderPushStatus.objects.all().delete()
 
@@ -351,6 +351,7 @@ def __clear_all_app_data():
 	shvote_models.Shvote.objects.all().delete()
 	shvote_models.ShvoteParticipance.objects.all().delete()
 	shvote_models.ShvoteControl.objects.all().delete()
+	shvote_models.ShvoteDetail.objects.all().delete()
 
 	#apps拼红包
 	redpacket_models.RedPacket.objects.all().delete()

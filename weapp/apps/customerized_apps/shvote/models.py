@@ -42,13 +42,25 @@ class ShvoteControl(models.Document):
 	"""
 	member_id= models.LongField(default=0) #参与者id
 	belong_to = models.StringField(default="", max_length=100) #对应的活动id
-	vote_to_list= models.ListField(default=[]) #被投票人
+	vote_to_list = models.ListField(default=[]) #被投票人
 	vote_count = models.IntField(default=0) #投票次数
-	created_at_str = models.StringField(max_length=24) #投票时间
+	created_at_str = models.StringField(max_length=24) #投票日期
+	created_at = models.DateTimeField() #投票时间
 	meta = {
 		'collection': 'shvote_shvote_control'
 	}
 
+class ShvoteDetail(models.Document):
+	"""
+	投票记录表
+	"""
+	member_id = models.LongField(default=0) #参与者id
+	belong_to = models.StringField(default="", max_length=100) #对应的活动id
+	vote_to_member_id = models.StringField(default=0) #被投票人
+	created_at = models.DateTimeField() #投票时间
+	meta = {
+		'collection': 'shvote_shvote_detail'
+	}
 
 STATUS_NOT_START = 0
 STATUS_RUNNING = 1
@@ -63,11 +75,11 @@ class Shvote(models.Document):
 	start_time = models.DateTimeField() #开始时间
 	end_time = models.DateTimeField() #结束时间
 	status = models.IntField(default=0) #状态
-	# participant_count = models.IntField(default=0) #参与者数量
 	related_page_id = models.StringField(default="", max_length=100) #termite page的id
 	created_at = models.DateTimeField() #创建时间
 	visits = models.LongField(default=0) #访问人数
 	share_image = models.StringField(default="", max_length=1024) #分享的图片链接
+	advertisement = models.StringField(default="", max_length=10000) #广告信息
 
 	meta = {
 		'collection': 'shvote_shvote'
