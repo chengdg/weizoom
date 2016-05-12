@@ -75,3 +75,17 @@ class RebateWaitingAction(models.Document):
 	meta = {
 		'collection': 'rebate_waiting_action'
 	}
+
+class RebateWeizoomCardDetails(models.Document):
+	"""
+	发放返利微众卡的详情记录
+	"""
+	record_id = models.StringField(default="", max_length=100) #对应的活动id
+	order_id = models.StringField(default="", max_length=100) #对应返利订单的order_id,注意，不是order.id ！！
+	member_id = models.LongField(default=0)	#返利的会员
+	weizoom_card_id = models.LongField(default=0) #返利的微众卡id
+	created_at = models.DateTimeField() #发放时间
+
+	meta = {
+		'collection': 'rebate_weizoom_card_details'
+	}

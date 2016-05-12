@@ -48,16 +48,19 @@ class RedPacketStatus(resource.Resource):
 		response = create_response(200)
 		return response.get_response()
 
-	# @login_required
-	# def api_put(request):
-	# 	"""
-	# 	临时方法，用于覆盖历史数据
-	# 	"""
-	# 	record_id = request.POST['id']
-	# 	response = create_response(500)
-	# 	if record_id:
-	# 		record = app_models.RedPacket.objects.get(id=record_id)
-	# 		record.update(set__status=app_models.STATUS_NOT_START)
-	# 		response = create_response(200)
-	# 		response.data.page_id = record.related_page_id
-	# 	return response.get_response()
+	@login_required
+	def api_put(request):
+		"""
+		手动发放单个活动的微众卡
+		"""
+		record_id = request.GET.get('record_id', None)
+		response = create_response(500)
+		if not record_id:
+			response.errMsg = u"请求参数出错~"
+			return response.get_response()
+		try:
+			record = app_models.Rebate.objects.get(id=record_id, status__ne=app_models.STATUS_NOT_START)
+			export.handle_rebate_core([record])
+		except:
+			response.errMsg = u'活动信息出错~'
+			return response.get_response()
