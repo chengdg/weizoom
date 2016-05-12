@@ -249,9 +249,14 @@ class MassSendingMessages(resource.Resource):
 
         target_members_count = 0
         if is_from_fans_list:
-            target_members_count = Member.objects.filter(webapp_id = webapp_id, is_subscribed = True, is_for_test = False, id__in = id_array).count()
-            is_more_than_two = target_members_count >= 2
-            is_below_w = target_members_count <= 10000
+            id_array_len = len(id_array)
+            if id_array_len < 1000:
+                target_members_count = Member.objects.filter(webapp_id = webapp_id, is_subscribed = True, is_for_test = False, id__in = id_array).count()
+                is_more_than_two = target_members_count >= 2
+                is_below_w = True
+            else:
+                is_more_than_two = True
+                is_below_w = id_array_len <= 10000
             #members = Member.objects.filter(webapp_id = webapp_id, is_subscribed = True, is_for_test = False, id__in = id_array)
             # for member in members:
             #     openid_list.append(member.member_open_id)
