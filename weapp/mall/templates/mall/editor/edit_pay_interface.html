@@ -107,9 +107,14 @@
 			<div class="form-group">
 					<label class="control-label col-sm-3" for="app_id" style="padding-top:5px;">接口版本：</label>
 					<div class="col-sm-4">
-						<select class="span2 form-control" value="{{alipay_config.pay_version}}" id="ali_pay_version" name="pay_version">
-							<option class = "pay_version_option" value="0" {% ifequal  alipay_config.pay_version 0 %}selected{% endifequal %}>V2</option>
-							<option class = "pay_version_option" value="1" {% ifequal  alipay_config.pay_version 1 %}selected{% endifequal %}>V5</option>
+						<select class="span2 form-control" value="{{alipay_config.pay_version}}" id="ali_pay_version" name="ali_pay_version">
+							{% if alipay_config.pay_version == '0' %}
+								<option class = "pay_version_option" value="0" selected>V2</option>
+								<option class = "pay_version_option" value="1" >V5</option>
+							{% else %}
+								<option class = "pay_version_option" value="0" >V2</option>
+								<option class = "pay_version_option" value="1" selected>V5</option>
+							{% endif %}
 						</select>
 					</div>
 			</div>
