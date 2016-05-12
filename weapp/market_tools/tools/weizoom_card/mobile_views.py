@@ -68,12 +68,12 @@ def get_weizoom_card_exchange_list(request):
 	is_weshop = False
 	if is_wallet:
 		is_binded = member_info.is_binded
-	user = User.objects.filter(id=request.user_profile.user_id)
-	username = None
-	if user.count() > 0:
-		username = user[0].username
-	if username and username == 'jobs':
-		is_weshop = True
+		user = User.objects.filter(id=request.user_profile.user_id)
+		username = None
+		if user.count() > 0:
+			username = user[0].username
+		if username and username == 'jobs':
+			is_weshop = True
 
 	card_details_dic = {}
 	card_details_list = []
