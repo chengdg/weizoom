@@ -23,6 +23,7 @@ from tools.express.express_poll import ExpressPoll
 from tools.express.models import ExpressServiceConfig
 #from webapp.modules.mall.utils import get_product_member_discount
 from mall.promotion import models as promotion_models
+from utils import cache_util
 
 UnSalesInfo = '已下架'
 
@@ -1063,22 +1064,42 @@ def send_request_to_kuaidi(order, **kwargs):
     #     return
 
     print u'------------ send_request_to_kuaidi order.status:{}'.format(order.status)
-    express_configs = ExpressServiceConfig.objects.filter(value=1)
-    if express_configs.count() > 0:
-        express_config = express_configs[0]
-        if express_config.name == u"快递鸟":
-            from tools.express.kdniao_express_poll import KdniaoExpressPoll
-            is_success = KdniaoExpressPoll(order).get_express_poll()
-        elif express_config.name == u"快递100":
-            from tools.express.express_poll import ExpressPoll
-            is_success = ExpressPoll(order).get_express_poll()
+    # express_configs = ExpressServiceConfig.objects.filter(value=1)
+    # if express_configs.count() > 0:
+    #     express_config = express_configs[0]
+    #     if express_config.name == u"快递鸟":
+    #         from tools.express.kdniao_express_poll import KdniaoExpressPoll
+    #         is_success = KdniaoExpressPoll(order).get_express_poll()
+    #     elif express_config.name == u"快递100":
+    #         from tools.express.express_poll import ExpressPoll
+    #         is_success = ExpressPoll(order).get_express_poll()
+    key = 'express_config_name'
+    name = cache_util.get_from_cache(key,get_express_service_for_cache())
+    if name == u"快递鸟":
+        from tools.express.kdniao_express_poll import KdniaoExpressPoll
+        is_success = KdniaoExpressPoll(order).get_express_poll()
+    elif name == u"快递100":
+        from tools.express.express_poll import ExpressPoll
+        is_success = ExpressPoll(order).get_express_poll()
     else:
         from tools.express.express_poll import ExpressPoll
         is_success = ExpressPoll(order).get_express_poll()
     print u'----------- send_request_to_kuaidi: {}'.format(is_success)
 
 
-
+def get_express_service_for_cache():
+    def inner_func():
+        express_configs = ExpressServiceConfig.objects.filter(value=1)
+        if express_configs.count() > 0:
+            express_config_name = express_configs[0].name
+            return {
+                'value': express_config_name,
+                }
+        else:
+            return {
+                'value': u"快递100",
+                }
+    return inner_func
 #############################################################################################
 # post_update_product_model_property_handler: post_update_product_model_property的handler
 #############################################################################################
