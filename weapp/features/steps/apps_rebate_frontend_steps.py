@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 __author__ = 'aix'
 
+import time
 from behave import *
 from mall.models import Order
 from modules.member.models import Member
@@ -36,3 +37,32 @@ def step_impl(context, webapp_user_name, record_name):
     response = context.client.post(url, data)
     response_data = json.loads(response.content)
     context.qa_result = response_data['data']
+    time.sleep(1)
+
+@then(u'{user}获得"{record_name}"列表')
+def step_impl(context, user, record_name):
+    expected_data = json.loads(context.text)
+    app = get_app_by_name(rebate_models.Rebate, record_name)
+    #首先进入活动列表页面
+    url = "/apps/rebate/rebates/"
+    get_response(context, url)
+    #获取列表
+    response = get_response(context, {
+        "app": "apps/rebate",
+        "resource": "rebates",
+        "method": "get",
+        "type": "api",
+        "args": {
+            "count_per_page": 10,
+            "page": 1,
+            "enable_paginate": 1
+        }
+    })
+    items = json.loads(response.content)['data']['items']
+    actual_data = {}
+    for item in items:
+        if item['name'] == expected_data['code_name']:
+            actual_data = item
+            break
+
+    bdd_util.assert_dict(expected_data, actual_data)
