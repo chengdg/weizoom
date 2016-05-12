@@ -340,8 +340,8 @@ $(document).ready(function() {
         	W.showHint('error','请输入正确金额或下单时间');
           	return false;
         }
-		var s_money = parseInt($('#start_money').val());
-		var e_money = parseInt($('#end_money').val());	
+		var s_money = parseFloat($('#start_money').val());
+		var e_money = parseFloat($('#end_money').val());	
         if(s_money > e_money){
             W.showHint('error','请输入正确金额');
             return false;
@@ -353,6 +353,8 @@ $(document).ready(function() {
 		$('#end_date').attr('value','');
 		$('#start_money').attr('value','');
 		$('#end_money').attr('value','');
+		$("input[name='firstOrder']").prop('checked',false);
+		$("input[name='NotfirstOrder']").prop('checked',false);
 	});
 
 	$('.is_show').click(function(){
