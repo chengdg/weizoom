@@ -33,10 +33,12 @@
 
 {% block content-panel %}
 <div class="xui-wzcoinPay-page xui-page">
+    {% if is_weshop %}
 	<div class="xui-tab">
 		<div class="xui-tab-active">微众卡余额查询</div>
-		<div class="xui-tab-normal"><a>微众卡钱包<a></div>
+		<div class="xui-tab-normal"><a>微众卡钱包</a></div>
 	</div>
+    {% endif %}
 	<div class="xui-container p30">
     	<form class="xui-form" method="post" action="" id="editForm">
 			<div class="xui-pageTitle tc xui-ffht c3">微众卡</div>
