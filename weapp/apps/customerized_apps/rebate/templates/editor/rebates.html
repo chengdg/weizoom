@@ -102,6 +102,7 @@
 						<a href="/apps/rebate/rebate/?id=${item.id}" class="ml5">编辑</a>
 					{{/if}}
 					<a target="_blank" href="https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=${item.ticket}">查看二维码</a>
+					<button class="hidden xa-grant-card" data-record-id="${item.id}">发卡</button>
 				</td>
 			</tr>
 			{{/each}}
@@ -173,6 +174,26 @@ $(document).ready(function() {
 			}
 		});
 	});
+
+    $('body').delegate('.xa-grant-card', 'click', function(){
+        var $this = $(this);
+        W.getApi().call({
+			app: 'apps/rebate',
+			resource: 'rebate_status',
+			method: 'put',
+			args: {
+				record_id: $this.attr("data-record-id")
+			},
+			success: function(data) {
+                console.log(data);
+				W.showHint('success', '发放返利微众卡成功！');
+			},
+			error: function(response) {
+                console.log(response);
+				W.showHint('error', '发放返利微众卡失败，请稍后再试！');
+			}
+		});
+    });
 
 	$('.xa-search').click(function(event) {
 		var name = $.trim($('[name="name"]').val());
