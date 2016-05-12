@@ -12,7 +12,7 @@ Feature:参加返利活动
 
 Background:
 	Given jobs登录系统
-	When jobs已创建微众卡
+	And jobs已创建微众卡
 	"""
 	{
 		"cards":[{
@@ -159,7 +159,7 @@ Background:
 			"is_active": "启用"
 		}]
 	"""
-	And jobs已添加支付方式
+	Given jobs已添加支付方式
 	"""
 		[{
 			"type": "货到付款",
@@ -168,7 +168,7 @@ Background:
 			"type": "微信支付",
 			"is_active": "启用"
 		},{
-			"type": "支付宝支付",
+			"type": "支付宝",
 			"is_active": "启用"
 		}]
 	"""
@@ -177,12 +177,12 @@ Background:
 		[{
 			"code_name":"返利活动1",
 			"is_attention_in":"true",
-			"is_limit_first_buy	":"true",
+			"is_limit_first_buy":"true",
 			"is_limit_cash":"true",
 			"order_rebate":{
 				"rebate_order_price":"1.00",
 				"rebate_money":"5.00"
-				}
+			},
 			"weizoom_card_id_from":"0000001",
 			"weizoom_card_id_to":"0000003",
 			"card_counts":5,
@@ -193,12 +193,12 @@ Background:
 		},{
 			"code_name":"返利活动2",
 			"is_attention_in":"true",
-			"is_limit_first_buy	":"true",
+			"is_limit_first_buy":"true",
 			"is_limit_cash":"false",
 			"order_rebate":{
 				"rebate_order_price":"10.00",
 				"rebate_money":"5.00"
-				}
+			},
 			"weizoom_card_id_from":"0000004",
 			"weizoom_card_id_to":"0000006",
 			"card_counts":5,
@@ -210,12 +210,12 @@ Background:
 		},{
 			"code_name":"返利活动3",
 			"is_attention_in":"true",
-			"is_limit_first_buy	":"false",
+			"is_limit_first_buy":"false",
 			"is_limit_cash":"true",
 			"order_rebate":{
 				"rebate_order_price":"1.00",
 				"rebate_money":"5.00"
-				}
+			},
 			"weizoom_card_id_from":"0000007",
 			"weizoom_card_id_to":"0000008",
 			"card_counts":5,
@@ -226,12 +226,12 @@ Background:
 		},{
 			"code_name":"返利活动4",
 			"is_attention_in":"true",
-			"is_limit_first_buy	":"false",
+			"is_limit_first_buy":"false",
 			"is_limit_cash":"false",
 			"order_rebate":{
 				"rebate_order_price":"1.00",
 				"rebate_money":"5.00"
-				}
+			},
 			"weizoom_card_id_from":"0000009",
 			"weizoom_card_id_to":"0000012",
 			"card_counts":5,
@@ -242,28 +242,28 @@ Background:
 		},{
 			"code_name":"返利活动5",
 			"is_attention_in":"false",
-			"is_limit_first_buy	":"false",
+			"is_limit_first_buy":"false",
 			"is_limit_cash":"false",
 			"order_rebate":{
 				"rebate_order_price":"1.00",
 				"rebate_money":"5.00"
-				}
+			},
 			"weizoom_card_id_from":"0000013",
 			"weizoom_card_id_to":"0000015",
 			"card_counts":5,
 			"start_time":"2016-05-06 00:00:00",
-			"end_time":"22016-05-11 00:00:00",
+			"end_time":"2016-05-11 00:00:00",
 			"reply_type": "文字",
 			"scan_code_reply": "返利活动5"
 		},{
 			"code_name":"返利活动6",
 			"is_attention_in":"false",
-			"is_limit_first_buy	":"false",
+			"is_limit_first_buy":"false",
 			"is_limit_cash":"true",
 			"order_rebate":{
 				"rebate_order_price":"1.00",
 				"rebate_money":"5.00"
-				}
+			},
 			"weizoom_card_id_from":"0000016",
 			"weizoom_card_id_to":"0000018",
 			"card_counts":5,
@@ -274,12 +274,12 @@ Background:
 		},{
 			"code_name":"返利活动7",
 			"is_attention_in":"false",
-			"is_limit_first_buy	":"true",
+			"is_limit_first_buy":"true",
 			"is_limit_cash":"true",
 			"order_rebate":{
 				"rebate_order_price":"1.00",
 				"rebate_money":"5.00"
-				}
+			},
 			"weizoom_card_id_from":"0000019",
 			"weizoom_card_id_to":"0000021",
 			"card_counts":5,
@@ -290,12 +290,12 @@ Background:
 		},{
 			"code_name":"返利活动8",
 			"is_attention_in":"false",
-			"is_limit_first_buy	":"true",
+			"is_limit_first_buy":"true",
 			"is_limit_cash":"false",
 			"order_rebate":{
 				"rebate_order_price":"1.00",
 				"rebate_money":"5.00"
-				}
+			},
 			"weizoom_card_id_from":"0000022",
 			"weizoom_card_id_to":"0000024",
 			"card_counts":5,
@@ -307,8 +307,7 @@ Background:
 	"""
 
 
-	
-@mall @rebate
+@mall @rebate @aix111
 Scenario:1 管理员能够查看到所有扫过该码并关注过的微信用户信息，带参数返利活动[关注人数]-会员数量变化；
 	#设置已关注会员可参与
 	#购买次数为首单
@@ -317,31 +316,30 @@ Scenario:1 管理员能够查看到所有扫过该码并关注过的微信用户
 	Given jobs登录系统
 	#未关注微信账号扫码关注，关注数量增加
 	When 清空浏览器
-	When bill扫描返利活动"返利活动1"
+	When bill扫描返利活动"返利活动1"的二维码
 	When bill访问jobs的webapp
-	
 
 	Given jobs登录系统
-	Then jobs获得返利活动列表
+	Then jobs获得"返利活动1"列表
 	"""
-		[{
+		{
 			"code_name": "返利活动1",
 			"attention_number": 1
-		}]
+		}
 	"""
 	#已关注会员扫码，关注数量增加
 	When 清空浏览器
 	When tom关注jobs的公众号
-	When tom扫描返利活动"返利活动1"
+	When tom扫描返利活动"返利活动1"的二维码
 	When tom访问jobs的webapp
-	
+
 	Given jobs登录系统
 	Then jobs获得"返利活动1"列表
 	"""
-		[{
+		{
 			"code_name": "返利活动1",
 			"attention_number": 2
-		}]
+		}
 	"""
 	#扫码返利活动后取消关注的会员，关注数量减少1
 	When 清空浏览器
@@ -350,10 +348,10 @@ Scenario:1 管理员能够查看到所有扫过该码并关注过的微信用户
 	Given jobs登录系统
 	Then jobs获得"返利活动1"列表
 	"""
-		[{
+		{
 			"code_name": "返利活动1",
 			"attention_number": 1
-		}]
+		}
 	"""
 	
 
@@ -362,18 +360,18 @@ Scenario:2 带参数返利活动[扫码后成交金额]-已关注会员可参与
 
 	Given jobs登录系统
 	When 清空浏览器
-	When bill扫描返利活动"返利活动1"
+	When bill扫描返利活动"返利活动1"的二维码
 	When bill访问jobs的webapp
 
 
 	When 清空浏览器
 	When zhouxun关注jobs的公众号
-	When zhouxun扫描带参数二维码"返利活动1"
+	When zhouxun扫描返利活动"返利活动1"的二维码
 	When zhouxun访问jobs的webapp
 
 	When 清空浏览器
 	When tom关注jobs的公众号
-	When tom扫描带参数二维码"返利活动1"
+	When tom扫描返利活动"返利活动1"的二维码
 	When tom访问jobs的webapp
 
 
@@ -482,19 +480,19 @@ Scenario:3 带参数返利活动[扫码后成交金额]-已关注会员可参与
 	#已关注会员在扫码之前已经下单
 	When 清空浏览器
 	When bill关注jobs的公众号于"2016-05-04 10:00:00"
-	When bill扫描带参数二维码"返利活动2"
+	When bill扫描返利活动"返利活动2"的二维码
 	When bill访问jobs的webapp
 
 
 	When 清空浏览器
 	When tom关注jobs的公众号于"2016-05-09 10:00:00"
-	When tom扫描带参数二维码"返利活动2"
+	When tom扫描返利活动"返利活动2"的二维码
 	When tom访问jobs的webapp
 
 	#用户参加已结束的活动，不会获得返利
 	When 清空浏览器
 	When zhouxun关注jobs的公众号于"2016-05-12 10:00:00"
-	When zouxun扫描带参数二维码"返利活动2"
+	When zouxun扫描返利活动"返利活动2"的二维码
 	When zhouxun访问jobs的webapp
 
 	When 微信用户批量消费jobs的商品
@@ -607,12 +605,12 @@ Scenario:4 带参数返利活动[扫码后成交金额]-已关注会员可参与
 
 	When 清空浏览器
 	When tom关注jobs的公众号于"2016-05-09 10:00:00"
-	When tom扫描带参数二维码"返利活动3"
+	When tom扫描返利活动"返利活动3"的二维码
 
 
 	When 清空浏览器
 	When zhouxun关注jobs的公众号于"2016-05-09 10:00:00"
-	When zouxun扫描带参数二维码"返利活动3"
+	When zouxun扫描返利活动"返利活动3"的二维码
 
 	When 微信用户批量消费jobs的商品
 		| order_id | date             | consumer | product | payment | pay_type  |postage*   |price*   | paid_amount*    | weizoom_card   | action     | order_status  |
@@ -648,16 +646,16 @@ Scenario:5 带参数返利活动[扫码后成交金额]-已关注会员可参与
 
 	When 清空浏览器
 	When bill关注jobs的公众号于"2016-05-05 10:00:00"
-	When bill扫描带参数二维码"返利活动4"
+	When bill扫描返利活动"返利活动4"的二维码
 
 	When 清空浏览器
 	When tom关注jobs的公众号于"2016-05-09 10:00:00"
-	When tom扫描带参数二维码"返利活动4"
+	When tom扫描返利活动"返利活动4"的二维码
 
 
 	When 清空浏览器
 	When zhouxun关注jobs的公众号于"2016-05-09 10:00:00"
-	When zouxun扫描带参数二维码"返利活动4"
+	When zouxun扫描返利活动"返利活动4"的二维码
 
 	When 微信用户批量消费jobs的商品
 		| order_id | date             | consumer | product | payment | pay_type  |postage*   |price*   | paid_amount*    | weizoom_card   | action     | order_status  |
@@ -719,14 +717,14 @@ Scenario:6 带参数返利活动[扫码后成交金额]-已关注会员不可参
 
 	When 清空浏览器
 	When bill关注jobs的公众号于"2016-05-08 10:00:00"
-	When bill扫描带参数二维码"返利活动5"
+	When bill扫描返利活动"返利活动5"的二维码
 
 	When 清空浏览器
-	When tom扫描带参数二维码"返利活动5"
+	When tom扫描返利活动"返利活动5"的二维码
 
 
 	When 清空浏览器
-	When zhouxun扫描带参数二维码"返利活动5"
+	When zhouxun扫描返利活动"返利活动5"的二维码
 
 	When 微信用户批量消费jobs的商品
 		| order_id | date             | consumer | product | payment | pay_type  |postage*   |price*   | paid_amount*    | weizoom_card   | action     | order_status  |
@@ -781,14 +779,14 @@ Scenario:7 带参数返利活动[扫码后成交金额]-已关注会员不可参
 	#未关注过的用户下单
 	When 清空浏览器
 	When bill关注jobs的公众号于"2016-05-05 10:00:00"
-	When bill扫描带参数二维码"返利活动6"
+	When bill扫描返利活动"返利活动6"的二维码
 
 	When 清空浏览器
-	When tom扫描带参数二维码"返利活动6"
+	When tom扫描返利活动"返利活动6"的二维码
 
 
 	When 清空浏览器
-	When zouxun扫描带参数二维码"返利活动6"
+	When zouxun扫描返利活动"返利活动6"的二维码
 
 	When 微信用户批量消费jobs的商品
 		| order_id | date             | consumer | product | payment | pay_type  |postage*   |price*   | paid_amount*    | weizoom_card   | action     | order_status  |
@@ -828,14 +826,14 @@ Scenario:8 带参数返利活动[扫码后成交金额]-已关注会员不可参
 
 	When 清空浏览器
 	When bill关注jobs的公众号于"2016-05-09 10:00:00"
-	When bill扫描带参数二维码"返利活动7"
+	When bill扫描返利活动"返利活动7"的二维码
 
 	When 清空浏览器
-	When tom扫描带参数二维码"返利活动7"
+	When tom扫描返利活动"返利活动7"的二维码
 
 
 	When 清空浏览器
-	When zhouxun扫描带参数二维码"返利活动7"
+	When zhouxun扫描返利活动"返利活动7"的二维码
 
 	When 微信用户批量消费jobs的商品
 		| order_id | date             | consumer | product | payment | pay_type  |postage*   |price*   | paid_amount*    | weizoom_card   | action     | order_status  |
@@ -877,14 +875,14 @@ Scenario:9 带参数返利活动[扫码后成交金额]-已关注会员不可参
 
 	When 清空浏览器
 	When bill关注jobs的公众号于"2016-05-05 10:00:00"
-	When bill扫描带参数二维码"返利活动8"
+	When bill扫描返利活动"返利活动8"的二维码
 
 	When 清空浏览器
-	When tom扫描带参数二维码"返利活动8"
+	When tom扫描返利活动"返利活动8"的二维码
 
 
 	When 清空浏览器
-	When zhouxun扫描带参数二维码"返利活动8"
+	When zhouxun扫描返利活动"返利活动8"的二维码
 
 	When 微信用户批量消费jobs的商品
 		| order_id | date             | consumer | product | payment | pay_type  |postage*   |price*   | paid_amount*    | weizoom_card   | action     | order_status  |
@@ -1040,7 +1038,7 @@ Scenario:10 带参数返利活动-多个返利活动同时存在，并且同一�
 
 	When 清空浏览器
 	When bill关注jobs的公众号于"2016-05-05 10:00:00"
-	When bill扫描带参数二维码"返利活动1"
+	When bill扫描返利活动"返利活动1"的二维码
 	When bill访问jobs的weapp
 	When bill购买jobs的商品
 		| order_id | date             | consumer | product | payment | pay_type  |postage*   |price*   | paid_amount*    | weizoom_card   | action     | order_status  |
@@ -1050,7 +1048,7 @@ Scenario:10 带参数返利活动-多个返利活动同时存在，并且同一�
 
 
 	When 清空浏览器
-	When bill扫描带参数二维码"返利活动2"
+	When bill扫描返利活动"返利活动2"的二维码
 	When bill访问jobs的weapp
 	When bill购买jobs的商品
 		| order_id | date             | consumer | product | payment | pay_type  |postage*   |price*   | paid_amount*    | weizoom_card   | action     | order_status  |
@@ -1096,7 +1094,7 @@ Scenario:11 带参数返利活动-查看发放详情
 	Given jobs登录系统
 	When 清空浏览器
 	When bill关注jobs的公众号于"2016-05-05 10:00:00"
-	When bill扫描带参数二维码"返利活动1"
+	When bill扫描返利活动"返利活动1"的二维码
 	When bill访问jobs的weapp
 	When bill购买jobs的商品
 		| order_id | date             | consumer | product | payment | pay_type  |postage*   |price*   | paid_amount*    | weizoom_card   | action     | order_status  |

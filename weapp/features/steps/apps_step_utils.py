@@ -84,6 +84,30 @@ def app_name2id(model, name, title=None):
     obj = model.objects.get(name=name)
     return (obj.related_page_id,obj.id)
 
+def get_app_by_name(model, record_name):
+    """
+    通过活动名称获取活动记录
+    @param model: apps的model class
+    @param record_name: 活动名称
+    @return: app model实例
+    """
+    try:
+        app = model.objects.filter(name=record_name)
+    except:
+        return None
+    if app.count() <= 0:
+        return None
+    return app.first()
+
+def get_openid(webapp_user_name, username):
+    """
+    通过微信端用户名和pc端用户名获取openid
+    @param webapp_user_name: 微信端用户名
+    @param username: pc端用户名
+    @return:
+    """
+    return '%s_%s' % (webapp_user_name, username)
+
 def name2status(name):
     """
     高级投票： 文字 转 状态值
