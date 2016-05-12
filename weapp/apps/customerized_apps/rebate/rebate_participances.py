@@ -106,7 +106,7 @@ class RebateParticipances(resource.Resource):
 
 			if member.status != member_models.NOT_SUBSCRIBED:
 				items.append({
-					'member_id': member.id,
+					'id': member.id,
 					'username': name,
 					'participant_icon': member.user_icon,
 					'follow_time': member.created_at.strftime("%Y-%m-%d %H:%M:%S"),

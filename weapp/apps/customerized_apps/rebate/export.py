@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+
+import datetime
 import rebates
 import models as apps_models
 from account.models import UserProfile
@@ -46,15 +48,21 @@ def get_link_targets(request):
 		})
 	return pageinfo, link_targets
 
-def handle_rebate_core():
+def handle_rebate_core(all_records=None):
 	"""
 	对于符合返利条件的订单，发放对应的微众卡
 	@return:
 	"""
-	all_records = apps_models.Rebate.objects(is_deleted=False,status__ne=apps_models.STATUS_NOT_START)
+	if not all_records:
+		all_records = apps_models.Rebate.objects(is_deleted=False,status__ne=apps_models.STATUS_NOT_START)
 
 	#筛选出扫码后已完成的符合要求的订单
 	webapp_user_id_belong_to_member_id, id2record, member_id2records, member_id2order_ids, all_orders = get_target_orders(all_records)
+
+	#排除掉已返利发卡的订单
+	done_order_ids = [d.order_id for d in apps_models.RebateWeizoomCardDetails.objects.all()]
+	all_orders = all_orders.exclude(order_id__in=done_order_ids)
+
 	order_id2order = {o.order_id: o for o in all_orders}
 
 	#判定每个订单属于哪个活动
@@ -76,9 +84,8 @@ def handle_rebate_core():
 			for order_id in target_order_ids:
 				target_order = order_id2order[order_id]
 				order_created_time = target_order.created_at
-				#TODO 已关注会员是否可参与
-				if not permission:
-					continue	#老会员不可参与
+				if not permission and member_id2member[member_id].created_at < start_time:
+					continue	#限制老会员不可参与则活动开始之前就关注的会员不算
 				if is_limit_first_buy and order_before_qrcode.get('member_id', None):
 					continue	#限制首单且该用户在扫码之前下过订单
 				if is_limit_first_buy and order_created_time < start_time:
@@ -95,14 +102,15 @@ def handle_rebate_core():
 					"weizoom_card_id_from": record.weizoom_card_id_from,
 					"weizoom_card_id_to": record.weizoom_card_id_to,
 					"target_member_info": member_id2member[member_id],
-					"record_id": str(record.id)
+					"record_id": str(record.id),
+					"order_id": order_id
 				})
 	#根据每个活动的配置，发放对应的微众卡
 	grant_card(need_grant_info)
 
 def grant_card(need_grant_info):
 	"""
-	发卡
+	发卡并记录发卡日志
 	以下几种情况，会保留微众卡，知道满足条件后发放
 		1、微众卡库存不足
 		2、该微信用户未关注
@@ -111,6 +119,7 @@ def grant_card(need_grant_info):
 	"""
 	create_list = []	#需要发放的卡集合
 	not_ready_card_list = []	#暂未满足条件以后再发的卡集合
+	log_list = []
 	for info in need_grant_info:
 		member_id = info['target_member_info'].id
 		member_name = info['target_member_info'].username_hexstr
@@ -122,17 +131,30 @@ def grant_card(need_grant_info):
 				record_id = info['record_id']
 			))
 			continue
+		weizoom_card_id = sorted(card_ids_list)[0]
 		create_list.append(promotion_models.CardHasExchanged(
 			webapp_id = info['webapp_id'],
-			card_id = sorted(card_ids_list)[0],
+			card_id = weizoom_card_id,
 			owner_id = member_id,
 			owner_name = member_name
 		))
+		log_list.append(apps_models.RebateWeizoomCardDetails(
+			record_id = info['record_id'],
+			order_id = info['order_id'],
+			member_id = member_id,
+			weizoom_card_id = weizoom_card_id,
+			created_at = datetime.datetime.now()
+		))
 
+	#记录暂未满足条件的返利动作
 	if len(not_ready_card_list) > 0:
 		apps_models.RebateWaitingAction.objects.insert(not_ready_card_list)
+	#发卡
 	if len(create_list) > 0:
 		promotion_models.CardHasExchanged.objects.bulk_create(create_list)
+	#记录已发卡的详情
+	if len(log_list) > 0:
+		apps_models.RebateWeizoomCardDetails.objects.insert(log_list)
 
 def handle_wating_actions():
 	actions = apps_models.RebateWaitingAction.objects.all()

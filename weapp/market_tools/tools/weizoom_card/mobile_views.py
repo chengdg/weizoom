@@ -49,7 +49,8 @@ def get_weizoom_card_login(request):
 		c = RequestContext(request, {
 				'page_title': u'微众卡',
 				'is_hide_weixin_option_menu': True,
-				'normal': True
+				'normal': True,
+				'is_weshop': True if username and username == 'jobs' else False
 			})
 		return render_to_response('%s/weizoom_card/webapp/weizoom_card_login.html' % TEMPLATE_DIR, c)
 
@@ -59,12 +60,25 @@ def get_weizoom_card_exchange_list(request):
 	"""
 	member_id = request.member.id
 	webapp_id = request.user_profile.webapp_id
+	member_info = MemberInfo.objects.get(member_id = member_id)
+
+	# 微众卡钱包
+	is_wallet = request.GET.get('is_wallet', '0')
+	is_binded = False
+	is_weshop = False
+	source = promotion_models.CardHasExchanged.CARD_SOURCE[0]
+	if is_wallet:
+		is_binded = member_info.is_binded
+		is_weshop = True
+		#微众卡来源-返利活动
+		source = promotion_models.CardHasExchanged.CARD_SOURCE[1]
+
 	card_details_dic = {}
 	card_details_list = []
-	member_has_cards = promotion_models.CardHasExchanged.objects.filter(webapp_id = webapp_id,owner_id = member_id).order_by('-created_at')
+	member_has_cards = promotion_models.CardHasExchanged.objects.filter(webapp_id = webapp_id,owner_id = member_id,source = source).order_by('-created_at')
 	total_money = 0
 	count = member_has_cards.count()
-	phone_number = MemberInfo.objects.get(member_id = member_id).phone_number
+	phone_number =member_info.phone_number
 	
 	card_details_dic['phone_number'] = phone_number
 	count = member_has_cards.count()
@@ -87,7 +101,7 @@ def get_weizoom_card_exchange_list(request):
 			'remainder': '%.2f' % cur_card.money,
 			'money': '%.2f' % cur_card.weizoom_card_rule.money,
 			'time': card.created_at.strftime("%Y-%m-%d"),
-			'type': u'兑换平台',
+			'type': u'兑换平台' if not is_wallet else u'返利活动',
 			'is_expired': is_expired,
 			'status': status 
 		})
@@ -99,7 +113,9 @@ def get_weizoom_card_exchange_list(request):
 	c = RequestContext(request, {
 		'page_title': u'微众卡',
 		'cards': card_details_dic,
-		'has_expired_cards': has_expired_cards
+		'has_expired_cards': has_expired_cards,
+		'is_binded': is_binded,
+		'is_weshop': is_weshop
 	})
 	return render_to_response('card_exchange/templates/card_exchange/webapp/m_card_exchange_list.html', c)
 
