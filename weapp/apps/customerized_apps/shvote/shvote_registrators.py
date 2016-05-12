@@ -141,6 +141,7 @@ class ShvoteRegistrators(resource.Resource):
 		"""
 		update_data = {}
 		update_data['set__is_use'] = app_models.MEMBER_IS_USE['NO']
+		update_data['set__status'] = app_models.MEMBER_STATUS['ASKING']
 		if request.POST.get('ids'):
 			ids = json.loads(request.POST['ids'])
 			app_models.ShvoteParticipance.objects(id__in=ids).update(**update_data)
