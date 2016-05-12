@@ -1,0 +1,87 @@
+{% extends "content_base_v2.html" %}
+{% block css %}
+<style type="text/css">
+/*.xui-labelOut label{
+    font-weight: normal;
+}*/
+</style>
+{% endblock %}
+{% block content-panel %}
+<div class="xui-mall-configProductListPage">
+    <div class="relative">
+        <ul class="breadcrumb">
+            <li>您当前所在位置</li>
+            <li>
+                <a href="/mall2/outline/">首页</a>
+            </li>
+            <li class="active">通用配置</li>
+        </ul>
+    </div>
+
+    <form class="xa-form xui-rightPanelBg xui-form mb50" action="/mall2/config_product_list/" method="post">
+        <section>
+            <div class="xui-legend pl30">
+            通用配置
+            </div>
+        </section>
+        <fieldset class="mt30">
+            <div class="form-group">
+                <label class="control-label col-sm-2 ml10 pt0 w110">商品销量：</label>
+                <label class="inline">
+                    <input type="radio" name='product_sales' value="1" {% if mall_config.show_product_sales %} checked {% endif %}><b style="vertical-align: text-bottom;font-weight:normal;display:inline-block;">&nbsp;&nbsp;开启</b>
+                </label>
+                <label class="ml15 inline">
+                    <input type="radio" name='product_sales' value="0" {% if not mall_config.show_product_sales %} checked {% endif %}><b style="vertical-align: text-bottom;font-weight:normal;display:inline-block;">&nbsp;&nbsp;关闭</b>
+                </label>
+            </div>
+        </fieldset>
+        <fieldset >
+            <div class="form-group">
+                <label class="control-label col-sm-2 ml10 pt0 w110">商品排序：</label>
+                <label class="inline">
+                    <input type="radio" name='product_sort' value="1" {% if mall_config.show_product_sort %} checked {% endif %}><b style="vertical-align: text-bottom;font-weight:normal;display:inline-block;">&nbsp;&nbsp;开启</b>
+                </label>
+                <label class="ml15 inline">
+                    <input type="radio" name='product_sort' value="0" {% if not mall_config.show_product_sort %} checked {% endif %}><b style="vertical-align: text-bottom;font-weight:normal;display:inline-block;">&nbsp;&nbsp;关闭</b>
+
+                </label>
+            </div>
+        </fieldset>
+        <fieldset >
+            <div class="form-group">
+                <label class="control-label col-sm-2 ml10 pt0 w110">商品搜索框：</label>
+                <label class="inline">
+                    <input type="radio" name='product_search' value="1" {% if mall_config.show_product_search %} checked {% endif %}><b style="vertical-align: text-bottom;font-weight:normal;display:inline-block;">&nbsp;&nbsp;开启</b>
+                </label>
+                <label class="ml15 inline">
+                    <input type="radio" name='product_search' value="0" {% if not mall_config.show_product_search %} checked {% endif %}><b style="vertical-align: text-bottom;font-weight:normal;display:inline-block;">&nbsp;&nbsp;关闭</b>
+                </label>
+            </div>
+        </fieldset>
+        <fieldset>
+            <div class="form-group">
+                <label class="control-label col-sm-2 ml10 pt0 w110">购物车：</label>
+                <label class="inline">
+                    <input type="radio" name='shopping_cart' value="1" {% if mall_config.show_shopping_cart %} checked {% endif %}><b style="vertical-align: text-bottom;font-weight:normal;display:inline-block;">&nbsp;&nbsp;开启</b>
+                </label>
+                <label class="ml15 inline">
+                    <input type="radio" name='shopping_cart' value="0" {% if not mall_config.show_shopping_cart %} checked {% endif %}><b style="vertical-align: text-bottom;font-weight:normal;display:inline-block;">&nbsp;&nbsp;关闭</b>
+                </label>
+            </div>
+        </fieldset>
+        <fieldset>
+            <div class="form-group">
+                <label class="control-label col-sm-2 ml10 pt0 w110"></label>
+                <label class="inline xui-i-help">
+                开启后，买家可以在商品列表直接将商品“加入购物车”。
+                </label>
+            </div>
+        </fieldset>
+        <input type="submit" class="btn xui-submit xa-submit btn-primary ml30 mb30" value="保存" />
+    </form>
+</div>
+
+
+{% endblock %}
+{% block js %}
+{% endblock %}
