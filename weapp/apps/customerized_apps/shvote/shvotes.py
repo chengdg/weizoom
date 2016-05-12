@@ -54,6 +54,8 @@ class Shvotes(resource.Resource):
 				data_data.update(set__status=app_models.STATUS_RUNNING)
 			elif now_time >= data_end_time:
 				data_data.update(set__status=app_models.STATUS_STOPED)
+			elif data_start_time >= now_time:
+				data_data.update(set__status=app_models.STATUS_NOT_START)
 		if name:
 			params['name__icontains'] = name
 		if status != -1:

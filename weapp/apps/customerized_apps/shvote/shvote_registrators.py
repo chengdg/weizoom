@@ -41,7 +41,7 @@ class ShvoteRegistrators(resource.Resource):
 			'third_nav_name': "shvotes",
 			'has_data': has_data,
 			'activity_id': request.GET['id']
-		});
+		})
 
 		return render_to_response('shvote/templates/editor/shvote_registrators.html', c)
 
@@ -99,14 +99,12 @@ class ShvoteRegistrators(resource.Resource):
 				'id': str(data.id),
 				'icon':data.icon,
 				'name':data.name,
-				# 'participant_name': member_id2member[data.member_id].username_size_ten if member_id2member.get(data.member_id) else u'未知',
-				# 'participant_icon': member_id2member[data.member_id].user_icon if member_id2member.get(data.member_id) else '/static/img/user-1.jpg',
+				'group':data.group if data.group else '无分组',
 				'count':data.count,
 				'serial_number':data.serial_number,
 				'status':data.status,
 				'created_at': data.created_at.strftime("%Y/%m/%d %H:%M"),
 				'activity_id': data.belong_to
-				# 'created_at': data.created_at.strftime("%Y-%m-%d %H:%M:%S")
 			})
 		response_data = {
 			'items': items,
@@ -186,6 +184,7 @@ class ShvoteRegistrators_Export(resource.Resource):
 			#from sample to get fields4excel_file
 			fields_pure.append(u'id')
 			fields_pure.append(u'选手')
+			fields_pure.append(u'分组')
 			fields_pure.append(u'票数')
 			fields_pure.append(u'编号')
 			fields_pure.append(u'状态')
@@ -198,6 +197,7 @@ class ShvoteRegistrators_Export(resource.Resource):
 				num = num+1
 				g_id = data["member_id"]
 				player_name = data["name"]
+				group = data["group"] if data["group"]!='' else u'无分组'
 				count = data["count"]
 				serial_number = data["serial_number"]
 				status = data['status']
@@ -210,6 +210,7 @@ class ShvoteRegistrators_Export(resource.Resource):
 
 				export_record.append(g_id)
 				export_record.append(player_name)
+				export_record.append(group)
 				export_record.append(count)
 				export_record.append(serial_number)
 				export_record.append(status_text)
@@ -354,7 +355,7 @@ class ShvoteCreatePlayer(resource.Resource):
 			min_member_id = min(vote_participance_created_list)
 			member_id = min_member_id - 1
 
-		all_participances = app_models.ShvoteParticipance.objects(belong_to=activity_id)
+		all_participances = app_models.ShvoteParticipance.objects(belong_to=activity_id,is_use=app_models.MEMBER_IS_USE['YES'])
 		serial_number_valid = True
 		for participance in all_participances:
 			if serial_number == participance.serial_number:
@@ -395,7 +396,7 @@ class ShvoteCreatePlayer(resource.Resource):
 		activity_id = request.POST['activity_id']
 		player_id = request.POST['player_id']
 
-		all_participances = app_models.ShvoteParticipance.objects(belong_to=activity_id)
+		all_participances = app_models.ShvoteParticipance.objects(belong_to=activity_id,id__ne=player_id,is_use=app_models.MEMBER_IS_USE['YES'])
 		serial_number_valid = True
 		for participance in all_participances:
 			if serial_number == participance.serial_number:

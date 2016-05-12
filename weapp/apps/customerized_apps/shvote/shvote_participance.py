@@ -87,7 +87,7 @@ class ShvoteParticipance(resource.Resource):
 			member_id = request.member.id
 			record_id = request.POST['belong_to']
 			post = request.POST
-			all_participances = app_models.ShvoteParticipance.objects(belong_to=record_id)
+			all_participances = app_models.ShvoteParticipance.objects(belong_to=record_id,is_use=app_models.MEMBER_IS_USE['YES'])
 			serial_number_valid = True
 			for participance in all_participances:
 				if post["serial_number"] == participance.serial_number:

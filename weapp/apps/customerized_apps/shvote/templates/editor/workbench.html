@@ -11,6 +11,13 @@
         .propertyGroup_property_horizontalField .propertyGroup_property_label{
             min-width: 70px;
         }
+        .is_running .xui-add-badge-btn,.is_running .xui-remove-btn{
+          display: none;
+        }
+        .is_running .xui-patterns.xui-keywordpane-patterns.xa-data-patterns.fl.mt10
+        {
+          padding: 11px 15px 11px 15px;
+        }
     </style>
 {% endblock %}
 
@@ -54,15 +61,15 @@
             <button class="xa-save btn btn-primary">保存</button>
             <button class="xa-preview btn btn-default ml20">预览</button>
           {% else %}
-            {% if shvote.status_text == "未开始" %}
-            <button class="xa-save btn btn-primary">保存</button>
-            <button class="xa-preview btn btn-default ml20">预览</button>
+            {% if shvote.status_text != "已结束" %}
+              <button class="xa-save btn btn-primary">保存</button>
+              <button class="xa-preview btn btn-default ml20">预览</button>
             {% endif %}
-            {% if shvote.status_text == "进行中" %}
-            进行中，不可更改
-            {% endif %}
+              <!--{% if shvote.status_text == "进行中" %}-->
+              <!--进行中，不可更改-->
+              <!--{% endif %}-->
             {% if shvote.status_text == "已结束" %}
-            已结束，不可更改
+              已结束，不可更改
             {% endif %}
           {% endif %}
         </div>
@@ -172,7 +179,6 @@
       W.Synchronizer = synchronizer;
 
       loadPages(pageManagerView);
-
       $('.xa-save').click(function() {
           var that = this;
         // 保存model
@@ -291,6 +297,17 @@
     });
   </script>
     {% endif %}
-    {% block js %}{% endblock %}
+
+    {% block js %}
+    <script>
+      $(document).ready(function() {
+        {%if shvote %}
+          {%if shvote.status_text == "进行中" %}
+            $('#rightPanel').addClass('is_running');
+            {%endif %}
+        {%endif %}
+      });
+    </script>
+  {% endblock %}
 {% endblock %}
 

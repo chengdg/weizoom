@@ -218,7 +218,7 @@ Scenario:2 管理员搜索选手
 		"""
 
 
-@mall2 @apps @shvote @shvote_admin_create
+@mall2 @apps @shvote @shvote_admin_create @kuki
 Scenario:3 管理员删除选手，审核通过和未通过的都可以删除
 	Given jobs登录系统
 	When bill关注jobs的公众号
@@ -290,7 +290,7 @@ Scenario:3 管理员删除选手，审核通过和未通过的都可以删除
 		"""
 
 @mall2 @apps @shvote @shvote_admin_create
-Scenario:4 微信用户不能重复报名参与高级投票活动 
+Scenario:4 微信用户不能重复报名参与高级投票活动,编号也不能重复
 	Given jobs登录系统
 	When bill关注jobs的公众号
 	And bill访问jobs的webapp
