@@ -25,11 +25,15 @@ import termite.pagestore as pagestore_manager
 from core.wxapi import get_weixin_api
 from account.util import get_binding_weixin_mpuser, get_mpuser_accesstoken
 from core.wxapi.api_create_qrcode_ticket import QrcodeTicket
+from market_tools.tools.weizoom_card import models as card_models
+from mall.promotion.string_util import byte_to_hex, hex_to_byte
+from mall.promotion import models as promotion_models
+from excel_response import ExcelResponse
 
 FIRST_NAV = mall_export.MALL_PROMOTION_AND_APPS_FIRST_NAV
 COUNT_PER_PAGE = 20
 
-class RedPacket(resource.Resource):
+class Rebate(resource.Resource):
 	app = 'apps/rebate'
 	resource = 'rebate'
 	
@@ -156,3 +160,120 @@ class RedPacket(resource.Resource):
 		
 		response = create_response(200)
 		return response.get_response()
+
+class RebateCardDetails(resource.Resource):
+	app = 'apps/rebate'
+	resource = 'card_details'
+
+	@login_required
+	def get(request):
+		"""
+		卡兑换详情页
+		"""
+		c = RequestContext(request, {
+			'first_nav_name': FIRST_NAV,
+			'second_navs': mall_export.get_promotion_and_apps_second_navs(request),
+			'second_nav_name': mall_export.MALL_APPS_SECOND_NAV,
+			'third_nav_name': mall_export.MALL_APPS_REBATE_NAV
+		})
+		return render_to_response('rebate/templates/editor/card_rebate_details.html', c)
+
+	@login_required
+	def api_get(request):
+		"""
+		查看微众卡使用详情
+		"""
+		cur_page = int(request.GET.get('page',1))
+		count_per_page = int(request.GET.get('count_per_page',10))
+
+		cards = card_models.WeizoomCard.objects.all()
+		rebate_cards = RebateCardDetails.get_rebate_cards(request,cards)
+		pageinfo, rebate_cards = paginator.paginate(rebate_cards, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
+		card_rules = card_models.WeizoomCardRule.objects.all()
+		rebate_cards_list = []
+		for card in rebate_cards:
+			card_id = card.card_id
+			try:
+				cur_card = cards.get(id = card_id)
+				weizoom_card_id = cur_card.weizoom_card_id
+				weizoom_card_rule_id = cur_card.weizoom_card_rule_id
+				cur_card_rule = card_rules.get(id = weizoom_card_rule_id)
+				money = cur_card_rule.money
+				remainder = cur_card.money
+				user = hex_to_byte(card.owner_name)
+				used_money = money - remainder
+				rebate_cards_list.append({
+					'card_id': weizoom_card_id,
+					'money': '%.2f' % money,
+					'remainder': '%.2f' % remainder,
+					'used_money': '%.2f' % used_money,
+					'user': user
+				})
+			except:
+				pass
+
+		response = create_response(200)
+		response.data.items = rebate_cards_list
+		response.data.pageinfo = paginator.to_dict(pageinfo)
+		return response.get_response()
+
+	@staticmethod
+	def get_rebate_cards(request,cards):
+		card_number = request.GET.get('cardNumber',None)
+		card_user = request.GET.get('cardUser',None)
+
+		webapp_id = request.user_profile.webapp_id
+		#查询
+		rebate_cards = promotion_models.CardHasExchanged.objects.filter(webapp_id=webapp_id, source=promotion_models.CardHasExchanged.CARD_SOURCE[1]).order_by('-created_at')
+		if card_number:
+			cur_cards = cards.filter(weizoom_card_id__contains = card_number)
+			card_id_list = []
+			for card in cur_cards:
+				card_id_list.append(card.id)
+			rebate_cards = rebate_cards.filter(card_id__in = card_id_list)
+		if card_user:
+			rebate_cards = rebate_cards.filter(owner_name__contains=byte_to_hex(card_user))
+
+		return rebate_cards
+
+class CardRebateDetailExport(resource.Resource):
+	app = 'apps/rebate'
+	resource = 'export_card_rebate_details'
+
+	@login_required
+	def api_get(request):
+		"""
+		微众卡兑换详情导出
+		"""
+		cards = card_models.WeizoomCard.objects.all()
+		exchanged_cards = RebateCardDetails.get_rebate_cards(request,cards)
+		card_rules = card_models.WeizoomCardRule.objects.all()
+
+		members_info = [
+			[u'卡号', u'面值',u'卡内余额',u'使用金额',u'使用者']
+		]
+
+		for card in exchanged_cards:
+			card_id = card.card_id
+			try:
+				cur_card = cards.get(id = card_id)
+				weizoom_card_id = cur_card.weizoom_card_id
+				weizoom_card_rule_id = cur_card.weizoom_card_rule_id
+				cur_card_rule = card_rules.get(id = weizoom_card_rule_id)
+				money = cur_card_rule.money
+				remainder = cur_card.money
+				user = hex_to_byte(card.owner_name)
+				used_money = money - remainder
+				info_list = [
+					weizoom_card_id,
+					'%.2f' % money,
+					'%.2f' % remainder,
+					'%.2f' % used_money,
+					user
+				]
+				members_info.append(info_list)
+			except:
+				pass
+
+		filename = u'微众卡返利详情'
+		return ExcelResponse(members_info, output_name=filename.encode('utf8'), force_csv=False)
