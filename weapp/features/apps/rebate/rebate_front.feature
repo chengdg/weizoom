@@ -380,17 +380,18 @@ Scenario:2 带参数返利活动[扫码后成交金额]-已关注会员可参与
 		|   0001   | 2016-05-09       |   bill   | 商品1,1 |   支付  |  支付宝   |   0.00    | 1.00    |     1.00        |                | jobs,完成  |    已完成     |
 		|   0002   | 2016-05-09       |   tom    | 商品1,1 |   支付  |  支付宝   |   0.00    | 1.00    |     1.00        | 0000041,1234567| jobs,完成  |    已完成     |
 		|   0003   | 2016-05-09       |  zhouxun | 商品1,1 |   支付  |  微众卡   |   0.00    | 1.00    |     1.00        |                | jobs,完成  |    已完成     |    
-		
-
-	When jobs对"返利活动1"的"关注人数"操作
+	
+	Given jobs登录系统	
+	When jobs能获得"返利活动1"的"关注人数"列表
+	When jobs对返利活动列表进行"关注人数"操作
 	#仅显示扫码后成交订单-勾选
-	Then jobs能获取"仅显示通过二维码新关注会员"列表
+	Then jobs能获取返利活动"仅显示通过二维码新关注会员"列表
 	"""
 		[{
 			"fans_name": "bill",
 			"buy_number": 1,
 			"integral": 0,
-			"price":20.00
+			"price":1.00
 		}]
 	"""
 	#显示所有的的会员
@@ -400,25 +401,25 @@ Scenario:2 带参数返利活动[扫码后成交金额]-已关注会员可参与
 			"fans_name": "zhouxun",
 			"buy_number": 1,
 			"integral": 0,
-			"price":20.00
+			"price":1.00
 		},{
 			"fans_name": "tom",
 			"buy_number": 1,
 			"integral": 0,
-			"price":20.00
+			"price":1.00
 		},{
 			"fans_name": "bill",
 			"buy_number": 1,
 			"integral": 0,
-			"price":20.00
+			"price":1.00
 		}]
 	"""
 
 	Given jobs登录系统	
-	When jobs对"扫码后成交金额"操作
+	When jobs能获得"返利活动1"的"订单"列表
 	#勾选仅显示扫码后的成交的订单
-	Then jobs显示"仅显示扫码后成交订单"
-	Then jobs能获取列表
+	Then jobs对返利活动订单进行"仅显示扫码后成交订单"操作
+	Then jobs能获取返利活动"订单"列表
 	"""
 		[{
 			"order_id":"0003",
@@ -503,11 +504,12 @@ Scenario:3 带参数返利活动[扫码后成交金额]-已关注会员可参与
 		|   0004   | 2016-05-12       |  zhouxun | 商品1,1 |   支付  |  微众卡   |   0.00    | 1.00    |     1.00        |                | jobs,完成  |    已完成     |
 
 
+
 	Given jobs登录系统	
-	When jobs对"扫码后成交金额"操作
+	When jobs能获得"返利活动2"的"订单"列表
 	#勾选仅显示扫码后的成交的订单
-	Then jobs显示"仅显示扫码后成交订单"
-	Then jobs能获取列表
+	Then jobs对返利活动订单进行"仅显示扫码后成交订单"操作
+	Then jobs能获取返利活动"订单"列表
 	"""
 		[{	"order_id":"0002",
 			"status": "已完成",
@@ -529,7 +531,8 @@ Scenario:3 带参数返利活动[扫码后成交金额]-已关注会员可参与
 			"card_payment":1.00
 		}]
 	"""
-	When jobs取消勾选'仅显示扫码后成交订单'
+	Then jobs取消对返利活动订单进行"仅显示扫码后成交订单"操作
+	Then jobs能获取返利活动"订单"列表
 	"""
 		[{
 			"order_id":"0001",
@@ -929,11 +932,13 @@ Scenario:9 带参数返利活动[扫码后成交金额]-已关注会员不可参
 	When zhouxun申请退款订单"0006"
 	Then zhouxun退款完成订单"0006"
 
+
+
 	Given jobs登录系统	
-	When jobs对"扫码后成交金额"操作
+	When jobs能获得"返利活动8"的"订单"列表
+	Then jobs对返利活动订单进行"仅显示扫码后成交订单"操作
 	#勾选仅显示扫码后的成交的订单
-	Then jobs显示"仅显示扫码后成交订单"
-	Then jobs能获取列表
+	Then jobs能获取返利活动"订单"列表
 	"""
 		[{	"order_id":"0001",
 			"status": "已完成",
@@ -979,7 +984,9 @@ Scenario:9 带参数返利活动[扫码后成交金额]-已关注会员不可参
 				"count": 1
 		}]
 	"""
-	When jobs取消勾选'仅显示扫码后成交订单'
+	Then jobs取消对返利活动订单进行"仅显示扫码后成交订单"操作
+	#勾选仅显示扫码后的成交的订单
+	Then jobs能获取返利活动"订单"列表
 	"""
 		[{	"order_id":"0001",
 			"status": "已完成",
@@ -1054,11 +1061,13 @@ Scenario:10 带参数返利活动-多个返利活动同时存在，并且同一�
 		| order_id | date             | consumer | product | payment | pay_type  |postage*   |price*   | paid_amount*    | weizoom_card   | action     | order_status  |
 		|   0003   | 2016-05-09       |   bill   | 商品1,1 |   支付  |  支付宝   |   0.00   | 1.00   |     1.00       |                | jobs,完成  |    已完成     |	
 
-	Given jobs登录系统	
-	When jobs对"返利活动1"的"扫码后成交金额"操作
+
+
+	Given jobs登录系统
+	When jobs能获得"返利活动1"的"订单"列表	
 	#勾选仅显示扫码后的成交的订单
-	Then jobs显示"仅显示扫码后成交订单"
-	Then jobs能获取列表
+	Then jobs对返利活动订单进行"仅显示扫码后成交订单"操作
+	Then jobs能获取返利活动"订单"列表
 	"""
 		[{"order_id":"0002",
 			"status": "已完成",
@@ -1071,10 +1080,10 @@ Scenario:10 带参数返利活动-多个返利活动同时存在，并且同一�
 		}]
 	"""
 
-	When jobs对"返利活动2"的"扫码后成交金额"操作
+	When jobs能获得"返利活动2"的"订单"列表	
 	#勾选仅显示扫码后的成交的订单
-	Then jobs显示"仅显示扫码后成交订单"
-	Then jobs能获取列表
+	Then jobs对返利活动订单进行"仅显示扫码后成交订单"操作
+	Then jobs能获取返利活动"订单"列表
 	"""
 		[{
 			"order_id":"0003",
