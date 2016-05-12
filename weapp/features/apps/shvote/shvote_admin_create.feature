@@ -218,7 +218,7 @@ Scenario:2 管理员搜索选手
 		"""
 
 
-@mall2 @apps @shvote @shvote_admin_create @kuki
+@mall2 @apps @shvote @shvote_admin_create
 Scenario:3 管理员删除选手，审核通过和未通过的都可以删除
 	Given jobs登录系统
 	When bill关注jobs的公众号
