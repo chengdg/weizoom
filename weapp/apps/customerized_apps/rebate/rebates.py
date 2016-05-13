@@ -80,7 +80,7 @@ class Rebates(resource.Resource):
 		for p in all_partis:
 			member_id = p.member_id
 			all_member_ids.add(member_id)
-		member_id2subscribe = {m.id: m.is_sub for m in Member.objects.filter(id__in=all_member_ids)}
+		member_id2subscribe = {m.id: m.is_subscribed for m in Member.objects.filter(id__in=all_member_ids)}
 		record_own_member_ids = {}
 		for p in all_partis:
 			belong_to = p.belong_to
