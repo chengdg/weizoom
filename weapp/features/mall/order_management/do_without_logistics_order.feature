@@ -1,10 +1,9 @@
 # __author__ : "冯雪静"
 
 Feature: 不需要物流的订单
-"""
-
-	jobs通过管理系统能为用户发货不需要物流
-"""
+	"""
+		jobs通过管理系统能为用户发货不需要物流
+	"""
 
 Background:
 	Given jobs登录系统
@@ -26,7 +25,7 @@ Background:
 			"status":"待发货",
 			"order_time":"2014-10-08 12:00:00",
 			"methods_of_payment":"优惠抵扣",
-			"sources":"商城",
+			"sources":"本店",
 			"ship_name":"bill",
 			"ship_tel":"13811223344"
 		},{
@@ -35,7 +34,7 @@ Background:
 			"status":"待发货",
 			"order_time":"2014-10-07 12:00:00",
 			"methods_of_payment":"支付宝",
-			"sources":"商城",
+			"sources":"本店",
 			"ship_name":"bill",
 			"ship_tel":"13811223344"
 		},{
@@ -44,7 +43,7 @@ Background:
 			"status":"待发货",
 			"order_time":"2014-10-06 12:00:00",
 			"methods_of_payment":"优惠抵扣",
-			"sources":"商城",
+			"sources":"本店",
 			"ship_name":"tom",
 			"ship_tel":"13711223344"
 		}]
@@ -76,7 +75,7 @@ Scenario: 1 对待发货订单进行发货不需要物流
 			"shipper": "",
 			"order_time":"2014-10-08 12:00:00",
 			"methods_of_payment":"优惠抵扣",
-			"sources":"商城",
+			"sources":"本店",
 			"ship_name":"bill",
 			"ship_tel":"13811223344"
 		}
@@ -99,7 +98,7 @@ Scenario: 1 对待发货订单进行发货不需要物流
 			"shipper": "jobs",
 			"order_time":"2014-10-07 12:00:00",
 			"methods_of_payment":"支付宝",
-			"sources":"商城",
+			"sources":"本店",
 			"ship_name":"bill",
 			"ship_tel":"13811223344"
 		}
@@ -115,7 +114,7 @@ Scenario: 1 对待发货订单进行发货不需要物流
 			"shipper": "",
 			"order_time":"2014-10-08 12:00:00",
 			"methods_of_payment":"优惠抵扣",
-			"sources":"商城",
+			"sources":"本店",
 			"ship_name":"bill",
 			"ship_tel":"13811223344"
 		}
@@ -131,7 +130,7 @@ Scenario: 1 对待发货订单进行发货不需要物流
 			"shipper": "jobs",
 			"order_time":"2014-10-07 12:00:00",
 			"methods_of_payment":"支付宝",
-			"sources":"商城",
+			"sources":"本店",
 			"ship_name":"bill",
 			"ship_tel":"13811223344"
 		}

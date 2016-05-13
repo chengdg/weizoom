@@ -1,12 +1,13 @@
  # __author__ : "冯雪静"
 #editor:王丽 2015.10.16
+
 Feature: 批量发货
-"""
-	jobs能为用户批量发货
-	1.对多个订单同时进行发货
-	2.对多个订单同时进行发货失败
-	3.对修改过价格的订单进行批量发货
-"""
+	"""
+		jobs能为用户批量发货
+		1.对多个订单同时进行发货
+		2.对多个订单同时进行发货失败
+		3.对修改过价格的订单进行批量发货
+	"""
 
 Background:
 	Given jobs登录系统
@@ -28,7 +29,7 @@ Background:
 			"status":"待发货",
 			"order_time":"2014-10-08 12:00:00",
 			"methods_of_payment":"优惠抵扣",
-			"sources":"商城",
+			"sources":"本店",
 			"ship_name":"bill",
 			"ship_tel":"13811223344"
 		},{
@@ -37,7 +38,7 @@ Background:
 			"status":"待发货",
 			"order_time":"2014-10-07 12:00:00",
 			"methods_of_payment":"支付宝",
-			"sources":"商城",
+			"sources":"本店",
 			"ship_name":"bill",
 			"ship_tel":"13811223344"
 		},{
@@ -46,7 +47,7 @@ Background:
 			"status":"待发货",
 			"order_time":"2014-10-06 12:00:00",
 			"methods_of_payment":"优惠抵扣",
-			"sources":"商城",
+			"sources":"本店",
 			"ship_name":"tom",
 			"ship_tel":"13711223344"
 		},{
@@ -55,7 +56,7 @@ Background:
 			"status":"待发货",
 			"order_time":"2014-10-05 12:00:00",
 			"methods_of_payment":"微信支付",
-			"sources":"商城",
+			"sources":"本店",
 			"ship_name":"tom",
 			"ship_tel":"13711223344"
 		},{
@@ -64,7 +65,7 @@ Background:
 			"status":"待发货",
 			"order_time":"2014-10-04 12:00:00",
 			"methods_of_payment":"优惠抵扣",
-			"sources":"商城",
+			"sources":"本店",
 			"ship_name":"bill",
 			"ship_tel":"13811223344"
 		},{
@@ -73,7 +74,7 @@ Background:
 			"status":"待发货",
 			"order_time":"2014-10-03 12:00:00",
 			"methods_of_payment":"货到付款",
-			"sources":"商城",
+			"sources":"本店",
 			"ship_name":"tom",
 			"ship_tel":"13711223344"
 		},{
@@ -82,7 +83,7 @@ Background:
 			"status":"已取消",
 			"order_time":"2014-10-02 12:00:00",
 			"methods_of_payment":"优惠抵扣",
-			"sources":"商城",
+			"sources":"本店",
 			"ship_name":"bill",
 			"ship_tel":"13811223344"
 		},{
@@ -91,7 +92,7 @@ Background:
 			"status":"待支付",
 			"order_time":"2014-10-01 12:00:00",
 			"methods_of_payment":"",
-			"sources":"商城",
+			"sources":"本店",
 			"ship_name":"tom",
 			"ship_tel":"13711223344"
 		}]
@@ -132,7 +133,7 @@ Scenario: 1 对多个订单同时进行发货
 			"status":"待支付",
 			"order_time":"2014-10-01 12:00:00",
 			"methods_of_payment":"",
-			"sources":"商城",
+			"sources":"本店",
 			"ship_name":"tom",
 			"ship_tel":"13711223344"
 		},{
@@ -141,7 +142,7 @@ Scenario: 1 对多个订单同时进行发货
 			"status":"已取消",
 			"order_time":"2014-10-02 12:00:00",
 			"methods_of_payment":"优惠抵扣",
-			"sources":"商城",
+			"sources":"本店",
 			"ship_name":"bill",
 			"ship_tel":"13811223344"
 		},{
@@ -150,7 +151,7 @@ Scenario: 1 对多个订单同时进行发货
 			"status":"已发货",
 			"order_time":"2014-10-03 12:00:00",
 			"methods_of_payment":"货到付款",
-			"sources":"商城",
+			"sources":"本店",
 			"ship_name":"tom",
 			"ship_tel":"13711223344",
 			"logistics":"顺丰速运",
@@ -162,7 +163,7 @@ Scenario: 1 对多个订单同时进行发货
 			"status":"已发货",
 			"order_time":"2014-10-04 12:00:00",
 			"methods_of_payment":"优惠抵扣",
-			"sources":"商城",
+			"sources":"本店",
 			"ship_name":"bill",
 			"ship_tel":"13811223344",
 			"logistics":"申通快递",
@@ -174,7 +175,7 @@ Scenario: 1 对多个订单同时进行发货
 			"status":"已发货",
 			"order_time":"2014-10-05 12:00:00",
 			"methods_of_payment":"微信支付",
-			"sources":"商城",
+			"sources":"本店",
 			"ship_name":"tom",
 			"ship_tel":"13711223344",
 			"logistics":"圆通速递",
@@ -186,7 +187,7 @@ Scenario: 1 对多个订单同时进行发货
 			"status":"待发货",
 			"order_time":"2014-10-06 12:00:00",
 			"methods_of_payment":"优惠抵扣",
-			"sources":"商城",
+			"sources":"本店",
 			"ship_name":"tom",
 			"ship_tel":"13711223344"
 		},{
@@ -195,7 +196,7 @@ Scenario: 1 对多个订单同时进行发货
 			"status":"待发货",
 			"order_time":"2014-10-07 12:00:00",
 			"methods_of_payment":"支付宝",
-			"sources":"商城",
+			"sources":"本店",
 			"ship_name":"bill",
 			"ship_tel":"13811223344"
 		},{
@@ -204,7 +205,7 @@ Scenario: 1 对多个订单同时进行发货
 			"status":"待发货",
 			"order_time":"2014-10-08 12:00:00",
 			"methods_of_payment":"优惠抵扣",
-			"sources":"商城",
+			"sources":"本店",
 			"ship_name":"bill",
 			"ship_tel":"13811223344"
 		}]
@@ -247,7 +248,7 @@ Scenario: 1 对多个订单同时进行发货
 			"status":"待支付",
 			"order_time":"2014-10-01 12:00:00",
 			"methods_of_payment":"",
-			"sources":"商城",
+			"sources":"本店",
 			"ship_name":"tom",
 			"ship_tel":"13711223344"
 		},{
@@ -256,7 +257,7 @@ Scenario: 1 对多个订单同时进行发货
 			"status":"已取消",
 			"order_time":"2014-10-02 12:00:00",
 			"methods_of_payment":"优惠抵扣",
-			"sources":"商城",
+			"sources":"本店",
 			"ship_name":"bill",
 			"ship_tel":"13811223344"
 		},{
@@ -265,7 +266,7 @@ Scenario: 1 对多个订单同时进行发货
 			"status":"已发货",
 			"order_time":"2014-10-03 12:00:00",
 			"methods_of_payment":"货到付款",
-			"sources":"商城",
+			"sources":"本店",
 			"ship_name":"tom",
 			"ship_tel":"13711223344",
 			"logistics":"顺丰速运",
@@ -277,7 +278,7 @@ Scenario: 1 对多个订单同时进行发货
 			"status":"已发货",
 			"order_time":"2014-10-04 12:00:00",
 			"methods_of_payment":"优惠抵扣",
-			"sources":"商城",
+			"sources":"本店",
 			"ship_name":"bill",
 			"ship_tel":"13811223344",
 			"logistics":"申通快递",
@@ -289,7 +290,7 @@ Scenario: 1 对多个订单同时进行发货
 			"status":"已发货",
 			"order_time":"2014-10-05 12:00:00",
 			"methods_of_payment":"微信支付",
-			"sources":"商城",
+			"sources":"本店",
 			"ship_name":"tom",
 			"ship_tel":"13711223344",
 			"logistics":"圆通速递",
@@ -301,7 +302,7 @@ Scenario: 1 对多个订单同时进行发货
 			"status":"待发货",
 			"order_time":"2014-10-06 12:00:00",
 			"methods_of_payment":"优惠抵扣",
-			"sources":"商城",
+			"sources":"本店",
 			"ship_name":"tom",
 			"ship_tel":"13711223344"
 		},{
@@ -310,7 +311,7 @@ Scenario: 1 对多个订单同时进行发货
 			"status":"已发货",
 			"order_time":"2014-10-07 12:00:00",
 			"methods_of_payment":"支付宝",
-			"sources":"商城",
+			"sources":"本店",
 			"ship_name":"bill",
 			"ship_tel":"13811223344",
 			"logistics":"圆通速递",
@@ -322,7 +323,7 @@ Scenario: 1 对多个订单同时进行发货
 			"status":"待发货",
 			"order_time":"2014-10-08 12:00:00",
 			"methods_of_payment":"优惠抵扣",
-			"sources":"商城",
+			"sources":"本店",
 			"ship_name":"bill",
 			"ship_tel":"13811223344"
 		}]
@@ -375,7 +376,7 @@ Scenario: 2 对多个订单同时进行发货失败
 			"status":"待支付",
 			"order_time":"2014-10-01 12:00:00",
 			"methods_of_payment":"",
-			"sources":"商城",
+			"sources":"本店",
 			"ship_name":"tom",
 			"ship_tel":"13711223344"
 		},{
@@ -384,7 +385,7 @@ Scenario: 2 对多个订单同时进行发货失败
 			"status":"已取消",
 			"order_time":"2014-10-02 12:00:00",
 			"methods_of_payment":"优惠抵扣",
-			"sources":"商城",
+			"sources":"本店",
 			"ship_name":"bill",
 			"ship_tel":"13811223344"
 		},{
@@ -393,7 +394,7 @@ Scenario: 2 对多个订单同时进行发货失败
 			"status":"待发货",
 			"order_time":"2014-10-03 12:00:00",
 			"methods_of_payment":"货到付款",
-			"sources":"商城",
+			"sources":"本店",
 			"ship_name":"tom",
 			"ship_tel":"13711223344"
 		},{
@@ -402,7 +403,7 @@ Scenario: 2 对多个订单同时进行发货失败
 			"status":"待发货",
 			"order_time":"2014-10-04 12:00:00",
 			"methods_of_payment":"优惠抵扣",
-			"sources":"商城",
+			"sources":"本店",
 			"ship_name":"bill",
 			"ship_tel":"13811223344"
 		},{
@@ -411,7 +412,7 @@ Scenario: 2 对多个订单同时进行发货失败
 			"status":"待发货",
 			"order_time":"2014-10-05 12:00:00",
 			"methods_of_payment":"微信支付",
-			"sources":"商城",
+			"sources":"本店",
 			"ship_name":"tom",
 			"ship_tel":"13711223344"
 		},{
@@ -420,7 +421,7 @@ Scenario: 2 对多个订单同时进行发货失败
 			"status":"待发货",
 			"order_time":"2014-10-06 12:00:00",
 			"methods_of_payment":"优惠抵扣",
-			"sources":"商城",
+			"sources":"本店",
 			"ship_name":"tom",
 			"ship_tel":"13711223344"
 		},{
@@ -429,7 +430,7 @@ Scenario: 2 对多个订单同时进行发货失败
 			"status":"待发货",
 			"order_time":"2014-10-07 12:00:00",
 			"methods_of_payment":"支付宝",
-			"sources":"商城",
+			"sources":"本店",
 			"ship_name":"bill",
 			"ship_tel":"13811223344"
 		},{
@@ -438,7 +439,7 @@ Scenario: 2 对多个订单同时进行发货失败
 			"status":"待发货",
 			"order_time":"2014-10-08 12:00:00",
 			"methods_of_payment":"优惠抵扣",
-			"sources":"商城",
+			"sources":"本店",
 			"ship_name":"bill",
 			"ship_tel":"13811223344"
 		}]
@@ -460,7 +461,7 @@ Scenario: 3 对修改过价格的订单进行批量发货
 			"final_price": 100.00,
 			"order_time":"2014-10-08 12:00:00",
 			"methods_of_payment":"",
-			"sources":"商城",
+			"sources":"本店",
 			"ship_name":"bill",
 			"ship_tel":"13811223344",
 			"products": [{
@@ -475,7 +476,7 @@ Scenario: 3 对修改过价格的订单进行批量发货
 			"final_price": 100.00,
 			"order_time":"2014-10-08 12:00:00",
 			"methods_of_payment":"",
-			"sources":"商城",
+			"sources":"本店",
 			"ship_name":"bill",
 			"ship_tel":"13811223344",
 			"products": [{
@@ -490,7 +491,7 @@ Scenario: 3 对修改过价格的订单进行批量发货
 			"final_price": 100.00,
 			"order_time":"2014-10-07 12:00:00",
 			"methods_of_payment":"",
-			"sources":"商城",
+			"sources":"本店",
 			"ship_name":"bill",
 			"ship_tel":"13811223344",
 			"products": [{
@@ -516,7 +517,7 @@ Scenario: 3 对修改过价格的订单进行批量发货
 			"status":"待发货",
 			"final_price": 90.00,
 			"order_time":"2014-10-08 12:00:00",
-			"sources":"商城",
+			"sources":"本店",
 			"ship_name":"bill",
 			"ship_tel":"13811223344"
 		}
@@ -537,7 +538,7 @@ Scenario: 3 对修改过价格的订单进行批量发货
 			"status":"待发货",
 			"final_price": 119.00,
 			"order_time":"2014-10-08 12:00:00",
-			"sources":"商城",
+			"sources":"本店",
 			"ship_name":"bill",
 			"ship_tel":"13811223344"
 		}
@@ -558,7 +559,7 @@ Scenario: 3 对修改过价格的订单进行批量发货
 			"status":"待发货",
 			"final_price": 99.00,
 			"order_time":"2014-10-07 12:00:00",
-			"sources":"商城",
+			"sources":"本店",
 			"ship_name":"bill",
 			"ship_tel":"13811223344"
 		}
@@ -597,7 +598,7 @@ Scenario: 3 对修改过价格的订单进行批量发货
 			"status":"已发货",
 			"price": "99.00",
 			"order_time":"2014-10-07 12:00:00",
-			"sources":"商城",
+			"sources":"本店",
 			"ship_name":"bill",
 			"ship_tel":"13811223344",
 			"products": [{
@@ -611,7 +612,7 @@ Scenario: 3 对修改过价格的订单进行批量发货
 			"status":"待发货",
 			"price": "119.00",
 			"order_time":"2014-10-08 12:00:00",
-			"sources":"商城",
+			"sources":"本店",
 			"ship_name":"bill",
 			"ship_tel":"13811223344",
 			"products": [{
@@ -625,7 +626,7 @@ Scenario: 3 对修改过价格的订单进行批量发货
 			"status":"已发货",
 			"price": "90.00",
 			"order_time":"2014-10-08 12:00:00",
-			"sources":"商城",
+			"sources":"本店",
 			"ship_name":"bill",
 			"ship_tel":"13811223344",
 			"products": [{
@@ -639,7 +640,7 @@ Scenario: 3 对修改过价格的订单进行批量发货
 			"status":"待支付",
 			"order_time":"2014-10-01 12:00:00",
 			"methods_of_payment":"",
-			"sources":"商城",
+			"sources":"本店",
 			"ship_name":"tom",
 			"ship_tel":"13711223344"
 		},{
@@ -648,7 +649,7 @@ Scenario: 3 对修改过价格的订单进行批量发货
 			"status":"已取消",
 			"order_time":"2014-10-02 12:00:00",
 			"methods_of_payment":"优惠抵扣",
-			"sources":"商城",
+			"sources":"本店",
 			"ship_name":"bill",
 			"ship_tel":"13811223344"
 		},{
@@ -657,7 +658,7 @@ Scenario: 3 对修改过价格的订单进行批量发货
 			"status":"待发货",
 			"order_time":"2014-10-03 12:00:00",
 			"methods_of_payment":"货到付款",
-			"sources":"商城",
+			"sources":"本店",
 			"ship_name":"tom",
 			"ship_tel":"13711223344"
 		},{
@@ -666,7 +667,7 @@ Scenario: 3 对修改过价格的订单进行批量发货
 			"status":"待发货",
 			"order_time":"2014-10-04 12:00:00",
 			"methods_of_payment":"优惠抵扣",
-			"sources":"商城",
+			"sources":"本店",
 			"ship_name":"bill",
 			"ship_tel":"13811223344"
 		},{
@@ -675,7 +676,7 @@ Scenario: 3 对修改过价格的订单进行批量发货
 			"status":"待发货",
 			"order_time":"2014-10-05 12:00:00",
 			"methods_of_payment":"微信支付",
-			"sources":"商城",
+			"sources":"本店",
 			"ship_name":"tom",
 			"ship_tel":"13711223344"
 		},{
@@ -684,7 +685,7 @@ Scenario: 3 对修改过价格的订单进行批量发货
 			"status":"待发货",
 			"order_time":"2014-10-06 12:00:00",
 			"methods_of_payment":"优惠抵扣",
-			"sources":"商城",
+			"sources":"本店",
 			"ship_name":"tom",
 			"ship_tel":"13711223344"
 		},{
@@ -693,7 +694,7 @@ Scenario: 3 对修改过价格的订单进行批量发货
 			"status":"待发货",
 			"order_time":"2014-10-07 12:00:00",
 			"methods_of_payment":"支付宝",
-			"sources":"商城",
+			"sources":"本店",
 			"ship_name":"bill",
 			"ship_tel":"13811223344"
 		},{
@@ -702,7 +703,7 @@ Scenario: 3 对修改过价格的订单进行批量发货
 			"status":"待发货",
 			"order_time":"2014-10-08 12:00:00",
 			"methods_of_payment":"优惠抵扣",
-			"sources":"商城",
+			"sources":"本店",
 			"ship_name":"bill",
 			"ship_tel":"13811223344"
 		}]
