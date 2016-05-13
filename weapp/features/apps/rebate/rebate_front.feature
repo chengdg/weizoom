@@ -382,10 +382,8 @@ Scenario:2 带参数返利活动[扫码后成交金额]-已关注会员可参与
 		|   0003   | 今天       |  zhouxun | 商品1,1 |   支付  |  微众卡   |   0.00    | 1.00    |     1.00        |                | jobs,完成  |    已完成     |    
 	
 	Given jobs登录系统	
-	When jobs能获得"返利活动1"的"关注人数"列表
-	#仅显示扫码后成交订单-勾选
-	Then jobs对返利活动会员列表进行"仅显示通过二维码新关注会员"操作
-	Then jobs能获取返利活动会员列表
+	#默认显示扫码后的新会员
+	Then jobs能获取"返利活动1"会员列表
 	"""
 		[{
 			"fans_name": "bill",
@@ -394,8 +392,9 @@ Scenario:2 带参数返利活动[扫码后成交金额]-已关注会员可参与
 			"price":1.00
 		}]
 	"""
+	When jobs取消对"返利活动1"进行"仅显示扫码后关注会员"操作
 	#显示所有的的会员
-	Then jobs能获取会员列表
+	Then jobs能获取"返利活动1"会员列表
 	"""
 		[{
 			"fans_name": "zhouxun",
@@ -415,11 +414,46 @@ Scenario:2 带参数返利活动[扫码后成交金额]-已关注会员可参与
 		}]
 	"""
 
-	Given jobs登录系统	
-	When jobs能获得"返利活动1"的"订单"列表
-	#勾选仅显示扫码后的成交的订单
-	Then jobs对返利活动订单进行"仅显示扫码后成交订单"操作
-	Then jobs能获取返利活动订单列表
+
+	Given jobs登录系统
+	#默认显示扫码后成交的订单	
+	Then jobs能获取"返利活动1"订单列表
+	"""
+		[{
+			"order_id":"0001",
+			"status": "已完成",
+			"final_price": 1.00,
+			"products": [{
+				"name": "商品1",
+				"price": 1.00,
+				"count": 1
+			}]
+		},{
+			"order_id":"0002",
+			"status": "已完成",
+			"final_price": 1.00,
+			"products": [{
+				"name": "商品1",
+				"price": 1.00,
+				"count": 1
+			}]
+		},{
+			"order_id":"0003",
+			"status": "已完成",
+			"final_price": 1.00,
+			"products": [{
+				"name": "商品1",
+				"price": 1.00,
+				"count": 1
+			}]
+			"cash_payment":2.00,
+			"card_payment":1.00
+		}]
+	"""
+
+	#显示所有成交的订单	
+	When jobs取消对"返利活动1"进行"仅显示扫码后成交订单"操作
+	Then jobs能获取"返利活动1"订单列表
 	"""
 		[{
 			"order_id":"0003",
@@ -518,6 +552,7 @@ Scenario:3 带参数返利活动[扫码后成交金额]-已关注会员可参与
 				"name": "商品1",
 				"price": 1.00,
 				"count": 1
+				}]
 			},{
 			"order_id":"0003",
 			"status": "已完成",
