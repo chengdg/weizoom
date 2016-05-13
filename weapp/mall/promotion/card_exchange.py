@@ -199,7 +199,7 @@ class CardExchangeDetail(resource.Resource):
 
 		webapp_id = request.user_profile.webapp_id
 		#查询
-		exchanged_cards = promotion_models.CardHasExchanged.objects.filter(webapp_id = webapp_id, source=promotion_models.CardHasExchanged.CARD_SOURCE[0]).order_by('-created_at')
+		exchanged_cards = promotion_models.CardHasExchanged.objects.filter(webapp_id = webapp_id, source=0).order_by('-created_at')
 		if card_number:
 			cur_cards = cards.filter(weizoom_card_id__contains = card_number)
 			card_id_list = []

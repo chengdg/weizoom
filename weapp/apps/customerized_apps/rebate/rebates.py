@@ -7,13 +7,16 @@ from django.db.models import F
 from django.contrib.auth.decorators import login_required
 from core import resource
 from core import paginator
+from core.exceptionutil import unicode_full_stack
 from core.jsonresponse import create_response
 import models as app_models
 from mall import export
-from datetime import datetime
+from datetime import date,datetime
 import export as rebate_export
-
+import os
 from modules.member.models import Member
+from watchdog.utils import watchdog_error
+from weapp import settings
 
 FIRST_NAV = export.MALL_PROMOTION_AND_APPS_FIRST_NAV
 COUNT_PER_PAGE = 20
@@ -42,9 +45,10 @@ class Rebates(resource.Resource):
 	@staticmethod
 	def get_datas(request):
 		name = request.GET.get('name', '')
-		
+		is_export = request.GET.get('is_export', '')
 		now_time = datetime.today().strftime('%Y-%m-%d %H:%M')
 		params = {'owner_id':request.manager.id,'is_deleted': False}
+
 		datas_datas = app_models.Rebate.objects(**params)
 		for data_data in datas_datas:
 			data_start_time = data_data.start_time.strftime('%Y-%m-%d %H:%M')
@@ -60,19 +64,11 @@ class Rebates(resource.Resource):
 		#进行分页
 		count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
 		cur_page = int(request.GET.get('page', '1'))
-		pageinfo, datas = paginator.paginate(datas, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
-		
-		return pageinfo, datas
+		if is_export !='is_export':
+			pageinfo, datas = paginator.paginate(datas, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
 
-	@login_required
-	def api_get(request):
-		"""
-		响应API GET
-		"""
-		pageinfo, datas = Rebates.get_datas(request)
-		items = []
-		#TODO 三个数值
 		#统计每个活动的扫码关注人数
+		items = []
 		record_id2partis = {}
 		record_ids = [d.id for d in datas]
 		all_member_ids = set()
@@ -80,7 +76,7 @@ class Rebates(resource.Resource):
 		for p in all_partis:
 			member_id = p.member_id
 			all_member_ids.add(member_id)
-		member_id2subscribe = {m.id: m.is_sub for m in Member.objects.filter(id__in=all_member_ids)}
+		member_id2subscribe = {m.id: m.is_subscribed for m in Member.objects.filter(id__in=all_member_ids)}
 		record_own_member_ids = {}
 		for p in all_partis:
 			belong_to = p.belong_to
@@ -146,6 +142,18 @@ class Rebates(resource.Resource):
 				'ticket': data.ticket,
 				'created_at': data.created_at.strftime("%Y-%m-%d %H:%M:%S")
 			})
+
+		if is_export !='is_export':
+			return pageinfo, items
+		else:
+			return items
+
+	@login_required
+	def api_get(request):
+		"""
+		响应API GET
+		"""
+		pageinfo, items = Rebates.get_datas(request)
 		response_data = {
 			'items': items,
 			'pageinfo': paginator.to_dict(pageinfo),
@@ -154,4 +162,116 @@ class Rebates(resource.Resource):
 		}
 		response = create_response(200)
 		response.data = response_data
+		return response.get_response()
+
+class Rebates_Export(resource.Resource):
+	'''
+	批量导出
+	'''
+	app = 'apps/rebate'
+	resource = 'rebates_export'
+
+	@login_required
+	def api_get(request):
+		"""
+		分析导出
+		"""
+		download_excel_file_name = u'返利活动批量导出.xls'
+		excel_file_name = 'rebate_participances_'+datetime.now().strftime('%H_%M_%S')+'.xls'
+		dir_path_suffix = '%d_%s' % (request.user.id, date.today())
+		dir_path = os.path.join(settings.UPLOAD_DIR, dir_path_suffix)
+
+		if not os.path.exists(dir_path):
+			os.makedirs(dir_path)
+		export_file_path = os.path.join(dir_path,excel_file_name)
+		#Excel Process Part
+		try:
+			import xlwt
+			datas =Rebates.get_datas(request)
+			fields_pure = []
+			export_data = []
+
+			#from sample to get fields4excel_file
+			fields_pure.append(u'活动名称')
+			fields_pure.append(u'关注人数')
+			fields_pure.append(u'扫码后成交金额')
+			fields_pure.append(u'首次下单数')
+			fields_pure.append(u'有效期')
+			fields_pure.append(u'活动状态')
+
+			#processing data
+			num = 0
+			for data in datas:
+				export_record = []
+				name = data["name"]
+				attention_number = data["attention_number"]
+				order_money = data["order_money"]
+				first_buy_num = data["first_buy_num"]
+				time = data["start_time"]+u'至'+data["end_time"]
+				status = data["status"]
+
+				export_record.append(name)
+				export_record.append(attention_number)
+				export_record.append(order_money)
+				export_record.append(first_buy_num)
+				export_record.append(time)
+				export_record.append(status)
+				export_data.append(export_record)
+			#workbook/sheet
+			wb = xlwt.Workbook(encoding='utf-8')
+			ws = wb.add_sheet(u'返利活动')
+			header_style = xlwt.XFStyle()
+
+			##write fields
+			row = col = 0
+			for h in fields_pure:
+				ws.write(row,col,h)
+				col += 1
+
+			##write data
+			if export_data:
+				row = 1
+				lens = len(export_data[0])
+				for record in export_data:
+					row_l = []
+					for col in range(lens):
+						record_col= record[col]
+						if type(record_col)==list:
+							row_l.append(len(record_col))
+							for n in range(len(record_col)):
+								data = record_col[n]
+								try:
+									ws.write(row+n,col,data)
+								except:
+									#'编码问题，不予导出'
+									print record
+									pass
+						else:
+							try:
+								ws.write(row,col,record[col])
+							except:
+								#'编码问题，不予导出'
+								print record
+								pass
+					if row_l:
+						row = row + max(row_l)
+					else:
+						row += 1
+				try:
+					wb.save(export_file_path)
+				except Exception, e:
+					print 'EXPORT EXCEL FILE SAVE ERROR'
+					print e
+					print '/static/upload/%s/%s'%(dir_path_suffix,excel_file_name)
+			else:
+				ws.write(1,0,'')
+				wb.save(export_file_path)
+			response = create_response(200)
+			response.data = {'download_path':'/static/upload/%s/%s'%(dir_path_suffix,excel_file_name),'filename':download_excel_file_name,'code':200}
+		except Exception, e:
+			error_msg = u"导出文件失败, cause:\n{}".format(unicode_full_stack())
+			watchdog_error(error_msg)
+			response = create_response(500)
+			response.innerErrMsg = unicode_full_stack()
+
 		return response.get_response()
