@@ -42,9 +42,6 @@ class Rebates(resource.Resource):
 	@staticmethod
 	def get_datas(request):
 		name = request.GET.get('name', '')
-		status = int(request.GET.get('status', -1))
-		start_time = request.GET.get('start_time', '')
-		end_time = request.GET.get('end_time', '')
 		
 		now_time = datetime.today().strftime('%Y-%m-%d %H:%M')
 		params = {'owner_id':request.manager.id,'is_deleted': False}
@@ -58,12 +55,6 @@ class Rebates(resource.Resource):
 				data_data.update(set__status=app_models.STATUS_STOPED)
 		if name:
 			params['name__icontains'] = name
-		if status != -1:
-			params['status'] = status
-		if start_time:
-			params['start_time__gte'] = start_time
-		if end_time:
-			params['end_time__lte'] = end_time
 		datas = app_models.Rebate.objects(**params).order_by('-id')
 
 		#进行分页
