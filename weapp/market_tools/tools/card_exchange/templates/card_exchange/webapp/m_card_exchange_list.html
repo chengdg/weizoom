@@ -223,7 +223,7 @@
     	background: rgba(0,0,0,0.5);
     	position: fixed;
     	z-index: 999;
-    	display: none;
+    	/*display: none;*/
     }
     .xui-code{
     	background: #fff;
@@ -297,10 +297,13 @@
     	background: #dbdbdb;
     }
     .xui-close{
+    	background: url("/markettools_static/weizoom_card/img/close.png");
+    	background-size: cover;
     	position: absolute;
     	right: -20px;
     	top: -20px;
     	width: 45px;
+    	height: 45px;
     }
 </style>
 {% endblock %}
@@ -308,7 +311,7 @@
 {% block content-panel %}
 <div class="xui-mask xa-mask">
 	<div class="xui-code">
-		<img class="xui-close xa-cancelBtn" src="/markettools_static/weizoom_card/img/close.png">
+		<i class="xui-close xa-cancelBtn"></i>
 		<div class="xui-codeTime-container">
 			<p>输入短信中的验证码</p>
 			<p class="xui-code-time xa-code-time">
