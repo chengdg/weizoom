@@ -114,18 +114,19 @@ class Rebates(resource.Resource):
 			has_order = False
 			for oid in order_ids:
 				oid = str(oid)
-				if not record_id2cash.has_key(rid):
-					record_id2cash[rid] = id2order[oid].final_price
-				else:
-					record_id2cash[rid] += id2order[oid].final_price
-				if not record_id2first_buy_num.has_key(rid):
-					if not has_order and (id2order[oid].created_at > record.start_time or id2order[oid].created_at < record.end_time):
-						record_id2first_buy_num[rid] = 1
-						has_order = True
-				else:
-					if not has_order and (id2order[oid].created_at > record.start_time or id2order[oid].created_at < record.end_time):
-						record_id2first_buy_num[rid] += 1
-						has_order = True
+				if id2order.get(oid, None):
+					if not record_id2cash.has_key(rid):
+						record_id2cash[rid] = id2order[oid].final_price
+					else:
+						record_id2cash[rid] += id2order[oid].final_price
+					if not record_id2first_buy_num.has_key(rid):
+						if not has_order and (id2order[oid].created_at > record.start_time or id2order[oid].created_at < record.end_time):
+							record_id2first_buy_num[rid] = 1
+							has_order = True
+					else:
+						if not has_order and (id2order[oid].created_at > record.start_time or id2order[oid].created_at < record.end_time):
+							record_id2first_buy_num[rid] += 1
+							has_order = True
 
 		for data in datas:
 			str_id = str(data.id)
