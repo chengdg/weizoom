@@ -224,7 +224,7 @@ class RebateCardDetails(resource.Resource):
 
 		webapp_id = request.user_profile.webapp_id
 		#查询
-		rebate_cards = promotion_models.CardHasExchanged.objects.filter(webapp_id=webapp_id, source=promotion_models.CardHasExchanged.CARD_SOURCE[1]).order_by('-created_at')
+		rebate_cards = promotion_models.CardHasExchanged.objects.filter(webapp_id=webapp_id, source=1).order_by('-created_at')
 		if card_number:
 			cur_cards = cards.filter(weizoom_card_id__contains = card_number)
 			card_id_list = []
