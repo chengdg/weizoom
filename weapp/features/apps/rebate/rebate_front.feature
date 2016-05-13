@@ -307,7 +307,7 @@ Background:
 	"""
 
 
-@mall @rebate @aix111
+@mall @rebate
 Scenario:1 管理员能够查看到所有扫过该码并关注过的微信用户信息，带参数返利活动[关注人数]-会员数量变化；
 	#设置已关注会员可参与
 	#购买次数为首单
@@ -324,7 +324,7 @@ Scenario:1 管理员能够查看到所有扫过该码并关注过的微信用户
 	"""
 		{
 			"code_name": "返利活动1",
-			"attention_number": 1
+			"attention_number": 0
 		}
 	"""
 	#已关注会员扫码，关注数量增加
@@ -338,7 +338,7 @@ Scenario:1 管理员能够查看到所有扫过该码并关注过的微信用户
 	"""
 		{
 			"code_name": "返利活动1",
-			"attention_number": 2
+			"attention_number": 1
 		}
 	"""
 	#扫码返利活动后取消关注的会员，关注数量减少1
@@ -350,7 +350,7 @@ Scenario:1 管理员能够查看到所有扫过该码并关注过的微信用户
 	"""
 		{
 			"code_name": "返利活动1",
-			"attention_number": 1
+			"attention_number": 0
 		}
 	"""
 	
