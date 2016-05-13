@@ -513,7 +513,7 @@ Scenario:3 带参数返利活动[扫码后成交金额]-已关注会员可参与
 	"""
 		[{	"order_id":"0002",
 			"status": "已完成",
-			"final_price": 20.00,
+			"final_price": 1.00,
 			"products": [{
 				"name": "商品1",
 				"price": 1.00,
@@ -521,7 +521,7 @@ Scenario:3 带参数返利活动[扫码后成交金额]-已关注会员可参与
 			},{
 			"order_id":"0003",
 			"status": "已完成",
-			"final_price": 20.00,
+			"final_price": 1.00,
 			"products": [{
 				"name": "商品1",
 				"price": 1.00,
@@ -537,7 +537,7 @@ Scenario:3 带参数返利活动[扫码后成交金额]-已关注会员可参与
 		[{
 			"order_id":"0001",
 			"status": "已完成",
-			"final_price": 20.00,
+			"final_price": 1.00,
 			"products": [{
 				"name": "商品1",
 				"price": 1.00,
@@ -546,7 +546,7 @@ Scenario:3 带参数返利活动[扫码后成交金额]-已关注会员可参与
 		},{
 			"order_id":"0002",
 			"status": "已完成",
-			"final_price": 20.00,
+			"final_price": 1.00,
 			"products": [{
 				"name": "商品1",
 				"price": 1.00,
@@ -555,7 +555,7 @@ Scenario:3 带参数返利活动[扫码后成交金额]-已关注会员可参与
 		},{
 			"order_id":"0003",
 			"status": "已完成",
-			"final_price": 20.00,
+			"final_price": 1.00,
 			"products": [{
 				"name": "商品1",
 				"price": 1.00,
@@ -563,7 +563,7 @@ Scenario:3 带参数返利活动[扫码后成交金额]-已关注会员可参与
 		},{
 			"order_id":"0003",
 			"status": "已完成",
-			"final_price": 20.00,
+			"final_price": 1.00,
 			"products": [{
 				"name": "商品1",
 				"price": 1.00,
