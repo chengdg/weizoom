@@ -232,7 +232,6 @@ class ProductList(resource.Resource):
 
         data = dict()
         data['owner_id'] = request.manager.id
-        data['username'] = request.manager.username
         data['mall_type'] = mall_type
         response = create_response(200)
         response.data = {

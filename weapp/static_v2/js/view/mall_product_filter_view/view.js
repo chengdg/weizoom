@@ -7,7 +7,8 @@ W.view.mall.ProductFilterView = Backbone.View.extend({
 
     events: {
         'click .xa-search': 'onClickSearchButton',
-        'click .xa-reset': 'onClickResetButton'
+        'click .xa-reset': 'onClickResetButton',
+        'click .xa-export': 'onClickExportButton'
     },
 
     initialize: function(options) {
@@ -85,6 +86,24 @@ W.view.mall.ProductFilterView = Backbone.View.extend({
         $('#category').val('-1');
         $('#supplier').val('');
         $('#orderSupplierType').val('-1');
+    },
+
+    // 导出按钮事件
+    onClickExportButton: function(event){
+        console.log('导出');
+        var url = '/mall2/order_export/';
+        var args = this.getFilterData();
+        args = this.getArgsExportValueByDict(args);
+        if (args.length > 0) {
+            url = url + '?'+args;
+        }
+
+        console.log(url, args);
+        // W.getLoadingView().show();
+        // $('#spin-hint').html('玩命导出中...');
+        // var $frame=$('<iframe>').hide().attr('src',url);
+        // $('body').append($frame);
+        // setTimeout(function(){W.getLoadingView().hide()}, 5000);
     },
 
     // 获取条件数据
@@ -203,6 +222,7 @@ W.view.mall.ProductFilterView = Backbone.View.extend({
         if (orderSupplierType && orderSupplierType != '-1'){
             data['orderSupplierType'] = orderSupplierType;
         }
+        xlog(data);
         this.trigger('search', data);
     },
 
