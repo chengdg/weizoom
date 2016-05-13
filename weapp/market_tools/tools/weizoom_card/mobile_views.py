@@ -66,12 +66,12 @@ def get_weizoom_card_exchange_list(request):
 	is_wallet = request.GET.get('is_wallet', '0')
 	is_binded = False
 	is_weshop = False
-	source = promotion_models.CardHasExchanged.CARD_SOURCE[0]
+	source = promotion_models.CARD_SOURCE_INTEGRAL
 	if is_wallet:
 		is_binded = member_info.is_binded
 		is_weshop = True
 		#微众卡来源-返利活动
-		source = promotion_models.CardHasExchanged.CARD_SOURCE[1]
+		source = promotion_models.CARD_SOURCE_REBATE
 
 	card_details_dic = {}
 	card_details_list = []
