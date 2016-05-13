@@ -82,18 +82,16 @@ class Shvotes(resource.Resource):
 
 		ids = [str(data.id) for data in datas]
 
-		record_id2memberinfo = {}
-		for c in app_models.ShvoteControl.objects(belong_to__in=ids):
-			belong_to = c.belong_to
-			if record_id2memberinfo.has_key(belong_to):
-				record_id2memberinfo[belong_to].add(c.member_id)
-			else:
-				record_id2memberinfo[belong_to] = {c.member_id}
+		# record_id2memberinfo = {}
+		# for c in app_models.ShvoteControl.objects(belong_to__in=ids):
+		# 	belong_to = c.belong_to
+		# 	if record_id2memberinfo.has_key(belong_to):
+		# 		record_id2memberinfo[belong_to].add(c.member_id)
+		# 	else:
+		# 		record_id2memberinfo[belong_to] = {c.member_id}
 
 		#后端审核通过，计入参与人数
-
 		participances = app_models.ShvoteParticipance.objects(belong_to__in=ids, is_use=app_models.MEMBER_IS_USE['YES'])
-
 		id2asking_count = id2participant_count = {str(one_id):0 for one_id in ids}
 		for participance in participances:
 			belong_to = str(participance.belong_to)
@@ -110,7 +108,7 @@ class Shvotes(resource.Resource):
 				'name': data.name,
 				'start_time': data.start_time.strftime('%Y-%m-%d %H:%M'),
 				'end_time': data.end_time.strftime('%Y-%m-%d %H:%M'),
-				'total_voted_count': len(record_id2memberinfo.get(id_str, [])),
+				'total_voted_count': app_models.ShvoteControl.objects(belong_to=id_str).count(),
 				'total_participanted_count': id2asking_count[id_str],
 				'related_page_id': data.related_page_id,
 				'status': data.status_text,
