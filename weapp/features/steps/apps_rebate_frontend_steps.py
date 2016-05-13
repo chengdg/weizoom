@@ -3,6 +3,7 @@
 __author__ = 'aix'
 
 import time
+import random
 from behave import *
 from mall.models import Order
 from modules.member.models import Member
@@ -17,19 +18,27 @@ from apps.customerized_apps.rebate import models as rebate_models
 from apps_step_utils import *
 from weixin2.models import Material, News
 
+def __create_random_ticket():
+    ticket = time.strftime("%Y%m%d%H%M%S", time.localtime())
+    return '%s%03d' % (ticket, random.randint(1, 999))
+
+
 @when(u'{webapp_user_name}扫描返利活动"{record_name}"的二维码')
 def step_impl(context, webapp_user_name, record_name):
     rebate = get_app_by_name(rebate_models.Rebate, record_name)
+    rebate.ticket = __create_random_ticket()
+    rebate.save()
     assert rebate is not None
     owner_id = rebate.owner_id
     owner = User.objects.get(id=owner_id)
     ticket = rebate.ticket
+    debug_print(ticket)
     # 模拟收到的消息
     openid = get_openid(webapp_user_name, owner.username)
     url = '/simulator/api/mp_user/qr_subscribe/?version=2'
     webapp_id = bdd_util.get_webapp_id_via_owner_id(owner_id)
     data = {
-        "timestamp": "1402211023857",
+        "timestamp": "1463055119171",
         "webapp_id": webapp_id,
         "ticket": ticket,
         "from_user": openid
@@ -37,7 +46,7 @@ def step_impl(context, webapp_user_name, record_name):
     response = context.client.post(url, data)
     response_data = json.loads(response.content)
     context.qa_result = response_data['data']
-    time.sleep(1)
+    debug_print(context.qa_result)
 
 @then(u'{user}获得"{record_name}"列表')
 def step_impl(context, user, record_name):
