@@ -50,12 +50,22 @@ html,body{
 				<ul class="disT w mt10">
 					<li class="disTc" style="width:41.836%;">
 						<!-- 2优惠券超过限额 显示 3优惠券过期 显示-->
-						<a href="{{h5_host}}/mall/products/?woid={{request.webapp_owner_id}}&category_id=0&fmt={{ cur_request_member.token }}" class="xui-btn xui-goShopping-btn">随便逛逛</a>
+						<!-- 微众商城跳转到店铺首页 request.user_profile.user.username == 'weshop' 的判断 -->
+						<a href="{% if request.user_profile.user.username == 'weshop' %}
+							{{h5_host}}/mall/home_page?woid={{request.webapp_owner_id}}
+						{% else %}
+							{{h5_host}}/mall/products/?woid={{request.webapp_owner_id}}&category_id=0&fmt={{ cur_request_member.token }}
+						{% endif %}" class="xui-btn xui-goShopping-btn">随便逛逛</a>
 						<!-- 1.优惠券领取成功 显示 -->
 						{% if rule.limit_product %}
 						<a href="{{h5_host}}/mall/coupon_products/?woid={{request.webapp_owner_id}}&coupon_rule_id={{rule.id}}&coupon_name={{rule.name}}&fmt={{ cur_request_member.token }}" class="xui-btn xui-toUse-btn hidden">立即使用</a>
 						{% else %}
-						<a href="{{h5_host}}/mall/products/?woid={{request.webapp_owner_id}}&category_id=0&fmt={{ cur_request_member.token }}" class="xui-btn xui-toUse-btn hidden">立即使用</a>
+						<!-- 微众商城跳转到店铺首页 request.user_profile.user.username == 'weshop' 的判断 -->
+						<a href="{% if request.user_profile.user.username == 'weshop' %}
+							{{h5_host}}/mall/home_page?woid={{request.webapp_owner_id}}
+						{% else %}
+							{{h5_host}}/mall/products/?woid={{request.webapp_owner_id}}&category_id=0&fmt={{ cur_request_member.token }}
+						{% endif %}" class="xui-btn xui-toUse-btn hidden">立即使用</a>
 						{% endif %}
 					</li>
 					<li class="disTc" style="width:14px;"></li>

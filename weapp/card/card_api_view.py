@@ -408,7 +408,7 @@ def get_weizoom_cards(request):
 	"""
 	卡列表
 	"""
-	count_per_page = int(30)
+	count_per_page = int(100)
 	cur_page = int(request.GET.get('page', '1'))
 	weizoom_card_rule_id = int(request.GET.get('weizoom_card_rule_id', '-1'))
 	weizoom_cards = WeizoomCard.objects.filter(weizoom_card_rule_id=weizoom_card_rule_id)
