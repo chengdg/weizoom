@@ -71,6 +71,7 @@ def step_impl(context, user, record_name):
     actual_data = {}
     for item in items:
         if item['name'] == expected_data['code_name']:
+            item['code_name'] = item['name']
             actual_data = item
             break
     bdd_util.assert_dict(expected_data, actual_data)

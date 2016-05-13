@@ -151,3 +151,64 @@ def step_impl(context, user):
 #         context.err_msg = err_msg
 #     else:
 #         bdd_util.assert_api_call_success(response)
+
+@then(u'{user}能获取"{rebate_name}"会员列表')
+def step_impl(context, user, rebate_name):
+    rebate_id = __get_rebate_id(rebate_name)
+
+    url = "/apps/rebate/rebate_participances/?record_id="+rebate_id
+    response = context.client.get(url)
+    response_data = json.loads(response.content)
+
+    actual = []
+    for item in response_data['data']['items']:
+        actual.append(dict(
+            fans_name=item['username'],
+            buy_number=item['pay_times'],
+            integral=item['integral'],
+            price=item['pay_money'],
+            follow_time=item['follow_time']
+        ))
+    expected = json.loads(context.text)
+    bdd_util.assert_list(expected, actual)
+
+@when (u'{user}取消对"{rebate_name}"进行"{operation_name}"操作')
+def step_impl(context, user, rebate_name, operation_name):
+    context.is_show = 0
+
+@then(u'{user}能获取"{rebate_name}"订单列表')
+def step_impl(context, user, rebate_name):
+    rebate_id = __get_rebate_id(rebate_name)
+
+    url = "/apps/rebate/rebate_order_list/?record_id=" + rebate_id
+    response = context.client.get(url)
+    response_data = json.loads(response.content)
+
+    actual = []
+    for item in response_data['data']['items']:
+        order_info = {}
+        order_info['order_id'] = item['id']
+        # order_info['order_time'] = '今天' if item['created_at'].split(" ")[0] == datetime.now().strftime('%Y-%m-%d') else \
+        # item['created_at'].split(" ")[0]
+        # order_info['payment_time'] = '今天' if item['payment_time'].split(" ")[0] == datetime.now().strftime(
+        #     '%Y-%m-%d') else item['payment_time'].split(" ")[0]
+        # order_info['consumer'] = item['buyer_name']
+        for product in item['products']:
+            product_info = []
+            product_info.append(product['name'])
+            if product['custom_model_properties']:
+                product_info.append(
+                    " ".join([property['property_value'] for property in product['custom_model_properties']]))
+            product_info.append(str(product['count']))
+            product_info.append(product['price'])
+        order_info['products'] = ",".join(product_info)
+        order_info['final_price'] = item['pay_money']
+        # order_info['pay_type'] = item['pay_interface_name']
+        # order_info['postage'] = item['postage']
+        # order_info['discount_amount'] = item['save_money']
+        # order_info['paid_amount'] = item['pay_money']
+        order_info['status'] = item['status']
+        actual.append(order_info)
+
+        expected = json.loads(context.text)
+        bdd_util.assert_list(expected, actual)
