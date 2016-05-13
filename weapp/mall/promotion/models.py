@@ -837,14 +837,16 @@ class CardExchangeRule(models.Model):
 #########################################################################
 # CardHasExchanged: 卡兑换记录
 #########################################################################
+CARD_SOURCE_STRS = [u'积分兑换', u'返利活动']
+CARD_SOURCE_INTEGRAL = 0
+CARD_SOURCE_REBATE = 1
 class CardHasExchanged(models.Model):
-	CARD_SOURCE = [u'积分兑换', u'返利活动']
 	webapp_id = models.CharField(max_length = 20)  # webapp,商家id
 	card_id = models.IntegerField()    #微众卡id
 	owner_id = models.IntegerField()    #卡拥有者
 	owner_name = models.CharField(max_length = 256) #拥有者姓名
 	created_at = models.DateTimeField(auto_now_add=True)  #兑换时间
-	source = models.CharField(max_length = 20, default=CARD_SOURCE[0]) #微众卡来源（积分兑换 & 返利活动）
+	source = models.IntegerField(default=CARD_SOURCE_STRS[CARD_SOURCE_INTEGRAL]) #微众卡来源（积分兑换 & 返利活动）
 
 	class Meta(object):
 		db_table = 'mallpromotion_card_has_exchanged'
