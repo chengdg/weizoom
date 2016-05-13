@@ -26,8 +26,10 @@ def __create_random_ticket():
 @when(u'{webapp_user_name}扫描返利活动"{record_name}"的二维码')
 def step_impl(context, webapp_user_name, record_name):
     rebate = get_app_by_name(rebate_models.Rebate, record_name)
-    rebate.ticket = __create_random_ticket()
-    rebate.save()
+    rebate = update_apps_status(rebate)
+    if rebate.ticket == "":
+        rebate.ticket = __create_random_ticket()
+        rebate.save()
     assert rebate is not None
     owner_id = rebate.owner_id
     owner = User.objects.get(id=owner_id)

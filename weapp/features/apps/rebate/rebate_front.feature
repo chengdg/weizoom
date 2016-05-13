@@ -313,25 +313,10 @@ Scenario:1 管理员能够查看到所有扫过该码并关注过的微信用户
 	#购买次数为首单
 	#订单金额为现金
 	#满10元返5元
-	Given jobs登录系统
 	#未关注微信账号扫码关注，关注数量增加
-	When 清空浏览器
-	When bill扫描返利活动"返利活动1"的二维码
+	When bill关注jobs的公众号
 	When bill访问jobs的webapp
-
-	Given jobs登录系统
-	Then jobs获得"返利活动1"列表
-	"""
-		{
-			"code_name": "返利活动1",
-			"attention_number": 0
-		}
-	"""
-	#已关注会员扫码，关注数量增加
-	When 清空浏览器
-	When tom关注jobs的公众号
-	When tom扫描返利活动"返利活动1"的二维码
-	When tom访问jobs的webapp
+	When bill扫描返利活动"返利活动1"的二维码
 
 	Given jobs登录系统
 	Then jobs获得"返利活动1"列表
@@ -339,6 +324,20 @@ Scenario:1 管理员能够查看到所有扫过该码并关注过的微信用户
 		{
 			"code_name": "返利活动1",
 			"attention_number": 1
+		}
+	"""
+	#已关注会员扫码，关注数量增加
+	When 清空浏览器
+	When tom关注jobs的公众号
+	When tom访问jobs的webapp
+	When tom扫描返利活动"返利活动1"的二维码
+
+	Given jobs登录系统
+	Then jobs获得"返利活动1"列表
+	"""
+		{
+			"code_name": "返利活动1",
+			"attention_number": 2
 		}
 	"""
 	#扫码返利活动后取消关注的会员，关注数量减少1
@@ -350,12 +349,12 @@ Scenario:1 管理员能够查看到所有扫过该码并关注过的微信用户
 	"""
 		{
 			"code_name": "返利活动1",
-			"attention_number": 0
+			"attention_number": 1
 		}
 	"""
 	
 
-@mall @rebate
+@mall @rebate @aix1111
 Scenario:2 带参数返利活动[扫码后成交金额]-已关注会员可参与；首单；现金
 
 	Given jobs登录系统
