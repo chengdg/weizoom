@@ -230,6 +230,8 @@ def __clear_all_app_data():
 	# 快递数据
 	express_model.ExpressHasOrderPushStatus.objects.all().delete()
 
+	# by eugene 05-13-2016
+	mall_models.MallOrderFromSharedRecord.objects.all().delete()
 	#权限
 	#duhao 20151019注释
 	# auth_models.UserHasPermission.objects.all().delete()
