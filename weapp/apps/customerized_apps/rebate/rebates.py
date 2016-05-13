@@ -102,10 +102,11 @@ class Rebates(resource.Resource):
 			if not member_ids:
 				continue
 			for mid in member_ids:
-				if not record_id2orders.has_key(rid):
-					record_id2orders[rid] = member_id2order_ids[mid]
-				else:
-					record_id2orders[rid] += member_id2order_ids[mid]
+				if member_id2order_ids.has_key(mid):
+					if not record_id2orders.has_key(rid):
+						record_id2orders[rid] = member_id2order_ids[mid]
+					else:
+						record_id2orders[rid] += member_id2order_ids[mid]
 		record_id2cash = {}
 		record_id2first_buy_num = {}
 		for rid, order_ids in record_id2orders.items():
