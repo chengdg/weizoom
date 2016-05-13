@@ -469,6 +469,8 @@ Scenario:2 带参数返利活动[扫码后成交金额]-已关注会员可参与
 	Then jobs发放返利微众卡
 
 	When 清空浏览器
+	When zhouxun关注jobs的公众号
+	When zhoucun访问jobs的webapp
 	Then zhouxun能获得返利微众卡
 	"""
 		[{
@@ -484,6 +486,8 @@ Scenario:2 带参数返利活动[扫码后成交金额]-已关注会员可参与
 	Then jobs发放返利微众卡
 
 	When 清空浏览器
+	When bill关注jobs的公众号
+	When bill访问jobs的webapp
 	Then bill能获得返利微众卡
 	"""
 		[{
@@ -624,6 +628,8 @@ Scenario:3 带参数返利活动[扫码后成交金额]-已关注会员可参与
 	Then jobs发放返利微众卡
 
 	When 清空浏览器
+	When tom关注jobs的公众号
+	When tom访问jobs的webapp
 	Then tom能获得返利微众卡
 	"""
 		[{
@@ -667,6 +673,8 @@ Scenario:4 带参数返利活动[扫码后成交金额]-已关注会员可参与
 	Then jobs发放返利微众卡
 
 	When 清空浏览器
+	When tom关注jobs的公众号
+	When tom访问jobs的webapp
 	Then tom能获得返利微众卡
 	"""
 		[{
@@ -718,6 +726,8 @@ Scenario:5 带参数返利活动[扫码后成交金额]-已关注会员可参与
 	Then jobs发放返利微众卡
 
 	When 清空浏览器
+	When bill关注jobs的公众号
+	When bill访问jobs的webapp
 	Then bill能获得返利微众卡
 	"""
 		[{
@@ -727,6 +737,8 @@ Scenario:5 带参数返利活动[扫码后成交金额]-已关注会员可参与
 	"""
 
 	When 清空浏览器
+	When tom关注jobs的公众号
+	When tom访问jobs的webapp
 	Then tom能获得返利微众卡
 	"""
 		[{
@@ -738,6 +750,8 @@ Scenario:5 带参数返利活动[扫码后成交金额]-已关注会员可参与
 	"""
 
 	When 清空浏览器
+	When zhouxun关注jobs的公众号
+	When zhouxun访问jobs的webapp
 	Then zhouxun能获得返利微众卡
 	"""
 		[{
@@ -787,6 +801,8 @@ Scenario:6 带参数返利活动[扫码后成交金额]-已关注会员不可参
 
 
 	When 清空浏览器
+	When tom关注jobs的公众号
+	When tom访问jobs的webapp
 	Then tom能获得返利微众卡
 	"""
 		[{
@@ -798,6 +814,8 @@ Scenario:6 带参数返利活动[扫码后成交金额]-已关注会员不可参
 	"""
 
 	When 清空浏览器
+	When zhouxun关注jobs的公众号
+	When zhoucun访问jobs的webapp
 	Then zhouxun能获得返利微众卡
 	"""
 		[{
@@ -848,6 +866,8 @@ Scenario:7 带参数返利活动[扫码后成交金额]-已关注会员不可参
 	Then jobs发放返利微众卡
 
 	When 清空浏览器
+	When tom关注jobs的公众号
+	When tom访问jobs的webapp
 	Then tom能获得返利微众卡
 	"""
 		[{
@@ -896,6 +916,8 @@ Scenario:8 带参数返利活动[扫码后成交金额]-已关注会员不可参
 
 
 	When 清空浏览器
+	When tom关注jobs的公众号
+	When tom访问jobs的webapp
 	Then tom能获得返利微众卡
 	"""
 		[{
