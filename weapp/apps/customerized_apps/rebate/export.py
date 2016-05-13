@@ -73,7 +73,9 @@ def handle_rebate_core(all_records=None):
 	need_grant_info = []
 	order_before_qrcode = {}
 	for member_id, records in member_id2records.items():
-		target_order_ids = member_id2order_ids[member_id]
+		target_order_ids = member_id2order_ids.get(member_id, None)
+		if not target_order_ids:
+			continue
 		for record in records:
 			permission = record.permission
 			is_limit_first_buy = record.is_limit_first_buy

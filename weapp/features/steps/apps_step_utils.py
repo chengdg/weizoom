@@ -189,6 +189,7 @@ def get_response(context, options, param=None):
         return response
     def __get_response(method, url, param):
         if method == "get":
+            #TODO 当param有值时的处理，拼接参数到url后
             return context.client.get(url)
         else:
             return context.client.post(url, param)

@@ -127,3 +127,7 @@ def step_impl(context,user,phone_number):
             sex = 0,
             name = user
         )
+
+@given(u'等待{seconds}秒')
+def step_impl(context, seconds):
+    time.sleep(int(seconds))

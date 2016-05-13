@@ -15,7 +15,7 @@ Background:
 			"tag_id_2": "分组2"
 		}
 		"""
-@mall2 @apps @survey @users_participate_survey @aix11
+@mall2 @apps @survey @users_participate_survey
 Scenario:1 参加调研活动,无需关注即可参与
 	Given jobs登录系统
 	When jobs添加优惠券规则

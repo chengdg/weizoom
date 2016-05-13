@@ -135,6 +135,11 @@ Background:
 			"password":"1234567",
 			"status":"未使用",
 			"price":5.00
+		},{
+			"id":"0000041",
+			"password":"1234567",
+			"status":"未使用",
+			"price":5.00
 		}]
 	}
 	"""
@@ -362,46 +367,42 @@ Scenario:2 带参数返利活动[扫码后成交金额]-已关注会员可参与
 	When bill扫描返利活动"返利活动1"的二维码
 	When bill访问jobs的webapp
 
-
 	When 清空浏览器
 	When zhouxun关注jobs的公众号
 	When zhouxun扫描返利活动"返利活动1"的二维码
-	When zhouxun访问jobs的webapp
 
 	When 清空浏览器
 	When tom关注jobs的公众号
 	When tom扫描返利活动"返利活动1"的二维码
-	When tom访问jobs的webapp
-
 
 	When 微信用户批量消费jobs的商品
-		| order_id | date             | consumer | product | payment | pay_type  |postage*   |price*   | paid_amount*    | weizoom_card   | action     | order_status  |
+		| order_id | date       | consumer | product | payment | pay_type  |postage*   |price*   | paid_amount*  | weizoom_card   | action     | order_status  |
 		|   0001   | 今天       |   bill   | 商品1,1 |   支付  |  支付宝   |   0.00    | 1.00    |     1.00        |                | jobs,完成  |    已完成     |
-		|   0002   | 今天       |   tom    | 商品1,1 |   支付  |  支付宝   |   0.00    | 1.00    |     1.00        | 0000041,1234567| jobs,完成  |    已完成     |
-		|   0003   | 今天       |  zhouxun | 商品1,1 |   支付  |  微众卡   |   0.00    | 1.00    |     1.00        |                | jobs,完成  |    已完成     |    
-	
-	Given jobs登录系统	
+		|   0002   | 今天       |   tom    | 商品1,1 |   支付  |  货到付款   |   0.00    | 1.00    |     1.00        | 0000041,1234567| jobs,完成  |    已完成     |
+		|   0003   | 今天       |  zhouxun | 商品1,1 |   支付  |   支付宝  |   0.00    | 1.00    |     1.00        |                | jobs,完成  |    已完成     |
+
+	Given jobs登录系统
 	#默认显示扫码后的新会员
-	Then jobs能获取"返利活动1"会员列表
-	"""
-		[{
-			"fans_name": "bill",
-			"buy_number": 1,
-			"integral": 0,
-			"price":1.00
-		}]
-	"""
+#	Then jobs能获取"返利活动1"会员列表
+#	"""
+#		[{
+#			"fans_name": "bill",
+#			"buy_number": 1,
+#			"integral": 0,
+#			"price":1.00
+#		}]
+#	"""
 	When jobs取消对"返利活动1"进行"仅显示扫码后关注会员"操作
 	#显示所有的的会员
 	Then jobs能获取"返利活动1"会员列表
 	"""
 		[{
-			"fans_name": "zhouxun",
+			"fans_name": "tom",
 			"buy_number": 1,
 			"integral": 0,
 			"price":1.00
 		},{
-			"fans_name": "tom",
+			"fans_name": "zhouxun",
 			"buy_number": 1,
 			"integral": 0,
 			"price":1.00
@@ -415,7 +416,7 @@ Scenario:2 带参数返利活动[扫码后成交金额]-已关注会员可参与
 
 
 	Given jobs登录系统
-	#默认显示扫码后成交的订单	
+	#默认显示扫码后成交的订单
 	Then jobs能获取"返利活动1"订单列表
 	"""
 		[{
@@ -445,7 +446,7 @@ Scenario:2 带参数返利活动[扫码后成交金额]-已关注会员可参与
 			"price": 1.00,
 			"count": 1
 			}]
-			
+
 		}]
 	"""
 
@@ -455,7 +456,7 @@ Scenario:2 带参数返利活动[扫码后成交金额]-已关注会员可参与
 			"cash_payment":2.00,
 			"card_payment":1.00
 		}
-		
+
 	"""
 
 
@@ -496,7 +497,7 @@ Scenario:2 带参数返利活动[扫码后成交金额]-已关注会员可参与
 	"""
 
 
-	
+
 
 
 

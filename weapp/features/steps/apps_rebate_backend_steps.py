@@ -54,6 +54,7 @@ def step_impl(context, user):
             params['reply_detail'] = ''
             params['reply_material_id'] = __get_material_id(context,rule['scan_code_reply'])
         response = context.client.post('/apps/rebate/api/rebate/?_method=put', params)
+        debug_print(response)
         bdd_util.assert_api_call_success(response)
 
 @when(u'{user}编辑返利活动"{rebate_name}"')
@@ -154,21 +155,35 @@ def step_impl(context, user):
 
 @then(u'{user}能获取"{rebate_name}"会员列表')
 def step_impl(context, user, rebate_name):
-    rebate_id = __get_rebate_id(rebate_name)
+    rebate_id = str(__get_rebate_id(rebate_name))
+    #首先进入页面
+    url = "/apps/rebate/rebate_participances/?id=rebate_id"
+    get_response(context, url)
+    #获取会员列表
+    response = get_response(context, {
+        "app": "apps/rebate",
+        "resource": "rebate_participances",
+        "method": "get",
+        "type": "api",
+        "args": {
+            "count_per_page": 50,
+            "page": 1,
+            "enable_paginate": 1,
+            "record_id": rebate_id,
+            "is_show": "1" if not hasattr(context, "is_show") else context.is_show
+        }
+    })
 
-    url = "/apps/rebate/rebate_participances/?record_id="+rebate_id
-    response = context.client.get(url)
     response_data = json.loads(response.content)
-
     actual = []
     for item in response_data['data']['items']:
-        actual.append(dict(
-            fans_name=item['username'],
-            buy_number=item['pay_times'],
-            integral=item['integral'],
-            price=item['pay_money'],
-            follow_time=item['follow_time']
-        ))
+        actual.append({
+            "fans_name": item['username'],
+            "buy_number": item['pay_times'],
+            "integral": item['integral'],
+            "price": item['pay_money'],
+            "follow_time": item['follow_time']
+        })
     expected = json.loads(context.text)
     bdd_util.assert_list(expected, actual)
 
