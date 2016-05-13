@@ -53,6 +53,7 @@ def cdn_host(request):
 	return {
 		'cdn_host': settings.CDN_HOST,
 		'fans_host': settings.FAN_HOST,
+		'markettools_host': settings.MARKETTOOLS_HOST,
 		'is_varnish_url': is_varnish_url(request)
 	}
 
