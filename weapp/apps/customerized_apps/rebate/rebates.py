@@ -70,7 +70,7 @@ class Rebates(resource.Resource):
 		#统计每个活动的扫码关注人数
 		items = []
 		record_id2partis = {}
-		record_ids = [d.id for d in datas]
+		record_ids = [str(d.id) for d in datas]
 		all_member_ids = set()
 		all_partis = app_models.RebateParticipance.objects(belong_to__in=record_ids)
 		for p in all_partis:
@@ -98,7 +98,6 @@ class Rebates(resource.Resource):
 		id2order = {str(o.id): o for o in all_orders}
 		record_id2orders = {}
 		for rid in record_ids:
-			rid = str(rid)
 			member_ids = record_own_member_ids.get(rid, None)
 			if not member_ids:
 				continue
