@@ -5,6 +5,7 @@ __author__ = 'chuter'
 from django.contrib import admin
 from models import *
 from django.contrib import messages
+from utils import cache_util
 
 class ExpressServiceConfigAdmin(admin.ModelAdmin):
 	fields = ('name',)
@@ -17,5 +18,9 @@ class ExpressServiceConfigAdmin(admin.ModelAdmin):
 		else:
 			ExpressServiceConfig.objects.all().update(value=0)
 			queryset.update(value=1)
+			key = 'express_config_name'
+			value = queryset[0].name
+			cache_util.set_cache(key, value)
+
 	make_on.short_description = "开启快递服务商"
 admin.site.register(ExpressServiceConfig, ExpressServiceConfigAdmin)
