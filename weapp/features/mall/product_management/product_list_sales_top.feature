@@ -153,7 +153,7 @@ Background:
 			"products": [{
 				"name": "商品5",
 				"count": 1
-			}
+			}]
 		},{
 			"products": [{
 				"name": "商品6",
