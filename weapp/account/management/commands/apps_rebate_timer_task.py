@@ -11,7 +11,7 @@ from watchdog.utils import watchdog_error
 from apps.customerized_apps.rebate.export import handle_rebate_core, handle_wating_actions
 
 class Command(BaseCommand):
-	help = 'start group stats task'
+	help = 'start rebate stats task'
 	args = ''
 
 	def handle(self, *args, **options):
@@ -24,14 +24,14 @@ class Command(BaseCommand):
 			handle_rebate_core()
 			end_time = time.time()
 			diff = (end_time-start_time)*1000
-			print (u'处理发放微众卡的任务...expend %s' % diff)
+			print ('grant card...expend %s' % diff)
 			#检查暂存的记录是否有满足条件
 			handle_wating_actions()
 			end_time = time.time()
 			diff = (end_time-start_time)*1000
-			print (u'检查暂存的记录是否有满足条件...expend %s' % diff)
+			print (u'check...expend %s' % diff)
 		except Exception, e:
-			print u'------发放返利微众卡失败--------------------------------'
+			print u'------grant fail--------------------------------'
+			print e
 			notify_msg = u"发放返利微众卡失败，cause:\n{}".format(unicode_full_stack())
 			watchdog_error(notify_msg)
-			print u'------发放返利微众卡失败--------------------------------'

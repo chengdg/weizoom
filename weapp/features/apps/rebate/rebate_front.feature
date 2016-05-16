@@ -366,11 +366,13 @@ Scenario:2 带参数返利活动[扫码后成交金额]-已关注会员可参与
 	When 清空浏览器
 	When bill扫描返利活动"返利活动1"的二维码
 
+	Given 等待1秒
 	When 清空浏览器
 	When zhouxun关注jobs的公众号
 	When zhouxun访问jobs的webapp
 	When zhouxun扫描返利活动"返利活动1"的二维码
 
+	Given 等待1秒
 	When 清空浏览器
 	When tom关注jobs的公众号
 	When tom访问jobs的webapp

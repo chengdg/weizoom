@@ -132,3 +132,8 @@ def step_impl(context,user,phone_number):
 @given(u'等待{seconds}秒')
 def step_impl(context, seconds):
     time.sleep(int(seconds))
+
+@then(u'{webapp_user_name}发放返利微众卡')
+def step_impl(context, webapp_user_name):
+    from apps.customerized_apps.rebate.export import handle_rebate_core
+    handle_rebate_core()
