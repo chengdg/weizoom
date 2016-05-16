@@ -321,10 +321,10 @@ Scenario:1 管理员能够查看到所有扫过该码并关注过的微信用户
 	#未关注微信账号扫码关注，关注数量增加
 	When bill关注jobs的公众号
 	When bill访问jobs的webapp
-	When bill扫描返利活动"返利活动1"的二维码
+	When bill扫描返利活动'返利活动1'的二维码
 
 	Given jobs登录系统
-	Then jobs获得"返利活动1"列表
+	Then jobs获得'返利活动1'列表
 	"""
 		{
 			"code_name": "返利活动1",
@@ -335,10 +335,10 @@ Scenario:1 管理员能够查看到所有扫过该码并关注过的微信用户
 	When 清空浏览器
 	When tom关注jobs的公众号
 	When tom访问jobs的webapp
-	When tom扫描返利活动"返利活动1"的二维码
+	When tom扫描返利活动'返利活动1'的二维码
 
 	Given jobs登录系统
-	Then jobs获得"返利活动1"列表
+	Then jobs获得'返利活动1'列表
 	"""
 		{
 			"code_name": "返利活动1",
@@ -350,7 +350,7 @@ Scenario:1 管理员能够查看到所有扫过该码并关注过的微信用户
 	When tom取消关注jobs的公众号
 
 	Given jobs登录系统
-	Then jobs获得"返利活动1"列表
+	Then jobs获得'返利活动1'列表
 	"""
 		{
 			"code_name": "返利活动1",
@@ -364,19 +364,19 @@ Scenario:2 带参数返利活动[扫码后成交金额]-已关注会员可参与
 
 	Given jobs登录系统
 	When 清空浏览器
-	When bill扫描返利活动"返利活动1"的二维码
+	When bill扫描返利活动'返利活动1'的二维码
 
 	Given 等待1秒
 	When 清空浏览器
 	When zhouxun关注jobs的公众号
 	When zhouxun访问jobs的webapp
-	When zhouxun扫描返利活动"返利活动1"的二维码
+	When zhouxun扫描返利活动'返利活动1'的二维码
 
 	Given 等待1秒
 	When 清空浏览器
 	When tom关注jobs的公众号
 	When tom访问jobs的webapp
-	When tom扫描返利活动"返利活动1"的二维码
+	When tom扫描返利活动'返利活动1'的二维码
 
 	When 清空浏览器
 	When bill关注jobs的公众号
@@ -390,7 +390,7 @@ Scenario:2 带参数返利活动[扫码后成交金额]-已关注会员可参与
 
 	Given jobs登录系统
 	#默认显示扫码后的新会员
-	Then jobs能获取"返利活动1"会员列表
+	Then jobs能获取'返利活动1'会员列表
 	"""
 		[{
 			"fans_name": "bill",
@@ -399,9 +399,9 @@ Scenario:2 带参数返利活动[扫码后成交金额]-已关注会员可参与
 			"price":1.00
 		}]
 	"""
-	When jobs取消对"返利活动1"进行"仅显示扫码后关注会员"操作
+	When jobs取消对'返利活动1'进行'仅显示扫码后关注会员'操作
 	#显示所有的的会员
-	Then jobs能获取"返利活动1"会员列表
+	Then jobs能获取'返利活动1'会员列表
 	"""
 		[{
 			"fans_name": "tom",
@@ -423,7 +423,7 @@ Scenario:2 带参数返利活动[扫码后成交金额]-已关注会员可参与
 
 	Given jobs登录系统
 	#默认显示扫码后成交的订单
-	Then jobs能获取"返利活动1"订单列表
+	Then jobs能获取'返利活动1'订单列表
 	"""
 		[{
 			"order_id":"0001",
@@ -468,8 +468,8 @@ Scenario:2 带参数返利活动[扫码后成交金额]-已关注会员可参与
 
 
 	When 清空浏览器
-	When zhouxun关注jobs的公众号于"今天"
-	When zhouxun绑定手机号"13563223667"
+	When zhouxun关注jobs的公众号于'今天'
+	When zhouxun绑定手机号'13563223667'
 
 	Given jobs登录系统
 	Then jobs发放返利微众卡
@@ -485,8 +485,8 @@ Scenario:2 带参数返利活动[扫码后成交金额]-已关注会员可参与
 
 	"""
 	When 清空浏览器
-	When bill关注jobs的公众号于"今天"
-	When bill绑定手机号"13563223668"
+	When bill关注jobs的公众号于'今天'
+	When bill绑定手机号'13563223668'
 
 	Given jobs登录系统
 	Then jobs发放返利微众卡
@@ -515,20 +515,20 @@ Scenario:3 带参数返利活动[扫码后成交金额]-已关注会员可参与
 
 	#已关注会员在扫码之前已经下单
 	When 清空浏览器
-	When bill关注jobs的公众号于"一天前"
-	When bill扫描返利活动"返利活动2"的二维码
+	When bill关注jobs的公众号于'一天前'
+	When bill扫描返利活动'返利活动2'的二维码
 	When bill访问jobs的webapp
 
 
 	When 清空浏览器
-	When tom关注jobs的公众号于"今天"
-	When tom扫描返利活动"返利活动2"的二维码
+	When tom关注jobs的公众号于'今天'
+	When tom扫描返利活动'返利活动2'的二维码
 	When tom访问jobs的webapp
 
 	#用户参加已结束的活动，不会获得返利
 	When 清空浏览器
-	When zhouxun关注jobs的公众号于"三天后"
-	When zouxun扫描返利活动"返利活动2"的二维码
+	When zhouxun关注jobs的公众号于'三天后'
+	When zouxun扫描返利活动'返利活动2'的二维码
 	When zhouxun访问jobs的webapp
 
 	When 微信用户批量消费jobs的商品
@@ -542,7 +542,7 @@ Scenario:3 带参数返利活动[扫码后成交金额]-已关注会员可参与
 
 	Given jobs登录系统	
 	#勾选仅显示扫码后的成交的订单(默认显示)
-	Then jobs能获取"返利活动2"订单列表
+	Then jobs能获取'返利活动2'订单列表
 	"""
 		[{	"order_id":"0002",
 			"status": "已完成",
@@ -566,8 +566,8 @@ Scenario:3 带参数返利活动[扫码后成交金额]-已关注会员可参与
 	"""
 
 	#显示所有的订单
-	Then jobs取消对返利活动订单进行"仅显示扫码后成交订单"操作
-	Then jobs能获取"返利活动2"订单列表
+	Then jobs取消对返利活动订单进行'仅显示扫码后成交订单'操作
+	Then jobs能获取'返利活动2'订单列表
 	"""
 		[{
 			"order_id":"0001",
@@ -627,7 +627,7 @@ Scenario:3 带参数返利活动[扫码后成交金额]-已关注会员可参与
 	When 清空浏览器
 	Then tom能获得返利微众卡手机号绑定页面
 
-	When tom绑定手机号"13562336987"
+	When tom绑定手机号'13562336987'
 
 	Given jobs登录系统
 	Then jobs发放返利微众卡
@@ -655,13 +655,13 @@ Scenario:4 带参数返利活动[扫码后成交金额]-已关注会员可参与
 	Given jobs登录系统
 
 	When 清空浏览器
-	When tom关注jobs的公众号于"今天"
-	When tom扫描返利活动"返利活动3"的二维码
+	When tom关注jobs的公众号于'今天'
+	When tom扫描返利活动'返利活动3'的二维码
 
 
 	When 清空浏览器
 	When zhouxun关注jobs的公众号于"今天"
-	When zouxun扫描返利活动"返利活动3"的二维码
+	When zouxun扫描返利活动'返利活动3'的二维码
 
 	When 微信用户批量消费jobs的商品
 		| order_id | date       | consumer | product | payment | pay_type  |postage*   |price* | paid_amount*   | weizoom_card   | action     | order_status  |
@@ -671,8 +671,8 @@ Scenario:4 带参数返利活动[扫码后成交金额]-已关注会员可参与
 
 
 	When 清空浏览器
-	When tom关注jobs的公众号于"今天"
-	When tom绑定手机号"13563223668"
+	When tom关注jobs的公众号于'今天'
+	When tom绑定手机号'13563223668'
 
 	Given jobs登录系统
 	Then jobs发放返利微众卡
@@ -698,17 +698,17 @@ Scenario:5 带参数返利活动[扫码后成交金额]-已关注会员可参与
 
 
 	When 清空浏览器
-	When bill关注jobs的公众号于"一天前"
-	When bill扫描返利活动"返利活动4"的二维码
+	When bill关注jobs的公众号于'一天前'
+	When bill扫描返利活动'返利活动4'的二维码
 
 	When 清空浏览器
-	When tom关注jobs的公众号于"今天"
-	When tom扫描返利活动"返利活动4"的二维码
+	When tom关注jobs的公众号于'今天'
+	When tom扫描返利活动'返利活动4'的二维码
 
 
 	When 清空浏览器
-	When zhouxun关注jobs的公众号于"今天"
-	When zouxun扫描返利活动"返利活动4"的二维码
+	When zhouxun关注jobs的公众号于'今天'
+	When zouxun扫描返利活动'返利活动4'的二维码
 
 	When 微信用户批量消费jobs的商品
 		| order_id | date       | consumer | product | payment | pay_type  |postage*   |price*   | paid_amount*    | weizoom_card   | action     | order_status  |
@@ -719,13 +719,13 @@ Scenario:5 带参数返利活动[扫码后成交金额]-已关注会员可参与
 
 
 	When 清空浏览器
-	When bill绑定手机号"13563223668"
+	When bill绑定手机号'13563223668'
 
 	When 清空浏览器
-	When tom绑定手机号"13563223669"
+	When tom绑定手机号'13563223669'
 
 	When 清空浏览器
-	When zhouxun绑定手机号"13563223679"
+	When zhouxun绑定手机号'13563223679'
 
 	Given jobs登录系统
 	Then jobs发放返利微众卡
@@ -775,15 +775,15 @@ Scenario:6 带参数返利活动[扫码后成交金额]-已关注会员不可参
 
 
 	When 清空浏览器
-	When bill关注jobs的公众号于"一天前"
-	When bill扫描返利活动"返利活动5"的二维码
+	When bill关注jobs的公众号于'一天前'
+	When bill扫描返利活动'返利活动5'的二维码
 
 	When 清空浏览器
-	When tom扫描返利活动"返利活动5"的二维码
+	When tom扫描返利活动'"'返利活动5'"'的二维码
 
 
 	When 清空浏览器
-	When zhouxun扫描返利活动"返利活动5"的二维码
+	When zhouxun扫描返利活动'返利活动5'的二维码
 
 	When 微信用户批量消费jobs的商品
 		| order_id | date       | consumer | product | payment | pay_type  |postage*   |price*   | paid_amount*    | weizoom_card   | action     | order_status  |
@@ -793,13 +793,13 @@ Scenario:6 带参数返利活动[扫码后成交金额]-已关注会员不可参
 		|   0004   | 明天       |  zhouxun | 商品1,1 |   支付  |  微众卡   |   0.00   | 1.00   |     1.00       | 0000041,1234567| jobs,完成  |    已完成     |
 
 	When 清空浏览器
-	When bill绑定手机号"13563223668"
+	When bill绑定手机号'13563223668'
 
 	When 清空浏览器
-	When tom绑定手机号"13563223669"
+	When tom绑定手机号'13563223669'
 
 	When 清空浏览器
-	When zhouxun绑定手机号"13563223679"
+	When zhouxun绑定手机号'13563223679'
 
 	Given jobs登录系统
 	Then jobs发放返利微众卡
@@ -841,15 +841,15 @@ Scenario:7 带参数返利活动[扫码后成交金额]-已关注会员不可参
 
 	#未关注过的用户下单
 	When 清空浏览器
-	When bill关注jobs的公众号于"一天前"
-	When bill扫描返利活动"返利活动6"的二维码
+	When bill关注jobs的公众号于'一天前'
+	When bill扫描返利活动'返利活动6'的二维码
 
 	When 清空浏览器
-	When tom扫描返利活动"返利活动6"的二维码
+	When tom扫描返利活动'返利活动6'的二维码
 
 
 	When 清空浏览器
-	When zouxun扫描返利活动"返利活动6"的二维码
+	When zouxun扫描返利活动'返利活动6'的二维码
 
 	When 微信用户批量消费jobs的商品
 		| order_id | date       | consumer | product | payment | pay_type  |postage*   |price* | paid_amount*   | weizoom_card   | action     | order_status  |
@@ -859,13 +859,13 @@ Scenario:7 带参数返利活动[扫码后成交金额]-已关注会员不可参
 
 
 	When 清空浏览器
-	When bill绑定手机号"13563223668"
+	When bill绑定手机号'13563223668'
 
 	When 清空浏览器
-	When tom绑定手机号"13563223669"
+	When tom绑定手机号'13563223669'
 
 	When 清空浏览器
-	When zhouxun绑定手机号"13563223679"
+	When zhouxun绑定手机号'13563223679'
 
 	Given jobs登录系统
 	Then jobs发放返利微众卡
@@ -890,15 +890,15 @@ Scenario:8 带参数返利活动[扫码后成交金额]-已关注会员不可参
 
 
 	When 清空浏览器
-	When bill关注jobs的公众号于"今天"
-	When bill扫描返利活动"返利活动7"的二维码
+	When bill关注jobs的公众号于'今天'
+	When bill扫描返利活动'返利活动7'的二维码
 
 	When 清空浏览器
-	When tom扫描返利活动"返利活动7"的二维码
+	When tom扫描返利活动'返利活动7'的二维码
 
 
 	When 清空浏览器
-	When zhouxun扫描返利活动"返利活动7"的二维码
+	When zhouxun扫描返利活动'返利活动7'的二维码
 
 	When 微信用户批量消费jobs的商品
 		| order_id | date       | consumer | product | payment | pay_type  |postage*  |price*  | paid_amount*   | weizoom_card   | action     | order_status  |
@@ -908,13 +908,13 @@ Scenario:8 带参数返利活动[扫码后成交金额]-已关注会员不可参
 		|   0004   | 明天       |  zhouxun | 商品1,1 |   支付  |  微众卡   |   0.00   | 0.00   |     1.00       | 0000041,1234567| jobs,完成  |    已完成     |
 
 	When 清空浏览器
-	When bill绑定手机号"13563223668"
+	When bill绑定手机号'13563223668'
 
 	When 清空浏览器
-	When tom绑定手机号"13563223669"
+	When tom绑定手机号'13563223669'
 
 	When 清空浏览器
-	When zhouxun绑定手机号"13563223679"
+	When zhouxun绑定手机号'13563223679'
 
 	Given jobs登录系统
 	Then jobs发放返利微众卡
@@ -941,15 +941,15 @@ Scenario:9 带参数返利活动[扫码后成交金额]-已关注会员不可参
 
 
 	When 清空浏览器
-	When bill关注jobs的公众号于"一天前"
-	When bill扫描返利活动"返利活动8"的二维码
+	When bill关注jobs的公众号于'一天前'
+	When bill扫描返利活动'返利活动8'的二维码
 
 	When 清空浏览器
-	When tom扫描返利活动"返利活动8"的二维码
+	When tom扫描返利活动'返利活动8'的二维码
 
 
 	When 清空浏览器
-	When zhouxun扫描返利活动"返利活动8"的二维码
+	When zhouxun扫描返利活动'返利活动8'的二维码
 
 	When 微信用户批量消费jobs的商品
 		| order_id | date       | consumer | product | payment | pay_type  |postage*   |price*   | paid_amount*    | weizoom_card   | action     | order_status  |
@@ -962,13 +962,13 @@ Scenario:9 带参数返利活动[扫码后成交金额]-已关注会员不可参
 
 
 	When 清空浏览器
-	When bill绑定手机号"13563223668"
+	When bill绑定手机号'13563223668'
 
 	When 清空浏览器
-	When tom绑定手机号"13563223669"
+	When tom绑定手机号'13563223669'
 
 	When 清空浏览器
-	When zhouxun绑定手机号"13563223679"
+	When zhouxun绑定手机号'13563223679'
 
 	Given jobs登录系统
 	Then jobs发放返利微众卡
@@ -993,14 +993,14 @@ Scenario:9 带参数返利活动[扫码后成交金额]-已关注会员不可参
 
 	When 清空浏览器
 	When zhouxun访问jobs的webapp
-	When zhouxun申请退款订单"0006"
-	Then zhouxun退款完成订单"0006"
+	When zhouxun申请退款订单'0006'
+	Then zhouxun退款完成订单'0006'
 
 
 
 	Given jobs登录系统
 	#默认显示勾选仅显示扫码后的成交的订单
-	Then jobs能获取"返利活动8"订单列表
+	Then jobs能获取'返利活动8'订单列表
 	"""
 		[{	"order_id":"0002",
 			"status": "已完成",
@@ -1042,9 +1042,9 @@ Scenario:9 带参数返利活动[扫码后成交金额]-已关注会员不可参
 			}]
 		}]
 	"""
-	Then jobs取消对返利活动订单进行"仅显示扫码后成交订单"操作
+	Then jobs取消对返利活动订单进行'仅显示扫码后成交订单'操作
 	#勾选仅显示扫码后的成交的订单
-	Then jobs能获取"返利活动8"订单列表
+	Then jobs能获取'返利活动8'订单列表
 	"""
 		[{	"order_id":"0001",
 			"status": "已完成",
@@ -1102,8 +1102,8 @@ Scenario:10 带参数返利活动-多个返利活动同时存在，并且同一�
 	Given jobs登录系统
 
 	When 清空浏览器
-	When bill关注jobs的公众号于"一天前"
-	When bill扫描返利活动"返利活动1"的二维码
+	When bill关注jobs的公众号于'一天前'
+	When bill扫描返利活动'返利活动1'的二维码
 	When bill访问jobs的weapp
 	When bill购买jobs的商品
 		| order_id | date        | consumer | product | payment | pay_type  |postage*   |price*   | paid_amount*    | weizoom_card   | action     | order_status  |
@@ -1113,7 +1113,7 @@ Scenario:10 带参数返利活动-多个返利活动同时存在，并且同一�
 
 
 	When 清空浏览器
-	When bill扫描返利活动"返利活动2"的二维码
+	When bill扫描返利活动'返利活动2'的二维码
 	When bill访问jobs的weapp
 	When bill购买jobs的商品
 		| order_id | date       | consumer | product | payment | pay_type  |postage*   |price*   | paid_amount*    | weizoom_card   | action     | order_status  |
@@ -1123,7 +1123,7 @@ Scenario:10 带参数返利活动-多个返利活动同时存在，并且同一�
 
 	Given jobs登录系统	
 	#默认显示勾选仅显示扫码后的成交的订单
-	Then jobs能获取"返利活动1"订单列表
+	Then jobs能获取'返利活动1'订单列表
 	"""
 		[{"order_id":"0002",
 			"status": "已完成",
@@ -1138,7 +1138,7 @@ Scenario:10 带参数返利活动-多个返利活动同时存在，并且同一�
 
 
 	#默认显示勾选仅显示扫码后的成交的订单
-	Then jobs能获取"返利活动2"订单列表
+	Then jobs能获取'返利活动2'订单列表
 	"""
 		[{
 			"order_id":"0003",
@@ -1157,15 +1157,15 @@ Scenario:10 带参数返利活动-多个返利活动同时存在，并且同一�
 Scenario:11 带参数返利活动-查看发放详情
 	Given jobs登录系统
 	When 清空浏览器
-	When bill关注jobs的公众号于"一天前"
-	When bill扫描返利活动"返利活动1"的二维码
+	When bill关注jobs的公众号于'一天前'
+	When bill扫描返利活动'返利活动1'的二维码
 	When bill访问jobs的weapp
 	When bill购买jobs的商品
 		| order_id | date         | consumer | product | payment | pay_type  |postage*   |price*   | paid_amount*    | weizoom_card   | action     | order_status  |
 		|   0001   | 一天前       |   bill   | 商品1,1 |   支付  |  支付宝   |   0.00    | 1.00    |     1.00        |                | jobs,完成  |    已完成     |
 
 
-	When bill绑定手机号"13563223667"
+	When bill绑定手机号'13563223667'
 
 	Given jobs登录系统
 	Then jobs发放返利微众卡

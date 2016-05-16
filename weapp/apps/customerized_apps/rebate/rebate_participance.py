@@ -2,7 +2,9 @@
 
 import json
 import random
-from datetime import datetime
+from datetime import date, datetime
+import os
+from weapp import settings
 
 from django.http import HttpResponseRedirect, HttpResponse
 from django.template import RequestContext
@@ -25,6 +27,7 @@ from mall import export as mall_export
 from modules.member import models as member_models
 from mall import models as mall_models
 from mall import module_api as mall_module_api
+from watchdog.utils import watchdog_error
 
 FIRST_NAV = 'apps'
 COUNT_PER_PAGE = 20
@@ -83,7 +86,7 @@ class RebateOrderList(resource.Resource):
 			if not_first_order:
 				params['is_first_order'] = 0
 
-		orders = mall_models.Order.objects.filter(**params)
+		orders = all_orders.filter(**params)
 		#统计微众卡支付总金额和现金支付总金额
 		final_price = 0
 		weizoom_card_money = 0
@@ -202,29 +205,60 @@ class RebateOrder_Export(resource.Resource):
 
 			# from sample to get fields4excel_file
 			# fields_pure.append(u'会员id')
-			fields_pure.append(u'用户名')
-			fields_pure.append(u'购买次数')
-			fields_pure.append(u'积分')
-			fields_pure.append(u'消费总额')
-			fields_pure.append(u'参与时间')
+			fields_pure.append(u'订单号')
+			fields_pure.append(u'下单时间')
+			fields_pure.append(u'付款时间')
+			fields_pure.append(u'商品名称')
+			fields_pure.append(u'商品单价')
+			fields_pure.append(u'商品数量')
+			fields_pure.append(u'支付方式')
+			fields_pure.append(u'支付金额')
+			# fields_pure.append(u'现金支付金额')
+			# fields_pure.append(u'微众卡支付金额')
+			fields_pure.append(u'订单状态')
+			fields_pure.append(u'购买人')
+			fields_pure.append(u'是否首单')
+			# fields_pure.append(u'采购价')
+			# fields_pure.append(u'采购成本')
 
 			# processing data
 			num = 0
 			for data in datas:
 				export_record = []
-				# member_id = data["member_id"]
-				participant_name = data["username"]
-				pay_times = data["pay_times"]
-				integral = data["integral"]
+				order_id = data["order_id"]
+				created_at = data["created_at"]
+				payment_time = data["payment_time"]
+				pay_interface_name = data["pay_interface_name"]
 				pay_money = data["pay_money"]
-				follow_time = data["follow_time"]
+				# final_price = data["final_price"]
+				# weizoom_card_money = data["weizoom_card_money"]
+				status = data["status"]
+				buyer_name = data["buyer_name"]
+				is_first_order = data["is_first_order"]
+				# purchase_price = data["purchase_price"] #采购价
+				# purchase_cost = data["purchase_cost"] #采购成本
+				products = data["products"]
+				for product in products:
+					product_name = product['name']
+					product_count = product['count']
+					product_price = product['price']
 
-				# export_record.append(member_id)
-				export_record.append(participant_name)
-				export_record.append(pay_times)
-				export_record.append(integral)
-				export_record.append(pay_money)
-				export_record.append(follow_time)
+					export_record.append(order_id)
+					export_record.append(created_at)
+					export_record.append(payment_time)
+					export_record.append(product_name)
+					export_record.append(product_price)
+					export_record.append(product_count)
+					export_record.append(pay_interface_name)
+					export_record.append(pay_money)
+					# export_record.append(final_price)
+					# export_record.append(weizoom_card_money)
+					export_record.append(status)
+					export_record.append(buyer_name)
+					export_record.append(is_first_order)
+					# export_record.append(purchase_price)
+					# export_record.append(purchase_cost)
+
 				export_data.append(export_record)
 			# workbook/sheet
 			wb = xlwt.Workbook(encoding='utf-8')
