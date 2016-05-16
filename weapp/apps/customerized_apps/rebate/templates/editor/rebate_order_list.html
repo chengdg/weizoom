@@ -339,7 +339,8 @@ $(document).ready(function() {
 		var start_date = $('#start_date').val();
 		var end_date = $('#end_date').val();
 		var start_money = $.trim($('#start_money').val());
-		var end_money = $.trim($('#end_money').val());	
+		var end_money = $.trim($('#end_money').val());
+		var regx = /^\d{1,9}(\.\d{1,2})?$/g
 		if(start_date||end_date){
 	        if (!W.validate()) {
 	        	W.showHint('error','请输入下单时间');
@@ -347,6 +348,10 @@ $(document).ready(function() {
 	        }
 	    }
 		if(start_money||end_money){
+			if(!(start_money.match(regx)&&(end_money).match(regx))){
+				W.showHint('error','请输入正确金额');
+				return false;
+			}
 			if(!(start_money && end_money)){
 	        	W.showHint('error','请输入实付金额');
 	          	return false;
