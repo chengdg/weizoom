@@ -153,7 +153,7 @@ def step_impl(context, user):
 #     else:
 #         bdd_util.assert_api_call_success(response)
 
-@then(u'{user}能获取"{rebate_name}"会员列表')
+@then(u"{user}能获取'{rebate_name}'会员列表")
 def step_impl(context, user, rebate_name):
     rebate_id = str(__get_rebate_id(rebate_name))
     #首先进入页面
@@ -187,11 +187,11 @@ def step_impl(context, user, rebate_name):
     expected = json.loads(context.text)
     bdd_util.assert_list(expected, actual)
 
-@when (u'{user}取消对"{rebate_name}"进行"{operation_name}"操作')
+@when (u"{user}取消对'{rebate_name}'进行'{operation_name}'操作")
 def step_impl(context, user, rebate_name, operation_name):
     context.is_show = 0
 
-@then(u'{user}能获取"{rebate_name}"订单列表')
+@then(u"{user}能获取'{rebate_name}'订单列表")
 def step_impl(context, user, rebate_name):
     rebate_id = __get_rebate_id(rebate_name)
     # 首先进入页面

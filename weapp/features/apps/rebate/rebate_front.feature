@@ -324,7 +324,7 @@ Scenario:1 管理员能够查看到所有扫过该码并关注过的微信用户
 	When bill扫描返利活动'返利活动1'的二维码
 
 	Given jobs登录系统
-	Then jobs获得'返利活动1'列表
+	Then jobs获得返利活动'返利活动1'的列表
 	"""
 		{
 			"code_name": "返利活动1",
@@ -338,7 +338,7 @@ Scenario:1 管理员能够查看到所有扫过该码并关注过的微信用户
 	When tom扫描返利活动'返利活动1'的二维码
 
 	Given jobs登录系统
-	Then jobs获得'返利活动1'列表
+	Then jobs获得返利活动'返利活动1'的列表
 	"""
 		{
 			"code_name": "返利活动1",
@@ -350,7 +350,7 @@ Scenario:1 管理员能够查看到所有扫过该码并关注过的微信用户
 	When tom取消关注jobs的公众号
 
 	Given jobs登录系统
-	Then jobs获得'返利活动1'列表
+	Then jobs获得返利活动'返利活动1'的列表
 	"""
 		{
 			"code_name": "返利活动1",
@@ -359,7 +359,7 @@ Scenario:1 管理员能够查看到所有扫过该码并关注过的微信用户
 	"""
 	
 
-@mall @rebate @aix1111
+@mall @rebate @aix1111 @sunhan
 Scenario:2 带参数返利活动[扫码后成交金额]-已关注会员可参与；首单；现金
 
 	Given jobs登录系统
@@ -437,7 +437,7 @@ Scenario:2 带参数返利活动[扫码后成交金额]-已关注会员可参与
 		},{
 			"order_id":"0002",
 			"status": "已完成",
-			"final_price": 1.00,
+			"final_price": 0.00,
 			"products": [{
 			"name": "商品1",
 			"price": 1.00,
@@ -501,10 +501,6 @@ Scenario:2 带参数返利活动[扫码后成交金额]-已关注会员可参与
 		}]
 
 	"""
-
-
-
-
 
 @mall @rebate
 Scenario:3 带参数返利活动[扫码后成交金额]-已关注会员可参与；首单；非现金

@@ -51,7 +51,7 @@ def step_impl(context, webapp_user_name, record_name):
     context.qa_result = response_data['data']
     debug_print(context.qa_result)
 
-@then(u"{user}获得'{record_name}'列表")
+@then(u"{user}获得返利活动'{record_name}'的列表")
 def step_impl(context, user, record_name):
     expected_data = json.loads(context.text)
     app = get_app_by_name(rebate_models.Rebate, record_name)
