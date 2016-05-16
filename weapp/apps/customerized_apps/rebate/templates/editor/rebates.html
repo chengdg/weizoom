@@ -4,6 +4,9 @@
         .xui-operations a{
             display: inline-block;
         }
+        .xui-searchInput{
+        	border:1px solid #b3b3b3;
+        }
     </style>
 
 {% endblock %}
@@ -20,7 +23,7 @@
 	<div class="panel panel-default xui-tableBox">
 		<div class="panel-header clearfix">
 			<div class="fr" style="margin-top: 2px;">
-				<input type="text" class="xui-searchInput w250 h30" id="name" name="name" value="" /><a class="xui-searchBtn btn btn-default xa-search h30 ml0 mr5" style="min-width:50px!important;background: #f2f2f2;border-left-width: 0px; border-radius:0px;">搜索</a>
+				<input type="text" class="xui-searchInput w250 h30" id="name" name="name" value="" /><a class="xui-searchBtn btn btn-default xa-search h30 ml0 mr5" style="min-width:50px!important;background: #f2f2f2;border-left-width: 0px; border-radius:0px;vertical-align:bottom;">搜索</a>
 			</div>
 			<a class="btn btn-default lh20 xui-i-btnWidth xa-export fr mr20" href="javascript:void(0);" style="width:100px!important;">导出</a>
 			<a id="export_href" style="display: none ">DownloadXLS</a>
