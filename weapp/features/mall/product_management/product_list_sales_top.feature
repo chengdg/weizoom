@@ -183,7 +183,7 @@ Background:
 			}
 		},{
 			"status": "已完成",
-			"final_price": 100.00,
+			"final_price": 200.00,
 			"products": {
 				"name": "商品2",
 				"price": 100.00,
@@ -191,7 +191,7 @@ Background:
 			}
 		},{
 			"status": "已完成",
-			"final_price": 100.00,
+			"final_price": 300.00,
 			"products": {
 				"name": "商品3",
 				"price": 100.00,
@@ -215,7 +215,7 @@ Background:
 			}
 		},{
 			"status": "已完成",
-			"final_price": 100.00,
+			"final_price": 200.00,
 			"products": {
 				"name": "商品6",
 				"price": 100.00,
@@ -223,7 +223,7 @@ Background:
 			}
 		},{
 			"status": "已完成",
-			"final_price": 100.00,
+			"final_price": 300.00,
 			"products": {
 				"name": "商品7",
 				"price": 100.00,
