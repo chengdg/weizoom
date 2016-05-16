@@ -56,27 +56,12 @@ class RebateParticipances(resource.Resource):
 		record_id = request.GET.get('record_id', 0)
 		is_show = request.GET.get('is_show', '0')
 
-		datas = app_models.RebateParticipance.objects(belong_to=record_id).order_by('-created_at')
+		if is_show == '1':
+			datas = app_models.RebateParticipance.objects(belong_to=record_id, is_new=True).order_by('-created_at')
+		else:
+			datas = app_models.RebateParticipance.objects(belong_to=record_id).order_by('-created_at')
 
 		member_ids = [d.member_id for d in datas]
-
-		if is_show == '1':
-			all_members = member_models.Member.objects.filter(id__in=member_ids)
-			member_id2created_at = {m.id: m.created_at for m in all_members}
-			member_ids = []
-			for data in datas:
-				participent_time = data.created_at
-				member_id = data.member_id
-				subscribe_time = member_id2created_at.get(member_id, None)
-				print ("----------------------------------------")
-				print ("----------------------------------------")
-				print ("subscribe_time==", subscribe_time)
-				print ("participent_time==", participent_time)
-				print ("----------------------------------------")
-				print ("----------------------------------------")
-				if subscribe_time:
-					if subscribe_time >= participent_time:
-						member_ids.append(data.member_id)
 
 		#查询
 		member_status = int(request.GET.get('status', '-1'))
