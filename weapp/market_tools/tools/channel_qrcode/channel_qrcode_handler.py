@@ -31,6 +31,8 @@ from channel_qrcode_util import *
 from mall.promotion import models as promotion_models
 from market_tools.tools.channel_qrcode import models
 
+from apps.customerized_apps.rebate import models as rebate_models
+
 """
 """
 class ChannelQrcodeHandler(MessageHandler):
@@ -64,6 +66,11 @@ class ChannelQrcodeHandler(MessageHandler):
 
 		#优化处理
 		if hasattr(context, 'is_member_qrcode') and (context.is_member_qrcode is True):
+			return None
+
+		#检查是否返利活动中有这个
+		if rebate_models.Rebate.objects(ticket=ticket, status=rebate_models.STATUS_RUNNING):
+			print 'apps.Rebate has the same ticket: %s, so let rebate handler handle it' % ticket
 			return None
 
 		if user_profile.user_id in [467,154] and \
