@@ -59,7 +59,7 @@ class RebateParticipance(models.Document):
 	member_id= models.LongField(default=0) #参与者id
 	belong_to = models.StringField(default="", max_length=100) #对应的活动id
 	created_at = models.DateTimeField() #扫码时间
-	is_new = models.BooleanField(default=True) #是扫码后才关注的会员
+	is_new = models.BooleanField(default=True) #扫码之前没有关注过则为True
 
 	meta = {
 		'collection': 'rebate_rebate_participance'
