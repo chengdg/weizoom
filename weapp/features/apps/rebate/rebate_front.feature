@@ -578,7 +578,7 @@ Scenario:3 带参数返利活动[扫码后成交金额]-已关注会员可参与
 #		},{
 #			"order_id":"0003",
 #			"status": "已完成",
-#			"final_price": 1.00,
+#			"final_price": 0.00,
 #			"products": [{
 #				"name": "商品1",
 #				"price": 1.00,
@@ -671,6 +671,7 @@ Scenario:4 带参数返利活动[扫码后成交金额]-已关注会员可参与
 	When 清空浏览器
 	When tom关注jobs的公众号
 	When tom访问jobs的webapp
+	#未满设置的金额，不符合满减条件
 	Then tom能获得返利微众卡
 	"""
 		[{
@@ -774,14 +775,14 @@ Scenario:6 带参数返利活动[扫码后成交金额]-已关注会员不可参
 	When bill扫描返利活动'返利活动5'的二维码
 
 	When 清空浏览器
-	When tom扫描返利活动'"'返利活动5'"'的二维码
+	When tom扫描返利活动'返利活动5'的二维码
 
 
 	When 清空浏览器
 	When zhouxun扫描返利活动'返利活动5'的二维码
 
 	When 微信用户批量消费jobs的商品
-		| order_id | date       | consumer | product | payment | pay_type  |postage*   |price*   | paid_amount*    | weizoom_card   | action     | order_status  |
+		| order_id | date       | consumer | product | payment | pay_type  |postage*  |price*  | paid_amount*   | weizoom_card   | action     | order_status  |
 		|   0001   | 今天       |   bill   | 商品1,1 |   支付  |  支付宝   |   0.00   | 1.00   |     1.00       |                | jobs,完成  |    已完成     |
 		|   0002   | 明天       |   tom    | 商品1,1 |   支付  |  支付宝   |   0.00   | 1.00   |     1.00       |                | jobs,完成  |    已完成     |
 		|   0003   | 明天       |   tom    | 商品1,1 |   支付  |  支付宝   |   0.00   | 1.00   |     1.00       |                | jobs,完成  |    已完成     |
@@ -815,7 +816,7 @@ Scenario:6 带参数返利活动[扫码后成交金额]-已关注会员不可参
 
 	When 清空浏览器
 	When zhouxun关注jobs的公众号
-	When zhoucun访问jobs的webapp
+	When zhouxun访问jobs的webapp
 	Then zhouxun能获得返利微众卡
 	"""
 		[{
@@ -845,7 +846,7 @@ Scenario:7 带参数返利活动[扫码后成交金额]-已关注会员不可参
 
 
 	When 清空浏览器
-	When zouxun扫描返利活动'返利活动6'的二维码
+	When zhouxun扫描返利活动'返利活动6'的二维码
 
 	When 微信用户批量消费jobs的商品
 		| order_id | date       | consumer | product | payment | pay_type  |postage*   |price* | paid_amount*   | weizoom_card   | action     | order_status  |
@@ -920,6 +921,7 @@ Scenario:8 带参数返利活动[扫码后成交金额]-已关注会员不可参
 	When 清空浏览器
 	When tom关注jobs的公众号
 	When tom访问jobs的webapp
+	#只要订单号为002的tom可以获得奖励
 	Then tom能获得返利微众卡
 	"""
 		[{
@@ -1032,16 +1034,25 @@ Scenario:9 带参数返利活动[扫码后成交金额]-已关注会员不可参
 		},{
 			"order_id":"0005",
 			"status": "已完成",
-			"final_price": 1.00,
+			"final_price": 0.00,
 			"products": [{
 			"name": "商品1",
 			"price": 1.00,
 			"count": 1
 			}]
+		},{
+			"order_id":"0006",
+			"status": "已完成",
+			"final_price": 0.00,
+			"products": [{
+			"name": "商品1",
+			"price": 1.00,
+			"count": 1
 		}]
 	"""
 	Then jobs取消对返利活动订单进行'仅显示扫码后成交订单'操作
 	#勾选仅显示扫码后的成交的订单
+	#已退款完成的不算入
 	Then jobs能获取'返利活动8'订单列表
 	"""
 		[{	"order_id":"0001",
@@ -1052,7 +1063,7 @@ Scenario:9 带参数返利活动[扫码后成交金额]-已关注会员不可参
 			"price": 1.00,
 			"count": 1
 		},{
-			"order_id":"0001",
+			"order_id":"0002",
 			"status": "已完成",
 			"final_price": 1.00,
 			"products": [{
