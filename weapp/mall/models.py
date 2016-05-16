@@ -1861,6 +1861,25 @@ class OrderHasPromotion(models.Model):
 		data['type'] = self.promotion_type
 		return data
 
+
+ORDER_CARD_DELETED = 0
+ORDER_CARD_USED = 1
+ORDER_CARD_REFUND = 2
+
+
+ORDER_CARD_TYPE = {
+}
+
+class OrderCardInfo(models.Model):
+	"""
+	<order card>关联
+	"""
+	order_id = models.CharField(max_length=100)  # 订单号
+	trade_id = models.CharField(max_length=100)  # 交易号
+	resource_type = models.IntegerField(default=1)  # 状态
+
+
+
 ########################################################################
 # OrderOperationLog:订单操作日志
 ########################################################################
