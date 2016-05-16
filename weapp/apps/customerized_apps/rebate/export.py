@@ -216,6 +216,7 @@ def get_target_orders(records=None, is_show=None):
 	all_member_ids = set() #所有member_id
 	for part in all_partis:
 		record_id = part.belong_to
+		tmp_record = id2record[record_id]
 		member_id = part.member_id
 		if not record_id2partis.has_key(record_id):
 			record_id2partis[record_id] = [member_id]
@@ -229,9 +230,9 @@ def get_target_orders(records=None, is_show=None):
 			all_member_ids.add(member_id)
 
 		if not member_id2records.has_key(member_id):
-			member_id2records[member_id] = [record_id]
+			member_id2records[member_id] = [tmp_record]
 		else:
-			member_id2records[member_id].append(record_id)
+			member_id2records[member_id].append(tmp_record)
 
 	webapp_user_id_belong_to_member_id = {} #webapp_user_id相关联的member_id
 	all_webapp_user_ids = [] #所有的webapp_user_id
