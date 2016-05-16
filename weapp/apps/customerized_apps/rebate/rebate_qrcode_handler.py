@@ -37,6 +37,9 @@ class RebateQrcodeHandler(MessageHandler):
 		if hasattr(context, 'is_member_qrcode') and (context.is_member_qrcode is True):
 			return None
 
+		if member and (hasattr(member, 'is_new') is False):
+			member.is_new = False
+
 		try:
 			rebate_record = apps_models.Rebate.objects.get(owner_id=user_profile.user_id, ticket=ticket, status=apps_models.STATUS_RUNNING)
 		except:
@@ -44,7 +47,11 @@ class RebateQrcodeHandler(MessageHandler):
 			return None
 		member_info = apps_models.RebateParticipance.objects(belong_to=str(rebate_record.id), member_id=member.id)
 		if member_info.count() <= 0:
-			member_info = apps_models.RebateParticipance(belong_to=str(rebate_record.id), member_id=member.id, created_at=datetime.now())
+			member_info = apps_models.RebateParticipance(
+				belong_to=str(rebate_record.id),
+				member_id=member.id,
+				is_new=member.is_new,
+				created_at=datetime.now())
 			member_info.save()
 
 		if rebate_record.reply_type == 1 and rebate_record.reply_detail:

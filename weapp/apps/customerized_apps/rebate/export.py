@@ -209,7 +209,7 @@ def get_target_orders(records=None, is_show=None):
 	if is_show:
 		member_ids = [p.member_id for p in all_partis]
 		members = member_models.Member.objects.filter(id__in=member_ids)
-		member_id2created_at = {m.id: m.created_at for m in members}
+		member_id2subscribed = {m.id: m.is_subscribed for m in members}
 
 	record_id2partis = {} #各活动的参与人member_id集合
 	member_id2records = {} #每个会员参与的所有活动
@@ -222,13 +222,9 @@ def get_target_orders(records=None, is_show=None):
 		else:
 			record_id2partis[record_id].append(member_id)
 
-		if is_show:
-			participent_time = part.created_at.strftime('%Y-%m-%d %H:%M:%S')
-			subscribe_time = member_id2created_at.get(member_id,None)
-			if subscribe_time:
-				subscribe_time = subscribe_time.strftime('%Y-%m-%d %H:%M:%S')
-				if subscribe_time >= participent_time:
-					all_member_ids.add(member_id)
+		if is_show and part.is_new:
+			if member_id2subscribed[part.member_id]:
+				all_member_ids.add(member_id)
 		else:
 			all_member_ids.add(member_id)
 
