@@ -194,29 +194,43 @@ def step_impl(context, user, rebate_name, operation_name):
 @then(u'{user}能获取"{rebate_name}"订单列表')
 def step_impl(context, user, rebate_name):
     rebate_id = __get_rebate_id(rebate_name)
-
+    # 首先进入页面
     url = "/apps/rebate/rebate_order_list/?record_id=" + str(rebate_id)
-    response = context.client.get(url)
-    response_data = json.loads(response.content)
+    get_response(context, url)
+    # 获取会员列表
+    response = get_response(context, {
+        "app": "apps/rebate",
+        "resource": "rebate_order_list",
+        "method": "get",
+        "type": "api",
+        "args": {
+            "count_per_page": 50,
+            "page": 1,
+            "enable_paginate": 1,
+            "record_id": rebate_id,
+            "is_show": "1" if not hasattr(context, "is_show") else context.is_show
+        }
+    })
 
+    response_data = json.loads(response.content)
     actual = []
     for item in response_data['data']['items']:
         order_info = {}
-        order_info['order_id'] = item['id']
+        order_info['order_id'] = item['order_id']
         # order_info['order_time'] = '今天' if item['created_at'].split(" ")[0] == datetime.now().strftime('%Y-%m-%d') else \
         # item['created_at'].split(" ")[0]
         # order_info['payment_time'] = '今天' if item['payment_time'].split(" ")[0] == datetime.now().strftime(
         #     '%Y-%m-%d') else item['payment_time'].split(" ")[0]
         # order_info['consumer'] = item['buyer_name']
+        products_list = []
         for product in item['products']:
-            product_info = []
-            product_info.append(product['name'])
-            if product['custom_model_properties']:
-                product_info.append(
-                    " ".join([property['property_value'] for property in product['custom_model_properties']]))
-            product_info.append(str(product['count']))
-            product_info.append(product['price'])
-        order_info['products'] = ",".join(product_info)
+            product_info = {}
+            product_info['name'] = product['name']
+            product_info['count']  = product['count']
+            product_info['price']  = product['price']
+            products_list.append(product_info)
+
+        order_info['products'] = products_list
         order_info['final_price'] = item['pay_money']
         # order_info['pay_type'] = item['pay_interface_name']
         # order_info['postage'] = item['postage']
@@ -225,5 +239,5 @@ def step_impl(context, user, rebate_name):
         order_info['status'] = item['status']
         actual.append(order_info)
 
-        expected = json.loads(context.text)
-        bdd_util.assert_list(expected, actual)
+    expected = json.loads(context.text)
+    bdd_util.assert_list(expected, actual)
