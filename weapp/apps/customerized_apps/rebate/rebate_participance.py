@@ -204,7 +204,6 @@ class RebateOrder_Export(resource.Resource):
 			export_data = []
 
 			# from sample to get fields4excel_file
-			# fields_pure.append(u'会员id')
 			fields_pure.append(u'订单号')
 			fields_pure.append(u'下单时间')
 			fields_pure.append(u'付款时间')
@@ -213,8 +212,8 @@ class RebateOrder_Export(resource.Resource):
 			fields_pure.append(u'商品数量')
 			fields_pure.append(u'支付方式')
 			fields_pure.append(u'支付金额')
-			# fields_pure.append(u'现金支付金额')
-			# fields_pure.append(u'微众卡支付金额')
+			fields_pure.append(u'现金支付金额')
+			fields_pure.append(u'微众卡支付金额')
 			fields_pure.append(u'订单状态')
 			fields_pure.append(u'购买人')
 			fields_pure.append(u'是否首单')
@@ -228,36 +227,32 @@ class RebateOrder_Export(resource.Resource):
 				order_id = data["order_id"]
 				created_at = data["created_at"]
 				payment_time = data["payment_time"]
+				products = data["products"]
 				pay_interface_name = data["pay_interface_name"]
 				pay_money = data["pay_money"]
 				# final_price = data["final_price"]
-				# weizoom_card_money = data["weizoom_card_money"]
+				weizoom_card_money = data["weizoom_card_money"]
 				status = data["status"]
 				buyer_name = data["buyer_name"]
-				is_first_order = data["is_first_order"]
+				is_first_order = u'是' if data["is_first_order"] else u'否'
 				# purchase_price = data["purchase_price"] #采购价
 				# purchase_cost = data["purchase_cost"] #采购成本
-				products = data["products"]
-				for product in products:
-					product_name = product['name']
-					product_count = product['count']
-					product_price = product['price']
 
-					export_record.append(order_id)
-					export_record.append(created_at)
-					export_record.append(payment_time)
-					export_record.append(product_name)
-					export_record.append(product_price)
-					export_record.append(product_count)
-					export_record.append(pay_interface_name)
-					export_record.append(pay_money)
-					# export_record.append(final_price)
-					# export_record.append(weizoom_card_money)
-					export_record.append(status)
-					export_record.append(buyer_name)
-					export_record.append(is_first_order)
-					# export_record.append(purchase_price)
-					# export_record.append(purchase_cost)
+				export_record.append(order_id)
+				export_record.append(created_at)
+				export_record.append(payment_time)
+				export_record.append(products)
+				export_record.append(products)
+				export_record.append(products)
+				export_record.append(pay_interface_name)
+				export_record.append(pay_money)
+				export_record.append(pay_money)
+				export_record.append(weizoom_card_money)
+				export_record.append(status)
+				export_record.append(buyer_name)
+				export_record.append(is_first_order)
+				# export_record.append(purchase_price)
+				# export_record.append(purchase_cost)
 
 				export_data.append(export_record)
 			# workbook/sheet
@@ -270,7 +265,6 @@ class RebateOrder_Export(resource.Resource):
 			for h in fields_pure:
 				ws.write(row, col, h)
 				col += 1
-
 			##write data
 			if export_data:
 				row = 1
@@ -284,10 +278,12 @@ class RebateOrder_Export(resource.Resource):
 							for n in range(len(record_col)):
 								data = record_col[n]
 								try:
-									ws.write(row + n, col, data)
+									ws.write(row + n, col, data['name'])
+									ws.write(row + n, col + 1, data['price'])
+									ws.write(row + n, col + 2, data['count'])
 								except:
 									# '编码问题，不予导出'
-									print record
+									# print record
 									pass
 						else:
 							try:
