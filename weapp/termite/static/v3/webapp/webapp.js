@@ -70,8 +70,13 @@ W.preloadImgsOnPage = function(option) {
                     $itemsImg.map(function(idx, item) {
                         $item = $(item);
                         var src = $item.attr('src')
-                        $item.attr('src', [src, '!/noicc/true/compress/true/progressive/true/quality/20'].join(''));
-                        $item.attr('data-url', src);
+                        // 第一张图不压缩，从第二张图开始压缩
+                        if (idx > 0) {
+                          $item.attr('src', [src, '!/noicc/true/compress/true/progressive/true/quality/20'].join(''));
+                          $item.attr('data-url', src);
+                        } else {
+                          $item.attr('src', src);
+                        }
                     });
                     break;
                 case 'productList':
