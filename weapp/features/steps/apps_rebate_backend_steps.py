@@ -195,7 +195,7 @@ def step_impl(context, user, rebate_name, operation_name):
 def step_impl(context, user, rebate_name):
     rebate_id = __get_rebate_id(rebate_name)
     # 首先进入页面
-    url = "/apps/rebate/rebate_order_list/?record_id=" + str(rebate_id)
+    url = "/apps/rebate/rebate_order_list/?id=" + str(rebate_id)
     get_response(context, url)
     # 获取会员列表
     response = get_response(context, {
