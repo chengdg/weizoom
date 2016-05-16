@@ -36,6 +36,7 @@ def step_impl(context, webapp_user_name, record_name):
     ticket = rebate.ticket
     debug_print(ticket)
     # 模拟收到的消息
+    time.sleep(1)
     openid = get_openid(webapp_user_name, owner.username)
     url = '/simulator/api/mp_user/qr_subscribe/?version=2'
     webapp_id = bdd_util.get_webapp_id_via_owner_id(owner_id)

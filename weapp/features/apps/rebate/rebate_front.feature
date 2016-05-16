@@ -365,15 +365,20 @@ Scenario:2 带参数返利活动[扫码后成交金额]-已关注会员可参与
 	Given jobs登录系统
 	When 清空浏览器
 	When bill扫描返利活动"返利活动1"的二维码
-	When bill访问jobs的webapp
 
 	When 清空浏览器
 	When zhouxun关注jobs的公众号
+	When zhouxun访问jobs的webapp
 	When zhouxun扫描返利活动"返利活动1"的二维码
 
 	When 清空浏览器
 	When tom关注jobs的公众号
+	When tom访问jobs的webapp
 	When tom扫描返利活动"返利活动1"的二维码
+
+	When 清空浏览器
+	When bill关注jobs的公众号
+	When bill访问jobs的webapp
 
 	When 微信用户批量消费jobs的商品
 		| order_id | date       | consumer | product | payment | pay_type  |postage*   |price*   | paid_amount*  | weizoom_card   | action     | order_status  |
@@ -383,15 +388,15 @@ Scenario:2 带参数返利活动[扫码后成交金额]-已关注会员可参与
 
 	Given jobs登录系统
 	#默认显示扫码后的新会员
-#	Then jobs能获取"返利活动1"会员列表
-#	"""
-#		[{
-#			"fans_name": "bill",
-#			"buy_number": 1,
-#			"integral": 0,
-#			"price":1.00
-#		}]
-#	"""
+	Then jobs能获取"返利活动1"会员列表
+	"""
+		[{
+			"fans_name": "bill",
+			"buy_number": 1,
+			"integral": 0,
+			"price":1.00
+		}]
+	"""
 	When jobs取消对"返利活动1"进行"仅显示扫码后关注会员"操作
 	#显示所有的的会员
 	Then jobs能获取"返利活动1"会员列表
@@ -413,7 +418,6 @@ Scenario:2 带参数返利活动[扫码后成交金额]-已关注会员可参与
 			"price":1.00
 		}]
 	"""
-
 
 	Given jobs登录系统
 	#默认显示扫码后成交的订单
@@ -495,7 +499,6 @@ Scenario:2 带参数返利活动[扫码后成交金额]-已关注会员可参与
 		}]
 
 	"""
-
 
 
 

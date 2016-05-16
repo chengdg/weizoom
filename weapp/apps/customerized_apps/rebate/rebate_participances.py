@@ -68,6 +68,12 @@ class RebateParticipances(resource.Resource):
 				participent_time = data.created_at
 				member_id = data.member_id
 				subscribe_time = member_id2created_at.get(member_id, None)
+				print ("----------------------------------------")
+				print ("----------------------------------------")
+				print ("subscribe_time==", subscribe_time)
+				print ("participent_time==", participent_time)
+				print ("----------------------------------------")
+				print ("----------------------------------------")
 				if subscribe_time:
 					if subscribe_time >= participent_time:
 						member_ids.append(data.member_id)
