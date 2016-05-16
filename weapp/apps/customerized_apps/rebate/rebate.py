@@ -102,7 +102,7 @@ class Rebate(resource.Resource):
 		data['is_limit_first_buy'] = True if data['is_limit_first_buy']=='1' else False
 		data['is_limit_cash'] = True if data['is_limit_cash']=='1' else False
 		rebate = app_models.Rebate(**data)
-		ticket_id = app_models.Rebate.objects.all().count() + 1
+		ticket_id = app_models.Rebate.objects.all().count() + 10001 #ID从1W开始计算，为了防止跟带参数二维码重复
 		rebate.ticket_id = ticket_id
 		rebate.save()
 
