@@ -213,6 +213,10 @@ def step_impl(context, user, rebate_name):
     })
 
     response_data = json.loads(response.content)
+
+    context.final_price = response_data['data']['final_price']
+    context.weizoom_card_money = response_data['data']['weizoom_card_money']
+
     actual = []
     for item in response_data['data']['items']:
         order_info = {}
@@ -238,6 +242,17 @@ def step_impl(context, user, rebate_name):
         # order_info['paid_amount'] = item['pay_money']
         order_info['status'] = item['status']
         actual.append(order_info)
+
+    expected = json.loads(context.text)
+    bdd_util.assert_list(expected, actual)
+
+@then(u"{user}获得总消费金额")
+def step_impl(context, user):
+    actual = {}
+    if hasattr(context, 'final_price'):
+        actual['cash_payment'] = context.final_price
+    if hasattr(context, 'final_price'):
+        actual['card_payment'] = context.weizoom_card_money
 
     expected = json.loads(context.text)
     bdd_util.assert_list(expected, actual)
