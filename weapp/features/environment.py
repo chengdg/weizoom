@@ -367,6 +367,8 @@ def __clear_all_app_data():
 	#apps返利活动
 	rebate_models.Rebate.objects.all().delete()
 	rebate_models.RebateParticipance.objects.all().delete()
+	rebate_models.RebateWeizoomCardDetails.objects.all().delete()
+	rebate_models.RebateWeizoomCardDetails.objects.all().delete()
 
 	#会员积分策略全部清零
 	member_models.IntegralStrategySttings.objects.all().update(be_member_increase_count=0)

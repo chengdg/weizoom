@@ -60,7 +60,7 @@ def handle_rebate_core(all_records=None):
 	webapp_user_id_belong_to_member_id, id2record, member_id2records, member_id2order_ids, all_orders = get_target_orders(all_records)
 
 	#排除掉已返利发卡的订单
-	order_has_granted = {d.order_id: True for d in apps_models.RebateWeizoomCardDetails.objects(order_id__in=id2record.keys())}
+	order_has_granted = {d.order_id: True for d in apps_models.RebateWeizoomCardDetails.objects(record_id__in=id2record.keys())}
 
 	order_id2order = {o.order_id: o for o in all_orders}
 
@@ -123,7 +123,9 @@ def grant_card(need_grant_info):
 	create_list = []	#需要发放的卡集合
 	not_ready_card_list = []	#暂未满足条件以后再发的卡集合
 	log_list = []
+	card_has_used = {}
 	for info in need_grant_info:
+		curr_index = 0
 		member_id = info['target_member_info'].id
 		member_name = info['target_member_info'].username_hexstr
 		card_ids_list = get_can_exchange_cards_list(info['weizoom_card_id_from'],info['weizoom_card_id_to'])
@@ -134,7 +136,18 @@ def grant_card(need_grant_info):
 				record_id = info['record_id']
 			))
 			continue
-		weizoom_card_id = sorted(card_ids_list)[0]
+		try:	#如果卡已经被发过，则取下一张，知道这个区间的卡被取完
+			while card_has_used.has_key(sorted(card_ids_list)[curr_index]):
+				curr_index += 1
+		except:
+			not_ready_card_list.append(apps_models.RebateWaitingAction(
+				webapp_id = info['webapp_id'],
+				member_id = member_id,
+				record_id = info['record_id']
+			))
+			continue
+		curr_card_id = sorted(card_ids_list)[curr_index]
+		weizoom_card_id = curr_card_id
 		create_list.append(promotion_models.CardHasExchanged(
 			webapp_id = info['webapp_id'],
 			card_id = weizoom_card_id,
@@ -149,6 +162,7 @@ def grant_card(need_grant_info):
 			weizoom_card_id = weizoom_card_id,
 			created_at = datetime.datetime.now()
 		))
+		card_has_used[curr_card_id] = True
 
 	#记录暂未满足条件的返利动作
 	if len(not_ready_card_list) > 0:
