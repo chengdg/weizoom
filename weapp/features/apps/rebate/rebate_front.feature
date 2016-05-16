@@ -520,7 +520,7 @@ Scenario:3 带参数返利活动[扫码后成交金额]-已关注会员可参与
 	When 清空浏览器
 	When zhouxun关注jobs的公众号于'3天后'
 	When zhouxun访问jobs的webapp
-	When zouxun扫描返利活动'返利活动2'的二维码
+	When zhouxun扫描返利活动'返利活动2'的二维码
 
 	When 微信用户批量消费jobs的商品
 		| order_id | date        | consumer | product | payment | pay_type  |postage*   |price*   | paid_amount*    | weizoom_card   | action     | order_status  |
@@ -644,12 +644,14 @@ Scenario:4 带参数返利活动[扫码后成交金额]-已关注会员可参与
 
 	When 清空浏览器
 	When tom关注jobs的公众号于'今天'
+	When tom访问jobs的webapp
 	When tom扫描返利活动'返利活动3'的二维码
 
 
 	When 清空浏览器
 	When zhouxun关注jobs的公众号于"今天"
-	When zouxun扫描返利活动'返利活动3'的二维码
+	When zhouxun访问jobs的webapp
+	When zhouxun扫描返利活动'返利活动3'的二维码
 
 	When 微信用户批量消费jobs的商品
 		| order_id | date       | consumer | product | payment | pay_type  |postage*   |price* | paid_amount*   | weizoom_card   | action     | order_status  |
@@ -660,6 +662,7 @@ Scenario:4 带参数返利活动[扫码后成交金额]-已关注会员可参与
 
 	When 清空浏览器
 	When tom关注jobs的公众号于'今天'
+	When tom访问jobs的webapp
 	When tom绑定手机号'13563223668'
 
 	Given jobs登录系统
@@ -687,16 +690,19 @@ Scenario:5 带参数返利活动[扫码后成交金额]-已关注会员可参与
 
 	When 清空浏览器
 	When bill关注jobs的公众号于'一天前'
+	When bill访问jobs的webapp
 	When bill扫描返利活动'返利活动4'的二维码
 
 	When 清空浏览器
 	When tom关注jobs的公众号于'今天'
+	When tom访问jobs的webapp
 	When tom扫描返利活动'返利活动4'的二维码
 
 
 	When 清空浏览器
 	When zhouxun关注jobs的公众号于'今天'
-	When zouxun扫描返利活动'返利活动4'的二维码
+	When zhouxun访问jobs的webapp
+	When zhouxun扫描返利活动'返利活动4'的二维码
 
 	When 微信用户批量消费jobs的商品
 		| order_id | date       | consumer | product | payment | pay_type  |postage*   |price*   | paid_amount*    | weizoom_card   | action     | order_status  |
@@ -764,6 +770,7 @@ Scenario:6 带参数返利活动[扫码后成交金额]-已关注会员不可参
 
 	When 清空浏览器
 	When bill关注jobs的公众号于'一天前'
+	When bill访问jobs的webapp
 	When bill扫描返利活动'返利活动5'的二维码
 
 	When 清空浏览器
@@ -830,6 +837,7 @@ Scenario:7 带参数返利活动[扫码后成交金额]-已关注会员不可参
 	#未关注过的用户下单
 	When 清空浏览器
 	When bill关注jobs的公众号于'一天前'
+	When bill访问jobs的webapp
 	When bill扫描返利活动'返利活动6'的二维码
 
 	When 清空浏览器
@@ -879,6 +887,7 @@ Scenario:8 带参数返利活动[扫码后成交金额]-已关注会员不可参
 
 	When 清空浏览器
 	When bill关注jobs的公众号于'今天'
+	When bill访问jobs的webapp
 	When bill扫描返利活动'返利活动7'的二维码
 
 	When 清空浏览器
@@ -930,6 +939,7 @@ Scenario:9 带参数返利活动[扫码后成交金额]-已关注会员不可参
 
 	When 清空浏览器
 	When bill关注jobs的公众号于'一天前'
+	When bill访问jobs的webapp
 	When bill扫描返利活动'返利活动8'的二维码
 
 	When 清空浏览器
@@ -1091,8 +1101,8 @@ Scenario:10 带参数返利活动-多个返利活动同时存在，并且同一�
 
 	When 清空浏览器
 	When bill关注jobs的公众号于'一天前'
+	When bill访问jobs的webapp
 	When bill扫描返利活动'返利活动1'的二维码
-	When bill访问jobs的weapp
 	When bill购买jobs的商品
 		| order_id | date        | consumer | product | payment | pay_type  |postage*   |price*   | paid_amount*    | weizoom_card   | action     | order_status  |
 		|   0001   | 一天前      |   bill   | 商品1,1 |   支付  |  支付宝   |   0.00   | 1.00   |     1.00       |                | jobs,完成  |    已完成        |
@@ -1146,8 +1156,9 @@ Scenario:11 带参数返利活动-查看发放详情
 	Given jobs登录系统
 	When 清空浏览器
 	When bill关注jobs的公众号于'一天前'
-	When bill扫描返利活动'返利活动1'的二维码
 	When bill访问jobs的weapp
+	When bill扫描返利活动'返利活动1'的二维码
+	
 	When bill购买jobs的商品
 		| order_id | date         | consumer | product | payment | pay_type  |postage*   |price*   | paid_amount*    | weizoom_card   | action     | order_status  |
 		|   0001   | 一天前       |   bill   | 商品1,1 |   支付  |  支付宝   |   0.00    | 1.00    |     1.00        |                | jobs,完成  |    已完成     |
