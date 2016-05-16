@@ -17,7 +17,8 @@ class Command(BaseCommand):
 	def handle(self, *args, **options):
 		"""
 		"""
-		try:
+		# try:
+		if True:
 			print ('rebate timer task start...')
 			start_time = time.time()
 			#处理发放微众卡的任务
@@ -30,8 +31,8 @@ class Command(BaseCommand):
 			end_time = time.time()
 			diff = (end_time-start_time)*1000
 			print (u'check...expend %s' % diff)
-		except Exception, e:
-			print u'------grant fail--------------------------------'
-			print e
-			notify_msg = u"发放返利微众卡失败，cause:\n{}".format(unicode_full_stack())
-			watchdog_error(notify_msg)
+		# except Exception, e:
+		# 	print u'------grant fail--------------------------------'
+		# 	print e
+		# 	notify_msg = u"发放返利微众卡失败，cause:\n{}".format(unicode_full_stack())
+		# 	watchdog_error(notify_msg)
