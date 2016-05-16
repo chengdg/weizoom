@@ -60,8 +60,7 @@ def handle_rebate_core(all_records=None):
 	webapp_user_id_belong_to_member_id, id2record, member_id2records, member_id2order_ids, all_orders = get_target_orders(all_records)
 
 	#排除掉已返利发卡的订单
-	done_order_ids = [d.order_id for d in apps_models.RebateWeizoomCardDetails.objects.all()]
-	all_orders = all_orders.exclude(order_id__in=done_order_ids)
+	order_has_granted = {d.order_id: True for d in apps_models.RebateWeizoomCardDetails.objects(order_id__in=id2record.keys())}
 
 	order_id2order = {o.order_id: o for o in all_orders}
 
@@ -99,6 +98,8 @@ def handle_rebate_core(all_records=None):
 					continue	#返利活动限制现金且该订单没有达到现金值，不算
 				if not is_limit_cash and target_order.product_price < rebate_order_price:
 					continue	#返利活动不限制现金但该订单的商品价格没有达到要求值，不算
+				if order_has_granted.has_key(order_id):
+					continue	#该订单已被返利过，不算
 				need_grant_info.append({
 					"webapp_id": owner_id2webapp_id[record.owner_id],
 					"weizoom_card_id_from": record.weizoom_card_id_from,
@@ -138,7 +139,8 @@ def grant_card(need_grant_info):
 			webapp_id = info['webapp_id'],
 			card_id = weizoom_card_id,
 			owner_id = member_id,
-			owner_name = member_name
+			owner_name = member_name,
+			source = promotion_models.CARD_SOURCE_REBATE
 		))
 		log_list.append(apps_models.RebateWeizoomCardDetails(
 			record_id = info['record_id'],

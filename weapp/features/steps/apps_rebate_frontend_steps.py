@@ -100,9 +100,8 @@ def step_impl(context, webapp_user_name):
         cards = response.context['cards']['card']
         print('cards!!!!!!!!!!!!!!')
         print(cards)
-        data_cards = []
         for card in cards:
-            data_cards.append({
+            actual.append({
                 'id': card['card_id']
             })
         bdd_util.assert_list(expected, actual)

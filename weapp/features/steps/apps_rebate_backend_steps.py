@@ -255,4 +255,4 @@ def step_impl(context, user):
         actual['card_payment'] = context.weizoom_card_money
 
     expected = json.loads(context.text)
-    bdd_util.assert_list(expected, actual)
+    bdd_util.assert_dict(expected, actual)
