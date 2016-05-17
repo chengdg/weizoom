@@ -102,7 +102,7 @@
                 -&nbsp
                 <input type="text" class="form-control w70" id="weizoom_card_id_to" name="weizoom_card_id_to" value="{{rebate_rule.weizoom_card_id_to}}" data-validate="require-notempty,,require-nonnegative"/>
             <span class="xa-exchangeStock"></span>
-            <span>{% if rebate_rule %}<a target="_blank" href="/apps/rebate/card_details/?id={{ rebate_rule.id }}" class="xui-detail" title="发放详情">发放详情</a>{% else %}{% endif %}</span>
+            <span><a target="_blank" {% if rebate_rule %} href="/apps/rebate/card_details/?id={{ rebate_rule.id }}" {% else %}{% endif %} class="xui-detail" title="发放详情">发放详情</a></span>
             </div>
             <div class="errorHint" data-error-hint="请输入数字"></div>
         </div>
