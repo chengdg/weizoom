@@ -119,7 +119,7 @@ class CleanUpCookieMiddleware(object):
 			response.delete_cookie(member_settings.SOCIAL_ACCOUNT_TOKEN_SESSION_KEY)
 			response.delete_cookie(member_settings.OPENID_WEBAPP_ID_KEY)
 			response.delete_cookie(member_settings.CURRENT_TOKEN)
-			
+
 			if webapp_id != request.user_profile.webapp_id:
 				response.delete_cookie(member_settings.FOLLOWED_MEMBER_TOKEN_SESSION_KEY)
 				response.delete_cookie(member_settings.FOLLOWED_MEMBER_SHARED_URL_SESSION_KEY)
@@ -774,7 +774,7 @@ class WebAppUserMiddleware(object):
 
 		if hasattr(request, 'webapp_user') and request.webapp_user:
 			return None
-			
+
 		uuid = request.COOKIES.get(member_settings.UUID_SESSION_KEY, None)
 
 		if (uuid is not None) and (request.member is not None):

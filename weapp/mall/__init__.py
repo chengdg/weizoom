@@ -9,3 +9,4 @@ import product
 import promotion
 import notice
 import outline
+import shopping_cart
