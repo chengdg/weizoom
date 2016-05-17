@@ -16,23 +16,37 @@ class Command(BaseCommand):
 
 	def handle(self, *args, **options):
 		"""
+		@args: grant  ==== 发卡
+			   check  ==== 处理待发卡记录
 		"""
-		# try:
-		if True:
-			print ('rebate timer task start...')
-			start_time = time.time()
-			#处理发放微众卡的任务
-			handle_rebate_core()
-			end_time = time.time()
-			diff = (end_time-start_time)*1000
-			print ('grant card...expend %s' % diff)
-			#检查暂存的记录是否有满足条件
-			handle_wating_actions()
-			end_time = time.time()
-			diff = (end_time-start_time)*1000
-			print (u'check...expend %s' % diff)
-		# except Exception, e:
-		# 	print u'------grant fail--------------------------------'
-		# 	print e
-		# 	notify_msg = u"发放返利微众卡失败，cause:\n{}".format(unicode_full_stack())
-		# 	watchdog_error(notify_msg)
+		print ('rebate timer task start...')
+
+		l = len(args)
+		if l == 1:
+			if args[0] == 'grant':
+				self.__grant()
+			elif args[0] == 'check':
+				self.__check()
+		elif l == 0:
+			self.__grant()
+			self.__check()
+		else:
+			print "invalid command %s" % ','.join(args)
+
+		print ('rebate timer task end...')
+
+	def __grant(self):
+		start_time = time.time()
+		#处理发放微众卡的任务
+		handle_rebate_core()
+		end_time = time.time()
+		diff = (end_time-start_time)*1000
+		print ('grant card...expend %s' % diff)
+
+	def __check(self):
+		start_time = time.time()
+		#检查暂存的记录是否有满足条件
+		handle_wating_actions()
+		end_time = time.time()
+		diff = (end_time-start_time)*1000
+		print (u'check...expend %s' % diff)
