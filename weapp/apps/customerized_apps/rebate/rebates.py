@@ -139,7 +139,7 @@ class Rebates(resource.Resource):
 					continue
 
 				#判断扫码后的金额
-				if temp_order.created_at>record.start_time or temp_order.created_at<record.end_time: #扫码后的
+				if temp_order.created_at>record.start_time and temp_order.created_at<record.end_time: #扫码后的
 					if not record_id2cash.has_key(rid):
 						record_id2cash[rid] = id2order[oid].final_price
 					else:
