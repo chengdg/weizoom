@@ -80,7 +80,7 @@ class Rebates(resource.Resource):
 			all_member_ids.add(member_id)
 		member_id2subscribe = {m.id: m.is_subscribed for m in Member.objects.filter(id__in=all_member_ids)}
 		record_own_member_ids = {}
-		member_id2partis = {}
+		# member_id2partis = {}
 		for p in all_partis:
 			belong_to = p.belong_to
 			member_id = p.member_id
@@ -96,12 +96,12 @@ class Rebates(resource.Resource):
 			else:
 				record_own_member_ids[belong_to].add(member_id)
 
-			if not member_id2partis.has_key(member_id):
-				member_id2partis[member_id] = {
-					belong_to: p.created_at
-				}
-			else:
-				member_id2partis[member_id][belong_to] = p.created_at
+			# if not member_id2partis.has_key(member_id):
+			# 	member_id2partis[member_id] = {
+			# 		belong_to: p.created_at
+			# 	}
+			# else:
+			# 	member_id2partis[member_id][belong_to] = p.created_at
 
 		#统计扫码后成交金额和首次下单数
 		webapp_user_id_belong_to_member_id, id2record, member_id2records, member_id2order_ids, all_orders = rebate_export.get_target_orders(datas)
@@ -139,7 +139,7 @@ class Rebates(resource.Resource):
 					continue
 
 				#判断扫码后的金额
-				if temp_order.created_at>member_id2partis[temp_member_id][rid] or temp_order.created_at<record.end_time: #扫码后的
+				if temp_order.created_at>record.start_time or temp_order.created_at<record.end_time: #扫码后的
 					if not record_id2cash.has_key(rid):
 						record_id2cash[rid] = id2order[oid].final_price
 					else:

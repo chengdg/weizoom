@@ -53,11 +53,16 @@ def handle_rebate_core(all_records=None):
 	对于符合返利条件的订单，发放对应的微众卡
 	@return:
 	"""
+	import time
 	if not all_records:
 		all_records = apps_models.Rebate.objects(is_deleted=False,status__ne=apps_models.STATUS_NOT_START)
 
 	#筛选出扫码后已完成的符合要求的订单
+	print "start get_target_orders============================="
+	print time.time()
 	webapp_user_id_belong_to_member_id, id2record, member_id2records, member_id2order_ids, all_orders = get_target_orders(all_records)
+	print "end get_target_orders============================="
+	print time.time()
 
 	#排除掉已返利发卡的订单
 	order_has_granted = {d.order_id: True for d in apps_models.RebateWeizoomCardDetails.objects(record_id__in=id2record.keys())}
@@ -109,7 +114,11 @@ def handle_rebate_core(all_records=None):
 					"order_id": order_id
 				})
 	#根据每个活动的配置，发放对应的微众卡
+	print "start time grant_card============================="
+	print time.time()
 	grant_card(need_grant_info)
+	print "end time grant_card============================="
+	print time.time()
 
 def grant_card(need_grant_info):
 	"""
