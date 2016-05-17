@@ -846,6 +846,7 @@ class CardHasExchanged(models.Model):
 	owner_name = models.CharField(max_length = 256) #拥有者姓名
 	created_at = models.DateTimeField(auto_now_add=True)  #兑换时间
 	source = models.IntegerField(default=CARD_SOURCE_INTEGRAL) #微众卡来源（积分兑换 & 返利活动）
+	rebate_id = models.CharField(max_length=50,default='') #返利活动ID,默认为0
 
 	class Meta(object):
 		db_table = 'mallpromotion_card_has_exchanged'

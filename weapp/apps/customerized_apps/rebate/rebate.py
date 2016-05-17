@@ -221,10 +221,11 @@ class RebateCardDetails(resource.Resource):
 	def get_rebate_cards(request,cards):
 		card_number = request.GET.get('cardNumber',None)
 		card_user = request.GET.get('cardUser',None)
+		rebate_rule_id = request.GET.get('id','')
 
 		webapp_id = request.user_profile.webapp_id
 		#查询
-		rebate_cards = promotion_models.CardHasExchanged.objects.filter(webapp_id=webapp_id, source=1).order_by('-created_at')
+		rebate_cards = promotion_models.CardHasExchanged.objects.filter(webapp_id=webapp_id, source=1 ,rebate_id=rebate_rule_id).order_by('-created_at')
 		if card_number:
 			cur_cards = cards.filter(weizoom_card_id__contains = card_number)
 			card_id_list = []
