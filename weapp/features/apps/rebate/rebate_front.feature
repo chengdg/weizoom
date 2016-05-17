@@ -311,7 +311,7 @@ Background:
 		}]
 	"""
 
-@mall @rebate
+@mall2 @rebate
 Scenario:1 管理员能够查看到所有扫过该码并关注过的微信用户信息，带参数返利活动[关注人数]-会员数量变化；
 	#设置已关注会员可参与
 	#购买次数为首单
@@ -357,7 +357,7 @@ Scenario:1 管理员能够查看到所有扫过该码并关注过的微信用户
 		}
 	"""
 
-@mall @rebate
+@mall2 @rebate
 Scenario:2 带参数返利活动[扫码后成交金额]-已关注会员可参与；首单；现金
 
 	Given jobs登录系统
@@ -492,7 +492,7 @@ Scenario:2 带参数返利活动[扫码后成交金额]-已关注会员可参与
 
 	"""
 
-@mall @rebate @aix1111 @kuki
+@mall2 @rebate
 Scenario:3 带参数返利活动[扫码后成交金额]-已关注会员可参与；首单；非现金
 	#已关注会员可参与；
 	#必须是首单；
@@ -601,7 +601,7 @@ Scenario:3 带参数返利活动[扫码后成交金额]-已关注会员可参与
 
 	"""
 
-@mall @rebate
+@mall2 @rebate
 Scenario:4 带参数返利活动[扫码后成交金额]-已关注会员可参与；不限；现金
 	#已关注会员可参与；
 	#必须是不限；
@@ -609,13 +609,13 @@ Scenario:4 带参数返利活动[扫码后成交金额]-已关注会员可参与
 	Given jobs登录系统
 
 	When 清空浏览器
-	When tom关注jobs的公众号于'今天'
+	When tom关注jobs的公众号
 	When tom访问jobs的webapp
 	When tom扫描返利活动'返利活动3'的二维码
 
 
 	When 清空浏览器
-	When zhouxun关注jobs的公众号于"今天"
+	When zhouxun关注jobs的公众号
 	When zhouxun访问jobs的webapp
 	When zhouxun扫描返利活动'返利活动3'的二维码
 
@@ -624,7 +624,6 @@ Scenario:4 带参数返利活动[扫码后成交金额]-已关注会员可参与
 		|   0001   | 明天       |   tom    | 商品1,1 |   支付  |  支付宝   |   0.00   | 1.00   |     1.00       |                | jobs,完成  |    已完成     |
 		|   0002   | 明天       |   tom    | 商品2,1 |   支付  |  支付宝   |   0.00   | 0.50   |     0.50       |                | jobs,完成  |    已完成     |
 		|   0003   | 明天       |  zhouxun | 商品1,1 |   支付  |  货到付款   |   0.00   | 1.00   |     1.00       | 0000041,1234567| jobs,完成  |    已完成     |
-
 
 	When 清空浏览器
 	When tom关注jobs的公众号于'今天'
@@ -635,7 +634,6 @@ Scenario:4 带参数返利活动[扫码后成交金额]-已关注会员可参与
 	Then jobs发放返利微众卡
 
 	When 清空浏览器
-	When tom关注jobs的公众号
 	When tom访问jobs的webapp
 	#未满设置的金额，不符合满减条件
 	Then tom能获得返利微众卡
@@ -646,8 +644,7 @@ Scenario:4 带参数返利活动[扫码后成交金额]-已关注会员可参与
 
 	"""
 
-
-@mall @rebate
+@mall2 @rebate
 Scenario:5 带参数返利活动[扫码后成交金额]-已关注会员可参与；不限；非现金
 	#已关注会员可参与；
 	#不限订单；
@@ -692,7 +689,6 @@ Scenario:5 带参数返利活动[扫码后成交金额]-已关注会员可参与
 	Then jobs发放返利微众卡
 
 	When 清空浏览器
-	When bill关注jobs的公众号
 	When bill访问jobs的webapp
 	Then bill能获得返利微众卡
 	"""
@@ -716,7 +712,6 @@ Scenario:5 带参数返利活动[扫码后成交金额]-已关注会员可参与
 	"""
 
 	When 清空浏览器
-	When zhouxun关注jobs的公众号
 	When zhouxun访问jobs的webapp
 	Then zhouxun能获得返利微众卡
 	"""
@@ -726,8 +721,7 @@ Scenario:5 带参数返利活动[扫码后成交金额]-已关注会员可参与
 
 	"""
 
-
-@mall @rebate
+@mall2 @rebate
 Scenario:6 带参数返利活动[扫码后成交金额]-已关注会员不可参与；不限；非现金
 	#已关注会员不可参与；
 	#不限订单；
@@ -768,7 +762,6 @@ Scenario:6 带参数返利活动[扫码后成交金额]-已关注会员不可参
 
 
 	When 清空浏览器
-	When tom关注jobs的公众号
 	When tom访问jobs的webapp
 	Then tom能获得返利微众卡
 	"""
@@ -781,7 +774,6 @@ Scenario:6 带参数返利活动[扫码后成交金额]-已关注会员不可参
 	"""
 
 	When 清空浏览器
-	When zhouxun关注jobs的公众号
 	When zhouxun访问jobs的webapp
 	Then zhouxun能获得返利微众卡
 	"""
@@ -791,10 +783,7 @@ Scenario:6 带参数返利活动[扫码后成交金额]-已关注会员不可参
 
 	"""
 
-
-
-
-@mall @rebate
+@mall2 @rebate
 Scenario:7 带参数返利活动[扫码后成交金额]-已关注会员不可参与；不限；现金
 	#已关注会员不可参与；
 	#不限订单；
@@ -834,17 +823,16 @@ Scenario:7 带参数返利活动[扫码后成交金额]-已关注会员不可参
 	Then jobs发放返利微众卡
 
 	When 清空浏览器
-	When tom关注jobs的公众号
 	When tom访问jobs的webapp
 	Then tom能获得返利微众卡
 	"""
 		[{
-			"id":"0000019"
+			"id":"0000016"
 		}]
 
 	"""
 	
-@mall @rebate
+@mall2 @rebate @kuki8
 Scenario:8 带参数返利活动[扫码后成交金额]-已关注会员不可参与；首单；现金
 	#已关注会员不可参与；
 	#首单；
@@ -883,21 +871,18 @@ Scenario:8 带参数返利活动[扫码后成交金额]-已关注会员不可参
 	Given jobs登录系统
 	Then jobs发放返利微众卡
 
-
 	When 清空浏览器
-	When tom关注jobs的公众号
 	When tom访问jobs的webapp
 	#只要订单号为002的tom可以获得奖励
 	Then tom能获得返利微众卡
 	"""
 		[{
-			"id":"0000022"
+			"id":"0000019"
 		}]
 
 	"""
 
-
-@mall @rebate
+@mall2 @rebate @kuki
 Scenario:9 带参数返利活动[扫码后成交金额]-已关注会员不可参与；首单；非现金
 	#已关注会员不可参与；
 	#首单；
@@ -961,7 +946,6 @@ Scenario:9 带参数返利活动[扫码后成交金额]-已关注会员不可参
 	When zhouxun访问jobs的webapp
 	When zhouxun申请退款订单'0006'
 	Then zhouxun退款完成订单'0006'
-
 
 
 	Given jobs登录系统
@@ -1046,7 +1030,7 @@ Scenario:9 带参数返利活动[扫码后成交金额]-已关注会员不可参
 
 
 
-@mall @rebate
+@mall2 @rebate
 Scenario:10 带参数返利活动-多个返利活动同时存在，并且同一个人扫多个返利活动的码且下单
 	Given jobs登录系统
 
@@ -1099,7 +1083,7 @@ Scenario:10 带参数返利活动-多个返利活动同时存在，并且同一�
 	"""
 
 
-@mall @rebate
+@mall2 @rebate
 Scenario:11 带参数返利活动-查看发放详情
 	Given jobs登录系统
 	When 清空浏览器
