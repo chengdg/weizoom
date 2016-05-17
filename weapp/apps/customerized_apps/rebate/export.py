@@ -58,11 +58,7 @@ def handle_rebate_core(all_records=None):
 		all_records = apps_models.Rebate.objects(is_deleted=False,status__ne=apps_models.STATUS_NOT_START)
 
 	#筛选出扫码后已完成的符合要求的订单
-	print "start get_target_orders============================="
-	print time.time()
 	webapp_user_id_belong_to_member_id, id2record, member_id2records, member_id2order_ids, all_orders = get_target_orders(all_records)
-	print "end get_target_orders============================="
-	print time.time()
 
 	#排除掉已返利发卡的订单
 	order_has_granted = {d.order_id: True for d in apps_models.RebateWeizoomCardDetails.objects(record_id__in=id2record.keys())}
@@ -99,6 +95,8 @@ def handle_rebate_core(all_records=None):
 					continue	#返利活动限制首单且该订单在该活动之前就产生了，不算
 				if order_created_time < start_time or order_created_time > end_time:
 					continue	#不在该返利活动的有效期内，不算
+				#TODO 不在用户扫码时间内的，不算
+
 				if is_limit_cash and target_order.final_price < rebate_order_price:
 					continue	#返利活动限制现金且该订单没有达到现金值，不算
 				if not is_limit_cash and target_order.product_price < rebate_order_price:
@@ -114,11 +112,7 @@ def handle_rebate_core(all_records=None):
 					"order_id": order_id
 				})
 	#根据每个活动的配置，发放对应的微众卡
-	print "start time grant_card============================="
-	print time.time()
 	grant_card(need_grant_info)
-	print "end time grant_card============================="
-	print time.time()
 
 def grant_card(need_grant_info):
 	"""

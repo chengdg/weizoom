@@ -105,7 +105,7 @@ class Rebates(resource.Resource):
 
 		#统计扫码后成交金额和首次下单数
 		webapp_user_id_belong_to_member_id, id2record, member_id2records, member_id2order_ids, all_orders = rebate_export.get_target_orders(datas)
-		id2order = {str(o.id): o for o in all_orders}
+		id2order = {o.order_id: o for o in all_orders}
 		record_id2orders = {}
 		for rid in record_ids:
 			member_ids = record_own_member_ids.get(rid, None)
