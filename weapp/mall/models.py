@@ -1872,10 +1872,11 @@ ORDER_CARD_TYPE = {
 
 class OrderCardInfo(models.Model):
 	"""
-	<order card>关联
+	订单的微众卡信息
 	"""
 	order_id = models.CharField(max_length=100)  # 订单号
 	trade_id = models.CharField(max_length=100)  # 交易号
+	used_card = models.CharField(max_length=1024)   # 订单使用的微众卡
 	created_at = models.DateTimeField(auto_now_add=True)  # 创建时间
 
 	class Meta(object):
