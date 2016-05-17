@@ -64,6 +64,11 @@ class RebateOrderList(resource.Resource):
 		rebate_start_time = records[0].start_time
 		rebate_end_time = records[0].end_time
 
+		member_id2scan_time = {}
+		if is_show:
+			rebate_participances = app_models.RebateParticipance.objects(belong_to=record_id)
+			member_id2scan_time = {p.member_id: p.created_at for p in rebate_participances}
+
 		webapp_user_id_belong_to_member_id, id2record, member_id2records, member_id2order_ids, all_orders = export.get_target_orders(records, is_show)
 		webapp_user_ids = webapp_user_id_belong_to_member_id.keys()
 
@@ -77,6 +82,8 @@ class RebateOrderList(resource.Resource):
 
 		if is_show:
 			all_orders = all_orders.filter(created_at__gte=rebate_start_time, created_at__lte=rebate_end_time)
+		else:
+			all_orders = all_orders.filter(created_at__lte=rebate_end_time)
 
 		if start_date:
 			params['created_at__gte'] = start_date
@@ -127,6 +134,12 @@ class RebateOrderList(resource.Resource):
 			# 获取order对应的member的显示名
 			member = webappuser2member.get(order.webapp_user_id, None)
 			if member:
+				if is_show:
+					member_id = member.id
+					scan_time = member_id2scan_time.get(member_id, None)
+					if scan_time and scan_time > order.created_at:
+						continue
+
 				order.buyer_name = member.username_for_html
 				order.buyer_id = member.id
 			else:
