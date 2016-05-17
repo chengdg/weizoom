@@ -57,7 +57,7 @@ def handle_rebate_core(all_records=None):
 		all_records = apps_models.Rebate.objects(is_deleted=False,status__ne=apps_models.STATUS_NOT_START)
 
 	#筛选出扫码后已完成的符合要求的订单
-	member_id2member, webapp_user_id_belong_to_member_id, id2record, member_id2records, member_id2order_ids, all_orders = get_target_orders(all_records)
+	webapp_user_id_belong_to_member_id, id2record, member_id2records, member_id2order_ids, all_orders = get_target_orders(all_records)
 
 	#排除掉已返利发卡的订单
 	order_has_granted = {d.order_id: True for d in apps_models.RebateWeizoomCardDetails.objects(record_id__in=id2record.keys())}
@@ -68,6 +68,7 @@ def handle_rebate_core(all_records=None):
 	#首先找到这个会员都参与过哪些活动，然后拿这些活动的生效日期范围与下单时间一一比较
 
 	owner_id2webapp_id = {u.manager_id: u.webapp_id for u in UserProfile.objects.filter(is_mp_registered=True, is_active=True)}
+	member_id2member = {m.id: m for m in member_models.Member.objects.filter(id__in=member_id2records.keys())}
 	need_grant_info = []
 	order_before_qrcode = {}
 	for member_id, records in member_id2records.items():
@@ -208,7 +209,6 @@ def get_target_orders(records=None, is_show=None):
 	筛选出扫码后已完成的符合要求的订单
 	@param record: 活动实例
 	@return:
-		member_id2member: member_id和member实例的映射
 		webapp_user_id_belong_to_member_id: webapp_user_id相关联的member_id
 		id2record: 活动id和实例的映射
 		member_id2records: 会员id和其参与过的活动的映射
@@ -270,6 +270,4 @@ def get_target_orders(records=None, is_show=None):
 		else:
 			member_id2order_ids[member_id].append(order.order_id)
 
-	member_id2member = {m.id: m for m in member_models.Member.objects.filter(id__in=member_id2records.keys())}
-
-	return member_id2member, webapp_user_id_belong_to_member_id, id2record, member_id2records, member_id2order_ids, all_orders
+	return webapp_user_id_belong_to_member_id, id2record, member_id2records, member_id2order_ids, all_orders

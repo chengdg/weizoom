@@ -78,6 +78,7 @@ class Rebates(resource.Resource):
 			all_member_ids.add(member_id)
 		member_id2subscribe = {m.id: m.is_subscribed for m in Member.objects.filter(id__in=all_member_ids)}
 		record_own_member_ids = {}
+		member_id2partis = {}
 		for p in all_partis:
 			belong_to = p.belong_to
 			member_id = p.member_id
@@ -92,6 +93,13 @@ class Rebates(resource.Resource):
 				record_own_member_ids[belong_to] = {member_id}
 			else:
 				record_own_member_ids[belong_to].add(member_id)
+
+			if not member_id2partis.has_key(member_id):
+				member_id2partis[member_id] = {
+					belong_to: p.created_at
+				}
+			else:
+				member_id2partis[member_id][belong_to] = p.created_at
 
 		#统计扫码后成交金额和首次下单数
 		webapp_user_id_belong_to_member_id, id2record, member_id2records, member_id2order_ids, all_orders = rebate_export.get_target_orders(datas)
@@ -111,22 +119,29 @@ class Rebates(resource.Resource):
 		record_id2first_buy_num = {}
 		for rid, order_ids in record_id2orders.items():
 			record = id2record[rid]
-			has_order = False
 			for oid in order_ids:
 				oid = str(oid)
-				if id2order.get(oid, None):
+				temp_order = id2order.get(oid, None)
+				if not temp_order:
+					continue
+
+				#判断首单
+				if temp_order.is_first_order:
+					if not record_id2first_buy_num.has_key(rid):
+						record_id2first_buy_num[rid] = 1
+					else:
+						record_id2first_buy_num[rid] += 1
+
+				temp_member_id = webapp_user_id_belong_to_member_id.get(temp_order.webapp_user_id, None)
+				if not temp_member_id or temp_member_id not in record_own_member_ids[rid]:
+					continue
+
+				#判断扫码后的金额
+				if temp_order.created_at>member_id2partis[temp_member_id][rid] or temp_order.created_at<record.end_time: #扫码后的
 					if not record_id2cash.has_key(rid):
 						record_id2cash[rid] = id2order[oid].final_price
 					else:
 						record_id2cash[rid] += id2order[oid].final_price
-					if not record_id2first_buy_num.has_key(rid):
-						if not has_order and (id2order[oid].created_at > record.start_time or id2order[oid].created_at < record.end_time):
-							record_id2first_buy_num[rid] = 1
-							has_order = True
-					else:
-						if not has_order and (id2order[oid].created_at > record.start_time or id2order[oid].created_at < record.end_time):
-							record_id2first_buy_num[rid] += 1
-							has_order = True
 
 		for data in datas:
 			str_id = str(data.id)
