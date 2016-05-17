@@ -153,7 +153,7 @@ class Rebates(resource.Resource):
 				'name': data.name,
 				'attention_number': len(record_id2partis[str_id]) if record_id2partis.get(str_id, None) else 0,
 				'order_money': record_id2cash[str_id] if record_id2cash.get(str_id, None) else 0,
-				'first_buy_num': record_id2first_buy_num[str_id] if record_id2cash.get(str_id, None) else 0,
+				'first_buy_num': record_id2first_buy_num[str_id] if record_id2first_buy_num.get(str_id, None) else 0,
 				'start_time': data.start_time.strftime('%Y-%m-%d %H:%M'),
 				'end_time': data.end_time.strftime('%Y-%m-%d %H:%M'),
 				'status': data.status_text,
