@@ -24,7 +24,7 @@ class ShoppingCartCount(resource.Resource):
             try:
                 shopping_cart = ShoppingCart.objects.filter(webapp_user_id=webapp_user_id)
                 if shopping_cart.count() > 0:
-                    shopping_cart_count = shopping_cart.first().count
+                    shopping_cart_count = shopping_cart.count()
                 else:
                     shopping_cart_count = 0
             except:
