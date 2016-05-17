@@ -1876,7 +1876,12 @@ class OrderCardInfo(models.Model):
 	"""
 	order_id = models.CharField(max_length=100)  # 订单号
 	trade_id = models.CharField(max_length=100)  # 交易号
-	resource_type = models.IntegerField(default=1)  # 状态
+	created_at = models.DateTimeField(auto_now_add=True)  # 创建时间
+
+	class Meta(object):
+		db_table = 'mall_order_card_info'
+		verbose_name = '订单微众卡相关信息'
+		verbose_name_plural = '订单微众卡相关信息'
 
 
 
