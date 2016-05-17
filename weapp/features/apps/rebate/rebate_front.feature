@@ -201,13 +201,13 @@ Background:
 			"is_limit_first_buy":"true",
 			"is_limit_cash":"false",
 			"order_rebate":{
-				"rebate_order_price":"10.00",
+				"rebate_order_price":"1.00",
 				"rebate_money":"5.00"
 			},
 			"weizoom_card_id_from":"0000004",
 			"weizoom_card_id_to":"0000006",
 			"card_counts":5,
-			"start_time":"明天",
+			"start_time":"今天",
 			"end_time":"3天后",
 			"reply_type": "文字",
 			"scan_code_reply": "返利活动2"
@@ -311,7 +311,6 @@ Background:
 		}]
 	"""
 
-
 @mall @rebate
 Scenario:1 管理员能够查看到所有扫过该码并关注过的微信用户信息，带参数返利活动[关注人数]-会员数量变化；
 	#设置已关注会员可参与
@@ -357,7 +356,6 @@ Scenario:1 管理员能够查看到所有扫过该码并关注过的微信用户
 			"attention_number": 1
 		}
 	"""
-	
 
 @mall @rebate
 Scenario:2 带参数返利活动[扫码后成交金额]-已关注会员可参与；首单；现金
@@ -465,8 +463,6 @@ Scenario:2 带参数返利活动[扫码后成交金额]-已关注会员可参与
 
 	"""
 
-
-
 	When 清空浏览器
 	When zhouxun绑定手机号'13563223667'
 
@@ -496,22 +492,26 @@ Scenario:2 带参数返利活动[扫码后成交金额]-已关注会员可参与
 
 	"""
 
-@mall @rebate @aix1111
+@mall @rebate @aix1111 @kuki
 Scenario:3 带参数返利活动[扫码后成交金额]-已关注会员可参与；首单；非现金
 	#已关注会员可参与；
 	#必须是首单；
 	#可不用现金支付；
 	Given jobs登录系统
 
+	When bill关注jobs的公众号于'2天前'
+	When bill访问jobs的webapp
+	When 微信用户批量消费jobs的商品
+	| order_id | date        | consumer | product | payment | pay_type  |postage*   |price*   | paid_amount*    | weizoom_card   | action     | order_status  |
+	|   0001   | 2天前      |   bill   | 商品1,1 |   支付  |  支付宝   |   0.00    | 1.00    |     1.00        |                | jobs,完成  |    已完成     |
+
 	#已关注会员在扫码之前已经下单
 	When 清空浏览器
-	When bill关注jobs的公众号于'1天前'
-	When bill访问jobs的webapp
 	When bill扫描返利活动'返利活动2'的二维码
 
 	Given 等待1秒
 	When 清空浏览器
-	When tom关注jobs的公众号于'后天'
+	When tom关注jobs的公众号
 	When tom访问jobs的webapp
 	When tom扫描返利活动'返利活动2'的二维码
 
@@ -524,9 +524,8 @@ Scenario:3 带参数返利活动[扫码后成交金额]-已关注会员可参与
 
 	When 微信用户批量消费jobs的商品
 		| order_id | date        | consumer | product | payment | pay_type  |postage*   |price*   | paid_amount*    | weizoom_card   | action     | order_status  |
-		|   0001   | 1天前      |   bill   | 商品1,1 |   支付  |  支付宝   |   0.00    | 1.00    |     1.00        |                | jobs,完成  |    已完成     |
-		|   0002   | 今天        |   bill   | 商品1,1 |   支付  |  支付宝   |   0.00    | 1.00    |     1.00        |                | jobs,完成  |    已完成     |
-		|   0003   | 后天        |   tom    | 商品1,1 |   支付  |  支付宝   |   0.00    | 1.00    |     1.00        | 0000041,1234567| jobs,完成  |    已完成     |
+		|   0002   | 昨天        |   bill   | 商品1,1 |   支付  |  支付宝   |   0.00    | 1.00    |     1.00        |                | jobs,完成  |    已完成     |
+		|   0003   | 明天        |   tom    | 商品1,1 |   支付  |  支付宝   |   0.00    | 1.00    |     1.00        | 0000041,1234567| jobs,完成  |    已完成     |
 		|   0004   | 4天后      |  zhouxun | 商品1,1 |   支付  |  货到付款   |   0.00    | 1.00    |     1.00        |                | jobs,完成  |    已完成     |
 
 	Given jobs登录系统
@@ -536,7 +535,7 @@ Scenario:3 带参数返利活动[扫码后成交金额]-已关注会员可参与
 		[{
 			"order_id":"0003",
 			"status": "已完成",
-			"final_price": 1.00,
+			"final_price": 0.00,
 			"products": [{
 				"name": "商品1",
 				"price": 1.00,
@@ -545,60 +544,62 @@ Scenario:3 带参数返利活动[扫码后成交金额]-已关注会员可参与
 		}]
 	"""
 
-#	#显示所有的订单
-#	When jobs取消对'返利活动2'进行'仅显示扫码后关注会员'操作
-#	Then jobs能获取'返利活动2'订单列表
-#	"""
-#		[{
-#			"order_id":"0003",
-#			"status": "已完成",
-#			"final_price": 1.00,
-#			"products": [{
-#				"name": "商品1",
-#				"price": 1.00,
-#				"count": 1
-#			}]
-#		}]
-#	"""
-#
-#	Then jobs获得总消费金额
-#	"""
-#		{
-#			"cash_payment":3.00,
-#			"card_payment":1.00
-#		}
-#
-#	"""
+	#显示所有的订单
+	When jobs取消对'返利活动2'进行'仅显示扫码后关注会员'操作
+	Then jobs能获取'返利活动2'订单列表
+	"""
+		[{
+			"order_id":"0001",
+			"status": "已完成",
+			"final_price": 1.00,
+			"products": [{
+				"name": "商品1",
+				"price": 1.00,
+				"count": 1
+			}]
+		},{
+			"order_id":"0002",
+			"status": "已完成",
+			"final_price": 1.00,
+			"products": [{
+				"name": "商品1",
+				"price": 1.00,
+				"count": 1
+			}]
+		},{
+			"order_id":"0003",
+			"status": "已完成",
+			"final_price": 0.00,
+			"products": [{
+				"name": "商品1",
+				"price": 1.00,
+				"count": 1
+			}]
+		}]
+	"""
 
+	Then jobs获得总消费金额
+	"""
+		{
+			"cash_payment":2.00,
+			"card_payment":1.00
+		}
 
+	"""
 
+	Given jobs登录系统
+	Then jobs发放返利微众卡
 
+	When 清空浏览器
+	When tom访问jobs的webapp
+	When tom绑定手机号'13562336987'
+	Then tom能获得返利微众卡
+	"""
+		[{
+			"id":"0000004"
+		}]
 
-#	Given jobs登录系统
-#	Then jobs发放返利微众卡
-#
-#	When 清空浏览器
-#	Then tom能获得返利微众卡手机号绑定页面
-#
-#	When tom绑定手机号'13562336987'
-#
-#	Given jobs登录系统
-#	Then jobs发放返利微众卡
-#
-#	When 清空浏览器
-#	When tom关注jobs的公众号
-#	When tom访问jobs的webapp
-#	Then tom能获得返利微众卡
-#	"""
-#		[{
-#			"id":"0000004"
-#		}]
-#
-#	"""
-
-
-	
-
+	"""
 
 @mall @rebate
 Scenario:4 带参数返利活动[扫码后成交金额]-已关注会员可参与；不限；现金
