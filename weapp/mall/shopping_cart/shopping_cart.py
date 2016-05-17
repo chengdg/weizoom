@@ -22,7 +22,11 @@ class ShoppingCartCount(resource.Resource):
         webapp_user_id = request.GET.get('webapp_user_id', None)
         if webapp_user_id:
             try:
-                shopping_cart_count = ShoppingCart.objects.get(webapp_user_id=webapp_user_id).count
+                shopping_cart = ShoppingCart.objects.filter(webapp_user_id=webapp_user_id)
+                if shopping_cart.count() > 0:
+                    shopping_cart_count = shopping_cart.first().count
+                else:
+                    shopping_cart_count = 0
             except:
                 notify_message = u"购物车数量函数出错，cause:\n{}".format(unicode_full_stack())
                 watchdog_error(notify_message)
