@@ -24,6 +24,21 @@ class WebappPageCacheMiddleware(object):
 			if request.GET.get('page_id', '') == 'preview':
 				#预览不使用缓存
 				return
+				
+			#如果当前cookie中没有会员信息，则不进行缓存
+			cookie_openid_webapp_id = request.COOKIES.get(member_settings.OPENID_WEBAPP_ID_KEY, None)
+			#print ">>>>>DF>>>DF>D>>>>>>&&&&&&&*88888",cookie_openid_webapp_id
+			if (cookie_openid_webapp_id is None):
+				return None
+			else:
+				split_list = cookie_openid_webapp_id.split('____')
+				if len(split_list) != 2:
+					return None
+				else:
+					webapp_id = split_list[1]
+					openid = split_list[0]
+					if webapp_id != request.user_profile.webapp_id or (not openid):
+						return None
 
 			project_id = None
 			if 'model' in request.GET:
@@ -52,6 +67,7 @@ class WebappPageCacheMiddleware(object):
 				return None
 
 	def process_response(self, request, response):
+		#TODO:暂时只针对店铺首页进行缓存优化
 		if not settings.ENABLE_WEPAGE_CACHE:
 			return response
 		else:

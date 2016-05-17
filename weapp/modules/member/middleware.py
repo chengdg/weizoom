@@ -968,7 +968,7 @@ class OAUTHMiddleware(object):
 			#cookie_openid_webapp_id  ==  'openid____webappid'
 			cookie_openid_webapp_id = request.COOKIES.get(member_settings.OPENID_WEBAPP_ID_KEY, None)
 			request_fmt = request.GET.get(member_settings.FOLLOWED_MEMBER_TOKEN_SESSION_KEY, None)
-			if is_request_for_api(request) or 'pay' in request.get_full_path():
+			if is_request_for_api(request) or 'pay' in request.get_full_path() or '/termite2/webapp_page/' in request.get_full_path():
 				request_fmt = True
 			#cookie_webapp_id = request.COOKIES.get('webapp_id', None)
 			#1 如果cookie中没有 cookie_open_id or cookie_opeqqqn_id 则进行授权

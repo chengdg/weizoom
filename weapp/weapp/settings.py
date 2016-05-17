@@ -585,7 +585,7 @@ MIXUP_FACTOR = 3179
 WATCH_DOG_DEVICE = 'mysql'
 
 WATCHDOG_WEIXIN_MESSAGE = False
-ENABLE_WEPAGE_CACHE = False
+ENABLE_WEPAGE_CACHE = True
 
 logging.basicConfig(format='%(asctime)s %(levelname)s: %(message)s', level=logging.INFO)
 
