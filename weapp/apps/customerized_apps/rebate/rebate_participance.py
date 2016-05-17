@@ -61,6 +61,9 @@ class RebateOrderList(resource.Resource):
 		is_show = int(request.GET.get('is_show', 0))
 
 		records = app_models.Rebate.objects(id=record_id)
+		rebate_start_time = records[0].start_time
+		rebate_end_time = records[0].end_time
+
 		webapp_user_id_belong_to_member_id, id2record, member_id2records, member_id2order_ids, all_orders = export.get_target_orders(records, is_show)
 		webapp_user_ids = webapp_user_id_belong_to_member_id.keys()
 
@@ -71,6 +74,9 @@ class RebateOrderList(resource.Resource):
 		end_money = request.GET.get('end_money', 0)
 		is_first_order = int(request.GET.get('is_first_order', 0))
 		not_first_order = int(request.GET.get('not_first_order', 0))
+
+		if is_show:
+			all_orders = all_orders.filter(created_at__gte=rebate_start_time, created_at__lte=rebate_end_time)
 
 		if start_date:
 			params['created_at__gte'] = start_date
