@@ -51,6 +51,20 @@ def step_impl(context, webapp_user_name, record_name):
     context.qa_result = response_data['data']
     debug_print(context.qa_result)
 
+@when(u"{webapp_user_name}扫描返利活动'{record_name}'的二维码于'{date_str}'")
+def step_impl(context, webapp_user_name, record_name, date_str):
+    #首先将扫码时间和活动开始结束时间做对比
+    rebate = get_app_by_name(rebate_models.Rebate, record_name)
+    real_start_time = rebate.start_time
+    real_end_time = rebate.end_time
+    curr_time = bdd_util.get_date(date_str)
+    if curr_time > real_start_time and curr_time < real_end_time:
+        rebate.status = rebate_models.STATUS_RUNNING
+        rebate.save()
+
+    context.execute_steps(u"%s扫描返利活动'%s'的二维码" % (webapp_user_name, record_name))
+
+
 @then(u"{user}获得返利活动'{record_name}'的列表")
 def step_impl(context, user, record_name):
     expected_data = json.loads(context.text)
