@@ -100,10 +100,10 @@ class RebateOrderList(resource.Resource):
 				params['is_first_order'] = 0
 
 		orders = all_orders.filter(**params)
-		#统计微众卡支付总金额和现金支付总金额
+		#统计微众卡支付总金额和现金支付总金额(退款成功不算)
 		final_price = 0
 		weizoom_card_money = 0
-		for order in orders:
+		for order in orders.exclude(status=mall_models.ORDER_STATUS_REFUNDED):
 			final_price += order.final_price
 			weizoom_card_money += order.weizoom_card_money
 
