@@ -50,7 +50,7 @@ def get_weizoom_card_login(request):
 				'page_title': u'微众卡',
 				'is_hide_weixin_option_menu': True,
 				'normal': True,
-				'is_weshop': True if username and username == 'jobs' else False
+				'is_weshop': True if username and username in ['jobs','weshop','ceshi01'] else False
 			})
 		return render_to_response('%s/weizoom_card/webapp/weizoom_card_login.html' % TEMPLATE_DIR, c)
 
