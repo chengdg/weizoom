@@ -64,6 +64,7 @@
         <script type="text/javascript" src="/termite_static/v3/gmu/widget/weshopBottomNav.js"></script>
         <script type="text/javascript" src="/termite_static/v3/gmu/widget/weshopSideNav.js"></script>
         <script type="text/javascript" src="/termite_static/v3/gmu/widget/productsPrice.js"></script>
+        <script type="text/javascript" src="/termite_static/v3/gmu/widget/shoppingCartNum.js"></script>
         <script type="text/javascript" src="/termite_static/v3/system/api.js"></script>
         <script type="text/javascript" src="/termite_static/v3/system/crypto-js.js"></script>
         <script type="text/javascript" src="/termite_static/v3/system/md5.js"></script>
@@ -311,6 +312,7 @@
             W.currentPageName = "{{current_page_name}}";
             W.projectId = "{{request.project.id}}";
             W.webappOwnerId = "{{request.webapp_owner_id}}";
+            W.webappUserId = "{{request.webapp_user.id}}";
             W.isUnderDevelopMode = {% if under_develop %}true{% else %}false{% endif %};
             W.curRequestMemberToken = "{{ cur_request_member.token }}";
             W.visitHistory = "{{ visit_histroy_url }}";
@@ -599,6 +601,18 @@
                         // 设置显示价格
                         $(this).find('.wa-inner-price').text('¥'+price);
                     });
+                }
+            });
+            
+            /* 设置购物车数量 */
+            gmu.staticCall('.wui-weshopSideBar .xa-shopCarCount', 'setShoppingCartNum', {
+                webappUserId: W.webappUserId,
+                updateShoppingCartNum: function(event, data){
+                    if (data.count > 0) {
+                        $('.wui-weshopSideBar .xa-shopCarCount').text(data.count).show();
+                    } else {
+                        $('.wui-weshopSideBar .xa-shopCarCount').hide();
+                    }
                 }
             });
         </script>

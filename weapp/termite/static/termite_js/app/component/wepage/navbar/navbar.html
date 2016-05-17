@@ -1,6 +1,7 @@
 {% load workbench_filter %}
 
 {% ifequal component.type 'wepage.navbar' %}
+<!-- 微页面中的底部导航 -->
 <div 
 	class="wui-template-globalNavbar"
 	data-component-cid="{{component.cid}}" 
@@ -50,7 +51,7 @@
 					<li class="xa-outLink" data-page="shopping-cart">
                         <a href="/workbench/jqm/preview/?woid={{request.webapp_owner_id}}&module=mall&model=shopping_cart&action=show&workspace_id=mall">
                             <i class="xui-bg">
-                            <span class="xui-shopCar xa-shopCarCount {% if shopping_cart_product_count %}{% else %}xui-hide{% endif %}">{{ shopping_cart_product_count }}</span>
+                            <span class="xui-shopCar xa-shopCarCount xui-hide"></span>
                             </i>
                         </a>
 					</li>
