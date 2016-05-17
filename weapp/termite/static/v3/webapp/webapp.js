@@ -75,7 +75,8 @@ W.preloadImgsOnPage = function(option) {
                           $item.attr('src', [src, '!/noicc/true/compress/true/progressive/true/quality/20'].join(''));
                           $item.attr('data-url', src);
                         } else {
-                          $item.attr('src', src);
+                          $item.attr('src', [src, '!/noicc/true/compress/true/progressive/true/quality/80'].join(''));
+                          $item.attr('data-url', src);
                         }
                     });
                     break;
