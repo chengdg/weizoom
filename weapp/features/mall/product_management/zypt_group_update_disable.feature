@@ -40,16 +40,6 @@ Background:
 		}]
 		"""
 	And bill选择'顺丰'运费配置
-	And bill添加商品分类
-		"""
-		[{
-			"name": "分类1"
-		}, {
-			"name": "分类2"
-		}, {
-			"name": "分类3"
-		}]
-		"""
 	And bill已添加商品规格
 		"""
 		[{
@@ -124,7 +114,6 @@ Background:
 		"""
 	#自营平台jobs登录
 	Given 设置jobs为自营平台账号
-	Given jobs登录系统
 	Given jobs登录系统
 	When jobs已添加支付方式
 		"""
