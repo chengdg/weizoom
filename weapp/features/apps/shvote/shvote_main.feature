@@ -225,7 +225,7 @@ Scenario:2 微信用户报名参与活动并通过审核在活动主页的显示
 			}]
 		"""
 
-@mall2 @apps @shvote @shvote_activity @aix5
+@mall2 @apps @shvote @shvote_activity
 Scenario:3 微信用户浏览高级投票活动主页，获得三维数据
 	#背景里已经有的三个报名投票的人就是三个浏览人数
 	#多增加一个人为其中的选手投票，三维数据的变化

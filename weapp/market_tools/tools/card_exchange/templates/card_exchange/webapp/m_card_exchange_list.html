@@ -6,7 +6,7 @@
 <link rel="stylesheet" href="/webapp_static/backend_default_v3/css/default_v3.css">
 <style type="text/css">
 	body{
-		background: #f5f5f5!important;
+		background: -webkit-linear-gradient(top,#fbfbfb,#e1e1e1)!important;
 	}
 	.xui-detail-wrapper{
 		font-size: 0.9rem;
@@ -15,17 +15,22 @@
 	.xui-header{
 		background: #ee3715;
 		overflow: hidden;
-		padding: 15px 10px 15px 35px;
+		padding: 15px 0;
 		color: #fff;
+		margin-top: 2px;
+		font-size: 0;
+	}
+	.xui-header > div {
+		display: inline-block;
+		width: 50%;
+		box-sizing: border-box;
 	}
 	.xui-header-left{
-		float: left;
-		width: 45%;
 		border-right: 1px dotted #f3735c;
+		padding-left: 35px;
 	}
 	.xui-header-right{
-		float: right;
-		width: 44%;
+		padding-left: 30px;
 	}
 	.xui-large{
 		font-size: 1.7rem;
@@ -134,12 +139,219 @@
     .xui-num{
     	font-size: 1.5rem;
     }
+    .xui-tab{
+    	font-size: 0;
+    	height: 40px;
+    	line-height: 40px;
+    }
+    .xui-tab > div{
+    	display: inline-block;
+    	width: 50%;
+    	font-family: "黑体";
+    	box-sizing: border-box;
+    	background-color: #fff;
+    }
+    .xui-tab-active{
+    	font-size: 1.2rem;
+    	text-align: center;
+    	color: #cf0404;
+    	border-bottom: 2px solid #cf0404;
+    }
+    .xui-tab-normal{
+    	border-right: 1px solid #f5f5f5;
+    	font-size: 1rem;
+    	text-align: center;
+       	display: inline-block;
+    	width: 50%;
+    	font-family: "黑体";
+    	box-sizing: border-box;
+    	background-color: #fff;
+    	color: #000;
+    }
+    h1{
+    	text-align: center;
+    	width: 100%;
+    	color: #ef3715;
+    	font-size: 2.0rem;
+    	margin-top: 30px;
+    	font-family: "黑体";
+    }
+    .xui-pocketLogo{
+    	text-align: center;
+    	margin-top: 30px;
+    }
+    .xui-bindPhone{
+    	margin-top: 30px;
+    	text-align: center;
+    }
+    .xui-bindPhone input{
+    	vertical-align: text-bottom;
+    	border:none;
+    	background: transparent;
+    	border-bottom: 1px solid #d7d7d7;
+    	font-size: 1.2rem;
+    	line-height: 2rem;
+    	margin-left: 10px;
+    	outline: none;
+    	width: 170px;
+    	color: #333333;
+    	font-family: "黑体"; 
+    	padding: 0;  	
+    }
+    .xui-bindPhone button{
+    	margin-left: 10px;
+    	vertical-align: text-bottom;
+    	color: #fff;
+    	background: #ef3715;
+    	border:none;
+    	border-radius: 3px;
+    	padding: 10px 0;
+    	width: 98px;
+    	font-size: .9rem;
+    	font-family: "黑体";
+    	outline: none;
+    }
+    @media only screen and (max-width: 320px){
+	    .xui-bindPhone input{
+	    	width: 140px;
+	    	font-size: 1.1rem;
+	    }	
+    }
+    .xui-mask{
+    	width: 100%;
+    	height: 100%;
+    	background: rgba(0,0,0,0.5);
+    	position: fixed;
+    	z-index: 999;
+    	display: none;
+    }
+    .xui-code{
+    	background: #fff;
+    	width: 80%;
+    	margin: 0 auto;
+    	margin-top: 50%;
+    	text-align: center;
+    	border-radius: 5px;
+    	padding: 20px 0;
+    	position: relative;
+    }
+    .xui-code input{
+    	border: 1px solid #dbdbdb;
+    	font-size: 1.1rem;
+    	height: 35px;
+    	line-height: 35px;
+    	width: 220px;
+    	padding-left: 10px;
+    	outline: none;
+    }
+    .xui-codeTime-container p:first-child{
+    	font-family: "黑体";
+    }
+    .xui-code-time{
+    	margin: 10px 0;
+    	color: #0091d5;
+    	font-size: .8em;
+    	text-align: right;
+    }
+    .xui-codeBtn-group{
+    	margin-top: 20px;
+    }
+    .xui-codeBtn-group button{
+    	border:none;
+    	border-radius: 15px;
+    	padding: 7px 30px;
+    	font-size: 1rem;
+    	font-family: "黑体";
+    	outline: none;
+    }
+    .xui-confirmBtn{
+    	margin-right: 8px;
+    	background: #0091d5;
+    	color: #fff;
+    }
+    .xui-cancelBtn{
+    	background: #dbdbdb;
+    	color: #666666;
+    }
+    .xui-codeTime-container{
+    	width: 220px;
+    	margin: 8px auto 5px;
+    }
+    .xui-success{
+    	width: 77%;
+    	margin:  0 auto;
+    	text-align: left;
+    	display: none;
+    }
+    .xui-success p{
+    	margin: 5px 0;
+    	padding-left: 8px;
+    	color: #0091d5;
+    }
+    .xui-success button{
+    	width: 100%;
+    	background: #cf0404;
+    	font-size: 1.1rem;
+    }
+    button.xui-disabled{
+    	background: #dbdbdb;
+    }
+    .xui-close{
+    	background: url("/markettools_static/weizoom_card/img/close.png");
+    	background-size: cover;
+    	position: absolute;
+    	right: -20px;
+    	top: -20px;
+    	width: 45px;
+    	height: 45px;
+    }
 </style>
 {% endblock %}
 
 {% block content-panel %}
+<div class="xui-mask xa-mask">
+	<div class="xui-code">
+		<i class="xui-close xa-cancelBtn"></i>
+		<div class="xui-codeTime-container">
+			<p>输入短信中的验证码</p>
+			<p class="xui-code-time xa-code-time">
+				<span> </span>
+			</p>
+		</div>
+		<input type="text" class="xa-phoneCode">
+		<div class="xui-codeBtn-group">
+			<button type="button" class="xui-confirmBtn xa-confirmBtn">确&nbsp;认</button>
+			<button type="button" class="xui-cancelBtn xa-cancelBtn">取&nbsp;消</button>
+		</div>
+	</div>
+</div>
 <div data-role="page" data-theme="x" class="xui-detail-wrapper">
 	<div data-role="content" data-theme="x">
+		{% if is_weshop %}
+		<div class="xui-notBind">
+			<div class="xui-tab">
+				<a class="xui-tab-normal" href="./?module=market_tool:weizoom_card&model=weizoom_card_login&action=get&workspace_id=market_tool:weizoom_card&webapp_owner_id={{request.webapp_owner_id}}&project_id=0">微众卡余额查询</a>
+				<div class="xui-tab-active">微众卡钱包</div>
+			</div>
+			{% if not is_binded %}
+			<h1>微众卡钱包</h1>
+			<div class="xui-pocketLogo">
+				<img src="/markettools_static/weizoom_card/img/pocket.png" alt="微众卡钱包" width="200px">
+			</div>
+			<div class="xui-bindPhone">
+				<i><img src="/markettools_static/weizoom_card/img/phone.png" width="20px"></i>
+				<input type="text" placeholder="请输入手机号码" class="xa-phoneNum" maxlength="11">
+				<button type="button" class="xa-recCode">获取验证码</button>
+				<div class="xui-success xa-success">
+					<p>手机号绑定成功</p>	
+					<button type="button" class="xa-reload">进入钱包</button>
+				<div>
+			</div>
+			{% endif %}
+		</div>
+		{% endif %}
+
+		{% if is_binded %}
 		<div class="xui-header">
 			<div class="xui-header-left">
 				<div class="xui-text xui-remain">账户余额</div>
@@ -241,6 +453,119 @@
 		    </div>
 		    {% endif %}
 	    </div>
+	    {% endif %}
     </div>
 </div>
+{% endblock %}
+{% block js %}
+<script type="text/javascript">
+	$(function(){
+		W.projectId = W.projectId.replace('weizoom_card','card_exchange');
+		$('.xa-recCode').click(function(){
+			var phone_number = $(this).siblings('input').val();
+			if(!validate_phone(phone_number)){
+				return false
+			}
+			W.getApi().call({
+					app: 'webapp',
+					api: 'project_api/call',
+					method: 'post',
+					args: _.extend({
+						woid: W.webappOwnerId,
+						project_id: W.projectId,
+						module: 'card_exchange',
+						target_api: 'captcha/send',
+						phone_number: phone_number
+					}),
+					success: function(data) {
+						$('.xa-recCode').html('(<span class="xa-countdown">60</span>)重新获取');
+						$('.xa-code-time > span').html('(<span class="xa-countdown">60</span>s) 后重新获取');
+						$('.xa-recCode').prop('disabled','true').addClass('xui-disabled');
+						$('.xa-mask').show();
+						countdown();						
+					},
+					error: function(data){
+						if (data.data && data.data.msg){
+							$('body').alert({
+								isShow: true,
+								info: data.data.msg,
+								isSlide: true,
+								speed: 2000
+							});
+						}
+					}
+				});
+		});
+		$('.xa-cancelBtn').click(function(){
+			$('.xa-mask').hide();
+		});
+		$('.xa-reload').click(function(){
+			window.location.reload();
+		});
+		$('.xa-confirmBtn').click(function(){
+			var phone_number = $('.xa-phoneNum').val();
+			var code = $('.xa-phoneCode').val();
+			W.getApi().call({
+				app: 'webapp',
+				api: 'project_api/call',
+				method: 'post',
+				args: _.extend({
+					woid: W.webappOwnerId,
+					project_id: W.projectId,
+					module: 'card_exchange',
+					target_api: 'phone/binding',
+					phone_number: phone_number,
+					code:code
+				}),
+				success: function(data) {
+					$('body').alert({
+						isShow: true,
+						info: '绑定成功',
+						isSlide: true,
+						speed: 3000
+					});					
+					clearInterval(count);
+					$('.xa-mask').hide();
+					$('.xa-recCode').prop('disabled',true).addClass('xui-disabled').text('获取验证码');	;
+					$('.xa-success').show();
+					$('.xa-phoneNum').prop('disabled',true);
+				},
+				error: function(data){
+					$('body').alert({
+						isShow: true,
+						info: data.data.msg,
+						isSlide: true,
+						speed: 2000
+					});
+				}
+			});
+		});
+	});
+	function validate_phone(phone_number){
+		var reg = /^1[3|4|5|8]\d{9}$/;
+		if(!reg.test(phone_number) || phone_number.length != 11){
+			$('body').alert({
+				isShow: true,
+				info: "请填写有效的手机号",
+				isSlide: true,
+				speed: 2000
+			});
+			return false;
+		}
+		return true;
+	}	
+
+	function countdown(){
+		var num = 60;
+		count = setInterval(function(){
+		if(num == 1){
+			clearInterval(count);
+			$('.xa-code-time > span').text('请重新获取验证码');
+			$('.xa-recCode').prop('disabled',false).removeClass('xui-disabled').text('获取验证码');			
+		}			
+			num -= 1;
+			$('.xa-countdown').text(num);	
+		},1000);		
+	}
+</script>
 {% endblock %}

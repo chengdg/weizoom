@@ -2,6 +2,7 @@
 
 __author__ = 'chuter'
 
+from datetime import datetime
 from django.db import models
 import mongoengine as mongo_models
 from django.contrib.auth.models import User
@@ -219,5 +220,25 @@ class UserappHasTemplateMessages(mongo_models.Document):
 		'collection': 'apps_Userapp_has_template'
 	}
 
+class AppsWeizoomCard(mongo_models.Document):
+	"""
+	百宝箱活动的微众卡信息
+	"""
+	belong_to = mongo_models.StringField() #所属活动
+	weizoom_card_id = mongo_models.StringField() #卡号
+	weizoom_card_password = mongo_models.StringField() #密码
+	status = mongo_models.IntField(default=0) #卡状态:0未使用，1已使用
+	created_at = mongo_models.DateTimeField() #创建时间
+	grant_time = mongo_models.DateTimeField() #使用时间
 
+	meta = {
+		'collection': 'apps_weizoom_card'
+	}
 
+	@staticmethod
+	def use_cards(weizoom_card_ids):
+		"""
+		将一系列卡标志为已使用
+		@param weizoom_card_ids: list
+		"""
+		AppsWeizoomCard.objects(weizoom_card_id__in=weizoom_card_ids).update(status=1, grant_time=datetime.now())

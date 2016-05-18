@@ -1,0 +1,127 @@
+{% extends "content_base_v2.html" %}
+
+{% block css %}
+	<style type="text/css">
+    .xui-filterPanel{
+    	padding-left: 50px;
+    	padding-right: 50px;
+    	margin-bottom: 15px;
+    }
+    .xui-filterPanel .btn-primary{
+    	margin: 0;
+    }
+    .xui-filterPanel .btn{
+    	width: 90px;
+    	height: 30px;
+    	font-weight: bold;
+    }
+    .xui-thead{
+    	background: #C8D1E4;
+    }
+    label{
+    	font-weight: normal;
+    }
+    input{
+		width: 150px;
+		line-height: 24px;
+		border: 1px solid #b1dbf1;
+		background-color: #f2f2f2;
+		padding: 0 5px;
+		color: #656565;
+		white-space: nowrap;
+    }
+    .xb-stripedTable td{
+    	height: 40px;
+    	line-height: 40px;
+    }
+	</style>
+{% endblock %}
+{% block content-panel %}
+<div>
+    <div class="relative">
+		<ul class="breadcrumb">
+			<li>您当前所在位置</li>
+			<li><a href="/apps/lottery/lotteries/">百宝箱</a></li>
+    		<li><a href="/apps/rebate/rebates/">返利活动</a></li>
+			<li class="active">微众卡使用详情</li>
+		</ul>
+	</div>
+    <div>
+    	<div class="xui-filterPanel">
+        	<form>
+	        	<span class="mr30">
+		        	<label>卡号：</label>
+		        	<input type="text" name="cardNumber" class="xui-cardNumber xa-cardNumber">
+	        	</span>
+	        	<span class="mr50">
+		        	<label>使用人：</label>
+		        	<input type="text" name="cardUser" class="xui-cardUser xa-cardUser">
+	        	</span>
+	        	<a class="btn btn-primary mr20 xa-search">查 询</a>
+	        	<a class="btn btn-default mr20 xa-reset">重 置</a>
+	        	<a class="btn btn-default xa-export">导 出</a>
+        	</form>
+        </div>
+        <div class="xa-listView" data-ui-role="advanced-table" data-app="apps/rebate" data-api="card_details" data-template-id="#exchange-detail" data-args='{"record_id": "{{record_id}}"}' data-enable-paginator="true" data-enable-load="true" data-item-count-per-page="15"></div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+{% block js %}
+
+{% verbatim %}
+<script type="text/x-jquery-tmpl" id="exchange-detail">
+    <table class="table table-bordered table-condensed xb-stripedTable">
+		<thead class="xui-thead">
+			<th>卡号</th>
+			<th>面值</th>
+			<th>卡内余额</th>
+			<th>使用金额</th>
+			<th>使用者</th>
+		</thead> 
+			<tbody>
+				{{each(i,item) items}}
+				<tr>
+					<td>${item.card_id}</td>
+					<td>${item.money}</td>
+					<td>${item.remainder}</td>
+					<td>${item.used_money}</td>
+					<td>${item.user}</td>
+				</tr>
+				{{/each}}
+		    </tbody>
+    </table>
+</script>
+{% endverbatim %}
+
+<script type="text/javascript">
+
+$(document).ready(function() {	
+	$(".xa-reset").click(function(){
+		$(".xa-cardNumber").val("");
+		$(".xa-cardUser").val("");
+	});
+
+	var tableView = $('.xa-listView').data('view');
+	$('.xa-search').click(function(){
+		var cardNumber = $(".xa-cardNumber").val();
+		var cardUser = $(".xa-cardUser").val();
+		var args = {
+			"cardNumber" : cardNumber,
+			"cardUser" : cardUser
+		};
+		tableView.reload(args);
+	});
+
+	$(".xa-export").click(function(){
+		var cardNumber = $(".xa-cardNumber").val();
+		var cardUser = $(".xa-cardUser").val();
+		var url = '/apps/rebate/api/export_card_rebate_details/?cardNumber='+cardNumber+'&cardUser='+cardUser;
+  		window.open(url);
+    });
+});
+
+</script>
+
+{% endblock %}

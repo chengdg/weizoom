@@ -1,0 +1,261 @@
+{% extends "content_base_v2.html" %}
+{% block css%}
+<style>
+	.xa-list [class^="icon-"]{
+		display: inline-block;
+		width: 14px;
+		height: 14px;
+		margin-top: 1px;
+		line-height: 14px;
+		vertical-align: text-top;
+	}
+	.xa-list .icon-arrow-up{
+		background: url('/static_v2/img/weixin/storingUp.png') no-repeat ;
+	}
+	.xa-list .icon-arrow-down{
+		background: url('/static_v2/img/weixin/storing.png') no-repeat;
+	}
+	.xui-filterPanel{
+		padding-bottom: 10px;
+	}
+	.xui-btnBox{
+		padding-left: 370px;
+		margin-top: 30px;
+	}
+	.mr130{
+		margin-right: 130px;
+	}
+	.xui-btnBox a{
+		width: 90px;
+	}
+	.xui-status{
+		padding-left: 5px;
+		border:1px solid #b3b3b3;
+	}
+	.xui-export{
+		width: 100px;
+	}
+	.panel-heading{
+		padding: 10px 10px;
+	}
+</style>
+{% endblock%}
+{% block content-panel %}
+<div class="xui-memberListPage">
+
+	<div class="relative">
+		<ul class="breadcrumb">
+		    <li>您当前所在位置</li>
+		    <li><a href="/apps/lottery/lotteries/">百宝箱</a></li>
+		    <li><a href="/apps/rebate/rebates/">返利活动</a></li>
+		    <li class="active">关注会员</li>
+		</ul>
+	</div>
+	<div class="xui-filterPanel">
+        <div class="xui-form disT ml20">
+            <div class="xui-i-item">
+			<label>关注时间：</label>
+				<input
+					type="text"
+					class="form-control xui-datePicker"
+					id="start_date"
+					name="start_date"
+					style=""
+				    value=""
+				    readonly="readonly"
+					data-validate="require-notempty"
+					data-enable-select-time="true"
+					data-ui-role="datepicker"
+				    data-format="yy-mm-dd"
+				    data-max="now"/>
+				<span class="ml5 mr5">至</span>
+				<input
+					type="text"
+					class="form-control xui-datePicker mr130"
+					id="end_date"
+					name="end_date"
+				    value=""
+				    readonly="readonly"
+					data-validate="require-notempty"
+					data-ui-role="datepicker"
+					data-enable-select-time="true"
+				    data-format="yy-mm-dd"
+				    data-max="now"
+				    data-min-el="#start_date"/>
+				<span>会员状态：</span>
+				<select style="background-color: #f2f2f2;width: 140px;" class="xa-status xui-status">
+					<option value="-1">全部</option>
+					<option value="1">已关注</option>
+					<option value="0">取消关注</option>
+				</select>
+				<div class="xui-btnBox">
+					<a class="btn btn-primary xa-search xui-fontBold mr30" href="javascript:void(0);">查询</a>
+					<a class="xa-reset btn btn-default xui-fontBold" href="javascript:void(0);">重置</a>
+				</div>
+			</div>
+    	</div>
+    </div>
+	<div class="panel panel-default xb-rightPanel pr mt20 xa-list">
+		<div class="panel-heading clearfix">
+			<input type="checkbox" class="is_show vs" checked value="0">&nbsp;&nbsp;仅显示通过二维码新关注会员
+			<a class="xui-export xa-export btn btn-default xui-fontBold fr" href="javascript:void(0);">导出</a>
+			<a id="export_href" style="display: none ">DownloadXLS</a>
+		</div>
+
+		<div 
+			data-ui-role="advanced-table" 
+			data-app="apps/rebate"			
+			data-resource="rebate_participances"
+			data-args='{"record_id": "{{record_id}}", "is_show":"1"}'
+			data-template-id="#members-view"
+			data-enable-paginator="true" 
+			data-enable-sort="false" 
+			data-selectable="false" 
+			data-item-count-per-page="50" 
+			class="panel-body"
+		></div>
+	</div>
+</div>
+{% endblock %}
+
+
+{% block js %}
+{% verbatim %}
+<script id="members-view" type="text/x-jquery-tmpl">
+
+	<table class="table table-bordered xui-productList xb-stripedTable xb-noTdBorder xb-noBottom xb-noBorder xb-theadBg xui-qrcode-table" >
+		<thead>
+		<tr>
+			<th >会员</th>
+			<th class="tx_sortable" style="width:15%;text-align:center;" data-sort-attr='pay_times'><a>购买次数</a></th>
+			<th class="tx_sortable" style="width:15%" data-sort-attr='integral' ><a>积分</a></th>
+			<th style="width:15%">消费总额</th>
+			<th style="width:20%"></th>
+			<th class="tx_sortable" style="width:20%" data-sort-attr='created_at' data-init-sort="-created_at" ><a>关注时间<a></th>
+		</tr>
+		</thead>
+		<tbody>
+		
+		{{each(i, member) items}}
+		<tr class='h60' data-id="${member.id}">
+			<td style="position:relative;">
+				<div class="xui-memberHeader fl pl30">
+					{{if member.is_subscribed == 0}}
+                        <div class="xui-cancelCover tc pa">
+                        	<span>已跑路</span>
+                        </div>
+					{{/if}}
+					<a href="/member/detail/?id=${ member.id }" target='_blank'>
+						<img src="{{if member.participant_icon}}${ member.participant_icon }{{else}}/static/img/user-1.jpg{{/if}}" onerror="this.src='/static/img/user-1.jpg'"/>
+					</a>
+				</div>
+				<div class="fl xui-i-fansName">
+					<a class='lh26 xui-i-link' href="/member/detail/?id=${ member.id }" target='_blank'>
+						{{html member.username}}
+					</a>
+				</div>
+			</td>
+			<td style="text-align:center">
+				<div class="centerAlign">${ member.pay_times }</div>
+			</td>
+			<td>
+				<div class="centerAlign">${ member.integral }</div>
+			</td>
+			<td>
+				<div class="centerAlign">${ member.pay_money }</div>
+			</td>
+			<td>
+				<div class="centerAlign"></div>
+			</td>
+			<td>
+				<div class="centerAlign">${ member.follow_time }</div>
+			</td>
+		</tr>
+		{{/each}}
+		</tbody>
+	</table>
+
+</script>
+{% endverbatim %}
+
+<script type="text/javascript">	
+$(document).ready(function() {
+	$('#start_date').attr('value','');
+	$('#end_date').attr('value','');
+
+	$('.xa-search').click(function(){
+		var start_date = $('#start_date').val();
+		var end_date = $('#end_date').val();
+		if(start_date||end_date){
+	        if (!W.validate()) {
+	        	W.showHint('error','请输入下单时间');
+	          	return false;
+	        }
+	    }		
+		dateViewReload();
+	});
+	$('.xa-reset').click(function(){
+		$('#start_date').attr('value','');
+		$('#end_date').attr('value','');
+		$('option').eq(0).prop('selected',true);
+	});
+	$('.is_show').click(function(){
+		dateViewReload();
+	});
+	$('.xa-export').click(function(){
+		W.getLoadingView();
+        var record_id = '{{ record_id }}';
+		var start_date = $('#start_date').val();
+		var end_date = $('#end_date').val();
+		var is_checked = $('.is_show').is(':checked');
+		var status = $('.xa-status').val();
+		var is_show = 0;
+		if (is_checked == true){
+			is_show = 1;
+		}
+		W.getApi().call({
+			method: 'get',
+			app: 'apps/rebate',
+			resource: 'rebate_participances_export',
+			args: {
+				'start_date': start_date,
+				'end_date': end_date,
+				'is_show': is_show,
+				'status': status,
+				'export_id': 1,
+                'record_id': record_id
+			},
+			success: function(resp){
+				if(resp.code == 200){
+					$('#export_href').prop({
+						'href': resp.download_path,
+						'download': resp.filename
+					}).get(0).click();
+
+				}
+				console.log("导出成功");
+			},
+			error: function(error){
+				console.log('导出失败');
+			}
+		});
+	});
+
+	function dateViewReload(){
+		var start_date = $('#start_date').val();
+		var end_date = $('#end_date').val();
+		var is_checked = $('.is_show').is(':checked');
+		var status = $('.xa-status').val();
+		var dataView = $('[data-ui-role="advanced-table"]').data('view');
+		var is_show = 0;
+		if (is_checked == true){
+			is_show = 1;
+		}
+		var args= '{"start_date":"'+start_date+'","end_date":"'+end_date+'", "is_show":"'+is_show+'","status":"'+status+'"}';
+		dataView.options.args = args;
+	    dataView.setPage(1);
+		dataView.reload();
+	}    
+});
+</script>
+{% endblock %}

@@ -49,22 +49,58 @@ def get_weizoom_card_login(request):
 		c = RequestContext(request, {
 				'page_title': u'微众卡',
 				'is_hide_weixin_option_menu': True,
-				'normal': True
+				'normal': True,
+				'is_weshop': True if username and username in ['jobs','weshop','ceshi01'] else False
 			})
 		return render_to_response('%s/weizoom_card/webapp/weizoom_card_login.html' % TEMPLATE_DIR, c)
 
+#======================================
+class ADict(dict):
+	def __init__(self, *args, **options):
+		dict.__init__(self, *args, **options)
+		self.__dict__ = self
+#======================================
+
+from apps import models as apps_root_models
 def get_weizoom_card_exchange_list(request):
 	"""
 	兑换卡列表
 	"""
 	member_id = request.member.id
 	webapp_id = request.user_profile.webapp_id
+	member_info = MemberInfo.objects.get(member_id = member_id)
+
+	# 微众卡钱包
+	is_wallet = int(request.GET.get('is_wallet', '0'))
+	is_binded = False
+	is_weshop = False
+	source = promotion_models.CARD_SOURCE_INTEGRAL
+	if is_wallet:
+		is_binded = member_info.is_binded
+		is_weshop = True
+		#微众卡来源-返利活动
+		source = promotion_models.CARD_SOURCE_REBATE
+
 	card_details_dic = {}
 	card_details_list = []
-	member_has_cards = promotion_models.CardHasExchanged.objects.filter(webapp_id = webapp_id,owner_id = member_id).order_by('-created_at')
+	member_has_cards = promotion_models.CardHasExchanged.objects.filter(webapp_id = webapp_id,owner_id = member_id,source = source).order_by('-created_at')
+	all_card_ids = [c.card_id for c in member_has_cards]
+	if is_wallet:
+		#注意！！！！
+		#此处仅仅是伪造的数据，待【微众卡系统】完善后需要改掉！！！！
+		card_id2card = {c.weizoom_card_id: ADict({
+			"is_expired": False,
+			"status": c.status,
+			"expired_time": datetime.strptime("2100-12-12", "%Y-%m-%d"),
+			"money": 0,
+			"weizoom_card_id": c.weizoom_card_id,
+			"weizoom_card_rule": ADict({"money": 0})
+		}) for c in apps_root_models.AppsWeizoomCard.objects(weizoom_card_id__in=all_card_ids)}
+
+	else:
+		card_id2card = {c.id: c for c in card_models.WeizoomCard.objects.filter(id__in=all_card_ids)}
 	total_money = 0
-	count = member_has_cards.count()
-	phone_number = MemberInfo.objects.get(member_id = member_id).phone_number
+	phone_number =member_info.phone_number
 	
 	card_details_dic['phone_number'] = phone_number
 	count = member_has_cards.count()
@@ -72,7 +108,9 @@ def get_weizoom_card_exchange_list(request):
 	today = datetime.today()
 	for card in member_has_cards:
 		card_id = card.card_id
-		cur_card = card_models.WeizoomCard.objects.get(id = card_id)
+		cur_card = card_id2card.get(card_id, None)
+		if not cur_card:
+			continue
 		is_expired = cur_card.is_expired
 		status = cur_card.status
 		if cur_card.expired_time < today:
@@ -87,7 +125,7 @@ def get_weizoom_card_exchange_list(request):
 			'remainder': '%.2f' % cur_card.money,
 			'money': '%.2f' % cur_card.weizoom_card_rule.money,
 			'time': card.created_at.strftime("%Y-%m-%d"),
-			'type': u'兑换平台',
+			'type': u'兑换平台' if not is_wallet else u'返利活动',
 			'is_expired': is_expired,
 			'status': status 
 		})
@@ -99,7 +137,9 @@ def get_weizoom_card_exchange_list(request):
 	c = RequestContext(request, {
 		'page_title': u'微众卡',
 		'cards': card_details_dic,
-		'has_expired_cards': has_expired_cards
+		'has_expired_cards': has_expired_cards,
+		'is_binded': is_binded,
+		'is_weshop': is_weshop
 	})
 	return render_to_response('card_exchange/templates/card_exchange/webapp/m_card_exchange_list.html', c)
 

@@ -44,6 +44,26 @@ def bool2Bool(bo):
         result = None
     return result
 
+def update_apps_status(model):
+    """
+    更新活动状态
+    由于活动创建后的状态不管start和end time是何时，都是默认的0，所以
+        在执行一些指令的时候，必须首先更新状态
+    @param model:
+    @return:
+    """
+    now_time = datetime.today().strftime('%Y-%m-%d %H:%M')
+    data_start_time = model.start_time.strftime('%Y-%m-%d %H:%M')
+    data_end_time = model.end_time.strftime('%Y-%m-%d %H:%M')
+    data_status = model.status
+    if data_status <= 1:
+        if data_start_time <= now_time and now_time < data_end_time:
+            model.update(set__status=1)
+        elif now_time >= data_end_time:
+            model.update(set__status=2)
+        model.reload()
+    return model
+
 def date_delta(start,end):
     """
     获得日期，相差天数，返回int
@@ -83,6 +103,30 @@ def app_name2id(model, name, title=None):
         name = material_models.News.objects.get(title=title).url
     obj = model.objects.get(name=name)
     return (obj.related_page_id,obj.id)
+
+def get_app_by_name(model, record_name):
+    """
+    通过活动名称获取活动记录
+    @param model: apps的model class
+    @param record_name: 活动名称
+    @return: app model实例
+    """
+    try:
+        app = model.objects.filter(name=record_name)
+    except:
+        return None
+    if app.count() <= 0:
+        return None
+    return app.first()
+
+def get_openid(webapp_user_name, username):
+    """
+    通过微信端用户名和pc端用户名获取openid
+    @param webapp_user_name: 微信端用户名
+    @param username: pc端用户名
+    @return:
+    """
+    return '%s_%s' % (webapp_user_name, username)
 
 def name2status(name):
     """
@@ -145,6 +189,7 @@ def get_response(context, options, param=None):
         return response
     def __get_response(method, url, param):
         if method == "get":
+            #TODO 当param有值时的处理，拼接参数到url后
             return context.client.get(url)
         else:
             return context.client.post(url, param)

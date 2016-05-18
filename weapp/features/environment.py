@@ -84,6 +84,7 @@ from apps.customerized_apps.vote import models as apps_vote_models
 from apps.customerized_apps.red_packet import models as redpacket_models
 from apps.customerized_apps.group import models as group_models
 from apps.customerized_apps.shvote import models as shvote_models
+from apps.customerized_apps.rebate import models as rebate_models
 
 
 from django.core.cache import cache
@@ -367,6 +368,15 @@ def __clear_all_app_data():
 	group_models.Group.objects.all().delete()
 	group_models.GroupRelations.objects.all().delete()
 	group_models.GroupDetail.objects.all().delete()
+
+	#apps返利活动
+	rebate_models.Rebate.objects.all().delete()
+	rebate_models.RebateParticipance.objects.all().delete()
+	rebate_models.RebateWeizoomCardDetails.objects.all().delete()
+	rebate_models.RebateWeizoomCardDetails.objects.all().delete()
+
+	#apps中的weizoom_card表
+	customized.AppsWeizoomCard.objects.all().delete()
 
 	#会员积分策略全部清零
 	member_models.IntegralStrategySttings.objects.all().update(be_member_increase_count=0)

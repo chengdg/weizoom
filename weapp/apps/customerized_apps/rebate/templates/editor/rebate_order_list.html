@@ -1,0 +1,395 @@
+{% extends "content_base_v2.html" %}
+{% block css%}
+<style>
+.xui-export{
+	width: 100px;
+}
+.xui-i-item .errorHint{
+	margin-left: 64px;
+}
+.xui-money{
+	width: 130px;
+    border: 1px solid #BFD7EB;;
+    background-color: #f2f2f2;
+    padding: 0 5px;
+}
+.ml13{
+	margin-left: 13px;
+}
+.xui-filterPanel{
+	padding-bottom: 25px;
+}
+</style>
+{% endblock %}
+{% block content-panel %}
+<div class="relative">
+	<ul class="breadcrumb">
+		<li>您当前所在位置</li>
+		<li><a href="/apps/lottery/lotteries/">百宝箱</a></li>
+		<li><a href="/apps/rebate/rebates/">返利活动</a></li>
+		<li class="active">活动订单</li>
+	</ul>
+</div>
+<div class="xui-filterPanel" >
+    <div class="xui-form disT ml20">
+        <div class="xui-i-item clearfix">
+			<label>下单时间：</label>
+			<input
+				type="text"
+				class="form-control xui-datePicker"
+				id="start_date"
+				name="start_date"
+				style=""
+			    value=""
+			    readonly="readonly"
+				data-validate="require-notempty"
+				data-enable-select-time="true"
+				data-ui-role="datepicker"
+			    data-format="yy-mm-dd"
+			    data-max="now"/>
+			<span class="ml5 mr5">至</span>
+			<input
+				type="text"
+				class="form-control xui-datePicker"
+				id="end_date"
+				name="end_date"
+			    value=""
+			    readonly="readonly"
+				data-validate="require-notempty"
+				data-ui-role="datepicker"
+				data-enable-select-time="true"
+			    data-format="yy-mm-dd"
+			    data-max="now"
+			    data-min-el="#start_date"/>
+			<input type="checkbox" class="vs ml30" name="firstOrder">&nbsp;首单
+			<input type="checkbox" class="vs ml30" name="NotfirstOrder">&nbsp;非首单
+			<div class="xui-btn-group fr">
+				<a class="btn btn-primary xa-search xui-fontBold ml60" href="javascript:void(0);">查询</a>
+				<a class="xa-reset btn btn-primary xui-fontBold" href="javascript:void(0);">重置</a>
+				<a class="xa-export btn btn-default xui-export xa-export ml40" href="javascript:void(0);">导出</a>
+				<a id="export_href" style="display: none ">DownloadXLS</a>				
+			</div>
+		</div>
+		<div class="xui-i-item" style="margin-top: -15px;">
+			<label>实付金额</label>
+			<input type="text" class="ml13 mr10 xui-money" id="start_money" >
+			<input type="text" class="xui-money" id="end_money" >
+		</div>
+	</div>
+</div>
+<div class="panel panel-default mt20 xui-bigBoxbg">
+	<div class="panel panel-default ml10 mr10 mb50" style="border:none;">
+		<div class="panel-heading xui-qrcode-order-head">
+			<input type="checkbox" class="is_show vs" checked value="0">&nbsp;&nbsp;仅显示扫码后成交订单
+			<div class="xui-i-money">现金支付：<span class="xa-getFinalPrice">0.00</span>&nbsp;&nbsp;微众卡支付：<span class="xa-getWeizoomCardMoney">0.00</span></span></div>
+		</div>
+		<div
+			data-ui-role="qrcode-order-advanced-table"
+			data-app="apps/rebate"
+			data-resource="rebate_order_list"
+			data-args='{"record_id": "{{record_id}}", "is_show":"1"}'
+			data-template-id="#promotions-view"
+			data-enable-paginator="true"
+			data-enable-sort="false"
+			data-selectable="true"
+			data-disable-header-select="true"
+			data-item-count-per-page="10"
+			data-outer-selecter='.xa-selectAll'
+			data-selecttable-tr='xa-selectTr'
+			class="panel-body xui-promotionHead pb0"
+		></div>
+	</div>
+</div>
+{% endblock %}
+
+
+{% block js %}
+{% verbatim %}
+<script id="promotions-view" type="text/x-jquery-tmpl">
+	{{if data.pageinfo.object_count != 0}}
+	<table class="table table-condensed mb0 xui-tableHead">
+		<thead>
+			<tr>
+				<th width="310">商品</th>
+				<th width="80">单价/数量</th>
+				<th width="140">优惠金额</th>
+				<th width="100">买家</th>
+				<th width="110">实付金额</th>
+				<th width="90">订单状态</th>
+			</tr>
+		</thead>
+	</table>
+	{{/if}}
+
+	{{if data.pageinfo.object_count == 0}}
+		<div class="xui-emptyBox xa-emptyBox">
+		<img src="/static_v2/img/editor/empty.png"><span class="ml20">您还没有相关数据！
+		</span>
+		</div>
+	{{/if}}
+
+	<ul class="xui-qrcode-list xa-countLi">
+        {{each(i, order) items}}
+		<li data-order-id="${order.id}">
+			<table width="100%" class="table mb15 xui-table-orderDetail">
+				<tr class="xui-order-firstTr">
+					<td colspan="8">
+					<div class="fl">
+						<p class="ml20 fl">
+						订单编号：
+						<a title="查看" class="xt-orderLink" href="/mall2/order/?order_id=${order.id}" target="_blank">${order.order_id}</a>
+						</p>
+						<p class="ml10 fl w60">
+						&nbsp;
+							${order.pay_interface_name}
+						</p>
+						<p class="ml40 fl">
+							下单时间：${order.created_at}
+						</p>
+						<p class="ml150 fl">
+							付款时间：${order.payment_time}
+						</p>
+					</div>
+					</td>
+				</tr>
+				<tr>
+					<td class="" width="390px">
+					<ul class="">
+					{{each(i, product) order.products}}
+						<li class="disT" style="width:100%;" data-id="${product.id}">
+							<div style="display:table-cell;vertical-align:middle;text-align: center;width:75px">
+
+                            {{if product.thumbnails_url.search('http://weappimg') != -1}}
+                            <img class="xui-product-thumbnails" src="${product.thumbnails_url + '!60'}" width="60" height="60"/>
+                            {{else}}
+                            <img class="xui-product-thumbnails" src="${product.thumbnails_url}" width="60" height="60"/>
+                            {{/if}}
+
+							</div>
+							<div style="width:235px;display:table-cell">
+								<p class="tl">
+								<a href="/mall2/product/?id=${product.id}" class="xa-productName" name="xa-productName">
+									{{if product.promotion }}
+										{{if product.promotion.type == "flash_sale"}}【限时抢购】{{/if}}
+										{{if product.promotion.type == "premium_sale:premium_product"}}【赠品】 {{/if}}
+									{{/if}}
+									${product.name}
+								</a></p>
+								<p class="tl pt10">
+								{{each(p, property) product.custom_model_properties}}
+									{{if p == (product.custom_model_properties.length - 1)}}
+										${property.property_value}
+									{{else}}
+										${property.property_value}&nbsp;/&nbsp;
+									{{/if}}
+								{{/each}}
+								</p>
+							</div>
+							<div style="width:80px;display:table-cell">
+								<p class="tc">${product.price}</p>
+								<p class="tc">(${product.count}&nbsp;件)</p>
+							</div>
+						</li>
+					{{/each}}
+					</ul>
+					</td>
+					<td width="140px">
+						{{if order.save_money != 0 }}
+							${ order.save_money}
+						{{/if}}
+					</td>
+					<td width="100">
+						{{if order.is_first_order }}<i class="xui-firstTag">首</i>{{/if}}
+						{{if order.buyer_id > 0}}
+							<a href="/member/detail/?id=${ order.buyer_id }" target='_blank'>{{html order.buyer_name}}</a>
+						{{else}}
+							{{html order.buyer_name}}
+						{{/if}}
+						{{if order.customer_message}}
+
+						{{/if}}
+					</td>
+					<td width="110">
+						${ order.pay_money }
+						{{if order.postage > 0 }}
+	                    </br>
+	                    	<span class="xui-colorGray">(含运费：${order.postage})</span>
+	                    {{/if}}
+	                    {{if order.weizoom_card_money > 0}}
+	                    </br>
+		                    <span class="xui-weizoomCard pr">
+			                    <i class="xa-weizoomCardImg"></i>
+			                    </br>
+			                    <span class="pa xa-weizoomCardHint" style="display:none;">微众卡支付&nbsp${order.weizoom_card_money}元</span>
+		                    </span>
+	                    {{/if}}
+					</td>
+					<td class="nowrap" width="90">
+						<div>
+	                        ${order.status}
+						</div>
+					</td>
+				</tr>
+				{{if order.remark }}
+				<tr>
+					<td colspan="8" class="xui-remark">
+					<img src="/static_v2/img/editor/attention.jpg">卖家备注：${order.remark}
+					</td>
+				</tr>
+				{{/if}}
+			</table>
+		</li>
+		{{/each}}
+	</ul>
+	<div class="hidden"><span class="xa-getHiddenFinalPrice">${data.final_price}</span></div>
+	<div class="hidden"><span class="xa-getHiddenWeizoomCardMoney">${data.weizoom_card_money}</span></div>
+</div>
+</script>
+{% endverbatim %}
+
+<script type="text/javascript">
+function formatOrderStatus(status) {
+	var color = '#333333';
+	if (status === '退款中') {
+		return '<img src="/static_v2/img/editor/refund.jpg" class="mr5"><span style="color:red">' + status + '</span>';
+	} else {
+		return '<span style="color: ' + color + '">' + status + '</span>';
+	}
+	return
+}
+$(document).ready(function() {
+	$('#start_date').attr('value','');
+	$('#end_date').attr('value','');
+
+	function dateViewReload(){
+		var start_date = $('#start_date').val();
+		var end_date = $('#end_date').val();
+		var start_money = $('#start_money').val();
+		var end_money = $('#end_money').val();	
+		var is_first_order = 0;
+		var not_first_order = 0;
+		if($("input[name='firstOrder']").is(':checked')){
+			is_first_order = 1;
+		}
+		if($("input[name='NotfirstOrder']").is(':checked')){
+			not_first_order = 1;
+		}	
+		var is_checked = $('.is_show').is(':checked');
+		var dataView = $('[data-ui-role="qrcode-order-advanced-table"]').data('view');
+		var is_show = 0;
+		if (is_checked == true){
+			is_show = 1;
+		}
+		var args= '{"start_date":"'+start_date+'","end_date":"'+end_date+'","start_money":"'+start_money+'","end_money":"'+end_money+'","is_show":"'+is_show+'","is_first_order":"'+is_first_order+'","not_first_order":"'+not_first_order+'"}';
+		dataView.options.args = args;
+	    dataView.setPage(1);
+		dataView.reload();
+	}
+
+	$('.xa-export').click(function(){
+		W.getLoadingView();
+        var record_id = '{{ record_id }}';
+		var start_date = $('#start_date').val();
+		var end_date = $('#end_date').val();
+		var start_money = $('#start_money').val();
+		var end_money = $('#end_money').val();	
+		var is_first_order = 0;
+		var not_first_order = 0;
+		if($("input[name='firstOrder']").is(':checked')){
+			is_first_order = 1;
+		}
+		if($("input[name='NotfirstOrder']").is(':checked')){
+			not_first_order = 1;
+		}	
+		var is_checked = $('.is_show').is(':checked');
+		var is_show = 0;
+		if (is_checked == true){
+			is_show = 1;
+		}		
+		W.getApi().call({
+			method : 'get',
+			app: 'apps/rebate',
+			resource: 'rebate_order_export',
+			args : {
+				'is_first_order': is_first_order,
+				'not_first_order': not_first_order,
+				'is_show': is_show,
+				'start_date': start_date,
+				'end_date': end_date,
+				'start_money': start_money,
+				'end_money': end_money,
+				'export_id': 1,
+                'record_id': record_id				
+			},
+			success: function(resp){
+				if(resp.code == 200){
+					$('#export_href').prop({
+						'href': resp.download_path,
+						'download': resp.filename
+					}).get(0).click();
+				}
+				console.log("导出成功");
+			},
+			error: function(error){
+				console.log('导出失败');
+			}			
+		});
+	});
+	$('.xa-search').click(function(){
+		var start_date = $('#start_date').val();
+		var end_date = $('#end_date').val();
+		var start_money = $.trim($('#start_money').val());
+		var end_money = $.trim($('#end_money').val());
+		var regx = /^\d{1,9}(\.\d{1,2})?$/g
+		if(start_date||end_date){
+	        if (!W.validate()) {
+	        	W.showHint('error','请输入下单时间');
+	          	return false;
+	        }
+	    }
+		if(start_money||end_money){
+			if(!(start_money.match(regx)&&(end_money).match(regx))){
+				W.showHint('error','请输入正确金额');
+				return false;
+			}
+			if(!(start_money && end_money)){
+	        	W.showHint('error','请输入实付金额');
+	          	return false;
+	        }else if(parseFloat(start_money)>parseFloat(end_money)){
+	        	W.showHint('error','请输入正确金额');
+	          	return false;
+	        }
+	    }
+		dateViewReload();
+	});
+	$('.xa-reset').click(function(){
+		$('#start_date').attr('value','');
+		$('#end_date').attr('value','');
+		$('#start_money').attr('value','');
+		$('#end_money').attr('value','');
+		$("input[name='firstOrder']").prop('checked',false);
+		$("input[name='NotfirstOrder']").prop('checked',false);
+	});
+
+	$('.is_show').click(function(){
+		dateViewReload();
+	});
+
+	// 微众卡价钱提示
+    $('body').delegate('.xa-weizoomCardImg','mouseenter',function(){
+    	$('.xa-weizoomCardImg').each(function(){
+			$(this).mouseenter(function() {
+				$(this).siblings('.xa-weizoomCardHint').css('display','inline-block');
+			});
+		});
+    });
+    $('body').delegate('.xa-weizoomCardImg','mouseleave',function(){
+    	$('.xa-weizoomCardImg').each(function(){
+			$(this).mouseleave(function() {
+				$(this).siblings('.xa-weizoomCardHint').css('display','none');
+			});
+		});
+    });
+});
+</script>
+{% endblock %}
