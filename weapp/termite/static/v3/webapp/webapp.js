@@ -87,7 +87,7 @@ W.preloadImgsOnPage = function(option) {
         if ($lazyImgs) {
             $lazyImgs.lazyload({
                 data_attribute:"url",
-                skip_invisible : false,
+                skip_invisible : true,
                 effect : "fadeIn",
                 placeholder: "/static_v2/img/webapp/mall/info_placeholder.png"
             });
