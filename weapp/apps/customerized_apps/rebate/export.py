@@ -137,7 +137,10 @@ def grant_card(need_grant_info, all_record_ids):
 			record_id2card_ids[record_id].append(c.weizoom_card_id)
 
 	def __get_useful_card(info):
-		curr_record_card_list = sorted(record_id2card_ids[str(info['record_id'])])
+		curr_record_card_list = record_id2card_ids.get(str(info['record_id']), None)
+		if not curr_record_card_list:
+			return None
+		curr_record_card_list = sorted(curr_record_card_list)
 		curr_index = 0
 		try:
 			curr_card_id = curr_record_card_list[curr_index]
