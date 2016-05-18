@@ -17,7 +17,7 @@ from core.jsonresponse import create_response
 from utils.cache_util import delete_cache
 from weixin2.models import News
 import models as app_models
-from apps.models import CustomizedAppWeizoomCard
+from apps.models import AppsWeizoomCard
 import export
 from apps import request_util
 from mall import export as mall_export
@@ -105,15 +105,15 @@ class Rebate(resource.Resource):
 		data['is_limit_first_buy'] = True if data['is_limit_first_buy']=='1' else False
 		data['is_limit_cash'] = True if data['is_limit_cash']=='1' else False
 		weizoom_card_ids = data['weizoom_card_ids'].split(',')
+		weizoom_card_passwords = data['weizoom_card_passwords'].split(',')
 		data['weizoom_card_ids'] = weizoom_card_ids
 		rebate = app_models.Rebate(**data)
 		ticket_id = app_models.Rebate.objects.all().count() + 10001 #ID从1W开始计算，为了防止跟带参数二维码重复
 		rebate.ticket_id = ticket_id
 		rebate.save()
-		weizoom_card_passwords = data['weizoom_card_passwords'].split(',')
 		for weizoom_card_id in weizoom_card_ids:
 			index = 0
-			weizoom_card_info = CustomizedAppWeizoomCard(
+			weizoom_card_info = AppsWeizoomCard(
 				owner_id = request.manager.id,
 				weizoom_card_id = weizoom_card_id,
 				weizoom_card_password = weizoom_card_passwords[index]
