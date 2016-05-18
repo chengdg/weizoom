@@ -799,7 +799,7 @@ class RedEnvelopeParticipences(models.Model):
 		verbose_name_plural = '红包领用分析'
 
 #########################################################################
-# CardExchange: 商家设置的卡兑换
+# CardExchange: 商家设置的卡兑换(积分兑换)
 #########################################################################
 
 NO_REQUIRE = 0          #无条件
@@ -846,3 +846,41 @@ class CardHasExchanged(models.Model):
 
 	class Meta(object):
 		db_table = 'mallpromotion_card_has_exchanged'
+
+
+#########################################################################
+# CardExchangeCash: 商家设置的卡兑换(现金兑换)
+#########################################################################
+
+class CardExchangeCash(models.Model):
+	webapp_id = models.CharField(max_length=20)  # webapp,商家id
+	require = models.IntegerField(default=NO_REQUIRE)   #兑换需求
+	reward_type = models.IntegerField(default=WEIZOOM_CARD)   #兑换奖励类型
+
+	class Meta(object):
+		db_table = 'mallpromotion_card_exchange_cash'
+
+#########################################################################
+# WeizoomCardExchangeCash: 商家设置的卡兑换规则
+#########################################################################
+class CardExchangeCash(models.Model):
+	exchange = models.ForeignKey(CardExchangeCash)
+	cash = models.IntegerField(default=0)  # 消耗现金
+	card_money = models.FloatField(default=0.0)  # 兑换微众卡金额
+	# card_number = models.CharField(max_length=256)  #微众卡号段
+
+	class Meta(object):
+		db_table = 'mallpromotion_card_exchange_rule_cash'
+
+#########################################################################
+# CardHasExchangedCash: 卡兑换记录
+#########################################################################
+class CardHasExchangedCash(models.Model):
+	webapp_id = models.CharField(max_length = 20)  # webapp,商家id
+	card_id = models.IntegerField()    #微众卡id
+	owner_id = models.IntegerField()    #卡拥有者
+	owner_name = models.CharField(max_length = 256) #拥有者姓名
+	created_at = models.DateTimeField(auto_now_add=True)  #兑换时间
+
+	class Meta(object):
+		db_table = 'mallpromotion_card_has_exchanged_cash'

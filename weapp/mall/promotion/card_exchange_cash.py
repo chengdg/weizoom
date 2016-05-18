@@ -27,9 +27,9 @@ from excel_response import ExcelResponse
 FIRST_NAV_NAME = export.MALL_PROMOTION_AND_APPS_FIRST_NAV
 
 
-class CardExchangeMoney(resource.Resource):
+class CardExchangeCash(resource.Resource):
 	app = "mall2"
-	resource = "card_exchange_money"
+	resource = "card_exchange_cash"
 
 	@login_required
 	def get(request):
@@ -37,7 +37,7 @@ class CardExchangeMoney(resource.Resource):
 		现金兑换微众卡配置页
 		"""
 		webapp_id = request.user_profile.webapp_id
-		card_exchange_dic = CardExchangeMoney.get_can_exchange_cards(webapp_id)
+		card_exchange_dic = CardExchangeCash.get_can_exchange_cards(webapp_id)
 		if card_exchange_dic:
 			prize_list = card_exchange_dic['prize']
 			for prize in prize_list:
@@ -51,10 +51,10 @@ class CardExchangeMoney(resource.Resource):
 			'first_nav_name': FIRST_NAV_NAME,
 			'second_navs': export.get_promotion_and_apps_second_navs(request),
 			'second_nav_name': export.MALL_PROMOTION_SECOND_NAV,
-			'third_nav_name': export.MALL_PROMOTION_CARD_EXCHANGE_MONEY_NAV,
+			'third_nav_name': export.MALL_PROMOTION_CARD_EXCHANGE_CASH_NAV,
 			'card_exchange_dic': card_exchange_dic
 		})
-		return render_to_response('mall/editor/promotion/card_exchange_money.html', c)
+		return render_to_response('mall/editor/promotion/card_exchange_cash.html', c)
 
 	@login_required
 	def api_get(request):
@@ -136,7 +136,7 @@ class CardExchangeMoney(resource.Resource):
 		except:
 			return {}
 
-class CardExchangeDetailMoney(resource.Resource):
+class CardExchangeDetailCash(resource.Resource):
 	app = "mall2"
 	resource = "card_exchange_details_money"
 
@@ -149,7 +149,7 @@ class CardExchangeDetailMoney(resource.Resource):
 			'first_nav_name': FIRST_NAV_NAME,
 			'second_navs': export.get_promotion_and_apps_second_navs(request),
 			'second_nav_name': export.MALL_PROMOTION_SECOND_NAV,
-			'third_nav_name': export.MALL_PROMOTION_CARD_EXCHANGE_MONEY_NAV,
+			'third_nav_name': export.MALL_PROMOTION_CARD_EXCHANGE_CASH_NAV,
 		})
 		return render_to_response('mall/editor/promotion/card_exchange_details_money.html', c)
 
@@ -211,9 +211,9 @@ class CardExchangeDetailMoney(resource.Resource):
 
 		return exchanged_cards
 
-class CardExchangeDetailMoneyExport(resource.Resource):
+class CardExchangeDetailCashExport(resource.Resource):
 	app = 'mall2'
-	resource = 'export_card_exchange_details_money'
+	resource = 'export_card_exchange_details_cash'
 
 	@login_required
 	def api_get(request):

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from market_tools.tools.card_exchange.export import get_card_exchange_link
-from market_tools.tools.card_exchange_money.export import get_card_exchange_money_link
+from market_tools.tools.card_exchange_cash.export import get_card_exchange_cash_link
 
 __author__ = 'liupeiyu'
 
@@ -203,7 +203,7 @@ def get_webapp_link_menu_objectes(request):
 		'cardExchangeMoney': {
 			'id': 13,
 			'name': '微众卡现金兑换平台',
-			'link': get_card_exchange_money_link(request),
+			'link': get_card_exchange_cash_link(request),
 			'users': ['jobs', 'njtest', 'ceshi01', 'weshop']
 		}
 		# 'feedback': {
