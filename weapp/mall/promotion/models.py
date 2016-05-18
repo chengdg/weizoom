@@ -864,7 +864,7 @@ class CashExchangeCard(models.Model):
 # CashExchangeCardRule: 商家设置的现金兑换卡规则
 #########################################################################
 class CashExchangeCardRule(models.Model):
-	exchange = models.ForeignKey(CardExchangeCash)
+	exchange = models.ForeignKey(CashExchangeCard)
 	cash = models.IntegerField(default=0)  # 消耗现金
 	card_money = models.FloatField(default=0.0)  # 兑换微众卡金额
 	# card_number = models.CharField(max_length=256)  #微众卡号段
