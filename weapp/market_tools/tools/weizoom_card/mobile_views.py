@@ -54,6 +54,7 @@ def get_weizoom_card_login(request):
 			})
 		return render_to_response('%s/weizoom_card/webapp/weizoom_card_login.html' % TEMPLATE_DIR, c)
 
+from apps import models as apps_root_models
 def get_weizoom_card_exchange_list(request):
 	"""
 	兑换卡列表
@@ -63,7 +64,7 @@ def get_weizoom_card_exchange_list(request):
 	member_info = MemberInfo.objects.get(member_id = member_id)
 
 	# 微众卡钱包
-	is_wallet = request.GET.get('is_wallet', '0')
+	is_wallet = int(request.GET.get('is_wallet', '0'))
 	is_binded = False
 	is_weshop = False
 	source = promotion_models.CARD_SOURCE_INTEGRAL
@@ -76,8 +77,19 @@ def get_weizoom_card_exchange_list(request):
 	card_details_dic = {}
 	card_details_list = []
 	member_has_cards = promotion_models.CardHasExchanged.objects.filter(webapp_id = webapp_id,owner_id = member_id,source = source).order_by('-created_at')
+	all_card_ids = [str(c.card_id) for c in member_has_cards]
+	if is_wallet:
+		card_id2card = {c.weizoom_card_id: {
+			"is_expired": False,
+			"status": c.status,
+			"expired_time": "2100-12-12 12:12:12",
+			"money": 0,
+			"weizoom_card_id": c.weizoom_card_id,
+			"weizoom_card_rule": {"money": 0}
+		} for c in apps_root_models.AppsWeizoomCard.objects(weizoom_card_id__in=all_card_ids)}
+	else:
+		card_id2card = {c.id: c for c in card_models.WeizoomCard.objects.filter(id__in=all_card_ids)}
 	total_money = 0
-	count = member_has_cards.count()
 	phone_number =member_info.phone_number
 	
 	card_details_dic['phone_number'] = phone_number
@@ -86,7 +98,9 @@ def get_weizoom_card_exchange_list(request):
 	today = datetime.today()
 	for card in member_has_cards:
 		card_id = card.card_id
-		cur_card = card_models.WeizoomCard.objects.get(id = card_id)
+		cur_card = card_id2card.get(card_id, None)
+		if not cur_card:
+			continue
 		is_expired = cur_card.is_expired
 		status = cur_card.status
 		if cur_card.expired_time < today:

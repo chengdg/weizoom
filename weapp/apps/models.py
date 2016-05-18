@@ -235,20 +235,6 @@ class AppsWeizoomCard(mongo_models.Document):
 	}
 
 	@staticmethod
-	def get_range_cards(record_id, start, end):
-		"""
-		获取卡号区间的所有卡信息，包含使用过的和未使用过的
-		"""
-		return AppsWeizoomCard.objects(belong_to=str(record_id), weizoom_card_id__range=(start, end))
-
-	@staticmethod
-	def get_unused_card(belong_to, start, end):
-		"""
-		从卡号区间中获取一张未使用的卡
-		"""
-		return AppsWeizoomCard.get_range_cards(belong_to, start, end).filter(status=0).first()
-
-	@staticmethod
 	def use_cards(weizoom_card_ids):
 		"""
 		将一系列卡标志为已使用
