@@ -185,18 +185,17 @@ class ProductList(resource.Resource):
 
         # 手动添加供货商的信息
         supplier_ids2name = dict([(s.id, s.name) for s in models.Supplier.objects.filter(owner=request.manager, is_delete=False)])
+        # 商品团购信息
+        woid = request.webapp_owner_id
+        try:
+            pids = [str(product.id) for product in products]
+            product2group = utils.get_product2group(pids, woid)
+        except:
+            error_msg = u"获取商品列表是否在团购中失败, cause:\n{}".format(unicode_full_stack())
+            watchdog_error(error_msg)
+            product2group={}
+
         #构造返回数据
-        if mall_type == 0 :
-            woid = request.webapp_owner_id
-            try:
-                pids = [str(product.id) for product in products]
-                product2group = utils.get_product2group(pids, woid)
-            except:
-                error_msg = u"获取商品列表是否在团购中失败, cause:\n{}".format(unicode_full_stack())
-                watchdog_error(error_msg)
-                product2group={}
-        else:
-            product2group = {}
         items = []
         items1 = []
         items2 = []
@@ -269,19 +268,19 @@ class ProductList(resource.Resource):
             return create_response(200).get_response()
 
         #团购
-        if mall_type == 0:
-            woid = request.webapp_owner_id
-            try:
-                pids = [str(product_id) for product_id in ids]
-                product2group = utils.get_product2group(pids, woid)
-            except:
-                error_msg = u"获取商品列表是否在团购中失败, cause:\n{}".format(unicode_full_stack())
-                watchdog_error(error_msg)
-                product2group={}
-            if product2group:
-                for id_tmp in ids:
-                    if product2group.has_key(id_tmp) and product2group[id_tmp] == True:
-                        ids.remove(id_tmp)
+        #if mall_type == 0:
+        woid = request.webapp_owner_id
+        try:
+            pids = [str(product_id) for product_id in ids]
+            product2group = utils.get_product2group(pids, woid)
+        except:
+            error_msg = u"获取商品列表是否在团购中失败, cause:\n{}".format(unicode_full_stack())
+            watchdog_error(error_msg)
+            product2group={}
+        if product2group:
+            for id_tmp in ids:
+                if product2group.has_key(id_tmp) and product2group[id_tmp] == True:
+                    ids.remove(id_tmp)
 
         #团购
         if ids:
@@ -447,6 +446,7 @@ class ProductPool(resource.Resource):
             count_per_page,
             query_string=request.META['QUERY_STRING'])
 
+        # 对应商品营销活动信息
         product_ids = [product['id'] for product in products]
         relations = models.WeizoomHasMallProductRelation.objects.filter(mall_product_id__in=product_ids, is_deleted=False)
         mall_product_id2weizoom_product_id = dict([(r.mall_product_id, r.weizoom_product_id) for r in relations])
@@ -456,6 +456,9 @@ class ProductPool(resource.Resource):
 
         product_id2relation = dict([(relation.product_id, relation)for relation in promotionrelations])
 
+        # 对应商品团购数据
+        weizoom_product_ids = [str(id) for id in mall_product_id2weizoom_product_id.values()]
+        product2group = utils.get_product2group(weizoom_product_ids, request.webapp_owner_id)
         #构造返回数据
         items = []
         for product in products:
@@ -465,9 +468,19 @@ class ProductPool(resource.Resource):
                 product_has_promotion = 1
             else:
                 product_has_promotion = 0
+
+            if mall_product_id2weizoom_product_id.has_key(product['id']) and product2group.has_key(mall_product_id2weizoom_product_id[product['id']]):
+                print product2group
+                print "++" * 10
+                print mall_product_id2weizoom_product_id[product['id']], product['name']
+                product_has_group = product2group[mall_product_id2weizoom_product_id[product['id']]]
+                print product_has_group
+            else:
+                product_has_group = 0
             items.append({
                 'id': product['id'],
                 'product_has_promotion': product_has_promotion,
+                'product_has_group': product_has_group,
                 'name': product['name'],
                 'thumbnails_url': product['thumbnails_url'],
                 'user_code': product['user_code'],

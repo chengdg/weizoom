@@ -70,7 +70,7 @@ W.view.mall.ProductsPoolView = Backbone.View.extend({
                     })
                 }
             })
-            
+
         }
      },
     /**
@@ -109,6 +109,12 @@ W.view.mall.ProductsPoolView = Backbone.View.extend({
         var $el = $(event.currentTarget);
         var productId = $el.parents('tr').data('id');
         var hasActivity = $el.parents('tr').data('product-has-promotion');
+        var hasGroup = $el.parents('tr').data('product-has-group');
+        if(hasGroup && hasGroup == true){
+            W.showHint('error', '该商品正在进行团购活动!');
+            return false;
+        }
+
         var _this = this,
             width,
             templateAlign,
