@@ -28,7 +28,7 @@
         .xui-i-put > div{
         	padding: 5px 0;
         }
-        .xui-i-integral{
+        .xui-i-cash{
         	width: 60px;	
         }
 		.xui-i-money{
@@ -150,8 +150,8 @@
 		        		    <div class="xui-i-put">
 			        		    <div>
 			        		    	<label>使用现金：</label>
-			        		    	<input type="text" class="xa-integral xui-i-integral xui-hide" name="integral" readonly=true value="{{item.integral}}">
-			        		    	<span class="xa-exchangeSpan">{{item.integral}}</span>
+			        		    	<input type="text" class="xa-cash xui-i-cash xui-hide" name="cash" readonly=true value="{{item.cash}}">
+			        		    	<span class="xa-exchangeSpan">{{item.cash}}</span>
 			        		    </div>
 			                    <div>
 			                    	<div class="xui-money">
@@ -216,8 +216,9 @@
 		        		    <div class="xui-i-put">
 			        		    <div>
 			        		    	<label>使用现金：</label>
-			        		    	<input type="text" class="xa-integral xui-i-integral" name="integral">
+			        		    	<input type="text" class="xa-cash xui-i-cash" name="cash">
 			        		    	<span class="xa-exchangeSpan"></span>
+			        		    	<span>元</span>
 			        		    </div>
 			                    <div>
 			                        <div class="xui-money">
@@ -267,16 +268,17 @@
 <script type="text/x-jquery-tmpl" id="exchange-input">
 <div class="xui-i-put xa-put">
 	<div>
-		<label>使用积分：</label>
-		<input type="text" class="xa-integral xui-i-integral" name="integral">
+		<label>使用现金：</label>
+		<input type="text" class="xa-cash xui-i-cash" name="cash">
 		<span class="xa-exchangeSpan"></span>
+		<span>元</span>
 	</div>
 	<div>
 		<div class="xui-money">
 			<label>兑换微众卡：</label>
 			<input type="text" class="xui-i-money xa-money" name="money">
 			<span class="xa-exchangeSpan"></span>
-			<span class=>元</span>
+			<span>元</span>
 		</div>
 		<div class="xui-num xa-num">
             <label>发放微众卡文件：</label>
@@ -462,16 +464,16 @@ $(document).ready(function() {
 		    //提交数据
 			var prize = [];
 			var money = $(".xa-money");
-			var integral = $(".xa-integral");
+			var cash = $(".xa-cash");
        		var isBind = $("option:selected").val();
 			for(var i=0;i<money.length;i++){
 				var moneyData = money[i].value;
-				var integralData = integral[i].value;
+				var cashData = cash[i].value;
                 var snumData = snum[i].value;
                 var endnumData = endnum[i].value;
 				var item = {
 					money:moneyData,
-					integral:integralData,
+					cash:cashData,
                     snum:snumData,
                     endnum:endnumData
 				}
