@@ -62,22 +62,14 @@ W.preloadImgsOnPage = function(option) {
             var tagId = ele['tagId'];
             var $itemsImg = $(tagId);
             if (_.isEmpty($itemsImg)) {
-                console.error('preloadImgsOnPage %o is not found', ele)
                 return;
             }
             switch(module) {
                 case 'imageGroup':
                     $itemsImg.map(function(idx, item) {
                         $item = $(item);
-                        var src = $item.attr('src')
-                        // 第一张图不压缩，从第二张图开始压缩
-                        if (idx > 0) {
-                          $item.attr('src', [src, '!/noicc/true/compress/true/progressive/true/quality/20'].join(''));
-                          $item.attr('data-url', src);
-                        } else {
-                          $item.attr('src', [src, '!/noicc/true/compress/true/progressive/true/quality/80'].join(''));
-                          $item.attr('data-url', src);
-                        }
+                        $item.attr('data-url', $item.attr('src'));
+                        $item.removeAttr('src');
                     });
                     break;
                 case 'productList':
