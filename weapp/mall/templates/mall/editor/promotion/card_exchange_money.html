@@ -25,7 +25,7 @@
 			padding-bottom: 10px;
 			padding-top: 10px;
 		}
-        .xui-i-put div{
+        .xui-i-put > div{
         	padding: 5px 0;
         }
         .xui-i-integral{
@@ -161,12 +161,15 @@
 				                    	<span>元</span>
 				                    </div>
 				                    <div class="xui-num xa-num">
-						                <label>号段：</label>
-						                <input type="text" class="xui-i-num xa-snum xui-hide" name="snum" readonly=true value="{{item.s_num}}">
-						                <span class="xa-exchangeSpan">{{item.s_num}}</span>
-						                <span class="ml5 mr5">-</span>
-						                <input type="text" class="xui-i-num xa-endnum xui-hide" name="endnum" readonly=true value="{{item.end_num}}">	
-					                	<span class="xa-exchangeSpan">{{item.end_num}}</span>
+							            <label>发放微众卡文件：</label>
+								        <div class="controls xa-errorHintContainer"  style="display: inline-block;">
+								            <div>
+								                <input type="file" id="card-file-1" name="card-file-1">
+								                <input type="hidden" id="weizoom_card_ids_1">
+								                <input type="hidden" id="weizoom_card_passwords_1">
+								            <span class="xa-exchangeStock"></span>
+								            </div>
+								        </div>	
 					                </div>	
 					                <span class="xa-exchangeStock xui-exchangeStock">库存：{{item.count}}</span>
                                     <a href="javascript:void(0);" class="xui-i-del xui-hide" title="删除">&times;</a>
@@ -224,12 +227,15 @@
 				                    	<span>元</span>
 				                    </div>
 				                    <div class="xui-num xa-num">
-						                <label>号段：</label>
-						                <input type="text" class="xui-i-num xa-snum" name="snum">
-						                <span class="xa-exchangeSpan"></span>
-						                <span class="ml5 mr5">-</span>
-						                <input type="text" class="xui-i-num xa-endnum" name="endnum">	
-						                <span class="xa-exchangeSpan"></span>
+							            <label>发放微众卡文件：</label>
+								        <div class="controls xa-errorHintContainer"  style="display: inline-block;">
+								            <div>
+								                <input type="file" id="card-file-1" name="card-file-1">
+								                <input type="hidden" id="weizoom_card_ids_1">
+								                <input type="hidden" id="weizoom_card_passwords_1">
+								            <span class="xa-exchangeStock"></span>
+								            </div>
+								        </div>	
 						            </div>
 					                <span class="xa-exchangeStock xui-exchangeStock"></span>
 					                <a href="javascript:void(0);" class="xui-i-del" title="删除">&times;</a>              
@@ -257,8 +263,9 @@
 {% block js %}
 
 {% verbatim %}
+
 <script type="text/x-jquery-tmpl" id="exchange-input">
-<div class="xui-i-put">
+<div class="xui-i-put xa-put">
 	<div>
 		<label>使用积分：</label>
 		<input type="text" class="xa-integral xui-i-integral" name="integral">
@@ -272,22 +279,88 @@
 			<span class=>元</span>
 		</div>
 		<div class="xui-num xa-num">
-			<label>号段：</label>
-			<input type="text" class="xui-i-num xa-snum" name="snum">
-			<span class="xa-exchangeSpan"></span>
-			<span class="ml5 mr5">-</span>
-			<input type="text" class="xui-i-num xa-endnum" name="endnum">	
-			<span class="xa-exchangeSpan"></span> 
+            <label>发放微众卡文件：</label>
+	        <div class="controls xa-errorHintContainer"  style="display: inline-block;">
+	            <div>
+	                <input type="file" id="card-file-${i}" name="card-file-${i}">
+	                <input type="hidden" id="weizoom_card_ids_${i}">
+	                <input type="hidden" id="weizoom_card_passwords_${i}">
+	            <span class="xa-exchangeStock"></span>
+	            </div>
+	        </div>	
 		</div>  
 		<span class="xa-exchangeStock xui-exchangeStock"></span>
 		<a href="javascript:void(0);" class="xui-i-del" title="删除">&times;</a>            
 	</div>
 </div>
 </script>
+
 {% endverbatim %}
 
 <script type="text/javascript">
 $(document).ready(function() {
+		var swf = '/static/uploadify.swf',
+		        overrideEvents = ['onError', 'onUploadSuccess'],
+		        multi = false,
+		        removeCompleted = false,
+		        uploader = '/apps/rebate/api/upload_file/',
+		        cancelImg = '/static/img/cancel.png',
+		        buttonText = '添加文件',
+		        fileTypeExts = '*.xls',
+		        method = 'post',
+		        removeTimeout = 0.0,
+		        width = 100,
+		        formData = {
+		            'owner_id': '9'
+		        },
+		        onError = function(errorType,file) {
+		            xlog(errorType);
+		            xlog(file.name);
+		        };
+		    //初始化上传组件
+		    $("#card-file-1").uploadify({
+		        overrideEvents: overrideEvents,
+		        swf: swf,
+		        width: width,
+		        multi: multi,
+		        removeCompleted: removeCompleted,
+		        uploader: uploader,
+		        cancelImg: cancelImg,
+		        buttonText: buttonText,
+		        fileTypeDesc: '微众卡文件',
+		        fileTypeExts: fileTypeExts,
+		        method: method,
+		        removeTimeout: removeTimeout,
+		        formData: $.extend(formData, {
+		            'cat': 'card-file'
+		        }),
+		        onUploadStart: function(file){
+		            if(file && (file.name.substring(file.name.length - 3,file.name.length) == 'xls')){}else{
+		                W.showHint('error', '请上传正确excel文件');
+		                $("#card-file-1").uploadify('cancel', '*');
+		                $("#card-file-1").uploadify('stop');
+		            }
+		        },
+		        onUploadSuccess : function(file, response, status) {
+		            response = JSON.parse(response);
+		            if(response.code == 200){
+		                console.log(response.data);
+		                $("#card-file-1").find('.uploadify-button-text').html('重新选择');
+		                $("#weizoom_card_ids_1").val(response.data['weizoom_card_ids_1']);
+		                $("#weizoom_card_passwords_1").val(response.data['weizoom_card_passwords_1']);
+		                has_file = true;
+		            }else{
+		                W.showHint('error', response.errMsg);
+		            }
+		        },
+		        onSelect: function(file) {
+		            var $queues = $('#card-file-1-queue').children();
+		            if($queues.length > 1){
+		                $queues.eq(0).remove();
+		            }
+		        },
+		        onError: onError
+		    });
 	var is_err = false; 
 	//检验是否为数字
 	$(document).on("blur","input",function(){
@@ -299,8 +372,55 @@ $(document).ready(function() {
 	    }
 	})  
     //添加新卡
-	$(".xa-add").click(function(){   
-		$("#exchange-input").tmpl().appendTo(".xa-exchange");
+   	var i = 2; 
+	$(".xa-add").click(function(){  
+		var num = {i:i};
+		$("#exchange-input").tmpl(num).appendTo(".xa-exchange");
+	    //新添加上传组件
+	    $("#card-file-"+i).uploadify({
+	        overrideEvents: overrideEvents,
+	        swf: swf,
+	        width: width,
+	        multi: multi,
+	        removeCompleted: removeCompleted,
+	        uploader: uploader,
+	        cancelImg: cancelImg,
+	        buttonText: buttonText,
+	        fileTypeDesc: '微众卡文件',
+	        fileTypeExts: fileTypeExts,
+	        method: method,
+	        removeTimeout: removeTimeout,
+	        formData: $.extend(formData, {
+	            'cat': 'card-file'
+	        }),
+	        onUploadStart: function(file){
+	            if(file && (file.name.substring(file.name.length - 3,file.name.length) == 'xls')){}else{
+	                W.showHint('error', '请上传正确excel文件');
+	                $("#card-file-"+i).uploadify('cancel', '*');
+	                $("#card-file-"+i).uploadify('stop');
+	            }
+	        },
+	        onUploadSuccess : function(file, response, status) {
+	            response = JSON.parse(response);
+	            if(response.code == 200){
+	                console.log(response.data);
+	                $("#card-file-"+i).find('.uploadify-button-text').html('重新选择');
+	                $("#weizoom_card_ids_"+i).val(response.data['weizoom_card_ids_'+i]);
+	                $("#weizoom_card_passwords_"+i).val(response.data['weizoom_card_passwords_'+i]);
+	                has_file = true;
+	            }else{
+	                W.showHint('error', response.errMsg);
+	            }
+	        },
+	        onSelect: function(file) {
+	            var $queues = $('#card-file-'+i+'-queue').children();
+	            if($queues.length > 1){
+	                $queues.eq(0).remove();
+	            }
+	        },
+	        onError: onError
+	    });
+	    i ++;
 	});  
     //控制删除按钮
 	$(".xui-i-del").eq(0).hide();
@@ -308,19 +428,15 @@ $(document).ready(function() {
     	$(this).parents(".xui-i-put").remove();
 	})
     //修改数据
-	$(".xa-btnSubmit").click(function(){  
-		if (is_err){
-			W.showHint('error','不存在该卡,请重新输入卡号区间'); 
-			return;
-		}      
+	$(".xa-btnSubmit").click(function(){     
 		if(!$("input").attr("readonly")){
 			//校验
 			var reg = new RegExp("^\\d+(\\.\\d+)?$");
-	        var all = $("input");
+	        var all = $("input[type='text']");
 	        for(var i=0;i<all.length;i++){
 	 			var arg = all[i].value;
 		    	if(!reg.test(arg)){
-		    		W.showHint('error','请输入纯数字')
+		    		W.showHint('error','请输入正确金额')
 		    		return 
 		    	}
 	        }         
@@ -387,79 +503,7 @@ $(document).ready(function() {
 			$(".xa-exchangeSpan").hide();
 		}     
 	});
-	//更新库存
-    $(document).on("blur",".xa-endnum",function(){
-    	var _this = $(this);
-    	var snumData = $(this).siblings(".xa-snum").val();
-	    var endnumData = $(this).val();
-	    if(snumData&&endnumData){
-	    var reg = new RegExp("^[0-9]*$");
-		if(!reg.test(endnumData)){
-			W.showHint('error','请输入纯数字')
-			return 
-		}
-	    if(parseInt(snumData) > parseInt(endnumData)){
-			W.showHint('error','号段不合法')
-			return 
-		}
-		var stockData = {
-	        snum:snumData,
-	        endnum:endnumData
-		}
-		W.getApi().call({
-			    method: 'get',
-			    app: 'mall2',
-			    api: 'card_exchange',
-			    args: stockData,
-			    scope: this,
-			    success: function(data) {
-			    	is_err = false;
-                	_this.parent(".xa-num").siblings(".xa-exchangeStock").html("库存：" + data);
-			    },
-			    error: function(resp) {
-			    	is_err = true;
-			    	W.showHint('error',resp.errMsg); 
-			    	_this.parent(".xa-num").siblings(".xa-exchangeStock").html("库存：" + 0);
-			    }
-			})
-		}
-    });
-    $(document).on("blur",".xa-snum",function(){
-       	var _this = $(this);
-    	var endnumData = $(this).siblings(".xa-endnum").val();
-	    var snumData = $(this).val();
-	    if(snumData&&endnumData) {
-	    var reg = new RegExp("^[0-9]*$");
-		if(!reg.test(snumData)){
-		    W.showHint('error','请输入纯数字')
-		    return 
-		}
-	    if(parseInt(snumData) > parseInt(endnumData)){
-			W.showHint('error','号段不合法')
-			return 
-		}
-		var stockData = {
-	        snum:snumData,
-	        endnum:endnumData
-		}
-		W.getApi().call({
-			    method: 'get',
-			    app: 'mall2',
-			    api: 'card_exchange',
-			    args: stockData,
-			    scope: this,
-			    success: function(data) {
-			    	is_err = false;
-                	_this.parent(".xa-num").siblings(".xa-exchangeStock").html("库存：" + data);
-			    },
-			    error: function(resp) {
-			    	is_err = true;
-			    	W.showHint('error',resp.errMsg); 
-			    	_this.parent(".xa-num").siblings(".xa-exchangeStock").html("库存：" + 0);  
-			    }
-			})
-		}
-    });
 });
 </script>
+
 {% endblock %}
