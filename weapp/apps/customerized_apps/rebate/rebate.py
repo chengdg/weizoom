@@ -114,9 +114,8 @@ class Rebate(resource.Resource):
 		rebate.save()
 		data = json.loads(rebate.to_json())
 		data['id'] = data['_id']['$oid']
-
+		index = 0
 		for weizoom_card_id in weizoom_card_ids:
-			index = 0
 			weizoom_card_info = AppsWeizoomCard(
 				owner_id = request.manager.id,
 				belong_to = data['id'],
@@ -154,15 +153,6 @@ class Rebate(resource.Resource):
 		data['is_limit_first_buy'] = True if data['is_limit_first_buy']=='1' else False
 		data['is_limit_cash'] = True if data['is_limit_cash']=='1' else False
 
-		# cur_rebate = app_models.Rebate.objects.get(id=request.POST['id'])
-		# cur_weizoom_card_ids = cur_rebate.weizoom_card_ids
-		# weizoom_card_ids = data['weizoom_card_ids'].split(',')
-		# weizoom_card_passwords = data['weizoom_card_passwords'].split(',')
-		# need_add_weizoom_card_ids =  [ i for i in weizoom_card_ids if i not in cur_weizoom_card_ids ]
-
-		# if need_add_weizoom_card_ids != []:
-		# 	cur_rebate.weizoom_card_ids.append(need_add_weizoom_card_ids)
-
 		update_data = {}
 		update_fields = set(['name', 'start_time', 'end_time', 'permission', 'is_limit_first_buy', 'is_limit_cash', 'rebate_order_price', 'rebate_money', 'weizoom_card_id_from', 'weizoom_card_id_to', 'reply_type', 'reply_detail', 'reply_material_id'])
 		for key, value in data.items():
@@ -170,6 +160,24 @@ class Rebate(resource.Resource):
 				update_data['set__'+key] = value
 
 		app_models.Rebate.objects(id=request.POST['id']).update(**update_data)
+
+		weizoom_card_ids = data['weizoom_card_ids'].split(',')
+		weizoom_card_passwords = data['weizoom_card_passwords'].split(',')
+		weizoom_card_id2password = {}
+		index = 0
+		for weizoom_card_id in weizoom_card_ids:
+			weizoom_card_id2password[weizoom_card_id].append(weizoom_card_passwords[index])
+			# weizoom_card_id2password = {
+			# 	weizoom_card_id:weizoom_card_passwords[index]
+			# }
+			index += 1
+
+		cur_weizoom_cards = AppsWeizoomCard.objects(belong_to=request.POST['id'])
+		cur_weizoom_card_ids = [cur_weizoom_card.weizoom_card_id for cur_weizoom_card in cur_weizoom_cards]
+		need_add_weizoom_card_ids =  [ i for i in weizoom_card_ids if i not in cur_weizoom_card_ids ]
+
+		if need_add_weizoom_card_ids != []:
+			print('22222')
 
 		#更新后清除缓存
 		# cache_key = 'apps_rebate_%s_html' % request.POST['id']
