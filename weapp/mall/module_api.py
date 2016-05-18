@@ -2904,7 +2904,9 @@ def get_order_pay_interfaces(webapp_owner_id, webapp_user, order_id):
 ########################################################################
 # __get_products_pay_interfaces: 获取商品的共同支付方式
 ########################################################################
-from market_tools.tools.weizoom_card.models import AccountHasWeizoomCardPermissions
+from market_tools.tools.weizoom_card.models import AccountHasWeizoomCardPermissions, WeizoomCardHasOrder
+
+
 def __get_products_pay_interfaces(webapp_user, products):
 	pay_interfaces = [pay_interface for pay_interface in webapp_user.webapp_owner_info.pay_interfaces if pay_interface.is_active and not pay_interface.type == PAY_INTERFACE_WEIZOOM_COIN]
 	#pay_interfaces = PayInterface.objects.filter(owner_id=webapp_owner_id, is_active=True).filter(~Q(type=PAY_INTERFACE_WEIZOOM_COIN))
@@ -3363,3 +3365,14 @@ def create_mall_order_from_shared(request,order_id):
 
 	# except Exception, e:
 	# 	raise e
+
+
+
+def refund_weizoom_card_money(order):
+	url = "http://" + settings.CARD_SERVER_DOMAIN + '/card/trade'
+	trade_id = WeizoomCardHasOrder.objects.filter(order_id=order.order_id).first().trade_id
+	data = {
+		'trade_id': trade_id,
+		'trade_type': 1 # 普通退款
+	}
+	is_success, resp = microservice_consume2(url=url, data=data, method='delete')
