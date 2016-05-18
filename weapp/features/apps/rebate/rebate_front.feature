@@ -188,9 +188,16 @@ Background:
 				"rebate_order_price":"1.00",
 				"rebate_money":"5.00"
 			},
-			"weizoom_card_id_from":"0000001",
-			"weizoom_card_id_to":"0000003",
-			"card_counts":5,
+			"cards":[{
+				"id":"0000001",
+				"password":"1234567"
+			},{
+				"id":"0000002",
+				"password":"1234567"
+			},{
+				"id":"0000003",
+				"password":"1234567"
+			}]
 			"start_time":"今天",
 			"end_time":"后天",
 			"reply_type": "文字",
@@ -204,9 +211,16 @@ Background:
 				"rebate_order_price":"1.00",
 				"rebate_money":"5.00"
 			},
-			"weizoom_card_id_from":"0000004",
-			"weizoom_card_id_to":"0000006",
-			"card_counts":5,
+			"cards":[{
+				"id":"0000004",
+				"password":"1234567"
+			},{
+				"id":"0000005",
+				"password":"1234567"
+			},{
+				"id":"0000006",
+				"password":"1234567"
+			}]
 			"start_time":"今天",
 			"end_time":"3天后",
 			"reply_type": "文字",
@@ -221,9 +235,13 @@ Background:
 				"rebate_order_price":"1.00",
 				"rebate_money":"5.00"
 			},
-			"weizoom_card_id_from":"0000007",
-			"weizoom_card_id_to":"0000008",
-			"card_counts":5,
+			"cards":[{
+				"id":"0000007",
+				"password":"1234567"
+			},{
+				"id":"0000008",
+				"password":"1234567"
+			}]
 			"start_time":"今天",
 			"end_time":"后天",
 			"reply_type": "文字",
@@ -237,9 +255,19 @@ Background:
 				"rebate_order_price":"1.00",
 				"rebate_money":"5.00"
 			},
-			"weizoom_card_id_from":"0000009",
-			"weizoom_card_id_to":"0000012",
-			"card_counts":5,
+			"cards":[{
+				"id":"0000009",
+				"password":"1234567"
+			},{
+				"id":"0000010",
+				"password":"1234567"
+			},{
+				"id":"0000011",
+				"password":"1234567"
+			},{
+				"id":"0000012",
+				"password":"1234567"
+			}]
 			"start_time":"今天",
 			"end_time":"后天",
 			"reply_type": "文字",
@@ -253,9 +281,16 @@ Background:
 				"rebate_order_price":"1.00",
 				"rebate_money":"5.00"
 			},
-			"weizoom_card_id_from":"0000013",
-			"weizoom_card_id_to":"0000015",
-			"card_counts":5,
+			"cards":[{
+				"id":"0000013",
+				"password":"1234567"
+			},{
+				"id":"0000014",
+				"password":"1234567"
+			},{
+				"id":"0000015",
+				"password":"1234567"
+			}]
 			"start_time":"今天",
 			"end_time":"后天",
 			"reply_type": "文字",
@@ -269,9 +304,16 @@ Background:
 				"rebate_order_price":"1.00",
 				"rebate_money":"5.00"
 			},
-			"weizoom_card_id_from":"0000016",
-			"weizoom_card_id_to":"0000018",
-			"card_counts":5,
+			"cards":[{
+				"id":"0000016",
+				"password":"1234567"
+			},{
+				"id":"0000017",
+				"password":"1234567"
+			},{
+				"id":"0000018",
+				"password":"1234567"
+			}]
 			"start_time":"今天",
 			"end_time":"后天",
 			"reply_type": "文字",
@@ -285,9 +327,16 @@ Background:
 				"rebate_order_price":"1.00",
 				"rebate_money":"5.00"
 			},
-			"weizoom_card_id_from":"0000019",
-			"weizoom_card_id_to":"0000021",
-			"card_counts":5,
+			"cards":[{
+				"id":"0000019",
+				"password":"1234567"
+			},{
+				"id":"0000020",
+				"password":"1234567"
+			},{
+				"id":"0000021",
+				"password":"1234567"
+			}]
 			"start_time":"今天",
 			"end_time":"后天",
 			"reply_type": "文字",
@@ -301,9 +350,16 @@ Background:
 				"rebate_order_price":"1.00",
 				"rebate_money":"5.00"
 			},
-			"weizoom_card_id_from":"0000022",
-			"weizoom_card_id_to":"0000024",
-			"card_counts":5,
+			"cards":[{
+				"id":"0000022",
+				"password":"1234567"
+			},{
+				"id":"0000023",
+				"password":"1234567"
+			},{
+				"id":"0000024",
+				"password":"1234567"
+			}]
 			"start_time":"今天",
 			"end_time":"后天",
 			"reply_type": "文字",
