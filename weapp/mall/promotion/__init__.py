@@ -16,6 +16,7 @@ from . import coupon_rule
 from . import red_envelpoe
 from . import issuing_coupon
 from . import card_exchange
+from . import card_exchange_money
 
 SCORE_PRIZE_TYPE = PrizeType(
                              u'优惠券',

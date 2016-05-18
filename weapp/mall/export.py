@@ -294,6 +294,7 @@ MALL_PROMOTION_INTEGRAL_SALE_NAV = 'integralYingyon'
 MALL_PROMOTION_ISSUING_COUPONS_NAV = 'issuingCoupon'
 MALL_PROMOTION_FORBIDDEN_COUPON_PRODUCT_NAV = 'forbiddenCouponProduct'
 MALL_PROMOTION_CARD_EXCHANGE_NAV = 'cardExchange'
+MALL_PROMOTION_CARD_EXCHANGE_MONEY_NAV = 'cardExchangeMoney'
 
 MALL_APPS_LOTTERY_NAV = 'lotteries'
 MALL_APPS_FEEDBACK_NAV = 'exsurveies'
@@ -384,6 +385,13 @@ MALL_PROMOTION_AND_APPS_SECOND_NAV = {
                     'title': u'微众卡兑换平台',
                     'url': '/mall2/card_exchange/',
                     'users': ['jobs', 'njtest', 'ceshi01', 'fulilaile'],
+                    'permission': ''
+                },
+                {
+                    'name': MALL_PROMOTION_CARD_EXCHANGE_MONEY_NAV,
+                    'title': u'现金兑换平台',
+                    'url': '/mall2/card_exchange_money/',
+                    'users': ['jobs', 'njtest', 'ceshi01', 'weshop'],
                     'permission': ''
                 }
             ]

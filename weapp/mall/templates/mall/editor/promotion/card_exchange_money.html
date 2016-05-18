@@ -1,0 +1,465 @@
+{% extends "content_base_v2.html" %}
+{% block css %}
+	<style type="text/css">
+		label{
+			font-weight: normal;
+		}
+		.xui-exchangeTable table tr td{
+			text-align: left;
+			padding-left: 20px;
+		}
+		.xui-exchangeTable table tr th{
+			width: 110px;
+		}
+		.xui-exchangeBtn{
+			background: #eaeef6;
+			text-align: center;
+			height: 80px;
+			line-height: 80px;
+		}
+		.xui-exchangeBtn a{
+			width: 100px;
+		}
+		.xui-i-put{
+			border-bottom: 1px dotted #ddd;
+			padding-bottom: 10px;
+			padding-top: 10px;
+		}
+        .xui-i-put div{
+        	padding: 5px 0;
+        }
+        .xui-i-integral{
+        	width: 60px;	
+        }
+		.xui-i-money{
+			width: 50px;
+		}
+		.xui-i-add{
+			cursor: pointer;
+			display: inline-block;
+			font-weight: bold;
+		}
+		.xui-i-num{
+			width: 90px;
+		}
+		.ml35{
+			display: inline-block;
+		}
+		#xui-theadBg{
+			background: #C8D1E4;
+		}
+		.modal-body .btn{
+			font-weight: bold;
+		}
+		.xui-bindPhoneNumTd{
+			height: 45px;
+		}
+		.xui-bindNumTxt{
+			height: 24px;
+			display: inline-block;
+			line-height: 24px;
+			margin-right: 10px;
+		}
+		.xui-detail{
+			display: inline-block;
+			border:1px solid #e1e1e1;
+			padding:3px 5px;
+			margin-top: 5px;
+			margin-right: 12px;
+			cursor: pointer;
+		}
+		.xui-detail:hover{
+			text-decoration: none;
+		}
+		.xui-i-del{
+			margin-left: 20px;
+			background: #207cbe;
+			border-radius: 25px;
+			color: #fff;
+			display: inline-block;
+			font-size: 25px;
+			width: 25px;
+			height: 25px;
+			line-height: 25px;
+			text-align: center;
+			position: absolute;
+		}
+		.xui-i-del:hover{
+			text-decoration: none;
+			color: #f3f3f3;
+		}
+		.xui-hide{
+			display: none;
+		}
+		.xui-money,.xui-num{
+			display: inline-block;
+		}
+		.xui-money{
+			width: 171px;
+		}
+		.xui-num{
+			width: 255px;
+		}
+		.xui-exchangeStock{
+			display: inline-block;
+			width: 60px;
+		}
+		.xui-cardTd{
+			height: 45px;
+		}
+	</style>
+{% endblock %}
+{% block content-panel %}
+<div>
+    <div class="relative">
+		<ul class="breadcrumb">
+			<li>您当前所在位置</li>
+			<li><a href="/mall2/flash_sale_list/">促销管理</a></li>
+			<li class="active">微众卡现金兑换平台</li>
+		</ul>
+	</div>
+{% if card_exchange_dic %}
+		<div class="xui-exchangeTable">
+		<table class="table table-bordered">
+			<tr>
+	        	<th>兑换要求：</th>
+	        	<td class="xui-bindPhoneNumTd">
+		        	{% if card_exchange_dic.is_bind %}
+		        	<span class="xui-bindNumTxt">绑定手机号</span>
+                    {% else %}
+                    <span class="xui-bindNumTxt">无条件</span>
+                    {% endif %}
+		        	<select class="xui-bindPhoneNum xui-hide">
+		        		<option value="1">绑定手机号</option>
+		        		<option value="0">无条件</option>		
+		        	</select>
+	        	</td>
+			</tr>
+			<tr>
+	        	<th>兑换奖励：</th>
+	        	<td class="xui-cardTd">微众卡</td>
+			</tr>
+			<tr>
+	        	<th>兑换奖项：
+	        		<a href="/mall2/card_exchange_details_money/" class="xui-detail xa-detail" title="使用详情">使用详情</a>
+	        	</th>
+	        	<td>
+	        	    <form>
+		        		<div class="xui-i-exchange xa-exchange">
+		        		    {% for item in card_exchange_dic.prize%}
+		        		    <div class="xui-i-put">
+			        		    <div>
+			        		    	<label>使用积分：</label>
+			        		    	<input type="text" class="xa-integral xui-i-integral xui-hide" name="integral" readonly=true value="{{item.integral}}">
+			        		    	<span class="xa-exchangeSpan">{{item.integral}}</span>
+			        		    </div>
+			                    <div>
+			                    	<div class="xui-money">
+				                    	<label>兑换微众卡：</label>
+				                    	<input type="text" class="xui-i-money xa-money xui-hide" name="money" readonly=true value="{{item.money}}">
+				                    	<span class="xa-exchangeSpan">{{item.money}}</span>
+				                    	<span>元</span>
+				                    </div>
+				                    <div class="xui-num xa-num">
+						                <label>号段：</label>
+						                <input type="text" class="xui-i-num xa-snum xui-hide" name="snum" readonly=true value="{{item.s_num}}">
+						                <span class="xa-exchangeSpan">{{item.s_num}}</span>
+						                <span class="ml5 mr5">-</span>
+						                <input type="text" class="xui-i-num xa-endnum xui-hide" name="endnum" readonly=true value="{{item.end_num}}">	
+					                	<span class="xa-exchangeSpan">{{item.end_num}}</span>
+					                </div>	
+					                <span class="xa-exchangeStock xui-exchangeStock">库存：{{item.count}}</span>
+                                    <a href="javascript:void(0);" class="xui-i-del xui-hide" title="删除">&times;</a>
+			                    </div>
+			                </div>
+			                {% endfor %}
+		        		</div>
+	        		</form>
+	        		<div>
+				    	<a class="xui-i-add xa-add xui-hide">+添加</a>
+				    </div>
+	        	</td>
+			</tr>
+	    </table>
+	    <div class="xui-exchangeBtn">
+	    	<a class="btn btn-primary xa-btnSubmit">修改</a>
+	    </div>
+	</div>
+
+{% else %}
+	<div class="xui-exchangeTable">
+		<table class="table table-bordered">
+			<tr>
+	        	<th>兑换要求：</th>
+	        	<td class="xui-bindPhoneNumTd">
+		        	<span class="xui-bindNumTxt">绑定手机号</span>
+		        	<select class="xui-bindPhoneNum">
+		        		<option value="1">绑定手机号</option>
+		        		<option value="0">无条件</option>		
+		        	</select>
+	        	</td>
+			</tr>
+			<tr>
+	        	<th>兑换奖励：</th>
+	        	<td class="xui-cardTd">微众卡</td>
+			</tr>
+			<tr>
+	        	<th>兑换奖项：
+	        		<a href="/mall2/card_exchange_details_money/" class="xui-detail xa-detail" title="使用详情">使用详情</a>
+	        	</th>
+	        	<td>
+	        	    <form>
+		        		<div class="xui-i-exchange xa-exchange">
+		        		    <div class="xui-i-put">
+			        		    <div>
+			        		    	<label>使用积分：</label>
+			        		    	<input type="text" class="xa-integral xui-i-integral" name="integral">
+			        		    	<span class="xa-exchangeSpan"></span>
+			        		    </div>
+			                    <div>
+			                        <div class="xui-money">
+				                    	<label>兑换微众卡：</label>
+				                    	<input type="text" class="xui-i-money xa-money" name="money">
+				                    	<span class="xa-exchangeSpan"></span>
+				                    	<span>元</span>
+				                    </div>
+				                    <div class="xui-num xa-num">
+						                <label>号段：</label>
+						                <input type="text" class="xui-i-num xa-snum" name="snum">
+						                <span class="xa-exchangeSpan"></span>
+						                <span class="ml5 mr5">-</span>
+						                <input type="text" class="xui-i-num xa-endnum" name="endnum">	
+						                <span class="xa-exchangeSpan"></span>
+						            </div>
+					                <span class="xa-exchangeStock xui-exchangeStock"></span>
+					                <a href="javascript:void(0);" class="xui-i-del" title="删除">&times;</a>              
+			                    </div>
+			                </div>
+		        		</div>
+	        		</form>
+	        		<div>
+				    	<a class="xui-i-add xa-add">+添加</a>
+				    </div>
+	        	</td>
+			</tr>
+	    </table>
+	    <div class="xui-exchangeBtn">
+	    	<a class="btn btn-primary xa-btnSubmit">完成设置</a>
+	    </div>
+	</div>
+{%endif%}
+</div>
+
+
+{% endblock %}
+
+
+{% block js %}
+
+{% verbatim %}
+<script type="text/x-jquery-tmpl" id="exchange-input">
+<div class="xui-i-put">
+	<div>
+		<label>使用积分：</label>
+		<input type="text" class="xa-integral xui-i-integral" name="integral">
+		<span class="xa-exchangeSpan"></span>
+	</div>
+	<div>
+		<div class="xui-money">
+			<label>兑换微众卡：</label>
+			<input type="text" class="xui-i-money xa-money" name="money">
+			<span class="xa-exchangeSpan"></span>
+			<span class=>元</span>
+		</div>
+		<div class="xui-num xa-num">
+			<label>号段：</label>
+			<input type="text" class="xui-i-num xa-snum" name="snum">
+			<span class="xa-exchangeSpan"></span>
+			<span class="ml5 mr5">-</span>
+			<input type="text" class="xui-i-num xa-endnum" name="endnum">	
+			<span class="xa-exchangeSpan"></span> 
+		</div>  
+		<span class="xa-exchangeStock xui-exchangeStock"></span>
+		<a href="javascript:void(0);" class="xui-i-del" title="删除">&times;</a>            
+	</div>
+</div>
+</script>
+{% endverbatim %}
+
+<script type="text/javascript">
+$(document).ready(function() {
+	var is_err = false; 
+	//检验是否为数字
+	$(document).on("blur","input",function(){
+        var num = $(this).val();
+        var reg = new RegExp("^\\d+(\\.\\d+)?$");
+        if(num == "") return
+        if(!reg.test(num)){
+		W.showHint('error', '请输入纯数字');
+	    }
+	})  
+    //添加新卡
+	$(".xa-add").click(function(){   
+		$("#exchange-input").tmpl().appendTo(".xa-exchange");
+	});  
+    //控制删除按钮
+	$(".xui-i-del").eq(0).hide();
+	$(document).on("click",".xui-i-del",function(){
+    	$(this).parents(".xui-i-put").remove();
+	})
+    //修改数据
+	$(".xa-btnSubmit").click(function(){  
+		if (is_err){
+			W.showHint('error','不存在该卡,请重新输入卡号区间'); 
+			return;
+		}      
+		if(!$("input").attr("readonly")){
+			//校验
+			var reg = new RegExp("^\\d+(\\.\\d+)?$");
+	        var all = $("input");
+	        for(var i=0;i<all.length;i++){
+	 			var arg = all[i].value;
+		    	if(!reg.test(arg)){
+		    		W.showHint('error','请输入纯数字')
+		    		return 
+		    	}
+	        }         
+	        var snum = $(".xa-snum")
+			var endnum = $(".xa-endnum");
+			for(var i=0;i<snum.length;i++){
+                var snumData = snum[i].value;
+                var endnumData = endnum[i].value;
+                if(parseInt(snumData) > parseInt(endnumData)) return
+            }            
+			$("input").attr("readonly",true).hide();
+            $(".xui-i-del").hide();
+            var exchange_input = $(".xa-exchangeSpan").prev();
+            for(var j=0;j<exchange_input.length;j++){
+            	$(".xa-exchangeSpan")[j].innerHTML = exchange_input[j].value;
+            }
+            $(".xa-exchangeSpan").show();
+			$(".xa-add").hide();
+			$(this).html("修改");
+			$(".xui-bindPhoneNum").hide();
+			var bindMess =$(".xui-bindPhoneNum option:selected").html();
+			$(".xui-bindNumTxt").html(bindMess); 
+		    //提交数据
+			var prize = [];
+			var money = $(".xa-money");
+			var integral = $(".xa-integral");
+       		var isBind = $("option:selected").val();
+			for(var i=0;i<money.length;i++){
+				var moneyData = money[i].value;
+				var integralData = integral[i].value;
+                var snumData = snum[i].value;
+                var endnumData = endnum[i].value;
+				var item = {
+					money:moneyData,
+					integral:integralData,
+                    snum:snumData,
+                    endnum:endnumData
+				}
+				prize.push(item);
+			} 
+			prize = JSON.stringify(prize);
+			W.getApi().call({
+			    method: 'post',
+			    app: 'mall2',
+			    api: 'card_exchange',
+			    args: {
+			    	"isBind" : isBind,
+			    	"prize" : prize
+			    },
+			    scope: this,
+			    success: function(data) {
+			        W.showHint('success', '保存成功');
+			    },
+			    error: function(resp) {
+			        W.showHint('error', '操作失败');
+			    }
+			})           
+		}else{
+            $("input").attr("readonly",false).show();
+			$(this).html("保存"); 
+			$(".xa-add").show();
+			$(".xui-i-del").css("display","inline-block").eq(0).hide();
+			$(".xui-bindPhoneNum").show();
+			$(".xa-exchangeSpan").hide();
+		}     
+	});
+	//更新库存
+    $(document).on("blur",".xa-endnum",function(){
+    	var _this = $(this);
+    	var snumData = $(this).siblings(".xa-snum").val();
+	    var endnumData = $(this).val();
+	    if(snumData&&endnumData){
+	    var reg = new RegExp("^[0-9]*$");
+		if(!reg.test(endnumData)){
+			W.showHint('error','请输入纯数字')
+			return 
+		}
+	    if(parseInt(snumData) > parseInt(endnumData)){
+			W.showHint('error','号段不合法')
+			return 
+		}
+		var stockData = {
+	        snum:snumData,
+	        endnum:endnumData
+		}
+		W.getApi().call({
+			    method: 'get',
+			    app: 'mall2',
+			    api: 'card_exchange',
+			    args: stockData,
+			    scope: this,
+			    success: function(data) {
+			    	is_err = false;
+                	_this.parent(".xa-num").siblings(".xa-exchangeStock").html("库存：" + data);
+			    },
+			    error: function(resp) {
+			    	is_err = true;
+			    	W.showHint('error',resp.errMsg); 
+			    	_this.parent(".xa-num").siblings(".xa-exchangeStock").html("库存：" + 0);
+			    }
+			})
+		}
+    });
+    $(document).on("blur",".xa-snum",function(){
+       	var _this = $(this);
+    	var endnumData = $(this).siblings(".xa-endnum").val();
+	    var snumData = $(this).val();
+	    if(snumData&&endnumData) {
+	    var reg = new RegExp("^[0-9]*$");
+		if(!reg.test(snumData)){
+		    W.showHint('error','请输入纯数字')
+		    return 
+		}
+	    if(parseInt(snumData) > parseInt(endnumData)){
+			W.showHint('error','号段不合法')
+			return 
+		}
+		var stockData = {
+	        snum:snumData,
+	        endnum:endnumData
+		}
+		W.getApi().call({
+			    method: 'get',
+			    app: 'mall2',
+			    api: 'card_exchange',
+			    args: stockData,
+			    scope: this,
+			    success: function(data) {
+			    	is_err = false;
+                	_this.parent(".xa-num").siblings(".xa-exchangeStock").html("库存：" + data);
+			    },
+			    error: function(resp) {
+			    	is_err = true;
+			    	W.showHint('error',resp.errMsg); 
+			    	_this.parent(".xa-num").siblings(".xa-exchangeStock").html("库存：" + 0);  
+			    }
+			})
+		}
+    });
+});
+</script>
+{% endblock %}
