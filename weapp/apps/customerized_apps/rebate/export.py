@@ -214,7 +214,10 @@ def handle_wating_actions():
 			record_id2card_ids[record_id].append(c.weizoom_card_id)
 
 	def __get_useful_card(record_id):
-		curr_record_card_list = sorted(record_id2card_ids[str(record_id)])
+		curr_record_card_list = record_id2card_ids.get(str(record_id), None)
+		if not curr_record_card_list:
+			return None
+		curr_record_card_list = sorted(curr_record_card_list)
 		try:
 			curr_card_id = curr_record_card_list[0]
 			return curr_card_id
