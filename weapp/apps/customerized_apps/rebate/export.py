@@ -127,8 +127,8 @@ def grant_card(need_grant_info, all_record_ids):
 	not_ready_card_list = []	#暂未满足条件以后再发的卡集合
 	log_list = []
 	card_has_used = {}
+	record_id2card_ids = {}
 	#获取活动与微众卡的映射
-	record_id2card_ids = {str(record.id): record.weizoom_card_ids for record in apps_models.Rebate.objects(id__in=all_record_ids)}
 	for c in apps_root_models.AppsWeizoomCard.objects(belong_to__in=all_record_ids, status=0):
 		record_id = c.belong_to
 		if not record_id2card_ids.has_key(record_id):
@@ -157,6 +157,11 @@ def grant_card(need_grant_info, all_record_ids):
 		member_id = info['target_member_info'].id
 		member_name = info['target_member_info'].username_hexstr
 		weizoom_card_id = __get_useful_card(info)
+		print "====card==================="
+		print "====card==================="
+		print weizoom_card_id
+		print "====card==================="
+		print "====card==================="
 		if not weizoom_card_id:
 			continue
 		create_list.append(promotion_models.CardHasExchanged(

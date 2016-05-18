@@ -228,7 +228,8 @@ class AppsWeizoomCard(mongo_models.Document):
 	weizoom_card_id = mongo_models.StringField() #卡号
 	weizoom_card_password = mongo_models.StringField() #密码
 	status = mongo_models.IntField(default=0) #卡状态:0未使用，1已使用
-	created_at = models.DateTimeField() #创建时间
+	created_at = mongo_models.DateTimeField() #创建时间
+	grant_time = mongo_models.DateTimeField() #使用时间
 
 	meta = {
 		'collection': 'apps_weizoom_card'
@@ -240,4 +241,4 @@ class AppsWeizoomCard(mongo_models.Document):
 		将一系列卡标志为已使用
 		@param weizoom_card_ids: list
 		"""
-		AppsWeizoomCard.objects(weizoom_card_id__in=weizoom_card_ids).update(status=1, created_at=datetime.now())
+		AppsWeizoomCard.objects(weizoom_card_id__in=weizoom_card_ids).update(status=1, grant_time=datetime.now())
