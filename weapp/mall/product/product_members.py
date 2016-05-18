@@ -72,7 +72,8 @@ class ProductMember(resource.Resource):
             {'first_nav_name': export.PRODUCT_FIRST_NAV,
              'second_navs': export.get_mall_product_second_navs(request),
              'product_name': product.name,
-             'mall_type': mall_type
+             'mall_type': mall_type,
+             'shelve_type':product.shelve_type
              }
         )
         return render_to_response('mall/editor/product_member.html', c)
