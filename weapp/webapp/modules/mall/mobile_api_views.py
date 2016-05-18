@@ -201,3 +201,10 @@ def get_member_product_info(request):
 
 def log_js_analysis(request):
 	return request_api_util.log_js_analysis(request)
+
+
+def get_shopping_cart_count(request):
+	"""
+	用户购物车的数量
+	"""
+	return request_api_util.get_shopping_cart_count(request)
