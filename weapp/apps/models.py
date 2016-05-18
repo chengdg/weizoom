@@ -224,7 +224,6 @@ class AppsWeizoomCard(mongo_models.Document):
 	"""
 	百宝箱活动的微众卡信息
 	"""
-	owner_id = mongo_models.LongField() #所属商家
 	belong_to = mongo_models.StringField() #所属活动
 	weizoom_card_id = mongo_models.StringField() #卡号
 	weizoom_card_password = mongo_models.StringField() #密码
@@ -243,7 +242,7 @@ class AppsWeizoomCard(mongo_models.Document):
 		return AppsWeizoomCard.objects(belong_to=str(record_id), weizoom_card_id__range=(start, end))
 
 	@staticmethod
-	def get_unused_card(owner_id, start, end):
+	def get_unused_card(belong_to, start, end):
 		"""
 		从卡号区间中获取一张未使用的卡
 		"""
