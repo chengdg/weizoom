@@ -33,11 +33,14 @@ def step_impl(context, user):
     rules = json.loads(context.text)
     for rule in rules:
         cards = rule.get('cards')
-        weizoom_card_ids = []
-        weizoom_card_passwords = []
+        weizoom_card_ids = ''
+        weizoom_card_passwords = ''
         for card in cards:
-            weizoom_card_ids.append(card['id'])
-            weizoom_card_passwords.append(card['password'])
+            if weizoom_card_ids == '':
+                weizoom_card_ids = card['id']
+            else:
+                weizoom_card_ids = weizoom_card_ids + ',' + card['id']
+                weizoom_card_passwords = weizoom_card_passwords + ',' +card['password']
         params = {
             'owner_id': context.client.user,
             'name': rule.get('code_name', ''),
