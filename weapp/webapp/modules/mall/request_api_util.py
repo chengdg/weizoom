@@ -1000,7 +1000,7 @@ def log_js_analysis(request):
 
 
 def get_shopping_cart_count(request):
-	webapp_user_id = request.GET.get('webapp_user_id', None)
+	webapp_user_id = request.webapp_user.id
 	if webapp_user_id:
 		try:
 			shopping_cart = ShoppingCart.objects.filter(webapp_user_id=webapp_user_id)
@@ -1012,7 +1012,7 @@ def get_shopping_cart_count(request):
 			notify_message = u"购物车数量函数出错，cause:\n{}".format(unicode_full_stack())
 			watchdog_error(notify_message)
 			return create_response(500).get_response()
-
+		print shopping_cart_count
 		response = create_response(200)
 		response.data = {'count': shopping_cart_count}
 		return response.get_response()

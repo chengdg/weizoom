@@ -89,9 +89,9 @@ def __get_display_info(request):
 		except:
 			pass
 
-	if request.user.is_from_weixin and request.REQUEST.get('project_id').startswith('new_app:') is False:
+	# if request.user.is_from_weixin and request.REQUEST.get('project_id').startswith('new_app:') is False:
 		#在预览模式下，不显示导航
-		__get_navbar(request, page)
+	__get_navbar(request, page)
 
 	display_info = {
 		'project': project,
@@ -130,7 +130,7 @@ def is_home_page(request):
 	return False
 
 def __is_enable_navbar(request, navbar_component):
-	if is_home_page(request):	
+	if is_home_page(request):
 		'''
 		主页是否显示navbar
 		'''
@@ -139,14 +139,14 @@ def __is_enable_navbar(request, navbar_component):
 			return True
 		else:
 			return False
-	else:		
+	else:
 		'''
 		微页面是否显示navbar
 		'''
 		return __is_wepage_navbar(navbar_component)
 
 
-def __is_wepage_navbar(navbar_component):	
+def __is_wepage_navbar(navbar_component):
 	return navbar_component['model']['pages']['wepage']['select']
 
 
@@ -199,7 +199,7 @@ def __get_fake_project_display_info(request):
 			page = __get_init_navbar_json()
 	else:
 		project_id = 'fake:%s:%s:%s' % (project_type, webapp_owner_id, page_id)
-		page = pagestore.get_page(project_id, page_id)		
+		page = pagestore.get_page(project_id, page_id)
 
 	display_info = {
 		'project': project,
