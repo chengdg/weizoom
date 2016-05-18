@@ -33,13 +33,15 @@ Copyright (c) 2011-2012 Weizoom Inc
 		},
 
 		getShoppingCartNum: function(){
-			var _this = this;			
+			var _this = this;				
 			W.getApi().call({
-				app: 'mall2',
-				api: 'shopping_cart_count',
+				app: 'webapp',
+				api: 'project_api/call',
 				method: 'get',
 				args: {
-					webapp_user_id: _this.webappUserId
+					webapp_user_id: _this.webappUserId,
+					module: 'mall',
+					target_api: 'shopping_cart_count/get'
 				},
 				success: function(data) {
 					_this.trigger('updateShoppingCartNum', data);
