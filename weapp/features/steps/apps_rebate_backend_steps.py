@@ -38,6 +38,7 @@ def step_impl(context, user):
         for card in cards:
             if weizoom_card_ids == '':
                 weizoom_card_ids = card['id']
+                weizoom_card_passwords = card['password']
             else:
                 weizoom_card_ids = weizoom_card_ids + ',' + card['id']
                 weizoom_card_passwords = weizoom_card_passwords + ',' +card['password']
