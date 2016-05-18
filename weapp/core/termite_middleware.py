@@ -9,6 +9,7 @@ from django.http import HttpResponseRedirect
 from django.http import HttpResponse
 from django.conf import settings
 
+from modules.member import member_settings
 from utils import cache_util
 from webapp import models as webapp_models
 from account import models as account_models
@@ -26,7 +27,7 @@ class WebappPageCacheMiddleware(object):
 			if request.GET.get('page_id', '') == 'preview':
 				#预览不使用缓存
 				return
-				
+
 			#如果当前cookie中没有会员信息，则不进行缓存
 			cookie_openid_webapp_id = request.COOKIES.get(member_settings.OPENID_WEBAPP_ID_KEY, None)
 			#print ">>>>>DF>>>DF>D>>>>>>&&&&&&&*88888",cookie_openid_webapp_id
