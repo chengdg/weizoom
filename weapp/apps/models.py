@@ -219,16 +219,16 @@ class UserappHasTemplateMessages(mongo_models.Document):
 		'collection': 'apps_Userapp_has_template'
 	}
 
-class CustomizedAppWeizoomCard(mongo_models.Document):
+class AppsWeizoomCard(mongo_models.Document):
 	"""
 	百宝箱活动的微众卡信息
 	"""
 	owner_id = mongo_models.LongField() #所属商家
 	weizoom_card_id = mongo_models.StringField() #卡号
-	weizoom_card_password = mongo_models.DynamicField() #密码
+	weizoom_card_password = mongo_models.StringField() #密码
 	status = mongo_models.IntField(default=0) #卡状态:0未使用，1已使用
 	created_at = models.DateTimeField() #创建时间
 
 	meta = {
-		'collection': 'apps_customized_app_weizoom_card'
+		'collection': 'apps_weizoom_card'
 	}
