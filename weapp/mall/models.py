@@ -1752,6 +1752,12 @@ def belong_to(webapp_id):
                     pay_interface_type=PAY_INTERFACE_WEIXIN_PAY
                 )]
             orders = orders.exclude(order_id__in=not_pay_group_order_ids+not_ship_group_on_order_ids+cancel_group_order_ids)
+        sync_order_order_ids = [order.order_id for order in orders.filter(supplier_user_id=user_id)]
+        group_order_not_success_order_ids = [relation.order_id for relation in OrderHasGroup.objects.filter(
+                                order_id__in=sync_order_order_ids,
+                                group_status__in=[GROUP_STATUS_ON, GROUP_STATUS_failure])
+                            ]
+        orders = orders.exclude(order_id__in=group_order_not_success_order_ids)
         return orders
 
 

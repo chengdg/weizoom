@@ -137,8 +137,16 @@
 						<a title="查看" class="xt-orderLink" href="/mall2/order/?order_id=${order.id}" target="_blank">${order.order_id}{{if order.edit_money}}-${order.edit_money}{{/if}}</a>
 						</p>
 						<p class="ml15 fl w20">
-						{{if order.is_group_buying}}
-							<img src="/static_v2/img/editor/orderGroupIcon.png"/>
+						{{if order.is_group_buying }}
+							{{if data.mall_type }}
+								<img src="/static_v2/img/editor/orderGroupIcon.png"/>
+							{{else}}
+								{{if order.supplier_user_id == 0 }}
+									<img src="/static_v2/img/editor/orderGroupIcon.png"/>
+								{{else}}
+									&nbsp;
+								{{/if}}
+							{{/if}}
 						{{else}}
 							&nbsp;
 						{{/if}}
