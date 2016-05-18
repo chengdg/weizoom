@@ -25,10 +25,13 @@ from . import utils
 from mall import export
 from weixin.user.module_api import get_all_active_mp_user_ids
 from apps.customerized_apps.group import models as group_models
-
+from modules.member.models import WebAppUser,Member
+from member.member_list import build_member_has_tags_json,get_tags_json
 import logging
 
-class ProductList(resource.Resource):
+COUNT_PER_PAGE = 50
+
+class ProductMember(resource.Resource):
     app = 'mall2'
     resource = 'product_members'
 
@@ -54,40 +57,33 @@ class ProductList(resource.Resource):
           如果shelve_type没有被提供， 将触发TypeError异常
         """
         mall_type = request.user_profile.webapp_type
-        shelve_type_get = request.GET.get("shelve_type", 1)
-        shelve_type = int(shelve_type_get if shelve_type_get.isdigit() else 1)
-        has_product = models.Product.objects.filter(
-            owner=request.manager,
-            shelve_type=shelve_type,
-            is_deleted=False
-        ).exists()
+        if not mall_type:
+            return HttpResponseRedirect('/mall2/product_list/?shelve_type=1')
+        has_product_id = request.GET.get('id')
+        if has_product_id:
+            try:
+                product = models.Product.objects.get(owner=request.manager, id=has_product_id)
+            except models.Product.DoesNotExist:
+                return Http404
+        else:
+            return Http404
         c = RequestContext(
             request,
             {'first_nav_name': export.PRODUCT_FIRST_NAV,
              'second_navs': export.get_mall_product_second_navs(request),
-             'has_product': has_product,
-             'high_stocks': request.GET.get('high_stocks', '-1'),
+             'product_name': product.name,
              'mall_type': mall_type
              }
         )
-        if shelve_type == models.PRODUCT_SHELVE_TYPE_ON:
-            c.update({'second_nav_name': export.PRODUCT_MANAGE_ON_SHELF_PRODUCT_NAV})
-            return render_to_response('mall/editor/onshelf_products.html', c)
-        elif shelve_type == models.PRODUCT_SHELVE_TYPE_OFF:
-            c.update({'second_nav_name': export.PRODUCT_MANAGE_OFF_SHELF_PRODUCT_NAV})
-            return render_to_response('mall/editor/offshelf_products.html', c)
-        elif shelve_type == models.PRODUCT_SHELVE_TYPE_RECYCLED:
-            c.update({'second_nav_name': export.PRODUCT_MANAGE_RECYCLED_PRODUCT_NAV})
-            return render_to_response('mall/editor/recycled_products.html', c)
-        else:
-            return Http404("Poll does not exist")
+        return render_to_response('mall/editor/product_member.html', c)
+
 
     @login_required
     def api_get(request):
-        """获取商品列表
+        """获取商品下的会员列表
         API:
             method: get
-            url: mall2/product_list/
+            url: mall2/product_members/
 
         Args:
           type: 上架类型
@@ -100,13 +96,74 @@ class ProductList(resource.Resource):
         """
         # 商城类型
         mall_type = request.user_profile.webapp_type
-        COUNT_PER_PAGE = 10
-        _type = request.GET.get('type', 'onshelf')
+        has_product_id = request.GET.get('id')
+        
 
-        #处理排序
-        sort_attr = request.GET.get('sort_attr', None)
-        if not sort_attr:
-            sort_attr = '-display_index'
 
-        #处理商品分类
-        if _type == 'offshelf':
+        sort_attr = request.GET.get('sort_attr', None) #之后处理
+        # order_has_products = models.OrderHasProduct.objects.filter(product_id=has_product_id, origin_order_id=0, order__status__in=
+        #     [models.ORDER_STATUS_PAYED_NOT_SHIP, models.ORDER_STATUS_PAYED_SHIPED, models.ORDER_STATUS_SUCCESSED]).order_by(sort_attr)
+        # order_has_products = order_has_products.values('webapp_user_id').distinct()
+        # order_ids = [order_has_product.order_id for order_has_product in order_has_products]
+        # webapp_user_id = [order_has_product. for order_has_product in order_has_products]
+        order_has_products = models.OrderHasProduct.objects.filter(product_id=has_product_id, origin_order_id=0)
+        order_ids = [order_has_product.order_id for order_has_product in order_has_products]
+        # orders = models.Order.objects.filter(id__in=order_ids,status__in=
+        #     [models.ORDER_STATUS_PAYED_NOT_SHIP, models.ORDER_STATUS_PAYED_SHIPED, models.ORDER_STATUS_SUCCESSED]).values('webapp_user_id').distinct()
+        orders = models.Order.objects.filter(id__in=order_ids,status__in=
+            [models.ORDER_STATUS_PAYED_NOT_SHIP, models.ORDER_STATUS_PAYED_SHIPED, models.ORDER_STATUS_SUCCESSED])
+        print "orders>>>>",orders
+        webapp_user_ids = [order.webapp_user_id for order in orders]
+        member_ids = [webapp_user.member_id for webapp_user in WebAppUser.objects.filter(id__in=webapp_user_ids)]
+        total_count = len(member_ids)
+
+
+
+
+
+        count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
+        cur_page = int(request.GET.get('page', '1'))
+        pageinfo, member_ids = paginator.paginate(
+            member_ids,
+            cur_page,
+            count_per_page,
+            )
+        members = Member.objects.filter(id__in=member_ids)
+        selected_count = members.count()
+        items = []
+        for member in members:
+            items.append(build_return_member_json(member))
+        tags_json = get_tags_json(request)
+        response = create_response(200)
+        response.data = {
+            'items': items,
+            'sortAttr': request.GET.get('sort_attr', '-created_at'),
+            'pageinfo': paginator.to_dict(pageinfo),
+            'tags': tags_json,
+            'selected_count': selected_count,
+            'total_count': total_count
+        }
+        return response.get_response()
+
+
+
+def build_return_member_json(member):
+    from mall.models import Order
+    return {
+        'id': member.id,
+        'username': member.username_for_title,
+        'username_truncated': member.username_truncated,
+        'user_icon': member.user_icon,
+        'grade_name': member.grade.name,
+        'integral': member.integral,
+        'factor': member.factor,
+        'remarks_name': member.remarks_name,
+        'created_at': datetime.strftime(member.created_at, '%Y-%m-%d'),
+        'last_visit_time': datetime.strftime(member.last_visit_time, '%Y-%m-%d') if member.last_visit_time else '-',
+        'session_id': member.session_id,
+        'friend_count':  member.friend_count,
+        'source':  member.source,
+        'tags':build_member_has_tags_json(member),
+        'is_subscribed':member.is_subscribed,
+        'experience': member.experience,
+    }
