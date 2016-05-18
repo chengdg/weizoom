@@ -102,7 +102,7 @@ def step_impl(context, webapp_user_name):
     webapp_owner_id = context.webapp_owner_id
     user = User.objects.get(id=context.webapp_owner_id)
     openid = "%s_%s" % (webapp_user_name, user.username)
-    url = '/workbench/jqm/preview/?module=market_tool:weizoom_card&model=weizoom_card_exchange_list&action=get&workspace_id=market_tool:weizoom_card&webapp_owner_id=%s&project_id=0&fmt=%s&opid=%s' % (webapp_owner_id, context.member.token, openid)
+    url = '/workbench/jqm/preview/?module=market_tool:weizoom_card&model=weizoom_card_exchange_list&action=get&workspace_id=market_tool:weizoom_card&webapp_owner_id=%s&project_id=0&fmt=%s&opid=%s&is_wallet=1' % (webapp_owner_id, context.member.token, openid)
     url = bdd_util.nginx(url)
     response = context.client.get(url)
     while response.status_code == 302:

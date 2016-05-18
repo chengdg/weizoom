@@ -137,7 +137,7 @@ def grant_card(need_grant_info, all_record_ids):
 			record_id2card_ids[record_id].append(c.weizoom_card_id)
 
 	def __get_useful_card(info):
-		curr_record_card_list = sorted(record_id2card_ids[str(record_id)])
+		curr_record_card_list = sorted(record_id2card_ids[str(info['record_id'])])
 		curr_index = 0
 		try:
 			curr_card_id = curr_record_card_list[curr_index]
@@ -198,21 +198,35 @@ def handle_wating_actions():
 	actions = apps_models.RebateWaitingAction.objects.all()
 	member_ids = [w.member_id for w in actions]
 	record_ids = [w.record_id for w in actions]
-	record_id2record = {str(r.id): r for r in apps_models.Rebate.objects(id__in=record_ids)}
 	member_id2member = {m.id: m for m in member_models.Member.objects.filter(id__in=member_ids)}
 	need_finish_actions = []
 	need_delete_ids = []
+	#获取活动与微众卡的映射
+	record_id2card_ids = {}
+	for c in apps_root_models.AppsWeizoomCard.objects(belong_to__in=record_ids, status=0):
+		record_id = c.belong_to
+		if not record_id2card_ids.has_key(record_id):
+			record_id2card_ids[record_id] = [c.weizoom_card_id]
+		else:
+			record_id2card_ids[record_id].append(c.weizoom_card_id)
+
+	def __get_useful_card(record_id):
+		curr_record_card_list = sorted(record_id2card_ids[str(record_id)])
+		try:
+			curr_card_id = curr_record_card_list[0]
+			return curr_card_id
+		except:
+			return None
 	for action in actions:
-		curr_record = record_id2record[action.record_id]
-		card_ids_list = get_can_exchange_cards_list(curr_record.weizoom_card_id_from,curr_record.weizoom_card_id_to)
-		if len(card_ids_list) <= 0:
+		can_use_card_id = __get_useful_card(action.record_id)
+		if not can_use_card_id:
 			continue
 		member_id = action.member_id
 		if not member_id2member[member_id].is_subscribed:
 			continue
 		need_finish_actions.append(promotion_models.CardHasExchanged(
 			webapp_id = action.webapp_id,
-			card_id = sorted(card_ids_list)[0],
+			card_id = can_use_card_id,
 			owner_id = member_id,
 			owner_name = member_id2member[member_id].username_hexstr
 		))
