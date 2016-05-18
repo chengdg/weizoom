@@ -13,6 +13,8 @@ from utils import cache_util
 from webapp import models as webapp_models
 from account import models as account_models
 
+from modules.member import member_settings
+
 class WebappPageCacheMiddleware(object):
 	def process_request(self, request):
 		if not settings.ENABLE_WEPAGE_CACHE:
