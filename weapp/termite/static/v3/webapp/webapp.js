@@ -82,16 +82,16 @@ W.preloadImgsOnPage = function(option) {
                 default:
                     break;
             }
-            $lazyImgs = $('[data-url]');
-            if ($lazyImgs) {
-                $lazyImgs.lazyload({
-                    data_attribute:"url",
-                    skip_invisible : false,
-                    effect : "fadeIn",
-                    placeholder: "/static_v2/img/webapp/mall/info_placeholder.png"
-                });
-            }
         });
+        $lazyImgs = $('[data-url]');
+        if ($lazyImgs) {
+            $lazyImgs.lazyload({
+                data_attribute:"url",
+                skip_invisible : false,
+                effect : "fadeIn",
+                placeholder: "/static_v2/img/webapp/mall/info_placeholder.png"
+            });
+        }
     });
 }
 
