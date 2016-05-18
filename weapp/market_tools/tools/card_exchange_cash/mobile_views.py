@@ -7,7 +7,7 @@ import os
 from django.template import Context, RequestContext
 from django.shortcuts import render_to_response
 
-from mall.promotion.card_exchange_money import CardExchangeMoney
+from mall.promotion.card_exchange_cash import CardExchangeCash
 from modules.member.models import MemberInfo
 from mall.promotion import models as promotion_models
 from market_tools.tools.weizoom_card import models as card_models
@@ -33,7 +33,7 @@ def get_page(request):
 	except:
 		member_is_bind = False
 
-	card_exchange_dic = CardExchangeMoney.get_can_exchange_cards(webapp_id)
+	card_exchange_dic = CardExchangeCash.get_can_exchange_cards(webapp_id)
 
 	c = RequestContext(request, {
 		'card_exchange_rule': card_exchange_dic,
@@ -43,4 +43,4 @@ def get_page(request):
 		# 'user_has_exchange_card': user_has_exchange_card
 	})
 
-	return render_to_response('%s/card_exchange_money/webapp/m_card_exchange_money.html' % TEMPLATE_DIR, c)
+	return render_to_response('%s/card_exchange_cash/webapp/m_card_exchange_cash.html' % TEMPLATE_DIR, c)

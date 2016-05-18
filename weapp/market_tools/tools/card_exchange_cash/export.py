@@ -17,11 +17,11 @@ def get_link_targets(request):
 
 	return response.get_response()
 
-def get_card_exchange_money_link(request):
+def get_card_exchange_cash_link(request):
 	#现金兑换微众卡页面
-	workspace_template_info = 'webapp_owner_id=%d&project_id=0&workspace_id=market_tool:card_exchange_money' % request.user.id
+	workspace_template_info = 'webapp_owner_id=%d&project_id=0&workspace_id=market_tool:card_exchange_cash' % request.user.id
 	webapp_id = request.user_profile.webapp_id
 	if CardExchange.objects.filter(webapp_id=webapp_id).count() > 0 and webapp_id:
-		return './?module=market_tool:card_exchange_money&model=page&action=get&webapp_id=%s&%s' % (webapp_id, workspace_template_info)
+		return './?module=market_tool:card_exchange_cash&model=page&action=get&webapp_id=%s&%s' % (webapp_id, workspace_template_info)
 
 	return None
