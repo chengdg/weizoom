@@ -7,7 +7,7 @@ from core.jsonresponse import create_response
 from webapp.modules.user_center import request_api_util
 from market_tools.tools.weizoom_card import models as card_models
 from mall.promotion import models as promotion_models
-from mall.promotion import card_exchange
+from mall.promotion import card_exchange_money
 from modules.member.models import MemberInfo,Member
 
 def exchange_card(request):
@@ -33,7 +33,7 @@ def exchange_card(request):
 			for number in card_number:
 				s_num = number.split('-')[0]
 				end_num = number.split('-')[1]
-				card_ids_list = card_exchange.get_can_exchange_cards_list(s_num,end_num)
+				card_ids_list = card_exchange_money.get_can_exchange_cards_list(s_num,end_num)
 				if len(card_ids_list) <= 0:
 					response.errMsg = u'该种卡库存不足'
 					return response.get_response()

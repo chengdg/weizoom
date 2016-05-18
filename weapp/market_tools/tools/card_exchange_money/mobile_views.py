@@ -18,7 +18,7 @@ TEMPLATE_DIR = '%s/templates' % template_path_items[-1]
 COUNT_PER_PAGE = 15
 def get_page(request):
 	"""
-	手机端卡兑换页
+	手机端现金兑换微众卡页面
 	"""
 	webapp_id = request.user_profile.webapp_id
 	#判断用户是否绑定手机号
