@@ -1003,24 +1003,6 @@ Scenario:9 带参数返利活动[扫码后成交金额]-已关注会员不可参
 	Then jobs能获取'返利活动8'订单列表
 	"""
 		[{
-			"order_id":"0002",
-			"status": "待支付",
-			"final_price": 1.00,
-			"products": [{
-				"name": "商品1",
-				"price": 1.00,
-				"count": 1
-			}]
-		},{
-			"order_id":"0003",
-			"status": "已完成",
-			"final_price": 1.00,
-			"products": [{
-				"name": "商品1",
-				"price": 1.00,
-				"count": 1
-			}]
-		},{
 			"order_id":"0004",
 			"status": "已完成",
 			"final_price": 1.00,
@@ -1114,29 +1096,78 @@ Scenario:9 带参数返利活动[扫码后成交金额]-已关注会员不可参
 @mall2 @rebate @kuki10
 Scenario:10 带参数返利活动-多个返利活动同时存在，并且同一个人扫多个返利活动的码且下单
 	Given jobs登录系统
+	When jobs新建返利活动
+	"""
+		[{
+			"code_name":"返利活动11",
+			"is_attention_in":"true",
+			"is_limit_first_buy":"true",
+			"is_limit_cash":"true",
+			"order_rebate":{
+				"rebate_order_price":"1.00",
+				"rebate_money":"5.00"
+			},
+			"cards":[{
+				"id":"0000025",
+				"password":"1234567"
+			}]
+			"start_time":"3天前",
+			"end_time":"今天",
+			"reply_type": "文字",
+			"scan_code_reply": "返利活动11"
+		},{
+			"code_name":"返利活动22",
+			"is_attention_in":"true",
+			"is_limit_first_buy":"true",
+			"is_limit_cash":"false",
+			"order_rebate":{
+				"rebate_order_price":"1.00",
+				"rebate_money":"5.00"
+			},
+			"cards":[{
+				"id":"0000026",
+				"password":"1234567"
+			}]
+			"start_time":"今天",
+			"end_time":"后天",
+			"reply_type": "文字",
+			"scan_code_reply": "返利活动22"
+		}]
+	"""
 
 	When 清空浏览器
-	When bill关注jobs的公众号于'今天'
+	When bill关注jobs的公众号于'1天前'
 	When bill访问jobs的webapp
-	When bill扫描返利活动'返利活动1'的二维码
+	When bill扫描返利活动'返利活动11'的二维码
 	When 微信用户批量消费jobs的商品
-		| order_id | date      | consumer | product | payment | pay_type  |postage*   |price*   | paid_amount*    | weizoom_card   | action     | order_status  |
-		|   0001   | 今天      |   bill   | 商品1,1 |   支付  |  支付宝   |   0.00   | 1.00   |     1.00       |                | jobs,完成      |    已完成        |
+		| order_id | date       | consumer | product | payment | pay_type  |postage*   |price*   | paid_amount*    | weizoom_card   | action     | order_status  |
+		|   0001   | 1天前      |   bill   | 商品1,1 |   支付  |  支付宝   |   0.00    | 1.00    |     1.00        |                | jobs,完成  |    已完成     |
+		|   0003   | 今天       |   bill   | 商品1,1 |   支付  |  支付宝   |   0.00    | 1.00    |     1.00        |                | jobs,完成  |    已完成     |
+		
 
 	When 清空浏览器
-	When bill扫描返利活动'返利活动2'的二维码
+	When bill扫描返利活动'返利活动22'的二维码
 	When bill访问jobs的webapp
 	When 微信用户批量消费jobs的商品
 		| order_id | date       | consumer | product | payment | pay_type  |postage*   |price*   | paid_amount*    | weizoom_card   | action     | order_status  |
-		|   0002   | 今天       |   bill   | 商品1,1 |   支付  |  支付宝   |   0.00   | 1.00   |     1.00       |                | jobs,完成  |    已完成     |
+		|   0002   | 明天       |   bill   | 商品1,1 |   支付  |  支付宝   |   0.00    | 1.00    |     1.00        |                | jobs,完成  |    已完成     |
 
 
 	Given jobs登录系统	
 	#默认显示勾选仅显示扫码后的成交的订单
-	Then jobs能获取'返利活动1'订单列表
+	Then jobs能获取'返利活动11'订单列表
 	"""
 		[{
 			"order_id":"0001",
+			"status": "已完成",
+			"final_price": 1.00,
+			"products": [{
+				"name": "商品1",
+				"price": 1.00,
+				"count": 1
+			}]
+		},{
+			"order_id":"0003",
 			"status": "已完成",
 			"final_price": 1.00,
 			"products": [{
@@ -1148,10 +1179,19 @@ Scenario:10 带参数返利活动-多个返利活动同时存在，并且同一�
 	"""
 
 	#默认显示勾选仅显示扫码后的成交的订单
-	Then jobs能获取'返利活动2'订单列表
+	Then jobs能获取'返利活动22'订单列表
 	"""
 		[{
 			"order_id":"0002",
+			"status": "已完成",
+			"final_price": 1.00,
+			"products": [{
+				"name": "商品1",
+				"price": 1.00,
+				"count": 1
+			}]
+		},{
+			"order_id":"0003",
 			"status": "已完成",
 			"final_price": 1.00,
 			"products": [{
