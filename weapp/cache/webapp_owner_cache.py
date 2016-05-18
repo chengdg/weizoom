@@ -239,6 +239,9 @@ def update_webapp_owner_info_cache_with_login(instance, **kwargs):
             return
     key = 'webapp_owner_info_{wo:%s}' % webapp_owner_id
     cache_util.delete_cache(key)
+
+    key_termite_page = 'termite_webapp_page_%s_*' % webapp_owner_id
+    cache_util.delete_pattern(key_termite_page)
     get_webapp_owner_info(webapp_owner_id)
 
 

@@ -59,7 +59,7 @@ class WebappPageCacheMiddleware(object):
 
 			if project_id != None:
 				request.project_id = project_id
-				key = 'termite_webapp_page_%s' % project_id
+				key = 'termite_webapp_page_%s_%s' % (request.user_profile.user_id, project_id)
 				value = cache_util.get_cache(key)
 				if value:
 					return HttpResponse(value+'<div style="display:none;">from cache</div>')
@@ -75,7 +75,7 @@ class WebappPageCacheMiddleware(object):
 			if hasattr(request, 'NEED_CACHE_WEBAPP_PAGE_IN_RESPONSE'):
 				try:
 					project_id = request.project_id
-					key = 'termite_webapp_page_%s' % project_id
+					key = 'termite_webapp_page_%s_%s' % (request.user_profile.user_id, project_id)
 					value = response.content
 					cache_util.set_cache(key, value)
 				except:
