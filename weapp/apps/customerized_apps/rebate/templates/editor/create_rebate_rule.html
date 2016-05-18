@@ -301,7 +301,8 @@ $(document).ready(function(){
         method: method,
         removeTimeout: removeTimeout,
         formData: $.extend(formData, {
-            'cat': 'card-file'
+            'has_file': has_file,
+            'belong_to': $.trim($('#rebate_id').val())
         }),
         onUploadStart: function(file){
             if(file && (file.name.substring(file.name.length - 3,file.name.length) == 'xls')){}else{

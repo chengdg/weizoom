@@ -163,21 +163,28 @@ class Rebate(resource.Resource):
 
 		weizoom_card_ids = data['weizoom_card_ids'].split(',')
 		weizoom_card_passwords = data['weizoom_card_passwords'].split(',')
-		weizoom_card_id2password = {}
-		index = 0
-		for weizoom_card_id in weizoom_card_ids:
-			weizoom_card_id2password[weizoom_card_id].append(weizoom_card_passwords[index])
-			# weizoom_card_id2password = {
-			# 	weizoom_card_id:weizoom_card_passwords[index]
-			# }
-			index += 1
 
 		cur_weizoom_cards = AppsWeizoomCard.objects(belong_to=request.POST['id'])
 		cur_weizoom_card_ids = [cur_weizoom_card.weizoom_card_id for cur_weizoom_card in cur_weizoom_cards]
 		need_add_weizoom_card_ids =  [ i for i in weizoom_card_ids if i not in cur_weizoom_card_ids ]
 
 		if need_add_weizoom_card_ids != []:
-			print('22222')
+			weizoom_card_id2password = {}
+			index = 0
+			for weizoom_card_id in weizoom_card_ids:
+				if not weizoom_card_id2password.has_key(weizoom_card_id):
+					weizoom_card_id2password[weizoom_card_id] = weizoom_card_passwords[index]
+				else:
+					weizoom_card_id2password[weizoom_card_id].append(weizoom_card_passwords[index])
+				index += 1
+			print(weizoom_card_id2password)
+			for need_add_weizoom_card_id in need_add_weizoom_card_ids:
+				weizoom_card_info = AppsWeizoomCard(
+					belong_to = data['id'],
+					weizoom_card_id = need_add_weizoom_card_id,
+					weizoom_card_password = weizoom_card_id2password[need_add_weizoom_card_id]
+				)
+				weizoom_card_info.save()
 
 		#更新后清除缓存
 		# cache_key = 'apps_rebate_%s_html' % request.POST['id']
@@ -320,11 +327,13 @@ class RebateUpload(resource.Resource):
 
 	def api_post(request):
 		"""
-		上传头像
+		上传文件
 		"""
 		upload_file = request.FILES.get('Filedata', None)
 		owner_id = request.POST.get('owner_id', None)
-		# file_cat = request.POST.get('cat', None)
+		has_file = request.POST.get('has_file', None)
+		belong_to = request.POST.get('belong_to', None)
+
 		weizoom_card_ids = []
 		weizoom_card_passwords = []
 		response = create_response(500)
@@ -348,17 +357,24 @@ class RebateUpload(resource.Resource):
 					weizoom_card_ids.append(str(table_content))
 				for i in range(1,nrows):
 					table_content=table.cell(i,1).value
-					weizoom_card_passwords.append(str(int(table_content)))
+					weizoom_card_passwords.append(str(table_content))
 			except Exception, e:
 				response = create_response(500)
 				response.errMsg = u'上传文件错误'
 
+			if not has_file:
+				card_stock = len(weizoom_card_ids)
+			else:
+				cur_weizoom_cards = AppsWeizoomCard.objects(belong_to=belong_to)
+				cur_weizoom_card_ids = [cur_weizoom_card.weizoom_card_id for cur_weizoom_card in cur_weizoom_cards]
+				need_add_weizoom_card_ids =  [ i for i in weizoom_card_ids if i not in cur_weizoom_card_ids ]
+				card_stock = len(cur_weizoom_cards) + len(need_add_weizoom_card_ids)
 			response = create_response(200)
 			response.data = {
 				'file_path': file_path,
 				'weizoom_card_ids': weizoom_card_ids,
 				'weizoom_card_passwords': weizoom_card_passwords,
-				'card_stock': len(weizoom_card_ids)
+				'card_stock': card_stock
 			}
 		else:
 			response.errMsg = u'文件错误'
