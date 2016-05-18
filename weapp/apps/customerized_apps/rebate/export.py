@@ -8,6 +8,7 @@ from mall import models as mall_models
 from mall.promotion import models as promotion_models
 from mall.promotion.card_exchange import get_can_exchange_cards_list
 from modules.member import models as member_models
+from apps import models as apps_root_models
 
 NAV = {
 	'section': u'',
@@ -71,6 +72,7 @@ def handle_rebate_core(all_records=None):
 	owner_id2webapp_id = {u.manager_id: u.webapp_id for u in UserProfile.objects.filter(is_mp_registered=True, is_active=True)}
 	member_id2member = {m.id: m for m in member_models.Member.objects.filter(id__in=member_id2records.keys())}
 	need_grant_info = []
+	all_record_ids = set()
 	for member_id, records in member_id2records.items():
 		target_order_ids = member_id2order_ids.get(member_id, None)
 		if not target_order_ids:
@@ -103,16 +105,16 @@ def handle_rebate_core(all_records=None):
 					continue	#该订单已被返利过，不算
 				need_grant_info.append({
 					"webapp_id": owner_id2webapp_id[record.owner_id],
-					"weizoom_card_id_from": record.weizoom_card_id_from,
-					"weizoom_card_id_to": record.weizoom_card_id_to,
 					"target_member_info": member_id2member[member_id],
 					"record_id": str(record.id),
 					"order_id": order_id
 				})
+				all_record_ids.add(str(record.id))
 	#根据每个活动的配置，发放对应的微众卡
-	grant_card(need_grant_info)
+	grant_card(need_grant_info, all_record_ids)
 
-def grant_card(need_grant_info):
+
+def grant_card(need_grant_info, all_record_ids):
 	"""
 	发卡并记录发卡日志
 	以下几种情况，会保留微众卡，知道满足条件后发放
@@ -125,30 +127,38 @@ def grant_card(need_grant_info):
 	not_ready_card_list = []	#暂未满足条件以后再发的卡集合
 	log_list = []
 	card_has_used = {}
-	for info in need_grant_info:
+	#获取活动与微众卡的映射
+	record_id2card_ids = {str(record.id): record.weizoom_card_ids for record in apps_models.Rebate.objects(id__in=all_record_ids)}
+	for c in apps_root_models.AppsWeizoomCard.objects(belong_to__in=all_record_ids, status=0):
+		record_id = c.belong_to
+		if not record_id2card_ids.has_key(record_id):
+			record_id2card_ids[record_id] = [c.weizoom_card_id]
+		else:
+			record_id2card_ids[record_id].append(c.weizoom_card_id)
+
+	def __get_useful_card(info):
+		curr_record_card_list = sorted(record_id2card_ids[str(record_id)])
 		curr_index = 0
-		member_id = info['target_member_info'].id
-		member_name = info['target_member_info'].username_hexstr
-		card_ids_list = get_can_exchange_cards_list(info['weizoom_card_id_from'],info['weizoom_card_id_to'])
-		if len(card_ids_list) <= 0:
-			not_ready_card_list.append(apps_models.RebateWaitingAction(
-				webapp_id = info['webapp_id'],
-				member_id = member_id,
-				record_id = info['record_id']
-			))
-			continue
-		try:	#如果卡已经被发过，则取下一张，知道这个区间的卡被取完
-			while card_has_used.has_key(sorted(card_ids_list)[curr_index]):
+		try:
+			curr_card_id = curr_record_card_list[curr_index]
+			while card_has_used.has_key(curr_card_id):
 				curr_index += 1
+				curr_card_id = curr_record_card_list[curr_index]
+			return curr_card_id
 		except:
 			not_ready_card_list.append(apps_models.RebateWaitingAction(
 				webapp_id = info['webapp_id'],
-				member_id = member_id,
+				member_id = info['target_member_info'].id,
 				record_id = info['record_id']
 			))
+			return None
+
+	for info in need_grant_info:
+		member_id = info['target_member_info'].id
+		member_name = info['target_member_info'].username_hexstr
+		weizoom_card_id = __get_useful_card(info)
+		if not weizoom_card_id:
 			continue
-		curr_card_id = sorted(card_ids_list)[curr_index]
-		weizoom_card_id = curr_card_id
 		create_list.append(promotion_models.CardHasExchanged(
 			webapp_id = info['webapp_id'],
 			card_id = weizoom_card_id,
@@ -164,7 +174,7 @@ def grant_card(need_grant_info):
 			weizoom_card_id = weizoom_card_id,
 			created_at = datetime.datetime.now()
 		))
-		card_has_used[curr_card_id] = True
+		card_has_used[weizoom_card_id] = True
 
 	#记录暂未满足条件的返利动作
 	if len(not_ready_card_list) > 0:
@@ -172,9 +182,12 @@ def grant_card(need_grant_info):
 	#发卡
 	if len(create_list) > 0:
 		promotion_models.CardHasExchanged.objects.bulk_create(create_list)
+	#标记已发放的卡
+	apps_root_models.AppsWeizoomCard.use_cards(card_has_used.keys())
 	#记录已发卡的详情
 	if len(log_list) > 0:
 		apps_models.RebateWeizoomCardDetails.objects.insert(log_list)
+
 
 def handle_wating_actions():
 	actions = apps_models.RebateWaitingAction.objects.all()
