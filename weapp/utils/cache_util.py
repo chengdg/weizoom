@@ -64,7 +64,7 @@ def get_cache(key):
 def get_many(keys):
 	return cache.get_many(keys)
 
-@retry_delete(attempt=3)
+@retry_delete(attempt=2)
 def delete_cache(key):
 	delete_count = cache.delete(key)
 	delete_api_count = cache.delete("api"+key)
@@ -73,7 +73,7 @@ def delete_cache(key):
 	if not delete_count or not delete_api_count:
 		raise DeleteCacheException('delete_cache return 0')
 
-@retry_delete(attempt=3)
+@retry_delete(attempt=2)
 def delete_pattern(key):
 	delete_count = cache.delete_pattern(key)
 	delete_api_count = cache.delete_pattern("api"+key)

@@ -28,7 +28,7 @@ class Project(resource.Resource):
 
 	@staticmethod
 	def delete_webapp_page_cache(webapp_owner_id, project_id):
-		key = 'termite_webapp_page_%s' % project_id
+		key = 'termite_webapp_page_%s_%s' % (webapp_owner_id, project_id)
 		cache_util.delete_cache(key)
 
 
@@ -296,7 +296,7 @@ def delete_webapp_page_cache(**kwargs):
 	if hasattr(cache, 'request') and cache.request.user_profile:
 		webapp_owner_id = cache.request.user_profile.user_id
 		for project in webapp_models.Project.objects.filter(owner_id=webapp_owner_id, type='wepage'):
-			key = 'termite_webapp_page_%s' % project.id
+			key = 'termite_webapp_page_%s_%s' % (webapp_owner_id, project.id)
 			cache_util.delete_cache(key)
 
 post_update_signal.connect(delete_webapp_page_cache, sender=mall_models.Product, dispatch_uid = "termite_product.update")
