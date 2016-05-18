@@ -116,6 +116,10 @@ class Rebates(resource.Resource):
 				continue
 			for mid in member_ids:
 				if member_id2order_ids.has_key(mid):
+					#注意！！！！
+					#由于一个会员可以同时参与多个返利活动，
+					#并且会员在此期间下的订单会同时显示在多个活动中
+					#所以以下的动作会使得record_id2orders[rid]中出现多个相同的order_id
 					if not record_id2orders.has_key(rid):
 						record_id2orders[rid] = member_id2order_ids[mid]
 					else:
@@ -123,8 +127,9 @@ class Rebates(resource.Resource):
 		record_id2cash = {}
 		record_id2first_buy_num = {}
 		for rid, order_ids in record_id2orders.items():
+			temp_order_ids = set(order_ids) #这里的id会重复
 			record = id2record[rid]
-			for oid in order_ids:
+			for oid in temp_order_ids:
 				oid = str(oid)
 				temp_order = id2order.get(oid, None)
 				if not temp_order:
@@ -133,14 +138,6 @@ class Rebates(resource.Resource):
 				temp_member_id = webapp_user_id_belong_to_member_id.get(temp_order.webapp_user_id, None)
 				if not temp_member_id or temp_member_id not in record_own_member_ids[rid]:
 					continue
-				print "============================="
-				print "============================="
-				print "order_created====", temp_order.created_at
-				print "record.start====", record.start_time
-				print "record.end====", record.end_time
-				print "member_partis_time====", member_id2partis[temp_member_id][rid]
-				print "============================="
-				print "============================="
 				if temp_order.created_at>record.start_time and temp_order.created_at<record.end_time: #扫码后的
 					#判断首单
 					if temp_order.is_first_order and temp_order.created_at > member_id2partis[temp_member_id][rid]:
