@@ -73,8 +73,7 @@ Background:
 
 Scenario:1 选择一商品，获得购买人列表（已关注会员+取消关注会员）
 	Given jobs登录系统
-	When jobs访问商品购买人
-	Then jobs可以获得购买商品的会员列表
+	Then jobs获得商品'商品1'的会员列表
 		| member | member_rank | friend_count | integral | attention_time  |  source  |    tags     |   status  |
 		| bill6  |   普通会员  |       0      |     0    |   2016-05-15    | 直接关注 |   未分组    |   已取消  | 
 		| bill5  |   普通会员  |       0      |     0    |   2016-05-15    | 直接关注 |   未分组    |   已关注  |
