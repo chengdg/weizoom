@@ -1,7 +1,7 @@
 {% extends "content_base_v2.html" %}
 {% load common_tag %}
 {% load account_filter %}
-
+{% load apps_filter %}
 {% block css %}
 <style>
   .control-label{
@@ -96,16 +96,18 @@
         </div>
     </div>
     <div class="form-group">
-        <label class="control-label col-sm-2 pt0 star_show">发放微众卡号段</label>
+        <label class="control-label col-sm-2 pt0 star_show">发放微众卡文件</label>
         <div class="controls xa-errorHintContainer">
-            <div style="margin-left: 120px;">
-                <input type="text" class="form-control w70" id="weizoom_card_id_from" name="weizoom_card_id_from" value="{{rebate_rule.weizoom_card_id_from}}" data-validate="require-notempty,,require-nonnegative"/>
-                -&nbsp
-                <input type="text" class="form-control w70" id="weizoom_card_id_to" name="weizoom_card_id_to" value="{{rebate_rule.weizoom_card_id_to}}" data-validate="require-notempty,,require-nonnegative"/>
+            <div style="margin-left: 168px;">
+                <input type="file" id="card-file" name="card-file">
+                <input type="hidden" id="weizoom_card_ids">
+                <input type="hidden" id="weizoom_card_passwords">
+                <!--<input type="text" class="form-control w70" id="weizoom_card_id_from" name="weizoom_card_id_from" value="{{rebate_rule.weizoom_card_id_from}}" data-validate="require-notempty,,require-nonnegative"/>-->
+                <!--<input type="text" class="form-control w70" id="weizoom_card_id_to" name="weizoom_card_id_to" value="{{rebate_rule.weizoom_card_id_to}}" data-validate="require-notempty,,require-nonnegative"/>-->
             <span class="xa-exchangeStock"></span>
             <span><a target="_blank" {% if rebate_rule %} href="/apps/rebate/card_details/?id={{ rebate_rule.id }}" {% else %}{% endif %} class="xui-detail" title="发放详情">发放详情</a></span>
             </div>
-            <div class="errorHint" data-error-hint="请输入数字"></div>
+            <!--<div class="errorHint" data-error-hint="请输入数字"></div>-->
         </div>
     </div>
     <div class="form-group">
@@ -195,7 +197,7 @@
 <script type="text/javascript">
 
 $(document).ready(function(){
-    var is_err = false;
+//    var is_err = false;
     var answerContent = W.loadJSON('qrcode_answer');
     var options = {
         el: '#edit-message-panel',
@@ -213,55 +215,120 @@ $(document).ready(function(){
         }
     }
     var editor = new W.view.weixin.MessageEditor(options);
-    //更新库存
-    $(document).on("blur","#weizoom_card_id_to",function(){
-    	var snumData = $(this).siblings("#weizoom_card_id_from").val();
-	    var endnumData = $(this).val();
-	    if(snumData&&endnumData){
-            if(parseInt(snumData) > parseInt(endnumData)){
-                W.showHint('error','号段不合法');
-                return
+//    //更新库存
+//    $(document).on("blur","#weizoom_card_id_to",function(){
+//    	var snumData = $(this).siblings("#weizoom_card_id_from").val();
+//	    var endnumData = $(this).val();
+//	    if(snumData&&endnumData){
+//            if(parseInt(snumData) > parseInt(endnumData)){
+//                W.showHint('error','号段不合法');
+//                return
+//            }
+//            var stockData = {
+//                snum:snumData,
+//                endnum:endnumData
+//            };
+//            checkStock(stockData);
+//		}
+//    });
+//    $(document).on("blur","#weizoom_card_id_from",function(){
+//    	var endnumData = $(this).siblings("#weizoom_card_id_to").val();
+//	    var snumData = $(this).val();
+//	    if(snumData&&endnumData) {
+//            if(parseInt(snumData) > parseInt(endnumData)){
+//                W.showHint('error','号段不合法');
+//                return
+//            }
+//            var stockData = {
+//                snum:snumData,
+//                endnum:endnumData
+//            };
+//            checkStock(stockData);
+//		}
+//    });
+//    function checkStock(stockData){
+//        W.getApi().call({
+//            method: 'get',
+//            app: 'mall2',
+//            api: 'card_exchange',
+//            args: stockData,
+//            scope: this,
+//            success: function(data) {
+//                is_err = false;
+//                $(".xa-exchangeStock").html("库存：" + data);
+//            },
+//            error: function(resp) {
+//                is_err = true;
+//                W.showHint('error',resp.errMsg);
+//                $(".xa-exchangeStock").html("库存：" + 0);
+//            }
+//        })
+//    }
+     var has_file = {% if has_file %}true{% else %}false{% endif %};
+    console.log(has_file);
+    //初始化上传组件参数
+    var swf = '/static/uploadify.swf',
+        overrideEvents = ['onError', 'onUploadSuccess'],
+        multi = false,
+        removeCompleted = false,
+        uploader = '/apps/rebate/api/upload_file/',
+        cancelImg = '/static/img/cancel.png',
+        buttonText = '添加文件',
+        fileTypeExts = '*.xls',
+        method = 'post',
+        removeTimeout = 0.0,
+        width = 100,
+        formData = {
+            'owner_id': '{{ request.webapp_owner_id }}'
+        },
+        onError = function(errorType,file) {
+            xlog(errorType);
+            xlog(file.name);
+        };
+    //初始化上传组件
+    $("#card-file").uploadify({
+        overrideEvents: overrideEvents,
+        swf: swf,
+        width: width,
+        multi: multi,
+        removeCompleted: removeCompleted,
+        uploader: uploader,
+        cancelImg: cancelImg,
+        buttonText: buttonText,
+        fileTypeDesc: '微众卡文件',
+        fileTypeExts: fileTypeExts,
+        method: method,
+        removeTimeout: removeTimeout,
+        formData: $.extend(formData, {
+            'cat': 'card-file'
+        }),
+        onUploadStart: function(file){
+            if(file && (file.name.substring(file.name.length - 3,file.name.length) == 'xls')){}else{
+                W.showHint('error', '请上传正确excel文件');
+                $("#card-file").uploadify('cancel', '*');
+                $("#card-file").uploadify('stop');
             }
-            var stockData = {
-                snum:snumData,
-                endnum:endnumData
-            };
-            checkStock(stockData);
-		}
+        },
+        onUploadSuccess : function(file, response, status) {
+            response = JSON.parse(response);
+            if(response.code == 200){
+                console.log(response.data);
+                $("#card-file").find('.uploadify-button-text').html('重新选择');
+                $("#weizoom_card_ids").val(response.data['weizoom_card_ids']);
+                $("#weizoom_card_passwords").val(response.data['weizoom_card_passwords']);
+                has_file = true;
+            }else{
+                W.showHint('error', response.errMsg);
+            }
+        },
+        onSelect: function(file) {
+            var $queues = $('#card-file-queue').children();
+            if($queues.length > 1){
+                $queues.eq(0).remove();
+            }
+        },
+        onError: onError
     });
-    $(document).on("blur","#weizoom_card_id_from",function(){
-    	var endnumData = $(this).siblings("#weizoom_card_id_to").val();
-	    var snumData = $(this).val();
-	    if(snumData&&endnumData) {
-            if(parseInt(snumData) > parseInt(endnumData)){
-                W.showHint('error','号段不合法');
-                return
-            }
-            var stockData = {
-                snum:snumData,
-                endnum:endnumData
-            };
-            checkStock(stockData);
-		}
-    });
-    function checkStock(stockData){
-        W.getApi().call({
-            method: 'get',
-            app: 'mall2',
-            api: 'card_exchange',
-            args: stockData,
-            scope: this,
-            success: function(data) {
-                is_err = false;
-                $(".xa-exchangeStock").html("库存：" + data);
-            },
-            error: function(resp) {
-                is_err = true;
-                W.showHint('error',resp.errMsg);
-                $(".xa-exchangeStock").html("库存：" + 0);
-            }
-        })
-    }
     // 提交按钮
     $('.xa-submit').click(function(event) {
         $(this).attr('disabled',true);
@@ -269,8 +336,8 @@ $(document).ready(function(){
           $(this).attr('disabled',false);
           return false;
         }
-        if(is_err){
-            W.showHint('error','该号段不存在，请重新输入');
+        if(!has_file){
+            W.showHint('error', '请上传微众卡文件');
             $(this).attr('disabled',false);
             return false;
         }
@@ -314,6 +381,8 @@ $(document).ready(function(){
             methodstr = "post";//编辑
             args['id'] = rebate_id;
         }
+        args['weizoom_card_ids'] = $("#weizoom_card_ids").val();
+        args['weizoom_card_passwords'] = $("#weizoom_card_passwords").val();
         console.log('args!!!!!!!!');
         console.log(args);
         W.getApi().call({

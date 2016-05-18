@@ -17,6 +17,7 @@ from core.jsonresponse import create_response
 from utils.cache_util import delete_cache
 from weixin2.models import News
 import models as app_models
+from apps.models import CustomizedAppWeizoomCard
 import export
 from apps import request_util
 from mall import export as mall_export
@@ -29,6 +30,8 @@ from market_tools.tools.weizoom_card import models as card_models
 from mall.promotion.string_util import byte_to_hex, hex_to_byte
 from mall.promotion import models as promotion_models
 from excel_response import ExcelResponse
+import os
+import xlrd
 
 FIRST_NAV = mall_export.MALL_PROMOTION_AND_APPS_FIRST_NAV
 COUNT_PER_PAGE = 20
@@ -101,11 +104,22 @@ class Rebate(resource.Resource):
 		data['permission'] = True if data['permission']=='1' else False
 		data['is_limit_first_buy'] = True if data['is_limit_first_buy']=='1' else False
 		data['is_limit_cash'] = True if data['is_limit_cash']=='1' else False
+		weizoom_card_ids = data['weizoom_card_ids'].split(',')
+		data['weizoom_card_ids'] = weizoom_card_ids
 		rebate = app_models.Rebate(**data)
 		ticket_id = app_models.Rebate.objects.all().count() + 10001 #ID从1W开始计算，为了防止跟带参数二维码重复
 		rebate.ticket_id = ticket_id
 		rebate.save()
-
+		weizoom_card_passwords = data['weizoom_card_passwords'].split(',')
+		for weizoom_card_id in weizoom_card_ids:
+			index = 0
+			weizoom_card_info = CustomizedAppWeizoomCard(
+				owner_id = request.manager.id,
+				weizoom_card_id = weizoom_card_id,
+				weizoom_card_password = weizoom_card_passwords[index]
+			)
+			weizoom_card_info.save()
+			index += 1
 		data = json.loads(rebate.to_json())
 		data['id'] = data['_id']['$oid']
 
@@ -279,3 +293,76 @@ class CardRebateDetailExport(resource.Resource):
 
 		filename = u'微众卡返利详情'
 		return ExcelResponse(members_info, output_name=filename.encode('utf8'), force_csv=False)
+
+class RebateUpload(resource.Resource):
+	app = 'apps/rebate'
+	resource = 'upload_file'
+
+	def api_post(request):
+		"""
+		上传头像
+		"""
+		upload_file = request.FILES.get('Filedata', None)
+		owner_id = request.POST.get('owner_id', None)
+		# file_cat = request.POST.get('cat', None)
+		weizoom_card_ids = []
+		weizoom_card_passwords = []
+		response = create_response(500)
+		if upload_file:
+			try:
+				now = datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
+				upload_file.name = now + upload_file.name
+				file_path = RebateUpload.__save_file(upload_file, owner_id)
+			except:
+				response.errMsg = u'保存文件出错'
+				return response.get_response()
+			try:
+				file_name_dir = '%s\owner_id%s\%s' % (settings.UPLOAD_DIR,owner_id,upload_file.name)
+				data = xlrd.open_workbook(file_name_dir)
+				table = data.sheet_by_index(0)
+				nrows = table.nrows   #行数
+				# ncols = table.ncols   #列数
+				# data = table.cell(0, 1).value
+				for i in range(1,nrows):
+					table_content=table.cell(i,0).value
+					weizoom_card_ids.append(str(table_content))
+				for i in range(1,nrows):
+					table_content=table.cell(i,1).value
+					weizoom_card_passwords.append(str(int(table_content)))
+			except Exception, e:
+				response = create_response(500)
+				response.errMsg = u'上传文件错误'
+
+			response = create_response(200)
+			response.data = {
+				'file_path': file_path,
+				'weizoom_card_ids': weizoom_card_ids,
+				'weizoom_card_passwords': weizoom_card_passwords
+			}
+		else:
+			response.errMsg = u'文件错误'
+		return response.get_response()
+
+	@staticmethod
+	def __save_file(file, owner_id):
+		"""
+		@param file: 文件
+		@param owner_id: webapp_owner_id
+		@return: 文件保存路径
+		"""
+		content = []
+		curr_dir = os.path.dirname(os.path.abspath(__file__))
+		if file:
+			for chunk in file.chunks():
+				content.append(chunk)
+
+		dir_path = os.path.join(curr_dir, '../../../','static', 'upload', 'owner_id'+owner_id)
+		if not os.path.exists(dir_path):
+			os.makedirs(dir_path)
+		file_path = os.path.join(dir_path, file.name)
+
+		dst_file = open(file_path, 'wb')
+		print >> dst_file, ''.join(content)
+		dst_file.close()
+		file_path = os.path.join('\standard_static', 'upload', 'owner_id'+owner_id, file.name).replace('\\','/')
+		return file_path
