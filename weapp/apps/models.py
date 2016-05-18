@@ -224,6 +224,7 @@ class AppsWeizoomCard(mongo_models.Document):
 	百宝箱活动的微众卡信息
 	"""
 	owner_id = mongo_models.LongField() #所属商家
+	belong_to = mongo_models.StringField() #所属活动
 	weizoom_card_id = mongo_models.StringField() #卡号
 	weizoom_card_password = mongo_models.StringField() #密码
 	status = mongo_models.IntField(default=0) #卡状态:0未使用，1已使用

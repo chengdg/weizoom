@@ -18,7 +18,6 @@ class Rebate(models.Document):
 	is_limit_cash = models.BooleanField() #订单金额是否为现金
 	rebate_order_price = models.FloatField() #订单返利需满多少元
 	rebate_money = models.FloatField() #返利返多少元
-	weizoom_card_ids = models.ListField() #发放微众卡卡号
 	weizoom_card_file_path = models.StringField() #文件路径
 	# weizoom_card_id_from = models.StringField() #发放微众卡号段
 	# weizoom_card_id_to = models.StringField() #发放微众卡号段
