@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
 
-from django.contrib.auth.decorators import login_required
-
 from core import resource
 from core.jsonresponse import create_response
 from watchdog.utils import watchdog_error, watchdog_info, watchdog_warning
@@ -17,7 +15,6 @@ class ShoppingCartCount(resource.Resource):
     app = "mall2"
     resource = "shopping_cart_count"
 
-    @login_required
     def api_get(request):
         webapp_user_id = request.GET.get('webapp_user_id', None)
         if webapp_user_id:
