@@ -9,10 +9,11 @@ from django.http import HttpResponseRedirect
 from django.http import HttpResponse
 from django.conf import settings
 
-from modules.member import member_settings
 from utils import cache_util
 from webapp import models as webapp_models
 from account import models as account_models
+
+from modules.member import member_settings
 
 class WebappPageCacheMiddleware(object):
 	def process_request(self, request):
@@ -68,7 +69,6 @@ class WebappPageCacheMiddleware(object):
 				return None
 
 	def process_response(self, request, response):
-		#TODO:暂时只针对店铺首页进行缓存优化
 		if not settings.ENABLE_WEPAGE_CACHE:
 			return response
 		else:
