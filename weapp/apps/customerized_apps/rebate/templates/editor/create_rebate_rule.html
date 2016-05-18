@@ -102,9 +102,10 @@
                 <input type="file" id="card-file" name="card-file">
                 <input type="hidden" id="weizoom_card_ids">
                 <input type="hidden" id="weizoom_card_passwords">
+                <input type="hidden" id="file_path">
                 <!--<input type="text" class="form-control w70" id="weizoom_card_id_from" name="weizoom_card_id_from" value="{{rebate_rule.weizoom_card_id_from}}" data-validate="require-notempty,,require-nonnegative"/>-->
                 <!--<input type="text" class="form-control w70" id="weizoom_card_id_to" name="weizoom_card_id_to" value="{{rebate_rule.weizoom_card_id_to}}" data-validate="require-notempty,,require-nonnegative"/>-->
-            <span class="xa-exchangeStock"></span>
+            <span class="xa-exchangeStock">{% if card_stock %}库存：{{card_stock}}{% endif %}</span>
             <span><a target="_blank" {% if rebate_rule %} href="/apps/rebate/card_details/?id={{ rebate_rule.id }}" {% else %}{% endif %} class="xui-detail" title="发放详情">发放详情</a></span>
             </div>
             <!--<div class="errorHint" data-error-hint="请输入数字"></div>-->
@@ -264,7 +265,7 @@ $(document).ready(function(){
 //            }
 //        })
 //    }
-     var has_file = {% if has_file %}true{% else %}false{% endif %};
+    var has_file = {% if card_stock %}true{% else %}false{% endif %};
     console.log(has_file);
     //初始化上传组件参数
     var swf = '/static/uploadify.swf',
@@ -316,6 +317,8 @@ $(document).ready(function(){
                 $("#card-file").find('.uploadify-button-text').html('重新选择');
                 $("#weizoom_card_ids").val(response.data['weizoom_card_ids']);
                 $("#weizoom_card_passwords").val(response.data['weizoom_card_passwords']);
+                $("#file_path").val(response.data['file_path']);
+                $(".xa-exchangeStock").html("库存：" + response.data['card_stock']);
                 has_file = true;
             }else{
                 W.showHint('error', response.errMsg);
@@ -383,6 +386,7 @@ $(document).ready(function(){
         }
         args['weizoom_card_ids'] = $("#weizoom_card_ids").val();
         args['weizoom_card_passwords'] = $("#weizoom_card_passwords").val();
+        args['weizoom_card_file_path'] = $("#file_path").val();
         console.log('args!!!!!!!!');
         console.log(args);
         W.getApi().call({

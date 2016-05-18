@@ -76,12 +76,14 @@ class Rebate(resource.Resource):
 				"name": "qrcode_answer",
 				"content": answer_content
 			}]
+			card_stock = AppsWeizoomCard.objects(belong_to=request.GET['id'],status=0).count()
 			c = RequestContext(request, {
 				'first_nav_name': FIRST_NAV,
 				'second_navs': mall_export.get_promotion_and_apps_second_navs(request),
 				'second_nav_name': mall_export.MALL_APPS_SECOND_NAV,
 				'third_nav_name': mall_export.MALL_APPS_REBATE_NAV,
 				'rebate_rule': rebate,
+				'card_stock': card_stock,
 				'jsons': jsons
 			})
 			return render_to_response('rebate/templates/editor/create_rebate_rule.html', c)
@@ -106,22 +108,22 @@ class Rebate(resource.Resource):
 		data['is_limit_cash'] = True if data['is_limit_cash']=='1' else False
 		weizoom_card_ids = data['weizoom_card_ids'].split(',')
 		weizoom_card_passwords = data['weizoom_card_passwords'].split(',')
-		data['weizoom_card_ids'] = weizoom_card_ids
 		rebate = app_models.Rebate(**data)
 		ticket_id = app_models.Rebate.objects.all().count() + 10001 #ID从1W开始计算，为了防止跟带参数二维码重复
 		rebate.ticket_id = ticket_id
 		rebate.save()
+		data = json.loads(rebate.to_json())
+		data['id'] = data['_id']['$oid']
+		index = 0
 		for weizoom_card_id in weizoom_card_ids:
-			index = 0
 			weizoom_card_info = AppsWeizoomCard(
 				owner_id = request.manager.id,
+				belong_to = data['id'],
 				weizoom_card_id = weizoom_card_id,
 				weizoom_card_password = weizoom_card_passwords[index]
 			)
 			weizoom_card_info.save()
 			index += 1
-		data = json.loads(rebate.to_json())
-		data['id'] = data['_id']['$oid']
 
 		if settings.MODE != 'develop':
 			mp_user = get_binding_weixin_mpuser(request.manager)
@@ -158,6 +160,24 @@ class Rebate(resource.Resource):
 				update_data['set__'+key] = value
 
 		app_models.Rebate.objects(id=request.POST['id']).update(**update_data)
+
+		weizoom_card_ids = data['weizoom_card_ids'].split(',')
+		weizoom_card_passwords = data['weizoom_card_passwords'].split(',')
+		weizoom_card_id2password = {}
+		index = 0
+		for weizoom_card_id in weizoom_card_ids:
+			weizoom_card_id2password[weizoom_card_id].append(weizoom_card_passwords[index])
+			# weizoom_card_id2password = {
+			# 	weizoom_card_id:weizoom_card_passwords[index]
+			# }
+			index += 1
+
+		cur_weizoom_cards = AppsWeizoomCard.objects(belong_to=request.POST['id'])
+		cur_weizoom_card_ids = [cur_weizoom_card.weizoom_card_id for cur_weizoom_card in cur_weizoom_cards]
+		need_add_weizoom_card_ids =  [ i for i in weizoom_card_ids if i not in cur_weizoom_card_ids ]
+
+		if need_add_weizoom_card_ids != []:
+			print('22222')
 
 		#更新后清除缓存
 		# cache_key = 'apps_rebate_%s_html' % request.POST['id']
@@ -337,7 +357,8 @@ class RebateUpload(resource.Resource):
 			response.data = {
 				'file_path': file_path,
 				'weizoom_card_ids': weizoom_card_ids,
-				'weizoom_card_passwords': weizoom_card_passwords
+				'weizoom_card_passwords': weizoom_card_passwords,
+				'card_stock': len(weizoom_card_ids)
 			}
 		else:
 			response.errMsg = u'文件错误'

@@ -168,7 +168,8 @@ class RebateOrderList(resource.Resource):
 				'save_money': '%.2f' % (float(mall_models.Order.get_order_has_price_number(order)) + float(order.postage) - float(order.final_price) - float(order.weizoom_card_money)),
 				'weizoom_card_money': float('%.2f' % order.weizoom_card_money),
 				'pay_money': '%.2f' % order.final_price,
-				'is_first_order': order.is_first_order
+				'is_first_order': order.is_first_order,
+				'total_purchase_price': order.total_purchase_price #总采购价
 			})
 		if not export_id:
 			return pageinfo, items, final_price, weizoom_card_money
@@ -235,7 +236,7 @@ class RebateOrder_Export(resource.Resource):
 			fields_pure.append(u'订单状态')
 			fields_pure.append(u'购买人')
 			fields_pure.append(u'是否首单')
-			# fields_pure.append(u'采购价')
+			fields_pure.append(u'采购价')
 			# fields_pure.append(u'采购成本')
 
 			# processing data
@@ -253,7 +254,7 @@ class RebateOrder_Export(resource.Resource):
 				status = data["status"]
 				buyer_name = data["buyer_name"]
 				is_first_order = u'是' if data["is_first_order"] else u'否'
-				# purchase_price = data["purchase_price"] #采购价
+				total_purchase_price = data["total_purchase_price"] #采购价
 				# purchase_cost = data["purchase_cost"] #采购成本
 
 				export_record.append(order_id)
@@ -269,7 +270,7 @@ class RebateOrder_Export(resource.Resource):
 				export_record.append(status)
 				export_record.append(buyer_name)
 				export_record.append(is_first_order)
-				# export_record.append(purchase_price)
+				export_record.append(total_purchase_price)
 				# export_record.append(purchase_cost)
 
 				export_data.append(export_record)
