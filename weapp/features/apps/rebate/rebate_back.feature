@@ -48,22 +48,12 @@ Background:
 				"password":"1234567",
 				"status":"未使用",
 				"price":100.00
-			},{
-				"id":"0000004",
-				"password":"1234567",
-				"status":"未使用",
-				"price":100.00
-			},{
-				"id":"0000005",
-				"password":"1234567",
-				"status":"未使用",
-				"price":100.00
 			}]
 		}
 		"""
 	When jobs开通使用微众卡权限
 
-@mall2 @rebate_back
+@mall2 @rebate @rebate_back
 Scenario:1 创建返利活动
 
 	Given jobs登录系统
@@ -78,8 +68,16 @@ Scenario:1 创建返利活动
 				"rebate_order_price":"10.00",
 				"rebate_money":"5.00"
 			},
-			"weizoom_card_id_from":"0000001",
-			"weizoom_card_id_to":"0000005",
+			"cards":[{
+				"id":"0000001",
+				"password":"1234567"
+			},{
+				"id":"0000002",
+				"password":"1234567"
+			},{
+				"id":"0000003",
+				"password":"1234567"
+			}],
 			"start_time":"今天",
 			"end_time":"2天后",
 			"reply_type": "文字",
@@ -98,7 +96,7 @@ Scenario:1 创建返利活动
 		}]
 		"""
 
-@mall2 @rebate_back
+@mall2 @rebate @rebate_back
 Scenario:2 编辑返利活动
 
 	Given jobs登录系统
@@ -113,8 +111,16 @@ Scenario:2 编辑返利活动
 				"rebate_order_price":"10.00",
 				"rebate_money":"5.00"
 			},
-			"weizoom_card_id_from":"0000001",
-			"weizoom_card_id_to":"0000005",
+			"cards":[{
+				"id":"0000001",
+				"password":"1234567"
+			},{
+				"id":"0000002",
+				"password":"1234567"
+			},{
+				"id":"0000003",
+				"password":"1234567"
+			}],
 			"start_time":"今天",
 			"end_time":"2天后",
 			"reply_type": "文字",
@@ -143,8 +149,16 @@ Scenario:2 编辑返利活动
 				"rebate_order_price":"20.00",
 				"rebate_money":"10.00"
 			},
-			"weizoom_card_id_from":"0000001",
-			"weizoom_card_id_to":"0000002",
+			"cards":[{
+				"id":"0000001",
+				"password":"1234567"
+			},{
+				"id":"0000002",
+				"password":"1234567"
+			},{
+				"id":"0000003",
+				"password":"1234567"
+			}],
 			"start_time":"今天",
 			"end_time":"3天后",
 			"reply_type": "文字",

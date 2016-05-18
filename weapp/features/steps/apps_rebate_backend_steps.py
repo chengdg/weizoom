@@ -32,6 +32,12 @@ def __change_select(select):
 def step_impl(context, user):
     rules = json.loads(context.text)
     for rule in rules:
+        cards = rule.get('cards')
+        weizoom_card_ids = []
+        weizoom_card_passwords = []
+        for card in cards:
+            weizoom_card_ids.append(card['id'])
+            weizoom_card_passwords.append(card['password'])
         params = {
             'owner_id': context.client.user,
             'name': rule.get('code_name', ''),
@@ -42,8 +48,8 @@ def step_impl(context, user):
             'is_limit_cash': __change_select(rule.get('is_limit_cash', '')),
             'rebate_order_price': rule.get('order_rebate').get('rebate_order_price'),
             'rebate_money': rule.get('order_rebate').get('rebate_money'),
-            'weizoom_card_id_from': rule.get('weizoom_card_id_from', ''),
-            'weizoom_card_id_to': rule.get('weizoom_card_id_to', '')
+            'weizoom_card_ids': weizoom_card_ids,
+            'weizoom_card_passwords': weizoom_card_passwords
         }
         if rule['reply_type'] == "文字":
             params['reply_type'] = 1
@@ -61,6 +67,12 @@ def step_impl(context, user):
 def step_impl(context, user, rebate_name):
     rules = json.loads(context.text)
     for rule in rules:
+        cards = rule.get('cards')
+        weizoom_card_ids = []
+        weizoom_card_passwords = []
+        for card in cards:
+            weizoom_card_ids.append(card['id'])
+            weizoom_card_passwords.append(card['password'])
         params = {
             'id': __get_rebate_id(rebate_name),
             'name': rule.get('code_name', ''),
@@ -71,8 +83,8 @@ def step_impl(context, user, rebate_name):
             'is_limit_cash': __change_select(rule.get('is_limit_cash', '')),
             'rebate_order_price': rule.get('order_rebate').get('rebate_order_price'),
             'rebate_money': rule.get('order_rebate').get('rebate_money'),
-            'weizoom_card_id_from': rule.get('weizoom_card_id_from', ''),
-            'weizoom_card_id_to': rule.get('weizoom_card_id_to', '')
+            'weizoom_card_ids': weizoom_card_ids,
+            'weizoom_card_passwords': weizoom_card_passwords
         }
         if rule['reply_type'] == "文字":
             params['reply_type'] = 1
