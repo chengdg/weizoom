@@ -51,7 +51,7 @@ class CardExchangeMoney(resource.Resource):
 			'first_nav_name': FIRST_NAV_NAME,
 			'second_navs': export.get_promotion_and_apps_second_navs(request),
 			'second_nav_name': export.MALL_PROMOTION_SECOND_NAV,
-			'third_nav_name': export.MALL_PROMOTION_CARD_EXCHANGE_NAV,
+			'third_nav_name': export.MALL_PROMOTION_CARD_EXCHANGE_MONEY_NAV,
 			'card_exchange_dic': card_exchange_dic
 		})
 		return render_to_response('mall/editor/promotion/card_exchange_money.html', c)
@@ -149,7 +149,7 @@ class CardExchangeDetailMoney(resource.Resource):
 			'first_nav_name': FIRST_NAV_NAME,
 			'second_navs': export.get_promotion_and_apps_second_navs(request),
 			'second_nav_name': export.MALL_PROMOTION_SECOND_NAV,
-			'third_nav_name': export.MALL_PROMOTION_CARD_EXCHANGE_NAV,
+			'third_nav_name': export.MALL_PROMOTION_CARD_EXCHANGE_MONEY_NAV,
 		})
 		return render_to_response('mall/editor/promotion/card_exchange_details_money.html', c)
 
