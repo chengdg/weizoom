@@ -133,7 +133,14 @@ class Rebates(resource.Resource):
 				temp_member_id = webapp_user_id_belong_to_member_id.get(temp_order.webapp_user_id, None)
 				if not temp_member_id or temp_member_id not in record_own_member_ids[rid]:
 					continue
-
+				print "============================="
+				print "============================="
+				print "order_created====", temp_order.created_at
+				print "record.start====", record.start_time
+				print "record.end====", record.end_time
+				print "member_partis_time====", member_id2partis[temp_member_id][rid]
+				print "============================="
+				print "============================="
 				if temp_order.created_at>record.start_time and temp_order.created_at<record.end_time: #扫码后的
 					#判断首单
 					if temp_order.is_first_order and temp_order.created_at > member_id2partis[temp_member_id][rid]:
