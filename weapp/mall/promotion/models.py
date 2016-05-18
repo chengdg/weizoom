@@ -849,38 +849,49 @@ class CardHasExchanged(models.Model):
 
 
 #########################################################################
-# CardExchangeCash: 商家设置的卡兑换(现金兑换)
+# CashExchangeCashCard: 商家设置的卡兑换(现金兑换)
 #########################################################################
 
-class CardExchangeCash(models.Model):
+class CashExchangeCard(models.Model):
 	webapp_id = models.CharField(max_length=20)  # webapp,商家id
 	require = models.IntegerField(default=NO_REQUIRE)   #兑换需求
 	reward_type = models.IntegerField(default=WEIZOOM_CARD)   #兑换奖励类型
 
 	class Meta(object):
-		db_table = 'mallpromotion_card_exchange_cash'
+		db_table = 'mallpromotion_cash_exchange_card'
 
 #########################################################################
-# WeizoomCardExchangeCash: 商家设置的卡兑换规则
+# CashExchangeCardRule: 商家设置的现金兑换卡规则
 #########################################################################
-class CardExchangeCash(models.Model):
+class CashExchangeCardRule(models.Model):
 	exchange = models.ForeignKey(CardExchangeCash)
 	cash = models.IntegerField(default=0)  # 消耗现金
 	card_money = models.FloatField(default=0.0)  # 兑换微众卡金额
 	# card_number = models.CharField(max_length=256)  #微众卡号段
 
 	class Meta(object):
-		db_table = 'mallpromotion_card_exchange_rule_cash'
+		db_table = 'mallpromotion_cash_exchange_card_rule'
 
 #########################################################################
-# CardHasExchangedCash: 卡兑换记录
+# CashExchangeCardRecord: 现金兑换卡记录
 #########################################################################
-class CardHasExchangedCash(models.Model):
-	webapp_id = models.CharField(max_length = 20)  # webapp,商家id
-	card_id = models.IntegerField()    #微众卡id
+NOT_EXCHANGED = 0
+HAS_EXCHANGED = 1
+CARDSTATUS = {
+	NOT_EXCHANGED: u'未兑换',
+	HAS_EXCHANGED: u'已兑换',
+}
+
+class CashExchangeCardRecord(models.Model):
+	exchange_rule = models.ForeignKey(CashExchangeCardRule)
+	# webapp_id = models.CharField(max_length = 20)  # webapp,商家id
+	card_id = models.CharField(max_length = 20)    #微众卡号
+	card_password = models.CharField(max_length = 20)  #微众卡密码
 	owner_id = models.IntegerField()    #卡拥有者
-	owner_name = models.CharField(max_length = 256) #拥有者姓名
-	created_at = models.DateTimeField(auto_now_add=True)  #兑换时间
+	# owner_name = models.CharField(max_length = 256) #拥有者姓名
+	created_at = models.DateTimeField(auto_now_add=True)
+	exchange_time = models.DateTimeField()  #兑换时间
+	status = models.IntegerField(default=NOT_EXCHANGED)  #微众卡状态
 
 	class Meta(object):
-		db_table = 'mallpromotion_card_has_exchanged_cash'
+		db_table = 'mallpromotion_cash_exchange_card_record'
