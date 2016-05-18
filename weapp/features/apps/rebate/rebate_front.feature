@@ -938,7 +938,7 @@ Scenario:8 带参数返利活动[扫码后成交金额]-已关注会员不可参
 
 	"""
 
-@mall2 @rebate  @aix9
+@mall2 @rebate
 Scenario:9 带参数返利活动[扫码后成交金额]-已关注会员不可参与；首单；非现金
 	#已关注会员不可参与；
 	#首单；
@@ -951,6 +951,8 @@ Scenario:9 带参数返利活动[扫码后成交金额]-已关注会员不可参
 	When bill扫描返利活动'返利活动8'的二维码
 
 	When 清空浏览器
+  	When tom关注jobs的公众号
+  	When tom取消关注jobs的公众号
 	When tom扫描返利活动'返利活动8'的二维码
 
 
@@ -973,6 +975,7 @@ Scenario:9 带参数返利活动[扫码后成交金额]-已关注会员不可参
 	When tom绑定手机号'13563223669'
 
 	When 清空浏览器
+	When zhouxun关注jobs的公众号
 	When zhouxun绑定手机号'13563223679'
 
 	Given jobs登录系统
@@ -991,8 +994,6 @@ Scenario:9 带参数返利活动[扫码后成交金额]-已关注会员不可参
 	"""
 		[{
 			"id":"0000023"
-		},{
-			"id":"0000024"
 		}]
 	"""
 
@@ -1003,51 +1004,8 @@ Scenario:9 带参数返利活动[扫码后成交金额]-已关注会员不可参
 	Then jobs能获取'返利活动8'订单列表
 	"""
 		[{
-			"order_id":"0004",
-			"status": "已完成",
-			"final_price": 1.00,
-			"products": [{
-				"name": "商品1",
-				"price": 1.00,
-				"count": 1
-			}]
-		},{
-			"order_id":"0005",
-			"status": "已完成",
-			"final_price": 0.00,
-			"products": [{
-				"name": "商品1",
-				"price": 1.00,
-				"count": 1
-			}]
-		},{
-			"order_id":"0006",
-			"status": "已完成",
-			"final_price": 0.00,
-			"products": [{
-				"name": "商品1",
-				"price": 1.00,
-				"count": 1
-			}]
-		}]
-	"""
-	When jobs取消对'返利活动8'进行'仅显示扫码后成交订单'操作
-	#勾选仅显示扫码后的成交的订单
-	#已退款完成的不算入
-	Then jobs能获取'返利活动8'订单列表
-	"""
-		[{
-			"order_id":"0001",
-			"status": "已完成",
-			"final_price": 1.00,
-			"products": [{
-				"name": "商品1",
-				"price": 1.00,
-				"count": 1
-			}]
-		},{
 			"order_id":"0002",
-			"status": "已完成",
+			"status": "待支付",
 			"final_price": 1.00,
 			"products": [{
 				"name": "商品1",
@@ -1084,7 +1042,68 @@ Scenario:9 带参数返利活动[扫码后成交金额]-已关注会员不可参
 		},{
 			"order_id":"0006",
 			"status": "退款成功",
+			"final_price": 1.00,
+			"products": [{
+				"name": "商品1",
+				"price": 1.00,
+				"count": 1
+			}]
+		}]
+	"""
+	When jobs取消对'返利活动8'进行'仅显示扫码后成交订单'操作
+	#勾选仅显示扫码后的成交的订单
+	#已退款完成的不算入
+	Then jobs能获取'返利活动8'订单列表
+	"""
+		[{
+			"order_id":"0001",
+			"status": "已完成",
+			"final_price": 1.00,
+			"products": [{
+				"name": "商品1",
+				"price": 1.00,
+				"count": 1
+			}]
+		},{
+			"order_id":"0002",
+			"status": "待支付",
+			"final_price": 1.00,
+			"products": [{
+				"name": "商品1",
+				"price": 1.00,
+				"count": 1
+			}]
+		},{
+			"order_id":"0003",
+			"status": "已完成",
+			"final_price": 1.00,
+			"products": [{
+				"name": "商品1",
+				"price": 1.00,
+				"count": 1
+			}]
+		},{
+			"order_id":"0004",
+			"status": "已完成",
+			"final_price": 1.00,
+			"products": [{
+				"name": "商品1",
+				"price": 1.00,
+				"count": 1
+			}]
+		},{
+			"order_id":"0005",
+			"status": "已完成",
 			"final_price": 0.00,
+			"products": [{
+				"name": "商品1",
+				"price": 1.00,
+				"count": 1
+			}]
+		},{
+			"order_id":"0006",
+			"status": "退款成功",
+			"final_price": 1.00,
 			"products": [{
 				"name": "商品1",
 				"price": 1.00,
