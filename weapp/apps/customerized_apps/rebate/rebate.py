@@ -346,7 +346,7 @@ class RebateUpload(resource.Resource):
 				response.errMsg = u'保存文件出错'
 				return response.get_response()
 			try:
-				file_name_dir = '%s\owner_id%s\%s' % (settings.UPLOAD_DIR,owner_id,upload_file.name)
+				file_name_dir = '%s/owner_id%s/%s' % (settings.UPLOAD_DIR,owner_id,upload_file.name)
 				data = xlrd.open_workbook(file_name_dir)
 				table = data.sheet_by_index(0)
 				nrows = table.nrows   #行数
@@ -365,7 +365,7 @@ class RebateUpload(resource.Resource):
 			if not has_file:
 				card_stock = len(weizoom_card_ids)
 			else:
-				cur_weizoom_cards = AppsWeizoomCard.objects(belong_to=belong_to)
+				cur_weizoom_cards = AppsWeizoomCard.objects(belong_to=belong_to, status=0)
 				cur_weizoom_card_ids = [cur_weizoom_card.weizoom_card_id for cur_weizoom_card in cur_weizoom_cards]
 				need_add_weizoom_card_ids =  [ i for i in weizoom_card_ids if i not in cur_weizoom_card_ids ]
 				card_stock = len(cur_weizoom_cards) + len(need_add_weizoom_card_ids)
