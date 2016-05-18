@@ -413,7 +413,7 @@ Scenario:1 管理员能够查看到所有扫过该码并关注过的微信用户
 		}
 	"""
 
-@mall2 @rebate @kuki
+@mall2 @rebate
 Scenario:2 带参数返利活动[扫码后成交金额]-已关注会员可参与；首单；现金
 
 	Given jobs登录系统
@@ -938,7 +938,7 @@ Scenario:8 带参数返利活动[扫码后成交金额]-已关注会员不可参
 
 	"""
 
-@mall2 @rebate
+@mall2 @rebate  @aix9
 Scenario:9 带参数返利活动[扫码后成交金额]-已关注会员不可参与；首单；非现金
 	#已关注会员不可参与；
 	#首单；

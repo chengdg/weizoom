@@ -841,7 +841,7 @@ CARD_SOURCE_INTEGRAL = 0	#积分兑换
 CARD_SOURCE_REBATE = 1	#返利活动
 class CardHasExchanged(models.Model):
 	webapp_id = models.CharField(max_length = 20)  # webapp,商家id
-	card_id = models.IntegerField()    #微众卡id
+	card_id = models.CharField(max_length=100)    #微众卡id
 	owner_id = models.IntegerField()    #卡拥有者
 	owner_name = models.CharField(max_length = 256) #拥有者姓名
 	created_at = models.DateTimeField(auto_now_add=True)  #兑换时间
