@@ -75,19 +75,19 @@
     <table class="table table-bordered table-condensed xb-stripedTable">
 		<thead class="xui-thead">
 			<th>卡号</th>
-			<th>面值</th>
-			<th>卡内余额</th>
-			<th>使用金额</th>
-			<th>使用者</th>
+			<th>密码</th>
+			<!--<th>面值</th>-->
+			<!--<th>使用金额</th>-->
+			<th>发放会员</th>
 		</thead> 
 			<tbody>
 				{{each(i,item) items}}
 				<tr>
-					<td>${item.card_id}</td>
-					<td>${item.money}</td>
-					<td>${item.remainder}</td>
-					<td>${item.used_money}</td>
-					<td>${item.user}</td>
+					<td>${item.card_number}</td>
+					<td>${item.card_password}</td>
+					<!--<td>${item.money}</td>-->
+					<!--<td>${item.used_money}</td>-->
+					<td>${item.member_name}</td>
 				</tr>
 				{{/each}}
 		    </tbody>
