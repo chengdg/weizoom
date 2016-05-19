@@ -1,30 +1,18 @@
 # -*- coding: utf-8 -*-
-from __future__ import absolute_import
 import json
-import operator
 from datetime import datetime
-from itertools import chain
-from django.conf import settings
-from django.db.models import F, Q
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-from mall.promotion import models as promotion_model
-from mall.signal_handler import products_not_online_handler_for_promotions
 from watchdog.utils import watchdog_warning, watchdog_error
-from account.models import UserProfile
 
 from core import paginator
 from core import resource
 from core.exceptionutil import unicode_full_stack
 from core.jsonresponse import create_response
 from mall import models  # 注意不要覆盖此module
-from mall import signals as mall_signals
-from . import utils
 from mall import export
-from weixin.user.module_api import get_all_active_mp_user_ids
-from apps.customerized_apps.group import models as group_models
 from modules.member.models import WebAppUser,Member,CANCEL_SUBSCRIBED,SUBSCRIBED,MemberGrade,MemberTag
 from member.member_list import build_member_has_tags_json,get_tags_json
 import logging
@@ -41,20 +29,20 @@ class ProductMember(resource.Resource):
 
 
         Requirement:
-          shelve_type(str): must be provided, the value range -> (0,1,2)
-                            必须提供， 取值范围(0, 1, 2)
+          id(str): must be provided,
+                            商品id必须提供， 
 
         Return:
           HttpResponse: the context in it include:{
             'first_nav_name',
             'second_navs',
             'second_nav_name',
-            'has_product'
+            'id'
           }
 
         Raise:
-          if shelve_type is not be provided the TypeError will be raise
-          如果shelve_type没有被提供， 将触发TypeError异常
+          if id is not be provided return product_list
+          如果id没有被提供， 将返回到在售商品列表
         """
         mall_type = request.user_profile.webapp_type
         webapp_id = request.user_profile.webapp_id
@@ -105,32 +93,22 @@ class ProductMember(resource.Resource):
             method: get
             url: mall2/product_members/
 
-        Args:
-          type: 上架类型
-            取值以及说明:
-              onshelf  : 上架
-              offshelf : 下架
-              recycled : 回收站
-              delete   : 删除
-
         """
+
         # 商城类型
         mall_type = request.user_profile.webapp_type
         webapp_id = request.user_profile.webapp_id
         has_product_id = request.GET.get('id')
         
-
-
         sort_attr = request.GET.get('sort_attr', '-id') #之后处理
         order_has_products = models.OrderHasProduct.objects.filter(product_id=has_product_id, origin_order_id=0)
         order_ids = order_has_products.values_list('order', flat=True)
-        orders = models.Order.objects.filter(id__in=order_ids,status__in=
-            [models.ORDER_STATUS_PAYED_NOT_SHIP, models.ORDER_STATUS_PAYED_SHIPED, models.ORDER_STATUS_SUCCESSED, models.ORDER_STATUS_REFUNDING, models.ORDER_STATUS_GROUP_REFUNDING])
+        orders = models.Order.objects.filter(webapp_id=webapp_id, id__in=order_ids,status__in=[models.ORDER_STATUS_PAYED_NOT_SHIP, 
+            models.ORDER_STATUS_PAYED_SHIPED, models.ORDER_STATUS_SUCCESSED, models.ORDER_STATUS_REFUNDING, models.ORDER_STATUS_GROUP_REFUNDING])
         webapp_user_ids = orders.values_list('webapp_user_id', flat=True)
-        member_ids = [webapp_user.member_id for webapp_user in WebAppUser.objects.filter(id__in=webapp_user_ids)]
+        member_ids = WebAppUser.objects.filter(id__in=webapp_user_ids).values_list('member_id', flat=True)
         members = Member.objects.filter(id__in=member_ids, status__in=[CANCEL_SUBSCRIBED,SUBSCRIBED], is_for_test=0, webapp_id=webapp_id).order_by(sort_attr)
         total_count = members.count()
-
 
         count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
         cur_page = int(request.GET.get('page', '1'))
@@ -140,7 +118,6 @@ class ProductMember(resource.Resource):
             count_per_page,
             )
         
-        selected_count = members.count()
         items = []
         for member in members:
             items.append(build_return_member_json(member))
@@ -151,9 +128,8 @@ class ProductMember(resource.Resource):
             'sortAttr': request.GET.get('sort_attr', '-created_at'),
             'pageinfo': paginator.to_dict(pageinfo),
             'tags': tags_json,
-            'selected_count': selected_count,
             'total_count': total_count,
-            'member_ids': member_ids
+            'member_ids': list(member_ids)
         }
         return response.get_response()
 
@@ -179,3 +155,4 @@ def build_return_member_json(member):
         'is_subscribed':member.is_subscribed,
         'experience': member.experience,
     }
+
