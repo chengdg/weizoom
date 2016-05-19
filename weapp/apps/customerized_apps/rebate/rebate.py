@@ -357,10 +357,10 @@ class RebateUpload(resource.Resource):
 				for i in range(1,nrows):
 					table_content=table.cell(i,0).value
 
-					weizoom_card_ids.append(str('%.0f' % table_content))
+					weizoom_card_ids.append(str(table_content))
 				for i in range(1,nrows):
 					table_content=table.cell(i,1).value
-					weizoom_card_passwords.append(str('%.0f' % table_content))
+					weizoom_card_passwords.append(str(table_content))
 			except Exception, e:
 				response.errMsg = u'上传文件错误'
 				return response.get_response()
