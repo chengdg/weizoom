@@ -337,6 +337,9 @@ def update_webapp_product_cache(**kwargs):
         pattern_categories = "webapp_products_categories_{wo:%s}" % webapp_owner_id
         cache_util.delete_pattern(pattern_categories)
 
+        key_termite_page = 'termite_webapp_page_%s_*' % webapp_owner_id
+        cache_util.delete_pattern(key_termite_page)
+
 def update_webapp_category_cache(**kwargs):
     if hasattr(cache, 'request') and cache.request.user_profile:
         webapp_owner_id = cache.request.user_profile.user_id
