@@ -334,7 +334,7 @@ class RebateUpload(resource.Resource):
 		upload_file = request.FILES.get('Filedata', None)
 		owner_id = request.POST.get('owner_id', None)
 		has_file = request.POST.get('has_file', None)
-		belong_to = request.POST.get('belong_to', None)
+		belong_to = request.POST.get('belong_to', '')
 
 		weizoom_card_ids = []
 		weizoom_card_passwords = []
@@ -362,9 +362,8 @@ class RebateUpload(resource.Resource):
 					table_content=table.cell(i,1).value
 					weizoom_card_passwords.append(str('%.0f' % table_content))
 			except Exception, e:
-				response = create_response(500)
 				response.errMsg = u'上传文件错误'
-
+				return response.get_response()
 			if not has_file:
 				card_stock = len(weizoom_card_ids)
 			else:
