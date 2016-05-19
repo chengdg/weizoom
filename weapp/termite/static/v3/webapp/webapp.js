@@ -68,11 +68,7 @@ W.preloadImgsOnPage = function(option) {
                 case 'imageGroup':
                     $itemsImg.map(function(idx, item) {
                         $item = $(item);
-                        $item.attr('data-url', $item.attr('src'));
-                        $item.removeAttr('src');
                     });
-                    $lazyImgs = $('[data-url]');
-                    lazyloadImg($lazyImgs, {threshold: 500});
                     break;
                 case 'productList':
                     $itemsImg.map(function(idx, item) {
