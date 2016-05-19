@@ -236,7 +236,7 @@ class RebateCardDetails(resource.Resource):
 		for card in rebate_cards:
 			card_id = card.card_id
 			try:
-				cur_card = cards.get(id = card_id)
+				cur_card = cards.get(weizoom_card_id = card_id)
 				weizoom_card_id = cur_card.weizoom_card_id
 				weizoom_card_rule_id = cur_card.weizoom_card_rule_id
 				cur_card_rule = card_rules.get(id = weizoom_card_rule_id)
@@ -251,8 +251,11 @@ class RebateCardDetails(resource.Resource):
 					'used_money': '%.2f' % used_money,
 					'user': user
 				})
-			except:
-				pass
+			except Exception,e:
+				print(e)
+				response = create_response(500)
+				return response.get_response()
+				# pass
 
 		response = create_response(200)
 		response.data.items = rebate_cards_list
@@ -267,7 +270,6 @@ class RebateCardDetails(resource.Resource):
 		#查询
 		rebate_rule_id = request.GET.get('record_id','')
 		rebate_cards = promotion_models.CardHasExchanged.objects.filter(webapp_id=webapp_id, source=1,rebate_id=rebate_rule_id).order_by('-created_at')
-
 		if card_number:
 			cur_cards = cards.filter(weizoom_card_id__contains = card_number)
 			card_id_list = []
