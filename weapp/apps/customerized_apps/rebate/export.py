@@ -9,6 +9,7 @@ from mall.promotion import models as promotion_models
 from mall.promotion.card_exchange import get_can_exchange_cards_list
 from modules.member import models as member_models
 from apps import models as apps_root_models
+from core.exceptionutil import unicode_full_stack
 
 NAV = {
 	'section': u'',
@@ -147,6 +148,7 @@ def grant_card(need_grant_info, all_record_ids):
 			while card_has_used.has_key(curr_card_id):
 				curr_index += 1
 				curr_card = curr_record_card_list[curr_index]
+				curr_card_id = curr_card.weizoom_card_id
 			return curr_card
 		except:
 			not_ready_card_list.append(apps_models.RebateWaitingAction(

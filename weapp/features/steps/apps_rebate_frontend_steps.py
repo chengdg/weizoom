@@ -118,6 +118,7 @@ def step_impl(context, webapp_user_name):
             actual.append({
                 'id': card['card_id']
             })
+        actual.sort(key=lambda item:int(item['id']))
         bdd_util.assert_list(expected, actual)
     else:
         print('[info] redirect error,response.status_code :')
