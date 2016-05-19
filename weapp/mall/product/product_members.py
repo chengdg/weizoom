@@ -77,10 +77,16 @@ class ProductMember(resource.Resource):
             else:
                 tags.append(tag)
         member_tags = tags
+        #0:下架（待售） 1:上架（在售）
+        if product.shelve_type == 0:
+            second_nav_name = export.PRODUCT_MANAGE_OFF_SHELF_PRODUCT_NAV
+        else:
+            second_nav_name = export.PRODUCT_MANAGE_ON_SHELF_PRODUCT_NAV
         c = RequestContext(
             request,
             {'first_nav_name': export.PRODUCT_FIRST_NAV,
              'second_navs': export.get_mall_product_second_navs(request),
+             'second_nav_name': second_nav_name,
              'product_name': product.name,
              'mall_type': mall_type,
              'shelve_type':product.shelve_type,
@@ -146,7 +152,8 @@ class ProductMember(resource.Resource):
             'pageinfo': paginator.to_dict(pageinfo),
             'tags': tags_json,
             'selected_count': selected_count,
-            'total_count': total_count
+            'total_count': total_count,
+            'member_ids': member_ids
         }
         return response.get_response()
 
