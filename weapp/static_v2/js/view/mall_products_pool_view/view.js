@@ -143,7 +143,9 @@ W.view.mall.ProductsPoolView = Backbone.View.extend({
                     success: function(data){
                         _this.table.reload();
                     },
-                    error: function(data){}
+                    error: function(data){
+                        W.showHint('error', '该商品正在进行团购活动!');
+                    }
                 })
             }
         })
