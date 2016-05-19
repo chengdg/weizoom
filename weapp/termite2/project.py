@@ -33,7 +33,7 @@ class Project(resource.Resource):
 
 	@staticmethod
 	def delete_all_webapp_page_cache(webapp_owner_id):
-		key_termite_page = 'termite_webapp_page_%s_*' % request.manager.id
+		key_termite_page = 'termite_webapp_page_%s_*' % webapp_owner_id
 		cache_util.delete_pattern(key_termite_page)
 
 	@staticmethod
