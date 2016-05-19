@@ -228,31 +228,20 @@ class RebateCardDetails(resource.Resource):
 		cur_page = int(request.GET.get('page',1))
 		count_per_page = int(request.GET.get('count_per_page',10))
 
-		cards = card_models.WeizoomCard.objects.all()
-		rebate_cards = RebateCardDetails.get_rebate_cards(request,cards)
+		rebate_cards = RebateCardDetails.get_rebate_cards(request)
 		pageinfo, rebate_cards = paginator.paginate(rebate_cards, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
-		card_rules = card_models.WeizoomCardRule.objects.all()
 		rebate_cards_list = []
 		for card in rebate_cards:
-			card_id = card.card_id
 			try:
-				cur_card = cards.get(id = card_id)
-				weizoom_card_id = cur_card.weizoom_card_id
-				weizoom_card_rule_id = cur_card.weizoom_card_rule_id
-				cur_card_rule = card_rules.get(id = weizoom_card_rule_id)
-				money = cur_card_rule.money
-				remainder = cur_card.money
-				user = hex_to_byte(card.owner_name)
-				used_money = money - remainder
 				rebate_cards_list.append({
-					'card_id': weizoom_card_id,
-					'money': '%.2f' % money,
-					'remainder': '%.2f' % remainder,
-					'used_money': '%.2f' % used_money,
-					'user': user
+					'card_number': card.card_number,
+					'card_password': card.card_password,
+					'member_name': hex_to_byte(card.member_name)
 				})
-			except:
-				pass
+			except Exception,e:
+				print(e)
+				response = create_response(500)
+				return response.get_response()
 
 		response = create_response(200)
 		response.data.items = rebate_cards_list
@@ -260,22 +249,16 @@ class RebateCardDetails(resource.Resource):
 		return response.get_response()
 
 	@staticmethod
-	def get_rebate_cards(request,cards):
+	def get_rebate_cards(request):
 		card_number = request.GET.get('cardNumber',None)
 		card_user = request.GET.get('cardUser',None)
-		webapp_id = request.user_profile.webapp_id
 		#查询
 		rebate_rule_id = request.GET.get('record_id','')
-		rebate_cards = promotion_models.CardHasExchanged.objects.filter(webapp_id=webapp_id, source=1,rebate_id=rebate_rule_id).order_by('-created_at')
-
+		rebate_cards = promotion_models.MemberHasWeizoomCard.objects.filter(source=promotion_models.WEIZOOM_CARD_SOURCE_REBATE,relation_id=rebate_rule_id).order_by('-created_at')
 		if card_number:
-			cur_cards = cards.filter(weizoom_card_id__contains = card_number)
-			card_id_list = []
-			for card in cur_cards:
-				card_id_list.append(card.id)
-			rebate_cards = rebate_cards.filter(card_id__in = card_id_list)
+			rebate_cards = rebate_cards.filter(card_number__in=card_number)
 		if card_user:
-			rebate_cards = rebate_cards.filter(owner_name__contains=byte_to_hex(card_user))
+			rebate_cards = rebate_cards.filter(member_name__contains=byte_to_hex(card_user))
 
 		return rebate_cards
 
@@ -332,7 +315,7 @@ class RebateUpload(resource.Resource):
 		upload_file = request.FILES.get('Filedata', None)
 		owner_id = request.POST.get('owner_id', None)
 		has_file = request.POST.get('has_file', None)
-		belong_to = request.POST.get('belong_to', None)
+		belong_to = request.POST.get('belong_to', '')
 
 		weizoom_card_ids = []
 		weizoom_card_passwords = []
@@ -342,7 +325,8 @@ class RebateUpload(resource.Resource):
 				now = datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
 				upload_file.name = now + upload_file.name
 				file_path = RebateUpload.__save_file(upload_file, owner_id)
-			except:
+			except Exception, e:
+				print(e)
 				response.errMsg = u'保存文件出错'
 				return response.get_response()
 			try:
@@ -353,14 +337,20 @@ class RebateUpload(resource.Resource):
 				# ncols = table.ncols   #列数
 				# data = table.cell(0, 1).value
 				for i in range(1,nrows):
-					table_content=table.cell(i,0).value
-					weizoom_card_ids.append(str(table_content))
+					table_content = table.cell(i,0).value
+					if table_content!= '':
+						weizoom_card_ids.append(str(table_content))
 				for i in range(1,nrows):
-					table_content=table.cell(i,1).value
-					weizoom_card_passwords.append(str(table_content))
+					table_content = table.cell(i,1).value
+					if table_content!= '':
+						weizoom_card_passwords.append(str(table_content))
+				if(len(weizoom_card_ids) != len(weizoom_card_passwords)):
+					response.errMsg = u'上传的微众卡卡号与密码列数不对应'
+					return response.get_response()
 			except Exception, e:
-				response = create_response(500)
+				print(e)
 				response.errMsg = u'上传文件错误'
+				return response.get_response()
 
 			if not has_file:
 				card_stock = len(weizoom_card_ids)
@@ -369,6 +359,7 @@ class RebateUpload(resource.Resource):
 				cur_weizoom_card_ids = [cur_weizoom_card.weizoom_card_id for cur_weizoom_card in cur_weizoom_cards]
 				need_add_weizoom_card_ids =  [ i for i in weizoom_card_ids if i not in cur_weizoom_card_ids ]
 				card_stock = len(cur_weizoom_cards) + len(need_add_weizoom_card_ids)
+
 			response = create_response(200)
 			response.data = {
 				'file_path': file_path,
