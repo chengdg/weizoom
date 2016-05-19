@@ -86,12 +86,16 @@ def get_weizoom_card_exchange_list(request):
 
 	member_has_cards = promotion_models.CardHasExchanged.objects.filter(webapp_id = webapp_id,owner_id = member_id,source = source).order_by('-created_at')
 	all_card_ids = [c.card_id for c in member_has_cards]
+	all_card_id2time = {c.card_id: c.created_at for c in member_has_cards}
 	card_id2card = {c.id: c for c in card_models.WeizoomCard.objects.filter(id__in=all_card_ids)}
 
 	#注意！！！！
 	#此处仅仅是伪造的数据，待【微众卡系统】完善后需要改掉！！！！
 	member_has_cards = promotion_models.MemberHasWeizoomCard.objects.filter(member_id = member_id,source = source).order_by('-created_at')
-	all_card_ids_v2 = [c.card_number for c in member_has_cards]
+	all_card_ids_v2 = []
+	for c in member_has_cards:
+		all_card_id2time[c.card_number] = c.created_at
+		all_card_ids_v2.append(c.card_number)
 
 	for c in apps_root_models.AppsWeizoomCard.objects(weizoom_card_id__in=all_card_ids_v2):
 		card_id2card[c.weizoom_card_id] = ADict({
@@ -107,11 +111,10 @@ def get_weizoom_card_exchange_list(request):
 	phone_number =member_info.phone_number
 	
 	card_details_dic['phone_number'] = phone_number
-	count = member_has_cards.count()
+	count = len(card_id2card.keys())
 	has_expired_cards = False
 	today = datetime.today()
-	for card in member_has_cards:
-		card_id = card.card_id
+	for card_id in card_id2card.keys():
 		cur_card = card_id2card.get(card_id, None)
 		if not cur_card:
 			continue
@@ -128,7 +131,7 @@ def get_weizoom_card_exchange_list(request):
 			'card_id': cur_card.weizoom_card_id,
 			'remainder': '%.2f' % cur_card.money,
 			'money': '%.2f' % cur_card.weizoom_card_rule.money,
-			'time': card.created_at.strftime("%Y-%m-%d"),
+			'time': all_card_id2time[card_id].strftime("%Y-%m-%d"),
 			'type': u'兑换平台' if not is_wallet else u'返利活动',
 			'is_expired': is_expired,
 			'status': status 
