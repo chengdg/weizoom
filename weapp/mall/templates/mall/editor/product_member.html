@@ -19,10 +19,16 @@
 			<li>
 				<a href="/mall2/product_list/?shelve_type=1">商品管理</a>
 			</li>
-			<li class="active">111</li>
+			<li>
+				{% if shelve_type == 1 %}
+				<a href="/mall2/product_list/?shelve_type=1">在售商品管理</a>
+				{% else %}
+				<a href="/mall2/product_list/?shelve_type=0">待售商品管理</a>
+				{% endif %}
+			</li>
+			<li class="active">{{product_name}}</li>
 		</ul>
 	</div>
-	<div class="xa-productFilterView xui-filterPanel"></div>
 	{% if counts %}
 	<div class="panel panel-default mt20 xb-rightPanel pr">
 		<div class="panel-heading dropdown xui-operation update_dropdown" style="height:40px">
@@ -133,15 +139,15 @@
 		</div>
 		<div
 			data-ui-role="advanced-table"
-			data-app="member"
-			data-resource="member_list"
+			data-app="mall2"
+			data-resource="product_members"
 			data-template-id="#members-view"
 			data-enable-paginator="true"
 			data-enable-sort="false"
 			data-selectable="true"
 			data-item-count-per-page="50"
 			class="panel-body"
-			data-args='{"status":"{{status}}"}'
+			data-args='{"id":7}'
 			data-disable-header-select="true"
 			data-user-webapp-id={{user.get_profile.webapp_id}}
 			data-download-excel-app="member"
@@ -282,11 +288,6 @@
 			<th >会员等级</th>
 			<th  class="tx_sortable xui-Blue pl0 pr0" style="width:6%" data-sort-attr='friend_count' data-sort-direction="up">好友数</th>
 			<th  class="tx_sortable xui-Blue pl0 pr0" style="width:7%" data-sort-attr='integral' data-sort-direction="up">积分</th>
-			<th  class="tx_sortable xui-Blue" style="width:9%" data-sort-attr='pay_money' data-sort-direction="up">消费总额</th>
-			<th  class="tx_sortable xui-Blue pl0 pr0" style="width:9%" data-sort-attr='unit_price' data-sort-direction="up">客单价</th>
-			<th  class="tx_sortable xui-Blue pl0 pr0" style="width:8%" data-sort-attr='pay_times' data-sort-direction="up">购买次数</th>
-			<th  class="tx_sortable xui-Blue pl0 pr0" style="width:8%" data-sort-attr='purchase_frequency' data-sort-direction="up">30天内购买频次</th>
-
 			<th  class="tx_sortable xui-Blue pr0" style="width:10%" data-sort-attr='created_at' data-init-sort="-created_at"  data-sort-direction="up">关注时间&来源</th>
 			<th  class="pr0" style="width:10%">分组</th>
 
@@ -334,18 +335,6 @@
 			</td>
 			<td>
 				<div class="centerAlign">${ member.integral }</div>
-			</td>
-			<td>
-				<div class="centerAlign">${ member.pay_money }</div>
-			</td>
-			<td>
-				<div class="centerAlign">${ member.unit_price }</div>
-			</td>
-			<td>
-				<div class="centerAlign">${ member.pay_times }</div>
-			</td>
-			<td>
-				<div class="centerAlign">${ member.purchase_frequency }</div>
 			</td>
 			<td>
 				<div class="centerAlign">${ member.created_at }</div>
