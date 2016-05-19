@@ -968,8 +968,11 @@ class OAUTHMiddleware(object):
 			#cookie_openid_webapp_id  ==  'openid____webappid'
 			cookie_openid_webapp_id = request.COOKIES.get(member_settings.OPENID_WEBAPP_ID_KEY, None)
 			request_fmt = request.GET.get(member_settings.FOLLOWED_MEMBER_TOKEN_SESSION_KEY, None)
-			if is_request_for_api(request) or 'pay' in request.get_full_path():
+			process_fmt = True 
+			if is_request_for_api(request) or 'pay' in request.get_full_path() or '/termite2/webapp_page/' in request.get_full_path():
 				request_fmt = True
+				process_fmt = False
+
 			#cookie_webapp_id = request.COOKIES.get('webapp_id', None)
 			#1 如果cookie中没有 cookie_open_id or cookie_opeqqqn_id 则进行授权
 			#print '================middleware cookie :', request.COOKIES.get(member_settings.FOLLOWED_MEMBER_TOKEN_SESSION_KEY, None)
@@ -1011,7 +1014,8 @@ class OAUTHMiddleware(object):
 							if response:
 								return response
 							#处理fmt
-							response = self.process_fmt_in_url(request, is_new_created_member)
+							if process_fmt:
+								response = self.process_fmt_in_url(request, is_new_created_member)
 							if response:
 								return response
 
@@ -1057,7 +1061,8 @@ class OAUTHMiddleware(object):
 					request.social_account = social_account
 					request.member = member
 					#处理分享链接
-					self.process_shared_url(request, member.is_new_created_member)
+					if process_fmt:
+						self.process_shared_url(request, member.is_new_created_member)
 
 					response = self.process_current_url(request)
 					return response

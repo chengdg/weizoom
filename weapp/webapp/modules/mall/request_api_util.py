@@ -405,7 +405,7 @@ def get_openid(request):
 	# 	'code': code,
 	# 	'grant_type': 'authorization_code'
 	# }
-	
+
 	component_authed_appid = ComponentAuthedAppid.objects.filter(authorizer_appid=appid, user_id=request.user_profile.user_id)[0]
 	component_info = component_authed_appid.component_info
 	component_access_token = component_info.component_access_token
@@ -997,3 +997,37 @@ def log_js_analysis(request):
 		stack = unicode_full_stack()
 		watchdog_error(stack)
 	return response
+
+
+def get_shopping_cart_count(request):
+	webapp_user_id = request.webapp_user.id
+	if webapp_user_id:
+		try:
+			shopping_cart = ShoppingCart.objects.filter(webapp_user_id=webapp_user_id)
+			if shopping_cart.count() > 0:
+				shopping_cart_count = shopping_cart.count()
+			else:
+				shopping_cart_count = 0
+		except:
+			notify_message = u"购物车数量函数出错，cause:\n{}".format(unicode_full_stack())
+			watchdog_error(notify_message)
+			return create_response(500).get_response()
+		print shopping_cart_count
+		response = create_response(200)
+		response.data = {'count': shopping_cart_count}
+		return response.get_response()
+	else:
+		notify_message = u"参数webapp_user_id确实或者错误！"
+		watchdog_error(notify_message)
+		return create_response(500).get_response()
+
+def get_member_subscribed_status(request):
+	try:
+		is_subscribed = request.member.is_subscribed
+		response = create_response(200)
+		response.data = {'is_subscribed': is_subscribed}
+		return response.get_response()
+	except:
+		notify_message = u"获取会员状态失败，cause:\n{}".format(unicode_full_stack())
+		watchdog_error(notify_message)
+		return create_response(500).get_response()

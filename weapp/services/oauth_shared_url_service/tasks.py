@@ -27,7 +27,7 @@ def process_shared_url(request, args):
 	member = request.member
 
 	try:
-		if fmt and member and fmt != member.token:
+		if fmt and member and fmt != member.token and fmt != "undefined":
 			#建立关系，更新会员来源
 			integral_friend_count = False
 			follow_member = Member.objects.get(token=fmt)

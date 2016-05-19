@@ -242,11 +242,6 @@ MIDDLEWARE_CLASSES = [
     # Uncomment this middleware for monitor sql querys:
     'core.debug_middleware.SqlMonitorMiddleware',
 
-
-
-    # termite middleware
-    'core.termite_middleware.WebappPageCacheMiddleware',
-
     # REST resorce manage
     'core.resource_middleware.ResourceJsMiddleware',
 
@@ -265,6 +260,8 @@ MIDDLEWARE_CLASSES = [
     'modules.member.middleware.AddUuidSessionMiddleware',
     'core.middleware.UserManagerMiddleware',
     'core.middleware.UserProfileMiddleware',
+    # termite middleware
+    'core.termite_middleware.WebappPageCacheMiddleware',
      # webapp home_page middleware
     'core.termite_middleware.WebappPageHomePageMiddleware',
 
@@ -587,7 +584,7 @@ MIXUP_FACTOR = 3179
 WATCH_DOG_DEVICE = 'mysql'
 
 WATCHDOG_WEIXIN_MESSAGE = False
-ENABLE_WEPAGE_CACHE = False
+ENABLE_WEPAGE_CACHE = True
 
 logging.basicConfig(format='%(asctime)s %(levelname)s: %(message)s', level=logging.INFO)
 

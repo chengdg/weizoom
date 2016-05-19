@@ -28,9 +28,13 @@ class Project(resource.Resource):
 
 	@staticmethod
 	def delete_webapp_page_cache(webapp_owner_id, project_id):
-		key = 'termite_webapp_page_%s' % project_id
+		key = 'termite_webapp_page_%s_%s' % (webapp_owner_id, project_id)
 		cache_util.delete_cache(key)
 
+	@staticmethod
+	def delete_all_webapp_page_cache(webapp_owner_id):
+		key_termite_page = 'termite_webapp_page_%s_*' % webapp_owner_id
+		cache_util.delete_pattern(key_termite_page)
 
 	@staticmethod
 	def create_empty_page(project):
@@ -230,6 +234,7 @@ class Project(resource.Resource):
 					result_project_id = project_id
 				response = create_response(200)
 				response.data = result_project_id
+				Project.delete_all_webapp_page_cache(webapp_owner_id)
 				return response.get_response()
 			if project_id.startswith('new_app:'):
 				if project_id.endswith(':0'):
@@ -238,13 +243,14 @@ class Project(resource.Resource):
 					response.data = {
 						'project_id': project_id
 					}
+					Project.delete_all_webapp_page_cache(request.manager.id)
 					return response.get_response()
 				else:
 					Project.update_app_page_content(request)
 			else:
 				Project.update_page_content(request)
 				#清除webapp page cache
-				Project.delete_webapp_page_cache(request.manager.id, project_id)
+				# Project.delete_webapp_page_cache(request.manager.id, project_id)
 		elif field == 'is_enable':
 			webapp_models.Project.objects.filter(id=project_id).update(is_enable=True)
 		else:
@@ -256,6 +262,10 @@ class Project(resource.Resource):
 				value = request.POST['value']
 				options = {field:value}
 			webapp_models.Project.objects.filter(id=project_id).update(**options)
+
+
+		key_termite_page = 'termite_webapp_page_%s_*' % request.manager.id
+		cache_util.delete_pattern(key_termite_page)
 
 		response = create_response(200)
 		return response.get_response()
@@ -296,7 +306,7 @@ def delete_webapp_page_cache(**kwargs):
 	if hasattr(cache, 'request') and cache.request.user_profile:
 		webapp_owner_id = cache.request.user_profile.user_id
 		for project in webapp_models.Project.objects.filter(owner_id=webapp_owner_id, type='wepage'):
-			key = 'termite_webapp_page_%s' % project.id
+			key = 'termite_webapp_page_%s_%s' % (webapp_owner_id, project.id)
 			cache_util.delete_cache(key)
 
 post_update_signal.connect(delete_webapp_page_cache, sender=mall_models.Product, dispatch_uid = "termite_product.update")

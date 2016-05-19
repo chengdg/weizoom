@@ -10,7 +10,7 @@ Copyright (c) 2011-2012 Weizoom Inc
 	gmu.define('AttentionAlert', {
         setting: {
             isShowButton: function(_this) {
-                return _this.$el.data('is-show-button') ? true : false;
+                return W.isSubscribedMember == false;
             },
             isShowCover: function(_this) {
                 return _this.$el.data('is-show-cover') ? true : false;
@@ -25,6 +25,10 @@ Copyright (c) 2011-2012 Weizoom Inc
             }
         },
 		_create : function() {
+            this.getIsSubscribed();
+        },
+
+        initView: function () {
             this.qrcode_image = this.setting.getQrcodeImage(this);
             var height = window.screen.height;
             if('True' === this.$el.data('varnish')){
@@ -32,6 +36,29 @@ Copyright (c) 2011-2012 Weizoom Inc
             }else if(this.setting.isShowButton(this)) {
                 this.render();
             }
+        },
+
+        getIsSubscribed: function () {            
+            var _this = this;
+            W.getApi().call({
+                app: 'webapp',
+                api: 'project_api/call',
+                method: 'get',
+                args: {
+                    woid: W.webappOwnerId,
+                    module: 'mall',
+                    target_api: 'member_subscribed_status/get'
+                },
+                success: function(data) {
+                    var is_subscribed = data.is_subscribed;
+                    // 设置全局变量
+                    W.isSubscribedMember = is_subscribed;
+                    _this.initView();
+                },
+                error: function(data) {
+
+                }
+            });
         },
 
         render: function() {
@@ -55,10 +82,10 @@ Copyright (c) 2011-2012 Weizoom Inc
             this.$el.css('height', height);
             $('body').append('<div data-ui-role="swipemask" class="xa-qrcodeMask" data-background="rgba(0,0,0,.5)"><div class="wui-attentionBox"><img class="wui-twoDimensionImg" src="'+this.qrcode_image+'"/></div></div>');
             
+            var _this = this;
             $('.xa-qrcodeMask').swipeMask().bind('click', function(event) {
-                $(this).attentionAlert('clickMask');
+                _this.clickMask();
             });
-
         },
 
         clickGuideAttention :function() {
