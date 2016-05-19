@@ -29,8 +29,7 @@
 			<li class="active">{{product_name}}</li>
 		</ul>
 	</div>
-	{% if counts %}
-	<div class="panel panel-default mt20 xb-rightPanel pr">
+	<div class="panel panel-default xb-rightPanel pr">
 		<div class="panel-heading dropdown xui-operation update_dropdown" style="height:40px">
 			<div class="xui-operationWrap">
 				<span class="checkbox" style="display:inline-block;margin:0 15px 0 15px;">
@@ -45,13 +44,13 @@
 				   	</a>
 				   	<ul class="dropdown-menu xui-menu multi-level" role="menu"  aria-labelledby="dropdownMenu">
 					    <li class="dropdown-submenu">
-					    	<a class="xa-send-message-select-member" type="button"  href="javascript:void(0);">
+					    	<a class="xa-send-message" type="button"  href="javascript:void(0);" data-status="selected">
 								给选中的人发消息（已取消关注除外）</span>
 						   	</a>
 					    </li>
 					    <li class="dropdown-submenu">
-					    	<a class=" xa-send-message-all-member"  type="button"  href="javascript:void(0);" >
-								给筛选出来的所有人发消息（已取消关注除外）</span>
+					    	<a class=" xa-send-message"  type="button"  href="javascript:void(0);" data-status="all">
+								给所有人发消息（已取消关注除外）</span>
 						   	</a>
 					    </li>
 					</ul>
@@ -68,21 +67,25 @@
 					    	<a class="" type="button"  href="javascript:void(0);">
 								给选中的人修改等级
 						   	</a>
+						   	{% if grades %}
 						   	<ul class="dropdown-menu xui-dropbox" style="min-height:29px;">
 						   		{% for grade in grades %}
 						   		<li><a href="javascript:void(0);" class="update-grade" data-id="{{grade.id}}" data-status="selected">{{grade.name}}</a></li>
 						   		{% endfor %}
 						   	</ul>
+						   	{% endif %}
 					    </li>
 					    <li class="dropdown-submenu">
 					    	<a class=""  type="button"  href="javascript:void(0);" >
-								给筛选出来的所有人修改等级
+								给所有人修改等级
 						   	</a>
+						   	{% if grades %}
 						   	<ul class="dropdown-menu xui-dropbox" {% if grades|length == 0 %}style="display:none;"{% endif %} style="min-height:29px;">
 						   		{% for grade in grades %}
 						   		<li><a href="javascript:void(0);" class="update-grade" data-id="{{grade.id}}" data-status="all">{{grade.name}}</a></li>
 						   		{% endfor %}
 						   	</ul>
+						   	{% endif %}
 					    </li>
 					</ul>
 				</div>
@@ -96,6 +99,7 @@
 					    	<a class="" type="button"  href="javascript:void(0);">
 								给选中的人修改分组
 						   	</a>
+						   	{% if user_tags %}
 						   	<ul class="dropdown-menu xui-dropbox" style="{% if user_tags|length == 0 %} display:none; {% endif %} ">
 						   		{% for tag in user_tags %}
 						   			{% if tag.name != '未分组' %}
@@ -103,11 +107,13 @@
 							   		{% endif %}
 						   		{% endfor %}
 						   	</ul>
+					   		{% endif %}
 					    </li>
 					    <li class="dropdown-submenu">
 					    	<a class=""  type="button"  href="javascript:void(0);" >
-								给筛选出来的所有人修改分组
+								给所有人修改分组
 						   	</a>
+						   	{% if user_tags %}
 						   	<ul class="dropdown-menu xui-dropbox" style="{% if user_tags|length == 0 %} display:none; {% endif %} ">
 						   		{% for tag in user_tags %}
 						   			{% if tag.name != '未分组' %}
@@ -115,6 +121,7 @@
 							   		{% endif %}
 							   	{% endfor %}
 						   	</ul>
+					   		{% endif %}
 					    </li>
 					</ul>
 				</div>
@@ -130,7 +137,7 @@
 					    </li>
 					    <li class="dropdown-submenu">
 					    	<a class=" xa-all-member"  type="button"  href="javascript:void(0);" >
-								给筛选出来的所有人发优惠券（已取消关注除外）</span>
+								给所有人发优惠券（已取消关注除外）</span>
 						   	</a>
 					    </li>
 					</ul>
@@ -167,13 +174,13 @@
 				   	</a>
 				   	<ul class="dropdown-menu multi-level" role="menu"  aria-labelledby="dropdownMenu">
 					    <li class="dropdown-submenu">
-					    	<a class="xa-send-message-select-member" type="button"  href="javascript:void(0);">
+					    	<a class="xa-send-message" type="button"  href="javascript:void(0);" data-status="selected">
 								给选中的人发消息（已取消关注除外）</span>
 						   	</a>
 					    </li>
 					    <li class="dropdown-submenu">
-					    	<a class="xa-send-message-all-member"  type="button"  href="javascript:void(0);" >
-								给筛选出来的所有人发消息（已取消关注除外）</span>
+					    	<a class="xa-send-message"  type="button"  href="javascript:void(0);" data-status="all">
+								给所有人发消息（已取消关注除外）</span>
 						   	</a>
 					    </li>
 					</ul>
@@ -188,21 +195,25 @@
 					    	<a class="" type="button"  href="javascript:void(0);">
 								给选中的人修改等级
 						   	</a>
+						   	{% if grades %}
 						   	<ul class="dropdown-menu xui-dropbox" style="min-height:29px;">
 						   		{% for grade in grades %}
 						   		<li><a href="javascript:void(0);" class="update-grade" data-id="{{grade.id}}" data-status="selected">{{grade.name}}</a></li>
 						   		{% endfor %}
 						   	</ul>
+						   	{% endif %}
 					    </li>
 					    <li class="dropdown-submenu">
 					    	<a class=""  type="button"  href="javascript:void(0);" >
-								给筛选出来的所有人修改等级
+								给所有人修改等级
 						   	</a>
+						   	{% if grades %}
 						   	<ul class="dropdown-menu xui-dropbox" {% if user_tags|length == 0 %}style="display:none;"{% endif %} style="min-height:29px;">
 						   		{% for grade in grades %}
 						   		<li><a href="javascript:void(0);" class="update-grade" data-id="{{grade.id}}" data-status="all">{{grade.name}}</a></li>
 						   		{% endfor %}
 						   	</ul>
+						   	{% endif %}
 					    </li>
 					</ul>
 				</div>
@@ -216,6 +227,7 @@
 					    	<a class="" type="button"  href="javascript:void(0);">
 								给选中的人修改分组
 						   	</a>
+						   	{% if user_tags %}
 						   	<ul class="dropdown-menu xui-dropbox" style="{% if user_tags|length == 0 %} display:none; {% endif %} ">
 						   		{% for tag in user_tags %}
 						   			{% if tag.name != '未分组' %}
@@ -223,11 +235,13 @@
 							   		{% endif %}
 						   		{% endfor %}
 						   	</ul>
+						   	{% endif %}
 					    </li>
 					    <li class="dropdown-submenu">
 					    	<a class=""  type="button"  href="javascript:void(0);" >
-								给筛选出来的所有人修改分组
+								给所有人修改分组
 						   	</a>
+						   	{% if user_tags %}
 						   	<ul class="dropdown-menu xui-dropbox" style="{% if user_tags|length == 0 %} display:none; {% endif %} ">
 						   		{% for tag in user_tags %}
 							   		{% if tag.name != '未分组' %}
@@ -235,6 +249,7 @@
 							   		{% endif %}
 						   		{% endfor %}
 						   	</ul>
+						   	{% endif %}
 					    </li>
 					</ul>
 				</div>
@@ -251,7 +266,7 @@
 					    </li>
 					    <li class="dropdown-submenu">
 					    	<a class="xa-all-member"  type="button"  href="javascript:void(0);" >
-								给筛选出来的所有人发优惠券（已取消关注除外）</span>
+								给所有人发优惠券（已取消关注除外）</span>
 						   	</a>
 					    </li>
 					</ul>
@@ -262,12 +277,6 @@
 	<form class="hidden xa-postSendMessageAll" action="/new_weixin/mass_sending_messages/" method="post">
         <input name="params"/>
     </form>
-{% else %}
-	<div class="xui-emptyBox">
-		<img src="/static_v2/img/editor/empty.png">
-		<span class="ml20">您还没有相关数据！</span>
-	</div>
-{% endif%}
 </div>
 {% endblock %}
 
@@ -276,20 +285,17 @@
 {% verbatim %}
 <script id="members-view" type="text/x-jquery-tmpl">
 	<div class="w500 pa pr30 div_export" style="top:10px;left:500px;line-height:30px;">
-		<label class="fr">筛选结果：${data.total_count}人</label>
-
-		<a href="javascript:void(0);" class="btn fr btn-default xa-export mr20 " id="export_data_file">导出结果</a>
-		
+		<label class="fr">筛选结果：${data.total_count}人</label>		
 	</div>
 	<table class="table table-bordered xui-productList xb-stripedTable xb-noTdBorder xb-noBottom xb-noBorder xb-theadBg" >
 		<thead>
 		<tr>
-			<th >会员</th>
+			<th>会员</th>
 			<th >会员等级</th>
-			<th  class="tx_sortable xui-Blue pl0 pr0" style="width:6%" data-sort-attr='friend_count' data-sort-direction="up">好友数</th>
-			<th  class="tx_sortable xui-Blue pl0 pr0" style="width:7%" data-sort-attr='integral' data-sort-direction="up">积分</th>
-			<th  class="tx_sortable xui-Blue pr0" style="width:10%" data-sort-attr='created_at' data-init-sort="-created_at"  data-sort-direction="up">关注时间&来源</th>
-			<th  class="pr0" style="width:10%">分组</th>
+			<th  class="tx_sortable xui-Blue pl0 pr0" data-sort-attr='friend_count' data-sort-direction="up">好友数</th>
+			<th  class="tx_sortable xui-Blue pl0 pr0" data-sort-attr='integral' data-sort-direction="up">积分</th>
+			<th  class="tx_sortable xui-Blue pr0" data-sort-attr='created_at' data-init-sort="-created_at"  data-sort-direction="up">关注时间&来源</th>
+			<th  class="pr0" style="width:15%">分组</th>
 
 			<th class="" style="width:10%">
 				操作
@@ -299,83 +305,87 @@
 		</thead>
 		<tbody>
 		<div id="__json-members" class="hidden">${JSON.stringify(items)}</div>
-		{{each(i, member) items}}
-		<tr data-id="${member.id}" data-status="${member.is_subscribed}">
-			<td style="position:relative;" title='{{html member.username}}'>
+		{{if items.length}}
+			{{each(i, member) items}}
+			<tr data-id="${member.id}" data-status="${member.is_subscribed}">
+				<td style="position:relative;" title='{{html member.username}}'>
 
-				<div class="column_block xui-memberHeader pr">
-					{{if member.is_subscribed == 0}}
-						<div class="xui-cancelCover tc">
-						已取消
-						</div>
-					{{/if}}
-					<a target="_blank" href="/member/detail/?id=${ member.id }">
-						<img src="{{if member.user_icon}}${ member.user_icon }{{else}}/static/img/user-1.jpg{{/if}}" onerror="this.src='/static/img/user-1.jpg'"/>
-					</a>
-				</div>
-				<div class="column_block">
-					<div>
-					<a class="xui-Blue" target="_blank" href="/member/detail/?id=${ member.id }" style="display:block;width:80px;" >{{html member.username_truncated}}</a>
-
-
-				</div>
-			</td>
-			<td>
-				<div class="centerAlign">${ member.grade_name }</div>
-			</td>
-			<td>
-				<div class="centerAlign">
-					{{if member.friend_count==0}}
-						<span class="cursor-text">${ member.friend_count }</span>
-					{{else}}
-						<a class="relation-text" href="javascript:void(0);" style="" friend_count='${friend_count}' fans_count='${fans_count}' value='${ member.id }'>${ member.friend_count }
+					<div class="column_block xui-memberHeader pr">
+						{{if member.is_subscribed == 0}}
+							<div class="xui-cancelCover tc">
+							已取消
+							</div>
+						{{/if}}
+						<a target="_blank" href="/member/detail/?id=${ member.id }">
+							<img src="{{if member.user_icon}}${ member.user_icon }{{else}}/static/img/user-1.jpg{{/if}}" onerror="this.src='/static/img/user-1.jpg'"/>
 						</a>
-					{{/if}}
-				</div>
-			</td>
-			<td>
-				<div class="centerAlign">${ member.integral }</div>
-			</td>
-			<td>
-				<div class="centerAlign">${ member.created_at }</div>
-				{{if member.source == 0}}<div class="">直接关注</div>{{/if}}
-				{{if member.source == -1}}<div class="">直接关注</div>{{/if}}
-				{{if member.source == 1}}<div class="xui-fromCode">推广扫码</div>{{/if}}
-				{{if member.source == 2}}<div class="xui-fromShare">会员分享</div>{{/if}}
-			</td>
-			<td>
-				<div class="centerAlign auto_wrap_no_flow">
-					{{each(i,tag) tags}}
-			           <span class="xa-tag-name" data-tag-id="${tag.id}">${tag.name}</span>
-			        {{/each}}
-			    </div>
-			</td>
+					</div>
+					<div class="column_block">
+						<div>
+						<a class="xui-Blue" target="_blank" href="/member/detail/?id=${ member.id }" style="display:block;width:80px;" >{{html member.username_truncated}}</a>
 
-			<td>
-			<div>
-				<div class="xui-wraper">
-					<div class="xui-left">
-						<a href="javascript:void(0);" class="xa-update-tag" data-id="${member.id}">调分组</a>
+
 					</div>
-					<div class="xui-right">
-						<a href="javascript:void(0);" class="xa-update-grade" data-id="${member.id}">设等级</a>
+				</td>
+				<td>
+					<div class="centerAlign">${ member.grade_name }</div>
+				</td>
+				<td>
+					<div class="centerAlign">
+						{{if member.friend_count==0}}
+							<span class="cursor-text">${ member.friend_count }</span>
+						{{else}}
+							<a class="relation-text" href="javascript:void(0);" style="" friend_count='${friend_count}' fans_count='${fans_count}' value='${ member.id }'>${ member.friend_count }
+							</a>
+						{{/if}}
 					</div>
-					<div class="cb"></div>
+				</td>
+				<td>
+					<div class="centerAlign">${ member.integral }</div>
+				</td>
+				<td>
+					<div class="centerAlign">${ member.created_at }</div>
+					{{if member.source == 0}}<div class="">直接关注</div>{{/if}}
+					{{if member.source == -1}}<div class="">直接关注</div>{{/if}}
+					{{if member.source == 1}}<div class="xui-fromCode">推广扫码</div>{{/if}}
+					{{if member.source == 2}}<div class="xui-fromShare">会员分享</div>{{/if}}
+				</td>
+				<td>
+					<div class="centerAlign auto_wrap_no_flow">
+						{{each(i,tag) tags}}
+				           <span class="xa-tag-name" data-tag-id="${tag.id}">${tag.name}</span>
+				        {{/each}}
+				    </div>
+				</td>
+
+				<td>
+				<div>
+					<div class="xui-wraper">
+						<div class="xui-left">
+							<a href="javascript:void(0);" class="xa-update-tag" data-id="${member.id}">调分组</a>
+						</div>
+						<div class="xui-right">
+							<a href="javascript:void(0);" class="xa-update-grade" data-id="${member.id}">设等级</a>
+						</div>
+						<div class="cb"></div>
+					</div>
+					<div class="xui-wraper">
+						<div class="xui-left">
+							<a href="javascript:void(0);" class="xa-issuing-coupon" data-member-name="${ member.username }">发优惠券</a>
+						</div>
+						<div class="xui-right">
+							<a href="javascript:void(0);" class="xa-update-integral" data-id="${member.id}">加积分</a></br>
+						</div>
+						<div class="cb"></div>
+					</div>
 				</div>
-				<div class="xui-wraper">
-					<div class="xui-left">
-						<a href="javascript:void(0);" class="xa-issuing-coupon" data-member-name="${ member.username }">发优惠券</a>
-					</div>
-					<div class="xui-right">
-						<a href="javascript:void(0);" class="xa-update-integral" data-id="${member.id}">加积分</a></br>
-					</div>
-					<div class="cb"></div>
-				</div>
-			<div>
-				<a target="_blank" href="/new_weixin/realtime_messages_detail/?session_id=${ member.session_id }"  {{if member.session_id == -1}}title="暂无对话" onclick="return false"{{/if}}>查看聊天记录</a>
-			</td>
-		</tr>
-		{{/each}}
+					<a target="_blank" href="/new_weixin/realtime_messages_detail/?session_id=${ member.session_id }"  {{if member.session_id == -1}}title="暂无对话" onclick="return false"{{/if}}>查看聊天记录</a>
+				</td>
+			</tr>
+			{{/each}}
+		{{else}}
+            <tr><td colspan='8' style="text-align:center">您还没有相关数据</td></tr>
+        {{/if}}
 		</tbody>
 	</table>
 </script>
@@ -420,17 +430,6 @@ $(document).ready(function() {
         var isChecked = $checkbox.is(':checked');
         $('tbody .xa-select,#all').prop('checked', isChecked);
 	});
-
-	var view = new W.view.member.memberFilterView ({
-		el: '.xui-filterPanel',
-		dataView: $('[data-ui-role="advanced-table"]').data('view'),
-		userWebappId: {{user.get_profile.webapp_id}},
-		status:'{{status}}'
-	});
-	view.$el.bind('end_click', function(){
-		DATA_INTERVAL = '';
-	});
-	//console.log('----------a:::',view.getFilterValue(),'--aaaaaa')
 	
 	// 修改等级
 	$('body').delegate('.xa-update-grade', 'click', function(event){
@@ -499,23 +498,20 @@ $(document).ready(function() {
 		var grade_id = $(this).attr('data-id');
 		var status = $(this).attr('data-status');
 
-	 	$('input.xa-select:checked').each(function(){
-    		post_ids.push($(this).parent().parent().attr('data-id'))
-  		});
+	 	
 	 	var dataView = $('[data-ui-role="advanced-table"]').data('view')
-		dataView.setPage(1);
-		dataView.args = view.getFilterValue();
+		if (status == 'all') {
+			post_ids = all_member_ids;
+		}else{
+			$('input.xa-select:checked').each(function(){
+    			post_ids.push($(this).parent().parent().attr('data-id'))
+  			});
+		}
 		var args = {
 			ids:post_ids.join('-'),
 			grade_id:grade_id,
-			update_status: status
 		}
-		if (status == 'all') {
-			// 合并筛选条件
-			var dataArgs = JSON.parse(view.getFilterValueByDict(dataView.args));
-			args = _.extend(args, dataArgs);
-		}
-	 	if (grade_id && post_ids.length > 0 || status == 'all') {
+	 	if (grade_id && post_ids.length > 0 && post_ids[0]!== undefined) {
 	 		W.resource.member.BatchUpdateMemberGrade.post({
 	 			data: args,
 	 			success: function(data) {
@@ -537,29 +533,21 @@ $(document).ready(function() {
 		var post_ids = [];
 		var tag_id = $(this).attr('data-id');
 		var status = $(this).attr('data-status');
-	 	$('input.xa-select:checked').each(function(){
-    		post_ids.push($(this).parent().parent().attr('data-id'))
-  			});
-	 	var dataView = $('[data-ui-role="advanced-table"]').data('view')
-		dataView.setPage(1);
-		dataView.args = view.getFilterValue();
+	 	
+		var dataView = $('[data-ui-role="advanced-table"]').data('view')
 
-		var args = {ids:post_ids.join('-'), tag_id:tag_id, update_status:status};
 		if (status == 'all') {
-			// 合并筛选条件
-			var dataArgs = JSON.parse(view.getFilterValueByDict(dataView.args));
-			args = _.extend(args, dataArgs);
+			post_ids = all_member_ids;
 		} else {
-			if (post_ids.length == 0){
-				W.getErrorHintView().show('请先选择会员！');
-				return;
-			}
+			$('input.xa-select:checked').each(function(){
+	    		post_ids.push($(this).parent().parent().attr('data-id'))
+			});
 		}
-	 	if (tag_id && post_ids.length > 0 || status == 'all') {
+		var args = {ids:post_ids.join('-'), tag_id:tag_id};
+	 	if (tag_id && post_ids.length > 0 && post_ids[0]!== undefined) {
 	 		W.resource.member.BatchUpdateMemberTag.post({
 	 			data: args,
 	 			success: function(data) {
-	                // window.location.reload();
 	                W.showHint('success', "添加分组成功");
 	                $('#xa-selectAll').attr('checked', false);	
 					$('#all').attr('checked', false);	
@@ -570,6 +558,8 @@ $(document).ready(function() {
 	            },
 	            scope: this
 	 		});
+	 	}else{
+			W.getErrorHintView().show('请先选择会员！');
 	 	}
 	});
 
@@ -624,34 +614,20 @@ $(document).ready(function() {
   		}
   		showDialogAndIssuingCoupon(member_ids, member_name);
 	});
-
+	//获得购买该商品所有的会员ID
+	var table = $('div[data-ui-role="advanced-table"]').data('view');
+	var all_member_ids;
+	table.afterload = function(){
+		all_member_ids = table.getRawData().member_ids
+	}
 	//给筛选出来的所有人发优惠券
 	$(document).delegate('.xa-all-member', 'click', function(event){
-		if(W.loadJSON('members').length > 0){
-			var filter_value = view.filter_value;
-			var args = {
-				'filter_value': filter_value,
-	            'count_per_page':999999999999
-			};
-			var member_ids = [];
-			W.resource.member.MemberIds.get({
-				data: args,
-				success: function(data){
-	                member_ids = data.member_ids;
-	                if(member_ids.length == 0){
-	                	W.showHint('error', '请先选择会员！');
-			  			return;
-			  		}
-			  		member_name = '';
-			  		if(member_ids.length == 1){
-			  			member_name = $('tr[data-id="'+member_ids[0]+'"]').find('a.xa-issuing-coupon').data('member-name');
-			  		}
-	                showDialogAndIssuingCoupon(member_ids, member_name);
-	            },
-	            error: function(data){
-	            	W.showHint('error', '发放失败!');
-	            }
-			});
+		var member_name = "";
+		if(all_member_ids.length > 0){
+	  		if(all_member_ids.length == 1){
+	  			member_name = $('tr[data-id="'+all_member_ids[0]+'"]').find('a.xa-issuing-coupon').data('member-name');
+	  		}
+            showDialogAndIssuingCoupon(all_member_ids, member_name);
 	    } else {
 	    	W.showHint('error', "没有可已发优惠券的用户！");
 	    }
@@ -697,28 +673,9 @@ $(document).ready(function() {
 		});
 
 	};
-
-	//群发消息
-	$(document).delegate('.xa-send-message-all-member', 'click', function(event){
-		var members = W.loadJSON('members');
-		var category = $('#member_tag option:selected').text();//会员分组
-		var grade = $('#grade option:selected').text();//会员等级
-        var status = $('#status option:selected').text();//会员状态
-        var source = $('#source option:selected').text();//会员来源
-
-		var filter_value = view.filter_value;
-		var params = 'category=' + category + '&grade=' + grade + '&status=' + status + '&source=' + source + '&filter_value=' + filter_value;
-
-		if(members && members.length > 0){
-			$('form.xa-postSendMessageAll input').val(params);
-	        $('form.xa-postSendMessageAll').submit();
-		} else {
-			W.showHint('error', "没有可已发送的用户");
-		}
-	});
-
-	$(document).delegate('.xa-send-message-select-member', 'click', function(event){
-		var memberIdArray = $('[data-ui-role="advanced-table"]').data('view').getAllSelectedDataIds();
+	$(document).delegate('.xa-send-message', 'click', function(event){
+		var status = $(this).attr('data-status');
+		var memberIdArray = (status=="selected")?$('[data-ui-role="advanced-table"]').data('view').getAllSelectedDataIds():all_member_ids;
         if (memberIdArray.length > 0) {
             var memberIds = 'member_ids=' + memberIdArray.join('|');
             $('form.xa-postSendMessageAll input').val(memberIds);
@@ -728,125 +685,25 @@ $(document).ready(function() {
         }
 	});
 
-	
-	
-	$('.panel-body').delegate('.xa-export', 'click', function(event){
-		W.getApi().call({
-			app: 'export_job',
-			resource: 'export_is_download',
-			method: 'get',
-			args: {
-				woid: woid,
-				type: 0,
-			},
-			success: function(data) {
-				if (data["status"] === 1 && data["is_download"] === 0){
-					W.showHint('error', '导出的文件尚未下载，请刷新页面进行下载！');
-				}
-				else if(data["status"] === 0 && data["is_download"] === 0){
-					W.showHint('success', '文件正在导出，请刷新页面进行查看！');
-					
-				}
-				else{
-					var url ='';
-					var filter_value = '';
-					if (view.filter_value) {
-						filter_value = view.filter_value;
-					};
-					var options = {
-						el: '.panel-body',
-						topic_id: '',
-						type: 0,
-						url: url,
-						jobId:0,
-						filter_value:filter_value,
-						isAlreadyExport : true,
-						app: 'member',
-						timelinesOptions: {
-							
-						}
-					}
-
-					var customersView = new W.CustomersView(options);
-				}
-			},
-			error: function(response) {
-				W.showHint('error', '网络超时，导出中断，请重试！');
-			}
-		});
-		
-	});
-	
-	var table = $('div[data-ui-role="advanced-table"]').data('view');
-	
-
-	var export2data = {{export2data|safe}};
-	var woid = "{{ request.manager.id }}";
-	if(export2data["status"] ===1 && export2data["is_download"] ===0 ){
-		table.afterload = function(){
-			var options = {
-				el: '.div_export',
-				topic_id: '',
-				type: '',
-				url: "",
-				jobId:export2data["id"],
-				isAlreadyExport : true,
-				app: 'member',
-				timelinesOptions: {
-				}
-			}
-			var memberExportFileView = new W.dialog.ExportFileView(options);
-			memberExportFileView.finish();
-		};
-	}
-	else if(export2data["status"] ===0 && export2data["is_download"] ===0 ){
-		table.afterload = function(){
-
-			var jobId = export2data["id"];
-			var options = {
-				el: '.div_export',
-				topic_id: '',
-				type: '',
-				url: "",
-				jobId:export2data["id"],
-				isAlreadyExport : true,
-				app: 'member',
-				timelinesOptions: {
-				}
-			}
-			var memberExportFileView = new W.dialog.ExportFileView(options);
-			memberExportFileView.doExportAfterApi();
-		};
-	}
-
 	$('.panel').delegate('.relation-text', 'click', function(event) {
-					var _this = this;
-					var $el = $(event.currentTarget);
+		var _this = this;
+		var $el = $(event.currentTarget);
 
-					var friend_count = $el.attr('friend_count');
-					var fans_count = $el.attr('fans_count');
-					var memberId = $el.attr('value');
-					if ($el.html() == '0') {
-						return false;
-					}
+		var friend_count = $el.attr('friend_count');
+		var fans_count = $el.attr('fans_count');
+		var memberId = $el.attr('value');
+		if ($el.html() == '0') {
+			return false;
+		}
 
-					W.dialog.showDialog('W.dialog.member.RelationsDialog', {
-						memberId: memberId,
-						friendCount: friend_count,
-						fansCount: fans_count,
-						isReload:true,
-						onlyFans:true
-					});
+		W.dialog.showDialog('W.dialog.member.RelationsDialog', {
+			memberId: memberId,
+			friendCount: friend_count,
+			fansCount: fans_count,
+			isReload:true,
+			onlyFans:true
+		});
 	});
-	
-
-	var status = '{{status}}';
-	if(status === '1') {
-		_.delay(function(){
-			console.log(status)
-			$("#status").val("1");
-		}, 700);
-	};
 });
 </script>
 {% endblock %}
