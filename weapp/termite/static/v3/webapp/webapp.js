@@ -69,7 +69,7 @@ W.preloadImgsOnPage = function(option) {
                     $itemsImg.map(function(idx, item) {
                         $item = $(item);
                         $item.attr('data-url', $item.attr('src'));
-                        $item.attr('src', $item.attr('src'));
+                        $item.removeAttr('src');
                     });
                     $lazyImgs = $('[data-url]');
                     lazyloadImg($lazyImgs, {threshold: 500});
