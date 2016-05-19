@@ -62,16 +62,12 @@ W.preloadImgsOnPage = function(option) {
             var tagId = ele['tagId'];
             var $itemsImg = $(tagId);
             if (_.isEmpty($itemsImg)) {
-                console.error('preloadImgsOnPage %o is not found', ele)
                 return;
             }
             switch(module) {
                 case 'imageGroup':
                     $itemsImg.map(function(idx, item) {
                         $item = $(item);
-                        var src = $item.attr('src')
-                        $item.attr('src', [src, '!/noicc/true/compress/true/progressive/true/quality/20'].join(''));
-                        $item.attr('data-url', src);
                     });
                     break;
                 case 'productList':
@@ -80,21 +76,29 @@ W.preloadImgsOnPage = function(option) {
                         $item.attr('data-url', $item.attr('src'));
                         $item.removeAttr('src');
                     });
+                    $lazyImgs = $('[data-url]');
+                    lazyloadImg($lazyImgs, {threshold: 0});
                     break;
                 default:
                     break;
             }
-            $lazyImgs = $('[data-url]');
-            if ($lazyImgs) {
-                $lazyImgs.lazyload({
-                    data_attribute:"url",
-                    skip_invisible : false,
-                    effect : "fadeIn",
-                    placeholder: "/static_v2/img/webapp/mall/info_placeholder.png"
-                });
-            }
         });
     });
+}
+
+function lazyloadImg($imgs, options) {
+    var defOptions = {
+            data_attribute:"url",
+            skip_invisible : false,
+            effect : "fadeIn",
+            placeholder: "/static_v2/img/webapp/mall/info_placeholder.png"
+        };
+
+    var options = _.defaults(options, defOptions);
+
+    if ($imgs) {
+        $imgs.lazyload(options);
+    }
 }
 
 function redirectTo(newHref) {
