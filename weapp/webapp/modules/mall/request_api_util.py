@@ -1020,3 +1020,14 @@ def get_shopping_cart_count(request):
 		notify_message = u"参数webapp_user_id确实或者错误！"
 		watchdog_error(notify_message)
 		return create_response(500).get_response()
+
+def get_member_subscribed_status(request):
+	try:
+		is_subscribed = request.member.is_subscribed
+		response = create_response(200)
+		response.data = {'is_subscribed': is_subscribed}
+		return response.get_response()
+	except:
+		notify_message = u"获取会员状态失败，cause:\n{}".format(unicode_full_stack())
+		watchdog_error(notify_message)
+		return create_response(500).get_response()

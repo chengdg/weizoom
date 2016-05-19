@@ -208,3 +208,9 @@ def get_shopping_cart_count(request):
 	用户购物车的数量
 	"""
 	return request_api_util.get_shopping_cart_count(request)
+
+def get_member_subscribed_status(request):
+	"""
+	会员的关注状态
+	"""
+	return request_api_util.get_member_subscribed_status(request)
