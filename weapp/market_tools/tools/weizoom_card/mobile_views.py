@@ -83,22 +83,26 @@ def get_weizoom_card_exchange_list(request):
 
 	card_details_dic = {}
 	card_details_list = []
+
 	member_has_cards = promotion_models.CardHasExchanged.objects.filter(webapp_id = webapp_id,owner_id = member_id,source = source).order_by('-created_at')
 	all_card_ids = [c.card_id for c in member_has_cards]
-	if is_wallet:
-		#注意！！！！
-		#此处仅仅是伪造的数据，待【微众卡系统】完善后需要改掉！！！！
-		card_id2card = {c.weizoom_card_id: ADict({
+	card_id2card = {c.id: c for c in card_models.WeizoomCard.objects.filter(id__in=all_card_ids)}
+
+	#注意！！！！
+	#此处仅仅是伪造的数据，待【微众卡系统】完善后需要改掉！！！！
+	member_has_cards = promotion_models.MemberHasWeizoomCard.objects.filter(webapp_id = webapp_id,owner_id = member_id,source = source).order_by('-created_at')
+	all_card_ids_v2 = [c.card_id for c in member_has_cards]
+
+	for c in apps_root_models.AppsWeizoomCard.objects(weizoom_card_id__in=all_card_ids_v2):
+		card_id2card[c.weizoom_card_id] = ADict({
 			"is_expired": False,
 			"status": c.status,
 			"expired_time": datetime.strptime("2100-12-12", "%Y-%m-%d"),
 			"money": 0,
 			"weizoom_card_id": c.weizoom_card_id,
 			"weizoom_card_rule": ADict({"money": 0})
-		}) for c in apps_root_models.AppsWeizoomCard.objects(weizoom_card_id__in=all_card_ids)}
+		})
 
-	else:
-		card_id2card = {c.id: c for c in card_models.WeizoomCard.objects.filter(id__in=all_card_ids)}
 	total_money = 0
 	phone_number =member_info.phone_number
 	
