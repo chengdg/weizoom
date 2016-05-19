@@ -317,6 +317,7 @@ def __clear_all_app_data():
 	promotion_models.CardExchange.objects.all().delete()
 	promotion_models.CardExchangeRule.objects.all().delete()
 	promotion_models.CardHasExchanged.objects.all().delete()
+	promotion_models.MemberHasWeizoomCard.objects.all().delete()
 
 	# 店铺装修
 	termite2_models.TemplateCustomModule.objects.all().delete()
@@ -373,7 +374,7 @@ def __clear_all_app_data():
 	rebate_models.Rebate.objects.all().delete()
 	rebate_models.RebateParticipance.objects.all().delete()
 	rebate_models.RebateWeizoomCardDetails.objects.all().delete()
-	rebate_models.RebateWeizoomCardDetails.objects.all().delete()
+	rebate_models.RebateWaitingAction.objects.all().delete()
 
 	#apps中的weizoom_card表
 	customized.AppsWeizoomCard.objects.all().delete()
