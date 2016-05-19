@@ -91,7 +91,7 @@ def get_weizoom_card_exchange_list(request):
 	#注意！！！！
 	#此处仅仅是伪造的数据，待【微众卡系统】完善后需要改掉！！！！
 	member_has_cards = promotion_models.MemberHasWeizoomCard.objects.filter(member_id = member_id,source = source).order_by('-created_at')
-	all_card_ids_v2 = [c.card_id for c in member_has_cards]
+	all_card_ids_v2 = [c.card_number for c in member_has_cards]
 
 	for c in apps_root_models.AppsWeizoomCard.objects(weizoom_card_id__in=all_card_ids_v2):
 		card_id2card[c.weizoom_card_id] = ADict({
