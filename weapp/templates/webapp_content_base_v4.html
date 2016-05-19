@@ -291,7 +291,7 @@
                     return;
                 }
 
-                if (isUserCenterLink(url) && W.curRequestMemberToken.length == 0) {
+                if (isUserCenterLink(url) && W.isSubscribedMember == false) {
                     /* 非会员显示二维码 */
                     $('.xa-qrcodeMask').swipeMask('show');
                 } else {
@@ -321,6 +321,11 @@
                 W.urlTitle = '{{ show_system_name }}';
             }
             W.pageTitle = "{{page_title}}";
+
+            // by liupeiyu 
+            // 会员是否已经关注，由于页面会缓存，在attentionAlert.js中，发送异步请求回去数据
+            W.isSubscribedMember = true;   
+
             W.errorMessage = null;
 
             {% if messages %}
