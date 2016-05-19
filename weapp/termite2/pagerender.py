@@ -341,10 +341,11 @@ def __render_component(request, page, component, project):
 			component[sub_component_type] = sub_component
 
 	
-	if hasattr(request, 'shopping_cart_product_count'):
-		shopping_cart_product_count = request.shopping_cart_product_count
-	else:
-		shopping_cart_product_count = _get_shopping_cart_product_nums(request)
+	# if hasattr(request, 'shopping_cart_product_count'):
+	# 	shopping_cart_product_count = request.shopping_cart_product_count
+	# else:
+	# 	shopping_cart_product_count = _get_shopping_cart_product_nums(request)
+	
 	# 二维码
 	current_auth_qrcode_img = None
 	if hasattr(request, "webapp_owner_info") and request.webapp_owner_info and hasattr(request.webapp_owner_info, "qrcode_img") :
@@ -368,7 +369,7 @@ def __render_component(request, page, component, project):
 		'in_design_mode': request.in_design_mode,
 		'in_preview_mode': request.in_preview_mode,
 		'in_production_mode': request.in_production_mode,
-		'shopping_cart_product_count': shopping_cart_product_count,
+		# 'shopping_cart_product_count': shopping_cart_product_count,
 		'current_auth_qrcode_img': current_auth_qrcode_img
 	})
 	if hasattr(request, 'extra_page_context'):
@@ -455,19 +456,19 @@ def create_mobile_page_html_content(request, page, page_component, project=None)
 			__load_templates()
 
 	# 购物车数量
-	shopping_cart_product_count = _get_shopping_cart_product_nums(request)
-	request.shopping_cart_product_count = shopping_cart_product_count
+	# shopping_cart_product_count = _get_shopping_cart_product_nums(request)
+	# request.shopping_cart_product_count = shopping_cart_product_count
 	htmls = []
 	htmls.append(__render_component(request, page, page_component, project))
 
 	return '\n'.join(htmls)
 
 
-def _get_shopping_cart_product_nums(request):
-	shopping_cart_product_count = 0
-	if hasattr(request, 'member') and request.member:
-		shopping_cart_product_count = mall_api.get_shopping_cart_product_nums(request.webapp_user)
+# def _get_shopping_cart_product_nums(request):
+# 	shopping_cart_product_count = 0
+# 	if hasattr(request, 'member') and request.member:
+# 		shopping_cart_product_count = mall_api.get_shopping_cart_product_nums(request.webapp_user)
 
-	return shopping_cart_product_count
+# 	return shopping_cart_product_count
 
 	

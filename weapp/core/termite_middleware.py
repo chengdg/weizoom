@@ -13,6 +13,8 @@ from utils import cache_util
 from webapp import models as webapp_models
 from account import models as account_models
 
+from modules.member import member_settings
+
 class WebappPageCacheMiddleware(object):
 	def process_request(self, request):
 		if not settings.ENABLE_WEPAGE_CACHE:
@@ -24,6 +26,21 @@ class WebappPageCacheMiddleware(object):
 			if request.GET.get('page_id', '') == 'preview':
 				#预览不使用缓存
 				return
+
+			#如果当前cookie中没有会员信息，则不进行缓存
+			cookie_openid_webapp_id = request.COOKIES.get(member_settings.OPENID_WEBAPP_ID_KEY, None)
+			#print ">>>>>DF>>>DF>D>>>>>>&&&&&&&*88888",cookie_openid_webapp_id
+			if (cookie_openid_webapp_id is None):
+				return None
+			else:
+				split_list = cookie_openid_webapp_id.split('____')
+				if len(split_list) != 2:
+					return None
+				else:
+					webapp_id = split_list[1]
+					openid = split_list[0]
+					if webapp_id != request.user_profile.webapp_id or (not openid):
+						return None
 
 			project_id = None
 			if 'model' in request.GET:
@@ -42,7 +59,7 @@ class WebappPageCacheMiddleware(object):
 
 			if project_id != None:
 				request.project_id = project_id
-				key = 'termite_webapp_page_%s' % project_id
+				key = 'termite_webapp_page_%s_%s' % (request.user_profile.user_id, project_id)
 				value = cache_util.get_cache(key)
 				if value:
 					return HttpResponse(value+'<div style="display:none;">from cache</div>')
@@ -58,7 +75,7 @@ class WebappPageCacheMiddleware(object):
 			if hasattr(request, 'NEED_CACHE_WEBAPP_PAGE_IN_RESPONSE'):
 				try:
 					project_id = request.project_id
-					key = 'termite_webapp_page_%s' % project_id
+					key = 'termite_webapp_page_%s_%s' % (request.user_profile.user_id, project_id)
 					value = response.content
 					cache_util.set_cache(key, value)
 				except:
