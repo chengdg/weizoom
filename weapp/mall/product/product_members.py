@@ -25,7 +25,7 @@ from . import utils
 from mall import export
 from weixin.user.module_api import get_all_active_mp_user_ids
 from apps.customerized_apps.group import models as group_models
-from modules.member.models import WebAppUser,Member,CANCEL_SUBSCRIBED,SUBSCRIBED,MemberGrade
+from modules.member.models import WebAppUser,Member,CANCEL_SUBSCRIBED,SUBSCRIBED,MemberGrade,MemberTag
 from member.member_list import build_member_has_tags_json,get_tags_json
 import logging
 
@@ -57,6 +57,7 @@ class ProductMember(resource.Resource):
           如果shelve_type没有被提供， 将触发TypeError异常
         """
         mall_type = request.user_profile.webapp_type
+        webapp_id = request.user_profile.webapp_id
         if not mall_type:
             return HttpResponseRedirect('/mall2/product_list/?shelve_type=1')
         has_product_id = request.GET.get('id')
