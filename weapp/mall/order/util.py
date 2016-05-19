@@ -312,7 +312,7 @@ def export_orders_json(request):
     temp_premium_id = None
     temp_premium_products = []
     for order in order_list:
-        order= __filter_order(order)
+        # order= __filter_order(order)
         # 获取order对应的member的显示名
         if webappuser2member:
             member = webappuser2member.get(order.webapp_user_id, None)
@@ -785,12 +785,17 @@ def get_detail_response(request):
 
         # 微众卡信息
         if order.weizoom_card_money:
-            from market_tools.tools.weizoom_card import models as weizoom_card_model
+            # from market_tools.tools.weizoom_card import models as weizoom_card_model
+            #
+            # cardOrders = weizoom_card_model.WeizoomCardHasOrder.objects.filter(order_id=order.order_id)
+            # cardIds = [card.card_id for card in cardOrders]
+            # cards = weizoom_card_model.WeizoomCard.objects.filter(id__in=cardIds)
+            # order.weizoom_cards = [card.weizoom_card_id for card in cards]
 
-            cardOrders = weizoom_card_model.WeizoomCardHasOrder.objects.filter(order_id=order.order_id)
-            cardIds = [card.card_id for card in cardOrders]
-            cards = weizoom_card_model.WeizoomCard.objects.filter(id__in=cardIds)
-            order.weizoom_cards = [card.weizoom_card_id for card in cards]
+            card_info = OrderCardInfo.objects.filter(order_id=order.order_id).first()
+            order.weizoom_cards = json.loads(card_info.used_card)
+
+
         # 获得子订单
         child_orders = list(Order.objects.filter(origin_order_id=order.id).all())
         if (not child_orders and order.supplier_user_id):
@@ -1107,7 +1112,7 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
     # 构造返回的order数据
     for order in orders:
         # 获取order对应的member的显示名
-        order = __filter_order(order)
+        # order = __filter_order(order)
         member = webappuser2member.get(order.webapp_user_id, None)
         if member:
             order.buyer_name = member.username_for_html
@@ -1300,8 +1305,8 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
             'save_money': float(Order.get_order_has_price_number(order)) + float(order.postage) - float(
                 order.final_price) - float(order.weizoom_card_money),
             'weizoom_card_money': float('%.2f' % order.weizoom_card_money),
-            'weizoom_card_money_huihui': float('%.2f' % order.weizoom_card_money_huihui),
-            'weizoom_card_money_rest': float('%.2f' % order.weizoom_card_money_rest),
+            # 'weizoom_card_money_huihui': float('%.2f' % order.weizoom_card_money_huihui),
+            # 'weizoom_card_money_rest': float('%.2f' % order.weizoom_card_money_rest),
             'pay_money': ('%.2f' % (order.total_purchase_price)) if (not mall_type and order.supplier_user_id > 0) else '%.2f' % (order.final_price + order.weizoom_card_money),
             'edit_money': str(order.edit_money).replace('.', '').replace('-', '') if order.edit_money else False,
             'groups': groups,
@@ -1467,36 +1472,36 @@ def __get_orders_by_params(query_dict, date_interval, date_interval_type, orders
             order_ids_in_delivery_intervale = [operationlog.order_id for operationlog in list(OrderOperationLog.objects.filter(created_at__gte=start_time,created_at__lt=end_time,action__startswith="订单发货"))]
             order_ids_in_delivery_intervale = [de.split("^")[0] for de in order_ids_in_delivery_intervale]
             orders = orders.filter(order_id__in=order_ids_in_delivery_intervale)
-    #惠惠卡需求
-    order_order_ids= []
-    if order_type and int(order_type) == 1:
-        card_ids = []
-        adict = {}
-        tmp = 0
-        for c in WeizoomCardHasOrder.objects.filter(owner_id=user_profile.user_id):
-            adict["{}_{}".format(c.order_id,tmp)] = c.card_id
-            tmp += 1
-            if tmp > 10:
-                tmp = 0
-        card_ids = [c.id for c in WeizoomCard.objects.filter(id__in=adict.values(),weizoom_card_id__startswith="9")]
-        for key, value in adict.items():
-            if value in card_ids:
-                order_order_ids.append(int(key.split('_')[0]))
-        orders = orders.filter(order_id__in=order_order_ids)
+    # #惠惠卡需求
+    # order_order_ids= []
+    # if order_type and int(order_type) == 1:
+    #     card_ids = []
+    #     adict = {}
+    #     tmp = 0
+    #     for c in WeizoomCardHasOrder.objects.filter(owner_id=user_profile.user_id):
+    #         adict["{}_{}".format(c.order_id,tmp)] = c.card_id
+    #         tmp += 1
+    #         if tmp > 10:
+    #             tmp = 0
+    #     card_ids = [c.id for c in WeizoomCard.objects.filter(id__in=adict.values(),weizoom_card_id__startswith="9")]
+    #     for key, value in adict.items():
+    #         if value in card_ids:
+    #             order_order_ids.append(int(key.split('_')[0]))
+    #     orders = orders.filter(order_id__in=order_order_ids)
     return orders
 
-def __filter_order(order):
-    order.weizoom_card_money_huihui = float(0)
-    order.weizoom_card_money_rest = float(0)
-    if order.weizoom_card_money >0:
-        card_orders = WeizoomCardHasOrder.objects.filter(order_id=order.order_id)
-        for card_order in card_orders:
-            if card_order.card:
-                if card_order.card.weizoom_card_id.startswith("9"):
-                    if float(card_order.money)>0:
-                        order.weizoom_card_money_huihui += float(card_order.money)
-        order.weizoom_card_money_rest = order.weizoom_card_money - order.weizoom_card_money_huihui
-    return order
+# def __filter_order(order):
+#     order.weizoom_card_money_huihui = float(0)
+#     order.weizoom_card_money_rest = float(0)
+#     if order.weizoom_card_money >0:
+#         card_orders = WeizoomCardHasOrder.objects.filter(order_id=order.order_id)
+#         for card_order in card_orders:
+#             if card_order.card:
+#                 if card_order.card.weizoom_card_id.startswith("9"):
+#                     if float(card_order.money)>0:
+#                         order.weizoom_card_money_huihui += float(card_order.money)
+#         order.weizoom_card_money_rest = order.weizoom_card_money - order.weizoom_card_money_huihui
+#     return order
 
 def __filter_order_status(order):
     if order.status == ORDER_STATUS_SUCCESSED:

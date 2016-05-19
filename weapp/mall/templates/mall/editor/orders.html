@@ -300,15 +300,7 @@
 							{{/if}}
 						{{/if}}
 						<div class="tc">
-						{{if order.weizoom_card_money_huihui > 0 }}
-							{{if !(data.mall_type == 0 && order.supplier_user_id) }}
-								<span class="xui-weizoomCard xui-huihuiCard pr">
-									<i class="xa-huihuiCardImg"></i>
-									<span class="pa" style="display:none;">惠惠卡支付&nbsp${order.weizoom_card_money_huihui}元</span>
-								</span>
-							{{/if}}
-						{{/if}}
-						{{if order.weizoom_card_money_rest > 0 }}
+						{{if order.weizoom_card_money > 0 }}
 							{{if !(data.mall_type == 0 && order.supplier_user_id) }}
 								<span class="xui-weizoomCard pr">
 									<i class="xa-weizoomCardImg"></i>
