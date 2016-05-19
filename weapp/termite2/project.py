@@ -31,6 +31,10 @@ class Project(resource.Resource):
 		key = 'termite_webapp_page_%s_%s' % (webapp_owner_id, project_id)
 		cache_util.delete_cache(key)
 
+	@staticmethod
+	def delete_all_webapp_page_cache(webapp_owner_id):
+		key_termite_page = 'termite_webapp_page_%s_*' % request.manager.id
+		cache_util.delete_pattern(key_termite_page)
 
 	@staticmethod
 	def create_empty_page(project):
@@ -230,6 +234,7 @@ class Project(resource.Resource):
 					result_project_id = project_id
 				response = create_response(200)
 				response.data = result_project_id
+				Project.delete_all_webapp_page_cache(webapp_owner_id)
 				return response.get_response()
 			if project_id.startswith('new_app:'):
 				if project_id.endswith(':0'):
@@ -238,6 +243,7 @@ class Project(resource.Resource):
 					response.data = {
 						'project_id': project_id
 					}
+					Project.delete_all_webapp_page_cache(request.manager.id)
 					return response.get_response()
 				else:
 					Project.update_app_page_content(request)
