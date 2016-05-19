@@ -244,7 +244,7 @@ class Project(resource.Resource):
 			else:
 				Project.update_page_content(request)
 				#清除webapp page cache
-				Project.delete_webapp_page_cache(request.manager.id, project_id)
+				# Project.delete_webapp_page_cache(request.manager.id, project_id)
 		elif field == 'is_enable':
 			webapp_models.Project.objects.filter(id=project_id).update(is_enable=True)
 		else:
@@ -256,6 +256,10 @@ class Project(resource.Resource):
 				value = request.POST['value']
 				options = {field:value}
 			webapp_models.Project.objects.filter(id=project_id).update(**options)
+
+
+		key_termite_page = 'termite_webapp_page_%s_*' % request.manager.id
+		cache_util.delete_pattern(key_termite_page)
 
 		response = create_response(200)
 		return response.get_response()
