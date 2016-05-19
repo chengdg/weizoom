@@ -13,6 +13,7 @@ from termite import pagestore as pagestore_manager
 from mall.order.util import update_order_status_by_group_status
 from group_participance import send_group_template_message
 from modules.member.models import Member
+from group_status import stop_group
 
 class GroupBuyProduct(resource.Resource):
 	app = 'apps/group'
@@ -283,3 +284,15 @@ class GetGroupUrl(resource.Resource):
 			return response.get_response()
 		except Exception,e:
 			pass
+
+def stop_group_activity_by_pid(pid):
+	#通过pid结束大团购活动，结束所有进行中的小团，已付款的进行退款，发送拼团失败模板消息
+	#检查当前pid是否有已配置的团购活动
+	group = app_models.Group.objects(product_id=pid,status__ne=app_models.STATUS_STOPED)
+	if group.count() > 0:
+		group = group.first()
+	else:
+		response = create_response(500)
+		response.errMsg = u"不存在已配置的团购活动"
+		return response.get_response()
+	stop_group(group.id,is_test=False)
