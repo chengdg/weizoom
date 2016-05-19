@@ -2688,4 +2688,3 @@ class ProductSearchRecord(models.Model):
 		verbose_name = "商品搜索记录"
 		verbose_name_plural = "商品搜索记录"
 		db_table = "mall_product_search_record"
-

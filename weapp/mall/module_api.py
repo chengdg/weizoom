@@ -35,6 +35,7 @@ from core import paginator
 #from market_tools.tools.delivery_plan.models import DeliveryPlan
 from market_tools.tools.template_message import models as template_message_model
 from market_tools.tools.template_message import module_api as template_message_api
+from utils.microservice_consumer import microservice_consume2
 
 from watchdog.utils import watchdog_fatal, watchdog_error, watchdog_alert, watchdog_warning
 from webapp.modules.mall import util as mall_util
@@ -3367,12 +3368,12 @@ def create_mall_order_from_shared(request,order_id):
 	# 	raise e
 
 
-
 def refund_weizoom_card_money(order):
 	url = "http://" + settings.CARD_SERVER_DOMAIN + '/card/trade'
 	trade_id = WeizoomCardHasOrder.objects.filter(order_id=order.order_id).first().trade_id
 	data = {
 		'trade_id': trade_id,
-		'trade_type': 1 # 普通退款
+		'trade_type': 1  # 普通退款
 	}
 	is_success, resp = microservice_consume2(url=url, data=data, method='delete')
+	return is_success, resp
