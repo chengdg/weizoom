@@ -40,18 +40,9 @@ class GroupStatus(resource.Resource):
 		group = groups.first()
 
 		if target_status == 'stoped':
-			target_status = app_models.STATUS_STOPED
-			now_time = datetime.today().strftime('%Y-%m-%d %H:%M')
-			groups.update(set__end_time=now_time)
-			pagestore = pagestore_manager.get_pagestore('mongo')
-			groups = app_models.Group.objects(id=group_id)
-			for data in groups:
-				related_page_id = data.related_page_id
-			page = pagestore.get_page(related_page_id, 1)
-			page['component']['components'][0]['model']['end_time'] = now_time
-			pagestore.save_page(related_page_id, 1, page['component'])
 			stop_group(group_id,is_test)
-
+			response = create_response(200)
+			return response.get_response()
 		elif target_status == 'running':
 			#说明手动点击开启了
 			groups.update(set__handle_status=1)
@@ -76,7 +67,16 @@ class GroupStatus(resource.Resource):
 def stop_group(group_id,is_test):
 	#手动关闭活动之后对于小团的处理：
 	#活动已结束，所有进行中的小团置为失败
+	target_status = app_models.STATUS_STOPED
+	now_time = datetime.today().strftime('%Y-%m-%d %H:%M')
 	group = app_models.Group.objects.get(id=group_id)
+	group.update(set__end_time=now_time,set__status=target_status)
+	pagestore = pagestore_manager.get_pagestore('mongo')
+	related_page_id = group.related_page_id
+	page = pagestore.get_page(related_page_id, 1)
+	page['component']['components'][0]['model']['end_time'] = now_time
+	pagestore.save_page(related_page_id, 1, page['component'])
+
 	running_group_relations = app_models.GroupRelations.objects(belong_to=group_id,group_status=app_models.GROUP_RUNNING)
 	not_start_group_relations = app_models.GroupRelations.objects(belong_to=group_id,group_status=app_models.GROUP_NOT_START)
 	for group_relation in not_start_group_relations:
