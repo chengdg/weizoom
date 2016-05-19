@@ -850,3 +850,22 @@ class CardHasExchanged(models.Model):
 
 	class Meta(object):
 		db_table = 'mallpromotion_card_has_exchanged'
+
+
+WEIZOOM_CARD_SOURCE_WEAPP = 0
+WEIZOOM_CARD_SOURCE_REBATE = 1
+class MemberHasWeizoomCard(models.Model):
+	"""
+	给会员发放的微众卡
+	"""
+	member_id = models.IntegerField() #会员id
+	member_name = models.CharField(max_length=1024) #会员名称
+	card_number = models.CharField(max_length=50) #微众卡卡号
+	card_password = models.CharField(max_length=100) #微众卡密码
+	relation_id = models.CharField(max_length=128) #关联的活动id
+	source = models.IntegerField() #微众卡来源
+
+	created_at = models.DateTimeField(auto_now_add=True) #发放时间
+
+	class Meta(object):
+		db_table = 'member_has_weizoom_card'
