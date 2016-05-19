@@ -337,15 +337,21 @@ class RebateUpload(resource.Resource):
 				# ncols = table.ncols   #列数
 				# data = table.cell(0, 1).value
 				for i in range(1,nrows):
-					table_content=table.cell(i,0).value
-					weizoom_card_ids.append(str(table_content))
+					table_content = table.cell(i,0).value
+					if table_content!= '':
+						weizoom_card_ids.append(str(table_content))
 				for i in range(1,nrows):
-					table_content=table.cell(i,1).value
-					weizoom_card_passwords.append(str(table_content))
+					table_content = table.cell(i,1).value
+					if table_content!= '':
+						weizoom_card_passwords.append(str(table_content))
+				if(len(weizoom_card_ids) != len(weizoom_card_passwords)):
+					response.errMsg = u'上传的微众卡卡号与密码列数不对应'
+					return response.get_response()
 			except Exception, e:
 				print(e)
 				response.errMsg = u'上传文件错误'
 				return response.get_response()
+
 			if not has_file:
 				card_stock = len(weizoom_card_ids)
 			else:
@@ -353,6 +359,7 @@ class RebateUpload(resource.Resource):
 				cur_weizoom_card_ids = [cur_weizoom_card.weizoom_card_id for cur_weizoom_card in cur_weizoom_cards]
 				need_add_weizoom_card_ids =  [ i for i in weizoom_card_ids if i not in cur_weizoom_card_ids ]
 				card_stock = len(cur_weizoom_cards) + len(need_add_weizoom_card_ids)
+
 			response = create_response(200)
 			response.data = {
 				'file_path': file_path,
