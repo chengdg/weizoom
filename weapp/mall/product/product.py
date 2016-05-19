@@ -282,7 +282,7 @@ class ProductList(resource.Resource):
                 if product2group.has_key(id_tmp) and product2group[id_tmp] == True:
                     ids.remove(id_tmp)
 
-        #团购
+
         if ids:
             prev_shelve_type = models.Product.objects.get(
                 id=ids[0]).shelve_type

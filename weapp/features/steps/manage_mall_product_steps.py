@@ -156,10 +156,10 @@ def step_update_product(context, user, product_name):
         }
         response = context.client.get(url, data)
         response_json = json.loads(response.content)
+
         if response_json['code'] == 500:
             context.event_hint = u"请先停止该商品参与的活动"
             return
-
     # url = '/mall2/product/?id=%d&source=offshelf' % existed_product.id
     url = '/mall2/product/?id=%d&?shelve_type=%d' % (
         existed_product.id, existed_product.shelve_type, )

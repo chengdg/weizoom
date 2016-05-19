@@ -13,6 +13,7 @@ from mall.promotion import models as promotion_model
 from core import search_util
 from mall.signal_handler import products_not_online_handler_for_promotions
 from utils import ding_util
+from apps.customerized_apps.group.group_openapi import stop_group_activity_by_pid
 
 from watchdog.utils import watchdog_fatal, watchdog_error
 from core.exceptionutil import unicode_full_stack
@@ -231,7 +232,9 @@ def delete_weizoom_mall_sync_product(request, product, reason):
             products.update(is_deleted=True)
             relations.update(is_deleted=True)
             products_not_online_handler_for_promotions(weizoom_product_ids, request,shelve_type='delete')
-
+            # 结束对应自营平台的团购商品
+            for pid in weizoom_product_ids:
+                stop_group_activity_by_pid(pid)
             text = u'商品删除提示：\n'
             text += u'商品位置：\n'
             for product in products:
