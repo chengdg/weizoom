@@ -25,7 +25,7 @@ from . import utils
 from mall import export
 from weixin.user.module_api import get_all_active_mp_user_ids
 from apps.customerized_apps.group import models as group_models
-from modules.member.models import WebAppUser,Member
+from modules.member.models import WebAppUser,Member,CANCEL_SUBSCRIBED,SUBSCRIBED,MemberGrade
 from member.member_list import build_member_has_tags_json,get_tags_json
 import logging
 
@@ -67,13 +67,25 @@ class ProductMember(resource.Resource):
                 return Http404
         else:
             return Http404
+        member_tags = MemberTag.get_member_tags(webapp_id)
+        #调整排序，将为分组放在最前面
+        tags = []
+        for tag in member_tags:
+            if tag.name == '未分组':
+                tags = [tag] + tags
+            else:
+                tags.append(tag)
+        member_tags = tags
         c = RequestContext(
             request,
             {'first_nav_name': export.PRODUCT_FIRST_NAV,
              'second_navs': export.get_mall_product_second_navs(request),
              'product_name': product.name,
              'mall_type': mall_type,
-             'shelve_type':product.shelve_type
+             'shelve_type':product.shelve_type,
+             'id':has_product_id,
+             'user_tags': member_tags,
+             'grades': MemberGrade.get_all_grades_list(webapp_id),
              }
         )
         return render_to_response('mall/editor/product_member.html', c)
@@ -97,39 +109,30 @@ class ProductMember(resource.Resource):
         """
         # 商城类型
         mall_type = request.user_profile.webapp_type
+        webapp_id = request.user_profile.webapp_id
         has_product_id = request.GET.get('id')
         
 
 
-        sort_attr = request.GET.get('sort_attr', None) #之后处理
-        # order_has_products = models.OrderHasProduct.objects.filter(product_id=has_product_id, origin_order_id=0, order__status__in=
-        #     [models.ORDER_STATUS_PAYED_NOT_SHIP, models.ORDER_STATUS_PAYED_SHIPED, models.ORDER_STATUS_SUCCESSED]).order_by(sort_attr)
-        # order_has_products = order_has_products.values('webapp_user_id').distinct()
-        # order_ids = [order_has_product.order_id for order_has_product in order_has_products]
-        # webapp_user_id = [order_has_product. for order_has_product in order_has_products]
+        sort_attr = request.GET.get('sort_attr', '-id') #之后处理
         order_has_products = models.OrderHasProduct.objects.filter(product_id=has_product_id, origin_order_id=0)
-        order_ids = [order_has_product.order_id for order_has_product in order_has_products]
-        # orders = models.Order.objects.filter(id__in=order_ids,status__in=
-        #     [models.ORDER_STATUS_PAYED_NOT_SHIP, models.ORDER_STATUS_PAYED_SHIPED, models.ORDER_STATUS_SUCCESSED]).values('webapp_user_id').distinct()
+        order_ids = order_has_products.values_list('order', flat=True)
         orders = models.Order.objects.filter(id__in=order_ids,status__in=
-            [models.ORDER_STATUS_PAYED_NOT_SHIP, models.ORDER_STATUS_PAYED_SHIPED, models.ORDER_STATUS_SUCCESSED])
-        print "orders>>>>",orders
-        webapp_user_ids = [order.webapp_user_id for order in orders]
+            [models.ORDER_STATUS_PAYED_NOT_SHIP, models.ORDER_STATUS_PAYED_SHIPED, models.ORDER_STATUS_SUCCESSED, models.ORDER_STATUS_REFUNDING, models.ORDER_STATUS_GROUP_REFUNDING])
+        webapp_user_ids = orders.values_list('webapp_user_id', flat=True)
         member_ids = [webapp_user.member_id for webapp_user in WebAppUser.objects.filter(id__in=webapp_user_ids)]
-        total_count = len(member_ids)
-
-
-
+        members = Member.objects.filter(id__in=member_ids, status__in=[CANCEL_SUBSCRIBED,SUBSCRIBED], is_for_test=0, webapp_id=webapp_id).order_by(sort_attr)
+        total_count = members.count()
 
 
         count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
         cur_page = int(request.GET.get('page', '1'))
-        pageinfo, member_ids = paginator.paginate(
-            member_ids,
+        pageinfo, members = paginator.paginate(
+            members,
             cur_page,
             count_per_page,
             )
-        members = Member.objects.filter(id__in=member_ids)
+        
         selected_count = members.count()
         items = []
         for member in members:
