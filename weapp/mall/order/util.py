@@ -793,7 +793,10 @@ def get_detail_response(request):
             # order.weizoom_cards = [card.weizoom_card_id for card in cards]
 
             card_info = OrderCardInfo.objects.filter(order_id=order.order_id).first()
-            order.weizoom_cards = json.loads(card_info.used_card)
+            if card_info:
+                order.weizoom_cards = json.loads(card_info.used_card)
+            else:
+                order.weizoom_cards = []
 
 
         # 获得子订单
