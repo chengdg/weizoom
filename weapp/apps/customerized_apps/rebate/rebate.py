@@ -325,7 +325,8 @@ class RebateUpload(resource.Resource):
 				now = datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
 				upload_file.name = now + upload_file.name
 				file_path = RebateUpload.__save_file(upload_file, owner_id)
-			except:
+			except Exception, e:
+				print(e)
 				response.errMsg = u'保存文件出错'
 				return response.get_response()
 			try:
@@ -337,12 +338,12 @@ class RebateUpload(resource.Resource):
 				# data = table.cell(0, 1).value
 				for i in range(1,nrows):
 					table_content=table.cell(i,0).value
-
 					weizoom_card_ids.append(str(table_content))
 				for i in range(1,nrows):
 					table_content=table.cell(i,1).value
 					weizoom_card_passwords.append(str(table_content))
 			except Exception, e:
+				print(e)
 				response.errMsg = u'上传文件错误'
 				return response.get_response()
 			if not has_file:
