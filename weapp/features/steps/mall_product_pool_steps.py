@@ -109,7 +109,11 @@ def step_impl(context, user, product_name, sync_time):
         '_method': 'post'
     }
     response = context.client.post(url, args)
-    bdd_util.assert_api_call_success(response)
+    try:
+        bdd_util.assert_api_call_success(response)
+    except:
+        context.product_info = u"'该商品正在进行团购活动'"
+        return
     user_id = User.objects.get(username=user).id
     sync_product = Product.objects.get(name=product_name, owner_id=user_id)
     sync_product_id = sync_product.id

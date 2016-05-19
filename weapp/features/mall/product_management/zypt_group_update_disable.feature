@@ -115,6 +115,7 @@ Background:
 	#自营平台jobs登录
 	Given 设置jobs为自营平台账号
 	Given jobs登录系统
+	When jobs添加微信证书
 	When jobs已添加支付方式
 		"""
 		[{
@@ -310,7 +311,7 @@ Background:
 	When jobs开启团购活动'团购活动3'
 	When jobs开启团购活动'团购活动4'
 
-
+@eugene @product_pool
 Scenario:1 对团购活动中的(同步商品)进行更新商品操作
 	商户更新已在自营平台创建团购活动的商品
 	1.自营平台的商品池显示“待更新”

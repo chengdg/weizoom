@@ -470,11 +470,7 @@ class ProductPool(resource.Resource):
                 product_has_promotion = 0
 
             if mall_product_id2weizoom_product_id.has_key(product['id']) and product2group.has_key(mall_product_id2weizoom_product_id[product['id']]):
-                print product2group
-                print "++" * 10
-                print mall_product_id2weizoom_product_id[product['id']], product['name']
                 product_has_group = product2group[mall_product_id2weizoom_product_id[product['id']]]
-                print product_has_group
             else:
                 product_has_group = 0
             items.append({
@@ -589,6 +585,10 @@ class ProductPool(resource.Resource):
             owner=request.manager,
             mall_product_id=product_id,
             is_deleted=False)
+        # 后台验证更新的商品是否参与团购
+        product2group = utils.get_product2group([str(relation.weizoom_product_id)], request.webapp_owner_id)
+        if product2group:
+            return create_response(500).get_response()
 
         # 微众系列商品参加的促销活动
         products_not_online_handler_for_promotions([relation.weizoom_product_id], request)
