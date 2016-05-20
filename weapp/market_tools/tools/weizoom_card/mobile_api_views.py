@@ -4,6 +4,7 @@ __author__ = 'bert'
 
 from datetime import datetime, timedelta
 
+from django.conf import settings
 from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.template import Context, RequestContext
 from django.shortcuts import render_to_response
@@ -35,7 +36,7 @@ def check_weizoom_card(request):
 	# data = dict()
 	# msg, weizoom_card = module_api.check_weizoom_card(name, password,request.webapp_user,request.member,request.webapp_owner_id,request.user_profile.webapp_id)
 
-	url = 'http://api.card.com/card/get_cards/?_method=post'
+	url = 'http://%s/card/get_cards/?_method=post' % settings.CARD_SERVER_DOMAIN
 	data_card = {
 		"card_infos": '[{"card_number":"%s","card_password": "%s"}]' %(name, password)
 	}
