@@ -609,18 +609,19 @@ $(document).ready(function() {
 	});
 	//获得购买该商品所有的会员ID
 	var table = $('div[data-ui-role="advanced-table"]').data('view');
-	var all_member_ids;
+	var all_member_ids,member_subscribed_ids;
 	table.afterload = function(){
-		all_member_ids = table.getRawData().member_ids
+		all_member_ids = table.getRawData().member_ids;
+		member_subscribed_ids = table.getRawData().member_subscribed_ids;
 	}
 	//给筛选出来的所有人发优惠券
 	$(document).delegate('.xa-all-member', 'click', function(event){
 		var member_name = "";
-		if(all_member_ids.length > 0){
-	  		if(all_member_ids.length == 1){
-	  			member_name = $('tr[data-id="'+all_member_ids[0]+'"]').find('a.xa-issuing-coupon').data('member-name');
+		if(member_subscribed_ids.length > 0){
+	  		if(member_subscribed_ids.length == 1){
+	  			member_name = $('tr[data-id="'+member_subscribed_ids[0]+'"]').find('a.xa-issuing-coupon').data('member-name');
 	  		}
-            showDialogAndIssuingCoupon(all_member_ids, member_name);
+            showDialogAndIssuingCoupon(member_subscribed_ids, member_name);
 	    } else {
 	    	W.showHint('error', "没有可已发优惠券的用户！");
 	    }
