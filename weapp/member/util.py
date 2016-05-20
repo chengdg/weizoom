@@ -251,7 +251,7 @@ def _get_mpuser_access_token(user):
 	else:
 		return None
 
-def members_memberids_from_webapp_user_ids(webapp_user_ids,sort_attr=None):
+def get_members_from_webapp_user_ids(webapp_user_ids,sort_attr=None):
 		if not webapp_user_ids:
 			return []
 		member_ids = WebAppUser.objects.filter(id__in=webapp_user_ids).values_list('member_id', flat=True)
@@ -291,7 +291,7 @@ def get_tags_json(webapp_id):
 
 	return tags_json
 
-def build_return_members_json(webapp_user_ids,**kwargs):
+def get_members_by(webapp_user_ids,**kwargs):
 	if kwargs.has_key('cur_page'):
 		cur_page=kwargs['cur_page']
 	else:
@@ -308,7 +308,7 @@ def build_return_members_json(webapp_user_ids,**kwargs):
 		webapp_id=kwargs['webapp_id']
 	else:
 		webapp_id = None 
-	members,member_ids = members_memberids_from_webapp_user_ids(webapp_user_ids, sort_attr)
+	members,member_ids = get_members_from_webapp_user_ids(webapp_user_ids, sort_attr)
 	data = {}
 	data['sortAttr'] = sort_attr
 	total_count = members.count()

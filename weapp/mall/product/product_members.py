@@ -14,7 +14,7 @@ from core.jsonresponse import create_response
 from mall import models  # 注意不要覆盖此module
 from mall import export
 from modules.member.models import MemberGrade,MemberTag
-from member.util import build_return_members_json
+from member.util import get_members_by
 import logging
 
 COUNT_PER_PAGE = 50
@@ -111,7 +111,7 @@ class ProductMember(resource.Resource):
         count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
         cur_page = int(request.GET.get('page', '1'))
 
-        data = build_return_members_json(webapp_user_ids,cur_page=cur_page,count_per_page=count_per_page,sort_attr=sort_attr, webapp_id=webapp_id)
+        data = get_members_by(webapp_user_ids,cur_page=cur_page,count_per_page=count_per_page,sort_attr=sort_attr, webapp_id=webapp_id)
         response = create_response(200)
         response.data = data
         return response.get_response()
