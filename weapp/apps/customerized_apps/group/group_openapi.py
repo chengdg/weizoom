@@ -290,8 +290,8 @@ def stop_group_activity_by_pid(pid, is_test=False):
 	#检查当前pid是否有已配置的团购活动
 	group = app_models.Group.objects(product_id=pid,status__ne=app_models.STATUS_STOPED)
 	if group.count() > 0:
-		print "111111111"
 		group = group.first()
 		stop_group(group.id, is_test)
+		stop_group(str(group.id),is_test)
 	else:
 		return
