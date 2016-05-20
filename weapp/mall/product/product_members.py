@@ -7,15 +7,14 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from watchdog.utils import watchdog_warning, watchdog_error
 
-from core import paginator
+
 from core import resource
 from core.exceptionutil import unicode_full_stack
 from core.jsonresponse import create_response
 from mall import models  # 注意不要覆盖此module
 from mall import export
-from modules.member.models import WebAppUser,Member,CANCEL_SUBSCRIBED,SUBSCRIBED,MemberGrade,MemberTag
-from member.member_list import build_member_has_tags_json,get_tags_json,build_return_product_member_json
-from member.util import members_memberids_from_webapp_user_ids
+from modules.member.models import MemberGrade,MemberTag
+from member.util import build_return_members_json
 import logging
 
 COUNT_PER_PAGE = 50
@@ -58,6 +57,7 @@ class ProductMember(resource.Resource):
         else:
             return Http404
         member_tags = MemberTag.get_member_tags(webapp_id)
+        member_grades = MemberGrade.get_all_grades_list(webapp_id)
         #调整排序，将为分组放在最前面
         tags = []
         for tag in member_tags:
@@ -81,7 +81,7 @@ class ProductMember(resource.Resource):
              'shelve_type':product.shelve_type,
              'id':has_product_id,
              'user_tags': member_tags,
-             'grades': MemberGrade.get_all_grades_list(webapp_id),
+             'grades': member_grades,
              }
         )
         return render_to_response('mall/editor/product_member.html', c)
@@ -107,30 +107,12 @@ class ProductMember(resource.Resource):
         orders = models.Order.objects.filter(webapp_id=webapp_id, id__in=order_ids,status__in=[models.ORDER_STATUS_PAYED_NOT_SHIP, 
             models.ORDER_STATUS_PAYED_SHIPED, models.ORDER_STATUS_SUCCESSED, models.ORDER_STATUS_REFUNDING, models.ORDER_STATUS_GROUP_REFUNDING])
         webapp_user_ids = orders.values_list('webapp_user_id', flat=True)
-        members,member_ids = members_memberids_from_webapp_user_ids(webapp_user_ids)
-        members = members.order_by(sort_attr)
-        total_count = members.count()
 
         count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
         cur_page = int(request.GET.get('page', '1'))
-        pageinfo, members = paginator.paginate(
-            members,
-            cur_page,
-            count_per_page,
-            )
-        
-        items = []
-        for member in members:
-            items.append(build_return_product_member_json(member))
-        tags_json = get_tags_json(request)
+
+        data = build_return_members_json(webapp_user_ids,cur_page=cur_page,count_per_page=count_per_page,sort_attr=sort_attr, webapp_id=webapp_id)
         response = create_response(200)
-        response.data = {
-            'items': items,
-            'sortAttr': request.GET.get('sort_attr', '-created_at'),
-            'pageinfo': paginator.to_dict(pageinfo),
-            'tags': tags_json,
-            'total_count': total_count,
-            'member_ids': list(member_ids)
-        }
+        response.data = data
         return response.get_response()
 

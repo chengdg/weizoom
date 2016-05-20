@@ -13,14 +13,17 @@ from core.wxapi.api_send_mass_message import TextMessage, NewsMessage
 from core.wxapi.api_upload_news import Articles
 from core.exceptionutil import full_stack, unicode_full_stack
 from core import emotion
+from core import paginator
 
 from account.util import get_binding_weixin_mpuser, get_mpuser_accesstoken
 
 from modules.member.models import Member, MemberTag, MemberHasTag, UserSentMassMsgLog, MESSAGE_TYPE_NEWS, MESSAGE_TYPE_TEXT,WebAppUser,CANCEL_SUBSCRIBED,SUBSCRIBED
 
 from weixin.message.material.models import News
+from member.member_list import build_member_has_tags_json
 
 from watchdog.utils import watchdog_warning, watchdog_error
+from datetime import datetime
 
 ########################################################################
 # send_mass_text_message: 发送文本消息
@@ -248,9 +251,86 @@ def _get_mpuser_access_token(user):
 	else:
 		return None
 
-def members_memberids_from_webapp_user_ids(webapp_user_ids):
+def members_memberids_from_webapp_user_ids(webapp_user_ids,sort_attr=None):
 		if not webapp_user_ids:
 			return []
 		member_ids = WebAppUser.objects.filter(id__in=webapp_user_ids).values_list('member_id', flat=True)
 		members = Member.objects.filter(id__in=member_ids, status__in=[CANCEL_SUBSCRIBED,SUBSCRIBED], is_for_test=0)
+		if sort_attr:
+			members = members.order_by(sort_attr)
 		return members,member_ids
+
+def build_member_json(member):
+	return {
+		'id': member.id,
+		'username': member.username_for_title,
+		'username_truncated': member.username_truncated,
+		'user_icon': member.user_icon,
+		'grade_name': member.grade.name,
+		'integral': member.integral,
+		'factor': member.factor,
+		'remarks_name': member.remarks_name,
+		'created_at': datetime.strftime(member.created_at, '%Y-%m-%d'),
+		'last_visit_time': datetime.strftime(member.last_visit_time, '%Y-%m-%d') if member.last_visit_time else '-',
+		'session_id': member.session_id,
+		'friend_count':  member.friend_count,
+		'source':  member.source,
+		'tags':build_member_has_tags_json(member),
+		'is_subscribed':member.is_subscribed,
+		'experience': member.experience,
+	}
+
+
+def get_tags_json(webapp_id):
+	
+	tags = MemberTag.get_member_tags(webapp_id)
+
+	tags_json = []
+	for tag in tags:
+		tags_json.append({'id':tag.id,'name': tag.name})
+
+	return tags_json
+
+def build_return_members_json(webapp_user_ids,**kwargs):
+	if kwargs.has_key('cur_page'):
+		cur_page=kwargs['cur_page']
+	else:
+		cur_page = None
+	if kwargs.has_key('count_per_page'):
+		count_per_page=kwargs['count_per_page']
+	else:
+		count_per_page = None
+	if kwargs.has_key('sort_attr'):
+		sort_attr=kwargs['sort_attr']
+	else:
+		sort_attr = None
+	if kwargs.has_key('webapp_id'):
+		webapp_id=kwargs['webapp_id']
+	else:
+		webapp_id = None 
+	members,member_ids = members_memberids_from_webapp_user_ids(webapp_user_ids, sort_attr)
+	data = {}
+	data['sortAttr'] = sort_attr
+	total_count = members.count()
+	
+	data['total_count'] = total_count
+	if cur_page and count_per_page:
+		pageinfo, members = paginator.paginate(
+			members,
+			cur_page,
+			count_per_page,
+			)
+		items = []
+		for member in members:
+			items.append(build_member_json(member))
+		data['items'] = items
+		data['pageinfo'] = paginator.to_dict(pageinfo)
+		data['member_ids'] = list(member_ids)
+	else:
+		data["members"] = members
+	if webapp_id:
+		tags_json = get_tags_json(webapp_id)
+		data['tags'] = tags_json
+
+	return data
+

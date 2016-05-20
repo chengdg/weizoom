@@ -223,27 +223,6 @@ def build_return_member_json(member):
 		'purchase_frequency':member.purchase_frequency,
 	}
 
-def build_return_product_member_json(member):
-    from mall.models import Order
-    return {
-        'id': member.id,
-        'username': member.username_for_title,
-        'username_truncated': member.username_truncated,
-        'user_icon': member.user_icon,
-        'grade_name': member.grade.name,
-        'integral': member.integral,
-        'factor': member.factor,
-        'remarks_name': member.remarks_name,
-        'created_at': datetime.strftime(member.created_at, '%Y-%m-%d'),
-        'last_visit_time': datetime.strftime(member.last_visit_time, '%Y-%m-%d') if member.last_visit_time else '-',
-        'session_id': member.session_id,
-        'friend_count':  member.friend_count,
-        'source':  member.source,
-        'tags':build_member_has_tags_json(member),
-        'is_subscribed':member.is_subscribed,
-        'experience': member.experience,
-    }
-
 def build_member_has_tags_json(member):
 	member_has_tags = []
 	for member_has_tag in MemberHasTag.get_member_has_tags(member):
