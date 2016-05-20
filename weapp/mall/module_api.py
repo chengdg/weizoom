@@ -3370,7 +3370,7 @@ def create_mall_order_from_shared(request,order_id):
 
 def refund_weizoom_card_money(order):
 	url = "http://" + settings.CARD_SERVER_DOMAIN + '/card/trade'
-	trade_id = WeizoomCardHasOrder.objects.filter(order_id=order.order_id).first().trade_id
+	trade_id = OrderCardInfo.objects.filter(order_id=order.order_id).first().trade_id
 	data = {
 		'trade_id': trade_id,
 		'trade_type': 1  # 普通退款
@@ -3379,4 +3379,5 @@ def refund_weizoom_card_money(order):
 	print('--------refund',msg)
 	watchdog_info(message=msg,type='wz_card')
 	is_success, resp = microservice_consume2(url=url, data=data, method='delete')
+	print('-------resp',resp)
 	return is_success, resp
