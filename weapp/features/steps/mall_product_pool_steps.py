@@ -64,6 +64,9 @@ def step_impl(context, user):
                 "actions": STATUS2ACTION[product['status']],
             })
 
+    # for i in range(0,len(expected)):
+    #     print expected[i]['name'], "+++", actual[i]['name']
+    #     print expected[i]['status'], "+++", actual[i]['status']
     bdd_util.assert_list(expected, actual)
 
 @when(u"{user}将商品'{product_name}'放入待售于'{sync_time}'")

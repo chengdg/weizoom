@@ -28,6 +28,11 @@ class ConfigProductList(resource.Resource):
 
     @login_required
     def post(request):
+        try:
+            mall_config = MallConfig.objects.get(owner=request.user)
+        except:
+            mall_config = MallConfig.objects.create(owner=request.user, order_expired_day=24)
+
         product_sales = int(request.POST.get('product_sales', '0'))
         product_sort = int(request.POST.get('product_sort', '0'))
         product_search = int(request.POST.get('product_search', '0'))
