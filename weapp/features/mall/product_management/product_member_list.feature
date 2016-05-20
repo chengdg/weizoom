@@ -49,11 +49,11 @@ Background:
 			"stock_type": "无限"
 		 }]
 		"""
-	When tom1关注jobs的公众号于'2015-05-15'
-	When tom2关注jobs的公众号于'2015-05-15'
-	When tom3关注jobs的公众号于'2015-05-15'
-	When tom5关注jobs的公众号于'2015-05-15'
-	When tom6关注jobs的公众号于'2015-05-15'
+	When tom1关注jobs的公众号于'2016-05-15'
+	When tom2关注jobs的公众号于'2016-05-15'
+	When tom3关注jobs的公众号于'2016-05-15'
+	When tom5关注jobs的公众号于'2016-05-15'
+	When tom6关注jobs的公众号于'2016-05-15'
 	When tom3取消关注jobs的公众号
 	When tom6取消关注jobs的公众号
 
