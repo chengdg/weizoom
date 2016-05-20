@@ -254,11 +254,12 @@ def _get_mpuser_access_token(user):
 def get_members_from_webapp_user_ids(webapp_user_ids,sort_attr=None):
 		if not webapp_user_ids:
 			return [],[]
-		member_ids = WebAppUser.objects.filter(id__in=webapp_user_ids).values_list('member_id', flat=True)
-		members = Member.objects.filter(id__in=member_ids, status__in=[CANCEL_SUBSCRIBED,SUBSCRIBED], is_for_test=0)
-		member_subscribed_ids = members.filter(status=SUBSCRIBED).values_list('id', flat=True)
+		member_all_ids = WebAppUser.objects.filter(id__in=webapp_user_ids).values_list('member_id', flat=True)
+		members = Member.objects.filter(id__in=member_all_ids, status__in=[CANCEL_SUBSCRIBED,SUBSCRIBED], is_for_test=0)
 		if sort_attr:
 			members = members.order_by(sort_attr)
+		member_subscribed_ids = members.filter(status=SUBSCRIBED).values_list('id', flat=True)
+		member_ids = members.values_list('id', flat=True)
 		return members,member_ids,member_subscribed_ids
 
 def build_member_json(member):
