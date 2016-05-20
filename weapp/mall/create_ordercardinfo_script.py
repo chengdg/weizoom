@@ -1,6 +1,24 @@
 # -*- coding: utf-8 -*-
+
+
+
+# -*- coding: utf-8 -*-
+import sys
+import datetime
+import copy
+reload(sys)
+sys.setdefaultencoding( "utf-8" )
+import os
+
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "weapp.settings")
+
+from django.core.management import execute_from_command_line
+execute_from_command_line(sys.argv)
+
+
 import json
 from mall import models as mall_models
+
 
 from market_tools.tools.weizoom_card import models as wz_models
 
