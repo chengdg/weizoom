@@ -437,7 +437,6 @@ $(document).ready(function() {
 		var member_id = $el.attr('data-id');
 		var dataView = $('[data-ui-role="advanced-table"]').data('view')
 		dataView.setPage(1);
-		dataView.args = view.getFilterValue();
 		var memberTagsUpdateView = W.getMemberTagsUpdateView({
 			width: 260,
 			title: '修改等级',
@@ -470,7 +469,6 @@ $(document).ready(function() {
 		}
 		var dataView = $('[data-ui-role="advanced-table"]').data('view')
 		dataView.setPage(1);
-		dataView.args = view.getFilterValue();
 		var memberTagsUpdateView = W.getMemberTagsUpdateView({
 			width: 260,
 			title: '修改分组',
@@ -570,7 +568,6 @@ $(document).ready(function() {
 		var member_id = $el.attr('data-id');
 		var dataView = $('[data-ui-role="advanced-table"]').data('view')
 		dataView.setPage(1);
-		dataView.args = view.getFilterValue();
 		var memberIntegralUpdateView = W.getMemberIntegralUpdateView({
 			width: 310,
 			title: '调积分',
