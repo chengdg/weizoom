@@ -359,18 +359,18 @@
 					<div class="xui-card-details">
 						<div class="xui-detail-top">
 							<div class="xui-detail-left">
-								<div class="xui-valid-time">有效期:{{item.start_time}}~{{item.end_time}}</div>
+								<div class="xui-valid-time">有效期:{{item.valid_time_from | slice:"10"}}~{{item.valid_time_to | slice:"10"}}</div>
 								<div class="xui-remain-money">
 									<span>余额</span>
 									<span class="xui-yuan">&yen;</span>
-									<span class="xui-num xui-numfont">{{item.remainder}}</span>
+									<span class="xui-num xui-numfont">{{item.balance}}</span>
 								</div>
 							</div>
 							<div class="xui-detail-right">
 								<a href="/workbench/jqm/preview/?module=market_tool:weizoom_card&model=card_exchange_detail&action=get&workspace_id=market_tool:weizoom_card&webapp_owner_id={{request.webapp_owner_id}}&project_id=0&card_id={{item.card_id}}" class="xui-check-detail">查看详情</a>
 								<div>
 									<span>卡号:</span> 
-									<span class="xui-numfont">{{item.card_id}}</span>
+									<span class="xui-numfont">{{item.card_number}}</span>
 								</div>
 							</div>
 						</div>
@@ -380,7 +380,7 @@
 								<span>{{item.type}}</span>
 								<span class="fr">
 									面值: &yen;
-									<span class="xui-numfont">{{item.money}}</span>
+									<span class="xui-numfont">{{item.face_value}}</span>
 								</span>
 							</span>
 						</div>
@@ -402,18 +402,18 @@
 					<div class="xui-card-details">
 						<div class="xui-detail-top">
 							<div class="xui-detail-left">
-								<div class="xui-valid-time">有效期:{{item.start_time}}~{{item.end_time}}</div>
+								<div class="xui-valid-time">有效期:{{item.valid_time_from | slice:"10"}}~{{item.valid_time_to | slice:"10"}}</div>
 								<div class="xui-remain-money">
 									<span>余额</span>
 									<span class="xui-yuan">&yen;</span>
-									<span class="xui-num xui-numfont">{{item.remainder}}</span>
+									<span class="xui-num xui-numfont">{{item.balance}}</span>
 								</div>
 							</div>
 							<div class="xui-detail-right">
 								<a href="/workbench/jqm/preview/?module=market_tool:weizoom_card&model=card_exchange_detail&action=get&workspace_id=market_tool:weizoom_card&webapp_owner_id={{request.webapp_owner_id}}&project_id=0&card_id={{item.card_id}}" class="xui-check-detail">查看详情</a>
 								<div class="xui-card-num">
 									<span>卡号:</span> 
-									<span class="xui-numfont">{{item.card_id}}</span>
+									<span class="xui-numfont">{{item.card_number}}</span>
 								</div>
 							</div>
 						</div>
@@ -424,7 +424,7 @@
 								<span>兑换平台</span>
 								<span class="fr">
 									面值: &yen; 
-									<span class="xui-numfont">{{item.money}}</span>
+									<span class="xui-numfont">{{item.face_value}}</span>
 								</span>
 							</span>
 						</div>
