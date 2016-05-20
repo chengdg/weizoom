@@ -133,9 +133,7 @@ def get_weizoom_card_change_money(request):
 		if card_infos:
 			card_infos = json.loads(card_infos)
 			card_number = card_infos['card_number']
-			card_has_orders = OrderCardInfo.objects.filter(used_card__icontains=card_number)
-			card_info_list = get_card_detail_normal(request,card_has_orders)
-
+			card_info_list = get_card_detail_normal(request,card_number)
 		else:
 			c = RequestContext(request, {
 				'page_title': u'微众卡',
@@ -293,10 +291,11 @@ def search_card_money(request,card_id,integral_each_yuan):
 
 	return weizoom_card_orders_list
 
-def get_card_detail_normal(request,card_orders):
+def get_card_detail_normal(request,card_id):
 	store_name = request.user_profile.store_name
+	card_has_orders = OrderCardInfo.objects.filter(used_card__icontains=card_id)
 	# card_orders = WeizoomCardHasOrder.objects.filter(card_id=card_id).exclude(order_id__in=[-1]).order_by('-created_at')
-	order_nums = [co.order_id for co in card_orders]
+	order_nums = [co.order_id for co in card_has_orders]
 	orders = Order.objects.filter(order_id__in=order_nums)
 	# order_id2orders = {o.order_id: o for o in orders}
 	order_ids = [o.id for o in orders]
