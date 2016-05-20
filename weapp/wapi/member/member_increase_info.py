@@ -33,16 +33,24 @@ class MemberIncrease(api_resource.ApiResource):
 		fisrt_day_of_month = dateutil.get_first_day_of_month()
 
 		member_increase_info = {}
-		total_count = member_models.Member.objects.filter(webapp_id=webapp_id, is_subscribed=True).count()
-		today_count = member_models.Member.objects.filter(webapp_id=webapp_id, is_subscribed=True, created_at__gte=today).count()
-		week_count = member_models.Member.objects.filter(webapp_id=webapp_id, is_subscribed=True, created_at__range=(monday, sunday)).count()
-		month_count = member_models.Member.objects.filter(webapp_id=webapp_id, is_subscribed=True, created_at__gte=fisrt_day_of_month).count()
+		total_count = member_models.Member.objects.filter(webapp_id=webapp_id, is_subscribed=True, is_for_test=False).count()
+		today_count = member_models.Member.objects.filter(webapp_id=webapp_id, is_subscribed=True, is_for_test=False, created_at__gte=today).count()
+		week_count = member_models.Member.objects.filter(webapp_id=webapp_id, is_subscribed=True, is_for_test=False, created_at__range=(monday, sunday)).count()
+		month_count = member_models.Member.objects.filter(webapp_id=webapp_id, is_subscribed=True, is_for_test=False, created_at__gte=fisrt_day_of_month).count()
 
 		#获取新增的购买用户数，暂时忽略买完就取关的情况
-		total_buy_member_count =  member_models.Member.objects.filter(webapp_id=webapp_id, is_subscribed=True, pay_times__gte=1).count()
-		today_buy_member_count = mall_models.Order.objects.filter(webapp_id=webapp_id, status__in=VALID_STATUS, is_first_order=True, created_at__gte=today).count()
-		week_buy_member_count = mall_models.Order.objects.filter(webapp_id=webapp_id, status__in=VALID_STATUS, is_first_order=True, created_at__range=(monday, sunday)).count()
-		month_buy_member_count = mall_models.Order.objects.filter(webapp_id=webapp_id, status__in=VALID_STATUS, is_first_order=True, created_at__gte=fisrt_day_of_month).count()
+		# total_buy_member_count =  member_models.Member.objects.filter(webapp_id=webapp_id, is_subscribed=True, pay_times__gte=1).count()
+		orders = mall_models.Order.objects.filter(webapp_id=webapp_id, status__in=VALID_STATUS)
+		total_buy_member_count = get_member_count(orders)
+
+		orders = mall_models.Order.objects.filter(webapp_id=webapp_id, status__in=VALID_STATUS, is_first_order=True, created_at__gte=today)
+		today_buy_member_count = get_member_count(orders)
+
+		orders = mall_models.Order.objects.filter(webapp_id=webapp_id, status__in=VALID_STATUS, is_first_order=True, created_at__range=(monday, sunday))
+		week_buy_member_count = get_member_count(orders)
+
+		orders = mall_models.Order.objects.filter(webapp_id=webapp_id, status__in=VALID_STATUS, is_first_order=True, created_at__gte=fisrt_day_of_month)
+		month_buy_member_count = get_member_count(orders)
 
 
 		return {
@@ -55,3 +63,13 @@ class MemberIncrease(api_resource.ApiResource):
 				'week_buy_member_count': week_buy_member_count,
 				'month_buy_member_count': month_buy_member_count
 			}
+
+def get_member_count(orders):
+	webapp_user_ids = set()
+	for order in orders:
+		webapp_user_ids.add(order.webapp_user_id)
+	webapp_users = member_models.WebAppUser.objects.filter(id__in=webapp_user_ids)
+	member_ids = [w.member_id for w in webapp_users]
+	member_count = member_models.Member.objects.filter(id__in=member_ids, is_subscribed=True, is_for_test=False).count()
+
+	return member_count
