@@ -12,38 +12,6 @@
 		font-size: 0.9rem;
 		font-family: "华文细黑";
 	}
-	.xui-header{
-		background: #ee3715;
-		overflow: hidden;
-		padding: 15px 0;
-		color: #fff;
-		margin-top: 2px;
-		font-size: 0;
-	}
-	.xui-header > div {
-		display: inline-block;
-		width: 50%;
-		box-sizing: border-box;
-	}
-	.xui-header-left{
-		border-right: 1px dotted #f3735c;
-		padding-left: 35px;
-	}
-	.xui-header-right{
-		padding-left: 30px;
-	}
-	.xui-large{
-		font-size: 1.7rem;
-		font-family: "Arial";
-	}
-	.xui-phone-num{
-		margin-bottom: 15px;
-		font-size: 1rem;
-		font-family: "Arial";
-	}
-	.xui-phone-num img{
-		margin-right: 2px;
-	}
 	.xui-remain{
 		margin-bottom: 10px;
 	}
@@ -71,7 +39,6 @@
 	.xui-detail-left .xui-valid-time{
 		font-family: 'Microsoft Yahei';
 		font-size: 0.7rem;
-		color: #666666;
 	}
 	.xui-detail-right{
 		float: right;
@@ -84,14 +51,15 @@
 		padding-left: 10px;
 	}
 	.xui-remain-money{
-		margin-top: 7px;
+		margin-top: 5px;
 		color: #ee3715;
 	}
-	.xui-remain-money > span{
-		color: #666666;
+	.xui-remain-money span:first-child{
+		color: #333;
 		vertical-align: text-bottom;
+		margin-right: 5px;
 		font-family: 'Microsoft Yahei';
-		font-size: 1.1rem;
+		font-size: 1rem;
 	}
 	.xui-check-detail{
 		display: block;
@@ -128,6 +96,7 @@
 	}
 	.xui-invalid-card .xui-detail-left{
 		color:#c1c2c2;
+		font-size: 1.5rem;
 	}
 	.xui-invalid-card .xui-card-num{
 		color: #c1c2c2;
@@ -181,6 +150,14 @@
     	right: 5px;
     	bottom: 0;
     }
+    @media only screen and (max-width: 320px){
+    .xui-tab-normal{
+    	font-size: 0.9rem;
+    }
+    .xui-tab-active{
+    	font-size: 1rem;
+    }
+}
 </style>
 {% endblock %}
 
@@ -206,9 +183,9 @@
 					<div class="xui-card-details">
 						<div class="xui-detail-top">
 							<div class="xui-detail-left">
-								<div class="xui-valid-time">有效期:{{item.time}}~{{item.time}}</div>
+								<div class="xui-valid-time">有效期:{{item.start_time}}~{{item.end_time}}</div>
 								<div class="xui-remain-money">
-									<span>名字什么的都是浮云</span>
+									<span>{{item.card_name}}</span>
 								</div>
 							</div>
 							<div class="xui-detail-right">
@@ -242,14 +219,14 @@
 					<span>失效卡：</span>
 				</div>
 				{% for item in cards.card %}
-				{% if item.is_expired == 1 or item.status == 3 %}
+				{% if item.is_expired == 1 %}
 				<div class="xui-wrap">
 					<div class="xui-card-details">
 						<div class="xui-detail-top">
 							<div class="xui-detail-left">
-								<div class="xui-valid-time">有效期:{{item.time}}~{{item.time}}</div>
+								<div class="xui-valid-time">有效期:{{item.start_time}}~{{item.end_time}}</div>
 								<div class="xui-remain-money">
-									<span>名字什么的都是浮云</span>
+									<span>{{item.card_name}}</span>
 								</div>
 							</div>
 							<div class="xui-detail-right">

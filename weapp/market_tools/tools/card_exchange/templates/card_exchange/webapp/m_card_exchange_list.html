@@ -12,38 +12,6 @@
 		font-size: 0.9rem;
 		font-family: "华文细黑";
 	}
-	.xui-header{
-		background: #ee3715;
-		overflow: hidden;
-		padding: 15px 0;
-		color: #fff;
-		margin-top: 2px;
-		font-size: 0;
-	}
-	.xui-header > div {
-		display: inline-block;
-		width: 50%;
-		box-sizing: border-box;
-	}
-	.xui-header-left{
-		border-right: 1px dotted #f3735c;
-		padding-left: 35px;
-	}
-	.xui-header-right{
-		padding-left: 30px;
-	}
-	.xui-large{
-		font-size: 1.7rem;
-		font-family: "Arial";
-	}
-	.xui-phone-num{
-		margin-bottom: 15px;
-		font-size: 1rem;
-		font-family: "Arial";
-	}
-	.xui-phone-num img{
-		margin-right: 2px;
-	}
 	.xui-remain{
 		margin-bottom: 10px;
 	}
@@ -144,6 +112,7 @@
     }
     .xui-yuan{
     	font-size: 1.1rem;
+    	font-family: "Microsoft Yahei";
     }
     .xui-text{
     	font-size: 1rem;
@@ -390,7 +359,7 @@
 					<div class="xui-card-details">
 						<div class="xui-detail-top">
 							<div class="xui-detail-left">
-								<div class="xui-valid-time">有效期:{{item.time}}~{{item.time}}</div>
+								<div class="xui-valid-time">有效期:{{item.start_time}}~{{item.end_time}}</div>
 								<div class="xui-remain-money">
 									<span>余额</span>
 									<span class="xui-yuan">&yen;</span>
@@ -428,12 +397,12 @@
 					<span>失效卡：</span>
 				</div>
 				{% for item in cards.card %}
-				{% if item.is_expired == 1 or item.status == 3 %}
+				{% if item.is_expired == 1 %}
 				<div class="xui-wrap">
 					<div class="xui-card-details">
 						<div class="xui-detail-top">
 							<div class="xui-detail-left">
-								<div class="xui-valid-time">有效期:{{item.time}}~{{item.time}}</div>
+								<div class="xui-valid-time">有效期:{{item.start_time}}~{{item.end_time}}</div>
 								<div class="xui-remain-money">
 									<span>余额</span>
 									<span class="xui-yuan">&yen;</span>
