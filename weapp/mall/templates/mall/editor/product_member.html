@@ -305,7 +305,6 @@
 		</thead>
 		<tbody>
 		<div id="__json-members" class="hidden">${JSON.stringify(items)}</div>
-		{{if items.length}}
 			{{each(i, member) items}}
 			<tr data-id="${member.id}" data-status="${member.is_subscribed}">
 				<td style="position:relative;" title='{{html member.username}}'>
@@ -383,9 +382,6 @@
 				</td>
 			</tr>
 			{{/each}}
-		{{else}}
-            <tr><td colspan='8' style="text-align:center">您还没有相关数据</td></tr>
-        {{/if}}
 		</tbody>
 	</table>
 </script>
