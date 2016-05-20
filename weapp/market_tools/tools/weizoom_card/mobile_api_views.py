@@ -18,6 +18,8 @@ from modules.member.integral import increase_member_integral
 from mall.models import *
 from account.views import save_base64_img_file_local_for_webapp
 import module_api
+import requests
+import json
 
 def check_weizoom_card(request):
 	"""
@@ -30,16 +32,32 @@ def check_weizoom_card(request):
 	"""
 	name = request.POST.get('name','')
 	password = request.POST.get('password','')
-	data = dict()
-	msg, weizoom_card = module_api.check_weizoom_card(name, password,request.webapp_user,request.member,request.webapp_owner_id,request.user_profile.webapp_id)
+	# data = dict()
+	# msg, weizoom_card = module_api.check_weizoom_card(name, password,request.webapp_user,request.member,request.webapp_owner_id,request.user_profile.webapp_id)
+
+	url = 'http://api.card.com/card/get_cards/?_method=post'
+	data_card = {
+		"card_infos": '[{"card_number":"%s","card_password": "%s"}]' %(name, password)
+	}
+	resp = requests.post(url, params=data_card)
+	text = json.loads(resp.text)
+	card_infos = text['data']['card_infos']
+
+	msg = None
+	if card_infos:
+		card_infos = card_infos[0][name]
+	else:
+		msg = u'卡号或密码错误'
+
 	if msg:
 		return create_response(500, msg)
-	weizoom_card_rule = WeizoomCardRule.objects.get(id=weizoom_card.weizoom_card_rule_id)
-	is_new_member_special = weizoom_card_rule.is_new_member_special
+	# weizoom_card_rule = WeizoomCardRule.objects.get(id=weizoom_card.weizoom_card_rule_id)
+	# is_new_member_special = weizoom_card_rule.is_new_member_special
 	response = create_response(200)
-	response.data.id = weizoom_card.id
-	response.data.money = round(weizoom_card.money, 2)
-	response.data.is_new_member_special = is_new_member_special
+	# response.data.id = weizoom_card.id
+	# response.data.money = round(weizoom_card.money, 2)
+	# response.data.is_new_member_special = is_new_member_special
+	response.data.card_infos = card_infos
 	response.data.code = 200
 	return response.get_response()
 

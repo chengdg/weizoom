@@ -21,35 +21,35 @@
 		<div class="xui-wcInfo">
 			<p>
 				<span>查询卡号：</span>
-				<span>{{ weizoom_card.weizoom_card_id }}</span>
+				<span>{{ weizoom_card.card_number }}</span>
 			</p>
 			<p>
 				<span>卡内余额：</span>
-				<span style="color:#D20001;">&yen;<span style="color:#D20001;" class="xt-price">{{ weizoom_card.money }}</span></span>
+				<span style="color:#D20001;">&yen;<span style="color:#D20001;" class="xt-price">{{ weizoom_card.balance }}</span></span>
 			</p>
-			<p>
-				<span>使用条件：</span>
-				<span style="color:#D20001;">
-					{% if weizoom_card.valid_restrictions %}
-						满{{ weizoom_card.valid_restrictions }}可用
-					{% else %}
-						不限制
-					{% endif %}
-				</span>
-			</p>
+{#			<p>#}
+{#				<span>使用条件：</span>#}
+{#				<span style="color:#D20001;">#}
+{#					{% if weizoom_card.valid_restrictions %}#}
+{#						满{{ weizoom_card.valid_restrictions }}可用#}
+{#					{% else %}#}
+{#						不限制#}
+{#					{% endif %}#}
+{#				</span>#}
+{#			</p>#}
 			<p class="xui-valid-time" style="padding-bottom:3%;">截至时间：{{ weizoom_card.valid_time_to }}</p>
 		</div>
 	</div>
 	<div class="xui-submitWzOther">
-		<a class="xui-wcInfoOther" id="shop_list">
-			<span>专属商家</span>
-			{% if weizoom_card.shop_list %}
-				<img src="/static_v2/img/webapp/mall/right_arrow.png">
-				<span class="shop_list_split">{{ weizoom_card.shop_list }}&nbsp;&nbsp;</span>
-			{% else %}
-				<div class="xui-shop-normal">通用</div>
-			{% endif %}
-		</a>
+{#		<a class="xui-wcInfoOther" id="shop_list">#}
+{#			<span>专属商家</span>#}
+{#			{% if weizoom_card.shop_list %}#}
+{#				<img src="/static_v2/img/webapp/mall/right_arrow.png">#}
+{#				<span class="shop_list_split">{{ weizoom_card.shop_list }}&nbsp;&nbsp;</span>#}
+{#			{% else %}#}
+{#				<div class="xui-shop-normal">通用</div>#}
+{#			{% endif %}#}
+{#		</a>#}
 		{% if weizoom_card.shop_list %}
 			<div class="shop_list_name">
 				{% for shop_name  in weizoom_card.shop_list_name %}
@@ -72,7 +72,7 @@
 					<thead>
 						<tr>
 							<td width="25%">时间</td>
-							<td width="25%">明细</td>
+{#							<td width="25%">明细</td>#}
 							<td>去处/来源</td>
 						</tr>
 					</thead>
@@ -83,23 +83,23 @@
 								{{order.created_at | date:"Y/m/d"}}<br/>
 								{{order.created_at | date:"H:i:s"}}
 							</td>
-							<td class="xui-order-info-money">
-								{% if order.is_product %}
-									{% if order.money < '0' %}
-										<span style="color: #0fb202">
-											+{{order.money| slice:"1:"}}
-										</span>
-									{% else %}
-										<span style="color: #cf0404">
-											-{{order.money}}
-										</span>
-									{% endif %}
-								{% else %}
-									<span style="color: #0fb202">
-										+{{order.money}}
-									</span>
-								{% endif %}
-							</td>
+{#							<td class="xui-order-info-money">#}
+{#								{% if order.is_product %}#}
+{#									{% if order.money < '0' %}#}
+{#										<span style="color: #0fb202">#}
+{#											+{{order.money| slice:"1:"}}#}
+{#										</span>#}
+{#									{% else %}#}
+{#										<span style="color: #cf0404">#}
+{#											-{{order.money}}#}
+{#										</span>#}
+{#									{% endif %}#}
+{#								{% else %}#}
+{#									<span style="color: #0fb202">#}
+{#										+{{order.money}}#}
+{#									</span>#}
+{#								{% endif %}#}
+{#							</td>#}
 							<td class="xui-order-info-name">
 								{{order.product_name}}
 							</td>
