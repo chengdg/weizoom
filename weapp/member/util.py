@@ -256,9 +256,10 @@ def get_members_from_webapp_user_ids(webapp_user_ids,sort_attr=None):
 			return [],[]
 		member_ids = WebAppUser.objects.filter(id__in=webapp_user_ids).values_list('member_id', flat=True)
 		members = Member.objects.filter(id__in=member_ids, status__in=[CANCEL_SUBSCRIBED,SUBSCRIBED], is_for_test=0)
+		member_subscribed_ids = members.filter(status=SUBSCRIBED).values_list('id', flat=True)
 		if sort_attr:
 			members = members.order_by(sort_attr)
-		return members,member_ids
+		return members,member_ids,member_subscribed_ids
 
 def build_member_json(member):
 	return {
@@ -308,7 +309,7 @@ def get_members_by(webapp_user_ids,**kwargs):
 		webapp_id=kwargs['webapp_id']
 	else:
 		webapp_id = None 
-	members,member_ids = get_members_from_webapp_user_ids(webapp_user_ids, sort_attr)
+	members,member_ids,member_subscribed_ids = get_members_from_webapp_user_ids(webapp_user_ids, sort_attr)
 	data = {}
 	data['sortAttr'] = sort_attr
 	try:
@@ -328,6 +329,7 @@ def get_members_by(webapp_user_ids,**kwargs):
 		data['items'] = items
 		data['pageinfo'] = paginator.to_dict(pageinfo)
 		data['member_ids'] = list(member_ids)
+		data['member_subscribed_ids'] = list(member_subscribed_ids)
 	else:
 		data["members"] = members
 	if webapp_id:
