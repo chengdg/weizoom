@@ -285,12 +285,13 @@ class GetGroupUrl(resource.Resource):
 		except Exception,e:
 			pass
 
-def stop_group_activity_by_pid(pid):
+def stop_group_activity_by_pid(pid, is_test=False):
 	#通过pid结束大团购活动，结束所有进行中的小团，已付款的进行退款，发送拼团失败模板消息
 	#检查当前pid是否有已配置的团购活动
 	group = app_models.Group.objects(product_id=pid,status__ne=app_models.STATUS_STOPED)
 	if group.count() > 0:
+		print "111111111"
 		group = group.first()
-		stop_group(group.id,is_test=False)
+		stop_group(group.id, is_test)
 	else:
 		return

@@ -1718,47 +1718,49 @@ def belong_to(webapp_id):
 	# 	return Order.objects.filter(webapp_id=webapp_id, origin_order_id__lte=0)
 	sync_able_status_list = [ORDER_STATUS_PAYED_SUCCESSED,
 	                         ORDER_STATUS_PAYED_NOT_SHIP,
-	                         ORDER_STATUS_PAYED_SHIPED,
-	                         ORDER_STATUS_SUCCESSED]
+							 ORDER_STATUS_PAYED_SHIPED,
+							 ORDER_STATUS_SUCCESSED]
 
 	profile = UserProfile.objects.get(webapp_id=webapp_id)
 	user_id = profile.user_id
 	webapp_type = profile.webapp_type
 	if webapp_type:
-		return Order.objects.filter(webapp_id=webapp_id, origin_order_id__lte=0)
+		orders = Order.objects.filter(webapp_id=webapp_id, origin_order_id__lte=0)
 	else:
 		orders = Order.objects.filter(Q(webapp_id=webapp_id)|Q(supplier_user_id=user_id, origin_order_id__gt=0,status__in=sync_able_status_list)).exclude(order_id__contains='s')
-        group_order_relations = OrderHasGroup.objects.filter(webapp_id=webapp_id)
-        if group_order_relations.count() > 0:
-            group_order_ids = [r.order_id for r in group_order_relations]
-            not_pay_group_order_ids = [order.order_id for order in Order.objects.filter(
-                order_id__in=group_order_ids,
-                status=ORDER_STATUS_NOT
-                )
-            ]
-            not_ship_group_on_order_ids = [order.order_id for order in Order.objects.filter(
-                order_id__in=[
-                    r.order_id for r in group_order_relations.filter(
-                    group_status__in=[GROUP_STATUS_ON, GROUP_STATUS_failure])
-                    ],
-                    status=ORDER_STATUS_PAYED_NOT_SHIP
-                )]
-            cancel_group_order_ids = [order.order_id for order in Order.objects.filter(
-                order_id__in=[
-                    r.order_id for r in group_order_relations.filter(
-                    group_status__in=[GROUP_STATUS_OK, GROUP_STATUS_failure])
-                    ],
-                    status=ORDER_STATUS_CANCEL,
-                    pay_interface_type=PAY_INTERFACE_WEIXIN_PAY
-                )]
-            orders = orders.exclude(order_id__in=not_pay_group_order_ids+not_ship_group_on_order_ids+cancel_group_order_ids)
-        sync_order_order_ids = [order.order_id for order in orders.filter(supplier_user_id=user_id)]
-        group_order_not_success_order_ids = [relation.order_id for relation in OrderHasGroup.objects.filter(
-                                order_id__in=sync_order_order_ids,
-                                group_status__in=[GROUP_STATUS_ON, GROUP_STATUS_failure])
-                            ]
-        orders = orders.exclude(order_id__in=group_order_not_success_order_ids)
-        return orders
+
+	group_order_relations = OrderHasGroup.objects.filter(webapp_id=webapp_id)
+	if group_order_relations.count() > 0:
+		group_order_ids = [r.order_id for r in group_order_relations]
+		not_pay_group_order_ids = [order.order_id for order in Order.objects.filter(
+			order_id__in=group_order_ids,
+			status=ORDER_STATUS_NOT
+			)
+		]
+		not_ship_group_on_order_ids = [order.order_id for order in Order.objects.filter(
+			order_id__in=[
+				r.order_id for r in group_order_relations.filter(
+				group_status__in=[GROUP_STATUS_ON, GROUP_STATUS_failure])
+				],
+				status=ORDER_STATUS_PAYED_NOT_SHIP
+			)]
+		cancel_group_order_ids = [order.order_id for order in Order.objects.filter(
+			order_id__in=[
+				r.order_id for r in group_order_relations.filter(
+				group_status__in=[GROUP_STATUS_OK, GROUP_STATUS_failure])
+				],
+				status=ORDER_STATUS_CANCEL,
+				pay_interface_type=PAY_INTERFACE_WEIXIN_PAY
+			)]
+		orders = orders.exclude(order_id__in=not_pay_group_order_ids+not_ship_group_on_order_ids+cancel_group_order_ids)
+	if not webapp_type:
+		sync_order_order_ids = [order.order_id for order in orders.filter(supplier_user_id=user_id)]
+		group_order_not_success_order_ids = [relation.order_id for relation in OrderHasGroup.objects.filter(
+								order_id__in=sync_order_order_ids,
+								group_status__in=[GROUP_STATUS_ON, GROUP_STATUS_failure])
+							]
+		orders = orders.exclude(order_id__in=group_order_not_success_order_ids)
+	return orders
 
 
 	# 微众商城代码
@@ -1771,7 +1773,7 @@ def belong_to(webapp_id):
 Order.objects.belong_to = belong_to
 #from django.db.models import signals
 # def after_save_order(instance, created, **kwargs):
-#    print kwargs
+#	print kwargs
 
 
 #signals.post_save.connect(after_save_order, sender=Order, dispatch_uid = "mall.after_save_order")

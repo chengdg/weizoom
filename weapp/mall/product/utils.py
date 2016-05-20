@@ -234,7 +234,10 @@ def delete_weizoom_mall_sync_product(request, product, reason):
             products_not_online_handler_for_promotions(weizoom_product_ids, request,shelve_type='delete')
             # 结束对应自营平台的团购商品
             for pid in weizoom_product_ids:
-                stop_group_activity_by_pid(pid)
+                is_test = False
+                if request.META.get('SERVER_NAME') == "testserver":
+                    is_test = True
+                stop_group_activity_by_pid(pid, is_test)
             text = u'商品删除提示：\n'
             text += u'商品位置：\n'
             for product in products:
