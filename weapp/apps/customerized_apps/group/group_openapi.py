@@ -291,6 +291,6 @@ def stop_group_activity_by_pid(pid):
 	group = app_models.Group.objects(product_id=pid,status__ne=app_models.STATUS_STOPED)
 	if group.count() > 0:
 		group = group.first()
-		stop_group(group.id,is_test=False)
+		stop_group(str(group.id),is_test=False)
 	else:
 		return
