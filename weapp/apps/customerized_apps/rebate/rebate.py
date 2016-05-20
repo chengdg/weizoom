@@ -30,6 +30,7 @@ from market_tools.tools.weizoom_card import models as card_models
 from mall.promotion.string_util import byte_to_hex, hex_to_byte
 from mall.promotion import models as promotion_models
 from excel_response import ExcelResponse
+from modules.member import models as member_models
 import os
 import xlrd
 
@@ -230,13 +231,19 @@ class RebateCardDetails(resource.Resource):
 
 		rebate_cards = RebateCardDetails.get_rebate_cards(request)
 		pageinfo, rebate_cards = paginator.paginate(rebate_cards, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
+		member_ids = [rebate_card.member_id for rebate_card in rebate_cards]
+		members = member_models.Member.objects.filter(id__in=member_ids)
 		rebate_cards_list = []
 		for card in rebate_cards:
+			try:
+				username = members.get(id=card.member_id).username_for_html
+			except:
+				username = u'未知'
 			try:
 				rebate_cards_list.append({
 					'card_number': card.card_number,
 					'card_password': card.card_password,
-					'member_name': hex_to_byte(card.member_name)
+					'username': username
 				})
 			except Exception,e:
 				print(e)
