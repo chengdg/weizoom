@@ -3375,5 +3375,7 @@ def refund_weizoom_card_money(order):
 		'trade_id': trade_id,
 		'trade_type': 1  # 普通退款
 	}
+	msg = 'wz_card refund:' + trade_id
+	watchdog_info(message=msg,type='wz_card')
 	is_success, resp = microservice_consume2(url=url, data=data, method='delete')
 	return is_success, resp
