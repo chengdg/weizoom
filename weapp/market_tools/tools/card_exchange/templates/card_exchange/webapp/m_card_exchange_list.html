@@ -59,6 +59,7 @@
 		margin: 0 auto;
 		background: #fff;
 		margin-top: 10px;
+		position: relative;
 	}
 	.xui-detail-top{
 		overflow: hidden;
@@ -66,6 +67,11 @@
 	}
 	.xui-detail-left{
 		float: left;
+	}
+	.xui-detail-left .xui-valid-time{
+		font-family: 'Microsoft Yahei';
+		font-size: 0.7rem;
+		color: #666666;
 	}
 	.xui-detail-right{
 		float: right;
@@ -78,15 +84,21 @@
 		padding-left: 10px;
 	}
 	.xui-remain-money{
-		padding-left: 15px;
 		margin-top: 5px;
 		color: #ee3715;
+	}
+	.xui-remain-money span:first-child{
+		color: #666666;
+		vertical-align: text-bottom;
+		margin-right: 5px;
+		font-family: 'Microsoft Yahei';
+		font-size: 1rem;
 	}
 	.xui-check-detail{
 		display: block;
 		text-align: right;
 		padding: 5px;
-		margin-bottom: 10px;
+		margin-bottom: 5px;
 		font-size: 1rem;
 		color: #52a9e3;
 	}
@@ -117,12 +129,12 @@
 	}
 	.xui-invalid-card .xui-detail-left{
 		color:#c1c2c2;
-		font-size: 1.5rem;
-		margin-left: 28px;
-		margin-top: 10px;
 	}
 	.xui-invalid-card .xui-card-num{
 		color: #c1c2c2;
+	}
+	.xui-invalid-card .xui-remain-money,.xui-invalid-card .xui-remain-money span:first-child {
+		color:#c1c2c2;
 	}
     .xui-wrap{
     	background: url("/markettools_static/weizoom_card/img/bg.png") repeat-x bottom;
@@ -146,24 +158,24 @@
     }
     .xui-tab > div{
     	display: inline-block;
-    	width: 50%;
-    	font-family: "黑体";
+    	width: 33.333%;
+    	font-family: 'Microsoft Yahei';
     	box-sizing: border-box;
     	background-color: #fff;
     }
     .xui-tab-active{
-    	font-size: 1.2rem;
+    	font-size: 1.1rem;
     	text-align: center;
     	color: #cf0404;
     	border-bottom: 2px solid #cf0404;
     }
     .xui-tab-normal{
-    	border-right: 1px solid #f5f5f5;
-    	font-size: 1rem;
+    	border-left: 1px solid #f5f5f5;
+    	font-size: 0.95rem;
     	text-align: center;
        	display: inline-block;
-    	width: 50%;
-    	font-family: "黑体";
+    	width: 33.333%;
+    	font-family: 'Microsoft Yahei';
     	box-sizing: border-box;
     	background-color: #fff;
     	color: #000;
@@ -216,6 +228,12 @@
 	    	width: 140px;
 	    	font-size: 1.1rem;
 	    }	
+	    .xui-tab-normal{
+	    	font-size: 0.9rem;
+	    }
+	    .xui-tab-active{
+	    	font-size: 1rem;
+	    }
     }
     .xui-mask{
     	width: 100%;
@@ -305,6 +323,15 @@
     	width: 45px;
     	height: 45px;
     }
+    .xui-invalid-seal{
+    	background: url("/markettools_static/weizoom_card/img/invalid-logo.png");
+    	background-size: cover;
+    	width: 62px;
+    	height: 62px;
+    	position: absolute;
+    	right: 5px;
+    	bottom: 0;
+    }
 </style>
 {% endblock %}
 
@@ -330,8 +357,10 @@
 		{% if is_weshop %}
 		<div class="xui-notBind">
 			<div class="xui-tab">
+				<div class="xui-tab-active">微众卡包</div>
+				<a class="xui-tab-normal">其他卡包</a>
 				<a class="xui-tab-normal" href="./?module=market_tool:weizoom_card&model=weizoom_card_login&action=get&workspace_id=market_tool:weizoom_card&webapp_owner_id={{request.webapp_owner_id}}&project_id=0">微众卡余额查询</a>
-				<div class="xui-tab-active">微众卡钱包</div>
+				
 			</div>
 			{% if not is_binded %}
 			<h1>微众卡钱包</h1>
@@ -352,26 +381,6 @@
 		{% endif %}
 
 		{% if is_binded %}
-		<div class="xui-header">
-			<div class="xui-header-left">
-				<div class="xui-text xui-remain">账户余额</div>
-					<div>
-						<span class="xui-yuan">&yen;</span>
-						<span class="xui-large">{{cards.total_money}}</span>
-					</div>				
-			</div>
-			<div class="xui-header-right">
-				<div class="xui-phone-num">
-					<img src="/markettools_static/weizoom_card/img/user.png" width="14px" height="16px" />
-					<span class="xui-phone-num">{{cards.phone_number}}</span>
-				</div>
-				<div class="xui-text">
-					可用数量:
-					<span class="xui-numfont">{{cards.count}}</span> 
-					张
-				</div>
-			</div>
-		</div>
 		<div class="xui-content">
 			<div class="xui-valid-card">
 				{% for item in cards.card %}
@@ -380,8 +389,9 @@
 					<div class="xui-card-details">
 						<div class="xui-detail-top">
 							<div class="xui-detail-left">
-								<div>余额</div>
+								<div class="xui-valid-time">有效期:{{item.time}}~{{item.time}}</div>
 								<div class="xui-remain-money">
+									<span>余额</span>
 									<span class="xui-yuan">&yen;</span>
 									<span class="xui-num xui-numfont">{{item.remainder}}</span>
 								</div>
@@ -398,7 +408,7 @@
 							<span>
 								<span class="xui-numfont">{{item.time}}</span>
 								<span>{{item.type}}</span>
-								<span class="fr" style="display: none;">
+								<span class="fr">
 									面值: &yen;
 									<span class="xui-numfont">{{item.money}}</span>
 								</span>
@@ -422,11 +432,12 @@
 					<div class="xui-card-details">
 						<div class="xui-detail-top">
 							<div class="xui-detail-left">
-								{% if item.is_expired == 1 %}
-								已过期
-								{% else %}
-								未激活
-								{% endif %}	
+								<div class="xui-valid-time">有效期:{{item.time}}~{{item.time}}</div>
+								<div class="xui-remain-money">
+									<span>余额</span>
+									<span class="xui-yuan">&yen;</span>
+									<span class="xui-num xui-numfont">{{item.remainder}}</span>
+								</div>
 							</div>
 							<div class="xui-detail-right">
 								<a href="/workbench/jqm/preview/?module=market_tool:weizoom_card&model=card_exchange_detail&action=get&workspace_id=market_tool:weizoom_card&webapp_owner_id={{request.webapp_owner_id}}&project_id=0&card_id={{item.card_id}}" class="xui-check-detail">查看详情</a>
@@ -437,10 +448,11 @@
 							</div>
 						</div>
 						<div class="xui-detail-bottom">
+							<div class="xui-invalid-seal"></div>
 							<span>
 								<span class="xui-numfont">{{item.time}}</span>
 								<span>兑换平台</span>
-								<span class="fr" style="display: none;">
+								<span class="fr">
 									面值: &yen; 
 									<span class="xui-numfont">{{item.money}}</span>
 								</span>
