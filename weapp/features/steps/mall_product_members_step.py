@@ -31,7 +31,6 @@ def step_impl(context, user, product_name):
             cur_p = row.as_dict()
             cur_p['attention_time'] = bdd_util.get_date(cur_p['attention_time']).strftime('%Y-%m-%d')
             expected.append(cur_p)
-    print expected
 
 
     product_id = Product.objects.get(name=product_name, supplier_user_id=0, is_deleted=False).id
@@ -45,6 +44,5 @@ def step_impl(context, user, product_name):
         item['attention_time'] = item['created_at'].split(" ")[0]
         item['source']  = SOURCE2TEXT[item['source']]
         item['tags'] = item['tags'][0]['name']
-        print "item['is_subscribed']>>>>>>>",item['is_subscribed']
         item['status']  = STATUS2TEXT[item['is_subscribed']]
     bdd_util.assert_list(expected, actual)

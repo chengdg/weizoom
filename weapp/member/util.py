@@ -16,7 +16,7 @@ from core import emotion
 
 from account.util import get_binding_weixin_mpuser, get_mpuser_accesstoken
 
-from modules.member.models import Member, MemberTag, MemberHasTag, UserSentMassMsgLog, MESSAGE_TYPE_NEWS, MESSAGE_TYPE_TEXT
+from modules.member.models import Member, MemberTag, MemberHasTag, UserSentMassMsgLog, MESSAGE_TYPE_NEWS, MESSAGE_TYPE_TEXT,WebAppUser,CANCEL_SUBSCRIBED,SUBSCRIBED
 
 from weixin.message.material.models import News
 
@@ -247,3 +247,10 @@ def _get_mpuser_access_token(user):
 		return mpuser_access_token
 	else:
 		return None
+
+def members_memberids_from_webapp_user_ids(webapp_user_ids):
+		if not webapp_user_ids:
+			return []
+		member_ids = WebAppUser.objects.filter(id__in=webapp_user_ids).values_list('member_id', flat=True)
+		members = Member.objects.filter(id__in=member_ids, status__in=[CANCEL_SUBSCRIBED,SUBSCRIBED], is_for_test=0)
+		return members,member_ids

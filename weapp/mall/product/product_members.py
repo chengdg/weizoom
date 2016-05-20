@@ -14,7 +14,8 @@ from core.jsonresponse import create_response
 from mall import models  # 注意不要覆盖此module
 from mall import export
 from modules.member.models import WebAppUser,Member,CANCEL_SUBSCRIBED,SUBSCRIBED,MemberGrade,MemberTag
-from member.member_list import build_member_has_tags_json,get_tags_json
+from member.member_list import build_member_has_tags_json,get_tags_json,build_return_product_member_json
+from member.util import members_memberids_from_webapp_user_ids
 import logging
 
 COUNT_PER_PAGE = 50
@@ -106,8 +107,8 @@ class ProductMember(resource.Resource):
         orders = models.Order.objects.filter(webapp_id=webapp_id, id__in=order_ids,status__in=[models.ORDER_STATUS_PAYED_NOT_SHIP, 
             models.ORDER_STATUS_PAYED_SHIPED, models.ORDER_STATUS_SUCCESSED, models.ORDER_STATUS_REFUNDING, models.ORDER_STATUS_GROUP_REFUNDING])
         webapp_user_ids = orders.values_list('webapp_user_id', flat=True)
-        member_ids = WebAppUser.objects.filter(id__in=webapp_user_ids).values_list('member_id', flat=True)
-        members = Member.objects.filter(id__in=member_ids, status__in=[CANCEL_SUBSCRIBED,SUBSCRIBED], is_for_test=0, webapp_id=webapp_id).order_by(sort_attr)
+        members,member_ids = members_memberids_from_webapp_user_ids(webapp_user_ids)
+        members = members.order_by(sort_attr)
         total_count = members.count()
 
         count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
@@ -120,7 +121,7 @@ class ProductMember(resource.Resource):
         
         items = []
         for member in members:
-            items.append(build_return_member_json(member))
+            items.append(build_return_product_member_json(member))
         tags_json = get_tags_json(request)
         response = create_response(200)
         response.data = {
@@ -132,27 +133,4 @@ class ProductMember(resource.Resource):
             'member_ids': list(member_ids)
         }
         return response.get_response()
-
-
-
-def build_return_member_json(member):
-    from mall.models import Order
-    return {
-        'id': member.id,
-        'username': member.username_for_title,
-        'username_truncated': member.username_truncated,
-        'user_icon': member.user_icon,
-        'grade_name': member.grade.name,
-        'integral': member.integral,
-        'factor': member.factor,
-        'remarks_name': member.remarks_name,
-        'created_at': datetime.strftime(member.created_at, '%Y-%m-%d'),
-        'last_visit_time': datetime.strftime(member.last_visit_time, '%Y-%m-%d') if member.last_visit_time else '-',
-        'session_id': member.session_id,
-        'friend_count':  member.friend_count,
-        'source':  member.source,
-        'tags':build_member_has_tags_json(member),
-        'is_subscribed':member.is_subscribed,
-        'experience': member.experience,
-    }
 
