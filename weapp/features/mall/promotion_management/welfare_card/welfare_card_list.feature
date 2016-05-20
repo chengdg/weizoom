@@ -99,13 +99,13 @@ Background:
 				}],
 			"detail":"微众虚拟商品1的详情",
 			"status":"在售"
-		}, {
-			"name":"微众普通商品2",
-			"product_type":"普通",
-			"is_virtual_product":"false",
+		},{
+			"name":"微众虚拟商品2",
+			"product_type":"微众卡",
+			"is_virtual_product":"true",
 			"supplier":"微众",
 			"purchase_price": 19.00,
-			"promotion_title": "普通商品2",
+			"promotion_title": "虚拟商品2",
 			"categories": "",
 			"bar_code":"212233",
 			"price": 20.00,
@@ -120,7 +120,7 @@ Background:
 				[{
 					"type": "在线支付"
 				}],
-			"detail":"微众普通商品2的详情",
+			"detail":"微众虚拟商品2的详情",
 			"status":"在售"
 		},{
 			"name": "稻香村虚拟商品3",
@@ -151,6 +151,37 @@ Background:
 			"status""在售"
 		}]
 		"""
+	And jobs已创建微众卡
+		"""
+		{
+			"cards":[{
+				"id":"0000001",
+				"password":"1234567",
+				"status":"未使用",
+				"price":10.00
+			},{
+				"id":"0000002",
+				"password":"2234567",
+				"status":"未使用",
+				"price":10.00
+			},{
+				"id":"0000003",
+				"password":"3234567",
+				"status":"未使用",
+				"price":20.00
+			},{
+				"id":"0000004",
+				"password":"4234567",
+				"status":"未使用",
+				"price":20.00
+			},{
+				"id":"0000005",
+				"password":"5234567",
+				"status":"未使用",
+				"price":10.00
+			}]
+		}
+		"""
 	#创建福利卡券活动
 	When jobs新建福利卡券活动
 		"""
@@ -166,30 +197,30 @@ Background:
 			"card_end_date":"30天后",
 			"cards":
 				[{
-					"id":"0001",
-					"password":"1234"
+					"id":"0000001",
+					"password":"1234567"
 				},{
 					"id":"0002",
-					"password":"2234"
+					"password":"2234567"
 				}],
 			"creat_time":"2天前"
 		},{
 			"product":
 				{
-					"name":"稻香村虚拟商品3",
-					"bar_code":"312233",
-					"price":30.00
+					"name":"微众虚拟商品2",
+					"bar_code":"212233",
+					"price":20.00
 				},
-			"activity_name":"稻香村代金券",
+			"activity_name":"20元通用卡",
 			"card_start_date":"今天",
 			"card_end_date":"30天后",
 			"cards":
 				[{
-					"id":"1001",
-					"password":"1234"
+					"id":"0000003",
+					"password":"3234567"
 				},{
-					"id":"1002",
-					"password":"2234"
+					"id":"0000004",
+					"password":"4234567"
 				}],
 			"creat_time":"今天"
 		}]
@@ -211,14 +242,14 @@ Scenario:1 编辑福利卡券活动
 			"card_end_date":"36天后",
 			"cards":
 				[{
-					"id":"0001",
-					"password":"1234"
+					"id":"0000001",
+					"password":"1234567"
 				},{
-					"id":"0002",
-					"password":"2234"
+					"id":"0000002",
+					"password":"2234567"
 				},{
-					"id":"0003",
-					"password":"3234"
+					"id":"0000005",
+					"password":"5234567"
 				}],
 			"create_time":"2天前"
 		}
@@ -226,10 +257,10 @@ Scenario:1 编辑福利卡券活动
 	Then jobs获得福利卡券活动列表
 		"""
 		[{
-			"activity_name":"稻香村代金券",
+			"activity_name":"20元通用卡",
 			"product":{
-				"name":"稻香村虚拟商品3",
-				"bar_code":"312233"
+				"name":"微众虚拟商品2",
+				"bar_code":"212233"
 				},
 			"card_stocks":2,
 			"card_sales":0,
@@ -250,15 +281,15 @@ Scenario:1 编辑福利卡券活动
 
 Scenario:2 结束福利卡券活动
 	Given jobs登录系统
-	When jobs'结束'福利卡券活动'稻香村代金券'
+	When jobs'结束'福利卡券活动'微众虚拟商品2'
 	#Then jobs获得提示信息'是否确认结束?'
 	Then jobs获得福利卡券活动列表
 		"""
 		[{
-			"activity_name":"稻香村代金券",
+			"activity_name":"20元通用卡",
 			"product":{
-				"name":"稻香村虚拟商品3",
-				"bar_code":"312233"
+				"name":"微众虚拟商品2",
+				"bar_code":"212233"
 				},
 			"card_stocks":2,
 			"card_sales":0,
@@ -284,7 +315,7 @@ Scenario:3 福利卡券活动列表的查询
 			When jobs设置福利卡券活动查询条件
 				"""
 				{
-					"product_name":"稻香村",
+					"product_name":"微众",
 					"product_bar_code":"",
 					"create_start_time":"",
 					"create_end_time":""
@@ -293,10 +324,16 @@ Scenario:3 福利卡券活动列表的查询
 			Then jobs获得福利卡券活动列表
 				"""
 				[{
-					"activity_name":"稻香村代金券",
+					"activity_name":"20元通用卡",
 					"product":{
-						"name":"稻香村虚拟商品3",
-						"bar_code":"312233"
+						"name":"微众虚拟商品2",
+						"bar_code":"212233"
+						}
+				},{
+					"activity_name":"10元通用卡",
+					"product":{
+						"name":"微众虚拟商品1",
+						"bar_code":"112233"
 						}
 				}]
 				"""
@@ -304,7 +341,7 @@ Scenario:3 福利卡券活动列表的查询
 			When jobs设置福利卡券活动查询条件
 				"""
 				{
-					"product_name":"稻香村虚拟商品3",
+					"product_name":"微众虚拟商品2",
 					"product_bar_code":"",
 					"create_start_time":"",
 					"create_end_time":""
@@ -313,10 +350,10 @@ Scenario:3 福利卡券活动列表的查询
 			Then jobs获得福利卡券活动列表
 				"""
 				[{
-					"activity_name":"稻香村代金券",
+					"activity_name":"20元通用卡",
 					"product":{
-						"name":"稻香村虚拟商品3",
-						"bar_code":"312233"
+						"name":"微众虚拟商品2",
+						"bar_code":"212233"
 						}
 				}]
 				"""
@@ -341,7 +378,7 @@ Scenario:3 福利卡券活动列表的查询
 				"""
 				{
 					"product_name":"",
-					"product_bar_code":"312233",
+					"product_bar_code":"212233",
 					"create_start_time":"",
 					"create_end_time":""
 				}
@@ -349,10 +386,10 @@ Scenario:3 福利卡券活动列表的查询
 			Then jobs获得福利卡券活动列表
 				"""
 				[{
-					"activity_name":"稻香村代金券",
+					"activity_name":"20元通用卡",
 					"product":{
-						"name":"稻香村虚拟商品3",
-						"bar_code":"312233"
+						"name":"微众虚拟商品2",
+						"bar_code":"212233"
 						}
 				}]
 				"""
@@ -392,10 +429,10 @@ Scenario:3 福利卡券活动列表的查询
 			Then jobs获得福利卡券活动列表
 				"""
 				[{
-				"activity_name":"稻香村代金券",
+					"activity_name":"20元通用卡",
 					"product":{
-						"name":"稻香村虚拟商品3",
-						"bar_code":"312233"
+						"name":"微众虚拟商品2",
+						"bar_code":"212233"
 						},
 					"create_time":"今天"
 				},{
@@ -426,8 +463,8 @@ Scenario:3 福利卡券活动列表的查询
 		When jobs设置福利卡券活动查询条件
 			"""
 			{
-				"product_name":"稻香村",
-				"product_bar_code":"312233",
+				"product_name":"微众",
+				"product_bar_code":"212233",
 				"create_start_time":"2天前",
 				"create_end_time":"明天"
 			}
@@ -435,10 +472,10 @@ Scenario:3 福利卡券活动列表的查询
 		Then jobs获得福利卡券活动列表
 			"""
 			[{
-				"activity_name":"稻香村代金券",
+				"activity_name":"20元通用卡",
 				"product":{
-					"name":"稻香村虚拟商品3",
-					"bar_code":"312233"
+					"name":"微众虚拟商品2",
+					"bar_code":"212233"
 					},
 				"create_time":"今天"
 			}]
