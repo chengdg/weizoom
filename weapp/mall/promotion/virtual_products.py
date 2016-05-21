@@ -76,6 +76,8 @@ class VirtualProducts(resource.Resource):
 				'bar_code': product.bar_code,
 				'price': product.price,
 				'stocks': product.stocks,
+				'thumbnails_url': product.thumbnails_url,
+				'detail_link': '/mall2/product/?id=%d&source=onshelf' % product.id,
 				'created_at': product.created_at.strftime('%Y-%m-%d %H:%M')
 			}
 			if product.id in active_product_ids:
@@ -107,16 +109,19 @@ class VirtualProducts(resource.Resource):
 		
 		try:
 			#先创建福利卡券活动
-			virtual_product = promotion_models.VirtualProduct.objects.create(
-								owner=owner,
-								name=name,
-								product_id=product_id
-							)
-			#再为该福利卡券活动上传卡密
-			success_num = upload_codes_for(code_file_path, virtual_product)
+			if name and product_id:
+				virtual_product = promotion_models.VirtualProduct.objects.create(
+									owner=owner,
+									name=name,
+									product_id=product_id
+								)
+				#再为该福利卡券活动上传卡密
+				success_num = upload_codes_for(code_file_path, virtual_product)
 
-			response = create_response(200)
-			response.data = {'success_num': success_num}
+				response = create_response(200)
+				response.data = {'success_num': success_num}
+			else:
+				1/0  #进入except
 		except:
 			response = create_response(500)
 
@@ -128,16 +133,31 @@ class VirtualProducts(resource.Resource):
 		"""
 		修改福利卡券活动，补充上传卡密
 		"""
-		owner = request.manager
-		ids = request.POST.get('id', '')
-		try:
-			for id in json.loads(ids):
-				promotion_models.ForbiddenCouponProduct.objects.filter(owner=owner, id=id).update(status=promotion_models.FORBIDDEN_STATUS_FINISHED)
-			response = create_response(200)
-		except Exception ,e:
-			print 'finish forbidden_coupon_products exception:',e
+		id = request.POST.get('id')
+		name = request.POST.get('name').strip()
+		product_id = request.POST.get('product_id').strip()
+		if id and name and product_id:
+			owner = request.manager
+			start_time = request.POST.get('start_time').strip()
+			end_time = request.POST.get('end_time').strip()
+			code_file_path = request.POST.get('code_file_path').strip()
+			
+			try:
+				#先创建福利卡券活动
+				virtual_product = promotion_models.VirtualProduct.objects.get(owner=owner,id=id)
+				virtual_product.name = name
+				virtual_product.product_id = product_id
+				virtual_product.save()
+				#再为该福利卡券活动上传卡密
+				success_num = upload_codes_for(code_file_path, virtual_product)
+
+				response = create_response(200)
+				response.data = {'success_num': success_num}
+			except:
+				response = create_response(500)
+		else:
 			response = create_response(500)
-		
+
 		return response.get_response()
 
 
