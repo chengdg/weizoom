@@ -13,6 +13,7 @@ from core.exceptionutil import unicode_full_stack
 from core.jsonresponse import create_response
 from mall import export
 from mall.promotion import models as promotion_models
+from mall import models as mall_models
 
 from watchdog.utils import watchdog_alert
 
@@ -46,7 +47,7 @@ class VirtualProducts(resource.Resource):
 	@login_required
 	def api_get(request):
 		"""
-		获取禁用商品
+		获取虚拟商品和微众卡商品
 		"""
 		owner = request.manager
 		#获取当前页数
@@ -56,31 +57,23 @@ class VirtualProducts(resource.Resource):
 
 		name = request.GET.get('name', '')
 		bar_code = request.GET.get('barCode', '')
-		promotion_status = int(request.GET.get('promotionStatus', -1))
-		start_date = request.GET.get('startDate', '')
-		end_date = request.GET.get('endDate', '')
 
-		args = {
-			'owner': owner
-		}
-		if promotion_status > 0:
-			args['status'] = promotion_status
-		else:
-			args['status__in'] = (promotion_models.FORBIDDEN_STATUS_NOT_START, promotion_models.FORBIDDEN_STATUS_STARTED)
-		if start_date and end_date:
-			args['start_date__gte'] = start_date
-			args['end_date__lte'] = end_date
-		if name:
-			args['product__name__contains'] = name
-		if bar_code:
-			args['product__bar_code'] = bar_code
-
-		forbidden_coupon_products = promotion_models.ForbiddenCouponProduct.objects.filter(**args).order_by('-id')
+		activities = promotion_models.VirtualProduct.objects.filter(owner=request.manager, is_finished=False)
+		active_product_ids = [activity.product_id for activity in activities]
+		#获取没有参加正在进行中的福利卡券活动的虚拟商品列表
+		products = mall_models.Product.objects.filter(
+					owner=request.manager, 
+					type__in=[mall_models.PRODUCT_VIRTUAL_TYPE, mall_models.PRODUCT_WZCARD_TYPE],
+					shelve_type = mall_models.PRODUCT_SHELVE_TYPE_ON
+				)
 
 		items = []
-		for product in forbidden_coupon_products:
-			if not product.is_overdue:
-				items.append(product.to_dict())
+		for product in products:
+			_product = product.to_dict()
+			if _product['id'] in active_product_ids:
+				_product['can_use'] = False
+			else:
+				_product['can_use'] = True
 
 		pageinfo, items = paginator.paginate(items, cur_page, count_per_page, None)
 		response = create_response(200)
@@ -97,9 +90,9 @@ class VirtualProducts(resource.Resource):
 		添加禁用商品
 		"""
 		owner = request.manager
-		products = request.POST.get('products', '')
-		start_date = request.POST.get('start_date', '2000-01-01')
-		end_date = request.POST.get('end_date', '2000-01-01')
+		product_id = request.POST.get('product_id')
+		start_time = request.POST.get('start_time')
+		end_time = request.POST.get('end_time')
 		is_permanant_active = int(request.POST.get('is_permanant_active', '0'))
 		product_ids = []
 		for product in json.loads(products):
