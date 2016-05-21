@@ -69,15 +69,19 @@ class VirtualProducts(resource.Resource):
 
 		items = []
 		for product in products:
+			product.fill_standard_model()
 			_product = {
 				'name': product.name,
 				'bar_code': product.bar_code,
-				'price': product.price
+				'price': product.price,
+				'stocks': product.stocks
+				'created_at': product.created_at.strftime('%Y-%m-%d %H:%M')
 			}
 			if product.id in active_product_ids:
 				_product['can_use'] = False
 			else:
 				_product['can_use'] = True
+			items.append(_product)
 
 		pageinfo, items = paginator.paginate(items, cur_page, count_per_page, None)
 		response = create_response(200)
