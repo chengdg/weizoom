@@ -26,7 +26,14 @@ class VirtualProducts(resource.Resource):
 	def get(request):
 		"""
 		浏览虚拟商品（福利卡券）列表
+		创建福利卡券活动
 		"""
+		_type = request.GET.get('type')
+		print '========type:',_type
+		tmpl = 'mall/editor/promotion/virtual_products.html'
+		if _type and _type == 'create':
+			tmpl = 'mall/editor/promotion/create_virtual_product.html'
+
 		c = RequestContext(request, {
 			'first_nav_name': export.MALL_PROMOTION_AND_APPS_FIRST_NAV,
 			'second_navs': export.get_promotion_and_apps_second_navs(request),
@@ -34,7 +41,7 @@ class VirtualProducts(resource.Resource):
 			'third_nav_name': export.MALL_PROMOTION_VIRTUAL_PRODUCTS_NAV
 		})
 
-		return render_to_response('mall/editor/promotion/virtual_products.html', c)
+		return render_to_response(tmpl, c)
 
 
 	@login_required
