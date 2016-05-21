@@ -242,6 +242,7 @@
 				<th>商品名称</th>
 				<th width="120">商品价格（元）</th>
 				<th width="80">商品库存</th>
+				<th width="120">创建时间</th>
 				<th width="120">操作</th>
 			</tr>
 		</thead>
@@ -256,20 +257,23 @@
 						${product.name}
 					</td>
 					<td>
-						${product.display_price}
+						${product.price}
 					</td>
 					<td>
-						${product.total_stocks}
+						${product.stocks}
+					</td>
+					<td>
+						${product.created_at}
 					</td>
 					<td>
 						{{if !product.has_forbidden_coupon}}
-							{{if !product.can_select}}
+							{{if !product.can_use}}
 							<label class="btn btn-primary checked" style="border-radius:3px;">
-								<input type="checkbox" autocomplete="off"><span>已选择</span>
+								<input type="checkbox" autocomplete="off"><span>已使用</span>
 							</label>
 							{{else}}
 							<label class="btn btn-primary" style="border-radius:3px;">
-								<input type="checkbox" autocomplete="off" class="{{if product.can_select}}xa-selectProduct{{/if}}" ><span>选取</span>
+								<input type="checkbox" autocomplete="off" class="{{if product.can_use}}xa-selectProduct{{/if}}" ><span>选取</span>
 							</label>
 							{{/if}}
 						{{/if}}
