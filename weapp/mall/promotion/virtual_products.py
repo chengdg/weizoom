@@ -74,7 +74,7 @@ class VirtualProducts(resource.Resource):
 				'name': product.name,
 				'bar_code': product.bar_code,
 				'price': product.price,
-				'stocks': product.stocks
+				'stocks': product.stocks,
 				'created_at': product.created_at.strftime('%Y-%m-%d %H:%M')
 			}
 			if product.id in active_product_ids:
