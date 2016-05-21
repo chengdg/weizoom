@@ -14,7 +14,7 @@
 	<ul class="breadcrumb">
 		<li>您当前所在位置</li>
 		<li><a href="/mall2/flash_sale_list/">促销管理</a></li>
-		<li class="active">福利卡券</li>
+		<li class="active">新建福利卡券</li>
 	</ul>
 </div>
 
@@ -33,51 +33,69 @@
 
 <div class="panel panel-default mt20  xb-panelBg">
 	<div class="panel-heading xui-createSaleHead">
-		限制规则
+		创建卡券
 	</div>
 	<form class="panel-body xui-formPanel xa-form xui-borderCancel mt30 pl40">
-		<!-- <div class=""> -->
-		<label class="star_show fn">活动时间
-		：</label>
-		<div style="display:inline-block; vertical-align:text-top;margin-top:-6px;">
-		<input
-			style="width:132px!important;cursor:pointer;"
-			type="text"
-			class="form-control xui-datePicker"
-			id="start_date"
-			name="start_date"
-			style=""
-		    value=""
-		    readonly="readonly"
-			data-validate="require-notempty"
-			data-enable-select-time="true"
-			data-ui-role="date-picker"
-		    data-format="yy-mm-dd HH:MM"
-		    data-min="now"
-		    data-max-el="#end_date"
-		    width="132"/>
-		    <div class="errorHint" data-error-hint="必须选择一个开始时间" style=""></div>
-		    </div>
-		至
-		<div style="display:inline-block; vertical-align:text-top;margin-top:-6px;">
-		<input
-			style="width:132px!important;cursor:pointer;"
-			type="text"
-			class="form-control xui-datePicker"
-			id="end_date"
-			name="end_date"
-		    value=""
-		    readonly="readonly"
-			data-validate="require-notempty"
-			data-ui-role="date-picker"
-			data-enable-select-time="true"
-		    data-format="yy-mm-dd HH:MM"
-		    data-min="now"
-		    data-min-el="#start_date"/>
-		    <div class="errorHint" data-error-hint="必须选择一个过期时间" style=""></div>
+		<div class="xui-i-col" style="display:block;">
+			<div class="xui-i-item">
+				<label class="star_show">活动名称：</label>
+				<input type="text" class="form-control" id="name" name="name" value="{% if promotion %}{{promotion.name}}{% endif %}" data-validate="require-string" minLength="1" maxLength="20" />
+				<div class="errorHint mt5 ml110" data-error-hint="活动名称必须在1-20个字内" ></div>
+			</div>
+			<!-- <div class=""> -->
+			<label class="star_show fn">卡券有效期
+			：</label>
+			<div style="display:inline-block; vertical-align:text-top;margin-top:-6px;">
+			<input
+				style="width:132px!important;cursor:pointer;"
+				type="text"
+				class="form-control xui-datePicker"
+				id="start_date"
+				name="start_date"
+				style=""
+			    value=""
+			    readonly="readonly"
+				data-validate="require-notempty"
+				data-enable-select-time="true"
+				data-ui-role="date-picker"
+			    data-format="yy-mm-dd HH:MM"
+			    data-min="now"
+			    data-max-el="#end_date"
+			    width="132"/>
+			    <div class="errorHint" data-error-hint="必须选择一个开始时间" style=""></div>
+			    </div>
+			至
+			<div style="display:inline-block; vertical-align:text-top;margin-top:-6px;">
+			<input
+				style="width:132px!important;cursor:pointer;"
+				type="text"
+				class="form-control xui-datePicker"
+				id="end_date"
+				name="end_date"
+			    value=""
+			    readonly="readonly"
+				data-validate="require-notempty"
+				data-ui-role="date-picker"
+				data-enable-select-time="true"
+			    data-format="yy-mm-dd HH:MM"
+			    data-min="now"
+			    data-min-el="#start_date"/>
+			    <div class="errorHint" data-error-hint="必须选择一个过期时间" style=""></div>
+			</div>
+			<input type="checkbox" id="notLimited" class="ml10 xa-forever" value="1"><label for="notLimited" class="vm ml5 fn">永久</label>
+			<!-- </div> -->
+			<div class="xui-i-item">
+				<label class="star_show">上传码库文件</label>
+				<div class="control-group xui-controlbox">
+					<div class="controls">
+						<input type="hidden" name="file_url" id="file_url" value="" data-validate="require-file" data-force-validate="true"/>
+						<div id="commonSelectCSVFileDialog-fileView"></div>
+						<span class="help-block mt15 xui-warning">仅支持不大于1MB的CSV文件</span>
+						<div class="errorHint"></div>
+					</div>
+				</div>
+			</div>
 		</div>
-		<input type="checkbox" id="notLimited" class="ml10 xa-forever" value="1"><label for="notLimited" class="vm ml5 fn">永久</label>
-		<!-- </div> -->
 
 		<div class="" style="display:inline-block;margin-top:-15px;margin-left:40px;">
 			<a class="btn btn-primary mr40 xa-submit xui-fontBold" href="javascript:void(0);">完成设置</a>
@@ -98,8 +116,7 @@
 			<tr>
 				<th>商品信息</th>
 				<th width="120">商品价格（元）</th>
-				<th>已参与的促销</th>
-				<th width="80">总销量</th>
+				<th>库存</th>
 				<th width="80">操作</th>
 			</tr>
 		</thead>
@@ -138,10 +155,7 @@
 					${product.display_price_range}
 				</td>
 				<td>
-					${product.promotion_name}
-				</td>
-				<td>
-					${product.sales}
+					333${product.total_stocks}555
 				</td>
 				<td>
 					<a href="javascript:void(0);" class="xa-delete">删除</a>
@@ -164,9 +178,9 @@ $(document).ready(function() {
 	var productSelector = new W.view.mall.PromotionSelectProductView({
 		el: '.xa-productSelector',
 		promotionId: promotionId,
-		enableMultiSelection: true,
+		enableMultiSelection: false,
 		tableOutAllSelectable:true,
-		uniqueDialog:'W.dialog.mall.SelectForbiddenCouponProductDialog',
+		uniqueDialog:'W.dialog.mall.CreatVirtualProductDialog',
 		tableTemplate: 'selected-promotion-products-view-tmpl-src'
 	});
 	productSelector.render();
@@ -212,6 +226,32 @@ $(document).ready(function() {
 			}
 		})
 	});
+
+	// csv文件
+	// var $csvView = $('#commonSelectCSVFileDialog-fileView');
+	// csvView = new W.view.common.CVSView({
+ //        el: $csvView.get(),
+ //        width: 84,
+ //        height:84,
+ //        autoShowHelp: true
+ //    });
+ //    csvView.bind('upload-file-success', function(path) {
+ //        var value = $imageInput.val();
+ //        if (value.length > 0) {
+ //            value += ','+ path;
+ //        }else{
+ //            value = path;
+ //        }
+ //        $imageInput.val(value);
+ //        if (!W.validate($('[name="file_url"]'))) {
+ //            return false;
+ //        }
+ //    });
+ //    csvView.bind('delete-file', function(path) {
+ //        $imageInput.val('');
+
+ //    });
+ //    csvView.render();
 });
 </script>
 

@@ -1,37 +1,37 @@
 {% extends "content_base_v2.html" %}
 
 {% block content-panel %}
-<div class="xui-forbiddenCpPage xui-commonPromotionStyle xui-promotionsPage">
+<div class="xui-welfarePage xui-commonPromotionStyle xui-promotionsPage">
 
-<div class="relative">
-	<ul class="breadcrumb">
-		<li>您当前所在位置</li>
-		<li><a href="/mall2/flash_sale_list/">促销管理</a></li>
-		<li class="active">福利卡券列表</li>
-	</ul>
-</div>
-<div class="xa-promotionFilterView xui-filterPanel"></div>
-
-<div class="panel panel-default mt20 xui-bigBoxbg">
-<div class="panel panel-default ml10 mr10 mb50" style="border:none;">
-	<div class="panel-heading xui-headStyle pl18"  style="background:#E9EDF5; margin-left: -2px;">
-		<input type="checkbox" id="topSelectAll" class="xa-selectAll" />
-		<label for="topSelectAll" class="xui-topSelectAll">全选</label>
-		<a href="javascript:void(0);" class="btn btn-default ml10 xa-proBatchFinish">结&nbsp;&nbsp;&nbsp;&nbsp;束</a>
-		<a href="/mall2/virtual_products/?type=create" class="btn btn-success ml10 fr xui-btnSetting"><img src="/static_v2/img/editor/plusOpcity.png" alt="">&nbsp;&nbsp;&nbsp;&nbsp;新建福利卡券</a>
+	<div class="relative">
+		<ul class="breadcrumb">
+			<li>您当前所在位置</li>
+			<li><a href="/mall2/flash_sale_list/">促销管理</a></li>
+			<li class="active">福利卡券列表</li>
+		</ul>
 	</div>
+	<div class="xa-promotionFilterView xui-filterPanel"></div>
 
-	
+	<div class="panel panel-default mt20 xui-bigBoxbg">
+		<div class="panel panel-default ml10 mr10 mb50" style="border:none;">
+			<div class="panel-heading xui-headStyle pl18"  style="background:#E9EDF5; margin-left: -2px;">
+				<input type="checkbox" id="topSelectAll" class="xa-selectAll" />
+				<label for="topSelectAll" class="xui-topSelectAll">全选</label>
+				<a href="javascript:void(0);" class="btn btn-default ml10 xa-proBatchFinish">结&nbsp;&nbsp;&nbsp;&nbsp;束</a>
+				<a href="/mall2/virtual_products/?type=create" class="btn btn-success ml10 fr xui-btnSetting"><img src="/static_v2/img/editor/plusOpcity.png" alt="">&nbsp;&nbsp;&nbsp;&nbsp;新建福利卡券</a>
+			</div>
 
-	<div class="xui-leftBoxTow">
-	<div class="panel-heading pl22">
-		<input type="checkbox" id="bottomSelectAll"  class="xa-selectAll" style="margin-left:-1px;"/>
-	<label for="bottomSelectAll" class="xui-topSelectAll">全选</label>
-		<a href="javascript:void(0);" class="btn btn-default ml10 xa-proBatchFinish">结&nbsp;&nbsp;&nbsp;&nbsp;束</a>
+			
+
+			<div class="xui-leftBoxTow">
+				<div class="panel-heading pl22">
+					<input type="checkbox" id="bottomSelectAll"  class="xa-selectAll" style="margin-left:-1px;"/>
+				<label for="bottomSelectAll" class="xui-topSelectAll">全选</label>
+					<a href="javascript:void(0);" class="btn btn-default ml10 xa-proBatchFinish">结&nbsp;&nbsp;&nbsp;&nbsp;束</a>
+				</div>
+			</div>
+		</div>
 	</div>
-</div>
-</div>
-
 </div>
 {% endblock %}
 
