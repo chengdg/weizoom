@@ -91,16 +91,18 @@
 						<div class="errorHint" data-error-hint="请选择供货商"></div>
 					</div>
 				</div>
+				{% if request.manager.username == 'jobs' %}
 				<div class="form-group">
-					<label class="control-label fl" for="supplier">商品类型{{product.type}}：</label>
+					<label class="control-label fl" for="type">商品类型：</label>
 					<div class="fl">
-	                	<select class="ml5">
-	                		<option value="normalProduct">普通商品</option>
-	                		<option value="virtualProduct">虚拟商品</option>
-	                		<option value="wzCard">微众卡</option>
+	                	<select class="ml5" id="type" name="type">
+	                		<option value="object" {% if product.type == 'object' %}selected='selected'{% endif %}>普通商品</option>
+	                		<option value="virtual" {% if product.type == 'virtual' %}selected='selected'{% endif %}>虚拟商品</option>
+	                		<option value="wzcard" {% if product.type == 'wzcard' %}selected='selected'{% endif %}>微众卡</option>
 	                	</select>
 					</div>
 				</div>
+				{% endif %}
 				<div class="form-group ">
 					<label class="control-label fl" for="purchase_price">采购价：</label>
 					<div class="fl">

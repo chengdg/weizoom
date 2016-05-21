@@ -29,7 +29,6 @@ class VirtualProducts(resource.Resource):
 		创建福利卡券活动
 		"""
 		_type = request.GET.get('type')
-		print '========type:',_type
 		tmpl = 'mall/editor/promotion/virtual_products.html'
 		if _type and _type == 'create':
 			tmpl = 'mall/editor/promotion/create_virtual_product.html'

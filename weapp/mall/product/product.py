@@ -1275,6 +1275,7 @@ class Product(resource.Resource):
                 'bar_code': request.POST.get('bar_code', '').strip(),
                 'thumbnails_url': thumbnails_url,
                 'detail': request.POST.get('detail', '').strip(),
+                'type': request.POST.get('type', models.PRODUCT_DEFAULT_TYPE),
                 'is_use_online_pay_interface': 'is_enable_online_pay_interface' in request.POST,
                 'is_use_cod_pay_interface': 'is_enable_cod_pay_interface' in request.POST,
                 'postage_id': postage_id,
