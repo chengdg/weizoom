@@ -891,8 +891,8 @@ CODE_STATUS_OVERDUE = 2 #已过期
 CODE_STATUS_EXPIRED = 3 #已失效
 CODE2TEXT = {
 	CODE_STATUS_NOT_GET: u'未领取',
-	CODE_STATUS_GET: u'已领取',
-	CODE_STATUS_OVERDUE: u'已过期',
+	CODE_STATUS_GET: u'已领取',  #已领取的就不判断是否过期，即使过期了数据库里依然是已领取状态，但是用户卡包里显示已过期
+	CODE_STATUS_OVERDUE: u'已过期',  #已过期的一定是没有被领取过的
 	CODE_STATUS_EXPIRED: u'已失效'
 }
 class VirtualProductHasCode(models.Model):
@@ -903,13 +903,28 @@ class VirtualProductHasCode(models.Model):
 	virtual_product = models.ForeignKey(VirtualProduct)
 	code = models.CharField(max_length=128) #卡号
 	password = models.CharField(max_length=128) #密码
-	start_time = models.CharField(max_length=20) #有效期起始时间
-	end_time = models.CharField(max_length=20) #有效期结束时间
+	start_time = models.DateTimeField() #有效期起始时间
+	end_time = models.DateTimeField()#有效期结束时间
 	status = models.IntegerField(default=CODE_STATUS_NOT_GET) #状态
-	member_id = models.CharField(max_length=20) #会员id
-	oid = models.CharField(max_length=20) #订单id
-	order_id = models.CharField(max_length=35) #订单order_id
+	get_time = models.CharField(max_length=20, default='') #领取/发放时间
+	member_id = models.CharField(max_length=20, default='') #会员id
+	oid = models.CharField(max_length=20, default='') #订单id
+	order_id = models.CharField(max_length=35, default='') #订单order_id
 	created_at = models.DateTimeField(auto_now_add=True)  #创建时间
 
 	class Meta(object):
 		db_table = 'mallpromotion_virtual_product_has_code'
+
+	def __update_status_if_necessary(self):
+		if self.status == CODE_STATUS_NOT_GET and end_time <= now:
+			# 未领取的卡券如果过期了则更新状态
+			self.status = CODE_STATUS_OVERDUE
+			self.save()
+
+	@property
+	def can_not_use(self):
+		self.__update_status_if_necessary()
+		if self.status in [CODE_STATUS_OVERDUE, CODE_STATUS_EXPIRED]:
+			return True
+		else:
+			return False
