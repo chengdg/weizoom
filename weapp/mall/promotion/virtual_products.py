@@ -160,23 +160,100 @@ class VirtualProducts(resource.Resource):
 
 		return response.get_response()
 
+class FileUploader(resource.Resource):
+	app = 'mall2'
+	resource = 'upload_virtual_product_file'
+
+	def api_post(request):
+		"""
+		上传文件
+		"""
+		upload_file = request.FILES.get('Filedata', None)
+		owner_id = request.owner.id
+
+		codes = []
+		weizoom_card_passwords = []
+		response = create_response(500)
+		if upload_file:
+			try:
+				now = datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
+				upload_file.name = now + upload_file.name
+				file_path = FileUploader.__save_file(upload_file, owner_id)
+			except Exception, e:
+				print(e)
+				response.errMsg = u'保存文件出错'
+				return response.get_response()
+			try:
+				file_name_dir = '%s/owner_id%s/%s' % (settings.UPLOAD_DIR,owner_id,upload_file.name)
+				data = xlrd.open_workbook(file_name_dir)
+				table = data.sheet_by_index(0)
+				nrows = table.nrows   #行数
+				for i in range(1,nrows):
+					table_content = table.cell(i,0).value
+					if table_content!= '':
+						codes.append(str(table_content))
+				for i in range(1,nrows):
+					table_content = table.cell(i,1).value
+					if table_content!= '':
+						passwords.append(str(table_content))
+				if(len(codes) != len(passwords)):
+					response.errMsg = u'上传的卡号与密码列数不对应'
+					return response.get_response()
+			except Exception, e:
+				print(e)
+				response.errMsg = u'上传文件错误'
+				return response.get_response()
+
+			valid_codes = get_valid_codes(codes)
+
+			response = create_response(200)
+			response.data = {
+				'file_path': file_path,
+				'valid_num': len(valid_codes)
+			}
+		else:
+			response.errMsg = u'文件错误'
+		return response.get_response()
+
+	@staticmethod
+	def __save_file(file, owner_id):
+		"""
+		@param file: 文件
+		@param owner_id: webapp_owner_id
+		@return: 文件保存路径
+		"""
+		content = []
+		curr_dir = os.path.dirname(os.path.abspath(__file__))
+		if file:
+			for chunk in file.chunks():
+				content.append(chunk)
+
+		dir_path = os.path.join(curr_dir, '../../../','static', 'upload', 'owner_id'+owner_id)
+		if not os.path.exists(dir_path):
+			os.makedirs(dir_path)
+		file_path = os.path.join(dir_path, file.name)
+
+		dst_file = open(file_path, 'wb')
+		print >> dst_file, ''.join(content)
+		dst_file.close()
+		file_path = os.path.join('\standard_static', 'upload', 'owner_id'+owner_id, file.name).replace('\\','/')
+		return file_path
+
 
 def upload_codes_for(code_file_path, virtual_product):
 	if not code_file_path:
 		return 0
 
 	codes_dict = get_codes_from_file(code_file_path)
-	existed_codes = promotion_models.VirtualProductHasCode.objects.filter(status__in=[promotion_models.CODE_STATUS_NOT_GET, promotion_models.CODE_STATUS_GET])
-	existed_code_ids = {}
-	for code in existed_codes:
-		if not code.can_not_use:
-			existed_code_ids[code.code] = 1
+	existed_code_ids = __get_existed_code_ids()
 
 	success_num = 0
 	for code in codes_dict:
 		code = code.strip()
 		#如果库中已存在已领取或者未领取的该码，则不添加这个码
-		if not code or existed_code_ids[code]:
+		if not code:
+			continue
+		if existed_code_ids.has_key(code):
 			continue
 
 		password = codes_dict[code].strip()
@@ -191,6 +268,23 @@ def upload_codes_for(code_file_path, virtual_product):
 		success_num += 1
 	logging.info('upload %d codes for virtual_product id %d' % (success_num, virtual_product.id))
 	return success_num
+
+def __get_existed_code_ids():
+	existed_codes = promotion_models.VirtualProductHasCode.objects.filter(status__in=[promotion_models.CODE_STATUS_NOT_GET, promotion_models.CODE_STATUS_GET])
+	existed_code_ids = {}
+	for code in existed_codes:
+		if not code.can_not_use:
+			existed_code_ids[code.code] = 1
+
+	return existed_code_ids
+
+def get_valid_codes(codes):
+	existed_code_ids = __get_existed_code_ids()
+	valid_codes = set()
+	for code in codes:
+		if not existed_code_ids.has_key(code):
+			valid_codes.add(code)
+	return valid_codes
 
 
 def get_codes_from_file(path):
