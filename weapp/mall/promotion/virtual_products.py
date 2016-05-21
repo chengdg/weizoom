@@ -55,8 +55,8 @@ class VirtualProducts(resource.Resource):
 		#获取每页个数
 		count_per_page = int(request.GET.get('count_per_page', 10))
 
-		name = request.GET.get('name', '')
-		bar_code = request.GET.get('barCode', '')
+		name = request.GET.get('name', '').strip()
+		bar_code = request.GET.get('barCode', '').strip()
 
 		activities = promotion_models.VirtualProduct.objects.filter(owner=request.manager, is_finished=False)
 		active_product_ids = [activity.product_id for activity in activities]
@@ -87,43 +87,37 @@ class VirtualProducts(resource.Resource):
 	@login_required
 	def api_put(request):
 		"""
-		添加禁用商品
+		创建福利卡券活动
 		"""
 		owner = request.manager
-		product_id = request.POST.get('product_id')
-		start_time = request.POST.get('start_time')
-		end_time = request.POST.get('end_time')
-		is_permanant_active = int(request.POST.get('is_permanant_active', '0'))
-		product_ids = []
-		for product in json.loads(products):
-			product_ids.append(product['id'])
+		name = request.POST.get('name').strip()
+		product_id = request.POST.get('product_id').strip()
+		start_time = request.POST.get('start_time').strip()
+		end_time = request.POST.get('end_time').strip()
+		code_file_path = request.POST.get('code_file_path').strip()
+		
 		try:
-			for product_id in product_ids:
-				promotion_models.ForbiddenCouponProduct.objects.create(
-					owner=owner,
-					product_id=product_id,
-					start_date=start_date,
-					end_date=end_date,
-					is_permanant_active=is_permanant_active
-				)
-			response = create_response(200)
-			try:
-				webapp_owner_id = owner.id
-				key = 'forbidden_coupon_products_%s' % webapp_owner_id
-				utils.cache_util.delete_cache(key)
-				logging.info(u"'del forbidden_coupon_products cache,key:{}".format(key))
-			except:
-				watchdog_alert(u'del forbidden_coupon_products cache error:{}'.format(unicode_full_stack()))
+			#先创建福利卡券活动
+			virtual_product = promotion_models.VirtualProduct.objects.create(
+								owner=owner,
+								name=name,
+								product_id=product_id
+							)
+			#再为该福利卡券活动上传卡密
+			success_num = upload_codes_for(code_file_path, virtual_product)
 
+			response = create_response(200)
+			response.data = {'success_num': success_num}
 		except:
 			response = create_response(500)
 
 		return response.get_response()
 
+
 	@login_required
 	def api_post(request):
 		"""
-		结束禁用商品
+		修改福利卡券活动，补充上传卡密
 		"""
 		owner = request.manager
 		ids = request.POST.get('id', '')
@@ -136,3 +130,48 @@ class VirtualProducts(resource.Resource):
 			response = create_response(500)
 		
 		return response.get_response()
+
+
+def upload_codes_for(code_file_path, virtual_product):
+	if not code_file_path:
+		return 0
+
+	codes_dict = get_codes_from_file(code_file_path)
+	existed_codes = promotion_models.VirtualProductHasCode.objects.filter(status__in=[promotion_models.CODE_STATUS_NOT_GET, promotion_models.CODE_STATUS_GET])
+	existed_code_ids = {}
+	for code in existed_codes:
+		if not code.can_not_use:
+			existed_code_ids[code.code] = 1
+
+	success_num = 0
+	for code in codes_dict:
+		code = code.strip()
+		#如果库中已存在已领取或者未领取的该码，则不添加这个码
+		if not code or existed_code_ids[code]:
+			continue
+
+		password = codes_dict[code].strip()
+		promotion_models.VirtualProductHasCode.objects.create(
+			owner=owner,
+			virtual_product=virtual_product,
+			code=code,
+			password=password,
+			start_time=start_time,
+			end_time=end_time
+		)
+		success_num += 1
+	logging.info('upload %d codes for virtual_product id %d' % (success_num, virtual_product.id))
+	return success_num
+
+
+def get_codes_from_file(path):
+    """
+    从文件中读取福利卡券的码库
+    """
+    pass
+    # file = ''
+    # if file:
+    #     pass
+    # else:
+    #     return {}
+
