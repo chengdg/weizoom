@@ -71,6 +71,7 @@ class VirtualProducts(resource.Resource):
 		for product in products:
 			product.fill_standard_model()
 			_product = {
+				'id': product.id,
 				'name': product.name,
 				'bar_code': product.bar_code,
 				'price': product.price,
@@ -183,3 +184,9 @@ def get_codes_from_file(path):
     # else:
     #     return {}
 
+
+def update_stocks():
+	"""
+	更新商品的库存
+	"""
+	pass
