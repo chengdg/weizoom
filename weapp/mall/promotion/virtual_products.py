@@ -69,8 +69,12 @@ class VirtualProducts(resource.Resource):
 
 		items = []
 		for product in products:
-			_product = product.to_dict()
-			if _product['id'] in active_product_ids:
+			_product = {
+				'name': product.name,
+				'bar_code': product.bar_code,
+				'price': product.price
+			}
+			if product.id in active_product_ids:
 				_product['can_use'] = False
 			else:
 				_product['can_use'] = True
