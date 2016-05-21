@@ -24,6 +24,8 @@ from mall.promotion.card_exchange import CardExchange
 from modules.member.models import MemberInfo
 from market_tools.tools.weizoom_card import models as card_models
 from datetime import datetime
+import requests
+import json
 
 template_path_items = os.path.dirname(__file__).split(os.sep)
 TEMPLATE_DIR = '%s/templates' % template_path_items[-1]
@@ -147,6 +149,46 @@ def get_weizoom_card_exchange_list(request):
 		'has_expired_cards': has_expired_cards,
 		'is_binded': is_binded,
 		'is_weshop': is_weshop
+	})
+	return render_to_response('card_exchange/templates/card_exchange/webapp/m_card_exchange_list.html', c)
+
+def get_weizoom_card_wallet(request):
+	"""
+	微众卡钱包
+	"""
+	member_id = request.member.id
+	member_info = MemberInfo.objects.get(member_id=member_id)
+	is_binded = member_info.is_binded
+	member_has_cards = promotion_models.MemberHasWeizoomCard.objects.filter(member_id = member_id)
+
+	data_card = {}
+	card_infos_list = []
+	for card in member_has_cards:
+		card_infos_list.append({
+			'card_number': card.card_number,
+			'card_password': card.card_password
+		})
+
+	data_card['card_infos'] = json.dumps(card_infos_list)
+
+	card_details_dic = {}
+	if member_has_cards:
+		url = 'http://%s/card/get_cards/?_method=post' % settings.CARD_SERVER_DOMAIN
+		resp = requests.post(url, params=data_card)
+		text = json.loads(resp.text)
+		card_infos = text['data']['card_infos']
+
+		card_details = []
+		for card in card_infos:
+			card_details += card.values()
+
+		card_details_dic['card'] = card_details
+	c = RequestContext(request, {
+		'page_title': u'微众卡',
+		'cards': card_details_dic,
+		# 'has_expired_cards': has_expired_cards,
+		'is_binded': is_binded,
+		'is_weshop': True
 	})
 	return render_to_response('card_exchange/templates/card_exchange/webapp/m_card_exchange_list.html', c)
 
