@@ -92,7 +92,7 @@
 		                <input type="hidden" id="weizoom_card_ids">
 		                <input type="hidden" id="weizoom_card_passwords">
 		                <input type="hidden" id="file_path">
-			            <span class="xa-exchangeStock">{% if card_stock %}库存：{{card_stock}}{% endif %}</span>
+			            <span class="xa-exchangeStock">{% if valid_num %}库存：{{valid_num}}{% endif %}</span>
 			            <span><a target="_blank" {% if rebate_rule %} href="/apps/rebate/card_details/?id={{ rebate_rule.id }}" {% else %}{% endif %} class="xui-detail" title="发放详情">发放详情</a></span>
 		            </div>
 		        </div>
@@ -220,17 +220,21 @@ $(document).ready(function() {
         overrideEvents = ['onError', 'onUploadSuccess'],
         multi = false,
         removeCompleted = false,
-        uploader = '/mall2/upload_virtual_product_file/',
+        uploader = '/mall2/api/upload_virtual_product_file/',
         cancelImg = '/static/img/cancel.png',
         buttonText = '添加码库',
         fileTypeExts = '*.xls',
         method = 'post',
         removeTimeout = 0.0,
         width = 100,
+        formData = {
+            'owner_id': '{{ request.webapp_owner_id }}'
+        },
         onError = function(errorType,file) {
             xlog(errorType);
             xlog(file.name);
         };
+
     //初始化上传组件
     $("#card-file").uploadify({
         overrideEvents: overrideEvents,
@@ -245,9 +249,10 @@ $(document).ready(function() {
         fileTypeExts: fileTypeExts,
         method: method,
         removeTimeout: removeTimeout,
+        formData: formData,
         onUploadStart: function(file){
             if(file && (file.name.substring(file.name.length - 3,file.name.length) == 'xls')){}else{
-                W.showHint('error', '请上传正确csv文件');
+                W.showHint('error', '请上传正确excel文件');
                 $("#card-file").uploadify('cancel', '*');
                 $("#card-file").uploadify('stop');
             }
@@ -258,7 +263,7 @@ $(document).ready(function() {
                 console.log(response.data);
                 $("#card-file").find('.uploadify-button-text').html('重新选择');
                 $("#file_path").val(response.data['file_path']);
-                $(".xa-exchangeStock").html("库存：" + response.data['card_stock']);
+                $(".xa-exchangeStock").html("库存：" + response.data['valid_num']);
                 has_file = true;
             }else{
                 W.showHint('error', response.errMsg);

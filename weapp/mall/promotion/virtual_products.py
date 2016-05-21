@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
-import json
+import json, os, xlrd
 import logging
 from datetime import datetime
 
@@ -18,6 +18,7 @@ from mall import models as mall_models
 from watchdog.utils import watchdog_alert
 
 import utils
+from django.conf import settings
 
 class VirtualProducts(resource.Resource):
 	app = 'mall2'
@@ -169,12 +170,13 @@ class FileUploader(resource.Resource):
 		上传文件
 		"""
 		upload_file = request.FILES.get('Filedata', None)
-		owner_id = request.owner.id
+		owner_id = request.POST.get('owner_id', None)
 
 		codes = []
-		weizoom_card_passwords = []
+		passwords = []
 		response = create_response(500)
-		if upload_file:
+		file_path = ""
+		if upload_file and owner_id:
 			try:
 				now = datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
 				upload_file.name = now + upload_file.name
@@ -184,15 +186,14 @@ class FileUploader(resource.Resource):
 				response.errMsg = u'保存文件出错'
 				return response.get_response()
 			try:
-				file_name_dir = '%s/owner_id%s/%s' % (settings.UPLOAD_DIR,owner_id,upload_file.name)
-				data = xlrd.open_workbook(file_name_dir)
+				data = xlrd.open_workbook(file_path)
 				table = data.sheet_by_index(0)
 				nrows = table.nrows   #行数
-				for i in range(1,nrows):
+				for i in range(0,nrows):
 					table_content = table.cell(i,0).value
 					if table_content!= '':
 						codes.append(str(table_content))
-				for i in range(1,nrows):
+				for i in range(0,nrows):
 					table_content = table.cell(i,1).value
 					if table_content!= '':
 						passwords.append(str(table_content))
@@ -236,7 +237,7 @@ class FileUploader(resource.Resource):
 		dst_file = open(file_path, 'wb')
 		print >> dst_file, ''.join(content)
 		dst_file.close()
-		file_path = os.path.join('\standard_static', 'upload', 'owner_id'+owner_id, file.name).replace('\\','/')
+		# file_path = os.path.join('\standard_static', 'upload', 'owner_id'+owner_id, file.name).replace('\\','/')
 		return file_path
 
 
