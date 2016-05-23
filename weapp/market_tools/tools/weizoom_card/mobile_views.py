@@ -157,13 +157,15 @@ def get_weizoom_card_wallet(request):
 	微众卡钱包
 	"""
 	member_id = request.member.id
-	member_info = MemberInfo.objects.get(member_id=member_id)
-	is_binded = member_info.is_binded
+	# member_info = MemberInfo.objects.get(member_id=member_id)
+	# is_binded = member_info.is_binded
 	member_has_cards = promotion_models.MemberHasWeizoomCard.objects.filter(member_id = member_id)
 
 	data_card = {}
 	card_infos_list = []
+	card_number2card = {}
 	for card in member_has_cards:
+		card_number2card[card.card_number] = card
 		card_infos_list.append({
 			'card_number': card.card_number,
 			'card_password': card.card_password
@@ -172,6 +174,7 @@ def get_weizoom_card_wallet(request):
 	data_card['card_infos'] = json.dumps(card_infos_list)
 
 	card_details_dic = {}
+	has_expired_cards = False
 	if member_has_cards:
 		url = 'http://%s/card/get_cards/?_method=post' % settings.CARD_SERVER_DOMAIN
 		resp = requests.post(url, params=data_card)
@@ -180,17 +183,28 @@ def get_weizoom_card_wallet(request):
 
 		card_details = []
 		for card in card_infos:
+			cur_card_details = card.values()[0]
+			card_number = cur_card_details['card_number']
+			cur_card_details['created_at'] = card_number2card[card_number].created_at.strftime('%Y-%m-%d')
+			cur_card_details['type'] = u'微众商城' if card_number2card[card_number].source == 0 else u'返利活动'
+			valid_time_to = cur_card_details['valid_time_to']
+			now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+			if now > valid_time_to:
+				cur_card_details['is_expired'] = True
+				has_expired_cards = True
+			else:
+				cur_card_details['is_expired'] = False
 			card_details += card.values()
 
 		card_details_dic['card'] = card_details
 	c = RequestContext(request, {
 		'page_title': u'微众卡',
 		'cards': card_details_dic,
-		# 'has_expired_cards': has_expired_cards,
-		'is_binded': is_binded,
+		'has_expired_cards': has_expired_cards,
+		'is_binded': True,
 		'is_weshop': True
 	})
-	return render_to_response('card_exchange/templates/card_exchange/webapp/m_card_exchange_list.html', c)
+	return render_to_response('card_exchange/templates/card_exchange/webapp/m_card_wallet.html', c)
 
 
 def get_card_exchange_detail(request):
