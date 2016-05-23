@@ -224,6 +224,36 @@ def get_card_exchange_detail(request):
 
 	return render_to_response('%s/weizoom_card/webapp/weizoom_card_change_info.html' % TEMPLATE_DIR, c)
 
+def get_card_wallet_details(request):
+	"""
+	微众卡钱包卡详情
+	"""
+	card_number = request.GET.get('card_id','')
+	card_password = request.GET.get('card_password', '')
+	weizoom_card_orders_list = get_card_detail_normal(request, card_number)
+
+	url = 'http://%s/card/get_cards/?_method=post' % settings.CARD_SERVER_DOMAIN
+	data_card = {}
+	card_infos_list = []
+	card_infos_list.append({
+		'card_number': card_number,
+		'card_password': card_password
+	})
+	data_card['card_infos'] = json.dumps(card_infos_list)
+	resp = requests.post(url, params=data_card)
+	text = json.loads(resp.text)
+	card_infos = text['data']['card_infos']
+	if card_infos:
+		card_infos = card_infos[0][card_number]
+
+	c = RequestContext(request, {
+		'card_orders': weizoom_card_orders_list,
+		'weizoom_card': card_infos,
+		# 'valid_restrictions': '%.2f' % valid_restrictions
+	})
+
+	return render_to_response('%s/weizoom_card/webapp/weizoom_card_wallet_details.html' % TEMPLATE_DIR, c)
+
 def get_weizoom_card_change_money(request):
 	normal = request.GET.get('normal', 0)
 	card_infos = request.GET.get('card_infos', '')
