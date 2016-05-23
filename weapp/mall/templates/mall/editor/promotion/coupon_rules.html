@@ -59,8 +59,8 @@ table{
 	<thead class="xui-theadHeight">
 		<tr>
 			<th width="50">序号</th>
-			<th>优惠券名称</th>
-			<th>类型</th>
+			<th width="100">优惠券名称</th>
+			<th width="70">类型</th>
 			<th>价值</th>
 			<th>领取限制</th>
 			<th>有效期</th>
@@ -79,7 +79,7 @@ table{
 				<tr class="h80 xui-couponTr" data-id="${ promotion.id }">
 					<td width="50">${ i+1 }</td>
 					<td width="100">${ promotion.detail.name }</td>
-					<td>
+					<td width="70">
 						{{if promotion.detail.limit_product}}
 						多商品券
 						{{else}}
@@ -92,7 +92,7 @@ table{
 						{{if promotion.detail.limit_counts<=0}}无限{{/if}}<br/>
 						<p class="xui-greyColor xa-remained-count">库存{{if promotion.status != '已结束'}}${promotion.detail.remained_count}{{else}}0{{/if}}</p>
 					</td>
-					<td>${ promotion.start_date}<br/>${ promotion.end_date}
+					<td width="126">${ promotion.start_date}<br/>${ promotion.end_date}
 					</td>
 					<td>
 						{{if promotion.detail.limit_product}}
@@ -105,7 +105,7 @@ table{
 					</td>
 					<td>${ promotion.detail.use_count }
 					</td>
-					<td>
+					<td width="150">
 						<a href="/mall2/coupon_list/?id=${ promotion.detail.id }">码库</a>
 						{{if promotion.status == '已结束' }}
 							&nbsp;-&nbsp;<a href="javascript:void(0);" class="xa-delete">删除</a>
