@@ -9,6 +9,9 @@
 .xui-promotionsPage ul li:nth-child(2n) .xb-stripedTable tbody > tr{
 	background: #fff;
 }
+table{
+	table-layout:fixed;
+}
 </style>
 {% endblock %}
 {% block content-panel %}
@@ -71,11 +74,11 @@
 <ul>
 	{{each(i, promotion) items}}
 	<li>
-		<table class="table table-bordered table-condensed xb-stripedTable xb-noTdBorder mb0 noborder">
+		<table width="100%" class="table table-bordered table-condensed xb-stripedTable xb-noTdBorder mb0 noborder">
 			<tbody>
 				<tr class="h80 xui-couponTr" data-id="${ promotion.id }">
-					<td>${ i+1 }</td>
-					<td>${ promotion.detail.name }</td>
+					<td width="50">${ i+1 }</td>
+					<td width="100">${ promotion.detail.name }</td>
 					<td>
 						{{if promotion.detail.limit_product}}
 						多商品券
