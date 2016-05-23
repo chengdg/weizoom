@@ -13,6 +13,7 @@ from django.test.client import Client
 from mall.models import *
 from mall.promotion.models import *
 from modules.member.models import *
+from account.social_account.models import SocialAccount
 import mall_product_steps as product_step_util
 from .steps_db_util import (
     get_custom_model_id_from_name, get_product_model_keys, get_area_ids
@@ -449,6 +450,10 @@ def step_impl(context, webapp_owner_name):
 			#先关注再取消关注，模拟非会员购买  duhao  20160407
 			context.execute_steps(u"When %s关注%s的公众号" % (webapp_user_name, webapp_owner_name))
 			context.execute_steps(u"When %s取消关注%s的公众号" % (webapp_user_name, webapp_owner_name))
+			openid = "%s_%s" %(webapp_user_name, webapp_owner_name)
+			soucial_account_id = SocialAccount.objects.get(openid=openid).id
+			member_id = MemberHasSocialAccount.objects.get(account_id=soucial_account_id).member_id
+			Member.objects.filter(id=member_id).update(status=2)
 
 			#clear last member's info in cookie and context
 			context.execute_steps(u"When 清空浏览器")

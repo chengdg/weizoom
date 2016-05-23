@@ -1,0 +1,703 @@
+{% extends "content_base_v2.html" %}
+{% block css %}
+<style type="text/css">
+.xi-member-name {
+	  overflow: hidden;
+	  text-overflow: ellipsis;
+	  white-space: nowrap;
+	  width: 152px;
+	  display: inline-block;
+}
+</style>
+{% endblock %}
+{% block content-panel %}
+<div class="xui-memberListPage">
+
+	<div class="relative">
+		<ul class="breadcrumb">
+			<li>您当前所在位置</li>
+			<li>
+				<a href="/mall2/product_list/?shelve_type=1">商品管理</a>
+			</li>
+			<li>
+				{% if shelve_type == 1 %}
+				<a href="/mall2/product_list/?shelve_type=1">在售商品管理</a>
+				{% else %}
+				<a href="/mall2/product_list/?shelve_type=0">待售商品管理</a>
+				{% endif %}
+			</li>
+			<li class="active">{{product_name}}</li>
+		</ul>
+	</div>
+	<div class="panel panel-default xb-rightPanel pr">
+		<div class="panel-heading dropdown xui-operation update_dropdown" style="height:40px">
+			<div class="xui-operationWrap">
+				<span class="checkbox" style="display:inline-block;margin:0 15px 0 15px;">
+					<label  for="all">
+						<input type="checkbox" id="xa-selectAll" style="top:14px" id="all">
+						全选
+					</label>
+				</span>
+				<div class="pr xui-inlineblock ">
+					<a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" data-target="#" style="width:96px;">
+						群发消息</span>
+				   	</a>
+				   	<ul class="dropdown-menu xui-menu multi-level" role="menu"  aria-labelledby="dropdownMenu">
+					    <li class="dropdown-submenu">
+					    	<a class="xa-send-message" type="button"  href="javascript:void(0);" data-status="selected">
+								给选中的人发消息（已取消关注除外）</span>
+						   	</a>
+					    </li>
+					    <li class="dropdown-submenu">
+					    	<a class=" xa-send-message"  type="button"  href="javascript:void(0);" data-status="all">
+								给所有人发消息（已取消关注除外）</span>
+						   	</a>
+					    </li>
+					</ul>
+				</div>
+				&nbsp;&nbsp;
+
+
+				<div class="pr xui-inlineblock mr10">
+					<a href="javascript:void(0);" type="button" class="pr dropdown-toggle" data-toggle="dropdown" data-target="#" style="width:96px;">
+						修改等级
+				   	</a>
+				   	<ul class="dropdown-menu multi-level" role="menu"  aria-labelledby="dropdownMenu">
+					    <li class="dropdown-submenu">
+					    	<a class="" type="button"  href="javascript:void(0);">
+								给选中的人修改等级
+						   	</a>
+						   	{% if grades %}
+						   	<ul class="dropdown-menu xui-dropbox" style="min-height:29px;">
+						   		{% for grade in grades %}
+						   		<li><a href="javascript:void(0);" class="update-grade" data-id="{{grade.id}}" data-status="selected">{{grade.name}}</a></li>
+						   		{% endfor %}
+						   	</ul>
+						   	{% endif %}
+					    </li>
+					    <li class="dropdown-submenu">
+					    	<a class=""  type="button"  href="javascript:void(0);" >
+								给所有人修改等级
+						   	</a>
+						   	{% if grades %}
+						   	<ul class="dropdown-menu xui-dropbox" {% if grades|length == 0 %}style="display:none;"{% endif %} style="min-height:29px;">
+						   		{% for grade in grades %}
+						   		<li><a href="javascript:void(0);" class="update-grade" data-id="{{grade.id}}" data-status="all">{{grade.name}}</a></li>
+						   		{% endfor %}
+						   	</ul>
+						   	{% endif %}
+					    </li>
+					</ul>
+				</div>
+
+				<div class="pr xui-inlineblock mr10">
+					<a href="javascript:void(0);" type="button" class="pr dropdown-toggle" data-toggle="dropdown" data-target="#" style="width:96px;">
+						添加分组
+				   	</a>
+				   	<ul class="dropdown-menu multi-level" role="menu"  aria-labelledby="dropdownMenu">
+					    <li class="dropdown-submenu">
+					    	<a class="" type="button"  href="javascript:void(0);">
+								给选中的人修改分组
+						   	</a>
+						   	{% if user_tags %}
+						   	<ul class="dropdown-menu xui-dropbox" style="{% if user_tags|length == 0 %} display:none; {% endif %} ">
+						   		{% for tag in user_tags %}
+						   			{% if tag.name != '未分组' %}
+							   			<li><a  href="javascript:void(0);" data-status="selected"  class="update-tag" data-id="{{tag.id}}">{{tag.name}}</a></li>
+							   		{% endif %}
+						   		{% endfor %}
+						   	</ul>
+					   		{% endif %}
+					    </li>
+					    <li class="dropdown-submenu">
+					    	<a class=""  type="button"  href="javascript:void(0);" >
+								给所有人修改分组
+						   	</a>
+						   	{% if user_tags %}
+						   	<ul class="dropdown-menu xui-dropbox" style="{% if user_tags|length == 0 %} display:none; {% endif %} ">
+						   		{% for tag in user_tags %}
+						   			{% if tag.name != '未分组' %}
+							   			<li><a  href="javascript:void(0);" data-status="all"  class="update-tag" data-id="{{tag.id}}">{{tag.name}}</a></li>
+							   		{% endif %}
+							   	{% endfor %}
+						   	</ul>
+					   		{% endif %}
+					    </li>
+					</ul>
+				</div>
+				<div class="pr xui-inlineblock mr10">
+					<a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" data-target="#" style="width:96px;">
+						发优惠券</span>
+				   	</a>
+				   	<ul class="dropdown-menu xui-menu multi-level" role="menu"  aria-labelledby="dropdownMenu">
+					    <li class="dropdown-submenu">
+					    	<a class=" xa-select-member" type="button"  href="javascript:void(0);">
+								给选中的人发优惠券（已取消关注除外）</span>
+						   	</a>
+					    </li>
+					    <li class="dropdown-submenu">
+					    	<a class=" xa-all-member"  type="button"  href="javascript:void(0);" >
+								给所有人发优惠券（已取消关注除外）</span>
+						   	</a>
+					    </li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div
+			data-ui-role="advanced-table"
+			data-app="mall2"
+			data-resource="product_members"
+			data-template-id="#members-view"
+			data-enable-paginator="true"
+			data-enable-sort="false"
+			data-selectable="true"
+			data-item-count-per-page="50"
+			class="panel-body"
+			data-args='{"id":"{{id}}"}'
+			data-disable-header-select="true"
+			data-user-webapp-id={{user.get_profile.webapp_id}}
+			data-download-excel-app="member"
+		></div>
+
+		<div class="dropdown xui-operation update_dropdown pa"  style="bottom:0px;">
+			<div >
+				<span class="checkbox" style="display:inline-block;margin:0 15px 0 13px;">
+					<label class="xa-selectAll" for="all">
+							<input type="checkbox" style="top:14px" id="all">
+							全选
+					</label>
+				</span>
+				<div class="pr xui-inlineblock">
+					<a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" data-target="#" style="width:96px;">
+						群发消息</span>
+				   	</a>
+				   	<ul class="dropdown-menu multi-level" role="menu"  aria-labelledby="dropdownMenu">
+					    <li class="dropdown-submenu">
+					    	<a class="xa-send-message" type="button"  href="javascript:void(0);" data-status="selected">
+								给选中的人发消息（已取消关注除外）</span>
+						   	</a>
+					    </li>
+					    <li class="dropdown-submenu">
+					    	<a class="xa-send-message"  type="button"  href="javascript:void(0);" data-status="all">
+								给所有人发消息（已取消关注除外）</span>
+						   	</a>
+					    </li>
+					</ul>
+				</div>
+				&nbsp;&nbsp;
+				<div class="pr xui-inlineblock">
+					<a href="javascript:void(0);" type="button" class="pr dropdown-toggle" data-toggle="dropdown" data-target="#" style="width:96px;">
+						修改等级
+				   	</a>
+				   	<ul class="dropdown-menu multi-level" role="menu"  aria-labelledby="dropdownMenu">
+					    <li class="dropdown-submenu">
+					    	<a class="" type="button"  href="javascript:void(0);">
+								给选中的人修改等级
+						   	</a>
+						   	{% if grades %}
+						   	<ul class="dropdown-menu xui-dropbox" style="min-height:29px;">
+						   		{% for grade in grades %}
+						   		<li><a href="javascript:void(0);" class="update-grade" data-id="{{grade.id}}" data-status="selected">{{grade.name}}</a></li>
+						   		{% endfor %}
+						   	</ul>
+						   	{% endif %}
+					    </li>
+					    <li class="dropdown-submenu">
+					    	<a class=""  type="button"  href="javascript:void(0);" >
+								给所有人修改等级
+						   	</a>
+						   	{% if grades %}
+						   	<ul class="dropdown-menu xui-dropbox" {% if user_tags|length == 0 %}style="display:none;"{% endif %} style="min-height:29px;">
+						   		{% for grade in grades %}
+						   		<li><a href="javascript:void(0);" class="update-grade" data-id="{{grade.id}}" data-status="all">{{grade.name}}</a></li>
+						   		{% endfor %}
+						   	</ul>
+						   	{% endif %}
+					    </li>
+					</ul>
+				</div>
+				&nbsp;&nbsp;
+				<div class="pr xui-inlineblock">
+					<a href="javascript:void(0);" type="button" class="pr dropdown-toggle" data-toggle="dropdown" data-target="#" style="width:96px;">
+						添加分组
+				   	</a>
+				   	<ul class="dropdown-menu multi-level" role="menu"  aria-labelledby="dropdownMenu">
+					    <li class="dropdown-submenu">
+					    	<a class="" type="button"  href="javascript:void(0);">
+								给选中的人修改分组
+						   	</a>
+						   	{% if user_tags %}
+						   	<ul class="dropdown-menu xui-dropbox" style="{% if user_tags|length == 0 %} display:none; {% endif %} ">
+						   		{% for tag in user_tags %}
+						   			{% if tag.name != '未分组' %}
+							   			<li><a  href="javascript:void(0);" data-status="selected"  class="update-tag" data-id="{{tag.id}}">{{tag.name}}</a></li>
+							   		{% endif %}
+						   		{% endfor %}
+						   	</ul>
+						   	{% endif %}
+					    </li>
+					    <li class="dropdown-submenu">
+					    	<a class=""  type="button"  href="javascript:void(0);" >
+								给所有人修改分组
+						   	</a>
+						   	{% if user_tags %}
+						   	<ul class="dropdown-menu xui-dropbox" style="{% if user_tags|length == 0 %} display:none; {% endif %} ">
+						   		{% for tag in user_tags %}
+							   		{% if tag.name != '未分组' %}
+							   			<li><a  href="javascript:void(0);" data-status="all"  class="update-tag" data-id="{{tag.id}}">{{tag.name}}</a></li>
+							   		{% endif %}
+						   		{% endfor %}
+						   	</ul>
+						   	{% endif %}
+					    </li>
+					</ul>
+				</div>
+				&nbsp;&nbsp;
+				<div class="pr xui-inlineblock">
+					<a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" data-target="#" style="width:96px;">
+						发优惠券</span>
+				   	</a>
+				   	<ul class="dropdown-menu multi-level" role="menu"  aria-labelledby="dropdownMenu">
+					    <li class="dropdown-submenu">
+					    	<a class="xa-select-member" type="button"  href="javascript:void(0);">
+								给选中的人发优惠券（已取消关注除外）</span>
+						   	</a>
+					    </li>
+					    <li class="dropdown-submenu">
+					    	<a class="xa-all-member"  type="button"  href="javascript:void(0);" >
+								给所有人发优惠券（已取消关注除外）</span>
+						   	</a>
+					    </li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+	<form class="hidden xa-postSendMessageAll" action="/new_weixin/mass_sending_messages/" method="post">
+        <input name="params"/>
+    </form>
+</div>
+{% endblock %}
+
+
+{% block js %}
+{% verbatim %}
+<script id="members-view" type="text/x-jquery-tmpl">
+	<div class="w500 pa pr30 div_export" style="top:10px;left:500px;line-height:30px;">
+		<label class="fr">筛选结果：${data.total_count}人</label>		
+	</div>
+	<table class="table table-bordered xui-productList xb-stripedTable xb-noTdBorder xb-noBottom xb-noBorder xb-theadBg" >
+		<thead>
+		<tr>
+			<th>会员</th>
+			<th >会员等级</th>
+			<th  class="tx_sortable xui-Blue pl0 pr0" data-sort-attr='friend_count' data-sort-direction="up">好友数</th>
+			<th  class="tx_sortable xui-Blue pl0 pr0" data-sort-attr='integral' data-sort-direction="up">积分</th>
+			<th  class="tx_sortable xui-Blue pr0" data-sort-attr='created_at' data-init-sort="-created_at"  data-sort-direction="up">关注时间&来源</th>
+			<th  class="pr0" style="width:15%">分组</th>
+
+			<th class="" style="width:10%">
+				操作
+			</th>
+
+		</tr>
+		</thead>
+		<tbody>
+		<div id="__json-members" class="hidden">${JSON.stringify(items)}</div>
+			{{each(i, member) items}}
+			<tr data-id="${member.id}" data-status="${member.is_subscribed}">
+				<td style="position:relative;" title='{{html member.username}}'>
+
+					<div class="column_block xui-memberHeader pr">
+						{{if member.is_subscribed == 0}}
+							<div class="xui-cancelCover tc">
+							已取消
+							</div>
+						{{/if}}
+						<a target="_blank" href="/member/detail/?id=${ member.id }">
+							<img src="{{if member.user_icon}}${ member.user_icon }{{else}}/static/img/user-1.jpg{{/if}}" onerror="this.src='/static/img/user-1.jpg'"/>
+						</a>
+					</div>
+					<div class="column_block">
+						<div>
+						<a class="xui-Blue" target="_blank" href="/member/detail/?id=${ member.id }" style="display:block;width:80px;" >{{html member.username_truncated}}</a>
+
+
+					</div>
+				</td>
+				<td>
+					<div class="centerAlign">${ member.grade_name }</div>
+				</td>
+				<td>
+					<div class="centerAlign">
+						{{if member.friend_count==0}}
+							<span class="cursor-text">${ member.friend_count }</span>
+						{{else}}
+							<a class="relation-text" href="javascript:void(0);" style="" friend_count='${friend_count}' fans_count='${fans_count}' value='${ member.id }'>${ member.friend_count }
+							</a>
+						{{/if}}
+					</div>
+				</td>
+				<td>
+					<div class="centerAlign">${ member.integral }</div>
+				</td>
+				<td>
+					<div class="centerAlign">${ member.created_at }</div>
+					{{if member.source == 0}}<div class="">直接关注</div>{{/if}}
+					{{if member.source == -1}}<div class="">直接关注</div>{{/if}}
+					{{if member.source == 1}}<div class="xui-fromCode">推广扫码</div>{{/if}}
+					{{if member.source == 2}}<div class="xui-fromShare">会员分享</div>{{/if}}
+				</td>
+				<td>
+					<div class="centerAlign auto_wrap_no_flow">
+						{{each(i,tag) tags}}
+				           <span class="xa-tag-name" data-tag-id="${tag.id}">${tag.name}</span>
+				        {{/each}}
+				    </div>
+				</td>
+
+				<td>
+				<div>
+					<div class="xui-wraper">
+						<div class="xui-left">
+							<a href="javascript:void(0);" class="xa-update-tag" data-id="${member.id}">调分组</a>
+						</div>
+						<div class="xui-right">
+							<a href="javascript:void(0);" class="xa-update-grade" data-id="${member.id}">设等级</a>
+						</div>
+						<div class="cb"></div>
+					</div>
+					<div class="xui-wraper">
+						<div class="xui-left">
+							<a href="javascript:void(0);" class="xa-issuing-coupon" data-member-name="${ member.username }">发优惠券</a>
+						</div>
+						<div class="xui-right">
+							<a href="javascript:void(0);" class="xa-update-integral" data-id="${member.id}">加积分</a></br>
+						</div>
+						<div class="cb"></div>
+					</div>
+				</div>
+					<a target="_blank" href="/new_weixin/realtime_messages_detail/?session_id=${ member.session_id }"  {{if member.session_id == -1}}title="暂无对话" onclick="return false"{{/if}}>查看聊天记录</a>
+				</td>
+			</tr>
+			{{/each}}
+		</tbody>
+	</table>
+</script>
+{% endverbatim %}
+
+<script type="text/javascript">
+$(document).ready(function() {
+	$('#all').attr('checked', false);
+	$('#xa-selectAll').attr('checked', false);
+	$('.update_dropdown').delegate('#all', 'click', function(event){
+		var $checkbox = $(event.currentTarget);
+        var isChecked = $checkbox.is(':checked');
+        $('tbody .xa-select,.xa-selectAll,#xa-selectAll').prop('checked', isChecked);
+
+	});
+
+	$('body').delegate('.xa-select', 'click', function(event){
+		var $el = $(event.currentTarget);
+		var isChecked = $el.is(':checked');
+
+		if (isChecked == false) {
+			$('#xa-selectAll').attr('checked', false);	
+			$('#all').attr('checked', false);	
+		} else {
+			var all_checked = true;
+			$(".xa-select").each(function(index, e){
+			    var isChecked = $(this).is(':checked');
+			    if (isChecked == false) {
+			    	all_checked = false;
+			    }	
+			  });
+			if (all_checked){
+				$('#xa-selectAll').attr('checked', true);	
+				$('#all').attr('checked', true);	
+			}
+		}	
+	});
+	
+	$('.panel-heading').delegate('#xa-selectAll', 'click', function(event){
+
+		var $checkbox = $(event.currentTarget);
+        var isChecked = $checkbox.is(':checked');
+        $('tbody .xa-select,#all').prop('checked', isChecked);
+	});
+	
+	// 修改等级
+	$('body').delegate('.xa-update-grade', 'click', function(event){
+		var $el = $(event.currentTarget);
+		var member_id = $el.attr('data-id');
+		var dataView = $('[data-ui-role="advanced-table"]').data('view')
+		dataView.setPage(1);
+		var memberTagsUpdateView = W.getMemberTagsUpdateView({
+			width: 260,
+			title: '修改等级',
+			position:'top',
+			isTitle: false,
+			privateContainerClass:'xui-updateGradeOrTagBox'
+		});
+
+		memberTagsUpdateView.show({
+			$action: $el,
+			isUpdateGrade: true,
+			memberId: member_id,
+			isPostData: true,
+			dataView:dataView
+		})
+        memberTagsUpdateView.render();
+		$('#xa-selectAll').attr('checked', false);	
+		$('#all').attr('checked', false);	
+
+	});
+	// 修改分组
+	$('body').delegate('.xa-update-tag', 'click', function(event){
+		var $el = $(event.currentTarget);
+		var member_id = $el.attr('data-id');
+		var tag_names = $($el).parents('tr').find('.xa-tag-name');
+		var tag_ids = []
+		for(var i = 0; i < tag_names.length; i++){
+			var id = $(tag_names[i]).data('tag-id');
+			tag_ids.push(id);
+		}
+		var dataView = $('[data-ui-role="advanced-table"]').data('view')
+		dataView.setPage(1);
+		var memberTagsUpdateView = W.getMemberTagsUpdateView({
+			width: 260,
+			title: '修改分组',
+			position:'top',
+			isTitle: false,
+			privateContainerClass:'xui-updateGradeOrTagBox'
+		});
+		memberTagsUpdateView.show({
+			$action: $el,
+			isUpdateGrade: false,
+			memberId: member_id,
+			tagIds: tag_ids,
+			isPostData: true,
+			dataView:dataView
+
+		})
+        memberTagsUpdateView.render();
+        $('#xa-selectAll').attr('checked', false);	
+		$('#all').attr('checked', false);	
+	});
+
+	// 修改等级
+	$('.update_dropdown').delegate('.update-grade', 'click', function(event){
+		var post_ids = [];
+		var grade_id = $(this).attr('data-id');
+		var status = $(this).attr('data-status');
+
+	 	
+	 	var dataView = $('[data-ui-role="advanced-table"]').data('view')
+		if (status == 'all') {
+			post_ids = all_member_ids;
+		}else{
+			$('input.xa-select:checked').each(function(){
+    			post_ids.push($(this).parent().parent().attr('data-id'))
+  			});
+		}
+		var args = {
+			ids:post_ids.join('-'),
+			grade_id:grade_id,
+		}
+	 	if (grade_id && post_ids.length > 0 && post_ids[0]!== undefined) {
+	 		W.resource.member.BatchUpdateMemberGrade.post({
+	 			data: args,
+	 			success: function(data) {
+	 				$('#xa-selectAll').attr('checked', false);	
+					$('#all').attr('checked', false);	
+	                dataView.reload();
+	            },
+	            error: function(response) {
+	                W.getErrorHintView().show('加载失败！请刷新页面重试！');
+	            },
+	            scope: this
+	 		});
+	 	}else{
+	 		W.getErrorHintView().show('请先选择会员！');
+	 	}
+	});
+	// 修改分组
+	$('.update_dropdown').delegate('.update-tag', 'click', function(event){
+		var post_ids = [];
+		var tag_id = $(this).attr('data-id');
+		var status = $(this).attr('data-status');
+	 	
+		var dataView = $('[data-ui-role="advanced-table"]').data('view')
+
+		if (status == 'all') {
+			post_ids = all_member_ids;
+		} else {
+			$('input.xa-select:checked').each(function(){
+	    		post_ids.push($(this).parent().parent().attr('data-id'))
+			});
+		}
+		var args = {ids:post_ids.join('-'), tag_id:tag_id};
+	 	if (tag_id && post_ids.length > 0 && post_ids[0]!== undefined) {
+	 		W.resource.member.BatchUpdateMemberTag.post({
+	 			data: args,
+	 			success: function(data) {
+	                W.showHint('success', "添加分组成功");
+	                $('#xa-selectAll').attr('checked', false);	
+					$('#all').attr('checked', false);	
+	                dataView.reload();
+	            },
+	            error: function(response) {
+	                W.getErrorHintView().show('加载失败！请刷新页面重试！');
+	            },
+	            scope: this
+	 		});
+	 	}else{
+			W.getErrorHintView().show('请先选择会员！');
+	 	}
+	});
+
+	// 修改积分
+	$('.panel-body').delegate('.xa-update-integral', 'click', function(event){
+
+		var $el = $(event.currentTarget);
+		var member_id = $el.attr('data-id');
+		var dataView = $('[data-ui-role="advanced-table"]').data('view')
+		dataView.setPage(1);
+		var memberIntegralUpdateView = W.getMemberIntegralUpdateView({
+			width: 310,
+			title: '调积分',
+			position:'top',
+			isTitle: false,
+			privateContainerClass:'xui-updateGradeOrTagBox'
+		});
+		memberIntegralUpdateView.show({
+			$action: $el,
+			memberId: member_id,
+			dataView:dataView
+		})
+        memberIntegralUpdateView.render();
+
+	});
+
+	//给单人发优惠券
+	$('.panel-body').delegate('.xa-issuing-coupon', 'click', function(event){
+		var member_ids = [];
+		var member_name = $(event.currentTarget).data('member-name');
+		member_id = $(event.currentTarget).parents('tr').data("id");
+		member_ids.push(member_id);
+		showDialogAndIssuingCoupon(member_ids, member_name);
+	});
+
+	//给多人发优惠券
+	$(document).delegate('.xa-select-member', 'click', function(event){
+		var member_ids = [];
+		var member_name = '';
+		$('input.xa-select:checked').each(function(){;
+			if($(this).parent().parent().data('status') == '1'){
+    			member_ids.push($(this).parent().parent().data('id'));
+			}
+  		});
+  		if(member_ids.length == 0){
+  			W.showHint('error', '请先选择会员！');
+  			return;
+  		}
+  		if(member_ids.length == 1){
+  			member_name = $('tr[data-id="'+member_ids[0]+'"]').find('a.xa-issuing-coupon').data('member-name');
+  		}
+  		showDialogAndIssuingCoupon(member_ids, member_name);
+	});
+	//获得购买该商品所有的会员ID
+	var table = $('div[data-ui-role="advanced-table"]').data('view');
+	var all_member_ids,member_subscribed_ids;
+	table.afterload = function(){
+		all_member_ids = table.getRawData().member_ids;
+		member_subscribed_ids = table.getRawData().member_subscribed_ids;
+	}
+	//给筛选出来的所有人发优惠券
+	$(document).delegate('.xa-all-member', 'click', function(event){
+		var member_name = "";
+		if(member_subscribed_ids.length > 0){
+	  		if(member_subscribed_ids.length == 1){
+	  			member_name = $('tr[data-id="'+member_subscribed_ids[0]+'"]').find('a.xa-issuing-coupon').data('member-name');
+	  		}
+            showDialogAndIssuingCoupon(member_subscribed_ids, member_name);
+	    } else {
+	    	W.showHint('error', "没有可已发优惠券的用户！");
+	    }
+	});
+
+	//执行发优惠券
+	function showDialogAndIssuingCoupon(member_ids, member_name){
+		var dialog = W.dialog.showDialog('W.dialog.mall.MemberPageSelectCouponDialog',{
+			member_name: member_name,
+			member_count: member_ids.length,
+			success: function(data){
+
+				if (!data.couponRuleId){
+					W.showHint('error', '请选择优惠券！');
+					return;
+				}
+				var args = {};
+				args.coupon_rule_id = data.couponRuleId;
+				args.pre_person_count = data.prePersonCount;
+		        args.member_id=member_ids;
+				W.getApi().call({
+					method: 'put',
+					app: 'mall2',
+					resource: 'issuing_coupons_record',
+					args: W.toFormData(args),
+					scope: this,
+					success: function(data) {
+						W.showHint('success', '优惠券发放成功');
+					},
+					error: function(resp) {
+		                if (resp.errMsg) {
+		                    W.showHint('error', resp.errMsg);
+		                	W.showHint('error', '发放失败!');
+		                }else {
+						    W.showHint('error', '发放失败!');
+		                }
+					}
+				})
+			},
+			error: function(data){
+				W.showHint('error', '发放失败!');
+			}
+		});
+
+	};
+	$(document).delegate('.xa-send-message', 'click', function(event){
+		var status = $(this).attr('data-status');
+		var memberIdArray = (status=="selected")?$('[data-ui-role="advanced-table"]').data('view').getAllSelectedDataIds():all_member_ids;
+        if (memberIdArray.length > 0) {
+            var memberIds = 'member_ids=' + memberIdArray.join('|');
+            $('form.xa-postSendMessageAll input').val(memberIds);
+            $('form.xa-postSendMessageAll').submit();
+        } else {
+            W.showHint('error', "没有选中的用户");
+        }
+	});
+
+	$('.panel').delegate('.relation-text', 'click', function(event) {
+		var _this = this;
+		var $el = $(event.currentTarget);
+
+		var friend_count = $el.attr('friend_count');
+		var fans_count = $el.attr('fans_count');
+		var memberId = $el.attr('value');
+		if ($el.html() == '0') {
+			return false;
+		}
+
+		W.dialog.showDialog('W.dialog.member.RelationsDialog', {
+			memberId: memberId,
+			friendCount: friend_count,
+			fansCount: fans_count,
+			isReload:true,
+			onlyFans:true
+		});
+	});
+});
+</script>
+{% endblock %}

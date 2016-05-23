@@ -6,4 +6,4 @@ from . import image_group
 from . import review
 from . import properties
 from . import model_property
-
+from . import product_members
