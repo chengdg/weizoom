@@ -159,7 +159,7 @@ def get_weizoom_card_wallet(request):
 	member_id = request.member.id
 	# member_info = MemberInfo.objects.get(member_id=member_id)
 	# is_binded = member_info.is_binded
-	member_has_cards = promotion_models.MemberHasWeizoomCard.objects.filter(member_id = member_id)
+	member_has_cards = promotion_models.MemberHasWeizoomCard.objects.filter(member_id = member_id).order_by('-created_at')
 
 	data_card = {}
 	card_infos_list = []
@@ -425,7 +425,7 @@ def search_card_money(request,card_id,integral_each_yuan):
 
 def get_card_detail_normal(request,card_id):
 	store_name = request.user_profile.store_name
-	card_has_orders = OrderCardInfo.objects.filter(used_card__icontains=card_id)
+	card_has_orders = OrderCardInfo.objects.filter(used_card__icontains=card_id).order_by('-created_at')
 	# card_orders = WeizoomCardHasOrder.objects.filter(card_id=cards_id).exclude(order_id__in=[-1]).order_by('-created_at')
 	order_nums = [co.order_id for co in card_has_orders]
 	orders = Order.objects.filter(order_id__in=order_nums)
