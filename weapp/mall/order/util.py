@@ -77,7 +77,7 @@ def export_orders_json(request):
     orders = [
         [u'订单号', u'下单时间', u'付款时间', u'商品名称', u'规格',
          u'商品单价', u'商品数量', u'销售额', u'商品总重量（斤）', u'支付方式', u'支付金额',
-         u'现金支付金额', u'微众卡+惠惠卡使用的所有金额', u'惠惠卡支付金额', u'运费', u'积分抵扣金额', u'优惠券金额',
+         u'现金支付金额', u'微众卡', u'运费', u'积分抵扣金额', u'优惠券金额',
          u'优惠券名称', u'订单状态', u'购买人', u'收货人', u'联系电话', u'收货地址省份',
          u'收货地址', u'发货人', u'发货人备注', u'来源' ,u'物流公司', u'快递单号',
          u'发货时间',u'商家备注',u'用户备注', u'买家来源', u'买家推荐人', u'扫描带参数二维码之前是否已关注', u'是否首单']
@@ -541,7 +541,7 @@ def export_orders_json(request):
                     order.total_purchase_price if not mall_type and(order.supplier or order.supplier_user_id) else final_price + weizoom_card_money,
                     u'0' if not mall_type and(order.supplier or order.supplier_user_id) else final_price,
                     u'0' if order.status == 0 else weizoom_card_money,
-                    order.weizoom_card_money_huihui,
+                    # order.weizoom_card_money_huihui,
                     order.postage,
                     u'0' if order.status == 0 else order.integral_money,
                     u'0' if order.status == 1 and coupon_name else coupon_money,
