@@ -476,11 +476,12 @@ def get_product2group(pids, woid='3'):
 
 def get_pids(woid):
     get_pids_url = "http://{}/m/apps/group/api/get_pids_by_woid/".format(settings.MARKETTOOLS_HOST)
-    response = urllib.urlopen("{}?woid={}".format(get_pids_url, woid))
+    request_url = "{}?woid={}".format(get_pids_url, woid)
+    response = urllib.urlopen(request_url)
     if response.code != 200:
-        response = urllib.urlopen("{}?woid={}".format(get_pids_url, woid))
+        response = urllib.urlopen(request_url)
         if response.code != 200:
-            error_msg = u"api请求参加活动的pids网络存在问题, cause:\n{}".format(response.code)
+            error_msg = u"api请求参加活动的pids网络存在问题, cause:\nrequest_url:{},response_code:{}".format(request_url, response.code)
             watchdog_error(error_msg)
             return []
 
