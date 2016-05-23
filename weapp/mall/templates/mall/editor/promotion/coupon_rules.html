@@ -116,6 +116,11 @@
 				{{/if}}
 			</td>
 		</tr>
+		{{if promotion.detail.note}}
+		<tr class="mb5">
+			<td colspan="10" class="xui-remark">备注：${ promotion.detail.note }</td>
+		</tr>
+		{{/if}}
 		{{/each}}
 	</tbody>
 </table>

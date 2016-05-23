@@ -427,7 +427,6 @@ class PromotionList(resource.Resource):
                 else:
                     data['product'] = []
             items.append(data)
-
         data = {
             "items": items,
             'pageinfo': paginator.to_dict(pageinfo),

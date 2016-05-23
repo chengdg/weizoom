@@ -154,7 +154,14 @@
     <div class="form-group h100">
       <label class="control-label col-sm-2 col-sm-offset-1 pt0 w110">使用说明：</label>
       <div class="controls">
-          <textarea class="input-xlarge w280" style="height: 100px" id="remark" name="remark">{{ coupon_rule.remark }}</textarea>
+          <textarea class="input-xlarge w280" style="height: 100px" id="remark" name="remark" placeholder="输入内容将显示在用用户手机端优惠券页面">{{ coupon_rule.remark }}</textarea>
+        <div class="errorHint"></div>
+      </div>
+    </div>
+    <div class="form-group h100">
+      <label class="control-label col-sm-2 col-sm-offset-1 pt0 w110">备&nbsp;&nbsp;&nbsp;&nbsp;注：</label>
+      <div class="controls">
+          <textarea class="input-xlarge w280" style="height: 100px" id="note" name="note" maxlength="300" placeholder="输入内容将显示在后台优惠列表处,最多300字">{{ coupon_rule.note }}</textarea>
         <div class="errorHint"></div>
       </div>
     </div>
