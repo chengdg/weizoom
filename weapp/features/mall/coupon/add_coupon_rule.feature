@@ -33,6 +33,11 @@ Feature: 添加优惠券规则
 			(3)“已上架商品”与“商品分组”为“多选”，可以混合选择，在分页间多选，切换页签，不保留之前的选择；选择后，将选择的商品和选择的分组内的商品进行去重，带入优惠券商品列表
 		3 保存新建优惠券，对多商品券的商品进行校验，存在不符合下面条件的商品给我出提示"部分商品已发生其他操作，请查证后再操作",对应商品在多商品券商品列表中的"删除"列标红
 		4 优惠券中的商品状态发生变，下架或者删除，优惠券活动详情中，商品列表商品状态对应发生变化，标记"待售"或"已删除"
+
+		补充需求修改 2016.05.23
+		1、创建优惠券页面增加'备注'字段，创建成功后点击列表中的【编辑】可对备注信息进行修改
+		2、创建时填写了备注信息，则在优惠券规则列表下方展示
+		3、该功能只应用于云商通后台的使用者，对手机端用户不产生任何影响，备注内容对手机端用户不可见
 	"""
 
 Background:
@@ -237,3 +242,83 @@ Scenario:4 添加多商品券-多个商品中保存时有不符合条件的商�
 		}]
 		"""
 	Then jobs获得优惠券规则添加失败提示'部分商品已发生其他操作，请查证后再操作'
+
+#补充:张三香 2016.05.23
+@promotion @promotionCoupon
+Scenario:5 添加优惠券规则,包含备注信息
+	#添加/编辑优惠券页面增加字段-备注
+	#优惠券规则列表下方显示创建时填写的备注信息
+	Given jobs登录系统
+	When jobs添加优惠券规则
+		"""
+		[{
+			"name": "全店通用券1",
+			"money": 100.00,
+			"limit_counts": 1,
+			"using_limit": "满50元可以使用",
+			"count": 5,
+			"start_date": "今天",
+			"end_date": "1天后",
+			"description":"使用说明1",
+			"remark":"全店通用券1的备注信息",
+			"coupon_id_prefix": "coupon1_id_"
+		},{
+			"name": "多商品券2",
+			"money": 100.00,
+			"limit_counts": 1,
+			"using_limit": "满50元可以使用",
+			"count": 5,
+			"start_date": "今天",
+			"end_date": "1天后",
+			"description":"使用说明2",
+			"remark":"多商品券2的备注信息",
+			"coupon_product": "商品1,商品2,商品3",
+			"coupon_id_prefix": "coupon2_id_"
+		}]
+		"""
+	Then jobs能获得优惠券规则列表
+		"""
+		[{
+			"name": "多商品券2",
+			"type": "多商品券",
+			"money": 100.00,
+			"limit_counts": 1,
+			"remained_count": 5,
+			"start_date": "今天",
+			"end_date": "1天后",
+			"special_product": "查看专属商品",
+			"get_person_count": 0,
+			"get_number": 0,
+			"use_count": 0,
+			"status": "进行中",
+			"remark":"多商品券2的备注信息"
+		},{
+			"name": "全店通用券1",
+			"type": "通用券",
+			"money": 100.00,
+			"limit_counts": 1,
+			"remained_count": 5,
+			"start_date": "今天",
+			"end_date": "1天后",
+			"special_product": "全部",
+			"get_person_count": 0,
+			"get_number": 0,
+			"use_count": 0,
+			"status": "进行中",
+			"remark":"全店通用券1的备注信息"
+		}]
+		"""
+	And jobs获得优惠券规则'全店通用券1'
+		"""
+		{
+			"name": "全店通用券1",
+			"money": 100.00,
+			"limit_counts": 1,
+			"using_limit": "满50元可以使用",
+			"count": 5,
+			"start_date": "今天",
+			"end_date": "1天后",
+			"description":"使用说明",
+			"remark":"全店通用券1的备注信息"
+		}
+		"""

@@ -1,6 +1,5 @@
-#author: 冯雪静
-#editor: 张三香 2015.10.13
-#editor: 王丽 2016.04.15
+#author: 王丽 2016.04.15
+#editor: 张三香 2016.05.23
 
 Feature: 更新优惠券规则
 	Jobs能通过管理系统更新"优惠券规则"
@@ -83,3 +82,41 @@ Scenario:1 更改优惠券规则名和使用说明
 		}
 		"""
 
+@promotion @promotionCoupon
+Scenario:2 更改优惠券规则的备注信息
+	Given jobs登录系统
+	When jobs添加优惠券规则
+		"""
+		[{
+			"name": "全体券3",
+			"money": 100.00,
+			"limit_counts": 1,
+			"using_limit": "满50元可以使用",
+			"count": 5,
+			"start_date": "今天",
+			"end_date": "1天后",
+			"description":"使用说明3",
+			"remark":"全体券3的备注信息",
+			"coupon_id_prefix": "coupon3_id_"
+		}]
+		"""
+	When jobs更新优惠券规则'全体券3'为
+		"""
+		{
+			"name": "全体券3",
+			"remark":"全体券3备注备注备注"
+		}
+		"""
+	Then jobs获得优惠券规则'全体券3'
+		"""
+		{
+			"name": "全体券3",
+			"money": 100.00,
+			"limit_counts": 1,
+			"count": 5,
+			"start_date": "今天",
+			"end_date": "1天后",
+			"description":"使用说明3",
+			"remark":"全体券3的备注备注备注"
+		}
+		"""
