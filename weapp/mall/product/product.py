@@ -587,7 +587,8 @@ class ProductPool(resource.Resource):
             is_deleted=False)
         # 后台验证更新的商品是否参与团购
         product2group = utils.get_product2group([str(relation.weizoom_product_id)], request.webapp_owner_id)
-        if product2group.has_key(str(relation.weizoom_product_id)) and product2group[str(relation.weizoom_product_id)]:
+
+        if product2group.has_key(relation.weizoom_product_id) and product2group[relation.weizoom_product_id]:
             return create_response(500).get_response()
 
         # 微众系列商品参加的促销活动

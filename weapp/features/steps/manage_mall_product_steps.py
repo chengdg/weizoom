@@ -378,6 +378,7 @@ def step_impl(context, product_info, user):
     # 这个if语句好像没什么意义暴力兼容zypt_group_update_disable.feature对应的语句
     if hasattr(context, 'product_info') and context.product_info == product_info:
         context.tc.assertEquals(True, True)
+        delattr(context, 'product_info')
         return
     product_name = context.product_name
     expected__is_group_buying = True

@@ -57,7 +57,7 @@ class GroupBuyProducts(resource.Resource):
 		pids = request.GET.get('pids')
 		pids = pids.split('_')
 		pids = [int(pid) for pid in pids]
-		records = app_models.Group.objects(product_id__in=pids,status=app_models.STATUS_RUNNING)
+		records = app_models.Group.objects(product_id__in=pids,status__in=[app_models.STATUS_RUNNING, app_models.STATUS_NOT_START])
 		pid_in_group_buy = [record.product_id for record in records]
 		for pid in pids:
 			if pid in pid_in_group_buy:
