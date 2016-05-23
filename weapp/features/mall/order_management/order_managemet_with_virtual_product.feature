@@ -202,19 +202,14 @@ Background:
 			"activity_name":"10元通用卡",
 			"card_start_date":"今天",
 			"card_end_date":"30天后",
-			"card_info":
-				{
-					"card_type":"微众卡",
-					"card_stocks":2,
-					"cards":
-						[{
-							"id":"0000001",
-							"password":"1234567"
-						},{
-							"id":"0000002",
-							"password":"2234567"
-						}]
-				},
+			"cards":
+				[{
+					"id":"0000001",
+					"password":"1234567"
+				},{
+					"id":"0000002",
+					"password":"2234567"
+				}],
 			"creat_time":"今天"
 		},{
 			"product":
@@ -226,19 +221,14 @@ Background:
 			"activity_name":"20元通用卡",
 			"card_start_date":"今天",
 			"card_end_date":"35天后",
-			"card_info":
-				{
-					"card_type":"微众卡",
-					"card_stocks":2,
-					"cards":
-						[{
-							"id":"0000011",
-							"password":"1234567"
-						},{
-							"id":"0000012",
-							"password":"2234567"
-						}]
-				},
+			"cards":
+				[{
+					"id":"0000011",
+					"password":"1234567"
+				},{
+					"id":"0000012",
+					"password":"2234567"
+				}],
 			"creat_time":"今天"
 		}]
 		"""
@@ -300,12 +290,18 @@ Scenario:1 查看含虚拟商品的订单列表
 				"name": "微众虚拟商品1",
 				"price":10.00,
 				"count": 1,
-				"type":"微众卡"
+				"type":"微众卡",
+				"supplier": "微众",
+				"is_sync_supplier": "false",
+				"status":"已完成"
 			},{
 				"name": "微众虚拟商品2",
 				"price":20.00,
 				"count": 1,
-				"type":"微众卡"
+				"type":"微众卡",
+				"supplier": "微众",
+				"is_sync_supplier": "false",
+				"status":"已完成"
 			}]
 		}]
 		"""
@@ -319,12 +315,18 @@ Scenario:1 查看含虚拟商品的订单列表
 				"name": "微众虚拟商品1",
 				"price":10.00,
 				"count": 1,
-				"type":"微众卡"
+				"type":"微众卡",
+				"supplier": "微众",
+				"is_sync_supplier": "false",
+				"status":"已完成"
 			},{
 				"name": "微众虚拟商品2",
 				"price":20.00,
 				"count": 1,
-				"type":"微众卡"
+				"type":"微众卡",
+				"supplier": "微众",
+				"is_sync_supplier": "false",
+				"status":"已完成"
 			}]
 		}
 		"""
@@ -354,7 +356,10 @@ Scenario:1 查看含虚拟商品的订单列表
 				"name": "微众普通商品4",
 				"price":40.00,
 				"count": 1,
-				"type":"普通"
+				"type":"普通",
+				"supplier": "微众",
+				"is_sync_supplier": "false",
+				"status": "待发货"
 			}]
 		},{
 			"order_no":"001",
@@ -364,12 +369,18 @@ Scenario:1 查看含虚拟商品的订单列表
 				"name": "微众虚拟商品1",
 				"price":10.00,
 				"count": 1,
-				"type":"微众卡"
+				"type":"微众卡",
+				"supplier": "微众",
+				"is_sync_supplier": "false",
+				"status": "已完成"
 			},{
 				"name": "微众虚拟商品2",
 				"price":20.00,
 				"count": 1,
-				"type":"微众卡"
+				"type":"微众卡",
+				"supplier": "微众",
+				"is_sync_supplier": "false",
+				"status": "已完成"
 			}]
 		}]
 		"""
