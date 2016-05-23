@@ -253,7 +253,7 @@ def _get_mpuser_access_token(user):
 
 def get_members_from_webapp_user_ids(webapp_user_ids,sort_attr=None):
 		if not webapp_user_ids:
-			return [],[]
+			return [],[],[]
 		member_all_ids = WebAppUser.objects.filter(id__in=webapp_user_ids).values_list('member_id', flat=True)
 		members = Member.objects.filter(id__in=member_all_ids, status__in=[CANCEL_SUBSCRIBED,SUBSCRIBED], is_for_test=0)
 		if sort_attr:
