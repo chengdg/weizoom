@@ -78,7 +78,7 @@
         font-size: 1rem;
 	}
 	.wui-detail-middle{
-		width: 9.5rem;
+		width: 11.5rem;
 	    margin: 5% 0 1% 2%;
 	    display: inline-block;
 	}
@@ -202,7 +202,7 @@
 		</div>
 		<div class="wui-detail-middle">
 			<span class="wa-detail-serial-number">序号：{{player_details.serial_number}}</span>
-			<span class="wui-detail-vote-count wa-detail-vote-count"><span>{{player_details.count}}</span>&nbsp;票</span>
+			<span class="wui-detail-vote-count wa-detail-vote-count"><span>{{player_details.count}}</span>&nbsp;票&nbsp;(第&nbsp;<span>{{ player_details.rank }}</span>&nbsp;名)</span>
 		</div>
 		<span class="wa-details-return wui-details-return">返回首页>></span>
 	</div>

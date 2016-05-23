@@ -264,6 +264,7 @@ def get_rank_data(data):
 		})
 	return result_list
 
+from core.exceptionutil import unicode_full_stack
 class MShvotePlayerDetails(resource.Resource):
 	app = 'apps/shvote'
 	resource = 'm_player_details'
@@ -307,8 +308,28 @@ class MShvotePlayerDetails(resource.Resource):
 
 		if player_id:
 			try:
-				player_details = app_models.ShvoteParticipance.objects().get(id = player_id)
+				player_details = app_models.ShvoteParticipance.objects().get(id=player_id, status=app_models.MEMBER_STATUS['PASSED'], is_use=app_models.MEMBER_IS_USE['YES'])
+				#获取排名
+				count = player_details.count
+				players_front_e = app_models.ShvoteParticipance.objects(
+					count__gte=count,
+					status=app_models.MEMBER_STATUS['PASSED'],
+					is_use=app_models.MEMBER_IS_USE['YES']
+				).order_by('-count', 'created_at')
+				tmp_count_e = players_front_e.count()
+				players_front = players_front_e.filter(count__gt=count).order_by('created_at')
+				tmp_count = players_front.count()
+				if tmp_count_e == tmp_count:
+					search_index = 0
+				else:
+					search_index = tmp_count
+				rank = tmp_count + 1
+				while str(players_front_e[search_index].id) != player_id:
+					search_index += 1
+					rank += 1
+				player_details.rank = rank
 			except:
+				print unicode_full_stack()
 				pass
 
 		c = RequestContext(request, {
