@@ -78,6 +78,7 @@ def step_impl(context, user_name):
         rule["get_person_count"] = coupon_rule["detail"]["get_person_count"]
         rule["get_number"] = coupon_rule["detail"]["get_count"]
         rule['status'] = coupon_rule['status']
+        rule['note'] = coupon_rule["detail"]['note']
 
         if coupon_rule["detail"]["limit_product"]:
             rule["type"] = "多商品券"
@@ -107,13 +108,19 @@ def step_impl(context, user_name, coupon_rule_name):
 
 
     new_one = json.loads(context.text)
-    name = new_one['name']
-    description = new_one['description']
+    name = new_one.get('name')
+    # description = new_one['description']
+    description = new_one.get('description')
+    note = new_one.get('note')
     data = {
         "rule_id": coupon_rule.id,
-        "name": name,
-        "remark":description
     }
+    if description:
+        data['remark'] = description
+    if note:
+        data['note'] = note
+    if name:
+        data['name'] = name
 
     response = context.client.post(url, data)
 
@@ -297,7 +304,8 @@ def step_impl(context, user, rule_name):
         # "start_date":"{} 00:00".format(bdd_util.get_date_str(cr_start_date)),
         # "cr_end_date": coupon_rule.get('end_date', u'1天后'),
         # "end_date ":"{} 00:00".format(bdd_util.get_date_str(cr_end_date))
-        "description": coupon_rule.remark
+        "description": coupon_rule.remark,
+        "note": coupon_rule.note
     }
 
     actual['coupon_product'] = ','.join([p.name for p in promotion.products])
@@ -341,7 +349,8 @@ def __add_coupon_rule(context, webapp_owner_name):
         start_date = "{} 00:00".format(bdd_util.get_date_str(cr_start_date))
         cr_end_date = coupon_rule.get('end_date', u'1天后')
         end_date = "{} 00:00".format(bdd_util.get_date_str(cr_end_date))
-        remark = coupon_rule.get('description', '')
+        remark = coupon_rule.get('description', '')  #使用说明
+        note = coupon_rule.get('note', '')  #备注
         post_data = {
             'name': cr_name,
             'money': cr_money,
@@ -349,7 +358,8 @@ def __add_coupon_rule(context, webapp_owner_name):
             'limit_counts': -1 if cr_limit_counts == u'无限' else cr_limit_counts,
             'start_date': start_date,
             'end_date': end_date,
-            'remark': remark
+            'remark': remark,
+            'note': note
         }
         if not "using_limit" in coupon_rule:
             post_data['is_valid_restrictions'] = '0'

@@ -115,6 +115,7 @@ class CouponRuleInfo(resource.Resource):
             couponRole.update(
                 name=request.POST.get('name', ''),
                 remark=request.POST.get('remark', ''),
+                note=request.POST.get('note', ''),
             )
             Promotion.objects.filter(detail_id=couponRole[0].id, type=PROMOTION_TYPE_COUPON).update(
                 name=request.POST.get('name', ''),
@@ -166,6 +167,7 @@ class CouponRuleInfo(resource.Resource):
             count=count,
             remained_count=count,
             remark=request.POST.get('remark', ''),
+            note=request.POST.get('note', ''),
             limit_product=limit_product == '1',
             limit_product_id=limit_product_id,
             start_date=start_date,

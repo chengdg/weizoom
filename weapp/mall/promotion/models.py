@@ -575,7 +575,8 @@ class CouponRule(models.Model):
 	limit_counts = models.IntegerField(default=0) #每人限领
 	limit_product = models.BooleanField(default=False) #限制指定商品
 	limit_product_id = models.CharField(max_length=2048,default=0) #限制指定商品ID
-	remark = models.TextField(default='') #备注
+	remark = models.TextField(default='') #使用说明
+	note = models.TextField(default='') #优惠券备注
 	get_person_count = models.IntegerField(default=0) #领取人数
 	get_count = models.IntegerField(default=0) #领取次数
 	use_count = models.IntegerField(default=0) #使用次数
@@ -602,6 +603,7 @@ class CouponRule(models.Model):
 		return {
 			'id': self.id,
 			'name': self.name,
+			'note': self.note,
 			'owner_id': self.owner_id,
 			'count': self.count,
 			'remained_count': self.remained_count,
