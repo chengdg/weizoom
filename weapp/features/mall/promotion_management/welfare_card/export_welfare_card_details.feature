@@ -57,8 +57,6 @@ Background:
 		[{
 			"name": "微众虚拟商品1",
 			"product_type":"微众卡",
-			"is_virtual_product":"true",
-
 			"supplier": "微众",
 			"purchase_price": 9.00,
 			"promotion_title": "10元通用卡",

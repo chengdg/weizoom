@@ -73,7 +73,6 @@ Background:
 		[{
 			"name": "微众虚拟商品1",
 			"product_type":"微众卡",
-			"is_virtual_product":"true",
 			"supplier": "微众",
 			"purchase_price": 9.00,
 			"promotion_title": "10元通用卡",
@@ -102,7 +101,6 @@ Background:
 		},{
 			"name": "微众虚拟商品2",
 			"product_type":"微众卡",
-			"is_virtual_product":"true",
 			"supplier": "微众",
 			"purchase_price": 19.00,
 			"promotion_title": "虚拟商品2",
@@ -125,7 +123,6 @@ Background:
 		},{
 			"name": "稻香村虚拟商品3",
 			"product_type":"虚拟",
-			"is_virtual_product":"true",
 			"supplier": "稻香村",
 			"purchase_price": 30.00,
 			"promotion_title": "稻香村代金券",

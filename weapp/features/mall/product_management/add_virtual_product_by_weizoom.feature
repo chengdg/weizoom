@@ -8,7 +8,7 @@ Feature:微众商城添加虚拟商品
 			普通:为正常的商品
 			虚拟:是指第三方的卡密，如影票、蛋糕券
 			微众卡:实际上也是虚拟的一种，单拿出来是因为微众卡只能单独下单，并且数据罗盘里不统计微众卡订单的数据，不然拿这批购买的微众卡再来买别的东西时，销售额会统计两遍
-		2、虚拟和微众卡类型的商品创建成功后，在售/待售商品列表，用"码"小图标来标识其为虚拟商品
+		2、在售/待售商品列表，'虚拟'类型的商品用"码"来标识，'微众卡'类型的商品用"卡"来标识
 		3、目前没有控制商品类型的修改（不管商品是否创建福利卡券，均可修改商品类型）因该功能只是微商城内部使用，会约束行为，暂不考虑这种场景
 	"""
 
@@ -72,7 +72,6 @@ Scenario:1 微众商城添加虚拟商品
 		[{
 			"name": "微众普通商品01",
 			"product_type":"普通",
-			"is_virtual_product":"false",
 			"supplier": "微众",
 			"purchase_price": 9.00,
 			"promotion_title": "普通商品",
@@ -101,7 +100,6 @@ Scenario:1 微众商城添加虚拟商品
 		}, {
 			"name": "微众虚拟商品02",
 			"product_type":"微众卡",
-			"is_virtual_product":"true",
 			"supplier": "微众",
 			"purchase_price": 19.00,
 			"promotion_title": "20元微众卡",
@@ -126,7 +124,6 @@ Scenario:1 微众商城添加虚拟商品
 		}, {
 			"name": "稻香村虚拟商品03",
 			"product_type":"虚拟",
-			"is_virtual_product":"true",
 			"supplier": "稻香村",
 			"purchase_price": 29.00,
 			"promotion_title": "稻香村代金券",
@@ -156,15 +153,15 @@ Scenario:1 微众商城添加虚拟商品
 		"""
 		[{
 			"name":"稻香村虚拟商品03",
-			"is_virtual_product":"true",
+			"product_type":"虚拟",
 			"supplier": "稻香村"
 		},{
 			"name":"微众虚拟商品02",
-			"is_virtual_product":"true",
+			"product_type":"微众卡",
 			"supplier": "微众"
 		},{
 			"name":"微众普通商品01",
-			"is_virtual_product":"false",
+			"product_type":"普通",
 			"supplier": "微众"
 		}]
 		"""
@@ -173,7 +170,6 @@ Scenario:1 微众商城添加虚拟商品
 		{
 			"name": "微众虚拟商品02",
 			"product_type":"微众卡",
-			"is_virtual_product":"true",
 			"supplier": "微众",
 			"purchase_price": 19.00,
 			"promotion_title": "20元微众卡",
@@ -196,3 +192,26 @@ Scenario:1 微众商城添加虚拟商品
 			"detail": "微众虚拟商品02的详情"
 		}
 		"""
+	#查看'待售'商品列表
+		When jobs批量下架商品
+			"""
+			[
+				"稻香村虚拟商品03","微众虚拟商品02","微众普通商品01"
+			]
+			"""
+		Then jobs能获得'待售'商品列表
+			"""
+			[{
+				"name":"稻香村虚拟商品03",
+				"product_type":"虚拟",
+				"supplier": "稻香村"
+			},{
+				"name":"微众虚拟商品02",
+				"product_type":"微众卡",
+				"supplier": "微众"
+			},{
+				"name":"微众普通商品01",
+				"product_type":"普通",
+				"supplier": "微众"
+			}]
+			"""
