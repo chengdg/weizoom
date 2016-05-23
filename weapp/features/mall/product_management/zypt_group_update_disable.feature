@@ -311,7 +311,7 @@ Background:
 	When jobs开启团购活动'团购活动3'
 	When jobs开启团购活动'团购活动4'
 
-@eugene @product_pool
+@mall2 @eugene @product_pool
 Scenario:1 对团购活动中的(同步商品)进行更新商品操作
 	商户更新已在自营平台创建团购活动的商品
 	1.自营平台的商品池显示“待更新”
@@ -362,7 +362,7 @@ Scenario:1 对团购活动中的(同步商品)进行更新商品操作
 	When jobs更新商品池商品'bill商品2'于'2015-08-03 10:30'
 	Then jobs获得提示信息'该商品正在进行团购活动'
 
-@eugene @product_pool
+@mall2 @eugene @product_pool
 Scenario:2 商户对自营平台团购活动中的(同步商品)进行下架和删除商品操作
 	商户下架已在自营平台创建团购活动的商品
 	1.自营平台团购活动自动结束
@@ -412,7 +412,7 @@ Scenario:2 商户对自营平台团购活动中的(同步商品)进行下架和�
 		}]
 		"""
 
-@eugene @product_pool
+@mall2 @eugene @product_pool
 Scenario:3 商户对自营平台团购活动中的(同步商品)进行修改成多规格商品
 	商户修改已在自营平台创建团购活动的商品为多规格
 	1.自营平台团购活动自动结束
