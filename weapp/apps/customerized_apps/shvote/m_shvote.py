@@ -316,18 +316,12 @@ class MShvotePlayerDetails(resource.Resource):
 					status=app_models.MEMBER_STATUS['PASSED'],
 					is_use=app_models.MEMBER_IS_USE['YES']
 				).order_by('-count', 'created_at')
-				tmp_count_e = players_front_e.count()
-				players_front = players_front_e.filter(count__gt=count).order_by('created_at')
-				tmp_count = players_front.count()
-				if tmp_count_e == tmp_count:
-					search_index = 0
-				else:
-					search_index = tmp_count
-				rank = tmp_count + 1
-				while str(players_front_e[search_index].id) != player_id:
-					search_index += 1
-					rank += 1
-				player_details.rank = rank
+				tmp_rank = 0
+				for sp in players_front_e:
+					tmp_rank += 1
+					if str(sp.id) == player_id:
+						player_details.rank = tmp_rank
+						break
 			except:
 				print unicode_full_stack()
 				pass

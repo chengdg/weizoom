@@ -261,7 +261,7 @@ $(document).ready(function() {
             args: {
                 webapp_owner_id: W.webappOwnerId,
                 belong_to: W.appRecordId,
-                icon: $('.wa-uploadHeadImg').siblings("ul").find('img').eq(0).attr("data-src"),
+                icon: $('.wa-uploadHeadImg').siblings("ul").find('img').eq(-1).attr("data-src"),
                 name: $('.wa-name').val(),
                 group: $.trim($('.type_name').html()),
                 serial_number: $('.wa-serial').val(),
