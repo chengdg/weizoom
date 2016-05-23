@@ -96,7 +96,7 @@ Scenario:2 更改优惠券规则的备注信息
 			"start_date": "今天",
 			"end_date": "1天后",
 			"description":"使用说明3",
-			"remark":"全体券3的备注信息",
+			"note":"全体券3的备注信息",
 			"coupon_id_prefix": "coupon3_id_"
 		}]
 		"""
@@ -104,7 +104,8 @@ Scenario:2 更改优惠券规则的备注信息
 		"""
 		{
 			"name": "全体券3",
-			"remark":"全体券3备注备注备注"
+			"description":"使用说明3",
+			"note":"全体券3备注备注备注"
 		}
 		"""
 	Then jobs获得优惠券规则'全体券3'
@@ -117,6 +118,6 @@ Scenario:2 更改优惠券规则的备注信息
 			"start_date": "今天",
 			"end_date": "1天后",
 			"description":"使用说明3",
-			"remark":"全体券3备注备注备注"
+			"note":"全体券3备注备注备注"
 		}
 		"""

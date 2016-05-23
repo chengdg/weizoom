@@ -6,6 +6,9 @@
 .popover{
 	min-width: 252px;
 }
+.xui-promotionsPage ul li:nth-child(2n) .xb-stripedTable tbody > tr{
+	background: #fff;
+}
 </style>
 {% endblock %}
 {% block content-panel %}
@@ -64,66 +67,73 @@
 			<th>操作</th>
 		</tr>
 	</thead>
-	<tbody>
-		{{each(i, promotion) items}}
-		<tr class="h80" data-id="${ promotion.id }">
-			<td>${ i+1 }</td>
-			<td>${ promotion.detail.name }</td>
-			<td>
-				{{if promotion.detail.limit_product}}
-				多商品券
-				{{else}}
-				通用券
-				{{/if}}
-			</td>
-			<td>${ promotion.detail.money }</td>
-			<td>
-				{{if promotion.detail.limit_counts>0}}1人${ promotion.detail.limit_counts }张{{/if}}
-				{{if promotion.detail.limit_counts<=0}}无限{{/if}}<br/>
-				<p class="xui-greyColor xa-remained-count">库存{{if promotion.status != '已结束'}}${promotion.detail.remained_count}{{else}}0{{/if}}</p>
-			</td>
-			<td>${ promotion.start_date}<br/>${ promotion.end_date}
-			</td>
-			<td>
-				{{if promotion.detail.limit_product}}
-				<span class="label label-info xa-showAllProducts cursor-pointer pl10 pr10" style="font-size: 1.0em;">查看专属商品</span>
-				{{else}}
-				全部
-				{{/if}}
-			</td>
-			<td>${ promotion.detail.get_person_count }/${promotion.detail.get_count}
-			</td>
-			<td>${ promotion.detail.use_count }
-			</td>
-			<td>
-				<a href="/mall2/coupon_list/?id=${ promotion.detail.id }">码库</a>
-				{{if promotion.status == '已结束' }}
-					&nbsp;-&nbsp;<a href="javascript:void(0);" class="xa-delete">删除</a>
-				{{/if}}
-				{{if promotion.status != '已结束' && promotion.status != '已失效'}}
-				&nbsp;-&nbsp;
-				<a class="xa-copyLinkBtn" href="javascript:void(0);" data-url="/termite/workbench/jqm/preview/?module=market_tool:coupon&model=coupon&action=get&workspace_id=market_tool:coupon&webapp_owner_id=${ promotion.detail.owner_id }&project_id=0&rule_id=${promotion.detail.id}">链接</a>&nbsp;-&nbsp;
-				<a href="/mall2/coupon_rule/?id=${ promotion.id }">编辑</a>&nbsp;-&nbsp;
-				<a href="/mall2/coupon_rule/?id=${ promotion.id }&action=get">查看</a>
-				<br/>
-				<a href="javascript:void(0);" class="xa-finish">使失效</a>
-				{{/if}}
-				{{if promotion.status == '已结束' }} 
-					<p class="xui-greyColor">已过期</p>
-				{{/if}}
-				{{if promotion.status == '已失效'}}
-					<p class="xui-greyColor">已失效</p>
-				{{/if}}
-			</td>
-		</tr>
-		{{if promotion.detail.note}}
-		<tr class="mb5">
-			<td colspan="10" class="xui-remark">备注：${ promotion.detail.note }</td>
-		</tr>
-		{{/if}}
-		{{/each}}
-	</tbody>
 </table>
+<ul>
+	{{each(i, promotion) items}}
+	<li>
+		<table class="table table-bordered table-condensed xb-stripedTable xb-noTdBorder mb0 noborder">
+			<tbody>
+				<tr class="h80 xui-couponTr" data-id="${ promotion.id }">
+					<td>${ i+1 }</td>
+					<td>${ promotion.detail.name }</td>
+					<td>
+						{{if promotion.detail.limit_product}}
+						多商品券
+						{{else}}
+						通用券
+						{{/if}}
+					</td>
+					<td>${ promotion.detail.money }</td>
+					<td>
+						{{if promotion.detail.limit_counts>0}}1人${ promotion.detail.limit_counts }张{{/if}}
+						{{if promotion.detail.limit_counts<=0}}无限{{/if}}<br/>
+						<p class="xui-greyColor xa-remained-count">库存{{if promotion.status != '已结束'}}${promotion.detail.remained_count}{{else}}0{{/if}}</p>
+					</td>
+					<td>${ promotion.start_date}<br/>${ promotion.end_date}
+					</td>
+					<td>
+						{{if promotion.detail.limit_product}}
+						<span class="label label-info xa-showAllProducts cursor-pointer pl10 pr10" style="font-size: 1.0em;">查看专属商品</span>
+						{{else}}
+						全部
+						{{/if}}
+					</td>
+					<td>${ promotion.detail.get_person_count }/${promotion.detail.get_count}
+					</td>
+					<td>${ promotion.detail.use_count }
+					</td>
+					<td>
+						<a href="/mall2/coupon_list/?id=${ promotion.detail.id }">码库</a>
+						{{if promotion.status == '已结束' }}
+							&nbsp;-&nbsp;<a href="javascript:void(0);" class="xa-delete">删除</a>
+						{{/if}}
+						{{if promotion.status != '已结束' && promotion.status != '已失效'}}
+						&nbsp;-&nbsp;
+						<a class="xa-copyLinkBtn" href="javascript:void(0);" data-url="/termite/workbench/jqm/preview/?module=market_tool:coupon&model=coupon&action=get&workspace_id=market_tool:coupon&webapp_owner_id=${ promotion.detail.owner_id }&project_id=0&rule_id=${promotion.detail.id}">链接</a>&nbsp;-&nbsp;
+						<a href="/mall2/coupon_rule/?id=${ promotion.id }">编辑</a>&nbsp;-&nbsp;
+						<a href="/mall2/coupon_rule/?id=${ promotion.id }&action=get">查看</a>
+						<br/>
+						<a href="javascript:void(0);" class="xa-finish">使失效</a>
+						{{/if}}
+						{{if promotion.status == '已结束' }} 
+							<p class="xui-greyColor">已过期</p>
+						{{/if}}
+						{{if promotion.status == '已失效'}}
+							<p class="xui-greyColor">已失效</p>
+						{{/if}}
+					</td>
+				</tr>
+				{{if promotion.detail.note}}
+				<tr class="mb5">
+					<td colspan="10" class="xui-remark">备注：${ promotion.detail.note }</td>
+				</tr>
+				{{/if}}
+			</tbody>
+		</table>
+	</li>
+	{{/each}}
+</ul>	
+
 {{else}}
 <div class="panel-body xb-noContent mb0">
 	<div class="xui-emptyBox mb0">

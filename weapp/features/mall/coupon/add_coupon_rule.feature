@@ -260,7 +260,7 @@ Scenario:5 添加优惠券规则,包含备注信息
 			"start_date": "今天",
 			"end_date": "1天后",
 			"description":"使用说明1",
-			"remark":"全店通用券1的备注信息",
+			"note":"全店通用券1的备注信息",
 			"coupon_id_prefix": "coupon1_id_"
 		},{
 			"name": "多商品券2",
@@ -271,7 +271,7 @@ Scenario:5 添加优惠券规则,包含备注信息
 			"start_date": "今天",
 			"end_date": "1天后",
 			"description":"使用说明2",
-			"remark":"多商品券2的备注信息",
+			"note":"多商品券2的备注信息",
 			"coupon_product": "商品1,商品2,商品3",
 			"coupon_id_prefix": "coupon2_id_"
 		}]
@@ -291,7 +291,7 @@ Scenario:5 添加优惠券规则,包含备注信息
 			"get_number": 0,
 			"use_count": 0,
 			"status": "进行中",
-			"remark":"多商品券2的备注信息"
+			"note":"多商品券2的备注信息"
 		},{
 			"name": "全店通用券1",
 			"type": "通用券",
@@ -305,7 +305,7 @@ Scenario:5 添加优惠券规则,包含备注信息
 			"get_number": 0,
 			"use_count": 0,
 			"status": "进行中",
-			"remark":"全店通用券1的备注信息"
+			"note":"全店通用券1的备注信息"
 		}]
 		"""
 	And jobs获得优惠券规则'全店通用券1'
@@ -318,7 +318,7 @@ Scenario:5 添加优惠券规则,包含备注信息
 			"count": 5,
 			"start_date": "今天",
 			"end_date": "1天后",
-			"description":"使用说明",
-			"remark":"全店通用券1的备注信息"
+			"description":"使用说明1",
+			"note":"全店通用券1的备注信息"
 		}
 		"""
