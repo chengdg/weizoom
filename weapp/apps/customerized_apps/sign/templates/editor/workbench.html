@@ -266,6 +266,7 @@ ui-appPage-commonStyle">
                         <th class="tx_sortable xui-Blue" data-sort-attr="top_serial_count" data-sort-direction="up">最高连续次数</th>
                         <th class="tx_sortable xui-Blue" data-sort-attr="total_integral" data-sort-direction="up">奖励总积分</th>
                         <th>优惠券奖励</th>
+                        <th class="hidden">操作</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -300,6 +301,11 @@ ui-appPage-commonStyle">
                         </td>
                         <td>
                             {{html item.latest_coupon }}
+                        </td>
+                        <td>
+                            <a href="/apps/sign/fill/?mid=${ item.member_id }" target="_blank">
+                                补签
+                            </a>
                         </td>
                     </tr>
                     {{/each}}
