@@ -312,6 +312,8 @@ class MShvotePlayerDetails(resource.Resource):
 				#获取排名
 				count = player_details.count
 				players_front_e = app_models.ShvoteParticipance.objects(
+					belong_to = player_details.belong_to,
+					group = player_details.group,
 					count__gte=count,
 					status=app_models.MEMBER_STATUS['PASSED'],
 					is_use=app_models.MEMBER_IS_USE['YES']
