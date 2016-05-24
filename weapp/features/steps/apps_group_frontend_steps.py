@@ -27,8 +27,8 @@ from modules.member.models import Member
 def __get_group_rule_id(group_rule_name):
 	return Group.objects.get(name=group_rule_name).id
 
-def __get_product_idByname(product_name):
-	return Product.objects.get(name=product_name).id
+def __get_product_idByname(product_name, owner_id):
+	return Product.objects.get(name=product_name, owner_id=owner_id).id
 
 def __get_group_relation_id(activity_id,page_owner_member_id):
 	try:
@@ -201,7 +201,7 @@ def step_tmpl(context, webapp_user_name, webapp_owner_name,group_record_name):
 	group_type= data['group_dict']['group_type']
 	group_days= data['group_dict']['group_days']
 	group_price= data['group_dict']['group_price']
-	product_id = __get_product_idByname(data['products']['name'])
+	product_id = __get_product_idByname(data['products']['name'], context.webapp_owner_id)
 	__open_group(context,activity_id,fid,group_type,group_days,group_price,product_id,openid)
 
 @When(u'{webapp_user_name}参加{group_owner_name}的团购活动"{group_record_name}"')

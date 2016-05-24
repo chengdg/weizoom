@@ -124,7 +124,6 @@
                                     </li>
                                     {% endif %}
                                 {% elif third_nav.name == 'groups' %}
-                                	{% if request.user_profile.webapp_type != 1 %}
                                     <li class="xui-sideBar-third {% ifequal third_nav_name third_nav.name %}active_third{% endifequal %}">
                                         <a href="{{third_nav.url}}" title="{{third_nav.title}}" name="{{third_nav.name}}">
                                             &nbsp;&nbsp;&nbsp;&nbsp;{{third_nav.title|safe}}
@@ -132,7 +131,6 @@
                                             {% if third_nav.class_name %}<i class="xui-noticyTip {{third_nav.class_name}}"></i>{% endif %}
                                         </a>
                                     </li>
-                               		{% endif %}
                                 {% else %}
                                     <li class="xui-sideBar-third {% ifequal third_nav_name third_nav.name %}active_third{% endifequal %}">
                                         <a href="{{third_nav.url}}" title="{{third_nav.title}}" name="{{third_nav.name}}">

@@ -796,10 +796,15 @@ def get_detail_response(request):
         if (not child_orders and order.supplier_user_id):
             child_orders = [order]
         if len(child_orders) > 1 and order.status > ORDER_STATUS_CANCEL:
-            order.actions = get_order_actions(order, is_detail_page=True, is_list_parent=True, mall_type=request.user_profile.webapp_type)
+            order.actions = get_order_actions(order, is_detail_page=True, is_list_parent=True,
+                mall_type=request.user_profile.webapp_type,
+                is_group_buying=is_group_buying
+                )
         elif len(child_orders) == 1:
             child_orders[0].pay_interface_type = order.pay_interface_type
-            order.actions = get_order_actions(child_orders[0], is_detail_page=True, mall_type=request.user_profile.webapp_type)
+            order.actions = get_order_actions(child_orders[0], is_detail_page=True,
+                mall_type=request.user_profile.webapp_type,
+                is_group_buying=is_group_buying)
         else:
             child_orders = [order]
             if is_group_buying:
@@ -1169,7 +1174,9 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
                         'express_company_name': fackorder.express_company_name,
                         'express_number': fackorder.express_number,
                         'leader_name': fackorder.leader_name,
-                        'actions': get_order_actions(fackorder, is_refund=is_refund, mall_type=mall_type, multi_child_orders=multi_child_orders)
+                        'actions': get_order_actions(fackorder, is_refund=is_refund, mall_type=mall_type,
+                            multi_child_orders=multi_child_orders,
+                            is_group_buying=True if order.order_id in group_order_ids else False)
                     }
                     if fackorder.supplier or (not fackorder.supplier and not fackorder.supplier_user_id):
                         group = {
@@ -1192,7 +1199,8 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
                     'express_company_name': order.express_company_name,
                     'express_number': order.express_number,
                     'leader_name': order.leader_name,
-                    'actions': get_order_actions(order, is_refund=is_refund, mall_type=mall_type)
+                    'actions': get_order_actions(order, is_refund=is_refund, mall_type=mall_type,
+                        is_group_buying=True if order.order_id in group_order_ids else False)
                 }
                 if order2fackorders.get(order.id) and len(order2fackorders.get(order.id)) == 1:
                     fackorder = order2fackorders[order.id][0]

@@ -13,6 +13,7 @@ from mall.promotion import models as promotion_model
 from core import search_util
 from mall.signal_handler import products_not_online_handler_for_promotions
 from utils import ding_util
+from apps.customerized_apps.group.group_openapi import stop_group_activity_by_pid
 
 from watchdog.utils import watchdog_fatal, watchdog_error
 from core.exceptionutil import unicode_full_stack
@@ -231,7 +232,12 @@ def delete_weizoom_mall_sync_product(request, product, reason):
             products.update(is_deleted=True)
             relations.update(is_deleted=True)
             products_not_online_handler_for_promotions(weizoom_product_ids, request,shelve_type='delete')
-
+            # 结束对应自营平台的团购商品
+            for pid in weizoom_product_ids:
+                is_test = False
+                if request.META.get('SERVER_NAME') == "testserver":
+                    is_test = True
+                stop_group_activity_by_pid(pid, is_test)
             text = u'商品删除提示：\n'
             text += u'商品位置：\n'
             for product in products:
@@ -470,11 +476,12 @@ def get_product2group(pids, woid='3'):
 
 def get_pids(woid):
     get_pids_url = "http://{}/m/apps/group/api/get_pids_by_woid/".format(settings.MARKETTOOLS_HOST)
-    response = urllib.urlopen("{}?woid={}".format(get_pids_url, woid))
+    request_url = "{}?woid={}".format(get_pids_url, woid)
+    response = urllib.urlopen(request_url)
     if response.code != 200:
-        response = urllib.urlopen("{}?woid={}".format(get_pids_url, woid))
+        response = urllib.urlopen(request_url)
         if response.code != 200:
-            error_msg = u"api请求参加活动的pids网络存在问题, cause:\n{}".format(response.code)
+            error_msg = u"api请求参加活动的pids网络存在问题, cause:\nrequest_url:{},response_code:{}".format(request_url, response.code)
             watchdog_error(error_msg)
             return []
 
