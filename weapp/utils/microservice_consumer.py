@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import json
+import logging
 
 import requests
 
@@ -97,22 +98,22 @@ def microservice_consume2(url='', data={}, method='get', timeout=None):
 			except:
 				weizoom_code = 10086  # 无法得到正确weizoom_code时的默认值
 			if weizoom_code == 200 or weizoom_code == 500:
-				watchdog_info(
+				logging.info(
 					u'microservice_consume_log,外部接口成功调用日志.code:%s,weizoom_code:%s,url:%s，request_data:%s,resp:%s' % (
 						resp.status_code, weizoom_code, url, str(data), resp_content))
 				return True, resp_content
 			else:
-				watchdog_alert(
+				logging.info(
 					u'microservice_consume_alert,外部接口调用错误-wzcode错误状态码.code:%s,weizoom_code:%s,url:%s，request_data:%s,resp:%s' % (
 						resp.status_code, weizoom_code, url, str(data), resp_content))
 				raise ResponseCodeException
 		else:
-			watchdog_alert(u'microservice_consume_alert,外部接口调用错误-http错误状态码.code:%s,url:%s，data:%s,method:%s' % (
+			logging.info(u'microservice_consume_alert,外部接口调用错误-http错误状态码.code:%s,url:%s，data:%s,method:%s' % (
 				resp.status_code, url, str(data), method))
 			raise ResponseCodeException
 	except BaseException as e:
 		traceback = unicode_full_stack()
-		watchdog_alert(u'外部接口调用错误-异常.url:%s,msg:%s,url:%s ,data:%s' % (url, traceback, url, str(data)))
+		logging.info(u'外部接口调用错误-异常.url:%s,msg:%s,url:%s ,data:%s' % (url, traceback, url, str(data)))
 		raise Exception(e)
 
 # 测试代码
