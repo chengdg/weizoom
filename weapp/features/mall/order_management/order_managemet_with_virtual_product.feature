@@ -210,7 +210,7 @@ Background:
 					"id":"0000002",
 					"password":"2234567"
 				}],
-			"creat_time":"今天"
+			"create_time":"今天"
 		},{
 			"product":
 				{
@@ -229,12 +229,13 @@ Background:
 					"id":"0000012",
 					"password":"2234567"
 				}],
-			"creat_time":"今天"
+			"create_time":"今天"
 		}]
 		"""
 	When bill关注jobs的公众号
 	When tom关注jobs的公众号
 
+@welfare_card @weizoom
 Scenario:1 查看含虚拟商品的订单列表
 	#bill购买微众卡商品
 	When bill访问jobs的webapp

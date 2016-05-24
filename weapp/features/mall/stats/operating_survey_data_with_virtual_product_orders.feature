@@ -185,7 +185,7 @@ Background:
 					"id":"0000002",
 					"password":"2234567"
 				}],
-			"creat_time":"今天"
+			"create_time":"今天"
 		}]
 		"""
 	When bill关注jobs的公众号
@@ -257,6 +257,7 @@ Background:
 				}
 				"""
 
+@welfare_card @weizoom
 Scenario:1 经营概况-店铺经营报告（不统计微众卡相关的订单）
 	Given jobs登录系统
 	When jobs设置筛选日期
