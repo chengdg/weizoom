@@ -113,18 +113,8 @@ class ManageSummary(resource.Resource):
 		
 
 		#成交金额
-		transaction_money = 0.00
-		transaction_nums = get_transaction_orders(webapp_id,low_date,high_date)
-		for transaction in transaction_nums:
-			if transaction.origin_order_id > 0:
-				#商户从微众自营商城同步的子订单需要计算采购价
-				tmp_transaction_money = round(transaction.total_purchase_price,2)
-			else:
-				tmp_transaction_money = round(transaction.final_price,2) + round(transaction.weizoom_card_money,2)
-			transaction_money += tmp_transaction_money
-
+		transaction_money, transaction_orders = stats_util.get_transaction_money_order_count(webapp_id,low_date,high_date)
 		#成交订单
-		transaction_orders = (get_transaction_orders(webapp_id,low_date,high_date)).count()
 
 		#购买总人数
 		buyer_count = stats_util.get_buyer_count(webapp_id,low_date,high_date)
@@ -177,14 +167,6 @@ class ManageSummary(resource.Resource):
 
 		return response.get_response()
 
-#获取成交订单
-def get_transaction_orders(webapp_id,low_date,high_date):
-	orders = belong_to(webapp_id)
-	transaction_orders = orders.filter(
-		Q(created_at__range=(low_date,high_date)),
-		Q(status__in=(ORDER_STATUS_PAYED_NOT_SHIP, ORDER_STATUS_PAYED_SHIPED, ORDER_STATUS_SUCCESSED))
-		)
-	return transaction_orders
 
 #获取来源为“本店”的总订单量
 # def get_total_buyer(webapp_id,low_date,high_date):
