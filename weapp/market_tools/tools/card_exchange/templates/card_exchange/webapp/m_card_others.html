@@ -175,16 +175,16 @@
 		</div>
 		{% endif %}
 		<div class="xui-content">
-			<div class="xui-valid-card">
-				{% for item in cards.card %}
-				{% if item.is_expired == 0 and item.status != 3 %}
+			<div class="xui-valid-card">{{ cards }}
+				{% for item in cards %}
+				{% if item.is_expired == 0%}
 				<div class="xui-wrap">
 					<div class="xui-card-details">
 						<div class="xui-detail-top">
 							<div class="xui-detail-left">
-								<div class="xui-valid-time">有效期:{{item.start_time}}~{{item.end_time}}</div>
+								<div class="xui-valid-time">有效期:{{item.validate_time_from | slice:"10"}}~{{item.validate_time_to | slice:"10"}}</div>
 								<div class="xui-remain-money">
-									<span>{{item.card_name}}</span>
+									<span>{{item.name}}</span>
 								</div>
 							</div>
 							<div class="xui-detail-right">
@@ -197,11 +197,11 @@
 						</div>
 						<div class="xui-detail-bottom">
 							<span>
-								下单时间:
-								<span class="xui-numfont">{{item.time}}</span>
+								到账时间:
+								<span class="xui-numfont">{{item.time | slice:"10"}}</span>
 								<span class="fr">
 									密码:
-									<span class="xui-numfont">{{item.passwprd}}</span>
+									<span class="xui-numfont">{{item.password}}</span>
 								</span>
 							</span>
 						</div>
@@ -217,15 +217,15 @@
 					<b></b>
 					<span>失效卡：</span>
 				</div>
-				{% for item in cards.card %}
+				{% for item in cards %}
 				{% if item.is_expired == 1 %}
 				<div class="xui-wrap">
 					<div class="xui-card-details">
 						<div class="xui-detail-top">
 							<div class="xui-detail-left">
-								<div class="xui-valid-time">有效期:{{item.start_time}}~{{item.end_time}}</div>
+								<div class="xui-valid-time">有效期:{{item.validate_time_from | slice:"10"}}~{{item.validate_time_to | slice:"10"}}</div>
 								<div class="xui-remain-money">
-									<span>{{item.card_name}}</span>
+									<span>{{item.name}}</span>
 								</div>
 							</div>
 							<div class="xui-detail-right">
@@ -239,8 +239,8 @@
 						<div class="xui-detail-bottom">
 							<div class="xui-invalid-seal"></div>
 							<span>
-								下单时间:
-								<span class="xui-numfont">{{item.time}}</span>
+								到账时间:
+								<span class="xui-numfont">{{item.time | slice:"10"}}</span>
 								<span class="fr">
 									密码:
 									<span class="xui-numfont">{{item.password}}</span>

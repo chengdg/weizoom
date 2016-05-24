@@ -473,12 +473,32 @@ def get_other_cards_list(request):
 	@param request:
 	@return:
 	"""
+	member_id = request.member.id
+	member_has_other_cards = promotion_models.VirtualProductHasCode.objects.filter(member_id = member_id)
+	cards = []
+	card_details_dic = {}
+	has_expired_cards = False
+	for card in member_has_other_cards:
+		card_details_dic['card_id'] = card.code
+		card_details_dic['password'] = card.password
+		card_details_dic['time'] = card.get_time
+		card_details_dic['name'] = card.virtual_product.product.name
+		card_details_dic['status'] = card.status
+		card_details_dic['is_expired'] = False
+		validate_time_to = card.end_time.strftime('%Y-%m-%d %H:%M:%S')
+		card_details_dic['validate_time_from'] = card.start_time.strftime('%Y-%m-%d %H:%M:%S')
+		card_details_dic['validate_time_to'] = validate_time_to
+		now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+		if now > validate_time_to:
+			card_details_dic['is_expired'] = True
+			has_expired_cards = True
+
+		cards.append(card_details_dic)
 
 	c = RequestContext(request, {
 		'page_title': u'其他卡包',
-		# 'cards': card_details_dic,
-		# 'has_expired_cards': has_expired_cards,
-		# 'is_binded': is_binded,
+		'cards': cards,
+		'has_expired_cards': has_expired_cards,
 		'is_weshop': True
 	})
 	return render_to_response('card_exchange/templates/card_exchange/webapp/m_card_others.html', c)
