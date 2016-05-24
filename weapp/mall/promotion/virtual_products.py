@@ -74,14 +74,37 @@ class VirtualProducts(resource.Resource):
 		virtual_products = promotion_models.VirtualProduct.objects.filter(**params).order_by('-id')
 		pageinfo, virtual_products = paginator.paginate(virtual_products, cur_page, count_per_page, None)
 
+		virtual_product_ids = [v.id for v in virtual_products]
+		virtual_product_has_codes = promotion_models.VirtualProductHasCode.objects.filter(
+				virtual_product_id__in=virtual_product_ids, 
+				status__in=[promotion_models.CODE_STATUS_GET, promotion_models.CODE_STATUS_NOT_GET]
+			)
+
+		virtual_product_id2code_stock = {}
+		virtual_product_id2sell_num = {}
+		for r in virtual_product_has_codes:
+			if r.can_not_use:
+				continue
+
+			if r.status == promotion_models.CODE_STATUS_NOT_GET:
+				if virtual_product_id2code_stock.has_key(r.virtual_product_id):
+					virtual_product_id2code_stock[r.virtual_product_id] += 1
+				else:
+					virtual_product_id2code_stock[r.virtual_product_id] = 1
+			elif r.status == promotion_models.CODE_STATUS_GET:
+				if virtual_product_id2sell_num.has_key(r.virtual_product_id):
+					virtual_product_id2sell_num[r.virtual_product_id] += 1
+				else:
+					virtual_product_id2sell_num[r.virtual_product_id] = 1
+
 		items = []
 		for virtual_product in virtual_products:
 			items.append({
 				'id': virtual_product.id,
 				'name': virtual_product.name,
 				'product_id': virtual_product.product.id,
-				'code_stock': 0,  #TODO:待实现  码库库存
-				'sell_num': 0,  #TODO:待实现  已售出
+				'code_stock': virtual_product_id2code_stock.get(virtual_product.id, 0),  #码库库存
+				'sell_num': virtual_product_id2sell_num.get(virtual_product.id, 0),  #已售出数量
 				'created_at': virtual_product.created_at.strftime('%Y:%m:%d %H:%M:%S'),
 			})
 
