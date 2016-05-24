@@ -57,7 +57,7 @@ class VirtualProducts(resource.Resource):
 		count_per_page = int(request.GET.get('count_per_page', 10))
 
 		name = request.GET.get('name', '').strip()
-		product__name = request.GET.get('product__name', '').strip()
+		product_name = request.GET.get('product_name', '').strip()
 		bar_code = request.GET.get('barCode', '').strip()
 		start_time = request.GET.get('start_time', '')
 		end_time = request.GET.get('end_time', '')
@@ -68,7 +68,7 @@ class VirtualProducts(resource.Resource):
 		if name:
 			params['name__contains'] = name
 		if product_name:
-			params['product__name__contains'] = name
+			params['product__name__contains'] = product_name
 		if bar_code:
 			params['product__bar_code'] = bar_code
 		if start_time and end_time:
