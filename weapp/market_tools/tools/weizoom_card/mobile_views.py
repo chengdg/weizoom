@@ -48,6 +48,11 @@ def get_weizoom_card_login(request):
 			#没有兑换过微众卡，进入卡兑换页面
 			return mobile_views.get_page(request)
 	else:
+		#微众商城用户查看我的卡包，默认进入卡包页面
+		is_query = int(request.GET.get('is_query',1))
+		if username and username in ['jobs', 'weshop', 'ceshi01'] and is_query:
+			return get_weizoom_card_wallet(request)
+
 		c = RequestContext(request, {
 				'page_title': u'微众卡',
 				'is_hide_weixin_option_menu': True,
