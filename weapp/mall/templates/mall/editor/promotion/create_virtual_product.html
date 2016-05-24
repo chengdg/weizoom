@@ -129,7 +129,7 @@
 			<tr
 				data-id="${product.id}"
 			 class="xa-productId">
-				<td style="text-align: left;" class="pt10">
+				<td style="text-align: left;" class="pt10 pl50">
 					<div class="imgBox fl" style="width: auto;border:solid 1px #ccc;">
 						<a href="${product.detail_link}" target="_blank">
                              {{if product.thumbnails_url.search('http://weappimg') != -1}}
@@ -194,7 +194,7 @@ $(document).ready(function() {
         uploader = '/mall2/api/upload_virtual_product_file/',
         cancelImg = '/static/img/cancel.png',
         buttonText = '添加码库',
-        fileTypeExts = '*.xls',
+        fileTypeExts = '*.xls; *.xlsx',
         method = 'post',
         removeTimeout = 0.0,
         width = 100,
@@ -222,7 +222,9 @@ $(document).ready(function() {
         removeTimeout: removeTimeout,
         formData: formData,
         onUploadStart: function(file){
-            if(file && (file.name.substring(file.name.length - 3,file.name.length) == 'xls')){}else{
+        	var fileType = file.name.substring(file.name.length - 3,file.name.length) == 'xls' ||file.name.substring(file.name.length - 4,file.name.length) == 'xlsx';
+        	console.log(fileType,'fileTypefileTypefileType')
+            if(file && fileType){}else{
                 W.showHint('error', '请上传正确excel文件');
                 $("#card-file").uploadify('cancel', '*');
                 $("#card-file").uploadify('stop');

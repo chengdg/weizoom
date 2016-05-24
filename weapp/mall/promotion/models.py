@@ -916,7 +916,8 @@ class VirtualProductHasCode(models.Model):
 		db_table = 'mallpromotion_virtual_product_has_code'
 
 	def __update_status_if_necessary(self):
-		if self.status == CODE_STATUS_NOT_GET and end_time <= now:
+		now = datetime.now()
+		if self.status == CODE_STATUS_NOT_GET and self.end_time <= now:
 			# 未领取的卡券如果过期了则更新状态
 			self.status = CODE_STATUS_OVERDUE
 			self.save()

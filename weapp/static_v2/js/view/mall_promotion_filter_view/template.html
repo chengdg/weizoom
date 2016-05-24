@@ -72,6 +72,7 @@
 	<a class="btn btn-default xa-reset xui-fontBold" href="javascript:void(0);">重&nbsp;&nbsp;&nbsp;置</a>
 </div>
 </script>
+
 <script id="mall-coupon-filter-view-tmpl-src" type="text/x-jquery-tmpl">
 <div class="xui-form disT">
 	<div class="xui-col disTc">
@@ -145,6 +146,7 @@
 	<a class="btn btn-default xa-reset xui-fontBold" href="javascript:void(0);">重&nbsp;&nbsp;&nbsp;置</a>
 </div>
 </script>
+
 <script id="mall-forbiddenCoupon-filter-view-tmpl-src" type="text/x-jquery-tmpl">
 <div class="xui-form disT">
 	<div class="xui-col disTc">
@@ -170,6 +172,58 @@
 	<div class="xui-col disTc">
 		<div class="xui-i-item ml15">
 			<label>起止时间
+			：</label>
+			<input
+				type="text"
+				class="form-control xui-datePicker"
+				id="start_date"
+				name="start_date"
+				style=""
+			    value="${startDate}"
+			    readonly="readonly"
+				data-enable-select-time="true"
+				data-validate="require-notempty"
+				data-ui-role="date-picker"
+			    data-format="yy-mm-dd HH:MM" />
+			至
+			<input
+				type="text"
+				class="form-control xui-datePicker"
+				id="end_date"
+				name="end_date"
+			    value="${endDate}"
+			    readonly="readonly"
+			    data-enable-select-time="true"
+				data-validate="require-notempty"
+				data-ui-role="date-picker"
+			    data-format="yy-mm-dd HH:MM"
+			    data-min-el="#start_date"/>
+		</div>
+	</div>
+</div>
+<div class="xui-btn-group">
+	<a class="btn btn-primary mr40 xa-search xui-fontBold" href="javascript:void(0);">查&nbsp;&nbsp;&nbsp;询</a>
+	<a class="btn btn-default xa-reset xui-fontBold" href="javascript:void(0);">重&nbsp;&nbsp;&nbsp;置</a>
+</div>
+</script>
+
+<script id="mall-welfarePage-filter-view-tmpl-src" type="text/x-jquery-tmpl">
+<div class="xui-form disT">
+	<div class="xui-col disTc">
+		<div class="xui-i-item">
+			<label class="">商品名称：</label>
+			<input type="text" class="form-control" id="name" name="name" value="" />
+		</div>
+	</div>
+	<div class="xui-col disTc">
+		<div class="xui-i-item">
+			<label>商品条码：</label>
+			<input type="text" class="form-control" id="bar_code" name="bar_code" value="" />
+		</div>
+	</div>
+	<div class="xui-col disTc">
+		<div class="xui-i-item ml15">
+			<label>创建时间
 			：</label>
 			<input
 				type="text"

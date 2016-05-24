@@ -21,7 +21,20 @@
 				<a href="/mall2/virtual_products/?type=create" class="btn btn-success ml10 fr xui-btnSetting"><img src="/static_v2/img/editor/plusOpcity.png" alt="">&nbsp;&nbsp;&nbsp;&nbsp;新建福利卡券</a>
 			</div>
 
-			
+			<div
+				data-ui-role="advanced-table"
+				data-app="mall2"
+				data-api="virtual_products"
+				data-template-id="#virtualProduct-view"
+				data-enable-paginator="true"
+				data-enable-sort="false"
+				data-selectable="true"
+				data-disable-header-select="true"
+				data-item-count-per-page="10"
+				data-outer-selecter='.xa-selectAll'
+				data-selecttable-tr='xa-selectTr'
+				class="panel-body xui-promotionHead"
+			></div>
 
 			<div class="xui-leftBoxTow">
 				<div class="panel-heading pl22">
@@ -38,14 +51,15 @@
 
 {% block js %}
 {% verbatim %}
-<script id="products-view" type="text/x-jquery-tmpl">
+<script id="virtualProduct-view" type="text/x-jquery-tmpl">
 	<table id="productListTable" class="table table-condensed mb0 xb-stripedTable xb-noTdBorder">
 		<thead class="xb-theadBg xui-theadHeight">
 			<tr>
-				<th >商品信息</th>
-				<th width="120">商品价格（元）</th>
-				<th width="130">禁用状态</th>
-				<th width="200">有效期</th>
+				<th >活动名称</th>
+				<th width="120">商品名称</th>
+				<th width="130">码库库存</th>
+				<th width="200">已经售出</th>
+				<th width="200">创建时间</th>
 				<th width="120">操作</th>
 			</tr>
 		</thead>
@@ -53,6 +67,7 @@
             {{if items.length}}
 	            {{each(i, item) items}}
 				<tr class="xui-trborder" data-id="${item.id}">
+					<td></td>
 					<td class="tl_important pt10 pb10">
 						{{if item.product}}
 						<div class="clearfix xui-i-cell2">
@@ -72,19 +87,17 @@
 								<div class="xui-commodityName">
 									<a href="${item.product.detail_link}" target="_blank">${product.name}</a>
 								</div>
-								<p style="color:#666;" class="mb0">{{if item.product.is_use_custom_model}}</p>
-								<span class="label label-info xa-showAllModels cursor-pointer" style="font-size: 1.0em;padding-bottom:2px;">查看${item.product.models.length}个规格详情</span>
-								{{else}}
+								<p style="color:#666;" class="mb0">
 								商品条码：${item.product.bar_code}
-								{{/if}}
+								</p>
 							</div>
 						</div>
+						{{/if}}
 					</td>
 					<td>
-						${item.product.display_price_range}
+						码库库存
 					</td>
-					{{/if}}
-					<td>${item.status_name}</td>
+					<td>已经售出</td>
 					<td>
 						{{if item.is_permanant_active}}
 						永久有效
@@ -93,7 +106,9 @@
 						{{/if}}
 					</td>
 					<td>
-						<a href="javascript:void(0);" class="xa-proFinish" style="width: 40px;text-decoration:none;">结束</a>
+						<a href="javascript:void(0);" class="" style="width: 60px;text-decoration:none;display:block;">发放详情</a>
+						<a href="javascript:void(0);" class="" style="width: 60px;text-decoration:none;display:block;">编辑</a>
+						<a href="javascript:void(0);" class="xa-proFinish" style="width: 60px;text-decoration:none;display:block;">结束</a>
 					</td>
 				</tr>
 				{{/each}}
@@ -109,8 +124,8 @@
 <script type="text/javascript">
 $(document).ready(function() {
 	var view = new W.view.mall.PromotionListView({
-		el: '.xui-forbiddenCpPage',
-		templateFilterName: 'mall-forbiddenCoupon-filter-view-tmpl-src'
+		el: '.xui-welfarePage',
+		templateFilterName: 'mall-welfarePage-filter-view-tmpl-src'
 	});
 	view.render();
 });
