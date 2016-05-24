@@ -1,0 +1,47 @@
+<html>
+    <head>
+        <title>补签</title>
+        <script type="text/javascript" src="/static_v2/lib/jquery/jquery-1.11.2.min.js"></script>
+
+    </head>
+    <body>
+        <div>
+            <div class="xui-member-info">
+                <img src="{{ member.icon }}">
+                <span>{{ member.username }}</span>
+            </div>
+            <div class="xui-date-selector">
+                <label>
+                    <select class="xa-date-selector xa-year">
+                        <option value="-1">不选择</option>
+                        {% for year in years %}
+                            <option value="{{ year.value }}">{{ year.name }}</option>
+                        {% endfor %}
+                    </select>
+                </label>
+                <label>
+                    <select class="xa-date-selector xa-month">
+                        <option value="-1">不选择</option>
+                        {% for month in months %}
+                            <option value="{{ month.value }}">{{ month.name }}</option>
+                        {% endfor %}
+                    </select>
+                </label>
+            </div>
+            <div class="xui-calinder"></div>
+        </div>
+    </body>
+    <script>
+        $('.xa-date-selector').on('change', function(){
+            var year = $('.xa-year').val();
+            var month = $('.xa-month').val();
+            if(year == -1 || month == -1) return;
+            $.ajax('/apps/sign/api/fill/?_method=get', {
+                data: {
+                    year: year,
+                    month: month
+                }
+            });
+        });
+    </script>
+</html>

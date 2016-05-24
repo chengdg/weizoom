@@ -130,3 +130,25 @@ class Sign(resource.Resource):
 
 		response = create_response(200)
 		return response.get_response()
+
+class SignFill(resource.Resource):
+	app = 'apps/sign'
+	resource = 'fill'
+
+	@login_required
+	def get(request):
+		record_id = request.GET.get('rid', None)
+		member_id = request.GET.get('mid', None)
+		if not record_id or not member_id:
+			c = {}
+		else:
+
+			sign = app_models.Sign.objects(id=record_id)
+			if sign.count()>0:
+				sign = sign[0]
+				c = RequestContext(request, {
+					'sign': sign,
+				})
+			else:
+				c = {}
+		return render_to_response('sign/templates/editor/fill.html', c)
