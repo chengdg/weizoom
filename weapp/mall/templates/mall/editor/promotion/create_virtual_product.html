@@ -87,21 +87,21 @@
 			<!-- <input type="checkbox" id="notLimited" class="ml10 xa-forever" value="1"><label for="notLimited" class="vm ml5 fn">永久</label> -->
 			<!-- </div> -->
 			<div class="xui-i-item">
-				<label class="star_show">上传码库文件</label>
+				<label class="star_show">上传码库文件：</label>
 				<div class="controls xa-errorHintContainer">
-		            <div style="margin-left: 168px;">
+		            <div style="margin-left: 120px;margin-top:-20px;">
 		                <input type="file" id="card-file" name="card-file">
 		                <input type="hidden" id="weizoom_card_ids">
 		                <input type="hidden" id="weizoom_card_passwords">
 		                <input type="hidden" id="file_path">
 			            <span class="xa-exchangeStock">{% if valid_num %}库存：{{valid_num}}{% endif %}</span>
-			            <span><a target="_blank" {% if rebate_rule %} href="/apps/rebate/card_details/?id={{ rebate_rule.id }}" {% else %}{% endif %} class="xui-detail" title="发放详情">发放详情</a></span>
+			            <span><a target="_blank" class="cursor-pointer" {% if rebate_rule %} href="/apps/rebate/card_details/?id={{ rebate_rule.id }}" {% else %}{% endif %} class="xui-detail" title="发放详情">发放详情</a></span>
 		            </div>
 		        </div>
 			</div>
 		</div>
 
-		<div class="" style="display:inline-block;margin-top:-15px;margin-left:40px;">
+		<div class="" style="display:inline-block;margin-left:40px;">
 			<a class="btn btn-primary mr40 xa-submit xui-fontBold" href="javascript:void(0);">完成设置</a>
 			<a class="btn btn-default xa-cancel xui-fontBold" href="/mall2/forbidden_coupon_product/">取消创建</a>
 		</div>
@@ -169,7 +169,7 @@ $(document).ready(function() {
 		el: '.xa-productSelector',
 		promotionId: promotionId,
 		enableMultiSelection: false,
-		tableOutAllSelectable:true,
+		// tableOutAllSelectable:true,
 		uniqueDialog:'W.dialog.mall.CreatVirtualProductDialog',
 		tableTemplate: 'creart-virtual-product-view-tmpl-src'
 	});
@@ -263,12 +263,9 @@ $(document).ready(function() {
         }
 		var args = $('.xa-form').serializeObject();
 		args.code_file_path = file_path;
-		// return
 		// args.products = JSON.stringify(productSelector.getData());
-		// args.product_id = args.products.;
 		var product_id = $('.xa-productId').data('id');
 		args.product_id = product_id;
-		console.log('--------------',args);
 		W.getApi().call({
 			method: 'put',
 			app: 'mall2',
