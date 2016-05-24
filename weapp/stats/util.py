@@ -742,3 +742,32 @@ def get_top10_product(webapp_id, low_date, high_date):
 ####################################################################
 #订单统计相关函数
 ####################################################################
+
+
+#获取成交订单
+def get_transaction_orders(webapp_id,low_date,high_date):
+	orders = belong_to(webapp_id)
+	transaction_orders = orders.filter(
+		Q(created_at__range=(low_date,high_date)),
+		Q(status__in=(ORDER_STATUS_PAYED_NOT_SHIP, ORDER_STATUS_PAYED_SHIPED, ORDER_STATUS_SUCCESSED))
+		)
+	return transaction_orders
+
+#获取成交金额
+def get_transaction_money(transaction_nums):
+	transaction_money = 0.00
+	for transaction in transaction_nums:
+		if transaction.origin_order_id > 0:
+			#商户从微众自营商城同步的子订单需要计算采购价
+			tmp_transaction_money = round(transaction.total_purchase_price,2)
+		else:
+			tmp_transaction_money = round(transaction.final_price,2) + round(transaction.weizoom_card_money,2)
+		transaction_money += tmp_transaction_money
+	return transaction_money
+
+#获取成交金额及成交订单数目
+def get_transaction_money_order_count(webapp_id,low_date,high_date):
+	orders = get_transaction_orders(webapp_id,low_date,high_date)
+	transaction_money = get_transaction_money(orders)
+	order_count = orders.count()
+	return transaction_money,order_count

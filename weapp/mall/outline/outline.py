@@ -21,7 +21,7 @@ from webapp import models as webapp_models
 from webapp import statistics_util as webapp_statistics_util
 from weixin2.home.outline import get_unread_message_count
 from django.db.models import Sum
-from stats.manage.manage_summary import get_transaction_money_order_count
+from stats import util as stats_util
 
 class Outline(resource.Resource):
     app = 'mall2'
@@ -61,7 +61,7 @@ class Outline(resource.Resource):
         today = '%s 23:59:59' % dateutil.get_yesterday_str('today')
         yesterday = '%s 00:00:00' % dateutil.get_yesterday_str('today')
 
-        order_money,order_count = get_transaction_money_order_count(webapp_id,yesterday,today)
+        order_money,order_count = stats_util.get_transaction_money_order_count(webapp_id,yesterday,today)
 
         # 获取会员数 update by bert at 20150817
         subscribed_member_count = member_models.Member.objects.filter(
