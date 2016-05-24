@@ -16,6 +16,7 @@ from . import coupon_rule
 from . import red_envelpoe
 from . import issuing_coupon
 from . import card_exchange
+from . import virtual_product
 from . import virtual_products
 
 SCORE_PRIZE_TYPE = PrizeType(
