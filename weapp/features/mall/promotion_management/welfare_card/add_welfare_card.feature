@@ -207,7 +207,7 @@ Scenario:1 新建福利卡券活动
 			"card_stocks":2,
 			"card_sales":0,
 			"create_time":"今天",
-			"actions":["发放详情","编辑","结束"]
+			"actions":["卡券详情","编辑","结束"]
 		}]
 		"""
 
