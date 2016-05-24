@@ -108,6 +108,7 @@ class VirtualProducts(resource.Resource):
 		end_time = request.POST.get('end_time').strip()
 		code_file_path = request.POST.get('code_file_path').strip()
 		
+		print name,product_id
 		try:
 			#先创建福利卡券活动
 			if name and product_id:
@@ -117,13 +118,14 @@ class VirtualProducts(resource.Resource):
 									product_id=product_id
 								)
 				#再为该福利卡券活动上传卡密
-				success_num = upload_codes_for(code_file_path, virtual_product)
+				success_num = upload_codes_for(owner, code_file_path, virtual_product, start_time, end_time)
 
 				response = create_response(200)
 				response.data = {'success_num': success_num}
 			else:
 				response = create_response(500)
-		except:
+		except Exception, e:
+			logging.error(e)
 			response = create_response(500)
 
 		return response.get_response()
@@ -150,11 +152,12 @@ class VirtualProducts(resource.Resource):
 				virtual_product.product_id = product_id
 				virtual_product.save()
 				#再为该福利卡券活动上传卡密
-				success_num = upload_codes_for(code_file_path, virtual_product)
+				success_num = upload_codes_for(owner, code_file_path, virtual_product, start_time, end_time)
 
 				response = create_response(200)
 				response.data = {'success_num': success_num}
-			except:
+			except Exception, e:
+				logging.error(e)
 				response = create_response(500)
 		else:
 			response = create_response(500)
@@ -180,12 +183,13 @@ class FileUploader(resource.Resource):
 				upload_file.name = now + upload_file.name
 				file_path = FileUploader.__save_file(upload_file, owner_id)
 			except Exception, e:
-				print(e)
+				logging.error(e)
 				response.errMsg = u'保存文件出错'
 				return response.get_response()
 			try:
 				codes_dict = get_codes_dict_from_file(file_path)
 			except Exception, e:
+				logging.error(e.message)
 				response.errMsg = e.message
 				return response.get_response()
 
@@ -193,7 +197,7 @@ class FileUploader(resource.Resource):
 			response = create_response(200)
 			response.data = {
 				'file_path': file_path,
-				'valid_num': len(valid_codes.keys())
+				'valid_num': len(valid_codes)
 			}
 		else:
 			response.errMsg = u'文件错误'
@@ -223,7 +227,7 @@ class FileUploader(resource.Resource):
 		return file_path
 
 
-def upload_codes_for(code_file_path, virtual_product):
+def upload_codes_for(owner, code_file_path, virtual_product, start_time, end_time):
 	if not code_file_path:
 		return 0
 

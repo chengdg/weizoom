@@ -42,47 +42,49 @@
 				<input type="text" class="form-control" id="name" name="name" value="{% if promotion %}{{promotion.name}}{% endif %}" data-validate="require-string" minLength="1" maxLength="20" />
 				<div class="errorHint mt5 ml110" data-error-hint="活动名称必须在1-20个字内" ></div>
 			</div>
-			<!-- <div class=""> -->
-			<label class="star_show fn">卡券有效期
-			：</label>
-			<div style="display:inline-block; vertical-align:text-top;margin-top:-6px;">
-			<input
-				style="width:132px!important;cursor:pointer;"
-				type="text"
-				class="form-control xui-datePicker"
-				id="start_date"
-				name="start_date"
-				style=""
-			    value=""
-			    readonly="readonly"
-				data-validate="require-notempty"
-				data-enable-select-time="true"
-				data-ui-role="date-picker"
-			    data-format="yy-mm-dd HH:MM"
-			    data-min="now"
-			    data-max-el="#end_date"
-			    width="132"/>
-			    <div class="errorHint" data-error-hint="必须选择一个开始时间" style=""></div>
-			    </div>
-			至
-			<div style="display:inline-block; vertical-align:text-top;margin-top:-6px;">
-			<input
-				style="width:132px!important;cursor:pointer;"
-				type="text"
-				class="form-control xui-datePicker"
-				id="end_date"
-				name="end_date"
-			    value=""
-			    readonly="readonly"
-				data-validate="require-notempty"
-				data-ui-role="date-picker"
-				data-enable-select-time="true"
-			    data-format="yy-mm-dd HH:MM"
-			    data-min="now"
-			    data-min-el="#start_date"/>
-			    <div class="errorHint" data-error-hint="必须选择一个过期时间" style=""></div>
+			<div class="xui-i-item">
+				
+				<label class="star_show fn">卡券有效期
+				：</label>
+				<div style="display:inline-block; vertical-align:text-top;margin-top:-6px;">
+				<input
+					style="width:132px!important;cursor:pointer;"
+					type="text"
+					class="form-control xui-datePicker"
+					id="start_time"
+					name="start_time"
+					style=""
+				    value=""
+				    readonly="readonly"
+					data-validate="require-notempty"
+					data-enable-select-time="true"
+					data-ui-role="date-picker"
+				    data-format="yy-mm-dd HH:MM"
+				    data-min="now"
+				    data-max-el="#end_time"
+				    width="132"/>
+				    <div class="errorHint" data-error-hint="必须选择一个开始时间" style=""></div>
+				    </div>
+				至
+				<div style="display:inline-block; vertical-align:text-top;margin-top:-6px;">
+				<input
+					style="width:132px!important;cursor:pointer;"
+					type="text"
+					class="form-control xui-datePicker"
+					id="end_time"
+					name="end_time"
+				    value=""
+				    readonly="readonly"
+					data-validate="require-notempty"
+					data-ui-role="date-picker"
+					data-enable-select-time="true"
+				    data-format="yy-mm-dd HH:MM"
+				    data-min="now"
+				    data-min-el="#start_time"/>
+				    <div class="errorHint" data-error-hint="必须选择一个过期时间" style=""></div>
+				</div>
 			</div>
-			<input type="checkbox" id="notLimited" class="ml10 xa-forever" value="1"><label for="notLimited" class="vm ml5 fn">永久</label>
+			<!-- <input type="checkbox" id="notLimited" class="ml10 xa-forever" value="1"><label for="notLimited" class="vm ml5 fn">永久</label> -->
 			<!-- </div> -->
 			<div class="xui-i-item">
 				<label class="star_show">上传码库文件</label>
@@ -126,7 +128,7 @@
             {{each(i, product) products}}
 			<tr
 				data-id="${product.id}"
-			>
+			 class="xa-productId">
 				<td style="text-align: left;" class="pt10">
 					<div class="imgBox fl" style="width: auto;border:solid 1px #ccc;">
 						<a href="${product.detail_link}" target="_blank">
@@ -145,7 +147,7 @@
 					</div>
 				</td>
 				<td class="xa-product-price">
-					${product.display_price_range}
+					${product.price}
 				</td>
 				<td>
 					${product.stocks}
@@ -173,48 +175,17 @@ $(document).ready(function() {
 	});
 	productSelector.render();
 
-	$('.xa-forever').change(function(event){
-		var $input = $(event.target);
-		if($input.prop('checked')){
-			$('input[data-ui-role="date-picker"]').val("").removeAttr('data-validate').attr('disabled', 'disabled').css('cursor','not-allowed').parent().removeClass('has-error').find('.errorHint').text("");
-		}else{
-			$('input[data-ui-role="date-picker"]').removeAttr('disabled').css('cursor','pointer').attr('data-validate', 'require-notempty');
-		}
-	});
-	$('.xa-submit').click(function(event) {
-		$(this).attr("disabled",true);
-		if(!W.validate()) {
-			$(this).attr("disabled",false);
-			return false;
-		}
-		var isPermanantActive;
-		if($('.xa-forever').prop('checked')){
-			isPermanantActive = 1;
-		}else{
-			isPermanantActive = 0;
-		}
-		var args = $('.xa-form').serializeObject();
-		args.products = JSON.stringify(productSelector.getData());
-		args.is_permanant_active = isPermanantActive;
-		W.getApi().call({
-			method: 'put',
-			app: 'mall2',
-			resource: 'forbidden_coupon_product',
-			args: W.toFormData(args),
-			scope: this,
-			success: function(data) {
-				W.showHint('success', '创建禁用优惠券商品成功');
-				_.delay(function() {
-					window.location.href = '/mall2/forbidden_coupon_product/';
-				}, 500)
-			},
-			error: function(resp) {
-				W.showHint('error', '创建禁用优惠券商品失败!');
-				$(this).attr("disabled",false);
-			}
-		})
-	});
+	// $('.xa-forever').change(function(event){
+	// 	var $input = $(event.target);
+	// 	if($input.prop('checked')){
+	// 		$('input[data-ui-role="date-picker"]').val("").removeAttr('data-validate').attr('disabled', 'disabled').css('cursor','not-allowed').parent().removeClass('has-error').find('.errorHint').text("");
+	// 	}else{
+	// 		$('input[data-ui-role="date-picker"]').removeAttr('disabled').css('cursor','pointer').attr('data-validate', 'require-notempty');
+	// 	}
+	// });
 
+	var file_path;
+	var has_file = {% if card_stock %}true{% else %}false{% endif %};
 	//初始化上传组件参数
     var swf = '/static/uploadify.swf',
         overrideEvents = ['onError', 'onUploadSuccess'],
@@ -263,6 +234,7 @@ $(document).ready(function() {
                 console.log(response.data);
                 $("#card-file").find('.uploadify-button-text').html('重新选择');
                 $("#file_path").val(response.data['file_path']);
+                file_path = response.data['file_path'];
                 $(".xa-exchangeStock").html("库存：" + response.data['valid_num']);
                 has_file = true;
             }else{
@@ -277,21 +249,46 @@ $(document).ready(function() {
         },
         onError: onError
     });
+	
+	$('.xa-submit').click(function(event) {
+		$(this).attr("disabled",true);
+		if(!W.validate()) {
+			$(this).attr("disabled",false);
+			return false;
+		}
+		if(!has_file){
+            W.showHint('error', '请上传卡库');
+            $(this).attr('disabled',false);
+            return false;
+        }
+		var args = $('.xa-form').serializeObject();
+		args.code_file_path = file_path;
+		// return
+		// args.products = JSON.stringify(productSelector.getData());
+		// args.product_id = args.products.;
+		var product_id = $('.xa-productId').data('id');
+		args.product_id = product_id;
+		console.log('--------------',args);
+		W.getApi().call({
+			method: 'put',
+			app: 'mall2',
+			resource: 'virtual_products',
+			args: W.toFormData(args),
+			scope: this,
+			success: function(data) {
+				W.showHint('success', '创建福利卡券成功');
+				_.delay(function() {
+					window.location.href = '/mall2/virtual_products/';
+				}, 500)
+			},
+			error: function(resp) {
+				W.showHint('error', '创建福利卡券失败!');
+				$(this).attr("disabled",false);
+			}
+		})
+	});
+
 });
 </script>
 
-<!--	限购价格验证	-->
-<script type="text/javascript">
-function validatePromotionPrice($el){
-  // 获取价格
-  var productPrice = $.trim($('.xa-product-price').text()).split('~')[0];
-  var promotionPrice = $.trim($('.xa-promotion-price').val());
-  var isValidate = parseFloat(promotionPrice) < parseFloat(productPrice);
-  return {
-	isValidate: isValidate,
-	errorHint: '限购价格应小于商品原价'
-  }
-}
-</script>
-<!--	/限购价格验证	-->
 {% endblock %}
