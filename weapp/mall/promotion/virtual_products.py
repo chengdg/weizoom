@@ -29,11 +29,17 @@ class VirtualProducts(resource.Resource):
 		"""
 		浏览虚拟商品（福利卡券）列表
 		"""
+		id = int(request.GET.get('id', 0))
+		virtual_product = None
+		if id:
+			virtual_product = promotion_models.VirtualProducts.objects.get(id=id)
+
 		c = RequestContext(request, {
 			'first_nav_name': export.MALL_PROMOTION_AND_APPS_FIRST_NAV,
 			'second_navs': export.get_promotion_and_apps_second_navs(request),
             'second_nav_name': export.MALL_PROMOTION_SECOND_NAV,
-			'third_nav_name': export.MALL_PROMOTION_VIRTUAL_PRODUCTS_NAV
+			'third_nav_name': export.MALL_PROMOTION_VIRTUAL_PRODUCTS_NAV,
+			'virtual_product': virtual_product
 		})
 
 		return render_to_response('mall/editor/promotion/virtual_products.html', c)
