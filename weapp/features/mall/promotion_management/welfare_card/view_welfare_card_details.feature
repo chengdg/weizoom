@@ -163,6 +163,7 @@ Background:
 	When bill关注jobs的公众号
 	When tom关注jobs的公众号
 
+@welfare_card @weizoom
 Scenario:1 查看卡券详情
 	Given jobs登录系统
 	Then jobs获得福利卡券活动列表
@@ -282,6 +283,7 @@ Scenario:1 查看卡券详情
 		}]
 		"""
 
+@welfare_card @weizoom
 Scenario:2 卡券详情列表的查询
 	When bill访问jobs的webapp
 	And bill购买jobs的商品

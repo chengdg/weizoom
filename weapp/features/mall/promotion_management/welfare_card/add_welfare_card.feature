@@ -171,6 +171,7 @@ Background:
 		}
 		"""
 
+@welfare_card @weizoom
 Scenario:1 新建福利卡券活动
 	Given jobs登录系统
 	When jobs新建福利卡券活动
@@ -211,6 +212,7 @@ Scenario:1 新建福利卡券活动
 		}]
 		"""
 
+@welfare_card @weizoom
 Scenario:2 新建福利卡活动，csv中包含非有效卡信息时，则上传不成功
 	Given jobs登录系统
 	When jobs新建福利卡券活动
@@ -241,6 +243,7 @@ Scenario:2 新建福利卡活动，csv中包含非有效卡信息时，则上传
 		"""
 	Then jobs获得提示信息'上传失败'
 
+@welfare_card @weizoom
 Scenario:3 新建福利卡活动，csv中包含正在使用的卡信息时，则上传不成功
 	Given jobs登录系统
 	When jobs新建福利卡券活动

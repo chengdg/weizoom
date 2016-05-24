@@ -200,7 +200,7 @@ Background:
 					"id":"0000001",
 					"password":"1234567"
 				},{
-					"id":"0002",
+					"id":"0000002",
 					"password":"2234567"
 				}],
 			"creat_time":"2天前"
@@ -226,6 +226,7 @@ Background:
 		}]
 		"""
 
+@welfare_card @weizoom
 Scenario:1 编辑福利卡券活动
 	Given jobs登录系统
 	When jobs编辑福利卡券活动
@@ -279,9 +280,10 @@ Scenario:1 编辑福利卡券活动
 		}]
 		"""
 
+@welfare_card @weizoom
 Scenario:2 结束福利卡券活动
 	Given jobs登录系统
-	When jobs'结束'福利卡券活动'微众虚拟商品2'
+	When jobs'结束'福利卡券活动'20元通用卡'
 	#Then jobs获得提示信息'是否确认结束?'
 	Then jobs获得福利卡券活动列表
 		"""
@@ -308,11 +310,12 @@ Scenario:2 结束福利卡券活动
 		}]
 		"""
 
+@welfare_card @weizoom
 Scenario:3 福利卡券活动列表的查询
 	Given jobs登录系统
-	#按照商品名称查询
+	#按照'商品名称'查询
 		#模糊查询
-			When jobs设置福利卡券活动查询条件
+			When jobs设置福利卡券活动列表查询条件
 				"""
 				{
 					"product_name":"微众",
@@ -338,7 +341,7 @@ Scenario:3 福利卡券活动列表的查询
 				}]
 				"""
 		#精确查询
-			When jobs设置福利卡券活动查询条件
+			When jobs设置福利卡券活动列表查询条件
 				"""
 				{
 					"product_name":"微众虚拟商品2",
@@ -358,9 +361,9 @@ Scenario:3 福利卡券活动列表的查询
 				}]
 				"""
 
-	#按照商品条码查询
+	#按照'商品条码'查询
 		#查询结果为空
-			When jobs设置福利卡券活动查询条件
+			When jobs设置福利卡券活动列表查询条件
 				"""
 				{
 					"product_name":"",
@@ -374,7 +377,7 @@ Scenario:3 福利卡券活动列表的查询
 				[]
 				"""
 		#精确查询
-			When jobs设置福利卡券活动查询条件
+			When jobs设置福利卡券活动列表查询条件
 				"""
 				{
 					"product_name":"",
@@ -394,9 +397,9 @@ Scenario:3 福利卡券活动列表的查询
 				}]
 				"""
 
-	#按照创建时间进行查询
+	#按照'创建时间'进行查询
 		#开始时间和结束时间相等
-			When jobs设置福利卡券活动查询条件
+			When jobs设置福利卡券活动列表查询条件
 				"""
 				{
 					"product_name":"",
@@ -417,7 +420,7 @@ Scenario:3 福利卡券活动列表的查询
 				}]
 				"""
 		#开始时间和结束时间不等
-			When jobs设置福利卡券活动查询条件
+			When jobs设置福利卡券活动列表查询条件
 				"""
 				{
 					"product_name":"",
@@ -445,7 +448,7 @@ Scenario:3 福利卡券活动列表的查询
 				}]
 				"""
 		#查询结果为空
-			When jobs设置福利卡券活动查询条件
+			When jobs设置福利卡券活动列表查询条件
 				"""
 				{
 					"product_name":"",
@@ -460,7 +463,7 @@ Scenario:3 福利卡券活动列表的查询
 				"""
 
 	#组合查询
-		When jobs设置福利卡券活动查询条件
+		When jobs设置福利卡券活动列表查询条件
 			"""
 			{
 				"product_name":"微众",
