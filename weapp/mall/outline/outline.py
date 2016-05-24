@@ -21,7 +21,7 @@ from webapp import models as webapp_models
 from webapp import statistics_util as webapp_statistics_util
 from weixin2.home.outline import get_unread_message_count
 from django.db.models import Sum
-
+from stats.manage.manage_summary import get_transaction_money_order_count
 
 class Outline(resource.Resource):
     app = 'mall2'
@@ -60,18 +60,8 @@ class Outline(resource.Resource):
         # 获得昨日订单数据
         today = '%s 23:59:59' % dateutil.get_yesterday_str('today')
         yesterday = '%s 00:00:00' % dateutil.get_yesterday_str('today')
-        orders = mall_models.Order.objects.belong_to(webapp_id).filter(
-            created_at__range=(yesterday, today))
-        statuses = set([
-            mall_models.ORDER_STATUS_PAYED_SUCCESSED,
-            mall_models.ORDER_STATUS_PAYED_NOT_SHIP,
-            mall_models.ORDER_STATUS_PAYED_SHIPED,
-            mall_models.ORDER_STATUS_SUCCESSED])
-        orders = [order for order in orders if (
-            order.type != 'test') and (order.status in statuses)]
-        order_money = 0.0
-        for order in orders:
-            order_money += order.final_price + order.weizoom_card_money
+
+        order_money,order_count = get_transaction_money_order_count(webapp_id,yesterday,today)
 
         # 获取会员数 update by bert at 20150817
         subscribed_member_count = member_models.Member.objects.filter(
@@ -94,7 +84,7 @@ class Outline(resource.Resource):
             'second_nav_name': export.MALL_HOME_OUTLINE_NAV,
             'unread_message_count': get_unread_message_count(request.manager),
             'new_member_count': new_member_count,
-            'order_count': len(orders), 
+            'order_count': order_count, 
             'order_money': order_money,
             'subscribed_member_count': subscribed_member_count,
             'shop_hint_data': _get_shop_hint_data(request),
