@@ -122,7 +122,7 @@ class VirtualProducts(resource.Resource):
 				response = create_response(200)
 				response.data = {'success_num': success_num}
 			else:
-				1/0  #进入except
+				response = create_response(500)
 		except:
 			response = create_response(500)
 
@@ -144,7 +144,7 @@ class VirtualProducts(resource.Resource):
 			code_file_path = request.POST.get('code_file_path').strip()
 			
 			try:
-				#先创建福利卡券活动
+				#先修改福利卡券活动
 				virtual_product = promotion_models.VirtualProduct.objects.get(owner=owner,id=id)
 				virtual_product.name = name
 				virtual_product.product_id = product_id
@@ -172,8 +172,6 @@ class FileUploader(resource.Resource):
 		upload_file = request.FILES.get('Filedata', None)
 		owner_id = request.POST.get('owner_id', None)
 
-		codes = []
-		passwords = []
 		response = create_response(500)
 		file_path = ""
 		if upload_file and owner_id:
@@ -186,31 +184,16 @@ class FileUploader(resource.Resource):
 				response.errMsg = u'保存文件出错'
 				return response.get_response()
 			try:
-				data = xlrd.open_workbook(file_path)
-				table = data.sheet_by_index(0)
-				nrows = table.nrows   #行数
-				for i in range(0,nrows):
-					table_content = table.cell(i,0).value
-					if table_content!= '':
-						codes.append(str(table_content))
-				for i in range(0,nrows):
-					table_content = table.cell(i,1).value
-					if table_content!= '':
-						passwords.append(str(table_content))
-				if(len(codes) != len(passwords)):
-					response.errMsg = u'上传的卡号与密码列数不对应'
-					return response.get_response()
+				codes_dict = get_codes_dict_from_file(file_path)
 			except Exception, e:
-				print(e)
-				response.errMsg = u'上传文件错误'
+				response.errMsg = e.message
 				return response.get_response()
 
-			valid_codes = get_valid_codes(codes)
-
+			valid_codes = get_valid_codes(codes_dict.keys())
 			response = create_response(200)
 			response.data = {
 				'file_path': file_path,
-				'valid_num': len(valid_codes)
+				'valid_num': len(valid_codes.keys())
 			}
 		else:
 			response.errMsg = u'文件错误'
@@ -237,7 +220,6 @@ class FileUploader(resource.Resource):
 		dst_file = open(file_path, 'wb')
 		print >> dst_file, ''.join(content)
 		dst_file.close()
-		# file_path = os.path.join('\standard_static', 'upload', 'owner_id'+owner_id, file.name).replace('\\','/')
 		return file_path
 
 
@@ -245,7 +227,7 @@ def upload_codes_for(code_file_path, virtual_product):
 	if not code_file_path:
 		return 0
 
-	codes_dict = get_codes_from_file(code_file_path)
+	codes_dict = get_codes_dict_from_file(code_file_path)
 	existed_code_ids = __get_existed_code_ids()
 
 	success_num = 0
@@ -288,16 +270,31 @@ def get_valid_codes(codes):
 	return valid_codes
 
 
-def get_codes_from_file(path):
-    """
-    从文件中读取福利卡券的码库
-    """
-    pass
-    # file = ''
-    # if file:
-    #     pass
-    # else:
-    #     return {}
+def get_codes_dict_from_file(file_path):
+	"""
+	从文件中读取福利卡券的码库
+	"""
+	codes_dict = {}
+	if os.path.exists(file_path):
+		data = xlrd.open_workbook(file_path)
+		table = data.sheet_by_index(0)
+		nrows = table.nrows   #行数
+		for i in range(0,nrows):
+			code = table.cell(i,0).value
+			password = table.cell(i,1).value
+			print i, code, type(code), password, type(password)
+			if type(code) == float:
+				code = str(int(code))
+			if type(password) == float:
+				password = str(int(password))
+			if code != '' and password != '':
+				codes_dict[code] = password
+			else:
+				raise ValueError(u'第%d行数据有误，请核查！' % (i + 1))
+	else:
+		raise ValueError(u'读取文件失败')
+
+	return codes_dict
 
 
 def update_stocks():
