@@ -57,6 +57,7 @@ class VirtualProducts(resource.Resource):
 		count_per_page = int(request.GET.get('count_per_page', 10))
 
 		name = request.GET.get('name', '').strip()
+		product__name = request.GET.get('product__name', '').strip()
 		bar_code = request.GET.get('barCode', '').strip()
 		start_time = request.GET.get('start_time', '')
 		end_time = request.GET.get('end_time', '')
@@ -65,6 +66,8 @@ class VirtualProducts(resource.Resource):
 			'owner': request.manager
 		}
 		if name:
+			params['name__contains'] = name
+		if product_name:
 			params['product__name__contains'] = name
 		if bar_code:
 			params['product__bar_code'] = bar_code
@@ -102,7 +105,12 @@ class VirtualProducts(resource.Resource):
 			items.append({
 				'id': virtual_product.id,
 				'name': virtual_product.name,
-				'product_id': virtual_product.product.id,
+				'product': {
+					'id': virtual_product.product.id,
+					'name': virtual_product.product.name,
+					'thumbnails_url': virtual_product.product.thumbnails_url,
+					'bar_code': virtual_product.product.bar_code,
+				}
 				'code_stock': virtual_product_id2code_stock.get(virtual_product.id, 0),  #码库库存
 				'sell_num': virtual_product_id2sell_num.get(virtual_product.id, 0),  #已售出数量
 				'created_at': virtual_product.created_at.strftime('%Y:%m:%d %H:%M:%S'),
