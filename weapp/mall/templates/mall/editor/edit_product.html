@@ -93,7 +93,7 @@
 				</div>
 
 				<!-- weshop微众商城定制功能start -->
-				{% if request.manager.username == 'jobs' %}
+				{% if request.manager.username == 'jobs' or request.manager.username == 'weshop' %}
 				<div class="form-group">
 					<label class="control-label fl" for="type">商品类型：</label>
 					<div class="fl">
