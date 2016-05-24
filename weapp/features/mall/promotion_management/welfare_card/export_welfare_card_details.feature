@@ -168,6 +168,7 @@ Background:
 		}]
 		"""
 
+@welfare_card @weizoom
 Scenario:1 导出卡券详情
 	Given jobs登录系统
 	Then jobs导出卡券详情

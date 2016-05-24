@@ -171,6 +171,7 @@ Background:
 		}
 		"""
 
+@welfare_card @weizoom
 Scenario:1 新建福利卡券活动
 	Given jobs登录系统
 	When jobs新建福利卡券活动
@@ -193,7 +194,7 @@ Scenario:1 新建福利卡券活动
 					"id":"0000002",
 					"password":"2234567"
 				}],
-			"creat_time":"今天"
+			"create_time":"今天"
 		}]
 		"""
 	Then jobs获得福利卡券活动列表
@@ -207,10 +208,11 @@ Scenario:1 新建福利卡券活动
 			"card_stocks":2,
 			"card_sales":0,
 			"create_time":"今天",
-			"actions":["发放详情","编辑","结束"]
+			"actions":["卡券详情","编辑","结束"]
 		}]
 		"""
 
+@welfare_card @weizoom
 Scenario:2 新建福利卡活动，csv中包含非有效卡信息时，则上传不成功
 	Given jobs登录系统
 	When jobs新建福利卡券活动
@@ -236,11 +238,12 @@ Scenario:2 新建福利卡活动，csv中包含非有效卡信息时，则上传
 					"id":"0000003",
 					"password":"3234567"
 				}],
-			"creat_time":"今天"
+			"create_time":"今天"
 		}]
 		"""
 	Then jobs获得提示信息'上传失败'
 
+@welfare_card @weizoom
 Scenario:3 新建福利卡活动，csv中包含正在使用的卡信息时，则上传不成功
 	Given jobs登录系统
 	When jobs新建福利卡券活动
@@ -263,7 +266,7 @@ Scenario:3 新建福利卡活动，csv中包含正在使用的卡信息时，则
 					"id":"0000002",
 					"password":"2234567"
 				}],
-			"creat_time":"今天"
+			"create_time":"今天"
 		}]
 		"""
 	When jobs新建福利卡券活动
@@ -283,7 +286,7 @@ Scenario:3 新建福利卡活动，csv中包含正在使用的卡信息时，则
 					"id":"0000001",
 					"password":"1234567"
 				}],
-			"creat_time":"今天"
+			"create_time":"今天"
 		}]
 		"""
 	Then jobs获得提示信息'该文件内卡券已经在使用中，请确认后再操作'
