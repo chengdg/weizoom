@@ -67,7 +67,7 @@
             {{if items.length}}
 	            {{each(i, item) items}}
 				<tr class="xui-trborder" data-id="${item.id}">
-					<td></td>
+					<td>${item.name}</td>
 					<td class="tl_important pt10 pb10">
 						{{if item.product}}
 						<div class="clearfix xui-i-cell2">
@@ -95,20 +95,16 @@
 						{{/if}}
 					</td>
 					<td>
-						码库库存
+						${item.code_stock}
 					</td>
 					<td>已经售出</td>
 					<td>
-						{{if item.is_permanant_active}}
-						永久有效
-						{{else}}
-						<span class="xui-i-date vm">${item.start_date}</span>至<span class="xui-i-date vm">${item.end_date}</span>
-						{{/if}}
+						${item.created_at}
 					</td>
 					<td>
-						<a href="javascript:void(0);" class="" style="width: 60px;text-decoration:none;display:block;">发放详情</a>
-						<a href="javascript:void(0);" class="" style="width: 60px;text-decoration:none;display:block;">编辑</a>
-						<a href="javascript:void(0);" class="xa-proFinish" style="width: 60px;text-decoration:none;display:block;">结束</a>
+						<a href="javascript:void(0);" class="" style="width: 120px;text-decoration:none;display:block;">发放详情</a>
+						<a href="javascript:void(0);" class="" style="width: 120px;text-decoration:none;display:block;">编辑</a>
+						<a href="javascript:void(0);" class="xa-proFinish" style="width: 120px;text-decoration:none;display:block;">结束</a>
 					</td>
 				</tr>
 				{{/each}}

@@ -14,7 +14,7 @@
 	<ul class="breadcrumb">
 		<li>您当前所在位置</li>
 		<li><a href="/mall2/flash_sale_list/">促销管理</a></li>
-		<li class="active">新建福利卡券</li>
+		<li class="active">{% if virtual_product.id %}编辑{% else %}新建{% endif %}福利卡券</li>
 	</ul>
 </div>
 
@@ -271,7 +271,7 @@ $(document).ready(function() {
 		W.getApi().call({
 			method: 'put',
 			app: 'mall2',
-			resource: 'virtual_products',
+			resource: 'virtual_product',
 			args: W.toFormData(args),
 			scope: this,
 			success: function(data) {
