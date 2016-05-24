@@ -698,7 +698,7 @@ def export_orders_json(request):
         u'商品金额:' + str(total_product_money).encode('utf8'),
         u'支付总额:' + str(final_total_order_money + weizoom_card_total_order_money).encode('utf8'),
         u'现金支付金额:' + str(final_total_order_money).encode('utf8'),
-        (u'微众卡+惠惠卡使用的所有金额:' if not mall_type else u'微众卡支付金额:') + str(weizoom_card_total_order_money).encode('utf8'),
+        (u'微众卡支付金额:' if not mall_type else u'微众卡支付金额:') + str(weizoom_card_total_order_money).encode('utf8'),
         u'赠品总数:' + str(total_premium_product).encode('utf8'),
         u'积分抵扣总金额:' + str(use_integral_money).encode('utf8'),
         u'优惠劵价值总额:' + str(coupon_money_count).encode('utf8'),
