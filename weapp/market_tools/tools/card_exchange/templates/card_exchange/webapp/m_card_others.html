@@ -51,7 +51,7 @@
 		padding-left: 10px;
 	}
 	.xui-remain-money{
-		margin-top: 5px;
+		margin-top: 8px;
 		color: #ee3715;
 	}
 	.xui-remain-money span:first-child{
@@ -59,7 +59,7 @@
 		vertical-align: text-bottom;
 		margin-right: 5px;
 		font-family: 'Microsoft Yahei';
-		font-size: 1rem;
+		font-size: 1.1rem;
 	}
 	.xui-check-detail{
 		display: block;
@@ -96,7 +96,6 @@
 	}
 	.xui-invalid-card .xui-detail-left{
 		color:#c1c2c2;
-		font-size: 1.5rem;
 	}
 	.xui-invalid-card .xui-card-num{
 		color: #c1c2c2;
@@ -157,6 +156,9 @@
     .xui-tab-active{
     	font-size: 1rem;
     }
+    .xui-detail-top{
+    	padding-right: 0;
+    }
 }
 </style>
 {% endblock %}
@@ -175,7 +177,7 @@
 		</div>
 		{% endif %}
 		<div class="xui-content">
-			<div class="xui-valid-card">{{ cards }}
+			<div class="xui-valid-card">
 				{% for item in cards %}
 				{% if item.is_expired == 0%}
 				<div class="xui-wrap">
