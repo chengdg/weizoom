@@ -110,7 +110,7 @@ class VirtualProducts(resource.Resource):
 					'name': virtual_product.product.name,
 					'thumbnails_url': virtual_product.product.thumbnails_url,
 					'bar_code': virtual_product.product.bar_code,
-				}
+				},
 				'code_stock': virtual_product_id2code_stock.get(virtual_product.id, 0),  #码库库存
 				'sell_num': virtual_product_id2sell_num.get(virtual_product.id, 0),  #已售出数量
 				'created_at': virtual_product.created_at.strftime('%Y:%m:%d %H:%M:%S'),
