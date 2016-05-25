@@ -81,11 +81,17 @@ class VirtualProduct(resource.Resource):
 		activities = promotion_models.VirtualProduct.objects.filter(owner=request.manager, is_finished=False)
 		active_product_ids = [activity.product_id for activity in activities]
 		#获取没有参加正在进行中的福利卡券活动的虚拟商品列表
-		products = mall_models.Product.objects.filter(
-					owner=request.manager, 
-					type__in=[mall_models.PRODUCT_VIRTUAL_TYPE, mall_models.PRODUCT_WZCARD_TYPE],
-					shelve_type = mall_models.PRODUCT_SHELVE_TYPE_ON
-				).order_by('-id')
+		params = {
+			'owner': request.manager, 
+			'type__in': [mall_models.PRODUCT_VIRTUAL_TYPE, mall_models.PRODUCT_WZCARD_TYPE],
+			'shelve_type': mall_models.PRODUCT_SHELVE_TYPE_ON
+		}
+		if name:
+			params['name__contains'] = name
+		if bar_code:
+			params['bar_code'] = bar_code
+
+		products = mall_models.Product.objects.filter(**params).order_by('-id')
 		pageinfo, products = paginator.paginate(products, cur_page, count_per_page, None)
 
 		items = []
@@ -121,13 +127,12 @@ class VirtualProduct(resource.Resource):
 		创建福利卡券活动
 		"""
 		owner = request.manager
-		name = request.POST.get('name').strip()
-		product_id = request.POST.get('product_id').strip()
-		start_time = request.POST.get('start_time').strip()
-		end_time = request.POST.get('end_time').strip()
-		code_file_path = request.POST.get('code_file_path').strip()
+		name = request.POST.get('name', '').strip()
+		product_id = request.POST.get('product_id', '').strip()
+		start_time = request.POST.get('start_time', '').strip()
+		end_time = request.POST.get('end_time', '').strip()
+		code_file_path = request.POST.get('code_file_path', '').strip()
 		
-		print name,product_id
 		try:
 			#先创建福利卡券活动
 			if name and product_id:
@@ -143,9 +148,11 @@ class VirtualProduct(resource.Resource):
 				response.data = {'success_num': success_num}
 			else:
 				response = create_response(500)
+				response.errMsg = u'活动名称或商品不能为空！'
 		except Exception, e:
 			logging.error(e)
 			response = create_response(500)
+			response.errMsg = e
 
 		return response.get_response()
 
@@ -156,21 +163,15 @@ class VirtualProduct(resource.Resource):
 		修改福利卡券活动，补充上传卡密
 		"""
 		id = request.POST.get('id')
-		name = request.POST.get('name').strip()
-		product_id = request.POST.get('product_id').strip()
-		if id and name and product_id:
+		if id:
 			owner = request.manager
-			start_time = request.POST.get('start_time').strip()
-			end_time = request.POST.get('end_time').strip()
-			code_file_path = request.POST.get('code_file_path').strip()
+			start_time = request.POST.get('start_time', '').strip()
+			end_time = request.POST.get('end_time', '').strip()
+			code_file_path = request.POST.get('code_file_path', '').strip()
 			
 			try:
-				#先修改福利卡券活动
 				virtual_product = promotion_models.VirtualProduct.objects.get(owner=owner, id=id, is_finished=False)
-				virtual_product.name = name
-				virtual_product.product_id = product_id
-				virtual_product.save()
-				#再为该福利卡券活动上传卡密
+				#为该福利卡券活动上传卡密
 				success_num = upload_codes_for(owner, code_file_path, virtual_product, start_time, end_time)
 
 				response = create_response(200)
@@ -178,8 +179,10 @@ class VirtualProduct(resource.Resource):
 			except Exception, e:
 				logging.error(e)
 				response = create_response(500)
+				response.errMsg = e
 		else:
 			response = create_response(500)
+			response.errMsg = u'id不能为空！'
 
 		return response.get_response()
 
@@ -279,11 +282,14 @@ def __get_existed_code_ids():
 	"""
 	获取未领取和已领取的卡密
 	"""
-	existed_codes = promotion_models.VirtualProductHasCode.objects.filter(status__in=[promotion_models.CODE_STATUS_NOT_GET, promotion_models.CODE_STATUS_GET])
+	# existed_codes = promotion_models.VirtualProductHasCode.objects.filter(status__in=[promotion_models.CODE_STATUS_NOT_GET, promotion_models.CODE_STATUS_GET])
+	#只要上传过，不管是哪个商家上传的，不管现在是什么状态，都不允许再次上传，不允许更改任何信息
+	existed_codes = promotion_models.VirtualProductHasCode.objects.all()
 	existed_code_ids = {}
 	for code in existed_codes:
-		if not code.can_not_use:
-			existed_code_ids[code.code] = 1
+		# if not code.can_not_use:
+		# 	existed_code_ids[code.code] = 1
+		existed_code_ids[code.code] = 1
 
 	return existed_code_ids
 

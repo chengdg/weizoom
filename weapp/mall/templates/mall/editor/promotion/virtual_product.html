@@ -300,12 +300,18 @@ $(document).ready(function() {
             return false;
         }
 		var args = $('.xa-form').serializeObject();
+		var method = 'put';
+		{% if virtual_product.id %}
+		method = 'post';
+		args.id = {{virtual_product.id}};
+		{% endif %}
+		xlog(args);
 		args.code_file_path = file_path;
 		// args.products = JSON.stringify(productSelector.getData());
 		var product_id = $('.xa-productId').data('id');
 		args.product_id = product_id;
 		W.getApi().call({
-			method: 'put',
+			method: method,
 			app: 'mall2',
 			resource: 'virtual_product',
 			args: W.toFormData(args),
