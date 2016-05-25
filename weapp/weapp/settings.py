@@ -145,6 +145,8 @@ WEAPP_MONGO = {
 APP_MONGO = {
     "HOST": 'mongo.weapp.com',
     "DB": 'app_data',
+    "USERNAME": None,
+    "PASSWORD": None,
     "ALIAS": 'apps'
 }
 
