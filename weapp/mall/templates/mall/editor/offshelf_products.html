@@ -112,7 +112,7 @@
 								{{/if}}
 							</div>
 							<div class="pl15 disTc xui-poductorIntroduction">
-								<div class="mb0 mt0" style="height:35px; "><p class="mb0" style="line-height:16px;">${product.name}</p></div>
+								<div class="mb0 mt0" style="height:35px; "><p class="mb0" style="line-height:16px;">{{if product.type == 'virtual' || product.type == 'wzcard' }}<i class="xui-virtualProductIcon">码</i>{{/if}}${product.name}</p></div>
 								{{if product.is_use_custom_model}}
 								<span class="label label-info xa-showAllModels cursor-pointer" style="font-size: 1.0em;">查看${product.models.length}个规格详情</span>
 								{{else}}
@@ -124,7 +124,6 @@
 					<td>
 					{{if data.data.mall_type == 1 }}
 						{{if product.is_sync }}<i class="xui-icon-sync">同</i>{{/if}}
-						{{if product.type == 'virtual' || product.type == 'wzcard' }}<i class="xui-virtualProductIcon">码</i>{{/if}}
 						${product.store_name}
 					{{else}}
 						${product.bar_code}

@@ -32,8 +32,8 @@ class VirtualProductCodes(resource.Resource):
 		"""
 		virtual_product_id = int(request.GET.get('id', 0))
 		virtual_product = None
-		if id:
-			_virtual_product = promotion_models.VirtualProduct.objects.get(id=id)
+		if virtual_product_id:
+			_virtual_product = promotion_models.VirtualProduct.objects.get(id=virtual_product_id)
 
 			virtual_product = {
 				'id': _virtual_product.id,
@@ -104,7 +104,7 @@ class VirtualProductCodes(resource.Resource):
 				'order_id': code.order_id
 			})
 
-		
+
 		response = create_response(200)
 		response.data = {
 			'items': items,
