@@ -2091,6 +2091,7 @@ PAY_INTERFACE_TENPAY = 1
 PAY_INTERFACE_WEIXIN_PAY = 2
 PAY_INTERFACE_COD = 9
 PAY_INTERFACE_PREFERENCE = 10
+PAY_INTERFACE_BEST_PAY = 11
 ###########################
 # ADD BY BERT  AT 16
 ###########################
@@ -2102,6 +2103,7 @@ PAYTYPE2LOGO = {
 	PAY_INTERFACE_WEIXIN_PAY: '/standard_static/img/mockapi/weixin_pay.png',
 	PAY_INTERFACE_COD: '/standard_static/img/mockapi/cod.png',
 	PAY_INTERFACE_WEIZOOM_COIN: '/standard_static/img/mockapi/wzcoin.png',
+	PAY_INTERFACE_BEST_PAY: '/standard_static/img/mockapi/best_pay.png',
 }
 PAYTYPE2NAME = {
 	-1: u'',
@@ -2110,7 +2112,8 @@ PAYTYPE2NAME = {
 	PAY_INTERFACE_TENPAY: u'财付通',
 	PAY_INTERFACE_WEIXIN_PAY: u'微信支付',
 	PAY_INTERFACE_COD: u'货到付款',
-	PAY_INTERFACE_WEIZOOM_COIN: u"微众卡支付"
+	PAY_INTERFACE_WEIZOOM_COIN: u"微众卡支付",
+	PAY_INTERFACE_BEST_PAY:u"翼支付"
 }
 PAYNAME2TYPE = {
 	u'优惠抵扣':PAY_INTERFACE_PREFERENCE,
@@ -2118,19 +2121,22 @@ PAYNAME2TYPE = {
 	u'财付通': PAY_INTERFACE_TENPAY,
 	u'微信支付': PAY_INTERFACE_WEIXIN_PAY,
 	u'货到付款': PAY_INTERFACE_COD,
-	u"微众卡支付": PAY_INTERFACE_WEIZOOM_COIN
+	u"微众卡支付": PAY_INTERFACE_WEIZOOM_COIN,
+	u"翼支付": PAY_INTERFACE_BEST_PAY
 }
 
 VALID_PAY_INTERFACES = [
 	PAY_INTERFACE_WEIXIN_PAY,
 	PAY_INTERFACE_COD,
 	PAY_INTERFACE_WEIZOOM_COIN,
-	PAY_INTERFACE_ALIPAY]
+	PAY_INTERFACE_ALIPAY,
+	PAY_INTERFACE_BEST_PAY]
 ONLINE_PAY_INTERFACE = [
 	PAY_INTERFACE_WEIXIN_PAY,
 	PAY_INTERFACE_ALIPAY,
 	PAY_INTERFACE_WEIZOOM_COIN,
-	PAY_INTERFACE_TENPAY]
+	PAY_INTERFACE_TENPAY,
+PAY_INTERFACE_BEST_PAY]
 
 
 class PayInterface(models.Model):
@@ -2175,6 +2181,11 @@ class PayInterface(models.Model):
 				order.order_id)
 		elif PAY_INTERFACE_WEIXIN_PAY == self.type:
 			return '/webapp/wxpay/?woid={}&order_id={}&pay_id={}&showwxpaytitle=1'.format(
+				webapp_owner_id,
+				order.order_id,
+				self.id)
+		elif PAY_INTERFACE_BEST_PAY == self.type:
+			return '/webapp/bestpay/?woid={}&order_id={}&pay_id={}&showwxpaytitle=1'.format(
 				webapp_owner_id,
 				order.order_id,
 				self.id)
