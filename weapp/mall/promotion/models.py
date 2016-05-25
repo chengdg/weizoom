@@ -906,7 +906,7 @@ class VirtualProductHasCode(models.Model):
 	start_time = models.DateTimeField() #有效期起始时间
 	end_time = models.DateTimeField()#有效期结束时间
 	status = models.IntegerField(default=CODE_STATUS_NOT_GET) #状态
-	get_time = models.CharField(max_length=20, default='') #领取/发放时间
+	get_time = models.DateTimeField(null=True) #领取/发放时间
 	member_id = models.CharField(max_length=20, default='') #会员id
 	oid = models.CharField(max_length=20, default='') #订单id
 	order_id = models.CharField(max_length=35, default='') #订单order_id
