@@ -1305,3 +1305,10 @@ table.table.order-print-summary-sec>tbody>tr>td.order-print-summary-pay_money{
     font-style: normal;
     margin-right: 2px;
 }
+.xui-virtualProductIcon{
+    background: #20BD7F;
+    color:#fff;
+    padding: 2px 3px;
+    font-style: normal;
+    margin-right: 2px;
+}

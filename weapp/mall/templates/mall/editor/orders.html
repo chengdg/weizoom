@@ -184,6 +184,9 @@
 							{{if group.supplier_user_id > 0 }}
 								<i class="xui-icon-sync">同</i>${group.products[0].supplier_store_name}
 							{{/if}}
+							{{if order.type == 'virtual' || order.type == 'wzcard' }}
+								<i class="xui-virtualProductIcon">码</i>
+							{{/if}}
                         {{else}}
                             {{if order.supplier_user_id > 0}}
                                 商城
