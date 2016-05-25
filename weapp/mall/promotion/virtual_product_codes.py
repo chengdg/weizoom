@@ -18,7 +18,7 @@ from modules.member import models as member_models
 
 from watchdog.utils import watchdog_alert
 
-import utils
+from utils.string_util import byte_to_hex
 from django.conf import settings
 
 class VirtualProductCodes(resource.Resource):
@@ -59,21 +59,43 @@ class VirtualProductCodes(resource.Resource):
 		"""
 		owner = request.manager
 		#获取当前页数
-		cur_page = int(request.POST.get('page', '1'))
+		cur_page = int(request.GET.get('page', '1'))
 		#获取每页个数
-		count_per_page = int(request.POST.get('count_per_page', 10))
+		count_per_page = int(request.GET.get('count_per_page', 10))
 
-		virtual_product_id = int(request.POST.get('virtual_product_id', '-1'))
-		code = request.POST.get('name', '')
-		member_name = request.POST.get('barCode', '')
-		valid_time_start = request.POST.get('valid_time_start', '')
-		valid_time_end = request.POST.get('valid_time_end', '')
-		get_time_start = request.POST.get('get_time_start', '')
-		get_time_end = request.POST.get('get_time_end', '')
-		status = int(request.POST.get('status', '-1'))
-		order_id = request.POST.get('order_id', '')
+		virtual_product_id = int(request.GET.get('virtual_product_id', '-1'))
+		code = request.GET.get('name', '')
+		member_name = request.GET.get('barCode', '')
+		valid_time_start = request.GET.get('valid_time_start', '')
+		valid_time_end = request.GET.get('valid_time_end', '')
+		get_time_start = request.GET.get('get_time_start', '')
+		get_time_end = request.GET.get('get_time_end', '')
+		status = int(request.GET.get('status', '-1'))
+		order_id = request.GET.get('order_id', '')
 
-		codes = promotion_models.VirtualProductHasCode.objects.filter(owner=request.manager, virtual_product_id=virtual_product_id).order_by('-id')
+		params = {
+			'owner': request.manager, 
+			'virtual_product_id': virtual_product_id
+		}
+		if code:
+			params['code'] = code
+		if member_name:
+			query_hex = byte_to_hex(value)
+			members = member_models.Member.objects.filter(username_hexstr__contains=query_hex)
+			member_ids = [m.id for m in members]
+			params['member_id__in'] = member_ids
+		if valid_time_start and valid_time_end:
+			params['start_time__lte'] = valid_time_end
+			params['end_time__gte'] = valid_time_start
+		if get_time_start and get_time_end:
+			params['get_time__lte'] = get_time_end
+			params['get_time__gte'] = get_time_start
+		if status:
+			params['status'] = status
+		if order_id:
+			params['order_id'] = order_id
+
+		codes = promotion_models.VirtualProductHasCode.objects.filter(**params).order_by('-id')
 		pageinfo, codes = paginator.paginate(codes, cur_page, count_per_page, None)
 
 		member_ids = []
