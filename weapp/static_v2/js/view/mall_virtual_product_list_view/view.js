@@ -25,7 +25,7 @@ W.view.mall.VirtualProductListView = Backbone.View.extend({
 		'click .xa-finish': 'onClickFinishLink',
 		'click .xa-start': 'onClickFinishLink',
 		'click .xa-delete': 'onClickDeleteLink',
-		'click .xa-proFinish':'onClickProFinish',
+		'click .xa-activeFinish':'onClickActiveFinish',
 		'click .xa-proBatchFinish':'onClickProBatchFinish',
 		'click .xa-batchDelete': 'onClickBatchDeleteLink',
 		'click .xa-batchFinish': 'onClickBatchFinishLink',
@@ -177,7 +177,7 @@ W.view.mall.VirtualProductListView = Backbone.View.extend({
 			}
 		});
 	},
-	onClickProFinish:function(event){
+	onClickActiveFinish:function(event){
 		var $link = $(event.currentTarget);
 		var $tr = $link.parents('tr');
 		var itemId = $tr.data('id');

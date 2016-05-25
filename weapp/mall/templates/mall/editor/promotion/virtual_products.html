@@ -1,5 +1,11 @@
 {% extends "content_base_v2.html" %}
-
+{% block css%}
+<style>
+	.xui-welfarePage .xui-commodityName{
+		width: 130px;
+	}
+</style>
+{% endblock%}
 {% block content-panel %}
 <div class="xui-welfarePage xui-commonPromotionStyle xui-promotionsPage">
 
@@ -56,7 +62,7 @@
 		<thead class="xb-theadBg xui-theadHeight">
 			<tr>
 				<th >活动名称</th>
-				<th width="120">商品名称</th>
+				<th width="220">商品名称</th>
 				<th width="130">码库库存</th>
 				<th width="200">已经售出</th>
 				<th width="200">创建时间</th>
