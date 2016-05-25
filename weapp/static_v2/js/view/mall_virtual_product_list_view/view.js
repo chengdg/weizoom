@@ -160,7 +160,7 @@ W.view.mall.VirtualProductListView = Backbone.View.extend({
 		W.getApi().call({
 			method: 'post',
 			app: 'mall2',
-			resource: 'forbidden_coupon_product',
+			resource: 'virtual_product',
 			args: {id: JSON.stringify(itemId)},
 			scope: this,
 			success: function(data) {
@@ -187,7 +187,7 @@ W.view.mall.VirtualProductListView = Backbone.View.extend({
 			width: 455,
         	position:'top',
 			isTitle: false,
-			msg: '结束后该商品将会移出该列表!',
+			msg: '是否确定结束该活动!',
 			confirm: function() {
 				_this.finishAndDeleteProducts($tr, [itemId]);
 			}
