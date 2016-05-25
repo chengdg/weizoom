@@ -481,7 +481,7 @@ def get_other_cards_list(request):
 	for card in member_has_other_cards:
 		card_details_dic['card_id'] = card.code
 		card_details_dic['password'] = card.password
-		card_details_dic['time'] = card.get_time
+		card_details_dic['time'] = card.get_time.strftime('%Y-%m-%d')
 		card_details_dic['product_id'] = card.virtual_product.product.id
 		card_details_dic['name'] = card.virtual_product.product.name
 		card_details_dic['status'] = card.status
