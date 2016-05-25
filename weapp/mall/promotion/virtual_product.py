@@ -32,7 +32,26 @@ class VirtualProduct(resource.Resource):
 		id = int(request.GET.get('id', 0))
 		virtual_product = None
 		if id:
-			virtual_product = promotion_models.VirtualProduct.objects.get(id=id)
+			_virtual_product = promotion_models.VirtualProduct.objects.get(id=id)
+			product = virtual_product.product
+			product.fill_standard_model()
+			_product = {
+				'id': product.id,
+				'name': product.name,
+				'bar_code': product.bar_code,
+				'price': product.price,
+				'stocks': product.stocks,
+				'thumbnails_url': product.thumbnails_url,
+				'detail_link': '/mall2/product/?id=%d&source=onshelf' % product.id,
+				'created_at': product.created_at.strftime('%Y-%m-%d %H:%M')
+			}
+
+			virtual_product = {
+				'id': _virtual_product.id,
+				'name': _virtual_product.name,
+				'product': _product,
+				'created_at': _virtual_product.created_at.strftime('%Y-%m-%d %H:%M')
+			}
 
 		c = RequestContext(request, {
 			'first_nav_name': export.MALL_PROMOTION_AND_APPS_FIRST_NAV,
@@ -147,7 +166,7 @@ class VirtualProduct(resource.Resource):
 			
 			try:
 				#先修改福利卡券活动
-				virtual_product = promotion_models.VirtualProduct.objects.get(owner=owner,id=id)
+				virtual_product = promotion_models.VirtualProduct.objects.get(owner=owner, id=id, is_finished=False)
 				virtual_product.name = name
 				virtual_product.product_id = product_id
 				virtual_product.save()

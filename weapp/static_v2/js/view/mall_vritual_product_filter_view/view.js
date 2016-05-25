@@ -1,5 +1,5 @@
 ensureNS('W.view.mall');
-W.view.mall.PromotionFilterView = Backbone.View.extend({
+W.view.mall.VirtualProductFilterView = Backbone.View.extend({
     getTemplate: function() {
         if(this.options.templateName){
             var tname = this.options.templateName.replace('-src','')
@@ -33,7 +33,6 @@ W.view.mall.PromotionFilterView = Backbone.View.extend({
     onClickSearchButton: function(){
         xlog("in onClickSearchButton()");
         var data = this.getFilterData();
-        console.log(data,'+++++++++')
         this.trigger('search', data);
     },
 

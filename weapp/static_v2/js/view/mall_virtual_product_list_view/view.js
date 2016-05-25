@@ -7,7 +7,7 @@ Copyright (c) 2011-2012 Weizoom Inc
  * @constructor
  */
 ensureNS('W.view.mall');
-W.view.mall.VirtualListView = Backbone.View.extend({
+W.view.mall.VirtualProductListView = Backbone.View.extend({
 	getModelInfoTemplate: function() {
 		$('#mall-product-list-view-model-info-tmpl-src').template('mall-product-list-view-model-info-tmpl');
 		return 'mall-product-list-view-model-info-tmpl';
