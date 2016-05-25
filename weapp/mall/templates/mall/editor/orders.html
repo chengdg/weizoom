@@ -274,7 +274,6 @@
 									data-delivery_time="${order.delivery_time}"
 									data-addr="${order.ship_address}"
 									data-tel="${order.ship_tel}"
-									data-message="${order.customer_message}"
 									{{if order.bill_type == 0}}
 										data-bill-type="--"
 									{{else}}
@@ -569,17 +568,6 @@ $(document).ready(function() {
 				}
 			})
 		});
-	//买家留言
-	// $('body').delegate('.xa-costomerMessage','click',function(event) {
-	// 	$('.xa-costomerMessage').popover({
-	// 	trigger:'click',
-	// 	placement:'right',
-	// 	template:'<div class="popover" role="tooltip"><div class="popover-content"></div></div>'
-	// 	});
-	// });
-
-
-
 
 	//买家留言
 	$('body').delegate('.xa-costomerMessage', 'mouseenter', function(event){
