@@ -77,22 +77,45 @@ class VirtualProducts(resource.Resource):
 				status__in=[promotion_models.CODE_STATUS_GET, promotion_models.CODE_STATUS_NOT_GET]
 			)
 
-		virtual_product_id2code_stock = {}
-		virtual_product_id2sell_num = {}
-		for r in virtual_product_has_codes:
-			if r.can_not_use:
-				continue
+		virtual_product_id2total_stock = {}  #总库存
+		virtual_product_id2code_stock = {}  #可用库存
+		virtual_product_id2sell_num = {}  #已经售出
+		virtual_product_id2overdue_num = {}  #已过期
+		virtual_product_id2expired_num = {}  #已失效
 
-			if r.status == promotion_models.CODE_STATUS_NOT_GET:
-				if virtual_product_id2code_stock.has_key(r.virtual_product_id):
-					virtual_product_id2code_stock[r.virtual_product_id] += 1
-				else:
-					virtual_product_id2code_stock[r.virtual_product_id] = 1
-			elif r.status == promotion_models.CODE_STATUS_GET:
-				if virtual_product_id2sell_num.has_key(r.virtual_product_id):
-					virtual_product_id2sell_num[r.virtual_product_id] += 1
-				else:
-					virtual_product_id2sell_num[r.virtual_product_id] = 1
+		for r in virtual_product_has_codes:
+			#总库存
+			if virtual_product_id2total_stock.has_key(r.virtual_product_id):
+				virtual_product_id2total_stock[r.virtual_product_id] += 1
+			else:
+				virtual_product_id2total_stock[r.virtual_product_id] = 1
+
+			if r.can_not_use:  #r.can_not_use会检查码是否过期
+				#已过期
+				if r.status == promotion_models.CODE_STATUS_OVERDUE:
+					if virtual_product_id2overdue_num.has_key(r.virtual_product_id):
+						virtual_product_id2overdue_num[r.virtual_product_id] += 1
+					else:
+						virtual_product_id2overdue_num[r.virtual_product_id] = 1
+
+				if r.status == promotion_models.CODE_STATUS_EXPIRED:
+					if virtual_product_id2expired_num.has_key(r.virtual_product_id):
+						virtual_product_id2expired_num[r.virtual_product_id] += 1
+					else:
+						virtual_product_id2expired_num[r.virtual_product_id] = 1
+			else:
+				#可用库存
+				if r.status == promotion_models.CODE_STATUS_NOT_GET:
+					if virtual_product_id2code_stock.has_key(r.virtual_product_id):
+						virtual_product_id2code_stock[r.virtual_product_id] += 1
+					else:
+						virtual_product_id2code_stock[r.virtual_product_id] = 1
+				#已经售出
+				elif r.status == promotion_models.CODE_STATUS_GET:
+					if virtual_product_id2sell_num.has_key(r.virtual_product_id):
+						virtual_product_id2sell_num[r.virtual_product_id] += 1
+					else:
+						virtual_product_id2sell_num[r.virtual_product_id] = 1
 
 		items = []
 		for virtual_product in virtual_products:
@@ -105,8 +128,11 @@ class VirtualProducts(resource.Resource):
 					'thumbnails_url': virtual_product.product.thumbnails_url,
 					'bar_code': virtual_product.product.bar_code,
 				},
-				'code_stock': virtual_product_id2code_stock.get(virtual_product.id, 0),  #码库库存
+				'total_stock': virtual_product_id2total_stock.get(virtual_product.id, 0),  #总库存
+				'code_stock': virtual_product_id2code_stock.get(virtual_product.id, 0),  #可用库存
 				'sell_num': virtual_product_id2sell_num.get(virtual_product.id, 0),  #已售出数量
+				'overdue_num': virtual_product_id2overdue_num.get(virtual_product.id, 0),  #已过期数量
+				'expired_num': virtual_product_id2expired_num.get(virtual_product.id, 0),  #已失效数量
 				'created_at': virtual_product.created_at.strftime('%Y:%m:%d %H:%M:%S'),
 			})
 
