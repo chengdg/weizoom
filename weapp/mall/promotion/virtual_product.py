@@ -209,13 +209,13 @@ class FileUploader(resource.Resource):
 				response.errMsg = u'保存文件出错'
 				return response.get_response()
 			try:
-				codes_dict = get_codes_dict_from_file(file_path)
+				codes, codes_dict = get_codes_dict_from_file(file_path)
 			except Exception, e:
 				logging.error(e.message)
 				response.errMsg = e.message
 				return response.get_response()
 
-			valid_codes = get_valid_codes(codes_dict.keys())
+			valid_codes = get_valid_codes(codes)
 			response = create_response(200)
 			response.data = {
 				'file_path': file_path,
@@ -253,19 +253,18 @@ def upload_codes_for(owner, code_file_path, virtual_product, start_time, end_tim
 	if not code_file_path:
 		return 0
 
-	codes_dict = get_codes_dict_from_file(code_file_path)
+	codes, codes_dict = get_codes_dict_from_file(code_file_path)
 	existed_code_ids = __get_existed_code_ids()
 
 	success_num = 0
-	for code in codes_dict:
-		code = code.strip()
-		#如果库中已存在已领取或者未领取的该码，则不添加这个码
+	for code in codes:
+		#如果库中已存在任何状态的该码，则不添加这个码
 		if not code:
 			continue
 		if existed_code_ids.has_key(code):
 			continue
 
-		password = codes_dict[code].strip()
+		password = codes_dict[code]
 		promotion_models.VirtualProductHasCode.objects.create(
 			owner=owner,
 			virtual_product=virtual_product,
@@ -309,6 +308,7 @@ def get_codes_dict_from_file(file_path):
 	"""
 	从文件中读取福利卡券的码库
 	"""
+	codes = []  #为了保证存到数据库中的顺序与文件中的顺序相同
 	codes_dict = {}
 	if os.path.exists(file_path):
 		data = xlrd.open_workbook(file_path)
@@ -317,19 +317,21 @@ def get_codes_dict_from_file(file_path):
 		for i in range(0,nrows):
 			code = table.cell(i,0).value
 			password = table.cell(i,1).value
-			print i, code, type(code), password, type(password)
+			
 			if type(code) == float:
 				code = str(int(code))
 			if type(password) == float:
 				password = str(int(password))
 			if code != '' and password != '':
-				codes_dict[code] = password
+				if not code in codes:
+					codes_dict[code] = password
+					codes.append(code)
 			else:
 				raise ValueError(u'第%d行数据有误，请核查！' % (i + 1))
 	else:
 		raise ValueError(u'读取文件失败')
 
-	return codes_dict
+	return codes, codes_dict
 
 
 def update_stocks():
