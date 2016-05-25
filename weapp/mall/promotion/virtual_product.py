@@ -235,7 +235,7 @@ class FileUploader(resource.Resource):
 			for chunk in file.chunks():
 				content.append(chunk)
 
-		dir_path = os.path.join(curr_dir, '../../../','static', 'upload', 'owner_id'+owner_id)
+		dir_path = os.path.join(curr_dir, '../../../', 'upload', 'owner_id'+owner_id)
 		if not os.path.exists(dir_path):
 			os.makedirs(dir_path)
 		file_path = os.path.join(dir_path, file.name)
