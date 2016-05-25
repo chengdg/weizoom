@@ -66,8 +66,11 @@
 			<tr>
 				<th width="150">活动名称</th>
 				<th width="220">商品信息</th>
-				<th >码库库存</th>
-				<th >已经售出</th>
+				<th >总库存</th>
+				<th >可用库存</th>
+				<th >已售出</th>
+				<th >已过期</th>
+				<th >已失效</th>
 				<th >创建时间</th>
 				<th width="120">操作</th>
 			</tr>
@@ -103,15 +106,16 @@
 						</div>
 						{{/if}}
 					</td>
-					<td>
-						${item.code_stock}
-					</td>
+					<td>${item.total_stock}</td>
+					<td>${item.code_stock}</td>
 					<td>${item.sell_num}</td>
+					<td>${item.overdue_num}</td>
+					<td>${item.expired_num}</td>
 					<td>
 						${item.created_at}
 					</td>
 					<td>
-						<a href="/mall2/virtual_product/?" class="" style="width: 120px;text-decoration:none;display:block;">发放详情</a>
+						<a href="/mall2/virtual_product/?" class="" style="width: 120px;text-decoration:none;display:block;">码库详情</a>
 						<a href="/mall2/virtual_product/?id=${item.id}" class="" style="width: 120px;text-decoration:none;display:block;">编辑</a>
 						<a href="javascript:void(0);" class="xa-activeFinish" style="width: 120px;text-decoration:none;display:block;">结束</a>
 					</td>
