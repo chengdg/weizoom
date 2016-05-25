@@ -24,13 +24,13 @@ print('----start...')
 
 for record in records:
 	try:
-		if record.order_id != '-1' and record.event_type != '使用':
+		if record.order_id != '-1' and record.event_type == '使用':
 			order_id = record.order_id
 			card_id = wz_models.WeizoomCard.objects.filter(id=record.card_id).first().weizoom_card_id
 			info = mall_models.OrderCardInfo.objects.filter(order_id=order_id).first()
 			if info:
 				used_card = json.loads(info.used_card) + [card_id]
-				info.used_card = json.dumps(used_card)
+				info.used_card = json.dumps(list(set(used_card)))
 				info.save()
 			else:
 				mall_models.OrderCardInfo.objects.create(
