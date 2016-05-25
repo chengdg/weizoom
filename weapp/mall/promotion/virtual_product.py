@@ -32,7 +32,7 @@ class VirtualProduct(resource.Resource):
 		id = int(request.GET.get('id', 0))
 		virtual_product = None
 		if id:
-			virtual_product = promotion_models.VirtualProducts.objects.get(id=id)
+			virtual_product = promotion_models.VirtualProduct.objects.get(id=id)
 
 		c = RequestContext(request, {
 			'first_nav_name': export.MALL_PROMOTION_AND_APPS_FIRST_NAV,
