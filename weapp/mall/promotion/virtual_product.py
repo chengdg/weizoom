@@ -186,6 +186,38 @@ class VirtualProduct(resource.Resource):
 
 		return response.get_response()
 
+
+	@login_required
+	def api_delete(request):
+		"""
+		结束福利卡券活动，把该活动的所有未发放的卡券都变为已失效
+		"""
+		virtual_product_id = request.POST.get('virtual_product_id')
+		if virtual_product_id:
+			owner = request.manager
+			
+			try:
+				virtual_product = promotion_models.VirtualProduct.objects.get(owner=owner, id=id, is_finished=False)
+				promotion_models.VirtualProductCodes.objects.filter(
+					owner=owner, 
+					virtual_product=virtual_product,
+					status=promotion_models.CODE_STATUS_NOT_GET
+				).update(status=promotion_models.CODE_STATUS_EXPIRED)
+				virtual_product.is_finished = True
+				virtual_product.save()
+
+				response = create_response(200)
+			except Exception, e:
+				logging.error(e)
+				response = create_response(500)
+				response.errMsg = e
+		else:
+			response = create_response(500)
+			response.errMsg = u'virtual_product_id不能为空！'
+
+		return response.get_response()
+
+
 class FileUploader(resource.Resource):
 	app = 'mall2'
 	resource = 'upload_virtual_product_file'
