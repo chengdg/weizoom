@@ -127,8 +127,9 @@
                       <p>{% if order.area %}{{ order.area }}{% endif %} {{order.ship_address}}</p>
                       <p>买家留言：
                         {% if mall_type %}
-                          <p>【锦衣大】华东交大和我i</p>
-                          <p>【尴尬地】132434</p>
+                          {% for message in  order.customer_message %}
+                            <p>【{{message.supplier_name}}】{{ message.customer_message }}</p>
+                          {% endfor %}
                         {% else %}
                           {{order.customer_message}}
                         {% endif %}

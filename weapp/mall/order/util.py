@@ -774,6 +774,8 @@ def get_detail_response(request):
         order.save_money = float(Order.get_order_has_price_number(order)) + float(order.postage) - float(
             order.final_price) - float(order.weizoom_card_money)
         order.pay_money = order.final_price + order.weizoom_card_money
+        if mall_type and order.customer_message:
+            order.customer_message = json.loads(order.customer_message).values()
         order.actions = get_order_actions(order, is_detail_page=True, mall_type=request.user_profile.webapp_type)
 
         show_first = True if OrderStatusLog.objects.filter(order_id=order.order_id,
@@ -1285,7 +1287,7 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
             'ship_tel': order.ship_tel,
             'bill_type': order.bill_type,
             'bill': order.bill,
-            'customer_message': '' if (not mall_type and order.supplier_user_id > 0) else order.customer_message,
+            'customer_message': order.customer_message,
             'buyer_name': order.buyer_name,
             'pay_interface_name': u'微信支付' if (not mall_type and order.supplier_user_id > 0) else  order.pay_interface_type_text,
             'created_at': datetime.strftime(order.created_at, '%Y-%m-%d %H:%M:%S'),

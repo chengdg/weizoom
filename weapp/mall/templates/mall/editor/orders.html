@@ -573,6 +573,16 @@ $(document).ready(function() {
 	$('body').delegate('.xa-costomerMessage', 'mouseenter', function(event){
 		var $el = $(event.currentTarget);
 		var messageContent = $el.data('content');
+		if (typeof(messageContent) === "object"){
+			var tmpMessage = '';
+			for(message in messageContent){
+				tmpMessage += '【' + messageContent[message]['supplier_name'] + '】' + messageContent[message]['customer_message'] + '<br>';
+			}
+			console.log(tmpMessage);
+			messageContent = tmpMessage;
+		} else {
+			messageContent = "买家留言：" + messageContent;
+		}
 		// console.log(content);
 		var mallOrderCostomerMessageView = W.getMallOrderCostomerMessageView({
 			width: 220,
