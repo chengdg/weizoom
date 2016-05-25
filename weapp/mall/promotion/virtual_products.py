@@ -134,6 +134,7 @@ class VirtualProducts(resource.Resource):
 				'overdue_num': virtual_product_id2overdue_num.get(virtual_product.id, 0),  #已过期数量
 				'expired_num': virtual_product_id2expired_num.get(virtual_product.id, 0),  #已失效数量
 				'created_at': virtual_product.created_at.strftime('%Y:%m:%d %H:%M:%S'),
+				'is_finished': virtual_product.is_finished
 			})
 
 		response = create_response(200)
