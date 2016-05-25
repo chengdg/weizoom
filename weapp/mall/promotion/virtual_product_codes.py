@@ -90,7 +90,7 @@ class VirtualProductCodes(resource.Resource):
 		if get_time_start and get_time_end:
 			params['get_time__lte'] = get_time_end
 			params['get_time__gte'] = get_time_start
-		if status:
+		if status >= 0:
 			params['status'] = status
 		if order_id:
 			params['order_id'] = order_id
@@ -121,11 +121,10 @@ class VirtualProductCodes(resource.Resource):
 				'status': promotion_models.CODE2TEXT[code.status],
 				'get_time': code.get_time.strftime('%Y-%m-%d %H:%M') if code.get_time else u'',
 				'member_id': code.member_id,
-				'member_name': member_id2nick_name[code.member_id],
+				'member_name': member_id2nick_name.get(code.member_id, ''),
 				'oid': code.oid,
 				'order_id': code.order_id
 			})
-
 
 		response = create_response(200)
 		response.data = {
@@ -147,7 +146,6 @@ class VirtualProductCodes(resource.Resource):
 		end_time = request.POST.get('end_time').strip()
 		code_file_path = request.POST.get('code_file_path').strip()
 		
-		print name,product_id
 		try:
 			#先创建福利卡券活动
 			if name and product_id:

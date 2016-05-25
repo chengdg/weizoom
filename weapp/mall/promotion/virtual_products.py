@@ -135,6 +135,7 @@ class VirtualProducts(resource.Resource):
 				'expired_num': virtual_product_id2expired_num.get(virtual_product.id, 0),  #已失效数量
 				'created_at': virtual_product.created_at.strftime('%Y:%m:%d %H:%M:%S'),
 			})
+			print "@@@@@@@@@"
 
 		response = create_response(200)
 		response.data = {
