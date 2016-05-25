@@ -14,42 +14,30 @@ from core.jsonresponse import create_response
 from mall import export
 from mall.promotion import models as promotion_models
 from mall import models as mall_models
+from modules.member import models as member_models
 
 from watchdog.utils import watchdog_alert
 
 import utils
 from django.conf import settings
 
-class VirtualProduct(resource.Resource):
+class VirtualProductCodes(resource.Resource):
 	app = 'mall2'
-	resource = 'virtual_product'
+	resource = 'virtual_product_codes'
 
 	@login_required
 	def get(request):
 		"""
 		创建福利卡券活动
 		"""
-		id = int(request.GET.get('id', 0))
+		virtual_product_id = int(request.GET.get('id', 0))
 		virtual_product = None
 		if id:
 			_virtual_product = promotion_models.VirtualProduct.objects.get(id=id)
-			product = _virtual_product.product
-			product.fill_standard_model()
-			_product = {
-				'id': product.id,
-				'name': product.name,
-				'bar_code': product.bar_code,
-				'price': product.price,
-				'stocks': product.stocks,
-				'thumbnails_url': product.thumbnails_url,
-				'detail_link': '/mall2/product/?id=%d&source=onshelf' % product.id,
-				'created_at': product.created_at.strftime('%Y-%m-%d %H:%M')
-			}
 
 			virtual_product = {
 				'id': _virtual_product.id,
 				'name': _virtual_product.name,
-				'product': _product,
 				'created_at': _virtual_product.created_at.strftime('%Y-%m-%d %H:%M')
 			}
 
@@ -61,7 +49,7 @@ class VirtualProduct(resource.Resource):
 			'virtual_product': virtual_product
 		})
 
-		return render_to_response('mall/editor/promotion/virtual_product.html', c)
+		return render_to_response('mall/editor/promotion/virtual_product_codes.html', c)
 
 
 	@login_required
@@ -71,42 +59,52 @@ class VirtualProduct(resource.Resource):
 		"""
 		owner = request.manager
 		#获取当前页数
-		cur_page = int(request.GET.get('page', '1'))
+		cur_page = int(request.POST.get('page', '1'))
 		#获取每页个数
-		count_per_page = int(request.GET.get('count_per_page', 10))
+		count_per_page = int(request.POST.get('count_per_page', 10))
 
-		name = request.GET.get('name', '').strip()
-		bar_code = request.GET.get('barCode', '').strip()
+		virtual_product_id = int(request.POST.get('virtual_product_id', '-1'))
+		code = request.POST.get('name', '')
+		member_name = request.POST.get('barCode', '')
+		valid_time_start = request.POST.get('valid_time_start', '')
+		valid_time_end = request.POST.get('valid_time_end', '')
+		get_time_start = request.POST.get('get_time_start', '')
+		get_time_end = request.POST.get('get_time_end', '')
+		status = int(request.POST.get('status', '-1'))
+		order_id = request.POST.get('order_id', '')
 
-		activities = promotion_models.VirtualProduct.objects.filter(owner=request.manager, is_finished=False)
-		active_product_ids = [activity.product_id for activity in activities]
-		#获取没有参加正在进行中的福利卡券活动的虚拟商品列表
-		products = mall_models.Product.objects.filter(
-					owner=request.manager, 
-					type__in=[mall_models.PRODUCT_VIRTUAL_TYPE, mall_models.PRODUCT_WZCARD_TYPE],
-					shelve_type = mall_models.PRODUCT_SHELVE_TYPE_ON
-				).order_by('-id')
-		pageinfo, products = paginator.paginate(products, cur_page, count_per_page, None)
+		codes = promotion_models.VirtualProductHasCode.objects.filter(owner=request.manager, virtual_product_id=virtual_product_id).order_by('-id')
+		pageinfo, codes = paginator.paginate(codes, cur_page, count_per_page, None)
+
+		member_ids = []
+		for code in codes:
+			if code.member_id:
+				member_ids.append(code.member_id)
+		members = member_models.Member.objects.filter(id__in=member_ids)
+		member_id2nick_name = {}
+		for member in members:
+			nick_name = member.username
+			try:
+				nick_name = nick_name.decode('utf8')
+			except:
+				nick_name = member.username_hexstr
+			member_id2nick_name[member.id] = nick_name
 
 		items = []
-		for product in products:
-			product.fill_standard_model()
-			_product = {
-				'id': product.id,
-				'name': product.name,
-				'bar_code': product.bar_code,
-				'price': product.price,
-				'stocks': product.stocks,
-				'thumbnails_url': product.thumbnails_url,
-				'detail_link': '/mall2/product/?id=%d&source=onshelf' % product.id,
-				'created_at': product.created_at.strftime('%Y-%m-%d %H:%M')
-			}
-			if product.id in active_product_ids:
-				_product['can_use'] = False
-			else:
-				_product['can_use'] = True
-			items.append(_product)
+		for code in codes:
+			items.append({
+				'id': code.id,
+				'code': code.code,
+				'created_at': code.created_at.strftime('%Y-%m-%d %H:%M'),
+				'status': promotion_models.CODE2TEXT[code.status],
+				'get_time': code.get_time.strftime('%Y-%m-%d %H:%M') if code.get_time else u'',
+				'member_id': code.member_id,
+				'member_name': member_id2nick_name[code.member_id],
+				'oid': code.oid,
+				'order_id': code.order_id
+			})
 
+		
 		response = create_response(200)
 		response.data = {
 			'items': items,

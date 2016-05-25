@@ -18,6 +18,7 @@ from . import issuing_coupon
 from . import card_exchange
 from . import virtual_product
 from . import virtual_products
+from . import virtual_product_codes
 
 SCORE_PRIZE_TYPE = PrizeType(
                              u'优惠券',
