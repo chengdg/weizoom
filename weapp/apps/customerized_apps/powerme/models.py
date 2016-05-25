@@ -11,7 +11,8 @@ class PowerMeControl(models.Document):
 	powerme_control = models.StringField(default="", max_length=100, unique_with=['belong_to', 'member_id', 'powered_member_id'])
 
 	meta = {
-		'collection': 'powerme_powerme_control'
+		'collection': 'powerme_powerme_control',
+		'db_alias': 'apps'
 	}
 
 class PowerMeRelations(models.Document):
@@ -20,7 +21,8 @@ class PowerMeRelations(models.Document):
 	powered_member_id = models.StringField(default="", max_length=20, unique_with=['belong_to', 'member_id']) #被助力者id
 
 	meta = {
-		'collection': 'powerme_powerme_relations'
+		'collection': 'powerme_powerme_relations',
+		'db_alias': 'apps'
 	}
 
 class PowerMeParticipance(models.Document):
@@ -32,7 +34,8 @@ class PowerMeParticipance(models.Document):
 	powered_member_id = models.DynamicField() #已助力的会员id list
 
 	meta = {
-		'collection': 'powerme_powerme_participance'
+		'collection': 'powerme_powerme_participance',
+		'db_alias': 'apps'
 	}
 
 
@@ -53,7 +56,8 @@ class PowerMe(models.Document):
 	created_at = models.DateTimeField() #创建时间
 	
 	meta = {
-		'collection': 'powerme_powerme'
+		'collection': 'powerme_powerme',
+		'db_alias': 'apps'
 	}
 	
 	@property
@@ -87,7 +91,8 @@ class PowerLog(models.Document):
 	created_at = models.DateTimeField(default=datetime.now()) #创建时间
 
 	meta = {
-		'collection': 'powerme_powered_log'
+		'collection': 'powerme_powered_log',
+		'db_alias': 'apps'
 	}
 
 class PoweredDetail(models.Document):
@@ -102,10 +107,6 @@ class PoweredDetail(models.Document):
 	created_at = models.DateTimeField() #创建时间
 
 	meta = {
-		'collection': 'powerme_powered_detail'
+		'collection': 'powerme_powered_detail',
+		'db_alias': 'apps'
 	}
-
-class TestA(models.Document):
-	li = models.ListField()
-	str = models.StringField(default="hello")
-	bl = models.BooleanField()

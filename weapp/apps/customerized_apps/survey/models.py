@@ -14,7 +14,8 @@ class surveyParticipance(models.Document):
 	created_at = models.DateTimeField() #创建时间
 
 	meta = {
-		'collection': 'survey_survey_participance'
+		'collection': 'survey_survey_participance',
+		'db_alias': 'apps'
 	}
 
 class surveyParticipanceLog(models.Document):
@@ -26,7 +27,8 @@ class surveyParticipanceLog(models.Document):
 	created_at = models.DateTimeField() #创建时间
 
 	meta = {
-		'collection': 'survey_survey_participance_log'
+		'collection': 'survey_survey_participance_log',
+		'db_alias': 'apps'
 	}
 
 STATUS_NOT_START = 0
@@ -44,7 +46,8 @@ class survey(models.Document):
 	created_at = models.DateTimeField() #创建时间
 	
 	meta = {
-		'collection': 'survey_survey'
+		'collection': 'survey_survey',
+		'db_alias': 'apps'
 	}
 	
 	@property

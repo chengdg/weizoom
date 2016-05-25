@@ -36,7 +36,8 @@ class Group(models.Document):
 	visited_member = models.ListField() #浏览过的member_list
 
 	meta = {
-		'collection': 'group_group'
+		'collection': 'group_group',
+		'db_alias': 'apps'
 	}
 
 	@property
@@ -84,7 +85,8 @@ class GroupRelations(models.Document):
 	created_at = models.DateTimeField() #创建时间
 
 	meta = {
-		'collection': 'group_group_relations'
+		'collection': 'group_group_relations',
+		'db_alias': 'apps'
 	}
 
 	@property
@@ -117,5 +119,6 @@ class GroupDetail(models.Document):
 	msg_api_failed_members_info = models.DynamicField() #模板消息发送失败的会员信息
 
 	meta = {
-		'collection': 'group_group_detail'
+		'collection': 'group_group_detail',
+		'db_alias': 'apps'
 	}

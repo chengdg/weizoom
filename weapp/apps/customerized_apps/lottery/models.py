@@ -14,7 +14,8 @@ class lotteryParticipance(models.Document):
 	lottery_date = models.DateTimeField() #最近一次抽奖时间
 
 	meta = {
-		'collection': 'lottery_lottery_participance'
+		'collection': 'lottery_lottery_participance',
+		'db_alias': 'apps'
 	}
 
 class lottoryRecord(models.Document):
@@ -35,7 +36,8 @@ class lottoryRecord(models.Document):
 
 	meta = {
 		'collection': 'lottery_lottery_record',
-		'ordering': ['-id']
+		'ordering': ['-id'],
+		'db_alias': 'apps'
 	}
 
 STATUS_NOT_START = 0
@@ -65,7 +67,8 @@ class lottery(models.Document):
 
 	
 	meta = {
-		'collection': 'lottery_lottery'
+		'collection': 'lottery_lottery',
+		'db_alias': 'apps'
 	}
 
 	@property
@@ -111,5 +114,6 @@ class lotteryControl(models.Document):
 
 
 	meta = {
-		'collection': 'lottery_lottery_control'
+		'collection': 'lottery_lottery_control',
+		'db_alias': 'apps'
 	}

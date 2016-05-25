@@ -33,7 +33,8 @@ class ShvoteParticipance(models.Document):
 	is_use = models.IntField(default=MEMBER_IS_USE['YES'])#逻辑删除
 
 	meta = {
-		'collection': 'shvote_shvote_participance'
+		'collection': 'shvote_shvote_participance',
+		'db_alias': 'apps'
 	}
 
 class ShvoteControl(models.Document):
@@ -47,7 +48,8 @@ class ShvoteControl(models.Document):
 	created_at_str = models.StringField(max_length=24) #投票日期
 	created_at = models.DateTimeField() #投票时间
 	meta = {
-		'collection': 'shvote_shvote_control'
+		'collection': 'shvote_shvote_control',
+		'db_alias': 'apps'
 	}
 
 class ShvoteDetail(models.Document):
@@ -59,7 +61,8 @@ class ShvoteDetail(models.Document):
 	vote_to_member_id = models.StringField(default=0) #被投票人
 	created_at = models.DateTimeField() #投票时间
 	meta = {
-		'collection': 'shvote_shvote_detail'
+		'collection': 'shvote_shvote_detail',
+		'db_alias': 'apps'
 	}
 
 STATUS_NOT_START = 0
@@ -82,7 +85,8 @@ class Shvote(models.Document):
 	advertisement = models.StringField(default="", max_length=10000) #广告信息
 
 	meta = {
-		'collection': 'shvote_shvote'
+		'collection': 'shvote_shvote',
+		'db_alias': 'apps'
 	}
 
 	@property
