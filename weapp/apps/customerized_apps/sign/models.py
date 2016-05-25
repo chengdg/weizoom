@@ -23,7 +23,8 @@ class SignDetails(models.Document):
 	type = models.StringField(default=u"页面签到", max_length=20) #页面签到 or 自动签到
 
 	meta = {
-		'collection': 'sign_sign_details'
+		'collection': 'sign_sign_details',
+		'db_alias': 'apps'
 	}
 
 class SignControl(models.Document):
@@ -32,7 +33,8 @@ class SignControl(models.Document):
 	sign_control = models.StringField(default="", max_length=100, unique_with=['belong_to', 'member_id'])
 
 	meta = {
-		'collection': 'sign_sign_control'
+		'collection': 'sign_sign_control',
+		'db_alias': 'apps'
 	}
 
 class SignParticipance(models.Document):
@@ -48,7 +50,8 @@ class SignParticipance(models.Document):
 	top_serial_count = models.IntField(default=0) #最高连续签到天数
 
 	meta = {
-		'collection': 'sign_sign_participance'
+		'collection': 'sign_sign_participance',
+		'db_alias': 'apps'
 	}
 
 	def do_signment(self, sign):
@@ -203,7 +206,8 @@ class Sign(models.Document):
 	created_at = models.DateTimeField() #创建时间
 	
 	meta = {
-		'collection': 'sign_sign'
+		'collection': 'sign_sign',
+		'db_alias': 'apps'
 	}
 
 

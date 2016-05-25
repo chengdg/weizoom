@@ -14,7 +14,8 @@ class exsurveyParticipance(models.Document):
 	created_at = models.DateTimeField() #创建时间
 
 	meta = {
-		'collection': 'exsurvey_exsurvey_participance'
+		'collection': 'exsurvey_exsurvey_participance',
+		'db_alias': 'apps'
 	}
 
 
@@ -32,7 +33,8 @@ class exsurvey(models.Document):
 	created_at = models.DateTimeField() #创建时间
 	
 	meta = {
-		'collection': 'exsurvey_exsurvey'
+		'collection': 'exsurvey_exsurvey',
+		'db_alias': 'apps'
 	}
 	
 	@property

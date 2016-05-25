@@ -135,9 +135,17 @@ else:
 
 DJANGO_REDIS_IGNORE_EXCEPTIONS = True
 
-APP_MONGO = {
+#商城店铺用
+WEAPP_MONGO = {
     "HOST": 'mongo.weapp.com',
     "DB": 'app_data'
+}
+
+#百宝箱用
+APP_MONGO = {
+    "HOST": 'mongo.weapp.com',
+    "DB": 'app_data',
+    "ALIAS": 'apps'
 }
 
 if ENABLE_SHENGJING_APP:

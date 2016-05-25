@@ -30,7 +30,8 @@ class Rebate(models.Document):
 	created_at = models.DateTimeField() #创建时间
 	
 	meta = {
-		'collection': 'rebate_rebate'
+		'collection': 'rebate_rebate',
+		'db_alias': 'apps'
 	}
 	
 	@property
@@ -63,7 +64,8 @@ class RebateParticipance(models.Document):
 	is_new = models.BooleanField(default=True) #扫码之前没有关注过则为True
 
 	meta = {
-		'collection': 'rebate_rebate_participance'
+		'collection': 'rebate_rebate_participance',
+		'db_alias': 'apps'
 	}
 
 class RebateWaitingAction(models.Document):
@@ -75,7 +77,8 @@ class RebateWaitingAction(models.Document):
 	member_id = models.LongField(default=0)
 
 	meta = {
-		'collection': 'rebate_waiting_action'
+		'collection': 'rebate_waiting_action',
+		'db_alias': 'apps'
 	}
 
 class RebateWeizoomCardDetails(models.Document):
@@ -89,5 +92,6 @@ class RebateWeizoomCardDetails(models.Document):
 	created_at = models.DateTimeField() #发放时间
 
 	meta = {
-		'collection': 'rebate_weizoom_card_details'
+		'collection': 'rebate_weizoom_card_details',
+		'db_alias': 'apps'
 	}

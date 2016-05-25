@@ -31,7 +31,8 @@ class RedPacket(models.Document):
 	created_at = models.DateTimeField() #创建时间
 	
 	meta = {
-		'collection': 'red_packet_red_packet'
+		'collection': 'red_packet_red_packet',
+		'db_alias': 'apps'
 	}
 	
 	@property
@@ -75,7 +76,8 @@ class RedPacketParticipance(models.Document):
 	msg_api_failed_members_info = models.DynamicField() #模板消息发送失败的会员信息
 
 	meta = {
-		'collection': 'red_packet_red_packet_participance'
+		'collection': 'red_packet_red_packet_participance',
+		'db_alias': 'apps'
 	}
 
 class RedPacketRelations(models.Document):
@@ -95,7 +97,8 @@ class RedPacketLog(models.Document):
 	created_at = models.DateTimeField(default=datetime.now()) #创建时间
 
 	meta = {
-		'collection': 'red_packet_red_packet_log'
+		'collection': 'red_packet_red_packet_log',
+		'db_alias': 'apps'
 	}
 
 class RedPacketDetail(models.Document):
@@ -112,7 +115,8 @@ class RedPacketDetail(models.Document):
 	created_at = models.DateTimeField() #创建时间
 
 	meta = {
-		'collection': 'red_packet_red_packet_detail'
+		'collection': 'red_packet_red_packet_detail',
+		'db_alias': 'apps'
 	}
 
 class RedPacketCertSettings(models.Document):
@@ -122,6 +126,11 @@ class RedPacketCertSettings(models.Document):
 	owner_id = models.StringField(default=0) #活动所有者
 	cert_path = models.StringField(default="", max_length=1024) #证书
 	key_path = models.StringField(default="", max_length=1024) #证书key
+
+	meta = {
+		'collection': 'red_packet_cert_settings',
+		'db_alias': 'apps'
+	}
 
 
 # class RedPacketAmountControl(models.Document):

@@ -22,7 +22,8 @@ get_apps = module_api.get_apps
 from django.conf import settings
 try:
 	from mongoengine import connect
-	connect(settings.APP_MONGO['DB'], host=settings.APP_MONGO['HOST'])
+	connect(settings.WEAPP_MONGO['DB'], host=settings.WEAPP_MONGO['HOST'])
+	connect(settings.APP_MONGO['DB'], host=settings.APP_MONGO['HOST'], alias=settings.APP_MONGO['ALIAS'])
 except:
 	print '[WARNING]: You have not installed mongoengine. App\'s data store will not be used. Please use "easy_install mongoengine" or "pip install mongoengine" to install it'
 

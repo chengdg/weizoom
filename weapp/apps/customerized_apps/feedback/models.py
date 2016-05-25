@@ -13,5 +13,6 @@ class feedbackParticipance(models.Document):
 	created_at = models.DateTimeField() #创建时间
 
 	meta = {
-		'collection': 'feedback_feedback_participance'
+		'collection': 'feedback_feedback_participance',
+		'db_alias': 'apps'
 	}

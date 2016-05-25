@@ -14,7 +14,8 @@ class voteParticipance(models.Document):
 	created_at = models.DateTimeField() #创建时间
 
 	meta = {
-		'collection': 'vote_vote_participance'
+		'collection': 'vote_vote_participance',
+		'db_alias': 'apps'
 	}
 
 
@@ -32,7 +33,8 @@ class vote(models.Document):
 	created_at = models.DateTimeField() #创建时间
 	
 	meta = {
-		'collection': 'vote_vote'
+		'collection': 'vote_vote',
+		'db_alias': 'apps'
 	}
 	
 	@property
