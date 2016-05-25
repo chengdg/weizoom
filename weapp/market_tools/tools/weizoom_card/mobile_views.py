@@ -482,6 +482,7 @@ def get_other_cards_list(request):
 		card_details_dic['card_id'] = card.code
 		card_details_dic['password'] = card.password
 		card_details_dic['time'] = card.get_time
+		card_details_dic['product_id'] = card.virtual_product.product.id
 		card_details_dic['name'] = card.virtual_product.product.name
 		card_details_dic['status'] = card.status
 		card_details_dic['is_expired'] = False
