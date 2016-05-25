@@ -33,7 +33,7 @@ class VirtualProduct(resource.Resource):
 		virtual_product = None
 		if id:
 			_virtual_product = promotion_models.VirtualProduct.objects.get(id=id)
-			product = virtual_product.product
+			product = _virtual_product.product
 			product.fill_standard_model()
 			_product = {
 				'id': product.id,

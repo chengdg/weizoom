@@ -87,7 +87,7 @@ Background:
 			"status":"在售"
 		},{
 			"name": "微众普通商品2",
-			"product_type":"普通",
+			"product_type":"普通商品",
 			"supplier": "微众",
 			"purchase_price": 19.00,
 			"promotion_title": "普通商品",
@@ -113,7 +113,7 @@ Background:
 			"status": "在售"
 		},{
 			"name": "微众普通商品3",
-			"product_type":"普通",
+			"product_type":"普通商品",
 			"supplier": "微众",
 			"purchase_price": 30.00,
 			"promotion_title": "普通商品3",

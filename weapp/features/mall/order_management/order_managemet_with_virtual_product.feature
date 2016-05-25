@@ -114,7 +114,7 @@ Background:
 			"status": "在售"
 		},{
 			"name": "稻香村虚拟商品3",
-			"product_type":"虚拟",
+			"product_type":"虚拟商品",
 			"supplier": "稻香村",
 			"purchase_price": 30.00,
 			"promotion_title": "稻香村代金券",
@@ -138,7 +138,7 @@ Background:
 			"status":"在售"
 		},{
 			"name": "微众普通商品4",
-			"product_type":"普通",
+			"product_type":"普通商品",
 			"supplier": "微众",
 			"purchase_price": 40.00,
 			"promotion_title": "非虚拟商品",

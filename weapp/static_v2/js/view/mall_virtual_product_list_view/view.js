@@ -25,7 +25,7 @@ W.view.mall.VirtualProductListView = Backbone.View.extend({
 		'click .xa-finish': 'onClickFinishLink',
 		'click .xa-start': 'onClickFinishLink',
 		'click .xa-delete': 'onClickDeleteLink',
-		'click .xa-proFinish':'onClickProFinish',
+		'click .xa-activeFinish':'onClickActiveFinish',
 		'click .xa-proBatchFinish':'onClickProBatchFinish',
 		'click .xa-batchDelete': 'onClickBatchDeleteLink',
 		'click .xa-batchFinish': 'onClickBatchFinishLink',
@@ -160,7 +160,7 @@ W.view.mall.VirtualProductListView = Backbone.View.extend({
 		W.getApi().call({
 			method: 'post',
 			app: 'mall2',
-			resource: 'forbidden_coupon_product',
+			resource: 'virtual_product',
 			args: {id: JSON.stringify(itemId)},
 			scope: this,
 			success: function(data) {
@@ -177,7 +177,7 @@ W.view.mall.VirtualProductListView = Backbone.View.extend({
 			}
 		});
 	},
-	onClickProFinish:function(event){
+	onClickActiveFinish:function(event){
 		var $link = $(event.currentTarget);
 		var $tr = $link.parents('tr');
 		var itemId = $tr.data('id');
@@ -187,7 +187,7 @@ W.view.mall.VirtualProductListView = Backbone.View.extend({
 			width: 455,
         	position:'top',
 			isTitle: false,
-			msg: '结束后该商品将会移出该列表!',
+			msg: '是否确定结束该活动!',
 			confirm: function() {
 				_this.finishAndDeleteProducts($tr, [itemId]);
 			}

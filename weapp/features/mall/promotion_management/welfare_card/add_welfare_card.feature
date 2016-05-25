@@ -7,7 +7,7 @@ Feature:新建福利卡券
 		2、新建福利卡券页面信息:
 			'商品信息'：
 				a.选择商品时，可按照'商品名称'和'商品条码'进行查询
-				b.不设置查询条件，点击【查询】后弹窗中显示所有在售商品列表，商品只能单选
+				b.不设置查询条件，点击【查询】后弹窗中显示所有在售虚拟商品列表，商品只能单选
 				c.选择商品后，显示商品信息（名称、图片、条码）、商品价格、库存、操作（【删除】）
 				d.同一商品只能存在一个福利卡券活动中
 			'活动名称':输入福利卡券活动的名称
@@ -17,6 +17,15 @@ Feature:新建福利卡券
 				b.如果某csv文件已经被使用，再次上传时，保存活动时进行校验提示“该文件内卡券已经在使用中，请确认后再操作”
 				c.csv文件上传完后，显示码库的数量
 				d.csv文件中如果有未激活或已过期状态的卡号，则应校验提示上传失败
+		3、新建福利卡券活动时，商品弹窗信息
+			a.弹窗名称-在售虚拟商品
+			b.弹窗中列表显示以下信息:
+				【商品条码】
+				【商品名称】
+				【商品价格】
+				【商品库存】
+				【创建时间】
+				【操作】
 	"""
 
 Background:
@@ -83,7 +92,7 @@ Background:
 			"price": 10.00,
 			"weight": 1.0,
 			"stock_type": "有限",
-			"stocks": 100,
+			"stocks": 2,
 			"swipe_images": [{
 				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
 			},{
@@ -109,7 +118,7 @@ Background:
 			"price": 20.00,
 			"weight": 1.0,
 			"stock_type": "有限",
-			"stocks": 200,
+			"stocks": 2,
 			"swipe_images": [{
 				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
 			}],
@@ -122,7 +131,7 @@ Background:
 			"status": "在售"
 		},{
 			"name": "稻香村虚拟商品3",
-			"product_type":"虚拟",
+			"product_type":"虚拟商品",
 			"supplier": "稻香村",
 			"purchase_price": 30.00,
 			"promotion_title": "稻香村代金券",
@@ -213,7 +222,7 @@ Scenario:1 新建福利卡券活动
 		"""
 
 @welfare_card @weizoom
-Scenario:2 新建福利卡活动，csv中包含非有效卡信息时，则上传不成功
+Scenario:2 新建福利卡券活动，csv中包含非有效卡信息时，则上传不成功
 	Given jobs登录系统
 	When jobs新建福利卡券活动
 		"""
@@ -244,7 +253,7 @@ Scenario:2 新建福利卡活动，csv中包含非有效卡信息时，则上传
 	Then jobs获得提示信息'上传失败'
 
 @welfare_card @weizoom
-Scenario:3 新建福利卡活动，csv中包含正在使用的卡信息时，则上传不成功
+Scenario:3 新建福利卡券活动，csv中包含正在使用的卡信息时，则上传不成功
 	Given jobs登录系统
 	When jobs新建福利卡券活动
 		"""
@@ -290,3 +299,109 @@ Scenario:3 新建福利卡活动，csv中包含正在使用的卡信息时，则
 		}]
 		"""
 	Then jobs获得提示信息'该文件内卡券已经在使用中，请确认后再操作'
+
+@welfare_card @weizoom
+Scenario:4 新建福利卡券活动，商品弹窗的校验
+	Given jobs登录系统
+	Given jobs已添加商品
+		"""
+		[{
+			"name": "微众虚拟商品4",
+			"product_type":"微众卡",
+			"supplier": "微众",
+			"purchase_price": 9.00,
+			"promotion_title": "40元通用卡",
+			"categories": "分类1,分类2",
+			"bar_code":"412233",
+			"min_limit":2,
+			"is_member_product":"on",
+			"price": 40.00,
+			"weight": 1.0,
+			"stock_type": "有限",
+			"stocks": 4,
+			"swipe_images": [{
+				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
+			},{
+				"url": "/standard_static/test_resource_img/hangzhou2.jpg"
+			}],
+			"postage":0.00,
+			"pay_interfaces":
+				[{
+					"type": "在线支付"
+				},{
+					"type": "货到付款"
+				}],
+			"detail":"微众虚拟商品1的详情",
+			"status":"待售"
+		},{
+			"name": "微众普通商品5",
+			"product_type":"普通商品",
+			"supplier": "微众",
+			"purchase_price": 49.00,
+			"promotion_title": "普通商品5",
+			"categories": "",
+			"bar_code":"512233",
+			"price": 50.00,
+			"weight": 1.0,
+			"stock_type": "有限",
+			"stocks": 5,
+			"swipe_images": [{
+				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
+			}],
+			"postage":0.00,
+			"pay_interfaces":
+				[{
+					"type": "在线支付"
+				}],
+			"detail": "微众普通商品5的详情",
+			"status": "在售"
+		}]
+		"""
+	When jobs新建活动时设置参与活动的商品查询条件
+		"""
+		{
+			"name":"",
+			"bar_code":""
+		}
+		"""
+	Then jobs新建福利卡券活动时能获得在售虚拟商品列表
+		| bar_code  | name             | price | stocks | create_time    | actions |
+		| 312233    | 稻香村虚拟商品3  | 30.00 | 2      | 今天           |  选取   |
+		| 212233    | 微众虚拟商品2    | 20.00 | 2      | 今天           |  选取   |
+		| 112233    | 微众虚拟商品1    | 10.00 | 2      | 今天           |  选取   |
+
+	When jobs新建福利卡券活动
+		"""
+		[{
+			"product":
+				{
+					"name":"微众虚拟商品1",
+					"bar_code":"112233",
+					"price":10.00
+				},
+			"activity_name":"10元通用卡",
+			"card_start_date":"今天",
+			"card_end_date":"30天后",
+			"cards":
+				[{
+					"id":"0000001",
+					"password":"1234567"
+				},{
+					"id":"0000002",
+					"password":"2234567"
+				}],
+			"create_time":"今天"
+		}]
+		"""
+	When jobs新建活动时设置参与活动的商品查询条件
+		"""
+		{
+			"name":"",
+			"bar_code":""
+		}
+		"""
+	Then jobs新建福利卡券活动时能获得在售虚拟商品列表
+		| bar_code  | name             | price | stocks | create_time    | actions |
+		| 312233    | 稻香村虚拟商品3  | 30.00 | 2      | 今天           |  选取   |
+		| 212233    | 微众虚拟商品2    | 20.00 | 2      | 今天           |  选取   |
+		| 112233    | 微众虚拟商品1    | 10.00 | 2      | 今天           |         |
