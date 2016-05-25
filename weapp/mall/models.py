@@ -1130,6 +1130,7 @@ class Product(models.Model):
 			'display_index': self.display_index,
 			'is_member_product': self.is_member_product,
 			'purchase_price': self.purchase_price,
+			'type': self.type,
 		}
 
 
