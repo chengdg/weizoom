@@ -64,8 +64,8 @@ class VirtualProductCodes(resource.Resource):
 		count_per_page = int(request.GET.get('count_per_page', 10))
 
 		virtual_product_id = int(request.GET.get('virtual_product_id', '-1'))
-		code = request.GET.get('name', '')
-		member_name = request.GET.get('barCode', '')
+		code = request.GET.get('code', '')
+		member_name = request.GET.get('member_name', '')
 		valid_time_start = request.GET.get('valid_time_start', '')
 		valid_time_end = request.GET.get('valid_time_end', '')
 		get_time_start = request.GET.get('get_time_start', '')
@@ -80,7 +80,7 @@ class VirtualProductCodes(resource.Resource):
 		if code:
 			params['code'] = code
 		if member_name:
-			query_hex = byte_to_hex(value)
+			query_hex = byte_to_hex(member_name)
 			members = member_models.Member.objects.filter(username_hexstr__contains=query_hex)
 			member_ids = [m.id for m in members]
 			params['member_id__in'] = member_ids
@@ -110,7 +110,7 @@ class VirtualProductCodes(resource.Resource):
 				nick_name = nick_name.decode('utf8')
 			except:
 				nick_name = member.username_hexstr
-			member_id2nick_name[member.id] = nick_name
+			member_id2nick_name[str(member.id)] = nick_name
 
 		items = []
 		for code in codes:
@@ -118,6 +118,8 @@ class VirtualProductCodes(resource.Resource):
 				'id': code.id,
 				'code': code.code,
 				'created_at': code.created_at.strftime('%Y-%m-%d %H:%M'),
+				'start_time': code.start_time.strftime('%Y-%m-%d %H:%M:%S'),
+				'end_time': code.end_time.strftime('%Y-%m-%d %H:%M:%S'),
 				'status': promotion_models.CODE2TEXT[code.status],
 				'get_time': code.get_time.strftime('%Y-%m-%d %H:%M') if code.get_time else u'',
 				'member_id': code.member_id,

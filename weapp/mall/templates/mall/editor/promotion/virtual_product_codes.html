@@ -1,0 +1,103 @@
+{% extends "content_base_v2.html" %}
+{% block css%}
+<style>
+
+</style>
+{% endblock%}
+{% block content-panel %}
+<div class="xui-virtualProductCodesPage xui-commonPromotionStyle xui-promotionsPage">
+
+	<div class="relative">
+		<ul class="breadcrumb">
+			<li>您当前所在位置</li>
+			<li><a href="/mall2/flash_sale_list/">促销管理</a></li>
+			<li class="active">码库详情</li>
+		</ul>
+	</div>
+	<div class="xa-virtualProductCodesFilterView xui-filterPanel"></div>
+
+	<div class="panel panel-default mt20 xui-bigBoxbg">
+		<div class="panel panel-default ml10 mr10 mb50" style="border:none;">
+			<div class="panel-heading xui-headStyle pl18 ovh"  style="background:#E9EDF5; margin-left: -2px;">
+				<!-- <input type="checkbox" id="topSelectAll" class="xa-selectAll" />
+				<label for="topSelectAll" class="xui-topSelectAll">全选</label>
+				<a href="javascript:void(0);" class="btn btn-default ml10 xa-proBatchFinish">结&nbsp;&nbsp;&nbsp;&nbsp;束</a> -->
+				<a href="/mall2/virtual_product/" class="btn btn-success ml10 fr xui-btnSetting"><img src="/static_v2/img/editor/plusOpcity.png" alt="">&nbsp;&nbsp;&nbsp;&nbsp;导出</a>
+			</div>
+
+			<div
+				data-ui-role="advanced-table"
+				data-app="mall2"
+				data-api="virtual_product_codes"
+				data-template-id="#virtualProductCodes-view"
+				data-enable-paginator="true"
+				data-enable-sort="false"
+				data-selectable="true"
+				data-disable-header-select="true"
+				data-args='{"virtual_product_id":"{{virtual_product.id}}"}'
+				data-item-count-per-page="10"
+				data-outer-selecter='.xa-selectAll'
+				data-selecttable-tr='xa-selectTr'
+				class="panel-body xui-promotionHead"
+			></div>
+
+		<!-- 	<div class="xui-leftBoxTow">
+				<div class="panel-heading pl22">
+					<input type="checkbox" id="bottomSelectAll"  class="xa-selectAll" style="margin-left:-1px;"/>
+				<label for="bottomSelectAll" class="xui-topSelectAll">全选</label>
+					<a href="javascript:void(0);" class="btn btn-default ml10 xa-proBatchFinish">结&nbsp;&nbsp;&nbsp;&nbsp;束</a>
+				</div>
+			</div> -->
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+
+{% block js %}
+{% verbatim %}
+<script id="virtualProductCodes-view" type="text/x-jquery-tmpl">
+	<table id="productListTable" class="table table-condensed mb0 xb-stripedTable xb-noTdBorder">
+		<thead class="xb-theadBg xui-theadHeight">
+			<tr>
+				<th width="150">卡券码</th>
+				<th >创建时间</th>
+				<th >有效期</th>
+				<th >卡券状态</th>
+				<th >领用时间</th>
+				<th >领取人</th>
+				<th >订单号</th>
+			</tr>
+		</thead>
+		<tbody id='product_list' class="xui-flashSaleTbody">
+            {{if items.length}}
+	            {{each(i, item) items}}
+				<tr class="h80" data-id="${item.id}">
+					<td>${item.code}</td>
+					<td>${item.created_at}</td>
+					<td>${item.start_time} <br /> ${item.end_time}</td>
+					<td>${item.status}</td>
+					<td>${item.get_time}</td>
+					<td><a href="/member/detail/?id=${item.member_id}" target="_blank">${item.member_name}</td>
+					<td><a href="/mall2/order/?order_id=${item.oid}" target="_blank">${item.order_id}</a></td>
+				</tr>
+				{{/each}}
+            {{else}}
+                <tr><td colspan='8'>还没有数据</td></tr>
+            {{/if}}
+		</tbody>
+	</table>
+</div>
+</script>
+{% endverbatim %}
+
+<script type="text/javascript">
+$(document).ready(function() {
+	var view = new W.view.mall.VirtualProductCodeView({
+		el: '.xui-virtualProductCodesPage',
+		templateFilterName: 'mall-virtualProductCodes-filter-view-tmpl-src'
+	});
+	view.render();
+});
+</script>
+{% endblock %}

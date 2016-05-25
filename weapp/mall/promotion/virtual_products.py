@@ -136,7 +136,6 @@ class VirtualProducts(resource.Resource):
 				'created_at': virtual_product.created_at.strftime('%Y:%m:%d %H:%M:%S'),
 				'is_finished': virtual_product.is_finished
 			})
-			print "@@@@@@@@@"
 
 		response = create_response(200)
 		response.data = {
