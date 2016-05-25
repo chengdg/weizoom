@@ -111,3 +111,5 @@ mall_products_pool_view
 card_recharge_filter_view
 mall_virtual_product_list_view
 mall_vritual_product_filter_view
+mall_vritual_product_codes_filter_view
+mall_virtual_product_codes_view
