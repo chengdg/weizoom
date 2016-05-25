@@ -4,6 +4,9 @@
 	.xui-welfarePage .xui-commodityName{
 		width: 130px;
 	}
+	.xui-promotionHead{
+		background: transparent;
+	}
 </style>
 {% endblock%}
 {% block content-panel %}
@@ -20,7 +23,7 @@
 
 	<div class="panel panel-default mt20 xui-bigBoxbg">
 		<div class="panel panel-default ml10 mr10 mb50" style="border:none;">
-			<div class="panel-heading xui-headStyle pl18"  style="background:#E9EDF5; margin-left: -2px;">
+			<div class="panel-heading xui-headStyle pl18 ovh"  style="background:#E9EDF5; margin-left: -2px;">
 				<!-- <input type="checkbox" id="topSelectAll" class="xa-selectAll" />
 				<label for="topSelectAll" class="xui-topSelectAll">全选</label>
 				<a href="javascript:void(0);" class="btn btn-default ml10 xa-proBatchFinish">结&nbsp;&nbsp;&nbsp;&nbsp;束</a> -->
@@ -61,11 +64,11 @@
 	<table id="productListTable" class="table table-condensed mb0 xb-stripedTable xb-noTdBorder">
 		<thead class="xb-theadBg xui-theadHeight">
 			<tr>
-				<th >活动名称</th>
-				<th width="220">商品名称</th>
-				<th width="130">码库库存</th>
-				<th width="200">已经售出</th>
-				<th width="200">创建时间</th>
+				<th width="150">活动名称</th>
+				<th width="220">商品信息</th>
+				<th >码库库存</th>
+				<th >已经售出</th>
+				<th >创建时间</th>
 				<th width="120">操作</th>
 			</tr>
 		</thead>

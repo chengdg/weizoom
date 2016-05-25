@@ -39,13 +39,13 @@
 					<tr class="xui-trColor" data-id="{{virtual_product.id}}">
 						<td class="tl_important pl20 pt10 pb10">
 							<div class="imgBox fl" style="width: auto;border:solid 1px #ccc;">
-								<a href="{{product.detail_link}}" target="_blank">
-									<img src="{{virtual_product.thumbnails_url}}" width="58" height="60"/>
+								<a href="{{virtual_product.product.detail_link}}" target="_blank">
+									<img src="{{virtual_product.product.thumbnails_url}}" width="58" height="60"/>
 								</a>
 							</div>
 							<div class="ml10 fl">
 								<div class="mb25">
-									<a href="{{product.detail_link}}" target="_blank">{{virtual_product.product.name}}</a>
+									<a href="{{virtual_product.product.detail_link}}" target="_blank">{{virtual_product.product.name}}</a>
 								</div>
 								<p style="color:#666">商品条码：{{virtual_product.product.bar_code}}</p>
 							</div>
@@ -54,7 +54,7 @@
 							{{virtual_product.product.price}}
 						</td>
 						<td>
-							{{virtual_product.product.sales}}
+							{{virtual_product.product.stocks}}
 						</td>
 					</tr>
 				</tbody>
