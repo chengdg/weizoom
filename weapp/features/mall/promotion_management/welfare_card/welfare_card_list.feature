@@ -10,12 +10,15 @@ Feature:福利卡券活动列表
 		2、福利卡券列表字段
 			活动名称：显示创建时的活动名称
 			商品名称：显示创建时选择的商品名称、条码
-			码库库存：福利卡券的库存；发放出一张卡券后，码库库存减1
-			已经售出：已经售出的福利卡券的数量；发放出一张卡券后，已经售出加1
+			总库存：福利卡券的总库存数
+			可用库存:福利卡券可用的库存数
+			已售出：已经售出的福利卡券的数量
+			已过期:已过期的卡券数量
+			已失效：已失效的卡券数量
 			创建时间：福利卡券的创建时间，精确到秒，显示格式为：xxxx-xx-xx xx:xx:xx
 			操作：【卡券详情】、【编辑】、【结束】/【已结束】
-		3、点击操作【编辑】，进入编辑福利卡券页面，进入后可修改'活动名称'、'有效期'、'码库'，不可删除已添加的商品
-		4、点击操作【结束】，弹出提示"是否确认结束？"，确认后则【结束】变为【已结束】
+		3、点击操作【编辑】，进入编辑福利卡券页面，进入后可修改'有效期'、'码库文件'，活动名称和商品均不可编辑
+		4、点击操作【结束】，弹出提示"是否确认结束该活动！"，确认后则【结束】变为【已结束】
 		5、福利卡券结束后，若有未发放完的卡券，则剩余的卡券将使失效
 	"""
 
@@ -223,7 +226,7 @@ Background:
 		}]
 		"""
 
-@welfare_card @weizoom
+@welfare_card @weshop
 Scenario:1 编辑福利卡券活动
 	Given jobs登录系统
 	When jobs编辑福利卡券活动
@@ -260,8 +263,11 @@ Scenario:1 编辑福利卡券活动
 				"name":"微众虚拟商品2",
 				"bar_code":"212233"
 				},
-			"card_stocks":2,
-			"card_sales":0,
+			"total_stocks":2,
+			"remain_stocks":2,
+			"sale_cards":0,
+			"expired_cards":0,
+			"invalid_cards":0,
 			"create_time":"今天",
 			"actions":["卡券详情","编辑","结束"]
 		},{
@@ -270,14 +276,17 @@ Scenario:1 编辑福利卡券活动
 				"name":"微众虚拟商品1",
 				"bar_code":"112233"
 			},
-			"card_stocks":3,
-			"card_sales":0,
+			"total_stocks":3,
+			"remain_stocks":3,
+			"sale_cards":0,
+			"expired_cards":0,
+			"invalid_cards":0,
 			"create_time":"2天前",
 			"actions":["卡券详情","编辑","结束"]
 		}]
 		"""
 
-@welfare_card @weizoom
+@welfare_card @weshop
 Scenario:2 结束福利卡券活动
 	Given jobs登录系统
 	When jobs'结束'福利卡券活动'20元通用卡'
@@ -290,8 +299,11 @@ Scenario:2 结束福利卡券活动
 				"name":"微众虚拟商品2",
 				"bar_code":"212233"
 				},
-			"card_stocks":2,
-			"card_sales":0,
+			"total_stocks":2,
+			"remain_stocks":2,
+			"sale_cards":0,
+			"expired_cards":0,
+			"invalid_cards":0,
 			"create_time":"今天",
 			"actions":["卡券详情","编辑","已结束"]
 		},{
@@ -300,14 +312,21 @@ Scenario:2 结束福利卡券活动
 				"name":"微众虚拟商品1",
 				"bar_code":"112233"
 			},
-			"card_stocks":2,
-			"card_sales":0,
+			"total_stocks":2,
+			"remain_stocks":2,
+			"sale_cards":0,
+			"expired_cards":0,
+			"invalid_cards":0,
 			"create_time":"2天前",
 			"actions":["卡券详情","编辑","结束"]
 		}]
 		"""
+	And jobs获得福利卡券活动'20元通用卡'的卡券详情列表
+		| card_id | create_time | start_date | end_date | status | get_time | member | order_no |
+		| 0000003 |   今天      |    今天    | 30天后   | 已失效 |          |        |          |
+		| 0000004 |   今天      |    今天    | 30天后   | 已失效 |          |        |          |
 
-@welfare_card @weizoom
+@welfare_card @weshop
 Scenario:3 福利卡券活动列表的查询
 	Given jobs登录系统
 	#按照'商品名称'查询

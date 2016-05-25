@@ -12,20 +12,19 @@ Feature:新建福利卡券
 				d.同一商品只能存在一个福利卡券活动中
 			'活动名称':输入福利卡券活动的名称
 			'卡券有效期':开始和结束时间
-			上传码库文件：
-				a.以上传csv格式方式添加码库；csv文件中需要显示卡号与密码字段，如果无密码，则为空
-				b.如果某csv文件已经被使用，再次上传时，保存活动时进行校验提示“该文件内卡券已经在使用中，请确认后再操作”
-				c.csv文件上传完后，显示码库的数量
-				d.csv文件中如果有未激活或已过期状态的卡号，则应校验提示上传失败
+			上传码库文件的校验：
+				a.以上传xls/xlsx格式方式添加码库；码库文件要严格按照格式进行填写（卡号、密码）
+				b.上传码库文件时会对以下情况均会进行校验：
+					卡号为空，密码非空
+					卡号非空，密码为空
+					卡号相同，密码不同/相同
+					卡号在其他福利卡券中有上传
+					编辑福利卡券时，包含创建时已经上传的卡号（只识别新补充的卡号信息，不更改已经上传的卡号信息）
+					卡号状态为未激活、已过期、已失效
 		3、新建福利卡券活动时，商品弹窗信息
-			a.弹窗名称-在售虚拟商品
+			a.弹窗名称：在售虚拟商品
 			b.弹窗中列表显示以下信息:
-				【商品条码】
-				【商品名称】
-				【商品价格】
-				【商品库存】
-				【创建时间】
-				【操作】
+				【商品条码】、【商品名称】、【商品价格】、【商品库存】【创建时间】、【操作】
 	"""
 
 Background:
@@ -180,7 +179,7 @@ Background:
 		}
 		"""
 
-@welfare_card @weizoom
+@welfare_card @weshop
 Scenario:1 新建福利卡券活动
 	Given jobs登录系统
 	When jobs新建福利卡券活动
@@ -214,15 +213,18 @@ Scenario:1 新建福利卡券活动
 				"name":"微众虚拟商品1",
 				"bar_code":"112233"
 			},
-			"card_stocks":2,
-			"card_sales":0,
+			"total_stocks":2,
+			"remain_stocks":2,
+			"sale_cards":0,
+			"expired_cards":0,
+			"invalid_cards":0,
 			"create_time":"今天",
 			"actions":["卡券详情","编辑","结束"]
 		}]
 		"""
 
-@welfare_card @weizoom
-Scenario:2 新建福利卡券活动，csv中包含非有效卡信息时，则上传不成功
+@welfare_card @weshop
+Scenario:2 新建福利卡券活动，码库文件中包含非有效卡信息时，则上传不成功
 	Given jobs登录系统
 	When jobs新建福利卡券活动
 		"""
@@ -252,8 +254,8 @@ Scenario:2 新建福利卡券活动，csv中包含非有效卡信息时，则上
 		"""
 	Then jobs获得提示信息'上传失败'
 
-@welfare_card @weizoom
-Scenario:3 新建福利卡券活动，csv中包含正在使用的卡信息时，则上传不成功
+@welfare_card @weshop
+Scenario:3 新建福利卡券活动，码库文件中包含正在使用的卡信息时，则上传不成功
 	Given jobs登录系统
 	When jobs新建福利卡券活动
 		"""
@@ -300,7 +302,7 @@ Scenario:3 新建福利卡券活动，csv中包含正在使用的卡信息时，
 		"""
 	Then jobs获得提示信息'该文件内卡券已经在使用中，请确认后再操作'
 
-@welfare_card @weizoom
+@welfare_card @weshop
 Scenario:4 新建福利卡券活动，商品弹窗的校验
 	Given jobs登录系统
 	Given jobs已添加商品
