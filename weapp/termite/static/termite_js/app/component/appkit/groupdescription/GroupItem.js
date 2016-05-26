@@ -15,15 +15,10 @@ W.component.appkit.GroupItem = W.component.Component.extend({
             name: 'group_type',
             type: 'select',
             displayName: '类型',
-			source:[{
-				name:'3人团',
-				value:'3'
-			},{
-				name:'10人团',
-				value:'10'
-			}],
-            default:'3',
-			isUserProperty:true
+			source: [2,3,4,5,6,7,8,9,10],
+			after: "人团",
+            default: 3,
+			isUserProperty: true
 
         },{
 			name:'group_days',

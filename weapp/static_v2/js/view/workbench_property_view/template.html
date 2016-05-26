@@ -1104,12 +1104,8 @@
 									<div class="propertyGroup_property_input">
 										<select data-field="${dynamicComponentField.name}" name="${dynamicComponentField.name}" class="input-medium">
 										{{each(n, nav) W.component.getSelectSource(dynamicComponentField.source, component)}}
-											<option value="${nav.value}" {{if dynamicComponent.model.get(dynamicComponentField.name) == nav.value}}selected="selected"{{/if}}>
-												{{if nav.name }}
-													${nav.name}
-												{{else}}
-													${nav.value}
-												{{/if}}
+											<option value="${nav}" {{if dynamicComponent.model.get(dynamicComponentField.name) == nav}}selected="selected"{{/if}}>
+													${nav}${dynamicComponentField.after}
 											</option>
 										{{/each}}
 										</select>
