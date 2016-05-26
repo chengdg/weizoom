@@ -777,7 +777,7 @@ class WebAppUserMiddleware(object):
 			
 		uuid = request.COOKIES.get(member_settings.UUID_SESSION_KEY, None)
 
-		if (uuid is not None) and (request.member is not None):
+		if (uuid is not None) and (request.member is not None) and request.user_profile:
 			uuid_related_webapp_user = get_request_webapp_user_by_uuid(uuid, request.user_profile.webapp_id)
 			if uuid_related_webapp_user is not None:
 				if request.found_member_in_cache:
@@ -793,6 +793,9 @@ class WebAppUserMiddleware(object):
 						uuid_related_webapp_user.father_id = member_related_webapp_user.id
 						uuid_related_webapp_user.save()
 						update_models_use_webapp_user(member_related_webapp_user, uuid_related_webapp_user)
+		elif not request.user_profile:
+			notify_message = u"WebAppUserMiddleware info, url:\n{}, cookies:{}".format(request.get_full_path(),request.COOKIES)
+			watchdog_error(notify_message)
 
 		if not request.found_member_in_cache:
 			if webapp_user is None:
