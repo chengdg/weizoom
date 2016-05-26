@@ -9,7 +9,8 @@ Feature:微众商城添加虚拟商品
 			虚拟商品:是指第三方的卡密，如影票、蛋糕券
 			微众卡:实际上也是虚拟的一种，单拿出来是因为微众卡只能单独下单，并且数据罗盘里不统计微众卡订单的数据，不然拿这批购买的微众卡再来买别的东西时，销售额会统计两遍
 		2、在售/待售商品列表，'虚拟'类型的商品用"码"来标识，'微众卡'类型的商品用"卡"来标识
-		3、目前没有控制商品类型的修改（不管商品是否创建福利卡券，均可修改商品类型）因该功能只是微商城内部使用，会约束行为，暂不考虑这种场景
+		3、创建商品时，当商品类型选择'虚拟商品'或者'微众卡'时，自动隐藏多规格，商品库存从无限变为有限，且值为0，不可更改
+		4、目前没有控制商品类型的修改（不管商品是否创建福利卡券，均可修改商品类型）因该功能只是微商城内部使用，会约束行为，暂不考虑这种场景
 	"""
 
 Background:
@@ -62,6 +63,7 @@ Background:
 		}]
 		"""
 
+@virtual_product @weizoom
 Scenario:1 微众商城添加虚拟商品
 	#微众虚拟商品01-微众卡（有图标"码"）
 	#微众普通商品02-普通（无图标"码"）
@@ -110,7 +112,7 @@ Scenario:1 微众商城添加虚拟商品
 			"price": 20.00,
 			"weight": 1.0,
 			"stock_type": "有限",
-			"stocks": 200,
+			"stocks": 0,
 			"swipe_images": [{
 				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
 			}],
@@ -134,7 +136,7 @@ Scenario:1 微众商城添加虚拟商品
 			"price": 30.00,
 			"weight": 1.0,
 			"stock_type": "有限",
-			"stocks": 30,
+			"stocks": 0,
 			"swipe_images": [{
 				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
 			}],
@@ -180,7 +182,7 @@ Scenario:1 微众商城添加虚拟商品
 			"price": 20.00,
 			"weight": 1.0,
 			"stock_type": "有限",
-			"stocks": 200,
+			"stocks": 0,
 			"swipe_images": [{
 				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
 			}],

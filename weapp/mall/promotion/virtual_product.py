@@ -133,25 +133,27 @@ class VirtualProduct(resource.Resource):
 		end_time = request.POST.get('end_time', '').strip()
 		code_file_path = request.POST.get('code_file_path', '').strip()
 		
+		response = create_response(500)
 		try:
 			#先创建福利卡券活动
 			if name and product_id:
-				virtual_product = promotion_models.VirtualProduct.objects.create(
-									owner=owner,
-									name=name,
-									product_id=product_id
-								)
-				#再为该福利卡券活动上传卡密
-				success_num = upload_codes_for(owner, code_file_path, virtual_product, start_time, end_time)
+				if promotion_models.VirtualProduct.objects.filter(product_id=product_id, is_finished=False).count() == 0:
+					virtual_product = promotion_models.VirtualProduct.objects.create(
+										owner=owner,
+										name=name,
+										product_id=product_id
+									)
+					#再为该福利卡券活动上传卡密
+					success_num = upload_codes_for(owner, code_file_path, virtual_product, start_time, end_time)
 
-				response = create_response(200)
-				response.data = {'success_num': success_num}
+					response = create_response(200)
+					response.data = {'success_num': success_num}
+				else:
+					response.errMsg = u'该商品已经有进行中的活动，请不要重复创建！'
 			else:
-				response = create_response(500)
 				response.errMsg = u'活动名称或商品不能为空！'
 		except Exception, e:
 			logging.error(e)
-			response = create_response(500)
 			response.errMsg = e
 
 		return response.get_response()
@@ -204,6 +206,8 @@ class VirtualProduct(resource.Resource):
 				).update(status=promotion_models.CODE_STATUS_EXPIRED)
 				virtual_product.is_finished = True
 				virtual_product.save()
+
+				update_stocks(virtual_product)  #更新商品库存
 
 				response = create_response(200)
 			except Exception, e:
@@ -306,6 +310,10 @@ def upload_codes_for(owner, code_file_path, virtual_product, start_time, end_tim
 		)
 		success_num += 1
 	logging.info('upload %d codes for virtual_product id %d' % (success_num, virtual_product.id))
+
+	#更新商品库存
+	update_stocks(virtual_product)
+
 	return success_num
 
 def __get_existed_code_ids():
@@ -348,8 +356,7 @@ def get_codes_dict_from_file(file_path):
 		for i in range(0,nrows):
 			code = table.cell(i,0).value
 			password = table.cell(i,1).value
-			print code, password
-			
+
 			if type(code) == float:
 				code = str(int(code))
 			if type(password) == float:
@@ -368,8 +375,18 @@ def get_codes_dict_from_file(file_path):
 	return codes, codes_dict
 
 
-def update_stocks():
+def update_stocks(virtual_product):
 	"""
-	更新商品的库存
+	更新商品的库存，必须是单规格商品
 	"""
-	pass
+	product = virtual_product.product
+	codes = promotion_models.VirtualProductHasCode.objects.filter(virtual_product=virtual_product, status=promotion_models.CODE_STATUS_NOT_GET)
+	stocks = 0
+	for code in codes:
+		if not code.can_not_use:
+			stocks += 1
+
+	product_model = mall_models.ProductModel.objects.get(product=product, is_standard=True)
+	product_model.stocks = stocks
+	product_model.save()
+	logging.info("update stocks for product:%d in virtual_product:%d to %d" % (product.id, virtual_product.id, stocks))

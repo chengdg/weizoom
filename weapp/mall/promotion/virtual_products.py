@@ -74,7 +74,7 @@ class VirtualProducts(resource.Resource):
 		virtual_product_ids = [v.id for v in virtual_products]
 		virtual_product_has_codes = promotion_models.VirtualProductHasCode.objects.filter(
 				virtual_product_id__in=virtual_product_ids, 
-				status__in=[promotion_models.CODE_STATUS_GET, promotion_models.CODE_STATUS_NOT_GET]
+				# status__in=[promotion_models.CODE_STATUS_GET, promotion_models.CODE_STATUS_NOT_GET]
 			)
 
 		virtual_product_id2total_stock = {}  #总库存

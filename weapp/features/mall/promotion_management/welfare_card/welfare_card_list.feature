@@ -16,7 +16,7 @@ Feature:福利卡券活动列表
 			已过期:已过期的卡券数量
 			已失效：已失效的卡券数量
 			创建时间：福利卡券的创建时间，精确到秒，显示格式为：xxxx-xx-xx xx:xx:xx
-			操作：【卡券详情】、【编辑】、【结束】/【已结束】
+			操作：【码库详情】、【增加库存】、【结束】/【已结束】
 		3、点击操作【编辑】，进入编辑福利卡券页面，进入后可修改'有效期'、'码库文件'，活动名称和商品均不可编辑
 		4、点击操作【结束】，弹出提示"是否确认结束该活动！"，确认后则【结束】变为【已结束】
 		5、福利卡券结束后，若有未发放完的卡券，则剩余的卡券将使失效
@@ -86,7 +86,7 @@ Background:
 			"price": 10.00,
 			"weight": 1.0,
 			"stock_type": "有限",
-			"stocks": 100,
+			"stocks": 0,
 			"swipe_images": [{
 				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
 			}, {
@@ -112,7 +112,7 @@ Background:
 			"price": 20.00,
 			"weight": 1.0,
 			"stock_type": "有限",
-			"stocks": 200,
+			"stocks": 0,
 			"swipe_images": [{
 				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
 			}],
@@ -136,7 +136,7 @@ Background:
 			"price": 30.00,
 			"weight": 1.0,
 			"stock_type": "有限",
-			"stocks": 2,
+			"stocks": 0,
 			"swipe_images": [{
 				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
 			}],
@@ -227,9 +227,10 @@ Background:
 		"""
 
 @welfare_card @weshop
-Scenario:1 编辑福利卡券活动
+Scenario:1 福利卡券列表-增加库存
 	Given jobs登录系统
-	When jobs编辑福利卡券活动
+	#点击【增加库存】按钮，可增加码库，同时设置卡有效期
+	When jobs对福利卡券活动进行'增加库存'
 		"""
 		{
 			"product":
@@ -238,7 +239,7 @@ Scenario:1 编辑福利卡券活动
 					"bar_code":"112233",
 					"price":10.00
 				},
-			"activity_name":"10元通用卡修改",
+			"activity_name":"10元通用卡",
 			"card_start_date":"今天",
 			"card_end_date":"36天后",
 			"cards":
@@ -269,9 +270,9 @@ Scenario:1 编辑福利卡券活动
 			"expired_cards":0,
 			"invalid_cards":0,
 			"create_time":"今天",
-			"actions":["卡券详情","编辑","结束"]
+			"actions":["码库详情","增加库存","结束"]
 		},{
-			"activity_name":"10元通用卡修改",
+			"activity_name":"10元通用卡",
 			"product":{
 				"name":"微众虚拟商品1",
 				"bar_code":"112233"
@@ -282,9 +283,14 @@ Scenario:1 编辑福利卡券活动
 			"expired_cards":0,
 			"invalid_cards":0,
 			"create_time":"2天前",
-			"actions":["卡券详情","编辑","结束"]
+			"actions":["码库详情","增加库存","结束"]
 		}]
 		"""
+	And jobs获得福利卡券活动'10元通用卡'的码库详情列表
+		| card_id | create_time | start_date | end_date | status | get_time | member | order_no |
+		| 0000001 |   今天      |    2天前   | 30天后   | 已失效 |          |        |          |
+		| 0000002 |   今天      |    2天前   | 30天后   | 已失效 |          |        |          |
+		| 0000005 |   今天      |    今天    | 36天后   | 已失效 |          |        |          |
 
 @welfare_card @weshop
 Scenario:2 结束福利卡券活动
@@ -305,7 +311,7 @@ Scenario:2 结束福利卡券活动
 			"expired_cards":0,
 			"invalid_cards":0,
 			"create_time":"今天",
-			"actions":["卡券详情","编辑","已结束"]
+			"actions":["码库详情","增加库存","已结束"]
 		},{
 			"activity_name":"10元通用卡",
 			"product":{
@@ -318,10 +324,10 @@ Scenario:2 结束福利卡券活动
 			"expired_cards":0,
 			"invalid_cards":0,
 			"create_time":"2天前",
-			"actions":["卡券详情","编辑","结束"]
+			"actions":["码库详情","增加库存","结束"]
 		}]
 		"""
-	And jobs获得福利卡券活动'20元通用卡'的卡券详情列表
+	And jobs获得福利卡券活动'20元通用卡'的码库详情列表
 		| card_id | create_time | start_date | end_date | status | get_time | member | order_no |
 		| 0000003 |   今天      |    今天    | 30天后   | 已失效 |          |        |          |
 		| 0000004 |   今天      |    今天    | 30天后   | 已失效 |          |        |          |

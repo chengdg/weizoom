@@ -25,6 +25,7 @@ Feature:新建福利卡券
 			a.弹窗名称：在售虚拟商品
 			b.弹窗中列表显示以下信息:
 				【商品条码】、【商品名称】、【商品价格】、【商品库存】【创建时间】、【操作】
+		4、上传码库后，自动更新商品的库存
 	"""
 
 Background:
@@ -91,7 +92,7 @@ Background:
 			"price": 10.00,
 			"weight": 1.0,
 			"stock_type": "有限",
-			"stocks": 2,
+			"stocks": 0,
 			"swipe_images": [{
 				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
 			},{
@@ -117,7 +118,7 @@ Background:
 			"price": 20.00,
 			"weight": 1.0,
 			"stock_type": "有限",
-			"stocks": 2,
+			"stocks": 0,
 			"swipe_images": [{
 				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
 			}],
@@ -141,7 +142,7 @@ Background:
 			"price": 30.00,
 			"weight": 1.0,
 			"stock_type": "有限",
-			"stocks": 2,
+			"stocks": 0,
 			"swipe_images": [{
 				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
 			}],
@@ -156,7 +157,7 @@ Background:
 			"status":"在售"
 		}]
 		"""
-	#创建csv文件中需要的卡信息
+	#创建码库文件中需要的卡信息
 	And jobs已创建微众卡
 		"""
 		{
@@ -173,6 +174,11 @@ Background:
 			},{
 				"id":"0000003",
 				"password":"3234567",
+				"status":"未激活",
+				"price":10.00
+			},{
+				"id":"0000004",
+				"password":"4234567",
 				"status":"未激活",
 				"price":10.00
 			}]
@@ -219,43 +225,152 @@ Scenario:1 新建福利卡券活动
 			"expired_cards":0,
 			"invalid_cards":0,
 			"create_time":"今天",
-			"actions":["卡券详情","编辑","结束"]
+			"actions":["码库详情","增加库存","结束"]
 		}]
+		"""
+	#上传码库后，自动更新商品库存
+	And jobs能获取商品'微众虚拟商品1'
+		"""
+		{
+			"name": "微众虚拟商品1",
+			"product_type":"微众卡",
+			"supplier": "微众",
+			"purchase_price": 9.00,
+			"promotion_title": "10元通用卡",
+			"categories": "分类1,分类2",
+			"bar_code":"112233",
+			"min_limit":2,
+			"is_member_product":"on",
+			"price": 10.00,
+			"weight": 1.0,
+			"stock_type": "有限",
+			"stocks": 2,
+			"swipe_images": [{
+				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
+			},{
+				"url": "/standard_static/test_resource_img/hangzhou2.jpg"
+			}],
+			"postage":0.00,
+			"pay_interfaces":
+				[{
+					"type": "在线支付"
+				},{
+					"type": "货到付款"
+				}],
+			"detail":"微众虚拟商品1的详情"
+		}
 		"""
 
 @welfare_card @weshop
 Scenario:2 新建福利卡券活动，码库文件中包含非有效卡信息时，则上传不成功
 	Given jobs登录系统
-	When jobs新建福利卡券活动
-		"""
-		[{
-			"product":
-				{
-					"name":"微众虚拟商品1",
-					"bar_code":"112233",
-					"price":10.00
-				},
-			"activity_name":"10元通用卡",
-			"card_start_date":"今天",
-			"card_end_date":"30天后",
-			"cards":
-				[{
-					"id":"0000001",
-					"password":"1234567"
-				},{
-					"id":"0000002",
-					"password":"2234567"
-				},{
-					"id":"0000003",
-					"password":"3234567"
-				}],
-			"create_time":"今天"
-		}]
-		"""
-	Then jobs获得提示信息'上传失败'
+	#码库文件中有重复卡号
+		When jobs新建福利卡券活动
+			"""
+			[{
+				"product":
+					{
+						"name":"微众虚拟商品1",
+						"bar_code":"112233",
+						"price":10.00
+					},
+				"activity_name":"10元通用卡",
+				"card_start_date":"今天",
+				"card_end_date":"30天后",
+				"cards":
+					[{
+						"id":"0000001",
+						"password":"1234567"
+					},{
+						"id":"0000002",
+						"password":"2234567"
+					},{
+						"id":"0000002",
+						"password":"2234567"
+					}],
+				"create_time":"今天"
+			}]
+			"""
+		Then jobs获得提示信息'第3行卡号与前面重复，请核查!'
+	#码库文件中卡号或密码为空
+		#卡密码为空
+		When jobs新建福利卡券活动
+			"""
+			[{
+				"product":
+					{
+						"name":"微众虚拟商品1",
+						"bar_code":"112233",
+						"price":10.00
+					},
+				"activity_name":"10元通用卡",
+				"card_start_date":"今天",
+				"card_end_date":"30天后",
+				"cards":
+					[{
+						"id":"0000001",
+						"password":"1234567"
+					},{
+						"id":"0000002",
+						"password":""
+					}],
+				"create_time":"今天"
+			}]
+			"""
+		Then jobs获得提示信息'第2行数据有误，请核查!'
+		#卡号为空
+		When jobs新建福利卡券活动
+			"""
+			[{
+				"product":
+					{
+						"name":"微众虚拟商品1",
+						"bar_code":"112233",
+						"price":10.00
+					},
+				"activity_name":"10元通用卡",
+				"card_start_date":"今天",
+				"card_end_date":"30天后",
+				"cards":
+					[{
+						"id":"0000001",
+						"password":"1234567"
+					},{
+						"id":"",
+						"password":"2234567"
+					}],
+				"create_time":"今天"
+			}]
+			"""
+		Then jobs获得提示信息'第2行数据有误，请核查!'
+		#卡号和密码均为空
+		When jobs新建福利卡券活动
+			"""
+			[{
+				"product":
+					{
+						"name":"微众虚拟商品1",
+						"bar_code":"112233",
+						"price":10.00
+					},
+				"activity_name":"10元通用卡",
+				"card_start_date":"今天",
+				"card_end_date":"30天后",
+				"cards":
+					[{
+						"id":"0000001",
+						"password":"1234567"
+					},{
+						"id":"",
+						"password":""
+					}],
+				"create_time":"今天"
+			}]
+			"""
+		Then jobs获得提示信息'第2行数据有误，请核查!'
 
 @welfare_card @weshop
-Scenario:3 新建福利卡券活动，码库文件中包含正在使用的卡信息时，则上传不成功
+Scenario:3 新建福利卡券活动，码库文件中包含正在使用的卡信息时，只读取可用的卡信息
 	Given jobs登录系统
 	When jobs新建福利卡券活动
 		"""
@@ -280,6 +395,7 @@ Scenario:3 新建福利卡券活动，码库文件中包含正在使用的卡信
 			"create_time":"今天"
 		}]
 		"""
+
 	When jobs新建福利卡券活动
 		"""
 		[{
@@ -296,11 +412,43 @@ Scenario:3 新建福利卡券活动，码库文件中包含正在使用的卡信
 				[{
 					"id":"0000001",
 					"password":"1234567"
+				},{
+					"id":"0000004",
+					"password":"4234567"
 				}],
 			"create_time":"今天"
 		}]
 		"""
-	Then jobs获得提示信息'该文件内卡券已经在使用中，请确认后再操作'
+	Then jobs获得福利卡券活动列表
+		"""
+		[{
+			"activity_name":"20元通用卡",
+			"product":{
+				"name":"微众虚拟商品2",
+				"bar_code":"212233"
+			},
+			"total_stocks":1,
+			"remain_stocks":1,
+			"sale_cards":0,
+			"expired_cards":0,
+			"invalid_cards":0,
+			"create_time":"今天",
+			"actions":["码库详情","增加库存","结束"]
+		},{
+			"activity_name":"10元通用卡",
+			"product":{
+				"name":"微众虚拟商品1",
+				"bar_code":"112233"
+			},
+			"total_stocks":2,
+			"remain_stocks":2,
+			"sale_cards":0,
+			"expired_cards":0,
+			"invalid_cards":0,
+			"create_time":"今天",
+			"actions":["码库详情","增加库存","结束"]
+		}]
+		"""
 
 @welfare_card @weshop
 Scenario:4 新建福利卡券活动，商品弹窗的校验
@@ -320,7 +468,7 @@ Scenario:4 新建福利卡券活动，商品弹窗的校验
 			"price": 40.00,
 			"weight": 1.0,
 			"stock_type": "有限",
-			"stocks": 4,
+			"stocks": 0,
 			"swipe_images": [{
 				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
 			},{
@@ -406,4 +554,4 @@ Scenario:4 新建福利卡券活动，商品弹窗的校验
 		| bar_code  | name             | price | stocks | create_time    | actions |
 		| 312233    | 稻香村虚拟商品3  | 30.00 | 2      | 今天           |  选取   |
 		| 212233    | 微众虚拟商品2    | 20.00 | 2      | 今天           |  选取   |
-		| 112233    | 微众虚拟商品1    | 10.00 | 2      | 今天           |         |
+		| 112233    | 微众虚拟商品1    | 10.00 | 2      | 今天           |  已使用 |

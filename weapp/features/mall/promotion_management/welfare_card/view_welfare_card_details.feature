@@ -3,23 +3,25 @@
 
 Feature:福利卡券详情
 	"""
-		1、点击操作【卡券详情】跳转到对应福利卡券的卡券详情页面
-		2、卡券详情页面信息
+		1、点击操作【码库详情】跳转到对应福利卡券的码库详情页面
+		2、码库详情页面信息
 			a.查询条件
 				卡券码:精确匹配
+				领取状态：精确匹配（全部、未领取、已领取和已过期）
+				领用时间：开始时间必须小于等于结束时间
 				领取人：模糊查询
-				领取时间：开始时间必须小于等于结束时间
-				订单号：精确匹配
-				状态：精确匹配（全部、未领取、已领取和已过期）
-			b.操作按钮：查询、重置、导出所有
+				订单编号：精确匹配
+				有效期：只要卡的开始时间在查询区间内，均可被筛选出来
+			b.操作按钮：查询、重置、导出
 			c.列表字段
 				卡券码:卡的号码
 				创建时间:卡的创建时间，如果是后补充的码库则显示码库补充时的时间
 				有效期：显示卡的有效期
-				状态：未领取、已领取、已过期
-				领取时间：用户个人中心得到卡的时间
+				卡券状态：未领取、已领取、已过期
+				领用时间：用户个人中心得到卡的时间
 				领取人：下单的用户名称
 				订单号：链接显示，点击跳转到对应的订单详情页
+			d.卡券码的显示顺序？？？
 	"""
 
 Background:
@@ -86,7 +88,7 @@ Background:
 			"price": 10.00,
 			"weight": 1.0,
 			"stock_type": "有限",
-			"stocks": 100,
+			"stocks": 0,
 			"swipe_images": [{
 				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
 			},{
@@ -164,7 +166,7 @@ Background:
 	When tom关注jobs的公众号
 
 @welfare_card @weizoom
-Scenario:1 查看卡券详情
+Scenario:1 查看福利卡券码库详情
 	Given jobs登录系统
 	Then jobs获得福利卡券活动列表
 		"""
@@ -174,44 +176,20 @@ Scenario:1 查看卡券详情
 				"name":"微众虚拟商品1",
 				"bar_code":"112233"
 			},
-			"card_stocks":3,
-			"card_sales":0,
+			"total_stocks":3,
+			"remain_stocks":3,
+			"sale_cards":0,
+			"expired_cards":0,
+			"invalid_cards":0,
 			"create_time":"今天",
-			"actions":["卡券详情","编辑","结束"]
+			"actions":["码库详情","增加库存","结束"]
 		}]
 		"""
-	When jobs访问福利卡券活动'10元通用卡'的卡券详情
-	Then jobs获得福利卡券活动'10元通用卡'的卡券详情列表
-		"""
-		[{
-			"card_id":"000001",
-			"create_time":"今天",
-			"start_date":"今天",
-			"end_date":"30天后",
-			"status":"未领取",
-			"get_time":"",
-			"member":"",
-			"order_no":""
-		},{
-			"card_id":"000002",
-			"create_time":"今天",
-			"start_date":"今天",
-			"end_date":"30天后",
-			"status":"未领取",
-			"get_time":"",
-			"member":"",
-			"order_no":""
-		},{
-			"card_id":"000003",
-			"create_time":"今天",
-			"start_date":"今天",
-			"end_date":"30天后",
-			"status":"未领取",
-			"get_time":"",
-			"member":"",
-			"order_no":""
-		}]
-		"""
+	And jobs获得福利卡券活动'10元通用卡'的码库详情列表
+		| card_id | create_time | start_date | end_date | status | get_time | member | order_no |
+		| 0000001 |   今天      |    今天    | 30天后   | 未领取 |          |        |          |
+		| 0000002 |   今天      |    今天    | 30天后   | 未领取 |          |        |          |
+		| 0000005 |   今天      |    今天    | 36天后   | 未领取 |          |        |          |
 	When bill访问jobs的webapp
 	And bill购买jobs的商品
 		"""
@@ -244,47 +222,23 @@ Scenario:1 查看卡券详情
 				"name":"微众虚拟商品1",
 				"bar_code":"112233"
 			},
-			"card_stocks":2,
-			"card_sales":1,
+			"total_stocks":2,
+			"remain_stocks":1,
+			"sale_cards":1,
+			"expired_cards":0,
+			"invalid_cards":0,
 			"create_time":"今天",
-			"actions":["卡券详情","编辑","结束"]
+			"actions":["码库详情","增加库存","结束"]
 		}]
 		"""
-	When jobs访问福利卡券活动'10元通用卡'的卡券详情
-	Then jobs获得福利卡券活动'10元通用卡'的卡券详情列表
-		"""
-		[{
-			"card_id":"000001",
-			"create_time":"今天",
-			"start_date":"今天",
-			"end_date":"30天后",
-			"status":"已领取",
-			"get_time":"今天",
-			"member":"bill",
-			"order_no":"001"
-		},{
-			"card_id":"000002",
-			"create_time":"今天",
-			"start_date":"今天",
-			"end_date":"30天后",
-			"status":"未领取",
-			"get_time":"",
-			"member":"",
-			"order_no":""
-		},{
-			"card_id":"000003",
-			"create_time":"今天",
-			"start_date":"今天",
-			"end_date":"30天后",
-			"status":"未领取",
-			"get_time":"",
-			"member":"",
-			"order_no":""
-		}]
-		"""
+	And jobs获得福利卡券活动'10元通用卡'的码库详情列表
+		| card_id | create_time | start_date | end_date | status | get_time | member | order_no |
+		| 0000001 |   今天      |    今天    | 30天后   | 已领取 | 今天     | bill   |   001    |
+		| 0000002 |   今天      |    今天    | 30天后   | 未领取 |          |        |          |
+		| 0000005 |   今天      |    今天    | 36天后   | 未领取 |          |        |          |
 
 @welfare_card @weizoom
-Scenario:2 卡券详情列表的查询
+Scenario:2 福利卡券码库详情列表的查询
 	When bill访问jobs的webapp
 	And bill购买jobs的商品
 		"""
@@ -332,42 +286,15 @@ Scenario:2 卡券详情列表的查询
 			"password":"2234567"
 		}]
 		"""
-	When jobs访问福利卡券活动'10元通用卡'的卡券详情
-	Then jobs获得福利卡券活动'10元通用卡'的卡券详情列表
-		"""
-		[{
-			"card_id":"000001",
-			"create_time":"今天",
-			"start_date":"今天",
-			"end_date":"30天后",
-			"status":"已领取",
-			"get_time":"今天",
-			"member":"bill",
-			"order_no":"001"
-		},{
-			"card_id":"000002",
-			"create_time":"今天",
-			"start_date":"今天",
-			"end_date":"30天后",
-			"status":"已领取",
-			"get_time":"今天",
-			"member":"tom",
-			"order_no":"002"
-		},{
-			"card_id":"000003",
-			"create_time":"今天",
-			"start_date":"今天",
-			"end_date":"30天后",
-			"status":"未领取",
-			"get_time":"",
-			"member":"",
-			"order_no":""
-		}]
-		"""
+	And jobs获得福利卡券活动'10元通用卡'的码库详情列表
+		| card_id | create_time | start_date | end_date | status | get_time | member | order_no |
+		| 0000001 |   今天      |    今天    | 30天后   | 已领取 | 今天     | bill   |   001    |
+		| 0000002 |   今天      |    今天    | 30天后   | 已领取 | 今天     | tom    |   002    |
+		| 0000005 |   今天      |    今天    | 36天后   | 未领取 |          |        |          |
 
 	#按照'卡券码'进行查询
 		When jobs访问福利卡券活动'10元通用卡'的卡券详情
-		And jobs设置卡券详情列表查询条件
+		And jobs设置码库详情列表查询条件
 			"""
 			{
 				"card_id":"0000001",
@@ -375,10 +302,12 @@ Scenario:2 卡券详情列表的查询
 				"get_start_time":"",
 				"get_end_time":"",
 				"order_no":"",
-				"status":""
+				"status":"",
+				"card_start_date":"",
+				"card_end_date":""
 			}
 			"""
-		Then jobs获得福利卡券活动'10元通用卡'的卡券详情列表
+		Then jobs获得福利卡券活动'10元通用卡'的码库详情列表
 			"""
 			[{
 				"card_id":"000001"
@@ -387,7 +316,7 @@ Scenario:2 卡券详情列表的查询
 
 	#按照'领取人'进行查看
 		#模糊匹配
-			When jobs设置卡券详情列表查询条件
+			When jobs设置码库详情列表查询条件
 				"""
 				{
 					"card_id":"",
@@ -395,10 +324,12 @@ Scenario:2 卡券详情列表的查询
 					"get_start_time":"",
 					"get_end_time":"",
 					"order_no":"",
-					"status":""
+					"status":"",
+					"card_start_date":"",
+					"card_end_date":""
 				}
 				"""
-			Then jobs获得福利卡券活动'10元通用卡'的卡券详情列表
+			Then jobs获得福利卡券活动'10元通用卡'的码库详情列表
 				"""
 				[{
 					"card_id":"000001",
@@ -406,7 +337,7 @@ Scenario:2 卡券详情列表的查询
 				}]
 				"""
 		#精确匹配
-			When jobs设置卡券详情列表查询条件
+			When jobs设置码库详情列表查询条件
 				"""
 				{
 					"card_id":"",
@@ -414,10 +345,12 @@ Scenario:2 卡券详情列表的查询
 					"get_start_time":"",
 					"get_end_time":"",
 					"order_no":"",
-					"status":""
+					"status":"",
+					"card_start_date":"",
+					"card_end_date":""
 				}
 				"""
-			Then jobs获得福利卡券活动'10元通用卡'的卡券详情列表
+			Then jobs获得福利卡券活动'10元通用卡'的码库详情列表
 				"""
 				[{
 					"card_id":"000001",
@@ -425,9 +358,9 @@ Scenario:2 卡券详情列表的查询
 				}]
 				"""
 
-	#按照'领取时间'进行查询
+	#按照'领用时间'进行查询
 		#开始时间和结束时间相等
-			When jobs设置卡券详情列表查询条件
+			When jobs设置码库详情列表查询条件
 				"""
 				{
 					"card_id":"",
@@ -435,10 +368,12 @@ Scenario:2 卡券详情列表的查询
 					"get_start_time":"今天",
 					"get_end_time":"今天",
 					"order_no":"",
-					"status":""
+					"status":"",
+					"card_start_date":"",
+					"card_end_date":""
 				}
 				"""
-			Then jobs获得福利卡券活动'10元通用卡'的卡券详情列表
+			Then jobs获得福利卡券活动'10元通用卡'的码库详情列表
 				"""
 				[{
 					"card_id":"000001"
@@ -449,7 +384,7 @@ Scenario:2 卡券详情列表的查询
 				}]
 				"""
 		#开始时间和结束时间不等
-			When jobs设置卡券详情列表查询条件
+			When jobs设置码库详情列表查询条件
 				"""
 				{
 					"card_id":"",
@@ -457,10 +392,12 @@ Scenario:2 卡券详情列表的查询
 					"get_start_time":"昨天",
 					"get_end_time":"明天",
 					"order_no":"",
-					"status":""
+					"status":"",
+					"card_start_date":"",
+					"card_end_date":""
 				}
 				"""
-			Then jobs获得福利卡券活动'10元通用卡'的卡券详情列表
+			Then jobs获得福利卡券活动'10元通用卡'的码库详情列表
 				"""
 				[{
 					"card_id":"000001"
@@ -471,7 +408,7 @@ Scenario:2 卡券详情列表的查询
 				}]
 				"""
 		#查询结果为空
-			When jobs设置卡券详情列表查询条件
+			When jobs设置码库详情列表查询条件
 				"""
 				{
 					"card_id":"",
@@ -479,17 +416,19 @@ Scenario:2 卡券详情列表的查询
 					"get_start_time":"明天",
 					"get_end_time":"2天后",
 					"order_no":"",
-					"status":""
+					"status":"",
+					"card_start_date":"",
+					"card_end_date":""
 				}
 				"""
-			Then jobs获得福利卡券活动'10元通用卡'的卡券详情列表
+			Then jobs获得福利卡券活动'10元通用卡'的码库详情列表
 				"""
 				[]
 				"""
 
 	#按照'订单编号'进行查询
 		#查询结果为空
-			When jobs设置卡券详情列表查询条件
+			When jobs设置码库详情列表查询条件
 				"""
 				{
 					"card_id":"",
@@ -497,15 +436,17 @@ Scenario:2 卡券详情列表的查询
 					"get_start_time":"",
 					"get_end_time":"",
 					"order_no":"00",
-					"status":""
+					"status":"",
+					"card_start_date":"",
+					"card_end_date":""
 				}
 				"""
-			Then jobs获得福利卡券活动'10元通用卡'的卡券详情列表
+			Then jobs获得福利卡券活动'10元通用卡'的码库详情列表
 				"""
 				[]
 				"""
 		#精确匹配
-			When jobs设置卡券详情列表查询条件
+			When jobs设置码库详情列表查询条件
 				"""
 				{
 					"card_id":"",
@@ -513,10 +454,12 @@ Scenario:2 卡券详情列表的查询
 					"get_start_time":"",
 					"get_end_time":"",
 					"order_no":"002",
-					"status":""
+					"status":"",
+					"card_start_date":"",
+					"card_end_date":""
 				}
 				"""
-			Then jobs获得福利卡券活动'10元通用卡'的卡券详情列表
+			Then jobs获得福利卡券活动'10元通用卡'的码库详情列表
 				"""
 				[{
 					"card_id":"000002",
@@ -524,8 +467,8 @@ Scenario:2 卡券详情列表的查询
 				}]
 				"""
 
-	#按照'状态'进行查询
-			When jobs设置卡券详情列表查询条件
+	#按照'领用状态'进行查询
+			When jobs设置码库详情列表查询条件
 				"""
 				{
 					"card_id":"",
@@ -533,10 +476,12 @@ Scenario:2 卡券详情列表的查询
 					"get_start_time":"",
 					"get_end_time":"",
 					"order_no":"",
-					"status":"未领取"
+					"status":"未领取",
+					"card_start_date":"",
+					"card_end_date":""
 				}
 				"""
-			Then jobs获得福利卡券活动'10元通用卡'的卡券详情列表
+			Then jobs获得福利卡券活动'10元通用卡'的码库详情列表
 				"""
 				[{
 					"card_id":"000003",
@@ -550,19 +495,60 @@ Scenario:2 卡券详情列表的查询
 				}]
 				"""
 
+	#按照'有效期'进行查询
+		#查询结果为空
+			When jobs设置码库详情列表查询条件
+				"""
+				{
+					"card_id":"",
+					"member":"",
+					"get_start_time":"",
+					"get_end_time":"",
+					"order_no":"",
+					"status":"",
+					"card_start_date":"昨天",
+					"card_end_date":"昨天"
+				}
+				"""
+			Then jobs获得福利卡券活动'10元通用卡'的码库详情列表
+				"""
+				[]
+				"""
+		#查询结果非空
+			When jobs设置码库详情列表查询条件
+				"""
+				{
+					"card_id":"",
+					"member":"",
+					"get_start_time":"",
+					"get_end_time":"",
+					"order_no":"",
+					"status":"",
+					"card_start_date":"今天",
+					"card_end_date":"20天后"
+				}
+				"""
+			Then jobs获得福利卡券活动'10元通用卡'的码库详情列表
+				| card_id | create_time | start_date | end_date | status | get_time | member | order_no |
+				| 0000001 |   今天      |    今天    | 30天后   | 已领取 | 今天     | bill   |   001    |
+				| 0000002 |   今天      |    今天    | 30天后   | 已领取 | 今天     | tom    |   002    |
+				| 0000005 |   今天      |    今天    | 36天后   | 未领取 |          |        |          |
+
 	#组合查询
-			When jobs设置卡券详情列表查询条件
-			"""
-			{
-				"card_id":"0000001",
-				"member":"bill",
-				"get_start_time":"今天",
-				"get_end_time":"今天",
-				"order_no":"001",
-				"status":"已领取"
-			}
-			"""
-			Then jobs获得福利卡券活动'10元通用卡'的卡券详情列表
+			When jobs设置码库详情列表查询条件
+				"""
+				{
+					"card_id":"0000001",
+					"member":"bill",
+					"get_start_time":"今天",
+					"get_end_time":"今天",
+					"order_no":"001",
+					"status":"已领取",
+					"card_start_date":"昨天",
+					"card_end_date":"35天后"
+				}
+				"""
+			Then jobs获得福利卡券活动'10元通用卡'的码库详情列表
 				"""
 				[{
 					"card_id":"000001",
