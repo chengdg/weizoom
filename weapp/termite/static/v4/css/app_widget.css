@@ -1896,9 +1896,9 @@ li.wui-selectBox-display-table {
     position: relative;
     top: 35px;
     left: -3px;
-    background: no-repeat scroll 0 0 url("/termite_static/img/component/group/group_title.png");
-    background-position: 8px 7px;
-    background-size: 94%;
+    background: no-repeat scroll 0 0 url("/termite_static/img/component/group/group_title_v1.png");
+    background-position: -10px -2px;
+    background-size: 105%;
     background-color: #fff;
 }
 .wui-group-container .wui-i-titleLabel .wui-i-title-pic-3{

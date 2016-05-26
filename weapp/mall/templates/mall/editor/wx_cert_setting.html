@@ -4,18 +4,46 @@
     <style>
         th, td{
             text-align: left !important;
-            width: 50%;
+            height: 56px;
         }
         .uploadify-queue{
             position: absolute;
-            width: 30%;
+            width: 35%;
             margin: -50px 0 0 100px;
         }
+        .uploadify{
+            margin-bottom: 0;
+        }  
+        .uploadify-queue-item{
+            margin-top: 12px;
+            padding: 9px;
+            border: none;
+            background: transparent;
+            margin-left: 70px;
+        }
+        .uploadify-button{
+            background: transparent;
+            box-shadow: none;
+            color: #1262b7;
+            padding-left: 10px;
+        }
+        #cert-file{
+            display: inline-block;
+        }  
+        #key-file{
+            display: inline-block;
+        }  
         .xui-help{
-            margin-right: 10px;
+            display: inline-block;
+            float: right;
+            height: 40px;
+            cursor: pointer;
+            line-height: 40px;
+            margin-right: 15px;
         }
         .xui-table{
-            width: 90%;
+            width: 100%;
+            margin-bottom: 0;
         }
         .xui-table tbody{
             background: #eaeef6;
@@ -24,8 +52,35 @@
             font-size: 20px;
             color: red;
         }
-        .xa-cert-name, .xa-key-name{
-            margin-left: 20px;
+        .xui-upload-success{
+            margin-right: 10px;
+            display: none;
+        }
+        .xui-upload-success span{
+            background: url('/static_v2/img/editor/success.png');
+            display: inline-block;
+            width: 20px;
+            height: 16px;
+            vertical-align: text-bottom;
+            margin-right: 5px;
+        }
+        .xui-table-container{
+            padding: 0 10px 10px;
+            background: #d8e9fb;
+            overflow: hidden;
+        }
+        table tr td.xui-bt-none{
+            border-top: none;
+        }
+        table tr td:first-child{
+            padding-left: 80px;
+            width: 40%;
+        }
+        .xui-cert-name,.xui-key-name{
+            margin-top: 5px;
+        }
+        .xui-show{
+            display: inline;
         }
     </style>
 {% endblock %}
@@ -36,27 +91,39 @@
 		<ul class="breadcrumb">
 			<li>您当前所在位置</li>
 			<li>配置管理</li>
-			<li class="xa-open"><a href="/mall2/weixin_certificate/">证书配置</a></li>
+            <li>支付方式</li>
+			<li class="xa-open"><a href="/mall2/weixin_certificate/">录入证书</a></li>
 		</ul>
 	</div>
-    <div>
+    <div class="xui-table-container">
+        <a class="xa-help xui-help">&nbsp;帮助说明&nbsp;</a>
         <table class="table xui-table">
             <thead></thead>
             <tbody>
                 <tr>
-                    <td><i>*</i> 证书pem格式<b class="xa-cert-name">{% if cert_name %}{{ cert_name }}{% endif %}</b></td>
-                    <td><input type="file" id="cert-file"></td>
+                    <td class="xui-bt-none">
+                        <b>证书pem格式</b>
+                        <div class="xa-cert-name xui-cert-name {% if not cert_name %}mt0{% endif %}">
+                        {% if cert_name %}
+                            {{ cert_name }}
+                        {% endif %}                           
+                        </div>
+                    </td>
+                    <td class="xui-bt-none"><span class="xui-upload-success xa-cert-success {% if cert_name %}xui-show{% endif %}"><span></span>上传成功</span><input type="file" id="cert-file"></td>
                 </tr>
                 <tr>
-                    <td><i>*</i> 证书密钥pem格式<b class="xa-key-name">{% if key_name %}{{ key_name }}{% endif %}</b></td>
-                    <td><input type="file" id="key-file"></td>
+                    <td>
+                        <b>证书密钥pem格式</b>
+                        <div class="xa-key-name xui-key-name {% if not key_name %}mt0{% endif %}">
+                        {% if key_name %}
+                            {{ key_name }}
+                        {% endif %}
+                        </div>
+                    </td>
+                    <td><span class="xui-upload-success xa-key-success {% if key_name %}xui-show{% endif %}"><span></span>上传成功</span><input type="file" id="key-file"></td>
                 </tr>
             </tbody>
         </table>
-    </div>
-    <div class="xui-done">
-        <button class="btn btn-success xa-help xui-help">&nbsp;帮助说明&nbsp;</button>
-        <button class="btn btn-success xa-done">&nbsp;完&nbsp;&nbsp;成&nbsp;</button>
     </div>
 {% endblock %}
 
@@ -142,15 +209,6 @@
         };
 
     $(function(){
-        //跳转到列表页
-        $('.xa-done').on('click', function(){
-            if(cert_done && key_done){
-                $('.xa-open').find('a').get(0).click();
-            }else{
-                if(!key_done) W.showHint('error', done_map['key_done']);
-                if(!cert_done) W.showHint('error', done_map['cert_done']);
-            }
-        });
         //帮助说明弹窗
         $('.xa-help').on('click', function(){
             W.dialog.showDialog('W.dialog.red_packet.UploadInstructionDialog', {});
@@ -175,16 +233,17 @@
             onUploadStart: function(file){
                 if(file && file.name == 'apiclient_cert.pem'){}else{
                     W.showHint('error', '请上传正确的证书文件');
-                    $("#cert-file").uploadify('cancel', '*');
-                    $("#cert-file").uploadify('stop');
+                    $('#cert-file').uploadify('cancel', '*');
+                    $('#cert-file').uploadify('stop');
                 }
             },
             onUploadSuccess : function(file, response, status) {
                 response = JSON.parse(response);
                 if(response.code == 200){
                     console.log(response.data);
-                    $("#cert-file").find('.uploadify-button-text').html('重新选择');
-                    $('.xa-cert-name').html('  (文件名：'+file.name+')');
+                    $('#cert-file').find('.uploadify-button-text').html('重新上传');
+                    $('.xa-cert-name').html('('+file.name+')');
+                    $('.xa-cert-success').show();
                     cert_done = true;
                 }else{
                     console.log(response.errMsg);
@@ -217,16 +276,17 @@
             onUploadStart: function(file){
                 if(file && file.name == 'apiclient_key.pem'){}else{
                     W.showHint('error', '请上传正确的证书密钥文件');
-                    $("#key-file").uploadify('cancel', '*');
-                    $("#key-file").uploadify('stop');
+                    $('#key-file').uploadify('cancel', '*');
+                    $('#key-file').uploadify('stop');
                 }
             },
             onUploadSuccess : function(file, response, status) {
                 response = JSON.parse(response);
                 if(response.code == 200){
                     console.log(response.data);
-                    $("#key-file").find('.uploadify-button-text').html('重新选择');
-                    $('.xa-key-name').html('  (文件名：'+file.name+')');
+                    $('#key-file').find('.uploadify-button-text').html('重新上传');
+                    $('.xa-key-name').html('('+file.name+')');
+                    $('.xa-key-success').show();
                     key_done = true;
                 }else{
                     console.log(response.errMsg);
@@ -240,6 +300,12 @@
             },
             onError: onError
         });
+        if(cert_done){
+            $("#cert-file").find('.uploadify-button-text').html('重新上传');   
+        }
+        if(key_done ){
+            $("#key-file").find('.uploadify-button-text').html('重新上传');   
+        }
     });
 </script>
 {% endblock %}
