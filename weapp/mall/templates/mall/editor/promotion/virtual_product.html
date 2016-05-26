@@ -139,7 +139,7 @@
 
 		<div class="" style="display:inline-block;margin-left:40px;">
 			<a class="btn btn-primary mr40 xa-submit xui-fontBold" href="javascript:void(0);">完成设置</a>
-			<a class="btn btn-default xa-cancel xui-fontBold" href="/mall2/forbidden_coupon_product/">取消创建</a>
+			<a class="btn btn-default xa-cancel xui-fontBold" href="/mall2/virtual_products/">取消创建</a>
 		</div>
 	</form>
 </div>
@@ -211,14 +211,6 @@ $(document).ready(function() {
 	});
 	productSelector.render();
 
-	// $('.xa-forever').change(function(event){
-	// 	var $input = $(event.target);
-	// 	if($input.prop('checked')){
-	// 		$('input[data-ui-role="date-picker"]').val("").removeAttr('data-validate').attr('disabled', 'disabled').css('cursor','not-allowed').parent().removeClass('has-error').find('.errorHint').text("");
-	// 	}else{
-	// 		$('input[data-ui-role="date-picker"]').removeAttr('disabled').css('cursor','pointer').attr('data-validate', 'require-notempty');
-	// 	}
-	// });
 
 	var file_path;
 	var has_file = {% if card_stock %}true{% else %}false{% endif %};

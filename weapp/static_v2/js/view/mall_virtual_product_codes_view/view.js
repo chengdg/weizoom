@@ -106,7 +106,7 @@ W.view.mall.VirtualProductCodeView = Backbone.View.extend({
 	onSearch: function(data) {
 		this.table.curPage = 1;
 		this.table.reload(data, {
-			emptyDataHint: '没有符合条件的促销活动'
+			emptyDataHint: '没有符合条件的查询结果'
 		});
 	},
 

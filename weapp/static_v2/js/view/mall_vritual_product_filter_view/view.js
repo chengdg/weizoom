@@ -31,7 +31,7 @@ W.view.mall.VirtualProductFilterView = Backbone.View.extend({
     },
 
     onClickSearchButton: function(){
-        xlog("in onClickSearchButton()");
+        xlog("in onClickSearchButton()VirtualProductFilterView");
         var data = this.getFilterData();
         this.trigger('search', data);
     },

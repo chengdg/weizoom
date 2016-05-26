@@ -19,7 +19,8 @@ Feature:福利卡券活动列表
 			操作：【码库详情】、【增加库存】、【结束】/【已结束】
 		3、点击操作【编辑】，进入编辑福利卡券页面，进入后可修改'有效期'、'码库文件'，活动名称和商品均不可编辑
 		4、点击操作【结束】，弹出提示"是否确认结束该活动！"，确认后则【结束】变为【已结束】
-		5、福利卡券结束后，若有未发放完的卡券，则剩余的卡券将使失效
+		5、【结束】福利卡券后，自动更新商品的库存为0
+		6、福利卡券结束后，若有未发放完的卡券，则剩余的卡券将使失效
 	"""
 
 Background:
@@ -306,12 +307,12 @@ Scenario:2 结束福利卡券活动
 				"bar_code":"212233"
 				},
 			"total_stocks":2,
-			"remain_stocks":2,
+			"remain_stocks":0,
 			"sale_cards":0,
 			"expired_cards":0,
-			"invalid_cards":0,
+			"invalid_cards":2,
 			"create_time":"今天",
-			"actions":["码库详情","增加库存","已结束"]
+			"actions":["码库详情","已结束"]
 		},{
 			"activity_name":"10元通用卡",
 			"product":{
@@ -331,6 +332,32 @@ Scenario:2 结束福利卡券活动
 		| card_id | create_time | start_date | end_date | status | get_time | member | order_no |
 		| 0000003 |   今天      |    今天    | 30天后   | 已失效 |          |        |          |
 		| 0000004 |   今天      |    今天    | 30天后   | 已失效 |          |        |          |
+	#结束福利卡券后，自动更新商品库存为0
+	And jobs能获取商品'微众虚拟商品2'
+		"""
+		{
+			"name":"微众虚拟商品2",
+			"product_type":"微众卡",
+			"supplier":"微众",
+			"purchase_price": 19.00,
+			"promotion_title": "虚拟商品2",
+			"categories": "",
+			"bar_code":"212233",
+			"price": 20.00,
+			"weight": 1.0,
+			"stock_type": "有限",
+			"stocks": 0,
+			"swipe_images": [{
+				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
+			}],
+			"postage":0.00,
+			"pay_interfaces":
+				[{
+					"type": "在线支付"
+				}],
+			"detail":"微众虚拟商品2的详情"
+		}
+		"""
 
 @welfare_card @weshop
 Scenario:3 福利卡券活动列表的查询
