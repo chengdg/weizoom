@@ -389,5 +389,6 @@ def update_stocks(virtual_product):
 
 	product_model = mall_models.ProductModel.objects.get(product=product, is_standard=True)
 	product_model.stocks = stocks
+	product_model.stock_type = 1
 	product_model.save()
 	logging.info("update stocks for product:%d in virtual_product:%d to %d" % (product.id, virtual_product.id, stocks))
