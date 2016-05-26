@@ -30,8 +30,8 @@ class WXCertificate(resource.Resource):
         cert_setting = WxCertSettings.objects.filter(owner_id=request.manager.id)
         if cert_setting.count() > 0:
             cert_setting = cert_setting.first()
-            cert_name = u'  (文件名：apiclient_cert.pem)' if cert_setting.cert_path != '' else ''
-            key_name = u'  (文件名：apiclient_key.pem)' if cert_setting.key_path != '' else ''
+            cert_name = u'  (apiclient_cert.pem)' if cert_setting.cert_path != '' else ''
+            key_name = u'  (apiclient_key.pem)' if cert_setting.key_path != '' else ''
         c = RequestContext(request, {
             'first_nav_name': FIRST_NAV,
             'second_navs': export.get_config_second_navs(request),
