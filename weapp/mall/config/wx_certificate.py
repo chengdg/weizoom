@@ -35,7 +35,7 @@ class WXCertificate(resource.Resource):
         c = RequestContext(request, {
             'first_nav_name': FIRST_NAV,
             'second_navs': export.get_config_second_navs(request),
-            'second_nav_name': export.MAIL_CONFIG_WEIXIN_NAV,
+            'second_nav_name': export.MALL_CONFIG_PAYINTERFACE_NAV,
             'cert_name': cert_name,
             'key_name': key_name
         })
