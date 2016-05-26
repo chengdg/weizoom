@@ -71,7 +71,7 @@ Background:
 			"price": 10.00,
 			"weight": 1.0,
 			"stock_type": "有限",
-			"stocks": 100,
+			"stocks": 0,
 			"swipe_images": [{
 				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
 			},{
@@ -99,7 +99,7 @@ Background:
 			"price": 20.00,
 			"weight": 1.0,
 			"stock_type": "有限",
-			"stocks": 200,
+			"stocks": 0,
 			"swipe_images": [{
 				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
 			}],
@@ -125,7 +125,7 @@ Background:
 			"price": 30.00,
 			"weight": 1.0,
 			"stock_type": "有限",
-			"stocks": 2,
+			"stocks": 0,
 			"swipe_images": [{
 				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
 			}],

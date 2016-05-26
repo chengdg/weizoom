@@ -1,7 +1,7 @@
 # watcher: benchi@weizoom.com, zhangsanxiang@weizoom.com
 #_author_:张三香 2016.05.20
 
-Feature:导出福利卡券详情
+Feature:导出福利卡券的码库详情
 
 Background:
 	Given 设置jobs为自营平台账号
@@ -67,7 +67,7 @@ Background:
 			"price": 10.00,
 			"weight": 1.0,
 			"stock_type": "有限",
-			"stocks": 100,
+			"stocks": 0,
 			"swipe_images": [{
 				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
 			},{
@@ -168,10 +168,10 @@ Background:
 		}]
 		"""
 
-@welfare_card @weizoom
+@welfare_card @weshop
 Scenario:1 导出卡券详情
 	Given jobs登录系统
-	Then jobs导出卡券详情
+	Then jobs导出福利卡券活动'10元通用卡'的码库详情
 		| card_id | create_time |start_date   |end_date     | status | get_time | member | order_no |
 		| 0000001 |   今天      |   今天      |   30天后    | 已领取 | 今天     | bill   |   001    |
 		| 0000002 |   今天      |   今天      |   30天后    | 未领取 |          |        |          |
