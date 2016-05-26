@@ -290,7 +290,7 @@
 								</i>
 							</span>
 						{{/if}}
-						{{if order.customer_message}}
+						{{if order.customer_message && order.customer_message!="{}"}}
 							<p class="pt5 tc"><a class="xa-costomerMessage xui-costomerMessage" data-content="${order.customer_message}"></a></p>
 						{{/if}}
 					</td>
@@ -572,18 +572,18 @@ $(document).ready(function() {
 	//买家留言
 	$('body').delegate('.xa-costomerMessage', 'mouseenter', function(event){
 		var $el = $(event.currentTarget);
-		var messageContent = $el.data('content');
-		if (typeof(messageContent) === "object"){
-			var tmpMessage = '';
-			for(message in messageContent){
-				tmpMessage += '【' + messageContent[message]['supplier_name'] + '】' + messageContent[message]['customer_message'] + '<br>';
-			}
-			console.log(tmpMessage);
-			messageContent = tmpMessage;
+		var messageContents = $el.data('content');
+		var content;
+		if (typeof(messageContents) === "object"){
+			var tmpMessage=[];
+			_.each(messageContents,function(messageContent){
+				tmpMessage.push(messageContent);
+			});
+			content = tmpMessage;
 		} else {
-			messageContent = "买家留言：" + messageContent;
+			content = messageContents;
 		}
-		// console.log(content);
+
 		var mallOrderCostomerMessageView = W.getMallOrderCostomerMessageView({
 			width: 220,
 			isTitle: false,
@@ -593,19 +593,12 @@ $(document).ready(function() {
 		});
 		mallOrderCostomerMessageView.show({
 			$action: $el,
-			messageContent: messageContent
+			messageContent: content
 		});
 	})
 
 	$('body').delegate('.xa-costomerMessage', 'mouseleave', function(event){
-		var mallOrderCostomerMessageView = W.getMallOrderCostomerMessageView({
-			width: 220,
-			isTitle: false,
-			isArrow:false,
-			privateContainerClass:'xui-costomerMessageDropBox',
-			position:'down-left'
-		});
-		mallOrderCostomerMessageView.hide();
+		$('.xui-costomerMessageDropBox').hide();
 	})
 
 	$('body').delegate('.xa-huihuiCardImg', 'mouseover', function(event) {

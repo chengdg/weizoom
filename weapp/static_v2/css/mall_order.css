@@ -410,11 +410,13 @@
     border: 1px solid #e48a0c;
     border-radius: 4px;
     box-shadow: 0 0 5px rgba(228, 138, 12, 0.7);
-    padding: 20px;
+    padding: 10px 12px;
     font-size: 12px;
     line-height: 24px;
 }
-
+.xui-costomerMessageDropBox p{
+    margin:0;
+}
 .xui-costomerMessage {
     display: inline-block;
     width: 20px;
