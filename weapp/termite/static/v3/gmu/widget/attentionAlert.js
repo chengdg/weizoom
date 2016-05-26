@@ -47,7 +47,8 @@ Copyright (c) 2011-2012 Weizoom Inc
                 args: {
                     woid: W.webappOwnerId,
                     module: 'mall',
-                    target_api: 'member_subscribed_status/get'
+                    target_api: 'member_subscribed_status/get',
+                    need_project: false
                 },
                 success: function(data) {
                     var is_subscribed = data.is_subscribed;

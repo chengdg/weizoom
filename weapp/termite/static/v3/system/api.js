@@ -18,8 +18,11 @@ W.Api = function() {
 
 	this.buildArgs = function(args) {
 		var base = {design_mode: W.isInDesignMode ? 1 : 0};
+		var need_project = args['need_project'];
 		if (W.projectId) {
-			base['project_id'] = W.projectId;
+			if (need_project != false) {
+				base['project_id'] = W.projectId;	
+			}
 		}
 		var mergedArgs = _.extend(base, this.defaultArgs, args);
 		var argList = [];
