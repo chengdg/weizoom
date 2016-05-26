@@ -66,7 +66,8 @@ def export_orders_json(request):
         '2': u'微信支付',
         '3': u'微众卡支付',
         '9': u'货到付款',
-        '10': u'优惠抵扣'
+        '10': u'优惠抵扣',
+        '11': u'翼支付'
     }
 
     source_list = {
