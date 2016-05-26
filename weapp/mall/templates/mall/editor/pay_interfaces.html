@@ -10,6 +10,7 @@
 <div class="xui-i-box xui-rightPanelBg xui-tableList-content pt5 pb20">
 {% for pay_interface in pay_interfaces %}
 {% if not pay_interface.type == 3 %}  <!--  PAY_INTERFACE_WEIZOOM_COIN  -->
+{% if not pay_interface.name == "翼支付" %}
 <section
 	class="xui-payInterface ml10 mr10"
 	style="width:976px;"
@@ -19,7 +20,7 @@
 	data-is-active="{% if pay_interface.is_active %}true{% else %}false{% endif %}"
 >
 	<h2 id="pay-title" class="xui-i-title xui-headHeight">
-		{% if not pay_interface.name == "翼支付" %}
+
             <span class="fb">{{pay_interface.name}}</span>
             {% if pay_interface.is_active %}
             <div id="pay-status" class="xui-floatBtn fb">(已启用)</div>
@@ -32,7 +33,7 @@
               <label class="xa-enable btn btn-success xui-saveBtn  xui-payStatusOn" value='0'><span>启用</span></label>
             </div>
             {% endif %}
-		{% endif %}
+
     </h2>
 	<div class="xui-i-content">
 		{% if pay_interface.name == "微信支付" %}
@@ -84,6 +85,7 @@
 		{% endif %}
 	</div>
 </section>
+{% endif %}
 {% endif %}
 {% endfor %}
 </div>
