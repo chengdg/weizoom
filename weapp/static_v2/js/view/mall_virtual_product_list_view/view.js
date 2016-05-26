@@ -22,15 +22,7 @@ W.view.mall.VirtualProductListView = Backbone.View.extend({
 	},
 
 	events: {
-		'click .xa-finish': 'onClickFinishLink',
-		'click .xa-start': 'onClickFinishLink',
-		'click .xa-delete': 'onClickDeleteLink',
 		'click .xa-activeFinish':'onClickActiveFinish',
-		'click .xa-proBatchFinish':'onClickProBatchFinish',
-		'click .xa-batchDelete': 'onClickBatchDeleteLink',
-		'click .xa-batchFinish': 'onClickBatchFinishLink',
-		'click .xa-showAllModels': 'onClickShowAllModelsButton',
-		'click .xa-selectAll': 'onClickSelectAll',
 		'click .xa-select': 'onClickSelect'
 	},
 
@@ -110,58 +102,13 @@ W.view.mall.VirtualProductListView = Backbone.View.extend({
 		});
 	},
 
-	onClickFinishLink: function(event) {
-		var $link = $(event.currentTarget);
-		var msg = $link.text().replace('|','').trim();
-		var warning_msg = '';
-		var $tr = $link.parents('tr');
-		var promotionId = $tr.data('id');
-		var _this = this;
-		if (msg == "使失效") {
-			warning_msg = "<div class='xui-couponsLinkDialog'><p>已被领取的优惠券优惠码在有效期内还可以继续使用<p></div>"
-		}
-		W.requireConfirm({
-			$el: $link,
-			width: 388,
-			position:'top',
-			isTitle: false,
-			msg: '确认'+msg+'活动？',
-			warning_msg: warning_msg,
-			confirm: function() {
-				_this.finishPromotions($tr, [promotionId], msg=='开始');
-				//_this.filterView.onClickSearchButton(); // 刷新商品列表
-				//_this.table.reload();
-			}
-		});
-	},
-
-	onClickDeleteLink: function(event) {
-		var $link = $(event.currentTarget);
-		var $tr = $link.parents('tr');
-		var promotionId = $tr.data('id');
-		var _this = this;
-		var $trs = this.$('[data-id="'+promotionId+'"]');
-		W.requireConfirm({
-			$el: $link,
-			width: 373,
-        	position:'top',
-			isTitle: false,
-			msg: '确认删除活动？',
-			confirm: function() {
-				_this.deletePromotions($tr, [promotionId]);
-				//_this.onSearch(_this.filterView.getFilterData()); //onClickSearchButton(); // 刷新商品列表
-				//_this.filterView.onClickSearchButton(); // 刷新商品列表
-				//_this.table.reload();
-			}
-		});
-	},
 	finishAndDeleteProducts:function($tr, itemId){
 		var _this = this;
 		W.getApi().call({
-			method: 'post',
+			method: 'delete',
 			app: 'mall2',
 			resource: 'virtual_product',
-			args: {id: JSON.stringify(itemId)},
+			args: {virtual_product_id: JSON.stringify(itemId)},
 			scope: this,
 			success: function(data) {
 				W.showHint('success', '结束成功!');
@@ -189,107 +136,12 @@ W.view.mall.VirtualProductListView = Backbone.View.extend({
 			isTitle: false,
 			msg: '是否确定结束该活动!',
 			confirm: function() {
-				_this.finishAndDeleteProducts($tr, [itemId]);
-			}
-		});
-	},
-	onClickProBatchFinish:function(event){
-		var $link = $(event.currentTarget);
-		var ids = this.table.getAllSelectedDataIds();
-		var _this = this;
-
-		for(var i = 0; i < ids.length; ++i) {
-			var id = ids[i];
-			$('[data-id="'+id+'"]').addClass('xa-actionTarget');
-		}
-
-		var $trs = $('.xa-actionTarget');
-		$trs.removeClass('.xa-actionTarget');
-		W.requireConfirm({
-			$el: $link,
-			width: 398,
-        	position:'top',
-			isTitle: false,
-			msg: '确认结束全部活动？',
-			confirm: function() {
-				_this.finishAndDeleteProducts($trs, ids);
-			}
-		});
-	},
-	onClickBatchFinishLink: function(event) {
-		var $link = $(event.currentTarget);
-		var ids = this.table.getAllSelectedDataIds();
-		for (var i = 0; i < ids.length; ++i) {
-			var id = ids[i];
-			var promotion = this.table.getDataItem(id);
-			if (promotion.get('status') === '已结束') {
-				W.showHint('error', '不能同时进行删除和结束操作');
-				return;
-			}
-		}
-
-		for(var i = 0; i < ids.length; ++i) {
-			var id = ids[i];
-			$('[data-id="'+id+'"]').addClass('xa-actionTarget');
-		}
-		var $trs = $('.xa-actionTarget');
-		$trs.removeClass('.xa-actionTarget');
-
-		var _this = this;
-		W.requireConfirm({
-			$el: $link,
-			width: 398,
-        	position:'top',
-			isTitle: false,
-			msg: '确认结束全部活动？',
-			confirm: function() {
-				_this.finishPromotions($trs, ids);
+				_this.finishAndDeleteProducts($tr, itemId);
 			}
 		});
 	},
 
-	onClickBatchDeleteLink: function(event) {
-		var $link = $(event.currentTarget);
-		var ids = this.table.getAllSelectedDataIds();
 
-		for (var i = 0; i < ids.length; ++i) {
-			var id = ids[i];
-			var promotion = this.table.getDataItem(id);
-			if (promotion.get('status') === '未开始' || promotion.get('status') === '进行中') {
-				W.showHint('error', '有未结束的活动，请先结束活动。');
-				return;
-			}
-		}
-
-		for(var i = 0; i < ids.length; ++i) {
-			var id = ids[i];
-			$('[data-id="'+id+'"]').addClass('xa-actionTarget');
-		}
-		var $trs = $('.xa-actionTarget');
-		$trs.removeClass('.xa-actionTarget');
-
-		var _this = this;
-		W.requireConfirm({
-			$el: $link,
-			width: 398,
-        	position:'top',
-			isTitle: false,
-			msg: '确认删除全部活动？',
-			confirm: function() {
-				_this.deletePromotions($trs, ids);
-			}
-		});
-	},
-
-	/**
-	 * onClickSelectAll: 点击“全选”复选框的响应函数
-	 */
-	onClickSelectAll: function(event) {
-		var $checkbox = $(event.currentTarget);
-		var isSelect = $checkbox.is(':checked');
-		this.table.selectAll(isSelect);
-		this.onClickSelect();
-	},
 	onCheckedSelect: function(){
 		var flag=0;
 		$(".xa-select").each(function () {
@@ -298,45 +150,8 @@ W.view.mall.VirtualProductListView = Backbone.View.extend({
 			}
 		});
 		return flag;
-	},
+	}
 
-	onClickSelect: function(event) {
-		var is_checked = this.onCheckedSelect();
-		if(is_checked){
-			$('.xa-batchFinish').attr("disabled",false);
-			$('.xa-batchDelete').attr("disabled",false);
-		}
-		else{
-			$('.xa-batchFinish').attr("disabled",true);
-			$('.xa-batchDelete').attr("disabled",true);
-		}
-	},
 
-	/**
-	 * onClickShowAllModelsButton: 鼠标点击“查看规格”区域的响应函数
-	 */
-	onClickShowAllModelsButton: function(event) {
-		var $target = $(event.currentTarget);
-		var $tr = $target.parents('tr');
-		var id = $tr.data('id');
-		var promotion = this.table.getDataItem(id);
-		var product = promotion.get('product');
-		if (!product || product.length === 0) {
-			//有多个product的promotion
-			var products = promotion.get('products');
-			var productId =$target.data('product-id');
-			var product = _.find(products, function(product) {
-				return product.id == productId; 
-			});
-		}
-		var models = product['models'];
-		var properties = _.pluck(models[0].property_values, 'propertyName');
-		var $node = $.tmpl(this.modelInfoTemplate, {properties: properties, models: models});
-		W.popup({
-			$el: $target,
-			position:'top',
-			isTitle: false,
-			msg: $node
-		});
-	},
+	
 });

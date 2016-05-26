@@ -195,10 +195,9 @@ class VirtualProduct(resource.Resource):
 		virtual_product_id = request.POST.get('virtual_product_id')
 		if virtual_product_id:
 			owner = request.manager
-			
 			try:
-				virtual_product = promotion_models.VirtualProduct.objects.get(owner=owner, id=id, is_finished=False)
-				promotion_models.VirtualProductCodes.objects.filter(
+				virtual_product = promotion_models.VirtualProduct.objects.get(owner=owner, id=virtual_product_id, is_finished=False)
+				promotion_models.VirtualProductHasCode.objects.filter(
 					owner=owner, 
 					virtual_product=virtual_product,
 					status=promotion_models.CODE_STATUS_NOT_GET
