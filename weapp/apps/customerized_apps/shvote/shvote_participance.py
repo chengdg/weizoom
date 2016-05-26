@@ -18,6 +18,7 @@ from mall import export as mall_export
 from modules.member.models import Member
 from core.exceptionutil import unicode_full_stack
 from apps.customerized_apps.shvote.m_shvote import update_shvote_status
+from m_shvote import _get_rank
 
 FIRST_NAV = mall_export.MALL_PROMOTION_AND_APPS_FIRST_NAV
 COUNT_PER_PAGE = 20
@@ -210,8 +211,7 @@ class ShvoteParticipance(resource.Resource):
 				created_at = datetime.now()
 			)
 			vote_detail.save()
-		except Exception,e:
-			print(e)
+		except:
 			response.errMsg = u'用户信息出错'
 			return response.get_response()
 
@@ -225,6 +225,7 @@ class ShvoteParticipance(resource.Resource):
 		# 	return response.get_response()
 
 		response = create_response(200)
+		response.data = {"rank": _get_rank(target.id).rank}
 		return response.get_response()
 
 

@@ -202,7 +202,7 @@
 		</div>
 		<div class="wui-detail-middle">
 			<span class="wa-detail-serial-number">序号：{{player_details.serial_number}}</span>
-			<span class="wui-detail-vote-count wa-detail-vote-count"><span>{{player_details.count}}</span>&nbsp;票&nbsp;(第&nbsp;<span>{{ player_details.rank }}</span>&nbsp;名)</span>
+			<span class="wui-detail-vote-count wa-detail-vote-count"><span id="wa-vote-count">{{player_details.count}}</span>&nbsp;票&nbsp;(第&nbsp;<span id="wa-vote-rank">{{ player_details.rank }}</span>&nbsp;名)</span>
 		</div>
 		<span class="wa-details-return wui-details-return">返回首页>></span>
 	</div>
@@ -262,10 +262,16 @@
                     voted_group: current_group
                 },
                 success: function(data){
-                	var vote_count = parseInt($('.wa-detail-vote-count span').text());
-                	$('.wa-detail-vote-count span').text(vote_count+1);
-                	var left_chance = parseInt($('.wa-ivote').attr('data-count'));
-                	$('.wa-ivote').attr('data-count',left_chance-1);
+                    //更新票数
+                    var $count = $('#wa-vote-count');
+                	var vote_count = parseInt($count.text());
+                	$count.text(vote_count+1);
+                    //更新所剩投票次数
+                    var $chance = $('.wa-ivote');
+                	var left_chance = parseInt($chance.attr('data-count'));
+                	$chance.attr('data-count',left_chance-1);
+                    //更新排名
+                    $('#wa-vote-rank').text(data.rank);
                     voteLock = false;
                     wuiAlert('投票成功');
                 },

@@ -307,26 +307,7 @@ class MShvotePlayerDetails(resource.Resource):
 			share_page_desc = record.name
 
 		if player_id:
-			try:
-				player_details = app_models.ShvoteParticipance.objects().get(id=player_id, status=app_models.MEMBER_STATUS['PASSED'], is_use=app_models.MEMBER_IS_USE['YES'])
-				#获取排名
-				count = player_details.count
-				players_front_e = app_models.ShvoteParticipance.objects(
-					belong_to = player_details.belong_to,
-					group = player_details.group,
-					count__gte=count,
-					status=app_models.MEMBER_STATUS['PASSED'],
-					is_use=app_models.MEMBER_IS_USE['YES']
-				).order_by('-count', 'created_at')
-				tmp_rank = 0
-				for sp in players_front_e:
-					tmp_rank += 1
-					if str(sp.id) == player_id:
-						player_details.rank = tmp_rank
-						break
-			except:
-				print unicode_full_stack()
-				pass
+			player_details = _get_rank(player_id)
 
 		c = RequestContext(request, {
 			'record_id': id,
@@ -343,3 +324,32 @@ class MShvotePlayerDetails(resource.Resource):
 		})
 
 		return render_to_response('shvote/templates/webapp/m_player_details.html', c)
+
+def _get_rank(p_id):
+	"""
+	根据参与者的id获取其排名
+	@param p_id:
+	@return:
+	"""
+	p_id = str(p_id)
+	try:
+		player_details = app_models.ShvoteParticipance.objects().get(id=p_id, status=app_models.MEMBER_STATUS['PASSED'], is_use=app_models.MEMBER_IS_USE['YES'])
+		count = player_details.count
+		players_front_e = app_models.ShvoteParticipance.objects(
+			belong_to = player_details.belong_to,
+			group = player_details.group,
+			count__gte=count,
+			status=app_models.MEMBER_STATUS['PASSED'],
+			is_use=app_models.MEMBER_IS_USE['YES']
+		).order_by('-count', 'created_at')
+		tmp_rank = 0
+		player_details.rank = 0
+		for sp in players_front_e:
+			tmp_rank += 1
+			if str(sp.id) == p_id:
+				player_details.rank = tmp_rank
+				return player_details
+		return player_details
+	except:
+		print unicode_full_stack()
+		return {}
