@@ -143,7 +143,7 @@ WEAPP_MONGO = {
 
 #百宝箱用
 APP_MONGO = {
-    "HOST": 'mongo.weapp.com',
+    "HOST": 'mongodb://root:weizoom@dds-bp1502411213f1e41.mongodb.rds.aliyuncs.com:3717,dds-bp1502411213f1e42.mongodb.rds.aliyuncs.com:3717/admin?replicaSet=mgset-1211291',
     "DB": 'app_data',
     "USERNAME": None,
     "PASSWORD": None,
