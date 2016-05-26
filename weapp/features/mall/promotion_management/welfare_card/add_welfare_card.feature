@@ -25,6 +25,7 @@ Feature:新建福利卡券
 			a.弹窗名称：在售虚拟商品
 			b.弹窗中列表显示以下信息:
 				【商品条码】、【商品名称】、【商品价格】、【商品库存】【创建时间】、【操作】
+		4、上传码库后，自动更新商品的库存
 	"""
 
 Background:
@@ -91,7 +92,7 @@ Background:
 			"price": 10.00,
 			"weight": 1.0,
 			"stock_type": "有限",
-			"stocks": 2,
+			"stocks": 0,
 			"swipe_images": [{
 				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
 			},{
@@ -117,7 +118,7 @@ Background:
 			"price": 20.00,
 			"weight": 1.0,
 			"stock_type": "有限",
-			"stocks": 2,
+			"stocks": 0,
 			"swipe_images": [{
 				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
 			}],
@@ -141,7 +142,7 @@ Background:
 			"price": 30.00,
 			"weight": 1.0,
 			"stock_type": "有限",
-			"stocks": 2,
+			"stocks": 0,
 			"swipe_images": [{
 				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
 			}],
@@ -226,6 +227,38 @@ Scenario:1 新建福利卡券活动
 			"create_time":"今天",
 			"actions":["码库详情","增加库存","结束"]
 		}]
+		"""
+	#上传码库后，自动更新商品库存
+	And jobs能获取商品'微众虚拟商品1'
+		"""
+		{
+			"name": "微众虚拟商品1",
+			"product_type":"微众卡",
+			"supplier": "微众",
+			"purchase_price": 9.00,
+			"promotion_title": "10元通用卡",
+			"categories": "分类1,分类2",
+			"bar_code":"112233",
+			"min_limit":2,
+			"is_member_product":"on",
+			"price": 10.00,
+			"weight": 1.0,
+			"stock_type": "有限",
+			"stocks": 2,
+			"swipe_images": [{
+				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
+			},{
+				"url": "/standard_static/test_resource_img/hangzhou2.jpg"
+			}],
+			"postage":0.00,
+			"pay_interfaces":
+				[{
+					"type": "在线支付"
+				},{
+					"type": "货到付款"
+				}],
+			"detail":"微众虚拟商品1的详情"
+		}
 		"""
 
 @welfare_card @weshop
@@ -435,7 +468,7 @@ Scenario:4 新建福利卡券活动，商品弹窗的校验
 			"price": 40.00,
 			"weight": 1.0,
 			"stock_type": "有限",
-			"stocks": 4,
+			"stocks": 0,
 			"swipe_images": [{
 				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
 			},{
