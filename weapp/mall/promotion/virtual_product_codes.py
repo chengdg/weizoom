@@ -95,7 +95,7 @@ class VirtualProductCodes(resource.Resource):
 		if order_id:
 			params['order_id'] = order_id
 
-		codes = promotion_models.VirtualProductHasCode.objects.filter(**params).order_by('-id')
+		codes = promotion_models.VirtualProductHasCode.objects.filter(**params).order_by('id')
 		pageinfo, codes = paginator.paginate(codes, cur_page, count_per_page, None)
 
 		member_ids = []
