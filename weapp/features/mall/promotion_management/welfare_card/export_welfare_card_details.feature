@@ -169,7 +169,7 @@ Background:
 		"""
 
 @welfare_card @weshop
-Scenario:1 导出卡券详情
+Scenario:1 导出码库详情
 	Given jobs登录系统
 	Then jobs导出福利卡券活动'10元通用卡'的码库详情
 		| card_id | create_time |start_date   |end_date     | status | get_time | member | order_no |
