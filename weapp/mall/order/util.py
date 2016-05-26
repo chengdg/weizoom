@@ -647,7 +647,7 @@ def export_orders_json(request):
                         u'-',
                         u'-',
                         u'-',
-                        u'-',
+                        # u'-',
                         u'-',
                         u'-',
                         u'-',
