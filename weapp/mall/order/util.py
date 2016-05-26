@@ -591,7 +591,7 @@ def export_orders_json(request):
                     u'-',
                     u'-',
                     u'-',
-                    u'-',
+                    # u'-',
                     u'-',
                     u'-',
                     u'-' if order.status == 1 and coupon_name else coupon_money,
