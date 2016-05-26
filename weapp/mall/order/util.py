@@ -567,7 +567,7 @@ def export_orders_json(request):
 
                 ]
                 if mall_type:
-                    tmp_order.insert(26, supplier_type)
+                    tmp_order.insert(25, supplier_type)
                 if has_supplier:
                     tmp_order.append( u'-' if 0.0 == product.purchase_price else product.purchase_price)
                     tmp_order.append(u'-'  if 0.0 ==product.purchase_price else product.purchase_price*relation.number)
@@ -617,7 +617,7 @@ def export_orders_json(request):
 
                 ]
                 if mall_type:
-                    tmp_order.insert(26, supplier_type)
+                    tmp_order.insert(25, supplier_type)
                 if has_supplier:
                     tmp_order.append(u'' if 0.0 == product.purchase_price else product.purchase_price)
                     tmp_order.append(u'' if 0.0 ==product.purchase_price else product.purchase_price*relation.number)
@@ -671,7 +671,7 @@ def export_orders_json(request):
                         '-'
                     ]
                     if mall_type:
-                        tmp_order.insert(26, supplier_type)
+                        tmp_order.insert(25, supplier_type)
                     if has_supplier:
                         tmp_order.append( u'-' if 0.0 == premium_product['purchase_price'] else premium_product['purchase_price'])
                         tmp_order.append(u'-' if 0.0 ==premium_product['purchase_price'] else premium_product['purchase_price']*premium_product['count'])
@@ -686,8 +686,8 @@ def export_orders_json(request):
     if request.GET.get("bdd",None):
         mall_type = True
     if mall_type:
-        orders[0][26] = u"供货商"
-        orders[0].insert(26, u'供货商类型')
+        orders[0][25] = u"供货商"
+        orders[0].insert(25, u'供货商类型')
         for order in orders:
             del order[13]
         orders[0][12] = u"微众卡支付金额"
