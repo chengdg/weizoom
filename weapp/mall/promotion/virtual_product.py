@@ -208,6 +208,8 @@ class VirtualProduct(resource.Resource):
 				virtual_product.is_finished = True
 				virtual_product.save()
 
+				update_stocks(virtual_product)  #更新商品库存
+
 				response = create_response(200)
 			except Exception, e:
 				logging.error(e)
