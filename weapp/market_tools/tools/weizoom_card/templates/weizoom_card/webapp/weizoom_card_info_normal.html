@@ -72,7 +72,7 @@
 					<thead>
 						<tr>
 							<td width="25%">时间</td>
-{#							<td width="25%">明细</td>#}
+							<td width="25%">明细</td>
 							<td>去处/来源</td>
 						</tr>
 					</thead>
@@ -83,23 +83,23 @@
 								{{order.created_at | date:"Y/m/d"}}<br/>
 								{{order.created_at | date:"H:i:s"}}
 							</td>
-{#							<td class="xui-order-info-money">#}
-{#								{% if order.is_product %}#}
-{#									{% if order.money < '0' %}#}
-{#										<span style="color: #0fb202">#}
-{#											+{{order.money| slice:"1:"}}#}
-{#										</span>#}
-{#									{% else %}#}
-{#										<span style="color: #cf0404">#}
-{#											-{{order.money}}#}
-{#										</span>#}
-{#									{% endif %}#}
-{#								{% else %}#}
-{#									<span style="color: #0fb202">#}
-{#										+{{order.money}}#}
-{#									</span>#}
-{#								{% endif %}#}
-{#							</td>#}
+							<td class="xui-order-info-money">
+								{% if order.is_product %}
+									{% if order.money < '0' %}
+										<span style="color: #0fb202">
+											+{{order.money| slice:"1:"}}
+										</span>
+									{% else %}
+										<span style="color: #cf0404">
+											-{{order.money}}
+										</span>
+									{% endif %}
+								{% else %}
+									<span style="color: #0fb202">
+										+{{order.money}}
+									</span>
+								{% endif %}
+							</td>
 							<td class="xui-order-info-name">
 								{{order.product_name}}
 							</td>
