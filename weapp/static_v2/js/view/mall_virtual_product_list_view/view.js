@@ -27,7 +27,7 @@ W.view.mall.VirtualProductListView = Backbone.View.extend({
 	},
 
 	render: function() {
-		this.filterView = new W.view.mall.PromotionFilterView({
+		this.filterView = new W.view.mall.VirtualProductFilterView({
 			el: '.xa-virtualFilterView',
 			promotionType: this.promotionType,
 			templateName: this.options.templateFilterName, 
