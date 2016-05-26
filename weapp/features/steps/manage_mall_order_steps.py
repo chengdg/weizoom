@@ -3,7 +3,7 @@ import urllib
 import urllib2
 
 from behave import when, then, given
-
+from django.contrib.auth.models import User
 from test import bdd_util
 from mall.models import (ORDER_TYPE2TEXT, STATUS2TEXT, ORDER_STATUS_PAYED_SHIPED, ORDER_STATUS_SUCCESSED, express_util,
                          ORDERSTATUS2TEXT, Order, Supplier)
@@ -210,9 +210,22 @@ def step_impl(context, user):
 #     expected_order = json.loads(context.text)
 #     bdd_util.assert_list(expected_order, actual_orders)
 
+def __get_customer_message_str(customer_message_data):
+    customer_message = {}
+    for supplier_name, message in customer_message_data.items():
+        if UserProfile.objects.filter(store_name=supplier_name).count() > 0:
+            key = "%du" % UserProfile.objects.get(store_name=supplier_name).user_id
+            customer_message[key] = {'supplier_name': 'supplier_name', 'customer_message': message}
+
+        if Supplier.objects.filter(name=supplier_name).count() > 0:
+            key = "%ds" % Supplier.objects.get(name=supplier_name).id
+            customer_message[key] = {'supplier_name': 'supplier_name', 'customer_message': message}
+    return customer_message
 
 @then(u"{user}可以看到订单列表")
 def step_impl(context, user):
+    user_id = User.objects.get(username=user).id
+    mall_type = UserProfile.objects.get(user_id=user_id).webapp_type
     if user != context.client.user.username:
         context.client.logout()
         context.client = bdd_util.login(user)
@@ -310,15 +323,19 @@ def step_impl(context, user):
                 pro['actions'] = set(pro['actions'])
             if 'is_sync_supplier' in pro:
                 del pro['is_sync_supplier']
-
+        if mall_type and order.get('customer_message'):
+            order['customer_message'] = json.dumps(__get_customer_message_str(order['customer_message']))
+            actual_order['products'] = sorted(actual_order['products'], key=lambda p: p['name'])
     # for i in range(len(expected)):
     #     # print expected[i]['order_no'], '++++', actual_orders[i]['order_no']
     #     # for j in range(len(expected[i]['products'])):
     #     #     print expected[i]['products'][j].get('actions',""), '****', actual_orders[i]['products'][j].get('actions',"")
     #     #     print expected[i]['products'][j].get('actions',"") == actual_orders[i]['products'][j].get('actions',"")
     #     print expected[i]['order_no'], '++++', actual_orders[i]['order_no']
-    #     print expected[i]['actions'], actual_orders[i]['actions']
-
+    #     print expected[i]['price'], actual_orders[i]['price']
+    # for i in range(len(expected[0]['products'])):
+    #     print expected[0]['products'][i]['name'], "+++++++" ,actual_orders[0]['products'][i]['name']
+    #     print expected[0]['products'][i]['price'], "+++++++" ,actual_orders[0]['products'][i]['price']
     bdd_util.assert_list(expected, actual_orders)
 
 
@@ -670,6 +687,8 @@ def step_get_specify_order(context, user):
 
 @then(u"{user}能获得订单'{order_id}'")
 def step_impl(context, user, order_id):
+    user_id = User.objects.get(username=user).id
+    mall_type = UserProfile.objects.get(user_id=user_id).webapp_type
     real_id = bdd_util.get_order_by_order_no(order_id).id
     response = context.client.get('/mall2/order/?order_id=%d' % real_id)
     actual_order = response.context['order']
@@ -726,6 +745,10 @@ def step_impl(context, user, order_id):
         for product in expected['products']:
             if 'is_sync_supplier' in product:
                 del product['is_sync_supplier']
+    if mall_type and 'customer_message' in expected:
+        expected['customer_message'] = __get_customer_message_str(expected['customer_message']).values()
+        actual_order.customer_message = actual_order.customer_message
+
 
     # 会员详情页无会员信息
     if "member" in expected:
