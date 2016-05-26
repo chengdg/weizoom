@@ -349,6 +349,7 @@ def get_codes_dict_from_file(file_path):
 		for i in range(0,nrows):
 			code = table.cell(i,0).value
 			password = table.cell(i,1).value
+			print code, password
 			
 			if type(code) == float:
 				code = str(int(code))
@@ -358,6 +359,8 @@ def get_codes_dict_from_file(file_path):
 				if not code in codes:
 					codes_dict[code] = password
 					codes.append(code)
+				else:
+					raise ValueError(u'第%d行卡号与前面重复，请核查！' % (i + 1))
 			else:
 				raise ValueError(u'第%d行数据有误，请核查！' % (i + 1))
 	else:
