@@ -70,7 +70,7 @@ def deliver_virtual_product(request, args):
 				virtual_product = virtual_products[0]
 
 				#判断该订单里的这个商品是否已经被发过货了，如果发过则不重复发放，且can_update_order_status不变为False
-				existed_records = promotion_models.VirtualProductHasCode.objects(virtual_product=virtual_product, oid=order.id)
+				existed_records = promotion_models.VirtualProductHasCode.objects.filter(virtual_product=virtual_product, oid=order.id)
 				if existed_records.count() > 0:
 					message = u'该商品已经发过货，无需重复发货，订单id：%s,商品id：%d,福利卡券活动id：%d' % (order.order_id, product_id, virtual_product.id)
 					print message
@@ -78,7 +78,7 @@ def deliver_virtual_product(request, args):
 					continue
 
 				#按id顺序发放
-				codes = promotion_models.VirtualProductHasCode.objects(virtual_product=virtual_product, status=promotion_models.CODE_STATUS_NOT_GET).order_by('id')
+				codes = promotion_models.VirtualProductHasCode.objects.filter(virtual_product=virtual_product, status=promotion_models.CODE_STATUS_NOT_GET).order_by('id')
 
 				_c = []
 				for code in codes:
