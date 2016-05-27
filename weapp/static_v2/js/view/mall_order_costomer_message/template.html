@@ -1,3 +1,9 @@
 <script id="costomerMessage-view" type="text/x-jquery-tmpl">
-${messageContent}
+{{if typeof(messageContent) == "object"}}
+	{{each(i,item) messageContent }}
+	<p>【${item.supplier_name}】${item.customer_message}</p>
+	{{/each}}
+{{else}}
+	${messageContent}
+{{/if}}
 </script>

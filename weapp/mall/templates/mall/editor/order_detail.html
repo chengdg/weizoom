@@ -125,7 +125,15 @@
                     <div class="xui-innerwrap">
                       <p>{{ order.ship_name }}<span class="ml30">{{ order.ship_tel }}</span></p>
                       <p>{% if order.area %}{{ order.area }}{% endif %} {{order.ship_address}}</p>
-                      <p>买家留言：{% if not is_sync %}{{order.customer_message}}{% endif %}{{order.customer_message}}</p>
+                      <p>买家留言：
+                        {% if mall_type %}
+                          {% for message in  order.customer_message %}
+                            <p>【{{message.supplier_name}}】{{ message.customer_message }}</p>
+                          {% endfor %}
+                        {% else %}
+                          {{order.customer_message}}
+                        {% endif %}
+                      </p>
                     </div>
                 </div>
                 <div class="col-md-4">
