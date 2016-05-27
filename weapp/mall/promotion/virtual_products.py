@@ -127,6 +127,7 @@ class VirtualProducts(resource.Resource):
 					'name': virtual_product.product.name,
 					'thumbnails_url': virtual_product.product.thumbnails_url,
 					'bar_code': virtual_product.product.bar_code,
+					'detail_link': '/mall2/product/?id=%d&source=onshelf' % virtual_product.product.id,
 				},
 				'total_stock': virtual_product_id2total_stock.get(virtual_product.id, 0),  #总库存
 				'code_stock': virtual_product_id2code_stock.get(virtual_product.id, 0),  #可用库存
