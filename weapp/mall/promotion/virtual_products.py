@@ -32,7 +32,7 @@ class VirtualProducts(resource.Resource):
 		c = RequestContext(request, {
 			'first_nav_name': export.MALL_PROMOTION_AND_APPS_FIRST_NAV,
 			'second_navs': export.get_promotion_and_apps_second_navs(request),
-            'second_nav_name': export.MALL_PROMOTION_SECOND_NAV,
+			'second_nav_name': export.MALL_PROMOTION_SECOND_NAV,
 			'third_nav_name': export.MALL_PROMOTION_VIRTUAL_PRODUCTS_NAV
 		})
 

@@ -1,8 +1,4 @@
-#coding:utf8
-"""@package services.virtual_product_service.tasks
-virtual_product_service 的Celery task实现
-
-"""
+# -*- coding: utf-8 -*-
 from __future__ import absolute_import
 from datetime import datetime
 
@@ -14,11 +10,27 @@ from modules.member import models as member_models
 from utils import ding_util
 from mall import module_api
 
+
+from django.template import RequestContext
+from django.shortcuts import render_to_response
+from django.contrib.auth.decorators import login_required
+
+from core import resource, paginator
+from core.exceptionutil import unicode_full_stack
+from core.jsonresponse import create_response
+from mall import export
+
+from watchdog.utils import watchdog_alert
+
+import utils
+from django.conf import settings
+
+
+
 VIRTUAL_ORDER_TYPE = [mall_models.PRODUCT_VIRTUAL_TYPE, mall_models.PRODUCT_WZCARD_TYPE]
 # WESHOP_DING_GROUP_ID = '105507196'  #微众商城FT团队钉钉id
 WESHOP_DING_GROUP_ID = '80035247'  #发消息测试群
 
-@task
 def deliver_virtual_product(request, args):
 	"""
 	每隔一分钟自动发货一次
@@ -112,3 +124,24 @@ def deliver_virtual_product(request, args):
 			module_api.ship_order(order.order_id, '', '', u'系统', '', False, False)
 
 	return 'OK {}'.format(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+
+
+class VirtualProducts(resource.Resource):
+	app = 'mall2'
+	resource = 'duhao'
+
+
+	@login_required
+	def get(request):
+		"""
+		浏览虚拟商品（福利卡券）列表
+		"""
+		deliver_virtual_product(None, None)
+		c = RequestContext(request, {
+			'first_nav_name': export.MALL_PROMOTION_AND_APPS_FIRST_NAV,
+			'second_navs': export.get_promotion_and_apps_second_navs(request),
+			'second_nav_name': export.MALL_PROMOTION_SECOND_NAV,
+			'third_nav_name': export.MALL_PROMOTION_VIRTUAL_PRODUCTS_NAV
+		})
+
+		return render_to_response('mall/editor/promotion/duhao.html', c)
