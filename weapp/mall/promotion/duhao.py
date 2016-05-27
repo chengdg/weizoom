@@ -90,7 +90,7 @@ def deliver_virtual_product(request, args):
 					continue
 
 				#按id顺序发放
-				codes = promotion_models.VirtualProductHasCode.objects(virtual_product=virtual_product, status=promotion_models.CODE_STATUS_NOT_GET).order_by('id')
+				codes = promotion_models.VirtualProductHasCode.objects.filter(virtual_product=virtual_product, status=promotion_models.CODE_STATUS_NOT_GET).order_by('id')
 
 				_c = []
 				for code in codes:
