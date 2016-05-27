@@ -526,9 +526,18 @@ def export_orders_json(request):
 
                 order_express_number = (order.express_number if not fackorder else fackorder.express_number).encode('utf8')
                 express_name = express_util.get_name_by_value(order.express_company_name if not fackorder else fackorder.express_company_name).encode('utf8')
-                customer_message = "" if not fackorder else fackorder.customer_message
-                if customer_message:
-                    order.customer_message = customer_message
+                if not fackorder:
+                    if mall_type:
+                        key = order_id.split('^')[1]
+                        try:
+                            customer_message = json.loads(order.customer_message).get(key, {}).get('customer_message')
+                        except:
+                            customer_message = ''
+                    else:
+                        customer_message = order.customer_message
+                else:
+                    customer_message = fackorder.customer_message
+
                 tmp_order = [
                     order_id,
                     order.created_at.strftime('%Y-%m-%d %H:%M').encode('utf8'),
@@ -562,7 +571,7 @@ def export_orders_json(request):
                     order_express_number if order_express_number else '-',
                     postage_time if postage_time else '-',
                     order.remark.encode('utf8') if order.remark.encode('utf8') else '-',
-                    u'-' if order.customer_message == '' else order.customer_message.encode('utf-8'),
+                    u'-' if customer_message == '' else customer_message.encode('utf-8'),
                     member_source_name if member_source_name else '-',
                     father_name_or_qrcode_name if father_name_or_qrcode_name else '-',
                     before_scanner_qrcode_is_member if before_scanner_qrcode_is_member else '-',
@@ -579,9 +588,17 @@ def export_orders_json(request):
             else:
                 order_express_number = (order.express_number if not fackorder else fackorder.express_number).encode('utf8')
                 express_name = express_util.get_name_by_value(order.express_company_name if not fackorder else fackorder.express_company_name).encode('utf8')
-                customer_message = "" if not fackorder else fackorder.customer_message
-                if customer_message:
-                    order.customer_message = customer_message
+                if not fackorder:
+                    if mall_type:
+                        key = order_id.split('^')[1]
+                        try:
+                            customer_message = json.loads(order.customer_message).get(key, {}).get('customer_message')
+                        except:
+                            customer_message = ''
+                    else:
+                        customer_message = order.customer_message
+                else:
+                    customer_message = fackorder.customer_message
                 tmp_order=[
                     order_id,
                     order.created_at.strftime('%Y-%m-%d %H:%M').encode('utf8'),
@@ -615,7 +632,7 @@ def export_orders_json(request):
                     order_express_number if order_express_number else '-',
                     postage_time if postage_time else '-',
                     u'-',
-                    u'-' if order.customer_message == '' else order.customer_message.encode('utf-8'),
+                    u'-' if customer_message == '' else customer_message.encode('utf-8'),
                     member_source_name if member_source_name else '-',
                     father_name_or_qrcode_name if father_name_or_qrcode_name else '-',
                     before_scanner_qrcode_is_member if before_scanner_qrcode_is_member else '-',
