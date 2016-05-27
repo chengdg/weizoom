@@ -27,10 +27,12 @@ def deliver_virtual_product(request, args):
 	@param args dict类型
 	"""
 	print 'start service virtual_product {}'.format(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+
+	#获取所有虚拟子订单
 	order2products = mall_models.OrderHasProduct.objects.filter(
 			order__status=mall_models.ORDER_STATUS_PAYED_NOT_SHIP,
 			order__type__in=VIRTUAL_ORDER_TYPE,
-			order__origin_order_id=0
+			order__origin_order_id__gt=0
 		)
 
 	oid2order = {}
