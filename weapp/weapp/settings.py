@@ -143,7 +143,7 @@ WEAPP_MONGO = {
 
 #百宝箱用
 APP_MONGO = {
-    "HOST": 'mongo.app.com',
+    "HOST": 'mongo.apps.com',
     "DB": 'app_data',
     "USERNAME": None,
     "PASSWORD": None,
