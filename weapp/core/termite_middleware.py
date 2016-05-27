@@ -125,7 +125,7 @@ class WebappPageHomePageMiddleware(object):
 class WebappPageMallMiddleware(object):
 	def process_request(self, request):
 		try:
-			if is_request_for_webapp_api(request) and ("member_subscribed_status" in request.get_full_path() or "shopping_cart_count" in request.get_full_path()):
+			if is_request_for_webapp_api(request) and ("member_subscribed_status" in request.get_full_path() or "shopping_cart_count" in request.get_full_path() or "member_product_info" in request.get_full_path()):
 				print ">>>>>>>iWebappPageMallMiddleware:", request.get_full_path()
 				if "shopping_cart_count" in request.get_full_path():
 					# if webapp_user_id:
@@ -158,6 +158,9 @@ class WebappPageMallMiddleware(object):
 						response = create_response(200)
 						response.data = {'is_subscribed': True}
 						return response.get_response()
+				elif "member_product_info" in request.get_full_path():
+					from mall import module_api as mall_api
+					return mall_api.get_member_product_info(request)
 		except:
 			notify_message = u"MemberCacheMiddleware 微首页函数出错，cause:\n{}".format(unicode_full_stack())
 			watchdog_error(notify_message)
