@@ -528,8 +528,8 @@ def export_orders_json(request):
                 express_name = express_util.get_name_by_value(order.express_company_name if not fackorder else fackorder.express_company_name).encode('utf8')
                 if not fackorder:
                     if mall_type:
-                        key = order_id.split('^')[1]
                         try:
+                            key = order_id.split('^')[1]
                             customer_message = json.loads(order.customer_message).get(key, {}).get('customer_message')
                         except:
                             customer_message = ''
@@ -590,8 +590,8 @@ def export_orders_json(request):
                 express_name = express_util.get_name_by_value(order.express_company_name if not fackorder else fackorder.express_company_name).encode('utf8')
                 if not fackorder:
                     if mall_type:
-                        key = order_id.split('^')[1]
                         try:
+                            key = order_id.split('^')[1]
                             customer_message = json.loads(order.customer_message).get(key, {}).get('customer_message')
                         except:
                             customer_message = ''
