@@ -267,6 +267,7 @@ MIDDLEWARE_CLASSES = [
 
     'modules.member.middleware.CleanUpCookieMiddleware',
     'modules.member.middleware.MemberCacheMiddleware',
+    'core.termite_middleware.WebappPageMallMiddleware',
     'modules.member.middleware.ProcessOpenidMiddleware',
     'modules.member.middleware.OAUTHMiddleware',
     'modules.member.middleware.RedirectBySctMiddleware',
