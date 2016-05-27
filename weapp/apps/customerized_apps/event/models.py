@@ -14,7 +14,8 @@ class eventParticipance(models.Document):
 	created_at = models.DateTimeField() #创建时间
 
 	meta = {
-		'collection': 'event_event_participance'
+		'collection': 'event_event_participance',
+		'db_alias': 'apps'
 	}
 
 
@@ -32,7 +33,8 @@ class event(models.Document):
 	created_at = models.DateTimeField() #创建时间
 	
 	meta = {
-		'collection': 'event_event'
+		'collection': 'event_event',
+		'db_alias': 'apps'
 	}
 	
 	@property

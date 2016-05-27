@@ -205,7 +205,8 @@ class UserHasTemplateMessages(mongo_models.Document):
 	content = mongo_models.StringField(max_length=1024) #模板内容
 
 	meta = {
-		'collection': 'apps_user_has_template'
+		'collection': 'apps_user_has_template',
+		'db_alias': 'apps'
 	}
 
 class UserappHasTemplateMessages(mongo_models.Document):
@@ -217,7 +218,8 @@ class UserappHasTemplateMessages(mongo_models.Document):
 	data_control = mongo_models.DynamicField() #模板选择选择控制 e.g {"success": "template_id1", "fail": "template_id2"}
 
 	meta = {
-		'collection': 'apps_Userapp_has_template'
+		'collection': 'apps_Userapp_has_template',
+		'db_alias': 'apps'
 	}
 
 class AppsWeizoomCard(mongo_models.Document):
@@ -232,7 +234,8 @@ class AppsWeizoomCard(mongo_models.Document):
 	grant_time = mongo_models.DateTimeField() #使用时间
 
 	meta = {
-		'collection': 'apps_weizoom_card'
+		'collection': 'apps_weizoom_card',
+		'db_alias': 'apps'
 	}
 
 	@staticmethod
