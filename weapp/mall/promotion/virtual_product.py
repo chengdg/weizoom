@@ -361,7 +361,8 @@ def get_codes_dict_from_file(file_path):
 				code = str(int(code))
 			if type(password) == float:
 				password = str(int(password))
-			if code != '' and password != '':
+			# if code != '' and password != '':
+			if code != '':
 				if not code in codes:
 					codes_dict[code] = password
 					codes.append(code)
