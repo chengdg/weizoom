@@ -121,7 +121,7 @@ def deliver_virtual_product(request, args):
 		if can_update_order_status:
 			#更改订单状态，发货
 			print u'订单发货：', order.order_id
-			module_api.ship_order(order.order_id, '', '', u'系统', '', False, False)
+			module_api.ship_order(order.id, '', '', u'系统', '', False, False)
 
 	return 'OK {}'.format(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
 

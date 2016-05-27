@@ -50,7 +50,7 @@ def deliver_virtual_product(request, args):
 	print 'virtual order count:', len(oid2order)
 	for oid in oid2product_id2count:
 		can_update_order_status = True  #是否可以更改订单的发货状态
-		print 'process order:', oid
+		print 'process order id:', oid
 		order = oid2order[oid]
 
 		#获取会员信息
@@ -64,7 +64,7 @@ def deliver_virtual_product(request, args):
 		product_id2count = oid2product_id2count[oid]
 		for product_id in product_id2count:
 			count = product_id2count[product_id]
-			print '  process product:%d, buy count:%d' % (product_id, count)
+			print '  process product id:%d, buy count:%d' % (product_id, count)
 			virtual_products = promotion_models.VirtualProduct.objects.filter(product_id=product_id, is_finished=False)
 			if virtual_products.count() > 0:
 				virtual_product = virtual_products[0]
@@ -109,6 +109,6 @@ def deliver_virtual_product(request, args):
 		if can_update_order_status:
 			#更改订单状态，发货
 			print u'订单发货：', order.order_id
-			module_api.ship_order(order.order_id, '', '', u'系统', '', False, False)
+			module_api.ship_order(order.id, '', '', u'系统', '', False, False)
 
 	return 'OK {}'.format(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
