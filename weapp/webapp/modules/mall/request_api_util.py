@@ -1000,9 +1000,10 @@ def log_js_analysis(request):
 
 
 def get_shopping_cart_count(request):
-	webapp_user_id = request.webapp_user.id
-	if webapp_user_id:
+	
+	if request.webapp_user:
 		try:
+			webapp_user_id = request.webapp_user.id
 			shopping_cart = ShoppingCart.objects.filter(webapp_user_id=webapp_user_id)
 			if shopping_cart.count() > 0:
 				shopping_cart_count = shopping_cart.count()
@@ -1011,7 +1012,7 @@ def get_shopping_cart_count(request):
 		except:
 			notify_message = u"购物车数量函数出错，cause:\n{}".format(unicode_full_stack())
 			watchdog_error(notify_message)
-			return create_response(500).get_response()
+			shopping_cart_count = 0
 		print shopping_cart_count
 		response = create_response(200)
 		response.data = {'count': shopping_cart_count}
@@ -1019,7 +1020,9 @@ def get_shopping_cart_count(request):
 	else:
 		notify_message = u"参数webapp_user_id确实或者错误！"
 		watchdog_error(notify_message)
-		return create_response(500).get_response()
+		response = create_response(200)
+		response.data = {'count': 0}
+		return response.get_response()
 
 def get_member_subscribed_status(request):
 	try:
@@ -1028,6 +1031,8 @@ def get_member_subscribed_status(request):
 		response.data = {'is_subscribed': is_subscribed}
 		return response.get_response()
 	except:
-		notify_message = u"获取会员状态失败，cause:\n{},{}".format(unicode_full_stack()， request.COOKIES)
+		notify_message = u"获取会员状态失败，cause:\n{},{}".format(unicode_full_stack(), request.COOKIES)
 		watchdog_error(notify_message)
-		return create_response(500).get_response()
+		response = create_response(200)
+		response.data = {'is_subscribed': True}
+		return response.get_response()
