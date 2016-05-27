@@ -6,7 +6,6 @@ virtual_product_service 的Celery task实现
 import datetime
 
 from celery import task
-from core.exceptionutil import unicode_full_stack
 
 from mall.promotion import models as promotion_models
 from mall import models as mall_models
