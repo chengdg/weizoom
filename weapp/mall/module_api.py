@@ -3371,6 +3371,7 @@ def create_mall_order_from_shared(request,order_id):
 
 
 def refund_weizoom_card_money(order):
+	from weapp import settings
 	url = "http://" + settings.CARD_SERVER_DOMAIN + '/card/trade'
 	trade_id = OrderCardInfo.objects.filter(order_id=order.order_id).first().trade_id
 	data = {
