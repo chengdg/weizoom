@@ -1028,6 +1028,6 @@ def get_member_subscribed_status(request):
 		response.data = {'is_subscribed': is_subscribed}
 		return response.get_response()
 	except:
-		notify_message = u"获取会员状态失败，cause:\n{}".format(unicode_full_stack())
+		notify_message = u"获取会员状态失败，cause:\n{},{}".format(unicode_full_stack()， request.COOKIES)
 		watchdog_error(notify_message)
 		return create_response(500).get_response()
