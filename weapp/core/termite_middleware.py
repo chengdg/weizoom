@@ -14,7 +14,7 @@ from core.jsonresponse import create_response
 from utils import cache_util
 from webapp import models as webapp_models
 from account import models as account_models
-
+from account.url_util import get_webappid_from_request, is_request_for_api, is_request_for_webapp, is_request_for_webapp_api
 from modules.member import member_settings
 
 class WebappPageCacheMiddleware(object):
@@ -121,7 +121,7 @@ class WebappPageHomePageMiddleware(object):
 		response = HttpResponseRedirect(new_url)
 		return response
 
-class WebappPageMallMiddleware(objects):
+class WebappPageMallMiddleware(object):
 	def process_request(self, request):
 		try:
 			if is_request_for_webapp_api(request) and "member_subscribed_status" in request.get_full_path() and "shopping_cart_count" in request.get_full_path():
