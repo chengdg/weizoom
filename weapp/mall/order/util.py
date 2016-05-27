@@ -698,7 +698,7 @@ def export_orders_json(request):
         u'商品金额:' + str(total_product_money).encode('utf8'),
         u'支付总额:' + str(final_total_order_money + weizoom_card_total_order_money).encode('utf8'),
         u'现金支付金额:' + str(final_total_order_money).encode('utf8'),
-        (u'微众卡支付金额:' if not mall_type else u'微众卡支付金额:') + str(weizoom_card_total_order_money).encode('utf8'),
+        u'微众卡支付金额:' + str(weizoom_card_total_order_money).encode('utf8'),
         u'赠品总数:' + str(total_premium_product).encode('utf8'),
         u'积分抵扣总金额:' + str(use_integral_money).encode('utf8'),
         u'优惠劵价值总额:' + str(coupon_money_count).encode('utf8'),
@@ -1858,3 +1858,16 @@ def assert_webapp_id(order, webapp_id):
             return False
     else:
         return True
+
+def get_param_from(request):
+    # webapp_id = request.user_profile.webapp_id
+    # mall_type = request.user_profile.webapp_type
+    user_id =  request.user_profile.user_id
+    status_type = request.GET.get('status', None)
+    # order_status = request.GET.get('order_status', None)
+    # user_profile = request.user_profile
+    # manager = request.manager
+    query_dict, date_interval,date_interval_type = __get_select_params(request)
+    param = {"user_id":user_id, "status_type":status_type, "query_dict":query_dict, "date_interval":date_interval, "date_interval_type":date_interval_type}
+
+get_orders_by_params = __get_orders_by_params

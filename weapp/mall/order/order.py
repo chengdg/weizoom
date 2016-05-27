@@ -25,6 +25,7 @@ from account.models import UserProfile
 from mall.module_api import update_order_status
 from weixin.user.module_api import get_mp_qrcode_img
 from weixin2.models import News
+from export_job.models import ExportJob
 
 COUNT_PER_PAGE = 20
 FIRST_NAV = export.ORDER_FIRST_NAV
@@ -181,6 +182,24 @@ class OrderList(resource.Resource):
             second_nav_name = export.ORDER_ALL
             has_order = util.is_has_order(request)
             page_type =u"所有订单"
+        woid = request.webapp_owner_id
+        export_jobs = ExportJob.objects.filter(woid=woid,type=1,is_download=0).order_by("-id")
+        if export_jobs:
+            export2data = {
+                "woid":int(export_jobs[0].woid) ,#
+                "status":1 if export_jobs[0].status else 0,
+                "is_download":1 if export_jobs[0].is_download else 0,
+                "id":int(export_jobs[0].id),
+                # "file_path": export_jobs[0].file_path,
+                }
+        else:
+            export2data = {
+                "woid":0,
+                "status":1,
+                "is_download":1,
+                "id":0,
+                "file_path":0,
+                }
         c = RequestContext(request, {
             'first_nav_name': FIRST_NAV,
             'second_navs': export.get_mall_order_second_navs(request),
@@ -188,7 +207,8 @@ class OrderList(resource.Resource):
             'has_order': has_order,
             'page_type': page_type,
             'order_status': order_status,
-            'mall_type': mall_type
+            'mall_type': mall_type,
+            'export2data': export2data,
         })
         return render_to_response('mall/editor/orders.html', c)
 
@@ -623,3 +643,41 @@ class orderConfig(resource.Resource):
             'news': news
         })
         return render_to_response('mall/editor/edit_expired_time.html', c)
+
+class OrderGetFile(resource.Resource):
+    """
+    获取参数，构建成文件，上传到u盘运
+    """
+    app = "mall2"
+    resource ="export_file_param"
+    
+    @login_required
+    def api_get(request):
+        woid = request.webapp_owner_id
+        type = int(request.GET.get('type', 0))
+
+        now = datetime.now()
+        #判断用户是否存在导出数据任务
+        if type == 1:
+            
+            param = util.get_param_from(request)
+           
+        exportjob = ExportJob.objects.create(
+                                    woid = woid,
+                                    type = type,
+                                    status = 0,
+                                    param = param,
+                                    created_at = now,
+                                    processed_count =0,
+                                    count =0,
+                                    )
+        from mall.order.tasks import send_order_export_job_task
+        send_order_export_job_task.delay(exportjob.id, param, type)
+
+        response = create_response(200)
+        response.data = {
+            'ok':'ok',
+            "exportjob_id":exportjob.id,
+        }
+        return response.get_response()
+

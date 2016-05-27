@@ -92,6 +92,11 @@
 		<a title="批量打印发货单" class="xa-order-print" href="javascript:void(0);">批量打印发货单</a>
     </div>
   <!-- 订单打印 2016.04.08 end -->
+	<div class="w500 pa pr30 div_export" style="top:10px;left:500px;line-height:30px;">
+
+		<a href="javascript:void(0);" class="btn fr btn-default xa-export mr20 " id="export_data_file">导出结果</a>
+		
+	</div>
 	<table class="table table-condensed mb0 xui-tableHead">
 		<thead>
 			<tr>
@@ -790,6 +795,95 @@ $(document).ready(function() {
 
 	})();
 	<!-- 订单打印 2016.04.08 end -->
+		$('.panel-body').delegate('.xa-export', 'click', function(event){
+		W.getApi().call({
+			app: 'export_job',
+			resource: 'export_is_download',
+			method: 'get',
+			args: {
+				woid: woid,
+				type: 0,
+			},
+			success: function(data) {
+				if (data["status"] === 1 && data["is_download"] === 0){
+					W.showHint('error', '导出的文件尚未下载，请刷新页面进行下载！');
+				}
+				else if(data["status"] === 0 && data["is_download"] === 0){
+					W.showHint('success', '文件正在导出，请刷新页面进行查看！');
+					
+				}
+				else{
+					var url ='';
+					var filter_value = '';
+					if (view.filter_value) {
+						filter_value = view.filter_value;
+					};
+					var options = {
+						el: '.panel-body',
+						topic_id: '',
+						type: 0,
+						url: url,
+						jobId:0,
+						filter_value:filter_value,
+						isAlreadyExport : true,
+						app: 'mall2/order',
+						timelinesOptions: {
+							
+						}
+					}
+
+					var customersView = new W.CustomersView(options);
+				}
+			},
+			error: function(response) {
+				W.showHint('error', '网络超时，导出中断，请重试！');
+			}
+		});
+		
+	});
+	
+	var table = $('div[data-ui-role="advanced-table"]').data('view');
+	
+
+	var export2data = {{export2data|safe}};
+	var woid = "{{ request.manager.id }}";
+	if(export2data["status"] ===1 && export2data["is_download"] ===0 ){
+		table.afterload = function(){
+			var options = {
+				el: '.div_export',
+				topic_id: '',
+				type: '',
+				url: "",
+				jobId:export2data["id"],
+				isAlreadyExport : true,
+				app: 'mall2/order',
+				timelinesOptions: {
+				}
+			}
+			var memberExportFileView = new W.dialog.ExportFileView(options);
+			memberExportFileView.finish();
+		};
+	}
+	else if(export2data["status"] ===0 && export2data["is_download"] ===0 ){
+		table.afterload = function(){
+
+			var jobId = export2data["id"];
+			var options = {
+				el: '.div_export',
+				topic_id: '',
+				type: '',
+				url: "",
+				jobId:export2data["id"],
+				isAlreadyExport : true,
+				app: 'mall2/order',
+				timelinesOptions: {
+				}
+			}
+			var memberExportFileView = new W.dialog.ExportFileView(options);
+			memberExportFileView.doExportAfterApi();
+		};
+	};
+
 });
 </script>
 {% endblock %}
