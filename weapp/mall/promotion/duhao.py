@@ -62,7 +62,7 @@ def deliver_virtual_product(request, args):
 	print 'virtual order count:', len(oid2order)
 	for oid in oid2product_id2count:
 		can_update_order_status = True  #是否可以更改订单的发货状态
-		print 'process order:', oid
+		print 'process order id:', oid
 		order = oid2order[oid]
 
 		#获取会员信息
@@ -76,13 +76,13 @@ def deliver_virtual_product(request, args):
 		product_id2count = oid2product_id2count[oid]
 		for product_id in product_id2count:
 			count = product_id2count[product_id]
-			print '  process product:%d, buy count:%d' % (product_id, count)
+			print '  process product id:%d, buy count:%d' % (product_id, count)
 			virtual_products = promotion_models.VirtualProduct.objects.filter(product_id=product_id, is_finished=False)
 			if virtual_products.count() > 0:
 				virtual_product = virtual_products[0]
 
 				#判断该订单里的这个商品是否已经被发过货了，如果发过则不重复发放，且can_update_order_status不变为False
-				existed_records = promotion_models.VirtualProductHasCode.objects(virtual_product=virtual_product, oid=order.id)
+				existed_records = promotion_models.VirtualProductHasCode.objects.filter(virtual_product=virtual_product, oid=order.id)
 				if existed_records.count() > 0:
 					message = u'该商品已经发过货，无需重复发货，订单id：%s,商品id：%d,福利卡券活动id：%d' % (order.order_id, product_id, virtual_product.id)
 					print message
