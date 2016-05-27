@@ -10,7 +10,8 @@ from django.http import HttpResponse
 from django.conf import settings
 
 from core.jsonresponse import create_response
-
+from core.exceptionutil import unicode_full_stack
+from watchdog.utils import watchdog_fatal, watchdog_error, watchdog_info
 from utils import cache_util
 from webapp import models as webapp_models
 from account import models as account_models
@@ -124,8 +125,8 @@ class WebappPageHomePageMiddleware(object):
 class WebappPageMallMiddleware(object):
 	def process_request(self, request):
 		try:
-			if is_request_for_webapp_api(request) and "member_subscribed_status" in request.get_full_path() and "shopping_cart_count" in request.get_full_path():
-				print ">>>>>>>in?>>>>>>>>>>", request.get_full_path()
+			if is_request_for_webapp_api(request) and ("member_subscribed_status" in request.get_full_path() or "shopping_cart_count" in request.get_full_path()):
+				print ">>>>>>>iWebappPageMallMiddleware:", request.get_full_path()
 				if "shopping_cart_count" in request.get_full_path():
 					# if webapp_user_id:
 					try:
