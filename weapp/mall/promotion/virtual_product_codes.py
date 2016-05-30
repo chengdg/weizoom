@@ -57,76 +57,7 @@ class VirtualProductCodes(resource.Resource):
 		"""
 		获取虚拟商品和微众卡商品
 		"""
-		owner = request.manager
-		#获取当前页数
-		cur_page = int(request.GET.get('page', '1'))
-		#获取每页个数
-		count_per_page = int(request.GET.get('count_per_page', 10))
-
-		virtual_product_id = int(request.GET.get('virtual_product_id', '-1'))
-		code = request.GET.get('code', '')
-		member_name = request.GET.get('member_name', '')
-		valid_time_start = request.GET.get('valid_time_start', '')
-		valid_time_end = request.GET.get('valid_time_end', '')
-		get_time_start = request.GET.get('get_time_start', '')
-		get_time_end = request.GET.get('get_time_end', '')
-		status = int(request.GET.get('status', '-1'))
-		order_id = request.GET.get('order_id', '')
-
-		params = {
-			'owner': request.manager, 
-			'virtual_product_id': virtual_product_id
-		}
-		if code:
-			params['code'] = code
-		if member_name:
-			query_hex = byte_to_hex(member_name)
-			members = member_models.Member.objects.filter(username_hexstr__contains=query_hex)
-			member_ids = [m.id for m in members]
-			params['member_id__in'] = member_ids
-		if valid_time_start and valid_time_end:
-			params['start_time__lte'] = valid_time_end
-			params['end_time__gte'] = valid_time_start
-		if get_time_start and get_time_end:
-			params['get_time__lte'] = get_time_end
-			params['get_time__gte'] = get_time_start
-		if status >= 0:
-			params['status'] = status
-		if order_id:
-			params['order_id'] = order_id
-
-		codes = promotion_models.VirtualProductHasCode.objects.filter(**params).order_by('id')
-		pageinfo, codes = paginator.paginate(codes, cur_page, count_per_page, None)
-
-		member_ids = []
-		for code in codes:
-			if code.member_id:
-				member_ids.append(code.member_id)
-		members = member_models.Member.objects.filter(id__in=member_ids)
-		member_id2nick_name = {}
-		for member in members:
-			nick_name = member.username
-			try:
-				nick_name = nick_name.decode('utf8')
-			except:
-				nick_name = member.username_hexstr
-			member_id2nick_name[str(member.id)] = nick_name
-
-		items = []
-		for code in codes:
-			items.append({
-				'id': code.id,
-				'code': code.code,
-				'created_at': code.created_at.strftime('%Y-%m-%d %H:%M'),
-				'start_time': code.start_time.strftime('%Y-%m-%d %H:%M:%S'),
-				'end_time': code.end_time.strftime('%Y-%m-%d %H:%M:%S'),
-				'status': promotion_models.CODE2TEXT[code.status],
-				'get_time': code.get_time.strftime('%Y-%m-%d %H:%M') if code.get_time else u'',
-				'member_id': code.member_id,
-				'member_name': member_id2nick_name.get(code.member_id, ''),
-				'oid': code.oid,
-				'order_id': code.order_id
-			})
+		items, pageinfo = get_codes(request)
 
 		response = create_response(200)
 		response.data = {
@@ -135,3 +66,107 @@ class VirtualProductCodes(resource.Resource):
 			'sortAttr': ''
 		}
 		return response.get_response()
+
+
+class VirtualProductCodesExport(resource.Resource):
+	app = 'mall2'
+	resource = 'virtual_product_codes_export'
+
+	@login_required
+	def get(request):
+		"""
+		导出福利卡券码库
+		"""
+		items, _ = get_codes(request, False)
+		codes = []
+		for item in items:
+			codes.append([
+				item['code'],
+				item['created_at'],
+				item['start_time'],
+				item['end_time'],
+				item['status'],
+				item['get_time'],
+				item['member_id'],
+				item['member_name'],
+				item['order_id']
+			])
+
+		return ExcelResponse(codes, output_name=u'福利卡券码库详情'.encode('utf8'), force_csv=False)
+
+
+def get_codes(request, is_need_page=True):
+	owner = request.manager
+	#获取当前页数
+	cur_page = int(request.GET.get('page', '1'))
+	#获取每页个数
+	count_per_page = int(request.GET.get('count_per_page', 10))
+
+	virtual_product_id = int(request.GET.get('virtual_product_id', '-1'))
+	code = request.GET.get('code', '')
+	member_name = request.GET.get('member_name', '')
+	valid_time_start = request.GET.get('valid_time_start', '')
+	valid_time_end = request.GET.get('valid_time_end', '')
+	get_time_start = request.GET.get('get_time_start', '')
+	get_time_end = request.GET.get('get_time_end', '')
+	status = int(request.GET.get('status', '-1'))
+	order_id = request.GET.get('order_id', '')
+
+	params = {
+		'owner': request.manager, 
+		'virtual_product_id': virtual_product_id
+	}
+	if code:
+		params['code'] = code
+	if member_name:
+		query_hex = byte_to_hex(member_name)
+		members = member_models.Member.objects.filter(username_hexstr__contains=query_hex)
+		member_ids = [m.id for m in members]
+		params['member_id__in'] = member_ids
+	if valid_time_start and valid_time_end:
+		params['start_time__lte'] = valid_time_end
+		params['end_time__gte'] = valid_time_start
+	if get_time_start and get_time_end:
+		params['get_time__lte'] = get_time_end
+		params['get_time__gte'] = get_time_start
+	if status >= 0:
+		params['status'] = status
+	if order_id:
+		params['order_id'] = order_id
+
+	pageinfo = None
+	if is_need_page:
+		codes = promotion_models.VirtualProductHasCode.objects.filter(**params).order_by('id')
+		pageinfo, codes = paginator.paginate(codes, cur_page, count_per_page, None)
+
+	member_ids = []
+	for code in codes:
+		if code.member_id:
+			member_ids.append(code.member_id)
+	members = member_models.Member.objects.filter(id__in=member_ids)
+	member_id2nick_name = {}
+	for member in members:
+		nick_name = member.username
+		try:
+			nick_name = nick_name.decode('utf8')
+		except:
+			nick_name = member.username_hexstr
+		member_id2nick_name[str(member.id)] = nick_name
+
+	items = []
+	for code in codes:
+		items.append({
+			'id': code.id,
+			'code': code.code,
+			'created_at': code.created_at.strftime('%Y-%m-%d %H:%M'),
+			'start_time': code.start_time.strftime('%Y-%m-%d %H:%M:%S'),
+			'end_time': code.end_time.strftime('%Y-%m-%d %H:%M:%S'),
+			'status': promotion_models.CODE2TEXT[code.status],
+			'get_time': code.get_time.strftime('%Y-%m-%d %H:%M') if code.get_time else u'',
+			'member_id': code.member_id,
+			'member_name': member_id2nick_name.get(code.member_id, ''),
+			'oid': code.oid,
+			'order_id': code.order_id
+		})
+
+	return items, pageinfo
