@@ -5,7 +5,8 @@ W.view.mall.order.orderFilter = Backbone.View.extend({
         'click .xa-filter': 'filter',
         'click .seacrh-order-btn': 'seacrhBtn',
         'click .recently-week-day': 'setDateText',
-        'click .export-btn': 'exportBtn'
+        'click .export-btn': 'exportBtn',
+        'click .xa-reset': 'resetFrom'
     },
 
     // 点击‘最近7天’或‘最近30天’
@@ -332,5 +333,6 @@ W.view.mall.order.orderFilter = Backbone.View.extend({
         $('#orderSupplierType').val(-1);
         $('#express_number').val('');
         $('#product_name').val('');
+        $('input[type="checkbox"]').attr("checked",false);
     }
 });
