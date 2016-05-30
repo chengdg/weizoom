@@ -54,7 +54,7 @@ def get_weizoom_card_login(request):
 			return get_weizoom_card_wallet(request)
 
 		c = RequestContext(request, {
-				'page_title': u'微众卡',
+				'page_title': u'我的卡包' if username and username in ['jobs','weshop','ceshi01'] else u'微众卡',
 				'is_hide_weixin_option_menu': True,
 				'normal': True,
 				'is_weshop': True if username and username in ['jobs','weshop','ceshi01'] else False
@@ -209,7 +209,7 @@ def get_weizoom_card_wallet(request):
 
 		card_details_dic['card'] = card_details
 	c = RequestContext(request, {
-		'page_title': u'微众卡',
+		'page_title': u'我的卡包',
 		'cards': card_details_dic,
 		'has_expired_cards': has_expired_cards,
 		'is_binded': True,
@@ -510,7 +510,7 @@ def get_other_cards_list(request):
 		cards.append(card_details_dic)
 
 	c = RequestContext(request, {
-		'page_title': u'其他卡包',
+		'page_title': u'我的卡包',
 		'cards': cards,
 		'has_expired_cards': has_expired_cards,
 		'is_weshop': True
