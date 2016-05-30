@@ -182,14 +182,9 @@ class WebappItemLinks(resource.Resource):
 		selected_id, is_selected_type = webapp_link_utils.get_selected_by_link_target(request, menu_type, link_type, selected_link_target)
 		request.selected_id = selected_id
 
-		URL = "http://%s/apps/export/api/get_app_items/" % settings.MARKETAPP_DOMAIN
-		args = {
-			"webapp_owner_id": request.manager.id,
-			"link_type": link_type,
-			"query": query
-		}
+		URL = "http://%s/apps/export/api/get_app_items/?webapp_owner_id=%s&link_type=%s&query=%s" % (settings.MARKETAPP_DOMAIN, str(request.manager.id), link_type, query)
 		try:
-			api_resp_text = requests.get(URL, args).text
+			api_resp_text = requests.get(URL).text
 			print URL, 'marketapp get_app_items===============>>>', api_resp_text
 			api_resp = json.loads(api_resp_text)
 		except:
