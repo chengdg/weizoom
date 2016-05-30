@@ -3,7 +3,7 @@ from __future__ import absolute_import
 import json, os, xlrd
 import logging
 from datetime import datetime
-
+from excel_response import ExcelResponse
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.contrib.auth.decorators import login_required
@@ -135,8 +135,8 @@ def get_codes(request, is_need_page=True):
 		params['order_id'] = order_id
 
 	pageinfo = None
+	codes = promotion_models.VirtualProductHasCode.objects.filter(**params).order_by('id')
 	if is_need_page:
-		codes = promotion_models.VirtualProductHasCode.objects.filter(**params).order_by('id')
 		pageinfo, codes = paginator.paginate(codes, cur_page, count_per_page, None)
 
 	member_ids = []
