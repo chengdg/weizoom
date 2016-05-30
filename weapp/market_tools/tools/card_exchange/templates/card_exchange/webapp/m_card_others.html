@@ -244,8 +244,10 @@
 								到账时间:
 								<span class="xui-numfont">{{item.time | slice:"10"}}</span>
 								<span class="fr">
+									{% if item.password %}
 									密码:
 									<span class="xui-numfont">{{item.password}}</span>
+									{% endif %}
 								</span>
 							</span>
 						</div>
