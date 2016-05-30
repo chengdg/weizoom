@@ -852,9 +852,9 @@ class CardHasExchanged(models.Model):
 		db_table = 'mallpromotion_card_has_exchanged'
 
 
-WEIZOOM_CARD_SOURCE_WEAPP = 0
-WEIZOOM_CARD_SOURCE_REBATE = 1
-WEIZOOM_CARD_SOURCE_VIRTUAL = 2
+WEIZOOM_CARD_SOURCE_WEAPP = 0	#目前没用到
+WEIZOOM_CARD_SOURCE_REBATE = 1	#返利活动
+WEIZOOM_CARD_SOURCE_VIRTUAL = 2  #福利卡券
 class MemberHasWeizoomCard(models.Model):
 	"""
 	给会员发放的微众卡
