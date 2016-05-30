@@ -111,7 +111,7 @@
 								{{/if}}
 							</div>
 							<div class="pl15 disTc xui-poductorIntroduction">
-								<div class="mb0 mt0" style="height:35px; "><p class="mb0" style="line-height:16px;">{{if product.type == 'virtual' || product.type == 'wzcard' }}<i class="xui-virtualProductIcon">码</i>{{/if}}${product.name}</p></div>
+								<div class="mb0 mt0" style="height:35px; "><p class="mb0" style="line-height:16px;">{{if product.type == 'virtual' }}<i class="xui-virtualProductIcon">码</i>{{/if}} {{if product.type == 'wzcard' }}<i class="xui-virtualProductIcon">卡</i>{{/if}}${product.name}</p></div>
 								{{if product.is_use_custom_model}}
 								<span class="label label-info xa-showAllModels cursor-pointer" style="font-size: 1.0em;">查看${product.models.length}个规格详情</span>
 								{{else}}

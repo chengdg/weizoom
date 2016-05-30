@@ -184,6 +184,12 @@
 							{{if group.supplier_user_id > 0 }}
 								<i class="xui-icon-sync">同</i>${group.products[0].supplier_store_name}
 							{{/if}}
+							{{if group.fackorder.type == 'wzcard' }}
+								<i class="xui-icon-sync">卡</i>${group.products[0].supplier_store_name}
+							{{/if}}
+							{{if group.fackorder.type == 'virtual' }}
+								<i class="xui-icon-sync">码</i>${group.products[0].supplier_store_name}
+							{{/if}}
                         {{else}}
                             {{if order.supplier_user_id > 0}}
                                 商城
@@ -212,9 +218,6 @@
 										{{if product.promotion.type == "premium_sale:premium_product"}}【赠品】 {{/if}}
 									{{/if}}
 									{{if product.grade_discounted_money}}【会员优惠】{{/if}}
-								{{/if}}
-								{{if order.type == 'virtual' || order.type == 'wzcard' }}
-									<i class="xui-virtualProductIcon">码</i>
 								{{/if}}
 									${product.name}{{if order.fackorders && order.fackorders[product.supplier]}}-${order.fackorders[product.supplier].order_id}{{/if}}
 								</span></p>

@@ -1169,6 +1169,7 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
                         'express_company_name': fackorder.express_company_name,
                         'express_number': fackorder.express_number,
                         'leader_name': fackorder.leader_name,
+                        'type': fackorder.type,
                         'actions': get_order_actions(fackorder, is_refund=is_refund, mall_type=mall_type, multi_child_orders=multi_child_orders)
                     }
                     if fackorder.supplier or (not fackorder.supplier and not fackorder.supplier_user_id):
@@ -1192,6 +1193,7 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
                     'express_company_name': order.express_company_name,
                     'express_number': order.express_number,
                     'leader_name': order.leader_name,
+                    'type': order.type,
                     'actions': get_order_actions(order, is_refund=is_refund, mall_type=mall_type)
                 }
                 if order2fackorders.get(order.id) and len(order2fackorders.get(order.id)) == 1:
