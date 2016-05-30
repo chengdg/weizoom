@@ -78,7 +78,9 @@ class VirtualProductCodesExport(resource.Resource):
 		导出福利卡券码库
 		"""
 		items, _ = get_codes(request, False)
-		codes = []
+		codes = [
+                [u'卡券码', u'创建时间', u'起始时间', u'结束时间', u'卡券状态', u'领用时间', u'领取人id', u'领取人昵称', u'订单号']
+            ]
 		for item in items:
 			codes.append([
 				item['code'],

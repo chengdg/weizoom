@@ -96,7 +96,7 @@ def deliver_virtual_product(request, args):
 					print '    deliver code:', code.code
 					code.member_id = member.id
 					code.get_time = datetime.now()
-					code.oid = order.id
+					code.oid = order.origin_order_id
 					code.order_id = order.order_id
 					code.status = promotion_models.CODE_STATUS_GET
 					code.save()
