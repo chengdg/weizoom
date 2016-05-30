@@ -480,9 +480,9 @@ def get_other_cards_list(request):
 	member_id = request.member.id
 	member_has_other_cards = promotion_models.VirtualProductHasCode.objects.filter(member_id = member_id)
 	cards = []
-	card_details_dic = {}
 	has_expired_cards = False
 	for card in member_has_other_cards:
+		card_details_dic = {}
 		card_details_dic['card_id'] = card.code
 		card_details_dic['password'] = card.password
 		card_details_dic['time'] = card.get_time.strftime('%Y-%m-%d')
