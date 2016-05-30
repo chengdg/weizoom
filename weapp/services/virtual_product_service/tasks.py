@@ -56,7 +56,7 @@ def deliver_virtual_product(request, args):
 		#获取会员信息
 		member = member_models.WebAppUser.get_member_by_webapp_user_id(order.webapp_user_id)
 		if not member:
-			message = u'获取member信息失败，订单id：%s,商品id：%d' % (order.order_id, product_id)
+			message = u'获取member信息失败，订单id:%s' % order.order_id
 			print message
 			ding_util.send_to_ding(message, WESHOP_DING_GROUP_ID)
 			continue
@@ -72,7 +72,7 @@ def deliver_virtual_product(request, args):
 				#判断该订单里的这个商品是否已经被发过货了，如果发过则不重复发放，且can_update_order_status不变为False
 				existed_records = promotion_models.VirtualProductHasCode.objects.filter(virtual_product=virtual_product, oid=order.id)
 				if existed_records.count() > 0:
-					message = u'该商品已经发过货，无需重复发货，订单id：%s,商品id：%d,福利卡券活动id：%d' % (order.order_id, product_id, virtual_product.id)
+					message = u'该商品已经发过货，无需重复发货，订单id:%s, 商品id:%d, 福利卡券活动id:%d, 商品名称:%s' % (order.order_id, product_id, virtual_product.id, virtual_product.product.name)
 					print message
 					ding_util.send_to_ding(message, WESHOP_DING_GROUP_ID)
 					continue
@@ -87,7 +87,7 @@ def deliver_virtual_product(request, args):
 
 				if len(_c) < count:
 					can_update_order_status = False
-					message = u'发放虚拟商品时库存不足，订单id：%s,商品id：%d,待发放：%d,库存：%d' % (order.order_id, product_id, count, len(_c))
+					message = u'发放虚拟商品时库存不足，订单id:%s, 商品id:%d, 待发放:%d, 库存:%d, 商品名称:%s' % (order.order_id, product_id, count, len(_c), virtual_product.product.name)
 					print message
 					ding_util.send_to_ding(message, WESHOP_DING_GROUP_ID)
 					continue
@@ -100,9 +100,27 @@ def deliver_virtual_product(request, args):
 					code.order_id = order.order_id
 					code.status = promotion_models.CODE_STATUS_GET
 					code.save()
+
+					if virtual_product.product.type == mall_models.PRODUCT_WZCARD_TYPE:
+						#如果商品是微众卡的话，需要往MemberHasWeizoomCard表里写入一份信息，方便手机卡包里的微众卡能正常显示
+						try:
+							member_has_wzcard = promotion_models.MemberHasWeizoomCard.objects.create(
+								member_id=member.id,
+								member_name=member.username,
+								card_number=code.code,
+								card_password=code.password,
+								relation_id=code.virtual_product.id,
+								source=promotion_models.WEIZOOM_CARD_SOURCE_VIRTUAL
+							)
+							print u'发放微众卡到member_has_wzcard：', member_has_wzcard.id
+						except Exception, e:
+							message = u'微众卡已经发放成功，但写入MemberHasWeizoomCard信息失败，订单id:%s, 商品id:%d, 商品名称:%s' % (order.order_id, product_id, virtual_product.product.name)
+							print message
+							print e
+							ding_util.send_to_ding(message, WESHOP_DING_GROUP_ID)
 			else:
 				can_update_order_status = False
-				message = u'虚拟商品发货失败，商品没有关联福利卡券活动，订单id：%s,商品id：%d' % (order.order_id, product_id)
+				message = u'虚拟商品发货失败，商品没有关联福利卡券活动，订单id:%s, 商品id:%d' % (order.order_id, product_id)
 				print message
 				ding_util.send_to_ding(message, WESHOP_DING_GROUP_ID)
 
