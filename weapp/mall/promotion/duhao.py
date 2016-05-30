@@ -59,6 +59,29 @@ def deliver_virtual_product(request, args):
 			oid2product_id2count[oid] = {}
 		oid2product_id2count[oid][product.id] = o2p.number
 
+		#判断是否有促销活动
+		if o2p.promotion_id:
+			promotion = None
+			try:
+				promotion = promotion_models.Promotion.objects.get(id=o2p.promotion_id)
+			except Exception, e:
+				message = u'获取促销失败，order id:%s, product id:%d, 商品名称:%s' % (order.order_id, product.id, product.name)
+				print message
+				ding_util.send_to_ding(message, WESHOP_DING_GROUP_ID)
+
+			#判断是否是买赠
+			if promotion.type == promotion_models.PROMOTION_TYPE_PREMIUM_SALE:
+				premiums = promotion_models.PremiumSaleProduct.objects.filter(premium_sale__id=promotion.detail_id)
+				if premiums.count() > 0:
+					premium = premiums[0]
+					_product = premium.product
+					#判断赠品是否是虚拟类型
+					if _product.type in [mall_models.PRODUCT_VIRTUAL_TYPE, mall_models.PRODUCT_WZCARD_TYPE]:
+						if oid2product_id2count[oid].has_key(_product.id):
+							oid2product_id2count[oid][_product.id] += _product.count
+						else:
+							oid2product_id2count[oid][_product.id] = _product.count
+
 	print 'virtual order count:', len(oid2order)
 	for oid in oid2product_id2count:
 		can_update_order_status = True  #是否可以更改订单的发货状态
