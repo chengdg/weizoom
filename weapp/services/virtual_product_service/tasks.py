@@ -53,7 +53,7 @@ def deliver_virtual_product(request, args):
 			try:
 				promotion = promotion_models.Promotion.objects.get(id=o2p.promotion_id)
 			except Exception, e:
-				message = u'获取促销失败，order id:%s, product id:%d, 商品名称:%s' % (order.order_id, product.id, product.name)
+				message = u'获取促销失败\norder id:%s\nproduct id:%d\n商品名称:%s' % (order.order_id, product.id, product.name)
 				print message
 				ding_util.send_to_ding(message, WESHOP_DING_GROUP_ID)
 
@@ -79,7 +79,7 @@ def deliver_virtual_product(request, args):
 		#获取会员信息
 		member = member_models.WebAppUser.get_member_by_webapp_user_id(order.webapp_user_id)
 		if not member:
-			message = u'获取member信息失败，订单id:%s' % order.order_id
+			message = u'获取member信息失败\n订单id:%s' % order.order_id
 			print message
 			ding_util.send_to_ding(message, WESHOP_DING_GROUP_ID)
 			continue
@@ -95,7 +95,7 @@ def deliver_virtual_product(request, args):
 				#判断该订单里的这个商品是否已经被发过货了，如果发过则不重复发放，且can_update_order_status不变为False
 				existed_records = promotion_models.VirtualProductHasCode.objects.filter(virtual_product=virtual_product, oid=order.id)
 				if existed_records.count() > 0:
-					message = u'该商品已经发过货，无需重复发货，订单id:%s, 商品id:%d, 福利卡券活动id:%d, 商品名称:%s' % (order.order_id, product_id, virtual_product.id, virtual_product.product.name)
+					message = u'该商品已经发过货，无需重复发货\n订单id:%s\n商品id:%d\n福利卡券活动id:%d\n商品名称:%s' % (order.order_id, product_id, virtual_product.id, virtual_product.product.name)
 					print message
 					ding_util.send_to_ding(message, WESHOP_DING_GROUP_ID)
 					continue
@@ -110,7 +110,7 @@ def deliver_virtual_product(request, args):
 
 				if len(_c) < count:
 					can_update_order_status = False
-					message = u'发放虚拟商品时库存不足，订单id:%s, 商品id:%d, 待发放:%d, 库存:%d, 商品名称:%s' % (order.order_id, product_id, count, len(_c), virtual_product.product.name)
+					message = u'发放虚拟商品时库存不足\n订单id:%s\n商品id:%d\n待发放:%d\n库存:%d\n商品名称:%s\n福利卡券活动id:%d' % (order.order_id, product_id, count, len(_c), virtual_product.product.name, virtual_product.id)
 					print message
 					ding_util.send_to_ding(message, WESHOP_DING_GROUP_ID)
 					continue
@@ -137,13 +137,13 @@ def deliver_virtual_product(request, args):
 							)
 							print u'订单%s发放微众卡到member_has_wzcard：%d', (order.order_id, member_has_wzcard.id)
 						except Exception, e:
-							message = u'微众卡已经发放成功，但写入MemberHasWeizoomCard信息失败，订单id:%s, 商品id:%d, 商品名称:%s' % (order.order_id, product_id, virtual_product.product.name)
+							message = u'微众卡已经发放成功，但写入MemberHasWeizoomCard信息失败\n订单id:%s\n商品id:%d\n商品名称:%s' % (order.order_id, product_id, virtual_product.product.name)
 							print message
 							print e
 							ding_util.send_to_ding(message, WESHOP_DING_GROUP_ID)
 			else:
 				can_update_order_status = False
-				message = u'虚拟商品发货失败，商品没有关联福利卡券活动，订单id:%s, 商品id:%d' % (order.order_id, product_id)
+				message = u'虚拟商品发货失败，商品没有关联福利卡券活动\n订单id:%s\n商品id:%d' % (order.order_id, product_id)
 				print message
 				ding_util.send_to_ding(message, WESHOP_DING_GROUP_ID)
 
