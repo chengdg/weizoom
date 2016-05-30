@@ -124,7 +124,7 @@ def deliver_virtual_product(request, args):
 								relation_id=code.virtual_product.id,
 								source=promotion_models.WEIZOOM_CARD_SOURCE_VIRTUAL
 							)
-							print u'发放微众卡到member_has_wzcard：', member_has_wzcard.id
+							print u'订单%s发放微众卡到member_has_wzcard：%d', (order.order_id, member_has_wzcard.id)
 						except Exception, e:
 							message = u'微众卡已经发放成功，但写入MemberHasWeizoomCard信息失败，订单id:%s, 商品id:%d, 商品名称:%s' % (order.order_id, product_id, virtual_product.product.name)
 							print message
