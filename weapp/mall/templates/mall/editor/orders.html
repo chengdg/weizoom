@@ -4,6 +4,13 @@
 
 {% block css %}
 <style type="text/css">
+#exportProgress{
+	float:right;
+	margin:4px 10px;
+}
+#exportProgress .exportProgress_msg{
+	margin-right:0;
+}
 </style>
 {% endblock %}
 
@@ -29,7 +36,6 @@
                 data-template-id="#mall-orders-view"
                 data-init-sort="-created_at"
                 data-selectable = "false"
-                <!-- class="panel-body" -->
                 data-user-webapp-id={{user.get_profile.webapp_id}}
                 data-args='{"order_status":"{{order_status}}"}'
             >
@@ -43,7 +49,6 @@
                 data-enable-paginator="true"
                 data-template-id="#mall-orders-view"
                 data-init-sort="-created_at"
-                class="panel-body"
                 data-user-webapp-id={{user.get_profile.webapp_id}}
             >
             </div>
@@ -92,13 +97,10 @@
 		<input type="checkBox" name="selectAllPrintOrders">
 		<span class="ml5 mr10">全选</span>
 		<a title="批量打印发货单" class="xa-order-print" href="javascript:void(0);">批量打印发货单</a>
-		<a href="javascript:void(0);" class="btn fr btn-default xa-export mr20" style="margin:4px 10px;" id="export_data_file">导出结果</a>
+		<a href="javascript:void(0);" class="btn fr btn-default xa-export" style="margin:4px 10px;" id="export_data_file">导出结果</a>
 
     </div>
   <!-- 订单打印 2016.04.08 end -->
-	<!--<div class="w500 pr30 div_export" style="top:10px;left:500px;line-height:30px;">
-		<a href="javascript:void(0);" class="btn fr btn-default xa-export mr20 " id="export_data_file">导出结果</a>
-	</div>-->
 	<table class="table table-condensed mb0 xui-tableHead">
 		<thead>
 			<tr>
@@ -788,7 +790,7 @@ $(document).ready(function() {
 
 	})();
 	<!-- 订单打印 2016.04.08 end -->
-	$('.panel-body').delegate('.xa-export', 'click', function(event){
+	$('body').delegate('.xa-export', 'click', function(event){
 		W.getApi().call({
 			app: 'export_job',
 			resource: 'export_is_download',
