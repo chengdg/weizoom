@@ -191,7 +191,13 @@ def get_weizoom_card_wallet(request):
 			cur_card_details = card.values()[0]
 			card_number = cur_card_details['card_number']
 			cur_card_details['created_at'] = card_number2card[card_number].created_at.strftime('%Y-%m-%d')
-			cur_card_details['type'] = u'微众商城' if card_number2card[card_number].source == 0 else u'返利活动'
+			source = card_number2card[card_number].source
+			if source == 1:
+				cur_card_details['type'] = u'返利活动'
+			elif source == 2:
+				cur_card_details['type'] = u'商城下单'
+			# elif source == 0:
+			# 	cur_card_details['type'] = u'商城下单'
 			valid_time_to = cur_card_details['valid_time_to']
 			now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 			if now > valid_time_to:
@@ -483,6 +489,9 @@ def get_other_cards_list(request):
 	has_expired_cards = False
 	for card in member_has_other_cards:
 		card_details_dic = {}
+		# 过滤出虚拟商品
+		if not card.virtual_product.product.type == 'virtual':
+			continue
 		card_details_dic['card_id'] = card.code
 		card_details_dic['password'] = card.password
 		card_details_dic['time'] = card.get_time.strftime('%Y-%m-%d')
