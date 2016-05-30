@@ -483,6 +483,9 @@ def get_other_cards_list(request):
 	has_expired_cards = False
 	for card in member_has_other_cards:
 		card_details_dic = {}
+		# 过滤出虚拟商品
+		if not card.virtual_product.product.type == 'virtual':
+			continue
 		card_details_dic['card_id'] = card.code
 		card_details_dic['password'] = card.password
 		card_details_dic['time'] = card.get_time.strftime('%Y-%m-%d')
