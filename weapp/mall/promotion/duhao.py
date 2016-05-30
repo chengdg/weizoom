@@ -78,9 +78,9 @@ def deliver_virtual_product(request, args):
 					#判断赠品是否是虚拟类型
 					if _product.type in [mall_models.PRODUCT_VIRTUAL_TYPE, mall_models.PRODUCT_WZCARD_TYPE]:
 						if oid2product_id2count[oid].has_key(_product.id):
-							oid2product_id2count[oid][_product.id] += _product.count
+							oid2product_id2count[oid][_product.id] += premium.count
 						else:
-							oid2product_id2count[oid][_product.id] = _product.count
+							oid2product_id2count[oid][_product.id] = premium.count
 
 	print 'virtual order count:', len(oid2order)
 	for oid in oid2product_id2count:
