@@ -109,7 +109,7 @@ W.dialog.ExportFileView = Backbone.View.extend({
 		this.progressDiv.show();
 		this.downloadLink.hide();
 		var url = this.url;
-		var filter_value = this.filter_value
+		var filter_value = this.filter_value;
 		var type = this.type
 		var app = this.app
 		var resource = this.resource
@@ -200,11 +200,9 @@ W.dialog.ExportFileView = Backbone.View.extend({
 });
 
 W.CustomersView = Backbone.View.extend({
-	el: '.panel-body',
 
 	initialize: function(options) {
 		this.options = options;
-		this.$el = $(this.el);
 		//创建导出view
 		this.loadingView = W.getLoadingView();
 		

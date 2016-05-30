@@ -7,57 +7,21 @@ from watchdog.utils import watchdog_error
 import json
 from celery import task
 from core import upyun_util
-from modules.member.models import Member
-from mall import models
-# from . import utils
 from datetime import datetime
 from export_job.models import ExportJob
 from account.models import UserProfile
 import os
-import xlsxwriter
-from mall.order.util import get_orders_by_params
-
 import re
-import json
-import logging
+import xlsxwriter
+from mall.order.util import get_orders_by_params,handle_member_nickname
 
-from datetime import date, datetime
-
-from django.http import HttpResponseRedirect
-from django.template import RequestContext
-from django.shortcuts import render_to_response
-from django.conf import settings
-import requests
-from django.http import Http404
-
-from mall import export
-from tools.regional import views as regional_util
 from tools.regional.views import get_str_value_by_string_ids_new
-from mall.promotion.models import CouponRule, Promotion, ProductHasPromotion, PROMOTION_TYPE_COUPON
 from modules.member.models import Member, WebAppUser, MemberFollowRelation, SOURCE_SELF_SUB, SOURCE_MEMBER_QRCODE, SOURCE_BY_URL
-import mall.models
-import mall.export
-from core.jsonresponse import create_response
-from core import paginator
 from mall.models import *
 from market_tools.tools.channel_qrcode.models import ChannelQrcodeHasMember
-import mall.module_api as mall_api
-from market_tools.tools.weizoom_card.models import AccountHasWeizoomCardPermissions
-from core.restful_url_route import api
-from watchdog.utils import watchdog_error, watchdog_info, watchdog_warning
-from mall.templatetags.mall_filter import *
-from weixin.user.module_api import get_all_active_mp_user_ids
-from account.models import UserProfile
-from market_tools.tools.weizoom_card.models import WeizoomCardHasOrder,WeizoomCard
-from core.exceptionutil import unicode_full_stack
-from mall.order.util import handle_member_nickname
 
-COUNT_PER_PAGE = 20
 
 DEFAULT_CREATE_TIME = '2000-01-01 00:00:00'
-
-COUNT_PER_PAGE = 20
-FIRST_NAV = export.ORDER_FIRST_NAV
 
 
 
@@ -84,7 +48,8 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
         '2': u'微信支付',
         '3': u'微众卡支付',
         '9': u'货到付款',
-        '10': u'优惠抵扣'
+        '10': u'优惠抵扣',
+        '11': u'翼支付'
     }
 
     source_list = {
@@ -102,6 +67,7 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
     user_id = filter_data_args["user_id"]
     status_type = filter_data_args["status_type"]
     query_dict, date_interval, date_interval_type = filter_data_args["query_dict"], filter_data_args["date_interval"], filter_data_args["date_interval_type"]
+    order_status = filter_data_args["order_status"]
     user_profile = UserProfile.objects.get(user_id=user_id)
     webapp_id = user_profile.webapp_id
     mall_type = user_profile.webapp_type
@@ -112,23 +78,22 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
 
     
     if mall_type:
-        orders[0][25] = u"供货商"
-        orders[0].insert(25, u'供货商类型')
+        orders[25] = u"供货商"
+        orders.insert(25, u'供货商类型')
         
-        orders[0][12] = u"微众卡支付金额"
+        orders[12] = u"微众卡支付金额"
 
     # 判断是否有供货商，如果有则显示该字段
     
-
     has_supplier = False
     if mall_type:
         has_supplier = True
 
     if has_supplier:
-        orders[0].append(u'采购价')
-        orders[0].append(u'采购成本')
+        orders.append(u'采购价')
+        orders.append(u'采购成本')
 
-    if type == 1:
+    if type in [1,3]:
         filename = "order_{}.xlsx".format(exportjob_id)
         dir_path_excel = "excel"
         dir_path = os.path.join(settings.UPLOAD_DIR, dir_path_excel)
@@ -700,20 +665,6 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
                     tmp_line += 1
                     table.write_row("A{}".format(tmp_line), temp_premium_product)
 
-            
-            # orders.append([
-            #     u'总计',
-            #     u'订单量:' + str(order_count).encode('utf8'),
-            #     u'已完成:' + str(finished_order_count).encode('utf8'),
-            #     u'商品金额:' + str(total_product_money).encode('utf8'),
-            #     u'支付总额:' + str(final_total_order_money + weizoom_card_total_order_money).encode('utf8'),
-            #     u'现金支付金额:' + str(final_total_order_money).encode('utf8'),
-            #     u'微众卡支付金额:' + str(weizoom_card_total_order_money).encode('utf8'),
-            #     u'赠品总数:' + str(total_premium_product).encode('utf8'),
-            #     u'积分抵扣总金额:' + str(use_integral_money).encode('utf8'),
-            #     u'优惠劵价值总额:' + str(coupon_money_count).encode('utf8'),
-            # ])
-            # print 'end - '+str(time.time() - begin_time)
             totals = [
                 u'总计',
                 u'订单量:' + str(order_count).encode('utf8'),

@@ -492,8 +492,10 @@ var DATA_INTERVAL = '';
 $(document).ready(function() {
     var pageType = $(".xa-pageType").text();
     var status = '';
+    var type = 1;
     if(pageType == '财务审核'){
-        status = 'audit'
+        status = 'audit';
+        type = 3;
     }
 	var filterBox = new W.view.mall.order.orderFilter({
 		el: ".xa-orderFilterView",
@@ -797,7 +799,7 @@ $(document).ready(function() {
 			method: 'get',
 			args: {
 				woid: woid,
-				type: 0,
+				type: type,
 			},
 			success: function(data) {
 				if (data["status"] === 1 && data["is_download"] === 0){
@@ -816,7 +818,7 @@ $(document).ready(function() {
 					var options = {
 						el: '.panel-body',
 						topic_id: '',
-						type: 1,
+						type: type,
 						url: url,
 						jobId:0,
 						filter_value:filter_value,

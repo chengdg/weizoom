@@ -1897,11 +1897,11 @@ def get_param_from(request):
     # mall_type = request.user_profile.webapp_type
     user_id =  request.user_profile.user_id
     status_type = request.GET.get('status', None)
-    # order_status = request.GET.get('order_status', None)
+    order_status = request.GET.get('order_status', None)
     # user_profile = request.user_profile
     # manager = request.manager
     query_dict, date_interval,date_interval_type = __get_select_params(request)
-    param = {"user_id":user_id, "status_type":status_type, "query_dict":query_dict, "date_interval":date_interval, "date_interval_type":date_interval_type}
+    param = {"user_id":user_id, "status_type":status_type, "query_dict":query_dict, "date_interval":date_interval, "date_interval_type":date_interval_type, "order_status":order_status}
     return param
 
 get_orders_by_params = __get_orders_by_params

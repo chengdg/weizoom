@@ -173,26 +173,37 @@ class OrderList(resource.Resource):
         #add by duhao 2015-09-17
         order_status = request.GET.get('order_status' , '-1')
         mall_type = request.user_profile.webapp_type
+        woid = request.webapp_owner_id
+        export2data = {}
 
         if belong == 'audit':
             second_nav_name = export.ORDER_AUDIT
             has_order = util.is_has_order(request, True)
             page_type = u"财务审核"
+            export_jobs = ExportJob.objects.filter(woid=woid,type=3,is_download=0).order_by("-id")
+            if export_jobs:
+                export2data = {
+                    "woid":int(export_jobs[0].woid) ,#
+                    "status":1 if export_jobs[0].status else 0,
+                    "is_download":1 if export_jobs[0].is_download else 0,
+                    "id":int(export_jobs[0].id),
+                    # "file_path": export_jobs[0].file_path,
+                    }
+
         else:
             second_nav_name = export.ORDER_ALL
             has_order = util.is_has_order(request)
             page_type =u"所有订单"
-        woid = request.webapp_owner_id
-        export_jobs = ExportJob.objects.filter(woid=woid,type=1,is_download=0).order_by("-id")
-        if export_jobs:
-            export2data = {
-                "woid":int(export_jobs[0].woid) ,#
-                "status":1 if export_jobs[0].status else 0,
-                "is_download":1 if export_jobs[0].is_download else 0,
-                "id":int(export_jobs[0].id),
-                # "file_path": export_jobs[0].file_path,
-                }
-        else:
+            export_jobs = ExportJob.objects.filter(woid=woid,type=1,is_download=0).order_by("-id")
+            if export_jobs:
+                export2data = {
+                    "woid":int(export_jobs[0].woid) ,#
+                    "status":1 if export_jobs[0].status else 0,
+                    "is_download":1 if export_jobs[0].is_download else 0,
+                    "id":int(export_jobs[0].id),
+                    # "file_path": export_jobs[0].file_path,
+                    }
+        if not export2data:
             export2data = {
                 "woid":0,
                 "status":1,
@@ -200,6 +211,8 @@ class OrderList(resource.Resource):
                 "id":0,
                 "file_path":0,
                 }
+        
+        
         c = RequestContext(request, {
             'first_nav_name': FIRST_NAV,
             'second_navs': export.get_mall_order_second_navs(request),
@@ -646,6 +659,7 @@ class orderConfig(resource.Resource):
 
 class OrderGetFile(resource.Resource):
     """
+    所有订单/财务审核中的订单导出
     获取参数，构建成文件，上传到u盘运
     """
     app = "mall2"
@@ -658,7 +672,7 @@ class OrderGetFile(resource.Resource):
 
         now = datetime.now()
         #判断用户是否存在导出数据任务
-        if type == 1:
+        if type in [1,3] :
             
             param = util.get_param_from(request)
            
