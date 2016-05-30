@@ -87,6 +87,7 @@ W.dialog.ExportFileView = Backbone.View.extend({
 		this.jobId = options.jobId;
 		this.url = options.url;
 		this.app = options.app;
+		this.resource = options.resource;
 		this.filter_value = options.filter_value;
 		this.exportLink = _this.find('.xa-export');
 		if(_this.find("#exportProgress_bar").length == 0){
@@ -111,9 +112,10 @@ W.dialog.ExportFileView = Backbone.View.extend({
 		var filter_value = this.filter_value
 		var type = this.type
 		var app = this.app
+		var resource = this.resource
 		W.getApi().call({
 			app: app,
-			resource: 'export_file_param',
+			resource: resource,
 			method: 'get',
 			args: {
 				filter_value: filter_value,
@@ -212,7 +214,7 @@ W.CustomersView = Backbone.View.extend({
 
 	exportFile: function() {
 		//创建导出数据的view
-		this.exportFileView = new W.dialog.ExportFileView({type:this.options.type, "url": this.options.url, "filter_value":this.options.filter_value, 'app':this.options.app});
+		this.exportFileView = new W.dialog.ExportFileView({type:this.options.type, "url": this.options.url, "filter_value":this.options.filter_value, 'app':this.options.app, 'resource':this.options.resource});
 		
 		if(this.options.isAlreadyExport) {
 			this.exportFileView.doExport();

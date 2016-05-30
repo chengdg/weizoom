@@ -9,7 +9,7 @@ from celery import task
 from core import upyun_util
 from modules.member.models import Member
 from mall import models
-from . import utils
+# from . import utils
 from datetime import datetime
 from export_job.models import ExportJob
 from account.models import UserProfile
@@ -50,6 +50,7 @@ from weixin.user.module_api import get_all_active_mp_user_ids
 from account.models import UserProfile
 from market_tools.tools.weizoom_card.models import WeizoomCardHasOrder,WeizoomCard
 from core.exceptionutil import unicode_full_stack
+from mall.order.util import handle_member_nickname
 
 COUNT_PER_PAGE = 20
 
@@ -91,21 +92,20 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
         'weizoom_mall': u'商城'
     }
 
-    orders = [
-        [u'订单号', u'下单时间', u'付款时间', u'商品名称', u'规格',
+    orders = [u'订单号', u'下单时间', u'付款时间', u'商品名称', u'规格',
          u'商品单价', u'商品数量', u'销售额', u'商品总重量（斤）', u'支付方式', u'支付金额',
          u'现金支付金额', u'微众卡', u'运费', u'积分抵扣金额', u'优惠券金额',
          u'优惠券名称', u'订单状态', u'购买人', u'收货人', u'联系电话', u'收货地址省份',
          u'收货地址', u'发货人', u'发货人备注', u'来源' ,u'物流公司', u'快递单号',
          u'发货时间',u'商家备注',u'用户备注', u'买家来源', u'买家推荐人', u'扫描带参数二维码之前是否已关注', u'是否首单']
-    ]
+    
     user_id = filter_data_args["user_id"]
     status_type = filter_data_args["status_type"]
     query_dict, date_interval, date_interval_type = filter_data_args["query_dict"], filter_data_args["date_interval"], filter_data_args["date_interval_type"]
     user_profile = UserProfile.objects.get(user_id=user_id)
     webapp_id = user_profile.webapp_id
     mall_type = user_profile.webapp_type
-    manager = User.objects.get(id=profile.manager_id)
+    manager = User.objects.get(id=user_profile.manager_id)
 
     supplier_users = None
     suplier_not_sub_order_ids = []
@@ -175,18 +175,18 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
                     for order in order_list:
                         if order.type != PRODUCT_INTEGRAL_TYPE and order.status == ORDER_STATUS_SUCCESSED:
                             finished_order_count += 1
-                else:
-                    try:
-                        order_count = order_list.count()
-                    except:
-                        order_count = len(order_list)
-                    try:
-                        finished_order_count = order_list.filter(status=ORDER_STATUS_SUCCESSED).count()
-                    except:
-                        finished_order_count = len(filter(__filter_order_status, order_list))
-                    # order_list = list(order_list.all())
-                # -----------------------获取查询条件字典和时间筛选条件--------------构造oreder_list----------结束
-                # 商品总额：
+            else:
+                try:
+                    order_count = order_list.count()
+                except:
+                    order_count = len(order_list)
+                try:
+                    finished_order_count = order_list.filter(status=ORDER_STATUS_SUCCESSED).count()
+                except:
+                    finished_order_count = len(filter(__filter_order_status, order_list))
+                # order_list = list(order_list.all())
+            # -----------------------获取查询条件字典和时间筛选条件--------------构造oreder_list----------结束
+            # 商品总额：
             total_product_money = 0.0
             # 支付金额
             final_total_order_money = 0.0
@@ -438,7 +438,11 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
                 for relation in sorted(orderRelations, key=lambda o:o.id):
                     if temp_premium_id and '%s_%s' % (order.id, relation.promotion_id) != temp_premium_id:
                         # 添加赠品信息
-                        orders.extend(temp_premium_products)
+                        #orders.extend(temp_premium_products)
+                        for temp_premium_product in temp_premium_products:
+                            tmp_line += 1
+                        
+                            table.write_row("A{}".format(tmp_line), temp_premium_product)
                         temp_premium_products = []
                         temp_premium_id = None
                     product = id2product[relation.product_id]
@@ -627,7 +631,9 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
                         if has_supplier:
                             tmp_order.append(u'' if 0.0 == product.purchase_price else product.purchase_price)
                             tmp_order.append(u'' if 0.0 ==product.purchase_price else product.purchase_price*relation.number)
-                        orders.append(tmp_order)
+                        # orders.append(tmp_order)
+                        tmp_line += 1
+                        table.write_row("A{}".format(tmp_line), tmp_order)
                         total_product_money += relation.price * relation.number
                     i += 1
                     if order.id in order2premium_product and not temp_premium_id:
@@ -684,12 +690,31 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
                             temp_premium_id = '%s_%s' % (order.id, relation.promotion_id)
                         # if test_index % pre_page == pre_page-1:
                         #   print str(test_index)+' - '+str(time.time() - test_begin_time)+'-'+str(time.time() - begin_time)
+                
+                write_order_count += 1
+                export_jobs.update(processed_count=write_order_count,update_at=datetime.now())
             if temp_premium_id:
                 # 处理赠品信息
-                orders.extend(temp_premium_products)
+                #orders.extend(temp_premium_products)
+                for temp_premium_product in temp_premium_products:
+                    tmp_line += 1
+                    table.write_row("A{}".format(tmp_line), temp_premium_product)
 
             
-            orders.append([
+            # orders.append([
+            #     u'总计',
+            #     u'订单量:' + str(order_count).encode('utf8'),
+            #     u'已完成:' + str(finished_order_count).encode('utf8'),
+            #     u'商品金额:' + str(total_product_money).encode('utf8'),
+            #     u'支付总额:' + str(final_total_order_money + weizoom_card_total_order_money).encode('utf8'),
+            #     u'现金支付金额:' + str(final_total_order_money).encode('utf8'),
+            #     u'微众卡支付金额:' + str(weizoom_card_total_order_money).encode('utf8'),
+            #     u'赠品总数:' + str(total_premium_product).encode('utf8'),
+            #     u'积分抵扣总金额:' + str(use_integral_money).encode('utf8'),
+            #     u'优惠劵价值总额:' + str(coupon_money_count).encode('utf8'),
+            # ])
+            # print 'end - '+str(time.time() - begin_time)
+            totals = [
                 u'总计',
                 u'订单量:' + str(order_count).encode('utf8'),
                 u'已完成:' + str(finished_order_count).encode('utf8'),
@@ -700,82 +725,11 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
                 u'赠品总数:' + str(total_premium_product).encode('utf8'),
                 u'积分抵扣总金额:' + str(use_integral_money).encode('utf8'),
                 u'优惠劵价值总额:' + str(coupon_money_count).encode('utf8'),
-            ])
-            # print 'end - '+str(time.time() - begin_time)
+            ]
+            tmp_line += 1
+            table.write_row("A{}".format(tmp_line), totals)
+            #return orders
 
-            return orders
-
-
-
-
-
-
-
-
-
-            if product_name:
-                product_reviews = product_reviews.filter(order_has_product__product__name__contains=product_name)
-            if product_user_code:
-                product_review_list = []
-                for product_review in product_reviews:
-                    product_model = models.ProductModel.objects.filter(name=product_review.order_has_product.product_model_name,product_id=product_review.product_id)[0]
-                    if product_user_code == product_model.user_code:
-                        product_review_list.append(product_review)
-                product_reviews = product_review_list
-            reviews_info = [u'用户ID', u'用户名',u'商品名称',u'订单号',
-                 u'姓名',u'电话',u'评价时间',u'状态',u'产品评星',u'评价内容',u'图片链接']
-            for i in range(len(reviews_info)):
-                table.write(0, i, reviews_info[i])
-            try:
-                review_count = product_reviews.count()
-            except:
-                review_count = len(product_reviews)
-            export_jobs.update(count=review_count)
-            review_count_write = 0
-            for product_review in product_reviews:
-                member_id = product_review.member_id
-                try:
-                   member = Member.objects.filter(id=member_id)[0]
-                except:
-                    continue
-                nike_name = member.username
-                try:
-                    nike_name = nike_name.decode('utf8')
-                except:
-                    nike_name = member.username_hexstr
-                product = models.Product.objects.filter(id=product_review.product_id)[0]
-                product_name = product.name
-                # order_id = product_review.order_id
-                order = models.Order.objects.filter(id=product_review.order_id)[0]
-                order_id = order.order_id
-                ship_name = order.ship_name
-                ship_tel = order.ship_tel
-                created_at = product_review.created_at.strftime('%Y-%m-%d %H:%M:%S')
-                status = models.PRODUCT_REVIEW_STATUS[int(product_review.status)+1][1]
-                product_score = product_review.product_score
-                review_detail = product_review.review_detail
-                pic_links = []
-                product_review_pictures = models.ProductReviewPicture.objects.filter(product_review=product_review)
-                for product_review_picture in product_review_pictures:
-                    pic_links.append(product_review_picture.att_url)
-
-                product_review_list = [ member_id,
-                                nike_name,
-                                product_name,
-                                order_id,
-                                ship_name,
-                                ship_tel,
-                                created_at,
-                                status,
-                                product_score,
-                                review_detail,
-                            ]
-                product_review_list.extend(pic_links)
-                review_count_write += 1
-                for i in range(len(product_review_list)):
-                    table.write(review_count_write, i, product_review_list[i])
-
-                export_jobs.update(processed_count=review_count_write,update_at=datetime.now())
             workbook.close()
             upyun_path = '/upload/excel/{}'.format(filename)
             yun_url = upyun_util.upload_image_to_upyun(file_path, upyun_path)
@@ -786,5 +740,3 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
             export_jobs.update(status=2,is_download=1)
             watchdog_error(notify_message)
 
-for order in orders:
-            del order[13]

@@ -649,7 +649,7 @@ class OrderGetFile(resource.Resource):
     获取参数，构建成文件，上传到u盘运
     """
     app = "mall2"
-    resource ="export_file_param"
+    resource ="export_order_param"
     
     @login_required
     def api_get(request):

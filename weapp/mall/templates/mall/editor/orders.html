@@ -29,6 +29,7 @@
                 data-template-id="#mall-orders-view"
                 data-init-sort="-created_at"
                 data-selectable = "false"
+                <!-- class="panel-body" -->
                 data-user-webapp-id={{user.get_profile.webapp_id}}
                 data-args='{"order_status":"{{order_status}}"}'
             >
@@ -42,6 +43,7 @@
                 data-enable-paginator="true"
                 data-template-id="#mall-orders-view"
                 data-init-sort="-created_at"
+                class="panel-body"
                 data-user-webapp-id={{user.get_profile.webapp_id}}
             >
             </div>
@@ -86,7 +88,7 @@
 	</ul>
 	{{if data.pageinfo.object_count != 0}}
   <!-- 订单打印 2016.04.08 start -->
-    <div class="print－all-orders-row">
+    <div class="print－all-orders-row div_export">
 		<input type="checkBox" name="selectAllPrintOrders">
 		<span class="ml5 mr10">全选</span>
 		<a title="批量打印发货单" class="xa-order-print" href="javascript:void(0);">批量打印发货单</a>
@@ -786,7 +788,7 @@ $(document).ready(function() {
 
 	})();
 	<!-- 订单打印 2016.04.08 end -->
-		$('.panel-body').delegate('.xa-export', 'click', function(event){
+	$('.panel-body').delegate('.xa-export', 'click', function(event){
 		W.getApi().call({
 			app: 'export_job',
 			resource: 'export_is_download',
@@ -806,18 +808,19 @@ $(document).ready(function() {
 				else{
 					var url ='';
 					var filter_value = '';
-					if (view.filter_value) {
-						filter_value = view.filter_value;
+					if (filterBox.filter_value) {
+						filter_value = filterBox.filter_value;
 					};
 					var options = {
 						el: '.panel-body',
 						topic_id: '',
-						type: 0,
+						type: 1,
 						url: url,
 						jobId:0,
 						filter_value:filter_value,
 						isAlreadyExport : true,
-						app: 'mall2/order',
+						app: 'mall2',
+						resource:'export_order_param',
 						timelinesOptions: {
 							
 						}

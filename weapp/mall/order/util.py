@@ -1902,5 +1902,6 @@ def get_param_from(request):
     # manager = request.manager
     query_dict, date_interval,date_interval_type = __get_select_params(request)
     param = {"user_id":user_id, "status_type":status_type, "query_dict":query_dict, "date_interval":date_interval, "date_interval_type":date_interval_type}
+    return param
 
 get_orders_by_params = __get_orders_by_params
