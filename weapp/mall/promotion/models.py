@@ -854,6 +854,7 @@ class CardHasExchanged(models.Model):
 
 WEIZOOM_CARD_SOURCE_WEAPP = 0
 WEIZOOM_CARD_SOURCE_REBATE = 1
+WEIZOOM_CARD_SOURCE_VIRTUAL = 2
 class MemberHasWeizoomCard(models.Model):
 	"""
 	给会员发放的微众卡
