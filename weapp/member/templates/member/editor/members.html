@@ -278,7 +278,7 @@
 		<tr>
 			<th >会员</th>
 			<th >会员等级</th>
-			<th  class="tx_sortable xui-Blue pl0 pr0" style="width:6%" data-sort-attr='friend_count' data-sort-direction="up">好友数</th>
+			<th  class="tx_sortable xui-Blue pl0 pr0" style="width:6%" data-sort-attr='fans_count' data-sort-direction="up">推荐数</th>
 			<th  class="tx_sortable xui-Blue pl0 pr0" style="width:7%" data-sort-attr='integral' data-sort-direction="up">积分</th>
 			<th  class="tx_sortable xui-Blue" style="width:9%" data-sort-attr='pay_money' data-sort-direction="up">消费总额</th>
 			<th  class="tx_sortable xui-Blue pl0 pr0" style="width:9%" data-sort-attr='unit_price' data-sort-direction="up">客单价</th>
@@ -322,12 +322,8 @@
 			</td>
 			<td>
 				<div class="centerAlign">
-					{{if member.friend_count==0}}
-						<span class="cursor-text">${ member.friend_count }</span>
-					{{else}}
-						<a class="relation-text" href="javascript:void(0);" style="" friend_count='${friend_count}' fans_count='${fans_count}' value='${ member.id }'>${ member.friend_count }
-						</a>
-					{{/if}}
+					<a class="relation-text" href="javascript:void(0);" style="" friend_count='${friend_count}' fans_count='${fans_count}' value='${ member.id }'>${ member.fans_count }
+					</a>
 				</div>
 			</td>
 			<td>
@@ -836,10 +832,6 @@ $(document).ready(function() {
 					var friend_count = $el.attr('friend_count');
 					var fans_count = $el.attr('fans_count');
 					var memberId = $el.attr('value');
-					if ($el.html() == '0') {
-						return false;
-					}
-
 					W.dialog.showDialog('W.dialog.member.RelationsDialog', {
 						memberId: memberId,
 						friendCount: friend_count,

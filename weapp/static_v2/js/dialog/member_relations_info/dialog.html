@@ -113,7 +113,7 @@
 							</tr>
 					{{/each}}
 					{{else}}
-						<tr rowspan='2' ><td colspan='5' class="h130 xui-fontGary" >暂无数据</td></tr>
+						<tr rowspan='2' ><td {{if data.only_fans==0}}colspan='6'{{else}}colspan='5'{{/if}} class="h130 xui-fontGary" >暂无数据</td></tr>
 					{{/if }}
 
 					</tbody>
