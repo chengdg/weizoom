@@ -1,5 +1,7 @@
 # __author__ : "王丽"
 #editor: 新新 2016.3.28
+#editor: 田丰敏 2016.5.31
+
 Feature: 会员列表-会员详情-基本信息
 """
 	#editor: 新新 
@@ -120,7 +122,7 @@ Scenario:1 会员基本信息（会员昵称、关注时间、上次交易时间
 			"last_buy_time":"今天",
 			"tags": ["未分组"],
 			"integral":0,
-			"friend_count":0,
+			"new_members":0,
 			"remarks":""
 		}
 		"""
@@ -146,7 +148,7 @@ Scenario:1 会员基本信息（会员昵称、关注时间、上次交易时间
 			"last_buy_time":"今天",
 			"tags": ["未分组"],
 			"integral":0,
-			"friend_count":0,
+			"new_members":0,
 			"remarks":"会员备注信息"
 		}
 		"""
@@ -169,7 +171,7 @@ Scenario:2 会员基本信息修改"所在分组"
 			"last_buy_time":"",
 			"tags": ["未分组"],
 			"integral":0,
-			"friend_count":0,
+			"new_members":0,
 			"remarks":""
 		}
 		"""
@@ -191,7 +193,7 @@ Scenario:2 会员基本信息修改"所在分组"
 			"last_buy_time":"",
 			"tags":["分组1", "分组3"],
 			"integral":0,
-			"friend_count":0,
+			"new_members":0,
 			"remarks":""
 		}
 		"""
@@ -214,7 +216,7 @@ Scenario:3 会员基本信息修改"调积分"
 			"last_buy_time":"",
 			"tags": ["未分组"],
 			"integral":0,
-			"friend_count":0,
+			"new_members":0,
 			"remarks":""
 		}
 		"""
@@ -237,7 +239,7 @@ Scenario:3 会员基本信息修改"调积分"
 			"last_buy_time":"",
 			"tags": ["未分组"],
 			"integral": -10,
-			"friend_count":0,
+			"new_members":0,
 			"remarks":""
 		}
 		"""
@@ -261,7 +263,7 @@ Scenario:3 会员基本信息修改"调积分"
 			"last_buy_time":"",
 			"tags": ["未分组"],
 			"integral": 10,
-			"friend_count":0,
+			"new_members":0,
 			"remarks":""
 		}
 		"""
@@ -318,7 +320,7 @@ Scenario:4 会员基本信息好友数验证
 			"last_buy_time":"",
 			"tags": ["未分组"],
 			"integral":0,
-			"friend_count":1,
+			"new_members":1,
 			"remarks":""
 		}
 		"""
