@@ -486,7 +486,7 @@ class Product(models.Model):
 						display_price_range = target_model['price']
 					else:
 						# 列表页部分显示商品的最小价格那个model的信息
-						custom_models.sort(lambda x, y: cmp(x['price'], y['price']))
+						custom_models.sort(lambda x, y: cmp(float(x['price']), float(y['price'])))
 						target_model = custom_models[0]
 						low_price = target_model['price']
 						high_price = custom_models[-1]['price']
