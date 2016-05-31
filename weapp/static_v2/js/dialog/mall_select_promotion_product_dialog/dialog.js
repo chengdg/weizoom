@@ -147,3 +147,13 @@ W.dialog.mall.SelectForbiddenCouponProductDialog = W.dialog.mall.SelectPromotion
         return "mall-select-forbiddenCoupon-product-dialog-tmpl";
     }
 });
+
+W.dialog.mall.CreatVirtualProductDialog = W.dialog.mall.SelectPromotionProductDialog.extend({
+    events: _.extend({
+    }, W.dialog.mall.SelectPromotionProductDialog.prototype.events),
+    getTemplate: function() {   
+        console.log('enter--------')     
+        $('#mall-createdVirtual-product-dialog-tmpl-src').template('mall-createdVirtual-product-dialog-tmpl');
+        return "mall-createdVirtual-product-dialog-tmpl";
+    }
+});

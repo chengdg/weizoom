@@ -46,6 +46,11 @@ echo ">> calling 'apps_group_timer_task'" >> $LOG
 echo "--------------------------------------------------------" >> $LOG
 python manage.py apps_group_timer_task >> $LOG 2>&1
 
+#add by duhao 20150521
+echo ">> calling 'services.virtual_product.tasks.deliver_virtual_product'" >> $LOG
+echo "--------------------------------------------------------" >> $LOG
+python services/send_task.py "services.virtual_product_service.tasks.deliver_virtual_product" {} "{}" >> $LOG 2>&1
+
 echo "========================================================" >> $LOG
 
 date >> $LOG

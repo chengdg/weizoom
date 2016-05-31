@@ -91,6 +91,21 @@
 						<div class="errorHint" data-error-hint="请选择供货商"></div>
 					</div>
 				</div>
+
+				<!-- weshop微众商城定制功能start -->
+				{% if request.manager.username == 'jobs' or request.manager.username == 'weshop' %}
+				<div class="form-group">
+					<label class="control-label fl" for="type">商品类型：</label>
+					<div class="fl">
+	                	<select class="ml5" id="type" name="type">
+	                		<option value="object" {% if product.type == 'object' %}selected='selected'{% endif %}>普通商品</option>
+	                		<option value="virtual" {% if product.type == 'virtual' %}selected='selected'{% endif %}>虚拟商品</option>
+	                		<option value="wzcard" {% if product.type == 'wzcard' %}selected='selected'{% endif %}>微众卡</option>
+	                	</select>
+					</div>
+				</div>
+				{% endif %}
+				<!-- weshop微众商城定制功能end -->
 				<div class="form-group ">
 					<label class="control-label fl" for="purchase_price">采购价：</label>
 					<div class="fl">
@@ -581,7 +596,7 @@ $('.xa-selectImage').click(function(){return false;})
 	$(document).ready(function() {
 
 		/*微众商城需求start 多规格开启*/
-		var webapp_id = '{{webapp_id}}';
+		var username = '{{request.manager.username}}';
 		/*微众商城需求end*/
 
 		var view = new W.view.mall.ProductEditor({
@@ -596,8 +611,8 @@ $('.xa-selectImage').click(function(){return false;})
 				$(':checkbox', $div).click();
 			}
 
-			/*微众商城需求start 多规格开启 当webapp_id 非微众商城时，多规格按钮隐藏*/
-			if(webapp_id != '3394'){
+			/*微众商城需求start 多规格开启 当username 非微众商城时，多规格按钮隐藏*/
+			if(username != 'weshop'){
 				$div.hide();
 			}
 			/*微众商城需求end*/
