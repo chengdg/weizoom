@@ -314,13 +314,13 @@ def update_webapp_product_cache(**kwargs):
                 # todo zhaolei 会存在多次删除的情况
                 cache_util.delete_cache(categories_products_key)
                 # todo zhaolei 清除对应的varnish缓存,需要重构
-                if settings.EN_VARNISH:
-                    if not settings.DEBUG:
-                        url = 'http://%s/termite/workbench/jqm/preview/?woid=%s&module=mall&model=products&action=list&category_id=%s' % \
-                                (settings.DOMAIN, webapp_owner_id, catory_id)
-                        request = urllib2.Request(url)
-                        request.get_method = lambda: 'PURGE'
-                        urllib2.urlopen(request)
+                # if settings.EN_VARNISH:
+                #     if not settings.DEBUG:
+                #         url = 'http://%s/termite/workbench/jqm/preview/?woid=%s&module=mall&model=products&action=list&category_id=%s' % \
+                #                 (settings.DOMAIN, webapp_owner_id, catory_id)
+                #         request = urllib2.Request(url)
+                #         request.get_method = lambda: 'PURGE'
+                #         urllib2.urlopen(request)
         elif instance and sender==mall_models.ProductCategory:
             categories_key = '{wo:%s}_categories' % (webapp_owner_id)
             cache_util.delete_cache(categories_key)
@@ -369,13 +369,13 @@ def update_webapp_category_cache(**kwargs):
             categories_products_key = '{wo:%s}_{co:%s}_products' % (webapp_owner_id,catory_id)
             cache_util.rem_set_member_from_redis(categories_products_key,product_id)
         # todo zhaolei 清除对应的varnish缓存,需要重构
-        if settings.EN_VARNISH:
-            if not settings.DEBUG:
-                url = 'http://%s/termite/workbench/jqm/preview/?woid=%s&module=mall&model=products&action=list&category_id=%s' % \
-                        (settings.DOMAIN, webapp_owner_id, category_id)
-                request = urllib2.Request(url)
-                request.get_method = lambda: 'PURGE'
-                urllib2.urlopen(request)
+        # if settings.EN_VARNISH:
+        #     if not settings.DEBUG:
+        #         url = 'http://%s/termite/workbench/jqm/preview/?woid=%s&module=mall&model=products&action=list&category_id=%s' % \
+        #                 (settings.DOMAIN, webapp_owner_id, category_id)
+        #         request = urllib2.Request(url)
+        #         request.get_method = lambda: 'PURGE'
+        #         urllib2.urlopen(request)
 
         pattern_categories = "webapp_products_categories_{wo:%s}" % webapp_owner_id
         cache_util.delete_pattern(pattern_categories)
@@ -828,20 +828,20 @@ def update_product_cache(webapp_owner_id, product_id, deleteRedis=True, deleteVa
         key = 'webapp_products_categories_{wo:%s}' % webapp_owner_id
         cache_util.delete_cache(key)
 
-    if settings.EN_VARNISH:
-        if not settings.IS_UNDER_BDD and deleteVarnish:
-            url = 'http://%s/termite/workbench/jqm/preview/?woid=%s&module=mall&model=product&rid=%s' % \
-                (settings.DOMAIN, webapp_owner_id, product_id)
-            request = urllib2.Request(url)
-            request.get_method = lambda: 'PURGE'
-            urllib2.urlopen(request)
+    # if settings.EN_VARNISH:
+    #     if not settings.IS_UNDER_BDD and deleteVarnish:
+    #         url = 'http://%s/termite/workbench/jqm/preview/?woid=%s&module=mall&model=product&rid=%s' % \
+    #             (settings.DOMAIN, webapp_owner_id, product_id)
+    #         request = urllib2.Request(url)
+    #         request.get_method = lambda: 'PURGE'
+    #         urllib2.urlopen(request)
 
-        if not settings.IS_UNDER_BDD and deleteVarnishList:
-            url = 'http://%s/termite/workbench/jqm/preview/?woid=%s&module=mall&model=products&action=list' % \
-                (settings.DOMAIN, webapp_owner_id)
-            request = urllib2.Request(url)
-            request.get_method = lambda: 'PURGE'
-            urllib2.urlopen(request)
+    #     if not settings.IS_UNDER_BDD and deleteVarnishList:
+    #         url = 'http://%s/termite/workbench/jqm/preview/?woid=%s&module=mall&model=products&action=list' % \
+    #             (settings.DOMAIN, webapp_owner_id)
+    #         request = urllib2.Request(url)
+    #         request.get_method = lambda: 'PURGE'
+    #         urllib2.urlopen(request)
             # todo 清除商品分类列表
             # for catHasProduct in mall_models.CategoryHasProduct.objects.filter(product_id=product_id):
             #     url = 'http://%s/termite/workbench/jqm/preview/?woid=%s&module=mall&model=products&action=list&category_id=%s' % \
@@ -852,9 +852,10 @@ def update_product_cache(webapp_owner_id, product_id, deleteRedis=True, deleteVa
 
 
 def update_product_list(webapp_owner_id):
-    if settings.EN_VARNISH:
-        url = 'http://%s/termite/workbench/jqm/preview/?woid=%s&module=mall&model=products&action=list' % \
-                (settings.DOMAIN, webapp_owner_id)
-        request = urllib2.Request(url)
-        request.get_method = lambda: 'PURGE'
-        urllib2.urlopen(request)
+    pass
+    # if settings.EN_VARNISH:
+    #     url = 'http://%s/termite/workbench/jqm/preview/?woid=%s&module=mall&model=products&action=list' % \
+    #             (settings.DOMAIN, webapp_owner_id)
+    #     request = urllib2.Request(url)
+    #     request.get_method = lambda: 'PURGE'
+    #     urllib2.urlopen(request)

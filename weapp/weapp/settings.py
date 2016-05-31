@@ -512,7 +512,7 @@ INSTALLED_TASKS = [
     'market_tools.tools.shake',
     'weixin2',
     'tools.express',
-
+    'termite2',
     'member',
     'mall.product',
     # for services
