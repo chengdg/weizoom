@@ -54,7 +54,7 @@ def get_weizoom_card_login(request):
 			return get_weizoom_card_wallet(request)
 
 		c = RequestContext(request, {
-				'page_title': u'微众卡',
+				'page_title': u'我的卡包' if username and username in ['jobs','weshop','ceshi01'] else u'微众卡',
 				'is_hide_weixin_option_menu': True,
 				'normal': True,
 				'is_weshop': True if username and username in ['jobs','weshop','ceshi01'] else False
@@ -164,8 +164,9 @@ def get_weizoom_card_wallet(request):
 	member_id = request.member.id
 	# member_info = MemberInfo.objects.get(member_id=member_id)
 	# is_binded = member_info.is_binded
+	print member_id,11111111111111111111111111111111111111111
 	member_has_cards = promotion_models.MemberHasWeizoomCard.objects.filter(member_id = member_id).order_by('-created_at')
-
+	print member_has_cards, 22222222222222222222222222222222
 	data_card = {}
 	card_infos_list = []
 	card_number2card = {}
@@ -185,7 +186,7 @@ def get_weizoom_card_wallet(request):
 		resp = requests.post(url, params=data_card)
 		text = json.loads(resp.text)
 		card_infos = text['data']['card_infos']
-
+		print card_infos, 3333333333333333333333333333333
 		card_details = []
 		for card in card_infos:
 			cur_card_details = card.values()[0]
@@ -208,8 +209,9 @@ def get_weizoom_card_wallet(request):
 			card_details += card.values()
 
 		card_details_dic['card'] = card_details
+	print card_details_dic, 444444444444444444444
 	c = RequestContext(request, {
-		'page_title': u'微众卡',
+		'page_title': u'我的卡包',
 		'cards': card_details_dic,
 		'has_expired_cards': has_expired_cards,
 		'is_binded': True,
@@ -484,7 +486,7 @@ def get_other_cards_list(request):
 	@return:
 	"""
 	member_id = request.member.id
-	member_has_other_cards = promotion_models.VirtualProductHasCode.objects.filter(member_id = member_id)
+	member_has_other_cards = promotion_models.VirtualProductHasCode.objects.filter(member_id = member_id).order_by('-created_at')
 	cards = []
 	has_expired_cards = False
 	for card in member_has_other_cards:
@@ -510,7 +512,7 @@ def get_other_cards_list(request):
 		cards.append(card_details_dic)
 
 	c = RequestContext(request, {
-		'page_title': u'其他卡包',
+		'page_title': u'我的卡包',
 		'cards': cards,
 		'has_expired_cards': has_expired_cards,
 		'is_weshop': True

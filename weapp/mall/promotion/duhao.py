@@ -59,6 +59,29 @@ def deliver_virtual_product(request, args):
 			oid2product_id2count[oid] = {}
 		oid2product_id2count[oid][product.id] = o2p.number
 
+		#判断是否有促销活动
+		if o2p.promotion_id:
+			promotion = None
+			try:
+				promotion = promotion_models.Promotion.objects.get(id=o2p.promotion_id)
+			except Exception, e:
+				message = u'获取促销失败\norder id:%s\nproduct id:%d\n商品名称:%s' % (order.order_id, product.id, product.name)
+				print message
+				ding_util.send_to_ding(message, WESHOP_DING_GROUP_ID)
+
+			#判断是否是买赠
+			if promotion.type == promotion_models.PROMOTION_TYPE_PREMIUM_SALE:
+				premiums = promotion_models.PremiumSaleProduct.objects.filter(premium_sale__id=promotion.detail_id)
+				if premiums.count() > 0:
+					premium = premiums[0]
+					_product = premium.product
+					#判断赠品是否是虚拟类型
+					if _product.type in [mall_models.PRODUCT_VIRTUAL_TYPE, mall_models.PRODUCT_WZCARD_TYPE]:
+						if oid2product_id2count[oid].has_key(_product.id):
+							oid2product_id2count[oid][_product.id] += premium.count
+						else:
+							oid2product_id2count[oid][_product.id] = premium.count
+
 	print 'virtual order count:', len(oid2order)
 	for oid in oid2product_id2count:
 		can_update_order_status = True  #是否可以更改订单的发货状态
@@ -68,7 +91,7 @@ def deliver_virtual_product(request, args):
 		#获取会员信息
 		member = member_models.WebAppUser.get_member_by_webapp_user_id(order.webapp_user_id)
 		if not member:
-			message = u'获取member信息失败，订单id:%s' % order.order_id
+			message = u'获取member信息失败\n订单id:%s' % order.order_id
 			print message
 			ding_util.send_to_ding(message, WESHOP_DING_GROUP_ID)
 			continue
@@ -84,7 +107,7 @@ def deliver_virtual_product(request, args):
 				#判断该订单里的这个商品是否已经被发过货了，如果发过则不重复发放，且can_update_order_status不变为False
 				existed_records = promotion_models.VirtualProductHasCode.objects.filter(virtual_product=virtual_product, oid=order.id)
 				if existed_records.count() > 0:
-					message = u'该商品已经发过货，无需重复发货，订单id:%s, 商品id:%d, 福利卡券活动id:%d, 商品名称:%s' % (order.order_id, product_id, virtual_product.id, virtual_product.product.name)
+					message = u'该商品已经发过货，无需重复发货\n订单id:%s\n商品id:%d\n福利卡券活动id:%d\n商品名称:%s' % (order.order_id, product_id, virtual_product.id, virtual_product.product.name)
 					print message
 					ding_util.send_to_ding(message, WESHOP_DING_GROUP_ID)
 					continue
@@ -99,7 +122,7 @@ def deliver_virtual_product(request, args):
 
 				if len(_c) < count:
 					can_update_order_status = False
-					message = u'发放虚拟商品时库存不足，订单id:%s, 商品id:%d, 待发放:%d, 库存:%d, 商品名称:%s' % (order.order_id, product_id, count, len(_c), virtual_product.product.name)
+					message = u'发放虚拟商品时库存不足\n订单id:%s\n商品id:%d\n待发放:%d\n库存:%d\n商品名称:%s\n福利卡券活动id:%d' % (order.order_id, product_id, count, len(_c), virtual_product.product.name, virtual_product.id)
 					print message
 					ding_util.send_to_ding(message, WESHOP_DING_GROUP_ID)
 					continue
@@ -124,15 +147,15 @@ def deliver_virtual_product(request, args):
 								relation_id=code.virtual_product.id,
 								source=promotion_models.WEIZOOM_CARD_SOURCE_VIRTUAL
 							)
-							print u'发放微众卡到member_has_wzcard：', member_has_wzcard.id
+							print u'订单%s发放微众卡到member_has_wzcard：%d', (order.order_id, member_has_wzcard.id)
 						except Exception, e:
-							message = u'微众卡已经发放成功，但写入MemberHasWeizoomCard信息失败，订单id:%s, 商品id:%d, 商品名称:%s' % (order.order_id, product_id, virtual_product.product.name)
+							message = u'微众卡已经发放成功，但写入MemberHasWeizoomCard信息失败\n订单id:%s\n商品id:%d\n商品名称:%s' % (order.order_id, product_id, virtual_product.product.name)
 							print message
 							print e
 							ding_util.send_to_ding(message, WESHOP_DING_GROUP_ID)
 			else:
 				can_update_order_status = False
-				message = u'虚拟商品发货失败，商品没有关联福利卡券活动，订单id:%s, 商品id:%d' % (order.order_id, product_id)
+				message = u'虚拟商品发货失败，商品没有关联福利卡券活动\n订单id:%s\n商品id:%d' % (order.order_id, product_id)
 				print message
 				ding_util.send_to_ding(message, WESHOP_DING_GROUP_ID)
 
@@ -140,6 +163,7 @@ def deliver_virtual_product(request, args):
 			#更改订单状态，发货
 			print u'订单发货：', order.order_id
 			module_api.ship_order(order.id, '', '', u'系统', '', False, False)
+
 
 
 class VirtualProducts(resource.Resource):
