@@ -178,6 +178,12 @@
 				<tr data-order-id="${group.fackorder.id}">
 					<td class="nowrap" width="75">
 						{{if data.mall_type}}
+							{{if group.fackorder.type == 'wzcard' }}
+								<i class="xui-virtualProductIcon">卡</i>${group.products[0].supplier_store_name}
+							{{/if}}
+							{{if group.fackorder.type == 'virtual' }}
+								<i class="xui-virtualProductIcon">码</i>${group.products[0].supplier_store_name}
+							{{/if}}
 							{{if group.id > 0}}
 							    ${data.supplier[group.id]}
 							{{/if}}

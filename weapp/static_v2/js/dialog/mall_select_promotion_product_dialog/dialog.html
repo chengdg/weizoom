@@ -124,7 +124,7 @@
 				<th>商品名称</th>
 				<th width="120">商品价格（元）</th>
 				<th width="80">商品库存</th>
-				<th width="120">禁用状态</th>
+				<th width="120">禁用状态7</th>
 				<th width="120">操作</th>
 			</tr>
 		</thead>
@@ -199,6 +199,85 @@
 				{{/each}}
             {{else}}
                 <tr><td colspan='3'>还没有数据</td></tr>
+            {{/if}}
+		</tbody>
+	</table>
+</script>
+
+<script id="mall-createdVirtual-product-dialog-tmpl-src" type="text/x-jquery-tmpl">
+	<div class="modal fade xui-selectPromotionProductDialog" id="mallSelectPromotionProductDialog">
+	<div class="modal-dialog modal-lg" style="width: 800px;">
+	<div class="modal-content">
+		<div class="modal-header">
+			<button aria-hidden="true" data-dismiss="modal" class="close" type="button"><span class="xui-closeColor" aria-hidden="true">&times;</span></button>
+			<h3 class="modal-title">
+				在售虚拟商品
+			</h3>
+		</div>
+		<div class="modal-body" style="min-height: 300px;">
+		<div
+			data-ui-role="advanced-table"
+			data-app="mall2"
+			data-api="virtual_product"
+			data-template-id="#createdVirtual-product-view"
+			data-enable-paginator="true"
+			data-enable-sort="false"
+			data-item-count-per-page="10"
+			data-auto-load="false"
+		></div>
+
+		</div>
+		<div class="modal-footer modal-footerBg">
+			<button class="btn btn-success xui-btnStyle" style="width:110px;height:36px;background:#1F7BBD; color:#ffffff;">完成选择</button>
+		</div>
+	</div>
+	</div>
+	</div>
+</script>
+<script id="createdVirtual-product-view" type="text/x-jquery-tmpl">
+	<table id="productListTable" class="table table-bordered table-condensed xb-stripedTable xui-tablePosition">
+		<thead style="background:#c8d2e5;">
+			<tr>
+				<th width="80">商品条码</th>
+				<th>商品名称</th>
+				<th width="120">商品价格（元）</th>
+				<th width="80">商品库存</th>
+				<th width="120">创建时间</th>
+				<th width="120">操作</th>
+			</tr>
+		</thead>
+		<tbody id='product_list'>
+            {{if items.length}}
+	            {{each(i, product) items}}
+				<tr class="" data-id="${product.id}">
+					<td>
+						${product.bar_code}
+					</td>
+					<td>
+						${product.name}
+					</td>
+					<td>
+						${product.price}
+					</td>
+					<td>
+						${product.stocks}
+					</td>
+					<td>
+						${product.created_at}
+					</td>
+					<td>
+						{{if !product.can_use}}
+							<span>已使用</span>
+						{{else}}
+						<label class="btn btn-primary" style="border-radius:3px;">
+							<input type="checkbox" autocomplete="off" class="{{if product.can_use}}xa-selectProduct{{/if}}" ><span>选取</span>
+						</label>
+						{{/if}}
+					</td>
+				</tr>
+				{{/each}}
+            {{else}}
+                <tr><td colspan='6'>还没有数据</td></tr>
             {{/if}}
 		</tbody>
 	</table>

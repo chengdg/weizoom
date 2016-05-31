@@ -852,8 +852,9 @@ class CardHasExchanged(models.Model):
 		db_table = 'mallpromotion_card_has_exchanged'
 
 
-WEIZOOM_CARD_SOURCE_WEAPP = 0
-WEIZOOM_CARD_SOURCE_REBATE = 1
+WEIZOOM_CARD_SOURCE_WEAPP = 0	#目前没用到
+WEIZOOM_CARD_SOURCE_REBATE = 1	#返利活动
+WEIZOOM_CARD_SOURCE_VIRTUAL = 2  #福利卡券
 class MemberHasWeizoomCard(models.Model):
 	"""
 	给会员发放的微众卡
@@ -869,3 +870,63 @@ class MemberHasWeizoomCard(models.Model):
 
 	class Meta(object):
 		db_table = 'member_has_weizoom_card'
+
+
+class VirtualProduct(models.Model):
+	"""
+	福利卡券活动
+	"""
+	owner = models.ForeignKey(User)
+	name = models.CharField(max_length=128) #活动名称
+	product = models.ForeignKey(Product)  #活动关联的商品
+	is_finished = models.BooleanField(default=False)  #活动是否结束
+	created_at = models.DateTimeField(auto_now_add=True)  #创建时间
+
+	class Meta(object):
+		db_table = 'mallpromotion_virtual_product'
+
+
+CODE_STATUS_NOT_GET = 0 #未领取
+CODE_STATUS_GET = 1 #已领取
+CODE_STATUS_OVERDUE = 2 #已过期
+CODE_STATUS_EXPIRED = 3 #已失效
+CODE2TEXT = {
+	CODE_STATUS_NOT_GET: u'未领取',
+	CODE_STATUS_GET: u'已领取',  #已领取的就不判断是否过期，即使过期了数据库里依然是已领取状态，但是用户卡包里显示已过期
+	CODE_STATUS_OVERDUE: u'已过期',  #已过期的一定是没有被领取过的
+	CODE_STATUS_EXPIRED: u'已失效'
+}
+class VirtualProductHasCode(models.Model):
+	"""
+	福利卡券活动关联的卡券码
+	"""
+	owner = models.ForeignKey(User)
+	virtual_product = models.ForeignKey(VirtualProduct)
+	code = models.CharField(max_length=128) #卡号
+	password = models.CharField(max_length=128) #密码
+	start_time = models.DateTimeField() #有效期起始时间
+	end_time = models.DateTimeField()#有效期结束时间
+	status = models.IntegerField(default=CODE_STATUS_NOT_GET) #状态
+	get_time = models.DateTimeField(null=True) #领取/发放时间
+	member_id = models.CharField(max_length=20, default='') #会员id
+	oid = models.CharField(max_length=20, default='') #订单id
+	order_id = models.CharField(max_length=35, default='') #订单order_id
+	created_at = models.DateTimeField(auto_now_add=True)  #创建时间
+
+	class Meta(object):
+		db_table = 'mallpromotion_virtual_product_has_code'
+
+	def __update_status_if_necessary(self):
+		now = datetime.now()
+		if self.status == CODE_STATUS_NOT_GET and self.end_time <= now:
+			# 未领取的卡券如果过期了则更新状态
+			self.status = CODE_STATUS_OVERDUE
+			self.save()
+
+	@property
+	def can_not_use(self):
+		self.__update_status_if_necessary()
+		if self.status in [CODE_STATUS_OVERDUE, CODE_STATUS_EXPIRED]:
+			return True
+		else:
+			return False

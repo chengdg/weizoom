@@ -17,13 +17,15 @@ from watchdog.utils import watchdog_warning, watchdog_error, watchdog_info
 from models import *
 
 from modules.member.models import IntegralStrategySttings
-from mall.models import Product,OrderHasProduct,Order
+from mall.models import Product,OrderHasProduct,Order, OrderCardInfo
 from mall.promotion import models as promotion_models
 from market_tools.tools.card_exchange import mobile_views
 from mall.promotion.card_exchange import CardExchange
 from modules.member.models import MemberInfo
 from market_tools.tools.weizoom_card import models as card_models
 from datetime import datetime
+import requests
+import json
 
 template_path_items = os.path.dirname(__file__).split(os.sep)
 TEMPLATE_DIR = '%s/templates' % template_path_items[-1]
@@ -46,8 +48,13 @@ def get_weizoom_card_login(request):
 			#没有兑换过微众卡，进入卡兑换页面
 			return mobile_views.get_page(request)
 	else:
+		#微众商城用户查看我的卡包，默认进入卡包页面
+		is_query = int(request.GET.get('is_query',1))
+		if username and username in ['jobs', 'weshop', 'ceshi01'] and is_query:
+			return get_weizoom_card_wallet(request)
+
 		c = RequestContext(request, {
-				'page_title': u'微众卡',
+				'page_title': u'我的卡包' if username and username in ['jobs','weshop','ceshi01'] else u'微众卡',
 				'is_hide_weixin_option_menu': True,
 				'normal': True,
 				'is_weshop': True if username and username in ['jobs','weshop','ceshi01'] else False
@@ -150,6 +157,68 @@ def get_weizoom_card_exchange_list(request):
 	})
 	return render_to_response('card_exchange/templates/card_exchange/webapp/m_card_exchange_list.html', c)
 
+def get_weizoom_card_wallet(request):
+	"""
+	微众卡钱包
+	"""
+	member_id = request.member.id
+	# member_info = MemberInfo.objects.get(member_id=member_id)
+	# is_binded = member_info.is_binded
+	print member_id,11111111111111111111111111111111111111111
+	member_has_cards = promotion_models.MemberHasWeizoomCard.objects.filter(member_id = member_id).order_by('-created_at')
+	print member_has_cards, 22222222222222222222222222222222
+	data_card = {}
+	card_infos_list = []
+	card_number2card = {}
+	for card in member_has_cards:
+		card_number2card[card.card_number] = card
+		card_infos_list.append({
+			'card_number': card.card_number,
+			'card_password': card.card_password
+		})
+
+	data_card['card_infos'] = json.dumps(card_infos_list)
+
+	card_details_dic = {}
+	has_expired_cards = False
+	if member_has_cards:
+		url = 'http://%s/card/get_cards/?_method=post' % settings.CARD_SERVER_DOMAIN
+		resp = requests.post(url, params=data_card)
+		text = json.loads(resp.text)
+		card_infos = text['data']['card_infos']
+		print card_infos, 3333333333333333333333333333333
+		card_details = []
+		for card in card_infos:
+			cur_card_details = card.values()[0]
+			card_number = cur_card_details['card_number']
+			cur_card_details['created_at'] = card_number2card[card_number].created_at.strftime('%Y-%m-%d')
+			source = card_number2card[card_number].source
+			if source == 1:
+				cur_card_details['type'] = u'返利活动'
+			elif source == 2:
+				cur_card_details['type'] = u'商城下单'
+			# elif source == 0:
+			# 	cur_card_details['type'] = u'商城下单'
+			valid_time_to = cur_card_details['valid_time_to']
+			now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+			if now > valid_time_to:
+				cur_card_details['is_expired'] = True
+				has_expired_cards = True
+			else:
+				cur_card_details['is_expired'] = False
+			card_details += card.values()
+
+		card_details_dic['card'] = card_details
+	print card_details_dic, 444444444444444444444
+	c = RequestContext(request, {
+		'page_title': u'我的卡包',
+		'cards': card_details_dic,
+		'has_expired_cards': has_expired_cards,
+		'is_binded': True,
+		'is_weshop': True
+	})
+	return render_to_response('card_exchange/templates/card_exchange/webapp/m_card_wallet.html', c)
+
 
 def get_card_exchange_detail(request):
 	"""
@@ -168,44 +237,49 @@ def get_card_exchange_detail(request):
 
 	return render_to_response('%s/weizoom_card/webapp/weizoom_card_change_info.html' % TEMPLATE_DIR, c)
 
+def get_card_wallet_details(request):
+	"""
+	微众卡钱包卡详情
+	"""
+	card_number = request.GET.get('card_id','')
+	card_password = request.GET.get('card_password', '')
+	weizoom_card_orders_list = get_card_detail_normal(request, card_number, card_password)
+
+	url = 'http://%s/card/get_cards/?_method=post' % settings.CARD_SERVER_DOMAIN
+	data_card = {}
+	card_infos_list = []
+	card_infos_list.append({
+		'card_number': card_number,
+		'card_password': card_password
+	})
+	data_card['card_infos'] = json.dumps(card_infos_list)
+	resp = requests.post(url, params=data_card)
+	text = json.loads(resp.text)
+	card_infos = text['data']['card_infos']
+	if card_infos:
+		card_infos = card_infos[0][card_number]
+
+	c = RequestContext(request, {
+		'card_orders': weizoom_card_orders_list,
+		'weizoom_card': card_infos,
+		# 'valid_restrictions': '%.2f' % valid_restrictions
+	})
+
+	return render_to_response('%s/weizoom_card/webapp/weizoom_card_wallet_details.html' % TEMPLATE_DIR, c)
+
 def get_weizoom_card_change_money(request):
-	card_id = request.GET.get('card_id', -1)
 	normal = request.GET.get('normal', 0)
+	card_infos = request.GET.get('card_infos', '')
 
 	integral_each_yuan = IntegralStrategySttings.get_integral_each_yuan(request.user_profile.webapp_id)
 
 	if normal:
-		weizoom_card_info = {}
-		weizoom_card = WeizoomCard.objects.filter(id=card_id)
-		if weizoom_card.count() > 0 and integral_each_yuan:
-			weizoom_card = weizoom_card[0]
-			weizoom_card_info['weizoom_card_id'] = weizoom_card.weizoom_card_id
-			weizoom_card_info['money'] = weizoom_card.money
-			rule = WeizoomCardRule.objects.filter(id=weizoom_card.weizoom_card_rule_id)
-			if rule.count() > 0:
-				rule = rule[0]
-				weizoom_card_info['valid_restrictions'] = rule.valid_restrictions if rule.valid_restrictions != -1 else ''
-				weizoom_card_info['valid_time_from'] = rule.valid_time_from.strftime('%Y/%m/%d ')
-				weizoom_card_info['valid_time_to'] = rule.valid_time_to.strftime(' %Y/%m/%d')
-				shop_limit_list = rule.shop_limit_list.split(',') if rule.shop_limit_list != -1 else ''
-				shop_black_list = rule.shop_black_list.split(',') if rule.shop_black_list != -1 else ''
-				shop_list_name = u''
-				if shop_limit_list:
-					if shop_black_list:
-						shop_list = set(shop_limit_list) - set(shop_black_list)
-					else:
-						shop_list = shop_limit_list
-					shop_list_name = [u.store_name for u in UserProfile.objects.filter(user_id__in=shop_list)]
-				else:
-					if shop_black_list:
-						owner_ids = [ahwcp.owner_id for ahwcp in AccountHasWeizoomCardPermissions.objects.filter(is_can_use_weizoom_card=True)]
-						shop_list = set(owner_ids) - set(shop_black_list)
-						shop_list_name = [u.store_name for u in UserProfile.objects.filter(user_id__in=shop_list)]
-				weizoom_card_info['shop_list'] = ' '.join(shop_list_name)
-				weizoom_card_info['shop_list_name'] = shop_list_name
-
-			card_info_list = get_card_detail_normal(request,card_id)
-
+		card_info_list = []
+		if card_infos:
+			card_infos = json.loads(card_infos)
+			card_number = card_infos['card_number']
+			card_password = card_infos['card_password']
+			card_info_list = get_card_detail_normal(request,card_number,card_password)
 		else:
 			c = RequestContext(request, {
 				'page_title': u'微众卡',
@@ -217,7 +291,7 @@ def get_weizoom_card_change_money(request):
 		c = RequestContext(request, {
 			'page_title': u'微众卡',
 			'is_hide_weixin_option_menu': True,
-			'weizoom_card': weizoom_card_info,
+			'weizoom_card': card_infos,
 			'card_orders': card_info_list
 		})
 		return render_to_response('%s/weizoom_card/webapp/weizoom_card_info_normal.html' % TEMPLATE_DIR, c)
@@ -247,6 +321,86 @@ def get_weizoom_card_change_money(request):
 			'card_orders': weizoom_card_orders_list
 		})
 		return render_to_response('%s/weizoom_card/webapp/weizoom_card_change_info.html' % TEMPLATE_DIR, c)
+
+# def get_weizoom_card_change_money(request):
+# 	card_id = request.GET.get('card_id', -1)
+# 	normal = request.GET.get('normal', 0)
+#
+# 	integral_each_yuan = IntegralStrategySttings.get_integral_each_yuan(request.user_profile.webapp_id)
+#
+# 	if normal:
+# 		weizoom_card_info = {}
+# 		weizoom_card = WeizoomCard.objects.filter(id=card_id)
+# 		if weizoom_card.count() > 0 and integral_each_yuan:
+# 			weizoom_card = weizoom_card[0]
+# 			weizoom_card_info['weizoom_card_id'] = weizoom_card.weizoom_card_id
+# 			weizoom_card_info['money'] = weizoom_card.money
+# 			rule = WeizoomCardRule.objects.filter(id=weizoom_card.weizoom_card_rule_id)
+# 			if rule.count() > 0:
+# 				rule = rule[0]
+# 				weizoom_card_info['valid_restrictions'] = rule.valid_restrictions if rule.valid_restrictions != -1 else ''
+# 				weizoom_card_info['valid_time_from'] = rule.valid_time_from.strftime('%Y/%m/%d ')
+# 				weizoom_card_info['valid_time_to'] = rule.valid_time_to.strftime(' %Y/%m/%d')
+# 				shop_limit_list = rule.shop_limit_list.split(',') if rule.shop_limit_list != -1 else ''
+# 				shop_black_list = rule.shop_black_list.split(',') if rule.shop_black_list != -1 else ''
+# 				shop_list_name = u''
+# 				if shop_limit_list:
+# 					if shop_black_list:
+# 						shop_list = set(shop_limit_list) - set(shop_black_list)
+# 					else:
+# 						shop_list = shop_limit_list
+# 					shop_list_name = [u.store_name for u in UserProfile.objects.filter(user_id__in=shop_list)]
+# 				else:
+# 					if shop_black_list:
+# 						owner_ids = [ahwcp.owner_id for ahwcp in AccountHasWeizoomCardPermissions.objects.filter(is_can_use_weizoom_card=True)]
+# 						shop_list = set(owner_ids) - set(shop_black_list)
+# 						shop_list_name = [u.store_name for u in UserProfile.objects.filter(user_id__in=shop_list)]
+# 				weizoom_card_info['shop_list'] = ' '.join(shop_list_name)
+# 				weizoom_card_info['shop_list_name'] = shop_list_name
+#
+# 			card_info_list = get_card_detail_normal(request,card_id)
+#
+# 		else:
+# 			c = RequestContext(request, {
+# 				'page_title': u'微众卡',
+# 				'is_hide_weixin_option_menu': True,
+# 				'normal': True
+# 			})
+# 			return render_to_response('%s/weizoom_card/webapp/weizoom_card_login.html' % TEMPLATE_DIR, c)
+#
+# 		c = RequestContext(request, {
+# 			'page_title': u'微众卡',
+# 			'is_hide_weixin_option_menu': True,
+# 			'weizoom_card': weizoom_card_info,
+# 			'card_orders': card_info_list
+# 		})
+# 		return render_to_response('%s/weizoom_card/webapp/weizoom_card_info_normal.html' % TEMPLATE_DIR, c)
+# 	else:
+#
+# 		weizoom_card_orders_list = search_card_money(request,card_id,integral_each_yuan)
+#
+# 		# if len(weizoom_card_orders_list) <= 0:
+# 		# 	c = RequestContext(request, {
+# 		# 		'page_title': u'微众卡',
+# 		# 		'is_hide_weixin_option_menu': True
+# 		# 	})
+# 	    #
+# 		# 	return render_to_response('%s/weizoom_card/webapp/weizoom_card_login.html' % TEMPLATE_DIR, c)
+# 		weizoom_card = WeizoomCard.objects.get(id=card_id)
+# 		change_integral = weizoom_card.money * integral_each_yuan
+# 		if change_integral > int(change_integral):
+# 			change_integral = int(change_integral) + 1
+# 		change_integral = int(change_integral)
+# 		is_can_pay = True if change_integral > 0 else False
+# 		c = RequestContext(request, {
+# 			'page_title': u'微众卡',
+# 			'is_hide_weixin_option_menu': True,
+# 			'weizoom_card': weizoom_card,
+# 			'is_can_pay': is_can_pay,
+# 			'change_integral': change_integral,
+# 			'card_orders': weizoom_card_orders_list
+# 		})
+# 		return render_to_response('%s/weizoom_card/webapp/weizoom_card_change_info.html' % TEMPLATE_DIR, c)
 
 def search_card_money(request,card_id,integral_each_yuan):
 	weizoom_card_orders_list = []
@@ -283,40 +437,84 @@ def search_card_money(request,card_id,integral_each_yuan):
 
 	return weizoom_card_orders_list
 
-def get_card_detail_normal(request,card_id):
+def get_card_detail_normal(request,card_id,card_password):
 	store_name = request.user_profile.store_name
-	card_orders = WeizoomCardHasOrder.objects.filter(card_id=card_id).exclude(order_id__in=[-1]).order_by('-created_at')
-	order_nums = [co.order_id for co in card_orders]
-	orders = Order.objects.filter(order_id__in=order_nums)
-	order_id2orders = {o.order_id: o for o in orders}
-	order_ids = [o.id for o in orders]
+	#api请求微众卡所属订单信息
+	url = 'http://%s/card/get_cards_use_info/?_method=post' % settings.CARD_SERVER_DOMAIN
+	data_card = {
+		"card_infos": '[{"card_number":"%s","card_password": "%s"}]' % (card_id, card_password)
+	}
+	resp = requests.post(url, params=data_card)
+	text = json.loads(resp.text)
+	card_infos = text['data']['card_infos']
+	card_has_orders = card_infos[0][card_id]['orders']
 
-	order_id2Product = {}
-	for ohp in OrderHasProduct.objects.filter(order_id__in=order_ids):
-		if not order_id2Product.get(ohp.order_id, None):
-			order_id2Product[ohp.order_id] = [ohp]
-		else:
-			order_id2Product[ohp.order_id].append(ohp)
 	card_info_list = []
-	for order in card_orders:
-		order_id = order_id2orders[order.order_id].id
-		products = order_id2Product[order_id]
-		product_name_list = []
-		for p in products:
-			product_name_list.append(p.product.name)
-		card_info_list.append({
-			'created_at': order.created_at,
-			'money': '%.2f' % order.money,
-			'product_name': u'[%s-商品] %s' % (store_name,','.join(product_name_list)) if order.money > 0 else u'[退款] %s' % (','.join(product_name_list)),
-			'is_product': True
-		})
-	card = promotion_models.CardHasExchanged.objects.filter(card_id=card_id)
-	if card.count() > 0 :
-		card = card[0]
-		card_info_list.append({
-			'created_at': card.created_at,
-			'money': '%.2f' % WeizoomCard.objects.get(id=card_id).weizoom_card_rule.money,
-			'product_name': u'兑换平台',
-			'is_product': False
-		})
+
+	if card_has_orders:
+		order_num2money = {co['order_id']: co['money'] for co in card_has_orders}
+		order_nums = [co['order_id'] for co in card_has_orders]
+		orders = Order.objects.filter(order_id__in=order_nums).order_by('-created_at')
+		order_ids = [o.id for o in orders]
+
+		order_id2Product = {}
+		for ohp in OrderHasProduct.objects.filter(order_id__in=order_ids):
+			if not order_id2Product.get(ohp.order_id, None):
+				order_id2Product[ohp.order_id] = [ohp]
+			else:
+				order_id2Product[ohp.order_id].append(ohp)
+		for order in orders:
+			order_id = order.id
+			order_num = order.order_id
+			products = order_id2Product[order_id]
+			product_name_list = []
+			for p in products:
+				product_name_list.append(p.product.name)
+			card_info_list.append({
+				'created_at': order.created_at,
+				'money': order_num2money[order_num],
+				'product_name': u'[商品] %s' % (','.join(product_name_list)) if order.weizoom_card_money > 0 else u'[退款] %s' % (','.join(product_name_list)),
+				'is_product': True
+			})
+
 	return card_info_list
+
+def get_other_cards_list(request):
+	"""
+	其他卡包页面
+	@param request:
+	@return:
+	"""
+	member_id = request.member.id
+	member_has_other_cards = promotion_models.VirtualProductHasCode.objects.filter(member_id = member_id).order_by('-created_at')
+	cards = []
+	has_expired_cards = False
+	for card in member_has_other_cards:
+		card_details_dic = {}
+		# 过滤出虚拟商品
+		if not card.virtual_product.product.type == 'virtual':
+			continue
+		card_details_dic['card_id'] = card.code
+		card_details_dic['password'] = card.password
+		card_details_dic['time'] = card.get_time.strftime('%Y-%m-%d')
+		card_details_dic['product_id'] = card.virtual_product.product.id
+		card_details_dic['name'] = card.virtual_product.product.name
+		card_details_dic['status'] = card.status
+		card_details_dic['is_expired'] = False
+		validate_time_to = card.end_time.strftime('%Y-%m-%d %H:%M:%S')
+		card_details_dic['validate_time_from'] = card.start_time.strftime('%Y-%m-%d %H:%M:%S')
+		card_details_dic['validate_time_to'] = validate_time_to
+		now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+		if now > validate_time_to:
+			card_details_dic['is_expired'] = True
+			has_expired_cards = True
+
+		cards.append(card_details_dic)
+
+	c = RequestContext(request, {
+		'page_title': u'我的卡包',
+		'cards': cards,
+		'has_expired_cards': has_expired_cards,
+		'is_weshop': True
+	})
+	return render_to_response('card_exchange/templates/card_exchange/webapp/m_card_others.html', c)
