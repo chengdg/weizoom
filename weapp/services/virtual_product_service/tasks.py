@@ -129,7 +129,8 @@ def deliver_virtual_product(request, args):
 						try:
 							member_has_wzcard = promotion_models.MemberHasWeizoomCard.objects.create(
 								member_id=member.id,
-								member_name=member.username,
+								# member_name=member.username,
+								member_name='',
 								card_number=code.code,
 								card_password=code.password,
 								relation_id=code.virtual_product.id,
