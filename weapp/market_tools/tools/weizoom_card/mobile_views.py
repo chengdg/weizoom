@@ -485,7 +485,7 @@ def get_other_cards_list(request):
 	@return:
 	"""
 	member_id = request.member.id
-	member_has_other_cards = promotion_models.VirtualProductHasCode.objects.filter(member_id = member_id).order_by('-created_at')
+	member_has_other_cards = promotion_models.VirtualProductHasCode.objects.filter(member_id = member_id).order_by('-get_time')
 	cards = []
 	has_expired_cards = False
 	for card in member_has_other_cards:
