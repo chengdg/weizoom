@@ -15,8 +15,8 @@ from utils import ding_util
 from mall import module_api
 
 VIRTUAL_ORDER_TYPE = [mall_models.PRODUCT_VIRTUAL_TYPE, mall_models.PRODUCT_WZCARD_TYPE]
-# WESHOP_DING_GROUP_ID = '105507196'  #微众商城FT团队钉钉id
-WESHOP_DING_GROUP_ID = '80035247'  #发消息测试群
+WESHOP_DING_GROUP_ID = '105507196'  #微众商城FT团队钉钉id
+# WESHOP_DING_GROUP_ID = '80035247'  #发消息测试群
 
 @task
 def deliver_virtual_product(request, args):
