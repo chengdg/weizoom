@@ -363,19 +363,19 @@ def _convert_amr_to_mp3(audio_content, message):
 
 	return mp3_audio_file_path
 
-@task
-def record_call_weixin_api(class_name, success=True):
-	url = "http://index.weizzz.com/table/api/cell_increase/" 
-	now_time = datetime.today().strftime('%Y-%m-%d')
-	table = "%s_weixin_api" % settings.MODE
-	rkey = "%s_%s" % (now_time, success)
-	params = {
-		"table": table,
-		"rkey": rkey,
-		"cname": class_name,
-		"val": '1'
-	}
-	res = requests.post(url, params)
-	json_obj = json.loads(res.text)
-	print 'record_call_weixin_api>>>',json_obj
+# @task
+# def record_call_weixin_api(class_name, success=True):
+	# url = "http://index.weizzz.com/table/api/cell_increase/" 
+	# now_time = datetime.today().strftime('%Y-%m-%d')
+	# table = "%s_weixin_api" % settings.MODE
+	# rkey = "%s_%s" % (now_time, success)
+	# params = {
+	# 	"table": table,
+	# 	"rkey": rkey,
+	# 	"cname": class_name,
+	# 	"val": '1'
+	# }
+	# res = requests.post(url, params)
+	# json_obj = json.loads(res.text)
+	# print 'record_call_weixin_api>>>',json_obj
 

@@ -308,3 +308,5 @@ def add_mhash_to_redis(hash_name,mapping):
 
 def get_mhash_from_redis(hash_name):
 	return pyredis.hgetall(hash_name)
+
+
