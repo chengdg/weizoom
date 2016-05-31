@@ -339,6 +339,12 @@ def update_webapp_product_cache(**kwargs):
 
         key_termite_page = 'termite_webapp_page_%s_*' % webapp_owner_id
         cache_util.delete_pattern(key_termite_page)
+        try:
+            from termite2.tasks import purge_webapp_page_from_varnish_cache
+            purge_webapp_page_from_varnish_cache.delay(webapp_owner_id)
+        except:
+            pass
+
 
 def update_webapp_category_cache(**kwargs):
     if hasattr(cache, 'request') and cache.request.user_profile:

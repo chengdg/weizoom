@@ -243,6 +243,11 @@ def update_webapp_owner_info_cache_with_login(instance, **kwargs):
     key_termite_page = 'termite_webapp_page_%s_*' % webapp_owner_id
     cache_util.delete_pattern(key_termite_page)
     get_webapp_owner_info(webapp_owner_id)
+    try:
+        from termite2.tasks import purge_webapp_page_from_varnish_cache
+        purge_webapp_page_from_varnish_cache.delay(webapp_owner_id)
+    except:
+        pass
 
 
 post_update_signal.connect(update_webapp_owner_info_cache_with_login, sender=weixin_user_models.MpuserPreviewInfo, dispatch_uid = "mpuser_preview_info.update")
