@@ -136,6 +136,9 @@
                          {% if pay_interface.type == 0 %}
                         data-href="./?woid={{request.webapp_owner_id}}&module=mall&model=product_order&action=pay&order_id={{order_id}}&ignore_template=1&pay_interface_id={{pay_interface.id}}"
                         {% endif %}
+                        {% if pay_interface.type == 11 %}
+                        data-href="./?woid={{request.webapp_owner_id}}&order_id={{order_id}}&related_config_id={{pay_interface.related_config_id}}"
+                        {% endif %}
                     >
                         <div class="xui-content-box">   
                             <span style="display:inline-block;padding:7px 15px;" class="fl"><img src="{{pay_interface.pay_logo}}" alt=""> </span>

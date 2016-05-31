@@ -66,7 +66,8 @@ def export_orders_json(request):
         '2': u'微信支付',
         '3': u'微众卡支付',
         '9': u'货到付款',
-        '10': u'优惠抵扣'
+        '10': u'优惠抵扣',
+        '11': u'翼支付'
     }
 
     source_list = {
@@ -798,7 +799,13 @@ def get_detail_response(request):
             order.final_price) - float(order.weizoom_card_money)
         order.pay_money = order.final_price + order.weizoom_card_money
         if mall_type and order.customer_message:
-            order.customer_message = json.loads(order.customer_message).values()
+            try:
+                order.customer_message = json.loads(order.customer_message).values()
+                zypt_customer_message_is_str = False
+            except:
+                zypt_customer_message_is_str = True
+        else:
+            zypt_customer_message_is_str = False
         order.actions = get_order_actions(order, is_detail_page=True, mall_type=request.user_profile.webapp_type)
 
         show_first = True if OrderStatusLog.objects.filter(order_id=order.order_id,
@@ -919,7 +926,8 @@ def get_detail_response(request):
             'show_first': show_first,
             'is_sync': is_sync,
             'is_show_order_status': True if len(supplier_ids) + len(supplier_user_ids) > 1 else False,
-            'is_group_buying': is_group_buying
+            'is_group_buying': is_group_buying,
+            'zypt_customer_message_is_str': zypt_customer_message_is_str
             })
 
         return render_to_response('mall/editor/order_detail.html', c)
@@ -1209,7 +1217,8 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
                         'leader_name': fackorder.leader_name,
                         'actions': get_order_actions(fackorder, is_refund=is_refund, mall_type=mall_type,
                             multi_child_orders=multi_child_orders,
-                            is_group_buying=True if order.order_id in group_order_ids else False)
+                            is_group_buying=True if order.order_id in group_order_ids else False),
+                        'type': fackorder.type,
                     }
                     if fackorder.supplier or (not fackorder.supplier and not fackorder.supplier_user_id):
                         group = {
@@ -1233,7 +1242,8 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
                     'express_number': order.express_number,
                     'leader_name': order.leader_name,
                     'actions': get_order_actions(order, is_refund=is_refund, mall_type=mall_type,
-                        is_group_buying=True if order.order_id in group_order_ids else False)
+                        is_group_buying=True if order.order_id in group_order_ids else False),
+                    'type': order.type,
                 }
                 if order2fackorders.get(order.id) and len(order2fackorders.get(order.id)) == 1:
                     fackorder = order2fackorders[order.id][0]
@@ -1693,13 +1703,13 @@ def get_order_actions(order, is_refund=False, is_detail_page=False, is_list_pare
         if order.status == ORDER_STATUS_NOT:
             result = [ORDER_PAY_ACTION, ORDER_UPDATE_PRICE_ACTION, ORDER_CANCEL_ACTION]
         elif order.status == ORDER_STATUS_PAYED_NOT_SHIP:
-            if order.pay_interface_type in [PAY_INTERFACE_ALIPAY, PAY_INTERFACE_TENPAY, PAY_INTERFACE_WEIXIN_PAY]:
+            if order.pay_interface_type in [PAY_INTERFACE_ALIPAY, PAY_INTERFACE_TENPAY, PAY_INTERFACE_WEIXIN_PAY, PAY_INTERFACE_BEST_PAY]:
                 result = [ORDER_SHIP_ACTION, ORDER_REFUNDIND_ACTION]
             else:
                 result = [ORDER_SHIP_ACTION, ORDER_CANCEL_ACTION]
         elif order.status == ORDER_STATUS_PAYED_SHIPED:
             actions = []
-            if order.pay_interface_type in [PAY_INTERFACE_ALIPAY, PAY_INTERFACE_TENPAY, PAY_INTERFACE_WEIXIN_PAY]:
+            if order.pay_interface_type in [PAY_INTERFACE_ALIPAY, PAY_INTERFACE_TENPAY, PAY_INTERFACE_WEIXIN_PAY, PAY_INTERFACE_BEST_PAY]:
                 if order.express_company_name:
                     actions = [ORDER_FINISH_ACTION, ORDER_UPDATE_EXPREDSS_ACTION, ORDER_REFUNDIND_ACTION]
                 else:
@@ -1711,7 +1721,7 @@ def get_order_actions(order, is_refund=False, is_detail_page=False, is_list_pare
                     actions = [ORDER_FINISH_ACTION, ORDER_CANCEL_ACTION]
             result = actions
         elif order.status == ORDER_STATUS_PAYED_NOT_SHIP:
-            if order.pay_interface_type in [PAY_INTERFACE_ALIPAY, PAY_INTERFACE_TENPAY, PAY_INTERFACE_WEIXIN_PAY]:
+            if order.pay_interface_type in [PAY_INTERFACE_ALIPAY, PAY_INTERFACE_TENPAY, PAY_INTERFACE_WEIXIN_PAY, PAY_INTERFACE_BEST_PAY]:
                 if order.express_company_name:
                     result = [ORDER_REFUNDIND_ACTION, ORDER_UPDATE_EXPREDSS_ACTION]
                 else:
@@ -1719,7 +1729,7 @@ def get_order_actions(order, is_refund=False, is_detail_page=False, is_list_pare
             else:
                 result = [ORDER_SHIP_ACTION, ORDER_CANCEL_ACTION]
         elif order.status == ORDER_STATUS_SUCCESSED:
-            if order.pay_interface_type in [PAY_INTERFACE_ALIPAY, PAY_INTERFACE_TENPAY, PAY_INTERFACE_WEIXIN_PAY,
+            if order.pay_interface_type in [PAY_INTERFACE_ALIPAY, PAY_INTERFACE_TENPAY, PAY_INTERFACE_WEIXIN_PAY, PAY_INTERFACE_BEST_PAY,
                                             PAY_INTERFACE_COD]:
                 result = [ORDER_REFUNDIND_ACTION]
             else:
