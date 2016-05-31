@@ -168,7 +168,7 @@ def grant_card(need_grant_info, all_record_ids):
 			card_number = weizoom_card.weizoom_card_id,
 			card_password = weizoom_card.weizoom_card_password,
 			member_id = member_id,
-			member_name = member_name,
+			# member_name = member_name,
 			source = promotion_models.WEIZOOM_CARD_SOURCE_REBATE,
 			relation_id = info['record_id']
 		))
@@ -230,7 +230,7 @@ def handle_wating_actions():
 			card_number = can_use_card.weizoom_card_id,
 			card_password = can_use_card.weizoom_card_password,
 			member_id = member_id,
-			member_name = member_id2member[member_id].username_hexstr,
+			# member_name = member_id2member[member_id].username_hexstr,
 			source = promotion_models.WEIZOOM_CARD_SOURCE_REBATE,
 			relation_id = action.record_id
 		))

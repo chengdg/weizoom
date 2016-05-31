@@ -265,7 +265,8 @@ class RebateCardDetails(resource.Resource):
 		if card_number:
 			rebate_cards = rebate_cards.filter(card_number__in=card_number)
 		if card_user:
-			rebate_cards = rebate_cards.filter(member_name__contains=byte_to_hex(card_user))
+			member_ids = [m.id for m in member_models.Member.objects.filter(username_hexstr__contains=byte_to_hex(card_user))]
+			rebate_cards = rebate_cards.filter(member_id__in=member_ids)
 
 		return rebate_cards
 
