@@ -164,9 +164,7 @@ def get_weizoom_card_wallet(request):
 	member_id = request.member.id
 	# member_info = MemberInfo.objects.get(member_id=member_id)
 	# is_binded = member_info.is_binded
-	print member_id,11111111111111111111111111111111111111111
 	member_has_cards = promotion_models.MemberHasWeizoomCard.objects.filter(member_id = member_id).order_by('-created_at')
-	print member_has_cards, 22222222222222222222222222222222
 	data_card = {}
 	card_infos_list = []
 	card_number2card = {}
@@ -186,7 +184,7 @@ def get_weizoom_card_wallet(request):
 		resp = requests.post(url, params=data_card)
 		text = json.loads(resp.text)
 		card_infos = text['data']['card_infos']
-		print card_infos, 3333333333333333333333333333333
+
 		card_details = []
 		for card in card_infos:
 			cur_card_details = card.values()[0]
@@ -209,7 +207,7 @@ def get_weizoom_card_wallet(request):
 			card_details += card.values()
 
 		card_details_dic['card'] = card_details
-	print card_details_dic, 444444444444444444444
+
 	c = RequestContext(request, {
 		'page_title': u'我的卡包',
 		'cards': card_details_dic,
@@ -470,10 +468,11 @@ def get_card_detail_normal(request,card_id,card_password):
 			product_name_list = []
 			for p in products:
 				product_name_list.append(p.product.name)
+			money = order_num2money[order_num]
 			card_info_list.append({
 				'created_at': order.created_at,
-				'money': order_num2money[order_num],
-				'product_name': u'[商品] %s' % (','.join(product_name_list)) if order.weizoom_card_money > 0 else u'[退款] %s' % (','.join(product_name_list)),
+				'money': money,
+				'product_name': u'[商品] %s' % (','.join(product_name_list)) if float(money) > 0 else u'[退款] %s' % (','.join(product_name_list)),
 				'is_product': True
 			})
 
