@@ -845,4 +845,4 @@ if MODE == 'develop' or MODE == 'test':
 else:
     APPS_H5_DOMAIN = 'h5.weapp.com'
 
-CARD_SERVER_DOMAIN = "api.card.com"
+CARD_SERVER_DOMAIN = "cardapi.weapp.com"
