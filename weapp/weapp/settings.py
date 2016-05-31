@@ -532,6 +532,7 @@ INSTALLED_TASKS = [
     # 'services.update_component_mp_token_service',
     'services.analysis_message_service',
     'services.count_keyword_service',
+    'services.virtual_product_service',
     'services.send_express_poll_service',
     'services.update_member_purchase_frequency'
 ]
