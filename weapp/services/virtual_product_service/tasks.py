@@ -15,8 +15,8 @@ from utils import ding_util
 from mall import module_api
 
 VIRTUAL_ORDER_TYPE = [mall_models.PRODUCT_VIRTUAL_TYPE, mall_models.PRODUCT_WZCARD_TYPE]
-# WESHOP_DING_GROUP_ID = '105507196'  #微众商城FT团队钉钉id
-WESHOP_DING_GROUP_ID = '80035247'  #发消息测试群
+WESHOP_DING_GROUP_ID = '105507196'  #微众商城FT团队钉钉id
+# WESHOP_DING_GROUP_ID = '80035247'  #发消息测试群
 
 @task
 def deliver_virtual_product(request, args):
@@ -129,7 +129,8 @@ def deliver_virtual_product(request, args):
 						try:
 							member_has_wzcard = promotion_models.MemberHasWeizoomCard.objects.create(
 								member_id=member.id,
-								member_name=member.username,
+								# member_name=member.username,
+								member_name='',
 								card_number=code.code,
 								card_password=code.password,
 								relation_id=code.virtual_product.id,

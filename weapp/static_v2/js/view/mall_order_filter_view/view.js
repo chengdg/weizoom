@@ -5,7 +5,8 @@ W.view.mall.order.orderFilter = Backbone.View.extend({
         'click .xa-filter': 'filter',
         'click .seacrh-order-btn': 'seacrhBtn',
         'click .recently-week-day': 'setDateText',
-        'click .export-btn': 'exportBtn'
+        'click .export-btn': 'exportBtn',
+        'click .xa-reset': 'resetFrom'
     },
 
     // 点击‘最近7天’或‘最近30天’
@@ -33,6 +34,13 @@ W.view.mall.order.orderFilter = Backbone.View.extend({
         var args = this.getFilterValue();
         if(dataView){
             dataView.options.args = this.getFilterValueByDict(args);
+            var status = this.options.status || '';
+            var args = this.getArgsExportValueByDict(args);
+            if (args.length > 0) {
+                this.filter_value ='&'+args+'&status='+status;
+            } else {
+                this.filter_value = '&status='+status;
+            }
             dataView.setPage(1);
             dataView.reload();
 
@@ -257,7 +265,8 @@ W.view.mall.order.orderFilter = Backbone.View.extend({
     	this.options = options || {};
     	this.$el = $(options.el);
         this.render();
-    	this.filter_value = '';
+        var status = this.options.status || '';
+    	this.filter_value = '&status='+status;
         this.bind('clickStatusBox', this.clickStatusBox);
     },
 
@@ -332,5 +341,6 @@ W.view.mall.order.orderFilter = Backbone.View.extend({
         $('#orderSupplierType').val(-1);
         $('#express_number').val('');
         $('#product_name').val('');
+        $('input[type="checkbox"]').attr("checked",false);
     }
 });

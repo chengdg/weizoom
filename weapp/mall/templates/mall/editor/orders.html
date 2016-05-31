@@ -4,6 +4,16 @@
 
 {% block css %}
 <style type="text/css">
+#exportProgress{
+	float:right;
+	margin:4px 10px;
+}
+#exportProgress .exportProgress_msg{
+	margin-right:0;
+}
+#downloadLink{
+  margin:4px 10px!important;
+}
 </style>
 {% endblock %}
 
@@ -86,10 +96,12 @@
 	</ul>
 	{{if data.pageinfo.object_count != 0}}
   <!-- 订单打印 2016.04.08 start -->
-    <div class="print－all-orders-row">
+    <div class="print－all-orders-row div_export">
 		<input type="checkBox" name="selectAllPrintOrders">
 		<span class="ml5 mr10">全选</span>
 		<a title="批量打印发货单" class="xa-order-print" href="javascript:void(0);">批量打印发货单</a>
+		<a href="javascript:void(0);" class="btn fr btn-default xa-export" style="margin:4px 10px;" id="export_data_file">导出结果</a>
+
     </div>
   <!-- 订单打印 2016.04.08 end -->
 	<table class="table table-condensed mb0 xui-tableHead">
@@ -489,8 +501,10 @@ var DATA_INTERVAL = '';
 $(document).ready(function() {
     var pageType = $(".xa-pageType").text();
     var status = '';
+    var type = 1;
     if(pageType == '财务审核'){
-        status = 'audit'
+        status = 'audit';
+        type = 3;
     }
 	var filterBox = new W.view.mall.order.orderFilter({
 		el: ".xa-orderFilterView",
@@ -787,6 +801,96 @@ $(document).ready(function() {
 
 	})();
 	<!-- 订单打印 2016.04.08 end -->
+	$('body').delegate('.xa-export', 'click', function(event){
+		W.getApi().call({
+			app: 'export_job',
+			resource: 'export_is_download',
+			method: 'get',
+			args: {
+				woid: woid,
+				type: type,
+			},
+			success: function(data) {
+				if (data["status"] === 1 && data["is_download"] === 0){
+					W.showHint('error', '导出的文件尚未下载，请刷新页面进行下载！');
+				}
+				else if(data["status"] === 0 && data["is_download"] === 0){
+					W.showHint('success', '文件正在导出，请刷新页面进行查看！');
+					
+				}
+				else{
+					var url ='';
+					var filter_value = '';
+					if (filterBox.filter_value) {
+						filter_value = filterBox.filter_value;
+					};
+					var options = {
+						el: '.panel-body',
+						topic_id: '',
+						type: type,
+						url: url,
+						jobId:0,
+						filter_value:filter_value,
+						isAlreadyExport : true,
+						app: 'mall2',
+						resource:'export_order_param',
+						timelinesOptions: {
+							
+						}
+					}
+
+					var customersView = new W.CustomersView(options);
+				}
+			},
+			error: function(response) {
+				W.showHint('error', '网络超时，导出中断，请重试！');
+			}
+		});
+		
+	});
+	
+	var table = $('div[data-ui-role="advanced-table"]').data('view');
+	
+
+	var export2data = {{export2data|safe}};
+	var woid = "{{ request.manager.id }}";
+	if(export2data["status"] ===1 && export2data["is_download"] ===0 ){
+		table.afterload = function(){
+			var options = {
+				el: '.div_export',
+				topic_id: '',
+				type: '',
+				url: "",
+				jobId:export2data["id"],
+				isAlreadyExport : true,
+				app: 'mall2/order',
+				timelinesOptions: {
+				}
+			}
+			var memberExportFileView = new W.dialog.ExportFileView(options);
+			memberExportFileView.finish();
+		};
+	}
+	else if(export2data["status"] ===0 && export2data["is_download"] ===0 ){
+		table.afterload = function(){
+
+			var jobId = export2data["id"];
+			var options = {
+				el: '.div_export',
+				topic_id: '',
+				type: '',
+				url: "",
+				jobId:export2data["id"],
+				isAlreadyExport : true,
+				app: 'mall2/order',
+				timelinesOptions: {
+				}
+			}
+			var memberExportFileView = new W.dialog.ExportFileView(options);
+			memberExportFileView.doExportAfterApi();
+		};
+	};
+
 });
 </script>
 {% endblock %}
