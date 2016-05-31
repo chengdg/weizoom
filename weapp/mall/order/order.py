@@ -333,14 +333,14 @@ class OrderFilterParams(resource.Resource):
         return response.get_response()
 
 
-class OrderExport(resource.Resource):
-    app = "mall2"
-    resource = "order_export"
+# class OrderExport(resource.Resource):
+#     app = "mall2"
+#     resource = "order_export"
 
-    @login_required
-    def get(request):
-        orders = util.export_orders_json(request)
-        return ExcelResponse(orders, output_name=u'订单列表'.encode('utf8'), force_csv=False)
+#     @login_required
+#     def get(request):
+#         orders = util.export_orders_json(request)
+#         return ExcelResponse(orders, output_name=u'订单列表'.encode('utf8'), force_csv=False)
 
 
 class ChannelQrcodePayedOrder(resource.Resource):
