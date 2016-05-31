@@ -387,8 +387,10 @@ def update_stocks(virtual_product):
 		if not code.can_not_use:
 			stocks += 1
 
-	product_model = mall_models.ProductModel.objects.get(product=product, is_standard=True)
-	product_model.stocks = stocks
-	product_model.stock_type = 1
-	product_model.save()
+	product_model = mall_models.ProductModel.objects.filter(product=product, is_standard=True)
+	# product_model.stocks = stocks
+	# product_model.stock_type = 1
+	# product_model.save()
+	#用save的话不能触发更新redis缓存的新号，朱天琦挖的坑
+	product_model.update(stock_type=1, stocks=stocks)
 	logging.info("update stocks for product:%d in virtual_product:%d to %d" % (product.id, virtual_product.id, stocks))
