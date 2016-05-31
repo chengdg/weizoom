@@ -126,8 +126,8 @@
                       <p>{{ order.ship_name }}<span class="ml30">{{ order.ship_tel }}</span></p>
                       <p>{% if order.area %}{{ order.area }}{% endif %} {{order.ship_address}}</p>
                       <p>买家留言：
-                        {% if mall_type %}
-                          {% for message in  order.customer_message %}
+                        {% if mall_type and not zypt_customer_message_is_str %}
+                          {% for message in order.customer_message %}
                             <p>【{{message.supplier_name}}】{{ message.customer_message }}</p>
                           {% endfor %}
                         {% else %}

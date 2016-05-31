@@ -799,7 +799,13 @@ def get_detail_response(request):
             order.final_price) - float(order.weizoom_card_money)
         order.pay_money = order.final_price + order.weizoom_card_money
         if mall_type and order.customer_message:
-            order.customer_message = json.loads(order.customer_message).values()
+            try:
+                order.customer_message = json.loads(order.customer_message).values()
+                zypt_customer_message_is_str = False
+            except:
+                zypt_customer_message_is_str = True
+        else:
+            zypt_customer_message_is_str = False
         order.actions = get_order_actions(order, is_detail_page=True, mall_type=request.user_profile.webapp_type)
 
         show_first = True if OrderStatusLog.objects.filter(order_id=order.order_id,
@@ -920,7 +926,8 @@ def get_detail_response(request):
             'show_first': show_first,
             'is_sync': is_sync,
             'is_show_order_status': True if len(supplier_ids) + len(supplier_user_ids) > 1 else False,
-            'is_group_buying': is_group_buying
+            'is_group_buying': is_group_buying,
+            'zypt_customer_message_is_str': zypt_customer_message_is_str
             })
 
         return render_to_response('mall/editor/order_detail.html', c)
