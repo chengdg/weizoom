@@ -243,12 +243,8 @@ class FileUploader(resource.Resource):
 				logging.error(e)
 				response.errMsg = u'保存文件出错'
 				return response.get_response()
-			try:
-				codes, codes_dict = get_codes_dict_from_file(file_path)
-			except Exception, e:
-				logging.error(e.message)
-				response.errMsg = e.message
-				return response.get_response()
+			codes, codes_dict = get_codes_dict_from_file(file_path)
+			
 
 			valid_codes = get_valid_codes(codes)
 			response = create_response(200)
@@ -353,9 +349,12 @@ def get_codes_dict_from_file(file_path):
 		data = xlrd.open_workbook(file_path)
 		table = data.sheet_by_index(0)
 		nrows = table.nrows   #行数
+		ncols = table.ncols
 		for i in range(0,nrows):
 			code = table.cell(i,0).value
-			password = table.cell(i,1).value
+			password = ''
+			if ncols > 1:
+				password = table.cell(i,1).value
 
 			if type(code) == float:
 				code = str(int(code))
