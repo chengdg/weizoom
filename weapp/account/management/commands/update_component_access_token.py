@@ -26,7 +26,7 @@ class Command(BaseCommand):
 	def handle(self, **options):
 		for component in ComponentInfo.objects.filter(is_active=True):
 			weixin_api = WeixinApi(None, weixin_http_client)
-			from weixin.message.message_handler.tasks import record_call_weixin_api
+			#from weixin.message.message_handler.tasks import record_call_weixin_api
 			# 获取第三方平台的component_access_token
 			try:
 				result = weixin_api.get_component_token(component.app_id, component.app_secret, component.component_verify_ticket)

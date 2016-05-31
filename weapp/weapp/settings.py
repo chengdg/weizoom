@@ -515,6 +515,7 @@ INSTALLED_TASKS = [
     'termite2',
     'member',
     'mall.product',
+    'mall.order',
     # for services
     'services.example_service',
     'services.send_order_email_service',
