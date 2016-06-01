@@ -1,20 +1,59 @@
-#coding:utf8
+# coding:utf8
 # bdd server相关的step
 
-import json
-import time
 import base64
-from datetime import datetime, timedelta
+import decimal
+import json
+import os
+from cgi import parse_qs
+from datetime import datetime, date
 from wsgiref.simple_server import WSGIRequestHandler, make_server
 from wsgiref.util import setup_testing_defaults
-from cgi import parse_qs, escape
+from features import environment
 
 from behave import *
 
-from features.steps.behave_utils import set_context_attrs
-from test import bdd_util
+BDD_SERVER2PORT = {
+	'weapp': 8170,
+	'weizoom_card': 8171,
+	'apiserver': 8172
+}
 
-from features import environment
+
+def _default(obj):
+	if isinstance(obj, datetime):
+		return obj.strftime('%Y-%m-%d %H:%M:%S')
+	elif isinstance(obj, date):
+		return obj.strftime('%Y-%m-%d')
+	elif isinstance(obj, decimal.Decimal):
+		return str(obj)
+	else:
+		return ''
+
+
+def _set_context_attrs(context, context_kvs):
+	for k, v in context_kvs.items():
+		if v:
+			setattr(context, k, v)
+
+
+def _git_shell(git_command):
+	try:
+		return os.popen(git_command).read().strip()
+	except:
+		return None
+
+
+try:
+	git_dir = _git_shell('git rev-parse --git-dir')
+	self_name = git_dir.split('/')[-2]
+except BaseException as e:
+	print(e)
+	print("你装git了吗？")
+	self_name = "你装git了吗？"
+
+os.system("title {}_bdd_server".format(self_name))
+
 
 class BDDRequestHandler(WSGIRequestHandler):
 	def handle(self):
@@ -22,10 +61,11 @@ class BDDRequestHandler(WSGIRequestHandler):
 
 		if 'shutdown=1' in self.raw_requestline:
 			import threading
-			threading.Thread(target = self.shutdown_server()).start()
+			threading.Thread(target=self.shutdown_server()).start()
 
 	def shutdown_server(self):
 		server = self.server
+
 		def inner_shutdown():
 			server.shutdown()
 			server.server_close()
@@ -59,46 +99,64 @@ def step_impl(context):
 		post = parse_qs(request_body)
 		step_data = json.loads(post['data'][0])
 		step = step_data['step'].strip()
+
+		# 0:成功，1：业务失败，2：异常
+		result = 0
 		if step == '__reset__':
 			print('*********************** run step **********************')
 			print(u'重置bdd环境')
 			environment.after_scenario(context, context.scenario)
 			environment.before_scenario(context, context.scenario)
-			return base64.b64encode('success')
-		else:
-			set_context_attrs(context, json.loads(step_data['context_kvs']))
 
-			step = u'%s\n"""\n%s\n"""' % (step_data['step'], step_data['context_text'])
+			resp = {
+				'result': result
+			}
+
+			return base64.b64encode(json.dumps(resp))
+		else:
+			_set_context_attrs(context, json.loads(step_data['context_attrs']))
+
+			if step_data['context_text']:
+				step_content = step_data['context_text']
+			else:
+				step_content = step_data['context_table']
+			step = u'%s\n"""\n%s\n"""' % (step_data['step'], step_content)
 			print('*********************** run step **********************')
 			print(step)
 
-			try:
-				context.execute_steps(u'%s\n"""\n%s\n"""' % (step_data['step'], step_data['context_text']))
+			context_attrs = {}
+			traceback = ''
 
-				raw_context_kvs = context._stack[0]
-				context_kvs = {}
-				for k,v in raw_context_kvs.items():
-					if isinstance(v, (basestring, int, float, list, dict, bool)) and k!='text':
-						try:
-							tmp = {'a': v}
-							json.dumps(tmp)
-							context_kvs[k] = v
-						except:
-							print('%s,%s .can not json.loads' % (k,type(v)))
-							pass
+			try:
+				context.execute_steps(step)
+			except AssertionError:
+				result = 1
+				from core.exceptionutil import full_stack
+				print('*********************** failure **********************')
+				traceback = full_stack()
+				print(traceback.decode('utf-8'))
+
 			except:
+				result = 2
 				from core.exceptionutil import full_stack
 				print('*********************** exception **********************')
-				stacktrace = full_stack()
-				print(stacktrace.decode('utf-8'))
-				return base64.b64encode(stacktrace)
+				traceback = full_stack()
+				print(traceback.decode('utf-8'))
 
-		# return base64.b64encode('success')
+			else:
+				result = 0
+				context_attrs = context._stack[0]
 
-			return base64.b64encode(json.dumps(context_kvs))
+			resp = {
+				'result': result,
+				'traceback': traceback,
+				'context_attrs': context_attrs
+			}
+			return base64.b64encode(json.dumps(resp, default=_default))
+
+	port = BDD_SERVER2PORT.get(self_name, 0)
+	assert port, "{}不是有效的项目名称，不要修改项目目录名称".format(self_name)
 
 	httpd = make_server('', 8170, simple_app, handler_class=BDDRequestHandler)
-	print("[bdd server] Serving on port 8170...")
+	print("[bdd server] Serving on port {}...".format(port))
 	httpd.serve_forever()
-
-
