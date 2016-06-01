@@ -143,6 +143,7 @@ def _process_oauth_member_relation_and_source(fmt, member_id, is_new_created_mem
 			if is_new_created_member:
 				MemberFollowRelation.objects.create(member_id=follow_member.id, follower_member_id=member.id, is_fans=is_new_created_member)
 				MemberFollowRelation.objects.create(member_id=member.id, follower_member_id=follow_member.id, is_fans=False)
+				Member.objects.filter(id=member_A.id).update(fans_count=F(fans_count)+1)
 				member.source = SOURCE_BY_URL
 				member.save()
 			elif MemberFollowRelation.objects.filter(member_id=member.id, follower_member_id=follow_member.id).count() == 0:

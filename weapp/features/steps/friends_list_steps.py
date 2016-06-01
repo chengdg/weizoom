@@ -16,7 +16,7 @@ sources_dict = {u'全部':'-1',u'直接关注':'0',u'推广扫码':'1',u'会员�
 @Then (u"{user}获得'{webapp_user}'推荐关注统计")
 def step_impl(context, user, webapp_user):
     #获取webapp_user 会员的id
-    members_url = '/member/api/member_list/'
+    members_url = '/member/api/member_list/?count_per_page=50'
     response = context.client.get(bdd_util.nginx(members_url))
     members_list = json.loads(response.content)['data']['items']
     for member in members_list:
@@ -24,12 +24,12 @@ def step_impl(context, user, webapp_user):
             context.member_id = member['id']
     #访问推荐关注的api并获取数据
     if not hasattr(context, 'focus_url'):
-        context.focus_url = '/member/api/follow_relations/?member_id=%s&only_fans=true' %context.member_id
+        context.focus_url = '/member/api/follow_relations/?member_id=%s&only_fans=true&count_per_page=20' %context.member_id
     response = context.client.get(bdd_util.nginx(context.focus_url))
     context.focus_data = json.loads(response.content)['data']
     #获取实际数据
     actual_data = {}
-    actual_data['new_members'] = context.focus_data['population']
+    actual_data['fans_count'] = context.focus_data['population']
     actual_data['ordered_members'] = context.focus_data['population_order']
     actual_data['pay_money'] = context.focus_data['amount']
 
@@ -92,7 +92,7 @@ def step_impl(context, user, webapp_user):
 @When (u"{user}访问'{webapp_user}'推荐关注页")
 def step_impl(context, user, webapp_user):
     #获取webapp_user 会员的id
-    members_url = '/member/api/member_list/'
+    members_url = '/member/api/member_list/?count_per_page=50'
     response = context.client.get(bdd_util.nginx(members_url))
     members_list = json.loads(response.content)['data']['items']
     for member in members_list:
@@ -108,7 +108,7 @@ def step_impl(context, user, webapp_user, total_page):
     response = context.client.get(bdd_util.nginx(context.focus_url))
     context.focus_data = json.loads(response.content)['data']
     actual_page = context.focus_data['pageinfo']['max_page']
-    assert(int(total_page),int(actual_page))
+    context.tc.assertEquals(int(total_page),int(actual_page))
 
 @When (u"{user}浏览推荐关注列表第{cur_page}页")
 def step_impl(context, user, cur_page):
@@ -123,7 +123,7 @@ def step_impl(context, user, webapp_user, total_page):
     response = context.client.get(bdd_util.nginx(context.friend_url))
     context.friend_data = json.loads(response.content)['data']
     actual_page = context.friend_data['pageinfo']['max_page']
-    assert(int(total_page),int(actual_page))
+    context.tc.assertEquals(int(total_page),int(actual_page))
 
 @When (u"{user}浏览好友列表第{cur_page}页")
 def step_impl(context, user, cur_page):

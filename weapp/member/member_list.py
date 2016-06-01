@@ -155,10 +155,7 @@ def get_request_members_list(request, export=False):
 		elif session_member_ids:
 			filter_data_args['id__in'] = session_member_ids
 		#最后对话时间和分组的处理
-	if "fans_count" not in sort_attr:
-		members = Member.objects.filter(**filter_data_args).order_by(sort_attr)
-	else:
-		members = Member.objects.filter(**filter_data_args)
+	members = Member.objects.filter(**filter_data_args).order_by(sort_attr)
 
 	if export:
 		# return members
@@ -213,7 +210,7 @@ def build_return_member_json(member):
 		'session_id': member.session_id,
 		'friend_count':  member.friend_count,
 		'source':  member.source,
-		'fans_count': len(MemberFollowRelation.get_follow_members_for(member.id, '1')),
+		'fans_count': member.fans_count,
 		'tags':build_member_has_tags_json(member),
 		'is_subscribed':member.is_subscribed,
 		'pay_money': '%.2f' % member.pay_money,
