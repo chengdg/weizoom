@@ -510,7 +510,10 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
                             else:
                                 customer_message = order.customer_message
                         else:
-                            customer_message = fackorder.customer_message
+                            if fackorder:
+                                customer_message = fackorder.customer_message
+                            else:
+                                customer_message = order.customer_message
 
                         tmp_order = [
                             order_id,
@@ -575,7 +578,10 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
                             else:
                                 customer_message = order.customer_message
                         else:
-                            customer_message = fackorder.customer_message
+                            if fackorder:
+                                customer_message = fackorder.customer_message
+                            else:
+                                customer_message = order.customer_message
                         tmp_order=[
                             order_id,
                             order.created_at.strftime('%Y-%m-%d %H:%M').encode('utf8'),
