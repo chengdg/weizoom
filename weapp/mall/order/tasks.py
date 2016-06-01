@@ -71,7 +71,7 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
     user_profile = UserProfile.objects.get(user_id=user_id)
     webapp_id = user_profile.webapp_id
     mall_type = user_profile.webapp_type
-    manager = User.objects.get(id=user_profile.manager_id)
+    manager = User.objects.get(id=user_id)
 
     supplier_users = None
     suplier_not_sub_order_ids = []
