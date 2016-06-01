@@ -27,7 +27,7 @@ def purge_webapp_page_from_varnish_cache(self, woid, project_id=0):
             
 
             url = "http://{}/termite2/webapp_page/?workspace_id={}&webapp_owner_id={}&project_id=0".format(settings.DOMAIN, home_project.workspace_id, woid)
-            url2method[url] = "BAN"
+            url2method[url] = "PURGE"
 
         else:
             project = webapp_models.Project.objects.get(id=project_id)
@@ -41,6 +41,9 @@ def purge_webapp_page_from_varnish_cache(self, woid, project_id=0):
           
 
             url = "http://{}/termite2/webapp_page/?workspace_id=home_page&pwebapp_owner_id={}&roject_id={}".format(settings.DOMAIN,  woid, project.id)
+            url2method[url] = "PURGE"
+
+            url = "http://{}/termite2/webapp_page/?workspace_id={}&webapp_owner_id={}&project_id=0".format(settings.DOMAIN, project.workspace_id, woid)
             url2method[url] = "PURGE"
 
         request_url(url2method)
