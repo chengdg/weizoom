@@ -19,6 +19,8 @@ from webapp import models as webapp_models
 from termite import pagestore as pagestore_manager
 from utils import cache_util
 
+from termite2.tasks import purge_webapp_page_from_varnish_cache
+
 EMPTY_PROJECT_ID = -1
 
 
@@ -31,10 +33,13 @@ class Project(resource.Resource):
 		key = 'termite_webapp_page_%s_%s' % (webapp_owner_id, project_id)
 		cache_util.delete_cache(key)
 
+		purge_webapp_page_from_varnish_cache.delay(webapp_owner_id, project_id)
+
 	@staticmethod
 	def delete_all_webapp_page_cache(webapp_owner_id):
 		key_termite_page = 'termite_webapp_page_%s_*' % webapp_owner_id
 		cache_util.delete_pattern(key_termite_page)
+		purge_webapp_page_from_varnish_cache.delay(webapp_owner_id)
 
 	@staticmethod
 	def create_empty_page(project):
@@ -266,6 +271,7 @@ class Project(resource.Resource):
 
 		key_termite_page = 'termite_webapp_page_%s_*' % request.manager.id
 		cache_util.delete_pattern(key_termite_page)
+		purge_webapp_page_from_varnish_cache.delay(request.manager.id)
 
 		response = create_response(200)
 		return response.get_response()
@@ -306,8 +312,10 @@ def delete_webapp_page_cache(**kwargs):
 	if hasattr(cache, 'request') and cache.request.user_profile:
 		webapp_owner_id = cache.request.user_profile.user_id
 		for project in webapp_models.Project.objects.filter(owner_id=webapp_owner_id, type='wepage'):
+			print "in>>>>>>>>>>>>>"
 			key = 'termite_webapp_page_%s_%s' % (webapp_owner_id, project.id)
 			cache_util.delete_cache(key)
+			purge_webapp_page_from_varnish_cache.delay(webapp_owner_id,  project.id)
 
 post_update_signal.connect(delete_webapp_page_cache, sender=mall_models.Product, dispatch_uid = "termite_product.update")
 signals.post_save.connect(delete_webapp_page_cache, sender=mall_models.Product, dispatch_uid = "termite_product.save")

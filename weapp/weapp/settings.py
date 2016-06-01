@@ -512,9 +512,10 @@ INSTALLED_TASKS = [
     'market_tools.tools.shake',
     'weixin2',
     'tools.express',
-
+    'termite2',
     'member',
     'mall.product',
+    'mall.order',
     # for services
     'services.example_service',
     'services.send_order_email_service',
@@ -532,6 +533,7 @@ INSTALLED_TASKS = [
     # 'services.update_component_mp_token_service',
     'services.analysis_message_service',
     'services.count_keyword_service',
+    'services.virtual_product_service',
     'services.send_express_poll_service',
     'services.update_member_purchase_frequency'
 ]

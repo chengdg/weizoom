@@ -35,6 +35,16 @@ def get_link_targets(request):
 ########################################################################
 def get_webapp_usage_link(webapp_owner_id, member):
 	workspace_template_info = 'workspace_id=market_tool:weizoom_card&webapp_owner_id=%d&project_id=0' % webapp_owner_id
+	#个人中心微众卡钱包展示名称
+	user = User.objects.filter(id=webapp_owner_id)
+	if user.count() > 0:
+		username = user[0].username
+		if username in ['jobs','weshop','ceshi01']:
+			return {
+				'name': u'我的卡包',
+				'second_name': u'所有卡券管理',
+				'link': './?module=market_tool:weizoom_card&model=weizoom_card_login&action=get&%s' % workspace_template_info
+			}
 
 	return {
 		'name': u'微众卡余额查询',

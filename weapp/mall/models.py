@@ -157,6 +157,8 @@ PRODUCT_DEFAULT_TYPE = 'object'
 PRODUCT_DELIVERY_PLAN_TYPE = 'delivery'
 PRODUCT_TEST_TYPE = 'test'
 PRODUCT_INTEGRAL_TYPE = 'integral'
+PRODUCT_VIRTUAL_TYPE = 'virtual'
+PRODUCT_WZCARD_TYPE = 'wzcard'
 POSTAGE_TYPE_UNIFIED = 'unified_postage_type'
 POSTAGE_TYPE_CUSTOM = 'custom_postage_type'
 
@@ -486,7 +488,7 @@ class Product(models.Model):
 						display_price_range = target_model['price']
 					else:
 						# 列表页部分显示商品的最小价格那个model的信息
-						custom_models.sort(lambda x, y: cmp(x['price'], y['price']))
+						custom_models.sort(lambda x, y: cmp(float(x['price']), float(y['price'])))
 						target_model = custom_models[0]
 						low_price = target_model['price']
 						high_price = custom_models[-1]['price']
@@ -1128,6 +1130,7 @@ class Product(models.Model):
 			'display_index': self.display_index,
 			'is_member_product': self.is_member_product,
 			'purchase_price': self.purchase_price,
+			'type': self.type,
 		}
 
 

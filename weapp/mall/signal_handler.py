@@ -224,8 +224,9 @@ def cancel_order_handler(order, **kwargs):
     try:
         # 返还微众卡
         # weizoom_card_module_api.return_weizoom_card_money(order)
-        from mall.module_api import refund_weizoom_card_money
-        refund_weizoom_card_money(order)
+        if order.weizoom_card_money:
+            from mall.module_api import refund_weizoom_card_money
+            refund_weizoom_card_money(order)
         # 返还优惠券
         if order.coupon_id and order.coupon_id > 0:
             coupons = promotion_models.Coupon.objects.filter(id = order.coupon_id)

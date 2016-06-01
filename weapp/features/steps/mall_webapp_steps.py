@@ -381,9 +381,6 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 		context.created_order_id = response_json['data']['order_id']
 
 		#访问支付结果链接
-		print 11111111111111111111111111
-		print response_json['data']
-		print 11111111111111111111111111
 		pay_url_info = response_json['data']['pay_url_info']
 		pay_type = pay_url_info['type']
 		del pay_url_info['type']

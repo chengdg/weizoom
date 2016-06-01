@@ -1044,7 +1044,7 @@ class MemberGetFile(resource.Resource):
 		woid = request.webapp_owner_id
 		type = int(request.GET.get('type', 0))
 
-		now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+		now = datetime.now()
 		#判断用户是否存在导出数据任务
 		if type == 0:
 			param ,sort_attr = get_request_members_list(request, True)

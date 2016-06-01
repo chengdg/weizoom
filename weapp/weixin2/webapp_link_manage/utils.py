@@ -220,7 +220,7 @@ def get_webapp_link_objectes_for_type(request, type, query, order_by):
 		'webappPage': {
 			'class': Project,
 			'query_name': 'site_title',
-			'link_template': './?workspace_id=home_page&project_id={}&webapp_owner_id=%d' % webapp_owner_id,
+			'link_template': './?workspace_id=home_page&webapp_owner_id=%d&project_id={}' % webapp_owner_id,
 			'filter': {
 				'is_enable': True
 			}

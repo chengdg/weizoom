@@ -39,6 +39,9 @@ def get_market_tool_webapp_usage_links(webapp_owner_id, member=None):
 		if tool_module_export and hasattr(tool_module_export, 'get_webapp_usage_link'):
 			link_info = tool_module_export.get_webapp_usage_link(webapp_owner_id, member)
 			link_info['en_name'] = tool_module.module_name
+			#个人中心微众卡包二级展示名称
+			if 'second_name' not in link_info:
+				link_info['second_name'] = link_info['name']
 			all_market_tool_webapp_usage_links.append(
 				link_info
 				)

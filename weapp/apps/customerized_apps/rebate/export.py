@@ -70,7 +70,7 @@ def handle_rebate_core(all_records=None):
 	#判定每个订单属于哪个活动
 	#首先找到这个会员都参与过哪些活动，然后拿这些活动的生效日期范围与下单时间一一比较
 
-	owner_id2webapp_id = {u.manager_id: u.webapp_id for u in UserProfile.objects.filter(is_mp_registered=True, is_active=True)}
+	owner_id2webapp_id = {u.manager_id if u.manager_id > 2 else u.user_id: u.webapp_id for u in UserProfile.objects.filter(is_mp_registered=True, is_active=True)}
 	member_id2member = {m.id: m for m in member_models.Member.objects.filter(id__in=member_id2records.keys())}
 	need_grant_info = []
 	all_record_ids = set()
@@ -168,7 +168,7 @@ def grant_card(need_grant_info, all_record_ids):
 			card_number = weizoom_card.weizoom_card_id,
 			card_password = weizoom_card.weizoom_card_password,
 			member_id = member_id,
-			member_name = member_name,
+			# member_name = member_name,
 			source = promotion_models.WEIZOOM_CARD_SOURCE_REBATE,
 			relation_id = info['record_id']
 		))
@@ -230,7 +230,7 @@ def handle_wating_actions():
 			card_number = can_use_card.weizoom_card_id,
 			card_password = can_use_card.weizoom_card_password,
 			member_id = member_id,
-			member_name = member_id2member[member_id].username_hexstr,
+			# member_name = member_id2member[member_id].username_hexstr,
 			source = promotion_models.WEIZOOM_CARD_SOURCE_REBATE,
 			relation_id = action.record_id
 		))

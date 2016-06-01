@@ -200,15 +200,15 @@ def call_api(weixin_api, api_instance_class):
 		result = api_response
 
 		try:
-			#watchdog_info('call weixin api: {} , result:{}'.format(api_instance_class.__class__.__name__, result))
+			watchdog_info('call weixin api: {} , result:{}'.format(api_instance_class.__class__.__name__, result))
 			if settings.MODE != 'develop':
-				from weixin.message.message_handler.tasks import record_call_weixin_api
+				#from weixin.message.message_handler.tasks import record_call_weixin_api
 				if hasattr(result, 'errcode'):
 					success = False
-					#watchdog_error('call weixin api: {} , result:{}'.format(api_instance_class.__class__.__name__, result))	
+					##watchdog_error('call weixin api: {} , result:{}'.format(api_instance_class.__class__.__name__, result))	
 				else:
 					success = True
-				record_call_weixin_api.delay(api_instance_class.__class__.__name__, success)
+				#record_call_weixin_api.delay(api_instance_class.__class__.__name__, success)
 		except:
 			pass
 		

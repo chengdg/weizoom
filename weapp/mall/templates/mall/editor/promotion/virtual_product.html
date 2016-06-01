@@ -1,0 +1,325 @@
+{% extends "content_base_v2.html" %}
+{% block css%}
+<style>
+	.xui-commonPromotionStyle .xb-stripedTable tbody > tr:nth-child(even){
+		background: #fff;
+		border-bottom: 1px solid #e5e5e5;
+	}
+</style>
+{% endblock%}
+{% block content-panel %}
+<div class="xui-promotion-createFlashSalePage xui-commonPromotionStyle">
+
+<div class="relative">
+	<ul class="breadcrumb">
+		<li>您当前所在位置</li>
+		<li><a href="/mall2/flash_sale_list/">促销管理</a></li>
+		<li class="active">{% if virtual_product.id %}编辑{% else %}新建{% endif %}福利卡券</li>
+	</ul>
+</div>
+
+<div class="xa-productSelector">
+	{% if virtual_product.id %}
+	{% else %}
+	<div class="xa-productSelectConditionPanel">
+	</div>
+	{% endif %}
+	<div class="panel panel-default mt20 xb-panelBg xa-errorHintContainer">
+		<div class="panel-body xa-selectedProductList mb0 pb0" style="margin-bottom:15px!important; margin-left:22px;" data-validate="require-element-exist" data-selector="tbody tr">
+			{% if virtual_product %}
+			<table id="productListTable" class="table table-bordered mb0 table-condensed xb-noTdBorder xb-stripedTable">
+				<thead class="xui-theadHeight">
+					<tr>
+						<th>商品信息</th>
+						<th width="120">商品价格（元）</th>
+						<th>库存</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr class="xui-trColor" data-id="{{virtual_product.id}}">
+						<td class="tl_important pl20 pt10 pb10">
+							<div class="imgBox fl" style="width: auto;border:solid 1px #ccc;">
+								<a href="{{virtual_product.product.detail_link}}" target="_blank">
+									<img src="{{virtual_product.product.thumbnails_url}}" width="58" height="60"/>
+								</a>
+							</div>
+							<div class="ml10 fl">
+								<div class="mb25">
+									<a href="{{virtual_product.product.detail_link}}" target="_blank">{{virtual_product.product.name}}</a>
+								</div>
+								<p style="color:#666">商品条码：{{virtual_product.product.bar_code}}</p>
+							</div>
+						</td>
+						<td>
+							{{virtual_product.product.price}}
+						</td>
+						<td>
+							{{virtual_product.product.stocks}}
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			{% else %}
+				请通过查询选择参与活动的商品
+			{% endif %}
+		</div>
+		<div class="errorHint pb0" style="padding-left:38px;" data-error-hint="请先选择商品"></div>
+	</div>
+</div>
+
+
+<div class="panel panel-default mt20  xb-panelBg">
+	<div class="panel-heading xui-createSaleHead">
+		创建卡券
+	</div>
+	<form class="panel-body xui-formPanel xa-form xui-borderCancel mt30 pl40">
+		<div class="xui-i-col" style="display:block;">
+			<div class="xui-i-item">
+				<label class="star_show">活动名称：</label>
+				<input type="text" class="form-control" id="name" name="name" value="{{virtual_product.name}}" {% if virtual_product.id %}disabled="disabled"{% endif %} data-validate="require-string" minLength="1" maxLength="20" />
+				<div class="errorHint mt5 ml110" data-error-hint="活动名称必须在1-20个字内" ></div>
+			</div>
+			<div class="xui-i-item">
+				
+				<label class="star_show fn">卡券有效期
+				：</label>
+				<div style="display:inline-block; vertical-align:text-top;margin-top:-6px;">
+				<input
+					style="width:132px!important;cursor:pointer;"
+					type="text"
+					class="form-control xui-datePicker"
+					id="start_time"
+					name="start_time"
+					style=""
+				    value="{{start_time}}"
+				    readonly="readonly"
+					data-validate="require-notempty"
+					data-enable-select-time="true"
+					data-ui-role="date-picker"
+				    data-format="yy-mm-dd HH:MM"
+				    data-min="now"
+				    data-max-el="#end_time"
+				    width="132"/>
+				    <div class="errorHint" data-error-hint="必须选择一个开始时间" style=""></div>
+				    </div>
+				至
+				<div style="display:inline-block; vertical-align:text-top;margin-top:-6px;">
+				<input
+					style="width:132px!important;cursor:pointer;"
+					type="text"
+					class="form-control xui-datePicker"
+					id="end_time"
+					name="end_time"
+				    value="{{end_time}}"
+				    readonly="readonly"
+					data-validate="require-notempty"
+					data-ui-role="date-picker"
+					data-enable-select-time="true"
+				    data-format="yy-mm-dd HH:MM"
+				    data-min="now"
+				    data-min-el="#start_time"/>
+				    <div class="errorHint" data-error-hint="必须选择一个过期时间" style=""></div>
+				</div>
+			</div>
+			<!-- <input type="checkbox" id="notLimited" class="ml10 xa-forever" value="1"><label for="notLimited" class="vm ml5 fn">永久</label> -->
+			<!-- </div> -->
+			<div class="xui-i-item">
+				<label class="star_show">上传码库文件：</label>
+				<div class="controls xa-errorHintContainer">
+		            <div style="margin-left: 120px;margin-top:-20px;">
+		                <input type="file" id="card-file" name="card-file">
+		                <input type="hidden" id="file_path">
+			            <span class="xa-exchangeStock">{% if valid_num %}库存：{{valid_num}}{% endif %}</span>
+		            </div>
+		        </div>
+			</div>
+		</div>
+
+		<div class="" style="display:inline-block;margin-left:40px;">
+			<a class="btn btn-primary mr40 xa-submit xui-fontBold" href="javascript:void(0);">完成设置</a>
+			<a class="btn btn-default xa-cancel xui-fontBold" href="/mall2/virtual_products/">取消创建</a>
+		</div>
+	</form>
+</div>
+
+</div>
+{% endblock %}
+
+
+{% block js %}
+{% verbatim %}
+<script id="creart-virtual-product-view-tmpl-src" type="text/x-jquery-tmpl">
+	<table id="productListTable" class="table table-bordered mb0 table-condensed xb-noTdBorder xb-stripedTable">
+		<thead class="xui-theadHeight">
+			<tr>
+				<th>商品信息</th>
+				<th width="120">商品价格（元）</th>
+				<th>库存</th>
+				<th width="80">操作</th>
+			</tr>
+		</thead>
+		<tbody id='product_list'>
+            {{each(i, product) products}}
+			<tr
+				data-id="${product.id}"
+			 class="xa-productId">
+				<td style="text-align: left;" class="pt10 pl50">
+					<div class="imgBox fl" style="width: auto;border:solid 1px #ccc;">
+						<a href="${product.detail_link}" target="_blank">
+                             {{if product.thumbnails_url.search('http://weappimg') != -1}}
+                               <img src="${product.thumbnails_url + '!60'}" width="60" height="60"/>
+                             {{else}}
+                               <img src="${product.thumbnails_url}" width="60" height="60"/>
+                             {{/if}}
+						</a>
+					</div>
+					<div class="ml10 fl">
+						<div class="mb25">
+							<a href="${product.detail_link}" target="_blank">${product.name}</a>
+						</div>
+						<p style="color:#666;">商品条码：${product.bar_code}</p>
+					</div>
+				</td>
+				<td class="xa-product-price">
+					${product.price}
+				</td>
+				<td>
+					${product.stocks}
+				</td>
+				<td>
+					<a href="javascript:void(0);" class="xa-delete">删除</a>
+				</td>
+			</tr>
+			{{/each}}
+		</tbody>
+	</table>
+</script>
+{% endverbatim %}
+
+<script type="text/javascript">
+var promotionId = {% if promotion %}{{promotion.id}}{% else %}0{% endif %};
+$(document).ready(function() {
+	var productSelector = new W.view.mall.PromotionSelectProductView({
+		el: '.xa-productSelector',
+		promotionId: promotionId,
+		enableMultiSelection: false,
+		// tableOutAllSelectable:true,
+		uniqueDialog:'W.dialog.mall.CreatVirtualProductDialog',
+		tableTemplate: 'creart-virtual-product-view-tmpl-src'
+	});
+	productSelector.render();
+
+
+	var file_path;
+	var has_file = {% if card_stock %}true{% else %}false{% endif %};
+	//初始化上传组件参数
+    var swf = '/static/uploadify.swf',
+        overrideEvents = ['onError', 'onUploadSuccess'],
+        multi = false,
+        removeCompleted = false,
+        uploader = '/mall2/api/upload_virtual_product_file/',
+        cancelImg = '/static/img/cancel.png',
+        buttonText = '添加码库',
+        fileTypeExts = '*.xls; *.xlsx',
+        method = 'post',
+        removeTimeout = 0.0,
+        width = 100,
+        formData = {
+            'owner_id': '{{ request.webapp_owner_id }}'
+        },
+        onError = function(errorType,file) {
+            xlog(errorType);
+            xlog(file.name);
+        };
+
+    //初始化上传组件
+    $("#card-file").uploadify({
+        overrideEvents: overrideEvents,
+        swf: swf,
+        width: width,
+        multi: multi,
+        removeCompleted: removeCompleted,
+        uploader: uploader,
+        cancelImg: cancelImg,
+        buttonText: buttonText,
+        fileTypeDesc: '虚拟码库',
+        fileTypeExts: fileTypeExts,
+        method: method,
+        removeTimeout: removeTimeout,
+        formData: formData,
+        onUploadStart: function(file){
+        	var fileType = file.name.substring(file.name.length - 3,file.name.length) == 'xls' ||file.name.substring(file.name.length - 4,file.name.length) == 'xlsx';
+        	console.log(fileType,'fileTypefileTypefileType')
+            if(file && fileType){}else{
+                W.showHint('error', '请上传正确excel文件');
+                $("#card-file").uploadify('cancel', '*');
+                $("#card-file").uploadify('stop');
+            }
+        },
+        onUploadSuccess : function(file, response, status) {
+            response = JSON.parse(response);
+            if(response.code == 200){
+                console.log(response.data);
+                $("#card-file").find('.uploadify-button-text').html('重新选择');
+                $("#file_path").val(response.data['file_path']);
+                file_path = response.data['file_path'];
+                $(".xa-exchangeStock").html("库存：" + response.data['valid_num']);
+                has_file = true;
+            }else{
+                W.showHint('error', response.errMsg);
+            }
+        },
+        onSelect: function(file) {
+            var $queues = $('#card-file-queue').children();
+            if($queues.length > 1){
+                $queues.eq(0).remove();
+            }
+        },
+        onError: onError
+    });
+	
+	$('.xa-submit').click(function(event) {
+		$(this).attr("disabled",true);
+		if(!W.validate()) {
+			$(this).attr("disabled",false);
+			return false;
+		}
+		if(!has_file){
+            W.showHint('error', '请上传卡库');
+            $(this).attr('disabled',false);
+            return false;
+        }
+		var args = $('.xa-form').serializeObject();
+		var method = 'put';
+		{% if virtual_product.id %}
+		method = 'post';
+		args.id = {{virtual_product.id}};
+		{% endif %}
+		xlog(args);
+		args.code_file_path = file_path;
+		// args.products = JSON.stringify(productSelector.getData());
+		var product_id = $('.xa-productId').data('id');
+		args.product_id = product_id;
+		W.getApi().call({
+			method: method,
+			app: 'mall2',
+			resource: 'virtual_product',
+			args: W.toFormData(args),
+			scope: this,
+			success: function(data) {
+				W.showHint('success', '创建福利卡券成功');
+				_.delay(function() {
+					window.location.href = '/mall2/virtual_products/';
+				}, 500)
+			},
+			error: function(resp) {
+				W.showHint('error', '创建福利卡券失败!');
+				$(this).attr("disabled",false);
+			}
+		})
+	});
+
+});
+</script>
+
+{% endblock %}
