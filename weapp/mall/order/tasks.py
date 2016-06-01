@@ -68,10 +68,11 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
     status_type = filter_data_args["status_type"]
     query_dict, date_interval, date_interval_type = filter_data_args["query_dict"], filter_data_args["date_interval"], filter_data_args["date_interval_type"]
     order_status = filter_data_args["order_status"]
+    manager_id = filter_data_args["manager_id"]
     user_profile = UserProfile.objects.get(user_id=user_id)
     webapp_id = user_profile.webapp_id
     mall_type = user_profile.webapp_type
-    manager = User.objects.get(id=user_profile.manager_id)
+    manager = User.objects.get(id=manager_id)
 
     supplier_users = None
     suplier_not_sub_order_ids = []
