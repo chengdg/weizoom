@@ -259,7 +259,7 @@ class OrderFilterParams(resource.Resource):
             status_dict = REFUND_STATUS2TEXT
         else:
             current_status_dict = copy.copy(STATUS2TEXT)
-            # del current_status_dict[ORDER_STATUS_REFUNDED]
+            del current_status_dict[ORDER_STATUS_REFUNDED]
             del current_status_dict[ORDER_STATUS_GROUP_REFUNDING]
             del current_status_dict[ORDER_STATUS_GROUP_REFUNDED]
             status_dict = current_status_dict

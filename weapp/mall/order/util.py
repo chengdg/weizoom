@@ -1187,7 +1187,7 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
         if order.come is 'weizoom_mall' and user.is_weizoom_mall is False:
             order.member_id = 0
 
-            # 构造返回的order数据
+    # 构造返回的order数据
     items = []
     for order in orders:
         products = mall_api.get_order_products(order)
