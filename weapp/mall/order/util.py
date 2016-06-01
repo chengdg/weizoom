@@ -1901,9 +1901,9 @@ def get_param_from(request):
     status_type = request.GET.get('status', None)
     order_status = request.GET.get('order_status', None)
     # user_profile = request.user_profile
-    # manager = request.manager
+    manager_id = request.manager.id
     query_dict, date_interval,date_interval_type = __get_select_params(request)
-    param = {"user_id":user_id, "status_type":status_type, "query_dict":query_dict, "date_interval":date_interval, "date_interval_type":date_interval_type, "order_status":order_status}
+    param = {"user_id":user_id, "status_type":status_type, "query_dict":query_dict, "date_interval":date_interval, "date_interval_type":date_interval_type, "order_status":order_status, "manager_id":manager_id}
     return param
 
 get_orders_by_params = __get_orders_by_params
