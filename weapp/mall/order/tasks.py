@@ -565,7 +565,7 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
                     else:
                         order_express_number = (order.express_number if not fackorder else fackorder.express_number).encode('utf8')
                         express_name = express_util.get_name_by_value(order.express_company_name if not fackorder else fackorder.express_company_name).encode('utf8')
-                        if fackorder:
+                        if '^' in order_id:
                             if mall_type:
                                 try:
                                     key = order_id.split('^')[1]
