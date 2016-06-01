@@ -292,7 +292,7 @@
 		<tr>
 			<th>会员</th>
 			<th >会员等级</th>
-			<th  class="tx_sortable xui-Blue pl0 pr0" data-sort-attr='friend_count' data-sort-direction="up">好友数</th>
+			<th  class="tx_sortable xui-Blue pl0 pr0" data-sort-attr='fans_count' data-sort-direction="up">推荐数</th>
 			<th  class="tx_sortable xui-Blue pl0 pr0" data-sort-attr='integral' data-sort-direction="up">积分</th>
 			<th  class="tx_sortable xui-Blue pr0" data-sort-attr='created_at' data-init-sort="-created_at"  data-sort-direction="up">关注时间&来源</th>
 			<th  class="pr0" style="width:15%">分组</th>
@@ -331,12 +331,8 @@
 				</td>
 				<td>
 					<div class="centerAlign">
-						{{if member.friend_count==0}}
-							<span class="cursor-text">${ member.friend_count }</span>
-						{{else}}
-							<a class="relation-text" href="javascript:void(0);" style="" friend_count='${friend_count}' fans_count='${fans_count}' value='${ member.id }'>${ member.friend_count }
-							</a>
-						{{/if}}
+						<a class="relation-text" href="javascript:void(0);" style="" friend_count='${friend_count}' fans_count='${fans_count}' value='${ member.id }'>${ member.fans_count }
+						</a>
 					</div>
 				</td>
 				<td>
