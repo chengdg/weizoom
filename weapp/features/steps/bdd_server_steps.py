@@ -45,12 +45,13 @@ def _git_shell(git_command):
 
 
 try:
-	git_dir = _git_shell('git rev-parse --git-dir')
-	self_name = git_dir.split('/')[-2]
+	git_dir = os.path.abspath(_git_shell('git rev-parse --git-dir'))
+	project_dir = os.path.dirname(git_dir)
+	self_name = project_dir.split(os.sep)[-1]
 except BaseException as e:
 	print(e)
-	print("你装git了吗？")
-	self_name = "你装git了吗？"
+	self_name = "You should install Git!!"
+	print(self_name)
 
 os.system("title {}_bdd_server".format(self_name))
 
@@ -104,7 +105,7 @@ def step_impl(context):
 		result = 0
 		if step == '__reset__':
 			print('*********************** run step **********************')
-			print(u'重置bdd环境')
+			print(u'Reset bdd environment...')
 			environment.after_scenario(context, context.scenario)
 			environment.before_scenario(context, context.scenario)
 
@@ -155,8 +156,8 @@ def step_impl(context):
 			return base64.b64encode(json.dumps(resp, default=_default))
 
 	port = BDD_SERVER2PORT.get(self_name, 0)
-	assert port, "{}不是有效的项目名称，不要修改项目目录名称".format(self_name)
+	assert port, "{} is not valid name.You can't change the git repository name!".format(self_name)
 
 	httpd = make_server('', 8170, simple_app, handler_class=BDDRequestHandler)
-	print("[bdd server] Serving on port {}...".format(port))
+	print("[{} bdd server] Serving on port {}...".format(self_name, port))
 	httpd.serve_forever()
