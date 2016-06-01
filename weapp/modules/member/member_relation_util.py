@@ -4,7 +4,7 @@ member_relation_util
 
 """
 __author__ = 'bert'
-
+from django.db.models import F
 from utils.uuid import uniqueid
 from utils.string_util import byte_to_hex
 
@@ -63,6 +63,7 @@ def build_member_follow_relation(request):
 			follower_member_id = member.id,
 			is_fans = is_fans,
 		)
+		Member.objects.filter(id=followed_member.id).update(fans_count=F('fans_count')+1)
 
 		MemberFollowRelation.objects.create(
 			member_id = member.id,

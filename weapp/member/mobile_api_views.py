@@ -3,7 +3,7 @@
 __author__ = 'bert'
 
 from django.conf import settings
-
+from django.db.models import F
 from account.social_account.models import SocialAccount, SOCIAL_PLATFORM_WEIXIN
 
 from weixin.message.handler.message_handler import MessageHandler
@@ -81,6 +81,7 @@ def get_sct(request):
 				if is_new_created_member:
 					MemberFollowRelation.objects.create(member_id=follow_member.id, follower_member_id=member.id, is_fans=is_new_created_member)
 					MemberFollowRelation.objects.create(member_id=member.id, follower_member_id=follow_member.id, is_fans=False)
+					Member.objects.filter(id=follow_member.id).update(fans_count=F('fans_count')+1)
 					member.source = SOURCE_BY_URL
 					member.save()
 				elif MemberFollowRelation.objects.objects.filter(member_id=member.id,follower_member_id=follow_member.id).count() == 0:

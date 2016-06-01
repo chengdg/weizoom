@@ -205,7 +205,7 @@ Scenario:1 默认条件和空条件查询
 			}]
 			"""
 		Then jobs可以获得会员列表
-			| name  | member_rank |  new_members | integral | pay_money | unit_price | pay_times |   attention_time  |  source  |    tags     |
+			| name  | member_rank |  fans_count | integral | pay_money | unit_price | pay_times |   attention_time  |  source  |    tags     |
 			| bill3 |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |        今天       | 会员分享 | 未分组      |
 			| bill2 |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |        今天       | 直接关注 | 未分组      |
 			| bill  |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |        今天       | 会员分享 | 未分组      |
@@ -229,7 +229,7 @@ Scenario:1 默认条件和空条件查询
 			}]
 			"""
 		Then jobs可以获得会员列表
-			| name  | member_rank |  new_members | integral | pay_money | unit_price | pay_times | attention_time | source   |    tags     |
+			| name  | member_rank |  fans_count | integral | pay_money | unit_price | pay_times | attention_time | source   |    tags     |
 			| bill3 | 普通会员    |       0      |     0    |   0.00    |    0.00    |    0      |       今天     | 会员分享 | 未分组      |
 			| bill2 | 普通会员    |       0      |     0    |   0.00    |    0.00    |    0      |       今天     | 直接关注 | 未分组      |
 			| bill  | 普通会员    |       0      |     0    |   0.00    |    0.00    |    0      |       今天     | 会员分享 | 未分组      |
@@ -962,7 +962,7 @@ Scenario:12 过滤条件"条件组合查询"
 			}]
 			"""
 		Then jobs可以获得会员列表
-			| name  | member_rank |  new_members | integral | pay_money | unit_price | pay_times | attention_time | source   |  tags   |
+			| name  | member_rank |  fans_count | integral | pay_money | unit_price | pay_times | attention_time | source   |  tags   |
 			| tom2  | 普通会员    |       0      |     50   |   110.00  |   110.00   |     1     |   2014-08-05   | 推广扫码 | 分组1   |
 
 @mall2 @member @memberList
@@ -980,27 +980,27 @@ Scenario:13 会员列表分页
 		When jobs访问会员列表
 		When jobs访问会员列表第1页
 		Then jobs可以获得会员列表
-			| name  | member_rank |  new_members | integral | pay_money | unit_price | pay_times |   attention_time  |  source  |    tags     |
+			| name  | member_rank |  fans_count | integral | pay_money | unit_price | pay_times |   attention_time  |  source  |    tags     |
 			| bill3 |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |        今天       | 会员分享 | 未分组      |
 			| bill2 |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |        今天       | 直接关注 | 未分组      |
 			| bill  |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |        今天       | 会员分享 | 未分组      |
 
 		When jobs访问会员列表第2页
 		Then jobs可以获得会员列表
-			| name  | member_rank |  new_members | integral | pay_money | unit_price | pay_times | attention_time | source   |    tags     |
+			| name  | member_rank |  fans_count | integral | pay_money | unit_price | pay_times | attention_time | source   |    tags     |
 			| tom7  | 金牌会员    |       0      |     0    |   0.00    |    0.00    |    0      |   2014-10-01   | 直接关注 | 未分组      |
 			| tom6  | 普通会员    |       0      |     0    |   0.00    |    0.00    |    0      |   2014-10-01   | 推广扫码 | 未分组      |
 			| tom5  | 金牌会员    |       0      |     0    |   0.00    |    0.00    |    0      |   2014-08-06   | 会员分享 | 分组3       |
 
 		When jobs访问会员列表第3页
 		Then jobs可以获得会员列表
-			| name  | member_rank |  new_members | integral | pay_money | unit_price | pay_times | attention_time | source   |    tags     |
+			| name  | member_rank |  fans_count | integral | pay_money | unit_price | pay_times | attention_time | source   |    tags     |
 			| tom3  | 银牌会员    |       1      |    100   |   110.00  |    110.00  |    1      |   2014-08-05   | 会员分享 | 分组1,分组3 |
 			| tom1  | 银牌会员    |       1      |     0    |    0.00   |     0.00   |    0      |   2014-08-04   | 直接关注 | 分组1       |
 
 		When jobs访问会员列表第2页
 		Then jobs可以获得会员列表
-			| name  | member_rank |  new_members | integral | pay_money | unit_price | pay_times | attention_time | source   |    tags     |
+			| name  | member_rank |  fans_count | integral | pay_money | unit_price | pay_times | attention_time | source   |    tags     |
 			| tom7  | 金牌会员    |       0      |     0    |   0.00    |    0.00    |    0      |   2014-10-01   | 直接关注 | 未分组      |
 			| tom6  | 普通会员    |       0      |     0    |   0.00    |    0.00    |    0      |   2014-10-01   | 推广扫码 | 未分组      |
 			| tom5  | 金牌会员    |       0      |     0    |   0.00    |    0.00    |    0      |   2014-08-06   | 会员分享 | 分组3       |

@@ -247,7 +247,10 @@ def _add_member_relation(new_member, old_member, only_create_friend=False):
 				MemberFollowRelation.objects.create(member_id=new_member.id, follower_member_id=old_member.id)
 				MemberFollowRelation.objects.create(member_id=old_member.id, follower_member_id=new_member.id, is_fans=is_fans)
 				Member.objects.filter(id=new_member.id).update(friend_count = F('friend_count') + 1)
-				Member.objects.filter(id=old_member.id).update(friend_count = F('friend_count') + 1)
+				if is_fans:
+					Member.objects.filter(id=old_member.id).update(friend_count = F('friend_count') + 1, fans_count = F('fans_count') + 1)
+				else:
+					Member.objects.filter(id=old_member.id).update(friend_count = F('friend_count') + 1)
 			# from django.db import connection, transaction
 			# cursor = connection.cursor()
 			# cursor.execute('update member_member set friend_count=friend_count+1 where id in (%d,%d)' % (new_member.id, old_member.id))

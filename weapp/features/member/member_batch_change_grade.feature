@@ -70,7 +70,7 @@ Scenario:1 选择当前页的部分会员，选择"给选中的人修改等级"
 	#选择第1页部分会员批量修改等级
 		When jobs访问会员列表第1页
 		Then jobs可以获得会员列表
-			| member| member_rank |  new_members | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
+			| member| member_rank |  fans_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
 			| bill  |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-05    | 直接关注 | 未分组      |
 			| tom   |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-04    | 推广扫码 | 未分组      |
 			| marry |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-03    | 会员分享 | 未分组      |
@@ -88,7 +88,7 @@ Scenario:1 选择当前页的部分会员，选择"给选中的人修改等级"
 			"""
 		When jobs访问会员列表第1页
 		Then jobs可以获得会员列表
-			| name  | member_rank |  new_members | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
+			| name  | member_rank |  fans_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
 			| bill  |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-05    | 直接关注 | 未分组      |
 			| tom   |   银牌会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-04    | 推广扫码 | 未分组      |
 			| marry |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-03    | 会员分享 | 未分组      |
@@ -96,7 +96,7 @@ Scenario:1 选择当前页的部分会员，选择"给选中的人修改等级"
 	#选择第3页部分会员批量修改等级
 		When jobs访问会员列表第3页
 		Then jobs可以获得会员列表
-			| name  | member_rank |  new_members | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
+			| name  | member_rank |  fans_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
 			| bill1 |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-06-06    | 直接关注 | 未分组      |
 			| bill2 |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-06-05    | 推广扫码 | 未分组      |
 			| bill3 |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-06-04    | 直接关注 | 未分组      |
@@ -114,7 +114,7 @@ Scenario:1 选择当前页的部分会员，选择"给选中的人修改等级"
 
 		When jobs访问会员列表第3页
 		Then jobs可以获得会员列表
-			| name  | member_rank |  new_members | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
+			| name  | member_rank |  fans_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
 			| bill1 |   铜牌会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-06-06    | 直接关注 | 未分组      |
 			| bill2 |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-06-05    | 推广扫码 | 未分组      |
 			| bill3 |   铜牌会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-06-04    | 直接关注 | 未分组      |
@@ -133,7 +133,7 @@ Scenario:2 选择当前页的全部会员，选择"给选中的人修改等级"
 	#选择第1页全部会员批量修改等级
 		When jobs访问会员列表第1页
 		Then jobs可以获得会员列表
-			| name  | member_rank |  new_members | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
+			| name  | member_rank |  fans_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
 			| bill  |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-05    | 直接关注 | 未分组      |
 			| tom   |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-04    | 推广扫码 | 未分组      |
 			| marry |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-03    | 会员分享 | 未分组      |
@@ -154,7 +154,7 @@ Scenario:2 选择当前页的全部会员，选择"给选中的人修改等级"
 
 		When jobs访问会员列表第1页
 		Then jobs可以获得会员列表
-			| name  | member_rank |  new_members | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
+			| name  | member_rank |  fans_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
 			| bill  |   银牌会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-05    | 直接关注 | 未分组      |
 			| tom   |   银牌会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-04    | 推广扫码 | 未分组      |
 			| marry |   银牌会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-03    | 会员分享 | 未分组      |
@@ -162,7 +162,7 @@ Scenario:2 选择当前页的全部会员，选择"给选中的人修改等级"
 	#选择第2页全部会员批量修改等级
 		When jobs访问会员列表第2页
 		Then jobs可以获得会员列表
-			| name  | member_rank |  new_members | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
+			| name  | member_rank |  fans_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
 			| tom1  |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-02    | 会员分享 | 未分组      |
 			| tom2  |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-01    | 会员分享 | 未分组      |
 			| tom3  |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-06-07    | 会员分享 | 未分组      |
@@ -183,7 +183,7 @@ Scenario:2 选择当前页的全部会员，选择"给选中的人修改等级"
 
 		When jobs访问会员列表第2页
 		Then jobs可以获得会员列表
-			| name  | member_rank |  new_members | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
+			| name  | member_rank |  fans_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
 			| tom1  |   金牌会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-02    | 会员分享 | 未分组      |
 			| tom2  |   金牌会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-01    | 会员分享 | 未分组      |
 			| tom3  |   金牌会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-06-07    | 会员分享 | 未分组      |
@@ -202,7 +202,7 @@ Scenario:3 没有选中会员，选择"给选中的人修改等级"
 	#进入第1页，不选择任何会员
 		When jobs访问会员列表第1页
 		Then jobs可以获得会员列表
-			| name  | member_rank |  new_members | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
+			| name  | member_rank |  fans_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
 			| bill  |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-05    | 直接关注 | 未分组      |
 			| tom   |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-04    | 推广扫码 | 未分组      |
 			| marry |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-03    | 会员分享 | 未分组      |
@@ -220,7 +220,7 @@ Scenario:3 没有选中会员，选择"给选中的人修改等级"
 
 		When jobs访问会员列表第1页
 		Then jobs可以获得会员列表
-			| name  | member_rank |  new_members | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
+			| name  | member_rank |  fans_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
 			| bill  |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-05    | 直接关注 | 未分组      |
 			| tom   |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-04    | 推广扫码 | 未分组      |
 			| marry |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-03    | 会员分享 | 未分组      |
@@ -246,7 +246,7 @@ Scenario:4 选择当前页的部分会员，选择"给筛选出来的所有人�
 	#选择第1页部分会员批量修改等级
 		When jobs访问会员列表第1页
 		Then jobs可以获得会员列表
-			| name  | member_rank |  new_members | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
+			| name  | member_rank |  fans_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
 			| marry |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-03    | 会员分享 | 未分组      |
 			| tom1  |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-02    | 会员分享 | 未分组      |
 			| tom2  |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-01    | 会员分享 | 未分组      |
@@ -266,20 +266,20 @@ Scenario:4 选择当前页的部分会员，选择"给筛选出来的所有人�
 
 		When jobs访问会员列表第1页
 		Then jobs可以获得会员列表
-			| name  | member_rank |  new_members | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
+			| name  | member_rank |  fans_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
 			| marry |   银牌会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-03    | 会员分享 | 未分组      |
 			| tom1  |   银牌会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-02    | 会员分享 | 未分组      |
 			| tom2  |   银牌会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-01    | 会员分享 | 未分组      |
 
 		When jobs访问会员列表第2页
 		Then jobs可以获得会员列表
-			| name  | member_rank |  new_members | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
+			| name  | member_rank |  fans_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
 			| tom3  |   银牌会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-06-07    | 会员分享 | 未分组      |
 
 	#选择第2页部分会员批量修改等级
 		When jobs访问会员列表第2页
 		Then jobs可以获得会员列表
-			| name  | member_rank |  new_members | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
+			| name  | member_rank |  fans_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
 			| tom3  |   银牌会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-06-07    | 会员分享 | 未分组      |
 
 		When jobs选择会员
@@ -296,14 +296,14 @@ Scenario:4 选择当前页的部分会员，选择"给筛选出来的所有人�
 
 		When jobs访问会员列表第1页
 		Then jobs可以获得会员列表
-			| name  | member_rank |  new_members | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
+			| name  | member_rank |  fans_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
 			| marry |   金牌会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-03    | 会员分享 | 未分组      |
 			| tom1  |   金牌会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-02    | 会员分享 | 未分组      |
 			| tom2  |   金牌会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-01    | 会员分享 | 未分组      |
 
 		When jobs访问会员列表第2页
 		Then jobs可以获得会员列表
-			| name  | member_rank |  new_members | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
+			| name  | member_rank |  fans_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
 			| tom3  |   金牌会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-06-07    | 会员分享 | 未分组      |
 
 @mall2 @member @memberList
@@ -327,7 +327,7 @@ Scenario:5 选择当前页的全部会员，选择"给筛选出来的所有人�
 	#选择第1页全部会员批量修改等级
 		When jobs访问会员列表第1页
 		Then jobs可以获得会员列表
-			| name  | member_rank |  new_members | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
+			| name  | member_rank |  fans_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
 			| marry |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-03    | 会员分享 | 未分组      |
 			| tom1  |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-02    | 会员分享 | 未分组      |
 			| tom2  |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-01    | 会员分享 | 未分组      |
@@ -348,21 +348,21 @@ Scenario:5 选择当前页的全部会员，选择"给筛选出来的所有人�
 
 		When jobs访问会员列表第1页
 		Then jobs可以获得会员列表
-			| name  | member_rank |  new_members | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
+			| name  | member_rank |  fans_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
 			| marry |   铜牌会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-03    | 会员分享 | 未分组      |
 			| tom1  |   铜牌会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-02    | 会员分享 | 未分组      |
 			| tom2  |   铜牌会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-01    | 会员分享 | 未分组      |
 
 		When jobs访问会员列表第2页
 		Then jobs可以获得会员列表
-			| name  | member_rank |  new_members | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
+			| name  | member_rank |  fans_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
 			| tom3  |   铜牌会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-06-07    | 会员分享 | 未分组      |
 
 	#选择第2页全部会员批量修改等级
 
 		When jobs访问会员列表第2页
 		Then jobs可以获得会员列表
-			| name  | member_rank |  new_members | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
+			| name  | member_rank |  fans_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
 			| tom3  |   铜牌会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-06-07    | 会员分享 | 未分组      |
 
 		When jobs选择会员
@@ -379,14 +379,14 @@ Scenario:5 选择当前页的全部会员，选择"给筛选出来的所有人�
 
 		When jobs访问会员列表第1页
 		Then jobs可以获得会员列表
-			| name  | member_rank |  new_members | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
+			| name  | member_rank |  fans_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
 			| marry |   金牌会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-03    | 会员分享 | 未分组      |
 			| tom1  |   金牌会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-02    | 会员分享 | 未分组      |
 			| tom2  |   金牌会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-01    | 会员分享 | 未分组      |
 
 		When jobs访问会员列表第2页
 		Then jobs可以获得会员列表
-			| name  | member_rank |  new_members | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
+			| name  | member_rank |  fans_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
 			| tom3  |   金牌会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-06-07    | 会员分享 | 未分组      |
 
 @mall2 @member @memberList
@@ -410,7 +410,7 @@ Scenario:6 没有选中会员，选择"给筛选出来的所有人修改等级"
 	#没有选择任何会员批量修改等级
 		When jobs访问会员列表第1页
 		Then jobs可以获得会员列表
-			| name  | member_rank |  new_members | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
+			| name  | member_rank |  fans_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
 			| marry |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-03    | 会员分享 | 未分组      |
 			| tom1  |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-02    | 会员分享 | 未分组      |
 			| tom2  |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-01    | 会员分享 | 未分组      |
@@ -428,14 +428,14 @@ Scenario:6 没有选中会员，选择"给筛选出来的所有人修改等级"
 
 		When jobs访问会员列表第1页
 		Then jobs可以获得会员列表
-			| name  | member_rank |  new_members | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
+			| name  | member_rank |  fans_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
 			| marry |   银牌会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-03    | 会员分享 | 未分组      |
 			| tom1  |   银牌会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-02    | 会员分享 | 未分组      |
 			| tom2  |   银牌会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-01    | 会员分享 | 未分组      |
 
 		When jobs访问会员列表第2页
 		Then jobs可以获得会员列表
-			| name  | member_rank |  new_members | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
+			| name  | member_rank |  fans_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
 			| tom3  |   银牌会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-06-07    | 会员分享 | 未分组      |
 
 @mall2 @member @memberList
@@ -541,7 +541,7 @@ Scenario:7 批量修改会员等级后，在会员详情和会员的个人中心
 			Given jobs登录系统
 			When jobs访问会员列表第3页
 			Then jobs可以获得会员列表
-				| name  | member_rank |  new_members | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
+				| name  | member_rank |  fans_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
 				| bill1 |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-06-06    | 直接关注 | 未分组      |
 				| bill2 |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-06-05    | 推广扫码 | 未分组      |
 				| bill3 |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-06-04    | 直接关注 | 未分组      |
@@ -594,7 +594,7 @@ Scenario:7 批量修改会员等级后，在会员详情和会员的个人中心
 		#不选择任何会员，直接批量修改等级
 			When jobs访问会员列表第1页
 			Then jobs可以获得会员列表
-				| name  | member_rank |  new_members | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
+				| name  | member_rank |  fans_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
 				| bill  |   金牌会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-05    | 直接关注 | 未分组      |
 				| bill1 |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-06-06    | 直接关注 | 未分组      |
 				| bill3 |   银牌会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-06-04    | 直接关注 | 未分组      |

@@ -92,7 +92,7 @@ Scenario:1 微信用户关注公众号成为会员
 			"pay_money": 0.00,
 			"unit_price": 0.00,
 			"integral": 20,
-			"new_members": 0,
+			"fans_count": 0,
 			"pay_times": 0,
 			"source": "直接关注",
 			"tags": ["未分组"],
@@ -132,7 +132,7 @@ Scenario:1 微信用户关注公众号成为会员
 			"unit_price": 0.00,
 			"pay_times": 0,
 			"integral": 20,
-			"new_members": 0,
+			"fans_count": 0,
 			"source": "会员分享",
 			"tags": ["未分组"],
 			"status": "已关注"
@@ -142,7 +142,7 @@ Scenario:1 微信用户关注公众号成为会员
 			"pay_money": 0.00,
 			"unit_price": 0.00,
 			"integral": 20,
-			"new_members": 1,
+			"fans_count": 1,
 			"pay_times": 0,
 			"source": "直接关注",
 			"tags": ["未分组"],
@@ -178,7 +178,7 @@ Scenario:1 微信用户关注公众号成为会员
 			"pay_money": 0.00,
 			"unit_price": 0.00,
 			"integral": 20,
-			"new_members": 0,
+			"fans_count": 0,
 			"pay_times": 0,
 			"source": "会员分享",
 			"tags": ["未分组"],
@@ -190,7 +190,7 @@ Scenario:1 微信用户关注公众号成为会员
 			"unit_price": 0.00,
 			"pay_times": 0,
 			"integral": 20,
-			"new_members": 0,
+			"fans_count": 0,
 			"source": "会员分享",
 			"tags": ["未分组"],
 			"status": "已关注"
@@ -200,7 +200,7 @@ Scenario:1 微信用户关注公众号成为会员
 			"pay_money": 0.00,
 			"unit_price": 0.00,
 			"integral": 20,
-			"new_members": 2,
+			"fans_count": 2,
 			"pay_times": 0,
 			"source": "直接关注",
 			"tags": ["未分组"],
@@ -230,7 +230,7 @@ Scenario:1 微信用户关注公众号成为会员
 			"pay_money": 0.00,
 			"unit_price": 0.00,
 			"integral": 20,
-			"new_members": 0,
+			"fans_count": 0,
 			"pay_times": 0,
 			"source": "直接关注",
 			"tags": ["未分组"],
@@ -241,7 +241,7 @@ Scenario:1 微信用户关注公众号成为会员
 			"pay_money": 0.00,
 			"unit_price": 0.00,
 			"integral": 20,
-			"new_members": 0,
+			"fans_count": 0,
 			"pay_times": 0,
 			"source": "会员分享",
 			"tags": ["未分组"],
@@ -253,7 +253,7 @@ Scenario:1 微信用户关注公众号成为会员
 			"unit_price": 0.00,
 			"pay_times": 0,
 			"integral": 20,
-			"new_members": 0,
+			"fans_count": 0,
 			"source": "会员分享",
 			"tags": ["未分组"],
 			"status": "已关注"
@@ -263,7 +263,7 @@ Scenario:1 微信用户关注公众号成为会员
 			"pay_money": 0.00,
 			"unit_price": 0.00,
 			"integral": 20,
-			"new_members": 2,
+			"fans_count": 2,
 			"pay_times": 0,
 			"source": "直接关注",
 			"tags": ["未分组"],
@@ -302,7 +302,7 @@ Scenario:1 微信用户关注公众号成为会员
 			"pay_money": 0.00,
 			"unit_price": 0.00,
 			"integral": 20,
-			"new_members": 0,
+			"fans_count": 0,
 			"pay_times": 0,
 			"source": "直接关注",
 			"tags": ["未分组"],
@@ -313,7 +313,7 @@ Scenario:1 微信用户关注公众号成为会员
 			"pay_money": 0.00,
 			"unit_price": 0.00,
 			"integral": 20,
-			"new_members": 0,
+			"fans_count": 0,
 			"pay_times": 0,
 			"source": "会员分享",
 			"tags": ["未分组"],
@@ -325,7 +325,7 @@ Scenario:1 微信用户关注公众号成为会员
 			"unit_price": 0.00,
 			"pay_times": 0,
 			"integral": 20,
-			"new_members": 0,
+			"fans_count": 0,
 			"source": "会员分享",
 			"tags": ["未分组"],
 			"status": "已关注"
@@ -335,7 +335,7 @@ Scenario:1 微信用户关注公众号成为会员
 			"pay_money": 100.00,
 			"unit_price": 100.00,
 			"integral": 20,
-			"new_members": 2,
+			"fans_count": 2,
 			"pay_times": 1,
 			"source": "直接关注",
 			"tags": ["未分组"],
@@ -365,7 +365,7 @@ Scenario:1 微信用户关注公众号成为会员
 			"pay_money": 100.00,
 			"unit_price": 100.00,
 			"integral": 20,
-			"new_members": 0,
+			"fans_count": 0,
 			"pay_times": 1,
 			"source": "直接关注",
 			"tags": ["未分组"],
@@ -376,7 +376,7 @@ Scenario:1 微信用户关注公众号成为会员
 			"pay_money": 0.00,
 			"unit_price": 0.00,
 			"integral": 20,
-			"new_members": 0,
+			"fans_count": 0,
 			"pay_times": 0,
 			"source": "会员分享",
 			"tags": ["未分组"],
@@ -388,7 +388,7 @@ Scenario:1 微信用户关注公众号成为会员
 			"unit_price": 0.00,
 			"pay_times": 0,
 			"integral": 20,
-			"new_members": 0,
+			"fans_count": 0,
 			"source": "会员分享",
 			"tags": ["未分组"],
 			"status": "已关注"
@@ -398,7 +398,7 @@ Scenario:1 微信用户关注公众号成为会员
 			"pay_money": 100.00,
 			"unit_price": 100.00,
 			"integral": 20,
-			"new_members": 2,
+			"fans_count": 2,
 			"pay_times": 1,
 			"source": "直接关注",
 			"tags": ["未分组"],
@@ -416,7 +416,7 @@ Scenario:1 微信用户关注公众号成为会员
 			"pay_money": 100.00,
 			"unit_price": 100.00,
 			"integral": 20,
-			"new_members": 0,
+			"fans_count": 0,
 			"pay_times": 1,
 			"source": "直接关注",
 			"tags": ["未分组"],
@@ -427,7 +427,7 @@ Scenario:1 微信用户关注公众号成为会员
 			"pay_money": 0.00,
 			"unit_price": 0.00,
 			"integral": 20,
-			"new_members": 0,
+			"fans_count": 0,
 			"pay_times": 0,
 			"source": "会员分享",
 			"tags": ["未分组"],
@@ -439,7 +439,7 @@ Scenario:1 微信用户关注公众号成为会员
 			"unit_price": 0.00,
 			"pay_times": 0,
 			"integral": 20,
-			"new_members": 0,
+			"fans_count": 0,
 			"source": "会员分享",
 			"tags": ["未分组"],
 			"status": "已关注"
@@ -476,7 +476,7 @@ Scenario:2 会员列表
 
 	Given jobs登录系统
 	Then jobs可以获得会员列表
-		|  member  | member_rank |  new_members |  integral  | pay_money | unit_price | pay_times | 30days_pay_times |  Source  | attention_time |  tags  | status |
+		|  member  | member_rank |  fans_count |  integral  | pay_money | unit_price | pay_times | 30days_pay_times |  Source  | attention_time |  tags  | status |
 		|  tom3    | 普通会员    |    0         |     20     |    0.00   |     0.00   |    0      |         0        | 直接关注 |    2015-5-1    | 未分组 | 已关注 |
 		|  tom2    | 普通会员    |    0         |     20     |    0.00   |     0.00   |    0      |         0        | 直接关注 |    2015-5-1    | 未分组 | 已取消 |
 		|  tom1    | 普通会员    |    0         |     20     |   200.00  |    100.00  |    2      |         1        | 直接关注 |    2015-5-1    | 未分组 | 已关注 |
@@ -494,7 +494,7 @@ Scenario:2 会员列表
 	Then jobs获得会员列表显示共3页
 	When jobs浏览会员列表第1页
 	Then jobs可以获得会员列表
-		|  member  | member_rank |  new_members |  integral  | pay_money | unit_price | pay_times | 30days_pay_times |  Source  | attention_time |  tags  | status |
+		|  member  | member_rank |  fans_count |  integral  | pay_money | unit_price | pay_times | 30days_pay_times |  Source  | attention_time |  tags  | status |
 		|  tom3    | 普通会员    |    0         |     20     |    0.00   |     0.00   |    0      |         0        | 直接关注 |    2015-5-1    | 未分组 | 已关注 |
 		|  tom2    | 普通会员    |    0         |     20     |    0.00   |     0.00   |    0      |         0        | 直接关注 |    2015-5-1    | 未分组 | 已取消 |
 

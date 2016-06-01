@@ -51,7 +51,7 @@ Scenario:1 无奖励
 	Given jobs登录系统
 	When jobs访问会员列表
 	Then jobs可以获得会员列表
-		| name  | member_rank |  new_members |   attention_time  |  source  |
+		| name  | member_rank |  fans_count |   attention_time  |  source  |
 		| tom   |   普通会员  |       0      |        今天       | 推广扫码 |
 		| bill  |   普通会员  |       1      |        今天       | 直接关注 |
 		
@@ -86,7 +86,7 @@ Scenario:2 积分奖励
 	When 清空浏览器
 	Given jobs登录系统
 	Then jobs可以获得会员列表
-		| name  | member_rank |  new_members | integral |   attention_time  |  source  |
+		| name  | member_rank |  fans_count | integral |   attention_time  |  source  |
 		| tom   |   普通会员  |       0      |     0    |        今天       | 推广扫码 |
 		| bill  |   普通会员  |       1      |    10    |        今天       | 直接关注 |
 
@@ -154,7 +154,7 @@ Scenario:3 优惠券奖励
 	When 清空浏览器
 	Given jobs登录系统
 	Then jobs可以获得会员列表
-		| name  | member_rank |  new_members |   attention_time  |  source  |
+		| name  | member_rank |  fans_count |   attention_time  |  source  |
 		| tom   |   普通会员  |       0      |        今天       | 推广扫码 |
 		| bill  |   普通会员  |       1      |        今天       | 直接关注 |
 
