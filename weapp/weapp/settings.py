@@ -600,7 +600,7 @@ WATCH_DOG_DEVICE = 'mysql'
 WATCHDOG_WEIXIN_MESSAGE = False
 ENABLE_WEPAGE_CACHE = True
 
-logging.basicConfig(format='WD %(asctime)s %(levelname)s: %(message)s', level=logging.INFO)
+logging.basicConfig(format='WD %(asctime)s %(filename)s[line:%(lineno)d] %(levelname)s %(message)s', level=logging.INFO)
 
 if 'develop' == MODE:
     DOMAIN = 'dev.weapp.com'
