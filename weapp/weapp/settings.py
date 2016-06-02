@@ -816,7 +816,7 @@ RESOURCES = ['stats', 'termite2', 'weixin2', 'mall','openapi']
 
 ENAPISERVER = False
 
-EN_VARNISH = True
+
 
 WEIZOOM_ACCOUNTS = ['devceshi', 'wzjx001', 'ceshi001', 'weizoomxs', 'weizoommm', 'weshop', 'weizoomclub', 'weizoomshop', 'weizoombfm', 'jobs', 'wz01', 'wz02', 'wz03', 'test003', 'fulilaile']
 # settings for WAPI Logger
@@ -826,6 +826,7 @@ if MODE == 'develop' or MODE == 'test':
     WAPI_LOGGER_SERVER_PORT = 27017
     WAPI_LOGGER_DB = 'wapi'
     WAPI_ACCESS_TOKEN_REQUIRED = True
+    EN_VARNISH = False
     #WAPI_ACCESS_TOKEN_REQUIRED = True
 else:
     # 真实环境暂时关闭
@@ -835,6 +836,7 @@ else:
     WAPI_LOGGER_SERVER_PORT = 27017
     WAPI_LOGGER_DB = 'wapi'
     WAPI_ACCESS_TOKEN_REQUIRED = False
+    EN_VARNISH = True
 
 
 from weapp import hack_django
