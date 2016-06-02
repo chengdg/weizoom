@@ -8,6 +8,7 @@ Watchdog接口
 
 from django.conf import settings
 import sys
+import json
 #from core.exceptionutil import full_stack
 
 #from .models import Message, WeappMessage
@@ -16,8 +17,17 @@ from .tasks import _watchdog
 #from weapp.settings import weapp_settings.TASKQUEUE_ENABLED
 import weapp.settings as weapp_settings
 from .models import WATCHDOG_ALERT, WATCHDOG_DEBUG,WATCHDOG_EMERGENCY,WATCHDOG_ERROR,WATCHDOG_FATAL,WATCHDOG_INFO,WATCHDOG_NOTICE,WATCHDOG_WARNING
+import logging
 
 __author__ = 'victor'
+
+def message_json(user_id, message, type):
+	message_dict = {}
+	message_dict["user_id"] = user_id
+	message_dict["message"] = message
+	message_dict["service_name"] = settings.SERVICE_NAME
+	message_dict["type"] = type
+	return json.dumps(message_dict)
 
 def watchdog_debug(message, type='WEB', user_id='0', db_name='default'):
 	"""
@@ -32,6 +42,8 @@ def watchdog_debug(message, type='WEB', user_id='0', db_name='default'):
 	else:
 		if WATCHDOG_DEBUG >= settings.WATCH_DOG_LEVEL:
 			_watchdog(type, message, WATCHDOG_DEBUG, user_id, db_name)
+
+	logging.DEBUG(message_json(user_id,message, type))
 	return result
 
 
@@ -48,7 +60,8 @@ def watchdog_info(message, type='WEB', user_id='0', db_name='default'):
 			result = send_watchdog.delay(type, message, WATCHDOG_INFO, user_id, db_name)
 	else:
 		if WATCHDOG_INFO >= settings.WATCH_DOG_LEVEL:
-			_watchdog(type, message, WATCHDOG_INFO, user_id, db_name)	
+			_watchdog(type, message, WATCHDOG_INFO, user_id, db_name)
+	logging.info(message_json(user_id, message, type))
 	return result
 
 
@@ -65,6 +78,7 @@ def watchdog_notice(message, type='WEB', user_id='0', db_name='default'):
 	else:
 		if WATCHDOG_NOTICE >= settings.WATCH_DOG_LEVEL:
 			_watchdog(type, message, WATCHDOG_NOTICE, user_id, db_name)
+	logging.info(message_json(user_id, message, type))
 	return result
 
 
@@ -81,11 +95,13 @@ def watchdog_warning(message, type='WEB', user_id='0', db_name='default'):
 	else:
 		if WATCHDOG_NOTICE >= settings.WATCH_DOG_LEVEL:
 			_watchdog(type, message, WATCHDOG_NOTICE, user_id, db_name)
+	logging.warning(message_json(user_id, message, type))
 	return result
 
 
 def watchdog_error(message, type='WEB', user_id='0', noraise=False, db_name='default'):
 	result = None
+	logging.error(message_json(user_id, message, type))
 	if weapp_settings.TASKQUEUE_ENABLED:
 		if WATCHDOG_ERROR >= settings.WATCH_DOG_LEVEL:
 			result = send_watchdog.delay(type, message, WATCHDOG_ERROR, user_id, db_name)
@@ -100,11 +116,13 @@ def watchdog_error(message, type='WEB', user_id='0', noraise=False, db_name='def
 			exception_type, value, tb = sys.exc_info()
 			if exception_type:
 				raise exception_type, exception_type(value), sys.exc_info()[2]
+
 	return result
 
 
 def watchdog_fatal(message, type='WEB', user_id='0', noraise=False, db_name='default'):
 	result = None
+	logging.error(message_json(user_id, message, type))
 	if weapp_settings.TASKQUEUE_ENABLED:
 		if WATCHDOG_FATAL >= settings.WATCH_DOG_LEVEL:
 			send_watchdog.delay(type, message, WATCHDOG_FATAL, user_id, db_name)
@@ -123,6 +141,7 @@ def watchdog_fatal(message, type='WEB', user_id='0', noraise=False, db_name='def
 
 
 def watchdog_alert(message, type='WEB', user_id='0', db_name='default'):
+	logging.critical(message_json(user_id, message, type))
 	result = None
 	if weapp_settings.TASKQUEUE_ENABLED:
 		if WATCHDOG_ALERT >= settings.WATCH_DOG_LEVEL:
@@ -134,6 +153,7 @@ def watchdog_alert(message, type='WEB', user_id='0', db_name='default'):
 
 
 def watchdog_js_analysis(message, type='JS_Analysis', user_id='0', db_name='default'):
+	logging.critical(message_json(user_id, message, type))
 	result = None
 	if weapp_settings.TASKQUEUE_ENABLED:
 		if WATCHDOG_ALERT >= settings.WATCH_DOG_LEVEL:
@@ -145,6 +165,7 @@ def watchdog_js_analysis(message, type='JS_Analysis', user_id='0', db_name='defa
 
 
 def watchdog_emergency(message, type='WEB', user_id='0', db_name='default'):
+	logging.critical(message_json(user_id, message, type))
 	result = None
 	if weapp_settings.TASKQUEUE_ENABLED:
 		if WATCHDOG_EMERGENCY >= settings.WATCH_DOG_LEVEL:

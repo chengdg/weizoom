@@ -16,6 +16,7 @@ WEIZOOM_CARD_ADMIN_USERS = ('card_admin',)
 MODE = 'develop'
 # 如果FAN_HOST不为空，退出后会跳转到 FAN_HOST/login/
 FAN_HOST = 'http://fans.dev.com'
+SERVICE_NAME = "weapp"
 
 DEBUG_MERGED_JS = True
 USE_DEV_JS = True
@@ -599,7 +600,7 @@ WATCH_DOG_DEVICE = 'mysql'
 WATCHDOG_WEIXIN_MESSAGE = False
 ENABLE_WEPAGE_CACHE = True
 
-logging.basicConfig(format='%(asctime)s %(levelname)s: %(message)s', level=logging.INFO)
+logging.basicConfig(format='WD %(asctime)s %(levelname)s: %(message)s', level=logging.INFO)
 
 if 'develop' == MODE:
     DOMAIN = 'dev.weapp.com'

@@ -43,16 +43,16 @@ def _watchdog(type, message, severity=WATCHDOG_INFO, user_id='0', db_name='defau
 				severity = 'EMERGENCY'
 			else:
 				severity = 'UNKNOWN'
-			if not settings.IS_UNDER_BDD:
-				logging.info("[%s] [%s] : %s" % (severity, type, message))
+			# if not settings.IS_UNDER_BDD:
+			# 	logging.info("[%s] [%s] : %s" % (severity, type, message))
 		else:
 			try:
-				if not settings.IS_UNDER_BDD:
-					logging.info("[%s] [%s] : %s" % (severity, type, message))
+				# if not settings.IS_UNDER_BDD:
+				# 	logging.info("[%s] [%s] : %s" % (severity, type, message))
 				WeappMessage.objects.using(settings.WATCHDOG_DB).create(type=type, message=message, severity=severity, user_id=user_id)
 			except:
-				logging.error(u'>>>>>>>>>>>>>>>>> not connection operation databases settings.WATCHDOG_DB={}'.format(settings.WATCHDOG_DB))
-				logging.error("Cause:\n{}".format(full_stack()))
+				# logging.error(u'>>>>>>>>>>>>>>>>> not connection operation databases settings.WATCHDOG_DB={}'.format(settings.WATCHDOG_DB))
+				# logging.error("Cause:\n{}".format(full_stack()))
 				print 'error message==============', message
 				Message.objects.create(type=type, message=message, severity=severity, user_id=user_id)
 	except:
@@ -67,8 +67,8 @@ def _watchdog(type, message, severity=WATCHDOG_INFO, user_id='0', db_name='defau
 @task(**TASK_CONFIG)
 def send_watchdog(level, message, severity=WATCHDOG_INFO, user_id='0', db_name='default'):
 	try:
-		if not settings.IS_UNDER_BDD:
-			logging.info('received watchdog message: [%s] [%s]' % (level, message))
+		# if not settings.IS_UNDER_BDD:
+		# 	logging.info('received watchdog message: [%s] [%s]' % (level, message))
 		_watchdog(level, message, severity, user_id, db_name)
 	except Exception, e:
 		logging.error("Failed to send watchdog message, retrying...")
