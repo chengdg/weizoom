@@ -846,3 +846,12 @@ else:
     APPS_H5_DOMAIN = 'h5.weapp.com'
 
 CARD_SERVER_DOMAIN = "cardapi.weapp.com"
+
+
+# BDD_SERVER相关配置
+BDD_SERVER2PORT = {
+    'weapp': 8170,
+    'weizoom_card': 8171,
+    'apiserver': 8172
+}
+
