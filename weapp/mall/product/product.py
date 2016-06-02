@@ -483,6 +483,7 @@ class ProductPool(resource.Resource):
                 'status': product['status'],
                 'store_name': user_id2userprofile[product['owner_id']].store_name,
                 'stocks': product['stocks'],
+                'price':product['price'],
                 'sync_time': mall_product_id2relation[product['id']].sync_time.strftime('%Y-%m-%d %H:%M') if mall_product_id2relation.has_key(product['id']) else ''
             })
 
