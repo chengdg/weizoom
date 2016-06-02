@@ -13,11 +13,24 @@ from features import environment
 
 from behave import *
 
+try:
+	import settings
+except ImportError:
+	from django.conf import settings
+except:
+	raise ImportError('bdd_server import setting error.')
+
+# BDD_SERVER2PORT = settings.BDD_SERVER2PORT
+
 BDD_SERVER2PORT = {
-	'weapp': 8170,
-	'weizoom_card': 8171,
-	'apiserver': 8172
+    'weapp': 8170,
+    'weizoom_card': 8171,
+    'apiserver': 8172
 }
+
+
+
+BDD_SERVER_HOST = '127.0.0.1'
 
 
 def _default(obj):
@@ -44,6 +57,7 @@ def _git_shell(git_command):
 		return None
 
 
+# 获得本BDD_SERVER名称
 try:
 	git_dir = os.path.abspath(_git_shell('git rev-parse --git-dir'))
 	project_dir = os.path.dirname(git_dir)
@@ -53,7 +67,11 @@ except BaseException as e:
 	self_name = "You should install Git!!"
 	print(self_name)
 
-os.system("title {}_bdd_server".format(self_name))
+# 修改窗口名,目前只对windows有效
+try:
+	os.system("title {}_bdd_server".format(self_name))
+except:
+	pass
 
 
 class BDDRequestHandler(WSGIRequestHandler):
@@ -96,10 +114,16 @@ def step_impl(context):
 		# When the method is POST the query string will be sent
 		# in the HTTP request body which is passed by the WSGI server
 		# in the file like wsgi.input environment variable.
+		# 从http request解析请求
 		request_body = environ['wsgi.input'].read(request_body_size)
 		post = parse_qs(request_body)
 		step_data = json.loads(post['data'][0])
 		step = step_data['step'].strip()
+
+		# 1. 解析step
+		# 2. 执行step
+		# 3. 分类step执行结果
+		# 4. 返回http response
 
 		# 0:成功，1：业务失败，2：异常
 		result = 0
@@ -115,6 +139,7 @@ def step_impl(context):
 
 			return base64.b64encode(json.dumps(resp))
 		else:
+			# 解析请求携带的context
 			_set_context_attrs(context, json.loads(step_data['context_attrs']))
 
 			if step_data['context_text']:
@@ -153,11 +178,14 @@ def step_impl(context):
 				'traceback': traceback,
 				'context_attrs': context_attrs
 			}
+
+			# 传递context时忽略基本类型外的对象
 			return base64.b64encode(json.dumps(resp, default=_default))
 
 	port = BDD_SERVER2PORT.get(self_name, 0)
 	assert port, "{} is not valid name.You can't change the git repository name!".format(self_name)
 
+	# 启动服务器
 	httpd = make_server('', port, simple_app, handler_class=BDDRequestHandler)
 	print("[{} bdd server] Serving on port {}...".format(self_name, port))
 	httpd.serve_forever()
