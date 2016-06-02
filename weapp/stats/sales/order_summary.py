@@ -204,6 +204,7 @@ def _get_stats_data(user, start_time, end_time):
 	wezoom_card_amount = 0.0
 	# 复购订单数
 	repeated_num = 0
+	bestpay_amount = 0.0  #翼支付金额
 	
 	# 获取订单趋势数据
 	order_trend_stats = _get_order_trend_stats(qualified_orders)
@@ -289,6 +290,8 @@ def _get_stats_data(user, start_time, end_time):
 			
 			if order.pay_interface_type == models.PAY_INTERFACE_ALIPAY:
 				alipay_amount += float(order.final_price)
+			elif order.pay_interface_type == models.PAY_INTERFACE_BEST_PAY:
+				bestpay_amount += float(order.final_price)
 			elif order.pay_interface_type == models.PAY_INTERFACE_WEIXIN_PAY:
 				if order.origin_order_id >0: #判断同步订单
 					weixinpay_amount += float(order.total_purchase_price)
@@ -338,6 +341,7 @@ def _get_stats_data(user, start_time, end_time):
 		'cod_order_num': cod_order_num,
 		'cod_amount': cod_amount,
 		'alipay_amount': alipay_amount,
+		'bestpay_amount': bestpay_amount,
 		'weixinpay_amount': weixinpay_amount,
 		'wezoom_card_amount': wezoom_card_amount,
 		'repeated_num': repeated_num,

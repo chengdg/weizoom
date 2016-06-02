@@ -891,6 +891,14 @@ $(document).ready(function() {
 		};
 	};
 
+
+	//微众商城的支付方式显示翼支付选项 duhao 20160602
+	var username = "{{request.manager.username}}";
+	if(username === "weshop") {
+		setTimeout(function(){
+			$('#payType').append('<option value="11" data-value="11" data-name="翼支付">翼支付</option>');
+		}, 500);
+	}
 });
 </script>
 {% endblock %}

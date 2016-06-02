@@ -446,6 +446,13 @@
 		if(data_array.length == 0){
 			data_array.push({});
 		}
+
+		//微众商城增加翼支付数据 duhao 20160602
+		var username = "{{request.manager.username}}";
+		var legendData = [ '支付宝', '微信支付', '货到付款', '微众卡支付' ];
+		if(username === 'weshop') {
+			legendData = [ '支付宝', '微信支付', '货到付款', '微众卡支付', '翼支付' ];
+		}
 		option = {
 				tooltip : {
 					trigger : 'item',
@@ -472,7 +479,7 @@
 				legend : {
 					orient : 'vertical',
 					x : 'left',
-					data : [ '支付宝', '微信支付', '货到付款', '微众卡支付' ]
+					data : legendData
 				},
 				// calculable : true,
 				series : [ {
