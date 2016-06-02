@@ -63,7 +63,7 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
          u'优惠券名称', u'订单状态', u'购买人', u'收货人', u'联系电话', u'收货地址省份',
          u'收货地址', u'发货人', u'发货人备注', u'来源' ,u'物流公司', u'快递单号',
          u'发货时间',u'商家备注',u'用户备注', u'买家来源', u'买家推荐人', u'扫描带参数二维码之前是否已关注', u'是否首单']
-    
+
     user_id = filter_data_args["user_id"]
     status_type = filter_data_args["status_type"]
     query_dict, date_interval, date_interval_type = filter_data_args["query_dict"], filter_data_args["date_interval"], filter_data_args["date_interval_type"]
@@ -77,15 +77,15 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
     supplier_users = None
     suplier_not_sub_order_ids = []
 
-    
+
     if mall_type:
         orders[25] = u"供货商"
         orders.insert(25, u'供货商类型')
-        
+
         orders[12] = u"微众卡支付金额"
 
     # 判断是否有供货商，如果有则显示该字段
-    
+
     has_supplier = False
     if mall_type:
         has_supplier = True
@@ -101,7 +101,7 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
         file_path = "{}/{}".format(dir_path,filename)
         workbook   = xlsxwriter.Workbook(file_path)
         table = workbook.add_worksheet()
-        
+
         table.write_row('A1', orders)
         try:
             order_list = Order.objects.belong_to(webapp_id).order_by('-id')
@@ -298,7 +298,7 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
 
             order2supplier = dict([(supplier.id, supplier) for supplier in Supplier.objects.filter(owner=manager)])
             id2store = dict([(profile.user_id, profile) for profile in UserProfile.objects.filter(webapp_type=0)])
-            
+
             # print 'end step 8 order - '+str(time.time() - begin_time)
             # 获取order对应的收货地区
             temp_premium_id = None
@@ -407,7 +407,7 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
                         #orders.extend(temp_premium_products)
                         for temp_premium_product in temp_premium_products:
                             tmp_line += 1
-                        
+
                             table.write_row("A{}".format(tmp_line), temp_premium_product)
                         temp_premium_products = []
                         temp_premium_id = None
@@ -499,6 +499,19 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
 
                         order_express_number = (order.express_number if not fackorder else fackorder.express_number).encode('utf8')
                         express_name = express_util.get_name_by_value(order.express_company_name if not fackorder else fackorder.express_company_name).encode('utf8')
+
+                        if '^' in order_id:
+                            if mall_type:
+                                try:
+                                    key = order_id.split('^')[1]
+                                    customer_message = json.loads(order.customer_message).get(key, {}).get('customer_message')
+                                except:
+                                    customer_message = ''
+                            else:
+                                customer_message = order.customer_message
+                        else:
+                            customer_message = order.customer_message
+
                         tmp_order = [
                             order_id,
                             order.created_at.strftime('%Y-%m-%d %H:%M').encode('utf8'),
@@ -532,7 +545,7 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
                             order_express_number if order_express_number else '-',
                             postage_time if postage_time else '-',
                             order.remark.encode('utf8') if order.remark.encode('utf8') else '-',
-                            u'-' if order.customer_message == '' else order.customer_message.encode('utf-8'),
+                            u'-' if customer_message == '' or not customer_message else order.customer_message.encode('utf-8'),
                             member_source_name if member_source_name else '-',
                             father_name_or_qrcode_name if father_name_or_qrcode_name else '-',
                             before_scanner_qrcode_is_member if before_scanner_qrcode_is_member else '-',
@@ -546,12 +559,23 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
                             tmp_order.append(u'-'  if 0.0 ==product.purchase_price else product.purchase_price*relation.number)
                         # orders.append(tmp_order)
                         tmp_line += 1
-                        
+
                         table.write_row("A{}".format(tmp_line), tmp_order)
                         total_product_money += relation.price * relation.number
                     else:
                         order_express_number = (order.express_number if not fackorder else fackorder.express_number).encode('utf8')
                         express_name = express_util.get_name_by_value(order.express_company_name if not fackorder else fackorder.express_company_name).encode('utf8')
+                        if '^' in order_id:
+                            if mall_type:
+                                try:
+                                    key = order_id.split('^')[1]
+                                    customer_message = json.loads(order.customer_message).get(key, {}).get('customer_message')
+                                except:
+                                    customer_message = ''
+                            else:
+                                customer_message = order.customer_message
+                        else:
+                            customer_message = order.customer_message
                         tmp_order=[
                             order_id,
                             order.created_at.strftime('%Y-%m-%d %H:%M').encode('utf8'),
@@ -585,7 +609,7 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
                             order_express_number if order_express_number else '-',
                             postage_time if postage_time else '-',
                             u'-',
-                            u'-',
+                            u'-' if customer_message == '' or not customer_message else customer_message.encode('utf-8'),
                             member_source_name if member_source_name else '-',
                             father_name_or_qrcode_name if father_name_or_qrcode_name else '-',
                             before_scanner_qrcode_is_member if before_scanner_qrcode_is_member else '-',
@@ -656,7 +680,7 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
                             temp_premium_id = '%s_%s' % (order.id, relation.promotion_id)
                         # if test_index % pre_page == pre_page-1:
                         #   print str(test_index)+' - '+str(time.time() - test_begin_time)+'-'+str(time.time() - begin_time)
-                
+
                 write_order_count += 1
                 export_jobs.update(processed_count=write_order_count,update_at=datetime.now())
             if temp_premium_id:
