@@ -10,6 +10,7 @@ from features.testenv.model_factory import *
 
 from django.test.client import Client
 from django.contrib.auth.models import User
+from django.db.models import F
 
 from apps.customerized_apps.shengjing.models import *
 
@@ -54,6 +55,7 @@ def step_impl(context, user, member_A, member_B):
 	member_B = Member.objects.filter(username_hexstr=username_hexstr_b, webapp_id=user_profile.webapp_id)[0]
 	if MemberFollowRelation.objects.filter(member_id=member_A.id, follower_member_id=member_B.id, is_fans=True).count() == 0:
 		MemberFollowRelation.objects.create(member_id=member_A.id, follower_member_id=member_B.id, is_fans=True)
+		Member.objects.filter(id=member_A.id).update(fans_count=F(fans_count)+1)
 
 
 @When(u"{user}的会员{member_A}和{member_B}访问绑定信息页面时输入以下内容")

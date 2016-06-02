@@ -1,5 +1,7 @@
 # __author__ : "王丽"
 #editor: 新新 2016.3.28
+#editor: 田丰敏 2016.5.31
+
 Feature: 会员列表-会员详情-基本信息
 """
 	#editor: 新新 
@@ -22,7 +24,7 @@ Feature: 会员列表-会员详情-基本信息
 						【管理员】："管理员赠送"、"管理员扣减"时是店铺的系统账号名
 						【明细】：积分的调整数量
 						【余额】：会员积分当时的余数
-	10、【好友数】："不可编辑"，本会员的好友数量
+	10、【推荐数】："不可编辑"，本会员的推荐会员数
 	11、【购买次数】："不可编辑"，本会员的购买次数（订单状态为：已完成）
 	12、【平均客单价】："不可编辑"，本会员的平均客单价（订单状态为：已完成）
 	13、【微众卡使用金额】："不可编辑"，本会员的微众卡使用金额（订单状态为：已完成）
@@ -120,7 +122,7 @@ Scenario:1 会员基本信息（会员昵称、关注时间、上次交易时间
 			"last_buy_time":"今天",
 			"tags": ["未分组"],
 			"integral":0,
-			"friend_count":0,
+			"fans_count":0,
 			"remarks":""
 		}
 		"""
@@ -146,7 +148,7 @@ Scenario:1 会员基本信息（会员昵称、关注时间、上次交易时间
 			"last_buy_time":"今天",
 			"tags": ["未分组"],
 			"integral":0,
-			"friend_count":0,
+			"fans_count":0,
 			"remarks":"会员备注信息"
 		}
 		"""
@@ -169,7 +171,7 @@ Scenario:2 会员基本信息修改"所在分组"
 			"last_buy_time":"",
 			"tags": ["未分组"],
 			"integral":0,
-			"friend_count":0,
+			"fans_count":0,
 			"remarks":""
 		}
 		"""
@@ -191,7 +193,7 @@ Scenario:2 会员基本信息修改"所在分组"
 			"last_buy_time":"",
 			"tags":["分组1", "分组3"],
 			"integral":0,
-			"friend_count":0,
+			"fans_count":0,
 			"remarks":""
 		}
 		"""
@@ -214,7 +216,7 @@ Scenario:3 会员基本信息修改"调积分"
 			"last_buy_time":"",
 			"tags": ["未分组"],
 			"integral":0,
-			"friend_count":0,
+			"fans_count":0,
 			"remarks":""
 		}
 		"""
@@ -237,7 +239,7 @@ Scenario:3 会员基本信息修改"调积分"
 			"last_buy_time":"",
 			"tags": ["未分组"],
 			"integral": -10,
-			"friend_count":0,
+			"fans_count":0,
 			"remarks":""
 		}
 		"""
@@ -261,7 +263,7 @@ Scenario:3 会员基本信息修改"调积分"
 			"last_buy_time":"",
 			"tags": ["未分组"],
 			"integral": 10,
-			"friend_count":0,
+			"fans_count":0,
 			"remarks":""
 		}
 		"""
@@ -286,7 +288,7 @@ Scenario:3 会员基本信息修改"调积分"
 		"""
 
 @mall2 @member @memberList  @member_detail_new @bert
-Scenario:4 会员基本信息好友数验证
+Scenario:4 会员基本信息推荐数验证
 	#bill和tom建立好友关系
 			When bill访问jobs的webapp
 			When bill把jobs的微站链接分享到朋友圈
@@ -318,7 +320,7 @@ Scenario:4 会员基本信息好友数验证
 			"last_buy_time":"",
 			"tags": ["未分组"],
 			"integral":0,
-			"friend_count":1,
+			"fans_count":1,
 			"remarks":""
 		}
 		"""

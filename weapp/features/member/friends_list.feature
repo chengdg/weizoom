@@ -292,7 +292,7 @@ Scenario:1 会员的好友列表和推荐关注列表
 	Then jobs获得'bill'推荐关注统计
 		"""
 		{
-			"new_members":10,
+			"fans_count":10,
 			"ordered_members":2,
 			"pay_money":220.00
 		}
@@ -352,22 +352,22 @@ Scenario:2 会员的好友列表和推荐关注列表分页
 			}
 			"""
 		When jobs访问'bill'推荐关注页
-		Then jobs获得'bill'推荐关注列表显示共3页
+		Then jobs获得'bill'推荐关注列表显示共5页
 		When jobs浏览推荐关注列表第1页
 		Then jobs获得'bill'推荐关注列表
 			|  member  | member_rank | pay_money |  integral  |  Source  | attention_time |
-			|  bill0013| 普通会员    |    0.00   |     0      | 会员分享 |      今天      |
-			|  bill0011| 普通会员    |    0.00   |     0      | 会员分享 |      今天      |
+			|   tom4   | 普通会员    |    0.00   |     0      | 推广扫码 |      今天      |
+			|   tom3   | 普通会员    |    0.00   |     0      | 推广扫码 |      今天      |
 		When jobs浏览推荐关注列表第2页
 		Then jobs获得'bill'推荐关注列表
 			|  member  | member_rank | pay_money |  integral  |  Source  | attention_time |
-			|  bill13  | 普通会员    |    110.00 |     0      | 会员分享 |      今天      |
-			|  bill11  | 普通会员    |    0.00   |     70     | 会员分享 |      今天      |
+			|   tom2   | 普通会员    |    110.00 |     0      | 推广扫码 |      今天      |
+			|   tom1   | 普通会员    |    0.00   |     0      | 推广扫码 |      今天      |
 		When jobs浏览推荐关注列表第3页
 		Then jobs获得'bill'推荐关注列表
 			|  member  | member_rank | pay_money |  integral  |  Source  | attention_time |
-			|  bill3   | 普通会员    |    0.00   |     0      | 会员分享 |      今天      |
-			|  bill1   | 普通会员    |    0.00   |     50     | 会员分享 |      今天      |
+			| bill0013 | 普通会员    |    0.00   |     0      | 会员分享 |      今天      |
+			| bill0011 | 普通会员    |    0.00   |     0      | 会员分享 |      今天      |
 
 	#好友列表分页
 		Given jobs设置分页查询参数
@@ -377,28 +377,29 @@ Scenario:2 会员的好友列表和推荐关注列表分页
 			}
 			"""
 		When jobs访问'bill'推荐关注页
-		Then jobs获得'bill'好友列表显示共4页
+		Then jobs获得'bill'好友列表显示共5页
 		When jobs浏览好友列表第1页
 		Then jobs获得'bill'好友列表
 			|  member  | member_rank | pay_money |  integral  |  Source  | recommended | attention_time |
-			|  bill0013| 普通会员    |    0.00   |     0      | 会员分享 |    bill     |      今天      |
-			|  bill0012| 普通会员    |    0.00   |     0      | 直接关注 |             |      今天      |
-			|  bill0011| 普通会员    |    0.00   |     0      | 会员分享 |    bill     |      今天      |
-			|  bill001 | 普通会员    |    0.00   |     80     | 会员分享 |    marry2   |      今天      |
+			|   tom4   | 普通会员    |    0.00   |     0      | 推广扫码 |    bill     |      今天      |
+			|   tom3   | 普通会员    |    0.00   |     0      | 推广扫码 |    bill     |      今天      |
+			|   tom2   | 普通会员    |    110.00 |     0      | 推广扫码 |    bill     |      今天      |
+			|   tom1   | 普通会员    |    0.00   |     0      | 推广扫码 |    bill     |      今天      |
 		When jobs浏览好友列表第2页
+		Then jobs获得'bill'好友列表
+			|  member  | member_rank | pay_money |  integral  |  Source  | recommended | attention_time |
+			| bill0013 | 普通会员    |    0.00   |     0      | 会员分享 |    bill     |      今天      |
+			| bill0012 | 普通会员    |    0.00   |     0      | 直接关注 |             |      今天      |
+			| bill0011 | 普通会员    |    0.00   |     0      | 会员分享 |    bill     |      今天      |
+			| bill001  | 普通会员    |    0.00   |     80     | 会员分享 |   marry2    |      今天      |
+		When jobs浏览好友列表第3页
 		Then jobs获得'bill'好友列表
 			|  member  | member_rank | pay_money |  integral  |  Source  | recommended | attention_time |
 			|  marry2  | 普通会员    |    0.00   |     0      | 直接关注 |             |      今天      |
 			|  bill13  | 普通会员    |    110.00 |     0      | 会员分享 |    bill     |      今天      |
 			|  bill12  | 普通会员    |    0.00   |     0      | 直接关注 |             |      今天      |
 			|  bill11  | 普通会员    |    0.00   |     70     | 会员分享 |    bill     |      今天      |
-		When jobs浏览好友列表第3页
-		Then jobs获得'bill'好友列表
-			|  member  | member_rank | pay_money |  integral  |  Source  | recommended | attention_time |
-			|  bill01  | 普通会员    |    110.00 |     60     | 会员分享 |    marry    |      今天      |
-			|  marry   | 普通会员    |    0.00   |     0      | 直接关注 |             |      今天      |
-			|  bill3   | 普通会员    |    0.00   |     0      | 会员分享 |    bill     |      今天      |
-			|  bill2   | 普通会员    |    0.00   |     0      | 直接关注 |             |      今天      |
+
 
 
 Scenario:3 (传播能力)会员统计
@@ -426,7 +427,7 @@ Scenario:4 (传播能力)会员的分享链接引流会员列表
 	Then jobs获得'bill'分享链接引流会员统计
 		"""
 		{
-			"new_members":6,
+			"fans_count":6,
 			"ordered_members":1,
 			"pay_money":110.00
 		}
@@ -460,7 +461,7 @@ Scenario:5 (传播能力)会员的二维码引流会员列表
 	Then jobs获得'bill'二维码引流会员统计
 		"""
 		{
-			"new_members":4,
+			"fans_count":4,
 			"ordered_members":1,
 			"pay_money":110.00
 		}

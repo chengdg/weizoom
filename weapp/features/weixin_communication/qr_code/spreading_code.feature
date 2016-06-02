@@ -1,6 +1,6 @@
 #author: 王丽
 #editor: 张三香 2015.10.16
-
+#editor: 田丰敏 2016.05.31
 Feature:推广扫码
 """
 	在系统中【推广扫码】建立推广扫码规则，在系统可以设置链接的地方，将此链接分享给系统中会员，
@@ -51,8 +51,8 @@ Scenario:1 无奖励
 	Given jobs登录系统
 	When jobs访问会员列表
 	Then jobs可以获得会员列表
-		| name  | member_rank | friend_count |   attention_time  |  source  |
-		| tom   |   普通会员  |       1      |        今天       | 推广扫码 |
+		| name  | member_rank |  fans_count |   attention_time  |  source  |
+		| tom   |   普通会员  |       0      |        今天       | 推广扫码 |
 		| bill  |   普通会员  |       1      |        今天       | 直接关注 |
 		
 @mall2 @qr_code
@@ -86,8 +86,8 @@ Scenario:2 积分奖励
 	When 清空浏览器
 	Given jobs登录系统
 	Then jobs可以获得会员列表
-		| name  | member_rank | friend_count | integral |   attention_time  |  source  |
-		| tom   |   普通会员  |       1      |     0    |        今天       | 推广扫码 |
+		| name  | member_rank |  fans_count | integral |   attention_time  |  source  |
+		| tom   |   普通会员  |       0      |     0    |        今天       | 推广扫码 |
 		| bill  |   普通会员  |       1      |    10    |        今天       | 直接关注 |
 
 @mall2 @qr_code
@@ -154,8 +154,8 @@ Scenario:3 优惠券奖励
 	When 清空浏览器
 	Given jobs登录系统
 	Then jobs可以获得会员列表
-		| name  | member_rank | friend_count |   attention_time  |  source  |
-		| tom   |   普通会员  |       1      |        今天       | 推广扫码 |
+		| name  | member_rank |  fans_count |   attention_time  |  source  |
+		| tom   |   普通会员  |       0      |        今天       | 推广扫码 |
 		| bill  |   普通会员  |       1      |        今天       | 直接关注 |
 
 	Then jobs能获得优惠券'优惠券1'的码库

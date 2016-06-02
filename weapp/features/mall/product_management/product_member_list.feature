@@ -1,5 +1,6 @@
 # watcher: tianfengmin@weizoom.com, benchi@weizoom.com
 # __author__ : "田丰敏" 2016-05-18
+#editor:田丰敏  2016-05-31 
 
 Feature: 商品管理-购买人
 """
@@ -10,7 +11,7 @@ Feature: 商品管理-购买人
 
 jobs通过“购买会员”链接查看购买该商品的所有会员信息：
 	1、会员状态包括：已关注，取消关注
-	2、会员列表：会员、会员等级、好友数、积分、关注事件&来源、分组、操作
+	2、会员列表：会员、会员等级、推荐数、积分、关注事件&来源、分组、操作
 
 备注：
 	1、会员购买该商品的订单状态：按照销量规则来做筛选
@@ -73,6 +74,6 @@ Background:
 Scenario:1 选择一商品，获得购买会员列表（已关注会员+取消关注会员）
 	Given jobs登录系统
 	Then jobs获得商品'商品1'的会员列表
-		| member | member_rank | friend_count | integral | attention_time  |  source  |    tags     |   status  |
+		| member | member_rank |  fans_count | integral | attention_time  |  source  |    tags     |   status  |
 		| tom3   |   普通会员  |       0      |     0    |   2016-05-15    | 直接关注 |   未分组    |   已取消  |
 		| tom2   |   普通会员  |       0      |     0    |   2016-05-15    | 直接关注 |   未分组    |   已关注  |

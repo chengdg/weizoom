@@ -276,6 +276,7 @@ def build_member_json(member):
 		'last_visit_time': datetime.strftime(member.last_visit_time, '%Y-%m-%d') if member.last_visit_time else '-',
 		'session_id': member.session_id,
 		'friend_count':  member.friend_count,
+		'fans_count':  member.fans_count,
 		'source':  member.source,
 		'tags':build_member_has_tags_json(member),
 		'is_subscribed':member.is_subscribed,

@@ -34,7 +34,7 @@ from django.contrib.auth.models import User
 #from django.core.management import call_command
 from django.test.client import Client
 from django.test.utils import setup_test_environment as setup_django_test_environment
-from django.db.models import Q
+from django.db.models import Q,F
 
 from features.testenv.model_factory import *
 from account import models as account_models
@@ -597,6 +597,8 @@ def __create_member_has_social(member, social_account):
 
 def __create_member_follow_relation(member_A, member_B, is_fans=False):
 	member_models.MemberFollowRelation.objects.create(member_id=member_A.id, follower_member_id=member_B.id, is_fans=is_fans)
+	if is_fans:
+		Member.objects.filter(id=member_A.id).update(fans_count=F(fans_count)+1)
 	member_models.MemberFollowRelation.objects.create(member_id=member_B.id, follower_member_id=member_A.id)
 
 

@@ -69,7 +69,7 @@ def step_impl(context, user, member):
     actual['tags'] = [tag.member_tag.name for tag in member_has_tags]
     actual['grade'] = grade_name
     actual['integral'] = show_member['integral']
-    actual['friend_count'] = show_member['friend_count']
+    actual['fans_count'] = show_member['fans_count']
 
     bdd_util.assert_dict(actual, expected)
 
