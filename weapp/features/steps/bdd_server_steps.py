@@ -158,6 +158,6 @@ def step_impl(context):
 	port = BDD_SERVER2PORT.get(self_name, 0)
 	assert port, "{} is not valid name.You can't change the git repository name!".format(self_name)
 
-	httpd = make_server('', 8170, simple_app, handler_class=BDDRequestHandler)
+	httpd = make_server('', port, simple_app, handler_class=BDDRequestHandler)
 	print("[{} bdd server] Serving on port {}...".format(self_name, port))
 	httpd.serve_forever()
