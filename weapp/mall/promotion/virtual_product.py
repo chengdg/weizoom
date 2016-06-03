@@ -84,7 +84,8 @@ class VirtualProduct(resource.Resource):
 		params = {
 			'owner': request.manager, 
 			'type__in': [mall_models.PRODUCT_VIRTUAL_TYPE, mall_models.PRODUCT_WZCARD_TYPE],
-			'shelve_type': mall_models.PRODUCT_SHELVE_TYPE_ON
+			'shelve_type': mall_models.PRODUCT_SHELVE_TYPE_ON,
+			'is_deleted': False
 		}
 		if name:
 			params['name__contains'] = name

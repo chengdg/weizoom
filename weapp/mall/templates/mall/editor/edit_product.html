@@ -100,7 +100,8 @@
 	                	<select class="ml5" id="type" name="type">
 	                		<option value="object" {% if product.type == 'object' %}selected='selected'{% endif %}>普通商品</option>
 	                		<option value="virtual" {% if product.type == 'virtual' %}selected='selected'{% endif %}>虚拟商品</option>
-	                		<option value="wzcard" {% if product.type == 'wzcard' %}selected='selected'{% endif %}>微众卡</option>
+	                		<option value="wzcard" {% if product.type == 'wzcard' %}selected='selected'{% endif %}>电子微众卡</option>
+	                		<option value="wzcard_entity" {% if product.type == 'wzcard_entity' %}selected='selected'{% endif %}>实体微众卡</option>
 	                	</select>
 					</div>
 				</div>
