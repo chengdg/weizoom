@@ -418,6 +418,7 @@ class ProductPool(resource.Resource):
 
         dict_products = []
         for product in products:
+            product.price = product.display_price
             product = product.to_dict()
             if product['id'] in mall_product_id2relation:
                 if mall_product_id2relation[product['id']].is_updated and not mall_product_id2relation[product['id']].is_deleted:
