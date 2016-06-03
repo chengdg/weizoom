@@ -56,6 +56,7 @@ def step_impl(context, user):
     for product in products:
         actual.append({
                 "name": product['name'],
+                "price": product['price'],
                 "user_code": product['user_code'],
                 "supplier": product['store_name'],
                 "stocks": product['stocks'],
