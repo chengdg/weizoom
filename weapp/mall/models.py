@@ -159,7 +159,7 @@ PRODUCT_TEST_TYPE = 'test'
 PRODUCT_INTEGRAL_TYPE = 'integral'
 PRODUCT_VIRTUAL_TYPE = 'virtual'  #第三方虚拟商品  weshop
 PRODUCT_WZCARD_TYPE = 'wzcard'  #电子微众卡  weshop
-PRODUCT_WZCARD_TYPE = 'wzcard_entity'  #实体微众卡  weshop
+PRODUCT_ENTITY_WZCARD_TYPE = 'wzcard_entity'  #实体微众卡  weshop
 POSTAGE_TYPE_UNIFIED = 'unified_postage_type'
 POSTAGE_TYPE_CUSTOM = 'custom_postage_type'
 
