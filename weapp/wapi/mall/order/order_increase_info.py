@@ -32,10 +32,10 @@ class OrderIncrease(api_resource.ApiResource):
 		fisrt_day_of_month = dateutil.get_first_day_of_month()
 
 		member_increase_info = {}
-		total_count = mall_models.Order.objects.filter(webapp_id=webapp_id, status__in=VALID_STATUS).count()
-		today_count = mall_models.Order.objects.filter(webapp_id=webapp_id, status__in=VALID_STATUS, created_at__gte=today).count()
-		week_count = mall_models.Order.objects.filter(webapp_id=webapp_id, status__in=VALID_STATUS, created_at__range=(monday, sunday)).count()
-		month_count = mall_models.Order.objects.filter(webapp_id=webapp_id, status__in=VALID_STATUS, created_at__gte=fisrt_day_of_month).count()
+		total_count = mall_models.Order.objects.filter(webapp_id=webapp_id, status__in=VALID_STATUS, origin_order_id__lte=0).count()
+		today_count = mall_models.Order.objects.filter(webapp_id=webapp_id, status__in=VALID_STATUS, created_at__gte=today, origin_order_id__lte=0).count()
+		week_count = mall_models.Order.objects.filter(webapp_id=webapp_id, status__in=VALID_STATUS, created_at__range=(monday, sunday), origin_order_id__lte=0).count()
+		month_count = mall_models.Order.objects.filter(webapp_id=webapp_id, status__in=VALID_STATUS, created_at__gte=fisrt_day_of_month, origin_order_id__lte=0).count()
 
 		price_day = 0.0
 		price_day_card = 0.0
@@ -47,19 +47,19 @@ class OrderIncrease(api_resource.ApiResource):
 		price_month_card = 0.0
 		price_month_money = 0.0
 
-		orders = mall_models.Order.objects.filter(webapp_id=webapp_id, status__in=VALID_STATUS, created_at__gte=today)
+		orders = mall_models.Order.objects.filter(webapp_id=webapp_id, status__in=VALID_STATUS, created_at__gte=today, origin_order_id__lte=0)
 		for order in orders:
 			price_day_card += order.weizoom_card_money
 			price_day_money += order.final_price
 		price_day = price_day_card + price_day_money
 
-		orders = mall_models.Order.objects.filter(webapp_id=webapp_id, status__in=VALID_STATUS, created_at__range=(monday, sunday))
+		orders = mall_models.Order.objects.filter(webapp_id=webapp_id, status__in=VALID_STATUS, created_at__range=(monday, sunday), origin_order_id__lte=0)
 		for order in orders:
 			price_week_card += order.weizoom_card_money
 			price_week_money += order.final_price
 		price_week = price_week_card + price_week_money
 
-		orders = mall_models.Order.objects.filter(webapp_id=webapp_id, status__in=VALID_STATUS, created_at__gte=fisrt_day_of_month)
+		orders = mall_models.Order.objects.filter(webapp_id=webapp_id, status__in=VALID_STATUS, created_at__gte=fisrt_day_of_month, origin_order_id__lte=0)
 		for order in orders:
 			price_month_card += order.weizoom_card_money
 			price_month_money += order.final_price
