@@ -60,9 +60,10 @@
             <tr>
                 <th width="250">商品信息</th>
                 <th width="100">供货商</th>
+                <th width="55">商品价格</th>
                 <th width="50">库存</th>
-                <th width="115">状态</th>
-                <th width="120">同步时间</th>
+                <th width="80">状态</th>
+                <th width="100">同步时间</th>
                 <th width="90">操作</th>
             </tr>
         </thead>
@@ -94,6 +95,9 @@
                     <td>
                         ${product.store_name}
                     </td>
+                    <td>
+                        ${product.price}
+                    </td>
                     <td>${product.stocks}</td>
                     <td>
                         {{if product.status == 1}}
@@ -121,7 +125,7 @@
                 </tr>
                 {{/each}}
             {{else}}
-                <tr><td colspan='6'>还没有数据</td></tr>
+                <tr><td colspan='7'>还没有数据</td></tr>
             {{/if}}
         </tbody>
     </table>
