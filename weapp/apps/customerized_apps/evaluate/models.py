@@ -27,7 +27,8 @@ class Evaluates(models.Document):
 	status = models.IntField(default=STATUS_WAITTING)  # 审核状态
 
 	meta = {
-		'collection': 'evaluate_evaluates'
+		'collection': 'evaluate_evaluates',
+		'db_alias': 'apps'
 	}
 
 
@@ -42,5 +43,6 @@ class EvaluateTemplateSetting(models.Document):
 	related_page_id = models.StringField(default='', max_length=100) #组件page_id
 
 	meta = {
-		'collection': 'evaluate_evaluate_template_setting'
+		'collection': 'evaluate_evaluate_template_setting',
+		'db_alias': 'apps'
 	}

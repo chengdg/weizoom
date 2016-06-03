@@ -8,9 +8,9 @@
     <div class="relative">
         <ul class="breadcrumb">
             <li>您当前所在位置</li>
-            <li><a href="/apps/lottery/lotteries/">百宝箱</a></li>
-            <li><a href="/apps/evaluate/evaluates/">商品评价</a></li>
-            <li class="active">新建</li>
+            <li><a href="/mall2/product_list/?shelve_type=1">商品管理</a></li>
+            <li><a href="/apps/evaluate/evaluates/">评价管理</a></li>
+            <li class="active">配置评价模版</li>
         </ul>
     </div>
     
@@ -60,7 +60,7 @@
         "task": "weizoom-load-termite-components"
       }
     -->
-  {{ '["appkit.page", "appkit.componentadder", "appkit.surveydescription", "appkit.qa", "appkit.selection", "appkit.shortcuts", "appkit.submitbutton"]'|load_termite_components|safe }}
+  {{ '["appkit.page", "appkit.componentadder", "appkit.qa", "appkit.selection", "appkit.textlist"]'|load_termite_components|safe }}
   <!-- *end_prunt_task* -->
   
   <script type="text/javascript">

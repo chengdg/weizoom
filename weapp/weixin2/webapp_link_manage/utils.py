@@ -5,6 +5,7 @@ __author__ = 'liupeiyu'
 
 import json
 from datetime import timedelta, datetime
+from django.conf import settings
 
 from mall.models import Product, ProductCategory, PRODUCT_SHELVE_TYPE_ON
 from mall.promotion.models import CouponRule, Promotion, PROMOTION_TYPE_COUPON
@@ -198,6 +199,11 @@ def get_webapp_link_menu_objectes(request):
 			'name': '微众卡兑换平台',
 			'link': get_card_exchange_link(request),
 			'users': ['jobs', 'njtest', 'ceshi01', 'fulilaile']
+		},
+		'evaluate': {
+			'id': 14,
+			'name': '待评价列表',
+			'link': '%s/mall/waiting_review_orders/?woid=%s' % (settings.H5_HOST, str(request.manager.id))
 		}
 		# 'feedback': {
 		# 	'id': 12,

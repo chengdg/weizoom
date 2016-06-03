@@ -11,16 +11,25 @@
     <div class="relative">
         <ul class="breadcrumb">
             <li>您当前所在位置</li>
-            <li>
-                <a href="/mall2/product_list/?shelve_type=1">商品管理</a>
-
-            </li>
+            <li><a href="/mall2/product_list/?shelve_type=1">商品管理</a></li>
             <li class="active">评价管理</li>
         </ul>
     </div>
     <div class="xa-productReviewFilterView xui-filterPanel"></div>
 
     <div class="panel panel-default mt20 xb-rightPanel">
+        <div class="panel-header clearfix">
+            <a href="javascript: void 0" class="btn btn-default fr ml10 mr10 mt10 xa-export">
+				导出文件
+			</a>
+			<a href="/apps/evaluate/evaluate/" class="btn btn-default fr ml10 mt10">
+				评价模版
+			</a>
+            <a href="/apps/evaluate/evaluate_relations/" class="btn btn-default fl ml10 mt10">
+				评价关联
+			</a>
+
+		</div>
         <div
             data-ui-role="advanced-table"
             data-app="apps/evaluate"

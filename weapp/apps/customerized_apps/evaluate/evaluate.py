@@ -21,8 +21,7 @@ from mall.promotion import utils as mall_api
 from mall import export as mall_export
 import termite.pagestore as pagestore_manager
 
-FIRST_NAV = mall_export.MALL_PROMOTION_AND_APPS_FIRST_NAV
-COUNT_PER_PAGE = 20
+FIRST_NAV = mall_export.PRODUCT_FIRST_NAV
 
 class Evaluate(resource.Resource):
 	app = 'apps/evaluate'
@@ -41,9 +40,8 @@ class Evaluate(resource.Resource):
 			except:
 				c = RequestContext(request, {
 					'first_nav_name': FIRST_NAV,
-					'second_navs': mall_export.get_promotion_and_apps_second_navs(request),
-					'second_nav_name': mall_export.MALL_APPS_SECOND_NAV,
-					'third_nav_name': "evaluates",
+					'second_navs': mall_export.get_mall_product_second_navs(request),
+					'second_nav_name': mall_export.PRODUCT_REVIEW_NAV,
 					'is_deleted_data': True
 				})
 				
@@ -62,9 +60,8 @@ class Evaluate(resource.Resource):
 			if not pages:
 				c = RequestContext(request, {
 					'first_nav_name': FIRST_NAV,
-					'second_navs': mall_export.get_promotion_and_apps_second_navs(request),
-					'second_nav_name': mall_export.MALL_APPS_SECOND_NAV,
-					'third_nav_name': "evaluates",
+					'second_navs': mall_export.get_mall_product_second_navs(request),
+					'second_nav_name': mall_export.PRODUCT_REVIEW_NAV,
 					'is_deleted_data': True
 				})
 				
@@ -72,9 +69,8 @@ class Evaluate(resource.Resource):
 		
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
-			'second_navs': mall_export.get_promotion_and_apps_second_navs(request),
-			'second_nav_name': mall_export.MALL_APPS_SECOND_NAV,
-			'third_nav_name': "evaluates",
+			'second_navs': mall_export.get_mall_product_second_navs(request),
+			'second_nav_name': mall_export.PRODUCT_REVIEW_NAV,
 			'evaluate': evaluate,
 			'is_create_new_data': is_create_new_data,
 			'project_id': project_id,

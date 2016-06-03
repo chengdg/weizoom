@@ -6,4 +6,5 @@ import evaluate_participances
 import m_evaluate
 import evaluate_status
 import evaluates
+import evaluate_relations
 

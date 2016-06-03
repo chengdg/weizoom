@@ -208,7 +208,8 @@ MALL_PRODUCT_SECOND_NAV = {
         {
             'name': PRODUCT_REVIEW_NAV,
             'title': u'评价管理',
-            'url': '/mall2/product_review_list/',
+            # 'url': '/mall2/product_review_list/',
+            'url': '/apps/evaluate/evaluates/',
             'permission': 'manage_product_review'
         },
     ]

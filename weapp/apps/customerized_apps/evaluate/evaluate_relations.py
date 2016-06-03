@@ -19,39 +19,21 @@ COUNT_PER_PAGE = 50
 
 class Evaluates(resource.Resource):
 	app = 'apps/evaluate'
-	resource = 'evaluates'
+	resource = 'evaluate_relations'
 	
 	@login_required
 	def get(request):
 		"""
-		商品评价列表
+		商品关联页面
 		"""
-		woid = request.webapp_owner_id
-		export_jobs = ExportJob.objects.filter(woid=woid, type=2, is_download=0).order_by("-id")
-		if export_jobs:
-			export2data = {
-				"woid": int(export_jobs[0].woid),  #
-				"status": 1 if export_jobs[0].status else 0,
-				"is_download": 1 if export_jobs[0].is_download else 0,
-				"id": int(export_jobs[0].id),
-				# "file_path": export_jobs[0].file_path,
-			}
-		else:
-			export2data = {
-				"woid": 0,
-				"status": 1,
-				"is_download": 1,
-				"id": 0,
-				"file_path": 0,
-			}
+
 		c = RequestContext(request,{
 		   'first_nav_name': FIRST_NAV_NAME,
 		   'second_navs': export.get_mall_product_second_navs(request),
-		   'second_nav_name': export.PRODUCT_REVIEW_NAV,
-		   'export2data': export2data,
+		   'second_nav_name': export.PRODUCT_REVIEW_NAV
 	   })
 		
-		return render_to_response('evaluate/templates/editor/evaluates.html', c)
+		return render_to_response('evaluate/templates/editor/evaluate_relations.html', c)
 	
 	# @staticmethod
 	# def get_datas(request):
