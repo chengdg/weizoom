@@ -84,6 +84,8 @@ def _run_bdd_server_step(step, context, bdd_server_name):
 	try:
 		resp_data = json.loads(base64.b64decode(response.text.encode('utf-8')).decode('utf-8'))
 
+		assert resp_data['bdd_server_name'] == bdd_server_name, "Lv chun bu dui ma zui ERROR,call {},but get {}".format(bdd_server_name,resp_data['bdd_server_name'])
+
 		result = int(resp_data['result'])
 		# 一切正常
 		if result == 0:
