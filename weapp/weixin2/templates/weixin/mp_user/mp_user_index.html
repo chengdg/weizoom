@@ -20,8 +20,13 @@
 					<p><font><B>绑定微信公众号，把店铺和微信打通</font></B></p>
 					<p class="mt20"> 绑定后即可在这里管理您的公众号，微众提供比微信后台更强大的功能！</p>
 					<div class="mt30">
-
+						{% if request.manager.username == 'bill' or request.manager.username == 'yexiang' or request.manager.username == 'huaren' %}
+						<!-- duhao 20160603 限制版账号不能绑定微信公众号 -->
+						<a style="background-color:#14d214" class="btn btn-success cert-setting-btn js-wxauth-btn" href="#"><img src="/static_v2/img/editor/weixinlogo.png">&nbsp;&nbsp;&nbsp;<B>我有微信公众号，立即设置</B></a>
+						<span class="cRed">如需更多功能，请升级完整版云商通系统</span>
+						{% else %}
 						<a style="background-color:#14d214" class="btn btn-success cert-setting-btn js-wxauth-btn" href="https://mp.weixin.qq.com/cgi-bin/componentloginpage?component_appid={{component_info.app_id}}&pre_auth_code={{pre_auth_code}}&redirect_uri=http://{{request_host}}/weixin/component/receiveauthcode/" target="_blank"><img src="/static_v2/img/editor/weixinlogo.png">&nbsp;&nbsp;&nbsp;<B>我有微信公众号，立即设置</B></a>
+						{% endif %}
 					</div>
 				</div>
 				<div class="line pa" style="border-left:1px #ccc solid;height:100px;left:655px;"></div>
