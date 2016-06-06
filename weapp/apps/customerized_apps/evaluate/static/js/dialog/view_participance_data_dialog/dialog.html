@@ -9,63 +9,7 @@
 		<div class="modal-body">
 			<b>评价内容</b>
 			<div class="xui-modal-content">
-				<div class="fl xui-evaluate-modalLef">
-					<div>
-						<span>评价日期：</span>
-						<span>{{datetime}}</span>
-					</div>
-					<div>
-						<span>晒单图片：</span>
-
-					</div>
-					<div>
-						<span>评价内容：</span>
-						<span class="vt xui-evaluate-comment">
-							{{content}}
-						</span>
-					</div>
-				</div>
-				<div class="fl xui-evaluate-modalRig">
-					<div>
-						<span>商品名称：</span>
-						<span>{{product_name}}</span>
-					</div>
-					<div>
-						<span>&nbsp;&nbsp;&nbsp;&nbsp;订单号：</span>
-						<a>20160405190356789</a>
-					</div>
-					<div>
-						<span>会员名称：</span>
-						<a>张全蛋</a>
-					</div>
-					<div>
-						<span>会员等级：</span>
-						<span>钻石会员</span>
-					</div>
-					<div>
-						<span>会员分组：</span>
-						<a>调分组</a>
-						<span>土小宝金杆粉</span>
-						<span>小二黑微家人</span>
-					</div>
-				</div>
 			</div>
-			<table class="xui-evaluate-table table table-bordered">
-				<tbody>
-					<tr>
-						<td>您使用/食用产品后的感受(需要改进的地方也请留下您的意见)</td>
-						<td>东西是新鲜的，个人很喜欢.东西是新鲜的，个人很喜欢.东西是新鲜的，个人很喜欢.东西是新鲜的，个人很喜欢</td>
-					</tr>
-					<tr>
-						<td>您对本产品的包装是否满意(必填)</td>
-						<td>满意</td>
-					</tr>
-					<tr>
-						<td>最后反馈</td>
-						<td></td>
-					</tr>					
-				</tbody>
-			</table>
 			<div class="xui-evalute-btnGroups">
 				<a href="javascript:void(0);" class="btn btn-default ml20 xa-modify" name="pass" data-status="1">通过审核</a>
 				<a href="javascript:void(0);" class="btn btn-default ml20 xa-modify" name="top" data-status="2">通过并置顶</a>
@@ -84,3 +28,61 @@
 	</div>
 </script>
 
+<script id="app-evaluate-viewParticipanceResultDialog-dialog-tmpl" type="text/x-handlebar-tmpl">
+		<div class="fl xui-evaluate-modalLef">
+			<div>
+				<span>评价日期：</span>
+				<span>{{datetime}}</span>
+			</div>
+			<div>
+				<span>晒单图片：</span>
+
+			</div>
+			<div>
+				<span>评价内容：</span>
+				<span class="vt xui-evaluate-comment">
+					{{content}}
+				</span>
+			</div>
+		</div>
+		<div class="fl xui-evaluate-modalRig">
+			<div>
+				<span>商品名称：</span>
+				<span>{{product_name}}</span>
+			</div>
+			<div>
+				<span>&nbsp;&nbsp;&nbsp;&nbsp;订单号：</span>
+				<a>20160405190356789</a>
+			</div>
+			<div>
+				<span>会员名称：</span>
+				<a>张全蛋</a>
+			</div>
+			<div>
+				<span>会员等级：</span>
+				<span>钻石会员</span>
+			</div>
+			<div>
+				<span>会员分组：</span>
+				<a>调分组</a>
+				<span>土小宝金杆粉</span>
+				<span>小二黑微家人</span>
+			</div>
+		</div>
+		<table class="xui-evaluate-table table table-bordered">
+			<tbody>
+				<tr>
+					<td>您使用/食用产品后的感受(需要改进的地方也请留下您的意见)</td>
+					<td>东西是新鲜的，个人很喜欢.东西是新鲜的，个人很喜欢.东西是新鲜的，个人很喜欢.东西是新鲜的，个人很喜欢</td>
+				</tr>
+				<tr>
+					<td>您对本产品的包装是否满意(必填)</td>
+					<td>满意</td>
+				</tr>
+				<tr>
+					<td>最后反馈</td>
+					<td></td>
+				</tr>					
+			</tbody>
+		</table>
+</script>
