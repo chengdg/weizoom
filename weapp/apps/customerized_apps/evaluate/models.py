@@ -46,3 +46,29 @@ class EvaluateTemplateSetting(models.Document):
 		'collection': 'evaluate_evaluate_template_setting',
 		'db_alias': 'apps'
 	}
+
+
+class EvaluatesRelations(models.Document):
+	"""
+	关联评价
+	"""
+	owner_id = models.LongField()  #商家id
+	created_at = models.DateTimeField()  # 关联时间
+	related_product_ids = models.ListField()  #关联商品id集合
+
+	meta = {
+		'collection': 'evaluate_relations',
+		'db_alias': 'apps'
+	}
+
+class EvaluatesRelatedProducts(models.Document):
+	"""
+	已经关联过的商品
+	"""
+	owner_id = models.LongField()  #商家id
+	product_id = models.IntField() #商品id
+
+	meta = {
+		'collection': 'evaluate_related_products',
+		'db_alias': 'apps'
+	}
