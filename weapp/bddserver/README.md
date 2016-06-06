@@ -163,9 +163,18 @@ code-base中具有上述文件结构
 git remote add -f bddserver https://git2.weizzz.com:84/weizoom/bddserver.git
 git subtree add --prefix=bddserver bddserver master --squash
 ```
-注：上述subtree命令只能在git项目根目录执行，如果实际项目代码文件不在根目录（如weapp项目），需要--prefix时增加路径：
+**注**：上述subtree命令只能在git项目根目录执行，如果实际项目代码文件不在根目录（如weapp项目），需要--prefix时增加路径：
 ```
 git subtree add --prefix=weapp/bddserver bddserver master --squash
 ```
 
 更新代码
+```
+git subtree pull --prefix=bddserver bddserver master --squash
+```
+
+**注**：--prefix扔然要指定位置,如weapp更新：
+
+```
+git subtree pull --prefix=weapp/bddserver bddserver master --squash
+```
