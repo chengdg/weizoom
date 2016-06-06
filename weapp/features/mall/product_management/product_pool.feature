@@ -1,5 +1,6 @@
 # watcher: wangli@weizoom.com,benchi@weizoom.com
 # __author__ : "王丽" 2016-02-19
+#editor: 田丰敏 2016.06.03
 
 Feature:商品池
 """

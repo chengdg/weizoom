@@ -1,5 +1,6 @@
 # watcher: zhangsanxiang@weizoom.com,benchi@weizoom.com
 #_author_:张三香 2016.01.19
+#editor: 田丰敏 2016.06.03
 
 Feature:商家和自营平台后台查看同步过来的订单列表及订单详情信息
 	"""

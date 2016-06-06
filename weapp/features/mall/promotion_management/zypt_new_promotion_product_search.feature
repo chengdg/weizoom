@@ -1,5 +1,6 @@
 # watcher: zhangsanxiang@weizoom.com,benchi@weizoom.com
 #_author_:张三香 2016.03.31
+#editor: 田丰敏 2016.06.03
 
 Feature:自营平台-新建促销活动页面的商品查询
 	"""
