@@ -21,41 +21,17 @@
 	<div class="xui-formPanel pb10 mb15">
 		<div class="xui-i-col">
 			<div class="xui-i-item">
-				<label class="">用户名：</label>
-				<input type="text" class="form-control" id="participant_name" name="participant_name" value="" />
+				<label class="">商品名称：</label>
+				<input type="text" class="form-control" id="product_name" name="product_name" value="" />
 			</div>
 		</div>
 		<div class="xui-i-col">
-			<div class="xui-i-item ml10">
-				<label>活动时间
-				：</label>
-				<input
-					type="text"
-					class="form-control xui-datePicker"
-					id="start_time"
-					name="start_time"
-					style=""
-					value=""
-					readonly="readonly"
-					data-enable-select-time="true"
-					data-validate="require-notempty"
-					data-ui-role="date-picker"
-					data-format="yy-mm-dd HH:MM" />
-				至
-				<input
-					type="text"
-					class="form-control xui-datePicker"
-					id="end_time"
-					name="end_time"
-					value=""
-					readonly="readonly"
-					data-enable-select-time="true"
-					data-validate="require-notempty"
-					data-ui-role="date-picker"
-					data-format="yy-mm-dd HH:MM"
-					data-min-el="#start_time"/>
+			<div class="xui-i-item">
+				<label class="">商品条码：</label>
+				<input type="text" class="form-control" id="bar_code" name="bar_code" value="" />
 			</div>
 		</div>
+
 		<div class="xui-i-col">
 			<div class="ml80">
 				<a class="btn btn-primary mr30 xa-search xui-fontBold" href="javascript:void(0);">查&nbsp;&nbsp;&nbsp;&nbsp;询</a>
@@ -63,13 +39,13 @@
 			</div>
 		</div>
 	</div>
-	
+	<div class="panel panel-default xui-tableBox p20">请通过查询选择需要关联评价的商品</div>
 	<div class="panel panel-default xui-tableBox">
 		<div 
 			class="panel-body panel-table p0 mt10"
 			data-ui-role="advanced-table" 
 			data-app="apps/evaluate" 
-			data-resource="evaluate_participances" 
+			data-resource="evaluate_relations"
 			data-args='{"id": "{{activity_id}}"}'
 			data-template-id="#table" 
 			data-enable-paginator="true" 
@@ -95,12 +71,12 @@
 <!-- *end_prunt_task* -->
 {% verbatim %}
 <script id="table" type="text/x-jquery-tmpl">
-	{{if items!='' }}
+	{{if items !=''}}
 	<table class="table table-bordered xb-stripedTable xb-noTdBorder xb-noBottom xb-noBorder xb-theadBg mb10">
 		<thead>
 			<tr>
-				<th>用户名</th>
-				<th>参与时间</th>
+				<th>商品名称</th>
+				<th>已获评价数</th>
 				<th>操作</th>
 			</tr>
 		</thead>
@@ -111,14 +87,13 @@
 					class="tl pl25"
 					style="width:250px; height:60px;" 
 				>
-					<img src="${item.participant_icon}" />
-					${item.participant_name}
+					${item.product_name}
 				</td>
 				<td>
 					${item.created_at}
 				</td>
 				<td>
-					<a href="javascript:void(0);" class="ml5 xa-viewData">查看结果</a>
+					<a href="javascript:void(0);" class="ml5 xa-viewData">解除</a>
 				</td>
 			</tr>
 			{{/each}}
@@ -147,17 +122,15 @@ $(document).ready(function() {
 		});
 	});
 	
-	$('.xa-search').click(function(event) {
-		var participant_name = $.trim($('[name="participant_name"]').val());
-		var startTime = $.trim($('[name="start_time"]').val());
-		var endTime = $.trim($('[name="end_time"]').val());
-		var table = $('[data-ui-role="advanced-table"]').data('view');
-		table.reload({
-			participant_name: participant_name,
-			start_time: startTime,
-			end_time: endTime
-		}, {
-			emptyDataHint: '没有符合条件的数据'
+	$('body').delegate('.xa-search', 'click', function(event) {
+		var product_name = $.trim($('[name="product_name"]').val());
+		var bar_code = $.trim($('[name="bar_code"]').val());
+        W.dialog.showDialog('W.dialog.app.evaluate.SearchProductDialog', {
+			product_name: product_name,
+            bar_code: bar_code,
+			success: function(data) {
+				// alert(data);
+			}
 		});
 	});
 });

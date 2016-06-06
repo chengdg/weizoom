@@ -1,0 +1,54 @@
+<script id="app-evaluate-searchProductDialog-dialog-tmpl" type="text/x-handlebar-tmpl">
+	<div class="xui-app_shvote-Dialog modal fade">
+	<div class="modal-dialog modal-lg">
+	<div class="modal-content">
+		<div class="modal-header">
+			<button aria-hidden="true" data-dismiss="modal" class="close" type="button"><span class="xui-closeColor" aria-hidden="true">&times;</span></button>
+			<h3 class="modal-title" >查看结果</h3>
+		</div>
+		<div class="modal-body">
+			<div
+                data-ui-role="advanced-table"
+                data-app="apps/evaluate"
+                data-resource="search_products_dialog"
+                data-args=''
+                data-template-id="#app-evaluate-searchProductDialog-tmpl"
+                data-enable-paginator="true"
+                data-enable-sort="false"
+                data-item-count-per-page="6"
+                data-auto-load="false"
+                class="mt10 mb20">
+            </div>
+		</div>
+		<div class="modal-footer">
+			<button class="btn btn-primary xa-submit-dialog">完成选择</button>
+		</div>
+	</div>
+	</div>
+	</div>
+</script>
+<script id="app-evaluate-searchProductDialog-tmpl" type="text/x-jquery-tmpl">
+    <table class="table table-bordered">
+    	<thead>
+    		<tr>
+    			<td>商品条码</td>
+    			<td>商品名称</td>
+    			<td>商品价格(元)</td>
+    			<td>已获评价数</td>
+    			<td>操作</td>
+    		</tr>
+    	</thead>
+    	<tbody>
+	        {{each(i, item) items}}
+				<tr>
+				    <td>${item.bar_code}</td>
+					<td>${item.product_name}</td>
+					<td>${item.price}</td>
+					<td>${item.evaluate_count}</td>
+					<td><button class="btn xa-select" style="color:#FFF" data-id=${item.id}>选取</button></td>
+				</tr>
+	        {{/each}}
+        </tbody>
+    </table>
+</script>
+

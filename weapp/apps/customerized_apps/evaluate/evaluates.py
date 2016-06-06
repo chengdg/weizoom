@@ -76,16 +76,7 @@ class Evaluates(resource.Resource):
 		商品评价列表
 		"""
 		woid = request.webapp_owner_id
-		# app_models.Evaluates.objects.create(
-		# 	owner_id = woid,
-		# 	member_id = 10,
-		# 	order_id = '20160603172146220',
-		# 	product_id = 8,
-		# 	score = 4,
-		# 	detail = u'还不错。。。。。。。。。。。。。。',
-		# 	status = 0,
-		# 	created_at = datetime.now()
-		# )
+
 		export_jobs = ExportJob.objects.filter(woid=woid, type=2, is_download=0).order_by("-id")
 		if export_jobs:
 			export2data = {
