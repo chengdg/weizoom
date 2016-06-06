@@ -8,6 +8,7 @@ Copyright (c) 2011-2012 Weizoom Inc
 ensureNS('W.dialog.app.evaluate');
 W.dialog.app.evaluate.SearchProductDialog = W.dialog.Dialog.extend({
 	events: _.extend({
+		'click .xa-select': 'onClickSelect'
 	}, W.dialog.Dialog.prototype.events),
 	
 	templates: {
@@ -16,6 +17,7 @@ W.dialog.app.evaluate.SearchProductDialog = W.dialog.Dialog.extend({
 	
 	onInitialize: function(options) {
 		this.table = this.$('[data-ui-role="advanced-table"]').data('view');
+		this.product_arr = [];
 	},
 	
 	beforeShow: function(options) {
@@ -36,5 +38,17 @@ W.dialog.app.evaluate.SearchProductDialog = W.dialog.Dialog.extend({
 	 */
 	onGetData: function(event) {
 		return {};
+	},
+
+	onClickSelect: function(event){
+		var $target = $(event.target);
+		if ($target.text() == '选取') {
+			$target.text('已选取').css('background-color', '#c9c9c9');
+			this.product_arr.push($target.data('id'));
+		} else {
+			$target.text('选取').css('background-color', '#30ABF9');
+			this.product_arr.pop($target.data('id'));
+		}
+		console.log(this.product_arr,44444444)
 	}
 });

@@ -108,8 +108,7 @@ class EvaluatesProducts(resource.Resource):
 		# 分页
 		count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
 		current_page = int(request.GET.get('page', '1'))
-		pageinfo, products = paginator.paginate(products, current_page,
-																		 count_per_page,
+		pageinfo, products = paginator.paginate(products, current_page,count_per_page,
 																		 query_string=request.META['QUERY_STRING'])
 
 		evaluates = app_models.Evaluates.objects(owner_id=owner_id).order_by("-created_at")
