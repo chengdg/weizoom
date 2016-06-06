@@ -198,7 +198,7 @@ class Evaluates(resource.Resource):
 				'product_score': review.score,
 				'status': {
 					'name': mall_models.PRODUCT_REVIEW_STATUS[int(review.status) + 1][1],  # 返回产品状态
-					'value': review.status,
+					'value': str(review.status),
 				}
 			})
 
