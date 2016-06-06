@@ -1,25 +1,14 @@
 # -*- coding: utf-8 -*-
 
-import json
-from datetime import datetime
-
-from django.http import HttpResponseRedirect, HttpResponse
 from django.template import RequestContext
 from django.shortcuts import render_to_response
-from django.db.models import F
 from django.contrib.auth.decorators import login_required
 
 from core import resource
-from core import paginator
 from core.jsonresponse import create_response
 
 import models as app_models
-import export
-from apps import request_util
-from modules.member import integral as integral_api
-from mall.promotion import utils as mall_api
 from mall import export as mall_export
-import termite.pagestore as pagestore_manager
 
 FIRST_NAV = mall_export.PRODUCT_FIRST_NAV
 
@@ -32,41 +21,19 @@ class Evaluate(resource.Resource):
 		"""
 		响应GET
 		"""
-		if 'id' in request.GET:
-			project_id = 'new_app:evaluate:%s' % request.GET.get('related_page_id', 0)
-			#处理删除异常
-			try:
-				evaluate = app_models.Evaluate.objects.get(id=request.GET['id'])
-			except:
-				c = RequestContext(request, {
-					'first_nav_name': FIRST_NAV,
-					'second_navs': mall_export.get_mall_product_second_navs(request),
-					'second_nav_name': mall_export.PRODUCT_REVIEW_NAV,
-					'is_deleted_data': True
-				})
-				
-				return render_to_response('evaluate/templates/editor/workbench.html', c)
-			
+		evaluate = None
+		select_type = 'ordinary'
+		is_create_new_data = True
+		project_id = 'new_app:evaluate:0'
+		try:
+			evaluate = app_models.EvaluateTemplateSetting.objects.get(owner_id=request.manager.id)
+			select_type = evaluate.template_type
+			related_page_id = evaluate.related_page_id
+			project_id = 'new_app:evaluate:%s' % related_page_id
 			is_create_new_data = False
-		else:
-			evaluate = None
-			is_create_new_data = True
-			project_id = 'new_app:evaluate:0'
-		
-		_, app_name, real_project_id = project_id.split(':')
-		if real_project_id != '0':
-			pagestore = pagestore_manager.get_pagestore('mongo')
-			pages = pagestore.get_page_components(real_project_id)
-			if not pages:
-				c = RequestContext(request, {
-					'first_nav_name': FIRST_NAV,
-					'second_navs': mall_export.get_mall_product_second_navs(request),
-					'second_nav_name': mall_export.PRODUCT_REVIEW_NAV,
-					'is_deleted_data': True
-				})
-				
-				return render_to_response('evaluate/templates/editor/workbench.html', c)
-		
+		except:
+			pass
+
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
 			'second_navs': mall_export.get_mall_product_second_navs(request),
@@ -74,6 +41,7 @@ class Evaluate(resource.Resource):
 			'evaluate': evaluate,
 			'is_create_new_data': is_create_new_data,
 			'project_id': project_id,
+			'select_type': select_type
 		})
 		
 		return render_to_response('evaluate/templates/editor/workbench.html', c)
@@ -83,17 +51,14 @@ class Evaluate(resource.Resource):
 		"""
 		响应PUT
 		"""
-		data = request_util.get_fields_to_be_save(request)
-		evaluate = app_models.Evaluate(**data)
+		evaluate = app_models.EvaluateTemplateSetting(
+			owner_id = request.manager.id,
+			template_type = request.POST['template_type'],
+			related_page_id = request.POST['related_page_id']
+		)
 		evaluate.save()
-		error_msg = None
-		
-		data = json.loads(evaluate.to_json())
-		data['id'] = data['_id']['$oid']
-		if error_msg:
-			data['error_msg'] = error_msg
+
 		response = create_response(200)
-		response.data = data
 		return response.get_response()
 	
 	@login_required
@@ -101,24 +66,7 @@ class Evaluate(resource.Resource):
 		"""
 		响应POST
 		"""
-		data = request_util.get_fields_to_be_save(request)
-		update_data = {}
-		update_fields = set(['name', 'start_time', 'end_time'])
-		for key, value in data.items():
-			if key in update_fields:
-				update_data['set__'+key] = value
-		app_models.Evaluate.objects(id=request.POST['id']).update(**update_data)
-		
-		response = create_response(200)
-		return response.get_response()
-	
-	@login_required
-	def api_delete(request):
-		"""
-		响应DELETE
-		"""
-		app_models.Evaluate.objects(id=request.POST['id']).delete()
-		
+		app_models.EvaluateTemplateSetting.objects(owner_id=request.manager.id).update(set__template_type=request.POST.get('template_type', 'ordinary'))
 		response = create_response(200)
 		return response.get_response()
 

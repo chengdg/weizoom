@@ -31,15 +31,12 @@ class Evaluates(models.Document):
 		'db_alias': 'apps'
 	}
 
-
-TEMPLATE_ORDINARY = 0
-TEMPLATE_CUSTOMIZED = 1
 class EvaluateTemplateSetting(models.Document):
 	"""
 	手机端评价页面模版
 	"""
 	owner_id = models.LongField() #创建人id
-	template_type = models.IntField(default=TEMPLATE_ORDINARY)
+	template_type = models.StringField(default='ordinary', max_length=20) #模版类型
 	related_page_id = models.StringField(default='', max_length=100) #组件page_id
 
 	meta = {
