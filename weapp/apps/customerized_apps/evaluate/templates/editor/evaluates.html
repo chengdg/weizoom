@@ -1,8 +1,18 @@
 {% extends "content_base_v2.html" %}
+{% load apps_filter %}
 {% block css %}
 <style type="text/css">
 .exportProgress_msg,#downloadLink{
     margin-right:0!important;
+}
+.edui-default{
+    z-index: 9999!important;
+}
+.edui-mask{
+    display: none;
+}
+.modal-body .fl > div{
+    margin-bottom: 5px;
 }
 </style>
 {% endblock %}
@@ -20,7 +30,7 @@
     <div class="panel panel-default mt20 xb-rightPanel">
         <div class="panel-header clearfix">
             <a href="javascript: void 0" class="btn btn-default fr ml10 mr10 mt10 xa-export">
-				导出文件
+				下载导出文件
 			</a>
 			<a href="/apps/evaluate/evaluate/" class="btn btn-default fr ml10 mt10">
 				评价模版
@@ -57,12 +67,16 @@
 
 
 {% block js %}
+<!-- *start_prunt_task* -->
+    <!-- [prunt_task] 
+      {
+        "task": "weizoom-load-app-views-dialogs"
+      }
+    -->
+{{ "evaluate"|load_app_views_and_dialogs|safe }}
+<!-- *end_prunt_task* -->
 {% verbatim %}
 <script id="products-review" type="text/x-jquery-tmpl">
-    <div class=" div_export clearfix xb-rightPanel pb10">
-        <a href="javascript:void(0);" class="btn fr btn-default xa-export" id="export_data_file">导出结果</a>
-
-    </div>
     <table id="productReviewListTable" class="table table-bordered table-condensed xb-stripedTable xb-noTdBorder xb-noBottom xb-noBorder xb-theadBg">
         ${data.stickied_count}
         <thead>
@@ -87,7 +101,7 @@
             <td width="100">${review.status.name}</td>
             <td width="80">
                 {{if review.status.value === '0'}}
-                    <a href="/mall2/product_review/?id=${review.id}">审核</a>
+                    <a data-id=${review.id} class="xa-verify">审核</a>
                 {{/if}}
                 {{if review.status.value === '1'}}
                     <a href="/mall2/product_review/?id=${review.id}">修改</a>&nbsp;&nbsp;
@@ -203,6 +217,16 @@ $(document).ready(function(){
             exportFileView.doExportAfterApi();
         };
     };
-  })
+
+    $('.panel-body').delegate('.xa-verify','click',function(){
+        var activityId = $(this).attr('data-id');
+        W.dialog.showDialog('W.dialog.app.evaluate.ViewParticipanceDataDialog',{
+            activityId: activityId,
+            success: function(data) {
+                // alert(data);
+            }
+        });
+    });
+})
 </script>
 {% endblock %}
