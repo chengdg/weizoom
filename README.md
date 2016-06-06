@@ -104,6 +104,11 @@ def step_impl(context):
 	4. bdd_server执行完毕后把结果解析成http响应发回。
 	5. call_bdd_server收到响应后，根据约定判定是否执行成功，以及显示信息。
 
+如图：
+![](bdd_server.png)
+
+如果图片没渲染出来，请查看<https://git2.weizzz.com:84/weizoom/bddserver/raw/master/bdd_server.png>
+
 ### 3.2. 文件结构
 
 因为behave的限制，实现BDD_SERVER必须为此目录结构：
@@ -158,7 +163,8 @@ code-base中具有上述文件结构
 **注**： behave不支持steps目录中子目录的steps文件，参见<https://github.com/behave/behave/issues/169>。
 
 ### 4.3.2 subtree
-增加bdd_server子目录的方式
+#### 增加bdd_server子目录的方式
+
 ```
 git remote add -f bddserver https://git2.weizzz.com:84/weizoom/bddserver.git
 git subtree add --prefix=bddserver bddserver master --squash
@@ -168,7 +174,14 @@ git subtree add --prefix=bddserver bddserver master --squash
 git subtree add --prefix=weapp/bddserver bddserver master --squash
 ```
 
-更新代码
+#### 更新代码
+
+因为subtree目录本身就是代码的一部分，所以按照git更新就可以了，而且只用一个人更新并提交代码即可。
+如果没有增加过remote，需要第一次更新时候执行：
+```
+git remote add -f bddserver https://git2.weizzz.com:84/weizoom/bddserver.git
+```
+
 ```
 git subtree pull --prefix=bddserver bddserver master --squash
 ```
