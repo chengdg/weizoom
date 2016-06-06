@@ -30,17 +30,18 @@ W.dialog.app.evaluate.ViewParticipanceDataDialog = W.dialog.Dialog.extend({
 	},
 	
 	onShow: function(options) {
-		this.activityId = options.activityId;
+		this.product_review_id = options.product_review_id;
+
 	},
 	
 	afterShow: function(options) {	
-		if (this.activityId) {
+		if (this.product_review_id) {
 			W.getApi().call({
-				app: 'apps/evaluate',
-				resource: 'evaluate_participance',
+				app: 'apps/evaluates',
+				resource: 'evaluates',
 				scope: this,
 				args: {
-					id: this.activityId
+					id: this.product_review_id
 				},
 				success: function(data) {
 					this.$dialog.find('.modal-body').text(data);
@@ -48,7 +49,31 @@ W.dialog.app.evaluate.ViewParticipanceDataDialog = W.dialog.Dialog.extend({
 				error: function(resp) {
 				}
 			})
-		}	
+		}
+		var source = $("#app-evaluate-viewParticipanceDataDialog-dialog-tmpl").html();
+		var template = Handlebars.compile(source);
+		var context = {datetime: "2016/03/03",content: "This is my first post!",product_name:"PS4"};
+		var html = template(context);
+
+		$(".xa-modify").click(function(event){
+            var $el = $(event.currentTarget);
+            var status = $el.attr("data-status");
+            W.getApi().call({
+                app: 'apps/evaluate',
+                resource: 'evaluate_participance',
+                method: 'post',
+                args: {
+                    product_review_id: this.product_review_id,
+                    status: status
+                },
+                success: function(){
+                    W.showHint('success', '操作成功');
+                },
+                error: function(){
+                    W.showHint('error', '操作失败');
+                }
+            })
+        })	
 	},
 	
 	/**

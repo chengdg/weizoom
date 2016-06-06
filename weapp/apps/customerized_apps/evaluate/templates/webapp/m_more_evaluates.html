@@ -1,82 +1,61 @@
-{% extends "apps_base.html" %}
-
-{% block css %}
-<style type="text/css">
-	h1 {
-		color: #00F;
-	}
-	.xui-record {
-		margin: 10px 15px;
-		padding: 5px;
-		box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-		border-radius: 5px;
-	}
-	.xui-record .xui-inner-content {
-		color: #8F8F8F;
-	}
-	a.xui-button {
-		padding: 10px;
-		display: block;
-		text-align: center;
-		color: #FFF;
-		margin: 10px 15px;
-		background-color: rgba(0, 125, 255, 0.5);
-		border-radius: 10px;
-	}
-</style>
-{% endblock %}
-
+{% extends "../webapp_content_base.html" %}
 {% block content-panel %}
-<div>
-	<h1 class="tc">Evaluate({{record.id}})</h1>
-	<div>
-		<div class="xui-recordContainer">
-			{% for item in record.items %}
-			<div class="xui-record">
-				<h3>{{item.0}}</h3>
-				<p class="xui-inner-content">{{item.1}}</p>
-			</div>
-			{% endfor %}
-			<div class="xui-record">
-				<h3>电话</h3>
-				<input name="tel" type="text" placeholder="请输入电话号码" />
-			</div>
-		</div>
-		<div>
-			<a href="javascript:void(0);" class="xa-join xui-button" data-id="{{record.id}}">参与活动</a>
-		</div>
-	</div>
+<div class="xui-reviewAllPage xui-page xa-page">
+    <div class="xui-title pr">
+        <i data-ui-role="goBack"></i>
+        <span class="em9">更多评价</span>
+    </div>
+    <div class="xui-content">
+        <ul class="xui-reviewlist">
+            {% for review in reviews %}
+                <li>
+                    <div class="clearfix pb10" style="padding-top:12px;">
+                        <div class="fl">
+                            <div class="xui-user">
+                                <img src="{% if review.member_icon %}{{ review.member_icon }}{% else %}/static/img/mobile/user-1.jpg{% endif %}" data-allow-autoplay="true">
+                            </div>
+                            <span class="ml5 xa-memberName">
+                                <!-- TODO: 处理autoescape off -->
+                                {{review.member_name |safe}}
+                            </span>
+                        </div>
+                        <span class="fr" style="line-height:30px;">{{ review.created_at|date("Y-m-j") }}</span>
+                    </div>
+                    <p class="em85 c6">{{ review.review_detail }}</p>
+                    {% if review.custom_model_properties %}
+                    <div class="pt5">
+                        {% for property in review.custom_model_properties %}
+                        <span class="mr10">{{ property.property_value }}</span>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    {% if review.reviewed_product_pictures.length > 0 %}
+                    <div class="xui-reviewImg clearfix mt10">
+                        {% for picture in review.reviewed_product_pictures %}
+                            {% if picture|truncatechars(15) === 'http://weappimg...'%}
+                            <img width="50" height="50" src="{{picture.att_url}}!60" full-src="{{picture.att_url}}">
+                            {% else %}
+                            <img width="50" height="50" src="{{picture.att_url}}">
+                            {% endif%}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
 </div>
 {% endblock %}
 
 {% block js %}
-<script type="text/javascript">
-	W.pageId = "{{request.GET.page_id}}";
-	$(document).ready(function() {
-		$('.xa-join').click(function(event) {
-			event.stopPropagation();
-			event.preventDefault();
-			var $link = $(event.currentTarget);
-			var id = $link.attr('data-id');
-			var tel = $.trim($('[name="tel"]').val());
-			W.getApi().call({
-				app: 'm/apps/evaluate',
-				resource: 'evaluate_participance',
-				method: 'put',
-				args: {
-					woid: W.webappOwnerId,
-					belong_to: id,
-					tel: tel
-				},
-				success: function(data) {
-					alert('参与成功');
-				},
-				error: function(data) {
-					alert('参与失败');
-				}
-			})
-		});
-	});
+<script>
+    $(document).ready(function(){
+        var spanMemberName = $(".xa-memberName");
+        for(var i = 0; i < spanMemberName.length; i++) {
+            var str = $(spanMemberName[i]).text().trim();
+            var str_name = str.substring(0,1)+"**"+str[str.length-1];
+            $(spanMemberName[i]).html(str_name)
+        }
+    })
 </script>
 {% endblock %}
-
