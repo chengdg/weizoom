@@ -10,11 +10,15 @@
             <li>您当前所在位置</li>
             <li><a href="/mall2/product_list/?shelve_type=1">商品管理</a></li>
             <li><a href="/apps/evaluate/evaluates/">评价管理</a></li>
-            <li class="active">配置评价模版</li>
+            <li class="active">评价模版</li>
         </ul>
     </div>
     
     <div style="background-color: #EAEEF7;" class="clearfix">
+        <div class="xui-workbench-header">
+            <h3>评价模版</h3>
+            <p>通过调整商品评价模版，可以满足不同应用场景的需求，手机普通评价或者更有价值的用户反馈</p>
+        </div>
         <div id="leftPanel" class="fl xui-workbench-leftPanel xui-hide"></div>
         
         <div id="phonePanel" class="xui-workbench-phonePanel xui-section fl">
@@ -60,7 +64,7 @@
         "task": "weizoom-load-termite-components"
       }
     -->
-  {{ '["appkit.page", "appkit.componentadder", "appkit.qa", "appkit.selection", "appkit.textlist"]'|load_termite_components|safe }}
+  {{ '["appkit.page", "appkit.componentadder", "appkit.qa", "appkit.selection", "appkit.submitbutton", "appkit.textlist"]'|load_termite_components|safe }}
   <!-- *end_prunt_task* -->
   
   <script type="text/javascript">
