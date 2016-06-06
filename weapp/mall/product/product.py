@@ -1486,6 +1486,7 @@ class ProductModelPrice(resource.Resource):
         """更新商品规格价格
         """
         model_infos = json.loads(request.POST.get('model_infos', '[]'))
+        woid = request.webapp_owner_id
         for model_info in model_infos:
             if not model_info.get('id', None):
                 # 商品没有规格的情况, 避免报错
@@ -1502,6 +1503,20 @@ class ProductModelPrice(resource.Resource):
 
             product_model.update(price=price)
 
+            #更新对应同步的商品状态
+            if not request.user_profile.webapp_type:
+                from .tasks import update_sync_product_status
+                product_id = product_model[0].product_id
+                products = models.Product.objects.filter(owner_id=woid, id=product_id)
+                models.Product.fill_details(request.manager, products, {
+                    'with_product_model': True,
+                    'with_image': True,
+                    'with_property': True,
+                    'with_model_property_info': True,
+                    'with_all_category': True,
+                    'with_sales': True
+                })
+                update_sync_product_status(products[0], request)
         response = create_response(200)
         return response.get_response()
 
