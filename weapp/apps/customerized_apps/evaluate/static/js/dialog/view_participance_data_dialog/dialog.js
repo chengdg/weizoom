@@ -31,14 +31,13 @@ W.dialog.app.evaluate.ViewParticipanceDataDialog = W.dialog.Dialog.extend({
 	
 	onShow: function(options) {
 		this.product_review_id = options.product_review_id;
-
 	},
 	
-	afterShow: function(options) {	
+	afterShow: function(options) {
 		if (this.product_review_id) {
 			W.getApi().call({
-				app: 'apps/evaluates',
-				resource: 'evaluates',
+				app: 'apps/evaluate',
+				resource: 'evaluate_review',
 				scope: this,
 				args: {
 					id: this.product_review_id
