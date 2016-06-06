@@ -3,6 +3,40 @@
 {% load workbench_filter %}
 {% load apps_filter %}
 
+{% block css %}
+<style>
+    .xui-workbench-header{
+        background: #fff;
+        padding: 0 20px 10px 20px;
+        margin: 19px 17px;
+        border: 1px solid #DCE3EB;
+    }
+    .xui-workbench-header h3{
+        font-weight: bold;
+        font-size: 16px;
+    }
+    .xui-hidden{
+        display: none;
+    }
+    .xui-workbench-selector{
+        position: absolute;
+        left: 373px;
+        margin-top: 75px;
+        border: 1px solid #DCE3EB;
+        padding: 10px 15px;
+        width: 400px;
+        background: white;
+    }
+    .xui-workbench-selector label{
+        display: inline-block;
+        margin-left: 15px;
+    }
+    .xui-workbench-selector label input{
+        margin-top: -3px;
+    }
+</style>
+{% endblock %}
+
 {% block content-panel %}
 <div id="workbench" class="xui-wepage-workbenchPage clearfix pr xui-appPage-commonStyle">
     <div class="relative">
@@ -19,13 +53,24 @@
             <h3>评价模版</h3>
             <p>通过调整商品评价模版，可以满足不同应用场景的需求，手机普通评价或者更有价值的用户反馈</p>
         </div>
+        <div class="xui-workbench-selector xa-workbench-selector">
+            选择商品评价的模版
+            <label class="xui-selectBtn {% if select_type == 'ordinary' %}xui-selected{% endif %} xui-i-ordinary">
+                <input type="radio" {% if select_type == 'ordinary' %}checked="checked"{% endif %} value="ordinary" />普通模版
+                <i class="xui-selectedIcon {% if select_type == 'ordinary' %}xui-hidden{% endif %}"></i>
+            </label>
+            <label class="xui-selectBtn {% if select_type == 'custom' %}xui-selected{% endif %} xui-i-custom">
+                <input type="radio" {% if select_type == 'custom' %}checked="checked"{% endif %} value="custom" />自定义模版
+                <i class="xui-selectedIcon {% if select_type == 'custom' %}xui-hidden{% endif %}"></i>
+            </label>
+        </div>
         <div id="leftPanel" class="fl xui-workbench-leftPanel xui-hide"></div>
         
         <div id="phonePanel" class="xui-workbench-phonePanel xui-section fl">
             <div id="phone" class="xui-phone ">
                 <div id="phoneSkin" class="xui-i-skin">
                     <div class="xui-i-title">
-                        <span class="xa-title">微页面标题</span>
+                        <span class="xa-title">评价模版</span>
                     </div>
                     <iframe name="phoneFrame" id="phoneIFrame" src="/termite2/webapp_design_page/?project_id={{project_id}}&design_mode=1" height="100%" border="none"></iframe>
                     <div id="phoneSkinCover" class="hide xui-i-skinCover"></div>
@@ -34,21 +79,8 @@
         </div>
         <div id="rightPanel" class="fl xui-workbench-rightPanel xui-hide" style="margin-bottom: 90px;"></div>
         <div class="xui-bottomActionBar xa-stickyBar">
-            {% if not evaluate %}
-                <button class="xa-save btn btn-primary">保存</button>
-                <button class="xa-preview btn btn-default ml20">预览</button>
-            {% else %}
-                {% if evaluate.status_text == "未开始" %}
-                    <button class="xa-save btn btn-primary">保存</button>
-                    <button class="xa-preview btn btn-default ml20">预览</button>
-                {% endif %}
-                {% if evaluate.status_text == "进行中" %}
-                    进行中，不可更改
-                {% endif %}
-                {% if evaluate.status_text == "已结束" %}
-                    已结束，不可更改
-                {% endif %}
-            {% endif %}
+            <button class="xa-save btn btn-primary">保存</button>
+            <button class="xa-preview btn btn-default ml20">预览</button>
         </div>
     </div>
 </div>
@@ -64,7 +96,7 @@
         "task": "weizoom-load-termite-components"
       }
     -->
-  {{ '["appkit.page", "appkit.componentadder", "appkit.qa", "appkit.selection", "appkit.submitbutton", "appkit.textlist"]'|load_termite_components|safe }}
+  {{ '["appkit.page", "appkit.evaluatedescription", "appkit.componentadder", "appkit.qa", "appkit.selection", "appkit.submitbutton", "appkit.textlist"]'|load_termite_components|safe }}
   <!-- *end_prunt_task* -->
   
   <script type="text/javascript">
@@ -78,6 +110,16 @@
     var bottomDistance = 110;
     /* 自动选中cid，当页面进来的时候 */
     W.autoSelectCid = 2;
+    //是否隐藏组件控制面板
+    W.hideActionPanel = true;
+
+    //阻止删除第一个组件
+    W.preventFirstComponentDelected = true;
+
+    var select_type = "{{ select_type }}";
+    var used = false;
+    "ordinary" === select_type || (W.hideActionPanel = false);
+
     
     var loadPages = function(pageManagerView) {
       W.getApi().call({
@@ -104,6 +146,20 @@
           if (firstPage) {
             pageManagerView.activePage(page);
           }
+            _.delay(function(){
+                 var $frame = $('#phoneIFrame').contents();
+                var $container = $frame.find('.wa-evaluate-container');
+                var $container_sibs = $container.parent().siblings();
+                var $body = $container.find('.wa-i-header');
+                if('custom' === select_type){
+                    $body.hide();
+                    $container_sibs.show();
+                }else{
+                    $body.show();
+                    $container_sibs.hide();
+                }
+            }, 200);
+
         },
         error: function(resp) {
           alert('Failed to load pages in JSON. Please check it.');
@@ -117,12 +173,7 @@
       
       $('#leftPanel').css('min-height' ,height+ 'px');
       $('#workbench').css('min-height' ,height+ 'px');
-      $(window).bind('beforeunload', function() {
-        if (isDirtyWorkbenchIndicatorVisible) {
-          return '您对页面的编辑还没保存，请先保存页面'
-        } else {
-        }
-      })
+
       
       var pageManagerView = new W.workbench.PageManagerView({
         el: '#leftPanel',
@@ -147,29 +198,26 @@
       synchronizer.run();
       W.Synchronizer = synchronizer;
       
-      loadPages(pageManagerView);
+      "ordinary" === select_type || loadPages(pageManagerView);
       
       $('.xa-save').click(function() {
           var that = this;
         // 保存model
         W.Synchronizer.manualSync(function(page, data) {
             that.disabled = true;
-          var descriptionModel = page.components[0].model;
-          var name = descriptionModel.get('title');
-          var startTime = descriptionModel.get('start_time')+":00";
-          var endTime = descriptionModel.get('end_time')+":00";
+          var components = page.components;
+            console.warn('=================');
+            console.warn(components);
           var relatedPageId = data['project_id'];
           var args = {
-            "name": name,
-            "start_time": startTime,
-            "end_time": endTime
+            template_type: select_type
           };
+            var method;
           if (isCreateNewData) {
-            var method = 'put';
+            method = 'put';
             args['related_page_id'] = relatedPageId;
           } else {
-            var method = 'post';
-            args['id'] = W.activityId;
+            method = 'post';
           }
           W.getApi().call({
             app: 'apps/evaluate',
@@ -231,27 +279,82 @@
           }
         });
       });
+
+
+        //组件切换
+        $('.xa-workbench-selector').delegate('label', 'click', function(){
+            var $frame = $('#phoneIFrame').contents();
+            $frame.find(".xa-designPage div[data-cid='"+W.autoSelectCid+"']").get(0).click();
+
+            var $this = $(this);
+            if($this.hasClass('xui-selected')) return;
+            var $input = $this.find('input');
+            var $icon = $this.find('i');
+            var $this_s = $this.siblings();
+            var $input_s = $this_s.find('input');
+            var $icon_s = $this_s.find('i');
+            select_type = $input.val();
+
+            var $rightPanel = $('#propertyEditor');
+            if(!$rightPanel.html() || $rightPanel.html().trim() == ''){
+                $rightPanel.hide();
+            }else{
+                $rightPanel.show();
+            }
+
+            $this.addClass('xui-selected');
+            $icon.addClass('xui-hidden');
+            $input.prop('checked', true);
+
+            $this_s.removeClass('xui-selected');
+            $input_s.prop('checked', false);
+            $icon_s.removeClass('xui-hidden');
+
+            var $container = $frame.find('.wa-evaluate-container');
+            var $container_sibs = $container.parent().siblings();
+            var $bar = $frame.find('.xa-actionPanel .xa-add, .xa-delete');
+            var $body = $container.find('.wa-i-header');
+
+            if('custom' === select_type){
+                $bar.show();
+                $body.hide();
+                used || loadPages(pageManagerView);
+                used = true;
+                $container_sibs.show();
+            }else{
+                $body.show();
+                $bar.hide();
+                $container_sibs.hide();
+            }
+        });
       
       $(document).click(function() {
         // 点击空白处，触发事件
         W.Broadcaster.trigger('designpage:cancel_delete');
       });
-        // 滚动浮动在底部
-          var stickyMenu = function(){
-              var winScrollTop = $(window).scrollTop();
-          　　var scrollHeight = $(document).height();
-          　　var windowHeight = $(window).height();
-              var gap = scrollHeight - winScrollTop - windowHeight;
-              if( gap < 44 ){
-                  $('.xa-stickyBar').css({ 'position': 'absolute'}).removeClass('fxd');
-              }else{
-                  $('.xa-stickyBar').css({ 'position': 'fixed' }).addClass('fxd');
-              }
-          };
+
+      // 滚动浮动在底部
+      var stickyMenu = function(){
+          var winScrollTop = $(window).scrollTop();
+      　　var scrollHeight = $(document).height();
+      　　var windowHeight = $(window).height();
+          var gap = scrollHeight - winScrollTop - windowHeight;
+          if( gap < 44 ){
+              $('.xa-stickyBar').css({ 'position': 'absolute'}).removeClass('fxd');
+          }else{
+              $('.xa-stickyBar').css({ 'position': 'fixed' }).addClass('fxd');
+          }
+      };
+      stickyMenu();
+      $(window).bind('scroll resize',(function() {
           stickyMenu();
-          $(window).bind('scroll resize',(function() {
-              stickyMenu();
-          }));
+      }));
+
+      $(window).bind('beforeunload', function() {
+        if (isDirtyWorkbenchIndicatorVisible) {
+          return '您对页面的编辑还没保存，请先保存页面'
+        }
+      });
     });
   </script>
 {% block js %}{% endblock %}

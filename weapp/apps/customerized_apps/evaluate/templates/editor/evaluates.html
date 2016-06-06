@@ -267,7 +267,7 @@ $(document).ready(function(){
     };
 
     $('.panel-body').delegate('.xa-verify','click',function(){
-        var product_review_id = $(this).attr('data-id');
+        var product_review_id = $(this).attr('data-product-review-id');
         W.dialog.showDialog('W.dialog.app.evaluate.ViewParticipanceDataDialog',{
             product_review_id: product_review_id,
             success: function(data) {

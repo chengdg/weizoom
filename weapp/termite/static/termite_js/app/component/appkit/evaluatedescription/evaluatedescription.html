@@ -1,7 +1,72 @@
 {% load workbench_filter %}
 
 {% ifequal component.type 'appkit.evaluatedescription' %}
-    <div class="wui-evaluate-container">
-        <div class="wui-i-body">阿道夫岁的根深蒂固</div>
+    <div class="wui-evaluate-container wa-evaluate-container">
+        <div class="wui-i-header">
+            <div class="wui-i-product-info">
+                <img src="">
+                <p class="wui-i-product-name"></p>
+                <p class="wui-i-product-desc"></p>
+            </div>
+            <div>
+                <span>商品评分</span>
+                <span class="wui-i-product-score">
+                    <span id='dj_product_score' data-value="5">
+                        <i data-grade="1"></i>
+                        <i data-grade="2"></i>
+                        <i data-grade="3"></i>
+                        <i data-grade="4"></i>
+                        <i data-grade="5"></i>
+                    </span>
+                </span>
+            </div>
+        </div>
+        <div class="wui-i-body wa-i-header">
+            <div class="wui-i-desc">
+                <p>还可以输入200字</p>
+                <textarea placeholder="长度在5-200之间\n写下购买体会或者给我们意见等, 可以为其他朋友在购买时提供参考和意见"></textarea>
+            </div>
+            <div class="wui-i-upload-img">
+                <span>上传图片</span>
+            </div>
+            <div class="wui-i-service-score">
+                <div>
+                    <span>服务态度</span>
+                    <span class="wui-i-manner-score">
+                        <span data-value="5">
+                            <i data-grade="1"></i>
+                            <i data-grade="2"></i>
+                            <i data-grade="3"></i>
+                            <i data-grade="4"></i>
+                            <i data-grade="5"></i>
+                        </span>
+                    </span>
+                </div>
+                <div>
+                    <span>发货速度</span>
+                    <span class="wui-i-speed-score">
+                        <span data-value="5">
+                            <i data-grade="1"></i>
+                            <i data-grade="2"></i>
+                            <i data-grade="3"></i>
+                            <i data-grade="4"></i>
+                            <i data-grade="5"></i>
+                        </span>
+                    </span>
+                </div>
+                <div>
+                    <span>物流服务</span>
+                    <span class="wui-i-logistical-score">
+                        <span data-value="5">
+                            <i data-grade="1"></i>
+                            <i data-grade="2"></i>
+                            <i data-grade="3"></i>
+                            <i data-grade="4"></i>
+                            <i data-grade="5"></i>
+                        </span>
+                    </span>
+                </div>
+            </div>
+        </div>
     </div>
 {% endifequal %}

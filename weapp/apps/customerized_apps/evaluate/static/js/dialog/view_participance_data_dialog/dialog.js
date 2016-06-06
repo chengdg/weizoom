@@ -32,26 +32,25 @@ W.dialog.app.evaluate.ViewParticipanceDataDialog = W.dialog.Dialog.extend({
 	
 	onShow: function(options) {
 		this.product_review_id = options.product_review_id;
-
 	},
 	
-	afterShow: function(options) {	
-		// if (this.product_review_id) {
-		// 	W.getApi().call({
-		// 		app: 'apps/evaluates',
-		// 		resource: 'evaluates',
-		// 		scope: this,
-		// 		args: {
-		// 			id: this.product_review_id
-		// 		},
-		// 		success: function(data) {
-					
-		// 		},
-		// 		error: function(resp) {
-		// 		}
-		// 	})
-		// }
-		var source = $("#app-evaluate-viewParticipanceResultDialog-dialog-tmpl").html();
+	afterShow: function(options) {
+		if (this.product_review_id) {
+			W.getApi().call({
+				app: 'apps/evaluate',
+				resource: 'evaluate_review',
+				scope: this,
+				args: {
+					id: this.product_review_id
+				},
+				success: function(data) {
+					this.$dialog.find('.modal-body').text(data);
+				},
+				error: function(resp) {
+				}
+			})
+		}
+		var source = $("#app-evaluate-viewParticipanceDataDialog-dialog-tmpl").html();
 		var template = Handlebars.compile(source);
 		var context = {datetime: "2016/03/03",content: "This is my first post!",product_name:"PS4"};
 		var html = template(context);
