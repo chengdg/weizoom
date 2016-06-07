@@ -2,18 +2,19 @@
 
 Feature: jobs在后台对已有评价进行审核
 """
-    [商品详情页的验证]
     1.审核通过：用户评价内容将显示在商品详情页；
     2.屏蔽处理：该评价将不被允许显示在商品详情页；
     3.通过并置顶：是指审核通过该评论，并且置顶显示该评价；
     4.置顶时间为15天，置顶周期结束后，恢复按评价时间倒序显示。
     5 同款商品，3个置顶操作，最后置顶的，排在最上面
     6.同款商品，最多可置顶3条评价信息，第4条置顶时，第一条置顶信息失去优先级，按原有时间顺序排列
+    7.回复会员评论：回复的内容显示在会员个人中心列表中；
 """
+@mall @apps @app_evaluate @reply_product_evaluate
 Background:
     Given 重置weapp的bdd环境
-    Given jobs登录系统:weapp
-    And jobs已添加商品:weapp
+    Given jobs登录系统
+    And jobs已添加商品
         """
         [{
             "name": "商品1",
@@ -26,8 +27,60 @@ Background:
             "price": "30.00"
         }]
         """
+    And jobs配置商品评论自定义模板
+    """
+    {
+        "type":"customized",
+        "answer":
+            {
+                "title":"您使用产品后的感受是",
+                "is_required":"是"
+            },
+        "choose":
+            {
+                "title":"您对本产品的包装是否满意",
+                "type":"单选",
+                "is_required":"是",
+                "option":[{
+                        "options":"是"
+                    },{
+                        "options":"否"
+                    },{
+                        "options":"不好说"
+                    }]
+            },
+        "participate_info":
+            {
+                "items_select":
+                    [{
+                        "item_name":"姓名",
+                        "is_selected":"false"
+                    },{
+                        "item_name":"手机",
+                        "is_selected":"true"
+                    },{
+                        "item_name":"邮箱",
+                        "is_selected":"true"
+                    },{
+                        "item_name":"QQ",
+                        "is_selected":"false"
+                    },{
+                        "item_name":"职位",
+                        "is_selected":"false"
+                    },{
+                        "item_name":"住址",
+                        "is_selected":"false"
+                    }],
+                "items_add":
+                    [{
+                        "item_name":"填写项1",
+                        "is_required":"是"
+                    }]
+            }
+    }
+    """
     Given bill关注jobs的公众号
-    And jobs已有的订单:weapp
+    And jobs已有的订单
         """
         [{
             "order_no":"1",
@@ -157,7 +210,9 @@ Background:
             }]
         }]
         """
-
+    
+    Given bill关注jobs的公众号
+    When 清空浏览器
     When bill访问jobs的webapp
     And bill完成订单'1'中'商品1'的评价
         """
@@ -265,7 +320,7 @@ Background:
         }
         """
     Given tom关注jobs的公众号
-    And jobs已有的订单:weapp
+    And jobs已有的订单
         """
         [{
             "order_no":"3",
@@ -304,7 +359,9 @@ Background:
                 "count": 1
             }]
         }]
-        """        
+        """ 
+    Given tom关注jobs的公众号 
+    When 清空浏览器      
     When tom访问jobs的webapp
     And tom完成订单'3'中'商品1'的评价
         """
@@ -335,47 +392,39 @@ Background:
             "title":"",
         }
         """
-
-
-    1.审核通过:用户评价内容将显示在商品详情页
-    2.屏蔽处理：该评价将不被允许显示在商品详情页
-    3.通过并置顶：是指审核通过该评论，并且置顶显示该评价
-    4.回复会员评论：回复的内容显示在会员个人中心列表中；
-
-
-    Given jobs登录系统:weapp
-    When jobs已完成对商品的评价信息审核:weapp
+    Given jobs登录系统
+    When jobs已完成对商品的评价信息审核
         """
         [{
             "product_name": "商品1",
             "order_no": "3",
             "member": "tom",
-            "status": "-1"
+            "status": "已屏蔽"
         },{
             "product_name": "商品1",
             "order_no": "1",
             "member": "bill",
-            "status": "1"
+            "status": "通过审核"
         },{
             "product_name": "商品1",
             "order_no": "12",
             "member": "bill",
-            "status": "2",          
+            "status": "通过并置顶",          
         },{
            "member": "tom",
            "order_no": "4",
            "product_name": "商品2",
-           "status": "0"
+           "status": "通过审核"
         },{
            "member": "bill",
            "order_no": "2",
            "product_name": "商品2",
-           "status": "2"
+           "status": "通过并置顶"
         }]
         """  
-
+    When 清空浏览器
     When bill访问jobs的webapp
-    Then bill在商品详情页成功获取'商品1'的评价列表
+    Then bill在商品详情页成功获取'商品1'的评价列表::h5
         """
         [{
             "member": "bill",
@@ -385,19 +434,20 @@ Background:
             "review_detail": "1商品1还不错！！！！！"
         }]
         """
-
-    And bill在商品详情页成功获取'商品2'的评价列表
+    And bill在商品详情页成功获取'商品2'的评价列表::h5
         """
         [{
             "member": "bill",
-            "review_detail": "商品2不太好！！！！！！！"
+            "review_detail": "2商品2不太好！！！！！！！"
+        },{
+            "member": "tom",
+            "review_detail": "4商品2还不错！！！！！"
         }]
         """  
-    Given jobs登录系统:weapp
-    
+    Given jobs登录系统
     And jobs完成'商品1'的评价的回复
-    	"""
-        {
+        """
+        [{
             "product_name": "商品1",
             "order_no": "3",
             "member": "bill",
@@ -409,20 +459,27 @@ Background:
             "member": "bill|",
             "review_detail": "12商品1还不错！！！！！",
             "reply": "谢谢评价"
-        }
+        }]
         """
-        And jobs完成'商品2'的评价的回复
-    	"""
-        {
+    And jobs完成'商品2'的评价的回复
+        """
+        [{
             "product_name": "商品2",
-            "order_no": "4",
+            "order_no": "2",
             "member": "bill",
             "review_detail": "商品2不太好！！！！！！！",
             "reply": "谢谢评价"
-        }
+        },{
+            "product_name": "商品2",
+            "order_no": "4",
+            "member": "tom",
+            "review_detail": "4商品2还不错！！！！！",
+            "reply": "谢谢评价"
+        }]
         """
-        When bill访问jobs的webapp
-        Then bill在个人中心成功获取'商品1'的评价列表
+    When 清空浏览器
+    When bill访问jobs的webapp
+    Then bill在个人中心成功获取'商品1'的评价列表
         """
         [{
             "member": "bill",            
@@ -431,6 +488,16 @@ Background:
         },{
             "member": "bill",            
             "review_detail": "1商品1还不错！！！！！",
+            "reply": "谢谢评价"
+        }]
+        """
+    When 清空浏览器
+    When tom访问jobs的webapp
+    Then tom在个人中心成功获取'商品2'的评价列表
+        """
+        [{
+            "member": "tom",            
+            "review_detail": "4商品2还不错！！！！！",
             "reply": "谢谢评价"
         }]
         """
