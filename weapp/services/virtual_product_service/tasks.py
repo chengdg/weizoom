@@ -37,8 +37,10 @@ def deliver_virtual_product(request, args):
 
 	oid2order = {}
 	oid2product_id2count = {}
+	order_ids = []
 	for o2p in order2products:
 		order = o2p.order
+		order_ids.append(order.order_id)
 		product = o2p.product
 		oid = order.id
 
@@ -70,11 +72,25 @@ def deliver_virtual_product(request, args):
 						else:
 							oid2product_id2count[oid][_product.id] = premium.count
 
+	order2groups = mall_models.OrderHasGroup.objects.filter(order_id__in=order_ids)
+	order_id2group_status = {}
+	for o2g in order2groups:
+		order_id2group_status[o2g.order_id] = o2g.group_status
+
 	print 'virtual order count:', len(oid2order)
 	for oid in oid2product_id2count:
 		can_update_order_status = True  #是否可以更改订单的发货状态
 		print 'process order id:', oid
 		order = oid2order[oid]
+
+		#判断团购状态
+		if order_id2group_status.has_key(order.order_id):
+			if order_id2group_status[order.order_id] == 1:
+				print u'团购订单%s可以发货' % order.order_id
+			else:
+				can_update_order_status = False
+				print u'团购订单%s团购未成功，跳过发货，团购状态%d' % (order.order_id, order_id2group_status[order.order_id])
+				continue
 
 		#获取会员信息
 		member = member_models.WebAppUser.get_member_by_webapp_user_id(order.webapp_user_id)
