@@ -150,7 +150,7 @@
                  var $frame = $('#phoneIFrame').contents();
                 var $container = $frame.find('.wa-evaluate-container');
                 var $container_sibs = $container.parent().siblings();
-                var $body = $container.find('.wa-i-header');
+                var $body = $container.find('.wa-i-body');
                 if('custom' === select_type){
                     $body.hide();
                     $container_sibs.show();
@@ -176,6 +176,9 @@
                cids.push(cid);
             }
         }
+        cids.map(function(cid){
+            page.removeComponent(cid);
+        });
     }
     
     $(document).ready(function() {
@@ -213,8 +216,6 @@
       
       $('.xa-save').click(function() {
           var that = this;
-          console.warn('W.Synchronizer=================');
-          console.warn(W.Synchronizer);
             if('ordinary' === select_type){
                 filterPageJson(W.Synchronizer.currentPage);
             }
@@ -222,8 +223,6 @@
         W.Synchronizer.manualSync(function(page, data) {
             that.disabled = true;
           var components = page.components;
-            console.warn('components=================');
-            console.warn(components);
           var relatedPageId = data['project_id'];
           var args = {
             template_type: select_type
@@ -235,22 +234,22 @@
           } else {
             method = 'post';
           }
-{#          W.getApi().call({#}
-{#            app: 'apps/evaluate',#}
-{#            resource: 'evaluate',#}
-{#            method: method,#}
-{#            args: args,#}
-{#            success: function(data) {#}
-{#              W.showHint('success', '保存成功');#}
-{#              _.delay(function() {#}
-{#                window.location.href = '/apps/evaluate/evaluates/';#}
-{#              }, 500);#}
-{#            },#}
-{#            error: function(resp) {#}
-{#              W.showHint('error', '保存失败!');#}
-{#                that.disabled = false;#}
-{#            }#}
-{#          });#}
+          W.getApi().call({
+            app: 'apps/evaluate',
+            resource: 'evaluate',
+            method: method,
+            args: args,
+            success: function(data) {
+              W.showHint('success', '保存成功');
+              _.delay(function() {
+                window.location.href = '/apps/evaluate/evaluates/';
+              }, 500);
+            },
+            error: function(resp) {
+              W.showHint('error', '保存失败!');
+                that.disabled = false;
+            }
+          });
         });
       });
       
@@ -329,7 +328,7 @@
             var $container = $frame.find('.wa-evaluate-container');
             var $container_sibs = $container.parent().siblings();
             var $bar = $frame.find('.xa-actionPanel .xa-add, .xa-delete');
-            var $body = $container.find('.wa-i-header');
+            var $body = $container.find('.wa-i-body');
 
             if('custom' === select_type){
                 $bar.show();
