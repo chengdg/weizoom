@@ -76,6 +76,56 @@ class EvaluatesRelations(resource.Resource):
 		}
 		return response.get_response()
 
+	@login_required
+	def api_post(request):
+		"""
+        处理关联评价
+        """
+		owner_id = request.manager.id
+
+		product_ids = request.POST.get('id', '[]')
+		product_ids = json.loads(product_ids)
+
+		try:
+			evaluate_relation = app_models.EvaluatesRelations.objects.create(
+				owner_id = owner_id,
+				related_product_ids = product_ids,
+				created_at = datetime.now()
+			)
+
+			for id in product_ids:
+				app_models.EvaluatesRelatedProducts.objects.create(
+					owner_id = owner_id,
+					product_id = id,
+					belong_to = str(evaluate_relation.id)
+				)
+
+			response = create_response(200)
+
+		except:
+			response = create_response(500)
+			response.errMsg  = u'评价关联失败，请稍后重试！'
+
+		return response.get_response()
+
+	@login_required
+	def api_delete(request):
+		"""
+        解除关联评价
+        """
+		relation_id = request.POST['id']
+
+		try:
+			app_models.EvaluatesRelations.objects(id = relation_id).delete()
+			app_models.EvaluatesRelatedProducts.objects(belong_to = relation_id).delete()
+
+			response = create_response(200)
+		except:
+			response = create_response(500)
+			response.errMsg = u'解除评价关联失败，请稍后重试！'
+
+		return response.get_response()
+
 class EvaluatesProducts(resource.Resource):
 	app = 'apps/evaluate'
 	resource = 'search_products_dialog'
@@ -99,9 +149,9 @@ class EvaluatesProducts(resource.Resource):
 			'owner_id': owner_id
 		}
 		if product_name:
-			param['name'] = product_name
+			param['name__icontains'] = product_name
 		if bar_code:
-			param['bar_code'] = bar_code
+			param['bar_code__icontains'] = bar_code
 
 		products = mall_models.Product.objects.exclude(id__in = related_products_ids).filter(**param).order_by('-created_at')
 

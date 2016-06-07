@@ -62,9 +62,9 @@ class EvaluatesRelatedProducts(models.Document):
 	"""
 	已经关联过的商品
 	"""
+	belong_to = models.StringField(default="", max_length=100)  # 对应的评价关联id
 	owner_id = models.LongField()  #商家id
 	product_id = models.IntField() #商品id
-
 	meta = {
 		'collection': 'evaluate_related_products',
 		'db_alias': 'apps'
