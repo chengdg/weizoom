@@ -9,7 +9,7 @@ Background:
     Given jobs登录系统
     When jobs配置商品评论自定义模板
     """
-    [{
+    {
         "type":"customized",
         "answer":
             [{
@@ -30,7 +30,7 @@ Background:
                     }]
             }],
         "participate_info":
-            [{
+            {
                 "items_select":
                     [{
                         "item_name":"姓名",
@@ -56,8 +56,8 @@ Background:
                         "item_name":"职称",
                         "is_required":"否"
                     }]
-            }]
-    }]
+            }
+    }
     """
     And jobs已添加商品
         """
@@ -69,7 +69,6 @@ Background:
             "price": 20.00
         }]
         """
-    Given bill关注jobs的公众号
     And jobs已有的订单
         """
         [{
@@ -108,7 +107,7 @@ Background:
             }]
         }]
         """
-
+    Given bill关注jobs的公众号
     When bill访问jobs的webapp
     Then bill成功获取个人中心的'待评价'列表
         """
@@ -140,7 +139,7 @@ Scenario:1 评价包括文字与晒图
         }
         """
     Then 订单'1'中'商品1'的评商品评价提示信息'发表评价失败'
-    # And 订单'1'中'商品1'的评商品评价提示详情'请填写问答题'
+    # And 订单'1'中'商品1'的评商品评价提示详情'请填写必填项'
 
     When bill访问jobs的webapp
     And bill完成订单'1'中'商品1'的评价
@@ -156,7 +155,7 @@ Scenario:1 评价包括文字与晒图
         }
         """
     Then 订单'1'中'商品1'的评商品评价提示信息'发表评价失败'
-    # And 订单'1'中'商品1'的评商品评价提示详情'请填写选择题'
+    # And 订单'1'中'商品1'的评商品评价提示详情'请填写必填项'
 
     When bill访问jobs的webapp
     And bill完成订单'1'中'商品1'的评价
@@ -172,7 +171,7 @@ Scenario:1 评价包括文字与晒图
         }
         """
     Then 订单'1'中'商品1'的评商品评价提示信息'发表评价失败'
-    # And 订单'1'中'商品1'的评商品评价提示详情'请填写手机号'
+    # And 订单'1'中'商品1'的评商品评价提示详情'请填写必填项'
 
     #文字在5-200以内，填写必填项，成功提交
     When bill完成订单'1'中'商品1'的评价
