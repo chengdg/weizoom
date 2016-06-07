@@ -1,82 +1,406 @@
 {% extends "apps_base.html" %}
-
-{% block css %}
-<style type="text/css">
-	h1 {
-		color: #00F;
-	}
-	.xui-record {
-		margin: 10px 15px;
-		padding: 5px;
-		box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-		border-radius: 5px;
-	}
-	.xui-record .xui-inner-content {
-		color: #8F8F8F;
-	}
-	a.xui-button {
-		padding: 10px;
-		display: block;
-		text-align: center;
-		color: #FFF;
-		margin: 10px 15px;
-		background-color: rgba(0, 125, 255, 0.5);
-		border-radius: 10px;
-	}
-</style>
-{% endblock %}
-
 {% block content-panel %}
-<div>
-	<h1 class="tc">Evaluate({{record.id}})</h1>
-	<div>
-		<div class="xui-recordContainer">
-			{% for item in record.items %}
-			<div class="xui-record">
-				<h3>{{item.0}}</h3>
-				<p class="xui-inner-content">{{item.1}}</p>
-			</div>
-			{% endfor %}
-			<div class="xui-record">
-				<h3>电话</h3>
-				<input name="tel" type="text" placeholder="请输入电话号码" />
-			</div>
-		</div>
-		<div>
-			<a href="javascript:void(0);" class="xa-join xui-button" data-id="{{record.id}}">参与活动</a>
-		</div>
-	</div>
+<div id="dj_request_owner_id" class="xui-productReviewCreatePage pb10" data-value="{{request.webapp_owner_id}}">
+    <div id="dj_product_created" class="xui-title pr" data-value="{{created}}">
+        <i id="dj_product_review_arrive" data-value="{{send_time}}" data-ui-role="goBack"></i>
+        <span id="dj_order_has_product_id" class="em9" data-value="{{order_has_product_id}}">发表评价</span>
+    </div>
+    {% if not created %}
+        <div id="dj_order_id"class="xui-productReview" data-value="{{order_id}}">
+            <div class="xui-product disT mb15 w">
+                <div class="xui-productImg disTc">
+                    <img src="{{product.thumbnails_url}}" data-allow-autoplay="false">
+                </div>
+                <div id="dj_product_id" class="productInfo disTc vt pl10" data-value="{{product.id}}">
+                    <div class="xui-productname em85 c65">{{product.name}}</div>
+                    <div class="xui-productSpecificationAndPrice em85 c65">
+                        {% if product.model.property_values.length > 0 %}
+                            {% for property_value in product.model.property_values %}
+                                {% if loop.first %}{{property_value.name}}
+                                {% else %}/ {{property_value.name}}
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="xui-reviewGrade">
+                <span class="c3 em9">商品评价</span>
+                <span class="xui-starGrade xa-starGrade">
+                    <span id='dj_product_score' data-value="5" class="xui-starGrade xui-starGrade5">
+                        <i data-grade="1"></i>
+                        <i data-grade="2"></i>
+                        <i data-grade="3"></i>
+                        <i data-grade="4"></i>
+                        <i data-grade="5"></i>
+                    </span>
+                </span>
+            </div>
+            <div class="xui-reviewText">
+                <!-- 发表评价判断 -->
+                <div class="em7 c9 xui-limitNum">
+                    还可以输入200字
+                </div>
+                <div class="pr xui-reviewHint">
+                    <textarea id='dj_review_detail' cols="30" rows="10" class="em8"></textarea>
+                    <div class="pa em8 xui-i-box p5" style="top:0;left:0;margin-top:8px;color:#cbcbcb">
+                        <div>
+                            长度在5—200之间
+                        </div>写下购买体会或者给我们意见等，可以为其他朋友在购买时候提供参考和意见~
+                    </div>
+                </div>
+            </div>
+            <div class="xui-productPhoto mt10">
+                <div class="xui-addPhoto xa-addPhoto mb10 fl pr">
+                    <input name="imgFile123" data-ui-role="uploadImage" type="file" style="opacity:0;top:0;left:0;width:45px;height:45px;" class="pa" multiple>
+                </div>
+                <div class="xui-deletePhoto xa-deletePhoto" style="display:none;">
+                </div>
+                <span class="cRed em95 none xa-finishEdit xui-finishEdit ml10">完成</span>
+                <span class="em75 xa-text xui-text">上传图片</span>
+            </div>
+        </div>
+        <div class="xui-serviceReview mt10 mb20">
+            <!-- 发表评价判断 -->
+            {% if has_order_review %}
+            <h2 class="c3 em9">
+                服务评分
+                <span id="dj_order_review_is_created" data-value="1" class="cRed fr">已完成</span>
+            </h2>
+            {% else %}
+            <h2 class="c3 em9">
+                服务评分
+                <span id="dj_order_review_is_created" data-value="0" class="cRed fr"></span>
+            </h2>
+            <div class="xui-i-box">
+                <div class="xui-serviceAttitude mb20">
+                    <span class="c65 em8">服务态度</span>
+                    <span class="xa-starGrade xui-starGrade">
+                        <span id="dj_serve_score" data-value='5' class="xui-starGrade xui-starGrade5">
+                            <i data-grade="1"></i>
+                            <i data-grade="2"></i>
+                            <i data-grade="3"></i>
+                            <i data-grade="4"></i>
+                            <i data-grade="5"></i>
+                        </span>
+                    </span>
+                </div>
+                <div class="xui-deliverySpeed mb20">
+                    <span class="c65 em8">发货速度</span>
+                    <span class="xa-starGrade xui-starGrade">
+                        <span id="dj_deliver_score" data-value='5' class="xui-starGrade xui-starGrade5">
+                            <i data-grade="1"></i>
+                            <i data-grade="2"></i>
+                            <i data-grade="3"></i>
+                            <i data-grade="4"></i>
+                            <i data-grade="5"></i>
+                        </span>
+                    </span>
+                </div>
+                <div class="xui-logisticsService">
+                    <span class="c65 em8" >物流服务</span>
+                    <span class="xa-starGrade xui-starGrade">
+                        <span id="dj_process_score" data-value='5' class="xui-starGrade xui-starGrade5">
+                            <i data-grade="1"></i>
+                            <i data-grade="2"></i>
+                            <i data-grade="3"></i>
+                            <i data-grade="4"></i>
+                            <i data-grade="5"></i>
+                        </span>
+                    </span>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        <input type="submit" class="xui-reviewBtn xa-reviewBtn em95 mb10" value="发表评论">
+    {% else %}
+        <div id="dj_order_id"class="xui-productReview" data-value="{{order_id}}">
+            <div class="xui-product disT mb15 w">
+                <div class="xui-productImg disTc">
+                    <img src="{{product.thumbnails_url}}" data-allow-autoplay="false">
+                </div>
+                <div id="dj_product_id" class="productInfo disTc vt pl10" data-value="{{product.id}}">
+                    <div class="xui-productname em85 c65">{{product.name}}</div>
+                    <div class="xui-productSpecificationAndPrice em85 c65">
+                        {% for model in product.custom_model_properties%}
+                            {% if forloop.first %}{{model.property_value}}
+                            {% else %}/ {{model.property_value}}
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div id="dj_product_review_id" class="xui-reviewGrade" data-value="{{reviewed_product.id}}">
+                <span class="c3 em9">商品评价</span>
+                <span class="">
+                    <span id='dj_product_score' data-value="{{reviewed_product.product_score}}" class="xui-starGrade xui-starGrade{{reviewed_product.product_score}}">
+                    </span>
+                </span>
+            </div>
+            <div class="xui-reviewText">
+                <span class="cRed em85">已评价</span>
+                <div class="c65 em8 xui-myReview">
+                     {{reviewed_product.review_detail}}
+                </div>
+            </div>
+            <div class="xui-productPhoto mt10">
+                <div class="xui-addPhoto xa-addPhoto mb10 fl pr">
+                    <input name="imgFile123" data-ui-role="uploadImage" type="file" style="opacity:0;top:0;left:0;width:45px;height:45px;" class="pa" multiple>
+                </div>
+                <div class="xui-deletePhoto xa-deletePhoto" style="display:none;">
+                </div>
+                <span class="cRed em95 none xa-finishEdit xui-finishEdit ml10">完成</span>
+                <span class="em75 xa-text xui-text">上传图片</span>
+            </div>
+        </div>
+        <div class="xui-serviceReview mt10 mb20">
+             <h2 class="c3 em9" style="margin-top:0;margin-bottom:0;">
+                服务评分
+                <span id="dj_order_review_is_created" data-value="1" class="cRed fr">已完成</span>
+            </h2>
+        </div>
+        <input type="submit" class="xui-reviewBtn xui-red xa-appendImgBtn em95 mb10" value="追加晒图">
+    {% endif %}
 </div>
 {% endblock %}
 
 {% block js %}
+
+<script type="text/javascript" src="/static/mobile_v3/lib/exif.js"></script>
+<script type="text/javascript" src="/static/mobile_v3/gmu/widget/addImg.js"></script>
 <script type="text/javascript">
-	W.pageId = "{{request.GET.page_id}}";
-	$(document).ready(function() {
-		$('.xa-join').click(function(event) {
-			event.stopPropagation();
-			event.preventDefault();
-			var $link = $(event.currentTarget);
-			var id = $link.attr('data-id');
-			var tel = $.trim($('[name="tel"]').val());
-			W.getApi().call({
-				app: 'm/apps/evaluate',
-				resource: 'evaluate_participance',
-				method: 'put',
-				args: {
-					woid: W.webappOwnerId,
-					belong_to: id,
-					tel: tel
-				},
-				success: function(data) {
-					alert('参与成功');
-				},
-				error: function(data) {
-					alert('参与失败');
-				}
-			})
-		});
-	});
+$(document).ready(function(){
+    // ajax 避免重复提交
+
+    // Get the delta-time between server and client
+    var product_review_arrive = parseFloat($('#dj_product_review_arrive').data('value'));
+    var the_local_time = parseFloat(Date.now());
+    var detal_time = product_review_arrive  - the_local_time / 1000.0;
+
+    var slag = true;
+    var $textarea = $('textarea');
+    var insetNum = 0;
+    if( $textarea.length == 1){
+        var insetNum = $textarea.val().length;
+    }
+
+    $('input[type="submit"]').on('click', function(e){
+        // 是否已经创建过商品的评价
+        var created = $("#dj_product_created").data('value');
+        if(!created){
+        if( insetNum < 5 || insetNum >200){
+            $('body').alert({
+                isShow: true,
+                info: '请输入5-200字',
+                speed: 2000,
+                callBack: function() {
+                    // window.location.reload();
+                }
+            });
+            return false;
+        }}
+        e.preventDefault();
+        var send_time = Date.now() / 1000.0;
+        var product_review_id = $("#dj_product_review_id").data('value')
+        var order_id = $('#dj_order_id').data('value');  // 订单ID
+        var product_id = $('#dj_product_id').data('value');
+        var order_has_product_id = $('#dj_order_has_product_id').data('value');
+        var product_score = $('#dj_product_score').data('value');
+        var review_detail = $('#dj_review_detail').val();
+        var serve_score = $('#dj_serve_score').data('value');
+        var deliver_score = $('#dj_deliver_score').data('value');
+        var process_score = $('#dj_process_score').data('value');
+        var picture_list = [];
+        var webapp_owner_id = $('#dj_request_owner_id').data('value');
+        $('.xui-imgList img').each(function(){
+                  picture_list.push($(this).attr('data-src'))
+        });
+        if(!created){
+            if (!slag){return;}
+            slag = false;
+            $('body').alert({
+                isShow: true,
+                info: '玩命传输中请等待...',
+                speed: 20000,
+                callBack: function() {
+                    // window.location.reload();
+                }
+            });
+
+            W.Resource.put({
+                data:{
+                    order_id:order_id,
+                    product_id:product_id,
+                    product_score:product_score,
+                    review_detail:review_detail,
+                    serve_score:serve_score,
+                    deliver_score:deliver_score,
+                    order_has_product_id:order_has_product_id,
+                    process_score:process_score,
+                    send_time:send_time,
+                    detal_time: detal_time,
+                    picture_list: JSON.stringify(picture_list),
+                },
+                resource: 'mall.review_product',
+                success:function(data){
+                    successful_url = "/mall/review_product_success/?woid="+webapp_owner_id+"&has_waiting_review="+data.has_waiting_review;
+                    _.delay(function() {
+                        window.location.href = successful_url;
+                    }, 50)
+                    $textarea.val('');
+                },
+                error: function(data){
+                    $('body').alert({
+                        isShow: true,
+                        info: data['msg'],
+                        speed: 3000,
+                        callBack: function() {
+                            // window.location.reload();
+                        }
+                    });
+                    slag = true;
+                    return ;
+                }
+            })
+            // W.getApi().call({
+            //     app:'webapp',
+            //     api:'project_api/call',
+            //     method:'post',
+            //     args:_.extend({
+            //         target_api:'product_review/create',
+            //         module:'mall',
+            //         woid:W.webappOwnerId,
+            //         order_id:order_id,
+            //         product_id:product_id,
+            //         product_score:product_score,
+            //         review_detail:review_detail,
+            //         serve_score:serve_score,
+            //         deliver_score:deliver_score,
+            //         order_has_product_id:order_has_product_id,
+            //         process_score:process_score,
+            //         send_time:send_time,
+            //         detal_time: detal_time,
+            //         picture_list: JSON.stringify(picture_list),
+            //     }),
+            //     success:function(data){
+            //         successful_url = "./?woid="+webapp_owner_id+"&module=mall&model=product_review&action=redirect&identify="+data;
+            //         _.delay(function() {
+            //             window.location.href = successful_url;
+            //         }, 50)
+            //         $textarea.val('');
+            //     },
+            //     error: function(data){
+            //         alert('没有可连接的网络');
+            //         return ;
+            //     },
+            // });
+        }else{
+            var $img = $('.xui-imgList img');
+            if( $img.length ==0 ){
+
+                    $('body').alert({
+                        isShow: true,
+                        info: '请添加图片',
+                        speed: 2000,
+                        callBack: function() {
+                            // window.location.reload();
+                        }
+                    });
+                    return false;
+            }
+            if (!slag){return;}
+            slag = false;
+            $('body').alert({
+                isShow: true,
+                info: '玩命传输中请等待...',
+                speed: 20000,
+                callBack: function() {
+                    // window.location.reload();
+                }
+            });
+            W.Resource.post({
+                resource: 'mall.review_product',
+                data: {
+                    order_id:order_id,
+                    product_id:product_id,
+                    product_review_id: product_review_id,
+                    order_has_product_id:order_has_product_id,
+                    send_time:send_time,
+                    detal_time: detal_time,
+                    picture_list: JSON.stringify(picture_list),
+                },
+                success:function(data){
+                    successful_url = "/mall/review_product_success/?woid="+webapp_owner_id+"&has_waiting_review="+data.has_waiting_review;
+                    _.delay(function() {
+                        window.location.href = successful_url;
+                    }, 50)
+                },
+                error: function(data){
+                    alert('没有可连接的网络');
+                    return ;
+                },
+            })
+            // W.getApi().call({
+            //     app:'webapp',
+            //     api:'project_api/call',
+            //     method:'post',
+            //     args:_.extend({
+            //         target_api:'product_review_picture/update',
+            //         module:'mall',
+            //         woid:W.webappOwnerId,
+            //         product_review_id: product_review_id,
+            //         order_has_product_id:order_has_product_id,
+            //         send_time:send_time,
+            //         detal_time: detal_time,
+            //         picture_list: JSON.stringify(picture_list),
+            //     }),
+            //     success:function(data){
+            //         successful_url = "./?woid="+webapp_owner_id+"&module=mall&model=product_review&action=redirect&identify="+data;
+            //         _.delay(function() {
+            //             window.location.href = successful_url;
+            //         }, 50)
+            //     },
+            //     error: function(data){
+            //         alert('没有可连接的网络');
+            //         return ;
+            //     },
+            // });
+        }
+    });
+    // 点击星评
+    $('.xa-starGrade i').click(function(event){
+        var $star = $(event.currentTarget);
+        var starGrade = $star.data('grade');
+        $star.parent('span').attr('class','xui-starGrade xui-starGrade'+starGrade);
+        $star.parent('span').data('value', starGrade);  // 方便数据采集
+    });
+    $('.xui-reviewHint').click(function(){
+        $(this).find('.xui-i-box').hide();
+        $('textarea').focus();
+    });
+    // 字数实时提示
+    if( $textarea.length == 1){
+        var limitNum = 200;
+        var insetNum = $textarea.val().length;
+        var $limitText = '<span>还可以输入'+limitNum+'字</span>';
+        var keyup_or_change = function() {
+           insetNum = $(this).val().length;
+           var remainder = limitNum - insetNum;
+           if( insetNum > 4 ){
+                $('.xa-reviewBtn').addClass('xui-red');
+           }else {
+                $('.xa-reviewBtn').removeClass('xui-red')
+           };
+           if( insetNum > 200 ){
+               remainder = insetNum - limitNum;
+               $limitText = '<span>已超出<span class="cRed">'+remainder+'</span>个字</span>';
+           }else{
+               $limitText =  '<span>还可以输入'+remainder+'字</span>';
+           }
+           $('.xui-limitNum').html($limitText);
+        }
+        $('textarea').change(keyup_or_change).keyup(keyup_or_change);
+    }
+});
 </script>
 {% endblock %}
-

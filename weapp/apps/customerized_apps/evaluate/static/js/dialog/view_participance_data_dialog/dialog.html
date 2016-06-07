@@ -32,16 +32,20 @@
 		<div class="fl xui-evaluate-modalLef">
 			<div>
 				<span>评价日期：</span>
-				<span>{{datetime}}</span>
+				<span>{{time}}</span>
+			</div>
+			<div>
+				<span>商品评星：</span>
+				<span>{{score}}</span>		
 			</div>
 			<div>
 				<span>晒单图片：</span>
-
+				<img src="{{img}}">
 			</div>
 			<div>
 				<span>评价内容：</span>
 				<span class="vt xui-evaluate-comment">
-					{{content}}
+					{{detail}}
 				</span>
 			</div>
 		</div>
@@ -52,15 +56,15 @@
 			</div>
 			<div>
 				<span>&nbsp;&nbsp;&nbsp;&nbsp;订单号：</span>
-				<a>20160405190356789</a>
+				<a>{{order_id}}</a>
 			</div>
 			<div>
 				<span>会员名称：</span>
-				<a>张全蛋</a>
+				<a>{{member_name}}</a>
 			</div>
 			<div>
 				<span>会员等级：</span>
-				<span>钻石会员</span>
+				<span>{{member_grade}}</span>
 			</div>
 			<div>
 				<span>会员分组：</span>
@@ -69,7 +73,7 @@
 				<span>小二黑微家人</span>
 			</div>
 		</div>
-		<table class="xui-evaluate-table table table-bordered">
+<!-- 		<table class="xui-evaluate-table table table-bordered">
 			<tbody>
 				<tr>
 					<td>您使用/食用产品后的感受(需要改进的地方也请留下您的意见)</td>
@@ -84,5 +88,5 @@
 					<td></td>
 				</tr>					
 			</tbody>
-		</table>
+		</table> -->
 </script>

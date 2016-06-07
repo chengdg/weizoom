@@ -1,82 +1,69 @@
 {% extends "apps_base.html" %}
-
-{% block css %}
-<style type="text/css">
-	h1 {
-		color: #00F;
-	}
-	.xui-record {
-		margin: 10px 15px;
-		padding: 5px;
-		box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-		border-radius: 5px;
-	}
-	.xui-record .xui-inner-content {
-		color: #8F8F8F;
-	}
-	a.xui-button {
-		padding: 10px;
-		display: block;
-		text-align: center;
-		color: #FFF;
-		margin: 10px 15px;
-		background-color: rgba(0, 125, 255, 0.5);
-		border-radius: 10px;
-	}
-</style>
-{% endblock %}
-
 {% block content-panel %}
-<div>
-	<h1 class="tc">Evaluate({{record.id}})</h1>
-	<div>
-		<div class="xui-recordContainer">
-			{% for item in record.items %}
-			<div class="xui-record">
-				<h3>{{item.0}}</h3>
-				<p class="xui-inner-content">{{item.1}}</p>
-			</div>
-			{% endfor %}
-			<div class="xui-record">
-				<h3>电话</h3>
-				<input name="tel" type="text" placeholder="请输入电话号码" />
-			</div>
-		</div>
-		<div>
-			<a href="javascript:void(0);" class="xa-join xui-button" data-id="{{record.id}}">参与活动</a>
-		</div>
-	</div>
+<div class="xui-orderReviewListPage pb20">
+    <div class="xui-title pr" style="background-color:#f0f0f0;">
+        <i data-ui-role="goBack"></i>
+        <span class="em9">待评价</span>
+    </div>
+    {% if orders %}
+    <div class="xui-orderReview">
+        {% for order in orders %}
+        {% if not order.order_is_reviewed %}
+        <div class="xui-i-box">
+            <div class="xui-orderNum em8 c9">
+                <span>订单号<span class="c65 pl5">{{ order.order_id }}</span></span>
+                <span class="fr">{{ order.created_at|date("Y. m. j H:i", -480 )}}</span>
+            </div>
+            <div class="xui-product pb10">
+                   {% for product in order.products %}
+                       {% if not product.has_review or not product.has_picture %}
+                        <div class="xui-productInfo pt10 disT w">
+                            <a href="javascript:void(0);" class="xui-productImg disTc">
+                                <img src="{{product.thumbnails_url}}" />
+                            </a>
+                            <div class="c65 disTc vt em85 pl10">
+                                <a href="javascript:void(0);" class="c65">{{ product.name }}</a>
+                                <div>
+                                    {% if product.model.property_values.length > 0 %}
+                                        {% for property_value in product.model.property_values %}
+                                            {% if loop.first %}{{property_value.name}}
+                                            {% else %}/ {{property_value.name}}
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endif %}
+                                </div>
+
+                                <div class="xui-button mt10">
+                                    {% if not product.has_review %}
+                                    <a href="/mall/review_product/?woid={{request.webapp_owner_id}}&order_has_product_id={{product.order_has_product_id}}&order_id={{order.order_id}}&product_id={{product.id}}&product_model_name={{product.product_model_name}}" class="xui-reviewBtn xui-comment tc fr" data-id="{{order.id}}">发表评价</a>
+                                    {% elif product.has_review and not product.has_picture %}
+                                    <a href="/mall/review_product/?woid={{request.webapp_owner_id}}&order_has_product_id={{product.order_has_product_id}}&order_id={{order.order_id}}&product_id={{product.id}}&product_model_name={{product.product_model_name}}" class="xui-reviewBtn xui-review tc fr" data-id="{{order.id}}">追加晒图</a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+            </div>
+            <div class="c9 em75 xui-money">实付款<span class="cRed em8">￥{{order.final_price.toFixed(2)}}</span></div>
+        </div>
+        {% endif %}
+        {% endfor %}
+</div>
+{% else %}
+    <div class="xa-emptyOrder">
+        <div class="xui-errorInfo xa-errorInfo"></div>
+    </div>
+{% endif %}       
 </div>
 {% endblock %}
 
 {% block js %}
-<script type="text/javascript">
-	W.pageId = "{{request.GET.page_id}}";
-	$(document).ready(function() {
-		$('.xa-join').click(function(event) {
-			event.stopPropagation();
-			event.preventDefault();
-			var $link = $(event.currentTarget);
-			var id = $link.attr('data-id');
-			var tel = $.trim($('[name="tel"]').val());
-			W.getApi().call({
-				app: 'm/apps/evaluate',
-				resource: 'evaluate_participance',
-				method: 'put',
-				args: {
-					woid: W.webappOwnerId,
-					belong_to: id,
-					tel: tel
-				},
-				success: function(data) {
-					alert('参与成功');
-				},
-				error: function(data) {
-					alert('参与失败');
-				}
-			})
-		});
-	});
+<script>
+$(document).ready(function($) {
+    if($('.xui-i-box').length == 0){
+        $('body').css('background-color','#fff');
+    }
+});
 </script>
 {% endblock %}
-

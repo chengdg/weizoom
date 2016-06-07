@@ -44,17 +44,18 @@ W.dialog.app.evaluate.ViewParticipanceDataDialog = W.dialog.Dialog.extend({
 					id: this.product_review_id
 				},
 				success: function(data) {
-					this.$dialog.find('.modal-body').text(data);
+					var context = data.items;
+					console.log(context);
+					var source = $("#app-evaluate-viewParticipanceResultDialog-dialog-tmpl").html();
+					var template = Handlebars.compile(source);					
+					var html = template(context);
+					$('.xui-modal-content').html(html);
 				},
 				error: function(resp) {
+					console.log('error');
 				}
 			})
 		}
-		var source = $("#app-evaluate-viewParticipanceDataDialog-dialog-tmpl").html();
-		var template = Handlebars.compile(source);
-		var context = {datetime: "2016/03/03",content: "This is my first post!",product_name:"PS4"};
-		var html = template(context);
-		$('.xui-modal-content').html(html);
 
 		$(".xa-modify").click(function(event){
             var $el = $(event.currentTarget);
