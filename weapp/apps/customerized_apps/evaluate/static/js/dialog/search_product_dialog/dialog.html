@@ -4,7 +4,7 @@
 	<div class="modal-content">
 		<div class="modal-header">
 			<button aria-hidden="true" data-dismiss="modal" class="close" type="button"><span class="xui-closeColor" aria-hidden="true">&times;</span></button>
-			<h3 class="modal-title" >查看结果</h3>
+			<h3 class="modal-title" >已上架商品</h3>
 		</div>
 		<div class="modal-body">
 			<div
@@ -41,10 +41,10 @@
     	<tbody>
 	        {{each(i, item) items}}
 				<tr>
-				    <td>${item.bar_code}</td>
-					<td>${item.product_name}</td>
-					<td>${item.price}</td>
-					<td>${item.evaluate_count}</td>
+				    <td class="xa-bar-code">${item.bar_code}</td>
+					<td class="xa-product-name">${item.product_name}</td>
+					<td class="xa-price">${item.price}</td>
+					<td class="xa-evaluate-count">${item.evaluate_count}</td>
 					<td><button class="btn xa-select" style="color:#FFF" data-id=${item.id}>选取</button></td>
 				</tr>
 	        {{/each}}

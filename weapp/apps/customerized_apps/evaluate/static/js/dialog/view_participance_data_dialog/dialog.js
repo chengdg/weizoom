@@ -57,19 +57,23 @@ W.dialog.app.evaluate.ViewParticipanceDataDialog = W.dialog.Dialog.extend({
 			})
 		}
 
+		var _this = this;
 		$(".xa-modify").click(function(event){
             var $el = $(event.currentTarget);
             var status = $el.attr("data-status");
             W.getApi().call({
                 app: 'apps/evaluate',
-                resource: 'evaluate_participance',
+                resource: 'evaluate_review',
                 method: 'post',
+				scope: this,
                 args: {
-                    product_review_id: this.product_review_id,
+                    product_review_id: _this.product_review_id,
                     status: status
                 },
                 success: function(){
                     W.showHint('success', '操作成功');
+					var table = $('[data-ui-role="advanced-table"]').data('view');
+					table.reload();
                 },
                 error: function(){
                     W.showHint('error', '操作失败');

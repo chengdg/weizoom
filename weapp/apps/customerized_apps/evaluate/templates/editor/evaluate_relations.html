@@ -39,7 +39,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="panel panel-default xui-tableBox p20">请通过查询选择需要关联评价的商品</div>
+	<div class="panel panel-default xui-tableBox xa-selected-products-table pt10 pb10">请通过查询选择需要关联评价的商品</div>
 	<div class="panel panel-default xui-tableBox">
 		<div 
 			class="panel-body panel-table p0 mt10"
@@ -93,7 +93,7 @@
 					${item.created_at}
 				</td>
 				<td>
-					<a href="javascript:void(0);" class="ml5 xa-viewData">解除</a>
+					<a href="javascript:void(0);" class="ml5 xa-remove-relation">解除</a>
 				</td>
 			</tr>
 			{{/each}}
@@ -110,18 +110,46 @@
 </script>
 {% endverbatim %}
 
+{% verbatim %}
+<script id="selected-products-tmpl" type="text/x-handlebars-template">
+	<table class="table table-bordered xb-stripedTable xb-noTdBorder xb-noBottom xb-noBorder xb-theadBg mb10 xa-products-table">
+		<thead>
+            <tr>
+                <th>商品信息</th>
+                <th>商品价格(元)</th>
+                <th>已获评价数</th>
+                <th>操作</th>
+            </tr>
+		</thead>
+        <tbody>
+            {{#each products}}
+            <tr data-id={{ id }}>
+                <td>
+                    <span>{{ product_name }}</span>
+                    </br>
+                    <span>{{ bar_code }}</span>
+                </td>
+                <td>
+                    {{ price }}
+                </td>
+                <td>
+                    {{ evaluate_count }}
+                </td>
+                <td style="cursor: pointer;color: #2B93DD;">
+                    <span class="xa-remove-product">移除</span>
+                </td>
+            </tr>
+            {{/each}}
+        </tbody>
+	</table>
+    <div class="p10">注：关联评价会导致各商品的评价取消置顶</div>
+    <div><button class="btn btn-success xa-relate-evaluate" style="display: block;margin: 0 auto">关联评价</button></div>
+</script>
+{% endverbatim %}
+
 <script type="text/javascript">
 $(document).ready(function() {
-	$('body').delegate('.xa-viewData', 'click', function(event) {
-		var activityId = $(event.currentTarget).parents('tr').data('id');
-		W.dialog.showDialog('W.dialog.app.evaluate.ViewParticipanceDataDialog', {
-			activityId: activityId,
-			success: function(data) {
-				alert(data);
-			}
-		});
-	});
-	
+	//商品查询
 	$('body').delegate('.xa-search', 'click', function(event) {
 		var product_name = $.trim($('[name="product_name"]').val());
 		var bar_code = $.trim($('[name="bar_code"]').val());
@@ -133,6 +161,68 @@ $(document).ready(function() {
 			}
 		});
 	});
+
+    //关联评价
+	$('body').delegate('.xa-relate-evaluate', 'click', function(event) {
+		var product_id_arr = [];
+        $('.xa-products-table tbody tr').each(function(index, el) {
+            product_id_arr.push($(el).data('id'));
+        });
+        if (product_id_arr.length < 2 ) {
+            W.showHint('error', '请至少选择两种商品！');
+            return false;
+        } else {
+            W.getApi().call({
+                app: 'apps/evaluate',
+                resource: 'evaluate_relations',
+                method: 'post',
+                args: {
+                    id: JSON.stringify(product_id_arr)
+                },
+                success: function(data) {
+                    W.showHint('success', '关联评价成功！');
+                    $('.xa-selected-products-table').html('请通过查询选择需要关联评价的商品');
+                    var table = $('[data-ui-role="advanced-table"]').data('view')
+                    table.reload();
+                },
+                error: function(response) {
+                    W.showHint('error', response.errMsg);
+                }
+            });
+        }
+	});
+
+    //移除选择的商品
+    $('body').delegate('.xa-remove-product', 'click', function(event) {
+        $(this).parents('tr').remove();
+	});
+
+    //解除评价
+    $('body').delegate('.xa-remove-relation', 'click', function(event) {
+        var relation_id = $(this).parents('tr').data('id');
+        W.getApi().call({
+			app: 'apps/evaluate',
+			resource: 'evaluate_relations',
+			method: 'delete',
+			args: {
+				id: relation_id
+			},
+			success: function(data) {
+				W.showHint('success', '解除关联评价成功！');
+                var table = $('[data-ui-role="advanced-table"]').data('view')
+                table.reload();
+			},
+			error: function(response) {
+				W.showHint('error', response.errMsg);
+			}
+		});
+	});
+
+    //重置
+    $('body').delegate('.xa-reset', 'click', function(event){
+        $('[name="product_name"]').val('');
+        $('[name="bar_code"]').val('');
+    });
 });
 </script>
 {% endblock %}

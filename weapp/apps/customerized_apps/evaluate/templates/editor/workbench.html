@@ -150,7 +150,7 @@
                  var $frame = $('#phoneIFrame').contents();
                 var $container = $frame.find('.wa-evaluate-container');
                 var $container_sibs = $container.parent().siblings();
-                var $body = $container.find('.wa-i-header');
+                var $body = $container.find('.wa-i-body');
                 if('custom' === select_type){
                     $body.hide();
                     $container_sibs.show();
@@ -165,6 +165,20 @@
           alert('Failed to load pages in JSON. Please check it.');
         }
       });
+    };
+
+    function filterPageJson(page){
+        var components = page.components;
+        var cids = [];
+        for(var i= 0, len=components.length; i<len; i++){
+            var cid = components[i].cid;
+            if(cid > 4){ //取4是因为默认的settings中已存在2，3，4组件
+               cids.push(cid);
+            }
+        }
+        cids.map(function(cid){
+            page.removeComponent(cid);
+        });
     }
     
     $(document).ready(function() {
@@ -202,12 +216,13 @@
       
       $('.xa-save').click(function() {
           var that = this;
+            if('ordinary' === select_type){
+                filterPageJson(W.Synchronizer.currentPage);
+            }
         // 保存model
         W.Synchronizer.manualSync(function(page, data) {
             that.disabled = true;
           var components = page.components;
-            console.warn('=================');
-            console.warn(components);
           var relatedPageId = data['project_id'];
           var args = {
             template_type: select_type
@@ -313,7 +328,7 @@
             var $container = $frame.find('.wa-evaluate-container');
             var $container_sibs = $container.parent().siblings();
             var $bar = $frame.find('.xa-actionPanel .xa-add, .xa-delete');
-            var $body = $container.find('.wa-i-header');
+            var $body = $container.find('.wa-i-body');
 
             if('custom' === select_type){
                 $bar.show();

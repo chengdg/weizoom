@@ -8,7 +8,9 @@ Copyright (c) 2011-2012 Weizoom Inc
 ensureNS('W.dialog.app.evaluate');
 W.dialog.app.evaluate.SearchProductDialog = W.dialog.Dialog.extend({
 	events: _.extend({
-		'click .xa-select': 'onClickSelect'
+		'click .xa-select': 'onClickSelect',
+		'click .xa-submit-dialog': 'onClickSubmitButton',
+		'click .close': 'onClickClose'
 	}, W.dialog.Dialog.prototype.events),
 	
 	templates: {
@@ -37,18 +39,52 @@ W.dialog.app.evaluate.SearchProductDialog = W.dialog.Dialog.extend({
 	 * onGetData: 获取数据
 	 */
 	onGetData: function(event) {
-		return {};
+		return this.product_arr;
 	},
 
 	onClickSelect: function(event){
 		var $target = $(event.target);
+		var $tr = $target.parents('tr');
+		var id = $target.data('id');
+		var bar_code = $tr.children('.xa-bar-code').text();
+		var product_name = $tr.children('.xa-product-name').text();
+		var price = $tr.children('.xa-price').text();
+		var evaluate_count = $tr.children('.xa-evaluate-count').text()
 		if ($target.text() == '选取') {
 			$target.text('已选取').css('background-color', '#c9c9c9');
-			this.product_arr.push($target.data('id'));
+			this.product_arr.push({
+				'id': id,
+				'bar_code': bar_code,
+				'product_name': product_name,
+				'price': price,
+				'evaluate_count': evaluate_count
+			})
 		} else {
 			$target.text('选取').css('background-color', '#30ABF9');
-			this.product_arr.pop($target.data('id'));
+			this.product_arr.pop({
+				'id': id,
+				'bar_code': bar_code,
+				'product_name': product_name,
+				'price': price,
+				'evaluate_count': evaluate_count
+			})
 		}
-		console.log(this.product_arr,44444444)
+	},
+
+	/**
+     * onClickSubmitButton: 点击“完成选择”按钮后的响应函数
+     */
+    onClickSubmitButton: function(event) {
+        var data = this.onGetData(event);
+		var content = $('#selected-products-tmpl').html();
+		var template = Handlebars.compile(content);
+		var context = {products:data};
+		$('.xa-selected-products-table').html(template(context));
+		this.$dialog.modal('hide');
+		this.product_arr = [];
+    },
+
+	onClickClose: function(event){
+		this.product_arr = [];
 	}
 });

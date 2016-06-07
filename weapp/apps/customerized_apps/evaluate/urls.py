@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
 
 import evaluate
+import evaluates
 import evaluate_participance
 import evaluate_participances
-import m_evaluate
-import evaluate_status
-import evaluates
 import evaluate_relations
+import m_evaluate
 import m_evaluating_list
+import m_more_evaluates
 import m_my_evaluates
 import remote_call
-import m_more_evaluates
 
