@@ -11,6 +11,9 @@ STATUS_WAITTING = 0
 STATUS_PASSED = 1
 STATUS_TOP = 2
 
+#默认评价置顶时间
+DEFAULT_DATETIME = datetime.strptime('2000-01-01', '%Y-%m-%d')
+
 class Evaluates(models.Document):
 	"""
 	所有用户的商品评价
