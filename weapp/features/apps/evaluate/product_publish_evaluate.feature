@@ -114,20 +114,14 @@ Background:
         """
         [{
             "order_no": "1",
-            "products": [
-                {
+            "products": [{
                     "product_name": "商品1"
-                }
-            ]
-
+                }]
         }, {
             "order_no": "2",
-            "products": [
-                {
+            "products": [{
                     "product_name": "商品2"
-                }
-            ]
-
+                }]
         }]
         """
 @mall @apps @app_evaluate @commit_app_product_comment
@@ -137,13 +131,10 @@ Scenario:1 评价包括文字与晒图
         """
         {
             "product_score": "5",
-            "serve_score": "4",
-            "deliver_score": "4",
-            "process_score": "4",
             "answer": "",
             "choose":"是",
             "name":"bill",
-            "tel":"13652587988",
+            "tel":"13013013011",
             "title":"工程师",
             "picture_list": ['1.png','2.jpg']
         }
@@ -156,13 +147,10 @@ Scenario:1 评价包括文字与晒图
         """
         {
             "product_score": "5",
-            "serve_score": "4",
-            "deliver_score": "4",
-            "process_score": "4",
             "answer": "腰不酸腿不痛，走路不抽经了！！！！",
             "choose":"",
             "name":"bill",
-            "tel":"13652587988",
+            "tel":"13013013011",
             "title":"",
             "picture_list": ['1.png','2.jpg']
         }
@@ -175,9 +163,6 @@ Scenario:1 评价包括文字与晒图
         """
         {
             "product_score": "5",
-            "serve_score": "4",
-            "deliver_score": "4",
-            "process_score": "4",
             "answer": "腰不酸腿不痛，走路不抽经了！！！！",
             "choose":"否",
             "name":"bill",
@@ -194,13 +179,10 @@ Scenario:1 评价包括文字与晒图
         """
         {
             "product_score": "4",
-            "serve_score": "4",
-            "deliver_score": "4",
-            "process_score": "4",
             "answer": "整体还可以",
             "choose":"不好说",
             "name":"bill",
-            "tel":"13650088986",
+            "tel":"13013013011",
             "title":"",
             "picture_list": ['1.png']
         }
@@ -209,20 +191,21 @@ Scenario:1 评价包括文字与晒图
         """
         [{
             "order_no": "2",
-            "products": [
-                {
+            "products": [{
                     "product_name": "商品2"
-                }
-            ]
+                }]
         }]
         """
     Then bill成功获取'商品评价'列表
         """
         [{
-            "answer": "整体还可以",
             "product_name":"商品1",
+            "answer": "整体还可以",
+            "choose":"不好说",
+            "name":"bill",
+            "tel":"13013013011",
+            "title":"",
             "picture_list":['1.png']
-
         }]
         """
 
@@ -233,13 +216,10 @@ Scenario:2 无晒图
         """
         {
             "product_score": "5",
-            "serve_score": "5",
-            "deliver_score": "5",
-            "process_score": "5",
             "answer": "商品非常好！！！",
             "choose":"是",
             "name":"bill",
-            "tel":"13650088986",
+            "tel":"13013013011",
             "title":"",
             "picture_list":[]
         }
@@ -248,24 +228,91 @@ Scenario:2 无晒图
         """
         [{
             "order_no": "1",
-            "products": [
-                {
+            "products": [{
                     "product_name": "商品1"
-                }
-            ]
-        }, {
+                }]
+        },{
             "order_no": "2",
-            "products": [
-                {
+            "products": [{
                     "product_name": "商品2"
-                }
-            ]
+                }]
         }]
         """
     Then bill成功获取'商品评价'列表
         """
         [{
-            "answer": "整体还可以",
-            "product_name":"商品1"
+            "product_name":"商品1",
+            "answer": "商品非常好！！！",
+            "choose":"是",
+            "name":"bill",
+            "tel":"13013013011",
+            "title":""
+        }]
+        """
+
+@mall @apps @app_evaluate @commit_app_product_comment
+Scenario:3 追加晒图
+    When bill完成订单'1'中'商品1'的评价
+    """
+        {
+            "product_score":"4",
+            "answer":"商品挺好的！"
+            "choose":"不好说",
+            "name":"bill",
+            "tel":"13013013011",
+            "title":"",
+            "picture_list": []
+        }
+    """
+    Then bill成功获取个人中心的'待评价'列表
+        """
+        [{
+            "order_no": "1",
+            "products": [{
+                    "product_name": "商品1"
+                }]
+        },{
+            "order_no": "2",
+            "products": [{
+                    "product_name": "商品2"
+                }]
+        }]
+        """
+    Then bill成功获取'商品评价'列表
+        """
+        [{
+            "product_name":"商品1",
+            "answer":"商品挺好的！"
+            "choose":"不好说",
+            "name":"bill",
+            "tel":"13013013011",
+            "title":""
+        }]
+        """
+    When bill完成订单'1'中'商品1'的追加晒图评价
+        """
+        {
+            "picture_list": ['1.jpg']
+        }
+        """
+    Then bill成功获取个人中心的'待评价'列表
+        """
+        [{
+            "order_no": "2",
+            "products": [{
+                    "product_name": "商品2"
+                }]
+        }]
+        """
+    Then bill成功获取'商品评价'列表
+        """
+        [{
+            "product_name":"商品1",
+            "answer":"商品挺好的！"
+            "choose":"不好说",
+            "name":"bill",
+            "tel":"13013013011",
+            "title":""
+            "picture_list":['1.jpg']
         }]
         """
