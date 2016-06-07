@@ -301,3 +301,24 @@ Scenario:4 配置自定义模板,添加所有模块
             }
     }
     """
+
+@mall @apps @app_evaluate @app_evaluate_template
+Scenario:5 配置普通模板
+    Given jobs登录系统
+    When jobs配置商品评论自定义模板
+    """
+    {
+        "type":"normal"
+    }
+    """
+    Then jobs能获得商品评价评论模板
+    """
+    {
+        "product_score":"5"
+        "evaluate": "",    
+        "picture_list":[],
+        "service_attitude":"5",
+        "delivery_speed":"5",
+        "logistics_service":"5"
+    }
+    """
