@@ -96,7 +96,7 @@ class MassSentMessages(resource.Resource):
             elif message.group_id == 0:
                 group_name = ""
             else:
-                group_name = member_group_id2name[message.group_id]
+                group_name = member_group_id2name.get(message.group_id, '')
 
             if message.member_ids != "":
                 group_name = u"自定义群发"
