@@ -505,7 +505,7 @@
         //查看选手详情
         $('.wa-rank-list').delegate('.wa-rank-pic', 'click', function(event) {
             var player_id = $(event.target).parents('.wa-rank-item').data('id');
-            window.location.href = '/m/apps/shvote/m_player_details/?webapp_owner_id='+W.webappOwnerId+'&id='+W.appRecordId+'&player_id='+player_id;
+            window.location.href = '/m/apps/shvote/m_player_details_v2/?webapp_owner_id='+W.webappOwnerId+'&id='+W.appRecordId+'&player_id='+player_id;
         });
 
         //参与投票
