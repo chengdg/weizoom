@@ -17,7 +17,7 @@ W.dialog.app.evaluate.ViewParticipanceDataDialog = W.dialog.Dialog.extend({
 
 	onInitialize: function(options) {
 		//创建富文本编辑器
-        var editor = new W.view.common.RichTextEditor({
+        editor = new W.view.common.RichTextEditor({
             el: 'textarea',
             type: 'text',
             width:837,
@@ -77,7 +77,23 @@ W.dialog.app.evaluate.ViewParticipanceDataDialog = W.dialog.Dialog.extend({
             })
         })	
 	},
-	
+
+	onClickSubmitButton: function(){
+		var content = editor.getContent();
+		W.getApi().call({
+                app: 'apps/evaluate',
+                resource: 'evaluate_participance',
+                method: 'post',
+                args: content,
+                success: function(){
+                    W.showHint('success', '操作成功');
+                    this.$dialog.modal('hide');
+                },
+                error: function(){
+                    W.showHint('error', '操作失败');
+                }
+            });
+	},
 	/**
 	 * onGetData: 获取数据
 	 */

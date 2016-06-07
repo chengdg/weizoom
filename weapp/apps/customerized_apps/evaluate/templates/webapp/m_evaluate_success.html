@@ -1,0 +1,28 @@
+{% extends "apps_base.html" %}
+{% block content-panel %}
+<div class="xui-productReviewSuccessedPage">
+    <div class="xui-placeholder"></div>
+    <div class="xui-reviewImg">
+        <img src="/static/img/mobile/review.png" alt="">
+    </div>
+    <div class="xui-button">
+        {% if has_waiting_review === "0" %}
+        <a href="/mall/home_page/?woid={{request.webapp_owner_id}}" class="xui-returnHome fl">返回首页</a>
+        {% else %}
+        <a href="/mall/home_page/?woid={{request.webapp_owner_id}}" class="xui-returnHome xui-smallReturnHome fl">返回首页</a>
+        <a href="/mall/waiting_review_orders/?woid={{request.webapp_owner_id}}" class="xui-continue cRed fr">继续评论</a>
+        {% endif %} 
+    </div>
+    
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+$(document).ready(function(){
+       
+});
+
+</script>
+
+{% endblock %}
