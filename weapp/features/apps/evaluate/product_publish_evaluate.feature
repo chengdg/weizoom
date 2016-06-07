@@ -209,7 +209,7 @@ Scenario:1 评价包括文字与晒图
         """
 
 @mall @apps @app_evaluate @commit_app_product_comment
-Scenario:2 无晒图
+Scenario:2 无晒图，追加晒图
     When bill访问jobs的webapp
     And bill完成订单'1'中'商品1'的评价
         """
@@ -248,46 +248,6 @@ Scenario:2 无晒图
             "title":""
         }]
         """
-
-@mall @apps @app_evaluate @commit_app_product_comment
-Scenario:3 追加晒图
-    When bill完成订单'1'中'商品1'的评价
-    """
-        {
-            "product_score":"4",
-            "answer":"商品挺好的！"
-            "choose":"不好说",
-            "name":"bill",
-            "tel":"13013013011",
-            "title":"",
-            "picture_list": []
-        }
-    """
-    Then bill成功获取个人中心的'待评价'列表
-        """
-        [{
-            "order_no": "1",
-            "products": [{
-                    "product_name": "商品1"
-                }]
-        },{
-            "order_no": "2",
-            "products": [{
-                    "product_name": "商品2"
-                }]
-        }]
-        """
-    Then bill成功获取'商品评价'列表
-        """
-        [{
-            "product_name":"商品1",
-            "answer":"商品挺好的！"
-            "choose":"不好说",
-            "name":"bill",
-            "tel":"13013013011",
-            "title":""
-        }]
-        """
     When bill完成订单'1'中'商品1'的追加晒图评价
         """
         {
@@ -307,8 +267,8 @@ Scenario:3 追加晒图
         """
         [{
             "product_name":"商品1",
-            "answer":"商品挺好的！"
-            "choose":"不好说",
+            "answer": "商品非常好！！！",
+            "choose":"是",
             "name":"bill",
             "tel":"13013013011",
             "title":""
