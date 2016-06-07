@@ -241,7 +241,6 @@ class EvaluateReview(resource.Resource):
 		"""
 		# 单个修改
 		if "product_review_id" in request.POST:
-
 			product_review_id = request.POST.get("product_review_id", None)
 			status = request.POST.get("status", None)
 			from modules.member.integral import increase_member_integral
@@ -281,12 +280,13 @@ class EvaluateReview(resource.Resource):
 			ids = request.POST.get("ids", '')
 			action = request.POST.get("action", '')
 			ids = ids.split(',')
+
 			from modules.member.integral import increase_member_integral
 			from modules.member import models as member_models
 
 			if action == 'pass':
 				try:
-					reviews = mall_models.ProductReview.objects.filter(owner_id=request.webapp_owner_id, id__in=ids)
+					reviews = app_models.Evaluates.objects(owner_id=request.webapp_owner_id, id__in=ids)
 
 					settings = member_models.IntegralStrategySttings.objects.get(
 						webapp_id=request.user_profile.webapp_id)
@@ -304,13 +304,13 @@ class EvaluateReview(resource.Resource):
 								if int(review.status) == 0:
 									increase_member_integral(id2member[review.member_id], settings.review_increase,
 															 '商品评价奖励')
-					reviews.update(status=1, top_time=mall_models.DEFAULT_DATETIME)
+					reviews.update(status=1, top_time=app_models.DEFAULT_DATETIME)
 					return create_response(200).get_response()
 				except:
 					return create_response(500).get_response()
 			else:
 				try:
-					mall_models.ProductReview.objects.filter(owner_id=request.webapp_owner_id, id__in=ids).update(status=-1)
+					app_models.Evaluates.objects(owner_id=request.webapp_owner_id, id__in=ids).update(status=-1)
 					return create_response(200).get_response()
 				except:
 					return create_response(500).get_response()
