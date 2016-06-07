@@ -203,7 +203,8 @@ $(document).ready(function(){
         })
     }
 
-    view.onClickModify= function(event){
+    view.onClickModify = function(event){
+
         var $el = $(event.currentTarget);
         var product_review_id = $el.attr("data-product-review-id");
         var status = $el.attr("data-status");
@@ -223,7 +224,7 @@ $(document).ready(function(){
                 W.showHint('error', '操作失败！');
             }
         })
-    },
+    }
 
     view.render();
 
