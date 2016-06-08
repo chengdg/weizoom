@@ -12,6 +12,7 @@ from django.contrib.auth.decorators import login_required
 from core import resource
 from core import paginator
 from core.jsonresponse import create_response
+from modules.member.module_api import get_member_by_id_list
 
 import models as app_models
 import export
@@ -27,9 +28,30 @@ class MyEvaluates(resource.Resource):
 		"""
 		响应GET
 		"""
+		product_id = request.GET.get('product_id','8')
+		webapp_owner_id = request.webapp_owner_id
+
+		reviews = app_models.Evaluates.objects(owner_id = webapp_owner_id, product_id = product_id)
+
+		member_ids = [review.member_id for review in reviews]
+		members = get_member_by_id_list(member_ids)
+		member_id2member = dict([(m.id, m) for m in members])
+
+		items = []
+		for review in reviews:
+			member_detail = member_id2member[review.member_id]
+			items.append({
+				'created_at': review.created_at,
+				'review_detail': review.detail,
+				'member_name': member_detail.username_for_html,
+				'member_icon': member_detail.user_icon,
+				'reviewed_product_pictures': review.pics,
+			})
+
 		c = RequestContext(request, {
 			'page_title': "更多评价",
 			'hide_non_member_cover': True, #非会员也可使用该页面
+			'reviews': items
 		})
 
 
