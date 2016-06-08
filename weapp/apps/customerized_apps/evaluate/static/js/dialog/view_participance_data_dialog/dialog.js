@@ -150,7 +150,7 @@ W.dialog.app.evaluate.ViewParticipanceDataDialog = W.dialog.Dialog.extend({
 				},
 				success: function(data) {
 					var context = data.items;
-					console.log(context);
+					console.log(context.img);
 					var source = $("#app-evaluate-viewParticipanceResultDialog-dialog-tmpl").html();
 					var template = Handlebars.compile(source);					
 					var html = template(context);
@@ -162,25 +162,25 @@ W.dialog.app.evaluate.ViewParticipanceDataDialog = W.dialog.Dialog.extend({
 			})
 		}
 
-		// $(".xa-modify").click(function(event){
-  //           var $el = $(event.currentTarget);
-  //           var status = $el.attr("data-status");
-  //           W.getApi().call({
-  //               app: 'apps/evaluate',
-  //               resource: 'evaluate_participance',
-  //               method: 'post',
-  //               args: {
-  //                   product_review_id: this.product_review_id,
-  //                   status: status
-  //               },
-  //               success: function(){
-  //                   W.showHint('success', '操作成功');
-  //               },
-  //               error: function(){
-  //                   W.showHint('error', '操作失败');
-  //               }
-  //           })
-  //       })	
+		$(".xa-modal-modify").click(function(event){
+            var $el = $(event.currentTarget);
+            var status = $el.attr("data-status");
+            W.getApi().call({
+                app: 'apps/evaluate',
+                resource: 'evaluate_participance',
+                method: 'post',
+                args: {
+                    product_review_id: this.product_review_id,
+                    status: status
+                },
+                success: function(){
+                    W.showHint('success', '操作成功');
+                },
+                error: function(){
+                    W.showHint('error', '操作失败');
+                }
+            })
+        })	
 	},
 
 	onClickSubmitButton: function(){

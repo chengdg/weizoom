@@ -1,4 +1,73 @@
 {% extends "apps_base.html" %}
+{% block css %}
+<style type="text/css">
+    .xui-productReviewListPage .xui-title{
+        text-align: center;
+        line-height: 35px;
+        color:#333;
+    }
+    .xui-productReviewListPage .xui-title a{
+        height: 35px;
+        width: 35px;
+        display: inline-block;
+        position: absolute;
+        left:0;
+    }
+    .xui-productReviewListPage .xui-title i{
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-top: 1px solid #393939;
+        border-left: 1px solid #393939;
+        -webkit-transform:rotate(-45deg);
+        left: 14px;
+        top:12px;
+    }
+    .xui-productReviewListPage{
+        height: 100%;
+    }
+    .xui-productReviewListPage .xui-productReview{
+        background: #fff;
+    }
+    .xui-productReviewListPage .xui-productReview .xui-productImg{
+        width: 50px;
+        height: 50px;
+    }
+    .xui-productReviewListPage .xui-uploadImg{
+        margin-top: 13px;
+    }
+    .xui-productReviewListPage .xui-uploadImg{
+        width: 100%;
+        overflow: hidden;
+        height: 52px;
+    }
+    .xui-productReviewListPage .xui-uploadImg img{
+        width: 50px;
+        height: 50px;
+        border: 1px solid #E5E5E5;
+        margin-right: 5px;
+    }
+    .xui-productReviewListPage .xui-uploadImg img:last-child{
+        margin-right: 0;
+    }
+    .xui-productReviewListPage .xui-emptyReview{
+        height: 100%;
+        background: #fff;
+    }
+    .xui-productReviewListPage .xui-placeholder{
+        height: 84px;
+    }
+    .xui-productReviewListPage .xui-emptyReview .xui-emptyImg{
+        width: 136px;
+        height: 130px;
+        background: url(/static/img/mobile/usercenter/empty.png) no-repeat;
+        -webkit-background-size: 380px 152px;
+        background-size: 380px 152px;
+        background-position: -136px 0;
+        margin: 0 auto;
+    }   
+</style>
+{% endblock %}
 {% block content-panel %}
 <div class="xui-productReviewListPage pb20">
     <div class="xui-title pr">

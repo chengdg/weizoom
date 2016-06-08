@@ -1,4 +1,76 @@
 {% extends "apps_base.html" %}
+{% block css %}
+<style type="text/css">
+    .xui-page{
+        min-height:100% !important;
+       /* padding-top:0px !important;*/
+        /*background-color: #f0f0f0;*/
+        border: 0 none;
+        left: 0;
+        min-height: 100%;
+        position: absolute;
+        top: 0;
+        width: 100%;
+    }
+    .xui-reviewAllPage .xui-title{
+        text-align: center;
+        line-height: 35px;
+        color:#333;
+    }
+    .xui-reviewAllPage .xui-title a{
+        height: 35px;
+        width: 35px;
+        display: inline-block;
+        position: absolute;
+        left:0;
+    }
+    .xui-reviewAllPage .xui-title i{
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-top: 1px solid #393939;
+        border-left: 1px solid #393939;
+        -webkit-transform:rotate(-45deg);
+        left: 14px;
+        top:12px;
+    }
+    .xui-reviewAllPage{
+        font-size: 0.8rem;
+        color: #999;
+    }
+    .xui-reviewAllPage .xui-content{
+        padding:0 10px;
+        background-color: #fff;
+        box-shadow: 0 1px rgba(0,0,0,.05);
+    }
+    .xui-reviewAllPage .xui-reviewlist li{
+        box-shadow: 0  1px rgba(0,0,0,.05);
+        padding-bottom:15px;
+    }
+    .xui-reviewAllPage .xui-reviewlist li:last-child{
+        box-shadow: none;
+    }
+    .xui-reviewAllPage .xui-user{
+        box-shadow: 0 0 0 1px rgba(227,227,227,.5);
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        vertical-align: middle;
+        background: url(/static/img/user-1.jpg) no-repeat;
+        background-size: cover;
+        overflow: hidden;
+        display: inline-block;
+    }
+    .xui-reviewAllPage .xui-reviewImg img{
+        float: left;
+        margin-right:6px;
+        border:1px solid #e5e5e5;
+    }
+    .xui-reviewAllPage dl dd{
+        float: left;   
+    }
+</style>
+{% endblock %}
 {% block content-panel %}
 <div class="xui-reviewAllPage xui-page xa-page">
     <div class="xui-title pr">
@@ -12,7 +84,7 @@
                     <div class="clearfix pb10" style="padding-top:12px;">
                         <div class="fl">
                             <div class="xui-user">
-                                <img src="{% if review.member_icon %}{{ review.member_icon }}{% else %}/static/img/mobile/user-1.jpg{% endif %}" data-allow-autoplay="true">
+                                <img src="{% if review.member_icon %}{{ review.member_icon }}{% else %}/static_v2/img/user-1.jpg{% endif %}" data-allow-autoplay="true">
                             </div>
                             <span class="ml5 xa-memberName">
                                 <!-- TODO: 处理autoescape off -->

@@ -11,9 +11,9 @@
 			<div class="xui-modal-content">
 			</div>
 			<div class="xui-evalute-btnGroups">
-				<a href="javascript:void(0);" class="btn btn-default ml20 xa-modify" name="pass" data-status="1">通过审核</a>
-				<a href="javascript:void(0);" class="btn btn-default ml20 xa-modify" name="top" data-status="2">通过并置顶</a>
-				<a href="javascript:void(0);" class="btn btn-default ml20 xa-modify" name="shield" data-status="-1">屏蔽处理</a>
+				<a href="javascript:void(0);" class="btn btn-default ml20 xa-modal-modify" name="pass" data-status="1">通过审核</a>
+				<a href="javascript:void(0);" class="btn btn-default ml20 xa-modal-modify" name="top" data-status="2">通过并置顶</a>
+				<a href="javascript:void(0);" class="btn btn-default ml20 xa-modal-modify" name="shield" data-status="-1">屏蔽处理</a>
 			</div>
 			<b>给会员的评价</b>
 			<div class="mt10">
@@ -40,7 +40,9 @@
 			</div>
 			<div>
 				<span>晒单图片：</span>
-				<img src="{{img}}">
+				{{#each img}}
+				 	<img src="{{this}}">
+				{{/each}}
 			</div>
 			<div>
 				<span>评价内容：</span>
