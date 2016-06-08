@@ -267,7 +267,7 @@ def get_rank_data(data):
 from core.exceptionutil import unicode_full_stack
 class MShvotePlayerDetails(resource.Resource):
 	app = 'apps/shvote'
-	resource = 'm_player_details_v2'
+	resource = 'm_player_details_v3'
 
 	def get(request):
 		player_id = request.GET['player_id'] 
