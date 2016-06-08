@@ -97,8 +97,8 @@ Background:
         	"order_price":20.00,
         	"payment_price":20.00,
         	"postage":0.00,
-        	"ship_name":"bill",
-        	"ship_tel":"13013013011",
+        	"ship_name":"tom",
+        	"ship_tel":"13667190229",
         	"ship_area":"北京市,北京市,海淀区",
         	"ship_address":"泰兴大厦",
         	"products":[{
@@ -135,7 +135,7 @@ Background:
         }
         """
 
-
+@mall @apps @apps_evaluate @evaluate_detail_member_group
 Scenario:1 jobs登录系统，在商品评价详情页面给会员调分组
 	When jobs登录系统
     Then jobs能获得评价详情
