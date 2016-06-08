@@ -2267,6 +2267,29 @@ li.wui-selectBox-display-table {
 /*百宝箱 shvote CSS ---- end */
 
 /*百宝箱 evakuate CSS ---- start */
+.wui-evaluate-container .wui-title {
+    text-align: center;
+    line-height: 35px;
+    color: #333;
+    padding: 0;
+}
+.wui-evaluate-container .wui-title a {
+    height: 35px;
+    width: 35px;
+    display: inline-block;
+    position: absolute;
+    left: 0;
+}
+.wui-evaluate-container .wui-title i {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-top: 1px solid #393939;
+    border-left: 1px solid #393939;
+    -webkit-transform: rotate(-45deg);
+    left: 14px;
+    top: 12px;       
+}
 .wui-evaluate-container .wui-i-header{
 	padding: 15px 10px 0;
 }

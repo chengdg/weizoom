@@ -158,6 +158,7 @@ class EvaluatesProducts(resource.Resource):
 			param['bar_code__icontains'] = bar_code
 
 		products = mall_models.Product.objects.exclude(id__in = related_products_ids).filter(**param).order_by('-created_at')
+		EvaluatesProducts.fill_display_price(products)
 
 		# 分页
 		count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
@@ -182,7 +183,7 @@ class EvaluatesProducts(resource.Resource):
 				'id': product_id,
 				'bar_code': product.bar_code,
 				'product_name': product.name,
-				'price': product.price,
+				'price': product.display_price,
 				'evaluate_count': product_id2evaluate_count.get(product_id,0)
 			})
 
@@ -194,3 +195,50 @@ class EvaluatesProducts(resource.Resource):
 			'data': {}
 		}
 		return response.get_response()
+
+	@staticmethod
+	def fill_display_price(products):
+		"""根据商品规格，获取商品价格
+        """
+		# 获取所有models
+		product2models = {}
+		product_ids = [product.id for product in products]
+		for model in mall_models.ProductModel.objects.filter(product_id__in=product_ids):
+			if model.is_deleted:
+				# model被删除，跳过
+				continue
+
+			product_id = model.product_id
+			if product_id in product2models:
+				models = product2models[product_id]
+			else:
+				models = {
+					'standard_model': None,
+					'custom_models': [],
+					'is_use_custom_model': False}
+				product2models[product_id] = models
+
+			if model.name == 'standard':
+				models['standard_model'] = model
+			else:
+				models['is_use_custom_model'] = True
+				models['custom_models'].append(model)
+		# 为每个product确定显示价格
+		for product in products:
+			product_id = product.id
+			if product_id in product2models:
+				models = product2models[product.id]
+				if models['is_use_custom_model']:
+					custom_models = models['custom_models']
+					if len(custom_models) == 1:
+						product.display_price = custom_models[0].price
+					else:
+						prices = sorted(
+							[model.price
+							 for model in custom_models])
+
+						product.display_price = '%.2f-%.2f' % (prices[0], prices[-1])
+				else:
+					product.display_price = '%.2f' % models['standard_model'].price
+			else:
+				product.display_price = product.price
