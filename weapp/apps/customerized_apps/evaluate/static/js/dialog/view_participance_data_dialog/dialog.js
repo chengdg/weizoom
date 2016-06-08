@@ -151,7 +151,6 @@ W.dialog.app.evaluate.ViewParticipanceDataDialog = W.dialog.Dialog.extend({
 				},
 				success: function(data) {
 					var context = data.items;
-					console.log(context.img);
 					var source = $("#app-evaluate-viewParticipanceResultDialog-dialog-tmpl").html();
 					var template = Handlebars.compile(source);					
 					var html = template(context);
