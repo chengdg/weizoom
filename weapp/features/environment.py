@@ -379,7 +379,8 @@ def __clear_all_app_data():
 	rebate_models.RebateWaitingAction.objects.all().delete()
 
 	#apps商品评价
-	evaluate_models.Evaluates.objects.all().delete()
+	evaluate_models.ProductEvaluates.objects.all().delete()
+	evaluate_models.OrderEvaluates.objects.all().delete()
 	evaluate_models.EvaluatesRelatedProducts.objects.all().delete()
 	evaluate_models.EvaluatesRelations.objects.all().delete()
 	evaluate_models.EvaluateTemplateSetting.objects.all().delete()

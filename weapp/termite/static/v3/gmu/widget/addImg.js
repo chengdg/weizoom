@@ -58,7 +58,7 @@
                 var $files = $(files);
                 $files.each(function(i, file) {
                     if(file.type !== "" && file.name !== ""){
-                        var isErrorByType = (file && file.type !== 'image/jpeg' && file.type !== 'image/gif' && file.type !== 'image/png');
+                        var isErrorByType = (file && file.type !== 'image/jpeg' && file.type !== 'image/pjpeg' && file.type !== 'image/gif' && file.type !== 'image/png');
                         var name = file.name.toLowerCase();
                         var isErrorByName = (file && file.name && !name.match(/\.(jpg|gif|png|jpeg)$/));
                         if(!file || (file && file.type && isErrorByType) || (file && file.name && isErrorByName)) {
@@ -66,7 +66,7 @@
                             return;
                         }
                     }else{
-                        JSAnalysis('userAddImg','',W.webappOwnerId);
+                        // JSAnalysis('userAddImg','',W.webappOwnerId);
                     }
                     var reader = new FileReader();
                     var $li = $("<li class='xa-img'><span class='pa xa-remove xui-remove' style='display:none;'><i class='pa'></i></span><div class='xui-progress xa-progress'><span></span></div></li>");
@@ -102,7 +102,7 @@
 
                                 img = null;
                             }
-                        }
+                        };
                         reader.readAsDataURL(file);
                     });
                    
@@ -138,7 +138,7 @@
                 success: function (data) {
                     var img ="<img src='" + data.path + "!reviewS' id='"+_this.uploadImg_id+"pro_reivew"+imglength+"' data-src="+ data.path +" full-src='" + data.path + "!review'>";
                     $li.append(img);
-                    $li.children('img').data('allow-autoplay','true')
+                    $li.children('img').data('allow-autoplay','true');
                     W.ImagePreview(wx);
                     clearInterval(loop);
                     $bar.css('width',"100%");

@@ -122,7 +122,7 @@ class Evaluates(resource.Resource):
 
 		# 当前用户
 		owner = request.manager
-		all_reviews = app_models.Evaluates.objects(owner_id=owner.id).order_by("-created_at")
+		all_reviews = app_models.ProductEvaluates.objects(owner_id=owner.id).order_by("-created_at")
 
 		if is_fetch_all_reviews:
 			# 分页
@@ -213,7 +213,7 @@ class EvaluateReview(resource.Resource):
 		"""
 
 		evaluate_id = request.GET.get('id',None)
-		evaluate = app_models.Evaluates.objects(id = evaluate_id)[0]
+		evaluate = app_models.ProductEvaluates.objects(id = evaluate_id)[0]
 
 		member = Member.objects.get(id = evaluate.member_id)
 		items = {
@@ -246,7 +246,7 @@ class EvaluateReview(resource.Resource):
 			from modules.member import models as member_models
 
 			if product_review_id:
-				review = app_models.Evaluates.objects(owner_id=request.webapp_owner_id, id=product_review_id)
+				review = app_models.ProductEvaluates.objects(owner_id=request.webapp_owner_id, id=product_review_id)
 				if status == '2' or status == '1':
 					if len(review) == 1 and int(review[0].status) == 0:
 						settings = member_models.IntegralStrategySttings.objects.get(
@@ -257,17 +257,17 @@ class EvaluateReview(resource.Resource):
 								increase_member_integral(member[0], settings.review_increase, '商品评价奖励')
 
 				if status == '2':
-					product_review = app_models.Evaluates.objects.get(id=product_review_id)
-					top_reviews = app_models.Evaluates.objects.filter(product_id=product_review.product_id,
+					product_review = app_models.ProductEvaluates.objects.get(id=product_review_id)
+					top_reviews = app_models.ProductEvaluates.objects.filter(product_id=product_review.product_id,
 																		   status=int(status)).order_by("top_time")
 					if top_reviews.count() >= 3:
 						ids = [review.id for review in top_reviews[:(top_reviews.count() - 2)]]
-						app_models.Evaluates.objects(id__in=ids).update(status=1,
+						app_models.ProductEvaluates.objects(id__in=ids).update(status=1,
 																				top_time=app_models.DEFAULT_DATETIME)
-						app_models.Evaluates.objects(id=product_review_id).update(status=int(status),
+						app_models.ProductEvaluates.objects(id=product_review_id).update(status=int(status),
 																							  top_time=datetime.now())
 					else:
-						app_models.Evaluates.objects(id=product_review_id).update(status=int(status),
+						app_models.ProductEvaluates.objects(id=product_review_id).update(status=int(status),
 																							  top_time=datetime.now())
 				else:
 					review.update(status=int(status), top_time=app_models.DEFAULT_DATETIME)
@@ -285,7 +285,7 @@ class EvaluateReview(resource.Resource):
 
 			if action == 'pass':
 				try:
-					reviews = app_models.Evaluates.objects(owner_id=request.webapp_owner_id, id__in=ids)
+					reviews = app_models.ProductEvaluates.objects(owner_id=request.webapp_owner_id, id__in=ids)
 
 					settings = member_models.IntegralStrategySttings.objects.get(
 						webapp_id=request.user_profile.webapp_id)
@@ -309,7 +309,7 @@ class EvaluateReview(resource.Resource):
 					return create_response(500).get_response()
 			else:
 				try:
-					app_models.Evaluates.objects(owner_id=request.webapp_owner_id, id__in=ids).update(status=-1)
+					app_models.ProductEvaluates.objects(owner_id=request.webapp_owner_id, id__in=ids).update(status=-1)
 					return create_response(200).get_response()
 				except:
 					return create_response(500).get_response()

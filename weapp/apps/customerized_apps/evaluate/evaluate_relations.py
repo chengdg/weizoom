@@ -47,7 +47,7 @@ class EvaluatesRelations(resource.Resource):
 
 		evaluate_relations = app_models.EvaluatesRelations.objects(owner_id = owner_id).order_by('-created_at')
 		has_related_product_ids = [p.product_id for p in app_models.EvaluatesRelatedProducts.objects(owner_id = owner_id)]
-		evaluates = app_models.Evaluates.objects(owner_id = owner_id, product_id__in = has_related_product_ids)
+		evaluates = app_models.ProductEvaluates.objects(owner_id = owner_id, product_id__in = has_related_product_ids)
 
 		# 分页
 		count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
@@ -165,7 +165,7 @@ class EvaluatesProducts(resource.Resource):
 		pageinfo, products = paginator.paginate(products, current_page,count_per_page,
 																		 query_string=request.META['QUERY_STRING'])
 
-		evaluates = app_models.Evaluates.objects(owner_id=owner_id).order_by("-created_at")
+		evaluates = app_models.ProductEvaluates.objects(owner_id=owner_id).order_by("-created_at")
 		#构造商品对应的评价数映射
 		product_id2evaluate_count = {}
 		for evaluate in evaluates:

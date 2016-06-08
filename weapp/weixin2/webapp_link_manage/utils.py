@@ -203,7 +203,7 @@ def get_webapp_link_menu_objectes(request):
 		'evaluate': {
 			'id': 14,
 			'name': '待评价列表',
-			'link': '/m/apps/evaluate/m_evaluating_list/?webapp_owner_id=%d' % request.manager.id
+			'link': '%s/mall/waiting_review_orders/?woid=%d' % (settings.H5_HOST, request.manager.id)
 		}
 		# 'feedback': {
 		# 	'id': 12,

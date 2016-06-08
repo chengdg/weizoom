@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from core import resource
 
-class Evaluates(resource.Resource):
+class RemoteEvaluates(resource.Resource):
 	"""
 	为h5系统提供接口，获取评价数据
 	"""
