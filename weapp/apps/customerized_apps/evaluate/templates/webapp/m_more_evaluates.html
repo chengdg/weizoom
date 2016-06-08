@@ -74,7 +74,9 @@
 {% block content-panel %}
 <div class="xui-reviewAllPage xui-page xa-page">
     <div class="xui-title pr">
-        <i data-ui-role="goBack"></i>
+        <a class="xa-goBack xui-returnPrev pa">
+            <i data-ui-role="goBack"></i>
+        </a>
         <span class="em9">更多评价</span>
     </div>
     <div class="xui-content">
@@ -91,7 +93,7 @@
                                 {{review.member_name |safe}}
                             </span>
                         </div>
-                        <span class="fr" style="line-height:30px;">{{ review.created_at|date("Y-m-j") }}</span>
+                        <span class="fr" style="line-height:30px;">{{ review.created_at|date:"Y-m-j" }}</span>
                     </div>
                     <p class="em85 c6">{{ review.review_detail }}</p>
                     {% if review.custom_model_properties %}
@@ -104,7 +106,7 @@
                     {% if review.reviewed_product_pictures.length > 0 %}
                     <div class="xui-reviewImg clearfix mt10">
                         {% for picture in review.reviewed_product_pictures %}
-                            {% if picture|truncatechars(15) === 'http://weappimg...'%}
+                            {% if picture|truncatechars:15 == 'http://weappimg...'%}
                             <img width="50" height="50" src="{{picture.att_url}}!60" full-src="{{picture.att_url}}">
                             {% else %}
                             <img width="50" height="50" src="{{picture.att_url}}">

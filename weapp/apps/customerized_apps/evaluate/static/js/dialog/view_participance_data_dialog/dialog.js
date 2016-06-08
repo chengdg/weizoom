@@ -127,6 +127,7 @@ W.dialog.app.evaluate.ViewParticipanceDataDialog = W.dialog.Dialog.extend({
             type: 'text',
             width: null,
             height: 100,
+            maxCount: 100,
             pasteplain: true
         })
 		editor.render();
@@ -185,14 +186,18 @@ W.dialog.app.evaluate.ViewParticipanceDataDialog = W.dialog.Dialog.extend({
 
 	onClickSubmitButton: function(){
 		var content = editor.getContent();
+		if (content.length > 100) {
+			W.showHint('error', '内容不能超过100字');
+			return;
+		}		
 		W.getApi().call({
                 app: 'apps/evaluate',
                 resource: 'evaluate_participance',
                 method: 'post',
                 args: content,
+                scope: this,
                 success: function(){
                     W.showHint('success', '操作成功');
-                    this.$dialog.modal('hide');
                 },
                 error: function(){
                     W.showHint('error', '操作失败');

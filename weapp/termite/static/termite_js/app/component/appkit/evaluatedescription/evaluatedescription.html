@@ -2,6 +2,12 @@
 
 {% ifequal component.type 'appkit.evaluatedescription' %}
     <div id="dj_request_owner_id" class="wui-evaluate-container wa-evaluate-container pb10">
+        <div id="dj_product_created" class="wui-title pr" data-value="{{created}}">
+            <a class="xa-goBack xui-returnPrev pa">
+                <i id="dj_product_review_arrive" data-value="{{send_time}}" data-ui-role="goBack"></i>
+            </a>
+            <span id="dj_order_has_product_id" class="em9" data-value="{{order_has_product_id}}">发表评价</span>
+        </div>
         <div class="wui-i-header">
             <div class="wui-i-product-info disT mb15 w">
                 <div class="wui-productImg disTc">

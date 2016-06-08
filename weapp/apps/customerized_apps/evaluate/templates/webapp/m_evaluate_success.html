@@ -46,7 +46,7 @@
         <img src="/static_v2/img/review.png" alt="">
     </div>
     <div class="xui-button">
-        {% if has_waiting_review === "0" %}
+        {% if has_waiting_review == "0" %}
         <a href="/mall/home_page/?woid={{request.webapp_owner_id}}" class="xui-returnHome fl">返回首页</a>
         {% else %}
         <a href="/mall/home_page/?woid={{request.webapp_owner_id}}" class="xui-returnHome xui-smallReturnHome fl">返回首页</a>
