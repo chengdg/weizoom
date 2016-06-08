@@ -26,6 +26,21 @@
                     </span>
                 </span>
             </div>
+            <div class="wui-i-uploadimg">
+                <div class="xui-productPhoto mt10">
+                    <div class="xui-addPhoto xa-addPhoto mb10 fl pr"
+                        {% if component.model.is_mandatory == "true" %}
+                        data-validate='require-upload-img::请上传"{{component.model.title}}"'
+                        {% endif %}
+                    >
+                        <input name="imgFile123" data-ui-role="uploadImage" type="file" style="opacity:0;top:0;left:0;width:45px;height:45px;" class="pa" multiple>
+                    </div>
+                    <div class="xui-deletePhoto xa-deletePhoto" style="display:none;"></div>
+                    <span class="cRed em95 none xa-finishEdit xui-finishEdit ml10">完成</span>
+                    <span class="em75 xa-text xui-text">上传图片</span>
+                </div>
+            </div>
+
         </div>
         <div class="wui-i-body wa-i-body">
             <div class="wui-reviewText">
