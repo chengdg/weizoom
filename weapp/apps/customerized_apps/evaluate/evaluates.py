@@ -24,12 +24,11 @@ COUNT_PER_PAGE = 50
 REVIEW_FILTERS = {
 	'review': [
 		{
-			'comparator': lambda review, filter_value: (filter_value == 'all') or (filter_value == review.status) or (
-				filter_value == '1' and review.status == '2'),
+			'comparator': lambda review, filter_value: (filter_value == 'all') or (filter_value == str(review.status)) or (
+				filter_value == '1' and review.status == 2),
 			'query_string_field': 'reviewStatus'
 		}, {
-			'comparator': lambda review, filter_value: (filter_value == 'all') or (
-				filter_value == review.product_score),
+			'comparator': lambda review, filter_value: (filter_value == 'all') or (filter_value == str(review.score)),
 			'query_string_field': 'productScore'
 		}, {
 			'comparator': lambda review, filter_value: filter_value <= review.created_at.strftime("%Y-%m-%d %H:%M"),
