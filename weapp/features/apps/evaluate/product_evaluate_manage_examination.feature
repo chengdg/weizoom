@@ -10,9 +10,8 @@ Feature: jobs在后台对已有评价进行审核
     6.同款商品，最多可置顶3条评价信息，第4条置顶时，第一条置顶信息失去优先级，按原有时间顺序排列
     7.回复会员评论：回复的内容显示在会员个人中心列表中；
 """
-@mall @apps @app_evaluate @reply_product_evaluate
+
 Background:
-    Given 重置weapp的bdd环境
     Given jobs登录系统
     And jobs已添加商品
         """

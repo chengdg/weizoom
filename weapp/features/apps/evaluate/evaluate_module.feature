@@ -14,7 +14,7 @@ Feature: jobs在weapp中配置自定义评价模板
         5.问答、选择题模块可以重复添加，参与人信息模块只能添加一次
 """
 
-@mall @apps @app_evaluate @app_evaluate_template
+@mall @apps @app_evaluate @app_evaluate_template @aix1
 Scenario:1 配置自定义模板,添加'问答'模块   
     Given jobs登录系统
     When jobs配置商品评论自定义模板
