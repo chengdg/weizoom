@@ -46,6 +46,8 @@ class EvaluatesRelations(resource.Resource):
 		owner_id  = request.manager.id
 
 		evaluate_relations = app_models.EvaluatesRelations.objects(owner_id = owner_id).order_by('-created_at')
+		has_related_product_ids = [p.product_id for p in app_models.EvaluatesRelatedProducts.objects(owner_id = owner_id)]
+		evaluates = app_models.Evaluates.objects(owner_id = owner_id, product_id__in = has_related_product_ids)
 
 		# 分页
 		count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
@@ -59,12 +61,14 @@ class EvaluatesRelations(resource.Resource):
 		items = []
 		for re in evaluate_relations:
 			related_product_ids = re.related_product_ids
+			evaluates = evaluates.filter(product_id__in = related_product_ids)
 			name = ''
 			for id in related_product_ids:
 				name = name + ' ' + product_id2name.get(id,'')
 			items.append({
 				'id': str(re.id),
-				'product_name': name
+				'product_name': name,
+				'evaluate_count': evaluates.count() if evaluates else 0
 			})
 
 		response = create_response(200)
