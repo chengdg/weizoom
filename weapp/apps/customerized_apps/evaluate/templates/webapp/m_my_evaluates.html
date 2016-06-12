@@ -82,7 +82,7 @@
         </a>
         <span class="em9">我的评价</span>
     </div>
-    {% if reviewed_products.length > 0 %}
+    {% if reviewed_products %}
     {% for review in reviewed_products %}
     <div class="xui-productReview p10 mb10">
         <div class="xui-product disT mb15 w">
@@ -112,7 +112,7 @@
             商家留言：
         </div>
         <div class="xui-productReviewText c65 em8">
-            {{review.review_detail}}
+            {{review.detail}}
         </div>
         <!-- 如果有商品评价晒图-->
         {% if review.reviewed_product_pictures.length > 0 %}

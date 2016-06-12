@@ -28,10 +28,10 @@ class MyEvaluates(resource.Resource):
 		"""
 		响应GET
 		"""
-		product_id = request.GET.get('product_id','8')
+		product_id = request.GET['product_id']
 		webapp_owner_id = request.webapp_owner_id
 
-		reviews = app_models.Evaluates.objects(owner_id = webapp_owner_id, product_id = product_id)
+		reviews = app_models.ProductEvaluates.objects(owner_id = webapp_owner_id, product_id = product_id)
 
 		member_ids = [review.member_id for review in reviews]
 		members = get_member_by_id_list(member_ids)
