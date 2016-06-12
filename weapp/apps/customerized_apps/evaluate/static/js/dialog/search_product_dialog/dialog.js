@@ -9,8 +9,7 @@ ensureNS('W.dialog.app.evaluate');
 W.dialog.app.evaluate.SearchProductDialog = W.dialog.Dialog.extend({
 	events: _.extend({
 		'click .xa-select': 'onClickSelect',
-		'click .xa-submit-dialog': 'onClickSubmitButton',
-		'click .close': 'onClickClose'
+		'click .xa-submit-dialog': 'onClickSubmitButton'
 	}, W.dialog.Dialog.prototype.events),
 	
 	templates: {
@@ -19,7 +18,7 @@ W.dialog.app.evaluate.SearchProductDialog = W.dialog.Dialog.extend({
 	
 	onInitialize: function(options) {
 		this.table = this.$('[data-ui-role="advanced-table"]').data('view');
-		this.product_arr = [];
+		product_arr = [];
 	},
 	
 	beforeShow: function(options) {
@@ -39,7 +38,7 @@ W.dialog.app.evaluate.SearchProductDialog = W.dialog.Dialog.extend({
 	 * onGetData: 获取数据
 	 */
 	onGetData: function(event) {
-		return this.product_arr;
+		return product_arr;
 	},
 
 	onClickSelect: function(event){
@@ -52,7 +51,7 @@ W.dialog.app.evaluate.SearchProductDialog = W.dialog.Dialog.extend({
 		var evaluate_count = $tr.children('.xa-evaluate-count').text()
 		if ($target.text() == '选取') {
 			$target.text('已选取').css('background-color', '#c9c9c9');
-			this.product_arr.push({
+			product_arr.push({
 				'id': id,
 				'bar_code': bar_code,
 				'product_name': product_name,
@@ -61,7 +60,7 @@ W.dialog.app.evaluate.SearchProductDialog = W.dialog.Dialog.extend({
 			})
 		} else {
 			$target.text('选取').css('background-color', '#30ABF9');
-			this.product_arr.pop({
+			product_arr.pop({
 				'id': id,
 				'bar_code': bar_code,
 				'product_name': product_name,
@@ -81,10 +80,5 @@ W.dialog.app.evaluate.SearchProductDialog = W.dialog.Dialog.extend({
 		var context = {products:data};
 		$('.xa-selected-products-table').html(template(context));
 		this.$dialog.modal('hide');
-		this.product_arr = [];
     },
-
-	onClickClose: function(event){
-		this.product_arr = [];
-	}
 });

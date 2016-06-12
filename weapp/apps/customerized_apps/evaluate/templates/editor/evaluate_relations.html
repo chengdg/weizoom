@@ -149,6 +149,98 @@
 
 <script type="text/javascript">
 $(document).ready(function() {
+	//翻页选取
+	var MyPaginationView = W.view.common.PaginationView.extend({
+		show: function() {
+			if (!this.pageinfo) {
+				this.pageinfo = {max_page:-1}
+			}
+			var context = _.extend({}, this.pageinfo, {
+				isHasDetailedPage: this.isHasDetailedPage,
+				isHasJumpPage: this.isHasJumpPage
+			});
+			var pagination_dom = $.tmpl(this.templateName, context);
+			this.$el.html(pagination_dom).show();
+			if (!this.pageinfo || (this.pageinfo && !this.pageinfo.has_next)) {
+				if(this.isDisplayInfo) {
+					this.$('#lastPageHint').show();
+				}
+			}
+			var selectBtn = $('.xa-select');
+			for(var i=0;i<selectBtn.length;i++){
+				for(var j=0;j<product_arr.length;j++){
+					if($(selectBtn[i]).attr('data-id') ==product_arr[j].id){
+						$(selectBtn[i]).text('已选取').css('background-color', '#c9c9c9');
+					}
+				}
+			}
+			return this;
+		}
+	});
+	var MyTable = W.view.common.AdvancedTable.extend({
+    	createPaginationView: function() {
+	        this.paginationView = new MyPaginationView({
+	            el: this.$('.xa-advancedTablePaginator'),
+	            isHasDetailedPage: true,
+	            isHasJumpPage: true
+	        });
+	        this.paginationView.bind('goto', this.gotoPage, this);
+   		}
+	});
+	W.registerUIRole('div[data-ui-role="advanced-table"]', function() {
+	    xlog("registed advance-table");
+	    var $div = $(this);
+	    var app = $div.attr('data-app');
+	    var api = $div.attr('data-api');
+	    var resource = $div.attr('data-resource');
+	    if (resource) {
+	        api = resource;
+	    }
+	    var apiMethod = $div.attr('data-method') || 'get';
+	    var args = $div.attr('data-args');
+	    var template = $div.attr('data-template-id');
+	    var initSort = $div.attr('data-init-sort');
+	    var enablePaginator = $div.data('enablePaginator');
+	    var enableSort = !!($div.attr('data-enable-sort') === 'true');
+	    var enableSelect = !!($div.attr('data-selectable') === 'true');
+	    var disableHeaderSelect = !!($div.attr('data-disable-header-select') === 'true');
+	    var selectableTrSelector = $div.data('selecttableTr');
+	    var sortApi = $div.attr('data-sort-api');
+	    var itemCountPerPage = $div.attr('data-item-count-per-page');
+	    var userWebappId = $div.attr('data-user-webapp-id');
+	    var outerSelecter = $div.attr('data-outer-selecter');
+	    var autoLoad = $div.data('autoLoad');
+	    if (autoLoad !== false) {
+	        autoLoad = true;
+	    }
+	    if (itemCountPerPage) {
+	        itemCountPerPage = parseInt(itemCountPerPage);
+	    } else {
+	        itemCountPerPage = 15;
+	    }
+	    var advancedTable = new MyTable({
+	        el: $div[0],
+	        template: template,
+	        app: app,
+	        api: api,
+	        args: args,
+	        apiMethod: apiMethod,
+	        initSort: initSort,
+	        itemCountPerPage: itemCountPerPage,
+	        enablePaginator: enablePaginator,
+	        enableSort: enableSort,
+	        enableSelect: enableSelect,
+	        disableHeaderSelect: disableHeaderSelect,
+	        selectableTrSelector: selectableTrSelector,
+	        sortApi: sortApi,
+	        userWebappId: userWebappId,
+	        autoLoad: autoLoad,
+	        outerSelecter: outerSelecter
+	    });
+	    advancedTable.render();
+	    $div.data('view', advancedTable);
+	});
+
 	//商品查询
 	$('body').delegate('.xa-search', 'click', function(event) {
 		var product_name = $.trim($('[name="product_name"]').val());
@@ -222,6 +314,10 @@ $(document).ready(function() {
     $('body').delegate('.xa-reset', 'click', function(event){
         $('[name="product_name"]').val('');
         $('[name="bar_code"]').val('');
+    });
+
+    $('body').on('hidden.bs.modal','.xa-relations-Dialog',function(){
+    	product_arr = [];
     });
 });
 </script>

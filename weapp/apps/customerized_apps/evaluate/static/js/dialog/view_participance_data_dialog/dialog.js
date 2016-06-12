@@ -159,7 +159,7 @@ W.dialog.app.evaluate.ViewParticipanceDataDialog = W.dialog.Dialog.extend({
 				error: function(resp) {
 					console.log('error');
 				}
-			})
+			});
 		}
 
 		$(".xa-modal-modify").click(function(event){
@@ -179,8 +179,8 @@ W.dialog.app.evaluate.ViewParticipanceDataDialog = W.dialog.Dialog.extend({
                 error: function(){
                     W.showHint('error', '操作失败');
                 }
-            })
-        })	
+            });
+        });	
 	},
 
 	onClickSubmitButton: function(){
