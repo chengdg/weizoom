@@ -138,9 +138,6 @@ W.dialog.app.evaluate.ViewParticipanceDataDialog = W.dialog.Dialog.extend({
 	
 	onShow: function(options) {
 		this.product_review_id = options.product_review_id;
-	},
-	
-	afterShow: function(options) {
 		if (this.product_review_id) {
 			W.getApi().call({
 				app: 'apps/evaluate',
@@ -154,14 +151,17 @@ W.dialog.app.evaluate.ViewParticipanceDataDialog = W.dialog.Dialog.extend({
 					var source = $("#app-evaluate-viewParticipanceResultDialog-dialog-tmpl").html();
 					var template = Handlebars.compile(source);					
 					var html = template(context);
-					$('.xui-modal-content').html(html);
+					$('.xa-modal-content').html(html);
 				},
 				error: function(resp) {
 					console.log('error');
 				}
 			});
 		}
-
+	},
+	
+	afterShow: function(options) {
+		editor.setContent($('.xa-hide-content').html());
 		var _this = this
 		$(".xa-modal-modify").click(function(event){
             var $el = $(event.currentTarget);
@@ -192,21 +192,21 @@ W.dialog.app.evaluate.ViewParticipanceDataDialog = W.dialog.Dialog.extend({
 			return;
 		}		
 		W.getApi().call({
-                app: 'apps/evaluate',
-                resource: 'evaluate_participance_shop_reply',
-                method: 'post',
-                args: {
-                    product_review_id: this.product_review_id,
-                    content: content
-                },
-                scope: this,
-                success: function(){
-                    W.showHint('success', '操作成功');
-                },
-                error: function(){
-                    W.showHint('error', '操作失败');
-                }
-            });
+            app: 'apps/evaluate',
+            resource: 'evaluate_review_shop_reply',
+            method: 'post',
+            args: {
+                product_review_id: this.product_review_id,
+                content: content
+            },
+            scope: this,
+            success: function(){
+                W.showHint('success', '操作成功');
+            },
+            error: function(){
+                W.showHint('error', '操作失败');
+            }
+        });
 	},
 	/**
 	 * onGetData: 获取数据

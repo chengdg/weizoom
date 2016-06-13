@@ -79,7 +79,7 @@
         -webkit-line-clamp: 5;
         -webkit-box-orient: vertical; 
     }
-    .xui-businessReview{
+    .xui-shopReply{
         border-bottom: 1px solid #e1e1e1;
     }
 </style>
@@ -117,11 +117,11 @@
                 </div>
             </div>
         </div>
-        <div class="pb10 xui-businessReview">
+        <div class="pb10 xui-shopReply">
             <span class="em9">商家留言：</span>
             <span class="em9 c65">奖励地址</span>
         </div>
-        <div class="xui-productReviewText c65 em9 pt10 xui-text-ellipsis">
+        <div class="xui-productReviewText c65 em9 pt10">
             {{review.detail}}
         </div>
         <!-- 如果有商品评价晒图-->
@@ -151,4 +151,9 @@
 {% endblock %}
 
 {% block js %}
+<script type="text/javascript">
+    $(function(){
+
+    });
+</script>
 {% endblock %}
