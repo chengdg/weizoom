@@ -223,7 +223,7 @@ W.dialog.app.evaluate.ViewParticipanceDataDialog = W.dialog.Dialog.extend({
             args: {
                 product_review_id: this.product_review_id,
                 content: content,
-                tag_ids: tag_ids,
+                tag_ids: JSON.stringify(tag_ids),
                 member_id: member_id
             },
             scope: this,

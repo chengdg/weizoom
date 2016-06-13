@@ -84,7 +84,7 @@
         overflow: hidden;
     }
     .xui-toggleBtn{
-        color: 
+        color: #0084ff;
     }
 </style>
 {% endblock %}
@@ -160,7 +160,7 @@
 {% block js %}
 <script type="text/javascript">
     $(function(){
-        if($('.xa-productReviewText').text().length > 135){
+        if($('.xa-productReviewText').height() > 90){
             $('.xa-productReviewText').addClass('xui-text-ellipsis');
             $('.xa-toggleBtn').show();
         }
