@@ -29,6 +29,7 @@ class ProductEvaluates(models.Document):
 	created_at = models.DateTimeField()  # 评价时间
 	top_time = models.DateTimeField() # 置顶时间
 	status = models.IntField(default=STATUS_WAITTING)  # 审核状态
+	shop_reply = models.StringField(max_length=256, default='')  #商家留言
 
 	meta = {
 		'collection': 'evaluate_product_evaluates',
