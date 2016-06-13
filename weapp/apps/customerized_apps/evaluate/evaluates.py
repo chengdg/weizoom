@@ -225,7 +225,7 @@ class EvaluateReview(resource.Resource):
 			'order_id': evaluate.order_id,
 			'member_name': member.username_for_html,
 			'member_grade': member.grade.name,
-			'shop_reply': review.shop_reply
+			'shop_reply': evaluate.shop_reply
 		}
 
 		response = create_response(200)
