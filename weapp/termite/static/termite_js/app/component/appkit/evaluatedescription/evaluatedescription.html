@@ -2,21 +2,21 @@
 
 {% ifequal component.type 'appkit.evaluatedescription' %}
     <!--R-->
-    <div id="dj_request_owner_id" class="wui-evaluate-container wa-evaluate-container pb10">
-        <div id="dj_product_created" class="wui-title pr" data-value="{{created}}">
+    <div class="wui-evaluate-container wa-evaluate-container pb10">
+        <div class="wui-title pr">
             <a class="xa-goBack xui-returnPrev pa">
-                <i id="dj_product_review_arrive" data-value="{{send_time}}" data-ui-role="goBack"></i>
+                <i id="goBack"></i>
             </a>
-            <span id="dj_order_has_product_id" class="em9" data-value="{{order_has_product_id}}">发表评价</span>
+            <span class="em9">发表评价</span>
         </div>
         <div class="wui-i-header">
             <div class="wui-i-product-info disT mb15 w">
-                <div class="wui-productImg disTc">
-                    <img src="" data-allow-autoplay="false">
+                <div class="wui-productImg disTc wa-productimg">
+                    <img src="" data-allow-autoplay="false" style="width: 60px; height: 60px;">
                 </div>
-                <div id="dj_product_id" class="disTc vt pl10">
-                    <div class="wui-productname em85 c65">商品名</div>
-                    <div class="em85 c65">
+                <div class="disTc vt pl10">
+                    <div class="wui-productname em85 c65 wa-productname">商品名</div>
+                    <div class="em85 c65 wa-productinfo">
                        商品介绍
                     </div>
                 </div>
@@ -35,11 +35,7 @@
             </div>
             <div class="wui-i-uploadimg">
                 <div class="xui-productPhoto mt10">
-                    <div class="xui-addPhoto xa-addPhoto mb10 fl pr"
-                        {% if component.model.is_mandatory == "true" %}
-                        data-validate='require-upload-img::请上传"{{component.model.title}}"'
-                        {% endif %}
-                    >
+                    <div class="xui-addPhoto xa-addPhoto mb10 fl pr">
                         <input name="imgFile123" data-ui-role="uploadImage" type="file" style="opacity:0;top:0;left:0;width:45px;height:45px;" class="pa" multiple>
                     </div>
                     <div class="xui-deletePhoto xa-deletePhoto" style="display:none;"></div>
@@ -51,12 +47,12 @@
         </div>
         <div class="wui-i-body wa-i-body">
             <div class="wui-reviewText">
-                <div class="em7 c9 xui-limitNum">
+                <div class="em7 c9 xui-limitNum wa-limitNum">
                     还可以输入200字
                 </div>
-                <div class="pr xui-reviewHint">
-                    <textarea id='dj_review_detail' cols="30" rows="10" class="em8"></textarea>
-                    <div class="pa em8 xui-i-box p5" style="top:0;left:0;margin-top:8px;color:#cbcbcb">
+                <div class="pr wui-reviewHint">
+                    <textarea id='dj_review_detail' cols="30" rows="10" class="em8 wa-ordinary-review-detail" placeholder=""></textarea>
+                    <div class="pa em8 wui-i-box p5" style="top:0;left:0;margin-top:8px;color:#cbcbcb">
                         <div>
                             长度在5—200之间
                         </div>写下购买体会或者给我们意见等，可以为其他朋友在购买时候提供参考和意见~
@@ -76,9 +72,9 @@
             <div class="wui-serviceReview mb20">
                 <h2 class="c3 em9">
                     服务评分
-                    <span id="dj_order_review_is_created" data-value="0" class="cRed fr"></span>
+                    <span id="dj_order_review_is_created" data-value="0" class="cRed fr wui-iscreated wa-iscreated">已完成</span>
                 </h2>              
-                <div class="wui-i-service-score wui-i-box">
+                <div class="wui-i-service-score wui-i-box wa-notcreated">
                     <div class="wui-serviceAttitude mb20">
                         <span class="c65 em8">服务态度</span>
                         <span class="wui-i-manner-score wa-starGrade wui-starGrade">
@@ -93,7 +89,7 @@
                     </div>
                     <div class="wui-deliverySpeed mb20">
                         <span class="c65 em8">发货速度</span>
-                        <span class="wui-i-speed-score xa-starGrade xui-starGrade">
+                        <span class="wui-i-speed-score wa-starGrade wui-starGrade">
                             <span id="dj_deliver_score" data-value='5' class="wui-starGrade wui-starGrade5">
                                 <i data-grade="1"></i>
                                 <i data-grade="2"></i>

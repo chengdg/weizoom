@@ -1,211 +1,148 @@
 {% extends "apps_base.html" %}
+{% block css %}
+    <style>
+        .wui-submitButton {
+            margin: 0 10px;
+        }
+    </style>
+{% endblock %}
 {% block content-panel %}
     {{ page_html_content|safe }}
+    <div class="wui-submitButton wa-submitButtonContainer">
+	    <a class="xui-btn xui-btn-danger wa-submitTermite" data-role="button" href="javascript:void(0);">发表评价</a>
+    </div>
 {% endblock %}
 
 {% block js %}
+<script>
+    var template_type = "{{ template_type }}",
+        order_id = "{{ order_id }}",
+        product_model_name = "{{ product_model_name }}",
+        order_has_product_id = "{{ order_has_product_id }}",
+        product_id = "{{ product_id }}",
+        created,
+        has_order_review;
 
-<script type="text/javascript">
-$(document).ready(function(){
-    // ajax 避免重复提交
+    $(function(){
+        if('ordinary' !== template_type) {
+            $('.wa-evaluate-container').find('.wa-i-body').hide();
+        }
+        getDynamicData();
+    });
 
-    // Get the delta-time between server and client
-    var product_review_arrive = parseFloat($('#dj_product_review_arrive').data('value'));
-    var the_local_time = parseFloat(Date.now());
-    var detal_time = product_review_arrive  - the_local_time / 1000.0;
-
-    var slag = true;
-    var $textarea = $('textarea');
-    var insetNum = 0;
-    if( $textarea.length == 1){
-        var insetNum = $textarea.val().length;
-    }
-
-    $('input[type="submit"]').on('click', function(e){
-        // 是否已经创建过商品的评价
-        var created = $("#dj_product_created").data('value');
-        if(!created){
-        if( insetNum < 5 || insetNum >200){
-            $('body').alert({
-                isShow: true,
-                info: '请输入5-200字',
-                speed: 2000,
-                callBack: function() {
-                    // window.location.reload();
-                }
-            });
-            return false;
-        }}
-        e.preventDefault();
-        var send_time = Date.now() / 1000.0;
-        var product_review_id = $("#dj_product_review_id").data('value')
-        var order_id = $('#dj_order_id').data('value');  // 订单ID
-        var product_id = $('#dj_product_id').data('value');
-        var order_has_product_id = $('#dj_order_has_product_id').data('value');
-        var product_score = $('#dj_product_score').data('value');
-        var review_detail = $('#dj_review_detail').val();
-        var serve_score = $('#dj_serve_score').data('value');
-        var deliver_score = $('#dj_deliver_score').data('value');
-        var process_score = $('#dj_process_score').data('value');
-        var picture_list = [];
-        var webapp_owner_id = $('#dj_request_owner_id').data('value');
-        $('.xui-imgList img').each(function(){
-                  picture_list.push($(this).attr('data-src'))
-        });
-        if(!created){
-            if (!slag){return;}
-            slag = false;
-            $('body').alert({
-                isShow: true,
-                info: '玩命传输中请等待...',
-                speed: 20000,
-                callBack: function() {
-                    // window.location.reload();
-                }
-            });
-
-            W.Resource.put({
-                data:{
-                    order_id:order_id,
-                    product_id:product_id,
-                    product_score:product_score,
-                    review_detail:review_detail,
-                    serve_score:serve_score,
-                    deliver_score:deliver_score,
-                    order_has_product_id:order_has_product_id,
-                    process_score:process_score,
-                    send_time:send_time,
-                    detal_time: detal_time,
-                    picture_list: JSON.stringify(picture_list),
-                },
-                resource: 'mall.review_product',
-                success:function(data){
-                    successful_url = "/mall/review_product_success/?woid="+webapp_owner_id+"&has_waiting_review="+data.has_waiting_review;
-                    _.delay(function() {
-                        window.location.href = successful_url;
-                    }, 50)
-                    $textarea.val('');
-                },
-                error: function(data){
-                    $('body').alert({
-                        isShow: true,
-                        info: data['msg'],
-                        speed: 3000,
-                        callBack: function() {
-                            // window.location.reload();
-                        }
-                    });
-                    slag = true;
-                    return ;
-                }
-            })
-        }else{
-            var $img = $('.xui-imgList img');
-            if( $img.length ==0 ){
-
-                    $('body').alert({
-                        isShow: true,
-                        info: '请添加图片',
-                        speed: 2000,
-                        callBack: function() {
-                            // window.location.reload();
-                        }
-                    });
-                    return false;
+    //获取商品和评价信息
+    function getDynamicData(){
+        loadingStatus(true);
+        W.getApi().call({
+            app: 'm/apps/evaluate',
+            resource: 'm_evaluate',
+            method: 'get',
+            args: {
+                webapp_owner_id: W.webappOwnerId,
+                order_id: order_id,
+                product_model_name: product_model_name,
+                order_has_product_id: order_has_product_id,
+                product_id: product_id
+            },
+            success: function(data){
+                loadingStatus(false);
+                render_page(data);
+                bind_events();
+            },
+            error: function(resp){
+                loadingStatus(false);
+                wuiAlert(resp.errMsg)
             }
-            if (!slag){return;}
-            slag = false;
-            $('body').alert({
-                isShow: true,
-                info: '玩命传输中请等待...',
-                speed: 20000,
-                callBack: function() {
-                    // window.location.reload();
-                }
-            });
-            W.Resource.post({
-                resource: 'mall.review_product',
-                data: {
-                    order_id:order_id,
-                    product_id:product_id,
-                    product_review_id: product_review_id,
-                    order_has_product_id:order_has_product_id,
-                    send_time:send_time,
-                    detal_time: detal_time,
-                    picture_list: JSON.stringify(picture_list),
-                },
-                success:function(data){
-                    successful_url = "/mall/review_product_success/?woid="+webapp_owner_id+"&has_waiting_review="+data.has_waiting_review;
-                    _.delay(function() {
-                        window.location.href = successful_url;
-                    }, 50)
-                },
-                error: function(data){
-                    alert('没有可连接的网络');
-                    return ;
-                },
-            })
-            // W.getApi().call({
-            //     app:'webapp',
-            //     api:'project_api/call',
-            //     method:'post',
-            //     args:_.extend({
-            //         target_api:'product_review_picture/update',
-            //         module:'mall',
-            //         woid:W.webappOwnerId,
-            //         product_review_id: product_review_id,
-            //         order_has_product_id:order_has_product_id,
-            //         send_time:send_time,
-            //         detal_time: detal_time,
-            //         picture_list: JSON.stringify(picture_list),
-            //     }),
-            //     success:function(data){
-            //         successful_url = "./?woid="+webapp_owner_id+"&module=mall&model=product_review&action=redirect&identify="+data;
-            //         _.delay(function() {
-            //             window.location.href = successful_url;
-            //         }, 50)
-            //     },
-            //     error: function(data){
-            //         alert('没有可连接的网络');
-            //         return ;
-            //     },
-            // });
-        }
-    });
-    // 点击星评
-    $('.xa-starGrade i').click(function(event){
-        var $star = $(event.currentTarget);
-        var starGrade = $star.data('grade');
-        $star.parent('span').attr('class','xui-starGrade xui-starGrade'+starGrade);
-        $star.parent('span').data('value', starGrade);  // 方便数据采集
-    });
-    $('.xui-reviewHint').click(function(){
-        $(this).find('.xui-i-box').hide();
-        $('textarea').focus();
-    });
-    // 字数实时提示
-    if( $textarea.length == 1){
-        var limitNum = 200;
-        var insetNum = $textarea.val().length;
-        var $limitText = '<span>还可以输入'+limitNum+'字</span>';
-        var keyup_or_change = function() {
-           insetNum = $(this).val().length;
-           var remainder = limitNum - insetNum;
-           if( insetNum > 4 ){
-                $('.xa-reviewBtn').addClass('xui-red');
-           }else {
-                $('.xa-reviewBtn').removeClass('xui-red')
-           };
-           if( insetNum > 200 ){
-               remainder = insetNum - limitNum;
-               $limitText = '<span>已超出<span class="cRed">'+remainder+'</span>个字</span>';
-           }else{
-               $limitText =  '<span>还可以输入'+remainder+'字</span>';
-           }
-           $('.xui-limitNum').html($limitText);
-        }
-        $('textarea').change(keyup_or_change).keyup(keyup_or_change);
+        });
     }
-});
+
+    //根据评价数据，渲染页面
+    function render_page(data){
+        deblog('render_page', data);
+        //首先渲染商品信息
+        var product = data.product;
+        $('.wa-productname').html(product.name);
+        $('.wa-productinfo').html(product.props);
+        $('.wa-productimg').find('img').prop('src', product.thumbnails_url).parent().css('border', 'none');
+        product_id = product.id;
+        has_order_review = data.has_order_review;
+        if(has_order_review){
+            $('.wa-iscreated').removeClass('wui-iscreated');
+            $('.wa-notcreated').addClass('wui-iscreated');
+        }
+        //渲染评价信息
+        created = data.created;
+        if(created){
+            //如果已经评价过，则渲染评价数据，根据配置的模版渲染页面
+
+        }else{
+            //否则直接渲染页面
+            var product_score = data.product_review.product_score;
+            $('#dj_product_score').prop({
+                'data-value': product_score,
+                'class': 'wui-starGrade wui-starGrade'+product_score
+            });
+            $('#dj_review_detail').val(data.product_review.review_detail);
+        }
+    }
+
+    //绑定事件
+    function bind_events(){
+        deblog('bind_events');
+        // 点击星评
+        $('.wa-evaluate-container').delegate('.wa-starGrade i', 'click', function(){
+            var $star = $(this);
+            var starGrade = $star.attr('data-grade');
+            $star.parent('span').attr({
+                'class': 'wui-starGrade wui-starGrade'+starGrade,
+                'data-value': starGrade
+            });
+        });
+        //隐藏说明提示
+        $('.wui-reviewHint').click(function(){
+            $(this).find('.wui-i-box').hide();
+            $(this).find('textarea').focus();
+        }).focusout(function(){
+            $(this).find('.wui-i-box').show();
+        });
+        // 字数实时提示
+        if('ordinary' === template_type) {
+            var $textarea = $('.wa-ordinary-review-detail');
+            var limitNum = 200;
+            var insetNum = $textarea.val().length;
+            var $limitText = '<span>还可以输入' + limitNum + '字</span>';
+            var keyup_or_change = function () {
+                insetNum = $(this).val().length;
+                var remainder = limitNum - insetNum;
+                if (insetNum > 4) {
+                    $('.xa-reviewBtn').addClass('xui-red');
+                } else {
+                    $('.xa-reviewBtn').removeClass('xui-red')
+                }
+                if (insetNum > 200) {
+                    remainder = insetNum - limitNum;
+                    $limitText = '<span>已超出<span class="cRed">' + remainder + '</span>个字</span>';
+                } else {
+                    $limitText = '<span>还可以输入' + remainder + '字</span>';
+                }
+                $('.wa-limitNum').html($limitText);
+            };
+            $textarea.change(keyup_or_change).keyup(keyup_or_change);
+        }
+        //提交按钮
+        $('body').delegate('.wa-submitTermite', 'click', submitEvaluateData);
+    }
+
+    //提交数据
+    function submitEvaluateData(){
+        //TODO 发表or晒图 ，普通or自定义
+        var postData;
+        if('ordinary' === template_type) {
+            postData = {
+                product_score: $('#dj_product_score').attr('data-value'),
+
+            };
+        }
+    }
 </script>
 {% endblock %}

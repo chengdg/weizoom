@@ -2493,4 +2493,7 @@ li.wui-selectBox-display-table {
     border: 1px solid #e1e1e1;
     box-sizing: border-box;
 }
+.wui-iscreated{
+	display: none;
+}
 /*百宝箱 evaluate CSS ---- end */

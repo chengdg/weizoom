@@ -207,6 +207,8 @@
                         $link.attr('href', 'javascript:void(0);');
                     })
                 }
+                //绑定事件
+                $('body').delegate('#goBack', 'click', goBack); //返回上一页
             });
 
             //参与活动，通用的组织数据方法，可覆盖
@@ -322,6 +324,20 @@
                 this.render = function (model) {
                     return fn.apply(model);
                 };
+            }
+
+            //方便查看debug信息
+            function deblog(header, msg){
+                var start = header + '-----------------------start';
+                var end = header + '-----------------------end';
+                console.log(start);
+                console.log(msg);
+                console.log(end);
+            }
+
+            //无缓存回到上一页
+            function goBack(){
+                window.history.back(-1);
             }
         </script>
 
