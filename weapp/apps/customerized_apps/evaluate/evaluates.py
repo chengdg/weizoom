@@ -332,16 +332,24 @@ class EvaluateReviewShopReply(resource.Resource):
 	@login_required
 	def api_post(request):
 		"""
-		商户给会员评价
+		商户给会员评价&修改会员等级
 		@return:
 		"""
 		reply = request.POST.get('content', '')
+		tag_ids = request.POST.get('tag_ids', None)
 		product_review_id = request.POST.get("product_review_id", None)
+		member_id = request.POST.get('member_id', None)
+		member = Member.objects.get(id=member_id)
 
 		try:
 			app_models.ProductEvaluates.objects(id = product_review_id).update(
 				shop_reply = reply
 			)
+
+			if tag_ids:
+				tag_id_list = json.loads(tag_ids)
+				MemberHasTag.delete_tag_member_relation_by_member(member)
+				MemberHasTag.add_tag_member_relation(member, tag_id_list)
 
 			response = create_response(200)
 			return response.get_response()
