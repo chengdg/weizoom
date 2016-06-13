@@ -225,6 +225,7 @@ class EvaluateReview(resource.Resource):
 			'order_id': evaluate.order_id,
 			'member_name': member.username_for_html,
 			'member_grade': member.grade.name,
+			'shop_reply': review.shop_reply
 		}
 
 		response = create_response(200)
@@ -313,3 +314,27 @@ class EvaluateReview(resource.Resource):
 					return create_response(200).get_response()
 				except:
 					return create_response(500).get_response()
+
+class EvaluateReviewShopReply(resource.Resource):
+	app = 'apps/evaluate'
+	resource = 'evaluate_review_shop_reply'
+
+	@login_required
+	def api_post(request):
+		"""
+		商户给会员评价
+		@return:
+		"""
+		reply = request.POST.get('content', '')
+		product_review_id = request.POST.get("product_review_id", None)
+
+		try:
+			app_models.ProductEvaluates.objects(id = product_review_id).update(
+				shop_reply = reply
+			)
+
+			response = create_response(200)
+			return response.get_response()
+		except:
+			response = create_response(500)
+			return response.get_response()
