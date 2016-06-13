@@ -16,7 +16,7 @@ from mall import models as mall_models
 from export_job.models import ExportJob
 from core import search_util
 from modules.member.module_api import get_member_by_id_list
-from modules.member.models import Member
+from modules.member.models import Member, MemberHasTag
 
 FIRST_NAV_NAME = export.PRODUCT_FIRST_NAV
 COUNT_PER_PAGE = 50
@@ -216,6 +216,8 @@ class EvaluateReview(resource.Resource):
 		evaluate = app_models.ProductEvaluates.objects(id = evaluate_id)[0]
 
 		member = Member.objects.get(id = evaluate.member_id)
+		member_has_tags = MemberHasTag.get_member_has_tags(member)
+
 		items = {
 			'time': evaluate.created_at.strftime('%Y/%m/%d'),
 			'score': evaluate.score,
@@ -225,7 +227,8 @@ class EvaluateReview(resource.Resource):
 			'order_id': evaluate.order_id,
 			'member_name': member.username_for_html,
 			'member_grade': member.grade.name,
-			'shop_reply': evaluate.shop_reply
+			'shop_reply': evaluate.shop_reply,
+			'member_has_tags': member_has_tags
 		}
 
 		response = create_response(200)

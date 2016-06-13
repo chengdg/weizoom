@@ -31,9 +31,6 @@ class MyEvaluates(resource.Resource):
 		"""
 		webapp_owner_id = request.webapp_owner_id
 		member_id = request.member.id
-		print webapp_owner_id,1111111111111111111
-
-
 
 		product_reviews = app_models.ProductEvaluates.objects.filter(owner_id = webapp_owner_id,
 																		 member_id=member_id).order_by('-id')
@@ -65,7 +62,8 @@ class MyEvaluates(resource.Resource):
 				'detail': review.detail,
 				'created_at': review.created_at,
 				'pics': review.pics,
-				'product': product_dic
+				'product': product_dic,
+				'shop_reply': review.shop_reply
 			})
 
 		c = RequestContext(request, {
