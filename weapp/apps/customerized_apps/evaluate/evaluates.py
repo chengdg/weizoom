@@ -217,6 +217,12 @@ class EvaluateReview(resource.Resource):
 
 		member = Member.objects.get(id = evaluate.member_id)
 		member_has_tags = MemberHasTag.get_member_has_tags(member)
+		tag_list = []
+		for tag in member_has_tags:
+			tag_list.append({
+				'tag_name': tag.member_tag.name,
+				'tag_id': tag.member_tag.id
+			})
 
 		items = {
 			'time': evaluate.created_at.strftime('%Y/%m/%d'),
@@ -228,7 +234,7 @@ class EvaluateReview(resource.Resource):
 			'member_name': member.username_for_html,
 			'member_grade': member.grade.name,
 			'shop_reply': evaluate.shop_reply,
-			'member_has_tags': member_has_tags
+			'member_has_tags': tag_list
 		}
 
 		response = create_response(200)
