@@ -231,6 +231,7 @@ class EvaluateReview(resource.Resource):
 			'img': evaluate.pics,
 			'product_name': mall_models.Product.objects.get(id = evaluate.product_id).name,
 			'order_id': evaluate.order_id,
+			'member_id': member.id,
 			'member_name': member.username_for_html,
 			'member_grade': member.grade.name,
 			'shop_reply': evaluate.shop_reply,
