@@ -43,11 +43,16 @@ def deliver_virtual_product(request, args):
 		order_ids.append(order.order_id)
 		product = o2p.product
 		oid = order.id
+		buy_count = o2p.number
 
 		oid2order[oid] = o2p.order
 		if not oid2product_id2count.has_key(oid):
 			oid2product_id2count[oid] = {}
-		oid2product_id2count[oid][product.id] = o2p.number
+		
+		if oid2product_id2count[oid].has_key(product.id):
+			oid2product_id2count[oid][product.id] += buy_count
+		else:
+			oid2product_id2count[oid][product.id] = buy_count
 
 		#判断是否有促销活动
 		if o2p.promotion_id:
@@ -62,15 +67,21 @@ def deliver_virtual_product(request, args):
 			#判断是否是买赠
 			if promotion.type == promotion_models.PROMOTION_TYPE_PREMIUM_SALE:
 				premiums = promotion_models.PremiumSaleProduct.objects.filter(premium_sale__id=promotion.detail_id)
-				if premiums.count() > 0:
-					premium = premiums[0]
+				for premium in premiums:
 					_product = premium.product
 					#判断赠品是否是虚拟类型
 					if _product.type in [mall_models.PRODUCT_VIRTUAL_TYPE, mall_models.PRODUCT_WZCARD_TYPE]:
-						if oid2product_id2count[oid].has_key(_product.id):
-							oid2product_id2count[oid][_product.id] += premium.count
+						premium_sale = premium.premium_sale
+						if premium.premium_sale.is_enable_cycle_mode:
+							premium_product_count = (buy_count / premium_sale.count) * premium.count
 						else:
-							oid2product_id2count[oid][_product.id] = premium.count
+							premium_product_count = premium.count
+
+						print u'赠品id:%d,名称:%s,个数:%d' % (_product.id, _product.name, premium_product_count)
+						if oid2product_id2count[oid].has_key(_product.id):
+							oid2product_id2count[oid][_product.id] += premium_product_count
+						else:
+							oid2product_id2count[oid][_product.id] = premium_product_count
 
 	order2groups = mall_models.OrderHasGroup.objects.filter(order_id__in=order_ids)
 	order_id2group_status = {}
@@ -152,7 +163,7 @@ def deliver_virtual_product(request, args):
 								relation_id=code.virtual_product.id,
 								source=promotion_models.WEIZOOM_CARD_SOURCE_VIRTUAL
 							)
-							print u'订单%s发放微众卡到member_has_wzcard：%d', (order.order_id, member_has_wzcard.id)
+							print u'订单%s发放微众卡到member_has_wzcard：%d' % (order.order_id, member_has_wzcard.id)
 						except Exception, e:
 							message = u'微众卡已经发放成功，但写入MemberHasWeizoomCard信息失败\n订单id:%s\n商品id:%d\n商品名称:%s' % (order.order_id, product_id, virtual_product.product.name)
 							print message
