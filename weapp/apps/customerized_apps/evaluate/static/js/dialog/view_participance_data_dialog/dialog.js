@@ -162,19 +162,21 @@ W.dialog.app.evaluate.ViewParticipanceDataDialog = W.dialog.Dialog.extend({
 			});
 		}
 
+		var _this = this
 		$(".xa-modal-modify").click(function(event){
             var $el = $(event.currentTarget);
             var status = $el.attr("data-status");
             W.getApi().call({
                 app: 'apps/evaluate',
-                resource: 'evaluate_participance',
+                resource: 'evaluate_review',
                 method: 'post',
                 args: {
-                    product_review_id: this.product_review_id,
+                    product_review_id: _this.product_review_id,
                     status: status
                 },
                 success: function(){
                     W.showHint('success', '操作成功');
+                    $('[data-ui-role="advanced-table"]').data('view').reload();
                 },
                 error: function(){
                     W.showHint('error', '操作失败');
@@ -191,9 +193,12 @@ W.dialog.app.evaluate.ViewParticipanceDataDialog = W.dialog.Dialog.extend({
 		}		
 		W.getApi().call({
                 app: 'apps/evaluate',
-                resource: 'evaluate_participance',
+                resource: 'evaluate_participance_shop_reply',
                 method: 'post',
-                args: content,
+                args: {
+                    product_review_id: this.product_review_id,
+                    content: content
+                },
                 scope: this,
                 success: function(){
                     W.showHint('success', '操作成功');
