@@ -72,8 +72,8 @@
 			</div>
 			<div>
 				<span>会员分组：</span>
+				<a href="javascript:void(0);" class="xa-update-tag mr10" data-id={{member_id}} >调分组</a>
 				<span class="tag-group xui-tagGroup" title="{{#each member_has_tags}} {{tag_name}} {{/each}}">
-					<a class="xa-update-tag" data-id={{member_id}}>调分组</a>
 					{{#each member_has_tags}}
 	                <span class="mr10">{{ tag_name }}</span>
 	                <input name = "tag_id" class="tag_id" id = "tag_id" hidden="hidden" value="{{ tag_id }}">

@@ -164,6 +164,16 @@
             $('.xa-productReviewText').addClass('xui-text-ellipsis');
             $('.xa-toggleBtn').show();
         }
+
+        $('.xa-toggleBtn').click(function(){
+            if($(this).html() == '展开'){
+                $(this).html('收起');
+                $('.xa-productReviewText').removeClass('xui-text-ellipsis');
+            }else{
+                $(this).html('展开');
+                $('.xa-productReviewText').addClass('xui-text-ellipsis');             
+            }
+        });
     });
 </script>
 {% endblock %}
