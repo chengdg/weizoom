@@ -81,6 +81,10 @@
     }
     .xui-shopReply{
         border-bottom: 1px solid #e1e1e1;
+        overflow: hidden;
+    }
+    .xui-toggleBtn{
+        color: 
     }
 </style>
 {% endblock %}
@@ -117,13 +121,16 @@
                 </div>
             </div>
         </div>
+        {% if review.shop_reply %}
         <div class="pb10 xui-shopReply">
-            <span class="em9">商家留言：</span>
-            <span class="em9 c65">奖励地址</span>
+            <span class="em9 fl">商家留言：</span>
+            <p class="em9 c65">{{review.shop_reply|safe}}</p>
         </div>
-        <div class="xui-productReviewText c65 em9 pt10">
+        {% endif %}
+        <div class="xui-productReviewText xa-productReviewText c65 em9 pt10 mb10">
             {{review.detail}}
         </div>
+        <a class="xa-toggleBtn xui-toggleBtn xui-hide em9">展开</a>
         <!-- 如果有商品评价晒图-->
         {% if review.pics %}
         <div class="xui-uploadImg">
@@ -153,7 +160,10 @@
 {% block js %}
 <script type="text/javascript">
     $(function(){
-
+        if($('.xa-productReviewText').text().length > 135){
+            $('.xa-productReviewText').addClass('xui-text-ellipsis');
+            $('.xa-toggleBtn').show();
+        }
     });
 </script>
 {% endblock %}

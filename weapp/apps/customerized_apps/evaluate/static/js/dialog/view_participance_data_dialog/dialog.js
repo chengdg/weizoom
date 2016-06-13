@@ -127,7 +127,6 @@ W.dialog.app.evaluate.ViewParticipanceDataDialog = W.dialog.Dialog.extend({
             type: 'text',
             width: null,
             height: 100,
-            maxCount: 100,
             pasteplain: true
         })
 		editor.render();
@@ -152,6 +151,7 @@ W.dialog.app.evaluate.ViewParticipanceDataDialog = W.dialog.Dialog.extend({
 					var template = Handlebars.compile(source);					
 					var html = template(context);
 					$('.xa-modal-content').html(html);
+					editor.setContent(data.items.shop_reply);
 				},
 				error: function(resp) {
 					console.log('error');
@@ -161,7 +161,6 @@ W.dialog.app.evaluate.ViewParticipanceDataDialog = W.dialog.Dialog.extend({
 	},
 	
 	afterShow: function(options) {
-		editor.setContent($('.xa-hide-content').html());
 		var _this = this
 		$(".xa-modal-modify").click(function(event){
             var $el = $(event.currentTarget);
@@ -183,21 +182,49 @@ W.dialog.app.evaluate.ViewParticipanceDataDialog = W.dialog.Dialog.extend({
                 }
             });
         });	
+
+		$('body').delegate('.xa-update-tag', 'click', function(event){
+			var $el = $(event.currentTarget);
+			var member_id = $(this).data('id');
+
+			var memberTagsUpdateView = W.getMemberTagsUpdateView({
+				width: 260,
+				title: '修改分组',
+				position:'top',
+				isTitle: false,
+				privateContainerClass:'xui-updateGradeOrTagBox',
+				isPostData: false
+			});
+			memberTagsUpdateView.show({
+				$action: $el,
+				isUpdateGrade: false,
+				memberId: member_id,
+				isPostData: false
+			})
+	        memberTagsUpdateView.render();
+		});
 	},
 
 	onClickSubmitButton: function(){
-		var content = editor.getContent();
-		if (content.length > 100) {
-			W.showHint('error', '内容不能超过100字');
-			return;
-		}		
+		var member_id = $('.xa-update-tag').data('id');
+		var content = editor.getHtmlContent();
+		var tag_ids = [];
+		$(".tag_id").each(function() {
+			tag_ids.push(this.value)
+		});
+		// if (content.length > 100) {
+		// 	W.showHint('error', '内容不能超过100字');
+		// 	return;
+		// }		
 		W.getApi().call({
             app: 'apps/evaluate',
             resource: 'evaluate_review_shop_reply',
             method: 'post',
             args: {
                 product_review_id: this.product_review_id,
-                content: content
+                content: content,
+                tag_ids: tag_ids,
+                member_id: member_id
             },
             scope: this,
             success: function(){

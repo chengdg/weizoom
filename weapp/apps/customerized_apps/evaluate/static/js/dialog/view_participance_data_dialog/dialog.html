@@ -72,9 +72,13 @@
 			</div>
 			<div>
 				<span>会员分组：</span>
-				<a>调分组</a>
-				<span>土小宝金杆粉</span>
-				<span>小二黑微家人</span>
+				<span class="tag-group xui-tagGroup" title="{{#each member_has_tags}} {{tag_name}} {{/each}}">
+					<a class="xa-update-tag" data-id={{member_id}}>调分组</a>
+					{{#each member_has_tags}}
+	                <span class="mr10">{{ tag_name }}</span>
+	                <input name = "tag_id" class="tag_id" id = "tag_id" hidden="hidden" value="{{ tag_id }}">
+	                {{/each}}
+	            </span>
 			</div>
 		</div>
 		<p class="xui-hide xa-hide-content">{{shop_reply}}</p>
