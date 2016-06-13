@@ -28,22 +28,6 @@ NEW_PAGE_JSON = """
         }, {
             "cid": 3,
             "pid": 1,
-            "property_view_title": "提交按钮",
-            "force_display_in_property_view": "no",
-            "components": [],
-            "selectable": "no",
-            "type": "appkit.submitbutton",
-            "model": {
-                "index": 99999,
-                "name": "",
-                "class": "",
-                "id": "",
-                "text": "提交"
-            },
-            "has_global_content": "no"
-        }, {
-            "cid": 4,
-            "pid": 1,
             "property_view_title": "新加模块",
             "force_display_in_property_view": "no",
             "components": [],

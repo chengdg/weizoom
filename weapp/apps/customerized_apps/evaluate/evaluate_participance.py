@@ -12,6 +12,7 @@ from django.contrib.auth.decorators import login_required
 from core import resource
 from core import paginator
 from core.jsonresponse import create_response
+from core.exceptionutil import unicode_full_stack
 
 import models as app_models
 import export
@@ -27,59 +28,93 @@ COUNT_PER_PAGE = 20
 class EvaluateParticipance(resource.Resource):
 	app = 'apps/evaluate'
 	resource = 'evaluate_participance'
-	
-	@login_required
-	def api_get(request):
-		"""
-		响应GET api
-		"""
-		if 'id' in request.GET:
-			evaluate_participance = app_models.EvaluateParticipance.objects.get(id=request.GET['id'])
-			data = evaluate_participance.to_json()
-		else:
-			data = {}
-		response = create_response(200)
-		response.data = data
-		return response.get_response()
-	
+
 	def api_put(request):
 		"""
-		响应PUT
+		发表评价
 		"""
-		data = request_util.get_fields_to_be_save(request)
-		evaluate_participance = app_models.EvaluateParticipance(**data)
-		evaluate_participance.save()
-		error_msg = None
-		
-		#调整参与数量
-		app_models.Evaluate.objects(id=data['belong_to']).update(**{"inc__participant_count":1})
-		
-		#活动奖励
-		prize = data.get('prize', None)
-		if prize:
-			prize_type = prize['type']
-			if prize_type == 'no_prize':
-				pass #不进行奖励
-			elif prize_type == 'integral':
-				if not request.member:
-					pass #非会员，不进行积分奖励
-				else:
-					value = int(prize['data'])
-					integral_api.increase_member_integral(request.member, value, u'参与活动奖励积分')
-			elif prize_type == 'coupon':
-				if not request.member:
-					pass #非会员，不进行优惠券发放
-				else:
-					coupon_rule_id = int(prize['data']['id'])
-					coupon, msg = mall_api.consume_coupon(request.webapp_owner_id, coupon_rule_id, request.member.id)
-					if not coupon:
-						error_msg = msg
-		
-		data = json.loads(evaluate_participance.to_json())
-		data['id'] = data['_id']['$oid']
-		if error_msg:
-			data['error_msg'] = error_msg
+		param = request.POST
+		response = create_response(500)
+		member = request.member
+		if not member:
+			response.errMsg = u'会员信息出错'
+			return response.get_response()
+		member_id = member.id
+		owner_id = int(request.webapp_owner_id)
+		product_id = int(param.get('product_id', 0))
+		order_id = param.get('order_id', '')
+		order_has_product_id = int(param.get('order_has_product_id', 0))
+		template_type = param.get('template_type', 'ordinary')
+
+
+		product_score = param.get('product_score', None)
+		review_detail = param.get('review_detail', '')
+		serve_score = param.get('serve_score', None)
+		deliver_score = param.get('deliver_score', None)
+		process_score = param.get('process_score', None)
+		picture_list = param.get('picture_list', None)
+
+		#创建订单评论
+		try:
+			order_evaluate = app_models.OrderEvaluates(
+				order_id = order_id,
+				owner_id = owner_id,
+				member_id = member_id,
+				serve_score = serve_score,
+				deliver_score = deliver_score,
+				process_score = process_score
+			)
+			order_evaluate.save()
+		except:
+			order_evaluate = app_models.OrderEvaluates.objects(order_id=order_id).first()
+
+		# 创建商品评论
+		product_evaluate = app_models.ProductEvaluates(
+			member_id = member_id,
+			order_evaluate_id = str(order_evaluate.id),
+			order_id = order_id,
+			owner_id = owner_id,
+			product_id = product_id,
+			order_has_product_id = order_has_product_id,
+			score = product_score,
+			detail = review_detail if template_type == 'ordinary' else json.loads(review_detail),
+			pics = picture_list.split(',')
+		)
+		product_evaluate.save()
+
 		response = create_response(200)
-		response.data = data
 		return response.get_response()
 
+	def api_post(request):
+		"""
+		追加晒图
+		"""
+		param = request.POST
+		response = create_response(500)
+		member = request.member
+		if not member:
+			response.errMsg = u'会员信息出错'
+			return response.get_response()
+		member_id = member.id
+		owner_id = int(request.webapp_owner_id)
+		product_id = int(param.get('product_id', 0))
+		order_id = param.get('order_id', '')
+		order_has_product_id = int(param.get('order_has_product_id', 0))
+		picture_list = param.get('picture_list', None)
+		if picture_list:
+			picture_list = picture_list.split(',')
+		try:
+			product_evaluate = app_models.ProductEvaluates.objects.get(
+				owner_id = owner_id,
+				member_id = member_id,
+				product_id = product_id,
+				order_id = order_id,
+				order_has_product_id = order_has_product_id
+			)
+			product_evaluate.pics += picture_list
+			product_evaluate.save()
+		except:
+			response.errMsg = u'评价数据出错'
+			return response.get_response()
+		response = create_response(200)
+		return response.get_response()

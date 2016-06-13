@@ -15,14 +15,7 @@
         _uploadImageClassName: 'xui-uploadImage',
 
         _alert: function(msg) {
-            $('body').alert({
-                isShow: true,
-                info: msg,
-                isSlide: true,
-                speed: 2000,
-                callBack: function() {
-                }
-            });
+            wuiAlert(msg, 2000);
         },
 
         _create : function() {
@@ -150,7 +143,6 @@
                 error: function (data) {
                     _this._alert('图片格式不正确，请重新上传');
                     clearInterval(loop);
-                    return;
                 }
             });
         },
@@ -162,7 +154,7 @@
                 ndata;
             width = img.width;
             height = img.height;
-            var needCompress = (ratio = width * height / 4000000)>1 ? true : false;
+            var needCompress = (ratio = width * height / 4000000)>1;
             //如果图片大于四百万像素，计算压缩比并将大小压至400万以下
             if (needCompress) {
                 ratio = Math.sqrt(ratio);

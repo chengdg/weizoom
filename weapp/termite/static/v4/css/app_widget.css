@@ -2361,7 +2361,7 @@ li.wui-selectBox-display-table {
     overflow: hidden;
 }
 .wui-evaluate-container .wui-separate{
-	height: 15px;
+	height: 10px;
 	background: #f0f0f0;
 }
 .wui-evaluate-container .wui-imgList li{
@@ -2490,8 +2490,13 @@ li.wui-selectBox-display-table {
     height: 60px;
     text-align: center;
     vertical-align: middle;
-    border: 1px solid #e1e1e1;
+    /*border: 1px solid #e1e1e1;*/
     box-sizing: border-box;
+}
+.wui-evaluate-container .wui-i-status{
+	color: #CF0404;
+	font-size: 0.85rem;
+	margin: 10px 0 0 10px;
 }
 .wui-iscreated{
 	display: none;

@@ -192,6 +192,7 @@
             W.resource = "{{ resource }}";
             W.isPC = {% if isPC %}true{% else %}false{% endif %};
             W.qrcodeUrl = "{{ request.webapp_owner_info.qrcode_img }}";
+            W.is_pic_up = true;
 
             $(document).ready(function() {
                 //作为子框架页的展示调整(预览或模拟器中)
@@ -208,7 +209,22 @@
                     })
                 }
                 //绑定事件
-                $('body').delegate('#goBack', 'click', goBack); //返回上一页
+                var $body = $('body');
+                $body.delegate('#goBack', 'click', goBack); //返回上一页
+                //针对选择题组件
+                $body.delegate('.selection-radio', 'click', function(event){
+                    var $span = $(event.currentTarget);
+                    $span.parents('ul').find('label').find('span :first').removeClass('radio-select');
+                    $span.addClass('radio-select');
+                });
+                $body.delegate('.selection-checkbox','click', function(event){
+                    var $span = $(event.currentTarget);
+                    if ($span.hasClass('checkbox-select')){
+                        $span.removeClass('checkbox-select');
+                    }else{
+                        $span.addClass('checkbox-select');
+                    }
+                });
             });
 
             //参与活动，通用的组织数据方法，可覆盖

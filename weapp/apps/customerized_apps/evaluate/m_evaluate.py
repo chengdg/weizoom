@@ -56,7 +56,8 @@ class MEvaluate(resource.Resource):
 			'order_has_product_id': param.get('order_has_product_id', '1'),
 			'order_id': param.get('order_id', '1'),
 			'product_id': param.get('product_id', '1'),
-			'product_model_name': param.get('product_model_name', 'test')
+			'product_model_name': param.get('product_model_name', 'test'),
+			'isPC': False if request.member else True
 		})
 
 		return render_to_response('evaluate/templates/webapp/m_evaluate.html', c)
@@ -71,10 +72,10 @@ class MEvaluate(resource.Resource):
 			response.errMsg = u'会员信息出错'
 			return response.get_response()
 		param = request.GET
-		order_id = param.get('order_id', None)
+		order_id = param.get('order_id', '')
 		product_model_name = param.get('product_model_name', None)
-		order_has_product_id = int(param.get('order_has_product_id', None))
-		product_id = param.get('product_id', None)
+		order_has_product_id = int(param.get('order_has_product_id', 0))
+		product_id = int(param.get('product_id', 0))
 
 		order_review_count = app_models.OrderEvaluates.objects(
 			owner_id=member.id,
@@ -97,13 +98,14 @@ class MEvaluate(resource.Resource):
 		try:
 			product_review = app_models.ProductEvaluates.objects.get(order_has_product_id=order_has_product_id)
 			product_review_dict = {
-				'id': product_review.id,
-				'product_score': product_review.product_score,
-				'review_detail': product_review.review_detail,
+				'id': str(product_review.id),
+				'product_score': product_review.score,
+				'review_detail': product_review.detail,
 				'has_pic': len(product_review.pics) > 0
 			}
+		except Exception, e:
+			print e
 			created = False
-		except:
 			pass
 
 		response = create_response(200)

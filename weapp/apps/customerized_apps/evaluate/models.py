@@ -41,7 +41,7 @@ class OrderEvaluates(models.Document):
 	"""
 	owner_id = models.LongField()
 	member_id= models.LongField() #评价用户
-	order_id = models.StringField(default='', max_length=50)  # Order.order_id ！！！
+	order_id = models.StringField(default='', max_length=50, unique=True)  # Order.order_id ！！！
 	serve_score = models.IntField(default=5)  # 服务态度评分
 	deliver_score = models.IntField(default=5)  # 发货速度评分
 	process_score = models.IntField(default=5)  # 物流服务评分
