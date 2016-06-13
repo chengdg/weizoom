@@ -92,14 +92,13 @@
                 {% else %}
                     <img src="{{review.product.thumbnails_url}}" >
                 {% endif %}
-
             </div>
             <div class="productInfo disTc vt pl10">
                 <div class="xui-productname em85 c65">{{review.product.name}}</div>
                 <div class="xui-productSpecificationAndPrice mt10">
                     <span class="xui-specification em75 c9">
-                        {% if review.custom_model_properties %}
-                            {% for property in review.custom_model_properties %}
+                        {% if review.product.custom_model_properties %}
+                            {% for property in review.product.custom_model_properties %}
                                 {{ property.property_value }}&nbsp;&nbsp;
                             {% endfor %}
                         {% endif %}
@@ -115,13 +114,13 @@
             {{review.detail}}
         </div>
         <!-- 如果有商品评价晒图-->
-        {% if review.reviewed_product_pictures.length > 0 %}
+        {% if review.pics %}
         <div class="xui-uploadImg">
-            {% for picture in review.reviewed_product_pictures%}
-            {% if picture.att_url|truncatechars:15 == 'http://weappimg...'%}
-                <img src="{{picture.att_url}}!60" full-src="{{picture.att_url}}">
+            {% for picture_url in review.pics%}
+            {% if picture_url|truncatechars:15 == 'http://weappimg...'%}
+                <img src="{{picture_url}}!60" full-src="{{picture_url}}">
             {% else %}
-                <img src="{{picture.att_url}}">
+                <img src="{{picture_url}}">
             {% endif %}
 
             {% endfor %}
