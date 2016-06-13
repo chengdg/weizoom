@@ -45,6 +45,10 @@ python manage.py sqldiff --old old.sql --new new.sql
 ```
 mysql -u xxx -p weapp < migrate.sql
 ```
+5.创建本地测试数据
+```
+behave -kt @full_init
+```
 
 # 集成测试
 
