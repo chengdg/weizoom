@@ -40,7 +40,7 @@ def check_weizoom_card(request):
 	data_card = {
 		"card_infos": '[{"card_number":"%s","card_password": "%s"}]' %(name, password)
 	}
-	resp = requests.post(url, params=data_card)
+	resp = requests.post(url, data=data_card)
 	text = json.loads(resp.text)
 	card_infos = text['data']['card_infos']
 

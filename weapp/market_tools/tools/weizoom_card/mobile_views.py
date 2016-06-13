@@ -181,7 +181,7 @@ def get_weizoom_card_wallet(request):
 	has_expired_cards = False
 	if member_has_cards:
 		url = 'http://%s/card/get_cards/?_method=post' % settings.CARD_SERVER_DOMAIN
-		resp = requests.post(url, params=data_card)
+		resp = requests.post(url, data=data_card)
 		text = json.loads(resp.text)
 		card_infos = text['data']['card_infos']
 
