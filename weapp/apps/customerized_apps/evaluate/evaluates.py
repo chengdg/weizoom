@@ -224,7 +224,16 @@ class EvaluateReview(resource.Resource):
 				'tag_id': tag.member_tag.id
 			})
 
-		order = mall_models.Order.objects.get(order_id = evaluate.order_id)
+		is_common_template = True
+		evaluate_detail = evaluate.detail
+		if isinstance(evaluate_detail, dict):
+			# print 111111111111111111111
+			# print evaluate_detail
+			is_common_template = False
+			# for key in evaluate_detail:
+			# 	type = key.split('::')[0]
+			# 	print type,55555555555555
+
 		items = {
 			'time': evaluate.created_at.strftime('%Y/%m/%d'),
 			'score': evaluate.score,
@@ -237,7 +246,8 @@ class EvaluateReview(resource.Resource):
 			'member_grade': member.grade.name,
 			'shop_reply': evaluate.shop_reply,
 			'member_has_tags': tag_list,
-			'order_id': order.id
+			'order_id': mall_models.Order.objects.get(order_id = evaluate.order_id).id,
+			'is_common_template': is_common_template
 		}
 
 		response = create_response(200)
