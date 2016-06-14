@@ -13,17 +13,29 @@
 		</li>
 		<li class="active">所有订单</li>
 	</ul>
-    <span>+新增地址</span>
-	<table class="table table-condensed mb0 xui-tableHead">
+    <input type="button" value="+新增地址"/>
+     <div
+                data-ui-role="advanced-table"
+                data-app="mall2"
+                data-resource="sender_info_list"
+                data-enable-paginator="true"
+                data-template-id="#mall-orders-view"
+                data-init-sort="-created_at"
+                data-selectable = "false"
+                data-user-webapp-id={{user.get_profile.webapp_id}}
+                data-args='{"order_status":"{{order_status}}"}'
+            >
+            </div>
+	<table class="table table-condensed mb0 xui-table">
 		<thead>
 			<tr>
-				<th width="100">默认</th>
-				<th width="100">发货人姓名</th>
-				<th width="100">发货人电话</th>
-				<th width="100">所在地区</th>
-				<th width="100">详细地址</th>
-				<th width="100">邮政编码</th>
-				<th width="100">操作</th>
+				<th width="60">默认</th>
+				<th width="60">发货人姓名</th>
+				<th width="60">发货人电话</th>
+				<th width="60">所在地区</th>
+				<th width="60">详细地址</th>
+				<th width="60">邮政编码</th>
+				<th width="60">操作</th>
 			</tr>
 		</thead>
 	</table>
