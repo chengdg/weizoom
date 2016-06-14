@@ -2716,18 +2716,21 @@ class ProductSearchRecord(models.Model):
 
 class SenderInfo(models.Model):
 	"""
-		存储发货人的相关信息
+		存储发件人的相关信息
 	"""
 	webapp_id = models.CharField(max_length=20, verbose_name='店铺ID')  # webapp,订单成交的店铺id
-	ship_name = models.CharField(max_length=100) # 收货人姓名
-	ship_tel = models.CharField(max_length=100) # 收货人电话
-	ship_address = models.CharField(max_length=200) # 收货人地址
+	sender_name = models.CharField(max_length=100) # 发件人姓名
+	sender_tel = models.CharField(max_length=100) # 发件人电话
+	sender_address = models.CharField(max_length=200) # 发件人地址
 	area = models.CharField(max_length=256) #地区
+	code = models.CharField(max_length=256, default='')  # 邮政编码
+	company_name = models.CharField(max_length=50, default='', verbose_name="公司名称")
+	remarks = models.TextField(max_length=1024, blank=True)
 	is_selected = models.BooleanField(default=True) # 是否选中，默认是选中
 	is_deleted = models.BooleanField(default=False) # 是否被删除
 	created_at = models.DateTimeField(auto_now_add=True)
 
 	class Meta(object):
-		verbose_name = "发货人信息"
-		verbose_name_plural = "发货人信息"
+		verbose_name = "发件人信息"
+		verbose_name_plural = "发件人信息"
 		db_table = "mall_sender_info"

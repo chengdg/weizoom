@@ -695,3 +695,150 @@ class OrderGetFile(resource.Resource):
         }
         return response.get_response()
 
+class SenderInfo(resource.Resource):
+    app = 'mall2'
+    resource = 'sender_info'
+
+    @login_required
+    def get(request):
+        """
+        发件人信息创建页&&发件人信息更新页
+        """
+        # 如果有product说明更新， 否则说明创建
+        sender_info_id = request.GET.get('id')
+        sender_info_id = int(sender_info_id) if sender_info_id else 0
+        webapp_id = request.user_profile.webapp_id
+
+        if sender_info_id:
+            try:
+                sender_info = SenderInfo.objects.get(webapp_id=webapp_id, id=sender_info_id)
+            except SenderInfo.DoesNotExist:
+                raise Http404
+           
+
+        else:
+            sender_info = {}
+
+        c = RequestContext(request, {
+            'first_nav_name': FIRST_NAV,
+            'second_navs': export.get_mall_order_second_navs(request),
+            'second_nav_name': export.ORDER_SENDER_INFO,
+            'sender_info': sender_info,
+        })
+
+
+        return render_to_response('mall/editor/sender_info.html', c)
+
+    @login_required
+    def put(request):
+        """创建发件人信息
+        """
+
+        webapp_id = request.user_profile.webapp_id
+
+
+        sender_info = SenderInfo.objects.create(
+            webapp_id=webapp_id,
+            sender_name=request.POST.get('sender_name', '').strip(),
+            area=request.POST.get('area', '').strip(),
+            sender_address=request.POST.get('sender_address', '').strip(),
+            sender_tel=request.POST.get('tel', '').strip(),
+            code=request.POST.get('code', '').strip(),
+            company_name=request.POST.get('company_name', '').strip(),
+            remarks=request.POST.get('remarks', '').strip(),
+        )
+
+        SenderInfo.objects.filter(~Q(id=sender_info.id),webapp_id=webapp_id).update(is_selected=False)
+        # component_authed_appids = ComponentAuthedAppid.objects.filter(~Q(user_id=user_id), authorizer_appid=authorizer_appid)
+        return HttpResponseRedirect('/mall2/sender_info_list/')
+
+    @login_required
+    def post(request):
+        """更新发件人信息
+        API:
+          method: post
+          url: /mall2/sender_info/?id=%d
+        """
+
+        # 获取默认运费
+        sender_info_id = request.GET.get('id')
+        sender_info_id = int(sender_info_id) if sender_info_id else 0
+        webapp_id = request.user_profile.webapp_id
+        is_selected = True if (request.GET.get('is_selected','') in ('true', 'yes', 'True', 'Yes', True, '1')) else False
+        
+
+        if sender_info_id:
+            SenderInfo.objects.filter(webapp_id=webapp_id,id=sender_info_id).update(
+                sender_name=request.POST.get('sender_name', '').strip(),
+                area=request.POST.get('area', '').strip(),
+                sender_address=request.POST.get('sender_address', '').strip(),
+                sender_tel=request.POST.get('tel', '').strip(),
+                code=request.POST.get('code', '').strip(),
+                company_name=request.POST.get('company_name', '').strip(),
+                remarks=request.POST.get('remarks', '').strip(),
+                is_selected=is_selected
+            )
+        if is_selected:
+            SenderInfo.objects.filter(~Q(id=sender_info_id),webapp_id=webapp_id).update(is_selected=False)
+        return HttpResponseRedirect(
+            '/mall2/sender_info_list/')
+
+    @login_required
+    def api_delete(request):
+        """
+        删除发货人
+        """
+
+        sender_info_id = request.GET.get('id')
+        sender_info_id = int(sender_info_id) if sender_info_id else 0
+        webapp_id = request.user_profile.webapp_id
+        if sender_info_id:
+            SenderInfo.objects.filter(webapp_id=webapp_id,id=sender_info_id).update(is_deleted=True)
+        return HttpResponseRedirect(
+            '/mall2/sender_info_list/')
+
+
+
+class SenderInfoList(resource.Resource):
+    app = 'mall2'
+    resource = 'sender_info'
+
+    @login_required
+    def get(request):
+        """
+        发件人信息创建页&&发件人信息更新页
+        """
+        # 如果有product说明更新， 否则说明创建
+
+        c = RequestContext(request, {
+            'first_nav_name': FIRST_NAV,
+            'second_navs': export.get_mall_order_second_navs(request),
+            'second_nav_name': export.ORDER_SENDER_INFO,
+
+        })
+
+
+        return render_to_response('mall/editor/sender_info_list.html', c)
+
+    @login_required
+    def api_get(request):
+
+        webapp_id = request.user_profile.webapp_id
+        sender_infos = SenderInfo.objects.filter(webapp_id=webapp_id,is_deleted=False).order_by("-id")
+        count_per_page = int(request.GET.get('count_per_page', 100))
+        cur_page = int(request.GET.get('page', '1'))
+        pageinfo, sender_infos = paginator.paginate(
+            sender_infos,
+            cur_page,
+            count_per_page,
+            query_string=request.META['QUERY_STRING'])
+
+        items = []
+        for sender_info in sender_infos :
+            items.append(sender_info.to_dict())
+        response = create_response(200)
+        response.data = {
+            'items': items,
+            'pageinfo': paginator.to_dict(pageinfo),
+        }
+        return response.get_response()

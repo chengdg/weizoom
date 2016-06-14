@@ -233,6 +233,7 @@ ORDER_AUDIT = 'financialCheck'
 ORDER_EXPIRED_TIME = 'orderExpiration'
 ORDER_BATCH_DELIVERY = 'orderBatchDelivery'
 ORDER_MONEY = 'orderMoney'
+ORDER_SENDER_INFO = 'orderSenderInfo'
 
 MALL_ORDER_SECOND_NAV = {
     'section': u'',
@@ -266,6 +267,11 @@ MALL_ORDER_SECOND_NAV = {
             'title': u'结算管理',
             'url': '/mall2/orders_to_money/',
             'permission': 'manage_order_settle',
+        },{
+            'name': ORDER_SENDER_INFO,
+            'title': u'发件人信息',
+            'url': '/mall2/sender_info_list/',
+            'permission': 'manage_order_sender_info',
         }
     ]
 }
