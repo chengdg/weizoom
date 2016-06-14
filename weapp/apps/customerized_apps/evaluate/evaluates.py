@@ -224,18 +224,20 @@ class EvaluateReview(resource.Resource):
 				'tag_id': tag.member_tag.id
 			})
 
+		order = mall_models.Order.objects.get(order_id = evaluate.order_id)
 		items = {
 			'time': evaluate.created_at.strftime('%Y/%m/%d'),
 			'score': evaluate.score,
 			'detail': evaluate.detail,
 			'img': evaluate.pics,
 			'product_name': mall_models.Product.objects.get(id = evaluate.product_id).name,
-			'order_id': evaluate.order_id,
+			'order_num': evaluate.order_id, #订单号
 			'member_id': member.id,
 			'member_name': member.username_for_html,
 			'member_grade': member.grade.name,
 			'shop_reply': evaluate.shop_reply,
-			'member_has_tags': tag_list
+			'member_has_tags': tag_list,
+			'order_id': order.id
 		}
 
 		response = create_response(200)
