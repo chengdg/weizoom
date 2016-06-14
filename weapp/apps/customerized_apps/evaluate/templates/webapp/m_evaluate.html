@@ -142,7 +142,7 @@
             $('body').delegate('.wa-submitTermite', 'click', submitEvaluateData);
         }else{
             //否则直接渲染页面
-            $('#dj_review_detail').val(product_review.review_detail);
+            $('#dj_review_detail').val(product_review.review_detail || '');
             bind_events();
         }
     }
