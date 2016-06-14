@@ -113,7 +113,7 @@ class MEvaluate(resource.Resource):
 				'thumbnails_url': product.thumbnails_url,
 				'id': product.id,
 				'name': product.name,
-				'props': ' / '.join([model.property_value for model in product.custom_model_properties]) if product.custom_model_properties else ''
+				'props': ' / '.join([model['property_value'] for model in product.custom_model_properties]) if product.custom_model_properties else ''
 			},
 			'product_review': product_review_dict,
 			'order_has_product_id': order_has_product_id,
