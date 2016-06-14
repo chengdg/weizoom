@@ -11,7 +11,7 @@ import apps_step_utils
 
 
 @when(u"{webapp_user}完成订单'{order_code}'中'{product_name}'的评价")
-def step_finished_a_product_review(context, webapp_user, order_code, product_name):
+def step_impl(context, webapp_user, order_code, product_name):
     url = '/webapp/api/project_api/call/'
     order_has_product = bdd_util.get_order_has_product(order_code, product_name)
     # 输入

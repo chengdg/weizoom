@@ -126,52 +126,52 @@ Background:
 #        """
 @mall @apps @app_evaluate @commit_app_product_comment
 Scenario:1 评价包括文字与晒图
-    When bill访问jobs的webapp
-    And bill完成订单'1'中'商品1'的评价
-        """
-        {
-            "product_score": "5",
-            "answer": "",
-            "choose":"是",
-            "name":"bill",
-            "tel":"13013013011",
-            "title":"工程师",
-            "picture_list": ['1.png','2.jpg']
-        }
-        """
-    Then 订单'1'中'商品1'的评商品评价提示信息'发表评价失败'
+#    When bill访问jobs的webapp
+#    And bill完成订单'1'中'商品1'的评价
+#        """
+#        {
+#            "product_score": "5",
+#            "answer": "",
+#            "choose":"是",
+#            "name":"bill",
+#            "tel":"13013013011",
+#            "title":"工程师",
+#            "picture_list": ['1.png','2.jpg']
+#        }
+#        """
+#    Then 订单'1'中'商品1'的评商品评价提示信息'发表评价失败'
     # And 订单'1'中'商品1'的评商品评价提示详情'请填写必填项'
 
-    When bill访问jobs的webapp
-    And bill完成订单'1'中'商品1'的评价
-        """
-        {
-            "product_score": "5",
-            "answer": "腰不酸腿不痛，走路不抽经了！！！！",
-            "choose":"",
-            "name":"bill",
-            "tel":"13013013011",
-            "title":"",
-            "picture_list": ['1.png','2.jpg']
-        }
-        """
-    Then 订单'1'中'商品1'的评商品评价提示信息'发表评价失败'
+#    When bill访问jobs的webapp
+#    And bill完成订单'1'中'商品1'的评价
+#        """
+#        {
+#            "product_score": "5",
+#            "answer": "腰不酸腿不痛，走路不抽经了！！！！",
+#            "choose":"",
+#            "name":"bill",
+#            "tel":"13013013011",
+#            "title":"",
+#            "picture_list": ['1.png','2.jpg']
+#        }
+#        """
+#    Then 订单'1'中'商品1'的评商品评价提示信息'发表评价失败'
     # And 订单'1'中'商品1'的评商品评价提示详情'请填写必填项'
 
-    When bill访问jobs的webapp
-    And bill完成订单'1'中'商品1'的评价
-        """
-        {
-            "product_score": "5",
-            "answer": "腰不酸腿不痛，走路不抽经了！！！！",
-            "choose":"否",
-            "name":"bill",
-            "tel":"",
-            "title":"经理",
-            "picture_list": ['1.png','2.jpg']
-        }
-        """
-    Then 订单'1'中'商品1'的评商品评价提示信息'发表评价失败'
+#    When bill访问jobs的webapp
+#    And bill完成订单'1'中'商品1'的评价
+#        """
+#        {
+#            "product_score": "5",
+#            "answer": "腰不酸腿不痛，走路不抽经了！！！！",
+#            "choose":"否",
+#            "name":"bill",
+#            "tel":"",
+#            "title":"经理",
+#            "picture_list": ['1.png','2.jpg']
+#        }
+#        """
+#    Then 订单'1'中'商品1'的评商品评价提示信息'发表评价失败'
     # And 订单'1'中'商品1'的评商品评价提示详情'请填写必填项'
 
     #文字在5-200以内，填写必填项，成功提交
