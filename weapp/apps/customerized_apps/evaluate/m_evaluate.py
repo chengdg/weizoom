@@ -101,12 +101,11 @@ class MEvaluate(resource.Resource):
 				'id': str(product_review.id),
 				'product_score': product_review.score,
 				'review_detail': product_review.detail,
-				'has_pic': len(product_review.pics) > 0
+				'has_pic': len(product_review.pics) > 0,
+				'pics': product_review.pics
 			}
-		except Exception, e:
-			print e
+		except:
 			created = False
-			pass
 
 		response = create_response(200)
 		response.data = {

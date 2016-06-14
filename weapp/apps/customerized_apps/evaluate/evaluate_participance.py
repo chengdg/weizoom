@@ -1,29 +1,15 @@
 # -*- coding: utf-8 -*-
 
 import json
-from datetime import datetime
-
-from django.http import HttpResponseRedirect, HttpResponse
-from django.template import RequestContext
-from django.shortcuts import render_to_response
-from django.db.models import F
-from django.contrib.auth.decorators import login_required
 
 from core import resource
-from core import paginator
 from core.jsonresponse import create_response
 from core.exceptionutil import unicode_full_stack
 
 import models as app_models
-import export
-from apps import request_util
-from modules.member import integral as integral_api
-from mall.promotion import utils as mall_api
 from mall import export as mall_export
-import termite.pagestore as pagestore_manager
 
 FIRST_NAV = mall_export.MALL_PROMOTION_AND_APPS_FIRST_NAV
-COUNT_PER_PAGE = 20
 
 class EvaluateParticipance(resource.Resource):
 	app = 'apps/evaluate'
@@ -46,13 +32,12 @@ class EvaluateParticipance(resource.Resource):
 		order_has_product_id = int(param.get('order_has_product_id', 0))
 		template_type = param.get('template_type', 'ordinary')
 
-
 		product_score = param.get('product_score', None)
 		review_detail = param.get('review_detail', '')
 		serve_score = param.get('serve_score', None)
 		deliver_score = param.get('deliver_score', None)
 		process_score = param.get('process_score', None)
-		picture_list = param.get('picture_list', None)
+		picture_list = param.get('picture_list', '')
 
 		#创建订单评论
 		try:
@@ -78,7 +63,7 @@ class EvaluateParticipance(resource.Resource):
 			order_has_product_id = order_has_product_id,
 			score = product_score,
 			detail = review_detail if template_type == 'ordinary' else json.loads(review_detail),
-			pics = picture_list.split(',')
+			pics = picture_list.split(',') if picture_list != '' else []
 		)
 		product_evaluate.save()
 

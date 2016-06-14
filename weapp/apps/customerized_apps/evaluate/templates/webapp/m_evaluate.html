@@ -90,7 +90,8 @@
             }else{
                 $('.wa-submitTermite').html('追加晒图');
             }
-            $('#dj_review_detail').val(detail || '').siblings().hide();
+            $('#dj_review_detail').val(detail || '').attr('readonly', true).siblings().hide();
+            $('.wa-limitNum').hide();
             //渲染动态组件数据
             for(var key in detail) {
                 var value = detail[key];
@@ -161,10 +162,7 @@
         });
         //隐藏说明提示
         $('.wui-reviewHint').click(function(){
-            $(this).find('.wui-i-box').hide();
             $(this).find('textarea').focus();
-        }).focusout(function(){
-            $(this).find('.wui-i-box').show();
         });
         // 字数实时提示
         if('ordinary' === template_type) {
@@ -174,6 +172,11 @@
             var $limitText = '<span>还可以输入' + limitNum + '字</span>';
             var keyup_or_change = function () {
                 insetNum = $(this).val().length;
+                if(insetNum == 0){
+                    $('.wui-reviewHint').find('.wui-i-box').show();
+                }else{
+                    $('.wui-reviewHint').find('.wui-i-box').hide();
+                }
                 var remainder = limitNum - insetNum;
                 if (insetNum > 4) {
                     $('.xa-reviewBtn').addClass('xui-red');
@@ -196,12 +199,13 @@
 
     //提交数据
     function submitEvaluateData(){
+        //防止重复提交
+        if(submitting) return;
         submitting = true;
         if(!W.is_pic_up){
             wuiAlert('图片还未上传完成', 2000);
             return;
         }
-        if(!W.validate()) return;
         var picture_list = [];
         $('.xui-imgList img').each(function(){
               picture_list.push($(this).attr('data-src'))
@@ -227,7 +231,8 @@
                     window.location.href = '/m/apps/evaluate/m_evaluate_success/?webapp_owner_id='+ W.webappOwnerId;
                 },
                 error: function(data) {
-                    wuiAlert(data.errMsg);
+                    wuiAlert(data.errMsg|| '网络错误');
+                    submitting = false;
                 }
             });
             return;
@@ -238,8 +243,6 @@
                 wuiAlert('请输入5-200字', 2000);
                 return;
             }
-            //隐藏说明文字
-            $('.wui-reviewHint').find('.wui-i-box').hide();
             $.extend(postData, {
                 review_detail: $('#dj_review_detail').val(),
                 serve_score: $('#dj_serve_score').attr('data-value'),
@@ -248,6 +251,7 @@
             });
         }else{
             //自定义模板
+            if(!W.validate()) return;
             var dynamicData = {}, data, type, cid, key, dataType, innerCid;
             var $components = $('.wa-evaluate-container').siblings();
             $components.each(function(){
@@ -296,7 +300,8 @@
                 window.location.href = '/m/apps/evaluate/m_evaluate_success/?webapp_owner_id='+ W.webappOwnerId;
             },
             error: function(data) {
-                wuiAlert(data.errMsg);
+                wuiAlert(data.errMsg || '网络错误');
+                submitting = false;
             }
         });
     }
