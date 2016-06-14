@@ -10,7 +10,7 @@ Background:
     When jobs配置商品评论自定义模板
     """
     {
-        "type":"customized",
+        "type":"custom",
         "answer":
             [{
                 "title":"您使用产品后的感受是",
@@ -30,7 +30,7 @@ Background:
                     }]
             }],
         "participate_info":
-            {
+            [{
                 "items_select":
                     [{
                         "item_name":"姓名",
@@ -56,7 +56,7 @@ Background:
                         "item_name":"职称",
                         "is_required":"否"
                     }]
-            }
+            }]
     }
     """
     And jobs已添加商品
@@ -69,7 +69,8 @@ Background:
             "price": 20.00
         }]
         """
-    And jobs已有的订单
+
+    Given jobs已有的订单
         """
         [{
             "order_no":"1",
@@ -109,20 +110,20 @@ Background:
         """
     Given bill关注jobs的公众号
     When bill访问jobs的webapp
-    Then bill成功获取个人中心的'待评价'列表
-        """
-        [{
-            "order_no": "1",
-            "products": [{
-                    "product_name": "商品1"
-                }]
-        }, {
-            "order_no": "2",
-            "products": [{
-                    "product_name": "商品2"
-                }]
-        }]
-        """
+#    Then bill成功获取个人中心的'待评价'列表::h5
+#        """
+#        [{
+#            "order_no": "1",
+#            "products": [{
+#                    "product_name": "商品1"
+#                }]
+#        }, {
+#            "order_no": "2",
+#            "products": [{
+#                    "product_name": "商品2"
+#                }]
+#        }]
+#        """
 @mall @apps @app_evaluate @commit_app_product_comment
 Scenario:1 评价包括文字与晒图
     When bill访问jobs的webapp
