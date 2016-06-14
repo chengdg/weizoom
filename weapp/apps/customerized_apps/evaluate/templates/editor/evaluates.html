@@ -63,6 +63,11 @@ a{
 .xui-evaluate-table > tbody > tr > td:last-child{
     width: 70%;
 }
+.xui-imgGroup{
+    display: inline-block;
+    overflow: hidden;
+    width: 330px;
+}
 </style>
 {% endblock %}
 {% block content-panel %}
@@ -323,10 +328,6 @@ $(document).ready(function(){
                 // alert(data);
             }
         });
-    });
-
-    $('body').delegate('.xa-submit','click',function(){
-        alert(1111111111);
     });
 })
 </script>

@@ -8,8 +8,7 @@
 		</div>
 		<div class="modal-body">
 			<b>评价内容</b>
-			<div class="xui-modal-content xa-modal-content">
-			</div>
+			<div class="xui-modal-content xa-modal-content"></div>
 			<div class="xui-evalute-btnGroups">
 				<a href="javascript:void(0);" class="btn btn-default ml20 xa-modal-modify" name="pass" data-status="1">通过审核</a>
 				<a href="javascript:void(0);" class="btn btn-default ml20 xa-modal-modify" name="top" data-status="2">通过并置顶</a>
@@ -29,69 +28,70 @@
 </script>
 
 <script id="app-evaluate-viewParticipanceResultDialog-dialog-tmpl" type="text/x-handlebar-tmpl">
-		<div class="fl xui-evaluate-modalLef">
-			<div>
-				<span>评价日期：</span>
-				<span>{{time}}</span>
-			</div>
-			<div>
-				<span>商品评星：</span>
-				<span>{{score}}</span>		
-			</div>
-			<div class="ovh">
-				<span class="fl">晒单图片：</span>
-				<ul>
-				{{#each img}}
-				 	<li class="fl"><img src="{{this}}" width="80px" height="80px"></li>
+	<div class="fl xui-evaluate-modalLef">
+		<div>
+			<span>评价日期：</span>
+			<span>{{time}}</span>
+		</div>
+		<div>
+			<span>商品评星：</span>
+			<span>{{score}}</span>		
+		</div>
+		<div class="xui-evaluate-img">
+			<span class="fl">晒单图片：</span>
+			<ul class="xui-imgGroup">
+			{{#each img}}
+			 	<li class="fl mr10 mb10"><img src="{{this}}" width="100px" height="100px"></li>
+			{{/each}}
+			</ul>
+		</div>
+		{{#if }}
+		<div>
+			<span>评价内容：</span>
+			<span class="vt xui-evaluate-comment">
+				{{detail}}
+			</span>
+		</div>
+		{{/if}}
+	</div>
+	<div class="fl xui-evaluate-modalRig">
+		<div>
+			<span>商品名称：</span>
+			<span>{{product_name}}</span>
+		</div>
+		<div>
+			<span>&nbsp;&nbsp;&nbsp;&nbsp;订单号：</span>
+			<a>{{order_id}}</a>
+		</div>
+		<div>
+			<span>会员名称：</span>
+			<a>{{member_name}}</a>
+		</div>
+		<div>
+			<span>会员等级：</span>
+			<span>{{member_grade}}</span>
+		</div>
+		<div>
+			<span>会员分组：</span>
+			<a href="javascript:void(0);" class="xa-update-tag mr10" data-id={{member_id}}>调分组</a>
+			<span class="tag-group xui-tagGroup" title="{{#each member_has_tags}}{{tag_name}}{{/each}}">
+				{{#each member_has_tags}}
+                <span class="mr10">{{tag_name}}</span>
+                <input name = "tag_id" class="tag_id" id = "tag_id" hidden="hidden" value="{{tag_id}}">
+                {{/each}}
+            </span>
+		</div>
+	</div>
+	{{#if }}
+	<table class="xui-evaluate-table table table-bordered">
+		<tbody>
+			<tr>
+				{{#each }}
+				<td>您使用/食用产品后的感受(需要改进的地方也请留下您的意见)</td>
+				<td>东西是新鲜的，个人很喜欢.东西是新鲜的，个人很喜欢.东西是新鲜的，个人很喜欢.东西是新鲜的，个人很喜欢</td>
 				{{/each}}
-				</ul>
-			</div>
-			<div>
-				<span>评价内容：</span>
-				<span class="vt xui-evaluate-comment">
-					{{detail}}
-				</span>
-			</div>
-		</div>
-		<div class="fl xui-evaluate-modalRig">
-			<div>
-				<span>商品名称：</span>
-				<span>{{product_name}}</span>
-			</div>
-			<div>
-				<span>&nbsp;&nbsp;&nbsp;&nbsp;订单号：</span>
-				<a>{{order_id}}</a>
-			</div>
-			<div>
-				<span>会员名称：</span>
-				<a>{{member_name}}</a>
-			</div>
-			<div>
-				<span>会员等级：</span>
-				<span>{{member_grade}}</span>
-			</div>
-			<div>
-				<span>会员分组：</span>
-				<a href="javascript:void(0);" class="xa-update-tag mr10" data-id={{member_id}} >调分组</a>
-				<span class="tag-group xui-tagGroup" title="{{#each member_has_tags}} {{tag_name}} {{/each}}">
-					{{#each member_has_tags}}
-	                <span class="mr10">{{ tag_name }}</span>
-	                <input name = "tag_id" class="tag_id" id = "tag_id" hidden="hidden" value="{{ tag_id }}">
-	                {{/each}}
-	            </span>
-			</div>
-		</div>
-		<p class="xui-hide xa-hide-content">{{shop_reply}}</p>
-		{{#if isActive}}
-		<table class="xui-evaluate-table table table-bordered">
-			<tbody>
-				<tr>
-					{{#each }}
-					<td>您使用/食用产品后的感受(需要改进的地方也请留下您的意见)</td>
-					<td>东西是新鲜的，个人很喜欢.东西是新鲜的，个人很喜欢.东西是新鲜的，个人很喜欢.东西是新鲜的，个人很喜欢</td>
-					{{/each}}
-				</tr>				
-			</tbody>
-		</table>
-		{{/if}}	
+			</tr>				
+		</tbody>
+	</table>
+	{{/if}}	
 </script>

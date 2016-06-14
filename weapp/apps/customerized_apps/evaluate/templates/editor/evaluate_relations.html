@@ -291,21 +291,32 @@ $(document).ready(function() {
 
     //解除评价
     $('body').delegate('.xa-remove-relation', 'click', function(event) {
+    	var $el = $(event.target);
         var relation_id = $(this).parents('tr').data('id');
-        W.getApi().call({
-			app: 'apps/evaluate',
-			resource: 'evaluate_relations',
-			method: 'delete',
-			args: {
-				id: relation_id
-			},
-			success: function(data) {
-				W.showHint('success', '解除关联评价成功！');
-                var table = $('[data-ui-role="advanced-table"]').data('view')
-                table.reload();
-			},
-			error: function(response) {
-				W.showHint('error', response.errMsg);
+		W.requireConfirm({
+			$el: $el,
+			width: 380,
+			height: 50,
+			position: 'right-middle',
+			isTitle: false,
+			msg: '确定解除关系？',
+			confirm: function() {
+	        W.getApi().call({
+				app: 'apps/evaluate',
+				resource: 'evaluate_relations',
+				method: 'delete',
+				args: {
+					id: relation_id
+				},
+				success: function(data) {
+					W.showHint('success', '解除关联评价成功！');
+	                var table = $('[data-ui-role="advanced-table"]').data('view')
+	                table.reload();
+				},
+				error: function(response) {
+					W.showHint('error', response.errMsg);
+				}
+			});
 			}
 		});
 	});
