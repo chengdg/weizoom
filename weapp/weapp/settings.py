@@ -13,7 +13,7 @@ IS_UNDER_BDD = False
 IS_UNDER_CODE_GENERATION = False
 WEIZOOM_CARD_ADMIN_USERS = ('card_admin',)
 
-MODE = 'deploy'
+MODE = 'develop'
 # 如果FAN_HOST不为空，退出后会跳转到 FAN_HOST/login/
 FAN_HOST = 'http://fans.dev.com'
 SERVICE_NAME = "weapp"

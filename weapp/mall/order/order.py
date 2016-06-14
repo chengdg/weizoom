@@ -695,7 +695,7 @@ class OrderGetFile(resource.Resource):
         }
         return response.get_response()
 
-class SenderInfo(resource.Resource):
+class OrderSenderInfo(resource.Resource):
     app = 'mall2'
     resource = 'sender_info'
 
