@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import json
+from datetime import datetime
 
 from core import resource
 from core.jsonresponse import create_response
@@ -63,7 +64,8 @@ class EvaluateParticipance(resource.Resource):
 			order_has_product_id = order_has_product_id,
 			score = product_score,
 			detail = review_detail if template_type == 'ordinary' else json.loads(review_detail),
-			pics = picture_list.split(',') if picture_list != '' else []
+			pics = picture_list.split(',') if picture_list != '' else [],
+			created_at = datetime.now()
 		)
 		product_evaluate.save()
 
