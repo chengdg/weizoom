@@ -1,0 +1,35 @@
+{% extends "content_base_v2.html" %}
+{% load common_tag %}
+{% load account_filter %}
+
+
+{% block content-panel %}
+
+<div class="xui-expiredTime-page">
+	<ul class="breadcrumb">
+		<li>您当前所在位置</li>
+		<li>
+			<a href="mall/editor/edit_expired_time.html">订单管理</a>
+		</li>
+		<li class="active">所有订单</li>
+	</ul>
+    <span>+新增地址</span>
+	<table class="table table-condensed mb0 xui-tableHead">
+		<thead>
+			<tr>
+				<th width="100">默认</th>
+				<th width="100">发货人姓名</th>
+				<th width="100">发货人电话</th>
+				<th width="100">所在地区</th>
+				<th width="100">详细地址</th>
+				<th width="100">邮政编码</th>
+				<th width="100">操作</th>
+			</tr>
+		</thead>
+	</table>
+</div>
+{% endblock %}
+
+{% block js %}
+
+{% endblock %}
