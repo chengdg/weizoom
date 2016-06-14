@@ -801,7 +801,7 @@ class SenderInfo(resource.Resource):
 
 class SenderInfoList(resource.Resource):
     app = 'mall2'
-    resource = 'sender_info'
+    resource = 'sender_info_list'
 
     @login_required
     def get(request):
