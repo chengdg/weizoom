@@ -127,7 +127,8 @@ W.dialog.app.evaluate.ViewParticipanceDataDialog = W.dialog.Dialog.extend({
             type: 'text',
             width: null,
             height: 100,
-            pasteplain: true
+            pasteplain: true,
+            autoHeight: false
         })
 		editor.render();
 	},

@@ -72,19 +72,43 @@
         background-position: -136px 0;
         margin: 0 auto;
     }  
-    .xui-text-ellipsis{
+    .xui-productReviewListPage .xui-text-ellipsis{
         overflow : hidden;
         text-overflow: ellipsis;
         display: -webkit-box;
         -webkit-line-clamp: 5;
         -webkit-box-orient: vertical; 
     }
-    .xui-shopReply{
+    .xui-productReviewListPage .xui-shopReply{
         border-bottom: 1px solid #e1e1e1;
         overflow: hidden;
     }
-    .xui-toggleBtn{
+    .xui-productReviewListPage .xui-btnWrapper{
+        position: relative;
+    }
+    .xui-productReviewListPage .xui-toggleBtn{
         color: #0084ff;
+    }
+    .xui-productReviewListPage .xui-arrow{
+        background: url(/static_v2/img/evaluates_arrow.png) no-repeat;
+        background-size: cover;
+        width: 10px;
+        height: 6px;
+        position: absolute;
+        top: 9px;
+        left: 30px;
+        transition: all .4s;
+    }
+    .xui-productReviewListPage .xui-arrow-up{
+        background: url(/static_v2/img/evaluates_arrow.png) no-repeat;
+        background-size: cover;
+        width: 10px;
+        height: 6px;
+        position: absolute;
+        top: 9px;
+        left: 30px;
+        transform: rotate(180deg); 
+        transition: all .4s;      
     }
 </style>
 {% endblock %}
@@ -92,7 +116,7 @@
 <div class="xui-productReviewListPage pb20">
     <div class="xui-title pr">
         <a class="xa-goBack xui-returnPrev pa">
-            <i data-ui-role="goBack"></i>
+            <i id="goBack"></i>
         </a>
         <span class="em9">我的评价</span>
     </div>
@@ -122,15 +146,17 @@
             </div>
         </div>
         {% if review.shop_reply %}
-        <div class="pb10 xui-shopReply">
+        <div class="pb10 xui-shopReply mb10">
             <span class="em9 fl">商家留言：</span>
             <p class="em9 c65">{{review.shop_reply|safe}}</p>
         </div>
         {% endif %}
-        <div class="xui-productReviewText xa-productReviewText c65 em9 pt10 mb10">
+        <div class="xui-productReviewText xa-productReviewText c65 em9 mb10">
             {{review.detail}}
         </div>
-        <a class="xa-toggleBtn xui-toggleBtn xui-hide em9">展开</a>
+        <div class="xui-btnWrapper xa-btnWrapper xui-hide">
+            <a class="xa-toggleBtn xui-toggleBtn em9">展开</a><i class="xui-arrow xa-arrow"></i>
+        </div>
         <!-- 如果有商品评价晒图-->
         {% if review.pics %}
         <div class="xui-uploadImg">
@@ -160,18 +186,22 @@
 {% block js %}
 <script type="text/javascript">
     $(function(){
-        if($('.xa-productReviewText').height() > 90){
-            $('.xa-productReviewText').addClass('xui-text-ellipsis');
-            $('.xa-toggleBtn').show();
-        }
+        $('.xa-productReviewText').each(function(){
+            if($(this).height() > 90){
+                $(this).addClass('xui-text-ellipsis');
+                $(this).siblings('.xa-btnWrapper').show();
+            }
+        });
 
         $('.xa-toggleBtn').click(function(){
             if($(this).html() == '展开'){
                 $(this).html('收起');
                 $('.xa-productReviewText').removeClass('xui-text-ellipsis');
+                $('.xa-arrow').removeClass('xui-arrow').addClass('xui-arrow-up');
             }else{
                 $(this).html('展开');
-                $('.xa-productReviewText').addClass('xui-text-ellipsis');             
+                $('.xa-productReviewText').addClass('xui-text-ellipsis');
+                $('.xa-arrow').removeClass('xui-arrow-up').addClass('xui-arrow');             
             }
         });
     });

@@ -38,11 +38,11 @@
 				<span>商品评星：</span>
 				<span>{{score}}</span>		
 			</div>
-			<div>
-				<span>晒单图片：</span>
+			<div class="ovh">
+				<span class="fl">晒单图片：</span>
 				<ul>
 				{{#each img}}
-				 	<li><img src="{{this}}" width="50px" height="50px"></li>
+				 	<li class="fl"><img src="{{this}}" width="80px" height="80px"></li>
 				{{/each}}
 				</ul>
 			</div>
@@ -86,17 +86,11 @@
 		<table class="xui-evaluate-table table table-bordered">
 			<tbody>
 				<tr>
+					{{#each }}
 					<td>您使用/食用产品后的感受(需要改进的地方也请留下您的意见)</td>
 					<td>东西是新鲜的，个人很喜欢.东西是新鲜的，个人很喜欢.东西是新鲜的，个人很喜欢.东西是新鲜的，个人很喜欢</td>
-				</tr>
-				<tr>
-					<td>您对本产品的包装是否满意(必填)</td>
-					<td>满意</td>
-				</tr>
-				<tr>
-					<td>最后反馈</td>
-					<td></td>
-				</tr>					
+					{{/each}}
+				</tr>				
 			</tbody>
 		</table>
 		{{/if}}	
