@@ -21,6 +21,15 @@ from modules.member.models import Member, MemberHasTag
 FIRST_NAV_NAME = export.PRODUCT_FIRST_NAV
 COUNT_PER_PAGE = 50
 
+SHORTCUTS_TEXT={
+	'phone': u'手机',
+	'name': u'姓名',
+	'email': u'邮箱',
+	'qq':u'QQ号',
+	'job':u'职位',
+	'addr':u'地址'
+}
+
 REVIEW_FILTERS = {
 	'review': [
 		{
@@ -227,17 +236,44 @@ class EvaluateReview(resource.Resource):
 		is_common_template = True
 		evaluate_detail = evaluate.detail
 		if isinstance(evaluate_detail, dict):
-			# print 111111111111111111111
-			# print evaluate_detail
+			evaluate_detail_list = []
 			is_common_template = False
-			# for key in evaluate_detail:
-			# 	type = key.split('::')[0]
-			# 	print type,55555555555555
+			for key,value in evaluate_detail.items():
+				value = evaluate_detail[key]
+				if 'textlist' in key.split('::'):
+					for k in value:
+						shortcut_name = k
+						if k in SHORTCUTS_TEXT:
+							shortcut_name = SHORTCUTS_TEXT[k]
+						evaluate_detail_list.append({
+							shortcut_name: value[k]
+						})
+				elif 'qa' in key.split('::'):
+					qa_title,qa_answer = value.split('::')
+					evaluate_detail_list.append({
+						qa_title: qa_answer
+					})
+				elif 'selection' in key.split('::'):
+					if isinstance(value, list):
+						mul_select_answers = []
+						for select in value:
+							mul_select_title, mul_select_answer, num = select.split('::')
+							mul_select_answers.append(mul_select_answer)
+						evaluate_detail_list.append({
+							mul_select_title: ','.join(mul_select_answers)
+						})
+					elif isinstance(value, basestring):
+						select_title, select_answer, num = value.split('::')
+						evaluate_detail_list.append({
+							select_title: select_answer
+						})
+
+			evaluate_detail = evaluate_detail_list
 
 		items = {
 			'time': evaluate.created_at.strftime('%Y/%m/%d'),
 			'score': evaluate.score,
-			'detail': evaluate.detail,
+			'detail': evaluate_detail,
 			'img': evaluate.pics,
 			'product_name': mall_models.Product.objects.get(id = evaluate.product_id).name,
 			'order_num': evaluate.order_id, #订单号
