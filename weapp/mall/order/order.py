@@ -748,7 +748,7 @@ class SenderInfo(resource.Resource):
             remarks=request.POST.get('remarks', '').strip(),
         )
 
-        SenderInfo.objects.filter(~Q(id=sender_info.id),webapp_id=webapp_id).update(is_selected=False)
+        SenderInfo.objects.filter(~Q(id=sender_info.id),webapp_id=webapp_id,is_deleted=False).update(is_selected=False)
         # component_authed_appids = ComponentAuthedAppid.objects.filter(~Q(user_id=user_id), authorizer_appid=authorizer_appid)
         return HttpResponseRedirect('/mall2/sender_info_list/')
 
@@ -793,9 +793,15 @@ class SenderInfo(resource.Resource):
         sender_info_id = int(sender_info_id) if sender_info_id else 0
         webapp_id = request.user_profile.webapp_id
         if sender_info_id:
-            SenderInfo.objects.filter(webapp_id=webapp_id,id=sender_info_id).update(is_deleted=True)
-        return HttpResponseRedirect(
-            '/mall2/sender_info_list/')
+            SenderInfo.objects.filter(webapp_id=webapp_id, id=sender_info_id).update(is_deleted=True)
+            selected_sender_infos=SenderInfo.objects.filter(webapp_id=webapp_id, id=sender_info_id, is_selected=True)
+            if selected_sender_infos:
+                sender_infos = SenderInfo.objects.filter(webapp_id=webapp_id,is_deleted=False).order_by("-id")
+                if sender_infos:
+                    sender_info_id = sender_infos[0].id
+                    SenderInfo.objects.filter(id=sender_info_id).update(is_selected=True)
+
+        return HttpResponseRedirect('/mall2/sender_info_list/')
 
 
 
