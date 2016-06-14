@@ -113,7 +113,7 @@
                     <span class="xui-specification em75 c9">
                         {% if review.product.custom_model_properties %}
                             {% for property in review.product.custom_model_properties %}
-                                {{ property.property_value }}&nbsp;&nbsp;
+                                {{ property.name }}:&nbsp;&nbsp;{{ property.property_value }}&nbsp;&nbsp;
                             {% endfor %}
                         {% endif %}
                     </span>
