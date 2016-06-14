@@ -4,6 +4,10 @@ import mall
 import stats
 import auth
 import openapi
+import member
+import wzcard
+
+import qrcode
 
 import views
 from django.conf.urls import *

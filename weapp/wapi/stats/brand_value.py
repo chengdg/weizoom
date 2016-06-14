@@ -1,23 +1,11 @@
 # -*- coding: utf-8 -*-
 
-#import json
-#from datetime import datetime
-#from django.http import HttpResponseRedirect
-#from django.template import RequestContext
-#from django.contrib.auth.decorators import login_required
-#from django.shortcuts import render_to_response
-#from django.db.models import F
-
-#from core import resource
 from core import api_resource
-from wapi.decorators import param_required
-#from mall import models as mall_models
+from wapi.decorators import param_required, ApiParamaterError
 
-#from wapi.decorators import wapi_access_required
-from wapi.wapi_utils import create_json_response
+from wapi.wapi_utils import get_webapp_id_via_username
 
 from stats.manage.brand_value_utils import get_brand_value
-
 from utils import dateutil as utils_dateutil
 
 class BrandValue(api_resource.ApiResource):
@@ -27,26 +15,29 @@ class BrandValue(api_resource.ApiResource):
 	app = 'stats'
 	resource = 'brand_value'
 
-	@param_required(['wid', 'dates'])
+	# @param_required(['wid', 'dates'])
 	def get(args):
 		"""
 		获取微品牌价值
 
+		@param un username
 		@param wid webapp_id
 		@param dates 日期列表，多日期用逗号(,)分隔。默认是当天。
 		"""
-		webapp_id = args.get('wid')
-		#print("webapp_id: {}".format(webapp_id))
-		dates = args.get('dates')
+		username = args.get('un', None)
+		webapp_id = args.get('wid', None)
+		if (not username) and (not webapp_id):
+			raise ApiParamaterError('no parameter wid or un!')
+
+		dates = args.get('dates', None)
 		if dates is None or len(dates)<1:
 			dates = [ utils_dateutil.date2string(utils_dateutil.now()) ]
 		else:
 			dates = dates.split(',')
 
-		#values = [ {"date":date_str, "bv":get_brand_value(webapp_id, date_str)} for date_str in dates ]
+		if username:
+			webapp_id = get_webapp_id_via_username(username)
+
 		values = {date_str: get_brand_value(webapp_id, date_str) for date_str in dates}
 
-		#return create_json_response(200, {
-		#		"values": values
-		#	})
 		return {"values": values}
