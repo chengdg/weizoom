@@ -59,7 +59,7 @@ p{
 
 .btn{
 	display: inline-block;
-	width:201px;
+	width:100px;
 	height:40px;
 	line-height: 40px;
 	border-radius: 4px;
@@ -81,3 +81,4 @@ p{
 		margin-top: 50px;
 	}
 }
+

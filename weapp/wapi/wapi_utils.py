@@ -41,3 +41,12 @@ def get_webapp_id_via_oid(owner_id):
 	return profile.webapp_id
 
 
+def get_webapp_id_via_username(username):
+	"""
+	获取username对应的webapp id
+
+	@TODO 优化缓存
+	"""
+	profile = UserProfile.objects.get(user__username=username)
+	return profile.webapp_id
+

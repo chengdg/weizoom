@@ -4,6 +4,7 @@
 # 参考自 com.wintim.common.util.DateUtil
 
 import datetime as dt
+import time
 
 
 DATETIME_FORMAT="%Y-%m-%d %H:%M:%S"
@@ -51,3 +52,18 @@ def parse_date(str):
 # 得到n天后的时间
 def get_date_after_days(date, days):
 	return date + dt.timedelta(days=days)
+
+def get_first_day_of_month():
+	now = dt.date.today()
+	monday = dt.timedelta(0 - now.weekday()) + now
+	sunday = dt.timedelta(6 - now.weekday()) + now
+
+	get_first_day_of_month = time.strftime('%Y-%m-01 00:00:00',time.localtime(time.time()))
+	return get_first_day_of_month
+
+def get_week_bounds():
+	now = dt.date.today()
+	monday = dt.timedelta(0 - now.weekday()) + now
+	sunday = dt.timedelta(6 - now.weekday()) + now
+
+	return monday.strftime(DATETIME_FORMAT), sunday.strftime(DATETIME_FORMAT)
