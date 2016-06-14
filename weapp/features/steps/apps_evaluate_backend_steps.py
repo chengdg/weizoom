@@ -108,31 +108,8 @@ def __get_page_json(args):
 				"components": []
 			},
 			{
-				"type": "appkit.submitbutton",
-				"cid": 3,
-				"pid": 1,
-				"auto_select": False,
-				"selectable": "no",
-				"force_display_in_property_view": "no",
-				"has_global_content": "no",
-				"need_server_process_component_data": "no",
-				"property_view_title": "",
-				"model": {
-					"id": "",
-					"class": "",
-					"name": "",
-					"index": 4,
-					"datasource": {
-						"type": "api",
-						"api_name": ""
-					},
-					"text": "提交"
-				},
-				"components": []
-			},
-			{
 				"type": "appkit.componentadder",
-				"cid": 4,
+				"cid": 3,
 				"pid": 1,
 				"auto_select": False,
 				"selectable": "yes",
@@ -488,3 +465,4 @@ def step_impl(context, user):
 	returned_components = json.loads(resp.content)['data'][0]['components']
 
 	apps_step_utils.debug_print(returned_components)
+	#TODO 验证page数据

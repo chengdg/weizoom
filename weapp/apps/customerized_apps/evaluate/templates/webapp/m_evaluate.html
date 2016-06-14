@@ -98,6 +98,7 @@
                 var cid = key.split('::')[1];
                 var type = 'appkit.' + key.split('::')[0];
                 if ('appkit.qa' === type) {
+                    value = value.split('::')[1];
                     $('.wui-QA').each(function(){
                         var $this = $(this);
                         if($this.attr('data-component-cid') == cid){
@@ -110,6 +111,7 @@
                         if($this.attr('data-component-cid') == cid){
                             var $lis = $this.find('li');
                             if('string' === typeof value){ //单选
+                                value = value.split('::')[2];
                                 $lis.each(function(){
                                    var $this = $(this);
                                    if($this.attr('data-component-cid') == value){
@@ -119,7 +121,9 @@
                             }else{  //多选
                                 $lis.each(function(){
                                     var $this = $(this);
-                                    if(value.indexOf($this.attr('data-component-cid')) >= 0){
+                                    if(value.filter(function(v){
+                                            return v.indexOf($this.attr('data-component-cid')) >= 0
+                                        }).length > 0){
                                         $this.find('.selection-checkbox').addClass('checkbox-select');
                                     }
                                 });
@@ -204,6 +208,7 @@
         submitting = true;
         if(!W.is_pic_up){
             wuiAlert('图片还未上传完成', 2000);
+            submitting = false;
             return;
         }
         var picture_list = [];
@@ -241,6 +246,7 @@
         if('ordinary' === template_type) {
             if(insetNum < 5 || insetNum >200){
                 wuiAlert('请输入5-200字', 2000);
+                submitting = false;
                 return;
             }
             $.extend(postData, {
@@ -251,8 +257,11 @@
             });
         }else{
             //自定义模板
-            if(!W.validate()) return;
-            var dynamicData = {}, data, type, cid, key, dataType, innerCid;
+            if(!W.validate()){
+                submitting = false;
+                return;
+            }
+            var dynamicData = {}, data, type, cid, key, title, innerTitle, dataType, innerCid;
             var $components = $('.wa-evaluate-container').siblings();
             $components.each(function(){
                 var $component = $(this);
@@ -261,21 +270,26 @@
                 key = type + '::' + cid;
                 if($component.hasClass('wui-QA')){ //问答模块
                     data = $component.find('.xa-inputControl textarea').val().trim();
+                    title = $component.find('.xa-inputControl').attr('data-input-name');
+                    dynamicData[key] = title+'::'+data;
                 }else if($component.hasClass('wui-textSelection')){ //选择题模块
-                    var $spans = $component.find('.xa-inputControl li label span');
+                    var $spans = $component.find('.xa-inputControl li label span').not('.xa-itemTitle');
                     dataType = $spans.eq(0).attr('data-type');
                     var className = dataType == 'radio' ? 'radio-select' : 'checkbox-select';
                     data = [];
+                    title = $component.find('ul').attr('data-input-name');
                     $spans.each(function(){
                         var $span = $(this);
                         innerCid = $span.parents('li').eq(0).attr('data-component-cid');
-
+                        innerTitle = $span.attr('data-input-name');
                         if(dataType == 'radio' && $span.hasClass(className)){ //单选
-                            data = innerCid;
+                            data = title+'::'+innerTitle+'::'+innerCid;
                         }else if(dataType == 'checkbox' && $span.hasClass(className)){ //多选
-                            data.push(innerCid);
+                            data.push(title+'::'+innerTitle+'::'+innerCid);
                         }
+                        dynamicData[key] = data;
                     });
+
                 }else if($component.hasClass('wui-shortcuts')){ //联系人模块
                     var $divs = $component.find('.xa-inputControl');
                     data = {};
@@ -284,8 +298,8 @@
                         dataType = $div.attr('data-input-name');
                         data[dataType] = $div.find('input').val().trim();
                     });
+                    dynamicData[key] = data;
                 }
-                dynamicData[key] = data;
             });
             $.extend(postData, {review_detail: JSON.stringify(dynamicData)});
         }

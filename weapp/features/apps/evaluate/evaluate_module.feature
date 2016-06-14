@@ -14,13 +14,13 @@ Feature: jobs在weapp中配置自定义评价模板
         5.问答、选择题模块可以重复添加，参与人信息模块只能添加一次
 """
 
-@mall @apps @app_evaluate @app_evaluate_template @aix1
+@mall @apps @app_evaluate @app_evaluate_template
 Scenario:1 配置自定义模板,添加'问答'模块   
     Given jobs登录系统
     When jobs配置商品评论自定义模板
     """
     {
-        "type":"customized",
+        "type":"custom",
         "answer":
             [{
                 "title":"您使用产品后的感受是",
@@ -34,7 +34,7 @@ Scenario:1 配置自定义模板,添加'问答'模块
     Then jobs能获得商品评价评论模板
     """
     {
-        "type":"customized",
+        "type":"custom",
         "answer":
             [{
                 "title":"您使用产品后的感受是",
@@ -52,7 +52,7 @@ Scenario:2 配置自定义模板,添加'选择题'模块
     When jobs配置商品评论自定义模板
     """
     {
-        "type":"customized",
+        "type":"custom",
         "choose":
             [{
                 "title":"您对本产品的包装是否满意",
@@ -82,7 +82,7 @@ Scenario:2 配置自定义模板,添加'选择题'模块
     Then jobs能获得商品评价评论模板
     """
     {
-        "type":"customized",
+        "type":"custom",
          "choose":
             [{
                 "title":"您对本产品的包装是否满意",
@@ -116,9 +116,9 @@ Scenario:3 配置自定义模板,添加'参与人信息'模块
     When jobs配置商品评论自定义模板
     """
     {
-        "type":"customized",
+        "type":"custom",
         "participate_info":
-            {
+            [{
                 "items_select":
                     [{
                         "item_name":"姓名",
@@ -150,15 +150,15 @@ Scenario:3 配置自定义模板,添加'参与人信息'模块
                         "item_name":"填写项3",
                         "is_required":"否"
                     }]
-            }
+            }]
     }
     """
     Then jobs能获得商品评价评论模板
     """
     {
-        "type":"customized",
+        "type":"custom",
          "participate_info":
-            {
+            [{
                 "items_select":
                     [{
                         "item_name":"姓名",
@@ -190,7 +190,7 @@ Scenario:3 配置自定义模板,添加'参与人信息'模块
                         "item_name":"填写项3",
                         "is_required":"否"
                     }]
-            }
+            }]
     }
     """
 
@@ -200,7 +200,7 @@ Scenario:4 配置自定义模板,添加所有模块
     When jobs配置商品评论自定义模板
     """
     {
-        "type":"customized",
+        "type":"custom",
         "answer":
             [{
                 "title":"您使用产品后的感受是",
@@ -220,7 +220,7 @@ Scenario:4 配置自定义模板,添加所有模块
                     }]
             }],
         "participate_info":
-            {
+            [{
                 "items_select":
                     [{
                         "item_name":"姓名",
@@ -246,13 +246,13 @@ Scenario:4 配置自定义模板,添加所有模块
                         "item_name":"填写项1",
                         "is_required":"是"
                     }]
-            }
+            }]
     }
     """
     Then jobs能获得商品评价评论模板
     """
     {
-        "type":"customized",
+        "type":"custom",
         "answer":
             [{
                 "title":"您使用产品后的感受是",
@@ -272,7 +272,7 @@ Scenario:4 配置自定义模板,添加所有模块
                     }]
             }],
         "participate_info":
-            {
+            [{
                 "items_select":
                     [{
                         "item_name":"姓名",
@@ -298,7 +298,7 @@ Scenario:4 配置自定义模板,添加所有模块
                         "item_name":"填写项1",
                         "is_required":"是"
                     }]
-            }
+            }]
     }
     """
 
@@ -308,13 +308,13 @@ Scenario:5 配置普通模板
     When jobs配置商品评论自定义模板
     """
     {
-        "type":"normal"
+        "type":"ordinary"
     }
     """
     Then jobs能获得商品评价评论模板
     """
     {
-        "product_score":"5"
+        "product_score":"5",
         "evaluate": "",    
         "picture_list":[],
         "service_attitude":"5",

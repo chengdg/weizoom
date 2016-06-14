@@ -224,18 +224,30 @@ class EvaluateReview(resource.Resource):
 				'tag_id': tag.member_tag.id
 			})
 
+		is_common_template = True
+		evaluate_detail = evaluate.detail
+		if isinstance(evaluate_detail, dict):
+			# print 111111111111111111111
+			# print evaluate_detail
+			is_common_template = False
+			# for key in evaluate_detail:
+			# 	type = key.split('::')[0]
+			# 	print type,55555555555555
+
 		items = {
 			'time': evaluate.created_at.strftime('%Y/%m/%d'),
 			'score': evaluate.score,
 			'detail': evaluate.detail,
 			'img': evaluate.pics,
 			'product_name': mall_models.Product.objects.get(id = evaluate.product_id).name,
-			'order_id': evaluate.order_id,
+			'order_num': evaluate.order_id, #订单号
 			'member_id': member.id,
 			'member_name': member.username_for_html,
 			'member_grade': member.grade.name,
 			'shop_reply': evaluate.shop_reply,
-			'member_has_tags': tag_list
+			'member_has_tags': tag_list,
+			'order_id': mall_models.Order.objects.get(order_id = evaluate.order_id).id,
+			'is_common_template': is_common_template
 		}
 
 		response = create_response(200)

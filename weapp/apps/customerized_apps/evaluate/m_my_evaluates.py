@@ -61,7 +61,7 @@ class MyEvaluates(resource.Resource):
 			product_review_list.append({
 				'detail': review.detail,
 				'created_at': review.created_at,
-				'pics': review.pics if review.pics[0] else [],
+				'pics': review.pics,
 				'product': product_dic,
 				'shop_reply': review.shop_reply
 			})
