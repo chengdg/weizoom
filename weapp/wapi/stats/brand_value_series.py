@@ -1,27 +1,14 @@
 # -*- coding: utf-8 -*-
 
-#import json
-#from datetime import datetime
-#from django.http import HttpResponseRedirect
-#from django.template import RequestContext
-#from django.contrib.auth.decorators import login_required
-#from django.shortcuts import render_to_response
-#from django.db.models import F
-
-#from core import resource
 from core import api_resource
-from wapi.decorators import param_required
-#from mall import models as mall_models
-
-#from wapi.decorators import wapi_access_required
+from wapi.decorators import param_required, ApiParamaterError
 
 from stats.manage.brand_value_utils import get_brand_value
+from wapi.wapi_utils import get_webapp_id_via_username
 
 from utils import dateutil as utils_dateutil
 import pandas as pd
 from core.charts_apis import *
-#from stats.manage.brand_value_utils import get_brand_value
-#from utils import dateutil as utils_dateutil
 
 # 显示点的个数
 DISPLAY_PERIODS_IN_CHARTS = 20
@@ -36,15 +23,22 @@ class BrandValueSeries(api_resource.ApiResource):
 	app = 'stats'
 	resource = 'brand_value_series'
 
-	@param_required(['wid'])
+	# @param_required(['wid'])
 	def get(args):
 		"""
 		返回微品牌价值JSON数据
 
 		"""
-		webapp_id = args.get('wid')
-		start_date = args.get('start_date')
-		end_date = args.get('end_date')
+		username = args.get('un', None)
+		webapp_id = args.get('wid', None)
+		if (not username) and (not webapp_id):
+			raise ApiParamaterError('no parameter wid or un!')
+
+		if username:
+			webapp_id = get_webapp_id_via_username(username)
+
+		start_date = args.get('start_date', None)
+		end_date = args.get('end_date', None)
 		freq_type = args.get('freq_type', 'W')
 		try:
 			periods = int(args.get('periods', DISPLAY_PERIODS_IN_CHARTS))
@@ -68,26 +62,17 @@ class BrandValueSeries(api_resource.ApiResource):
 				watchdog_warning(notify_msg)
 				end_date = utils_dateutil.now()
 
-		#webapp_id = request.user_profile.webapp_id
 		if start_date is not None:
 			date_range = pd.date_range(start=start_date, end=end_date, freq=freq)
 		else:
 			# 如果不指定start_date，则以end_date为基准倒推DISPLAY_PERIODS_IN_CHARTS 个日期(点)
 			date_range = pd.date_range(end=end_date, periods=periods, freq=freq)
-		#date_list = []
-		#values = []
+
 		# TODO: 需要优化。可以一次计算完成
 		data = {}
 		for date in date_range:
 			date_str = utils_dateutil.date2string(date.to_datetime())  # 将pd.Timestamp转成datetime
-			#date_list.append(date_str)
 			value = get_brand_value(webapp_id, date_str)
-			#values.append()
 			data[date_str] = value
 
-		#print("date_list: {}".format(date_list))
-
-		#response = create_response(200)
-		#response.data = data
-		#return response.get_response()
 		return data
