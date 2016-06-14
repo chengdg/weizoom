@@ -204,6 +204,7 @@
         submitting = true;
         if(!W.is_pic_up){
             wuiAlert('图片还未上传完成', 2000);
+            submitting = false;
             return;
         }
         var picture_list = [];
@@ -241,6 +242,7 @@
         if('ordinary' === template_type) {
             if(insetNum < 5 || insetNum >200){
                 wuiAlert('请输入5-200字', 2000);
+                submitting = false;
                 return;
             }
             $.extend(postData, {
@@ -251,7 +253,10 @@
             });
         }else{
             //自定义模板
-            if(!W.validate()) return;
+            if(!W.validate()){
+                submitting = false;
+                return;
+            }
             var dynamicData = {}, data, type, cid, key, dataType, innerCid;
             var $components = $('.wa-evaluate-container').siblings();
             $components.each(function(){
