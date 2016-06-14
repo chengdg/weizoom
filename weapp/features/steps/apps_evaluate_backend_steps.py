@@ -465,3 +465,4 @@ def step_impl(context, user):
 	returned_components = json.loads(resp.content)['data'][0]['components']
 
 	apps_step_utils.debug_print(returned_components)
+	#TODO 验证page数据

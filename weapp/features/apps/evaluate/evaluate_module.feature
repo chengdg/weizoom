@@ -118,7 +118,7 @@ Scenario:3 配置自定义模板,添加'参与人信息'模块
     {
         "type":"custom",
         "participate_info":
-            {
+            [{
                 "items_select":
                     [{
                         "item_name":"姓名",
@@ -150,7 +150,7 @@ Scenario:3 配置自定义模板,添加'参与人信息'模块
                         "item_name":"填写项3",
                         "is_required":"否"
                     }]
-            }
+            }]
     }
     """
     Then jobs能获得商品评价评论模板
@@ -158,7 +158,7 @@ Scenario:3 配置自定义模板,添加'参与人信息'模块
     {
         "type":"custom",
          "participate_info":
-            {
+            [{
                 "items_select":
                     [{
                         "item_name":"姓名",
@@ -190,7 +190,7 @@ Scenario:3 配置自定义模板,添加'参与人信息'模块
                         "item_name":"填写项3",
                         "is_required":"否"
                     }]
-            }
+            }]
     }
     """
 
@@ -220,7 +220,7 @@ Scenario:4 配置自定义模板,添加所有模块
                     }]
             }],
         "participate_info":
-            {
+            [{
                 "items_select":
                     [{
                         "item_name":"姓名",
@@ -246,7 +246,7 @@ Scenario:4 配置自定义模板,添加所有模块
                         "item_name":"填写项1",
                         "is_required":"是"
                     }]
-            }
+            }]
     }
     """
     Then jobs能获得商品评价评论模板
@@ -272,7 +272,7 @@ Scenario:4 配置自定义模板,添加所有模块
                     }]
             }],
         "participate_info":
-            {
+            [{
                 "items_select":
                     [{
                         "item_name":"姓名",
@@ -298,7 +298,7 @@ Scenario:4 配置自定义模板,添加所有模块
                         "item_name":"填写项1",
                         "is_required":"是"
                     }]
-            }
+            }]
     }
     """
 
