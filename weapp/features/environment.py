@@ -229,6 +229,7 @@ def __clear_all_app_data():
 	mall_models.ProductSearchRecord.objects.all().delete()
 	mall_models.MallConfig.objects.all().delete()
 	mall_models.OrderCardInfo.objects.all().delete()
+	mall_models.SenderInfo.objects.all().delete()
 	# 快递数据
 	express_model.ExpressHasOrderPushStatus.objects.all().delete()
 

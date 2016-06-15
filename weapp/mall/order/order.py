@@ -766,8 +766,8 @@ class OrderSenderInfo(resource.Resource):
         sender_info_id = int(sender_info_id) if sender_info_id else 0
         webapp_id = request.user_profile.webapp_id
         is_selected = True if (request.GET.get('is_selected','') in ('true', 'yes', 'True', 'Yes', True, '1')) else False
-        
-
+        sender_tel=request.POST.get('sender_tel', '').strip()
+        print "sender_tel>>>>",sender_tel
         if sender_info_id:
             SenderInfo.objects.filter(webapp_id=webapp_id,id=sender_info_id).update(
                 sender_name=request.POST.get('sender_name', '').strip(),
@@ -777,9 +777,10 @@ class OrderSenderInfo(resource.Resource):
                 code=request.POST.get('code', '').strip(),
                 company_name=request.POST.get('company_name', '').strip(),
                 remarks=request.POST.get('remarks', '').strip(),
-                is_selected=is_selected
+                
             )
         if is_selected:
+            SenderInfo.objects.filter(webapp_id=webapp_id,id=sender_info_id).update(is_selected=is_selected)
             SenderInfo.objects.filter(~Q(id=sender_info_id),webapp_id=webapp_id).update(is_selected=False)
         return HttpResponseRedirect(
             '/mall2/sender_info_list/')
