@@ -246,12 +246,14 @@ class EvaluateReview(resource.Resource):
 						if k in SHORTCUTS_TEXT:
 							shortcut_name = SHORTCUTS_TEXT[k]
 						evaluate_detail_list.append({
-							shortcut_name: value[k]
+							'title': shortcut_name,
+							'answer': value[k]
 						})
 				elif 'qa' in key.split('::'):
 					qa_title,qa_answer = value.split('::')
 					evaluate_detail_list.append({
-						qa_title: qa_answer
+						'title': qa_title,
+						'answer': qa_answer
 					})
 				elif 'selection' in key.split('::'):
 					if isinstance(value, list):
@@ -260,12 +262,14 @@ class EvaluateReview(resource.Resource):
 							mul_select_title, mul_select_answer, num = select.split('::')
 							mul_select_answers.append(mul_select_answer)
 						evaluate_detail_list.append({
-							mul_select_title: ','.join(mul_select_answers)
+							'title': mul_select_title,
+							'answer': ','.join(mul_select_answers)
 						})
 					elif isinstance(value, basestring):
 						select_title, select_answer, num = value.split('::')
 						evaluate_detail_list.append({
-							select_title: select_answer
+							'title': select_title,
+							'answer': select_answer
 						})
 
 			evaluate_detail = evaluate_detail_list
