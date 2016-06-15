@@ -95,7 +95,15 @@
                         </div>
                         <span class="fr" style="line-height:30px;">{{ review.created_at|date:"Y-m-j" }}</span>
                     </div>
-                    <p class="em85 c6">{{ review.review_detail }}</p>
+                    <p class="em85 c6">
+                    {% if is_common_template %}
+                    {{ review.review_detail }}
+                    {% else %}
+                    {% for item in review.review_detail %}
+                        {{ forloop.counter }}、{{item.title}}:{{item.answer}} <br/>
+                    {% endfor %}                        
+                    {% endif %}
+                    </p>
                     {% if review.custom_model_properties %}
                     <div class="pt5">
                         {% for property in review.custom_model_properties %}
@@ -103,13 +111,13 @@
                         {% endfor %}
                     </div>
                     {% endif %}
-                    {% if review.reviewed_product_pictures.length > 0 %}
+                    {% if review.reviewed_product_pictures %}
                     <div class="xui-reviewImg clearfix mt10">
                         {% for picture in review.reviewed_product_pictures %}
                             {% if picture|truncatechars:15 == 'http://weappimg...'%}
-                            <img width="50" height="50" src="{{picture.att_url}}!60" full-src="{{picture.att_url}}">
+                            <img width="50" height="50" src="{{picture}}!60" full-src="{{picture}}">
                             {% else %}
-                            <img width="50" height="50" src="{{picture.att_url}}">
+                            <img width="50" height="50" src="{{picture}}">
                             {% endif%}
                         {% endfor %}
                     </div>

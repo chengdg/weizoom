@@ -123,7 +123,7 @@
     {% if reviewed_products %}
     {% for review in reviewed_products %}
     <div class="xui-productReview p10 mb10">
-        <div class="xui-product disT mb15 w">
+        <div class="xui-product disT mb10 w">
             <div class="xui-productImg disTc">
                 {% if review.product.thumbnails_url|truncatechars:15 == 'http://weappimg...'%}
                     <img src="{{review.product.thumbnails_url}}!60" full-src="{{review.product.thumbnails_url}}" >
@@ -152,7 +152,14 @@
         </div>
         {% endif %}
         <div class="xui-productReviewText xa-productReviewText c65 em9 mb10">
+        {% if is_common_template %}
             {{review.detail}}
+        {% else %}
+            {% for item in review.detail %}
+                {{ forloop.counter }}、{{item.title}}:{{item.answer}} <br/>
+            {% endfor %}
+        {% endif %}
+
         </div>
         <div class="xui-btnWrapper xa-btnWrapper xui-hide">
             <a class="xa-toggleBtn xui-toggleBtn em9">展开</a><i class="xui-arrow xa-arrow"></i>
