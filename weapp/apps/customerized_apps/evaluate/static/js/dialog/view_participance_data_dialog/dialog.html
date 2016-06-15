@@ -45,13 +45,14 @@
 			{{/each}}
 			</ul>
 		</div>
-
+		{{#if is_common_template}}
 		<div>
 			<span>评价内容：</span>
 			<span class="vt xui-evaluate-comment">
 				{{detail}}
 			</span>
 		</div>
+		{{/if}}
 	</div>
 	<div class="fl xui-evaluate-modalRig">
 		<div>
@@ -81,5 +82,16 @@
             </span>
 		</div>
 	</div>
-
+	{{#unless is_common_template}}
+	<table class="xui-evaluate-table table table-bordered">
+		<tbody>
+			{{#each detail}}
+			<tr>
+				<td>{{title}}</td>
+				<td>{{answer}}</td>
+			</tr>	
+			{{/each}}			
+		</tbody>
+	</table>
+	{{/unless}}	
 </script>
