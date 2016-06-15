@@ -31,6 +31,8 @@ class ProductEvaluates(models.Document):
 	status = models.IntField(default=STATUS_WAITTING)  # 审核状态
 	shop_reply = models.StringField(max_length=256, default='')  #商家留言
 
+	old_id = models.LongField(default=0) #mysql中的id，用于迁移数据
+
 	meta = {
 		'collection': 'evaluate_product_evaluates',
 		'db_alias': 'apps'
@@ -46,6 +48,8 @@ class OrderEvaluates(models.Document):
 	serve_score = models.IntField(default=5)  # 服务态度评分
 	deliver_score = models.IntField(default=5)  # 发货速度评分
 	process_score = models.IntField(default=5)  # 物流服务评分
+
+	old_id = models.LongField(default=0) #mysql中的id，用于迁移数据
 
 	meta = {
 		'collection': 'evaluate_order_evaluates',

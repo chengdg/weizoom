@@ -48,8 +48,8 @@
                 product_id: product_id
             },
             success: function(data){
-                loadingStatus(false);
                 render_page(data);
+                loadingStatus(false);
             },
             error: function(resp){
                 loadingStatus(false);
@@ -86,6 +86,21 @@
             });
             $('.wa-evaluate-container').find('.wui-i-status').removeClass('xui-hidden');
             if(has_pic){
+                var pics = product_review.pics;
+                var $ul = $('.wa-evaluate-container').find('.wui-i-uploadimg ul');
+                if($ul.length == 0){
+                    $ul = $('<ul class="xui-imgList xa-imgList"></ul>');
+                    $('.wa-evaluate-container').find('.wui-i-uploadimg .xui-productPhoto').prepend($ul);
+                }else{
+                  $ul = $ul.eq(0);
+                }
+                pics.forEach(function(pic){
+                    var $li = $("<li class='xa-img'><span class='pa xa-remove xui-remove' style='display:none;'><i class='pa'></i></span><div class='xui-progress xa-progress' style='opacity: 0;'><span></span></div></li>");
+                    $li.append("<img src='"+pic+"' data-src='"+pic+"' full-src='"+pic+"'>");
+                    $ul.append($li);
+                });
+                $ul.children('img').data('allow-autoplay','true');
+                $ul.siblings().hide();
                 $('.wa-submitTermite').parent().hide();
             }else{
                 $('.wa-submitTermite').html('追加晒图');
@@ -211,6 +226,7 @@
             submitting = false;
             return;
         }
+        loadingStatus(true);
         var picture_list = [];
         $('.xui-imgList img').each(function(){
               picture_list.push($(this).attr('data-src'))
@@ -236,6 +252,7 @@
                     window.location.href = '/m/apps/evaluate/m_evaluate_success/?webapp_owner_id='+ W.webappOwnerId;
                 },
                 error: function(data) {
+                    loadingStatus(false);
                     wuiAlert(data.errMsg|| '网络错误');
                     submitting = false;
                 }
@@ -258,6 +275,7 @@
         }else{
             //自定义模板
             if(!W.validate()){
+                loadingStatus(false);
                 submitting = false;
                 return;
             }
@@ -314,6 +332,7 @@
                 window.location.href = '/m/apps/evaluate/m_evaluate_success/?webapp_owner_id='+ W.webappOwnerId;
             },
             error: function(data) {
+                loadingStatus(false);
                 wuiAlert(data.errMsg || '网络错误');
                 submitting = false;
             }
