@@ -8,6 +8,7 @@ from excel_response import ExcelResponse
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render_to_response
+from django.http import HttpResponseRedirect, Http404
 
 from core import resource
 from mall import export
@@ -742,7 +743,7 @@ class OrderSenderInfo(resource.Resource):
             sender_name=request.POST.get('sender_name', '').strip(),
             area=request.POST.get('area', '').strip(),
             sender_address=request.POST.get('sender_address', '').strip(),
-            sender_tel=request.POST.get('tel', '').strip(),
+            sender_tel=request.POST.get('sender_tel', '').strip(),
             code=request.POST.get('code', '').strip(),
             company_name=request.POST.get('company_name', '').strip(),
             remarks=request.POST.get('remarks', '').strip(),
@@ -772,7 +773,7 @@ class OrderSenderInfo(resource.Resource):
                 sender_name=request.POST.get('sender_name', '').strip(),
                 area=request.POST.get('area', '').strip(),
                 sender_address=request.POST.get('sender_address', '').strip(),
-                sender_tel=request.POST.get('tel', '').strip(),
+                sender_tel=request.POST.get('sender_tel', '').strip(),
                 code=request.POST.get('code', '').strip(),
                 company_name=request.POST.get('company_name', '').strip(),
                 remarks=request.POST.get('remarks', '').strip(),
@@ -841,7 +842,19 @@ class SenderInfoList(resource.Resource):
 
         items = []
         for sender_info in sender_infos :
-            items.append(sender_info.to_dict())
+            items.append({
+                "sender_name":sender_info.sender_name,
+                "sender_tel":sender_info.sender_tel,
+                "sender_address":sender_info.sender_address,
+                "area":regional_util.get_str_value_by_string_ids(sender_info.area),
+                "code":sender_info.code,
+                "company_name":sender_info.company_name,
+                "remarks":sender_info.remarks,
+                "is_selected":sender_info.is_selected,
+                "created_at":sender_info.created_at.strftime('%Y-%m-%d %H-%M-%S'),
+
+
+                })
         response = create_response(200)
         response.data = {
             'items': items,
