@@ -762,13 +762,11 @@ class OrderSenderInfo(resource.Resource):
         """
 
         # 获取默认运费
-        sender_info_id = request.GET.get('id')
+        sender_info_id = request.POST.get('id')
         sender_info_id = int(sender_info_id) if sender_info_id else 0
         webapp_id = request.user_profile.webapp_id
-        is_selected = True if (request.GET.get('is_selected','') in ('true', 'yes', 'True', 'Yes', True, '1')) else False
-        sender_tel=request.POST.get('sender_tel', '').strip()
-        print "sender_tel>>>>",sender_tel
-        if sender_info_id:
+        is_selected = True if (request.POST.get('is_selected','') in ('true', 'yes', 'True', 'Yes', True, '1')) else False
+        if sender_info_id and not is_selected:
             SenderInfo.objects.filter(webapp_id=webapp_id,id=sender_info_id).update(
                 sender_name=request.POST.get('sender_name', '').strip(),
                 area=request.POST.get('area', '').strip(),
@@ -791,7 +789,7 @@ class OrderSenderInfo(resource.Resource):
         删除发货人
         """
 
-        sender_info_id = request.GET.get('id')
+        sender_info_id = request.POST.get('id')
         sender_info_id = int(sender_info_id) if sender_info_id else 0
         webapp_id = request.user_profile.webapp_id
         if sender_info_id:
