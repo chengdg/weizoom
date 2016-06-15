@@ -103,7 +103,7 @@ Scenario:1 发件人信息列表
 	#编辑地址“一先生”的电话为“15688888888”
 	When jobs编辑'一先生'地址信息
 		"""
-		[{
+		{
 			"sender_name": "一先生",
 			"area": "北京 北京市 海淀区",
 			"sender_address": "海淀科技大厦301",
@@ -111,7 +111,7 @@ Scenario:1 发件人信息列表
 			"sender_tel": "15688888888",
 			"company_name": "某某技术有限公司",
 			"remarks": "谢谢"
-		}]
+		}
 		"""
 	Then jobs能获得发件人信息列表
 		"""
