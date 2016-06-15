@@ -75,7 +75,7 @@ Background:
 		| member_name   |   attention_time     | member_source |
 		| bill 			| 2016-06-06 23:59:59  |    直接关注   |
 		| tom 			| 2016-06-06 00:00:00  |    推广扫码   |
-    And jobs已有订单
+    And jobs已有的订单
     	"""
     	[{
     		"order_no":"1",
