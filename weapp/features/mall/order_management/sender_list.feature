@@ -54,8 +54,7 @@ Scenario:1 发件人信息列表
 			"area": "北京 北京市 海淀区",
 			"sender_address": "海淀科技大厦301",
 			"code": "111111",
-			"is_selected": "true",
-			"actions": ["编辑","删除"]
+			"is_selected": "true"
 		}]
 		"""
 
@@ -83,24 +82,21 @@ Scenario:1 发件人信息列表
 			"area": "北京 北京市 海淀区",
 			"sender_address": "海淀科技大厦301",
 			"code": "111111",
-			"is_selected": "true",
-			"actions": ["编辑","删除"]
+			"is_selected": "true"
 		},{
 			"sender_name": "二先生",
 			"sender_tel": "15612345678",
 			"area": "北京 北京市 海淀区",
 			"sender_address": "海淀科技大厦301",
 			"code": "",
-			"is_selected": "false",
-			"actions": ["编辑","删除","默认"]
+			"is_selected": "false"
 		},{
 			"sender_name": "一先生",
 			"sender_tel": "15612345678",
 			"area": "北京 北京市 海淀区",
 			"sender_address": "海淀科技大厦301",
 			"code": "111111",
-			"is_selected": "false",
-			"actions": ["编辑","删除","默认"]
+			"is_selected": "false"
 		}]
 		"""
 
@@ -125,24 +121,21 @@ Scenario:1 发件人信息列表
 			"area": "北京 北京市 海淀区",
 			"sender_address": "海淀科技大厦301",
 			"code": "111111",
-			"is_selected": "true",
-			"actions": ["编辑","删除"]
+			"is_selected": "true"
 		},{
 			"sender_name": "二先生",
 			"sender_tel": "15612345678",
 			"area": "北京 北京市 海淀区",
 			"sender_address": "海淀科技大厦301",
 			"code": "",
-			"is_selected": "false",
-			"actions": ["编辑","删除","默认"]
+			"is_selected": "false"
 		},{
 			"sender_name": "一先生",
 			"sender_tel": "15688888888",
 			"area": "北京 北京市 海淀区",
 			"sender_address": "海淀科技大厦301",
 			"code": "111111",
-			"is_selected": "false",
-			"actions": ["编辑","删除","默认"]
+			"is_selected": "false"
 		}]
 		"""
 
@@ -156,24 +149,21 @@ Scenario:1 发件人信息列表
 			"area": "北京 北京市 海淀区",
 			"sender_address": "海淀科技大厦301",
 			"code": "111111",
-			"is_selected": "false",
-			"actions": ["编辑","删除","默认"]
+			"is_selected": "false"
 		},{
 			"sender_name": "二先生",
 			"sender_tel": "15612345678",
 			"area": "北京 北京市 海淀区",
 			"sender_address": "海淀科技大厦301",
 			"code": "",
-			"is_selected": "true",
-			"actions": ["编辑","删除"]
+			"is_selected": "true"
 		},{
 			"sender_name": "一先生",
 			"sender_tel": "15688888888",
 			"area": "北京 北京市 海淀区",
 			"sender_address": "海淀科技大厦301",
 			"code": "111111",
-			"is_selected": "false",
-			"actions": ["编辑","删除","默认"]
+			"is_selected": "false"
 		}]
 		"""
 
@@ -187,16 +177,14 @@ Scenario:1 发件人信息列表
 			"area": "北京 北京市 海淀区",
 			"sender_address": "海淀科技大厦301",
 			"code": "111111",
-			"is_selected": "true",
-			"actions": ["编辑","删除"]
+			"is_selected": "true"
 		},{
 			"sender_name": "一先生",
 			"sender_tel": "15688888888",
 			"area": "北京 北京市 海淀区",
 			"sender_address": "海淀科技大厦301",
 			"code": "111111",
-			"is_selected": "false",
-			"actions": ["编辑","删除","默认"]
+			"is_selected": "false"
 		}]
 		"""
 
