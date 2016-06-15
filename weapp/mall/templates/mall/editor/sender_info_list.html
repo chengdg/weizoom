@@ -13,35 +13,79 @@
 		</li>
 		<li class="active">所有订单</li>
 	</ul>
-    <input type="button" value="+新增地址"/>
+   <a href="/mall2/sender_info/">+新增地址</a>
      <div
                 data-ui-role="advanced-table"
                 data-app="mall2"
                 data-resource="sender_info_list"
                 data-enable-paginator="true"
-                data-template-id="#mall-orders-view"
+                data-template-id="#mall-orders-sender"
                 data-init-sort="-created_at"
                 data-selectable = "false"
                 data-user-webapp-id={{user.get_profile.webapp_id}}
-                data-args='{"order_status":"{{order_status}}"}'
             >
             </div>
-	<table class="table table-condensed mb0 xui-table">
-		<thead>
-			<tr>
-				<th width="60">默认</th>
-				<th width="60">发货人姓名</th>
-				<th width="60">发货人电话</th>
-				<th width="60">所在地区</th>
-				<th width="60">详细地址</th>
-				<th width="60">邮政编码</th>
-				<th width="60">操作</th>
-			</tr>
-		</thead>
-	</table>
+   
+	
 </div>
 {% endblock %}
 
 {% block js %}
-
+{% verbatim %}
+ <script id="mall-orders-sender" type="text/x-jquery-tmpl">
+	<table class="table xb-stripedTable">
+		<thead>
+			<tr class="xui-trHeight">
+				<th width="110px">默认</th>
+				<th width="110">发货人信息</th>
+				<th width="110">发货人电话</th>
+				<th width="110">所在地区</th>
+				<th width="110">详细地址</th>
+				<th width="110">邮政编码</th>
+				<th width="110">操作</th>
+			</tr>
+		</thead>
+		<tbody id='mall-orders'>
+            {{each(i, item) items}}
+                <tr data-id="${item.id}">
+                	<!--默认-->
+                    <td class="nowrap">
+                        <input type="radio" id="verbose_name" value="" />
+                    </td>
+                    <!--发货人姓名-->
+                    <td class="nowrap">
+                        <div>${item.sender_name}</div>
+                    </td>
+                    <!--发货人电话-->
+                    <td class="nowrap">
+                        <div>${item.sender_tel}</div>
+                    </td>
+                    <!--所在地区-->
+                    <td class="nowrap">
+                        <div>${item.area}</div>
+                    </td>
+                    <!--详细地址-->
+                    <td class="nowrap">
+                        <div>${item.sender_address}</div>
+                    </td>
+                    <!--邮政编码-->
+                    <td class="nowrap">
+                        <div>${item.code}</div>
+                    </td>
+                    <!--操作-->
+                    <td class="tc" style="width:100px;">
+                        <a href="javascript:void(0);"
+                         data-id="${item.id}"
+                         class="xui-delete-sender xa-delete mr10">删除</a>
+                        <a href="/mall2/sender_info_list/?id=${sender.id}"
+                         data-id="${item.id}"
+                         data-name="${item.name}"
+                         >修改</a>
+                    </td>
+                </tr>
+			{{/each}}
+		</tbody>        
+	</table>
+</script>
+{% endverbatim %}
 {% endblock %}

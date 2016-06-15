@@ -1,0 +1,179 @@
+{% extends "content_base_v2.html" %} {% load common_tag %} {% load account_filter %} {% block content-panel %}
+
+<div class="xui-expiredTime-page">
+	<ul class="breadcrumb">
+		<li>您当前所在位置</li>
+		<li>
+			<a href="mall/editor/edit_expired_time.html">订单管理</a>
+		</li>
+		<li class="active">所有订单</li>
+	</ul>
+	<div class="xui-new-adress w975 pr" style="background: #EAEEF6;">
+		<div class="pt20 pl20">添加新地址</div>
+		<div class="xui-i-content mt20 pl50">
+			<form action="/mall2/sender_info_list/" method="get">
+				
+				<div class="mb10">
+					<label for="" class="star_show">发货人：</label>
+					<input type="text" class="ml10" required/><br />
+				</div>
+				
+			<div class="mb10">
+			<label for="" class="star_show">所在地区：</label>
+			<select name="province" class="province" required>
+             	<option value="请选择">请选择省/直辖市</option>            	
+             </select>
+			 <select name="city" class="city" required>
+             	<option value="请选择">请选择市</option>            	
+             </select>
+			 <select name="district" class="district" required>
+             	<option value="请选择">请选择区/县</option>            	
+             </select><br />
+			</div>
+
+				<div>
+					<div class="mb10">
+						<label for="" class="star_show fl">详细信息：</label>
+						<textarea name="adress" rows="5" cols="50" placeholder="不需要重复填写省/市/区" required></textarea>
+					</div>
+				</div><br />
+				<div class="mb10 ">
+					邮政编码：<input type="text" name="" id="" value="" class="ml20"/><br />
+				</div>
+				
+				<div class="mb10"> 
+					<label class="star_show fl" >发货人电话：</label>
+					<input type="tel" name="" id="" value="" required/>
+				</div>
+				
+				<div class="mb10">
+					公司名称：<input type="text" class="ml20"/>
+				</div>
+				
+				<div class="mb10">
+					<label class="fl">备注：</label><textarea name="adress" rows="5" cols="50" class="ml10"></textarea>
+				</div>
+				<div class="mt70 ml200">
+					<input type="submit" name="" id="submitBtn" value="保存" class="btn btn-default" style="border-radius: 10%;"/>
+				</div>
+				
+			</form>
+		</div>
+	</div>
+</div>
+
+{% endblock %}
+{% block js %}
+<script type="text/javascript">
+
+	$(document).ready(function() {
+		var obj = {
+			init: function () {
+				this.getPrvince();
+			},
+
+			// 解析字符串
+			parseStr: function(data) {
+				var _data=[];
+		        _.each(data,function(item,i){
+		       	 	_data.push(item);
+		       	});
+		       	return _data;
+			},
+			// 获取省份
+			getPrvince: function() {
+				var _this = this;
+				W.getApi().call({
+                 method: 'get',
+                 app: 'tools',
+                 resource: 'regional/provinces',
+					success: function(data) {
+						var _data=_this.parseStr(data);
+						var option = '';
+						for(var i=0,len=_data.length;i<len;i++){
+							option+='<option value="'+_data[i]+'" data-id="'+(i+1)+'">'+_data[i]+'</option>';				
+						}
+						$('.province').html(option);
+						_this.selectProvince();
+					},
+					error: function(resp) {
+					}
+				});
+			},
+			// 选择省份
+			selectProvince: function() {
+				var _this = this;
+				$('.province').on('click',function() {
+					var $self = $(this);
+					if($self.find('option:selected').html() != "请选择省份/直辖市") {
+						_this.getCity();
+					}else{
+						$('.city').html('<option>请选择市</option>');
+					}
+				});
+			},
+			
+			// 获取城市
+			getCity: function() {
+				var _this = this;
+                var id = $('.province').find('option:selected').data('id')
+//              console.log(id);
+                   W.getApi().call({
+                    method: 'get',
+                    app: 'tools',
+                    resource: 'regional/cities/'+id,
+					success: function(datas) {
+						var option = '';
+						_.each(datas,function(data,i){
+//							console.log(data,i)
+							option+='<option value="'+data+'" data-id="'+i+'">'+data+'</option>';
+						})
+
+
+						$('.city').html(option);
+						_this.selectDistrict();
+					},
+					error: function(resp) {
+					}
+				});
+			},
+			
+			//选择区县
+			selectDistrict: function() {
+				var _this = this;
+				$('.city').on('click',function() {
+					var $self = $(this);
+					if($self.find('option:selected').html() != "请选择市") {
+						_this.getDistrict();
+					}else{
+						$('.district').html('<option>请选择市</option>');
+					}
+				});
+			},
+			
+			// 获取区/县
+			getDistrict: function() {
+				var _this = this;
+                var id=$('.city').find('option:selected').data('id');
+//              console.log(id);
+                   W.getApi().call({
+                    method: 'get',
+                    app: 'tools',
+                    resource: 'regional/districts/'+id,
+					success: function(datas) {
+						var option = '';
+						_.each(datas,function(data,i){
+//							console.log(data,i)
+							option+='<option value="'+data+'" data-id="'+i+'">'+data+'</option>';
+						})
+						$('.district').html(option);
+					},
+					error: function(resp) {
+					}
+				});
+			},
+		};
+		obj.init();
+	});
+</script>
+{% endblock %}
