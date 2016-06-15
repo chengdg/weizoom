@@ -452,7 +452,7 @@ Background:
             "member": "bill",
             "review_detail": "1商品1还不错！！！！！",
             "reply": "谢谢评价"
-        }，{
+        },{
             "product_name": "商品1",
             "order_no": "12",
             "member": "bill|",

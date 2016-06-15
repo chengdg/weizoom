@@ -137,8 +137,8 @@ Background:
 
 @mall @apps @apps_evaluate @evaluate_detail_member_group
 Scenario:1 jobs登录系统，在商品评价详情页面给会员调分组
-	When jobs登录系统
-    Then jobs能获得评价详情
+	Given jobs登录系统
+    Then jobs能获得订单"2"中的"商品2"评价详情
         """
         [{
             "product_name": "商品2",
@@ -151,28 +151,13 @@ Scenario:1 jobs登录系统，在商品评价详情页面给会员调分组
             "choose":"否",
             "picture_list":[],
             "action": ["通过审核","通过并置顶","屏蔽处理"]
-        },{
-            "product_name": "商品1",
-            "order_no": "1",
-            "member": "bill",
-            "member_rank":"普通会员",
-            "tags":"未分组",
-            "product_score":"5",
-            "answer":"商品很好，棒棒哒！",
-            "choose":"否",
-            "picture_list":['1.png','2.jpg'],
-            "action": ["通过审核","通过并置顶","屏蔽处理"]
         }]
         """
     When jobs给"tom"调分组
 		"""
 		["分组2"]
 		"""
-	And jobs给"bill"调分组
-		"""
-		["分组3"]
-		"""
-	Then jobs能获得评价详情
+    Then jobs能获得评价详情
         """
         [{
             "product_name": "商品2",
@@ -185,12 +170,27 @@ Scenario:1 jobs登录系统，在商品评价详情页面给会员调分组
             "choose":"否",
             "picture_list":[],
             "action": ["通过审核","通过并置顶","屏蔽处理"]
+        }]
+        """
+    Then jobs能获得订单"2"中的"商品2"评价详情
+        """
+        [{
+            "product_name": "商品2",
+            "order_no": "2",
+            "member": "tom",
+            "member_rank":"普通会员",
+            "tags":"未分组",
+            "product_score":"2",
+            "answer":"用完皮肤过敏了~~呜呜呜~~",
+            "choose":"否",
+            "picture_list":[],
+            "action": ["通过审核","通过并置顶","屏蔽处理"]
         },{
             "product_name": "商品1",
             "order_no": "1",
             "member": "bill",
             "member_rank":"普通会员",
-            "tags":"分组3",
+            "tags":"未分组",
             "product_score":"5",
             "answer":"商品很好，棒棒哒！",
             "choose":"否",
@@ -200,5 +200,5 @@ Scenario:1 jobs登录系统，在商品评价详情页面给会员调分组
         """
 	Then jobs可以获得会员列表
 			| name  |    tags    |
-			| bill  |   分组3    |
+			| bill  |   未分组   |
 			| tom   |   分组2    |

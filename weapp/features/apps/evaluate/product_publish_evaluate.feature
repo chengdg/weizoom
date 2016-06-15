@@ -179,12 +179,20 @@ Scenario:1 评价包括文字与晒图
         """
         {
             "product_score": "4",
-            "answer": "整体还可以",
-            "choose":"不好说",
-            "name":"bill",
-            "tel":"13013013011",
-            "title":"",
-            "picture_list": ['1.png']
+            "answer":[{ 
+                "title":"您使用产品后的感受是",
+                "value":"整体还可以"
+                }],
+            "choose":[{
+                "title":"您对本产品的包装是否满意",
+                "value":"不好说"
+                }],
+            "participate_info":[{
+                "name":"bill",
+                "tel":"13013013011",
+                "title":""
+            }],
+            "picture_list": ['1.png'] 
         }
         """
     Then bill成功获取个人中心的'待评价'列表
@@ -200,12 +208,15 @@ Scenario:1 评价包括文字与晒图
         """
         [{
             "product_name":"商品1",
-            "answer": "整体还可以",
-            "choose":"不好说",
-            "name":"bill",
-            "tel":"13013013011",
-            "title":"",
-            "picture_list":['1.png']
+            "answer":[{ 
+                "title":"您使用产品后的感受是",
+                "value":"整体还可以"
+                }],
+            "choose":[{
+                "title":"您对本产品的包装是否满意",
+                "value":"不好说"
+                }],
+            "picture_list": ['1.png'] 
         }]
         """
 
@@ -216,11 +227,19 @@ Scenario:2 无晒图，追加晒图
         """
         {
             "product_score": "5",
-            "answer": "商品非常好！！！",
-            "choose":"是",
-            "name":"bill",
-            "tel":"13013013011",
-            "title":"",
+            "answer":[{ 
+                "title":"您使用产品后的感受是",
+                "value":"商品非常好！！！"
+                }],
+            "choose":[{
+                "title":"您对本产品的包装是否满意",
+                "value":"是"
+                }],
+            "participate_info":[{
+                "name":"bill",
+                "tel":"13013013011",
+                "title":""
+            }],
             "picture_list":[]
         }
         """
@@ -242,11 +261,15 @@ Scenario:2 无晒图，追加晒图
         """
         [{
             "product_name":"商品1",
-            "answer": "商品非常好！！！",
-            "choose":"是",
-            "name":"bill",
-            "tel":"13013013011",
-            "title":""
+            "answer":[{ 
+                "title":"您使用产品后的感受是",
+                "value":"商品非常好！！！"
+                }],
+            "choose":[{
+                "title":"您对本产品的包装是否满意",
+                "value":"是"
+                }],
+            "picture_list":[]
         }]
         """
     When bill完成订单'1'中'商品1'的追加晒图评价
@@ -268,11 +291,14 @@ Scenario:2 无晒图，追加晒图
         """
         [{
             "product_name":"商品1",
-            "answer": "商品非常好！！！",
-            "choose":"是",
-            "name":"bill",
-            "tel":"13013013011",
-            "title":""
+            "answer":[{ 
+                "title":"您使用产品后的感受是",
+                "value":"商品非常好！！！"
+                }],
+            "choose":[{
+                "title":"您对本产品的包装是否满意",
+                "value":"是"
+                }],
             "picture_list":['1.jpg']
         }]
         """
