@@ -29,7 +29,7 @@ class WzcardSale(api_resource.ApiResource):
 		is_all = int(args.get('is_all', '0'))
 
 		pageinfo = None
-		wzcards = promotion_models.VirtualProductHasCode.objects.all()
+		wzcards = promotion_models.VirtualProductHasCode.objects.filter(virtual_product__product__type='wzcard')
 		if start_date and end_date:
 			start_time = start_date + ' 00:00:00'
 			end_time = end_date + ' 23:59:59'
