@@ -110,91 +110,30 @@ Background:
         """
     Given bill关注jobs的公众号
     When bill访问jobs的webapp
-#    Then bill成功获取个人中心的'待评价'列表::h5
-#        """
-#        [{
-#            "order_no": "1",
-#            "products": [{
-#                    "product_name": "商品1"
-#                }]
-#        }, {
-#            "order_no": "2",
-#            "products": [{
-#                    "product_name": "商品2"
-#                }]
-#        }]
-#        """
+
 @mall @apps @app_evaluate @commit_app_product_comment
 Scenario:1 评价包括文字与晒图
-#    When bill访问jobs的webapp
-#    And bill完成订单'1'中'商品1'的评价
-#        """
-#        {
-#            "product_score": "5",
-#            "answer": "",
-#            "choose":"是",
-#            "name":"bill",
-#            "tel":"13013013011",
-#            "title":"工程师",
-#            "picture_list": ['1.png','2.jpg']
-#        }
-#        """
-#    Then 订单'1'中'商品1'的评商品评价提示信息'发表评价失败'
-    # And 订单'1'中'商品1'的评商品评价提示详情'请填写必填项'
-
-#    When bill访问jobs的webapp
-#    And bill完成订单'1'中'商品1'的评价
-#        """
-#        {
-#            "product_score": "5",
-#            "answer": "腰不酸腿不痛，走路不抽经了！！！！",
-#            "choose":"",
-#            "name":"bill",
-#            "tel":"13013013011",
-#            "title":"",
-#            "picture_list": ['1.png','2.jpg']
-#        }
-#        """
-#    Then 订单'1'中'商品1'的评商品评价提示信息'发表评价失败'
-    # And 订单'1'中'商品1'的评商品评价提示详情'请填写必填项'
-
-#    When bill访问jobs的webapp
-#    And bill完成订单'1'中'商品1'的评价
-#        """
-#        {
-#            "product_score": "5",
-#            "answer": "腰不酸腿不痛，走路不抽经了！！！！",
-#            "choose":"否",
-#            "name":"bill",
-#            "tel":"",
-#            "title":"经理",
-#            "picture_list": ['1.png','2.jpg']
-#        }
-#        """
-#    Then 订单'1'中'商品1'的评商品评价提示信息'发表评价失败'
-    # And 订单'1'中'商品1'的评商品评价提示详情'请填写必填项'
-
-    #文字在5-200以内，填写必填项，成功提交
     When bill完成订单'1'中'商品1'的评价
-        """
-        {
-            "product_score": "4",
-            "answer":[{ 
-                "title":"您使用产品后的感受是",
-                "value":"整体还可以"
-                }],
-            "choose":[{
-                "title":"您对本产品的包装是否满意",
-                "value":"不好说"
-                }],
-            "participate_info":[{
-                "name":"bill",
-                "tel":"13013013011",
-                "title":""
-            }],
-            "picture_list": ['1.png'] 
-        }
-        """
+    """
+    {
+        "product_score": "4",
+        "answer": [{
+            "title":"您使用产品后的感受是",
+            "value":"整体还可以"
+        }],
+        "choose": [{
+            "title":"您对本产品的包装是否满意",
+            "value":"不好说"
+        }],
+        "participate_info":[{
+            "name":"bill",
+            "tel":"13013013011",
+            "title":""
+        }],
+        "picture_list": ["1.png"]
+    }
+    """
+
     Then bill成功获取个人中心的'待评价'列表
         """
         [{
@@ -204,11 +143,11 @@ Scenario:1 评价包括文字与晒图
                 }]
         }]
         """
-    Then bill成功获取'商品评价'列表
+    Then bill成功获取'我的评价'列表
         """
         [{
             "product_name":"商品1",
-            "answer":[{ 
+            "answer":[{
                 "title":"您使用产品后的感受是",
                 "value":"整体还可以"
                 }],
@@ -216,7 +155,7 @@ Scenario:1 评价包括文字与晒图
                 "title":"您对本产品的包装是否满意",
                 "value":"不好说"
                 }],
-            "picture_list": ['1.png'] 
+            "picture_list": ['1.png']
         }]
         """
 
@@ -243,6 +182,7 @@ Scenario:2 无晒图，追加晒图
             "picture_list":[]
         }
         """
+
     Then bill成功获取个人中心的'待评价'列表
         """
         [{
@@ -261,7 +201,7 @@ Scenario:2 无晒图，追加晒图
         """
         [{
             "product_name":"商品1",
-            "answer":[{ 
+            "answer":[{
                 "title":"您使用产品后的感受是",
                 "value":"商品非常好！！！"
                 }],
@@ -272,12 +212,13 @@ Scenario:2 无晒图，追加晒图
             "picture_list":[]
         }]
         """
-    When bill完成订单'1'中'商品1'的追加晒图评价
+    When bill完成订单'1'中'商品1'的追加晒图
         """
         {
-            "picture_list": ['1.jpg']
+            "picture_list": ["1.jpg"]
         }
         """
+
     Then bill成功获取个人中心的'待评价'列表
         """
         [{
@@ -291,7 +232,7 @@ Scenario:2 无晒图，追加晒图
         """
         [{
             "product_name":"商品1",
-            "answer":[{ 
+            "answer":[{
                 "title":"您使用产品后的感受是",
                 "value":"商品非常好！！！"
                 }],
