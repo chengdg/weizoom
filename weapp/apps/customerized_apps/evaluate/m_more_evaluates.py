@@ -35,9 +35,9 @@ class MyEvaluates(resource.Resource):
 		try:
 			related_products = app_models.EvaluatesRelatedProducts.objects.get(product_id = product_id)
 			related_product_ids = app_models.EvaluatesRelations.objects.get(id = related_products.belong_to).related_product_ids
-			reviews = app_models.ProductEvaluates.objects(owner_id = webapp_owner_id, product_id__in = related_product_ids)
+			reviews = app_models.ProductEvaluates.objects(owner_id = webapp_owner_id, status__in = [1,2], product_id__in = related_product_ids).order_by('-top_time','-created_at')
 		except:
-			reviews = app_models.ProductEvaluates.objects(owner_id = webapp_owner_id, product_id = product_id)
+			reviews = app_models.ProductEvaluates.objects(owner_id = webapp_owner_id, status__in = [1,2], product_id = product_id).order_by('-top_time','-created_at')
 
 		member_ids = [review.member_id for review in reviews]
 		members = get_member_by_id_list(member_ids)

@@ -286,8 +286,16 @@ class EvaluateReview(resource.Resource):
 								increase_member_integral(member[0], settings.review_increase, '商品评价奖励')
 
 				if status == '2':
-					product_review = app_models.ProductEvaluates.objects.get(id=product_review_id)
-					top_reviews = app_models.ProductEvaluates.objects.filter(product_id=product_review.product_id,
+					try:
+						#商品评价关联，则关联的商品最多有三个置顶
+						product_id = review[0].product_id
+						related_product = app_models.EvaluatesRelatedProducts.objects.get(product_id=product_id)
+						related_product_ids = app_models.EvaluatesRelations.objects.get(id=related_product.belong_to).related_product_ids
+						top_reviews = app_models.ProductEvaluates.objects.filter(product_id__in=related_product_ids,status=int(status)).order_by("top_time")
+					except:
+						#商品评价没有关联，单个商品也只能最多有三个置顶
+						product_review = app_models.ProductEvaluates.objects.get(id=product_review_id)
+						top_reviews = app_models.ProductEvaluates.objects.filter(product_id=product_review.product_id,
 																		   status=int(status)).order_by("top_time")
 					if top_reviews.count() >= 3:
 						ids = [review.id for review in top_reviews[:(top_reviews.count() - 2)]]
