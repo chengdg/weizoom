@@ -13,6 +13,7 @@ from core import resource
 from core import paginator
 from core.jsonresponse import create_response
 from modules.member.module_api import get_member_by_id_list
+from evaluates import get_evaluate_detail
 
 import models as app_models
 import export
@@ -31,7 +32,12 @@ class MyEvaluates(resource.Resource):
 		product_id = request.GET['product_id']
 		webapp_owner_id = request.webapp_owner_id
 
-		reviews = app_models.ProductEvaluates.objects(owner_id = webapp_owner_id, product_id = product_id)
+		try:
+			related_products = app_models.EvaluatesRelatedProducts.objects.get(product_id = product_id)
+			related_product_ids = app_models.EvaluatesRelations.objects.get(id = related_products.belong_to).related_product_ids
+			reviews = app_models.ProductEvaluates.objects(owner_id = webapp_owner_id, product_id__in = related_product_ids)
+		except:
+			reviews = app_models.ProductEvaluates.objects(owner_id = webapp_owner_id, product_id = product_id)
 
 		member_ids = [review.member_id for review in reviews]
 		members = get_member_by_id_list(member_ids)
@@ -40,12 +46,21 @@ class MyEvaluates(resource.Resource):
 		items = []
 		for review in reviews:
 			member_detail = member_id2member[review.member_id]
+
+			is_common_template = True
+			review_detail = review.detail
+			if isinstance(review_detail, dict):
+				is_common_template = False
+				# 组织自定义模板用户评价数据结构
+				review_detail = get_evaluate_detail(review_detail)
+
 			items.append({
 				'created_at': review.created_at,
-				'review_detail': review.detail,
+				'review_detail': review_detail,
 				'member_name': member_detail.username_for_html,
 				'member_icon': member_detail.user_icon,
 				'reviewed_product_pictures': review.pics,
+				'is_common_template': is_common_template
 			})
 
 		c = RequestContext(request, {
