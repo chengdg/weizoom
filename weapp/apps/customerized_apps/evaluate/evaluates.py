@@ -236,43 +236,9 @@ class EvaluateReview(resource.Resource):
 		is_common_template = True
 		evaluate_detail = evaluate.detail
 		if isinstance(evaluate_detail, dict):
-			evaluate_detail_list = []
 			is_common_template = False
-			for key,value in evaluate_detail.items():
-				value = evaluate_detail[key]
-				if 'textlist' in key.split('::'):
-					for k in value:
-						shortcut_name = k
-						if k in SHORTCUTS_TEXT:
-							shortcut_name = SHORTCUTS_TEXT[k]
-						evaluate_detail_list.append({
-							'title': shortcut_name,
-							'answer': value[k]
-						})
-				elif 'qa' in key.split('::'):
-					qa_title,qa_answer = value.split('::')
-					evaluate_detail_list.append({
-						'title': qa_title,
-						'answer': qa_answer
-					})
-				elif 'selection' in key.split('::'):
-					if isinstance(value, list):
-						mul_select_answers = []
-						for select in value:
-							mul_select_title, mul_select_answer, num = select.split('::')
-							mul_select_answers.append(mul_select_answer)
-						evaluate_detail_list.append({
-							'title': mul_select_title,
-							'answer': ','.join(mul_select_answers)
-						})
-					elif isinstance(value, basestring):
-						select_title, select_answer, num = value.split('::')
-						evaluate_detail_list.append({
-							'title': select_title,
-							'answer': select_answer
-						})
-
-			evaluate_detail = evaluate_detail_list
+			# 组织自定义模板用户评价数据结构
+			evaluate_detail = get_evaluate_detail(evaluate_detail)
 
 		items = {
 			'time': evaluate.created_at.strftime('%Y/%m/%d'),
@@ -408,3 +374,42 @@ class EvaluateReviewShopReply(resource.Resource):
 		except:
 			response = create_response(500)
 			return response.get_response()
+
+def get_evaluate_detail(evaluate_detail):
+	#组织自定义模板用户评价数据结构
+	evaluate_detail_list = []
+	for key, value in evaluate_detail.items():
+		value = evaluate_detail[key]
+		if 'textlist' in key.split('::'):
+			for k in value:
+				shortcut_name = k
+				if k in SHORTCUTS_TEXT:
+					shortcut_name = SHORTCUTS_TEXT[k]
+				evaluate_detail_list.append({
+					'title': shortcut_name,
+					'answer': value[k]
+				})
+		elif 'qa' in key.split('::'):
+			qa_title, qa_answer = value.split('::')
+			evaluate_detail_list.append({
+				'title': qa_title,
+				'answer': qa_answer
+			})
+		elif 'selection' in key.split('::'):
+			if isinstance(value, list):
+				mul_select_answers = []
+				for select in value:
+					mul_select_title, mul_select_answer, num = select.split('::')
+					mul_select_answers.append(mul_select_answer)
+				evaluate_detail_list.append({
+					'title': mul_select_title,
+					'answer': ','.join(mul_select_answers)
+				})
+			elif isinstance(value, basestring):
+				select_title, select_answer, num = value.split('::')
+				evaluate_detail_list.append({
+					'title': select_title,
+					'answer': select_answer
+				})
+
+	return evaluate_detail_list

@@ -14,6 +14,7 @@ import mall.module_api as mall_api
 from core import resource
 from core import paginator
 from core.jsonresponse import create_response
+from evaluates import get_evaluate_detail
 
 import models as app_models
 import export
@@ -58,12 +59,20 @@ class MyEvaluates(resource.Resource):
 				if product['name'] == product_name:
 					product_dic = product
 
+			is_common_template = True
+			review_detail = review.detail
+			if isinstance(review_detail, dict):
+				is_common_template = False
+				# 组织自定义模板用户评价数据结构
+				review_detail = get_evaluate_detail(review_detail)
+
 			product_review_list.append({
-				'detail': review.detail,
+				'detail': review_detail,
 				'created_at': review.created_at,
 				'pics': review.pics,
 				'product': product_dic,
-				'shop_reply': review.shop_reply
+				'shop_reply': review.shop_reply,
+				'is_common_template': is_common_template
 			})
 
 		c = RequestContext(request, {
