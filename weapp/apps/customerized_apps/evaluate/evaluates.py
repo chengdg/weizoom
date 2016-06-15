@@ -238,7 +238,8 @@ class EvaluateReview(resource.Resource):
 		if isinstance(evaluate_detail, dict):
 			is_common_template = False
 			# 组织自定义模板用户评价数据结构
-			evaluate_detail = get_evaluate_detail(evaluate_detail)
+			is_review_dialog = True
+			evaluate_detail = get_evaluate_detail(evaluate_detail, is_review_dialog)
 
 		items = {
 			'time': evaluate.created_at.strftime('%Y/%m/%d'),
@@ -383,27 +384,29 @@ class EvaluateReviewShopReply(resource.Resource):
 			response = create_response(500)
 			return response.get_response()
 
-def get_evaluate_detail(evaluate_detail):
+def get_evaluate_detail(evaluate_detail, is_review_dialog = False):
 	#组织自定义模板用户评价数据结构
 	evaluate_detail_list = []
-	for key, value in evaluate_detail.items():
+	for key, value in sorted(evaluate_detail.items()):
 		value = evaluate_detail[key]
-		if 'textlist' in key.split('::'):
-			for k in value:
-				shortcut_name = k
-				if k in SHORTCUTS_TEXT:
-					shortcut_name = SHORTCUTS_TEXT[k]
-				evaluate_detail_list.append({
-					'title': shortcut_name,
-					'answer': value[k]
-				})
-		elif 'qa' in key.split('::'):
+		#参与人信息只展示在后台的审核弹窗里
+		if is_review_dialog:
+			if 'textlist' in key.split('::'):
+				for k in value:
+					shortcut_name = k
+					if k in SHORTCUTS_TEXT:
+						shortcut_name = SHORTCUTS_TEXT[k]
+					evaluate_detail_list.append({
+						'title': shortcut_name,
+						'answer': value[k]
+					})
+		if 'qa' in key.split('::'):
 			qa_title, qa_answer = value.split('::')
 			evaluate_detail_list.append({
 				'title': qa_title,
 				'answer': qa_answer
 			})
-		elif 'selection' in key.split('::'):
+		if 'selection' in key.split('::'):
 			if isinstance(value, list):
 				mul_select_answers = []
 				for select in value:

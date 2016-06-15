@@ -52,7 +52,7 @@
 			data-enable-sort="false" 
 			data-selectable="false" 
 			data-disable-header-select="true" 
-			data-item-count-per-page="10" 
+			data-item-count-per-page="5"
 		>
 		</div>
 	</div>
@@ -272,7 +272,7 @@ $(document).ready(function() {
                     id: JSON.stringify(product_id_arr)
                 },
                 success: function(data) {
-                    W.showHint('success', '关联评价成功！');
+                    W.showHint('success', '关联评价成功');
                     $('.xa-selected-products-table').html('请通过查询选择需要关联评价的商品');
                     var table = $('[data-ui-role="advanced-table"]').data('view')
                     table.reload();
