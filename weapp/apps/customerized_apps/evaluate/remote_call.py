@@ -163,11 +163,10 @@ class GetUnreviewdCount(resource.Resource):
 		order_has_product_list_ids = map(lambda x: int(x), order_has_product_list_ids.split('_'))
 		try:
 			count = apps_models.ProductEvaluates.objects(order_has_product_id__in=order_has_product_list_ids, pics__ne=[]).count()
+			response = create_response(200)
 			response.data = {
 				"reviewed_count": count
 			}
-			print '=============='
-			print response.data
 			return response.get_response()
 		except:
 			response.errMsg = u'查询失败'
