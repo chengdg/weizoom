@@ -4,6 +4,7 @@ from core.jsonresponse import create_response
 from core.exceptionutil import unicode_full_stack
 
 import models as apps_models
+from mall.models import Order
 from modules.member.models import Member
 
 
@@ -175,6 +176,8 @@ class GetOrderEvaluatesStatus(resource.Resource):
 			response.errMsg = u'参数错误'
 			return response.get_response()
 		order_evas = apps_models.OrderEvaluates.objects(owner_id=int(owner_id), member_id=int(member_id))
+		order_ids = [o.order_id for o in order_evas]
+		order_order_id2id = {o.order_id: o.id for o in Order.objects.filter(order_id__in=order_ids)}
 		response = create_response(200)
-		response.data = {'orders': [{'order_id': o.order_id, 'order_is_reviewed': True} for o in order_evas]}
+		response.data = {'orders': [{'order_id': order_order_id2id.get(o.order_id, 0), 'order_is_reviewed': True} for o in order_evas]}
 		return response.get_response()
