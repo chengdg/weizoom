@@ -11,7 +11,7 @@ Background:
 	When jobs配置商品评论自定义模板
     	"""
     	{
-        	"type":"customized",
+        	"type":"custom",
          	"answer":
             	[{
                 	"title":"您使用产品后的感受是",
