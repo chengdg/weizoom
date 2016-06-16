@@ -731,7 +731,7 @@ class OrderSenderInfo(resource.Resource):
         return render_to_response('mall/editor/sender_info.html', c)
 
     @login_required
-    def put(request):
+    def api_put(request):
         """创建发件人信息
         """
 
@@ -751,7 +751,7 @@ class OrderSenderInfo(resource.Resource):
 
         SenderInfo.objects.filter(~Q(id=sender_info.id),webapp_id=webapp_id,is_deleted=False).update(is_selected=False)
         # component_authed_appids = ComponentAuthedAppid.objects.filter(~Q(user_id=user_id), authorizer_appid=authorizer_appid)
-        return HttpResponseRedirect('/mall2/sender_info_list/')
+        return create_response(200).get_response()
 
     @login_required
     def post(request):
@@ -858,5 +858,96 @@ class SenderInfoList(resource.Resource):
         response.data = {
             'items': items,
             'pageinfo': paginator.to_dict(pageinfo),
+        }
+        return response.get_response()
+
+
+
+
+class EOrder(resource.Resource):
+    app = 'mall2'
+    resource = 'print_eorder'
+
+    @login_required
+    def api_get(request):
+
+        order_ids = json.loads(request.GET.get('order_ids', '[]'))
+        #order_ids = request.GET.get('order_ids', '')
+        orders = Order.objects.filter(id__in=[int(id) for id in order_ids])
+        webapp_user_ids = set([order.webapp_user_id for order in orders])
+        from modules.member.models import Member
+        webappuser2member = Member.members_from_webapp_user_ids(webapp_user_ids)
+
+        order_ids = [order.id for order in orders]
+        # 获得order对应的商品数量
+        order2productcount = {}
+        for relation in OrderHasProduct.objects.filter(order_id__in=order_ids).order_by('id'):
+            order_id = relation.order_id
+            if order_id in order2productcount:
+                order2productcount[order_id] = order2productcount[order_id] + 1
+            else:
+                order2productcount[order_id] = 1
+
+        # 构造返回的order数据
+        for order in orders:
+            # 获取order对应的member的显示名
+            member = webappuser2member.get(order.webapp_user_id, None)
+            if member:
+                order.buyer_name = member.username_for_print
+            else:
+                order.buyer_name = u'未知'
+            order.product_count = order2productcount.get(order.id, 0)
+
+        # 构造返回的order数据
+        items = []
+        for order in orders:
+            products = mall_api.get_order_products(order)
+
+            for product in products:
+                property_values = []
+
+                if product['promotion']:
+                    if product['promotion']['type'] == "flash_sale":
+                        product['name'] = u"【限时抢购】" + product['name']
+                    elif product['promotion']['type'] == "premium_sale:premium_product":
+                        product['name'] = u"【赠品】" + product['name']
+                if product.has_key('grade_discounted_money') and product['grade_discounted_money']:
+                        product['name'] = u"【会员优惠】" + product['name']
+
+
+                if product.has_key('custom_model_properties') and product['custom_model_properties']:
+                    for model in product['custom_model_properties']:
+                        property_values.append(model['property_value'])
+                product['property_values'] = '/'.join(property_values)
+
+                if order.supplier_user_id:
+                    product['price'] = product['purchase_price']
+                    product['total_price'] = product['purchase_price'] * product['count']
+
+            items.append({
+                'id': order.id,
+                'order_id': order.order_id,
+                'supplier_user_id': order.supplier_user_id,
+                'products': products,
+                'total_price': order.total_purchase_price if order.supplier_user_id else Order.get_order_has_price_number(order),
+                'order_total_price': float('%.2f' % order.get_total_price()),
+                'ship_name': order.ship_name,
+                'ship_address': '%s %s' % (regional_util.get_str_value_by_string_ids(order.area), order.ship_address),
+                'ship_tel': order.ship_tel,
+                'buyer_name': order.buyer_name,
+                'created_at': datetime.strftime(order.created_at, '%Y-%m-%d %H:%M:%S'),
+                'product_count': order.product_count,
+                'postage': 0 if order.supplier_user_id else '%.2f' % order.postage,
+                'save_money': 0 if order.supplier_user_id else float(Order.get_order_has_price_number(order)) + float(order.postage) - float(
+                    order.final_price) - float(order.weizoom_card_money),
+                'pay_money': order.total_purchase_price if order.supplier_user_id else order.final_price + order.weizoom_card_money,
+            })
+
+        response = create_response(200)
+        response.data = {
+            'items': items,
+            'store_name': store_name,
+            'qrcode_url': qrcode_url,
+            'order_count': len(order_ids)
         }
         return response.get_response()
