@@ -139,23 +139,22 @@ Scenario:1 评价包括文字与晒图
         [{
             "order_no": "2",
             "products": [{
-                    "product_name": "商品2"
-                }]
+                "product_name": "商品2"
+            }]
         }]
         """
     Then bill成功获取'我的评价'列表
         """
         [{
             "product_name":"商品1",
-            "answer":[{
+            "comments":[{
                 "title":"您使用产品后的感受是",
                 "value":"整体还可以"
-                }],
-            "choose":[{
+            },{
                 "title":"您对本产品的包装是否满意",
                 "value":"不好说"
-                }],
-            "picture_list": ['1.png']
+            }],
+            "picture_list":["1.png"]
         }]
         """
 
@@ -169,11 +168,11 @@ Scenario:2 无晒图，追加晒图
             "answer":[{ 
                 "title":"您使用产品后的感受是",
                 "value":"商品非常好！！！"
-                }],
+            }],
             "choose":[{
                 "title":"您对本产品的包装是否满意",
                 "value":"是"
-                }],
+            }],
             "participate_info":[{
                 "name":"bill",
                 "tel":"13013013011",
@@ -188,27 +187,26 @@ Scenario:2 无晒图，追加晒图
         [{
             "order_no": "1",
             "products": [{
-                    "product_name": "商品1"
-                }]
+                "product_name": "商品1"
+            }]
         },{
             "order_no": "2",
             "products": [{
-                    "product_name": "商品2"
-                }]
+                "product_name": "商品2"
+            }]
         }]
         """
     Then bill成功获取'商品评价'列表
         """
         [{
             "product_name":"商品1",
-            "answer":[{
+            "comments":[{
                 "title":"您使用产品后的感受是",
                 "value":"商品非常好！！！"
-                }],
-            "choose":[{
+            },{
                 "title":"您对本产品的包装是否满意",
                 "value":"是"
-                }],
+            }],
             "picture_list":[]
         }]
         """
@@ -224,22 +222,21 @@ Scenario:2 无晒图，追加晒图
         [{
             "order_no": "2",
             "products": [{
-                    "product_name": "商品2"
-                }]
+                "product_name": "商品2"
+            }]
         }]
         """
     Then bill成功获取'商品评价'列表
         """
         [{
             "product_name":"商品1",
-            "answer":[{
+            "comments":[{
                 "title":"您使用产品后的感受是",
                 "value":"商品非常好！！！"
-                }],
-            "choose":[{
+            },{
                 "title":"您对本产品的包装是否满意",
                 "value":"是"
-                }],
+            }],
             "picture_list":['1.jpg']
         }]
         """
