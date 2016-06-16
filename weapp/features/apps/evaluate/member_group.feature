@@ -54,7 +54,7 @@ Background:
                         }]
                 }],
             "participate_info":
-                {
+                [{
                     "items_select":[{
                             "item_name":"姓名",
                             "is_selected":"true"
@@ -63,7 +63,7 @@ Background:
                         "item_name":"性别",
                         "is_required":"否"
                         }]
-                }
+                }]
         }
         """
     Given bill关注jobs的公众号
