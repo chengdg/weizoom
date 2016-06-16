@@ -33,6 +33,45 @@ Background:
 			"tag_id_3": "分组3"
 		}
 		"""
+    When jobs配置商品评论自定义模板
+        """
+        {
+            "type":"custom",
+            "answer":
+                [{
+                    "title":"您使用产品后的感受是",
+                    "is_required":"是"
+                }],
+            "choose":
+                [{
+                    "title":"您对本产品的包装是否满意",
+                    "type":"单选",
+                    "is_required":"是",
+                    "option":[{
+                            "options":"是"
+                        },{
+                            "options":"否"
+                        }]
+                }],
+            "participate_info":
+                [{
+                    "items_select":
+                        [{
+                            "item_name":"手机",
+                            "is_selected":"true"
+                        },{
+                            "item_name":"姓名",
+                            "is_selected":"true"
+                        }],
+                    "items_add":
+                        [{
+                            "item_name":"职称",
+                            "is_required":"否"
+                        }]
+                }]
+        }
+        """
+    When 清空浏览器
     Given bill关注jobs的公众号
     And jobs已有的订单
     	"""
@@ -44,7 +83,7 @@ Background:
     		"order_price":10.00,
     		"payment_price":10.00,
     		"postage":0.00,
-    		"ship_name":bill,
+    		"ship_name":"bill",
     		"ship_tel":"13013013011",
        		"ship_area":"北京市,北京市,海淀区",
         	"ship_address":"泰兴大厦",
@@ -97,7 +136,7 @@ Background:
                 "tel":"13013013011",
                 "title":"工程师"
             }],
-            "picture_list": ['1.png','2.jpg']
+            "picture_list": ["1.png","2.jpg"]
         }
         """
     When 清空浏览器
@@ -122,39 +161,6 @@ Background:
             "picture_list": []
         }
         """
-    When jobs配置商品评论自定义模板
-        """
-        {
-            "type":"customized",
-            "answer":
-                [{
-                    "title":"您使用产品后的感受是",
-                    "is_required":"是"
-                }],
-            "choose":
-                [{
-                    "title":"您对本产品的包装是否满意",
-                    "type":"单选",
-                    "is_required":"是",
-                    "option":[{
-                            "options":"是"
-                        },{
-                            "options":"否"
-                        }]
-                }],
-            "participate_info":
-                {
-                    "items_select":[{
-                            "item_name":"姓名",
-                            "is_selected":"true"
-                        }],
-                    "items_add":[{
-                        "item_name":"性别",
-                        "is_required":"否"
-                        }]
-                }
-        }
-        """
 
 @mall @apps @apps_evaluate @evaluate_detail_member_group
 Scenario:1 jobs登录系统，在商品评价详情页面给会员调分组
@@ -168,13 +174,21 @@ Scenario:1 jobs登录系统，在商品评价详情页面给会员调分组
             "member_rank":"普通会员",
             "tags":["未分组"],
             "product_score":"2",
-            "answer":[{
-                "title":"您使用产品后的感受是",
-                "value":"用完皮肤过敏了~~呜呜呜~~"
-                }],
-            "choose":[{
-                "title":"您对本产品的包装是否满意",
-                "value":"否"
+            "comments":[{
+                    "title":"您使用产品后的感受是",
+                    "value":"用完皮肤过敏了~~呜呜呜~~"
+                },{
+                    "title":"您对本产品的包装是否满意",
+                    "value":"否"
+                },{
+                    "title":"tel",
+                    "value":"13013013058"
+                },{
+                    "title":"name",
+                    "value":"tom"
+                },{
+                    "title":"title",
+                    "value":"设计师"
                 }],
             "picture_list":[]
         }
@@ -190,20 +204,28 @@ Scenario:1 jobs登录系统，在商品评价详情页面给会员调分组
             "order_no": "2",
             "member": "tom",
             "member_rank":"普通会员",
-            "tags"::["分组2","分组3"],
+            "tags":["分组2","分组3"],
             "product_score":"2",
-            "answer":[{
-                "title":"您使用产品后的感受是",
-                "value":"用完皮肤过敏了~~呜呜呜~~"
-                }],
-            "choose":[{
-                "title":"您对本产品的包装是否满意",
-                "value":"否"
+            "comments":[{
+                    "title":"您使用产品后的感受是",
+                    "value":"用完皮肤过敏了~~呜呜呜~~"
+                },{
+                    "title":"您对本产品的包装是否满意",
+                    "value":"否"
+                },{
+                    "title":"tel",
+                    "value":"13013013058"
+                },{
+                    "title":"name",
+                    "value":"tom"
+                },{
+                    "title":"title",
+                    "value":"设计师"
                 }],
             "picture_list":[]
         }
         """
 	Then jobs可以获得会员列表
         | name  |      tags     |
-        | bill  |     未分组    |
         | tom   |   分组2,分组3 |
+        | bill  |     未分组    |

@@ -1,13 +1,15 @@
 # -*- coding: utf-8 -*-
 from core import resource
 from core.jsonresponse import create_response
+from core.exceptionutil import unicode_full_stack
 
 import models as apps_models
+from mall.models import Order
 from modules.member.models import Member
 
 
 class GetProductEvaluatesStatus(resource.Resource):
-	app = 'apps/evaluate/remote'
+	app = 'apps/evaluate'
 	resource = 'get_product_evaluates_status'
 
 	def get(request):
@@ -40,7 +42,7 @@ class GetProductEvaluatesStatus(resource.Resource):
 		for evaluate in evaluates:
 			order_id = evaluate.order_id
 			has_reviewed = False
-			if type(evaluate.detail) != 'string':
+			if type(evaluate.detail) == 'dict':
 				for k, v in evaluate.detail.items():
 					if (k.find('qa') >= 0 and v) or (k.find('selection') >= 0 and v):
 						has_reviewed = True
@@ -63,7 +65,7 @@ class GetProductEvaluatesStatus(resource.Resource):
 		return response.get_response()
 
 class GetProductEvaluates(resource.Resource):
-	app = 'apps/evaluate/remote'
+	app = 'apps/evaluate'
 	resource = 'get_product_evaluates'
 
 	def get(request):
@@ -98,8 +100,8 @@ class GetProductEvaluates(resource.Resource):
 			count += 0
 			member_id = evaluate.member_id
 			detail = evaluate.detail
-			if type(detail) != 'string':
-				for k, v in detail.items():
+			if type(detail) == 'dict':
+				for k, v in detail.items():	#TODO 内容需要修改
 					if k.find('qa') >= 0 and v:
 						detail = v.split('::')[1]
 						break
@@ -122,7 +124,7 @@ class GetProductEvaluates(resource.Resource):
 		return response.get_response()
 
 class GetUnreviewdCount(resource.Resource):
-	app = 'apps/evaluate/remote'
+	app = 'apps/evaluate'
 	resource = 'get_unreviewd_count'
 
 	def get(request):
@@ -140,10 +142,11 @@ class GetUnreviewdCount(resource.Resource):
 			return response.get_response()
 		order_has_product_list_ids = map(lambda x: int(x), order_has_product_list_ids.split('_'))
 		try:
-			count = apps_models.ProductEvaluates.objects(order_has_product_id__in=order_has_product_list_ids, pics__ne=[])
+			count = apps_models.ProductEvaluates.objects(order_has_product_id__in=order_has_product_list_ids, pics__ne=[]).count()
 			response.data = {
 				"reviewed_count": len(order_has_product_list_ids) - count
 			}
+			print response.data
 			return response.get_response()
 		except Exception, e:
 			response.errMsg = u'查询失败'
@@ -152,7 +155,7 @@ class GetUnreviewdCount(resource.Resource):
 
 class GetOrderEvaluatesStatus(resource.Resource):
 
-	app = 'apps/evaluate/remote'
+	app = 'apps/evaluate'
 	resource = 'get_order_evaluates'
 
 	def get(request):
@@ -173,6 +176,8 @@ class GetOrderEvaluatesStatus(resource.Resource):
 			response.errMsg = u'参数错误'
 			return response.get_response()
 		order_evas = apps_models.OrderEvaluates.objects(owner_id=int(owner_id), member_id=int(member_id))
+		order_ids = [o.order_id for o in order_evas]
+		order_order_id2id = {o.order_id: o.id for o in Order.objects.filter(order_id__in=order_ids)}
 		response = create_response(200)
-		response.data = {'orders': [{'order_id': o.order_id, 'order_is_reviewed': True} for o in order_evas]}
+		response.data = {'orders': [{'order_id': order_order_id2id.get(o.order_id, 0), 'order_is_reviewed': True} for o in order_evas]}
 		return response.get_response()
