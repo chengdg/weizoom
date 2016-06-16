@@ -256,7 +256,7 @@ Background:
 @mall @apps @apps_evaluate @product_evaluate_relate @sun1
 Scenario:1 关联商品评论
     When bill访问jobs的webapp
-    Then bill在商品详情页成功获取'商品1'的评价列表
+    Then bill能获取'商品1'的更多评价列表
         """
         [{
             "member": "bill",
@@ -266,7 +266,7 @@ Scenario:1 关联商品评论
             "answer": "最满意的一次购物！"
         }]
         """
-    And bill在商品详情页成功获取'商品2'的评价列表
+    And bill能获取'商品2'的更多评价列表
         """
         [{
             "member": "tom",
