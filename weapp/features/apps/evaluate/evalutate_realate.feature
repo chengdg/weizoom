@@ -329,7 +329,7 @@ Scenario:1 关联商品评论
         }]
         """
 	Given jobs登录系统
-	When jobs设置商品查询条件
+	When jobs在关联商品评价中设置商品查询条件
 		"""
 		{
 			"product_name":"商品"
@@ -500,7 +500,7 @@ Scenario:1 关联商品评论
 @mall @apps @apps_evaluate @product_evaluate_release
 Scenario:2 解除商品评论关联
 	Given jobs登录系统
-	When jobs设置商品查询条件
+	When jobs在关联商品评价中设置商品查询条件
 		"""
 		{
 			"product_name":"商品"
