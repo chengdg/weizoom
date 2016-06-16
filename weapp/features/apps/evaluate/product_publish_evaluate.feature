@@ -196,7 +196,7 @@ Scenario:2 无晒图，追加晒图
             }]
         }]
         """
-    Then bill成功获取'商品评价'列表
+    Then bill成功获取'我的评价'列表
         """
         [{
             "product_name":"商品1",
@@ -226,7 +226,7 @@ Scenario:2 无晒图，追加晒图
             }]
         }]
         """
-    Then bill成功获取'商品评价'列表
+    Then bill成功获取'我的评价'列表
         """
         [{
             "product_name":"商品1",
