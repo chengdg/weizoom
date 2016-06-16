@@ -24,7 +24,7 @@ def step_impl(context, webapp_user, order_code, product_name):
         'picture_list': context_dict['picture_list'],
         'product_id': order_has_product.product_id,
         'order_has_product_id': order_has_product.id,
-        'order_id': order_has_product.order_id,
+        'order_id': order_code,
         'template_type': 'custom'
     }
     tem_dict = dict()
@@ -49,7 +49,7 @@ def step_impl(context, webapp_user, order_code, product_name):
     context.product_name = product_name
     context.product_id = order_has_product.product_id
     context.order_has_product_id = order_has_product.id
-    context.order_id = order_has_product.order_id
+    context.order_id = order_code
 
 @when(u"{webapp_user}完成订单'{order_code}'中'{product_name}'的追加晒图")
 def step_impl(context, webapp_user, order_code, product_name):
