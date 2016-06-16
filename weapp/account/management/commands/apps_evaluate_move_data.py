@@ -43,30 +43,32 @@ class Command(BaseCommand):
 				process_score = old_review.process_score,
 				old_id = old_review.id
 			))
-		new_order_evaluates = app_models.OrderEvaluates.objects.insert(order_evaluate_creation_list)
-		order_oldid2newid = {o.old_id: str(o.id) for o in new_order_evaluates}
 
-		product_evaluate_creation_list = []
-		for old_review in old_product_reviews:
-			pics = old_review_id2pics.get(old_review.id, [])
-			product_evaluate_creation_list.append(app_models.ProductEvaluates(
-				owner_id = old_review.owner_id,
-				member_id = old_review.member_id,
-				order_id = old_review.order_id,
-				old_id = old_review.id,
-				product_id = old_review.product_id,
-				order_evaluate_id = order_oldid2newid[old_review.id],
-				order_has_product_id = old_review.order_has_product_id,
-				score = old_review.product_score,
-				detail = old_review.review_detail,
-				pics = pics,
-				created_at = old_review.created_at,
-				status = int(old_review.status),
-				top_time = old_review.top_time,
-				shop_reply = '',
+		if len(order_evaluate_creation_list) > 0:
+			new_order_evaluates = app_models.OrderEvaluates.objects.insert(order_evaluate_creation_list)
+			order_oldid2newid = {o.old_id: str(o.id) for o in new_order_evaluates}
 
-			))
-		app_models.ProductEvaluates.objects.insert(product_evaluate_creation_list)
+			product_evaluate_creation_list = []
+			for old_review in old_product_reviews:
+				pics = old_review_id2pics.get(old_review.id, [])
+				product_evaluate_creation_list.append(app_models.ProductEvaluates(
+					owner_id = old_review.owner_id,
+					member_id = old_review.member_id,
+					order_id = old_review.order_id,
+					old_id = old_review.id,
+					product_id = old_review.product_id,
+					order_evaluate_id = order_oldid2newid[old_review.id],
+					order_has_product_id = old_review.order_has_product_id,
+					score = old_review.product_score,
+					detail = old_review.review_detail,
+					pics = pics,
+					created_at = old_review.created_at,
+					status = int(old_review.status),
+					top_time = old_review.top_time,
+					shop_reply = '',
+
+				))
+			app_models.ProductEvaluates.objects.insert(product_evaluate_creation_list)
 		end_time = time.time()
 		diff = (end_time-start_time)*1000
 		print 'move data end...expend %s' % diff

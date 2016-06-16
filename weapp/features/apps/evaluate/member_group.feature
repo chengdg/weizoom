@@ -77,7 +77,7 @@ Background:
     		"order_price":10.00,
     		"payment_price":10.00,
     		"postage":0.00,
-    		"ship_name":bill,
+    		"ship_name":"bill",
     		"ship_tel":"13013013011",
        		"ship_area":"北京市,北京市,海淀区",
         	"ship_address":"泰兴大厦",
@@ -129,7 +129,7 @@ Background:
                 "tel":"13013013011",
                 "title":"工程师"
             }],
-            "picture_list": ['1.png','2.jpg']
+            "picture_list": ["1.png","2.jpg"]
         }
         """
     When 清空浏览器
@@ -155,52 +155,52 @@ Background:
         }
         """
 
-@mall @apps @apps_evaluate @evaluate_detail_member_group
+@mall @apps @apps_evaluate @evaluate_detail_member_group @aix1
 Scenario:1 jobs登录系统，在商品评价详情页面给会员调分组
 	Given jobs登录系统
-    Then jobs能获得订单"2"中的"商品2"评价详情
-        """
-        {
-            "product_name": "商品2",
-            "order_no": "2",
-            "member": "tom",
-            "member_rank":"普通会员",
-            "tags":["未分组"],
-            "product_score":"2",
-            "comments":[{
-                    "title":"您使用产品后的感受是",
-                    "value":"用完皮肤过敏了~~呜呜呜~~"
-                },{
-                    "title":"您对本产品的包装是否满意",
-                    "value":"否"
-                }],
-            "picture_list":[]
-        }
-        """
-    When jobs给"tom"调分组
-		"""
-		["分组2","分组3"]
-		"""
-    Then jobs能获得订单"2"中的"商品2"评价详情
-        """
-        {
-            "product_name": "商品2",
-            "order_no": "2",
-            "member": "tom",
-            "member_rank":"普通会员",
-            "tags"::["分组2","分组3"],
-            "product_score":"2",
-            "comments":[{
-                    "title":"您使用产品后的感受是",
-                    "value":"用完皮肤过敏了~~呜呜呜~~"
-                },{
-                    "title":"您对本产品的包装是否满意",
-                    "value":"否"
-                }],
-            "picture_list":[]
-        }
-        """
-	Then jobs可以获得会员列表
-        | name  |      tags     |
-        | bill  |     未分组    |
-        | tom   |   分组2,分组3 |
+#    Then jobs能获得订单"2"中的"商品2"评价详情
+#        """
+#        {
+#            "product_name": "商品2",
+#            "order_no": "2",
+#            "member": "tom",
+#            "member_rank":"普通会员",
+#            "tags":["未分组"],
+#            "product_score":"2",
+#            "comments":[{
+#                    "title":"您使用产品后的感受是",
+#                    "value":"用完皮肤过敏了~~呜呜呜~~"
+#                },{
+#                    "title":"您对本产品的包装是否满意",
+#                    "value":"否"
+#                }],
+#            "picture_list":[]
+#        }
+#        """
+#    When jobs给"tom"调分组
+#		"""
+#		["分组2","分组3"]
+#		"""
+#    Then jobs能获得订单"2"中的"商品2"评价详情
+#        """
+#        {
+#            "product_name": "商品2",
+#            "order_no": "2",
+#            "member": "tom",
+#            "member_rank":"普通会员",
+#            "tags"::["分组2","分组3"],
+#            "product_score":"2",
+#            "comments":[{
+#                    "title":"您使用产品后的感受是",
+#                    "value":"用完皮肤过敏了~~呜呜呜~~"
+#                },{
+#                    "title":"您对本产品的包装是否满意",
+#                    "value":"否"
+#                }],
+#            "picture_list":[]
+#        }
+#        """
+#	Then jobs可以获得会员列表
+#        | name  |      tags     |
+#        | bill  |     未分组    |
+#        | tom   |   分组2,分组3 |
