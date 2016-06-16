@@ -150,7 +150,13 @@ a{
             <td width="130" style="text-align:left;">${review.product_name}</td>
             <td width="95" style="text-align:left;">{{html review.user_name}}</td>
             <td width="150">${review.created_at}</td>
-            <td width="190" style="text-align:left;"><div style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;width:190px;">${review.content}</div></td>
+            <td width="190" style="text-align:left;"><div style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;width:190px;">{{if review.is_common_template }}
+                {{review.detail}}
+              {{else}}
+                {{each(i,item) review.detail }}
+                  ${item.title}:${item.answer};
+                {{/each}}
+              {{/if}}</div></td>
             <td width="65">${review.product_score}星</td>
             <td width="100">${review.status.name}</td>
             <td width="80">

@@ -147,13 +147,15 @@
             pageManagerView.activePage(page);
           }
             _.delay(function(){
-                 var $frame = $('#phoneIFrame').contents();
+                var $frame = $('#phoneIFrame').contents();
                 var $container = $frame.find('.wa-evaluate-container');
                 var $container_sibs = $container.parent().siblings();
                 var $body = $container.find('.wa-i-body');
                 if('custom' === select_type){
                     $body.hide();
                     $container_sibs.show();
+                    $frame.find('.wa-uploadimg-tm').removeClass('wui-hide');
+                    $frame.find('.wa-evaluate-container').parent().siblings().addClass('wui-evaluate-component');
                 }else{
                     $body.show();
                     $container_sibs.hide();
@@ -340,6 +342,7 @@
                 $body.show();
                 $bar.hide();
                 $container_sibs.hide();
+                $("#phoneIFrame").contents().find('.wa-uploadimg-tm').addClass('wui-hide');
             }
         });
       

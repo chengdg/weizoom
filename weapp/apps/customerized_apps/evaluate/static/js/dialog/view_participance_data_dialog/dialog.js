@@ -122,7 +122,7 @@ W.dialog.app.evaluate.ViewParticipanceDataDialog = W.dialog.Dialog.extend({
 			        this.isEditorReady = false; //editor是否已经ready了
 			    }
         });
-        editor = new MyEditor({
+        this.editor = new MyEditor({
             el: 'textarea',
             type: 'text',
             width: null,
@@ -130,7 +130,7 @@ W.dialog.app.evaluate.ViewParticipanceDataDialog = W.dialog.Dialog.extend({
             pasteplain: true,
             autoHeight: false
         })
-		editor.render();
+		this.editor.render();
 	},
 	
 	beforeShow: function(options) {
@@ -152,7 +152,7 @@ W.dialog.app.evaluate.ViewParticipanceDataDialog = W.dialog.Dialog.extend({
 					var template = Handlebars.compile(source);					
 					var html = template(context);
 					$('.xa-modal-content').html(html);
-					editor.setContent(data.items.shop_reply);
+					this.editor.setContent(data.items.shop_reply);
 				},
 				error: function(resp) {
 					console.log('error');
@@ -208,7 +208,7 @@ W.dialog.app.evaluate.ViewParticipanceDataDialog = W.dialog.Dialog.extend({
 
 	onClickSubmitButton: function(){
 		var member_id = $('.xa-update-tag').data('id');
-		var content = editor.getHtmlContent();
+		var content = this.editor.getHtmlContent();
 		var tag_ids = [];
 		$(".tag_id").each(function() {
 			tag_ids.push(this.value)
