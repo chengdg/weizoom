@@ -260,23 +260,74 @@ Scenario:1 关联商品评论
         """
         [{
             "member": "bill",
-            "review_detail": "商品很好，棒棒哒！"
+            "comments": [{
+                    "title":"您使用产品后的感受是",                
+                    "value":"商品很好，棒棒哒！"
+                },{
+                    "title":"您对本产品的包装是否满意",
+                    "value":"是"
+                },{
+                    "title":"name",
+                    "value":"bill"
+                },{
+                    "title":"gender",
+                    "value":"女"
+                }],
+            "picture_list": ["1.png","2.jpg"]               
         },{
             "member": "tom",
-            "answer": "最满意的一次购物！"
+            "comments": [{
+                    "title":"您使用产品后的感受是",                
+                    "value":"最满意的一次购物！"
+                },{
+                    "title":"您对本产品的包装是否满意",
+                    "value":"是"
+                },{
+                    "title":"name",
+                    "value":"tom"
+                },{
+                    "title":"gender",
+                    "value":"男"
+                }],
+            "picture_list": ["5.png"]
         }]
         """
     And bill能获取'商品2'的更多评价列表
         """
         [{
             "member": "tom",
-            "answer": "用完皮肤过敏了~~呜呜呜~~"
+            "comments": [{
+                    "title":"您使用产品后的感受是",                
+                    "value":"用完皮肤过敏了~~呜呜呜~~"
+                },{
+                    "title":"您对本产品的包装是否满意",
+                    "value":"否"
+                },{
+                    "title":"name",
+                    "value":"tom"
+                },{
+                    "title":"gender",
+                    "value":"男"
+                }],
+            "picture_list": []
         },{
             "member": "bill",
-            "review_detail": "东西马马虎虎"
+            "comments": [{
+                    "title":"您使用产品后的感受是",                
+                    "value":"东西马马虎虎"
+                },{
+                    "title":"您对本产品的包装是否满意",
+                    "value":"是"
+                },{
+                    "title":"name",
+                    "value":"bill"
+                },{
+                    "title":"gender",
+                    "value":""
+                }],
+            "picture_list": ["3.png","4.jpg"]
         }]
         """
-
 	Given jobs登录系统
 	When jobs设置商品查询条件
 		"""
@@ -313,32 +364,136 @@ Scenario:1 关联商品评论
         """
         [{
             "member": "tom",
-            "answer": "最满意的一次购物！"
+            "comments": [{
+                    "title":"您使用产品后的感受是",                
+                    "value":"最满意的一次购物！"
+                },{
+                    "title":"您对本产品的包装是否满意",
+                    "value":"是"
+                },{
+                    "title":"name",
+                    "value":"tom"
+                },{
+                    "title":"gender",
+                    "value":"男"
+                }],
+            "picture_list": ["5.png"]
         },{
             "member": "tom",
-            "answer": "用完皮肤过敏了~~呜呜呜~~"
+            "comments": [{
+                    "title":"您使用产品后的感受是",                
+                    "value":"用完皮肤过敏了~~呜呜呜~~"
+                },{
+                    "title":"您对本产品的包装是否满意",
+                    "value":"否"
+                },{
+                    "title":"name",
+                    "value":"tom"
+                },{
+                    "title":"gender",
+                    "value":"男"
+                }],
+            "picture_list": []
         },{
             "member": "bill",
-            "review_detail": "东西马马虎虎"
-        }{
+            "comments": [{
+                    "title":"您使用产品后的感受是",                
+                    "value":"东西马马虎虎"
+                },{
+                    "title":"您对本产品的包装是否满意",
+                    "value":"是"
+                },{
+                    "title":"name",
+                    "value":"bill"
+                },{
+                    "title":"gender",
+                    "value":""
+                }],
+            "picture_list": ["3.png","4.jpg"]
+        },{
             "member": "bill",
-            "review_detail": "商品很好，棒棒哒！"
+            "comments": [{
+                    "title":"您使用产品后的感受是",                
+                    "value":"商品很好，棒棒哒！"
+                },{
+                    "title":"您对本产品的包装是否满意",
+                    "value":"是"
+                },{
+                    "title":"name",
+                    "value":"bill"
+                },{
+                    "title":"gender",
+                    "value":"女"
+                }],
+            "picture_list": ["1.png","2.jpg"]               
         }]
         """
     Then bill能获取'商品2'的更多评价列表
         """
         [{
             "member": "tom",
-            "answer": "最满意的一次购物！"
+            "comments": [{
+                    "title":"您使用产品后的感受是",                
+                    "value":"最满意的一次购物！"
+                },{
+                    "title":"您对本产品的包装是否满意",
+                    "value":"是"
+                },{
+                    "title":"name",
+                    "value":"tom"
+                },{
+                    "title":"gender",
+                    "value":"男"
+                }],
+            "picture_list": ["5.png"]
         },{
             "member": "tom",
-            "answer": "用完皮肤过敏了~~呜呜呜~~"
+            "comments": [{
+                    "title":"您使用产品后的感受是",                
+                    "value":"用完皮肤过敏了~~呜呜呜~~"
+                },{
+                    "title":"您对本产品的包装是否满意",
+                    "value":"否"
+                },{
+                    "title":"name",
+                    "value":"tom"
+                },{
+                    "title":"gender",
+                    "value":"男"
+                }],
+            "picture_list": []
         },{
             "member": "bill",
-            "review_detail": "东西马马虎虎"
-        }{
+            "comments": [{
+                    "title":"您使用产品后的感受是",                
+                    "value":"东西马马虎虎"
+                },{
+                    "title":"您对本产品的包装是否满意",
+                    "value":"是"
+                },{
+                    "title":"name",
+                    "value":"bill"
+                },{
+                    "title":"gender",
+                    "value":""
+                }],
+            "picture_list": ["3.png","4.jpg"]
+        },{
             "member": "bill",
-            "review_detail": "商品很好，棒棒哒！"
+            "comments": [{
+                    "title":"您使用产品后的感受是",                
+                    "value":"商品很好，棒棒哒！"
+                },{
+                    "title":"您对本产品的包装是否满意",
+                    "value":"是"
+                },{
+                    "title":"name",
+                    "value":"bill"
+                },{
+                    "title":"gender",
+                    "value":"女"
+                }],
+            "picture_list": ["1.png","2.jpg"]               
         }]
         """
 
@@ -391,32 +546,136 @@ Scenario:2 解除商品评论关联
         """
         [{
             "member": "tom",
-            "answer": "最满意的一次购物！"
+            "comments": [{
+                    "title":"您使用产品后的感受是",                
+                    "value":"最满意的一次购物！"
+                },{
+                    "title":"您对本产品的包装是否满意",
+                    "value":"是"
+                },{
+                    "title":"name",
+                    "value":"tom"
+                },{
+                    "title":"gender",
+                    "value":"男"
+                }],
+            "picture_list": ["5.png"]
         },{
             "member": "tom",
-            "answer": "用完皮肤过敏了~~呜呜呜~~"
+            "comments": [{
+                    "title":"您使用产品后的感受是",                
+                    "value":"用完皮肤过敏了~~呜呜呜~~"
+                },{
+                    "title":"您对本产品的包装是否满意",
+                    "value":"否"
+                },{
+                    "title":"name",
+                    "value":"tom"
+                },{
+                    "title":"gender",
+                    "value":"男"
+                }],
+            "picture_list": []
         },{
             "member": "bill",
-            "review_detail": "东西马马虎虎"
-        }{
+            "comments": [{
+                    "title":"您使用产品后的感受是",                
+                    "value":"东西马马虎虎"
+                },{
+                    "title":"您对本产品的包装是否满意",
+                    "value":"是"
+                },{
+                    "title":"name",
+                    "value":"bill"
+                },{
+                    "title":"gender",
+                    "value":""
+                }],
+            "picture_list": ["3.png","4.jpg"]
+        },{
             "member": "bill",
-            "review_detail": "商品很好，棒棒哒！"
+            "comments": [{
+                    "title":"您使用产品后的感受是",                
+                    "value":"商品很好，棒棒哒！"
+                },{
+                    "title":"您对本产品的包装是否满意",
+                    "value":"是"
+                },{
+                    "title":"name",
+                    "value":"bill"
+                },{
+                    "title":"gender",
+                    "value":"女"
+                }],
+            "picture_list": ["1.png","2.jpg"]               
         }]
         """
     Then bill能获取'商品2'的更多评价列表
         """
         [{
             "member": "tom",
-            "answer": "最满意的一次购物！"
+            "comments": [{
+                    "title":"您使用产品后的感受是",                
+                    "value":"最满意的一次购物！"
+                },{
+                    "title":"您对本产品的包装是否满意",
+                    "value":"是"
+                },{
+                    "title":"name",
+                    "value":"tom"
+                },{
+                    "title":"gender",
+                    "value":"男"
+                }],
+            "picture_list": ["5.png"]
         },{
             "member": "tom",
-            "answer": "用完皮肤过敏了~~呜呜呜~~"
+            "comments": [{
+                    "title":"您使用产品后的感受是",                
+                    "value":"用完皮肤过敏了~~呜呜呜~~"
+                },{
+                    "title":"您对本产品的包装是否满意",
+                    "value":"否"
+                },{
+                    "title":"name",
+                    "value":"tom"
+                },{
+                    "title":"gender",
+                    "value":"男"
+                }],
+            "picture_list": []
         },{
             "member": "bill",
-            "review_detail": "东西马马虎虎"
-        }{
+            "comments": [{
+                    "title":"您使用产品后的感受是",                
+                    "value":"东西马马虎虎"
+                },{
+                    "title":"您对本产品的包装是否满意",
+                    "value":"是"
+                },{
+                    "title":"name",
+                    "value":"bill"
+                },{
+                    "title":"gender",
+                    "value":""
+                }],
+            "picture_list": ["3.png","4.jpg"]
+        },{
             "member": "bill",
-            "review_detail": "商品很好，棒棒哒！"
+            "comments": [{
+                    "title":"您使用产品后的感受是",                
+                    "value":"商品很好，棒棒哒！"
+                },{
+                    "title":"您对本产品的包装是否满意",
+                    "value":"是"
+                },{
+                    "title":"name",
+                    "value":"bill"
+                },{
+                    "title":"gender",
+                    "value":"女"
+                }],
+            "picture_list": ["1.png","2.jpg"]               
         }]
         """
     When jobs解除商品关联评价
@@ -439,19 +698,71 @@ Scenario:2 解除商品评论关联
         """
         [{
             "member": "tom",
-            "answer": "最满意的一次购物！"
+            "comments": [{
+                    "title":"您使用产品后的感受是",                
+                    "value":"最满意的一次购物！"
+                },{
+                    "title":"您对本产品的包装是否满意",
+                    "value":"是"
+                },{
+                    "title":"name",
+                    "value":"tom"
+                },{
+                    "title":"gender",
+                    "value":"男"
+                }],
+            "picture_list": ["5.png"]
         },{
             "member": "bill",
-            "review_detail": "商品很好，棒棒哒！"
+            "comments": [{
+                    "title":"您使用产品后的感受是",                
+                    "value":"商品很好，棒棒哒！"
+                },{
+                    "title":"您对本产品的包装是否满意",
+                    "value":"是"
+                },{
+                    "title":"name",
+                    "value":"bill"
+                },{
+                    "title":"gender",
+                    "value":"女"
+                }],
+            "picture_list": ["1.png","2.jpg"]               
         }]
         """
     And bill能获得'商品2'的更多评价列表
         """
         [{
             "member": "bill",
-            "review_detail": "东西马马虎虎"
+            "comments": [{
+                    "title":"您使用产品后的感受是",                
+                    "value":"东西马马虎虎"
+                },{
+                    "title":"您对本产品的包装是否满意",
+                    "value":"是"
+                },{
+                    "title":"name",
+                    "value":"bill"
+                },{
+                    "title":"gender",
+                    "value":""
+                }],
+            "picture_list": ["3.png","4.jpg"]
         },{
             "member": "tom",
-            "answer": "用完皮肤过敏了~~呜呜呜~~"
+            "comments": [{
+                    "title":"您使用产品后的感受是",                
+                    "value":"用完皮肤过敏了~~呜呜呜~~"
+                },{
+                    "title":"您对本产品的包装是否满意",
+                    "value":"否"
+                },{
+                    "title":"name",
+                    "value":"tom"
+                },{
+                    "title":"gender",
+                    "value":"男"
+                }],
+            "picture_list": []
         }]
         """
