@@ -7,7 +7,7 @@ from modules.member.models import Member
 
 
 class GetProductEvaluatesStatus(resource.Resource):
-	app = 'apps/evaluate/remote'
+	app = 'apps/evaluate'
 	resource = 'get_product_evaluates_status'
 
 	def get(request):
@@ -63,7 +63,7 @@ class GetProductEvaluatesStatus(resource.Resource):
 		return response.get_response()
 
 class GetProductEvaluates(resource.Resource):
-	app = 'apps/evaluate/remote'
+	app = 'apps/evaluate'
 	resource = 'get_product_evaluates'
 
 	def get(request):
@@ -122,7 +122,7 @@ class GetProductEvaluates(resource.Resource):
 		return response.get_response()
 
 class GetUnreviewdCount(resource.Resource):
-	app = 'apps/evaluate/remote'
+	app = 'apps/evaluate'
 	resource = 'get_unreviewd_count'
 
 	def get(request):
@@ -152,7 +152,7 @@ class GetUnreviewdCount(resource.Resource):
 
 class GetOrderEvaluatesStatus(resource.Resource):
 
-	app = 'apps/evaluate/remote'
+	app = 'apps/evaluate'
 	resource = 'get_order_evaluates'
 
 	def get(request):
