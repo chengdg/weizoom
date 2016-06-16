@@ -187,6 +187,7 @@ Background:
             "picture_list": ['3.png','4.jpg']
         }
         """
+    When 清空浏览器
     When tom访问jobs的webapp
     And tom完成订单'2'中'商品2'的评价
         """
