@@ -876,7 +876,7 @@ class EOrder(resource.Resource):
 
         order_ids = json.loads(request.GET.get('order_ids', '[]'))
         #order_ids = request.GET.get('order_ids', '')
-        orders = Order.objects.filter(id__in=[int(id) for id in order_ids])
+        orders = Order.objects.filter(id__in=[int(id) for id in order_ids], status=3)#待发货的订单
         webapp_user_ids = set([order.webapp_user_id for order in orders])
         from modules.member.models import Member
         webappuser2member = Member.members_from_webapp_user_ids(webapp_user_ids)
@@ -923,9 +923,6 @@ class EOrder(resource.Resource):
                         property_values.append(model['property_value'])
                 product['property_values'] = '/'.join(property_values)
 
-                if order.supplier_user_id:
-                    product['price'] = product['purchase_price']
-                    product['total_price'] = product['purchase_price'] * product['count']
 
             items.append({
                 'id': order.id,
