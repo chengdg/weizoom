@@ -3,40 +3,7 @@ Feature: 管理员在审核评价页面调整会员分组
 
 Background:
 	Given jobs登录系统
-	When jobs配置商品评论自定义模板
-    	"""
-    	{
-        	"type":"customized",
-         	"answer":
-            	[{
-                	"title":"您使用产品后的感受是",
-                	"is_required":"是"
-            	}],
-        	"choose":
-            	[{
-                	"title":"您对本产品的包装是否满意",
-                	"type":"单选",
-                	"is_required":"是",
-               		"option":[{
-                        	"options":"是"
-                    	},{
-                        	"options":"否"
-                    	}]
-            	}],
-        	"participate_info":
-            	{
-                	"items_select":[{
-                        	"item_name":"姓名",
-                        	"is_selected":"true"
-                    	}],
-                	"items_add":[{
-                        "item_name":"性别",
-                        "is_required":"否"
-                    	}]
-            	}
-    	}
-    	"""
-    When jobs已添加商品
+    And jobs已添加商品
    		"""
    		[{
     		"name":"商品1",
@@ -46,19 +13,19 @@ Background:
     		"price":20.00
     	}]
    		"""
-    When jobs添加会员等级
-		"""
-		[{
-			"name": "银牌会员",
-			"upgrade": "手动升级",
-			"discount": "10"
-		},{
-			"name": "金牌会员",
-			"upgrade": "手动升级",
-			"discount": "9"
-		}]
-		"""
-    When jobs添加会员分组
+#    When jobs添加会员等级
+#		"""
+#		[{
+#			"name": "银牌会员",
+#			"upgrade": "手动升级",
+#			"discount": "10"
+#		},{
+#			"name": "金牌会员",
+#			"upgrade": "手动升级",
+#			"discount": "9"
+#		}]
+#		"""
+    And jobs添加会员分组
 		"""
 		{
 			"tag_id_1": "分组1",
@@ -66,11 +33,8 @@ Background:
 			"tag_id_3": "分组3"
 		}
 		"""
-	When jobs批量获取微信用户关注
-		| member_name   |   attention_time     | member_source |
-		| bill 			| 2016-06-06 23:59:59  |    直接关注   |
-		| tom 			| 2016-06-06 00:00:00  |    推广扫码   |
-    And jobs已有订单
+    Given bill关注jobs的公众号
+    And jobs已有的订单
     	"""
     	[{
     		"order_no":"1",
@@ -89,49 +53,106 @@ Background:
                 "price": 10.00,
                 "count": 1
         	}]
-   	 	},{
-       		"order_no":"2",
-        	"member":"tom",
-        	"status":"已完成",
-        	"sources":"本店",
-        	"order_price":20.00,
-        	"payment_price":20.00,
-        	"postage":0.00,
-        	"ship_name":"tom",
-        	"ship_tel":"13667190229",
-        	"ship_area":"北京市,北京市,海淀区",
-        	"ship_address":"泰兴大厦",
-        	"products":[{
-            	"name":"商品2",
-            	"price": 20.00,
-            	"count": 1
-        	}]
-    	}]
+   	 	}]
     	"""
+    When 清空浏览器
+    Given tom关注jobs的公众号
+    And jobs已有的订单
+        """
+        [{
+            "order_no":"2",
+            "member":"tom",
+            "status":"已完成",
+            "sources":"本店",
+            "order_price":20.00,
+            "payment_price":20.00,
+            "postage":0.00,
+            "ship_name":"tom",
+            "ship_tel":"13667190229",
+            "ship_area":"北京市,北京市,海淀区",
+            "ship_address":"泰兴大厦",
+            "products":[{
+                "name":"商品2",
+                "price": 20.00,
+                "count": 1
+            }]
+        }]
+        """
+    When 清空浏览器
     When bill访问jobs的webapp
    	And bill完成订单'1'中'商品1'的评价
         """
         {
             "product_score": "5",
-            "answer": "商品很好，棒棒哒！",
-            "choose":"是",
-            "name":"bill",
-            "tel":"13013013011",
-            "title":"工程师",
+            "answer":[{
+                "title":"您使用产品后的感受是",
+                "value":"商品很好，棒棒哒！"
+                }],
+            "choose":[{
+                "title":"您对本产品的包装是否满意",
+                "value":"是"
+                }],
+            "participate_info":[{
+                "name":"bill",
+                "tel":"13013013011",
+                "title":"工程师"
+            }],
             "picture_list": ['1.png','2.jpg']
         }
         """
+    When 清空浏览器
     When tom访问jobs的webapp
     And tom完成订单'2'中'商品2'的评价
         """
         {
-            "product_score": "2",
-            "answer": "用完皮肤过敏了~~呜呜呜~~",
-            "choose":"否",
-            "name":"tom",
-            "tel":"13013013058",
-            "title":"设计师",
+             "product_score": "2",
+            "answer":[{
+                "title":"您使用产品后的感受是",
+                "value":"用完皮肤过敏了~~呜呜呜~~"
+                }],
+            "choose":[{
+                "title":"您对本产品的包装是否满意",
+                "value":"否"
+                }],
+            "participate_info":[{
+                "name":"tom",
+                "tel":"13013013058",
+                "title":"设计师"
+            }],
             "picture_list": []
+        }
+        """
+    When jobs配置商品评论自定义模板
+        """
+        {
+            "type":"customized",
+            "answer":
+                [{
+                    "title":"您使用产品后的感受是",
+                    "is_required":"是"
+                }],
+            "choose":
+                [{
+                    "title":"您对本产品的包装是否满意",
+                    "type":"单选",
+                    "is_required":"是",
+                    "option":[{
+                            "options":"是"
+                        },{
+                            "options":"否"
+                        }]
+                }],
+            "participate_info":
+                {
+                    "items_select":[{
+                            "item_name":"姓名",
+                            "is_selected":"true"
+                        }],
+                    "items_add":[{
+                        "item_name":"性别",
+                        "is_required":"否"
+                        }]
+                }
         }
         """
 
@@ -140,65 +161,49 @@ Scenario:1 jobs登录系统，在商品评价详情页面给会员调分组
 	Given jobs登录系统
     Then jobs能获得订单"2"中的"商品2"评价详情
         """
-        [{
+        {
             "product_name": "商品2",
             "order_no": "2",
             "member": "tom",
             "member_rank":"普通会员",
-            "tags":"未分组",
+            "tags":["未分组"],
             "product_score":"2",
-            "answer":"用完皮肤过敏了~~呜呜呜~~",
-            "choose":"否",
-            "picture_list":[],
-            "action": ["通过审核","通过并置顶","屏蔽处理"]
-        }]
+            "answer":[{
+                "title":"您使用产品后的感受是",
+                "value":"用完皮肤过敏了~~呜呜呜~~"
+                }],
+            "choose":[{
+                "title":"您对本产品的包装是否满意",
+                "value":"否"
+                }],
+            "picture_list":[]
+        }
         """
     When jobs给"tom"调分组
 		"""
-		["分组2"]
+		["分组2","分组3"]
 		"""
-    Then jobs能获得评价详情
-        """
-        [{
-            "product_name": "商品2",
-            "order_no": "2",
-            "member": "tom",
-            "member_rank":"普通会员",
-            "tags":"分组2",
-            "product_score":"2",
-            "answer":"用完皮肤过敏了~~呜呜呜~~",
-            "choose":"否",
-            "picture_list":[],
-            "action": ["通过审核","通过并置顶","屏蔽处理"]
-        }]
-        """
     Then jobs能获得订单"2"中的"商品2"评价详情
         """
-        [{
+        {
             "product_name": "商品2",
             "order_no": "2",
             "member": "tom",
             "member_rank":"普通会员",
-            "tags":"未分组",
+            "tags"::["分组2","分组3"],
             "product_score":"2",
-            "answer":"用完皮肤过敏了~~呜呜呜~~",
-            "choose":"否",
-            "picture_list":[],
-            "action": ["通过审核","通过并置顶","屏蔽处理"]
-        },{
-            "product_name": "商品1",
-            "order_no": "1",
-            "member": "bill",
-            "member_rank":"普通会员",
-            "tags":"未分组",
-            "product_score":"5",
-            "answer":"商品很好，棒棒哒！",
-            "choose":"否",
-            "picture_list":['1.png','2.jpg'],
-            "action": ["通过审核","通过并置顶","屏蔽处理"]
-        }]
+            "answer":[{
+                "title":"您使用产品后的感受是",
+                "value":"用完皮肤过敏了~~呜呜呜~~"
+                }],
+            "choose":[{
+                "title":"您对本产品的包装是否满意",
+                "value":"否"
+                }],
+            "picture_list":[]
+        }
         """
 	Then jobs可以获得会员列表
-			| name  |    tags    |
-			| bill  |   未分组   |
-			| tom   |   分组2    |
+        | name  |      tags     |
+        | bill  |     未分组    |
+        | tom   |   分组2,分组3 |
