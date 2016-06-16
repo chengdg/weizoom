@@ -136,7 +136,7 @@ Background:
     Given tom关注jobs的公众号
     And jobs已有的订单
         """
-        [,{
+        [{
             "order_no":"3",
             "member":"tom",
             "status":"已完成",
@@ -216,7 +216,7 @@ Background:
     Given jerry关注jobs的公众号
     And jobs已有的订单
         """
-        [,{
+        [{
             "order_no":"5",
             "member":"jerry",
             "status":"已完成",
@@ -271,12 +271,12 @@ Scenario:1 审核通过 屏蔽处理 通过并置顶
             "product_name": "商品1",
             "order_no": "2",
             "member": "bill",
-            "status": "通过审核",          
+            "status": "通过审核"
         },{
             "product_name": "商品1",
             "order_no": "3",
             "member": "tom",
-            "status": "屏蔽处理",          
+            "status": "屏蔽处理"
         },{
             "product_name": "商品1",
             "order_no": "4",
