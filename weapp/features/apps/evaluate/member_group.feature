@@ -167,13 +167,12 @@ Scenario:1 jobs登录系统，在商品评价详情页面给会员调分组
             "member_rank":"普通会员",
             "tags":["未分组"],
             "product_score":"2",
-            "answer":[{
-                "title":"您使用产品后的感受是",
-                "value":"用完皮肤过敏了~~呜呜呜~~"
-                }],
-            "choose":[{
-                "title":"您对本产品的包装是否满意",
-                "value":"否"
+            "comments":[{
+                    "title":"您使用产品后的感受是",
+                    "value":"用完皮肤过敏了~~呜呜呜~~"
+                },{
+                    "title":"您对本产品的包装是否满意",
+                    "value":"否"
                 }],
             "picture_list":[]
         }
@@ -191,13 +190,12 @@ Scenario:1 jobs登录系统，在商品评价详情页面给会员调分组
             "member_rank":"普通会员",
             "tags"::["分组2","分组3"],
             "product_score":"2",
-            "answer":[{
-                "title":"您使用产品后的感受是",
-                "value":"用完皮肤过敏了~~呜呜呜~~"
-                }],
-            "choose":[{
-                "title":"您对本产品的包装是否满意",
-                "value":"否"
+            "comments":[{
+                    "title":"您使用产品后的感受是",
+                    "value":"用完皮肤过敏了~~呜呜呜~~"
+                },{
+                    "title":"您对本产品的包装是否满意",
+                    "value":"否"
                 }],
             "picture_list":[]
         }
