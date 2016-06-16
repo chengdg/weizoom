@@ -7,7 +7,7 @@ import copy
 from behave import *
 from test import bdd_util
 from mall import models as mall_models
-from apps.customerized_apps.evaluate.models import ProductEvaluates
+from apps.customerized_apps.evaluate.models import ProductEvaluates, EvaluatesRelations
 
 import apps_step_utils
 
@@ -556,18 +556,114 @@ def step_webapp_owner_verified_review(context, webapp_owner):
 			product_review.top_time = top_time
 			product_review.save()
 
-@when(u'{webapp_owner}已完成对商品的评价信息审核并置顶')
-def step_impl(context, webapp_owner):
-	assert False
+# @when(u'{webapp_owner}已完成对商品的评价信息审核并置顶')
+# def step_impl(context, webapp_owner):
+# 	assert False
+#
+# @when(u'{webapp_owner}取消对商品的评价信息置顶')
+# def step_impl(context, webapp_owner):
+# 	assert False
+#
+# @when(u'{webapp_owner}屏蔽对商品的评价信息')
+# def step_impl(context, webapp_owner):
+# 	assert False
+#
+# @when(u'{webapp_owner}已完成对商品的评价信息置顶')
+# def step_impl(context, webapp_owner):
+# 	assert False
 
-@when(u'{webapp_owner}取消对商品的评价信息置顶')
-def step_impl(context, webapp_owner):
-	assert False
+@then(u"{webapp_user}能获取'{product_name}'的更多评价列表")
+def step_impl(context, webapp_user, product_name):
+	product = bdd_util.get_product_by(product_name)
+	expected = json.loads(context.text)
+	url = "/m/apps/evaluate/m_more_evaluates/?webapp_owner_id={}&product_id={}".format(context.webapp_owner_id, product.id)
 
-@when(u'{webapp_owner}屏蔽对商品的评价信息')
-def step_impl(context, webapp_owner):
-	assert False
+	response = context.client.get(bdd_util.nginx(url), follow=True)
+	product_review_list = response.context['reviews']
+	actual = []
+	if product_review_list:
+		for i in product_review_list:
+			data = {}
+			data['member'] = i['member_name']
 
-@when(u'{webapp_owner}已完成对商品的评价信息置顶')
-def step_impl(context, webapp_owner):
-	assert False
+			detail_list = []
+			for detail in i['review_detail']:
+				detail_list.append({
+					'title': 'name' if detail['title'] == u'姓名' else detail['title'],
+					'value': detail['answer']
+				})
+			data['comments'] = detail_list
+
+			data['picture_list'] = i['reviewed_product_pictures']
+			actual.append(data)
+	else:
+		actual.append({})
+
+	bdd_util.assert_list(expected, actual)
+
+@when(u"{user}在关联商品评价中设置商品查询条件")
+def step_impl(context, user):
+	expected = json.loads(context.text)
+	context.product_filter = expected
+
+@when(u"{user}成功关联商品评价")
+def step_impl(context, user):
+	expected = json.loads(context.text)
+	product_ids = []
+	for product in expected:
+		product_name = product['product_name']
+		product = bdd_util.get_product_by(product_name)
+		product_ids.append(product.id)
+
+	url = "/apps/evaluate/api/evaluate_relations/?design_mode=0&version=1"
+	args = {
+		"id": json.dumps(product_ids)
+	}
+
+	response = context.client.post(url, args)
+	bdd_util.assert_api_call_success(response)
+
+@then(u"{user}能获得商品评价关联列表")
+def step_impl(context, user):
+	expected = json.loads(context.text)
+
+	url = "/apps/evaluate/api/evaluate_relations/?design_mode=0&version=1"
+	response = context.client.get(url)
+
+	relations = json.loads(response.content)['data']['items']
+
+	actual = []
+	for relation in relations:
+		product_name_list = relation['product_name'].split(' ')
+		product_list = []
+		for name in product_name_list:
+			if name != '':
+				product_list.append({
+					'product_name': name
+				})
+
+		actual.append({
+			'comment': relation['evaluate_count'],
+			'product_list': product_list
+		})
+
+	bdd_util.assert_list(expected, actual)
+
+@when(u"{user}解除商品关联评价")
+def step_impl(context, user):
+	expected = json.loads(context.text)[0]['product_list']
+	product_ids = []
+	for product in expected:
+		product_name = product['product_name']
+		product = bdd_util.get_product_by(product_name)
+		product_ids.append(product.id)
+
+	relation = EvaluatesRelations.objects.get(related_product_ids=product_ids)
+
+	url = "/apps/evaluate/api/evaluate_relations/?_method=delete&design_mode=0&version=1"
+	args = {
+		"id": relation.id
+	}
+
+	response = context.client.post(url, args)
+	bdd_util.assert_api_call_success(response)

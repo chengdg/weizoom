@@ -253,7 +253,7 @@ Background:
         }]
         """
 
-@mall @apps @apps_evaluate @product_evaluate_relate @sun1
+@mall @apps @apps_evaluate @product_evaluate_relate
 Scenario:1 关联商品评论
     When bill访问jobs的webapp
     Then bill能获取'商品1'的更多评价列表
