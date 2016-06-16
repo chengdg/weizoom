@@ -45,7 +45,7 @@
 				<th width="110">操作</th>
 			</tr>
 		</thead>
-		<tbody id='webapp_id'>
+		<tbody>
             {{each(i, item) items}}
                 <tr data-id="${item.id}">
                 	<!--默认-->
@@ -62,7 +62,7 @@
                     </td>
                     <!--所在地区-->
                     <td class="nowrap">
-                        <div>${item.area_province+item.area_city+item.area_district}</div>
+                        <div>${item.area}</div>
                     </td>
                     <!--详细地址-->
                     <td class="nowrap">
@@ -74,13 +74,8 @@
                     </td>
                     <!--操作-->
                     <td class="tc" style="width:100px;">
-                        <a href="javascript:void(0);"
-                         data-id="${item.id}"
-                         class="xui-delete-sender xa-delete mr10">删除</a>
-                        <a href="/mall2/sender_info_list/?id=${sender.id}"
-                         data-id="${item.id}"
-                         data-name="${item.name}"
-                         >修改</a>
+                        <a href="javascript:void(0);" data-id="" class="xui-delete-sender xa-delete mr10">删除</a>
+                        <a href="" data-id="" data-name="">修改</a>
                     </td>
                 </tr>
 			{{/each}}

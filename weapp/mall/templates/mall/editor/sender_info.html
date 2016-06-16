@@ -31,13 +31,13 @@
 			 <select class="xa-district" required>
              	<option value="请选择">请选择区/县</option>            	
              </select><br />
-             <input type="hidden" name="sender_address" />
+             <input type="hidden" name="area" />
 			</div>
 
 				<div>
 					<div class="mb10">
 						<label for="" class="star_show fl">详细信息：</label>
-						<textarea name="adress" rows="5" cols="50" placeholder="不需要重复填写省/市/区" required></textarea>
+						<textarea rows="5" cols="50" placeholder="不需要重复填写省/市/区" name="sender_address" required></textarea>
 					</div>
 				</div><br />
 				<div class="mb10 ">
@@ -71,10 +71,10 @@
     
 	$(document).ready(function() {
 		$('.xa-submit').on('click',function(){
-    	var sender_address = $('.xa-province').val()+$('.xa-city').val()+$('.xa-district').val();
-    	$('[name="sender_address"]').val(sender_address);
+    	var area = $('.xa-province').val()+'_'+$('.xa-city').val()+'_'+$('.xa-district').val();
+    	$('[name="area"]').val(area);
     	var args = $('form').serializeObject();
-    	$('form').submit();
+//  	$('form').submit();
     	  W.getApi().call({
           method: 'put',
           app: 'mall2',
@@ -94,14 +94,7 @@
 				this.getPrvince();
 			},
 
-			// 解析字符串
-			parseStr: function(data) {
-				var _data=[];
-		        _.each(data,function(item,i){
-		       	 	_data.push(item);
-		       	});
-		       	return _data;
-			},
+
 			// 获取省份
 			getPrvince: function() {
 				var _this = this;
@@ -109,12 +102,12 @@
                  method: 'get',
                  app: 'tools',
                  resource: 'regional/provinces',
-					success: function(data) {
-						var _data=_this.parseStr(data);
+					success: function(datas) {
 						var option = '';
-						for(var i=0,len=_data.length;i<len;i++){
-							option+='<option value="'+_data[i]+'" data-id="'+(i+1)+'">'+_data[i]+'</option>';				
-						}
+						_.each(datas,function(data,i){
+//							console.log(data,i)
+							option+='<option value="'+i+'" data-id="'+i+'">'+data+'</option>';
+						})
 						$('.xa-province').html(option);
 						_this.selectProvince();
 					},
@@ -148,7 +141,7 @@
 						var option = '';
 						_.each(datas,function(data,i){
 //							console.log(data,i)
-							option+='<option value="'+data+'" data-id="'+i+'">'+data+'</option>';
+							option+='<option value="'+i+'" data-id="'+i+'">'+data+'</option>';
 						})
 
 
@@ -186,7 +179,7 @@
 						var option = '';
 						_.each(datas,function(data,i){
 //							console.log(data,i)
-							option+='<option value="'+data+'" data-id="'+i+'">'+data+'</option>';
+							option+='<option value="'+i+'" data-id="'+i+'">'+data+'</option>';
 						})
 						$('.xa-district').html(option);
 					},
@@ -196,6 +189,7 @@
 			},
 		};
 		obj.init();
+		
 	});
 </script>
 {% endblock %}
