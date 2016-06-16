@@ -2381,8 +2381,7 @@ li.wui-selectBox-display-table {
     width: 45px;
     height: 45px;
 }
-.wui-evaluate-container .wui-productPhoto .wui-addPhoto,
-.wui-evaluate-container .wui-productPhoto .wui-deletePhoto{
+.wui-evaluate-container .wui-i-uploadimg .xui-productPhoto .xui-addPhoto,.wui-i-uploadimg .xui-productPhoto .xui-deletePhoto{
     width: 46px;
     height: 45px;
     display: inline-block;
@@ -2397,7 +2396,15 @@ li.wui-selectBox-display-table {
     float: left;
     position: relative;
     margin-bottom: 10px;
-
+}
+.wui-evaluate-container .wui-i-uploadimg .xui-productPhoto .xui-deletePhoto {
+    background-position: 0 0;
+}
+.wui-evaluate-container .wui-i-uploadimg .xui-productPhoto .xui-deletePhoto {
+    margin-right: 0;
+}
+.wui-evaluate-container .wui-i-uploadimg .xui-productPhoto .xui-deletePhoto {
+    line-height: 35px;
 }
 .wui-evaluate-container .wui-productPhoto .wui-deletePhoto{
     line-height: 35px;
@@ -2499,5 +2506,37 @@ li.wui-selectBox-display-table {
 }
 .wui-iscreated{
 	display: none;
+}
+.wui-pa{
+	position: absolute;
+	bottom: -65px;
+	width: 100%;
+}
+.wui-i-uploadimg-common{
+	padding: 0 10px;
+}
+.wui-evaluate-component .wui-i-title{
+	border-left: 0;
+	background: url('/termite_static/img/component/evaluate/evaluate_ic.png') no-repeat;
+	background-size: 8px 18px;
+	padding-left: 15px;
+}
+.wui-evaluate-component .selection-radio {
+    background: rgba(0, 0, 0, 0) url("/termite_static/img/component/evaluate/evaluate_radio.png") no-repeat scroll 0 0 / 70% auto;
+    height: 22px;
+    position: absolute;
+    width: 30px;
+}
+.wui-evaluate-component .radio-select {
+    background-position: 0 -48px;
+}
+.wui-evaluate-component .selection-checkbox {
+    background: rgba(0, 0, 0, 0) url("/termite_static/img/component/evaluate/evaluate_checkbox.png") no-repeat scroll 0 0 / 70% auto;
+    height: 22px;
+    position: absolute;
+    width: 30px;
+}
+.wui-evaluate-component .checkbox-select {
+    background-position: 0 -34px;
 }
 /*百宝箱 evaluate CSS ---- end */

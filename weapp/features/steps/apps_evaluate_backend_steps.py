@@ -517,7 +517,7 @@ def step_webapp_owner_verified_review(context, webapp_owner):
 	"""
 	 [{
 		"member": "tom",
-		"status": "-1",  -> ('-1', '已屏蔽'),  ('0', '待审核'),  ('1', '已通过'),  ('1', '取消置顶'),  ('2', '通过并置顶')
+		"status": "-1",  -> ('-1', '已屏蔽'),  ('0', '待审核'),  ('1', '通过审核'),  ('1', '取消置顶'),  ('2', '通过并置顶')
 		"product_name": "商品1",
 		"order_no": "3"
 	}, {
@@ -532,9 +532,9 @@ def step_webapp_owner_verified_review(context, webapp_owner):
 	review_status = {
 		u'已屏蔽': -1,
 		u'待审核': 0,
-		u'已通过': 1,
+		u'通过审核': 1,
 		u'取消置顶': 1,
-		u'通过并置顶': 1,
+		u'通过并置顶': 2,
 	}
 
 	url = '/apps/evaluate/api/evaluate_review/?design_mode=0&version=1'
@@ -548,6 +548,7 @@ def step_webapp_owner_verified_review(context, webapp_owner):
 			"product_review_id": product_review.id,
 			"status": str(review_status[i.get("status")])
 		}
+
 		context.client.post(url, args)
 		if 'time' in i and str(review_status[i.get("status")]) == "2":
 			time = i['time']

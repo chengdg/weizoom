@@ -4,6 +4,9 @@
         .wui-submitButton {
             margin: 0 10px;
         }
+        .wui-evaluate-component{
+            padding: 15px 10px 0 10px;
+        }
     </style>
 {% endblock %}
 {% block content-panel %}
@@ -28,9 +31,15 @@
     $(function(){
         if('ordinary' !== template_type) {
             $('.wa-evaluate-container').find('.wa-i-body').hide();
+            $('.xa-componentContainer').removeClass('pr');
+            $('.wa-page').addClass('pr');
+            $('.wa-uploadimg-tm').removeClass('wui-hide').addClass('wui-pa');
+            $('.wa-submitTermite').addClass('mt70');
         }
         if(W.isPC) return;
         getDynamicData();
+         $('.wa-evaluate-container').siblings().find('.wui-i-title').addClass('wui-evaluate-title');
+         $('.wa-evaluate-container').siblings().addClass('wui-evaluate-component');
     });
 
     //获取商品和评价信息

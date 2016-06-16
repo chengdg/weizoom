@@ -100,7 +100,7 @@
                     {{ review.review_detail }}
                     {% else %}
                     {% for item in review.review_detail %}
-                        {{ forloop.counter }}、{{item.title}}:{{item.answer}} <br/>
+                        {{item.answer}}{% if not forloop.last %}；{% endif %}
                     {% endfor %}                        
                     {% endif %}
                     </p>
