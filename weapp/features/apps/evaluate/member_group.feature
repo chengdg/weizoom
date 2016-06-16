@@ -33,6 +33,39 @@ Background:
 			"tag_id_3": "分组3"
 		}
 		"""
+    When jobs配置商品评论自定义模板
+        """
+        {
+            "type":"customized",
+            "answer":
+                [{
+                    "title":"您使用产品后的感受是",
+                    "is_required":"是"
+                }],
+            "choose":
+                [{
+                    "title":"您对本产品的包装是否满意",
+                    "type":"单选",
+                    "is_required":"是",
+                    "option":[{
+                            "options":"是"
+                        },{
+                            "options":"否"
+                        }]
+                }],
+            "participate_info":
+                {
+                    "items_select":[{
+                            "item_name":"姓名",
+                            "is_selected":"true"
+                        }],
+                    "items_add":[{
+                        "item_name":"性别",
+                        "is_required":"否"
+                        }]
+                }
+        }
+        """
     Given bill关注jobs的公众号
     And jobs已有的订单
     	"""
@@ -120,39 +153,6 @@ Background:
                 "title":"设计师"
             }],
             "picture_list": []
-        }
-        """
-    When jobs配置商品评论自定义模板
-        """
-        {
-            "type":"customized",
-            "answer":
-                [{
-                    "title":"您使用产品后的感受是",
-                    "is_required":"是"
-                }],
-            "choose":
-                [{
-                    "title":"您对本产品的包装是否满意",
-                    "type":"单选",
-                    "is_required":"是",
-                    "option":[{
-                            "options":"是"
-                        },{
-                            "options":"否"
-                        }]
-                }],
-            "participate_info":
-                {
-                    "items_select":[{
-                            "item_name":"姓名",
-                            "is_selected":"true"
-                        }],
-                    "items_add":[{
-                        "item_name":"性别",
-                        "is_required":"否"
-                        }]
-                }
         }
         """
 
