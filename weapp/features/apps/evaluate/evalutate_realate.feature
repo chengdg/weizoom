@@ -51,18 +51,19 @@ Background:
     		"price":20.00
     	}]
    		"""
-    When jobs添加会员等级
-		"""
-		[{
-			"name": "银牌会员",
-			"upgrade": "手动升级",
-			"discount": "10"
-		},{
-			"name": "金牌会员",
-			"upgrade": "手动升级",
-			"discount": "9"
-		}]
-		"""
+    
+#    When jobs添加会员等级
+#		"""
+#		[{
+#			"name": "银牌会员",
+#			"upgrade": "手动升级",
+#			"discount": "10"
+#		},{
+#			"name": "金牌会员",
+#			"upgrade": "手动升级",
+#			"discount": "9"
+#		}]
+#		"""
     When jobs添加会员分组
 		"""
 		{
@@ -75,7 +76,7 @@ Background:
 		| member_name   |   attention_time     | member_source |
 		| bill 			| 2016-06-06 23:59:59  |    直接关注   |
 		| tom 			| 2016-06-06 00:00:00  |    推广扫码   |
-    And jobs已有的订单
+    Given jobs已有的订单
     	"""
     	[{
     		"order_no":"1",
@@ -152,21 +153,37 @@ Background:
         """
         {
             "product_score": "5",
-            "answer": "商品很好，棒棒哒！",
-            "choose":"是",
-            "name":"bill",
-            "gender":"女",
-            "picture_list": ['1.png','2.jpg']
+            "answer":[{ 
+                "title":"您使用产品后的感受是",
+                "value":"商品很好，棒棒哒！"
+                }],
+            "choose":[{
+                "title":"您对本产品的包装是否满意",
+                "value":"是"
+                }],
+            "participate_info":[{
+                "name":"bill",
+                "gender":"女"
+            }],
+            "picture_list": ['1.png','2.jpg'] 
         }
         """
     And bill完成订单'4'中'商品2'的评价
         """
         {
             "product_score": "3",
-            "answer": "东西马马虎虎",
-            "choose":"是",
-            "name":"bill",,
-            "gender":"",
+            "answer":[{ 
+                "title":"您使用产品后的感受是",
+                "value":"东西马马虎虎"
+                }],
+            "choose":[{
+                "title":"您对本产品的包装是否满意",
+                "value":"是"
+                }],
+            "participate_info":[{
+                "name":"bill",
+                "gender":""
+            }],
             "picture_list": ['3.png','4.jpg']
         }
         """
@@ -175,10 +192,18 @@ Background:
         """
         {
             "product_score": "2",
-            "answer": "用完皮肤过敏了~~呜呜呜~~",
-            "choose":"否",
-            "name":"tom",
-            "gender":"男",
+            "answer":[{ 
+                "title":"您使用产品后的感受是",
+                "value":"用完皮肤过敏了~~呜呜呜~~"
+                }],
+            "choose":[{
+                "title":"您对本产品的包装是否满意",
+                "value":"否"
+                }],
+            "participate_info":[{
+                "name":"tom",
+                "gender":"男"
+            }],
             "picture_list": []
         }
         """
@@ -186,10 +211,18 @@ Background:
         """
         {
             "product_score": "5",
-            "answer": "最满意的一次购物！",
-            "choose":"是",
-            "name":"tom",
-            "gender":"男",
+            "answer":[{ 
+                "title":"您使用产品后的感受是",
+                "value":"最满意的一次购物！"
+                }],
+            "choose":[{
+                "title":"您对本产品的包装是否满意",
+                "value":"是"
+                }],
+            "participate_info":[{
+                "name":"tom",
+                "gender":"男"
+            }],
             "picture_list": ['5.png']
         }
         """
@@ -275,7 +308,7 @@ Scenario:1 关联商品评论
 		"""
 
 	When bill访问jobs的webapp
-    Then bill在商品详情页成功获取'商品1'的评价列表
+    Then bill能获取'商品1'的更多评价列表
         """
         [{
             "member": "tom",
@@ -291,7 +324,7 @@ Scenario:1 关联商品评论
             "review_detail": "商品很好，棒棒哒！"
         }]
         """
-    Then bill在商品详情页成功获取'商品2'的评价列表
+    Then bill能获取'商品2'的更多评价列表
         """
         [{
             "member": "tom",
@@ -353,6 +386,38 @@ Scenario:2 解除商品评论关联
            "status": "通过审核"
         }]
         """
+    Then bill能获取'商品1'的更多评价列表
+        """
+        [{
+            "member": "tom",
+            "answer": "最满意的一次购物！"
+        },{
+            "member": "tom",
+            "answer": "用完皮肤过敏了~~呜呜呜~~"
+        },{
+            "member": "bill",
+            "review_detail": "东西马马虎虎"
+        }{
+            "member": "bill",
+            "review_detail": "商品很好，棒棒哒！"
+        }]
+        """
+    Then bill能获取'商品2'的更多评价列表
+        """
+        [{
+            "member": "tom",
+            "answer": "最满意的一次购物！"
+        },{
+            "member": "tom",
+            "answer": "用完皮肤过敏了~~呜呜呜~~"
+        },{
+            "member": "bill",
+            "review_detail": "东西马马虎虎"
+        }{
+            "member": "bill",
+            "review_detail": "商品很好，棒棒哒！"
+        }]
+        """
     When jobs解除商品关联评价
 		"""
 		[{
@@ -369,7 +434,7 @@ Scenario:2 解除商品评论关联
 		[]
 		"""
 	When bill访问jobs的webapp
- 	Then bill在商品详情页成功获取'商品1'的评价列表
+ 	Then bill能获得'商品1'的更多评价列表
         """
         [{
             "member": "tom",
@@ -379,7 +444,7 @@ Scenario:2 解除商品评论关联
             "review_detail": "商品很好，棒棒哒！"
         }]
         """
-    And bill在商品详情页成功获取'商品2'的评价列表
+    And bill能获得'商品2'的更多评价列表
         """
         [{
             "member": "bill",
