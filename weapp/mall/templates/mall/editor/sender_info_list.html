@@ -33,7 +33,7 @@
 {% block js %}
 {% verbatim %}
  <script id="mall-orders-sender" type="text/x-jquery-tmpl">
-	<table class="table xb-stripedTable">
+	<table class="table">
 		<thead>
 			<tr class="xui-trHeight">
 				<th width="110px">默认</th>
@@ -45,7 +45,7 @@
 				<th width="110">操作</th>
 			</tr>
 		</thead>
-		<tbody id='mall-orders'>
+		<tbody id='webapp_id'>
             {{each(i, item) items}}
                 <tr data-id="${item.id}">
                 	<!--默认-->
@@ -53,7 +53,7 @@
                         <input type="radio" id="verbose_name" value="" />
                     </td>
                     <!--发货人姓名-->
-                    <td class="nowrap">
+                    <td>
                         <div>${item.sender_name}</div>
                     </td>
                     <!--发货人电话-->
@@ -62,7 +62,7 @@
                     </td>
                     <!--所在地区-->
                     <td class="nowrap">
-                        <div>${item.area}</div>
+                        <div>${item.area_province+item.area_city+item.area_district}</div>
                     </td>
                     <!--详细地址-->
                     <td class="nowrap">
