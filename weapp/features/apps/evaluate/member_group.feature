@@ -55,17 +55,23 @@ Background:
                 }],
             "participate_info":
                 [{
-                    "items_select":[{
+                    "items_select":
+                        [{
+                            "item_name":"手机",
+                            "is_selected":"true"
+                        },{
                             "item_name":"姓名",
                             "is_selected":"true"
                         }],
-                    "items_add":[{
-                        "item_name":"性别",
-                        "is_required":"否"
+                    "items_add":
+                        [{
+                            "item_name":"职称",
+                            "is_required":"否"
                         }]
                 }]
         }
         """
+    When 清空浏览器
     Given bill关注jobs的公众号
     And jobs已有的订单
     	"""
@@ -111,6 +117,7 @@ Background:
             }]
         }]
         """
+    When 清空浏览器
     When bill访问jobs的webapp
    	And bill完成订单'1'中'商品1'的评价
         """
@@ -158,49 +165,67 @@ Background:
 @mall @apps @apps_evaluate @evaluate_detail_member_group
 Scenario:1 jobs登录系统，在商品评价详情页面给会员调分组
 	Given jobs登录系统
-#    Then jobs能获得订单"2"中的"商品2"评价详情
-#        """
-#        {
-#            "product_name": "商品2",
-#            "order_no": "2",
-#            "member": "tom",
-#            "member_rank":"普通会员",
-#            "tags":["未分组"],
-#            "product_score":"2",
-#            "comments":[{
-#                    "title":"您使用产品后的感受是",
-#                    "value":"用完皮肤过敏了~~呜呜呜~~"
-#                },{
-#                    "title":"您对本产品的包装是否满意",
-#                    "value":"否"
-#                }],
-#            "picture_list":[]
-#        }
-#        """
-#    When jobs给"tom"调分组
-#		"""
-#		["分组2","分组3"]
-#		"""
-#    Then jobs能获得订单"2"中的"商品2"评价详情
-#        """
-#        {
-#            "product_name": "商品2",
-#            "order_no": "2",
-#            "member": "tom",
-#            "member_rank":"普通会员",
-#            "tags"::["分组2","分组3"],
-#            "product_score":"2",
-#            "comments":[{
-#                    "title":"您使用产品后的感受是",
-#                    "value":"用完皮肤过敏了~~呜呜呜~~"
-#                },{
-#                    "title":"您对本产品的包装是否满意",
-#                    "value":"否"
-#                }],
-#            "picture_list":[]
-#        }
-#        """
-#	Then jobs可以获得会员列表
-#        | name  |      tags     |
-#        | bill  |     未分组    |
-#        | tom   |   分组2,分组3 |
+    Then jobs能获得订单"2"中的"商品2"评价详情
+        """
+        {
+            "product_name": "商品2",
+            "order_no": "2",
+            "member": "tom",
+            "member_rank":"普通会员",
+            "tags":["未分组"],
+            "product_score":"2",
+            "comments":[{
+                    "title":"您使用产品后的感受是",
+                    "value":"用完皮肤过敏了~~呜呜呜~~"
+                },{
+                    "title":"您对本产品的包装是否满意",
+                    "value":"否"
+                },{
+                    "title":"tel",
+                    "value":"13013013058"
+                },{
+                    "title":"name",
+                    "value":"tom"
+                },{
+                    "title":"title",
+                    "value":"设计师"
+                }],
+            "picture_list":[]
+        }
+        """
+    When jobs给"tom"调分组
+		"""
+		["分组2","分组3"]
+		"""
+    Then jobs能获得订单"2"中的"商品2"评价详情
+        """
+        {
+            "product_name": "商品2",
+            "order_no": "2",
+            "member": "tom",
+            "member_rank":"普通会员",
+            "tags":["分组2","分组3"],
+            "product_score":"2",
+            "comments":[{
+                    "title":"您使用产品后的感受是",
+                    "value":"用完皮肤过敏了~~呜呜呜~~"
+                },{
+                    "title":"您对本产品的包装是否满意",
+                    "value":"否"
+                },{
+                    "title":"tel",
+                    "value":"13013013058"
+                },{
+                    "title":"name",
+                    "value":"tom"
+                },{
+                    "title":"title",
+                    "value":"设计师"
+                }],
+            "picture_list":[]
+        }
+        """
+	Then jobs可以获得会员列表
+        | name  |      tags     |
+        | tom   |   分组2,分组3 |
+        | bill  |     未分组    |
