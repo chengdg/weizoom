@@ -40,7 +40,7 @@ class GetProductEvaluatesStatus(resource.Resource):
 		for evaluate in evaluates:
 			order_id = evaluate.order_id
 			has_reviewed = False
-			if type(evaluate.detail) not in ['string', 'unicode']:
+			if type(evaluate.detail) == 'dict':
 				for k, v in evaluate.detail.items():
 					if (k.find('qa') >= 0 and v) or (k.find('selection') >= 0 and v):
 						has_reviewed = True
@@ -98,7 +98,7 @@ class GetProductEvaluates(resource.Resource):
 			count += 0
 			member_id = evaluate.member_id
 			detail = evaluate.detail
-			if type(detail) not in  ['string', 'unicode']:
+			if type(detail) == 'dict':
 				for k, v in detail.items():
 					if k.find('qa') >= 0 and v:
 						detail = v.split('::')[1]
