@@ -186,20 +186,30 @@ class Evaluates(resource.Resource):
 				# product = webapp_cache.get_webapp_product_detail(request.webapp_owner_id, review.product_id)
 				# product.fill_specific_model(review.product_model_name)
 				review.product_user_code = id2product[review.product_id].user_code
+
+			is_common_template = True
+			review_detail = review.detail
+			if isinstance(review_detail, dict):
+				is_common_template = False
+				# 组织自定义模板用户评价数据结构
+				is_review_dialog = True
+				review_detail = get_evaluate_detail(review_detail, is_review_dialog)
+
 			items.append({
 				'id': str(review.id),
 				'product_user_code': review.product_user_code,
 				'product_name': id2product[review.product_id].name,
 				'user_name': member_id2member_name.get(review.member_id, '已经跑路'),
 				'created_at': review.created_at.strftime('%Y-%m-%d %H:%M:%S'),
-				'content': review.detail,
+				'detail': review_detail,
 				'product_id': review.product_id,
 				'member_id': review.member_id,
 				'product_score': review.score,
 				'status': {
 					'name': mall_models.PRODUCT_REVIEW_STATUS[int(review.status) + 1][1],  # 返回产品状态
 					'value': str(review.status),
-				}
+				},
+				'is_common_template': is_common_template
 			})
 
 		response = create_response(200)
