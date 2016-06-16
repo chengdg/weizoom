@@ -266,12 +266,6 @@ Scenario:1 关联商品评论
                 },{
                     "title":"您对本产品的包装是否满意",
                     "value":"是"
-                },{
-                    "title":"name",
-                    "value":"bill"
-                },{
-                    "title":"gender",
-                    "value":"女"
                 }],
             "picture_list": ["1.png","2.jpg"]               
         },{
@@ -282,12 +276,6 @@ Scenario:1 关联商品评论
                 },{
                     "title":"您对本产品的包装是否满意",
                     "value":"是"
-                },{
-                    "title":"name",
-                    "value":"tom"
-                },{
-                    "title":"gender",
-                    "value":"男"
                 }],
             "picture_list": ["5.png"]
         }]
@@ -302,12 +290,6 @@ Scenario:1 关联商品评论
                 },{
                     "title":"您对本产品的包装是否满意",
                     "value":"否"
-                },{
-                    "title":"name",
-                    "value":"tom"
-                },{
-                    "title":"gender",
-                    "value":"男"
                 }],
             "picture_list": []
         },{
@@ -318,12 +300,6 @@ Scenario:1 关联商品评论
                 },{
                     "title":"您对本产品的包装是否满意",
                     "value":"是"
-                },{
-                    "title":"name",
-                    "value":"bill"
-                },{
-                    "title":"gender",
-                    "value":""
                 }],
             "picture_list": ["3.png","4.jpg"]
         }]
@@ -370,12 +346,6 @@ Scenario:1 关联商品评论
                 },{
                     "title":"您对本产品的包装是否满意",
                     "value":"是"
-                },{
-                    "title":"name",
-                    "value":"tom"
-                },{
-                    "title":"gender",
-                    "value":"男"
                 }],
             "picture_list": ["5.png"]
         },{
@@ -386,12 +356,6 @@ Scenario:1 关联商品评论
                 },{
                     "title":"您对本产品的包装是否满意",
                     "value":"否"
-                },{
-                    "title":"name",
-                    "value":"tom"
-                },{
-                    "title":"gender",
-                    "value":"男"
                 }],
             "picture_list": []
         },{
@@ -402,12 +366,6 @@ Scenario:1 关联商品评论
                 },{
                     "title":"您对本产品的包装是否满意",
                     "value":"是"
-                },{
-                    "title":"name",
-                    "value":"bill"
-                },{
-                    "title":"gender",
-                    "value":""
                 }],
             "picture_list": ["3.png","4.jpg"]
         },{
@@ -418,12 +376,6 @@ Scenario:1 关联商品评论
                 },{
                     "title":"您对本产品的包装是否满意",
                     "value":"是"
-                },{
-                    "title":"name",
-                    "value":"bill"
-                },{
-                    "title":"gender",
-                    "value":"女"
                 }],
             "picture_list": ["1.png","2.jpg"]               
         }]
@@ -438,12 +390,6 @@ Scenario:1 关联商品评论
                 },{
                     "title":"您对本产品的包装是否满意",
                     "value":"是"
-                },{
-                    "title":"name",
-                    "value":"tom"
-                },{
-                    "title":"gender",
-                    "value":"男"
                 }],
             "picture_list": ["5.png"]
         },{
@@ -454,12 +400,6 @@ Scenario:1 关联商品评论
                 },{
                     "title":"您对本产品的包装是否满意",
                     "value":"否"
-                },{
-                    "title":"name",
-                    "value":"tom"
-                },{
-                    "title":"gender",
-                    "value":"男"
                 }],
             "picture_list": []
         },{
@@ -470,12 +410,6 @@ Scenario:1 关联商品评论
                 },{
                     "title":"您对本产品的包装是否满意",
                     "value":"是"
-                },{
-                    "title":"name",
-                    "value":"bill"
-                },{
-                    "title":"gender",
-                    "value":""
                 }],
             "picture_list": ["3.png","4.jpg"]
         },{
@@ -486,12 +420,6 @@ Scenario:1 关联商品评论
                 },{
                     "title":"您对本产品的包装是否满意",
                     "value":"是"
-                },{
-                    "title":"name",
-                    "value":"bill"
-                },{
-                    "title":"gender",
-                    "value":"女"
                 }],
             "picture_list": ["1.png","2.jpg"]               
         }]
@@ -552,12 +480,6 @@ Scenario:2 解除商品评论关联
                 },{
                     "title":"您对本产品的包装是否满意",
                     "value":"是"
-                },{
-                    "title":"name",
-                    "value":"tom"
-                },{
-                    "title":"gender",
-                    "value":"男"
                 }],
             "picture_list": ["5.png"]
         },{
@@ -568,12 +490,6 @@ Scenario:2 解除商品评论关联
                 },{
                     "title":"您对本产品的包装是否满意",
                     "value":"否"
-                },{
-                    "title":"name",
-                    "value":"tom"
-                },{
-                    "title":"gender",
-                    "value":"男"
                 }],
             "picture_list": []
         },{
@@ -584,12 +500,6 @@ Scenario:2 解除商品评论关联
                 },{
                     "title":"您对本产品的包装是否满意",
                     "value":"是"
-                },{
-                    "title":"name",
-                    "value":"bill"
-                },{
-                    "title":"gender",
-                    "value":""
                 }],
             "picture_list": ["3.png","4.jpg"]
         },{
@@ -600,12 +510,6 @@ Scenario:2 解除商品评论关联
                 },{
                     "title":"您对本产品的包装是否满意",
                     "value":"是"
-                },{
-                    "title":"name",
-                    "value":"bill"
-                },{
-                    "title":"gender",
-                    "value":"女"
                 }],
             "picture_list": ["1.png","2.jpg"]               
         }]
@@ -620,12 +524,6 @@ Scenario:2 解除商品评论关联
                 },{
                     "title":"您对本产品的包装是否满意",
                     "value":"是"
-                },{
-                    "title":"name",
-                    "value":"tom"
-                },{
-                    "title":"gender",
-                    "value":"男"
                 }],
             "picture_list": ["5.png"]
         },{
@@ -636,12 +534,6 @@ Scenario:2 解除商品评论关联
                 },{
                     "title":"您对本产品的包装是否满意",
                     "value":"否"
-                },{
-                    "title":"name",
-                    "value":"tom"
-                },{
-                    "title":"gender",
-                    "value":"男"
                 }],
             "picture_list": []
         },{
@@ -652,12 +544,6 @@ Scenario:2 解除商品评论关联
                 },{
                     "title":"您对本产品的包装是否满意",
                     "value":"是"
-                },{
-                    "title":"name",
-                    "value":"bill"
-                },{
-                    "title":"gender",
-                    "value":""
                 }],
             "picture_list": ["3.png","4.jpg"]
         },{
@@ -668,12 +554,6 @@ Scenario:2 解除商品评论关联
                 },{
                     "title":"您对本产品的包装是否满意",
                     "value":"是"
-                },{
-                    "title":"name",
-                    "value":"bill"
-                },{
-                    "title":"gender",
-                    "value":"女"
                 }],
             "picture_list": ["1.png","2.jpg"]               
         }]
@@ -704,12 +584,6 @@ Scenario:2 解除商品评论关联
                 },{
                     "title":"您对本产品的包装是否满意",
                     "value":"是"
-                },{
-                    "title":"name",
-                    "value":"tom"
-                },{
-                    "title":"gender",
-                    "value":"男"
                 }],
             "picture_list": ["5.png"]
         },{
@@ -720,12 +594,6 @@ Scenario:2 解除商品评论关联
                 },{
                     "title":"您对本产品的包装是否满意",
                     "value":"是"
-                },{
-                    "title":"name",
-                    "value":"bill"
-                },{
-                    "title":"gender",
-                    "value":"女"
                 }],
             "picture_list": ["1.png","2.jpg"]               
         }]
@@ -740,12 +608,6 @@ Scenario:2 解除商品评论关联
                 },{
                     "title":"您对本产品的包装是否满意",
                     "value":"是"
-                },{
-                    "title":"name",
-                    "value":"bill"
-                },{
-                    "title":"gender",
-                    "value":""
                 }],
             "picture_list": ["3.png","4.jpg"]
         },{
@@ -756,12 +618,6 @@ Scenario:2 解除商品评论关联
                 },{
                     "title":"您对本产品的包装是否满意",
                     "value":"否"
-                },{
-                    "title":"name",
-                    "value":"tom"
-                },{
-                    "title":"gender",
-                    "value":"男"
                 }],
             "picture_list": []
         }]
