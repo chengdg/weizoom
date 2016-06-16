@@ -877,6 +877,17 @@ class EOrder(resource.Resource):
         order_ids = json.loads(request.GET.get('order_ids', '[]'))
         #order_ids = request.GET.get('order_ids', '')
         orders = Order.objects.filter(id__in=[int(id) for id in order_ids], status=3)#待发货的订单
+        ship2orders={}
+        for order in orders:
+            ship_info = "{}_{}_{}".format(order.ship_name, order.ship_address, order.ship_tel)
+            if ship2orders.has_key(ship_info):
+                ship2orders[ship_info].append(order)
+            else:
+                ship2orders[ship_info] = [order]
+
+        for ship,orders in ship2orders.items():
+            for order in orders:
+                pass
         webapp_user_ids = set([order.webapp_user_id for order in orders])
         from modules.member.models import Member
         webappuser2member = Member.members_from_webapp_user_ids(webapp_user_ids)
