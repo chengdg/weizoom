@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from core import resource
 from core.jsonresponse import create_response
+from core.exceptionutil import unicode_full_stack
 
 import models as apps_models
 from modules.member.models import Member
@@ -99,7 +100,7 @@ class GetProductEvaluates(resource.Resource):
 			member_id = evaluate.member_id
 			detail = evaluate.detail
 			if type(detail) == 'dict':
-				for k, v in detail.items():
+				for k, v in detail.items():	#TODO 内容需要修改
 					if k.find('qa') >= 0 and v:
 						detail = v.split('::')[1]
 						break
@@ -140,10 +141,11 @@ class GetUnreviewdCount(resource.Resource):
 			return response.get_response()
 		order_has_product_list_ids = map(lambda x: int(x), order_has_product_list_ids.split('_'))
 		try:
-			count = apps_models.ProductEvaluates.objects(order_has_product_id__in=order_has_product_list_ids, pics__ne=[])
+			count = apps_models.ProductEvaluates.objects(order_has_product_id__in=order_has_product_list_ids, pics__ne=[]).count()
 			response.data = {
 				"reviewed_count": len(order_has_product_list_ids) - count
 			}
+			print response.data
 			return response.get_response()
 		except Exception, e:
 			response.errMsg = u'查询失败'

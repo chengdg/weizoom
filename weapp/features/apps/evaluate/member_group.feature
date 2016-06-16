@@ -155,7 +155,7 @@ Background:
         }
         """
 
-@mall @apps @apps_evaluate @evaluate_detail_member_group @aix1
+@mall @apps @apps_evaluate @evaluate_detail_member_group
 Scenario:1 jobs登录系统，在商品评价详情页面给会员调分组
 	Given jobs登录系统
 #    Then jobs能获得订单"2"中的"商品2"评价详情
