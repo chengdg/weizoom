@@ -6,6 +6,8 @@ import json
 import copy
 from behave import *
 from test import bdd_util
+from mall import models as mall_models
+from apps.customerized_apps.evaluate.models import ProductEvaluates
 
 import apps_step_utils
 
@@ -416,6 +418,12 @@ def __get_page_json(args):
 
 	return json.dumps(page_temple)
 
+def get_product_review(order_code, product_name):
+	product_id = mall_models.Product.objects.get(name=product_name).id
+	product_review = ProductEvaluates.objects().get(product_id=product_id, order_id=order_code)
+
+	return product_review
+
 
 @when(u'{user}配置商品评论自定义模板')
 def step_impl(context, user):
@@ -437,11 +445,11 @@ def step_impl(context, user):
 
 	termite_url = "/termite2/api/project/?design_mode={}&project_id={}&version={}".format(design_mode,project_id,version)
 	post_termite_response = context.client.post(termite_url, {
-        "field":"page_content",
-        "id":project_id,
-        "page_id":"1",
-        "page_json": page_json
-    })
+		"field":"page_content",
+		"id":project_id,
+		"page_id":"1",
+		"page_json": page_json
+	})
 	related_page_id = json.loads(post_termite_response.content).get("data",{})['project_id']
 
 	post_evaluate_args = {
@@ -466,3 +474,99 @@ def step_impl(context, user):
 
 	apps_step_utils.debug_print(returned_components)
 	#TODO 验证page数据
+
+@then(u'{user}能获得订单"{order_id}"中的"{product_name}"评价详情')
+def step_impl(context, user, order_id, product_name):
+	product_review = get_product_review(order_id, product_name)
+
+	design_mode = 0
+	version = 1
+	evaluate_url = "/apps/evaluate/api/evaluate_review/?design_mode={}&version={}&id={}".format(design_mode,version,product_review.id)
+	evaluate_response = context.client.get(evaluate_url)
+
+	evaluate_detail = json.loads(evaluate_response.content)['data']['items']
+
+	actual = {}
+
+	tag_list = []
+	for tag in evaluate_detail['member_has_tags']:
+		tag_list.append(tag['tag_name'])
+
+	detail_list = []
+	for detail in evaluate_detail['detail']:
+		detail_list.append({
+			'title': 'name' if detail['title'] == u'姓名' else detail['title'],
+			'value': detail['answer']
+		})
+
+	actual['product_name'] = evaluate_detail['product_name']
+	actual['order_no'] = evaluate_detail['order_num']
+	actual['member'] = evaluate_detail['member_name']
+	actual['member_rank'] = evaluate_detail['member_grade']
+	actual['tags'] = tag_list
+	actual['product_score'] = evaluate_detail['score']
+	actual['picture_list'] = evaluate_detail['img']
+	actual['comments'] = detail_list
+
+	expected = json.loads(context.text)
+	bdd_util.assert_dict(expected, actual)
+
+
+@when(u"{webapp_owner}已完成对商品的评价信息审核")
+def step_webapp_owner_verified_review(context, webapp_owner):
+	"""
+	 [{
+		"member": "tom",
+		"status": "-1",  -> ('-1', '已屏蔽'),  ('0', '待审核'),  ('1', '已通过'),  ('1', '取消置顶'),  ('2', '通过并置顶')
+		"product_name": "商品1",
+		"order_no": "3"
+	}, {
+		"member": "bill",
+		"status": "1",
+		"product_name": "商品1",
+		"order_no": "1"
+	}]
+
+
+	"""
+	review_status = {
+		u'已屏蔽': -1,
+		u'待审核': 0,
+		u'已通过': 1,
+		u'取消置顶': 1,
+		u'通过并置顶': 1,
+	}
+
+	url = '/apps/evaluate/api/evaluate_review/?design_mode=0&version=1'
+	context_dict = json.loads(context.text)
+	for i in context_dict:
+		product_name = i.get('product_name')
+		order_code = i.get('order_no')
+		product_review = get_product_review(order_code, product_name)
+
+		args = {
+			"product_review_id": product_review.id,
+			"status": str(review_status[i.get("status")])
+		}
+		context.client.post(url, args)
+		if 'time' in i and str(review_status[i.get("status")]) == "2":
+			time = i['time']
+			top_time = "{} 00:00".format(bdd_util.get_date_str(time))
+			product_review.top_time = top_time
+			product_review.save()
+
+@when(u'{webapp_owner}已完成对商品的评价信息审核并置顶')
+def step_impl(context, webapp_owner):
+	assert False
+
+@when(u'{webapp_owner}取消对商品的评价信息置顶')
+def step_impl(context, webapp_owner):
+	assert False
+
+@when(u'{webapp_owner}屏蔽对商品的评价信息')
+def step_impl(context, webapp_owner):
+	assert False
+
+@when(u'{webapp_owner}已完成对商品的评价信息置顶')
+def step_impl(context, webapp_owner):
+	assert False
