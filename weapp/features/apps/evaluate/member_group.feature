@@ -111,7 +111,6 @@ Background:
             }]
         }]
         """
-    When 清空浏览器
     When bill访问jobs的webapp
    	And bill完成订单'1'中'商品1'的评价
         """
