@@ -801,7 +801,9 @@ class OrderSenderInfo(resource.Resource):
                     sender_info_id = sender_infos[0].id
                     SenderInfo.objects.filter(id=sender_info_id).update(is_selected=True)
 
-        return HttpResponseRedirect('/mall2/sender_info_list/')
+        response = create_response(200)
+        return response.get_response()
+
 
 
 
@@ -842,6 +844,7 @@ class SenderInfoList(resource.Resource):
         items = []
         for sender_info in sender_infos :
             items.append({
+                "id":sender_info.id,
                 "sender_name":sender_info.sender_name,
                 "sender_tel":sender_info.sender_tel,
                 "sender_address":sender_info.sender_address,
