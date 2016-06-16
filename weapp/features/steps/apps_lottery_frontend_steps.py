@@ -83,6 +83,9 @@ def step_impl(context,webapp_user_name):
 		'entity': u'实物',
 		'no_prize': u'谢谢参与'
 	}
+	import logging
+	logging.info('------------------123')
+	logging.info("{}".format(lottery_result))
 	# 构造实际数据
 	actual = []
 	actual.append({

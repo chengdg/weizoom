@@ -178,7 +178,7 @@ W.dialog.Dialog = Backbone.View.extend({
         }
     },
 
-    setTitle: function(title){     
+    setTitle: function(title){
         if (title) {
             var $title = this.$('.xa-title');
             var $titleInput = this.$('.xa-titleInput');
@@ -208,7 +208,7 @@ W.dialog.Dialog = Backbone.View.extend({
             if ($editIcon) {
                 $editIcon.hide();
             }
-        }   
+        }
     }
 });
 

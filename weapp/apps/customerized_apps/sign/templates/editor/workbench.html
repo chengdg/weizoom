@@ -188,7 +188,7 @@ ui-appPage-commonStyle">
     <ul class="breadcrumb">
       <li>您当前所在位置</li>
       <li><a href="/apps/lottery/lotteries/">百宝箱</a></li>
-      <li class="active">新建</li>
+      <li class="active">签到</li>
     </ul>
   </div>
 
@@ -216,7 +216,7 @@ ui-appPage-commonStyle">
         </div>
     <div id="leftPanel" class="fl xui-workbench-leftPanel xui-hide">
     </div>
-    
+
     <div id="phonePanel" class="xui-workbench-phonePanel xui-section fl">
       <div id="phone" class="xui-phone ">
           <div id="phoneSkin" class="xui-i-skin">
@@ -259,13 +259,14 @@ ui-appPage-commonStyle">
                 <thead>
                     <tr>
                         <th>会员</th>
-                        <th class="tx_sortable xui-Blue" data-sort-attr="created_at" data-sort-direction="up">第一次签到</th>
+                        <!--<th class="tx_sortable xui-Blue" data-sort-attr="created_at" data-sort-direction="up">第一次签到</th>-->
                         <th class="tx_sortable xui-Blue" data-sort-attr="latest_date" data-sort-direction="up" data-init-sort="-latest_date">最后一次签到</th>
                         <th class="tx_sortable xui-Blue" data-sort-attr="total_count" data-sort-direction="up">累计次数</th>
                         <th class="tx_sortable xui-Blue" data-sort-attr="serial_count" data-sort-direction="up">连续次数</th>
-                        <th class="tx_sortable xui-Blue" data-sort-attr="top_serial_count" data-sort-direction="up">最高连续次数</th>
-                        <th class="tx_sortable xui-Blue" data-sort-attr="total_integral" data-sort-direction="up">奖励总积分</th>
-                        <th>优惠券奖励</th>
+                        <!--<th class="tx_sortable xui-Blue" data-sort-attr="top_serial_count" data-sort-direction="up">最高连续次数</th>-->
+                        <th class="tx_sortable xui-Blue" data-sort-attr="total_integral" data-sort-direction="up">积分奖励</th>
+                        <th class="tx_sortable xui-Blue" data-sort-attr="total_coupon" data-sort-direction="up">优惠券张数</th>
+                        <th>操作</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -280,9 +281,9 @@ ui-appPage-commonStyle">
                                 {{html item.participant_name}}
                             </a>
                         </td>
-                        <td>
+                        <!--<td>
                             ${item.created_at}
-                        </td>
+                        </td>-->
                         <td>
                             ${item.latest_date}
                         </td>
@@ -292,15 +293,16 @@ ui-appPage-commonStyle">
                         <td>
                             ${item.serial_count}
                         </td>
-                        <td>
+                        <!--<td>
                             ${item.top_serial_count}
-                        </td>
+                        </td>-->
                         <td>
                             ${item.total_integral}
                         </td>
                         <td>
-                            {{html item.latest_coupon }}
+                            <a href="javascript:void(0);" class="xa-coupon" member_id="${item.member_id}">{{html item.coupon_count }}</a>
                         </td>
+                        <td><a href="javascript:void(0);" member_id="${item.member_id}" belong_to="${item.belong_to}" class="ml5 xa-viewData">查看详情</a></td>
                     </tr>
                     {{/each}}
                 </tbody>
@@ -319,14 +321,23 @@ ui-appPage-commonStyle">
 
 {% block base_js %}
   <!-- *start_prunt_task* -->
-    <!-- [prunt_task] 
+    <!-- [prunt_task]
       {
         "task": "weizoom-load-termite-components"
       }
     -->
   {{ '["appkit.page", "appkit.componentadder", "appkit.signdescription", "appkit.submitbutton"]'|load_termite_components|safe }}
   <!-- *end_prunt_task* -->
-  
+
+	<!-- *start_prunt_task* -->
+		<!-- [prunt_task]
+		  {
+		    "task": "weizoom-load-app-views-dialogs"
+		  }
+		-->
+	{{ "sign"|load_app_views_and_dialogs|safe }}
+	<!-- *end_prunt_task* -->
+
   <script type="text/javascript">
     W.uid = "{{request.manager.id}}";
     var signStatus = "off";
@@ -344,7 +355,7 @@ ui-appPage-commonStyle">
     W.hideActionPanel = true;
 
     var table;
-    
+
     var loadPages = function(pageManagerView) {
       W.getApi().call({
         app: 'apps',
@@ -376,12 +387,12 @@ ui-appPage-commonStyle">
         }
       });
     };
-    
+
     $(document).ready(function() {
         table = $('[data-ui-role="advanced-table"]').data('view');
       var windowHeight = $(window).height();
       var height = windowHeight - 350;
-      
+
       $('#leftPanel').css('min-height' ,height+ 'px');
       $('#workbench').css('min-height' ,height+ 'px');
       $(window).bind('beforeunload', function() {
@@ -390,18 +401,18 @@ ui-appPage-commonStyle">
         } else {
         }
       });
-      
+
       var pageManagerView = new W.workbench.PageManagerView({
         el: '#leftPanel',
         isSystemManager: W.isSystemManager
       });
       pageManagerView.render();
-      
+
       var phoneView = new W.workbench.PhoneView({
         el: '#phonePanel'
       });
       phoneView.render();
-      
+
       var propertyViewLeft = phoneView.getRightBorderOffset() - $('#workbench').offset().left;
       var propertyView = new W.workbench.PropertyView({
         el: '#rightPanel',
@@ -413,7 +424,7 @@ ui-appPage-commonStyle">
       var synchronizer = new W.workbench.PageSynchronizer();
       synchronizer.run();
       W.Synchronizer = synchronizer;
-      
+
       loadPages(pageManagerView);
 
 
@@ -500,9 +511,9 @@ ui-appPage-commonStyle">
 
         );
       });
-      
+
       W.isReady = true;
-      
+
       W.Broadcaster.on('designpage:reach_scroll_boundary', function(direction) {
         var $window = $(window);
         var scrollTop = $window.scrollTop();
@@ -513,12 +524,12 @@ ui-appPage-commonStyle">
         }
         $window.scrollTop(newScrollTop);
       });
-      
+
       $('[data-toggle="tooltip"]').tooltip();
 
       $('.xa-preview').click(function(event){
         var page = pageManagerView.getCurrentActivePage();
-        
+
         // 验证
         if (!W.isSystemManager) {
             if(!page.validate()) {
@@ -625,7 +636,27 @@ ui-appPage-commonStyle">
           $(window).bind('scroll resize',(function() {
               stickyMenu();
           }));
-    });
+
+				$('body').delegate('.xa-viewData', 'click', function(event) {
+					var member_id = $(event.currentTarget).attr('member_id');
+					var belong_to = $(event.currentTarget).attr('belong_to');
+
+					W.dialog.showDialog('W.dialog.app.sign.ViewParticipanceDataDialog', {
+						memberId: member_id,
+						belongTo: belong_to,
+						success: function(data) {
+							// alert(data);
+						}
+					});
+				});
+
+            $('body').delegate(".xa-coupon", 'click', function(event){
+                var memberId = $(event.currentTarget).attr('member_id');
+                    W.dialog.showDialog('W.dialog.app.sign.MemberDetailSignCouponsDialog', {
+                        memberId: memberId
+                    });
+            });
+        });
 
     function changeStatus(act){
         var innerHtml,actionHtml;
@@ -656,6 +687,7 @@ ui-appPage-commonStyle">
             });
         }
     }
+
   </script>
 {% block js %}
 <script id="sign-chance-dialog-tmpl-src" type="text/x-jquery-tmpl">

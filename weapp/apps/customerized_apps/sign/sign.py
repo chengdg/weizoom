@@ -39,6 +39,7 @@ class Sign(resource.Resource):
 			is_create_new_data = False
 			project_id = 'new_app:sign:%s' % sign.related_page_id
 			keywords = sign.reply['keyword']
+			# keywords = {}
 		else:
 			sign = None
 			is_create_new_data = True
@@ -56,7 +57,7 @@ class Sign(resource.Resource):
 			'webapp_owner_id': owner_id,
 			'keywords': json.dumps(keywords)
 		})
-		
+
 		return render_to_response('sign/templates/editor/workbench.html', c)
 
 	@login_required
@@ -69,6 +70,7 @@ class Sign(resource.Resource):
 		if sign.count()>0:
 			sign = sign[0]
 			keywords = sign.reply['keyword']
+			# keywords = {}
 		else:
 			keywords = {}
 
@@ -91,7 +93,7 @@ class Sign(resource.Resource):
 		sign.save()
 
 		error_msg = None
-		
+
 		data = json.loads(sign.to_json())
 		data['id'] = data['_id']['$oid']
 		if error_msg:
@@ -99,7 +101,7 @@ class Sign(resource.Resource):
 		response = create_response(200)
 		response.data = data
 		return response.get_response()
-	
+
 	@login_required
 	def api_post(request):
 		"""

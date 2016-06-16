@@ -26,7 +26,7 @@ def get_second_navs(request):
 	else:
 		# webapp_module_views.get_modules_page_second_navs(request)
 		second_navs = [NAV]
-	
+
 	return second_navs
 
 
@@ -64,6 +64,7 @@ def get_sing_fields_to_save(request):
 
 	if 'reply' in request.POST:
 		fields['reply'] = json.loads(fields['reply'])
+	fields['reply'] = {"keyword":{},"content":""}
 
 	return fields
 
