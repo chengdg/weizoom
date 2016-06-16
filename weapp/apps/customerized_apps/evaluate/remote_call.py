@@ -102,7 +102,16 @@ class GetProductEvaluates(resource.Resource):
 			response.errMsg = u'参数错误'
 			return response.get_response()
 
-		evaluates = apps_models.ProductEvaluates.objects(owner_id=int(owner_id), product_id=int(product_id), status__in=[apps_models.STATUS_PASSED, apps_models.STATUS_TOP]).order_by('-top_time', '-created_at')
+		#需要考虑到评价相关联的商品
+		owner_id=int(owner_id)
+		product_id = int(product_id)
+		relations = apps_models.EvaluatesRelatedProducts.objects(owner_id=owner_id, product_id=product_id)
+		if relations.count() > 0:
+			product_ids = relations.first().related_product_ids
+		else:
+			product_ids = [product_id]
+
+		evaluates = apps_models.ProductEvaluates.objects(owner_id=owner_id, product_id__in=product_ids, status__in=[apps_models.STATUS_PASSED, apps_models.STATUS_TOP]).order_by('-top_time', '-created_at')
 		member_ids = [e.member_id for e in evaluates]
 		member_id2info = {m.id: {'icon': m.user_icon, 'name': m.username_for_title} for m in Member.objects.filter(id__in=member_ids)}
 		result = []
@@ -111,18 +120,18 @@ class GetProductEvaluates(resource.Resource):
 			count += 0
 			member_id = evaluate.member_id
 			detail = evaluate.detail
+			temp_detail = []
 			if type(detail) == 'dict':
-				for k, v in detail.items():	#TODO 内容需要修改
-					if k.find('qa') >= 0 and v:
-						detail = v.split('::')[1]
-						break
+				for k, v in detail.items():
+					if (k.find('qa') >= 0 and v) or (k.find('selection') >= 0 and v):
+						temp_detail.append(v.split('::')[1])
 
 			result.append({
 				'status': evaluate.status,
 				'member_icon': member_id2info[member_id]['icon'],
 				'created_at': evaluate.created_at.strftime("%Y-%m-%d %H:%M:%S"),
 				'member_id': member_id,
-				'review_detail': detail if type(detail) == 'string' else '',
+				'review_detail': detail if type(detail) in ['str', 'unicode'] else ','.join(temp_detail),
 				'member_name': member_id2info[member_id]['name']
 			})
 			if count >= 2:
@@ -157,11 +166,9 @@ class GetUnreviewdCount(resource.Resource):
 			response.data = {
 				"reviewed_count": len(order_has_product_list_ids) - count
 			}
-			print response.data
 			return response.get_response()
-		except Exception, e:
+		except:
 			response.errMsg = u'查询失败'
-			response.innerMsg = e
 			return response.get_response()
 
 class GetOrderEvaluatesStatus(resource.Resource):
