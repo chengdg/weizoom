@@ -844,6 +844,7 @@ class SenderInfoList(resource.Resource):
         items = []
         for sender_info in sender_infos :
             items.append({
+                "id":sender_info.id,
                 "sender_name":sender_info.sender_name,
                 "sender_tel":sender_info.sender_tel,
                 "sender_address":sender_info.sender_address,
