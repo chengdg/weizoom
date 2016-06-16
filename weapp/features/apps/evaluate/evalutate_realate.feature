@@ -256,177 +256,54 @@ Background:
 @mall @apps @apps_evaluate @product_evaluate_relate @sun1
 Scenario:1 关联商品评论
     When bill访问jobs的webapp
-#    Then bill能获取'商品1'的更多评价列表
-#        """
-#        [{
-#            "member": "bill",
-#            "comments": [{
-#                    "title":"您使用产品后的感受是",
-#                    "value":"商品很好，棒棒哒！"
-#                },{
-#                    "title":"您对本产品的包装是否满意",
-#                    "value":"是"
-#                }],
-#            "picture_list": ["1.png","2.jpg"]
-#        },{
-#            "member": "tom",
-#            "comments": [{
-#                    "title":"您使用产品后的感受是",
-#                    "value":"最满意的一次购物！"
-#                },{
-#                    "title":"您对本产品的包装是否满意",
-#                    "value":"是"
-#                }],
-#            "picture_list": ["5.png"]
-#        }]
-#        """
-#    And bill能获取'商品2'的更多评价列表
-#        """
-#        [{
-#            "member": "tom",
-#            "comments": [{
-#                    "title":"您使用产品后的感受是",
-#                    "value":"用完皮肤过敏了~~呜呜呜~~"
-#                },{
-#                    "title":"您对本产品的包装是否满意",
-#                    "value":"否"
-#                }],
-#            "picture_list": []
-#        },{
-#            "member": "bill",
-#            "comments": [{
-#                    "title":"您使用产品后的感受是",
-#                    "value":"东西马马虎虎"
-#                },{
-#                    "title":"您对本产品的包装是否满意",
-#                    "value":"是"
-#                }],
-#            "picture_list": ["3.png","4.jpg"]
-#        }]
-#        """
-#	Given jobs登录系统
-#	When jobs在关联商品评价中设置商品查询条件
-#		"""
-#		{
-#			"product_name":"商品"
-#		}
-#		"""
-#	And jobs成功关联商品评价
-#		"""
-#		[{
-#			"product_name":"商品1",
-#			"price":10.00,
-#			"comment":2
-#		},{
-#			"product_name":"商品2",
-#			"price":20.00,
-#			"comment":2
-#		}]
-#		"""
-#	Then jobs能获得商品评价关联列表
-#		"""
-#		[{
-#			"product_list":{
-#					"product_name":"商品1"
-#				},{
-#					"product_name":"商品2"
-#				},
-#			"comment":"4"
-#		}]
-#		"""
-#
-#	When bill访问jobs的webapp
-#    Then bill能获取'商品1'的更多评价列表
-#        """
-#        [{
-#            "member": "tom",
-#            "comments": [{
-#                    "title":"您使用产品后的感受是",
-#                    "value":"最满意的一次购物！"
-#                },{
-#                    "title":"您对本产品的包装是否满意",
-#                    "value":"是"
-#                }],
-#            "picture_list": ["5.png"]
-#        },{
-#            "member": "tom",
-#            "comments": [{
-#                    "title":"您使用产品后的感受是",
-#                    "value":"用完皮肤过敏了~~呜呜呜~~"
-#                },{
-#                    "title":"您对本产品的包装是否满意",
-#                    "value":"否"
-#                }],
-#            "picture_list": []
-#        },{
-#            "member": "bill",
-#            "comments": [{
-#                    "title":"您使用产品后的感受是",
-#                    "value":"东西马马虎虎"
-#                },{
-#                    "title":"您对本产品的包装是否满意",
-#                    "value":"是"
-#                }],
-#            "picture_list": ["3.png","4.jpg"]
-#        },{
-#            "member": "bill",
-#            "comments": [{
-#                    "title":"您使用产品后的感受是",
-#                    "value":"商品很好，棒棒哒！"
-#                },{
-#                    "title":"您对本产品的包装是否满意",
-#                    "value":"是"
-#                }],
-#            "picture_list": ["1.png","2.jpg"]
-#        }]
-#        """
-#    Then bill能获取'商品2'的更多评价列表
-#        """
-#        [{
-#            "member": "tom",
-#            "comments": [{
-#                    "title":"您使用产品后的感受是",
-#                    "value":"最满意的一次购物！"
-#                },{
-#                    "title":"您对本产品的包装是否满意",
-#                    "value":"是"
-#                }],
-#            "picture_list": ["5.png"]
-#        },{
-#            "member": "tom",
-#            "comments": [{
-#                    "title":"您使用产品后的感受是",
-#                    "value":"用完皮肤过敏了~~呜呜呜~~"
-#                },{
-#                    "title":"您对本产品的包装是否满意",
-#                    "value":"否"
-#                }],
-#            "picture_list": []
-#        },{
-#            "member": "bill",
-#            "comments": [{
-#                    "title":"您使用产品后的感受是",
-#                    "value":"东西马马虎虎"
-#                },{
-#                    "title":"您对本产品的包装是否满意",
-#                    "value":"是"
-#                }],
-#            "picture_list": ["3.png","4.jpg"]
-#        },{
-#            "member": "bill",
-#            "comments": [{
-#                    "title":"您使用产品后的感受是",
-#                    "value":"商品很好，棒棒哒！"
-#                },{
-#                    "title":"您对本产品的包装是否满意",
-#                    "value":"是"
-#                }],
-#            "picture_list": ["1.png","2.jpg"]
-#        }]
-#        """
-
-@mall @apps @apps_evaluate @product_evaluate_release
-Scenario:2 解除商品评论关联
+    Then bill能获取'商品1'的更多评价列表
+        """
+        [{
+            "member": "bill",
+            "comments": [{
+                    "title":"您使用产品后的感受是",                
+                    "value":"商品很好，棒棒哒！"
+                },{
+                    "title":"您对本产品的包装是否满意",
+                    "value":"是"
+                }],
+            "picture_list": ["1.png","2.jpg"]               
+        },{
+            "member": "tom",
+            "comments": [{
+                    "title":"您使用产品后的感受是",                
+                    "value":"最满意的一次购物！"
+                },{
+                    "title":"您对本产品的包装是否满意",
+                    "value":"是"
+                }],
+            "picture_list": ["5.png"]
+        }]
+        """
+    And bill能获取'商品2'的更多评价列表
+        """
+        [{
+            "member": "tom",
+            "comments": [{
+                    "title":"您使用产品后的感受是",                
+                    "value":"用完皮肤过敏了~~呜呜呜~~"
+                },{
+                    "title":"您对本产品的包装是否满意",
+                    "value":"否"
+                }],
+            "picture_list": []
+        },{
+            "member": "bill",
+            "comments": [{
+                    "title":"您使用产品后的感受是",                
+                    "value":"东西马马虎虎"
+                },{
+                    "title":"您对本产品的包装是否满意",
+                    "value":"是"
+                }],
+            "picture_list": ["3.png","4.jpg"]
+        }]
+        """
 	Given jobs登录系统
 	When jobs在关联商品评价中设置商品查询条件
 		"""
@@ -446,30 +323,18 @@ Scenario:2 解除商品评论关联
 			"comment":2
 		}]
 		"""
-    When jobs已完成对商品的评价信息审核
-        """
-        [{
-            "product_name": "商品2",
-            "order_no": "2",
-            "member": "tom",
-            "status": "通过并置顶"
-        },{
-            "product_name": "商品1",
-            "order_no": "3",
-            "member": "tom",
-            "status": "通过并置顶"
-        },{
-            "product_name": "商品2",
-            "order_no": "4",
-            "member": "bill",
-            "status": "通过并置顶"
-        },{
-           "member": "bill",
-           "order_no": "1",
-           "product_name": "商品1",
-           "status": "通过审核"
-        }]
-        """
+	Then jobs能获得商品评价关联列表
+		"""
+		[{
+			"product_list":[{
+					"product_name":"商品1"
+				},{
+					"product_name":"商品2"
+				}],
+			"comment":"4"
+		}]
+		"""
+	When bill访问jobs的webapp
     Then bill能获取'商品1'的更多评价列表
         """
         [{
@@ -558,14 +423,148 @@ Scenario:2 解除商品评论关联
             "picture_list": ["1.png","2.jpg"]               
         }]
         """
+
+@mall @apps @apps_evaluate @product_evaluate_release
+Scenario:2 解除商品评论关联
+	Given jobs登录系统
+	When jobs在关联商品评价中设置商品查询条件
+		"""
+		{
+			"product_name":"商品"
+		}
+		"""
+	And jobs成功关联商品评价
+		"""
+		[{
+			"product_name":"商品1",
+			"price":10.00,
+			"comment":2
+		},{
+			"product_name":"商品2",
+			"price":20.00,
+			"comment":2
+		}]
+		"""
+    When jobs已完成对商品的评价信息审核
+        """
+        [{
+            "product_name": "商品2",
+            "order_no": "2",
+            "member": "tom",
+            "status": "通过并置顶"
+        },{
+            "product_name": "商品1",
+            "order_no": "3",
+            "member": "tom",
+            "status": "通过并置顶"
+        },{
+            "product_name": "商品2",
+            "order_no": "4",
+            "member": "bill",
+            "status": "通过并置顶"
+        },{
+           "member": "bill",
+           "order_no": "1",
+           "product_name": "商品1",
+           "status": "通过审核"
+        }]
+        """
+    Then bill能获取'商品1'的更多评价列表
+        """
+        [{
+            "member": "bill",
+            "comments": [{
+                    "title":"您使用产品后的感受是",                
+                    "value":"东西马马虎虎"
+                },{
+                    "title":"您对本产品的包装是否满意",
+                    "value":"是"
+                }],
+            "picture_list": ["3.png","4.jpg"]
+        },{
+            "member": "tom",
+            "comments": [{
+                    "title":"您使用产品后的感受是",                
+                    "value":"最满意的一次购物！"
+                },{
+                    "title":"您对本产品的包装是否满意",
+                    "value":"是"
+                }],
+            "picture_list": ["5.png"]
+        },{
+            "member": "tom",
+            "comments": [{
+                    "title":"您使用产品后的感受是",                
+                    "value":"用完皮肤过敏了~~呜呜呜~~"
+                },{
+                    "title":"您对本产品的包装是否满意",
+                    "value":"否"
+                }],
+            "picture_list": []
+        },{
+            "member": "bill",
+            "comments": [{
+                    "title":"您使用产品后的感受是",                
+                    "value":"商品很好，棒棒哒！"
+                },{
+                    "title":"您对本产品的包装是否满意",
+                    "value":"是"
+                }],
+            "picture_list": ["1.png","2.jpg"]               
+        }]
+        """
+    Then bill能获取'商品2'的更多评价列表
+        """
+        [{
+            "member": "bill",
+            "comments": [{
+                    "title":"您使用产品后的感受是",                
+                    "value":"东西马马虎虎"
+                },{
+                    "title":"您对本产品的包装是否满意",
+                    "value":"是"
+                }],
+            "picture_list": ["3.png","4.jpg"]
+        },{
+            "member": "tom",
+            "comments": [{
+                    "title":"您使用产品后的感受是",                
+                    "value":"最满意的一次购物！"
+                },{
+                    "title":"您对本产品的包装是否满意",
+                    "value":"是"
+                }],
+            "picture_list": ["5.png"]
+        },{
+            "member": "tom",
+            "comments": [{
+                    "title":"您使用产品后的感受是",                
+                    "value":"用完皮肤过敏了~~呜呜呜~~"
+                },{
+                    "title":"您对本产品的包装是否满意",
+                    "value":"否"
+                }],
+            "picture_list": []
+        },{
+            "member": "bill",
+            "comments": [{
+                    "title":"您使用产品后的感受是",                
+                    "value":"商品很好，棒棒哒！"
+                },{
+                    "title":"您对本产品的包装是否满意",
+                    "value":"是"
+                }],
+            "picture_list": ["1.png","2.jpg"]               
+        }]
+        """
     When jobs解除商品关联评价
 		"""
 		[{
-			"product_list":{
+			"product_list":[{
 					"product_name":"商品1"
 				},{
 					"product_name":"商品2"
-				},
+				}],
 			"comment":"4"
 		}]
 		"""
@@ -574,7 +573,7 @@ Scenario:2 解除商品评论关联
 		[]
 		"""
 	When bill访问jobs的webapp
- 	Then bill能获得'商品1'的更多评价列表
+ 	Then bill能获取'商品1'的更多评价列表
         """
         [{
             "member": "tom",
@@ -598,7 +597,7 @@ Scenario:2 解除商品评论关联
             "picture_list": ["1.png","2.jpg"]               
         }]
         """
-    And bill能获得'商品2'的更多评价列表
+    And bill能获取'商品2'的更多评价列表
         """
         [{
             "member": "bill",
