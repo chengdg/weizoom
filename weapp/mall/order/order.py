@@ -801,7 +801,9 @@ class OrderSenderInfo(resource.Resource):
                     sender_info_id = sender_infos[0].id
                     SenderInfo.objects.filter(id=sender_info_id).update(is_selected=True)
 
-        return HttpResponseRedirect('/mall2/sender_info_list/')
+        response = create_response(200)
+        return response.get_response()
+
 
 
 
