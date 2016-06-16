@@ -29,7 +29,7 @@ Background:
                     	}]
             	}],
         	"participate_info":
-            	{
+            	[{
                 	"items_select":[{
                         	"item_name":"姓名",
                         	"is_selected":"true"
@@ -38,7 +38,7 @@ Background:
                         "item_name":"性别",
                         "is_required":"否"
                     	}]
-            	}
+            	}]
     	}
     	"""
     When jobs已添加商品
@@ -86,7 +86,7 @@ Background:
     		"order_price":10.00,
     		"payment_price":10.00,
     		"postage":0.00,
-    		"ship_name":bill,
+    		"ship_name":"bill",
     		"ship_tel":"13013013011",
        		"ship_area":"北京市,北京市,海淀区",
         	"ship_address":"泰兴大厦",
@@ -137,7 +137,7 @@ Background:
     		"order_price":10.00,
     		"payment_price":10.00,
     		"postage":0.00,
-    		"ship_name":bill,
+    		"ship_name":"bill",
     		"ship_tel":"13013013011",
        		"ship_area":"北京市,北京市,海淀区",
         	"ship_address":"泰兴大厦",
@@ -146,14 +146,14 @@ Background:
                 "price": 20.00,
                 "count": 1
         	}]
-   	 	},]
+   	 	}]
     	"""
     When bill访问jobs的webapp
    	And bill完成订单'1'中'商品1'的评价
         """
         {
             "product_score": "5",
-            "answer":[{ 
+            "answer":[{
                 "title":"您使用产品后的感受是",
                 "value":"商品很好，棒棒哒！"
                 }],
@@ -165,14 +165,14 @@ Background:
                 "name":"bill",
                 "gender":"女"
             }],
-            "picture_list": ['1.png','2.jpg'] 
+            "picture_list": ["1.png","2.jpg"]
         }
         """
     And bill完成订单'4'中'商品2'的评价
         """
         {
             "product_score": "3",
-            "answer":[{ 
+            "answer":[{
                 "title":"您使用产品后的感受是",
                 "value":"东西马马虎虎"
                 }],
@@ -184,7 +184,7 @@ Background:
                 "name":"bill",
                 "gender":""
             }],
-            "picture_list": ['3.png','4.jpg']
+            "picture_list": ["3.png","4.jpg"]
         }
         """
     When 清空浏览器
@@ -193,7 +193,7 @@ Background:
         """
         {
             "product_score": "2",
-            "answer":[{ 
+            "answer":[{
                 "title":"您使用产品后的感受是",
                 "value":"用完皮肤过敏了~~呜呜呜~~"
                 }],
@@ -212,7 +212,7 @@ Background:
         """
         {
             "product_score": "5",
-            "answer":[{ 
+            "answer":[{
                 "title":"您使用产品后的感受是",
                 "value":"最满意的一次购物！"
                 }],
@@ -224,7 +224,7 @@ Background:
                 "name":"tom",
                 "gender":"男"
             }],
-            "picture_list": ['5.png']
+            "picture_list": ["5.png"]
         }
         """
     Given jobs登录系统
@@ -253,7 +253,7 @@ Background:
         }]
         """
 
-@mall @apps @apps_evaluate @product_evaluate_relate
+@mall @apps @apps_evaluate @product_evaluate_relate @sun1
 Scenario:1 关联商品评论
     When bill访问jobs的webapp
     Then bill在商品详情页成功获取'商品1'的评价列表
