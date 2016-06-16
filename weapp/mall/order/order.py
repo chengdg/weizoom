@@ -731,7 +731,7 @@ class OrderSenderInfo(resource.Resource):
         return render_to_response('mall/editor/sender_info.html', c)
 
     @login_required
-    def put(request):
+    def api_put(request):
         """创建发件人信息
         """
 
@@ -751,7 +751,7 @@ class OrderSenderInfo(resource.Resource):
 
         SenderInfo.objects.filter(~Q(id=sender_info.id),webapp_id=webapp_id,is_deleted=False).update(is_selected=False)
         # component_authed_appids = ComponentAuthedAppid.objects.filter(~Q(user_id=user_id), authorizer_appid=authorizer_appid)
-        return HttpResponseRedirect('/mall2/sender_info_list/')
+        return create_response(200).get_response()
 
     @login_required
     def post(request):
