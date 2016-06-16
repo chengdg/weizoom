@@ -8,6 +8,10 @@ from mall.models import Order
 from modules.member.models import Member
 
 
+def _get_order_id_to_id(evaluates):
+	order_ids = [p.order_id for p in evaluates]
+	return {o.order_id: o.id for o in Order.objects.filter(order_id__in=order_ids)}
+
 class GetProductEvaluatesStatus(resource.Resource):
 	app = 'apps/evaluate'
 	resource = 'get_product_evaluates_status'
@@ -38,9 +42,10 @@ class GetProductEvaluatesStatus(resource.Resource):
 			response.errMsg = u'参数错误'
 			return response.get_response()
 		evaluates = apps_models.ProductEvaluates.objects(owner_id=int(owner_id), member_id=int(member_id))
+		order_id2id = _get_order_id_to_id(evaluates)
 		order_id2evaluiates = dict()
 		for evaluate in evaluates:
-			order_id = evaluate.order_id
+			order_id = order_id2id.get(evaluate.order_id, 0)
 			has_reviewed = False
 			if type(evaluate.detail) == 'dict':
 				for k, v in evaluate.detail.items():
@@ -59,9 +64,15 @@ class GetProductEvaluatesStatus(resource.Resource):
 				order_id2evaluiates[order_id] = [temp_dict]
 			else:
 				order_id2evaluiates[order_id].append(temp_dict)
-
+		orders = []
+		for k, v in order_id2evaluiates.items():
+			orders.append({
+				'order_id': k,
+				'order_is_reviewed': True,
+				'order_product': v
+			})
 		response = create_response(200)
-		response.data = {'orders': order_id2evaluiates}
+		response.data = {'orders': orders}
 		return response.get_response()
 
 class GetProductEvaluates(resource.Resource):
@@ -176,8 +187,7 @@ class GetOrderEvaluatesStatus(resource.Resource):
 			response.errMsg = u'参数错误'
 			return response.get_response()
 		order_evas = apps_models.OrderEvaluates.objects(owner_id=int(owner_id), member_id=int(member_id))
-		order_ids = [o.order_id for o in order_evas]
-		order_order_id2id = {o.order_id: o.id for o in Order.objects.filter(order_id__in=order_ids)}
+		order_id2id = _get_order_id_to_id(order_evas)
 		response = create_response(200)
-		response.data = {'orders': [{'order_id': order_order_id2id.get(o.order_id, 0), 'order_is_reviewed': True} for o in order_evas]}
+		response.data = {'orders': [{'order_id': order_id2id.get(o.order_id, 0), 'order_is_reviewed': True} for o in order_evas]}
 		return response.get_response()
