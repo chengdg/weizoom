@@ -141,13 +141,15 @@ W.dialog.app.evaluate.ViewParticipanceDataDialog = W.dialog.Dialog.extend({
 		        $(".tag_id").each(function() {
 		            tag_ids.push(this.value)
 		        });
+
 		        W.getApi().call({
-		            app: 'apps/evaluate',
-		            resource: 'evaluate_review_member_update',
+		            app: 'member',
+		            resource: 'update_member_tag_or_grade',
 		            method: 'post',
 		            args: {
-		                tag_ids: JSON.stringify(tag_ids),
-		                member_id: member_id
+		                checked_ids: tag_ids.join('_'),
+		                member_id: member_id,
+		                type: 'tag'
 		            },
 		            scope: this,
 		            success: function(){
