@@ -39,7 +39,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="panel panel-default xui-tableBox xa-selected-products-table pt10 pb10">请通过查询选择需要关联评价的商品</div>
+	<div class="panel panel-default xui-tableBox xa-selected-products-table pt10 pb10 pl50">请通过查询选择需要关联评价的商品</div>
 	<div class="panel panel-default xui-tableBox">
 		<div 
 			class="panel-body panel-table p0 mt10"
@@ -84,7 +84,7 @@
 		  {{each(i, item) items}}
 			<tr data-id="${item.id}">
 				<td 
-					class="tl pl25"
+					class="tl pl40"
 					style="width:250px; height:60px;" 
 				>
 					{{each(j, name) item.product_name}}${this}</br>{{/each}}
@@ -274,6 +274,7 @@ $(document).ready(function() {
                 success: function(data) {
                     W.showHint('success', '关联评价成功');
                     $('.xa-selected-products-table').html('请通过查询选择需要关联评价的商品');
+                    $('.xa-selected-products-table').addClass('pl50')
                     var table = $('[data-ui-role="advanced-table"]').data('view')
                     table.reload();
                 },

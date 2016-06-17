@@ -79,6 +79,7 @@ W.dialog.app.evaluate.SearchProductDialog = W.dialog.Dialog.extend({
 		var template = Handlebars.compile(content);
 		var context = {products:data};
 		$('.xa-selected-products-table').html(template(context));
+		$('.xa-selected-products-table').removeClass('pl50')
 		this.$dialog.modal('hide');
     },
 });
