@@ -237,6 +237,6 @@ Scenario:2 无晒图，追加晒图
 #                "title":"您对本产品的包装是否满意",
 #                "value":"是"
 #            }],
-#            "picture_list":['1.jpg']
+#            "picture_list":["1.jpg"]
 #        }]
 #        """
