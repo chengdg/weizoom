@@ -7,3 +7,4 @@ import m_sign
 import sign_status
 import signs
 
+import sign_participance_details
