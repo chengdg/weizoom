@@ -126,7 +126,7 @@ class GetProductEvaluates(resource.Resource):
 			detail = evaluate.detail
 			temp_detail = []
 			if isinstance(detail, dict):
-				for k, v in detail.items():
+				for k, v in sorted(detail.items()):
 					if (k.find('qa') >= 0 and v) or (k.find('selection') >= 0 and v):
 						temp_detail.append(v.split('::')[1])
 				temp_detail = u'；'.join(temp_detail)
