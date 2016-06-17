@@ -73,6 +73,9 @@ class GetProductEvaluatesStatus(resource.Resource):
 			})
 		response = create_response(200)
 		response.data = {'orders': orders}
+		print '====================='
+		print orders
+		print '======================'
 		return response.get_response()
 
 class GetProductEvaluates(resource.Resource):
@@ -107,7 +110,7 @@ class GetProductEvaluates(resource.Resource):
 		product_id = int(product_id)
 		relations = apps_models.EvaluatesRelatedProducts.objects(owner_id=owner_id, product_id=product_id)
 		if relations.count() > 0:
-			product_ids = relations.first().related_product_ids
+			product_ids = apps_models.EvaluatesRelations.objects(id=relations.first().belong_to).first().related_product_ids
 		else:
 			product_ids = [product_id]
 
