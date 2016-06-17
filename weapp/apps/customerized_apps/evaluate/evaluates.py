@@ -378,7 +378,7 @@ class EvaluateReviewShopReply(resource.Resource):
 
 		try:
 			app_models.ProductEvaluates.objects(id = product_review_id).update(
-				shop_reply = reply
+				set__shop_reply = reply
 			)
 
 			response = create_response(200)
