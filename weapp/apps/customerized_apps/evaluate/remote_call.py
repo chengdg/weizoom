@@ -125,7 +125,7 @@ class GetProductEvaluates(resource.Resource):
 				for k, v in detail.items():
 					if (k.find('qa') >= 0 and v) or (k.find('selection') >= 0 and v):
 						temp_detail.append(v.split('::')[1])
-				temp_detail = ', '.join(temp_detail)
+				temp_detail = u'；'.join(temp_detail)
 			else:
 				temp_detail = detail
 
