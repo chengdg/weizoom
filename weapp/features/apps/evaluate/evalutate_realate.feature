@@ -253,7 +253,7 @@ Background:
         }]
         """
 
-@mall @apps @apps_evaluate @product_evaluate_relate @sun1
+@mall @apps @apps_evaluate @product_evaluate_relate
 Scenario:1 关联商品评论
     When bill访问jobs的webapp
     Then bill能获取'商品1'的更多评价列表
@@ -266,12 +266,6 @@ Scenario:1 关联商品评论
                 },{
                     "title":"您对本产品的包装是否满意",
                     "value":"是"
-                },{
-                    "title":"name",
-                    "value":"bill"
-                },{
-                    "title":"gender",
-                    "value":"女"
                 }],
             "picture_list": ["1.png","2.jpg"]               
         },{
@@ -282,12 +276,6 @@ Scenario:1 关联商品评论
                 },{
                     "title":"您对本产品的包装是否满意",
                     "value":"是"
-                },{
-                    "title":"name",
-                    "value":"tom"
-                },{
-                    "title":"gender",
-                    "value":"男"
                 }],
             "picture_list": ["5.png"]
         }]
@@ -302,12 +290,6 @@ Scenario:1 关联商品评论
                 },{
                     "title":"您对本产品的包装是否满意",
                     "value":"否"
-                },{
-                    "title":"name",
-                    "value":"tom"
-                },{
-                    "title":"gender",
-                    "value":"男"
                 }],
             "picture_list": []
         },{
@@ -318,18 +300,12 @@ Scenario:1 关联商品评论
                 },{
                     "title":"您对本产品的包装是否满意",
                     "value":"是"
-                },{
-                    "title":"name",
-                    "value":"bill"
-                },{
-                    "title":"gender",
-                    "value":""
                 }],
             "picture_list": ["3.png","4.jpg"]
         }]
         """
 	Given jobs登录系统
-	When jobs设置商品查询条件
+	When jobs在关联商品评价中设置商品查询条件
 		"""
 		{
 			"product_name":"商品"
@@ -350,15 +326,14 @@ Scenario:1 关联商品评论
 	Then jobs能获得商品评价关联列表
 		"""
 		[{
-			"product_list":{
+			"product_list":[{
 					"product_name":"商品1"
 				},{
 					"product_name":"商品2"
-				},
+				}],
 			"comment":"4"
 		}]
 		"""
-
 	When bill访问jobs的webapp
     Then bill能获取'商品1'的更多评价列表
         """
@@ -370,12 +345,6 @@ Scenario:1 关联商品评论
                 },{
                     "title":"您对本产品的包装是否满意",
                     "value":"是"
-                },{
-                    "title":"name",
-                    "value":"tom"
-                },{
-                    "title":"gender",
-                    "value":"男"
                 }],
             "picture_list": ["5.png"]
         },{
@@ -386,12 +355,6 @@ Scenario:1 关联商品评论
                 },{
                     "title":"您对本产品的包装是否满意",
                     "value":"否"
-                },{
-                    "title":"name",
-                    "value":"tom"
-                },{
-                    "title":"gender",
-                    "value":"男"
                 }],
             "picture_list": []
         },{
@@ -402,12 +365,6 @@ Scenario:1 关联商品评论
                 },{
                     "title":"您对本产品的包装是否满意",
                     "value":"是"
-                },{
-                    "title":"name",
-                    "value":"bill"
-                },{
-                    "title":"gender",
-                    "value":""
                 }],
             "picture_list": ["3.png","4.jpg"]
         },{
@@ -418,12 +375,6 @@ Scenario:1 关联商品评论
                 },{
                     "title":"您对本产品的包装是否满意",
                     "value":"是"
-                },{
-                    "title":"name",
-                    "value":"bill"
-                },{
-                    "title":"gender",
-                    "value":"女"
                 }],
             "picture_list": ["1.png","2.jpg"]               
         }]
@@ -438,12 +389,6 @@ Scenario:1 关联商品评论
                 },{
                     "title":"您对本产品的包装是否满意",
                     "value":"是"
-                },{
-                    "title":"name",
-                    "value":"tom"
-                },{
-                    "title":"gender",
-                    "value":"男"
                 }],
             "picture_list": ["5.png"]
         },{
@@ -454,12 +399,6 @@ Scenario:1 关联商品评论
                 },{
                     "title":"您对本产品的包装是否满意",
                     "value":"否"
-                },{
-                    "title":"name",
-                    "value":"tom"
-                },{
-                    "title":"gender",
-                    "value":"男"
                 }],
             "picture_list": []
         },{
@@ -470,12 +409,6 @@ Scenario:1 关联商品评论
                 },{
                     "title":"您对本产品的包装是否满意",
                     "value":"是"
-                },{
-                    "title":"name",
-                    "value":"bill"
-                },{
-                    "title":"gender",
-                    "value":""
                 }],
             "picture_list": ["3.png","4.jpg"]
         },{
@@ -486,12 +419,6 @@ Scenario:1 关联商品评论
                 },{
                     "title":"您对本产品的包装是否满意",
                     "value":"是"
-                },{
-                    "title":"name",
-                    "value":"bill"
-                },{
-                    "title":"gender",
-                    "value":"女"
                 }],
             "picture_list": ["1.png","2.jpg"]               
         }]
@@ -500,7 +427,7 @@ Scenario:1 关联商品评论
 @mall @apps @apps_evaluate @product_evaluate_release
 Scenario:2 解除商品评论关联
 	Given jobs登录系统
-	When jobs设置商品查询条件
+	When jobs在关联商品评价中设置商品查询条件
 		"""
 		{
 			"product_name":"商品"
@@ -545,6 +472,16 @@ Scenario:2 解除商品评论关联
     Then bill能获取'商品1'的更多评价列表
         """
         [{
+            "member": "bill",
+            "comments": [{
+                    "title":"您使用产品后的感受是",                
+                    "value":"东西马马虎虎"
+                },{
+                    "title":"您对本产品的包装是否满意",
+                    "value":"是"
+                }],
+            "picture_list": ["3.png","4.jpg"]
+        },{
             "member": "tom",
             "comments": [{
                     "title":"您使用产品后的感受是",                
@@ -552,12 +489,6 @@ Scenario:2 解除商品评论关联
                 },{
                     "title":"您对本产品的包装是否满意",
                     "value":"是"
-                },{
-                    "title":"name",
-                    "value":"tom"
-                },{
-                    "title":"gender",
-                    "value":"男"
                 }],
             "picture_list": ["5.png"]
         },{
@@ -568,30 +499,8 @@ Scenario:2 解除商品评论关联
                 },{
                     "title":"您对本产品的包装是否满意",
                     "value":"否"
-                },{
-                    "title":"name",
-                    "value":"tom"
-                },{
-                    "title":"gender",
-                    "value":"男"
                 }],
             "picture_list": []
-        },{
-            "member": "bill",
-            "comments": [{
-                    "title":"您使用产品后的感受是",                
-                    "value":"东西马马虎虎"
-                },{
-                    "title":"您对本产品的包装是否满意",
-                    "value":"是"
-                },{
-                    "title":"name",
-                    "value":"bill"
-                },{
-                    "title":"gender",
-                    "value":""
-                }],
-            "picture_list": ["3.png","4.jpg"]
         },{
             "member": "bill",
             "comments": [{
@@ -600,12 +509,6 @@ Scenario:2 解除商品评论关联
                 },{
                     "title":"您对本产品的包装是否满意",
                     "value":"是"
-                },{
-                    "title":"name",
-                    "value":"bill"
-                },{
-                    "title":"gender",
-                    "value":"女"
                 }],
             "picture_list": ["1.png","2.jpg"]               
         }]
@@ -613,6 +516,16 @@ Scenario:2 解除商品评论关联
     Then bill能获取'商品2'的更多评价列表
         """
         [{
+            "member": "bill",
+            "comments": [{
+                    "title":"您使用产品后的感受是",                
+                    "value":"东西马马虎虎"
+                },{
+                    "title":"您对本产品的包装是否满意",
+                    "value":"是"
+                }],
+            "picture_list": ["3.png","4.jpg"]
+        },{
             "member": "tom",
             "comments": [{
                     "title":"您使用产品后的感受是",                
@@ -620,12 +533,6 @@ Scenario:2 解除商品评论关联
                 },{
                     "title":"您对本产品的包装是否满意",
                     "value":"是"
-                },{
-                    "title":"name",
-                    "value":"tom"
-                },{
-                    "title":"gender",
-                    "value":"男"
                 }],
             "picture_list": ["5.png"]
         },{
@@ -636,30 +543,8 @@ Scenario:2 解除商品评论关联
                 },{
                     "title":"您对本产品的包装是否满意",
                     "value":"否"
-                },{
-                    "title":"name",
-                    "value":"tom"
-                },{
-                    "title":"gender",
-                    "value":"男"
                 }],
             "picture_list": []
-        },{
-            "member": "bill",
-            "comments": [{
-                    "title":"您使用产品后的感受是",                
-                    "value":"东西马马虎虎"
-                },{
-                    "title":"您对本产品的包装是否满意",
-                    "value":"是"
-                },{
-                    "title":"name",
-                    "value":"bill"
-                },{
-                    "title":"gender",
-                    "value":""
-                }],
-            "picture_list": ["3.png","4.jpg"]
         },{
             "member": "bill",
             "comments": [{
@@ -668,12 +553,6 @@ Scenario:2 解除商品评论关联
                 },{
                     "title":"您对本产品的包装是否满意",
                     "value":"是"
-                },{
-                    "title":"name",
-                    "value":"bill"
-                },{
-                    "title":"gender",
-                    "value":"女"
                 }],
             "picture_list": ["1.png","2.jpg"]               
         }]
@@ -681,11 +560,11 @@ Scenario:2 解除商品评论关联
     When jobs解除商品关联评价
 		"""
 		[{
-			"product_list":{
+			"product_list":[{
 					"product_name":"商品1"
 				},{
 					"product_name":"商品2"
-				},
+				}],
 			"comment":"4"
 		}]
 		"""
@@ -694,7 +573,7 @@ Scenario:2 解除商品评论关联
 		[]
 		"""
 	When bill访问jobs的webapp
- 	Then bill能获得'商品1'的更多评价列表
+ 	Then bill能获取'商品1'的更多评价列表
         """
         [{
             "member": "tom",
@@ -704,12 +583,6 @@ Scenario:2 解除商品评论关联
                 },{
                     "title":"您对本产品的包装是否满意",
                     "value":"是"
-                },{
-                    "title":"name",
-                    "value":"tom"
-                },{
-                    "title":"gender",
-                    "value":"男"
                 }],
             "picture_list": ["5.png"]
         },{
@@ -720,17 +593,11 @@ Scenario:2 解除商品评论关联
                 },{
                     "title":"您对本产品的包装是否满意",
                     "value":"是"
-                },{
-                    "title":"name",
-                    "value":"bill"
-                },{
-                    "title":"gender",
-                    "value":"女"
                 }],
             "picture_list": ["1.png","2.jpg"]               
         }]
         """
-    And bill能获得'商品2'的更多评价列表
+    And bill能获取'商品2'的更多评价列表
         """
         [{
             "member": "bill",
@@ -740,12 +607,6 @@ Scenario:2 解除商品评论关联
                 },{
                     "title":"您对本产品的包装是否满意",
                     "value":"是"
-                },{
-                    "title":"name",
-                    "value":"bill"
-                },{
-                    "title":"gender",
-                    "value":""
                 }],
             "picture_list": ["3.png","4.jpg"]
         },{
@@ -756,12 +617,6 @@ Scenario:2 解除商品评论关联
                 },{
                     "title":"您对本产品的包装是否满意",
                     "value":"否"
-                },{
-                    "title":"name",
-                    "value":"tom"
-                },{
-                    "title":"gender",
-                    "value":"男"
                 }],
             "picture_list": []
         }]

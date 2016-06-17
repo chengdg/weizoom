@@ -229,6 +229,7 @@
                 if(length == 0){
                     _this.$parents.find('.xa-addPhoto,.xa-text').show();
                     _this.$parents.find('.xa-finishEdit').hide();
+                    W.is_pic_up = true;
                 }
             });
         }

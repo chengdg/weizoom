@@ -111,7 +111,7 @@ Background:
     Given bill关注jobs的公众号
     When bill访问jobs的webapp
 
-@mall @apps @app_evaluate @commit_app_product_comment @aix1
+@mall @apps @app_evaluate @commit_app_product_comment
 Scenario:1 评价包括文字与晒图
     When bill完成订单'1'中'商品1'的评价
     """
@@ -134,28 +134,27 @@ Scenario:1 评价包括文字与晒图
     }
     """
 
-    Then bill成功获取个人中心的'待评价'列表
-        """
-        [{
-            "order_no": "2",
-            "products": [{
-                    "product_name": "商品2"
-                }]
-        }]
-        """
+#    Then bill成功获取个人中心的'待评价'列表::h5
+#        """
+#        [{
+#            "order_no": "2",
+#            "products": [{
+#                "product_name": "商品2"
+#            }]
+#        }]
+#        """
     Then bill成功获取'我的评价'列表
         """
         [{
             "product_name":"商品1",
-            "answer":[{
+            "comments":[{
                 "title":"您使用产品后的感受是",
                 "value":"整体还可以"
-                }],
-            "choose":[{
+            },{
                 "title":"您对本产品的包装是否满意",
                 "value":"不好说"
-                }],
-            "picture_list": ['1.png']
+            }],
+            "picture_list":["1.png"]
         }]
         """
 
@@ -169,11 +168,11 @@ Scenario:2 无晒图，追加晒图
             "answer":[{ 
                 "title":"您使用产品后的感受是",
                 "value":"商品非常好！！！"
-                }],
+            }],
             "choose":[{
                 "title":"您对本产品的包装是否满意",
                 "value":"是"
-                }],
+            }],
             "participate_info":[{
                 "name":"bill",
                 "tel":"13013013011",
@@ -183,35 +182,34 @@ Scenario:2 无晒图，追加晒图
         }
         """
 
-    Then bill成功获取个人中心的'待评价'列表
-        """
-        [{
-            "order_no": "1",
-            "products": [{
-                    "product_name": "商品1"
-                }]
-        },{
-            "order_no": "2",
-            "products": [{
-                    "product_name": "商品2"
-                }]
-        }]
-        """
-    Then bill成功获取'商品评价'列表
-        """
-        [{
-            "product_name":"商品1",
-            "answer":[{
-                "title":"您使用产品后的感受是",
-                "value":"商品非常好！！！"
-                }],
-            "choose":[{
-                "title":"您对本产品的包装是否满意",
-                "value":"是"
-                }],
-            "picture_list":[]
-        }]
-        """
+#    Then bill成功获取个人中心的'待评价'列表::h5
+#        """
+#        [{
+#            "order_no": "1",
+#            "products": [{
+#                "product_name": "商品1"
+#            }]
+#        },{
+#            "order_no": "2",
+#            "products": [{
+#                "product_name": "商品2"
+#            }]
+#        }]
+#        """
+#    Then bill成功获取'我的评价'列表
+#        """
+#        [{
+#            "product_name":"商品1",
+#            "comments":[{
+#                "title":"您使用产品后的感受是",
+#                "value":"商品非常好！！！"
+#            },{
+#                "title":"您对本产品的包装是否满意",
+#                "value":"是"
+#            }],
+#            "picture_list":[]
+#        }]
+#        """
     When bill完成订单'1'中'商品1'的追加晒图
         """
         {
@@ -219,27 +217,26 @@ Scenario:2 无晒图，追加晒图
         }
         """
 
-    Then bill成功获取个人中心的'待评价'列表
-        """
-        [{
-            "order_no": "2",
-            "products": [{
-                    "product_name": "商品2"
-                }]
-        }]
-        """
-    Then bill成功获取'商品评价'列表
-        """
-        [{
-            "product_name":"商品1",
-            "answer":[{
-                "title":"您使用产品后的感受是",
-                "value":"商品非常好！！！"
-                }],
-            "choose":[{
-                "title":"您对本产品的包装是否满意",
-                "value":"是"
-                }],
-            "picture_list":['1.jpg']
-        }]
-        """
+#    Then bill成功获取个人中心的'待评价'列表::h5
+#        """
+#        [{
+#            "order_no": "2",
+#            "products": [{
+#                "product_name": "商品2"
+#            }]
+#        }]
+#        """
+#    Then bill成功获取'我的评价'列表
+#        """
+#        [{
+#            "product_name":"商品1",
+#            "comments":[{
+#                "title":"您使用产品后的感受是",
+#                "value":"商品非常好！！！"
+#            },{
+#                "title":"您对本产品的包装是否满意",
+#                "value":"是"
+#            }],
+#            "picture_list":["1.jpg"]
+#        }]
+#        """

@@ -26,11 +26,13 @@
         created,
         has_order_review,
         insetNum,
-        submitting = false;
+        submitting = false,
+        $container;
 
     $(function(){
+        $container = $('.wa-evaluate-container');
         if('ordinary' !== template_type) {
-            $('.wa-evaluate-container').find('.wa-i-body').hide();
+            $container.find('.wa-i-body').hide();
             $('.xa-componentContainer').removeClass('pr');
             $('.wa-page').addClass('pr');
             $('.wa-uploadimg-tm').removeClass('wui-hide').addClass('wui-pa');
@@ -38,8 +40,8 @@
         }
         if(W.isPC) return;
         getDynamicData();
-         $('.wa-evaluate-container').siblings().addClass('wui-evaluate-component');
-         $('.wa-uploadimg-tm').removeClass('wui-pf').addClass('wui-pa');
+        $('.wa-evaluate-container').siblings().addClass('wui-evaluate-component');
+        $('.wa-uploadimg-tm').removeClass('wui-pf').addClass('wui-pa');
     });
 
     //获取商品和评价信息
@@ -93,13 +95,13 @@
                 'data-value': product_score,
                 'class': 'wui-starGrade wui-starGrade'+product_score
             });
-            $('.wa-evaluate-container').find('.wui-i-status').removeClass('xui-hidden');
+            $container.find('.wui-i-status').removeClass('xui-hidden');
             if(has_pic){
                 var pics = product_review.pics;
-                var $ul = $('.wa-evaluate-container').find('.wui-i-uploadimg ul');
+                var $ul = $container.find('.wui-i-uploadimg ul');
                 if($ul.length == 0){
                     $ul = $('<ul class="xui-imgList xa-imgList"></ul>');
-                    $('.wa-evaluate-container').find('.wui-i-uploadimg .xui-productPhoto').prepend($ul);
+                    $container.find('.wui-i-uploadimg .xui-productPhoto').prepend($ul);
                 }else{
                   $ul = $ul.eq(0);
                 }
@@ -180,7 +182,7 @@
     function bind_events(){
         deblog('bind_events');
         // 点击星评
-        $('.wa-evaluate-container').delegate('.wa-starGrade i', 'click', function(){
+        $container.delegate('.wa-starGrade i', 'click', function(){
             var $star = $(this);
             var starGrade = $star.attr('data-grade');
             $star.parent('span').attr({
@@ -289,7 +291,7 @@
                 return;
             }
             var dynamicData = {}, data, type, cid, key, title, innerTitle, dataType, innerCid;
-            var $components = $('.wa-evaluate-container').siblings();
+            var $components = $container.siblings();
             $components.each(function(){
                 var $component = $(this);
                 cid = $component.attr('data-component-cid');
