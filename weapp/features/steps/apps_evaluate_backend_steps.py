@@ -508,6 +508,23 @@ def step_impl(context, user, order_id, product_name):
 	actual['picture_list'] = evaluate_detail['img']
 	actual['comments'] = detail_list
 
+	shop_reply = evaluate_detail['shop_reply']
+	reply = ''
+	if shop_reply:
+		index = shop_reply.find('/')
+		if index == -1:
+			reply = {
+				'text': shop_reply,
+			}
+		else:
+			reply = {
+				'text': shop_reply[:index],
+				'url': shop_reply[index:]
+			}
+
+	actual['reply'] = reply
+
+
 	expected = json.loads(context.text)
 	bdd_util.assert_dict(expected, actual)
 
@@ -530,7 +547,7 @@ def step_webapp_owner_verified_review(context, webapp_owner):
 
 	"""
 	review_status = {
-		u'已屏蔽': -1,
+		u'屏蔽处理': -1,
 		u'待审核': 0,
 		u'通过审核': 1,
 		u'取消置顶': 1,
@@ -667,3 +684,73 @@ def step_impl(context, user):
 
 	response = context.client.post(url, args)
 	bdd_util.assert_api_call_success(response)
+
+@then(u"{webapp_user}成功获取'{text}'列表")
+def step_product_review_should(context, webapp_user, text):
+	url = "/m/apps/evaluate/m_my_evaluates/?webapp_owner_id={}".format(context.webapp_owner_id)
+	response = context.client.get(bdd_util.nginx(url), follow=True)
+
+	expected = json.loads(context.text)
+
+	product_review_list = response.context['reviewed_products']
+	actual = []
+	if product_review_list:
+		for i in product_review_list:
+			data = {}
+			detail_list = []
+			for detail in i['detail']:
+				detail_list.append({
+					'title': 'name' if detail['title'] == u'姓名' else detail['title'],
+					'value': detail['answer']
+				})
+			data['comments'] = detail_list
+
+			data['picture_list'] = i['pics']
+			data['product_name'] = i['product']['name']
+
+			shop_reply = i['shop_reply']
+			reply = ''
+			if shop_reply:
+				index = shop_reply.find('/')
+				if index == -1:
+					reply = {
+						'text': shop_reply,
+					}
+				else:
+					reply = {
+						'text': shop_reply[:index],
+						'url': shop_reply[index:]
+					}
+
+			data['reply'] = reply
+
+			actual.append(data)
+	else:
+		actual.append({})
+
+	bdd_util.assert_list(expected, actual)
+
+@when(u"{user}完成订单'{order_id}'中'{product_name}'的评价回复")
+def step_impl(context, user, order_id, product_name):
+	expected = json.loads(context.text)
+
+	product_review = get_product_review(order_id, product_name)
+
+	url = "/apps/evaluate/api/evaluate_review_shop_reply/?design_mode=0&version=1"
+
+	reply_text = expected['text']
+	try:
+		# reply_url = '<a href="https://%s%s"></a>' %(settings.DOMAIN, expected['url'])
+		content = reply_text + expected['url']
+	except:
+		content = reply_text
+
+	args = {
+		"content": content,
+		"product_review_id": str(product_review.id),
+		"member_id": product_review.member_id
+	}
+
+	response = context.client.post(url, args)
+	bdd_util.assert_api_call_success(response)
+
