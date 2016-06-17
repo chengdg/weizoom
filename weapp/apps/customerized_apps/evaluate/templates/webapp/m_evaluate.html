@@ -40,7 +40,7 @@
         }
         if(W.isPC) return;
         getDynamicData();
-        $('.wa-evaluate-container').siblings().addClass('wui-evaluate-component');
+        $container.siblings().addClass('wui-evaluate-component');
         $('.wa-uploadimg-tm').removeClass('wui-pf').addClass('wui-pa');
     });
 
@@ -118,59 +118,62 @@
             }
             $('#dj_review_detail').val(detail || '').attr('readonly', true).siblings().hide();
             $('.wa-limitNum').hide();
-            //渲染动态组件数据
-            for(var key in detail) {
-                var value = detail[key];
-                var cid = key.split('::')[1];
-                var type = 'appkit.' + key.split('::')[0];
-                if ('appkit.qa' === type) {
-                    value = value.split('::')[1];
-                    $('.wui-QA').each(function(){
-                        var $this = $(this);
-                        if($this.attr('data-component-cid') == cid){
-                            $this.find('textarea').val(value).attr('readonly', true);
-                        }
-                    });
-                }else if('appkit.selection' === type){
-                    $('.wui-textSelection').each(function(){
-                        var $this = $(this);
-                        if($this.attr('data-component-cid') == cid){
-                            var $lis = $this.find('li');
-                            if('string' === typeof value){ //单选
-                                value = value.split('::')[2];
-                                $lis.each(function(){
-                                   var $this = $(this);
-                                   if($this.attr('data-component-cid') == value){
-                                       $this.find('.selection-radio').addClass('radio-select');
-                                   }
-                               });
-                            }else{  //多选
-                                $lis.each(function(){
-                                    var $this = $(this);
-                                    if(value.filter(function(v){
-                                            return v.indexOf($this.attr('data-component-cid')) >= 0
-                                        }).length > 0){
-                                        $this.find('.selection-checkbox').addClass('checkbox-select');
+            //渲染动态组件数据, 根据之前的评价数据判断是否渲染
+            if(typeof detail != 'string'){
+                for(var key in detail) {
+                    var value = detail[key];
+                    var cid = key.split('::')[1];
+                    var type = 'appkit.' + key.split('::')[0];
+                    if ('appkit.qa' === type) {
+                        value = value.split('::')[1];
+                        $('.wui-QA').each(function(){
+                            var $this = $(this);
+                            if($this.attr('data-component-cid') == cid){
+                                $this.find('textarea').val(value).attr('readonly', true);
+                            }
+                        });
+                    }else if('appkit.selection' === type){
+                        $('.wui-textSelection').each(function(){
+                            var $this = $(this);
+                            if($this.attr('data-component-cid') == cid){
+                                var $lis = $this.find('li');
+                                if('string' === typeof value){ //单选
+                                    value = value.split('::')[2];
+                                    $lis.each(function(){
+                                       var $this = $(this);
+                                       if($this.attr('data-component-cid') == value){
+                                           $this.find('.selection-radio').addClass('radio-select');
+                                       }
+                                   });
+                                }else{  //多选
+                                    $lis.each(function(){
+                                        var $this = $(this);
+                                        if(value.filter(function(v){
+                                                return v.indexOf($this.attr('data-component-cid')) >= 0
+                                            }).length > 0){
+                                            $this.find('.selection-checkbox').addClass('checkbox-select');
+                                        }
+                                    });
+                                }
+                            }
+                        });
+                    }else if('appkit.textlist' === type){
+                        $('.wui-shortcuts').each(function(){
+                            var $this = $(this);
+                            if($this.attr('data-component-cid') == cid){
+                                $this.find('li').each(function(){
+                                    var $this = $(this).find('div');
+                                    var val = value[$this.attr('data-input-name')];
+                                    if(val!= undefined){
+                                        $this.find('input').val(val).attr('readonly', true);
                                     }
                                 });
                             }
-                        }
-                    });
-                }else if('appkit.textlist' === type){
-                    $('.wui-shortcuts').each(function(){
-                        var $this = $(this);
-                        if($this.attr('data-component-cid') == cid){
-                            $this.find('li').each(function(){
-                                var $this = $(this).find('div');
-                                var val = value[$this.attr('data-input-name')];
-                                if(val!= undefined){
-                                    $this.find('input').val(val).attr('readonly', true);
-                                }
-                            });
-                        }
-                    });
+                        });
+                    }
                 }
             }
+
             $('body').delegate('.wa-submitTermite', 'click', submitEvaluateData);
         }else{
             //否则直接渲染页面
@@ -253,7 +256,12 @@
         };
 
         if(created){ //晒图
-            deblog('post', postData);
+            if(picture_list.length == 0){
+                loadingStatus(false);
+                wuiAlert('请先上传图片！');
+                submitting = false;
+                return;
+            }
             W.getApi().call({
                 app: 'm/apps/evaluate',
                 resource: 'evaluate_participance',
