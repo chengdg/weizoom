@@ -413,7 +413,7 @@ Scenario:2 同个商品，最多可置顶3条评价信息
                 }],
             "picture_list": ["5.png"]
         },{
-            "member": "bill",
+            "member": "tom",
             "comments": [{
                     "title":"您使用产品后的感受是",                
                     "value":"商品1棒棒哒"
@@ -479,11 +479,11 @@ Scenario:3 回复用户发表的商品评论
                     "title":"您对本产品的包装是否满意",
                    "value":"是"
                 },{
-                    "title":"name",
-                    "value":"bill"
-                },{
                     "title":"gender",
                     "value":"女"
+                },{
+                    "title":"name",
+                    "value":"bill"
                 }],
             "picture_list":["1.png","2.png"],
             "reply":{
@@ -543,11 +543,11 @@ Scenario:3 回复用户发表的商品评论
                     "title":"您对本产品的包装是否满意",
                     "value":"是"
                 },{
-                    "title":"name",
-                    "value":"bill"
-                },{
                     "title":"gender",
                     "value":"女"
+                },{
+                    "title":"name",
+                    "value":"bill"
                 }],
             "picture_list":["1.png","2.png"],
             "reply":{
