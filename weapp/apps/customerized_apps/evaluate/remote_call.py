@@ -47,7 +47,7 @@ class GetProductEvaluatesStatus(resource.Resource):
 		for evaluate in evaluates:
 			order_id = order_id2id.get(evaluate.order_id, 0)
 			has_reviewed = False
-			if type(evaluate.detail) == 'dict':
+			if isinstance(evaluate.detail, dict):
 				for k, v in evaluate.detail.items():
 					if (k.find('qa') >= 0 and v) or (k.find('selection') >= 0 and v):
 						has_reviewed = True
@@ -121,10 +121,11 @@ class GetProductEvaluates(resource.Resource):
 			member_id = evaluate.member_id
 			detail = evaluate.detail
 			temp_detail = []
-			if type(detail) == 'dict':
+			if isinstance(detail, dict):
 				for k, v in detail.items():
 					if (k.find('qa') >= 0 and v) or (k.find('selection') >= 0 and v):
 						temp_detail.append(v.split('::')[1])
+				temp_detail = ', '.join(temp_detail)
 			else:
 				temp_detail = detail
 
