@@ -480,18 +480,16 @@ Scenario:3 回复用户发表的商品评论
                    "value":"是"
                 },{
                     "title":"name",
-                    "value":"13013013058"
-                },{
-                    "title":"name",
                     "value":"bill"
                 },{
                     "title":"gender",
                     "value":"女"
                 }],
-             "picture_list":["1.png","2.png"],
+            "picture_list":["1.png","2.png"],
             "reply":{
                 "text":"感谢您的选择，希望我们的产品能让您满意！",
                 "url":"/mall2/integral_sales_list/"
+            }
         }
         """
     When 清空浏览器
@@ -557,6 +555,7 @@ Scenario:3 回复用户发表的商品评论
             "picture_list":["1.png","2.png"],
             "reply":{
                 "text":"您的满意是我们的追求，哈哈"
+            }
         }
         """
     When 清空浏览器
