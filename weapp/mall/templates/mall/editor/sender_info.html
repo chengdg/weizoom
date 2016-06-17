@@ -13,11 +13,14 @@
 		<div class="xui-i-content mt20 pl50">
 			
 			<!--<form action="/mall2/sender_info/" method="put">-->
-				<form action="/mall2/sender_info/?method=put" method="post">
+				<form action="/mall2/sender_info/?method=put" method="post" id="senderForm">
 
 				<div class="mb10">
 					<label for="" class="star_show">发货人：</label>
-					<input type="text" class="ml10" name="sender_name" required/><br />
+					<input type="text" class="ml10 xa-senderName" name="sender_name" data-validate="require-notempty" value="{% if sender %} {{sender.sender_name}}{% endif %}" required/>
+					<span class="errorHint"></span>
+					<br />
+					
 				</div>
 				
 			<div class="mb10">
@@ -31,30 +34,32 @@
 			 <select class="xa-district" required>
              	<option value="请选择">请选择区/县</option>            	
              </select><br />
-             <input type="hidden" name="area" />
+             <input type="hidden" name="area" value="{% if sender %}{{sender.area}}{% endif %}" />
 			</div>
 
 				<div>
 					<div class="mb10">
 						<label for="" class="star_show fl">详细信息：</label>
-						<textarea rows="5" cols="50" placeholder="不需要重复填写省/市/区" name="sender_address" required></textarea>
+						<textarea rows="5" cols="50" placeholder="不需要重复填写省/市/区" name="sender_address" value="{% if sender %} {{sender.sender_address}}{% endif %}"required></textarea>
+						<div class="errorHint"></div>
 					</div>
 				</div><br />
 				<div class="mb10 ">
-					邮政编码：<input type="text" name="code" class="ml20"/><br />
+					邮政编码：<input type="text" name="code" class="ml20" value="{% if sender %} {{sender.code}}{% endif %}"/><br />
 				</div>
 				
 				<div class="mb10"> 
 					<label class="star_show fl" >发货人电话：</label>
-					<input type="tel" name="sender_tel" required/>
+					<input type="tel" name="sender_tel" data-validate="require-mobile-phone" value="{% if sender %} {{sender.sender_tel}}{% endif %}" required/>
+					<span class="errorHint"></span>
 				</div>
 				
 				<div class="mb10">
-					公司名称：<input type="text" class="ml20" name="company_name"/>
+					公司名称：<input type="text" class="ml20" name="company_name" value="{% if sender %} {{sender.company_name}}{% endif %}"/>
 				</div>
 				
 				<div class="mb10">
-					<label class="fl">备注：</label><textarea name="adress" rows="5" cols="50" class="ml10"></textarea>
+					<label class="fl">备注：</label><textarea rows="5" cols="50" class="ml10" name="remarks" value="{% if sender %} {{sender.remarks}} {% endif %}"></textarea>
 				</div>
 				<div class="mt70 ml200">
 					<a href="javascript:void(0);" class="btn btn-default xa-submit">保存</a>
@@ -88,6 +93,22 @@
 				});
        });
        
+       $('#senderForm').submit(function() {
+			if (!W.validate()) {
+				return false;
+			}
+			var $senderName = $('.xa-senderName');
+			var senderNameVal =$senderName.val();
+			if (senderNameVal = "") {
+				W.showHint('error', '请输入发货人信息');
+				return false;
+			}else{
+				W.showHint('success', '保存成功');
+				return true;
+			}
+
+
+		});
        
 		var obj = {
 			init: function () {

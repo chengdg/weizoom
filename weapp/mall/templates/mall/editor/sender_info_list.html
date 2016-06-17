@@ -46,41 +46,82 @@
 			</tr>
 		</thead>
 		<tbody>
-            {{each(i, item) items}}
-                <tr data-id="${item.id}">
+            {{each(i, sender) items}}
+                <tr data-id="${sender.id}" data-name = "${sender.name}">
                 	<!--默认-->
                     <td class="nowrap">
-                        <input type="radio" id="verbose_name" value="" />
+                        <input type="radio" checked="true" class="xa-radio" />
                     </td>
                     <!--发货人姓名-->
                     <td>
-                        <div>${item.sender_name}</div>
+                        <div>${sender.sender_name}</div>
                     </td>
                     <!--发货人电话-->
                     <td class="nowrap">
-                        <div>${item.sender_tel}</div>
+                        <div>${sender.sender_tel}</div>
                     </td>
                     <!--所在地区-->
                     <td class="nowrap">
-                        <div>${item.area}</div>
+                        <div>${sender.area}</div>
                     </td>
                     <!--详细地址-->
                     <td class="nowrap">
-                        <div>${item.sender_address}</div>
+                        <div>${sender.sender_address}</div>
                     </td>
                     <!--邮政编码-->
                     <td class="nowrap">
-                        <div>${item.code}</div>
+                        <div>${sender.code}</div>
                     </td>
                     <!--操作-->
                     <td class="tc" style="width:100px;">
-                        <a href="javascript:void(0);" data-id="" class="xui-delete-sender xa-delete mr10">删除</a>
-                        <a href="" data-id="" data-name="">修改</a>
+                        <a href="javascript:void(0);" data-id="${sender.id}" class="xui-delete-sender xa-delete mr10">删除</a>
+                        <a href="/mall2/sender_info/?id=${sender.id}" data-id="${sender.id}" data-name="${sender.name}">修改</a>
                     </td>
                 </tr>
 			{{/each}}
 		</tbody>        
 	</table>
+</script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+
+    $('body').delegate('.xui-delete-sender', 'click', function (event) {
+
+        var id = $(this).attr('data-id');
+        console.log(id);
+        var $el = $(event.currentTarget);
+        W.requireConfirm({
+            $el: $el,
+            msg : '确定删除？',            
+            isTitle: false,
+            confirm: function(){
+                W.getApi().call({
+                    app: 'mall2',
+                    api: 'sender_info',
+                    method: 'delete',
+                    args: {id: id},
+                    success: function(data) {
+                    	console.log(data);
+                        //根据data内容动态显示
+                        if(data.msg){
+                            W.showHint('error',data.msg);
+                        }else{
+                            W.finishConfirm();
+                            $('div[data-ui-role="advanced-table"]').data('view').reload();
+                        }
+                    },
+                    error: function(resp) {
+                        W.showHint('error','失败');
+                    },
+                    scope: this
+                });
+            }
+        });
+
+    });
+});
+
 </script>
 {% endverbatim %}
 {% endblock %}
