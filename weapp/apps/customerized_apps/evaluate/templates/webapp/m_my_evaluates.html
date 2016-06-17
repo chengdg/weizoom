@@ -196,6 +196,7 @@
             if($(this).height() > 160){
                 $(this).addClass('xui-text-ellipsis');
                 $(this).siblings('.xa-btnWrapper').show();
+                $(this).parent('.xui-productReview').find('.xui-uploadImg').addClass('wui-hide');
             }
         });
 
@@ -204,10 +205,12 @@
                 $(this).html('收起');
                 $('.xa-productReviewText').removeClass('xui-text-ellipsis');
                 $('.xa-arrow').removeClass('xui-arrow').addClass('xui-arrow-up');
+                $(this).parents('.xui-productReview').find('.xui-uploadImg').removeClass('wui-hide');      
             }else{
                 $(this).html('展开');
                 $('.xa-productReviewText').addClass('xui-text-ellipsis');
-                $('.xa-arrow').removeClass('xui-arrow-up').addClass('xui-arrow');             
+                $('.xa-arrow').removeClass('xui-arrow-up').addClass('xui-arrow');
+                $(this).parents('.xui-productReview').find('.xui-uploadImg').addClass('wui-hide');                  
             }
         });
     });
