@@ -218,7 +218,7 @@ Scenario:1 微众卡绑定-输入有效的微众卡号和密码
 					"card_total_value":10.00,
 					"id":"101000002",
 					"binding_date":"2016-06-16",
-					"source":"用户绑定",
+					"source":"绑定卡",
 					"actions":["查看详情"],
 					"status":"未使用"
 				},{
@@ -228,7 +228,7 @@ Scenario:1 微众卡绑定-输入有效的微众卡号和密码
 					"card_total_value":10.00,
 					"id":"101000001",
 					"binding_date":"2016-06-16",
-					"source":"用户绑定",
+					"source":"绑定卡",
 					"actions":["查看详情"],
 					"status":"未使用"
 				}],
@@ -260,7 +260,7 @@ Scenario:1 微众卡绑定-输入有效的微众卡号和密码
 					"card_total_value":10.00,
 					"id":"101000001",
 					"binding_date":"2016-06-16",
-					"source":"用户绑定",
+					"source":"绑定卡",
 					"actions":["查看详情"],
 					"status":"未使用"
 				}],
@@ -292,7 +292,7 @@ Scenario:1 微众卡绑定-输入有效的微众卡号和密码
 					"card_total_value":10.00,
 					"id":"101000001",
 					"binding_date":"2016-06-16",
-					"source":"用户绑定",
+					"source":"绑定卡",
 					"actions":["查看详情"],
 					"status":"未使用"
 				}],
@@ -314,7 +314,7 @@ Scenario:1 微众卡绑定-输入有效的微众卡号和密码
 						"card_total_value":10.00,
 						"id":"101000001",
 						"binding_date":"2016-06-16",
-						"source":"用户绑定",
+						"source":"绑定卡",
 						"actions":["查看详情"],
 						"status":"未使用"
 					}],
@@ -326,7 +326,7 @@ Scenario:1 微众卡绑定-输入有效的微众卡号和密码
 						"card_total_value":10.00,
 						"id":"101000002",
 						"binding_date":"2016-06-16",
-						"source":"用户绑定",
+						"source":"绑定卡",
 						"actions":["查看详情"],
 						"status":"未激活"
 					}]
@@ -361,7 +361,7 @@ Scenario:1 微众卡绑定-输入有效的微众卡号和密码
 						"card_total_value":10.00,
 						"id":"101000001",
 						"binding_date":"2016-06-16",
-						"source":"用户绑定",
+						"source":"绑定卡",
 						"actions":["查看详情"],
 						"status":"已用完"
 					},{
@@ -371,7 +371,7 @@ Scenario:1 微众卡绑定-输入有效的微众卡号和密码
 						"card_total_value":10.00,
 						"id":"101000002",
 						"binding_date":"2016-06-16",
-						"source":"用户绑定",
+						"source":"绑定卡",
 						"actions":["查看详情"],
 						"status":"未激活"
 					}]
@@ -391,7 +391,7 @@ Scenario:1 微众卡绑定-输入有效的微众卡号和密码
 						"card_total_value":10.00,
 						"id":"101000001",
 						"binding_date":"2016-06-16",
-						"source":"用户绑定",
+						"source":"绑定卡",
 						"actions":["查看详情"],
 						"status":"已用完"
 					}]
@@ -411,7 +411,7 @@ Scenario:1 微众卡绑定-输入有效的微众卡号和密码
 						"card_total_value":10.00,
 						"id":"101000001",
 						"binding_date":"2016-06-16",
-						"source":"用户绑定",
+						"source":"绑定卡",
 						"actions":["查看详情"],
 						"status":"已用完"
 					}]
