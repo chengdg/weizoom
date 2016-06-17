@@ -73,9 +73,6 @@ class GetProductEvaluatesStatus(resource.Resource):
 			})
 		response = create_response(200)
 		response.data = {'orders': orders}
-		print '====================='
-		print orders
-		print '======================'
 		return response.get_response()
 
 class GetProductEvaluates(resource.Resource):
@@ -128,13 +125,15 @@ class GetProductEvaluates(resource.Resource):
 				for k, v in detail.items():
 					if (k.find('qa') >= 0 and v) or (k.find('selection') >= 0 and v):
 						temp_detail.append(v.split('::')[1])
+			else:
+				temp_detail = detail
 
 			result.append({
 				'status': evaluate.status,
 				'member_icon': member_id2info[member_id]['icon'],
 				'created_at': evaluate.created_at.strftime("%Y-%m-%d %H:%M:%S"),
 				'member_id': member_id,
-				'review_detail': detail if type(detail) in ['str', 'unicode'] else ','.join(temp_detail),
+				'review_detail': temp_detail,
 				'member_name': member_id2info[member_id]['name']
 			})
 			if count >= 2:
