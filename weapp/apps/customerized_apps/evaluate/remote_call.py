@@ -68,7 +68,7 @@ class GetProductEvaluatesStatus(resource.Resource):
 		for k, v in order_id2evaluiates.items():
 			orders.append({
 				'order_id': k,
-				'order_is_reviewed': True,
+				'order_is_reviewed': v['has_reviewed_picture'],
 				'order_product': v
 			})
 		response = create_response(200)
