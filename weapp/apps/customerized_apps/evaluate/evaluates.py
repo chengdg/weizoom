@@ -17,6 +17,7 @@ from export_job.models import ExportJob
 from core import search_util
 from modules.member.module_api import get_member_by_id_list
 from modules.member.models import Member, MemberHasTag
+from excel_response import ExcelResponse
 
 FIRST_NAV_NAME = export.PRODUCT_FIRST_NAV
 COUNT_PER_PAGE = 50
@@ -84,30 +85,10 @@ class Evaluates(resource.Resource):
 		"""
 		商品评价列表
 		"""
-		woid = request.webapp_owner_id
-
-		export_jobs = ExportJob.objects.filter(woid=woid, type=2, is_download=0).order_by("-id")
-		if export_jobs:
-			export2data = {
-				"woid": int(export_jobs[0].woid),  #
-				"status": 1 if export_jobs[0].status else 0,
-				"is_download": 1 if export_jobs[0].is_download else 0,
-				"id": int(export_jobs[0].id),
-				# "file_path": export_jobs[0].file_path,
-			}
-		else:
-			export2data = {
-				"woid": 0,
-				"status": 1,
-				"is_download": 1,
-				"id": 0,
-				"file_path": 0,
-			}
 		c = RequestContext(request,{
 		   'first_nav_name': FIRST_NAV_NAME,
 		   'second_navs': export.get_mall_product_second_navs(request),
 		   'second_nav_name': export.PRODUCT_REVIEW_NAV,
-		   'export2data': export2data,
 	   })
 		
 		return render_to_response('evaluate/templates/editor/evaluates.html', c)
@@ -386,6 +367,93 @@ class EvaluateReviewShopReply(resource.Resource):
 		except:
 			response = create_response(500)
 			return response.get_response()
+
+class EvaluatesExport(resource.Resource):
+	app = 'apps/evaluate'
+	resource = 'evaluates_export'
+
+	@login_required
+	def api_get(request):
+		"""
+		评价列表导出
+		@return:
+		"""
+		name = request.GET.get('name', '')
+		user_code = request.GET.get('userCode', '')
+		review_status = request.GET.get('reviewStatus', 'all')
+		start_date = request.GET.get('startDate', '')
+		end_date = request.GET.get('endDate', '')
+		product_score = request.GET.get('productScore', '-1')
+
+		is_fetch_all_reviews = (not name) and (not user_code) and (not start_date) and (not end_date) and (
+			review_status == 'all') and (product_score == 'all')
+
+		# 当前用户
+		owner = request.manager
+		all_reviews = app_models.ProductEvaluates.objects(owner_id=owner.id).order_by("-created_at")
+
+		if is_fetch_all_reviews:
+			# 分页
+			count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
+			current_page = int(request.GET.get('page', '1'))
+			pageinfo, product_reviews = paginator.paginate(all_reviews, current_page, count_per_page,
+														   query_string=request.META['QUERY_STRING'])
+		else:
+			all_reviews = _filter_reviews(request, all_reviews)
+
+			# 处理商品编码
+			product_reviews = []
+			if user_code:
+				for review in all_reviews:
+					# from cache import webapp_cache
+
+					# review_product = mall_models.OrderHasProduct.objects.get(id=review.order_has_product_id)
+					# product = webapp_cache.get_webapp_product_detail(request.webapp_owner_id, review.product_id)
+					# product.fill_specific_model(review_product.product_model_name)
+					product = mall_models.Product.objects.get(id=review.product_id)
+					if product.user_code == user_code:
+						review.product_user_code = user_code
+						product_reviews.append(review)
+			else:
+				product_reviews = all_reviews
+		print product_reviews,22222222222222222
+			# count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
+			# current_page = int(request.GET.get('page', '1'))
+			# pageinfo, product_reviews = paginator.paginate(product_reviews, current_page, count_per_page,
+			# 											   query_string=request.META['QUERY_STRING'])
+
+		# 处理商品
+		product_ids = [review.product_id for review in product_reviews]
+		id2product = dict([(product.id, product) for product in mall_models.Product.objects.filter(id__in=product_ids)])
+		# 处理会员
+		member_ids = [review.member_id for review in product_reviews]
+		members = get_member_by_id_list(member_ids)
+		member_id2member = dict([(m.id, m) for m in members])
+
+		members_info = [
+			[u'商品名称', u'订单号', u'姓名', u'电话', u'评价时间', u'状态', u'产品评星', u'评价内容', u'图片链接']
+		]
+
+		for review in product_reviews:
+			try:
+				member = member_id2member.get(review.member_id, None)
+				info_list = [
+					id2product[review.product_id].name,
+					review.order_id,
+					member.username_for_html if member else u'已经跑路',
+					member.username_for_html if member else u'已经跑路',
+					review.created_at.strftime("%Y-%m-%d %H:%H:%S"),
+					review.status,
+					review.score,
+					review.detail,
+					review.pics
+				]
+				members_info.append(info_list)
+			except:
+				pass
+
+		filename = u'评价列表'
+		return ExcelResponse(members_info, output_name=filename.encode('utf8'), force_csv=False)
 
 def get_evaluate_detail(evaluate_detail, is_review_dialog = False):
 	#组织自定义模板用户评价数据结构
