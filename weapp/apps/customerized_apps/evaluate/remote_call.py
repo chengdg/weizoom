@@ -44,8 +44,10 @@ class GetProductEvaluatesStatus(resource.Resource):
 		evaluates = apps_models.ProductEvaluates.objects(owner_id=int(owner_id), member_id=int(member_id))
 		order_id2id = _get_order_id_to_id(evaluates)
 		order_id2evaluiates = dict()
+		order_id2status = dict()
 		for evaluate in evaluates:
 			order_id = order_id2id.get(evaluate.order_id, 0)
+			order_status = order_id2status.get(order_id, True)
 			has_reviewed = False
 			if isinstance(evaluate.detail, dict):
 				for k, v in evaluate.detail.items():
@@ -64,11 +66,13 @@ class GetProductEvaluatesStatus(resource.Resource):
 				order_id2evaluiates[order_id] = [temp_dict]
 			else:
 				order_id2evaluiates[order_id].append(temp_dict)
+
+			order_id2status[order_id] = order_status and len(evaluate.pics) > 0
 		orders = []
 		for k, v in order_id2evaluiates.items():
 			orders.append({
 				'order_id': k,
-				'order_is_reviewed': v['has_reviewed_picture'],
+				'order_is_reviewed': order_id2status.get(k, True),
 				'order_product': v
 			})
 		response = create_response(200)
