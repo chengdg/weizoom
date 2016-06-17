@@ -35,14 +35,14 @@
  <script id="mall-orders-sender" type="text/x-jquery-tmpl">
 	<table class="table">
 		<thead>
-			<tr class="xui-trHeight">
-				<th width="110px">默认</th>
-				<th width="110">发货人信息</th>
-				<th width="110">发货人电话</th>
-				<th width="110">所在地区</th>
-				<th width="110">详细地址</th>
-				<th width="110">邮政编码</th>
-				<th width="110">操作</th>
+			<tr class="xui-trHeight" style="background:#C0C0C0">
+				<th width="80">默认</th>
+				<th width="80">发货人信息</th>
+				<th width="80">发货人电话</th>
+				<th width="80">所在地区</th>
+				<th width="80">详细地址</th>
+				<th width="80">邮政编码</th>
+				<th width="80">操作</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -66,16 +66,18 @@
                     </td>
                     <!--详细地址-->
                     <td class="nowrap">
-                        <div>${sender.sender_address}</div>
+                        <div>${sender.sender_address}</div>  
+                        <div hidden="true">${sender.remarks}</div>
                     </td>
                     <!--邮政编码-->
                     <td class="nowrap">
-                        <div>${sender.code}</div>
+                        <div>${sender.code}</div>                        
                     </td>
                     <!--操作-->
                     <td class="tc" style="width:100px;">
+                    	
                         <a href="javascript:void(0);" data-id="${sender.id}" class="xui-delete-sender xa-delete mr10">删除</a>
-                        <a href="/mall2/sender_info/?id=${sender.id}" data-id="${sender.id}" data-name="${sender.name}">修改</a>
+                        <a href="/mall2/sender_info/?id=${sender.id}" data-id="${sender.id}" data-name="${sender.name}" class="xa-revise">修改</a>
                     </td>
                 </tr>
 			{{/each}}

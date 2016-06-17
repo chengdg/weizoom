@@ -17,7 +17,7 @@
 
 				<div class="mb10">
 					<label for="" class="star_show">发货人：</label>
-					<input type="text" class="ml10 xa-senderName" name="sender_name" data-validate="require-notempty" value="{% if sender %} {{sender.sender_name}}{% endif %}" required/>
+					<input type="text" class="ml10 xa-senderName" name="sender_name" data-validate="require-notempty" value="{{sender_info.sender_name}}" required/>
 					<span class="errorHint"></span>
 					<br />
 					
@@ -34,32 +34,33 @@
 			 <select class="xa-district" required>
              	<option value="请选择">请选择区/县</option>            	
              </select><br />
-             <input type="hidden" name="area" value="{% if sender %}{{sender.area}}{% endif %}" />
+             <input type="hidden" name="area" value="{{sender_info.area}}" />      
+             {{sender_info.area}}
 			</div>
 
 				<div>
 					<div class="mb10">
 						<label for="" class="star_show fl">详细信息：</label>
-						<textarea rows="5" cols="50" placeholder="不需要重复填写省/市/区" name="sender_address" value="{% if sender %} {{sender.sender_address}}{% endif %}"required></textarea>
+						<textarea rows="5" cols="50" placeholder="不需要重复填写省/市/区" name="sender_address" required>{{sender_info.sender_address}}</textarea>
 						<div class="errorHint"></div>
 					</div>
 				</div><br />
 				<div class="mb10 ">
-					邮政编码：<input type="text" name="code" class="ml20" value="{% if sender %} {{sender.code}}{% endif %}"/><br />
+					邮政编码：<input type="text" name="code" class="ml20" value="{{sender_info.code}}"/><br />
 				</div>
 				
 				<div class="mb10"> 
 					<label class="star_show fl" >发货人电话：</label>
-					<input type="tel" name="sender_tel" data-validate="require-mobile-phone" value="{% if sender %} {{sender.sender_tel}}{% endif %}" required/>
+					<input type="tel" name="sender_tel" data-validate="require-mobile-phone" value="{{sender_info.sender_tel}}" required/>
 					<span class="errorHint"></span>
 				</div>
 				
 				<div class="mb10">
-					公司名称：<input type="text" class="ml20" name="company_name" value="{% if sender %} {{sender.company_name}}{% endif %}"/>
+					公司名称：<input type="text" class="ml20" name="company_name" value="{{sender_info.company_name}}"/>
 				</div>
 				
 				<div class="mb10">
-					<label class="fl">备注：</label><textarea rows="5" cols="50" class="ml10" name="remarks" value="{% if sender %} {{sender.remarks}} {% endif %}"></textarea>
+					<label class="fl">备注：</label><textarea rows="5" cols="50" class="ml10" name="remarks">{{sender_info.remarks}}</textarea>
 				</div>
 				<div class="mt70 ml200">
 					<a href="javascript:void(0);" class="btn btn-default xa-submit">保存</a>
