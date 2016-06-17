@@ -150,3 +150,16 @@ def get_str_value_by_string_ids_new(str_ids):
 		return u'{}'.format(ship_address.strip())
 	else:
 		return None
+
+def get_province_city_area(area):
+	ship_site = get_str_value_by_string_ids(area)
+	ship_site = ship_site.split(" ")
+	if len(ship_site) == 3:
+		ship_province = ship_site[0]
+		ship_city = ship_site[1]
+		ship_area = ship_site[2]
+	elif len(ship_site) == 2:
+		ship_province = ship_site[0]
+		ship_city = ship_site[1]
+		ship_area = ''
+	return ship_province, ship_city, ship_area

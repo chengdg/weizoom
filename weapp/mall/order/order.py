@@ -14,6 +14,7 @@ from core import resource
 from mall import export
 import util
 from tools.regional import views as regional_util
+from tools.express.kdniao_express_eorder import KdniaoExpressEorder
 from core.jsonresponse import create_response
 from core import paginator
 from mall.models import *
@@ -874,6 +875,30 @@ class EOrder(resource.Resource):
     @login_required
     def api_get(request):
 
+        sender_id = request.GET.get('id','')
+        express_company_name = request.GET.get('express_company_name','')
+        webapp_id = request.user_profile.webapp_id
+        if not sender_id or not express_company_name:
+            response = create_response(500)
+            response.data = {
+                'items': [],
+                'errMsg': "未选择快递公司或者没有发件人信息",
+
+            }
+            return response.get_response()
+
+        sender_info = SenderInfo.objects.get(webapp_id=webapp_id,id=sender_id)
+        sender_province, sender_city, sender_area = regional_util.get_province_city_area(sender_info.area)
+
+        sender = {"Name" : sender_info.sender_name,
+                "Mobile" : sender_info.sender_tel,
+                "ProvinceName" : sender_province,
+                "CityName" : sender_city,
+                "ExpAreaName" : sender_area,
+                "Address" : sender_info.sender_address,
+                }
+
+        items = []
         order_ids = json.loads(request.GET.get('order_ids', '[]'))
         #order_ids = request.GET.get('order_ids', '')
         orders = Order.objects.filter(id__in=[int(id) for id in order_ids], status=3)#待发货的订单
@@ -886,79 +911,51 @@ class EOrder(resource.Resource):
                 ship2orders[ship_info] = [order]
 
         for ship,orders in ship2orders.items():
+            commodity = [] #需传递的商品信息
+            product_info2count = {}
             for order in orders:
-                pass
-        webapp_user_ids = set([order.webapp_user_id for order in orders])
-        from modules.member.models import Member
-        webappuser2member = Member.members_from_webapp_user_ids(webapp_user_ids)
 
-        order_ids = [order.id for order in orders]
-        # 获得order对应的商品数量
-        order2productcount = {}
-        for relation in OrderHasProduct.objects.filter(order_id__in=order_ids).order_by('id'):
-            order_id = relation.order_id
-            if order_id in order2productcount:
-                order2productcount[order_id] = order2productcount[order_id] + 1
-            else:
-                order2productcount[order_id] = 1
+                products = mall_api.get_order_products(order)
+                for product in products:
+                    property_values = []
 
-        # 构造返回的order数据
-        for order in orders:
-            # 获取order对应的member的显示名
-            member = webappuser2member.get(order.webapp_user_id, None)
-            if member:
-                order.buyer_name = member.username_for_print
-            else:
-                order.buyer_name = u'未知'
-            order.product_count = order2productcount.get(order.id, 0)
+                    if product['promotion']:
+                        if product['promotion']['type'] == "flash_sale":
+                            product['name'] = u"【限时抢购】" + product['name']
+                        elif product['promotion']['type'] == "premium_sale:premium_product":
+                            product['name'] = u"【赠品】" + product['name']
+                    if product.has_key('grade_discounted_money') and product['grade_discounted_money']:
+                            product['name'] = u"【会员优惠】" + product['name']
 
-        # 构造返回的order数据
-        items = []
-        for order in orders:
-            products = mall_api.get_order_products(order)
+                    if product.has_key('custom_model_properties') and product['custom_model_properties']:
+                        for model in product['custom_model_properties']:
+                            property_values.append(model['property_value'])
+                    product['property_values'] = '/'.join(property_values)
 
-            for product in products:
-                property_values = []
+                    product_info_temp = "{} {}usercode{}".format(product['name'], product['property_values'], product['user_code'])
+                    if product_info2count.has_key(product_info_temp):
+                        product_info2count[product_info_temp] = product_info2count[product_info_temp]+ product['count']
+                    else:
+                        product_info2count[product_info_temp] = product['count']
+            for product_info,count in product_info2count.items():
+                product_infos= product_info.split("usercode")
+                product_name, product_user_code = product_infos[0], product_infos[1]
+                goods = {"GoodsName":product_name, "Goodsquantity":count, "GoodsCode":product_user_code}
+                commodity.append(goods)
 
-                if product['promotion']:
-                    if product['promotion']['type'] == "flash_sale":
-                        product['name'] = u"【限时抢购】" + product['name']
-                    elif product['promotion']['type'] == "premium_sale:premium_product":
-                        product['name'] = u"【赠品】" + product['name']
-                if product.has_key('grade_discounted_money') and product['grade_discounted_money']:
-                        product['name'] = u"【会员优惠】" + product['name']
+            ship_province, ship_city, ship_area = regional_util.get_province_city_area(orders[0].area)
 
+            receiver = {"Name":orders[0].ship_name, "Mobile": orders[0].ship_name, "ProvinceName" : ship_province, "CityName" : ship_city, 
+                        "ExpAreaName" : ship_area,"Address" : orders[0].ship_address}
 
-                if product.has_key('custom_model_properties') and product['custom_model_properties']:
-                    for model in product['custom_model_properties']:
-                        property_values.append(model['property_value'])
-                product['property_values'] = '/'.join(property_values)
+            orderCode = orders[0].order_id
+            order_id = orders[0].id
+            eorder=KdniaoExpressEorder(orderCode, express_company_name, sender, receiver, commodity, order_id)
+            eorder.get_express_eorder()
 
-
-            items.append({
-                'id': order.id,
-                'order_id': order.order_id,
-                'supplier_user_id': order.supplier_user_id,
-                'products': products,
-                'total_price': order.total_purchase_price if order.supplier_user_id else Order.get_order_has_price_number(order),
-                'order_total_price': float('%.2f' % order.get_total_price()),
-                'ship_name': order.ship_name,
-                'ship_address': '%s %s' % (regional_util.get_str_value_by_string_ids(order.area), order.ship_address),
-                'ship_tel': order.ship_tel,
-                'buyer_name': order.buyer_name,
-                'created_at': datetime.strftime(order.created_at, '%Y-%m-%d %H:%M:%S'),
-                'product_count': order.product_count,
-                'postage': 0 if order.supplier_user_id else '%.2f' % order.postage,
-                'save_money': 0 if order.supplier_user_id else float(Order.get_order_has_price_number(order)) + float(order.postage) - float(
-                    order.final_price) - float(order.weizoom_card_money),
-                'pay_money': order.total_purchase_price if order.supplier_user_id else order.final_price + order.weizoom_card_money,
-            })
 
         response = create_response(200)
         response.data = {
             'items': items,
-            'store_name': store_name,
-            'qrcode_url': qrcode_url,
-            'order_count': len(order_ids)
         }
         return response.get_response()
