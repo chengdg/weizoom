@@ -251,10 +251,10 @@ W.dialog.app.evaluate.ViewParticipanceDataDialog = W.dialog.Dialog.extend({
 		
 		var content = this.editor.getHtmlContent();
 
-		// if (content.length > 100) {
-		// 	W.showHint('error', '内容不能超过100字');
-		// 	return;
-		// }		
+		if (content.length > 300) {
+			W.showHint('error', '内容不能超过300字');
+			return;
+		}		
 		W.getApi().call({
             app: 'apps/evaluate',
             resource: 'evaluate_review_shop_reply',
