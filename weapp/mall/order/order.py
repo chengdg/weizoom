@@ -15,6 +15,7 @@ from mall import export
 import util
 from tools.regional import views as regional_util
 from tools.express.kdniao_express_eorder import KdniaoExpressEorder
+from tools.express import util as express_util
 from core.jsonresponse import create_response
 from core import paginator
 from mall.models import *
@@ -877,6 +878,7 @@ class EOrder(resource.Resource):
 
         sender_id = request.GET.get('id','')
         express_company_name = request.GET.get('express_company_name','')
+        express_company_name_value = express_util.get_value_by_name(express_company_name)
         webapp_id = request.user_profile.webapp_id
         if not sender_id or not express_company_name:
             response = create_response(500)
@@ -899,6 +901,7 @@ class EOrder(resource.Resource):
                 }
 
         items = []
+        delivery_param = []
         order_ids = json.loads(request.GET.get('order_ids', '[]'))
         #order_ids = request.GET.get('order_ids', '')
         orders = Order.objects.filter(id__in=[int(id) for id in order_ids], status=3)#待发货的订单
@@ -948,14 +951,28 @@ class EOrder(resource.Resource):
             receiver = {"Name":orders[0].ship_name, "Mobile": orders[0].ship_name, "ProvinceName" : ship_province, "CityName" : ship_city, 
                         "ExpAreaName" : ship_area,"Address" : orders[0].ship_address}
 
-            orderCode = orders[0].order_id
+            orderCode = orders[0].order_id+'7'
             order_id = orders[0].id
-            eorder=KdniaoExpressEorder(orderCode, express_company_name, sender, receiver, commodity, order_id)
-            eorder.get_express_eorder()
+            eorder=KdniaoExpressEorder(orderCode, express_company_name_value, sender, receiver, commodity, order_id)
+            is_success, template, express_order = eorder.get_express_eorder()
+            express_number = express_order["LogisticCode"]
+            if is_success:
 
+                for order in orders:
+                    delivery_param.append({'order_id':order.order_id, 'express_company_name':express_company_name, 'express_number':express_number})
+
+
+        if delivery_param:
+            from cache.webapp_owner_cache import update_unship_order_count
+            update_unship_order_count(webapp_id)
+            success_data, error_items = mall_api.batch_handle_order(delivery_param, request.manager,webapp_id)
+            print "success_data",success_data
+            print "*"*100
+            for item_temp in error_items:
+                print item_temp['error_info']
 
         response = create_response(200)
         response.data = {
-            'items': items,
+            'items': express_order,
         }
         return response.get_response()
