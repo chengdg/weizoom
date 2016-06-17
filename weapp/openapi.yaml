@@ -142,7 +142,7 @@ paths:
             properties:
               orders:
                 type: list
-                description: 所有待评价订单商品的评价状态
+                $ref: "#/definitions/orders"
 definitions:
   group_id:
     name: group_id
@@ -152,3 +152,10 @@ definitions:
     name: activity_url
     description: 团购活动链接
     type: string
+
+  orders:
+    type: list
+    items:
+      $ref: "#/definitions/order"
+    description: 所有订单信息
+

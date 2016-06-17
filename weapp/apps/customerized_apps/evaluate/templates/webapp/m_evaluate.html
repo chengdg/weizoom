@@ -281,6 +281,7 @@
         //发表
         if('ordinary' === template_type) {
             if(insetNum < 5 || insetNum >200){
+                loadingStatus(false);
                 wuiAlert('请输入5-200字', 2000);
                 submitting = false;
                 return;
