@@ -358,12 +358,12 @@ Scenario:2 同个商品，最多可置顶3条评价信息
             "product_name": "商品1",
             "order_no": "2",
             "member": "bill",
-            "status": "通过并置顶",          
+            "status": "通过并置顶"       
         },{
             "product_name": "商品1",
             "order_no": "3",
             "member": "tom",
-            "status": "通过并置顶",          
+            "status": "通过并置顶"         
         },{
             "product_name": "商品1",
             "order_no": "4",
