@@ -651,7 +651,7 @@ def step_impl(context, user):
 
 	actual = []
 	for relation in relations:
-		product_name_list = relation['product_name'].split(' ')
+		product_name_list = relation['product_name']
 		product_list = []
 		for name in product_name_list:
 			if name != '':
