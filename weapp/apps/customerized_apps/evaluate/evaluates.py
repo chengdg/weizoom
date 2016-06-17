@@ -287,19 +287,20 @@ class EvaluateReview(resource.Resource):
 
 			if product_review_id:
 				review = app_models.ProductEvaluates.objects(owner_id=request.webapp_owner_id, id=product_review_id)
+				first_review = review.first()
 				if status == '2' or status == '1':
-					if len(review) == 1 and int(review[0].status) == 0:
+					if review.count() == 1 and int(first_review.status) == 0:
 						settings = member_models.IntegralStrategySttings.objects.get(
 							webapp_id=request.user_profile.webapp_id)
 						if settings.review_increase > 0:
-							member = member_models.Member.objects.filter(id=review[0].member_id)
+							member = member_models.Member.objects.filter(id=first_review.member_id)
 							if len(member):
 								increase_member_integral(member[0], settings.review_increase, '商品评价奖励')
 
 				if status == '2':
 					try:
 						#商品评价关联，则关联的商品最多有三个置顶
-						product_id = review[0].product_id
+						product_id = first_review.product_id
 						related_product = app_models.EvaluatesRelatedProducts.objects.get(product_id=product_id)
 						related_product_ids = app_models.EvaluatesRelations.objects.get(id=related_product.belong_to).related_product_ids
 						top_reviews = app_models.ProductEvaluates.objects.filter(product_id__in=related_product_ids,status=int(status)).order_by("top_time")
@@ -309,16 +310,16 @@ class EvaluateReview(resource.Resource):
 						top_reviews = app_models.ProductEvaluates.objects.filter(product_id=product_review.product_id,
 																		   status=int(status)).order_by("top_time")
 					if top_reviews.count() >= 3:
-						ids = [review.id for review in top_reviews[:(top_reviews.count() - 2)]]
-						app_models.ProductEvaluates.objects(id__in=ids).update(status=1,
-																				top_time=app_models.DEFAULT_DATETIME)
-						app_models.ProductEvaluates.objects(id=product_review_id).update(status=int(status),
-																							  top_time=datetime.now())
+						ids = [re.id for re in top_reviews[:(top_reviews.count() - 2)]]
+						app_models.ProductEvaluates.objects(id__in=ids).update(set__status=app_models.STATUS_PASSED,
+																				set__top_time=app_models.DEFAULT_DATETIME)
+						app_models.ProductEvaluates.objects(id=product_review_id).update(set__status=int(status),
+																							  set__top_time=datetime.now())
 					else:
-						app_models.ProductEvaluates.objects(id=product_review_id).update(status=int(status),
-																							  top_time=datetime.now())
+						app_models.ProductEvaluates.objects(id=product_review_id).update(set__status=int(status),
+																							  set__top_time=datetime.now())
 				else:
-					review.update(status=int(status), top_time=app_models.DEFAULT_DATETIME)
+					review.update(set__status=int(status), set__top_time=app_models.DEFAULT_DATETIME)
 				return create_response(200).get_response()
 			else:
 				return create_response(500).get_response()
@@ -351,13 +352,13 @@ class EvaluateReview(resource.Resource):
 								if int(review.status) == 0:
 									increase_member_integral(id2member[review.member_id], settings.review_increase,
 															 '商品评价奖励')
-					reviews.update(status=1, top_time=app_models.DEFAULT_DATETIME)
+					reviews.update(set__status=app_models.STATUS_PASSED, set__top_time=app_models.DEFAULT_DATETIME)
 					return create_response(200).get_response()
 				except:
 					return create_response(500).get_response()
 			else:
 				try:
-					app_models.ProductEvaluates.objects(owner_id=request.webapp_owner_id, id__in=ids).update(status=-1)
+					app_models.ProductEvaluates.objects(owner_id=request.webapp_owner_id, id__in=ids).update(set__status=app_models.STATUS_DENIED)
 					return create_response(200).get_response()
 				except:
 					return create_response(500).get_response()

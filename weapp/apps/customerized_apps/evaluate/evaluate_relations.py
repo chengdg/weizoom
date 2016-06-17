@@ -104,7 +104,7 @@ class EvaluatesRelations(resource.Resource):
 					belong_to = str(evaluate_relation.id)
 				)
 			#商品关联，取消之前的置顶
-			app_models.ProductEvaluates.objects(product_id__in = product_ids).update(status = 1, top_time=app_models.DEFAULT_DATETIME)
+			app_models.ProductEvaluates.objects(product_id__in = product_ids).update(set__status = app_models.STATUS_PASSED, set__top_time=app_models.DEFAULT_DATETIME)
 
 			response = create_response(200)
 
