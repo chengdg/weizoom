@@ -76,7 +76,7 @@
         overflow : hidden;
         text-overflow: ellipsis;
         display: -webkit-box;
-        -webkit-line-clamp: 5;
+        -webkit-line-clamp: 10;
         -webkit-box-orient: vertical; 
     }
     .xui-productReviewListPage .xui-shopReply{
@@ -193,7 +193,7 @@
 <script type="text/javascript">
     $(function(){
         $('.xa-productReviewText').each(function(){
-            if($(this).height() > 90){
+            if($(this).height() > 160){
                 $(this).addClass('xui-text-ellipsis');
                 $(this).siblings('.xa-btnWrapper').show();
             }
