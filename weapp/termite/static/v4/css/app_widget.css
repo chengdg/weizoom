@@ -2507,10 +2507,15 @@ li.wui-selectBox-display-table {
 .wui-iscreated{
 	display: none;
 }
+.wui-pf{
+	position: fixed;
+	width: 100%;
+	bottom: -5px;
+}
 .wui-pa{
 	position: absolute;
-	bottom: -65px;
 	width: 100%;
+	bottom: -65px;
 }
 .wui-i-uploadimg-common{
 	padding: 0 10px;

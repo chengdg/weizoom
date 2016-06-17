@@ -131,6 +131,44 @@ W.dialog.app.evaluate.ViewParticipanceDataDialog = W.dialog.Dialog.extend({
             autoHeight: false
         })
 		this.editor.render();
+
+		var MyMemberTagsUpdateView = W.view.member.MemberTagsUpdateView.extend({
+			onClickSubmit: function(event) {
+		        var $el = $(event.currentTarget);
+		        this.submitSendApi(this.isUpdateGrade,this.memberId)
+		        var member_id = $('.xa-update-tag').data('id');
+		        var tag_ids = [];
+		        $(".tag_id").each(function() {
+		            tag_ids.push(this.value)
+		        });
+		        W.getApi().call({
+		            app: 'apps/evaluate',
+		            resource: 'evaluate_review_member_update',
+		            method: 'post',
+		            args: {
+		                tag_ids: JSON.stringify(tag_ids),
+		                member_id: member_id
+		            },
+		            scope: this,
+		            success: function(){
+		                W.showHint('success', '操作成功');
+		            },
+		            error: function(){
+		                W.showHint('error', '操作失败');
+		            }
+		        });
+		    }
+		});
+		W.getMemberTagsUpdateView = function(options) {
+		    var dialog = W.registry['W.view.member.MemberTagsUpdateView'];
+		    if (!dialog) {
+		        //创建dialog
+		        xlog('create W.view.member.MemberTagsUpdateView');
+		        dialog = new MyMemberTagsUpdateView(options);
+		        W.registry['W.view.member.MemberTagsUpdateView'] = dialog;
+		    }
+		    return dialog;
+		};
 	},
 	
 	beforeShow: function(options) {
@@ -159,6 +197,28 @@ W.dialog.app.evaluate.ViewParticipanceDataDialog = W.dialog.Dialog.extend({
 				}
 			});
 		}
+
+
+		$('body').delegate('.xa-update-tag', 'click', function(event){
+			var $el = $(event.currentTarget);
+			var member_id = $(this).data('id');
+
+			var memberTagsUpdateView = W.getMemberTagsUpdateView({
+				width: 260,
+				title: '修改分组',
+				position:'top',
+				isTitle: false,
+				privateContainerClass:'xui-updateGradeOrTagBox',
+				isPostData: false
+			});
+			memberTagsUpdateView.show({
+				$action: $el,
+				isUpdateGrade: false,
+				memberId: member_id,
+				isPostData: false
+			})
+	        memberTagsUpdateView.render();
+		});
 	},
 	
 	afterShow: function(options) {
@@ -182,37 +242,13 @@ W.dialog.app.evaluate.ViewParticipanceDataDialog = W.dialog.Dialog.extend({
                     W.showHint('error', '操作失败');
                 }
             });
-        });	
-
-		$('body').delegate('.xa-update-tag', 'click', function(event){
-			var $el = $(event.currentTarget);
-			var member_id = $(this).data('id');
-
-			var memberTagsUpdateView = W.getMemberTagsUpdateView({
-				width: 260,
-				title: '修改分组',
-				position:'top',
-				isTitle: false,
-				privateContainerClass:'xui-updateGradeOrTagBox',
-				isPostData: false
-			});
-			memberTagsUpdateView.show({
-				$action: $el,
-				isUpdateGrade: false,
-				memberId: member_id,
-				isPostData: false
-			})
-	        memberTagsUpdateView.render();
-		});
+        });			
 	},
 
 	onClickSubmitButton: function(){
-		var member_id = $('.xa-update-tag').data('id');
+		
 		var content = this.editor.getHtmlContent();
-		var tag_ids = [];
-		$(".tag_id").each(function() {
-			tag_ids.push(this.value)
-		});
+
 		// if (content.length > 100) {
 		// 	W.showHint('error', '内容不能超过100字');
 		// 	return;
@@ -223,9 +259,7 @@ W.dialog.app.evaluate.ViewParticipanceDataDialog = W.dialog.Dialog.extend({
             method: 'post',
             args: {
                 product_review_id: this.product_review_id,
-                content: content,
-                tag_ids: JSON.stringify(tag_ids),
-                member_id: member_id
+                content: content
             },
             scope: this,
             success: function(){
