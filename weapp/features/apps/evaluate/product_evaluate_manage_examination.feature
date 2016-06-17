@@ -544,9 +544,6 @@ Scenario:3 回复用户发表的商品评论
                     "value":"是"
                 },{
                     "title":"name",
-                    "value":"13013013058"
-                },{
-                    "title":"name",
                     "value":"bill"
                 },{
                     "title":"gender",
