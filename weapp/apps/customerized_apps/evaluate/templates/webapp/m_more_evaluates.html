@@ -96,8 +96,8 @@
                         <span class="fr" style="line-height:30px;">{{ review.created_at|date:"Y-m-j" }}</span>
                     </div>
                     <p class="em85 c6">
-                    {% if is_common_template %}
-                    {{ review.review_detail }}
+                    {% if review.is_common_template %}
+                        {{ review.review_detail }}
                     {% else %}
                     {% for item in review.review_detail %}
                         {{item.answer}}{% if not forloop.last %}；{% endif %}
