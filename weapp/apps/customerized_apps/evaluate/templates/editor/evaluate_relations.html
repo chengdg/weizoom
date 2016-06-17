@@ -87,7 +87,7 @@
 					class="tl pl25"
 					style="width:250px; height:60px;" 
 				>
-					${item.product_name}
+					{{each(j, name) item.product_name}}${this}</br>{{/each}}
 				</td>
 				<td>
 					${item.evaluate_count}

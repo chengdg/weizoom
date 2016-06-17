@@ -62,9 +62,10 @@ class EvaluatesRelations(resource.Resource):
 		for re in evaluate_relations:
 			related_product_ids = re.related_product_ids
 			evaluates = evaluates.filter(product_id__in = related_product_ids)
-			name = ''
+			name = []
 			for id in related_product_ids:
-				name = name + ' ' + product_id2name.get(id,'')
+				name.append(product_id2name.get(id, None))
+
 			items.append({
 				'id': str(re.id),
 				'product_name': name,
