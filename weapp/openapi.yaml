@@ -5,9 +5,9 @@ swagger: '2.0'
 
 # This is your document metadata
 info:
-  version: "0.0.1"
-  title: 团购服务面向apiserver接口
-  description: apiserver需要的接口,由团购服务提供
+  version: "0.1.1"
+  title: 面向h5和apiserver接口
+  description:
 
 # Describe your paths here
 paths:
@@ -125,6 +125,24 @@ paths:
           description: 参数为'pay'(表示支付成功)或者'cancel'(订单已取消)
         - $ref: '#/definitions/group_id'
 
+  /apps/evaluate/get_product_evaluates_status:
+    get:
+      description: h5个人中心-待评价订单，获取待评价订单的评价状态
+      parameters:
+        - name: woid
+          type: string
+        - name: member_id
+          type: string
+      responses:
+        200:
+          description: Successful response
+          schema:
+            title: data
+            type: object
+            properties:
+              orders:
+                type: list
+                description: 所有待评价订单商品的评价状态
 definitions:
   group_id:
     name: group_id

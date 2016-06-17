@@ -16,7 +16,7 @@ class GetProductEvaluatesStatus(resource.Resource):
 	app = 'apps/evaluate'
 	resource = 'get_product_evaluates_status'
 
-	def get(request):
+	def api_get(request):
 		"""
 		个人中心-待评价订单，获取待评价订单的评价状态
 		@params woid, member_id
@@ -47,7 +47,7 @@ class GetProductEvaluatesStatus(resource.Resource):
 		for evaluate in evaluates:
 			order_id = order_id2id.get(evaluate.order_id, 0)
 			has_reviewed = False
-			if type(evaluate.detail) == 'dict':
+			if isinstance(evaluate.detail, dict):
 				for k, v in evaluate.detail.items():
 					if (k.find('qa') >= 0 and v) or (k.find('selection') >= 0 and v):
 						has_reviewed = True
@@ -68,7 +68,7 @@ class GetProductEvaluatesStatus(resource.Resource):
 		for k, v in order_id2evaluiates.items():
 			orders.append({
 				'order_id': k,
-				'order_is_reviewed': True,
+				'order_is_reviewed': v['has_reviewed_picture'],
 				'order_product': v
 			})
 		response = create_response(200)
@@ -79,7 +79,7 @@ class GetProductEvaluates(resource.Resource):
 	app = 'apps/evaluate'
 	resource = 'get_product_evaluates'
 
-	def get(request):
+	def api_get(request):
 		"""
 		商品详情-两条评价信息
 		@params woid, product_id
@@ -121,10 +121,11 @@ class GetProductEvaluates(resource.Resource):
 			member_id = evaluate.member_id
 			detail = evaluate.detail
 			temp_detail = []
-			if type(detail) == 'dict':
+			if isinstance(detail, dict):
 				for k, v in detail.items():
 					if (k.find('qa') >= 0 and v) or (k.find('selection') >= 0 and v):
 						temp_detail.append(v.split('::')[1])
+				temp_detail = ', '.join(temp_detail)
 			else:
 				temp_detail = detail
 
@@ -149,7 +150,7 @@ class GetUnreviewdCount(resource.Resource):
 	app = 'apps/evaluate'
 	resource = 'get_unreviewd_count'
 
-	def get(request):
+	def api_get(request):
 		"""
 		个人中心-待评价(获取待评价的个数) 当前会员所有未晒图的产品
 		@param	order_has_product_list_ids
@@ -179,7 +180,7 @@ class GetOrderEvaluatesStatus(resource.Resource):
 	app = 'apps/evaluate'
 	resource = 'get_order_evaluates'
 
-	def get(request):
+	def api_get(request):
 		"""
 		个人中心-全部订单，获取订单的评价状态
 		@param woid, member_id
