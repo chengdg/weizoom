@@ -951,7 +951,7 @@ class EOrder(resource.Resource):
             receiver = {"Name":orders[0].ship_name, "Mobile": orders[0].ship_name, "ProvinceName" : ship_province, "CityName" : ship_city, 
                         "ExpAreaName" : ship_area,"Address" : orders[0].ship_address}
 
-            orderCode = orders[0].order_id+'7'
+            orderCode = orders[0].order_id
             order_id = orders[0].id
             eorder=KdniaoExpressEorder(orderCode, express_company_name_value, sender, receiver, commodity, order_id)
             is_success, template, express_order = eorder.get_express_eorder()

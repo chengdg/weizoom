@@ -10,6 +10,7 @@ from hashlib import md5
 import base64
 from tools.express.models import *
 from tools.express.kdniao_express_config import *
+import datetime
 
 def post(url, data): 
     req = urllib2.Request(url) 
@@ -179,6 +180,20 @@ class KdniaoExpressPoll(object):
 
 		# 保存快递信息	
 		self.express = self._save_poll_order_id()
+
+		#暂无物流信息没有更新状态时，商家正在通知快递公司揽件
+		if ExpressDetail.objects.filter(express_id=self.express.id).count() == 0:
+			context = u'商家正在通知快递公司揽件'
+			dtime = datetime.datetime.now()
+			ExpressDetail.objects.create(
+					express_id = self.express.id,
+					context = context,
+					time = dtime,
+					ftime = dtime,
+					status = -1,
+					display_index = 1
+				)
+
 
 		# 发送订阅请求
 		data = self._poll_response()
