@@ -1,14 +1,12 @@
-# __author__ : 邓成龙 2016-06-20
-Feature: 签到-后台优惠券明细
-"""
-	优惠券明细列表
-	领取时间：连续签到自动得到的优惠券时的时间
-	优惠券名称：获得优惠券的名称
-	明细：新建优惠券时给的类型：全部商品or部分商品
-	状态：【全部、未使用、已使用、已过期】
-	去处：【订单号】在商城购买商品下单时的订单号
+# __author__ : 邓成龙 2016.06.20
 
+Feature: 签到-后台签到详情
 """
+	签到时间：签到时间显示签到时间，精确到分;没有签到时显示当天日期，精确到分,默认为：年月日为当天时间，时分秒为0
+	获得奖励:1.积分2.优惠券名称3.null
+	签到状态为: √（签到） or ×（没有签到）
+"""
+
 Background:
 	Given jobs登录系统
 	When jobs添加优惠券规则
@@ -19,24 +17,21 @@ Background:
 			"limit_counts": "无限",
 			"start_date": "1天前",
 			"end_date": "3天后",
-			"coupon_id_prefix": "coupon1_id_",
-			"detailed":"currency"
+			"coupon_id_prefix": "coupon1_id_"
 		},{
 			"name": "优惠券2",
 			"money": 20.00,
 			"limit_counts": "无限",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"coupon_id_prefix": "coupon2_id_",
-			"detailed":"currency"
+			"coupon_id_prefix": "coupon2_id_"
 		},{
 			"name": "优惠券M",
 			"money": 20.00,
 			"limit_counts": "无限",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"coupon_id_prefix": "coupon3_id_",
-			"detailed":"part"
+			"coupon_id_prefix": "coupon3_id_"
 		}]
 		"""
 	Given jobs添加签到活动"签到活动1",并且保存
@@ -56,7 +51,7 @@ Background:
 			"sign_settings":
 				[{
 					"sign_in": "0",
-					"integral": "20"
+					"integral": "10"
 				},{
 					"sign_in":"2",
 					"send_coupon":"优惠券M"
@@ -65,7 +60,6 @@ Background:
 					"send_coupon":"优惠券1"
 				},{
 					"sign_in":"5",
-					"integral": "10",
 					"send_coupon":"优惠券2"
 				}]
 		}
@@ -80,6 +74,9 @@ Background:
 
 	Given bill关注jobs的公众号
 	And tom关注jobs的公众号
+	And marry关注jobs的公众号
+	And jack关注jobs的公众号
+	And nokia关注jobs的公众号
 
 	#会员签到
 
@@ -115,49 +112,72 @@ Background:
 		When 清空浏览器
 		When bill访问jobs的webapp
 		When bill在微信中向jobs的公众号发送消息'签到'于'2015-10-09 10:30:00'
-
-	#tom先签到1次，终止一天，再连续签到2次
-		When 清空浏览器
-		When tom访问jobs的webapp
-		When tom在微信中向jobs的公众号发送消息'签到'于'前两天'
-
-		When 清空浏览器
-		When tom访问jobs的webapp
-		When tom在微信中向jobs的公众号发送消息'签到'于'前一天'
-
-		When 清空浏览器
-		When tom访问jobs的webapp
-		When tom在微信中向jobs的公众号发送消息'签到'于'今天'
-@mall2 @apps @apps_sign @apps_sign_coupon_detailed
-Scenario:1 优惠券明细列表
+@mall2 @apps @apps_sign @apps_sign_detailed
+Scenario:1 会员签到统计详情列表
+#倒序排列，一页显示15条记录
 	Given jobs登录系统
-	When jobs查看'bill'的优惠券明细
-	Then jobs获得'bill'优惠券明细列表
+	When jobs查看'bill'的签到详情列表
+	Then jobs获得'bill'签到详情列表
 	"""
 		[{
-			"collection_time":"2015/10/09 10:30:00",
-			"coupon":"优惠券1",
-			"detailed":"通用券",
-			"state":"已过期"
+			"sign_time":"2015.10.15 00:00:00",
+			"get_reward":"",
+			"sign_state":"0"
 		},{
-			"collection_time":"2015/10/05 10:30:00",
-			"coupon":"优惠券2",
-			"detailed":"通用券",
-			"state":"已过期"
+			"sign_time":"2015.10.14 00:00:00",
+			"get_reward":"",
+			"sign_state":"0"
 		},{
-			"collection_time":"2015/10/02 10:30:00",
-			"coupon":"优惠券M",
-			"detailed":"多商品券",
-			"state":"已过期"
+			"sign_time":"2015.10.13 00:00:00",
+			"get_reward":"",
+			"sign_state":"0"
+		},{
+			"sign_time":"2015.10.12 00:00:00",
+			"get_reward":"",
+			"sign_state":"0"
+		},{
+			"sign_time":"2015.10.11 00:00:00",
+			"get_reward":"",
+			"sign_state":"0"
+		},{
+			"sign_time":"2015.10.10 00:00:00",
+			"get_reward":"",
+			"sign_state":"0"
+		},{
+			"sign_time":"2015.10.09 10:30:00",
+			"get_reward":"优惠券1",
+			"sign_state":"1"
+		},{
+			"sign_time":"2015.10.08 10:30:00",
+			"get_reward":"积分+10",
+			"sign_state":"1"
+		},{
+			"sign_time":"2015.10.07 10:30:00",
+			"get_reward":"积分+10",
+			"sign_state":"1"
+		},{
+			"sign_time":"2015.10.06 00:00:00",
+			"get_reward":"",
+			"sign_state":"0"
+		},{
+			"sign_time":"2015.10.05 10:30:00",
+			"get_reward":"优惠券2",
+			"sign_state":"1"
+		},{
+			"sign_time":"2015.10.04 10:30:00",
+			"get_reward":"积分+10",
+			"sign_state":"1"
+		},{
+			"sign_time":"2015.10.03 10:30:00",
+			"get_reward":"积分+10",
+			"sign_state":"1"
+		},{
+			"sign_time":"2015.10.02 10:30:00",
+			"get_reward":"优惠券M",
+			"sign_state":"1"
+		},{
+			"sign_time":"2015.10.01 10:30:00",
+			"get_reward":"积分+10",
+			"sign_state":"1"
 		}]
-	"""
-	When jobs查看'tom'的优惠券明细
-	Then jobs获得'tom'优惠券明细列表
-	"""
-		[{
-			"collection_time":"今天",
-			"coupon":"优惠券M",
-			"detailed":"多商品券",
-			"state":"未使用"
-		}]
-	"""
+	""" 
