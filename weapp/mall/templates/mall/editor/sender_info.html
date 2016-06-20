@@ -35,7 +35,6 @@
              	<option value="请选择">请选择区/县</option>            	
              </select><br />
              <input type="hidden" name="area" value="{{sender_info.area}}" />      
-             {{sender_info.area}}
 			</div>
 
 				<div>
@@ -74,7 +73,7 @@
 {% endblock %}
 {% block js %}
 <script type="text/javascript">
-    
+
 	$(document).ready(function() {
 		$('.xa-submit').on('click',function(){
     	var area = $('.xa-province').val()+'_'+$('.xa-city').val()+'_'+$('.xa-district').val();
@@ -118,7 +117,7 @@
 
 
 			// 获取省份
-			getPrvince: function() {
+			getPrvince: function(pid) {
 				var _this = this;
 				W.getApi().call({
                  method: 'get',
@@ -128,10 +127,11 @@
 						var option = '';
 						_.each(datas,function(data,i){
 //							console.log(data,i)
-							option+='<option value="'+i+'" data-id="'+i+'">'+data+'</option>';
+							if(pid && pid == i){ }
+							option+='<option value="'+i+'" data-id="'+i+'" '+ (pid && pid == i?'selected':'')+'>'+data+'</option>';
 						})
 						$('.xa-province').html(option);
-						_this.selectProvince();
+						_this.selectProvince(pid);
 					},
 					error: function(resp) {
 					}
@@ -151,9 +151,9 @@
 			},
 			
 			// 获取城市
-			getCity: function() {
+			getCity: function(pid,cid) {
 				var _this = this;
-                var id = $('.xa-province').find('option:selected').data('id')
+                var id = pid?pid:$('.xa-province').find('option:selected').data('id')
 //              console.log(id);
                    W.getApi().call({
                     method: 'get',
@@ -163,7 +163,7 @@
 						var option = '';
 						_.each(datas,function(data,i){
 //							console.log(data,i)
-							option+='<option value="'+i+'" data-id="'+i+'">'+data+'</option>';
+							option+='<option value="'+i+'" data-id="'+i+'" '+ (cid && cid == i?'selected':'')+'>'+data+'</option>';
 						})
 
 
@@ -189,9 +189,9 @@
 			},
 			
 			// 获取区/县
-			getDistrict: function() {
+			getDistrict: function(cid,did) {
 				var _this = this;
-                var id=$('.xa-city').find('option:selected').data('id');
+                var id=cid?cid:$('.xa-city').find('option:selected').data('id');
 //              console.log(id);
                    W.getApi().call({
                     method: 'get',
@@ -201,7 +201,7 @@
 						var option = '';
 						_.each(datas,function(data,i){
 //							console.log(data,i)
-							option+='<option value="'+i+'" data-id="'+i+'">'+data+'</option>';
+							option+='<option value="'+i+'" data-id="'+i+'" '+ (did && did == i?'selected':'')+'>'+data+'</option>';
 						})
 						$('.xa-district').html(option);
 					},
@@ -211,7 +211,15 @@
 			},
 		};
 		obj.init();
-		
+		//页面为修改时：
+		var area = "{{sender_info.area}}";
+		var isChange = "{{sender_info}}" != "{}"?true:false;
+		var areaId = area.split('_');
+		if(isChange){
+			obj.getPrvince(areaId[0]);
+			obj.getCity(areaId[0],areaId[1]);
+			obj.getDistrict(areaId[1],areaId[2]);
+		}
 	});
 </script>
 {% endblock %}
