@@ -121,7 +121,7 @@ class GetProductEvaluates(resource.Resource):
 		result = []
 		count = 0
 		for evaluate in evaluates:
-			count += 0
+			count += 1
 			member_id = evaluate.member_id
 			detail = evaluate.detail
 			temp_detail = []
