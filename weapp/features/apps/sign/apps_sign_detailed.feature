@@ -161,7 +161,7 @@ Background:
 Scenario:1 会员签到统计详情列表
 #倒序排列，一页显示15条记录
 	Given jobs登录系统
-	
+	When jobs设置当前时间为'2015.10.15 22:22:22'
 	Then jobs获得'bill'参加'签到活动1'的签到详情列表
 	"""
 		[{

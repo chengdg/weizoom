@@ -260,68 +260,120 @@ Scenario:1 优惠券明细列表
 	Given jobs登录系统
 
 	Then jobs获得'bill'参加'签到活动1'的优惠券明细列表
-	"""
-		[{
-			"collection_time":"2015/10/09 10:30:00",
-			"coupon":"优惠券1",
-			"detailed":"通用券",
-			"state":"未使用"
-		},{
-			"collection_time":"2015/10/05 10:30:00",
-			"coupon":"优惠券2",
-			"detailed":"通用券",
-			"state":"未使用"
-		},{
-			"collection_time":"2015/10/02 10:30:00",
-			"coupon":"优惠券M",
-			"detailed":"多商品券",
-			"state":"已过期"
-		}]
-	"""
+		"""
+			[{
+				"collection_time":"2015/10/09 10:30:00",
+				"coupon":"优惠券1",
+				"detailed":"通用券",
+				"state":"未使用"
+			},{
+				"collection_time":"2015/10/05 10:30:00",
+				"coupon":"优惠券2",
+				"detailed":"通用券",
+				"state":"未使用"
+			},{
+				"collection_time":"2015/10/02 10:30:00",
+				"coupon":"优惠券M",
+				"detailed":"多商品券",
+				"state":"已过期"
+			}]
+		"""
 	
 	Then jobs获得'tom'参加'签到活动1'的优惠券明细列表
-	"""
-		[{
-			"collection_time":"今天",
-			"coupon":"优惠券M",
-			"detailed":"多商品券",
-			"state":"未使用"
-		}]
-	"""
+		"""
+			[{
+				"collection_time":"今天",
+				"coupon":"优惠券M",
+				"detailed":"多商品券",
+				"state":"未使用"
+			}]
+		"""
 
 @mall2 @apps @apps_sign @apps_sign_coupon_detailed
-Scenario:2 使用中的优惠券明细列表
-	Given jobs登录系统
+Scenario:2 优惠券明细列表查询
 	When bill访问jobs的webapp
 	And bill购买jobs的商品
 		"""
-		{
-			"order_id": "00001",
-			"pay_type": "微信支付",
-			"products": [{
-				"name": "商品1",
-				"count": 1
-			}],
-			"coupon": "coupon1_id_1"
-		}
+			{
+				"order_id": "00001",
+				"pay_type": "微信支付",
+				"products": [{
+					"name": "商品1",
+					"count": 1
+				}],
+				"coupon": "coupon1_id_1"
+			}
+		"""
+	Given jobs登录系统
+	Then jobs能获得weapp系统'bill'拥有优惠券默认查询条件
+		"""
+			[{
+				"status":"全部"
+			}]
+		"""
+	Then jobs获得'bill'参加'签到活动1'的优惠券明细列表
+		"""
+			[{
+				"collection_time":"2015/10/09 10:30:00",
+				"coupon":"优惠券1",
+				"detailed":"通用券",
+				"state":"已使用"
+			},{
+				"collection_time":"2015/10/05 10:30:00",
+				"coupon":"优惠券2",
+				"detailed":"通用券",
+				"state":"未使用"
+			},{
+				"collection_time":"2015/10/02 10:30:00",
+				"coupon":"优惠券M",
+				"detailed":"多商品券",
+				"state":"未使用"
+			}]
 		"""
 
+	When jobs设置优惠券状态查询条件
+		"""
+			[{
+				"status":"未使用"
+			}]
+		"""
 	Then jobs获得'bill'参加'签到活动1'的优惠券明细列表
-	"""
+		"""
+			[{
+				"collection_time":"2015/10/05 10:30:00",
+				"coupon":"优惠券2",
+				"detailed":"通用券",
+				"state":"未使用"
+			},{
+				"collection_time":"2015/10/02 10:30:00",
+				"coupon":"优惠券M",
+				"detailed":"多商品券",
+				"state":"未使用"
+			}]
+		"""
+
+	When jobs设置优惠券状态查询条件
+		"""
+			[{
+				"status":"已使用"
+			}]
+		"""
+	Then jobs获得'bill'参加'签到活动1'的优惠券明细列表
+		"""
+			[{
+				"collection_time":"2015/10/09 10:30:00",
+				"coupon":"优惠券1",
+				"detailed":"通用券",
+				"state":"已使用"
+			}]
+		"""
+	When jobs设置优惠券状态查询条件
+		"""
 		[{
-			"collection_time":"2015/10/09 10:30:00",
-			"coupon":"优惠券1",
-			"detailed":"通用券",
-			"state":"已使用"
-		},{
-			"collection_time":"2015/10/05 10:30:00",
-			"coupon":"优惠券2",
-			"detailed":"通用券",
-			"state":"未使用"
-		},{
-			"collection_time":"2015/10/02 10:30:00",
-			"coupon":"优惠券M",
-			"detailed":"多商品券",
-			"state":"未使用"
+			"status":"已过期"
 		}]
-	"""
+		"""
+	Then jobs能获得weapp系统'bill'拥有优惠券
+		"""
+		[]
+		"""
