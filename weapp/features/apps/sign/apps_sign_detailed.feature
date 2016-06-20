@@ -43,11 +43,6 @@ Background:
 			"share_pic": "1.jpg",
 			"share_describe": "签到送好礼！",
 			"reply_content": "每日签到获得20积分,连续签到奖励更丰富哦！",
-			"reply_keyword":
-				[{
-					"rule": "精确",
-					"key_word": "签到"
-				}],
 			"sign_settings":
 				[{
 					"sign_in": "0",
@@ -74,7 +69,7 @@ Background:
 			"cover_in_the_text":"true",
 			"summary":"签到",
 			"content":"签到",
-			"jump_url":"微信签到活动"
+			"jump_url":"签到活动1"
 		}]
 		"""
 	And jobs已添加关键词自动回复规则
@@ -198,7 +193,7 @@ Scenario:1 会员签到统计详情列表
 			"sign_state":"1"
 		},{
 			"sign_time":"2015.10.08 10:30:00",
-			"get_reward":"积分+10",
+			"get_reward":"优惠券M",
 			"sign_state":"1"
 		},{
 			"sign_time":"2015.10.07 10:30:00",
@@ -218,7 +213,7 @@ Scenario:1 会员签到统计详情列表
 			"sign_state":"1"
 		},{
 			"sign_time":"2015.10.03 10:30:00",
-			"get_reward":"积分+10",
+			"get_reward":"优惠券1",
 			"sign_state":"1"
 		},{
 			"sign_time":"2015.10.02 10:30:00",
