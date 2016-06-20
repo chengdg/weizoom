@@ -63,8 +63,8 @@
         <ul class="breadcrumb">
       <li>您当前所在位置</li>
       <li><a href="/termite2/pages/">百宝箱</a></li>
-      <li><a href="/apps/exlottery/exlotteries/">微信抽奖</a></li>
-      <li class="active">新建抽奖</li>
+      <li><a href="/apps/exlottery/exlotteries/">专项抽奖</a></li>
+      <li class="active">新建专项抽奖</li>
         </ul>
     </div>
 {% if is_deleted_data %}
@@ -118,7 +118,7 @@
         "task": "weizoom-load-termite-components"
       }
     -->
-  {{ '["appkit.page", "appkit.lotterydescription", "appkit.submitbutton"]'|load_termite_components|safe }}
+  {{ '["appkit.page", "appkit.exlotterydescription", "appkit.submitbutton"]'|load_termite_components|safe }}
   <!-- *end_prunt_task* -->
 
 {% if not is_deleted_data %}

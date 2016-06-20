@@ -297,6 +297,7 @@ MALL_PROMOTION_VIRTUAL_PRODUCTS_NAV = 'virtualProducts'
 MALL_PROMOTION_CARD_EXCHANGE_NAV = 'cardExchange'
 
 MALL_APPS_LOTTERY_NAV = 'lotteries'
+MALL_APPS_EXLOTTERY_NAV = 'exlotteries'
 MALL_APPS_FEEDBACK_NAV = 'exsurveies'
 MALL_APPS_SURVEY_NAV = 'surveies'
 MALL_APPS_EVENT_NAV = 'events'
@@ -408,6 +409,12 @@ MALL_PROMOTION_AND_APPS_SECOND_NAV = {
                     'title': "微信抽奖",
                     'url': '/apps/lottery/lotteries/',
                     'permission': ''
+                },{
+                    'name': MALL_APPS_EXLOTTERY_NAV,
+                    'title': u'专项抽奖',
+                    'url': '/apps/exlottery/exlotteries/',
+                    'permission': '',
+                    'users': ['jobs','njtest', 'ceshi01', 'weshop']
                 },
                 # {
                     # 'name': MALL_APPS_FEEDBACK_NAV,
