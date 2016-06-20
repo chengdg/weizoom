@@ -215,7 +215,7 @@ Scenario:2 会员签到统计列表分页
 Scenario:3 会员签到统计列表查询
 	Given jobs登录系统
 
-	When jobs设置查询参数
+	When jobs设置签到统计列表查询参数
 		"""
 		{
 			"name":"o"
