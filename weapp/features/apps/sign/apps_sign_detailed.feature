@@ -156,12 +156,13 @@ Background:
 		Then bill收到自动回复'签到得优惠'
 		When bill点击图文'签到得优惠'进入签到得优惠页面
 		When bill参加签到活动于'2015-10-09 10:30:00'
+
 @mall2 @apps @apps_sign @apps_sign_detailed
 Scenario:1 会员签到统计详情列表
 #倒序排列，一页显示15条记录
 	Given jobs登录系统
 	
-	Then jobs获得'bill'签到详情列表
+	Then jobs获得'bill'参加'签到活动1'的签到详情列表
 	"""
 		[{
 			"sign_time":"2015.10.15 00:00:00",
