@@ -300,7 +300,7 @@ ui-appPage-commonStyle">
                             ${item.total_integral}
                         </td>
                         <td>
-                            <a href="" >{{html item.coupon_count }}</a>
+                            <a href="javascript:void(0);" class="xa-coupon" member_id="${item.member_id}">{{html item.coupon_count }}</a>
                         </td>
                         <td><a href="javascript:void(0);" member_id="${item.member_id}" belong_to="${item.belong_to}" class="ml5 xa-viewData">查看详情</a></td>
                     </tr>
@@ -649,7 +649,14 @@ ui-appPage-commonStyle">
 						}
 					});
 				});
-    });
+
+            $('body').delegate(".xa-coupon", 'click', function(event){
+                var memberId = $(event.currentTarget).attr('member_id');
+                    W.dialog.showDialog('W.member.dialog.MemberDetailCouponsDialog', {
+                        memberId: memberId
+                    });
+            });  
+        });
 
     function changeStatus(act){
         var innerHtml,actionHtml;
@@ -680,6 +687,7 @@ ui-appPage-commonStyle">
             });
         }
     }
+
   </script>
 {% block js %}
 <script id="sign-chance-dialog-tmpl-src" type="text/x-jquery-tmpl">
