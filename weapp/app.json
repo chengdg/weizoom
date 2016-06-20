@@ -1,9 +1,9 @@
 {
-	"name": "shvote",
+	"name": "exlottery",
 	"resources": [{
-		"name": "Shvote",
+		"name": "Exlottery",
 		"need_user_participant": true,
-		"display_name": "高级投票",
+		"display_name": "专项抽奖",
 		"enable_termite": true
 	}]
 }
