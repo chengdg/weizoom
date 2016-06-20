@@ -44,7 +44,6 @@ Scenario:1 新建微信专项抽奖
 			"desc":"百事专项抽奖活动",
 			"start_date":"今天",
 			"end_date":"2天后",
-			"desc":"抽奖啦抽奖啦",
 			"reduce_integral":0,
 			"send_integral":1,
 			"win_rate":"50%",
