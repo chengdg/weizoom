@@ -193,7 +193,7 @@ Scenario:1 会员签到统计详情列表
 			"sign_state":"1"
 		},{
 			"sign_time":"2015.10.08 10:30:00",
-			"get_reward":"积分+10",
+			"get_reward":"优惠券M",
 			"sign_state":"1"
 		},{
 			"sign_time":"2015.10.07 10:30:00",
@@ -213,7 +213,7 @@ Scenario:1 会员签到统计详情列表
 			"sign_state":"1"
 		},{
 			"sign_time":"2015.10.03 10:30:00",
-			"get_reward":"积分+10",
+			"get_reward":"优惠券1",
 			"sign_state":"1"
 		},{
 			"sign_time":"2015.10.02 10:30:00",
