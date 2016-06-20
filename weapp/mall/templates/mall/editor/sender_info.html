@@ -13,13 +13,13 @@
 		<div class="xui-i-content mt20 pl50">
 			
 			<!--<form action="/mall2/sender_info/" method="put">-->
-				<form action="/mall2/sender_info/?method=put" method="post" id="senderForm">
+				<form  id="senderForm" data-id={{sender_info.id}}>
 
 				<div class="mb10">
 					<label for="" class="star_show">发货人：</label>
-					<input type="text" class="ml10 xa-senderName" name="sender_name" data-validate="require-notempty" value="{{sender_info.sender_name}}" required/>
+					<input type="text" class="ml10 xa-senderName" name="sender_name"  maxlength="100" value="{{sender_info.sender_name}}" data-validate="required-none"/>
 					<span class="errorHint"></span>
-					<br />
+					
 					
 				</div>
 				
@@ -75,40 +75,52 @@
 <script type="text/javascript">
 
 	$(document).ready(function() {
-		$('.xa-submit').on('click',function(){
-    	var area = $('.xa-province').val()+'_'+$('.xa-city').val()+'_'+$('.xa-district').val();
-    	$('[name="area"]').val(area);
-    	var args = $('form').serializeObject();
-//  	$('form').submit();
-    	  W.getApi().call({
-          method: 'put',
-          app: 'mall2',
-          resource: 'sender_info',
-          args:args,
-	      success: function(data) {
-				window.location.href = '/mall2/sender_info_list/';
-					},
-					error: function(resp) {
-					}
-				});
-       });
-       
-       $('#senderForm').submit(function() {
+		$('.xa-submit').click(function(){
 			if (!W.validate()) {
 				return false;
 			}
 			var $senderName = $('.xa-senderName');
 			var senderNameVal =$senderName.val();
-			if (senderNameVal = "") {
-				W.showHint('error', '请输入发货人信息');
+			console.log(senderNameVal+'11111');
+			if (isNaN(senderNameVal)) {
+				W.showHint('error', '请输入发件人信息'); 
 				return false;
 			}else{
 				W.showHint('success', '保存成功');
+				window.location.href = '/mall2/sender_info_list/';
 				return true;
 			}
+    	var area = $('.xa-province').val()+'_'+$('.xa-city').val()+'_'+$('.xa-district').val();
+    	$('[name="area"]').val(area);
+    	var args = $('form').serializeObject();
+//  	$('form').submit();
+        var method,resource;
+        if(window.location.search.indexOf("id")== -1){
+        	method = 'put';
 
-
-		});
+        }else{
+        	var id = "{{sender_info.id}}";
+        	method = 'post';
+        	args = _.extend(args,{id:id})
+        	
+        }
+//      console.log(method,resource);
+    	  W.getApi().call({
+          method:'post',
+          
+          app: 'mall2',
+          resource:'sender_info',
+          args:args,
+	      success: function(data) {
+	      	
+				window.location.href = '/mall2/sender_info_list/';
+					},
+					error: function(resp) {
+						
+					}
+				});
+       });
+       
        
 		var obj = {
 			init: function () {
@@ -211,11 +223,11 @@
 			},
 		};
 		obj.init();
-		//页面为修改时：
-		var area = "{{sender_info.area}}";
-		var isChange = "{{sender_info}}" != "{}"?true:false;
-		var areaId = area.split('_');
+		//页面为修改时：		
+		var isChange = "{{sender_info}}" != "{}"?true:false;		
 		if(isChange){
+			var area = "{{sender_info.area}}";
+			var areaId = area.split('_');
 			obj.getPrvince(areaId[0]);
 			obj.getCity(areaId[0],areaId[1]);
 			obj.getDistrict(areaId[1],areaId[2]);

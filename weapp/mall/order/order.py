@@ -756,7 +756,7 @@ class OrderSenderInfo(resource.Resource):
         return create_response(200).get_response()
 
     @login_required
-    def post(request):
+    def api_post(request):
         """更新发件人信息
         API:
           method: post
@@ -782,8 +782,7 @@ class OrderSenderInfo(resource.Resource):
         if is_selected:
             SenderInfo.objects.filter(webapp_id=webapp_id,id=sender_info_id).update(is_selected=is_selected)
             SenderInfo.objects.filter(~Q(id=sender_info_id),webapp_id=webapp_id).update(is_selected=False)
-        return HttpResponseRedirect(
-            '/mall2/sender_info_list/')
+        return create_response(200).get_response()
 
     @login_required
     def api_delete(request):
