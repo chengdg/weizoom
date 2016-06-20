@@ -90,6 +90,11 @@ class Exlottery(resource.Resource):
 		data = request_util.get_fields_to_be_save(request)
 		exlottery = app_models.Exlottery(**data)
 		exlottery.save()
+
+		lottery_code_count = request.POST.get('lottery_code_count',0)
+		owner_id = request.manager.id
+		generate_exlottery_code(owner_id,str(exlottery.id), lottery_code_count)
+
 		error_msg = None
 		
 		data = json.loads(exlottery.to_json())
@@ -125,4 +130,25 @@ class Exlottery(resource.Resource):
 		
 		response = create_response(200)
 		return response.get_response()
+
+def generate_exlottery_code(owner_id, belong_to, count):
+	"""
+	生成专项抽奖码库
+	@param count:
+	@return:
+	"""
+	import random
+	choice = '0123456789abcdefghijklmnopqrstuvwxyz'
+
+	for i in range(int(count)):
+		exlotterycode = app_models.ExlotteryCode(
+			owner_id = owner_id,
+			belong_to = belong_to,
+			code = 'el%s' %''.join(random.sample(choice,8)),
+			created_at = datetime.now()
+		)
+		exlotterycode.save()
+
+
+
 

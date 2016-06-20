@@ -111,3 +111,24 @@ class ExlotteryControl(models.Document):
 		'collection': 'exlottery_exlottery_control',
 		'db_alias': 'apps'
 	}
+
+
+NOT_PRIZE = 0
+FIRST_PRIZE = 1
+SECOND_PRIZE = 2
+THIRD_PRIZE = 3
+
+class ExlotteryCode(models.Document):
+	owner_id = models.LongField()  # 创建人id
+	belong_to = models.StringField(default="", max_length=100)  # 对应的专项抽奖活动id
+	code = models.StringField(default="", max_length=20) #抽奖码
+	member_id = models.LongField(default=0)  # 参与者id
+	created_at = models.DateTimeField()  # 创建时间
+	get_time = models.DateTimeField()  # 获得时间
+	prize_grade = models.IntField(default=0) # 奖品等级
+	prize_name = models.StringField(default="", max_length=100)  # 奖品名称
+
+	meta = {
+		'collection': 'exlottery_code',
+		'db_alias': 'apps'
+	}
