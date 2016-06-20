@@ -50,10 +50,10 @@
     </div>
     <div class="xui-button">
         {% if not has_waiting_review %}
-        <a href="http://{{ h5_host }}/mall/home_page/?woid={{request.webapp_owner_id}}" class="xui-returnHome fl">返回首页</a>
+        <a href="http://{{ h5_host }}/mall/home_page/?woid={{request.webapp_owner_id}}&fmt={{ fmt }}" class="xui-returnHome fl">返回首页</a>
         {% else %}
-        <a href="http://{{ h5_host }}/mall/home_page/?woid={{request.webapp_owner_id}}" class="xui-returnHome xui-smallReturnHome fl">返回首页</a>
-        <a href="http://{{ h5_host }}/mall/waiting_review_orders/?woid={{request.webapp_owner_id}}" class="xui-continue cRed fr">继续评论</a>
+        <a href="http://{{ h5_host }}/mall/home_page/?woid={{request.webapp_owner_id}}&fmt={{ fmt }}" class="xui-returnHome xui-smallReturnHome fl">返回首页</a>
+        <a href="http://{{ h5_host }}/mall/waiting_review_orders/?woid={{request.webapp_owner_id}}&fmt={{ fmt }}" class="xui-continue cRed fr">继续评论</a>
         {% endif %} 
     </div>
     

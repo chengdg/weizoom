@@ -18,7 +18,8 @@ class EvaluatesSucceed(resource.Resource):
 			'h5_host': settings.APPS_H5_DOMAIN,
 			'page_title': u'评价成功',
 			'is_hide_weixin_option_menu': True,
-			'has_waiting_review': True
+			'has_waiting_review': True,
+			'fmt': request.GET.get('fmt', '')
 		})
 
 
