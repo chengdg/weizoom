@@ -121,6 +121,7 @@ def get_member_info_by(member_id):
 	 		member_info = MemberInfo.objects.filter(member=member)[0]
 	 	else:
 	 		member_info = MemberInfo.objects.create(member=member, name = '')
+		return member_info
 	except:
 		return None
 

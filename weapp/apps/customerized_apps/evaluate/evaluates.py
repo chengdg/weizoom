@@ -15,7 +15,7 @@ from mall import export
 from mall import models as mall_models
 from export_job.models import ExportJob
 from core import search_util
-from modules.member.module_api import get_member_by_id_list
+from modules.member.module_api import get_member_by_id_list, get_member_info_by
 from modules.member.models import Member, MemberHasTag
 from excel_response import ExcelResponse
 
@@ -378,49 +378,24 @@ class EvaluatesExport(resource.Resource):
 		评价列表导出
 		@return:
 		"""
-		name = request.GET.get('name', '')
 		user_code = request.GET.get('userCode', '')
-		review_status = request.GET.get('reviewStatus', 'all')
-		start_date = request.GET.get('startDate', '')
-		end_date = request.GET.get('endDate', '')
-		product_score = request.GET.get('productScore', '-1')
-
-		is_fetch_all_reviews = (not name) and (not user_code) and (not start_date) and (not end_date) and (
-			review_status == 'all') and (product_score == 'all')
 
 		# 当前用户
 		owner = request.manager
 		all_reviews = app_models.ProductEvaluates.objects(owner_id=owner.id).order_by("-created_at")
 
-		if is_fetch_all_reviews:
-			# 分页
-			count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
-			current_page = int(request.GET.get('page', '1'))
-			pageinfo, product_reviews = paginator.paginate(all_reviews, current_page, count_per_page,
-														   query_string=request.META['QUERY_STRING'])
+		all_reviews = _filter_reviews(request, all_reviews)
+
+		# 处理商品编码
+		product_reviews = []
+		if user_code:
+			for review in all_reviews:
+				product = mall_models.Product.objects.get(id=review.product_id)
+				if product.user_code == user_code:
+					review.product_user_code = user_code
+					product_reviews.append(review)
 		else:
-			all_reviews = _filter_reviews(request, all_reviews)
-
-			# 处理商品编码
-			product_reviews = []
-			if user_code:
-				for review in all_reviews:
-					# from cache import webapp_cache
-
-					# review_product = mall_models.OrderHasProduct.objects.get(id=review.order_has_product_id)
-					# product = webapp_cache.get_webapp_product_detail(request.webapp_owner_id, review.product_id)
-					# product.fill_specific_model(review_product.product_model_name)
-					product = mall_models.Product.objects.get(id=review.product_id)
-					if product.user_code == user_code:
-						review.product_user_code = user_code
-						product_reviews.append(review)
-			else:
-				product_reviews = all_reviews
-		print product_reviews,22222222222222222
-			# count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
-			# current_page = int(request.GET.get('page', '1'))
-			# pageinfo, product_reviews = paginator.paginate(product_reviews, current_page, count_per_page,
-			# 											   query_string=request.META['QUERY_STRING'])
+			product_reviews = all_reviews
 
 		# 处理商品
 		product_ids = [review.product_id for review in product_reviews]
@@ -435,13 +410,14 @@ class EvaluatesExport(resource.Resource):
 		]
 
 		for review in product_reviews:
+			member_info = get_member_info_by(review.member_id)
 			try:
 				member = member_id2member.get(review.member_id, None)
 				info_list = [
 					id2product[review.product_id].name,
 					review.order_id,
 					member.username_for_html if member else u'已经跑路',
-					member.username_for_html if member else u'已经跑路',
+					member_info.phone_number if member_info else '',
 					review.created_at.strftime("%Y-%m-%d %H:%H:%S"),
 					review.status,
 					review.score,

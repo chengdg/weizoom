@@ -247,26 +247,9 @@ $(document).ready(function(){
         var reviewStatus = $('#review_status').val();
         var userCode = $.trim($('#user_code').val());
         var productScore = $.trim($('#product_score').val());
-        W.getApi().call({
-            app: 'apps/evaluate',
-            resource: 'evaluates_export',
-            method: 'get',
-            args: {
-                startDate: startDate,
-                endDate: endDate,
-                name: name,
-                reviewStatus: reviewStatus,
-                userCode: userCode,
-                productScore: productScore,
-            },
-            success: function(data) {
-                W.showHint('success', '导出成功！');
-            },
-            error: function(response) {
-                W.showHint('error', '导出失败，请重试！');
-            }
-        });
 
+        var url = "/apps/evaluate/api/evaluates_export/?startDate="+startDate+"&endDate="+endDate+"&name="+name+"&reviewStatus="+reviewStatus+"&userCode="+userCode+"&productScore="+productScore;
+        window.open(url);
     });
 
     var table = $('div[data-ui-role="advanced-table"]').data('view');
