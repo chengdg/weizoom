@@ -253,7 +253,7 @@ Background:
 		When nokia点击图文'签到活动'进入签到活动页面
 		When nokia参加签到活动于'2015-10-13 10:30:00'
 
-@mall2 @apps @apps_sign @apps_sign_backend @sign_statistics
+@mall2 @apps @apps_sign @apps_sign_backend @sign_statistics @cl
 Scenario:1 会员签到统计列表
 	Given jobs登录系统
 
@@ -265,7 +265,7 @@ Scenario:1 会员签到统计列表
 		| bill | 2015/10/09 10:30:00 |      8     |         3       |     70    |     5      |
 		| tom  | 2015/10/06 10:30:00 |      3     |         2       |     40    |     1      |
 
-@mall2 @apps @apps_sign @apps_sign_backend @sign_statistics
+@mall2 @apps @apps_sign @apps_sign_backend @sign_statistics @cl
 Scenario:2 会员签到统计列表分页
 	Given jobs登录系统
 
@@ -285,7 +285,7 @@ Scenario:2 会员签到统计列表分页
 	Then jobs获得会员签到统计列表
 		| name |       last_sign     | total_sign | continuous_sign | integral | coupon_num |
 		| marry| 2015/10/11 10:30:00 |      5     |         1       |     60   |     2      |
-		| bill | 2015/10/09 10:30:00 |      8     |         3       |     70   |     3      |
+		| bill | 2015/10/09 10:30:00 |      8     |         3       |     70   |     5      |
   	When jobs访问签到统计第'3'页
 	Then jobs获得会员签到统计列表
 		| name |       last_sign     | total_sign | continuous_sign | integral | coupon_num |
@@ -294,8 +294,9 @@ Scenario:2 会员签到统计列表分页
 	Then jobs获得会员签到统计列表
 		| name |       last_sign     | total_sign | continuous_sign | integral | coupon_num |
 		| marry| 2015/10/11 10:30:00 |      5     |         1       |     60   |     2      |
-		| bill | 2015/10/09 10:30:00 |      8     |         3       |     70   |     3      |
-@mall2 @apps @apps_sign @apps_sign_backend @sign_statistics
+		| bill | 2015/10/09 10:30:00 |      8     |         3       |     70   |     5      |
+
+@mall2 @apps @apps_sign @apps_sign_backend @sign_statistics @cl
 Scenario:3 会员签到统计列表查询
 	Given jobs登录系统
 

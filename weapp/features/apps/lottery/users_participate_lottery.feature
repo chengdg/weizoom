@@ -555,7 +555,7 @@ Scenario:7 优惠券有领取限制，用户无法获得优惠券奖励
 		"""
 
 #补充.张雪 2016.01.19
-@mall2 @apps @apps_lottery @users_participate_lottery @apps_lottery_frontend @cl
+@mall2 @apps @apps_lottery @users_participate_lottery @apps_lottery_frontend
 Scenario:8 奖品机会被抽完，手机端提示信息奖品被抽完，下次再来
 	#中奖概率：100%；抽奖限制：一天两次
 	#奖项设置：

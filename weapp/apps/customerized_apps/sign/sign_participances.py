@@ -83,8 +83,9 @@ class SignParticipances(resource.Resource):
 
 		items = []
 		for data in datas:
-			print len(data.prize['coupon'].split(',')),"data.prize['coupon']"
-			coupon_count = len(data.prize['coupon'].split(','))
+			coupon_count = 0
+			if data.prize['coupon']:
+				coupon_count = len(data.prize['coupon'].split(','))
 			items.append({
 				'id': str(data.id),
 				'belong_to': data.belong_to,
