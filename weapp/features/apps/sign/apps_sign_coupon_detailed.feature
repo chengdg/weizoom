@@ -70,6 +70,35 @@ Background:
 				}]
 		}
 		"""
+	When jobs已添加单图文
+		"""
+		[{
+			"title":"签到得优惠",
+			"cover": [{
+				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
+			}],
+			"cover_in_the_text":"true",
+			"summary":"签到",
+			"content":"签到",
+			"jump_url":"微信签到活动"
+		}]
+		"""
+	And jobs已添加关键词自动回复规则
+		"""
+		[{
+			"rules_name":"规则1",
+			"keyword":
+				[{
+					"keyword": "签到",
+					"type": "equal"
+				}],
+			"keyword_reply":
+				[{
+					"reply_content":"签到得优惠",
+					"reply_type":"text_picture"
+				}]
+		}]
+		"""
 	When jobs更新签到活动的状态
 		"""
 		{
@@ -86,48 +115,81 @@ Background:
 	#bill先连续签到5次，终止一天，再连续签到3次
 		When 清空浏览器
 		When bill访问jobs的webapp
-		When bill在微信中向jobs的公众号发送消息'签到'于'2015-10-01 10:30:00'
+		When bill在微信中向jobs的公众号发送消息'签到'
+		Then bill收到自动回复'签到得优惠'
+		When bill点击图文'签到得优惠'进入签到得优惠页面
+		When bill参加签到活动于'2015-10-01 10:30:00'
 
 		When 清空浏览器
 		When bill访问jobs的webapp
-		When bill在微信中向jobs的公众号发送消息'签到'于'2015-10-02 10:30:00'
+		When bill在微信中向jobs的公众号发送消息'签到'
+		Then bill收到自动回复'签到得优惠'
+		When bill点击图文'签到得优惠'进入签到得优惠页面
+		When bill参加签到活动于'2015-10-02 10:30:00'
 
 		When 清空浏览器
 		When bill访问jobs的webapp
-		When bill在微信中向jobs的公众号发送消息'签到'于'2015-10-03 10:30:00'
+		When bill在微信中向jobs的公众号发送消息'签到'
+		Then bill收到自动回复'签到得优惠'
+		When bill点击图文'签到得优惠'进入签到得优惠页面
+		When bill参加签到活动于'2015-10-03 10:30:00'
 
 		When 清空浏览器
 		When bill访问jobs的webapp
-		When bill在微信中向jobs的公众号发送消息'签到'于'2015-10-04 10:30:00'
+		When bill在微信中向jobs的公众号发送消息'签到'
+		Then bill收到自动回复'签到得优惠'
+		When bill点击图文'签到得优惠'进入签到得优惠页面
+		When bill参加签到活动于'2015-10-04 10:30:00'
 
 		When 清空浏览器
 		When bill访问jobs的webapp
-		When bill在微信中向jobs的公众号发送消息'签到'于'2015-10-05 10:30:00'
+		When bill在微信中向jobs的公众号发送消息'签到'
+		Then bill收到自动回复'签到得优惠'
+		When bill点击图文'签到得优惠'进入签到得优惠页面
+		When bill参加签到活动于'2015-10-05 10:30:00'
 
 		When 清空浏览器
 		When bill访问jobs的webapp
-		When bill在微信中向jobs的公众号发送消息'签到'于'2015-10-07 10:30:00'
+		When bill在微信中向jobs的公众号发送消息'签到'
+		Then bill收到自动回复'签到得优惠'
+		When bill点击图文'签到得优惠'进入签到得优惠页面
+		When bill参加签到活动于'2015-10-07 10:30:00'
 
 		When 清空浏览器
 		When bill访问jobs的webapp
-		When bill在微信中向jobs的公众号发送消息'签到'于'2015-10-08 10:30:00'
+		When bill在微信中向jobs的公众号发送消息'签到'
+		Then bill收到自动回复'签到得优惠'
+		When bill点击图文'签到得优惠'进入签到得优惠页面
+		When bill参加签到活动于'2015-10-08 10:30:00'
 
 		When 清空浏览器
 		When bill访问jobs的webapp
-		When bill在微信中向jobs的公众号发送消息'签到'于'2015-10-09 10:30:00'
+		When bill在微信中向jobs的公众号发送消息'签到'
+		Then bill收到自动回复'签到得优惠'
+		When bill点击图文'签到得优惠'进入签到得优惠页面
+		When bill参加签到活动于'2015-10-09 10:30:00'
 
 	#tom先签到1次，终止一天，再连续签到2次
 		When 清空浏览器
 		When tom访问jobs的webapp
-		When tom在微信中向jobs的公众号发送消息'签到'于'前两天'
+		When tom在微信中向jobs的公众号发送消息'签到'
+		Then tom收到自动回复'签到得优惠'
+		When tom点击图文'签到得优惠'进入签到得优惠页面
+		When tom参加签到活动于'前两天'
 
 		When 清空浏览器
 		When tom访问jobs的webapp
-		When tom在微信中向jobs的公众号发送消息'签到'于'前一天'
+		When tom在微信中向jobs的公众号发送消息'签到'
+		Then tom收到自动回复'签到得优惠'
+		When tom点击图文'签到得优惠'进入签到得优惠页面
+		When tom参加签到活动于'前一天'
 
 		When 清空浏览器
 		When tom访问jobs的webapp
-		When tom在微信中向jobs的公众号发送消息'签到'于'今天'
+		When tom在微信中向jobs的公众号发送消息'签到'
+		Then tom收到自动回复'签到得优惠'
+		When tom点击图文'签到得优惠'进入签到得优惠页面
+		When tom参加签到活动于'今天'
 @mall2 @apps @apps_sign @apps_sign_coupon_detailed
 Scenario:1 优惠券明细列表
 	Given jobs登录系统
