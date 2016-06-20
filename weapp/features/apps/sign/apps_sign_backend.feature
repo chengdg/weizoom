@@ -1,5 +1,5 @@
 # __author__ : 张雪
-
+#editor: 邓成龙 2016.06.20
 Feature: 后台配置数据
 	"""
 		用户通过jobs签到成功,活动签到奖励
@@ -52,17 +52,6 @@ Scenario:1 配置后台所有数据,优惠券数量足,没有过期
 			"share_pic":"1.jpg",
 			"share_describe": "签到获得奖励",
 			"reply_content":"签到",
-			"reply_keyword":
-				[{
-					"rule": "精确",
-					"key_word": "78"
-				},{
-					"rule": "精确",
-					"key_word": "12"
-				},{
-					"rule":"模糊",
-					"key_word": "123456"
-				}],
 			"sign_settings":
 				[{
 					"sign_in": "0",
@@ -91,17 +80,6 @@ Scenario:1 配置后台所有数据,优惠券数量足,没有过期
 			"share_pic":"1.jpg",
 			"share_describe": "签到获得奖励",
 			"reply_content":"签到",
-			"reply_keyword":
-				[{
-					"rule": "精确",
-					"key_word": "78"
-				},{
-					"rule": "精确",
-					"key_word": "12"
-				},{
-					"rule":"模糊",
-					"key_word": "123456"
-				}],
 			"sign_settings":
 				[{
 					"sign_in": "0",
@@ -133,17 +111,6 @@ Scenario:2 一条奖励下,不添加优惠券,有积分
 			"share_pic":"2.jpg",
 			"share_describe": "签到获得奖励",
 			"reply_content":"签到",
-			"reply_keyword":
-				[{
-					"rule": "精确",
-					"key_word": "78"
-				},{
-					"rule": "精确",
-					"key_word": "12"
-				},{
-					"rule":"模糊",
-					"key_word": "123456"
-				}],
 			"sign_settings":
 				[{
 					"sign_in": "0",
@@ -160,17 +127,6 @@ Scenario:2 一条奖励下,不添加优惠券,有积分
 			"share_pic":"2.jpg",
 			"share_describe": "签到获得奖励",
 			"reply_content":"签到",
-			"reply_keyword":
-				[{
-					"rule": "精确",
-					"key_word": "78"
-				},{
-					"rule": "精确",
-					"key_word": "12"
-				},{
-					"rule":"模糊",
-					"key_word": "123456"
-				}],
 			"sign_settings":
 				[{
 					"sign_in": "0",
@@ -190,11 +146,6 @@ Scenario:3 一条奖励下,添加优惠券,不添加积分
 			"share_pic":"3.jpg",
 			"share_describe": "签到获得奖励",
 			"reply_content":"签到",
-			"reply_keyword":
-				[{
-					"rule": "精确",
-					"key_word": "78"
-			}],
 			"sign_settings":
 				[{
 					"sign_in": "0",
@@ -213,11 +164,6 @@ Scenario:3 一条奖励下,添加优惠券,不添加积分
 			"share_pic":"3.jpg",
 			"share_describe": "签到获得奖励",
 			"reply_content":"签到",
-			"reply_keyword":
-				[{
-					"rule": "精确",
-					"key_word": "78"
-				}],
 			"sign_settings":
 				[{
 					"sign_in": "0",
@@ -238,11 +184,6 @@ Scenario:4 一条奖励下,添加优惠券,添加积分
 			"share_pic":"4.jpg",
 			"share_describe": "签到获得奖励",
 			"reply_content":"签到",
-			"reply_keyword":
-				[{
-					"rule":"模糊",
-					"key_word": "123456"
-				}],
 			"sign_settings":
 				[{
 					"sign_in": "0",
@@ -262,11 +203,6 @@ Scenario:4 一条奖励下,添加优惠券,添加积分
 			"share_pic":"4.jpg",
 			"share_describe": "签到获得奖励",
 			"reply_content":"签到",
-			"reply_keyword":
-				[{
-					"rule":"模糊",
-					"key_word": "123456"
-				}],
 			"sign_settings":
 				[{
 					"sign_in": "0",
@@ -288,17 +224,6 @@ Scenario:5 三条奖励下,一条优惠券,一条积分,一条优惠券加积分
 			"share_pic":"5.jpg",
 			"share_describe": "签到获得奖励",
 			"reply_content":"签到",
-			"reply_keyword":
-				[{
-					"rule": "精确",
-					"key_word": "78"
-				},{
-					"rule": "精确",
-					"key_word": "12"
-				},{
-					"rule":"模糊",
-					"key_word": "123456"
-				}],
 			"sign_settings":
 				[{
 					"sign_in": "0",
@@ -325,17 +250,6 @@ Scenario:5 三条奖励下,一条优惠券,一条积分,一条优惠券加积分
 			"share_pic":"5.jpg",
 			"share_describe": "签到获得奖励",
 			"reply_content":"签到",
-			"reply_keyword":
-				[{
-					"rule": "精确",
-					"key_word": "78"
-				},{
-					"rule": "精确",
-					"key_word": "12"
-				},{
-					"rule":"模糊",
-					"key_word": "123456"
-				}],
 			"sign_settings":
 				[{
 					"sign_in": "0",
@@ -365,17 +279,6 @@ Scenario:6 更新签到活动的状态
 			"share_pic":"7.jpg",
 			"share_describe": "签到获得奖励",
 			"reply_content":"签到",
-			"reply_keyword":
-				[{
-					"rule": "精确",
-					"key_word": "78"
-				},{
-					"rule": "精确",
-					"key_word": "12"
-				},{
-					"rule":"模糊",
-					"key_word": "123456"
-				}],
 			"sign_settings":
 				[{
 					"sign_in": "0",

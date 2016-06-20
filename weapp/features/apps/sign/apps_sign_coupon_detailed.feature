@@ -11,6 +11,20 @@ Feature: 签到-后台优惠券明细
 """
 Background:
 	Given jobs登录系统
+	Given jobs已添加商品
+		"""
+		[{
+			"name": "商品1",
+			"price": 100.00
+		}]
+		"""
+	And jobs已添加支付方式
+		"""
+		[{
+			"type": "微信支付",
+			"is_active": "启用"
+		}]
+		"""
 	When jobs添加优惠券规则
 		"""
 		[{
@@ -30,14 +44,14 @@ Background:
 			"coupon_id_prefix": "coupon2_id_",
 			"detailed":"currency"
 		},{
-			"name": "优惠券M",
-			"money": 20.00,
-			"limit_counts": "无限",
-			"start_date": "今天",
-			"end_date": "1天后",
-			"coupon_id_prefix": "coupon3_id_",
-			"detailed":"part"
-		}]
+            "name": "优惠券M",
+            "money": 20.00,
+            "limit_counts": "无限",
+            "start_date": "2天前",
+            "end_date": "1天前",
+            "coupon_id_prefix": "coupon3_id_",
+            "detailed":"part"  
+        }]
 		"""
 	Given jobs添加签到活动"签到活动1",并且保存
 		"""
@@ -48,11 +62,6 @@ Background:
 			"share_pic": "1.jpg",
 			"share_describe": "签到送好礼！",
 			"reply_content": "每日签到获得20积分,连续签到奖励更丰富哦！",
-			"reply_keyword":
-				[{
-					"rule": "精确",
-					"key_word": "签到"
-				}],
 			"sign_settings":
 				[{
 					"sign_in": "0",
@@ -80,7 +89,7 @@ Background:
 			"cover_in_the_text":"true",
 			"summary":"签到",
 			"content":"签到",
-			"jump_url":"微信签到活动"
+			"jump_url":"签到活动1"
 		}]
 		"""
 	And jobs已添加关键词自动回复规则
@@ -200,12 +209,12 @@ Scenario:1 优惠券明细列表
 			"collection_time":"2015/10/09 10:30:00",
 			"coupon":"优惠券1",
 			"detailed":"通用券",
-			"state":"已过期"
+			"state":"未使用"
 		},{
 			"collection_time":"2015/10/05 10:30:00",
 			"coupon":"优惠券2",
 			"detailed":"通用券",
-			"state":"已过期"
+			"state":"未使用"
 		},{
 			"collection_time":"2015/10/02 10:30:00",
 			"coupon":"优惠券M",
@@ -220,6 +229,43 @@ Scenario:1 优惠券明细列表
 			"collection_time":"今天",
 			"coupon":"优惠券M",
 			"detailed":"多商品券",
+			"state":"已过期"
+		}]
+	"""
+
+@mall2 @apps @apps_sign @apps_sign_coupon_detailed
+Scenario:2 使用中的优惠券明细列表
+	Given jobs登录系统
+	When bill访问jobs的webapp
+	And bill购买jobs的商品
+		"""
+		{
+			"order_id": "00001",
+			"pay_type": "微信支付",
+			"products": [{
+				"name": "商品1",
+				"count": 1
+			}],
+			"coupon": "coupon1_id_1"
+		}
+		"""
+	When jobs查看'bill'的优惠券明细
+	Then jobs获得'bill'优惠券明细列表
+	"""
+		[{
+			"collection_time":"2015/10/09 10:30:00",
+			"coupon":"优惠券1",
+			"detailed":"通用券",
+			"state":"已使用"
+		},{
+			"collection_time":"2015/10/05 10:30:00",
+			"coupon":"优惠券2",
+			"detailed":"通用券",
 			"state":"未使用"
+		},{
+			"collection_time":"2015/10/02 10:30:00",
+			"coupon":"优惠券M",
+			"detailed":"多商品券",
+			"state":"已过期"
 		}]
 	"""

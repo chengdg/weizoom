@@ -1,3 +1,4 @@
+#editor: 邓成龙 2016.06.20
 Feature:测试修改签到活动
 
 Background:
@@ -20,6 +21,94 @@ Background:
 			"coupon_id_prefix": "coupon2_id_"
 		}]
 		"""
+	When jobs已添加单图文
+		"""
+		[{
+			"title":"签到活动2",
+			"cover": [{
+				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
+			}],
+			"cover_in_the_text":"true",
+			"summary":"签到1",
+			"content":"签到1",
+			"jump_url":"签到活动1"
+		}]
+		"""
+	And jobs已添加关键词自动回复规则
+		"""
+		[{
+			"rules_name":"规则1",
+			"keyword":
+				[{
+					"keyword": "签到1",
+					"type": "equal"
+				}],
+			"keyword_reply":
+				[{
+					"reply_content":"签到活动1",
+					"reply_type":"text_picture"
+				}]
+		}]
+		"""
+	When jobs已添加单图文
+		"""
+		[{
+			"title":"签到活动2",
+			"cover": [{
+				"url": "/standard_static/test_resource_img/hangzhou2.jpg"
+			}],
+			"cover_in_the_text":"true",
+			"summary":"签到2",
+			"content":"签到2",
+			"jump_url":"签到活动2"
+		}]
+		"""
+	And jobs已添加关键词自动回复规则
+		"""
+		[{
+			"rules_name":"规则2",
+			"keyword":
+				[{
+					"keyword": "签到2",
+					"type": "equal"
+				}],
+			"keyword_reply":
+				[{
+					"reply_content":"签到活动2",
+					"reply_type":"text_picture"
+				}]
+		}]
+		"""
+	When jobs已添加单图文
+		"""
+		[{
+			"title":"签到活动3",
+			"cover": [{
+				"url": "/standard_static/test_resource_img/hangzhou3.jpg"
+			}],
+			"cover_in_the_text":"true",
+			"summary":"签到3",
+			"content":"签到3",
+			"jump_url":"签到活动3"
+		}]
+		"""
+	And jobs已添加关键词自动回复规则
+		"""
+		[{
+			"rules_name":"规则3",
+			"keyword":
+				[{
+					"keyword": "签到3",
+					"type": "equal"
+				}],
+			"keyword_reply":
+				[{
+					"reply_content":"签到活动3",
+					"reply_type":"text_picture"
+				}]
+		}]
+		"""
+
 @mall2 @apps @apps_sign @edited_sign
 Scenario:1 对签到活动内容进行修改，会员访问活动页面
 	When jobs添加签到活动"签到活动1",并且保存
@@ -31,11 +120,6 @@ Scenario:1 对签到活动内容进行修改，会员访问活动页面
 			"share_pic": "1.jpg",
 			"share_describe": "签到送好礼！",
 			"reply_content": "每日签到获得2积分和优惠券1一张",
-			"reply_keyword":
-				[{
-					"rule": "精确",
-					"key_word": "签到1"
-				}],
 			"sign_settings":
 				[{
 					"sign_in": "0",
@@ -55,10 +139,10 @@ Scenario:1 对签到活动内容进行修改，会员访问活动页面
 	When bill访问jobs的webapp
   	When 清空浏览器
 	When bill在微信中向jobs的公众号发送消息'签到1'
-	Then bill获得系统回复的消息
-	"""
-	签到成功！<br />已连续签到1天。<br />本次签到获得以下奖励:<br />2积分<br />优惠券1<br />签到说明：1签到赚积分！连续签到奖励更丰富哦！<br />每日签到获得2积分和优惠券1一张<br />
-	"""
+	Then bill收到自动回复'签到活动1'
+	When bill点击图文'签到活动1'进入签到活动页面
+	Then bill能参加签到活动
+
 	When bill访问jobs的webapp
 	Then bill在jobs的webapp中拥有2会员积分
 	And bill能获得webapp优惠券列表
@@ -79,11 +163,6 @@ Scenario:1 对签到活动内容进行修改，会员访问活动页面
 				"share_pic": "2.jpg",
 				"share_describe": "签到送好礼！",
 				"reply_content": "每日签到获得5积分和优惠券2一张",
-				"reply_keyword":
-					[{
-						"rule": "模糊",
-						"key_word": "签到2"
-					}],
 				"sign_settings":
 					[{
 						"sign_in": "0",
@@ -94,11 +173,10 @@ Scenario:1 对签到活动内容进行修改，会员访问活动页面
 			"""
 		When bill访问jobs的webapp
 		When 清空浏览器
-		When bill在微信中向jobs的公众号发送消息'签到2'
-		Then bill获得系统回复的消息
-		"""
-		亲，今天您已经签到过了哦，<br />明天再来吧！<br />
-		"""
+		When bill在微信中向jobs的公众号发送消息'签到1'
+		Then bill收到自动回复'签到活动1'
+		When bill点击图文'签到活动1'进入签到活动页面
+		Then bill不能参加签到活动
 
 	#在关闭状态下进行修改签到活动
 		Given jobs登录系统
@@ -117,11 +195,6 @@ Scenario:1 对签到活动内容进行修改，会员访问活动页面
 				"share_pic": "2.jpg",
 				"share_describe": "签到送好礼！",
 				"reply_content": "每日签到获得10积分和优惠券2一张",
-				"reply_keyword":
-					[{
-						"rule": "模糊",
-						"key_word": "签到3"
-					}],
 				"sign_settings":
 					[{
 						"sign_in": "0",
@@ -140,10 +213,9 @@ Scenario:1 对签到活动内容进行修改，会员访问活动页面
 		When bill访问jobs的webapp
 		When 清空浏览器
 		When bill在微信中向jobs的公众号发送消息'签到3'
-		Then bill获得系统回复的消息
-		"""
-		签到成功！<br />已连续签到1天。<br />本次签到获得以下奖励:<br />10积分<br />优惠券2<br />签到说明：3签到赚积分！连续签到奖励更丰富哦！<br />每日签到获得10积分和优惠券2一张<br />
-		"""
+		Then bill收到自动回复'签到活动3'
+		When bill点击图文'签到活动3'进入签到活动页面
+		Then bill能参加签到活动
 		When bill访问jobs的webapp
 		Then bill在jobs的webapp中拥有12会员积分
 		And bill能获得webapp优惠券列表

@@ -53,11 +53,6 @@ Background:
 			"share_pic": "1.jpg",
 			"share_describe": "签到送好礼！",
 			"reply_content": "每日签到获得20积分,连续签到奖励更丰富哦！",
-			"reply_keyword":
-				[{
-					"rule": "精确",
-					"key_word": "签到"
-				}],
 			"sign_settings":
 				[{
 					"sign_in": "0",
