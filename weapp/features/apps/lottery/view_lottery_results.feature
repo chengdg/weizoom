@@ -68,22 +68,22 @@ Background:
 
 	When 微信用户批量参加jobs的微信抽奖活动
 		| name      |member_name| prize_grade | prize_name |lottery_time| receive_status |
-		|微信抽奖01 |bill       | 一等奖       | 优惠券1     |前天        | 已领取         |
-		|微信抽奖01 |bill       | 一等奖       | 优惠券1     |昨天        | 已领取         |
-		|微信抽奖01 |tom        | 一等奖       | 优惠券1     |今天        | 已领取         |
-		|微信抽奖01 |bill       | 一等奖       | 优惠券1     |今天        | 已领取         |
-		|微信抽奖01 |tom1       | 一等奖       | 优惠券1     |今天        | 已领取         |
+		|微信抽奖01 |bill       | 一等奖       | 优惠券1     |前天      | 已领取         |
+		|微信抽奖01 |bill       | 一等奖       | 优惠券1     |昨天      | 已领取         |
+		|微信抽奖01 |tom        | 一等奖       | 优惠券1     |今天      | 已领取         |
+		|微信抽奖01 |bill       | 一等奖       | 优惠券1     |今天      | 已领取         |
+		|微信抽奖01 |tom1       | 一等奖       | 优惠券1     |今天      | 已领取         |
 
 @mall2 @apps @apps_lottery @view_lottery_results
 Scenario:1 查看结果列表
 	Given jobs登录系统
 	Then jobs获得微信抽奖活动列表
-		"""
+	"""
 		[{
 			"name":"微信抽奖01",
 			"participant_count":5
 		}]
-		"""
+	"""
 	When jobs查看微信抽奖活动'微信抽奖01'
 	Then jobs获得微信抽奖活动'微信抽奖01'的结果列表
 		|member_name|mobile | prize_grade | prize_name |lottery_time| receive_status |actions|

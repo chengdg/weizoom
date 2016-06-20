@@ -5,7 +5,7 @@ Feature: 新建微信专享抽奖活动
 Background:
 	Given jobs登录系统
 	When jobs添加优惠券规则
-		"""
+	"""
 		[{
 			"name": "优惠券1",
 			"money": 100.00,
@@ -32,13 +32,13 @@ Background:
 			"using_limit": "满50元可以使用",
 			"coupon_id_prefix": "coupon3_id_"
 		}]
-		"""
+	"""
 
 @mall2 @apps @apps_lottery @add_exlottery @apps_exlottery_backend
 Scenario:1 新建微信专项抽奖
 	Given jobs登录系统
 	When jobs新建微信专项抽奖活动
-		"""
+	"""
 		[{
 			"name":"微信专项抽奖活动",
 			"desc":"百事专项抽奖活动",
@@ -71,9 +71,9 @@ Scenario:1 新建微信专项抽奖
 				"pic":"1.jpg"
 			}]
 		}]
-		"""
+	"""
 	Then jobs获得微信专项抽奖活动列表
-		"""
+	"""
 		[{
 			"name":"微信专项抽奖活动",
 			"start_date":"今天",
@@ -82,14 +82,14 @@ Scenario:1 新建微信专项抽奖
 			"participant_count":0,
 			"actions": ["码库","查看结果","链接","关闭","预览"]
 		}]
-		"""
+	"""
 
 
 @mall2 @apps @apps_lottery @add_exlottery @apps_exlottery_backend
 Scenario:2 新建微信专项抽奖活动，查看码库
 	Given jobs登录系统
 	When jobs新建微信专项抽奖活动
-		"""
+	"""
 		[{
 			"name":"微信专项抽奖活动",
 			"desc":"百事专项抽奖活动",
@@ -122,38 +122,8 @@ Scenario:2 新建微信专项抽奖活动，查看码库
 				"pic":"4.jpg"
 			}]
 		}]
-		"""
-	Then jobs获得'微信专项抽奖活动'码库列表
-		"""
-		[{
-			"lottery_code":"el8s539t18",
-			"user":"",
-			"use_date":"",
-			"prize_grade":"",
-			"prize_name":""
-		},{
-			"lottery_code":"el2f5e754g",
-			"user":"",
-			"use_date":"",
-			"prize_grade":"",
-			"prize_name":""
-		},{
-			"lottery_code":"el58fe24rf",
-			"user":"",
-			"use_date":"",
-			"prize_grade":"",
-			"prize_name":""
-		},{
-			"lottery_code":"elm8v6uj41",
-			"user":"",
-			"use_date":"",
-			"prize_grade":"",
-			"prize_name":""
-		},{
-			"lottery_code":"elmn782f2r",
-			"user":"",
-			"use_date":"",
-			"prize_grade":"",
-			"prize_name":""
-		}]
-		"""
+	"""
+	Then jobs生成码库
+	"""
+		["el8s539t18","el2f5e754g","el58fe24rf","elm8v6uj41","elmn782f2r"]
+	"""
