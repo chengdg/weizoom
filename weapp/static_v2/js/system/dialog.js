@@ -178,7 +178,7 @@ W.dialog.Dialog = Backbone.View.extend({
         }
     },
 
-    setTitle: function(title){     
+    setTitle: function(title){
         if (title) {
             var $title = this.$('.xa-title');
             var $titleInput = this.$('.xa-titleInput');
@@ -208,7 +208,7 @@ W.dialog.Dialog = Backbone.View.extend({
             if ($editIcon) {
                 $editIcon.hide();
             }
-        }   
+        }
     }
 });
 
@@ -225,11 +225,13 @@ W.dialog.showDialog = function(dialogName, options) {
     //没有dialog，创建之
     xlog('create new dialog: ' + dialogName);
     var obj = window;
+		console.log(obj,"wwwwwwwwwwwww")
     var items = dialogName.split('.');
     var itemCount = items.length;
     // 定位对象?
     for (var i = 0; i < itemCount; ++i) {
         var item = items[i];
+				console.log(item,"dweeeeeeeeeeeeee")
         if (obj.hasOwnProperty(item)) {
             obj = obj[item];
         } else {
@@ -237,6 +239,7 @@ W.dialog.showDialog = function(dialogName, options) {
             break;
         }
     }
+		console.log(obj,"dddddddddddd")
 
     if (obj !== null) {
         //xlog(options);
