@@ -48,7 +48,7 @@ Background:
             "money": 20.00,
             "limit_counts": "无限",
             "start_date": "2天前",
-            "end_date": "1天前",
+            "end_date": "1天后",
             "coupon_id_prefix": "coupon3_id_",
             "detailed":"part"  
         }]
@@ -202,7 +202,7 @@ Background:
 @mall2 @apps @apps_sign @apps_sign_coupon_detailed
 Scenario:1 优惠券明细列表
 	Given jobs登录系统
-	When jobs查看'bill'的优惠券明细
+
 	Then jobs获得'bill'优惠券明细列表
 	"""
 		[{
@@ -222,14 +222,14 @@ Scenario:1 优惠券明细列表
 			"state":"已过期"
 		}]
 	"""
-	When jobs查看'tom'的优惠券明细
+	
 	Then jobs获得'tom'优惠券明细列表
 	"""
 		[{
 			"collection_time":"今天",
 			"coupon":"优惠券M",
 			"detailed":"多商品券",
-			"state":"已过期"
+			"state":"未使用"
 		}]
 	"""
 
@@ -249,7 +249,7 @@ Scenario:2 使用中的优惠券明细列表
 			"coupon": "coupon1_id_1"
 		}
 		"""
-	When jobs查看'bill'的优惠券明细
+
 	Then jobs获得'bill'优惠券明细列表
 	"""
 		[{
@@ -266,6 +266,6 @@ Scenario:2 使用中的优惠券明细列表
 			"collection_time":"2015/10/02 10:30:00",
 			"coupon":"优惠券M",
 			"detailed":"多商品券",
-			"state":"已过期"
+			"state":"未使用"
 		}]
 	"""

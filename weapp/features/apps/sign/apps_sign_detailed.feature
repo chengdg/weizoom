@@ -160,7 +160,7 @@ Background:
 Scenario:1 会员签到统计详情列表
 #倒序排列，一页显示15条记录
 	Given jobs登录系统
-	When jobs查看'bill'的签到详情列表
+	
 	Then jobs获得'bill'签到详情列表
 	"""
 		[{
