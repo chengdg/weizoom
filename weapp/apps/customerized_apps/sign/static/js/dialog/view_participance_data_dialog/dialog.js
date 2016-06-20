@@ -28,10 +28,15 @@ W.dialog.app.sign.ViewParticipanceDataDialog = W.dialog.Dialog.extend({
 	},
 
 	onShow: function(options) {
-	},
+		this.memberId = options.memberId;
+		this.belongTo = options.belongTo
 
-	afterShow: function(options) {
-		this.table.reload({"member_id": this.memberId,"belong_to": this.belongTo});
+		var _this = this;
+		if (!_this.table) {
+				_this.table = this.$dialog.find('[data-ui-role="advanced-table"]').data('view');
+		}
+		_this.table.curPage = 1;
+		_this.table.reload({"member_id": this.memberId,"belong_to": this.belongTo});
 	},
 
 	/**

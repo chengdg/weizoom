@@ -56,6 +56,8 @@ class SignParticipances(resource.Resource):
 
 		if 'total_integral' in sort_attr:
 			datas = sorted(datas, lambda x,y: cmp(x.prize['integral'], y.prize['integral']), reverse=True if '-' in sort_attr else False)
+		elif 'total_coupon' in sort_attr:
+			datas = sorted(datas, lambda x,y: cmp(len(x.prize['coupon'].split(',')), len(y.prize['coupon'].split(','))), reverse=True if '-' in sort_attr else False)
 		else:
 			datas = datas.order_by(sort_attr)
 		#进行分页
