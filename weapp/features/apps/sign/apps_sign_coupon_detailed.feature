@@ -184,7 +184,7 @@ Background:
 		When tom在微信中向jobs的公众号发送消息'签到'
 		Then tom收到自动回复'签到得优惠'
 		When tom点击图文'签到得优惠'进入签到得优惠页面
-		When tom参加签到活动于'前两天'
+		When tom参加签到活动于'前三天'
 
 		When 清空浏览器
 		When tom访问jobs的webapp
