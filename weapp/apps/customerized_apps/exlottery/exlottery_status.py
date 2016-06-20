@@ -17,6 +17,7 @@ import models as app_models
 from mall import export
 from apps import request_util
 from termite import pagestore as pagestore_manager
+from modules.member.models import Member
 
 FIRST_NAV = export.MALL_PROMOTION_AND_APPS_FIRST_NAV
 COUNT_PER_PAGE = 20
@@ -28,7 +29,7 @@ class ExlotteryStatus(resource.Resource):
 	@login_required
 	def get(request):
 		"""
-        响应GET
+        码库页面
         """
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
@@ -49,27 +50,45 @@ class ExlotteryStatus(resource.Resource):
 		owner_id = request.manager.id
 
 		exlottery_codes = app_models.ExlotteryCode.objects(owner_id = owner_id, belong_to = id)
+		count = exlottery_codes.count()
+
+		#构造会员id和会员名映射
+		member_ids = [code.member_id for code in exlottery_codes]
+		members = Member.objects.filter(id__in = member_ids)
+		member_id2member_name = {m.id: m.username_for_html for m in members}
+
 		#分页
 		count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
 		cur_page = int(request.GET.get('page', '1'))
 		pageinfo, exlottery_codes = paginator.paginate(exlottery_codes, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
 
 		items = []
-
+		used_count = 0
 		for code in exlottery_codes:
+			grade = code.prize_grade
+			if grade != 0:
+				grade = app_models.EXLOTTERY_PRIZE[grade]
+				used_count += 1
+			else:
+				grade = ''
+			member_id = code.member_id
 			items.append({
 				'code': code.code,
-				'grade': code.prize_grade,
+				'grade': grade,
 				'name': code.prize_name,
-				'member': code.member_id,
+				'member': member_id2member_name[member_id] if member_id != 0 else '',
 				'time': code.created_at.strftime('%Y-%m-%d %H:%M')
 			})
 
+		data = {}
+		data['count'] = count
+		data['has_used'] = used_count
+		
 		response_data = {
 			'items': items,
 			'pageinfo': paginator.to_dict(pageinfo),
 			'sortAttr': '',
-			'data': {}
+			'data': data,
 		}
 		response = create_response(200)
 		response.data = response_data

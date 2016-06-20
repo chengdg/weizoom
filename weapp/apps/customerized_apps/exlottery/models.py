@@ -113,10 +113,19 @@ class ExlotteryControl(models.Document):
 	}
 
 
-NOT_PRIZE = 0
+NOT_USED = 0
 FIRST_PRIZE = 1
 SECOND_PRIZE = 2
 THIRD_PRIZE = 3
+NOT_PRIZE = 4
+
+EXLOTTERY_PRIZE = {
+	NOT_USED: u'未领取',
+	FIRST_PRIZE: u'一等奖',
+	SECOND_PRIZE: u'二等奖',
+	THIRD_PRIZE: u'三等奖',
+	NOT_PRIZE: u'未中奖',
+}
 
 class ExlotteryCode(models.Document):
 	owner_id = models.LongField()  # 创建人id
