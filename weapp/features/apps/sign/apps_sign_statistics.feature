@@ -314,7 +314,7 @@ Scenario:3 会员签到统计列表查询
 		| name |       last_sign     | total_sign | continuous_sign |  integral | coupon_num |
 		| nokia| 2015/10/13 10:30:00 |      2     |         1       |     40    |     0      |
 		| tom  | 2015/10/06 10:30:00 |      3     |         2       |     40    |     1      |
-	When jobs设置查询参数
+	When jobs设置签到统计列表查询参数
 		"""
 		{
 			"name":"tom"
@@ -323,7 +323,7 @@ Scenario:3 会员签到统计列表查询
 	Then jobs获得会员签到统计列表
 		| name |       last_sign     | total_sign | continuous_sign |  integral | coupon_num |
 		| tom  | 2015/10/06 10:30:00 |      3     |         2       |     40    |     1      |
-	When jobs设置查询参数
+	When jobs设置签到统计列表查询参数
 		"""
 		{
 			"name":"123456"
