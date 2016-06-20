@@ -1,8 +1,8 @@
 {% extends "content_base_v2.html" %}
 {% block css %}
 <style type="text/css">
-	.panel-header > span{
-		margin-right: 52px;
+	.panel-header > div:first-child{
+		font-size: 15px;
 	}
 </style>
 {% endblock %}
@@ -39,15 +39,40 @@
 	</div>
 
 	<div class="panel panel-default xui-tableBox">
-		<div class="panel-header clearfix">
-			<span>实时数据</span>
-			<span>已使用：{{data.count}}</span>
-			<span>一等奖：5</span>
-			<span>二等奖：12</span>
-			<span>三等奖：12</span>
-			<span>创建时间：2016-05-23 11:12</span>
-			<span>状态：有效/过期</span>
-			<a>导出>></a>
+		<div class="panel-header disT">
+			<div class="disTc">实时数据</div>
+			<div class="disTc">
+				<b>抽奖码共计：</b>
+				{{data.count}}
+			</div>
+			<div class="disTc">
+				<b>已使用：</b>
+				{{data.has_used}}
+			</div>
+			<div class="disTc">
+				<b>一等奖：</b>
+				{{data.first}}
+			</div>
+			<div class="disTc">
+				<b>二等奖：</b>
+				{{data.second}}
+			</div>
+			<div class="disTc">
+				<b>三等奖：</b>
+				{{data.third}}
+			</div>
+			<div class="disTc">
+				<span>创建时间：</span>
+				{{data.creat_time}}
+			</div>
+			<div class="disTc">
+				<span>状态：</span>
+				{{data.status}}
+			</div>
+			<div class="disTc">
+				<a href="javascript:void(0)" class="xa-export">导出>></a>
+				<a id="export_href" style="display: none ">DownloadXLS</a>
+			</div>
 		</div>
 
 		<div
@@ -118,15 +143,46 @@
 
 <script type="text/javascript">
 	$(document).ready(function(){
+		//搜索
 		$('.xa-search').click(function(event){
 			var name = $.trim($('[name="code"]').val());
 			var status = $.trim($('[name="member"]').val());
 			var table = $('[data-ui-role="advanced-table"]').data('view');
 			table.reload({
-				member: member,
-				code: code
+				'member': member,
+				'code': code
 			},{
 				emptyDataHint: '没有符合条件的数据'
+			});
+		});
+		//导出
+		$('.xa-export').click(function(event){
+			W.getLoadingView();
+			var name = $.trim($('[name="code"]').val());
+			var status = $.trim($('[name="member"]').val());
+			var export_id =window.location.search.split('?id=')[1];
+			W.getApi().call({
+				method: 'get',
+				app: 'apps/exlottery',
+				resource: 'exlottery_participances_export',
+				args: {
+					'id': export_id,
+					'member': member,
+					'code': code
+				},
+				success: function(resp){
+					if(resp.code == 200){
+						$('#export_href').prop({
+							'href': resp.download_path,
+							'download': resp.filename
+						}).get(0).click();
+
+					}
+					console.log("导出成功");
+				},
+				error: function(error){
+					console.log('导出失败');
+				}
 			});
 		});
 	});
