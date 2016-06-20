@@ -290,22 +290,10 @@ Scenario:1 审核通过 屏蔽处理 通过并置顶
     #    """
     #    [{
     #        "member": "bill",
-    #        "comments": [{
-    #                "title":"您使用产品后的感受是",                
-    #                "value":"商品1很好"
-    #            },{
-    #                "title":"您对本产品的包装是否满意",
-    #                "value":"是"
-    #            }]
+    #        "review_detail": "商品1很好；是"
     #    },{
     #        "member": "tom",
-    #        "comments": [{
-    #                "title":"您使用产品后的感受是",                
-    #                "value":"商品1超喜欢"
-    #            },{
-    #                "title":"您对本产品的包装是否满意",
-    #                "value":"是"
-    #            }]
+    #        "review_detail": "商品1超喜欢；是"
     #    }]
     #    """
     Then bill能获取'商品1'的更多评价列表
@@ -382,22 +370,10 @@ Scenario:2 同个商品，最多可置顶3条评价信息
     #    """
     #    [{
     #        "member": "tom",
-    #        "comments": [{
-    #                "title":"您使用产品后的感受是",                
-    #                "value":"商品1超喜欢"
-    #            },{
-    #                "title":"您对本产品的包装是否满意",
-    #                "value":"是"
-    #            }]
+    #        "review_detail": "商品1超喜欢；是"
     #    },{
     #        "member": "bill",
-    #        "comments": [{
-    #                "title":"您使用产品后的感受是",                
-    #                "value":"商品1棒棒哒"
-    #            },{
-    #                "title":"您对本产品的包装是否满意",
-    #                "value":"是"
-    #            }]
+    #        "review_detail": "商品1棒棒哒；是"
     #    }]
     #    """
     Then bill能获取'商品1'的更多评价列表
