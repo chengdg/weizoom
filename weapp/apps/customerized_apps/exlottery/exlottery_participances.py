@@ -31,15 +31,15 @@ class ExlotteryParticipances(resource.Resource):
 		"""
 		响应GET
 		"""
-		# has_data = app_models.ExlotteryParticipance.objects(belong_to=request.GET['id']).count()
+		has_data = app_models.ExlotteryParticipance.objects(belong_to=request.GET['id']).count()
 
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
 			'second_navs': export.get_promotion_and_apps_second_navs(request),
 			'second_nav_name': export.MALL_APPS_SECOND_NAV,
-            'third_nav_name': export.MALL_APPS_LOTTERY_NAV
-			# 'has_data': has_data,
-			# 'activity_id': request.GET['id']
+            'third_nav_name': export.MALL_APPS_LOTTERY_NAV,
+			'has_data': has_data,
+			'activity_id': request.GET['id']
 		})
 
 		return render_to_response('exlottery/templates/editor/exlottery_participances.html', c)
