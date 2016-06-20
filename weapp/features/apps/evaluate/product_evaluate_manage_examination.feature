@@ -286,7 +286,7 @@ Scenario:1 审核通过 屏蔽处理 通过并置顶
         """ 
     When 清空浏览器
     When bill访问jobs的webapp
-    #Then bill在商品详情页成功获取'商品1'的评价列表::h5
+    #Then bill在商品详情页成功获取'商品1'的评价列表::apiserver
     #    """
     #    [{
     #        "member": "bill",
@@ -366,7 +366,7 @@ Scenario:2 同个商品，最多可置顶3条评价信息
         """ 
     When 清空浏览器
     When bill访问jobs的webapp
-    #Then bill在商品详情页成功获取'商品1'的评价列表::h5
+    #Then bill在商品详情页成功获取'商品1'的评价列表::apiserver
     #    """
     #    [{
     #        "member": "tom",

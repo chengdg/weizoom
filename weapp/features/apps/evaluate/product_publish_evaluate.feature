@@ -134,7 +134,7 @@ Scenario:1 评价包括文字与晒图
     }
     """
 
-#    Then bill成功获取个人中心的'待评价'列表::h5
+#    Then bill成功获取个人中心的'待评价'列表::apiserver
 #        """
 #        [{
 #            "order_no": "2",
@@ -182,7 +182,7 @@ Scenario:2 无晒图，追加晒图
         }
         """
 
-#    Then bill成功获取个人中心的'待评价'列表::h5
+#    Then bill成功获取个人中心的'待评价'列表::apiserver
 #        """
 #        [{
 #            "order_no": "1",
@@ -217,7 +217,7 @@ Scenario:2 无晒图，追加晒图
         }
         """
 
-#    Then bill成功获取个人中心的'待评价'列表::h5
+#    Then bill成功获取个人中心的'待评价'列表::apiserver
 #        """
 #        [{
 #            "order_no": "2",
