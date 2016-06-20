@@ -78,14 +78,14 @@ Background:
 	When jobs已添加单图文
 		"""
 		[{
-			"title":"签到得优惠",
+			"title":"签到活动",
 			"cover": [{
 				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
 			}],
 			"cover_in_the_text":"true",
 			"summary":"签到",
 			"content":"签到",
-			"jump_url":"微信签到活动"
+			"jump_url":"签到活动1"
 		}]
 		"""
 	And jobs已添加关键词自动回复规则
@@ -99,7 +99,7 @@ Background:
 				}],
 			"keyword_reply":
 				[{
-					"reply_content":"签到得优惠",
+					"reply_content":"签到活动",
 					"reply_type":"text_picture"
 				}]
 		}]
@@ -124,138 +124,138 @@ Background:
 		When 清空浏览器
 		When bill访问jobs的webapp
 		When bill在微信中向jobs的公众号发送消息'签到'
-		Then bill收到自动回复'签到得优惠'
-		When bill点击图文'签到得优惠'进入签到得优惠页面
+		Then bill收到自动回复'签到活动'
+		When bill点击图文'签到活动'进入签到活动页面
 		When bill参加签到活动于'2015-10-01 10:30:00'
 
 		When 清空浏览器
 		When bill访问jobs的webapp
 		When bill在微信中向jobs的公众号发送消息'签到'
-		Then bill收到自动回复'签到得优惠'
-		When bill点击图文'签到得优惠'进入签到得优惠页面
+		Then bill收到自动回复'签到活动'
+		When bill点击图文'签到活动'进入签到活动页面
 		When bill参加签到活动于'2015-10-02 10:30:00'
 
 		When 清空浏览器
 		When bill访问jobs的webapp
 		When bill在微信中向jobs的公众号发送消息'签到'
-		Then bill收到自动回复'签到得优惠'
-		When bill点击图文'签到得优惠'进入签到得优惠页面
+		Then bill收到自动回复'签到活动'
+		When bill点击图文'签到活动'进入签到活动页面
 		When bill参加签到活动于'2015-10-03 10:30:00'
 
 		When 清空浏览器
 		When bill访问jobs的webapp
 		When bill在微信中向jobs的公众号发送消息'签到'
-		Then bill收到自动回复'签到得优惠'
-		When bill点击图文'签到得优惠'进入签到得优惠页面
+		Then bill收到自动回复'签到活动'
+		When bill点击图文'签到活动'进入签到活动页面
 		When bill参加签到活动于'2015-10-04 10:30:00'
 
 		When 清空浏览器
 		When bill访问jobs的webapp
 		When bill在微信中向jobs的公众号发送消息'签到'
-		Then bill收到自动回复'签到得优惠'
-		When bill点击图文'签到得优惠'进入签到得优惠页面
+		Then bill收到自动回复'签到活动'
+		When bill点击图文'签到活动'进入签到活动页面
 		When bill参加签到活动于'2015-10-05 10:30:00'
 
 		When 清空浏览器
 		When bill访问jobs的webapp
 		When bill在微信中向jobs的公众号发送消息'签到'
-		Then bill收到自动回复'签到得优惠'
-		When bill点击图文'签到得优惠'进入签到得优惠页面
+		Then bill收到自动回复'签到活动'
+		When bill点击图文'签到活动'进入签到活动页面
 		When bill参加签到活动于'2015-10-07 10:30:00'
 
 		When 清空浏览器
 		When bill访问jobs的webapp
 		When bill在微信中向jobs的公众号发送消息'签到'
-		Then bill收到自动回复'签到得优惠'
-		When bill点击图文'签到得优惠'进入签到得优惠页面
+		Then bill收到自动回复'签到活动'
+		When bill点击图文'签到活动'进入签到活动页面
 		When bill参加签到活动于'2015-10-08 10:30:00'
 
 		When 清空浏览器
 		When bill访问jobs的webapp
 		When bill在微信中向jobs的公众号发送消息'签到'
-		Then bill收到自动回复'签到得优惠'
-		When bill点击图文'签到得优惠'进入签到得优惠页面
+		Then bill收到自动回复'签到活动'
+		When bill点击图文'签到活动'进入签到活动页面
 		When bill参加签到活动于'2015-10-09 10:30:00'
 
 	#tom先签到1次，终止一天，再连续签到2次
 		When 清空浏览器
 		When tom访问jobs的webapp
 		When tom在微信中向jobs的公众号发送消息'签到'
-		Then tom收到自动回复'签到得优惠'
-		When tom点击图文'签到得优惠'进入签到得优惠页面
+		Then tom收到自动回复'签到活动'
+		When tom点击图文'签到活动'进入签到活动页面
 		When tom参加签到活动于'2015-10-03 10:30:00'
 
 		When 清空浏览器
 		When tom访问jobs的webapp
 		When tom在微信中向jobs的公众号发送消息'签到'
-		Then tom收到自动回复'签到得优惠'
-		When tom点击图文'签到得优惠'进入签到得优惠页面
+		Then tom收到自动回复'签到活动'
+		When tom点击图文'签到活动'进入签到活动页面
 		When tom参加签到活动于'2015-10-05 10:30:00'
 
 		When 清空浏览器
 		When tom访问jobs的webapp
 		When tom在微信中向jobs的公众号发送消息'签到'
-		Then tom收到自动回复'签到得优惠'
-		When tom点击图文'签到得优惠'进入签到得优惠页面
+		Then tom收到自动回复'签到活动'
+		When tom点击图文'签到活动'进入签到活动页面
 		When tom参加签到活动于'2015-10-06 10:30:00'
 
 	#marry先签到1次，终止一天，再连续签到3次, 再终止两天，再签到一次
 		When 清空浏览器
 		When marry访问jobs的webapp
 		When marry在微信中向jobs的公众号发送消息'签到'
-		Then marry收到自动回复'签到得优惠'
-		When marry点击图文'签到得优惠'进入签到得优惠页面
+		Then marry收到自动回复'签到活动'
+		When marry点击图文'签到活动'进入签到活动页面
 		When marry参加签到活动于'2015-10-04 10:30:00'
 
 		When 清空浏览器
 		When marry访问jobs的webapp
 		When marry在微信中向jobs的公众号发送消息'签到'
-		Then marry收到自动回复'签到得优惠'
-		When marry点击图文'签到得优惠'进入签到得优惠页面
+		Then marry收到自动回复'签到活动'
+		When marry点击图文'签到活动'进入签到活动页面
 		When marry参加签到活动于'2015-10-06 10:30:00'
 
 		When 清空浏览器
 		When marry访问jobs的webapp
 		When marry在微信中向jobs的公众号发送消息'签到'
-		Then marry收到自动回复'签到得优惠'
-		When marry点击图文'签到得优惠'进入签到得优惠页面
+		Then marry收到自动回复'签到活动'
+		When marry点击图文'签到活动'进入签到活动页面
 		When marry参加签到活动于'2015-10-07 10:30:00'
 
 		When 清空浏览器
 		When marry访问jobs的webapp
 		When marry在微信中向jobs的公众号发送消息'签到'
-		Then marry收到自动回复'签到得优惠'
-		When marry点击图文'签到得优惠'进入签到得优惠页面
+		Then marry收到自动回复'签到活动'
+		When marry点击图文'签到活动'进入签到活动页面
 		When marry参加签到活动于'2015-10-08 10:30:00'
 
 		When 清空浏览器
 		When marry访问jobs的webapp
 		When marry在微信中向jobs的公众号发送消息'签到'
-		Then marry收到自动回复'签到得优惠'
-		When marry点击图文'签到得优惠'进入签到得优惠页面
+		Then marry收到自动回复'签到活动'
+		When marry点击图文'签到活动'进入签到活动页面
 		When marry参加签到活动于'2015-10-11 10:30:00'
 
 	#jack签到1次
 		When 清空浏览器
 		When jack访问jobs的webapp
 		When jack在微信中向jobs的公众号发送消息'签到'
-		Then jack收到自动回复'签到得优惠'
-		When jack点击图文'签到得优惠'进入签到得优惠页面
+		Then jack收到自动回复'签到活动'
+		When jack点击图文'签到活动'进入签到活动页面
 		When jack参加签到活动于'2015-10-12 10:30:00'
 
 	#nokia签到1次,终止两天，再签到一次
 		When 清空浏览器
 		When nokia访问jobs的webapp
 		When nokia在微信中向jobs的公众号发送消息'签到'
-		Then nokia收到自动回复'签到得优惠'
-		When nokia点击图文'签到得优惠'进入签到得优惠页面
+		Then nokia收到自动回复'签到活动'
+		When nokia点击图文'签到活动'进入签到活动页面
 		When nokia参加签到活动于'2015-10-10 10:30:00'
 
 		When 清空浏览器
 		When nokia访问jobs的webapp
 		When nokia在微信中向jobs的公众号发送消息'签到'
-		Then nokia收到自动回复'签到得优惠'
-		When nokia点击图文'签到得优惠'进入签到得优惠页面
+		Then nokia收到自动回复'签到活动'
+		When nokia点击图文'签到活动'进入签到活动页面
 		When nokia参加签到活动于'2015-10-13 10:30:00'
 
 @mall2 @apps @apps_sign @apps_sign_backend @sign_statistics
