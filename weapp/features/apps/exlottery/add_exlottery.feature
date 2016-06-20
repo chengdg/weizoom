@@ -87,7 +87,7 @@ Scenario:1 新建微信专项抽奖
 @mall2 @apps @apps_lottery @add_exlottery @apps_exlottery_backend
 Scenario:2 新建微信专项抽奖活动，查看码库
 	Given jobs登录系统
-	When jobs新建微信抽奖活动
+	When jobs新建微信专项抽奖活动
 		"""
 		[{
 			"name":"微信专项抽奖活动",
