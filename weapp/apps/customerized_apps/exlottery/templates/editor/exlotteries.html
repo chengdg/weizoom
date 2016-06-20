@@ -77,8 +77,8 @@
 		<div
 			class="panel-body panel-table p0"
 			data-ui-role="advanced-table"
-			data-app="apps/lottery"
-			data-resource="lotteries"
+			data-app="apps/exlottery"
+			data-resource="exlotteries"
 			data-template-id="#table"
 			data-enable-paginator="true"
 			data-enable-sort="false"
@@ -137,7 +137,8 @@
 					${item.participant_count}
 				</td>
 				<td>
-				    <a href="/apps/lottery/lottery_participances/?id=${item.id}">查看结果</a>
+				    <a href="/apps/exlottery/exlottery_status/?id=${item.id}">码库&nbsp;&nbsp;</a>
+				    <a href="/apps/exlottery/exlottery_participances/?id=${item.id}">查看结果</a>
 				    <a class="ml5 xa-copyLinkBtn" href="javascript:void(0);" data-id=${item.id}>链接</a>
 					{{if (item.status === '未开始' || item.status === '已结束')}}
 					<a href="javascript:void(0)" class="ml5 xa-delete" data-id=${item.id}>删除</a>

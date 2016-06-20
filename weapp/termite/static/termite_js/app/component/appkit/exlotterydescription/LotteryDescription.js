@@ -104,40 +104,6 @@ W.component.appkit.LotteryDescription = W.component.Component.extend({
 			isUserProperty: true,
 			default: 0
 		}, {
-			name: 'delivery_setting',
-			type: 'radio',
-			displayName: '送积分规则',
-			isUserProperty: true,
-			source: [{
-				name: '仅限未中奖用户',
-				value: 'true'
-			}, {
-				name: '所有用户',
-				value: 'false'
-			}],
-			default: 'true'
-		},{
-			name: 'limitation',
-			type: 'radio',
-			displayName: '抽奖限制',
-			isUserProperty: true,
-			source: [{
-				name: '一人一次',
-				value: 'once_per_user'
-			}, {
-				name: '一天一次',
-				value: 'once_per_day'
-			}, {
-				name: '一天两次',
-				value: 'twice_per_day'
-			},
-			{
-				name: '不限',
-				value: 'no_limit'
-			}
-			],
-			default: 'once_per_user'
-		},{
 			name: 'chance',
 			type: 'text_with_annotation',
 			displayName: '中奖率',
@@ -147,6 +113,34 @@ W.component.appkit.LotteryDescription = W.component.Component.extend({
 			annotation: "%  <b style='color:#1262b7' id='lottery_chance_dialog_trigger'>中奖率详细规则</b>",
 			validate: 'data-validate="require-notempty::中奖率不能为空,,require-percent::请输入1-100之间的数字"',
 			validateIgnoreDefaultValue: true
+		}, {
+			name: 'lottery_code_count',
+			type: 'text_with_annotation',
+			displayName: '生成抽奖码',
+			isUserProperty: true,
+			maxLength: 10,
+			size: '70px',
+			annotation: "张",
+			validate: 'data-validate="require-notempty::生成抽奖码不能为空,,require-percent::请输入纯数字"',
+			validateIgnoreDefaultValue: true
+		}, {
+			name: 'reply',
+			type: 'text',
+			displayName: '自动回复语设置',
+			isUserProperty: true,
+			maxLength: 30,
+			validate: 'data-validate="require-notempty::自动回复语不能为空,,require-word"',
+			validateIgnoreDefaultValue: true,
+			default: '',
+		}, {
+			name: 'reply_link',
+			type: 'text',
+			displayName: '自动回复超链接',
+			isUserProperty: true,
+			maxLength: 30,
+			validate: 'data-validate="require-notempty::自动回复超链接不能为空,,require-word"',
+			validateIgnoreDefaultValue: true,
+			default: '',
 		}, {
 			name: 'allow_repeat',
 			type: 'radio_with_annotation',
@@ -193,32 +187,32 @@ W.component.appkit.LotteryDescription = W.component.Component.extend({
 		delivery: function($node, model, value, $propertyViewNode) {
 			$node.find('.wui-i-prize>.xa-delivery').html(value);
 		},
-		limitation: function($node, model, value, $propertyViewNode) {
-			switch (value){
-				case 'once_per_user':
-					value = '1';
-					break;
-				case 'once_per_day':
-					value = '1';
-					break;
-				case 'twice_per_day':
-					value = '2';
-					break;
-				case 'no_limit':
-					value = '-1';
-					break;
-				default :
-					value = '0';
-					break;
-			}
-			var $header = $node.find('.wui-lotterydescription').find('.xa-header');
-			if(value == '-1'){
-				$header.addClass('wui-lotterydescription-hide');
-			}else{
-				$header.removeClass('wui-lotterydescription-hide').find('p b').html(value);
-			}
-
-		}
+		// limitation: function($node, model, value, $propertyViewNode) {
+		// 	switch (value){
+		// 		case 'once_per_user':
+		// 			value = '1';
+		// 			break;
+		// 		case 'once_per_day':
+		// 			value = '1';
+		// 			break;
+		// 		case 'twice_per_day':
+		// 			value = '2';
+		// 			break;
+		// 		case 'no_limit':
+		// 			value = '-1';
+		// 			break;
+		// 		default :
+		// 			value = '0';
+		// 			break;
+		// 	}
+		// 	var $header = $node.find('.wui-lotterydescription').find('.xa-header');
+		// 	if(value == '-1'){
+		// 		$header.addClass('wui-lotterydescription-hide');
+		// 	}else{
+		// 		$header.removeClass('wui-lotterydescription-hide').find('p b').html(value);
+		// 	}
+        //
+		// }
 	},
 
 	initialize: function(obj) {

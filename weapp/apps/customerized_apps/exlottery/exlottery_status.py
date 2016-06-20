@@ -14,14 +14,32 @@ from core import paginator
 from core.jsonresponse import create_response
 
 import models as app_models
-import export
+from mall import export
 from apps import request_util
 from termite import pagestore as pagestore_manager
+
+FIRST_NAV = export.MALL_PROMOTION_AND_APPS_FIRST_NAV
+COUNT_PER_PAGE = 20
 
 class ExlotteryStatus(resource.Resource):
 	app = 'apps/exlottery'
 	resource = 'exlottery_status'
-	
+
+	@login_required
+	def get(request):
+		"""
+        响应GET
+        """
+		c = RequestContext(request, {
+			'first_nav_name': FIRST_NAV,
+			'second_navs': export.get_promotion_and_apps_second_navs(request),
+			'second_nav_name': export.MALL_APPS_SECOND_NAV,
+			'third_nav_name': export.MALL_APPS_LOTTERY_NAV,
+			# 'has_data': has_data,
+			'activity_id': request.GET['id']
+		})
+
+		return render_to_response('exlottery/templates/editor/exlottery_status.html', c)
 	@login_required
 	def api_post(request):
 		"""

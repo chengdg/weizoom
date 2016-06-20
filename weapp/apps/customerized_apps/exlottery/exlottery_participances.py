@@ -22,16 +22,16 @@ from watchdog.utils import watchdog_error
 FIRST_NAV = export.MALL_PROMOTION_AND_APPS_FIRST_NAV
 COUNT_PER_PAGE = 20
 
-class lotteryParticipances(resource.Resource):
-	app = 'apps/lottery'
-	resource = 'lottery_participances'
+class ExlotteryParticipances(resource.Resource):
+	app = 'apps/exlottery'
+	resource = 'exlottery_participances'
 
 	@login_required
 	def get(request):
 		"""
 		响应GET
 		"""
-		has_data = app_models.lotteryParticipance.objects(belong_to=request.GET['id']).count()
+		has_data = app_models.ExlotteryParticipance.objects(belong_to=request.GET['id']).count()
 
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
@@ -42,7 +42,7 @@ class lotteryParticipances(resource.Resource):
 			'activity_id': request.GET['id']
 		})
 
-		return render_to_response('lottery/templates/editor/lottery_participances.html', c)
+		return render_to_response('exlottery/templates/editor/exlottery_participances.html', c)
 
 	@staticmethod
 	def get_datas(request):
@@ -77,7 +77,7 @@ class lotteryParticipances(resource.Resource):
 		if status != '-1':
 			params['status'] = True if status == '1' else False
 		# datas = app_models.lotteryParticipance.objects(**params).order_by('-id')
-		datas = app_models.lottoryRecord.objects(**params)
+		datas = app_models.ExlottoryRecord.objects(**params)
 		if not export_id:
 			#进行分页
 			count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
