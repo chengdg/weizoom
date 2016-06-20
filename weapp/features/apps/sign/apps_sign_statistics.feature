@@ -1,4 +1,5 @@
 # __author__ : 王丽 2015-11-25
+#editor: 邓成龙 2016.06.20
 
 Feature: 签到-后台签到统计
 """
@@ -6,13 +7,11 @@ Feature: 签到-后台签到统计
 	1 列表展示签到的会员，默认按照会员的"最后一次签到时间"倒叙排列；
 		可以按照"第一次签到"、"最后一次签到"、"累计次数"、"连续次数"、"最高连续次数"、"奖励总积分"字段进行手动排序
 	2【会员】：该会员的头像和会员昵称，会员昵称全部显示，不折行
-	3【第一次签到】：该会员第一次签到的时间；精确到秒（例：2015/11/25 10:25:21）
-	4【最后一次签到】：该会员最后一次签到的时间；精确到秒（例：2015/11/25 10:25:21）
-	5【累计次数】：该会员累计签到的次数
-	6【连续次数】：该会员目前最后一次的连续签到天数
-	7【最高连续次数】：该会员连续签到天数最大值
-	8【奖励总积分】：该会员签到获得的总积分数
-	9【优惠券奖励】：该会员最近三次获得优惠券奖励的优惠券名称
+	3【最后一次签到】：该会员最后一次签到的时间；精确到秒（例：2015/11/25 10:25:21）
+	4【累计次数】：该会员累计签到的次数
+	5【连续次数】：该会员目前最后一次的连续签到天数
+	6【奖励总积分】：该会员签到获得的总积分数
+	7【优惠券数量】：该会员最近三次获得优惠券奖励的优惠券数量
 """
 
 Background:
@@ -175,12 +174,12 @@ Scenario:1 会员签到统计列表
 	Given jobs登录系统
 
 	Then jobs获得会员签到统计列表
-		| name |     first_sign      |       last_sign     | total_sign | continuous_sign | max_continuous_sign | integral |       coupon            |
-		| nokia| 2015/10/10 10:30:00 | 2015/10/13 10:30:00 |      2     |         1       |         0           |     40   |                         |
-		| jack | 2015/10/12 10:30:00 | 2015/10/12 10:30:00 |      1     |         1       |         0           |     20   |                         |
-		| marry| 2015/10/04 10:30:00 | 2015/10/11 10:30:00 |      5     |         1       |         3           |     60   | 优惠券1<br>优惠券M         |
-		| bill | 2015/10/01 10:30:00 | 2015/10/09 10:30:00 |      8     |         3       |         5           |     70   | 优惠券1<br>优惠券M<br>优惠券2 |
-		| tom  | 2015/10/03 10:30:00 | 2015/10/06 10:30:00 |      3     |         2       |         2           |     40   | 优惠券M                 |
+		| name |       last_sign     | total_sign | continuous_sign |  integral | coupon_num |
+		| nokia| 2015/10/13 10:30:00 |      2     |         1       |     40    |     0      |
+		| jack | 2015/10/12 10:30:00 |      1     |         1       |     20    |     0      |
+		| marry| 2015/10/11 10:30:00 |      5     |         1       |     60    |     2      |
+		| bill | 2015/10/09 10:30:00 |      8     |         3       |     70    |     3      |
+		| tom  | 2015/10/06 10:30:00 |      3     |         2       |     40    |     1      |
 
 @mall2 @apps @apps_sign @apps_sign_backend @sign_statistics
 Scenario:2 会员签到统计列表分页
@@ -212,3 +211,34 @@ Scenario:2 会员签到统计列表分页
 		| name |     first_sign      |       last_sign     | total_sign | continuous_sign | max_continuous_sign | integral |       coupon            |
 		| marry| 2015/10/04 10:30:00 | 2015/10/11 10:30:00 |      5     |         1       |         3           |     60   | 优惠券1<br>优惠券M         |
 		| bill | 2015/10/01 10:30:00 | 2015/10/09 10:30:00 |      8     |         3       |         5           |     70   | 优惠券1<br>优惠券M<br>优惠券2 |
+@mall2 @apps @apps_sign @apps_sign_backend @sign_statistics
+Scenario:3 会员签到统计列表查询
+	Given jobs登录系统
+
+	When jobs设置查询参数
+		"""
+		{
+			"name":"o"
+		}
+		"""
+	Then jobs获得会员签到统计列表
+		| name |       last_sign     | total_sign | continuous_sign |  integral | coupon_num |
+		| nokia| 2015/10/13 10:30:00 |      2     |         1       |     40    |     0      |
+		| tom  | 2015/10/06 10:30:00 |      3     |         2       |     40    |     1      |
+	When jobs设置查询参数
+		"""
+		{
+			"name":"tom"
+		}
+		"""
+	Then jobs获得会员签到统计列表
+		| name |       last_sign     | total_sign | continuous_sign |  integral | coupon_num |
+		| tom  | 2015/10/06 10:30:00 |      3     |         2       |     40    |     1      |
+	When jobs设置查询参数
+		"""
+		{
+			"name":"123456"
+		}
+		"""
+	Then jobs获得会员签到统计列表
+		| name |       last_sign     | total_sign | continuous_sign |  integral | coupon_num |
