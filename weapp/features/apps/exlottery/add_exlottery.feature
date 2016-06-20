@@ -49,6 +49,8 @@ Scenario:1 新建微信专项抽奖
 			"send_integral":1,
 			"win_rate":"50%",
 			"lottory_code_num":10,
+			"reply":"感谢您对杭州百事可乐的关注",
+			"link_reply":"立即抽奖",
 			"is_repeat_win":"是",
 			"prize_settings":[{
 				"prize_grade":"一等奖",
@@ -71,7 +73,7 @@ Scenario:1 新建微信专项抽奖
 			}]
 		}]
 		"""
-	Then jobs获得微信抽奖活动列表
+	Then jobs获得微信专项抽奖活动列表
 		"""
 		[{
 			"name":"微信专项抽奖活动",
@@ -98,6 +100,8 @@ Scenario:2 新建微信专项抽奖活动，查看码库
 			"send_integral":0,
 			"win_rate":"60%",
 			"lottory_code_num":5,
+			"reply":"感谢您对杭州百事可乐的关注",
+			"link_reply":"立即抽奖",
 			"is_repeat_win":"否",
 			"prize_settings":[{
 				"prize_grade":"一等奖",
@@ -120,7 +124,7 @@ Scenario:2 新建微信专项抽奖活动，查看码库
 			}]
 		}]
 		"""
-	Then jobs获得码库列表
+	Then jobs获得'微信专项抽奖活动'码库列表
 		"""
 		[{
 			"lottery_code":"el8s539t18",
