@@ -58,6 +58,7 @@ Background:
 	When bill获得jobs的抽奖码
 	Then bill在jobs的webapp中拥有抽奖码
 	When bill使用抽奖码参加抽奖活动'专项抽奖'
+
 @mall2 @apps @apps_exlottery @users_start_exlottery 
 Scenario:1 抽奖码校验通过
 	Then bill获得抽奖结果
@@ -75,7 +76,7 @@ Scenario:1 抽奖码校验通过
 				"prize_grade":"一等奖",
 				"prize_name":"迪士尼门票"
 				"member":"bill",
-				"time":"2016-06-20"
+				"time":"今天"
 			}]
 		"""
 Scenario:2 抽奖码校验不通过
