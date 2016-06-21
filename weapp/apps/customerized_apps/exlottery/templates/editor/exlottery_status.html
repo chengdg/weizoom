@@ -183,7 +183,7 @@
 			var member = $.trim($('[name="member"]').val());
 			var status = $('[name="status"]').val();
 			var export_id =window.location.search.split('?id=')[1];
-			var url = '/apps/exlottery/exlottery_status_export/?code='+code+'&status='+status+'&member='+member+'&export_id='+export_id;
+			var url = '/apps/exlottery/api/exlottery_status_export/?code='+code+'&status='+status+'&member='+member+'&export_id='+export_id;
 	  		window.open(url);
 		});
 	});
