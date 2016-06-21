@@ -121,7 +121,7 @@ W.component.appkit.LotteryDescription = W.component.Component.extend({
 			maxLength: 10,
 			size: '70px',
 			annotation: "张",
-			validate: 'data-validate="require-notempty::生成抽奖码不能为空,,require-percent::请输入纯数字"',
+			validate: 'data-validate="require-notempty::生成抽奖码不能为空,,require-nonnegative::只能输入0和正整数"',
 			validateIgnoreDefaultValue: true
 		}, {
 			name: 'reply',

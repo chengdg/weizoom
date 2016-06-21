@@ -132,7 +132,7 @@ DEFAULT_TIME = '2000-01-01 00:00:00'
 class ExlotteryCode(models.Document):
 	owner_id = models.LongField()  # 创建人id
 	belong_to = models.StringField(default="", max_length=100)  # 对应的专项抽奖活动id
-	code = models.StringField(default="", max_length=20) #抽奖码
+	code = models.StringField(default="", max_length=20, unique=True) #抽奖码
 	member_id = models.LongField(default=0)  # 参与者id
 	created_at = models.DateTimeField()  # 创建时间
 	get_time = models.DateTimeField(default=DEFAULT_TIME)  # 获得时间

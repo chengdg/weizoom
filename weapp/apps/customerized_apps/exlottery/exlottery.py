@@ -141,14 +141,16 @@ def generate_exlottery_code(owner_id, belong_to, count):
 	"""
 	choice = '0123456789abcdefghijklmnopqrstuvwxyz'
 
+	exlottery_list = []
 	for i in range(int(count)):
-		exlotterycode = app_models.ExlotteryCode(
+		exlottery_list.append(app_models.ExlotteryCode(
 			owner_id = owner_id,
-			belong_to = belong_to,
-			code = 'el%s' %''.join(random.sample(choice,8)),
+		    belong_to = belong_to,
+			code = 'el%s' % ''.join(random.sample(choice, 8)),
 			created_at = datetime.now()
-		)
-		exlotterycode.save()
+		))
+
+	app_models.ExlotteryCode.objects.insert(exlottery_list)
 
 
 
