@@ -211,51 +211,60 @@ Background:
 		When tom点击图文'签到活动1'进入签到活动页面
 		When tom参加签到活动于'今天'
 
-		When jobs新建微信抽奖活动
+		When jobs为会员发放优惠券
 		"""
-		[{
-			"name":"微信抽奖",
-			"start_date":"1天前",
-			"end_date":"今天",
-			"desc":"抽奖啦抽奖啦",
-			"reduce_integral":15,
-			"send_integral":0,
-			"send_integral_rules":"仅限未中奖用户",
-			"lottery_limit":"不限",
-			"win_rate":"100%",
-			"is_repeat_win":"是",
-			"prize_settings":[{
-				"prize_grade":"一等奖",
-				"prize_counts":10,
-				"prize_type":"优惠券",
-				"coupon":"优惠券3",
-				"pic":""
-			},{
-				"prize_grade":"二等奖",
-				"prize_counts":0,
-				"prize_type":"优惠券",
-				"coupon":"优惠券2",
-				"pic":""
-			},{
-				"prize_grade":"三等奖",
-				"prize_counts":0,
-				"prize_type":"实物",
-				"gift":"精美礼品",
-				"pic":"1.jpg"
-			}]
-		}]
+		{
+			"name": "优惠券3",
+			"count": 1,
+			"members": ["bill"]
+		}
 		"""
+
+#		When jobs新建微信抽奖活动
+#		"""
+#		[{
+#			"name":"微信抽奖",
+#			"start_date":"1天前",
+#			"end_date":"今天",
+#			"desc":"抽奖啦抽奖啦",
+#			"reduce_integral":15,
+#			"send_integral":0,
+#			"send_integral_rules":"仅限未中奖用户",
+#			"lottery_limit":"不限",
+#			"win_rate":"100%",
+#			"is_repeat_win":"是",
+#			"prize_settings":[{
+#				"prize_grade":"一等奖",
+#				"prize_counts":10,
+#				"prize_type":"优惠券",
+#				"coupon":"优惠券3",
+#				"pic":""
+#			},{
+#				"prize_grade":"二等奖",
+#				"prize_counts":0,
+#				"prize_type":"优惠券",
+#				"coupon":"优惠券2",
+#				"pic":""
+#			},{
+#				"prize_grade":"三等奖",
+#				"prize_counts":0,
+#				"prize_type":"实物",
+#				"gift":"精美礼品",
+#				"pic":"1.jpg"
+#			}]
+#		}]
+#		"""
 	
-	When bill访问jobs的webapp
-	When bill参加微信抽奖活动'微信抽奖'
-	Then bill获得抽奖结果
-		"""
-		[{
-			"prize_grade":"一等奖",
-			"prize_type":"优惠券",
-			"prize_name":"优惠券3"
-		}]
-		"""
+#	When bill访问jobs的webapp
+#	When bill参加微信抽奖活动'微信抽奖'
+#	Then bill获得抽奖结果
+#		"""
+#		[{
+#			"prize_grade":"一等奖",
+#			"prize_type":"优惠券",
+#			"prize_name":"优惠券3"
+#		}]
+#		"""
 
 @mall2 @apps @apps_sign @apps_sign_coupon_detailed @dgl
 Scenario:1 优惠券明细列表
