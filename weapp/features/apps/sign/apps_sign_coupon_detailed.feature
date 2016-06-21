@@ -255,7 +255,7 @@ Background:
 		}]
 		"""
 
-@mall2 @apps @apps_sign @apps_sign_coupon_detailed
+@mall2 @apps @apps_sign @apps_sign_coupon_detailed @dgl
 Scenario:1 优惠券明细列表
 	Given jobs登录系统
 

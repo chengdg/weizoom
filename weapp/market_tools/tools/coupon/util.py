@@ -10,8 +10,10 @@ from mall.promotion import models as promotion_models
 from mall.promotion.models import Coupon
 from mall.promotion.utils import coupon_id_maker
 from mall.models import *
+from apps.customerized_apps.sign.models import SignDetails
 
-from market_tools.tools.coupon.tasks import send_message_to_member
+# from market_tools.tools.coupon.tasks import send_message_to_member
+from apps.customerized_apps.mysql_models import ConsumeCouponLog
 
 def get_coupon_rules(owner):
 	"""
@@ -299,5 +301,22 @@ def get_member_coupons(member, status=-1):
 	return member_coupons
 
 
+def get_member_coupons_for_sign(member, status=-1):
+	"""
+	得到通过签到获得的优惠券信息
+	"""
+	orders = Order.objects.filter(webapp_user_id__in=member.get_webapp_user_ids, coupon_id__gt=1).filter(status__in=[ORDER_STATUS_NOT, ORDER_STATUS_PAYED_SUCCESSED, ORDER_STATUS_PAYED_NOT_SHIP, ORDER_STATUS_PAYED_SHIPED, ORDER_STATUS_SUCCESSED])
+	coupon_ids = [order.coupon_id for order in orders]
 
+	if status == -1:
+		member_coupons = Coupon.objects.filter(Q(member_id=member.id)| Q(id__in=coupon_ids)).order_by('-provided_time', '-coupon_record_id', '-id')
+	else:
+		member_coupons = Coupon.objects.filter(Q(member_id=member.id)| Q(id__in=coupon_ids)).filter(status=status).order_by('-provided_time', '-coupon_record_id', '-id')
 
+	member_coupons_filter = []
+
+	for member_coupon in member_coupons:
+		if ConsumeCouponLog.objects.filter(member_id=member_coupon.member_id, coupon_id=member_coupon.id, app_name='sign'):
+			member_coupons_filter.append(member_coupon)
+			
+	return member_coupons_filter
