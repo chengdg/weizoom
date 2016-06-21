@@ -560,3 +560,142 @@ Scenario:3 回复用户发表的商品评论
             }
         }]
         """
+
+@mall @apps @app_evaluate @comment_examination
+Scenario:4 jobs通过审核评价，给用户加积分
+   1.tom评价jobs的商品，jobs通过审核，给tom加相应的积分
+   2.tom评价jobs的商品，jobs通过并置顶，给tom加相应的积分
+   3.jobs取消置顶，屏蔽评论，tom的积分不变
+
+    When tom访问jobs的webapp
+    Then tom在jobs的webapp中获得积分日志
+        """
+        [{
+            "content": "首次关注",
+            "integral": 20
+        }]
+        """
+    Given jobs登录系统
+    And jobs设定会员积分策略
+        """
+        {
+            "review_increase": 20,
+            "be_member_increase_count": 20
+        }
+        """
+    When jobs已完成对商品的评价信息审核
+        """
+        [{
+            "product_name": "商品1",
+            "order_no": "3",
+            "member": "tom",
+            "status": "通过审核"         
+        }]
+        """ 
+    When tom访问jobs的webapp
+    Then tom在jobs的webapp中获得积分日志
+        """
+        [{
+            "content": "商品评价奖励",
+            "integral": 20
+        },{
+            "content": "首次关注",
+            "integral": 20
+        }]
+        """
+    Given jobs登录系统
+    When jobs已完成对商品的评价信息审核
+        """
+        [{
+            "product_name": "商品1",
+            "order_no": "4",
+            "member": "tom",
+            "status": "通过并置顶"
+        }]
+        """ 
+    When tom访问jobs的webapp
+    Then tom在jobs的webapp中获得积分日志
+        """
+        [{
+            "content": "商品评价奖励",
+            "integral": 20
+        },{
+            "content": "商品评价奖励",
+            "integral": 20
+        },{
+            "content": "首次关注",
+            "integral": 20
+        }]
+        """
+    Given jobs登录系统
+    When jobs已完成对商品的评价信息审核
+        """
+        [{
+            "product_name": "商品1",
+            "order_no": "4",
+            "member": "tom",
+            "status": "通过审核"
+        }]
+        """
+    When tom访问jobs的webapp
+    Then tom在jobs的webapp中获得积分日志
+        """
+        [{
+            "content": "商品评价奖励",
+            "integral": 20
+        },{
+            "content": "商品评价奖励",
+            "integral": 20
+        },{
+            "content": "首次关注",
+            "integral": 20
+        }]
+        """
+    Given jobs登录系统
+    When jobs已完成对商品的评价信息审核
+        """
+        [{
+            "product_name": "商品1",
+            "order_no": "4",
+            "member": "tom",
+            "status": "屏蔽处理"
+        }]
+        """
+    When tom访问jobs的webapp
+    Then tom在jobs的webapp中获得积分日志
+        """
+        [{
+            "content": "商品评价奖励",
+            "integral": 20
+        },{
+            "content": "商品评价奖励",
+            "integral": 20
+        },{
+            "content": "首次关注",
+            "integral": 20
+        }]
+        """
+    Given jobs登录系统
+    When jobs已完成对商品的评价信息审核
+        """
+        [{
+            "product_name": "商品1",
+            "order_no": "3",
+            "member": "tom",
+            "status": "通过并置顶"
+        }]
+        """
+    When tom访问jobs的webapp
+    Then tom在jobs的webapp中获得积分日志
+        """
+        [{
+            "content": "商品评价奖励",
+            "integral": 20
+        },{
+            "content": "商品评价奖励",
+            "integral": 20
+        },{
+            "content": "首次关注",
+            "integral": 20
+        }]
+        """
