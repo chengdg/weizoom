@@ -221,6 +221,41 @@ def step_impl(context, webapp_user_name, date_str):
 
 	context.need_change_date = True
 
+@then(u"{webapp_user_name}参加签到活动")
+def step_impl(context, webapp_user_name):
+	today = datetime.now()
+	date = today.strftime("%Y-%m-%d %H:%M:%S")
+	if not hasattr(context,"latest_date"):
+		context.latest_date = {
+			webapp_user_name : bdd_util.get_date(date)
+		}
+
+	params = {
+		'webapp_owner_id': context.webapp_owner_id,
+		'id': context.sign_id
+	}
+	signParticipance = SignParticipance.objects(member_id=context.member.id)
+	if signParticipance:
+		timedelta = (bdd_util.get_date(date) - context.latest_date[webapp_user_name]).days
+		__change_sign_date(context.member.id,timedelta)#将上一次签到时间向前调整
+		response = context.client.post('/m/apps/sign/api/sign_participance/?_method=put', params)
+	else:
+		response = context.client.post('/m/apps/sign/api/sign_participance/?_method=put', params)
+		#首次签到的话，将首次签到时间置为设定的时间
+		signParticipance.update(set__created_at = bdd_util.get_date(date))
+	#如果是另一个用户签到了，创建新的最近一次签到时间到dict里
+	if webapp_user_name not in context.latest_date:
+		context.latest_date[webapp_user_name] = bdd_util.get_date(date)
+	#对比时间，记录最后一次签到时间
+	if context.latest_date[webapp_user_name] < bdd_util.get_date(date):
+		context.latest_date[webapp_user_name] = bdd_util.get_date(date)
+
+	item = SignDetails.objects.filter(belong_to=context.sign_id, member_id=context.member.id).order_by('-id').first()
+	item.update(set__created_at = bdd_util.get_date(date))
+
+	context.need_change_date = True
+
+
 @when(u"{user}设置签到统计列表查询参数")
 def step_impl(context, user):
 	context.filter = json.loads(context.text)
