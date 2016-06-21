@@ -69,7 +69,8 @@ Background:
             "price": 20.00
         }]
         """
-
+    Given bill关注jobs的公众号
+    When bill访问jobs的webapp
     Given jobs已有的订单
         """
         [{
@@ -108,11 +109,12 @@ Background:
             }]
         }]
         """
-    Given bill关注jobs的公众号
-    When bill访问jobs的webapp
+   
 
 @mall @apps @app_evaluate @commit_app_product_comment
 Scenario:1 评价包括文字与晒图
+ 	Given bill关注jobs的公众号
+    When bill访问jobs的webapp
     When bill完成订单'1'中'商品1'的评价
     """
     {
