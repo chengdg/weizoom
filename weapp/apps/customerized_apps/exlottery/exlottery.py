@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import json
+import random
 from datetime import datetime
 
 from django.http import HttpResponseRedirect, HttpResponse
@@ -137,7 +138,6 @@ def generate_exlottery_code(owner_id, belong_to, count):
 	@param count:
 	@return:
 	"""
-	import random
 	choice = '0123456789abcdefghijklmnopqrstuvwxyz'
 
 	for i in range(int(count)):

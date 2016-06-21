@@ -52,6 +52,10 @@ class ExlotteryStatus(resource.Resource):
 		exlottery_codes = app_models.ExlotteryCode.objects(owner_id = owner_id, belong_to = id)
 		count = exlottery_codes.count()
 
+		exlottery = app_models.Exlottery.objects(id = id).first()
+		created_at = exlottery.created_at.strftime('%Y-%m-%d %H:%M')
+		status = exlottery.status_text
+
 		#构造会员id和会员名映射
 		member_ids = [code.member_id for code in exlottery_codes]
 		members = Member.objects.filter(id__in = member_ids)
@@ -64,9 +68,18 @@ class ExlotteryStatus(resource.Resource):
 
 		items = []
 		used_count = 0
+		first_prize = 0
+		second_proze = 0
+		third_prize = 0
 		for code in exlottery_codes:
 			grade = code.prize_grade
 			if grade != 0:
+				if grade == 1:
+					first_prize += 1
+				elif grade == 2:
+					second_proze += 1
+				elif grade == 3:
+					third_prize += 1
 				grade = app_models.EXLOTTERY_PRIZE[grade]
 				used_count += 1
 			else:
@@ -83,7 +96,12 @@ class ExlotteryStatus(resource.Resource):
 		data = {}
 		data['count'] = count
 		data['has_used'] = used_count
-		
+		data['first'] = first_prize
+		data['second'] = second_proze
+		data['third'] = third_prize
+		data['create_at'] = created_at
+		data['status'] = status
+
 		response_data = {
 			'items': items,
 			'pageinfo': paginator.to_dict(pageinfo),
