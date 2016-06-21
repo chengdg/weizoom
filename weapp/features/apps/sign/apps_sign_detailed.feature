@@ -157,11 +157,11 @@ Background:
 		When bill点击图文'签到活动1'进入签到活动页面
 		When bill参加签到活动于'6天前'
 
-@mall2 @apps @apps_sign @apps_sign_detailed
+@mall2 @apps @apps_sign @apps_sign_detailed @cl
 Scenario:1 会员签到统计详情列表
 #倒序排列，一页显示15条记录
 	Given jobs登录系统
-	
+
 	Then jobs获得'bill'参加'签到活动1'的签到详情列表
 	"""
 		[{
@@ -225,4 +225,4 @@ Scenario:1 会员签到统计详情列表
 			"get_reward":"积分+10",
 			"sign_state":"1"
 		}]
-	""" 
+	"""
