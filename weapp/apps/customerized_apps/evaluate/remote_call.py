@@ -67,7 +67,7 @@ class GetProductEvaluatesStatus(resource.Resource):
 			else:
 				order_id2evaluiates[order_id].append(temp_dict)
 
-			order_id2status[order_id] = order_status and len(evaluate.pics) > 0
+			order_id2status[order_id] = order_status and len(evaluate.pics) > 0 and has_reviewed
 		orders = []
 		for k, v in order_id2evaluiates.items():
 			orders.append({
