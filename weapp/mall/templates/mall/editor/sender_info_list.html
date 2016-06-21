@@ -36,9 +36,9 @@
 	<table class="table">
 		<thead>
 			<tr class="xui-trHeight" style="background:#C0C0C0">
-				<th width="80">默认</th>
-				<th width="80">发货人信息</th>
-				<th width="80">发货人电话</th>
+				<!--<th width="80">默认</th>-->
+				<th width="80">发件人信息</th>
+				<th width="80">发件人电话</th>
 				<th width="80">所在地区</th>
 				<th width="80">详细地址</th>
 				<th width="80">邮政编码</th>
@@ -49,12 +49,20 @@
             {{each(i, sender) items}}
                 <tr data-id="${sender.id}" data-name = "${sender.name}">
                 	<!--默认-->
-                    <td class="nowrap">
-                        <input type="radio" checked="true" class="xa-radio" />
-                    </td>
+                	
+                    <!--<td class="nowrap">
+                    	{{if is_selected ==1}}
+                        <input type="radio" checked="true" class="xa-radio" />   
+                        {{else}}
+                        <input type="radio" class="xa-radio" />
+                        {{/if}}
+                        ${sender.is_selected}
+                    </td>-->
+                   
                     <!--发货人姓名-->
                     <td>
                         <div>${sender.sender_name}</div>
+                        
                     </td>
                     <!--发货人电话-->
                     <td class="nowrap">
@@ -76,8 +84,9 @@
                     <!--操作-->
                     <td class="tc" style="width:100px;">
                     	
-                        <a href="javascript:void(0);" data-id="${sender.id}" class="xui-delete-sender xa-delete mr10">删除</a>
-                        <a href="/mall2/sender_info/?id=${sender.id}" data-id="${sender.id}" data-name="${sender.name}" class="xa-revise">修改</a>
+                        <a href="javascript:void(0);" data-id="${sender.id}" class="xui-delete-sender  mr10">删除</a>
+                        <a href="/mall2/sender_info/?id=${sender.id}" data-id="${sender.id}" data-name="${sender.name}" class=" mr10">修改</a>
+                        <a href="javascript:void(0);" data-id="${sender.id}" data-name="${sender.name}" class="xui-default-sender ">默认</a>
                     </td>
                 </tr>
 			{{/each}}
@@ -91,7 +100,7 @@ $(document).ready(function() {
     $('body').delegate('.xui-delete-sender', 'click', function (event) {
 
         var id = $(this).attr('data-id');
-//      console.log(id);
+//      console.log(id+"@@@@");
         var $el = $(event.currentTarget);
         W.requireConfirm({
             $el: $el,
@@ -121,6 +130,27 @@ $(document).ready(function() {
             }
         });
 
+    });
+    
+    //默认信息
+    $('body').delegate('.xui-default-sender', 'click', function (event) {
+    	
+          var id = $(this).attr('data-id'),
+            
+               args = _.extend(args,{id:id})
+               W.getApi().call({
+         　　　　　 method:'post',          
+          　　　　　app: 'mall2',
+         　　　　　 resource:'sender_info',
+          　　　　　args:args,
+	      　　　　　success: function(data) {
+						                		  	
+				       
+					},
+					error: function(resp) {
+						
+					}
+				});
     });
 });
 

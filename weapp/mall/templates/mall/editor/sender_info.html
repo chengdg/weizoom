@@ -10,13 +10,12 @@
 	</ul>
 	<div class="xui-new-adress w975 pr" style="background: #EAEEF6;">
 		<div class="pt20 pl20">添加新地址</div>
-		<div class="xui-i-content mt20 pl50">
+		<div class="xui-i-content mt20 pl50 ">
 			
-			<!--<form action="/mall2/sender_info/" method="put">-->
 				<form  id="senderForm" data-id={{sender_info.id}}>
 
 				<div class="mb10">
-					<label for="" class="star_show">发货人：</label>
+					<label for="" class="star_show">发件人：</label>
 					<input type="text" class="ml10 xa-senderName" name="sender_name"  maxlength="100" value="{{sender_info.sender_name}}" data-validate="require-notempty"/>
 					<span class="errorHint"></span>
 					
@@ -51,7 +50,7 @@
 				</div>
 				
 				<div class="mb10"> 
-					<label class="star_show fl" >发货人电话：</label>
+					<label class="star_show fl" >发件人电话：</label>
 					<input type="tel" name="sender_tel" data-validate="require-mobile-phone" value="{{sender_info.sender_tel}}" required/>
 					<span class="errorHint"></span>
 				</div>
@@ -61,7 +60,7 @@
 				</div>
 				
 				<div class="mb10">
-					<label class="fl">备注：</label><textarea rows="5" cols="50" class="ml10" name="remarks">{{sender_info.remarks}}</textarea>
+					<label class="fl">备注：</label><textarea rows="5" cols="50" class="ml30" name="remarks">{{sender_info.remarks}}</textarea>
 				</div>
 				<div class="mt70 ml200">
 					<a href="javascript:void(0);" class="btn btn-default xa-submit">保存</a>
@@ -83,19 +82,19 @@
 			}
 			var $senderName = $('.xa-senderName');
 			var senderNameVal =$senderName.val();
-			console.log(senderNameVal+'11111');
-			if (isNaN(senderNameVal)) {
+
+			if (senderNameVal=='') {
 				W.showHint('error', '请输入发件人信息'); 
 				return false;
 			}else{
 				W.showHint('success', '保存成功');
-				window.location.href = '/mall2/sender_info_list/';
-				return true;
+				setTimeout(function() {
+   							window.location.reload();
+   						}, 500);
 			}
     	var area = $('.xa-province').val()+'_'+$('.xa-city').val()+'_'+$('.xa-district').val();
     	$('[name="area"]').val(area);
     	var args = $('form').serializeObject();
-//  	$('form').submit();
         var method,resource;
         if(window.location.search.indexOf("id")== -1){
         	method = 'put';
@@ -106,10 +105,8 @@
         	args = _.extend(args,{id:id})
         	
         }
-//      console.log(method,resource);
     	  W.getApi().call({
-          method:'post',
-          
+          method:method,          
           app: 'mall2',
           resource:'sender_info',
           args:args,
@@ -179,8 +176,6 @@
 //							console.log(data,i)
 							option+='<option value="'+i+'" data-id="'+i+'" '+ (cid && cid == i?'selected':'')+'>'+data+'</option>';
 						})
-
-
 						$('.xa-city').html(option);
 						_this.selectDistrict();
 					},
