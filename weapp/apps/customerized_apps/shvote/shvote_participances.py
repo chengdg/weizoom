@@ -46,7 +46,7 @@ class ShvoteParticipances(resource.Resource):
 		return render_to_response('shvote/templates/editor/shvote_participances.html', c)
 
 	@staticmethod
-	def get_datas(request):
+	def get_datas(request, is_export = False):
 		name = request.GET.get('participant_name', '')
 		webapp_id = request.user_profile.webapp_id
 		member_ids = []
@@ -71,12 +71,15 @@ class ShvoteParticipances(resource.Resource):
 			params['created_at__lte'] = end_time
 		datas = app_models.ShvoteParticipance.objects(**params).order_by('-id')
 
-		#进行分页
-		count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
-		cur_page = int(request.GET.get('page', '1'))
-		pageinfo, datas = paginator.paginate(datas, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
+		if is_export:
+			return datas
+		else:
+			#进行分页
+			count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
+			cur_page = int(request.GET.get('page', '1'))
+			pageinfo, datas = paginator.paginate(datas, cur_page, 1, query_string=request.META['QUERY_STRING'])
 
-		return pageinfo, datas
+			return pageinfo, datas
 
 	@login_required
 	def api_get(request):
@@ -124,7 +127,6 @@ class ShvoteParticipances_Export(resource.Resource):
 		分析导出
 		"""
 		export_id = request.GET.get('id',0)
-		pageinfo, datas = ShvoteParticipances.get_datas(request)
 		download_excel_file_name = u'高级投票查看结果.xls'
 		excel_file_name = 'shvote_details_'+datetime.now().strftime('%H_%M_%S')+'.xls'
 		dir_path_suffix = '%d_%s' % (request.user.id, date.today())
@@ -136,7 +138,7 @@ class ShvoteParticipances_Export(resource.Resource):
 		#Excel Process Part
 		try:
 			import xlwt
-			pageinfo, datas = ShvoteParticipances.get_datas(request)
+			datas = ShvoteParticipances.get_datas(request, export_id)
 			fields_pure = []
 			export_data = []
 
