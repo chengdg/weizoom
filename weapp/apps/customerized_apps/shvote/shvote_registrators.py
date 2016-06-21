@@ -296,7 +296,7 @@ class ShvoteCreatePlayer(resource.Resource):
 		action = True
 		record_status = True
 		try:
-			shvote = app_models.Shvote.objects.get(id = activity_id,status__ne = app_models.STATUS_STOPED)
+			shvote = app_models.Shvote.objects.get(id = activity_id)
 		except:
 			record_status = False
 		if player_id:
