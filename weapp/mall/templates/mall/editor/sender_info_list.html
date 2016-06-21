@@ -143,16 +143,13 @@ $(document).ready(function() {
          	status = $self.attr('status'),
          	id     = $self.attr('data-id');
          	console.log(id+ '---'+ status);
-         	if(status == '1'){
-         		return false;
-         	}
                W.getApi().call({
          　　　　　 method:'post',          
           　　　　　app: 'mall2',
-         　　　　　 resource:'sender_info/?id='+id,
+         　　　　　 resource:'sender_info',
           　　　　　args:{
           			id:id,
-          			is_selected:status
+          			is_selected:'true',
           	},
 	      　　　　　success: function(data) {               		  	
 				       $self.addClass("btn-danger");
