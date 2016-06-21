@@ -40,6 +40,35 @@ Background:
 			"coupon_id_prefix": "coupon2_id_"
 		}]
 		"""
+	When jobs已添加单图文
+		"""
+		[{
+			"title":"签到活动1",
+			"cover": [{
+				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
+			}],
+			"cover_in_the_text":"true",
+			"summary":"签到1",
+			"content":"签到1",
+			"jump_url":"签到活动1"
+		}]
+		"""
+	And jobs已添加关键词自动回复规则
+		"""
+		[{
+			"rules_name":"规则1",
+			"keyword":
+				[{
+					"keyword": "签到1",
+					"type": "equal"
+				}],
+			"keyword_reply":
+				[{
+					"reply_content":"签到活动1",
+					"reply_type":"text_picture"
+				}]
+		}]
+		"""
 
 @mall2 @apps @apps_sign @apps_sign_backend
 Scenario:1 配置后台所有数据,优惠券数量足,没有过期
