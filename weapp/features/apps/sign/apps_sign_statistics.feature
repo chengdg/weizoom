@@ -286,16 +286,17 @@ Scenario:2 会员签到统计列表分页
 	Then jobs获得会员签到统计列表
 		| name |last_sign | total_sign | continuous_sign | integral | coupon_num |
 		| marry|   今天   |      5     |         1       |     60   |     2      |
-		| bill |   今天   |      8     |         3       |     70   |     5      |
+		| tom  |   今天   |      3     |         2       |     40   |     1      |
+		
   	When jobs访问签到统计第'3'页
 	Then jobs获得会员签到统计列表
 		| name |last_sign | total_sign | continuous_sign | integral | coupon_num |
-		| tom  |   今天   |      3     |         2       |     40   |     1      |
+		| bill |   今天   |      8     |         3       |     70   |     5      |
 	When jobs访问签到统计列表上一页
 	Then jobs获得会员签到统计列表
 		| name |last_sign | total_sign | continuous_sign | integral | coupon_num |
 		| marry|   今天   |      5     |         1       |     60   |     2      |
-		| bill |   今天   |      8     |         3       |     70   |     5      |
+		| tom  |   今天   |      3     |         2       |     40   |     1      |
 
 @mall2 @apps @apps_sign @apps_sign_backend @sign_statistics @cl
 Scenario:3 会员签到统计列表查询

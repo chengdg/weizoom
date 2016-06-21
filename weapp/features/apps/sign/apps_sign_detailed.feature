@@ -4,7 +4,7 @@ Feature: 签到-后台签到详情
 """
 	【签到时间】：签到时间显示签到时间，精确到分;没有签到时显示当天日期，精确到分,默认为：年月日为当天时间，时分秒为0
 	【获得奖励】:1.积分2.优惠券名称3.null
-	【签到状态】为: √（签到） or ×（没有签到）
+	【签到状态】为:1表示 √（签到） or 0表示×（没有签到）
 """
 
 Background:
@@ -105,56 +105,56 @@ Background:
 		When bill访问jobs的webapp
 		When bill在微信中向jobs的公众号发送消息'签到'
 		Then bill收到自动回复'签到活动1'
-		When bill点击图文'签到活动1'进入签到得优惠页面
+		When bill点击图文'签到活动1'进入签到活动页面
 		When bill参加签到活动于'14天前'
 
 		When 清空浏览器
 		When bill访问jobs的webapp
 		When bill在微信中向jobs的公众号发送消息'签到'
 		Then bill收到自动回复'签到活动1'
-		When bill点击图文'签到活动1'进入签到得优惠页面
+		When bill点击图文'签到活动1'进入签到活动页面
 		When bill参加签到活动于'13天前'
 
 		When 清空浏览器
 		When bill访问jobs的webapp
 		When bill在微信中向jobs的公众号发送消息'签到'
 		Then bill收到自动回复'签到活动1'
-		When bill点击图文'签到活动1'进入签到得优惠页面
+		When bill点击图文'签到活动1'进入签到活动页面
 		When bill参加签到活动于'12天前'
 
 		When 清空浏览器
 		When bill访问jobs的webapp
 		When bill在微信中向jobs的公众号发送消息'签到'
 		Then bill收到自动回复'签到活动1'
-		When bill点击图文'签到活动1'进入签到得优惠页面
+		When bill点击图文'签到活动1'进入签到活动页面
 		When bill参加签到活动于'11天前'
 
 		When 清空浏览器
 		When bill访问jobs的webapp
 		When bill在微信中向jobs的公众号发送消息'签到'
 		Then bill收到自动回复'签到活动1'
-		When bill点击图文'签到活动1'进入签到得优惠页面
+		When bill点击图文'签到活动1'进入签到活动页面
 		When bill参加签到活动于'10天前'
 
 		When 清空浏览器
 		When bill访问jobs的webapp
 		When bill在微信中向jobs的公众号发送消息'签到'
 		Then bill收到自动回复'签到活动1'
-		When bill点击图文'签到活动1'进入签到得优惠页面
+		When bill点击图文'签到活动1'进入签到活动页面
 		When bill参加签到活动于'8天前'
 
 		When 清空浏览器
 		When bill访问jobs的webapp
 		When bill在微信中向jobs的公众号发送消息'签到'
 		Then bill收到自动回复'签到活动1'
-		When bill点击图文'签到活动1'进入签到得优惠页面
+		When bill点击图文'签到活动1'进入签到活动页面
 		When bill参加签到活动于'7天前'
 
 		When 清空浏览器
 		When bill访问jobs的webapp
 		When bill在微信中向jobs的公众号发送消息'签到'
 		Then bill收到自动回复'签到活动1'
-		When bill点击图文'签到活动1'进入签到得优惠页面
+		When bill点击图文'签到活动1'进入签到活动页面
 		When bill参加签到活动于'6天前'
 
 @mall2 @apps @apps_sign @apps_sign_detailed
