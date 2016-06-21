@@ -55,7 +55,7 @@ Background:
 		"""
 	Then jobs生成码库
 	"""
-		["el8s539t18","el2f5e754g","el58fe24rf","elm8v6uj41","elmn782f2r"]
+		["el8s539t18"]
 	"""
 
 	
@@ -68,13 +68,13 @@ Scenario:1 抽奖码校验通过
 	When bill使用抽奖码"el8s539t18"参加抽奖活动'专项抽奖'
 	Then bill获得抽奖结果
 		"""
-			[{
+			{
 				"prize_grade":"一等奖",
 				"prize_name":"迪士尼门票"
-			}]
+			}
 		"""
 	Given jobs登录系统
-	Then jobs获得码库详情中的"抽奖码"和"抽奖信息"
+	Then jobs获得码库详情列表
 		"""
 			[{
 				"number":"el8s539t18",
@@ -84,13 +84,30 @@ Scenario:1 抽奖码校验通过
 				"time":"今天"
 			}]
 		"""
-Scenario:2 抽奖码校验不通过
+Scenario:2 tom通过点击bill的朋友圈分享链接进行抽奖
 	Given bill关注jobs的公众号
 	When bill访问jobs的webapp
-	When bill使用抽奖码"e52589522"参加抽奖活动'专项抽奖'
-	Then bill获得公众号提示
+	When bill获得jobs的抽奖码
+	When bill使用抽奖码"el8s539t18"参加抽奖活动'专项抽奖'
+	Then bill获得抽奖结果
 		"""
-			[{
+			{
+				"prize_grade":"一等奖",
+				"prize_name":"迪士尼门票"
+			}
+		"""
+	Given bill关注jobs的公众号
+	When bill把jobs的抽奖活动链接分享到朋友圈
+	#暂时用先关注再取消关注的方式来模拟非会员的情况
+	When tom关注jobs的公众号
+	And tom取消关注jobs的公众号
+	When tom点击bill分享的抽奖链接进行抽奖
+	When tom通过弹出的二维码关注jobs的公众号
+	When tom访问jobs的webapp	
+	When tom使用抽奖码"el8s539t18"参加抽奖活动'专项抽奖'
+	Then tom获得抽奖结果
+		"""
+			{
 				"reply":"抽奖码不正确"
-			}]
+			}
 		"""
