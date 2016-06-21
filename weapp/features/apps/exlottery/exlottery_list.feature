@@ -47,7 +47,7 @@ Background:
 			"coupon_id_prefix": "coupon3_id_"
 		}]
 	"""
-	When jobs新建微信专项抽奖活动
+	When jobs新建专项抽奖活动
 	"""
 		[{
 			"name":"专项抽奖活动01",
@@ -57,7 +57,7 @@ Background:
 			"reduce_integral":1,
 			"send_integral":0,
 			"win_rate":"100%",
-			"lottory_code_num":10,
+			"lottory_code_num":5,
 			"reply":"感谢您对杭州百事可乐的关注",
 			"link_reply":"立即抽奖",
 			"is_repeat_win":"是",
@@ -90,7 +90,7 @@ Background:
 	When bill访问jobs的webapp
 	When bill获得jobs的20会员积分
 	Then bill在jobs的webapp中拥有20会员积分
-	When 微信用户批量参加jobs的微信抽奖活动
+	When 微信用户批量参加jobs的专项抽奖活动
 		|name           |member_name| prize_grade | prize_name |lottery_time| receive_status |lottery_code|
 		|专项抽奖活动01 |   bill    |  一等奖     | 优惠券1    |前天        | 已领取         |el8s539t18  |
 		|专项抽奖活动01 |   bill    |  二等奖     | 优惠券2    |昨天        | 已领取         |elm8v6uj41  |
@@ -105,7 +105,7 @@ Scenario:1 微信专项抽奖活动码库查询
 	"""
 		{}
 	"""
-	Then jobs获得'专项抽奖活动01'码库列表
+	Then jobs能获得'专项抽奖活动01'码库列表
 	"""
 		[{
 			"lottery_code":"el58fe24rf",
@@ -143,24 +143,12 @@ Scenario:1 微信专项抽奖活动码库查询
 	When jobs设置'专项抽奖活动01'码库列表查询条件
 	"""
 		{
-			"lottery_code":"5"
+			"lottery_code":"el2f5e754g"
 		}
 	"""
-	Then jobs获得'专项抽奖活动01'码库列表
+	Then jobs能获得'专项抽奖活动01'码库列表
 	"""
 		[{
-			"lottery_code":"el58fe24rf",
-			"user":"bill",
-			"use_date":"今天",
-			"prize_grade":"三等奖",
-			"prize_name":"优惠券3"
-		},{
-			"lottery_code":"el8s539t18",
-			"user":"bill",
-			"use_date":"前天",
-			"prize_grade":"一等奖",
-			"prize_name":"优惠券1"
-		},{
 			"lottery_code":"el2f5e754g",
 			"user":"",
 			"use_date":"",
@@ -175,7 +163,7 @@ Scenario:1 微信专项抽奖活动码库查询
 			"user":"bill"
 		}
 	"""
-	Then jobs获得'专项抽奖活动01'码库列表
+	Then jobs能获得'专项抽奖活动01'码库列表
 	"""
 		[{
 			"lottery_code":"el58fe24rf",
@@ -209,7 +197,7 @@ Scenario:2 微信专项抽奖活动码库列表分页
 		"""
 	#Then jobs获得微信专项抽奖活动'专项抽奖活动01'码库列表共'3'页
 	When jobs访问'专项抽奖活动01'码库列表第'1'页
-	Then jobs获得'专项抽奖活动01'码库列表
+	Then jobs能获得'专项抽奖活动01'码库列表
 	"""
 		[{
 			"lottery_code":"el58fe24rf",
@@ -226,7 +214,7 @@ Scenario:2 微信专项抽奖活动码库列表分页
 		}]
 	"""
 	When jobs访问'专项抽奖活动01'码库列表下一页
-	Then jobs获得'专项抽奖活动01'码库列表
+	Then jobs能获得'专项抽奖活动01'码库列表
 	"""
 		[{
 			"lottery_code":"el8s539t18",
@@ -243,7 +231,7 @@ Scenario:2 微信专项抽奖活动码库列表分页
 		}]
 	"""
 	When jobs访问'专项抽奖活动01'码库列表第'3'页
-	Then jobs获得'专项抽奖活动01'码库列表
+	Then jobs能获得'专项抽奖活动01'码库列表
 	"""
 		[{
 			"lottery_code":"elmn782f2r",
@@ -254,7 +242,7 @@ Scenario:2 微信专项抽奖活动码库列表分页
 		}]
 	"""
 	When jobs访问'专项抽奖活动01'码库列表上一页
-	Then jobs获得'专项抽奖活动01'码库列表
+	Then jobs能获得'专项抽奖活动01'码库列表
 		"""
 		[{
 			"lottery_code":"el8s539t18",

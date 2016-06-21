@@ -199,7 +199,7 @@ Scenario:2 新建微信专项抽奖活动，查看码库列表
 			}]
 		}]
 	"""
-	Then jobs生成码库
+	Then jobs生成'专项抽奖活动001'码库
 	"""
 		["el8s539t18","el2f5e754g","el58fe24rf","elm8v6uj41","elmn782f2r"]
 	"""
