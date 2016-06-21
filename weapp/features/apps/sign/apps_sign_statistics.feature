@@ -262,8 +262,9 @@ Scenario:1 会员签到统计列表
 		| nokia|   今天   |      2     |         1       |     40    |     0      |
 		| jack |   今天   |      1     |         1       |     20    |     0      |
 		| marry|   今天   |      5     |         1       |     60    |     2      |
-		| bill |   今天   |      8     |         3       |     70    |     5      |
 		| tom  |   今天   |      3     |         2       |     40    |     1      |
+		| bill |   今天   |      8     |         3       |     70    |     5      |
+		
 
 @mall2 @apps @apps_sign @apps_sign_backend @sign_statistics @cl
 Scenario:2 会员签到统计列表分页
