@@ -32,9 +32,6 @@ Background:
 		"""
 	Given bill关注jobs的公众号
 	When bill访问jobs的webapp
-	When bill获得jobs的抽奖码
-	Then bill在jobs的webapp中拥有抽奖码
-
 @mall2 @apps @apps_exlottery @users_participate_exlottery 
 Scenario:1专项抽奖活动未开始
 	Given jobs登录系统
@@ -47,34 +44,37 @@ Scenario:1专项抽奖活动未开始
 			"end_date":"5天后",
 			"reduce_integral":0,
 			"send_integral":0,
-			"code_count":"2000",
-			"automatic_reply:"谢谢"，
-			"link":"立即抽奖"，
-			"win_rate":"50%",
+			"win_rate":"60%",
+			"lottory_code_num":1,
+			"reply":"感谢您对杭州百事可乐的关注",
+			"link_reply":"立即抽奖",
 			"is_repeat_win":"否",
 			"prize_settings":[{
 				"prize_grade":"一等奖",
 				"prize_counts":10,
 				"prize_type":"积分",
-				"integral":100,
-				"pic":""
+				"integral":1000,
+				"pic":"2.jpg"
 			},{
 				"prize_grade":"二等奖",
 				"prize_counts":30,
 				"prize_type":"优惠券",
-				"coupon":"优惠券1",
-				"pic":""
+				"coupon":"优惠券2",
+				"pic":"3.jpg"
 			},{
 				"prize_grade":"三等奖",
 				"prize_counts":50,
-				"prize_type":"实物",
-				"gift":"精美礼品",
-				"pic":"1.jpg"
+				"prize_type":"优惠券",
+				"coupon":"优惠券3",
+				"pic":"4.jpg"
 			}]
 		}]
 		"""
-	When bill访问jobs的webapp
-	When bill使用抽奖码参加抽奖活动'专项抽奖'
+	Then jobs生成码库
+	"""
+		["el8s539t18","el2f5e754g","el58fe24rf","elm8v6uj41","elmn782f2r"]
+	"""
+	When bill使用抽奖码"el8s539t18"参加抽奖活动'专项抽奖'
 	Then bill获得公众号回复
 		"""
 		[{
@@ -93,34 +93,38 @@ Scenario:2 活动已结束并且抽奖码已使用
 			"end_date":"1天前",
 			"reduce_integral":0,
 			"send_integral":0,
-			"code_count":"2000",
-			"automatic_reply:"谢谢"，
-			"link":"立即抽奖"，
-			"win_rate":"50%",
+			"win_rate":"60%",
+			"lottory_code_num":1,
+			"reply":"感谢您对杭州百事可乐的关注",
+			"link_reply":"立即抽奖",
 			"is_repeat_win":"否",
 			"prize_settings":[{
 				"prize_grade":"一等奖",
 				"prize_counts":10,
 				"prize_type":"积分",
-				"integral":100,
-				"pic":""
+				"integral":1000,
+				"pic":"2.jpg"
 			},{
 				"prize_grade":"二等奖",
 				"prize_counts":30,
 				"prize_type":"优惠券",
-				"coupon":"优惠券1",
-				"pic":""
+				"coupon":"优惠券2",
+				"pic":"3.jpg"
 			},{
 				"prize_grade":"三等奖",
 				"prize_counts":50,
-				"prize_type":"实物",
-				"gift":"精美礼品",
-				"pic":"1.jpg"
+				"prize_type":"优惠券",
+				"coupon":"优惠券3",
+				"pic":"4.jpg"
 			}]
 		}]
 		"""
-	When bill访问jobs的webapp
-	When bill使用抽奖码参加抽奖活动'专项抽奖'
+	Then jobs生成码库
+	"""
+		["el8s539t18","el2f5e754g","el58fe24rf","elm8v6uj41","elmn782f2r"]
+	"""
+
+	When bill使用抽奖码"el8s539t18"参加抽奖活动'专项抽奖'
 	Then bill获得公众号回复
 		"""
 		[{
@@ -139,34 +143,38 @@ Scenario:3 活动已结束并且抽奖码未使用
 			"end_date":"1天前",
 			"reduce_integral":0,
 			"send_integral":0,
-			"code_count":"2000",
-			"automatic_reply:"谢谢"，
-			"link":"立即抽奖"，
-			"win_rate":"50%",
+			"win_rate":"60%",
+			"lottory_code_num":1,
+			"reply":"感谢您对杭州百事可乐的关注",
+			"link_reply":"立即抽奖",
 			"is_repeat_win":"否",
 			"prize_settings":[{
 				"prize_grade":"一等奖",
 				"prize_counts":10,
 				"prize_type":"积分",
-				"integral":100,
-				"pic":""
+				"integral":1000,
+				"pic":"2.jpg"
 			},{
 				"prize_grade":"二等奖",
 				"prize_counts":30,
 				"prize_type":"优惠券",
-				"coupon":"优惠券1",
-				"pic":""
+				"coupon":"优惠券2",
+				"pic":"3.jpg"
 			},{
 				"prize_grade":"三等奖",
 				"prize_counts":50,
-				"prize_type":"实物",
-				"gift":"精美礼品",
-				"pic":"1.jpg"
+				"prize_type":"优惠券",
+				"coupon":"优惠券3",
+				"pic":"4.jpg"
 			}]
 		}]
 		"""
-	When bill访问jobs的webapp
-	When bill使用抽奖码参加抽奖活动'专项抽奖'
+	Then jobs生成码库
+	"""
+		["el8s539t18","el2f5e754g","el58fe24rf","elm8v6uj41","elmn782f2r"]
+	"""
+
+	When bill使用抽奖码"el8s539t18"参加抽奖活动'专项抽奖'
 	Then bill获得公众号回复
 		"""
 		[{
@@ -185,34 +193,38 @@ Scenario:4 活动进行中，抽奖码已使用
 			"end_date":"5天后",
 			"reduce_integral":0,
 			"send_integral":0,
-			"code_count":"2000",
-			"automatic_reply:"谢谢"，
-			"link":"立即抽奖"，
-			"win_rate":"50%",
+			"win_rate":"60%",
+			"lottory_code_num":1,
+			"reply":"感谢您对杭州百事可乐的关注",
+			"link_reply":"立即抽奖",
 			"is_repeat_win":"否",
 			"prize_settings":[{
 				"prize_grade":"一等奖",
 				"prize_counts":10,
 				"prize_type":"积分",
-				"integral":100,
-				"pic":""
+				"integral":1000,
+				"pic":"2.jpg"
 			},{
 				"prize_grade":"二等奖",
 				"prize_counts":30,
 				"prize_type":"优惠券",
-				"coupon":"优惠券1",
-				"pic":""
+				"coupon":"优惠券2",
+				"pic":"3.jpg"
 			},{
 				"prize_grade":"三等奖",
 				"prize_counts":50,
-				"prize_type":"实物",
-				"gift":"精美礼品",
-				"pic":"1.jpg"
+				"prize_type":"优惠券",
+				"coupon":"优惠券3",
+				"pic":"4.jpg"
 			}]
 		}]
 		"""
-	When bill访问jobs的webapp
-	When bill使用抽奖码参加抽奖活动'专项抽奖'
+	Then jobs生成码库
+	"""
+		["el8s539t18","el2f5e754g","el58fe24rf","elm8v6uj41","elmn782f2r"]
+	"""
+
+	When bill使用抽奖码"el8s539t18"参加抽奖活动'专项抽奖'
 	Then bill获得公众号回复
 		"""
 		[{
@@ -231,34 +243,38 @@ Scenario:5 抽奖码不正确
 			"end_date":"5天后",
 			"reduce_integral":0,
 			"send_integral":0,
-			"code_count":"2000",
-			"automatic_reply:"谢谢"，
-			"link":"立即抽奖"，
-			"win_rate":"50%",
+			"win_rate":"60%",
+			"lottory_code_num":1,
+			"reply":"感谢您对杭州百事可乐的关注",
+			"link_reply":"立即抽奖",
 			"is_repeat_win":"否",
 			"prize_settings":[{
 				"prize_grade":"一等奖",
 				"prize_counts":10,
 				"prize_type":"积分",
-				"integral":100,
-				"pic":""
+				"integral":1000,
+				"pic":"2.jpg"
 			},{
 				"prize_grade":"二等奖",
 				"prize_counts":30,
 				"prize_type":"优惠券",
-				"coupon":"优惠券1",
-				"pic":""
+				"coupon":"优惠券2",
+				"pic":"3.jpg"
 			},{
 				"prize_grade":"三等奖",
 				"prize_counts":50,
-				"prize_type":"实物",
-				"gift":"精美礼品",
-				"pic":"1.jpg"
+				"prize_type":"优惠券",
+				"coupon":"优惠券3",
+				"pic":"4.jpg"
 			}]
 		}]
 		"""
-	When bill访问jobs的webapp
-	When bill使用抽奖码参加抽奖活动'专项抽奖'
+	Then jobs生成码库
+	"""
+		["el8s539t18","el2f5e754g","el58fe24rf","elm8v6uj41","elmn782f2r"]
+	"""
+
+	When bill使用抽奖码"e52589522"参加抽奖活动'专项抽奖'
 	Then bill获得公众号回复
 		"""
 		[{
@@ -277,41 +293,45 @@ Scenario:6 活动进行中，抽奖码正确且未使用
 			"end_date":"5天后",
 			"reduce_integral":0,
 			"send_integral":0,
-			"code_count":"2000",
-			"automatic_reply:"谢谢"，
-			"link":"立即抽奖"，
-			"win_rate":"50%",
+			"win_rate":"60%",
+			"lottory_code_num":1,
+			"reply":"感谢您对杭州百事可乐的关注",
+			"link_reply":"立即抽奖",
 			"is_repeat_win":"否",
 			"prize_settings":[{
 				"prize_grade":"一等奖",
 				"prize_counts":10,
 				"prize_type":"积分",
-				"integral":100,
-				"pic":""
+				"integral":1000,
+				"pic":"2.jpg"
 			},{
 				"prize_grade":"二等奖",
 				"prize_counts":30,
 				"prize_type":"优惠券",
-				"coupon":"优惠券1",
-				"pic":""
+				"coupon":"优惠券2",
+				"pic":"3.jpg"
 			},{
 				"prize_grade":"三等奖",
 				"prize_counts":50,
-				"prize_type":"实物",
-				"gift":"精美礼品",
-				"pic":"1.jpg"
+				"prize_type":"优惠券",
+				"coupon":"优惠券3",
+				"pic":"4.jpg"
 			}]
 		}]
 		"""
-	When bill访问jobs的webapp
-	When bill使用抽奖码参加抽奖活动'专项抽奖'
+	Then jobs生成码库
+	"""
+		["el8s539t18","el2f5e754g","el58fe24rf","elm8v6uj41","elmn782f2r"]
+	"""
+
+	When bill使用抽奖码"el8s539t18"参加抽奖活动'专项抽奖'
 	Then bill获得公众号回复
 		"""
 		[{
 			"reply":[{
-				"content":"感谢",
-				"link":"立即抽奖"
-			}]
+						"content":"感谢您对杭州百事可乐的关注",
+						"link":"立即抽奖"
+					}]
 		}]
 		"""
 	
