@@ -17,8 +17,8 @@ from termite2 import pagecreater
 
 
 class Mlottery(resource.Resource):
-	app = 'apps/lottery'
-	resource = 'm_lottery'
+	app = 'apps/exlottery'
+	resource = 'm_exlottery'
 
 	def get(request):
 		"""

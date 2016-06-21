@@ -137,7 +137,7 @@
 					${item.participant_count}
 				</td>
 				<td>
-				    <a href="/apps/exlottery/exlottery_status/?id=${item.id}">码库&nbsp;&nbsp;</a>
+				    <a href="/apps/exlottery/exlottery_code_store/?id=${item.id}">码库&nbsp;&nbsp;</a>
 				    <a href="/apps/exlottery/exlottery_participances/?id=${item.id}">查看结果</a>
 				    <a class="ml5 xa-copyLinkBtn" href="javascript:void(0);" data-id=${item.id}>链接</a>
 					{{if (item.status === '未开始' || item.status === '已结束')}}
@@ -178,8 +178,8 @@ $(document).ready(function() {
 			msg: '确定删除？',
 			confirm: function() {
 				W.getApi().call({
-					app: 'apps/lottery',
-					resource: 'lottery',
+					app: 'apps/exlottery',
+					resource: 'exlottery',
 					method: 'delete',
 					args: {
 						id: id
@@ -202,8 +202,8 @@ $(document).ready(function() {
 		var $el = $(event.target);
 		var id = $el.data('id');
 		W.getApi().call({
-			app: 'apps/lottery',
-			resource: 'lottery_status',
+			app: 'apps/exlottery',
+			resource: 'exlottery_status',
 			method: 'post',
 			args: {
 				id: id,
@@ -224,7 +224,7 @@ $(document).ready(function() {
 	$('body').delegate('.xa-preview', 'click', function(event) {
 		var $el = $(event.target);
 		var id = $el.data('id');
-		var previewUrl = '/m/apps/lottery/m_lottery/?woid='+W.mid+'&id='+id;
+		var previewUrl = '/m/apps/exlottery/m_exlottery/?woid='+W.mid+'&id='+id;
 		window.open('/termite2/app_preview/?preview_url='+encodeURIComponent(previewUrl), '_tab');
 	});
 
@@ -255,7 +255,7 @@ $(document).ready(function() {
 	$('body').delegate('.xa-copyLinkBtn', 'click', function(event){
 		var $el = $(event.currentTarget);
 		var data_id = $el.attr('data-id');
-        var urlLink = "/m/apps/lottery/m_lottery/?webapp_owner_id="+W.mid+"&id="+data_id;
+        var urlLink = "/m/apps/exlottery/m_exlottery/?webapp_owner_id="+W.mid+"&id="+data_id;
 
 		var promotionCopyLinkView = W.getPromotionCopyLinkView({
 			width: 414,
