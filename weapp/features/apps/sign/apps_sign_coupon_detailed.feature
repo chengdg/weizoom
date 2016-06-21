@@ -218,7 +218,7 @@ Background:
 			"start_date":"1天前",
 			"end_date":"今天",
 			"desc":"抽奖啦抽奖啦",
-			"reduce_integral":0,
+			"reduce_integral":15,
 			"send_integral":0,
 			"send_integral_rules":"仅限未中奖用户",
 			"lottery_limit":"不限",

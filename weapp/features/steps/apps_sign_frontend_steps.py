@@ -9,7 +9,7 @@ from modules.member import module_api as member_api
 from utils import url_helper
 import datetime as dt
 import termite.pagestore as pagestore_manager
-from apps.customerized_apps.sign.models import Sign, SignParticipance
+from apps.customerized_apps.sign.models import Sign, SignParticipance, SignDetails
 from modules.member.models import Member, SOURCE_MEMBER_QRCODE
 from utils.string_util import byte_to_hex
 import json
@@ -215,6 +215,9 @@ def step_impl(context, webapp_user_name, date_str):
 	#对比时间，记录最后一次签到时间
 	if context.latest_date[webapp_user_name] < bdd_util.get_date(date):
 		context.latest_date[webapp_user_name] = bdd_util.get_date(date)
+
+	item = SignDetails.objects.filter(belong_to=context.sign_id, member_id=context.member.id).order_by('-id').first()
+	item.update(set__created_at = bdd_util.get_date(date))
 
 	context.need_change_date = True
 

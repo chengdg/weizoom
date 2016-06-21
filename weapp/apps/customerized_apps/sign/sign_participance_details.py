@@ -81,6 +81,7 @@ class SignParticipances(resource.Resource):
 				else:
 					returnDataList.append({
 						"created_at": date_d.strftime("%Y.%m.%d %H:%M:%S"),
+						"created_at_f": date_d.strftime("%Y-%m-%d %H:%M:%S"),
 						"prize": "",
 						"status": 0
 					})
