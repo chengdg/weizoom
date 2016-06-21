@@ -46,7 +46,7 @@ class ShvoteRegistrators(resource.Resource):
 		return render_to_response('shvote/templates/editor/shvote_registrators.html', c)
 
 	@staticmethod
-	def get_datas(request):
+	def get_datas(request, is_export = False):
 		name = request.GET.get('participant_name', '')#搜索
 		serial_number = request.GET.get('serial_number', '')
 		status = int(request.GET.get('participant_status', -1))
@@ -72,12 +72,15 @@ class ShvoteRegistrators(resource.Resource):
 		# 	params['created_at__lte'] = end_time
 		datas = app_models.ShvoteParticipance.objects(**params).order_by('-id').order_by('status')#筛选后参与者集合
 
-		#进行分页
-		count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
-		cur_page = int(request.GET.get('page', '1'))
-		pageinfo, datas = paginator.paginate(datas, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
+		if is_export:
+			return datas
+		else:
+			#进行分页
+			count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
+			cur_page = int(request.GET.get('page', '1'))
+			pageinfo, datas = paginator.paginate(datas, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
 
-		return pageinfo, datas
+			return pageinfo, datas
 
 	@login_required
 	def api_get(request):
@@ -166,7 +169,6 @@ class ShvoteRegistrators_Export(resource.Resource):
 		分析导出
 		"""
 		export_id = request.GET.get('id',0)
-		pageinfo, datas = ShvoteRegistrators.get_datas(request)
 		download_excel_file_name = u'高级投票报名详情.xls'
 		excel_file_name = 'shvote_registrators_'+datetime.now().strftime('%H_%M_%S')+'.xls'
 		dir_path_suffix = '%d_%s' % (request.user.id, date.today())
@@ -178,7 +180,7 @@ class ShvoteRegistrators_Export(resource.Resource):
 		#Excel Process Part
 		try:
 			import xlwt
-			pageinfo, datas = ShvoteRegistrators.get_datas(request)
+			datas = ShvoteRegistrators.get_datas(request, export_id)
 			fields_pure = []
 			export_data = []
 
