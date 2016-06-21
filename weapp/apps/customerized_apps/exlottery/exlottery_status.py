@@ -18,6 +18,7 @@ from mall import export
 from apps import request_util
 from termite import pagestore as pagestore_manager
 from modules.member.models import Member
+from utils.string_util import byte_to_hex
 
 FIRST_NAV = export.MALL_PROMOTION_AND_APPS_FIRST_NAV
 COUNT_PER_PAGE = 20
@@ -49,7 +50,20 @@ class ExlotteryStatus(resource.Resource):
 		id = request.GET.get('id',None)
 		owner_id = request.manager.id
 
-		exlottery_codes = app_models.ExlotteryCode.objects(owner_id = owner_id, belong_to = id)
+		#过滤
+		code = request.GET.get('code', None)
+		member = request.GET.get('member', None)
+		prize_grade = int(request.GET.get('status', -1))
+		param = {
+			'owner_id': owner_id,
+			'belong_to': id,
+		}
+		if code:
+			param['code'] = code
+		if prize_grade != -1:
+			param['prize_grade'] = prize_grade
+
+		exlottery_codes = app_models.ExlotteryCode.objects(**param)
 		count = exlottery_codes.count()
 
 		exlottery = app_models.Exlottery.objects(id = id).first()
@@ -69,7 +83,7 @@ class ExlotteryStatus(resource.Resource):
 		items = []
 		used_count = 0
 		first_prize = 0
-		second_proze = 0
+		second_prize = 0
 		third_prize = 0
 		for code in exlottery_codes:
 			grade = code.prize_grade
@@ -97,7 +111,7 @@ class ExlotteryStatus(resource.Resource):
 		data['count'] = count
 		data['has_used'] = used_count
 		data['first'] = first_prize
-		data['second'] = second_proze
+		data['second'] = second_prize
 		data['third'] = third_prize
 		data['create_at'] = created_at
 		data['status'] = status
