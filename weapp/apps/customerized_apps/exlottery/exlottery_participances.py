@@ -92,7 +92,7 @@ class ExlotteryParticipances(resource.Resource):
 		"""
 		响应API GET
 		"""
-		pageinfo, datas = lotteryParticipances.get_datas(request)
+		pageinfo, datas = ExlotteryParticipances.get_datas(request)
 
 		tmp_member_ids = []
 		for data in datas:
@@ -127,16 +127,16 @@ class ExlotteryParticipances(resource.Resource):
 		"""
 		领取奖品
 		"""
-		app_models.lottoryRecord.objects(id=request.POST['id']).update(set__status=True)
+		app_models.ExlottoryRecord.objects(id=request.POST['id']).update(set__status=True)
 		response = create_response(200)
 		return response.get_response()
 
-class lotteryParticipances_Export(resource.Resource):
+class ExlotteryParticipances_Export(resource.Resource):
 	'''
 	批量导出
 	'''
-	app = 'apps/lottery'
-	resource = 'lottery_participances-export'
+	app = 'apps/exlottery'
+	resource = 'exlottery_participances-export'
 	@login_required
 	def api_get(request):
 		"""
@@ -157,7 +157,7 @@ class lotteryParticipances_Export(resource.Resource):
 		#Excel Process Part
 		try:
 			import xlwt
-			datas = lotteryParticipances.get_datas(request)
+			datas = ExlotteryParticipances.get_datas(request)
 			fields_raw = []
 			export_data = []
 
