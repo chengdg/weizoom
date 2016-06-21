@@ -123,14 +123,14 @@ Scenario:1 修改最高连续签到天数，当会员累计签到达到该天数
 	When bill在微信中向jobs的公众号发送消息'签到1'
 	Then bill收到自动回复'签到活动1'
 	When bill点击图文'签到活动1'进入签到活动页面
-	Then bill能参加签到活动
+	Then bill参加签到活动
 	
 	When 修改bill的签到时间为前一天
 	When 清空浏览器
 	When bill在微信中向jobs的公众号发送消息'签到1'
 	Then bill收到自动回复'签到活动1'
 	When bill点击图文'签到活动1'进入签到活动页面
-	Then bill能参加签到活动
+	Then bill参加签到活动
 
 
 	When 修改bill的签到时间为前一天
@@ -138,7 +138,7 @@ Scenario:1 修改最高连续签到天数，当会员累计签到达到该天数
 	When bill在微信中向jobs的公众号发送消息'签到1'
 	Then bill收到自动回复'签到活动1'
 	When bill点击图文'签到活动1'进入签到活动页面
-	Then bill能参加签到活动
+	Then bill参加签到活动
 
 
 	When bill访问jobs的webapp
@@ -187,14 +187,14 @@ Scenario:1 修改最高连续签到天数，当会员累计签到达到该天数
 	When bill在微信中向jobs的公众号发送消息'签到1'
 	Then bill收到自动回复'签到活动1'
 	When bill点击图文'签到活动1'进入签到活动页面
-	Then bill能参加签到活动
+	Then bill参加签到活动
 
 	When 修改bill的签到时间为前一天
 	When 清空浏览器
 	When bill在微信中向jobs的公众号发送消息'签到1'
 	Then bill收到自动回复'签到活动1'
 	When bill点击图文'签到活动1'进入签到活动页面
-	Then bill能参加签到活动
+	Then bill参加签到活动
 
 	When bill访问jobs的webapp
 	Then bill在jobs的webapp中拥有13会员积分
@@ -261,14 +261,14 @@ Scenario:2 修改最高连续签到天数，当会员累计签到未达到该天
 	When bill在微信中向jobs的公众号发送消息'签到2'
 	Then bill收到自动回复'签到活动2'
 	When bill点击图文'签到活动2'进入签到活动页面
-	Then bill能参加签到活动
+	Then bill参加签到活动
 
 	When 修改bill的签到时间为前一天
 	When 清空浏览器
 	When bill在微信中向jobs的公众号发送消息'签到2'
 	Then bill收到自动回复'签到活动2'
 	When bill点击图文'签到活动2'进入签到活动页面
-	Then bill能参加签到活动
+	Then bill参加签到活动
 
 	When bill访问jobs的webapp
 	Then bill在jobs的webapp中拥有7会员积分
@@ -312,14 +312,14 @@ Scenario:2 修改最高连续签到天数，当会员累计签到未达到该天
 	When bill在微信中向jobs的公众号发送消息'签到2'
 	Then bill收到自动回复'签到活动2'
 	When bill点击图文'签到活动2'进入签到活动页面
-	Then bill能参加签到活动
+	Then bill参加签到活动
 
 	When 修改bill的签到时间为前一天
 	When 清空浏览器
 	When bill在微信中向jobs的公众号发送消息'签到2'
 	Then bill收到自动回复'签到活动2'
 	When bill点击图文'签到活动2'进入签到活动页面
-	Then bill能参加签到活动
+	Then bill参加签到活动
 
 	When bill访问jobs的webapp
 	Then bill在jobs的webapp中拥有19会员积分

@@ -142,7 +142,7 @@ Scenario:1 对签到活动内容进行修改，会员访问活动页面
 	When bill在微信中向jobs的公众号发送消息'签到1'
 	Then bill收到自动回复'签到活动1'
 	When bill点击图文'签到活动1'进入签到活动页面
-	Then bill能参加签到活动
+	Then bill参加签到活动
 
 	When bill访问jobs的webapp
 	Then bill在jobs的webapp中拥有2会员积分
@@ -177,7 +177,7 @@ Scenario:1 对签到活动内容进行修改，会员访问活动页面
 		When bill在微信中向jobs的公众号发送消息'签到1'
 		Then bill收到自动回复'签到活动1'
 		When bill点击图文'签到活动1'进入签到活动页面
-		Then bill不能参加签到活动
+		Then bill参加签到活动
 
 	#在关闭状态下进行修改签到活动
 		Given jobs登录系统
@@ -216,7 +216,7 @@ Scenario:1 对签到活动内容进行修改，会员访问活动页面
 		When bill在微信中向jobs的公众号发送消息'签到3'
 		Then bill收到自动回复'签到活动3'
 		When bill点击图文'签到活动3'进入签到活动页面
-		Then bill能参加签到活动
+		Then bill参加签到活动
 		When bill访问jobs的webapp
 		Then bill在jobs的webapp中拥有12会员积分
 		And bill能获得webapp优惠券列表
