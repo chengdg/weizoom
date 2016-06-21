@@ -35,10 +35,11 @@
 				<div class="xui-i-item ml20">
 					<label>获奖等级：</label>
 					<select class="" id="status" name="status">
-						<option value="-1">未中奖</option>
-						<option value="0">一等奖</option>
-						<option value="1">二等奖</option>
-						<option value="2">三等奖</option>
+						<option value="-1">全部</option>
+						<option value="4">未中奖</option>
+						<option value="1">一等奖</option>
+						<option value="2">二等奖</option>
+						<option value="3">三等奖</option>
 					</select>
 				</div>
 			</div>
@@ -50,42 +51,6 @@
 	</div>
 
 	<div class="panel panel-default xui-tableBox">
-		<div class="panel-header disT">
-			<div class="disTc">实时数据</div>
-			<div class="disTc">
-				<b>抽奖码共计：</b>
-				{{data.count}}
-			</div>
-			<div class="disTc">
-				<b>已使用：</b>
-				{{data.has_used}}
-			</div>
-			<div class="disTc">
-				<b>一等奖：</b>
-				{{data.first}}
-			</div>
-			<div class="disTc">
-				<b>二等奖：</b>
-				{{data.second}}
-			</div>
-			<div class="disTc">
-				<b>三等奖：</b>
-				{{data.third}}
-			</div>
-			<div class="disTc">
-				<span>创建时间：</span>
-				{{data.creat_time}}
-			</div>
-			<div class="disTc">
-				<span>状态：</span>
-				{{data.status}}
-			</div>
-			<div class="disTc">
-				<a href="javascript:void(0)" class="xa-export">导出>></a>
-				<a id="export_href" style="display: none ">DownloadXLS</a>
-			</div>
-		</div>
-
 		<div
 			class="panel-body panel-table p0"
 			data-ui-role="advanced-table"
@@ -109,6 +74,41 @@
 
 {% verbatim %}
 <script id="table" type="text/x-jquery-tmpl">
+	<div class="panel-header disT">
+		<div class="disTc" style="width:90px;">实时数据</div>
+		<div class="disTc" style="width:120px;">
+			<b>抽奖码共计：</b>
+			${data.data.count}
+		</div>
+		<div class="disTc" style="width:100px;">
+			<b>已使用：</b>
+			${data.data.has_used}
+		</div>
+		<div class="disTc" style="width:100px;">
+			<b>一等奖：</b>
+			${data.data.first}
+		</div>
+		<div class="disTc" style="width:100px;">
+			<b>二等奖：</b>
+			${data.data.second}
+		</div>
+		<div class="disTc" style="width:100px;">
+			<b>三等奖：</b>
+			${data.data.third}
+		</div>
+		<div class="disTc" style="width:200px;">
+			<span>创建时间：</span>
+			${data.data.create_at}
+		</div>
+		<div class="disTc" style="width:120px;">
+			<span>状态：</span>
+			${data.data.status}
+		</div>
+		<div class="disTc">
+			<a href="javascript:void(0)" class="xa-export">导出<span style="font-family:'宋体'">&gt;&gt;</span></a>
+			<a id="export_href" style="display: none ">DownloadXLS</a>
+		</div>
+	</div>
 	{{if items!='' }}
 	<table class="table table-bordered xb-stripedTable xb-noTdBorder xb-noBottom xb-noBorder xb-theadBg mb10">
 		<thead>
@@ -157,16 +157,26 @@
 	$(document).ready(function(){
 		//搜索
 		$('.xa-search').click(function(event){
-			var name = $.trim($('[name="code"]').val());
-			var status = $.trim($('[name="member"]').val());
+			var code = $.trim($('[name="code"]').val());
+			var memeber = $.trim($('[name="member"]').val());
+			var status = $('[name="status"]').val();
 			var table = $('[data-ui-role="advanced-table"]').data('view');
 			table.reload({
-				'member': member,
-				'code': code
+				member: member,
+				code: code,
+				status: status
 			},{
 				emptyDataHint: '没有符合条件的数据'
 			});
 		});
+
+		//重置
+		$('.xa-reset').click(function(event) {
+			$('[name="code"]').val('');
+			$('[name="status"]').val('-1');
+			$('[name="member"]').val('');
+		});
+
 		//导出
 		$('.xa-export').click(function(event){
 			W.getLoadingView();
@@ -188,7 +198,6 @@
 							'href': resp.download_path,
 							'download': resp.filename
 						}).get(0).click();
-
 					}
 					console.log("导出成功");
 				},
