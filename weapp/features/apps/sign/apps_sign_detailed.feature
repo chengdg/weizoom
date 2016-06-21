@@ -105,56 +105,56 @@ Background:
 		When bill访问jobs的webapp
 		When bill在微信中向jobs的公众号发送消息'签到'
 		Then bill收到自动回复'签到活动1'
-		When bill点击图文'签到活动1'进入签到得优惠页面
+		When bill点击图文'签到活动1'进入签到活动页面
 		When bill参加签到活动于'14天前'
 
 		When 清空浏览器
 		When bill访问jobs的webapp
 		When bill在微信中向jobs的公众号发送消息'签到'
 		Then bill收到自动回复'签到活动1'
-		When bill点击图文'签到活动1'进入签到得优惠页面
+		When bill点击图文'签到活动1'进入签到活动页面
 		When bill参加签到活动于'13天前'
 
 		When 清空浏览器
 		When bill访问jobs的webapp
 		When bill在微信中向jobs的公众号发送消息'签到'
 		Then bill收到自动回复'签到活动1'
-		When bill点击图文'签到活动1'进入签到得优惠页面
+		When bill点击图文'签到活动1'进入签到活动页面
 		When bill参加签到活动于'12天前'
 
 		When 清空浏览器
 		When bill访问jobs的webapp
 		When bill在微信中向jobs的公众号发送消息'签到'
 		Then bill收到自动回复'签到活动1'
-		When bill点击图文'签到活动1'进入签到得优惠页面
+		When bill点击图文'签到活动1'进入签到活动页面
 		When bill参加签到活动于'11天前'
 
 		When 清空浏览器
 		When bill访问jobs的webapp
 		When bill在微信中向jobs的公众号发送消息'签到'
 		Then bill收到自动回复'签到活动1'
-		When bill点击图文'签到活动1'进入签到得优惠页面
+		When bill点击图文'签到活动1'进入签到活动页面
 		When bill参加签到活动于'10天前'
 
 		When 清空浏览器
 		When bill访问jobs的webapp
 		When bill在微信中向jobs的公众号发送消息'签到'
 		Then bill收到自动回复'签到活动1'
-		When bill点击图文'签到活动1'进入签到得优惠页面
+		When bill点击图文'签到活动1'进入签到活动页面
 		When bill参加签到活动于'8天前'
 
 		When 清空浏览器
 		When bill访问jobs的webapp
 		When bill在微信中向jobs的公众号发送消息'签到'
 		Then bill收到自动回复'签到活动1'
-		When bill点击图文'签到活动1'进入签到得优惠页面
+		When bill点击图文'签到活动1'进入签到活动页面
 		When bill参加签到活动于'7天前'
 
 		When 清空浏览器
 		When bill访问jobs的webapp
 		When bill在微信中向jobs的公众号发送消息'签到'
 		Then bill收到自动回复'签到活动1'
-		When bill点击图文'签到活动1'进入签到得优惠页面
+		When bill点击图文'签到活动1'进入签到活动页面
 		When bill参加签到活动于'6天前'
 
 @mall2 @apps @apps_sign @apps_sign_detailed

@@ -137,56 +137,56 @@ Background:
 		When bill访问jobs的webapp
 		When bill在微信中向jobs的公众号发送消息'签到'
 		Then bill收到自动回复'签到活动1'
-		When bill点击图文'签到活动1'进入签到得优惠页面
+		When bill点击图文'签到活动1'进入签到活动页面
 		When bill参加签到活动于'8天前'
 
 		When 清空浏览器
 		When bill访问jobs的webapp
 		When bill在微信中向jobs的公众号发送消息'签到'
 		Then bill收到自动回复'签到活动1'
-		When bill点击图文'签到活动1'进入签到得优惠页面
+		When bill点击图文'签到活动1'进入签到活动页面
 		When bill参加签到活动于'7天前'
 
 		When 清空浏览器
 		When bill访问jobs的webapp
 		When bill在微信中向jobs的公众号发送消息'签到'
 		Then bill收到自动回复'签到活动1'
-		When bill点击图文'签到活动1'进入签到得优惠页面
+		When bill点击图文'签到活动1'进入签到活动页面
 		When bill参加签到活动于'6天前'
 
 		When 清空浏览器
 		When bill访问jobs的webapp
 		When bill在微信中向jobs的公众号发送消息'签到'
 		Then bill收到自动回复'签到活动1'
-		When bill点击图文'签到活动1'进入签到得优惠页面
+		When bill点击图文'签到活动1'进入签到活动页面
 		When bill参加签到活动于'5天前'
 
 		When 清空浏览器
 		When bill访问jobs的webapp
 		When bill在微信中向jobs的公众号发送消息'签到'
 		Then bill收到自动回复'签到活动1'
-		When bill点击图文'签到活动1'进入签到得优惠页面
+		When bill点击图文'签到活动1'进入签到活动页面
 		When bill参加签到活动于'4天前'
 
 		When 清空浏览器
 		When bill访问jobs的webapp
 		When bill在微信中向jobs的公众号发送消息'签到'
 		Then bill收到自动回复'签到活动1'
-		When bill点击图文'签到活动1'进入签到得优惠页面
+		When bill点击图文'签到活动1'进入签到活动页面
 		When bill参加签到活动于'2天前'
 
 		When 清空浏览器
 		When bill访问jobs的webapp
 		When bill在微信中向jobs的公众号发送消息'签到'
 		Then bill收到自动回复'签到活动1'
-		When bill点击图文'签到活动1'进入签到得优惠页面
+		When bill点击图文'签到活动1'进入签到活动页面
 		When bill参加签到活动于'1天前'
 
 		When 清空浏览器
 		When bill访问jobs的webapp
 		When bill在微信中向jobs的公众号发送消息'签到'
 		Then bill收到自动回复'签到活动1'
-		When bill点击图文'签到活动1'进入签到得优惠页面
+		When bill点击图文'签到活动1'进入签到活动页面
 		When bill参加签到活动于'今天'
 
 	#tom先签到1次，终止一天，再连续签到2次
@@ -194,21 +194,21 @@ Background:
 		When tom访问jobs的webapp
 		When tom在微信中向jobs的公众号发送消息'签到'
 		Then tom收到自动回复'签到活动1'
-		When tom点击图文'签到活动1'进入签到得优惠页面
+		When tom点击图文'签到活动1'进入签到活动页面
 		When tom参加签到活动于'3天前'
 
 		When 清空浏览器
 		When tom访问jobs的webapp
 		When tom在微信中向jobs的公众号发送消息'签到'
 		Then tom收到自动回复'签到活动1'
-		When tom点击图文'签到活动1'进入签到得优惠页面
+		When tom点击图文'签到活动1'进入签到活动页面
 		When tom参加签到活动于'1天前'
 
 		When 清空浏览器
 		When tom访问jobs的webapp
 		When tom在微信中向jobs的公众号发送消息'签到'
 		Then tom收到自动回复'签到活动1'
-		When tom点击图文'签到活动1'进入签到得优惠页面
+		When tom点击图文'签到活动1'进入签到活动页面
 		When tom参加签到活动于'今天'
 
 		When jobs新建微信抽奖活动
