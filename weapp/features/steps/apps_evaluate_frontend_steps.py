@@ -21,7 +21,7 @@ def step_impl(context, webapp_user, order_code, product_name):
     data = {
         'webapp_owner_id': context.webapp_owner_id,
         'product_score': context_dict['product_score'],
-        'picture_list': ','.join(context_dict['picture_list']),
+        'picture_list': ','.join(context_dict['picture_list']) if context_dict.get('picture_list', None) else '',
         'product_id': order_has_product.product_id,
         'order_has_product_id': order_has_product.id,
         'order_id': order_code,
@@ -57,7 +57,7 @@ def step_impl(context, webapp_user, order_code, product_name):
     # 输入
     data = {
         'webapp_owner_id': context.webapp_owner_id,
-        'picture_list': context_dict['picture_list'],
+        'picture_list': ','.join(context_dict['picture_list']) if context_dict.get('picture_list', None) else '',
         'product_id': context.product_id,
         'order_has_product_id': context.order_has_product_id,
         'order_id': context.order_id,
