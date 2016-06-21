@@ -33,11 +33,11 @@ class EvaluateParticipance(resource.Resource):
 		order_has_product_id = int(param.get('order_has_product_id', 0))
 		template_type = param.get('template_type', 'ordinary')
 
-		product_score = param.get('product_score', None)
+		product_score = param.get('product_score', 5)
 		review_detail = param.get('review_detail', '')
-		serve_score = param.get('serve_score', None)
-		deliver_score = param.get('deliver_score', None)
-		process_score = param.get('process_score', None)
+		serve_score = param.get('serve_score', 5)
+		deliver_score = param.get('deliver_score', 5)
+		process_score = param.get('process_score', 5)
 		picture_list = param.get('picture_list', '')
 
 		#创建订单评论

@@ -24,20 +24,27 @@ def step_impl(context, webapp_user, order_code, product_name):
         'picture_list': ','.join(context_dict['picture_list']) if context_dict.get('picture_list', None) else '',
         'product_id': order_has_product.product_id,
         'order_has_product_id': order_has_product.id,
-        'order_id': order_code,
-        'template_type': 'custom'
+        'order_id': order_code
     }
-    tem_dict = dict()
+    if context_dict.get('review_detail', None):
+        data['review_detail'] = context_dict['review_detail']
+        data['template_type'] = 'ordinary'
+        data['serve_score'] = context_dict.get('serve_score', 5)
+        data['deliver_score'] = context_dict.get('deliver_score', 5)
+        data['process_score'] = context_dict.get('process_score', 5)
+    else:
+        data['template_type'] = 'custom'
+        tem_dict = dict()
 
-    for k, v in context_dict.items():
-        for one in v:
-            if 'answer' == k:
-                tem_dict['qa::'+_get_random_number()] = one['title'] + '::' + one['value']
-            elif 'choose' == k:
-                tem_dict['selection::'+_get_random_number()] = one['title'] + '::' + one['value'] + '::' + _get_random_number()
-            elif 'participate_info' == k:
-                tem_dict['textlist::'+_get_random_number()] = one
-    data['review_detail'] = json.dumps(tem_dict)
+        for k, v in context_dict.items():
+            for one in v:
+                if 'answer' == k:
+                    tem_dict['qa::'+_get_random_number()] = one['title'] + '::' + one['value']
+                elif 'choose' == k:
+                    tem_dict['selection::'+_get_random_number()] = one['title'] + '::' + one['value'] + '::' + _get_random_number()
+                elif 'participate_info' == k:
+                    tem_dict['textlist::'+_get_random_number()] = one
+        data['review_detail'] = json.dumps(tem_dict)
 
     apps_step_utils.get_response(context, {
         "app": "m/apps/evaluate",
