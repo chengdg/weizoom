@@ -121,49 +121,49 @@ Background:
 		When bill在微信中向jobs的公众号发送消息'签到'
 		Then bill收到自动回复'签到活动'
 		When bill点击图文'签到活动'进入签到活动页面
-		When bill参加签到活动于'前八天'
+		When bill参加签到活动于'8天前'
 
 		When 清空浏览器
 		When bill访问jobs的webapp
 		When bill在微信中向jobs的公众号发送消息'签到'
 		Then bill收到自动回复'签到活动'
 		When bill点击图文'签到活动'进入签到活动页面
-		When bill参加签到活动于'前七天'
+		When bill参加签到活动于'7天前'
 
 		When 清空浏览器
 		When bill访问jobs的webapp
 		When bill在微信中向jobs的公众号发送消息'签到'
 		Then bill收到自动回复'签到活动'
 		When bill点击图文'签到活动'进入签到活动页面
-		When bill参加签到活动于'前六天'
+		When bill参加签到活动于'6天前'
 
 		When 清空浏览器
 		When bill访问jobs的webapp
 		When bill在微信中向jobs的公众号发送消息'签到'
 		Then bill收到自动回复'签到活动'
 		When bill点击图文'签到活动'进入签到活动页面
-		When bill参加签到活动于'前五天'
+		When bill参加签到活动于'5天前'
 
 		When 清空浏览器
 		When bill访问jobs的webapp
 		When bill在微信中向jobs的公众号发送消息'签到'
 		Then bill收到自动回复'签到活动'
 		When bill点击图文'签到活动'进入签到活动页面
-		When bill参加签到活动于'前四天'
+		When bill参加签到活动于'4天前'
 
 		When 清空浏览器
 		When bill访问jobs的webapp
 		When bill在微信中向jobs的公众号发送消息'签到'
 		Then bill收到自动回复'签到活动'
 		When bill点击图文'签到活动'进入签到活动页面
-		When bill参加签到活动于'前两天'
+		When bill参加签到活动于'2天前'
 
 		When 清空浏览器
 		When bill访问jobs的webapp
 		When bill在微信中向jobs的公众号发送消息'签到'
 		Then bill收到自动回复'签到活动'
 		When bill点击图文'签到活动'进入签到活动页面
-		When bill参加签到活动于'前一天'
+		When bill参加签到活动于'1天前'
 
 		When 清空浏览器
 		When bill访问jobs的webapp
@@ -178,14 +178,14 @@ Background:
 		When tom在微信中向jobs的公众号发送消息'签到'
 		Then tom收到自动回复'签到活动'
 		When tom点击图文'签到活动'进入签到活动页面
-		When tom参加签到活动于'前三天'
+		When tom参加签到活动于'3天前'
 
 		When 清空浏览器
 		When tom访问jobs的webapp
 		When tom在微信中向jobs的公众号发送消息'签到'
 		Then tom收到自动回复'签到活动'
 		When tom点击图文'签到活动'进入签到活动页面
-		When tom参加签到活动于'前一天'
+		When tom参加签到活动于'1天前'
 
 		When 清空浏览器
 		When tom访问jobs的webapp
@@ -200,28 +200,28 @@ Background:
 		When marry在微信中向jobs的公众号发送消息'签到'
 		Then marry收到自动回复'签到活动'
 		When marry点击图文'签到活动'进入签到活动页面
-		When marry参加签到活动于'前六天'
+		When marry参加签到活动于'6天前'
 
 		When 清空浏览器
 		When marry访问jobs的webapp
 		When marry在微信中向jobs的公众号发送消息'签到'
 		Then marry收到自动回复'签到活动'
 		When marry点击图文'签到活动'进入签到活动页面
-		When marry参加签到活动于'前五天'
+		When marry参加签到活动于'5天前'
 
 		When 清空浏览器
 		When marry访问jobs的webapp
 		When marry在微信中向jobs的公众号发送消息'签到'
 		Then marry收到自动回复'签到活动'
 		When marry点击图文'签到活动'进入签到活动页面
-		When marry参加签到活动于'前四天'
+		When marry参加签到活动于'4天前'
 
 		When 清空浏览器
 		When marry访问jobs的webapp
 		When marry在微信中向jobs的公众号发送消息'签到'
 		Then marry收到自动回复'签到活动'
 		When marry点击图文'签到活动'进入签到活动页面
-		When marry参加签到活动于'前三天'
+		When marry参加签到活动于'3天前'
 
 		When 清空浏览器
 		When marry访问jobs的webapp
@@ -244,7 +244,7 @@ Background:
 		When nokia在微信中向jobs的公众号发送消息'签到'
 		Then nokia收到自动回复'签到活动'
 		When nokia点击图文'签到活动'进入签到活动页面
-		When nokia参加签到活动于'前三天'
+		When nokia参加签到活动于'3天前'
 
 		When 清空浏览器
 		When nokia访问jobs的webapp
