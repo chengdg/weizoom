@@ -113,10 +113,11 @@ class Exlottery(resource.Resource):
 		"""
 		data = request_util.get_fields_to_be_save(request)
 		update_data = {}
-		update_fields = set(['name', 'start_time', 'end_time'])
+		update_fields = set(['name', 'start_time', 'end_time', 'expend', 'delivery', 'chance', 'prize', 'share_description', 'reply', 'reply_link'])
 		for key, value in data.items():
 			if key in update_fields:
 				update_data['set__'+key] = value
+
 		app_models.Exlottery.objects(id=request.POST['id']).update(**update_data)
 		
 		response = create_response(200)
