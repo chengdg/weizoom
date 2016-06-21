@@ -710,7 +710,7 @@ def step_impl(context, user):
 	for p in participances:
 		p_dict = OrderedDict()
 		p_dict[u"name"] = p['participant_name']
-		p_dict[u"last_sign"] = p['latest_date']
+		p_dict[u"last_sign"] = bdd_util.get_date_str(p['latest_date_f'])
 		p_dict[u"total_sign"] = p['total_count']
 		p_dict[u"continuous_sign"] = p['serial_count']
 		p_dict[u"integral"] = p['total_integral']
@@ -721,6 +721,8 @@ def step_impl(context, user):
 	if context.table:
 		for row in context.table:
 			cur_p = row.as_dict()
+			if cur_p[u'last_sign']:
+				cur_p[u'last_sign'] = bdd_util.get_date_str(cur_p[u'last_sign'])
 			expected.append(cur_p)
 	else:
 		expected = json.loads(context.text)

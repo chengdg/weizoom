@@ -70,6 +70,7 @@ class SignParticipances(resource.Resource):
 						prize_str += u'%s' % coupon_id2name.get(item['prize']['coupon']['id'],'')
 				time2prize[item.created_at.strftime("%Y.%m.%d")] = {
 					"created_at": item.created_at.strftime("%Y.%m.%d %H:%M:%S"),
+					"created_at_f": item.created_at.strftime("%Y-%m-%d %H:%M:%S"),
 					"prize": prize_str,
 					"status": 1
 				}

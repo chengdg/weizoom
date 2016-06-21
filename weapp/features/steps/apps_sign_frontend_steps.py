@@ -187,8 +187,10 @@ def __sign_name2id(name, title=None):
     sign = Sign.objects.get(name=name)
     return sign.related_page_id,sign.id
 
-@when(u"{webapp_user_name}参加签到活动于'{date}'")
-def step_impl(context, webapp_user_name, date):
+@when(u"{webapp_user_name}参加签到活动于'{date_str}'")
+def step_impl(context, webapp_user_name, date_str):
+	today = datetime.now()
+	date = "%s %s" % (bdd_util.get_date_str(date_str),today.strftime("%H:%M:%S"))
 	if not hasattr(context,"latest_date"):
 		context.latest_date = {
 			webapp_user_name : bdd_util.get_date(date)
