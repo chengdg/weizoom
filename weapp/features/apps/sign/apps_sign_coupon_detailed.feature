@@ -35,7 +35,7 @@ Background:
 			"start_date": "1天前",
 			"end_date": "3天后",
 			"coupon_id_prefix": "coupon1_id_",
-			"detailed":"currency"
+			"description":"使用说明"
 		},{
 			"name": "优惠券2",
 			"money": 20.00,
@@ -43,7 +43,7 @@ Background:
 			"start_date": "今天",
 			"end_date": "1天后",
 			"coupon_id_prefix": "coupon2_id_",
-			"detailed":"currency"
+			"description":"使用说明"
 		},{
             "name": "优惠券M",
             "money": 20.00,
@@ -51,7 +51,8 @@ Background:
             "start_date": "2天前",
             "end_date": "1天后",
             "coupon_id_prefix": "coupon3_id_",
-            "detailed":"part"  
+            "coupon_product": "商品1",
+            "description":"使用说明"
         },{
             "name": "优惠券3",
             "money": 20.00,
@@ -59,7 +60,8 @@ Background:
             "start_date": "2天前",
             "end_date": "1天后",
             "coupon_id_prefix": "coupon4_id_",
-            "detailed":"part"  
+            "coupon_product": "商品1",
+            "description":"使用说明"
         }]
 		"""
 	Given jobs添加签到活动"签到活动1",并且保存
@@ -134,79 +136,79 @@ Background:
 		When 清空浏览器
 		When bill访问jobs的webapp
 		When bill在微信中向jobs的公众号发送消息'签到'
-		Then bill收到自动回复'签到得优惠'
-		When bill点击图文'签到得优惠'进入签到得优惠页面
-		When bill参加签到活动于'2015-10-01 10:30:00'
+		Then bill收到自动回复'签到活动1'
+		When bill点击图文'签到活动1'进入签到得优惠页面
+		When bill参加签到活动于'8天前'
 
 		When 清空浏览器
 		When bill访问jobs的webapp
 		When bill在微信中向jobs的公众号发送消息'签到'
-		Then bill收到自动回复'签到得优惠'
-		When bill点击图文'签到得优惠'进入签到得优惠页面
-		When bill参加签到活动于'2015-10-02 10:30:00'
+		Then bill收到自动回复'签到活动1'
+		When bill点击图文'签到活动1'进入签到得优惠页面
+		When bill参加签到活动于'7天前'
 
 		When 清空浏览器
 		When bill访问jobs的webapp
 		When bill在微信中向jobs的公众号发送消息'签到'
-		Then bill收到自动回复'签到得优惠'
-		When bill点击图文'签到得优惠'进入签到得优惠页面
-		When bill参加签到活动于'2015-10-03 10:30:00'
+		Then bill收到自动回复'签到活动1'
+		When bill点击图文'签到活动1'进入签到得优惠页面
+		When bill参加签到活动于'6天前'
 
 		When 清空浏览器
 		When bill访问jobs的webapp
 		When bill在微信中向jobs的公众号发送消息'签到'
-		Then bill收到自动回复'签到得优惠'
-		When bill点击图文'签到得优惠'进入签到得优惠页面
-		When bill参加签到活动于'2015-10-04 10:30:00'
+		Then bill收到自动回复'签到活动1'
+		When bill点击图文'签到活动1'进入签到得优惠页面
+		When bill参加签到活动于'5天前'
 
 		When 清空浏览器
 		When bill访问jobs的webapp
 		When bill在微信中向jobs的公众号发送消息'签到'
-		Then bill收到自动回复'签到得优惠'
-		When bill点击图文'签到得优惠'进入签到得优惠页面
-		When bill参加签到活动于'2015-10-05 10:30:00'
+		Then bill收到自动回复'签到活动1'
+		When bill点击图文'签到活动1'进入签到得优惠页面
+		When bill参加签到活动于'4天前'
 
 		When 清空浏览器
 		When bill访问jobs的webapp
 		When bill在微信中向jobs的公众号发送消息'签到'
-		Then bill收到自动回复'签到得优惠'
-		When bill点击图文'签到得优惠'进入签到得优惠页面
-		When bill参加签到活动于'2015-10-07 10:30:00'
+		Then bill收到自动回复'签到活动1'
+		When bill点击图文'签到活动1'进入签到得优惠页面
+		When bill参加签到活动于'2天前'
 
 		When 清空浏览器
 		When bill访问jobs的webapp
 		When bill在微信中向jobs的公众号发送消息'签到'
-		Then bill收到自动回复'签到得优惠'
-		When bill点击图文'签到得优惠'进入签到得优惠页面
-		When bill参加签到活动于'2015-10-08 10:30:00'
+		Then bill收到自动回复'签到活动1'
+		When bill点击图文'签到活动1'进入签到得优惠页面
+		When bill参加签到活动于'1天前'
 
 		When 清空浏览器
 		When bill访问jobs的webapp
 		When bill在微信中向jobs的公众号发送消息'签到'
-		Then bill收到自动回复'签到得优惠'
-		When bill点击图文'签到得优惠'进入签到得优惠页面
-		When bill参加签到活动于'2015-10-09 10:30:00'
+		Then bill收到自动回复'签到活动1'
+		When bill点击图文'签到活动1'进入签到得优惠页面
+		When bill参加签到活动于'今天'
 
 	#tom先签到1次，终止一天，再连续签到2次
 		When 清空浏览器
 		When tom访问jobs的webapp
 		When tom在微信中向jobs的公众号发送消息'签到'
-		Then tom收到自动回复'签到得优惠'
-		When tom点击图文'签到得优惠'进入签到得优惠页面
-		When tom参加签到活动于'前三天'
+		Then tom收到自动回复'签到活动1'
+		When tom点击图文'签到活动1'进入签到得优惠页面
+		When tom参加签到活动于'3天前'
 
 		When 清空浏览器
 		When tom访问jobs的webapp
 		When tom在微信中向jobs的公众号发送消息'签到'
-		Then tom收到自动回复'签到得优惠'
-		When tom点击图文'签到得优惠'进入签到得优惠页面
-		When tom参加签到活动于'前一天'
+		Then tom收到自动回复'签到活动1'
+		When tom点击图文'签到活动1'进入签到得优惠页面
+		When tom参加签到活动于'1天前'
 
 		When 清空浏览器
 		When tom访问jobs的webapp
 		When tom在微信中向jobs的公众号发送消息'签到'
-		Then tom收到自动回复'签到得优惠'
-		When tom点击图文'签到得优惠'进入签到得优惠页面
+		Then tom收到自动回复'签到活动1'
+		When tom点击图文'签到活动1'进入签到得优惠页面
 		When tom参加签到活动于'今天'
 
 		When jobs新建微信抽奖活动
@@ -226,7 +228,7 @@ Background:
 				"prize_grade":"一等奖",
 				"prize_counts":10,
 				"prize_type":"优惠券",
-				"coupon":"优惠券1",
+				"coupon":"优惠券3",
 				"pic":""
 			},{
 				"prize_grade":"二等奖",
@@ -262,20 +264,35 @@ Scenario:1 优惠券明细列表
 	Then jobs获得'bill'参加'签到活动1'的优惠券明细列表
 		"""
 			[{
-				"collection_time":"2015/10/09 10:30:00",
-				"coupon":"优惠券1",
-				"detailed":"通用券",
-				"state":"未使用"
+				"collection_time":"今天",
+				"name":"优惠券1",
+				"coupon_id":"coupon1_id_2",
+				"type":"通用券",
+				"status":"未使用"
 			},{
-				"collection_time":"2015/10/05 10:30:00",
-				"coupon":"优惠券2",
-				"detailed":"通用券",
-				"state":"未使用"
+				"collection_time":"1天前",
+				"name":"优惠券M",
+				"coupon_id":"coupon3_id_2",
+				"type":"多商品券",
+				"status":"未使用"
 			},{
-				"collection_time":"2015/10/02 10:30:00",
-				"coupon":"优惠券M",
-				"detailed":"多商品券",
-				"state":"已过期"
+				"collection_time":"4天前",
+				"name":"优惠券2",
+				"coupon_id":"coupon2_id_1",
+				"type":"多商品券",
+				"status":"未使用"
+			},{
+				"collection_time":"5天前",
+				"name":"优惠券1",
+				"coupon_id":"coupon1_id_1",
+				"type":"通用券",
+				"status":"未使用"
+			},{
+				"collection_time":"6天前",
+				"name":"优惠券M",
+				"coupon_id":"coupon3_id_1",
+				"type":"多商品券",
+				"status":"未使用"
 			}]
 		"""
 	
@@ -314,20 +331,35 @@ Scenario:2 优惠券明细列表查询
 	Then jobs获得'bill'参加'签到活动1'的优惠券明细列表
 		"""
 			[{
-				"collection_time":"2015/10/09 10:30:00",
-				"coupon":"优惠券1",
-				"detailed":"通用券",
-				"state":"已使用"
+				"collection_time":"2015-10-09 10:30:00",
+				"name":"优惠券1",
+				"coupon_id":"coupon1_id_2",
+				"type":"通用券",
+				"status":"未使用"
 			},{
-				"collection_time":"2015/10/05 10:30:00",
-				"coupon":"优惠券2",
-				"detailed":"通用券",
-				"state":"未使用"
+				"collection_time":"2015-10-08 10:30:00",
+				"name":"优惠券M",
+				"coupon_id":"coupon3_id_2",
+				"type":"多商品券",
+				"status":"未使用"
 			},{
-				"collection_time":"2015/10/02 10:30:00",
-				"coupon":"优惠券M",
-				"detailed":"多商品券",
-				"state":"未使用"
+				"collection_time":"2015-10-05 10:30:00",
+				"name":"优惠券2",
+				"coupon_id":"coupon2_id_1",
+				"type":"多商品券",
+				"status":"未使用"
+			},{
+				"collection_time":"2015-10-03 10:30:00",
+				"name":"优惠券1",
+				"coupon_id":"coupon1_id_1",
+				"type":"通用券",
+				"status":"未使用"
+			},{
+				"collection_time":"2015-10-02 10:30:00",
+				"name":"优惠券M",
+				"coupon_id":"coupon3_id_1",
+				"type":"多商品券",
+				"status":"未使用"
 			}]
 		"""
 
@@ -340,15 +372,29 @@ Scenario:2 优惠券明细列表查询
 	Then jobs获得'bill'参加'签到活动1'的优惠券明细列表
 		"""
 			[{
-				"collection_time":"2015/10/05 10:30:00",
-				"coupon":"优惠券2",
-				"detailed":"通用券",
-				"state":"未使用"
+				"collection_time":"2015-10-09 10:30:00",
+				"name":"优惠券1",
+				"coupon_id":"coupon1_id_2",
+				"type":"通用券",
+				"status":"未使用"
 			},{
-				"collection_time":"2015/10/02 10:30:00",
-				"coupon":"优惠券M",
-				"detailed":"多商品券",
-				"state":"未使用"
+				"collection_time":"2015-10-08 10:30:00",
+				"name":"优惠券M",
+				"coupon_id":"coupon3_id_2",
+				"type":"通用券",
+				"status":"未使用"
+			},{
+				"collection_time":"2015-10-05 10:30:00",
+				"name":"优惠券2",
+				"coupon_id":"coupon2_id_1",
+				"type":"多商品券",
+				"status":"未使用"
+			},{
+				"collection_time":"2015-10-02 10:30:00",
+				"name":"优惠券M",
+				"coupon_id":"coupon3_id_1",
+				"type":"通用券",
+				"status":"未使用"
 			}]
 		"""
 
@@ -361,10 +407,11 @@ Scenario:2 优惠券明细列表查询
 	Then jobs获得'bill'参加'签到活动1'的优惠券明细列表
 		"""
 			[{
-				"collection_time":"2015/10/09 10:30:00",
-				"coupon":"优惠券1",
-				"detailed":"通用券",
-				"state":"已使用"
+				"collection_time":"2015-10-09 10:30:00",
+				"name":"优惠券1",
+				"coupon_id":"coupon1_id_1",
+				"type":"通用券",
+				"status":"已使用"
 			}]
 		"""
 	When jobs设置优惠券状态查询条件
@@ -373,7 +420,7 @@ Scenario:2 优惠券明细列表查询
 			"status":"已过期"
 		}]
 		"""
-	Then jobs能获得weapp系统'bill'拥有优惠券
+	Then jobs获得'bill'参加'签到活动1'的优惠券明细列表
 		"""
 		[]
 		"""

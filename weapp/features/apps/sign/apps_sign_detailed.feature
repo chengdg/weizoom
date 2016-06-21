@@ -62,7 +62,7 @@ Background:
 	When jobs已添加单图文
 		"""
 		[{
-			"title":"签到得优惠",
+			"title":"签到活动1",
 			"cover": [{
 				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
 			}],
@@ -83,7 +83,7 @@ Background:
 				}],
 			"keyword_reply":
 				[{
-					"reply_content":"签到得优惠",
+					"reply_content":"签到活动1",
 					"reply_type":"text_picture"
 				}]
 		}]
@@ -104,124 +104,124 @@ Background:
 		When 清空浏览器
 		When bill访问jobs的webapp
 		When bill在微信中向jobs的公众号发送消息'签到'
-		Then bill收到自动回复'签到得优惠'
-		When bill点击图文'签到得优惠'进入签到得优惠页面
-		When bill参加签到活动于'2015-10-01 10:30:00'
+		Then bill收到自动回复'签到活动1'
+		When bill点击图文'签到活动1'进入签到得优惠页面
+		When bill参加签到活动于'14天前'
 
 		When 清空浏览器
 		When bill访问jobs的webapp
 		When bill在微信中向jobs的公众号发送消息'签到'
-		Then bill收到自动回复'签到得优惠'
-		When bill点击图文'签到得优惠'进入签到得优惠页面
-		When bill参加签到活动于'2015-10-02 10:30:00'
+		Then bill收到自动回复'签到活动1'
+		When bill点击图文'签到活动1'进入签到得优惠页面
+		When bill参加签到活动于'13天前'
 
 		When 清空浏览器
 		When bill访问jobs的webapp
 		When bill在微信中向jobs的公众号发送消息'签到'
-		Then bill收到自动回复'签到得优惠'
-		When bill点击图文'签到得优惠'进入签到得优惠页面
-		When bill参加签到活动于'2015-10-03 10:30:00'
+		Then bill收到自动回复'签到活动1'
+		When bill点击图文'签到活动1'进入签到得优惠页面
+		When bill参加签到活动于'12天前'
 
 		When 清空浏览器
 		When bill访问jobs的webapp
 		When bill在微信中向jobs的公众号发送消息'签到'
-		Then bill收到自动回复'签到得优惠'
-		When bill点击图文'签到得优惠'进入签到得优惠页面
-		When bill参加签到活动于'2015-10-04 10:30:00'
+		Then bill收到自动回复'签到活动1'
+		When bill点击图文'签到活动1'进入签到得优惠页面
+		When bill参加签到活动于'11天前'
 
 		When 清空浏览器
 		When bill访问jobs的webapp
 		When bill在微信中向jobs的公众号发送消息'签到'
-		Then bill收到自动回复'签到得优惠'
-		When bill点击图文'签到得优惠'进入签到得优惠页面
-		When bill参加签到活动于'2015-10-05 10:30:00'
+		Then bill收到自动回复'签到活动1'
+		When bill点击图文'签到活动1'进入签到得优惠页面
+		When bill参加签到活动于'10天前'
 
 		When 清空浏览器
 		When bill访问jobs的webapp
 		When bill在微信中向jobs的公众号发送消息'签到'
-		Then bill收到自动回复'签到得优惠'
-		When bill点击图文'签到得优惠'进入签到得优惠页面
-		When bill参加签到活动于'2015-10-07 10:30:00'
+		Then bill收到自动回复'签到活动1'
+		When bill点击图文'签到活动1'进入签到得优惠页面
+		When bill参加签到活动于'8天前'
 
 		When 清空浏览器
 		When bill访问jobs的webapp
 		When bill在微信中向jobs的公众号发送消息'签到'
-		Then bill收到自动回复'签到得优惠'
-		When bill点击图文'签到得优惠'进入签到得优惠页面
-		When bill参加签到活动于'2015-10-08 10:30:00'
+		Then bill收到自动回复'签到活动1'
+		When bill点击图文'签到活动1'进入签到得优惠页面
+		When bill参加签到活动于'7天前'
 
 		When 清空浏览器
 		When bill访问jobs的webapp
 		When bill在微信中向jobs的公众号发送消息'签到'
-		Then bill收到自动回复'签到得优惠'
-		When bill点击图文'签到得优惠'进入签到得优惠页面
-		When bill参加签到活动于'2015-10-09 10:30:00'
+		Then bill收到自动回复'签到活动1'
+		When bill点击图文'签到活动1'进入签到得优惠页面
+		When bill参加签到活动于'6天前'
 
 @mall2 @apps @apps_sign @apps_sign_detailed
 Scenario:1 会员签到统计详情列表
 #倒序排列，一页显示15条记录
 	Given jobs登录系统
-	When jobs设置当前时间为'2015.10.15 22:22:22'
+	
 	Then jobs获得'bill'参加'签到活动1'的签到详情列表
 	"""
 		[{
-			"sign_time":"2015.10.15 00:00:00",
+			"sign_time":"今天",
 			"get_reward":"",
 			"sign_state":"0"
 		},{
-			"sign_time":"2015.10.14 00:00:00",
+			"sign_time":"1天前",
 			"get_reward":"",
 			"sign_state":"0"
 		},{
-			"sign_time":"2015.10.13 00:00:00",
+			"sign_time":"2天前",
 			"get_reward":"",
 			"sign_state":"0"
 		},{
-			"sign_time":"2015.10.12 00:00:00",
+			"sign_time":"3天前",
 			"get_reward":"",
 			"sign_state":"0"
 		},{
-			"sign_time":"2015.10.11 00:00:00",
+			"sign_time":"4天前",
 			"get_reward":"",
 			"sign_state":"0"
 		},{
-			"sign_time":"2015.10.10 00:00:00",
+			"sign_time":"5天前",
 			"get_reward":"",
 			"sign_state":"0"
 		},{
-			"sign_time":"2015.10.09 10:30:00",
+			"sign_time":"6天前",
 			"get_reward":"优惠券1",
 			"sign_state":"1"
 		},{
-			"sign_time":"2015.10.08 10:30:00",
+			"sign_time":"7天前",
 			"get_reward":"优惠券M",
 			"sign_state":"1"
 		},{
-			"sign_time":"2015.10.07 10:30:00",
+			"sign_time":"8天前",
 			"get_reward":"积分+10",
 			"sign_state":"1"
 		},{
-			"sign_time":"2015.10.06 00:00:00",
+			"sign_time":"9天前",
 			"get_reward":"",
 			"sign_state":"0"
 		},{
-			"sign_time":"2015.10.05 10:30:00",
+			"sign_time":"10天前",
 			"get_reward":"优惠券2",
 			"sign_state":"1"
 		},{
-			"sign_time":"2015.10.04 10:30:00",
+			"sign_time":"11天前",
 			"get_reward":"积分+10",
 			"sign_state":"1"
 		},{
-			"sign_time":"2015.10.03 10:30:00",
+			"sign_time":"12天前",
 			"get_reward":"优惠券1",
 			"sign_state":"1"
 		},{
-			"sign_time":"2015.10.02 10:30:00",
+			"sign_time":"13天前",
 			"get_reward":"优惠券M",
 			"sign_state":"1"
 		},{
-			"sign_time":"2015.10.01 10:30:00",
+			"sign_time":"14天前",
 			"get_reward":"积分+10",
 			"sign_state":"1"
 		}]
