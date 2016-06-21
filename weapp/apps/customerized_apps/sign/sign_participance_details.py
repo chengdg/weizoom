@@ -64,10 +64,10 @@ class SignParticipances(resource.Resource):
 			for item in items:
 				prize_str = u''
 				if item['prize'].get('integral', None):
-					prize_str += u'积分+%s' % str(t['prize']['integral'])
+					prize_str += u'积分+%s<br/>' % str(t['prize']['integral'])
 				if item['prize'].get('coupon', None):
 					if item['prize']['coupon']['id']:
-						prize_str += u'%s' % coupon_id2name.get(item['prize']['coupon']['id'],'')
+						prize_str += u'%s<br/>' % coupon_id2name.get(item['prize']['coupon']['id'],'')
 				time2prize[item.created_at.strftime("%Y.%m.%d")] = {
 					"created_at": item.created_at.strftime("%Y.%m.%d %H:%M:%S"),
 					"created_at_f": item.created_at.strftime("%Y-%m-%d %H:%M:%S"),
