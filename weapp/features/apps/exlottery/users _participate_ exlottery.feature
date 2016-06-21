@@ -1,3 +1,5 @@
+#_author_:江秋丽 2016.06.20
+
 Feature:微信用户参与专项抽奖活动
 
 Background:
