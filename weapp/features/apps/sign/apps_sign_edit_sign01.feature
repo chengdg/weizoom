@@ -160,7 +160,39 @@ Scenario:1 修改最高连续签到天数，当会员累计签到达到该天数
 	When bill点击图文'签到活动1'进入签到活动页面
 	Then bill参加签到活动
 
-	
+	When 修改bill的签到时间为前一天
+	When 清空浏览器
+	When bill在微信中向jobs的公众号发送消息'签到1'
+	Then bill收到自动回复'签到活动1'
+	When bill点击图文'签到活动1'进入签到活动页面
+	Then bill参加签到活动
+
+	When bill访问jobs的webapp
+	Then bill在jobs的webapp中拥有13会员积分
+	And bill能获得webapp优惠券列表
+		"""
+		[{
+			"coupon_id":"coupon1_id_1",
+			"money":1.00,
+			"status":"未使用"
+		},{
+			"coupon_id":"coupon1_id_2",
+			"money":1.00,
+			"status":"未使用"
+		},{
+			"coupon_id":"coupon1_id_3",
+			"money":1.00,
+			"status":"未使用"
+		},{
+			"coupon_id":"coupon1_id_4",
+			"money":1.00,
+			"status":"未使用"
+		},{
+			"coupon_id":"coupon2_id_1",
+			"money":2.00,
+			"status":"未使用"
+		}]
+		"""
 
 @mall2 @apps @apps_sign @edited_sign
 Scenario:2 修改最高连续签到天数，当会员累计签到未达到该天数，继续签到获得新规则下的奖励
