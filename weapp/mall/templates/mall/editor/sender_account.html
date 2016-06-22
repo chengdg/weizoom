@@ -34,35 +34,28 @@
 	<div>
 		<ul class="xui-senderNav">
 		<li><a href="/mall2/sender_info_list">发件人信息</a></li>
-		<li style="border-bottom: 3px solid #0088CC;"><a href="mall2/address_1">快递账号管理</a></li>
+		<li style="border-bottom: 3px solid #0088CC;"><a href="/mall2/sender_account">快递账号管理</a></li>
 	</ul>
 	</div>
-	<div class="fr h40 lh40">注:需联系附近的快递网店，获取打印电子面单所需账号密码，顺丰、EMS可直接使用</div>
-   <div class="cb mt10 mb10 ml8">
-   	<a href="/mall2/sender_info/" class="btn btn-success">
-   	<img src="/static_v2/img/editor/plusOpcity.png" alt=""/>
-   	新增地址
-   </a>
-   </div>
-   
+	<div class="fr h40 lh40">注：需联系附近的快递网店，获取打印电子面单所需账号密码，顺丰、EMS可直接使用</div>
 	<div
                 data-ui-role="advanced-table"
                 data-app="mall2"
-                data-resource=""
+                data-resource="sender_account"
                 data-enable-paginator="true"
-                data-template-id="#mall-orders-address"
+                data-template-id="#mall-orders-account"
                 data-init-sort="-created_at"
                 data-selectable = "false"
                 data-user-webapp-id={{user.get_profile.webapp_id}}
             >
+            div
    </div>
 {% endblock %}
 
 {% block js %}
 {% verbatim %}
- <script id="mall-orders-address" type="text/x-jquery-tmpl">
- 	{{if items!='' }}
-	<table class="table ml8">
+ <script id="mall-orders-account" type="text/x-jquery-tmpl">
+	<table class="table">
 		<thead>
 			<tr class="xui-trHeight" style="background:#c9d1e4;">
 				<th width="80">快递名称</th>
@@ -71,31 +64,29 @@
 			</tr>
 		</thead>
 		<tbody style="border: 1px solid #CCC;">
-            {{each(i, address) items}}
-                <tr data-id="${address.id}" data-name = "${address.name}">
+            {{each(i, account) items}}
+                <tr data-id="${account.id}" data-name = "${account.name}">
                    
                     <!--快递名称-->
                     <td>
-                        <div>${}</div>                        
+                        <div>${account.express_company_name}</div>
+                        
                     </td>
                     <!--账号-->
                     <td class="nowrap">
-                        <input type="text"  value="${}"/>
+                        <input type="text"  value="${account.account}"/>
                     </td>
                     <!--密码-->
                     <td class="nowrap">
-                      <input type="password" value="${}" />
+                      <input type="password" value="${account.password}" />
                     </td>                    
                 </tr>
 			{{/each}}
-		</tbody>        
+		</tbody>		
 	</table>
-	{{else}}
-		<div class="xui-emptyBox m10">
-			<img src="/static_v2/img/editor/empty.png">
-			<span class="ml20">您还没有相关数据！</span>
-		</div>
-	{{/if}}
+	<div class="tc">
+					<a href="javascript:void(0);" class="btn btn-primary xa-submit">保存</a>
+				</div>
 </script>
 {% endverbatim %}
 {% endblock %}
