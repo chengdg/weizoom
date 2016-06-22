@@ -14,6 +14,7 @@ from apps.customerized_apps.sign.models import SignDetails
 
 # from market_tools.tools.coupon.tasks import send_message_to_member
 from apps.customerized_apps.mysql_models import ConsumeCouponLog
+from apps.customerized_apps.sign.models import Sign
 
 def get_coupon_rules(owner):
 	"""
@@ -301,7 +302,7 @@ def get_member_coupons(member, status=-1):
 	return member_coupons
 
 
-def get_member_coupons_for_sign(member, user, status=-1):
+def get_member_coupons_for_sign(member, user, project_id, status=-1):
 	"""
 	得到通过签到获得的优惠券信息
 	"""
@@ -315,8 +316,12 @@ def get_member_coupons_for_sign(member, user, status=-1):
 
 	member_coupons_filter = []
 
+	sign = Sign.objects.get(related_page_id=project_id)
+
 	for member_coupon in member_coupons:
-		if ConsumeCouponLog.objects.filter(member_id=member_coupon.member_id, coupon_id=member_coupon.id, app_name='sign', user_id=user.id):
+		consume_doupon_log = ConsumeCouponLog.objects.filter(member_id=member_coupon.member_id, coupon_id=member_coupon.id, app_name='sign', user_id=user.id, app_id="%s"%sign.id)
+		if consume_doupon_log:
+
 			member_coupons_filter.append(member_coupon)
 			
 	return member_coupons_filter

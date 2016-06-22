@@ -84,7 +84,8 @@ class MemberCouponInfo(resource.Resource):
 		items = []
 		member = Member.objects.get(id=member_id)
 		if project_id:
-			member_coupon_list = get_member_coupons_for_sign(member, request.user, status)
+			project_id = request.GET.get('project_id').split(':')[2]
+			member_coupon_list = get_member_coupons_for_sign(member, request.user, project_id, status)
 		else:
 			member_coupon_list = get_member_coupons(member, status)
 		count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
