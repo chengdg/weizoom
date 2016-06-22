@@ -58,7 +58,7 @@ Background:
 		}]
 		"""
 
-@mall2 @apps @apps_sign @edited_sign @cl_ee
+@mall2 @apps @apps_sign @edited_sign
 Scenario:1 修改最高连续签到天数，当会员累计签到达到该天数，继续签到从头开始
 	When jobs添加签到活动"签到活动1",并且保存
 		"""

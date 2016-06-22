@@ -161,6 +161,7 @@ def step_impl(context, webapp_user_name, title):
 
 	#获取页面
 	view_mobile_main_page(context)
+	get_dynamic_data(context)
 
 def view_mobile_main_page(context):
     """
@@ -173,6 +174,18 @@ def view_mobile_main_page(context):
         "resource": "m_sign",
         "method": "get",
         "type": "get",
+        "args": {
+            "webapp_owner_id": context.webapp_owner_id,
+            "id": context.sign_id
+        }
+    })
+
+def get_dynamic_data(context):
+    return apps_util.get_response(context, {
+        "app": "m/apps/sign",
+        "resource": "m_sign",
+        "type": "api",
+        "method": "get",
         "args": {
             "webapp_owner_id": context.webapp_owner_id,
             "id": context.sign_id
