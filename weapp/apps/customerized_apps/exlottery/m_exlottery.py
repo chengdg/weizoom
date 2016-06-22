@@ -16,7 +16,7 @@ from termite2 import pagecreater
 
 
 
-class Mlottery(resource.Resource):
+class Mexlottery(resource.Resource):
 	app = 'apps/exlottery'
 	resource = 'm_exlottery'
 
@@ -45,17 +45,16 @@ class Mlottery(resource.Resource):
 					return HttpResponse(cache_data)
 
 			try:
-				record = app_models.lottery.objects.get(id=id)
+				record = app_models.Exlottery.objects.get(id=id)
 			except:
 				c = RequestContext(request,{
 					'is_deleted_data': True
 				})
-				return render_to_response('lottery/templates/webapp/m_lottery.html', c)
-
+				return render_to_response('exlottery/templates/webapp/m_exlottery.html', c)
 			expend = record.expend
-			share_page_desc = record.name
-			activity_status, record = update_lottery_status(record)
-			project_id = 'new_app:lottery:%s' % record.related_page_id
+			share_page_desc = record.share_description
+			activity_status, record = update_exlottery_status(record)
+			project_id = 'new_app:exlottery:%s' % record.related_page_id
 
 		request.GET._mutable = True
 		request.GET.update({"project_id": project_id})
@@ -75,7 +74,7 @@ class Mlottery(resource.Resource):
 			'share_page_desc': share_page_desc,
 			'share_img_url': thumbnails_url
 		})
-		response = render_to_string('lottery/templates/webapp/m_lottery.html', c)
+		response = render_to_string('exlottery/templates/webapp/m_exlottery.html', c)
 		if not is_pc:
 			SET_CACHE(cache_key, response)
 		return HttpResponse(response)
@@ -86,7 +85,7 @@ class Mlottery(resource.Resource):
 		响应GET
 		"""
 		record_id = request.GET.get('id',None)
-		lottery_status = False
+		exlottery_status = False
 		can_play_count = 0
 		member = request.member
 		response = create_response(500)
@@ -95,7 +94,7 @@ class Mlottery(resource.Resource):
 			response.errMsg = u'活动信息出错'
 			return response.get_response()
 
-		record = app_models.lottery.objects(id=record_id)
+		record = app_models.Exlottery.objects(id=record_id)
 		if record.count() <= 0:
 			response.errMsg = 'is_deleted'
 			return response.get_response()
@@ -103,33 +102,33 @@ class Mlottery(resource.Resource):
 		record = record.first()
 		member_id = member.id
 		isMember = member.is_subscribed
-		activity_status, record = update_lottery_status(record)
+		activity_status, record = update_exlottery_status(record)
 
-		lottery_participance = app_models.lotteryParticipance.objects(belong_to=record_id, member_id=member_id)
-		participance_data_count = lottery_participance.count()
+		exlottery_participance = app_models.ExlotteryParticipance.objects(belong_to=record_id, member_id=member_id)
+		participance_data_count = exlottery_participance.count()
 		if participance_data_count != 0 and record.limitation_times != -1:
-			lottery_participance = lottery_participance[0]
-			total_count = lottery_participance.total_count
+			exlottery_participance = exlottery_participance[0]
+			total_count = exlottery_participance.total_count
 			#再次进入抽奖活动页面，根据抽奖规则限制以及当前日期和最近一次抽奖日期，更新can_play_count
 			now_date_str = datetime.today().strftime('%Y-%m-%d')
-			last_lottery_date_str = lottery_participance.lottery_date.strftime('%Y-%m-%d')
+			last_exlottery_date_str = exlottery_participance.exlottery_date.strftime('%Y-%m-%d')
 			if record.limitation == 'once_per_user' and total_count > 0:
-				lottery_participance.update(set__can_play_count=0)
+				exlottery_participance.update(set__can_play_count=0)
 				can_play_count = 0
-			if now_date_str != last_lottery_date_str:
+			if now_date_str != last_exlottery_date_str:
 				if record.limitation == 'once_per_day':
-					lottery_participance.update(set__can_play_count=1)
+					exlottery_participance.update(set__can_play_count=1)
 					can_play_count = 1
 				elif record.limitation == 'twice_per_day':
-					lottery_participance.update(set__can_play_count=2)
+					exlottery_participance.update(set__can_play_count=2)
 					can_play_count = 2
 			else:
-				can_play_count = lottery_participance.can_play_count
-			lottery_participance.reload()
+				can_play_count = exlottery_participance.can_play_count
+			exlottery_participance.reload()
 		else:
 			can_play_count = record.limitation_times
 		if can_play_count != 0:
-			lottery_status = True
+			exlottery_status = True
 
 		#会员信息
 		member_info = {
@@ -137,27 +136,27 @@ class Mlottery(resource.Resource):
 			'member_id': member_id,
 			'remained_integral': member.integral,
 			'activity_status': activity_status,
-			'lottery_status': lottery_status if activity_status == u'进行中' else False,
-			'can_play_count': can_play_count if lottery_status else 0
+			'exlottery_status': exlottery_status if activity_status == u'进行中' else False,
+			'can_play_count': can_play_count if exlottery_status else 0
 		}
 		#历史中奖记录
 		all_prize_type_list = ['integral', 'coupon', 'entity']
-		lotteries = app_models.lottoryRecord.objects(belong_to=record_id, member_id=member_id, prize_type__in=all_prize_type_list)
+		exlotteries = app_models.ExlottoryRecord.objects(belong_to=record_id, member_id=member_id, prize_type__in=all_prize_type_list)
 
-		lottery_history = [{
+		exlottery_history = [{
 			'created_at': l.created_at.strftime('%Y-%m-%d'),
 			'prize_name': l.prize_name,
 			'prize_title': l.prize_title
-		} for l in lotteries]
+		} for l in exlotteries]
 
 		response = create_response(200)
 		response.data = {
-			'lottery_history': lottery_history,
+			'exlottery_history': exlottery_history,
 			'member_info': member_info
 		}
 		return response.get_response()
 
-def update_lottery_status(lottery):
+def update_exlottery_status(lottery):
 	activity_status = lottery.status_text
 	now_time = datetime.today().strftime('%Y-%m-%d %H:%M')
 	data_start_time = lottery.start_time.strftime('%Y-%m-%d %H:%M')

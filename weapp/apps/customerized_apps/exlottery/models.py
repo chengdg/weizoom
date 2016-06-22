@@ -11,7 +11,7 @@ class ExlotteryParticipance(models.Document):
 	has_prize = models.BooleanField(default=False) #是否中奖
 	total_count = models.IntField(default=0) #已参与次数
 	can_play_count = models.IntField(default=0) #可参与次数
-	lottery_date = models.DateTimeField() #最近一次抽奖时间
+	exlottery_date = models.DateTimeField() #最近一次抽奖时间
 
 	meta = {
 		'collection': 'exlottery_exlottery_participance',
