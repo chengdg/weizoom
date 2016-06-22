@@ -67,7 +67,7 @@ COUPON_STATUS = {
 	u'已过期': 2,
 				}
 
-@when(u"{webapp_owner_name}获得'{webapp_user_name}'参加'签到活动1'的优惠券明细列表默认查询条件")
+@when(u"{webapp_owner_name}获得'{webapp_user_name}'参加'{webapp_name}'的优惠券明细列表默认查询条件")
 def step_impl(context, webapp_owner_name, webapp_user_name):
 	context_json = json.loads(context.text)
 	filter_dict = {}
