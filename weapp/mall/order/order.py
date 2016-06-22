@@ -976,7 +976,10 @@ class EOrder(resource.Resource):
         return response.get_response()
 
 
-sender_express_names = [u'中通速递', u'圆通速递', u'申通快递', u'百世快递', u'韵达快运', u'德邦', u'宅急送', u'顺丰', u'EMS']
+sender_express_names = [u'中通速递', u'圆通速递', u'申通快递', u'百世快递', u'韵达快运', u'德邦']
+ignore_sender_express_names = [ u'宅急送', u'顺丰', u'EMS']
+#ignore_sender_express_names,不需要账号密码直接可用的快递公司
+
 class OrderSenderAccount(resource.Resource):
     app = 'mall2'
     resource = 'sender_account'
@@ -1017,24 +1020,51 @@ class OrderSenderAccount(resource.Resource):
         for sender_express_name in sender_express_names :
             if account2info.has_key(sender_express_name):
                 items.append({
+                    "id": account2info.id,
                     "name": sender_express_name,
                     "account": account2info[sender_express_name]["account"],
                     "password": account2info[sender_express_name]["password"],
                     })
-            elif sender_express_name in [ u'宅急送', u'顺丰', u'EMS']:
-                items.append({
-                    "name": sender_express_name,
-                    "account": "ignore",
-                    "password": "ignore",
-                    })
             else:
                 items.append({
+                    "id": 0,
                     "name": sender_express_name,
                     "account": "",
                     "password": "",
                     })
+        for ignore_sender_express_name in ignore_sender_express_names:
+            items.append({
+                "id": 0,
+                "name": ignore_sender_express_name,
+                "account": "ignore",
+                "password": "ignore",
+                })
+
         response = create_response(200)
         response.data = {
             'items': items,
         }
+        return response.get_response()
+
+    @login_required
+    def api_post(request):
+        """
+        定义一下：
+        如果传空值及"",前端显示空
+        如果传ignore,前端就显示——
+        """
+
+        webapp_id = request.user_profile.webapp_id
+        express_accounts = request.POST.get("express_accounts", "")
+        for express_account in express_accounts:
+            # if express_account["name"] in ignore_sender_express_names:
+            #     continue
+            if express_account["account"] in ["ignore",""]:
+                continue
+            elif express_account["name"] in sender_express_names:
+                if SenderAccount.objects.filter(webapp_id=webapp_id, express_company_name=express_account["name"]).count()>0:
+                    SenderAccount.objects.filter(webapp_id=webapp_id, express_company_name=express_account["name"]).update(account=express_account["account"], password=express_account["password"])
+                else:
+                    SenderAccount.objects.create(webapp_id=webapp_id, express_company_name=express_account["name"],account=express_account["account"], password=express_account["password"])
+        response = create_response(200)
         return response.get_response()
