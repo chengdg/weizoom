@@ -16,7 +16,7 @@ from utils import url_helper
 import datetime as dt
 from mall.promotion.models import CouponRule
 from weixin.message.material import models as material_models
-from apps.customerized_apps.lottery import models as lottery_models
+from apps.customerized_apps.exlottery import models as exlottery_models
 import termite.pagestore as pagestore_manager
 import json
 
@@ -193,6 +193,12 @@ def __get_actions(status):
 	elif status=="已结束" or "未开始":
 		actions_list.insert(3,u"删除")
 	return actions_list
+
+def __get_exlottery_by_exlottery_name(name):
+	"""
+	根据专项抽奖名称获得专项抽奖信息
+	"""
+	return exlottery_models.Exlottery.objects(name = name).first()
 
 def __get_exlotteryPageJson(args):
 	"""
@@ -815,6 +821,37 @@ def step_impl(context,user):
 			actual_list.append(tmp)
 		print("actual_data: {}".format(actual_list))
 		bdd_util.assert_list(expected,actual_list)
+
+@then(u"{user}生成'{exlottery_name}'码库")
+def step_impl(context, user, exlottery_name):
+	text = json.loads(context.text)
+	exlottery = __get_exlottery_by_exlottery_name(exlottery_name)
+	exlottery_codes = exlottery_models.ExlotteryCode.objects(belong_to = str(exlottery.id)).order_by('-get_time', '-created_at')
+
+	for i in range(len(text)):
+		exlottery_codes[i].update(set__code = text[i])
+
+@then(u"{user}能获得'{exlottery_name}'码库列表")
+def step_impl(context, user, exlottery_name):
+	design_mode = 0
+	version = 1
+
+	expected = json.loads(context.text)
+
+	exlottery = __get_exlottery_by_exlottery_name(exlottery_name)
+	url = "/apps/exlottery/api/exlottery_code_store/??design_mode={}&version={}&id={}".format(design_mode, version, exlottery.id)
+	response = context.client.get(url)
+	codes = json.loads(response.content)['data']['items']
+
+	actual = []
+	for code in codes:
+		actual.append({
+			'lottery_code': code['code']
+		})
+
+	bdd_util.assert_list(expected, actual)
+
+
 #
 # @when(u"{user}编辑微信抽奖活动'{lottery_name}'")
 # def step_impl(context,user,lottery_name):
