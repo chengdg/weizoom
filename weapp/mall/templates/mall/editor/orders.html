@@ -101,10 +101,34 @@
 		<span class="ml5 mr10">全选</span>
 		<a title="批量打印发货单" class="xa-order-print" href="javascript:void(0);">批量打印发货单</a>
 		<a title="合并打印发货单" class="xa-order-merge" href="javascript:void(0);">合并打印发货单</a>
-		<a title="打印快递单" class="xa-order-adress" href="javascript:void(0);">打印快递单</a>		
+		<a title="打印快递单" class="xa-order-adress" href="javascript:return false;" data-toggle="modal" data-toggle="modal" data-target="#myModal">打印快递单</a>		
 		<a href="javascript:void(0);" class="btn fr btn-default xa-export" style="margin:4px 10px;" id="export_data_file">导出结果</a>
-
     </div>
+    <!--打印快递单弹出框开始-->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+  	<div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title fl" >打印电子面单</h3>
+        <h3 class="modal-title fr mr20"style="color: #f00;" >需热敏打印机</h3>
+      </div>
+      <div class="modal-body ml50">
+      	选择物流:
+        <select class="xa-address">
+        	<option value="">申通快递</option>
+        	<option value="">顺丰快递</option>
+        	<option value="">圆通快递</option>
+        </select>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" >确认</button>
+        <button type="button" class="btn btn-default " data-dismiss="modal">取消</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!--打印快递单弹出框结束-->
+
   <!-- 订单打印 2016.04.08 end -->
 	<table class="table table-condensed mb0 xui-tableHead">
 		<thead>
@@ -383,6 +407,8 @@
 			<input  type="checkBox" name="selectAllPrintOrders">
 			<span class="ml5 mr10">全选</span>
 			<a title="批量打印发货单" class="xa-order-print" href="javascript:void(0);">批量打印发货单</a>
+			<a title="合并打印发货单" class="xa-order-merge" href="javascript:void(0);">合并打印发货单</a>
+			<a title="打印快递单" class="xa-order-adress" href="javascript:return false;" data-toggle="modal" data-toggle="modal" data-target="#myModal">打印快递单</a>
 	    </div>
 	{{/if}}
 </script>

@@ -13,7 +13,10 @@
 		</li>
 		<li class="active">所有订单</li>
 	</ul>
-   <a href="/mall2/sender_info/">+新增地址</a>
+   <a href="/mall2/sender_info/" class="btn btn-success  mb10">
+   	<img src="/static_v2/img/editor/plusOpcity.png" alt=""/>
+   	新增地址
+   </a>
      <div
                 data-ui-role="advanced-table"
                 data-app="mall2"
@@ -33,9 +36,10 @@
 {% block js %}
 {% verbatim %}
  <script id="mall-orders-sender" type="text/x-jquery-tmpl">
+ 	{{if items!='' }}
 	<table class="table">
 		<thead>
-			<tr class="xui-trHeight" style="background:#C0C0C0">
+			<tr class="xui-trHeight" style="background:#c9d1e4;">
 				<!--<th width="80">默认</th>-->
 				<th width="80">发件人信息</th>
 				<th width="80">发件人电话</th>
@@ -45,7 +49,7 @@
 				<th width="80">操作</th>
 			</tr>
 		</thead>
-		<tbody>
+		<tbody style="border: 1px solid #CCC;">
             {{each(i, sender) items}}
                 <tr data-id="${sender.id}" data-name = "${sender.name}">
                 	<!--默认-->
@@ -87,15 +91,21 @@
                         <a href="javascript:void(0);" data-id="${sender.id}" class="xui-delete-sender  mr10">删除</a>
                         <a href="/mall2/sender_info/?id=${sender.id}" data-id="${sender.id}" data-name="${sender.name}" class=" mr10">修改</a>
                         {{if is_selected == 1}}
-                        <a href="javascript:void(0);" data-id="${sender.id}" status="${sender.is_selected}" data-name="${sender.name}" class="xui-default-sender btn-danger">默认</a>
+                        <a href="javascript:void(0);" data-id="${sender.id}" status="${sender.is_selected}" data-name="${sender.name}" class="xui-default-sender btn-default">默认</a>
                         {{else}}
-                        <a href="javascript:void(0);" data-id="${sender.id}" status="${sender.is_selected}" data-name="${sender.name}" class="xui-default-sender ">默认</a>
+                        <a href="javascript:void(0);" data-id="${sender.id}" status="${sender.is_selected}" data-name="${sender.name}" class="xui-default-sender">默认</a>
                         {{/if}}
                     </td>
                 </tr>
 			{{/each}}
 		</tbody>        
 	</table>
+	{{else}}
+		<div class="xui-emptyBox m10">
+			<img src="/static_v2/img/editor/empty.png">
+			<span class="ml20">您还没有相关数据！</span>
+		</div>
+	{{/if}}
 </script>
 
 <script type="text/javascript">
@@ -138,11 +148,14 @@ $(document).ready(function() {
     
     //默认信息
     $('body').delegate('.xui-default-sender', 'click', function (event) {
-    	
+
          var $self = $(this),
          	status = $self.attr('status'),
          	id     = $self.attr('data-id');
-         	console.log(id+ '---'+ status);
+         	
+        	if(status== 'true'){
+    			return false;
+    		}
                W.getApi().call({
          　　　　　 method:'post',          
           　　　　　app: 'mall2',
@@ -152,8 +165,8 @@ $(document).ready(function() {
           			is_selected:'true',
           	},
 	      　　　　　success: function(data) {               		  	
-				       $self.addClass("btn-danger");
-				       $self.parents('tr').siblings().find('.xui-default-sender').removeClass('btn-danger')
+				       $self.addClass("btn-default");
+				       $self.parents('tr').siblings().find('.xui-default-sender').removeClass('btn-default')
 				       
 					},
 					error: function(resp) {
