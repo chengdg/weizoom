@@ -458,7 +458,7 @@ def get_product2group(pids, woid='3'):
         'pids': "_".join(pids)
     }
 
-    resp = Resource.use('marketapp-apiserver').get({
+    resp = Resource.use('marketapp_apiserver').get({
         'resource':'group.group_buy_products',
         'data':params
     })
@@ -477,7 +477,7 @@ def get_pids(woid):
     params = {
         'woid': woid
     }
-    resp = Resource.use('marketapp-apiserver').get({
+    resp = Resource.use('marketapp_apiserver').get({
         'resource': 'group.get_pids_by_woid',
         'data': params
     })
