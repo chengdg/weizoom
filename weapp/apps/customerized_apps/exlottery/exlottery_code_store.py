@@ -57,16 +57,22 @@ class ExlotteryCodeStore(resource.Resource):
 		prize_grade = int(request.GET.get('status', -1))
 		if not id:
 			id = export_id
-		param = {
+		params = {
 			'owner_id': owner_id,
 			'belong_to': id,
 		}
 		if code:
-			param['code'] = code
+			params['code'] = code
 		if prize_grade != -1:
-			param['prize_grade'] = prize_grade
+			params['prize_grade'] = prize_grade
+		if member:
+			hexstr = byte_to_hex(member)
+			members = Member.objects.filter(webapp_id=owner_id, username_hexstr=hexstr)
+			temp_ids = [member.id for member in members]
+			member_ids = temp_ids if temp_ids else [-1]
+			params['member_id__in'] = member_ids
 
-		exlottery_codes = app_models.ExlotteryCode.objects(**param).order_by('-get_time', '-created_at')
+		exlottery_codes = app_models.ExlotteryCode.objects(**params).order_by('-get_time', '-created_at')
 		count = exlottery_codes.count()
 
 		exlottery = app_models.Exlottery.objects(id=id).first()

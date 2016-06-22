@@ -671,9 +671,9 @@ def __Stop_Lottery(context,lottery_id):
 	stop_lottery_response = context.client.post(stop_exlottery_url,stop_args)
 	return stop_lottery_response
 
-def __Search_Lottery(context,search_dic):
+def __Search_Exlottery_Code(context,search_dic,id):
 	"""
-	搜索抽奖活动
+	搜索码库
 
 	输入搜索字典
 	返回数据列表
@@ -685,23 +685,18 @@ def __Search_Lottery(context,search_dic):
 	enable_paginate = 1
 	count_per_page = 10
 
-	name = search_dic["name"]
-	start_time = search_dic["start_time"]
-	end_time = search_dic["end_time"]
-	status = __name2status(search_dic["status"])
+	code = search_dic["lottery_code"]
+	member = search_dic["user"]
 
-
-
-	search_url = "/apps/lottery/api/lotteries/?design_mode={}&version={}&name={}&status={}&start_time={}&end_time={}&count_per_page={}&page={}&enable_paginate={}".format(
+	search_url = "/apps/exlottery/api/exlottery_code_store/?design_mode={}&version={}&code={}&member={}&count_per_page={}&page={}&enable_paginate={}&id={}".format(
 			design_mode,
 			version,
-			name,
-			status,
-			start_time,
-			end_time,
+			code,
+			member,
 			count_per_page,
 			page,
-			enable_paginate)
+			enable_paginate,
+			id)
 
 	search_response = context.client.get(search_url)
 	bdd_util.assert_api_call_success(search_response)
@@ -834,24 +829,82 @@ def step_impl(context, user, exlottery_name):
 @then(u"{user}能获得'{exlottery_name}'码库列表")
 def step_impl(context, user, exlottery_name):
 	design_mode = 0
+	count_per_page = 10
 	version = 1
+	page = 1
+	enable_paginate = 1
 
 	expected = json.loads(context.text)
+	actual = []
+
+	#搜索查看结果
+	if hasattr(context, "search_exlottery_code"):
+		search_code_result = context.search_exlottery_code
+		for code in search_code_result:
+			actual.append({
+				'lottery_code': code['code'],
+				'user': code['member'],
+				'use_date': code['time'],
+				'prize_grade': code['grade'],
+				'prize_name': code['name']
+			})
+
+		bdd_util.assert_list(expected, actual)
+	# 其他查看结果
+	else:
+		# 分页情况，更新分页参数
+		if hasattr(context, "paging"):
+			paging_dic = context.paging
+			count_per_page = paging_dic['count_per_page']
+			page = paging_dic['page_num']
+
+		exlottery = __get_exlottery_by_exlottery_name(exlottery_name)
+		url = "/apps/exlottery/api/exlottery_code_store/?design_mode={}&version={}&count_per_page={}&page={}&enable_paginate={}&id={}".format(design_mode, version, count_per_page, page, enable_paginate, exlottery.id)
+		response = context.client.get(url)
+		codes = json.loads(response.content)['data']['items']
+
+		for code in codes:
+			actual.append({
+				'lottery_code': code['code'],
+				'user': code['member'],
+				'use_date': code['time'],
+				'prize_grade': code['grade'],
+				'prize_name': code['name']
+			})
+
+		bdd_util.assert_list(expected, actual)
+
+@when(u"{user}设置'{exlottery_name}'码库列表查询条件")
+def step_impl(context,user,exlottery_name):
+	expect = json.loads(context.text)
 
 	exlottery = __get_exlottery_by_exlottery_name(exlottery_name)
-	url = "/apps/exlottery/api/exlottery_code_store/??design_mode={}&version={}&id={}".format(design_mode, version, exlottery.id)
-	response = context.client.get(url)
-	codes = json.loads(response.content)['data']['items']
+	search_dic = {
+		"lottery_code": expect.get("lottery_code",""),
+		"user": expect.get("user",""),
+	}
+	search_response = __Search_Exlottery_Code(context,search_dic,exlottery.id)
+	exlottery_array = json.loads(search_response.content)['data']['items']
+	context.search_exlottery_code = exlottery_array
 
-	actual = []
-	for code in codes:
-		actual.append({
-			'lottery_code': code['code']
-		})
+@when(u"{user}访问'{exlottery_name}'码库列表第'{page_num}'页")
+def step_impl(context,user,exlottery_name,page_num):
+	count_per_page = context.count_per_page
+	context.paging = {'count_per_page':count_per_page,"page_num":page_num}
 
-	bdd_util.assert_list(expected, actual)
+@when(u"{user}访问'{exlottery_name}'码库列表下一页")
+def step_impl(context,user,exlottery_name):
+	paging_dic = context.paging
+	count_per_page = paging_dic['count_per_page']
+	page_num = int(paging_dic['page_num'])+1
+	context.paging = {'count_per_page':count_per_page,"page_num":page_num}
 
-
+@when(u"{user}访问'{exlottery_name}'码库列表上一页")
+def step_impl(context,user,exlottery_name):
+	paging_dic = context.paging
+	count_per_page = paging_dic['count_per_page']
+	page_num = int(paging_dic['page_num'])-1
+	context.paging = {'count_per_page':count_per_page,"page_num":page_num}
 #
 # @when(u"{user}编辑微信抽奖活动'{lottery_name}'")
 # def step_impl(context,user,lottery_name):
