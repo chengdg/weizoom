@@ -752,7 +752,6 @@ class OrderSenderInfo(resource.Resource):
         )
 
         SenderInfo.objects.filter(~Q(id=sender_info.id),webapp_id=webapp_id,is_deleted=False).update(is_selected=False)
-        # component_authed_appids = ComponentAuthedAppid.objects.filter(~Q(user_id=user_id), authorizer_appid=authorizer_appid)
         return create_response(200).get_response()
 
     @login_required
@@ -973,5 +972,69 @@ class EOrder(resource.Resource):
         response = create_response(200)
         response.data = {
             'items': express_order,
+        }
+        return response.get_response()
+
+
+sender_express_names = [u'中通速递', u'圆通速递', u'申通快递', u'百世快递', u'韵达快运', u'德邦', u'宅急送', u'顺丰', u'EMS']
+class OrderSenderAccount(resource.Resource):
+    app = 'mall2'
+    resource = 'sender_account'
+
+    @login_required
+    def get(request):
+        """
+        发件人账号信息创建页&&发件人信息更新页
+        """
+        # 如果有product说明更新， 否则说明创建
+
+        c = RequestContext(request, {
+            'first_nav_name': FIRST_NAV,
+            'second_navs': export.get_mall_order_second_navs(request),
+            'second_nav_name': export.ORDER_SENDER_INFO,
+
+        })
+
+
+        return render_to_response('mall/editor/sender_account.html', c)
+
+    @login_required
+    def api_get(request):
+        """
+        定义一下：
+        如果传空值及"",前端显示空
+        如果传ignore,前端就显示——
+        """
+
+        webapp_id = request.user_profile.webapp_id
+        sender_accounts = SenderAccount.objects.filter(webapp_id=webapp_id)
+        account2info={}
+        for sender_account in sender_accounts:
+            account2info[sender_account.express_company_name] = {"account":sender_account.account, "password":sender_account.password}
+
+
+        items = []
+        for sender_express_name in sender_express_names :
+            if account2info.has_key(sender_express_name):
+                items.append({
+                    "name": sender_express_name,
+                    "account": account2info[sender_express_name]["account"],
+                    "password": account2info[sender_express_name]["password"],
+                    })
+            elif sender_express_name in [ u'宅急送', u'顺丰', u'EMS']:
+                items.append({
+                    "name": sender_express_name,
+                    "account": "ignore",
+                    "password": "ignore",
+                    })
+            else:
+                items.append({
+                    "name": sender_express_name,
+                    "account": "",
+                    "password": "",
+                    })
+        response = create_response(200)
+        response.data = {
+            'items': items,
         }
         return response.get_response()

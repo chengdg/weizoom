@@ -2734,3 +2734,19 @@ class SenderInfo(models.Model):
 		verbose_name = "发件人信息"
 		verbose_name_plural = "发件人信息"
 		db_table = "mall_sender_info"
+
+
+class SenderAccount(models.Model):
+	"""
+		存储发件人的账号密码
+	"""
+	webapp_id = models.CharField(max_length=20, verbose_name='店铺ID')  # webapp,订单成交的店铺id
+	express_company_name = models.CharField(max_length=50, default='', verbose_name="快递公司名称")
+	account = models.CharField(max_length=100) # 发件人快递公司账号
+	password = models.CharField(max_length=100) # 发件人快递公司密码
+	created_at = models.DateTimeField(auto_now_add=True)
+
+	class Meta(object):
+		verbose_name = "发件人账号信息"
+		verbose_name_plural = "发件人账号信息"
+		db_table = "mall_sender_account"
