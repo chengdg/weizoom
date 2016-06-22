@@ -291,13 +291,13 @@ Scenario:1 优惠券明细列表
 				"type":"多商品券",
 				"status":"未使用"
 			},{
-				"collection_time":"5天前",
+				"collection_time":"6天前",
 				"name":"优惠券1",
 				"coupon_id":"coupon1_id_1",
 				"type":"通用券",
 				"status":"未使用"
 			},{
-				"collection_time":"6天前",
+				"collection_time":"7天前",
 				"name":"优惠券M",
 				"coupon_id":"coupon3_id_1",
 				"type":"多商品券",

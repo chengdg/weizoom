@@ -42,7 +42,7 @@ def step_impl(context, user,member_name,sign_name):
 	for detail in participance_detatils:
 		p_dict = OrderedDict()
 		p_dict[u"sign_time"] = bdd_util.get_date_str(detail['created_at_f'])
-		p_dict[u"get_reward"] = detail['prize']
+		p_dict[u"get_reward"] = detail['prize'].replace('<br/>','')
 		p_dict[u"sign_state"] = detail['status']
 		actual.append((p_dict))
 	print("actual_data: {}".format(actual))

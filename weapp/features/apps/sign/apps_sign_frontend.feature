@@ -323,13 +323,13 @@ Scenario:5 用户一天内连续两次签到，获取优惠券奖励
 	When bill在微信中向jobs的公众号发送消息'签到1'
 	Then bill收到自动回复'签到活动1'
 	When bill点击图文'签到活动1'进入签到活动页面
-	Then bill能参加签到活动
+	Then bill参加签到活动
 
 	When 清空浏览器
 	When bill在微信中向jobs的公众号发送消息'签到1'
 	Then bill收到自动回复'签到活动1'
 	When bill点击图文'签到活动1'进入签到活动页面
-	Then bill不能参加签到活动
+	Then bill参加签到活动
 
     When bill访问jobs的webapp
 	Then bill能获得webapp优惠券列表
@@ -376,7 +376,7 @@ Scenario:6 用户连续3天进行签到
 	When bill在微信中向jobs的公众号发送消息'签到1'
 	Then bill收到自动回复'签到活动1'
 	When bill点击图文'签到活动1'进入签到活动页面
-	Then bill能参加签到活动
+	Then bill参加签到活动
 
 	When 修改bill的签到时间为前一天
 	When 清空浏览器
@@ -384,7 +384,7 @@ Scenario:6 用户连续3天进行签到
 	When bill在微信中向jobs的公众号发送消息'签到1'
 	Then bill收到自动回复'签到活动1'
 	When bill点击图文'签到活动1'进入签到活动页面
-	Then bill能参加签到活动
+	Then bill参加签到活动
 
 	When 修改bill的签到时间为前一天
 	When 清空浏览器
@@ -392,7 +392,7 @@ Scenario:6 用户连续3天进行签到
 	When bill在微信中向jobs的公众号发送消息'签到1'
 	Then bill收到自动回复'签到活动1'
 	When bill点击图文'签到活动1'进入签到活动页面
-	Then bill能参加签到活动
+	Then bill参加签到活动
 
 	When bill访问jobs的webapp
 	Then bill能获得webapp优惠券列表
@@ -436,7 +436,7 @@ Scenario:7 用户分享"签到活动1"到朋友圈,会员通过分享到朋友�
 	When bill在微信中向jobs的公众号发送消息'签到1'
 	Then bill收到自动回复'签到活动1'
 	When bill点击图文'签到活动1'进入签到活动页面
-	Then bill能参加签到活动
+	Then bill参加签到活动
 
 	When bill点击系统回复的链接
 	When bill把jobs的签到活动链接分享到朋友圈
@@ -479,7 +479,7 @@ Scenario:8 非会员用户访问签到分享进行签到
 	When bill在微信中向jobs的公众号发送消息'签到1'
 	Then bill收到自动回复'签到活动1'
 	When bill点击图文'签到活动1'进入签到活动页面
-	Then bill能参加签到活动
+	Then bill参加签到活动
 
 	When bill点击系统回复的链接
 	When bill把jobs的签到活动链接分享到朋友圈
