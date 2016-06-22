@@ -171,3 +171,20 @@ def update_exlottery_status(lottery):
 			activity_status = u'已结束'
 		lottery.reload()
 	return activity_status, lottery
+
+def check_keyword(data):
+	"""
+	匹配用户的消息
+	@param data: {
+		'webapp_owner_id': 0,
+		'keyword': 0,
+		'openid': 0,
+		'webapp_id': 0
+	}
+	@return: return_html string
+	"""
+	return_html = []
+	#TODO 如果匹配到正确的抽奖吗格式，则返回相应的字符串，格式为html字符串，但只能包含a标签，例如
+	# 欢迎使用抽奖吗，<a href='http://dev.weapp.com/apps/exlottery/m_exlottery/?token=elnas134l4'>立即抽奖</a>
+
+	return ''.join(return_html)
