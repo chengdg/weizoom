@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # 签到详情
 # author: dgl
+# 需要打开apiserver
 
 import json
 import logging
@@ -9,6 +10,7 @@ from test import bdd_util
 from modules.member import module_api as member_api
 from utils.string_util import byte_to_hex
 from modules.member.models import Member
+from apps.customerized_apps.sign.models import Sign
 
 def __date2time(date_str):
 	"""
@@ -19,20 +21,16 @@ def __date2time(date_str):
 	p_time = "{}".format(bdd_util.get_date_str(cr_date))
 	return p_time
 
-@then(u"{webapp_owner_name}获得'{webapp_user_name}'参加'签到活动1'的优惠券明细列表")
-def step_impl(context, webapp_owner_name, webapp_user_name):
+@then(u"{webapp_owner_name}获得'{webapp_user_name}'参加'{webapp_name}'的优惠券明细列表")
+def step_impl(context, webapp_owner_name, webapp_user_name, webapp_name):
 
-	# webapp_owner_id = context.webapp_owner_id
+
 	member = Member.objects.get(username_hexstr=byte_to_hex(webapp_user_name))
-	# openid = "%s_%s" % (webapp_user_name, webapp_owner_name)
-	# member = member_api.get_member_by_openid(openid, context.webapp_id)
-
-	
-
+	sign = Sign.objects.get(name=webapp_name)
 	data = {
 		'id': member.id,
 		'design_mode': 0,
-		'project_id': 'new_app:sign:xxx',
+		'project_id': 'new_app:sign:%s'%sign.related_page_id,
 	}
 	if hasattr(context, 'filter_dict'):
 		# logging.info('------set filter_dict____')
