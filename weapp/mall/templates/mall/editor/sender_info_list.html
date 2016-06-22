@@ -1,11 +1,29 @@
 {% extends "content_base_v2.html" %}
 {% load common_tag %}
 {% load account_filter %}
-
-
+{% block css %}
+<style type="text/css">
+	.xui-senderNav{
+		display: block;
+		border-bottom: 1px solid #ccc;
+		height: 40px;
+	}
+	.xui-senderNav li{
+		float: left;
+		padding-left: 38px;
+		padding-right: 38px;
+		line-height: 40px;
+	}
+	.xui-senderNav li a{
+		color: #000;
+		font-size: 14px;
+		text-decoration:none;
+	}
+</style>
+{% endblock %}
 {% block content-panel %}
 
-<div class="xui-expiredTime-page">
+<div class="xui-expiredTime-page" style="background: #eaeef6">
 	<ul class="breadcrumb">
 		<li>您当前所在位置</li>
 		<li>
@@ -13,11 +31,21 @@
 		</li>
 		<li class="active">所有订单</li>
 	</ul>
-   <a href="/mall2/sender_info/" class="btn btn-success  mb10">
+	<div>
+		<ul class="xui-senderNav">
+		<li style="border-bottom: 3px solid #0088CC;"><a href="/mall2/sender_info_list">发件人信息</a></li>
+		<li><a href="mall2/address_1">快递账号管理</a></li>
+	</ul>
+	</div>
+	
+   <div class="cb mt10 mb10 ml8">
+   	<a href="/mall2/sender_info/" class="btn btn-success">
    	<img src="/static_v2/img/editor/plusOpcity.png" alt=""/>
    	新增地址
    </a>
-     <div
+   </div>
+   
+	<div
                 data-ui-role="advanced-table"
                 data-app="mall2"
                 data-resource="sender_info_list"
@@ -27,17 +55,14 @@
                 data-selectable = "false"
                 data-user-webapp-id={{user.get_profile.webapp_id}}
             >
-            </div>
-   
-	
-</div>
+   </div>
 {% endblock %}
 
 {% block js %}
 {% verbatim %}
  <script id="mall-orders-sender" type="text/x-jquery-tmpl">
  	{{if items!='' }}
-	<table class="table">
+	<table class="table ml8">
 		<thead>
 			<tr class="xui-trHeight" style="background:#c9d1e4;">
 				<!--<th width="80">默认</th>-->
@@ -153,7 +178,7 @@ $(document).ready(function() {
          	status = $self.attr('status'),
          	id     = $self.attr('data-id');
          	
-        	if(status== 'true'){
+        	if(status== '1'){
     			return false;
     		}
                W.getApi().call({
@@ -162,7 +187,7 @@ $(document).ready(function() {
          　　　　　 resource:'sender_info',
           　　　　　args:{
           			id:id,
-          			is_selected:'true',
+          			is_selected:'1',
           	},
 	      　　　　　success: function(data) {               		  	
 				       $self.addClass("btn-default");
