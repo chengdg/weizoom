@@ -82,7 +82,7 @@ Background:
 			}]
 		}]
 	"""
-	Then jobs生成码库
+	Then jobs生成'专项抽奖活动01'码库
 	"""
 		["el8s539t18","el2f5e754g","el58fe24rf","elm8v6uj41","elmn782f2r"]
 	"""
