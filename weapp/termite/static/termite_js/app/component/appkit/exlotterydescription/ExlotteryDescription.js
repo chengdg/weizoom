@@ -3,13 +3,13 @@
  * 
  */
 ensureNS('W.component.appkit');
-W.component.appkit.LotteryDescription = W.component.Component.extend({
-	type: 'appkit.lotterydescription',
+W.component.appkit.ExlotteryDescription = W.component.Component.extend({
+	type: 'appkit.exlotterydescription',
 	selectable: 'yes',
-	propertyViewTitle: '微信抽奖',
+	propertyViewTitle: '专项抽奖',
 
 	dynamicComponentTypes: [{
-        type: 'appkit.lotteryitem',
+        type: 'appkit.exlotteryitem',
         model: 3
     }],
 

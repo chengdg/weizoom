@@ -268,7 +268,7 @@ def __get_exlotteryPageJson(args):
 				},
 				"components": [
 					{
-						"type": "appkit.lotteryitem",
+						"type": "appkit.exlotteryitem",
 						"cid": 4,
 						"pid": 2,
 						"auto_select": False,
@@ -294,7 +294,7 @@ def __get_exlotteryPageJson(args):
 						"components": []
 					},
 					{
-						"type": "appkit.lotteryitem",
+						"type": "appkit.exlotteryitem",
 						"cid": 5,
 						"pid": 2,
 						"auto_select": False,
@@ -320,7 +320,7 @@ def __get_exlotteryPageJson(args):
 						"components": []
 					},
 					{
-						"type": "appkit.lotteryitem",
+						"type": "appkit.exlotteryitem",
 						"cid": 6,
 						"pid": 2,
 						"auto_select": False,
@@ -526,9 +526,7 @@ def __Create_Exlottery(context,text,user):
 		"reply_link":reply_link,
 		"lottery_code_count":lottery_code_count
 	}
-	print "====4444444444444444=============="
-	print post_exlottery_args
-	print "====4444444444444444=============="
+
 	exlottery_url ="/apps/exlottery/api/exlottery/?design_mode={}&project_id={}&version={}&_method=put".format(design_mode,project_id,version)
 	post_exlottery_response = context.client.post(exlottery_url,post_exlottery_args)
 

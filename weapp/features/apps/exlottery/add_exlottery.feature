@@ -34,7 +34,7 @@ Background:
 		}]
 	"""
 
-@mall2 @apps @apps_lottery @add_exlottery @apps_exlottery_backend
+@mall2 @apps @apps_lottery @add_exlottery @apps_exlottery_backend @vito
 Scenario:1 新建微信专项抽奖
 	Given jobs登录系统
 	When jobs新建专项抽奖活动
@@ -134,31 +134,31 @@ Scenario:1 新建微信专项抽奖
 			}]
 		}]
 	"""
-	Then jobs获得专项抽奖活动列表
-	"""
-		[{
-			"name":"专项抽奖活动03",
-			"start_date":"2天后",
-			"end_date":"3天后",
-			"status":"未开始",
-			"participant_count":0,
-			"actions": ["码库","查看结果","链接","删除","预览"]
-		},{
-			"name":"专项抽奖活动02",
-			"start_date":"3天前",
-			"end_date":"昨天",
-			"status":"已过期",
-			"participant_count":0,
-			"actions": ["码库","查看结果","链接","删除","预览"]
-		},{
-			"name":"专项抽奖活动01",
-			"start_date":"今天",
-			"end_date":"2天后",
-			"status":"进行中",
-			"participant_count":0,
-			"actions": ["码库","查看结果","链接","关闭","预览"]
-		}]
-	"""
+#	Then jobs获得专项抽奖活动列表
+#	"""
+#		[{
+#			"name":"专项抽奖活动03",
+#			"start_date":"2天后",
+#			"end_date":"3天后",
+#			"status":"未开始",
+#			"participant_count":0,
+#			"actions": ["码库","查看结果","链接","删除","预览"]
+#		},{
+#			"name":"专项抽奖活动02",
+#			"start_date":"3天前",
+#			"end_date":"昨天",
+#			"status":"已过期",
+#			"participant_count":0,
+#			"actions": ["码库","查看结果","链接","删除","预览"]
+#		},{
+#			"name":"专项抽奖活动01",
+#			"start_date":"今天",
+#			"end_date":"2天后",
+#			"status":"进行中",
+#			"participant_count":0,
+#			"actions": ["码库","查看结果","链接","关闭","预览"]
+#		}]
+#	"""
 
 
 @mall2 @apps @apps_lottery @add_exlottery @apps_exlottery_backend

@@ -1,10 +1,10 @@
 /**
- * @class W.component.appkit.LottertItem
+ * @class W.component.appkit.ExlottertItem
  * 奖项
  */
 ensureNS('W.component.appkit');
-W.component.appkit.LottertItem = W.component.Component.extend({
-	type: 'appkit.lotteryitem',
+W.component.appkit.ExlottertItem = W.component.Component.extend({
+	type: 'appkit.exlotteryitem',
 	selectable: 'no',
 	propertyViewTitle: '',
 

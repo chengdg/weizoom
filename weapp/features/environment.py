@@ -85,6 +85,7 @@ from apps.customerized_apps.red_packet import models as redpacket_models
 from apps.customerized_apps.group import models as group_models
 from apps.customerized_apps.shvote import models as shvote_models
 from apps.customerized_apps.rebate import models as rebate_models
+from apps.customerized_apps.exlottery import models as apps_exlottery_models
 
 
 from django.core.cache import cache
@@ -401,6 +402,12 @@ def __clear_all_app_data():
 	#微众卡
 	WeizoomCardHasOrder.objects.all().delete()
 
+	#专项抽奖
+	apps_exlottery_models.Exlottery.objects.all().delete()
+	apps_exlottery_models.ExlotteryParticipance.objects.all().delete()
+	apps_exlottery_models.ExlottoryRecord.objects.all().delete()
+	apps_exlottery_models.ExlotteryControl.objects.all().delete()
+	apps_exlottery_models.ExlotteryCode.objects.all().delete()
 
 	# weixin_user_models.ComponentInfo.objects.all().delete()
 	# weixin_user_models.ComponentAuthedAppid.objects.all().delete()
