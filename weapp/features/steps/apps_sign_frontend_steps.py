@@ -14,6 +14,7 @@ from modules.member.models import Member, SOURCE_MEMBER_QRCODE
 from utils.string_util import byte_to_hex
 import json
 import re
+from mall.promotion.models import Coupon
 
 from weixin.message.material import models as material_models
 import apps_step_utils as apps_util
@@ -231,8 +232,26 @@ def step_impl(context, webapp_user_name, date_str):
 	if context.latest_date[webapp_user_name] < bdd_util.get_date(date):
 		context.latest_date[webapp_user_name] = bdd_util.get_date(date)
 
+
 	item = SignDetails.objects.filter(belong_to=context.sign_id, member_id=context.member.id).order_by('-id').first()
-	item.update(set__created_at = bdd_util.get_date(date))
+	item.update(created_at = bdd_util.get_date(date))
+
+
+	# 下面的step会将签到详情领取时间改成step接受的时间.
+	sign_details_index = SignDetails.objects.count() - 1
+	last_sign = SignDetails.objects.all()[sign_details_index] # 得到最后一个签到信息
+
+	if last_sign.prize["coupon"]["id"]: # 如果最后一个签到信息中提示获得了优惠券.修改日期为当前时间
+		import time
+		time.sleep(1)
+
+		from apps.customerized_apps.mysql_models import  ConsumeCouponLog
+		coupon_log_index = ConsumeCouponLog.objects.count() - 1
+		last_coupon = ConsumeCouponLog.objects.all()[coupon_log_index]
+		coupon = Coupon.objects.filter(id=last_coupon.coupon_id)
+
+		coupon.update(provided_time=date) # 修改日期为当前时间
+
 
 	context.need_change_date = True
 

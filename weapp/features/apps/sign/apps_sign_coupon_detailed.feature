@@ -266,7 +266,7 @@ Background:
 #		}]
 #		"""
 
-@mall2 @apps @apps_sign @apps_sign_coupon_detailed
+@mall2 @apps @apps_sign @apps_sign_coupon_detailed @dgl
 Scenario:1 优惠券明细列表
 	Given jobs登录系统
 
@@ -288,7 +288,7 @@ Scenario:1 优惠券明细列表
 				"collection_time":"4天前",
 				"name":"优惠券2",
 				"coupon_id":"coupon2_id_1",
-				"type":"多商品券",
+				"type":"通用券",
 				"status":"未使用"
 			},{
 				"collection_time":"6天前",
@@ -309,13 +309,14 @@ Scenario:1 优惠券明细列表
 		"""
 			[{
 				"collection_time":"今天",
-				"coupon":"优惠券M",
-				"detailed":"多商品券",
-				"state":"未使用"
+				"name":"优惠券M",
+				"coupon_id":"coupon3_id_3",
+				"type":"多商品券",
+				"status":"未使用"
 			}]
 		"""
 
-@mall2 @apps @apps_sign @apps_sign_coupon_detailed
+@mall2 @apps @apps_sign @apps_sign_coupon_detailed @dgl2
 Scenario:2 优惠券明细列表查询
 	When bill访问jobs的webapp
 	And bill购买jobs的商品
@@ -331,7 +332,7 @@ Scenario:2 优惠券明细列表查询
 			}
 		"""
 	Given jobs登录系统
-	Then jobs获得'bill'参加'签到活动1'的优惠券明细列表默认查询条件
+	When jobs获得'bill'参加'签到活动1'的优惠券明细列表默认查询条件
 		"""
 			[{
 				"status":"全部"
@@ -355,16 +356,16 @@ Scenario:2 优惠券明细列表查询
 				"collection_time":"4天前",
 				"name":"优惠券2",
 				"coupon_id":"coupon2_id_1",
-				"type":"多商品券",
-				"status":"未使用"
-			},{
-				"collection_time":"5天前",
-				"name":"优惠券1",
-				"coupon_id":"coupon1_id_1",
 				"type":"通用券",
 				"status":"未使用"
 			},{
 				"collection_time":"6天前",
+				"name":"优惠券1",
+				"coupon_id":"coupon1_id_1",
+				"type":"通用券",
+				"status":"已使用"
+			},{
+				"collection_time":"7天前",
 				"name":"优惠券M",
 				"coupon_id":"coupon3_id_1",
 				"type":"多商品券",
@@ -390,19 +391,19 @@ Scenario:2 优惠券明细列表查询
 				"collection_time":"1天前",
 				"name":"优惠券M",
 				"coupon_id":"coupon3_id_2",
-				"type":"通用券",
+				"type":"多商品券",
 				"status":"未使用"
 			},{
 				"collection_time":"4天前",
 				"name":"优惠券2",
 				"coupon_id":"coupon2_id_1",
-				"type":"多商品券",
+				"type":"通用券",
 				"status":"未使用"
 			},{
-				"collection_time":"6天前",
+				"collection_time":"7天前",
 				"name":"优惠券M",
 				"coupon_id":"coupon3_id_1",
-				"type":"通用券",
+				"type":"多商品券",
 				"status":"未使用"
 			}]
 		"""
@@ -416,7 +417,7 @@ Scenario:2 优惠券明细列表查询
 	Then jobs获得'bill'参加'签到活动1'的优惠券明细列表
 		"""
 			[{
-				"collection_time":"今天",
+				"collection_time":"6天前",
 				"name":"优惠券1",
 				"coupon_id":"coupon1_id_1",
 				"type":"通用券",
