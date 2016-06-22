@@ -21,6 +21,8 @@ from django.conf import settings
 import logging
 import urllib
 from django.db.models import F
+from eaglet.utils.resource_client import Resource
+
 DING_GROUP_ID = '93756731'
 TEST_DING_GROUP_ID = '80035247'
 
@@ -447,50 +449,43 @@ def handle_group_product(request, product_id, swipe_images, thumbnails_url):
 def get_product2group(pids, woid='3'):
     #例子
     #pids为list,里面的每一项都是商品id的str
-    pids_url = "http://{}/m/apps/group/api/group_buy_products/".format(settings.MARKETTOOLS_HOST)
+
     # pids_url = "http://{}/mall2/api/test/".format(settings.MARKETTOOLS_HOST)
     if not pids:
         return {}
-    params = "pids={}".format(("_").join(pids))
-    response = urllib.urlopen("{}?{}&woid={}".format(pids_url, params, woid))
-    if response.code != 200:
-        response = urllib.urlopen("{}?{}&woid={}".format(pids_url, params, woid))
-        if response.code != 200:
-            error_msg = u"api请求失败,获取商品是否在团购中失败, cause:\n{}".format(response.code)
-            watchdog_error(error_msg)
-            return {}
+    params = {
+        'woid': woid,
+        'pids': "_".join(pids)
+    }
 
-    data =  response.read()
-    data = json.loads(data)
-    if data["data"]["pid2is_in_group_buy"]:
-        product_groups = data["data"]["pid2is_in_group_buy"]
+    resp = Resource.use('marketapp-apiserver').get({
+        'resource':'group.group_buy_products',
+        'data':params
+    })
+
+    if resp and resp['code']:
+        product_groups = resp['pid2is_in_group_buy']
         product2group = {}
         for product_group in product_groups:
             product2group[product_group["pid"]] = product_group["is_in_group_buy"]
-        logging.info(u"请求活动返回数据>>>>>>>>>>>>>>>{}".format(product2group))
     else:
-        error_msg = u"api请求获取的数据存在问题, cause:\n{}".format(data)
-        watchdog_error(error_msg)
         product2group = {}
+
     return product2group
 
 def get_pids(woid):
-    get_pids_url = "http://{}/m/apps/group/api/get_pids_by_woid/".format(settings.MARKETTOOLS_HOST)
-    request_url = "{}?woid={}".format(get_pids_url, woid)
-    response = urllib.urlopen(request_url)
-    if response.code != 200:
-        response = urllib.urlopen(request_url)
-        if response.code != 200:
-            error_msg = u"api请求参加活动的pids网络存在问题, cause:\nrequest_url:{},response_code:{}".format(request_url, response.code)
-            watchdog_error(error_msg)
-            return []
+    params = {
+        'woid': woid
+    }
+    resp = Resource.use('marketapp-apiserver').get({
+        'resource': 'group.get_pids_by_woid',
+        'data': params
+    })
 
-    data =  response.read()
-    data = json.loads(data)
-    if data["data"].has_key("pids_list"):
-        pids = data["data"]["pids_list"]
-    else:
-        error_msg = u"api请求参加活动的pids存在问题, cause:\n{}".format(data)
-        watchdog_error(error_msg)
-        pids = []
+    pids = []
+    if resp and resp['code'] == 200:
+        data = resp['data']
+        if data.has_key("pids_list"):
+            pids = data["pids_list"]
+
     return pids
