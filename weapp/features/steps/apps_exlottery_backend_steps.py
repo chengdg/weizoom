@@ -187,11 +187,11 @@ def __get_actions(status):
 	根据输入抽奖状态
 	返回对于操作列表
 	"""
-	actions_list = [u"查看结果",u"链接",u"预览"]
+	actions_list = [u"码库",u"查看结果",u"链接",u"预览"]
 	if status == u"进行中":
-		actions_list.insert(2,u"关闭")
+		actions_list.insert(3,u"关闭")
 	elif status=="已结束" or "未开始":
-		actions_list.insert(2,u"删除")
+		actions_list.insert(3,u"删除")
 	return actions_list
 
 def __get_exlotteryPageJson(args):
@@ -384,7 +384,7 @@ def __prize_settings_process(prize_settings):
 
 	page_prize_list = []
 	lottery_prize_list = []
-	lottery_prize_dic = {}
+	exlottery_prize_dic = {}
 
 	if prize_settings:
 		index = 0
@@ -418,7 +418,7 @@ def __prize_settings_process(prize_settings):
 			page_prize_list.append(page_prize_dic)
 
 			#lottery_lottery
-			lottery_prize_dic[plist[index]] = {
+			exlottery_prize_dic[plist[index]] = {
 				"title":prize_setting.get("prize_grade",""),
 				"prize_count":prize_setting.get("prize_counts",""),
 				"leftCount":prize_setting.get("rest",""),
@@ -427,7 +427,7 @@ def __prize_settings_process(prize_settings):
 			}
 			index += 1
 
-		return (page_prize_list,lottery_prize_dic)
+		return (page_prize_list,exlottery_prize_dic)
 	else:
 		return []
 
@@ -745,76 +745,76 @@ def step_impl(context,user):
 	for text in text_list:
 		__Create_Exlottery(context,text,user)
 
-# @then(u'{user}获得微信抽奖活动列表')
-# def step_impl(context,user):
-# 	design_mode = 0
-# 	count_per_page = 10
-# 	version = 1
-# 	page = 1
-# 	enable_paginate = 1
-#
-# 	actual_list = []
-# 	expected = json.loads(context.text)
-#
-# 	#搜索查看结果
-# 	if hasattr(context,"search_lottery"):
-# 		rec_search_list = context.search_lottery
-# 		for item in rec_search_list:
-# 			tmp = {
-# 				"name":item['name'],
-# 				"status":item['status'],
-# 				"start_time":item['start_time'],
-# 				"end_time":item['end_time'],
-# 				"participant_count":item['participant_count'],
-# 			}
-# 			tmp["actions"] = __get_actions(item['status'])
-# 			actual_list.append(tmp)
-#
-# 		for expect in expected:
-# 			if 'start_date' in expect:
-# 				expect['start_time'] = __date2time(expect['start_date'])
-# 				del expect['start_date']
-# 			if 'end_date' in expect:
-# 				expect['end_time'] = __date2time(expect['end_date'])
-# 				del expect['end_date']
-# 		print("expected: {}".format(expected))
-#
-# 		bdd_util.assert_list(expected,actual_list)#assert_list(小集合，大集合)
-# 	#其他查看结果
-# 	else:
-# 		#分页情况，更新分页参数
-# 		if hasattr(context,"paging"):
-# 			paging_dic = context.paging
-# 			count_per_page = paging_dic['count_per_page']
-# 			page = paging_dic['page_num']
-#
-# 		for expect in expected:
-# 			if 'start_date' in expect:
-# 				expect['start_time'] = __date2time(expect['start_date'])
-# 				del expect['start_date']
-# 			if 'end_date' in expect:
-# 				expect['end_time'] = __date2time(expect['end_date'])
-# 				del expect['end_date']
-#
-#
-# 		print("expected: {}".format(expected))
-#
-# 		rec_exlottery_url ="/apps/lottery/api/lotteries/?design_mode={}&version={}&count_per_page={}&page={}&enable_paginate={}".format(design_mode,version,count_per_page,page,enable_paginate)
-# 		rec_lottery_response = context.client.get(rec_exlottery_url)
-# 		rec_lottery_list = json.loads(rec_lottery_response.content)['data']['items']#[::-1]
-#
-# 		for item in rec_lottery_list:
-# 			tmp = {
-# 				"name":item['name'],
-# 				"status":item['status'],
-# 				"start_time":__date2time(item['start_time']),
-# 				"end_time":__date2time(item['end_time']),
-# 				"participant_count":item['participant_count'],
-# 			}
-# 			tmp["actions"] = __get_actions(item['status'])
-# 			actual_list.append(tmp)
-# 		print("actual_data: {}".format(actual_list))
-# 		bdd_util.assert_list(expected,actual_list)
+@then(u'{user}获得专项抽奖活动列表')
+def step_impl(context,user):
+	design_mode = 0
+	count_per_page = 10
+	version = 1
+	page = 1
+	enable_paginate = 1
+
+	actual_list = []
+	expected = json.loads(context.text)
+
+	#搜索查看结果
+	if hasattr(context,"search_lottery"):
+		rec_search_list = context.search_lottery
+		for item in rec_search_list:
+			tmp = {
+				"name":item['name'],
+				"status":item['status'],
+				"start_time":item['start_time'],
+				"end_time":item['end_time'],
+				"participant_count":item['participant_count'],
+			}
+			tmp["actions"] = __get_actions(item['status'])
+			actual_list.append(tmp)
+
+		for expect in expected:
+			if 'start_date' in expect:
+				expect['start_time'] = __date2time(expect['start_date'])
+				del expect['start_date']
+			if 'end_date' in expect:
+				expect['end_time'] = __date2time(expect['end_date'])
+				del expect['end_date']
+		print("expected: {}".format(expected))
+
+		bdd_util.assert_list(expected,actual_list)#assert_list(小集合，大集合)
+	#其他查看结果
+	else:
+		#分页情况，更新分页参数
+		if hasattr(context,"paging"):
+			paging_dic = context.paging
+			count_per_page = paging_dic['count_per_page']
+			page = paging_dic['page_num']
+
+		for expect in expected:
+			if 'start_date' in expect:
+				expect['start_time'] = __date2time(expect['start_date'])
+				del expect['start_date']
+			if 'end_date' in expect:
+				expect['end_time'] = __date2time(expect['end_date'])
+				del expect['end_date']
+
+
+		print("expected: {}".format(expected))
+
+		rec_exlottery_url ="/apps/exlottery/api/exlotteries/?design_mode={}&version={}&count_per_page={}&page={}&enable_paginate={}".format(design_mode,version,count_per_page,page,enable_paginate)
+		rec_exlottery_response = context.client.get(rec_exlottery_url)
+		rec_exlottery_list = json.loads(rec_exlottery_response.content)['data']['items']#[::-1]
+
+		for item in rec_exlottery_list:
+			tmp = {
+				"name":item['name'],
+				"status":item['status'] if item['status'] != u'已结束' else u'已过期',
+				"start_time":__date2time(item['start_time']),
+				"end_time":__date2time(item['end_time']),
+				"participant_count":item['participant_count'],
+			}
+			tmp["actions"] = __get_actions(item['status'])
+			actual_list.append(tmp)
+		print("actual_data: {}".format(actual_list))
+		bdd_util.assert_list(expected,actual_list)
 #
 # @when(u"{user}编辑微信抽奖活动'{lottery_name}'")
 # def step_impl(context,user,lottery_name):
