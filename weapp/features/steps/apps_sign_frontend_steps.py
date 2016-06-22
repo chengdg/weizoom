@@ -14,6 +14,7 @@ from modules.member.models import Member, SOURCE_MEMBER_QRCODE
 from utils.string_util import byte_to_hex
 import json
 import re
+from mall.promotion.models import Coupon
 
 from weixin.message.material import models as material_models
 import apps_step_utils as apps_util
@@ -216,8 +217,24 @@ def step_impl(context, webapp_user_name, date_str):
 	if context.latest_date[webapp_user_name] < bdd_util.get_date(date):
 		context.latest_date[webapp_user_name] = bdd_util.get_date(date)
 
+
 	item = SignDetails.objects.filter(belong_to=context.sign_id, member_id=context.member.id).order_by('-id').first()
-	item.update(set__created_at = bdd_util.get_date(date))
+	item.update(created_at = bdd_util.get_date(date))
+	import logging
+	from apps.customerized_apps.mysql_models import  ConsumeCouponLog
+	coupon_log_index = ConsumeCouponLog.objects.count() - 1
+	last_coupon = ConsumeCouponLog.objects.all()[coupon_log_index]
+	logging.info('-----------123----------')
+	# logging.info("{0}".format(dir(last_coupon_id)))
+
+	import time
+	time.sleep(1)
+	coupon = Coupon.objects.filter(id=last_coupon.coupon_id)
+	logging.info("{}".format(coupon))
+	coupon.update(provided_time=date)
+
+	# coupon.created_at = date
+	# coupon.save()
 
 	context.need_change_date = True
 
