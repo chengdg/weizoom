@@ -38,8 +38,8 @@ class Sign(resource.Resource):
 			sign = sign[0]
 			is_create_new_data = False
 			project_id = 'new_app:sign:%s' % sign.related_page_id
-			# keywords = sign.reply['keyword']
-			keywords = {}
+			keywords = sign.reply['keyword']
+			# keywords = {}
 		else:
 			sign = None
 			is_create_new_data = True
@@ -69,8 +69,8 @@ class Sign(resource.Resource):
 		sign = app_models.Sign.objects(owner_id=owner_id)
 		if sign.count()>0:
 			sign = sign[0]
-			# keywords = sign.reply['keyword']
-			keywords = {}
+			keywords = sign.reply['keyword']
+			# keywords = {}
 		else:
 			keywords = {}
 

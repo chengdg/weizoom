@@ -87,6 +87,8 @@ def step_impl(context, user):
 	signParticipance = SignParticipance.objects.get(member_id=context.member.id)
 	created_at = signParticipance.created_at
 	signParticipance.update(set__created_at = created_at-timedelta(days=1))
+	item = SignDetails.objects.filter(belong_to=context.sign_id, member_id=context.member.id).order_by('-id').first()
+	item.update(set__created_at = created_at-timedelta(days=1))
 	__change_sign_date(context.member.id,1)
 
 #只修改参与时间
