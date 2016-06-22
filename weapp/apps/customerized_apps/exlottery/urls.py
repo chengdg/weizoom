@@ -7,4 +7,5 @@ import m_exlottery
 import exlottery_status
 import exlotteries
 import exlottery_code_store
+import exlottery_prize
 
