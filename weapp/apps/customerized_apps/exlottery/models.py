@@ -5,13 +5,13 @@ from datetime import datetime
 import mongoengine as models
 
 class ExlotteryParticipance(models.Document):
-	webapp_user_id = models.LongField(default=0) #参与者id
+	"""
+	记录会员与抽奖码关系
+	"""
 	member_id= models.LongField(default=0) #参与者id
 	belong_to = models.StringField(default="", max_length=100) #对应的活动id
-	has_prize = models.BooleanField(default=False) #是否中奖
-	total_count = models.IntField(default=0) #已参与次数
-	can_play_count = models.IntField(default=0) #可参与次数
-	exlottery_date = models.DateTimeField() #最近一次抽奖时间
+	created_at = models.DateTimeField()  # 领取时间
+	code = models.StringField(default="", max_length=20, unique=True)  # 抽奖码
 
 	meta = {
 		'collection': 'exlottery_exlottery_participance',
@@ -22,7 +22,6 @@ class ExlottoryRecord(models.Document):
 	"""
 	抽奖记录表
 	"""
-	webapp_user_id = models.LongField(default=0) #参与者id
 	member_id= models.LongField(default=0) #参与者id
 	belong_to = models.StringField(default="", max_length=100) #对应的抽奖活动id
 	lottery_name = models.StringField(default="", max_length=100) #对应的抽奖活动title
@@ -129,6 +128,8 @@ EXLOTTERY_PRIZE = {
 
 DEFAULT_TIME = '2000-01-01 00:00:00'
 
+NOT_USED = 0
+HAS_USED = 1
 class ExlotteryCode(models.Document):
 	owner_id = models.LongField()  # 创建人id
 	belong_to = models.StringField(default="", max_length=100)  # 对应的专项抽奖活动id
@@ -138,6 +139,7 @@ class ExlotteryCode(models.Document):
 	get_time = models.DateTimeField(default=DEFAULT_TIME)  # 获得时间
 	prize_grade = models.IntField(default=0) # 奖品等级
 	prize_name = models.StringField(default="", max_length=100)  # 奖品名称
+	status = models.IntField(default=0) # 抽奖码有没有被使用
 
 	meta = {
 		'collection': 'exlottery_code',

@@ -30,31 +30,29 @@ class Mexlottery(resource.Resource):
 		auth_appid_info = None
 		share_page_desc = ''
 		thumbnails_url = '/static_v2/img/thumbnails_lottery.png'
-		cache_key = 'apps_lottery_%s_html' % id
+		cache_key = 'apps_exlottery_%s_html' % id
 		record = None
 		member = request.member
-		if 'new_app:' in id:
-			project_id = id
-			activity_status = u"未开始"
-		else:
-			if not is_pc:
-				#从redis缓存获取静态页面
-				cache_data = GET_CACHE(cache_key)
-				if cache_data:
-					print 'redis---return'
-					return HttpResponse(cache_data)
 
-			try:
-				record = app_models.Exlottery.objects.get(id=id)
-			except:
-				c = RequestContext(request,{
-					'is_deleted_data': True
-				})
-				return render_to_response('exlottery/templates/webapp/m_exlottery.html', c)
-			expend = record.expend
-			share_page_desc = record.share_description
-			activity_status, record = update_exlottery_status(record)
-			project_id = 'new_app:exlottery:%s' % record.related_page_id
+		if not is_pc:
+			#从redis缓存获取静态页面
+			cache_data = GET_CACHE(cache_key)
+			if cache_data:
+				print 'redis---return'
+				return HttpResponse(cache_data)
+
+		try:
+			record = app_models.Exlottery.objects.get(id=id)
+		except:
+			c = RequestContext(request,{
+				'is_deleted_data': True
+			})
+			return render_to_response('exlottery/templates/webapp/m_exlottery.html', c)
+		expend = record.expend
+		share_page_desc = record.share_description
+		activity_status, record = update_exlottery_status(record)
+
+		project_id = 'new_app:exlottery:%s' % record.related_page_id
 
 		request.GET._mutable = True
 		request.GET.update({"project_id": project_id})
@@ -64,10 +62,10 @@ class Mexlottery(resource.Resource):
 			'expend_integral': expend,
 			'record_id': id,
 			'activity_status': activity_status,
-			'page_title': record.name if record else u'微信抽奖',
+			'page_title': record.name if record else u'专项抽奖',
 			'page_html_content': html,
-			'app_name': "lottery",
-			'resource': "lottery",
+			'app_name': "exlottery",
+			'resource': "exlottery",
 			'hide_non_member_cover': True, #非会员也可使用该页面
 			'isPC': True if is_pc else False,
 			'auth_appid_info': auth_appid_info,
@@ -86,8 +84,9 @@ class Mexlottery(resource.Resource):
 		"""
 		record_id = request.GET.get('id',None)
 		exlottery_status = False
-		can_play_count = 0
+
 		member = request.member
+		code = request.GET.get('token',None)
 		response = create_response(500)
 
 		if not record_id or not member:
@@ -104,29 +103,15 @@ class Mexlottery(resource.Resource):
 		isMember = member.is_subscribed
 		activity_status, record = update_exlottery_status(record)
 
-		exlottery_participance = app_models.ExlotteryParticipance.objects(belong_to=record_id, member_id=member_id)
-		participance_data_count = exlottery_participance.count()
-		if participance_data_count != 0 and record.limitation_times != -1:
-			exlottery_participance = exlottery_participance[0]
-			total_count = exlottery_participance.total_count
-			#再次进入抽奖活动页面，根据抽奖规则限制以及当前日期和最近一次抽奖日期，更新can_play_count
-			now_date_str = datetime.today().strftime('%Y-%m-%d')
-			last_exlottery_date_str = exlottery_participance.exlottery_date.strftime('%Y-%m-%d')
-			if record.limitation == 'once_per_user' and total_count > 0:
-				exlottery_participance.update(set__can_play_count=0)
-				can_play_count = 0
-			if now_date_str != last_exlottery_date_str:
-				if record.limitation == 'once_per_day':
-					exlottery_participance.update(set__can_play_count=1)
+		can_play_count = 0
+		#非会员不可参与
+		if isMember:
+			#验证抽奖码有没有被使用过
+			exlottery_code_has_used = app_models.ExlotteryCode.objects(code=code, belong_to=record_id)
+			if exlottery_code_has_used.count() > 1:
+				if exlottery_code_has_used.first().status == app_models.NOT_USED:
 					can_play_count = 1
-				elif record.limitation == 'twice_per_day':
-					exlottery_participance.update(set__can_play_count=2)
-					can_play_count = 2
-			else:
-				can_play_count = exlottery_participance.can_play_count
-			exlottery_participance.reload()
-		else:
-			can_play_count = record.limitation_times
+
 		if can_play_count != 0:
 			exlottery_status = True
 
