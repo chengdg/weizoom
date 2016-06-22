@@ -652,7 +652,7 @@ ui-appPage-commonStyle">
 
             $('body').delegate(".xa-coupon", 'click', function(event){
                 var memberId = $(event.currentTarget).attr('member_id');
-                    W.dialog.showDialog('W.member.dialog.MemberDetailCouponsDialog', {
+                    W.dialog.showDialog('W.dialog.app.sign.MemberDetailSignCouponsDialog', {
                         memberId: memberId
                     });
             });
