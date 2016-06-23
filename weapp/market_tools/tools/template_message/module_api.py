@@ -350,3 +350,37 @@ def __get_coupon_detail_data(attribute, model):
 		detail_data[key] = {"value" : value, "color" : "#173177"}
 
 	return detail_data
+
+
+########################################################################
+# send_template_message_for_not_paid_order: 订单未支付通知消息模板
+# duhao 20160623
+########################################################################
+def send_template_message_for_not_paid_order(webapp_owner_id, member_id, template_data):
+	if _is_member_subscribed(member_id):
+		# 会员已经取消关注
+		return True
+
+	user_profile = UserProfile.objects.get(user_id=webapp_owner_id)
+	user = user_profile.user
+
+	if template_data and user_profile:
+		mpuser_access_token = _get_mpuser_access_token(user)
+		if mpuser_access_token:
+			try:
+				weixin_api = get_weixin_api(mpuser_access_token)
+
+				social_account = member_model_api.get_social_account_by_member_id(member_id)
+				if social_account and social_account.openid:
+					template_data['touser'] = social_account.openid
+					
+				result = weixin_api.send_template_message(template_data, True)
+				return True
+			except:
+				notify_message = u"发送模板消息异常, cause:\n{}".format(unicode_full_stack())
+				watchdog_warning(notify_message)
+				return False
+		else:
+			return False
+
+	return True
