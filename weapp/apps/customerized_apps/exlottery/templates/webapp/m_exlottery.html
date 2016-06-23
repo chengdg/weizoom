@@ -424,13 +424,15 @@
                     }
                     return false;
                 }else{
+                    var code = "{{code}}";
                     W.getApi().call({
                         app: 'm/apps/exlottery',
                         resource: 'exlottery_prize',
                         method: 'put',
                         args:{
                             id: W.appRecordId,
-                            webapp_owner_id: W.webappOwnerId
+                            webapp_owner_id: W.webappOwnerId,
+                            code: "{{code}}"
                         },
                         success: function(data){
                             lottery.roll();
