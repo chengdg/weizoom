@@ -450,7 +450,8 @@
                 method: 'get',
                 args: {
                     webapp_owner_id: W.webappOwnerId,
-                    id: W.appRecordId
+                    id: W.appRecordId,
+                    code: "{{code}}"
                 },
                 success: function(data) {
                     console.log(data);
