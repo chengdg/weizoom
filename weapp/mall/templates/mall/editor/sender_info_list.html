@@ -139,7 +139,6 @@ $(document).ready(function() {
     $('body').delegate('.xui-delete-sender', 'click', function (event) {
 
         var id = $(this).attr('data-id');
-//      console.log(id+"@@@@");
         var $el = $(event.currentTarget);
         W.requireConfirm({
             $el: $el,

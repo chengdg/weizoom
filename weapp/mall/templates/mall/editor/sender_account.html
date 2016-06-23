@@ -64,21 +64,28 @@
 			</tr>
 		</thead>
 		<tbody style="border: 1px solid #CCC;">
-            {{each(i, account) items}}
-                <tr data-id="${account.id}" data-name = "${account.name}">
+            {{each(i, accounts) items}}
+                <tr data-id="${accounts.id}">
                    
                     <!--快递名称-->
                     <td>
-                        <div>${account.express_company_name}</div>
-                        
+                        <div name="">${accounts.name}</div>                                                
                     </td>
                     <!--账号-->
                     <td class="nowrap">
-                        <input type="text"  value="${account.account}"/>
+                    	{{if account == 'ignore'}}
+                    	<div>————</div>
+                    	{{else}}
+                        <input type="text"  value="${accounts.account}" class="xa-account" name="account"/>
+                        {{/if}}                       
                     </td>
                     <!--密码-->
                     <td class="nowrap">
-                      <input type="password" value="${account.password}" />
+                	{{if password == 'ignore'}}
+                     	<div>————</div>
+                      {{else}}                     
+                       <input type="password" value="${accounts.password}" class="xa-account-password" name="password" />
+                     {{/if}}
                     </td>                    
                 </tr>
 			{{/each}}
@@ -87,6 +94,38 @@
 	<div class="tc">
 					<a href="javascript:void(0);" class="btn btn-primary xa-submit">保存</a>
 				</div>
+</script>
+<script type="text/javascript">
+	$(document).ready(function(){
+		var $this=$(this),
+		    id=$this.attr('data-id'),
+		    
+			$account=$('.xa-account'),
+			$accountVal=$account.val(),
+			
+			$passWord=$('.xa-account-password'),
+			$passwordVal=$passWord.val(),
+			
+			express_accounts=$accountVal+$passwordVal
+		$('.xa-submit').click(function(){
+			 W.getApi().call({
+          method:'post',          
+          app: 'mall2',
+          resource:'sender_account',
+          args:{
+          	id:id,
+          	express_accounts:express_accounts,
+          },
+	      success: function(data) {
+	      	window.location.reload();
+				
+					},
+					error: function(resp) {
+						
+					}
+				});
+		})
+	})
 </script>
 {% endverbatim %}
 {% endblock %}
