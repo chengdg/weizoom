@@ -101,6 +101,12 @@ class Mexlottery(resource.Resource):
 			response.errMsg = 'is_deleted'
 			return response.get_response()
 
+		#检查抽奖码是否存在
+		exlottery_code = app_models.ExlotteryCode.objects(belong_to=record_id, code=code)
+		if exlottery_code.count() == 0:
+			response.errMsg = u'活动信息出错'
+			return response.get_response()
+
 		record = record.first()
 		member_id = member.id
 		isMember = member.is_subscribed
