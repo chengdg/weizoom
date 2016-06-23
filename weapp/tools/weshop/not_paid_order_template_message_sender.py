@@ -20,7 +20,7 @@ from market_tools.tools.template_message import module_api as template_message_a
 
 OWNER_ID = 216
 WEBAPP_ID = '3394'
-TEMPLATE_ID = '7maasEvSNPagfo1eXsP2pa2rgWDr_Hc_R7vsWYZpyvw'
+TEMPLATE_ID = 'b24zJJ8jDnvSQom-VdxQCHCev9KQZxAJscfhquqBHlg'
 TEMPLATE_URL = 'http://mall.weizoom.com/mall/order_list/?woid=%d&type=0' % OWNER_ID
 FIRST_TEXT = u'亲，您还有订单未支付哦~~~'
 REMARK_TEXT = u'\n未付款订单会在下单1小时后自动取消，即将到手的宝贝不要轻易放弃哟！\n点此前去付款'
@@ -59,22 +59,39 @@ def get_not_paid_order_infos():
 		origin_order_id__lte=0
 	)
 	webapp_user_id2order = {}
+	oids = []
 	for order in orders:
+		oids.append(order.id)
 		webapp_user_id2order[order.webapp_user_id] = order
 
-	member_id2order_id2created_at = {}
+	order_id2product_name = {}
+	order2products = mall_models.OrderHasProduct.objects.filter(order_id__in=oids)
+	for order2product in order2products:
+		order_id2product_name[order2product.order.order_id] = order2product.product.name
+
+	member_id2order_id2info = {}
 	webapp_users = member_models.WebAppUser.objects.filter(id__in=webapp_user_id2order.keys())
 	for webapp_user in webapp_users:
 		if webapp_user.member_id != 0 and webapp_user.member_id != -1:
 			order = webapp_user_id2order[webapp_user.id]
-			member_id2order_id2created_at[webapp_user.member_id] = {order.order_id: order.created_at.strftime('%Y-%m-%d %H:%M:%S')}
+			order_id2info = {
+				order.order_id: {
+					'created_at': order.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+					'price': '%.2f' % order.final_price,
+					'product_name': order_id2product_name[order.order_id]
+				}
+			}
+			member_id2order_id2info[webapp_user.member_id] = order_id2info
 	
-	return member_id2order_id2created_at
+	return member_id2order_id2info
 
-def send_message(owner_id, member_id, template_id, template_url, first_text, created_at, order_id, remark_text):
+def send_message(owner_id, member_id, template_id, template_url, first_text, created_at, order_id, product_name, price, remark_text):
 	detail_data = {}
-	detail_data["ordertape"] = {"value" : created_at, "color" : "#173177"}
-	detail_data["ordeID"] = {"value" : order_id, "color" : "#173177"}
+	detail_data["type"] = {"value" : u'商品', "color" : "#000000"}
+	detail_data["e_title"] = {"value" : product_name, "color" : "#173177"}
+	detail_data["order_date"] = {"value" : created_at, "color" : "#173177"}
+	detail_data["o_id"] = {"value" : order_id, "color" : "#173177"}
+	detail_data["o_money"] = {"value" : price, "color" : "#173177"}
 	detail_data["first"] = {"value" : first_text, "color" : "#000000"}
 	detail_data["remark"] = {"value" : remark_text, "color" : "#000000"}
 	
@@ -88,12 +105,16 @@ def send_message(owner_id, member_id, template_id, template_url, first_text, cre
 
 
 if __name__ == '__main__':
-	member_id2order_id2created_at = get_not_paid_order_infos()
-	for member_id in member_id2order_id2created_at:
-		order_id2created_at = member_id2order_id2created_at[member_id]
-		for order_id in order_id2created_at:
-			created_at = order_id2created_at[order_id]
-			logging.info(u'member_id:%d, order_id:%s, created_at:%s' % (member_id, order_id, created_at))
-			send_message(OWNER_ID, member_id, TEMPLATE_ID, TEMPLATE_URL, FIRST_TEXT, created_at, order_id, REMARK_TEXT)
+	member_id2order_id2info = get_not_paid_order_infos()
+	for member_id in member_id2order_id2info:
+		order_id2info = member_id2order_id2info[member_id]
+		for order_id in order_id2info:
+			info = order_id2info[order_id]
+			created_at = info['created_at']
+			price = info['price']
+			product_name = info['product_name']
+
+			logging.info(u'member_id:%d, order_id:%s, created_at:%s, product_name:%s, price:%s' % (member_id, order_id, created_at, product_name, price))
+			send_message(OWNER_ID, member_id, TEMPLATE_ID, TEMPLATE_URL, FIRST_TEXT, created_at, order_id, product_name, price, REMARK_TEXT)
 
 	logging.info('finish!!!')
