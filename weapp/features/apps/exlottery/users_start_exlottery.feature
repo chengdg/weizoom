@@ -104,7 +104,7 @@ Scenario:1 抽奖码校验通过
 		"""
 
 @mall2 @apps @apps_exlottery @users_start_exlottery 
-Scenario:2 tom通过点击bill的朋友圈分享链接进行抽奖
+Scenario:2 其他微信用户通过回复分享至朋友圈的专项抽奖活动页面参与活动
 	Given bill关注jobs的公众号
 	When bill访问jobs的webapp
 	When bill在微信中向jobs的公众号发送消息'el8s539t18'
@@ -124,7 +124,10 @@ Scenario:2 tom通过点击bill的朋友圈分享链接进行抽奖
     	该抽奖码已使用
     """
     When 清空浏览器
-    When jerry点击bill分享的'专项抽奖'活动链接进行抽奖
+    When jerry点击bill分享的'专项抽奖'活动链接参加专项抽奖活动
+	#Then jerry获得弹层提示信息'1.长按二维码关注"惠中大酒店"公众<br />号<br />2.回复抽奖码,即可参加活动'
+	When jerry通过识别弹层中的公众号二维码关注jobs的公众号
+	When jerry点击bill分享的'专项抽奖'活动链接参加专项抽奖活动
 	Then jerry获得抽奖结果
 	"""
 		该抽奖码已使用
