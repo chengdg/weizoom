@@ -1069,6 +1069,8 @@ class OrderSenderAccount(resource.Resource):
             #     continue
             if express_account["account"] in ["ignore",""]:
                 continue
+            elif express_account["password"] == "************":
+                continue
             elif express_account["name"] in sender_express_names:
                 if SenderAccount.objects.filter(webapp_id=webapp_id, express_company_name=express_account["name"]).count()>0:
                     SenderAccount.objects.filter(webapp_id=webapp_id, express_company_name=express_account["name"]).update(account=express_account["account"], password=express_account["password"])
