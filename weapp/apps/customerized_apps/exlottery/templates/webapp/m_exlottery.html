@@ -240,7 +240,7 @@
                 this.$closeBtn.hide();
             }else if(prize_type == 'timesout'){
                 this.$title.hide();
-                this.$contentHeader.html("您今天的抽奖机会已经用完，<br>明天再来吧~");
+                this.$contentHeader.html("该抽奖码已使用");
                 this.$closeBtn.hide();
             }else if(prize_type == 'notready'){
                 this.$title.html('请耐心等待').show();
@@ -392,12 +392,24 @@
             var need_integral = parseInt($('.xa-remainedIntegral strong').html());
             var remained_integral = parseInt($('.xa-remainedIntegral b').html());
             $(".xa-lottery-go").click(function(){
+                if (!W.isMember) {
+                    showQrcode(W.qrcodeUrl);
+                    return false;
+                }
                 var _that = this;
                 $(this).addClass('xa-lottery-go-to');
                 window.setTimeout(function(){
                     $(_that).removeClass('xa-lottery-go-to');
                 }, 100);
-                if(lottery.isRolling || !exlottery_status || can_play_count==0 || need_integral != 0){
+                if( need_integral != 0){
+                    if(need_integral > remained_integral){
+                        resultDialog.render({
+                            prize_type: 'noIntegral'
+                        });
+                        return false;   
+                    }
+                }
+                if(lottery.isRolling || !exlottery_status || can_play_count==0){
                     if(lottery.isRolling) return false;
                     if(activity_status == '未开始'){
                         resultDialog.render({
@@ -406,10 +418,6 @@
                     }else if(activity_status == '已结束'){
                         resultDialog.render({
                             prize_type: 'gameover'
-                        });
-                    }else if(need_integral > remained_integral){
-                        resultDialog.render({
-                            prize_type: 'noIntegral'
                         });
                     }else{
                         resultDialog.render()

@@ -9,11 +9,7 @@
             </h1>
         </div>
         <div class="wui-i-roulette wui-i-header xa-header {% if component.model.limitation == 'no_limit' %}wui-lotterydescription-hide{% endif %}">
-            <p>您还有<b>
-                {% if component.model.limitation == 'once_per_user' %}1{% endif %}
-                {% if component.model.limitation == 'once_per_day' %}1{% endif %}
-                {% if component.model.limitation == 'twice_per_day' %}2{% endif %}
-                {% if component.model.limitation == 'none' %}0{% endif %}</b>次抽奖机会！</p>
+            <p class="wui-hide">您还有<b>0</b>次抽奖机会！</p>
         </div>
         <div class="wui-i-roulette wui-i-header xa-remainedIntegral">
             需要消耗<strong>{{ component.model.expend }}</strong>积分, <p style="display: inline-block">剩余<b></b>积分</p>
