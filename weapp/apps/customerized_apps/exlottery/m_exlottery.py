@@ -25,7 +25,7 @@ class Mexlottery(resource.Resource):
 		响应GET
 		"""
 		id = request.GET['id']
-		is_pc = request.GET.get('isPC', None)
+		code = request.GET.get('code', None)
 		expend = 0
 		auth_appid_info = None
 		share_page_desc = ''
@@ -33,13 +33,14 @@ class Mexlottery(resource.Resource):
 		cache_key = 'apps_exlottery_%s_html' % id
 		record = None
 		member = request.member
+		is_pc = False if member else True
 
-		if not is_pc:
-			#从redis缓存获取静态页面
-			cache_data = GET_CACHE(cache_key)
-			if cache_data:
-				print 'redis---return'
-				return HttpResponse(cache_data)
+		# if not is_pc:
+		# 	#从redis缓存获取静态页面
+		# 	cache_data = GET_CACHE(cache_key)
+		# 	if cache_data:
+		# 		print 'redis---return'
+		# 		return HttpResponse(cache_data)
 
 		try:
 			record = app_models.Exlottery.objects.get(id=id)
@@ -67,10 +68,11 @@ class Mexlottery(resource.Resource):
 			'app_name': "exlottery",
 			'resource': "exlottery",
 			'hide_non_member_cover': True, #非会员也可使用该页面
-			'isPC': True if is_pc else False,
+			'isPC': is_pc,
 			'auth_appid_info': auth_appid_info,
 			'share_page_desc': share_page_desc,
-			'share_img_url': thumbnails_url
+			'share_img_url': thumbnails_url,
+			'code': code
 		})
 		response = render_to_string('exlottery/templates/webapp/m_exlottery.html', c)
 		if not is_pc:
@@ -86,7 +88,7 @@ class Mexlottery(resource.Resource):
 		exlottery_status = False
 
 		member = request.member
-		code = request.GET.get('token',None)
+		code = request.GET.get('code',None)
 		response = create_response(500)
 
 		if not record_id or not member:
@@ -106,11 +108,20 @@ class Mexlottery(resource.Resource):
 		can_play_count = 0
 		#非会员不可参与
 		if isMember:
-			#验证抽奖码有没有被使用过
-			exlottery_code_has_used = app_models.ExlotteryCode.objects(code=code, belong_to=record_id)
-			if exlottery_code_has_used.count() > 1:
-				if exlottery_code_has_used.first().status == app_models.NOT_USED:
-					can_play_count = 1
+			#首先验证抽奖码有没有和本会员绑定
+			member_has_code = app_models.ExlotteryParticipance.objects(code=code, belong_to=record_id, member_id=member_id)
+			# app_models.ExlotteryParticipance.objects.create(
+			# 	code=code,
+			# 	belong_to=record_id,
+			# 	member_id=member_id,
+			# 	created_at = datetime.now()
+			# )
+			if member_has_code.count() == 1:
+				#如果绑定，验证抽奖码有没有抽奖
+				exlottery_code_has_used = app_models.ExlotteryCode.objects(code=code, belong_to=record_id)
+				if exlottery_code_has_used.count() == 1:
+					if exlottery_code_has_used.first().status == app_models.NOT_USED:
+						can_play_count = 1
 
 		if can_play_count != 0:
 			exlottery_status = True
