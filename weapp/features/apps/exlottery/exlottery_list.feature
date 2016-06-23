@@ -90,12 +90,45 @@ Background:
 	When bill访问jobs的webapp
 	When bill获得jobs的20会员积分
 	Then bill在jobs的webapp中拥有20会员积分
-	When 微信用户批量参加jobs的专项抽奖活动
-		|name           |member_name| prize_grade | prize_name |lottery_time| receive_status |lottery_code|
-		|专项抽奖活动01 |   bill    |  一等奖     | 优惠券1    |前天        | 已领取         |el8s539t18  |
-		|专项抽奖活动01 |   bill    |  二等奖     | 优惠券2    |昨天        | 已领取         |elm8v6uj41  |
-		|专项抽奖活动01 |   bill    |  三等奖     | 优惠券3    |今天        | 已领取         |el58fe24rf  |
-
+	When bill向公众号中发送消息"el8s539t18"
+	Then bill获得公众号回复
+	"""
+    感谢您对杭州百事可乐的关注<br />立即抽奖<br />
+    """
+	When bill参加抽奖活动'专项抽奖活动01'
+	Then bill获得抽奖结果
+	"""
+		{
+			"prize_grade":"一等奖",
+			"prize_name":"优惠券1"
+		}
+	"""
+	When bill向公众号中发送消息"elm8v6uj41"
+	Then bill获得公众号回复
+	"""
+    感谢您对杭州百事可乐的关注<br />立即抽奖<br />
+    """
+	When bill参加抽奖活动'专项抽奖活动01'
+	Then bill获得抽奖结果
+	"""
+		{
+			"prize_grade":"二等奖",
+			"prize_name":"优惠券2"
+		}
+	"""
+	When bill向公众号中发送消息"el58fe24rf"
+	Then bill获得公众号回复
+	"""
+    感谢您对杭州百事可乐的关注<br />立即抽奖<br />
+    """
+	When bill参加抽奖活动'专项抽奖活动01'
+	Then bill获得抽奖结果
+	"""
+		{
+			"prize_grade":"三等奖",
+			"prize_name":"优惠券3"
+		}
+	"""
 
 @mall2 @apps @apps_exlottery @exlottery_code_list
 Scenario:1 微信专项抽奖活动码库查询
