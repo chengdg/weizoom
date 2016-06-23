@@ -247,6 +247,10 @@
                 this.$contentHeader.html("抽奖活动还未开始！");
                 this.$userCenter.show();
                 this.$closeBtn.hide();
+            }else if(prize_type == 'noIntegral'){
+                this.$title.hide();
+                this.$contentHeader.html("积分不足");
+                this.$closeBtn.hide();
             }
             var that = this;
             if(delay){
@@ -385,13 +389,15 @@
             resultDialog = new ResultDialog();
             var $container = $('.wui-lotterydescription').find('.wui-i-body');
             var lottery = new Roulette($container);
+            var need_integral = parseInt($('.xa-remainedIntegral strong').html());
+            var remained_integral = parseInt($('.xa-remainedIntegral b').html());
             $(".xa-lottery-go").click(function(){
                 var _that = this;
                 $(this).addClass('xa-lottery-go-to');
                 window.setTimeout(function(){
                     $(_that).removeClass('xa-lottery-go-to');
                 }, 100);
-                if(lottery.isRolling || !exlottery_status || can_play_count==0){
+                if(lottery.isRolling || !exlottery_status || can_play_count==0 || need_integral != 0){
                     if(lottery.isRolling) return false;
                     if(activity_status == '未开始'){
                         resultDialog.render({
@@ -400,6 +406,10 @@
                     }else if(activity_status == '已结束'){
                         resultDialog.render({
                             prize_type: 'gameover'
+                        });
+                    }else if(need_integral > remained_integral){
+                        resultDialog.render({
+                            prize_type: 'noIntegral'
                         });
                     }else{
                         resultDialog.render()
