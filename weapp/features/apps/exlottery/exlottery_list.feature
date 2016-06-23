@@ -90,8 +90,8 @@ Background:
 	When bill访问jobs的webapp
 	When bill获得jobs的20会员积分
 	Then bill在jobs的webapp中拥有20会员积分
-	When bill向公众号中发送消息"el8s539t18"
-	Then bill获得公众号回复
+	When bill在微信中向jobs的公众号发送消息"el8s539t18"
+	Then bill获得'专项抽奖活动01'系统回复的消息
 	"""
     感谢您对杭州百事可乐的关注<br />立即抽奖<br />
     """
@@ -103,8 +103,8 @@ Background:
 			"prize_name":"优惠券1"
 		}
 	"""
-	When bill向公众号中发送消息"elm8v6uj41"
-	Then bill获得公众号回复
+	When bill在微信中向jobs的公众号发送消息"elm8v6uj41"
+	Then bill获得'专项抽奖活动01'系统回复的消息
 	"""
     感谢您对杭州百事可乐的关注<br />立即抽奖<br />
     """
@@ -116,8 +116,8 @@ Background:
 			"prize_name":"优惠券2"
 		}
 	"""
-	When bill向公众号中发送消息"el58fe24rf"
-	Then bill获得公众号回复
+	When bill在微信中向jobs的公众号发送消息"el58fe24rf"
+	Then bill获得'专项抽奖活动01'系统回复的消息
 	"""
     感谢您对杭州百事可乐的关注<br />立即抽奖<br />
     """
