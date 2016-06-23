@@ -1,0 +1,216 @@
+{% extends "apps_base.html" %}
+{% block css %}
+<style type="text/css">
+    html,body{
+        height: 100%;
+    }
+    .xui-productReviewListPage {
+        height: 100%;
+    }
+    .xui-productReviewListPage .xui-title{
+        text-align: center;
+        line-height: 35px;
+        color:#333;
+    }
+    .xui-productReviewListPage .xui-title a{
+        height: 35px;
+        width: 35px;
+        display: inline-block;
+        position: absolute;
+        left:0;
+    }
+    .xui-productReviewListPage .xui-title i{
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-top: 1px solid #393939;
+        border-left: 1px solid #393939;
+        -webkit-transform:rotate(-45deg);
+        left: 14px;
+        top:12px;
+    }
+    .xui-productReviewListPage{
+        height: 100%;
+    }
+    .xui-productReviewListPage .xui-productReview{
+        background: #fff;
+    }
+    .xui-productReviewListPage .xui-productReview .xui-productImg{
+        width: 50px;
+        height: 50px;
+    }
+    .xui-productReviewListPage .xui-uploadImg{
+        margin-top: 13px;
+    }
+    .xui-productReviewListPage .xui-uploadImg{
+        width: 100%;
+        overflow: hidden;
+        height: 52px;
+    }
+    .xui-productReviewListPage .xui-uploadImg img{
+        width: 50px;
+        height: 50px;
+        border: 1px solid #E5E5E5;
+        margin-right: 5px;
+    }
+    .xui-productReviewListPage .xui-uploadImg img:last-child{
+        margin-right: 0;
+    }
+    .xui-productReviewListPage .xui-emptyReview{
+        height: 100%;
+        background: #fff;
+    }
+    .xui-productReviewListPage .xui-placeholder{
+        height: 84px;
+    }
+    .xui-productReviewListPage .xui-emptyReview .xui-emptyImg{
+        width: 136px;
+        height: 130px;
+        background: url(/static_v2/img/empty.png) no-repeat;
+        -webkit-background-size: 380px 152px;
+        background-size: 380px 152px;
+        background-position: -136px 0;
+        margin: 0 auto;
+    }  
+    .xui-productReviewListPage .xui-text-ellipsis{
+        overflow : hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 10;
+        -webkit-box-orient: vertical; 
+    }
+    .xui-productReviewListPage .xui-shopReply{
+        border-bottom: 1px solid #e1e1e1;
+        overflow: hidden;
+    }
+    .xui-productReviewListPage .xui-btnWrapper{
+        position: relative;
+    }
+    .xui-productReviewListPage .xui-toggleBtn{
+        color: #0084ff;
+    }
+    .xui-productReviewListPage .xui-arrow{
+        background: url(/static_v2/img/evaluates_arrow.png) no-repeat;
+        background-size: cover;
+        width: 10px;
+        height: 6px;
+        position: absolute;
+        top: 9px;
+        left: 30px;
+    }
+    .xui-productReviewListPage .xui-arrow-up{
+        background: url(/static_v2/img/evaluates_arrow.png) no-repeat;
+        background-size: cover;
+        width: 10px;
+        height: 6px;
+        position: absolute;
+        top: 9px;
+        left: 30px;
+        transform: rotate(180deg);     
+    }
+</style>
+{% endblock %}
+{% block content-panel %}
+<div class="xui-productReviewListPage pb20">
+    <div class="xui-title pr">
+        <a class="xa-goBack xui-returnPrev pa" id="goBack">
+            <i></i>
+        </a>
+        <span class="em9">我的评价</span>
+    </div>
+    {% if reviewed_products %}
+    {% for review in reviewed_products %}
+    <div class="xui-productReview p10 mb10">
+        <div class="xui-product disT mb10 w">
+            <div class="xui-productImg disTc">
+                {% if review.product.thumbnails_url|truncatechars:15 == 'http://weappimg...'%}
+                    <img src="{{review.product.thumbnails_url}}!60" full-src="{{review.product.thumbnails_url}}" >
+                {% else %}
+                    <img src="{{review.product.thumbnails_url}}" >
+                {% endif %}
+            </div>
+            <div class="productInfo disTc vt pl10">
+                <div class="xui-productname em85 c65">{{review.product.name}}</div>
+                <div class="xui-productSpecificationAndPrice mt10">
+                    <span class="xui-specification em75 c9">
+                        {% if review.product.custom_model_properties %}
+                            {% for property in review.product.custom_model_properties %}
+                                {{ property.name }}:&nbsp;&nbsp;{{ property.property_value }}&nbsp;&nbsp;
+                            {% endfor %}
+                        {% endif %}
+                    </span>
+                    <span class="em7 c9 fr">{{review.created_at|date:"Y-m-d"}}</span>
+                </div>
+            </div>
+        </div>
+        {% if review.shop_reply %}
+        <div class="pb10 xui-shopReply mb10">
+            <span class="em9 fl">商家留言：</span>
+            <p class="em9 c65">{{review.shop_reply|safe}}</p>
+        </div>
+        {% endif %}
+        <div class="xui-productReviewText xa-productReviewText c65 em9 mb10">
+        {% if is_common_template %}
+            {{review.detail}}
+        {% else %}
+            {% for item in review.detail %}
+                {{ forloop.counter }}、{{item.title}}:{{item.answer}} <br/>
+            {% endfor %}
+        {% endif %}
+        </div>
+        <div class="xui-btnWrapper xa-btnWrapper xui-hide">
+            <a class="xa-toggleBtn xui-toggleBtn em9">展开</a><i class="xui-arrow xa-arrow"></i>
+        </div>
+        <!-- 如果有商品评价晒图-->
+        {% if review.pics %}
+        <div class="xui-uploadImg">
+            {% for picture_url in review.pics%}
+            {% if picture_url|truncatechars:15 == 'http://weappimg...'%}
+                <img src="{{picture_url}}!60" full-src="{{picture_url}}">
+            {% else %}
+                <img src="{{picture_url}}">
+            {% endif %}
+
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+    {% endfor %}
+    {% else %}
+
+    <div class="xa-emptyReview xui-emptyReview">
+         <div class="xui-placeholder"></div>
+         <div class="xui-emptyImg"></div>
+    </div>
+    {% endif %}
+       
+</div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+    $(function(){
+        $('.xa-productReviewText').each(function(){
+            if($(this).height() > 160){
+                $(this).addClass('xui-text-ellipsis');
+                $(this).siblings('.xa-btnWrapper').show();
+                $(this).parent('.xui-productReview').find('.xui-uploadImg').addClass('wui-hide');
+            }
+        });
+
+        $('.xa-toggleBtn').click(function(){
+            if($(this).html() == '展开'){
+                $(this).html('收起');
+                $(this).parents('.xui-productReview').find('.xa-productReviewText').removeClass('xui-text-ellipsis');
+                $(this).parents('.xui-productReview').find('.xa-arrow').removeClass('xui-arrow').addClass('xui-arrow-up');
+                $(this).parents('.xui-productReview').find('.xui-uploadImg').removeClass('wui-hide');      
+            }else{
+                $(this).html('展开');
+                $(this).parents('.xui-productReview').find('.xa-productReviewText').addClass('xui-text-ellipsis');
+                $(this).parents('.xui-productReview').find('.xa-arrow').removeClass('xui-arrow-up').addClass('xui-arrow');
+                $(this).parents('.xui-productReview').find('.xui-uploadImg').addClass('wui-hide');                  
+            }
+        });
+    });
+</script>
+{% endblock %}

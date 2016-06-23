@@ -1,0 +1,337 @@
+{% extends "content_base_v2.html" %}
+{% load apps_filter %}
+
+    <style>
+        .tl.pl25 img{
+            height: 60px;
+            width: 60px;
+        }
+    </style>
+{% block content-panel %}
+<div class="xui-EvaluateParticipancesAppPage xui-appPage-commonStyle">
+	<div class="relative">
+		<ul class="breadcrumb">
+			<li>您当前所在位置</li>
+			<li><a href="/mall2/product_list/?shelve_type=1">商品管理</a></li>
+			<li><a href="/apps/evaluate/evaluates/">评价管理</a></li>
+			<li class="active">关联评价</li>
+		</ul>
+	</div>
+	
+	<div class="xui-formPanel pb10 mb15">
+		<div class="xui-i-col">
+			<div class="xui-i-item">
+				<label class="">商品名称：</label>
+				<input type="text" class="form-control" id="product_name" name="product_name" value="" />
+			</div>
+		</div>
+		<div class="xui-i-col">
+			<div class="xui-i-item">
+				<label class="">商品条码：</label>
+				<input type="text" class="form-control" id="bar_code" name="bar_code" value="" />
+			</div>
+		</div>
+
+		<div class="xui-i-col">
+			<div class="ml80">
+				<a class="btn btn-primary mr30 xa-search xui-fontBold" href="javascript:void(0);">查&nbsp;&nbsp;&nbsp;&nbsp;询</a>
+				<a class="btn btn-default xa-reset xui-fontBold" href="javascript:void(0);">重&nbsp;&nbsp;&nbsp;&nbsp;置</a>
+			</div>
+		</div>
+	</div>
+	<div class="panel panel-default xui-tableBox xa-selected-products-table pt10 pb10 pl50">请通过查询选择需要关联评价的商品</div>
+	<div class="panel panel-default xui-tableBox">
+		<div 
+			class="panel-body panel-table p0 mt10"
+			data-ui-role="advanced-table" 
+			data-app="apps/evaluate" 
+			data-resource="evaluate_relations"
+			data-args='{"id": "{{activity_id}}"}'
+			data-template-id="#table" 
+			data-enable-paginator="true" 
+			data-enable-sort="false" 
+			data-selectable="false" 
+			data-disable-header-select="true" 
+			data-item-count-per-page="5"
+		>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+
+{% block js %}
+<!-- *start_prunt_task* -->
+	<!-- [prunt_task] 
+	  {
+	    "task": "weizoom-load-app-views-dialogs"
+	  }
+	-->
+{{ "evaluate"|load_app_views_and_dialogs|safe }}
+<!-- *end_prunt_task* -->
+{% verbatim %}
+<script id="table" type="text/x-jquery-tmpl">
+	{{if items !=''}}
+	<table class="table table-bordered xb-stripedTable xb-noTdBorder xb-noBottom xb-noBorder xb-theadBg mb10">
+		<thead>
+			<tr>
+				<th>商品名称</th>
+				<th>已获评价数</th>
+				<th>操作</th>
+			</tr>
+		</thead>
+		<tbody>
+		  {{each(i, item) items}}
+			<tr data-id="${item.id}">
+				<td 
+					class="tl pl40"
+					style="width:250px; height:60px;" 
+				>
+					{{each(j, name) item.product_name}}${this}</br>{{/each}}
+				</td>
+				<td>
+					${item.evaluate_count}
+				</td>
+				<td>
+					<a href="javascript:void(0);" class="ml5 xa-remove-relation">解除</a>
+				</td>
+			</tr>
+			{{/each}}
+		</tbody>
+		<div class="cb"></div>
+	</table>
+	{{else}}
+		<div class="xui-emptyBox m10">
+			<img src="/static_v2/img/editor/empty.png">
+			<span class="ml20">您还没有相关数据！</span>
+		</div>
+	{{/if}}
+	<br>
+</script>
+{% endverbatim %}
+
+{% verbatim %}
+<script id="selected-products-tmpl" type="text/x-handlebars-template">
+	<table class="table table-bordered xb-stripedTable xb-noTdBorder xb-noBottom xb-noBorder xb-theadBg mb10 xa-products-table">
+		<thead>
+            <tr>
+                <th>商品信息</th>
+                <th>商品价格(元)</th>
+                <th>已获评价数</th>
+                <th>操作</th>
+            </tr>
+		</thead>
+        <tbody>
+            {{#each products}}
+            <tr data-id={{ id }}>
+                <td>
+                    <span>{{ product_name }}</span>
+                    </br>
+                    <span>{{ bar_code }}</span>
+                </td>
+                <td>
+                    {{ price }}
+                </td>
+                <td>
+                    {{ evaluate_count }}
+                </td>
+                <td style="cursor: pointer;color: #2B93DD;">
+                    <span class="xa-remove-product">移除</span>
+                </td>
+            </tr>
+            {{/each}}
+        </tbody>
+	</table>
+    <div class="p10">注：关联评价会导致各商品的评价取消置顶</div>
+    <div><button class="btn btn-success xa-relate-evaluate" style="display: block;margin: 0 auto">关联评价</button></div>
+</script>
+{% endverbatim %}
+
+<script type="text/javascript">
+$(document).ready(function() {
+	//翻页选取
+	var MyPaginationView = W.view.common.PaginationView.extend({
+		show: function() {
+			if (!this.pageinfo) {
+				this.pageinfo = {max_page:-1}
+			}
+			var context = _.extend({}, this.pageinfo, {
+				isHasDetailedPage: this.isHasDetailedPage,
+				isHasJumpPage: this.isHasJumpPage
+			});
+			var pagination_dom = $.tmpl(this.templateName, context);
+			this.$el.html(pagination_dom).show();
+			if (!this.pageinfo || (this.pageinfo && !this.pageinfo.has_next)) {
+				if(this.isDisplayInfo) {
+					this.$('#lastPageHint').show();
+				}
+			}
+			var selectBtn = $('.xa-select');
+			for(var i=0;i<selectBtn.length;i++){
+				for(var j=0;j<product_arr.length;j++){
+					if($(selectBtn[i]).attr('data-id') ==product_arr[j].id){
+						$(selectBtn[i]).text('已选取').css('background-color', '#c9c9c9');
+					}
+				}
+			}
+			return this;
+		}
+	});
+	var MyTable = W.view.common.AdvancedTable.extend({
+    	createPaginationView: function() {
+	        this.paginationView = new MyPaginationView({
+	            el: this.$('.xa-advancedTablePaginator'),
+	            isHasDetailedPage: true,
+	            isHasJumpPage: true
+	        });
+	        this.paginationView.bind('goto', this.gotoPage, this);
+   		}
+	});
+	W.registerUIRole('div[data-ui-role="advanced-table"]', function() {
+	    xlog("registed advance-table");
+	    var $div = $(this);
+	    var app = $div.attr('data-app');
+	    var api = $div.attr('data-api');
+	    var resource = $div.attr('data-resource');
+	    if (resource) {
+	        api = resource;
+	    }
+	    var apiMethod = $div.attr('data-method') || 'get';
+	    var args = $div.attr('data-args');
+	    var template = $div.attr('data-template-id');
+	    var initSort = $div.attr('data-init-sort');
+	    var enablePaginator = $div.data('enablePaginator');
+	    var enableSort = !!($div.attr('data-enable-sort') === 'true');
+	    var enableSelect = !!($div.attr('data-selectable') === 'true');
+	    var disableHeaderSelect = !!($div.attr('data-disable-header-select') === 'true');
+	    var selectableTrSelector = $div.data('selecttableTr');
+	    var sortApi = $div.attr('data-sort-api');
+	    var itemCountPerPage = $div.attr('data-item-count-per-page');
+	    var userWebappId = $div.attr('data-user-webapp-id');
+	    var outerSelecter = $div.attr('data-outer-selecter');
+	    var autoLoad = $div.data('autoLoad');
+	    if (autoLoad !== false) {
+	        autoLoad = true;
+	    }
+	    if (itemCountPerPage) {
+	        itemCountPerPage = parseInt(itemCountPerPage);
+	    } else {
+	        itemCountPerPage = 15;
+	    }
+	    var advancedTable = new MyTable({
+	        el: $div[0],
+	        template: template,
+	        app: app,
+	        api: api,
+	        args: args,
+	        apiMethod: apiMethod,
+	        initSort: initSort,
+	        itemCountPerPage: itemCountPerPage,
+	        enablePaginator: enablePaginator,
+	        enableSort: enableSort,
+	        enableSelect: enableSelect,
+	        disableHeaderSelect: disableHeaderSelect,
+	        selectableTrSelector: selectableTrSelector,
+	        sortApi: sortApi,
+	        userWebappId: userWebappId,
+	        autoLoad: autoLoad,
+	        outerSelecter: outerSelecter
+	    });
+	    advancedTable.render();
+	    $div.data('view', advancedTable);
+	});
+
+	//商品查询
+	$('body').delegate('.xa-search', 'click', function(event) {
+		var product_name = $.trim($('[name="product_name"]').val());
+		var bar_code = $.trim($('[name="bar_code"]').val());
+        W.dialog.showDialog('W.dialog.app.evaluate.SearchProductDialog', {
+			product_name: product_name,
+            bar_code: bar_code,
+			success: function(data) {
+				// alert(data);
+			}
+		});
+	});
+
+    //关联评价
+	$('body').delegate('.xa-relate-evaluate', 'click', function(event) {
+		var product_id_arr = [];
+        $('.xa-products-table tbody tr').each(function(index, el) {
+            product_id_arr.push($(el).data('id'));
+        });
+        if (product_id_arr.length < 2 ) {
+            W.showHint('error', '请至少选择两种商品！');
+            return false;
+        } else {
+            W.getApi().call({
+                app: 'apps/evaluate',
+                resource: 'evaluate_relations',
+                method: 'post',
+                args: {
+                    id: JSON.stringify(product_id_arr)
+                },
+                success: function(data) {
+                    W.showHint('success', '关联评价成功');
+                    $('.xa-selected-products-table').html('请通过查询选择需要关联评价的商品');
+                    $('.xa-selected-products-table').addClass('pl50')
+                    var table = $('[data-ui-role="advanced-table"]').data('view')
+                    table.reload();
+                },
+                error: function(response) {
+                    W.showHint('error', response.errMsg);
+                }
+            });
+        }
+	});
+
+    //移除选择的商品
+    $('body').delegate('.xa-remove-product', 'click', function(event) {
+        $(this).parents('tr').remove();
+	});
+
+    //解除评价
+    $('body').delegate('.xa-remove-relation', 'click', function(event) {
+    	var $el = $(event.target);
+        var relation_id = $(this).parents('tr').data('id');
+		W.requireConfirm({
+			$el: $el,
+			width: 380,
+			height: 50,
+			position: 'right-middle',
+			isTitle: false,
+			msg: '确定解除关系？',
+			confirm: function() {
+	        W.getApi().call({
+				app: 'apps/evaluate',
+				resource: 'evaluate_relations',
+				method: 'delete',
+				args: {
+					id: relation_id
+				},
+				success: function(data) {
+					W.showHint('success', '解除关联评价成功！');
+	                var table = $('[data-ui-role="advanced-table"]').data('view')
+	                table.reload();
+				},
+				error: function(response) {
+					W.showHint('error', response.errMsg);
+				}
+			});
+			}
+		});
+	});
+
+    //重置
+    $('body').delegate('.xa-reset', 'click', function(event){
+        $('[name="product_name"]').val('');
+        $('[name="bar_code"]').val('');
+    });
+
+    $('body').on('hidden.bs.modal','.xa-relations-Dialog',function(){
+    	product_arr = [];
+    });
+});
+</script>
+{% endblock %}
+

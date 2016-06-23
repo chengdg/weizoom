@@ -1,0 +1,121 @@
+{% load workbench_filter %}
+
+{% ifequal component.type 'appkit.evaluatedescription' %}
+    <!--R-->
+    <div class="wui-evaluate-container wa-evaluate-container">
+        <div class="wui-title pr">
+            <a class="xa-goBack xui-returnPrev pa">
+                <i id="goBack"></i>
+            </a>
+            <span class="em9">发表评价</span>
+        </div>
+        <div class="wui-i-header">
+            <div class="wui-i-product-info disT mb15 w">
+                <div class="wui-productImg disTc wa-productimg">
+                    <img src="/termite_static/img/component/evaluate/evaluate_common.jpg" data-allow-autoplay="false" style="width: 60px; height: 60px;">
+                </div>
+                <div class="disTc vt pl10">
+                    <div class="wui-productname em85 c65 wa-productname">商品名</div>
+                    <div class="em85 c65 wa-productinfo">
+                       商品介绍
+                    </div>
+                </div>
+            </div>
+            <div class="wui-reviewGrade">
+                <span class="c3 em9">商品评分</span>
+                <span class="wui-i-product-score wui-starGrade wa-starGrade">
+                    <span id='dj_product_score' data-value="5" class="wui-starGrade wui-starGrade5">
+                        <i data-grade="1"></i>
+                        <i data-grade="2"></i>
+                        <i data-grade="3"></i>
+                        <i data-grade="4"></i>
+                        <i data-grade="5"></i>
+                    </span>
+                </span>
+            </div>
+            <div class="wui-i-status xui-hidden">已评价</div>
+            <div class="wui-i-uploadimg wa-uploadimg-tm wui-hide">
+                <div class="xui-productPhoto mt10">
+                    <div class="xui-addPhoto xa-addPhoto mb10 fl pr">
+                        <input name="imgFile123" data-ui-role="uploadImage" type="file" style="opacity:0;top:0;left:0;width:45px;height:45px;" class="pa" multiple>
+                    </div>
+                    <div class="xui-deletePhoto xa-deletePhoto" style="display:none;"></div>
+                    <span class="cRed em95 none xa-finishEdit xui-finishEdit ml10">完成</span>
+                    <span class="em75 xa-text xui-text">上传图片</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="wui-i-body wa-i-body">
+            <div class="wui-reviewText">
+                <div class="em7 c9 xui-limitNum wa-limitNum">
+                    还可以输入200字
+                </div>
+                <div class="pr wui-reviewHint">
+                    <textarea id='dj_review_detail' cols="30" rows="10" class="em8 wa-ordinary-review-detail" placeholder=""></textarea>
+                    <div class="pa em8 wui-i-box p5" style="top:0;left:0;margin-top:8px;color:#cbcbcb">
+                        <div>
+                            长度在5—200之间
+                        </div>写下购买体会或者给我们意见等，可以为其他朋友在购买时候提供参考和意见~
+                    </div>
+                </div>
+            </div>
+            <div class="wui-i-uploadimg wa-uploadimg wui-i-uploadimg-common">
+                <div class="xui-productPhoto mt10">
+                    <div class="xui-addPhoto xa-addPhoto mb10 fl pr">
+                        <input name="imgFile123" data-ui-role="uploadImage" type="file" style="opacity:0;top:0;left:0;width:45px;height:45px;" class="pa" multiple>
+                    </div>
+                    <div class="xui-deletePhoto xa-deletePhoto" style="display:none;"></div>
+                    <span class="cRed em95 none xa-finishEdit xui-finishEdit ml10">完成</span>
+                    <span class="em75 xa-text xui-text">上传图片</span>
+                </div>
+            </div> 
+            <div class="wui-separate"></div>
+            <div class="wui-serviceReview mb20">
+                <h2 class="c3 em9">
+                    服务评分
+                    <span id="dj_order_review_is_created" data-value="0" class="cRed fr wui-iscreated wa-iscreated">已完成</span>
+                </h2>              
+                <div class="wui-i-service-score wui-i-box wa-notcreated">
+                    <div class="wui-serviceAttitude mb20">
+                        <span class="c65 em8">服务态度</span>
+                        <span class="wui-i-manner-score wa-starGrade wui-starGrade">
+                            <span id="dj_deliver_score" data-value='5' class="wui-starGrade wui-starGrade5">
+                                <i data-grade="1"></i>
+                                <i data-grade="2"></i>
+                                <i data-grade="3"></i>
+                                <i data-grade="4"></i>
+                                <i data-grade="5"></i>
+                            </span>
+                        </span>
+                    </div>
+                    <div class="wui-deliverySpeed mb20">
+                        <span class="c65 em8">发货速度</span>
+                        <span class="wui-i-speed-score wa-starGrade wui-starGrade">
+                            <span id="dj_deliver_score" data-value='5' class="wui-starGrade wui-starGrade5">
+                                <i data-grade="1"></i>
+                                <i data-grade="2"></i>
+                                <i data-grade="3"></i>
+                                <i data-grade="4"></i>
+                                <i data-grade="5"></i>
+                            </span>
+                        </span>
+                    </div>
+                    <div class="wui-logisticsService">
+                        <span class="c65 em8">物流服务</span>
+                        <span class="wui-i-logistical-score wa-starGrade wui-starGrade">
+                            <span id="dj_process_score" data-value='5' class="wui-starGrade wui-starGrade5">
+                                <i data-grade="1"></i>
+                                <i data-grade="2"></i>
+                                <i data-grade="3"></i>
+                                <i data-grade="4"></i>
+                                <i data-grade="5"></i>
+                            </span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--R-->
+{% endifequal %}

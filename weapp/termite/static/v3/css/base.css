@@ -224,8 +224,8 @@ textarea{resize:none}
 .pr30{padding-right:30px !important;}
 .pr50{padding-right:50px !important;}
 .pr100{padding-right:100px !important;}
-.min180{min-height:180 !importantpx;}
-.min220{min-height:220 !importantpx;}
+.min180{min-height:180px !important;}
+.min220{min-height:220px !important;}
 
 /*文字灰度：由深及浅*/
 .c3{color: #333;}

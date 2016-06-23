@@ -264,6 +264,12 @@ W.workbench.PropertyView = Backbone.View.extend({
      *********************************************************/    
     onUpdatePropertyEditor: function(component, offset, options) {
         xlog("[property view]: update property editor");
+        //如果组件的fields是[]，则隐藏属性区域，解决padding导致的白框
+        if(component && component.fields.length == 0){
+            $('#rightPanel').css('visibility', 'hidden');
+        }else{
+            $('#rightPanel').css('visibility', 'visible');
+        }
         //跳过对wepage.page的处理
         var isPage = this.pageRegex.test(component.type);
         if (isPage) {

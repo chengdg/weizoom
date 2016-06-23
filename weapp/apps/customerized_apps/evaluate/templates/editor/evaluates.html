@@ -1,0 +1,270 @@
+{% extends "content_base_v2.html" %}
+{% load apps_filter %}
+{% block css %}
+<style type="text/css">
+.exportProgress_msg,#downloadLink{
+    margin-right:0!important;
+}
+.edui-default{
+    z-index: 9999!important;
+}
+.edui-mask{
+    display: none;
+}
+a{
+    cursor: pointer;
+}
+.modal-body .fl > div{
+    margin-bottom: 5px;
+}
+.xui-modal-content{
+    overflow:hidden;
+    margin-top:10px;
+}
+.xui-app_evaluate-Dialog .modal-body{
+    padding:0 30px;
+}
+.xui-evaluate-modalLef{
+    width:50%;
+    border-right:1px solid #e1e1e1;
+    padding-bottom: 20px;
+    margin-bottom: 10px;
+}
+.xui-evaluate-comment{
+    display:inline-block;width:330px;
+}
+.xui-evaluate-modalRig{
+    width: 50%;
+    padding-left:10px;
+}
+.xui-evalute-btnGroups{
+    border-bottom:2px solid #e1e1e1;
+    padding-bottom:15px;
+    text-align:center;
+    margin-bottom:20px;
+    margin-top:15px;
+}
+.xui-evalute-btnGroups > a{
+    font-weight:bold;
+    border-radius:3px;
+}
+.xui-evalute-modalFooter{
+    background:#eaeef7;
+    margin-top:10px;
+    height:50px;
+    line-height:50px;
+}
+.xui-evaluate-table{
+    margin-bottom: 0;
+}
+.xui-evaluate-table > tbody> tr > td{
+    text-align: left;
+    word-break: break-all;
+}
+.xui-evaluate-table > tbody > tr > td:last-child{
+    width: 70%;
+}
+.xui-imgGroup{
+    display: inline-block;
+    overflow: hidden;
+    width: 330px;
+}
+</style>
+{% endblock %}
+{% block content-panel %}
+<div class="xui-productsPage">
+    <div class="relative">
+        <ul class="breadcrumb">
+            <li>您当前所在位置</li>
+            <li><a href="/mall2/product_list/?shelve_type=1">商品管理</a></li>
+            <li class="active">评价管理</li>
+        </ul>
+    </div>
+    <div class="xa-productReviewFilterView xui-filterPanel"></div>
+
+    <div class="panel panel-default mt20 xb-rightPanel">
+        <div class="panel-header clearfix">
+            <a href="javascript: void 0" class="btn btn-default fr ml10 mr10 mt10 xa-export">
+				导出文件
+			</a>
+			<a href="/apps/evaluate/evaluate/" class="btn btn-default fr ml10 mt10">
+				评价模版
+			</a>
+            <a href="/apps/evaluate/evaluate_relations/" class="btn btn-default fl ml10 mt10">
+				评价关联
+			</a>
+
+		</div>
+        <div
+            data-ui-role="advanced-table"
+            data-app="apps/evaluate"
+            data-resource="evaluates"
+            data-template-id="#products-review"
+            data-enable-paginator="true"
+            data-enable-sort="false"
+            data-selectable="true"
+            data-item-count-per-page="18"
+            data-outer-selecter=".xa-selectAll"
+            data-disable-header-select="true"
+            class="panel-body"
+        ></div>
+        <div style="height:30px;"></div>
+        <div class="xui-batchbtn">
+            <label for="bottomSelectAll" class="xui-selectAll ml12">
+                <input type="checkbox" id="bottomSelectAll" class="xa-selectAll">全选
+            </label>
+            <a href="javascript:void(0);" class="btn btn-default ml10 xa-batchPass">通过</a>
+            <a href="javascript:void(0);" class="btn btn-default ml10 xa-batchShield">屏蔽</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block js %}
+<!-- *start_prunt_task* -->
+    <!-- [prunt_task] 
+      {
+        "task": "weizoom-load-app-views-dialogs"
+      }
+    -->
+{{ "evaluate"|load_app_views_and_dialogs|safe }}
+<!-- *end_prunt_task* -->
+{% verbatim %}
+<script id="products-review" type="text/x-jquery-tmpl">
+    <table id="productReviewListTable" class="table table-bordered table-condensed xb-stripedTable xb-noTdBorder xb-noBottom xb-noBorder xb-theadBg">
+        ${data.stickied_count}
+        <thead>
+          <th width="90">商品编码</th>
+          <th width="130" style="text-align:left;">商品名称</th>
+          <th width="95" style="text-align:left;">用户名</th>
+          <th width="150" >评价时间</th>
+          <th width="190" style="text-align:left;">评价内容</th>
+          <th width="65">商品评星</th>
+          <th width="100">状态</th>
+          <th width="80">操作</th>
+        </thead>
+        <tbody id='product_review_list'>
+        {{each(i, review) items}}
+        <tr data-id="${review.id}">
+            <td width="90">${review.product_user_code}</td>
+            <td width="130" style="text-align:left;">${review.product_name}</td>
+            <td width="95" style="text-align:left;">{{html review.user_name}}</td>
+            <td width="150">${review.created_at}</td>
+            <td width="190" style="text-align:left;"><div style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;width:190px;">{{if review.is_common_template }}
+                ${review.detail}
+              {{else}}
+                {{each(i,item) review.detail }}
+                  ${item.title}:${item.answer};
+                {{/each}}
+              {{/if}}</div></td>
+            <td width="65">${review.product_score}星</td>
+            <td width="100">${review.status.name}</td>
+            <td width="80">
+                {{if review.status.value === '0'}}
+                    <a href="javascript:void(0);" data-product-review-id="${review.id}" class="xa-verify">审核</a>
+                {{/if}}
+                {{if review.status.value === '1'}}
+                    <a href="javascript:void(0);" data-product-review-id="${review.id}" class="xa-verify">修改</a>&nbsp;&nbsp;
+                    <a href="javascript:void(0);" class="xa-modify" data-product-review-id="${review.id}" data-status="2">置顶</a>
+                {{/if}}
+                {{if review.status.value === '2'}}
+                    <a href="javascript:void(0);" data-product-review-id="${review.id}" class="xa-verify">修改</a><br>
+                    <a href="javascript:void(0);" class="xa-modify" data-product-review-id="${review.id}" data-status="1">取消置顶</a>
+                {{/if}}
+                {{if review.status.value === '-1'}}
+                    <a href="javascript:void(0);" data-product-review-id="${review.id}" class="xa-verify">修改</a>
+                {{/if}}
+            </td>
+        </tr>
+        {{/each}}
+
+        </tbody>
+    </table>
+</script>
+{% endverbatim %}
+
+<script type="text/javascript">
+$(document).ready(function(){
+    var evaluate_view = W.view.mall.ProductReviewListView.extend({
+        batchUpdateReviews: function(reviewIds, action) {
+            console.log(reviewIds);
+            W.getApi().call({
+                method: 'post',
+                app: 'apps/evaluate',
+                resource: 'evaluate_review',
+                args:{
+                    ids: reviewIds.join(','),
+                    action: action
+                },
+                scope: this,
+                success: function(data) {
+                    W.showHint('success', '操作成功！');
+                    $('[data-ui-role="advanced-table"]').data('view').reload();
+                    $('#bottomSelectAll').prop('checked', false);
+                },
+                error: function() {
+
+                    W.showHint('error', '操作失败！');
+                }
+            })
+        },
+
+        onClickModify: function(event){
+            var $el = $(event.currentTarget);
+            var product_review_id = $el.attr("data-product-review-id");
+            var status = $el.attr("data-status");
+            W.getApi().call({
+                app: 'apps/evaluate',
+                resource: 'evaluate_review',
+                method: 'post',
+                args: {
+                    product_review_id: product_review_id,
+                    status: status
+                },
+                success: function(){
+                    W.showHint('success', '操作成功！');
+                    $('[data-ui-role="advanced-table"]').data('view').reload();
+                },
+                error: function(){
+                    W.showHint('error', '操作失败！');
+                }
+            })
+        }
+    });
+
+    var view = new evaluate_view({
+        el: '.xui-productsPage'
+    });
+
+    view.render();
+
+
+    $('body').delegate('.xa-export', 'click', function(event){
+        var startDate = $.trim($('#start_date').val());
+        var endDate = $.trim($('#end_date').val());
+        var name = $.trim($('#name').val());
+        var reviewStatus = $('#review_status').val();
+        var userCode = $.trim($('#user_code').val());
+        var productScore = $.trim($('#product_score').val());
+
+        var url = "/apps/evaluate/api/evaluates_export/?startDate="+startDate+"&endDate="+endDate+"&name="+name+"&reviewStatus="+reviewStatus+"&userCode="+userCode+"&productScore="+productScore;
+        window.open(url);
+    });
+
+    var table = $('div[data-ui-role="advanced-table"]').data('view');
+
+{#    var woid = "{{ request.manager.id }}";#}
+
+    $('.panel-body').delegate('.xa-verify','click',function(){
+        var product_review_id = $(this).attr('data-product-review-id');
+        W.dialog.showDialog('W.dialog.app.evaluate.ViewParticipanceDataDialog',{
+            product_review_id: product_review_id,
+            success: function(data) {
+                // alert(data);
+            }
+        });
+    });
+})
+</script>
+{% endblock %}

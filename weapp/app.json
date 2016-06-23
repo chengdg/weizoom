@@ -1,9 +1,9 @@
 {
-	"name": "shvote",
+	"name": "evaluate",
 	"resources": [{
-		"name": "Shvote",
+		"name": "Evaluate",
 		"need_user_participant": true,
-		"display_name": "高级投票",
+		"display_name": "商品评价",
 		"enable_termite": true
 	}]
 }

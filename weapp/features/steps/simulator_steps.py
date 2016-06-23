@@ -155,6 +155,7 @@ def step_impl(context, user, mp_user_name, date):
 def step_impl(context, webapp_user_name, webapp_owner_name):
 	client = context.client
 	openid = '%s_%s' % (webapp_user_name, webapp_owner_name)
+	context.openid = openid
 
 	#获取sct cookie
 	sct = SocialAccount.objects.get(openid=openid).token
