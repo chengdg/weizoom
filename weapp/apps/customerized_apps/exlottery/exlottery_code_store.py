@@ -131,7 +131,9 @@ class ExlotteryCodeStore(resource.Resource):
 					second_prize += 1
 				if grade == u'三等奖':
 					third_prize += 1
-				name = record.prize_name
+				if grade == u'谢谢参与':
+					grade = u'未中奖'
+				name = record.prize_name if record.prize_name != u'谢谢参与' else u'无'
 				member_id = record.member_id
 				member = member_id2member_name[member_id]
 				time = record.created_at.strftime('%Y-%m-%d %H:%M')
@@ -180,13 +182,18 @@ class ExlotteryCodeExport(resource.Resource):
 		]
 
 		for code in exlottery_codes:
-			record = code2record.get(code, None)
+			record = code2record.get(code.code, None)
 			grade = ''
 			name = ''
 			member = ''
 			time = ''
 			if record:
+				grade = record.prize_title
+				if grade == u'谢谢参与':
+					grade = u'未中奖'
 				name = record.prize_name
+				if name == u'谢谢参与':
+					name = u'无'
 				member_id = record.member_id
 				member = member_id2member_name[member_id]
 				time = record.created_at.strftime('%Y-%m-%d %H:%M')

@@ -36,7 +36,7 @@ class ExlottoryRecord(models.Document):
 	tel = models.StringField(default="", max_length=20)
 	status = models.BooleanField(default=False) #是否已领取
 	created_at = models.DateTimeField() #创建时间
-	code = models.StringField(default="", max_length=20, unique=True)  # 抽奖码
+	code = models.StringField(default="", max_length=20)  # 抽奖码
 
 	meta = {
 		'collection': 'exlottery_exlottery_record',

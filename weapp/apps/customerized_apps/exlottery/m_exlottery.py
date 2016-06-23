@@ -197,7 +197,10 @@ def check_keyword(data):
 		code = keyword,
 		status = app_models.NOT_USED
 	)
-	exlottery_participance.save()
+	try:
+		exlottery_participance.save()
+	except:
+		return None
 
 	reply = exlottery.reply
 	reply_link = exlottery.reply_link

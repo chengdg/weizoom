@@ -155,15 +155,6 @@ class exlottery_prize(resource.Resource):
 			response.errMsg = u'您已经抽到奖品了,不能重复中奖~'
 			return response.get_response()
 
-		# sync_result = exlottery_participance.modify(
-		# 	query={'created_at__lt': now_datetime - dt.timedelta(seconds=1)},
-		# 	set__created_at=now_datetime
-		# )
-		# if not sync_result:
-		# 	response = create_response(500)
-		# 	response.errMsg = u'操作过于频繁！'
-		# 	return response.get_response()
-
 		#扣除抽奖消耗的积分
 		member.consume_integral(expend, u'参与抽奖，消耗积分')
 		#奖励抽奖赠送积分
@@ -227,7 +218,7 @@ class exlottery_prize(resource.Resource):
 		exlottery_record = app_models.ExlottoryRecord(**log_data)
 		exlottery_record.save()
 		#更新码的使用时间
-		exlottery_code = app_models.ExlotteryCode.objects(belong_to=record_id, code=code)
+		exlottery_code = app_models.ExlotteryCode.objects(belong_to=record_id, code=code).first()
 		exlottery_code.update(set__use_time=exlottery_record.created_at)
 		#抽奖后，更新数据
 		has_prize = False if result == u'谢谢参与' else True
