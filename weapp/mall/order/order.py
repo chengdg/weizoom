@@ -1023,7 +1023,7 @@ class OrderSenderAccount(resource.Resource):
                     "id": account2info.id,
                     "name": sender_express_name,
                     "account": account2info[sender_express_name]["account"],
-                    "password": account2info[sender_express_name]["password"],
+                    "password": "************",
                     })
             else:
                 items.append({
