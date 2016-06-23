@@ -28,7 +28,7 @@ class ExlottoryRecord(models.Document):
 	"""
 	member_id= models.LongField(default=0) #参与者id
 	belong_to = models.StringField(default="", max_length=100) #对应的抽奖活动id
-	lottery_name = models.StringField(default="", max_length=100) #对应的抽奖活动title
+	exlottery_name = models.StringField(default="", max_length=100) #对应的抽奖活动title
 	prize_type = models.StringField(default="", max_length=16) #奖品类型
 	prize_title = models.StringField(default="", max_length=16) #奖项标题
 	prize_name = models.StringField(default="", max_length=100) #奖项名称

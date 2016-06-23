@@ -13,6 +13,7 @@ from utils.cache_util import GET_CACHE, SET_CACHE
 
 import models as app_models
 from termite2 import pagecreater
+from modules.member.module_api import get_member_by_openid
 
 
 
@@ -109,19 +110,11 @@ class Mexlottery(resource.Resource):
 		#非会员不可参与
 		if isMember:
 			#首先验证抽奖码有没有和本会员绑定
-			member_has_code = app_models.ExlotteryParticipance.objects(code=code, belong_to=record_id, member_id=member_id)
-			# app_models.ExlotteryParticipance.objects.create(
-			# 	code=code,
-			# 	belong_to=record_id,
-			# 	member_id=member_id,
-			# 	created_at = datetime.now()
-			# )
+			member_has_code = app_models.ExlotteryParticipance.objects(code=code, belong_to=record_id,member_id=member_id)
 			if member_has_code.count() == 1:
-				#如果绑定，验证抽奖码有没有抽奖
-				exlottery_code_has_used = app_models.ExlotteryCode.objects(code=code, belong_to=record_id)
-				if exlottery_code_has_used.count() == 1:
-					if exlottery_code_has_used.first().status == app_models.NOT_USED:
-						can_play_count = 1
+				# 如果绑定，验证抽奖码有没有抽奖
+				if member_has_code.first().status == app_models.NOT_USED:
+					can_play_count = 1
 
 		if can_play_count != 0:
 			exlottery_status = True
@@ -179,8 +172,62 @@ def check_keyword(data):
 	}
 	@return: return_html string
 	"""
-	return_html = []
-	#TODO 如果匹配到正确的抽奖吗格式，则返回相应的字符串，格式为html字符串，但只能包含a标签，例如
-	# 欢迎使用抽奖吗，<a href='http://dev.weapp.com/apps/exlottery/m_exlottery/?token=elnas134l4'>立即抽奖</a>
+	webapp_owner_id = data['webapp_owner_id']
+	keyword = data['keyword']
+	member = get_member_by_openid(data['openid'], data['webapp_id'])
+	if not member:
+		return None
 
-	return ''.join(return_html)
+	resp, exlottery= check_exlottery_code(keyword, member.id)
+
+	if resp is not True:
+		return resp
+
+	#将用户与抽奖码绑定
+	exlottery_participance = app_models.ExlotteryParticipance(
+		member_id = member.id,
+		belong_to = str(exlottery.id),
+		created_at = datetime.now(),
+		code = keyword,
+		status = app_models.NOT_USED
+	)
+	exlottery_participance.save()
+
+	reply = exlottery.reply
+	reply_link = exlottery.reply_link
+	return_html = "{},&nbsp;<a href='/m/apps/exlottery/m_exlottery/?webapp_owner_id={}&id={}&code={}'>{}</a>".format(reply, webapp_owner_id, str(exlottery.id), keyword ,reply_link)
+
+	return return_html
+
+def check_exlottery_code(keyword,member_id):
+	if len(keyword) != 10:
+		return None
+	if not keyword.startswith('el'):
+		return None
+	code = app_models.ExlotteryCode.objects(code=keyword).order_by('-created_at')
+	if code.count() == 0:
+		return u'请输入正确的抽奖码', None
+
+	code = code.first()
+	belong_to = code.belong_to
+	exlottery = app_models.Exlottery.objects(id=belong_to)
+	if exlottery.count() == 0:
+		return None, None
+	exlottery = exlottery.first()
+	exlottery_status = exlottery.status
+	exlottery_participance = app_models.ExlotteryParticipance.objects(code=keyword, member_id=member_id,
+																	  belong_to=belong_to)
+	exlottery_participance_count = exlottery_participance.count()
+
+	if exlottery_status == app_models.STATUS_NOT_START:
+		return u'该抽奖码尚未生效', None
+	elif exlottery_status == app_models.STATUS_STOPED:
+		if exlottery_participance_count > 0:
+			return u'该抽奖码已使用', None
+		else:
+			return u'该抽奖码已过期', None
+	elif exlottery_status == app_models.STATUS_RUNNING:
+		if exlottery_participance_count > 0:
+			return u'该抽奖码已使用', None
+
+	return True, exlottery
