@@ -71,7 +71,6 @@ class Exlottery(resource.Resource):
 				
 				return render_to_response('exlottery/templates/editor/workbench.html', c)
 
-		print exlottery.status_text
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
 			'second_navs': mall_export.get_promotion_and_apps_second_navs(request),
