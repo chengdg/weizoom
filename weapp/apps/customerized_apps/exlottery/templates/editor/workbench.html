@@ -410,7 +410,7 @@
       $(document).click(function(event) {
         // 点击空白处，触发事件
           if(event.target.id == 'lottery_chance_dialog_trigger'){
-                W.dialog.showDialog('W.dialog.lottery.InstructionDialog',{
+                W.dialog.showDialog('W.dialog.exlottery.InstructionDialog',{
                     success: function(data){}
                 });
           }
@@ -431,8 +431,8 @@
         //}
 
         //初始化中奖率说明dialog
-        ensureNS('W.dialog.lottery');
-        W.dialog.lottery.InstructionDialog = W.dialog.Dialog.extend({
+        ensureNS('W.dialog.exlottery');
+        W.dialog.exlottery.InstructionDialog = W.dialog.Dialog.extend({
             getTemplate: function() {
                 $('#lottery-chance-dialog-tmpl-src').template('lottery-chance-dialog-tmpl');
                 return "lottery-chance-dialog-tmpl";
