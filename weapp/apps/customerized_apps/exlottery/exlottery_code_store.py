@@ -72,7 +72,7 @@ class ExlotteryCodeStore(resource.Resource):
 		# 	member_ids = temp_ids if temp_ids else [-1]
 		# 	params['member_id__in'] = member_ids
 
-		exlottery_codes = app_models.ExlotteryCode.objects(**params).order_by('-created_at')
+		exlottery_codes = app_models.ExlotteryCode.objects(**params).order_by('-use_time', '-created_at')
 		count = exlottery_codes.count()
 
 		exlottery = app_models.Exlottery.objects(id=id).first()

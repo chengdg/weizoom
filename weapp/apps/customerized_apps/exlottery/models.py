@@ -117,13 +117,14 @@ class ExlotteryControl(models.Document):
 	}
 
 
-# DEFAULT_TIME = '2000-01-01 00:00:00'
+DEFAULT_TIME = '2000-01-01 00:00:00'
 
 class ExlotteryCode(models.Document):
 	owner_id = models.LongField()  # 创建人id
 	belong_to = models.StringField(default="", max_length=100)  # 对应的专项抽奖活动id
 	code = models.StringField(default="", max_length=20, unique=True) #抽奖码
 	created_at = models.DateTimeField()  # 创建时间
+	use_time = models.DateTimeField(default=DEFAULT_TIME)  # 抽奖码使用时间
 
 	meta = {
 		'collection': 'exlottery_code',
