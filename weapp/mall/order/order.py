@@ -1040,9 +1040,17 @@ class OrderSenderAccount(resource.Resource):
                 "password": "ignore",
                 })
 
+        count_per_page = int(request.GET.get('count_per_page', 100))
+        cur_page = int(request.GET.get('page', '1'))
+        pageinfo, items = paginator.paginate(
+            items,
+            cur_page,
+            count_per_page,
+            query_string=request.META['QUERY_STRING'])
         response = create_response(200)
         response.data = {
             'items': items,
+            'pageinfo': paginator.to_dict(pageinfo),
         }
         return response.get_response()
 
