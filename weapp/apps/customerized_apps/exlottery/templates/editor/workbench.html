@@ -91,17 +91,17 @@
       </div>
     </div>
       <div id="rightPanel" class="fl xui-workbench-rightPanel xui-hide" style="margin-bottom: 90px;"></div>
-        {% if lottery and lottery.status_text == "进行中"%}<div style="position: absolute;height: 100%;width: 100%"></div>{% endif %}
+        {% if exlottery and exlottery.status_text == "进行中"%}<div style="position: absolute;height: 100%;width: 100%"></div>{% endif %}
       <div class="xui-bottomActionBar xa-stickyBar">
-          {% if not lottery %}
+          {% if not exlottery %}
             <button class="xa-save btn btn-primary">保存</button>
             <button class="xa-preview btn btn-default ml20">预览</button>
           {% else %}
-            {% if lottery.status_text == "未开始" or lottery.status_text == "进行中"%}
+            {% if exlottery.status_text == "未开始" or exlottery.status_text == "进行中"%}
             <button class="xa-save btn btn-primary">保存</button>
             <button class="xa-preview btn btn-default ml20">预览</button>
             {% endif %}
-            {% if lottery.status_text == "已结束" %}
+            {% if exlottery.status_text == "已结束" %}
             已结束，不可更改
             {% endif %}
           {% endif %}
@@ -201,7 +201,7 @@
 				});
 			});
             W.Broadcaster.on('page:rendered', function () {
-                if ("{{ lottery.status_text }}" == "进行中" ){
+                if ("{{ exlottery.status_text }}" == "进行中" ){
                     W.getApi().call({
                         method: 'get',
                         app: 'apps/exlottery',
