@@ -5,10 +5,10 @@
 		<div class="modal-header">
 			<button aria-hidden="true" data-dismiss="modal" class="close" type="button"><span aria-hidden="true">&times;</span></button>
 			<h3 class="modal-title">
-			签到优惠劵明细
+			签到优惠劵明细<b class="red">&nbsp;&nbsp;&nbsp;(签到补发的优惠券不在这里显示)</b>
 			</h3>
 		</div>
-		<div class="modal-body p20 pt0" 
+		<div class="modal-body p20 pt0"
 			data-ui-role="advanced-table"
 			data-app="member"
 			data-resource="member_coupon"
@@ -69,7 +69,7 @@
 
 	<tbody>
  	{{if items.length}}
-		{{each(i, coupon) items}}		
+		{{each(i, coupon) items}}
 		<tr data-id="">
 			<td>${provided_time}</td>
 		    <td class="coupon_name_in_dialog">
