@@ -253,9 +253,7 @@ def step_impl(context, user, pay_interface_name):
         param['ali_public_key'] = data['ali_public_key']
         param['private_key'] = data['private_key']
         param['seller_email'] = data['seller_email']
-
     response = context.client.post('/mall2/pay_interface/?id=%d' % interface.id, param)
-
 # 	db_pay_interface = PayInterface.objects.get(owner_id=context.webapp_owner_id, description=pay_interface_description)
 # 	pay_interface = json.loads(context.text)
 # 	data = __fill_post_data(pay_interface)

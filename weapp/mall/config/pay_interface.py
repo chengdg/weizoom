@@ -218,7 +218,7 @@ class PayInterfaceInfo(resource.Resource):
         """
         pay_interface_id = request.GET['id']
         pay_interface = PayInterface.objects.get(id=pay_interface_id)
-
+        print "zl--------------------------xxxx"
         if pay_interface.type == PAY_INTERFACE_WEIXIN_PAY:
             _update_weixin_pay_config(request, pay_interface)
         elif pay_interface.type == PAY_INTERFACE_ALIPAY:
@@ -302,6 +302,7 @@ def _update_weixin_pay_config(request, pay_interface):
             paysign_key=request.POST.get('paysign_key', '').strip()
         )
     else:
+        print "zl---------------",request.POST.get('mch_id', '').strip()
         UserWeixinPayOrderConfig.objects.filter(owner=request.manager, id=pay_interface.related_config_id).update(
             app_id=request.POST.get('app_id', '').strip(),
             pay_version=request.POST.get('pay_version', 0),

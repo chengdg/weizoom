@@ -52,7 +52,10 @@ def step_impl(context, user, action):
 def step_impl(context, user, order_code):
     url = '/mall2/api/order/'
     post_data = json.loads(context.text)
-    order_real_id = bdd_util.get_order_by_order_no(order_code).id
+    if order_code == 'wz':
+        order_real_id = bdd_util.get_order_by_order_no(context.created_order_id).id
+    else:
+        order_real_id = bdd_util.get_order_by_order_no(order_code).id
     post_data['order_id'] = order_real_id
     response = context.client.post(url, post_data)
     bdd_util.assert_api_call_success(response)
