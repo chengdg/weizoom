@@ -250,8 +250,7 @@ W.dialog.app.evaluate.ViewParticipanceDataDialog = W.dialog.Dialog.extend({
 	onClickSubmitButton: function(){
 		
 		var content = this.editor.getHtmlContent();
-
-		if (content.length > 300) {
+		if (this.editor.getContent().length > 300) {
 			W.showHint('error', '内容不能超过300字');
 			return;
 		}		
