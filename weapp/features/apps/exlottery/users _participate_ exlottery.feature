@@ -154,7 +154,7 @@ Scenario:3 活动已结束并且抽奖码已使用，bill使用抽奖码进行�
 			"is_repeat_win":"否",
 			"prize_settings":[{
 				"prize_grade":"一等奖",
-				"prize_counts":10,
+				"prize_counts":0,
 				"prize_type":"积分",
 				"integral":1000,
 				"pic":"2.jpg"
@@ -166,7 +166,7 @@ Scenario:3 活动已结束并且抽奖码已使用，bill使用抽奖码进行�
 				"pic":"3.jpg"
 			},{
 				"prize_grade":"三等奖",
-				"prize_counts":50,
+				"prize_counts":0,
 				"prize_type":"优惠券",
 				"coupon":"优惠券2",
 				"pic":"4.jpg"
@@ -186,7 +186,8 @@ Scenario:3 活动已结束并且抽奖码已使用，bill使用抽奖码进行�
 	"""
     感谢您对杭州百事可乐的关注<br />立即抽奖<br />
     """
-	When bill使用抽奖码'el8s539t18'参加专项抽奖活动'专项抽奖'
+	When bill点击'立即抽奖'进入'专项抽奖'活动页面
+	When bill参加专项抽奖活动'专项抽奖'
 	Then bill获得专项抽奖结果
 	"""
 		{
@@ -277,13 +278,13 @@ Scenario:5 活动进行中，抽奖码已使用，bill使用抽奖码进行抽�
 				"pic":"2.jpg"
 			},{
 				"prize_grade":"二等奖",
-				"prize_counts":30,
+				"prize_counts":0,
 				"prize_type":"优惠券",
 				"coupon":"优惠券1",
 				"pic":"3.jpg"
 			},{
 				"prize_grade":"三等奖",
-				"prize_counts":50,
+				"prize_counts":0,
 				"prize_type":"优惠券",
 				"coupon":"优惠券2",
 				"pic":"4.jpg"
@@ -304,7 +305,8 @@ Scenario:5 活动进行中，抽奖码已使用，bill使用抽奖码进行抽�
     感谢您对杭州百事可乐的关注<br />立即抽奖<br />
 
     """
-    When bill使用抽奖码'el8s539t18'参加专项抽奖活动'专项抽奖'
+    When bill点击'立即抽奖'进入'专项抽奖'活动页面
+	When bill参加专项抽奖活动'专项抽奖'
 	Then bill获得专项抽奖结果
 	"""
 		{

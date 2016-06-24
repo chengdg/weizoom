@@ -24,7 +24,7 @@ Background:
 			"name": "优惠券1",
 			"money": 100.00,
 			"count": 50,
-			"limit_counts": 不限,
+			"limit_counts": "无限",
 			"start_date": "今天",
 			"end_date": "10天后",
 			"coupon_id_prefix": "coupon1_id_"
@@ -32,7 +32,7 @@ Background:
 			"name": "优惠券2",
 			"money": 50.00,
 			"count": 50,
-			"limit_counts": 不限,
+			"limit_counts": "无限",
 			"start_date": "今天",
 			"end_date": "5天后",
 			"coupon_id_prefix": "coupon2_id_"
@@ -40,7 +40,7 @@ Background:
 			"name": "优惠券3",
 			"money": 30.00,
 			"count": 50,
-			"limit_counts": 不限,
+			"limit_counts": "无限",
 			"start_date": "今天",
 			"end_date": "5天后",
 			"using_limit": "满50元可以使用",
