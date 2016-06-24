@@ -212,12 +212,12 @@
                 var $body = $('body');
                 $body.delegate('.wa-goBack', 'click', goBack); //返回上一页
                 //针对选择题组件
-                $body.delegate('.selection-radio', 'click', function(event){
+                $('.selection-radio').click(function(event){
                     var $span = $(event.currentTarget);
                     $span.parents('ul').find('label').find('span :first').removeClass('radio-select');
                     $span.addClass('radio-select');
                 });
-                $body.delegate('.selection-checkbox','click', function(event){
+                $('.selection-checkbox').click(function(event){
                     var $span = $(event.currentTarget);
                     if ($span.hasClass('checkbox-select')){
                         $span.removeClass('checkbox-select');
