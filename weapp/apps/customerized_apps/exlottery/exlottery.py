@@ -112,13 +112,20 @@ class Exlottery(resource.Resource):
 		响应POST
 		"""
 		data = request_util.get_fields_to_be_save(request)
+		record_id = request.POST['id']
 		update_data = {}
-		update_fields = set(['name', 'start_time', 'end_time', 'expend', 'delivery', 'chance', 'prize', 'share_description', 'reply', 'reply_link'])
+		update_fields = set(['name', 'start_time', 'end_time', 'expend', 'allow_repeat', 'lottery_code_count', 'delivery', 'chance', 'prize', 'share_description', 'reply', 'reply_link'])
 		for key, value in data.items():
 			if key in update_fields:
 				update_data['set__'+key] = value
 
-		app_models.Exlottery.objects(id=request.POST['id']).update(**update_data)
+		print '================'
+		record = app_models.Exlottery.objects(id=record_id)
+		record.update_one(**update_data)
+		if record.count() > 0:
+			record = record.first()
+			if u'未开始' == record.status_text:
+				generate_exlottery_code(request.manager.id, record_id, data['lottery_code_count'])
 		
 		response = create_response(200)
 		return response.get_response()
@@ -150,6 +157,10 @@ def generate_exlottery_code(owner_id, belong_to, count):
 			created_at = datetime.now()
 		))
 
+	app_models.ExlotteryCode.objects(
+		owner_id = owner_id,
+		belong_to = belong_to
+	).delete()
 	app_models.ExlotteryCode.objects.insert(exlottery_list)
 
 

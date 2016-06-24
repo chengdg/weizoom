@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from apps.customerized_apps.lottery.models import lottoryRecord
-
 __author__ = 'mark24'
 
 from behave import *
@@ -147,12 +145,12 @@ def __get_coupon_rule_id(coupon_rule_name):
 	coupon_rule = promotion_models.CouponRule.objects.get(name=coupon_rule_name)
 	return coupon_rule.id
 
-def __lottery_name2id(name):
+def __exlottery_name2id(name):
 	"""
 	给抽奖项目的名字，返回id元祖
 	返回（related_page_id,lottery_lottery中id）
 	"""
-	obj = lottery_models.lottery.objects.get(name=name)
+	obj = exlottery_models.Exlottery.objects.get(name=name)
 	return (obj.related_page_id,obj.id)
 
 def __status2name(status_num):
@@ -546,7 +544,7 @@ def __Create_Exlottery(context,text,user):
 	rec_exlottery_url ="/apps/exlottery/api/exlotteries/?design_mode={}&version={}&count_per_page={}&page={}&enable_paginate={}".format(design_mode,version,count_per_page,page,enable_paginate)
 	rec_exlottery_response = context.client.get(rec_exlottery_url)
 
-def __Update_Lottery(context,text,page_id,lottery_id):
+def __Update_Exlottery(context,text,page_id,lottery_id):
 	"""
 	模拟用户登录页面
 	编辑抽奖项目
@@ -574,8 +572,9 @@ def __Update_Lottery(context,text,page_id,lottery_id):
 	desc = text.get('desc','')#描述
 	reduce_integral = text.get('reduce_integral',0)#消耗积分
 	send_integral = text.get('send_integral',0)#参与送积分
-	send_integral_rules = text.get('send_integral_rules',"")#送积分规则
-	lottery_limit = __name2limit(text.get('lottery_limit',u'一人一次'))#抽奖限制
+	reply = text.get('reply',"")#送积分规则
+	reply_link = text.get('link_reply',"")
+	lottery_code_count = text.get('lottory_code_num',u'0')#抽奖码个数
 	win_rate = text.get('win_rate','0%').split('%')[0]#中奖率
 	is_repeat_win = __name2Bool(text.get('is_repeat_win',"true"))#重复中奖
 	expect_prize_settings_list = text.get('prize_settings',[])
@@ -590,11 +589,12 @@ def __Update_Lottery(context,text,page_id,lottery_id):
 		"description":desc,#描述
 		"expend":reduce_integral,#消耗积分
 		"delivery":send_integral,#参与送积分
-		"delivery_setting":__delivery2Bool(send_integral_rules),#送积分规则
-		"limitation":lottery_limit,#抽奖限制
 		"chance":win_rate,#中奖率
 		"allow_repeat":is_repeat_win,#重复中奖
-		"prize_settings":page_prize_settings
+		"prize_settings":page_prize_settings,
+		"reply":reply,
+		"reply_link":reply_link,
+		"lottery_code_count":lottery_code_count
 	}
 
 	page_json = __get_exlotteryPageJson(page_args)
@@ -606,28 +606,29 @@ def __Update_Lottery(context,text,page_id,lottery_id):
 		"page_json": page_json
 	}
 
-	update_lottery_args = {
+	update_exlottery_args = {
 		"name":title,
 		"start_time":start_time,
 		"end_time":end_time,
 		"expend":reduce_integral,#消耗积分
 		"delivery":send_integral,#参与送积分
-		"delivery_setting":__delivery2Bool(send_integral_rules),#送积分规则
-		"limitation":lottery_limit,#抽奖限制
 		"chance":win_rate,#中奖率
 		"allow_repeat":is_repeat_win,#重复中奖
 		"prize":json.dumps(exlottery_prize_settings),
-		"id":lottery_id#updated的差别
+		"id":lottery_id,#updated的差别
+		"reply":reply,
+		"reply_link":reply_link,
+		"lottery_code_count":lottery_code_count
 	}
 
 
 	#page 更新Page
 	update_page_url = "/termite2/api/project/?design_mode={}&project_id={}&version={}".format(design_mode,project_id,version)
-	update_page_response = context.client.post(update_page_url,update_page_args)
+	context.client.post(update_page_url,update_page_args)
 
 	#step4:更新lottery
-	update_exlottery_url ="/apps/lottery/api/lottery/?design_mode={}&project_id={}&version={}".format(design_mode,project_id,version)
-	update_lottery_response = context.client.post(update_exlottery_url,update_lottery_args)
+	update_exlottery_url ="/apps/exlottery/api/exlottery/?design_mode={}&project_id={}&version={}".format(design_mode,project_id,version)
+	context.client.post(update_exlottery_url,update_exlottery_args)
 
 	#跳转,更新状态位
 	design_mode = 0
@@ -636,8 +637,8 @@ def __Update_Lottery(context,text,page_id,lottery_id):
 	page = 1
 	enable_paginate = 1
 
-	rec_exlottery_url ="/apps/lottery/api/lotteries/?design_mode={}&version={}&count_per_page={}&page={}&enable_paginate={}".format(design_mode,version,count_per_page,page,enable_paginate)
-	rec_lottery_response = context.client.get(rec_exlottery_url)
+	rec_exlottery_url ="/apps/exlottery/api/exlotteries/?design_mode={}&version={}&count_per_page={}&page={}&enable_paginate={}".format(design_mode,version,count_per_page,page,enable_paginate)
+	context.client.get(rec_exlottery_url)
 
 def __Delete_Lottery(context,lottery_id):
 	"""
@@ -807,7 +808,7 @@ def step_impl(context,user):
 		for item in rec_exlottery_list:
 			tmp = {
 				"name":item['name'],
-				"status":item['status'] if item['status'] != u'已结束' else u'已过期',
+				"status":item['status'],
 				"start_time":__date2time(item['start_time']),
 				"end_time":__date2time(item['end_time']),
 				"participant_count":item['participant_count'],
@@ -905,96 +906,99 @@ def step_impl(context,user,exlottery_name):
 	count_per_page = paging_dic['count_per_page']
 	page_num = int(paging_dic['page_num'])-1
 	context.paging = {'count_per_page':count_per_page,"page_num":page_num}
-#
-# @when(u"{user}编辑微信抽奖活动'{lottery_name}'")
-# def step_impl(context,user,lottery_name):
-# 	expect = json.loads(context.text)[0]
-# 	lottery_page_id,lottery_id = __lottery_name2id(lottery_name)#纯数字
-# 	__Update_Lottery(context,expect,lottery_page_id,lottery_id)
-#
-# @then(u"{user}获得微信抽奖活动'{lottery_name}'")
-# def step_impl(context,user,lottery_name):
-# 	expect = json.loads(context.text)[0]
-#
-# 	title = expect.get("name","")
-#
-# 	cr_start_date = expect.get('start_date', u'今天')
-# 	start_date = bdd_util.get_date_str(cr_start_date)
-# 	start_time = "{} 00:00".format(bdd_util.get_date_str(cr_start_date))
-#
-# 	cr_end_date = expect.get('end_date', u'1天后')
-# 	end_date = bdd_util.get_date_str(cr_end_date)
-# 	end_time = "{} 00:00".format(bdd_util.get_date_str(cr_end_date))
-#
-# 	valid_time = "%s~%s"%(start_time,end_time)
-#
-# 	desc = expect.get('desc','')#描述
-# 	reduce_integral = expect.get('reduce_integral',0)#消耗积分
-# 	send_integral = expect.get('send_integral',0)#参与送积分
-# 	send_integral_rules = expect.get('send_integral_rules',"")#送积分规则
-# 	lottery_limit = __name2limit(expect.get('lottery_limit',u'一人一次'))#抽奖限制
-# 	win_rate = expect.get('win_rate','0%').split('%')[0]#中奖率
-# 	is_repeat_win = __name2Bool(expect.get('is_repeat_win',"true"))#重复中奖
-# 	expect_prize_settings_list = expect.get('prize_settings',[])
-# 	page_prize_settings,exlottery_prize_settings = __prize_settings_process(expect_prize_settings_list)
-#
-#
-# 	obj = lottery_models.lottery.objects.get(name=lottery_name)#纯数字
-# 	lottory_record = lottoryRecord.objects.filter(belong_to=str(obj.id))
-# 	related_page_id = obj.related_page_id
-# 	pagestore = pagestore_manager.get_pagestore('mongo')
-# 	page = pagestore.get_page(related_page_id, 1)
-# 	page_component = page['component']['components'][0]['components']
-#
-# 	prize_dic = {}
-# 	for record in lottory_record:
-# 		if not prize_dic.has_key(record.prize_title):
-# 			prize_dic[record.prize_title] = 1
-# 		else:
-# 			prize_dic[record.prize_title] += 1
-#
-# 	expect_lottery_dic = {
-# 		"name":title,
-# 		"start_time":start_time,
-# 		"end_time":end_time,
-# 		"expend":reduce_integral,#消耗积分
-# 		"delivery":send_integral,#参与送积分
-# 		"delivery_setting":__delivery2Bool(send_integral_rules),#送积分规则
-# 		"limitation":lottery_limit,#抽奖限制
-# 		"chance":win_rate,#中奖率
-# 		"allow_repeat":is_repeat_win,#重复中奖
-# 		"prize_settings":page_prize_settings
-# 	}
-#
-#
-# 	actual_prize_list=[]
-# 	for comp in page_component:
-# 		actual_prize_dic={}
-# 		actual_prize_dic['title'] = comp['model']['title']
-# 		actual_prize_dic['prize_count'] = comp['model']['prize_count']
-# 		actual_prize_dic['leftCount'] = (comp['model']['prize_count'] - prize_dic.get(comp['model']['title'], 0)) if expect_prize_settings_list[page_component.index(comp)].has_key('rest') else ""
-# 		actual_prize_dic['image'] = comp['model']['image']
-# 		actual_prize_dic['prize'] = {
-# 			"type":comp['model']['prize']['type'],
-# 			"data":comp['model']['prize']['data']
-# 		}
-# 		actual_prize_list.append(actual_prize_dic)
-#
-# 	actual_lottery_dic = {
-# 		"name": obj.name,
-# 		"start_time":__datetime2str(obj.start_time),
-# 		"end_time":__datetime2str(obj.end_time),
-# 		"expend":obj.expend,#消耗积分
-# 		"delivery":obj.delivery,#参与送积分
-# 		"delivery_setting":obj.delivery_setting,#送积分规则
-# 		"limitation":obj.limitation,#抽奖限制
-# 		"chance":obj.chance,#中奖率
-# 		"allow_repeat":obj.allow_repeat,#重复中奖
-# 		"prize_settings":actual_prize_list,
-# 	}
-#
-# 	bdd_util.assert_dict(expect_lottery_dic, actual_lottery_dic)
-#
+
+@when(u"{user}编辑专项抽奖活动'{exlottery_name}'")
+def step_impl(context,user,exlottery_name):
+	expect = json.loads(context.text)[0]
+	lottery_page_id,lottery_id = __exlottery_name2id(exlottery_name)#纯数字
+	__Update_Exlottery(context,expect,lottery_page_id,lottery_id)
+
+@then(u"{user}获得专项抽奖活动'{lottery_name}'")
+def step_impl(context,user,lottery_name):
+	expect = json.loads(context.text)[0]
+
+	title = expect.get("name","")
+
+	cr_start_date = expect.get('start_date', u'今天')
+	start_date = bdd_util.get_date_str(cr_start_date)
+	start_time = "{} 00:00".format(bdd_util.get_date_str(cr_start_date))
+
+	cr_end_date = expect.get('end_date', u'1天后')
+	end_date = bdd_util.get_date_str(cr_end_date)
+	end_time = "{} 00:00".format(bdd_util.get_date_str(cr_end_date))
+
+	valid_time = "%s~%s"%(start_time,end_time)
+
+	desc = expect.get('desc','')#描述
+	reduce_integral = expect.get('reduce_integral',0)#消耗积分
+	send_integral = expect.get('send_integral',0)#参与送积分
+	reply = expect.get('reply',"")#送积分规则
+	reply_link = expect.get('link_reply',"")
+	lottery_code_count = expect.get('lottory_code_num',u'0')#抽奖码个数
+	win_rate = expect.get('win_rate','0%').split('%')[0]#中奖率
+	is_repeat_win = __name2Bool(expect.get('is_repeat_win',"true"))#重复中奖
+	expect_prize_settings_list = expect.get('prize_settings',[])
+	page_prize_settings,exlottery_prize_settings = __prize_settings_process(expect_prize_settings_list)
+
+
+	obj = exlottery_models.Exlottery.objects.get(name=lottery_name)#纯数字
+	lottory_record = exlottery_models.ExlottoryRecord.objects.filter(belong_to=str(obj.id))
+	related_page_id = obj.related_page_id
+	pagestore = pagestore_manager.get_pagestore('mongo')
+	page = pagestore.get_page(related_page_id, 1)
+	page_component = page['component']['components'][0]['components']
+
+	prize_dic = {}
+	for record in lottory_record:
+		if not prize_dic.has_key(record.prize_title):
+			prize_dic[record.prize_title] = 1
+		else:
+			prize_dic[record.prize_title] += 1
+
+	expect_lottery_dic = {
+		"name":title,
+		"start_time":start_time,
+		"end_time":end_time,
+		"expend":reduce_integral,#消耗积分
+		"delivery":send_integral,#参与送积分
+		"chance":win_rate,#中奖率
+		"allow_repeat":is_repeat_win,#重复中奖
+		"prize_settings":page_prize_settings,
+		"reply":reply,
+		"reply_link":reply_link,
+		"lottery_code_count":lottery_code_count
+	}
+
+
+	actual_prize_list=[]
+	for comp in page_component:
+		actual_prize_dic={}
+		actual_prize_dic['title'] = comp['model']['title']
+		actual_prize_dic['prize_count'] = comp['model']['prize_count']
+		actual_prize_dic['leftCount'] = (comp['model']['prize_count'] - prize_dic.get(comp['model']['title'], 0)) if expect_prize_settings_list[page_component.index(comp)].has_key('rest') else ""
+		actual_prize_dic['image'] = comp['model']['image']
+		actual_prize_dic['prize'] = {
+			"type":comp['model']['prize']['type'],
+			"data":comp['model']['prize']['data']
+		}
+		actual_prize_list.append(actual_prize_dic)
+
+	actual_lottery_dic = {
+		"name": obj.name,
+		"start_time":__datetime2str(obj.start_time),
+		"end_time":__datetime2str(obj.end_time),
+		"expend":obj.expend,#消耗积分
+		"delivery":obj.delivery,#参与送积分
+		"chance":obj.chance,#中奖率
+		"allow_repeat":obj.allow_repeat,#重复中奖
+		"prize_settings":actual_prize_list,
+		"reply":obj.reply,
+		"reply_link":obj.reply_link,
+		"lottery_code_count":obj.lottery_code_count
+	}
+
+	bdd_util.assert_dict(expect_lottery_dic, actual_lottery_dic)
+
 # @when(u"{user}删除微信抽奖活动'{lottery_name}'")
 # def step_impl(context,user,lottery_name):
 # 	lottery_page_id,lottery_id = __lottery_name2id(lottery_name)#纯数字
