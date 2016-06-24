@@ -24,7 +24,7 @@ Background:
 			"name": "优惠券1",
 			"money": 100.00,
 			"count": 50,
-			"limit_counts": 1,
+			"limit_counts": 不限,
 			"start_date": "今天",
 			"end_date": "10天后",
 			"coupon_id_prefix": "coupon1_id_"
@@ -32,7 +32,7 @@ Background:
 			"name": "优惠券2",
 			"money": 50.00,
 			"count": 50,
-			"limit_counts": 1,
+			"limit_counts": 不限,
 			"start_date": "今天",
 			"end_date": "5天后",
 			"coupon_id_prefix": "coupon2_id_"
@@ -40,7 +40,7 @@ Background:
 			"name": "优惠券3",
 			"money": 30.00,
 			"count": 50,
-			"limit_counts": 1,
+			"limit_counts": 不限,
 			"start_date": "今天",
 			"end_date": "5天后",
 			"using_limit": "满50元可以使用",
@@ -69,13 +69,13 @@ Background:
 				"pic":""
 			},{
 				"prize_grade":"二等奖",
-				"prize_counts":30,
+				"prize_counts":0,
 				"prize_type":"优惠券",
 				"coupon":"优惠券2",
 				"pic":""
 			},{
 				"prize_grade":"三等奖",
-				"prize_counts":50,
+				"prize_counts":0,
 				"prize_type":"优惠券",
 				"coupon":"优惠券3",
 				"pic":"1.jpg"
@@ -96,7 +96,8 @@ Background:
 	"""
     感谢您对杭州百事可乐的关注<br />立即抽奖<br />
     """
-	When bill使用抽奖码'el8s539t18'参加专项抽奖活动'专项抽奖活动01'
+	When bill点击'立即抽奖'进入'专项抽奖活动01'活动页面
+	When bill参加专项抽奖活动'专项抽奖活动01'
 	Then bill获得专项抽奖结果
 	"""
 		{
@@ -109,12 +110,13 @@ Background:
 	"""
     感谢您对杭州百事可乐的关注<br />立即抽奖<br />
     """
-	When bill使用抽奖码'elm8v6uj41'参加专项抽奖活动'专项抽奖活动01'
+    When bill点击'立即抽奖'进入'专项抽奖活动01'活动页面
+	When bill参加专项抽奖活动'专项抽奖活动01'
 	Then bill获得专项抽奖结果
 	"""
 		{
-			"prize_grade":"二等奖",
-			"prize_name":"优惠券2"
+			"prize_grade":"一等奖",
+			"prize_name":"优惠券1"
 		}
 	"""
 	When bill在微信中向jobs的公众号发送消息'el58fe24rf'
@@ -122,12 +124,13 @@ Background:
 	"""
     感谢您对杭州百事可乐的关注<br />立即抽奖<br />
     """
-	When bill使用抽奖码'el58fe24rf'参加专项抽奖活动'专项抽奖活动01'
+	When bill点击'立即抽奖'进入'专项抽奖活动01'活动页面
+	When bill参加专项抽奖活动'专项抽奖活动01'
 	Then bill获得专项抽奖结果
 	"""
 		{
-			"prize_grade":"三等奖",
-			"prize_name":"优惠券3"
+			"prize_grade":"一等奖",
+			"prize_name":"优惠券1"
 		}
 	"""
 
@@ -145,14 +148,14 @@ Scenario:1 微信专项抽奖活动码库查询
 			"lottery_code":"el58fe24rf",
 			"user":"bill",
 			"use_date":"今天",
-			"prize_grade":"三等奖",
-			"prize_name":"优惠券3"
+			"prize_grade":"一等奖",
+			"prize_name":"优惠券1"
 		},{
 			"lottery_code":"elm8v6uj41",
 			"user":"bill",
 			"use_date":"昨天",
-			"prize_grade":"二等奖",
-			"prize_name":"优惠券2"
+			"prize_grade":"一等奖",
+			"prize_name":"优惠券1"
 		},{
 			"lottery_code":"el8s539t18",
 			"user":"bill",
@@ -203,14 +206,14 @@ Scenario:1 微信专项抽奖活动码库查询
 			"lottery_code":"el58fe24rf",
 			"user":"bill",
 			"use_date":"今天",
-			"prize_grade":"三等奖",
-			"prize_name":"优惠券3"
+			"prize_grade":"一等奖",
+			"prize_name":"优惠券1"
 		},{
 			"lottery_code":"elm8v6uj41",
 			"user":"bill",
 			"use_date":"昨天",
-			"prize_grade":"二等奖",
-			"prize_name":"优惠券2"
+			"prize_grade":"一等奖",
+			"prize_name":"优惠券1"
 		},{
 			"lottery_code":"el8s539t18",
 			"user":"bill",
@@ -237,14 +240,14 @@ Scenario:2 微信专项抽奖活动码库列表分页
 			"lottery_code":"el58fe24rf",
 			"user":"bill",
 			"use_date":"今天",
-			"prize_grade":"三等奖",
-			"prize_name":"优惠券3"
+			"prize_grade":"一等奖",
+			"prize_name":"优惠券1"
 		},{
 			"lottery_code":"elm8v6uj41",
 			"user":"bill",
 			"use_date":"昨天",
-			"prize_grade":"二等奖",
-			"prize_name":"优惠券2"
+			"prize_grade":"一等奖",
+			"prize_name":"优惠券1"
 		}]
 	"""
 	When jobs访问'专项抽奖活动01'码库列表下一页
