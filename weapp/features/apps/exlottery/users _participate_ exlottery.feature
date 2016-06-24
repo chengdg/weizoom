@@ -135,7 +135,7 @@ Scenario:2专项抽奖活动未开始,bill使用抽奖码进行抽奖
 		该抽奖码尚未生效
 	"""
 	
-@mall2 @apps @apps_exlottery @users_participate_exlottery 
+@mall2 @apps @apps_exlottery @users_participate_exlottery
 Scenario:3 活动已结束并且抽奖码已使用，bill使用抽奖码进行抽奖
 	Given jobs登录系统
 	When jobs新建专项抽奖活动
@@ -147,7 +147,7 @@ Scenario:3 活动已结束并且抽奖码已使用，bill使用抽奖码进行�
 			"end_date":"明天",
 			"reduce_integral":5,
 			"send_integral":0,
-			"win_rate":"60%",
+			"win_rate":"100%",
 			"lottory_code_num":1,
 			"reply":"感谢您对杭州百事可乐的关注",
 			"link_reply":"立即抽奖",
@@ -195,7 +195,7 @@ Scenario:3 活动已结束并且抽奖码已使用，bill使用抽奖码进行�
 			"prize_name":"优惠券1"
 		}
 	"""
-	When bill于'三天后'在微信中向jobs的公众号发送消息'el8s539t18'
+	When bill在微信中向jobs的公众号发送消息'el8s539t18'
 	Then bill获得'专项抽奖'系统回复的消息
 	"""
 		该抽奖码已使用
@@ -253,7 +253,7 @@ Scenario:4 活动已结束并且抽奖码未使用，bill使用抽奖码进行�
     该抽奖码已过期
     """
 
-@mall2 @apps @apps_exlottery @users_participate_exlottery 
+@mall2 @apps @apps_exlottery @users_participate_exlottery
 Scenario:5 活动进行中，抽奖码已使用，bill使用抽奖码进行抽奖
 	Given jobs登录系统
 	When jobs新建专项抽奖活动
@@ -265,7 +265,7 @@ Scenario:5 活动进行中，抽奖码已使用，bill使用抽奖码进行抽�
 			"end_date":"2天后",
 			"reduce_integral":5,
 			"send_integral":0,
-			"win_rate":"60%",
+			"win_rate":"100%",
 			"lottory_code_num":1,
 			"reply":"感谢您对杭州百事可乐的关注",
 			"link_reply":"立即抽奖",

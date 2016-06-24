@@ -16,6 +16,7 @@ from utils.string_util import byte_to_hex
 import json
 import re
 import time
+import apps_step_utils as app_utils
 
 def __get_exlottery_id(lottery_name):
 	return Exlottery.objects.get(name=lottery_name).id
@@ -38,6 +39,7 @@ def __get_into_lottery_pages(context,webapp_owner_id,lottery_id,lottery_code):
 def step_impl(context, user, exlottery_name):
 	answer = context.text.strip()
 	result = context.qa_result["data"]
+
 	if answer.find('<br />') != -1:
 		answer_list =  answer.split('<br />')
 		if result.find(answer_list[0]) != -1 and result.find(answer_list[1]) != -1:
@@ -52,36 +54,13 @@ def step_impl(context, user, exlottery_name):
 		else:
 			context.tc.assertEquals(True, False)
 
-import apps_step_utils as app_utils
-@when(u"{webapp_user_name}用抽奖码{lottery_code}参加专项抽奖活动'{lottery_name}'")
-def step_impl(context,webapp_user_name,lottery_code,lottery_name):
-	lottery_id = __get_exlottery_id(lottery_name)
-	webapp_owner_id = context.webapp_owner_id
-	user = User.objects.get(id=context.webapp_owner_id)
-	openid = "%s_%s" % (webapp_user_name, user.username)
-	context.openid = openid
-	__get_into_lottery_pages(context,webapp_owner_id,lottery_id,lottery_code)
-	params = {
-		'webapp_owner_id': webapp_owner_id,
-		'id': str(lottery_id),
-        'code': lottery_code
-	}
-
-	response = app_utils.get_response(context, {
-        "app": "m/apps/exlottery",
-        "resource": "exlottery_prize",
-        "method": "put",
-        "type": "api",
-        "args": params
-    })
-	context.lottery_result = json.loads(response.content)
-
 @then(u"{webapp_user_name}获得专项抽奖结果")
 def step_impl(context, webapp_user_name):
 	try:
 		#抽奖成功获得奖励
 		expected = json.loads(context.text)
 		lottery_result = context.lottery_result['data']
+
 		type2name = {
 			'integral': u'积分',
 			'coupon': u'优惠券',
@@ -89,14 +68,13 @@ def step_impl(context, webapp_user_name):
 			'no_prize': u'谢谢参与'
 		}
 		# 构造实际数据
-		actual = []
-		actual.append({
+		actual = {
 			"prize_grade": lottery_result['result'],
 			"prize_type": type2name[lottery_result['prize_type']],
 			"prize_name": lottery_result['prize_name']
-		})
+		}
 
-		bdd_util.assert_list(expected, actual)
+		bdd_util.assert_dict(expected, actual)
 	except:
 		#抽奖失败获得错误提示
 		expected = context.text.strip()
@@ -134,6 +112,17 @@ def step_impl(context, webapp_user_name, user, lottery_name):
 
 @when(u"{webapp_user_name_new}点击{webapp_user_name}分享的'{lottery_name}'活动链接参加专项抽奖活动")
 def step_impl(context, webapp_user_name_new, webapp_user_name, lottery_name):
+	response = app_utils.get_response(context, {
+		"app": "m/apps/exlottery",
+		"resource": "exlottery_prize",
+		"method": "put",
+		"type": "api",
+		"args": context.exlottery_detail
+	})
+	context.lottery_result = json.loads(response.content)
+
+@when(u"{webapp_user_name}参加专项抽奖活动'{lottery_name}'")
+def step_impl(context, webapp_user_name, lottery_name):
 	response = app_utils.get_response(context, {
 		"app": "m/apps/exlottery",
 		"resource": "exlottery_prize",

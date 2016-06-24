@@ -837,6 +837,11 @@ def step_impl(context, user, exlottery_name):
 
 	expected = json.loads(context.text)
 	actual = []
+	for code in expected:
+		use_date = code.get('use_date','')
+		if use_date:
+			start_date = bdd_util.get_date_str(use_date)
+			code['use_date'] = start_date
 
 	#搜索查看结果
 	if hasattr(context, "search_exlottery_code"):
@@ -845,7 +850,7 @@ def step_impl(context, user, exlottery_name):
 			actual.append({
 				'lottery_code': code['code'],
 				'user': code['member'],
-				'use_date': code['time'],
+				'use_date': code['time'][:10] if code['time'] else '',
 				'prize_grade': code['grade'],
 				'prize_name': code['name']
 			})
@@ -868,7 +873,7 @@ def step_impl(context, user, exlottery_name):
 			actual.append({
 				'lottery_code': code['code'],
 				'user': code['member'],
-				'use_date': code['time'],
+				'use_date': code['time'][:10] if code['time'] else '',
 				'prize_grade': code['grade'],
 				'prize_name': code['name']
 			})

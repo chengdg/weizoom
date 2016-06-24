@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+from django.conf import settings
 from datetime import datetime
 
 from django.http import HttpResponse
@@ -36,12 +36,12 @@ class Mexlottery(resource.Resource):
 		member = request.member
 		is_pc = False if member else True
 
-		# if not is_pc:
-		# 	#从redis缓存获取静态页面
-		# 	cache_data = GET_CACHE(cache_key)
-		# 	if cache_data:
-		# 		print 'redis---return'
-		# 		return HttpResponse(cache_data)
+		if not is_pc:
+			#从redis缓存获取静态页面
+			cache_data = GET_CACHE(cache_key)
+			if cache_data:
+				print 'redis---return'
+				return HttpResponse(cache_data)
 
 		try:
 			record = app_models.Exlottery.objects.get(id=id)
@@ -181,9 +181,7 @@ def check_keyword(data):
 	webapp_owner_id = data['webapp_owner_id']
 	keyword = data['keyword']
 	member = get_member_by_openid(data['openid'], data['webapp_id'])
-	print "----------777777777777777777777"
-	print member.id
-	print "----------777777777777777777777"
+
 	if not member:
 		return None
 
@@ -207,7 +205,8 @@ def check_keyword(data):
 
 	reply = exlottery.reply
 	reply_link = exlottery.reply_link
-	return_html = "{},&nbsp;<a href='/m/apps/exlottery/m_exlottery/?webapp_owner_id={}&id={}&code={}'>{}</a>".format(reply, webapp_owner_id, str(exlottery.id), keyword ,reply_link)
+	host = settings.DOMAIN
+	return_html = u"{}, <a href='http://{}/m/apps/exlottery/m_exlottery/?webapp_owner_id={}&id={}&code={}'>{}</a>".format(reply, host, webapp_owner_id, str(exlottery.id), keyword ,reply_link)
 
 	return return_html
 

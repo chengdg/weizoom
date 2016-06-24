@@ -58,7 +58,6 @@ class exlottery_prize(resource.Resource):
 		算法：奖池抽奖球数量=奖品总数量+奖品总数量/中奖概率
 			 如，中奖率：15%，奖品总数：500个，则奖池抽奖球个数为：500/15%=3333=3333
 		"""
-		print 555555555555555555555555555555555555555555555
 		post = request.POST
 		response = create_response(500)
 		record_id = post.get('id', None)
@@ -80,7 +79,6 @@ class exlottery_prize(resource.Resource):
 
 		#检查码有没有被使用过
 		can_play_count = 0
-		print code,record_id,member_id,6666666666666666666666666666666
 		exlottery_participance = app_models.ExlotteryParticipance.objects(code=code, belong_to=record_id, member_id=member_id)
 		if exlottery_participance.count() == 1:
 			# 如果绑定，验证抽奖码有没有抽奖
@@ -143,12 +141,6 @@ class exlottery_prize(resource.Resource):
 		exlottery_record = app_models.ExlottoryRecord.objects(belong_to=record_id, member_id=member_id, code=code)
 		if exlottery_record.count() != 0:
 			exlottery_record = exlottery_record.first()
-		# else:
-		# 	#如果当前用户没有参与过该活动，则创建新记录
-		# 	data['belong_to'] = record_id
-		# 	data['created_at'] = now_datetime - dt.timedelta(seconds=2) #第一次参与抽奖初始抽奖时间向前2秒以免在下面的逻辑中被判定为过于频繁
-		# 	exlottery_record = app_models.ExlottoryRecord(**data)
-		# 	exlottery_record.save()
 
 		#如果限制抽奖次数，则进行判断目前是否抽奖次数已经使用完
 		if not allow_repeat and exlottery_record:
@@ -223,17 +215,6 @@ class exlottery_prize(resource.Resource):
 		exlottery_code.update(set__use_time=exlottery_record.created_at)
 		#抽奖后，更新数据
 		has_prize = False if result == u'谢谢参与' else True
-
-		#根据送积分规则，查询当前用户是否已中奖
-		# if delivery_setting == 'false':
-		# 	member.consume_integral(-delivery, u'参与抽奖，获得参与积分')
-		# elif not exlottery_participance.has_prize and not has_prize:
-		# 	member.consume_integral(-delivery, u'参与抽奖，获得参与积分')
-
-		# if has_prize:
-		# 	exlottery_participance.update(**{"set__has_prize":has_prize, "inc__total_count":1})
-		# else:
-		# 	exlottery_participance.update(inc__total_count=1)
 
 		# #修复参与过抽奖的用户隔一天后再抽就能无限制抽奖的bug -----start
 		# exlottery_participance.update(set__exlottery_date=now_datetime)
