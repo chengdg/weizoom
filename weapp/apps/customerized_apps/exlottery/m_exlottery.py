@@ -227,8 +227,7 @@ def check_exlottery_code(keyword,member_id):
 		return None, None
 	exlottery = exlottery.first()
 	exlottery_status = exlottery.status
-	exlottery_participance = app_models.ExlotteryParticipance.objects(code=keyword, member_id=member_id,
-																	  belong_to=belong_to)
+	exlottery_participance = app_models.ExlotteryParticipance.objects(code=keyword,belong_to=belong_to)
 	exlottery_participance_count = exlottery_participance.count()
 
 	if exlottery_status == app_models.STATUS_NOT_START:
