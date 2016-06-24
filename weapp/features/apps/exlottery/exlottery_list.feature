@@ -110,7 +110,7 @@ Background:
     感谢您对杭州百事可乐的关注<br />立即抽奖<br />
     """
 	When bill使用抽奖码'elm8v6uj41'参加专项抽奖活动'专项抽奖活动01'
-	Then bill获得抽奖结果
+	Then bill获得专项抽奖结果
 	"""
 		{
 			"prize_grade":"二等奖",
@@ -123,7 +123,7 @@ Background:
     感谢您对杭州百事可乐的关注<br />立即抽奖<br />
     """
 	When bill使用抽奖码'el58fe24rf'参加专项抽奖活动'专项抽奖活动01'
-	Then bill获得抽奖结果
+	Then bill获得专项抽奖结果
 	"""
 		{
 			"prize_grade":"三等奖",
