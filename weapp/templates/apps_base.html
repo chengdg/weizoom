@@ -194,7 +194,7 @@
             W.qrcodeUrl = "{{ request.webapp_owner_info.qrcode_img }}";
             W.is_pic_up = true;
 
-            $(document).ready(function() {
+            $(function() {
                 //作为子框架页的展示调整(预览或模拟器中)
                 var isInFrame = (parent !== window);
                 if (isInFrame) {
@@ -344,6 +344,10 @@
 
             //方便查看debug信息
             function deblog(header, msg){
+                if(msg == undefined){
+                    msg = header;
+                    header = 'debug';
+                }
                 var start = header + '-----------------------start';
                 var end = header + '-----------------------end';
                 console.log(start);
