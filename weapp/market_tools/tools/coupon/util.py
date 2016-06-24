@@ -310,9 +310,12 @@ def get_member_coupons_for_sign(member, user, project_id, status=-1):
 	consume_doupon_logs = ConsumeCouponLog.objects.filter(member_id=member.id, app_name='sign', user_id=user.id, app_id="%s"%sign.id)
 	consume_doupon_log_ids = [consume_doupon_log.coupon_id for consume_doupon_log in consume_doupon_logs]
 
+	orders = Order.objects.filter(webapp_user_id__in=member.get_webapp_user_ids, coupon_id__gt=1).filter(status__in=[ORDER_STATUS_NOT, ORDER_STATUS_PAYED_SUCCESSED, ORDER_STATUS_PAYED_NOT_SHIP, ORDER_STATUS_PAYED_SHIPED, ORDER_STATUS_SUCCESSED])
+	coupon_ids = [order.coupon_id for order in orders]
+
 	if status == -1:
-		member_coupons = Coupon.objects.filter(member_id=member.id).filter(id__in=consume_doupon_log_ids).order_by('-provided_time', '-coupon_record_id', '-id')
+		member_coupons = Coupon.objects.filter(Q(member_id=member.id)| Q(id__in=coupon_ids)).filter(id__in=consume_doupon_log_ids).order_by('-provided_time', '-coupon_record_id', '-id')
 	else:
-		member_coupons = Coupon.objects.filter(member_id=member.id).filter(id__in=consume_doupon_log_ids).filter(status=status).order_by('-provided_time', '-coupon_record_id', '-id')
+		member_coupons = Coupon.objects.filter(Q(member_id=member.id)| Q(id__in=coupon_ids)).filter(id__in=consume_doupon_log_ids).filter(status=status).order_by('-provided_time', '-coupon_record_id', '-id')
 
 	return member_coupons
