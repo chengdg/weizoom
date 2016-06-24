@@ -181,6 +181,9 @@ def check_keyword(data):
 	webapp_owner_id = data['webapp_owner_id']
 	keyword = data['keyword']
 	member = get_member_by_openid(data['openid'], data['webapp_id'])
+	print "----------777777777777777777777"
+	print member.id
+	print "----------777777777777777777777"
 	if not member:
 		return None
 

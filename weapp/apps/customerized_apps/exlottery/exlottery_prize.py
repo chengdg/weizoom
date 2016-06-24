@@ -58,6 +58,7 @@ class exlottery_prize(resource.Resource):
 		算法：奖池抽奖球数量=奖品总数量+奖品总数量/中奖概率
 			 如，中奖率：15%，奖品总数：500个，则奖池抽奖球个数为：500/15%=3333=3333
 		"""
+		print 555555555555555555555555555555555555555555555
 		post = request.POST
 		response = create_response(500)
 		record_id = post.get('id', None)
@@ -79,12 +80,12 @@ class exlottery_prize(resource.Resource):
 
 		#检查码有没有被使用过
 		can_play_count = 0
+		print code,record_id,member_id,6666666666666666666666666666666
 		exlottery_participance = app_models.ExlotteryParticipance.objects(code=code, belong_to=record_id, member_id=member_id)
 		if exlottery_participance.count() == 1:
 			# 如果绑定，验证抽奖码有没有抽奖
 			if exlottery_participance.first().status == app_models.NOT_USED:
 				can_play_count = 1
-
 		# 如果当前可玩次数为0，则直接返回
 		if can_play_count <= 0:
 			response = create_response(500)
