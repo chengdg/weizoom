@@ -372,7 +372,7 @@ ui-appPage-commonStyle">
             var page = W.component.Component.parseJSON(pages[i]);
 						//微众商城的去除自动回复
 						var username = "{{request.manager.username}}";
-						if (username== "jobs"){
+						if (username== "weshop"){
 							for (var j in page.components[0].fields){
 								var field = page.components[0].fields[j];
 								if (field.name == 'reply_keyword' || field.name == 'reply_content'){

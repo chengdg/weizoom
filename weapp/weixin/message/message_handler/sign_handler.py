@@ -38,7 +38,7 @@ class SignHandler(KeywordHandler):
 	def _handle_keyword(self, context, from_weixin_user, is_from_simulator):
 		user_id = context.user_profile.user_id
 		username = User.objects.get(id=user_id).username
-		if username != 'jobs':
+		if username != 'weshop':
 			# request = context.request
 			message = context.message
 			response = None
