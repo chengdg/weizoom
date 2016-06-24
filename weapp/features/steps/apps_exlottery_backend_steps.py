@@ -808,7 +808,7 @@ def step_impl(context,user):
 		for item in rec_exlottery_list:
 			tmp = {
 				"name":item['name'],
-				"status":item['status'] if item['status'] != u'已结束' else u'已过期',
+				"status":item['status'],
 				"start_time":__date2time(item['start_time']),
 				"end_time":__date2time(item['end_time']),
 				"participant_count":item['participant_count'],

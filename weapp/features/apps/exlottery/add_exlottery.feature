@@ -34,7 +34,7 @@ Background:
 		}]
 	"""
 
-@mall2 @apps @apps_lottery @add_exlottery @apps_exlottery_backend @vito
+@mall2 @apps @apps_lottery @add_exlottery @apps_exlottery_backend
 Scenario:1 新建微信专项抽奖
 	Given jobs登录系统
 	When jobs新建专项抽奖活动
@@ -147,7 +147,7 @@ Scenario:1 新建微信专项抽奖
 			"name":"专项抽奖活动02",
 			"start_date":"3天前",
 			"end_date":"昨天",
-			"status":"已过期",
+			"status":"已结束",
 			"participant_count":0,
 			"actions": ["码库","查看结果","链接","删除","预览"]
 		},{
