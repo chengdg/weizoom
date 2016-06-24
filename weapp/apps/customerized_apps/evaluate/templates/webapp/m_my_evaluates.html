@@ -150,7 +150,7 @@
         </div>
         {% endif %}
         <div class="xui-productReviewText xa-productReviewText c65 em9 mb10">
-        {% if is_common_template %}
+        {% if review.is_common_template %}
             {{review.detail}}
         {% else %}
             {% for item in review.detail %}
