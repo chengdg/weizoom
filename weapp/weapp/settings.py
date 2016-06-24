@@ -638,7 +638,7 @@ elif 'test' == MODE:
     VISIT_RECORD_MIN_TIME_SPAN_SECONDS = 3 * 60
     USE_MOCK_PAY_API = False
     CDN_HOST = ''
-    H5_HOST = 'http://h5.mall3.weizzz.com'
+    H5_HOST = 'http://h5.zhifu.weapp.weizzz.com'
 
     #WAPI_SECRET_ACCESS_TOKEN = 'simple_wapi_key'
     WAPI_SECRET_ACCESS_TOKEN = 'akoANSpqVzuNBAeVscHB1lQnjNosByMcdV8sqpKOv2nlQssB0V'

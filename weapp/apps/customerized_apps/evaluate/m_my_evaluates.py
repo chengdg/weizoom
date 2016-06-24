@@ -71,14 +71,14 @@ class MyEvaluates(resource.Resource):
 				'created_at': review.created_at,
 				'pics': review.pics,
 				'product': product_dic,
-				'shop_reply': review.shop_reply,
-				'is_common_template': is_common_template
+				'shop_reply': review.shop_reply
 			})
 
 		c = RequestContext(request, {
 			'page_title': "我的评价",
 			'hide_non_member_cover': True, #非会员也可使用该页面
 			'reviewed_products': product_review_list,
+			'is_common_template': is_common_template
 		})
 
 

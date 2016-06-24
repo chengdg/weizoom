@@ -78,9 +78,11 @@ class MEvaluate(resource.Resource):
 		product_id = int(param.get('product_id', 0))
 
 		order_review_count = app_models.OrderEvaluates.objects(
-			owner_id=member.id,
-			order_id=order_id,
+			owner_id = request.webapp_owner_id,
+			member_id = member.id,
+			order_id = order_id
 		).count()
+
 		has_order_review = order_review_count > 0
 
 		# 得到商品信息, 如果商品已不存在（下架..）, 返回错误

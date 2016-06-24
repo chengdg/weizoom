@@ -2279,6 +2279,7 @@ li.wui-selectBox-display-table {
     display: inline-block;
     position: absolute;
     left: 0;
+	z-index: 10004;
 }
 .wui-evaluate-container .wui-title i {
     display: inline-block;

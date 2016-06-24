@@ -210,7 +210,7 @@
                 }
                 //绑定事件
                 var $body = $('body');
-                $body.delegate('#goBack', 'click', goBack); //返回上一页
+                $body.delegate('.wa-goBack', 'click', goBack); //返回上一页
                 //针对选择题组件
                 $body.delegate('.selection-radio', 'click', function(event){
                     var $span = $(event.currentTarget);
