@@ -36,42 +36,47 @@ from apps.customerized_apps.sign.models import Sign
 class SignHandler(KeywordHandler):
 
 	def _handle_keyword(self, context, from_weixin_user, is_from_simulator):
-		# request = context.request
-		message = context.message
-		response = None
-		response_rule = None
-		response_content = None
-		data = {}
-		try:
-			data['webapp_owner_id'] = context.user_profile.user_id
-			data['keyword'] = message.content
-			data['openid'] = message.fromUserName
-			data['webapp_id'] = context.user_profile.webapp_id
+		user_id = context.user_profile.user_id
+		username = User.objects.get(id=user_id).username
+		if username != 'weshop':
+			# request = context.request
+			message = context.message
+			response = None
+			response_rule = None
+			response_content = None
+			data = {}
+			try:
+				data['webapp_owner_id'] = context.user_profile.user_id
+				data['keyword'] = message.content
+				data['openid'] = message.fromUserName
+				data['webapp_id'] = context.user_profile.webapp_id
 
-			response_content = Sign.do_auto_signment(data)
+				response_content = Sign.do_auto_signment(data)
 
-			if response_content:
-				response = generator.get_text_response(message.fromUserName, message.toUserName, response_content, message.fromUserName, context.user_profile)
+				if response_content:
+					response = generator.get_text_response(message.fromUserName, message.toUserName, response_content, message.fromUserName, context.user_profile)
 
-				try:
-					self._process_recorde_message(context, response_rule, from_weixin_user, is_from_simulator)
-				except:
-					notify_message = u"_process_recorde_message, cause:\n{}".format(unicode_full_stack())
-					message_tail = '\nanswer:%s,patterns:%s,owner_id:%d,id:%d' % (response_rule.answer, response_rule.patterns, response_rule.owner_id, response_rule.id)
-					notify_message += message_tail
-					watchdog_error(notify_message)
-			
-			return response
-		except:
+					try:
+						self._process_recorde_message(context, response_rule, from_weixin_user, is_from_simulator)
+					except:
+						notify_message = u"_process_recorde_message, cause:\n{}".format(unicode_full_stack())
+						message_tail = '\nanswer:%s,patterns:%s,owner_id:%d,id:%d' % (response_rule.answer, response_rule.patterns, response_rule.owner_id, response_rule.id)
+						notify_message += message_tail
+						watchdog_error(notify_message)
+
+				return response
+			except:
+				return None
+		else:
 			return None
-		
+
 
 	def _process_recorde_message(self, context, response_rule, from_weixin_user, is_from_simulator):
 		new_context = {}
 		new_context['member_id'] = context.member.id if context.member else -1
 		new_context['message'] = context.message.__dict__ if context.message else None
 		new_context['user_profile_id'] = context.user_profile.id if context.user_profile else None
-		
+
 		request = context.request
 		post = {}
 		post.update(request.POST)
@@ -82,7 +87,7 @@ class SignHandler(KeywordHandler):
 		new_context['response_rule_id'] = response_rule.id if response_rule else -1
 		#new_context['from_weixin_user_id'] = from_weixin_user.id if from_weixin_user else -1
 		new_context['from_user_name'] = context.message.fromUserName
-		
+
 		new_context['is_from_simulator'] = is_from_simulator
 		new_context['request'] = current_request_dict
 
@@ -134,7 +139,7 @@ class SignHandler(KeywordHandler):
 
 	def _should_record_message(self, is_from_simulator, request):
 		should_record_message = True
-		
+
 		'''
 		if settings.RECORD_SIMULATOR_MESSAGE:
 			return True
@@ -156,7 +161,7 @@ class SignHandler(KeywordHandler):
 			head_icon = '/static/img/zhouxun_50.jpg'
 		elif weixin_user_name == 'yangmi':
 			head_icon = '/static/img/yangmi_50.jpg'
-		
+
 		return head_icon
 
 	########################################################################

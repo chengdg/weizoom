@@ -68,27 +68,27 @@ W.component.appkit.SignDescription = W.component.Component.extend({
 			isUserProperty: true,
 			default: '签到赚积分啦！'
 		}]},{
-		// group:"自动回复",
-		// groupClass:'xui-propertyView-app-ReplyGroup',
-		// fields:[{
-		// 	name: 'reply_keyword',
-		// 	type: 'badge',
-		// 	displayName: '关键字',
-		// 	isUserProperty: true,
-		// 	plugin: 'apps_prize_keywordpane',
-		// 	uirole: 'apps-prize-keyword-pane',
-		// 	'btnName': '+ 添加',
-		// 	default: {}
-		//
-		// },{
-		// 	name: 'reply_content',
-		// 	type: 'textarea',
-		// 	displayName: '回复内容',
-		// 	maxLength: 200,
-		// 	isUserProperty: true,
-		// 	placeholder: '建议填写店铺近期活动通知，签到奖励等内容……',
-		// 	default: '建议填写店铺近期活动通知，签到奖励等内容……'
-		// }]},{
+		group:"自动回复",
+		groupClass:'xui-propertyView-app-ReplyGroup',
+		fields:[{
+			name: 'reply_keyword',
+			type: 'badge',
+			displayName: '关键字',
+			isUserProperty: true,
+			plugin: 'apps_prize_keywordpane',
+			uirole: 'apps-prize-keyword-pane',
+			'btnName': '+ 添加',
+			default: {}
+
+		},{
+			name: 'reply_content',
+			type: 'textarea',
+			displayName: '回复内容',
+			maxLength: 200,
+			isUserProperty: true,
+			placeholder: '建议填写店铺近期活动通知，签到奖励等内容……',
+			default: '建议填写店铺近期活动通知，签到奖励等内容……'
+		}]},{
 			group:"签到设置",
 			groupClass:"xui-propertyView-app-SignSettingGroupName",
 			groupHelp:{

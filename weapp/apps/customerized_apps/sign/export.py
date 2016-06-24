@@ -64,7 +64,6 @@ def get_sing_fields_to_save(request):
 
 	if 'reply' in request.POST:
 		fields['reply'] = json.loads(fields['reply'])
-	fields['reply'] = {"keyword":{},"content":""}
 
 	return fields
 
