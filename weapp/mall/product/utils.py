@@ -464,7 +464,8 @@ def get_product2group(pids, woid='3'):
     })
 
     if resp and resp['code']:
-        product_groups = resp['pid2is_in_group_buy']
+        data = resp['data']
+        product_groups = data['pid2is_in_group_buy']
         product2group = {}
         for product_group in product_groups:
             product2group[product_group["pid"]] = product_group["is_in_group_buy"]
