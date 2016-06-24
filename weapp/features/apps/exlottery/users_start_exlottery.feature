@@ -75,7 +75,7 @@ Scenario:1 抽奖码校验通过
     感谢您对杭州百事可乐的关注<br />立即抽奖<br />
     """
     When bill使用抽奖码'el8s539t18'参加专项抽奖活动'专项抽奖'
-	Then bill获得抽奖结果
+	Then bill获得专项抽奖结果
 	"""
 		{
 			"prize_grade":"三等奖",
