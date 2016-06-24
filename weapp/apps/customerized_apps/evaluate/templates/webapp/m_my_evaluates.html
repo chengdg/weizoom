@@ -145,9 +145,9 @@
             </div>
         </div>
         {% if review.shop_reply %}
-        <div class="pb10 xui-shopReply mb10">
+        <div class="pb10 xui-shopReply mb10 xa-shopReply">
             <span class="em9 fl">商家留言：</span>
-            <p class="em9 c65">{{review.shop_reply|safe}}</p>
+            {{review.shop_reply|safe}}
         </div>
         {% endif %}
         <div class="xui-productReviewText xa-productReviewText c65 em9 mb10">
@@ -212,6 +212,9 @@
                 $(this).parents('.xui-productReview').find('.xui-uploadImg').addClass('wui-hide');                  
             }
         });
+
+        $('.xa-shopReply').find('p').addClass('em9','c65');
+        $('.xa-shopReply').find('p img').addClass('vm');
     });
 </script>
 {% endblock %}
