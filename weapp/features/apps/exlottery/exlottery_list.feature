@@ -153,13 +153,13 @@ Scenario:1 微信专项抽奖活动码库查询
 		},{
 			"lottery_code":"elm8v6uj41",
 			"user":"bill",
-			"use_date":"昨天",
+			"use_date":"今天",
 			"prize_grade":"一等奖",
 			"prize_name":"优惠券1"
 		},{
 			"lottery_code":"el8s539t18",
 			"user":"bill",
-			"use_date":"前天",
+			"use_date":"今天",
 			"prize_grade":"一等奖",
 			"prize_name":"优惠券1"
 		},{
