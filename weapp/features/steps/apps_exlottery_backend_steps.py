@@ -640,7 +640,7 @@ def __Update_Exlottery(context,text,page_id,lottery_id):
 	rec_exlottery_url ="/apps/exlottery/api/exlotteries/?design_mode={}&version={}&count_per_page={}&page={}&enable_paginate={}".format(design_mode,version,count_per_page,page,enable_paginate)
 	context.client.get(rec_exlottery_url)
 
-def __Delete_Lottery(context,lottery_id):
+def __Delete_Exlottery(context,lottery_id):
 	"""
 	删除抽奖活动
 	写入mongo表：
@@ -650,21 +650,21 @@ def __Delete_Lottery(context,lottery_id):
 	"""
 	design_mode = 0
 	version = 1
-	del_exlottery_url = "/apps/lottery/api/lottery/?design_mode={}&version={}&_method=delete".format(design_mode,version)
+	del_exlottery_url = "/apps/exlottery/api/exlottery/?design_mode={}&version={}&_method=delete".format(design_mode,version)
 	del_args ={
 		"id":lottery_id
 	}
 	del_lottery_response = context.client.post(del_exlottery_url,del_args)
 	return del_lottery_response
 
-def __Stop_Lottery(context,lottery_id):
+def __Stop_Exlottery(context,lottery_id):
 	"""
 	关闭抽奖活动
 	"""
 
 	design_mode = 0
 	version = 1
-	stop_exlottery_url = "/apps/lottery/api/lottery_status/?design_mode={}&version={}".format(design_mode,version)
+	stop_exlottery_url = "/apps/exlottery/api/exlottery_status/?design_mode={}&version={}".format(design_mode,version)
 	stop_args ={
 		"id":lottery_id,
 		"target":'stoped'
@@ -808,7 +808,7 @@ def step_impl(context,user):
 		for item in rec_exlottery_list:
 			tmp = {
 				"name":item['name'],
-				"status":item['status'],
+				"status":item['status'] if item['status'] != u'已结束' else u'已过期',
 				"start_time":__date2time(item['start_time']),
 				"end_time":__date2time(item['end_time']),
 				"participant_count":item['participant_count'],
@@ -999,185 +999,14 @@ def step_impl(context,user,lottery_name):
 
 	bdd_util.assert_dict(expect_lottery_dic, actual_lottery_dic)
 
-# @when(u"{user}删除微信抽奖活动'{lottery_name}'")
-# def step_impl(context,user,lottery_name):
-# 	lottery_page_id,lottery_id = __lottery_name2id(lottery_name)#纯数字
-# 	del_response = __Delete_Lottery(context,lottery_id)
-# 	bdd_util.assert_api_call_success(del_response)
-#
-# @when(u"{user}关闭微信抽奖活动'{lottery_name}'")
-# def step_impl(context,user,lottery_name):
-# 	lottery_page_id,lottery_id = __lottery_name2id(lottery_name)#纯数字
-# 	stop_response = __Stop_Lottery(context,lottery_id)
-# 	bdd_util.assert_api_call_success(stop_response)
-#
-# @when(u"{user}设置微信抽奖活动列表查询条件")
-# def step_impl(context,user):
-# 	expect = json.loads(context.text)
-# 	if 'start_date' in expect:
-# 		expect['start_time'] = __date2time(expect['start_date']) if expect['start_date'] else ""
-# 		del expect['start_date']
-#
-# 	if 'end_date' in expect:
-# 		expect['end_time'] = __date2time(expect['end_date']) if expect['end_date'] else ""
-# 		del expect['end_date']
-#
-# 	search_dic = {
-# 		"name": expect.get("name",""),
-# 		"start_time": expect.get("start_time",""),
-# 		"end_time": expect.get("end_time",""),
-# 		"status": expect.get("status",u"全部")
-# 	}
-# 	search_response = __Search_Lottery(context,search_dic)
-# 	lottery_array = json.loads(search_response.content)['data']['items']
-# 	context.search_lottery = lottery_array
-#
-# @when(u"{user}访问微信抽奖活动列表第'{page_num}'页")
-# def step_impl(context,user,page_num):
-# 	count_per_page = context.count_per_page
-# 	context.paging = {'count_per_page':count_per_page,"page_num":page_num}
-#
-# @when(u"{user}访问微信抽奖活动列表下一页")
-# def step_impl(context,user):
-# 	paging_dic = context.paging
-# 	count_per_page = paging_dic['count_per_page']
-# 	page_num = int(paging_dic['page_num'])+1
-# 	context.paging = {'count_per_page':count_per_page,"page_num":page_num}
-#
-# @when(u"{user}访问微信抽奖活动列表上一页")
-# def step_impl(context,user):
-# 	paging_dic = context.paging
-# 	count_per_page = paging_dic['count_per_page']
-# 	page_num = int(paging_dic['page_num'])-1
-# 	context.paging = {'count_per_page':count_per_page,"page_num":page_num}
-#
-# @when(u"{user}查看微信抽奖活动'{lottery_name}'")
-# def check_lottery_list(context,user,lottery_name):
-# 	design_mode = 0
-# 	version = 1
-# 	page = 1
-#
-# 	if hasattr(context,"enable_paginate"):
-# 		enable_paginate = context.enable_paginate
-# 	else:
-# 		enable_paginate = 1
-# 	if hasattr(context,"count_per_page"):
-# 		count_per_page = context.count_per_page
-# 	else:
-# 		count_per_page = 10
-#
-#
-# 	if hasattr(context,"paging"):
-# 		paging_dic = context.paging
-# 		count_per_page = paging_dic['count_per_page']
-# 		page = paging_dic['page_num']
-#
-# 	lottery_page_id,lottery_id = __lottery_name2id(lottery_name)#纯数字
-# 	url ='/apps/lottery/api/lottery_participances/?design_mode={}&version={}&id={}&count_per_page={}&page={}&enable_paginate={}&_method=get'.format(
-# 			design_mode,
-# 			version,
-# 			lottery_id,
-# 			count_per_page,
-# 			page,
-# 			enable_paginate,
-# 		)
-# 	url = bdd_util.nginx(url)
-# 	response = context.client.get(url)
-# 	context.participances = json.loads(response.content)
-# 	context.lottery_id = "%s"%(lottery_id)
-#
-#
-# @then(u"{webapp_user_name}获得微信抽奖活动'{power_me_rule_name}'的结果列表")
-# def step_tmpl(context, webapp_user_name, power_me_rule_name):
-#
-# 	if hasattr(context,"search_lottery_result"):
-# 		participances = context.search_lottery_result
-# 	else:
-# 		participances = context.participances['data']['items']
-# 	actual = []
-#
-# 	for p in participances:
-# 		p_dict = OrderedDict()
-# 		p_dict[u"member_name"] = p['participant_name']
-# 		p_dict[u"mobile"] = p['tel']
-# 		p_dict[u"prize_grade"] = p['prize_title']
-# 		p_dict[u"prize_name"] = p['prize_name']
-# 		p_dict[u"lottery_time"] = bdd_util.get_date_str(p['created_at'])
-# 		p_dict[u"receive_status"] = u'已领取' if p['status'] else u'未领取'
-# 		p_dict[u"actions"] = u'' if p['status'] else u'领取'
-# 		actual.append((p_dict))
-# 	print("actual_data: {}".format(actual))
-# 	expected = []
-# 	if context.table:
-# 		for row in context.table:
-# 			cur_p = row.as_dict()
-# 			if cur_p[u'lottery_time']:
-# 				cur_p[u'lottery_time'] = bdd_util.get_date_str(cur_p[u'lottery_time'])
-# 			expected.append(cur_p)
-# 	else:
-# 		expected = json.loads(context.text)
-# 	print("expected: {}".format(expected))
-#
-# 	bdd_util.assert_list(expected, actual)
-#
-# @when(u"{user}设置微信抽奖活动结果列表查询条件")
-# def step_impl(context,user):
-# 	expect = json.loads(context.text)
-#
-# 	if 'lottery_start_time' in expect:
-# 		expect['start_time'] = __date2time(expect['lottery_start_time']) if expect['lottery_start_time'] else ""
-# 		del expect['lottery_start_time']
-#
-# 	if 'lottery_end_time' in expect:
-# 		expect['end_time'] = __date2time(expect['lottery_end_time']) if expect['lottery_end_time'] else ""
-# 		del expect['lottery_end_time']
-#
-# 	print("expected: {}".format(expect))
-# 	id = context.lottery_id
-# 	participant_name = expect.get("member_name","")
-# 	start_time = expect.get("start_time","")
-# 	end_time = expect.get("end_time","")
-# 	prize_type = expect.get("prize_type",u"全部")
-# 	status = expect.get("status",u"全部")
-#
-# 	search_dic = {
-# 		"id":id,
-# 		"participant_name":participant_name,
-# 		"start_time":start_time,
-# 		"end_time":end_time,
-# 		"prize_type":prize_type,
-# 		"status":status
-# 	}
-# 	search_response = __Search_Lottery_Result(context,search_dic)
-# 	lottery_result_array = json.loads(search_response.content)['data']['items']
-# 	context.search_lottery_result = lottery_result_array
-#
-# @when(u"{user}访问微信抽奖活动'{lottery_name}'的结果列表第'{page_num}'页")
-# def step_impl(context,user,lottery_name,page_num):
-# 	count_per_page = context.count_per_page
-# 	context.paging = {'count_per_page':count_per_page,"page_num":page_num}
-# 	check_lottery_list(context,user,lottery_name)
-#
-# @when(u"{user}访问微信抽奖活动'{lottery_name}'的结果列表下一页")
-# def step_impl(context,user,lottery_name):
-# 	paging_dic = context.paging
-# 	count_per_page = paging_dic['count_per_page']
-# 	page_num = int(paging_dic['page_num'])+1
-# 	context.paging = {'count_per_page':count_per_page,"page_num":page_num}
-# 	check_lottery_list(context,user,lottery_name)
-#
-# @when(u"{user}访问微信抽奖活动'{lottery_name}'的结果列表上一页")
-# def step_impl(context,user,lottery_name):
-# 	paging_dic = context.paging
-# 	count_per_page = paging_dic['count_per_page']
-# 	page_num = int(paging_dic['page_num'])-1
-# 	context.paging = {'count_per_page':count_per_page,"page_num":page_num}
-# 	check_lottery_list(context,user,lottery_name)
+@when(u"{user}删除专项抽奖活动'{lottery_name}'")
+def step_impl(context,user,lottery_name):
+	lottery_page_id,lottery_id = __exlottery_name2id(lottery_name)#纯数字
+	del_response = __Delete_Exlottery(context,lottery_id)
+	bdd_util.assert_api_call_success(del_response)
 
-# @then(u"{user}能批量导出抽奖活动'{lottery_name}'")
-# def step_impl(context,user,lottery_name):
-# 	lottery_page_id,lottery_id = __lottery_name2id(lottery_name)#纯数字
-# 	url ='/apps/lottery/api/lottery_participances_export/?_method=get&export_id=%s' % (lottery_id)
-# 	url = bdd_util.nginx(url)
-# 	response = context.client.get(url)
-# 	bdd_util.assert_api_call_success(response)
+@when(u"{user}关闭专项抽奖活动'{lottery_name}'")
+def step_impl(context,user,lottery_name):
+	lottery_page_id,lottery_id = __exlottery_name2id(lottery_name)#纯数字
+	stop_response = __Stop_Exlottery(context,lottery_id)
+	bdd_util.assert_api_call_success(stop_response)

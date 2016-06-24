@@ -183,7 +183,7 @@ Scenario:3 活动已结束并且抽奖码已使用，bill使用抽奖码进行�
     感谢您对杭州百事可乐的关注<br />立即抽奖<br />
     """
 	When bill使用抽奖码'el8s539t18'参加专项抽奖活动'专项抽奖'
-	Then bill获得抽奖结果
+	Then bill获得专项抽奖结果
 	"""
 		{
 			"prize_grade":"二等奖",
@@ -293,7 +293,7 @@ Scenario:5 活动进行中，抽奖码已使用，bill使用抽奖码进行抽�
 
     """
     When bill使用抽奖码'el8s539t18'参加专项抽奖活动'专项抽奖'
-	Then bill获得抽奖结果
+	Then bill获得专项抽奖结果
 	"""
 		{
 			"prize_grade":"一等奖",
