@@ -480,7 +480,7 @@ class MemberDetail(resource.Resource):
 			try:
 				date_before_30 = get_date_after_days(now(),-30).strftime("%Y-%m-%d")
 				webapp_user_ids = member.get_webapp_user_ids
-				purchase_count_30days = Order.objects.filter(webapp_user_id__in=webapp_user_ids, payment_time__gte=date_before_30,status=ORDER_STATUS_SUCCESSED).count()
+				purchase_count_30days = Order.objects.filter(webapp_user_id__in=webapp_user_ids, payment_time__gte=date_before_30,status=ORDER_STATUS_SUCCESSED,origin_order_id__lte=0).count()
 				member.purchase_frequency = purchase_count_30days
 			except:
 				notify_message = u"更新会员30天购买次数失败:cause:\n{}".format(unicode_full_stack())
