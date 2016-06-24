@@ -177,6 +177,10 @@ Scenario:3 活动已结束并且抽奖码已使用，bill使用抽奖码进行�
 	"""
 		["el8s539t18"]
 	"""
+	Given bill关注jobs的公众号
+	When bill访问jobs的webapp
+	When bill获得jobs的20会员积分
+	Then bill在jobs的webapp中拥有20会员积分
 	When bill在微信中向jobs的公众号发送消息'el8s539t18'
 	Then bill获得'专项抽奖'系统回复的消息
 	"""
@@ -238,6 +242,10 @@ Scenario:4 活动已结束并且抽奖码未使用，bill使用抽奖码进行�
 	"""
 		["el8s539t18"]
 	"""
+	Given bill关注jobs的公众号
+	When bill访问jobs的webapp
+	When bill获得jobs的20会员积分
+	Then bill在jobs的webapp中拥有20会员积分
 	When bill在微信中向jobs的公众号发送消息'el8s539t18'
 	Then bill获得'专项抽奖'系统回复的消息
 	"""
@@ -286,6 +294,10 @@ Scenario:5 活动进行中，抽奖码已使用，bill使用抽奖码进行抽�
 	"""
 		["el8s539t18"]
 	"""
+	Given bill关注jobs的公众号
+	When bill访问jobs的webapp
+	When bill获得jobs的20会员积分
+	Then bill在jobs的webapp中拥有20会员积分
 	When bill在微信中向jobs的公众号发送消息'el8s539t18'
 	Then bill获得'专项抽奖'系统回复的消息
 	"""
@@ -349,6 +361,10 @@ Scenario:6 抽奖码不正确，bill使用抽奖码进行抽奖
 	"""
 		["el8s539t18"]
 	"""
+	Given bill关注jobs的公众号
+	When bill访问jobs的webapp
+	When bill获得jobs的20会员积分
+	Then bill在jobs的webapp中拥有20会员积分
 	When bill在微信中向jobs的公众号发送消息'el12345678'
 	Then bill获得'专项抽奖'系统回复的消息
 	"""
