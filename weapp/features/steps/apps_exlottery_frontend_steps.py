@@ -53,7 +53,7 @@ def step_impl(context,webapp_user_name,lottery_code,lottery_name):
 	user = User.objects.get(id=context.webapp_owner_id)
 	openid = "%s_%s" % (webapp_user_name, user.username)
 	context.openid = openid
-	# __get_into_lottery_pages(context,webapp_owner_id,lottery_id,lottery_code)
+	__get_into_lottery_pages(context,webapp_owner_id,lottery_id,lottery_code)
 	params = {
 		'webapp_owner_id': webapp_owner_id,
 		'id': str(lottery_id),
@@ -73,6 +73,7 @@ def step_impl(context,webapp_user_name,lottery_code,lottery_name):
 
 @then(u"{webapp_user_name}获得专项抽奖结果")
 def step_impl(context, webapp_user_name):
+	app_utils.debug_print(context.lottery_result)
 	lottery_result = context.lottery_result['data']
 	type2name = {
 		'integral': u'积分',

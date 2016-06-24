@@ -65,7 +65,7 @@ Background:
 		["el8s539t18"]
 	"""	
 
-@mall2 @apps @apps_exlottery @users_start_exlottery 
+@mall2 @apps @apps_exlottery @users_start_exlottery @aix1
 Scenario:1 抽奖码校验通过
 	Given bill关注jobs的公众号
 	When bill访问jobs的webapp

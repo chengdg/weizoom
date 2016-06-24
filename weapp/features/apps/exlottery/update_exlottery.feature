@@ -128,7 +128,7 @@ Background:
 		["el8s539t18","el2f5e754g","el58fe24rf","elm8v6uj41","elmn782f2r"]
 	"""
 
-@mall2 @apps @apps_exlottery @update_exlottery @aix111
+@mall2 @apps @apps_exlottery @update_exlottery
 Scenario:1 编辑'未开始'状态的微信专项抽奖活动
 	Given jobs登录系统
 	Then jobs获得专项抽奖活动列表

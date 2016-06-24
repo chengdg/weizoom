@@ -119,7 +119,6 @@ class Exlottery(resource.Resource):
 			if key in update_fields:
 				update_data['set__'+key] = value
 
-		print '================'
 		record = app_models.Exlottery.objects(id=record_id)
 		record.update_one(**update_data)
 		if record.count() > 0:

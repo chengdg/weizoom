@@ -36,7 +36,7 @@ Background:
 	When bill获得jobs的20会员积分
 	Then bill在jobs的webapp中拥有20会员积分
 
-@mall2 @apps @apps_lottery @users_participate_lottery @apps_lottery_frontend
+@mall2 @apps @apps_lottery @users_participate_lottery @apps_lottery_frontend @aix22
 Scenario:1 会员参加微信抽奖活动,需要消耗积分
 	Given jobs登录系统
 	When jobs新建微信抽奖活动

@@ -86,6 +86,7 @@ Background:
 	"""
 		["el8s539t18","el2f5e754g","el58fe24rf","elm8v6uj41","elmn782f2r"]
 	"""
+	When 清空浏览器
 	When bill关注jobs的公众号
 	When bill访问jobs的webapp
 	When bill获得jobs的20会员积分
@@ -96,7 +97,7 @@ Background:
     感谢您对杭州百事可乐的关注<br />立即抽奖<br />
     """
 	When bill使用抽奖码'el8s539t18'参加专项抽奖活动'专项抽奖活动01'
-	Then bill获得抽奖结果
+	Then bill获得专项抽奖结果
 	"""
 		{
 			"prize_grade":"一等奖",
