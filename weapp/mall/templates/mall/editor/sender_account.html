@@ -69,7 +69,7 @@
                    
                     <!--快递名称-->
                     <td>
-                        <div name="">${accounts.name}</div>                                                
+                        <div>${accounts.name}</div>                                                
                     </td>
                     <!--账号-->
                     <td class="nowrap">
@@ -97,8 +97,10 @@
 </script>
 <script type="text/javascript">
 	$(document).ready(function(){
-		var $this=$(this),
-		    id=$this.attr('data-id'),
+
+		$('.xa-submit').click(function(){
+			alert(1)
+			var id='{{sender_account.id}}',
 		    
 			$account=$('.xa-account'),
 			$accountVal=$account.val(),
@@ -107,7 +109,7 @@
 			$passwordVal=$passWord.val(),
 			
 			express_accounts=$accountVal+$passwordVal
-		$('.xa-submit').click(function(){
+			
 			 W.getApi().call({
           method:'post',          
           app: 'mall2',
