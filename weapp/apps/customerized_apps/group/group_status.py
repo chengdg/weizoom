@@ -11,6 +11,7 @@ from django.contrib.auth.decorators import login_required
 
 from core import resource
 from core import paginator
+from core.exceptionutil import unicode_full_stack
 from core.jsonresponse import create_response
 
 import models as app_models
@@ -107,4 +108,4 @@ def stop_group(group_id,is_test):
 			member_info_list = [{"member_id": group_detail.grouped_member_id, "order_id": group_detail.order_id} for group_detail in group_details]
 			send_group_template_message(activity_info, member_info_list)
 		except:
-			print 'template----------------------------------'
+			print u'update status error, course: \n{}'.format(unicode_full_stack())
