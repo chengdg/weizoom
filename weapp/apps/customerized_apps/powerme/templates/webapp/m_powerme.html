@@ -148,6 +148,29 @@
         text-overflow: ellipsis;
         white-space: nowrap;
     }
+.wui-i-weshop li{
+    float:left;
+    width: 50%;
+}
+.wui-i-weshop .active {
+    color: #33CC99;
+    margin-top: -3px;
+    border-bottom: 3px solid #33CC99;
+}
+.wui-i-states-weshop .wa-top100 li{
+    text-align: left;
+    padding: 16px 5% 0;
+}
+.wui-powerme-container .wui-i-states-weshop .wa-top100 li:nth-child(1) span{
+    min-width: 45px;
+    display: inline-block;
+}
+.wui-powerme-container .wui-i-states-weshop .wa-top100 li:not(.wui-i-top100-title){
+    border-bottom: 1px dotted #ffffff;
+    height: 55px;
+    width: 90%;
+    display: inline-block;
+}
 
 </style>
 {% endblock %}
@@ -221,7 +244,13 @@
     var page_owner_member_id = '';
     var qrcode_url = W.qrcodeUrl;
     var new_qrcode_url = {% if params_qrcode_url %}'{{params_qrcode_url}}'{% else %}qrcode_url{% endif %};
+    var username = "{{ username }}"; //公众号的username
+    var has_power = false;
     $(function(){
+        if (username == 'jobs'){
+            $('.wui-i-states').hide();
+            $('.wui-i-states-weshop').show();
+        }
         //隐藏参与活动按钮
         $('.xa-submitButtonContainer').hide();
         if(W.isPC){
@@ -251,20 +280,42 @@
             var $powerBtn = $('.wa-power');
             $powerBtn.find('.wa-mobile_solution').html(page_owner_name);
             if(W.isMember){
-                if(is_powered){
-                    $powerBtn.find('.wa-power-btn-action').html('已帮');
-                    $powerBtn.on('click', function(){
-                        openGuideMask();
-                    }).show();
+                if (username == 'jobs'){
+                    if (has_power){
+                        $powerBtn.html("您已助力过该活动")
+                    }else {
+                        if(is_powered){
+                            $powerBtn.find('.wa-power-btn-action').html('已帮');
+                            $powerBtn.on('click', function(){
+                                openGuideMask();
+                            }).show();
+                        }else{
+                            $powerBtn.find('.wa-power-btn-action').html('帮');
+                           $powerBtn.on('click', function(){
+                               if(is_powered){
+                                   openGuideMask();
+                               }else{
+                                   powerYou();
+                               }
+                           }).show();
+                        }
+                    }
                 }else{
-                    $powerBtn.find('.wa-power-btn-action').html('帮');
-                   $powerBtn.on('click', function(){
-                       if(is_powered){
-                           openGuideMask();
-                       }else{
-                           powerYou();
-                       }
-                   }).show();
+                    if(is_powered){
+                        $powerBtn.find('.wa-power-btn-action').html('已帮');
+                        $powerBtn.on('click', function(){
+                            openGuideMask();
+                        }).show();
+                    }else{
+                        $powerBtn.find('.wa-power-btn-action').html('帮');
+                       $powerBtn.on('click', function(){
+                           if(is_powered){
+                               openGuideMask();
+                           }else{
+                               powerYou();
+                           }
+                       }).show();
+                    }
                 }
             }else{
                 if(is_powered){
@@ -376,6 +427,7 @@
 
         is_powered = member_info.is_powered;
         page_owner_member_id = member_info.page_owner_member_id;
+        has_power = member_info.has_power;
         updateBtnStatus();
     }
 
