@@ -29,7 +29,7 @@ def __get_into_lottery_pages(context,webapp_owner_id,lottery_id,lottery_code):
 		"method": "get",
 		"args": {
 			"webapp_owner_id": webapp_owner_id,
-			"code": lottery_code,
+			"ex_code": lottery_code,
 			"id": lottery_id
 		}
 	})
@@ -90,10 +90,10 @@ def step_impl(context, webapp_user_name, lottery_name):
 
 	webapp_owner_id_index = exlottery_url.find('webapp_owner_id=')
 	lottery_id_index = exlottery_url.find('&id=')
-	code_index = exlottery_url.find('&code=')
+	code_index = exlottery_url.find('&ex_code=')
 	webapp_owner_id = exlottery_url[webapp_owner_id_index + len('webapp_owner_id='):lottery_id_index]
 	lottery_id = exlottery_url[lottery_id_index + len('&id='):code_index]
-	code = exlottery_url[code_index + len('&code='):]
+	code = exlottery_url[code_index + len('&ex_code='):]
 
 	user = User.objects.get(id=webapp_owner_id)
 	openid = "%s_%s" % (webapp_user_name, user.username)
