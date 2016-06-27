@@ -85,12 +85,6 @@
         border-bottom: 1px solid #e1e1e1;
         overflow: hidden;
     }
-    .xui-productReviewListPage .xui-shopReply > p:first-child:before{
-        content: '商家留言：'
-    }
-    .xui-productReviewListPage .xui-shopReply img{
-        vertical-align: middle;
-    }
     .xui-productReviewListPage .xui-btnWrapper{
         position: relative;
     }
@@ -153,6 +147,7 @@
         </div>
         {% if review.shop_reply %}
         <div class="pb10 xui-shopReply mb10 xa-shopReply">
+            <span class="em9 c65 fl">商家留言：</span>
             {{review.shop_reply|safe}}
         </div>
         {% endif %}
@@ -177,6 +172,7 @@
             {% else %}
                 <img src="{{picture_url}}">
             {% endif %}
+
             {% endfor %}
         </div>
         {% endif %}
@@ -219,12 +215,7 @@
         });
 
         $('.xa-shopReply').find('p').addClass('em9').addClass('c65');
-        var $reply = $('.xa-shopReply');
-        $reply.each(function(){
-            if($(this).find('p').length == 0){
-                $(this).find('img').wrap('<p class="c65 em9 fl"></p>');
-            }
-        });
+        $('.xa-shopReply').find('p img').addClass('vt');
     });
 </script>
 {% endblock %}
