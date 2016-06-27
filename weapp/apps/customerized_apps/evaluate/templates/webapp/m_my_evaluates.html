@@ -146,7 +146,7 @@
         </div>
         {% if review.shop_reply %}
         <div class="pb10 xui-shopReply mb10 xa-shopReply">
-            <span class="em9 fl">商家留言：</span>
+            <span class="em9 c65 fl">商家留言：</span>
             {{review.shop_reply|safe}}
         </div>
         {% endif %}
@@ -213,7 +213,7 @@
             }
         });
 
-        $('.xa-shopReply').find('p').addClass('em9','c65');
+        $('.xa-shopReply').find('p').addClass('em9').addClass('c65');
         $('.xa-shopReply').find('p img').addClass('vt');
     });
 </script>
