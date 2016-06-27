@@ -13,6 +13,7 @@ from core import resource
 from core import paginator
 from core.exceptionutil import unicode_full_stack
 from core.jsonresponse import create_response
+from eaglet.utils.resource_client import Resource
 
 import models as app_models
 import export
@@ -84,28 +85,46 @@ def stop_group(group_id,is_test):
 		group_relation_id = group_relation.id
 		has_placed_order = app_models.GroupDetail.objects(relation_belong_to=str(group_relation_id),order_id__not='')
 		if has_placed_order.count() > 0:
-			update_order_status_by_group_status(group_id,'failure')
+			# update_order_status_by_group_status(group_id,'failure')
+			resp = Resource.use('zeus').post({
+				'resource': 'mall.group_update_order',
+				'data': {
+					'group_id': group_id,
+					'status': 'failure',
+					'is_test': 1 if is_test else 0
+				}
+			})
 	for group_relation in running_group_relations:
 		group_relation.update(group_status=app_models.GROUP_FAILURE)
 		group_relation_id = group_relation.id
-		update_order_status_by_group_status(group_relation_id,'failure', is_test=is_test)
-		#发送拼团失败模板消息
-		try:
-			group_details = app_models.GroupDetail.objects(relation_belong_to=str(group_relation_id))
-			owner_id = group.owner_id
-			product_name = group.product_name
-			miss = int(group_relation.group_type) - group_details.filter(is_already_paid=True).count()
-			activity_info = {
-				"owner_id": str(owner_id),
-				"record_id": group_id,
-				"group_id": str(group_relation_id),
-				"fid": str(group_relation.member_id),
-				"price": '%.2f' % group_relation.group_price,
-				"product_name": product_name,
-				"status" : 'fail',
-				"miss": str(miss)
+		# update_order_status_by_group_status(group_relation_id,'failure', is_test=is_test)
+		resp = Resource.use('zeus').post({
+			'resource': 'mall.group_update_order',
+			'data': {
+				'group_id': group_relation_id,
+				'status': 'failure',
+				'is_test': 1 if is_test else 0
 			}
-			member_info_list = [{"member_id": group_detail.grouped_member_id, "order_id": group_detail.order_id} for group_detail in group_details]
-			send_group_template_message(activity_info, member_info_list)
-		except:
-			print u'update status error, course: \n{}'.format(unicode_full_stack())
+		})
+		# 发送拼团成功模板消息
+		if resp and resp['code'] == 200:
+			#发送拼团失败模板消息
+			try:
+				group_details = app_models.GroupDetail.objects(relation_belong_to=str(group_relation_id))
+				owner_id = group.owner_id
+				product_name = group.product_name
+				miss = int(group_relation.group_type) - group_details.filter(is_already_paid=True).count()
+				activity_info = {
+					"owner_id": str(owner_id),
+					"record_id": group_id,
+					"group_id": str(group_relation_id),
+					"fid": str(group_relation.member_id),
+					"price": '%.2f' % group_relation.group_price,
+					"product_name": product_name,
+					"status" : 'fail',
+					"miss": str(miss)
+				}
+				member_info_list = [{"member_id": group_detail.grouped_member_id, "order_id": group_detail.order_id} for group_detail in group_details]
+				send_group_template_message(activity_info, member_info_list)
+			except:
+				print u'update status error, course: \n{}'.format(unicode_full_stack())

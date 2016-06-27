@@ -6,6 +6,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.template.loader import render_to_string
+from eaglet.utils.resource_client import Resource
 
 from core import resource
 
@@ -105,29 +106,38 @@ class MGroup(resource.Resource):
 						timing = (group_relation_info.created_at + timedelta(days=int(group_relation_info.group_days)) - datetime.today()).total_seconds()
 						if timing <= 0 and group_relation_info.group_status == app_models.GROUP_RUNNING:
 							group_relation_info.update(set__group_status=app_models.GROUP_FAILURE)
-							update_order_status_by_group_status(group_relation_info.id,'failure')
-							#发送拼团失败模板消息
-							try:
-								group_details = app_models.GroupDetail.objects(relation_belong_to=str(group_relation_id))
-								owner_id = record.owner_id
-								product_name = record.product_name
-								miss = int(group_relation_info.group_type)-group_details.count()
-								activity_info = {
-									"owner_id": str(owner_id),
-									"record_id": str(record_id),
-									"group_id": str(group_relation_id),
-									"fid": str(group_relation_info.member_id),
-									"price": '%.2f' % group_relation_info.group_price,
-									"product_name": product_name,
-									"status" : 'fail',
-									"miss": str(miss)
+							# update_order_status_by_group_status(group_relation_info.id,'failure')
+							resp = Resource.use('zeus').post({
+								'resource': 'mall.group_update_order',
+								'data': {
+									'group_id': group_relation_info.id,
+									'status': 'failure',
+									'is_test': 1 if request.GET.get('is_test', False) else 0
 								}
+							})
+							if resp and resp['code'] == 200:
+								#发送拼团失败模板消息
+								try:
+									group_details = app_models.GroupDetail.objects(relation_belong_to=str(group_relation_id))
+									owner_id = record.owner_id
+									product_name = record.product_name
+									miss = int(group_relation_info.group_type)-group_details.count()
+									activity_info = {
+										"owner_id": str(owner_id),
+										"record_id": str(record_id),
+										"group_id": str(group_relation_id),
+										"fid": str(group_relation_info.member_id),
+										"price": '%.2f' % group_relation_info.group_price,
+										"product_name": product_name,
+										"status" : 'fail',
+										"miss": str(miss)
+									}
 
-								member_info_list = [{"member_id": group_detail.grouped_member_id, "order_id": group_detail.order_id} for group_detail in group_details]
-								send_group_template_message(activity_info, member_info_list)
-							except Exception, e:
-								print e
-								pass
+									member_info_list = [{"member_id": group_detail.grouped_member_id, "order_id": group_detail.order_id} for group_detail in group_details]
+									send_group_template_message(activity_info, member_info_list)
+								except Exception, e:
+									print e
+									pass
 
 						# 获取该主页帮助者列表
 						helpers = app_models.GroupDetail.objects(relation_belong_to=str(group_relation_id), owner_id=fid, order_id__ne='').order_by('created_at')

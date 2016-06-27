@@ -5,6 +5,7 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.db.models import F
 from django.contrib.auth.decorators import login_required
+from eaglet.utils.resource_client import Resource
 
 from apps.models import UserHasTemplateMessages, UserappHasTemplateMessages
 from core import resource
@@ -82,30 +83,39 @@ class Groups(resource.Resource):
 				for group_relation in running_group_relations:
 					group_relation.update(group_status=app_models.GROUP_FAILURE)
 					group_relation_id = group_relation.id
-					update_order_status_by_group_status(group_relation_id,'failure')
-					#发送拼团失败模板消息
-					try:
-						group_details = app_models.GroupDetail.objects(relation_belong_to=str(group_relation_id))
-						owner_id = data_data.owner_id
-						product_name = data_data.product_name
-						miss = int(group_relation.group_type)-group_details.count()
-						activity_info = {
-							"owner_id": str(owner_id),
-							"record_id": str(request.POST['id']),
-							"group_id": str(group_relation_id),
-							"fid": str(group_relation.member_id),
-							"price": '%.2f' % group_relation.group_price,
-							"product_name": product_name,
-							"status" : 'fail',
-							"miss": str(miss)
+					# update_order_status_by_group_status(group_relation_id,'failure')
+					resp = Resource.use('zeus').post({
+						'resource': 'mall.group_update_order',
+						'data': {
+							'group_id': group_relation_id,
+							'status': 'failure',
+							'is_test': 1 if request.GET.get('is_test', False) else 0
 						}
-						member_info_list = [{"member_id": group_detail.grouped_member_id, "order_id": group_detail.order_id} for group_detail in group_details]
-						send_group_template_message(activity_info, member_info_list)
-					except Exception, e:
-						print(u'发送拼团失败模板消息失败')
-						print 'template----------------------------------'
-						print e
-						print 'template----------------------------------'
+					})
+					if resp and resp['code'] == 200:
+						#发送拼团失败模板消息
+						try:
+							group_details = app_models.GroupDetail.objects(relation_belong_to=str(group_relation_id))
+							owner_id = data_data.owner_id
+							product_name = data_data.product_name
+							miss = int(group_relation.group_type)-group_details.count()
+							activity_info = {
+								"owner_id": str(owner_id),
+								"record_id": str(request.POST['id']),
+								"group_id": str(group_relation_id),
+								"fid": str(group_relation.member_id),
+								"price": '%.2f' % group_relation.group_price,
+								"product_name": product_name,
+								"status" : 'fail',
+								"miss": str(miss)
+							}
+							member_info_list = [{"member_id": group_detail.grouped_member_id, "order_id": group_detail.order_id} for group_detail in group_details]
+							send_group_template_message(activity_info, member_info_list)
+						except Exception, e:
+							print(u'发送拼团失败模板消息失败')
+							print 'template----------------------------------'
+							print e
+							print 'template----------------------------------'
 
 		if group_name:
 			params['name__icontains'] = group_name
