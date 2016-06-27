@@ -6,8 +6,8 @@ NAV = {
 	'navs': [
 		{
 			'name': "lotteries",
-			'title': "微信抽奖",
-			'url': '/apps/lottery/lotteries/',
+			'title': "专项抽奖",
+			'url': '/apps/exlottery/exlotteries/',
 			'need_permissions': []
 		},
 	]

@@ -33,7 +33,7 @@ class Exlotteries(resource.Resource):
 			'second_nav_name': mall_export.MALL_APPS_SECOND_NAV,
 			'third_nav_name': "exlotteries",
 			'has_data': has_data
-		});
+		})
 		
 		return render_to_response('exlottery/templates/editor/exlotteries.html', c)
 	
