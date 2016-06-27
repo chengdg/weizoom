@@ -3382,7 +3382,7 @@ def refund_weizoom_card_money(order):
 	watchdog_info(message=msg, type='wz_card')
 
 	resp = Resource.use('card_apiserver').delete({
-		'resource': 'delete',
+		'resource': 'card.trade',
 		'data': data
 	})
 
