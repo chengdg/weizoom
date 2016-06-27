@@ -110,3 +110,17 @@ class PoweredDetail(models.Document):
 		'collection': 'powerme_powered_detail',
 		'db_alias': 'apps'
 	}
+
+class PoweredLimitRelation(models.Document):
+	"""
+	限制的微助力的log
+	"""
+	belong_to = models.StringField(default="", max_length=100)  #对应的活动id
+	member_id = models.LongField()  #助力者的id
+	powered_member_id = models.LongField()  #被助力者id
+	created_at = models.DateTimeField()  #创建时间
+
+	meta = {
+		'collection': 'powerme_powered_limit_relation',
+		'db_alias': 'apps'
+	}

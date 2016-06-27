@@ -148,6 +148,20 @@
         text-overflow: ellipsis;
         white-space: nowrap;
     }
+.wui-i-states-weshop .wa-top100 li{
+    text-align: left;
+    padding: 16px 5% 0;
+}
+.wui-powerme-container .wui-i-states-weshop .wa-top100 li:nth-child(1) span{
+    min-width: 45px;
+    display: inline-block;
+}
+.wui-powerme-container .wui-i-states-weshop .wa-top100 li:not(.wui-i-top100-title){
+    border-bottom: 1px dotted #ffffff;
+    height: 55px;
+    width: 90%;
+    display: inline-block;
+}
 
 </style>
 {% endblock %}
@@ -168,6 +182,12 @@
         <div class="f15 xui-successHint xui-spritebg">
             <div class="xui-spritebg xui-successHint-img"></div>
             <div style="display: inline-block;color: #333;width: 75%;"><p>成功帮<span class="wa-pageownername"></span>助力值+1</p><p>关系好就是任性！</p></div>
+        </div>
+    </div>
+    <div class="xui-powerLimit none">
+        <div class="f15 xui-successHint xui-spritebg">
+            <div class="xui-spritebg xui-successHint-img"></div>
+            <div style="display: inline-block;color: #333;width: 75%;"><p>您已帮<span class="wa-poweredname"></span>助力过该活动</p></div>
         </div>
     </div>
     <!-- 非会员引导 -->
@@ -221,6 +241,8 @@
     var page_owner_member_id = '';
     var qrcode_url = W.qrcodeUrl;
     var new_qrcode_url = {% if params_qrcode_url %}'{{params_qrcode_url}}'{% else %}qrcode_url{% endif %};
+    var username = "{{ username }}"; //公众号的username
+    var has_power = false;
     $(function(){
         //隐藏参与活动按钮
         $('.xa-submitButtonContainer').hide();
@@ -233,6 +255,10 @@
     });
 
     function updateBtnStatus(){
+        if (username == 'weshop' && is_self_page){
+            $('.wui-i-states').hide();
+            $('.wui-i-states-weshop').show();
+        }
         if('进行中' != W.activityStatus){
             $('.wa-timing').hide();
             if('未开始' == W.activityStatus){
@@ -251,20 +277,45 @@
             var $powerBtn = $('.wa-power');
             $powerBtn.find('.wa-mobile_solution').html(page_owner_name);
             if(W.isMember){
-                if(is_powered){
-                    $powerBtn.find('.wa-power-btn-action').html('已帮');
-                    $powerBtn.on('click', function(){
-                        openGuideMask();
-                    }).show();
+                if (username == 'weshop'){
+                    if (has_power){
+                        $powerBtn.html('您已助力过该活动');
+                        $powerBtn.on('click', function(){
+                                openGuideMask();
+                            }).show();
+                    }else {
+                        if(is_powered){
+                            $powerBtn.find('.wa-power-btn-action').html('已帮');
+                            $powerBtn.on('click', function(){
+                                openGuideMask();
+                            }).show();
+                        }else{
+                            $powerBtn.find('.wa-power-btn-action').html('帮');
+                           $powerBtn.on('click', function(){
+                               if(is_powered){
+                                   openGuideMask();
+                               }else{
+                                   powerYou();
+                               }
+                           }).show();
+                        }
+                    }
                 }else{
-                    $powerBtn.find('.wa-power-btn-action').html('帮');
-                   $powerBtn.on('click', function(){
-                       if(is_powered){
-                           openGuideMask();
-                       }else{
-                           powerYou();
-                       }
-                   }).show();
+                    if(is_powered){
+                        $powerBtn.find('.wa-power-btn-action').html('已帮');
+                        $powerBtn.on('click', function(){
+                            openGuideMask();
+                        }).show();
+                    }else{
+                        $powerBtn.find('.wa-power-btn-action').html('帮');
+                       $powerBtn.on('click', function(){
+                           if(is_powered){
+                               openGuideMask();
+                           }else{
+                               powerYou();
+                           }
+                       }).show();
+                    }
                 }
             }else{
                 if(is_powered){
@@ -326,6 +377,8 @@
                 renderTime(data.member_info.timing);
                 //渲染排名
                 showTop100(data);
+                //渲染我的好友
+                showFriends(data);
                 //隐藏loading动画元素
                 loadingStatus(false);
                 //监听分享成功事件
@@ -376,6 +429,7 @@
 
         is_powered = member_info.is_powered;
         page_owner_member_id = member_info.page_owner_member_id;
+        has_power = member_info.has_power;
         updateBtnStatus();
     }
 
@@ -404,6 +458,36 @@
 
         //展示与隐藏我的排名面板
         window.setTimeout(showMyRank, 2*1000);
+    }
+    function showFriends(data){
+        var follow_friend_list = data.follow_friend_list;
+        var unfollow_friend_list = data.unfollow_friend_list;
+        if ($.isEmptyObject(follow_friend_list) && $.isEmptyObject(unfollow_friend_list)){
+            $('.wa-friends').html("<div style='margin-top:20px'>还没有好友帮您助力～</div>");
+        }else{
+            if(follow_friend_list || $.isEmptyObject(follow_friend_list)){
+                var follow_li_content = '';
+                for(var i in follow_friend_list){
+                    var f = follow_friend_list[i];
+                    follow_li_content += "<li style='float:left;width:16.5%;position: relative'>" +
+                            "<div class='wui-weshop-friend-name'><span class='wui-weshop-wraper'></span><img src='"+ f.user_icon+"'></div>" +
+                            "<div style='font-size:0.8rem'>"+f.username+"</div></li>";
+                }
+                follow_li_content += "<li style='clear:both'></li>";
+                $('.follow_friends').append($(follow_li_content));
+            }
+            if(unfollow_friend_list || $.isEmptyObject(unfollow_friend_list)) {
+                var unfollow_li_content = '';
+                for (var i in unfollow_friend_list) {
+                    var u = unfollow_friend_list[i];
+                    unfollow_li_content += "<li style='float:left;width:16.5%;position: relative'>" +
+                            "<div class='wui-weshop-friend-name'><span class='wui-weshop-wraper'></span><img src='" + u.user_icon + "'></div>" +
+                            "<div style='font-size:0.8rem'>" + u.username + "</div></li>";
+                }
+                unfollow_li_content += "<li style='clear:both'></li>";
+                $('.unfollow_friends').append($(unfollow_li_content));
+            }
+        }
     }
 
     function renderTime(seconds){
@@ -465,6 +549,10 @@
         mask('show');
         $('.xui-powerSucceed').removeClass('none');
     }
+    function openLimitWin(){
+        mask('show');
+        $('.xui-powerLimit').removeClass('none');
+    }
     function openGuestMask(){
         mask('show');
         $('.xa-attention-guest').removeClass('none');
@@ -495,14 +583,20 @@
                 fid: page_owner_member_id
             },
             success: function(data) {
-                if (W.isMember) {
-                    $('.wa-power').find('.wa-power-btn-action').html('已帮');
-                    openSuccessWin();
+                if (username == 'weshop' && data.hasOwnProperty('powered_member_name')){
+                    $('.wa-poweredname').html(data.powered_member_name);
+                    openLimitWin();
+                    $('.wa-power').html('您已助力过该活动');
                 }else{
-                    $attention.find('.xa-attention-tip').show();
-                    $attention.find('img').attr('src', new_qrcode_url);
-                    $attention.find('.xa-attention-reply').children().first().html("3.回复：");
-                    openGuestMask();
+                    if (W.isMember) {
+                        $('.wa-power').find('.wa-power-btn-action').html('已帮');
+                        openSuccessWin();
+                    }else{
+                        $attention.find('.xa-attention-tip').show();
+                        $attention.find('img').attr('src', new_qrcode_url);
+                        $attention.find('.xa-attention-reply').children().first().html("3.回复：");
+                        openGuestMask();
+                    }
                 }
             },
             error: function(data) {
@@ -524,6 +618,18 @@
             }
         });
     }
+    $('.wa-weshop').click(function(event){
+        $(this).find('li').removeClass('active');
+        $(event.target).addClass('active');
+        if ($(event.target).hasClass('weshop-friends')){
+            $('.wui-i-states-weshop').find('.wa-top100').hide();
+            $('.wa-friends').show();
+        }else{
+            $('.wui-i-states-weshop').find('.wa-top100').show();
+            $('.wa-friends').hide();
+        }
+
+    });
     //隐藏所有
     $('.mask').click(function(){
         mask('hide');
@@ -531,6 +637,7 @@
         $('.xui-attention').addClass('none');
         $('.xa-share').addClass('none');
         $('.xui-errMsg').addClass('none');
+        $('.xui-powerLimit').addClass('none');
     });
     $('.xa-closeBtn').click(function(){
         $('.xui-attention').addClass('none');
