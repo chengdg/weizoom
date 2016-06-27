@@ -136,8 +136,6 @@ class exlottery_prize(resource.Resource):
 			response.errMsg = u'奖品已抽光'
 			return response.get_response()
 
-		data = {}
-		data['member_id'] = member_id
 		exlottery_record = app_models.ExlottoryRecord.objects(belong_to=record_id, member_id=member_id, code=code)
 		if exlottery_record.count() != 0:
 			exlottery_record = exlottery_record.first()
@@ -216,9 +214,6 @@ class exlottery_prize(resource.Resource):
 		#抽奖后，更新数据
 		has_prize = False if result == u'谢谢参与' else True
 
-		# #修复参与过抽奖的用户隔一天后再抽就能无限制抽奖的bug -----start
-		# exlottery_participance.update(set__exlottery_date=now_datetime)
-		# #修复参与过抽奖的用户隔一天后再抽就能无限制抽奖的bug -----end
 		exlottery_participance.update(set__status=app_models.HAS_USED)
 		exlottery_participance.first().reload()
 		#调整参与数量和中奖人数
