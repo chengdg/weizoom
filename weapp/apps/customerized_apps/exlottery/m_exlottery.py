@@ -36,12 +36,12 @@ class Mexlottery(resource.Resource):
 		member = request.member
 		is_pc = False if member else True
 
-		if not is_pc:
-			#从redis缓存获取静态页面
-			cache_data = GET_CACHE(cache_key)
-			if cache_data:
-				print 'redis---return'
-				return HttpResponse(cache_data)
+		# if not is_pc:
+		# 	#从redis缓存获取静态页面
+		# 	cache_data = GET_CACHE(cache_key)
+		# 	if cache_data:
+		# 		print 'redis---return'
+		# 		return HttpResponse(cache_data)
 
 		try:
 			record = app_models.Exlottery.objects.get(id=id)
@@ -76,8 +76,8 @@ class Mexlottery(resource.Resource):
 			'code': code
 		})
 		response = render_to_string('exlottery/templates/webapp/m_exlottery.html', c)
-		if not is_pc:
-			SET_CACHE(cache_key, response)
+		# if not is_pc:
+		# 	SET_CACHE(cache_key, response)
 		return HttpResponse(response)
 
 
