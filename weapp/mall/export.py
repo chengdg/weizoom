@@ -414,7 +414,7 @@ MALL_PROMOTION_AND_APPS_SECOND_NAV = {
                     'title': u'专项抽奖',
                     'url': '/apps/exlottery/exlotteries/',
                     'permission': '',
-                    'users': ['jobs','njtest', 'ceshi01', 'weshop']
+                    'users': ['jobs','njtest', 'ceshi01', 'baishi']
                 },
                 # {
                     # 'name': MALL_APPS_FEEDBACK_NAV,
