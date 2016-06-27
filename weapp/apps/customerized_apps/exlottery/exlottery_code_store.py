@@ -68,7 +68,7 @@ class ExlotteryCodeStore(resource.Resource):
 		# 	params['prize_grade'] = prize_grade
 		if member:
 			hexstr = byte_to_hex(member)
-			members = Member.objects.filter(webapp_id=webapp_id, username_hexstr=hexstr)
+			members = Member.objects.filter(webapp_id=webapp_id, username_hexstr__icontains=hexstr)
 			temp_ids = [member.id for member in members]
 			member_ids = temp_ids if temp_ids else [-1]
 			exlottory_record = app_models.ExlottoryRecord.objects(member_id__in = member_ids)
