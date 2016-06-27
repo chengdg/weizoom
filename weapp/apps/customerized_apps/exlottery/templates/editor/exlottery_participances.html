@@ -220,8 +220,8 @@ $(document).ready(function() {
         var export_id =window.location.search.split('?id=')[1];
         W.getApi().call({
             method: 'get',
-            app: 'apps/lottery',
-            resource: 'lottery_participances-export',
+            app: 'apps/exlottery',
+            resource: 'exlottery_participances-export',
             args: {
 				'export_id':export_id,
 				'participant_name': participant_name,
@@ -258,8 +258,8 @@ $(document).ready(function() {
 			msg: '确定领取该奖品？',
 			confirm: function() {
 				W.getApi().call({
-					app: 'apps/lottery',
-					resource: 'lottery_participances',
+					app: 'apps/exlottery',
+					resource: 'exlottery_participances',
 					method: 'post',
 					args: {
 						id: id
