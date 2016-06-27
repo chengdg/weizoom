@@ -88,6 +88,9 @@
     .xui-productReviewListPage .xui-shopReply > p:first-child:before{
         content: '商家留言：'
     }
+    .xui-productReviewListPage .xui-shopReply img{
+        vertical-align: middle;
+    }
     .xui-productReviewListPage .xui-btnWrapper{
         position: relative;
     }
@@ -216,7 +219,12 @@
         });
 
         $('.xa-shopReply').find('p').addClass('em9').addClass('c65');
-        $('.xa-shopReply').find('p img').addClass('vm');
+        var $reply = $('.xa-shopReply');
+        $reply.each(function(){
+            if($(this).find('p').length == 0){
+                $(this).find('img').wrap('<p class="c65 em9 fl"></p>');
+            }
+        });
     });
 </script>
 {% endblock %}
