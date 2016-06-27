@@ -4,9 +4,22 @@
 	<div class="modal-content">
 		<div class="modal-header">
 			<button aria-hidden="true" data-dismiss="modal" class="close" type="button"><span class="xui-closeColor" aria-hidden="true">&times;</span></button>
-			<h3 class="modal-title" >查看结果</h3>
+			<h3 class="modal-title" >签到详情</h3>
 		</div>
-		<div class="modal-body">			
+		<div class="modal-body" style="min-height: 300px; overflow: auto;">
+				<div style="color:#FF0000;font-weight:bold">仅显示最近3个月的签到信息</div>
+				<div
+								data-ui-role="advanced-table"
+								data-app="apps/sign"
+								data-resource="sign_participance_details"
+								data-args=''
+								data-template-id="#app-sign-viewDetails-tmpl"
+								data-enable-paginator="true"
+								data-enable-sort="false"
+								data-item-count-per-page="15"
+								data-auto-load="false"
+								class="mt10 mb20"
+						></div>
 		</div>
 		<div class="modal-footer">
 			<button class="btn btn-primary xa-submit-dialog">确认</button>
@@ -16,3 +29,33 @@
 	</div>
 </script>
 
+<script id="app-sign-viewDetails-tmpl" type="text/x-handlebar-tmpl">
+<table class="table table-bordered xb-stripedTable xa-productTable xui-i-group_members">
+    <thead style="background:#c8d2e5;">
+        <tr>
+            <th>签到时间</th>
+            <th>获得奖励</th>
+            <th>签到状态</th>
+        </tr>
+    </thead>
+    <tbody>
+      {{each(i, item) items}}
+        <tr>
+            <td>
+							${item.created_at}
+            </td>
+            <td>
+                {{html item.prize}}
+            </td>
+            <td>
+							{{if (item.status == 1)}}
+								<img width=16 src="/static_v2/img/sign_success.png"/>
+							{{else}}
+								<img width=16 src="/static_v2/img/sign_error.png"/>
+							{{/if}}
+            </td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+</script>

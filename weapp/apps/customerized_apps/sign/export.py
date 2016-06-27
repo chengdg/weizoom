@@ -26,7 +26,7 @@ def get_second_navs(request):
 	else:
 		# webapp_module_views.get_modules_page_second_navs(request)
 		second_navs = [NAV]
-	
+
 	return second_navs
 
 

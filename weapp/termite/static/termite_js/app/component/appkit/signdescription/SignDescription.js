@@ -1,6 +1,6 @@
 /**
  * @class W.component.appkit.SignDescription
- * 
+ *
  */
 ensureNS('W.component.appkit');
 W.component.appkit.SignDescription = W.component.Component.extend({

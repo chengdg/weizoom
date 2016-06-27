@@ -21,14 +21,14 @@ COUNT_PER_PAGE = 20
 class SignParticipances(resource.Resource):
 	app = 'apps/sign'
 	resource = 'sign_participances'
-	
+
 	@login_required
 	def get(request):
 		"""
 		响应GET
 		"""
 		has_data = app_models.SignParticipance.objects(belong_to=request.GET['id']).count()
-		
+
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
 			'second_navs': export.get_second_navs(request),
@@ -36,9 +36,9 @@ class SignParticipances(resource.Resource):
 			'has_data': has_data,
 			'activity_id': request.GET['id']
 		})
-		
+
 		return render_to_response('sign/templates/editor/sign_participances.html', c)
-	
+
 	@staticmethod
 	def get_datas(request):
 		sort_attr = request.GET.get('sort_attr', '-latest_date')
@@ -56,13 +56,15 @@ class SignParticipances(resource.Resource):
 
 		if 'total_integral' in sort_attr:
 			datas = sorted(datas, lambda x,y: cmp(x.prize['integral'], y.prize['integral']), reverse=True if '-' in sort_attr else False)
+		elif 'total_coupon' in sort_attr:
+			datas = sorted(datas, lambda x,y: cmp(len(x.prize['coupon'].split(',')), len(y.prize['coupon'].split(','))), reverse=True if '-' in sort_attr else False)
 		else:
 			datas = datas.order_by(sort_attr)
 		#进行分页
 		count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
 		cur_page = int(request.GET.get('page', '1'))
 		pageinfo, datas = paginator.paginate(datas, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
-		
+
 		return pageinfo, datas
 
 	@login_required
@@ -81,7 +83,9 @@ class SignParticipances(resource.Resource):
 
 		items = []
 		for data in datas:
-			temp_list = data.prize['coupon'].split(',')
+			coupon_count = 0
+			if data.prize['coupon']:
+				coupon_count = len(data.prize['coupon'].split(','))
 			items.append({
 				'id': str(data.id),
 				'belong_to': data.belong_to,
@@ -90,11 +94,12 @@ class SignParticipances(resource.Resource):
 				'participant_icon': member_id2member[data.member_id].user_icon if member_id2member.get(data.member_id) else '/static/img/user-1.jpg',
 				'created_at': data.created_at.strftime("%Y/%m/%d %H:%M:%S"),
 				'latest_date': data.latest_date.strftime("%Y/%m/%d %H:%M:%S") if data.latest_date else "",
+				'latest_date_f': data.latest_date.strftime("%Y-%m-%d %H:%M:%S") if data.latest_date else "",
 				'total_count': data.total_count,
 				'serial_count': data.serial_count,
 				'top_serial_count': data.top_serial_count,
 				'total_integral': data.prize['integral'],
-				'latest_coupon': "<br>".join(temp_list[::-1][:3])
+				'coupon_count': coupon_count
 			})
 		response_data = {
 			'items': items,
@@ -147,4 +152,3 @@ class SignParticipancesDetail(resource.Resource):
 				'errMsg': u'member_id或者belong_to不存在'
 			})
 		return render_to_response('sign/templates/editor/sign_participance_detail.html', c)
-

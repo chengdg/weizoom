@@ -693,12 +693,15 @@ def step_impl(context, user):
 	version = 1
 	page = 1
 	enable_paginate = 1
+	participant_name = u''
 	#分页情况，更新分页参数
 	if hasattr(context,"paging"):
 		paging_dic = context.paging
 		count_per_page = paging_dic['count_per_page']
 		page = paging_dic['page_num']
-	url ='/apps/sign/api/sign_participances/?design_mode=%s&version=%s&count_per_page=%s&page=%s&enable_paginate=%s&_method=get&id=%s' % (design_mode,version,count_per_page,page,enable_paginate,context.sign_id)
+	if hasattr(context,"filter"):
+		participant_name = context.filter["name"]
+	url ='/apps/sign/api/sign_participances/?design_mode=%s&version=%s&count_per_page=%s&page=%s&enable_paginate=%s&_method=get&id=%s&participant_name=%s' % (design_mode,version,count_per_page,page,enable_paginate,context.sign_id,participant_name)
 	url = bdd_util.nginx(url)
 	response = context.client.get(url)
 	context.participances = json.loads(response.content)
@@ -707,19 +710,19 @@ def step_impl(context, user):
 	for p in participances:
 		p_dict = OrderedDict()
 		p_dict[u"name"] = p['participant_name']
-		p_dict[u"first_sign"] = p['created_at']
-		p_dict[u"last_sign"] = p['latest_date']
+		p_dict[u"last_sign"] = bdd_util.get_date_str(p['latest_date_f'])
 		p_dict[u"total_sign"] = p['total_count']
 		p_dict[u"continuous_sign"] = p['serial_count']
-		p_dict[u"max_continuous_sign"] = p['top_serial_count']
 		p_dict[u"integral"] = p['total_integral']
-		p_dict[u"coupon"] = p['latest_coupon']
+		p_dict[u"coupon_num"] = p['coupon_count']
 		actual.append((p_dict))
 	print("actual_data: {}".format(actual))
 	expected = []
 	if context.table:
 		for row in context.table:
 			cur_p = row.as_dict()
+			if cur_p[u'last_sign']:
+				cur_p[u'last_sign'] = bdd_util.get_date_str(cur_p[u'last_sign'])
 			expected.append(cur_p)
 	else:
 		expected = json.loads(context.text)

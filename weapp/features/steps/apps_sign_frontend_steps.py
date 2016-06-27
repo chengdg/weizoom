@@ -9,11 +9,15 @@ from modules.member import module_api as member_api
 from utils import url_helper
 import datetime as dt
 import termite.pagestore as pagestore_manager
-from apps.customerized_apps.sign.models import Sign, SignParticipance
+from apps.customerized_apps.sign.models import Sign, SignParticipance, SignDetails
 from modules.member.models import Member, SOURCE_MEMBER_QRCODE
 from utils.string_util import byte_to_hex
 import json
 import re
+from mall.promotion.models import Coupon
+
+from weixin.message.material import models as material_models
+import apps_step_utils as apps_util
 
 def __get_sign_record_id(webapp_owner_id):
 	return Sign.objects.get(owner_id=webapp_owner_id).id
@@ -83,6 +87,8 @@ def step_impl(context, user):
 	signParticipance = SignParticipance.objects.get(member_id=context.member.id)
 	created_at = signParticipance.created_at
 	signParticipance.update(set__created_at = created_at-timedelta(days=1))
+	item = SignDetails.objects.filter(belong_to=context.sign_id, member_id=context.member.id).order_by('-id').first()
+	item.update(set__created_at = created_at-timedelta(days=1))
 	__change_sign_date(context.member.id,1)
 
 #只修改参与时间
@@ -121,27 +127,169 @@ def step_impl(context, webapp_user_name, mp_user_name):
 	# 因没有可用的API处理Member相关的source字段, 暂时直接操作Member对象
 	Member.objects.filter(id=member.id).update(source=SOURCE_MEMBER_QRCODE)
 
-@when(u"{user}在微信中向{mp_user_name}的公众号发送消息'{message}'于'{date}'")
-def step_impl(context, user, mp_user_name, message, date):
+# @when(u"{user}在微信中向{mp_user_name}的公众号发送消息'{message}'于'{date}'")
+# def step_impl(context, user, mp_user_name, message, date):
+# 	if not hasattr(context,"latest_date"):
+# 		context.latest_date = {
+# 			user : bdd_util.get_date(date)
+# 		}
+# 	signParticipance = SignParticipance.objects(member_id=context.member.id)
+# 	if signParticipance:
+# 		timedelta = (bdd_util.get_date(date) - context.latest_date[user]).days
+# 		__change_sign_date(context.member.id,timedelta)#将上一次签到时间向前调整
+# 		context.execute_steps(u"when %s在微信中向%s的公众号发送消息'%s'" % (user, mp_user_name, message))
+# 	else:
+# 		context.execute_steps(u"when %s在微信中向%s的公众号发送消息'%s'" % (user, mp_user_name, message))
+# 		#首次签到的话，将首次签到时间置为设定的时间
+# 		signParticipance.update(set__created_at = bdd_util.get_date(date))
+# 	#如果是另一个用户签到了，创建新的最近一次签到时间到dict里
+# 	if user not in context.latest_date:
+# 		context.latest_date[user] = bdd_util.get_date(date)
+# 	#对比时间，记录最后一次签到时间
+# 	if context.latest_date[user] < bdd_util.get_date(date):
+# 		context.latest_date[user] = bdd_util.get_date(date)
+# 	context.need_change_date = True
+# 	#因为无法在这句里更改签到的最后一次签到时间，否则每次跟现在的时间去做对比，都不算是连续签到
+# 	#暂时先把修改最后一次签到时间的操作放在“then获得会员签到统计列表”的steps中
+
+@when(u"{webapp_user_name}点击图文'{title}'进入签到活动页面")
+def step_impl(context, webapp_user_name, title):
+	user = User.objects.get(id=context.webapp_owner_id)
+	openid = "%s_%s" % (webapp_user_name, user.username)
+	_, sign_id = __sign_name2id('', title)
+	context.sign_id = str(sign_id)
+	context.openid = openid
+
+	#获取页面
+	view_mobile_main_page(context)
+	get_dynamic_data(context)
+
+def view_mobile_main_page(context):
+    """
+    进入活动主页
+    @param context:
+    @return:
+    """
+    return apps_util.get_response(context, {
+        "app": "m/apps/sign",
+        "resource": "m_sign",
+        "method": "get",
+        "type": "get",
+        "args": {
+            "webapp_owner_id": context.webapp_owner_id,
+            "id": context.sign_id
+        }
+    })
+
+def get_dynamic_data(context):
+    return apps_util.get_response(context, {
+        "app": "m/apps/sign",
+        "resource": "m_sign",
+        "type": "api",
+        "method": "get",
+        "args": {
+            "webapp_owner_id": context.webapp_owner_id,
+            "id": context.sign_id
+        }
+    })
+
+def __sign_name2id(name, title=None):
+    """
+    给签到项目的名字，返回id元祖
+    返回（related_page_id,group_group中id）
+    """
+    if title:
+        name = material_models.News.objects.get(title=title).url
+    sign = Sign.objects.get(name=name)
+    return sign.related_page_id,sign.id
+
+@when(u"{webapp_user_name}参加签到活动于'{date_str}'")
+def step_impl(context, webapp_user_name, date_str):
+	today = datetime.now()
+	date = "%s %s" % (bdd_util.get_date_str(date_str),today.strftime("%H:%M:%S"))
 	if not hasattr(context,"latest_date"):
 		context.latest_date = {
-			user : bdd_util.get_date(date)
+			webapp_user_name : bdd_util.get_date(date)
 		}
+
+	params = {
+		'webapp_owner_id': context.webapp_owner_id,
+		'id': context.sign_id
+	}
 	signParticipance = SignParticipance.objects(member_id=context.member.id)
 	if signParticipance:
-		timedelta = (bdd_util.get_date(date) - context.latest_date[user]).days
+		timedelta = (bdd_util.get_date(date) - context.latest_date[webapp_user_name]).days
 		__change_sign_date(context.member.id,timedelta)#将上一次签到时间向前调整
-		context.execute_steps(u"when %s在微信中向%s的公众号发送消息'%s'" % (user, mp_user_name, message))
+		response = context.client.post('/m/apps/sign/api/sign_participance/?_method=put', params)
 	else:
-		context.execute_steps(u"when %s在微信中向%s的公众号发送消息'%s'" % (user, mp_user_name, message))
+		response = context.client.post('/m/apps/sign/api/sign_participance/?_method=put', params)
 		#首次签到的话，将首次签到时间置为设定的时间
 		signParticipance.update(set__created_at = bdd_util.get_date(date))
 	#如果是另一个用户签到了，创建新的最近一次签到时间到dict里
-	if user not in context.latest_date:
-		context.latest_date[user] = bdd_util.get_date(date)
+	if webapp_user_name not in context.latest_date:
+		context.latest_date[webapp_user_name] = bdd_util.get_date(date)
 	#对比时间，记录最后一次签到时间
-	if context.latest_date[user] < bdd_util.get_date(date):
-		context.latest_date[user] = bdd_util.get_date(date)
+	if context.latest_date[webapp_user_name] < bdd_util.get_date(date):
+		context.latest_date[webapp_user_name] = bdd_util.get_date(date)
+
+
+	item = SignDetails.objects.filter(belong_to=context.sign_id, member_id=context.member.id).order_by('-id').first()
+	item.update(created_at = bdd_util.get_date(date))
+
+
+	# 下面的step会将签到详情领取时间改成step接受的时间.
+	sign_details_index = SignDetails.objects.count() - 1
+	last_sign = SignDetails.objects.all()[sign_details_index] # 得到最后一个签到信息
+
+	if last_sign.prize["coupon"]["id"]: # 如果最后一个签到信息中提示获得了优惠券.修改日期为当前时间
+		import time
+		time.sleep(1)
+
+		from apps.customerized_apps.mysql_models import  ConsumeCouponLog
+		coupon_log_index = ConsumeCouponLog.objects.count() - 1
+		last_coupon = ConsumeCouponLog.objects.all()[coupon_log_index]
+		coupon = Coupon.objects.filter(id=last_coupon.coupon_id)
+
+		coupon.update(provided_time=date) # 修改日期为当前时间
+
+
 	context.need_change_date = True
-	#因为无法在这句里更改签到的最后一次签到时间，否则每次跟现在的时间去做对比，都不算是连续签到
-	#暂时先把修改最后一次签到时间的操作放在“then获得会员签到统计列表”的steps中
+
+@then(u"{webapp_user_name}参加签到活动")
+def step_impl(context, webapp_user_name):
+	# today = datetime.now()
+	# date = today.strftime("%Y-%m-%d %H:%M:%S")
+	# if not hasattr(context,"latest_date"):
+	# 	context.latest_date = {
+	# 		webapp_user_name : bdd_util.get_date(date)
+	# 	}
+
+	params = {
+		'webapp_owner_id': context.webapp_owner_id,
+		'id': context.sign_id
+	}
+	# signParticipance = SignParticipance.objects(member_id=context.member.id)
+	# if signParticipance:
+	# 	timedelta = (bdd_util.get_date(date) - context.latest_date[webapp_user_name]).days
+	# 	__change_sign_date(context.member.id,timedelta)#将上一次签到时间向前调整
+	response = context.client.post('/m/apps/sign/api/sign_participance/?_method=put', params)
+	# else:
+	# 	response = context.client.post('/m/apps/sign/api/sign_participance/?_method=put', params)
+	# 	#首次签到的话，将首次签到时间置为设定的时间
+	# 	signParticipance.update(set__created_at = bdd_util.get_date(date))
+	# #如果是另一个用户签到了，创建新的最近一次签到时间到dict里
+	# if webapp_user_name not in context.latest_date:
+	# 	context.latest_date[webapp_user_name] = bdd_util.get_date(date)
+	# #对比时间，记录最后一次签到时间
+	# if context.latest_date[webapp_user_name] < bdd_util.get_date(date):
+	# 	context.latest_date[webapp_user_name] = bdd_util.get_date(date)
+	#
+	# item = SignDetails.objects.filter(belong_to=context.sign_id, member_id=context.member.id).order_by('-id').first()
+	# item.update(set__created_at = bdd_util.get_date(date))
+	#
+	# context.need_change_date = True
+
+
+@when(u"{user}设置签到统计列表查询参数")
+def step_impl(context, user):
+	context.filter = json.loads(context.text)

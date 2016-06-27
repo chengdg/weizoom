@@ -1,3 +1,5 @@
+#_author_:无
+#editor: 邓成龙 2016.06.20
 Feature:测试修改签到活动
 
 Background:
@@ -20,22 +22,47 @@ Background:
 			"coupon_id_prefix": "coupon2_id_"
 		}]
 		"""
-@mall2 @apps @apps_sign @edited_sign
+	When jobs已添加单图文
+		"""
+		[{
+			"title":"签到活动",
+			"cover": [{
+				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
+			}],
+			"cover_in_the_text":"true",
+			"summary":"签到",
+			"content":"签到",
+			"jump_url":"签到活动"
+		}]
+		"""
+	And jobs已添加关键词自动回复规则
+		"""
+		[{
+			"rules_name":"规则1",
+			"keyword":
+				[{
+					"keyword": "签到",
+					"type": "equal"
+				}],
+			"keyword_reply":
+				[{
+					"reply_content":"签到活动",
+					"reply_type":"text_picture"
+				}]
+		}]
+		"""
+
+@mall2 @apps @apps_sign @edited_sign @cl_e
 Scenario:1 对签到活动内容进行修改，会员访问活动页面
-	When jobs添加签到活动"签到活动1",并且保存
+	When jobs添加签到活动"签到活动",并且保存
 		"""
 		{
 			"status": "off",
-			"name": "签到活动1",
+			"name": "签到活动",
 			"sign_describe": "1签到赚积分！连续签到奖励更丰富哦！",
 			"share_pic": "1.jpg",
 			"share_describe": "签到送好礼！",
 			"reply_content": "每日签到获得2积分和优惠券1一张",
-			"reply_keyword":
-				[{
-					"rule": "精确",
-					"key_word": "签到1"
-				}],
 			"sign_settings":
 				[{
 					"sign_in": "0",
@@ -47,18 +74,18 @@ Scenario:1 对签到活动内容进行修改，会员访问活动页面
 	When jobs更新签到活动的状态
 		"""
 		{
-			"name": "签到活动1",
+			"name": "签到活动",
 			"status": "on"
 		}
 		"""
 	When bill关注jobs的公众号
 	When bill访问jobs的webapp
   	When 清空浏览器
-	When bill在微信中向jobs的公众号发送消息'签到1'
-	Then bill获得系统回复的消息
-	"""
-	签到成功！<br />已连续签到1天。<br />本次签到获得以下奖励:<br />2积分<br />优惠券1<br />签到说明：1签到赚积分！连续签到奖励更丰富哦！<br />每日签到获得2积分和优惠券1一张<br />
-	"""
+	When bill在微信中向jobs的公众号发送消息'签到'
+	Then bill收到自动回复'签到活动'
+	When bill点击图文'签到活动'进入签到活动页面
+	Then bill参加签到活动
+
 	When bill访问jobs的webapp
 	Then bill在jobs的webapp中拥有2会员积分
 	And bill能获得webapp优惠券列表
@@ -74,16 +101,11 @@ Scenario:1 对签到活动内容进行修改，会员访问活动页面
 		When jobs编辑签到活动,并且保存
 			"""
 			{
-				"name": "签到活动2",
+				"name": "签到活动",
 				"sign_describe": "2签到赚积分！连续签到奖励更丰富哦！",
 				"share_pic": "2.jpg",
 				"share_describe": "签到送好礼！",
 				"reply_content": "每日签到获得5积分和优惠券2一张",
-				"reply_keyword":
-					[{
-						"rule": "模糊",
-						"key_word": "签到2"
-					}],
 				"sign_settings":
 					[{
 						"sign_in": "0",
@@ -94,34 +116,28 @@ Scenario:1 对签到活动内容进行修改，会员访问活动页面
 			"""
 		When bill访问jobs的webapp
 		When 清空浏览器
-		When bill在微信中向jobs的公众号发送消息'签到2'
-		Then bill获得系统回复的消息
-		"""
-		亲，今天您已经签到过了哦，<br />明天再来吧！<br />
-		"""
+		When bill在微信中向jobs的公众号发送消息'签到'
+		Then bill收到自动回复'签到活动'
+		When bill点击图文'签到活动'进入签到活动页面
+		Then bill参加签到活动
 
 	#在关闭状态下进行修改签到活动
 		Given jobs登录系统
 		When jobs更新签到活动的状态
 			"""
 			{
-				"name": "签到活动2",
+				"name": "签到活动",
 				"status": "off"
 			}
 			"""
 		When jobs编辑签到活动,并且保存
 			"""
 			{
-				"name": "签到活动3",
+				"name": "签到活动",
 				"sign_describe": "3签到赚积分！连续签到奖励更丰富哦！",
 				"share_pic": "2.jpg",
 				"share_describe": "签到送好礼！",
 				"reply_content": "每日签到获得10积分和优惠券2一张",
-				"reply_keyword":
-					[{
-						"rule": "模糊",
-						"key_word": "签到3"
-					}],
 				"sign_settings":
 					[{
 						"sign_in": "0",
@@ -133,17 +149,16 @@ Scenario:1 对签到活动内容进行修改，会员访问活动页面
 		When jobs更新签到活动的状态
 			"""
 			{
-				"name": "签到活动3",
+				"name": "签到活动",
 				"status": "on"
 			}
 			"""
 		When bill访问jobs的webapp
 		When 清空浏览器
-		When bill在微信中向jobs的公众号发送消息'签到3'
-		Then bill获得系统回复的消息
-		"""
-		签到成功！<br />已连续签到1天。<br />本次签到获得以下奖励:<br />10积分<br />优惠券2<br />签到说明：3签到赚积分！连续签到奖励更丰富哦！<br />每日签到获得10积分和优惠券2一张<br />
-		"""
+		When bill在微信中向jobs的公众号发送消息'签到'
+		Then bill收到自动回复'签到活动'
+		When bill点击图文'签到活动'进入签到活动页面
+		Then bill参加签到活动
 		When bill访问jobs的webapp
 		Then bill在jobs的webapp中拥有12会员积分
 		And bill能获得webapp优惠券列表

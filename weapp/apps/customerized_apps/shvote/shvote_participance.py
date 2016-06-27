@@ -169,6 +169,9 @@ class ShvoteParticipance(resource.Resource):
 
 		record = app_models.Shvote.objects(id=record_id)
 		if record.count() > 0:
+			if record.first().status == app_models.STATUS_STOPED:
+				response.errMsg = u'该投票活动已经结束'
+				return response.get_response()
 			can_vote_count = record.first().votecount_per_one
 		else:
 			response.errMsg = u'该投票活动已被删除'

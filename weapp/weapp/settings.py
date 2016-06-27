@@ -857,4 +857,3 @@ BDD_SERVER2PORT = {
     'weizoom_card': 8171,
     'apiserver': 8172
 }
-

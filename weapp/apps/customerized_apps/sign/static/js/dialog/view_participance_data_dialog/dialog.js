@@ -9,39 +9,36 @@ ensureNS('W.dialog.app.sign');
 W.dialog.app.sign.ViewParticipanceDataDialog = W.dialog.Dialog.extend({
 	events: _.extend({
 	}, W.dialog.Dialog.prototype.events),
-	
+
 	templates: {
 		dialogTmpl: '#app-sign-viewParticipanceDataDialog-dialog-tmpl'
 	},
-	
+	getTemplate: function() {
+			$('#app-sign-viewParticipanceDataDialog-dialog-tmpl').template('app-sign-viewDetails-tmpl');
+			return "app-sign-viewParticipanceDataDialog-dialog-tmpl";
+	},
+
 	onInitialize: function(options) {
+		this.table = this.$('[data-ui-role="advanced-table"]').data('view');
 	},
-	
 	beforeShow: function(options) {
+		this.memberId = options.memberId;
+		this.belongTo = options.belongTo;
+		this.table.reset();
 	},
-	
+
 	onShow: function(options) {
-		this.activityId = options.activityId;
-	},
-	
-	afterShow: function(options) {
-		if (this.activityId) {
-			W.getApi().call({
-				app: 'apps/sign',
-				resource: 'sign_participance',
-				scope: this,
-				args: {
-					id: this.activityId
-				},
-				success: function(data) {
-					this.$dialog.find('.modal-body').text(data);
-				},
-				error: function(resp) {
-				}
-			})
+		this.memberId = options.memberId;
+		this.belongTo = options.belongTo
+
+		var _this = this;
+		if (!_this.table) {
+				_this.table = this.$dialog.find('[data-ui-role="advanced-table"]').data('view');
 		}
+		_this.table.curPage = 1;
+		_this.table.reload({"member_id": this.memberId,"belong_to": this.belongTo});
 	},
-	
+
 	/**
 	 * onGetData: 获取数据
 	 */
