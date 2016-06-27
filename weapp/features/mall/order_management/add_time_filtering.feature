@@ -154,7 +154,7 @@ Background:
 		}
 		"""
 
-@mall2 @order @allOrder
+@mall2 @order @allOrder @tg
 Scenario: 1 选择时间段查询订单
 	jobs选择时间段确认后
 	1.jobs选择时间段时,可以看到订单列表列表

@@ -80,7 +80,7 @@ Background:
 		}
 		"""
 
-@mall2 @order @allOrder
+@mall2 @order @allOrder @tat
 Scenario:1 购买商品后，可以获得订单列表
 	bill购买了商品1(只下单, 未支付)和商品2(已支付)
 
