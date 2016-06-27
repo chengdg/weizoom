@@ -117,8 +117,9 @@
                 $('.wa-submitTermite').html('追加晒图');
             }
             if(typeof detail == 'string'){
-                $('#dj_review_detail').val(detail || '').attr('readonly', true).siblings().hide();
+                $('#dj_review_detail').val(detail || '')
             }
+            $('#dj_review_detail').attr('readonly', true).siblings().hide();
             $('.wa-limitNum').hide();
             //渲染动态组件数据, 根据之前的评价数据判断是否渲染
             if(typeof detail != 'string'){
