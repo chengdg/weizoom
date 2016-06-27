@@ -460,10 +460,11 @@ def get_evaluate_detail(evaluate_detail, is_review_dialog = False):
 				for select in value:
 					mul_select_title, mul_select_answer, num = select.split('::')
 					mul_select_answers.append(mul_select_answer)
-				evaluate_detail_list.append({
-					'title': mul_select_title,
-					'answer': ','.join(mul_select_answers)
-				})
+				if mul_select_title and mul_select_answers:
+					evaluate_detail_list.append({
+						'title': mul_select_title,
+						'answer': ','.join(mul_select_answers)
+					})
 			elif isinstance(value, basestring):
 				select_title, select_answer, num = value.split('::')
 				evaluate_detail_list.append({
