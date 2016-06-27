@@ -2266,7 +2266,7 @@ li.wui-selectBox-display-table {
 }
 /*百宝箱 shvote CSS ---- end */
 
-/*百宝箱 evakuate CSS ---- start */
+/*百宝箱 evaluate CSS ---- start */
 .wui-evaluate-container .wui-title {
     text-align: center;
     line-height: 35px;
@@ -2287,6 +2287,7 @@ li.wui-selectBox-display-table {
     height: 8px;
     border-top: 1px solid #393939;
     border-left: 1px solid #393939;
+    transform: rotate(-45deg);
     -webkit-transform: rotate(-45deg);
     left: 14px;
     top: 12px;       
