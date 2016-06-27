@@ -456,6 +456,7 @@ def get_evaluate_detail(evaluate_detail, is_review_dialog = False):
 		if 'selection' in key.split('::'):
 			if isinstance(value, list):
 				mul_select_answers = []
+				mul_select_title = ''
 				for select in value:
 					mul_select_title, mul_select_answer, num = select.split('::')
 					mul_select_answers.append(mul_select_answer)
