@@ -26,6 +26,7 @@
         height: 8px;
         border-top: 1px solid #393939;
         border-left: 1px solid #393939;
+        transform:rotate(-45deg);
         -webkit-transform:rotate(-45deg);
         left: 14px;
         top:12px;
@@ -155,7 +156,7 @@
             {{review.detail}}
         {% else %}
             {% for item in review.detail %}
-                {{ forloop.counter }}、{{item.title}}:{{item.answer}} <br/>
+                {{ forloop.counter }}、{{item.title}}：{{item.answer}} <br/>
             {% endfor %}
         {% endif %}
         </div>
