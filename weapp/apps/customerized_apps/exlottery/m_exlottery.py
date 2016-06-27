@@ -26,7 +26,7 @@ class Mexlottery(resource.Resource):
 		响应GET
 		"""
 		id = request.GET['id']
-		code = request.GET.get('code', None)
+		code = request.GET.get('ex_code', None)
 		expend = 0
 		auth_appid_info = None
 		share_page_desc = ''
@@ -206,7 +206,7 @@ def check_keyword(data):
 	reply = exlottery.reply
 	reply_link = exlottery.reply_link
 	host = settings.DOMAIN
-	return_html = u"{}, <a href='http://{}/m/apps/exlottery/m_exlottery/?webapp_owner_id={}&id={}&code={}'>{}</a>".format(reply, host, webapp_owner_id, str(exlottery.id), keyword ,reply_link)
+	return_html = u"{}, <a href='http://{}/m/apps/exlottery/m_exlottery/?webapp_owner_id={}&id={}&ex_code={}'>{}</a>".format(reply, host, webapp_owner_id, str(exlottery.id), keyword ,reply_link)
 
 	return return_html
 
