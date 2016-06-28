@@ -282,7 +282,7 @@
             if(W.isMember){
                 if (username == 'jobs'){
                     if (has_power){
-                        $powerBtn.html("您已助力过该活动")
+                        $powerBtn.html('<span class="wa-power-btn-action">您已助力过该活动</span>')
                     }else {
                         if(is_powered){
                             $powerBtn.find('.wa-power-btn-action').html('已帮');
