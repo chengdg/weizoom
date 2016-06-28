@@ -113,7 +113,6 @@ class Mexlottery(resource.Resource):
 		activity_status, record = update_exlottery_status(record)
 
 		can_play_count = 0
-		code_has_used = False
 		is_member_self = True
 
 		#首先验证抽奖码有没有和本会员绑定
@@ -124,13 +123,9 @@ class Mexlottery(resource.Resource):
 				# 如果绑定，验证抽奖码有没有抽奖
 				if member_has_code.first().status == app_models.NOT_USED:
 					can_play_count = 1
-		#分享处理(1.码已经使用过，2.码没有使用过)
+		#分享处理(如果分享出去，别人访问页面is_member_self为false)
 		elif member_has_code.count() == 0:
 			is_member_self = False
-			exlottory_record = app_models.ExlottoryRecord.objects(code=code, belong_to=record_id)
-			#码已经使用过
-			if exlottory_record.count() == 1:
-				code_has_used = True
 
 		if can_play_count != 0:
 			exlottery_status = True
@@ -143,7 +138,6 @@ class Mexlottery(resource.Resource):
 			'activity_status': activity_status,
 			'exlottery_status': exlottery_status if activity_status == u'进行中' else False,
 			'can_play_count': can_play_count if exlottery_status else 0,
-			'code_has_used': code_has_used,
 			'is_member_self': is_member_self
 		}
 		#历史中奖记录
