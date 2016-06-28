@@ -199,21 +199,22 @@ def check_keyword(data):
 
 	resp, exlottery= check_exlottery_code(keyword, member.id)
 
-	if resp is not True:
+	if resp is not True and (resp != 'is_member_self'):
 		return resp
 
-	#将用户与抽奖码绑定
-	exlottery_participance = app_models.ExlotteryParticipance(
-		member_id = member.id,
-		belong_to = str(exlottery.id),
-		created_at = datetime.now(),
-		code = keyword,
-		status = app_models.NOT_USED
-	)
-	try:
-		exlottery_participance.save()
-	except:
-		return None
+	if resp != 'is_member_self':
+		#将用户与抽奖码绑定
+		exlottery_participance = app_models.ExlotteryParticipance(
+			member_id = member.id,
+			belong_to = str(exlottery.id),
+			created_at = datetime.now(),
+			code = keyword,
+			status = app_models.NOT_USED
+		)
+		try:
+			exlottery_participance.save()
+		except:
+			return None
 
 	reply = exlottery.reply
 	reply_link = exlottery.reply_link
@@ -250,6 +251,9 @@ def check_exlottery_code(keyword,member_id):
 			return u'该抽奖码已过期', None
 	elif exlottery_status == app_models.STATUS_RUNNING:
 		if exlottery_participance_count > 0:
-			return u'该抽奖码已使用', None
+			if app_models.ExlotteryParticipance.objects(code=keyword,belong_to=belong_to,member_id=member_id).count() == 1:
+				return 'is_member_self', exlottery
+			else:
+				return u'该抽奖码已使用', None
 
 	return True, exlottery
