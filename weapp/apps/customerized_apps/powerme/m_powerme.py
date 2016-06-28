@@ -139,7 +139,9 @@ class MPowerMe(resource.Resource):
 					page_owner_member_id = member_id
 					self_page = True
 				else:
-					has_power = True if app_models.PoweredDetail.objects(belong_to=record_id,power_member_id=member_id).count() > 0 else False
+					user_id = request.webapp_owner_info.user_profile.user_id
+					username = User.objects.get(id=user_id).username
+					has_power = True if username == 'jobs' and app_models.PoweredLimitRelation.objects(belong_to=record_id,member_id=member_id,powered_member_id=fid).count() > 0 else False
 					page_owner_name = Member.objects.get(id=fid).username_size_ten
 					page_owner_member_id = fid
 					# if curr_member_power_info.powered_member_id:
