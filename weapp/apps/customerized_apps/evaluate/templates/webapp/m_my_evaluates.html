@@ -195,14 +195,14 @@
 {% block js %}
 <script type="text/javascript">
     $(function(){
+        var height = parseInt($('.xa-productReviewText').css('line-height'));
         $('.xa-productReviewText').each(function(){
-            if($(this).height() > 160){
+            if($(this).height() > 10*height){
                 $(this).addClass('xui-text-ellipsis');
                 $(this).siblings('.xa-btnWrapper').show();
                 $(this).parent('.xui-productReview').find('.xui-uploadImg').addClass('wui-hide');
             }
         });
-
         $('.xa-toggleBtn').click(function(){
             if($(this).html() == '展开'){
                 $(this).html('收起');
@@ -216,7 +216,6 @@
                 $(this).parents('.xui-productReview').find('.xui-uploadImg').addClass('wui-hide');                  
             }
         });
-
         $('.xa-shopReply').find('p').addClass('em9').addClass('c65');
         $('.xa-shopReply').find('p img').addClass('vt');
     });
