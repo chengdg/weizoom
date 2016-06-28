@@ -432,28 +432,32 @@ class EvaluatesExport(resource.Resource):
 		return ExcelResponse(members_info, output_name=filename.encode('utf8'), force_csv=False)
 
 def get_evaluate_detail(evaluate_detail, is_review_dialog = False):
+	from operator import itemgetter
 	#组织自定义模板用户评价数据结构
 	evaluate_detail_list = []
-	for key, value in sorted(evaluate_detail.items()):
-		value = evaluate_detail[key]
+	for key, value in evaluate_detail.items():
+		keys = key.split('::')
+		index = keys[1]
 		#参与人信息只展示在后台的审核弹窗里
 		if is_review_dialog:
-			if 'textlist' in key.split('::'):
+			if 'textlist' in keys:
 				for k in value:
 					shortcut_name = k
 					if k in SHORTCUTS_TEXT:
 						shortcut_name = SHORTCUTS_TEXT[k]
 					evaluate_detail_list.append({
 						'title': shortcut_name,
-						'answer': value[k]
+						'answer': value[k],
+						'index': int(index)
 					})
-		if 'qa' in key.split('::'):
+		if 'qa' in keys:
 			qa_title, qa_answer = value.split('::')
 			evaluate_detail_list.append({
 				'title': qa_title,
-				'answer': qa_answer
+				'answer': qa_answer,
+				'index': int(index)
 			})
-		if 'selection' in key.split('::'):
+		if 'selection' in keys:
 			if isinstance(value, list):
 				mul_select_answers = []
 				mul_select_title = ''
@@ -463,13 +467,16 @@ def get_evaluate_detail(evaluate_detail, is_review_dialog = False):
 				if mul_select_title and mul_select_answers:
 					evaluate_detail_list.append({
 						'title': mul_select_title,
-						'answer': ','.join(mul_select_answers)
+						'answer': ','.join(mul_select_answers),
+						'index': int(index)
 					})
 			elif isinstance(value, basestring):
 				select_title, select_answer, num = value.split('::')
 				evaluate_detail_list.append({
 					'title': select_title,
-					'answer': select_answer
+					'answer': select_answer,
+					'index': int(index)
 				})
+	evaluate_detail_list = sorted(evaluate_detail_list, key=itemgetter('index'))
 
 	return evaluate_detail_list
