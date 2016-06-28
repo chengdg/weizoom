@@ -396,6 +396,10 @@
                     showQrcode(W.qrcodeUrl);
                     return false;
                 }
+                if(!is_member_self){
+                    wuiAlert('请使用抽奖码进行抽奖');
+                    return false;
+                }
                 var _that = this;
                 $(this).addClass('xa-lottery-go-to');
                 window.setTimeout(function(){
@@ -463,7 +467,6 @@
                     code: "{{code}}"
                 },
                 success: function(data) {
-                    console.log(data);
                     var member_info = data.member_info;
                     renderDynamicData(member_info);
                     getHistory(data.exlottery_history);
@@ -484,6 +487,7 @@
         function renderDynamicData(member_info){
             exlottery_status = member_info.exlottery_status;
             activity_status = member_info.activity_status;
+            is_member_self = member_info.is_member_self;
             W.isMember = member_info.isMember;
             //可参与次数
             can_play_count = member_info.can_play_count;
