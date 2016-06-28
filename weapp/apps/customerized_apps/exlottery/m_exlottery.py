@@ -252,7 +252,10 @@ def check_exlottery_code(keyword,member_id):
 	elif exlottery_status == app_models.STATUS_RUNNING:
 		if exlottery_participance_count > 0:
 			if app_models.ExlotteryParticipance.objects(code=keyword,belong_to=belong_to,member_id=member_id).count() == 1:
-				return 'is_member_self', exlottery
+				if exlottery_participance.first().status == app_models.NOT_USED:
+					return 'is_member_self', exlottery
+				else:
+					return u'该抽奖码已使用', None
 			else:
 				return u'该抽奖码已使用', None
 
