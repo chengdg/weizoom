@@ -71,18 +71,10 @@ W.component.appkit.ExlotteryDescription = W.component.Component.extend({
 		}, {
 			name: 'description',
 			type: 'textarea',
-			displayName: '活动说明',
+			displayName: '活动规则',
 			maxLength: 200,
 			isUserProperty: true,
 			default: ''
-		}, {
-			name: 'share_description',
-			type: 'textarea',
-			displayName: '分享说明',
-			maxLength: 30,
-			isUserProperty: true,
-			default: '',
-			placeholder: '用于分享活动时的简略描述，不超过30字'
 		}, {
 			name: 'expend',
 			type: 'text_with_annotation',
