@@ -1049,10 +1049,10 @@ Scenario:12 好友助力,查看助力的好友
 
 	Then bill获得"微助力活动1"的我的好友
 	"""
-		{
+		[{
 			"type":"默默支持的",
 			"name":["bigs","tom"]
-		}
+		}]
 	"""
 
 	When bigs取消关注jobs的公众号
