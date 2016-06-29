@@ -423,9 +423,9 @@ class EvaluatesExport(resource.Resource):
 							id2product[review.product_id].name if i == 0 else '',
 							review.order_id if i == 0 else '',
 							member.username_for_html if i == 0 else '' if member else u'已经跑路',
-							member_info.phone_number if member_info else '' if i == 0 else '',
+							member_info.phone_number if i == 0 else '' if member_info else '',
 							review.created_at.strftime("%Y-%m-%d %H:%H:%S") if i == 0 else '',
-							review.status if i == 0 else '',
+							app_models.EVALUATE_STATUS[review.status] if i == 0 else '',
 							review.score if i == 0 else '',
 							review.pics if i == 0 else '',
 							'【%s】%s' % (re['title'],re['answer'])

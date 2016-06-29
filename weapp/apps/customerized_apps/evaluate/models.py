@@ -9,6 +9,12 @@ STATUS_DENIED = -1
 STATUS_WAITTING = 0
 STATUS_PASSED = 1
 STATUS_TOP = 2
+EVALUATE_STATUS = {
+	STATUS_DENIED: u'已屏蔽',
+	STATUS_WAITTING: u'待审核',
+	STATUS_PASSED: u'已通过',
+	STATUS_TOP: u'通过并置顶',
+}
 
 #默认评价置顶时间
 DEFAULT_DATETIME = datetime.strptime('2000-01-01', '%Y-%m-%d')
