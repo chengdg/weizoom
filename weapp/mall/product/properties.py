@@ -2,11 +2,14 @@
 import json
 from django.template import RequestContext
 from django.shortcuts import render_to_response
+from eaglet.utils.resource_client import Resource
 
 from core import resource
 from core.jsonresponse import create_response
 from mall import export
-from mall import models as mall_models
+
+ZEUS_HOST = 'api.zeus.com'
+SERVICE_NAME = 'zeus'
 
 
 class Property(resource.Resource):
@@ -35,25 +38,32 @@ class Property(resource.Resource):
         """
         title = request.POST['title']
         new_properties = json.loads(request.POST.get('newProperties', "[]"))
+        params = {
+            'owner_id': request.manager.id,
+            'title': title
+        }
+        # 创建模板
+        resp = Resource.use(SERVICE_NAME, ZEUS_HOST).put({
+            'resource': 'mall.product_property_template',
+            'data': params
+        })
+        if resp and resp['code'] == 200:
 
-        template = mall_models.ProductPropertyTemplate.objects.create(
-            owner=request.manager,
-            name=title
-        )
+            template = resp['data']
+            properties_params = {
+                'template_id': template['id'],
+                'owner_id': request.manager.id,
+                'properties': json.dumps(new_properties)
+            }
+            # 创建模板的属性
+            property_resp = Resource.use(SERVICE_NAME, gateway_host=ZEUS_HOST).put({
+                'resource': 'mall.template_property',
+                'data': properties_params
+            })
+            if property_resp and property_resp['code'] == 200:
 
-        # 创建新的property
-        for property in new_properties:
-            if property['id'] < 0:
-                # 需要新建property
-                mall_models.TemplateProperty.objects.create(
-                    owner=request.manager,
-                    template=template,
-                    name=property['name'],
-                    value=property['value']
-                )
-
-        response = create_response(200)
-        return response.get_response()
+                response = create_response(200)
+                return response.get_response()
 
     def api_post(request):
         """更新属性模板
@@ -72,34 +82,47 @@ class Property(resource.Resource):
         update_properteis = json.loads(request.POST.get('updateProperties', "[]"))
         deleted_property_ids = json.loads(request.POST.get('deletedIds', "[]"))
 
-        mall_models.ProductPropertyTemplate.objects.filter(
-            id=template_id
-        ).update(name=title)
+        # 更新template
+        template_params = {
+            "id": template_id,
+            'title': title
+        }
+        template_update = Resource.use(SERVICE_NAME, ZEUS_HOST).post({
+            'resource': 'mall.product_property_template',
+            'data': template_params
+        })
+        if template_update and template_update['code'] == 200:
 
-        # 创建新的property
-        for property in new_properties:
-            if property['id'] < 0:
-                # 需要新建property
-                mall_models.TemplateProperty.objects.create(
-                    owner=request.manager,
-                    template_id=template_id,
-                    name=property['name'],
-                    value=property['value']
-                )
+            # 创建新的property
+            if new_properties:
+                create_new_properties_params = {
+                    "owner_id": request.manager.id,
+                    'properties': json.dumps(new_properties),
+                    'template_id': template_id,
+                }
+                Resource.use(SERVICE_NAME, ZEUS_HOST).put({
+                    'resource': 'mall.template_property',
+                    'data': create_new_properties_params
+                })
+            if update_properteis:
+                # 更新已有的property
+                update_properties_params = {
+                    'properties': json.dumps(update_properteis),
+                }
+                Resource.use(SERVICE_NAME, ZEUS_HOST).post({
+                    'resource': 'mall.template_property',
+                    'data': update_properties_params
+                })
 
-        # 更新已有的property
-        for property in update_properteis:
-                mall_models.TemplateProperty.objects.filter(
-                    id=property['id']
-                ).update(
-                    name=property['name'],
-                    value=property['value']
-                )
-        #删除property
-        mall_models.TemplateProperty.objects.filter(
-            id__in=deleted_property_ids
-        ).delete()
-
+            # 删除property
+            if deleted_property_ids:
+                delete_properties_params = {
+                    'ids': json.dumps(deleted_property_ids),
+                }
+                Resource.use(SERVICE_NAME, ZEUS_HOST).delete({
+                    'resource': 'mall.template_property',
+                    'data': delete_properties_params
+                })
         response = create_response(200)
         return response.get_response()
 
@@ -113,14 +136,21 @@ class Property(resource.Resource):
           DoesNotExist: if id is not provided
         """
         template_id = request.POST.get('id')
+        params = {
+            'id': template_id,
+        }
+        resp = Resource.use(SERVICE_NAME, ZEUS_HOST).delete({
+            'resource': 'mall.product_property_template',
+            'data': params
+        })
 
-        mall_models.ProductPropertyTemplate.objects.filter(
-            owner=request.manager,
-            id=template_id
-        ).delete()
-
-        response = create_response(200)
-        return response.get_response()
+        if resp:
+            if resp['code'] == 200:
+                response = create_response(200)
+                return response.get_response()
+            else:
+                response = create_response(resp['code'])
+                return response.get_response()
 
 
 class PropertyList(resource.Resource):
@@ -131,22 +161,22 @@ class PropertyList(resource.Resource):
         """商品属性模板列表页面.
 
         """
-        templates = mall_models.ProductPropertyTemplate.objects.filter(
-            owner=request.manager)
-        for template in templates:
-            template.properties = []
-        id2templates = dict(
-            [(template.id, template) for template in templates]
-        )
 
-        template_ids = [template.id for template in templates]
-        properties = mall_models.TemplateProperty.objects.filter(
-            template_id__in=template_ids
+        user_id = request.manager.id
+        params = {
+            'owner_id': user_id
+        }
+        resp = Resource.use(SERVICE_NAME, gateway_host=ZEUS_HOST).get(
+            {
+                'resource': 'mall.template_list',
+                'data': params
+            }
         )
-        for property in properties:
-            template = id2templates.get(property.template_id, None)
-            if template:
-                template.properties.append(property)
+        templates = None
+        if resp:
+            code = resp['code']
+            if code == 200:
+                templates = resp['data']['templates']
 
         c = RequestContext(request, {
             'first_nav_name': export.PRODUCT_FIRST_NAV,
@@ -160,7 +190,7 @@ class PropertyList(resource.Resource):
         """ 获得属性模板中的属性集合
 
         Args:
-          id: 属性模板id
+        id: 属性模板id
 
         Return json:
           Example:
@@ -177,17 +207,19 @@ class PropertyList(resource.Resource):
         if template_id == -1:
             properties = []
         else:
-            properties = mall_models.TemplateProperty.objects.filter(
-                template_id=template_id)
-
-        result_properties = []
-        for property in properties:
-            result_properties.append({
-                "id": property.id,
-                "name": property.name,
-                "value": property.value
-            })
-
+            params = {
+                'template_id': template_id
+            }
+            resp = Resource.use(SERVICE_NAME, ZEUS_HOST).get(
+                {
+                    'resource': 'mall.template_property',
+                    'data': params
+                }
+            )
+            if resp and resp['code'] == 200:
+                    properties = resp['data']
+            else:
+                properties = []
         response = create_response(200)
-        response.data = result_properties
+        response.data = properties
         return response.get_response()
