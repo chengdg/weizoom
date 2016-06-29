@@ -406,27 +406,51 @@ class EvaluatesExport(resource.Resource):
 		member_id2member = dict([(m.id, m) for m in members])
 
 		members_info = [
-			[u'商品名称', u'订单号', u'姓名', u'电话', u'评价时间', u'状态', u'产品评星', u'评价内容', u'图片链接']
+			[u'商品名称', u'订单号', u'姓名', u'电话', u'评价时间', u'状态', u'产品评星', u'图片链接', u'评价内容']
 		]
 
 		for review in product_reviews:
 			member_info = get_member_info_by(review.member_id)
-			try:
-				member = member_id2member.get(review.member_id, None)
-				info_list = [
-					id2product[review.product_id].name,
-					review.order_id,
-					member.username_for_html if member else u'已经跑路',
-					member_info.phone_number if member_info else '',
-					review.created_at.strftime("%Y-%m-%d %H:%H:%S"),
-					review.status,
-					review.score,
-					review.detail,
-					review.pics
-				]
-				members_info.append(info_list)
-			except:
-				pass
+			review_detail = review.detail
+			#处理自定义模板评价内容
+			if isinstance(review_detail, dict):
+				review_detail_list = get_evaluate_detail(review_detail, is_review_dialog=False)
+				try:
+					member = member_id2member.get(review.member_id, None)
+					i=0
+					for re in review_detail_list:
+						info_list = [
+							id2product[review.product_id].name if i == 0 else '',
+							review.order_id if i == 0 else '',
+							member.username_for_html if i == 0 else '' if member else u'已经跑路',
+							member_info.phone_number if member_info else '' if i == 0 else '',
+							review.created_at.strftime("%Y-%m-%d %H:%H:%S") if i == 0 else '',
+							review.status if i == 0 else '',
+							review.score if i == 0 else '',
+							review.pics if i == 0 else '',
+							'【%s】%s' % (re['title'],re['answer'])
+						]
+						members_info.append(info_list)
+						i += 1
+				except:
+					pass
+			else:
+				try:
+					member = member_id2member.get(review.member_id, None)
+					info_list = [
+						id2product[review.product_id].name,
+						review.order_id,
+						member.username_for_html if member else u'已经跑路',
+						member_info.phone_number if member_info else '',
+						review.created_at.strftime("%Y-%m-%d %H:%H:%S"),
+						review.status,
+						review.score,
+						review.pics,
+						review_detail
+					]
+					members_info.append(info_list)
+				except:
+					pass
 
 		filename = u'评价列表'
 		return ExcelResponse(members_info, output_name=filename.encode('utf8'), force_csv=False)
