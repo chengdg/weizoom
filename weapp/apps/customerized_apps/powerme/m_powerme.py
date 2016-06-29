@@ -29,6 +29,7 @@ class MPowerMe(resource.Resource):
 		record_id = request.GET.get('id', None)
 		member = request.member
 		member_id = member.id
+		fid = request.GET.get('fid', member_id)
 		response = create_response(500)
 		if not record_id or not member_id:
 			response.errMsg = u'活动信息出错'
@@ -44,6 +45,8 @@ class MPowerMe(resource.Resource):
 		if cache_data:
 			participances_dict = cache_data['participances_dict']
 			participances_list = cache_data['participances_list']
+			follow_friend_list = cache_data['follow_friend_list']
+			unfollow_friend_list = cache_data['unfollow_friend_list']
 			total_participant_count = cache_data['total_participant_count']
 			print '================from cache'
 		else:
@@ -69,9 +72,34 @@ class MPowerMe(resource.Resource):
 				participances_list.append(temp_dict)
 			# 取前100位
 			participances_list = participances_list[:100]
+
+			user_id = request.webapp_owner_info.user_profile.user_id
+			username = User.objects.get(id=user_id).username
+			follow_friend_list = []
+			unfollow_friend_list = []
+			if username == 'jobs':
+				details = app_models.PoweredDetail.objects(belong_to=record_id, owner_id=fid)
+				power_member_ids = [d.power_member_id for d in details]
+				power_member_id2member = {m.id: m for m in Member.objects.filter(id__in=power_member_ids)}
+				for member_id, member in power_member_id2member.items():
+					if member.is_subscribed:
+						follow_friend_list.append({
+							'user_icon': member.user_icon,
+							'username': member.username_truncated
+						})
+					else:
+						unfollow_friend_list.append({
+							'user_icon': member.user_icon,
+							'username': member.username_truncated
+						})
+
+
+
 			SET_CACHE(cache_key, {
 				'participances_dict': participances_dict,
 				'participances_list': participances_list,
+				'follow_friend_list': follow_friend_list,
+				'unfollow_friend_list': unfollow_friend_list,
 				'total_participant_count': total_participant_count
 			})
 			print '================set cache'
@@ -89,7 +117,7 @@ class MPowerMe(resource.Resource):
 		has_power = False
 
 		# fid = request.COOKIES['fid']
-		fid = request.GET.get('fid', member_id)
+		# fid = request.GET.get('fid', member_id)
 
 		if 'new_app:' in record_id:
 			project_id = record_id
@@ -197,7 +225,9 @@ class MPowerMe(resource.Resource):
 			'participances': participances_list,
 			'current_member_rank_info': current_member_rank_info,
 			'total_participant_count': total_participant_count,
-			'member_info': member_info
+			'member_info': member_info,
+			'follow_friend_list': follow_friend_list,
+			'unfollow_friend_list': unfollow_friend_list
 		}
 		return response.get_response()
 

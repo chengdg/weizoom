@@ -386,6 +386,8 @@
                 renderTime(data.member_info.timing);
                 //渲染排名
                 showTop100(data);
+                //渲染我的好友
+                showFriends(data);
                 //隐藏loading动画元素
                 loadingStatus(false);
                 //监听分享成功事件
@@ -465,6 +467,36 @@
 
         //展示与隐藏我的排名面板
         window.setTimeout(showMyRank, 2*1000);
+    }
+    function showFriends(data){
+        var follow_friend_list = data.follow_friend_list;
+        var unfollow_friend_list = data.unfollow_friend_list;
+        if ($.isEmptyObject(follow_friend_list) && $.isEmptyObject(unfollow_friend_list)){
+            $('.wa-friends').html("<div style='margin-top:20px'>还没有好友帮您助力～</div>");
+        }else{
+            if(follow_friend_list || $.isEmptyObject(follow_friend_list)){
+                var follow_li_content = '';
+                for(var i in follow_friend_list){
+                    var f = follow_friend_list[i];
+                    follow_li_content += "<li style='float:left;width:20%;position: relative'>" +
+                            "<div class='wui-weshop-friend-name'><span class='wui-weshop-wraper'></span><img src='"+ f.user_icon+"'></div>" +
+                            "<div>"+f.username+"</div></li>";
+                }
+                follow_li_content += "<li style='clear:both'></li>";
+                $('.follow_friends').append($(follow_li_content));
+            }
+            if(unfollow_friend_list || $.isEmptyObject(unfollow_friend_list)) {
+                var unfollow_li_content = '';
+                for (var i in unfollow_friend_list) {
+                    var u = unfollow_friend_list[i];
+                    unfollow_li_content += "<li style='float:left;width:20%;position: relative'>" +
+                            "<div class='wui-weshop-friend-name'><span class='wui-weshop-wraper'></span><img src='" + u.user_icon + "'></div>" +
+                            "<div>" + u.username + "</div></li>";
+                }
+                unfollow_li_content += "<li style='clear:both'></li>";
+                $('.unfollow_friends').append($(unfollow_li_content));
+            }
+        }
     }
 
     function renderTime(seconds){
@@ -595,6 +627,18 @@
             }
         });
     }
+    $('.wa-weshop').click(function(event){
+        $(this).find('li').removeClass('active');
+        $(event.target).addClass('active');
+        if ($(event.target).hasClass('weshop-friends')){
+            $('.wui-i-states-weshop').find('.wa-top100').hide();
+            $('.wa-friends').show();
+        }else{
+            $('.wui-i-states-weshop').find('.wa-top100').show();
+            $('.wa-friends').hide();
+        }
+
+    });
     //隐藏所有
     $('.mask').click(function(){
         mask('hide');
