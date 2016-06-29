@@ -1,0 +1,192 @@
+{% extends "content_base_v2.html" %}
+{% block css %}
+<style type="text/css">
+	.panel-header > div:first-child{
+		font-size: 15px;
+	}
+</style>
+{% endblock %}
+{% block content-panel %}
+<div class="xui-lotteriesAppPage xui-appPage-commonStyle">
+	<div class="relative">
+		<ul class="breadcrumb">
+			<li>您当前所在位置</li>
+			<li><a href="/apps/exlottery/exlotteries/">百宝箱</a></li>
+			<li><a href="/apps/exlottery/exlotteries/">专项抽奖</a></li>
+			<li class="active">码库</li>
+		</ul>
+	</div>
+
+	<div class="xui-filterPanel mb15">
+		<div class="xui-form disT">
+			<div class="xui-col disTc">
+				<div class="xui-i-item">
+					<label class="">抽奖码：</label>
+					<input type="text" class="form-control" id="code" name="code" value="" />
+				</div>
+			</div>
+			<div class="xui-col disTc">
+				<div class="xui-i-item">
+					<label class="">使用人</label>
+					<input type="text" class="form-control" id="member" name="member" value="" />
+				</div>
+			</div>
+			<div class="xui-col disTc">
+				<div class="xui-i-item ml20">
+					<label>获奖等级：</label>
+					<select class="" id="status" name="status">
+						<option value="-1">全部</option>
+						<option value="4">未中奖</option>
+						<option value="1">一等奖</option>
+						<option value="2">二等奖</option>
+						<option value="3">三等奖</option>
+					</select>
+				</div>
+			</div>
+		</div>
+		<div class="xui-btn-group">
+			<a class="btn btn-primary mr40 xa-search xui-fontBold" href="javascript:void(0);">查&nbsp;&nbsp;&nbsp;询</a>
+			<a class="btn btn-default xa-reset xui-fontBold" href="javascript:void(0);">重&nbsp;&nbsp;&nbsp;置</a>
+		</div>
+	</div>
+
+	<div class="panel panel-default xui-tableBox">
+		<div
+			class="panel-body panel-table p0"
+			data-ui-role="advanced-table"
+			data-app="apps/exlottery"
+			data-resource="exlottery_code_store"
+			data-template-id="#table"
+			data-enable-paginator="true"
+			data-enable-sort="false"
+			data-selectable="false"
+			data-disable-header-select="true"
+			data-item-count-per-page="20"
+            data-args='{"id": "{{activity_id}}"}'
+		>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+
+{% block js %}
+
+{% verbatim %}
+<script id="table" type="text/x-jquery-tmpl">
+	<div class="panel-header disT">
+		<div class="disTc" style="width:90px;">实时数据</div>
+		<div class="disTc" style="width:120px;">
+			<b>抽奖码共计：</b>
+			${data.data.count}
+		</div>
+		<div class="disTc" style="width:100px;">
+			<b>已使用：</b>
+			${data.data.has_used}
+		</div>
+		<div class="disTc" style="width:100px;">
+			<b>一等奖：</b>
+			${data.data.first}
+		</div>
+		<div class="disTc" style="width:100px;">
+			<b>二等奖：</b>
+			${data.data.second}
+		</div>
+		<div class="disTc" style="width:100px;">
+			<b>三等奖：</b>
+			${data.data.third}
+		</div>
+		<div class="disTc" style="width:200px;">
+			<span>创建时间：</span>
+			${data.data.create_at}
+		</div>
+		<div class="disTc" style="width:120px;">
+			<span>状态：</span>
+			${data.data.status}
+		</div>
+		<div class="disTc">
+			<a href="javascript:void(0)" class="xa-export">导出<span style="font-family:'宋体'">&gt;&gt;</span></a>
+		</div>
+	</div>
+	{{if items!='' }}
+	<table class="table table-bordered xb-stripedTable xb-noTdBorder xb-noBottom xb-noBorder xb-theadBg mb10">
+		<thead>
+			<tr>
+				<th>抽奖码</th>
+				<th>使用人</th>
+				<th>使用时间</th>
+				<th>获奖等级</th>
+				<th>奖品名称</th>
+			</tr>
+		</thead>
+		<tbody>
+		  {{each(i, item) items}}
+			<tr>
+				<td>
+					${item.code}
+				</td>
+				<td>
+					${item.member}
+				</td>
+				<td>
+					${item.time}
+				</td>
+				<td>
+					${item.grade}
+				</td>
+				<td>
+					${item.name}
+				</td>
+			</tr>
+			{{/each}}
+		</tbody>
+		<div class="cb"></div>
+	</table>
+	{{else}}
+		<div class="xui-emptyBox m10">
+			<img src="/static_v2/img/editor/empty.png">
+			<span class="ml20">您还没有相关数据！</span>
+		</div>
+	{{/if}}
+	<br>
+</script>
+{% endverbatim %}
+
+<script type="text/javascript">
+	$(document).ready(function(){
+		//搜索
+		$('.xa-search').click(function(event){
+			var code = $.trim($('[name="code"]').val());
+			var member = $.trim($('[name="member"]').val());
+			var status = $('[name="status"]').val();
+			var table = $('[data-ui-role="advanced-table"]').data('view');
+			table.reload({
+				member: member,
+				code: code,
+				status: status
+			},{
+				emptyDataHint: '没有符合条件的数据'
+			});
+		});
+
+		//重置
+		$('.xa-reset').click(function(event) {
+			$('[name="code"]').val('');
+			$('[name="status"]').val('-1');
+			$('[name="member"]').val('');
+		});
+
+		//导出
+		$('body').delegate('.xa-export','click',function(event){
+			W.getLoadingView();
+			var code = $.trim($('[name="code"]').val());
+			var member = $.trim($('[name="member"]').val());
+			var status = $('[name="status"]').val();
+			var export_id =window.location.search.split('?id=')[1];
+			var url = '/apps/exlottery/api/exlottery_code_export/?code='+code+'&status='+status+'&member='+member+'&export_id='+export_id;
+	  		window.open(url);
+		});
+	});
+</script>
+
+{% endblock %}
