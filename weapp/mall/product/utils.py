@@ -520,3 +520,4 @@ def zeus_req(method, opt, *args, **kwargs):
         else:
             msg = u'调用zeus出错, resource={}'.format(opt['resource'])
             watchdog_error(message=msg)
+            
