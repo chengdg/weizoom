@@ -625,12 +625,12 @@ Scenario:3 自营平台，查看会员列表中的购买次数
 		When nokia对订单进行发货
 			"""
 			{
-				"order_no":"001",
+				"order_no":"001-供货商1",
 				"logistics":"off",
 				"shipper": ""
 			}
 			"""
-		When nokia'完成'订单'001'
+		When nokia'完成'订单'001-供货商1'
 	#002-多个自建供货商的商品
 		When bill访问nokia的webapp
 		When bill购买nokia的商品
