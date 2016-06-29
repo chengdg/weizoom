@@ -157,7 +157,8 @@ def sorted_products(manager_id, product_categories, reverse):
       products(list): 根据CategoryHasProduct，添加过display的product列表
     """
     #获取与category关联的product集合
-    category_ids = (category.id for category in product_categories)
+    # rocky 以前是对象获取，现在是从json中获取
+    category_ids = (category.get('id') for category in product_categories)
     relations = models.CategoryHasProduct.objects.filter(
         category_id__in=category_ids).select_related('product')
     categoryId2relations = dict()
@@ -184,7 +185,7 @@ def sorted_products(manager_id, product_categories, reverse):
 
     for c in product_categories:
         products = []
-        for i in categoryId2relations.get(c.id, []):
+        for i in categoryId2relations.get(c.get('id'), []):
             if id2product.has_key(i.product_id):
                 product = copy.copy(id2product[i.product_id])
                 product.display_index = i.display_index
@@ -202,7 +203,7 @@ def sorted_products(manager_id, product_categories, reverse):
         # products = sorted(products, key=attrgetter('shelve_type'), reverse=reverse)
 
 
-        c.products = products
+        c['products'] = products
     return product_categories
 
 MALL_PRODUCT_DELETED = -1
@@ -494,3 +495,28 @@ def get_pids(woid):
         watchdog_error(error_msg)
         pids = []
     return pids
+
+# rocky 调用zeus接口入口
+from eaglet.utils.resource_client import Resource
+
+def zeus_req(method, opt, *args, **kwargs):
+        if method.lower() == 'delete':
+            resp = Resource.use('zeus', 'api.zeus.com').delete(opt)
+        elif method.lower() == 'post':
+            resp = Resource.use('zeus', 'api.zeus.com').post(opt)
+        elif method.lower() == 'put':
+            resp = Resource.use('zeus', 'api.zeus.com').put(opt)
+        else:
+            resp = Resource.use('zeus', 'api.zeus.com').get(opt)
+        if resp:
+            code = resp['code']
+            zeus_resp = resp['data']
+            if code == 200:
+                return zeus_resp
+                product_categories = zeus_resp['categories']
+            else:
+                msg = u'调用zeus返回状态值不是200,而是{0},resource={1}'.format(code, opt['resource'])
+                watchdog_error(message=msg)
+        else:
+            msg = u'调用zeus出错, resource={}'.format(opt['resource'])
+            watchdog_error(message=msg)

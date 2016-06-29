@@ -16,6 +16,7 @@ from core.exceptionutil import unicode_full_stack
 from watchdog.utils import watchdog_warning
 
 
+
 class Categories(resource.Resource):
     """
     分组列表通用类，只返回分组本身信息
@@ -119,11 +120,23 @@ class CategoryList(resource.Resource):
         商品分类列表页面
         """
         #获取category集合
-        product_categories = mall_models.ProductCategory.objects.filter(
-            owner=request.manager)
+        # rocky 更新
+        #############################
+        # product_categories = mall_models.ProductCategory.objects.filter(
+        #     owner=request.manager)
+        opt = {
+            'resource': 'mall.category_list',
+            'data': {
+                'category_ids':'all',
+                'owner_id': request.manager.id
+            }
+        }
+        zeus_resp = category_ROA_utils.zeus_req('get',  opt)
+        product_categories = zeus_resp['categories']
+        ###############################
+
 
         category_ROA_utils.sorted_products(request.manager.id, product_categories, True)
-
         c = RequestContext(request, {
                     'first_nav_name': export.PRODUCT_FIRST_NAV,
                     'second_navs': export.get_mall_product_second_navs(request),
@@ -232,8 +245,16 @@ class CategoryList(resource.Resource):
         elif action == 'sorted':
             reverse = json.loads(request.GET.get('reverse', 'true'))
             #获取category集合
-            product_categories = mall_models.ProductCategory.objects.filter(
-                id=category_id)
+            opt = {
+                'resource': 'mall.category',
+                'data': {
+                    'category_id': category_id
+                }
+            }
+            zeus_resp = category_ROA_utils.zeus_req('get', opt)
+            product_categories = zeus_resp['category']
+            # product_categories = mall_models.ProductCategory.objects.filter(
+            #     id=category_id)
 
             category_ROA_utils.sorted_products(request.manager.id, product_categories, reverse)
 
@@ -262,11 +283,21 @@ class CategoryList(resource.Resource):
             category_id = request.POST.get('category_id')
             product_id = request.POST.get('product_id')
             position = request.POST.get('position')
-            category_has_product = mall_models.CategoryHasProduct.objects.get(
-                category_id=category_id,
-                product_id=product_id
-            )
-            category_has_product.move_to_position(position)
+            # category_has_product = mall_models.CategoryHasProduct.objects.get(
+            #     category_id=category_id,
+            #     product_id=product_id
+            # )
+            # category_has_product.move_to_position(position)
+
+            category_ROA_utils.zeus_req('put', {
+                    'resource': 'mall.category_has_product',
+                    'data': {
+                        'category_id': category_id,
+                        'product_id': product_id,
+                        'position': position
+                    }
+                })
+
             response = create_response(200)
             return response.get_response()
         except:
@@ -292,19 +323,37 @@ class Category(resource.Resource):
         """
         # pdb.set_trace()
         if request.POST:
-            product_category = mall_models.ProductCategory.objects.create(
-                owner=request.manager,
-                name=request.POST.get('name', '').strip()
-            )
-            product_ids = request.POST.getlist('product_ids[]')
-            product_category.product_count = len(product_ids)
-            product_category.save()
+            opt = {
+                'resource': 'mall.category',
+                'data': {
+                    'owner_id': request.manager.id,
+                    'name': request.POST.get('name', '').strip()
+                }
+            }
+            zeus_category_resp = category_ROA_utils.zeus_req('post', opt)
 
-            for product_id in product_ids:
-                mall_models.CategoryHasProduct.objects.create(
-                    product_id=product_id,
-                    category=product_category
-                )
+            # product_category = mall_models.ProductCategory.objects.create(
+            #     owner=request.manager,
+            #     name=request.POST.get('name', '').strip()
+            # )
+            product_category = zeus_category_resp['category']
+            product_ids = request.POST.getlist('product_ids[]')
+
+            zeus_categoryhasproduct_resp = category_ROA_utils.zeus_req('post', {
+                    'resource': 'mall.category_has_product',
+                    'data': {
+                        'category_id': product_category['id'],
+                        'product_ids': ','.join(product_ids)
+                    }
+                })
+            # product_category.product_count = len(product_ids)
+            # product_category.save()
+
+            # for product_id in product_ids:
+            #     mall_models.CategoryHasProduct.objects.create(
+            #         product_id=product_id,
+            #         category=product_category
+            #     )
             return create_response(200).get_response()
 
     @login_required
@@ -351,14 +400,27 @@ class Category(resource.Resource):
         # import pdb
         # pdb.set_trace()
         if product_id:
-            mall_models.CategoryHasProduct.objects.filter(
-                product_id=product_id,
-                category_id=category_id
-            ).delete()
+            # mall_models.CategoryHasProduct.objects.filter(
+            #     product_id=product_id,
+            #     category_id=category_id
+            # ).delete()
+            category_ROA_utils.zeus_req('delete', {
+                    'resource': 'mall.category_has_product',
+                    'data': {
+                        'category_id': category_id,
+                        'product_id': product_id
+                    }
+                })
         elif category_id:
-            mall_models.ProductCategory.objects.filter(
-                owner=request.manager,
-                id=category_id
-            ).delete()
+            zeus_category_resp = category_ROA_utils.zeus_req('delete', {
+                    'resource': 'mall.category',
+                    'data': {
+                        'category_id': category_id
+                    }
+                })
+            # mall_models.ProductCategory.objects.filter(
+            #     owner=request.manager,
+            #     id=category_id
+            # ).delete()
 
         return create_response(200).get_response()
