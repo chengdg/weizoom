@@ -126,29 +126,33 @@ class WebappPageMallMiddleware(object):
 	def process_request(self, request):
 		try:
 			if is_request_for_webapp_api(request) and ("member_subscribed_status" in request.get_full_path() or "shopping_cart_count" in request.get_full_path() or "member_product_info" in request.get_full_path()):
-				print ">>>>>>>iWebappPageMallMiddleware:", request.get_full_path()
 				if "shopping_cart_count" in request.get_full_path():
 					# if webapp_user_id:
 					try:
-						webapp_user_id = request.webapp_user.id
-						from mall.models import ShoppingCart
-						shopping_cart = ShoppingCart.objects.filter(webapp_user_id=webapp_user_id)
-						if shopping_cart.count() > 0:
-							shopping_cart_count = shopping_cart.count()
-						else:
+						if request.webapp_user:
+							webapp_user_id = request.webapp_user.id
+							from mall.models import ShoppingCart
+							shopping_cart = ShoppingCart.objects.filter(webapp_user_id=webapp_user_id)
+							if shopping_cart.count() > 0:
+								shopping_cart_count = shopping_cart.count()
+							else:
+								shopping_cart_count = 0
+						else
 							shopping_cart_count = 0
 					except:
 						notify_message = u"购物车数量函数出错，cause:\n{}".format(unicode_full_stack())
 						watchdog_error(notify_message)
 						shopping_cart_count = 0
 						
-					print ">>>>>>>shopping_cart_count:",shopping_cart_count
 					response = create_response(200)
 					response.data = {'count': shopping_cart_count}
 					return response.get_response()
 				elif  "member_subscribed_status" in request.get_full_path():
 					try:
-						is_subscribed = request.member.is_subscribed
+						if request.member:
+							is_subscribed = request.member.is_subscribed
+						else:
+							is_subscribed = True
 						response = create_response(200)
 						response.data = {'is_subscribed': is_subscribed}
 						return response.get_response()
