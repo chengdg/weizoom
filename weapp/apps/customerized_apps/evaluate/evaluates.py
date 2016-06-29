@@ -443,7 +443,7 @@ class EvaluatesExport(resource.Resource):
 						member.username_for_html if member else u'已经跑路',
 						member_info.phone_number if member_info else '',
 						review.created_at.strftime("%Y-%m-%d %H:%H:%S"),
-						review.status,
+						app_models.EVALUATE_STATUS[review.status],
 						review.score,
 						review.pics,
 						review_detail
