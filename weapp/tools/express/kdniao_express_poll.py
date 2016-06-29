@@ -19,7 +19,7 @@ def post(url, data):
 express2kdniaocode = {'quanfengkuaidi': 'QFKD', 'shentong': 'STO', 'zhaijisong': 'ZJS', 'rufengda': 'RFD', 
 	'debangwuliu': 'DBL', 'shunfeng': 'SF', 'yunda': 'YD', 'bpost': 'BEL', 'tiantian': 'HHTT', 
 	'suer': 'SURE', 'ems': 'EMS', 'zhongtong': 'ZTO', 'kuaijiesudi': 'FAST', 'yuantong': 'YTO', 
-	'huitongkuaidi': 'HTKY', 'guotongkuaidi': 'GTO', 'youzhengguonei': 'YZPY'}
+	'huitongkuaidi': 'HTKY', 'guotongkuaidi': 'GTO', 'youzhengguonei': 'YZPY', 'youshuwuliu': 'UC'}
 
 class KdniaoExpressPoll(object):
 	'''
