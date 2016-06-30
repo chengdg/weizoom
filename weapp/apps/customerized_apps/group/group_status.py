@@ -83,7 +83,7 @@ def stop_group(group_id,is_test):
 	not_start_group_relations = app_models.GroupRelations.objects(belong_to=group_id,group_status=app_models.GROUP_NOT_START)
 	for group_relation in not_start_group_relations:
 		group_relation_id = group_relation.id
-		has_placed_order = app_models.GroupDetail.objects(relation_belong_to=str(group_relation_id),order_id__not='')
+		has_placed_order = app_models.GroupDetail.objects(relation_belong_to=str(group_relation_id),order_id__ne='')
 		if has_placed_order.count() > 0:
 			# update_order_status_by_group_status(group_id,'failure')
 			resp = Resource.use('zeus').post({
