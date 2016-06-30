@@ -478,9 +478,9 @@
                 var follow_li_content = '';
                 for(var i in follow_friend_list){
                     var f = follow_friend_list[i];
-                    follow_li_content += "<li style='float:left;width:20%;position: relative'>" +
+                    follow_li_content += "<li style='float:left;width:16.5%;position: relative'>" +
                             "<div class='wui-weshop-friend-name'><span class='wui-weshop-wraper'></span><img src='"+ f.user_icon+"'></div>" +
-                            "<div>"+f.username+"</div></li>";
+                            "<div style='font-size:0.8rem'>"+f.username+"</div></li>";
                 }
                 follow_li_content += "<li style='clear:both'></li>";
                 $('.follow_friends').append($(follow_li_content));
@@ -491,7 +491,7 @@
                     var u = unfollow_friend_list[i];
                     unfollow_li_content += "<li style='float:left;width:16.5%;position: relative'>" +
                             "<div class='wui-weshop-friend-name'><span class='wui-weshop-wraper'></span><img src='" + u.user_icon + "'></div>" +
-                            "<div>" + u.username + "</div></li>";
+                            "<div style='font-size:0.8rem'>" + u.username + "</div></li>";
                 }
                 unfollow_li_content += "<li style='clear:both'></li>";
                 $('.unfollow_friends').append($(unfollow_li_content));
