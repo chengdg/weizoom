@@ -43,7 +43,7 @@ class Command(BaseCommand):
 					resp = Resource.use('zeus').post({
 						'resource': 'mall.group_update_order',
 						'data': {
-							'group_id': group_id,
+							'group_id': str(group_id),
 							'status': 'failure',
 							'is_test': 0
 						}
@@ -125,7 +125,7 @@ class Command(BaseCommand):
 					resp = Resource.use('zeus').post({
 						'resource': 'mall.group_update_order',
 						'data': {
-							'group_id': group_id,
+							'group_id': str(group_id),
 							'status': 'failure',
 							'is_test': 0
 						}
@@ -137,7 +137,7 @@ class Command(BaseCommand):
 				resp = Resource.use('zeus').post({
 					'resource': 'mall.group_update_order',
 					'data': {
-						'group_id': group_id,
+						'group_id': str(group_id),
 						'status': 'failure',
 						'is_test': 0
 					}
