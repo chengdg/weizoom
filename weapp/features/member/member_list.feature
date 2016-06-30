@@ -502,7 +502,7 @@ Scenario:2 会员列表
 #补充:张三香 2016.06.29
 #针对bug补充-（功能问题）自营平台-后台订单列表中的购买次数和30天内购买频次显示不正常
 
-@member @memberList
+@member @memberList @mall2
 Scenario:3 自营平台，查看会员列表中的购买次数
 	#备注-30天内购买次数无法实现steps（这个是执行的脚本）
 
