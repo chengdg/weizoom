@@ -1,0 +1,166 @@
+{% extends "apps_base.html" %}
+
+{% block css %}
+<style type="text/css">
+    html,body{
+        height: 100%;
+        font-family: "黑体";
+    }
+    .wui-exlottery-top{
+        background: #fff;
+        height: 2rem;
+        line-height: 2rem;
+        text-align: center;
+    }
+    .wui-exlottery-page{
+        position: relative;
+        height: 100%;
+        background: url(/static_v2/img/page-background.jpg) no-repeat;
+        background-size: cover;
+    }
+    .wui-exlottery-container{
+        width: 70%;
+        margin: 0 auto;
+        position: relative;
+        top: 50%;
+        text-align: center;
+        font-size: 0;
+    }
+    .wui-exlottery-container > div{
+        text-align: center;
+        margin-bottom: 10px;
+    }
+    .wui-exlottery-container > div:nth-child(2){
+        text-align: left;
+    }
+    .wui-exlottery-btn{
+        border:none;
+        border-radius: .2rem;
+        height: 2.5rem;
+        line-height: 2.4rem;
+        color: #fff;
+        width: 100%;
+        font-size: 1rem;
+        outline: none;
+        background-color: #dc3434;
+        box-shadow: 0 3px 0px #ac0101;
+        font-family: "黑体";
+    }  
+    .wui-exlottery-container input{
+        border: 1px solid #dbdbdb;
+        box-sizing: border-box;
+        font-size: .9rem;
+        height: 1.9rem;
+        line-height: 1.9rem;
+        border-radius: .2rem;
+        width: 100%;
+        outline: none;
+        padding: 0 0 0 .3rem;
+        font-family: "黑体";
+    }
+    .wui-exlottery-container .wui-verify-input{
+        width: 70%;
+        margin-right: 3%;
+    }
+    a.wui-verify-refresh{
+        display: inline-block;
+        width: 27%;
+        text-align: center;
+        font-size: .9rem;
+        background: #fff;
+        height: 1.9rem;
+        line-height: 1.9rem;
+        border-radius: .2rem;
+        text-decoration: underline;
+        font-family: "Arial";
+        color: #005fc0;
+    }
+    .wui-apps-alert{
+        opacity: 0;
+        color: whitesmoke;
+        position: fixed;
+        top: 0;
+        width: 100%;
+        transition: opacity 0.5s, top 0.7s;
+        -webkit-transition: opacity 0.5s, top 0.7s;
+        z-index: 10003;
+        text-align: center;
+    }
+    .wui-apps-alert > span{
+        background-color: #000;
+        border-radius: 2px;
+        margin: 0 auto;
+        display: inline-block;
+        height: 2rem;
+        line-height: 2rem;
+        width: 70%;
+    }
+</style>
+{% endblock %}
+
+{% block content-panel %}
+<div class="wui-exlottery-page">
+    <h1 class="wui-exlottery-top">杭州百事可乐</h1>
+    <div class="wui-exlottery-container"> 
+        <div> 
+            <input type="text" placeholder="请输入抽奖码" class="wui-excode-input wa-excode-input">
+        </div>
+        <div>
+            <input type="text" placeholder="验证码" class="wui-verify-input wa-verify-input" maxlength="4">
+            <a href="javascript:void(0)" class="wui-verify-refresh">YB2H</a>
+        </div>
+        <button class="wui-exlottery-btn wa-exlottery-btn">立即抽奖</button>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+    $(function(){
+        var myAlertTimer;
+        function myWuiAlert(msg, time){
+            if(myAlertTimer) window.clearTimeout(myAlertTimer);
+            time = parseInt(time) || 2000;
+            var $alert = $('.wa-alert');
+            $alert.find('span').html(msg);
+            $alert.css({
+                'opacity': '.8',
+                'top': '32%'
+            });
+            myAlertTimer = window.setTimeout(function(){
+                $alert.css({
+                    'opacity': 0,
+                    'top': '2rem'
+                });
+            }, time);
+        }
+        $('.wa-exlottery-btn').click(function(){
+            var excode = $.trim($('.wa-excode-input').val());
+            var verify_code = $.trim($('.wa-verify-input').val());
+            if(!verify_code){
+                myWuiAlert('请输入验证码');
+                return false;
+            }else if(!verify_code){
+                myWuiAlert('请输入正确抽奖码');
+                return false;
+            }else{
+                W.getApi().call({
+                    app: 'm/apps/exlottery',
+                    resource: 'm_exlottery_page',
+                    method: 'post',
+                    args: {
+                        excode: excode,
+                        verify_code: verify_code
+                    },
+                    success: function(data){
+                        console.log(data);
+                    },
+                    error: function(data){
+                        console.log(data);
+                    }
+                });
+            }
+        });
+    })
+</script>
+{% endblock %}
