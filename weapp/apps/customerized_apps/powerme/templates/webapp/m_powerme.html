@@ -255,6 +255,10 @@
     });
 
     function updateBtnStatus(){
+        if (username == 'jobs' && is_self_page){
+            $('.wui-i-states').hide();
+            $('.wui-i-states-weshop').show();
+        }
         if('进行中' != W.activityStatus){
             $('.wa-timing').hide();
             if('未开始' == W.activityStatus){
@@ -263,10 +267,6 @@
                 $('.wa-closed').show();
             }
             return false;
-        }
-         if (username == 'jobs' && is_self_page){
-            $('.wui-i-states').hide();
-            $('.wui-i-states-weshop').show();
         }
         //如果是自己的主页
         if(is_self_page){
