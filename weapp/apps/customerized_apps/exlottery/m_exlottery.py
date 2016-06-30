@@ -45,6 +45,7 @@ class Mexlottery(resource.Resource):
 
 		try:
 			record = app_models.Exlottery.objects.get(id=id)
+			exlottery_bg_image = record.exlottery_bg_image
 		except:
 			c = RequestContext(request,{
 				'is_deleted_data': True
@@ -72,7 +73,7 @@ class Mexlottery(resource.Resource):
 			'isPC': is_pc,
 			'auth_appid_info': auth_appid_info,
 			'share_page_desc': share_page_desc,
-			'share_img_url': thumbnails_url,
+			'share_img_url': exlottery_bg_image if exlottery_bg_image else thumbnails_url,
 			'code': code
 		})
 		response = render_to_string('exlottery/templates/webapp/m_exlottery.html', c)
@@ -89,7 +90,7 @@ class Mexlottery(resource.Resource):
 		exlottery_status = False
 
 		member = request.member
-		code = request.GET.get('code',None)
+		code = request.GET.get('ex_code',None)
 		response = create_response(500)
 
 		if not record_id or not member:
@@ -129,7 +130,7 @@ class Mexlottery(resource.Resource):
 
 		if can_play_count != 0:
 			exlottery_status = True
-		
+
 		#会员信息
 		member_info = {
 			'isMember': isMember,
@@ -173,84 +174,35 @@ def update_exlottery_status(lottery):
 		lottery.reload()
 	return activity_status, lottery
 
-def check_keyword(data):
-	"""
-	匹配用户的消息
-	@param data: {
-		'webapp_owner_id': 0,
-		'keyword': 0,
-		'openid': 0,
-		'webapp_id': 0
-	}
-	@return: return_html string
-	"""
-	webapp_owner_id = data['webapp_owner_id']
-	keyword = data['keyword']
-	member = get_member_by_openid(data['openid'], data['webapp_id'])
-
-	if not member:
-		return None
-
-	resp, exlottery= check_exlottery_code(keyword, member.id)
-
-	if resp is not True and (resp != 'is_member_self'):
-		return resp
-
-	if resp != 'is_member_self':
-		#将用户与抽奖码绑定
-		exlottery_participance = app_models.ExlotteryParticipance(
-			member_id = member.id,
-			belong_to = str(exlottery.id),
-			created_at = datetime.now(),
-			code = keyword,
-			status = app_models.NOT_USED
-		)
-		try:
-			exlottery_participance.save()
-		except:
-			return None
-
-	reply = exlottery.reply
-	reply_link = exlottery.reply_link
-	host = settings.DOMAIN
-	return_html = u"{}, <a href='http://{}/m/apps/exlottery/m_exlottery/?webapp_owner_id={}&id={}&ex_code={}'>{}</a>".format(reply, host, webapp_owner_id, str(exlottery.id), keyword ,reply_link)
-
-	return return_html
-
-def check_exlottery_code(keyword,member_id):
-	if len(keyword) != 10:
-		return None
-	if not keyword.startswith('el'):
-		return None
-	code = app_models.ExlotteryCode.objects(code=keyword).order_by('-created_at')
+def check_exlottery_code(keyword,member_id,record_id):
+	code = app_models.ExlotteryCode.objects(code=keyword, belong_to=record_id).order_by('-created_at')
 	if code.count() == 0:
-		return u'请输入正确的抽奖码', None
+		return u'请输入正确的抽奖码'
 
-	code = code.first()
-	belong_to = code.belong_to
-	exlottery = app_models.Exlottery.objects(id=belong_to)
+	exlottery = app_models.Exlottery.objects(id=record_id)
 	if exlottery.count() == 0:
-		return None, None
+		return u'活动信息出错'
 	exlottery = exlottery.first()
-	exlottery_status = exlottery.status
-	exlottery_participance = app_models.ExlotteryParticipance.objects(code=keyword,belong_to=belong_to)
+	exlottery_status, exlottery = update_exlottery_status(exlottery)
+
+	exlottery_participance = app_models.ExlotteryParticipance.objects(code=keyword,belong_to=record_id)
 	exlottery_participance_count = exlottery_participance.count()
 
-	if exlottery_status == app_models.STATUS_NOT_START:
-		return u'该抽奖码尚未生效', None
-	elif exlottery_status == app_models.STATUS_STOPED:
+	if exlottery_status == u'未开始':
+		return u'该抽奖码尚未生效'
+	elif exlottery_status == u'已结束':
 		if exlottery_participance_count > 0:
-			return u'该抽奖码已使用', None
+			return u'该抽奖码已使用'
 		else:
-			return u'该抽奖码已过期', None
-	elif exlottery_status == app_models.STATUS_RUNNING:
+			return u'该抽奖码已过期'
+	elif exlottery_status == u'进行中':
 		if exlottery_participance_count > 0:
-			if app_models.ExlotteryParticipance.objects(code=keyword,belong_to=belong_to,member_id=member_id).count() == 1:
+			if app_models.ExlotteryParticipance.objects(code=keyword,belong_to=record_id,member_id=member_id).count() == 1:
 				if exlottery_participance.first().status == app_models.NOT_USED:
-					return 'is_member_self', exlottery
+					return 'is_member_self'
 				else:
-					return u'该抽奖码已使用', None
+					return u'该抽奖码已使用'
 			else:
-				return u'该抽奖码已使用', None
+				return u'该抽奖码已使用'
 
-	return True, exlottery
+	return True

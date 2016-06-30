@@ -12,7 +12,7 @@
 		data-target="integral"
 		placeholder="输入奖励积分值"
 		data-validate="require-notempty::不能为空,,require-nonnegative::输入0或整数积分值"
-		{{#if prize.data}}value="{{prize.data}}"{{/if}} />
+		{{#if prize.data}}value="{{prize.data}}"{{else}}value="0"{{/if}} />
 
 	<div class="ml5 xui-inline xa-selectedCoupon xa-optionTarget {{#ifCond prize.type '!==' 'coupon'}}xui-hide{{/ifCond}}">
 		<div class="pr xui-i-selectedBox">

@@ -61,7 +61,7 @@ class exlottery_prize(resource.Resource):
 		post = request.POST
 		response = create_response(500)
 		record_id = post.get('id', None)
-		code = post.get('code', None)
+		code = post.get('ex_code', None)
 		now_datetime = datetime.today()
 
 		member = request.member
@@ -136,12 +136,9 @@ class exlottery_prize(resource.Resource):
 			response.errMsg = u'奖品已抽光'
 			return response.get_response()
 
-		exlottery_record = app_models.ExlottoryRecord.objects(belong_to=record_id, member_id=member_id, code=code)
-		if exlottery_record.count() != 0:
-			exlottery_record = exlottery_record.first()
-
-		#如果限制抽奖次数，则进行判断目前是否抽奖次数已经使用完
-		if not allow_repeat and exlottery_record:
+		member_has_record = app_models.ExlottoryRecord.objects(belong_to=record_id, member_id=member_id, prize_type__in=['integral','coupon','entity'])
+		#如果不能重复中奖，则判断是否之前抽中过
+		if not allow_repeat and member_has_record:
 			response = create_response(500)
 			response.errMsg = u'您已经抽到奖品了,不能重复中奖~'
 			return response.get_response()

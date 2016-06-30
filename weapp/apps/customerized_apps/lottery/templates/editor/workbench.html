@@ -174,10 +174,10 @@
             pageManagerView.activePage(page);
           }
 
-            W.Broadcaster.on("image_dialog_select:deleteImage", function(cid){
-				var comp = W.component.CID2COMPONENT[cid],
+            W.Broadcaster.on("image_dialog_select:deleteImage", function(options){
+				var comp = W.component.CID2COMPONENT[options.cid],
 					targetClass;
-				switch (cid){
+				switch (options.cid){
 					case '4':
 						targetClass = '.xa-lottery-first';
 						break;

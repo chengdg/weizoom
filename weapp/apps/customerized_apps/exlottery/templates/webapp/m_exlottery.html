@@ -435,7 +435,7 @@
                         args:{
                             id: W.appRecordId,
                             webapp_owner_id: W.webappOwnerId,
-                            code: "{{code}}"
+                            ex_code: "{{code}}"
                         },
                         success: function(data){
                             lottery.roll();
@@ -464,7 +464,7 @@
                 args: {
                     webapp_owner_id: W.webappOwnerId,
                     id: W.appRecordId,
-                    code: "{{code}}"
+                    ex_code: "{{code}}"
                 },
                 success: function(data) {
                     var member_info = data.member_info;

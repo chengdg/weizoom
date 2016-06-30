@@ -114,7 +114,7 @@ class Exlottery(resource.Resource):
 		data = request_util.get_fields_to_be_save(request)
 		record_id = request.POST['id']
 		update_data = {}
-		update_fields = set(['name', 'start_time', 'end_time', 'expend', 'allow_repeat', 'lottery_code_count', 'delivery', 'chance', 'prize', 'share_description', 'reply', 'reply_link'])
+		update_fields = set(['name', 'start_time', 'end_time', 'expend', 'allow_repeat', 'lottery_code_count', 'delivery', 'chance', 'prize', 'share_description', 'homepage_image'])
 		for key, value in data.items():
 			if key in update_fields:
 				update_data['set__'+key] = value
@@ -137,6 +137,17 @@ class Exlottery(resource.Resource):
 		app_models.Exlottery.objects(id=request.POST['id']).delete()
 		
 		response = create_response(200)
+		return response.get_response()
+
+class ExlotteryPrizeCount(resource.Resource):
+	app = 'apps/exlottery'
+	resource = 'exlottery_prize_count'
+
+	@login_required
+	def api_get(request):
+		exlottery = app_models.Exlottery.objects.get(id=request.GET['id'])
+		response = create_response(200)
+		response.data = exlottery.prize
 		return response.get_response()
 
 def generate_exlottery_code(owner_id, belong_to, count):
