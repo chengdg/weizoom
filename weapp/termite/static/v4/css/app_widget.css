@@ -1229,10 +1229,10 @@ p.wui-i-start_time,p.wui-i-end_time{
 	height: 40px;
 }
 .wui-weshop-friend-name img{
-	border-radius: 80px;
-	left: 8px;
-	position: absolute;
-	top: 2px;
+	border-radius: 100%;
+	margin-left: -39px;
+	position: fixed;
+	margin-top: 1px;
 	width: 37px;
 }
 
