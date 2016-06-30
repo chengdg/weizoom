@@ -162,6 +162,13 @@
     width: 90%;
     display: inline-block;
 }
+.xui-errorHint-img{
+    display: inline-block;
+    float: left;
+    height: 33px;
+    width: 46px;
+    background: url("/termite_static/img/component/powerme/error.png") no-repeat scroll 0 0 / 70% auto rgba(0, 0, 0, 0)
+}
 
 </style>
 {% endblock %}
@@ -186,7 +193,7 @@
     </div>
     <div class="xui-powerLimit none">
         <div class="f15 xui-successHint xui-spritebg">
-            <div class="xui-spritebg xui-successHint-img"></div>
+            <div class="xui-spritebg xui-errorHint-img"></div>
             <div style="display: inline-block;color: #333;width: 75%;"><p>您已帮<span class="wa-poweredname"></span>助力过该活动</p></div>
         </div>
     </div>
