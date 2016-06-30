@@ -113,6 +113,12 @@ W.component.appkit.ExlotteryDescription = W.component.Component.extend({
 			help: '提示:建议图片长款640px*500px',
 			default: ""
 		}, {
+            name: 'background_color',
+            type: 'color_picker',
+            displayName: '抽奖背景颜色',
+            isUserProperty: true,
+            default: ''
+        }, {
 			name: 'expend',
 			type: 'text_with_annotation',
 			displayName: '消耗积分',
@@ -152,24 +158,6 @@ W.component.appkit.ExlotteryDescription = W.component.Component.extend({
 			annotation: "张",
 			validate: 'data-validate="require-notempty::生成抽奖码不能为空,,require-nonnegative::只能输入0和正整数"',
 			validateIgnoreDefaultValue: true
-		}, {
-			name: 'reply',
-			type: 'text',
-			displayName: '自动回复语设置',
-			isUserProperty: true,
-			maxLength: 30,
-			validate: 'data-validate="require-notempty::自动回复语不能为空,,require-word"',
-			validateIgnoreDefaultValue: true,
-			default: '',
-		}, {
-			name: 'reply_link',
-			type: 'text',
-			displayName: '自动回复超链接',
-			isUserProperty: true,
-			maxLength: 30,
-			validate: 'data-validate="require-notempty::自动回复超链接不能为空,,require-word"',
-			validateIgnoreDefaultValue: true,
-			default: '',
 		}, {
 			name: 'allow_repeat',
 			type: 'radio_with_annotation',
@@ -264,6 +252,12 @@ W.component.appkit.ExlotteryDescription = W.component.Component.extend({
 				$target.css("background-image","url("+image.url+")");
 			}
             this.refresh($node, {refreshPropertyView: true});
+		},
+		background_color: function($node, model, value, $propertyViewNode){
+			if (value) {
+				var $target = $('#phoneIFrame').contents().find('.xa-prizeContainer');//找到子frame中的相应元素
+				$target.css("background-color", value);
+			}
 		}
 	},
 

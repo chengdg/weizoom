@@ -60,16 +60,13 @@ class Exlottery(models.Document):
 	created_at = models.DateTimeField() #创建时间
 	expend = models.IntField(default=0) #消耗积分
 	delivery = models.IntField(default=0) #参与送积分
-	# delivery_setting = models.StringField(default="true", max_length=20) #送积分规则
-	# limitation = models.StringField(default="once_per_user", max_length=32) #抽奖限制
 	chance = models.IntField(default=0) #中奖几率
 	allow_repeat = models.StringField(default="true", max_length=10) #是否允许重复中奖
 	prize = models.DynamicField() #每个奖项的奖品数量
 
 	share_description = models.StringField(default="", max_length=30) #分享说明
 	lottery_code_count = models.IntField(default=0) #抽奖码数量
-	reply = models.StringField(default="", max_length=30) #自动回复语
-	reply_link = models.StringField(default="", max_length=30)  # 自动回复超链接
+	homepage_image = models.StringField(default="", max_length=256) #首页背景图
 	#证书文存放件路径
 	cert_pem_path = models.StringField(default="", max_length=256) #证书
 	key_pem_path = models.StringField(default="", max_length=256) #证书密钥

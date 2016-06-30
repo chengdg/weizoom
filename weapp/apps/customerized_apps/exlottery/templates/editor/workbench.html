@@ -302,14 +302,11 @@
           var endTime = descriptionModel.get('end_time');
           var expend = descriptionModel.get('expend');
           var delivery = descriptionModel.get('delivery');
-          //var delivery_setting = descriptionModel.get('delivery_setting');
-          //var limitation = descriptionModel.get('limitation');
           var chance = descriptionModel.get('chance');
           var allow_repeat = descriptionModel.get('allow_repeat');
             var share_description = descriptionModel.get('share_description');
             var lottery_code_count = descriptionModel.get('lottery_code_count');
-            var reply = descriptionModel.get('reply');
-            var reply_link = descriptionModel.get('reply_link');
+            var homepage_image = descriptionModel.get('homepage_image');
           var relatedPageId = data['project_id'];
             var prizeData = {
                 "一等奖": {
@@ -337,15 +334,12 @@
             "end_time": endTime,
             "expend": expend,
             "delivery": delivery,
-            //"delivery_setting": delivery_setting,
-            //"limitation": limitation,
             "chance": chance,
             "allow_repeat": allow_repeat,
               "prize":JSON.stringify(prizeData),
               "share_description": share_description,
               "lottery_code_count": lottery_code_count,
-              "reply": reply,
-              "reply_link": reply_link
+              "homepage_image": homepage_image
           };
           if (isCreateNewData) {
             var method = 'put';
