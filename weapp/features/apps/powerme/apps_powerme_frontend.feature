@@ -1025,50 +1025,50 @@ Scenario:11 非会员为非会员（中间取消关注的会员）助力
 	When tom点击bill分享的微助力活动链接进行助力
 	Then tom获得微助力活动提示"该用户已退出活动"
 
-@mall2 @apps @apps_powerme @apps_powerme_frontend
-Scenario:12 好友助力,查看助力的好友
-	When bill关注jobs的公众号
-	When bill访问jobs的webapp
-	When bill在微信中向jobs的公众号发送消息'微助力1'
-	Then bill收到自动回复'微助力1单图文'
-	When bill点击图文"微助力1单图文"进入微助力活动页面
-
-	When bill把jobs的微助力活动链接分享到朋友圈
-	When tom关注jobs的公众号
-	When tom访问jobs的webapp
-	When tom点击bill分享的微助力活动链接进行助力
-	When bigs关注jobs的公众号
-	When bigs访问jobs的webapp
-	When bigs点击bill分享的微助力活动链接进行助力
-
-	When bill访问jobs的webapp
-	When bill在微信中向jobs的公众号发送消息'微助力1'
-	Then bill收到自动回复'微助力1单图文'
-	When bill点击图文"微助力1单图文"进入微助力活动页面
-
-
-	Then bill获得"微助力活动1"的我的好友
-	"""
-		[{
-			"type":"默默支持的",
-			"name":["bigs","tom"]
-		}]
-	"""
-
-	When bigs取消关注jobs的公众号
-
-	When bill访问jobs的webapp
-	When bill在微信中向jobs的公众号发送消息'微助力1'
-	Then bill收到自动回复'微助力1单图文'
-	When bill点击图文"微助力1单图文"进入微助力活动页面
-
-	Then bill获得"微助力活动1"的我的好友
-	"""
-		[{
-			"type":"默默支持的",
-			"name":["tom"]
-		},{
-			"type":"偷偷逃跑的",
-			"name":["bigs"]
-		}]
-	"""
+#@mall2 @apps @apps_powerme @apps_powerme_frontend
+#Scenario:12 好友助力,查看助力的好友
+#	When bill关注jobs的公众号
+#	When bill访问jobs的webapp
+#	When bill在微信中向jobs的公众号发送消息'微助力1'
+#	Then bill收到自动回复'微助力1单图文'
+#	When bill点击图文"微助力1单图文"进入微助力活动页面
+#
+#	When bill把jobs的微助力活动链接分享到朋友圈
+#	When tom关注jobs的公众号
+#	When tom访问jobs的webapp
+#	When tom点击bill分享的微助力活动链接进行助力
+#	When bigs关注jobs的公众号
+#	When bigs访问jobs的webapp
+#	When bigs点击bill分享的微助力活动链接进行助力
+#
+#	When bill访问jobs的webapp
+#	When bill在微信中向jobs的公众号发送消息'微助力1'
+#	Then bill收到自动回复'微助力1单图文'
+#	When bill点击图文"微助力1单图文"进入微助力活动页面
+#
+#
+#	Then bill获得"微助力活动1"的我的好友
+#	"""
+#		[{
+#			"type":"默默支持的",
+#			"name":["bigs","tom"]
+#		}]
+#	"""
+#
+#	When bigs取消关注jobs的公众号
+#
+#	When bill访问jobs的webapp
+#	When bill在微信中向jobs的公众号发送消息'微助力1'
+#	Then bill收到自动回复'微助力1单图文'
+#	When bill点击图文"微助力1单图文"进入微助力活动页面
+#
+#	Then bill获得"微助力活动1"的我的好友
+#	"""
+#		[{
+#			"type":"默默支持的",
+#			"name":["tom"]
+#		},{
+#			"type":"偷偷逃跑的",
+#			"name":["bigs"]
+#		}]
+#	"""
