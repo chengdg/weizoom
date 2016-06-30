@@ -119,7 +119,7 @@ class Command(BaseCommand):
 			all_end_not_start_group_relations = all_not_start_group_relations.filter(belong_to__in=all_end_not_start_group_ids)
 			for group_relation in all_end_not_start_group_relations: #团长未支付的的开团订单需要取消掉
 				group_id = group_relation.id
-				has_placed_order = all_unpaid_group_details.filter(relation_belong_to=str(group_id),order_id__not='')
+				has_placed_order = all_unpaid_group_details.filter(relation_belong_to=str(group_id),order_id__ne='')
 				if has_placed_order.count() > 0:
 					# update_order_status_by_group_status(group_id,'failure')
 					resp = Resource.use('zeus').post({

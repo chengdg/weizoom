@@ -94,6 +94,8 @@ def stop_group(group_id,is_test):
 					'is_test': 1 if is_test else 0
 				}
 			})
+			print 'zeus request result::=================='
+			print resp
 	for group_relation in running_group_relations:
 		group_relation.update(group_status=app_models.GROUP_FAILURE)
 		group_relation_id = group_relation.id
@@ -106,6 +108,8 @@ def stop_group(group_id,is_test):
 				'is_test': 1 if is_test else 0
 			}
 		})
+		print 'zeus request result::=================='
+		print resp
 		# 发送拼团成功模板消息
 		if resp and resp['code'] == 200:
 			#发送拼团失败模板消息

@@ -21,6 +21,10 @@ class Command(BaseCommand):
 		"""
 		print 'move data start...'
 		start_time = time.time()
+		#首先删除之前迁移的数据
+		app_models.OrderEvaluates.objects(old_id__ne=0).delete()
+		app_models.ProductEvaluates.objects(old_id__ne=0).delete()
+		print 'delete last time moval'
 		#从mysql中提取数据
 		old_product_reviews = mall_models.ProductReview.objects.all()
 		old_order_reviews = mall_models.OrderReview.objects.all()
@@ -57,7 +61,7 @@ class Command(BaseCommand):
 					order_id = old_review.order_id,
 					old_id = old_review.id,
 					product_id = old_review.product_id,
-					order_evaluate_id = order_oldid2newid[old_review.id],
+					order_evaluate_id = order_oldid2newid.get(old_review.id, 0),
 					order_has_product_id = old_review.order_has_product_id,
 					score = old_review.product_score,
 					detail = old_review.review_detail,
