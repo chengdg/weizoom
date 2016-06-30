@@ -255,7 +255,7 @@
     });
 
     function updateBtnStatus(){
-        if (username == 'jobs' && is_self_page){
+        if (username == 'weshop' && is_self_page){
             $('.wui-i-states').hide();
             $('.wui-i-states-weshop').show();
         }
@@ -277,7 +277,7 @@
             var $powerBtn = $('.wa-power');
             $powerBtn.find('.wa-mobile_solution').html(page_owner_name);
             if(W.isMember){
-                if (username == 'jobs'){
+                if (username == 'weshop'){
                     if (has_power){
                         $powerBtn.html('您已助力过该活动');
                         $powerBtn.on('click', function(){
@@ -583,7 +583,7 @@
                 fid: page_owner_member_id
             },
             success: function(data) {
-                if (username == 'jobs' && data.hasOwnProperty('powered_member_name')){
+                if (username == 'weshop' && data.hasOwnProperty('powered_member_name')){
                     $('.wa-poweredname').html(data.powered_member_name);
                     openLimitWin();
                     $('.wa-power').html('您已助力过该活动');

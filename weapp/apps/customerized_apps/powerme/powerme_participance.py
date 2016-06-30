@@ -65,7 +65,7 @@ class PowerMeParticipance(resource.Resource):
 				response.errMsg = u'不存在该会员'
 				return response.get_response()
 			detail = app_models.PoweredDetail.objects(belong_to=power_id,power_member_id=member_id)
-			if username == 'jobs' and detail.count() > 0:
+			if username == 'weshop' and detail.count() > 0:
 				app_models.PoweredLimitRelation(
 					belong_to=power_id,
 					member_id=member_id,

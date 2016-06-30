@@ -145,7 +145,7 @@ class MPowerMe(resource.Resource):
 				else:
 					user_id = request.webapp_owner_info.user_profile.user_id
 					username = User.objects.get(id=user_id).username
-					has_power = True if username == 'jobs' and app_models.PoweredLimitRelation.objects(belong_to=record_id,member_id=member_id,powered_member_id=fid).count() > 0 else False
+					has_power = True if username == 'weshop' and app_models.PoweredLimitRelation.objects(belong_to=record_id,member_id=member_id,powered_member_id=fid).count() > 0 else False
 					page_owner_name = Member.objects.get(id=fid).username_size_ten
 					page_owner_member_id = fid
 					# if curr_member_power_info.powered_member_id:
@@ -200,7 +200,7 @@ class MPowerMe(resource.Resource):
 		username = User.objects.get(id=user_id).username
 		follow_friend_list = []
 		unfollow_friend_list = []
-		if username == 'jobs':
+		if username == 'weshop':
 			details = app_models.PoweredDetail.objects(belong_to=record_id, owner_id=fid)
 			power_member_ids = [d.power_member_id for d in details]
 			power_member_id2member = {m.id: m for m in Member.objects.filter(id__in=power_member_ids)}
