@@ -66,7 +66,7 @@ Background:
 		}]
 		"""
 
-@mall2 @product @group @ProductList  @mall @mall.product_category  @rocky_test
+@mall2 @product @group @ProductList  @mall @mall.product_category  @rocky
 Scenario:1 Jobs更新已存在的商品分类
 	When jobs更新商品分类'分类1'为
 		"""
@@ -85,7 +85,7 @@ Scenario:1 Jobs更新已存在的商品分类
 		}]
 		"""
 
-@mall2 @product @group @ProductList  @mall @mall.product_category  @rocky_test
+@mall2 @product @group @ProductList  @mall @mall.product_category  @rocky
 Scenario:2 Jobs删除已存在的商品分类
 	When jobs删除商品分类'分类2'
 	Then jobs能获取商品分类列表
@@ -97,7 +97,7 @@ Scenario:2 Jobs删除已存在的商品分类
 		}]
 		"""
 
-@mall2 @product @group @ProductList  @mall.product_category @mall  @rocky_test
+@mall2 @product @group @ProductList  @mall.product_category @mall  @rocky
 Scenario:3 从分类中删除商品
 
 	Given jobs登录系统
@@ -139,7 +139,7 @@ Scenario:3 从分类中删除商品
 		}]
 		"""
 
-@mall2 @product @group @ProductList  @mall.product_category @mall  @rocky_test
+@mall2 @product @group @ProductList  @mall.product_category @mall  @rocky
 Scenario:4 向分类中添加商品
 
 	Given jobs登录系统
@@ -233,7 +233,7 @@ Scenario:4 向分类中添加商品
 		}]
 		"""
 
-@mall2 @product @group @ProductList  @mall.product_category @mall @rocky_test
+@mall2 @product @group @ProductList  @mall.product_category @mall @rocky
 Scenario:5 向分类中添加商品排序
 	jobs向分类中添加商品，可以进行排序
 	1.在分类里，将待售商品放在最下面，只给在售商品排序，待售商品在排序列里没有输入框
