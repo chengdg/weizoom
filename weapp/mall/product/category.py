@@ -323,14 +323,13 @@ class Category(resource.Resource):
         """
         # pdb.set_trace()
         if request.POST:
-            opt = {
-                'resource': 'mall.category',
-                'data': {
-                    'owner_id': request.manager.id,
-                    'name': request.POST.get('name', '').strip()
-                }
-            }
-            zeus_category_resp = category_ROA_utils.zeus_req('post', opt)
+            zeus_category_resp = category_ROA_utils.zeus_req('post', {
+                    'resource': 'mall.category',
+                    'data': {
+                        'owner_id': request.manager.id,
+                        'name': request.POST.get('name', '').strip()
+                    }
+                })
 
             # product_category = mall_models.ProductCategory.objects.create(
             #     owner=request.manager,
@@ -338,14 +337,14 @@ class Category(resource.Resource):
             # )
             product_category = zeus_category_resp['category']
             product_ids = request.POST.getlist('product_ids[]')
-
-            zeus_categoryhasproduct_resp = category_ROA_utils.zeus_req('post', {
-                    'resource': 'mall.category_has_product',
-                    'data': {
-                        'category_id': product_category['id'],
-                        'product_ids': ','.join(product_ids)
-                    }
-                })
+            if product_ids:
+                zeus_categoryhasproduct_resp = category_ROA_utils.zeus_req('post', {
+                        'resource': 'mall.category_has_product',
+                        'data': {
+                            'category_id': product_category['id'],
+                            'product_ids': ','.join(product_ids)
+                        }
+                    })
             # product_category.product_count = len(product_ids)
             # product_category.save()
 
@@ -368,21 +367,36 @@ class Category(resource.Resource):
         """
         category_id = request.POST['id']
         product_ids = request.POST.getlist('product_ids[]')
-        product_categorys = mall_models.ProductCategory.objects.filter(owner=request.manager, id=category_id)
-        if 0 != product_categorys.count():
-            product_categorys.update(
-            name=request.POST.get('name', '').strip(),
-            product_count=len(product_ids)
-            )
-        else:
-            response = create_response(500)
-            response.data = {'msg':"该商品分类已不存在"}
-            return response.get_response()
+        zeus_category_resp = category_ROA_utils.zeus_req('put', {
+                'resource': 'mall.category',
+                'data': {
+                    'category_id': category_id,
+                    'name': request.POST.get('name', '').strip()
+                }
+            })        
+        # product_categorys = mall_models.ProductCategory.objects.filter(owner=request.manager, id=category_id)
+        # if 0 != product_categorys.count():
+        #     product_categorys.update(
+        #     name=request.POST.get('name', '').strip(),
+        #     product_count=len(product_ids)
+        #     )
+        # else:
+        #     response = create_response(500)
+        #     response.data = {'msg':"该商品分类已不存在"}
+        #     return response.get_response()
         #重建<category, product>关系
-        for product_id in product_ids:
-            mall_models.CategoryHasProduct.objects.create(
-                product_id=product_id,
-                category_id=category_id)
+        if product_ids:
+            zeus_categoryhasproduct_resp = category_ROA_utils.zeus_req('post', {
+                    'resource': 'mall.category_has_product',
+                    'data': {
+                        'category_id': category_id,
+                        'product_ids': ','.join(product_ids)
+                    }
+                })
+        # for product_id in product_ids:
+        #     mall_models.CategoryHasProduct.objects.create(
+        #         product_id=product_id,
+        #         category_id=category_id)
 
         return create_response(200).get_response()
 
@@ -412,7 +426,7 @@ class Category(resource.Resource):
                     }
                 })
         elif category_id:
-            zeus_category_resp = category_ROA_utils.zeus_req('delete', {
+                category_ROA_utils.zeus_req('delete', {
                     'resource': 'mall.category',
                     'data': {
                         'category_id': category_id

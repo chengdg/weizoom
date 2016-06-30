@@ -605,19 +605,19 @@ $('.xa-selectImage').click(function(){return false;})
 			productId:'{{product.id}}'
 		});
 		view.render();
-		if(location.search.indexOf('no_custom_model=1')>0||$('#supplier').length>0){
-			// 隐藏定制规格：买赠活动跳转、有供货商选择
-			var $div = $('[data-ui-role="mall-product-custom-model-editor"] legend div');
-			if($(':checkbox', $div).attr('checked')=='checked'){
-				$(':checkbox', $div).click();
-			}
+		// if(location.search.indexOf('no_custom_model=1')>0||$('#supplier').length>0){
+		// 	// 隐藏定制规格：买赠活动跳转、有供货商选择
+		// 	var $div = $('[data-ui-role="mall-product-custom-model-editor"] legend div');
+		// 	if($(':checkbox', $div).attr('checked')=='checked'){
+		// 		$(':checkbox', $div).click();
+		// 	}
 
-			/*微众商城需求start 多规格开启 当username 非微众商城时，多规格按钮隐藏*/
-			if(username != 'weshop'){
-				$div.hide();
-			}
-			/*微众商城需求end*/
-		}
+		// 	/*微众商城需求start 多规格开启 当username 非微众商城时，多规格按钮隐藏*/
+		// 	if(username != 'weshop'){
+		// 		$div.hide();
+		// 	}
+		// 	/*微众商城需求end*/
+		// }
 
 
 		$('.xa-tips').popover({

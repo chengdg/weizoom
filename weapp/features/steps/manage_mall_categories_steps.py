@@ -41,7 +41,7 @@ def step_get_category(context, user):
     actual_list = []
     for a in actual:
         chp_list = mall_models.CategoryHasProduct.objects.filter(
-        category_id=a.id)
+        category_id=a['id'])
         product_id2chp = dict(map(lambda chp: (chp.product_id, chp), chp_list))
         product_ids = [chp.product_id for chp in chp_list]
         cache_products = mall_models.Product.objects.filter(id__in=product_ids,is_deleted=False)
@@ -59,7 +59,9 @@ def step_get_category(context, user):
         cache_products = products_not_0 + products_is_0
         product_dict = {}
         product_dict['products'] = []
-        product_dict['name'] = a.name
+        product_dict['name'] = a['name']
+        print('=============================')
+        print(cache_products)
         for c_product in cache_products:
             dict_one = {
             "name": c_product.name,
@@ -69,9 +71,12 @@ def step_get_category(context, user):
             }
             product_dict['products'].append(dict_one)
         actual_list.append(product_dict)
-    print(actual_list)
     # print("111"+int(2))
     expected = json.loads(context.text)
+    print('###################################')
+    print(expected)
+    print(actual_list)
+    print('###################################')
     bdd_util.assert_list(expected, actual_list)
 
 

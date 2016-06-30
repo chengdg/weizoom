@@ -113,14 +113,19 @@ class Mexlottery(resource.Resource):
 		activity_status, record = update_exlottery_status(record)
 
 		can_play_count = 0
-		#非会员不可参与
-		if isMember:
-			#首先验证抽奖码有没有和本会员绑定
-			member_has_code = app_models.ExlotteryParticipance.objects(code=code, belong_to=record_id,member_id=member_id)
-			if member_has_code.count() == 1:
+		is_member_self = True
+
+		#首先验证抽奖码有没有和本会员绑定
+		member_has_code = app_models.ExlotteryParticipance.objects(code=code, belong_to=record_id,member_id=member_id)
+		if member_has_code.count() == 1:
+			# 非会员不可参与
+			if isMember:
 				# 如果绑定，验证抽奖码有没有抽奖
 				if member_has_code.first().status == app_models.NOT_USED:
 					can_play_count = 1
+		#分享处理(如果分享出去，别人访问页面is_member_self为false)
+		elif member_has_code.count() == 0:
+			is_member_self = False
 
 		if can_play_count != 0:
 			exlottery_status = True
@@ -132,7 +137,8 @@ class Mexlottery(resource.Resource):
 			'remained_integral': member.integral,
 			'activity_status': activity_status,
 			'exlottery_status': exlottery_status if activity_status == u'进行中' else False,
-			'can_play_count': can_play_count if exlottery_status else 0
+			'can_play_count': can_play_count if exlottery_status else 0,
+			'is_member_self': is_member_self
 		}
 		#历史中奖记录
 		all_prize_type_list = ['integral', 'coupon', 'entity']
@@ -187,21 +193,22 @@ def check_keyword(data):
 
 	resp, exlottery= check_exlottery_code(keyword, member.id)
 
-	if resp is not True:
+	if resp is not True and (resp != 'is_member_self'):
 		return resp
 
-	#将用户与抽奖码绑定
-	exlottery_participance = app_models.ExlotteryParticipance(
-		member_id = member.id,
-		belong_to = str(exlottery.id),
-		created_at = datetime.now(),
-		code = keyword,
-		status = app_models.NOT_USED
-	)
-	try:
-		exlottery_participance.save()
-	except:
-		return None
+	if resp != 'is_member_self':
+		#将用户与抽奖码绑定
+		exlottery_participance = app_models.ExlotteryParticipance(
+			member_id = member.id,
+			belong_to = str(exlottery.id),
+			created_at = datetime.now(),
+			code = keyword,
+			status = app_models.NOT_USED
+		)
+		try:
+			exlottery_participance.save()
+		except:
+			return None
 
 	reply = exlottery.reply
 	reply_link = exlottery.reply_link
@@ -238,6 +245,12 @@ def check_exlottery_code(keyword,member_id):
 			return u'该抽奖码已过期', None
 	elif exlottery_status == app_models.STATUS_RUNNING:
 		if exlottery_participance_count > 0:
-			return u'该抽奖码已使用', None
+			if app_models.ExlotteryParticipance.objects(code=keyword,belong_to=belong_to,member_id=member_id).count() == 1:
+				if exlottery_participance.first().status == app_models.NOT_USED:
+					return 'is_member_self', exlottery
+				else:
+					return u'该抽奖码已使用', None
+			else:
+				return u'该抽奖码已使用', None
 
 	return True, exlottery
