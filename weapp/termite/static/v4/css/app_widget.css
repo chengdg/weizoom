@@ -991,6 +991,36 @@ p.wui-i-start_time,p.wui-i-end_time{
     padding: 10px 0 50px;
 }
 
+/*微助力好友*/
+.wui-powerme-container .wa-friends .wui-i-radius span{
+    width: 6px;
+	height: 6px;
+	display: inline-block;
+	border-radius:3px
+}
+.wui-powerme-container .wui-i-weshop{
+	margin: 0 5px;
+}
+.wui-powerme-container .wui-i-weshop li{
+	padding: 10px 0;
+    float:left;
+	width: 49.3%;
+}
+.wui-powerme-container .wui-i-weshop .weshop-top100{
+	border-radius: 5px 5px 0 0;
+	border-left-width: 1px;
+	border-top-width: 1px;
+	border-left-style: solid;
+	border-top-style: solid;
+}
+.wui-powerme-container .wui-i-weshop .weshop-friends{
+	border-radius: 5px 5px 0 5px;
+	border-right-width: 1px;
+	border-top-width: 1px;
+	border-right-style: solid;
+	border-top-style: solid;
+}
+
 /*配色方案*/
 /*新年红*/
 .wui-powerme-container.new_year_red .wui-i-body{
@@ -1047,6 +1077,21 @@ p.wui-i-start_time,p.wui-i-end_time{
 .wui-powerme-container.new_year_red .wui-i-top100-power {
     color: #fff453
 }
+
+.wui-powerme-container.new_year_red .wui-i-weshop li:not(.active){
+	border-radius: 5px 5px 5px 5px;
+	border-color: #DEDEDE;
+	color: #910002;
+    background: #DEDEDE;
+}
+
+.wui-powerme-container.new_year_red .wui-i-weshop .active {
+	border-color: #DEDEDE;
+	color: #FEFEFC;
+}
+.wui-powerme-container.new_year_red .wa-friends .wui-i-radius span{
+	background: #FFF873;
+}
 /*热带橙色*/
 .wui-powerme-container.orange .wui-i-body{
     background: #ff7d42;
@@ -1100,6 +1145,22 @@ p.wui-i-start_time,p.wui-i-end_time{
 .wui-powerme-container.orange .wui-i-states ul li:not(.wui-i-top100-title){
     border-bottom: 1px dotted #ddad87;
 }
+
+.wui-powerme-container.orange .wui-i-weshop li:not(.active){
+	border-radius: 5px 5px 5px 5px;
+	border-color: #DEDEDE;
+	color: #FC7E44;
+    background: #DEDEDE;
+}
+
+.wui-powerme-container.orange .wui-i-weshop .active {
+	border-color: #DEDEDE;
+	color: #FEFEFC;
+}
+.wui-powerme-container.orange .wa-friends .wui-i-radius span{
+	background: #9D3100;
+}
+
 /*玫瑰红*/
 .wui-powerme-container.red .wui-i-body{
     background: #e63041;
@@ -1152,6 +1213,20 @@ p.wui-i-start_time,p.wui-i-end_time{
 }
 .wui-powerme-container.red .wui-i-top100-power {
     color: #FEF354
+}
+.wui-powerme-container.red .wui-i-weshop li:not(.active){
+	border-radius: 5px 5px 5px 5px;
+	border-color: #DEDEDE;
+	color: #E53043;
+    background: #DEDEDE;
+}
+
+.wui-powerme-container.red .wui-i-weshop .active {
+	border-color: #DEDEDE;
+	color: #FEFEFC;
+}
+.wui-powerme-container.red .wa-friends .wui-i-radius span{
+	background: #8E0C18;
 }
 /*冬日暖阳*/
 .wui-powerme-container.yellow .wui-i-body{
@@ -1207,17 +1282,26 @@ p.wui-i-start_time,p.wui-i-end_time{
 	border-bottom: 1px dotted #cac8b0;
 }
 
+.wui-powerme-container.yellow .wui-i-weshop li:not(.active){
+	border-radius: 5px 5px 5px 5px;
+	border-color: #6F2E0E;
+	color: #FFF5C7;
+    background: #6F2E0E;
+}
+
+.wui-powerme-container.yellow .wui-i-weshop .active {
+	border-color: #6F2E0E;
+	color: #6F2E0E;
+}
+
 .wui-powerme-container.yellow .wa-friends .wui-i-radius{
 	width: 22px;
 	display: inline-block
 }
 .wui-powerme-container.yellow .wa-friends .wui-i-radius span{
-    width: 6px;
-	height: 6px;
-	display: inline-block;
 	background: #C75C28;
-	border-radius:3px
 }
+
 .wui-weshop-friend-name{
 	text-align: center;
 }
@@ -1230,7 +1314,7 @@ p.wui-i-start_time,p.wui-i-end_time{
 }
 .wui-weshop-friend-name img{
 	border-radius: 100%;
-	margin-left: -39px;
+	margin-left: -38px;
 	position: fixed;
 	margin-top: 1px;
 	width: 37px;
