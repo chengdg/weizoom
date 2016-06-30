@@ -108,7 +108,7 @@
         <div>
             <input type="text" placeholder="验证码" class="wui-verify-input wa-verify-input" maxlength="4">
             <!-- <a href="javascript:void(0)" class="wui-verify-refresh">YB2H</a> -->
-            <img class="codeimg" style="cursor:pointer" onclick="this.setAttribute('src','/m/apps/exlottery/m_captcha/?nocache='+Math.random());" src="/m/apps/exlottery/m_captcha/"/>
+            <img class="codeimg" style="cursor:pointer" onclick="this.setAttribute('src','/m/apps/exlottery/api/m_captcha/?webapp_owner_id={{ request.webapp_owner_id}}&nocache='+Math.random());" src="/m/apps/exlottery/api/m_captcha/?webapp_owner_id={{ request.webapp_owner_id}}"/>
         </div>
         <button class="wui-exlottery-btn wa-exlottery-btn">立即抽奖</button>
     </div>
@@ -150,6 +150,7 @@
                     resource: 'm_exlottery_page',
                     method: 'post',
                     args: {
+                        webapp_owner_id: W.webappOwnerId,
                         excode: excode,
                         verify_code: verify_code
                     },

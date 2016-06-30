@@ -145,16 +145,16 @@ class MexlotteryCaptcha(resource.Resource):
 		cur_color = random.choice(COLOR_LIST)
 		captcha_image = captcha(
 			drawings=[background('#FFFFFF'),
-			text(fonts=['ARLRDBD.TTF'], font_sizes=[30],
-				 drawings=[
-					 offset(dx_factor=0.1, dy_factor=0.1)
-				 ],
-				 color=cur_color,
-				 squeeze_factor=1.2),
-			curve(cur_color),
-			noise(),
-		  # smooth()
-		], width=120, height=45)
+					  text(fonts=['ARLRDBD.TTF'], font_sizes=[30],
+						   drawings=[
+							   offset(dx_factor=0.1, dy_factor=0.1)
+						   ],
+						   color=cur_color,
+						   squeeze_factor=1.2),
+					  curve(cur_color),
+					  noise(),
+					  # smooth()
+					  ], width=120, height=45)
 		code_dict = init_check_code()
 		rand_list = code_dict['clist']
 		rand_str = code_dict['cstr']
@@ -164,7 +164,6 @@ class MexlotteryCaptcha(resource.Resource):
 		buf = StringIO.StringIO()
 		image.save(buf, 'png')
 		return HttpResponse(buf.getvalue(), 'image/png')
-
 
 # 创建随机码
 def init_check_code(length=4):
