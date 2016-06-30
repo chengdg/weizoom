@@ -71,9 +71,11 @@ W.component.appkit.ExlotteryDescription = W.component.Component.extend({
 		}, {
 			name: 'share_description',
 			type: 'textarea',
-			displayName: '分享说明',
+			displayName: '分享简介',
 			maxLength: 30,
 			isUserProperty: true,
+			validate: 'data-validate="require-notempty::分享简介不能为空,,require-word"',
+			validateIgnoreDefaultValue: true,
 			default: '',
 			placeholder: '用于分享活动时的简略描述，不超过30字'
 		}, {
@@ -81,8 +83,35 @@ W.component.appkit.ExlotteryDescription = W.component.Component.extend({
 			type: 'textarea',
 			displayName: '活动规则',
 			maxLength: 200,
+			validate: 'data-validate="require-notempty::活动规则不能为空,,require-word"',
+			validateIgnoreDefaultValue: true,
 			isUserProperty: true,
 			default: ''
+		}, {
+			name: 'homepage_image',
+			type: 'image_dialog_select_v2',
+			displayName: '首页背景图',
+			isUserProperty: true,
+			isShowCloseButton: true,
+			triggerButton: {nodata:'选择图片', hasdata:'修改'},
+			selectedButton: '选择图片',
+			dialog: 'W.dialog.termite.SelectImagesDialog',
+			dialogParameter: '{"multiSelection": false}',
+			help: '提示:建议图片长款640px*500px',
+			validate: 'data-validate="require-notempty::请添加一张图片"',
+			default: ""
+		}, {
+			name: 'exlottery_bg_image',
+			type: 'image_dialog_select_v2',
+			displayName: '抽奖背景图',
+			isUserProperty: true,
+			isShowCloseButton: true,
+			triggerButton: {nodata:'选择图片', hasdata:'修改'},
+			selectedButton: '选择图片',
+			dialog: 'W.dialog.termite.SelectImagesDialog',
+			dialogParameter: '{"multiSelection": false}',
+			help: '提示:建议图片长款640px*500px',
+			default: ""
 		}, {
 			name: 'expend',
 			type: 'text_with_annotation',
@@ -187,32 +216,55 @@ W.component.appkit.ExlotteryDescription = W.component.Component.extend({
 		delivery: function($node, model, value, $propertyViewNode) {
 			$node.find('.wui-i-prize>.xa-delivery').html(value);
 		},
-		// limitation: function($node, model, value, $propertyViewNode) {
-		// 	switch (value){
-		// 		case 'once_per_user':
-		// 			value = '1';
-		// 			break;
-		// 		case 'once_per_day':
-		// 			value = '1';
-		// 			break;
-		// 		case 'twice_per_day':
-		// 			value = '2';
-		// 			break;
-		// 		case 'no_limit':
-		// 			value = '-1';
-		// 			break;
-		// 		default :
-		// 			value = '0';
-		// 			break;
-		// 	}
-		// 	var $header = $node.find('.wui-lotterydescription').find('.xa-header');
-		// 	if(value == '-1'){
-		// 		$header.addClass('wui-lotterydescription-hide');
-		// 	}else{
-		// 		$header.removeClass('wui-lotterydescription-hide').find('p b').html(value);
-		// 	}
-        //
-		// }
+		homepage_image: function($node, model, value, $propertyViewNode){
+			var image = {url:''};
+            var data = {type:null};
+            if (value !== '') {
+                data = $.parseJSON(value);
+                image = data.images[0];
+            }
+            model.set({
+                homepage_image: image.url
+            }, {silent: true});
+
+            // if (data.type === 'newImage') {
+            //     W.resource.termite2.Image.put({
+            //         data: image,
+            //         success: function(data) {
+            //         },
+            //         error: function(resp) {
+            //         }
+            //     })
+            // }
+            this.refresh($node, {refreshPropertyView: true});
+		},
+		exlottery_bg_image: function($node, model, value, $propertyViewNode){
+			var image = {url:''};
+            var data = {type:null};
+            if (value !== '') {
+                data = $.parseJSON(value);
+                image = data.images[0];
+            }
+            model.set({
+                exlottery_bg_image: image.url
+            }, {silent: true});
+
+            if (data.type === 'newImage') {
+                W.resource.termite2.Image.put({
+                    data: image,
+                    success: function(data) {
+                    },
+                    error: function(resp) {
+                    }
+                })
+            }
+			var $target = $('#phoneIFrame').contents().find('.xa-exlotterydescription');//找到子frame中的相应元素
+			if (value) {
+				//更新propertyView中的图片
+				$target.css("background-image","url("+image.url+")");
+			}
+            this.refresh($node, {refreshPropertyView: true});
+		}
 	},
 
 	initialize: function(obj) {
