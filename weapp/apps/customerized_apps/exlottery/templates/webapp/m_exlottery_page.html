@@ -148,17 +148,18 @@
                 W.getApi().call({
                     app: 'm/apps/exlottery',
                     resource: 'm_exlottery_page',
-                    method: 'post',
+                    method: 'get',
                     args: {
                         webapp_owner_id: W.webappOwnerId,
+                        id: W.appRecordId,
                         excode: excode,
                         verify_code: verify_code
                     },
                     success: function(data){
                         console.log(data);
                     },
-                    error: function(data){
-                        console.log(data);
+                    error: function(resp){
+                        myWuiAlert(resp.errMsg);
                     }
                 });
             }

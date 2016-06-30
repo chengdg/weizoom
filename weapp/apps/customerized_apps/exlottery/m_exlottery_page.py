@@ -30,7 +30,7 @@ class Mexlottery(resource.Resource):
 		响应GET
 		"""
 		id = request.GET['id']
-		# record = None
+
 		member = request.member
 		is_pc = False if member else True
 
@@ -62,76 +62,37 @@ class Mexlottery(resource.Resource):
 		"""
 		响应GET
 		"""
-		record_id = request.GET.get('id',None)
-		exlottery_status = False
-
+		owner_id = request.webapp_owner_id
 		member = request.member
-		code = request.GET.get('code',None)
+		record_id = request.GET.get('id',None)
+		ex_code = request.GET['excode']
+		verify = request.GET['verify_code'].encode('utf8')
+		_code = request.session['checkcode']
+		# request.session['checkcode'] = ''
+
 		response = create_response(500)
+		# 检查验证码是否正确
+		if _code.lower() != str(verify).lower():
+			response.errMsg = u'验证码输入有误'
+			return response.get_response()
+
+		# 检查抽奖码是否存在
+		exlottery_code = app_models.ExlotteryCode.objects(owner_id=owner_id, belong_to=record_id, code=ex_code)
+		if exlottery_code.count() == 0:
+			response.errMsg = u'请输入正确抽奖码'
+			return response.get_response()
 
 		if not record_id or not member:
 			response.errMsg = u'活动信息出错'
 			return response.get_response()
 
-		record = app_models.Exlottery.objects(id=record_id)
-		if record.count() <= 0:
-			response.errMsg = 'is_deleted'
-			return response.get_response()
-
-		#检查抽奖码是否存在
-		exlottery_code = app_models.ExlotteryCode.objects(belong_to=record_id, code=code)
-		if exlottery_code.count() == 0:
+		exlottery = app_models.Exlottery.objects(owner_id=owner_id, id=record_id)
+		if exlottery.count() <= 0:
 			response.errMsg = u'活动信息出错'
 			return response.get_response()
 
-		record = record.first()
-		member_id = member.id
-		isMember = member.is_subscribed
-		activity_status, record = update_exlottery_status(record)
-
-		can_play_count = 0
-		is_member_self = True
-
-		#首先验证抽奖码有没有和本会员绑定
-		member_has_code = app_models.ExlotteryParticipance.objects(code=code, belong_to=record_id,member_id=member_id)
-		if member_has_code.count() == 1:
-			# 非会员不可参与
-			if isMember:
-				# 如果绑定，验证抽奖码有没有抽奖
-				if member_has_code.first().status == app_models.NOT_USED:
-					can_play_count = 1
-		#分享处理(如果分享出去，别人访问页面is_member_self为false)
-		elif member_has_code.count() == 0:
-			is_member_self = False
-
-		if can_play_count != 0:
-			exlottery_status = True
-		
-		#会员信息
-		member_info = {
-			'isMember': isMember,
-			'member_id': member_id,
-			'remained_integral': member.integral,
-			'activity_status': activity_status,
-			'exlottery_status': exlottery_status if activity_status == u'进行中' else False,
-			'can_play_count': can_play_count if exlottery_status else 0,
-			'is_member_self': is_member_self
-		}
-		#历史中奖记录
-		all_prize_type_list = ['integral', 'coupon', 'entity']
-		exlotteries = app_models.ExlottoryRecord.objects(belong_to=record_id, member_id=member_id, prize_type__in=all_prize_type_list)
-
-		exlottery_history = [{
-			'created_at': l.created_at.strftime('%Y-%m-%d'),
-			'prize_name': l.prize_name,
-			'prize_title': l.prize_title
-		} for l in exlotteries]
-
 		response = create_response(200)
-		response.data = {
-			'exlottery_history': exlottery_history,
-			'member_info': member_info
-		}
+
 		return response.get_response()
 
 class MexlotteryCaptcha(resource.Resource):
