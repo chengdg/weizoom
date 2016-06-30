@@ -107,7 +107,8 @@
         </div>
         <div>
             <input type="text" placeholder="验证码" class="wui-verify-input wa-verify-input" maxlength="4">
-            <a href="javascript:void(0)" class="wui-verify-refresh">YB2H</a>
+            <!-- <a href="javascript:void(0)" class="wui-verify-refresh">YB2H</a> -->
+            <img class="codeimg" style="cursor:pointer" onclick="this.setAttribute('src','/m/apps/exlottery/m_captcha/?nocache='+Math.random());" src="/m/apps/exlottery/m_captcha/"/>
         </div>
         <button class="wui-exlottery-btn wa-exlottery-btn">立即抽奖</button>
     </div>
