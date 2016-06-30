@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+import random
+import StringIO
+
 from django.conf import settings
 from datetime import datetime
 
@@ -14,8 +17,9 @@ from utils.cache_util import GET_CACHE, SET_CACHE
 import models as app_models
 from termite2 import pagecreater
 from modules.member.module_api import get_member_by_openid
+from image import *
 
-
+COLOR_LIST = ['#1b4da0', '#0e3e20', '#eb6139', '#730f0f', '#0c1532', '#eb6139', '#000000']
 
 class Mexlottery(resource.Resource):
 	app = 'apps/exlottery'
@@ -26,58 +30,31 @@ class Mexlottery(resource.Resource):
 		响应GET
 		"""
 		id = request.GET['id']
-		code = request.GET.get('ex_code', None)
-		expend = 0
-		auth_appid_info = None
-		share_page_desc = ''
-		thumbnails_url = '/static_v2/img/thumbnails_lottery.png'
-		cache_key = 'apps_exlottery_%s_html' % id
-		record = None
+		# record = None
 		member = request.member
 		is_pc = False if member else True
 
-		# if not is_pc:
-		# 	#从redis缓存获取静态页面
-		# 	cache_data = GET_CACHE(cache_key)
-		# 	if cache_data:
-		# 		print 'redis---return'
-		# 		return HttpResponse(cache_data)
+		# try:
+		# 	record = app_models.Exlottery.objects.get(id=id)
+		# except:
+		# 	c = RequestContext(request,{
+		# 		'is_deleted_data': True
+		# 	})
+		# 	return render_to_response('exlottery/templates/webapp/m_exlottery.html', c)
+		# activity_status, record = update_exlottery_status(record)
 
-		try:
-			record = app_models.Exlottery.objects.get(id=id)
-		except:
-			c = RequestContext(request,{
-				'is_deleted_data': True
-			})
-			return render_to_response('exlottery/templates/webapp/m_exlottery.html', c)
-		expend = record.expend
-		share_page_desc = record.share_description
-		activity_status, record = update_exlottery_status(record)
 
-		project_id = 'new_app:exlottery:%s' % record.related_page_id
-
-		request.GET._mutable = True
-		request.GET.update({"project_id": project_id})
-		request.GET._mutable = False
-		html = pagecreater.create_page(request, return_html_snippet=True)
 		c = RequestContext(request, {
-			'expend_integral': expend,
 			'record_id': id,
-			'activity_status': activity_status,
-			'page_title': record.name if record else u'专项抽奖',
-			'page_html_content': html,
+			# 'activity_status': activity_status,
+			'page_title': u'专项抽奖',
 			'app_name': "exlottery",
 			'resource': "exlottery",
 			'hide_non_member_cover': True, #非会员也可使用该页面
 			'isPC': is_pc,
-			'auth_appid_info': auth_appid_info,
-			'share_page_desc': share_page_desc,
-			'share_img_url': thumbnails_url,
-			'code': code
 		})
 		response = render_to_string('exlottery/templates/webapp/m_exlottery_page.html', c)
-		# if not is_pc:
-		# 	SET_CACHE(cache_key, response)
+
 		return HttpResponse(response)
 
 
@@ -156,6 +133,47 @@ class Mexlottery(resource.Resource):
 			'member_info': member_info
 		}
 		return response.get_response()
+
+class MexlotteryCaptcha(resource.Resource):
+	app = 'apps/exlottery'
+	resource = 'm_captcha'
+
+	def api_get(request):
+		"""
+		响应GET
+		"""
+		cur_color = random.choice(COLOR_LIST)
+		captcha_image = captcha(
+			drawings=[background('#FFFFFF'),
+			text(fonts=['ARLRDBD.TTF'], font_sizes=[30],
+				 drawings=[
+					 offset(dx_factor=0.1, dy_factor=0.1)
+				 ],
+				 color=cur_color,
+				 squeeze_factor=1.2),
+			curve(cur_color),
+			noise(),
+		  # smooth()
+		], width=120, height=45)
+		code_dict = init_check_code()
+		rand_list = code_dict['clist']
+		rand_str = code_dict['cstr']
+		image = captcha_image(rand_list)
+		# 将验证码转换成小写，并保存到session中
+		request.session['checkcode'] = rand_str.lower()
+		buf = StringIO.StringIO()
+		image.save(buf, 'png')
+		return HttpResponse(buf.getvalue(), 'image/png')
+
+
+# 创建随机码
+def init_check_code(length=4):
+	codes = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K',
+			 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+
+	code_list = random.sample(codes, 4)
+	code_str = ''.join(code_list)
+	return {'clist': code_list, 'cstr': code_str}
 
 def update_exlottery_status(lottery):
 	activity_status = lottery.status_text
