@@ -1,0 +1,71 @@
+{% extends "apps_base.html" %}
+{% block css %}
+<style type="text/css">
+    html,body{
+        height: 100%;
+    }
+    .xui-productReviewSuccessedPage{
+        background: #fff;
+        height: 100%;
+    }
+    .xui-productReviewSuccessedPage .xui-placeholder{
+        height: 70px;
+    }
+    .xui-productReviewSuccessedPage .xui-reviewImg{
+        width: 99px;
+        height: 133px;
+        margin: 0 auto;
+    }
+    .xui-productReviewSuccessedPage .xui-button{
+        width: 94%;
+        margin: 44px auto;
+        height: 40px;
+        text-align: center;
+        line-height: 40px;
+        border-radius: 2px;
+    }
+    .xui-productReviewSuccessedPage .xui-button a{
+        display: block;
+    }
+    .xui-productReviewSuccessedPage .xui-returnHome{
+        width: 100%;
+        background: #CF0303;
+        color: #fff;
+    }
+    .xui-productReviewSuccessedPage .xui-smallReturnHome{
+        width: 45%;
+    }
+    .xui-productReviewSuccessedPage .xui-continue{
+        background: #FFE9E9;
+        border: 1px solid #CF0404;
+        width: 45%;
+    }   
+</style>
+{% endblock %}
+{% block content-panel %}
+<div class="xui-productReviewSuccessedPage">
+    <div class="xui-placeholder"></div>
+    <div class="xui-reviewImg">
+        <img src="/static_v2/img/review.png" alt="">
+    </div>
+    <div class="xui-button">
+        {% if not has_waiting_review %}
+        <a href="{{ h5_host }}/mall/home_page/?woid={{request.webapp_owner_id}}&fmt={{ fmt }}" class="xui-returnHome fl">返回首页</a>
+        {% else %}
+        <a href="{{ h5_host }}/mall/home_page/?woid={{request.webapp_owner_id}}&fmt={{ fmt }}" class="xui-returnHome xui-smallReturnHome fl">返回首页</a>
+        <a href="{{ h5_host }}/mall/waiting_review_orders/?woid={{request.webapp_owner_id}}&fmt={{ fmt }}" class="xui-continue cRed fr">继续评论</a>
+        {% endif %} 
+    </div>
+    
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+$(document).ready(function(){
+       
+});
+
+</script>
+
+{% endblock %}

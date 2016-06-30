@@ -1,0 +1,365 @@
+{% extends "apps_base.html" %}
+{% block css %}
+    <style>
+        .wui-submitButton {
+            margin: 0 10px;
+        }
+        .wui-evaluate-component{
+            padding: 15px 10px 0 10px;
+        }
+    </style>
+{% endblock %}
+{% block content-panel %}
+    {{ page_html_content|safe }}
+    <div class="wui-submitButton wa-submitButtonContainer">
+	    <a class="xui-btn xui-btn-danger wa-submitTermite" data-role="button" href="javascript:void(0);">发表评价</a>
+    </div>
+{% endblock %}
+
+{% block js %}
+<script>
+    var template_type = "{{ template_type }}",
+        order_id = "{{ order_id }}",
+        product_model_name = "{{ product_model_name }}",
+        order_has_product_id = "{{ order_has_product_id }}",
+        product_id = "{{ product_id }}",
+        created,
+        has_order_review,
+        insetNum,
+        submitting = false,
+        $container;
+
+    $(function(){
+        $container = $('.wa-evaluate-container');
+        if('ordinary' !== template_type) {
+            $container.find('.wa-i-body').hide();
+            $('.xa-componentContainer').removeClass('pr');
+            $('.wa-page').addClass('pr');
+            $('.wa-uploadimg-tm').removeClass('wui-hide').addClass('wui-pa');
+            $('.wa-submitTermite').addClass('mt70');
+        }
+        if(W.isPC) return;
+        getDynamicData();
+        $container.siblings().addClass('wui-evaluate-component');
+        $('.wa-uploadimg-tm').removeClass('wui-pf').addClass('wui-pa');
+    });
+
+    //获取商品和评价信息
+    function getDynamicData(){
+        loadingStatus(true);
+        W.getApi().call({
+            app: 'm/apps/evaluate',
+            resource: 'm_evaluate',
+            method: 'get',
+            args: {
+                webapp_owner_id: W.webappOwnerId,
+                order_id: order_id,
+                product_model_name: product_model_name,
+                order_has_product_id: order_has_product_id,
+                product_id: product_id
+            },
+            success: function(data){
+                render_page(data);
+                loadingStatus(false);
+            },
+            error: function(resp){
+                loadingStatus(false);
+                wuiAlert(resp.errMsg)
+            }
+        });
+    }
+
+    //根据评价数据，渲染页面
+    function render_page(data){
+        deblog('render_page', data);
+        //首先渲染商品信息
+        var product = data.product;
+        $('.wa-productname').html(product.name);
+        $('.wa-productinfo').html(product.props);
+        $('.wa-productimg').find('img').prop('src', product.thumbnails_url).parent().css('border', 'none');
+        product_id = product.id;
+        has_order_review = data.has_order_review;
+        if(has_order_review){
+            $('.wa-iscreated').removeClass('wui-iscreated');
+            $('.wa-notcreated').addClass('wui-iscreated');
+        }
+        //渲染评价信息
+        created = data.created;
+        var product_review = data.product_review;
+        var detail = product_review.review_detail;
+        var product_score = product_review.product_score;
+        var has_pic = product_review.has_pic;
+        if(created){
+            //如果已经评价过，则渲染评价数据，根据配置的模版渲染页面
+            $('#dj_product_score').attr({
+                'data-value': product_score,
+                'class': 'wui-starGrade wui-starGrade'+product_score
+            });
+            $container.find('.wui-i-status').removeClass('xui-hidden');
+            if(has_pic){
+                var pics = product_review.pics;
+                var $ul = $container.find('.wui-i-uploadimg ul');
+                if($ul.length == 0){
+                    $ul = $('<ul class="xui-imgList xa-imgList"></ul>');
+                    $container.find('.wui-i-uploadimg .xui-productPhoto').prepend($ul);
+                }else{
+                  $ul = $ul.eq(0);
+                }
+                pics.forEach(function(pic){
+                    var $li = $("<li class='xa-img'><span class='pa xa-remove xui-remove' style='display:none;'><i class='pa'></i></span><div class='xui-progress xa-progress' style='opacity: 0;'><span></span></div></li>");
+                    $li.append("<img src='"+pic+"' data-src='"+pic+"' full-src='"+pic+"'>");
+                    $ul.append($li);
+                });
+                $ul.children('img').data('allow-autoplay','true');
+                $ul.siblings().hide();
+                $('.wa-submitTermite').parent().hide();
+            }else{
+                $('.wa-submitTermite').html('追加晒图');
+            }
+            if(typeof detail == 'string'){
+                $('#dj_review_detail').val(detail || '')
+            }
+            $('#dj_review_detail').attr('readonly', true).siblings().hide();
+            $('.wa-limitNum').hide();
+            //渲染动态组件数据, 根据之前的评价数据判断是否渲染
+            if(typeof detail != 'string'){
+                for(var key in detail) {
+                    var value = detail[key];
+                    var cid = key.split('::')[1];
+                    var type = 'appkit.' + key.split('::')[0];
+                    if ('appkit.qa' === type) {
+                        value = value.split('::')[1];
+                        $('.wui-QA').each(function(){
+                            var $this = $(this);
+                            if($this.attr('data-component-cid') == cid){
+                                $this.find('textarea').val(value).attr('readonly', true);
+                            }
+                        });
+                    }else if('appkit.selection' === type){
+                        $('.wui-textSelection').each(function(){
+                            var $this = $(this);
+                            if($this.attr('data-component-cid') == cid){
+                                var $lis = $this.find('li');
+                                if('string' === typeof value){ //单选
+                                    value = value.split('::')[2];
+                                    $lis.each(function(){
+                                       var $this = $(this);
+                                       if($this.attr('data-component-cid') == value){
+                                           $this.find('.selection-radio').addClass('radio-select');
+                                       }
+                                   });
+                                }else{  //多选
+                                    $lis.each(function(){
+                                        var $this = $(this);
+                                        if(value.filter(function(v){
+                                                return v.indexOf($this.attr('data-component-cid')) >= 0
+                                            }).length > 0){
+                                            $this.find('.selection-checkbox').addClass('checkbox-select');
+                                        }
+                                    });
+                                }
+                            }
+                        });
+                    }else if('appkit.textlist' === type){
+                        $('.wui-shortcuts').each(function(){
+                            var $this = $(this);
+                            if($this.attr('data-component-cid') == cid){
+                                $this.find('li').each(function(){
+                                    var $this = $(this).find('div');
+                                    var val = value[$this.attr('data-input-name')];
+                                    if(val!= undefined){
+                                        $this.find('input').val(val).attr('readonly', true);
+                                    }
+                                });
+                            }
+                        });
+                    }
+                }
+            }
+
+            $('body').delegate('.wa-submitTermite', 'click', submitEvaluateData);
+        }else{
+            //否则直接渲染页面
+            bind_events();
+        }
+    }
+
+    //绑定事件
+    function bind_events(){
+        deblog('bind_events');
+        // 点击星评
+        $container.delegate('.wa-starGrade i', 'click', function(){
+            var $star = $(this);
+            var starGrade = $star.attr('data-grade');
+            $star.parent('span').attr({
+                'class': 'wui-starGrade wui-starGrade'+starGrade,
+                'data-value': starGrade
+            });
+        });
+        //隐藏说明提示
+        $('.wui-reviewHint').click(function(){
+            $(this).find('textarea').focus();
+        });
+        // 字数实时提示
+        if('ordinary' === template_type) {
+            var $textarea = $('.wa-ordinary-review-detail');
+            var limitNum = 200;
+            insetNum = $textarea.val().length;
+            var $limitText = '<span>还可以输入' + limitNum + '字</span>';
+            var keyup_or_change = function () {
+                insetNum = $(this).val().length;
+                if(insetNum == 0){
+                    $('.wui-reviewHint').find('.wui-i-box').show();
+                }else{
+                    $('.wui-reviewHint').find('.wui-i-box').hide();
+                }
+                var remainder = limitNum - insetNum;
+                if (insetNum > 4) {
+                    $('.xa-reviewBtn').addClass('xui-red');
+                } else {
+                    $('.xa-reviewBtn').removeClass('xui-red')
+                }
+                if (insetNum > 200) {
+                    remainder = insetNum - limitNum;
+                    $limitText = '<span>已超出<span class="cRed">' + remainder + '</span>个字</span>';
+                } else {
+                    $limitText = '<span>还可以输入' + remainder + '字</span>';
+                }
+                $('.wa-limitNum').html($limitText);
+            };
+            $textarea.change(keyup_or_change).keyup(keyup_or_change);
+        }
+        //提交按钮
+        $('body').delegate('.wa-submitTermite', 'click', submitEvaluateData);
+    }
+
+    //提交数据
+    function submitEvaluateData(){
+        //防止重复提交
+        if(submitting) return;
+        submitting = true;
+        if(!W.is_pic_up){
+            wuiAlert('图片还未上传完成', 2000);
+            submitting = false;
+            return;
+        }
+        loadingStatus(true);
+        var picture_list = [];
+        $('.xui-imgList img').each(function(){
+              picture_list.push($(this).attr('data-src'))
+        });
+        var postData = {
+            webapp_owner_id: W.webappOwnerId,
+            product_score: $('#dj_product_score').attr('data-value'),
+            picture_list: picture_list.join(','),
+            product_id: product_id,
+            order_has_product_id: order_has_product_id,
+            order_id: order_id,
+            template_type: template_type
+        };
+
+        if(created){ //晒图
+            if(picture_list.length == 0){
+                loadingStatus(false);
+                wuiAlert('请先上传图片！');
+                submitting = false;
+                return;
+            }
+            W.getApi().call({
+                app: 'm/apps/evaluate',
+                resource: 'evaluate_participance',
+                method: 'post',
+                args: postData,
+                success: function(data) {
+                    window.location.href = '/m/apps/evaluate/m_evaluate_success/?webapp_owner_id='+ W.webappOwnerId;
+                },
+                error: function(data) {
+                    loadingStatus(false);
+                    wuiAlert(data.errMsg|| '网络错误');
+                    submitting = false;
+                }
+            });
+            return;
+        }
+        //发表
+        if('ordinary' === template_type) {
+            if(insetNum < 5 || insetNum >200){
+                loadingStatus(false);
+                wuiAlert('请输入5-200字', 2000);
+                submitting = false;
+                return;
+            }
+            $.extend(postData, {
+                review_detail: $('#dj_review_detail').val(),
+                serve_score: $('#dj_serve_score').attr('data-value'),
+                deliver_score: $('#dj_deliver_score').attr('data-value'),
+                process_score: $('#dj_process_score').attr('data-value')
+            });
+        }else{
+            //自定义模板
+            if(!W.validate()){
+                loadingStatus(false);
+                submitting = false;
+                return;
+            }
+            var dynamicData = {}, data, type, cid, key, title, innerTitle, dataType, innerCid;
+            var $components = $container.siblings();
+            $components.each(function(){
+                var $component = $(this);
+                cid = $component.attr('data-component-cid');
+                type = $component.find('.xa-inputControl').attr('data-control-type').replace('appkit.', '');
+                key = type + '::' + cid;
+                if($component.hasClass('wui-QA')){ //问答模块
+                    data = $component.find('.xa-inputControl textarea').val().trim();
+                    title = $component.find('.xa-inputControl').attr('data-input-name');
+                    dynamicData[key] = title+'::'+data;
+                }else if($component.hasClass('wui-textSelection')){ //选择题模块
+                    var $spans = $component.find('.xa-inputControl li label span').not('.xa-itemTitle');
+                    dataType = $spans.eq(0).attr('data-type');
+                    var className = dataType == 'radio' ? 'radio-select' : 'checkbox-select';
+                    data = [];
+                    title = $component.find('ul').attr('data-input-name');
+                    $spans.each(function(){
+                        var $span = $(this);
+                        innerCid = $span.parents('li').eq(0).attr('data-component-cid');
+                        innerTitle = $span.attr('data-input-name');
+                        if(dataType == 'radio' && $span.hasClass(className)){ //单选
+                            data = title+'::'+innerTitle+'::'+innerCid;
+                        }else if(dataType == 'checkbox' && $span.hasClass(className)){ //多选
+                            data.push(title+'::'+innerTitle+'::'+innerCid);
+                        }
+                        dynamicData[key] = data;
+                    });
+
+                }else if($component.hasClass('wui-shortcuts')){ //联系人模块
+                    var $divs = $component.find('.xa-inputControl');
+                    data = {};
+                    $divs.each(function(){
+                        var $div = $(this);
+                        dataType = $div.attr('data-input-name');
+                        data[dataType] = $div.find('input').val().trim();
+                    });
+                    dynamicData[key] = data;
+                }
+            });
+            $.extend(postData, {review_detail: JSON.stringify(dynamicData)});
+        }
+        //提交数据
+        deblog('put', postData);
+        W.getApi().call({
+            app: 'm/apps/evaluate',
+            resource: 'evaluate_participance',
+            method: 'put',
+            args: postData,
+            success: function(data) {
+                window.location.href = '/m/apps/evaluate/m_evaluate_success/?webapp_owner_id='+ W.webappOwnerId;
+            },
+            error: function(data) {
+                loadingStatus(false);
+                wuiAlert(data.errMsg || '网络错误');
+                submitting = false;
+            }
+        });
+    }
+</script>
+{% endblock %}

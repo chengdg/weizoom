@@ -104,11 +104,7 @@ W.ValidaterClass = function() {
             extract: 'element',
             check: function(element) {
                 var $selectedInput = element.find('input:checked');
-                if ($selectedInput.length > 0) {
-                    return true;
-                } else {
-                    return false;
-                }
+                return $selectedInput.length > 0;
             },
             errorHint: ''
         },
@@ -156,11 +152,7 @@ W.ValidaterClass = function() {
             extract: 'value',
             check: function(value) {
                 var trimedValue = $.trim(value);
-                if (trimedValue.length == 0) {
-                    return false;
-                } else {
-                    return true;
-                }
+                return trimedValue.length != 0;
             },
             errorHint: '请选择一个选项'
         },
@@ -168,12 +160,8 @@ W.ValidaterClass = function() {
 			type: 'function',
 			extract: 'value',
 			check: function(value) {
-				var value = parseInt(value);
-				if (value < 0) {
-					return false;
-				} else {
-					return true;
-				}
+				value = parseInt(value);
+				return value >= 0;
 			},
 			errorHint: '请选择一个选项'
 		},
@@ -219,11 +207,7 @@ W.ValidaterClass = function() {
 			extract: 'element',
 			check: function(element) {
 				var is_upload = element.parent().find('.xa-imgList .xa-img');
-				if (is_upload.length == 0) {
-					return false;
-				} else {
-					return true;
-				}
+				return is_upload.length != 0;
 			},
 			errorHint: ''
 		},
@@ -232,11 +216,7 @@ W.ValidaterClass = function() {
 			extract: 'element',
 			check: function(element) {
                 var span_value = element.attr('data-product');
-				if (span_value == '') {
-					return false;
-				} else {
-					return true;
-				}
+				return span_value != '';
 			},
 			errorHint: ''
 		}
@@ -345,4 +325,4 @@ W.validate = function(el, checkDynamicElement) {
     }
 
     return !hasError;
-}
+};

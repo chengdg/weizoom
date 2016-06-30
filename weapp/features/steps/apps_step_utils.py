@@ -128,6 +128,18 @@ def get_openid(webapp_user_name, username):
     """
     return '%s_%s' % (webapp_user_name, username)
 
+def fill_context_with_openid(context, webapp_user):
+    """
+    将openid塞入context中并返回openid
+    @param webapp_user: 微信端用户名
+    @param context: 上下文
+    @return: openid
+    """
+    webapp_owner_id = str(context.webapp_owner_id)
+    user = User.objects.get(id=webapp_owner_id)
+    context.openid = "%s_%s" % (webapp_user, user.username)
+    return context.openid
+
 def name2status(name):
     """
     高级投票： 文字 转 状态值

@@ -48,6 +48,7 @@ from member.member_grade import auto_update_grade
 random.seed(time.time())
 from bs4 import BeautifulSoup
 # NO_PROMOTION_ID = -1
+from eaglet.utils.resource_client import Resource
 
 def __get_promotion_name(product):
 	"""判断商品是否促销， 没有返回None, 有返回促销ID与商品的规格名.
@@ -3371,16 +3372,18 @@ def create_mall_order_from_shared(request,order_id):
 
 
 def refund_weizoom_card_money(order):
-	from weapp import settings
-	url = "http://" + settings.CARD_SERVER_DOMAIN + '/card/trade'
 	trade_id = OrderCardInfo.objects.filter(order_id=order.order_id).first().trade_id
 	data = {
 		'trade_id': trade_id,
 		'trade_type': 1  # 普通退款
 	}
 	msg = 'wz_card refund:' + trade_id
-	print('--------refund',msg)
-	watchdog_info(message=msg,type='wz_card')
-	is_success, resp = microservice_consume2(url=url, data=data, method='delete')
-	print('-------resp',resp)
-	return is_success, resp
+
+	watchdog_info(message=msg, type='wz_card')
+
+	resp = Resource.use('card_apiserver').delete({
+		'resource': 'card.trade',
+		'data': data
+	})
+
+	return resp

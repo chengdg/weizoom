@@ -2265,3 +2265,285 @@ li.wui-selectBox-display-table {
 	font-family: '黑体';
 }
 /*百宝箱 shvote CSS ---- end */
+
+/*百宝箱 evaluate CSS ---- start */
+.wui-evaluate-container .wui-title {
+    text-align: center;
+    line-height: 35px;
+    color: #333;
+    padding: 0;
+}
+.wui-evaluate-container .wui-title a {
+    height: 35px;
+    width: 35px;
+    display: inline-block;
+    position: absolute;
+    left: 0;
+	z-index: 10004;
+}
+.wui-evaluate-container .wui-title i {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-top: 1px solid #393939;
+    border-left: 1px solid #393939;
+    transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+    left: 14px;
+    top: 12px;       
+}
+.wui-evaluate-container .wui-i-header{
+	padding: 15px 10px 0;
+}
+.wui-evaluate-container .wui-i-header,.wui-evaluate-container .wui-i-body{
+	background: #fff;
+}
+.wui-evaluate-container .wui-serviceReview{
+    padding: 15px 10px;
+    background: #fff;
+    border-top: 1px solid #E5E5E5;
+    border-bottom: 1px solid #E5E5E5;
+}
+.wui-evaluate-container .wui-productname{
+    height: 36px;
+    overflow: hidden;
+}
+.wui-evaluate-container .wui-reviewGrade{
+	padding-bottom: 12px;
+}
+.wui-evaluate-container .wui-starGrade{
+    display: inline-block;
+    width: 181px;
+    height: 21px;
+    background: url(/termite_static/img/component/evaluate/sprite0506.png) no-repeat;
+    -webkit-background-size: 225px 123px;
+    background-size: 225px 123px;
+    background-position: 0 -82px;
+    float: right;
+}
+.wui-evaluate-container .wui-starGrade1{
+    background-position: -159px -104px;
+}
+.wui-evaluate-container .wui-starGrade2{
+    background-position: -119px -104px;
+}
+.wui-evaluate-container .wui-starGrade3{
+    background-position: -79px -104px;
+}
+.wui-evaluate-container .wui-starGrade4{
+    background-position: -40px -104px;
+}
+.wui-evaluate-container .wui-starGrade5{
+    background-position: 0px -104px;
+}
+.wui-evaluate-container .wui-starGrade i{
+    width: 21px;
+    height: 21px;
+    display: inline-block;
+    margin-right: 14px;
+}
+.wui-evaluate-container .wui-starGrade i:last-child{
+    margin-right: 0;
+}
+.wui-evaluate-container .wui-reviewText{
+	padding: 0 10px;
+}
+.wui-evaluate-container .wui-reviewText textarea{
+    margin-top: 8px;
+    color: #666;
+    background: #F5F5F5;
+    width: 98%;
+    height: 100px;
+    outline: none;
+    border: 1px solid #E9E9E9;
+    border-radius: 5px;
+}
+.wui-evaluate-container .wui-productPhoto{
+	padding: 0 10px;
+    overflow: hidden;
+}
+.wui-evaluate-container .wui-separate{
+	height: 10px;
+	background: #f0f0f0;
+}
+.wui-evaluate-container .wui-imgList li{
+    position: relative;
+    float: left;
+    margin-bottom: 10px;
+    width: 45px;
+    height: 45px;
+    margin-right: 2px;
+    box-shadow: inset 0px 0px 0px 1px #ddd;
+    overflow: hidden;
+    background: url(/termite_static/img/component/evaluate/sprite0506.png) no-repeat;
+    background-size: 225px 123px;
+    background-position: -180px 0px;
+}
+.wui-evaluate-container .wui-imgList li img{
+    width: 45px;
+    height: 45px;
+}
+.wui-evaluate-container .wui-i-uploadimg .xui-productPhoto .xui-addPhoto,.wui-i-uploadimg .xui-productPhoto .xui-deletePhoto{
+    width: 46px;
+    height: 45px;
+    display: inline-block;
+    background: url(/termite_static/img/component/evaluate/photoBtn.png);
+    -webkit-background-size: 92px 45px;
+    background-size: 92px 45px;
+    background-position: -46px 0;
+    text-align: center;
+    line-height: 45px;
+    margin-right: 3px;
+    overflow: hidden;
+    float: left;
+    position: relative;
+    margin-bottom: 10px;
+}
+.wui-evaluate-container .wui-i-uploadimg .xui-productPhoto .xui-deletePhoto {
+    background-position: 0 0;
+}
+.wui-evaluate-container .wui-i-uploadimg .xui-productPhoto .xui-deletePhoto {
+    margin-right: 0;
+}
+.wui-evaluate-container .wui-i-uploadimg .xui-productPhoto .xui-deletePhoto {
+    line-height: 35px;
+}
+.wui-evaluate-container .wui-productPhoto .wui-deletePhoto{
+    line-height: 35px;
+}
+.wui-evaluate-container .wui-productPhoto .wui-finishEdit{
+    line-height: 45px;
+}
+.wui-evaluate-container .wui-productPhoto .wui-deletePhoto{
+    margin-right: 0;
+}
+.wui-evaluate-container .wui-productPhoto .wui-deletePhoto{
+    background-position: 0 0;
+}
+.wui-evaluate-container .wui-productPhoto .wui-remove{
+    top:0px;
+    right:0px;
+    z-index:99;
+    display:inline-block;
+    width:45px;
+    height:45px;
+    background:rgba(0,0,0,0.5);
+    text-align: center;
+    line-height: 45px;
+}
+.wui-evaluate-container .wui-productPhoto .wui-remove i{
+    background: url(/termite_static/img/component/evaluate/sprite0506.png);
+    -webkit-background-size: 225px 123px;
+    background-size: 225px 123px;
+    background-position: -44px 0;
+    width: 23px;
+    height: 22px;
+    display: inline-block;
+    top:10px;
+    left: 10px;
+}
+.wui-evaluate-container .wui-progress{
+    position:absolute;
+    width:100%;
+    height:4px;
+    background:rgba(0,0,0,.3);
+    left:0;
+    bottom:0;
+    -webkit-transition:all linear .4s;
+    transition:all linear .4s;
+}
+.wui-evaluate-container .wui-progress span{
+    display: block;
+    height:4px;
+    width: 0;
+    background:#4AB700;
+    -webkit-transition:all linear .6s;
+    transition:all linear .6s;
+}
+.wui-evaluate-container.wui-productPhoto .wui-addPhoto .wui-i-box i{
+    margin-left: -3px;
+}
+.wui-evaluate-container .wui-productPhoto .wui-text{
+    color: #A9A9A9;
+    line-height: 45px;
+}
+.wui-evaluate-container .wui-serviceReview h2{
+    margin-top: 5px;
+    margin-bottom:16px;
+}
+.wui-evaluate-container .wui-reviewBtn{
+    width: 94%;
+    background: #A9A9A9;
+    color: #fff;
+    height: 40px;
+    border-radius: 2px;
+    text-align: center;
+    line-height: 40px;
+    margin-right: auto;
+    margin-left: auto;
+    display: block;
+    border: none;
+}
+.wui-evaluate-container .wui-reviewBtn:focus{
+    outline: none;
+}
+.wui-evaluate-container .wui-red{
+    background: #CF0303;
+}
+.wui-evaluate-container .wui-uploadImg{
+    width: 45px;
+    height: 45px;
+}
+.wui-evaluate-container .wui-productImg{
+    width: 60px;
+    height: 60px;
+    text-align: center;
+    vertical-align: middle;
+    /*border: 1px solid #e1e1e1;*/
+    box-sizing: border-box;
+}
+.wui-evaluate-container .wui-i-status{
+	color: #CF0404;
+	font-size: 0.85rem;
+}
+.wui-iscreated{
+	display: none;
+}
+.wui-pf{
+	position: fixed;
+	width: 100%;
+	bottom: -5px;
+}
+.wui-pa{
+	position: absolute;
+	width: 100%;
+	bottom: -65px;
+}
+.wui-i-uploadimg-common{
+	padding: 0 10px;
+}
+.wui-evaluate-component .wui-i-title{
+	border-left: 0;
+	background: url('/termite_static/img/component/evaluate/evaluate_ic.png') no-repeat;
+	background-size: 8px 18px;
+	padding-left: 15px;
+}
+.wui-evaluate-component .selection-radio {
+    background: rgba(0, 0, 0, 0) url("/termite_static/img/component/evaluate/evaluate_radio.png") no-repeat scroll 0 0 / 70% auto;
+    height: 22px;
+    position: absolute;
+    width: 30px;
+}
+.wui-evaluate-component .radio-select {
+    background-position: 0 -48px;
+}
+.wui-evaluate-component .selection-checkbox {
+    background: rgba(0, 0, 0, 0) url("/termite_static/img/component/evaluate/evaluate_checkbox.png") no-repeat scroll 0 0 / 70% auto;
+    height: 22px;
+    position: absolute;
+    width: 30px;
+}
+.wui-evaluate-component .checkbox-select {
+    background-position: 0 -34px;
+}
+/*百宝箱 evaluate CSS ---- end */

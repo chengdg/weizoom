@@ -40,7 +40,7 @@ W.view.mall.ProductReviewListView = Backbone.View.extend({
 
     //置顶
     onClickModify: function(event){
-
+        
         var $el = $(event.currentTarget);
         var product_review_id = $el.attr("data-product-review-id");
         var status = $el.attr("data-status");

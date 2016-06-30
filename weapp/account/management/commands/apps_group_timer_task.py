@@ -4,6 +4,7 @@ import time
 from datetime import timedelta,datetime
 
 from django.core.management.base import BaseCommand, CommandError
+from eaglet.utils.resource_client import Resource
 from core.exceptionutil import unicode_full_stack
 
 from watchdog.utils import watchdog_error, watchdog_info, watchdog_warning
@@ -38,31 +39,40 @@ class Command(BaseCommand):
 				group_id = group_relation.id
 				if timing <= 0:
 					group_relation.update(set__group_status=app_models.GROUP_FAILURE)
-					update_order_status_by_group_status(group_id,'failure')
-					#收集拼团失败模板消息数据
-					try:
-						group_details = all_group_details_has_paid.filter(relation_belong_to=str(group_id))
-						group_info = all_groups.get(id=group_relation.belong_to)
-						owner_id = group_info.owner_id
-						product_name = group_info.product_name
-						miss = int(group_relation.group_type)-group_details.count()
-						activity_info = {
-							"owner_id": str(owner_id),
-							"record_id": str(group_relation.belong_to),
-							"group_id": str(group_id),
-							"fid": str(group_relation.member_id),
-							"price": '%.2f' % group_relation.group_price,
-							"product_name": product_name,
-							"status" : 'fail',
-							"miss": str(miss)
+					# update_order_status_by_group_status(group_id,'failure')
+					resp = Resource.use('zeus').post({
+						'resource': 'mall.group_update_order',
+						'data': {
+							'group_id': group_id,
+							'status': 'failure',
+							'is_test': 0
 						}
-						member_info_list = [{"member_id": group_detail.grouped_member_id, "order_id": group_detail.order_id} for group_detail in group_details]
-						template_message_list.append({'activity_info':activity_info,'member_info_list':member_info_list})
-					except Exception, e:
-						print '------template--------------------------------'
-						print e
-						print '------template--------------------------------'
-						print(u'读取拼团模板消息数据失败')
+					})
+					if resp and resp['code'] == 200:
+						#收集拼团失败模板消息数据
+						try:
+							group_details = all_group_details_has_paid.filter(relation_belong_to=str(group_id))
+							group_info = all_groups.get(id=group_relation.belong_to)
+							owner_id = group_info.owner_id
+							product_name = group_info.product_name
+							miss = int(group_relation.group_type)-group_details.count()
+							activity_info = {
+								"owner_id": str(owner_id),
+								"record_id": str(group_relation.belong_to),
+								"group_id": str(group_id),
+								"fid": str(group_relation.member_id),
+								"price": '%.2f' % group_relation.group_price,
+								"product_name": product_name,
+								"status" : 'fail',
+								"miss": str(miss)
+							}
+							member_info_list = [{"member_id": group_detail.grouped_member_id, "order_id": group_detail.order_id} for group_detail in group_details]
+							template_message_list.append({'activity_info':activity_info,'member_info_list':member_info_list})
+						except Exception, e:
+							print '------template--------------------------------'
+							print e
+							print '------template--------------------------------'
+							print(u'读取拼团模板消息数据失败')
 			"""
 			所有已到15分钟还未开团成功的团购，删除团购记录
 			"""
@@ -111,35 +121,52 @@ class Command(BaseCommand):
 				group_id = group_relation.id
 				has_placed_order = all_unpaid_group_details.filter(relation_belong_to=str(group_id),order_id__not='')
 				if has_placed_order.count() > 0:
-					update_order_status_by_group_status(group_id,'failure')
+					# update_order_status_by_group_status(group_id,'failure')
+					resp = Resource.use('zeus').post({
+						'resource': 'mall.group_update_order',
+						'data': {
+							'group_id': group_id,
+							'status': 'failure',
+							'is_test': 0
+						}
+					})
 			for group_relation in all_end_group_relations:
 				group_id = group_relation.id
 				group_relation.update(set__group_status=app_models.GROUP_FAILURE)
-				update_order_status_by_group_status(group_id,'failure')
-				#收集拼团失败模板消息数据
-				try:
-					group_details = all_group_details_has_paid.filter(relation_belong_to=str(group_id))
-					group_info = all_groups.get(id=group_relation.belong_to)
-					owner_id = group_info.owner_id
-					product_name = group_info.product_name
-					miss = int(group_relation.group_type)-group_details.count()
-					activity_info = {
-						"owner_id": str(owner_id),
-						"record_id": str(group_relation.belong_to),
-						"group_id": str(group_id),
-						"fid": str(group_relation.member_id),
-						"price": '%.2f' % group_relation.group_price,
-						"product_name": product_name,
-						"status" : 'fail',
-						"miss": str(miss)
+				# update_order_status_by_group_status(group_id,'failure')
+				resp = Resource.use('zeus').post({
+					'resource': 'mall.group_update_order',
+					'data': {
+						'group_id': group_id,
+						'status': 'failure',
+						'is_test': 0
 					}
-					member_info_list = [{"member_id": group_detail.grouped_member_id, "order_id": group_detail.order_id} for group_detail in group_details]
-					template_message_list.append({'activity_info':activity_info,'member_info_list':member_info_list})
-				except Exception, e:
-					print '------template--------------------------------'
-					print e
-					print '------template--------------------------------'
-					print(u'读取拼团模板消息数据失败')
+				})
+				if resp and resp['code'] == 200:
+					#收集拼团失败模板消息数据
+					try:
+						group_details = all_group_details_has_paid.filter(relation_belong_to=str(group_id))
+						group_info = all_groups.get(id=group_relation.belong_to)
+						owner_id = group_info.owner_id
+						product_name = group_info.product_name
+						miss = int(group_relation.group_type)-group_details.count()
+						activity_info = {
+							"owner_id": str(owner_id),
+							"record_id": str(group_relation.belong_to),
+							"group_id": str(group_id),
+							"fid": str(group_relation.member_id),
+							"price": '%.2f' % group_relation.group_price,
+							"product_name": product_name,
+							"status" : 'fail',
+							"miss": str(miss)
+						}
+						member_info_list = [{"member_id": group_detail.grouped_member_id, "order_id": group_detail.order_id} for group_detail in group_details]
+						template_message_list.append({'activity_info':activity_info,'member_info_list':member_info_list})
+					except Exception, e:
+						print '------template--------------------------------'
+						print e
+						print '------template--------------------------------'
+						print(u'读取拼团模板消息数据失败')
 
 
 			"""

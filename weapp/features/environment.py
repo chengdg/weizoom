@@ -86,6 +86,7 @@ from apps.customerized_apps.group import models as group_models
 from apps.customerized_apps.shvote import models as shvote_models
 from apps.customerized_apps.rebate import models as rebate_models
 from apps.customerized_apps.exlottery import models as apps_exlottery_models
+from apps.customerized_apps.evaluate import models as evaluate_models
 
 
 from django.core.cache import cache
@@ -377,6 +378,13 @@ def __clear_all_app_data():
 	rebate_models.RebateParticipance.objects.all().delete()
 	rebate_models.RebateWeizoomCardDetails.objects.all().delete()
 	rebate_models.RebateWaitingAction.objects.all().delete()
+
+	#apps商品评价
+	evaluate_models.ProductEvaluates.objects.all().delete()
+	evaluate_models.OrderEvaluates.objects.all().delete()
+	evaluate_models.EvaluatesRelatedProducts.objects.all().delete()
+	evaluate_models.EvaluatesRelations.objects.all().delete()
+	evaluate_models.EvaluateTemplateSetting.objects.all().delete()
 
 	#apps中的weizoom_card表
 	customized.AppsWeizoomCard.objects.all().delete()

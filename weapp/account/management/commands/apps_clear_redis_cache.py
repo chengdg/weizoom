@@ -41,4 +41,4 @@ class Command(BaseCommand):
 			patten = "apps_*"
 			delete_pattern(patten)
 			print 'delete all apps cache'
-		print 'clear apps redis cache start...'
+		print 'clear apps redis cache end...'

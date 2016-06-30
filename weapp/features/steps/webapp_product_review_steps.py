@@ -9,45 +9,45 @@ from test import bdd_util
 def step_visit_product_review(context, webapp_user, text):
     pass
 
+#该step已迁移到百宝箱中 mod by vito
+# @then(u"{webapp_user}成功获取'{text}'列表")
+# def step_product_review_should(context, webapp_user, text):
+#     url = "/workbench/jqm/preview/?woid=%d&module=mall&model=product_review_list&action=get&member_id=%d" % (context.webapp_owner_id, context.member.id)
+#     response = context.client.get(bdd_util.nginx(url), follow=True)
+#     # 期望的输出
+#     expected = json.loads(context.text)
+#     # 实际的输出
+#     actual = []
+#     product_review_list = response.context['product_review_list']
+#     for i in product_review_list:
+#         product_review = {}
+#         product_review['review_detail'] = i.review_detail
+#         product_review['product_name'] = i.product.name
+#         actual.append(product_review)
+#     print("-"*10, 'actual', "-"*10, actual)
+#     print("-"*10, 'expected', "-"*10, expected)
+#     bdd_util.assert_list(expected, actual)
 
-@then(u"{webapp_user}成功获取'{text}'列表")
-def step_product_review_should(context, webapp_user, text):
-    url = "/workbench/jqm/preview/?woid=%d&module=mall&model=product_review_list&action=get&member_id=%d" % (context.webapp_owner_id, context.member.id)
-    response = context.client.get(bdd_util.nginx(url), follow=True)
-    # 期望的输出
-    expected = json.loads(context.text)
-    # 实际的输出
-    actual = []
-    product_review_list = response.context['product_review_list']
-    for i in product_review_list:
-        product_review = {}
-        product_review['review_detail'] = i.review_detail
-        product_review['product_name'] = i.product.name
-        actual.append(product_review)
-    print("-"*10, 'actual', "-"*10, actual)
-    print("-"*10, 'expected', "-"*10, expected)
-    bdd_util.assert_list(expected, actual)
-
-
-@when(u"{webapp_user}完成订单'{order_code}'中'{product_name}'的评价")
-def step_finished_a_product_review(context, webapp_user, order_code, product_name):
-    url = '/webapp/api/project_api/call/'
-    order_has_product = bdd_util.get_order_has_product(order_code, product_name)
-    # 输入
-    data = {}
-    context_dict = json.loads(context.text)
-    data.update(context_dict)
-    data['target_api'] = 'product_review/create'
-    data['module'] = 'mall'
-    data['woid'] = context.webapp_owner_id
-    data['order_id'] = order_has_product.order_id
-    data['product_id'] = order_has_product.product_id
-    data['order_has_product_id'] = order_has_product.id
-    has_picture = context_dict.get('picture_list', None)
-    if has_picture:
-        data['picture_list'] = str(has_picture)
-
-    context.client.post(url, data)
+#该step已迁移到百宝箱中 mod by aix
+# @when(u"{webapp_user}完成订单'{order_code}'中'{product_name}'的评价")
+# def step_finished_a_product_review(context, webapp_user, order_code, product_name):
+#     url = '/webapp/api/project_api/call/'
+#     order_has_product = bdd_util.get_order_has_product(order_code, product_name)
+#     # 输入
+#     data = {}
+#     context_dict = json.loads(context.text)
+#     data.update(context_dict)
+#     data['target_api'] = 'product_review/create'
+#     data['module'] = 'mall'
+#     data['woid'] = context.webapp_owner_id
+#     data['order_id'] = order_has_product.order_id
+#     data['product_id'] = order_has_product.product_id
+#     data['order_has_product_id'] = order_has_product.id
+#     has_picture = context_dict.get('picture_list', None)
+#     if has_picture:
+#         data['picture_list'] = str(has_picture)
+#
+#     context.client.post(url, data)
 
 
 @when(u"{webapp_owner}已获取对商品的评价信息")

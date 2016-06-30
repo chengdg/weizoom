@@ -1,0 +1,144 @@
+{% extends "apps_base.html" %}
+{% block css %}
+<style type="text/css">
+    .xui-page{
+        min-height:100% !important;
+       /* padding-top:0px !important;*/
+        /*background-color: #f0f0f0;*/
+        border: 0 none;
+        left: 0;
+        min-height: 100%;
+        position: absolute;
+        top: 0;
+        width: 100%;
+    }
+    .xui-reviewAllPage .xui-title{
+        text-align: center;
+        line-height: 35px;
+        color:#333;
+        z-index: 10004;
+    }
+    .xui-reviewAllPage .xui-title a{
+        height: 35px;
+        width: 35px;
+        display: inline-block;
+        position: absolute;
+        left:0;
+    }
+    .xui-reviewAllPage .xui-title i{
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-top: 1px solid #393939;
+        border-left: 1px solid #393939;
+        -webkit-transform:rotate(-45deg);
+        left: 14px;
+        top:12px;
+    }
+    .xui-reviewAllPage{
+        font-size: 0.8rem;
+        color: #999;
+    }
+    .xui-reviewAllPage .xui-content{
+        padding:0 10px;
+        background-color: #fff;
+        box-shadow: 0 1px rgba(0,0,0,.05);
+    }
+    .xui-reviewAllPage .xui-reviewlist li{
+        box-shadow: 0  1px rgba(0,0,0,.05);
+        padding-bottom:15px;
+    }
+    .xui-reviewAllPage .xui-reviewlist li:last-child{
+        box-shadow: none;
+    }
+    .xui-reviewAllPage .xui-user{
+        box-shadow: 0 0 0 1px rgba(227,227,227,.5);
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        vertical-align: middle;
+        background: url(/static/img/user-1.jpg) no-repeat;
+        background-size: cover;
+        overflow: hidden;
+        display: inline-block;
+    }
+    .xui-reviewAllPage .xui-reviewImg img{
+        float: left;
+        margin-right:6px;
+        border:1px solid #e5e5e5;
+    }
+    .xui-reviewAllPage dl dd{
+        float: left;   
+    }
+</style>
+{% endblock %}
+{% block content-panel %}
+<div class="xui-reviewAllPage xui-page xa-page">
+    <div class="xui-title pr">
+        <a class="xa-goBack xui-returnPrev pa wa-goBack" id="goBack">
+            <i></i>
+        </a>
+        <span class="em9">更多评价</span>
+    </div>
+    <div class="xui-content">
+        <ul class="xui-reviewlist">
+            {% for review in reviews %}
+                <li>
+                    <div class="clearfix pb10" style="padding-top:12px;">
+                        <div class="fl">
+                            <div class="xui-user">
+                                <img src="{% if review.member_icon %}{{ review.member_icon }}{% else %}/static_v2/img/user-1.jpg{% endif %}" data-allow-autoplay="true">
+                            </div>
+                            <span class="ml5 xa-memberName">
+                                <!-- TODO: 处理autoescape off -->
+                                {{review.member_name |safe}}
+                            </span>
+                        </div>
+                        <span class="fr" style="line-height:30px;">{{ review.created_at|date:"Y-m-j" }}</span>
+                    </div>
+                    <p class="em85 c6">
+                    {% if review.is_common_template %}
+                        {{ review.review_detail }}
+                    {% else %}
+                    {% for item in review.review_detail %}
+                        {{item.answer}}{% if not forloop.last %}；{% endif %}
+                    {% endfor %}                        
+                    {% endif %}
+                    </p>
+                    {% if review.custom_model_properties %}
+                    <div class="pt5">
+                        {% for property in review.custom_model_properties %}
+                        <span class="mr10">{{ property.property_value }}</span>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    {% if review.reviewed_product_pictures %}
+                    <div class="xui-reviewImg clearfix mt10">
+                        {% for picture in review.reviewed_product_pictures %}
+                            {% if picture|truncatechars:15 == 'http://weappimg...'%}
+                            <img width="50" height="50" src="{{picture}}!60" full-src="{{picture}}">
+                            {% else %}
+                            <img width="50" height="50" src="{{picture}}">
+                            {% endif%}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+    $(document).ready(function(){
+        var spanMemberName = $(".xa-memberName");
+        for(var i = 0; i < spanMemberName.length; i++) {
+            var str = $(spanMemberName[i]).text().trim();
+            var str_name = str.substring(0,1)+"**"+str[str.length-1];
+            $(spanMemberName[i]).html(str_name)
+        }
+    })
+</script>
+{% endblock %}
