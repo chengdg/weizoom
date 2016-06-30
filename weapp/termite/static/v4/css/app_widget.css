@@ -1314,8 +1314,8 @@ p.wui-i-start_time,p.wui-i-end_time{
 }
 .wui-weshop-friend-name img{
 	border-radius: 100%;
-	margin-left: -38px;
-	position: fixed;
+	margin-left: -39px;
+	position: absolute;
 	margin-top: 1px;
 	width: 37px;
 }
