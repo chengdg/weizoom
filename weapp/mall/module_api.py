@@ -3334,7 +3334,7 @@ def update_user_paymoney(id):
 	#更新会员的消费、消费次数、消费单价
 	from modules.member.models import WebAppUser
 	member = WebAppUser.get_member_by_webapp_user_id(id)
-	user_orders = Order.get_orders_from_webapp_user_ids(member.get_webapp_user_ids)
+	user_orders = Order.by_webapp_user_id(member.get_webapp_user_ids)
 	pay_money = 0
 	pay_times = 0
 

@@ -15,6 +15,7 @@ Feature: 微信用户关注公众号成为系统会员
 """
 
 Background:
+	Given 添加jobs店铺名称为'jobs商家'
 	Given jobs登录系统
 	And 开启手动清除cookie模式
 	And jobs设定会员积分策略
@@ -498,3 +499,234 @@ Scenario:2 会员列表
 		|  tom3    | 普通会员    |    0         |     20     |    0.00   |     0.00   |    0      |         0        | 直接关注 |    2015-5-1    | 未分组 | 已关注 |
 		|  tom2    | 普通会员    |    0         |     20     |    0.00   |     0.00   |    0      |         0        | 直接关注 |    2015-5-1    | 未分组 | 已取消 |
 
+#补充:张三香 2016.06.29
+#针对bug补充-（功能问题）自营平台-后台订单列表中的购买次数和30天内购买频次显示不正常
+
+@member @memberList
+Scenario:3 自营平台，查看会员列表中的购买次数
+	#备注-30天内购买次数无法实现steps（这个是执行的脚本）
+
+	Given 设置nokia为自营平台账号
+	Given nokia登录系统
+	And nokia已添加供货商
+		"""
+		[{
+			"name": "供货商1",
+			"responsible_person": "宝宝",
+			"supplier_tel": "13811223344",
+			"supplier_address": "北京市海淀区泰兴大厦",
+			"remark": "备注卖花生油"
+		}, {
+			"name": "供货商2",
+			"responsible_person": "陌陌",
+			"supplier_tel": "13811223344",
+			"supplier_address": "北京市海淀区泰兴大厦",
+			"remark": ""
+		}]
+		"""
+	And nokia已添加支付方式
+		"""
+		[{
+			"type": "微信支付",
+			"is_active": "启用"
+		}, {
+			"type": "支付宝",
+			"is_active": "启用"
+		}, {
+			"type": "货到付款",
+			"is_active": "启用"
+		}]
+		"""
+	When nokia开通使用微众卡权限
+	When nokia添加支付方式
+		"""
+		[{
+			"type": "微众卡支付",
+			"is_active": "启用"
+		}]
+		"""
+	And nokia已添加商品
+		"""
+		[{
+			"supplier": "供货商1",
+			"name": "商品1a",
+			"price": 10.00,
+			"purchase_price": 9.00,
+			"weight": 1.0,
+			"stock_type": "无限",
+			"pay_interfaces":[{
+				"type": "货到付款"
+			}]
+		}, {
+			"supplier": "供货商1",
+			"name": "商品1b",
+			"price": 20.00,
+			"purchase_price": 19.00,
+			"weight": 1.0,
+			"stock_type": "有限",
+			"stocks": 10,
+			"pay_interfaces":[{
+				"type": "货到付款"
+			}]
+		}, {
+			"supplier": "供货商2",
+			"name": "商品2a",
+			"price": 20.00,
+			"purchase_price": 19.00,
+			"weight": 1.0,
+			"stock_type": "有限",
+			"stocks": 10,
+			"pay_interfaces":[{
+				"type": "货到付款"
+			}]
+		}]
+		"""
+	When nokia将商品'商品1'放入待售于'2015-08-02 10:30'
+	When nokia更新商品'商品1'
+		"""
+		{
+			"name":"商品1",
+			"supplier":"jobs商家",
+			"purchase_price": 99.00,
+			"is_member_product":"off",
+			"pay_interfaces":[{
+				"type": "货到付款"
+			}],
+			"model": {
+				"models": {
+					"standard": {
+						"price": 100.00,
+						"user_code":"0102",
+						"weight":1.0,
+						"stock_type": "无限"
+					}
+				}
+			}
+		}
+		"""
+	When nokia'上架'商品'商品1'
+
+	#bill的购买数据
+	When bill关注nokia的公众号
+	When bill访问nokia的webapp
+	#001-单个自建供货商商品
+		When bill购买nokia的商品
+			"""
+			{
+				"order_id":"001",
+				"pay_type":"货到付款",
+				"products":[{
+					"name":"商品1a",
+					"count":1
+				}]
+			}
+			"""
+		Given nokia登录系统
+		When nokia对订单进行发货
+			"""
+			{
+				"order_no":"001-供货商1",
+				"logistics":"off",
+				"shipper": ""
+			}
+			"""
+		When nokia'完成'订单'001-供货商1'
+	#002-多个自建供货商的商品
+		When bill访问nokia的webapp
+		When bill购买nokia的商品
+			"""
+			{
+				"order_id":"002",
+				"pay_type":"货到付款",
+				"products":[{
+					"name":"商品1a",
+					"count":1
+				},{
+					"name":"商品2a",
+					"count":1
+				}]
+			}
+			"""
+		Given nokia登录系统
+		When nokia对订单进行发货
+			"""
+			{
+				"order_no":"002-供货商1",
+				"logistics":"off",
+				"shipper": ""
+			}
+			"""
+		When nokia对订单进行发货
+			"""
+			{
+				"order_no":"002-供货商2",
+				"logistics":"off",
+				"shipper": ""
+			}
+			"""
+		When nokia'完成'订单'002-供货商1'
+		When nokia'完成'订单'002-供货商2'
+	#003-单个同步供货商的商品
+		When bill访问nokia的webapp
+		When bill购买nokia的商品
+			"""
+			{
+				"order_id":"003",
+				"pay_type":"货到付款",
+				"products":[{
+					"name":"商品1",
+					"count":1
+				}]
+			}
+			"""
+		Given nokia登录系统
+		When nokia对订单进行发货
+			"""
+			{
+				"order_no":"003",
+				"logistics":"off",
+				"shipper": ""
+			}
+			"""
+		When nokia'完成'订单'003'
+	#004-同步和自建供货商的商品
+		When bill访问nokia的webapp
+		When bill购买nokia的商品
+			"""
+			{
+				"order_id":"004",
+				"pay_type":"货到付款",
+				"products":[{
+					"name":"商品1",
+					"count":1
+				},{
+					"name":"商品1a",
+					"count":1
+				}]
+			}
+			"""
+		Given nokia登录系统
+		When nokia对订单进行发货
+			"""
+			{
+				"order_no":"004-jobs商家",
+				"logistics":"off",
+				"shipper": ""
+			}
+
+			"""
+		When nokia对订单进行发货
+			"""
+			{
+				"order_no":"004-供货商1",
+				"logistics":"off",
+				"shipper": ""
+			}
+			"""
+		When nokia'完成'订单'004-jobs商家'
+		When nokia'完成'订单'004-供货商1'
+
+	Given nokia登录系统
+	Then nokia可以获得会员列表
+		|  member  | member_rank |pay_times |
+		|  bill    | 普通会员    |    4     |
