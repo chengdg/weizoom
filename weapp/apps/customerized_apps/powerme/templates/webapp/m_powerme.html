@@ -253,10 +253,6 @@
     var username = "{{ username }}"; //公众号的username
     var has_power = false;
     $(function(){
-        if (username == 'jobs'){
-            $('.wui-i-states').hide();
-            $('.wui-i-states-weshop').show();
-        }
         //隐藏参与活动按钮
         $('.xa-submitButtonContainer').hide();
         if(W.isPC){
@@ -276,6 +272,10 @@
                 $('.wa-closed').show();
             }
             return false;
+        }
+         if (username == 'jobs' && is_self_page){
+            $('.wui-i-states').hide();
+            $('.wui-i-states-weshop').show();
         }
         //如果是自己的主页
         if(is_self_page){
@@ -489,7 +489,7 @@
                 var unfollow_li_content = '';
                 for (var i in unfollow_friend_list) {
                     var u = unfollow_friend_list[i];
-                    unfollow_li_content += "<li style='float:left;width:20%;position: relative'>" +
+                    unfollow_li_content += "<li style='float:left;width:16.5%;position: relative'>" +
                             "<div class='wui-weshop-friend-name'><span class='wui-weshop-wraper'></span><img src='" + u.user_icon + "'></div>" +
                             "<div>" + u.username + "</div></li>";
                 }

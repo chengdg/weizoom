@@ -1225,15 +1225,15 @@ p.wui-i-start_time,p.wui-i-end_time{
 	display: inline-block;
 	background: white none repeat scroll 0 0;
 	border-radius: 100%;
-	width: 45px;
-	height: 45px;
+	width: 40px;
+	height: 40px;
 }
 .wui-weshop-friend-name img{
 	border-radius: 80px;
-	left: 13px;
+	left: 8px;
 	position: absolute;
 	top: 2px;
-	width: 41px;
+	width: 37px;
 }
 
 /* 百宝箱 vote new style ---start*/
