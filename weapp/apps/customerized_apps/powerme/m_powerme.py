@@ -45,8 +45,6 @@ class MPowerMe(resource.Resource):
 		if cache_data:
 			participances_dict = cache_data['participances_dict']
 			participances_list = cache_data['participances_list']
-			follow_friend_list = cache_data['follow_friend_list']
-			unfollow_friend_list = cache_data['unfollow_friend_list']
 			total_participant_count = cache_data['total_participant_count']
 			print '================from cache'
 		else:
@@ -73,33 +71,11 @@ class MPowerMe(resource.Resource):
 			# 取前100位
 			participances_list = participances_list[:100]
 
-			user_id = request.webapp_owner_info.user_profile.user_id
-			username = User.objects.get(id=user_id).username
-			follow_friend_list = []
-			unfollow_friend_list = []
-			if username == 'jobs':
-				details = app_models.PoweredDetail.objects(belong_to=record_id, owner_id=fid)
-				power_member_ids = [d.power_member_id for d in details]
-				power_member_id2member = {m.id: m for m in Member.objects.filter(id__in=power_member_ids)}
-				for member_id, member in power_member_id2member.items():
-					if member.is_subscribed:
-						follow_friend_list.append({
-							'user_icon': member.user_icon,
-							'username': member.username_truncated
-						})
-					else:
-						unfollow_friend_list.append({
-							'user_icon': member.user_icon,
-							'username': member.username_truncated
-						})
-
 
 
 			SET_CACHE(cache_key, {
 				'participances_dict': participances_dict,
 				'participances_list': participances_list,
-				'follow_friend_list': follow_friend_list,
-				'unfollow_friend_list': unfollow_friend_list,
 				'total_participant_count': total_participant_count
 			})
 			print '================set cache'
@@ -219,6 +195,26 @@ class MPowerMe(resource.Resource):
 			'activity_status': activity_status,
 			'has_power': has_power
 		}
+
+		user_id = request.webapp_owner_info.user_profile.user_id
+		username = User.objects.get(id=user_id).username
+		follow_friend_list = []
+		unfollow_friend_list = []
+		if username == 'jobs':
+			details = app_models.PoweredDetail.objects(belong_to=record_id, owner_id=fid)
+			power_member_ids = [d.power_member_id for d in details]
+			power_member_id2member = {m.id: m for m in Member.objects.filter(id__in=power_member_ids)}
+			for member_id, member in power_member_id2member.items():
+				if member.is_subscribed:
+					follow_friend_list.append({
+						'user_icon': member.user_icon,
+						'username': member.username_truncated
+					})
+				else:
+					unfollow_friend_list.append({
+						'user_icon': member.user_icon,
+						'username': member.username_truncated
+					})
 
 		response = create_response(200)
 		response.data = {
