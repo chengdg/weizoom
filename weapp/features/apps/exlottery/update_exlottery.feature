@@ -26,7 +26,7 @@ Background:
 			"coupon_id_prefix": "coupon1_id_"
 		}]
 		"""
-	When jobs添加单图文
+	When jobs已添加单图文
 		"""
 		[{
 			"title":"百事抽奖活动单图文",
@@ -39,7 +39,7 @@ Background:
 			"jump_url":"新建百事抽奖活动"
 		}]
 		"""
-	When jobs添加关键词自动回复规则
+	When jobs已添加关键词自动回复规则
 		"""
 		[{
 			"rules_name":"抽奖规则",
