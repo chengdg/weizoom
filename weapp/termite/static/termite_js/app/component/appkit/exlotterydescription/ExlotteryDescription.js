@@ -97,7 +97,7 @@ W.component.appkit.ExlotteryDescription = W.component.Component.extend({
 			selectedButton: '选择图片',
 			dialog: 'W.dialog.termite.SelectImagesDialog',
 			dialogParameter: '{"multiSelection": false}',
-			help: '提示:建议图片长款640px*500px',
+			help: '提示:建议图片长宽640px*500px',
 			validate: 'data-validate="require-notempty::请添加一张图片"',
 			default: ""
 		}, {
@@ -110,7 +110,7 @@ W.component.appkit.ExlotteryDescription = W.component.Component.extend({
 			selectedButton: '选择图片',
 			dialog: 'W.dialog.termite.SelectImagesDialog',
 			dialogParameter: '{"multiSelection": false}',
-			help: '提示:建议图片长款640px*500px',
+			help: '提示:建议图片长宽640px*500px',
 			default: ""
 		}, {
             name: 'background_color',
@@ -256,9 +256,13 @@ W.component.appkit.ExlotteryDescription = W.component.Component.extend({
 		background_color: function($node, model, value, $propertyViewNode){
 			if (value) {
 				var $target = $('#phoneIFrame').contents().find('.xa-prizeContainer');//找到子frame中的相应元素
-				var $target_another = $('#phoneIFrame').contents().find('.xa-prizeContainer .xa-subtitle');//找到子frame中的相应元素
+				var $target_2 = $('#phoneIFrame').contents().find('.xa-prizeContainer .xa-subtitle');
+				var $target_3 = $('#phoneIFrame').contents().find('.xa-prizeContainer .xa-time');
+				var $target_4 = $('#phoneIFrame').contents().find('.xa-prizeContainer .xa-description');
 				$target.css("background-color", value);
-				$target_another.css("background-color", value);
+				$target_2.css("background-color", value);
+				$target_3.css("border-top", "1px solid #e5e5e5");
+				$target_4.css("border-top", "1px solid #e5e5e5");
 			}
 		}
 	},
