@@ -28,12 +28,12 @@ Scenario:1 新建微信专项抽奖
 			"rule":"活动规则",
 			"home_page_pic":"1.jpg",
 			"lottory_pic":"2.jpg",
-			"lottory_color":"red",
+			"lottory_color":"#0000FF",
 			"start_date":"今天",
 			"end_date":"2天后",
 			"reduce_integral":0,
 			"send_integral":0,
-			"win_rate":"50%",
+			"win_rate":"100%",
 			"lottory_code_num":10,
 			"is_repeat_win":"否",			
 			"prize_settings":[{
@@ -44,13 +44,13 @@ Scenario:1 新建微信专项抽奖
 				"pic":""
 			},{
 				"prize_grade":"二等奖",
-				"prize_counts":30,
+				"prize_counts":0,
 				"prize_type":"优惠券",
 				"coupon":"优惠券1",
 				"pic":""
 			},{
 				"prize_grade":"三等奖",
-				"prize_counts":50,
+				"prize_counts":0,
 				"prize_type":"实物",
 				"gift":"精美礼品",
 				"pic":"4.jpg"
@@ -61,12 +61,12 @@ Scenario:1 新建微信专项抽奖
 			"rule":"活动规则",
 			"home_page_pic":"1.jpg",
 			"lottory_pic":"2.jpg",
-			"lottory_color":"red",
+			"lottory_color":"#0000FF",
 			"start_date":"3天前",
 			"end_date":"昨天",
 			"reduce_integral":0,
 			"send_integral":0,
-			"win_rate":"50%",
+			"win_rate":"100%",
 			"lottory_code_num":10,
 			"is_repeat_win":"否",
 			"prize_settings":[{
@@ -77,13 +77,13 @@ Scenario:1 新建微信专项抽奖
 				"pic":""
 			},{
 				"prize_grade":"二等奖",
-				"prize_counts":30,
+				"prize_counts":0,
 				"prize_type":"优惠券",
 				"coupon":"优惠券1",
 				"pic":""
 			},{
 				"prize_grade":"三等奖",
-				"prize_counts":50,
+				"prize_counts":0,
 				"prize_type":"实物",
 				"gift":"精美礼品",
 				"pic":"4.jpg"
@@ -94,12 +94,12 @@ Scenario:1 新建微信专项抽奖
 			"rule":"活动规则",
 			"home_page_pic":"1.jpg",
 			"lottory_pic":"2.jpg",
-			"lottory_color":"red",
+			"lottory_color":"#0000FF",
 			"start_date":"2天后",
 			"end_date":"3天后",
 			"reduce_integral":0,
 			"send_integral":0,
-			"win_rate":"50%",
+			"win_rate":"100%",
 			"lottory_code_num":10,
 			"is_repeat_win":"否",
 			"prize_settings":[{
@@ -110,13 +110,13 @@ Scenario:1 新建微信专项抽奖
 				"pic":""
 			},{
 				"prize_grade":"二等奖",
-				"prize_counts":30,
+				"prize_counts":0,
 				"prize_type":"优惠券",
 				"coupon":"优惠券1",
 				"pic":""
 			},{
 				"prize_grade":"三等奖",
-				"prize_counts":50,
+				"prize_counts":0,
 				"prize_type":"实物",
 				"gift":"精美礼品",
 				"pic":"4.jpg"
