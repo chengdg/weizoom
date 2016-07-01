@@ -6,7 +6,7 @@ Background:
 	Given jobs登录系统
 	When jobs添加优惠券规则
 	"""
-		[
+		[{
 			"name": "优惠券1",
 			"money": 100.00,
 			"count": 50,
@@ -14,7 +14,7 @@ Background:
 			"start_date": "今天",
 			"end_date": "10天后",
 			"coupon_id_prefix": "coupon1_id_"
-		]
+		}]
 	"""
 
 @mall2 @apps @apps_lottery  @add_exlottery_addition
@@ -25,7 +25,7 @@ Scenario:1 新建微信专项抽奖
 		[{
 			"name":"专项抽奖活动01",
 			"share_intro":"百事专项抽奖活动",
-			"rule":"活动规则",
+			"desc":"活动规则",
 			"home_page_pic":"1.jpg",
 			"lottory_pic":"2.jpg",
 			"lottory_color":"#0000FF",
@@ -58,7 +58,7 @@ Scenario:1 新建微信专项抽奖
 		},{
 			"name":"专项抽奖活动02",
 			"share_intro":"百事专项抽奖活动",
-			"rule":"活动规则",
+			"desc":"活动规则",
 			"home_page_pic":"1.jpg",
 			"lottory_pic":"2.jpg",
 			"lottory_color":"#0000FF",
@@ -91,7 +91,7 @@ Scenario:1 新建微信专项抽奖
 		},{
 			"name":"专项抽奖活动03",
 			"share_intro":"百事专项抽奖活动",
-			"rule":"活动规则",
+			"desc":"活动规则",
 			"home_page_pic":"1.jpg",
 			"lottory_pic":"2.jpg",
 			"lottory_color":"#0000FF",
