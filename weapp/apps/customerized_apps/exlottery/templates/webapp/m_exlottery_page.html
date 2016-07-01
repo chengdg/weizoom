@@ -15,7 +15,6 @@
     .wui-exlottery-page{
         position: relative;
         height: 100%;
-        background: url(/static_v2/img/page-background.jpg) no-repeat;
         background-size: cover;
     }
     .wui-exlottery-container{
@@ -97,7 +96,7 @@
 {% endblock %}
 
 {% block content-panel %}
-<div class="wui-exlottery-page">
+<div class="wui-exlottery-page" style="background-image: url({{homepage_image}});">
     <h1 class="wui-exlottery-top">杭州百事可乐</h1>
     <div class="wui-exlottery-container"> 
         <div> 
@@ -117,6 +116,7 @@
 {% block js %}
 <script type="text/javascript">
     $(function(){
+        //定制消息提示
         var myAlertTimer;
         function myWuiAlert(msg, time){
             if(myAlertTimer) window.clearTimeout(myAlertTimer);
@@ -134,6 +134,7 @@
                 });
             }, time);
         }
+        //点击抽奖
         $('.wa-exlottery-btn').click(function(){
             var excode = $.trim($('.wa-excode-input').val());
             var verify_code = $.trim($('.wa-verify-input').val());
@@ -165,6 +166,7 @@
                 });
             }
         });
+        //点击刷新验证码
         $('.wa-verify-container').click(function(){
             $(this).find('img').attr('src','/m/apps/exlottery/api/m_captcha/?webapp_owner_id={{ request.webapp_owner_id}}&nocache='+Math.random());
         });
