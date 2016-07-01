@@ -208,12 +208,12 @@ class MPowerMe(resource.Resource):
 				if member.is_subscribed:
 					follow_friend_list.append({
 						'user_icon': member.user_icon,
-						'username': member.username_truncated
+						'username': username_size_four(member)
 					})
 				else:
 					unfollow_friend_list.append({
 						'user_icon': member.user_icon,
-						'username': member.username_truncated
+						'username': username_size_four(member)
 					})
 
 		response = create_response(200)
@@ -367,3 +367,42 @@ def clear_non_member_power_info(record_id):
 # app_models.PowerMeParticipance.objects(belong_to=record_id, member_id__in=need_clear_member_ids).update(set__power=0, set__has_join=False)
 # 清空助力详情日志
 # app_models.PoweredDetail.objects(belong_to=record_id, owner_id__in=need_clear_member_ids).delete()
+
+
+import re
+
+def username_size_four(member):
+	try:
+		username = unicode(member.username_for_html, 'utf8')
+		_username = re.sub('<[^<]+?><[^<]+?>', ' ', username)
+		if len(_username) <= 4:
+			return username
+		else:
+			name_str = username
+			span_list = re.findall(r'<[^<]+?><[^<]+?>', name_str) #保存表情符
+
+			output_str = ""
+			count = 0
+
+			if not span_list:
+				return u'%s...' % name_str[:4]
+
+			for span in span_list:
+				length = len(span)
+				while not span == name_str[:length]:
+					output_str += name_str[0]
+					count += 1
+					name_str = name_str[1:]
+					if count == 4:
+						break
+				else:
+					output_str += span
+					count += 1
+					name_str = name_str[length:]
+					if count == 4:
+						break
+				if count == 4:
+					break
+			return u'%s...' % output_str
+	except:
+		return member.username_for_html[:4]
