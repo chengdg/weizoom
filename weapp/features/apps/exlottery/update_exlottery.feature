@@ -26,50 +26,50 @@ Background:
 			"coupon_id_prefix": "coupon1_id_"
 		}]
 		"""
+	When jobs添加单图文
+		"""
+		[{
+			"title":"百事抽奖活动单图文",
+			"cover": [{
+				"url": "6.jpg"
+			}],
+			"cover_in_the_text":"true",
+			"summary":"百事抽奖",
+			"content":"百事抽奖",
+			"jump_url":"新建百事抽奖活动"
+		}]
+		"""
+	When jobs添加关键词自动回复规则
+		"""
+		[{
+			"rules_name":"抽奖规则",
+			"keyword":
+				[{
+					"keyword": "百事抽奖",
+					"type": "equal"
+				}],
+			"keyword_reply":
+				[{
+					"reply_content":"百事抽奖活动单图文",
+					"reply_type":"text_picture"
+				}]
+		}]
+		"""
 	When jobs新建专项抽奖活动
 		"""
 		[{
 			"name":"专项抽奖01",
-			"desc":"抽奖啦抽奖啦",
+			"share_intro":"百事专项抽奖活动",
+			"desc":"活动规则",
+			"home_page_pic":"1.jpg",
+			"lottory_pic":"2.jpg",
+			"lottory_color":"#0000FF",
 			"start_date":"明天",
 			"end_date":"2天后",
 			"reduce_integral":0,
 			"send_integral":1,
-			"win_rate":"50%",
+			"win_rate":"100%",
 			"lottory_code_num":5,
-			"reply":"感谢关注！",
-			"link_reply":"立即抽奖",
-			"is_repeat_win":"是",
-			"prize_settings":[{
-				"prize_grade":"一等奖",
-				"prize_counts":10,
-				"prize_type":"积分",
-				"integral":100,
-				"pic":""
-			},{
-				"prize_grade":"二等奖",
-				"prize_counts":30,
-				"prize_type":"优惠券",
-				"coupon":"优惠券1",
-				"pic":""
-			},{
-				"prize_grade":"三等奖",
-				"prize_counts":50,
-				"prize_type":"实物",
-				"gift":"精美礼品",
-				"pic":"1.jpg"
-			}]
-		},{
-			"name":"专项抽奖02",
-			"desc":"抽奖啦抽奖啦",
-			"start_date":"今天",
-			"end_date":"2天后",
-			"reduce_integral":100,
-			"send_integral":0,
-			"win_rate":"50%",
-			"lottory_code_num":5,
-			"reply":"感谢关注！",
-			"link_reply":"立即抽奖",
 			"is_repeat_win":"否",
 			"prize_settings":[{
 				"prize_grade":"一等奖",
@@ -79,29 +79,31 @@ Background:
 				"pic":""
 			},{
 				"prize_grade":"二等奖",
-				"prize_counts":30,
+				"prize_counts":0,
 				"prize_type":"优惠券",
 				"coupon":"优惠券1",
 				"pic":""
 			},{
 				"prize_grade":"三等奖",
-				"prize_counts":50,
+				"prize_counts":0,
 				"prize_type":"实物",
 				"gift":"精美礼品",
 				"pic":"1.jpg"
 			}]
 		},{
-			"name":"专项抽奖03",
-			"desc":"抽奖啦抽奖啦",
-			"start_date":"3天前",
-			"end_date":"昨天",
-			"reduce_integral":0,
+			"name":"专项抽奖02",
+			"share_intro":"百事专项抽奖活动",
+			"desc":"活动规则",
+			"home_page_pic":"1.jpg",
+			"lottory_pic":"2.jpg",
+			"lottory_color":"#0000FF",
+			"start_date":"今天",
+			"end_date":"2天后",
+			"reduce_integral":100,
 			"send_integral":0,
-			"win_rate":"50%",
+			"win_rate":"100%",
 			"lottory_code_num":5,
-			"reply":"感谢关注！",
-			"link_reply":"立即抽奖",
-			"is_repeat_win":"是",
+			"is_repeat_win":"否",
 			"prize_settings":[{
 				"prize_grade":"一等奖",
 				"prize_counts":10,
@@ -110,23 +112,58 @@ Background:
 				"pic":""
 			},{
 				"prize_grade":"二等奖",
-				"prize_counts":30,
+				"prize_counts":0,
 				"prize_type":"优惠券",
 				"coupon":"优惠券1",
 				"pic":""
 			},{
 				"prize_grade":"三等奖",
-				"prize_counts":50,
+				"prize_counts":0,
+				"prize_type":"实物",
+				"gift":"精美礼品",
+				"pic":"1.jpg"
+			}]
+		},{
+			"name":"专项抽奖03",
+			"share_intro":"百事专项抽奖活动",
+			"desc":"活动规则",
+			"home_page_pic":"1.jpg",
+			"lottory_pic":"2.jpg",
+			"lottory_color":"#0000FF",
+			"start_date":"3天前",
+			"end_date":"昨天",
+			"reduce_integral":0,
+			"send_integral":0,
+			"win_rate":"100%",
+			"lottory_code_num":5,
+			"is_repeat_win":"否",
+			"prize_settings":[{
+				"prize_grade":"一等奖",
+				"prize_counts":10,
+				"prize_type":"积分",
+				"integral":100,
+				"pic":""
+			},{
+				"prize_grade":"二等奖",
+				"prize_counts":0,
+				"prize_type":"优惠券",
+				"coupon":"优惠券1",
+				"pic":""
+			},{
+				"prize_grade":"三等奖",
+				"prize_counts":0,
 				"prize_type":"实物",
 				"gift":"精美礼品",
 				"pic":"1.jpg"
 			}]
 		}]
 		"""
+
 	Then jobs生成'专项抽奖01'码库
 	"""
 		["el8s539t18","el2f5e754g","el58fe24rf","elm8v6uj41","elmn782f2r"]
 	"""
+
 
 @mall2 @apps @apps_exlottery @update_exlottery
 Scenario:1 编辑'未开始'状态的微信专项抽奖活动
@@ -163,15 +200,17 @@ Scenario:1 编辑'未开始'状态的微信专项抽奖活动
 		"""
 		[{
 			"name":"微信抽奖001",
-			"desc":"抽奖啦抽奖啦",
+			"share_intro":"百事专项抽奖活动",
+			"desc":"活动规则",
+			"home_page_pic":"1.jpg",
+			"lottory_pic":"2.jpg",
+			"lottory_color":"#0000FF",
 			"start_date":"今天",
 			"end_date":"2天后",
 			"reduce_integral":0,
 			"send_integral":1,
-			"win_rate":"80%",
+			"win_rate":"100%",
 			"lottory_code_num":2,
-			"reply":"欢迎来到奇妙世界！",
-			"link_reply":"叮一下试试看",
 			"is_repeat_win":"否",
 			"prize_settings":[{
 				"prize_grade":"一等奖",
@@ -181,13 +220,13 @@ Scenario:1 编辑'未开始'状态的微信专项抽奖活动
 				"pic":""
 			},{
 				"prize_grade":"二等奖",
-				"prize_counts":20,
+				"prize_counts":0,
 				"prize_type":"积分",
 				"integral":100,
 				"pic":""
 			},{
 				"prize_grade":"三等奖",
-				"prize_counts":30,
+				"prize_counts":0,
 				"prize_type":"积分",
 				"integral":30,
 				"pic":"1.jpg"
@@ -211,15 +250,17 @@ Scenario:1 编辑'未开始'状态的微信专项抽奖活动
 		"""
 		[{
 			"name":"微信抽奖001",
+			"share_intro":"百事专项抽奖活动",
+			"desc":"活动规则",
+			"home_page_pic":"1.jpg",
+			"lottory_pic":"2.jpg",
+			"lottory_color":"#0000FF",
 			"start_date":"今天",
 			"end_date":"2天后",
-			"desc":"抽奖啦抽奖啦",
 			"reduce_integral":0,
 			"send_integral":1,
-			"win_rate":"80%",
+			"win_rate":"100%",
 			"lottory_code_num":2,
-			"reply":"欢迎来到奇妙世界！",
-			"link_reply":"叮一下试试看",
 			"is_repeat_win":"否",
 			"prize_settings":[{
 				"prize_grade":"一等奖",
@@ -229,13 +270,13 @@ Scenario:1 编辑'未开始'状态的微信专项抽奖活动
 				"pic":""
 			},{
 				"prize_grade":"二等奖",
-				"prize_counts":20,
+				"prize_counts":0,
 				"prize_type":"积分",
 				"integral":100,
 				"pic":""
 			},{
 				"prize_grade":"三等奖",
-				"prize_counts":30,
+				"prize_counts":0,
 				"prize_type":"积分",
 				"integral":30,
 				"pic":"1.jpg"
