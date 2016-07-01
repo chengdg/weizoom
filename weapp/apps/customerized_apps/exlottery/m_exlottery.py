@@ -26,7 +26,7 @@ class Mexlottery(resource.Resource):
 		响应GET
 		"""
 		id = request.GET['id']
-		code = request.GET.get('ex_code', None)
+		code = request.GET.get('code', None)
 		expend = 0
 		auth_appid_info = None
 		share_page_desc = ''
@@ -129,7 +129,7 @@ class Mexlottery(resource.Resource):
 
 		if can_play_count != 0:
 			exlottery_status = True
-		
+
 		#会员信息
 		member_info = {
 			'isMember': isMember,

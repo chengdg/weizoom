@@ -156,7 +156,9 @@
                         verify_code: verify_code
                     },
                     success: function(data){
-                        console.log(data);
+                        var link = '/m/apps/exlottery/m_exlottery/?webapp_owner_id='+W.webappOwnerId+'&id='+W.appRecordId+'&code='+excode;
+                        console.log(link);
+                        window.location.href = link;
                     },
                     error: function(resp){
                         myWuiAlert(resp.errMsg);
