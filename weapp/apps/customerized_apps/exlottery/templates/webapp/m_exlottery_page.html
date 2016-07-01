@@ -59,21 +59,14 @@
         font-family: "黑体";
     }
     .wui-exlottery-container .wui-verify-input{
-        width: 70%;
+        width: 69%;
         margin-right: 3%;
     }
-    a.wui-verify-refresh{
+    img.wui-verify-refresh{
         display: inline-block;
-        width: 27%;
-        text-align: center;
-        font-size: .9rem;
-        background: #fff;
+        width: 28%;
         height: 1.9rem;
-        line-height: 1.9rem;
-        border-radius: .2rem;
-        text-decoration: underline;
-        font-family: "Arial";
-        color: #005fc0;
+        vertical-align: top;
     }
     .wui-apps-alert{
         opacity: 0;
@@ -107,8 +100,7 @@
         </div>
         <div>
             <input type="text" placeholder="验证码" class="wui-verify-input wa-verify-input" maxlength="4">
-            <!-- <a href="javascript:void(0)" class="wui-verify-refresh">YB2H</a> -->
-            <img class="codeimg" style="cursor:pointer" onclick="this.setAttribute('src','/m/apps/exlottery/api/m_captcha/?webapp_owner_id={{ request.webapp_owner_id}}&nocache='+Math.random());" src="/m/apps/exlottery/api/m_captcha/?webapp_owner_id={{ request.webapp_owner_id}}"/>
+            <img class="codeimg wui-verify-refresh" onclick="this.setAttribute('src','/m/apps/exlottery/api/m_captcha/?webapp_owner_id={{ request.webapp_owner_id}}&nocache='+Math.random());" src="/m/apps/exlottery/api/m_captcha/?webapp_owner_id={{ request.webapp_owner_id}}"/>
         </div>
         <button class="wui-exlottery-btn wa-exlottery-btn">立即抽奖</button>
     </div>
@@ -141,8 +133,8 @@
             if(!verify_code){
                 myWuiAlert('请输入验证码');
                 return false;
-            }else if(!verify_code){
-                myWuiAlert('请输入正确抽奖码');
+            }else if(!excode){
+                myWuiAlert('请输入抽奖码');
                 return false;
             }else{
                 W.getApi().call({
