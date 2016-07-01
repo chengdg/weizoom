@@ -62,11 +62,16 @@
         width: 69%;
         margin-right: 3%;
     }
-    img.wui-verify-refresh{
-        display: inline-block;
+    .wui-verify-container{
         width: 28%;
         height: 1.9rem;
+        display: inline-block;
         vertical-align: top;
+    }
+    img.wui-verify-refresh{
+        width: 100%;
+        height: 100%;
+        pointer-events: none; 
     }
     .wui-apps-alert{
         opacity: 0;
@@ -100,7 +105,9 @@
         </div>
         <div>
             <input type="text" placeholder="验证码" class="wui-verify-input wa-verify-input" maxlength="4">
-            <img class="codeimg wui-verify-refresh" onclick="this.setAttribute('src','/m/apps/exlottery/api/m_captcha/?webapp_owner_id={{ request.webapp_owner_id}}&nocache='+Math.random());" src="/m/apps/exlottery/api/m_captcha/?webapp_owner_id={{ request.webapp_owner_id}}"/>
+            <div class="wui-verify-container wa-verify-container">
+                <img class="codeimg wui-verify-refresh" src="/m/apps/exlottery/api/m_captcha/?webapp_owner_id={{ request.webapp_owner_id}}"/>
+            </div>
         </div>
         <button class="wui-exlottery-btn wa-exlottery-btn">立即抽奖</button>
     </div>
@@ -158,6 +165,9 @@
                 });
             }
         });
-    })
+        $('.wa-verify-container').click(function(){
+            $(this).find('img').attr('src','/m/apps/exlottery/api/m_captcha/?webapp_owner_id={{ request.webapp_owner_id}}&nocache='+Math.random());
+        });
+    });
 </script>
 {% endblock %}
