@@ -8,4 +8,4 @@ mysql -u weapp --password=weizoom weapp < loc.sql
 cd ..
 python manage.py markettool2app
 python manage.py init_customized_apps
-pause
+
