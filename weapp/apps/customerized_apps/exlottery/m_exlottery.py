@@ -218,39 +218,36 @@ def check_keyword(data):
 	return return_html
 
 def check_exlottery_code(keyword,member_id):
-	if len(keyword) != 10:
-		return None
-	if not keyword.startswith('el'):
-		return None
 	code = app_models.ExlotteryCode.objects(code=keyword).order_by('-created_at')
 	if code.count() == 0:
-		return u'请输入正确的抽奖码', None
+		return u'请输入正确的抽奖码'
 
 	code = code.first()
 	belong_to = code.belong_to
 	exlottery = app_models.Exlottery.objects(id=belong_to)
 	if exlottery.count() == 0:
-		return None, None
+		return u'活动信息出错'
 	exlottery = exlottery.first()
-	exlottery_status = exlottery.status
+	exlottery_status, exlottery = update_exlottery_status(exlottery)
+
 	exlottery_participance = app_models.ExlotteryParticipance.objects(code=keyword,belong_to=belong_to)
 	exlottery_participance_count = exlottery_participance.count()
 
-	if exlottery_status == app_models.STATUS_NOT_START:
-		return u'该抽奖码尚未生效', None
-	elif exlottery_status == app_models.STATUS_STOPED:
+	if exlottery_status == u'未开始':
+		return u'该抽奖码尚未生效'
+	elif exlottery_status == u'已结束':
 		if exlottery_participance_count > 0:
-			return u'该抽奖码已使用', None
+			return u'该抽奖码已使用'
 		else:
-			return u'该抽奖码已过期', None
-	elif exlottery_status == app_models.STATUS_RUNNING:
+			return u'该抽奖码已过期'
+	elif exlottery_status == u'进行中':
 		if exlottery_participance_count > 0:
 			if app_models.ExlotteryParticipance.objects(code=keyword,belong_to=belong_to,member_id=member_id).count() == 1:
 				if exlottery_participance.first().status == app_models.NOT_USED:
-					return 'is_member_self', exlottery
+					return 'is_member_self'
 				else:
-					return u'该抽奖码已使用', None
+					return u'该抽奖码已使用'
 			else:
-				return u'该抽奖码已使用', None
+				return u'该抽奖码已使用'
 
-	return True, exlottery
+	return True
