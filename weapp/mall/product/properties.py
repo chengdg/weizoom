@@ -217,7 +217,7 @@ class PropertyList(resource.Resource):
                 }
             )
             if resp and resp['code'] == 200:
-                    properties = resp['data']
+                    properties = resp['data']['properties']
             else:
                 properties = []
         response = create_response(200)
