@@ -4,12 +4,6 @@ Feature:微信用户使用抽奖码
 
 Background:
 	Given jobs登录系统
-	And jobs设定会员积分策略
-		"""
-		{
-			"be_member_increase_count":20
-		}
-		"""
 	When jobs添加优惠券规则
 		"""
 		[{
@@ -71,12 +65,12 @@ Scenario:1 微信用户进入专项抽奖活动首页，未输入验证码
 			"rule":"活动规则",
 			"home_page_pic":"1.jpg",
 			"lottory_pic":"2.jpg",
-			"lottory_color":"red",
+			"lottory_color":"#0000FF",
 			"start_date":"今天",
 			"end_date":"2天后",
 			"reduce_integral":0,
 			"send_integral":0,
-			"win_rate":"50%",
+			"win_rate":"100%",
 			"lottory_code_num":1,
 			"is_repeat_win":"否",
 			"prize_settings":[{
@@ -87,13 +81,13 @@ Scenario:1 微信用户进入专项抽奖活动首页，未输入验证码
 				"pic":"2.jpg"
 			},{
 				"prize_grade":"二等奖",
-				"prize_counts":30,
+				"prize_counts":0,
 				"prize_type":"优惠券",
 				"coupon":"优惠券1",
 				"pic":"3.jpg"
 			},{
 				"prize_grade":"三等奖",
-				"prize_counts":50,
+				"prize_counts":0,
 				"prize_type":"优惠券",
 				"coupon":"优惠券2",
 				"pic":"4.jpg"
@@ -104,20 +98,13 @@ Scenario:1 微信用户进入专项抽奖活动首页，未输入验证码
 	"""
 		["el8s539t18"]
 	"""
-	Then jobs生成'专项抽奖'验证码
-	"""
-		tudf
-	"""
-	
 	Given bill关注jobs的公众号
 	When bill访问jobs的webapp
-	When bill获得jobs的20会员积分
-	Then bill在jobs的webapp中拥有20会员积分
 	When bill在微信中向jobs的公众号发送消息'百事抽奖'
 	Then bill收到自动回复'百事抽奖活动单图文'
 	When bill点击图文'百事抽奖活动单图文'进入'专项抽奖'活动页面
+	Then bill在'专项抽奖'活动首页获得验证码"tudf"
 	When bill在'专项抽奖'活动首页中输入验证码""
-
 	Then bill获得页面提示的消息
 	"""
 		请输入验证码
@@ -134,12 +121,12 @@ Scenario:2 微信用户进入专项抽奖活动首页，输入验证码错误
 			"rule":"活动规则",
 			"home_page_pic":"1.jpg",
 			"lottory_pic":"2.jpg",
-			"lottory_color":"red",
+			"lottory_color":"#0000FF",
 			"start_date":"今天",
 			"end_date":"5天后",
 			"reduce_integral":5,
 			"send_integral":0,
-			"win_rate":"60%",
+			"win_rate":"100%",
 			"lottory_code_num":1,
 			"is_repeat_win":"否",
 			"prize_settings":[{
@@ -150,13 +137,13 @@ Scenario:2 微信用户进入专项抽奖活动首页，输入验证码错误
 				"pic":"2.jpg"
 			},{
 				"prize_grade":"二等奖",
-				"prize_counts":30,
+				"prize_counts":0,
 				"prize_type":"优惠券",
 				"coupon":"优惠券1",
 				"pic":"3.jpg"
 			},{
 				"prize_grade":"三等奖",
-				"prize_counts":50,
+				"prize_counts":0,
 				"prize_type":"优惠券",
 				"coupon":"优惠券2",
 				"pic":"4.jpg"
@@ -167,19 +154,13 @@ Scenario:2 微信用户进入专项抽奖活动首页，输入验证码错误
 	"""
 		["el8s539t18"]
 	"""
-	Then jobs生成'专项抽奖'验证码
-	"""
-		tudf
-	"""
 	Given bill关注jobs的公众号
 	When bill访问jobs的webapp
-	When bill获得jobs的20会员积分
-	Then bill在jobs的webapp中拥有20会员积分
 	When bill在微信中向jobs的公众号发送消息'百事抽奖'
 	Then bill收到自动回复'百事抽奖活动单图文'
 	When bill点击图文'百事抽奖活动单图文'进入'专项抽奖'活动页面
+	Then bill在'专项抽奖'活动首页获得验证码"tudf"
 	When bill在'专项抽奖'活动首页中输入验证码"sdfg"
-
 	Then bill获得页面提示的消息
 	"""
 		验证码输入有误
@@ -197,12 +178,12 @@ Scenario:3
 			"rule":"活动规则",
 			"home_page_pic":"1.jpg",
 			"lottory_pic":"2.jpg",
-			"lottory_color":"red",
+			"lottory_color":"#0000FF",
 			"start_date":"2天后",
 			"end_date":"5天后",
 			"reduce_integral":5,
 			"send_integral":0,
-			"win_rate":"60%",
+			"win_rate":"100%",
 			"lottory_code_num":1,
 			"is_repeat_win":"否",
 			"prize_settings":[{
@@ -213,13 +194,13 @@ Scenario:3
 				"pic":"2.jpg"
 			},{
 				"prize_grade":"二等奖",
-				"prize_counts":30,
+				"prize_counts":0,
 				"prize_type":"优惠券",
 				"coupon":"优惠券1",
 				"pic":"3.jpg"
 			},{
 				"prize_grade":"三等奖",
-				"prize_counts":50,
+				"prize_counts":0,
 				"prize_type":"优惠券",
 				"coupon":"优惠券2",
 				"pic":"4.jpg"
@@ -230,17 +211,13 @@ Scenario:3
 	"""
 		["el8s539t18"]
 	"""
-	Then jobs生成'专项抽奖'验证码
-	"""
-		tudf
-	"""
+
 	Given bill关注jobs的公众号
 	When bill访问jobs的webapp
-	When bill获得jobs的20会员积分
-	Then bill在jobs的webapp中拥有20会员积分
 	When bill在微信中向jobs的公众号发送消息'百事抽奖'
 	Then bill收到自动回复'百事抽奖活动单图文'
 	When bill点击图文'百事抽奖活动单图文'进入'专项抽奖'活动页面
+	Then bill在'专项抽奖'活动首页获得验证码"tudf"
 	When bill在'专项抽奖'活动首页中输入验证码"tudf"
 	When bill在'专项抽奖'活动首页中输入抽奖码'el8s539t18'
 	Then bill获得页面提示的消息
@@ -259,12 +236,12 @@ Scenario:4 微信用户进入专项抽奖活动首页，验证码正确，抽奖
 			"rule":"活动规则",
 			"home_page_pic":"1.jpg",
 			"lottory_pic":"2.jpg",
-			"lottory_color":"red",
+			"lottory_color":"#0000FF",
 			"start_date":"今天",
 			"end_date":"5天后",
 			"reduce_integral":5,
 			"send_integral":0,
-			"win_rate":"60%",
+			"win_rate":"100%",
 			"lottory_code_num":1,
 			"is_repeat_win":"否",
 			"prize_settings":[{
@@ -275,13 +252,13 @@ Scenario:4 微信用户进入专项抽奖活动首页，验证码正确，抽奖
 				"pic":"2.jpg"
 			},{
 				"prize_grade":"二等奖",
-				"prize_counts":30,
+				"prize_counts":0,
 				"prize_type":"优惠券",
 				"coupon":"优惠券1",
 				"pic":"3.jpg"
 			},{
 				"prize_grade":"三等奖",
-				"prize_counts":50,
+				"prize_counts":0,
 				"prize_type":"优惠券",
 				"coupon":"优惠券2",
 				"pic":"4.jpg"
@@ -292,17 +269,12 @@ Scenario:4 微信用户进入专项抽奖活动首页，验证码正确，抽奖
 	"""
 		["el8s539t18"]
 	"""
-	Then jobs生成'专项抽奖'验证码
-	"""
-		tudf
-	"""
 	Given bill关注jobs的公众号
 	When bill访问jobs的webapp
-	When bill获得jobs的20会员积分
-	Then bill在jobs的webapp中拥有20会员积分
 	When bill在微信中向jobs的公众号发送消息'百事抽奖'
 	Then bill收到自动回复'百事抽奖活动单图文'
 	When bill点击图文'百事抽奖活动单图文'进入'专项抽奖'活动页面
+	Then bill在'专项抽奖'活动首页获得验证码"tudf"
 	When bill在专项抽奖活动首页中输入验证码"tudf"
 	When bill在专项抽奖活动首页中输入抽奖码'el8s539t18'
 	When bill点击'立即抽奖'进入'专项抽奖'活动内容页
@@ -310,8 +282,8 @@ Scenario:4 微信用户进入专项抽奖活动首页，验证码正确，抽奖
 	Then bill获得专项抽奖结果
 	"""
 		{
-			"prize_grade":"二等奖",
-			"prize_name":"优惠券1"
+			"prize_grade":"一等奖",
+			"prize_name":"1000积分"
 		}
 	"""
 	
@@ -328,12 +300,12 @@ Scenario:5 微信用户进入专项抽奖活动首页，验证码正确，活动
 			"rule":"活动规则",
 			"home_page_pic":"1.jpg",
 			"lottory_pic":"2.jpg",
-			"lottory_color":"red",
-			"start_date":"今天",
-			"end_date":"明天",
+			"lottory_color":"#0000FF",
+			"start_date":"4天前",
+			"end_date":"2天前",
 			"reduce_integral":5,
 			"send_integral":0,
-			"win_rate":"60%",
+			"win_rate":"100%",
 			"lottory_code_num":1,
 			"is_repeat_win":"否",
 			"prize_settings":[{
@@ -344,13 +316,13 @@ Scenario:5 微信用户进入专项抽奖活动首页，验证码正确，活动
 				"pic":"2.jpg"
 			},{
 				"prize_grade":"二等奖",
-				"prize_counts":30,
+				"prize_counts":0,
 				"prize_type":"优惠券",
 				"coupon":"优惠券1",
 				"pic":"3.jpg"
 			},{
 				"prize_grade":"三等奖",
-				"prize_counts":50,
+				"prize_counts":0,
 				"prize_type":"优惠券",
 				"coupon":"优惠券2",
 				"pic":"4.jpg"
@@ -361,18 +333,13 @@ Scenario:5 微信用户进入专项抽奖活动首页，验证码正确，活动
 	"""
 		["el8s539t18"]
 	"""
-	Then jobs生成'专项抽奖'验证码
-	"""
-		tudf
-	"""
+
 	Given bill关注jobs的公众号
 	When bill访问jobs的webapp
-	When bill获得jobs的20会员积分
-	Then bill在jobs的webapp中拥有20会员积分
 	When bill在微信中向jobs的公众号发送消息'百事抽奖'
 	Then bill收到自动回复'百事抽奖活动单图文'
 	When bill点击图文'百事抽奖活动单图文'进入'专项抽奖'活动页面
-	
+	Then bill在'专项抽奖'活动首页获得验证码"tudf"
 	When bill在'专项抽奖'活动首页中输入验证码"tudf"
 	When bill在'专项抽奖'活动首页中输入抽奖码'el8s539t18'
 	When bill点击'立即抽奖'进入'专项抽奖'活动内容页
@@ -380,12 +347,15 @@ Scenario:5 微信用户进入专项抽奖活动首页，验证码正确，活动
 	Then bill获得专项抽奖结果
 	"""
 		{
-			"prize_grade":"二等奖",
-			"prize_name":"优惠券1"
+			"prize_grade":"一等奖",
+			"prize_name":"1000积分"
 		}
 	"""
+	When bill于3天后点击图文'百事抽奖活动单图文'进入'专项抽奖'活动页面
+	Then bill在'专项抽奖'活动首页获得验证码"qwer"
+	When bill在'专项抽奖'活动首页中输入验证码"qwer"
 	When bill在'专项抽奖'活动首页中输入抽奖码'el8s539t18'
-	Then bill页面提示的消息
+	Then bill获得页面提示的消息
 	"""
 		该抽奖码已使用
 	"""
@@ -402,12 +372,12 @@ Scenario:6 微信用户进入专项抽奖活动首页，验证码正确，活动
 			"rule":"活动规则",
 			"home_page_pic":"1.jpg",
 			"lottory_pic":"2.jpg",
-			"lottory_color":"red",
+			"lottory_color":"#0000FF",
 			"start_date":"今天",
 			"end_date":"5天后",
 			"reduce_integral":5,
 			"send_integral":0,
-			"win_rate":"60%",
+			"win_rate":"100%",
 			"lottory_code_num":1,
 			"is_repeat_win":"否",
 			"prize_settings":[{
@@ -418,13 +388,13 @@ Scenario:6 微信用户进入专项抽奖活动首页，验证码正确，活动
 				"pic":"2.jpg"
 			},{
 				"prize_grade":"二等奖",
-				"prize_counts":30,
+				"prize_counts":0,
 				"prize_type":"优惠券",
 				"coupon":"优惠券1",
 				"pic":"3.jpg"
 			},{
 				"prize_grade":"三等奖",
-				"prize_counts":50,
+				"prize_counts":0,
 				"prize_type":"优惠券",
 				"coupon":"优惠券2",
 				"pic":"4.jpg"
@@ -435,18 +405,12 @@ Scenario:6 微信用户进入专项抽奖活动首页，验证码正确，活动
 	"""
 		["el8s539t18"]
 	"""
-	Then jobs生成'专项抽奖'验证码
-	"""
-		tudf
-	"""
 	Given bill关注jobs的公众号
 	When bill访问jobs的webapp
-	When bill获得jobs的20会员积分
-	Then bill在jobs的webapp中拥有20会员积分
 	When bill在微信中向jobs的公众号发送消息'百事抽奖'
 	Then bill收到自动回复'百事抽奖活动单图文'
 	When bill点击图文'百事抽奖活动单图文'进入'专项抽奖'活动页面
-	
+	Then bill在'专项抽奖'活动首页获得验证码"tudf"
 	When bill在'专项抽奖'活动首页中输入验证码"tudf"
 	When bill在'专项抽奖'活动首页中输入抽奖码'el8s539t18'
 	When bill点击'立即抽奖'进入'专项抽奖'活动内容页
@@ -458,6 +422,9 @@ Scenario:6 微信用户进入专项抽奖活动首页，验证码正确，活动
 			"prize_name":"1000积分"
 		}
 	"""
+	When bill于1天后点击图文'百事抽奖活动单图文'进入'专项抽奖'活动页面
+	Then bill在'专项抽奖'活动首页获得验证码"qwer"
+	When bill在'专项抽奖'活动首页中输入验证码"qwer"
 	When bill在'专项抽奖'活动首页中输入抽奖码'el8s539t18'
 	Then bill获得页面提示的消息
 	"""
@@ -478,12 +445,12 @@ Scenario:7 微信用户进入专项抽奖活动首页，验证码正确，活动
 			"rule":"活动规则",
 			"home_page_pic":"1.jpg",
 			"lottory_pic":"2.jpg",
-			"lottory_color":"red",
+			"lottory_color":"#0000FF",
 			"start_date":"2天前",
 			"end_date":"1天前",
 			"reduce_integral":5,
 			"send_integral":0,
-			"win_rate":"60%",
+			"win_rate":"100%",
 			"lottory_code_num":1,
 			"is_repeat_win":"否",
 			"prize_settings":[{
@@ -494,13 +461,13 @@ Scenario:7 微信用户进入专项抽奖活动首页，验证码正确，活动
 				"pic":"2.jpg"
 			},{
 				"prize_grade":"二等奖",
-				"prize_counts":30,
+				"prize_counts":0,
 				"prize_type":"优惠券",
 				"coupon":"优惠券1",
 				"pic":"3.jpg"
 			},{
 				"prize_grade":"三等奖",
-				"prize_counts":50,
+				"prize_counts":0,
 				"prize_type":"优惠券",
 				"coupon":"优惠券2",
 				"pic":"4.jpg"
@@ -511,17 +478,13 @@ Scenario:7 微信用户进入专项抽奖活动首页，验证码正确，活动
 	"""
 		["el8s539t18"]
 	"""
-	Then jobs生成'专项抽奖'验证码
-	"""
-		tudf
-	"""
+
 	Given bill关注jobs的公众号
 	When bill访问jobs的webapp
-	When bill获得jobs的20会员积分
-	Then bill在jobs的webapp中拥有20会员积分
 	When bill在微信中向jobs的公众号发送消息'百事抽奖'
 	Then bill收到自动回复'百事抽奖活动单图文'
 	When bill点击图文'百事抽奖活动单图文'进入'专项抽奖'活动页面
+	Then bill在'专项抽奖'活动首页获得验证码"tudf"
 	When bill在'专项抽奖'活动首页中输入验证码"tudf"
 	When bill在'专项抽奖'活动首页中输入抽奖码'el8s539t18'
 	Then bill获得页面提示的消息
@@ -540,12 +503,12 @@ Scenario:8 微信用户进入专项抽奖活动首页，验证码正确，抽奖
 			"rule":"活动规则",
 			"home_page_pic":"1.jpg",
 			"lottory_pic":"2.jpg",
-			"lottory_color":"red",
+			"lottory_color":"#0000FF",
 			"start_date":"2天前",
 			"end_date":"1天前",
 			"reduce_integral":5,
 			"send_integral":0,
-			"win_rate":"60%",
+			"win_rate":"100%",
 			"lottory_code_num":1,
 			"is_repeat_win":"否",
 			"prize_settings":[{
@@ -556,13 +519,13 @@ Scenario:8 微信用户进入专项抽奖活动首页，验证码正确，抽奖
 				"pic":"2.jpg"
 			},{
 				"prize_grade":"二等奖",
-				"prize_counts":30,
+				"prize_counts":0,
 				"prize_type":"优惠券",
 				"coupon":"优惠券1",
 				"pic":"3.jpg"
 			},{
 				"prize_grade":"三等奖",
-				"prize_counts":50,
+				"prize_counts":0,
 				"prize_type":"优惠券",
 				"coupon":"优惠券2",
 				"pic":"4.jpg"
@@ -573,17 +536,13 @@ Scenario:8 微信用户进入专项抽奖活动首页，验证码正确，抽奖
 	"""
 		["el8s539t18"]
 	"""
-	Then jobs生成'专项抽奖'验证码
-	"""
-		tudf
-	"""
+
 	Given bill关注jobs的公众号
 	When bill访问jobs的webapp
-	When bill获得jobs的20会员积分
-	Then bill在jobs的webapp中拥有20会员积分
 	When bill在微信中向jobs的公众号发送消息'百事抽奖'
 	Then bill收到自动回复'百事抽奖活动单图文'
 	When bill点击图文'百事抽奖活动单图文'进入'专项抽奖'活动页面
+	Then bill在'专项抽奖'活动首页获得验证码"tudf"
 	When bill在'专项抽奖'活动首页中输入验证码"tudf"
 	When bill在'专项抽奖'活动首页中输入抽奖码'el12345678'
 	Then bill获得页面提示的消息
