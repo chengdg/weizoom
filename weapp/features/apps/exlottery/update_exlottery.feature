@@ -36,7 +36,47 @@ Background:
 			"cover_in_the_text":"true",
 			"summary":"百事抽奖",
 			"content":"百事抽奖",
-			"jump_url":"新建百事抽奖活动"
+			"jump_url":"专项抽奖01"
+		}]
+		"""
+	
+	When jobs已添加单图文
+		"""
+		[{
+			"title":"百事抽奖活动单图文",
+			"cover": [{
+				"url": "6.jpg"
+			}],
+			"cover_in_the_text":"true",
+			"summary":"百事抽奖",
+			"content":"百事抽奖",
+			"jump_url":"专项抽奖02"
+		}]
+		"""
+	When jobs已添加单图文
+		"""
+		[{
+			"title":"百事抽奖活动单图文",
+			"cover": [{
+				"url": "6.jpg"
+			}],
+			"cover_in_the_text":"true",
+			"summary":"百事抽奖",
+			"content":"百事抽奖",
+			"jump_url":"专项抽奖03"
+		}]
+		"""
+	When jobs已添加单图文
+		"""
+		[{
+			"title":"百事抽奖活动单图文",
+			"cover": [{
+				"url": "6.jpg"
+			}],
+			"cover_in_the_text":"true",
+			"summary":"百事抽奖",
+			"content":"百事抽奖",
+			"jump_url":"微信抽奖001"
 		}]
 		"""
 	When jobs已添加关键词自动回复规则

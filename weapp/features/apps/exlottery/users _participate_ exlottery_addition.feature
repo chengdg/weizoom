@@ -34,7 +34,7 @@ Background:
 			"cover_in_the_text":"true",
 			"summary":"百事抽奖",
 			"content":"百事抽奖",
-			"jump_url":"新建百事抽奖活动"
+			"jump_url":"专项抽奖"
 		}]
 		"""
 	When jobs已添加关键词自动回复规则
