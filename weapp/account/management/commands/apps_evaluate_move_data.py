@@ -35,30 +35,45 @@ class Command(BaseCommand):
 			else:
 				old_review_id2pics[p.id].append(p.att_url)
 
+		old_order_id2order_id = {o.id: o.order_id for o in mall_models.Order.objects.all()}
+
+		print 'finished loading mysql data~'
+
 		#插入到mongo中
 		order_evaluate_creation_list = []
+		#处理重复的订单
+		has_old_id = []
+		order_view_count = 0
 		for old_review in old_order_reviews:
+			if old_review.order_id in has_old_id:
+				continue
+			order_view_count += 1
+			has_old_id.append(old_order_id2order_id[old_review.order_id])
 			order_evaluate_creation_list.append(app_models.OrderEvaluates(
 				owner_id = old_review.owner_id,
 				member_id = old_review.member_id,
-				order_id = old_review.order_id,
+				order_id = old_order_id2order_id[old_review.order_id],
 				serve_score = old_review.serve_score,
 				deliver_score = old_review.deliver_score,
 				process_score = old_review.process_score,
 				old_id = old_review.id
 			))
+			print 'got %d order evaluates' % order_view_count
 
 		if len(order_evaluate_creation_list) > 0:
 			new_order_evaluates = app_models.OrderEvaluates.objects.insert(order_evaluate_creation_list)
+			print 'moving order evaluates done ! next product evaluate'
 			order_oldid2newid = {o.old_id: str(o.id) for o in new_order_evaluates}
 
 			product_evaluate_creation_list = []
+			product_view_count = 0
 			for old_review in old_product_reviews:
 				pics = old_review_id2pics.get(old_review.id, [])
+				product_view_count += 1
 				product_evaluate_creation_list.append(app_models.ProductEvaluates(
 					owner_id = old_review.owner_id,
 					member_id = old_review.member_id,
-					order_id = old_review.order_id,
+					order_id = old_order_id2order_id[old_review.order_id],
 					old_id = old_review.id,
 					product_id = old_review.product_id,
 					order_evaluate_id = order_oldid2newid.get(old_review.id, 0),
@@ -69,10 +84,11 @@ class Command(BaseCommand):
 					created_at = old_review.created_at,
 					status = int(old_review.status),
 					top_time = old_review.top_time,
-					shop_reply = '',
-
+					shop_reply = ''
 				))
+				print 'got %d product evaluates' % product_view_count
 			app_models.ProductEvaluates.objects.insert(product_evaluate_creation_list)
+			print 'moving product evaluates done !'
 		end_time = time.time()
 		diff = (end_time-start_time)*1000
 		print 'move data end...expend %s' % diff
