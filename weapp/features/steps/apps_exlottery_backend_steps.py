@@ -255,15 +255,15 @@ def __get_exlotteryPageJson(args):
 					"end_time": args['end_time'],
 					"valid_time": args['valid_time'],
 					"description": args['description'],
+					"share_description": args['share_description'],
 					"expend": args['expend'],
 					"delivery": args['delivery'],
-					# "delivery_setting": args['delivery_setting'],
-					# "limitation": args['limitation'],
 					"chance": args['chance'],
 					"allow_repeat": args['allow_repeat'],
-					"reply": args['reply'],
-					"reply_link": args['reply_link'],
 					"lottery_code_count": args['lottery_code_count'],
+					"homepage_image": args['homepage_image'],
+					"exlottery_bg_image": args['exlottery_bg_image'],
+					"background_color": args['background_color'],
 					"items": [
 						4,
 						5,
@@ -291,7 +291,7 @@ def __get_exlotteryPageJson(args):
 								"api_name": ""
 							},
 							"title": "一等奖",
-							"prize_count": args['prize_settings'][0]['prize_count'],
+							"prize_count": str(args['prize_settings'][0]['prize_count']),
 							"prize": args['prize_settings'][0]['prize'],
 							"image": args['prize_settings'][0]['image']
 						},
@@ -317,7 +317,7 @@ def __get_exlotteryPageJson(args):
 								"api_name": ""
 							},
 							"title": "二等奖",
-							"prize_count": args['prize_settings'][1]['prize_count'],
+							"prize_count": str(args['prize_settings'][1]['prize_count']),
 							"prize": args['prize_settings'][1]['prize'],
 							"image": args['prize_settings'][1]['image']
 						},
@@ -343,7 +343,7 @@ def __get_exlotteryPageJson(args):
 								"api_name": ""
 							},
 							"title": "三等奖",
-							"prize_count": args['prize_settings'][2]['prize_count'],
+							"prize_count": str(args['prize_settings'][2]['prize_count']),
 							"prize": args['prize_settings'][2]['prize'],
 							"image": args['prize_settings'][2]['image']
 						},
@@ -458,17 +458,17 @@ def __Create_Exlottery(context,text,user):
 
 	valid_time = "%s~%s"%(start_time,end_time)
 
-	desc = text.get('desc','')#分享时的描述
+	desc = text.get('desc','')#活动规则
+	share_intro = text.get('share_intro', '')  #分享时的描述
 	reduce_integral = text.get('reduce_integral',0)#消耗积分
 	send_integral = text.get('send_integral',0)#参与送积分
-	# send_integral_rules = text.get('send_integral_rules',"")#送积分规则
-	# lottery_limit = __name2limit(text.get('lottery_limit',u'一人一次'))#抽奖限制
 	win_rate = text.get('win_rate','0%').split('%')[0]#中奖率
 	is_repeat_win = __name2Bool(text.get('is_repeat_win',"true"))#重复中奖
 
-	reply = text.get('reply','')
-	reply_link = text.get('link_reply','')
 	lottery_code_count = text.get('lottory_code_num',0)
+	home_page_pic = text.get('home_page_pic','')
+	lottory_pic = text.get('lottory_pic','')
+	lottory_color = text.get('lottory_color','')
 
 	expect_prize_settings_list = text.get('prize_settings',[])
 	page_prize_settings,exlottery_prize_settings = __prize_settings_process(expect_prize_settings_list)
@@ -479,16 +479,16 @@ def __Create_Exlottery(context,text,user):
 		"end_time":end_time,
 		"valid_time":valid_time,
 		"description":desc,#描述
+		"share_description": share_intro,  #分享简介
 		"expend":reduce_integral,#消耗积分
 		"delivery":send_integral,#参与送积分
-		# "delivery_setting":__delivery2Bool(send_integral_rules),#送积分规则
-		# "limitation":lottery_limit,#抽奖限制
 		"chance":win_rate,#中奖率
 		"allow_repeat":is_repeat_win,#重复中奖
 		"prize_settings":page_prize_settings,
-		"reply":reply,
-		"reply_link":reply_link,
-		"lottery_code_count":lottery_code_count
+		"lottery_code_count":lottery_code_count,
+		"homepage_image":home_page_pic,
+		"exlottery_bg_image":lottory_pic,
+		"background_color":lottory_color
 	}
 	#step1：登录页面，获得分配的project_id
 	get_exlottery_response = context.client.get("/apps/exlottery/exlottery/")
@@ -516,19 +516,17 @@ def __Create_Exlottery(context,text,user):
 	#step4:发送lottery_args
 	post_exlottery_args = {
 		"name":title,
+		"share_description": share_intro,  #分享简介
 		"start_time":start_time,
 		"end_time":end_time,
+		"homepage_image": home_page_pic,
 		"expend":reduce_integral,#消耗积分
 		"delivery":send_integral,#参与送积分
-		# "delivery_setting":__delivery2Bool(send_integral_rules),#送积分规则
-		# "limitation":lottery_limit,#抽奖限制
 		"chance":win_rate,#中奖率
 		"allow_repeat":is_repeat_win,#重复中奖
 		"prize":json.dumps(exlottery_prize_settings),
 		"related_page_id":related_page_id,
-		"reply":reply,
-		"reply_link":reply_link,
-		"lottery_code_count":lottery_code_count
+		"lottery_code_count":lottery_code_count,
 	}
 
 	exlottery_url ="/apps/exlottery/api/exlottery/?design_mode={}&project_id={}&version={}&_method=put".format(design_mode,project_id,version)
@@ -569,12 +567,18 @@ def __Update_Exlottery(context,text,page_id,lottery_id):
 
 	valid_time = "%s~%s"%(start_time,end_time)
 
-	desc = text.get('desc','')#描述
+	desc = text.get('desc', '')  #活动规则
+	share_intro = text.get('share_intro', '')  #分享时的描述
 	reduce_integral = text.get('reduce_integral',0)#消耗积分
 	send_integral = text.get('send_integral',0)#参与送积分
 	reply = text.get('reply',"")#送积分规则
 	reply_link = text.get('link_reply',"")
 	lottery_code_count = text.get('lottory_code_num',u'0')#抽奖码个数
+
+	home_page_pic = text.get('home_page_pic', '')
+	lottory_pic = text.get('lottory_pic', '')
+	lottory_color = text.get('lottory_color', '')
+
 	win_rate = text.get('win_rate','0%').split('%')[0]#中奖率
 	is_repeat_win = __name2Bool(text.get('is_repeat_win',"true"))#重复中奖
 	expect_prize_settings_list = text.get('prize_settings',[])
@@ -587,14 +591,16 @@ def __Update_Exlottery(context,text,page_id,lottery_id):
 		"end_time":end_time,
 		"valid_time":valid_time,
 		"description":desc,#描述
+		"share_description": share_intro,  #分享简介
 		"expend":reduce_integral,#消耗积分
 		"delivery":send_integral,#参与送积分
 		"chance":win_rate,#中奖率
 		"allow_repeat":is_repeat_win,#重复中奖
 		"prize_settings":page_prize_settings,
-		"reply":reply,
-		"reply_link":reply_link,
-		"lottery_code_count":lottery_code_count
+		"lottery_code_count":lottery_code_count,
+		"homepage_image":home_page_pic,
+		"exlottery_bg_image":lottory_pic,
+		"background_color":lottory_color
 	}
 
 	page_json = __get_exlotteryPageJson(page_args)
@@ -608,17 +614,17 @@ def __Update_Exlottery(context,text,page_id,lottery_id):
 
 	update_exlottery_args = {
 		"name":title,
+		"share_description": share_intro,  # 分享简介
 		"start_time":start_time,
 		"end_time":end_time,
+		"homepage_image": home_page_pic,
 		"expend":reduce_integral,#消耗积分
 		"delivery":send_integral,#参与送积分
 		"chance":win_rate,#中奖率
 		"allow_repeat":is_repeat_win,#重复中奖
 		"prize":json.dumps(exlottery_prize_settings),
 		"id":lottery_id,#updated的差别
-		"reply":reply,
-		"reply_link":reply_link,
-		"lottery_code_count":lottery_code_count
+		"lottery_code_count":lottery_code_count,
 	}
 
 
