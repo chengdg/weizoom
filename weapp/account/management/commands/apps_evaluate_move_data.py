@@ -41,18 +41,19 @@ class Command(BaseCommand):
 
 		#插入到mongo中
 		order_evaluate_creation_list = []
-		#处理重复的订单
-		has_old_id = []
+		#处理重复的订单,首先排除OrderEvaluates表中已存在的order_id
+		has_old_id = set([o.order_id for o in app_models.OrderEvaluates.objects.all()])
 		order_view_count = 0
 		for old_review in old_order_reviews:
-			if old_review.order_id in has_old_id:
+			temp_order_id = old_order_id2order_id[old_review.order_id]
+			if temp_order_id in has_old_id:
 				continue
 			order_view_count += 1
-			has_old_id.append(old_order_id2order_id[old_review.order_id])
+			has_old_id.add(temp_order_id)
 			order_evaluate_creation_list.append(app_models.OrderEvaluates(
 				owner_id = old_review.owner_id,
 				member_id = old_review.member_id,
-				order_id = old_order_id2order_id[old_review.order_id],
+				order_id = temp_order_id,
 				serve_score = old_review.serve_score,
 				deliver_score = old_review.deliver_score,
 				process_score = old_review.process_score,
