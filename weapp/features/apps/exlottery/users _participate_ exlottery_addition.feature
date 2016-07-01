@@ -60,9 +60,9 @@ Scenario:1 微信用户进入专项抽奖活动首页，未输入验证码
 	When jobs新建专项抽奖活动
 		"""
 		[{
-			"name":"专项抽奖活动01",
+			"name":"专项抽奖",
 			"share_intro":"百事专项抽奖活动",
-			"rule":"活动规则",
+			"desc":"活动规则",
 			"home_page_pic":"1.jpg",
 			"lottory_pic":"2.jpg",
 			"lottory_color":"#0000FF",
@@ -118,7 +118,7 @@ Scenario:2 微信用户进入专项抽奖活动首页，输入验证码错误
 		[{
 			"name":"专项抽奖",
 			"share_intro":"百事专项抽奖活动",
-			"rule":"活动规则",
+			"desc":"活动规则",
 			"home_page_pic":"1.jpg",
 			"lottory_pic":"2.jpg",
 			"lottory_color":"#0000FF",
@@ -175,7 +175,7 @@ Scenario:3
 		[{
 			"name":"专项抽奖",
 			"share_intro":"百事专项抽奖活动",
-			"rule":"活动规则",
+			"desc":"活动规则",
 			"home_page_pic":"1.jpg",
 			"lottory_pic":"2.jpg",
 			"lottory_color":"#0000FF",
@@ -233,7 +233,7 @@ Scenario:4 微信用户进入专项抽奖活动首页，验证码正确，抽奖
 		[{
 			"name":"专项抽奖",
 			"share_intro":"百事专项抽奖活动",
-			"rule":"活动规则",
+			"desc":"活动规则",
 			"home_page_pic":"1.jpg",
 			"lottory_pic":"2.jpg",
 			"lottory_color":"#0000FF",
@@ -297,7 +297,7 @@ Scenario:5 微信用户进入专项抽奖活动首页，验证码正确，活动
 		[{
 			"name":"专项抽奖",
 			"share_intro":"百事专项抽奖活动",
-			"rule":"活动规则",
+			"desc":"活动规则",
 			"home_page_pic":"1.jpg",
 			"lottory_pic":"2.jpg",
 			"lottory_color":"#0000FF",
@@ -369,7 +369,7 @@ Scenario:6 微信用户进入专项抽奖活动首页，验证码正确，活动
 		[{
 			"name":"专项抽奖",
 			"share_intro":"百事专项抽奖活动",
-			"rule":"活动规则",
+			"desc":"活动规则",
 			"home_page_pic":"1.jpg",
 			"lottory_pic":"2.jpg",
 			"lottory_color":"#0000FF",
@@ -442,7 +442,7 @@ Scenario:7 微信用户进入专项抽奖活动首页，验证码正确，活动
 		[{
 			"name":"专项抽奖",
 			"share_intro":"百事专项抽奖活动",
-			"rule":"活动规则",
+			"desc":"活动规则",
 			"home_page_pic":"1.jpg",
 			"lottory_pic":"2.jpg",
 			"lottory_color":"#0000FF",
@@ -500,7 +500,7 @@ Scenario:8 微信用户进入专项抽奖活动首页，验证码正确，抽奖
 		[{
 			"name":"专项抽奖",
 			"share_intro":"百事专项抽奖活动",
-			"rule":"活动规则",
+			"desc":"活动规则",
 			"home_page_pic":"1.jpg",
 			"lottory_pic":"2.jpg",
 			"lottory_color":"#0000FF",
