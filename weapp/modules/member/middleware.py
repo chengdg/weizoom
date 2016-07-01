@@ -11,7 +11,7 @@ from django.template import RequestContext, Context
 
 from webapp.models import PageVisitLog
 from account.models import UserProfile
-from watchdog.utils import watchdog_fatal, watchdog_error, watchdog_info
+from watchdog.utils import watchdog_fatal, watchdog_error, watchdog_info,watchdog_warning
 
 from core.exceptionutil import unicode_full_stack
 from utils import url_helper
@@ -263,7 +263,7 @@ class RedirectBySctMiddleware(object):
 						return response
 			except:
 				notify_message = u"处理cookie sct失败，cookie_sct={}, cause:\n{}, request_url:{}".format(cookie_sct, unicode_full_stack(), request.get_full_path())
-				watchdog_error(notify_message)
+				watchdog_warning(notify_message)
 			finally:
 				request.social_account = social_account
 				request.member = member
@@ -795,7 +795,7 @@ class WebAppUserMiddleware(object):
 						update_models_use_webapp_user(member_related_webapp_user, uuid_related_webapp_user)
 		elif not request.user_profile:
 			notify_message = u"WebAppUserMiddleware info, url:\n{}, cookies:{}".format(request.get_full_path(),request.COOKIES)
-			watchdog_error(notify_message)
+			watchdog_warning(notify_message)
 
 		if not request.found_member_in_cache:
 			if webapp_user is None:

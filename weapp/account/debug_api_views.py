@@ -18,7 +18,7 @@ from core.jsonresponse import create_response, decode_json_str
 #from account.social_account.models import SocialAccount
 #from core.wxapi import get_weixin_api
 
-from watchdog.utils import watchdog_error, watchdog_alert
+from watchdog.utils import watchdog_error, watchdog_alert, watchdog_warning
 
 def log_api_error(request):
 	api = request.POST.get('api', '')
@@ -54,7 +54,7 @@ def log_js_error(request):
 	except:
 		member_info = u''
 
-	watchdog_alert(u"***** Client Javascript Exception (%s) *****\n%s[UserAgent]: %s\n%s" % (message, member_info, user_agent, content),
+	watchdog_warning(u"***** Client Javascript Exception (%s) *****\n%s[UserAgent]: %s\n%s" % (message, member_info, user_agent, content),
 		'JS', str(user_id))
 
 	return create_response(200).get_response()
