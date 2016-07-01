@@ -173,50 +173,6 @@ def update_exlottery_status(lottery):
 		lottery.reload()
 	return activity_status, lottery
 
-def check_keyword(data):
-	"""
-	匹配用户的消息
-	@param data: {
-		'webapp_owner_id': 0,
-		'keyword': 0,
-		'openid': 0,
-		'webapp_id': 0
-	}
-	@return: return_html string
-	"""
-	webapp_owner_id = data['webapp_owner_id']
-	keyword = data['keyword']
-	member = get_member_by_openid(data['openid'], data['webapp_id'])
-
-	if not member:
-		return None
-
-	resp, exlottery= check_exlottery_code(keyword, member.id)
-
-	if resp is not True and (resp != 'is_member_self'):
-		return resp
-
-	if resp != 'is_member_self':
-		#将用户与抽奖码绑定
-		exlottery_participance = app_models.ExlotteryParticipance(
-			member_id = member.id,
-			belong_to = str(exlottery.id),
-			created_at = datetime.now(),
-			code = keyword,
-			status = app_models.NOT_USED
-		)
-		try:
-			exlottery_participance.save()
-		except:
-			return None
-
-	reply = exlottery.reply
-	reply_link = exlottery.reply_link
-	host = settings.DOMAIN
-	return_html = u"{}, <a href='http://{}/m/apps/exlottery/m_exlottery/?webapp_owner_id={}&id={}&ex_code={}'>{}</a>".format(reply, host, webapp_owner_id, str(exlottery.id), keyword ,reply_link)
-
-	return return_html
-
 def check_exlottery_code(keyword,member_id):
 	code = app_models.ExlotteryCode.objects(code=keyword).order_by('-created_at')
 	if code.count() == 0:

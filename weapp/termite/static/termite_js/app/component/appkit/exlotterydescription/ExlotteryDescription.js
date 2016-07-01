@@ -256,7 +256,9 @@ W.component.appkit.ExlotteryDescription = W.component.Component.extend({
 		background_color: function($node, model, value, $propertyViewNode){
 			if (value) {
 				var $target = $('#phoneIFrame').contents().find('.xa-prizeContainer');//找到子frame中的相应元素
+				var $target_another = $('#phoneIFrame').contents().find('.xa-prizeContainer .xa-subtitle');//找到子frame中的相应元素
 				$target.css("background-color", value);
+				$target_another.css("background-color", value);
 			}
 		}
 	},
