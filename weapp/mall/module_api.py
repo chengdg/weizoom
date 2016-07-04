@@ -2377,7 +2377,7 @@ def update_order_status(user, action, order, request=None):
 				order_record.save()
 				#print '>>>>>.aaaaaaaaaaaaaaaaaaaaaaaaffffff>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>'
 	except:
-		notify_message = u"订单状态为已完成时为贡献者增加积分，cause:\n{}".format(unicode_full_stack())
+		notify_message = u"订单状态为已完成时为贡献者增加积分,order_id:{}，cause:\n{}".format(order_id, unicode_full_stack())
 		watchdog_error(notify_message)
 	from webapp.handlers import event_handler_util
 	from utils import json_util
