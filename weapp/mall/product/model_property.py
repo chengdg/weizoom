@@ -3,11 +3,16 @@
 from django.contrib.auth.decorators import login_required
 from django.template import RequestContext
 from django.shortcuts import render_to_response
+from eaglet.utils.resource_client import Resource
 
 from core import resource
 from core.jsonresponse import create_response
 from mall import models as mall_models
 from mall import export, signals
+
+
+ZEUS_HOST = 'api.zeus.com'
+SERVICE_NAME = 'zeus'
 
 
 class ModelPropertyList(resource.Resource):
@@ -19,35 +24,42 @@ class ModelPropertyList(resource.Resource):
         """
         商品规格列表页面.
         """
-        model_properties = mall_models.ProductModelProperty.objects.filter(
-            owner=request.manager,
-            is_deleted=False)
-        id2property = {}
-        for model_property in model_properties:
-            model_property.property_values = []
-            t_name = model_property.name
-            model_property.shot_name = t_name[:6]+'...' if len(t_name) > 6 else t_name
-            id2property[model_property.id] = model_property
+        params = {
+            'owner_id': request.manager.id,
+        }
+        # 创建模板
+        resp = Resource.use(SERVICE_NAME, ZEUS_HOST).get({
+            'resource': 'mall.product_model_property_list',
+            'data': params
+        })
+        result = []
+        if resp and resp['code'] == 200:
 
-        property_ids = [property.id for property in model_properties]
-        mpv = mall_models.ProductModelPropertyValue.objects.filter(
-            property_id__in=property_ids)
-        for property_value in mpv:
-            if property_value.is_deleted:
-                continue
-            property_id = property_value.property_id
-            property = id2property[property_id]
-            property_value.is_image_property_value = (
-                property.is_image_property and property_value.pic_url)
-            t_name = property_value.name
-            property_value.shot_name = t_name[:10]+'...' if len(t_name) > 10 else t_name
-            property.property_values.append(property_value)
+            model_properties = resp['data']['product_models']
+            # 重新操作页面方便
+            for model_property in model_properties:
+                product_model = model_property['product_model']
+                property_values = model_property['properties']
+
+                product_model['shot_name'] = product_model.get('name')[:6] \
+                    if len(product_model.get('name')) > 6 else product_model.get('name')
+                product_model['type'] = mall_models.PRODUCT_MODEL_PROPERTY_TYPE_TEXT \
+                    if product_model.get('type') == 'text' \
+                    else mall_models.PRODUCT_MODEL_PROPERTY_TYPE_IMAGE
+
+                for value in property_values:
+                    value['shot_name'] = value.get('name')[:10] if len(value.get('name')) > 10 else value.get('name')
+                    value['is_image_property_value'] = product_model.get('type') \
+                                                             == mall_models.PRODUCT_MODEL_PROPERTY_TYPE_IMAGE \
+                                                       and product_model.get('pic_url')
+                product_model['property_values'] = property_values
+                result.append(product_model)
 
         c = RequestContext(request, {
             'first_nav_name': export.PRODUCT_FIRST_NAV,
             'second_navs': export.get_mall_product_second_navs(request),
             'second_nav_name': export.PRODUCT_MANAGE_MODEL_NAV,
-            'model_properties': model_properties
+            'model_properties': result
         })
         return render_to_response('mall/editor/model_properties.html', c)
 
@@ -127,14 +139,22 @@ class ModelProperty(resource.Resource):
           data: %d
 
         """
-        _property = mall_models.ProductModelProperty.objects.create(
-            owner=request.manager,
-            name=''
-        )
+        params = {
+            'owner_id': request.manager.id,
+            'name': '',
+            'type': 'text'
+        }
+        # 创建模板
+        resp = Resource.use(SERVICE_NAME, ZEUS_HOST).put({
+            'resource': 'mall.product_model_property',
+            'data': params
+        })
+        if resp and resp['code'] == 200:
+            _property = resp['data'].get('product_model')
 
-        response = create_response(200)
-        response.data = _property.id
-        return response.get_response()
+            response = create_response(200)
+            response.data = _property.get('id')
+            return response.get_response()
 
     @login_required
     def api_post(request):
@@ -147,27 +167,40 @@ class ModelProperty(resource.Resource):
             name -> 新的规格名,
             type -> 新的规格类型. text或image
         """
-        id = request.POST['id']
+        model_id = request.POST['id']
         field = request.POST['field']
-        if 'name' == field:
-            name = request.POST['name']
-            mall_models.ProductModelProperty.objects.filter(
-                owner=request.manager,
-                id=id
-            ).update(name=name)
-        elif 'type' == field:
-            _type = request.POST.get('type')
-            if _type and _type == 'text':
-                _type = mall_models.PRODUCT_MODEL_PROPERTY_TYPE_TEXT
+        get_params = {
+            'id': model_id
+        }
+        resp = Resource.use(SERVICE_NAME, ZEUS_HOST).get({
+            'resource': 'mall.product_model_property',
+            'data': get_params
+        })
+        if resp:
+            if resp.get('code') == 200:
+                _model = resp.get('data').get('product_model')
+                if _model:
+                    name = _model.get('name')
+                    model_type = _model.get('type')
+                    if field == 'name':
+                        name = request.POST['name']
+                    if field == 'type':
+                        model_type = request.POST.get('type')
+                    params = {
+                        'id': model_id,
+                        'name': name,
+                        'type': model_type
+                    }
+                    post_resp = Resource.use(SERVICE_NAME, ZEUS_HOST).post({
+                        'resource': 'mall.product_model_property',
+                        'data': params
+                    })
+                    if post_resp and post_resp.get('code') == 200:
+                        response = create_response(200)
+                        return response.get_response()
             else:
-                _type = mall_models.PRODUCT_MODEL_PROPERTY_TYPE_IMAGE
-
-            mall_models.ProductModelProperty.objects.filter(
-                owner=request.manager,
-                id=id
-            ).update(type=_type)
-        response = create_response(200)
-        return response.get_response()
+                response = create_response(resp.get('code'))
+                return response.get_response()
 
     @login_required
     def api_delete(request):
@@ -180,29 +213,40 @@ class ModelProperty(resource.Resource):
           处理由于规格变化引起的商品状态的变化.
         """
         property_id = request.POST['id']
+        # TODO 怎么改造 --------------start------------------
         model_property = mall_models.ProductModelProperty.objects.get(
             owner=request.manager,
             id=property_id)
+
         signals.pre_delete_product_model_property.send(
             sender=mall_models.ProductModelProperty,
             model_property=model_property,
             request=request)
+        # TODO 怎么改造 --------------end ------------------
 
-        mall_models.ProductModelPropertyValue.objects.filter(
-            property_id=property_id
-        ).update(is_deleted=True)
-        mall_models.ProductModelProperty.objects.filter(
-            id=property_id
-        ).update(is_deleted=True)
+        params = {
+            'id': property_id,
+            # 'name': name,
+            # 'type': model_type
+        }
+        resp = Resource.use(SERVICE_NAME, ZEUS_HOST).delete({
+            'resource': 'mall.product_model_property',
+            'data': params
+        })
 
-        response = create_response(200)
-        return response.get_response()
+        if resp:
+            if resp.get('code') == 200:
+
+                response = create_response(200)
+                return response.get_response()
+            else:
+                response = create_response(resp.get('code'))
+                return response.get_response()
 
 
 class ModelPropertyValue(resource.Resource):
     app = 'mall2'
     resource = 'model_property_value'
-
 
     @login_required
     def api_put(request):
@@ -216,15 +260,22 @@ class ModelPropertyValue(resource.Resource):
         property_id = request.POST['id']
         pic_url = request.POST['pic_url']
         name = request.POST['name']
-        property_value = mall_models.ProductModelPropertyValue.objects.create(
-            property_id=property_id,
-            name=name,
-            pic_url=pic_url
-        )
+        params = {
+            'id': property_id,
+            'name': name,
+            'pic_url': pic_url
+        }
+        resp = Resource.use(SERVICE_NAME, ZEUS_HOST).put({
+            'resource': 'mall.model_property_value',
+            'data': params
+        })
 
-        response = create_response(200)
-        response.data = property_value.id
-        return response.get_response()
+        if resp:
+            if resp.get('code') == 200:
+                property_value = resp.get('data').get('product_model_value')
+                response = create_response(200)
+                response.data = property_value.get('id')
+                return response.get_response()
 
     @login_required
     def api_post(request):
@@ -239,16 +290,19 @@ class ModelPropertyValue(resource.Resource):
         pic_url = request.POST['pic_url']
         name = request.POST['name']
 
-        try:
-            mall_models.ProductModelPropertyValue.objects.filter(id=property_value_id).update(
-                name=name,
-                pic_url=pic_url
-            )
-            response = create_response(200)
-        except:
-            response = create_response(500)
+        params = {
+            'id': property_value_id,
+            'name': name,
+            'pic_url': pic_url
+        }
+        resp = Resource.use(SERVICE_NAME, ZEUS_HOST).post({
+            'resource': 'mall.model_property_value',
+            'data': params
+        })
 
-        return response.get_response()
+        if resp and resp.get('code') == 200:
+            response = create_response(200)
+            return response.get_response()
 
     @login_required
     def api_delete(request):
@@ -263,6 +317,7 @@ class ModelPropertyValue(resource.Resource):
           DoesNotExist: if id is not provided
         """
         property_value_id = request.POST.get('id')
+        # TODO　其他变化接口暂时未提供
         mall_models.ProductModelPropertyValue.objects.filter(
             id=property_value_id
         ).update(is_deleted=True)
