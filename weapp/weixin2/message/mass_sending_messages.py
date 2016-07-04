@@ -247,6 +247,10 @@ class MassSendingMessages(resource.Resource):
             except Exception, e:
                 print u'群发消息异常，mass_sending_messages:', e
 
+        print 'aix1=================='
+        print 'member_ids====', member_ids
+        print 'ids======', ids
+        print 'aix1=================='
         target_members_count = 0
         if is_from_fans_list:
             id_array_len = len(id_array)
@@ -273,6 +277,9 @@ class MassSendingMessages(resource.Resource):
                 #商城会员
                 if group_id == -1:
                     target_members_count = Member.objects.filter(webapp_id = webapp_id, is_subscribed = True, is_for_test = False).count()
+                    print 'aix2=================='
+                    print target_members_count
+                    print 'aix2=================='
                     #当group_id等于-1时发送给全部会员
                     #openid_list = get_openid_list_by_webapp_id(webapp_id)
                 else:
