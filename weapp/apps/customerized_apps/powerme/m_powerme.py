@@ -30,6 +30,10 @@ class MPowerMe(resource.Resource):
 		member = request.member
 		member_id = member.id
 		fid = request.GET.get('fid', member_id)
+
+		user_id = request.webapp_owner_info.user_profile.user_id
+		username = User.objects.get(id=user_id).username
+
 		response = create_response(500)
 		if not record_id or not member_id:
 			response.errMsg = u'活动信息出错'
@@ -42,7 +46,7 @@ class MPowerMe(resource.Resource):
 		current_member_rank_info = None
 		cache_key = 'apps_powerme_%s' % record_id
 		cache_data = GET_CACHE(cache_key)
-		if cache_data:
+		if username != 'weshop' and cache_data:
 			participances_dict = cache_data['participances_dict']
 			participances_list = cache_data['participances_list']
 			total_participant_count = cache_data['total_participant_count']
@@ -196,8 +200,7 @@ class MPowerMe(resource.Resource):
 			'has_power': has_power
 		}
 
-		user_id = request.webapp_owner_info.user_profile.user_id
-		username = User.objects.get(id=user_id).username
+
 		follow_friend_list = []
 		unfollow_friend_list = []
 		if username == 'weshop':
