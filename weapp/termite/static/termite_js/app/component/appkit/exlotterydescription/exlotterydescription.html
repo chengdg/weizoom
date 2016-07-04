@@ -117,7 +117,7 @@
             <div class="wui-i-settingTitle mr15">奖项设置</div>
             <div class="wui-i-settingData xa-settingData" style="margin-left: 2em;margin-top: 10px;">
                 <ul >
-                    {% if component.components.0.model.prize_count != 0 %}
+                    {% if component.components.0.model.prize_count != '0' %}
                     <li data_cid="4">
                         一等奖:&nbsp;&nbsp;
                         {% if component.components.0.model.prize.type == 'coupon' %}
