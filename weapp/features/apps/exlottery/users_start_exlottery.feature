@@ -103,8 +103,8 @@ Scenario:1 抽奖码校验通过
 	When bill在微信中向jobs的公众号发送消息'百事抽奖'
 	Then bill收到自动回复'百事抽奖活动单图文'
 	When bill点击图文'百事抽奖活动单图文'进入专项抽奖活动页面
-	Then bill在专项抽奖活动首页获得验证码"tudf"
-	When bill在专项抽奖活动首页中输入验证码"tudf"
+	Then bill在专项抽奖活动首页获得验证码'tudf'
+	When bill在专项抽奖活动首页中输入验证码'tudf'
 	When bill在专项抽奖活动首页中输入抽奖码'el8s539t18'
 	When bill点击'立即抽奖'进入专项抽奖活动内容页
 	When bill参加专项抽奖活动'专项抽奖'
@@ -144,8 +144,8 @@ Scenario:2 其他微信用户通过回复分享至朋友圈的专项抽奖活动
 	When bill在微信中向jobs的公众号发送消息'百事抽奖'
 	Then bill收到自动回复'百事抽奖活动单图文'
 	When bill点击图文'百事抽奖活动单图文'进入专项抽奖活动页面
-	Then bill在专项抽奖活动首页获得验证码"tudf"
-	When bill在专项抽奖活动首页中输入验证码"tudf"
+	Then bill在专项抽奖活动首页获得验证码'tudf'
+	When bill在专项抽奖活动首页中输入验证码'tudf'
 	When bill在专项抽奖活动首页中输入抽奖码'el8s539t18'
 	When bill点击'立即抽奖'进入专项抽奖活动内容页	
 	When bill把jobs的'专项抽奖'活动链接分享到朋友圈

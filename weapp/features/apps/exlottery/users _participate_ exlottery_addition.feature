@@ -103,8 +103,8 @@ Scenario:1 微信用户进入专项抽奖活动首页，未输入验证码
 	When bill在微信中向jobs的公众号发送消息'百事抽奖'
 	Then bill收到自动回复'百事抽奖活动单图文'
 	When bill点击图文'百事抽奖活动单图文'进入专项抽奖活动页面
-	Then bill在专项抽奖活动首页获得验证码"tudf"
-	When bill在专项抽奖活动首页中输入验证码""
+	Then bill在专项抽奖活动首页获得验证码'tudf'
+	When bill在专项抽奖活动首页中输入验证码''
 	When bill点击'立即抽奖'进入专项抽奖活动内容页
 	Then bill获得页面提示的消息
 	"""
@@ -160,8 +160,8 @@ Scenario:2 微信用户进入专项抽奖活动首页，输入验证码错误
 	When bill在微信中向jobs的公众号发送消息'百事抽奖'
 	Then bill收到自动回复'百事抽奖活动单图文'
 	When bill点击图文'百事抽奖活动单图文'进入专项抽奖活动页面
-	Then bill在专项抽奖活动首页获得验证码"tudf"
-	When bill在专项抽奖活动首页中输入验证码"sdfg"
+	Then bill在专项抽奖活动首页获得验证码'tudf'
+	When bill在专项抽奖活动首页中输入验证码'sdfg'
 	When bill点击'立即抽奖'进入专项抽奖活动内容页
 	Then bill获得页面提示的消息
 	"""
@@ -219,8 +219,8 @@ Scenario:3
 	When bill在微信中向jobs的公众号发送消息'百事抽奖'
 	Then bill收到自动回复'百事抽奖活动单图文'
 	When bill点击图文'百事抽奖活动单图文'进入专项抽奖活动页面
-	Then bill在专项抽奖活动首页获得验证码"tudf"
-	When bill在专项抽奖活动首页中输入验证码"tudf"
+	Then bill在专项抽奖活动首页获得验证码'tudf'
+	When bill在专项抽奖活动首页中输入验证码'tudf'
 	When bill在专项抽奖活动首页中输入抽奖码'el8s539t18'
 	When bill点击'立即抽奖'进入专项抽奖活动内容页
 	Then bill获得页面提示的消息
@@ -277,8 +277,8 @@ Scenario:4 微信用户进入专项抽奖活动首页，验证码正确，抽奖
 	When bill在微信中向jobs的公众号发送消息'百事抽奖'
 	Then bill收到自动回复'百事抽奖活动单图文'
 	When bill点击图文'百事抽奖活动单图文'进入专项抽奖活动页面
-	Then bill在专项抽奖活动首页获得验证码"tudf"
-	When bill在专项抽奖活动首页中输入验证码"tudf"
+	Then bill在专项抽奖活动首页获得验证码'tudf'
+	When bill在专项抽奖活动首页中输入验证码'tudf'
 	When bill在专项抽奖活动首页中输入抽奖码'el8s539t18'
 	When bill点击'立即抽奖'进入专项抽奖活动内容页
 	When bill参加专项抽奖活动'专项抽奖'
@@ -342,8 +342,8 @@ Scenario:5 微信用户进入专项抽奖活动首页，验证码正确，活动
 	When bill在微信中向jobs的公众号发送消息'百事抽奖'
 	Then bill收到自动回复'百事抽奖活动单图文'
 	When bill点击图文'百事抽奖活动单图文'进入专项抽奖活动页面
-	Then bill在专项抽奖活动首页获得验证码"tudf"
-	When bill在专项抽奖活动首页中输入验证码"tudf"
+	Then bill在专项抽奖活动首页获得验证码'tudf'
+	When bill在专项抽奖活动首页中输入验证码'tudf'
 	When bill在专项抽奖活动首页中输入抽奖码'el8s539t18'
 	When bill点击'立即抽奖'进入专项抽奖活动内容页
 	When bill参加专项抽奖活动'专项抽奖'
@@ -355,8 +355,8 @@ Scenario:5 微信用户进入专项抽奖活动首页，验证码正确，活动
 		}
 	"""
 	When bill于3天后点击图文'百事抽奖活动单图文'进入专项抽奖活动页面
-	Then bill在专项抽奖活动首页获得验证码"qwer"
-	When bill在专项抽奖活动首页中输入验证码"qwer"
+	Then bill在专项抽奖活动首页获得验证码'qwer'
+	When bill在专项抽奖活动首页中输入验证码'qwer'
 	When bill在专项抽奖活动首页中输入抽奖码'el8s539t18'
 	When bill点击'立即抽奖'进入专项抽奖活动内容页
 	Then bill获得页面提示的消息
@@ -414,8 +414,8 @@ Scenario:6 微信用户进入专项抽奖活动首页，验证码正确，活动
 	When bill在微信中向jobs的公众号发送消息'百事抽奖'
 	Then bill收到自动回复'百事抽奖活动单图文'
 	When bill点击图文'百事抽奖活动单图文'进入专项抽奖活动页面
-	Then bill在专项抽奖活动首页获得验证码"tudf"
-	When bill在专项抽奖活动首页中输入验证码"tudf"
+	Then bill在专项抽奖活动首页获得验证码'tudf'
+	When bill在专项抽奖活动首页中输入验证码'tudf'
 	When bill在专项抽奖活动首页中输入抽奖码'el8s539t18'
 	When bill点击'立即抽奖'进入专项抽奖活动内容页
 	When bill参加专项抽奖活动'专项抽奖'
@@ -427,8 +427,8 @@ Scenario:6 微信用户进入专项抽奖活动首页，验证码正确，活动
 		}
 	"""
 	When bill于1天后点击图文'百事抽奖活动单图文'进入专项抽奖活动页面
-	Then bill在专项抽奖活动首页获得验证码"qwer"
-	When bill在专项抽奖活动首页中输入验证码"qwer"
+	Then bill在专项抽奖活动首页获得验证码'qwer'
+	When bill在专项抽奖活动首页中输入验证码'qwer'
 	When bill在专项抽奖活动首页中输入抽奖码'el8s539t18'
 	When bill点击'立即抽奖'进入专项抽奖活动内容页
 	Then bill获得页面提示的消息
@@ -489,8 +489,8 @@ Scenario:7 微信用户进入专项抽奖活动首页，验证码正确，活动
 	When bill在微信中向jobs的公众号发送消息'百事抽奖'
 	Then bill收到自动回复'百事抽奖活动单图文'
 	When bill点击图文'百事抽奖活动单图文'进入专项抽奖活动页面
-	Then bill在专项抽奖活动首页获得验证码"tudf"
-	When bill在专项抽奖活动首页中输入验证码"tudf"
+	Then bill在专项抽奖活动首页获得验证码'tudf'
+	When bill在专项抽奖活动首页中输入验证码'tudf'
 	When bill在专项抽奖活动首页中输入抽奖码'el8s539t18'
 	When bill点击'立即抽奖'进入专项抽奖活动内容页
 	Then bill获得页面提示的消息
@@ -548,8 +548,8 @@ Scenario:8 微信用户进入专项抽奖活动首页，验证码正确，抽奖
 	When bill在微信中向jobs的公众号发送消息'百事抽奖'
 	Then bill收到自动回复'百事抽奖活动单图文'
 	When bill点击图文'百事抽奖活动单图文'进入专项抽奖活动页面
-	Then bill在专项抽奖活动首页获得验证码"tudf"
-	When bill在专项抽奖活动首页中输入验证码"tudf"
+	Then bill在专项抽奖活动首页获得验证码'tudf'
+	When bill在专项抽奖活动首页中输入验证码'tudf'
 	When bill在专项抽奖活动首页中输入抽奖码'el12345678'
 	When bill点击'立即抽奖'进入专项抽奖活动内容页
 	Then bill获得页面提示的消息
