@@ -3387,3 +3387,14 @@ def refund_weizoom_card_money(order):
 	})
 
 	return resp
+
+import msg_crypt
+crypt = msg_crypt.MsgCrypt(settings.WZCARD_ENCRYPT_INFO['token'], settings.WZCARD_ENCRYPT_INFO['encodingAESKey'],
+                           settings.WZCARD_ENCRYPT_INFO['id'])
+
+def encrypt_msg(raw_msg):
+	return crypt.EncryptMsg(str(raw_msg))
+
+
+def decrypt_password(encrypt_msg):
+	return crypt.DecryptMsg(encrypt_msg)[1]
