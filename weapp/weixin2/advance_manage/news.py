@@ -44,7 +44,7 @@ class SingleNews(resource.Resource):
 			'second_nav_name': export.WEIXIN_ADVANCE_SECOND_NAV,
 			'third_nav_name': export.ADVANCE_MANAGE_MATERIAL_NAV,
 			'material_id': material_id,
-			'newses': json.dumps(newses_object)
+			'newses': json.dumps(newses_object).replace("'", "\\'") #解决前台单引号导致的问题
 		})
 
 		return render_to_response('weixin/advance_manage/edit_single_news.html', c)

@@ -117,7 +117,7 @@ def send_mass_news_message_with_openid_list(user_profile, openid_list, material_
 
 				try:
 					if not pic_result_url:
-						watchdog_error(u'上传多媒体文件失败 url:{}, pic_result:{}'.format(pic_url, pic_result_url))
+						watchdog_error(u'上传多媒体文件失败 url:{}, pic_result:{}, weixin_resp:{}'.format(pic_url, pic_result_url, pic_result))
 				except:
 					pass
 				pic_pre = matched.group("img_pre")

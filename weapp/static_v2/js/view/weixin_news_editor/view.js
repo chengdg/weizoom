@@ -99,7 +99,7 @@ W.view.weixin.NewsEditor = Backbone.View.extend({
 	        el: this.$('.xa-weixin-edit-imageView'),
 	        height: this.imageHeight,
 	        width: this.imageWidth,
-	        // sizeLimit: 128,
+	        sizeLimit: 1024,
 	        format: 'jpg',
 	        autoShowHelp: false,
 	        buttonText: '添加图片'
