@@ -12,6 +12,7 @@ from django.contrib.auth.models import User
 
 from account.models import UserProfile
 from mall.models import *
+from weixin.user.models import *
 
 STATUS2TEXT = {
     1: u'待更新',
@@ -29,6 +30,12 @@ STATUS2ACTION = {
 def step_impl(context, user, store_name):
     user_id = User.objects.get(username=user).id
     UserProfile.objects.filter(user_id=user_id).update(store_name=store_name)
+
+@given(u"添加{user}公众号名称为'{nick_name}'")
+def step_impl(context, user, nick_name):
+    user_id = User.objects.get(username=user).id
+    auth_appid = ComponentAuthedAppid.objects.get(user_id=user_id).id
+    ComponentAuthedAppidInfo.objects.filter(auth_appid=auth_appid).update(nick_name=nick_name)
 
 @given(u"设置{user}为自营平台账号")
 def step_impl(context, user):

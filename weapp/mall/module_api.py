@@ -3389,6 +3389,7 @@ def refund_weizoom_card_money(order):
 	return resp
 
 import msg_crypt
+from weapp import settings
 crypt = msg_crypt.MsgCrypt(settings.WZCARD_ENCRYPT_INFO['token'], settings.WZCARD_ENCRYPT_INFO['encodingAESKey'],
                            settings.WZCARD_ENCRYPT_INFO['id'])
 
