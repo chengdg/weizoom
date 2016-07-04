@@ -30,6 +30,10 @@ class MPowerMe(resource.Resource):
 		member = request.member
 		member_id = member.id
 		fid = request.GET.get('fid', member_id)
+
+		user_id = request.webapp_owner_info.user_profile.user_id
+		username = User.objects.get(id=user_id).username
+
 		response = create_response(500)
 		if not record_id or not member_id:
 			response.errMsg = u'活动信息出错'
@@ -42,12 +46,48 @@ class MPowerMe(resource.Resource):
 		current_member_rank_info = None
 		cache_key = 'apps_powerme_%s' % record_id
 		cache_data = GET_CACHE(cache_key)
-		if cache_data:
+		if username != 'weshop' and cache_data:
 			participances_dict = cache_data['participances_dict']
 			participances_list = cache_data['participances_list']
 			total_participant_count = cache_data['total_participant_count']
 			print '================from cache'
 		else:
+			if username == 'weshop':
+				need_del_powerlogs_ids = []
+				power_logs = app_models.PowerLog.objects(belong_to=record_id)
+				power_member_ids = [p.power_member_id for p in power_logs]
+				member_id2subscribe = {m.id: m.is_subscribed for m in Member.objects.filter(id__in=power_member_ids)}
+
+				temp_participances = app_models.PowerMeParticipance.objects(belong_to=record_id, has_join=True).order_by('-power', 'created_at')
+				record_id2participances = {}
+				for pa in temp_participances:
+					belong_to = pa.belong_to
+					if not record_id2participances.has_key(belong_to):
+						record_id2participances[belong_to] = [pa]
+					else:
+						record_id2participances[belong_to].append(pa)
+
+				#统计助力值
+				need_power_logs = [p for p in power_logs if member_id2subscribe[p.power_member_id]]
+				power_log_ids = [p.id for p in need_power_logs]
+				need_power_member_ids = [p.be_powered_member_id for p in need_power_logs]
+				#计算助力值
+				need_power_member_id2power = {}
+				for m_id in need_power_member_ids:
+					if not need_power_member_id2power.has_key(m_id):
+						need_power_member_id2power[m_id] = 1
+					else:
+						need_power_member_id2power[m_id] += 1
+				for m_id in need_power_member_id2power.keys():
+					app_models.PowerMeParticipance.objects(belong_to=record_id,member_id=m_id).update(inc__power=need_power_member_id2power[m_id])
+				#更新已关注会员的助力详情记录
+				detail_power_member_ids = [p.power_member_id for p in need_power_logs]
+				app_models.PoweredDetail.objects(belong_to=record_id, power_member_id__in=detail_power_member_ids).update(set__has_powered=True)
+				need_del_powerlogs_ids += power_log_ids
+				#删除计算过的log
+				app_models.PowerLog.objects(id__in=need_del_powerlogs_ids).delete()
+
+
 			# 遍历log，统计助力值
 			participances_dict = {}
 			participances_list = []
@@ -196,12 +236,11 @@ class MPowerMe(resource.Resource):
 			'has_power': has_power
 		}
 
-		user_id = request.webapp_owner_info.user_profile.user_id
-		username = User.objects.get(id=user_id).username
+
 		follow_friend_list = []
 		unfollow_friend_list = []
 		if username == 'weshop':
-			details = app_models.PoweredDetail.objects(belong_to=record_id, owner_id=fid)
+			details = app_models.PoweredDetail.objects(belong_to=record_id, owner_id=fid, has_powered=True)
 			power_member_ids = [d.power_member_id for d in details]
 			power_member_id2member = {m.id: m for m in Member.objects.filter(id__in=power_member_ids)}
 			for member_id, member in power_member_id2member.items():
