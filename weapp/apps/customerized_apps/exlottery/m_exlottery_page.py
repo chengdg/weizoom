@@ -86,7 +86,7 @@ class Mexlottery(resource.Resource):
 			return response.get_response()
 
 		# 检查抽奖码是否可用
-		resp = check_exlottery_code(ex_code, member.id)
+		resp = check_exlottery_code(ex_code, member.id, record_id)
 
 		if resp is not True and (resp != 'is_member_self'):
 			response.errMsg = resp

@@ -173,20 +173,18 @@ def update_exlottery_status(lottery):
 		lottery.reload()
 	return activity_status, lottery
 
-def check_exlottery_code(keyword,member_id):
-	code = app_models.ExlotteryCode.objects(code=keyword).order_by('-created_at')
+def check_exlottery_code(keyword,member_id,record_id):
+	code = app_models.ExlotteryCode.objects(code=keyword, belong_to=record_id).order_by('-created_at')
 	if code.count() == 0:
 		return u'请输入正确的抽奖码'
 
-	code = code.first()
-	belong_to = code.belong_to
-	exlottery = app_models.Exlottery.objects(id=belong_to)
+	exlottery = app_models.Exlottery.objects(id=record_id)
 	if exlottery.count() == 0:
 		return u'活动信息出错'
 	exlottery = exlottery.first()
 	exlottery_status, exlottery = update_exlottery_status(exlottery)
 
-	exlottery_participance = app_models.ExlotteryParticipance.objects(code=keyword,belong_to=belong_to)
+	exlottery_participance = app_models.ExlotteryParticipance.objects(code=keyword,belong_to=record_id)
 	exlottery_participance_count = exlottery_participance.count()
 
 	if exlottery_status == u'未开始':
@@ -198,7 +196,7 @@ def check_exlottery_code(keyword,member_id):
 			return u'该抽奖码已过期'
 	elif exlottery_status == u'进行中':
 		if exlottery_participance_count > 0:
-			if app_models.ExlotteryParticipance.objects(code=keyword,belong_to=belong_to,member_id=member_id).count() == 1:
+			if app_models.ExlotteryParticipance.objects(code=keyword,belong_to=record_id,member_id=member_id).count() == 1:
 				if exlottery_participance.first().status == app_models.NOT_USED:
 					return 'is_member_self'
 				else:
