@@ -162,7 +162,7 @@ Scenario:2 其他微信用户通过回复分享至朋友圈的专项抽奖活动
     When jerry点击bill分享的'专项抽奖'活动链接参加专项抽奖活动
 	When jerry通过识别弹层中的公众号二维码关注jobs的公众号
 	When jerry点击bill分享的'专项抽奖'活动链接参加专项抽奖活动
-	Then jerry获得专项抽奖结果
+	Then jerry获得页面提示的消息
 	"""
 		该抽奖码已使用
 	"""
