@@ -33,7 +33,7 @@ def log_api_error(request):
 	except:
 		user_id = 0
 
-	if len(error.strip()) > 0:
+	if len(error.strip()) > 0 and error and error != 'null':
 		#TODO: 加入watchdog操作
 		watchdog_error(u'api:{},\nerror:\n{}'.format(api, error), 'API', str(user_id))
 
