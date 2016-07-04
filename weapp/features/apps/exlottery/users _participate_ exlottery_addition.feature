@@ -249,8 +249,8 @@ Scenario:4 微信用户进入专项抽奖活动首页，验证码正确，活动
 			"home_page_pic":"1.jpg",
 			"lottory_pic":"2.jpg",
 			"lottory_color":"#0000FF",
-			"start_date":"4天前",
-			"end_date":"2天前",
+			"start_date":"2天前",
+			"end_date":"1天后",
 			"reduce_integral":0,
 			"send_integral":0,
 			"win_rate":"100%",
@@ -299,7 +299,7 @@ Scenario:4 微信用户进入专项抽奖活动首页，验证码正确，活动
 			"prize_name":"1000积分"
 		}
 	"""
-	When bill于'1天后'点击图文'百事抽奖活动单图文'进入专项抽奖活动页面
+	When bill于'3天后'点击图文'百事抽奖活动单图文'进入专项抽奖活动页面
 	Then bill在专项抽奖活动首页获得验证码'qwer'
 	When bill在专项抽奖活动首页中输入验证码'qwer'
 	When bill在专项抽奖活动首页中输入抽奖码'el8s539t18'
