@@ -25,9 +25,9 @@ W.component.appkit.ExlottertItem = W.component.Component.extend({
 			maxLength: 5,
 			size: '70px',
 			annotation: '个 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;剩余：<b class="xa-leftCount" style="color:red">0</b>&nbsp;&nbsp;个',
-			validate: 'data-validate="require-notempty::选项不能为空,,require-natural::只能填入数字"',
+			validate: 'data-validate="require-natural::只能填入数字"',
 			validateIgnoreDefaultValue: true,
-			default: ''
+			default: '0'
 		},{
 			name: 'prize',
 			type: 'prize_selector_v3',
