@@ -204,7 +204,7 @@ class MPowerMe(resource.Resource):
 		follow_friend_list = []
 		unfollow_friend_list = []
 		if username == 'weshop':
-			details = app_models.PoweredDetail.objects(belong_to=record_id, owner_id=fid)
+			details = app_models.PoweredDetail.objects(belong_to=record_id, owner_id=fid, has_powered=True)
 			power_member_ids = [d.power_member_id for d in details]
 			power_member_id2member = {m.id: m for m in Member.objects.filter(id__in=power_member_ids)}
 			for member_id, member in power_member_id2member.items():
