@@ -54,65 +54,9 @@ Background:
 		}]
 		"""
 
-@mall2 @apps @apps_exlottery @participate_exlottery_addition @sun
-Scenario:1 微信用户进入专项抽奖活动首页，未输入验证码
-	Given jobs登录系统
-	When jobs新建专项抽奖活动
-		"""
-		[{
-			"name":"专项抽奖",
-			"share_intro":"百事专项抽奖活动",
-			"desc":"活动规则",
-			"home_page_pic":"1.jpg",
-			"lottory_pic":"2.jpg",
-			"lottory_color":"#0000FF",
-			"start_date":"今天",
-			"end_date":"2天后",
-			"reduce_integral":0,
-			"send_integral":0,
-			"win_rate":"100%",
-			"lottory_code_num":1,
-			"is_repeat_win":"否",
-			"prize_settings":[{
-				"prize_grade":"一等奖",
-				"prize_counts":10,
-				"prize_type":"积分",
-				"integral":1000,
-				"pic":"2.jpg"
-			},{
-				"prize_grade":"二等奖",
-				"prize_counts":0,
-				"prize_type":"优惠券",
-				"coupon":"优惠券1",
-				"pic":"3.jpg"
-			},{
-				"prize_grade":"三等奖",
-				"prize_counts":0,
-				"prize_type":"优惠券",
-				"coupon":"优惠券2",
-				"pic":"4.jpg"
-			}]
-		}]
-		"""
-	Then jobs生成'专项抽奖'码库
-	"""
-		["el8s539t18"]
-	"""
-	Given bill关注jobs的公众号
-	When bill访问jobs的webapp
-	When bill在微信中向jobs的公众号发送消息'百事抽奖'
-	Then bill收到自动回复'百事抽奖活动单图文'
-	When bill点击图文'百事抽奖活动单图文'进入专项抽奖活动页面
-	Then bill在专项抽奖活动首页获得验证码'tudf'
-	When bill在专项抽奖活动首页中输入验证码''
-	When bill点击'立即抽奖'进入专项抽奖活动内容页
-	Then bill获得页面提示的消息
-	"""
-		请输入验证码
-	"""
 
 @mall2 @apps @apps_exlottery @participate_exlottery_addition 
-Scenario:2 微信用户进入专项抽奖活动首页，输入验证码错误
+Scenario:1 微信用户进入专项抽奖活动首页，输入验证码错误
 	Given jobs登录系统
 	When jobs新建专项抽奖活动
 		"""
@@ -162,6 +106,7 @@ Scenario:2 微信用户进入专项抽奖活动首页，输入验证码错误
 	When bill点击图文'百事抽奖活动单图文'进入专项抽奖活动页面
 	Then bill在专项抽奖活动首页获得验证码'tudf'
 	When bill在专项抽奖活动首页中输入验证码'sdfg'
+	When bill在专项抽奖活动首页中输入抽奖码'el8s539t18'
 	When bill点击'立即抽奖'进入专项抽奖活动内容页
 	Then bill获得页面提示的消息
 	"""
@@ -169,7 +114,7 @@ Scenario:2 微信用户进入专项抽奖活动首页，输入验证码错误
 	"""
 
 @mall2 @apps @apps_exlottery @participate_exlottery_addition 
-Scenario:3
+Scenario:2
 微信用户进入专项抽奖活动首页，验证码正确，活动未开始
 	Given jobs登录系统
 	When jobs新建专项抽奖活动
@@ -229,7 +174,7 @@ Scenario:3
 	"""
 	
 @mall2 @apps @apps_exlottery @participate_exlottery_addition
-Scenario:4 微信用户进入专项抽奖活动首页，验证码正确，抽奖码正确且未使用
+Scenario:3 微信用户进入专项抽奖活动首页，验证码正确，抽奖码正确且未使用
 	Given jobs登录系统
 	When jobs新建专项抽奖活动
 		"""
@@ -292,7 +237,7 @@ Scenario:4 微信用户进入专项抽奖活动首页，验证码正确，抽奖
 	
 
 @mall2 @apps @apps_exlottery @participate_exlottery_addition
-Scenario:5 微信用户进入专项抽奖活动首页，验证码正确，活动已结束并且抽奖码已使用
+Scenario:4 微信用户进入专项抽奖活动首页，验证码正确，活动已结束并且抽奖码已使用
 
 	Given jobs登录系统
 	When jobs新建专项抽奖活动
@@ -366,7 +311,7 @@ Scenario:5 微信用户进入专项抽奖活动首页，验证码正确，活动
 
 
 @mall2 @apps @apps_exlottery @participate_exlottery_addition
-Scenario:6 微信用户进入专项抽奖活动首页，验证码正确，活动进行中，抽奖码已使用
+Scenario:5 微信用户进入专项抽奖活动首页，验证码正确，活动进行中，抽奖码已使用
 	Given jobs登录系统
 	When jobs新建专项抽奖活动
 		"""
@@ -439,7 +384,7 @@ Scenario:6 微信用户进入专项抽奖活动首页，验证码正确，活动
 
 	
 @mall2 @apps @apps_exlottery @participate_exlottery_addition
-Scenario:7 微信用户进入专项抽奖活动首页，验证码正确，活动已结束并且抽奖码未使用
+Scenario:6 微信用户进入专项抽奖活动首页，验证码正确，活动已结束并且抽奖码未使用
 
 	Given jobs登录系统
 	When jobs新建专项抽奖活动
@@ -499,7 +444,7 @@ Scenario:7 微信用户进入专项抽奖活动首页，验证码正确，活动
 	"""
 
 @mall2 @apps @apps_exlottery @participate_exlottery_addition 
-Scenario:8 微信用户进入专项抽奖活动首页，验证码正确，抽奖码不正确
+Scenario:7 微信用户进入专项抽奖活动首页，验证码正确，抽奖码不正确
 	Given jobs登录系统
 	When jobs新建专项抽奖活动
 		"""
