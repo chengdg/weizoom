@@ -143,7 +143,7 @@ Background:
 	Then bill在专项抽奖活动首页获得验证码'tudf'
 	When bill在专项抽奖活动首页中输入验证码'tudf'
 	When bill在专项抽奖活动首页中输入抽奖码'elm8v6uj41'
-    When bill点击'立即抽奖'进入专项抽奖活动页面
+    When bill点击'立即抽奖'进入专项抽奖活动内容页
 	When bill参加专项抽奖活动'专项抽奖'
 	Then bill获得专项抽奖结果
 	"""
@@ -158,7 +158,7 @@ Background:
 	Then bill在专项抽奖活动首页获得验证码'tudf'
 	When bill在专项抽奖活动首页中输入验证码'tudf'
 	When bill在专项抽奖活动首页中输入抽奖码'el58fe24rf'
-	When bill点击'立即抽奖'进入专项抽奖活动页面
+	When bill点击'立即抽奖'进入专项抽奖活动内容页
 	When bill参加专项抽奖活动'专项抽奖'
 	Then bill获得专项抽奖结果
 	"""
