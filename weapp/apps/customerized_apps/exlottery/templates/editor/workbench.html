@@ -182,57 +182,68 @@
             pageManagerView.activePage(page);
           }
 
-            W.Broadcaster.on("image_dialog_select:deleteImage", function(cid){
-				var comp = W.component.CID2COMPONENT[cid],
-					targetClass;
-				switch (cid){
-					case '4':
-						targetClass = '.xa-lottery-first';
-						break;
-					case '5':
-						targetClass = '.xa-lottery-second';
-						break;
-					case '6':
-						targetClass = '.xa-lottery-third';
-						break;
-					default:
-						targetClass = '.xa-lottery-first';
-						break;
-				}
+          W.Broadcaster.on("image_dialog_select:deleteImage", function(options){
+            if(options.anchor == 'items'){
+              var cid = options.cid
+      				var comp = W.component.CID2COMPONENT[cid],
+      					targetClass;
+      				switch (cid){
+      					case '4':
+      						targetClass = '.xa-lottery-first';
+      						break;
+      					case '5':
+      						targetClass = '.xa-lottery-second';
+      						break;
+      					case '6':
+      						targetClass = '.xa-lottery-third';
+      						break;
+      					default:
+      						targetClass = '.xa-lottery-first';
+      						break;
+      				}
+      				var $target = $('#phoneIFrame').contents().find(targetClass);//找到子frame中的相应元素
+      				var defaultPosition = $target.attr('defaultPosition');
+      				$target.html("<span style='background-position:"+ defaultPosition + ";'></span>");
 
-				var $target = $('#phoneIFrame').contents().find(targetClass);//找到子frame中的相应元素
-				var defaultPosition = $target.attr('defaultPosition');
-				$target.html("<span style='background-position:"+ defaultPosition + ";'></span>");
+      				comp.model.set({
+      					image: ''
+      				});
+            }else{
+              if(options.anchor == 'homepage_image'){
+                var comp = W.component.CID2COMPONENT[2];
+                comp.model.set({
+                  exlottery_bg_image: ''
+                });                
+              }else{
+                $('#phoneIFrame').contents().find('.xa-exlotterydescription').css("background-image","");
+              }
+            }
+		      });
+          W.Broadcaster.on('page:rendered', function () {
+              if ("{{ exlottery.status_text }}" == "进行中" ){
+                  W.getApi().call({
+                      method: 'get',
+                      app: 'apps/exlottery',
+                      resource: 'exlottery_prize_count',
+                      args:{id:W.activityId},
+                      success: function (data) {
+                              var prize_count = $('input[data-field="prize_count"]');
+                              $(prize_count[0]).parent().find('span b').text(data["一等奖"].prize_count);
+                              $(prize_count[1]).parent().find('span b').text(data["二等奖"].prize_count);
+                              $(prize_count[2]).parent().find('span b').text(data["三等奖"].prize_count);
+                              window.total_prize_count = {
+                                  "一等奖": {total_prize_count:$(prize_count[0]).val(),left_count:$(prize_count[0]).parent().find('.xa-leftCount').text(),control_prize_count:$(prize_count[0]).val()},
+                                  "二等奖": {total_prize_count:$(prize_count[1]).val(),left_count:$(prize_count[1]).parent().find('.xa-leftCount').text(),control_prize_count:$(prize_count[1]).val()},
+                                  "三等奖": {total_prize_count:$(prize_count[2]).val(),left_count:$(prize_count[2]).parent().find('.xa-leftCount').text(),control_prize_count:$(prize_count[2]).val()},
+                                  "status": "进行中"
+                              };
+                      },
+                      error:function(){
 
-				comp.model.set({
-					image: ''
-				});
-			});
-            W.Broadcaster.on('page:rendered', function () {
-                if ("{{ exlottery.status_text }}" == "进行中" ){
-                    W.getApi().call({
-                        method: 'get',
-                        app: 'apps/exlottery',
-                        resource: 'exlottery_prize_count',
-                        args:{id:W.activityId},
-                        success: function (data) {
-                                var prize_count = $('input[data-field="prize_count"]');
-                                $(prize_count[0]).parent().find('span b').text(data["一等奖"].prize_count);
-                                $(prize_count[1]).parent().find('span b').text(data["二等奖"].prize_count);
-                                $(prize_count[2]).parent().find('span b').text(data["三等奖"].prize_count);
-                                window.total_prize_count = {
-                                    "一等奖": {total_prize_count:$(prize_count[0]).val(),left_count:$(prize_count[0]).parent().find('.xa-leftCount').text(),control_prize_count:$(prize_count[0]).val()},
-                                    "二等奖": {total_prize_count:$(prize_count[1]).val(),left_count:$(prize_count[1]).parent().find('.xa-leftCount').text(),control_prize_count:$(prize_count[1]).val()},
-                                    "三等奖": {total_prize_count:$(prize_count[2]).val(),left_count:$(prize_count[2]).parent().find('.xa-leftCount').text(),control_prize_count:$(prize_count[2]).val()},
-                                    "status": "进行中"
-                                };
-                        },
-                        error:function(){
-
-                        }
-                    });
-                }
-            });
+                      }
+                  });
+              }
+          });
         },
         error: function(resp) {
           alert('Failed to load pages in JSON. Please check it.');

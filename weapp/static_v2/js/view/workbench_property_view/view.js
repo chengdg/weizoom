@@ -1068,7 +1068,8 @@ W.workbench.PropertyView = Backbone.View.extend({
         $el.hide();
         //广播删除事件，以便删除phoneView中的对应图片
         var cid = $el.parents('.propertyGroup_property_dynamicControlField_control').attr('data-dynamic-cid');
-        W.Broadcaster.trigger("image_dialog_select:deleteImage", cid);
+        var anchor = $el.parents('.propertyGroup_property').attr('data-field-anchor');
+        W.Broadcaster.trigger("image_dialog_select:deleteImage", {cid:cid,anchor:anchor});
     },
 
     onMouseoverImage: function(event){
