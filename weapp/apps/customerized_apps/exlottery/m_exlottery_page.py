@@ -67,6 +67,12 @@ class Mexlottery(resource.Resource):
 		ex_code = request.GET['excode']
 		verify = request.GET['verify_code'].encode('utf8')
 		_code = request.session['checkcode']
+
+		#BDD专用
+		verify_for_bdd = request.GET.get('verify_code_for_bdd', None)
+		if verify_for_bdd:
+			_code = verify_for_bdd
+
 		# request.session['checkcode'] = ''
 
 		response = create_response(500)
