@@ -943,11 +943,13 @@ def step_impl(context,user,lottery_name):
 	desc = expect.get('desc','')#描述
 	reduce_integral = expect.get('reduce_integral',0)#消耗积分
 	send_integral = expect.get('send_integral',0)#参与送积分
-	reply = expect.get('reply',"")#送积分规则
-	reply_link = expect.get('link_reply',"")
 	lottery_code_count = expect.get('lottory_code_num',u'0')#抽奖码个数
 	win_rate = expect.get('win_rate','0%').split('%')[0]#中奖率
 	is_repeat_win = __name2Bool(expect.get('is_repeat_win',"true"))#重复中奖
+
+	share_intro = expect.get('share_intro','')#分享简介
+	home_page_pic = expect.get('home_page_pic','')#首页背景图
+
 	expect_prize_settings_list = expect.get('prize_settings',[])
 	page_prize_settings,exlottery_prize_settings = __prize_settings_process(expect_prize_settings_list)
 
@@ -975,9 +977,9 @@ def step_impl(context,user,lottery_name):
 		"chance":win_rate,#中奖率
 		"allow_repeat":is_repeat_win,#重复中奖
 		"prize_settings":page_prize_settings,
-		"reply":reply,
-		"reply_link":reply_link,
-		"lottery_code_count":lottery_code_count
+		"lottery_code_count":lottery_code_count,
+		"share_intro":share_intro,
+		"home_page_pic":home_page_pic
 	}
 
 
@@ -1003,9 +1005,9 @@ def step_impl(context,user,lottery_name):
 		"chance":obj.chance,#中奖率
 		"allow_repeat":obj.allow_repeat,#重复中奖
 		"prize_settings":actual_prize_list,
-		"reply":obj.reply,
-		"reply_link":obj.reply_link,
-		"lottery_code_count":obj.lottery_code_count
+		"lottery_code_count":obj.lottery_code_count,
+		"share_intro":obj.share_description,
+		"home_page_pic":obj.homepage_image
 	}
 
 	bdd_util.assert_dict(expect_lottery_dic, actual_lottery_dic)

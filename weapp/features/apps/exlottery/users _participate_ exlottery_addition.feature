@@ -54,7 +54,7 @@ Background:
 		}]
 		"""
 
-@mall2 @apps @apps_exlottery @participate_exlottery_addition 
+@mall2 @apps @apps_exlottery @participate_exlottery_addition @sun
 Scenario:1 微信用户进入专项抽奖活动首页，未输入验证码
 	Given jobs登录系统
 	When jobs新建专项抽奖活动
@@ -103,12 +103,12 @@ Scenario:1 微信用户进入专项抽奖活动首页，未输入验证码
 	When bill在微信中向jobs的公众号发送消息'百事抽奖'
 	Then bill收到自动回复'百事抽奖活动单图文'
 	When bill点击图文'百事抽奖活动单图文'进入专项抽奖活动页面
-	Then bill在专项抽奖活动首页获得验证码"tudf"
-	When bill在专项抽奖活动首页中输入验证码""
-	Then bill获得页面提示的消息
-	"""
-		请输入验证码
-	"""
+#	Then bill在专项抽奖活动首页获得验证码"tudf"
+#	When bill在专项抽奖活动首页中输入验证码""
+#	Then bill获得页面提示的消息
+#	"""
+#		请输入验证码
+#	"""
 
 @mall2 @apps @apps_exlottery @participate_exlottery_addition 
 Scenario:2 微信用户进入专项抽奖活动首页，输入验证码错误

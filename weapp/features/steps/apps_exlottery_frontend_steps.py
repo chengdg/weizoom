@@ -17,6 +17,7 @@ import json
 import re
 import time
 import apps_step_utils as app_utils
+from weixin.message.material import models as material_models
 
 def __get_exlottery_id(lottery_name):
 	return Exlottery.objects.get(name=lottery_name).id
@@ -34,6 +35,22 @@ def __get_into_lottery_pages(context,webapp_owner_id,lottery_id,lottery_code):
 		}
 	})
 	return response
+
+def __get_into_exlottery_home_page(context):
+	"""
+	进入抽奖主页
+	@param context:
+	@return:
+	"""
+	return app_utils.get_response(context, {
+		"app": "m/apps/exlottery",
+		"resource": "m_exlottery_page",
+		"method": "get",
+		"args": {
+			"webapp_owner_id": context.webapp_owner_id,
+			"id": context.exlottery_id
+		}
+	})
 
 @then(u"{user}获得'{exlottery_name}'系统回复的消息")
 def step_impl(context, user, exlottery_name):
@@ -131,3 +148,20 @@ def step_impl(context, webapp_user_name, lottery_name):
 		"args": context.exlottery_detail
 	})
 	context.lottery_result = json.loads(response.content)
+
+@When(u"{webapp_user_name}点击图文'{title}'进入专项抽奖活动页面")
+def step_impl(context, webapp_user_name, title):
+	user = User.objects.get(id=context.webapp_owner_id)
+	openid = "%s_%s" % (webapp_user_name, user.username)
+	exlottery_name = material_models.News.objects.get(title=title).url
+	exlottery_id = __get_exlottery_id(exlottery_name)
+
+	context.exlottery_id = str(exlottery_id)
+	context.openid = openid
+
+	#获取抽奖首页
+	__get_into_exlottery_home_page(context)
+	#获取动态数据
+	# response = get_dynamic_data(context)
+	# result_data = json.loads(response.content)['data']['record_info']
+	# context.record_info = result_data
