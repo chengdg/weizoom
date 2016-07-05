@@ -139,6 +139,17 @@ class Exlottery(resource.Resource):
 		response = create_response(200)
 		return response.get_response()
 
+class ExlotteryPrizeCount(resource.Resource):
+	app = 'apps/exlottery'
+	resource = 'exlottery_prize_count'
+
+	@login_required
+	def api_get(request):
+		exlottery = app_models.Exlottery.objects.get(id=request.GET['id'])
+		response = create_response(200)
+		response.data = exlottery.prize
+		return response.get_response()
+
 def generate_exlottery_code(owner_id, belong_to, count):
 	"""
 	生成专项抽奖码库
