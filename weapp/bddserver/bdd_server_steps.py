@@ -107,12 +107,9 @@ def step_impl(context):
 	# A relatively simple WSGI application. It's going to print(out the)
 	# environment dictionary after being updated by setup_testing_defaults
 	def simple_app(environ, start_response):
-
-		# 修改窗口名,目前只对windows有效
-		try:
-			os.system("title {}_bdd_server".format(self_name))
-		except:
-			pass
+		def print2(stream):
+			context.print_redircet.console.write(stream + '\n')
+		# print2 =context.print_redircet.console.write
 
 		setup_testing_defaults(environ)
 
@@ -144,14 +141,17 @@ def step_impl(context):
 		# 0:成功，1：业务失败，2：异常
 		result = 0
 		if step == '__reset__':
-			print('*********************** run step **********************')
-			print(u'Reset bdd environment...')
+			# print('*********************** run step **********************')
+			# print(u'Reset bdd environment...')
+			context.print_redircet.console.write('*********************** run step **********************')
+			context.print_redircet.console.write(u'Reset bdd environment...')
 			environment.after_scenario(context, context.scenario)
 			environment.before_scenario(context, context.scenario)
 
 			resp = {
 				'result': result,
-				'bdd_server_name': self_name
+				'bdd_server_name': self_name,
+				'buffs': context.print_redircet.buffs
 			}
 
 			return base64.b64encode(json.dumps(resp))
@@ -164,8 +164,10 @@ def step_impl(context):
 			else:
 				step_content = step_data['context_table']
 			step = u'%s\n"""\n%s\n"""' % (step_data['step'], step_content)
-			print('*********************** run step **********************')
-			print(step)
+			# print('*********************** run step **********************')
+			print2('*********************** run step **********************')
+			# print(step)
+			print2(step)
 
 			context_attrs = {}
 			traceback = ''
@@ -174,25 +176,29 @@ def step_impl(context):
 				context.execute_steps(step)
 			except AssertionError:
 				result = 1
-				print('*********************** failure **********************')
+				print2('*********************** failure **********************')
 				traceback = full_stack()
-				print(traceback.decode('utf-8'))
+				print2(traceback.decode('utf-8'))
 
 			except:
 				result = 2
-				print('*********************** exception **********************')
+				print2('*********************** exception **********************')
 				traceback = full_stack()
-				print(traceback.decode('utf-8'))
+				print2(traceback.decode('utf-8'))
 
 			else:
 				result = 0
 				context_attrs = context._stack[0]
+			finally:
+				buffs = context.print_redircet.buffs
+				context.print_redircet.clear()
 
 			resp = {
 				'result': result,
 				'traceback': traceback,
 				'context_attrs': context_attrs,
-				'bdd_server_name': self_name
+				'bdd_server_name': self_name,
+				'buffs': buffs
 			}
 
 			# 传递context时忽略基本类型外的对象
@@ -203,5 +209,6 @@ def step_impl(context):
 
 	# 启动服务器
 	httpd = make_server('', port, simple_app, handler_class=BDDRequestHandler)
-	print("[{} bdd server] Serving on port {}...".format(self_name, port))
+	# print("[{} bdd server] Serving on port {}...".format(self_name, port))
+	context.print_redircet.console.write("[{} bdd server] Serving on port {}...".format(self_name, port))
 	httpd.serve_forever()

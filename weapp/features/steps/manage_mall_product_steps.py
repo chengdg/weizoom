@@ -47,6 +47,9 @@ def step_product_add(context, user):
       ]
 
     """
+    print('-----------let me see')
+    print('asdasdasdasdad')
+    print 121212121212121221
     url = '/mall2/product/?_method=put'
     if context.table:
         context.products = context.table

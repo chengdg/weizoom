@@ -95,6 +95,36 @@ from termite2 import models as termite2_models
 import termite.pagestore as pagestore_manager
 
 
+# 重定向print
+class PrintRedirection(object):
+	def __init__(self):
+		self.console = sys.stdout
+		self.buff = ''
+		self.buffs = []
+
+
+	def write(self,output_stream):
+		self.console.write(output_stream)
+		self.buffs.append(output_stream)
+
+
+	def reset(self):
+		sys.stdout=self.console
+
+	def clear(self):
+		self.buffs = []
+
+
+print_redircet = PrintRedirection()
+
+# def before_step(context, step):
+# 	sys.stdout = print_redircet
+# 	context.print_redircet = print_redircet
+#
+#
+# def after_step(context, step):
+# 	print_redircet.clear()
+
 def add_touch_support_in_selenium():
 	"""
 	HACK: add touch support into selenium
@@ -723,6 +753,9 @@ def after_all(context):
 
 
 def before_scenario(context, scenario):
+	sys.stdout = print_redircet
+	context.print_redircet = print_redircet
+
 	is_ui_test = False
 	for tag in scenario.tags:
 		if tag.startswith('ui-') or tag == 'ui':
