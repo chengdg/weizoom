@@ -152,16 +152,17 @@ W.component.appkit.ExlottertItem = W.component.Component.extend({
 			var data_cid = $propertyViewNode.attr('data-dynamic-cid');
 			var $li_b = $node.find('.wui-i-settingData li[data_cid="' + data_cid + '"]').find('p');
 
+			//奖品数量为0时该奖项在奖项设置里不显示
+			if (value == '' || Number(value) == 0) {
+				$li_b.parent().hide();
+			} else {
+				$li_b.parent().show();
+			}
+
 			if (total_prize_count['status'] == "进行中"){
 				$propertyViewNode.find('input[data-field="prize_count"]').attr('data-validate','"require-notempty::选项不能为空,,require-natural::只能填入数字,,require-countcontrol::请输入大于"'+total_prize_count[prize_title]['control_prize_count']+'"的数字"');
 			}
 			if ((/^[0-9]*$/g).exec(value) != null){
-				//奖品数量为0时该奖项在奖项设置里不显示
-				if (Number(value) == 0) {
-					$li_b.parent().hide();
-				} else {
-					$li_b.parent().show();
-				}
 				var leftCount = Number(value) - Number(prize_count) + Number(left_count);
 				if (leftCount == -1){
 					$propertyViewNode.find('.xa-leftCount').text(0);
