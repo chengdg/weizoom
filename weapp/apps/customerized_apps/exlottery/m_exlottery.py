@@ -45,6 +45,7 @@ class Mexlottery(resource.Resource):
 
 		try:
 			record = app_models.Exlottery.objects.get(id=id)
+			exlottery_bg_image = record.exlottery_bg_image
 		except:
 			c = RequestContext(request,{
 				'is_deleted_data': True
@@ -72,7 +73,7 @@ class Mexlottery(resource.Resource):
 			'isPC': is_pc,
 			'auth_appid_info': auth_appid_info,
 			'share_page_desc': share_page_desc,
-			'share_img_url': thumbnails_url,
+			'share_img_url': exlottery_bg_image if exlottery_bg_image else thumbnails_url,
 			'code': code
 		})
 		response = render_to_string('exlottery/templates/webapp/m_exlottery.html', c)

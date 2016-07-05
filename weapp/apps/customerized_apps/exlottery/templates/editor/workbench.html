@@ -318,6 +318,7 @@
             var share_description = descriptionModel.get('share_description');
             var lottery_code_count = descriptionModel.get('lottery_code_count');
             var homepage_image = descriptionModel.get('homepage_image');
+            var exlottery_bg_image = descriptionModel.get('exlottery_bg_image');
           var relatedPageId = data['project_id'];
             var prizeData = {
                 "一等奖": {
@@ -350,7 +351,8 @@
               "prize":JSON.stringify(prizeData),
               "share_description": share_description,
               "lottery_code_count": lottery_code_count,
-              "homepage_image": homepage_image
+              "homepage_image": homepage_image,
+              "exlottery_bg_image": exlottery_bg_image
           };
           if (isCreateNewData) {
             var method = 'put';

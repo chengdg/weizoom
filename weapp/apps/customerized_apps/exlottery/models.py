@@ -67,6 +67,7 @@ class Exlottery(models.Document):
 	share_description = models.StringField(default="", max_length=30) #分享说明
 	lottery_code_count = models.IntField(default=0) #抽奖码数量
 	homepage_image = models.StringField(default="", max_length=256) #首页背景图
+	exlottery_bg_image = models.StringField(default="", max_length=256)  # 抽奖背景图
 	#证书文存放件路径
 	cert_pem_path = models.StringField(default="", max_length=256) #证书
 	key_pem_path = models.StringField(default="", max_length=256) #证书密钥
