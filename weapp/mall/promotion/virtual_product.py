@@ -399,7 +399,7 @@ def update_stocks(virtual_product):
 	product_model.update(stock_type=1, stocks=stocks)
 	logging.info("update stocks for product:%d in virtual_product:%d to %d" % (product.id, virtual_product.id, stocks))
 
-
+from weapp import settings
 crypt = msg_crypt.MsgCrypt(settings.WZCARD_ENCRYPT_INFO['token'], settings.WZCARD_ENCRYPT_INFO['encodingAESKey'],
                            settings.WZCARD_ENCRYPT_INFO['id'])
 def encrypt_password(raw_password):
