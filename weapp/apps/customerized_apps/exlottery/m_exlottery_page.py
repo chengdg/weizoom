@@ -34,10 +34,12 @@ class Mexlottery(resource.Resource):
 
 		member = request.member
 		is_pc = False if member else True
+		thumbnails_url = '/static_v2/img/thumbnails_lottery.png'
 
 		try:
 			record = app_models.Exlottery.objects.get(id=id)
 			homepage_image = record.homepage_image
+			thumbnails_url = homepage_image
 		except:
 			c = RequestContext(request,{
 				'is_deleted_data': True
@@ -51,6 +53,7 @@ class Mexlottery(resource.Resource):
 			'resource': "exlottery",
 			'hide_non_member_cover': True, #非会员也可使用该页面
 			'isPC': is_pc,
+			'share_img_url': thumbnails_url,
 			'homepage_image': homepage_image
 		})
 		response = render_to_string('exlottery/templates/webapp/m_exlottery_page.html', c)
