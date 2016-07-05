@@ -16,6 +16,7 @@ from mall.promotion import models as promotion_models
 from mall import models as mall_models
 
 from watchdog.utils import watchdog_alert
+from mall import msg_crypt
 
 import utils
 from django.conf import settings
@@ -297,6 +298,9 @@ def upload_codes_for(owner, code_file_path, virtual_product, start_time, end_tim
 			continue
 
 		password = codes_dict[code]
+		if password:
+			password = encrypt_password(password)
+
 		promotion_models.VirtualProductHasCode.objects.create(
 			owner=owner,
 			virtual_product=virtual_product,
@@ -394,3 +398,15 @@ def update_stocks(virtual_product):
 	#用save的话不能触发更新redis缓存的新号，朱天琦挖的坑
 	product_model.update(stock_type=1, stocks=stocks)
 	logging.info("update stocks for product:%d in virtual_product:%d to %d" % (product.id, virtual_product.id, stocks))
+
+
+crypt = msg_crypt.MsgCrypt(settings.WZCARD_ENCRYPT_INFO['token'], settings.WZCARD_ENCRYPT_INFO['encodingAESKey'],
+                           settings.WZCARD_ENCRYPT_INFO['id'])
+def encrypt_password(raw_password):
+	password = str(raw_password)
+	return crypt.EncryptMsg(password)
+
+def decrypt_password(encrypt_password):
+	if not encrypt_password:
+		return ''
+	return crypt.DecryptMsg(encrypt_password)[1]
