@@ -404,6 +404,8 @@ crypt = msg_crypt.MsgCrypt(settings.WZCARD_ENCRYPT_INFO['token'], settings.WZCAR
                            settings.WZCARD_ENCRYPT_INFO['id'])
 def encrypt_password(raw_password):
 	password = str(raw_password)
+	if not password:
+		return ''
 	return crypt.EncryptMsg(password)
 
 def decrypt_password(encrypt_password):

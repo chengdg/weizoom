@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import sys
 
+from mall.promotion.virtual_product import encrypt_password
+
 reload(sys)
 sys.setdefaultencoding("utf-8")
 import os
@@ -11,10 +13,9 @@ from django.core.management import execute_from_command_line
 
 execute_from_command_line(sys.argv)
 from mall.module_api import encrypt_msg
-from mall.promotion.models import MemberHasWeizoomCard
+from mall.promotion.models import MemberHasWeizoomCard, VirtualProductHasCode
 
-
-print('----start...')
+print('----MemberHasWeizoomCard start...')
 
 cards = MemberHasWeizoomCard.objects.all()
 
@@ -24,4 +25,20 @@ for card in cards:
 
 		card.save()
 	print('**card_number:{},card_password:{}'.format(card.card_number,card.card_password))
-print('end...')
+print('MemberHasWeizoomCard end...')
+
+
+print('----VirtualProductHasCode start...')
+vproducts = VirtualProductHasCode.objects.all()
+
+for vproduct in vproducts:
+
+	vproduct.password = encrypt_password(vproduct.password)
+	vproduct.save()
+
+
+
+print('VirtualProductHasCode end...')
+
+
+print('-------all end---------')
