@@ -26,7 +26,7 @@ class Mexlottery(resource.Resource):
 		响应GET
 		"""
 		id = request.GET['id']
-		code = request.GET.get('code', None)
+		code = request.GET.get('ex_code', None)
 		expend = 0
 		auth_appid_info = None
 		share_page_desc = ''
@@ -89,7 +89,7 @@ class Mexlottery(resource.Resource):
 		exlottery_status = False
 
 		member = request.member
-		code = request.GET.get('code',None)
+		code = request.GET.get('ex_code',None)
 		response = create_response(500)
 
 		if not record_id or not member:

@@ -61,7 +61,7 @@ class exlottery_prize(resource.Resource):
 		post = request.POST
 		response = create_response(500)
 		record_id = post.get('id', None)
-		code = post.get('code', None)
+		code = post.get('ex_code', None)
 		now_datetime = datetime.today()
 
 		member = request.member
