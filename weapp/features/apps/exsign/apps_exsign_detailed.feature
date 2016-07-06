@@ -1,4 +1,5 @@
 # __author__ : 邓成龙 2016.06.20
+#editor: 邓成龙 2016.07.06
 
 Feature: 签到-后台签到详情
 """
@@ -34,7 +35,7 @@ Background:
 			"coupon_id_prefix": "coupon3_id_"
 		}]
 		"""
-	Given jobs添加签到活动"签到活动1",并且保存
+	Given jobs添加专项签到活动"签到活动1",并且保存
 		"""
 		{
 			"status": "off",
@@ -49,13 +50,22 @@ Background:
 					"integral": "10"
 				},{
 					"sign_in":"2",
-					"send_coupon":"优惠券M"
+					"coupons":[{
+						"send_coupon": "优惠券M",
+						"member_grade":"全部"
+					}]
 				},{
 					"sign_in":"3",
-					"send_coupon":"优惠券1"
+					"coupons":[{
+						"send_coupon": "优惠券1",
+						"member_grade":"全部"
+					}]
 				},{
 					"sign_in":"5",
-					"send_coupon":"优惠券2"
+					"coupons":[{
+						"send_coupon": "优惠券2",
+						"member_grade":"全部"
+					}]
 				}]
 		}
 		"""
@@ -88,7 +98,7 @@ Background:
 				}]
 		}]
 		"""
-	When jobs更新签到活动的状态
+	When jobs更新专项签到活动的状态
 		"""
 		{
 			"name":"签到活动1",
@@ -105,64 +115,64 @@ Background:
 		When bill访问jobs的webapp
 		When bill在微信中向jobs的公众号发送消息'签到'
 		Then bill收到自动回复'签到活动1'
-		When bill点击图文'签到活动1'进入签到活动页面
-		When bill参加签到活动于'14天前'
+		When bill点击图文'签到活动1'进入专项签到活动页面
+		When bill参加专项签到活动于'14天前'
 
 		When 清空浏览器
 		When bill访问jobs的webapp
 		When bill在微信中向jobs的公众号发送消息'签到'
 		Then bill收到自动回复'签到活动1'
-		When bill点击图文'签到活动1'进入签到活动页面
-		When bill参加签到活动于'13天前'
+		When bill点击图文'签到活动1'进入专项签到活动页面
+		When bill参加专项签到活动于'13天前'
 
 		When 清空浏览器
 		When bill访问jobs的webapp
 		When bill在微信中向jobs的公众号发送消息'签到'
 		Then bill收到自动回复'签到活动1'
-		When bill点击图文'签到活动1'进入签到活动页面
-		When bill参加签到活动于'12天前'
+		When bill点击图文'签到活动1'进入专项签到活动页面
+		When bill参加专项签到活动于'12天前'
 
 		When 清空浏览器
 		When bill访问jobs的webapp
 		When bill在微信中向jobs的公众号发送消息'签到'
 		Then bill收到自动回复'签到活动1'
-		When bill点击图文'签到活动1'进入签到活动页面
-		When bill参加签到活动于'11天前'
+		When bill点击图文'签到活动1'进入专项签到活动页面
+		When bill参加专项签到活动于'11天前'
 
 		When 清空浏览器
 		When bill访问jobs的webapp
 		When bill在微信中向jobs的公众号发送消息'签到'
 		Then bill收到自动回复'签到活动1'
-		When bill点击图文'签到活动1'进入签到活动页面
-		When bill参加签到活动于'10天前'
+		When bill点击图文'签到活动1'进入专项签到活动页面
+		When bill参加专项签到活动于'10天前'
 
 		When 清空浏览器
 		When bill访问jobs的webapp
 		When bill在微信中向jobs的公众号发送消息'签到'
 		Then bill收到自动回复'签到活动1'
-		When bill点击图文'签到活动1'进入签到活动页面
-		When bill参加签到活动于'8天前'
+		When bill点击图文'签到活动1'进入专项签到活动页面
+		When bill参加专项签到活动于'8天前'
 
 		When 清空浏览器
 		When bill访问jobs的webapp
 		When bill在微信中向jobs的公众号发送消息'签到'
 		Then bill收到自动回复'签到活动1'
-		When bill点击图文'签到活动1'进入签到活动页面
-		When bill参加签到活动于'7天前'
+		When bill点击图文'签到活动1'进入专项签到活动页面
+		When bill参加专项签到活动于'7天前'
 
 		When 清空浏览器
 		When bill访问jobs的webapp
 		When bill在微信中向jobs的公众号发送消息'签到'
 		Then bill收到自动回复'签到活动1'
-		When bill点击图文'签到活动1'进入签到活动页面
-		When bill参加签到活动于'6天前'
+		When bill点击图文'签到活动1'进入专项签到活动页面
+		When bill参加专项签到活动于'6天前'
 
-@mall2 @apps @apps_sign @apps_sign_detailed
+@mall2 @apps @apps_exsign @apps_exsign_detailed
 Scenario:1 会员签到统计详情列表
 #倒序排列，一页显示15条记录
 	Given jobs登录系统
 
-	Then jobs获得'bill'参加'签到活动1'的签到详情列表
+	Then jobs获得'bill'参加专项签到'签到活动1'的签到详情列表
 	"""
 		[{
 			"sign_time":"今天",

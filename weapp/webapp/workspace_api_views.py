@@ -74,6 +74,10 @@ def get_tools(request):
 	if tools.get('card_exchange', None) and menus.get('cardExchange', None) and request.manager.username not in menus['cardExchange']['users']:
 		tools['card_exchange'] = 0
 
+	#专项签到
+	if menus.get('exsign', None) and request.manager.username not in menus['exsign']['users']:
+		tools['exsign'] = 0
+
 	response = create_response(200)
 	response.data = tools
 	return response.get_response()

@@ -415,6 +415,23 @@ class IssuingCouponsFilter(resource.Resource):
                 response = create_response(500)
                 response.errMsg = u'不存在该优惠券'
             return response.get_response()
+        elif filter_type == "coupon_counts":
+            """
+            获取多张优惠券库存
+            """
+            coupon_ids = request.GET.get("coupon_ids", None)
+            coupon_ids = coupon_ids.split(',')
+            response = create_response(200)
+            if coupon_ids:
+                coupons = CouponRule.objects.filter(id__in=coupon_ids)
+                coupon_dict = {}
+                for c in coupons:
+                    coupon_dict[c.id] = c.remained_count
+                response.data = coupon_dict
+            else:
+                response = create_response(500)
+                response.errMsg = u'不存在该优惠券'
+            return response.get_response()
 
 
 ######################

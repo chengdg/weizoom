@@ -76,6 +76,7 @@ from selenium.webdriver.chrome.options import Options
 from apps import models as customized
 from apps import apps_manager
 from apps.customerized_apps.sign import models as sign_models
+from apps.customerized_apps.exsign import models as exsign_models
 from apps.customerized_apps.powerme import models as powerme_models
 from apps.customerized_apps.event import models as event_models
 from apps.customerized_apps.lottery import models as apps_lottery_models
@@ -329,6 +330,10 @@ def __clear_all_app_data():
 	sign_models.Sign.objects.all().delete()
 	# sign_models.SignControl.objects.all().delete()
 	sign_models.SignParticipance.objects.all().delete()
+
+	# 专项签到
+	exsign_models.exSign.objects.all().delete()
+	exsign_models.exSignParticipance.objects.all().delete()
 
 	#微助力
 	powerme_models.PowerMe.objects.all().delete()

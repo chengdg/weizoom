@@ -1,5 +1,6 @@
 #_author_:无
 #editor: 邓成龙 2016.06.20
+#editor: 邓成龙 2016.07.06
 Feature:测试修改签到活动
 
 Background:
@@ -52,9 +53,9 @@ Background:
 		}]
 		"""
 
-@mall2 @apps @apps_sign @edited_sign
+@mall2 @apps @apps_exsign @edited_exsign
 Scenario:1 对签到活动内容进行修改，会员访问活动页面
-	When jobs添加签到活动"签到活动",并且保存
+	When jobs添加专项签到活动"签到活动",并且保存
 		"""
 		{
 			"status": "off",
@@ -67,11 +68,14 @@ Scenario:1 对签到活动内容进行修改，会员访问活动页面
 				[{
 					"sign_in": "0",
 					"integral": "2",
-					"send_coupon": "优惠券1"
+					"coupons":[{
+						"send_coupon": "优惠券1",
+						"member_grade":"全部"
+					}]
 				}]
 		}
 		"""
-	When jobs更新签到活动的状态
+	When jobs更新专项签到活动的状态
 		"""
 		{
 			"name": "签到活动",
@@ -83,8 +87,8 @@ Scenario:1 对签到活动内容进行修改，会员访问活动页面
   	When 清空浏览器
 	When bill在微信中向jobs的公众号发送消息'签到'
 	Then bill收到自动回复'签到活动'
-	When bill点击图文'签到活动'进入签到活动页面
-	Then bill参加签到活动
+	When bill点击图文'签到活动'进入专项签到活动页面
+	Then bill参加专项签到活动
 
 	When bill访问jobs的webapp
 	Then bill在jobs的webapp中拥有2会员积分
@@ -98,7 +102,7 @@ Scenario:1 对签到活动内容进行修改，会员访问活动页面
 		"""
 	#在开启状态下修改签到活动
 		Given jobs登录系统
-		When jobs编辑签到活动,并且保存
+		When jobs编辑专项签到活动,并且保存
 			"""
 			{
 				"name": "签到活动",
@@ -110,7 +114,10 @@ Scenario:1 对签到活动内容进行修改，会员访问活动页面
 					[{
 						"sign_in": "0",
 						"integral": "5",
-						"send_coupon":"优惠券2"
+						"coupons":[{
+						"send_coupon": "优惠券2",
+						"member_grade":"全部"
+					}]
 					}]
 			}
 			"""
@@ -118,19 +125,19 @@ Scenario:1 对签到活动内容进行修改，会员访问活动页面
 		When 清空浏览器
 		When bill在微信中向jobs的公众号发送消息'签到'
 		Then bill收到自动回复'签到活动'
-		When bill点击图文'签到活动'进入签到活动页面
-		Then bill参加签到活动
+		When bill点击图文'签到活动'进入专项签到活动页面
+		Then bill参加专项签到活动
 
 	#在关闭状态下进行修改签到活动
 		Given jobs登录系统
-		When jobs更新签到活动的状态
+		When jobs更新专项签到活动的状态
 			"""
 			{
 				"name": "签到活动",
 				"status": "off"
 			}
 			"""
-		When jobs编辑签到活动,并且保存
+		When jobs编辑专项签到活动,并且保存
 			"""
 			{
 				"name": "签到活动",
@@ -142,11 +149,14 @@ Scenario:1 对签到活动内容进行修改，会员访问活动页面
 					[{
 						"sign_in": "0",
 						"integral": "10",
-						"send_coupon":"优惠券2"
+						"coupons":[{
+						"send_coupon": "优惠券2",
+						"member_grade":"全部"
+					}]
 					}]
 			}
 			"""
-		When jobs更新签到活动的状态
+		When jobs更新专项签到活动的状态
 			"""
 			{
 				"name": "签到活动",
@@ -157,8 +167,8 @@ Scenario:1 对签到活动内容进行修改，会员访问活动页面
 		When 清空浏览器
 		When bill在微信中向jobs的公众号发送消息'签到'
 		Then bill收到自动回复'签到活动'
-		When bill点击图文'签到活动'进入签到活动页面
-		Then bill参加签到活动
+		When bill点击图文'签到活动'进入专项签到活动页面
+		Then bill参加专项签到活动
 		When bill访问jobs的webapp
 		Then bill在jobs的webapp中拥有12会员积分
 		And bill能获得webapp优惠券列表
