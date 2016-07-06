@@ -53,7 +53,7 @@ Background:
 		}]
 		"""
 
-@mall2 @apps @apps_sign @edited_sign @cl_e
+@mall2 @apps @apps_exsign @edited_exsign
 Scenario:1 对签到活动内容进行修改，会员访问活动页面
 	When jobs添加专项签到活动"签到活动",并且保存
 		"""

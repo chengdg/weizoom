@@ -254,7 +254,7 @@ Background:
 		When nokia点击图文'签到活动'进入签到活动页面
 		When nokia参加专项签到活动于'今天'
 
-@mall2 @apps @apps_sign @apps_sign_backend @sign_statistics @cl
+@mall2 @apps @apps_exsign @apps_exsign_backend @exsignsign_statistics
 Scenario:1 会员签到统计列表
 	Given jobs登录系统
 
@@ -267,7 +267,7 @@ Scenario:1 会员签到统计列表
 		| bill |   今天   |      8     |         3       |     70    |     5      |
 		
 
-@mall2 @apps @apps_sign @apps_sign_backend @sign_statistics @cl
+@mall2 @apps @apps_exsign @apps_exsign_backend @exsign_statistics
 Scenario:2 会员签到统计列表分页
 	Given jobs登录系统
 
@@ -299,7 +299,7 @@ Scenario:2 会员签到统计列表分页
 		| marry|   今天   |      5     |         1       |     60   |     2      |
 		| tom  |   今天   |      3     |         2       |     40   |     1      |
 
-@mall2 @apps @apps_sign @apps_sign_backend @sign_statistics @cl
+@mall2 @apps @apps_exsign @apps_exsign_backend @exsign_statistics
 Scenario:3 会员签到统计列表查询
 	Given jobs登录系统
 

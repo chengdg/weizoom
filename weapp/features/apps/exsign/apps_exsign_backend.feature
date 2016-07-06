@@ -71,7 +71,7 @@ Background:
 		}]
 		"""
 
-@mall2 @apps @apps_sign @apps_sign_backend
+@mall2 @apps @apps_exsign @apps_exsign_backend
 Scenario:1 配置后台所有数据,优惠券数量足,没有过期
 #各种等级的会员,相同会员得到的不同优惠券和积分
 	When jobs添加专项签到活动"签到活动1",并且保存
@@ -191,7 +191,7 @@ Scenario:1 配置后台所有数据,优惠券数量足,没有过期
 		}
 		"""
 
-@mall2 @apps @apps_sign @apps_sign_backend
+@mall2 @apps @apps_exsign @apps_exsign_backend
 Scenario:2 一条奖励下,不添加优惠券,有积分
 	When jobs添加专项签到活动"签到活动2",并且保存
 		"""
@@ -226,7 +226,7 @@ Scenario:2 一条奖励下,不添加优惠券,有积分
 		}
 		"""
 
-@mall2 @apps @apps_sign @apps_sign_backend
+@mall2 @apps @apps_exsign @apps_exsign_backend
 Scenario:3 一条奖励下,添加优惠券,不添加积分
 	When jobs添加专项签到活动"签到活动3",并且保存
 		"""
@@ -294,7 +294,7 @@ Scenario:3 一条奖励下,添加优惠券,不添加积分
 		}
 		"""
 
-@mall2 @apps @apps_sign @apps_sign_backend
+@mall2 @apps @apps_exsign @apps_exsign_backend
 Scenario:4 三条奖励下,一条优惠券,一条积分,一条优惠券加积分
 	When jobs添加专项签到活动"签到活动5",并且保存
 		"""
@@ -407,7 +407,7 @@ Scenario:4 三条奖励下,一条优惠券,一条积分,一条优惠券加积分
 		}
 		"""
 
-@mall2 @apps @apps_sign @apps_sign_backend
+@mall2 @apps @apps_exsign @apps_exsign_backend
 Scenario:5 更新签到活动的状态
 	When jobs添加专项签到活动"签到活动7",并且保存
 		"""
@@ -502,7 +502,7 @@ Scenario:5 更新签到活动的状态
 		"""
 	Then jobs的专项签到活动"签到活动7"状态为"关闭"
 
-@mall2 @apps @apps_sign @apps_sign_backend
+@mall2 @apps @apps_exsign @apps_exsign_backend
 Scenario:6 删除优惠券信息
 	When jobs添加专项签到活动"签到活动7"
 		"""

@@ -74,7 +74,7 @@ Background:
 				}]
 		}]
 		"""
-@mall2 @apps @apps_sign @apps_sign_frontend
+@mall2 @apps @apps_exsign @apps_exsign_frontend
 Scenario:1 用户进入签到页面完成"签到活动1"签到
 	Given jobs添加专项签到活动"签到活动1",并且保存
 		"""
@@ -292,7 +292,7 @@ Scenario:1 用户进入签到页面完成"签到活动1"签到
   #  签到活动未开始
 #    """
 #
-@mall2 @apps @apps_sign @apps_sign_frontend
+@mall2 @apps @apps_exsign @apps_exsign_frontend
 Scenario:5 用户一天内连续两次签到，获取优惠券奖励
 	Given jobs添加专项签到活动"签到活动1",并且保存
 		"""
@@ -342,7 +342,7 @@ Scenario:5 用户一天内连续两次签到，获取优惠券奖励
 		}]
 		"""
 
-@mall2 @apps @apps_sign @apps_sign_frontend
+@mall2 @apps @apps_exsign @apps_exsign_frontend
 Scenario:6 用户连续3天进行签到
 	Given jobs添加专项签到活动"签到活动1",并且保存
 		"""
@@ -405,7 +405,7 @@ Scenario:6 用户连续3天进行签到
 		}]
 		"""
 
-@mall2 @apps @apps_sign @apps_sign_frontend
+@mall2 @apps @apps_exsign @apps_exsign_frontend
 Scenario:7 用户分享"签到活动1"到朋友圈,会员通过分享到朋友圈的链接参与签到
 	Given jobs添加专项签到活动"签到活动1",并且保存
 		"""
@@ -448,7 +448,7 @@ Scenario:7 用户分享"签到活动1"到朋友圈,会员通过分享到朋友�
 	When tom访问jobs的webapp
 	Then tom在jobs的webapp中拥有2会员积分
 
-@mall2 @apps @apps_sign @apps_sign_frontend
+@mall2 @apps @apps_exsign @apps_exsign_frontend
 Scenario:8 非会员用户访问签到分享进行签到
 	Given jobs添加专项签到活动"签到活动1",并且保存
 		"""
@@ -495,7 +495,7 @@ Scenario:8 非会员用户访问签到分享进行签到
 	When tom访问jobs的webapp
 	Then tom在jobs的webapp中拥有2会员积分
 
-@mall2 @apps @apps_sign @apps_sign_frontend
+@mall2 @apps @apps_exsign @apps_exsign_frontend
 Scenario:9 对签到活动内容进行修改，会员访问活动页面
 	Given jobs添加专项签到活动"签到活动1",并且保存
 		"""

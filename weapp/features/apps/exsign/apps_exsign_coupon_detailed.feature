@@ -266,7 +266,7 @@ Background:
 #		}]
 #		"""
 
-@mall2 @apps @apps_sign @apps_sign_coupon_detailed @dgl
+@mall2 @apps @apps_exsign @apps_exsign_coupon_detailed
 Scenario:1 优惠券明细列表
 	Given jobs登录系统
 
@@ -316,7 +316,7 @@ Scenario:1 优惠券明细列表
 			}]
 		"""
 
-@mall2 @apps @apps_sign @apps_sign_coupon_detailed @dgl2
+@mall2 @apps @apps_exsign @apps_exsign_coupon_detailed
 Scenario:2 优惠券明细列表查询
 	When bill访问jobs的webapp
 	And bill购买jobs的商品
