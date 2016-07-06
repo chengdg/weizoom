@@ -18,6 +18,11 @@ echo "========================================================" >> $LOG
 
 # add more services here
 
+#add by duhao 20150521
+echo ">> calling 'services.virtual_product.tasks.deliver_virtual_product'" >> $LOG
+echo "--------------------------------------------------------" >> $LOG
+python services/virtual_product_service/run.py >> $LOG 2>&1
+
 echo ">> calling 'services.start_promotion_service.tasks.start_promotion'" >> $LOG
 echo "--------------------------------------------------------" >> $LOG
 python services/send_task.py "services.start_promotion_service.tasks.start_promotion" {} "{\"id\": 0}" >> $LOG 2>&1
@@ -45,11 +50,6 @@ python manage.py cancel_group_order_timeout >> $LOG 2>&1
 echo ">> calling 'apps_group_timer_task'" >> $LOG
 echo "--------------------------------------------------------" >> $LOG
 python manage.py apps_group_timer_task >> $LOG 2>&1
-
-#add by duhao 20150521
-echo ">> calling 'services.virtual_product.tasks.deliver_virtual_product'" >> $LOG
-echo "--------------------------------------------------------" >> $LOG
-python services/send_task.py "services.virtual_product_service.tasks.deliver_virtual_product" {} "{}" >> $LOG 2>&1
 
 echo "========================================================" >> $LOG
 
