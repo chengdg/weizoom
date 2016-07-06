@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import sys
 
-from mall.promotion.virtual_product import encrypt_password
 
 reload(sys)
 sys.setdefaultencoding("utf-8")
@@ -14,6 +13,7 @@ from django.core.management import execute_from_command_line
 execute_from_command_line(sys.argv)
 from mall.module_api import encrypt_msg
 from mall.promotion.models import MemberHasWeizoomCard, VirtualProductHasCode
+from mall.promotion.virtual_product import encrypt_password
 
 print('----MemberHasWeizoomCard start...')
 
