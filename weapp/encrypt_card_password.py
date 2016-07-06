@@ -15,6 +15,8 @@ from mall.module_api import encrypt_msg
 from mall.promotion.models import MemberHasWeizoomCard, VirtualProductHasCode
 from mall.promotion.virtual_product import encrypt_password
 
+from apps.models import AppsWeizoomCard
+
 print('----MemberHasWeizoomCard start...')
 
 cards = MemberHasWeizoomCard.objects.all()
@@ -36,9 +38,16 @@ for vproduct in vproducts:
 		vproduct.password = encrypt_password(vproduct.password)
 		vproduct.save()
 
-
-
 print('VirtualProductHasCode end...')
+
+print('----AppsWeizoomCard start...')
+for single_card in AppsWeizoomCard.objects.all():
+	ps = single_card.weizoom_card_password
+	if len(ps) < 10:
+		single_card.weizoom_card_password = encrypt_password(ps)
+		single_card.save()
+
+print('----AppsWeizoomCard end...')
 
 
 print('-------all end---------')

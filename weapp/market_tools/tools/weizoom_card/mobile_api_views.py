@@ -30,7 +30,10 @@ def check_weizoom_card(request):
 		id: weizoom_card,
 		money: round(weizoom_card.money, 2)
 	}
+	已废弃
 	"""
+	if True:
+		return
 	name = request.POST.get('name','')
 	password = request.POST.get('password','')
 	# data = dict()
@@ -68,6 +71,8 @@ def change_weizoom_card_to_integral(request):
 	"""
 	微众卡兑换积分，暂不使用
 	"""
+	if True:
+		return
 	response = create_response(500)
 	data = dict()
 	card_id = request.POST.get('card_id', '')

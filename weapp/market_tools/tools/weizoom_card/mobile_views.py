@@ -32,6 +32,13 @@ TEMPLATE_DIR = '%s/templates' % template_path_items[-1]
 
 COUNT_PER_PAGE = 15
 def get_weizoom_card_login(request):
+	"""
+	已废弃
+	@param request:
+	@return:
+	"""
+	if True:
+		return
 	user_id = request.user_profile.user_id
 	user = User.objects.filter(id=user_id)
 	username = None
@@ -72,7 +79,10 @@ from apps import models as apps_root_models
 def get_weizoom_card_exchange_list(request):
 	"""
 	兑换卡列表
+	已废弃
 	"""
+	if True:
+		return
 	member_id = request.member.id
 	webapp_id = request.user_profile.webapp_id
 	member_info = MemberInfo.objects.get(member_id = member_id)
@@ -160,7 +170,10 @@ def get_weizoom_card_exchange_list(request):
 def get_weizoom_card_wallet(request):
 	"""
 	微众卡钱包
+	已废弃
 	"""
+	if True:
+		return
 	member_id = request.member.id
 	# member_info = MemberInfo.objects.get(member_id=member_id)
 	# is_binded = member_info.is_binded
@@ -221,7 +234,10 @@ def get_weizoom_card_wallet(request):
 def get_card_exchange_detail(request):
 	"""
 	兑换卡详情
+	已废弃
 	"""
+	if True:
+		return
 	card_id = request.GET.get('card_id',None)
 	integral_each_yuan = IntegralStrategySttings.get_integral_each_yuan(request.user_profile.webapp_id)
 	card = WeizoomCard.objects.get(weizoom_card_id=card_id)
@@ -238,7 +254,10 @@ def get_card_exchange_detail(request):
 def get_card_wallet_details(request):
 	"""
 	微众卡钱包卡详情
+	已废弃
 	"""
+	if True:
+		return
 	card_number = request.GET.get('card_id','')
 	card_password = request.GET.get('card_password', '')
 	weizoom_card_orders_list = get_card_detail_normal(request, card_number, card_password)
@@ -483,7 +502,10 @@ def get_other_cards_list(request):
 	其他卡包页面
 	@param request:
 	@return:
+	已废弃
 	"""
+	if True:
+		return
 	member_id = request.member.id
 	member_has_other_cards = promotion_models.VirtualProductHasCode.objects.filter(member_id = member_id).order_by('-get_time')
 	cards = []
