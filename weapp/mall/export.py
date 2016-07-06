@@ -310,6 +310,7 @@ MALL_APPS_REDPACKET_NAV = 'red_packet'
 MALL_APPS_GROUP_NAV = 'groups'
 MALL_APPS_SHVOTE_NAV = 'shvotes'
 MALL_APPS_REBATE_NAV = 'rebate'
+MALL_APPS_EXSIGN_NAV = 'exsign'
 
 #
 # 应用和营销左侧垂直方向二级导航信息
@@ -482,6 +483,12 @@ MALL_PROMOTION_AND_APPS_SECOND_NAV = {
                     'url': '/apps/rebate/rebates/',
                     'permission': '',
                     'users': ['jobs','njtest', 'ceshi01', 'weshop']
+                },{
+                    'name': MALL_APPS_EXSIGN_NAV,
+                    'title': u'专项签到',
+                    'url': '/apps/exsign/exsign/',
+                    'permission': '',
+                    'users': ['jobs', 'ceshi01', 'weshop']
                 },
                 # {
                 #     'name': MALL_APPS_REDPACKET_NAV,
