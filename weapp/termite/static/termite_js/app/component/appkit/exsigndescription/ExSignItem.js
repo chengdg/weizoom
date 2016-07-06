@@ -3,8 +3,8 @@
  * 签到动态组件
  */
 ensureNS('W.component.appkit');
-W.component.appkit.SignItem = W.component.Component.extend({
-	type: 'appkit.signitem',
+W.component.appkit.ExSignItem = W.component.Component.extend({
+	type: 'appkit.exsignitem',
 	selectable: 'no',
 	propertyViewTitle: '',
 

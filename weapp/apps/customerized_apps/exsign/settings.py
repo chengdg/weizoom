@@ -17,7 +17,7 @@ NEW_PAGE_JSON = """
             "force_display_in_property_view": "no",
             "components": [],
             "selectable": "yes",
-            "type": "appkit.signdescription",
+            "type": "appkit.exsigndescription",
             "model": {
                 "index": 2,
                 "name": "",

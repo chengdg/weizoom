@@ -1,15 +1,15 @@
 /**
- * @class W.component.appkit.SignDescription
+ * @class W.component.appkit.ExSignDescription
  *
  */
 ensureNS('W.component.appkit');
-W.component.appkit.SignDescription = W.component.Component.extend({
-	type: 'appkit.signdescription',
+W.component.appkit.ExSignDescription = W.component.Component.extend({
+	type: 'appkit.exsigndescription',
 	selectable: 'yes',
 	propertyViewTitle: '签到',
 
     dynamicComponentTypes: [{
-        type: 'appkit.signitem',
+        type: 'appkit.exsignitem',
         model: 2
     }],
 
@@ -98,7 +98,7 @@ W.component.appkit.SignDescription = W.component.Component.extend({
 					className:'xui-outerFunctionTrigger xa-outerFunctionTrigger',
 					id:'outerFunctionTrigger',
 					text:'奖励说明',
-					handler: 'W.component.appkit.SignDescription.handleHelp'
+					handler: 'W.component.appkit.ExSignDescription.handleHelp'
 				}
 			},
 			fields:[{
@@ -128,11 +128,11 @@ W.component.appkit.SignDescription = W.component.Component.extend({
 			default: '0'
 		},{
 			name: 'daily_prizes',
-			type: 'prize_selector_v4',
+			type: 'prize_selector_v5',
 			displayName: '送优惠券',
 			isUserProperty: true,
 			help:"仅能选择限领为“不限”的优惠券",
-			default:""
+			default: []
 		}]},{
 		group:"",
 		groupClass:"xui-propertyView-app-SignDynamicGroup",
@@ -148,9 +148,6 @@ W.component.appkit.SignDescription = W.component.Component.extend({
         }]
 	}],
 	propertyChangeHandlers: {
-		reply_keyword: function($node, model, value, $propertyViewNode) {
-			this.refresh($node, {resize:true, refreshPropertyView:true});
-		},
 		image: function($node, model, value, $propertyViewNode) {
 			console.log(value);
 			var image = {url:''};
@@ -196,9 +193,13 @@ W.component.appkit.SignDescription = W.component.Component.extend({
 			}
 		},
 		daily_prizes:function($node, model, value){
-			if(value && value.name != ''){
+			if(value.length>0){
 				$node.find('.daily_prizes').show();
-				$node.find('.daily_prizes').text("“"+value.name+"”"+"一张");
+				var html_str = '';
+				for (var i in value){
+					html_str += "<div>“"+value[i].name+"”"+"一张</div>"
+				}
+				$node.find('.daily_prizes').html(html_str);
 			}else{
 				$node.find('.daily_prizes').hide();
 			}
@@ -214,7 +215,7 @@ W.component.appkit.SignDescription = W.component.Component.extend({
 	}
 });
 
-W.component.appkit.SignDescription.handleHelp = function(){
+W.component.appkit.ExSignDescription.handleHelp = function(){
 
 	//初始化签到奖励说明
 	ensureNS('W.dialog.sign');

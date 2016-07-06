@@ -1,6 +1,6 @@
 {% load workbench_filter %}
 
-{% ifequal component.type 'appkit.signdescription' %}
+{% ifequal component.type 'appkit.exsigndescription' %}
 
     <style>
         .Chr, p {
@@ -268,7 +268,11 @@
         <div class="wui-SignDescriptionDiv Chr wa-prize-board">
             <span class="wa-daily_title">今日可以领取 </span>
             <span class="daily_points wa-daily_points Num">{% if component.model.daily_points %}{{component.model.daily_points}}{% else %}0{% endif %} 积分</span>
-            <p class="daily_prizes wa-daily_prizes" {% if not component.model.daily_prizes.name %}style="display: none"{% endif %}>{{ component.model.daily_prizes.name }} 一张</p>
+            <p class="daily_prizes wa-daily_prizes" {% if not component.model.daily_prizes %}style="display: none"{% endif %}>
+			{% for daily_prize in component.model.daily_prizes %}
+                <div>{{ daily_prize.name }}一张</div>
+                {% endfor %}
+			</p>
         </div>
     </div>
 </div>

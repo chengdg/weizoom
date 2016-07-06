@@ -1,0 +1,65 @@
+
+<script id="apps-coupon-v5-tmpl" type="text/x-handlebar-tmpl">
+	<div class="xui-inline xa-selectedCoupon xa-optionTarget">
+		<div class="pr xui-i-selectedBox" style="margin-left:0;">
+			<span class="xui-i-selected-title xa-couponName" coupon-id="{{ prize.id }}">{{prize.name}}</span>
+			<a href="javascript:void(0);" class="xa-changeSelectCoupon ml5">修改</a>
+			<span style="color:#666666">剩余库存: <span class="xa-couponCount">{{#if prize.count}}{{prize.count}}{{ else }} 0 {{/if}}</span>&nbsp;&nbsp;</span>
+			<span><a href="/mall2/coupon/?rule_id={{ prize.id }}" target="_blank" class="xa-changeCouponCount" >追加库存</a></span>
+		</div>
+		<div style="margin-top:10px;">
+			<span>会员等级: </span>
+			<select class="xa-changeMemberGrade">
+				{{#each member_grades}}
+				<option value="{{this.id}}">{{this.name}}</option>
+				{{/each}}
+			</select>
+			<button class="btn btn-default xa-removeCoupon" style="min-width:50px;padding-top:3px;padding-bottom:3px;float:right" >删除</button>
+		</div>
+		<hr style="margin-top: 10px;margin-bottom: 10px;border-top-color:#ccc" />
+	</div>
+</script>
+
+
+<script id="apps-prize-selector-v5-tmpl" type="text/x-handlebar-tmpl">
+<div class="xui-apps-prizeSelector" style="margin-top: 2px;">
+	<div class="coupon_div xa-selectCoupon {{#if prizes}}xui-hide{{/if}}" data-target="coupon">
+		<a
+			href="javascript:void(0);"
+			class="ml5"
+		>请选择优惠券	</a>
+		<input style="width:0;background:#F9F9F9;border:0" type="text" />
+		<div class="errorHint" style="margin-left: 58%;width: 100px;"></div>
+	</div>
+	{{#each prizes}}
+	<div class="xui-inline xa-selectedCoupon xa-optionTarget">
+		<div class="pr xui-i-selectedBox" style="margin-left:0;">
+			<span class="xui-i-selected-title xa-couponName" coupon-id="{{id}}">{{name}}</span>
+			<a href="javascript:void(0);" class="xa-changeSelectCoupon ml5">修改</a>
+			<span style="color:#666666">剩余库存: <span class="xa-couponCount">{{#if count}}{{count}}{{ else }} 0 {{/if}}</span>&nbsp;&nbsp;</span>
+			<span><a href="/mall2/coupon/?rule_id={{id}}" target="_blank" class="xa-changeCouponCount" >追加库存</a></span>
+		</div>
+		<div style="margin-top:10px;">
+			<span>会员等级: </span>
+			<select class="xa-changeMemberGrade">
+				{{#each ../member_grades}}
+				<option value="{{id}}" {{#ifequal ../grade_id id}}selected{{/ifequal}} >{{name}}</option>
+				{{/each}}
+			</select>
+			<button class="btn btn-default xa-removeCoupon" style="min-width:50px;padding-top:3px;padding-bottom:3px;float:right" >删除</button>
+		</div>
+		<hr style="margin-top: 10px;margin-bottom: 10px;border-top-color:#ccc" />
+	</div>
+	{{/each}}
+	<div class="errorHint" style="margin-left: 37%;"></div>
+
+</div>
+<div class="addcoupon_div xa-addselectCoupon {{#unless  prizes}}xui-hide{{/unless}}" data-target="coupon">
+		<a
+			href="javascript:void(0);"
+			class="ml5"
+		>+添加优惠券</a>
+		<input style="width:0;background:#F9F9F9;border:0" type="text" />
+		<div class="errorHint" style="margin-left: 58%;width: 100px;"></div>
+	</div>
+</script>

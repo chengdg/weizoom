@@ -92,6 +92,7 @@ W.workbench.PropertyView = Backbone.View.extend({
             "tags_selector": _.bind(this.initTagsSelector, this),
             "prize_selector_v3": _.bind(this.initPrizeSelectorV3, this),
             "prize_selector_v4": _.bind(this.initPrizeSelectorV4, this),
+            "prize_selector_v5": _.bind(this.initPrizeSelectorV5, this),
             "apps_prize_keywordpane": _.bind(this.initPrizeKeywordPane, this),
             "apps_badge_tools": _.bind(this.initBadgeToolsPane, this),
             "moneyrange": _.bind(this.initMoneyRange, this)
@@ -885,6 +886,16 @@ W.workbench.PropertyView = Backbone.View.extend({
         W.createWidgets($el);
 
         var view = $el.find('[data-ui-role="apps-prize-selector-v4"]').data('view');
+        var _this = this;
+        view.on('change-prize', function(prize) {
+            var attr = $el.attr('data-field');
+            _this.getTargetComponent($el).model.set(attr, prize);
+        });
+    },
+    initPrizeSelectorV5: function($el){
+        W.createWidgets($el);
+
+        var view = $el.find('[data-ui-role="apps-prize-selector-v5"]').data('view');
         var _this = this;
         view.on('change-prize', function(prize) {
             var attr = $el.attr('data-field');
