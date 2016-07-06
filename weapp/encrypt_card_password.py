@@ -32,7 +32,7 @@ print('----VirtualProductHasCode start...')
 vproducts = VirtualProductHasCode.objects.all()
 
 for vproduct in vproducts:
-	if len(vproduct.card_password) < 10:
+	if len(vproduct.password) < 10:
 		vproduct.password = encrypt_password(vproduct.password)
 		vproduct.save()
 
