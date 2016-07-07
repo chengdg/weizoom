@@ -436,12 +436,12 @@
                 temp_coupon = prize_info.daily_prize.coupon;
             }
             $('.wa-daily_points').html((temp_integral == '' || temp_integral == 0) ? '' : (temp_integral+'  积分')).show();
-            if (temp_coupon.id != 0) {
-                prize_html = '"' + temp_coupon.name + '"';
-                prize_html += '一张';
-            } else {
-                prize_html = ''
-            }
+			var prize_html = "";
+            if (temp_coupon.length > 0) {
+				for (var i in temp_coupon) {
+					prize_html += "<div>"+temp_coupon[i].grade_name+": “"+temp_coupon[i].name+"”一张</div>";
+				}
+			}
             $('.wa-daily_prizes').html(prize_html).show();
         } else {
             if(flag){

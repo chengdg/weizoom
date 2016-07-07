@@ -51,20 +51,6 @@ class exSignParticipance(resource.Resource):
 				response.errMsg = u'签到活动未开始'
 				return response.get_response()
 
-			#并发问题临时解决方案 ---start
-			# control_data = {}
-			# control_data['member_id'] = member_id
-			# control_data['belong_to'] = activity_id
-			# control_data['sign_control'] = datetime.today().strftime('%Y-%m-%d')
-			# try:
-			# 	control = app_models.SignControl(**control_data)
-			# 	control.save()
-			# except:
-			# 	response = create_response(500)
-			# 	response.errMsg = u'一天只能签到一次'
-			# 	return response.get_response()
-			#并发问题临时解决方案 ---end
-
 			signer = app_models.exSignParticipance.objects(belong_to=activity_id, member_id=member_id)
 			if signer.count() > 0:
 				signer = signer.first()
@@ -80,7 +66,7 @@ class exSignParticipance(resource.Resource):
 				)
 				signer.save()
 
-			return_data = signer.do_signment(sign)
+			return_data = signer.do_signment(sign, request.member.grade_id)
 			detail_dict = {
 				'belong_to': activity_id,
 				'member_id': member_id,
@@ -95,12 +81,12 @@ class exSignParticipance(resource.Resource):
 				}
 			}
 			if return_data['status_code'] == app_models.RETURN_STATUS_CODE['SUCCESS']:
-				coupon_flag = return_data['curr_prize_coupon_count'] > 0
+				coupon_flag = return_data['curr_prize_coupon']['count'] > 0
 				detail_dict['prize'] = {
 					'integral': return_data['curr_prize_integral'],
 					'coupon': {
-						'id': return_data['curr_prize_coupon_id'],
-						'name': return_data['curr_prize_coupon_name'] if coupon_flag else u'优惠券已领完,请联系客服补发'
+						'id':  return_data['curr_prize_coupon']['id'],
+						'name':  return_data['curr_prize_coupon']['name'] if coupon_flag else u'优惠券已领完,请联系客服补发'
 					}
 				}
 				response = create_response(200)
@@ -108,18 +94,11 @@ class exSignParticipance(resource.Resource):
 					'serial_count': return_data['serial_count'],
 					'daily_prize': {
 						'integral': return_data['daily_integral'],
-						'coupon': {
-							'id': return_data['daily_coupon_id'],
-							'name': return_data['daily_coupon_name'],
-						}
+						'coupon': return_data['daily_coupon']
 					},
 					'curr_prize':{
 						'integral': return_data['curr_prize_integral'],
-						'coupon': {
-							'id': return_data['curr_prize_coupon_id'],
-							'name': return_data['curr_prize_coupon_name'],
-							'count': return_data['curr_prize_coupon_count']
-						}
+						'coupon': return_data['curr_prize_coupon']
 					}
 				}
 				if return_data['next_serial_count'] != 0:
@@ -127,10 +106,7 @@ class exSignParticipance(resource.Resource):
 						'count': return_data['next_serial_count'],
 						'prize': {
 							'integral': return_data['next_serial_integral'],
-							'coupon': {
-								'id': return_data['next_serial_coupon_id'],
-								'name': return_data['next_serial_coupon_name']
-							}
+							'coupon': return_data['next_serial_coupon']
 						}
 					}
 				#记录签到历史

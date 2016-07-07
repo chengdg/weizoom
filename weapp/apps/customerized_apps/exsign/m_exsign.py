@@ -78,10 +78,13 @@ class exMSign(resource.Resource):
                         p_integral = setting['integral']
                     else:
                         p_integral = 0
-                    if setting['coupon']['name']:
-                        p_coupon = setting['coupon']['name']
-                    else:
-                        p_coupon = ""
+                    p_coupon = []
+                    if setting['coupon']:
+                        for coupon in setting['coupon']:
+                            p_coupon.append({
+                                "coupon_name": coupon['name'],
+                                "grade_name": coupon['grade_name']
+                            })
                     prize_rules[name] = {'integral': p_integral,'coupon': p_coupon}
 
                 prize_info = {
