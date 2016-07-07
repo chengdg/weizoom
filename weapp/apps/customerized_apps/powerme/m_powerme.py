@@ -63,13 +63,14 @@ class MPowerMe(resource.Resource):
 				power_log_ids = [p.id for p in need_power_logs]
 				#更新已关注会员的助力详情记录
 				detail_power_member_ids = [p.power_member_id for p in need_power_logs]
-				details = app_models.PoweredDetail.objects(belong_to=record_id, power_member_id__in=detail_power_member_ids).order_by('-id')
-				details[0].update(set__has_powered=True)
-				#计算助力值
-				app_models.PowerMeParticipance.objects(belong_to=record_id,member_id=details[0].owner_id).update(inc__power=1)
-				need_del_powerlogs_ids += power_log_ids
-				#删除计算过的log
-				app_models.PowerLog.objects(id__in=need_del_powerlogs_ids).delete()
+				detail = app_models.PoweredDetail.objects(belong_to=record_id, power_member_id__in=detail_power_member_ids).order_by('-id').first()
+				if detail:
+					detail.update(set__has_powered=True)
+					#计算助力值
+					app_models.PowerMeParticipance.objects(belong_to=record_id,member_id=detail.owner_id).update(inc__power=1)
+					need_del_powerlogs_ids += power_log_ids
+					#删除计算过的log
+					app_models.PowerLog.objects(id__in=need_del_powerlogs_ids).delete()
 
 
 			# 遍历log，统计助力值
