@@ -170,7 +170,9 @@ class MPowerMe(resource.Resource):
 				else:
 					user_id = request.webapp_owner_info.user_profile.user_id
 					username = User.objects.get(id=user_id).username
-					has_power = True if username == 'weshop' and app_models.PoweredLimitRelation.objects(belong_to=record_id,member_id=member_id,powered_member_id=fid).count() > 0 and app_models.PoweredDetail.objects(belong_to=record_id,owner_id=fid,power_member_id=member_id,has_power=True).count() > 0 else False
+					relation = app_models.PoweredLimitRelation.objects(belong_to=record_id,member_id=member_id,powered_member_id=fid)
+					detail = app_models.PoweredDetail.objects(belong_to=record_id,owner_id=fid,power_member_id=member_id,has_power=True)
+					has_power = True if username == 'weshop' and relation.count() > 0 else False
 					page_owner_name = Member.objects.get(id=fid).username_size_ten
 					page_owner_member_id = fid
 					# if curr_member_power_info.powered_member_id:
