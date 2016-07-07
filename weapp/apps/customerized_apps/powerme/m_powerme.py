@@ -71,6 +71,7 @@ class MPowerMe(resource.Resource):
 					need_del_powerlogs_ids += power_log_ids
 					#删除计算过的log
 					app_models.PowerLog.objects(id__in=need_del_powerlogs_ids).delete()
+					app_models.PoweredLimitRelation.objects(belong_to=record_id,member_id__in=detail_power_member_ids.remove(detail.power_member_id)).delete()
 
 
 			# 遍历log，统计助力值
@@ -171,7 +172,6 @@ class MPowerMe(resource.Resource):
 					user_id = request.webapp_owner_info.user_profile.user_id
 					username = User.objects.get(id=user_id).username
 					relation = app_models.PoweredLimitRelation.objects(belong_to=record_id,member_id=member_id,powered_member_id=fid)
-					detail = app_models.PoweredDetail.objects(belong_to=record_id,owner_id=fid,power_member_id=member_id,has_power=True)
 					has_power = True if username == 'weshop' and relation.count() > 0 else False
 					page_owner_name = Member.objects.get(id=fid).username_size_ten
 					page_owner_member_id = fid
