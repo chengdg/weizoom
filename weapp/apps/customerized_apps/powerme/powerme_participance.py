@@ -82,7 +82,7 @@ class PowerMeParticipance(resource.Resource):
 						app_models.PoweredLimitRelation(
 							belong_to=power_id,
 							member_id=member_id,
-							powered_member_id=fid,
+							powered_member_id=int(fid),
 							created_at=datetime.now()
 						).save()
 						p_member_id= detail.first().owner_id
@@ -93,7 +93,7 @@ class PowerMeParticipance(resource.Resource):
 					app_models.PoweredLimitRelation(
 						belong_to=power_id,
 						member_id=member_id,
-						powered_member_id=fid,
+						powered_member_id=int(fid),
 						created_at=datetime.now()
 					).save()
 					power_log = app_models.PowerLog(
@@ -112,6 +112,7 @@ class PowerMeParticipance(resource.Resource):
 						created_at = datetime.now()
 					)
 					detail_log.save()
+					response = create_response(200)
 			else:
 				#更新被助力者信息
 				powered_member_info = app_models.PowerMeParticipance.objects(belong_to=power_id, member_id=int(fid)).first()
