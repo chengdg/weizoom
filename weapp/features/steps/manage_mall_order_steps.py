@@ -234,32 +234,42 @@ def step_impl(context, user):
     if hasattr(context, 'query_params'):
         query_params = context.query_params
         delattr(context, 'query_params')
+
     response = context.client.get('/mall2/api/order_list/', query_params)
     items = json.loads(response.content)['data']['items']
+    print('========================================')
+    print(query_params)
+    print(len(items))
+    print(response)
+    print('========================================')
 
     actual_orders = []
     source = {'mine_mall': u'本店', 'weizoom_mall': u'商城'}
 
     for order_item in items:
+        # import pdb
+        # pdb.set_trace()
         sync_order = False
         if 'u' in order_item['order_id']:
             sync_order = True
             user_id = order_item['order_id'].split('^')[1][:-1]
             store_name = UserProfile.objects.get(user_id=user_id).store_name
             order_item['order_id'] = '%s-%s' % (order_item['order_id'].split('^')[0], store_name)
+        # print(order_item)
+        # print('===============221111111111111111111111111111111111111=')
         actual_order = {}
         actual_order['order_no'] = order_item['order_id']
         actual_order['order_time'] = order_item['created_at']
         actual_order['ship_name'] = order_item['ship_name']
         actual_order['ship_tel'] = order_item['ship_tel']
         actual_order["sources"] = u'商城' if sync_order else u'本店'
-        actual_order["member"] = order_item['buyer_name'] if order_item['member_is_subscribed'] else '非会员'
+        actual_order["member"] = order_item['ship_name'] if order_item['member_is_subscribed'] else '非会员'
         actual_order["methods_of_payment"] = order_item['pay_interface_name']
         actual_order["logistics"] = express_util.get_name_by_value(order_item['express_company_name'])
         actual_order["number"] = order_item['express_number']
         actual_order["shipper"] = order_item['leader_name']
         actual_order["integral"] = order_item['integral']
-        actual_order['status'] = order_item['status']
+        actual_order['status'] = order_item['order_status']
         actual_order['price'] = order_item['pay_money']
         actual_order['payment_time'] = order_item['payment_time']
         actual_order['final_price'] = order_item['pay_money']
@@ -287,6 +297,8 @@ def step_impl(context, user):
         # order_list的接口数据返回格式已经更新，上面的代码可以改为如下代码：
         buy_product_results = []
         for group in order_item['groups']:
+            # print(group)
+            # print('===============221111111111111111111111111111111111111=')
             for buy_product in group['products']:
                 total_price = buy_product.get('total_price',
                                               round(float(buy_product.get('price')) * buy_product.get('count'), 2))
@@ -308,6 +320,8 @@ def step_impl(context, user):
                 if children_order_action:
                     buy_product_result['actions'] = get_order_action_set(group['fackorder']['actions'])
                 buy_product_results.append(buy_product_result)
+                # print(buy_product)
+                # print('===============277777777777777777777777777777777777777=')
         actual_order['products'] = buy_product_results
         actual_order['products_count'] = len(buy_product_results)
         actual_orders.append(actual_order)
@@ -327,15 +341,25 @@ def step_impl(context, user):
             order['customer_message'] = json.dumps(__get_customer_message_str(order['customer_message']))
             actual_order['products'] = sorted(actual_order['products'], key=lambda p: p['name'])
     # for i in range(len(expected)):
-    #     # print expected[i]['order_no'], '++++', actual_orders[i]['order_no']
-    #     # for j in range(len(expected[i]['products'])):
-    #     #     print expected[i]['products'][j].get('actions',""), '****', actual_orders[i]['products'][j].get('actions',"")
-    #     #     print expected[i]['products'][j].get('actions',"") == actual_orders[i]['products'][j].get('actions',"")
+    #     print expected[i]['order_no'], '++++', actual_orders[i]['order_no']
+    #     for j in range(len(expected[i]['products'])):
+    #         print expected[i]['products'][j].get('actions',""), '****', actual_orders[i]['products'][j].get('actions',"")
+    #         print expected[i]['products'][j].get('actions',"") == actual_orders[i]['products'][j].get('actions',"")
     #     print expected[i]['order_no'], '++++', actual_orders[i]['order_no']
     #     print expected[i]['price'], actual_orders[i]['price']
     # for i in range(len(expected[0]['products'])):
     #     print expected[0]['products'][i]['name'], "+++++++" ,actual_orders[0]['products'][i]['name']
     #     print expected[0]['products'][i]['price'], "+++++++" ,actual_orders[0]['products'][i]['price']
+    print('###########################################')
+    print(expected)
+    print(actual_orders)
+    for k in expected:
+       print(k)
+    print('---------------------------------------------------------------')
+    for k in actual_orders:
+        print(k)
+       
+    print('###########################################')
     bdd_util.assert_list(expected, actual_orders)
 
 
@@ -538,6 +562,10 @@ def step_look_for_order(context, user):
     context.query_params = query_params
     context.export_query_params = query_params
 
+    print('#################################################3')
+    print(context)
+    print('#################################################3')
+
 
 
 @then(u"{user}导出订单获取订单统计信息")
@@ -625,8 +653,11 @@ def step_get_specify_order(context, user):
     ]
     actual = []
     for row in csv_items[1:]:
+        print('900000===================================================')
+        print(row)
         # if reader.line_num :
         item = dict(map(None, csv_items[0], [str(r).decode('utf8') for r in row]))
+        print(item)
         item['ship_address'] = '' if not item.get('ship_address') else item.get('ship_address').replace(' ', ',')
         if '' != item.get('pay_time') and '已完成' not in item.get('pay_time').encode('utf-8'):
             data = datetime.strptime(item['pay_time'], '%Y-%m-%d %H:%M')

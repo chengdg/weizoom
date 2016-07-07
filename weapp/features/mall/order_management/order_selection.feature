@@ -145,7 +145,7 @@ Background:
 		}]
 		"""
 
-@mall2 @order @allOrder
+@mall2 @order @allOrder  @rocky_test
 Scenario:1 选择订单筛选条件
 	jobs选择订单筛选条件后
 	1. jobs选择一个条件时,可以看到订单列表
@@ -453,8 +453,8 @@ Scenario:1 选择订单筛选条件
 		}]
 		"""
 
-# __editor__ : "王丽" 2016-03-08
-@mall2 @order @allOrder @eugene
+# __editor__ : "王丽" 2016-03-08  
+@mall2 @order @allOrder @eugene @rocky
 Scenario:2 按照【订单类型】进行筛选
 	#筛选“订单类型”内容为“全部、首单、非首单”
 	#"全部":筛选出所有订单；"首单"：筛选出带有首单标记的订单；"非首单":筛选出没有首单标记的订单
@@ -476,7 +476,7 @@ Scenario:2 按照【订单类型】进行筛选
 			"member": "bill",
 			"status": "待支付",
 			"order_time": "2014-10-08 12:00:00",
-			"payment_time":"",
+			"payment_time":"2000-01-01 00:00:00",
 			"methods_of_payment": "微信支付",
 			"sources": "本店",
 			"ship_name": "bill",
@@ -555,7 +555,7 @@ Scenario:2 按照【订单类型】进行筛选
 			"member": "bill",
 			"status": "待支付",
 			"order_time": "2014-10-08 12:00:00",
-			"payment_time":"",
+			"payment_time":"2000-01-01 00:00:00",
 			"methods_of_payment": "微信支付",
 			"sources": "本店",
 			"ship_name": "bill",
@@ -669,7 +669,7 @@ Scenario:2 按照【订单类型】进行筛选
 			"member": "bill",
 			"status": "待支付",
 			"order_time": "2014-10-08 12:00:00",
-			"payment_time":"",
+			"payment_time":"2000-01-01 00:00:00",
 			"methods_of_payment": "微信支付",
 			"sources": "本店",
 			"ship_name": "bill",
@@ -712,7 +712,7 @@ Scenario:2 按照【订单类型】进行筛选
 		"""
 
 # __editor__ : "王丽" 2016-03-08
-@mall2 @order @allOrder @eugene
+@mall2 @order @allOrder @eugene  @rocky
 Scenario:3 混合条件进行筛选
 	Given jobs登录系统
 	When jobs根据给定条件查询订单
