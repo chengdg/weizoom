@@ -6,7 +6,6 @@ import models as apps_models
 from account.models import UserProfile
 from mall import models as mall_models
 from mall.promotion import models as promotion_models
-from mall.promotion.card_exchange import get_can_exchange_cards_list
 from modules.member import models as member_models
 from apps import models as apps_root_models
 from core.exceptionutil import unicode_full_stack

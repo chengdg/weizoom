@@ -220,3 +220,9 @@ def step_impl(context, webapp_user):
         response = context.client.post(url, data)
     else:
         context.server_error_msg=response_json.get("data").get('msg')
+
+
+from services.virtual_product_service import tasks
+@when(u"系统自动发货")
+def step_impl(context):
+    tasks.deliver_virtual_product(None, None)
