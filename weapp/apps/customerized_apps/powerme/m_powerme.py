@@ -71,7 +71,7 @@ class MPowerMe(resource.Resource):
 					need_del_powerlogs_ids += power_log_ids
 					#删除计算过的log
 					app_models.PowerLog.objects(id__in=need_del_powerlogs_ids).delete()
-					app_models.PoweredLimitRelation.objects(belong_to=record_id,member_id=detail.power_member_id).delete()
+					app_models.PoweredLimitRelation.objects(belong_to=record_id,powered_member_id=detail.owner_id,member_id=detail.power_member_id).delete()
 
 
 			# 遍历log，统计助力值
