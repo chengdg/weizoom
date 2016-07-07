@@ -64,18 +64,30 @@ class PowerMeParticipance(resource.Resource):
 				response = create_response(500)
 				response.errMsg = u'不存在该会员'
 				return response.get_response()
-			detail = app_models.PoweredDetail.objects(belong_to=power_id,power_member_id=member_id,has_powered=True)
-			if username == 'weshop' and detail.count() > 0:
-				app_models.PoweredLimitRelation(
-					belong_to=power_id,
-					member_id=member_id,
-					powered_member_id=fid,
-					created_at=datetime.now()
-				).save()
-				p_member_id= detail.first().owner_id
-				username_size_ten = Member.objects.get(id=p_member_id).username_size_ten
-				response = create_response(200)
-				response.data.powered_member_name = username_size_ten
+			if username == 'weshop':
+				if request.member.is_subscribed:
+					detail = app_models.PoweredDetail.objects(belong_to=power_id,power_member_id=member_id,has_powered=True)
+					if detail.count() > 0:
+						app_models.PoweredLimitRelation(
+							belong_to=power_id,
+							member_id=member_id,
+							powered_member_id=fid,
+							created_at=datetime.now()
+						).save()
+						p_member_id = detail.first().owner_id
+						username_size_ten = Member.objects.get(id=p_member_id).username_size_ten
+						response = create_response(200)
+						response.data.powered_member_name = username_size_ten
+				else:
+					detail = app_models.PoweredDetail.objects(belong_to=power_id,power_member_id=member_id)
+					if detail.count() > 0:
+						app_models.PoweredLimitRelation(
+							belong_to=power_id,
+							member_id=member_id,
+							powered_member_id=fid,
+							created_at=datetime.now()
+						).save()
+						response = create_response(200)
 			else:
 				#更新当前membre的参与信息
 				try:
