@@ -6,7 +6,6 @@ import models as apps_models
 from account.models import UserProfile
 from mall import models as mall_models
 from mall.promotion import models as promotion_models
-from mall.promotion.virtual_product import encrypt_password
 from modules.member import models as member_models
 from apps import models as apps_root_models
 from core.exceptionutil import unicode_full_stack
@@ -166,7 +165,7 @@ def grant_card(need_grant_info, all_record_ids):
 			continue
 		create_list.append(promotion_models.MemberHasWeizoomCard(
 			card_number = weizoom_card.weizoom_card_id,
-			card_password = encrypt_password(weizoom_card.weizoom_card_password),
+			card_password = weizoom_card.weizoom_card_password,
 			member_id = member_id,
 			# member_name = member_name,
 			source = promotion_models.WEIZOOM_CARD_SOURCE_REBATE,
@@ -228,7 +227,7 @@ def handle_wating_actions():
 			continue
 		need_finish_actions.append(promotion_models.MemberHasWeizoomCard(
 			card_number = can_use_card.weizoom_card_id,
-			card_password = encrypt_password(can_use_card.weizoom_card_password),
+			card_password = can_use_card.weizoom_card_password,
 			member_id = member_id,
 			# member_name = member_id2member[member_id].username_hexstr,
 			source = promotion_models.WEIZOOM_CARD_SOURCE_REBATE,

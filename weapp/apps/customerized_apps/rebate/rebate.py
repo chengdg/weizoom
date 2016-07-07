@@ -21,7 +21,7 @@ from apps.models import AppsWeizoomCard
 import export
 from apps import request_util
 from mall import export as mall_export
-from mall.promotion.virtual_product import encrypt_password
+from mall.promotion.virtual_product import encrypt_password, decrypt_password
 from modules.member import integral as integral_api
 import termite.pagestore as pagestore_manager
 from core.wxapi import get_weixin_api
@@ -243,7 +243,7 @@ class RebateCardDetails(resource.Resource):
 			try:
 				rebate_cards_list.append({
 					'card_number': card.card_number,
-					'card_password': card.card_password,
+					'card_password': decrypt_password(card.card_password),
 					'username': username
 				})
 			except Exception,e:
