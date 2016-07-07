@@ -156,6 +156,14 @@ class exMSign(resource.Resource):
 
             #检查当前用户签到情况
             daily_prize = prize_settings['0']
+            temp_daily_coupon = {}
+            if daily_prize["coupon"]:
+                for c in daily_prize["coupon"]:
+                    if request.member.grade_id == int(c["grade_id"]):
+                        temp_daily_coupon = {
+                            "name": c["name"]
+                        }
+            daily_prize["coupon"] = temp_daily_coupon
             serial_prize = {}
             next_serial_prize = {}
             prize_rules = {}
@@ -197,28 +205,40 @@ class exMSign(resource.Resource):
                     status = u'已签到'
                     for name in sorted(map(lambda x: (int(x),x), prize_settings.keys())):
                         setting = prize_settings[name[1]]
+                        temp_serial_coupon = {}
+                        for c in setting["coupon"]:
+                            if request.member.grade_id == int(c["grade_id"]):
+                                temp_serial_coupon = {
+                                    "name": c["name"]
+                                }
                         name = name[0]
                         if int(name) > signer.serial_count:
                             next_serial_prize = {
                                 'count': int(name),
-                                'prize': setting
+                                'prize': temp_serial_coupon
                             }
                             break
                 elif temp_serial_count >=1:
                     flag = False
                     for name in sorted(map(lambda x: (int(x),x), prize_settings.keys())):
                         setting = prize_settings[name[1]]
+                        temp_serial_coupon = {}
+                        for c in setting["coupon"]:
+                            if request.member.grade_id == int(c["grade_id"]):
+                                temp_serial_coupon = {
+                                    "name": c["name"]
+                                }
                         name = int(name[0])
                         if flag or name>signer.serial_count + 1:
                             next_serial_prize = {
                                 'count': name,
-                                'prize': setting
+                                'prize': temp_serial_coupon
                             }
                             break
                         if name == signer.serial_count + 1:
                             serial_prize = {
                                 'count': name,
-                                'prize':setting
+                                'prize': temp_serial_coupon
                             }
                             flag = True
 

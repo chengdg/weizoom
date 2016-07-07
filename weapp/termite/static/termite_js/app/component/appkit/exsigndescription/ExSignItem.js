@@ -33,10 +33,10 @@ W.component.appkit.ExSignItem = W.component.Component.extend({
 			default: '0'
 		},{
 			name: 'serial_count_prizes',
-			type: 'prize_selector_v4',
+			type: 'prize_selector_v5',
 			displayName: '送优惠券',
 			isUserProperty: true,
-			default:""
+			default:[]
 		}]
 	}],
 

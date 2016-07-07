@@ -437,10 +437,8 @@
             }
             $('.wa-daily_points').html((temp_integral == '' || temp_integral == 0) ? '' : (temp_integral+'  积分')).show();
 			var prize_html = "";
-            if (temp_coupon.length > 0) {
-				for (var i in temp_coupon) {
-					prize_html += "<div>"+temp_coupon[i].grade_name+": “"+temp_coupon[i].name+"”一张</div>";
-				}
+            if (!$.isEmptyObject(temp_coupon)) {
+				prize_html += "<div>“"+temp_coupon.name+"”一张</div>";
 			}
             $('.wa-daily_prizes').html(prize_html).show();
         } else {
@@ -464,7 +462,7 @@
                 }else{
                     $('.wa-prize-board').find('.daily_points').hide();
                 }
-                if (temp_prize.prize.coupon.id != 0) {
+                if (!$.isEmptyObject(temp_prize.prize.coupon)) {
                     $('.wa-prize-board').find('.daily_prizes').html("\"" + temp_prize.prize.coupon.name + "\" 一张").show();
                 }else{
                     $('.wa-prize-board').find('.daily_prizes').hide();
@@ -477,10 +475,10 @@
                 }else{
                     $('.wa-prize-board').find('.daily_points').hide();
                 }
-                if (tomorrow_prize.coupon.id != 0) {
+                if (!$.isEmptyObject(tomorrow_prize.coupon)) {
                     $('.wa-prize-board').find('.daily_prizes').html("“" + tomorrow_prize.coupon.name + "” 一张").show();
                 }else{
-                    $('.wa-prize-board').find('.daily_prizes')
+                    $('.wa-prize-board').find('.daily_prizes').hide()
                 }
             }
         }

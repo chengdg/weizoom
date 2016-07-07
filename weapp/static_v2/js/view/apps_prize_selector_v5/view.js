@@ -119,6 +119,7 @@ W.view.apps.PrizeSelectorV5 = Backbone.View.extend({
 W.registerUIRole('[data-ui-role="apps-prize-selector-v5"]', function() {
     var $el = $(this);
 	var prizes = $el.data('prizes');
+	console.log(prizes,"dddddddddddddddd")
 	var view;
 
 		view = new W.view.apps.PrizeSelectorV5({
