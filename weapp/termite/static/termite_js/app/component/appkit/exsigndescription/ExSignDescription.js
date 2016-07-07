@@ -197,7 +197,7 @@ W.component.appkit.ExSignDescription = W.component.Component.extend({
 				$node.find('.daily_prizes').show();
 				var html_str = '';
 				for (var i in value){
-					html_str += "<div>“"+value[i].name+"”"+"一张</div>"
+					html_str += "<div>"+value[i].grade_name+": “"+value[i].name+"”"+"一张</div>"
 				}
 				$node.find('.daily_prizes').html(html_str);
 			}else{

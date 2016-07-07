@@ -48,14 +48,14 @@ W.view.apps.PrizeSelectorV5 = Backbone.View.extend({
 				var prize = {
 					id: coupon.id,
 					name: coupon.name,
-					count:coupon.count,
-					grade_id: -1
+					count: coupon.count,
+					grade_id: -1,
+					grade_name: "全部"
 				};
 				_this.prizes.push(prize);
 				xwarn(_this.prizes);
 				var html = _this.renderTmpl('viewCoupon', {prize:prize,member_grades:_this.member_grades});
 				_this.$el.find('.xui-apps-prizeSelector').append(html);
-				//_this.$el.find('.xa-couponName').text(coupon.name);
 				_this.$el.find('.xa-selectedCoupon').removeClass('xui-hide');
 				_this.$el.find('.xa-addselectCoupon').removeClass('xui-hide');
 				_this.$el.find('.coupon_div').addClass('xui-hide');
@@ -72,11 +72,6 @@ W.view.apps.PrizeSelectorV5 = Backbone.View.extend({
 		W.dialog.showDialog('W.dialog.mall.SelectCouponDialog', {
 			success: function(data) {
 				var coupon = data[0];
-				var prize = {
-					id: coupon.id,
-					name: coupon.name,
-					count:coupon.count,
-				};
 				_this.prizes[index]["id"] =coupon.id;
 				_this.prizes[index]["name"] =coupon.name;
 				_this.prizes[index]["count"] =coupon.count;
@@ -107,7 +102,16 @@ W.view.apps.PrizeSelectorV5 = Backbone.View.extend({
 	onChangeMemberGrade: function(event){
 		var $selectGrade = $(event.currentTarget);
 		var index = this.$el.find('.xa-selectedCoupon').index($selectGrade.parents('.xa-selectedCoupon'));
-		this.prizes[index]["grade_id"] = $selectGrade.attr('value');
+		var grade_id = $selectGrade.attr('value');
+		this.prizes[index]["grade_id"] = grade_id;
+		var member_grades = this.member_grades;
+		var grade_name = "全部";
+		for (var i in member_grades){
+			if (member_grades[i].id == grade_id){
+				grade_name = member_grades[i].name
+			}
+		}
+		this.prizes[index]["grade_name"] = grade_name;
 		this.trigger('change-prize', _.deepClone(this.prizes));
 	}
 });
