@@ -39,26 +39,7 @@ Background:
 			"discount": "7"
 		}]
 		"""
-	Then jobs能获取会员等级列表
-		"""
-		[{
-			"name": "普通会员",
-			"upgrade": "自动升级",
-			"discount": "10"
-		}, {
-			"name": "铜牌会员",
-			"upgrade": "手动升级",
-			"discount": "9"
-		}, {
-			"name": "银牌会员",
-			"upgrade": "手动升级",
-			"discount": "8"
-		}, {
-			"name": "金牌会员",
-			"upgrade": "手动升级",
-			"discount": "7"
-		}]
-		"""
+
 	When jobs添加优惠券规则
 		"""
 		[{
@@ -71,7 +52,7 @@ Background:
 		},{
 			"name": "优惠券2",
 			"money":1.00,
-			"count":0,
+			"count":50,
 			"start_date": "今天",
 			"end_date": "1天后",
 			"coupon_id_prefix": "coupon2_id_"
