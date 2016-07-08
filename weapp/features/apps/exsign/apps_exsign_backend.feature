@@ -23,6 +23,42 @@ Feature: 后台配置数据
 
 Background:
 	Given jobs登录系统
+	When jobs添加会员等级
+		"""
+		[{
+			"name": "铜牌会员",
+			"upgrade": "手动升级",
+			"discount": "9"
+		}, {
+			"name": "银牌会员",
+			"upgrade": "手动升级",
+			"discount": "8"
+		}, {
+			"name": "金牌会员",
+			"upgrade": "手动升级",
+			"discount": "7"
+		}]
+		"""
+	Then jobs能获取会员等级列表
+		"""
+		[{
+			"name": "普通会员",
+			"upgrade": "自动升级",
+			"discount": "10"
+		}, {
+			"name": "铜牌会员",
+			"upgrade": "手动升级",
+			"discount": "9"
+		}, {
+			"name": "银牌会员",
+			"upgrade": "手动升级",
+			"discount": "8"
+		}, {
+			"name": "金牌会员",
+			"upgrade": "手动升级",
+			"discount": "7"
+		}]
+		"""
 	When jobs添加优惠券规则
 		"""
 		[{
@@ -81,8 +117,6 @@ Scenario:1 配置后台所有数据,优惠券数量足,没有过期
 			"name": "签到活动1",
 			"sign_describe":"签到即可获得积分,连续签到奖励更大哦",
 			"share_pic":"1.jpg",
-			"share_describe": "签到获得奖励",
-			"reply_content":"签到",
 			"sign_settings":
 				[{
 					"sign_in": "0",
@@ -139,8 +173,6 @@ Scenario:1 配置后台所有数据,优惠券数量足,没有过期
 			"name": "签到活动1",
 			"sign_describe":"签到即可获得积分,连续签到奖励更大哦",
 			"share_pic":"1.jpg",
-			"share_describe": "签到获得奖励",
-			"reply_content":"签到",
 			"sign_settings":
 				[{
 					"sign_in": "0",
@@ -148,19 +180,19 @@ Scenario:1 配置后台所有数据,优惠券数量足,没有过期
 					"coupons":[{
 						"send_coupon": "优惠券1",
 						"prize_counts":50,
-						"member_grade":"铜牌等级"
+						"member_grade":"铜牌会员"
 					},{
 						"send_coupon": "优惠券2",
 						"prize_counts":50,
-						"member_grade":"银牌等级"
+						"member_grade":"银牌会员"
 					},{
 						"send_coupon": "优惠券1",
 						"prize_counts":50,
-						"member_grade":"金牌等级"
+						"member_grade":"金牌会员"
 					},{
 						"send_coupon": "优惠券2",
 						"prize_counts":50,
-						"member_grade":"金牌等级"
+						"member_grade":"金牌会员"
 					}]
 				},{
 					"sign_in": "5",
@@ -168,19 +200,19 @@ Scenario:1 配置后台所有数据,优惠券数量足,没有过期
 					"coupons":[{
 						"send_coupon": "优惠券1",
 						"prize_counts":50,
-						"member_grade":"铜牌等级"
+						"member_grade":"铜牌会员"
 					},{
 						"send_coupon": "优惠券2",
 						"prize_counts":50,
-						"member_grade":"银牌等级"
+						"member_grade":"银牌会员"
 					},{
 						"send_coupon": "优惠券1",
 						"prize_counts":50,
-						"member_grade":"金牌等级"
+						"member_grade":"金牌会员"
 					},{
 						"send_coupon": "优惠券2",
 						"prize_counts":50,
-						"member_grade":"金牌等级"
+						"member_grade":"金牌会员"
 					},{
 						"send_coupon": "优惠券1",
 						"prize_counts":50,
@@ -200,8 +232,6 @@ Scenario:2 一条奖励下,不添加优惠券,有积分
 			"name": "签到活动2",
 			"sign_describe":"签到即可获得积分,连续签到奖励更大哦",
 			"share_pic":"2.jpg",
-			"share_describe": "签到获得奖励",
-			"reply_content":"签到",
 			"sign_settings":
 				[{
 					"sign_in": "0",
@@ -235,27 +265,25 @@ Scenario:3 一条奖励下,添加优惠券,不添加积分
 			"name": "签到活动3",
 			"sign_describe":"签到即可获得积分,连续签到奖励更大哦",
 			"share_pic":"3.jpg",
-			"share_describe": "签到获得奖励",
-			"reply_content":"签到",
 			"sign_settings":
 				[{
 					"sign_in": "0",
 					"coupons":[{
 						"send_coupon": "优惠券1",
 						"prize_counts":50,
-						"member_grade":"铜牌等级"
+						"member_grade":"铜牌会员"
 					},{
 						"send_coupon": "优惠券2",
 						"prize_counts":50,
-						"member_grade":"银牌等级"
+						"member_grade":"银牌会员"
 					},{
 						"send_coupon": "优惠券1",
 						"prize_counts":50,
-						"member_grade":"金牌等级"
+						"member_grade":"金牌会员"
 					},{
 						"send_coupon": "优惠券2",
 						"prize_counts":50,
-						"member_grade":"金牌等级"
+						"member_grade":"金牌会员"
 					}]
 				}]
 		}
@@ -266,29 +294,26 @@ Scenario:3 一条奖励下,添加优惠券,不添加积分
 			"status":"off",
 			"name": "签到活动3",
 			"sign_describe":"签到即可获得积分,连续签到奖励更大哦",
-
 			"share_pic":"3.jpg",
-			"share_describe": "签到获得奖励",
-			"reply_content":"签到",
 			"sign_settings":
 				[{
 					"sign_in": "0",
 					"coupons":[{
 						"send_coupon": "优惠券1",
 						"prize_counts":50,
-						"member_grade":"铜牌等级"
+						"member_grade":"铜牌会员"
 					},{
 						"send_coupon": "优惠券2",
 						"prize_counts":50,
-						"member_grade":"银牌等级"
+						"member_grade":"银牌会员"
 					},{
 						"send_coupon": "优惠券1",
 						"prize_counts":50,
-						"member_grade":"金牌等级"
+						"member_grade":"金牌会员"
 					},{
 						"send_coupon": "优惠券2",
 						"prize_counts":50,
-						"member_grade":"金牌等级"
+						"member_grade":"金牌会员"
 					}]
 				}]
 		}
@@ -303,27 +328,25 @@ Scenario:4 三条奖励下,一条优惠券,一条积分,一条优惠券加积分
 			"name": "签到活动5",
 			"sign_describe":"签到即可获得积分,连续签到奖励更大哦",
 			"share_pic":"5.jpg",
-			"share_describe": "签到获得奖励",
-			"reply_content":"签到",
 			"sign_settings":
 				[{
 					"sign_in": "0",
 					"coupons":[{
 						"send_coupon": "优惠券1",
 						"prize_counts":50,
-						"member_grade":"铜牌等级"
+						"member_grade":"铜牌会员"
 					},{
 						"send_coupon": "优惠券2",
 						"prize_counts":50,
-						"member_grade":"银牌等级"
+						"member_grade":"银牌会员"
 					},{
 						"send_coupon": "优惠券1",
 						"prize_counts":50,
-						"member_grade":"金牌等级"
+						"member_grade":"金牌会员"
 					},{
 						"send_coupon": "优惠券2",
 						"prize_counts":50,
-						"member_grade":"金牌等级"
+						"member_grade":"金牌会员"
 					}]
 				},{
 					"sign_in": "3",
@@ -334,19 +357,19 @@ Scenario:4 三条奖励下,一条优惠券,一条积分,一条优惠券加积分
 					"coupons":[{
 						"send_coupon": "优惠券1",
 						"prize_counts":50,
-						"member_grade":"铜牌等级"
+						"member_grade":"铜牌会员"
 					},{
 						"send_coupon": "优惠券2",
 						"prize_counts":50,
-						"member_grade":"银牌等级"
+						"member_grade":"银牌会员"
 					},{
 						"send_coupon": "优惠券1",
 						"prize_counts":50,
-						"member_grade":"金牌等级"
+						"member_grade":"金牌会员"
 					},{
 						"send_coupon": "优惠券2",
 						"prize_counts":50,
-						"member_grade":"金牌等级"
+						"member_grade":"金牌会员"
 					}]
 				}]
 		}
@@ -360,25 +383,25 @@ Scenario:4 三条奖励下,一条优惠券,一条积分,一条优惠券加积分
 			"share_pic":"5.jpg",
 			"share_describe": "签到获得奖励",
 			"reply_content":"签到",
-						"sign_settings":
+			"sign_settings":
 				[{
 					"sign_in": "0",
 					"coupons":[{
 						"send_coupon": "优惠券1",
 						"prize_counts":50,
-						"member_grade":"铜牌等级"
+						"member_grade":"铜牌会员"
 					},{
 						"send_coupon": "优惠券2",
 						"prize_counts":50,
-						"member_grade":"银牌等级"
+						"member_grade":"银牌会员"
 					},{
 						"send_coupon": "优惠券1",
 						"prize_counts":50,
-						"member_grade":"金牌等级"
+						"member_grade":"金牌会员"
 					},{
 						"send_coupon": "优惠券2",
 						"prize_counts":50,
-						"member_grade":"金牌等级"
+						"member_grade":"金牌会员"
 					}]
 				},{
 					"sign_in": "3",
@@ -389,19 +412,19 @@ Scenario:4 三条奖励下,一条优惠券,一条积分,一条优惠券加积分
 					"coupons":[{
 						"send_coupon": "优惠券1",
 						"prize_counts":50,
-						"member_grade":"铜牌等级"
+						"member_grade":"铜牌会员"
 					},{
 						"send_coupon": "优惠券2",
 						"prize_counts":50,
-						"member_grade":"银牌等级"
+						"member_grade":"银牌会员"
 					},{
 						"send_coupon": "优惠券1",
 						"prize_counts":50,
-						"member_grade":"金牌等级"
+						"member_grade":"金牌会员"
 					},{
 						"send_coupon": "优惠券2",
 						"prize_counts":50,
-						"member_grade":"金牌等级"
+						"member_grade":"金牌会员"
 					}]
 				}]
 		}
@@ -416,8 +439,6 @@ Scenario:5 更新签到活动的状态
 			"name": "签到活动7",
 			"sign_describe":"签到即可获得积分,连续签到奖励更大哦",
 			"share_pic":"7.jpg",
-			"share_describe": "签到获得奖励",
-			"reply_content":"签到",
 			"sign_settings":
 				[{
 					"sign_in": "0",
@@ -425,19 +446,19 @@ Scenario:5 更新签到活动的状态
 					"coupons":[{
 						"send_coupon": "优惠券1",
 						"prize_counts":50,
-						"member_grade":"铜牌等级"
+						"member_grade":"铜牌会员"
 					},{
 						"send_coupon": "优惠券2",
 						"prize_counts":50,
-						"member_grade":"银牌等级"
+						"member_grade":"银牌会员"
 					},{
 						"send_coupon": "优惠券1",
 						"prize_counts":50,
-						"member_grade":"金牌等级"
+						"member_grade":"金牌会员"
 					},{
 						"send_coupon": "优惠券2",
 						"prize_counts":50,
-						"member_grade":"金牌等级"
+						"member_grade":"金牌会员"
 					}]
 				},{
 					"sign_in": "3",
@@ -445,19 +466,19 @@ Scenario:5 更新签到活动的状态
 					"coupons":[{
 						"send_coupon": "优惠券1",
 						"prize_counts":50,
-						"member_grade":"铜牌等级"
+						"member_grade":"铜牌会员"
 					},{
 						"send_coupon": "优惠券2",
 						"prize_counts":50,
-						"member_grade":"银牌等级"
+						"member_grade":"银牌会员"
 					},{
 						"send_coupon": "优惠券1",
 						"prize_counts":50,
-						"member_grade":"金牌等级"
+						"member_grade":"金牌会员"
 					},{
 						"send_coupon": "优惠券2",
 						"prize_counts":50,
-						"member_grade":"金牌等级"
+						"member_grade":"金牌会员"
 					}]
 				},{
 					"sign_in": "5",
@@ -465,19 +486,19 @@ Scenario:5 更新签到活动的状态
 					"coupons":[{
 						"send_coupon": "优惠券1",
 						"prize_counts":50,
-						"member_grade":"铜牌等级"
+						"member_grade":"铜牌会员"
 					},{
 						"send_coupon": "优惠券2",
 						"prize_counts":50,
-						"member_grade":"银牌等级"
+						"member_grade":"银牌会员"
 					},{
 						"send_coupon": "优惠券1",
 						"prize_counts":50,
-						"member_grade":"金牌等级"
+						"member_grade":"金牌会员"
 					},{
 						"send_coupon": "优惠券2",
 						"prize_counts":50,
-						"member_grade":"金牌等级"
+						"member_grade":"金牌会员"
 					}]
 				}]
 		}
@@ -511,8 +532,6 @@ Scenario:6 删除优惠券信息
 			"name": "签到活动7",
 			"sign_describe":"签到即可获得积分,连续签到奖励更大哦",
 			"share_pic":"7.jpg",
-			"share_describe": "签到获得奖励",
-			"reply_content":"签到",
 			"sign_settings":
 				[{
 					"sign_in": "0",
@@ -520,19 +539,19 @@ Scenario:6 删除优惠券信息
 					"coupons":[{
 						"send_coupon": "优惠券1",
 						"prize_counts":50,
-						"member_grade":"铜牌等级"
+						"member_grade":"铜牌会员"
 					},{
 						"send_coupon": "优惠券2",
 						"prize_counts":50,
-						"member_grade":"银牌等级"
+						"member_grade":"银牌会员"
 					},{
 						"send_coupon": "优惠券1",
 						"prize_counts":50,
-						"member_grade":"金牌等级"
+						"member_grade":"金牌会员"
 					},{
 						"send_coupon": "优惠券2",
 						"prize_counts":50,
-						"member_grade":"金牌等级"
+						"member_grade":"金牌会员"
 					}]
 				},{
 					"sign_in": "3",
@@ -540,19 +559,19 @@ Scenario:6 删除优惠券信息
 					"coupons":[{
 						"send_coupon": "优惠券1",
 						"prize_counts":50,
-						"member_grade":"铜牌等级"
+						"member_grade":"铜牌会员"
 					},{
 						"send_coupon": "优惠券2",
 						"prize_counts":50,
-						"member_grade":"银牌等级"
+						"member_grade":"银牌会员"
 					},{
 						"send_coupon": "优惠券1",
 						"prize_counts":50,
-						"member_grade":"金牌等级"
+						"member_grade":"金牌会员"
 					},{
 						"send_coupon": "优惠券2",
 						"prize_counts":50,
-						"member_grade":"金牌等级"
+						"member_grade":"金牌会员"
 					}]
 				},{
 					"sign_in": "5",
@@ -560,19 +579,19 @@ Scenario:6 删除优惠券信息
 					"coupons":[{
 						"send_coupon": "优惠券1",
 						"prize_counts":50,
-						"member_grade":"铜牌等级"
+						"member_grade":"铜牌会员"
 					},{
 						"send_coupon": "优惠券2",
 						"prize_counts":50,
-						"member_grade":"银牌等级"
+						"member_grade":"银牌会员"
 					},{
 						"send_coupon": "优惠券1",
 						"prize_counts":50,
-						"member_grade":"金牌等级"
+						"member_grade":"金牌会员"
 					},{
 						"send_coupon": "优惠券2",
 						"prize_counts":50,
-						"member_grade":"金牌等级"
+						"member_grade":"金牌会员"
 					}]
 				}]
 		}
@@ -584,8 +603,6 @@ Scenario:6 删除优惠券信息
 			"name": "签到活动7",
 			"sign_describe":"签到即可获得积分,连续签到奖励更大哦",
 			"share_pic":"7.jpg",
-			"share_describe": "签到获得奖励",
-			"reply_content":"签到",
 			"sign_settings":
 				[{
 					"sign_in": "0",
@@ -593,15 +610,15 @@ Scenario:6 删除优惠券信息
 					"coupons":[{
 						"send_coupon": "优惠券1",
 						"prize_counts":50,
-						"member_grade":"铜牌等级"
+						"member_grade":"铜牌会员"
 					}{
 						"send_coupon": "优惠券1",
 						"prize_counts":50,
-						"member_grade":"金牌等级"
+						"member_grade":"金牌会员"
 					},{
 						"send_coupon": "优惠券2",
 						"prize_counts":50,
-						"member_grade":"金牌等级"
+						"member_grade":"金牌会员"
 					}]
 				},{
 					"sign_in": "3",
@@ -609,15 +626,15 @@ Scenario:6 删除优惠券信息
 					"coupons":[{
 						"send_coupon": "优惠券1",
 						"prize_counts":50,
-						"member_grade":"铜牌等级"
+						"member_grade":"铜牌会员"
 					},{
 						"send_coupon": "优惠券2",
 						"prize_counts":50,
-						"member_grade":"银牌等级"
+						"member_grade":"银牌会员"
 					},{
 						"send_coupon": "优惠券2",
 						"prize_counts":50,
-						"member_grade":"金牌等级"
+						"member_grade":"金牌会员"
 					}]
 				}
 				}]
@@ -630,8 +647,6 @@ Scenario:6 删除优惠券信息
 			"name": "签到活动7",
 			"sign_describe":"签到即可获得积分,连续签到奖励更大哦",
 			"share_pic":"7.jpg",
-			"share_describe": "签到获得奖励",
-			"reply_content":"签到",
 			"sign_settings":
 				[{
 					"sign_in": "0",
@@ -639,15 +654,15 @@ Scenario:6 删除优惠券信息
 					"coupons":[{
 						"send_coupon": "优惠券1",
 						"prize_counts":50,
-						"member_grade":"铜牌等级"
+						"member_grade":"铜牌会员"
 					}{
 						"send_coupon": "优惠券1",
 						"prize_counts":50,
-						"member_grade":"金牌等级"
+						"member_grade":"金牌会员"
 					},{
 						"send_coupon": "优惠券2",
 						"prize_counts":50,
-						"member_grade":"金牌等级"
+						"member_grade":"金牌会员"
 					}]
 				},{
 					"sign_in": "3",
@@ -655,15 +670,15 @@ Scenario:6 删除优惠券信息
 					"coupons":[{
 						"send_coupon": "优惠券1",
 						"prize_counts":50,
-						"member_grade":"铜牌等级"
+						"member_grade":"铜牌会员"
 					},{
 						"send_coupon": "优惠券2",
 						"prize_counts":50,
-						"member_grade":"银牌等级"
+						"member_grade":"银牌会员"
 					},{
 						"send_coupon": "优惠券2",
 						"prize_counts":50,
-						"member_grade":"金牌等级"
+						"member_grade":"金牌会员"
 					}]
 				}
 				}]
