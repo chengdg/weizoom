@@ -206,12 +206,6 @@ class exSignParticipance(models.Document):
 			for c in curr_prize_coupon:
 				coupon, msg, coupon_count = get_consume_coupon(exsign.owner_id,'exsign', str(exsign.id), c['id'], self.member_id)
 				c["count"] = coupon_count
-		else:
-			curr_prize_coupon = {
-				"id": 0,
-				"name": "",
-				"count": 0
-			}
 		return_data['curr_prize_integral'] = curr_prize_integral
 		return_data['curr_prize_coupon'] = curr_prize_coupon
 		return_data['daily_integral'] = daily_integral

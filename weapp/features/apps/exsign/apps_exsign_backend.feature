@@ -410,7 +410,7 @@ Scenario:4 三条奖励下,一条优惠券,一条积分,一条优惠券加积分
 		}
 		"""
 
-@mall2 @apps @apps_exsign @apps_exsign_backend @cl
+@mall2 @apps @apps_exsign @apps_exsign_backend
 Scenario:5 更新签到活动的状态
 	When jobs添加专项签到活动"签到活动7",并且保存
 		"""
@@ -503,9 +503,9 @@ Scenario:5 更新签到活动的状态
 		"""
 	Then jobs的专项签到活动"签到活动7"状态为"关闭"
 
-@mall2 @apps @apps_exsign @apps_exsign_backend
+@mall2 @apps @apps_exsign @apps_exsign_backend @cl
 Scenario:6 删除优惠券信息
-	When jobs添加专项签到活动"签到活动7"
+	When jobs添加专项签到活动"签到活动7",并且保存
 		"""
 		{
 			"status":"off",

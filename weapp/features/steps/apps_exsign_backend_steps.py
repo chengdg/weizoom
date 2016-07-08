@@ -543,7 +543,7 @@ def step_impl(context,user):
 		"share":json.dumps(share),
 		"status":status,
 		"related_page_id":context.project_id,
-		"signId": context.exsign_id
+		"exsignId": context.exsign_id
 	}
 	post_sign_response = __post_ExSignArgs(context,post_sign_args,project_id,design_mode=0,version=1)
 
@@ -591,7 +591,7 @@ def update_sign_status(context,user):
 	project_id = u'new_app:exsign:'+str(context.project_id)
 	exsign_id = str(context.exsign_id)
 	args = {
-		"signId":exsign_id,
+		"exsignId":exsign_id,
 		"status":value
 	}
 	post_response = __post_ExSignArgs(context,args,project_id)
