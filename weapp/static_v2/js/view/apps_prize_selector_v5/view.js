@@ -119,9 +119,38 @@ W.view.apps.PrizeSelectorV5 = Backbone.View.extend({
 W.registerUIRole('[data-ui-role="apps-prize-selector-v5"]', function() {
     var $el = $(this);
 	var prizes = $el.data('prizes');
-	console.log(prizes,"dddddddddddddddd")
 	var view;
-
+	if (!$.isEmptyObject(prizes)){
+		var coupon_ids = [];
+		for (var i in prizes){
+			coupon_ids.push(prizes[i].id)
+		}
+		W.getApi().call({
+			app: 'mall2',
+			resource: 'issuing_coupons_filter',
+			method: 'get',
+			async: false,
+			args: {
+				"filter_type": "coupon_counts",
+				"coupon_ids": coupon_ids
+			},
+			success: function(data){
+				for (var i in prizes){
+					prizes[i]["count"] = data[prizes[i].id]
+				}
+				view = new W.view.apps.PrizeSelectorV5({
+					el: $el.get(0),
+					prizes: prizes
+				});
+				view.render();
+				//缓存view
+				$el.data('view', view);
+			},
+			error: function(error){
+				W.showHint('error', '获取优惠券库存失败~');
+			}
+		});
+	}else{
 		view = new W.view.apps.PrizeSelectorV5({
 			el: $el.get(0),
 			prizes: prizes
@@ -129,4 +158,6 @@ W.registerUIRole('[data-ui-role="apps-prize-selector-v5"]', function() {
 		view.render();
 		//缓存view
 		$el.data('view', view);
+	}
+
 });
