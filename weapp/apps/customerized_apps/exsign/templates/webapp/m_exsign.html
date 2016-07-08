@@ -438,7 +438,9 @@
             $('.wa-daily_points').html((temp_integral == '' || temp_integral == 0) ? '' : (temp_integral+'  积分')).show();
 			var prize_html = "";
             if (!$.isEmptyObject(temp_coupon)) {
-				prize_html += "<div>“"+temp_coupon.name+"”一张</div>";
+				for (var i in temp_coupon){
+					prize_html += "<div>“"+temp_coupon[i].name+"”一张</div>";
+				}
 			}
             $('.wa-daily_prizes').html(prize_html).show();
         } else {
@@ -454,7 +456,7 @@
             }
             $('.wa-sign-board').find('.wa-i-serial-count b').html(prize_info.serial_count < 10 ? ('0' + prize_info.serial_count) : prize_info.serial_count);
             var temp_prize = prize_info.next_serial_prize;
-            var str = [];
+			console.log(temp_prize,"pppppppppppppp")
             if (!$.isEmptyObject(temp_prize)) {
                  $('.wa-prize-board').find('.wa-daily_title').html("连续签到" + temp_prize.count + "天可领取 ");
                 if (temp_prize.prize.integral != 0) {
@@ -463,7 +465,13 @@
                     $('.wa-prize-board').find('.daily_points').hide();
                 }
                 if (!$.isEmptyObject(temp_prize.prize.coupon)) {
-                    $('.wa-prize-board').find('.daily_prizes').html("\"" + temp_prize.prize.coupon.name + "\" 一张").show();
+					var prize_html = "";
+					if (!$.isEmptyObject(temp_prize.prize.coupon)) {
+						for (var i in temp_prize.prize.coupon){
+							prize_html += "<div>“"+temp_prize.prize.coupon[i].name+"”一张</div>";
+						}
+					}
+                    $('.wa-prize-board').find('.daily_prizes').html(prize_html).show();
                 }else{
                     $('.wa-prize-board').find('.daily_prizes').hide();
                 }
@@ -476,7 +484,13 @@
                     $('.wa-prize-board').find('.daily_points').hide();
                 }
                 if (!$.isEmptyObject(tomorrow_prize.coupon)) {
-                    $('.wa-prize-board').find('.daily_prizes').html("“" + tomorrow_prize.coupon.name + "” 一张").show();
+					var prize_html = "";
+					if (!$.isEmptyObject(tomorrow_prize.coupon)) {
+						for (var i in tomorrow_prize.coupon){
+							prize_html += "<div>“"+tomorrow_prize.coupon[i].name+"”一张</div>";
+						}
+					}
+                    $('.wa-prize-board').find('.daily_prizes').html(prize_html).show();
                 }else{
                     $('.wa-prize-board').find('.daily_prizes').hide()
                 }

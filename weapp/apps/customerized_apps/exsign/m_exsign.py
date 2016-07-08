@@ -155,15 +155,23 @@ class exMSign(resource.Resource):
             record_id = record.id
 
             #检查当前用户签到情况
-            daily_prize = prize_settings['0']
-            temp_daily_coupon = {}
-            if daily_prize["coupon"]:
-                for c in daily_prize["coupon"]:
+            cur_daily_prize = prize_settings['0']
+            temp_daily_coupon = []
+            if cur_daily_prize["coupon"]:
+                for c in cur_daily_prize["coupon"]:
                     if request.member.grade_id == int(c["grade_id"]):
-                        temp_daily_coupon = {
+                        temp_daily_coupon.append({
                             "name": c["name"]
-                        }
-            daily_prize["coupon"] = temp_daily_coupon
+                        })
+                    elif int(c["grade_id"]) == 0:
+                        temp_daily_coupon.append({
+                            "name": c["name"]
+                         })
+
+            daily_prize = {
+                "integral": cur_daily_prize["integral"],
+                "coupon": temp_daily_coupon
+            }
             serial_prize = {}
             next_serial_prize = {}
             prize_rules = {}
@@ -179,7 +187,7 @@ class exMSign(resource.Resource):
 
             signers = app_models.exSignParticipance.objects(belong_to=str(record_id), member_id=member_id)
             participance_data_count = signers.count()
-            signer = signers[0] if participance_data_count>0 else None
+            signer = signers[0] if participance_data_count > 0 else None
 
             if signer:
                 #检查是否已签到
@@ -205,12 +213,19 @@ class exMSign(resource.Resource):
                     status = u'已签到'
                     for name in sorted(map(lambda x: (int(x),x), prize_settings.keys())):
                         setting = prize_settings[name[1]]
-                        temp_serial_coupon = {}
+                        temp_serial_coupon = {
+                            "integral": setting["integral"],
+                            "coupon": []
+                        }
                         for c in setting["coupon"]:
                             if request.member.grade_id == int(c["grade_id"]):
-                                temp_serial_coupon = {
+                                temp_serial_coupon["coupon"].append({
                                     "name": c["name"]
-                                }
+                                })
+                            elif int(c["grade_id"]) == 0:
+                                temp_serial_coupon["coupon"].append({
+                                    "name": c["name"]
+                                })
                         name = name[0]
                         if int(name) > signer.serial_count:
                             next_serial_prize = {
@@ -222,12 +237,20 @@ class exMSign(resource.Resource):
                     flag = False
                     for name in sorted(map(lambda x: (int(x),x), prize_settings.keys())):
                         setting = prize_settings[name[1]]
-                        temp_serial_coupon = {}
+                        temp_serial_coupon = {
+                            "integral": setting["integral"],
+                            "coupon": []
+                        }
                         for c in setting["coupon"]:
                             if request.member.grade_id == int(c["grade_id"]):
-                                temp_serial_coupon = {
+                                temp_serial_coupon["coupon"].append({
                                     "name": c["name"]
-                                }
+                                })
+                            elif int(c["grade_id"]) == 0:
+                                 temp_serial_coupon["coupon"].append({
+                                    "name": c["name"]
+                                })
+
                         name = int(name[0])
                         if flag or name>signer.serial_count + 1:
                             next_serial_prize = {

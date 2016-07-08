@@ -270,7 +270,7 @@
             <span class="daily_points wa-daily_points Num">{% if component.model.daily_points %}{{component.model.daily_points}}{% else %}0{% endif %} 积分</span>
             <div class="daily_prizes wa-daily_prizes" {% if not component.model.daily_prizes %}style="display: none"{% endif %}>
             {% for daily_prize in component.model.daily_prizes %}
-                <div>{{ daily_prize.grade_name }}: “{{ daily_prize.name }}”一张</div>
+                <div>“{{ daily_prize.name }}”一张</div>
             {% endfor %}
             </div>
         </div>

@@ -49,7 +49,7 @@ W.view.apps.PrizeSelectorV5 = Backbone.View.extend({
 					id: coupon.id,
 					name: coupon.name,
 					count: coupon.count,
-					grade_id: -1,
+					grade_id: 0,
 					grade_name: "全部"
 				};
 				_this.prizes.push(prize);

@@ -16,7 +16,7 @@ class exSignMemberGradeList(resource.Resource):
 		webapp_id = request.user_profile.webapp_id
 		member_grades = MemberGrade.get_all_grades_list(webapp_id)
 		member_grade_list = [{
-			"id": -1,
+			"id": 0,
 			"name": u"全部"
 		}]
 		for grade in member_grades:
