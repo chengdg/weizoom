@@ -93,7 +93,7 @@ def __get_exsign(context):
 	"""
 	step1 登录Sign页面
 	"""
-	get_sign_response = context.client.get("/apps/sign/sign/")
+	get_sign_response = context.client.get("/apps/exsign/exsign/")
 	sign_args_response = get_sign_response.context
 	return sign_args_response
 
@@ -365,7 +365,7 @@ def step_add_exsign(context,user,exsign_name):
 	##Step1模拟登陆Sign页面 （Fin初始页面所有HTML元素）
 	exsign_args_response = __get_exsign(context)
 
-	sign  = exsign_args_response['sign']
+	sign = exsign_args_response['exsign']
 	is_create_new_data = exsign_args_response['is_create_new_data']
 	project_id = exsign_args_response['project_id']
 	webapp_owner_id = exsign_args_response['webapp_owner_id']
@@ -398,12 +398,11 @@ def step_add_exsign(context,user,exsign_name):
 
 			if coupons:
 				tmp_prize_settings_arr["serial_count_prizes"] ={}
-				print __get_coupon_member_grade_json(coupons),"ppppppppppppp"
 				prize_settings[tmp_sign_in]["coupon"] = __get_coupon_member_grade_json(coupons)
 
 				tmp_prize_settings_arr["serial_count_prizes"] = __get_coupon_member_grade_json(coupons)
 			else:
-				prize_settings[tmp_sign_in]["coupon"] = {'id':None,'count':0,'name':''}
+				prize_settings[tmp_sign_in]["coupon"] = []
 
 		else:
 			pass
@@ -490,8 +489,7 @@ def step_impl(context,user):
 	for item in sign_settings:
 		tmp_sign_in = item.get("sign_in","")
 		tmp_integral = item.get("integral","")
-		tmp_send_coupon = item.get("send_coupon","")
-		tmp_prize_counts = item.get("prize_counts","")
+		coupons = item.get("coupons","")
 		tmp_prize_settings_arr = {}
 
 		if tmp_sign_in:
@@ -503,12 +501,14 @@ def step_impl(context,user):
 			else:
 				prize_settings[tmp_sign_in]["integral"] = 0
 
-			if tmp_send_coupon:
+
+			if coupons:
 				tmp_prize_settings_arr["serial_count_prizes"] ={}
-				prize_settings[tmp_sign_in]["coupon"] = __get_coupon_json(tmp_send_coupon)
-				tmp_prize_settings_arr["serial_count_prizes"] = __get_coupon_json(tmp_send_coupon)
+				prize_settings[tmp_sign_in]["coupon"] = __get_coupon_member_grade_json(coupons)
+
+				tmp_prize_settings_arr["serial_count_prizes"] = __get_coupon_member_grade_json(coupons)
 			else:
-				prize_settings[tmp_sign_in]["coupon"] = {'id':None,'count':0,'name':''}
+				prize_settings[tmp_sign_in]["coupon"] = []
 
 		else:
 			pass

@@ -74,6 +74,23 @@ Background:
 				}]
 		}]
 		"""
+	When jobs添加会员等级
+		"""
+		[{
+			"name": "铜牌会员",
+			"upgrade": "手动升级",
+			"discount": "9"
+		}, {
+			"name": "银牌会员",
+			"upgrade": "手动升级",
+			"discount": "8"
+		}, {
+			"name": "金牌会员",
+			"upgrade": "手动升级",
+			"discount": "7"
+		}]
+		"""
+
 @mall2 @apps @apps_exsign @apps_exsign_frontend
 Scenario:1 用户进入签到页面完成"签到活动1"签到
 	Given jobs添加专项签到活动"签到活动1",并且保存
@@ -115,39 +132,55 @@ Scenario:1 用户进入签到页面完成"签到活动1"签到
 		}
 		"""
 	When bill关注jobs的公众号
+	Given jobs登录系统
+	When jobs更新'bill'的会员等级
+		"""
+		{
+			"name": "bill",
+			"member_rank": "金牌会员"
+		}
+		"""
+	When bill关注jobs的公众号
 	When bill访问jobs的webapp
 
-	When 设置bill为"金牌会员"
-
 	Then bill在jobs的webapp中拥有0会员积分
-	When bill进入jobs签到页面进行签到
-	Then bill获取专项签到活动的内容
+	When bill进入jobs专项签到页面进行签到
+	Then bill获取专项签到成功的内容
 		"""
 		[{
 			"serial_count": "1",
 			"daily_prize":
 				{
 					"integral":"100",
-					"coupon":"优惠券1",
-					"coupon":"优惠券2"
+					"coupons":[
+						"优惠券1",
+						"优惠券2"
+					]
 				},
 			"curr_prize":
 				{	
 					"integral":"100",
-					"coupon":"优惠券1",
-					"coupon":"优惠券2"
+					"coupons":[
+						"优惠券1",
+						"优惠券2"
+					]
 				}
 		}]
 		"""
 	When bill访问jobs的webapp
-	Then bill在jobs的webapp中拥有500会员积分
+	Then bill在jobs的webapp中拥有100会员积分
 	Then bill能获得webapp优惠券列表
 		"""
 		[{
 			"coupon_id": "coupon1_id_1",
 			"money": 1.00,
 			"status": "未使用"
-		}]
+		},{
+			"coupon_id": "coupon2_id_1",
+			"money": 2.00,
+			"status": "未使用"
+		}
+		]
 		"""
 
 #@mall2 @apps @apps_sign @apps_sign_frontend
@@ -345,13 +378,13 @@ Scenario:5 用户一天内连续两次签到，获取优惠券奖励
 	When 清空浏览器
 	When bill在微信中向jobs的公众号发送消息'签到1'
 	Then bill收到自动回复'签到活动1'
-	When bill点击图文'签到活动1'进入签到活动页面
+	When bill点击图文'签到活动1'进入专项签到活动页面
 	Then bill参加专项签到活动
 
 	When 清空浏览器
 	When bill在微信中向jobs的公众号发送消息'签到1'
 	Then bill收到自动回复'签到活动1'
-	When bill点击图文'签到活动1'进入签到活动页面
+	When bill点击图文'签到活动1'进入专项签到活动页面
 	Then bill参加专项签到活动
 
     When bill访问jobs的webapp
@@ -376,7 +409,7 @@ Scenario:6 用户连续3天进行签到
 			"sign_settings":
 				[{
 					"sign_in": "0",
-					"integral": "2",
+					"integral": "2"
 				},{
 					"sign_in":"3",
 					"coupons":[{
@@ -400,23 +433,23 @@ Scenario:6 用户连续3天进行签到
 	When 清空浏览器
 	When bill在微信中向jobs的公众号发送消息'签到1'
 	Then bill收到自动回复'签到活动1'
-	When bill点击图文'签到活动1'进入签到活动页面
+	When bill点击图文'签到活动1'进入专项签到活动页面
 	Then bill参加专项签到活动
 
-	When 修改bill的签到时间为前一天
+	When 修改bill的专项签到时间为前一天
 	When 清空浏览器
 	When bill访问jobs的webapp
 	When bill在微信中向jobs的公众号发送消息'签到1'
 	Then bill收到自动回复'签到活动1'
-	When bill点击图文'签到活动1'进入签到活动页面
+	When bill点击图文'签到活动1'进入专项签到活动页面
 	Then bill参加专项签到活动
 
-	When 修改bill的签到时间为前一天
+	When 修改bill的专项签到时间为前一天
 	When 清空浏览器
 	When bill访问jobs的webapp
 	When bill在微信中向jobs的公众号发送消息'签到1'
 	Then bill收到自动回复'签到活动1'
-	When bill点击图文'签到活动1'进入签到活动页面
+	When bill点击图文'签到活动1'进入专项签到活动页面
 	Then bill参加专项签到活动
 
 	When bill访问jobs的webapp
@@ -458,15 +491,14 @@ Scenario:7 用户分享"签到活动1"到朋友圈,会员通过分享到朋友�
 	When 清空浏览器
 	When bill在微信中向jobs的公众号发送消息'签到1'
 	Then bill收到自动回复'签到活动1'
-	When bill点击图文'签到活动1'进入签到活动页面
+	When bill点击图文'签到活动1'进入专项签到活动页面
 	Then bill参加专项签到活动
 
-	When bill点击系统回复的链接
-	When bill把jobs的签到活动链接分享到朋友圈
+	When bill把jobs的专项签到活动链接分享到朋友圈
 	When tom关注jobs的公众号
 	When tom访问jobs的webapp
 	Then tom在jobs的webapp中拥有0会员积分
-	When tom点击bill分享的签到链接进行签到
+	When tom点击bill分享的专项签到链接进行签到
 	When tom访问jobs的webapp
 	Then tom在jobs的webapp中拥有2会员积分
 
@@ -486,7 +518,7 @@ Scenario:8 非会员用户访问签到分享进行签到
 				}]
 		}
 		"""
-	When jobs更新签到活动的状态
+	When jobs更新专项签到活动的状态
 		"""
 		{
 			"name": "签到活动1",
@@ -499,19 +531,18 @@ Scenario:8 非会员用户访问签到分享进行签到
 	When 清空浏览器
 	When bill在微信中向jobs的公众号发送消息'签到1'
 	Then bill收到自动回复'签到活动1'
-	When bill点击图文'签到活动1'进入签到活动页面
+	When bill点击图文'签到活动1'进入专项签到活动页面
 	Then bill参加专项签到活动
 
-	When bill点击系统回复的链接
-	When bill把jobs的签到活动链接分享到朋友圈
+	When bill把jobs的专项签到活动链接分享到朋友圈
 	#暂时用先关注再取消关注的方式来模拟非会员的情况
 	When tom关注jobs的公众号
 	And tom取消关注jobs的公众号
-	When tom点击bill分享的签到链接进行签到
+	When tom点击bill分享的专项签到链接进行签到
 	When tom通过弹出的二维码关注jobs的公众号
 	When tom访问jobs的webapp
 	Then tom在jobs的webapp中拥有0会员积分
-	When tom点击bill分享的签到链接进行签到
+	When tom点击bill分享的专项签到链接进行签到
 	When tom访问jobs的webapp
 	Then tom在jobs的webapp中拥有2会员积分
 
@@ -539,20 +570,20 @@ Scenario:9 对签到活动内容进行修改，会员访问活动页面
 	When bill关注jobs的公众号
 	When bill访问jobs的webapp
 	Then bill在jobs的webapp中拥有0会员积分
-	When bill进入jobs签到页面进行签到
-	Then bill获取签到成功的内容
+	When bill进入jobs专项签到页面进行签到
+	Then bill获取专项签到成功的内容
 		"""
 		[{
 			"serial_count": "1",
 			"daily_prize":
 				{
 					"integral":"2",
-					"coupon":"优惠券1"
+					"coupons":["优惠券1"]
 				},
 			"curr_prize":
 				{
 					"integral":"2",
-					"coupon":"优惠券1"
+					"coupons":["优惠券1"]
 				}
 		}]
 		"""
@@ -602,20 +633,20 @@ Scenario:9 对签到活动内容进行修改，会员访问活动页面
 	When bill关注jobs的公众号
 	When bill访问jobs的webapp
 	Then bill在jobs的webapp中拥有2会员积分
-	When bill进入jobs签到页面进行签到
-	Then bill获取签到成功的内容
+	When bill进入jobs专项签到页面进行签到
+	Then bill获取专项签到成功的内容
 		"""
 		[{
 			"serial_count": "1",
 			"daily_prize":
 				{
 					"integral":"5",
-					"coupon":"优惠券2"
+					"coupons":["优惠券2"]
 				},
 			"curr_prize":
 				{
 					"integral":"5",
-					"coupon":"优惠券2"
+					"coupons":["优惠券2"]
 				}
 		}]
 		"""
