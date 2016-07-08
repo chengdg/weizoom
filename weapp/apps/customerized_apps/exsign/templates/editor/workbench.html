@@ -446,10 +446,7 @@ ui-appPage-commonStyle">
             var prize_setings = {
                 '0':{
                         'integral':daily_points,
-                        'coupon': !$.isEmptyObject(daily_prizes) ? daily_prizes : {
-                            "id": 0,
-                            "name": ""
-                        }
+                        'coupon': !$.isEmptyObject(daily_prizes) ? daily_prizes : []
                     }
                 };
             for(var i=0;i<dynamicComponents.length;i++){
@@ -460,10 +457,7 @@ ui-appPage-commonStyle">
                 var serial_prizes = dynamicComponents[i].model.get('serial_count_prizes');
                 prize_setings[index]={
                     'integral':dynamicComponents[i].model.get('serial_count_points'),
-                    'coupon':!$.isEmptyObject(serial_prizes)? serial_prizes: {
-                            "id": 0,
-                            "name": ""
-                        }
+                    'coupon':!$.isEmptyObject(serial_prizes)? serial_prizes: []
                 }
             }
 

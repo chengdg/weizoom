@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from modules.member.models import MemberGrade
+
 __author__ = 'cl'
 
 from behave import *
@@ -58,17 +60,34 @@ def __get_coupon_rule_count(coupon_rule_name):
 	coupon_rule = promotion_models.CouponRule.objects.get(name=coupon_rule_name)
 	return coupon_rule.count
 
-def __get_coupon_json(coupon_rule_name):
+def __get_coupon_member_grade_json(coupons):
 	"""
 	获取优惠券json
 	"""
-	coupon_rule = promotion_models.CouponRule.objects.get(name=coupon_rule_name)
-	coupon ={
-		"id":coupon_rule.id,
-		"count":coupon_rule.count,
-		"name":coupon_rule.name
-	}
-	return coupon
+	coupon_name_list = []
+	member_grade_list = []
+	for c in coupons:
+		coupon_name_list.append(c["send_coupon"])
+		member_grade_list.append(c["member_grade"])
+	coupon_rules = promotion_models.CouponRule.objects.filter(name__in=coupon_name_list)
+	grade_name2grade_id = {mg.name: mg.id for mg in MemberGrade.objects.filter(name__in=member_grade_list)}
+	coupon_name2coupon = {}
+	for coupon_rule in coupon_rules:
+		coupon_name2coupon[coupon_rule.name] ={
+			"id": coupon_rule.id,
+			"count": coupon_rule.count
+		}
+	re_coupons = []
+	for coupon in coupons:
+		coupon_name = coupon["send_coupon"]
+		re_coupons.append({
+			"id": coupon_name2coupon[coupon_name]["id"],
+			"count": coupon_name2coupon[coupon_name]["count"],
+			"name": coupon_name,
+			"grade_id": grade_name2grade_id.get(coupon["member_grade"], 0)
+		})
+
+	return re_coupons
 
 def __get_exsign(context):
 	"""
@@ -365,8 +384,7 @@ def step_add_exsign(context,user,exsign_name):
 	for item in sign_settings:
 		tmp_sign_in = item.get("sign_in","")
 		tmp_integral = item.get("integral","")
-		tmp_send_coupon = item.get("send_coupon","")
-		tmp_prize_counts = item.get("prize_counts","")
+		coupons = item.get("coupons","")
 		tmp_prize_settings_arr = {}
 
 		if tmp_sign_in:
@@ -378,10 +396,12 @@ def step_add_exsign(context,user,exsign_name):
 			else:
 				prize_settings[tmp_sign_in]["integral"] = 0
 
-			if tmp_send_coupon:
+			if coupons:
 				tmp_prize_settings_arr["serial_count_prizes"] ={}
-				prize_settings[tmp_sign_in]["coupon"] = __get_coupon_json(tmp_send_coupon)
-				tmp_prize_settings_arr["serial_count_prizes"] = __get_coupon_json(tmp_send_coupon)
+				print __get_coupon_member_grade_json(coupons),"ppppppppppppp"
+				prize_settings[tmp_sign_in]["coupon"] = __get_coupon_member_grade_json(coupons)
+
+				tmp_prize_settings_arr["serial_count_prizes"] = __get_coupon_member_grade_json(coupons)
 			else:
 				prize_settings[tmp_sign_in]["coupon"] = {'id':None,'count':0,'name':''}
 
@@ -426,7 +446,7 @@ def step_add_exsign(context,user,exsign_name):
 	#传递保留参数
 	context.project_id = page_related_id
 	context.json_page = __get_PageJson(page_args)
-	context.sign_id = post_exsign_response['data']['id']
+	context.exsign_id = post_exsign_response['data']['id']
 	context.sign = sign
 	context.webapp_owner_id = webapp_owner_id
 
@@ -441,7 +461,7 @@ def step_impl(context,user):
 	"""
 	webapp_owner_id = context.webapp_owner_id
 	project_id = 'new_app:exsign:%s'%(context.project_id)
-	sign_id = context.sign_id
+	exsign_id = context.exsign_id
 	sign = context.sign
 	json_page = context.json_page
 
@@ -523,7 +543,7 @@ def step_impl(context,user):
 		"share":json.dumps(share),
 		"status":status,
 		"related_page_id":context.project_id,
-		"signId": context.sign_id
+		"signId": context.exsign_id
 	}
 	post_sign_response = __post_ExSignArgs(context,post_sign_args,project_id,design_mode=0,version=1)
 
@@ -547,23 +567,6 @@ def step_impl(context,user,sign_name):
 		"img":sign_json.get("share_pic",""),
 		"desc":sign_json.get("share_describe","")
 	}
-	reply = {}
-	keyword ={}
-	reply_keyword = sign_json.get("reply_keyword","")
-	reply_content = sign_json.get("reply_content","")
-
-
-	for item in reply_keyword:
-		rule = ""
-		if item['rule']=="精确":
-			rule = "accurate"
-		elif item['rule']=="模糊":
-			rule = "blur"
-		keyword[item["key_word"]] = rule
-	reply ={
-		"keyword":keyword,
-		"content":reply_content
-	}
 
 	# 方案1：核对Page
 	# 问题：模板组建的变化，也许需要更改组件
@@ -585,14 +588,14 @@ def update_sign_status(context,user):
 	if context.text:
 		value = text.get("status","off")
 
-	project_id = u'new_app:sign:'+str(context.project_id)
-	sign_id = str(context.sign_id)
+	project_id = u'new_app:exsign:'+str(context.project_id)
+	exsign_id = str(context.exsign_id)
 	args = {
-		"signId":sign_id,
+		"signId":exsign_id,
 		"status":value
 	}
 	post_response = __post_ExSignArgs(context,args,project_id)
-	context.sign_id = sign_id
+	context.exsign_id = exsign_id
 
 
 @when(u'{user}离开专项签到活动"{sign_name}"')
@@ -606,11 +609,11 @@ def step_impl(context,user,sign_name,sign_tag):
 		u'开启':1,
 		u'关闭':0
 	}
-	sign_id = context.sign_id
-	db_sign = Sign.objects(id=sign_id)[0]
+	exsign_id = context.exsign_id
+	db_sign = exSign.objects(id=exsign_id)[0]
 
-	sign_status = {'status':status2name[sign_tag]}
-	db_status = {'status':db_sign['status']}
+	sign_status = {'status': status2name[sign_tag]}
+	db_status = {'status': db_sign['status']}
 	bdd_util.assert_dict(sign_status,db_sign)
 
 @then(u"{user}获得会员专项签到统计列表")
@@ -633,7 +636,7 @@ def step_impl(context, user):
 		page = paging_dic['page_num']
 	if hasattr(context,"filter"):
 		participant_name = context.filter["name"]
-	url ='/apps/exsign/api/exsign_participances/?design_mode=%s&version=%s&count_per_page=%s&page=%s&enable_paginate=%s&_method=get&id=%s&participant_name=%s' % (design_mode,version,count_per_page,page,enable_paginate,context.sign_id,participant_name)
+	url ='/apps/exsign/api/exsign_participances/?design_mode=%s&version=%s&count_per_page=%s&page=%s&enable_paginate=%s&_method=get&id=%s&participant_name=%s' % (design_mode,version,count_per_page,page,enable_paginate,context.exsign_id,participant_name)
 	url = bdd_util.nginx(url)
 	response = context.client.get(url)
 	context.participances = json.loads(response.content)
@@ -664,7 +667,7 @@ def step_impl(context, user):
 
 #更改所有参与者的最后一次签到时间
 def __change_all_member_last_sign_time(context):
-	signParticipance = exSignParticipance.objects(belong_to=context.sign_id)
+	signParticipance = exSignParticipance.objects(belong_to=context.exsign_id)
 	member_ids = []
 	for data in signParticipance:
 		member_ids.append(data.member_id)

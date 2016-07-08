@@ -228,7 +228,6 @@ Scenario:2 一条奖励下,不添加优惠券,有积分
 			"sign_describe":"签到即可获得积分,连续签到奖励更大哦",
 			"share_pic":"2.jpg",
 			"share_describe": "签到获得奖励",
-			"reply_content":"签到",
 			"sign_settings":
 				[{
 					"sign_in": "0",
@@ -411,7 +410,7 @@ Scenario:4 三条奖励下,一条优惠券,一条积分,一条优惠券加积分
 		}
 		"""
 
-@mall2 @apps @apps_exsign @apps_exsign_backend
+@mall2 @apps @apps_exsign @apps_exsign_backend @cl
 Scenario:5 更新签到活动的状态
 	When jobs添加专项签到活动"签到活动7",并且保存
 		"""
