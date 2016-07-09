@@ -81,14 +81,17 @@ class exSignParticipance(resource.Resource):
 				}
 			}
 			if return_data['status_code'] == app_models.RETURN_STATUS_CODE['SUCCESS']:
-				coupon_flag = return_data['curr_prize_coupon']['count'] > 0
 				detail_dict['prize'] = {
 					'integral': return_data['curr_prize_integral'],
-					'coupon': {
-						'id':  return_data['curr_prize_coupon']['id'],
-						'name':  return_data['curr_prize_coupon']['name'] if coupon_flag else u'优惠券已领完,请联系客服补发'
-					}
+					'coupon': []
 				}
+				if return_data['curr_prize_coupon']:
+					for c in return_data['curr_prize_coupon']:
+						coupon_flag = c['count'] > 0
+						detail_dict['prize']['coupon'].append({
+							'id':  c['id'],
+							'name':  c['name'] if coupon_flag else u'优惠券已领完,请联系客服补发'
+						})
 				response = create_response(200)
 				response.data = {
 					'serial_count': return_data['serial_count'],

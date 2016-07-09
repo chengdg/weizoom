@@ -57,8 +57,9 @@ class exSignParticipances(resource.Resource):
 			coupon_ids = []
 			for t in items:
 				if t['prize'].get('coupon', None):
-					if t['prize']['coupon']['id']:
-						coupon_ids.append(t['prize']['coupon']['id'])
+					coupon = t['prize']['coupon']
+					for c in coupon:
+						coupon_ids.append(c['id'])
 			coupon_id2name = {c.id: c.name for c in promotion_models.CouponRule.objects.filter(id__in=coupon_ids)}
 
 			for item in items:
@@ -66,8 +67,9 @@ class exSignParticipances(resource.Resource):
 				if item['prize'].get('integral', None):
 					prize_str += u'积分+%s<br/>' % str(t['prize']['integral'])
 				if item['prize'].get('coupon', None):
-					if item['prize']['coupon']['id']:
-						prize_str += u'%s<br/>' % coupon_id2name.get(item['prize']['coupon']['id'],'')
+					coupon = item['prize']['coupon']
+					for c in coupon:
+						prize_str += u'%s<br/>' % coupon_id2name.get(c['id'],'')
 				time2prize[item.created_at.strftime("%Y.%m.%d")] = {
 					"created_at": item.created_at.strftime("%Y.%m.%d %H:%M:%S"),
 					"created_at_f": item.created_at.strftime("%Y-%m-%d %H:%M:%S"),

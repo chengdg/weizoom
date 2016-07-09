@@ -54,7 +54,7 @@ class exSignParticipance(models.Document):
 		'db_alias': 'apps'
 	}
 
-	def do_signment(self, sign, grade_id):
+	def do_signment(self, exsign, grade_id):
 		return_data = {
 			'status_code': RETURN_STATUS_CODE['SUCCESS'],
 		}
@@ -86,12 +86,12 @@ class exSignParticipance(models.Document):
 		curr_prize_integral = daily_integral = serial_integral = next_serial_integral = next_serial_count = 0
 		curr_prize_coupon_id = daily_coupon_id = serial_coupon_id = next_serial_coupon_id = ''
 		curr_prize_coupon_name = daily_coupon_name = serial_coupon_name = next_serial_coupon_name = ''
-		next_serial_coupon = {}
-		daily_coupon = {}
-		serial_coupon = {}
-		curr_prize_coupon = {}
+		next_serial_coupon = []
+		daily_coupon = []
+		serial_coupon = []
+		curr_prize_coupon = []
 		#首先获取奖项配置
-		prize_settings = sign.prize_settings
+		prize_settings = exsign.prize_settings
 		bingo = 0
 		flag = False
 		for name in sorted(map(lambda x: (int(x),x), prize_settings.keys())):
@@ -104,12 +104,18 @@ class exSignParticipance(models.Document):
 						next_serial_integral = value
 					elif type == 'coupon':
 						for v in value:
-							if v['grade_id'] == grade_id:
-								next_serial_coupon = {
+							if int(v['grade_id']) == grade_id:
+								next_serial_coupon.append({
 									"id": v["id"],
 									"name": v["name"],
 									"grade_id": v["grade_id"]
-								}
+								})
+							elif int(v['grade_id']) == 0:
+								next_serial_coupon.append({
+									"id": v["id"],
+									"name": v["name"],
+									"grade_id": v["grade_id"]
+								})
 				break
 			if name == 0:
 				#每日奖励和达到连续签到要求的奖励
@@ -119,12 +125,17 @@ class exSignParticipance(models.Document):
 					elif type == 'coupon':
 						for v in value:
 							if int(v['grade_id']) == grade_id:
-
-								daily_coupon = {
+								daily_coupon.append({
 									"id": v["id"],
 									"name": v["name"],
 									"grade_id": v["grade_id"]
-								}
+								})
+							elif int(v['grade_id']) == 0:
+								daily_coupon.append({
+									"id": v["id"],
+									"name": v["name"],
+									"grade_id": v["grade_id"]
+								})
 			if name == curr_serial_count:
 				#达到连续签到要求的奖励
 				bingo = curr_serial_count
@@ -135,11 +146,18 @@ class exSignParticipance(models.Document):
 					elif type == 'coupon':
 						for v in value:
 							if int(v['grade_id']) == grade_id:
-								serial_coupon = {
+								serial_coupon.append({
 									"id": v["id"],
 									"name": v["name"],
 									"grade_id": v["grade_id"]
-								}
+								})
+							elif int(v['grade_id']) == 0:
+								serial_coupon.append({
+									"id": v["id"],
+									"name": v["name"],
+									"grade_id": v["grade_id"]
+								})
+
 		user_prize = self.prize
 		temp_coupon_list = user_prize['coupon'].split(',')
 		temp_coupon_list = [] if temp_coupon_list == [''] else temp_coupon_list #防止出现[''].append(x)再用join时出现前置逗号的问题
@@ -147,13 +165,15 @@ class exSignParticipance(models.Document):
 		if bingo == curr_serial_count:
 			user_prize['integral'] = int(user_prize['integral']) + serial_integral
 			if serial_coupon:
-				temp_coupon_list.append(serial_coupon["name"])
+				for s in serial_coupon:
+					temp_coupon_list.append(s["name"])
 				curr_prize_coupon = serial_coupon
 			curr_prize_integral = serial_integral
 		else:
 			user_prize['integral'] = int(user_prize['integral']) + daily_integral
 			if daily_coupon:
-				temp_coupon_list.append(daily_coupon["name"])
+				for d in daily_coupon:
+					temp_coupon_list.append(d["name"])
 				curr_prize_coupon = daily_coupon
 			curr_prize_integral = daily_integral
 
@@ -176,16 +196,16 @@ class exSignParticipance(models.Document):
 			return return_data
 		self.reload()
 		#更新签到参与人数
-		sign.update(inc__participant_count=1)
+		exsign.update(inc__participant_count=1)
 
 		#发放奖励 积分&优惠券
 		member = member_models.Member.objects.get(id=self.member_id)
 		member.consume_integral(-int(curr_prize_integral), u'参与签到，积分奖项')
-		print daily_coupon,curr_prize_coupon,"ppppppppppppp"
 		if curr_prize_coupon:
 			from apps.request_util import get_consume_coupon
-			coupon, msg, coupon_count = get_consume_coupon(sign.owner_id,'sign', str(sign.id), curr_prize_coupon['id'], self.member_id)
-			curr_prize_coupon["count"] = coupon_count
+			for c in curr_prize_coupon:
+				coupon, msg, coupon_count = get_consume_coupon(exsign.owner_id,'exsign', str(exsign.id), c['id'], self.member_id)
+				c["count"] = coupon_count
 		else:
 			curr_prize_coupon = {
 				"id": 0,

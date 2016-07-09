@@ -219,12 +219,17 @@
             }else{
                 this.$integral.hide();
             }
-            if (data.coupon && data.coupon.name != '') {
-                if (data.coupon.count > 0) {
-                    this.$coupon.find('span').text(data.coupon.name);
-                } else {
-                    this.$coupon.html('优惠券奖励已领完,请联系客服补发');
-                }
+            if (!$.isEmptyObject(data.coupon)) {
+				var html_str = "";
+				for (var i in data.coupon){
+					if (data.coupon[i].count > 0) {
+						html_str += "<span>"+data.coupon[i].name+"</span><br/>"
+						this.$coupon.find('span').text(data.coupon.name);
+					} else {
+						html_str += "<span>"+data.coupon[i].name+"奖励已领完,请联系客服补发</span><br/>"
+					}
+				}
+				this.$coupon.find('span').append(html_str);
                 this.$coupon.show();
                 c_flag = false;
             }else{
@@ -456,7 +461,6 @@
             }
             $('.wa-sign-board').find('.wa-i-serial-count b').html(prize_info.serial_count < 10 ? ('0' + prize_info.serial_count) : prize_info.serial_count);
             var temp_prize = prize_info.next_serial_prize;
-			console.log(temp_prize,"pppppppppppppp")
             if (!$.isEmptyObject(temp_prize)) {
                  $('.wa-prize-board').find('.wa-daily_title').html("连续签到" + temp_prize.count + "天可领取 ");
                 if (temp_prize.prize.integral != 0) {
