@@ -83,13 +83,27 @@ Scenario:1 用户进入签到页面完成"签到活动1"签到
 			"name": "签到活动1",
 			"sign_describe": "签到赚积分！连续签到奖励更丰富哦！",
 			"share_pic": "1.jpg",
-			"share_describe": "签到送好礼！",
-			"reply_content": "每日签到获得2积分和优惠券1一张",
 			"sign_settings":
 				[{
 					"sign_in": "0",
-					"integral": "2",
-					"send_coupon": "优惠券1"
+					"integral": "100",
+					"coupons":[{
+						"send_coupon": "优惠券1",
+						"prize_counts":50,
+						"member_grade":"铜牌会员"
+					},{
+						"send_coupon": "优惠券2",
+						"prize_counts":50,
+						"member_grade":"银牌会员"
+					},{
+						"send_coupon": "优惠券1",
+						"prize_counts":50,
+						"member_grade":"金牌会员"
+					},{
+						"send_coupon": "优惠券2",
+						"prize_counts":50,
+						"member_grade":"金牌会员"
+					}]
 				}]
 		}
 		"""
@@ -102,6 +116,9 @@ Scenario:1 用户进入签到页面完成"签到活动1"签到
 		"""
 	When bill关注jobs的公众号
 	When bill访问jobs的webapp
+
+	When 设置bill为"金牌会员"
+
 	Then bill在jobs的webapp中拥有0会员积分
 	When bill进入jobs签到页面进行签到
 	Then bill获取专项签到活动的内容
@@ -110,18 +127,20 @@ Scenario:1 用户进入签到页面完成"签到活动1"签到
 			"serial_count": "1",
 			"daily_prize":
 				{
-					"integral":"2",
-					"coupon":"优惠券1"
+					"integral":"100",
+					"coupon":"优惠券1",
+					"coupon":"优惠券2"
 				},
 			"curr_prize":
-				{
-					"integral":"2",
-					"coupon":"优惠券1"
+				{	
+					"integral":"100",
+					"coupon":"优惠券1",
+					"coupon":"优惠券2"
 				}
 		}]
 		"""
 	When bill访问jobs的webapp
-	Then bill在jobs的webapp中拥有2会员积分
+	Then bill在jobs的webapp中拥有500会员积分
 	Then bill能获得webapp优惠券列表
 		"""
 		[{
@@ -301,12 +320,15 @@ Scenario:5 用户一天内连续两次签到，获取优惠券奖励
 			"name": "签到活动1",
 			"sign_describe": "签到赚积分！连续签到奖励更丰富哦！",
 			"share_pic": "1.jpg",
-			"share_describe": "签到送好礼！",
-			"reply_content": "每日签到获得优惠券1一张",
 			"sign_settings":
 				[{
 					"sign_in": "0",
-					"send_coupon": "优惠券1"
+					"integral": "100",
+					"coupons":[{
+						"send_coupon": "优惠券1",
+						"prize_counts":50,
+						"member_grade":"全部"
+					}]
 				}]
 		}
 		"""
@@ -351,15 +373,17 @@ Scenario:6 用户连续3天进行签到
 			"name": "签到活动1",
 			"sign_describe":  "签到赚积分！连续签到奖励更丰富哦！",
 			"share_pic":  "1.jpg",
-			"share_describe": "签到获得奖励",
-			"reply_content": "每日签到获得2积分,连续签到3天获得优惠券1一张",
 			"sign_settings":
 				[{
 					"sign_in": "0",
-					"integral": "2"
+					"integral": "2",
 				},{
 					"sign_in":"3",
-					"send_coupon":"优惠券1"
+					"coupons":[{
+						"send_coupon": "优惠券1",
+						"prize_counts":50,
+						"member_grade":"全部"
+					}]
 				}]
 		}
 		"""
@@ -414,8 +438,6 @@ Scenario:7 用户分享"签到活动1"到朋友圈,会员通过分享到朋友�
 			"name": "签到活动1",
 			"sign_describe":  "签到赚积分！连续签到奖励更丰富哦！",
 			"share_pic":  "1.jpg",
-			"share_describe": "签到获得奖励",
-			"reply_content": "每日签到获得2积分",
 			"sign_settings":
 				[{
 					"sign_in": "0",
@@ -457,8 +479,6 @@ Scenario:8 非会员用户访问签到分享进行签到
 			"name": "签到活动1",
 			"sign_describe": "签到赚积分！连续签到奖励更丰富哦！",
 			"share_pic": "1.jpg",
-			"share_describe": "签到送好礼！",
-			"reply_content": "每日签到获得2积分",
 			"sign_settings":
 				[{
 					"sign_in": "0",
@@ -504,13 +524,15 @@ Scenario:9 对签到活动内容进行修改，会员访问活动页面
 			"name": "签到活动1",
 			"sign_describe": "签到赚积分！连续签到奖励更丰富哦！",
 			"share_pic": "1.jpg",
-			"share_describe": "签到送好礼！",
-			"reply_content": "每日签到获得2积分和优惠券1一张",
 			"sign_settings":
 				[{
 					"sign_in": "0",
 					"integral": "2",
-					"send_coupon": "优惠券1"
+					"coupons":[{
+						"send_coupon": "优惠券1",
+						"prize_counts":50,
+						"member_grade":"全部"
+					}]
 				}]
 		}
 		"""
@@ -558,13 +580,15 @@ Scenario:9 对签到活动内容进行修改，会员访问活动页面
 			"name": "签到活动2",
 			"sign_describe": "签到赚积分！连续签到奖励更丰富哦！",
 			"share_pic": "2.jpg",
-			"share_describe": "签到送好礼！",
-			"reply_content": "每日签到获得5积分和优惠券2一张",
 			"sign_settings":
 				[{
 					"sign_in": "0",
 					"integral": "5",
-					"send_coupon":"优惠券2"
+					"coupons":[{
+						"send_coupon": "优惠券2",
+						"prize_counts":50,
+						"member_grade":"全部"
+					}]
 				}]
 		}
 		"""
