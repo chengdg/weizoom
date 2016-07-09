@@ -221,15 +221,18 @@
             }
             if (!$.isEmptyObject(data.coupon)) {
 				var html_str = "";
+				var mun = 0;
 				for (var i in data.coupon){
 					if (data.coupon[i].count > 0) {
-						html_str += "<span>"+data.coupon[i].name+"</span><br/>"
-						this.$coupon.find('span').text(data.coupon.name);
+						html_str += "<span>"+data.coupon[i].name+"</span><br/>";
 					} else {
-						html_str += "<span>"+data.coupon[i].name+"奖励已领完,请联系客服补发</span><br/>"
+						mun += 1;
 					}
 				}
 				this.$coupon.find('span').append(html_str);
+				if (num > 0){
+					this.$coupon.append("<p>还有"+num+"张优惠券已领完,请联系客服补发</p>");
+				}
                 this.$coupon.show();
                 c_flag = false;
             }else{
