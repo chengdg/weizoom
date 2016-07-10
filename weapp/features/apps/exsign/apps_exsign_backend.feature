@@ -124,19 +124,19 @@ Scenario:1 配置后台所有数据,优惠券数量足,没有过期
 					"coupons":[{
 						"send_coupon": "优惠券1",
 						"prize_counts":50,
-						"member_grade":"铜牌等级"
+						"member_grade":"铜牌会员"
 					},{
 						"send_coupon": "优惠券2",
 						"prize_counts":50,
-						"member_grade":"银牌等级"
+						"member_grade":"银牌会员"
 					},{
 						"send_coupon": "优惠券1",
 						"prize_counts":50,
-						"member_grade":"金牌等级"
+						"member_grade":"金牌会员"
 					},{
 						"send_coupon": "优惠券2",
 						"prize_counts":50,
-						"member_grade":"金牌等级"
+						"member_grade":"金牌会员"
 					}]
 				},{
 					"sign_in": "5",
@@ -144,19 +144,19 @@ Scenario:1 配置后台所有数据,优惠券数量足,没有过期
 					"coupons":[{
 						"send_coupon": "优惠券1",
 						"prize_counts":50,
-						"member_grade":"铜牌等级"
+						"member_grade":"铜牌会员"
 					},{
 						"send_coupon": "优惠券2",
 						"prize_counts":50,
-						"member_grade":"银牌等级"
+						"member_grade":"银牌会员"
 					},{
 						"send_coupon": "优惠券1",
 						"prize_counts":50,
-						"member_grade":"金牌等级"
+						"member_grade":"金牌会员"
 					},{
 						"send_coupon": "优惠券2",
 						"prize_counts":50,
-						"member_grade":"金牌等级"
+						"member_grade":"金牌会员"
 					},{
 						"send_coupon": "优惠券1",
 						"prize_counts":50,
