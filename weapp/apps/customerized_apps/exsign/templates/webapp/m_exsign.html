@@ -369,7 +369,11 @@
               }
 			  if (!$.isEmptyObject(day_coupon)) {
 					for (var i in day_coupon){
-						rule_html += "<div>“"+day_coupon[i].coupon_name+"”一张</div>";
+						if (i < day_coupon.length-1){
+							str_coupon += "<span>“"+day_coupon[i].coupon_name+"”一张、</span>";
+						}else{
+							str_coupon += "<span>“"+day_coupon[i].coupon_name+"”一张</span>";
+						}
 					}
 			  }
               if(day_integral <= 0 && !day_coupon){
@@ -387,7 +391,11 @@
               }
 			  if (!$.isEmptyObject(day_coupon)) {
 					for (var i in day_coupon){
-						rule_html += "<div>“"+day_coupon[i].coupon_name+"”一张</div>";
+						if (i < day_coupon.length-1){
+							str_coupon += "<span>“"+day_coupon[i].coupon_name+"”一张、</span>";
+						}else{
+							str_coupon += "<span>“"+day_coupon[i].coupon_name+"”一张</span>";
+						}
 					}
 			  }
 
