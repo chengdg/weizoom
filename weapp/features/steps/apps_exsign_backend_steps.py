@@ -365,7 +365,7 @@ def step_add_exsign(context,user,exsign_name):
 	##Step1模拟登陆Sign页面 （Fin初始页面所有HTML元素）
 	exsign_args_response = __get_exsign(context)
 
-	sign = exsign_args_response['exsign']
+	exsign = exsign_args_response['exsign']
 	is_create_new_data = exsign_args_response['is_create_new_data']
 	project_id = exsign_args_response['project_id']
 	webapp_owner_id = exsign_args_response['webapp_owner_id']
@@ -407,6 +407,7 @@ def step_add_exsign(context,user,exsign_name):
 		else:
 			pass
 		prize_settings_arr.append(tmp_prize_settings_arr)
+	print len(prize_settings_arr),"dfffffffffffffffffffffff"
 	page_prizes = {}#Page记录数据
 	for i in range(len(prize_settings_arr)):
 		item = prize_settings_arr[i]
@@ -446,7 +447,7 @@ def step_add_exsign(context,user,exsign_name):
 	context.project_id = page_related_id
 	context.json_page = __get_PageJson(page_args)
 	context.exsign_id = post_exsign_response['data']['id']
-	context.sign = sign
+	context.exsign = exsign
 	context.webapp_owner_id = webapp_owner_id
 
 @given(u'{user}添加专项签到活动"{sign_name}",并且保存')
@@ -460,8 +461,8 @@ def step_impl(context,user):
 	"""
 	webapp_owner_id = context.webapp_owner_id
 	project_id = 'new_app:exsign:%s'%(context.project_id)
-	exsign_id = context.exsign_id
-	sign = context.sign
+	sign_id = context.exsign_id
+	sign = context.exsign
 	json_page = context.json_page
 
 	#feature 数据
@@ -480,6 +481,7 @@ def step_impl(context,user):
 	##step3 获得Page右边个人配置JSON (Fin获得右边配置的空Json，这边主要是验证请求是否成功)
 	dynamicPage_data = __get_DynamicPage(context,project_id)
 
+
 	#step5 POST,PageJSON到Mongo,返回Page_id(Fin)
 
 	##Page的数据处理
@@ -490,6 +492,7 @@ def step_impl(context,user):
 		tmp_sign_in = item.get("sign_in","")
 		tmp_integral = item.get("integral","")
 		coupons = item.get("coupons","")
+		# tmp_prize_counts = item.get("prize_counts","")
 		tmp_prize_settings_arr = {}
 
 		if tmp_sign_in:
@@ -501,11 +504,9 @@ def step_impl(context,user):
 			else:
 				prize_settings[tmp_sign_in]["integral"] = 0
 
-
 			if coupons:
 				tmp_prize_settings_arr["serial_count_prizes"] ={}
 				prize_settings[tmp_sign_in]["coupon"] = __get_coupon_member_grade_json(coupons)
-
 				tmp_prize_settings_arr["serial_count_prizes"] = __get_coupon_member_grade_json(coupons)
 			else:
 				prize_settings[tmp_sign_in]["coupon"] = []
@@ -546,6 +547,7 @@ def step_impl(context,user):
 		"exsignId": context.exsign_id
 	}
 	post_sign_response = __post_ExSignArgs(context,post_sign_args,project_id,design_mode=0,version=1)
+	context.json_page = __get_PageJson(page_args)
 
 
 @then(u'{user}获得专项签到活动"{sign_name}"')

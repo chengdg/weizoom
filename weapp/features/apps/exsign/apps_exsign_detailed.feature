@@ -62,7 +62,6 @@ Background:
 					}]
 				},{
 					"sign_in":"5",
-					"integral": "10",
 					"coupons":[{
 						"send_coupon": "优惠券2",
 						"member_grade":"全部"
@@ -168,7 +167,7 @@ Background:
 		When bill点击图文'签到活动1'进入专项签到活动页面
 		When bill参加专项签到活动于'6天前'
 
-@mall2 @apps @apps_exsign @apps_exsign_detailed @cl_e
+@mall2 @apps @apps_exsign @apps_exsign_detailed
 Scenario:1 会员签到统计详情列表
 #倒序排列，一页显示15条记录
 	Given jobs登录系统

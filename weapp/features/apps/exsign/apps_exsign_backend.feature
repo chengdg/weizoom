@@ -503,12 +503,12 @@ Scenario:5 更新签到活动的状态
 		"""
 	Then jobs的专项签到活动"签到活动7"状态为"关闭"
 
-@mall2 @apps @apps_exsign @apps_exsign_backend @cl
+@mall2 @apps @apps_exsign @apps_exsign_backend
 Scenario:6 删除优惠券信息
 	When jobs添加专项签到活动"签到活动7",并且保存
 		"""
 		{
-			"status":"off",
+			"status":"on",
 			"name": "签到活动7",
 			"sign_describe":"签到即可获得积分,连续签到奖励更大哦",
 			"share_pic":"7.jpg",
@@ -577,7 +577,7 @@ Scenario:6 删除优惠券信息
 		}
 		"""
 	#删除
-	When jobs编辑专项签到活动"签到活动7",并且保存
+	When jobs编辑专项签到活动,并且保存
 		"""
 		{
 			"status":"off",
@@ -592,7 +592,7 @@ Scenario:6 删除优惠券信息
 						"send_coupon": "优惠券1",
 						"prize_counts":50,
 						"member_grade":"铜牌会员"
-					}{
+					},{
 						"send_coupon": "优惠券1",
 						"prize_counts":50,
 						"member_grade":"金牌会员"
@@ -617,7 +617,6 @@ Scenario:6 删除优惠券信息
 						"prize_counts":50,
 						"member_grade":"金牌会员"
 					}]
-				}
 				}]
 		}
 		"""
@@ -636,7 +635,7 @@ Scenario:6 删除优惠券信息
 						"send_coupon": "优惠券1",
 						"prize_counts":50,
 						"member_grade":"铜牌会员"
-					}{
+					},{
 						"send_coupon": "优惠券1",
 						"prize_counts":50,
 						"member_grade":"金牌会员"
@@ -661,7 +660,6 @@ Scenario:6 删除优惠券信息
 						"prize_counts":50,
 						"member_grade":"金牌会员"
 					}]
-				}
 				}]
 		}
 		"""
