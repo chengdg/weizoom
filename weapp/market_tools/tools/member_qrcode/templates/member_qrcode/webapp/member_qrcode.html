@@ -39,7 +39,7 @@
 {% block content-panel %}
 <div data-role="page" data-theme="x" class="xui-memberQrcode-page {% if not user.is_from_weixin %}notweixin{% endif %}"  data-title="{{ page_title }}">
 	<div data-role="content">
-        {% if member_qrcode_settings.is_limited %}
+        {% if member_qrcode_settings.is_limited and not is_shared_page%}
             <h2>今日推荐奖励机会</h2>
             <div class="xui-chance">
                 <span>已使用:<b>{{ limit_chance_used }}</b></span>
@@ -73,4 +73,7 @@
 {% endblock %}
 
 {% block js %}
+    <script>
+        $('[data-ui-role="attentionAlert"]').hide(); //隐藏关注引导页面，使得该页面的二维码可以被长按识别
+    </script>
 {% endblock %}
