@@ -50,6 +50,7 @@
 	background-color: rgba(0, 0, 0, 0.5);
 	top: 0px;
 	left: 0px;
+	height: 100%;
 }
 .wui-appParticipantResult-Cover .wui-i-background {
 	background-color: #FFF;
