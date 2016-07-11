@@ -79,14 +79,23 @@ Background:
 					"integral": "20"
 				},{
 					"sign_in":"2",
-					"send_coupon":"优惠券M"
+					"coupons":[{
+						"send_coupon": "优惠券M",
+						"member_grade":"全部"
+					}]
 				},{
 					"sign_in":"3",
-					"send_coupon":"优惠券1"
+					"coupons":[{
+						"send_coupon": "优惠券1",
+						"member_grade":"全部"
+					}]
 				},{
 					"sign_in":"5",
 					"integral": "10",
-					"send_coupon":"优惠券2"
+					"coupons":[{
+						"send_coupon": "优惠券2",
+						"member_grade":"全部"
+					}]
 				}]
 		}
 		"""
@@ -137,56 +146,56 @@ Background:
 		When bill访问jobs的webapp
 		When bill在微信中向jobs的公众号发送消息'签到'
 		Then bill收到自动回复'签到活动1'
-		When bill点击图文'签到活动1'进入签到活动页面
+		When bill点击图文'签到活动1'进入专项签到活动页面
 		When bill参加专项签到活动于'8天前'
 
 		When 清空浏览器
 		When bill访问jobs的webapp
 		When bill在微信中向jobs的公众号发送消息'签到'
 		Then bill收到自动回复'签到活动1'
-		When bill点击图文'签到活动1'进入签到活动页面
+		When bill点击图文'签到活动1'进入专项签到活动页面
 		When bill参加专项签到活动于'7天前'
 
 		When 清空浏览器
 		When bill访问jobs的webapp
 		When bill在微信中向jobs的公众号发送消息'签到'
 		Then bill收到自动回复'签到活动1'
-		When bill点击图文'签到活动1'进入签到活动页面
+		When bill点击图文'签到活动1'进入专项签到活动页面
 		When bill参加专项签到活动于'6天前'
 
 		When 清空浏览器
 		When bill访问jobs的webapp
 		When bill在微信中向jobs的公众号发送消息'签到'
 		Then bill收到自动回复'签到活动1'
-		When bill点击图文'签到活动1'进入签到活动页面
+		When bill点击图文'签到活动1'进入专项签到活动页面
 		When bill参加专项签到活动于'5天前'
 
 		When 清空浏览器
 		When bill访问jobs的webapp
 		When bill在微信中向jobs的公众号发送消息'签到'
 		Then bill收到自动回复'签到活动1'
-		When bill点击图文'签到活动1'进入签到活动页面
+		When bill点击图文'签到活动1'进入专项签到活动页面
 		When bill参加专项签到活动于'4天前'
 
 		When 清空浏览器
 		When bill访问jobs的webapp
 		When bill在微信中向jobs的公众号发送消息'签到'
 		Then bill收到自动回复'签到活动1'
-		When bill点击图文'签到活动1'进入签到活动页面
+		When bill点击图文'签到活动1'进入专项签到活动页面
 		When bill参加专项签到活动于'2天前'
 
 		When 清空浏览器
 		When bill访问jobs的webapp
 		When bill在微信中向jobs的公众号发送消息'签到'
 		Then bill收到自动回复'签到活动1'
-		When bill点击图文'签到活动1'进入签到活动页面
+		When bill点击图文'签到活动1'进入专项签到活动页面
 		When bill参加专项签到活动于'1天前'
 
 		When 清空浏览器
 		When bill访问jobs的webapp
 		When bill在微信中向jobs的公众号发送消息'签到'
 		Then bill收到自动回复'签到活动1'
-		When bill点击图文'签到活动1'进入签到活动页面
+		When bill点击图文'签到活动1'进入专项签到活动页面
 		When bill参加专项签到活动于'今天'
 
 	#tom先签到1次，终止一天，再连续签到2次
@@ -194,21 +203,21 @@ Background:
 		When tom访问jobs的webapp
 		When tom在微信中向jobs的公众号发送消息'签到'
 		Then tom收到自动回复'签到活动1'
-		When tom点击图文'签到活动1'进入签到活动页面
+		When tom点击图文'签到活动1'进入专项签到活动页面
 		When tom参加专项签到活动于'3天前'
 
 		When 清空浏览器
 		When tom访问jobs的webapp
 		When tom在微信中向jobs的公众号发送消息'签到'
 		Then tom收到自动回复'签到活动1'
-		When tom点击图文'签到活动1'进入签到活动页面
+		When tom点击图文'签到活动1'进入专项签到活动页面
 		When tom参加专项签到活动于'1天前'
 
 		When 清空浏览器
 		When tom访问jobs的webapp
 		When tom在微信中向jobs的公众号发送消息'签到'
 		Then tom收到自动回复'签到活动1'
-		When tom点击图文'签到活动1'进入签到活动页面
+		When tom点击图文'签到活动1'进入专项签到活动页面
 		When tom参加专项签到活动于'今天'
 
 		When jobs为会员发放优惠券
@@ -270,7 +279,7 @@ Background:
 Scenario:1 优惠券明细列表
 	Given jobs登录系统
 
-	Then jobs获得'bill'参加'签到活动1'的优惠券明细列表
+	Then jobs获得'bill'参加专项签到'签到活动1'的优惠券明细列表
 		"""
 			[{
 				"collection_time":"今天",
@@ -305,7 +314,7 @@ Scenario:1 优惠券明细列表
 			}]
 		"""
 	
-	Then jobs获得'tom'参加'签到活动1'的优惠券明细列表
+	Then jobs获得'tom'参加专项签到'签到活动1'的优惠券明细列表
 		"""
 			[{
 				"collection_time":"今天",
@@ -332,13 +341,13 @@ Scenario:2 优惠券明细列表查询
 			}
 		"""
 	Given jobs登录系统
-	When jobs获得'bill'参加'签到活动1'的优惠券明细列表默认查询条件
+	When jobs获得'bill'参加专项签到'签到活动1'的优惠券明细列表默认查询条件
 		"""
 			[{
 				"status":"全部"
 			}]
 		"""
-	Then jobs获得'bill'参加'签到活动1'的优惠券明细列表
+	Then jobs获得'bill'参加专项签到'签到活动1'的优惠券明细列表
 		"""
 			[{
 				"collection_time":"今天",
@@ -373,13 +382,13 @@ Scenario:2 优惠券明细列表查询
 			}]
 		"""
 
-	When jobs获得'bill'参加'签到活动1'的优惠券明细列表默认查询条件
+	When jobs获得'bill'参加专项签到'签到活动1'的优惠券明细列表默认查询条件
 		"""
 			[{
 				"status":"未使用"
 			}]
 		"""
-	Then jobs获得'bill'参加'签到活动1'的优惠券明细列表
+	Then jobs获得'bill'参加专项签到'签到活动1'的优惠券明细列表
 		"""
 			[{
 				"collection_time":"今天",
@@ -408,13 +417,13 @@ Scenario:2 优惠券明细列表查询
 			}]
 		"""
 
-	When jobs获得'bill'参加'签到活动1'的优惠券明细列表默认查询条件
+	When jobs获得'bill'参加专项签到'签到活动1'的优惠券明细列表默认查询条件
 		"""
 			[{
 				"status":"已使用"
 			}]
 		"""
-	Then jobs获得'bill'参加'签到活动1'的优惠券明细列表
+	Then jobs获得'bill'参加专项签到'签到活动1'的优惠券明细列表
 		"""
 			[{
 				"collection_time":"6天前",
@@ -424,13 +433,13 @@ Scenario:2 优惠券明细列表查询
 				"status":"已使用"
 			}]
 		"""
-	When jobs获得'bill'参加'签到活动1'的优惠券明细列表默认查询条件
+	When jobs获得'bill'参加专项签到'签到活动1'的优惠券明细列表默认查询条件
 		"""
 		[{
 			"status":"已过期"
 		}]
 		"""
-	Then jobs获得'bill'参加'签到活动1'的优惠券明细列表
+	Then jobs获得'bill'参加专项签到'签到活动1'的优惠券明细列表
 		"""
 		[]
 		"""

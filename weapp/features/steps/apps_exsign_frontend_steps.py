@@ -188,7 +188,7 @@ def step_impl(context, webapp_user_name, date_str):
 	sign_details_index = exSignDetails.objects.count() - 1
 	last_sign = exSignDetails.objects.all()[sign_details_index] # 得到最后一个签到信息
 
-	if last_sign.prize["coupon"]["id"]: # 如果最后一个签到信息中提示获得了优惠券.修改日期为当前时间
+	if last_sign.prize["coupon"]: # 如果最后一个签到信息中提示获得了优惠券.修改日期为当前时间
 		import time
 		time.sleep(1)
 
