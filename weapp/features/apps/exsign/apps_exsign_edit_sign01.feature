@@ -74,11 +74,17 @@ Scenario:1 修改最高连续签到天数，当会员累计签到达到该天数
 				[{
 					"sign_in":"0",
 					"integral":"2",
-					"send_coupon":"优惠券1"
+					"coupons":[{
+						"send_coupon": "优惠券1",
+						"member_grade":"全部"
+					}]
 				},{
 					"sign_in":"4",
 					"integral":"10",
-					"send_coupon":"优惠券2"
+					"coupons":[{
+						"send_coupon": "优惠券2",
+						"member_grade":"全部"
+					}]
 				}]
 		}
 		"""
@@ -94,14 +100,14 @@ Scenario:1 修改最高连续签到天数，当会员累计签到达到该天数
 	When 清空浏览器
 	When bill在微信中向jobs的公众号发送消息'签到1'
 	Then bill收到自动回复'签到活动1'
-	When bill点击图文'签到活动1'进入签到活动页面
+	When bill点击图文'签到活动1'进入专项签到活动页面
 	Then bill参加专项签到活动
 
 	When 修改bill的签到时间为前一天
 	When 清空浏览器
 	When bill在微信中向jobs的公众号发送消息'签到1'
 	Then bill收到自动回复'签到活动1'
-	When bill点击图文'签到活动1'进入签到活动页面
+	When bill点击图文'签到活动1'进入专项签到活动页面
 	Then bill参加专项签到活动
 
 
@@ -109,7 +115,7 @@ Scenario:1 修改最高连续签到天数，当会员累计签到达到该天数
 	When 清空浏览器
 	When bill在微信中向jobs的公众号发送消息'签到1'
 	Then bill收到自动回复'签到活动1'
-	When bill点击图文'签到活动1'进入签到活动页面
+	When bill点击图文'签到活动1'进入专项签到活动页面
 	Then bill参加专项签到活动
 
 
@@ -134,7 +140,7 @@ Scenario:1 修改最高连续签到天数，当会员累计签到达到该天数
 
 	#在开启状态下修改签到活动
 	Given jobs登录系统
-	When jobs编辑签到活动,并且保存
+	When jobs编辑专项签到活动,并且保存
 		"""
 		{
 			"name":"签到活动1",
@@ -146,11 +152,17 @@ Scenario:1 修改最高连续签到天数，当会员累计签到达到该天数
 				[{
 					"sign_in":"0",
 					"integral":"2",
-					"send_coupon":"优惠券1"
+					"coupons":[{
+						"send_coupon": "优惠券1",
+						"member_grade":"全部"
+					}]
 				},{
 					"sign_in":"2",
 					"integral":"5",
-					"send_coupon":"优惠券2"
+					"coupons":[{
+						"send_coupon": "优惠券2",
+						"member_grade":"全部"
+					}]
 				}]
 		}
 		"""
@@ -158,14 +170,14 @@ Scenario:1 修改最高连续签到天数，当会员累计签到达到该天数
 	When 清空浏览器
 	When bill在微信中向jobs的公众号发送消息'签到1'
 	Then bill收到自动回复'签到活动1'
-	When bill点击图文'签到活动1'进入签到活动页面
+	When bill点击图文'签到活动1'进入专项签到活动页面
 	Then bill参加专项签到活动
 
 	When 修改bill的签到时间为前一天
 	When 清空浏览器
 	When bill在微信中向jobs的公众号发送消息'签到1'
 	Then bill收到自动回复'签到活动1'
-	When bill点击图文'签到活动1'进入签到活动页面
+	When bill点击图文'签到活动1'进入专项签到活动页面
 	Then bill参加专项签到活动
 
 	When bill访问jobs的webapp
@@ -210,12 +222,18 @@ Scenario:2 修改最高连续签到天数，当会员累计签到未达到该天
 				[{
 					"sign_in":"0",
 					"integral":"2",
-					"send_coupon":"优惠券1"
+					"coupons":[{
+						"send_coupon": "优惠券1",
+						"member_grade":"全部"
+					}]
 				},
 				{
 					"sign_in":"2",
 					"integral":"5",
-					"send_coupon":"优惠券1"
+					"coupons":[{
+						"send_coupon": "优惠券1",
+						"member_grade":"全部"
+					}]
 				}]
 
 		}
@@ -232,14 +250,14 @@ Scenario:2 修改最高连续签到天数，当会员累计签到未达到该天
 	When 清空浏览器
 	When bill在微信中向jobs的公众号发送消息'签到1'
 	Then bill收到自动回复'签到活动1'
-	When bill点击图文'签到活动1'进入签到活动页面
+	When bill点击图文'签到活动1'进入专项签到活动页面
 	Then bill参加专项签到活动
 
 	When 修改bill的签到时间为前一天
 	When 清空浏览器
 	When bill在微信中向jobs的公众号发送消息'签到1'
 	Then bill收到自动回复'签到活动1'
-	When bill点击图文'签到活动1'进入签到活动页面
+	When bill点击图文'签到活动1'进入专项签到活动页面
 	Then bill参加专项签到活动
 
 	When bill访问jobs的webapp
@@ -271,11 +289,17 @@ Scenario:2 修改最高连续签到天数，当会员累计签到未达到该天
 				[{
 					"sign_in":"0",
 					"integral":"2",
-					"send_coupon":"优惠券1"
+					"coupons":[{
+						"send_coupon": "优惠券1",
+						"member_grade":"全部"
+					}]
 				},{
 					"sign_in":"3",
 					"integral":"10",
-					"send_coupon":"优惠券2"
+					"coupons":[{
+						"send_coupon": "优惠券2",
+						"member_grade":"全部"
+					}]
 				}]
 		}
 		"""
@@ -283,14 +307,14 @@ Scenario:2 修改最高连续签到天数，当会员累计签到未达到该天
 	When 清空浏览器
 	When bill在微信中向jobs的公众号发送消息'签到1'
 	Then bill收到自动回复'签到活动1'
-	When bill点击图文'签到活动1'进入签到活动页面
+	When bill点击图文'签到活动1'进入专项签到活动页面
 	Then bill参加专项签到活动
 
 	When 修改bill的签到时间为前一天
 	When 清空浏览器
 	When bill在微信中向jobs的公众号发送消息'签到1'
 	Then bill收到自动回复'签到活动1'
-	When bill点击图文'签到活动1'进入签到活动页面
+	When bill点击图文'签到活动1'进入专项签到活动页面
 	Then bill参加专项签到活动
 
 	When bill访问jobs的webapp
