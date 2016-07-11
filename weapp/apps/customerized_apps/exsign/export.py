@@ -51,7 +51,7 @@ def get_sing_fields_to_save(request):
 	return fields
 
 def get_exsign_webapp_link(request):
-	exsign = app_models.exSign.objects.count()
+	exsign = app_models.exSign.objects(owner_id=request.user.id).count()
 	if exsign > 0:
 		return '/m/apps/exsign/m_exsign/?webapp_owner_id=%d' % request.manager.id
 	return None
