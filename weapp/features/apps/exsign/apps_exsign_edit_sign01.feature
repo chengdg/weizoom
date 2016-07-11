@@ -59,7 +59,7 @@ Background:
 		}]
 		"""
 
-@mall2 @apps @apps_exsign @edited_exsign
+@mall2 @apps @apps_exsign @edited_exsign @cl_e
 Scenario:1 修改最高连续签到天数，当会员累计签到达到该天数，继续签到从头开始
 	When jobs添加专项签到活动"签到活动1",并且保存
 		"""
@@ -103,7 +103,7 @@ Scenario:1 修改最高连续签到天数，当会员累计签到达到该天数
 	When bill点击图文'签到活动1'进入专项签到活动页面
 	Then bill参加专项签到活动
 
-	When 修改bill的签到时间为前一天
+	When 修改bill的专项签到时间为前一天
 	When 清空浏览器
 	When bill在微信中向jobs的公众号发送消息'签到1'
 	Then bill收到自动回复'签到活动1'
@@ -111,7 +111,7 @@ Scenario:1 修改最高连续签到天数，当会员累计签到达到该天数
 	Then bill参加专项签到活动
 
 
-	When 修改bill的签到时间为前一天
+	When 修改bill的专项签到时间为前一天
 	When 清空浏览器
 	When bill在微信中向jobs的公众号发送消息'签到1'
 	Then bill收到自动回复'签到活动1'
@@ -166,14 +166,14 @@ Scenario:1 修改最高连续签到天数，当会员累计签到达到该天数
 				}]
 		}
 		"""
-	When 修改bill的签到时间为前一天
+	When 修改bill的专项签到时间为前一天
 	When 清空浏览器
 	When bill在微信中向jobs的公众号发送消息'签到1'
 	Then bill收到自动回复'签到活动1'
 	When bill点击图文'签到活动1'进入专项签到活动页面
 	Then bill参加专项签到活动
 
-	When 修改bill的签到时间为前一天
+	When 修改bill的专项签到时间为前一天
 	When 清空浏览器
 	When bill在微信中向jobs的公众号发送消息'签到1'
 	Then bill收到自动回复'签到活动1'
@@ -253,7 +253,7 @@ Scenario:2 修改最高连续签到天数，当会员累计签到未达到该天
 	When bill点击图文'签到活动1'进入专项签到活动页面
 	Then bill参加专项签到活动
 
-	When 修改bill的签到时间为前一天
+	When 修改bill的专项签到时间为前一天
 	When 清空浏览器
 	When bill在微信中向jobs的公众号发送消息'签到1'
 	Then bill收到自动回复'签到活动1'
@@ -303,14 +303,14 @@ Scenario:2 修改最高连续签到天数，当会员累计签到未达到该天
 				}]
 		}
 		"""
-	When 修改bill的签到时间为前一天
+	When 修改bill的专项签到时间为前一天
 	When 清空浏览器
 	When bill在微信中向jobs的公众号发送消息'签到1'
 	Then bill收到自动回复'签到活动1'
 	When bill点击图文'签到活动1'进入专项签到活动页面
 	Then bill参加专项签到活动
 
-	When 修改bill的签到时间为前一天
+	When 修改bill的专项签到时间为前一天
 	When 清空浏览器
 	When bill在微信中向jobs的公众号发送消息'签到1'
 	Then bill收到自动回复'签到活动1'

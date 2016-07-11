@@ -407,7 +407,6 @@ def step_add_exsign(context,user,exsign_name):
 		else:
 			pass
 		prize_settings_arr.append(tmp_prize_settings_arr)
-	print len(prize_settings_arr),"dfffffffffffffffffffffff"
 	page_prizes = {}#Page记录数据
 	for i in range(len(prize_settings_arr)):
 		item = prize_settings_arr[i]
