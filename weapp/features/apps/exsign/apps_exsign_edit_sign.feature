@@ -68,7 +68,10 @@ Scenario:1 对签到活动内容进行修改，会员访问活动页面
 				[{
 					"sign_in": "0",
 					"integral": "2",
-					"send_coupon": "优惠券1"
+					"coupons":[{
+						"send_coupon": "优惠券1",
+						"member_grade":"全部"
+					}]
 				}]
 		}
 		"""
@@ -111,7 +114,10 @@ Scenario:1 对签到活动内容进行修改，会员访问活动页面
 					[{
 						"sign_in": "0",
 						"integral": "5",
-						"send_coupon":"优惠券2"
+						"coupons":[{
+						"send_coupon": "优惠券2",
+						"member_grade":"全部"
+					}]
 					}]
 			}
 			"""
@@ -143,7 +149,10 @@ Scenario:1 对签到活动内容进行修改，会员访问活动页面
 					[{
 						"sign_in": "0",
 						"integral": "10",
-						"send_coupon":"优惠券2"
+						"coupons":[{
+						"send_coupon": "优惠券2",
+						"member_grade":"全部"
+					}]
 					}]
 			}
 			"""
