@@ -413,7 +413,7 @@ def step_add_exsign(context,user,exsign_name):
 		page_prizes["prize_item%d"%i]={
 				"serial_count":prize_settings_arr[i]["serial_count"],
 				"serial_count_points":prize_settings_arr[i].get("serial_count_points",0),
-				"serial_count_prizes":prize_settings_arr[i].get("serial_count_prizes",{})
+				"serial_count_prizes":prize_settings_arr[i].get("serial_count_prizes",[])
 		}
 	#Page的参数args
 	page_args ={
@@ -519,7 +519,7 @@ def step_impl(context,user):
 		page_prizes["prize_item%d"%i]={
 				"serial_count":prize_settings_arr[i]["serial_count"],
 				"serial_count_points":prize_settings_arr[i].get("serial_count_points",0),
-				"serial_count_prizes":prize_settings_arr[i].get("serial_count_prizes",{})
+				"serial_count_prizes":prize_settings_arr[i].get("serial_count_prizes",[])
 		}
 	#Page的参数args
 	page_args ={
@@ -592,8 +592,8 @@ def update_sign_status(context,user):
 	project_id = u'new_app:exsign:'+str(context.project_id)
 	exsign_id = str(context.exsign_id)
 	args = {
-		"exsignId":exsign_id,
-		"status":value
+		"exsignId": exsign_id,
+		"status": value
 	}
 	post_response = __post_ExSignArgs(context,args,project_id)
 	context.exsign_id = exsign_id
