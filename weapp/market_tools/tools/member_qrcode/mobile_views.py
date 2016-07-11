@@ -106,6 +106,7 @@ def get_settings(request):
 	if member_qrcode_settings.count() <= 0:
 		return return_deleted_page(request)
 
+	owner_member = member
 	member_qrcode_settings = member_qrcode_settings.first()
 	limit_chance_used = 0
 	limit_chance_left = member_qrcode_settings.limit_chance
@@ -117,6 +118,7 @@ def get_settings(request):
 		limit_chance_left = limit_chance_left if limit_chance_left >= 0 else 0
 	try:
 		ticket, expired_second = get_member_qrcode(request.project.owner_id, fid)
+		owner_member = Member.objects.get(id=fid)
 		if ticket:
 			qrcode_url = get_qcrod_url(ticket)
 		else:
@@ -129,12 +131,12 @@ def get_settings(request):
 	default_img = SpecialArticle.objects.filter(owner=request.project.owner_id, name='not_from_weixin')[0].content if SpecialArticle.objects.filter(owner=request.project.owner_id, name='not_from_weixin').count()>0 else None
 	c = RequestContext(request, {
 		'page_title': u'会员二维码',
-		'member': member,
+		'member': owner_member,
 		'member_qrcode_settings': member_qrcode_settings,
 		'default_img': default_img,
 		'expired_second': expired_second,
 		'qrcode_url': qrcode_url,
-		'is_hide_weixin_option_menu': True,
+		'is_hide_weixin_option_menu': False,
 		'limit_chance_used': limit_chance_used,
 		'limit_chance_left': limit_chance_left,
 		'is_shared_page': str(fid) != str(member_id)
