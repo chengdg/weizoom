@@ -325,7 +325,7 @@ Scenario:1 优惠券明细列表
 			}]
 		"""
 
-@mall2 @apps @apps_exsign @apps_exsign_coupon_detailed @cl_e
+@mall2 @apps @apps_exsign @apps_exsign_coupon_detailed
 Scenario:2 优惠券明细列表查询
 	When bill访问jobs的webapp
 	And bill购买jobs的商品
