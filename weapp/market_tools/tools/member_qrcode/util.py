@@ -145,22 +145,20 @@ def get_qcrod_url(ticket):
 ###########################################################
 def update_member_qrcode_log(user_profile, member, ticket):
 	try:
-		if MemberQrcode.objects.filter(ticket=ticket).count() > 0:
-			member_qrcode =  MemberQrcode.objects.filter(ticket=ticket)[0]
+		member_qrcodes = MemberQrcode.objects.filter(ticket=ticket)
+		if member_qrcodes.count() > 0:
+			member_qrcode =  member_qrcodes.first()
 			only_create_friend = False
 			if hasattr(member, 'old_status') and member.old_status == NOT_SUBSCRIBED:
 				only_create_friend = True
-			if member and  member.is_new:
-				if MemberQrcodeLog.objects.filter(member_id=member.id).count() == 0:
-
-					if member_qrcode and MemberQrcodeLog.objects.filter(member_id=member.id).count() == 0:
-						MemberQrcodeLog.objects.create(member_qrcode=member_qrcode,member_id=member.id)
-						_add_award_to_member(user_profile, member, member_qrcode)
-						#修改来源
-						if not only_create_friend:
-							_update_member_source(member)
-						#建立关系
-						_add_member_relation(member, member_qrcode.member, only_create_friend)
+			if member and member.is_new and member_qrcode and MemberQrcodeLog.objects.filter(member_id=member.id).count() == 0:
+				MemberQrcodeLog.objects.create(member_qrcode=member_qrcode,member_id=member.id)
+				_add_award_to_member(user_profile, member, member_qrcode)
+				#修改来源
+				if not only_create_friend:
+					_update_member_source(member)
+				#建立关系
+				_add_member_relation(member, member_qrcode.member, only_create_friend)
 			return True
 		else:
 			return False
