@@ -18,6 +18,11 @@ MODE = 'develop'
 FAN_HOST = 'http://fans.dev.com'
 SERVICE_NAME = "weapp"
 
+# 调用zeus接口HOST
+ZEUS_HOST = 'api.zeus.com'
+#zeus服务名称
+ZEUS_SERVICE_NAME = 'zeus'
+
 DEBUG_MERGED_JS = True
 USE_DEV_JS = True
 # whether to use dev resource

@@ -500,14 +500,17 @@ def get_pids(woid):
 from eaglet.utils.resource_client import Resource
 
 def zeus_req(method, opt, *args, **kwargs):
+        ZEUS_HOST = settings.ZEUS_HOST
+        ZEUS_SERVICE_NAME = settings.ZEUS_SERVICE_NAME
+        
         if method.lower() == 'delete':
-            resp = Resource.use('zeus', 'api.zeus.com').delete(opt)
+            resp = Resource.use(ZEUS_SERVICE_NAME, ZEUS_HOST).delete(opt)
         elif method.lower() == 'post':
-            resp = Resource.use('zeus', 'api.zeus.com').post(opt)
+            resp = Resource.use(ZEUS_SERVICE_NAME, ZEUS_HOST).post(opt)
         elif method.lower() == 'put':
-            resp = Resource.use('zeus', 'api.zeus.com').put(opt)
+            resp = Resource.use(ZEUS_SERVICE_NAME, ZEUS_HOST).put(opt)
         else:
-            resp = Resource.use('zeus', 'api.zeus.com').get(opt)
+            resp = Resource.use(ZEUS_SERVICE_NAME, ZEUS_HOST).get(opt)
         if resp:
             code = resp['code']
             zeus_resp = resp['data']
