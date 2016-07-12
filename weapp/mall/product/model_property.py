@@ -9,10 +9,8 @@ from core import resource
 from core.jsonresponse import create_response
 from mall import models as mall_models
 from mall import export, signals
-
-
-ZEUS_HOST = 'api.zeus.com'
-SERVICE_NAME = 'zeus'
+from weapp.settings import ZEUS_HOST
+from weapp.settings import ZEUS_SERVICE_NAME as SERVICE_NAME
 
 
 class ModelPropertyList(resource.Resource):
