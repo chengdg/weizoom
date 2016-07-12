@@ -981,14 +981,14 @@ def get_orders_response(request, is_refund=False):
     user = request.manager
     query_string = request.META['QUERY_STRING']
     watchdog_message += ",webapp_id:" + str(request.manager.get_profile().webapp_id)
-    # items, pageinfo, order_return_count = __get_order_items(user, query_dict, 
-    #                                                                             sort_attr,
-    #                                                                            date_interval_type,
-    #                                                                            query_string,
-    #                                                                            count_per_page, 
-    #                                                                            cur_page,
-    #                                                                            date_interval=date_interval,
-    #                                                                            is_refund=is_refund)
+    items, pageinfo, order_return_count = __get_order_items(user, query_dict, 
+                                                                                sort_attr,
+                                                                               date_interval_type,
+                                                                               query_string,
+                                                                               count_per_page, 
+                                                                               cur_page,
+                                                                               date_interval=date_interval,
+                                                                               is_refund=is_refund)
     def parse_f():
         filter_p = {}
         for x in query_string.split('&'):
@@ -1032,11 +1032,13 @@ def get_orders_response(request, is_refund=False):
         'resource': 'mall.order_list',
         'data': params
     })
-    zeus_orders, zeus_pageinfo= zeus_resp['orders'], zeus_resp['pageinfo']
+    if zeus_resp:
+        zeus_orders, zeus_pageinfo= zeus_resp['orders'], zeus_resp['pageinfo']
     # print zeus_orders,
     # print zeus_pageinfo
     print '---------------------------------------------------------------'
     print user.id
+    print mall_type
     print params
     print parse_f()
     print query_dict, date_interval, date_interval_type
@@ -1052,43 +1054,43 @@ def get_orders_response(request, is_refund=False):
     supplier_users = dict([(profile.user_id, profile.store_name) for profile in all_mall_userprofiles])
 
     response = create_response(200)
-    # if query_dict.has_key('status'):
-    #     current_status_value = query_dict['status']
-    # elif query_dict.has_key('status__in'):
-    #     if query_dict['status__in'] == [ORDER_STATUS_GROUP_REFUNDED, ORDER_STATUS_GROUP_REFUNDING]:
-    #         current_status_value = ORDER_STATUS_GROUP_REFUNDING
-    #     elif query_dict['status__in'] == [ORDER_STATUS_GROUP_REFUNDING, ORDER_STATUS_REFUNDING]:
-    #         current_status_value = ORDER_STATUS_REFUNDING
-    #     elif query_dict['status__in'] == [ORDER_STATUS_REFUNDED, ORDER_STATUS_REFUNDED]:
-    #         current_status_value = ORDER_STATUS_REFUNDED
-    # else:
-    #     current_status_value = -1
-
-    # response.data = {
-    #     'items': items, #zeus_orders, #
-    #     'pageinfo': paginator.to_dict(pageinfo), #zeus_pageinfo, #
-    #     'supplier': supplier,
-    #     'supplier_users': supplier_users,
-    #     'sortAttr': sort_attr,
-    #     'existed_pay_interfaces': existed_pay_interfaces,
-    #     'order_return_count': order_return_count, #len(zeus_orders),#
-    #     'current_status_value': current_status_value,
-    #     'is_refund': is_refund,
-    #     'mall_type': mall_type
-    # }
+    if query_dict.has_key('status'):
+        current_status_value = query_dict['status']
+    elif query_dict.has_key('status__in'):
+        if query_dict['status__in'] == [ORDER_STATUS_GROUP_REFUNDED, ORDER_STATUS_GROUP_REFUNDING]:
+            current_status_value = ORDER_STATUS_GROUP_REFUNDING
+        elif query_dict['status__in'] == [ORDER_STATUS_GROUP_REFUNDING, ORDER_STATUS_REFUNDING]:
+            current_status_value = ORDER_STATUS_REFUNDING
+        elif query_dict['status__in'] == [ORDER_STATUS_REFUNDED, ORDER_STATUS_REFUNDED]:
+            current_status_value = ORDER_STATUS_REFUNDED
+    else:
+        current_status_value = -1
 
     response.data = {
-        'items': zeus_orders, #items, #
-        'pageinfo': zeus_pageinfo, #paginator.to_dict(pageinfo), #
+        'items': items, #zeus_orders, #
+        'pageinfo': paginator.to_dict(pageinfo), #zeus_pageinfo, #
         'supplier': supplier,
         'supplier_users': supplier_users,
         'sortAttr': sort_attr,
         'existed_pay_interfaces': existed_pay_interfaces,
-        'order_return_count': len(zeus_orders),#order_return_count, #
+        'order_return_count': order_return_count, #len(zeus_orders),#
         'current_status_value': current_status_value,
         'is_refund': is_refund,
         'mall_type': mall_type
     }
+
+    # response.data = {
+    #     'items': zeus_orders, #items, #
+    #     'pageinfo': zeus_pageinfo, #paginator.to_dict(pageinfo), #
+    #     'supplier': supplier,
+    #     'supplier_users': supplier_users,
+    #     'sortAttr': sort_attr,
+    #     'existed_pay_interfaces': existed_pay_interfaces,
+    #     'order_return_count': len(zeus_orders),#order_return_count, #
+    #     'current_status_value': current_status_value,
+    #     'is_refund': is_refund,
+    #     'mall_type': mall_type
+    # }
 
     if query_dict or date_interval:
         watchdog_info(watchdog_message, type="mall")
