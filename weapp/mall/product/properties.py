@@ -7,9 +7,8 @@ from eaglet.utils.resource_client import Resource
 from core import resource
 from core.jsonresponse import create_response
 from mall import export
-
-ZEUS_HOST = 'api.zeus.com'
-SERVICE_NAME = 'zeus'
+from weapp.settings import ZEUS_HOST
+from weapp.settings import ZEUS_SERVICE_NAME as SERVICE_NAME
 
 
 class Property(resource.Resource):
