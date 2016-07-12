@@ -73,4 +73,7 @@
 {% endblock %}
 
 {% block js %}
+    <script>
+        $('[data-ui-role="attentionAlert"]').hide(); //隐藏关注引导页面，使得该页面的二维码可以被长按识别
+    </script>
 {% endblock %}
