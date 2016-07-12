@@ -859,6 +859,8 @@ BDD_SERVER2PORT = {
     'weizoom_card': 8171,
     'apiserver': 8172
 }
-# zeus gate_way
+
+# 调用zeus接口HOST
 ZEUS_HOST = 'api.zeus.com'
+# zeus服务名称
 ZEUS_SERVICE_NAME = 'zeus'
