@@ -370,9 +370,9 @@
 			  if (!$.isEmptyObject(day_coupon)) {
 					for (var i in day_coupon){
 						if (i < day_coupon.length-1){
-							str_coupon += "<span>“"+day_coupon[i].coupon_name+"”一张、</span>";
+							str_coupon += "“"+day_coupon[i].coupon_name+"”一张、";
 						}else{
-							str_coupon += "<span>“"+day_coupon[i].coupon_name+"”一张</span>";
+							str_coupon += "“"+day_coupon[i].coupon_name+"”一张";
 						}
 					}
 			  }
@@ -392,9 +392,9 @@
 			  if (!$.isEmptyObject(day_coupon)) {
 					for (var i in day_coupon){
 						if (i < day_coupon.length-1){
-							str_coupon += "<span>“"+day_coupon[i].coupon_name+"”一张、</span>";
+							str_coupon += "“"+day_coupon[i].coupon_name+"”一张、";
 						}else{
-							str_coupon += "<span>“"+day_coupon[i].coupon_name+"”一张</span>";
+							str_coupon += "“"+day_coupon[i].coupon_name+"”一张";
 						}
 					}
 			  }
@@ -402,7 +402,7 @@
               rule_html += "<li>"+str_int+str_coupon+"。</li>";
           }
         }
-        $('.wa-rules-div').find('.wa-rules-i-content').html(rule_html);
+        $('.wa-exsign-rules').html(rule_html);
     }
 
     function fillUserInfo(data){
@@ -484,9 +484,9 @@
             $('.wa-sign-board').find('.wa-i-serial-count b').html(prize_info.serial_count < 10 ? ('0' + prize_info.serial_count) : prize_info.serial_count);
             var temp_prize = prize_info.next_serial_prize;
             if (!$.isEmptyObject(temp_prize)) {
-                 $('.wa-prize-board').find('.wa-daily_title').html("连续签到" + temp_prize.count + "天可领取 ");
+                 $('.wa-prize-board').find('.wa-daily_title').html("连续签到" + temp_prize.count + "天可领取");
                 if (temp_prize.prize.integral != 0) {
-                    $('.wa-prize-board').find('.daily_points').html(temp_prize.prize.integral + "  积分").show();
+                    $('.wa-prize-board').find('.daily_points').html(temp_prize.prize.integral + "积分，").show();
                 }else{
                     $('.wa-prize-board').find('.daily_points').hide();
                 }
@@ -501,10 +501,10 @@
                     $('.wa-prize-board').find('.daily_prizes').hide();
                 }
             } else {
-                $('.wa-prize-board').find('.wa-daily_title').html("明天可领取 ");
+                $('.wa-prize-board').find('.wa-daily_title').html("明天可领取");
                 var tomorrow_prize = prize_info.daily_prize;
                 if (tomorrow_prize.integral != 0) {
-                    $('.wa-prize-board').find('.daily_points').html(tomorrow_prize.integral + "  积分").show();
+                    $('.wa-prize-board').find('.daily_points').html(tomorrow_prize.integral + "积分，").show();
                 }else{
                     $('.wa-prize-board').find('.daily_points').hide();
                 }

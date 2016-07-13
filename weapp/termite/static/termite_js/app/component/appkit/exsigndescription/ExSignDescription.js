@@ -195,10 +195,7 @@ W.component.appkit.ExSignDescription = W.component.Component.extend({
 		daily_prizes:function($node, model, value){
 			if(value.length>0){
 				$node.find('.daily_prizes').show();
-				var html_str = '';
-				for (var i in value){
-					html_str += "<div>"+value[i].grade_name+": “"+value[i].name+"”"+"一张</div>"
-				}
+				var html_str = "<b class='wui-coupon-count'>"+value.length+"张</b>优惠券";
 				$node.find('.daily_prizes').html(html_str);
 			}else{
 				$node.find('.daily_prizes').hide();
