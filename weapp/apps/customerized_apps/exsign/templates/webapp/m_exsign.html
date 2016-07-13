@@ -412,6 +412,10 @@
         $('.wa-user-icon').find('img').attr('src', data.member_info.user_icon);
 
     }
+	function MemberGrade(data){
+		console.log(data,"pppppp")
+		$('.wa-member-grade').html(data.member_grade);
+	}
 
     function getDynamicData(){
         loadingStatus(true);
@@ -427,6 +431,8 @@
                 status = data.status;
                 activity_status = data.activity_status;
                 W.isMember = data.isMember;
+				//填充会员等级信息
+				MemberGrade(data);
                 //填充用户信息
                 fillUserInfo(data);
                 //填充签到奖励信息
@@ -445,6 +451,7 @@
     }
 
     function fillPrizeInfo(prize_info, flag) {
+		var prize_html = "";
         if ('已签到' != status) {
             var temp_integral,
                     temp_coupon;
@@ -455,12 +462,12 @@
                 temp_integral = prize_info.daily_prize.integral;
                 temp_coupon = prize_info.daily_prize.coupon;
             }
-            $('.wa-daily_points').html((temp_integral == '' || temp_integral == 0) ? '' : (temp_integral+'  积分')).show();
-			var prize_html = "";
+            $('.wa-daily_points').html((temp_integral == '' || temp_integral == 0) ? '' : (temp_integral+'积分，')).show();
             if (!$.isEmptyObject(temp_coupon)) {
-				for (var i in temp_coupon){
-					prize_html += "<div>“"+temp_coupon[i].name+"”一张</div>";
-				}
+				prize_html += "<b class='wui-coupon-count'>"+temp_coupon.length+"张</b>优惠券";
+				//for (var i in temp_coupon){
+				//	prize_html += "<div>“"+temp_coupon[i].name+"”一张</div>";
+				//}
 			}
             $('.wa-daily_prizes').html(prize_html).show();
         } else {
@@ -484,12 +491,11 @@
                     $('.wa-prize-board').find('.daily_points').hide();
                 }
                 if (!$.isEmptyObject(temp_prize.prize.coupon)) {
-					var prize_html = "";
-					if (!$.isEmptyObject(temp_prize.prize.coupon)) {
-						for (var i in temp_prize.prize.coupon){
-							prize_html += "<div>“"+temp_prize.prize.coupon[i].name+"”一张</div>";
-						}
-					}
+					//var prize_html = "";
+					prize_html += "<b class='wui-coupon-count'>"+temp_prize.prize.coupon.length+"张</b>优惠券";
+					//for (var i in temp_prize.prize.coupon){
+					//	prize_html += "<div>“"+temp_prize.prize.coupon[i].name+"”一张</div>";
+					//}
                     $('.wa-prize-board').find('.daily_prizes').html(prize_html).show();
                 }else{
                     $('.wa-prize-board').find('.daily_prizes').hide();
@@ -503,12 +509,11 @@
                     $('.wa-prize-board').find('.daily_points').hide();
                 }
                 if (!$.isEmptyObject(tomorrow_prize.coupon)) {
-					var prize_html = "";
-					if (!$.isEmptyObject(tomorrow_prize.coupon)) {
-						for (var i in tomorrow_prize.coupon){
-							prize_html += "<div>“"+tomorrow_prize.coupon[i].name+"”一张</div>";
-						}
-					}
+					//var prize_html = "";
+					prize_html += "<b class='wui-coupon-count'>"+tomorrow_prize.coupon.length+"张</b>优惠券";
+					//for (var i in tomorrow_prize.coupon){
+					//	prize_html += "<div>“"+tomorrow_prize.coupon[i].name+"”一张</div>";
+					//}
                     $('.wa-prize-board').find('.daily_prizes').html(prize_html).show();
                 }else{
                     $('.wa-prize-board').find('.daily_prizes').hide()

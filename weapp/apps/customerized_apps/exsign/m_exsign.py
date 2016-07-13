@@ -7,6 +7,8 @@ import datetime as dt_datetime
 from django.http import HttpResponseRedirect, HttpResponse
 from django.template import RequestContext
 from django.shortcuts import render_to_response
+
+from modules.member.models import MemberGrade
 from termite import pagestore as pagestore_manager
 from django.template.loader import render_to_string
 
@@ -31,6 +33,7 @@ class exMSign(resource.Resource):
         isPC = request.GET.get('isPC',0)
         webapp_owner_id = request.GET.get('webapp_owner_id', None)
         prize_info = {}
+        member_grade = u""
 
 
         if 'new_app' in p_id:
@@ -100,13 +103,17 @@ class exMSign(resource.Resource):
         request.GET.update({"project_id": project_id})
         request.GET._mutable = False
         html = pagecreater.create_page(request, return_html_snippet=True)
+
+        if request.member and request.member.grade_id:
+            grade_id = request.member.grade_id
+            member_grade = MemberGrade.objects.get(id=grade_id).name
         c = RequestContext(request, {
             'record_id': record_id,
             'activity_status': activity_status,
             'page_title': u"签到",
             'page_html_content': html,
-            'app_name': "sign",
-            'resource': "sign",
+            'app_name': "exsign",
+            'resource': "exsign",
             'hide_non_member_cover': True, #非会员也可使用该页面
             'isPC': False if not isPC else True,
             'prize_info': json.dumps(prize_info),
@@ -114,6 +121,7 @@ class exMSign(resource.Resource):
             'share_img_url': record.share['img'] if record else '',
             'share_page_desc': u"签到",
             'exsign_description': exsign_description,
+            'member_grade': member_grade
 
         })
         response = render_to_string('exsign/templates/webapp/m_exsign.html', c)
@@ -128,6 +136,7 @@ class exMSign(resource.Resource):
         webapp_owner_id = request.GET.get('webapp_owner_id', None)
         member_info = {}
         prize_info = {}
+        member_grade = u""
 
         member = request.member
 
@@ -271,14 +280,17 @@ class exMSign(resource.Resource):
                 'next_serial_prize': next_serial_prize,
                 'prize_rules':prize_rules
             }
-
+        if member and member.grade_id:
+            grade_id = member.grade_id
+            member_grade = MemberGrade.objects.get(id=grade_id).name
         response = create_response(200)
         response.data = {
             "status":status,
             "activity_status": activity_status,
             "isMember":isMember,
             "member_info":member_info,
-            "prize_info":prize_info
+            "prize_info":prize_info,
+            "member_grade": member_grade
         }
 
         return response.get_response()
