@@ -65,8 +65,6 @@ Background:
 			"lottory_color":"#0000FF",
 			"start_date":"今天",
 			"end_date":"2天后",
-#			"reduce_integral":0,
-#			"send_integral":0,
 			"win_rate":"100%",
 			"lottory_code_num":1,
 			"is_repeat_win":"否",
