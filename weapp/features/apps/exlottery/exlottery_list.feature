@@ -90,7 +90,7 @@ Background:
 			"end_date":"2天后",
 			"win_rate":"100%",
 			"lottory_code_num":5,
-			"is_repeat_win":"否",			
+			"is_repeat_win":"是",			
 			"prize_settings":[{
 				"prize_grade":"一等奖",
 				"prize_counts":10,
