@@ -256,8 +256,8 @@ def __get_exlotteryPageJson(args):
 					"valid_time": args['valid_time'],
 					"description": args['description'],
 					"share_description": args['share_description'],
-					"expend": args['expend'],
-					"delivery": args['delivery'],
+					# "expend": args['expend'],
+					# "delivery": args['delivery'],
 					"chance": args['chance'],
 					"allow_repeat": args['allow_repeat'],
 					"lottery_code_count": args['lottery_code_count'],
@@ -460,8 +460,8 @@ def __Create_Exlottery(context,text,user):
 
 	desc = text.get('desc','')#活动规则
 	share_intro = text.get('share_intro', '')  #分享时的描述
-	reduce_integral = text.get('reduce_integral',0)#消耗积分
-	send_integral = text.get('send_integral',0)#参与送积分
+	# reduce_integral = text.get('reduce_integral',0)#消耗积分
+	# send_integral = text.get('send_integral',0)#参与送积分
 	win_rate = text.get('win_rate','0%').split('%')[0]#中奖率
 	is_repeat_win = __name2Bool(text.get('is_repeat_win',"true"))#重复中奖
 
@@ -480,8 +480,8 @@ def __Create_Exlottery(context,text,user):
 		"valid_time":valid_time,
 		"description":desc,#描述
 		"share_description": share_intro,  #分享简介
-		"expend":reduce_integral,#消耗积分
-		"delivery":send_integral,#参与送积分
+		# "expend":reduce_integral,#消耗积分
+		# "delivery":send_integral,#参与送积分
 		"chance":win_rate,#中奖率
 		"allow_repeat":is_repeat_win,#重复中奖
 		"prize_settings":page_prize_settings,
@@ -520,8 +520,8 @@ def __Create_Exlottery(context,text,user):
 		"start_time":start_time,
 		"end_time":end_time,
 		"homepage_image": home_page_pic,
-		"expend":reduce_integral,#消耗积分
-		"delivery":send_integral,#参与送积分
+		# "expend":reduce_integral,#消耗积分
+		# "delivery":send_integral,#参与送积分
 		"chance":win_rate,#中奖率
 		"allow_repeat":is_repeat_win,#重复中奖
 		"prize":json.dumps(exlottery_prize_settings),
@@ -569,8 +569,8 @@ def __Update_Exlottery(context,text,page_id,lottery_id):
 
 	desc = text.get('desc', '')  #活动规则
 	share_intro = text.get('share_intro', '')  #分享时的描述
-	reduce_integral = text.get('reduce_integral',0)#消耗积分
-	send_integral = text.get('send_integral',0)#参与送积分
+	# reduce_integral = text.get('reduce_integral',0)#消耗积分
+	# send_integral = text.get('send_integral',0)#参与送积分
 	reply = text.get('reply',"")#送积分规则
 	reply_link = text.get('link_reply',"")
 	lottery_code_count = text.get('lottory_code_num',u'0')#抽奖码个数
@@ -592,8 +592,8 @@ def __Update_Exlottery(context,text,page_id,lottery_id):
 		"valid_time":valid_time,
 		"description":desc,#描述
 		"share_description": share_intro,  #分享简介
-		"expend":reduce_integral,#消耗积分
-		"delivery":send_integral,#参与送积分
+		# "expend":reduce_integral,#消耗积分
+		# "delivery":send_integral,#参与送积分
 		"chance":win_rate,#中奖率
 		"allow_repeat":is_repeat_win,#重复中奖
 		"prize_settings":page_prize_settings,
@@ -618,8 +618,8 @@ def __Update_Exlottery(context,text,page_id,lottery_id):
 		"start_time":start_time,
 		"end_time":end_time,
 		"homepage_image": home_page_pic,
-		"expend":reduce_integral,#消耗积分
-		"delivery":send_integral,#参与送积分
+		# "expend":reduce_integral,#消耗积分
+		# "delivery":send_integral,#参与送积分
 		"chance":win_rate,#中奖率
 		"allow_repeat":is_repeat_win,#重复中奖
 		"prize":json.dumps(exlottery_prize_settings),
@@ -941,8 +941,8 @@ def step_impl(context,user,lottery_name):
 	valid_time = "%s~%s"%(start_time,end_time)
 
 	desc = expect.get('desc','')#描述
-	reduce_integral = expect.get('reduce_integral',0)#消耗积分
-	send_integral = expect.get('send_integral',0)#参与送积分
+	# reduce_integral = expect.get('reduce_integral',0)#消耗积分
+	# send_integral = expect.get('send_integral',0)#参与送积分
 	lottery_code_count = expect.get('lottory_code_num',u'0')#抽奖码个数
 	win_rate = expect.get('win_rate','0%').split('%')[0]#中奖率
 	is_repeat_win = __name2Bool(expect.get('is_repeat_win',"true"))#重复中奖
@@ -972,8 +972,8 @@ def step_impl(context,user,lottery_name):
 		"name":title,
 		"start_time":start_time,
 		"end_time":end_time,
-		"expend":reduce_integral,#消耗积分
-		"delivery":send_integral,#参与送积分
+		# "expend":reduce_integral,#消耗积分
+		# "delivery":send_integral,#参与送积分
 		"chance":win_rate,#中奖率
 		"allow_repeat":is_repeat_win,#重复中奖
 		"prize_settings":page_prize_settings,
@@ -1000,8 +1000,8 @@ def step_impl(context,user,lottery_name):
 		"name": obj.name,
 		"start_time":__datetime2str(obj.start_time),
 		"end_time":__datetime2str(obj.end_time),
-		"expend":obj.expend,#消耗积分
-		"delivery":obj.delivery,#参与送积分
+		# "expend":obj.expend,#消耗积分
+		# "delivery":obj.delivery,#参与送积分
 		"chance":obj.chance,#中奖率
 		"allow_repeat":obj.allow_repeat,#重复中奖
 		"prize_settings":actual_prize_list,
