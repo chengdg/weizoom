@@ -52,7 +52,7 @@ class Mexlottery(resource.Resource):
 
 		c = RequestContext(request, {
 			'record_id': id,
-			'page_title': u'专项抽奖',
+			'page_title': u'幸运码抽奖',
 			'app_name': "exlottery",
 			'resource': "exlottery",
 			'hide_non_member_cover': True, #非会员也可使用该页面

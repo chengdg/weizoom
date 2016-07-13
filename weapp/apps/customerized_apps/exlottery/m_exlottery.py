@@ -65,7 +65,7 @@ class Mexlottery(resource.Resource):
 			'expend_integral': expend,
 			'record_id': id,
 			'activity_status': activity_status,
-			'page_title': record.name if record else u'专项抽奖',
+			'page_title': record.name if record else u'幸运码抽奖',
 			'page_html_content': html,
 			'app_name': "exlottery",
 			'resource': "exlottery",
