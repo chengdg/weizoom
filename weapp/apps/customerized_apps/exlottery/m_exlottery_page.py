@@ -12,7 +12,9 @@ from django.template.loader import render_to_string
 
 from core import resource
 from core.jsonresponse import create_response
+from core.exceptionutil import unicode_full_stack
 from utils.cache_util import GET_CACHE, SET_CACHE
+from watchdog.utils import watchdog_error
 
 import models as app_models
 from termite2 import pagecreater
@@ -124,28 +126,33 @@ class MexlotteryCaptcha(resource.Resource):
 		"""
 		响应GET
 		"""
-		cur_color = random.choice(COLOR_LIST)
-		captcha_image = captcha(
-			drawings=[background('#FFFFFF'),
-					  text(fonts=['ARLRDBD.TTF'], font_sizes=[30],
-						   drawings=[
-							   offset(dx_factor=0.1, dy_factor=0.1)
-						   ],
-						   color=cur_color,
-						   squeeze_factor=1.2),
-					  curve(cur_color),
-					  noise(),
-					  # smooth()
-					  ], width=120, height=45)
-		code_dict = init_check_code()
-		rand_list = code_dict['clist']
-		rand_str = code_dict['cstr']
-		image = captcha_image(rand_list)
-		# 将验证码转换成小写，并保存到session中
-		request.session['checkcode'] = rand_str.lower()
-		buf = StringIO.StringIO()
-		image.save(buf, 'png')
-		return HttpResponse(buf.getvalue(), 'image/png')
+		try:
+			cur_color = random.choice(COLOR_LIST)
+			captcha_image = captcha(
+				drawings=[background('#FFFFFF'),
+						  text(fonts=['ARLRDBD.TTF'], font_sizes=[30],
+							   drawings=[
+								   offset(dx_factor=0.1, dy_factor=0.1)
+							   ],
+							   color=cur_color,
+							   squeeze_factor=1.2),
+						  curve(cur_color),
+						  noise(),
+						  # smooth()
+						  ], width=120, height=45)
+			code_dict = init_check_code()
+			rand_list = code_dict['clist']
+			rand_str = code_dict['cstr']
+			image = captcha_image(rand_list)
+			# 将验证码转换成小写，并保存到session中
+			request.session['checkcode'] = rand_str.lower()
+			buf = StringIO.StringIO()
+			image.save(buf, 'png')
+			return HttpResponse(buf.getvalue(), 'image/png')
+		except:
+			error_msg = u"生成专项抽奖验证码失败, cause:\n{}".format(unicode_full_stack())
+			watchdog_error(error_msg)
+			return HttpResponse('')
 
 # 创建随机码
 def init_check_code(length=4):

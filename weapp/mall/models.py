@@ -1585,7 +1585,13 @@ class Order(models.Model):
 		if len(coupon_ids) == 0:
 			return None
 		else:
-			return list(Order.objects.filter(coupon_id__in=coupon_ids))
+			# return list(Order.objects.filter(coupon_id__in=coupon_ids))
+			orders = list(Order.objects.filter(coupon_id__in=coupon_ids))
+			for i, order in enumerate(orders):
+				if order.origin_order_id > 0:
+					# 显示母订单数据
+					orders[i] = Order.objects.filter(id=order.origin_order_id).first()
+			return orders
 
 	@property
 	def get_pay_interface_name(self):

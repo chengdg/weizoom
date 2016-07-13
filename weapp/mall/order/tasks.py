@@ -457,10 +457,14 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
                     if fackorder:
                         if not '^' in fackorder.order_id:
                             order_id = '%s%s'.encode('utf8') % (order.order_id if not fackorder else fackorder.order_id, '-%s' % save_money if save_money else '')
+                            customer_message = fackorder.customer_message
                         else:
                             order_id = fackorder.order_id
+                            customer_message = fackorder.customer_message
                     else:
                         order_id = order.order_id
+                        customer_message = order.customer_message
+                        #自营下如果商品没有供货商(存在该数据的情况下)
 
                     order_status = status[str(order.status if not fackorder else fackorder.status)].encode('utf8')
                     # 订单发货时间
@@ -500,17 +504,7 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
                         order_express_number = (order.express_number if not fackorder else fackorder.express_number).encode('utf8')
                         express_name = express_util.get_name_by_value(order.express_company_name if not fackorder else fackorder.express_company_name).encode('utf8')
 
-                        if '^' in order_id:
-                            if mall_type:
-                                try:
-                                    key = order_id.split('^')[1]
-                                    customer_message = json.loads(order.customer_message).get(key, {}).get('customer_message')
-                                except:
-                                    customer_message = ''
-                            else:
-                                customer_message = order.customer_message
-                        else:
-                            customer_message = order.customer_message
+
 
                         tmp_order = [
                             order_id,
@@ -545,7 +539,7 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
                             order_express_number if order_express_number else '-',
                             postage_time if postage_time else '-',
                             order.remark.encode('utf8') if order.remark.encode('utf8') else '-',
-                            u'-' if customer_message == '' or not customer_message else order.customer_message.encode('utf-8'),
+                            u'-' if customer_message == '' or not customer_message else customer_message.encode('utf-8'),
                             member_source_name if member_source_name else '-',
                             father_name_or_qrcode_name if father_name_or_qrcode_name else '-',
                             before_scanner_qrcode_is_member if before_scanner_qrcode_is_member else '-',
@@ -565,17 +559,7 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
                     else:
                         order_express_number = (order.express_number if not fackorder else fackorder.express_number).encode('utf8')
                         express_name = express_util.get_name_by_value(order.express_company_name if not fackorder else fackorder.express_company_name).encode('utf8')
-                        if '^' in order_id:
-                            if mall_type:
-                                try:
-                                    key = order_id.split('^')[1]
-                                    customer_message = json.loads(order.customer_message).get(key, {}).get('customer_message')
-                                except:
-                                    customer_message = ''
-                            else:
-                                customer_message = order.customer_message
-                        else:
-                            customer_message = order.customer_message
+                        
                         tmp_order=[
                             order_id,
                             order.created_at.strftime('%Y-%m-%d %H:%M').encode('utf8'),

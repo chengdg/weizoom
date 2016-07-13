@@ -85,7 +85,7 @@
         <meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" name="viewport">
         <meta content="telephone=no" name="format-detection">
     </head>
-    <body data-value="{{ cur_request_member.token }}" data-key="fmt" is-under-develop="{{ under_develop }}" style="background:#f2f2f2; position:relative; visibility:hidden;">
+    <body data-value="{{ cur_request_member.token }}" data-key="fmt" is-under-develop="{{ under_develop }}" style="background:#f2f2f2; position:relative; visibility:hidden;height:100%;">
         <!-- xt-errMsg for test -->
         <input id="xt-errMsg" type="hidden" value="" />
 
@@ -419,7 +419,7 @@
                                     <div class="wui-i-qrcode"><img height="205px" width="205px" src="' + W.qrcodeUrl + '"></div>\
                                     <div class="wui-i-bottomText">长按二维码可关注我们</div>\
                                     <div></div>');
-                            $node.height(document.body.scrollHeight);
+{#                            $node.height(document.body.scrollHeight);#}
                             $('body').append($node);
                         }
                     }
@@ -568,7 +568,7 @@
                                     <div class="wui-i-close xa-closeParticipantResult" style="right: -10px;top: -10px">&#10005</div>\
                                 </div>\
                             </div>');
-                            $('.wui-appParticipantResult-Cover').height(document.body.scrollHeight);
+{#                            $('.wui-appParticipantResult-Cover').height(document.body.scrollHeight);#}
                             $('.xa-closeParticipantResult').on('click', function(event) {
                                 $('.wui-appParticipantResult-Cover').remove();
                             });

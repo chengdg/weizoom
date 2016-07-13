@@ -6,7 +6,6 @@ import models as apps_models
 from account.models import UserProfile
 from mall import models as mall_models
 from mall.promotion import models as promotion_models
-from mall.promotion.card_exchange import get_can_exchange_cards_list
 from modules.member import models as member_models
 from apps import models as apps_root_models
 from core.exceptionutil import unicode_full_stack
@@ -296,7 +295,7 @@ def get_target_orders(records=None, is_show=None):
 		webapp_user_id_belong_to_member_id[webapp_user_id] = member_id
 		all_webapp_user_ids.append(webapp_user_id)
 
-	all_orders = mall_models.Order.objects.filter(webapp_user_id__in=all_webapp_user_ids, origin_order_id__lte=0).order_by('created_at') #必须要按时间正序
+	all_orders = mall_models.Order.objects.filter(webapp_user_id__in=all_webapp_user_ids, origin_order_id__lte=0, status=mall_models.ORDER_STATUS_SUCCESSED).order_by('created_at') #必须要按时间正序
 
 	member_id2order_ids = {} #会员所下的订单
 	for order in all_orders:

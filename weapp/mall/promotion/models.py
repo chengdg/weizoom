@@ -857,6 +857,7 @@ class CardHasExchanged(models.Model):
 WEIZOOM_CARD_SOURCE_WEAPP = 0	#目前没用到
 WEIZOOM_CARD_SOURCE_REBATE = 1	#返利活动
 WEIZOOM_CARD_SOURCE_VIRTUAL = 2  #福利卡券
+WEIZOOM_CARD_SOURCE_BIND = 3 # 绑定卡
 class MemberHasWeizoomCard(models.Model):
 	"""
 	给会员发放的微众卡
@@ -864,7 +865,7 @@ class MemberHasWeizoomCard(models.Model):
 	member_id = models.IntegerField() #会员id
 	member_name = models.CharField(max_length=1024) #会员名称
 	card_number = models.CharField(max_length=50) #微众卡卡号
-	card_password = models.CharField(max_length=100) #微众卡密码
+	card_password = models.CharField(max_length=512) #微众卡密码
 	relation_id = models.CharField(max_length=128) #关联的活动id
 	source = models.IntegerField() #微众卡来源
 
@@ -905,7 +906,7 @@ class VirtualProductHasCode(models.Model):
 	owner = models.ForeignKey(User)
 	virtual_product = models.ForeignKey(VirtualProduct)
 	code = models.CharField(max_length=128) #卡号
-	password = models.CharField(max_length=128) #密码
+	password = models.CharField(max_length=512) #密码
 	start_time = models.DateTimeField() #有效期起始时间
 	end_time = models.DateTimeField()#有效期结束时间
 	status = models.IntegerField(default=CODE_STATUS_NOT_GET) #状态

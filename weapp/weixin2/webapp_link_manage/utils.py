@@ -28,6 +28,8 @@ from mall.promotion.models import RedEnvelopeRule
 
 from apps.customerized_apps.sign.export import get_sign_webapp_link
 
+from apps.customerized_apps.exsign.export import get_exsign_webapp_link
+
 def get_webapp_link_menu_objectes(request):
 	"""
 	获取微站内部链接的menu的json数据
@@ -209,7 +211,13 @@ def get_webapp_link_menu_objectes(request):
 			'id': 14,
 			'name': '待评价列表',
 			'link': '%s/mall/waiting_review_orders/?woid=%d' % (settings.H5_HOST, request.manager.id)
-		}
+		},
+		'exsign': {
+			'id': 15,
+			'name': '专项签到',
+			'link': get_exsign_webapp_link(request),
+			'users': ['jobs', 'ceshi01', 'weshop']
+		},
 		# 'feedback': {
 		# 	'id': 12,
 		# 	'name': '用户反馈',
