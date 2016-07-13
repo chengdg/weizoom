@@ -470,7 +470,7 @@ Scenario:3 发优惠券
 				}
 				"""
 
-@mall2 @member @memberList
+@mall2 @member @memberList @rocky_test1
 Scenario:4 加积分
 
 	Given jobs登录系统
