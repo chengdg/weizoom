@@ -148,8 +148,14 @@ W.component.appkit.ExSignDescription = W.component.Component.extend({
         }]
 	}],
 	propertyChangeHandlers: {
+		description: function($node, model, value, $propertyViewNode) {
+			if(value != '') {
+				$node.find('.wui-description').html(value).show()
+			}else{
+				$node.find('.wui-description').hide();
+			}
+		},
 		image: function($node, model, value, $propertyViewNode) {
-			console.log(value);
 			var image = {url:''};
 			var data = {type:null};
 			if (value !== '') {
@@ -187,9 +193,11 @@ W.component.appkit.ExSignDescription = W.component.Component.extend({
 				$propertyViewNode.find('.xa-dayly-setting').find('input[data-field="daily_points"]').val('0');
 			}
 			if(value != '' && value != 0){
-				$node.find('.daily_points').text(value+'  积分').show();
+				$node.find('.daily_points').text(value+'积分，').show();
+				$node.find('.wui-ExSignRules .wui-rules-daily-point').html('获得'+value+'积分')
 			}else{
 				$node.find('.daily_points').hide();
+				$node.find('.wui-ExSignRules .wui-rules-daily-point').hide()
 			}
 		},
 		daily_prizes:function($node, model, value){
@@ -197,6 +205,11 @@ W.component.appkit.ExSignDescription = W.component.Component.extend({
 				$node.find('.daily_prizes').show();
 				var html_str = "<b class='wui-coupon-count'>"+value.length+"张</b>优惠券";
 				$node.find('.daily_prizes').html(html_str);
+				var coupon_str = '';
+				for (var i in value){
+					coupon_str += '<div>获得'+value[i].name+'</div>'
+				}
+				$node.find('.wui-ExSignRules .wui-rules-daily-prizes').html(coupon_str)
 			}else{
 				$node.find('.daily_prizes').hide();
 			}

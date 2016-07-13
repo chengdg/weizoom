@@ -84,13 +84,18 @@ class exMSign(resource.Resource):
                     p_coupon = []
                     if setting['coupon']:
                         for coupon in setting['coupon']:
-                            p_coupon.append({
-                                "coupon_name": coupon['name']
-                            })
-                    prize_rules[name] = {'integral': p_integral,'coupon': p_coupon}
+                            if request.member.grade_id == int(coupon["grade_id"]):
+                                p_coupon.append({
+                                    "coupon_name": coupon['name']
+                                })
+                            elif int(coupon["grade_id"]) == 0:
+                                p_coupon.append({
+                                    "coupon_name": coupon['name']
+                                })
+                    prize_rules[name] = {'integral': p_integral, 'coupon': p_coupon}
 
                 prize_info = {
-                    'prize_rules':prize_rules
+                    'prize_rules': prize_rules
                 }
 
             else:
@@ -278,7 +283,7 @@ class exMSign(resource.Resource):
                 'daily_prize': daily_prize,
                 'serial_prize': serial_prize,
                 'next_serial_prize': next_serial_prize,
-                'prize_rules':prize_rules
+                'prize_rules': prize_rules
             }
         if member and member.grade_id:
             grade_id = member.grade_id
