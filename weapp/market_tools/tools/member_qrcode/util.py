@@ -225,8 +225,7 @@ def _add_award_to_member(user_profile, member, member_qrcode):
 
 def _update_member_source(member):
 	try:
-		if member.source == -1:
-			Member.objects.filter(id=member.id).update(source=SOURCE_MEMBER_QRCODE)
+		Member.objects.filter(id=member.id).update(source=SOURCE_MEMBER_QRCODE)
 	except:
 		notify_msg = u"微信会员二维码扫描修改会员来源member_id :{} cause:\n{}".format(member.id, unicode_full_stack())
 		watchdog_fatal(notify_msg)
