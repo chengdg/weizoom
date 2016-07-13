@@ -1,4 +1,5 @@
-#_author_:许韦 2016.06.20
+#_author_:江秋丽 2016.07.13
+
 
 Feature:更新微信专项抽奖活动
 	"""
@@ -106,8 +107,8 @@ Background:
 			"lottory_color":"#0000FF",
 			"start_date":"明天",
 			"end_date":"2天后",
-			"reduce_integral":0,
-			"send_integral":1,
+##			"reduce_integral":0,
+##			"send_integral":1,
 			"win_rate":"100%",
 			"lottory_code_num":5,
 			"is_repeat_win":"否",
@@ -139,8 +140,8 @@ Background:
 			"lottory_color":"#0000FF",
 			"start_date":"今天",
 			"end_date":"2天后",
-			"reduce_integral":100,
-			"send_integral":0,
+#			"reduce_integral":100,
+#			"send_integral":0,
 			"win_rate":"100%",
 			"lottory_code_num":5,
 			"is_repeat_win":"否",
@@ -172,8 +173,8 @@ Background:
 			"lottory_color":"#0000FF",
 			"start_date":"3天前",
 			"end_date":"昨天",
-			"reduce_integral":0,
-			"send_integral":0,
+#			"reduce_integral":0,
+#			"send_integral":0,
 			"win_rate":"100%",
 			"lottory_code_num":5,
 			"is_repeat_win":"否",
@@ -247,8 +248,8 @@ Scenario:1 编辑'未开始'状态的微信专项抽奖活动
 			"lottory_color":"#0000FF",
 			"start_date":"今天",
 			"end_date":"2天后",
-			"reduce_integral":0,
-			"send_integral":1,
+#			"reduce_integral":0,
+#			"send_integral":1,
 			"win_rate":"100%",
 			"lottory_code_num":2,
 			"is_repeat_win":"否",
@@ -297,8 +298,8 @@ Scenario:1 编辑'未开始'状态的微信专项抽奖活动
 			"lottory_color":"#0000FF",
 			"start_date":"今天",
 			"end_date":"2天后",
-			"reduce_integral":0,
-			"send_integral":1,
+#			"reduce_integral":0,
+#			"send_integral":1,
 			"win_rate":"100%",
 			"lottory_code_num":2,
 			"is_repeat_win":"否",

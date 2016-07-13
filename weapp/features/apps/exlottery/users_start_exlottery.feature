@@ -1,4 +1,4 @@
-#_author_:江秋丽 2016.06.20
+#_author_:江秋丽 2016.07.13
 
 Feature:微信用户进入专项抽奖页面进行抽奖
 
@@ -65,8 +65,8 @@ Background:
 			"lottory_color":"#0000FF",
 			"start_date":"今天",
 			"end_date":"2天后",
-			"reduce_integral":0,
-			"send_integral":0,
+#			"reduce_integral":0,
+#			"send_integral":0,
 			"win_rate":"100%",
 			"lottory_code_num":1,
 			"is_repeat_win":"否",
