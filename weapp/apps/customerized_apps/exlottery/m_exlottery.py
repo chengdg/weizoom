@@ -27,7 +27,7 @@ class Mexlottery(resource.Resource):
 		"""
 		id = request.GET['id']
 		code = request.GET.get('ex_code', None)
-		expend = 0
+		# expend = 0
 		auth_appid_info = None
 		share_page_desc = ''
 		thumbnails_url = '/static_v2/img/thumbnails_lottery.png'
@@ -51,7 +51,7 @@ class Mexlottery(resource.Resource):
 				'is_deleted_data': True
 			})
 			return render_to_response('exlottery/templates/webapp/m_exlottery.html', c)
-		expend = record.expend
+		# expend = record.expend
 		share_page_desc = record.share_description
 		activity_status, record = update_exlottery_status(record)
 
@@ -62,10 +62,10 @@ class Mexlottery(resource.Resource):
 		request.GET._mutable = False
 		html = pagecreater.create_page(request, return_html_snippet=True)
 		c = RequestContext(request, {
-			'expend_integral': expend,
+			# 'expend_integral': expend,
 			'record_id': id,
 			'activity_status': activity_status,
-			'page_title': record.name if record else u'专项抽奖',
+			'page_title': record.name if record else u'幸运码抽奖',
 			'page_html_content': html,
 			'app_name': "exlottery",
 			'resource': "exlottery",
@@ -135,7 +135,7 @@ class Mexlottery(resource.Resource):
 		member_info = {
 			'isMember': isMember,
 			'member_id': member_id,
-			'remained_integral': member.integral,
+			# 'remained_integral': member.integral,
 			'activity_status': activity_status,
 			'exlottery_status': exlottery_status if activity_status == u'进行中' else False,
 			'can_play_count': can_play_count if exlottery_status else 0,

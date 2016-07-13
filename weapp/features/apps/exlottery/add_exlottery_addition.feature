@@ -1,4 +1,4 @@
-#_author_:江秋丽 2015.06.30
+#_author_:江秋丽 2016.07.13
 
 Feature: 新建微信专项抽奖活动
 
@@ -31,8 +31,6 @@ Scenario:1 新建微信专项抽奖
 			"lottory_color":"#0000FF",
 			"start_date":"今天",
 			"end_date":"2天后",
-			"reduce_integral":0,
-			"send_integral":0,
 			"win_rate":"100%",
 			"lottory_code_num":10,
 			"is_repeat_win":"否",			
@@ -64,8 +62,6 @@ Scenario:1 新建微信专项抽奖
 			"lottory_color":"#0000FF",
 			"start_date":"3天前",
 			"end_date":"昨天",
-			"reduce_integral":0,
-			"send_integral":0,
 			"win_rate":"100%",
 			"lottory_code_num":10,
 			"is_repeat_win":"否",
@@ -97,8 +93,6 @@ Scenario:1 新建微信专项抽奖
 			"lottory_color":"#0000FF",
 			"start_date":"2天后",
 			"end_date":"3天后",
-			"reduce_integral":0,
-			"send_integral":0,
 			"win_rate":"100%",
 			"lottory_code_num":10,
 			"is_repeat_win":"否",

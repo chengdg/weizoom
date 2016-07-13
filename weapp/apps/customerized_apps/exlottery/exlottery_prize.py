@@ -102,13 +102,13 @@ class exlottery_prize(resource.Resource):
 		winner_count = exlottery.winner_count #中奖人数
 		#根据抽奖限制，对比抽奖时间
 		allow_repeat = True if exlottery.allow_repeat == 'true' else False
-		expend = exlottery.expend
-		delivery = exlottery.delivery
+		# expend = exlottery.expend
+		# delivery = exlottery.delivery
 
-		if not member or member.integral < expend:
-			response = create_response(500)
-			response.errMsg = u'积分不足'
-			return response.get_response()
+		# if not member or member.integral < expend:
+		# 	response = create_response(500)
+		# 	response.errMsg = u'积分不足'
+		# 	return response.get_response()
 
 		#构造奖项池
 		prize_tank = []
@@ -144,9 +144,9 @@ class exlottery_prize(resource.Resource):
 			return response.get_response()
 
 		#扣除抽奖消耗的积分
-		member.consume_integral(expend, u'参与抽奖，消耗积分')
+		# member.consume_integral(expend, u'参与抽奖，消耗积分')
 		#奖励抽奖赠送积分
-		member.consume_integral(-delivery, u'参与抽奖，获得参与积分')
+		# member.consume_integral(-delivery, u'参与抽奖，获得参与积分')
 		#判定是否中奖
 		exlottery_prize_type = "no_prize"
 		exlottery_prize_data = ''
@@ -231,6 +231,6 @@ class exlottery_prize(resource.Resource):
 			"prize_name": prize_value,
 			'prize_type': exlottery_prize_type,
 			'can_play_count': 0,
-			'remained_integral': member_models.objects.get(id=member_id).integral
+			# 'remained_integral': member_models.objects.get(id=member_id).integral
 		}
 		return response.get_response()

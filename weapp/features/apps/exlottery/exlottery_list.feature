@@ -1,4 +1,5 @@
-#_author_:许韦 2015.06.20
+#_author_:江秋丽 2016.07.13
+
 
 Feature: 微信专项抽奖码库列表
 	"""
@@ -87,11 +88,9 @@ Background:
 			"lottory_color":"#0000FF",
 			"start_date":"今天",
 			"end_date":"2天后",
-			"reduce_integral":0,
-			"send_integral":0,
 			"win_rate":"100%",
 			"lottory_code_num":5,
-			"is_repeat_win":"否",			
+			"is_repeat_win":"是",			
 			"prize_settings":[{
 				"prize_grade":"一等奖",
 				"prize_counts":10,
