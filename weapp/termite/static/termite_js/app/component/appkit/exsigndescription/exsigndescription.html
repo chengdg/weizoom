@@ -348,7 +348,7 @@
 					<div class="fl">每日签到：</div>
 					<div class="fl">
 						<ul>
-							<li class="wui-rules-daily-point" {% if not component.model.daily_points %}style="display: none"{% endif %}>获得{%if component.model.daily_points %}{{component.model.daily_points}}{%else%}0{%endif%}积分</li>
+							<li class="wui-rules-daily-point">获得{%if component.model.daily_points %}{{component.model.daily_points}}{%else%}0{%endif%}积分</li>
 							<li class="wui-rules-daily-prizes" {% if not component.model.daily_prizes %}style="display: none"{% endif %}>
 								{% for daily_prize in  component.model.daily_prizes %}
 								<div>获得{{daily_prize.name}}</div>

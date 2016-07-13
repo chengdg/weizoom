@@ -194,7 +194,7 @@ W.component.appkit.ExSignDescription = W.component.Component.extend({
 			}
 			if(value != '' && value != 0){
 				$node.find('.daily_points').text(value+'积分，').show();
-				$node.find('.wui-ExSignRules .wui-rules-daily-point').html('获得'+value+'积分')
+				$node.find('.wui-ExSignRules .wui-rules-daily-point').html('获得'+value+'积分').show()
 			}else{
 				$node.find('.daily_points').hide();
 				$node.find('.wui-ExSignRules .wui-rules-daily-point').hide()
@@ -209,7 +209,7 @@ W.component.appkit.ExSignDescription = W.component.Component.extend({
 				for (var i in value){
 					coupon_str += '<div>获得'+value[i].name+'</div>'
 				}
-				$node.find('.wui-ExSignRules .wui-rules-daily-prizes').html(coupon_str)
+				$node.find('.wui-ExSignRules .wui-rules-daily-prizes').html(coupon_str).show()
 			}else{
 				$node.find('.daily_prizes').hide();
 			}
