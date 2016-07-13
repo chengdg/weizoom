@@ -129,7 +129,7 @@
             }else{
                 $('.wui-lotterydescription .xa-header').removeClass('wui-lotterydescription-hide').find('p>b').html(can_play_count);
             }
-            $('.xa-remainedIntegral p>b').html(data.remained_integral);
+{#            $('.xa-remainedIntegral p>b').html(data.remained_integral);#}
             //更新中奖历史
             var newRecord = data.newRecord;
             if(!$.isEmptyObject(newRecord)){
@@ -390,7 +390,7 @@
             var $container = $('.wui-lotterydescription').find('.wui-i-body');
             var lottery = new Roulette($container);
             var need_integral = parseInt($('.xa-remainedIntegral strong').html());
-            var remained_integral = parseInt($('.xa-remainedIntegral b').html());
+{#            var remained_integral = parseInt($('.xa-remainedIntegral b').html());#}
             $(".xa-lottery-go").click(function(){
                 if (!W.isMember) {
                     showQrcode(W.qrcodeUrl);
@@ -405,14 +405,14 @@
                 window.setTimeout(function(){
                     $(_that).removeClass('xa-lottery-go-to');
                 }, 100);
-                if( need_integral != 0){
-                    if(need_integral > remained_integral){
-                        resultDialog.render({
-                            prize_type: 'noIntegral'
-                        });
-                        return false;   
-                    }
-                }
+{#                if( need_integral != 0){#}
+{#                    if(need_integral > remained_integral){#}
+{#                        resultDialog.render({#}
+{#                            prize_type: 'noIntegral'#}
+{#                        });#}
+{#                        return false;   #}
+{#                    }#}
+{#                }#}
                 if(lottery.isRolling || !exlottery_status || can_play_count==0){
                     if(lottery.isRolling) return false;
                     if(activity_status == '未开始'){
@@ -497,8 +497,8 @@
                 $('.wui-lotterydescription .xa-header').removeClass('wui-lotterydescription-hide').find('p>b').html(can_play_count);
             }
             //会员信息
-            var remained_integral = member_info.remained_integral;
-            $('.xa-remainedIntegral').find('p>b').html(remained_integral);
+{#            var remained_integral = member_info.remained_integral;#}
+{#            $('.xa-remainedIntegral').find('p>b').html(remained_integral);#}
 
 
         }

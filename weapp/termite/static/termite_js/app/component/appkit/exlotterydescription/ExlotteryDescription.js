@@ -118,27 +118,29 @@ W.component.appkit.ExlotteryDescription = W.component.Component.extend({
             displayName: '抽奖背景颜色',
             isUserProperty: true,
             default: ''
-        }, {
-			name: 'expend',
-			type: 'text_with_annotation',
-			displayName: '消耗积分',
-			maxLength: 4,
-			annotation: '积分数为0时，则为不消耗',
-			validate: 'data-validate="require-notempty::消耗积分不能为空,,require-nonnegative::只能输入0和正整数"',
-			size: '70px',
-			isUserProperty: true,
-			default: 0
-		}, {
-			name: 'delivery',
-			type: 'text_with_annotation',
-			displayName: '参与送积分',
-			maxLength: 4,
-			annotation: '积分数为0时，则为不送',
-			validate: 'data-validate="require-notempty::参与送积分不能为空,,require-nonnegative::只能输入0和正整数"',
-			size: '70px',
-			isUserProperty: true,
-			default: 0
-		}, {
+        },
+		// 	{
+		// 	name: 'expend',
+		// 	type: 'text_with_annotation',
+		// 	displayName: '消耗积分',
+		// 	maxLength: 4,
+		// 	annotation: '积分数为0时，则为不消耗',
+		// 	validate: 'data-validate="require-notempty::消耗积分不能为空,,require-nonnegative::只能输入0和正整数"',
+		// 	size: '70px',
+		// 	isUserProperty: true,
+		// 	default: 0
+		// }, {
+		// 	name: 'delivery',
+		// 	type: 'text_with_annotation',
+		// 	displayName: '参与送积分',
+		// 	maxLength: 4,
+		// 	annotation: '积分数为0时，则为不送',
+		// 	validate: 'data-validate="require-notempty::参与送积分不能为空,,require-nonnegative::只能输入0和正整数"',
+		// 	size: '70px',
+		// 	isUserProperty: true,
+		// 	default: 0
+		// },
+			{
 			name: 'chance',
 			type: 'text_with_annotation',
 			displayName: '中奖率',
@@ -198,12 +200,12 @@ W.component.appkit.ExlotteryDescription = W.component.Component.extend({
 			model.set({description:value.replace(/\n/g,'<br>')},{silent: true});
 			$node.find('.xa-description .wui-i-description-content').html(value.replace(/\n/g,'<br>'));
 		},
-		expend: function($node, model, value, $propertyViewNode) {
-			$node.find('.wui-lotterydescription .xa-remainedIntegral strong').text(value);
-		},
-		delivery: function($node, model, value, $propertyViewNode) {
-			$node.find('.wui-i-prize>.xa-delivery').html(value);
-		},
+		// expend: function($node, model, value, $propertyViewNode) {
+		// 	$node.find('.wui-lotterydescription .xa-remainedIntegral strong').text(value);
+		// },
+		// delivery: function($node, model, value, $propertyViewNode) {
+		// 	$node.find('.wui-i-prize>.xa-delivery').html(value);
+		// },
 		homepage_image: function($node, model, value, $propertyViewNode){
 			var image = {url:''};
             var data = {type:null};
