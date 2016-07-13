@@ -86,11 +86,11 @@ class exMSign(resource.Resource):
                         for coupon in setting['coupon']:
                             if request.member.grade_id == int(coupon["grade_id"]):
                                 p_coupon.append({
-                                    "coupon_name": coupon['name']
+                                    "name": coupon['name']
                                 })
                             elif int(coupon["grade_id"]) == 0:
                                 p_coupon.append({
-                                    "coupon_name": coupon['name']
+                                    "name": coupon['name']
                                 })
                     prize_rules[name] = {'integral': p_integral, 'coupon': p_coupon}
 
@@ -277,6 +277,25 @@ class exMSign(resource.Resource):
                                 'prize': temp_serial_coupon
                             }
                             flag = True
+            for name in sorted(map(lambda x: (int(x),x), prize_settings.keys())):
+                setting = prize_settings[name[1]]
+                name = name[0]
+                if setting['integral']:
+                    p_integral = setting['integral']
+                else:
+                    p_integral = 0
+                p_coupon = []
+                if setting['coupon']:
+                    for coupon in setting['coupon']:
+                        if request.member.grade_id == int(coupon["grade_id"]):
+                            p_coupon.append({
+                                "name": coupon['name']
+                            })
+                        elif int(coupon["grade_id"]) == 0:
+                            p_coupon.append({
+                                "name": coupon['name']
+                            })
+                prize_rules[name] = {'integral': p_integral, 'coupon': p_coupon}
 
             prize_info = {
                 'serial_count': signer.serial_count if signer else 0,

@@ -370,7 +370,7 @@
 				}
 				if (!$.isEmptyObject(day_coupon)) {
 					for (var d in day_coupon) {
-						str_coupon += '<div>获得' + day_coupon[d].coupon_name + '</div>';
+						str_coupon += '<div>获得' + day_coupon[d].name + '</div>';
 					}
 				}
 				$('.wui-rules-daily-prizes').html(str_coupon);
@@ -384,7 +384,7 @@
 				}
 				if (!$.isEmptyObject(day_coupon)) {
 					for (var d in day_coupon) {
-						str_coupon += '<div>获得' + day_coupon[d].coupon_name + '</div>';
+						str_coupon += '<div>获得' + day_coupon[d].name + '</div>';
 					}
 				}
 				$('.wui-rules').append(
@@ -434,6 +434,7 @@
                 fillUserInfo(data);
                 //填充签到奖励信息
                 fillPrizeInfo(data.prize_info, true);
+				fillRulesInfo(data.prize_info);
                 loadingStatus(false);
             },
             error:function(data){
