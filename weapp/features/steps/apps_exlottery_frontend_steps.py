@@ -152,7 +152,7 @@ def step_impl(context, webapp_user_name, lottery_name):
 	context.exlottery_detail = {
 		'webapp_owner_id': context.webapp_owner_id,
 		'id': context.exlottery_id,
-		'code': context.exlottery_code
+		'ex_code': context.exlottery_code
 	}
 
 	response = app_utils.get_response(context, {
