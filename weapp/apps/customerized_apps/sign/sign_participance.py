@@ -122,6 +122,7 @@ class SignParticipance(resource.Resource):
 						}
 					}
 				}
+
 				if return_data['next_serial_count'] != 0:
 					response.data['next_serial_prize'] = {
 						'count': return_data['next_serial_count'],
@@ -133,6 +134,8 @@ class SignParticipance(resource.Resource):
 							}
 						}
 					}
+				if return_data['next_serial_count'] == return_data['serial_count'] + 1:
+					response.data['serial_prize'] = response.data['next_serial_prize']
 				#记录签到历史
 				details = app_models.SignDetails(**detail_dict)
 				details.save()
