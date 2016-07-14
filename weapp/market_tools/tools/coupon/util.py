@@ -5,17 +5,12 @@ import random
 from datetime import timedelta, datetime
 from django.db import IntegrityError, transaction
 from django.db.models import F, Q
-
-from apps.customerized_apps.exsign.models import exSign
 from mall.promotion import models as promotion_models
 from mall.promotion.models import Coupon
 from mall.promotion.utils import coupon_id_maker
 from mall.models import *
-from apps.customerized_apps.sign.models import SignDetails
 
 # from market_tools.tools.coupon.tasks import send_message_to_member
-from apps.customerized_apps.mysql_models import ConsumeCouponLog
-from apps.customerized_apps.sign.models import Sign
 
 def get_coupon_rules(owner):
 	"""
@@ -299,42 +294,5 @@ def get_member_coupons(member, status=-1):
 		member_coupons = Coupon.objects.filter(Q(member_id=member.id)| Q(id__in=coupon_ids)).order_by('-provided_time', '-coupon_record_id', '-id')
 	else:
 		member_coupons = Coupon.objects.filter(Q(member_id=member.id)| Q(id__in=coupon_ids)).filter(status=status).order_by('-provided_time', '-coupon_record_id', '-id')
-
-	return member_coupons
-
-
-def get_member_coupons_for_sign(member, user, project_id, status=-1):
-	"""
-	得到通过签到获得的优惠券信息
-	"""
-	sign = Sign.objects.get(related_page_id=project_id)
-	consume_doupon_logs = ConsumeCouponLog.objects.filter(member_id=member.id, app_name='sign', user_id=user.id, app_id="%s"%sign.id)
-	consume_doupon_log_ids = [consume_doupon_log.coupon_id for consume_doupon_log in consume_doupon_logs]
-
-	orders = Order.objects.filter(webapp_user_id__in=member.get_webapp_user_ids, coupon_id__gt=1).filter(status__in=[ORDER_STATUS_NOT, ORDER_STATUS_PAYED_SUCCESSED, ORDER_STATUS_PAYED_NOT_SHIP, ORDER_STATUS_PAYED_SHIPED, ORDER_STATUS_SUCCESSED])
-	coupon_ids = [order.coupon_id for order in orders]
-
-	if status == -1:
-		member_coupons = Coupon.objects.filter(Q(member_id=member.id)| Q(id__in=coupon_ids)).filter(id__in=consume_doupon_log_ids).order_by('-provided_time', '-coupon_record_id', '-id')
-	else:
-		member_coupons = Coupon.objects.filter(Q(member_id=member.id)| Q(id__in=coupon_ids)).filter(id__in=consume_doupon_log_ids).filter(status=status).order_by('-provided_time', '-coupon_record_id', '-id')
-
-	return member_coupons
-
-def get_member_coupons_for_exsign(member, user, project_id, status=-1):
-	"""
-	得到通过专项签到获得的优惠券信息
-	"""
-	sign = exSign.objects.get(related_page_id=project_id)
-	consume_doupon_logs = ConsumeCouponLog.objects.filter(member_id=member.id, app_name='exsign', user_id=user.id, app_id="%s"%sign.id)
-	consume_doupon_log_ids = [consume_doupon_log.coupon_id for consume_doupon_log in consume_doupon_logs]
-
-	orders = Order.objects.filter(webapp_user_id__in=member.get_webapp_user_ids, coupon_id__gt=1).filter(status__in=[ORDER_STATUS_NOT, ORDER_STATUS_PAYED_SUCCESSED, ORDER_STATUS_PAYED_NOT_SHIP, ORDER_STATUS_PAYED_SHIPED, ORDER_STATUS_SUCCESSED])
-	coupon_ids = [order.coupon_id for order in orders]
-
-	if status == -1:
-		member_coupons = Coupon.objects.filter(Q(member_id=member.id)| Q(id__in=coupon_ids)).filter(id__in=consume_doupon_log_ids).order_by('-provided_time', '-coupon_record_id', '-id')
-	else:
-		member_coupons = Coupon.objects.filter(Q(member_id=member.id)| Q(id__in=coupon_ids)).filter(id__in=consume_doupon_log_ids).filter(status=status).order_by('-provided_time', '-coupon_record_id', '-id')
 
 	return member_coupons

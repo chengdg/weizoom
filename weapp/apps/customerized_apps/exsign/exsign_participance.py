@@ -86,7 +86,6 @@ class exSignParticipance(resource.Resource):
 					'coupon': []
 				}
 				if return_data['curr_prize_coupon']:
-					print return_data['curr_prize_coupon'],"ppppppppppppp"
 					for c in return_data['curr_prize_coupon']:
 						coupon_flag = c['count'] > 0
 						detail_dict['prize']['coupon'].append({

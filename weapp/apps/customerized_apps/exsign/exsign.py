@@ -23,7 +23,7 @@ from mall.promotion import utils as mall_api
 FIRST_NAV = mall_export.MALL_PROMOTION_AND_APPS_FIRST_NAV
 COUNT_PER_PAGE = 20
 
-class Sign(resource.Resource):
+class exSign(resource.Resource):
 	app = 'apps/exsign'
 	resource = 'exsign'
 

@@ -7,8 +7,9 @@ from core.jsonresponse import create_response
 from mall.promotion.models import *
 from mall.models import Order
 
-from market_tools.tools.coupon.util import get_member_coupons, get_member_coupons_for_sign, \
-	get_member_coupons_for_exsign
+from market_tools.tools.coupon.util import get_member_coupons
+from apps.customerized_apps.sign.sign_participances import get_member_coupons_for_sign
+from  apps.customerized_apps.exsign.exsign_participances import get_member_coupons_for_exsign
 from modules.member.models import *
 
 COUNT_PER_PAGE = 10

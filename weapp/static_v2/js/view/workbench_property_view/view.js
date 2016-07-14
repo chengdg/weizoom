@@ -95,7 +95,11 @@ W.workbench.PropertyView = Backbone.View.extend({
             "prize_selector_v5": _.bind(this.initPrizeSelectorV5, this),
             "apps_prize_keywordpane": _.bind(this.initPrizeKeywordPane, this),
             "apps_badge_tools": _.bind(this.initBadgeToolsPane, this),
-            "moneyrange": _.bind(this.initMoneyRange, this)
+            "moneyrange": _.bind(this.initMoneyRange, this),
+            "appkit.block": this.initSliderView,
+            "appkit.title":this.initDateTime,
+            "appkit.item_group": this.initProductsView,
+            "appkit.item_list": this.initProductsView
         };
 
 

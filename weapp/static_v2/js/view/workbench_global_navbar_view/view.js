@@ -40,7 +40,9 @@ W.workbench.GlobalNavView = Backbone.View.extend({
             "wepage.item_group": this.initProductsView, 
             "wepage.item_list": this.initProductsView,
             "wepage.pageheader": _.bind(this.initPageHeader, this),
-            "colorpicker": _.bind(this.initColorPicker, this)
+            "colorpicker": _.bind(this.initColorPicker, this),
+            "appkit.item_group": this.initProductsView,
+            "appkit.item_list": this.initProductsView
         };
 
 
