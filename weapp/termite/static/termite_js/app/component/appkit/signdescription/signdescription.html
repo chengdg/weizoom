@@ -269,6 +269,13 @@
             <span class="wa-daily_title">今日可以领取 </span>
             <span class="daily_points wa-daily_points Num">{% if component.model.daily_points %}{{component.model.daily_points}}{% else %}0{% endif %} 积分</span>
             <p class="daily_prizes wa-daily_prizes" {% if not component.model.daily_prizes.name %}style="display: none"{% endif %}>{{ component.model.daily_prizes.name }} 一张</p>
+            <br>
+            <div style="display: none">
+                <span class="wa-serial_title">连续签到 <b style="font-weight: normal">0</b> 天可领取</span>
+                <span class="serial_points wa-serial_points Num"><b style="font-weight: normal">0</b> 积分</span>
+                <p class="serial_prizes wa-serial_prizes"><b style="font-weight: normal">0</b> 一张</p>
+            </div>
+
         </div>
     </div>
 </div>

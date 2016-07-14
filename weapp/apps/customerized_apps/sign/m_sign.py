@@ -80,6 +80,15 @@ class MSign(resource.Resource):
             participance_data_count = signers.count()
             signer = signers[0] if participance_data_count>0 else None
 
+            for name in sorted(map(lambda x: (int(x),x), prize_settings.keys())):
+                setting = prize_settings[name[1]]
+                name = name[0]
+                if int(name) > 0:
+                    next_serial_prize = {
+                        'count': int(name),
+                        'prize': setting
+                    }
+                    break
             if signer:
                 #检查是否已签到
                 nowDate = datetime.now().strftime('%Y-%m-%d')
@@ -104,13 +113,22 @@ class MSign(resource.Resource):
                     status = u'已签到'
                     for name in sorted(map(lambda x: (int(x),x), prize_settings.keys())):
                         setting = prize_settings[name[1]]
-                        name = name[0]
-                        if int(name) > signer.serial_count:
+                        name = int(name[0])
+                        if name == signer.serial_count + 1:
+                            serial_prize = {
+                                'count': name,
+                                'prize':setting
+                            }
+                        if name > signer.serial_count:
                             next_serial_prize = {
-                                'count': int(name),
+                                'count': name,
                                 'prize': setting
                             }
                             break
+                    for name in sorted(map(lambda x: (int(x),x), prize_settings.keys()), reverse=True):
+                        if int(name[0]) == signer.serial_count:
+                            next_serial_prize = {}
+                        break
                 elif temp_serial_count >=1:
                     flag = False
                     for name in sorted(map(lambda x: (int(x),x), prize_settings.keys())):
@@ -121,6 +139,7 @@ class MSign(resource.Resource):
                                 'count': name,
                                 'prize': setting
                             }
+                            flag = 0
                             break
                         if name == signer.serial_count + 1:
                             serial_prize = {
@@ -128,6 +147,8 @@ class MSign(resource.Resource):
                                 'prize':setting
                             }
                             flag = True
+                    if flag != 0:
+                        next_serial_prize = {}
 
             prize_info = {
                 'serial_count': signer.serial_count if signer else 0,
