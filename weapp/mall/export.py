@@ -413,7 +413,7 @@ MALL_PROMOTION_AND_APPS_SECOND_NAV = {
                     'permission': ''
                 },{
                     'name': MALL_APPS_EXLOTTERY_NAV,
-                    'title': "专项抽奖",
+                    'title': "幸运码抽奖",
                     'url': '/apps/exlottery/exlotteries/',
                     'permission': '',
                 },

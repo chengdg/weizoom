@@ -6,7 +6,7 @@ NAV = {
 	'navs': [
 		{
 			'name': "lotteries",
-			'title': "专项抽奖",
+			'title': "幸运码抽奖",
 			'url': '/apps/exlottery/exlotteries/',
 			'need_permissions': []
 		},

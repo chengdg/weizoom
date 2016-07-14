@@ -87,9 +87,9 @@ def get_webapp_link_menu_objectes(request):
 				'add_btn_title': '新建抽奖',
 				'add_link': '/apps/lottery/lottery/'
 			},{
-				'name': '专项抽奖',
+				'name': '幸运码抽奖',
 				'type': 'exlottery',
-				'add_btn_title': '新建专项抽奖',
+				'add_btn_title': '新建幸运码抽奖',
 				'add_link': '/apps/exlottery/exlottery/'
 			},
 			# {

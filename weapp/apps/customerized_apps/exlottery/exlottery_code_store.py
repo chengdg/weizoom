@@ -212,5 +212,5 @@ class ExlotteryCodeExport(resource.Resource):
 			except:
 				pass
 
-		filename = u'专项抽奖码库详情'
+		filename = u'幸运码抽奖码库详情'
 		return ExcelResponse(members_info, output_name=filename.encode('utf8'), force_csv=False)

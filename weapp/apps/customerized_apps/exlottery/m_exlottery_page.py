@@ -150,7 +150,7 @@ class MexlotteryCaptcha(resource.Resource):
 			image.save(buf, 'png')
 			return HttpResponse(buf.getvalue(), 'image/png')
 		except:
-			error_msg = u"生成专项抽奖验证码失败, cause:\n{}".format(unicode_full_stack())
+			error_msg = u"生成幸运码抽奖验证码失败, cause:\n{}".format(unicode_full_stack())
 			watchdog_error(error_msg)
 			return HttpResponse('')
 
