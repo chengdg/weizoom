@@ -244,7 +244,7 @@ def _add_member_relation(new_member, old_member, only_create_friend=False):
 				MemberFollowRelation.objects.create(member_id=new_member.id, follower_member_id=old_member.id)
 				MemberFollowRelation.objects.create(member_id=old_member.id, follower_member_id=new_member.id, is_fans=is_fans)
 				Member.objects.filter(id=new_member.id).update(friend_count = F('friend_count') + 1)
-				if is_fans:
+				if is_fans and new_member.status != NOT_SUBSCRIBED:
 					Member.objects.filter(id=old_member.id).update(friend_count = F('friend_count') + 1, fans_count = F('fans_count') + 1)
 				else:
 					Member.objects.filter(id=old_member.id).update(friend_count = F('friend_count') + 1)

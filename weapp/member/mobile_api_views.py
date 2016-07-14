@@ -81,7 +81,8 @@ def get_sct(request):
 				if is_new_created_member:
 					MemberFollowRelation.objects.create(member_id=follow_member.id, follower_member_id=member.id, is_fans=is_new_created_member)
 					MemberFollowRelation.objects.create(member_id=member.id, follower_member_id=follow_member.id, is_fans=False)
-					Member.objects.filter(id=follow_member.id).update(fans_count=F('fans_count')+1)
+					#Member.objects.filter(id=follow_member.id).update(fans_count=F('fans_count')+1)
+					#create_member_by_social_account中的oauth_create默认为True,新会员状态为NOT_SUBSCRIBED
 					member.source = SOURCE_BY_URL
 					member.save()
 				elif MemberFollowRelation.objects.objects.filter(member_id=member.id,follower_member_id=follow_member.id).count() == 0:
