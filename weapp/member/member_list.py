@@ -605,8 +605,8 @@ class MemberDetail(resource.Resource):
 		#微众卡使用金额
 		if member:
 			member.weizoom_card_total_money = weizoom_card_total_money
-		if member.fans != fans_count.count():
-			Member.objects.filter(id=member.id).update(fans_count.count())
+		if member.fans_count != len(fans_count):
+			Member.objects.filter(id=member.id).update(fans_count=len(fans_count))
 
 
 		c = RequestContext(request, {
