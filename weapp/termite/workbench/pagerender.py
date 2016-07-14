@@ -167,6 +167,9 @@ def __render_component(request, page, component, project):
 			# 过滤 商品列表 更新分类信息
 			sub_component = __update_category(sub_component)
 
+		if sub_component['type'] == 'appkit.item_list':
+			# 过滤 商品列表 更新分类信息
+			sub_component = __update_category(sub_component)
 		if sub_component:
 			sub_component['parent_component'] = component
 			sub_component['html'] = __render_component(request, page, sub_component, project)

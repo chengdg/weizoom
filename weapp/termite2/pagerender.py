@@ -310,6 +310,10 @@ def __render_component(request, page, component, project):
 			process_item_group_data(request, component)
 		elif component['type'] == 'wepage.item_list':
 			process_item_list_data(request, component)
+		elif component['type'] == 'appkit.item_group':
+			process_item_group_data(request, component)
+		elif component['type'] == 'appkit.item_list':
+			process_item_list_data(request, component)
 
 		if not component['_has_data']:
 			return ''

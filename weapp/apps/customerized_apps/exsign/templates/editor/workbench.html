@@ -62,7 +62,7 @@
         .xa-dayly-setting-topGap{
             display: none;
         }
-        .propertyGroup_property_dynamicControlField_content{
+        .xui-propertyView-app-SignDynamicGroup .propertyGroup_property_dynamicControlField_content{
             width: 100%;
             border:1px solid #DDDDDD;
             background-color: #FFFFFF;
@@ -73,25 +73,26 @@
         .xui-outerFunctionTrigger,.groupHelp_tip{
             margin-left: 5px;
         }
-        .propertyGroup_property_horizontalField .propertyGroup_property_label{
+        .xui-propertyView-app-SignNameGroup .propertyGroup_property_horizontalField .propertyGroup_property_label,
+		.xui-propertyView-app-ShareGroup .propertyGroup_property_horizontalField .propertyGroup_property_label,
+		.xui-propertyView-app-SignSettingGroup .propertyGroup_property_horizontalField .propertyGroup_property_label,
+		.xui-propertyView-app-SignDynamicGroup .propertyGroup_property_horizontalField .propertyGroup_property_label{
             width:90px;
         }
         .propertyGroup.xui-propertyView-app-SignSettingGroup{
             width:480px;
             padding-left: 32px;
         }
-        .propertyGroup_property_dynamicControlField_control,.propertyGroup_property_dynamicControlField_content.xui-text{
+        .xui-propertyView-app-SignDynamicGroup .propertyGroup_property_dynamicControlField_control,.xui-propertyView-app-SignDynamicGroup .propertyGroup_property_dynamicControlField_content.xui-text{
             width:480px;
         }
-        .propertyGroup_property_dynamicControlField_content.xui-text{
+		.xui-propertyView-app-SignDynamicGroup .propertyGroup_property_dynamicControlField_content.xui-text{
             padding-left: 34px;
         }
-        .mr5.xa-addDynamicComponent.xui-addDynamicComponent{
+        .xui-propertyView-app-SignDynamicGroup .mr5.xa-addDynamicComponent.xui-addDynamicComponent{
             width:480px;
         }
-        .propertyGroup_property_textareaField{
-            margin-left: 30px;
-        }
+
         .propertyGroup_property_textareaField .propertyGroup_property_label{
             width:60px;
         }
@@ -102,7 +103,7 @@
             width: 330px !important;
             margin: 5px auto !important;
         }
-        .propertyGroup_property_dynamicControlField_content.xui-text{
+        .xui-propertyView-app-SignDynamicGroup .propertyGroup_property_dynamicControlField_content.xui-text{
          padding-top: 16px;
         }
         .xui-removeImageButton span,.close.xui-close{
@@ -147,7 +148,7 @@
         .xui-link-copy{
             margin-top: 3px;
         }
-        .xui-i-triggerButton{
+        .xui-propertyView-app-ShareGroup .xui-i-triggerButton{
             position: absolute;
             margin-top: -23px !important;
             background: rgba(0,0,0,0.6);
@@ -338,6 +339,7 @@ ui-appPage-commonStyle">
 	<!-- *end_prunt_task* -->
 
   <script type="text/javascript">
+  //"appkit.item", "appkit.itemlist","appkit.image","appkit.title","appkit.block",
     W.uid = "{{request.manager.id}}";
     var exsignStatus = "off";
     W.projectId = "{{project_id}}";
@@ -352,6 +354,7 @@ ui-appPage-commonStyle">
 
     //是否隐藏组件控制面板
     W.hideActionPanel = true;
+	//W.preventFirstComponentDelected = true;
 
     var table;
 

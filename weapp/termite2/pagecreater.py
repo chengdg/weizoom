@@ -248,6 +248,9 @@ def create_component(request):
 	project = webapp_models.Project()
 	project.id = 0
 	project.type = 'wepage'
+	if page_component.has_key("components"):
+		if page_component["components"][0]["type"].split(".")[0] == "appkit":
+			project.type = 'appkit'
 	html = pagerender.create_mobile_page_html_content(request, page, page['component'], project)
 
 	response = create_response(200)

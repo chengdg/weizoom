@@ -1,0 +1,168 @@
+{% load workbench_filter %}
+
+{% if component.type == 'appkit.item_group' %}
+<div
+    class="xa-products-box wui-product {% if component.model.itemname %}wui-productTitle{% endif %}"
+    data-component-cid="{{component.cid}}"
+    data-index="{{component.model.index}}"
+>
+    <ul class="wui-block-type{{component.model.type}} wui-card-type-{{component.model.card_type}} ">
+        {% if component.components %}
+            {% if component.valid_product_count >= 0 %}
+                {% for sub_component in component.components %}
+                {{ sub_component.html|safe }}
+                {% endfor %}
+            {% else %}
+                <li class="">
+                    <a class="wui-inner-box1" >
+                        <div class="wui-inner-pic">
+                            <p class="xui-productTitle">第一个商品</p>
+                        </div>
+                         <div class="wui-inner-titleAndprice ">
+                            <p class="wa-inner-title xui-inner-title">在此处显示商品名称</p>
+                            <p class="wa-inner-price xui-inner-price">￥100.00</p>
+                        </div>
+                    </a>
+                </li>
+                <li class="">
+                    <a class="wui-inner-box1" >
+                        <div class="wui-inner-pic">
+                            <p class="xui-productTitle">第二个商品</p>
+                        </div>
+                         <div class="wui-inner-titleAndprice">
+                            <p class="wa-inner-title xui-inner-title">在此处显示商品名称</p>
+                            <p class="wa-inner-price xui-inner-price">￥100.00</p>
+                        </div>
+                    </a>
+                </li>
+                <li class="">
+                    <a class="wui-inner-box1" >
+                        <div class="wui-inner-pic">
+                            <p class="xui-productTitle">第三个商品</p>
+                        </div>
+                         <div class="wui-inner-titleAndprice">
+                            <p class="wa-inner-title xui-inner-title">在此处显示商品名称</p>
+                            <p class="wa-inner-price xui-inner-price">￥100.00</p>
+                        </div>
+                    </a>
+                </li>
+                <li class="wui-inner-defalut-box4">
+                    <a class="wui-inner-box1" >
+                        <div class="wui-inner-pic">
+                            <p class="xui-productTitle">第四个商品</p>
+                        </div>
+                         <div class="wui-inner-titleAndprice">
+                            <p class="wa-inner-title xui-inner-title">在此处显示商品名称</p>
+                            <p class="wa-inner-price xui-inner-price">￥100.00</p>
+                        </div>
+                    </a>
+                </li>
+            {% endif %}
+        {% else %}
+            <li class="">
+                <a class="wui-inner-box1" >
+                    <div class="wui-inner-pic">
+                        <p class="xui-productTitle">第一个商品</p>
+                    </div>
+                     <div class="wui-inner-titleAndprice ">
+                        <p class="wa-inner-title xui-inner-title">在此处显示商品名称</p>
+                        <p class="wa-inner-price xui-inner-price">￥100.00</p>
+                    </div>
+                </a>
+            </li>
+            <li class="">
+                <a class="wui-inner-box1" >
+                    <div class="wui-inner-pic">
+                        <p class="xui-productTitle">第二个商品</p>
+                    </div>
+                     <div class="wui-inner-titleAndprice">
+                        <p class="wa-inner-title xui-inner-title">在此处显示商品名称</p>
+                        <p class="wa-inner-price xui-inner-price">￥100.00</p>
+                    </div>
+                </a>
+            </li>
+            <li class="">
+                <a class="wui-inner-box1" >
+                    <div class="wui-inner-pic">
+                        <p class="xui-productTitle">第三个商品</p>
+                    </div>
+                     <div class="wui-inner-titleAndprice">
+                        <p class="wa-inner-title xui-inner-title">在此处显示商品名称</p>
+                        <p class="wa-inner-price xui-inner-price">￥100.00</p>
+                    </div>
+                </a>
+            </li>
+            <li class="wui-inner-defalut-box4">
+                <a class="wui-inner-box1" >
+                    <div class="wui-inner-pic">
+                        <p class="xui-productTitle">第四个商品</p>
+                    </div>
+                     <div class="wui-inner-titleAndprice">
+                        <p class="wa-inner-title xui-inner-title">在此处显示商品名称</p>
+                        <p class="wa-inner-price xui-inner-price">￥100.00</p>
+                    </div>
+                </a>
+            </li>
+        {% endif %}
+    </ul>
+</div>
+{% endif %}
+
+{% if component.type == 'appkit.item' %}
+<li
+    data-component-cid="{{component.cid}}"
+    data-index="{{component.model.index}}"
+>
+    {% with component|find_index_in_parent as index %}
+    {% with component.runtime_data.product as product %}
+    <a
+        class="wui-inner-box{{index}}{% if product.is_member_product %} xa-member-product{% endif %} wa-item-product"
+        href="{{component.model.target|format_target:project_id}}"
+        data-handlebar-data='{ "index":"{{index}}", "product":{"thumbnails_url":"{{product.thumbnails_url}}", "name":"{{product.name}}", "display_price":"{{product.display_price}}"} }'
+        data-product-promotion='{{product.promotion_js}}'
+        data-product-price="{{product.display_price}}"
+    >
+        <div class="wui-inner-pic">
+            {% if product.thumbnails_url %}
+            <img src="{{product.thumbnails_url}}" />
+            {% else %}
+            <p>{{product.name}}</p>
+            {% endif %}
+        </div>
+        <div class="wui-inner-titleAndprice">
+            <p
+                class="wa-inner-title xui-inner-title"
+                {% if component.parent_component.model.type == '3' %}
+                {% else %}
+                    {% if component.parent_component.model.itemname %}
+                    {% else %}
+                    style="display:none;"
+                    {% endif %}
+                {% endif %}
+            >{{product.name}}</p>
+
+            <p
+                class="wa-inner-price xui-inner-price
+                {% if component.parent_component.model.type == '3' %}
+                {% else %}
+                    {% if component.parent_component.model.card_type == '1' %}
+                    {% else %}
+                        {% if component.parent_component.model.itemname %}
+                        xui-border
+                        {% endif %}
+                    {% endif %}
+                {% endif %}"
+                {% if component.parent_component.model.type == '3' %}
+                {% else %}
+                    {% if component.parent_component.model.price %}
+                    {% else %}
+                    style="display:none;"
+                    {% endif %}
+                {% endif %}
+            ><span>¥</span>{{product.display_price}}</p>
+        </div>
+    </a>
+    {% endwith %}
+    {% endwith %}
+</li>
+{% endif %}
