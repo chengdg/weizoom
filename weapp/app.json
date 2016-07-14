@@ -3,7 +3,7 @@
 	"resources": [{
 		"name": "Exlottery",
 		"need_user_participant": true,
-		"display_name": "专项抽奖",
+		"display_name": "幸运码抽奖",
 		"enable_termite": true
 	}]
 }

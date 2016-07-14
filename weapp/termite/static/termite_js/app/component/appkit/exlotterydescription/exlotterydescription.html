@@ -4,9 +4,7 @@
 {% ifequal component.type 'appkit.exlotterydescription' %}
     <div class="wui-surveyDescription wui-lotterydescription xa-exlotterydescription" {% if component.model.exlottery_bg_image %}style="background-image: url({{ component.model.exlottery_bg_image }})"{% endif %}>
         <div class="wui-i-roulette wui-i-title">
-            <h1 class="wui-i-innerTitle">
-                <p class="xa-title">{{component.model.title}}</p>
-            </h1>
+            <h1 class="wui-i-innerTitle"></h1>
         </div>
         <div class="wui-i-roulette wui-i-header xa-header {% if component.model.limitation == 'no_limit' %}wui-lotterydescription-hide{% endif %}">
             <p class="wui-hide">您还有<b>0</b>次抽奖机会！</p>

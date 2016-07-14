@@ -6,7 +6,7 @@ ensureNS('W.component.appkit');
 W.component.appkit.ExlotteryDescription = W.component.Component.extend({
 	type: 'appkit.exlotterydescription',
 	selectable: 'yes',
-	propertyViewTitle: '专项抽奖',
+	propertyViewTitle: '幸运码抽奖',
 
 	dynamicComponentTypes: [{
         type: 'appkit.exlotteryitem',

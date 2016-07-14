@@ -146,7 +146,7 @@ class ExlotteryParticipances_Export(resource.Resource):
 
 		# app_name = lotteryParticipances_Export.app.split('/')[1]
 		# excel_file_name = ('%s_id%s_%s.xls') % (app_name,export_id,datetime.now().strftime('%Y%m%d%H%m%M%S'))
-		download_excel_file_name = u'专项抽奖详情.xls'
+		download_excel_file_name = u'幸运码抽奖详情.xls'
 		excel_file_name = 'lottery_details_'+datetime.now().strftime('%H_%M_%S')+'.xls'
 		dir_path_suffix = '%d_%s' % (request.user.id, date.today())
 		dir_path = os.path.join(settings.UPLOAD_DIR, dir_path_suffix)
