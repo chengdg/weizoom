@@ -58,8 +58,8 @@ class Exlottery(models.Document):
 	winner_count = models.IntField(default=0) #中奖人数
 	related_page_id = models.StringField(default="", max_length=100) #termite page的id
 	created_at = models.DateTimeField() #创建时间
-	expend = models.IntField(default=0) #消耗积分
-	delivery = models.IntField(default=0) #参与送积分
+	# expend = models.IntField(default=0) #消耗积分
+	# delivery = models.IntField(default=0) #参与送积分
 	chance = models.IntField(default=0) #中奖几率
 	allow_repeat = models.StringField(default="true", max_length=10) #是否允许重复中奖
 	prize = models.DynamicField() #每个奖项的奖品数量

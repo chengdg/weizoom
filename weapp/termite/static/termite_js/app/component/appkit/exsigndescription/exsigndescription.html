@@ -12,21 +12,45 @@
         }
 
         .wui-SignPageDiv {
+			background-image:  url('/termite_static/img/component/exsign/exsigndescription_rules_bg.png');
             width: 100%;
-            height: 560px;
-            background-color: #F0F0F0;
+            min-height: 560px;
         }
 
         .wui-TopPaneDiv {
-            height: 33%;
-            background-image: url('/termite_static/img/component/sign/signdescription_left_bg.png');
-            background-repeat: repeat-x;
-            background-size: 5% auto;
+            background-image: url('/termite_static/img/component/exsign/exsigndescription_top_bg.png');
             text-align: center;
             color: white;
             padding-bottom: 15px;
+            background-repeat: no-repeat;
+			background-size: 100% 120%;
+			background-position: 35% 50%;
         }
-
+		.wui-Member{
+			padding-top: 20px;
+			font-size: 1.2rem;
+		}
+		.wui-MemberGrade,.wui-MemberPoint{
+			float: left;
+			width: 50%;
+		}
+		.wui-MemberGrade div{
+			padding-right: 50%;
+		}
+		.wui-MemberGrade-grade{
+			font-size: 1rem;
+			color: #572200;
+		}
+		.wui-MemberPoint div{
+			padding-left: 50%;
+		}
+		.wui-MemberPoint-point{
+			font-size: 1rem;
+			color: #FEEA00;
+		}
+		.wui-clearf{
+			clear: both;
+		}
         .wui-UserPhotoDiv {
             padding-top: 20px;
             padding-bottom: 5px;
@@ -90,7 +114,7 @@
             width: 160px;
             height: 160px;
             padding: 2px;
-            background: #9AD2EB;
+            background: #FF964A;
             border-radius: 120px;
             -webkit-border-radius: 50%;
             margin-left: auto;
@@ -102,7 +126,7 @@
         .wui-SignCircle .wui-SignSign {
             width: 145px;
             height: 145px;
-            background: #0090D6;
+            background: #feb930;
             display: inline-block; /* circle wraps image */
             border-radius: 120px;
             -webkit-border-radius: 50%;
@@ -121,27 +145,52 @@
         }
 
         .wui-SignDescriptionDiv {
-            color: #555555;
             text-align: center;
-            height:10%;
-            margin-top: 15%;
-            margin-bottom: 15%;
+			padding-bottom: 20px;
         }
+		.wui-ExSignRules{
+			list-style-type: decimal;
+			text-align: left;
+			background: #FFF5EB;
+			border-top-left-radius: 15px;
+			border-top-right-radius: 15px;
+			margin-right: 5%;
+			margin-left: 5%;
+			background: -webkit-linear-gradient(#FBF9F7, rgba(253, 240, 225, 0.3)); /* Safari 5.1 - 6.0 */
+			background: -o-linear-gradient(#FBF9F7, rgba(253, 240, 225, 0.3)); /* Opera 11.1 - 12.0 */
+			background: -moz-linear-gradient(#FBF9F7, rgba(253, 240, 225, 0.3)); /* Firefox 3.6 - 15 */
+			background: linear-gradient(#FBF9F7, rgba(253, 240, 225, 0.3)); /* 标准的语法 */
+			color: #F35C3E;
+			padding: 20px 10px 30px 30px;
+
+		}
+		.wui-ExSignRules >li{
+			list-style-type: decimal;
+			padding-bottom: 10px;
+		}
+		.wui-ExSignRules >li ul li{
+			padding-bottom: 5px;
+		}
+		.wui-ExSignRules .wui-rules-serial-prizes,.wui-ExSignRules .wui-rules-daily-prizes div{
+			padding-bottom: 5px;
+		}
+
         .wui-SignCircle.wa-sign-board{
-            background-color: #F0F0F0;
+            background-color: rgba(253, 190, 123, 0.65);
             font-weight: bold;
             margin-top: auto;
 
         }
         .wui-SignCircle.wa-sign-board .wui-SignSign{
-            background-color: #9AD2EB;
-            border: 5px solid #0B93D5;
+            background-color: #fff;
+            border: 5px solid #fff;
         }
         .wui-SignCircle.wa-sign-board .wui-SignChr{
             line-height: 30px;
             font-size:1em;
         }
         .wui-SignCircle.wa-sign-board .wui-SignChr-Head{
+			color: #ff8300;
             margin-top: 10px;
             font-size: 0.8em;
         }
@@ -152,12 +201,16 @@
             padding-top: 10px;
         }
         .wui-SignCircle.wa-sign-board .wui-SignChr-Days b{
+			color:#ff8300;
             font-size: 3em;
             font-weight: 700;
             margin-left: 25px;
         }
+		 .wui-SignCircle.wa-sign-board .wui-SignChr-Days .wui-SignChr-DaysText{
+			 color: #FD3B32;
+		}
         .wui-SignCircle.wa-sign-board .wui-SignChr-Tail{
-            color:#626262;
+            color:#ff8300;
             font-size: 0.8em;
         }
         .wui-integral-adder{
@@ -227,12 +280,31 @@
 
         .fadeOutUp{-webkit-animation-name:fadeOutUp;animation-name:fadeOutUp}
 
+		.wui-coupon-count{
+			color: #FDEB00;
+		}
+		.wui-rules-member-center{
+			color: #207CBE;
+			text-decoration: underline;
+		}
+
     </style>
     <link href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
 
 <div class="wui-SignPageDiv wa-signPageDiv">
     <div class="wui-TopPaneDiv">
-        <div class="wui-UserPhotoDiv">
+		<div class="wui-Member">
+			<div class="wui-MemberGrade">
+				<div>当前等级</div>
+				<div class="wui-MemberGrade-grade wa-member-grade"></div>
+			</div>
+			<div class="wui-MemberPoint">
+				<div>我的积分</div>
+				<div class="wui-MemberPoint-point wa-user-integral"></div>
+			</div>
+			<div class="wui-clearf"></div>
+		</div>
+        <!--<div class="wui-UserPhotoDiv">
             <div class="wui-UserPhotoCircle wa-user-icon">
                 <img src="/static/img/user-1.jpg">
             </div>
@@ -243,37 +315,67 @@
         </div>
         <div class="wui-Rules Border wa-rules">
             <div class="wui-Rules Chr">活动规则<span class="fa fa-play-circle"></span></div>
-
-        </div>
-    </div>
-
-    <div class="wui-BodyPaneDiv">
-        <div class="wui-SignDiv animate3d">
-            <div class="wui-SignCircle wa-sign-board back-face">
-                <div class="wui-SignSign">
-                    <p class="wui-SignChr wui-SignChr-Head">已连续签到</p>
-                    <p class="wui-SignChr wui-SignChr-Days wa-i-serial-count"><b class="Chr Num"></b>天</p>
-                    <p class="wui-SignChr wui-SignChr-Tail">已签到</p>
-                </div>
-            </div>
-            <div class="wui-SignCircle wa-sign-btn front-face">
-                <div class="wui-SignSign">
-                    <p class="wui-SignChr">签到</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="wui-SignDescriptionDiv">
-        <div class="wui-SignDescriptionDiv Chr wa-prize-board">
-            <span class="wa-daily_title">今日可以领取 </span>
-            <span class="daily_points wa-daily_points Num">{% if component.model.daily_points %}{{component.model.daily_points}}{% else %}0{% endif %} 积分</span>
-            <div class="daily_prizes wa-daily_prizes" {% if not component.model.daily_prizes %}style="display: none"{% endif %}>
-            {% for daily_prize in component.model.daily_prizes %}
-                <div>“{{ daily_prize.name }}”一张</div>
-            {% endfor %}
-            </div>
-        </div>
+        </div>-->
+		<div class="wui-BodyPaneDiv">
+			<div class="wui-SignDiv animate3d">
+				<div class="wui-SignCircle wa-sign-board back-face">
+					<div class="wui-SignSign">
+						<p class="wui-SignChr wui-SignChr-Head">已连续签到</p>
+						<p class="wui-SignChr wui-SignChr-Days wa-i-serial-count"><b class="Chr Num"></b><span class="wui-SignChr-DaysText">天</span></p>
+						<p class="wui-SignChr wui-SignChr-Tail">已签到</p>
+					</div>
+				</div>
+				<div class="wui-SignCircle wa-sign-btn front-face">
+					<div class="wui-SignSign">
+						<p class="wui-SignChr">签到</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="wa-prize-board">
+			<span class="wa-daily_title">今日可以领取</span><span class="daily_points wa-daily_points Num">{%if component.model.daily_points %}{{component.model.daily_points}}{%else%}0{%endif%}积分，</span><span class="daily_prizes wa-daily_prizes" {%if not component.model.daily_prizes %}style="display: none"{%endif%}><b class="wui-coupon-count" >{{component.model.daily_prizes | length}}张</b>优惠券</span>
+		</div>
+	</div>
+    <li class="wui-SignDescriptionDiv">
+		<div class="wui-SignDescriptionDivRules">
+			<img src="/termite_static/img/component/exsign/exsigndescription_rules_top.png" />
+		</div>
+        <ul class="Chr wui-ExSignRules wa-exsign-rules">
+			<li class="wui-description" {% if not component.model.description %}style="display: none"{% endif %}>{{component.model.description}}</li>
+			<li class="wui-rules"><div>签到次数和对应奖品关系如下：</div>
+				<div class="wui-rules-daily">
+					<div class="fl">每日签到：</div>
+					<div class="fl">
+						<ul>
+							<li class="wui-rules-daily-point">获得{%if component.model.daily_points %}{{component.model.daily_points}}{%else%}0{%endif%}积分</li>
+							<li class="wui-rules-daily-prizes" {% if not component.model.daily_prizes %}style="display: none"{% endif %}>
+								{% for daily_prize in  component.model.daily_prizes %}
+								<div>获得{{daily_prize.name}}</div>
+							{% endfor %}
+							</li>
+						</ul>
+					</div>
+					<div class="wui-clearf"></div>
+				</div>
+				{% for component in  component.components %}
+					<div class="wui-rules-serial wui-rules-serial{{ component.cid }}">
+					<div class="wui-rules-days fl">连续签到{{ component.model.serial_count }}天：</div>
+					<div class="wui-rules-rule fl">
+						<ul>
+							<li class="wui-rules-serial-point" {% if not component.model.serial_count_points %}style="display: none"{% endif %}>获得{%if component.model.serial_count_points %}{{component.model.serial_count_points}}{%else%}0{%endif%}积分</li>
+							<li class="wui-rules-serial-prizes">
+								{% for serial_count_prize in  component.model.serial_count_prizes %}
+									<div>获得{{serial_count_prize.name}}</div>
+								{% endfor %}
+							</li>
+						</ul>
+					</div>
+					<div class="wui-clearf"></div>
+				</div>
+				{% endfor %}
+			</li>
+			<li>签到奖励可以到<b class="wui-rules-member-center">个人中心</b>查看</li>
+		</ul>
     </div>
 </div>
 {% endifequal %}

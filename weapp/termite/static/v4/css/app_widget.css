@@ -48,9 +48,9 @@
 	width: 100%;
 	z-index: 9999;
 	background-color: rgba(0, 0, 0, 0.5);
-	top: 0px;
-	left: 0px;
-	height: 100%;
+	top: 0;
+	left: 0;
+	height: 111%;
 }
 .wui-appParticipantResult-Cover .wui-i-background {
 	background-color: #FFF;
@@ -345,12 +345,12 @@
 
 .wui-lotterydescription{
 	background: url("/termite_static/img/component/lottery/roulette_background.png") no-repeat scroll 42% 100% / 110% 100%;
-	height: 440px;
+	height: 451px;
 	padding-top: 0;
 	margin-top: -40px;
 }
 .wui-lotterydescription>.wui-i-title{
-	background: url("/termite_static/img/component/lottery/roulette_title.png") no-repeat scroll center center / 275px 140px rgba(0, 0, 0, 0);
+/*	background: url("/termite_static/img/component/lottery/roulette_title.png") no-repeat scroll center center / 275px 140px rgba(0, 0, 0, 0);*/
     height: 140px;
     padding-top: 0;
 }
