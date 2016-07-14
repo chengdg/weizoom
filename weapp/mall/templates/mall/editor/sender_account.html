@@ -47,14 +47,14 @@
                 data-init-sort="-created_at"
                 data-selectable = "false"
                 data-user-webapp-id={{user.get_profile.webapp_id}}
-            >
-            div
-   </div>
+            ></div>
 {% endblock %}
 
 {% block js %}
 {% verbatim %}
+
  <script id="mall-orders-account" type="text/x-jquery-tmpl">
+    
 	<table class="table">
 		<thead>
 			<tr class="xui-trHeight" style="background:#c9d1e4;">
@@ -65,18 +65,18 @@
 		</thead>
 		<tbody style="border: 1px solid #CCC;">
             {{each(i, accounts) items}}
-                <tr data-id="${accounts.id}">
-                   
+                // <tr>
+               <tr  data-id='${accounts.id}'>
                     <!--快递名称-->
                     <td>
-                        <div>${accounts.name}</div>                                                
+                        <div class='xa-account-name'  >${accounts.name}</div>                                                
                     </td>
                     <!--账号-->
                     <td class="nowrap">
                     	{{if account == 'ignore'}}
                     	<div>————</div>
                     	{{else}}
-                        <input type="text"  value="${accounts.account}" class="xa-account" name="account"/>
+                        <input type="text"  value="${accounts.account}" class="xa-account"/>
                         {{/if}}                       
                     </td>
                     <!--密码-->
@@ -84,49 +84,53 @@
                 	{{if password == 'ignore'}}
                      	<div>————</div>
                       {{else}}                     
-                       <input type="password" value="${accounts.password}" class="xa-account-password" name="password" />
+                       <input type="password" value="${accounts.password}" class="xa-account-password" />
                      {{/if}}
                     </td>                    
                 </tr>
 			{{/each}}
 		</tbody>		
-	</table>
-	<div class="tc">
+	</table> 
+				<div class="tc">
 					<a href="javascript:void(0);" class="btn btn-primary xa-submit">保存</a>
 				</div>
 </script>
+
 <script type="text/javascript">
 	$(document).ready(function(){
+		$('body').delegate('.xa-submit', 'click', function(event) {
+			var id = $(this).attr('data-id'),
+				$name=$('.xa-account-name'),
+				$nameVal=$name.text(),
 
-		$('.xa-submit').click(function(){
-			alert(1)
-			var id='{{sender_account.id}}',
-		    
-			$account=$('.xa-account'),
-			$accountVal=$account.val(),
+				$account=$('.xa-account'),
+				$accountVal=$account.val(),
 			
-			$passWord=$('.xa-account-password'),
-			$passwordVal=$passWord.val(),
+				$passWord=$('.xa-account-password'),
+				$passwordVal=$passWord.val(),
+				express_accounts = [$nameVal,$accountVal,$passwordVal];
 			
-			express_accounts=$accountVal+$passwordVal
-			
-			 W.getApi().call({
-          method:'post',          
-          app: 'mall2',
-          resource:'sender_account',
-          args:{
-          	id:id,
-          	express_accounts:express_accounts,
-          },
-	      success: function(data) {
-	      	window.location.reload();
+		W.getApi().call({
+         	method:'post',          
+        	app: 'mall2',
+        	resource:'sender_account',
+         	args:{id:id,
+          		express_accounts:express_accounts,
+          	},
+          	
+	      	success: function(data) {
+			console.log('______________',express_accounts)
+	      		W.showHint('success', '保存成功');
+					setTimeout(function() {
+   						 $('div[data-ui-role="advanced-table"]').data('view').reload();
+   						}, 500);
 				
 					},
-					error: function(resp) {
-						
+			error: function(resp) {
+						 W.showHint('error','失败');
 					}
 				});
-		})
+		});
 	})
 </script>
 {% endverbatim %}
