@@ -222,8 +222,15 @@ def get_mall_product_second_navs(request):
     if request.user.username == 'manager':
         # second_navs = [MALL_PRODUCT_SECOND_NAV]
         pass
+    # else:
+    #     second_navs = [MALL_PRODUCT_SECOND_NAV]
+    #自营平台注释掉添加新商品
     else:
-        second_navs = [MALL_PRODUCT_SECOND_NAV]
+        if request.user_profile.webapp_type:
+            nav = {"navs":MALL_PRODUCT_SECOND_NAV['navs'][0:1]+MALL_PRODUCT_SECOND_NAV['navs'][2:]}
+            second_navs = [nav]
+        else:
+            second_navs = [MALL_PRODUCT_SECOND_NAV]
 
     return second_navs
 
@@ -566,10 +573,10 @@ def get_config_second_navs(request):
     if request.user.username == 'manager':
         pass
     else:
-        if request.user_profile.webapp_type:
-            second_navs = [CONFIG_NAV]
-        else:
-            nav = {"navs":CONFIG_NAV['navs'][:-1]}
-            second_navs = [nav]
+        # if request.user_profile.webapp_type:
+        #     second_navs = [CONFIG_NAV]
+        # else:
+        nav = {"navs":CONFIG_NAV['navs'][:-1]}
+        second_navs = [nav]
 
     return second_navs

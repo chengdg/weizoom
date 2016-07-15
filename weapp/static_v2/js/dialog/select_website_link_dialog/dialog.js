@@ -101,8 +101,13 @@ W.dialog.weixin.SelectWebSiteLinkDialog = W.dialog.Dialog.extend({
 
     setAddBtuHtml: function(){
         var $addBtn = this.$('.xa-add-item');
-        $addBtn.html('<span class="xui-add-btn-icon">+</span>' + this.selectedItem.add_btn_title);
-        $addBtn.attr('href', this.selectedItem.add_link);
+        if (this.selectedItem.add_link) {
+            $addBtn.html('<span class="xui-add-btn-icon">+</span>' + this.selectedItem.add_btn_title);
+            $addBtn.attr('href', this.selectedItem.add_link)
+            $addBtn.show();
+        } else {
+            $addBtn.hide();
+        }
     },
 
     setAddBox: function(){
