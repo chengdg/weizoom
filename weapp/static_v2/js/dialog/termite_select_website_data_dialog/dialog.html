@@ -11,7 +11,9 @@
 		
 		<div class="modal-body" style="padding-left:30px;padding-right:30px;">
 			<div class="clearfix">
+				{{ if not mall_type }}
 				<a href="/new_weixin/single_news/" target="_blank" class="btn btn-success xa-addItem w150 mt10 h30"><span class="mr5 pr">+</span>新建<span class="xa-itemName"></span></a>
+				{{ endif }}
 				<div class="fr">
 					<input class="form-control xa-query xui-search-text" value=""><span class="xa-search xui-searchBtn cursor-pointer btn btn-primary">搜索</span>
 				</div>

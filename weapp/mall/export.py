@@ -222,8 +222,15 @@ def get_mall_product_second_navs(request):
     if request.user.username == 'manager':
         # second_navs = [MALL_PRODUCT_SECOND_NAV]
         pass
+    # else:
+    #     second_navs = [MALL_PRODUCT_SECOND_NAV]
+    #自营平台注释掉添加新商品
     else:
-        second_navs = [MALL_PRODUCT_SECOND_NAV]
+        if request.user_profile.webapp_type:
+            nav = {"navs":MALL_PRODUCT_SECOND_NAV['navs'][0:1]+MALL_PRODUCT_SECOND_NAV['navs'][2:]}
+            second_navs = [nav]
+        else:
+            second_navs = [MALL_PRODUCT_SECOND_NAV]
 
     return second_navs
 
@@ -550,12 +557,12 @@ CONFIG_NAV = {
             'url': '/mall2/email_notify_list/',
             'permission': 'manage_config_mail'
         },
-        {
-            'name': MAIL_CONFIG_SUPPLIER_NAV,
-            'title': u'供货商',
-            'url': '/mall2/supplier_list/',
-            'permission': 'manage_supplier'
-        },
+        # {
+        #     'name': MAIL_CONFIG_SUPPLIER_NAV,
+        #     'title': u'供货商',
+        #     'url': '/mall2/supplier_list/',
+        #     'permission': 'manage_supplier'
+        # },
     ]
 }
 

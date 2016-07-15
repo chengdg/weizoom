@@ -22,7 +22,9 @@
 			</label>
 			<a href="javascript:void(0);" class="btn btn-default ml10 xa-batchOnshelf">批量上架</a>
 			<a href="javascript:void(0);" class="btn btn-default ml10 xa-batchDelete">彻底删除</a>
+			{% if not mall_type %}
 			<a href="/mall2/product/" class="btn btn-success xui-addProductBtn ml10 xa-addProduct fr"><span style="padding-right:5px;"><img src="/static_v2/img/editor/plusOpcity.png"></span>添加新商品</a>
+			{% endif %}
 		</div>
 		<div
 			data-ui-role="products-advanced-table"
