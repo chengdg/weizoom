@@ -3,9 +3,15 @@
 {% ifequal component.type 'appkit.exsigndescription' %}
 
     <style>
-        .Chr, p {
+				html{
+					background-color: #fff !important;
+				}
+        .Chr, p:not(.wui-description p){
             font-family: STHeiti;
         }
+				.wui-description p span,.wui-ExSignRules li{
+					font-family: "微软雅黑","Microsoft YaHei";
+				}
 
         .Chr.Num{
             font-family: Arial;
@@ -290,7 +296,7 @@
     </style>
     <link href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
 
-<div class="wui-SignPageDiv wa-signPageDiv">
+<div class="wui-SignPageDiv wa-signPageDiv" data-component-cid="{{component.cid}}">
     <div class="wui-TopPaneDiv">
 		<div class="wui-Member">
 			<div class="wui-MemberGrade">
@@ -303,18 +309,6 @@
 			</div>
 			<div class="wui-clearf"></div>
 		</div>
-        <!--<div class="wui-UserPhotoDiv">
-            <div class="wui-UserPhotoCircle wa-user-icon">
-                <img src="/static/img/user-1.jpg">
-            </div>
-        </div>
-        <div class="wui-UserName Chr wa-username"><p>用户名</p></div>
-        <div class="wui-UserPointDiv">
-            <p class="wui-UserPoint Chr">积分:<span class="wui-TotalPoints Chr Num wa-user-integral"></span><b class="wui-integral-adder"></b></p>
-        </div>
-        <div class="wui-Rules Border wa-rules">
-            <div class="wui-Rules Chr">活动规则<span class="fa fa-play-circle"></span></div>
-        </div>-->
 		<div class="wui-BodyPaneDiv">
 			<div class="wui-SignDiv animate3d">
 				<div class="wui-SignCircle wa-sign-board back-face">
@@ -340,7 +334,7 @@
 			<img src="/termite_static/img/component/exsign/exsigndescription_rules_top.png" />
 		</div>
 		<ul class="Chr wui-ExSignRules wa-exsign-rules">
-				<li class="wui-description" {% if not component.model.description %}style="display: none"{% endif %}>{{component.model.description}}</li>
+				<li class="wui-description" {% if not component.model.description %}style="display: none"{% endif %}>{{component.model.description | safe}}</li>
 				<li class="wui-rules"><div>签到次数和对应奖品关系如下：</div>
 					<div class="wui-rules-daily">
 						<div class="fl">每日签到：</div>
@@ -356,25 +350,30 @@
 						</div>
 						<div class="wui-clearf"></div>
 					</div>
-					{% for component in  component.components %}
-						<div class="wui-rules-serial wui-rules-serial{{ component.cid }}">
-						<div class="wui-rules-days fl">连续签到{{ component.model.serial_count }}天：</div>
-						<div class="wui-rules-rule fl">
-							<ul>
-								<li class="wui-rules-serial-point" {% if not component.model.serial_count_points %}style="display: none"{% endif %}>获得{%if component.model.serial_count_points %}{{component.model.serial_count_points}}{%else%}0{%endif%}积分</li>
-								<li class="wui-rules-serial-prizes">
-									{% for serial_count_prize in  component.model.serial_count_prizes %}
-										<div>获得{{serial_count_prize.name}}</div>
-									{% endfor %}
-								</li>
-							</ul>
-						</div>
-						<div class="wui-clearf"></div>
-					</div>
+					{% for sub_component in component.components %}
+						{{ sub_component.html|safe }}
 					{% endfor %}
 				</li>
 				<li>签到奖励可以到<b class="wui-rules-member-center">个人中心</b>查看</li>
 			</ul>
 	</div>
+</div>
+{% endifequal %}
+
+
+{% ifequal component.type 'appkit.exsignitem' %}
+<div class="wui-rules-serial wui-rules-serial{{ component.cid }}" data-dynamic-cid="{{component.cid}}">
+<div class="wui-rules-days fl">连续签到<span>{{ component.model.serial_count }}</span>天：</div>
+<div class="wui-rules-rule fl">
+	<ul>
+		<li class="wui-rules-serial-point" {% if not component.model.serial_count_points %}style="display: none"{% endif %}>获得<span>{%if component.model.serial_count_points %}{{component.model.serial_count_points}}{%else%}0{%endif%}</span>积分</li>
+		<li class="wui-rules-serial-prizes">
+			{% for serial_count_prize in  component.model.serial_count_prizes %}
+				<div>获得{{serial_count_prize.name}}</div>
+			{% endfor %}
+		</li>
+	</ul>
+</div>
+<div class="wui-clearf"></div>
 </div>
 {% endifequal %}
