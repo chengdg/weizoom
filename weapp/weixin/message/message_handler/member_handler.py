@@ -20,7 +20,7 @@ from modules.member.util import (get_member_by_binded_social_account,
 from modules.member import tasks as member_tasks
 from watchdog.utils import watchdog_error, watchdog_fatal
 import datetime
-
+from member.member_list import count_member_follow_relations
 """
 根据消息创建会员
 
@@ -121,6 +121,7 @@ class MemberHandler(MessageHandler):
 				TODO:
 					 更新好友数量
 				"""	
+				self.update_member_relations(member)
 				member.is_new = True
 			else:
 				member.is_new = False
@@ -155,3 +156,19 @@ class MemberHandler(MessageHandler):
 			notify_message = u"MemberHandler中创建会员后增加积分失败，会员id:{}, cause:\n{}".format(
 					member.id, unicode_full_stack())
 			watchdog_error(notify_message)
+
+	def update_member_relations(self, member):
+		member_friends = MemberFollowRelation.get_follow_members_for(member.id)
+		#首次关注没粉丝
+		Member.objects.filter(id=member.id).update(friend_count=len(member_friends))
+
+		#该会员可能是其他人的粉丝
+		follow_relation = MemberFollowRelation.objects.filter(follower_member_id=member.id, is_fans=True)
+		if follow_relation:
+			fans_relations = MemberFollowRelation.get_follow_members_for(follow_relation[0].member_id, '1')
+			Member.objects.filter(id=follow_relation[0].member_id).update(fans_count=len(fans_relations))
+
+		#更新和该会员是好友关系的member的好友数
+		for member_friend in member_friends:
+			friend_count = count_member_follow_relations(member_friend)
+			Member.objects.filter(id=member_friend.id).update(friend_count=friend_count)

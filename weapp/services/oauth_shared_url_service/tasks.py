@@ -33,7 +33,8 @@ def process_shared_url(request, args):
 			follow_member = Member.objects.get(token=fmt)
 			if is_new_created_member:
 				MemberFollowRelation.objects.create(member_id=follow_member.id, follower_member_id=member.id, is_fans=is_new_created_member)
-				Member.objects.filter(id=follow_member.id).update(fans_count=F('fans_count')+1)
+				if member.status!=NOT_SUBSCRIBED:
+					Member.objects.filter(id=follow_member.id).update(fans_count=F('fans_count')+1)
 				MemberFollowRelation.objects.create(member_id=member.id, follower_member_id=follow_member.id, is_fans=False)
 				member.source = SOURCE_BY_URL
 				member.save()

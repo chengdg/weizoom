@@ -63,7 +63,8 @@ def build_member_follow_relation(request):
 			follower_member_id = member.id,
 			is_fans = is_fans,
 		)
-		Member.objects.filter(id=followed_member.id).update(fans_count=F('fans_count')+1)
+		if is_fans and followed_member.status != NOT_SUBSCRIBED:
+			Member.objects.filter(id=followed_member.id).update(fans_count=F('fans_count')+1)
 
 		MemberFollowRelation.objects.create(
 			member_id = member.id,
