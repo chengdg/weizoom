@@ -28,10 +28,10 @@
             <label for="topSelectAll" class="xui-selectAll ml15">
                 <input type="checkbox" id="topSelectAll" class="xa-selectAll">全选
             </label>
-            <a href="javascript:void(0);" class="btn btn-default ml10 xa-batchOffshelf">批量放入待售</a>
-            <a href="javascript:void(0);" class="btn btn-primary ml10 xa-checkOffshelf xui-offshelf-btn fr">
+            <a href="javascript:void(0);" class="btn btn-default ml10 xa-batchOffshelf">批量上架</a>
+           <!--  <a href="javascript:void(0);" class="btn btn-primary ml10 xa-checkOffshelf xui-offshelf-btn fr">
                 查看失效商品
-            </a>
+            </a> -->
         </div>
         <div
         data-ui-role="pool-advanced-table"
@@ -112,7 +112,8 @@
                     </td>
                     <td class="xui-createdTime">${product.sync_time}</td>
                     <td>
-                        {{if product.status == 1}}
+                        <a href="javascript:void(0);" class="xa-offshelf">上架</a>
+                       <!--  {{if product.status == 1}}
                         <a href="javascript:void(0);" class="xa-update">更新</a>
                         {{/if}}
                         {{if product.status == 2}}
@@ -120,7 +121,7 @@
                         {{/if}}
                         {{if product.status == 3}}
                         <span class="c6">无更新</a>
-                        {{/if}}
+                        {{/if}} -->
                     </td>
                 </tr>
                 {{/each}}
