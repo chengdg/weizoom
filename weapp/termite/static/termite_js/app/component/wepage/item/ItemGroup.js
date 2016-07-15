@@ -16,7 +16,7 @@ W.component.wepage.ItemGroup = W.component.Component.extend({
         createStrategy: {
             type: 'dialog',
             dialog: 'W.dialog.termite.SelectWebSiteDataDialog',
-            dialogParameter: '{"title":[{"name":"已上架商品", "type":"product"}], "navData":{"product":{"dataName":"商品", "dataLink": "/mall2/product/"}}}'
+            dialogParameter: '{"title":[{"name":"已上架商品", "type":"product"}],"navData":{"product":{"dataName":"商品", "dataLink": "/mall2/product/"}},"mallType": '+ W.mallType +'}'
         },
     }],
 

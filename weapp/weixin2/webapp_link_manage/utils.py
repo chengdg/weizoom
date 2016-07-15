@@ -36,6 +36,8 @@ def get_webapp_link_menu_objectes(request):
 	"""
 	webapp_owner_id = request.manager.id
 	workspace_id = request.user_profile.homepage_workspace_id
+	mall_type = request.user_profile.webapp_type
+
 	menus = {
 		'webappPage': {
 			'id': 1,
@@ -54,7 +56,7 @@ def get_webapp_link_menu_objectes(request):
 				'name': '已上架商品',
 				'type': 'product',
 				'add_btn_title': '新建商品',
-				'add_link': '/mall2/product/'
+				'add_link': '' if mall_type else '/mall2/product/'
 			},{
 				'name': '商品分组',
 				'type': 'category',

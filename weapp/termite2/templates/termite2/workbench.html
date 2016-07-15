@@ -52,16 +52,6 @@
 
 {% block base_js %}
   
-  <!-- *start_prunt_task* -->
-    <!-- [prunt_task] 
-      {
-        "task": "weizoom-load-termite-components"
-      }
-    -->  
-  {{ '["wepage.page", "wepage.componentadder", "wepage.pageheader", "wepage.shopheader", "wepage.personalityTheme", "wepage.specialTemplate", "wepage.richtext", "wepage.item", "wepage.itemlist", "wepage.image", "wepage.notice", "wepage.title", "wepage.textnav", "wepage.imagenav", "wepage.block", "wepage.imagedisplay"]'|load_termite_components|safe }}
-  <!-- *end_prunt_task* -->
-  
-
   <script type="text/javascript">
     W.uid = {{ user.id }};
     W.projectId = {{ project.id }};
@@ -76,6 +66,8 @@
     var isNewProject = {% if is_new_project %}true{% else %}false{% endif %};
     W.isSystemManager = {% if user|is_system_manager %}true{% else %}false{% endif %};
     W.isUseWepage = {% if user.get_profile.is_use_wepage %}true{% else %}false{% endif %};
+    W.mallType = {{ request.user_profile.webapp_type }};
+
     var bottomDistance = 110;
 
     /* 是否可编辑标题 */
@@ -83,7 +75,18 @@
 
     /* 自动选中cid，当页面进来的时候 */
     W.autoSelectCid = 0
+  </script>
 
+  <!-- *start_prunt_task* -->
+    <!-- [prunt_task] 
+      {
+        "task": "weizoom-load-termite-components"
+      }
+    -->  
+  {{ '["wepage.page", "wepage.componentadder", "wepage.pageheader", "wepage.shopheader", "wepage.personalityTheme", "wepage.specialTemplate", "wepage.richtext", "wepage.item", "wepage.itemlist", "wepage.image", "wepage.notice", "wepage.title", "wepage.textnav", "wepage.imagenav", "wepage.block", "wepage.imagedisplay"]'|load_termite_components|safe }}
+  <!-- *end_prunt_task* -->
+
+  <script type="text/javascript">
     var loadPages = function(pageManagerView) {
       W.getApi().call({
         app: 'termite2',
