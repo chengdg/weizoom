@@ -347,6 +347,10 @@ from eaglet.utils.resource_client import Resource
 def zeus_req(method, opt, *args, **kwargs):
         ZEUS_HOST = settings.ZEUS_HOST
         ZEUS_SERVICE_NAME = settings.ZEUS_SERVICE_NAME
+        print '====================================='
+        print 'zeus_host--->', ZEUS_HOST
+        print 'zeus_service_name--->', ZEUS_SERVICE_NAME
+        print '====================================='
         if method.lower() == 'delete':
             resp = Resource.use(ZEUS_SERVICE_NAME, ZEUS_HOST).delete(opt)
         elif method.lower() == 'post':
