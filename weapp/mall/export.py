@@ -557,12 +557,12 @@ CONFIG_NAV = {
             'url': '/mall2/email_notify_list/',
             'permission': 'manage_config_mail'
         },
-        # {
-        #     'name': MAIL_CONFIG_SUPPLIER_NAV,
-        #     'title': u'供货商',
-        #     'url': '/mall2/supplier_list/',
-        #     'permission': 'manage_supplier'
-        # },
+        {
+            'name': MAIL_CONFIG_SUPPLIER_NAV,
+            'title': u'供货商',
+            'url': '/mall2/supplier_list/',
+            'permission': 'manage_supplier'
+        },
     ]
 }
 
@@ -573,10 +573,10 @@ def get_config_second_navs(request):
     if request.user.username == 'manager':
         pass
     else:
-        if request.user_profile.webapp_type:
-            second_navs = [CONFIG_NAV]
-        else:
-            nav = {"navs":CONFIG_NAV['navs'][:-1]}
-            second_navs = [nav]
+        # if request.user_profile.webapp_type:
+        #     second_navs = [CONFIG_NAV]
+        # else:
+        nav = {"navs":CONFIG_NAV['navs'][:-1]}
+        second_navs = [nav]
 
     return second_navs
