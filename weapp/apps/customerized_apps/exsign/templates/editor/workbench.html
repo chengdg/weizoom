@@ -326,7 +326,7 @@ ui-appPage-commonStyle">
         "task": "weizoom-load-termite-components"
       }
     -->
-  {{ '["appkit.page", "appkit.componentadder", "appkit.exsigndescription", "appkit.submitbutton"]'|load_termite_components|safe }}
+  {{ '["appkit.page", "appkit.componentadder", "appkit.exsigndescription", "appkit.item", "appkit.itemlist","appkit.image","appkit.title","appkit.block", "appkit.submitbutton"]'|load_termite_components|safe }}
   <!-- *end_prunt_task* -->
 
 	<!-- *start_prunt_task* -->
@@ -353,8 +353,8 @@ ui-appPage-commonStyle">
     W.autoSelectCid = 2;
 
     //是否隐藏组件控制面板
-    W.hideActionPanel = true;
-	//W.preventFirstComponentDelected = true;
+    //W.hideActionPanel = true;
+	W.preventFirstComponentDelected = true;
 
     var table;
 

@@ -184,8 +184,9 @@ W.component.appkit.ExSignDescription = W.component.Component.extend({
 		},
 		items: function($node, model, value) {
             this.refresh($node, {resize:true, refreshPropertyView:true});
-		 	var view = $('[data-ui-role="apps-prize-keyword-pane"]').data('view');
-			view && view.render(W.weixinKeywordObj);
+			console.log("ddddddddddddddd")
+		 	//var view = $('[data-ui-role="apps-prize-keyword-pane"]').data('view');
+			//view && view.render(W.weixinKeywordObj);
         },
 		daily_points:function($node, model, value, $propertyViewNode){
 			if(value == ''){

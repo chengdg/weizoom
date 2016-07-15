@@ -42,7 +42,11 @@ class Command(BaseCommand):
 				signdetails = sign_models.SignDetails.objects(belong_to=str(sign[0].id))
 				for detail in signdetails:
 					if detail.prize["coupon"]:
-						detail.prize["coupon"] = [detail.prize["coupon"]]
+						if detail.prize["coupon"]["id"]:
+							detail.prize["coupon"] = [detail.prize["coupon"]]
+						else:
+							detail.prize["coupon"]["id"] = 0
+							detail.prize["coupon"] = [detail.prize["coupon"]]
 					exsign_models.exSignDetails(
 						member_id=detail.member_id,
 						belong_to=str(exsign_id) if exsign_id else detail.belong_to,
