@@ -12,6 +12,7 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response
 from core.exceptionutil import unicode_full_stack
 from utils import url_helper
+from watchdog.utils import watchdog_info
 import models as app_models
 from modules.member.models import Member
 from mall.order.util import cancel_group_buying
@@ -75,6 +76,7 @@ class GroupParticipance(resource.Resource):
 		group_type = request.POST['group_type']
 		group_days = request.POST['group_days']
 		group_price = request.POST['group_price']
+		log_msg = ''
 
 		#未提交订单，但是跳转过订单页面的情况
 		group_relation = app_models.GroupRelations.objects(belong_to=group_record_id,member_id=member_id)
@@ -101,6 +103,8 @@ class GroupParticipance(resource.Resource):
 				response.data = {
 					'relation_belong_to': relation_belong_to
 				}
+				log_msg = u'团购活动[参团]，小团id: {}'.format(group_relation_id)
+				watchdog_info(log_msg)
 				return response.get_response()
 		else:
 			try:
@@ -131,6 +135,9 @@ class GroupParticipance(resource.Resource):
 				response.data = {
 					'relation_belong_to': relation_belong_to
 				}
+
+				log_msg = u'团购活动[开团]，小团id: {}'.format(group_member_info.id)
+				watchdog_info(log_msg)
 				return response.get_response()
 			except:
 				response = create_response(500)

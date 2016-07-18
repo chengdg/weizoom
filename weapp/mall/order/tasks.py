@@ -127,7 +127,8 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
             # 处理团购筛选
             group_order_relations = OrderHasGroup.objects.filter(webapp_id=webapp_id)
             group_order_ids = [r.order_id for r in group_order_relations]
-            if query_dict.get('order_type') and query_dict['order_type'] == 2 and not mall_type:
+            #自营平台有团购了，所以去掉mall_type
+            if query_dict.get('order_type') and query_dict['order_type'] == 2:
                 order_list = order_list.filter(order_id__in=group_order_ids)
 
             order_list = get_orders_by_params(query_dict, date_interval, date_interval_type, order_list, user_profile)
