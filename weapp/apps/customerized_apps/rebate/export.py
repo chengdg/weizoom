@@ -99,9 +99,9 @@ def handle_rebate_core(all_records=None):
 				if order_created_time < start_time or order_created_time > end_time:
 					continue	#不在该返利活动的有效期内，不算
 				for p in cur_member_participations:
-					if record_id == p.belong_to:
+					if str(record_id) == str(p.belong_to):
 						participate_time = p.created_at  #该活动扫码时间
-						continue
+						break
 				if participate_time and order_created_time < participate_time:
 					continue #不在用户扫码时间内的，不算
 				if is_limit_cash and target_order.final_price < rebate_order_price:
