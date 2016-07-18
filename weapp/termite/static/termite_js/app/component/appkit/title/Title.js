@@ -1,9 +1,9 @@
 /**
  * @class W.component.appkit.Title
- * 
+ *
  */
 ensureNS('W.component.appkit');
-W.component.wepage.Title = W.component.Component.extend({
+W.component.appkit.Title = W.component.Component.extend({
 	type: 'appkit.title',
 	propertyViewTitle: '标题',
 

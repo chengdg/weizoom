@@ -13,7 +13,7 @@ class Command(BaseCommand):
 	def handle(self, **options):
 		"""
 		"""
-		user = User.objects.filter(username='weshop')
+		user = User.objects.filter(username='jobs')
 		if user.count() > 0:
 			user = user[0]
 			sign = sign_models.Sign.objects(owner_id=user.id)
@@ -25,8 +25,9 @@ class Command(BaseCommand):
 				exsign_models.exSignParticipance.objects(belong_to=str(exsign_id)).delete()
 				exsign_models.exSignDetails.objects(belong_to=str(exsign_id)).delete()
 				signparticipances = sign_models.SignParticipance.objects(belong_to=str(sign[0].id))
+				exsignParticipance_list = []
 				for participance in signparticipances:
-					exsign_models.exSignParticipance(
+					exsignParticipance_list.append(exsign_models.exSignParticipance(
 						webapp_user_id=participance.webapp_user_id,
 						member_id=participance.member_id,
 						belong_to=str(exsign_id) if exsign_id else participance.belong_to,
@@ -37,9 +38,11 @@ class Command(BaseCommand):
 						total_count=participance.total_count,
 						serial_count=participance.serial_count,
 						top_serial_count=participance.top_serial_count,
-					).save()
+					))
+				exsign_models.exSignParticipance.objects.insert(exsignParticipance_list)
 
 				signdetails = sign_models.SignDetails.objects(belong_to=str(sign[0].id))
+				exsigndetails_list = []
 				for detail in signdetails:
 					if detail.prize["coupon"]:
 						if detail.prize["coupon"]["id"]:
@@ -47,17 +50,19 @@ class Command(BaseCommand):
 						else:
 							detail.prize["coupon"]["id"] = 0
 							detail.prize["coupon"] = [detail.prize["coupon"]]
-					exsign_models.exSignDetails(
+					exsigndetails_list.append(exsign_models.exSignDetails(
 						member_id=detail.member_id,
 						belong_to=str(exsign_id) if exsign_id else detail.belong_to,
 						created_at=detail.created_at,
 						prize=detail.prize,
 						type=detail.type
-					).save()
+					))
+				exsign_models.exSignDetails.objects.insert(exsigndetails_list)
 
 				logs = ConsumeCouponLog.objects(user_id=user.id, app_name=u'sign', app_id=str(sign[0].id))
+				coupon_logs = []
 				for log in logs:
-					ConsumeCouponLog(
+					coupon_logs.append(ConsumeCouponLog(
 						user_id=log.user_id,
 						app_name=u'exsign',
 						app_id=str(exsign_id) if exsign_id else log.app_id,
@@ -65,6 +70,7 @@ class Command(BaseCommand):
 						coupon_id=log.coupon_id,
 						coupon_msg=log.coupon_msg,
 						created_at=log.created_at,
-					).save()
+					))
+				ConsumeCouponLog.objects.insert(coupon_logs)
 		else:
 			print u"没有weshop帐号"

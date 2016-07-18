@@ -134,23 +134,23 @@ W.component.appkit.ExSignDescription = W.component.Component.extend({
 			help:"仅能选择限领为“不限”的优惠券",
 			default: []
 		}]},{
-		group:"",
+		group:"连续签到",
 		groupClass:"xui-propertyView-app-SignDynamicGroup",
 		fields:[{
 			name: 'items',//动态组件,那个加好
-            displayName: '',
-            type: 'dynamic-generated-control',
-            isShowCloseButton: true,
-            minItemLength: 0,
+			displayName: '',
+			type: 'dynamic-generated-control',
+			isShowCloseButton: true,
+			minItemLength: 0,
 			maxItemLength: 10,
-            isUserProperty: true,
-            default: []
-        }]
+			isUserProperty: true,
+			default: []
+			}]
 	}],
 	propertyChangeHandlers: {
 		description: function($node, model, value, $propertyViewNode) {
-			if(value != '') {
-				$node.find('.wui-description').html(value).show()
+			if(value !== '') {
+				$node.find('.wui-description').html(value).show();
 			}else{
 				$node.find('.wui-description').hide();
 			}
@@ -173,7 +173,7 @@ W.component.appkit.ExSignDescription = W.component.Component.extend({
 					},
 					error: function(resp) {
 					}
-				})
+				});
 			}
 
 			if (value) {
@@ -183,22 +183,19 @@ W.component.appkit.ExSignDescription = W.component.Component.extend({
 			}
 		},
 		items: function($node, model, value) {
-            this.refresh($node, {resize:true, refreshPropertyView:true});
-			console.log("ddddddddddddddd")
-		 	//var view = $('[data-ui-role="apps-prize-keyword-pane"]').data('view');
-			//view && view.render(W.weixinKeywordObj);
-        },
+			this.refresh($node, {resize:true, refreshPropertyView:true});
+		},
 		daily_points:function($node, model, value, $propertyViewNode){
-			if(value == ''){
+			if(value === ''){
 				model.set('daily_points', 0);
 				$propertyViewNode.find('.xa-dayly-setting').find('input[data-field="daily_points"]').val('0');
 			}
-			if(value != '' && value != 0){
+			if(value !== '' && value !== 0){
 				$node.find('.daily_points').text(value+'积分，').show();
-				$node.find('.wui-ExSignRules .wui-rules-daily-point').html('获得'+value+'积分').show()
+				$node.find('.wui-ExSignRules .wui-rules-daily-point').html('获得'+value+'积分').show();
 			}else{
 				$node.find('.daily_points').hide();
-				$node.find('.wui-ExSignRules .wui-rules-daily-point').hide()
+				$node.find('.wui-ExSignRules .wui-rules-daily-point').hide();
 			}
 		},
 		daily_prizes:function($node, model, value){
@@ -208,9 +205,9 @@ W.component.appkit.ExSignDescription = W.component.Component.extend({
 				$node.find('.daily_prizes').html(html_str);
 				var coupon_str = '';
 				for (var i in value){
-					coupon_str += '<div>获得'+value[i].name+'</div>'
+					coupon_str += '<div>获得'+value[i].name+'</div>';
 				}
-				$node.find('.wui-ExSignRules .wui-rules-daily-prizes').html(coupon_str).show()
+				$node.find('.wui-ExSignRules .wui-rules-daily-prizes').html(coupon_str).show();
 			}else{
 				$node.find('.daily_prizes').hide();
 			}
@@ -218,23 +215,5 @@ W.component.appkit.ExSignDescription = W.component.Component.extend({
 		share_description: function($node, model, value){
 			model.set({share_description:value.replace(/\n/g,'')},{silent: true});
 		}
-	},
-
-	initialize: function(obj) {
-		this.super('initialize', obj);
-
 	}
 });
-
-W.component.appkit.ExSignDescription.handleHelp = function(){
-
-	//初始化签到奖励说明
-	ensureNS('W.dialog.sign');
-	W.dialog.sign.InstructionDialog = W.dialog.Dialog.extend({
-		getTemplate: function() {
-			$('#sign-chance-dialog-tmpl-src').template('sign-chance-dialog-tmpl');
-			return "sign-chance-dialog-tmpl";
-		}
-	});
-
-};
