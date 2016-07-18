@@ -12,6 +12,7 @@ from modules.member.models import *
 from core.jsonresponse import create_response
 from webapp import models as webapp_models
 from weixin.user.models import DEFAULT_ICON, get_system_user_binded_mpuser
+from member.util import zeus_req
 
 COUNT_PER_PAGE = 20
 
@@ -203,19 +204,27 @@ class UpdateMemberTagOrGrade(resource.Resource):
         type = request.POST.get('type', None)
         checked_ids = request.POST.get('checked_ids', None)
         member_id = request.POST.get('member_id', None)
-
         if type and member_id:
             member = Member.objects.get(id=member_id)
             if member.webapp_id == webapp_id:
                 if type == 'tag':
-                    tag_ids = checked_ids.split('_')
-                    MemberHasTag.delete_tag_member_relation_by_member(member)
-                    tag_ids = [id for id in tag_ids if id]
-                    if tag_ids:
-                        MemberHasTag.add_tag_member_relation(member, tag_ids)
-                    else:
-                        tag_ids.append(MemberTag.get_default_tag(webapp_id).id)
-                        MemberHasTag.add_tag_member_relation(member, tag_ids)
+                    tag_ids = [id for id in checked_ids.split('_') if id]
+                    zeus_req('put', {
+                        'resource': 'member.member_has_tag',
+                        'data': {
+                            'member_id': member_id,
+                            'member_tag_ids': ','.join(tag_ids)
+                        }
+                    })
+                    ###################################
+                    # tag_ids = checked_ids.split('_')
+                    # MemberHasTag.delete_tag_member_relation_by_member(member)
+                    # tag_ids = [id for id in tag_ids if id]
+                    # if tag_ids:
+                    #     MemberHasTag.add_tag_member_relation(member, tag_ids)
+                    # else:
+                    #     tag_ids.append(MemberTag.get_default_tag(webapp_id).id)
+                    #     MemberHasTag.add_tag_member_relation(member, tag_ids)
                 elif type == 'grade':
                     member.grade = MemberGrade.objects.get(id=checked_ids)
                     member.save()
