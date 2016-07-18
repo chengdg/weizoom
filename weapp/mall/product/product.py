@@ -327,10 +327,10 @@ class ProductList(resource.Resource):
 
                 now = datetime.now()
                 if shelve_type != models.PRODUCT_SHELVE_TYPE_ON:
-                    products.update(shelve_type=shelve_type, display_index=0, update_time=now)
+                    products.update(shelve_type=shelve_type, display_index=models.MAX_DISPLAY_INDEX, update_time=now)
                 else:
                     #上架
-                    products.update(shelve_type=shelve_type, display_index=0, update_time=now)
+                    products.update(shelve_type=shelve_type, display_index=models.MAX_DISPLAY_INDEX, update_time=now)
             is_prev_shelve = prev_shelve_type == models.PRODUCT_SHELVE_TYPE_ON
             is_not_sale = shelve_type != models.PRODUCT_SHELVE_TYPE_ON
 
