@@ -18,7 +18,7 @@ from core.exceptionutil import unicode_full_stack
 from core.upyun_util import *
 from core.jsonresponse import create_response
 from core import search_util
-from mall.promotion.utils import create_coupons, verification_multi_product_promotion, string_ids2int_ids
+from mall.promotion.utils import create_coupons, verification_multi_product_promotion, verification_multi_product_promotion_weizoom_mall,string_ids2int_ids
 
 COUNT_PER_PAGE = 20
 PROMOTION_TYPE_COUPON = 4
@@ -136,7 +136,7 @@ class CouponRuleInfo(resource.Resource):
         limit_product_id = request.POST.get('product_ids', '-1')
         if limit_product == '1':
             limit_product_ids = string_ids2int_ids(limit_product_id)
-            save_success, error_product_ids = verification_multi_product_promotion(request.manager, limit_product_ids, 'coupon')
+            save_success, error_product_ids = verification_multi_product_promotion_weizoom_mall(request.manager, limit_product_ids, 'coupon')
             if not save_success:
                 response = create_response(200)
                 response.data = {

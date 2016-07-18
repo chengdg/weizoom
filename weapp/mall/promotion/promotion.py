@@ -10,6 +10,7 @@ from core.jsonresponse import create_response
 from mall import export
 from mall.promotion import models  # 注意：不要覆盖此module
 from mall.models import PRODUCT_SHELVE_TYPE_ON
+from mall import models as mall_models
 from .utils import filter_promotions
 from cache import webapp_cache
 from apps.customerized_apps.group import models as group_models
@@ -26,6 +27,7 @@ class Promotion(resource.Resource):
 
         @param type "usable_promotion_products" or "promotion_products"
         """
+        mall_type = request.user_profile.webapp_type
         promotion_product_type = request.GET.get('type', 'promotion_products')
         if promotion_product_type == 'usable_promotion_products':
 
@@ -36,10 +38,12 @@ class Promotion(resource.Resource):
 
             filter_name = request.GET.get('filter_name', '')
 
-            products = models.Product.objects.filter(
-                owner=request.manager,
-                shelve_type=PRODUCT_SHELVE_TYPE_ON,
-                is_deleted=False)
+            # update by bert
+            products = mall_models.Product.objects.belong_to(mall_type, request.manager, mall_models.PRODUCT_SHELVE_TYPE_ON)
+            # products = models.Product.objects.filter(
+            #     owner=request.manager,
+            #     shelve_type=PRODUCT_SHELVE_TYPE_ON,
+            #     is_deleted=False)
 
             if filter_name:
                 products = products.filter(name__contains=filter_name)

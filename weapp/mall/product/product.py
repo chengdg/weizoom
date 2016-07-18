@@ -192,9 +192,15 @@ class ProductList(resource.Resource):
         if mall_type:
             product_ids = [product.id for product in products]
             product_id2store_name, product_id2sync_time = utils.get_sync_product_store_name(product_ids)
+
+            manager_product_user_id = UserProfile.objects.filter(webapp_type=2)[0].user_id
+            manager_supplier_ids2name = dict([(s.id, s.name) for s in models.Supplier.objects.filter(owner_id=manager_product_user_id)])
+
+
         else:
             product_id2store_name = {}
             product_id2sync_time = {}
+            manager_supplier_ids2name = {}
 
         # 手动添加供货商的信息
         supplier_ids2name = dict([(s.id, s.name) for s in models.Supplier.objects.filter(owner=request.manager, is_delete=False)])
@@ -215,9 +221,19 @@ class ProductList(resource.Resource):
         for product in products:
             product_dict = product.format_to_dict()
             product_dict['is_self'] = (request.manager.id == product.owner_id)
-            product_dict['store_name'] = supplier_ids2name[product.supplier] if product.supplier and supplier_ids2name.has_key(product.supplier) else product_id2store_name.get(product.id, "")
+
+            if manager_supplier_ids2name:
+                store_name = manager_supplier_ids2name.get(product.supplier, "")
+                if store_name:
+                    is_sync = True
+            
+            if not store_name:
+                store_name = supplier_ids2name[product.supplier] if product.supplier and supplier_ids2name.has_key(product.supplier) else product_id2store_name.get(product.id, "")
+                is_sync = product_id2store_name.has_key(product.id)
+
+            product_dict['store_name'] = store_name
             product_dict['sync_time'] = product_id2sync_time.get(product.id, product.created_at.strftime('%Y-%m-%d %H:%M'))
-            product_dict['is_sync'] = product_id2store_name.has_key(product.id)
+            product_dict['is_sync'] = is_sync
 
             if product.id in product_pool2display_index.keys():
                 product_dict['display_index'] = product_pool2display_index[product.id]
@@ -497,6 +513,14 @@ class ProductPool(resource.Resource):
             count_per_page,
             query_string=request.META['QUERY_STRING'])
 
+        manager_product_user_id = 0
+        if request.user_profile.webapp_type == 1:
+            manager_product_user_id = UserProfile.objects.filter(webapp_type=2)[0].user_id
+
+        supplier_ids2name = {}
+        if manager_product_user_id:
+            supplier_ids2name = dict([(s.id, s.name) for s in models.Supplier.objects.filter(owner_id=manager_product_user_id)])
+
         # 对应商品营销活动信息
         # product_ids = [product['id'] for product in products]
         # relations = models.WeizoomHasMallProductRelation.objects.filter(mall_product_id__in=product_ids, is_deleted=False)
@@ -511,6 +535,7 @@ class ProductPool(resource.Resource):
         # weizoom_product_ids = [str(id) for id in mall_product_id2weizoom_product_id.values()]
         # product2group = utils.get_product2group(weizoom_product_ids, request.webapp_owner_id)
         #构造返回数据
+
         items = []
         for product in products:
             
@@ -530,6 +555,7 @@ class ProductPool(resource.Resource):
             # product = product.to_dict()
             product.fill_standard_model()
 
+
             items.append({
                 'id': product.id,
                 # 'product_has_promotion': product_has_promotion,
@@ -538,7 +564,7 @@ class ProductPool(resource.Resource):
                 'thumbnails_url': product.thumbnails_url,
                 'user_code': product.user_code,
                 #'status': product['status'],
-                'store_name': product.supplier,#user_id2userprofile[product['owner_id']].store_name,
+                'store_name': supplier_ids2name.get(product.supplier, product.supplier),#user_id2userprofile[product['owner_id']].store_name,
                 'stocks': product.stocks,
                 'price':product.price,
                # 'sync_time': mall_product_id2relation[product['id']].sync_time.strftime('%Y-%m-%d %H:%M') if mall_product_id2relation.has_key(product['id']) else ''
@@ -794,7 +820,13 @@ class Product(resource.Resource):
 
         if has_product_id:
             try:
-                product = models.Product.objects.get(owner=request.manager, id=has_product_id)
+                if mall_type:
+                    if models.ProductPool.objects.filter(woid=request.manager.id, product_id=has_product_id).count() > 0:
+                        product = models.Product.objects.get(id=has_product_id)
+                    else:
+                        product = models.Product.objects.get(owner=request.manager, id=has_product_id)
+                else:
+                    product = models.Product.objects.get(owner=request.manager, id=has_product_id)
             except models.Product.DoesNotExist:
                 return Http404
             products = [product]
@@ -1745,9 +1777,10 @@ class CheckProductHasPromotion(resource.Resource):
         if not buy_in_supplier:
             return create_response(200).get_response()
         if product_id:
-            promotion_relation = promotion_model.ProductHasPromotion.objects.filter(product_id=product_id, promotion__status__in=[promotion_model.PROMOTION_STATUS_STARTED, promotion_model.PROMOTION_STATUS_NOT_START])
+            promotion_relation = promotion_model.ProductHasPromotion.objects.filter(promotion__owner=request.manager, product_id=product_id, promotion__status__in=[promotion_model.PROMOTION_STATUS_STARTED, promotion_model.PROMOTION_STATUS_NOT_START])
             group_records = group_models.Group.objects(product_id=product_id,status__lte=1)
             forbidden_coupon_product_relation = promotion_model.ForbiddenCouponProduct.objects.filter(
+                    owner=ForbiddenCouponProduct,
                     product_id=product_id,
                     status__in=[promotion_model.FORBIDDEN_STATUS_NOT_START, promotion_model.FORBIDDEN_STATUS_STARTED]
                 )
