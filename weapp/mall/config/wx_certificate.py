@@ -12,10 +12,15 @@ from mall import export
 from mall.models import WxCertSettings
 from core.upyun_util import upload_static_file
 from datetime import datetime
+from Crypto.Cipher import AES
+from Crypto import Random
+import os
 
-import os,sys
 
 FIRST_NAV = export.MALL_CONFIG_FIRST_NAV
+SECRET_KEY = b'akoANSpqVzuNBAeVscHB1lQnjNosByMc'
+
+
 class WXCertificate(resource.Resource):
 
     app = "mall2" # 资源所属的app名称
@@ -88,6 +93,13 @@ class WXCertificate(resource.Resource):
         return response.get_response()
 
     @staticmethod
+    def __encrypt(content):
+        iv = Random.new().read(AES.block_size)
+        cipher = AES.new(SECRET_KEY, AES.MODE_CFB, iv)
+        msg = iv + cipher.encrypt(content)
+        return msg
+
+    @staticmethod
     def __save_cert_file( file, owner_id):
         """
         将上传的文件保存在每个resource的upload目录下
@@ -101,23 +113,24 @@ class WXCertificate(resource.Resource):
         if file:
             for chunk in file.chunks():
                 content.append(chunk)
+        content = ''.join(content)
 
         if settings.MODE == 'develop' or settings.MODE == 'test':
             dir_path = os.path.join(curr_dir,'upload','weixin_cert', 'owner_id_test'+owner_id)
         else:
             dir_path = os.path.join(curr_dir,'upload','weixin_cert', 'owner_id'+owner_id)
 
-
         if not os.path.exists(dir_path):
             os.makedirs(dir_path)
         file_path = os.path.join(dir_path, file.name)
 
-        dst_file = open(file_path, 'wb')
-        print >> dst_file, ''.join(content)
-        dst_file.close()
-         # upload_static_file(file_path, upyun_path, check_exist=False):
-        try:
-            up_path = upload_static_file(file_path,"/cert_files/owner_id"+ owner_id +"/"+ file.name,False)
-        except:
-            up_path = upload_static_file(file_path,"/cert_files/owner_id"+ owner_id +"/"+ file.name,False)
-        return file_path,up_path
+        with open(file_path, 'wb') as dst_file:
+            dst_file.write(content)
+            # dst_file.write(WXCertificate.__encrypt(content))
+
+        # if settings.MODE == 'develop' or settings.MODE == 'test':
+        up_path = upload_static_file(file_path, "/cert_files/owner_id" + owner_id +
+                                     "/" + file.name + datetime.now().strftime("%Y-%m-%d-%H-%M-%S-%f"), False)
+        # else:
+        #     up_path = upload_static_file(file_path, "/cert_files/owner_id" + owner_id + "/" + file.name, False)
+        return file_path, up_path
