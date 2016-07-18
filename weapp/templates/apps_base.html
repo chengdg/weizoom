@@ -179,6 +179,7 @@
 
         <!--<script src="http://192.168.2.76:8080/target/target-script-min.js"></script> -->
         <script type="text/javascript">
+						W.onloadHandlers = [];//swipeImage的变量
             var isHideWeixinOptionMenu = {% if is_hide_weixin_option_menu %}true{% else %}false{% endif %};
             W.isAlreadyParticipanted = {% if is_already_participanted %}true{% else %}false{% endif %};
             W.currentPageName = "{{current_page_name}}";
