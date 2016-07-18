@@ -32,6 +32,7 @@ from . import signals as mall_signals
 MALL_CONFIG_PRODUCT_COUNT_NO_LIMIT = 999999999
 MALL_CONFIG_PRODUCT_NORMAL = 7
 
+MAX_DISPLAY_INDEX = 9999
 
 class MallConfig(models.Model):
 	owner = models.ForeignKey(User, related_name='mall_config')
@@ -187,7 +188,7 @@ class Product(models.Model):
 	pic_url = models.CharField(max_length=1024)  # 商品图
 	detail = models.TextField(default='')  # 商品详情
 	remark = models.TextField(default='')  # 备注
-	display_index = models.IntegerField(default=0, blank=True)  # 显示的排序
+	display_index = models.IntegerField(default=MAX_DISPLAY_INDEX, blank=True)  # 显示的排序
 	created_at = models.DateTimeField(auto_now_add=True)  # 添加时间
 	shelve_type = models.IntegerField(
 		default=PRODUCT_SHELVE_TYPE_OFF,
@@ -1141,7 +1142,7 @@ class Product(models.Model):
 class CategoryHasProduct(models.Model):
 	product = models.ForeignKey(Product)
 	category = models.ForeignKey(ProductCategory)
-	display_index = models.IntegerField(default=0, null=True)  # 分组商品排序
+	display_index = models.IntegerField(default=MAX_DISPLAY_INDEX, null=True)  # 分组商品排序
 	created_at = models.DateTimeField(auto_now_add=True)
 
 	def move_to_position(self, pos):

@@ -151,19 +151,19 @@ class ProductList(resource.Resource):
         else:
             products = sorted(products, key=operator.attrgetter('id'))
             products = sorted(products, key=operator.attrgetter(sort_attr))
-        products_is_0 = filter(lambda p: p.display_index == 0, products)
-        products_not_0 = filter(lambda p: p.display_index != 0, products)
-        products_not_0 = sorted(products_not_0, key=operator.attrgetter('display_index'))
+        products_is_max = filter(lambda p: p.display_index == 0, products)
+        products_not_max = filter(lambda p: p.display_index != 0, products)
+        products_not_max = sorted(products_not_max, key=operator.attrgetter('display_index'))
 
         if mall_type:
-            products = utils.weizoom_filter_products(request, products_not_0 + products_is_0)
+            products = utils.weizoom_filter_products(request, products_not_max + products_is_max)
             supplier_type = request.GET.get('orderSupplierType', '')
             if supplier_type == '0':
                 products = filter(lambda p: p.supplier_user_id > 0, products)
             elif supplier_type == '1':
                 products = filter(lambda p: p.supplier > 0, products)
         else:
-            products = utils.filter_products(request, products_not_0 + products_is_0)
+            products = utils.filter_products(request, products_not_max + products_is_max)
 
 
 
@@ -201,6 +201,8 @@ class ProductList(resource.Resource):
         items2 = []
         for product in products:
             product_dict = product.format_to_dict()
+            # 默认排序显示成0
+            product_dict['display_index'] = 0 if product_dict['display_index'] == models.MAX_DISPLAY_INDEX else product_dict['display_index']
             product_dict['is_self'] = (request.manager.id == product.owner_id)
             product_dict['store_name'] = supplier_ids2name[product.supplier] if product.supplier and supplier_ids2name.has_key(product.supplier) else product_id2store_name.get(product.id, "")
             product_dict['sync_time'] = product_id2sync_time.get(product.id, product.created_at.strftime('%Y-%m-%d %H:%M'))
