@@ -16,6 +16,7 @@ import message_memo
 import message_search
 import template_messages_detail
 import keyword_rules_material
+import new_template_messages
 
 urlpatterns = patterns('',
 )

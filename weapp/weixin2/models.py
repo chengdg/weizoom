@@ -714,3 +714,66 @@ class KeywordCount(models.Model):
 		db_table = 'weixin_keyword_count'
 		verbose_name = '关键词统计'
 		verbose_name_plural = '关键词统计'
+
+
+
+
+
+class UserHasTemplateMessages(models.Model):
+	"""
+	商家在公众平台上配置的模板消息
+	"""
+	owner_id = models.IntegerField() #所属商家
+	template_id = models.CharField(max_length=32, unique=True) #模板id
+	title = models.CharField(max_length=256) #模板标题
+	primary_industry = models.CharField(max_length=64) #一级行业
+	deputy_industry = models.CharField(max_length=64) #二级行业
+	content = models.CharField(max_length=2048) #模板内容
+	example = models.CharField(max_length=2048) #模板示例
+
+	class Meta(object):
+		db_table = 'weixin_user_has_templates'
+		verbose_name = '我的模版'
+		verbose_name_plural = '我的模版'
+
+
+#模版用途
+WEIXIN_TEMPLATE_USAGE = {
+	'APPS_RED_PACKET': 0, #百宝箱拼红包
+	'APPS_GROUP_SUCCESS': 1, #百宝箱团购成功
+	'APPS_GROUP_FAIL': 2, #百宝箱团购失败
+
+}
+
+class UserTemplateSettings(models.Model):
+	"""
+	商家各功能所配置的模板消息
+	"""
+	owner_id = models.IntegerField() #所属商家
+	usage = models.IntegerField(max_length=128) #模版用途
+	template_id = models.CharField(max_length=32, unique=True) #模板id
+	first = models.CharField(max_length=1024, default='') #模版开头语
+	remark = models.CharField(max_length=1024, default='') #模版最后的注释
+	status = models.BooleanField(default=False) #配置状态，是否启用
+
+	class Meta(object):
+		db_table = 'weixin_template_settings'
+		verbose_name = '模版设置'
+		verbose_name_plural = '模版设置'
+
+
+class TemplateMessageLogs(models.Model):
+	"""
+	模版消息记录
+	"""
+	owner_id = models.IntegerField() #所属商家
+	usage = models.IntegerField(max_length=128) #模版用途
+	template_id = models.CharField(max_length=32, unique=True) #模板id
+	content = models.TextField() #消息内容
+	status = models.CharField(max_length=64, default='') #状态
+	error_msg = models.CharField(max_length=2048, default='') #错误信息
+
+	class Meta(object):
+		db_table = 'weixin_template_message_logs'
+		verbose_name = '模版消息记录'
+		verbose_name_plural = '模版消息记录'

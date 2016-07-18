@@ -1,0 +1,111 @@
+{% extends "content_base_v2.html" %}
+{% block content-panel %}
+<div class="xui-weixin-template_messagesPage">
+    <div class="relative">
+        <ul class="breadcrumb">
+            <li>您当前所在位置</li>
+            <li><a href="/new_weixin/realtime_messages/">消息互动</a></li>
+            <li class="active">模板消息</li>
+        </ul>
+    </div>
+    <div>
+        使用“更新”功能，保持与公众号平台模版消息的同步
+        <button type="button" class="btn btn-primary xa-sync-template">更新模版</button>
+    </div>
+    <div class="xui-background">
+        {% if has_templates %}
+            <div class="panel-body"></div>
+        {% else %}
+            <div>暂没有配置模版消息</div>
+        {% endif %}
+    </div>
+
+
+</div>
+{% endblock %}
+
+{% block js %}
+{% verbatim %}
+<script id="weixin-template-message-view" type="text/x-jquery-tmpl">
+<table class="table table-condensed mb0 xui-tableHead">
+		<thead>
+			<tr>
+				<th class="tl" width="385"><span style="padding-left:100px">标题</span></th>
+				<th width="140">行业</th>
+				<th width="180">状态</th>
+				<th width="290">操作</th>
+			</tr>
+		</thead>
+        <tbody id = "template_message_list">
+			{{if items.length}}
+	            {{each(i, tmpl) items}}
+	                {{if tmpl.title in using_templates}}
+                        <tr data-template-id="${tmpl.template_id}">
+                            <td class="tl" style="padding-left:100px">
+                                <div>
+                                    ${tmpl.title}
+                                </div>
+                            </td>
+                            <td>
+                                <div class="centerAlign">
+                                ${tmpl.industry_name}
+                                </div>
+                            </td>
+                            <td>
+                                <div class="centerAlign current-status" data-id="${tmpl.template_detail_id}" >
+                                    {{if tmpl.status == '1'}}
+                                        启用
+                                    {{else}}
+                                        未启用
+                                    {{/if}}
+                                </div>
+                            </td>
+                            <td class="tc">
+                                <a class="n-success mt10 w50 mr10"  status="1" value = ${tmpl.template_detail_id} href="/new_weixin/template_messages_detail?template_detail_id=${tmpl.template_detail_id}">编　辑</a>
+                                {{if tmpl.status}}
+                                   <a class="btn btn-danger mt10 w50 mr10 xa-update-status"  status="1" value = ${tmpl.template_detail_id} >停　用</a>
+                                {{else}}
+                                    <a class="btn btn-success mt10 w50 mr10  xa-update-status" status="0"  value = ${tmpl.template_detail_id} >启　用</a>
+                                {{/if}}
+                            </td>
+                        </tr>
+                    {{/if}}
+				{{/each}}
+			{{/if}}
+		</tbody>
+</table>
+
+</script>
+
+{% endverbatim %}
+
+<script type="text/javascript">
+var using_templates = [];
+$(document).ready(function() {
+    //获取模版消息
+    W.resource.new_weixin.NewTemplateMessages.get({
+        data: {},
+        success: function(data){
+            console.log(data);
+            //TODO 渲染模版
+        },
+        error: function(){
+            W.showHint('error', '获取模版消息失败，清重试！');
+        }
+    });
+    //同步模版
+    $('.xa-sync-template').on('click', function(){
+        W.resource.new_weixin.NewTemplateMessages.post({
+            data: {},
+            success: function(data){
+                console.log(data);
+                W.showHint('error', '更新模版成功');
+            },
+            error: function(resp){
+                W.showHint('error', resp.errMsg);
+            }
+        });
+    });
+});
+</script>
+{% endblock %}
