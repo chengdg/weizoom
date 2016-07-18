@@ -1,23 +1,33 @@
 # -*- coding: utf-8 -*-
 import json
+from excel_response import ExcelResponse
+from datetime import datetime
+
 from django.http import HttpResponseRedirect, HttpResponse
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.db.models import F
 from django.contrib.auth.decorators import login_required
+
+from apps import send_task
+
 from core import resource
 from core import paginator
 from core.jsonresponse import create_response
-import models as app_models
-# import export
-from datetime import datetime
+from core import search_util
+
 from mall import export
 from mall import models as mall_models
+
 from export_job.models import ExportJob
-from core import search_util
+
 from modules.member.module_api import get_member_by_id_list, get_member_info_by
 from modules.member.models import Member, MemberHasTag
-from excel_response import ExcelResponse
+from modules.member.integral import increase_member_integral
+from modules.member import models as member_models
+
+import models as app_models
+
 
 FIRST_NAV_NAME = export.PRODUCT_FIRST_NAV
 COUNT_PER_PAGE = 50
@@ -263,8 +273,6 @@ class EvaluateReview(resource.Resource):
 		if "product_review_id" in request.POST:
 			product_review_id = request.POST.get("product_review_id", None)
 			status = request.POST.get("status", None)
-			from modules.member.integral import increase_member_integral
-			from modules.member import models as member_models
 
 			if product_review_id:
 				review = app_models.ProductEvaluates.objects(owner_id=request.webapp_owner_id, id=product_review_id)
@@ -276,7 +284,25 @@ class EvaluateReview(resource.Resource):
 						if settings.review_increase > 0:
 							member = member_models.Member.objects.filter(id=first_review.member_id)
 							if len(member):
+								temp_integral = member[0].integral
 								increase_member_integral(member[0], settings.review_increase, '商品评价奖励')
+								#发送积分变动模版
+								send_task('services.weixin_template_service.task.service_template_message', {
+									'user_id': request.webapp_owner_id,
+									'reason': u'商品评价奖励',
+									'event_type': 7,
+									'member_id': member[0].id,
+									'url': '',
+									'items': {
+										'keyword1': member[0].username_hexstr.decode('hex').decode('utf-8'),
+										'keyword2': datetime.now().strftime(u'%Y年%m月%d日 %H:%M'),
+										'keyword3': settings.review_increase,
+										'keyword4': temp_integral + settings.review_increase,
+										'keyword5': u'商品评价奖励'
+									},
+									'first': u'恭喜您获得积分奖励！',
+									'remark': u'请前往个人中心查看'
+								})
 
 				if status == '2':
 					try:
@@ -310,9 +336,6 @@ class EvaluateReview(resource.Resource):
 			action = request.POST.get("action", '')
 			ids = ids.split(',')
 
-			from modules.member.integral import increase_member_integral
-			from modules.member import models as member_models
-
 			if action == 'pass':
 				try:
 					reviews = app_models.ProductEvaluates.objects(owner_id=request.webapp_owner_id, id__in=ids)
@@ -331,8 +354,26 @@ class EvaluateReview(resource.Resource):
 							id2member = dict((member.id, member) for member in members)
 							for review in reviews:
 								if int(review.status) == 0:
+									temp_integral = id2member[review.member_id].integral
 									increase_member_integral(id2member[review.member_id], settings.review_increase,
 															 '商品评价奖励')
+									#发送积分变动模版
+									send_task('services.weixin_template_service.task.service_template_message', {
+										'user_id': request.webapp_owner_id,
+										'reason': u'商品评价奖励',
+										'event_type': 7,
+										'member_id': id2member[review.member_id].id,
+										'url': '',
+										'items': {
+											'keyword1': id2member[review.member_id].username_hexstr.decode('hex').decode('utf-8'),
+											'keyword2': datetime.now().strftime(u'%Y年%m月%d日 %H:%M'),
+											'keyword3': settings.review_increase,
+											'keyword4': temp_integral + settings.review_increase,
+											'keyword5': u'商品评价奖励'
+										},
+										'first': u'恭喜您获得积分奖励！',
+										'remark': u'请前往个人中心查看'
+									})
 					reviews.update(set__status=app_models.STATUS_PASSED, set__top_time=app_models.DEFAULT_DATETIME)
 					return create_response(200).get_response()
 				except:
