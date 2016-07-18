@@ -75,6 +75,7 @@ class RebateWaitingAction(models.Document):
 	webapp_id = models.StringField(default="", max_length=100)
 	record_id = models.StringField(default="", max_length=100) #对应的活动id
 	member_id = models.LongField(default=0)
+	order_id = models.StringField(default="", max_length=100)  # 对应返利订单的order_id,注意，不是order.id ！！
 
 	meta = {
 		'collection': 'rebate_waiting_action',

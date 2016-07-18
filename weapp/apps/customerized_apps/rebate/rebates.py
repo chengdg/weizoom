@@ -105,7 +105,7 @@ class Rebates(resource.Resource):
 				member_id2partis[member_id][belong_to] = p.created_at
 
 		#统计扫码后成交金额和首次下单数
-		webapp_user_id_belong_to_member_id, id2record, member_id2records, member_id2order_ids, all_orders = rebate_export.get_target_orders(datas)
+		webapp_user_id_belong_to_member_id, id2record, member_id2records, member_id2order_ids, all_orders, member_id2participations = rebate_export.get_target_orders(datas)
 		#除去完成退款的订单
 		all_orders = all_orders.exclude(status=mall_models.ORDER_STATUS_REFUNDED)
 		id2order = {o.order_id: o for o in all_orders}
