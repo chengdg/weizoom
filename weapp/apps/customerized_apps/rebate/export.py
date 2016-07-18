@@ -59,7 +59,7 @@ def handle_rebate_core(all_records=None):
 		all_records = apps_models.Rebate.objects(is_deleted=False,status__ne=apps_models.STATUS_NOT_START)
 
 	#筛选出扫码后已完成的符合要求的订单
-	webapp_user_id_belong_to_member_id, id2record, member_id2records, member_id2order_ids, all_orders = get_target_orders(all_records)
+	webapp_user_id_belong_to_member_id, id2record, member_id2records, member_id2order_ids, all_orders, member_id2participations = get_target_orders(all_records)
 
 	#排除掉已返利发卡的订单
 	order_has_granted = {d.order_id: True for d in apps_models.RebateWeizoomCardDetails.objects(record_id__in=id2record.keys())}
@@ -75,15 +75,18 @@ def handle_rebate_core(all_records=None):
 	all_record_ids = set()
 	for member_id, records in member_id2records.items():
 		target_order_ids = member_id2order_ids.get(member_id, None)
-		if not target_order_ids:
+		cur_member_participations = member_id2participations.get(member_id, None)
+		if not target_order_ids or not cur_member_participations:
 			continue
 		for record in records:
+			record_id = record.id
 			permission = record.permission
 			is_limit_first_buy = record.is_limit_first_buy
 			is_limit_cash = record.is_limit_cash
 			rebate_order_price = record.rebate_order_price
 			start_time = record.start_time
 			end_time = record.end_time
+			participate_time = None
 			for order_id in target_order_ids:
 				target_order = order_id2order[order_id]
 				order_created_time = target_order.created_at
@@ -95,8 +98,12 @@ def handle_rebate_core(all_records=None):
 					continue	#返利活动限制首单且该订单在该活动之前就产生了，不算
 				if order_created_time < start_time or order_created_time > end_time:
 					continue	#不在该返利活动的有效期内，不算
-				#TODO 不在用户扫码时间内的，不算
-
+				for p in cur_member_participations:
+					if record_id == p.belong_to:
+						participate_time = p.created_at  #该活动扫码时间
+						continue
+				if participate_time and order_created_time < participate_time:
+					continue #不在用户扫码时间内的，不算
 				if is_limit_cash and target_order.final_price < rebate_order_price:
 					continue	#返利活动限制现金且该订单没有达到现金值，不算
 				if not is_limit_cash and target_order.product_price < rebate_order_price:
@@ -267,6 +274,7 @@ def get_target_orders(records=None, is_show=None):
 	record_id2partis = {} #各活动的参与人member_id集合
 	member_id2records = {} #每个会员参与的所有活动
 	all_member_ids = set() #所有member_id
+	member_id2participations = {} # 会员与扫码映射
 	for part in all_partis:
 		record_id = part.belong_to
 		tmp_record = id2record[record_id]
@@ -287,6 +295,11 @@ def get_target_orders(records=None, is_show=None):
 		else:
 			member_id2records[member_id].append(tmp_record)
 
+		if not member_id2participations.has_key(member_id):
+			member_id2participations[member_id] = [part]
+		else:
+			member_id2participations[member_id].append(part)
+
 	webapp_user_id_belong_to_member_id = {} #webapp_user_id相关联的member_id
 	all_webapp_user_ids = [] #所有的webapp_user_id
 	for w in member_models.WebAppUser.objects.filter(member_id__in=all_member_ids):
@@ -306,4 +319,4 @@ def get_target_orders(records=None, is_show=None):
 		else:
 			member_id2order_ids[member_id].append(order.order_id)
 
-	return webapp_user_id_belong_to_member_id, id2record, member_id2records, member_id2order_ids, all_orders
+	return webapp_user_id_belong_to_member_id, id2record, member_id2records, member_id2order_ids, all_orders, member_id2participations

@@ -69,7 +69,7 @@ class RebateOrderList(resource.Resource):
 		# 	rebate_participances = app_models.RebateParticipance.objects(belong_to=record_id)
 		# 	member_id2scan_time = {p.member_id: p.created_at for p in rebate_participances}
 
-		webapp_user_id_belong_to_member_id, id2record, member_id2records, member_id2order_ids, all_orders = export.get_target_orders(records, is_show)
+		webapp_user_id_belong_to_member_id, id2record, member_id2records, member_id2order_ids, all_orders, member_id2participations = export.get_target_orders(records, is_show)
 		webapp_user_ids = webapp_user_id_belong_to_member_id.keys()
 
 		params = {'webapp_user_id__in': webapp_user_ids}
