@@ -129,8 +129,8 @@ class WXCertificate(resource.Resource):
             # dst_file.write(WXCertificate.__encrypt(content))
 
         # if settings.MODE == 'develop' or settings.MODE == 'test':
-        up_path = upload_static_file(file_path, "/cert_files/owner_id" + owner_id +
-                                     "/" + file.name + datetime.now().strftime("%Y-%m-%d-%H-%M-%S-%f"), False)
+        up_path = upload_static_file(file_path, "/cert_files/owner_id" + owner_id + "/" +
+                                     datetime.now().strftime("%Y-%m-%d-%H-%M-%S-%f") + "/" + file.name, False)
         # else:
         #     up_path = upload_static_file(file_path, "/cert_files/owner_id" + owner_id + "/" + file.name, False)
         return file_path, up_path
