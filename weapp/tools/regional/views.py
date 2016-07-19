@@ -97,6 +97,7 @@ def get_str_value_by_string_ids(str_ids):
 			return None
 	except:
 		from core.exceptionutil import unicode_full_stack
+		from watchdog.utils import watchdog_fatal, watchdog_error, watchdog_alert
 		msg = {
 			'traceback': unicode_full_stack(),
 			'str_ids': str_ids,
