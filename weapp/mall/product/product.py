@@ -56,11 +56,14 @@ class ProductList(resource.Resource):
         mall_type = request.user_profile.webapp_type
         shelve_type_get = request.GET.get("shelve_type", 1)
         shelve_type = int(shelve_type_get if shelve_type_get.isdigit() else 1)
-        has_product = models.Product.objects.filter(
-            owner=request.manager,
-            shelve_type=shelve_type,
-            is_deleted=False
-        ).exists()
+        if mall_type:
+            has_product = models.Product.objects.belong_to(mall_type, request.manager, shelve_type).count() > 0
+        else:
+            has_product = models.Product.objects.filter(
+                owner=request.manager,
+                shelve_type=shelve_type,
+                is_deleted=False
+            ).exists()
         c = RequestContext(
             request,
             {'first_nav_name': export.PRODUCT_FIRST_NAV,
@@ -108,7 +111,7 @@ class ProductList(resource.Resource):
         if not sort_attr:
             sort_attr = '-display_index'
 
-        
+        print "1>>>>>>>"*10
         #处理商品分类
         product_pool2display_index = {}
         if _type == 'offshelf':
@@ -118,7 +121,7 @@ class ProductList(resource.Resource):
             if mall_type:
                 product_pool = models.ProductPool.objects.filter(woid=request.manager.id, status=models.PP_STATUS_OFF)
                 product_pool2display_index = dict([(pool.product_id, pool.display_index) for pool in product_pool])
-
+            print "2222"*10,products
             # products = models.Product.objects.filter(
             #     owner=request.manager,
             #     shelve_type=models.PRODUCT_SHELVE_TYPE_OFF,

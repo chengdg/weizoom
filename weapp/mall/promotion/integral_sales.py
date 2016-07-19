@@ -11,7 +11,7 @@ from core import resource
 from core.jsonresponse import create_response
 from mall import export
 from mall.promotion import models as promotion_models  # 注意：不要覆盖此module
-from mall.promotion.utils import string_ids2int_ids, verification_multi_product_promotion
+from mall.promotion.utils import string_ids2int_ids, verification_multi_product_promotion, verification_multi_product_promotion_weizoom_mall
 from modules.member.models import MemberGrade, IntegralStrategySttings
 
 
@@ -83,7 +83,7 @@ class IntegralSales(resource.Resource):
         # product_ids = string_ids2int_ids(product_ids)
 
         # 保存时校验商品
-        save_success, error_product_ids = verification_multi_product_promotion(request.manager, product_ids, 'integral_sale')
+        save_success, error_product_ids = verification_multi_product_promotion_weizoom_mall(request.manager, product_ids, 'integral_sale')
         if not save_success:
             response = create_response(200)
             response.data = {

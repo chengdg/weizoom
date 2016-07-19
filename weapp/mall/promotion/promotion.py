@@ -113,6 +113,7 @@ class Promotion(resource.Resource):
 
             # id2promotion = dict([(promotion.id, promotion) for promotion in promotions])
             # promotion_ids = [promotion.id for promotion in promotions]
+            print ">>>>>>>>>>>>>.promotion_ids", promotion_ids
             php = models.ProductHasPromotion.objects.filter(promotion_id__in=promotion_ids)
             for relation in php:
                 product_id = relation.product_id
