@@ -42,7 +42,6 @@
         data-enable-sort="false"
         data-selectable="true"
         data-item-count-per-page="12"
-        data-disable-header-select="true"
         data-outer-selecter='.xa-selectAll'
         class="panel-body"
     ></div>
@@ -62,8 +61,6 @@
                 <th width="100">供货商</th>
                 <th width="55">商品价格</th>
                 <th width="50">库存</th>
-                <th width="80">状态</th>
-                <th width="100">同步时间</th>
                 <th width="90">操作</th>
             </tr>
         </thead>
@@ -99,18 +96,6 @@
                         ${product.price}
                     </td>
                     <td>${product.stocks}</td>
-                    <td>
-                        {{if product.status == 1}}
-                        <span class="cRed">待更新</span>
-                        {{/if}}
-                        {{if product.status == 2}}
-                        <span>未选择</span>
-                        {{/if}}
-                        {{if product.status == 3}}
-                        <span class="cRed">已选择</span>
-                        {{/if}}
-                    </td>
-                    <td class="xui-createdTime">${product.sync_time}</td>
                     <td>
                         <a href="javascript:void(0);" class="xa-offshelf">上架</a>
                        <!--  {{if product.status == 1}}

@@ -435,7 +435,7 @@ class ProductPool(resource.Resource):
     def api_get(request):
         product_name = request.GET.get('name', '')
         supplier_name = request.GET.get('supplier', '')
-        status = request.GET.get('status', '-1')
+        #status = request.GET.get('status', '-1')
 
         # 获取所有供货商的id
         #OLD CODE
@@ -446,23 +446,25 @@ class ProductPool(resource.Resource):
         # if not owner_ids:
         #     return create_response(200).get_response()
 
-
+        manager_user_profile = UserProfile.objects.filter(webapp_type=2)[0]
         product_pool = models.ProductPool.objects.filter(woid=request.manager.id, status=models.PP_STATUS_ON_POOL)
         
         product_ids = [pool.product_id for pool in product_pool]
         products = models.Product.objects.filter(id__in=product_ids)
-        # 筛选供货商
-        #if supplier_name:
 
-            #owner_ids = [profile.user_id for profile in all_mall_userprofiles.filter(store_name__contains=supplier_name)]
 
+
+        if supplier_name:
+            supplier_ids = [s.id for s in models.Supplier.objects.filter(owner_id=manager_user_profile.user_id, name__contains=supplier_name)]
+            if supplier_ids:
+                products = products.filter(supplier__in=supplier_ids)
+            else:
+                products = []
         # 筛选出所有商品
-        # if product_name:
-        #     all_mall_product = models.Product.objects.filter(
-        #         owner__in=owner_ids,
-        #         name__contains=product_name,
-        #         shelve_type=models.PRODUCT_SHELVE_TYPE_ON,
-        #         is_deleted=False)
+        if product_name and products:
+            products = products.filter(name__contains=product_name)
+
+
         # else:
         #     all_mall_product = models.Product.objects.filter(
         #         owner__in=owner_ids,
