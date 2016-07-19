@@ -134,7 +134,7 @@ W.component.appkit.ExSignDescription = W.component.Component.extend({
 			help:"仅能选择限领为“不限”的优惠券",
 			default: []
 		}]},{
-		group:"连续签到",
+		group:"",
 		groupClass:"xui-propertyView-app-SignDynamicGroup",
 		fields:[{
 			name: 'items',//动态组件,那个加好
