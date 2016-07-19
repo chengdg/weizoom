@@ -444,7 +444,7 @@
                     {% endfor %}
                 </ul>
               </div>
-              {% if has_store_name or product.is_group_buying%}
+              {% if has_store_name or product.is_group_buying or pool_mall_type%}
               {% else %}
               <div class="xa-instantProperties">
                 <a href="javascript:void(0);" class="xa-addProperty xui-i-propertyName xui-propertyNameBtn pb15" style="display:block;margin-left:10px;width:55px;">+添加</a>

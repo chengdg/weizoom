@@ -828,7 +828,10 @@ class Product(resource.Resource):
             try:
                 if mall_type:
                     if models.ProductPool.objects.filter(woid=request.manager.id, product_id=has_product_id).count() > 0:
+                        #商品池中的商品状态不在Product中，在ProductPool中
+                        shelve_type = models.ProductPool.objects.filter(woid=request.manager.id, product_id=has_product_id)[0].status
                         product = models.Product.objects.get(id=has_product_id)
+                        product.shelve_type = shelve_type
                         pool_mall_type = True
                     else:
                         product = models.Product.objects.get(owner=request.manager, id=has_product_id)
@@ -1133,7 +1136,6 @@ class Product(resource.Resource):
         if mall_type:
             if models.ProductPool.objects.filter(product_id=product_id, woid=woid).count()>0:
                 # 减少原category的product_count
-                print "ok"*100
                 _update_product_category(request,product_id)
                 source = int(request.GET.get('shelve_type', 0))
                 if source == models.PRODUCT_SHELVE_TYPE_OFF:
