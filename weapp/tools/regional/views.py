@@ -105,6 +105,7 @@ def get_str_value_by_string_ids(str_ids):
 		}
 
 		watchdog_alert(msg)
+		return ''
 
 
 def get_str_value_by_string_ids_(str_ids):
