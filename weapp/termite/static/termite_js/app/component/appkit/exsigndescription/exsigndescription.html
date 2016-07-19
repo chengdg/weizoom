@@ -3,11 +3,11 @@
 {% ifequal component.type 'appkit.exsigndescription' %}
 
     <style>
-        .Chr, p {
+        .Chr, p:not(.wui-description p){
             font-family: STHeiti;
         }
-				.wui-description p,.wui-ExSignRules li{
-					font-family: "微软雅黑";
+				.wui-description p span,.wui-ExSignRules li{
+					font-family: "微软雅黑","Microsoft YaHei";
 				}
 
         .Chr.Num{
