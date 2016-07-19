@@ -19,7 +19,7 @@
         height: 15px;
         background-color: #ffffff;
         margin: 0;
-        margin-right: 10px;
+        margin-right: 10px;                 
     }
     .template_edit{
         margin-left: 210px;
@@ -55,7 +55,7 @@
         height: 28px;
         line-height: 28px;
         padding-left: 6px;
-        color: #666666;
+        color: #666666;  
     }
     .template_edit_detail{
         border-top: #f5f5f5 solid 1px;
@@ -158,61 +158,62 @@
 {% endverbatim %}
 
 <script type="text/javascript">
-var using_templates = ["领取奖金提醒"];
+var using_templates = [];
 var items;
-$(document).ready(function() {1
-    //自定义模板
-    Handlebars.registerHelper('compare', function(a,b,options) {   
-        if(a == b) {
-            return options.fn(this);
-        } else {
-            return options.inverse(this);
+//自定义模板
+Handlebars.registerHelper('compare', function(a,b,options) {   
+    if(a == b) {
+        return options.fn(this);
+    } else {
+        return options.inverse(this);
+    }
+});
+Handlebars.registerHelper('if_in', function(title,options) {   
+    var flag = 0;
+    for(var i=0;i<using_templates.length;i++){
+        if(using_templates[i] == title){        
+            flag += 1;
         }
-    });
-    Handlebars.registerHelper('if_in', function(title,options) {   
-        var flag = 0;
-        for(var i=0;i<using_templates.length;i++){
-            if(using_templates[i] == title){        
-                flag += 1;
-            }
-        }
-        if(flag > 0) {
-            return options.fn(this);
-        } else {
-            return options.inverse(this);
-        }
-    });
-    Handlebars.registerHelper('list', function(item_message, options) {
-        var out = '<ul>';
-        for(var i=0, l=item_message.length; i<l; i++) {
-            var message = item_message[i].split('：');
-            out = out + '<li>' + message[0] + '：' + '<span>' + message[1] + '</span>' + '</li>';
-        }
-        return out + '</ul>';
-    });
+    }
+    if(flag > 0) {
+        return options.fn(this);
+    } else {
+        return options.inverse(this);
+    }
+});
+Handlebars.registerHelper('list', function(item_message, options) {
+    var out = '<ul>';
+    for(var i=0, l=item_message.length; i<l; i++) {
+        var message = item_message[i].split('：');
+        out = out + '<li>' + message[0] + '：' + '<span>' + message[1] + '</span>' + '</li>';
+    }
+    return out + '</ul>';
+});
 
+$(document).ready(function(){
     //获取模版消息
     W.resource.new_weixin.NewTemplateMessages.get({
         data: {},
         success: function(data){
             console.log(data);
-            //TODO 渲染模版
             items = data.items;
+            renderList();
         },
         error: function(){
             W.showHint('error', '获取模版消息失败，清重试！');
         }
     });
-
-    //渲染模板列表
-    var context = {
-        items: items,
-        using_templates: using_templates
-    };
-    var source = $('#weixin-template-message-view').html();
-    var template = Handlebars.compile(source);  
-    var html = template(context);
-    $('.panel-body').html(html);
+    
+    // items = [{
+    //             'status': 'False',
+    //             'first': '',
+    //             'remark': '',
+    //             'industry_name': "IT科技",
+    //             'title': "领取奖金提醒",
+    //             'template_id': "iPk5sOIt5X_flOVKn5GrTFpncEYTojx6ddbt8WYoV5s",
+    //             'example': "您已提交领奖申请\n\n领奖金额：xxxx元\n领奖时间：2013-10-10 12:22:22\n银行信息：xx银行(尾号xxxx)\n到账时间：预计xxxxxxx\n\n预计将于xxxx到达您的银行卡"
+    //         }]
+    // renderList();
 
     //同步模版
     $('.xa-sync-template').on('click', function(){
@@ -299,6 +300,17 @@ $(document).ready(function() {1
                 items[i].remark = cur_remark;
             }
         }
+    }
+
+    function renderList(){
+        var context = {
+            items: items,
+            using_templates: using_templates
+        };
+        var source = $('#weixin-template-message-view').html();
+        var template = Handlebars.compile(source);  
+        var html = template(context);
+        $('.panel-body').html(html);
     }
 });
 </script>
