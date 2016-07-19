@@ -332,7 +332,7 @@ class RebateUpload(resource.Resource):
 		if upload_file:
 			try:
 				now = datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
-				upload_file.name = now + 'rebate_file'
+				upload_file.name = now + upload_file.name
 				file_path = RebateUpload.__save_file(upload_file, owner_id)
 			except Exception, e:
 				print(e)
