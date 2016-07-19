@@ -12,7 +12,7 @@ Feature: 增加会员分组
 		2、新增会员和调整没有分组的会员，默认进入"未分组"
 	"""
 
-@mall2 @member @meberGroup   @member.tag @member.add_tag
+@mall2 @member @meberGroup   @member.tag @member.add_tag @rocky_post
 Scenario:1 添加会员分组
 	Jobs添加多组"会员分组"后，"会员分组列表"会按照添加的顺序正序排列
 

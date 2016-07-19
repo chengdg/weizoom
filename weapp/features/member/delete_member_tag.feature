@@ -24,7 +24,7 @@ Background:
 		}
 		"""
 
-@mall2 @member @meberGroup   @member.tag @member.delete_tag
+@mall2 @member @meberGroup   @member.tag @member.delete_tag  @rocky_delete
 Scenario:1 Jobs删除已存在的会员分组
 	#数组中保留的是删除后保留的分组，并不是要删除的分组
 	When jobs删除会员分组

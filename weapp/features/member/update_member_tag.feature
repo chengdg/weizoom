@@ -24,15 +24,15 @@ Background:
 		}	
 		"""
 
-@mall2 @member @meberGroup   @member.tag @member.update_tag
+@mall2 @member @meberGroup   @member.tag @member.update_tag @rocky_update
 Scenario:1 Jobs更新已存在的会员分组
 	When jobs更新会员分组
 		"""
 		{
 			"tag_id_0": "未分组",
 			"tag_id_1": "分组1*",
-			"tag_id_2": "分组2",
-			"tag_id_3": "分组3"
+			"tag_id_2": "分组2*",
+			"tag_id_3": "分组3*"
 		}	
 		"""
 	Then jobs能获取会员分组列表
@@ -42,9 +42,9 @@ Scenario:1 Jobs更新已存在的会员分组
 		},{
 			"name": "分组1*"
 		},{
-			"name": "分组2"
+			"name": "分组2*"
 		},{
-			"name": "分组3"
+			"name": "分组3*"
 		}]
 		"""
 
