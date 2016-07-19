@@ -139,7 +139,7 @@
 						<input
 							type="checkbox"
 							value="{{ category.id }}"
-							class="xa-product_category  mr20"
+							class="xa-product_category {% if pool_mall_type %} xa-weshop {% endif %}mr20"
 							{% ifequal category.is_selected 1 %}checked="checked"{% endifequal %}
 						/>
 						{{ category.name }}
@@ -473,8 +473,8 @@
 			<div class="ml100">
 				<div class="xui-fontGary" style="line-height:48px;">创建好的商品会显示在待售列表中，需要您手动上架销售。</div>
 				<div>
-                    {% if request.manager.id == product.owner.id or not product %}
-					<input type="button" class="xa-submit btn btn-primary mr40" id="submitBtn" value="保存" />
+                    {% if request.manager.id == product.owner.id or not product or pool_mall_type %}
+					<input type="button" class="xa-submit xa-weshop btn btn-primary mr40" id="submitBtn" value="保存" />
 					{% else %}
 					{% if request.GET.source == 'onshelf' %}
 					<input type="button" onclick="history.go(-1)" class="btn btn-primary mr40 xa-weshop" value="返回" />

@@ -823,11 +823,13 @@ class Product(resource.Resource):
         has_store_name = False
         store_name = ''
 
+        pool_mall_type = False
         if has_product_id:
             try:
                 if mall_type:
                     if models.ProductPool.objects.filter(woid=request.manager.id, product_id=has_product_id).count() > 0:
                         product = models.Product.objects.get(id=has_product_id)
+                        pool_mall_type = True
                     else:
                         product = models.Product.objects.get(owner=request.manager, id=has_product_id)
                 else:
@@ -927,7 +929,8 @@ class Product(resource.Resource):
             'is_bill': is_bill,
             'mall_type': mall_type,
             'has_store_name': has_store_name,
-            'store_name': store_name
+            'store_name': store_name,
+            'pool_mall_type': pool_mall_type
         })
         if _type == models.PRODUCT_INTEGRAL_TYPE:
             return render_to_response('mall/editor/edit_integral_product.html', c)
