@@ -772,6 +772,8 @@ class TemplateMessageLogs(models.Model):
 	content = models.TextField() #消息内容
 	status = models.CharField(max_length=64, default='') #状态
 	error_msg = models.CharField(max_length=2048, default='') #错误信息
+	resp_msgid = models.CharField(max_length=128, default='') #发送的消息id
+	created_at = models.DateTimeField(auto_now_add=True)
 
 	class Meta(object):
 		db_table = 'weixin_template_message_logs'
