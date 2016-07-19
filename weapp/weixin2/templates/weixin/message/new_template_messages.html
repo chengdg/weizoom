@@ -33,7 +33,7 @@
     }
     .template_edit_panel{
         display: none;
-        width: 322px;
+        width: 320px;
         background: url(/static_v2/img/editor/weixin_bg.png) top no-repeat;
         padding: 70px 15px 15px;
     }
@@ -73,7 +73,10 @@
         font-size: 16px;
         font-style: normal;
     }
-    .edit_item span{
+    .template_edit_content ul li{
+        margin-bottom: 5px; 
+    }
+    .template_edit_content ul li span{
         color: #1c69bb;
     }
     .template_commit{
@@ -128,13 +131,13 @@
     <div id = "template_message_list">
         {{#if items.length}}
             {{#each items}}
-                {{#if title}}
+                {{#if_in title}}
                     <div class="template_message_item">
-                        <input type="checkbox" name="control" class="template_control" {{#if status}}checked{{/if}} data-template-id="{{template_id}}" data-status = "{{status}}">
+                        <input type="checkbox" name="control" class="template_control" {{#compare status 'True'}}checked{{/compare}} data-template-id="{{template_id}}" data-status = "{{status}}">
                         <span>{{title}}（行业：{{industry_name}}，模板库编号：TM00398）</span>
                         <a href="javascript:void(0)" class="template_edit" title="编辑" data-template-id="{{template_id}}">编辑</a>
                     </div>
-                {{/if}}
+                {{/if_in}}
             {{/each}}
         {{/if}}
     </div>
@@ -145,9 +148,7 @@
         <h2>{{item_title}}</h2>
         <div class="cl6 mt5 mb5">7月11日</div>
         <input type="text" name="first" class="template_edit_first mb10" value={{#if item_first}}"{{item_first}}"{{/if}}></input>
-        {{#each item_message_arr}}
-        <p class="template_edit_name mb5 edit_item">{{this}}</p>
-        {{/each}}
+        {{#list item_message_arr}}{{/list}}
         <input type="text" name="remark" class="mt5 template_edit_remark" value={{#if item_remark}}"{{item_remark}}"{{/if}}></input>   
         <div class="template_edit_detail">
             详情<i>></i>
@@ -157,45 +158,53 @@
 {% endverbatim %}
 
 <script type="text/javascript">
-var using_templates = [];
-$(document).ready(function() {
-    //获取模版消息
-    // W.resource.new_weixin.NewTemplateMessages.get({
-    //     data: {},
-    //     success: function(data){
-    //         console.log(data);
-    //         //TODO 渲染模版
-    //     },
-    //     error: function(){
-    //         W.showHint('error', '获取模版消息失败，清重试！');
-    //     }
-    // });
-    var items = [{
-        'status': true,
-        'first': '',
-        'remark': '',
-        'industry_name': "IT科技",
-        'title': "领取奖金提醒1",
-        'template_id': "13215465",
-        'example': "您已提交领奖申请\n\n领奖金额：xxxx元\n领奖时间：2013-10-10 12:22:22\n银行信息：xx银行(尾号xxxx)\n到账时间：预计xxxxxxx\n\n预计将于xxxx到达您的银行卡"
-    },{
-        'status': false,
-        'first': '',
-        'remark': '',
-        'industry_name': "IT科技",
-        'title': "领取奖金提醒2",
-        'template_id': "23215465",
-        'example': "您已提交领奖申请\n\n领奖金额：xxxx元\n领奖时间：2013-10-10 12:22:22\n银行信息：xx银行(尾号xxxx)\n到账时间：预计xxxxxxx\n\n预计将于xxxx到达您的银行卡"
-    },{
-        'status': false,
-        'first': '',
-        'remark': '',
-        'industry_name': "IT科技",
-        'title': "领取奖金提醒3",
-        'template_id': "43215465",
-        'example': "您已提交领奖申请\n\n领奖金额：xxxx元\n领奖时间：2013-10-10 12:22:22\n银行信息：xx银行(尾号xxxx)\n到账时间：预计xxxxxxx\n\n预计将于xxxx到达您的银行卡"
-    }];
+var using_templates = ["领取奖金提醒"];
+var items;
+$(document).ready(function() {1
+    //自定义模板
+    Handlebars.registerHelper('compare', function(a,b,options) {   
+        if(a == b) {
+            return options.fn(this);
+        } else {
+            return options.inverse(this);
+        }
+    });
+    Handlebars.registerHelper('if_in', function(title,options) {   
+        var flag = 0;
+        for(var i=0;i<using_templates.length;i++){
+            if(using_templates[i] == title){        
+                flag += 1;
+            }
+        }
+        if(flag > 0) {
+            return options.fn(this);
+        } else {
+            return options.inverse(this);
+        }
+    });
+    Handlebars.registerHelper('list', function(item_message, options) {
+        var out = '<ul>';
+        for(var i=0, l=item_message.length; i<l; i++) {
+            var message = item_message[i].split('：');
+            out = out + '<li>' + message[0] + '：' + '<span>' + message[1] + '</span>' + '</li>';
+        }
+        return out + '</ul>';
+    });
 
+    //获取模版消息
+    W.resource.new_weixin.NewTemplateMessages.get({
+        data: {},
+        success: function(data){
+            console.log(data);
+            //TODO 渲染模版
+            items = data.items;
+        },
+        error: function(){
+            W.showHint('error', '获取模版消息失败，清重试！');
+        }
+    });
+
+    //渲染模板列表
     var context = {
         items: items,
         using_templates: using_templates
@@ -222,15 +231,7 @@ $(document).ready(function() {
     //编辑
     $('body').delegate('.template_edit','click',function(){
         if($('.template_edit_content').length != 0){
-            var template_id = $('.template_edit_content').attr('data-template-id');
-            var cur_first = $('.template_edit_content').find('.template_edit_first').val();
-            var cur_remark = $('.template_edit_content').find('.template_edit_remark').val();
-            for(var i=0;i<items.length;i++){
-                if(items[i]['template_id'] == template_id){
-                    items[i].first = cur_first;
-                    items[i].remark = cur_remark;
-                }
-            }
+            saveData();
         }
         var template_id = $(this).attr('data-template-id');
         var item = items.filter(function(e){
@@ -250,26 +251,45 @@ $(document).ready(function() {
         $('.template_edit_panel').html(html).show();
     });
 
+    //更改状态
     $('body').delegate('.template_control','click',function(){
         var template_id = $(this).attr('data-template-id');
-        if( $(this).attr('data-status') == 'true'){
-            $(this).attr('data-status','false');
+        if( $(this).attr('data-status') == 'True'){
+            $(this).attr('data-status','False');
             for(var i=0;i<items.length;i++){
                 if(items[i]['template_id'] == template_id){;
-                    items[i]['status'] = 'false';
+                    items[i]['status'] = 'False';
                 }
             }          
         }else{
-            $(this).attr('data-status','true'); 
+            $(this).attr('data-status','True'); 
             for(var j=0;j<items.length;j++){
                 if(items[j]['template_id'] == template_id){
-                    items[j]['status'] = 'true';
+                    items[j]['status'] = 'True';
                 }
             }           
         }
     });
 
+    //保存
     $('.template_commit').click(function(){
+        saveData();    
+        console.log(items);    
+        W.getApi().call({
+            app: 'new_weixin',
+            resource: 'new_template_messages',
+            method: 'post',
+            args: items,
+            success: function(data){
+                W.showHint('success', '保存成功');
+            },
+            error: function(resp){
+                W.showHint('error','保存失败')
+            }
+        });        
+    });
+
+    function saveData(){
         var template_id = $('.template_edit_content').attr('data-template-id');
         var cur_first = $('.template_edit_content').find('.template_edit_first').val();
         var cur_remark = $('.template_edit_content').find('.template_edit_remark').val();
@@ -279,11 +299,7 @@ $(document).ready(function() {
                 items[i].remark = cur_remark;
             }
         }
-
-        W.getApi().call({
-            //TODO
-        });        
-    });
+    }
 });
 </script>
 {% endblock %}
