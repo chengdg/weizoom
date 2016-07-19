@@ -32,7 +32,7 @@ W.component.appkit.ExSignDescription = W.component.Component.extend({
 			default: ''
 		},{
 			name: 'description',
-			type: 'textarea',
+			type: 'rich_text',
 			displayName: '签到说明',
 			maxLength: 200,
 			isUserProperty: true,

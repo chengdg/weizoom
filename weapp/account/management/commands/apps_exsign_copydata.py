@@ -13,7 +13,7 @@ class Command(BaseCommand):
 	def handle(self, **options):
 		"""
 		"""
-		user = User.objects.filter(username='jobs')
+		user = User.objects.filter(username='weshop')
 		if user.count() > 0:
 			user = user[0]
 			sign = sign_models.Sign.objects(owner_id=user.id)
@@ -39,7 +39,8 @@ class Command(BaseCommand):
 						serial_count=participance.serial_count,
 						top_serial_count=participance.top_serial_count,
 					))
-				exsign_models.exSignParticipance.objects.insert(exsignParticipance_list)
+				if exsignParticipance_list:
+					exsign_models.exSignParticipance.objects.insert(exsignParticipance_list)
 
 				signdetails = sign_models.SignDetails.objects(belong_to=str(sign[0].id))
 				exsigndetails_list = []
@@ -57,7 +58,8 @@ class Command(BaseCommand):
 						prize=detail.prize,
 						type=detail.type
 					))
-				exsign_models.exSignDetails.objects.insert(exsigndetails_list)
+				if exsigndetails_list:
+					exsign_models.exSignDetails.objects.insert(exsigndetails_list)
 
 				logs = ConsumeCouponLog.objects(user_id=user.id, app_name=u'sign', app_id=str(sign[0].id))
 				coupon_logs = []
@@ -71,6 +73,7 @@ class Command(BaseCommand):
 						coupon_msg=log.coupon_msg,
 						created_at=log.created_at,
 					))
-				ConsumeCouponLog.objects.insert(coupon_logs)
+				if coupon_logs:
+					ConsumeCouponLog.objects.insert(coupon_logs)
 		else:
 			print u"没有weshop帐号"
