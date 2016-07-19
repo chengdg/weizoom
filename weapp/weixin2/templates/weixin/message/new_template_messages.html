@@ -22,7 +22,7 @@
         margin-right: 10px;                 
     }
     .template_edit{
-        margin-left: 210px;
+        margin-left: 350px;
     }
     .template_edit_container{
         position: absolute;
@@ -128,13 +128,13 @@
 {% block js %}
 {% verbatim %}
 <script id="weixin-template-message-view" type="text/x-handlebar-tmpl">
-    <div id = "template_message_list">
+    <div id="template_message_list">
         {{#if items.length}}
             {{#each items}}
                 {{#if_in title}}
                     <div class="template_message_item">
-                        <input type="checkbox" name="control" class="template_control" {{#compare status 'True'}}checked{{/compare}} data-template-id="{{template_id}}" data-status = "{{status}}">
-                        <span>{{title}}（行业：{{industry_name}}，模板库编号：TM00398）</span>
+                        <input type="checkbox" name="control" class="template_control" {{#ifequal status 'True'}}checked{{/ifequal}} data-template-id="{{template_id}}" data-status = "{{status}}">
+                        <span>{{title}}（行业：{{industry_name}}）</span>
                         <a href="javascript:void(0)" class="template_edit" title="编辑" data-template-id="{{template_id}}">编辑</a>
                     </div>
                 {{/if_in}}
@@ -158,38 +158,8 @@
 {% endverbatim %}
 
 <script type="text/javascript">
-var using_templates = [];
+var using_templates = ["领取奖金提醒"];
 var items;
-//自定义模板
-Handlebars.registerHelper('compare', function(a,b,options) {   
-    if(a == b) {
-        return options.fn(this);
-    } else {
-        return options.inverse(this);
-    }
-});
-Handlebars.registerHelper('if_in', function(title,options) {   
-    var flag = 0;
-    for(var i=0;i<using_templates.length;i++){
-        if(using_templates[i] == title){        
-            flag += 1;
-        }
-    }
-    if(flag > 0) {
-        return options.fn(this);
-    } else {
-        return options.inverse(this);
-    }
-});
-Handlebars.registerHelper('list', function(item_message, options) {
-    var out = '<ul>';
-    for(var i=0, l=item_message.length; i<l; i++) {
-        var message = item_message[i].split('：');
-        out = out + '<li>' + message[0] + '：' + '<span>' + message[1] + '</span>' + '</li>';
-    }
-    return out + '</ul>';
-});
-
 $(document).ready(function(){
     //获取模版消息
     W.resource.new_weixin.NewTemplateMessages.get({
@@ -203,7 +173,7 @@ $(document).ready(function(){
             W.showHint('error', '获取模版消息失败，清重试！');
         }
     });
-    
+
     // items = [{
     //             'status': 'False',
     //             'first': '',

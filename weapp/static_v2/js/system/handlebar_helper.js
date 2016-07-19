@@ -49,3 +49,26 @@ Handlebars.registerHelper('updateContext', function (obj, options) {
     }
     return options.fn(this);
 });
+
+Handlebars.registerHelper('if_in', function(title,options) {   
+    var flag = 0;
+    for(var i=0;i<using_templates.length;i++){
+        if(using_templates[i] == title){        
+            flag += 1;
+        }
+    }
+    if(flag > 0) {
+        return options.fn(this);
+    } else {
+        return options.inverse(this);
+    }
+});
+
+Handlebars.registerHelper('list', function(item_message, options) {
+    var out = '<ul>';
+    for(var i=0, l=item_message.length; i<l; i++) {
+        var message = item_message[i].split('：');
+        out = out + '<li>' + message[0] + '：' + '<span>' + message[1] + '</span>' + '</li>';
+    }
+    return out + '</ul>';
+});
