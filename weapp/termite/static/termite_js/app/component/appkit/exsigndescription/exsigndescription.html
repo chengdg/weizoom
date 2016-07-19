@@ -328,7 +328,7 @@
 			<img src="/termite_static/img/component/exsign/exsigndescription_rules_top.png" />
 		</div>
 		<ul class="Chr wui-ExSignRules wa-exsign-rules">
-				<li class="wui-description" {% if not component.model.description %}style="display: none"{% endif %}>{{component.model.description}}</li>
+				<li class="wui-description" {% if not component.model.description %}style="display: none"{% endif %}>{{component.model.description | safe}}</li>
 				<li class="wui-rules"><div>签到次数和对应奖品关系如下：</div>
 					<div class="wui-rules-daily">
 						<div class="fl">每日签到：</div>
