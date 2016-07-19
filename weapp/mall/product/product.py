@@ -1127,6 +1127,27 @@ class Product(resource.Resource):
         """
 
         # 获取默认运费
+        mall_type = request.user_profile.webapp_type
+        woid = request.webapp_owner_id
+        product_id = request.GET.get('id')
+        if mall_type:
+            if models.ProductPool.objects.filter(product_id=product_id, woid=woid).count()>0:
+                # 减少原category的product_count
+                print "ok"*100
+                _update_product_category(request,product_id)
+                source = int(request.GET.get('shelve_type', 0))
+                if source == models.PRODUCT_SHELVE_TYPE_OFF:
+                    url = '/mall2/product_list/?shelve_type=%d' % (models.PRODUCT_SHELVE_TYPE_OFF, )
+                    return HttpResponseRedirect(url)
+                elif source == models.PRODUCT_SHELVE_TYPE_ON:
+                    url = '/mall2/product_list/?shelve_type=%d' % (models.PRODUCT_SHELVE_TYPE_ON, )
+                    return HttpResponseRedirect(url)
+                else:
+                    url = '/mall2/product_list/?shelve_type=%d' % (models.PRODUCT_SHELVE_TYPE_RECYCLED, )
+                    return HttpResponseRedirect(url)
+
+
+
         swipe_images = request.POST.get('swipe_images', '[]')
         if not swipe_images:
             url = '/mall2/product_list/?shelve_type=%d' % int(request.GET.get('shelve_type', 0))
@@ -1135,11 +1156,7 @@ class Product(resource.Resource):
             swipe_images = json.loads(swipe_images)
         thumbnails_url = swipe_images[0]["url"]
 
-        product_id = request.GET.get('id')
-
         #添加团购活动判断:非自营\团购\标准规格
-        mall_type = request.user_profile.webapp_type
-        woid = request.webapp_owner_id
         if mall_type == 0:
             is_group_buying = product_is_group(product_id, woid)
         else:
@@ -1325,33 +1342,7 @@ class Product(resource.Resource):
                 id__in=property_ids_to_be_delete).delete()
 
             # 减少原category的product_count
-            user_category_ids = [
-                category.id for category in models.ProductCategory.objects.filter(
-                    owner=request.manager)]
-            old_category_ids = set([relation.category_id for relation in models.CategoryHasProduct.objects.filter(
-                category_id__in=user_category_ids, product_id=product_id)])
-            catetories_ids = request.POST.get('product_category', -1).split(',')
-
-            for category_id in catetories_ids:
-                if not category_id.isdigit():
-                    continue
-                category_id = int(category_id)
-                if category_id in old_category_ids:
-                    old_category_ids.remove(category_id)
-                else:
-                    models.CategoryHasProduct.objects.create(
-                        category_id=category_id, product_id=product_id)
-                    models.ProductCategory.objects.filter(
-                        id=category_id
-                    ).update(product_count=F('product_count') + 1)
-            if len(old_category_ids) > 0:
-                # 存在被删除的ctegory关系，删除该关系
-                models.CategoryHasProduct.objects.filter(
-                    category_id__in=old_category_ids, product_id=product_id
-                ).delete()
-                models.ProductCategory.objects.filter(
-                    id__in=old_category_ids
-                ).update(product_count=F('product_count') - 1)
+            _update_product_category(request,product_id)
 
             # 更新product
             postage_type = request.POST['postage_type']
@@ -1429,6 +1420,36 @@ class Product(resource.Resource):
         else:
             url = '/mall2/product_list/?shelve_type=%d' % (models.PRODUCT_SHELVE_TYPE_RECYCLED, )
             return HttpResponseRedirect(url)
+
+def _update_product_category(request,product_id):
+    user_category_ids = [
+        category.id for category in models.ProductCategory.objects.filter(
+            owner=request.manager)]
+    old_category_ids = set([relation.category_id for relation in models.CategoryHasProduct.objects.filter(
+        category_id__in=user_category_ids, product_id=product_id)])
+    catetories_ids = request.POST.get('product_category', -1).split(',')
+
+    for category_id in catetories_ids:
+        if not category_id.isdigit():
+            continue
+        category_id = int(category_id)
+        if category_id in old_category_ids:
+            old_category_ids.remove(category_id)
+        else:
+            models.CategoryHasProduct.objects.create(
+                category_id=category_id, product_id=product_id)
+            models.ProductCategory.objects.filter(
+                id=category_id
+            ).update(product_count=F('product_count') + 1)
+    if len(old_category_ids) > 0:
+        # 存在被删除的ctegory关系，删除该关系
+        models.CategoryHasProduct.objects.filter(
+            category_id__in=old_category_ids, product_id=product_id
+        ).delete()
+        models.ProductCategory.objects.filter(
+            id__in=old_category_ids
+        ).update(product_count=F('product_count') - 1)
+
 
 class ProductPos(resource.Resource):
     app = 'mall2'

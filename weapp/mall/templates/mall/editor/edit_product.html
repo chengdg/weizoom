@@ -263,7 +263,7 @@
 			<div class="form-group">
 				<label class="control-label col-sm-2 col-sm-offset-1 star_show">运费设置：</label>
 				<div id="freight"  class="col-sm-9">
-				{% if request.manager.id == product.owner.id or not product %}
+				{% if request.manager.id == product.owner.id or not product or pool_mall_type%}
 					{% if product.is_group_buying %}
 					<input type="hidden" name="postage_type"
 						value="{% if postage_config_info.is_use_system_postage_config %}custom_postage_type{% else %}unified_postage_type{% endif %}"/>
@@ -305,7 +305,7 @@
 			<div class="form-group">
 				<label class="control-label col-sm-2 col-sm-offset-1 star_show">支付方式：</label>
 				<div id="pay-method" class="col-sm-9" data-validate='require-custom-function' data-validate-function='validatePay'>
-				{% if request.manager.id == product.owner.id or not product %}
+				{% if request.manager.id == product.owner.id or not product or pool_mall_type%}
 					<label class="checkbox xa-pay-method" >
                     {% if pay_interface_config.online_pay_interfaces %}
 	             		<input type='checkbox' id='is_enable_online_pay_interface'
@@ -478,9 +478,9 @@
 					{% else %}
 					{% if request.GET.source == 'onshelf' %}
 					<input type="button" onclick="history.go(-1)" class="btn btn-primary mr40 xa-weshop" value="返回" />
-					<!-- {% else %}
+					{% else %}
 					<input type="button" class="btn btn-primary mr40 xa-check xa-weshop" value="审核上架" />
-					{% endif %} -->
+					{% endif %}
 					{% endif %}
 					<!--
 					<input type="button" class="btn btn-success" value="预览" />
@@ -553,7 +553,7 @@ $('.xa-freight').on('click', function(e){
     }
 
 });
-{% if request.manager.id != product.owner.id and product %}
+{% if request.manager.id != product.owner.id and product and not pool_mall_type%}
 $('.xa-check').on('click', function(){
 	W.getApi().call({
         method: 'post',
@@ -573,6 +573,11 @@ $('.xa-check').on('click', function(){
 setTimeout(function(){$('input').not('.xa-weshop').attr('disabled','1');}, 500)
 $('.xa-addProperty').click(function(){return false;})
 $('.xa-selectImage').click(function(){return false;})
+{% endif %}
+{% if request.manager.id != product.owner.id and product and pool_mall_type%}
+setTimeout(function(){
+	$('input').not('.xa-weshop').not('[type="hidden"]').attr('disabled','1');
+}, 500)
 {% endif %}
 </script>
 <!--   / 运费验证实现    -->
