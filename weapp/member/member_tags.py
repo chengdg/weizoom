@@ -156,64 +156,6 @@ class MemberTags(resource.Resource):
                 'member_tag_ids': ','.join([str(id) for id in delete_ids]),
             }
         })
-        # members = [m.member for m in MemberHasTag.objects.filter(member_tag_id__in=delete_ids)]
-        # MemberTag.objects.filter(id__in=delete_ids).delete()
-        # for m in members:
-        #     if MemberHasTag.objects.filter(member=m).count() == 0:
-        #         MemberHasTag.objects.create(member=m, member_tag_id=default_tag_id)
-
-        #########################################################
-        # 数据库有的
-        # member_tag_ids = [member_tag.id for member_tag in member_tags]
-        # id_values = {}  # post传入的
-
-        # tags_dict = request.POST.dict()
-        # if tags_dict.has_key('timestamp'):
-        #     tags_dict.pop('timestamp')
-        # if tags_dict.has_key('_ids'):
-        #     tags_dict.pop('_ids')
-        # for key, value in tags_dict.items():
-        #     id = key.split('_')[2]
-        #     id_values[int(id)] = value
-
-
-        # delete_ids = list(set(member_tag_ids).difference(set(id_values.keys())))
-        # diff_tag_ids = list(set(id_values.keys()).difference(set(member_tag_ids)))
-
-        # print '==============ddddddd=========================='
-        # print id_values.keys()
-        # print delete_ids
-        # print diff_tag_ids
-        # print member_tag_ids
-        # print '==============ddddddd=========================='
-
-
-        # if diff_tag_ids: # post
-            # zeus_req('post', {
-            #     'resource': 'member.member_tags',
-            #     'data': {
-            #         'webapp_id': webapp_id,
-            #         'name': json.dumps(id_values) ,
-            #         'id': ','.join(str(id) for id in diff_tag_ids)
-            #     }
-            # })
-        # elif delete_ids : # delete
-            # zeus_req('delete', {
-            #     'resource': 'member.member_tags',
-            #     'data': {
-            #         'webapp_id': webapp_id,
-            #         'member_tag_ids': ','.join([str(id) for id in delete_ids]),
-            #     }
-            # })
-        # else: # put
-        #     zeus_req('put', {
-        #         'resource': 'member.member_tags',
-        #         'data': {
-        #             'member_tag_ids': ','.join([str(id) for id in id_values.keys()]),
-        #             'name': json.dumps(id_values),
-        #             'weapp_id': webapp_id
-        #         }
-        #     }) 
 
         response = create_response(200)
         return response.get_response()
