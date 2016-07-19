@@ -96,6 +96,7 @@ def get_str_value_by_string_ids(str_ids):
 		else:
 			return None
 	except:
+		from core.exceptionutil import unicode_full_stack
 		msg = {
 			'traceback': unicode_full_stack(),
 			'str_ids': str_ids,
