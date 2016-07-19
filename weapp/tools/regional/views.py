@@ -62,38 +62,47 @@ def _get_districts_for_city(city_id):
 
 
 def get_str_value_by_string_ids(str_ids):
-	if str_ids != '' and str_ids:
-		cache = get_cache('mem')
-		ship_address = cache.get(str_ids)
-		if not ship_address:
-			area_args = str_ids.split('_')
-			ship_address = ''
-			curren_area = ''
-			for index, area in enumerate(area_args):
+	try:
+		if str_ids != '' and str_ids:
+			cache = get_cache('mem')
+			ship_address = cache.get(str_ids)
+			if not ship_address:
+				area_args = str_ids.split('_')
+				ship_address = ''
+				curren_area = ''
+				for index, area in enumerate(area_args):
 
-				if index == 0:
-					try:
-						curren_area = Province.objects.get(id=int(area))
-					except ValueError:
+					if index == 0:
+						try:
+							curren_area = Province.objects.get(id=int(area))
+						except ValueError:
+							pass
+					elif index == 1:
+						try:
+							curren_area = City.objects.get(id=int(area))
+						except ValueError:
+							pass
+					elif index == 2:
+						try:
+							curren_area = District.objects.get(id=int(area))
+						except ValueError:
+							pass
+					if isinstance(curren_area, str):
 						pass
-				elif index == 1:
-					try:
-						curren_area = City.objects.get(id=int(area))
-					except ValueError:
-						pass
-				elif index == 2:
-					try:
-						curren_area = District.objects.get(id=int(area))
-					except ValueError:
-						pass
-				if isinstance(curren_area, str):
-					pass
-				else:
-					ship_address =  ship_address + ' ' + curren_area.name
-			cache.set(str_ids, ship_address)
-		return u'{}'.format(ship_address.strip())
-	else:
-		return None
+					else:
+						ship_address =  ship_address + ' ' + curren_area.name
+				cache.set(str_ids, ship_address)
+			return u'{}'.format(ship_address.strip())
+		else:
+			return None
+	except:
+		msg = {
+			'traceback': unicode_full_stack(),
+			'str_ids': str_ids,
+			'hint': u'解析收货地址异常'
+		}
+
+		watchdog_alert(msg)
 
 
 def get_str_value_by_string_ids_(str_ids):
