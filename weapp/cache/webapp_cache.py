@@ -875,6 +875,7 @@ def update_product_list(webapp_owner_id):
 
 
 def update_product_list_cache(webapp_owner_id):
+    print(';-------x')
     webapp_owner_id = webapp_owner_id
     key = 'webapp_products_categories_{wo:%s}' % webapp_owner_id
 
@@ -890,19 +891,20 @@ def update_product_list_cache(webapp_owner_id):
 
     categories = [{"id": category.id, "name": category.name} for category in categories]
 
-    from mall.models import Product
+    print('-----------product_models',len(product_models),product_models)
 
     from django.contrib.auth.models import User
     webapp_owner = User.objects.get(id=webapp_owner_id)
-    products = Product.fill_details(webapp_owner=webapp_owner, products=product_models, options={
+    mall_models.Product.fill_details(webapp_owner=webapp_owner, products=product_models, options={
             "with_price": True,
-            "with_product_promotion": True,
+            # todo
+            # "with_product_promotion": True,
             "with_selected_category": True
         })
 
     product_datas = []
 
-    for product in products:
+    for product in product_models:
         product_datas.append({
             "id": product.id,
             "name": product.name,
@@ -924,15 +926,15 @@ def update_product_list_cache(webapp_owner_id):
 
 
 def __get_product_models_for_list(webapp_owner_id):
-    products = mall_models.Product.select().dj_where(
+    products = mall_models.Product.objects.filter(
         owner=webapp_owner_id,
         shelve_type=mall_models.PRODUCT_SHELVE_TYPE_ON,
-        is_deleted=False,
-        type__not=mall_models.PRODUCT_DELIVERY_PLAN_TYPE).order_by(mall_models.Product.display_index,
-                                                                   -mall_models.Product.id)
+        is_deleted=False)
+        # todo, order_by(mall_models.Product.display_index, -mall_models.Product.id)
 
-    products_0 = products.dj_where(display_index=0)
-    products_not_0 = products.dj_where(display_index__not=0)
+    products_0 = products.filter(display_index=0)
+    # products_not_0 = products.filter(display_index__not=0)
+    products_not_0 = products.exclude(display_index=0)
     products = list(itertools.chain(products_not_0, products_0))
     return products
 
