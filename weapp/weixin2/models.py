@@ -724,7 +724,7 @@ class UserHasTemplateMessages(models.Model):
 	商家在公众平台上配置的模板消息
 	"""
 	owner_id = models.IntegerField() #所属商家
-	template_id = models.CharField(max_length=512, unique=True) #模板id
+	template_id = models.CharField(max_length=512) #模板id
 	title = models.CharField(max_length=256) #模板标题
 	primary_industry = models.CharField(max_length=64) #一级行业
 	deputy_industry = models.CharField(max_length=64) #二级行业
@@ -751,7 +751,7 @@ class UserTemplateSettings(models.Model):
 	"""
 	owner_id = models.IntegerField() #所属商家
 	usage = models.IntegerField(max_length=128) #模版用途
-	template_id = models.CharField(max_length=512, unique=True) #模板id
+	template_id = models.CharField(max_length=512) #模板id
 	first = models.CharField(max_length=1024, default='') #模版开头语
 	remark = models.CharField(max_length=1024, default='') #模版最后的注释
 	status = models.BooleanField(default=False) #配置状态，是否启用
@@ -768,7 +768,7 @@ class TemplateMessageLogs(models.Model):
 	"""
 	owner_id = models.IntegerField() #所属商家
 	usage = models.IntegerField(max_length=128) #模版用途
-	template_id = models.CharField(max_length=512, unique=True) #模板id
+	template_id = models.CharField(max_length=512) #模板id
 	content = models.TextField() #消息内容
 	status = models.CharField(max_length=64, default='') #状态
 	error_msg = models.CharField(max_length=2048, default='') #错误信息
