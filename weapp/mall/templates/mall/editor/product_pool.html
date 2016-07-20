@@ -12,7 +12,7 @@
         </li>
         <li class="active">添加新商品-商品池</li>
     </ul>
-<!--     {% if mall_type %}
+    {% if request.manager.username == 'weshop' or request.manager.username =='weizoomjx' %}
     <ul class="nav nav-tabs" style="border:none;">
         <li>
             <a href="/mall2/product/">添加新商品</a>
@@ -21,7 +21,7 @@
             <a href="/mall2/product_pool/">商品池</a>
         </li>
     </ul>
-    {% endif %} -->
+    {% endif %}
     <div class="xa-productFilterView xui-filterPanel"></div>
     <div class="panel panel-default mt20 xb-rightPanel" style="min-height:120px;">
         <div class="panel-heading">

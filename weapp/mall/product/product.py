@@ -825,7 +825,7 @@ class Product(resource.Resource):
         mall_type = request.user_profile.webapp_type
 
         #自营平台去掉添加新商品
-        if mall_type and not has_product_id:
+        if mall_type and not has_product_id and request.manager.username not in ['weshop', 'weizoomjx']:
             return HttpResponseRedirect(
             '/mall2/product_pool/')
         
