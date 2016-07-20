@@ -209,7 +209,7 @@ def handle_wating_actions():
 	need_finish_actions = []
 	need_delete_ids = []
 	log_list = []
-	card_has_granted = []
+	card_has_granted = {}
 	#获取活动与微众卡的映射
 	record_id2card = {}
 	for c in apps_root_models.AppsWeizoomCard.objects(belong_to__in=record_ids, status=0).order_by("weizoom_card_id"):
@@ -223,8 +223,14 @@ def handle_wating_actions():
 		curr_record_card_list = record_id2card.get(str(record_id), None)
 		if not curr_record_card_list:
 			return None
+		curr_index = 0
 		try:
-			curr_card = curr_record_card_list[0]
+			curr_card = curr_record_card_list[curr_index]
+			curr_card_id = curr_card.weizoom_card_id
+			while card_has_granted.has_key(curr_card_id):
+				curr_index += 1
+				curr_card = curr_record_card_list[curr_index]
+				curr_card_id = curr_card.weizoom_card_id
 			return curr_card
 		except:
 			return None
@@ -251,7 +257,7 @@ def handle_wating_actions():
 			created_at=datetime.datetime.now()
 		))
 		need_delete_ids.append(action.id)
-		card_has_granted.append(can_use_card.weizoom_card_id)
+		card_has_granted[can_use_card.weizoom_card_id] = True
 
 	#发卡
 	if len(need_finish_actions) >0:
