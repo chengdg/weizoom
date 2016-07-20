@@ -430,7 +430,7 @@ class ProductPool(resource.Resource):
             'first_nav_name': export.PRODUCT_FIRST_NAV,
             'second_navs': export.get_mall_product_second_navs(request),
             'second_nav_name': export.PRODUCT_ADD_PRODUCT_NAV,
-            'mall_type': mall_type
+            'mall_type': mall_type,
         })
         return render_to_response('mall/editor/product_pool.html', c)
 
@@ -825,7 +825,7 @@ class Product(resource.Resource):
         mall_type = request.user_profile.webapp_type
 
         #自营平台去掉添加新商品
-        if mall_type and not has_product_id:
+        if mall_type and not has_product_id and request.manager.username not in ['weshop', 'weizoomjx']:
             return HttpResponseRedirect(
             '/mall2/product_pool/')
         
