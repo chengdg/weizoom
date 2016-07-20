@@ -50,7 +50,7 @@ W.view.mall.ProductsPoolView = Backbone.View.extend({
         var $el = $(event.currentTarget);
         var _this = this;
         if(product_ids.length !== 0){
-            var msg = "是否确认批量保存" + product_ids.length + "个商品至</br>待售商品管理？";
+            var msg = "是否确认批量保存" + product_ids.length + "个商品至</br>在售商品管理？";
             W.requireConfirm({
                 $el: $el,
                 width:260,
