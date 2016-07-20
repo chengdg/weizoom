@@ -123,23 +123,19 @@
         </div>
     </div>
 </div>
-{% endblock %}
 
-{% block js %}
 {% verbatim %}
 <script id="weixin-template-message-view" type="text/x-handlebar-tmpl">
     <div id="template_message_list">
-        {{#if items.length}}
-            {{#each items}}
-                {{#if_in title}}
-                    <div class="template_message_item">
-                        <input type="checkbox" name="control" class="template_control" {{#ifequal status 'True'}}checked{{/ifequal}} data-template-id="{{template_id}}" data-status = "{{status}}">
-                        <span>{{title}}（行业：{{industry_name}}）</span>
-                        <a href="javascript:void(0)" class="template_edit" title="编辑" data-template-id="{{template_id}}">编辑</a>
-                    </div>
-                {{/if_in}}
-            {{/each}}
-        {{/if}}
+        {{#each items}}
+            {{#if_in this.title ../using_templates}}
+                <div class="template_message_item">
+                    <input type="checkbox" name="control" class="template_control" {{#ifequal status 'True'}}checked{{/ifequal}} data-template-id="{{template_id}}" data-status = "{{status}}">
+                    <span>{{title}}（行业：{{industry_name}}）</span>
+                    <a href="javascript:void(0)" class="template_edit" title="编辑" data-template-id="{{template_id}}">编辑</a>
+                </div>
+            {{/if_in}}
+        {{/each}}
     </div>
 </script>
 
@@ -149,10 +145,10 @@
         <div class="cl6 mt5 mb5">7月11日</div>
         <input type="text" name="first" class="template_edit_first mb10" value={{#if item_first}}"{{item_first}}"{{/if}}></input>
         {{#list item_message_arr}}{{/list}}
-        <input type="text" name="remark" class="mt5 template_edit_remark" value={{#if item_remark}}"{{item_remark}}"{{/if}}></input>   
+        <input type="text" name="remark" class="mt5 template_edit_remark" value={{#if item_remark}}"{{item_remark}}"{{/if}}></input>
         <div class="template_edit_detail">
             详情<i>></i>
-        </div>           
+        </div>
     </div>
 </script>
 
@@ -187,7 +183,10 @@
     </div>
 </script>
 {% endverbatim %}
+{% endblock %}
 
+
+{% block js %}
 <script type="text/javascript">
 var using_templates = ["拼团成功通知", "拼团退款提醒", "商品发货通知", "购买成功通知", "订单标记发货通知", "积分变动通知", "付款成功通知"];
 var items;
@@ -236,7 +235,7 @@ $(document).ready(function(){
         },
         success: function(data){
             console.log(data);
-            items = data.items;
+            items = data;
             renderList();
         },
         error: function(){
@@ -289,7 +288,7 @@ $(document).ready(function(){
         var item = items.filter(function(e){
             return e['template_id'] == template_id;
         })[0];
-        var item_message_arr = item.example.split('\n\n')[1].split('\n');
+        var item_message_arr = item.example.split('::');
         var context = {
             item_title: item.title,
             template_id: template_id,
@@ -388,6 +387,7 @@ $(document).ready(function(){
         var source = $('#weixin-template-message-view').html();
         var template = Handlebars.compile(source);  
         var html = template(context);
+
         $('.panel-body').html(html);
     }
 });

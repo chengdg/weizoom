@@ -59,9 +59,12 @@ class NewTemplateMessages(resource.Resource):
                 'industry_name': '%s-%s' % (template.primary_industry, template.deputy_industry),
                 'title': template.title,
                 'template_id': template_id,
-                'example': template.example
+                'content': template.content,
+                'example': template.example.replace('\n', '::')
             }
-
+            print template.title
+            print template.content
+            print '=============='
             setting = id2template.get(template_id, None)
             if setting:
                 item['status'] = template.status

@@ -49,15 +49,15 @@ Handlebars.registerHelper('updateContext', function (obj, options) {
     }
     return options.fn(this);
 });
-
-Handlebars.registerHelper('if_in', function(title,options) {   
-    var flag = 0;
-    for(var i=0;i<using_templates.length;i++){
-        if(using_templates[i] == title){        
-            flag += 1;
+Handlebars.registerHelper('if_in', function(str, array, options) {
+    var flag = false;
+    for(var i=0; i<array.length; i++){
+        if(array[i] == str){
+            flag = true;
+            break;
         }
     }
-    if(flag > 0) {
+    if(flag) {
         return options.fn(this);
     } else {
         return options.inverse(this);
