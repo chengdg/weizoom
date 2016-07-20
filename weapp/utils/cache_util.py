@@ -55,7 +55,8 @@ def get_trace_back():
 	return stack
 
 def set_cache(key, value, timeout=0):
-	cache.set(key, value, timeout)
+	_timeout = timeout if timeout else None
+	cache.set(key, value, _timeout)
 
 def get_cache(key):
 	return cache.get(key)
