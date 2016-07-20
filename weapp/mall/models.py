@@ -620,9 +620,12 @@ class Product(models.Model):
 
 			product = promotion2product.get(promotion_db_model.id)
 			if product:
+
 				product.promotion = {
-					'promotion_price': flash_sale.promotion_price
+					'detail': {'promotion_price': flash_sale.promotion_price},
+					'member_grade_id':promotion_db_model.member_grade_id
 				}
+
 
 
 
