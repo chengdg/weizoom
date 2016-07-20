@@ -34,8 +34,7 @@ class NewTemplateMessages(resource.Resource):
             'second_navs': export.get_weixin_second_navs(request),
             'second_nav_name': export.WEIXIN_MESSAGE_SECOND_NAV,
             'third_nav_name': export.MESSAGE_TEMPLATE_MESSAGE_NAV,
-            # 'has_templates': weixin_models.UserTemplateSettings.objects.filter(owner_id=request.manager.id).count() > 0
-            'has_templates': True
+            'has_templates': weixin_models.UserTemplateSettings.objects.filter(owner_id=request.manager.id).count() > 0
         })
 
         return render_to_response('weixin/message/new_template_messages.html', c)
@@ -48,7 +47,7 @@ class NewTemplateMessages(resource.Resource):
         templates = weixin_models.UserHasTemplateMessages.objects.filter(owner_id=request.manager.id)
         template_ids = [t.template_id for t in templates]
 
-        id2template = {t.template_id: t for t in weixin_models.UserTemplateSettings.objects.filter(id__in=template_ids)}
+        id2template = {t.template_id: t for t in weixin_models.UserTemplateSettings.objects.filter(template_id__in=template_ids)}
 
         items = []
         for template in templates:
@@ -79,7 +78,17 @@ class NewTemplateMessages(resource.Resource):
         """
         配置模版消息内容
         """
+        action = request.POST.get('action')
         response = create_response(200)
+        if 'status' == action:
+            template_id = request.POST.get('template_id')
+            status = request.POST.get('status')
+            weixin_models.UserTemplateSettings.objects.filter(owner_id=request.manager.id, template_id=template_id).update(status=status)
+        else:
+            saved_data = request.POST.get('saved_data')
+            template_id = saved_data.template_id
+            weixin_models.UserTemplateSettings.objects.filter(owner_id=request.manager.id, template_id=template_id).update(first=saved_data.first, remark=saved_data.remark)
+
         return response.get_response()
 
     @login_required
@@ -97,10 +106,6 @@ class NewTemplateMessages(resource.Resource):
                 weixin_api = get_weixin_api(mpuser_access_token)
                 curr_template_info = {t.template_id: t for t in weixin_models.UserHasTemplateMessages.objects.filter(owner_id=user_id)}
                 result = weixin_api.get_all_template_messages(True)
-                print '================='
-                print result
-                print type(result)
-                print '================='
                 template_list = result['template_list']
                 need_create_list = [] #商家新配置的模版
                 changed_template_info = [] #有变化的模版，包括新增的和先删除后新增同一个模版后，template_id发生变化的模版
@@ -123,7 +128,12 @@ class NewTemplateMessages(resource.Resource):
                         ))
                         changed_template_info.append({
                             'template_id': template_id,
-                            'title': title
+                            'title': title,
+                            'status': False,
+                            'first': '',
+                            'remark': '',
+                            'industry_name': '%s-%s' % (t['primary_industry'], t['deputy_industry']),
+                            'example': t['example']
                         })
                 for t_id in curr_template_info.keys(): #如果当前库里的template_id不在获取的信息之中，那么就是商家已删除的
                     if t_id not in all_sync_ids:
@@ -142,7 +152,7 @@ class NewTemplateMessages(resource.Resource):
                 #提醒用户这些模版已经发生变化
                 response = create_response(200)
                 response.data = {
-                    'created': changed_template_info,
+                    'changed': changed_template_info,
                     'deleted': deleted_template_info
                 }
                 return response.get_response()
@@ -150,7 +160,7 @@ class NewTemplateMessages(resource.Resource):
                 notify_message = u"获取模板列表异常, cause:\n{}".format(unicode_full_stack())
                 watchdog_alert(notify_message)
                 response.errMsg = u"获取模板列表异常"
-                response.errMsg = notify_message
+                response.innerErrMsg = notify_message
                 return response.get_response()
         else:
             response.errMsg = u'微信接口异常'
