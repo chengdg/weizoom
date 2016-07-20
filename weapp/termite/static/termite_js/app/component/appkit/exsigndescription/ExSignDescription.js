@@ -192,7 +192,7 @@ W.component.appkit.ExSignDescription = W.component.Component.extend({
 				$propertyViewNode.find('.xa-dayly-setting').find('input[data-field="daily_points"]').val('0');
 			}
 			if(value !== '' && value !== 0){
-				$node.find('.daily_points').text(value+'积分，').show();
+				$node.find('.daily_points').show().find('.wui-points-count').html(value);
 				$node.find('.wui-ExSignRules .wui-rules-daily-point').html('获得'+value+'积分').show();
 			}else{
 				$node.find('.daily_points').hide();
@@ -202,7 +202,7 @@ W.component.appkit.ExSignDescription = W.component.Component.extend({
 		daily_prizes:function($node, model, value){
 			if(value.length>0){
 				$node.find('.daily_prizes').show();
-				var html_str = "<b class='wui-coupon-count'>"+value.length+"张</b>优惠券";
+				var html_str = "和<b class='wui-coupon-count'>"+value.length+"张</b>优惠券";
 				$node.find('.daily_prizes').html(html_str);
 				var coupon_str = '';
 				for (var i in value){

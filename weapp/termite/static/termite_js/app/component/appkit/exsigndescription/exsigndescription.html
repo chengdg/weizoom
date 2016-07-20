@@ -226,7 +226,7 @@
         /* 翻页动画 */
         .animate3d{
             height: 160px;
-            width: 160px;
+            width: 163px;
             margin: 0 auto;
         }
         .front-face, .back-face{
@@ -285,7 +285,7 @@
 
         .fadeOutUp{-webkit-animation-name:fadeOutUp;animation-name:fadeOutUp}
 
-		.wui-coupon-count{
+		.wui-coupon-count,.wui-points-count{
 			color: #FDEB00;
 		}
 		.wui-rules-member-center{
@@ -295,6 +295,9 @@
 		.wui-description p{
 			padding-bottom: 2px;
 			font-family: "微软雅黑","Microsoft YaHei";
+		}
+		.wa-prize-board{
+			margin-bottom: 10px;
 		}
 
     </style>
@@ -330,7 +333,7 @@
 			</div>
 		</div>
 		<div class="wa-prize-board">
-			<span class="wa-daily_title">今日可以领取</span><span class="daily_points wa-daily_points Num">{%if component.model.daily_points %}{{component.model.daily_points}}{%else%}0{%endif%}积分，</span><span class="daily_prizes wa-daily_prizes" {%if not component.model.daily_prizes %}style="display: none"{%endif%}><b class="wui-coupon-count" >{{ component.model.daily_prizes|length }}张</b>优惠券</span>
+			<span class="wa-daily_title">今日可以领取</span><span class="daily_points wa-daily_points Num"><b class="wui-points-count" >{%if component.model.daily_points %}{{component.model.daily_points}}{%else%}0{%endif%}</b>积分</span><span class="daily_prizes wa-daily_prizes" {%if not component.model.daily_prizes %}style="display: none"{%endif%}>和<b class="wui-coupon-count" >{{ component.model.daily_prizes|length }}张</b>优惠券</span>
 		</div>
 	</div>
     <div class="wui-SignDescriptionDiv">

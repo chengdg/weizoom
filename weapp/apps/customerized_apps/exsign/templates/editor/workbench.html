@@ -684,7 +684,12 @@ ui-appPage-commonStyle">
         }
     }
 		W.Broadcaster.on('exsign:change:items', function(value){
-			$(window.frames["phoneFrame"].document).find(".wui-coupon-count").html(value+"张")
+			if (value === 0){
+				$(window.frames["phoneFrame"].document).find(".wui-coupon-count").parent().hide();
+			}else{
+				$(window.frames["phoneFrame"].document).find(".wui-coupon-count").html(value+"张")
+			}
+
 	  });
 
   </script>
