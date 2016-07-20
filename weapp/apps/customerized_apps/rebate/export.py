@@ -160,7 +160,8 @@ def grant_card(need_grant_info, all_record_ids):
 			not_ready_card_list.append(apps_models.RebateWaitingAction(
 				webapp_id = info['webapp_id'],
 				member_id = info['target_member_info'].id,
-				record_id = info['record_id']
+				record_id = info['record_id'],
+				order_id = info['order_id']
 			))
 			return None
 
@@ -207,6 +208,8 @@ def handle_wating_actions():
 	member_id2member = {m.id: m for m in member_models.Member.objects.filter(id__in=member_ids)}
 	need_finish_actions = []
 	need_delete_ids = []
+	log_list = []
+	card_has_granted = []
 	#获取活动与微众卡的映射
 	record_id2card = {}
 	for c in apps_root_models.AppsWeizoomCard.objects(belong_to__in=record_ids, status=0).order_by("weizoom_card_id"):
@@ -240,11 +243,25 @@ def handle_wating_actions():
 			source = promotion_models.WEIZOOM_CARD_SOURCE_REBATE,
 			relation_id = action.record_id
 		))
+		log_list.append(apps_models.RebateWeizoomCardDetails(
+			record_id=action.record_id,
+			order_id=action.order_id,
+			member_id=action.member_id,
+			weizoom_card_id=can_use_card.weizoom_card_id,
+			created_at=datetime.datetime.now()
+		))
 		need_delete_ids.append(action.id)
+		card_has_granted.append(can_use_card.weizoom_card_id)
 
+	#发卡
 	if len(need_finish_actions) >0:
 		promotion_models.MemberHasWeizoomCard.objects.bulk_create(need_finish_actions)
-
+	# 记录已发卡的详情
+	if len(log_list) > 0:
+		apps_models.RebateWeizoomCardDetails.objects.insert(log_list)
+	# 标记已发放的卡
+	apps_root_models.AppsWeizoomCard.use_cards(card_has_granted)
+	#删除待发卡数据
 	apps_models.RebateWaitingAction.objects(id__in=need_delete_ids).delete()
 
 def get_target_orders(records=None, is_show=None):
