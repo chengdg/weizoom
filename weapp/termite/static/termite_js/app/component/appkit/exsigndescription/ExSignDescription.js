@@ -184,6 +184,7 @@ W.component.appkit.ExSignDescription = W.component.Component.extend({
 		},
 		items: function($node, model, value) {
 			this.refresh($node, {resize:true, refreshPropertyView:true});
+			parent.W.Broadcaster.trigger('exsign:change:items', model.get("daily_prizes").length);
 		},
 		daily_points:function($node, model, value, $propertyViewNode){
 			if(value === ''){
@@ -215,5 +216,9 @@ W.component.appkit.ExSignDescription = W.component.Component.extend({
 		share_description: function($node, model, value){
 			model.set({share_description:value.replace(/\n/g,'')},{silent: true});
 		}
-	}
-});
+	},
+		initialize: function(obj) {
+			this.super('initialize', obj);
+
+		}
+	});

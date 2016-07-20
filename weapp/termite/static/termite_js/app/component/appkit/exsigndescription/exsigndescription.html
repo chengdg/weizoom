@@ -174,11 +174,11 @@
 			padding-bottom: 10px;
 		}
 		.wui-ExSignRules >li ul li{
-			padding-bottom: 5px;
+			padding-bottom: 2px;
 		}
-		.wui-ExSignRules .wui-rules-serial-prizes,.wui-ExSignRules .wui-rules-daily-prizes div{
+		/*.wui-ExSignRules .wui-rules-serial-prizes,.wui-ExSignRules .wui-rules-daily-prizes div{
 			padding-bottom: 5px;
-		}
+		}*/
 
         .wui-SignCircle.wa-sign-board{
             background-color: rgba(253, 190, 123, 0.65);
@@ -326,7 +326,7 @@
 			</div>
 		</div>
 		<div class="wa-prize-board">
-			<span class="wa-daily_title">今日可以领取</span><span class="daily_points wa-daily_points Num">{%if component.model.daily_points %}{{component.model.daily_points}}{%else%}0{%endif%}积分，</span><span class="daily_prizes wa-daily_prizes" {%if not component.model.daily_prizes %}style="display: none"{%endif%}><b class="wui-coupon-count" >{{component.model.daily_prizes | length}}张</b>优惠券</span>
+			<span class="wa-daily_title">今日可以领取</span><span class="daily_points wa-daily_points Num">{%if component.model.daily_points %}{{component.model.daily_points}}{%else%}0{%endif%}积分，</span><span class="daily_prizes wa-daily_prizes" {%if not component.model.daily_prizes %}style="display: none"{%endif%}><b class="wui-coupon-count" >{{ component.model.daily_prizes|length }}张</b>优惠券</span>
 		</div>
 	</div>
     <div class="wui-SignDescriptionDiv">
@@ -334,7 +334,7 @@
 			<img src="/termite_static/img/component/exsign/exsigndescription_rules_top.png" />
 		</div>
 		<ul class="Chr wui-ExSignRules wa-exsign-rules">
-				<li class="wui-description" {% if not component.model.description %}style="display: none"{% endif %}>{{component.model.description | safe}}</li>
+				<li class="wui-description" {% if not component.model.description %}style="display: none"{% endif %}>{{component.model.description|safe}}</li>
 				<li class="wui-rules"><div>签到次数和对应奖品关系如下：</div>
 					<div class="wui-rules-daily">
 						<div class="fl">每日签到：</div>

@@ -679,6 +679,9 @@ ui-appPage-commonStyle">
             });
         }
     }
+		W.Broadcaster.on('exsign:change:items', function(value){
+			$(window.frames["phoneFrame"].document).find(".wui-coupon-count").html(value+"张")
+	  });
 
   </script>
 {% block js %}
