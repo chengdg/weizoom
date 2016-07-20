@@ -823,6 +823,12 @@ class Product(resource.Resource):
 
         # 商城的类型
         mall_type = request.user_profile.webapp_type
+
+        #自营平台去掉添加新商品
+        if mall_type and not has_product_id:
+            return HttpResponseRedirect(
+            '/mall2/product_pool/')
+        
         has_store_name = False
         store_name = ''
 
