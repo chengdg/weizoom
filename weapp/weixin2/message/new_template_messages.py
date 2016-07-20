@@ -90,12 +90,17 @@ class NewTemplateMessages(resource.Resource):
         """
         mpuser_access_token = _get_mpuser_access_token(request.manager)
         response = create_response(500)
+        print mpuser_access_token
         if mpuser_access_token:
             user_id = request.manager.id
             try:
                 weixin_api = get_weixin_api(mpuser_access_token)
                 curr_template_info = {t.template_id: t for t in weixin_models.UserHasTemplateMessages.objects.filter(owner_id=user_id)}
                 result = weixin_api.get_all_template_messages(True)
+                print '================='
+                print result
+                print type(result)
+                print '================='
                 template_list = result['template_list']
                 need_create_list = [] #商家新配置的模版
                 changed_template_info = [] #有变化的模版，包括新增的和先删除后新增同一个模版后，template_id发生变化的模版
