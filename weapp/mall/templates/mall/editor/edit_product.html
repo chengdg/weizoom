@@ -243,12 +243,12 @@
 			                data-width="{{image.width}}"
 			                data-height="{{image.height}}">
 							<img class="imgexist" src="{{image.url}}" />
-							<button class="xui-close xa-deleteImage" type="button">
+							<button class="xui-close {% if not pool_mall_type %}xa-deleteImage{% endif %}" type="button">
 								<span>&times;</span>
 							</button>
 						</li>
 						{% endfor %}
-						<li class="xui-i-image xa-selectImage">
+						<li class="xui-i-image  {% if not pool_mall_type %}xa-selectImage{% endif %}">
               <img src="/static_v2/img/editor/addProduct.png"/>
 						</li>
 					</ul>
@@ -410,7 +410,7 @@
 				<span style="padding-left:18px;">您还没有配置属性模板，可以前往<a href="/mall2/property_list/" target="_blank">配置属性模板</a></span>
 			{% else %}
 			<select class="ml20 xa-propertyTemplateSelector"
-				{% if product.is_group_buying %}disabled{% endif %}
+				{% if product.is_group_buying or  pool_mall_type%}disabled{% endif %}
 			>
 				<option value="-1">选择属性模板</option>
 				{% for property_template in property_templates %}
@@ -433,7 +433,7 @@
 	                        value='{{property.value}}'
 	                        maxlength="255"
                         	{% if has_store_name %}readonly=true{% endif %}
-                        	{% if product.is_group_buying %}readonly=true{% endif %}/>
+                        	{% if product.is_group_buying or pool_mall_type %}readonly=true{% endif %}/>
 
                         {% if product.is_group_buying or has_store_name %}
                         {% else %}
