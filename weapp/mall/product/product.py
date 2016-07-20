@@ -64,6 +64,7 @@ class ProductList(resource.Resource):
                 shelve_type=shelve_type,
                 is_deleted=False
             ).exists()
+        print has_product,"<<<D<D<D<D<D<D<D<D<D<<<<<<<<<"
         c = RequestContext(
             request,
             {'first_nav_name': export.PRODUCT_FIRST_NAV,
@@ -229,7 +230,9 @@ class ProductList(resource.Resource):
                 store_name = manager_supplier_ids2name.get(product.supplier, "")
                 if store_name:
                     is_sync = True
-            
+            else:
+                store_name = ''
+
             if not store_name:
                 store_name = supplier_ids2name[product.supplier] if product.supplier and supplier_ids2name.has_key(product.supplier) else product_id2store_name.get(product.id, "")
                 is_sync = product_id2store_name.has_key(product.id)
