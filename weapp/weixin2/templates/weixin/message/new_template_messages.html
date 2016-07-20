@@ -164,7 +164,7 @@ $(document).ready(function(){
     //获取模版消息
     W.resource.new_weixin.NewTemplateMessages.get({
         data: {
-            woid: W.webappOwnerId
+            woid: W.mid
         },
         success: function(data){
             console.log(data);
@@ -191,7 +191,7 @@ $(document).ready(function(){
     $('.xa-sync-template').on('click', function(){
         W.resource.new_weixin.NewTemplateMessages.post({
             data: {
-                woid: W.webappOwnerId
+                woid: W.mid
             },
             success: function(data){
                 console.log(data);
@@ -256,7 +256,7 @@ $(document).ready(function(){
             method: 'post',
             args: {
                 items: items,
-                woid: W.webappOwnerId
+                woid: W.mid
             },
             success: function(data){
                 W.showHint('success', '保存成功');
