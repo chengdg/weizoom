@@ -113,7 +113,6 @@ class Promotion(resource.Resource):
 
             # id2promotion = dict([(promotion.id, promotion) for promotion in promotions])
             # promotion_ids = [promotion.id for promotion in promotions]
-            print ">>>>>>>>>>>>>.promotion_ids", promotion_ids
             php = models.ProductHasPromotion.objects.filter(promotion_id__in=promotion_ids)
             for relation in php:
                 product_id = relation.product_id
@@ -377,6 +376,12 @@ class PromotionList(resource.Resource):
                 'with_concrete_promotion': True
             })
 
+        mall_type = request.user_profile.webapp_type
+        product_pool2status = {}
+        if mall_type:
+            product_pool = mall_models.ProductPool.objects.filter(woid=request.manager.id)
+            product_ids = [pool.product_id for pool in product_pool]
+            product_pool2status = dict([(pool.product_id, pool.status) for pool in product_pool])
         #获取返回数据
         items = []
         for promotion in promotions:
@@ -408,6 +413,23 @@ class PromotionList(resource.Resource):
                     #
                     # if total_stocks == 0 and product.status == u'在售':
                     #     product.status = u'已售罄'
+                    if product_pool2status:
+                        if product.id in product_pool2status.keys():
+                            status_pool = product_pool2status[product.id]
+                            if status_pool == mall_models.PP_STATUS_ON:
+                                status = u'在售'
+                            elif status_pool == mall_models.PP_STATUS_OFF:
+                                status = u'待售'
+                            elif status_pool == mall_models.PP_STATUS_DELETE:
+                                status = u'已删除'
+                            else:
+                                status = u'商品池中'
+                        else:
+                            status = ""
+                    
+                    else:
+                        status =  product.status
+
                     data["products"].append({
                         'id': product.id,
                         'name': product.name,
@@ -424,7 +446,7 @@ class PromotionList(resource.Resource):
                         'current_used_model': product.current_used_model,
                         'created_at': datetime.strftime(product.created_at, '%Y-%m-%d %H:%M'),
                         "detail_link": '/mall2/product/?id=%d&source=onshelf' % product.id,
-                        'status': product.status
+                        'status': status
                     })
 
                 if len(data['products']) == 1:

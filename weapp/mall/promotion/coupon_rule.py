@@ -137,7 +137,6 @@ class CouponRuleInfo(resource.Resource):
         if limit_product == '1':
             limit_product_ids = string_ids2int_ids(limit_product_id)
             save_success, error_product_ids = verification_multi_product_promotion_weizoom_mall(request.manager, limit_product_ids, 'coupon')
-            print save_success, error_product_ids,">>>SD>SD>S>S>>S>>>S>>>>"
             if not save_success:
                 response = create_response(200)
                 response.data = {
