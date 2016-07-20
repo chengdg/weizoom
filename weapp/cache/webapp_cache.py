@@ -114,6 +114,8 @@ def get_webapp_products_new(webapp_owner_user_profile,
         cache_products = products
     else:
         cache_products = get_webapp_products_detail(webapp_owner_user_profile.user_id,category_pros_data)
+        print('--------------3',cache_products[0].promotion)
+
         products = get_webapp_product_ids_from_db_new(webapp_owner_user_profile, is_access_weizoom_mall,category_id)
         if products:
             if len(cache_products) == len(products):
@@ -170,7 +172,7 @@ def get_webapp_products_new(webapp_owner_user_profile,
         products_is_0 = sorted(products_is_0, key=attrgetter('id'), reverse=True)
         products_not_0 = sorted(products_not_0, key=attrgetter('display_index'))
         cache_products = products_not_0 + products_is_0
-
+    print('---------0',cache_products[0].promotion)
     return category, cache_products
 
 def get_webapp_categories_from_cache(webapp_owner_user_profile):
@@ -875,7 +877,7 @@ def update_product_list(webapp_owner_id):
 
 
 def update_product_list_cache(webapp_owner_id):
-    print(';-------x')
+
     webapp_owner_id = webapp_owner_id
     key = 'webapp_products_categories_{wo:%s}' % webapp_owner_id
 
@@ -891,14 +893,11 @@ def update_product_list_cache(webapp_owner_id):
 
     categories = [{"id": category.id, "name": category.name} for category in categories]
 
-    print('-----------product_models',len(product_models),product_models)
-
     from django.contrib.auth.models import User
     webapp_owner = User.objects.get(id=webapp_owner_id)
     mall_models.Product.fill_details(webapp_owner=webapp_owner, products=product_models, options={
             "with_price": True,
-            # todo
-            # "with_product_promotion": True,
+            "flash_sale": True,
             "with_selected_category": True
         })
 
@@ -909,8 +908,8 @@ def update_product_list_cache(webapp_owner_id):
             "id": product.id,
             "name": product.name,
             "is_member_product": product.is_member_product,
-            "display_price": product.price_info['display_price'],
-            "promotion_js": json.dumps(product.promotion.to_dict()) if product.promotion else json.dumps(None),
+            "display_price": product.display_price,
+            "promotion_js": json.dumps(product.promotion),
             "thumbnails_url": product.thumbnails_url
         })
 
@@ -921,7 +920,6 @@ def update_product_list_cache(webapp_owner_id):
         "products": product_datas,
         "categories": categories
     }
-
     cache_util.set_cache(key, data)
 
 
@@ -929,11 +927,9 @@ def __get_product_models_for_list(webapp_owner_id):
     products = mall_models.Product.objects.filter(
         owner=webapp_owner_id,
         shelve_type=mall_models.PRODUCT_SHELVE_TYPE_ON,
-        is_deleted=False)
-        # todo, order_by(mall_models.Product.display_index, -mall_models.Product.id)
+        is_deleted=False).order_by('display_index', '-id')
 
     products_0 = products.filter(display_index=0)
-    # products_not_0 = products.filter(display_index__not=0)
     products_not_0 = products.exclude(display_index=0)
     products = list(itertools.chain(products_not_0, products_0))
     return products
