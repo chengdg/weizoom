@@ -865,3 +865,26 @@ def update_product_list(webapp_owner_id):
     #     request = urllib2.Request(url)
     #     request.get_method = lambda: 'PURGE'
     #     urllib2.urlopen(request)
+
+
+def update_webapp_product_pool_cache(**kwargs):
+    """
+    更新商品详情缓存
+    """
+    if hasattr(cache, 'request') and cache.request.user_profile:
+        webapp_owner_id = cache.request.user_profile.user_id
+        product_ids = None
+        pattern = 'webapp_product_detail_{wo:%s}_*' % webapp_owner_id
+        cache_util.delete_pattern(pattern)
+
+        pattern_categories = "webapp_products_categories_{wo:%s}" % webapp_owner_id
+        cache_util.delete_pattern(pattern_categories)
+
+           
+
+
+
+post_update_signal.connect(update_webapp_product_pool_cache,
+                           sender=mall_models.ProductPool, dispatch_uid="product_pool.update")
+signals.post_save.connect(update_webapp_product_pool_cache,
+                          sender=mall_models.ProductPool, dispatch_uid="product_pool.save")
