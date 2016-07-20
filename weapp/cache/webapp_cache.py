@@ -880,6 +880,10 @@ def update_product_list_cache(webapp_owner_id):
 
     webapp_owner_id = webapp_owner_id
     key = 'webapp_products_categories_{wo:%s}' % webapp_owner_id
+    try:
+        cache_util.delete_cache(key)
+    except:
+        pass
 
     product_models = __get_product_models_for_list(webapp_owner_id)
 
@@ -920,7 +924,8 @@ def update_product_list_cache(webapp_owner_id):
         "products": product_datas,
         "categories": categories
     }
-    cache_util.set_cache(key, data)
+    api_key = 'api' + key
+    cache_util.set_cache(api_key, data)
 
 
 def __get_product_models_for_list(webapp_owner_id):
