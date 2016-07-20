@@ -106,8 +106,7 @@
         </ul>
     </div>
     <div>
-        使用“更新”功能，保持与公众号平台模版消息的同步
-        <button type="button" class="btn btn-primary xa-sync-template">更新模版</button>
+
     </div>
     <div class="xui-background">
         <div class="template_edit_container">
@@ -119,6 +118,7 @@
             <div>暂没有配置模版消息</div>
         {% endif %}
         <div class="template_commit">
+            <button type="button" class="btn btn-primary xa-sync-template">更新模版</button>
             <button class="btn btn-primary xa-submit">保&nbsp;&nbsp;&nbsp;&nbsp;存</button>
         </div>
     </div>
@@ -158,12 +158,14 @@
 {% endverbatim %}
 
 <script type="text/javascript">
-var using_templates = ["领取奖金提醒"];
+var using_templates = ["拼团成功通知", "拼团退款提醒", "商品发货通知", "购买成功通知", "订单标记发货通知", "积分变动通知", "付款成功通知"];
 var items;
 $(document).ready(function(){
     //获取模版消息
     W.resource.new_weixin.NewTemplateMessages.get({
-        data: {},
+        data: {
+            woid: W.webappOwnerId
+        },
         success: function(data){
             console.log(data);
             items = data.items;
@@ -188,7 +190,9 @@ $(document).ready(function(){
     //同步模版
     $('.xa-sync-template').on('click', function(){
         W.resource.new_weixin.NewTemplateMessages.post({
-            data: {},
+            data: {
+                woid: W.webappOwnerId
+            },
             success: function(data){
                 console.log(data);
                 W.showHint('error', '更新模版成功');
@@ -250,7 +254,10 @@ $(document).ready(function(){
             app: 'new_weixin',
             resource: 'new_template_messages',
             method: 'post',
-            args: items,
+            args: {
+                items: items,
+                woid: W.webappOwnerId
+            },
             success: function(data){
                 W.showHint('success', '保存成功');
             },

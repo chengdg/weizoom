@@ -88,7 +88,11 @@ class NewTemplateMessages(resource.Resource):
         同步模版
         从微信获取商家在公众号中配置的所有模板消息
         """
+        print '================'
+        print request.manager
+        print '==================='
         mpuser_access_token = _get_mpuser_access_token(request.manager)
+        print mpuser_access_token
         response = create_response(500)
         if mpuser_access_token:
             weixin_api = get_weixin_api(mpuser_access_token)
