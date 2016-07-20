@@ -24,7 +24,7 @@ W.view.mall.ProductsPoolView = Backbone.View.extend({
         'click .xa-batchOffshelf': 'onClickBatchAddOffShelf',
         'click .xa-update': 'onClickUpdateBtn',
         'click .xa-offshelf': 'onClickCreateProductOffShelf',
-        'click .xa-selectAll':'onClickSelectAll',
+        'click .xa-selectAll':'onClickSelectAll'
     },
 
     render: function() {
@@ -50,7 +50,7 @@ W.view.mall.ProductsPoolView = Backbone.View.extend({
         var $el = $(event.currentTarget);
         var _this = this;
         if(product_ids.length !== 0){
-            var msg = "是否确认批量保存" + product_ids.length + "个商品至</br>待售商品管理？";
+            var msg = "是否确认批量保存" + product_ids.length + "个商品至</br>在售商品管理？";
             W.requireConfirm({
                 $el: $el,
                 width:260,
@@ -126,7 +126,7 @@ W.view.mall.ProductsPoolView = Backbone.View.extend({
         }else{
             width = 400;
             templateAlign = "";
-            msg = "是否确认更新该商品？";
+            msg = "是否确认上架该商品？";
         }
         W.requireConfirm({
             $el: $el,

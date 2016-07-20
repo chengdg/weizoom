@@ -12,7 +12,7 @@
         </li>
         <li class="active">添加新商品-商品池</li>
     </ul>
-    {% if mall_type %}
+<!--     {% if mall_type %}
     <ul class="nav nav-tabs" style="border:none;">
         <li>
             <a href="/mall2/product/">添加新商品</a>
@@ -21,17 +21,17 @@
             <a href="/mall2/product_pool/">商品池</a>
         </li>
     </ul>
-    {% endif %}
+    {% endif %} -->
     <div class="xa-productFilterView xui-filterPanel"></div>
     <div class="panel panel-default mt20 xb-rightPanel" style="min-height:120px;">
         <div class="panel-heading">
             <label for="topSelectAll" class="xui-selectAll ml15">
                 <input type="checkbox" id="topSelectAll" class="xa-selectAll">全选
             </label>
-            <a href="javascript:void(0);" class="btn btn-default ml10 xa-batchOffshelf">批量放入待售</a>
-            <a href="javascript:void(0);" class="btn btn-primary ml10 xa-checkOffshelf xui-offshelf-btn fr">
+            <a href="javascript:void(0);" class="btn btn-default ml10 xa-batchOffshelf">批量上架</a>
+           <!--  <a href="javascript:void(0);" class="btn btn-primary ml10 xa-checkOffshelf xui-offshelf-btn fr">
                 查看失效商品
-            </a>
+            </a> -->
         </div>
         <div
         data-ui-role="pool-advanced-table"
@@ -42,7 +42,6 @@
         data-enable-sort="false"
         data-selectable="true"
         data-item-count-per-page="12"
-        data-disable-header-select="true"
         data-outer-selecter='.xa-selectAll'
         class="panel-body"
     ></div>
@@ -62,15 +61,13 @@
                 <th width="100">供货商</th>
                 <th width="55">商品价格</th>
                 <th width="50">库存</th>
-                <th width="80">状态</th>
-                <th width="100">同步时间</th>
                 <th width="90">操作</th>
             </tr>
         </thead>
         <tbody id='product_list'>
             {{if items.length}}
                 {{each(i, product) items}}
-                <tr data-id="${product.id}" class="xa-selectTr" data-product-has-promotion="${product.product_has_promotion}" data-product-has-group="${product.product_has_group}" data-product-status="${product.status}">
+                <tr data-id="${product.id}" class="xa-selectTr" data-product-has-promotion="${product.product_has_promotion}" data-product-has-group="${product.product_has_group}" data-product-status="2">
                     <td class="wui-advanced-table-sort-handler tl_important">
                         <div class="disT w">
                             <div class="imgBox disTc pr xui-imgBox vm">
@@ -100,19 +97,8 @@
                     </td>
                     <td>${product.stocks}</td>
                     <td>
-                        {{if product.status == 1}}
-                        <span class="cRed">待更新</span>
-                        {{/if}}
-                        {{if product.status == 2}}
-                        <span>未选择</span>
-                        {{/if}}
-                        {{if product.status == 3}}
-                        <span class="cRed">已选择</span>
-                        {{/if}}
-                    </td>
-                    <td class="xui-createdTime">${product.sync_time}</td>
-                    <td>
-                        {{if product.status == 1}}
+                        <a href="javascript:void(0);" class="xa-offshelf">上架</a>
+                       <!--  {{if product.status == 1}}
                         <a href="javascript:void(0);" class="xa-update">更新</a>
                         {{/if}}
                         {{if product.status == 2}}
@@ -120,7 +106,7 @@
                         {{/if}}
                         {{if product.status == 3}}
                         <span class="c6">无更新</a>
-                        {{/if}}
+                        {{/if}} -->
                     </td>
                 </tr>
                 {{/each}}

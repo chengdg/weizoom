@@ -13,7 +13,7 @@
 		</li>
 		<li class="active">{% if product %}更新{% else %}添加新{% endif %}商品</li>
 	</ul>
-  {% if mall_type and not product %}
+ <!--  {% if mall_type and not product %}
 	<ul class="nav nav-tabs" style="border:none;">
 		<li class="active">
 			<a href="/mall2/product/">添加新商品</a>
@@ -22,7 +22,7 @@
 			<a href="/mall2/product_pool/">商品池</a>
 		</li> -->
 	</ul>
-    {% endif %}
+    {% endif %} -->
 	<form class="form-horizontal xui-mall-addProductForm xa-addProductForm" method="POST"
         action={% if product %}"/mall2/product/?id={{product.id}}&shelve_type={{product.shelve_type}}"{% else %}"/mall2/product/?_method=put"{%endif%}
         id="editForm" data-id="{% if product %}{{ product.id }}{% else %}0{% endif %}"
@@ -139,7 +139,7 @@
 						<input
 							type="checkbox"
 							value="{{ category.id }}"
-							class="xa-product_category  mr20"
+							class="xa-product_category {% if pool_mall_type %} xa-weshop {% endif %}mr20"
 							{% ifequal category.is_selected 1 %}checked="checked"{% endifequal %}
 						/>
 						{{ category.name }}
@@ -243,12 +243,12 @@
 			                data-width="{{image.width}}"
 			                data-height="{{image.height}}">
 							<img class="imgexist" src="{{image.url}}" />
-							<button class="xui-close xa-deleteImage" type="button">
+							<button class="xui-close {% if not pool_mall_type %}xa-deleteImage{% endif %}" type="button">
 								<span>&times;</span>
 							</button>
 						</li>
 						{% endfor %}
-						<li class="xui-i-image xa-selectImage">
+						<li class="xui-i-image  {% if not pool_mall_type %}xa-selectImage{% endif %}">
               <img src="/static_v2/img/editor/addProduct.png"/>
 						</li>
 					</ul>
@@ -263,7 +263,7 @@
 			<div class="form-group">
 				<label class="control-label col-sm-2 col-sm-offset-1 star_show">运费设置：</label>
 				<div id="freight"  class="col-sm-9">
-				{% if request.manager.id == product.owner.id or not product %}
+				{% if request.manager.id == product.owner.id or not product or pool_mall_type%}
 					{% if product.is_group_buying %}
 					<input type="hidden" name="postage_type"
 						value="{% if postage_config_info.is_use_system_postage_config %}custom_postage_type{% else %}unified_postage_type{% endif %}"/>
@@ -305,7 +305,7 @@
 			<div class="form-group">
 				<label class="control-label col-sm-2 col-sm-offset-1 star_show">支付方式：</label>
 				<div id="pay-method" class="col-sm-9" data-validate='require-custom-function' data-validate-function='validatePay'>
-				{% if request.manager.id == product.owner.id or not product %}
+				{% if request.manager.id == product.owner.id or not product or pool_mall_type%}
 					<label class="checkbox xa-pay-method" >
                     {% if pay_interface_config.online_pay_interfaces %}
 	             		<input type='checkbox' id='is_enable_online_pay_interface'
@@ -410,7 +410,7 @@
 				<span style="padding-left:18px;">您还没有配置属性模板，可以前往<a href="/mall2/property_list/" target="_blank">配置属性模板</a></span>
 			{% else %}
 			<select class="ml20 xa-propertyTemplateSelector"
-				{% if product.is_group_buying %}disabled{% endif %}
+				{% if product.is_group_buying or  pool_mall_type%}disabled{% endif %}
 			>
 				<option value="-1">选择属性模板</option>
 				{% for property_template in property_templates %}
@@ -433,7 +433,7 @@
 	                        value='{{property.value}}'
 	                        maxlength="255"
                         	{% if has_store_name %}readonly=true{% endif %}
-                        	{% if product.is_group_buying %}readonly=true{% endif %}/>
+                        	{% if product.is_group_buying or pool_mall_type %}readonly=true{% endif %}/>
 
                         {% if product.is_group_buying or has_store_name %}
                         {% else %}
@@ -444,7 +444,7 @@
                     {% endfor %}
                 </ul>
               </div>
-              {% if has_store_name or product.is_group_buying%}
+              {% if has_store_name or product.is_group_buying or pool_mall_type%}
               {% else %}
               <div class="xa-instantProperties">
                 <a href="javascript:void(0);" class="xa-addProperty xui-i-propertyName xui-propertyNameBtn pb15" style="display:block;margin-left:10px;width:55px;">+添加</a>
@@ -473,8 +473,8 @@
 			<div class="ml100">
 				<div class="xui-fontGary" style="line-height:48px;">创建好的商品会显示在待售列表中，需要您手动上架销售。</div>
 				<div>
-                    {% if request.manager.id == product.owner.id or not product %}
-					<input type="button" class="xa-submit btn btn-primary mr40" id="submitBtn" value="保存" />
+                    {% if request.manager.id == product.owner.id or not product or pool_mall_type %}
+					<input type="button" class="xa-submit xa-weshop btn btn-primary mr40" id="submitBtn" value="保存" />
 					{% else %}
 					{% if request.GET.source == 'onshelf' %}
 					<input type="button" onclick="history.go(-1)" class="btn btn-primary mr40 xa-weshop" value="返回" />
@@ -553,7 +553,7 @@ $('.xa-freight').on('click', function(e){
     }
 
 });
-{% if request.manager.id != product.owner.id and product %}
+{% if request.manager.id != product.owner.id and product and not pool_mall_type%}
 $('.xa-check').on('click', function(){
 	W.getApi().call({
         method: 'post',
@@ -573,6 +573,11 @@ $('.xa-check').on('click', function(){
 setTimeout(function(){$('input').not('.xa-weshop').attr('disabled','1');}, 500)
 $('.xa-addProperty').click(function(){return false;})
 $('.xa-selectImage').click(function(){return false;})
+{% endif %}
+{% if request.manager.id != product.owner.id and product and pool_mall_type%}
+setTimeout(function(){
+	$('input').not('.xa-weshop').not('[type="hidden"]').attr('disabled','1');
+}, 500)
 {% endif %}
 </script>
 <!--   / 运费验证实现    -->

@@ -6,8 +6,9 @@ __author__ = 'liupeiyu'
 import json
 from datetime import timedelta, datetime
 from django.conf import settings
+from django.db.models import Q
 
-from mall.models import Product, ProductCategory, PRODUCT_SHELVE_TYPE_ON
+from mall.models import Product, ProductCategory, PRODUCT_SHELVE_TYPE_ON, ProductPool, PP_STATUS_ON
 from mall.promotion.models import CouponRule, Promotion, PROMOTION_TYPE_COUPON
 from market_tools.tools.vote.models import Vote
 from market_tools.tools.lottery.models import Lottery
@@ -29,6 +30,7 @@ from mall.promotion.models import RedEnvelopeRule
 from apps.customerized_apps.sign.export import get_sign_webapp_link
 
 from apps.customerized_apps.exsign.export import get_exsign_webapp_link
+from account.models import UserProfile
 
 def get_webapp_link_menu_objectes(request):
 	"""
@@ -344,7 +346,23 @@ def get_webapp_link_objectes_for_type(request, type, query, order_by):
 		kwargs.update(item.get('filter', {}))
 		if query and len(query) > 0:
 			kwargs[item['query_name']+'__contains'] = query
-		objects = item['class'].objects.filter(**kwargs).order_by(order_by)
+		if request.user_profile.webapp_type == 1:
+			if item['class'] == Product:
+				product_pool = ProductPool.objects.filter(woid=request.manager.id, status=PP_STATUS_ON)
+				
+				product_ids = [pool.product_id for pool in product_pool]
+				product_pool_kwargs = {}
+				product_pool_kwargs['id__in'] = product_ids
+				if query and len(query) > 0:
+					product_pool_kwargs['name__contains'] = query
+
+				objects = item['class'].objects.filter(Q(**kwargs)|Q(**product_pool_kwargs)).order_by(order_by)
+				
+
+			else:
+				objects = iitem['class'].objects.filter(**kwargs).order_by(order_by)
+		else:
+			objects = item['class'].objects.filter(**kwargs).order_by(order_by)
 
 		if type == 'webappPage':
 			objects = objects.order_by('-is_active', '-id')

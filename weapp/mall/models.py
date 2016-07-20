@@ -658,9 +658,13 @@ class Product(models.Model):
 			False)
 		if is_enable_model_property_info:
 			# 获取model property，为后续使用做准备
-			properties = list(
-				ProductModelProperty.objects.filter(
-					owner=webapp_owner))
+			# properties = list(
+			# 	ProductModelProperty.objects.filter(
+			# 		owner=webapp_owner))
+
+			#TODO bert prodcut_pool 增加默认商品规格 owner
+			properties = ProductModelProperty.objects.filter(
+					owner=webapp_owner)
 			property_ids = [property.id for property in properties]
 			id2property = dict([(str(property.id), property)
 							   for property in properties])
@@ -2719,3 +2723,71 @@ class ProductSearchRecord(models.Model):
 		verbose_name = "商品搜索记录"
 		verbose_name_plural = "商品搜索记录"
 		db_table = "mall_product_search_record"
+
+PP_STATUS_OFF = 0 #商品下架(待售)
+PP_STATUS_ON = 1 #商品上架
+PP_STATUS_DELETE = -1 #商品删除 不在当前供应商显示
+PP_STATUS_ON_POOL = 2 #商品在商品池中显示
+
+
+class ProductPool(models.Model):
+	woid = models.IntegerField() #自营平台woid
+	product_id = models.IntegerField() #商品管理上传的商品id
+	status = models.IntegerField(default=PP_STATUS_ON_POOL) #商品状态
+	display_index = models.IntegerField(default=0, blank=True)  # 显示的排序
+	created_at = models.DateTimeField(auto_now_add=True)  # 添加时间
+
+	class Meta(object):
+		verbose_name = "商品池商品"
+		verbose_name_plural = "商品池商品"
+		db_table = "product_pool"
+
+def product_belong_to(mall_type, owner, type):
+	if mall_type and type in [PRODUCT_SHELVE_TYPE_OFF, PRODUCT_SHELVE_TYPE_ON]:
+		if type == PRODUCT_SHELVE_TYPE_OFF:
+			status = PP_STATUS_OFF
+		else:
+			status = PP_STATUS_ON
+		product_pool_ids = [pool.product_id for pool in ProductPool.objects.filter(woid=owner.id, status=status)]
+
+		products = Product.objects.filter(
+				Q(owner=owner,
+                shelve_type=type,
+                is_deleted=False)|Q(id__in=product_pool_ids))
+	else:
+		products = Product.objects.filter(
+                owner=owner,
+                shelve_type=type,
+                is_deleted=False)
+
+	return products
+
+Product.objects.belong_to = product_belong_to
+
+
+class PandaHasProductRelation(models.Model):
+    """
+    panda同步过来的商品中间关系
+    """
+    panda_product_id = models.IntegerField()
+    weapp_product_id = models.IntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)  # 添加时间
+
+    class Meta(object):
+            verbose_name = "panda同步过来的商品中间关系"
+            verbose_name_plural = "panda同步过来的商品中间关系"
+            db_table = "panda_has_product_relation"
+
+
+class ProductLimitPurchasePrice(models.Model):
+    """
+    8000商品限时结算价格
+    """
+    product_id = models.IntegerField(),
+    start_time = models.DateTimeField()
+    end_time = models.DateTimeField()
+
+    class Meta:
+        verbose_name = "商品池商品"
+        verbose_name_plural = "商品池商品"
+        db_table = "product_limit_purchase_price"
