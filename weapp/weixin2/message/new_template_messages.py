@@ -34,7 +34,7 @@ class NewTemplateMessages(resource.Resource):
             'second_navs': export.get_weixin_second_navs(request),
             'second_nav_name': export.WEIXIN_MESSAGE_SECOND_NAV,
             'third_nav_name': export.MESSAGE_TEMPLATE_MESSAGE_NAV,
-            'has_templates': weixin_models.UserTemplateSettings.objects.filter(owner_id=request.manager.id).count() > 0
+            'has_templates': weixin_models.UserHasTemplateMessages.objects.filter(owner_id=request.manager.id).count() > 0
         })
 
         return render_to_response('weixin/message/new_template_messages.html', c)
