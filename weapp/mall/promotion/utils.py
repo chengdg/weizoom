@@ -355,7 +355,7 @@ def verification_multi_product_promotion_weizoom_mall(webapp_owner, product_ids,
     all_error_product_ids = []
     # 检测商品拥有者、删除、下架、
 
-    product_pool_ids = [pool.product_id for pool in models.ProductPool.objects.filter(woid=webapp_owner.id, status=models.PP_STATUS_ON)]
+    product_pool_ids = [pool.product_id for pool in models.ProductPool.objects.filter(woid=webapp_owner.id,  product_id__in=product_ids, status=models.PP_STATUS_ON)]
 
     products = models.Product.objects.filter(
             Q(owner=webapp_owner,
@@ -378,7 +378,7 @@ def verification_multi_product_promotion_weizoom_mall(webapp_owner, product_ids,
     not_on_shelve_error_product_ids = list(set(product_ids).difference(set(usable_product_ids)))  # b中有而a中没有的
 
     all_error_product_ids.extend(not_on_shelve_error_product_ids)
-
+    print ">>>D>DS>DS>>>>>>>all_error_product_ids",all_error_product_ids
     # 检测活动互斥,状态为“未开始”和“进行中”的活动属于检测互斥范围  update by bert
     error_products = promotion_models.ProductHasPromotion.objects.filter(promotion__owner=webapp_owner,product_id__in=usable_product_ids,
                                                                          promotion__status__in=[
@@ -388,6 +388,7 @@ def verification_multi_product_promotion_weizoom_mall(webapp_owner, product_ids,
     if promotion_type == 'coupon':
         # 多品券不和多品券、积分应用互斥
         error_products = error_products.exclude(promotion__type=promotion_models.PROMOTION_TYPE_COUPON).exclude(promotion__type=promotion_models.PROMOTION_TYPE_INTEGRAL_SALE)
+        print error_products,"sadfasdf>>>>>"
     elif promotion_type == 'integral_sale':
         # 创建积分应用只和积分应用本身互斥
         error_products = error_products.filter(promotion__type=promotion_models.PROMOTION_TYPE_INTEGRAL_SALE)
