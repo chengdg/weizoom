@@ -142,11 +142,11 @@
 					<td>
 						{{if product.is_use_custom_model}}
 						<div class="xa-priceText">${product.display_price_range}</div>
-						<div><a href="javascript:void(0);" class="xa-modifyCustomModelPrice">修改</a></div>
+						<div><a href="javascript:void(0);" class="xa-modifyCustomModelPrice">{{if product.is_self}}修改{{/if}}</a></div>
 						{{else}}
 						<div class="xa-priceText">${product.display_price}</div>
 						<input class="xa-priceInput xui-hide" style="width: 35%;" data-validate="require-price"/>
-						<div><a href="javascript:void(0);" class="xa-modifyStandardModelPrice">修改</a></div>
+						<div><a href="javascript:void(0);" class="xa-modifyStandardModelPrice">{{if product.is_self}}修改{{/if}}</a></div>
 						{{/if}}
 					</td>
 					<td>
