@@ -6,7 +6,7 @@ ensureNS('W.component.appkit');
 W.component.appkit.ExSignDescription = W.component.Component.extend({
 	type: 'appkit.exsigndescription',
 	selectable: 'yes',
-	propertyViewTitle: '签到',
+	propertyViewTitle: '签到页面',
 
     dynamicComponentTypes: [{
         type: 'appkit.exsignitem',
