@@ -11,6 +11,7 @@ from weapp.settings import MODE
 from core import resource
 from mall import export
 from mall.models import *
+from mall import models  as mall_models
 from models import *
 from modules.member import models as member_models
 from core import paginator
@@ -465,14 +466,37 @@ class CouponRuleProducts(resource.Resource):
 
         items = []
 
+        mall_type = request.user_profile.webapp_type
+        product_pool2status = {}
+        if mall_type:
+            product_pool = mall_models.ProductPool.objects.filter(woid=request.manager.id)
+            product_ids = [pool.product_id for pool in product_pool]
+            product_pool2status = dict([(pool.product_id, pool.status) for pool in product_pool])
+
         for product in products:
+
+            if product_pool2status:
+                if product.id in product_pool2status.keys():
+                    status_pool = product_pool2status[product.id]
+                    if status_pool == mall_models.PP_STATUS_ON:
+                        status = u'在售'
+                    elif status_pool == mall_models.PP_STATUS_OFF:
+                        status = u'待售'
+                    elif status_pool == mall_models.PP_STATUS_DELETE:
+                        status = u'已删除'
+                    else:
+                        status = u'商品池中'
+                else:
+                    status = ""
+            else:
+                status =  product.status
             item = {
                 "name": product.name,
                 "bar_code": product.bar_code,
                 'detail_link': product.detail_link,
                 'price': product.display_price_range,
                 'total_socks': product.total_stocks,
-                'status': product.status
+                'status': status
             }
             items.append(item)
         response = create_response(200)
