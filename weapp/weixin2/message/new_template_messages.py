@@ -88,16 +88,12 @@ class NewTemplateMessages(resource.Resource):
         同步模版
         从微信获取商家在公众号中配置的所有模板消息
         """
-        print '================'
-        print request.manager
-        print '==================='
         mpuser_access_token = _get_mpuser_access_token(request.manager)
-        print mpuser_access_token
         response = create_response(500)
         if mpuser_access_token:
-            weixin_api = get_weixin_api(mpuser_access_token)
             user_id = request.manager.id
             try:
+                weixin_api = get_weixin_api(mpuser_access_token)
                 curr_template_info = {t.template_id: t for t in weixin_models.UserHasTemplateMessages.objects.filter(owner_id=user_id)}
                 result = weixin_api.get_all_template_messages(True)
                 template_list = result['template_list']
@@ -145,11 +141,11 @@ class NewTemplateMessages(resource.Resource):
                     'deleted': deleted_template_info
                 }
                 return response.get_response()
-            except Exception, e:
-                print e
+            except:
                 notify_message = u"获取模板列表异常, cause:\n{}".format(unicode_full_stack())
                 watchdog_alert(notify_message)
-                response.errMsg = e
+                response.errMsg = u"获取模板列表异常"
+                response.errMsg = notify_message
                 return response.get_response()
         else:
             response.errMsg = u'微信接口异常'
