@@ -487,7 +487,7 @@ class CouponRuleProducts(resource.Resource):
                     else:
                         status = u'商品池中'
                 else:
-                    status = ""
+                    status = product.status
             else:
                 status =  product.status
             item = {
