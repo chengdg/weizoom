@@ -3,13 +3,15 @@ from __future__ import absolute_import
 from operator import attrgetter
 import time
 import urllib2
+
+import itertools
 from django.conf import settings
 from django.db.models import signals
 
 import cache
 from account.models import UserProfile
 from utils import cache_util
-from mall.models import WeizoomMall
+from mall.models import WeizoomMall, ProductCategory, CategoryHasProduct
 from mall import module_api as mall_api
 from mall import models as mall_models
 from mall.promotion import models as promotion_models
@@ -334,8 +336,9 @@ def update_webapp_product_cache(**kwargs):
                     key = 'webapp_product_detail_{wo:%s}_{pid:%s}' % (webapp_owner_id, product_id)
                     cache_util.delete_pattern(key)
 
-        pattern_categories = "webapp_products_categories_{wo:%s}" % webapp_owner_id
-        cache_util.delete_pattern(pattern_categories)
+        # pattern_categories = "webapp_products_categories_{wo:%s}" % webapp_owner_id
+        # cache_util.delete_pattern(pattern_categories)
+        update_product_list_cache(webapp_owner_id)
 
         key_termite_page = 'termite_webapp_page_%s_*' % webapp_owner_id
         cache_util.delete_pattern(key_termite_page)
@@ -383,8 +386,9 @@ def update_webapp_category_cache(**kwargs):
         #         request.get_method = lambda: 'PURGE'
         #         urllib2.urlopen(request)
 
-        pattern_categories = "webapp_products_categories_{wo:%s}" % webapp_owner_id
-        cache_util.delete_pattern(pattern_categories)
+        # pattern_categories = "webapp_products_categories_{wo:%s}" % webapp_owner_id
+        # cache_util.delete_pattern(pattern_categories)
+        update_product_list_cache(webapp_owner_id)
 
 post_update_signal.connect(
     update_webapp_product_cache, sender=mall_models.Product, dispatch_uid="product.update")
@@ -527,8 +531,9 @@ def update_webapp_product_detail_cache(**kwargs):
             pattern = 'webapp_product_detail_{wo:%s}_*' % webapp_owner_id
             cache_util.delete_pattern(pattern)
 
-            pattern_categories = "webapp_products_categories_{wo:%s}" % webapp_owner_id
-            cache_util.delete_pattern(pattern_categories)
+            # pattern_categories = "webapp_products_categories_{wo:%s}" % webapp_owner_id
+            # cache_util.delete_pattern(pattern_categories)
+            update_product_list_cache(webapp_owner_id)
 
             instance = kwargs.get('instance', None)
             if instance:
@@ -574,8 +579,9 @@ def update_webapp_product_detail_cache_when_update_model_property_value(**kwargs
             key = 'webapp_product_detail_{wo:%s}_{pid:*}' % (owner_id)
             cache_util.delete_pattern(key)
 
-            key = 'webapp_products_categories_{wo:%s' % (owner_id)
-            cache_util.delete_pattern(key)
+            # key = 'webapp_products_categories_{wo:%s' % (owner_id)
+            # cache_util.delete_pattern(key)
+            update_product_list_cache(owner_id)
 
 post_update_signal.connect(update_webapp_product_detail_cache_when_update_model_property_value,
                            sender=mall_models.ProductModelPropertyValue, dispatch_uid="mall_product_model_property_value.update")
@@ -831,8 +837,9 @@ def update_product_cache(webapp_owner_id, product_id, deleteRedis=True, deleteVa
         key = 'webapp_product_detail_{wo:%s}_{pid:%s}' % (webapp_owner_id, product_id)
         cache_util.delete_cache(key)
 
-        key = 'webapp_products_categories_{wo:%s}' % webapp_owner_id
-        cache_util.delete_cache(key)
+        # key = 'webapp_products_categories_{wo:%s}' % webapp_owner_id
+        # cache_util.delete_cache(key)
+        update_product_list_cache(webapp_owner_id)
 
     # if settings.EN_VARNISH:
     #     if not settings.IS_UNDER_BDD and deleteVarnish:
@@ -865,3 +872,67 @@ def update_product_list(webapp_owner_id):
     #     request = urllib2.Request(url)
     #     request.get_method = lambda: 'PURGE'
     #     urllib2.urlopen(request)
+
+
+def update_product_list_cache(webapp_owner_id):
+    webapp_owner_id = webapp_owner_id
+    key = 'webapp_products_categories_{wo:%s}' % webapp_owner_id
+
+    product_models = __get_product_models_for_list(webapp_owner_id)
+
+    categories = ProductCategory.objects.filter(owner_id=webapp_owner_id)
+
+    product_ids = [product_model.id for product_model in product_models]
+    category_has_products = CategoryHasProduct.objects.filter(product__in=product_ids)
+    product2categories = dict()
+    for relation in category_has_products:
+        product2categories.setdefault(relation.product_id, set()).add(relation.category_id)
+
+    categories = [{"id": category.id, "name": category.name} for category in categories]
+
+    from mall.models import Product
+
+    from django.contrib.auth.models import User
+    webapp_owner = User.objects.get(id=webapp_owner_id)
+    products = Product.fill_details(webapp_owner=webapp_owner, products=product_models, options={
+            "with_price": True,
+            "with_product_promotion": True,
+            "with_selected_category": True
+        })
+
+    product_datas = []
+
+    for product in products:
+        product_datas.append({
+            "id": product.id,
+            "name": product.name,
+            "is_member_product": product.is_member_product,
+            "display_price": product.price_info['display_price'],
+            "promotion_js": json.dumps(product.promotion.to_dict()) if product.promotion else json.dumps(None),
+            "thumbnails_url": product.thumbnails_url
+        })
+
+    for product_data in product_datas:
+        product_data['categories'] = list(product2categories.get(product_data['id'], []))
+
+    data = {
+        "products": product_datas,
+        "categories": categories
+    }
+
+    cache_util.set_cache(key, data)
+
+
+def __get_product_models_for_list(webapp_owner_id):
+    products = mall_models.Product.select().dj_where(
+        owner=webapp_owner_id,
+        shelve_type=mall_models.PRODUCT_SHELVE_TYPE_ON,
+        is_deleted=False,
+        type__not=mall_models.PRODUCT_DELIVERY_PLAN_TYPE).order_by(mall_models.Product.display_index,
+                                                                   -mall_models.Product.id)
+
+    products_0 = products.dj_where(display_index=0)
+    products_not_0 = products.dj_where(display_index__not=0)
+    products = list(itertools.chain(products_not_0, products_0))
+    return products
+
