@@ -64,7 +64,7 @@ class NewTemplateMessages(resource.Resource):
 
             setting = id2template.get(template_id, None)
             if setting:
-                item['status'] = template.status
+                item['status'] = setting.status
                 item['first'] = setting.first
                 item['remark'] = setting.remark
 
@@ -83,9 +83,14 @@ class NewTemplateMessages(resource.Resource):
         if 'status' == action:
             template_id = request.POST.get('template_id')
             status = request.POST.get('status')
-            weixin_models.UserTemplateSettings.objects.filter(owner_id=request.manager.id, template_id=template_id).update(status=status)
-        else:
-            saved_data = request.POST.get('saved_data')
+            status = True if status == 'true' else False
+            settings = weixin_models.UserTemplateSettings.objects.filter(owner_id=request.manager.id, template_id=template_id)
+            if settings.count() > 0:
+                settings.update(status=status)
+            else:
+                setting = weixin_models.UserTemplateSettings(owner_id=request.manager.id, template_id=template_id, status=status, usage=0)
+                setting.save()
+            saved_data = json.loads(request.POST.get('saved_data'))
             template_id = saved_data.template_id
             weixin_models.UserTemplateSettings.objects.filter(owner_id=request.manager.id, template_id=template_id).update(first=saved_data.first, remark=saved_data.remark)
 

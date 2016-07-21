@@ -5,12 +5,21 @@
         position: relative;
         min-height: 531px;
     }
+    .template_hint {
+        border:1px solid #f58b0f;
+        background: #fff7eb;
+        color: #f58b0f;
+        padding: 15px;
+        font-size: 15px;    
+        margin: 0;
+    }
     .template_message_item{
         border-bottom: 1px solid #e6e6e6;
         width: 580px;
         color: #666666;
-        height: 40px;
-        line-height: 40px;
+        height: 37px;
+        line-height: 37px;
+        position: relative;
     }
     input.template_control{
         display: inline-block;
@@ -22,7 +31,10 @@
         margin-right: 10px;                 
     }
     .template_edit{
-        margin-left: 350px;
+        display: inline-block;
+        position: absolute;
+        height: 14px;
+        right: 15px;
     }
     .template_edit_container{
         position: absolute;
@@ -105,9 +117,7 @@
             <li class="active">模板消息</li>
         </ul>
     </div>
-    <div>
-
-    </div>
+    <p class="template_hint">只有认证的服务号才能使用模板消息，请前往微信公众平台-模板库-选择行业（ IT科技/互联网/电子商务、消费品/消费品）搜索相应的模板标题，添加对应编号的模板消息至我的模板后即可使用</p> 
     <div class="xui-background">
         <div class="template_edit_container">
             <div class="template_edit_panel"></div>
@@ -130,7 +140,7 @@
         {{#each items}}
             {{#if_in this.title ../using_templates}}
                 <div class="template_message_item">
-                    <input type="checkbox" name="control" class="template_control" {{#ifequal status 'True'}}checked{{/ifequal}} data-template-id="{{template_id}}" data-status = "{{status}}">
+                    <input type="checkbox" name="control" class="template_control" {{#if status}}checked{{/if}} data-template-id="{{template_id}}" data-status = "{{status}}">
                     <span>{{title}}（行业：{{industry_name}}）</span>
                     <a href="javascript:void(0)" class="template_edit" title="编辑" data-template-id="{{template_id}}">编辑</a>
                 </div>
@@ -243,18 +253,7 @@ $(document).ready(function(){
         }
     });
 
-    // items = [{
-    //             'status': 'False',
-    //             'first': '',
-    //             'remark': '',
-    //             'industry_name': "IT科技",
-    //             'title': "领取奖金提醒",
-    //             'template_id': "iPk5sOIt5X_flOVKn5GrTFpncEYTojx6ddbt8WYoV5s",
-    //             'example': "您已提交领奖申请\n\n领奖金额：xxxx元\n领奖时间：2013-10-10 12:22:22\n银行信息：xx银行(尾号xxxx)\n到账时间：预计xxxxxxx\n\n预计将于xxxx到达您的银行卡"
-    //         }]
-    // renderList();
-
-    //同步模版
+     //同步模版
     $('.xa-sync-template').on('click', function(){
         W.resource.new_weixin.NewTemplateMessages.post({
             data: {
@@ -309,18 +308,18 @@ $(document).ready(function(){
     //更改状态
     $('body').delegate('.template_control','click',function(){
         var template_id = $(this).attr('data-template-id');
-        if( $(this).attr('data-status') == 'True'){
-            $(this).attr('data-status','False');
+        if( $(this).attr('data-status') == 'true'){
+            $(this).attr('data-status','false');
             for(var i=0;i<items.length;i++){
                 if(items[i]['template_id'] == template_id){
-                    items[i]['status'] = 'False';
+                    items[i]['status'] = false;
                 }
             }          
         }else{
-            $(this).attr('data-status','True'); 
+            $(this).attr('data-status','true'); 
             for(var j=0;j<items.length;j++){
                 if(items[j]['template_id'] == template_id){
-                    items[j]['status'] = 'True';
+                    items[j]['status'] = true;
                 }
             }           
         }
@@ -330,11 +329,11 @@ $(document).ready(function(){
                 woid: W.mid,
                 action: 'status',
                 template_id: template_id,
-                status: status == 'True'
+                status: status == 'true'
             },
             success: function(data){
                 editing = false;
-                W.showHint('success', status == 'True'? '启用模版': '停用模版');
+                W.showHint('success', status == 'true' ? '启用模版': '停用模版');
             },
             error: function(resp){
                 W.showHint('error','更改状态失败')
@@ -343,7 +342,7 @@ $(document).ready(function(){
     });
 
     //保存
-    $('.template_commit').click(function(){
+    $('.xa-submit').click(function(){
         var template_info = getSaveData();
         console.log(items);
         W.resource.new_weixin.NewTemplateMessages.put({
