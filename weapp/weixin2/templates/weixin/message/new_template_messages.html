@@ -106,6 +106,18 @@
     .cl6{
         color: #666666;
     }
+    .xui-i-changed h2,.xui-i-deleted h2{
+        margin: 0 0 10px;
+        font-size: 15px;
+        font-weight: 700;
+    }
+    .xui-i-changed p,.xui-i-deleted p{
+        font-size: 14px;
+        text-indent: 10px;
+    }
+    .xui-hidden {
+        display: none;
+    }
 </style>
 {% endblock %}
 {% block content-panel %}
@@ -170,27 +182,29 @@
                 <div class="modal-header">
                     <h3 class="modal-title">更新内容</h3>
                 </div>
-                <div class="modal-body" >
-                    <div class="xui-i-changed {{#unless has_changed }}xui-hidden{{/unless}}">
-                        <p>新增的模版：</p>
-                        {{#each changed}}
-                            <p>{{ this.title }}</p>
-                        {{/each}}
-                    </div>
-                    <div class="xui-i-deleted {{#unless has_deleted }}xui-hidden{{/unless}}">
-                        <p>删除的模版：</p>
-                        {{#each deleted}}
-                            <p>{{ this.title }}</p>
-                        {{/each}}
-                    </div>
-                    <div class="xui-i-desc">请对新增的模版进行配置，已被删除的模版将不再展示</div>
-                </div>
+                <div class="modal-body"></div>
                 <div class="modal-footer modal-footerBg">
                     <button data-dismiss="modal" class="btn btn-danger" type="button">知道了</button>
                 </div>
             </div>
         </div>
     </div>
+</script>
+
+<script id="weixin-template-syncResult-dialog" type="text/x-handlebar-tmpl">
+    <div class="xui-i-changed {{#unless has_changed }}xui-hidden{{/unless}}">
+        <h2>新增的模版：</h2>
+        {{#each changed}}
+            <p>{{ title }}</p>
+        {{/each}}
+    </div>
+    <div class="xui-i-deleted {{#unless has_deleted }}xui-hidden{{/unless}}">
+        <h2>删除的模版：</h2>
+        {{#each deleted}}
+            <p>{{ title }}</p>
+        {{/each}}
+    </div>
+    <div class="xui-i-desc">请对新增的模版进行配置，已被删除的模版将不再展示</div>
 </script>
 {% endverbatim %}
 {% endblock %}
@@ -205,17 +219,24 @@ var curr_first = '';
 var curr_remark = '';
 //更新模版后的消息弹窗
 var AfterSyncDialog = W.dialog.Dialog.extend({
-    initialize: function(options){
+    events: _.extend({
+    }, W.dialog.Dialog.prototype.events),
+    
+    templates: {
+        dialogTmpl: '#weixin-template-sync-dialog',
+        resultTmpl: '#weixin-template-syncResult-dialog'
+    },
+    onInitialize: function(options){
         $('#templateSyncDialog').remove();
-        var source = $('#weixin-template-sync-dialog').html();
+        var source = $('#weixin-template-syncResult-dialog').html();
         var template = Handlebars.compile(source);
         this.changed_tmpls = options.changed_tmpls;
         this.deleted_tmpls = options.deleted_tmpls;
         this.all_deleted_template_ids = [];
         for(var i= 0, l=this.deleted_tmpls.length; i<l; i++){
-            this.all_deleted_template_ids.push(this.deleted_tmpls[i]);
+            this.all_deleted_template_ids.push(this.deleted_tmpls[i].template_id);
         }
-        $('body').append(template({
+        this.$dialog.find('.modal-body').html(template({
             changed: options.changed_tmpls,
             deleted: options.deleted_tmpls,
             has_changed: options.changed_tmpls.length,
@@ -224,7 +245,7 @@ var AfterSyncDialog = W.dialog.Dialog.extend({
     },
     onShow: function(){
         if($.isEmptyObject(items)) return;
-        //出去已删除的
+        //去除已删除的
         for(var i= 0, l=items.length; i<l; i++){
             var tmp = items[i];
             if(this.all_deleted_template_ids.indexOf(tmp.template_id) >= 0){
@@ -232,11 +253,26 @@ var AfterSyncDialog = W.dialog.Dialog.extend({
             }
         }
         //加入新增的
-        items.concat(this.changed_tmpls);
+        items = items.concat(this.changed_tmpls);
         //重新渲染模版列表
+        var context = {
+            items: items,
+            using_templates: using_templates
+        };
         renderList();
     }
 });
+function renderList(){
+    var context = {
+        items: items,
+        using_templates: using_templates
+    };
+    var source = $('#weixin-template-message-view').html();
+    var template = Handlebars.compile(source);  
+    var html = template(context);
+
+    $('.panel-body').html(html);
+}
 $(document).ready(function(){
     //获取模版消息
     W.resource.new_weixin.NewTemplateMessages.get({
@@ -253,7 +289,7 @@ $(document).ready(function(){
         }
     });
 
-     //同步模版
+    //同步模版
     $('.xa-sync-template').on('click', function(){
         W.resource.new_weixin.NewTemplateMessages.post({
             data: {
@@ -273,7 +309,7 @@ $(document).ready(function(){
             }
         });
     });
-
+    
     //编辑
     $('body').delegate('.template_edit','click',function(){
         var $content = $('.template_edit_content');
@@ -376,18 +412,6 @@ $(document).ready(function(){
             }
         }
         return result;
-    }
-
-    function renderList(){
-        var context = {
-            items: items,
-            using_templates: using_templates
-        };
-        var source = $('#weixin-template-message-view').html();
-        var template = Handlebars.compile(source);  
-        var html = template(context);
-
-        $('.panel-body').html(html);
     }
 });
 </script>
