@@ -21,6 +21,9 @@ from weapp import settings
 from mall.order.util import update_order_status_by_group_status
 from apps.customerized_apps.group.group_participance import send_group_template_message
 
+from watchdog.utils import watchdog_alert, watchdog_info
+from core.exceptionutil import unicode_full_stack
+
 class MGroup(resource.Resource):
 	app = 'apps/group'
 	resource = 'm_group'
@@ -228,113 +231,120 @@ class MGroup(resource.Resource):
 		"""
 		响应GET
 		"""
-		record_id = request.GET.get('id','id')
-		mpUserPreviewName = ''
-		activity_status = u"未开始"
-		member = request.member
-		fid = 0
-		group_relation_id = None
-		product_id = None
+		try:
+			record_id = request.GET.get('id','id')
+			mpUserPreviewName = ''
+			activity_status = u"未开始"
+			member = request.member
+			fid = 0
+			group_relation_id = None
+			product_id = None
 
-		if 'new_app:' in record_id:
-			project_id = record_id
-			record_id = 0
-			record = None
-		elif member:
-			member_id = member.id
-			fid = request.GET.get('fid', None)
-			group_relation_id = request.GET.get('group_relation_id', None)
+			if 'new_app:' in record_id:
+				project_id = record_id
+				record_id = 0
+				record = None
+			elif member:
+				member_id = member.id
+				fid = request.GET.get('fid', None)
+				group_relation_id = request.GET.get('group_relation_id', None)
 
-			#判断分享页是否自己的主页
-			# if not fid:
-			# 	new_url = url_helper.add_query_part_to_request_url(request.get_full_path(), 'fid', member_id)
-			# 	response = HttpResponseRedirect(new_url)
-			# 	response.set_cookie('fid', member_id, max_age=60*60*24*365)
-			# 	return response
+				#判断分享页是否自己的主页
+				# if not fid:
+				# 	new_url = url_helper.add_query_part_to_request_url(request.get_full_path(), 'fid', member_id)
+				# 	response = HttpResponseRedirect(new_url)
+				# 	response.set_cookie('fid', member_id, max_age=60*60*24*365)
+				# 	return response
 
-			if not group_relation_id:
-				group_relation = app_models.GroupRelations.objects(belong_to=record_id, member_id=str(member_id))
-				if group_relation.count() > 0:
-					group_relation = group_relation.first()
-					group_detail = app_models.GroupDetail.objects(
-						relation_belong_to = str(group_relation.id),
-						owner_id = str(member_id),
-						grouped_member_id = str(member_id),
-					)
-					if group_detail.count() > 0: #已成功开团
-						if group_relation.group_status != app_models.GROUP_NOT_START:
-							new_url_1 = url_helper.add_query_part_to_request_url(request.get_full_path(), 'group_relation_id', str(group_relation.id))
-							new_url = url_helper.add_query_part_to_request_url(new_url_1, 'fid', member_id)
-							response = HttpResponseRedirect(new_url)
-							response.set_cookie('group_relation_id', str(group_relation.id), max_age=60*60*24*365)
-							return response
+				if not group_relation_id:
+					group_relation = app_models.GroupRelations.objects(belong_to=record_id, member_id=str(member_id))
+					if group_relation.count() > 0:
+						group_relation = group_relation.first()
+						group_detail = app_models.GroupDetail.objects(
+							relation_belong_to = str(group_relation.id),
+							owner_id = str(member_id),
+							grouped_member_id = str(member_id),
+						)
+						if group_detail.count() > 0: #已成功开团
+							if group_relation.group_status != app_models.GROUP_NOT_START:
+								new_url_1 = url_helper.add_query_part_to_request_url(request.get_full_path(), 'group_relation_id', str(group_relation.id))
+								new_url = url_helper.add_query_part_to_request_url(new_url_1, 'fid', member_id)
+								response = HttpResponseRedirect(new_url)
+								response.set_cookie('group_relation_id', str(group_relation.id), max_age=60*60*24*365)
+								return response
 
-			# cache_key = 'apps_group_%s_html' % record_id
-			# # 从redis缓存获取静态页面
-			# cache_data = GET_CACHE(cache_key)
-			# if cache_data:
-			# 	print 'redis---return'
-			# 	return HttpResponse(cache_data)
+				# cache_key = 'apps_group_%s_html' % record_id
+				# # 从redis缓存获取静态页面
+				# cache_data = GET_CACHE(cache_key)
+				# if cache_data:
+				# 	print 'redis---return'
+				# 	return HttpResponse(cache_data)
 
-			record = app_models.Group.objects(id=record_id)
-			if record.count() > 0:
-				record = record.first()
-				record.update(add_to_set__visited_member=member_id)
-				#获取公众号昵称
-				mpUserPreviewName = request.webapp_owner_info.auth_appid_info.nick_name
-				#获取活动状态
-				activity_status = record.status_text
-				if activity_status == u'已结束':
-					record.update(set__status=app_models.STATUS_STOPED)
-				product_id = record.product_id
-				project_id = 'new_app:group:%s' % record.related_page_id
+				record = app_models.Group.objects(id=record_id)
+				if record.count() > 0:
+					record = record.first()
+					record.update(add_to_set__visited_member=member_id)
+					#获取公众号昵称
+					mpUserPreviewName = request.webapp_owner_info.auth_appid_info.nick_name
+					#获取活动状态
+					activity_status = record.status_text
+					if activity_status == u'已结束':
+						record.update(set__status=app_models.STATUS_STOPED)
+					product_id = record.product_id
+					project_id = 'new_app:group:%s' % record.related_page_id
+				else:
+					c = RequestContext(request, {
+						'is_deleted_data': True
+					})
+					return render_to_response('group/templates/webapp/m_group.html', c)
+
 			else:
-				c = RequestContext(request, {
-					'is_deleted_data': True
-				})
-				return render_to_response('group/templates/webapp/m_group.html', c)
+				record = app_models.Group.objects(id=record_id)
+				if record.count() >0:
+					record = record.first()
+					#获取活动状态
+					activity_status = record.status_text
+					if activity_status == u'已结束':
+						record.update(set__status=app_models.STATUS_STOPED)
+					project_id = 'new_app:group:%s' % record.related_page_id
+				else:
+					c = RequestContext(request, {
+						'is_deleted_data': True
+					})
+					return render_to_response('group/templates/webapp/m_group.html', c)
 
-		else:
-			record = app_models.Group.objects(id=record_id)
-			if record.count() >0:
-				record = record.first()
-				#获取活动状态
-				activity_status = record.status_text
-				if activity_status == u'已结束':
-					record.update(set__status=app_models.STATUS_STOPED)
-				project_id = 'new_app:group:%s' % record.related_page_id
-			else:
-				c = RequestContext(request, {
-					'is_deleted_data': True
-				})
-				return render_to_response('group/templates/webapp/m_group.html', c)
+			request.GET._mutable = True
+			request.GET.update({"project_id": project_id})
+			request.GET._mutable = False
+			html = pagecreater.create_page(request, return_html_snippet=True)
 
-		request.GET._mutable = True
-		request.GET.update({"project_id": project_id})
-		request.GET._mutable = False
-		html = pagecreater.create_page(request, return_html_snippet=True)
-
-		c = RequestContext(request, {
-			'record_id': record_id,
-			'group_relation_id': group_relation_id, #小团购id，如不存在则为None
-			'product_id': product_id, #产品id，如不存在则为None
-			'activity_status': activity_status,
-			'page_title': record.name if record else u"团购",
-			'page_html_content': html,
-			'app_name': "group",
-			'resource': "group",
-			'hide_non_member_cover': True, #非会员也可使用该页面
-			'isPC': False if request.member else True,
-			'share_page_title': mpUserPreviewName,
-			'share_img_url': record.material_image if record else '',
-			'share_page_desc': record.share_description if record else u"团购",
-			'share_to_timeline_use_desc': True,  #分享到朋友圈的时候信息变成分享给朋友的描述
-			'settings_domain': settings.APPS_H5_DOMAIN
-		})
-		response = render_to_string('group/templates/webapp/m_group.html', c)
-		# if request.member:
-		# 	SET_CACHE(cache_key, response)
-		return HttpResponse(response)
+			c = RequestContext(request, {
+				'record_id': record_id,
+				'group_relation_id': group_relation_id, #小团购id，如不存在则为None
+				'product_id': product_id, #产品id，如不存在则为None
+				'activity_status': activity_status,
+				'page_title': record.name if record else u"团购",
+				'page_html_content': html,
+				'app_name': "group",
+				'resource': "group",
+				'hide_non_member_cover': True, #非会员也可使用该页面
+				'isPC': False if request.member else True,
+				'share_page_title': mpUserPreviewName,
+				'share_img_url': record.material_image if record else '',
+				'share_page_desc': record.share_description if record else u"团购",
+				'share_to_timeline_use_desc': True,  #分享到朋友圈的时候信息变成分享给朋友的描述
+				'settings_domain': settings.APPS_H5_DOMAIN
+			})
+			response = render_to_string('group/templates/webapp/m_group.html', c)
+			# if request.member:
+			# 	SET_CACHE(cache_key, response)
+			return HttpResponse(response)
+		except:
+			watchdog_alert(u'团购页面跳转失败，cause:\n{}'.format(unicode_full_stack()))
+			c = RequestContext(request, {
+				# 'is_deleted_data': True
+			})
+			return render_to_response('group/templates/webapp/m_group.html', c)
 
 class GetProductDetail(resource.Resource):
 	app = 'apps/group'
