@@ -6,3 +6,4 @@ import purchase_trend
 import member_increasement
 import fans
 import sale
+import cost_analysis
