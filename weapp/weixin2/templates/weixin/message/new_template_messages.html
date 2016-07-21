@@ -1,7 +1,7 @@
 {% extends "content_base_v2.html" %}
 {% block css%}
 <style type="text/css">
-    .xui-background{
+    .xui-template-container{
         position: relative;
         min-height: 531px;
     }
@@ -11,7 +11,7 @@
         color: #f58b0f;
         padding: 15px;
         font-size: 15px;    
-        margin: 0;
+        margin: 0 0 15px;
     }
     .template_message_item{
         border-bottom: 1px solid #e6e6e6;
@@ -20,6 +20,9 @@
         height: 37px;
         line-height: 37px;
         position: relative;
+    }
+    .template_message_item > span{
+        cursor: pointer;
     }
     input.template_control{
         display: inline-block;
@@ -118,6 +121,29 @@
     .xui-hidden {
         display: none;
     }
+    .xui-active {
+        color: #1262b7;
+    }
+    .alert-warning {
+        color: #8a6d3b;
+    }
+    .xui-showIntroduction {
+        position: absolute;
+        left: 600px;
+        top: 20px;
+    }
+    .xui-weixin-template_messagesPage .xui-templateIntroduction {
+        position: absolute;
+        left: 550px;
+        top: 42px;
+        width: 425px;
+        height: 215px;
+        background: #fff;
+        border: 1px solid #ccc;
+    }
+    a:active,a:hover,a:visited,a:link{
+        text-decoration: none;
+    }
 </style>
 {% endblock %}
 {% block content-panel %}
@@ -130,7 +156,8 @@
         </ul>
     </div>
     <p class="template_hint">只有认证的服务号才能使用模板消息，请前往微信公众平台-模板库-选择行业（ IT科技/互联网/电子商务、消费品/消费品）搜索相应的模板标题，添加对应编号的模板消息至我的模板后即可使用</p> 
-    <div class="xui-background">
+    <div class="xui-template-container xa-template-container xui-background">
+        <img class="xa-showIntroduction xui-showIntroduction" src="/static_v2/img/weixin/wenhao.png">
         <div class="template_edit_container">
             <div class="template_edit_panel"></div>
         </div>
@@ -153,7 +180,7 @@
             {{#if_in this.title ../using_templates}}
                 <div class="template_message_item">
                     <input type="checkbox" name="control" class="template_control" {{#if status}}checked{{/if}} data-template-id="{{template_id}}" data-status = "{{status}}" data-title="{{ title }}">
-                    <span>{{title}}（行业：{{industry_name}}）</span>
+                    <span class="xa-industry">{{title}}（行业：{{industry_name}}）</span>
                     <a href="javascript:void(0)" class="template_edit" title="编辑" data-template-id="{{template_id}}">编辑</a>
                 </div>
             {{/if_in}}
@@ -165,9 +192,9 @@
     <div class="template_edit_content" data-template-id="{{template_id}}">
         <h2>{{item_title}}</h2>
         <div class="cl6 mt5 mb5">7月11日</div>
-        <input type="text" name="first" class="template_edit_first mb10" value="{{item_first}}"></input>
+        <input type="text" name="first" class="template_edit_first mb10" value="{{item_first}}" placeholder="请输入开头语"></input>
         {{#list item_message_arr}}{{/list}}
-        <input type="text" name="remark" class="mt5 template_edit_remark" value="{{item_remark}}"></input>
+        <input type="text" name="remark" class="mt5 template_edit_remark" value="{{item_remark}}" placeholder="请输入结尾语"></input>
         <div class="template_edit_detail">
             详情<i>></i>
         </div>
@@ -319,6 +346,8 @@ $(document).ready(function(){
             W.showHint('warning', '请先保存更改');
             return;
         }
+        $('.template_edit').siblings('span').removeClass('xui-active');
+        $(this).siblings('span').addClass('xui-active');
         var template_id = $(this).attr('data-template-id');
         var item = items.filter(function(e){
             return e['template_id'] == template_id;
@@ -341,6 +370,9 @@ $(document).ready(function(){
         editing = true;
     });
 
+    $('body').delegate('.xa-industry','click',function(){
+        $(this).siblings('.template_edit').trigger('click');
+    });
     //更改状态
     $('body').delegate('.template_control','click',function(){
         var template_id = $(this).attr('data-template-id');
@@ -397,6 +429,14 @@ $(document).ready(function(){
                 W.showHint('error','保存失败')
             }
         });
+    });
+
+
+    $('.xa-showIntroduction').on('mouseover',function(){
+        $('.xa-template-container').append('<div class="xui-templateIntroduction"><p class="pt20">模板消息仅用于公众号向用户发送业务通知。如微信支付成功商品购买成功通知等，模板消息只对认证的服务号开放。</p><p>配置方法：</p><ul><li>1、登录微信公众平台</li><li>2、在“添加功能插件”处添加模板消息，并填写申请信息</li><li>3、打开模板消息</li><li>4、在模板库中添加对应编号的模板</li><li>5、在我的模板中复制模板ID</li><li>6、在微众后台模板消息配置中粘贴所复制的ID</li><li>7、填写开头语和结束语，其他商品信息系统会自动获取无需自己填写</li></ul><div>')
+    });
+    $('.xa-showIntroduction').on('mouseout',function(){
+         $(".xui-templateIntroduction").remove();
     });
 
     function getSaveData(){
