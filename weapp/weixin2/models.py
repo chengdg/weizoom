@@ -744,6 +744,15 @@ WEIXIN_TEMPLATE_USAGE = {
 	'APPS_GROUP_FAIL': 2, #百宝箱团购失败
 
 }
+WEIXIN_TEMPLATE_TITLE2USAGE = {
+	u'拼团成功通知': 1,
+	u'拼团退款提醒': 2,
+	u'商品发货通知': 3,
+	u'订单标记发货通知': 4,
+	u'购买成功通知': 5,
+	u'付款成功通知': 6,
+	u'积分变动通知': 7
+}
 
 class UserTemplateSettings(models.Model):
 	"""

@@ -83,16 +83,31 @@ class NewTemplateMessages(resource.Resource):
         if 'status' == action:
             template_id = request.POST.get('template_id')
             status = request.POST.get('status')
+            title = request.POST.get('title')
             status = True if status == 'true' else False
             settings = weixin_models.UserTemplateSettings.objects.filter(owner_id=request.manager.id, template_id=template_id)
             if settings.count() > 0:
                 settings.update(status=status)
             else:
-                setting = weixin_models.UserTemplateSettings(owner_id=request.manager.id, template_id=template_id, status=status, usage=0)
+                setting = weixin_models.UserTemplateSettings(owner_id=request.manager.id, template_id=template_id, status=status, usage=weixin_models.WEIXIN_TEMPLATE_TITLE2USAGE[title])
                 setting.save()
+        else:
             saved_data = json.loads(request.POST.get('saved_data'))
-            template_id = saved_data.template_id
-            weixin_models.UserTemplateSettings.objects.filter(owner_id=request.manager.id, template_id=template_id).update(first=saved_data.first, remark=saved_data.remark)
+            template_id = saved_data['template_id']
+            first = saved_data['first']
+            remark = saved_data['remark']
+            setting = weixin_models.UserTemplateSettings.objects.filter(owner_id=request.manager.id, template_id=template_id)
+            if setting.count() > 0:
+                setting.update(first=first, remark=remark)
+            else:
+                setting = weixin_models.UserTemplateSettings(
+                    owner_id=request.manager.id,
+                    template_id=template_id,
+                    first=first,
+                    remark=remark,
+                    usage=weixin_models.WEIXIN_TEMPLATE_TITLE2USAGE[saved_data['title']]
+                )
+                setting.save()
 
         return response.get_response()
 
