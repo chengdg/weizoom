@@ -360,7 +360,7 @@ def get_webapp_link_objectes_for_type(request, type, query, order_by):
 				
 
 			else:
-				objects = iitem['class'].objects.filter(**kwargs).order_by(order_by)
+				objects = item['class'].objects.filter(**kwargs).order_by(order_by)
 		else:
 			objects = item['class'].objects.filter(**kwargs).order_by(order_by)
 
