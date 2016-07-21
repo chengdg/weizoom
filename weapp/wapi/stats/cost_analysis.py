@@ -43,7 +43,8 @@ class CostAnalysis(api_resource.ApiResource):
 		for order in orders:
 			weapp_id = order.webapp_id
 			coupon_count = 1 if order.coupon_id else 0
-			loss_money = order.weizoom_card_money+order.final_price-order.total_purchase_price
+			sale_money = order.weizoom_card_money + order.final_price + order.coupon_money + order.integral_money  #销售额
+			loss_money = sale_money - order.total_purchase_price
 			if not webapp_id2cost.has_key(weapp_id):
 				webapp_id2cost[order.webapp_id] = {
 					"order_count": 1,
@@ -54,7 +55,8 @@ class CostAnalysis(api_resource.ApiResource):
 					"weizoom_card_money": order.weizoom_card_money,
 					"final_price": order.final_price,
 					"total_purchase_price": order.total_purchase_price,
-					"loss_money": loss_money
+					"loss_money": loss_money,
+					"sale_money": sale_money
 				}
 			else:
 				cur_cost = webapp_id2cost[order.webapp_id]
@@ -67,6 +69,7 @@ class CostAnalysis(api_resource.ApiResource):
 				cur_cost["final_price"] += order.final_price
 				cur_cost["total_purchase_price"] += order.total_purchase_price
 				cur_cost["loss_money"] += loss_money
+				cur_cost["sale_money"] += sale_money
 
 		owner_ids = []
 		for w_id in webapp_ids:
@@ -92,45 +95,6 @@ class CostAnalysis(api_resource.ApiResource):
 				coupon_info["get_money"] += cr.get_count*cr.money
 
 		logging.info('start get member_integral_logs')
-		# 获取每个自营平台的会员
-		# members = Member.objects.filter(webapp_id__in=webapp_ids)
-		# member_ids = []
-		# webapp_id2member_ids = {}
-		# for member in members:
-		# 	member_ids.append(member.id)
-		# 	if not webapp_id2member_ids.has_key(member.webapp_id):
-		# 		webapp_id2member_ids[member.webapp_id] = [member.id]
-		# 	else:
-		# 		webapp_id2member_ids[member.webapp_id].append(member.id)
-
-		# member_integral_logs = MemberIntegralLog.objects.filter(member__id__in=member_ids,created_at__gte=start_date,created_at__lte=end_date)
-
-		# # 每个会员新增的积分数
-		# member_id2integral = {}
-		# for log in  member_integral_logs:
-		# 	if not member_id2integral.has_key(log.member_id):
-		# 		member_id2integral[log.member_id] = log.integral_count
-		# 	else:
-		# 		member_id2integral[log.member_id] += log.integral_count
-
-		# #每个自营平台的新增积分数
-		# webapp_id2integral = {}
-		# for webapp_id,webapp_member_ids in webapp_id2member_ids.items():
-		# 	webapp_id2integral[webapp_id] = 0
-		# 	for webapp_member_id in webapp_member_ids:
-		# 		webapp_id2integral[webapp_id] += member_id2integral.get(webapp_member_id,0)
-
-
-		# members = Member.objects.filter(webapp_id__in=webapp_ids)
-		# member_ids = []
-		# webapp_id2member_ids = {}
-		# for member in members:
-		# 	member_ids.append(member.id)
-		# 	if not webapp_id2member_ids.has_key(member.webapp_id):
-		# 		webapp_id2member_ids[member.webapp_id] = [member.id]
-		# 	else:
-		# 		webapp_id2member_ids[member.webapp_id].append(member.id)
-
 		member_integral_logs = MemberIntegralLog.objects.filter(created_at__range=(start_date, end_date))
 
 		# 每个会员新增的积分数
@@ -152,20 +116,6 @@ class CostAnalysis(api_resource.ApiResource):
 				webapp_id2integral[member.webapp_id] = 0
 			webapp_id2integral[member.webapp_id] += member_id2integral.get(member.id,0)
 
-
-		# member_integral_logs = MemberIntegralLog.objects.filter(member__webapp_id__in=webapp_ids,created_at__range=(start_date, end_date))
-		# logging.info('member_integral_logs count: %d', member_integral_logs.count())
-		# webapp_id2integral = {}
-		# i = 0
-		# for log in  member_integral_logs:
-		# 	i += 1
-		# 	if i % 100 == 0:
-		# 		logging.info('has process %d' % i)
-		# 	_webapp_id = log.member.webapp_id
-		# 	if not webapp_id2integral.has_key(_webapp_id):
-		# 		webapp_id2integral[_webapp_id] = 0
-
-		# 	webapp_id2integral[_webapp_id] += log.integral_count
 		logging.info('get member_integral_logs end')
 
 		cost_list = []
@@ -186,6 +136,7 @@ class CostAnalysis(api_resource.ApiResource):
 				"final_price": u"%.2f" % (cost["final_price"] if cost else 0),
 				"total_purchase_price": u"%.2f" % (cost["total_purchase_price"] if cost else 0),
 				"loss_money": u"%.2f" % (cost["loss_money"] if cost else 0),
+				"sale_money": u"%.2f" % (cost["sale_money"] if cost else 0),
 				"publish_count": coupon["count"] if coupon else 0,
 				"publish_money": u"%.2f" % (coupon["money"] if coupon else 0),
 				"get_count": coupon["get_count"] if coupon else 0,
