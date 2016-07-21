@@ -153,9 +153,9 @@
     <div class="template_edit_content" data-template-id="{{template_id}}">
         <h2>{{item_title}}</h2>
         <div class="cl6 mt5 mb5">7月11日</div>
-        <input type="text" name="first" class="template_edit_first mb10" value={{#if item_first}}"{{item_first}}"{{/if}}></input>
+        <input type="text" name="first" class="template_edit_first mb10" value="{{item_first}}"></input>
         {{#list item_message_arr}}{{/list}}
-        <input type="text" name="remark" class="mt5 template_edit_remark" value={{#if item_remark}}"{{item_remark}}"{{/if}}></input>
+        <input type="text" name="remark" class="mt5 template_edit_remark" value="{{item_remark}}"></input>
         <div class="template_edit_detail">
             详情<i>></i>
         </div>
@@ -280,7 +280,7 @@ $(document).ready(function(){
         var old_first = $content.find('.template_edit_first').val();
         var old_remark = $content.find('.template_edit_remark').val();
         if(editing && (curr_first != old_first || curr_remark != old_remark)){
-            W.showHint('info', '请先保存更改');
+            W.showHint('warning', '请先保存更改');
             return;
         }
         var template_id = $(this).attr('data-template-id');
@@ -351,7 +351,7 @@ $(document).ready(function(){
             data: {
                 woid: W.mid,
                 action: 'items',
-                saved_data: template_info
+                saved_data: JSON.stringify(template_info)
             },
             success: function(data){
                 editing = false;

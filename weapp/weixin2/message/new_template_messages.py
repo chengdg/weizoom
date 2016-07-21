@@ -64,10 +64,11 @@ class NewTemplateMessages(resource.Resource):
 
             setting = id2template.get(template_id, None)
             if setting:
+                print '----'
                 item['status'] = setting.status
                 item['first'] = setting.first
                 item['remark'] = setting.remark
-
+            print item
             items.append(item)
         response = create_response(200)
         response.data = items
