@@ -834,8 +834,9 @@ class Product(models.Model):
 				model = ProductModel.objects.get(product_id=self.id, name=model_name)
 			except:
 				model = None
+			product = self
 			if model:			
-				product = self
+				
 				product.price = model.price
 				product.weight = model.weight
 				product.stock_type = model.stock_type
