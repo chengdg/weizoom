@@ -846,14 +846,29 @@ class Product(models.Model):
 				product.model_name = model_name
 				product.model = model
 				product.is_model_deleted = False
-				product.market_price = model.market_price
+				product.market_price = 0.0
 				product.user_code = model.user_code
 				if model.is_deleted:
 					product.is_model_deleted = True
 				#raise ValueError("product model is deleted: %s" % model_name)
+				
+			else:
+				product.price = product.price
+				product.weight = product.weight
+				product.stock_type = model.stock_type
+				product.min_limit = product.stocks
+				product.stocks = model.stocks
+				product.model_name = model_name
+				product.model = None
+				product.is_model_deleted = True
+				product.market_price = 0.0
+				product.user_code = product.user_code
+				product.is_model_deleted = True
+
 
 			property_ids = []
 			property_value_ids = []
+
 			name = product.model_name
 			if product.model_name != 'standard':
 				for model_property_info in product.model_name.split('_'):
