@@ -759,7 +759,7 @@ class UserTemplateSettings(models.Model):
 	商家各功能所配置的模板消息
 	"""
 	owner_id = models.IntegerField() #所属商家
-	usage = models.IntegerField(max_length=128) #模版用途
+	usage = models.IntegerField() #模版用途
 	template_id = models.CharField(max_length=512) #模板id
 	first = models.CharField(max_length=1024, default='') #模版开头语
 	remark = models.CharField(max_length=1024, default='') #模版最后的注释
@@ -776,7 +776,8 @@ class TemplateMessageLogs(models.Model):
 	模版消息记录
 	"""
 	owner_id = models.IntegerField() #所属商家
-	usage = models.IntegerField(max_length=128) #模版用途
+	usage = models.IntegerField() #模版用途
+	reason = models.CharField(max_length=1024, default='') #使用模版的场景描述
 	template_id = models.CharField(max_length=512) #模板id
 	content = models.TextField() #消息内容
 	status = models.CharField(max_length=64, default='') #状态
