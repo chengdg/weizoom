@@ -855,9 +855,9 @@ class Product(models.Model):
 			else:
 				product.price = product.price
 				product.weight = product.weight
-				product.stock_type = model.stock_type
+				product.stock_type = product.stock_type
 				product.min_limit = product.stocks
-				product.stocks = model.stocks
+				product.stocks = product.stocks
 				product.model_name = model_name
 				product.model = None
 				product.is_model_deleted = True
