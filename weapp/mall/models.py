@@ -830,21 +830,25 @@ class Product(models.Model):
 				product.market_price = model.market_price
 				product.custom_model_properties = None
 		else:
-			model = ProductModel.objects.get(product_id=self.id, name=model_name)
-			product = self
-			product.price = model.price
-			product.weight = model.weight
-			product.stock_type = model.stock_type
-			if not hasattr(product, 'min_limit'):
-				product.min_limit = product.stocks
-			product.stocks = model.stocks
-			product.model_name = model_name
-			product.model = model
-			product.is_model_deleted = False
-			product.market_price = model.market_price
-			product.user_code = model.user_code
-			if model.is_deleted:
-				product.is_model_deleted = True
+			try:
+				model = ProductModel.objects.get(product_id=self.id, name=model_name)
+			except:
+				model = None
+			if model:			
+				product = self
+				product.price = model.price
+				product.weight = model.weight
+				product.stock_type = model.stock_type
+				if not hasattr(product, 'min_limit'):
+					product.min_limit = product.stocks
+				product.stocks = model.stocks
+				product.model_name = model_name
+				product.model = model
+				product.is_model_deleted = False
+				product.market_price = model.market_price
+				product.user_code = model.user_code
+				if model.is_deleted:
+					product.is_model_deleted = True
 				#raise ValueError("product model is deleted: %s" % model_name)
 
 			property_ids = []
