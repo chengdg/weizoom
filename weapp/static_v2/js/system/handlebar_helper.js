@@ -68,7 +68,7 @@ Handlebars.registerHelper('list', function(item_message, options) {
     var out = '<ul>';
     for(var i=0, l=item_message.length; i<l; i++) {
         var message = item_message[i].split('：');
-        out = out + '<li>' + message[0] + '：' + '<span>' + message[1] + '</span>' + '</li>';
+        out = out + '<li>' + message[0] + '：' + '<span>xxx</span>' + '</li>';
     }
     return out + '</ul>';
 });

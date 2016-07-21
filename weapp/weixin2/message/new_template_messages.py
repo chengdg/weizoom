@@ -59,12 +59,9 @@ class NewTemplateMessages(resource.Resource):
                 'industry_name': '%s-%s' % (template.primary_industry, template.deputy_industry),
                 'title': template.title,
                 'template_id': template_id,
-                'content': template.content,
-                'example': template.example.replace('\n', '::')
+                'example': '::'.join([x for x in template.content[template.content.find('}}')+2: template.content.rfind('{{')].split('\n') if x !=''])
             }
-            print template.title
-            print template.content
-            print '=============='
+
             setting = id2template.get(template_id, None)
             if setting:
                 item['status'] = template.status
