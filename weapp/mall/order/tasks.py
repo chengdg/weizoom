@@ -516,8 +516,8 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
                             relation.price,
                             relation.number,
                             relation.price*relation.number,
-                            product_idandmodel_value2weigth[
-                                (relation.product_id, relation.product_model_name)] * 2 * relation.number,
+                            product_idandmodel_value2weigth.get(
+                                (relation.product_id, relation.product_model_name),0) * 2 * relation.number,
                             payment_type[str(int(order.pay_interface_type))],
                             order.total_purchase_price if not mall_type and(order.supplier or order.supplier_user_id) else final_price + weizoom_card_money,
                             u'0' if not mall_type and(order.supplier or order.supplier_user_id) else final_price,
@@ -570,8 +570,8 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
                             relation.price,
                             relation.number,
                             relation.price*relation.number,
-                            product_idandmodel_value2weigth[
-                                (relation.product_id, relation.product_model_name)] * 2 * relation.number,
+                            product_idandmodel_value2weigth.get(
+                                (relation.product_id, relation.product_model_name),0) * 2 * relation.number,
                             payment_type[str(int(order.pay_interface_type))],
                             u'-',
                             u'-',
