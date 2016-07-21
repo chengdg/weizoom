@@ -105,7 +105,13 @@
                     <td>
                         ${product.price}
                     </td>
-                    <td>${product.stocks}</td>
+                    <td>
+                    {{if product.stocks == 0}}
+                        无限
+                    {{else}}
+                        ${product.stocks}
+                    {{/if}}
+                    </td>
                     <td>
                         <a href="javascript:void(0);" class="xa-offshelf">上架</a>
                        <!--  {{if product.status == 1}}
