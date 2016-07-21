@@ -43,7 +43,7 @@ class CostAnalysis(api_resource.ApiResource):
 		for order in orders:
 			weapp_id = order.webapp_id
 			coupon_count = 1 if order.coupon_id else 0
-			loss_money = order.weizoom_card_money+order.final_price-order.total_purchase_price
+			loss_money = order.total_purchase_price - (order.weizoom_card_money + order.final_price)
 			if not webapp_id2cost.has_key(weapp_id):
 				webapp_id2cost[order.webapp_id] = {
 					"order_count": 1,
