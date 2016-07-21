@@ -59,7 +59,7 @@ def handle_rebate_core(all_records=None):
 		all_records = apps_models.Rebate.objects(is_deleted=False,status__ne=apps_models.STATUS_NOT_START)
 
 	#筛选出扫码后已完成的符合要求的订单
-	webapp_user_id_belong_to_member_id, id2record, member_id2records, member_id2order_ids, all_orders = get_target_orders(all_records)
+	webapp_user_id_belong_to_member_id, id2record, member_id2records, member_id2order_ids, all_orders, member_id2participations = get_target_orders(all_records)
 
 	#排除掉已返利发卡的订单
 	order_has_granted = {d.order_id: True for d in apps_models.RebateWeizoomCardDetails.objects(record_id__in=id2record.keys())}
@@ -75,15 +75,18 @@ def handle_rebate_core(all_records=None):
 	all_record_ids = set()
 	for member_id, records in member_id2records.items():
 		target_order_ids = member_id2order_ids.get(member_id, None)
-		if not target_order_ids:
+		cur_member_participations = member_id2participations.get(member_id, None)
+		if not target_order_ids or not cur_member_participations:
 			continue
 		for record in records:
+			record_id = record.id
 			permission = record.permission
 			is_limit_first_buy = record.is_limit_first_buy
 			is_limit_cash = record.is_limit_cash
 			rebate_order_price = record.rebate_order_price
 			start_time = record.start_time
 			end_time = record.end_time
+			participate_time = None
 			for order_id in target_order_ids:
 				target_order = order_id2order[order_id]
 				order_created_time = target_order.created_at
@@ -95,8 +98,12 @@ def handle_rebate_core(all_records=None):
 					continue	#返利活动限制首单且该订单在该活动之前就产生了，不算
 				if order_created_time < start_time or order_created_time > end_time:
 					continue	#不在该返利活动的有效期内，不算
-				#TODO 不在用户扫码时间内的，不算
-
+				for p in cur_member_participations:
+					if str(record_id) == str(p.belong_to):
+						participate_time = p.created_at  #该活动扫码时间
+						break
+				if participate_time and order_created_time < participate_time:
+					continue #不在用户扫码时间内的，不算
 				if is_limit_cash and target_order.final_price < rebate_order_price:
 					continue	#返利活动限制现金且该订单没有达到现金值，不算
 				if not is_limit_cash and target_order.product_price < rebate_order_price:
@@ -153,7 +160,8 @@ def grant_card(need_grant_info, all_record_ids):
 			not_ready_card_list.append(apps_models.RebateWaitingAction(
 				webapp_id = info['webapp_id'],
 				member_id = info['target_member_info'].id,
-				record_id = info['record_id']
+				record_id = info['record_id'],
+				order_id = info['order_id']
 			))
 			return None
 
@@ -200,6 +208,8 @@ def handle_wating_actions():
 	member_id2member = {m.id: m for m in member_models.Member.objects.filter(id__in=member_ids)}
 	need_finish_actions = []
 	need_delete_ids = []
+	log_list = []
+	card_has_granted = {}
 	#获取活动与微众卡的映射
 	record_id2card = {}
 	for c in apps_root_models.AppsWeizoomCard.objects(belong_to__in=record_ids, status=0).order_by("weizoom_card_id"):
@@ -213,8 +223,14 @@ def handle_wating_actions():
 		curr_record_card_list = record_id2card.get(str(record_id), None)
 		if not curr_record_card_list:
 			return None
+		curr_index = 0
 		try:
-			curr_card = curr_record_card_list[0]
+			curr_card = curr_record_card_list[curr_index]
+			curr_card_id = curr_card.weizoom_card_id
+			while card_has_granted.has_key(curr_card_id):
+				curr_index += 1
+				curr_card = curr_record_card_list[curr_index]
+				curr_card_id = curr_card.weizoom_card_id
 			return curr_card
 		except:
 			return None
@@ -233,11 +249,25 @@ def handle_wating_actions():
 			source = promotion_models.WEIZOOM_CARD_SOURCE_REBATE,
 			relation_id = action.record_id
 		))
+		log_list.append(apps_models.RebateWeizoomCardDetails(
+			record_id=action.record_id,
+			order_id=action.order_id,
+			member_id=action.member_id,
+			weizoom_card_id=can_use_card.weizoom_card_id,
+			created_at=datetime.datetime.now()
+		))
 		need_delete_ids.append(action.id)
+		card_has_granted[can_use_card.weizoom_card_id] = True
 
+	#发卡
 	if len(need_finish_actions) >0:
 		promotion_models.MemberHasWeizoomCard.objects.bulk_create(need_finish_actions)
-
+	# 记录已发卡的详情
+	if len(log_list) > 0:
+		apps_models.RebateWeizoomCardDetails.objects.insert(log_list)
+	# 标记已发放的卡
+	apps_root_models.AppsWeizoomCard.use_cards(card_has_granted.keys())
+	#删除待发卡数据
 	apps_models.RebateWaitingAction.objects(id__in=need_delete_ids).delete()
 
 def get_target_orders(records=None, is_show=None):
@@ -267,6 +297,7 @@ def get_target_orders(records=None, is_show=None):
 	record_id2partis = {} #各活动的参与人member_id集合
 	member_id2records = {} #每个会员参与的所有活动
 	all_member_ids = set() #所有member_id
+	member_id2participations = {} # 会员与扫码映射
 	for part in all_partis:
 		record_id = part.belong_to
 		tmp_record = id2record[record_id]
@@ -287,6 +318,11 @@ def get_target_orders(records=None, is_show=None):
 		else:
 			member_id2records[member_id].append(tmp_record)
 
+		if not member_id2participations.has_key(member_id):
+			member_id2participations[member_id] = [part]
+		else:
+			member_id2participations[member_id].append(part)
+
 	webapp_user_id_belong_to_member_id = {} #webapp_user_id相关联的member_id
 	all_webapp_user_ids = [] #所有的webapp_user_id
 	for w in member_models.WebAppUser.objects.filter(member_id__in=all_member_ids):
@@ -306,4 +342,4 @@ def get_target_orders(records=None, is_show=None):
 		else:
 			member_id2order_ids[member_id].append(order.order_id)
 
-	return webapp_user_id_belong_to_member_id, id2record, member_id2records, member_id2order_ids, all_orders
+	return webapp_user_id_belong_to_member_id, id2record, member_id2records, member_id2order_ids, all_orders, member_id2participations
