@@ -266,7 +266,7 @@ def handle_wating_actions():
 	if len(log_list) > 0:
 		apps_models.RebateWeizoomCardDetails.objects.insert(log_list)
 	# 标记已发放的卡
-	apps_root_models.AppsWeizoomCard.use_cards(card_has_granted)
+	apps_root_models.AppsWeizoomCard.use_cards(card_has_granted.keys())
 	#删除待发卡数据
 	apps_models.RebateWaitingAction.objects(id__in=need_delete_ids).delete()
 
