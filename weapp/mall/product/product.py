@@ -917,7 +917,11 @@ class Product(resource.Resource):
             owner=request.manager)
 
         _type = request.GET.get('type', 'object')
-        supplier = [(s.id, s.name) for s in models.Supplier.objects.filter(owner=request.manager, is_delete=False)]
+        #自营平台的供货商不可修改，所以只传它自己的supplier即可。微众商城和精选如果没有供货商就传空list
+        if mall_type and has_product_id:
+            supplier = [(s.id, s.name) for s in models.Supplier.objects.filter(id=product.supplier, is_delete=False)]
+        else:
+            supplier = [(s.id, s.name) for s in models.Supplier.objects.filter(owner=request.manager, is_delete=False)]
 
         is_bill = True if request.manager.username not in settings.WEIZOOM_ACCOUNTS else  False
 
