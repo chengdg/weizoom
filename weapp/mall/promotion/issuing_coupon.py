@@ -172,12 +172,24 @@ class IssuingCouponsRecord(resource.Resource):
         member_ids = request.POST.get('member_id', None)  # 获取会员id 组
         member_ids = json.loads(member_ids)
         coupon_rule_id = int(request.POST.get('coupon_rule_id'))  # 优惠券规则
+        # 对应优惠券的库存
+        coupon_rule = promotion_models.CouponRule.objects.get(id=coupon_rule_id)
+        if coupon_rule.receive_rule:
+            member_ids_new = []
+            webapp_id = request.manager.webapp_id
+            webapp_user_ids = WebAppUser.objects.filter(member_id__in=member_ids, webapp_id=webapp_id).values_list('id', flat=True)
+            has_order_webapp_user_ids = mall_models.Order.objects.filter(webapp_id=webapp_id, webapp_user_id__in=webapp_user_ids, status__in=
+                [mall_models.ORDER_STATUS_PAYED_NOT_SHIP, mall_models.ORDER_STATUS_PAYED_SHIPED, mall_models.ORDER_STATUS_SUCCESSED]).values_list('webapp_user_id', flat=True)
+            has_order_member_ids = WebAppUser.objects.filter(id__in=has_order_webapp_user_ids, webapp_id=webapp_id).values_list('member_id', flat=True)
+            member_ids_new = [member_id for member_id in member_ids if member_id not in has_order_member_ids]
+            member_ids = member_ids_new
+
+            
         pre_person_count = int(request.POST.get('pre_person_count'))  # 每人几张
         person_count = len(member_ids)  # 发放的人数
         send_count = pre_person_count * person_count  # 发放的张数
 
-        # 对应优惠券的库存
-        coupon_rule = promotion_models.CouponRule.objects.get(id=coupon_rule_id)
+
         coupon_count = coupon_rule.remained_count
         if coupon_count < send_count:
             response = create_response(500)
