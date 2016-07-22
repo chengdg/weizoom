@@ -95,14 +95,15 @@ class CostAnalysis(api_resource.ApiResource):
 				coupon_info["get_money"] += cr.get_count*cr.money
 
 		logging.info('start get member_integral_logs')
-		member_integral_logs = MemberIntegralLog.objects.filter(created_at__range=(start_date, end_date))
+		member_integral_logs = MemberIntegralLog.objects.filter(
+			created_at__range=(start_date, end_date),
+			integral_count__gt=0).exclude(event_type__in=[RETURN_BY_SYSTEM,RETURN_BY_CANCEl_ORDER,MANAGER_MODIFY,MANAGER_MODIFY_ADD,MANAGER_MODIFY_REDUCT])
 
 		# 每个会员新增的积分数
 		member_set = set()
 		member_id2integral = {}
 		for log in  member_integral_logs:
 			member_set.add(log.member_id)
-
 			if not member_id2integral.has_key(log.member_id):
 				member_id2integral[log.member_id] = log.integral_count
 			else:
