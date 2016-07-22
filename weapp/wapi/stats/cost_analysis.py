@@ -9,6 +9,8 @@ from mall.models import *
 from account.models import *
 from modules.member.models import *
 from mall.promotion.models import *
+from eaglet.utils.resource_client import Resource
+from django.conf import settings
 
 class CostAnalysis(api_resource.ApiResource):
 	"""
@@ -39,9 +41,17 @@ class CostAnalysis(api_resource.ApiResource):
 			created_at__gte=start_date,created_at__lte=end_date)
 		logging.info('orders count: %d' % orders.count())
 
+		webapp_id2order_numbers = {}
+		order_numbers =[]
 		webapp_id2cost = {}
 		for order in orders:
 			weapp_id = order.webapp_id
+			if order.weizoom_card_money:
+				order_numbers.append(order.order_id)
+				if not webapp_id2order_numbers.has_key(weapp_id):
+					webapp_id2order_numbers[weapp_id] = [order.order_id]
+				else:
+					webapp_id2order_numbers[weapp_id].append(order.order_id)
 			coupon_count = 1 if order.coupon_id else 0
 			sale_money = order.weizoom_card_money + order.final_price + order.coupon_money + order.integral_money  #销售额
 			loss_money = sale_money - order.total_purchase_price
@@ -70,6 +80,36 @@ class CostAnalysis(api_resource.ApiResource):
 				cur_cost["total_purchase_price"] += order.total_purchase_price
 				cur_cost["loss_money"] += loss_money
 				cur_cost["sale_money"] += sale_money
+
+		webapp_id2order_card_info = {}
+		start_time = time.time()
+		for weapp_id,order_numbers in webapp_id2order_numbers.items():
+			#使用微众卡的接口
+			resp = Resource.use('card_apiserver').post({
+				'resource': 'card.order_use_card_type',
+				'data': {"order_ids": ','.join(order_numbers)}
+			})
+			order_cards = []
+			if resp:
+				order_cards = resp['data']
+				for order_card in order_cards:
+					if order_card["order_id"] in order_numbers:
+						if not webapp_id2order_card_info.has_key(weapp_id):
+							webapp_id2order_card_info[weapp_id] = {
+								"sale": order_card["sale"],
+								"internal": order_card["internal"],
+								"rebate": order_card["rebate"],
+								"unknown": order_card["unknown"]
+							}
+						else:
+							order_card_info = webapp_id2order_card_info[weapp_id]
+							order_card_info["sale"] += order_card["sale"]
+							order_card_info["internal"] += order_card["internal"]
+							order_card_info["rebate"] += order_card["rebate"]
+							order_card_info["unknown"] += order_card["unknown"]
+		end_time = time.time()
+		print end_time - start_time,"pppppppppp"
+
 
 		owner_ids = []
 		for w_id in webapp_ids:
@@ -126,6 +166,7 @@ class CostAnalysis(api_resource.ApiResource):
 			user_id = userprofile.user_id
 
 			coupon = owner_id2coupon_info.get(user_id,None)
+			order_card_info = webapp_id2order_card_info.get(webapp_id,None)
 			cost_list.append({
 				"store_name": userprofile.store_name,
 				"order_count": cost["order_count"] if cost else 0,
@@ -134,6 +175,10 @@ class CostAnalysis(api_resource.ApiResource):
 				"integral_money": u"%.2f" % (cost["integral_money"] if cost else 0),
 				"integral": cost["integral"] if cost else 0,
 				"weizoom_card_money": u"%.2f" % (cost["weizoom_card_money"] if cost else 0),
+				"sale": u"%.2f" % (order_card_info["sale"] if order_card_info else 0),
+				"internal": u"%.2f" % (order_card_info["internal"] if order_card_info else 0),
+				"rebate": u"%.2f" % (order_card_info["rebate"] if order_card_info else 0),
+				"unknown": u"%.2f" % (order_card_info["unknown"] if order_card_info else 0),
 				"final_price": u"%.2f" % (cost["final_price"] if cost else 0),
 				"total_purchase_price": u"%.2f" % (cost["total_purchase_price"] if cost else 0),
 				"loss_money": u"%.2f" % (cost["loss_money"] if cost else 0),
