@@ -51,7 +51,7 @@ from celery import Celery
 import logging
 logging.info('init apps celery...')
 celery = Celery()
-celery.config_from_object('celeryconfig')
+celery.config_from_object('apps.celeryconfig')
 
 from eaglet.core import watchdog
 from eaglet.core.exceptionutil import unicode_full_stack
