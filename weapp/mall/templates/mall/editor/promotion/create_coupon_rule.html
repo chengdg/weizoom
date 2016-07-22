@@ -198,7 +198,7 @@ margin-top: -29px;"></div>
 
     <div class="form-group h40">
        <label class="control-label col-sm-2 col-sm-offset-1 w110">领取权限：</label>
-       <input type="checkbox" name='' value="" ><b style="vertical-align: text-bottom;font-weight:normal;display:inline-block;">仅未下单用户可领取</b>
+       <input type="checkbox" name='reveive_rule' value="0" ><b style="vertical-align: text-bottom;font-weight:normal;display:inline-block;">仅未下单用户可领取</b>
     </div>
 
     <div class="panel-body mb0 xui-promotion-createFlashSalePage xa-product">
@@ -409,7 +409,7 @@ $(function(){
       });
       if(ids.length > 0){
           ids = ids.substring(1);          
-      }
+      } 
       xlog(ids)
       $('[name="product_ids"]').val(ids)    
   };
@@ -540,7 +540,7 @@ $(document).ready(function(){
 	}
 });
 
-$('.xa-valid-restrictions').on('click', function(e){
+$('.xa-valid-restrictions').on('click', function(e){ 
 	var $input = $(e.target);
 	if($input.prop('checked')){
 		$('.xa-valid-restrictions-input').attr('data-validate', 'require-int::金额必须为数字')
