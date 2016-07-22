@@ -9,7 +9,7 @@ from django.shortcuts import render_to_response
 from django.db.models import F
 from django.contrib.auth.decorators import login_required
 
-from eaglet.utils.send_task import send_task
+from celery.execute import send_task
 
 from core import resource
 from core import paginator
@@ -286,7 +286,7 @@ class EvaluateReview(resource.Resource):
 							if len(member):
 								increase_member_integral(member[0], settings.review_increase, '商品评价奖励')
 								#发送积分变动模版
-								send_task('services.weixin_template_service.task.service_template_message', {
+								send_task('services.weixin_template_service.task.service_template_message', args={
 									'user_id': request.webapp_owner_id,
 									'reason': u'商品评价奖励',
 									'event_type': 7,
@@ -354,7 +354,7 @@ class EvaluateReview(resource.Resource):
 									increase_member_integral(id2member[review.member_id], settings.review_increase,
 															 '商品评价奖励')
 									#发送积分变动模版
-									send_task('services.weixin_template_service.task.service_template_message', {
+									send_task('services.weixin_template_service.task.service_template_message', args={
 										'user_id': request.webapp_owner_id,
 										'reason': u'商品评价奖励',
 										'event_type': 7,

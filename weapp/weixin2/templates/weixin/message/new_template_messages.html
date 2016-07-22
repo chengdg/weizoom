@@ -128,18 +128,19 @@
         color: #8a6d3b;
     }
     .xui-showIntroduction {
-        position: absolute;
-        left: 600px;
-        top: 20px;
+        cursor: pointer;
+        color: gray;
     }
-    .xui-weixin-template_messagesPage .xui-templateIntroduction {
+    .xui-weixin-template_messagesPage .xui-newTemplateIntroduction {
         position: absolute;
-        left: 550px;
-        top: 42px;
+        left: 410px;
+        top: 100px;
         width: 425px;
-        height: 215px;
+        height: 120px;
         background: #fff;
         border: 1px solid #ccc;
+        z-index: 1;
+        padding: 10px;
     }
     a:active,a:hover,a:visited,a:link{
         text-decoration: none;
@@ -155,9 +156,18 @@
             <li class="active">模板消息</li>
         </ul>
     </div>
-    <p class="template_hint">只有认证的服务号才能使用模板消息，请前往微信公众平台-模板库-选择行业（ IT科技/互联网/电子商务、消费品/消费品）搜索相应的模板标题，添加对应编号的模板消息至我的模板后即可使用</p> 
+    <p class="template_hint">只有认证的服务号才能使用模板消息，请前往微信公众平台-模板库-选择行业（ IT科技/互联网/电子商务、消费品/消费品）搜索相应的模板标题，添加对应编号的模板消息至我的模板后即可使用&nbsp;&nbsp;<b class="xa-showIntroduction xui-showIntroduction">配置方法</b></p>
+    <div class="xui-newTemplateIntroduction xui-hidden">
+        <ul>
+            <li>1、登录微信公众平台</li>
+            <li>2、在“添加功能插件”处添加模板消息，并填写申请信息</li>
+            <li>3、打开模板消息</li>
+            <li>4、在模板库中添加特定的模板</li>
+            <li>5、回到weapp，点击“更新模版”</li>
+            <li>6、填写开头语和结束语，其他信息系统会自动获取无需填写，仅作预览</li>
+        </ul>
+    </div>
     <div class="xui-template-container xa-template-container xui-background">
-        <img class="xa-showIntroduction xui-showIntroduction" src="/static_v2/img/weixin/wenhao.png">
         <div class="template_edit_container">
             <div class="template_edit_panel"></div>
         </div>
@@ -432,11 +442,11 @@ $(document).ready(function(){
     });
 
 
+    //配置方法
     $('.xa-showIntroduction').on('mouseover',function(){
-        $('.xa-template-container').append('<div class="xui-templateIntroduction"><p class="pt20">模板消息仅用于公众号向用户发送业务通知。如微信支付成功商品购买成功通知等，模板消息只对认证的服务号开放。</p><p>配置方法：</p><ul><li>1、登录微信公众平台</li><li>2、在“添加功能插件”处添加模板消息，并填写申请信息</li><li>3、打开模板消息</li><li>4、在模板库中添加对应编号的模板</li><li>5、在我的模板中复制模板ID</li><li>6、在微众后台模板消息配置中粘贴所复制的ID</li><li>7、填写开头语和结束语，其他商品信息系统会自动获取无需自己填写</li></ul><div>')
-    });
-    $('.xa-showIntroduction').on('mouseout',function(){
-         $(".xui-templateIntroduction").remove();
+        $(".xui-newTemplateIntroduction").removeClass('xui-hidden');
+    }).on('mouseout',function(){
+         $(".xui-newTemplateIntroduction").addClass('xui-hidden');
     });
 
     function getSaveData(){
