@@ -24,20 +24,17 @@
     .template_message_item > span{
         cursor: pointer;
     }
-    input.template_control{
-        display: inline-block;
-        vertical-align: middle;
-        width: 15px;
-        height: 15px;
-        background-color: #ffffff;
-        margin: 0;
-        margin-right: 10px;                 
-    }
-    .template_edit{
-        display: inline-block;
+    .template_edit,.template_control{
         position: absolute;
-        height: 14px;
         right: 15px;
+        top: 3px;
+        height: 29px;
+        margin: 0;
+        width: 25px;
+    }
+    .template_control{
+        right: 100px;
+        border-radius: 3px;
     }
     .template_edit_container{
         position: absolute;
@@ -123,9 +120,8 @@
     }
     .xui-active {
         color: #1262b7;
-    }
-    .alert-warning {
-        color: #8a6d3b;
+        font-size: 14px;
+        font-weight: bold;
     }
     .xui-showIntroduction {
         cursor: pointer;
@@ -142,8 +138,8 @@
         z-index: 1;
         padding: 10px;
     }
-    a:active,a:hover,a:visited,a:link{
-        text-decoration: none;
+    .btn-warning{
+        border-radius: 3px;
     }
 </style>
 {% endblock %}
@@ -178,7 +174,6 @@
         {% endif %}
         <div class="template_commit">
             <button type="button" class="btn btn-primary xa-sync-template">更新模版</button>
-            <button class="btn btn-primary xa-submit">保&nbsp;&nbsp;&nbsp;&nbsp;存</button>
         </div>
     </div>
 </div>
@@ -189,9 +184,9 @@
         {{#each items}}
             {{#if_in this.title ../using_templates}}
                 <div class="template_message_item">
-                    <input type="checkbox" name="control" class="template_control" {{#if status}}checked{{/if}} data-template-id="{{template_id}}" data-status = "{{status}}" data-title="{{ title }}">
                     <span class="xa-industry">{{title}}（行业：{{industry_name}}）</span>
-                    <a href="javascript:void(0)" class="template_edit" title="编辑" data-template-id="{{template_id}}">编辑</a>
+                    <button type="button" class="template_edit btn btn-primary" title="编辑" data-template-id="{{template_id}}">编辑</button>
+                    <button type="button" class="template_control btn {{#if status}}btn-danger{{else}}btn-success{{/if}}" data-template-id="{{template_id}}" data-status = "{{status}}" data-title="{{ title }}">{{#if status}}停用{{else}}启用{{/if}}</button>
                 </div>
             {{/if_in}}
         {{/each}}
@@ -202,9 +197,9 @@
     <div class="template_edit_content" data-template-id="{{template_id}}">
         <h2>{{item_title}}</h2>
         <div class="cl6 mt5 mb5">7月11日</div>
-        <input type="text" name="first" class="template_edit_first mb10" value="{{item_first}}" placeholder="请输入开头语"></input>
+        <input type="text" name="first" class="template_edit_first mb10 template_edit_input" value="{{item_first}}" placeholder="请输入开头语"></input>
         {{#list item_message_arr}}{{/list}}
-        <input type="text" name="remark" class="mt5 template_edit_remark" value="{{item_remark}}" placeholder="请输入结尾语"></input>
+        <input type="text" name="remark" class="mt5 template_edit_remark template_edit_input" value="{{item_remark}}" placeholder="请输入结尾语"></input>
         <div class="template_edit_detail">
             详情<i>></i>
         </div>
@@ -320,6 +315,7 @@ $(document).ready(function(){
             console.log(data);
             items = data;
             renderList();
+            $('.template_edit').eq(0).trigger('click');
         },
         error: function(){
             W.showHint('error', '获取模版消息失败，清重试！');
@@ -347,48 +343,72 @@ $(document).ready(function(){
         });
     });
     
-    //编辑
+    //编辑&&保存
     $('body').delegate('.template_edit','click',function(){
-        var $content = $('.template_edit_content');
-        var old_first = $content.find('.template_edit_first').val();
-        var old_remark = $content.find('.template_edit_remark').val();
-        if(editing && (curr_first != old_first || curr_remark != old_remark)){
-            W.showHint('warning', '请先保存更改');
-            return;
-        }
-        $('.template_edit').siblings('span').removeClass('xui-active');
-        $(this).siblings('span').addClass('xui-active');
-        var template_id = $(this).attr('data-template-id');
-        var item = items.filter(function(e){
-            return e['template_id'] == template_id;
-        })[0];
-        var item_message_arr = item.example.split('::');
-        var context = {
-            item_title: item.title,
-            template_id: template_id,
-            item_first: item.first,
-            item_message_arr: item_message_arr,
-            item_remark: item.remark
-        };
-        var source = $('#weixin-template-edit-view').html();
-        var template = Handlebars.compile(source);  
-        var html = template(context);
-        $('.template_edit_panel').html(html).show();
+        if($(this).html() == '保存'){
+            var _this = $(this);
+            var template_info = getSaveData();
+            W.resource.new_weixin.NewTemplateMessages.put({
+                data: {
+                    woid: W.mid,
+                    action: 'items',
+                    saved_data: JSON.stringify(template_info)
+                },
+                success: function(data){
+                    editing = false;
+                    W.showHint('success', '保存成功');
+                    _this.html('编辑');
+                    _this.removeClass('btn-warning').addClass('btn-primary');
+                },
+                error: function(resp){
+                    W.showHint('error','保存失败')
+                }
+            });
+        }else{
+            var $content = $('.template_edit_content');
+            var old_first = $content.find('.template_edit_first').val();
+            var old_remark = $content.find('.template_edit_remark').val();
+            if(editing && (curr_first != old_first || curr_remark != old_remark)){
+                W.showHint('error', '请先保存更改');
+                return;
+            }
+            $('.template_edit').siblings('span').removeClass('xui-active');
+            $(this).siblings('span').addClass('xui-active');
+            var template_id = $(this).attr('data-template-id');
+            var item = items.filter(function(e){
+                return e['template_id'] == template_id;
+            })[0];
+            var item_message_arr = item.example.split('::');
+            var context = {
+                item_title: item.title,
+                template_id: template_id,
+                item_first: item.first,
+                item_message_arr: item_message_arr,
+                item_remark: item.remark
+            };
+            var source = $('#weixin-template-edit-view').html();
+            var template = Handlebars.compile(source);  
+            var html = template(context);
+            $('.template_edit_panel').html(html).show();
 
-        curr_first = item.first;
-        curr_remark = item.remark;
-        editing = true;
+            curr_first = item.first;
+            curr_remark = item.remark;
+            editing = true;
+        }
     });
 
     $('body').delegate('.xa-industry','click',function(){
         $(this).siblings('.template_edit').trigger('click');
     });
+
     //更改状态
     $('body').delegate('.template_control','click',function(){
         var template_id = $(this).attr('data-template-id');
         var title = $(this).attr('data-title');
         if( $(this).attr('data-status') == 'true'){
             $(this).attr('data-status','false');
+            $(this).html('启用').removeClass('btn-danger').addClass('btn-success');;
+            $(this).attr('disabled',true);
             for(var i=0;i<items.length;i++){
                 if(items[i]['template_id'] == template_id){
                     items[i]['status'] = false;
@@ -396,6 +416,8 @@ $(document).ready(function(){
             }          
         }else{
             $(this).attr('data-status','true'); 
+            $(this).html('停用').removeClass('btn-success').addClass('btn-danger');
+            $(this).attr('disabled',true);
             for(var j=0;j<items.length;j++){
                 if(items[j]['template_id'] == template_id){
                     items[j]['status'] = true;
@@ -403,6 +425,7 @@ $(document).ready(function(){
             }           
         }
         var status = $(this).attr('data-status');
+        var _this = $(this);
         W.resource.new_weixin.NewTemplateMessages.put({
             data: {
                 woid: W.mid,
@@ -412,35 +435,28 @@ $(document).ready(function(){
                 title:title
             },
             success: function(data){
-                editing = false;
                 W.showHint('success', status == 'true' ? '启用模版': '停用模版');
+                _this.attr('disabled',false);
             },
             error: function(resp){
                 W.showHint('error','更改状态失败')
+                _this.attr('disabled',false);
             }
         });
     });
 
-    //保存
-    $('.xa-submit').click(function(){
-        var template_info = getSaveData();
-        console.log(items);
-        W.resource.new_weixin.NewTemplateMessages.put({
-            data: {
-                woid: W.mid,
-                action: 'items',
-                saved_data: JSON.stringify(template_info)
-            },
-            success: function(data){
-                editing = false;
-                W.showHint('success', '保存成功');
-            },
-            error: function(resp){
-                W.showHint('error','保存失败')
+    //监听input 
+    $('body').delegate('.template_edit_input','input propertychange',function(){
+        editing = true;
+        var template_id = $(this).parents('.template_edit_content').attr('data-template-id');
+        var $edit_btn = $('.template_edit');
+        for(var i = 0;i < $edit_btn.length;i ++){
+            if($edit_btn.eq(i).attr('data-template-id') == template_id && $edit_btn.eq(i).html() == '编辑'){
+                $edit_btn.eq(i).html('保存');  
+                $edit_btn.eq(i).removeClass('btn-primary').addClass('btn-warning');
             }
-        });
+        }
     });
-
 
     //配置方法
     $('.xa-showIntroduction').on('mouseover',function(){
