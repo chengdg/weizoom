@@ -152,7 +152,7 @@ def filter_products(request, products):
     return filtered_products
 
 
-def sorted_products(manager_id, product_categories, reverse):
+def sorted_products(mall_type, manager_id, product_categories, reverse):
     """根据display_index对在售商品进行排序
 
     Args:
@@ -168,6 +168,12 @@ def sorted_products(manager_id, product_categories, reverse):
     productIds = set([x.product_id for x in relations])
     products = models.Product.objects.filter(id__in=productIds, is_deleted=False).exclude(
         shelve_type=models.PRODUCT_SHELVE_TYPE_RECYCLED)
+
+    product_pool2status = {}
+    if mall_type:
+        product_pool = models.ProductPool.objects.filter(woid=manager_id)
+        product_pool2status = dict([(pool.product_id, pool.status) for pool in product_pool])
+
     # 微众商城代码
     #duhao 20151120
     #微众商城的商品-分组管理 页面  商品的状态应该是商品在微众商城里的状态，而不是在商户里的状态
@@ -182,7 +188,26 @@ def sorted_products(manager_id, product_categories, reverse):
 
     models.Product.fill_display_price(products)
     models.Product.fill_sales_detail(manager_id, products, productIds)
-    id2product = dict([(product.id, product) for product in products])
+    #id2product = dict([(product.id, product) for product in products])
+    id2product = {}
+    for product in products:
+        if mall_type and product_pool2status:
+            if product.id in product_pool2status.keys():
+                status_pool = product_pool2status[product.id]
+                if status_pool == models.PP_STATUS_ON:
+                    status = u'在售'
+                elif status_pool == models.PP_STATUS_OFF:
+                    status = u'待售'
+                elif status_pool == models.PP_STATUS_DELETE:
+                    status = u'已删除'
+                else:
+                    status = u'商品池中'
+            else:
+                status = product.status
+        else:
+            status = product.status
+        product._status = status
+        id2product[product.id] = product
 
     for c in product_categories:
         products = []

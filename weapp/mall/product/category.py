@@ -123,7 +123,9 @@ class CategoryList(resource.Resource):
         product_categories = mall_models.ProductCategory.objects.filter(
             owner=request.manager)
 
-        category_ROA_utils.sorted_products(request.manager.id, product_categories, True)
+        mall_type = request.user_profile.webapp_type
+
+        category_ROA_utils.sorted_products(mall_type,request.manager.id, product_categories, True)
 
         c = RequestContext(request, {
                     'first_nav_name': export.PRODUCT_FIRST_NAV,
@@ -266,8 +268,8 @@ class CategoryList(resource.Resource):
             #获取category集合
             product_categories = mall_models.ProductCategory.objects.filter(
                 id=category_id)
-
-            category_ROA_utils.sorted_products(request.manager.id, product_categories, reverse)
+            mall_type = request.user_profile.webapp_type
+            category_ROA_utils.sorted_products(mall_type, request.manager.id, product_categories, reverse)
 
             response = create_response(200)
             response.data = {
