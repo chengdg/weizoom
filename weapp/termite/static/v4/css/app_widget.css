@@ -2667,3 +2667,146 @@ li.wui-selectBox-display-table {
     background-position: 0 -34px;
 }
 /*百宝箱 evaluate CSS ---- end */
+
+/*百宝箱 egg CSS ---- start */
+.wui-eggDescription {
+	background: url(/termite_static/img/component/egg/egg_bg.jpg) no-repeat;
+	background-size: cover;
+    height: 460px;
+    margin-top: -20px;
+    position: relative;
+    padding: 0 10px;
+}
+.wui-eggDescription .wui-i-egg{
+	background: url(/termite_static/img/component/egg/egg_normal.png) no-repeat;
+	background-size: cover;
+	width: 9rem;
+	height: 12rem;
+	position: absolute;
+	left: 50%;
+	margin-left: -4.5rem;
+	bottom: 57px;
+}
+.wui-eggDescription .wui-i-eggBroken{
+    background: url(/termite_static/img/component/egg/egg_broken.png) no-repeat;
+    background-size: cover;
+    width: 16.5rem;
+    height: 12rem;
+    position: absolute;
+    bottom: 57px;
+ 	display: none;
+}
+.wui-eggDescription .wui-i-integral{
+	position: absolute;
+	bottom: 13px;
+	width: 88%;
+	background: rgba(0,0,0,0.1);
+	padding: 5px 12px;
+	border-radius: 15px;
+	font-size: 14px;
+}
+.wui-eggDescription .wui-i-integral > p{
+	display: inline-block;
+	color: #fff;
+	margin-right: 18px;
+	width: 28%;
+}
+.wui-eggDescription .wui-i-integral > p:last-child{
+	margin-right: 0;
+}
+.wui-surveyDescription .wui-i-eggInfo{
+	border-top: none;
+}
+.wui-surveyDescription .wui-i-eggSubtitle{
+	background: url(/termite_static/img/component/egg/egg_intro.png) no-repeat top center;
+	background-size: auto 26.5px;;
+	text-align: center;
+	height: 30px;
+}
+.wui-surveyDescription .wui-i-eggSubtitle h2{
+	line-height: 26px;
+}
+.wui-eggDescription  > .wui-i-innerTitle {
+	margin-top: 156px;
+	color: #07fff7;
+	transform: rotateZ(-6deg);
+	text-indent: 20px;
+}
+/*百宝箱 egg CSS ---- end */
+/*百宝箱 scratch CSS ---- start */
+.wui-scratchDescription {
+    background: url(/termite_static/img/component/scratch/scratch_bg.jpg) no-repeat;
+    background-size: 100% 287px;
+    background-position: center center;
+    height: 287px;
+    padding-top: 0;
+    margin-top: -40px;
+   	position: relative;
+}
+.wui-scratchDescription > .wui-i-title {
+    background: url('');
+    height: 121px;
+    padding-top: 0;
+}
+.wui-scratchDescription .wui-i-card{
+	background: url(/termite_static/img/component/scratch/card_bg.png) no-repeat;
+	background-size: 100% 116px;
+	height: 116px;
+	width: 100%;
+	margin: 0 auto;
+	padding-top: 5px;
+}
+.wui-scratchDescription .wui-i-card .wui-i-hand{
+	position: absolute;
+	width: 65.5px;
+	height: 52.5px;
+	right: 0;
+	top: 174px;
+	background: url('/termite_static/img/component/scratch/hand.png') no-repeat;
+	background-size: cover;
+	z-index: 10;
+}
+.wui-scratchDescription .wui-i-cardMask{
+	width: 92%;
+	height: 80px;
+	margin: 10px auto;
+	background: #cccccc;
+}
+.wui-scratchDescription .wui-i-cardMask h2{
+	color: #999999;
+	line-height: 80px;
+	text-align: center;
+	font-size: 30px;
+}
+.wui-scratchDescription > .wui-i-header{
+	text-align: left;
+	font-size: 14px;
+}
+.wui-scratchContainer .wui-i-info {
+	border-top: none;
+	padding: 0 20px;
+}
+.wui-scratchContainer {
+	padding: 10px 0;
+}
+.wui-scratchContainer .wui-i-subtitle{
+	margin-top: 0;
+	width: 100%;
+	height: 57px;
+	line-height: 75px;
+	background: url('/termite_static/img/component/scratch/inro_bg.png') no-repeat;
+	background-size: 100% auto;
+}
+.wui-scratchContainer .wui-i-cardContainer{
+	display: none;
+}
+.wui-scratchDescription .wui-i-cardInfo{
+	display: none;
+}
+.wui-scratchDescription canvas{
+	display: none;
+}
+.wui-scratchDescription .xui-i-retry{
+	display: none;
+}
+/*百宝箱 scratch CSS ---- end */

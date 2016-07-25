@@ -88,6 +88,8 @@ from apps.customerized_apps.shvote import models as shvote_models
 from apps.customerized_apps.rebate import models as rebate_models
 from apps.customerized_apps.exlottery import models as apps_exlottery_models
 from apps.customerized_apps.evaluate import models as evaluate_models
+from apps.customerized_apps.egg import models as egg_models
+from apps.customerized_apps.scratch import models as scratch_models
 
 
 from django.core.cache import cache
@@ -390,6 +392,18 @@ def __clear_all_app_data():
 	evaluate_models.EvaluatesRelatedProducts.objects.all().delete()
 	evaluate_models.EvaluatesRelations.objects.all().delete()
 	evaluate_models.EvaluateTemplateSetting.objects.all().delete()
+
+	#apps砸金蛋
+	egg_models.Egg.objects.all().delete()
+	egg_models.EggParticipance.objects.all().delete()
+	egg_models.EggRecord.objects.all().delete()
+	egg_models.EggControl.objects.all().delete()
+
+	# apps刮刮卡
+	scratch_models.Scratch.objects.all().delete()
+	scratch_models.ScratchParticipance.objects.all().delete()
+	scratch_models.ScratchRecord.objects.all().delete()
+	scratch_models.ScratchControl.objects.all().delete()
 
 	#apps中的weizoom_card表
 	customized.AppsWeizoomCard.objects.all().delete()

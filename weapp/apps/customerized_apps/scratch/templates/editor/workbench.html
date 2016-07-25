@@ -1,0 +1,466 @@
+{% extends "content_base_v2.html" %}
+
+{% load workbench_filter %}
+{% load apps_filter %}
+
+{% block css %}
+    <style>
+        .propertyGroup_property {
+          min-height: 35px;
+        }
+        .propertyGroup_property_dialogSelectField{
+            margin-top: 10px;
+        }
+        .propertyGroup_property_label {
+          display: inline-block;
+          vertical-align: top;
+          margin-right: 7px;
+          line-height: 24px;
+          text-align: right;
+          width: 67px;
+        }
+        .propertyGroup_property_input {
+            display: inline-block;
+        }
+        .propertyGroup_property_textareaField .propertyGroup_property_input {
+          width: 80% !important;
+        }
+        .propertyGroup_property_dynamicControlField.propertyGroup_property_horizontalField.xui-product.ui-sortable {
+          border-top: 1px solid #ccc;
+          margin-top: 12px;
+        }
+        .propertyGroup_property_dynamicControlField_control {
+          border: 1px solid #ccc;
+          width: 100% !important;
+          padding: 10px 10px !important;
+        }
+        input[value*='等奖']{
+            border: none;
+        }
+        .propertyGroup_property_horizontalField .propertyGroup_property_label {
+            width: 73px;
+        }
+        .form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control{
+            cursor: pointer;
+        }
+
+        .radio-mask{
+            position: absolute;
+            height: 35px;
+            width: 65px;
+            background: black;
+            opacity: 0.5;
+            margin-top: -2px;
+            margin-left: -72px;
+            border-radius: 4px;
+        }
+    </style>
+{% endblock %}
+
+{% block content-panel %}
+<div id="workbench" class="xui-wepage-workbenchPage clearfix pr xui-appPage-commonStyle">
+    <div class="relative">
+        <ul class="breadcrumb">
+      <li>您当前所在位置</li>
+      <li><a href="/termite2/pages/">百宝箱</a></li>
+      <li><a href="/apps/scratch/scratches/">刮刮卡</a></li>
+      <li class="active">新建刮刮卡</li>
+        </ul>
+    </div>
+{% if is_deleted_data %}
+    <div style="background-color: #EAEEF7;" class="clearfix">
+    <div class="xui-emptyBox m10">
+        <img src="/static_v2/img/editor/empty.png">
+        <span class="ml20">您访问的数据已被删除！</span>
+    </div>
+    </div>
+{% else %}
+  <div style="background-color: #EAEEF7;" class="clearfix">
+    <div id="leftPanel" class="fl xui-workbench-leftPanel xui-hide">
+    </div>
+    
+    <div id="phonePanel" class="xui-workbench-phonePanel xui-section fl">
+      <div id="phone" class="xui-phone ">
+          <div id="phoneSkin" class="xui-i-skin">
+            <div class="xui-i-title">
+              <span class="xa-title">微页面标题</span>
+            </div>
+            <iframe name="phoneFrame" id="phoneIFrame" src="/termite2/webapp_design_page/?project_id={{project_id}}&design_mode=1" height="100%" border="none"></iframe>
+          <div id="phoneSkinCover" class="hide xui-i-skinCover"></div>
+        </div>
+      </div>
+    </div>
+      <div id="rightPanel" class="fl xui-workbench-rightPanel xui-hide" style="margin-bottom: 90px;"></div>
+        {% if scratch and scratch.status_text == "进行中"%}<div style="position: absolute;height: 100%;width: 100%"></div>{% endif %}
+      <div class="xui-bottomActionBar xa-stickyBar">
+          {% if not scratch %}
+            <button class="xa-save btn btn-primary">保存</button>
+            <button class="xa-preview btn btn-default ml20">预览</button>
+          {% else %}
+            {% if scratch.status_text == "未开始" or scratch.status_text == "进行中"%}
+            <button class="xa-save btn btn-primary">保存</button>
+            <button class="xa-preview btn btn-default ml20">预览</button>
+            {% endif %}
+            {% if scratch.status_text == "已结束" %}
+            已结束，不可更改
+            {% endif %}
+          {% endif %}
+        </div>
+  </div>
+{% endif %}
+</div>
+{% endblock %}
+
+{% block base_js %}
+  <!-- *start_prunt_task* -->
+    <!-- [prunt_task] 
+      {
+        "task": "weizoom-load-termite-components"
+      }
+    -->
+  {{ '["appkit.page", "appkit.scratchdescription", "appkit.submitbutton"]'|load_termite_components|safe }}
+  <!-- *end_prunt_task* -->
+
+{% if not is_deleted_data %}
+  <script type="text/javascript">
+    W.uid = "{{request.manager.id}}";
+    W.projectId = "{{project_id}}";
+    W.activityId = "{{scratch.id}}";
+    W.host = "{{request.META.HTTP_HOST}}";
+    W.API_VERSION = 1;
+    var isCreateNewData = {% if is_create_new_data %}true{% else %}false{% endif %};
+    W.isSystemManager = {% if request.manager|is_system_manager %}true{% else %}false{% endif %};
+    var bottomDistance = 110;
+
+    /* 是否页面验证 */
+    W.isUserPageWalidate = true;
+    
+    /* 自动选中cid，当页面进来的时候 */
+    W.autoSelectCid = 2;
+
+    //是否隐藏组件控制面板
+    W.hideActionPanel = true;
+
+    window.total_prize_count ={
+        "一等奖": {total_prize_count: 0, left_count: 0, control_prize_count: 0},
+        "二等奖": {total_prize_count: 0, left_count: 0, control_prize_count: 0},
+        "三等奖": {total_prize_count: 0, left_count: 0, control_prize_count: 0},
+        "status": "未开始"
+    };
+    
+    var loadPages = function(pageManagerView) {
+      W.getApi().call({
+        app: 'apps',
+        api: 'dynamic_pages/get',
+        args: {
+          project_id: W.projectId
+        },
+        showLoading: false,
+        success: function(data) {
+          var pages = data;
+          var firstPage = null;
+          for (var i = 0; i < pages.length; ++i) {
+            //xlog("pages[i]:");xlog(pages[i]);
+            var page = W.component.Component.parseJSON(pages[i]);
+            if (isCreateNewData) {
+              page.isNewCreated = true;
+            }
+            pageManagerView.addPage(page.getModel().get('title'), page, {silent: true});
+            if (!firstPage) {
+                firstPage = page;
+            }
+          }
+          if (firstPage) {
+            pageManagerView.activePage(page);
+          }
+
+            W.Broadcaster.on("image_dialog_select:deleteImage", function(options){
+				if(options.anchor == 'scratch_bg_image'){
+                    $('#phoneIFrame').contents().find('.xa-scratchDescription').css("background-image","");
+                }
+			});
+            W.Broadcaster.on('page:rendered', function () {
+                if ("{{ scratch.status_text }}" == "进行中" ){
+                    W.getApi().call({
+                        method: 'get',
+                        app: 'apps/scratch',
+                        resource: 'scratch_prize_count',
+                        args:{id:W.activityId},
+                        success: function (data) {
+                                var prize_count = $('input[data-field="prize_count"]');
+                                $(prize_count[0]).parent().find('span b').text(data["一等奖"].prize_count);
+                                $(prize_count[1]).parent().find('span b').text(data["二等奖"].prize_count);
+                                $(prize_count[2]).parent().find('span b').text(data["三等奖"].prize_count);
+                                window.total_prize_count = {
+                                    "一等奖": {total_prize_count:$(prize_count[0]).val(),left_count:$(prize_count[0]).parent().find('.xa-leftCount').text(),control_prize_count:$(prize_count[0]).val()},
+                                    "二等奖": {total_prize_count:$(prize_count[1]).val(),left_count:$(prize_count[1]).parent().find('.xa-leftCount').text(),control_prize_count:$(prize_count[1]).val()},
+                                    "三等奖": {total_prize_count:$(prize_count[2]).val(),left_count:$(prize_count[2]).parent().find('.xa-leftCount').text(),control_prize_count:$(prize_count[2]).val()},
+                                    "status": "进行中"
+                                };
+                        },
+                        error:function(){
+
+                        }
+                    });
+                }
+            });
+        },
+        error: function(resp) {
+          alert('Failed to load pages in JSON. Please check it.');
+        }
+      });
+    };
+    W.Broadcaster.on('selectwidget:assert', function(){
+        var prize_count = $('input[data-field="prize_count"]');
+        $(prize_count[0]).parent().find('span b').text(Number($(prize_count[0]).val()) || 0);
+        $(prize_count[1]).parent().find('span b').text(Number($(prize_count[1]).val()) || 0);
+        $(prize_count[2]).parent().find('span b').text(Number($(prize_count[2]).val()) || 0);
+        window.total_prize_count = {
+            "一等奖": {total_prize_count:$(prize_count[0]).val(),left_count: Number($(prize_count[0]).parent().find('.xa-leftCount').text()),control_prize_count:$(prize_count[0]).val()},
+            "二等奖": {total_prize_count:$(prize_count[1]).val(),left_count:$(prize_count[1]).parent().find('.xa-leftCount').text(),control_prize_count:$(prize_count[1]).val()},
+            "三等奖": {total_prize_count:$(prize_count[2]).val(),left_count:$(prize_count[2]).parent().find('.xa-leftCount').text(),control_prize_count:$(prize_count[2]).val()},
+            "status": "未开始"
+        };
+    });
+    
+    $(document).ready(function() {
+      var windowHeight = $(window).height();
+      var height = windowHeight - 350;
+
+      $('#leftPanel').css('min-height' ,height+ 'px');
+      $('#workbench').css('min-height' ,height+ 'px');
+      $(window).bind('beforeunload', function() {
+        if (isDirtyWorkbenchIndicatorVisible) {
+          return '您对页面的编辑还没保存，请先保存页面'
+        } else {
+        }
+      })
+      
+      var pageManagerView = new W.workbench.PageManagerView({
+        el: '#leftPanel',
+        isSystemManager: W.isSystemManager
+      });
+      pageManagerView.render();
+      
+      var phoneView = new W.workbench.PhoneView({
+        el: '#phonePanel'
+      });
+      phoneView.render();
+      
+      var propertyViewLeft = phoneView.getRightBorderOffset() - $('#workbench').offset().left;
+      var propertyView = new W.workbench.PropertyView({
+        el: '#rightPanel',
+        left: propertyViewLeft,
+        onlyShowUserProperty: true//!W.isSystemManager
+      });
+      propertyView.render();
+      
+      var synchronizer = new W.workbench.PageSynchronizer();
+      synchronizer.run();
+      W.Synchronizer = synchronizer;
+      
+      loadPages(pageManagerView);
+      
+      $('.xa-save').click(function() {
+          var that = this;
+        // 保存model
+        W.Synchronizer.manualSync(function(page, data) {
+            that.disabled = true;
+          var descriptionModel = page.components[0].model;
+            var dynamicComponents = page.components[0].components;
+          var name = descriptionModel.get('title');
+          var startTime = descriptionModel.get('start_time');
+          var endTime = descriptionModel.get('end_time');
+          var expend = descriptionModel.get('expend');
+          var delivery = descriptionModel.get('delivery');
+          var delivery_setting = descriptionModel.get('delivery_setting');
+          var limitation = descriptionModel.get('limitation');
+          var chance = descriptionModel.get('chance');
+          var allow_repeat = descriptionModel.get('allow_repeat');
+          var relatedPageId = data['project_id'];
+            var prizeData = {
+                "一等奖": {
+                    'title': dynamicComponents[0].model.get('title'),
+                    'prize_count': window.total_prize_count["一等奖"]['left_count'],
+                    'prize_type': dynamicComponents[0].model.get('prize').type,
+                    'prize_data': dynamicComponents[0].model.get('prize').data
+                },
+                "二等奖": {
+                    'title': dynamicComponents[1].model.get('title'),
+                    'prize_count': window.total_prize_count["二等奖"]['left_count'],
+                    'prize_type': dynamicComponents[1].model.get('prize').type,
+                    'prize_data': dynamicComponents[1].model.get('prize').data
+                },
+                "三等奖": {
+                    'title': dynamicComponents[2].model.get('title'),
+                    'prize_count': window.total_prize_count["三等奖"]['left_count'],
+                    'prize_type': dynamicComponents[2].model.get('prize').type,
+                    'prize_data': dynamicComponents[2].model.get('prize').data
+                }
+            };
+          var args = {
+            "name": name,
+            "start_time": startTime,
+            "end_time": endTime,
+            "expend": expend,
+            "delivery": delivery,
+            "delivery_setting": delivery_setting,
+            "limitation": limitation,
+            "chance": chance,
+            "allow_repeat": allow_repeat,
+              "prize":JSON.stringify(prizeData)
+          };
+          if (isCreateNewData) {
+            var method = 'put';
+            args['related_page_id'] = relatedPageId;
+          } else {
+            var method = 'post';
+            args['id'] = W.activityId;
+          }
+          W.getApi().call({
+            app: 'apps/scratch',
+            resource: 'scratch',
+            method: method,
+            args: args,
+            success: function(data) {
+              W.showHint('success', '保存成功');
+              _.delay(function() {
+                window.location.href = '/apps/scratch/scratches/';
+              }, 500);
+            },
+            error: function(resp) {
+              W.showHint('error', '保存失败!');
+                that.disabled = false;
+            }
+          });
+        });
+      });
+      
+      W.isReady = true;
+      
+      W.Broadcaster.on('designpage:reach_scroll_boundary', function(direction) {
+        var $window = $(window);
+        var scrollTop = $window.scrollTop();
+        if (direction === 'down') {
+          var newScrollTop = scrollTop + 20;
+        } else {
+          var newScrollTop = scrollTop - 20;
+        }
+        $window.scrollTop(newScrollTop);
+      });
+      
+      $('[data-toggle="tooltip"]').tooltip();
+      
+      $('.xa-preview').click(function(event){
+        var page = pageManagerView.getCurrentActivePage();
+        
+        // 验证
+        if (!W.isSystemManager) {
+            if(!page.validate()) {
+                return;
+            }
+        }
+        
+        // 预览
+        var pageJson = JSON.stringify(page.toJSON());
+        projectId = W.projectId.split(':')[2];
+        W.resource.termite2.TermitePreview.put({
+          data: {
+            project_id: projectId,
+            page_json: pageJson
+          },
+          success: function(data) {
+            var previewUrl = '/m/apps/scratch/m_scratch/?page_id=preview&woid='+W.uid+'&id='+W.projectId;
+            window.open('/termite2/app_preview/?preview_url='+encodeURIComponent(previewUrl), '_tab');
+          },
+          error: function(resp) {
+          }
+        });
+      });
+      
+      $(document).click(function(event) {
+        // 点击空白处，触发事件
+          if(event.target.id == 'lottery_chance_dialog_trigger'){
+                W.dialog.showDialog('W.dialog.scratch.InstructionDialog',{
+                    success: function(data){}
+                });
+          }
+        W.Broadcaster.trigger('designpage:cancel_delete');
+
+          //禁用不限次数选择(临时)，存在高并发bug
+          //if(!$temp_disabled_radio || $temp_disabled_radio.length <= 0){
+          //    $temp_disabled_radio = $("input[value='no_limit']");
+          //    hideNoLimitOption($temp_disabled_radio);
+          //}
+      });
+
+        //function hideNoLimitOption($el){
+         //   if(!$temp_disabled_radio || $temp_disabled_radio.length <= 0) return;
+         //   $el = $("input[value='no_limit']");
+         //     $el.parent().after("<span class='radio-mask' data-toggle='tooltip' title='因近期出现个别粉丝违规操作（刷票）的情况，该功能暂停使用！'></span>");
+         //     $('[data-toggle="tooltip"]').tooltip();
+        //}
+
+        //初始化中奖率说明dialog
+        ensureNS('W.dialog.scratch');
+        W.dialog.scratch.InstructionDialog = W.dialog.Dialog.extend({
+            getTemplate: function() {
+                $('#lottery-chance-dialog-tmpl-src').template('lottery-chance-dialog-tmpl');
+                return "lottery-chance-dialog-tmpl";
+            }
+        });
+        // 滚动浮动在底部
+          var stickyMenu = function(){
+              var winScrollTop = $(window).scrollTop();
+          　　var scrollHeight = $(document).height();
+          　　var windowHeight = $(window).height();
+              var gap = scrollHeight - winScrollTop - windowHeight;
+              if( gap < 44 ){
+                  $('.xa-stickyBar').css({ 'position': 'absolute'}).removeClass('fxd');
+              }else{
+                  $('.xa-stickyBar').css({ 'position': 'fixed' }).addClass('fxd');
+              }
+          };
+          stickyMenu();
+          $(window).bind('scroll resize',(function() {
+              stickyMenu();
+          }));
+    });
+  </script>
+<script id="lottery-chance-dialog-tmpl-src" type="text/x-jquery-tmpl">
+<div class="modal fade">
+    <div class="modal-dialog modal-lg" style="width: 600px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button aria-hidden="true" data-dismiss="modal" class="close" type="button"><span class="xui-closeColor" aria-hidden="true">&times;</span></button>
+                <h3 class="modal-title">中奖概率说明</h3>
+            </div>
+
+            <div class="modal-body ml15">
+                <div>
+                    <p>1、中奖概率：所有参与活动的人里面可以允许多少人中奖</p>
+                    <p class="pl20"> 例如：比如中奖概率为70%，那么所有参与活动的人里面有70%的人会中奖。</p>
+                </div>
+                <div>
+                    <p>2、奖品数量：奖品数量会直接影响用户中几等奖</p>
+                    <p class="pl20">例如：一等奖奖品数量为10，二等奖数量为30，三等奖数量为60，那么用户中一等奖的概率为10%，中二等奖的概率为30%，中三等奖的概率为60%。</p>
+
+                </div>
+                <div>
+                    <p>3、导致用户不中奖的原因</p>
+                    <p class="pl20"> a.奖品数量为0时，用户不会中奖</p>
+                    <p class="pl20">b.优惠券如果有限制时，会导致用户不会中奖</p>
+                    <p class="pl40">例如：二等奖的奖品为优惠券，但在设置此优惠券时限制了一人只能领一张。当用户在活动期间内已经抽到过了此优惠券 ，那么此用户当再次抽中二等奖时就会认为不中奖，提示谢谢参与。</p>
+                </div>
+            </div>
+
+            <div class="modal-footer modal-footerBg">
+                <button class="btn btn-success" aria-hidden="true" data-dismiss="modal" style="width:110px;height:36px;background:#207cbe; color:#ffffff;">关&nbsp;&nbsp;闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+</script>
+    {% endif %}
+{% block js %}{% endblock %}
+{% endblock %}
