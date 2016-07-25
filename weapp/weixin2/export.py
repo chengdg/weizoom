@@ -88,7 +88,7 @@ WEIXIN_SECOND_NAV = {
                 {
                     'name': MESSAGE_TEMPLATE_MESSAGE_NAV,
                     'title': u'模板消息',
-                    'url': '/new_weixin/new_template_messages/',
+                    'url': '/new_weixin/template_messages/',
                     'permission': ''
                 }
             ]

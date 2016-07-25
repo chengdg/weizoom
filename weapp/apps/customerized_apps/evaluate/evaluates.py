@@ -299,7 +299,9 @@ class EvaluateReview(resource.Resource):
 										'keyword3': settings.review_increase,
 										'keyword4': temp_integral + settings.review_increase,
 										'keyword5': u'商品评价奖励'
-									}
+									},
+									'first': u'恭喜您获得积分奖励！',
+									'remark': u'请前往个人中心查看'
 								})
 
 				if status == '2':
@@ -368,7 +370,9 @@ class EvaluateReview(resource.Resource):
 											'keyword3': settings.review_increase,
 											'keyword4': temp_integral + settings.review_increase,
 											'keyword5': u'商品评价奖励'
-										}
+										},
+										'first': u'恭喜您获得积分奖励！',
+										'remark': u'请前往个人中心查看'
 									})
 					reviews.update(set__status=app_models.STATUS_PASSED, set__top_time=app_models.DEFAULT_DATETIME)
 					return create_response(200).get_response()

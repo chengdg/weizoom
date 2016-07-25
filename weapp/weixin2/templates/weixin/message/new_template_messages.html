@@ -141,6 +141,14 @@
         margin-top: -46px;
         float: right;
     }
+    .xui-null{
+        font-size: 20px;
+        text-align: center;
+        vertical-align: middle;
+        padding-top: 100px;
+        font-weight: bold;
+        color: gray;
+    }
 </style>
 {% endblock %}
 {% block content-panel %}
@@ -172,7 +180,7 @@
         {% if has_templates %}
             <div class="panel-body"></div>
         {% else %}
-            <div>暂没有配置模版消息</div>
+            <div class="xui-null">没有模版消息, 请尝试点击右上方的[更新模版]按钮</div>
         {% endif %}
     </div>
 </div>
