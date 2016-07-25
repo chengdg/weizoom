@@ -198,7 +198,7 @@ class RealtimeMessages(resource.Resource):
                                     member_username = members[0].username
                                 for news in newses:
                                     news.title = news.title.replace('{{username}}', member_username)
-                                    news.text = news.text.replace('{{username}}', member_username)
+                                    news.summary = news.summary.replace('{{username}}', member_username)
                             articles = weixin_module_api.get_articles_object(newses)
                             custom_message = NewsCustomMessage(articles)
 
