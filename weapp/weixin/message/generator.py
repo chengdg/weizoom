@@ -3,11 +3,14 @@
 生成微信response的工具
 
 """
-
+import re
 import time
 import base64
 
 from modules.member import member_settings
+from weixin2.models import WeixinUser
+from utils.string_util import hex_to_byte
+from weixin2.export import NEWS_TEXT_USERNAME
 
 
 REQUEST_TEXT_TMPL = u"""
@@ -177,6 +180,18 @@ def get_news_response(from_user_name, to_user_name, newses, token):
 		pic_url =  'http://%s%s' % (user_profile.host, news.pic_url) if news.pic_url.find('http') == -1 else news.pic_url
 		if len(url.strip()) > 0:
 			member_check = base64.encodestring(from_user_name).replace('=', '').strip()
+			#如果是weshop或weizoomjx帐号，title,Description的替换
+			if user_profile.user.username in NEWS_TEXT_USERNAME:
+				weixinusers = WeixinUser.objects.filter(username=from_user_name,webapp_id=user_profile.webapp_id)
+				nick_name = u''
+				if weixinusers.count() > 0:
+					weixinuser = weixinusers[0]
+					nick_name = weixinuser.nick_name.decode('hex').decode('utf-8')
+				re_str = ur'\{\{u\}\}|｛｛u｝｝'
+				news.title = re.sub(re_str, nick_name, news.title)
+				news.summary = re.sub(re_str, nick_name, news.summary)
+				# news.title = news.title.replace('{{username}}', nick_name)
+				# news.summary = news.summary.replace('{{username}}', nick_name)
 			buf.append(NEWS_ITEM_WITH_URL_TMPL % (news.title, news.summary,pic_url, url.replace("${member}", from_user_name).replace("${member_check}", member_check)))
 		else:
 			buf.append(NEWS_ITEM_WITHOUT_URL_TMPL % (news.title, news.summary, pic_url))
@@ -254,6 +269,18 @@ def get_text_response(from_user_name, to_user_name, content, token, user_profile
 			beg = quote_end_pos
 		content = ''.join(items).strip()
 
+		#如果是weshop或weizoomjx帐号，content的替换
+		if user_profile.user.username in NEWS_TEXT_USERNAME:
+			weixinusers = WeixinUser.objects.filter(username=from_user_name,webapp_id=user_profile.webapp_id)
+			nick_name = u''
+			if weixinusers.count() > 0:
+				weixinuser = weixinusers[0]
+				nick_name = weixinuser.nick_name.decode('hex').decode('utf-8')
+				# nick_name = weixinuser.nickname_for_html
+			re_str = ur'\{\{u\}\}|｛｛u｝｝'
+			content = re.sub(re_str, nick_name, content)
+			# content = content.replace('{{username}}', nick_name)
+
 	return RESPONSE_TEXT_TMPL % (from_user_name, to_user_name, timestamp, content)
 
 RESPONSE_CUSTOMER_SERVICE_TMPL = u"""
@@ -317,5 +344,3 @@ REQUEST_IMAGE_MESSAGE_TEST_TMPL = u"""
 def get_image_message_test_request(to_user, from_user, content):
 	timestamp = int(time.time())
 	return REQUEST_IMAGE_MESSAGE_TEST_TMPL % (to_user, from_user, timestamp)
-
-

@@ -12,6 +12,7 @@ from core import emotion
 from core.emojicons_util import encode_emojicons_for_html
 
 from modules.member.models import  Member
+from utils.string_util import byte_to_hex, hex_to_byte
 
 DEFAULT_ICON = '/static/img/user-1.jpg'
 

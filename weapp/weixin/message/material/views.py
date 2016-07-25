@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import re
 
 __author__ = 'chuter'
 
@@ -31,6 +32,8 @@ import weixin
 
 from weixin.user.module_api import get_mp_nick_name
 
+from weixin2.export import NEWS_TEXT_USERNAME
+
 FIRSTT_NAV_NAME = weixin.NAV_NAME
 WEIXIN_SECOND_NAVS = weixin.get_weixin_second_navs()
 
@@ -40,6 +43,16 @@ WEIXIN_SECOND_NAVS = weixin.get_weixin_second_navs()
 def show_news_detail(request, newsid):
 	try:
 		news = News.objects.get(id=newsid)
+		#如果是weshop或weizoomjx帐号，title,Description的替换
+		if news.user.username in NEWS_TEXT_USERNAME:
+			member_username = request.member.username_hexstr.decode('hex').decode('utf-8')
+			re_str = ur'\{\{u\}\}|｛｛u｝｝'
+			news.title = re.sub(re_str, member_username, news.title)
+			news.text = re.sub(re_str, member_username, news.text)
+			news.summary = re.sub(re_str, member_username, news.summary)
+
+			# news.title = news.title.replace('{{username}}', member_username)
+			# news.text = news.text.replace('{{username}}', member_username)
 		# 为了支持是否显示点击关注的区域
 		settings = OperationSettings.get_settings_for_user(news.user.id)
 		request.operation_settings = settings

@@ -154,3 +154,7 @@ def get_weixin_second_navs(request):
             second_navs = [WEIXIN_SECOND_NAV]
 
     return second_navs
+
+
+#可以通过配置图文和文本自动带上用户昵称的帐号
+NEWS_TEXT_USERNAME = ["weshop","weizoomjx"]

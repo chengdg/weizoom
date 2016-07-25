@@ -29,9 +29,12 @@ from modules.member.models import MemberHasSocialAccount, Member,MemberHasTag
 from account.social_account.models import SocialAccount
 from watchdog.utils import *
 
-from utils.string_util import byte_to_hex
+from utils.string_util import byte_to_hex, hex_to_byte
 
 from util import translate_special_characters
+
+from weixin2.export import NEWS_TEXT_USERNAME
+
 COUNT_PER_PAGE = 20
 FIRST_NAV = export.WEIXIN_HOME_FIRST_NAV
 DATETIME_BEFORE_HOURS = 48
@@ -185,10 +188,26 @@ class RealtimeMessages(resource.Resource):
                     if is_active:
                         if type == u'text':
                             #文本消息
+                            #如果是weshop或weizoomjx帐号，title,Description的替换
+                            if request.user.username in NEWS_TEXT_USERNAME:
+                                nick_name = session.weixin_user.nick_name.decode('hex').decode('utf-8')
+                                re_str = ur'\{\{u\}\}|｛｛u｝｝'
+                                answer = re.sub(re_str, nick_name, answer)
+                                # answer = answer.replace('{{username}}', nick_name)
+
                             custom_message = TextCustomMessage(answer)
                         else:
                             #图文消息
                             newses = weixin_module_api.get_material_news_info(material_id)
+                            #如果是weshop或weizoomjx帐号，title,Description的替换
+                            if request.user.username in NEWS_TEXT_USERNAME:
+                                nick_name = session.weixin_user.nick_name.decode('hex').decode('utf-8')
+                                for news in newses:
+                                    re_str = ur'\{\{u\}\}|｛｛u｝｝'
+                                    news.title = re.sub(re_str, nick_name, news.title)
+                                    news.summary = re.sub(re_str, nick_name, news.summary)
+                                    # news.title = news.title.replace('{{username}}', nick_name)
+                                    # news.summary = news.summary.replace('{{username}}', nick_name)
                             articles = weixin_module_api.get_articles_object(newses)
                             custom_message = NewsCustomMessage(articles)
 
