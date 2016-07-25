@@ -157,8 +157,8 @@
                     return false;
                 }
                  W.getApi().call({
-                        app: 'm/apps/lottery',
-                        resource: 'lottery_prize',
+                        app: 'm/apps/scratch',
+                        resource: 'scratch_prize',
                         method: 'post',
                         args:{
                             id: W.appRecordId,
@@ -407,8 +407,8 @@
                     return false;
                 }else{
                     W.getApi().call({
-                        app: 'm/apps/lottery',
-                        resource: 'lottery_prize',
+                        app: 'm/apps/scratch',
+                        resource: 'scratch_prize',
                         method: 'put',
                         args:{
                             id: W.appRecordId,
@@ -435,8 +435,8 @@
         function getDynamicData(){
             loadingStatus(true);
             W.getApi().call({
-                app: 'm/apps/lottery',
-                resource: 'm_lottery',
+                app: 'm/apps/scratch',
+                resource: 'm_scratch',
                 method: 'get',
                 args: {
                     webapp_owner_id: W.webappOwnerId,

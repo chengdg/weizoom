@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
-from apps.customerized_apps.lottery import lotteries
+from apps.customerized_apps.scratch import scratches
 
 NAV = {
 	'section': u'',
 	'navs': [
 		{
-			'name': "lotteries",
+			'name': "scratches",
 			'title': "微信抽奖",
-			'url': '/apps/lottery/lotteries/',
+			'url': '/apps/scratch/scratches/',
 			'need_permissions': []
 		},
 	]
@@ -36,13 +36,13 @@ def get_link_targets(request):
 		request.GET = request.GET.copy()
 		request.GET['name'] = query
 	
-	pageinfo, datas = lotteries.lotteries.get_datas(request)
+	pageinfo, datas = scratches.Scratches.get_datas(request)
 	link_targets = []
 	for data in datas:
 		link_targets.append({
 			"id": str(data.id),
 			"name": data.name,
-			"link": '/m/apps/lottery/m_lottery/?webapp_owner_id=%d&id=%s' % (request.manager.id, data.id),
+			"link": '/m/apps/scratch/m_scratch/?webapp_owner_id=%d&id=%s' % (request.manager.id, data.id),
 			"isChecked": True if str(data.id) == selected_id else False,
 			'start_time': data.start_time.strftime('%Y-%m-%d %H:%M'),
 			'end_time': data.end_time.strftime('%Y-%m-%d %H:%M'),

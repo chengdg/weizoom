@@ -11,9 +11,9 @@
 <div class="xui-lotteryParticipanceFormPage xui-appPage-commonStyle">
 	<ul class="breadcrumb" style="margin-bottom:-12px;">
 		<li>您当前所在位置</li>
-		<li><a href="/apps/lottery/lotteries/">百宝箱</a></li>
-		<li><a href="/apps/lottery/lotteries/">微信抽奖</a></li>
-		<li class="active">新建微信抽奖</li>
+		<li><a href="/apps/scratch/scratches/">百宝箱</a></li>
+		<li><a href="/apps/scratch/scratches/">刮刮卡</a></li>
+		<li class="active">新建刮刮卡</li>
 	</ul>
 	
 	<form 
@@ -99,14 +99,14 @@
 			var $form = $('form');
 			var data = $form.serializeObject();
 			W.getApi().call({
-				app: 'apps/lottery',
-				resource: 'lottery_participance',
+				app: 'apps/scratch',
+				resource: 'scratch_participance',
 				method: 'put',
 				args: data,
 				success: function(data) {
 					W.showHint('success', '创建成功');
 					_.delay(function() {
-						window.location.href = '/apps/lottery/lotteries/';
+						window.location.href = '/apps/scratch/scratches/';
 					}, 500);
 				},
 				error: function(resp) {

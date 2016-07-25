@@ -18,9 +18,9 @@ import models as app_models
 import export
 from apps import request_util
 
-class lotteryStatus(resource.Resource):
-	app = 'apps/lottery'
-	resource = 'lottery_status'
+class ScratchStatus(resource.Resource):
+	app = 'apps/scratch'
+	resource = 'scratch_status'
 	
 	@login_required
 	def api_post(request):
@@ -31,9 +31,9 @@ class lotteryStatus(resource.Resource):
 		if target_status == 'stoped':
 			target_status = app_models.STATUS_STOPED
 			now_time = datetime.today().strftime('%Y-%m-%d %H:%M')
-			app_models.lottery.objects(id=request.POST['id']).update(set__end_time=now_time)
+			app_models.Scratch.objects(id=request.POST['id']).update(set__end_time=now_time)
 			pagestore = pagestore_manager.get_pagestore('mongo')
-			datas = app_models.lottery.objects(id=request.POST['id'])
+			datas = app_models.Scratch.objects(id=request.POST['id'])
 			for data in datas:
 				related_page_id = data.related_page_id
 			page = pagestore.get_page(related_page_id, 1)
@@ -44,7 +44,7 @@ class lotteryStatus(resource.Resource):
 			target_status = app_models.STATUS_RUNNING
 		elif target_status == 'not_start':
 			target_status = app_models.STATUS_NOT_START
-		app_models.lottery.objects(id=request.POST['id']).update(set__status=target_status)
+		app_models.Scratch.objects(id=request.POST['id']).update(set__status=target_status)
 		
 		response = create_response(200)
 		return response.get_response()

@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
-import lottery
-import lottery_participance
-import lottery_participances
-import m_lottery
-import lottery_status
-import lotteries
-import lottery_prize
+import scratch
+import scratch_participance
+import scratch_participances
+import m_scratch
+import scratch_status
+import scratch
+import scratch_prize
 

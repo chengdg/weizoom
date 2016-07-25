@@ -63,8 +63,8 @@
         <ul class="breadcrumb">
       <li>您当前所在位置</li>
       <li><a href="/termite2/pages/">百宝箱</a></li>
-      <li><a href="/apps/lottery/lotteries/">微信抽奖</a></li>
-      <li class="active">新建抽奖</li>
+      <li><a href="/apps/scratch/scratches/">刮刮卡</a></li>
+      <li class="active">新建刮刮卡</li>
         </ul>
     </div>
 {% if is_deleted_data %}
@@ -118,7 +118,7 @@
         "task": "weizoom-load-termite-components"
       }
     -->
-  {{ '["appkit.page", "appkit.lotterydescription", "appkit.submitbutton"]'|load_termite_components|safe }}
+  {{ '["appkit.page", "appkit.scratchdescription", "appkit.submitbutton"]'|load_termite_components|safe }}
   <!-- *end_prunt_task* -->
 
 {% if not is_deleted_data %}
@@ -204,8 +204,8 @@
                 if ("{{ lottery.status_text }}" == "进行中" ){
                     W.getApi().call({
                         method: 'get',
-                        app: 'apps/lottery',
-                        resource: 'lottery_prize_count',
+                        app: 'apps/scratch',
+                        resource: 'scratch_prize_count',
                         args:{id:W.activityId},
                         success: function (data) {
                                 var prize_count = $('input[data-field="prize_count"]');
@@ -339,14 +339,14 @@
             args['id'] = W.activityId;
           }
           W.getApi().call({
-            app: 'apps/lottery',
-            resource: 'lottery',
+            app: 'apps/scratch',
+            resource: 'scratch',
             method: method,
             args: args,
             success: function(data) {
               W.showHint('success', '保存成功');
               _.delay(function() {
-                window.location.href = '/apps/lottery/lotteries/';
+                window.location.href = '/apps/scratch/scratches/';
               }, 500);
             },
             error: function(resp) {
@@ -391,7 +391,7 @@
             page_json: pageJson
           },
           success: function(data) {
-            var previewUrl = '/m/apps/lottery/m_lottery/?page_id=preview&woid='+W.uid+'&id='+W.projectId;
+            var previewUrl = '/m/apps/scratch/m_scratch/?page_id=preview&woid='+W.uid+'&id='+W.projectId;
             window.open('/termite2/app_preview/?preview_url='+encodeURIComponent(previewUrl), '_tab');
           },
           error: function(resp) {

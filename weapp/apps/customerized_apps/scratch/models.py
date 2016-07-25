@@ -4,28 +4,28 @@ from datetime import datetime
 
 import mongoengine as models
 
-class lotteryParticipance(models.Document):
+class ScratchParticipance(models.Document):
 	webapp_user_id = models.LongField(default=0) #参与者id
 	member_id= models.LongField(default=0) #参与者id
 	belong_to = models.StringField(default="", max_length=100) #对应的活动id
 	has_prize = models.BooleanField(default=False) #是否中奖
 	total_count = models.IntField(default=0) #已参与次数
 	can_play_count = models.IntField(default=0) #可参与次数
-	lottery_date = models.DateTimeField() #最近一次抽奖时间
+	scratch_date = models.DateTimeField() #最近一次刮刮卡时间
 
 	meta = {
-		'collection': 'lottery_lottery_participance',
+		'collection': 'scratch_scratch_participance',
 		'db_alias': 'apps'
 	}
 
-class lottoryRecord(models.Document):
+class ScratchRecord(models.Document):
 	"""
-	抽奖记录表
+	刮刮卡记录表
 	"""
 	webapp_user_id = models.LongField(default=0) #参与者id
 	member_id= models.LongField(default=0) #参与者id
 	belong_to = models.StringField(default="", max_length=100) #对应的抽奖活动id
-	lottery_name = models.StringField(default="", max_length=100) #对应的抽奖活动title
+	scratch_name = models.StringField(default="", max_length=100) #对应的刮刮卡活动title
 	prize_type = models.StringField(default="", max_length=16) #奖品类型
 	prize_title = models.StringField(default="", max_length=16) #奖项标题
 	prize_name = models.StringField(default="", max_length=100) #奖项名称
@@ -35,7 +35,7 @@ class lottoryRecord(models.Document):
 	created_at = models.DateTimeField() #创建时间
 
 	meta = {
-		'collection': 'lottery_lottery_record',
+		'collection': 'scratch_scratch_record',
 		'ordering': ['-id'],
 		'db_alias': 'apps'
 	}
@@ -43,10 +43,10 @@ class lottoryRecord(models.Document):
 STATUS_NOT_START = 0
 STATUS_RUNNING = 1
 STATUS_STOPED = 2
-class lottery(models.Document):
+class Scratch(models.Document):
 	owner_id = models.LongField() #创建人id
 	name = models.StringField(default="", max_length=100) #名称
-	lottery_type = models.StringField(default="roulette", max_length=100) #抽奖类型
+	scratch_type = models.StringField(default="roulette", max_length=100) #刮刮卡类型
 	start_time = models.DateTimeField() #开始时间
 	end_time = models.DateTimeField() #结束时间
 	status = models.IntField(default=0) #状态
@@ -67,13 +67,13 @@ class lottery(models.Document):
 
 	
 	meta = {
-		'collection': 'lottery_lottery',
+		'collection': 'scratch_scratch',
 		'db_alias': 'apps'
 	}
 
 	@property
-	def lottery_type_cn(self):
-		return (u'大转盘', u'刮刮乐', u'红包')[('roulette', 'scratch', 'red').index(self.lottery_type)]
+	def scratch_type_cn(self):
+		return (u'大转盘', u'刮刮乐', u'红包')[('roulette', 'scratch', 'red').index(self.scratch_type)]
 
 	@property
 	def limitation_times(self):
@@ -105,8 +105,8 @@ class lottery(models.Document):
 		else:
 			return False
 
-class lotteryControl(models.Document):
-	belong_to = models.StringField(default="", max_length=100) #对应的抽奖活动id
+class ScratchControl(models.Document):
+	belong_to = models.StringField(default="", max_length=100) #对应的刮刮卡活动id
 	member_id= models.LongField(default=0) #参与者id
 	date_control = models.StringField(default="", max_length=100)
 	can_play_count_control_one = models.StringField(default="", max_length=100, unique_with=['belong_to', 'member_id', 'date_control']) #第一次参与
@@ -114,6 +114,6 @@ class lotteryControl(models.Document):
 
 
 	meta = {
-		'collection': 'lottery_lottery_control',
+		'collection': 'scratch_scratch_control',
 		'db_alias': 'apps'
 	}

@@ -423,7 +423,7 @@ MALL_PROMOTION_AND_APPS_SECOND_NAV = {
                 }, {
                     'name': MALL_APPS_SCRATCH_NAV,
                     'title': "刮刮卡",
-                    'url': '/apps/scratch/scratchs/',
+                    'url': '/apps/scratch/scratches/',
                     'permission': '',
                 }, {
                     'name': MALL_APPS_LOTTERY_NAV,

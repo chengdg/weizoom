@@ -15,8 +15,8 @@
 	<div class="relative">
 		<ul class="breadcrumb">
 			<li>您当前所在位置</li>
-			<li><a href="/apps/lottery/lotteries/">百宝箱</a></li>
-			<li><a href="/apps/lottery/lotteries/">微信抽奖</a></li>
+			<li><a href="/apps/scratch/scratches/">百宝箱</a></li>
+			<li><a href="/apps/scratch/scratches/">刮刮卡</a></li>
 			<li class="active">查看结果</li>
 		</ul>
 	</div>
@@ -90,8 +90,8 @@
 		<div 
 			class="panel-body panel-table p0 mt10"
 			data-ui-role="advanced-table" 
-			data-app="apps/lottery" 
-			data-resource="lottery_participances" 
+			data-app="apps/scratch"
+			data-resource="scratch_participances"
 			data-args='{"id": "{{activity_id}}"}'
 			data-template-id="#table" 
 			data-enable-paginator="true" 
@@ -220,8 +220,8 @@ $(document).ready(function() {
         var export_id =window.location.search.split('?id=')[1];
         W.getApi().call({
             method: 'get',
-            app: 'apps/lottery',
-            resource: 'lottery_participances-export',
+            app: 'apps/scratch',
+            resource: 'scratch_participances-export',
             args: {
 				'export_id':export_id,
 				'participant_name': participant_name,
@@ -258,8 +258,8 @@ $(document).ready(function() {
 			msg: '确定领取该奖品？',
 			confirm: function() {
 				W.getApi().call({
-					app: 'apps/lottery',
-					resource: 'lottery_participances',
+					app: 'apps/scratch',
+					resource: 'scratch_participances',
 					method: 'post',
 					args: {
 						id: id

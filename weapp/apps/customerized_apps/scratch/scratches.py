@@ -15,26 +15,26 @@ from datetime import datetime
 FIRST_NAV = export.MALL_PROMOTION_AND_APPS_FIRST_NAV
 COUNT_PER_PAGE = 20
 
-class lotteries(resource.Resource):
-	app = 'apps/lottery'
-	resource = 'lotteries'
+class Scratches(resource.Resource):
+	app = 'apps/scratch'
+	resource = 'scratches'
 	
 	@login_required
 	def get(request):
 		"""
 		响应GET
 		"""
-		has_data = app_models.lottery.objects.count()
+		has_data = app_models.Scratch.objects.count()
 		
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
 			'second_navs': export.get_promotion_and_apps_second_navs(request),
 			'second_nav_name': export.MALL_APPS_SECOND_NAV,
-            'third_nav_name': export.MALL_APPS_LOTTERY_NAV,
+            'third_nav_name': export.MALL_APPS_SCRATCH_NAV,
 			'has_data': has_data
 		});
 		
-		return render_to_response('lottery/templates/editor/lotteries.html', c)
+		return render_to_response('scratch/templates/editor/scratches.html', c)
 	
 	@staticmethod
 	def get_datas(request):
@@ -45,7 +45,7 @@ class lotteries(resource.Resource):
 		
 		now_time = datetime.today().strftime('%Y-%m-%d %H:%M')
 		params = {'owner_id':request.manager.id}
-		datas_datas = app_models.lottery.objects(**params)
+		datas_datas = app_models.Scratch.objects(**params)
 		for data_data in datas_datas:
 			data_start_time = data_data.start_time.strftime('%Y-%m-%d %H:%M')
 			data_end_time = data_data.end_time.strftime('%Y-%m-%d %H:%M')
@@ -63,7 +63,7 @@ class lotteries(resource.Resource):
 			params['start_time__gte'] = start_time
 		if end_time:
 			params['end_time__lte'] = end_time
-		datas = app_models.lottery.objects(**params).order_by('-id')	
+		datas = app_models.Scratch.objects(**params).order_by('-id')
 		
 		#进行分页
 		count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
@@ -77,7 +77,7 @@ class lotteries(resource.Resource):
 		"""
 		响应API GET
 		"""
-		pageinfo, datas = lotteries.get_datas(request)
+		pageinfo, datas = Scratches.get_datas(request)
 		
 		items = []
 		for data in datas:

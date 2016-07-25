@@ -22,27 +22,27 @@ from watchdog.utils import watchdog_error
 FIRST_NAV = export.MALL_PROMOTION_AND_APPS_FIRST_NAV
 COUNT_PER_PAGE = 20
 
-class lotteryParticipances(resource.Resource):
-	app = 'apps/lottery'
-	resource = 'lottery_participances'
+class ScratchParticipances(resource.Resource):
+	app = 'apps/scratch'
+	resource = 'scratch_participances'
 	
 	@login_required
 	def get(request):
 		"""
 		响应GET
 		"""
-		has_data = app_models.lotteryParticipance.objects(belong_to=request.GET['id']).count()
+		has_data = app_models.ScratchParticipance.objects(belong_to=request.GET['id']).count()
 		
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
 			'second_navs': export.get_promotion_and_apps_second_navs(request),
 			'second_nav_name': export.MALL_APPS_SECOND_NAV,
-            'third_nav_name': export.MALL_APPS_LOTTERY_NAV,
+            'third_nav_name': export.MALL_APPS_SCRATCH_NAV,
 			'has_data': has_data,
 			'activity_id': request.GET['id']
 		})
 		
-		return render_to_response('lottery/templates/editor/lottery_participances.html', c)
+		return render_to_response('scratch/templates/editor/scratch_participances.html', c)
 	
 	@staticmethod
 	def get_datas(request):
@@ -76,8 +76,8 @@ class lotteryParticipances(resource.Resource):
 			params['prize_type'] = prize_type
 		if status != '-1':
 			params['status'] = True if status == '1' else False
-		# datas = app_models.lotteryParticipance.objects(**params).order_by('-id')
-		datas = app_models.lottoryRecord.objects(**params)
+		# datas = app_models.scratchParticipance.objects(**params).order_by('-id')
+		datas = app_models.ScratchRecord.objects(**params)
 		if not export_id:
 			#进行分页
 			count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
@@ -92,7 +92,7 @@ class lotteryParticipances(resource.Resource):
 		"""
 		响应API GET
 		"""
-		pageinfo, datas = lotteryParticipances.get_datas(request)
+		pageinfo, datas = ScratchParticipances.get_datas(request)
 		
 		tmp_member_ids = []
 		for data in datas:
@@ -127,16 +127,16 @@ class lotteryParticipances(resource.Resource):
 		"""
 		领取奖品
 		"""
-		app_models.lottoryRecord.objects(id=request.POST['id']).update(set__status=True)
+		app_models.ScratchRecord.objects(id=request.POST['id']).update(set__status=True)
 		response = create_response(200)
 		return response.get_response()
 
-class lotteryParticipances_Export(resource.Resource):
+class ScratchParticipances_Export(resource.Resource):
 	'''
 	批量导出
 	'''
-	app = 'apps/lottery'
-	resource = 'lottery_participances-export'
+	app = 'apps/scratch'
+	resource = 'scratch_participances-export'
 	@login_required
 	def api_get(request):
 		"""
@@ -144,10 +144,10 @@ class lotteryParticipances_Export(resource.Resource):
 		"""
 		export_id = request.GET.get('export_id','')
 
-		# app_name = lotteryParticipances_Export.app.split('/')[1]
+		# app_name = scratchParticipances_Export.app.split('/')[1]
 		# excel_file_name = ('%s_id%s_%s.xls') % (app_name,export_id,datetime.now().strftime('%Y%m%d%H%m%M%S'))
-		download_excel_file_name = u'微信抽奖详情.xls'
-		excel_file_name = 'lottery_details_'+datetime.now().strftime('%H_%M_%S')+'.xls'
+		download_excel_file_name = u'刮刮卡详情.xls'
+		excel_file_name = 'scratch_details_'+datetime.now().strftime('%H_%M_%S')+'.xls'
 		dir_path_suffix = '%d_%s' % (request.user.id, date.today())
 		dir_path = os.path.join(settings.UPLOAD_DIR, dir_path_suffix)
 
@@ -157,7 +157,7 @@ class lotteryParticipances_Export(resource.Resource):
 		#Excel Process Part
 		try:
 			import xlwt
-			datas = lotteryParticipances.get_datas(request)
+			datas = ScratchParticipances.get_datas(request)
 			fields_raw = []
 			export_data = []
 

@@ -1,12 +1,12 @@
 {% extends "content_base_v2.html" %}
 
 {% block content-panel %}
-<div class="xui-lotteriesAppPage xui-appPage-commonStyle">
+<div class="xui-lotteryStatusAppPage xui-appPage-commonStyle">
 	<div class="relative">
 		<ul class="breadcrumb">
 			<li>您当前所在位置</li>
-			<li><a href="/apps/lottery/lotteries/">百宝箱</a></li>
-			<li class="active">微信抽奖</li>
+			<li><a href="/apps/scratch/scratches/">百宝箱</a></li>
+			<li class="active">刮刮卡</li>
 		</ul>
 	</div>
 	
@@ -77,8 +77,8 @@
 		<div 
 			class="panel-body panel-table p0"
 			data-ui-role="advanced-table" 
-			data-app="apps/lottery" 
-			data-resource="lotteries" 
+			data-app="apps/scratch"
+			data-resource="scratch_status"
 			data-template-id="#table" 
 			data-enable-paginator="true" 
 			data-enable-sort="false" 
@@ -99,11 +99,11 @@
 	<table class="table table-bordered xb-stripedTable xb-noTdBorder xb-noBottom xb-noBorder xb-theadBg mb10">
 		<thead>
 			<tr>
-				<th>活动名称</th>
+				<th>名称</th>
 				<th>开始时间</th>
 				<th>结束时间</th>
 				<th>状态</th>
-				<th>参与次数</th>
+				<th>参与人数</th>
 				<th>操作</th>
 			</tr>
 		</thead>
@@ -118,7 +118,7 @@
 				   <a 
 					class="xui-ellipsisFox" 
 					limit="15" 
-					href="/apps/lottery/lottery/?id=${item.id}&related_page_id=${item.related_page_id}"
+					href="/apps/scratch/scratch/?id=${item.id}&related_page_id=${item.related_page_id}"
 					style="text-overflow: -o-ellipsis-lastline;overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;"
 					>
 						${item.name}
@@ -137,15 +137,14 @@
 					${item.participant_count}
 				</td>
 				<td>
-				    <a href="/apps/lottery/lottery_participances/?id=${item.id}">查看结果</a>
-				    <a class="ml5 xa-copyLinkBtn" href="javascript:void(0);" data-id=${item.id}>链接</a>
-					{{if (item.status === '未开始' || item.status === '已结束')}}
-					<a href="javascript:void(0)" class="ml5 xa-delete" data-id=${item.id}>删除</a>
+					{{if (item.status === '未开启' || item.status === '已结束')}}
+					<a href="javascript:void(0)" class="xa-delete" data-id=${item.id}>删除</a>
 					{{/if}}
 					{{if (item.status === '进行中')}}
-					<a href="javascript:void(0)" class="ml5 xa-close" data-id=${item.id}>关闭</a>
+					<a href="javascript:void(0)" class="xa-close" data-id=${item.id}>关闭</a>
 					{{/if}}
 					<a href="javascript:void(0);" class="ml5 xa-preview" data-id=${item.id}>预览</a>
+					<a href="/apps/scratch/scratch_participances/?id=${item.id}" class="ml5">查看结果</a>
 				</td>
 			</tr>
 			{{/each}}
@@ -164,7 +163,7 @@
 
 <script type="text/javascript">
 $(document).ready(function() {
-	W.mid = "{{ request.manager.id }}";
+	
 	$('body').delegate('.xa-delete', 'click', function(event) {
 		var $el = $(event.target);
 		var id = $el.data('id');
@@ -177,8 +176,8 @@ $(document).ready(function() {
 			msg: '确定删除？',
 			confirm: function() {
 				W.getApi().call({
-					app: 'apps/lottery',
-					resource: 'lottery',
+					app: 'apps/scratch',
+					resource: 'scratch',
 					method: 'delete',
 					args: {
 						id: id
@@ -201,8 +200,8 @@ $(document).ready(function() {
 		var $el = $(event.target);
 		var id = $el.data('id');
 		W.getApi().call({
-			app: 'apps/lottery',
-			resource: 'lottery_status',
+			app: 'apps/scratch',
+			resource: 'scratch_status',
 			method: 'post',
 			args: {
 				id: id,
@@ -223,7 +222,7 @@ $(document).ready(function() {
 	$('body').delegate('.xa-preview', 'click', function(event) {
 		var $el = $(event.target);
 		var id = $el.data('id');
-		var previewUrl = '/m/apps/lottery/m_lottery/?woid='+W.mid+'&id='+id;
+		var previewUrl = '/m/apps/scratch/m_scratch/?woid='+W.mid+'&id='+id;
 		window.open('/termite2/app_preview/?preview_url='+encodeURIComponent(previewUrl), '_tab');
 	});
 	
@@ -245,31 +244,11 @@ $(document).ready(function() {
 	
 	$('.xa-reset').click(function(event) {
 		$('[name="name"]').val('');
-		$('[name="status"]').val('-1');
+		$('[name="status"]').val('0');
 		$('[name="start_time"]').val('');
 		$('[name="end_time"]').val('');
 	});
 
-    // 复制链接
-	$('body').delegate('.xa-copyLinkBtn', 'click', function(event){
-		var $el = $(event.currentTarget);
-		var data_id = $el.attr('data-id');
-        var urlLink = "/m/apps/lottery/m_lottery/?webapp_owner_id="+W.mid+"&id="+data_id;
-
-		var promotionCopyLinkView = W.getPromotionCopyLinkView({
-			width: 414,
-			height: 62,
-			title: '复制链接',
-			position:'top',
-			isTitle: false,
-			privateContainerClass:'xui-remarkDropBox'
-
-		});
-		promotionCopyLinkView.show({
-			$action: $el,
-			urlLink: urlLink
-		})
-	});
 });
 </script>
 {% endblock %}
