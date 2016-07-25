@@ -318,6 +318,8 @@ MALL_APPS_GROUP_NAV = 'groups'
 MALL_APPS_SHVOTE_NAV = 'shvotes'
 MALL_APPS_REBATE_NAV = 'rebate'
 MALL_APPS_EXSIGN_NAV = 'exsign'
+MALL_APPS_EGG_NAV = 'edd'
+MALL_APPS_SCRATCH_NAV = 'scratch'
 
 #
 # 应用和营销左侧垂直方向二级导航信息
@@ -414,6 +416,16 @@ MALL_PROMOTION_AND_APPS_SECOND_NAV = {
             'permission': 'manage_apps',
             'third_navs': [
                 {
+                    'name': MALL_APPS_EGG_NAV,
+                    'title': "砸金蛋",
+                    'url': '/apps/egg/eggs/',
+                    'permission': ''
+                }, {
+                    'name': MALL_APPS_SCRATCH_NAV,
+                    'title': "刮刮卡",
+                    'url': '/apps/scratch/scratchs/',
+                    'permission': '',
+                }, {
                     'name': MALL_APPS_LOTTERY_NAV,
                     'title': "微信抽奖",
                     'url': '/apps/lottery/lotteries/',

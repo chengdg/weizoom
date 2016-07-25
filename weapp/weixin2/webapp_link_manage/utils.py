@@ -86,11 +86,21 @@ def get_webapp_link_menu_objectes(request):
 			'name': '营销推广',
 			'title': [
 			{
+				'name': '砸金蛋',
+				'type': 'egg',
+				'add_btn_title': '新建砸金蛋',
+				'add_link': '/apps/egg/egg/'
+			}, {
+				'name': '刮刮卡',
+				'type': 'scratch',
+				'add_btn_title': '新建刮刮卡',
+				'add_link': '/apps/scratch/scratch/'
+			}, {
 				'name': '抽奖',
 				'type': 'lottery',
 				'add_btn_title': '新建抽奖',
 				'add_link': '/apps/lottery/lottery/'
-			},{
+			}, {
 				'name': '幸运码抽奖',
 				'type': 'exlottery',
 				'add_btn_title': '新建幸运码抽奖',
