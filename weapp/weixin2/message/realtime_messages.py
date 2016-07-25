@@ -29,7 +29,7 @@ from modules.member.models import MemberHasSocialAccount, Member,MemberHasTag
 from account.social_account.models import SocialAccount
 from watchdog.utils import *
 
-from utils.string_util import byte_to_hex
+from utils.string_util import byte_to_hex, hex_to_byte
 
 from util import translate_special_characters
 COUNT_PER_PAGE = 20
@@ -191,7 +191,7 @@ class RealtimeMessages(resource.Resource):
                             newses = weixin_module_api.get_material_news_info(material_id)
                             #如果是weshop帐号，title,Description的替换
                             if request.user.username == 'jobs':
-                                nick_name = session.weixin_user.weixin_user_nick_name
+                                nick_name = hex_to_byte(session.weixin_user.nick_name)
                                 for news in newses:
                                     news.title = news.title.replace('{{username}}', nick_name)
                                     news.summary = news.summary.replace('{{username}}',nick_name)
