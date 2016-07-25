@@ -208,13 +208,26 @@
 <!-- 同步模版的弹窗 -->
 <script id="weixin-template-sync-dialog" type="text/x-handlebar-tmpl">
     <div class="modal fade xui-templateSyncDialog" id="templateSyncDialog">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <h3 class="modal-title">更新内容</h3>
                 </div>
-                <div class="modal-body"></div>
-                <div class="modal-footer modal-footerBg">
+                <div class="modal-body">
+                    <div class="xui-i-changed {{#unless has_changed }}xui-hidden{{/unless}}">
+                        <h2>新增的模版：</h2>
+                        {{#each changed}}
+                            <p>{{ title }}</p>
+                        {{/each}}
+                    </div>
+                    <div class="xui-i-deleted {{#unless has_deleted }}xui-hidden{{/unless}}">
+                        <h2>删除的模版：</h2>
+                        {{#each deleted}}
+                            <p>{{ title }}</p>
+                        {{/each}}
+                    </div>
+                </div>
+                <div class="modal-footer" style="height: 40px; line-height: 40px;">
                     <button data-dismiss="modal" class="btn btn-danger" type="button">知道了</button>
                 </div>
             </div>
@@ -222,21 +235,6 @@
     </div>
 </script>
 
-<script id="weixin-template-syncResult-dialog" type="text/x-handlebar-tmpl">
-    <div class="xui-i-changed {{#unless has_changed }}xui-hidden{{/unless}}">
-        <h2>新增的模版：</h2>
-        {{#each changed}}
-            <p>{{ title }}</p>
-        {{/each}}
-    </div>
-    <div class="xui-i-deleted {{#unless has_deleted }}xui-hidden{{/unless}}">
-        <h2>删除的模版：</h2>
-        {{#each deleted}}
-            <p>{{ title }}</p>
-        {{/each}}
-    </div>
-    <div class="xui-i-desc">请对新增的模版进行配置，已被删除的模版将不再展示</div>
-</script>
 {% endverbatim %}
 {% endblock %}
 
@@ -250,45 +248,25 @@ var curr_first = '';
 var curr_remark = '';
 //更新模版后的消息弹窗
 var AfterSyncDialog = W.dialog.Dialog.extend({
-    events: _.extend({
-    }, W.dialog.Dialog.prototype.events),
-    
-    templates: {
-        dialogTmpl: '#weixin-template-sync-dialog',
-        resultTmpl: '#weixin-template-syncResult-dialog'
-    },
-    onInitialize: function(options){
+
+    initialize: function(options){
         $('#templateSyncDialog').remove();
-        var source = $('#weixin-template-syncResult-dialog').html();
+        var source = $('#weixin-template-sync-dialog').html();
         var template = Handlebars.compile(source);
         this.changed_tmpls = options.changed_tmpls;
         this.deleted_tmpls = options.deleted_tmpls;
-        this.all_deleted_template_ids = [];
-        for(var i= 0, l=this.deleted_tmpls.length; i<l; i++){
-            this.all_deleted_template_ids.push(this.deleted_tmpls[i].template_id);
-        }
-        this.$dialog.find('.modal-body').html(template({
+        $('body').append(template({
             changed: options.changed_tmpls,
             deleted: options.deleted_tmpls,
             has_changed: options.changed_tmpls.length,
             has_deleted: options.deleted_tmpls.length
         }));
+        this.$dialog = $('#templateSyncDialog');
     },
     onShow: function(){
-        console.log('==================');
-        console.log(items);
         if($.isEmptyObject(items)) return;
         //去除已删除的
-        for(var i= 0, l=items.length; i<l; i++){
-            var tmp = items[i];
-            if(this.all_deleted_template_ids.indexOf(tmp.template_id) >= 0){
-                delete items[i];
-            }
-        }
-        //加入新增的
-        items = items.concat(this.changed_tmpls);
-        //重新渲染模版列表
-        renderList();
+        getTemplateList();
     }
 });
 function renderList(){
@@ -303,8 +281,8 @@ function renderList(){
 
     $('.panel-body').html(html);
 }
-$(document).ready(function(){
-    //获取模版消息
+
+function getTemplateList(){
     W.resource.new_weixin.NewTemplateMessages.get({
         data: {
             woid: W.mid
@@ -319,6 +297,11 @@ $(document).ready(function(){
             W.showHint('error', '获取模版消息失败，清重试！');
         }
     });
+}
+
+$(document).ready(function(){
+    //获取模版消息
+    getTemplateList();
 
     //同步模版
     $('.xa-sync-template').on('click', function(){
@@ -330,6 +313,10 @@ $(document).ready(function(){
                 console.log(data);
                 var changed_tmpls = data.changed;
                 var deleted_tmpls = data.deleted;
+                if($.isEmptyObject(changed_tmpls) && $.isEmptyObject(deleted_tmpls)){
+                    W.showHint('info', '无需更新~');
+                    return;
+                }
                 W.dialog.showDialog('AfterSyncDialog', {
                     changed_tmpls: changed_tmpls,
                     deleted_tmpls: deleted_tmpls
