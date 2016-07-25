@@ -120,7 +120,7 @@
         left: 410px;
         top: 100px;
         width: 425px;
-        height: 120px;
+        height: 135px;
         background: #fff;
         border: 1px solid #ccc;
         z-index: 1;
@@ -275,6 +275,8 @@ var AfterSyncDialog = W.dialog.Dialog.extend({
         }));
     },
     onShow: function(){
+        console.log('==================');
+        console.log(items);
         if($.isEmptyObject(items)) return;
         //去除已删除的
         for(var i= 0, l=items.length; i<l; i++){
@@ -286,14 +288,11 @@ var AfterSyncDialog = W.dialog.Dialog.extend({
         //加入新增的
         items = items.concat(this.changed_tmpls);
         //重新渲染模版列表
-        var context = {
-            items: items,
-            using_templates: using_templates
-        };
         renderList();
     }
 });
 function renderList(){
+    console.log('rendering template...');
     var context = {
         items: items,
         using_templates: using_templates
@@ -438,7 +437,7 @@ $(document).ready(function(){
                 _this.attr('disabled',false);
             },
             error: function(resp){
-                W.showHint('error','更改状态失败')
+                W.showHint('error','更改状态失败');
                 _this.attr('disabled',false);
             }
         });
