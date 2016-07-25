@@ -15,7 +15,7 @@ import re
 import xlsxwriter
 from mall.order.util import get_orders_by_params,handle_member_nickname
 
-from tools.regional.views import get_str_value_by_string_ids_new
+from tools.regional.views import get_str_value_by_string_ids_new,get_str_value_by_string_ids
 from modules.member.models import Member, WebAppUser, MemberFollowRelation, SOURCE_SELF_SUB, SOURCE_MEMBER_QRCODE, SOURCE_BY_URL
 from mall.models import *
 from market_tools.tools.channel_qrcode.models import ChannelQrcodeHasMember
@@ -384,7 +384,7 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
                     except:
                         pass
 
-                area = get_str_value_by_string_ids_new(order.area)
+                area = get_str_value_by_string_ids(order.area)
                 if area:
                     province = area.split(' ')[0]
                     address = '%s %s' % (area, order.ship_address)
@@ -697,7 +697,7 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
             export_jobs.update(status=1,file_path=yun_url,update_at=datetime.now())
 
         except:
-            notify_message = "导出商品评论任务失败,response:{}".format(unicode_full_stack())
+            notify_message = "导出订单任务失败,response:{}".format(unicode_full_stack())
             export_jobs.update(status=2,is_download=1)
             watchdog_error(notify_message)
 
