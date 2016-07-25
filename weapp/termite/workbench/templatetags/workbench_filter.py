@@ -217,6 +217,8 @@ def to_swipe_images_json(component, request=None):
 		url = model['image']
 		link_url = extract_target_data(model['target'], request)
 		title = model.get('title', '')
+		if url.find('upaiyun.com') > -1:
+			url = url + '!/progressive/true/quality/75'
 		items.append({'url':url, 'link_url':link_url, 'title':title})
 	return json.dumps(items)
 
