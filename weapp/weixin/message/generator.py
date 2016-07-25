@@ -177,6 +177,10 @@ def get_news_response(from_user_name, to_user_name, newses, token):
 		pic_url =  'http://%s%s' % (user_profile.host, news.pic_url) if news.pic_url.find('http') == -1 else news.pic_url
 		if len(url.strip()) > 0:
 			member_check = base64.encodestring(from_user_name).replace('=', '').strip()
+			#如果是weshop帐号，title,Description的替换
+			if user_profile.user.username == 'jobs':
+				news.title = news.title.replace('{{username}}',from_user_name.split('_')[0])
+				news.summary = news.summary.replace('{{username}}',from_user_name.split('_')[0])
 			buf.append(NEWS_ITEM_WITH_URL_TMPL % (news.title, news.summary,pic_url, url.replace("${member}", from_user_name).replace("${member_check}", member_check)))
 		else:
 			buf.append(NEWS_ITEM_WITHOUT_URL_TMPL % (news.title, news.summary, pic_url))
@@ -317,5 +321,3 @@ REQUEST_IMAGE_MESSAGE_TEST_TMPL = u"""
 def get_image_message_test_request(to_user, from_user, content):
 	timestamp = int(time.time())
 	return REQUEST_IMAGE_MESSAGE_TEST_TMPL % (to_user, from_user, timestamp)
-
-

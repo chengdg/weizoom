@@ -40,6 +40,11 @@ WEIXIN_SECOND_NAVS = weixin.get_weixin_second_navs()
 def show_news_detail(request, newsid):
 	try:
 		news = News.objects.get(id=newsid)
+		#如果是weshop帐号，title,Description的替换
+		if news.user.username == 'jobs':
+			member_username = request.member.username
+			news.title = news.title.replace('{{username}}',member_username)
+			news.text = news.text.replace('{{username}}',member_username)
 		# 为了支持是否显示点击关注的区域
 		settings = OperationSettings.get_settings_for_user(news.user.id)
 		request.operation_settings = settings
