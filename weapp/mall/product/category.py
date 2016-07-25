@@ -5,6 +5,7 @@ from operator import attrgetter
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.contrib.auth.decorators import login_required
+from django.db.models import F, Q
 
 from mall.promotion.utils import verification_multi_product_promotion
 from .. import models as mall_models
@@ -152,6 +153,7 @@ class CategoryList(resource.Resource):
           reverse: 'true' or 'false'
 
         """
+        mall_type = request.user_profile.webapp_type
         action = request.GET.get('action')
         category_id = int(request.GET.get('id'))
         if not action:
@@ -159,9 +161,20 @@ class CategoryList(resource.Resource):
             name_query = request.GET.get('name')
 
             #获取商品集合
-            products = list(mall_models.Product.objects.filter(
-                owner=request.manager, is_deleted=False).exclude(
-                shelve_type=mall_models.PRODUCT_SHELVE_TYPE_RECYCLED))
+            product_pool2status = {}
+            if mall_type:
+                product_pool = mall_models.ProductPool.objects.filter(woid=request.manager.id, status__in=[mall_models.PP_STATUS_OFF, mall_models.PP_STATUS_ON])
+                
+                product_pool2status = dict([(pool.product_id, pool.status) for pool in product_pool])
+                product_ids = product_pool2status.keys()
+
+                products = mall_models.Product.objects.filter(Q(owner=request.manager,
+                    is_deleted=False)|Q(id__in=product_ids)).exclude(
+                    shelve_type=mall_models.PRODUCT_SHELVE_TYPE_RECYCLED)
+            else:
+                products = mall_models.Product.objects.filter(
+                    owner=request.manager, is_deleted=False).exclude(
+                    shelve_type=mall_models.PRODUCT_SHELVE_TYPE_RECYCLED)
             # 微众商城代码
             #duhao 20151120
             #当在 商品-分组管理 页面管理分组时，弹出的商品列表应该只包含商城自己商品列表里的在售商品
@@ -175,10 +188,12 @@ class CategoryList(resource.Resource):
             #     products = _products
                     
             if name_query:
-                products = [
-                    product for product in products if name_query in product.name
-                ]
+                # products = [
+                #     product for product in products if name_query in product.name
+                # ]
+                products = products.filter(name__contains=name_query)
 
+            products = list(products)
             if category_id != -1:
                 #获取已在分类中的商品
                 relations = mall_models.CategoryHasProduct.objects.filter(
@@ -211,11 +226,28 @@ class CategoryList(resource.Resource):
             result_products = []
             for product in products:
                 relation = '%s_%s' % (category_id, product.id)
+
+                if mall_type and product_pool2status:
+                    if product.id in product_pool2status.keys():
+                        status_pool = product_pool2status[product.id]
+                        if status_pool == mall_models.PP_STATUS_ON:
+                            status = u'在售'
+                        elif status_pool == mall_models.PP_STATUS_OFF:
+                            status = u'待售'
+                        elif status_pool == mall_models.PP_STATUS_DELETE:
+                            status = u'已删除'
+                        else:
+                            status = u'商品池中'
+                    else:
+                        status = product.status
+                else:
+                    status = product.status
+
                 result_products.append({
                     "id": product.id,
                     "name": product.name,
                     "display_price": product.display_price,
-                    "status": product.status,
+                    "status": status,
                     "sales": product.sales if product.sales else -1,
                     "update_time": product.update_time.strftime("%Y-%m-%d")
                 })
