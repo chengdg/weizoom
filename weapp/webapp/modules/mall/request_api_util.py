@@ -1048,31 +1048,11 @@ def get_page_products(request):
 
 	products_data = []
 
-	# if category_id:
-	# 	category_id = int(category_id)
-	# 	categories = mall_models.ProductCategory.objects.filter(id=category_id)
-	# 	if categories.count() == 1:
-	# 		_, products = webapp_cache.get_webapp_products_new(request.user_profile, False, category_id)
-	#
-	# 		for product in products:
-	# 			products_data.append({
-	# 				"id": product.id,
-	# 				"name": product.name,
-	# 				"thumbnails_url": product.thumbnails_url,
-	# 				"display_price": product.display_price,
-	# 				"is_member_product": product.is_member_product,
-	# 				"promotion_js": json.dumps(product.promotion) if product.promotion else ""
-	# 			})
-    #
-    #
-	#
-	# elif product_ids:
 	_, products = webapp_cache.get_webapp_products_new(request.user_profile, False, category_id)
 
 	if product_ids:
-		product_ids = product_ids.split(',')
-
-		products = filter(lambda x: x.id in product_ids,products)
+		product_ids = map(lambda x: int(x), product_ids.split(','))
+		products = filter(lambda x: x.id in product_ids, products)
 
 	for product in products:
 
