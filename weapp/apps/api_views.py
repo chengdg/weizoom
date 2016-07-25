@@ -399,7 +399,6 @@ def get_templates(user):
 	if mpuser_access_token:
 		weixin_api = get_weixin_api(mpuser_access_token)
 		try:
-			print '22123123'
 			result = weixin_api.get_all_template_messages(True)
 			template_list = result['template_list']
 			user_update_list = []

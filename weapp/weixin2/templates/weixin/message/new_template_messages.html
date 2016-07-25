@@ -1,0 +1,479 @@
+{% extends "content_base_v2.html" %}
+{% block css%}
+<style type="text/css">
+    .xui-template-container{
+        position: relative;
+        min-height: 531px;
+    }
+    .template_hint {
+        border:1px solid #f58b0f;
+        background: #fff7eb;
+        color: #f58b0f;
+        padding: 15px;
+        font-size: 15px;    
+        margin: 0 0 15px;
+    }
+    .template_message_item{
+        border-bottom: 1px solid #e6e6e6;
+        width: 580px;
+        color: #666666;
+        height: 37px;
+        line-height: 37px;
+        position: relative;
+    }
+    .template_message_item > span{
+        cursor: pointer;
+    }
+    .template_edit,.template_control{
+        position: absolute;
+        right: 15px;
+        top: 3px;
+        height: 29px;
+        margin: 0;
+        width: 25px;
+    }
+    .template_control{
+        right: 100px;
+        border-radius: 3px;
+    }
+    .template_edit_container{
+        position: absolute;
+        background: #ebebeb;
+        right: 15px;
+        top: 15px;
+        border: 1px solid #e5e5e5;
+    }
+    .template_edit_panel{
+        display: none;
+        width: 320px;
+        background: url(/static_v2/img/editor/weixin_bg.png) top no-repeat;
+        padding: 70px 15px 15px;
+    }
+    .template_edit_content{
+        width: 100%;
+        height: 100%;
+        background: #ffffff;
+        border: 2px solid #dfdfdf;
+        border-radius: 5px;
+        padding: 20px 10px 0;
+    }
+    .template_edit_content h2{
+        margin: 0;
+        font-size: 15px;
+        font-weight: bold;
+    }
+    .template_edit_panel input{
+        width: 100%;
+        height: 28px;
+        line-height: 28px;
+        padding-left: 6px;
+        color: #666666;  
+    }
+    .template_edit_detail{
+        border-top: #f5f5f5 solid 1px;
+        margin-top: 20px;
+        height: 35px;
+        line-height: 35px;
+        color: #666666;
+        overflow: hidden;
+    }
+    .template_edit_detail i{
+        display: inline-block;
+        float: right;
+        font-family: "黑体";
+        font-weight: bold;
+        font-size: 16px;
+        font-style: normal;
+    }
+    .template_edit_content ul li{
+        margin-bottom: 5px; 
+    }
+    .template_edit_content ul li span{
+        color: #1c69bb;
+    }
+    .cl6{
+        color: #666666;
+    }
+    .xui-i-changed h2,.xui-i-deleted h2{
+        margin: 0 0 10px;
+        font-size: 15px;
+        font-weight: 700;
+    }
+    .xui-i-changed p,.xui-i-deleted p{
+        font-size: 14px;
+        text-indent: 10px;
+    }
+    .xui-hidden {
+        display: none;
+    }
+    .xui-active {
+        color: #1262b7;
+        font-size: 14px;
+        font-weight: bold;
+    }
+    .xui-showIntroduction {
+        cursor: pointer;
+        color: gray;
+    }
+    .xui-weixin-template_messagesPage .xui-newTemplateIntroduction {
+        position: absolute;
+        left: 410px;
+        top: 100px;
+        width: 425px;
+        height: 135px;
+        background: #fff;
+        border: 1px solid #ccc;
+        z-index: 1;
+        padding: 10px;
+    }
+    .btn-warning{
+        border-radius: 3px;
+    }
+    #template_message_list button{
+        min-width: 50px;
+        border-radius: 2px;
+        height: 25px;
+        line-height: 10px;
+    }
+    .xui-sync-template{
+        border-radius: 0;
+        margin-right: 0;
+        margin-top: -46px;
+        float: right;
+    }
+    .xui-null{
+        font-size: 20px;
+        text-align: center;
+        vertical-align: middle;
+        padding-top: 100px;
+        font-weight: bold;
+        color: gray;
+    }
+</style>
+{% endblock %}
+{% block content-panel %}
+<div class="xui-weixin-template_messagesPage">
+    <div class="relative">
+        <ul class="breadcrumb">
+            <li>您当前所在位置</li>
+            <li><a href="/new_weixin/realtime_messages/">消息互动</a></li>
+            <li class="active">模板消息</li>
+        </ul>
+    </div>
+    <p class="template_hint">只有认证的服务号才能使用模板消息，请前往微信公众平台-模板库-选择行业（ IT科技/互联网/电子商务、消费品/消费品）搜索相应的模板标题，添加对应编号的模板消息至我的模板后即可使用&nbsp;&nbsp;<b class="xa-showIntroduction xui-showIntroduction">配置方法</b></p>
+    <div class="xui-newTemplateIntroduction xui-hidden">
+        <ul>
+            <li>1、登录微信公众平台</li>
+            <li>2、在“添加功能插件”处添加模板消息，并填写申请信息</li>
+            <li>3、打开模板消息</li>
+            <li>4、在模板库中添加特定的模板</li>
+            <li>5、回到weapp，点击“更新模版”</li>
+            <li>6、填写开头语和结束语，其他信息系统会自动获取无需填写，仅作预览</li>
+            <li>7、选择启用或停用模版</li>
+        </ul>
+    </div>
+    <button type="button" class="btn btn-primary xa-sync-template xui-sync-template">更新模版</button>
+    <div class="xui-template-container xa-template-container xui-background">
+        <div class="template_edit_container">
+            <div class="template_edit_panel"></div>
+        </div>
+        {% if has_templates %}
+            <div class="panel-body"></div>
+        {% else %}
+            <div class="xui-null">没有模版消息, 请尝试点击右上方的[更新模版]按钮</div>
+        {% endif %}
+    </div>
+</div>
+
+{% verbatim %}
+<script id="weixin-template-message-view" type="text/x-handlebar-tmpl">
+    <div id="template_message_list">
+        {{#each items}}
+            {{#if_in this.title ../using_templates}}
+                <div class="template_message_item">
+                    <span class="xa-industry">{{title}}（行业：{{industry_name}}）</span>
+                    <button type="button" class="template_edit btn btn-primary" title="编辑" data-template-id="{{template_id}}">编辑</button>
+                    <button type="button" class="template_control btn {{#if status}}btn-danger{{else}}btn-success{{/if}}" data-template-id="{{template_id}}" data-status = "{{status}}" data-title="{{ title }}">{{#if status}}停用{{else}}启用{{/if}}</button>
+                </div>
+            {{/if_in}}
+        {{/each}}
+    </div>
+</script>
+
+<script id="weixin-template-edit-view" type="text/x-handlebar-tmpl">
+    <div class="template_edit_content" data-template-id="{{template_id}}">
+        <h2>{{item_title}}</h2>
+        <div class="cl6 mt5 mb5">7月11日</div>
+        <input type="text" name="first" class="template_edit_first mb10 template_edit_input" value="{{item_first}}" placeholder="请输入开头语"></input>
+        {{#list item_message_arr}}{{/list}}
+        <input type="text" name="remark" class="mt5 template_edit_remark template_edit_input" value="{{item_remark}}" placeholder="请输入结尾语"></input>
+        <div class="template_edit_detail">
+            详情<i>></i>
+        </div>
+    </div>
+</script>
+
+<!-- 同步模版的弹窗 -->
+<script id="weixin-template-sync-dialog" type="text/x-handlebar-tmpl">
+    <div class="modal fade xui-templateSyncDialog" id="templateSyncDialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">更新内容</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="xui-i-changed {{#unless has_changed }}xui-hidden{{/unless}}">
+                        <h2>新增的模版：</h2>
+                        {{#each changed}}
+                            <p>{{ title }}</p>
+                        {{/each}}
+                    </div>
+                    <div class="xui-i-deleted {{#unless has_deleted }}xui-hidden{{/unless}}">
+                        <h2>删除的模版：</h2>
+                        {{#each deleted}}
+                            <p>{{ title }}</p>
+                        {{/each}}
+                    </div>
+                </div>
+                <div class="modal-footer" style="height: 40px; line-height: 40px;">
+                    <button data-dismiss="modal" class="btn btn-danger" type="button">知道了</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
+{% endverbatim %}
+{% endblock %}
+
+
+{% block js %}
+<script type="text/javascript">
+var using_templates = ["拼团成功通知", "拼团退款提醒", "商品发货通知", "购买成功通知", "订单标记发货通知", "积分变动通知", "付款成功通知"];
+var items;
+var editing = false; //标识当前是否在编辑某个模版内容
+var curr_first = '';
+var curr_remark = '';
+//更新模版后的消息弹窗
+var AfterSyncDialog = W.dialog.Dialog.extend({
+
+    initialize: function(options){
+        $('#templateSyncDialog').remove();
+        var source = $('#weixin-template-sync-dialog').html();
+        var template = Handlebars.compile(source);
+        this.changed_tmpls = options.changed_tmpls;
+        this.deleted_tmpls = options.deleted_tmpls;
+        $('body').append(template({
+            changed: options.changed_tmpls,
+            deleted: options.deleted_tmpls,
+            has_changed: options.changed_tmpls.length,
+            has_deleted: options.deleted_tmpls.length
+        }));
+        this.$dialog = $('#templateSyncDialog');
+    },
+    onShow: function(){
+        if($.isEmptyObject(items)) return;
+        //去除已删除的
+        getTemplateList();
+    }
+});
+function renderList(){
+    console.log('rendering template...');
+    var context = {
+        items: items,
+        using_templates: using_templates
+    };
+    var source = $('#weixin-template-message-view').html();
+    var template = Handlebars.compile(source);  
+    var html = template(context);
+
+    $('.panel-body').html(html);
+}
+
+function getTemplateList(){
+    W.resource.new_weixin.NewTemplateMessages.get({
+        data: {
+            woid: W.mid
+        },
+        success: function(data){
+            console.log(data);
+            items = data;
+            renderList();
+            $('.template_edit').eq(0).trigger('click');
+        },
+        error: function(){
+            W.showHint('error', '获取模版消息失败，清重试！');
+        }
+    });
+}
+
+$(document).ready(function(){
+    //获取模版消息
+    getTemplateList();
+
+    //同步模版
+    $('.xa-sync-template').on('click', function(){
+        W.resource.new_weixin.NewTemplateMessages.post({
+            data: {
+                woid: W.mid
+            },
+            success: function(data){
+                console.log(data);
+                var changed_tmpls = data.changed;
+                var deleted_tmpls = data.deleted;
+                if($.isEmptyObject(changed_tmpls) && $.isEmptyObject(deleted_tmpls)){
+                    W.showHint('info', '无需更新~');
+                    return;
+                }
+                W.dialog.showDialog('AfterSyncDialog', {
+                    changed_tmpls: changed_tmpls,
+                    deleted_tmpls: deleted_tmpls
+                });
+            },
+            error: function(resp){
+                W.showHint('error', resp.errMsg);
+            }
+        });
+    });
+    
+    //编辑&&保存
+    $('body').delegate('.template_edit','click',function(){
+        if($(this).html() == '保存'){
+            var _this = $(this);
+            var template_info = getSaveData();
+            W.resource.new_weixin.NewTemplateMessages.put({
+                data: {
+                    woid: W.mid,
+                    action: 'items',
+                    saved_data: JSON.stringify(template_info)
+                },
+                success: function(data){
+                    editing = false;
+                    W.showHint('success', '保存成功');
+                    _this.html('编辑');
+                    _this.removeClass('btn-warning').addClass('btn-primary');
+                },
+                error: function(resp){
+                    W.showHint('error','保存失败')
+                }
+            });
+        }else{
+            var $content = $('.template_edit_content');
+            var old_first = $content.find('.template_edit_first').val();
+            var old_remark = $content.find('.template_edit_remark').val();
+            if(editing && (curr_first != old_first || curr_remark != old_remark)){
+                W.showHint('error', '请先保存更改');
+                return;
+            }
+            $('.template_edit').siblings('span').removeClass('xui-active');
+            $(this).siblings('span').addClass('xui-active');
+            var template_id = $(this).attr('data-template-id');
+            var item = items.filter(function(e){
+                return e['template_id'] == template_id;
+            })[0];
+            var item_message_arr = item.example.split('::');
+            var context = {
+                item_title: item.title,
+                template_id: template_id,
+                item_first: item.first,
+                item_message_arr: item_message_arr,
+                item_remark: item.remark
+            };
+            var source = $('#weixin-template-edit-view').html();
+            var template = Handlebars.compile(source);  
+            var html = template(context);
+            $('.template_edit_panel').html(html).show();
+
+            curr_first = item.first;
+            curr_remark = item.remark;
+            editing = true;
+        }
+    });
+
+    $('body').delegate('.xa-industry','click',function(){
+        $(this).siblings('.template_edit').trigger('click');
+    });
+
+    //更改状态
+    $('body').delegate('.template_control','click',function(){
+        var template_id = $(this).attr('data-template-id');
+        var title = $(this).attr('data-title');
+        if( $(this).attr('data-status') == 'true'){
+            $(this).attr('data-status','false');
+            $(this).html('启用').removeClass('btn-danger').addClass('btn-success');;
+            $(this).attr('disabled',true);
+            for(var i=0;i<items.length;i++){
+                if(items[i]['template_id'] == template_id){
+                    items[i]['status'] = false;
+                }
+            }          
+        }else{
+            $(this).attr('data-status','true'); 
+            $(this).html('停用').removeClass('btn-success').addClass('btn-danger');
+            $(this).attr('disabled',true);
+            for(var j=0;j<items.length;j++){
+                if(items[j]['template_id'] == template_id){
+                    items[j]['status'] = true;
+                }
+            }           
+        }
+        var status = $(this).attr('data-status');
+        var _this = $(this);
+        W.resource.new_weixin.NewTemplateMessages.put({
+            data: {
+                woid: W.mid,
+                action: 'status',
+                template_id: template_id,
+                status: status == 'true',
+                title:title
+            },
+            success: function(data){
+                W.showHint('success', status == 'true' ? '启用模版': '停用模版');
+                _this.attr('disabled',false);
+            },
+            error: function(resp){
+                W.showHint('error','更改状态失败');
+                _this.attr('disabled',false);
+            }
+        });
+    });
+
+    //监听input 
+    $('body').delegate('.template_edit_input','input propertychange',function(){
+        editing = true;
+        var template_id = $(this).parents('.template_edit_content').attr('data-template-id');
+        var $edit_btn = $('.template_edit');
+        for(var i = 0;i < $edit_btn.length;i ++){
+            if($edit_btn.eq(i).attr('data-template-id') == template_id && $edit_btn.eq(i).html() == '编辑'){
+                $edit_btn.eq(i).html('保存');  
+                $edit_btn.eq(i).removeClass('btn-primary').addClass('btn-warning');
+            }
+        }
+    });
+
+    //配置方法
+    $('.xa-showIntroduction').on('mouseover',function(){
+        $(".xui-newTemplateIntroduction").removeClass('xui-hidden');
+    }).on('mouseout',function(){
+         $(".xui-newTemplateIntroduction").addClass('xui-hidden');
+    });
+
+    function getSaveData(){
+        var $content = $('.template_edit_content');
+        var template_id = $content.attr('data-template-id');
+        var cur_first = $content.find('.template_edit_first').val();
+        var cur_remark = $content.find('.template_edit_remark').val();
+        result = '';
+        for(var i=0;i<items.length;i++){
+            if(items[i]['template_id'] == template_id){
+                items[i].first = cur_first;
+                items[i].remark = cur_remark;
+                result = items[i];
+                break;
+            }
+        }
+        return result;
+    }
+});
+</script>
+{% endblock %}
