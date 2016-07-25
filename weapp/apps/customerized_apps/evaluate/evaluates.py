@@ -284,6 +284,7 @@ class EvaluateReview(resource.Resource):
 						if settings.review_increase > 0:
 							member = member_models.Member.objects.filter(id=first_review.member_id)
 							if len(member):
+								temp_integral = member[0].integral
 								increase_member_integral(member[0], settings.review_increase, '商品评价奖励')
 								#发送积分变动模版
 								send_task('services.weixin_template_service.task.service_template_message', {
@@ -296,7 +297,7 @@ class EvaluateReview(resource.Resource):
 										'keyword1': member[0].username_hexstr.decode('hex').decode('utf-8'),
 										'keyword2': datetime.now().strftime(u'%Y年%m月%d日 %H:%M'),
 										'keyword3': settings.review_increase,
-										'keyword4': member[0].integral,
+										'keyword4': temp_integral + settings.review_increase,
 										'keyword5': u'商品评价奖励'
 									}
 								})
@@ -351,6 +352,7 @@ class EvaluateReview(resource.Resource):
 							id2member = dict((member.id, member) for member in members)
 							for review in reviews:
 								if int(review.status) == 0:
+									temp_integral = id2member[review.member_id].integral
 									increase_member_integral(id2member[review.member_id], settings.review_increase,
 															 '商品评价奖励')
 									#发送积分变动模版
@@ -364,7 +366,7 @@ class EvaluateReview(resource.Resource):
 											'keyword1': id2member[review.member_id].username_hexstr.decode('hex').decode('utf-8'),
 											'keyword2': datetime.now().strftime(u'%Y年%m月%d日 %H:%M'),
 											'keyword3': settings.review_increase,
-											'keyword4': id2member[review.member_id].integral,
+											'keyword4': temp_integral + settings.review_increase,
 											'keyword5': u'商品评价奖励'
 										}
 									})
