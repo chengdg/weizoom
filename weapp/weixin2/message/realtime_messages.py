@@ -191,17 +191,10 @@ class RealtimeMessages(resource.Resource):
                             newses = weixin_module_api.get_material_news_info(material_id)
                             #如果是weshop帐号，title,Description的替换
                             if request.user.username == 'jobs':
-                                member_id = session.id
-                                print member_id,"dddddddddddddd"
-                                members = Member.objects.filter(id=member_id)
-                                member_username = u""
-                                if members.count() > 0:
-                                    member_username = members[0].username
+                                nick_name = session.weixin_user.weixin_user_nick_name
                                 for news in newses:
-                                    news.title = news.title.replace('{{username}}', member_username)
-                                    news.summary = news.summary.replace('{{username}}', member_username)
-                                for n in newses:
-                                    print n.title,"pppppppppppp"
+                                    news.title = news.title.replace('{{username}}', nick_name)
+                                    news.summary = news.summary.replace('{{username}}',nick_name)
                             articles = weixin_module_api.get_articles_object(newses)
                             custom_message = NewsCustomMessage(articles)
 
