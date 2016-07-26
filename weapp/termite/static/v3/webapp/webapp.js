@@ -74,12 +74,14 @@ W.preloadImgsOnPage = function(option) {
                     $lazyImgs = $('[data-url]');
                     lazyloadImg($lazyImgs, {threshold: 0});
                     break;
-                case 'imageGroup':
-                    /*
+                case 'singleImageWithTitle':
                     $itemsImg.map(function(idx, item) {
                         $item = $(item);
+                        $item.attr('data-url', $item.attr('src'));
+                        $item.removeAttr('src');
                     });
-                     * */
+                    $lazyImgs = $('[data-url]');
+                    lazyloadImg($lazyImgs, {threshold: 0, placeholder: ""});
                     break;
                 case 'productList':
                     $itemsImg.map(function(idx, item) {
