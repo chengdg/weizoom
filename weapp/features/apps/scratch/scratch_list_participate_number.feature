@@ -1,6 +1,6 @@
-#_author_:江秋丽 2016.07.25
+#_author_:江秋丽 2016.07.26
 
-Feature:砸金蛋活动列表-参与次数
+Feature:刮刮卡活动列表-参与次数
 
 Background:
 	Given jobs登录系统
@@ -29,23 +29,24 @@ Background:
 	When tom关注jobs的公众号
 	When marry关注jobs的公众号
 
-@mall2 @apps @apps_egg @participate_number_egg
-Scenario:1 砸金蛋活动列表参与次数的校验
+@mall2 @apps @apps_scratch @participate_number_scratch
+Scenario:1 刮刮卡活动列表参与次数的校验
 	Given jobs登录系统
-	When jobs新建砸金蛋活动
+	When jobs新建刮刮卡活动
 		"""
 		[{
-			"name":"砸金蛋抽奖01",
+			"name":"刮刮卡刮奖01",
 			"start_date":"今天",
 			"end_date":"2天后",
-			"desc":"抽奖啦抽奖啦",
+			"desc":"刮奖啦刮奖啦",
+			"lottory_pic":"2.jpg",
+			"lottory_color":"#0000FF",
 			"reduce_integral":0,
 			"send_integral":0,
 			"send_integral_rules":"仅限未中奖用户",
 			"lottery_limit":"不限",
 			"win_rate":"50%",
 			"is_repeat_win":"是",
-			"lottory_color":"#0000FF",
 			"prize_settings":[{
 				"prize_grade":"一等奖",
 				"prize_counts":10,
@@ -64,42 +65,42 @@ Scenario:1 砸金蛋活动列表参与次数的校验
 			}]
 		}]
 		"""
-	Then jobs获得砸金蛋活动列表
+	Then jobs获得刮刮卡活动列表
 		"""
 		[{
-			"name":"砸金蛋抽奖01",
+			"name":"刮刮卡刮奖01",
 			"participant_count":0
 		}]
 		"""
 
 	#bill参加2次
-	When bill参加砸金蛋活动'砸金蛋抽奖01'
+	When bill参加刮刮卡活动'刮刮卡刮奖01'
 
 	When 清空浏览器
-	When bill参加砸金蛋活动'砸金蛋抽奖01'
+	When bill参加刮刮卡活动'刮刮卡刮奖01'
 
 	#tom参加1次
 	When 清空浏览器
-	When tom参加砸金蛋活动'砸金蛋抽奖01'
+	When tom参加刮刮卡活动'刮刮卡刮奖01'
 
-	When tom把jobs的砸金蛋活动'砸金蛋抽奖01'的活动链接分享到朋友圈
+	When tom把jobs的刮刮卡活动'刮刮卡刮奖01'的活动链接分享到朋友圈
 
 
 	#marry取消关注后参加1次，关注后参加1次
 	When marry取消关注jobs的公众号
-	When marry点击tom分享的砸金蛋活动'砸金蛋抽奖01'的活动链接
-	When marry参加砸金蛋活动'砸金蛋抽奖01'
+	When marry点击tom分享的刮刮卡活动'刮刮卡刮奖01'的活动链接
+	When marry参加刮刮卡活动'刮刮卡刮奖01'
 
 	When 清空浏览器
 	When marry关注jobs的公众号
-	When marry点击tom分享的砸金蛋活动'砸金蛋抽奖01'的活动链接
-	When marry参加砸金蛋活动'砸金蛋抽奖01'
+	When marry点击tom分享的刮刮卡活动'刮刮卡刮奖01'的活动链接
+	When marry参加刮刮卡活动'刮刮卡刮奖01'
 
 	Given jobs登录系统
-	Then jobs获得砸金蛋活动列表
+	Then jobs获得刮刮卡活动列表
 		"""
 		[{
-			"name":"砸金蛋抽奖01",
+			"name":"刮刮卡刮奖01",
 			"participant_count":5
 		}]
 		"""

@@ -1,6 +1,6 @@
-#_author_:江秋丽 2016.07.25
+#_author_:江秋丽 2016.07.26
 
-Feature:手机端用户参与砸金蛋活动
+Feature:手机端用户参与刮刮卡活动
 
 Background:
 	Given jobs登录系统
@@ -36,23 +36,24 @@ Background:
 	When bill获得jobs的20会员积分
 	Then bill在jobs的webapp中拥有20会员积分
 
-@mall2 @apps @apps_egg @users_participate_egg 
-Scenario:1 会员参加砸金蛋活动,需要消耗积分
+@mall2 @apps @apps_scratch @users_participate_scratch 
+Scenario:1 会员参加刮刮卡活动,需要消耗积分
 	Given jobs登录系统
-	When jobs新建砸金蛋活动
+	When jobs新建刮刮卡活动
 		"""
 		[{
-			"name":"砸金蛋抽奖",
+			"name":"刮刮卡刮奖",
 			"start_date":"今天",
 			"end_date":"2天后",
-			"desc":"抽奖啦抽奖啦",
+			"desc":"刮奖啦刮奖啦",
+			"lottory_pic":"2.jpg",
+			"lottory_color":"#0000FF",
 			"reduce_integral":15,
 			"send_integral":0,
 			"send_integral_rules":"仅限未中奖用户",
 			"lottery_limit":"不限",
 			"win_rate":"100%",
 			"is_repeat_win":"是",
-			"lottory_color":"#0000FF",
 			"prize_settings":[{
 				"prize_grade":"一等奖",
 				"prize_counts":10,
@@ -71,10 +72,10 @@ Scenario:1 会员参加砸金蛋活动,需要消耗积分
 			}]
 		}]
 		"""
-	#积分充足时，可以参加抽奖活动
+	#积分充足时，可以参加刮奖活动
 	When bill访问jobs的webapp
-	When bill参加砸金蛋活动'砸金蛋抽奖'
-	Then bill获得砸金蛋结果
+	When bill参加刮刮卡活动'刮刮卡刮奖'
+	Then bill获得刮刮卡结果
 		"""
 		[{
 			"prize_grade":"一等奖",
@@ -95,18 +96,18 @@ Scenario:1 会员参加砸金蛋活动,需要消耗积分
 	And bill在jobs的webapp中获得积分日志
 		"""
 		[{
-			"content":"参与砸金蛋，消耗积分",
+			"content":"参与刮奖，消耗积分",
 			"integral":-15
 		},{
 			"content":"首次关注",
 			"integral":20
 		}]
 		"""
-	#积分不足时，无法参加抽奖活动
-	When bill参加砸金蛋活动'砸金蛋抽奖'
-	Then bill获得砸金蛋错误提示'积分不足'
+	#积分不足时，无法参加刮奖活动
+	When bill参加刮刮卡活动'刮刮卡刮奖'
+	Then bill获得刮刮卡错误提示'积分不足'
 
-	#增加积分后，则可正常参加抽奖活动
+	#增加积分后，则可正常参加刮奖活动
 	Given jobs登录系统
 	When jobs给"bill"加积分
 			"""
@@ -119,8 +120,8 @@ Scenario:1 会员参加砸金蛋活动,需要消耗积分
 	When bill访问jobs的webapp
 	Then bill在jobs的webapp中拥有15会员积分
 
-	When bill参加砸金蛋活动'砸金蛋抽奖'
-	Then bill获得砸金蛋结果
+	When bill参加刮刮卡活动'刮刮卡刮奖'
+	Then bill获得刮刮卡结果
 		"""
 		[{
 			"prize_grade":"一等奖",
@@ -131,16 +132,18 @@ Scenario:1 会员参加砸金蛋活动,需要消耗积分
 	When bill访问jobs的webapp
 	Then bill在jobs的webapp中拥有0会员积分
 
-@mall2 @apps @apps_egg @users_participate_egg
-Scenario:2 非会员通过分享链接参加砸金蛋活动
+@mall2 @apps @apps_scratch @users_participate_scratch
+Scenario:2 非会员通过分享链接参加刮刮卡活动
 	Given jobs登录系统
-	When jobs新建砸金蛋活动
+	When jobs新建刮刮卡活动
 		"""
 		[{
-			"name":"砸金蛋抽奖",
+			"name":"刮刮卡刮奖",
 			"start_date":"昨天",
 			"end_date":"2天后",
-			"desc":"抽奖啦抽奖啦",
+			"desc":"刮奖啦刮奖啦",
+			"lottory_pic":"2.jpg",
+			"lottory_color":"#0000FF",
 			"reduce_integral":0,
 			"send_integral":0,
 			"send_integral_rules":"仅限未中奖用户",
@@ -151,33 +154,30 @@ Scenario:2 非会员通过分享链接参加砸金蛋活动
 				"prize_grade":"一等奖",
 				"prize_counts":10,
 				"prize_type":"积分",
-				"integral":50,
-				"pic":""
+				"integral":50
 			},{
 				"prize_grade":"二等奖",
 				"prize_counts":0,
 				"prize_type":"优惠券",
-				"coupon":"优惠券2",
-				"pic":""
+				"coupon":"优惠券2"
 			},{
 				"prize_grade":"三等奖",
 				"prize_counts":0,
 				"prize_type":"实物",
-				"gift":"精美礼品",
-				"pic":"1.jpg"
+				"gift":"精美礼品"
 			}]
 		}]
 		"""
-	When bill参加砸金蛋活动'砸金蛋抽奖'
-	When bill把jobs的砸金蛋活动'砸金蛋抽奖'的活动链接分享到朋友圈
+	When bill参加刮刮卡活动'刮刮卡刮奖'
+	When bill把jobs的刮刮卡活动'刮刮卡刮奖'的活动链接分享到朋友圈
 
 	When tom关注jobs的公众号
 	When tom访问jobs的webapp
 	When tom取消关注jobs的公众号
 
-	When tom点击bill分享的砸金蛋活动'砸金蛋抽奖'的活动链接
-	When tom参加砸金蛋活动'砸金蛋抽奖'
-	Then tom获得砸金蛋结果
+	When tom点击bill分享的刮刮卡活动'刮刮卡刮奖'的活动链接
+	When tom参加刮刮卡活动'刮刮卡刮奖'
+	Then tom获得刮刮卡结果
 		"""
 		[{
 			"prize_grade":"一等奖",
@@ -186,23 +186,24 @@ Scenario:2 非会员通过分享链接参加砸金蛋活动
 		}]
 		"""
 
-@mall2 @apps @apps_egg @users_participate_egg
-Scenario:3 会员参加砸金蛋活动，抽奖限制为一人一次
+@mall2 @apps @apps_scratch @users_participate_scratch
+Scenario:3 会员参加刮刮卡活动，刮奖限制为一人一次
 	Given jobs登录系统
-	When jobs新建砸金蛋活动
+	When jobs新建刮刮卡活动
 		"""
 		[{
-			"name":"砸金蛋抽奖",
+			"name":"刮刮卡刮奖",
 			"start_date":"3天前",
 			"end_date":"2天后",
-			"desc":"抽奖啦抽奖啦",
+			"desc":"刮奖啦刮奖啦",
+			"lottory_pic":"2.jpg",
+			"lottory_color":"#0000FF",
 			"reduce_integral":0,
 			"send_integral":0,
 			"send_integral_rules":"仅限未中奖用户",
 			"lottery_limit":"一人一次",
 			"win_rate":"50%",
 			"is_repeat_win":"否",
-			"lottory_color":"#0000FF",
 			"prize_settings":[{
 				"prize_grade":"一等奖",
 				"prize_counts":10,
@@ -222,39 +223,40 @@ Scenario:3 会员参加砸金蛋活动，抽奖限制为一人一次
 		}]
 		"""
 
-	When bill参加砸金蛋活动'砸金蛋抽奖'
+	When bill参加刮刮卡活动'刮刮卡刮奖'
 
 	When 清空浏览器
-	When bill参加砸金蛋活动'砸金蛋抽奖'
-	Then bill获得砸金蛋错误提示'您今天的抽奖机会已经用完~'
+	When bill参加刮刮卡活动'刮刮卡刮奖'
+	Then bill获得刮刮卡错误提示'您今天的刮奖机会已经用完~'
 
 	When tom关注jobs的公众号
-	When tom参加砸金蛋活动'砸金蛋抽奖'
-	When tom把jobs的砸金蛋活动'砸金蛋抽奖'的活动链接分享到朋友圈
+	When tom参加刮刮卡活动'刮刮卡刮奖'
+	When tom把jobs的刮刮卡活动'刮刮卡刮奖'的活动链接分享到朋友圈
 
 	When 清空浏览器
 	When bill取消关注jobs的公众号
-	When bill点击tom分享的砸金蛋活动'砸金蛋抽奖'的活动链接
-	When bill参加砸金蛋活动'砸金蛋抽奖'
-	Then bill获得砸金蛋错误提示'您今天的抽奖机会已经用完~'
+	When bill点击tom分享的刮刮卡活动'刮刮卡刮奖'的活动链接
+	When bill参加刮刮卡活动'刮刮卡刮奖'
+	Then bill获得刮刮卡错误提示'您今天的刮奖机会已经用完~'
 
-@mall2 @apps @apps_egg @users_participate_egg
-Scenario:4 会员参加砸金蛋活动，抽奖限制为一天两次
+@mall2 @apps @apps_scratch @users_participate_scratch
+Scenario:4 会员参加刮刮卡活动，刮奖限制为一天两次
 	Given jobs登录系统
-	When jobs新建砸金蛋活动
+	When jobs新建刮刮卡活动
 		"""
 		[{
-			"name":"砸金蛋抽奖",
+			"name":"刮刮卡刮奖",
 			"start_date":"3天前",
 			"end_date":"2天后",
-			"desc":"抽奖啦抽奖啦",
+			"desc":"刮奖啦刮奖啦",
+			"lottory_pic":"2.jpg",
+			"lottory_color":"#0000FF",
 			"reduce_integral":0,
 			"send_integral":0,
 			"send_integral_rules":"仅限未中奖用户",
 			"lottery_limit":"一天两次",
 			"win_rate":"50%",
 			"is_repeat_win":"是",
-			"lottory_color":"#0000FF",
 			"prize_settings":[{
 				"prize_grade":"一等奖",
 				"prize_counts":10,
@@ -274,33 +276,33 @@ Scenario:4 会员参加砸金蛋活动，抽奖限制为一天两次
 		}]
 		"""
 
-	#bill昨天参加2次抽奖活动
-	When bill参加砸金蛋活动"砸金蛋抽奖"于"昨天"
+	#bill昨天参加2次刮奖活动
+	When bill参加刮刮卡活动"刮刮卡刮奖"于"昨天"
 
 	When 清空浏览器
-	When bill参加砸金蛋活动"砸金蛋抽奖"于"昨天"
+	When bill参加刮刮卡活动"刮刮卡刮奖"于"昨天"
 
-	#bill今天仍有2次抽奖机会
-	When bill参加砸金蛋活动'砸金蛋抽奖'
-
-	When 清空浏览器
-	When bill参加砸金蛋活动'砸金蛋抽奖'
+	#bill今天仍有2次刮奖机会
+	When bill参加刮刮卡活动'刮刮卡刮奖'
 
 	When 清空浏览器
-	When bill参加砸金蛋活动'砸金蛋抽奖'
-	Then bill获得砸金蛋错误提示'您今天的抽奖机会已经用完~'
+	When bill参加刮刮卡活动'刮刮卡刮奖'
+
+	When 清空浏览器
+	When bill参加刮刮卡活动'刮刮卡刮奖'
+	Then bill获得刮刮卡错误提示'您今天的刮奖机会已经用完~'
 
 #补充：张雪 2015.12.02 (目前不存在概率为0的场景)
 #@mall2 @apps @apps_lottery @users_participate_lottery @apps_lottery_frontend
 #Scenario:5 中奖概率率为0,中奖用户为0
 #	Given jobs登录系统
-#	When jobs新建砸金蛋活动
+#	When jobs新建刮刮卡活动
 #		"""
 #		[{
-#			"name":"砸金蛋抽奖",
+#			"name":"刮刮卡刮奖",
 #			"start_date":"今天",
 #			"end_date":"2天后",
-#			"desc":"抽奖啦抽奖啦",
+#			"desc":"刮奖啦刮奖啦",
 #			"reduce_integral":0,
 #			"send_integral":0,
 #			"send_integral_rules":"仅限未中奖用户",
@@ -311,35 +313,32 @@ Scenario:4 会员参加砸金蛋活动，抽奖限制为一天两次
 #				"prize_grade":"一等奖",
 #				"prize_counts":10,
 #				"prize_type":"积分",
-#				"integral":50,
-#				"pic":""
+#				"integral":50
 #			},{
 #				"prize_grade":"二等奖",
 #				"prize_counts":20,
 #				"prize_type":"积分",
-#				"integral":30,
-#				"pic":""
+#				"integral":30
 #			},{
 #				"prize_grade":"三等奖",
 #				"prize_counts":30,
 #				"prize_type":"实物",
-#				"gift":"精美礼品",
-#				"pic":"1.jpg"
+#				"gift":"精美礼品"
 #			}]
 #		}]
 #		"""
 #
-#	When bill参加砸金蛋活动'砸金蛋抽奖'
-#	Then bill获得砸金蛋结果
+#	When bill参加刮刮卡活动'刮刮卡刮奖'
+#	Then bill获得刮刮卡结果
 #		"""
 #		[{
 #			"prize_grade":"谢谢参与"
 #		}]
 #		"""
 
-@mall2 @apps @apps_egg @users_participate_egg
+@mall2 @apps @apps_scratch @users_participate_scratch
 Scenario:6 优惠券数量为0，用户无法获得优惠券奖励
-	#中奖概率：100%；抽奖限制：一天两次
+	#中奖概率：100%；刮奖限制：一天两次
 	#奖项设置：
 		#一等奖，1，优惠券3
 		#二等奖，2，优惠券3
@@ -369,20 +368,21 @@ Scenario:6 优惠券数量为0，用户无法获得优惠券奖励
 			}
 		}
 		"""
-	When jobs新建砸金蛋活动
+	When jobs新建刮刮卡活动
 		"""
 		[{
-			"name":"砸金蛋抽奖",
+			"name":"刮刮卡刮奖",
 			"start_date":"今天",
 			"end_date":"2天后",
-			"desc":"抽奖啦抽奖啦",
+			"desc":"刮奖啦刮奖啦",
+			"lottory_pic":"2.jpg",
+			"lottory_color":"#0000FF",
 			"reduce_integral":0,
 			"send_integral":0,
 			"send_integral_rules":"仅限未中奖用户",
 			"lottery_limit":"一天两次",
 			"win_rate":"100%",
 			"is_repeat_win":"是",
-			"lottory_color":"#0000FF",
 			"prize_settings":[{
 				"prize_grade":"一等奖",
 				"prize_counts":10,
@@ -422,27 +422,27 @@ Scenario:6 优惠券数量为0，用户无法获得优惠券奖励
 		}
 		"""
 
-	#优惠券库存为0的情况下，用户参加抽奖将不会获得奖励
+	#优惠券库存为0的情况下，用户参加刮奖将不会获得奖励
 	When tom关注jobs的公众号
-	When tom参加砸金蛋活动'砸金蛋抽奖'
-	Then tom获得砸金蛋结果
+	When tom参加刮刮卡活动'刮刮卡刮奖'
+	Then tom获得刮刮卡结果
 		"""
 		[{
 			"prize_grade":"谢谢参与"
 		}]
 		"""
 
-	When tom参加砸金蛋活动'砸金蛋抽奖'
-	Then tom获得砸金蛋结果
+	When tom参加刮刮卡活动'刮刮卡刮奖'
+	Then tom获得刮刮卡结果
 		"""
 		[{
 			"prize_grade":"谢谢参与"
 		}]
 		"""
 
-@mall2 @apps @apps_egg @users_participate_egg
+@mall2 @apps @apps_scratch @users_participate_scratch
 Scenario:7 优惠券有领取限制，用户无法获得优惠券奖励
-	#中奖概率：100%；抽奖限制：一天两次
+	#中奖概率：100%；刮奖限制：一天两次
 	#奖项设置：
 		#一等奖，1，优惠券3
 		#二等奖，2，优惠券3
@@ -474,20 +474,21 @@ Scenario:7 优惠券有领取限制，用户无法获得优惠券奖励
 			}
 		}
 		"""
-	When jobs新建砸金蛋活动
+	When jobs新建刮刮卡活动
 		"""
 		[{
-			"name":"砸金蛋抽奖",
+			"name":"刮刮卡刮奖",
 			"start_date":"今天",
 			"end_date":"2天后",
-			"desc":"抽奖啦抽奖啦",
+			"desc":"刮奖啦刮奖啦",
+			"lottory_pic":"2.jpg",
+			"lottory_color":"#0000FF",
 			"reduce_integral":0,
 			"send_integral":0,
 			"send_integral_rules":"仅限未中奖用户",
 			"lottery_limit":"一天两次",
 			"win_rate":"100%",
 			"is_repeat_win":"是",
-			"lottory_color":"#0000FF",
 			"prize_settings":[{
 				"prize_grade":"一等奖",
 				"prize_counts":10,
@@ -508,8 +509,8 @@ Scenario:7 优惠券有领取限制，用户无法获得优惠券奖励
 		"""
 
 	When tom关注jobs的公众号
-	When tom参加砸金蛋活动'砸金蛋抽奖'
-	Then tom获得砸金蛋结果
+	When tom参加刮刮卡活动'刮刮卡刮奖'
+	Then tom获得刮刮卡结果
 		"""
 		[{
 			"prize_grade":"一等奖",
@@ -527,8 +528,8 @@ Scenario:7 优惠券有领取限制，用户无法获得优惠券奖励
 		}]
 		"""
 
-	When tom参加砸金蛋活动'砸金蛋抽奖'
-	Then tom获得砸金蛋结果
+	When tom参加刮刮卡活动'刮刮卡刮奖'
+	Then tom获得刮刮卡结果
 		"""
 		[{
 			"prize_grade":"谢谢参与"
@@ -545,9 +546,9 @@ Scenario:7 优惠券有领取限制，用户无法获得优惠券奖励
 		"""
 
 #补充.张雪 2016.01.19
-@mall2 @apps @apps_egg @users_participate_egg
+@mall2 @apps @apps_scratch @users_participate_scratch
 Scenario:8 奖品机会被抽完，手机端提示信息奖品被抽完，下次再来
-	#中奖概率：100%；抽奖限制：一天两次
+	#中奖概率：100%；刮奖限制：一天两次
 	#奖项设置：
 		#一等奖，1，优惠券3
 		#二等奖，0，优惠券3
@@ -591,20 +592,21 @@ Scenario:8 奖品机会被抽完，手机端提示信息奖品被抽完，下次
 			}
 		}
 		"""
-	When jobs新建砸金蛋活动
+	When jobs新建刮刮卡活动
 		"""
 		[{
-			"name":"砸金蛋抽奖",
+			"name":"刮刮卡刮奖",
 			"start_date":"今天",
 			"end_date":"2天后",
-			"desc":"抽奖啦抽奖啦",
+			"desc":"刮奖啦刮奖啦",
+			"lottory_pic":"2.jpg",
+			"lottory_color":"#0000FF",
 			"reduce_integral":0,
 			"send_integral":0,
 			"send_integral_rules":"仅限未中奖用户",
 			"lottery_limit":"一天两次",
 			"win_rate":"100%",
 			"is_repeat_win":"是",
-			"lottory_color":"#0000FF",
 			"prize_settings":[{
 				"prize_grade":"一等奖",
 				"prize_counts":1,
@@ -617,7 +619,7 @@ Scenario:8 奖品机会被抽完，手机端提示信息奖品被抽完，下次
 				"rest":0,
 				"prize_type":"优惠券",
 				"coupon":"优惠券3"
-			},{
+			},{ 
 				"prize_grade":"三等奖",
 				"prize_counts":0,
 				"rest":0,
@@ -629,8 +631,8 @@ Scenario:8 奖品机会被抽完，手机端提示信息奖品被抽完，下次
 
 	When tom关注jobs的公众号
 	When tom访问jobs的webapp
-	When tom参加砸金蛋活动'砸金蛋抽奖'
-	Then tom获得砸金蛋结果
+	When tom参加刮刮卡活动'刮刮卡刮奖'
+	Then tom获得刮刮卡结果
 		"""
 		[{
 			"prize_grade":"一等奖",
@@ -647,20 +649,21 @@ Scenario:8 奖品机会被抽完，手机端提示信息奖品被抽完，下次
 		}]
 		"""
 	Given jobs登录系统
-	Then jobs获得砸金蛋活动'砸金蛋抽奖'
+	Then jobs获得刮刮卡活动'刮刮卡刮奖'
 		"""
 		[{
-			"name":"砸金蛋抽奖",
+			"name":"刮刮卡刮奖",
 			"start_date":"今天",
 			"end_date":"2天后",
-			"desc":"抽奖啦抽奖啦",
+			"desc":"刮奖啦刮奖啦",
+			"lottory_pic":"2.jpg",
+			"lottory_color":"#0000FF",
 			"reduce_integral":0,
 			"send_integral":0,
 			"send_integral_rules":"仅限未中奖用户",
 			"lottery_limit":"一天两次",
 			"win_rate":"100%",
 			"is_repeat_win":"是",
-			"lottory_color":"#0000FF",
 			"prize_settings":[{
 				"prize_grade":"一等奖",
 				"prize_counts":1,
@@ -683,24 +686,25 @@ Scenario:8 奖品机会被抽完，手机端提示信息奖品被抽完，下次
 		}]
 		"""
 
-	When tom参加砸金蛋活动'砸金蛋抽奖'
-	Then tom获得砸金蛋错误提示'奖品已抽光'
+	When tom参加刮刮卡活动'刮刮卡刮奖'
+	Then tom获得刮刮卡错误提示'奖品已抽光'
 
 	Given jobs登录系统
-	When jobs编辑砸金蛋活动'砸金蛋抽奖'
+	When jobs编辑刮刮卡活动'刮刮卡刮奖'
 		"""
 		[{
-			"name":"砸金蛋抽奖",
+			"name":"刮刮卡刮奖",
 			"start_date":"今天",
 			"end_date":"2天后",
-			"desc":"抽奖啦抽奖啦",
+			"desc":"刮奖啦刮奖啦",
+			"lottory_pic":"2.jpg",
+			"lottory_color":"#0000FF",
 			"reduce_integral":0,
 			"send_integral":0,
 			"send_integral_rules":"仅限未中奖用户",
 			"lottery_limit":"一天两次",
 			"win_rate":"100%",
 			"is_repeat_win":"是",
-			"lottory_color":"#0000FF",
 			"prize_settings":[{
 				"prize_grade":"一等奖",
 				"prize_counts":3,
@@ -723,8 +727,8 @@ Scenario:8 奖品机会被抽完，手机端提示信息奖品被抽完，下次
 		}]
 		"""
 
-	When tom参加砸金蛋活动'砸金蛋抽奖'
-	Then tom获得砸金蛋结果
+	When tom参加刮刮卡活动'刮刮卡刮奖'
+	Then tom获得刮刮卡结果
 		"""
 		[{
 			"prize_grade":"一等奖",
@@ -747,20 +751,21 @@ Scenario:8 奖品机会被抽完，手机端提示信息奖品被抽完，下次
 		"""
 
 	Given jobs登录系统
-	Then jobs获得砸金蛋活动'砸金蛋抽奖'
+	Then jobs获得刮刮卡活动'刮刮卡刮奖'
 		"""
 		[{
-			"name":"砸金蛋抽奖",
+			"name":"刮刮卡刮奖",
 			"start_date":"今天",
 			"end_date":"2天后",
-			"desc":"抽奖啦抽奖啦",
+			"desc":"刮奖啦刮奖啦",
+			"lottory_pic":"2.jpg",
+			"lottory_color":"#0000FF",
 			"reduce_integral":0,
 			"send_integral":0,
 			"send_integral_rules":"仅限未中奖用户",
 			"lottery_limit":"一天两次",
 			"win_rate":"100%",
 			"is_repeat_win":"是",
-			"lottory_color":"#0000FF",
 			"prize_settings":[{
 				"prize_grade":"一等奖",
 				"prize_counts":3,
