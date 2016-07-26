@@ -20,7 +20,7 @@
 		class="form-horizontal xui-app-form pl20 pr20" 
 		method="post" 
 		id="editForm" 
-		data-id="{% if lottery_participance %}{{ lottery_participance.id }}{% else %}0{% endif %}"
+		data-id="{% if scratch_participance %}{{ scratch_participance.id }}{% else %}0{% endif %}"
 	>
 		<fieldset >
 			<legend>
@@ -34,7 +34,7 @@
 						class="form-control w490 mr20 ml5" 
 						id="name" name="name"
 						placeholder=""
-						value="{% if lottery_participance %}{{ lottery_participance.name }}{% endif %}"
+						value="{% if scratch_participance %}{{ scratch_participance.name }}{% endif %}"
 						data-validate="require-notempty"
 						maxlength="20"
 					/>
@@ -51,7 +51,7 @@
 						id="start_time"
 						name="start_time"
 						style=""
-					    value="{{lottery_participance.start_time|date:"Y-m-d H:i"}}"
+					    value="{{scratch_participance.start_time|date:"Y-m-d H:i"}}"
 					    readonly="readonly"
 						data-enable-select-time="true"
 						data-validate="require-notempty"
@@ -65,7 +65,7 @@
 						class="form-control xui-datePicker xui-inline"
 						id="end_time"
 						name="end_time"
-					    value="{{lottery_participance.end_time|date:"Y-m-d H:i"}}"
+					    value="{{scratch_participance.end_time|date:"Y-m-d H:i"}}"
 					    readonly="readonly"
 					    data-enable-select-time="true"
 						data-validate="require-notempty"
@@ -90,7 +90,7 @@
 
 {% block js %}
 <script type="text/javascript">
-	var inUpdateMode = {% if lottery_participance %}true{% else %}false{% endif %};
+	var inUpdateMode = {% if scratch_participance %}true{% else %}false{% endif %};
 	$(document).ready(function() {
 		$('.xa-submit').click(function() {
 			if (!W.validate()) {

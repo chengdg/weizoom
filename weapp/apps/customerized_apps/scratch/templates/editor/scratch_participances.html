@@ -113,7 +113,7 @@
 	    "task": "weizoom-load-app-views-dialogs"
 	  }
 	-->
-{{ "lottery"|load_app_views_and_dialogs|safe }}
+{{ "scratch"|load_app_views_and_dialogs|safe }}
 <!-- *end_prunt_task* -->
 {% verbatim %}
 <script id="table" type="text/x-jquery-tmpl">
@@ -183,7 +183,7 @@
 $(document).ready(function() {
 	$('body').delegate('.xa-viewData', 'click', function(event) {
 		var activityId = $(event.currentTarget).parents('tr').data('id');
-		W.dialog.showDialog('W.dialog.app.lottery.ViewParticipanceDataDialog', {
+		W.dialog.showDialog('W.dialog.app.scratch.ViewParticipanceDataDialog', {
 			activityId: activityId,
 			success: function(data) {
 

@@ -5,13 +5,13 @@ Copyright (c) 2011-2012 Weizoom Inc
 /**
  * 对话框
  */
-ensureNS('W.dialog.app.lottery');
-W.dialog.app.lottery.ViewParticipanceDataDialog = W.dialog.Dialog.extend({
+ensureNS('W.dialog.app.scratch');
+W.dialog.app.scratch.ViewParticipanceDataDialog = W.dialog.Dialog.extend({
 	events: _.extend({
 	}, W.dialog.Dialog.prototype.events),
 	
 	templates: {
-		dialogTmpl: '#app-lottery-viewParticipanceDataDialog-dialog-tmpl'
+		dialogTmpl: '#app-scratch-viewParticipanceDataDialog-dialog-tmpl'
 	},
 	
 	onInitialize: function(options) {
@@ -27,8 +27,8 @@ W.dialog.app.lottery.ViewParticipanceDataDialog = W.dialog.Dialog.extend({
 	afterShow: function(options) {
 		if (this.activityId) {
 			W.getApi().call({
-				app: 'apps/lottery',
-				resource: 'lottery_participance',
+				app: 'apps/scratch',
+				resource: 'scratch_participance',
 				scope: this,
 				args: {
 					id: this.activityId
