@@ -873,7 +873,6 @@ def get_detail_response(request):
         if supplier_ids:
             # 获取<供货商，订单状态文字显示>，因为子订单的状态是跟随供货商走的 在这个场景下
             supplier2status = dict([(tmp_order.supplier, tmp_order.get_status_text()) for tmp_order in filter(lambda o: o.supplier > 0, child_orders)])
-            order.products.sort(lambda x, y: cmp(x['supplier'], y['supplier']))
             for product in order.products:
                 product['order_status'] = supplier2status.get(product['supplier'], '')
                 if product['supplier']:
@@ -882,18 +881,17 @@ def get_detail_response(request):
         if supplier_user_ids:
             # 获取<供货商，订单状态文字显示>，因为子订单的状态是跟随供货商走的 在这个场景下
             supplier_user_id2status = dict([(tmp_order.supplier_user_id, tmp_order.get_status_text()) for tmp_order in filter(lambda o: o.supplier_user_id > 0, child_orders)])
-            order.products.sort(lambda x, y: cmp(x['supplier_user_id'], y['supplier_user_id']))
             for product in order.products:
                 if product['id'] not in supplier_product_ids:
                     product['order_status'] = supplier_user_id2status.get(product['supplier_user_id'], '')
 
         name = request.GET.get('name', None)
         if not name:
-            suppliers = list(Supplier.objects.filter(id__in=supplier_ids).order_by('-id'))
-            supplier_stores = list(UserProfile.objects.filter(user_id__in=supplier_user_ids).order_by('-id'))
+            suppliers = list(Supplier.objects.filter(id__in=supplier_ids).order_by('id'))
+            supplier_stores = list(UserProfile.objects.filter(user_id__in=supplier_user_ids).order_by('id'))
         else:
-            suppliers = list(Supplier.objects.filter(id__in=supplier_ids,name__contains=name).filter(is_delete=False).order_by('-id'))
-            supplier_stores = list(UserProfile.objects.filter(user_id__in=supplier_user_ids, store_name__contains=name).order_by('-id'))
+            suppliers = list(Supplier.objects.filter(id__in=supplier_ids,name__contains=name).filter(is_delete=False).order_by('id'))
+            supplier_stores = list(UserProfile.objects.filter(user_id__in=supplier_user_ids, store_name__contains=name).order_by('id'))
 
         #add by duhao 把订单操作人信息放到操作日志中，方便精选的拆单子订单能正常显示操作员信息
         order_operation_logs = mall_api.get_order_operation_logs(order.order_id, len(child_orders))
@@ -915,7 +913,7 @@ def get_detail_response(request):
             'second_nav_name': export.ORDER_ALL,
             'mall_type': mall_type,
             'order': order,
-            'child_orders': child_orders,
+            'child_orders': sorted(child_orders, key=lambda order: "%d-%d" % (order.supplier, order.supplier_user_id)),
             'suppliers': suppliers,
             'supplier_stores': supplier_stores,
             'is_order_not_payed': (order.status == ORDER_STATUS_NOT),
