@@ -72,7 +72,7 @@ W.preloadImgsOnPage = function(option) {
                         $item.removeAttr('src');
                     });
                     $lazyImgs = $('[data-url]');
-                    lazyloadImg($lazyImgs, {threshold: 0});
+                    lazyloadImg($lazyImgs, {threshold: 200});
                     break;
                 case 'singleImageWithTitle':
                     $itemsImg.map(function(idx, item) {
