@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import json
+import datetime
 
 from django.http import HttpResponseRedirect, HttpResponse
 from django.template import RequestContext
@@ -14,6 +15,7 @@ from webapp import models as webapp_models
 
 from termite2 import pagecreater
 from termite.workbench import jqm_views
+from eaglet.core import watchdog
 
 
 class WebappPage(resource.Resource):
@@ -24,6 +26,8 @@ class WebappPage(resource.Resource):
 		"""
 		webapp页面（目前是首页）
 		"""
+		start_date = datetime.datetime.now()
+
 		if 'model' in request.GET:
 			return jqm_views.show_preview_page(request)
 
@@ -110,4 +114,17 @@ class WebappPage(resource.Resource):
 			'hide_non_member_cover': True #非会员也可使用该页面
 		})
 
+		## start watchdog.info
+		end_date = datetime.datetime.now()
+		url = '{}{}'.format(request.get_host(), request.get_full_path())
+		timestamp = end_date - start_date
+		message_info = {
+			'message_service': 'WEPAGE',
+			'message_type': 'render_to_response',
+			'url': url,
+			'timestamp': str(timestamp),
+			'user_id': request.user_profile.user_id
+		}
+		watchdog.info(message_info)
+		## end watchdog.info
 		return render_to_response('workbench/wepage_webapp_page.html', c)

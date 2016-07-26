@@ -65,10 +65,23 @@ W.preloadImgsOnPage = function(option) {
                 return;
             }
             switch(module) {
-                case 'imageGroup':
+                case 'imageNav':
                     $itemsImg.map(function(idx, item) {
                         $item = $(item);
+                        $item.attr('data-url', $item.attr('src'));
+                        $item.removeAttr('src');
                     });
+                    $lazyImgs = $('[data-url]');
+                    lazyloadImg($lazyImgs, {threshold: 200});
+                    break;
+                case 'singleImageWithTitle':
+                    $itemsImg.map(function(idx, item) {
+                        $item = $(item);
+                        $item.attr('data-url', $item.attr('src'));
+                        $item.removeAttr('src');
+                    });
+                    $lazyImgs = $('[data-url]');
+                    lazyloadImg($lazyImgs, {threshold: 0, placeholder: ""});
                     break;
                 case 'productList':
                     $itemsImg.map(function(idx, item) {
