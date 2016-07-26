@@ -154,6 +154,12 @@ W.component.appkit.EggDescription = W.component.Component.extend({
 			}],
 			default: 'true'
 		}, {
+            name: 'background_color',
+            type: 'color_picker',
+            displayName: '抽奖背景颜色',
+            isUserProperty: true,
+            default: ''
+        }, {
             name: 'items',
             displayName: '',
             type: 'dynamic-generated-control',
@@ -210,6 +216,18 @@ W.component.appkit.EggDescription = W.component.Component.extend({
 				$header.removeClass('wui-lotterydescription-hide').find('p b').html(value);
 			}
 
+		},
+		background_color: function($node, model, value, $propertyViewNode){
+			if (value) {
+				var $target = $('#phoneIFrame').contents().find('.xa-prizeContainer');//找到子frame中的相应元素
+				var $target_2 = $('#phoneIFrame').contents().find('.xa-prizeContainer .xa-subtitle');
+				var $target_3 = $('#phoneIFrame').contents().find('.xa-prizeContainer .xa-time');
+				var $target_4 = $('#phoneIFrame').contents().find('.xa-prizeContainer .xa-description');
+				$target.css("background-color", value);
+				$target_2.css("background-color", value);
+				$target_3.css("border-top", "1px solid #e5e5e5");
+				$target_4.css("border-top", "1px solid #e5e5e5");
+			}
 		}
 	},
 

@@ -97,7 +97,7 @@ NEW_PAGE_JSON = """
             "index": 1,
             "name": "",
             "title": "index",
-            "site_title": "微信抽奖",
+            "site_title": "刮刮卡",
             "uploadWidth": "320",
             "uploadHeight": "568",
             "class": "",

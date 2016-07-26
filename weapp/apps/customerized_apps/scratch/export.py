@@ -6,7 +6,7 @@ NAV = {
 	'navs': [
 		{
 			'name': "scratches",
-			'title': "微信抽奖",
+			'title': "刮刮卡",
 			'url': '/apps/scratch/scratches/',
 			'need_permissions': []
 		},
