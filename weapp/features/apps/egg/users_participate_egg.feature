@@ -62,7 +62,7 @@ Scenario:1 会员参加砸金蛋活动,需要消耗积分
 				"prize_grade":"二等奖",
 				"prize_counts":0,
 				"prize_type":"优惠券",
-				"coupon":"优惠券2
+				"coupon":"优惠券2"
 			},{
 				"prize_grade":"三等奖",
 				"prize_counts":0,
@@ -95,7 +95,7 @@ Scenario:1 会员参加砸金蛋活动,需要消耗积分
 	And bill在jobs的webapp中获得积分日志
 		"""
 		[{
-			"content":"参与抽奖，消耗积分",
+			"content":"参与砸金蛋，消耗积分",
 			"integral":-15
 		},{
 			"content":"首次关注",

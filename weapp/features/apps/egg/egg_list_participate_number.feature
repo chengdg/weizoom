@@ -29,7 +29,7 @@ Background:
 	When tom关注jobs的公众号
 	When marry关注jobs的公众号
 
-@mall2 @apps @apps_egg @participate_number
+@mall2 @apps @apps_egg @participate_number_egg
 Scenario:1 砸金蛋活动列表参与次数的校验
 	Given jobs登录系统
 	When jobs新建砸金蛋活动
@@ -87,7 +87,7 @@ Scenario:1 砸金蛋活动列表参与次数的校验
 
 	#marry取消关注后参加1次，关注后参加1次
 	When marry取消关注jobs的公众号
-	When marry点击tom分享的砸金蛋抽奖活动'砸金蛋抽奖01'的活动链接
+	When marry点击tom分享的砸金蛋活动'砸金蛋抽奖01'的活动链接
 	When marry参加砸金蛋活动'砸金蛋抽奖01'
 
 	When 清空浏览器

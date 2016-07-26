@@ -118,7 +118,7 @@ Background:
 @mall2 @apps @apps_egg @update_egg
 Scenario:1 编辑'未开始'状态的砸金蛋活动
 	Given jobs登录系统
-	Then jobs获得砸金蛋抽奖活动列表
+	Then jobs获得砸金蛋活动列表
 		"""
 		[{
 			"name":"砸金蛋抽奖03",
@@ -335,11 +335,11 @@ Scenario:4 编辑'进行中'状态的砸金蛋活动
 				"prize_grade":"三等奖",
 				"prize_counts":60,
 				"prize_type":"实物",
-				"gift":"精美礼品
+				"gift":"精美礼品"
 			}]
 		}]
 		"""
-	Then jobs获得砸金蛋抽奖活动列表
+	Then jobs获得砸金蛋活动列表
 		"""
 		[{
 			"name":"砸金蛋抽奖03",
