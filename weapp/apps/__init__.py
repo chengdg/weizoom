@@ -45,20 +45,3 @@ except:
 # 	response.data = 'you call api: %s' % request.POST['target_api']
 
 # 	return response.get_response()
-
-#配置apps用的celery客户端
-# from celery import Celery
-# import logging
-# logging.info('init apps celery...')
-# celery = Celery()
-# celery.config_from_object('apps.celeryconfig')
-
-# from eaglet.core import watchdog
-# from eaglet.core.exceptionutil import unicode_full_stack
-def send_task(queue_name, args):
-	# try:
-	# 	celery.send_task(queue_name, args=[args], queue=queue_name)
-	# except:
-	# 	notify_message = u"queue_name:{}, args:{}, cause:\n{}".format(queue_name, args, unicode_full_stack())
-	# 	watchdog.error(notify_message)
-	pass

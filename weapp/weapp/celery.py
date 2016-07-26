@@ -35,7 +35,14 @@ app.autodiscover_tasks(lambda: settings.INSTALLED_TASKS)
 def debug_task(self):
     print('Request: {0!r}'.format(self.request))
 
-
+from watchdog.utils import watchdog_alert
+from core.exceptionutil import unicode_full_stack
+def send_task(queue_name, args):
+    try:
+        app.send_task(queue_name, args=[args], queue=queue_name)
+    except:
+        notify_message = u"queue_name:{}, args:{}, cause:\n{}".format(queue_name, args, unicode_full_stack())
+        watchdog_alert(notify_message)
 
 
 ##################################################################################################

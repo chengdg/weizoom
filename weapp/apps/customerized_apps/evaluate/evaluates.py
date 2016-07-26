@@ -9,7 +9,7 @@ from django.shortcuts import render_to_response
 from django.db.models import F
 from django.contrib.auth.decorators import login_required
 
-from apps import send_task
+from weapp.celery import send_task
 
 from core import resource
 from core import paginator
