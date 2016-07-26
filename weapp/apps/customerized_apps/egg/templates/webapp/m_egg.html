@@ -98,7 +98,23 @@
             min-width: 30%;
         }      
     }
-    @media screen and (min-width: 321px) and (max-width: 414px) {
+    @media screen and (min-width: 321px) and (max-width: 360px) {
+        .wui-eggDescription{
+            height: 510px;
+        }
+        .wui-eggDescription .wui-i-eggBroken {
+            width: 288px;
+            height: 209px;
+            position: absolute;
+            left: 6%;
+        }
+        .wui-eggDescription .wui-i-egg {
+            width: 156px;
+            height: 206px;
+            margin-left: -78px;
+        }
+    }
+    @media screen and (min-width: 375px) and (max-width: 414px) {
         .wui-eggDescription{
             height: 529px;
         }
@@ -331,18 +347,18 @@
 
         function initLottery(){
             resultDialog = new ResultDialog();
-            // $('.wa-egg').click(function(){
-            //     doResult();
-            // })
-            SHAKE_THRESHOLD = 800;
-            last_update = 0;
-            var x = y = z = last_x = last_y = last_z = 0;
+            $('.wa-egg').click(function(){
+                doResult();
+            })
+            // SHAKE_THRESHOLD = 800;
+            // last_update = 0;
+            // var x = y = z = last_x = last_y = last_z = 0;
 
-            if (window.DeviceMotionEvent) {
-                window.addEventListener('devicemotion', deviceMotionHandler, false);
-            } else {
-                alert('本设备不支持devicemotion事件');
-            }         
+            // if (window.DeviceMotionEvent) {
+            //     window.addEventListener('devicemotion', deviceMotionHandler, false);
+            // } else {
+            //     alert('本设备不支持devicemotion事件');
+            // }         
         }
 
         function getDynamicData(){
