@@ -2680,20 +2680,19 @@ li.wui-selectBox-display-table {
 .wui-eggDescription .wui-i-egg{
 	background: url(/termite_static/img/component/egg/egg_normal.png) no-repeat;
 	background-size: cover;
-	width: 137px;
-	height: 180px;
+	width: 9rem;
+	height: 12rem;
 	position: absolute;
 	left: 50%;
-	margin-left: -67px;
+	margin-left: -4.5rem;
 	bottom: 57px;
 }
 .wui-eggDescription .wui-i-eggBroken{
     background: url(/termite_static/img/component/egg/egg_broken.png) no-repeat;
     background-size: cover;
-    width: 250px;
-    height: 182px;
+    width: 16.5rem;
+    height: 12rem;
     position: absolute;
-    left: 5%;
     bottom: 57px;
  	display: none;
 }

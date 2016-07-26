@@ -331,19 +331,18 @@
 
         function initLottery(){
             resultDialog = new ResultDialog();
-            $('.wui-i-egg').click(function(){
-                doResult();
-            })
+            // $('.wa-egg').click(function(){
+            //     doResult();
+            // })
+            SHAKE_THRESHOLD = 800;
+            last_update = 0;
+            var x = y = z = last_x = last_y = last_z = 0;
 
-            // SHAKE_THRESHOLD = 800;
-            // last_update = 0;
-            // var x = y = z = last_x = last_y = last_z = 0;
-
-            // if (window.DeviceMotionEvent) {
-            //     window.addEventListener('devicemotion', deviceMotionHandler, false);
-            // } else {
-            //     alert('本设备不支持devicemotion事件');
-            // }         
+            if (window.DeviceMotionEvent) {
+                window.addEventListener('devicemotion', deviceMotionHandler, false);
+            } else {
+                alert('本设备不支持devicemotion事件');
+            }         
         }
 
         function getDynamicData(){
