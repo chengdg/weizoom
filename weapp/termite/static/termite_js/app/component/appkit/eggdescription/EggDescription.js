@@ -186,10 +186,10 @@ W.component.appkit.EggDescription = W.component.Component.extend({
 			$node.find('.xa-description .wui-i-description-content').html(value.replace(/\n/g,'<br>'));
 		},
 		expend: function($node, model, value, $propertyViewNode) {
-			$node.find('.wui-lotterydescription .xa-remainedIntegral strong').text(value);
+			$node.find('.wui-eggDescription .xa-eggDescription-expend strong').text(value);
 		},
 		delivery: function($node, model, value, $propertyViewNode) {
-			$node.find('.wui-i-prize>.xa-delivery').html(value);
+			$node.find('.wui-eggDescription .xa-eggDescription-delivery strong').html(value);
 		},
 		limitation: function($node, model, value, $propertyViewNode) {
 			switch (value){
