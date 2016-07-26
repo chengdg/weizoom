@@ -6,7 +6,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.contrib.auth.decorators import login_required
-from django.db.models import F
+from django.db.models import F ,Q
 
 from core import resource
 from core import paginator
@@ -57,7 +57,23 @@ class WebappDatas(resource.Resource):
 		if 'filter' in info:
 			kwargs.update(info['filter'])
 
-		objects = info['class'].objects.filter(**kwargs).order_by(order_by)
+		if request.user_profile.webapp_type == 1:
+			if info['class'] == mall_models.Product:
+				product_pool = mall_models.ProductPool.objects.filter(woid=request.manager.id, status=mall_models.PP_STATUS_ON)
+				
+				product_ids = [pool.product_id for pool in product_pool]
+				product_pool_kwargs = {}
+				product_pool_kwargs['id__in'] = product_ids
+				if query and len(query) > 0:
+					product_pool_kwargs['name__contains'] = query
+
+				objects = info['class'].objects.filter(Q(**kwargs)|Q(**product_pool_kwargs)).order_by(order_by)
+			else:
+				objects = info['class'].objects.filter(**kwargs).order_by(order_by)
+		else:
+			objects = info['class'].objects.filter(**kwargs).order_by(order_by)
+
+		#objects = info['class'].objects.filter(**kwargs).order_by(order_by)
 
 		return objects, info
 	

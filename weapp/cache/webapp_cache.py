@@ -90,7 +90,7 @@ def get_webapp_product_ids_from_db_new(webapp_owner_user_profile, is_access_weiz
     """
     webapp_id = webapp_owner_user_profile.webapp_id
     webapp_owner_id = webapp_owner_user_profile.user_id
-    products = mall_api.get_products_in_webapp(webapp_id, is_access_weizoom_mall, webapp_owner_id, category_id)
+    products = mall_api.get_products_in_webapp(webapp_id, webapp_owner_user_profile.webapp_type, webapp_owner_id, category_id)
     return products
 
 def get_webapp_products_new(webapp_owner_user_profile,

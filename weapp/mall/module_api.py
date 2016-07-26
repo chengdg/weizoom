@@ -334,17 +334,28 @@ def get_products_in_webapp(webapp_id, is_access_weizoom_mall, webapp_owner_id, c
 		'shelve_type':PRODUCT_SHELVE_TYPE_ON,
 		'is_deleted':False
 	}
+
+	weizoom_mall_params = {}
 	if category_id!=0:
 
 		category_has_products = CategoryHasProduct.objects.filter(category_id = category_id)
 		product_ids = [p.product_id for p in category_has_products]
 		params['id__in'] = product_ids
+	else:
+		if is_access_weizoom_mall:
+			product_pool = ProductPool.objects.filter(woid=webapp_owner_id, status=PP_STATUS_ON)
+			product_pool_ids = [pool.product_id for pool in product_pool]
+			if product_pool_ids:
+				weizoom_mall_params['id__in'] = product_pool_ids
 	# 微众商城代码
 	# if is_access_weizoom_mall:
 	# 	products = list(Product.objects.filter(**params).exclude(weshop_sync = PRODUCT_SHELVE_TYPE_ON).order_by('-id'))
 	# else:
 	# 	products = list(Product.objects.filter(**params).order_by('-id'))
-	products = list(Product.objects.filter(**params).order_by('-id'))
+	if weizoom_mall_params and is_access_weizoom_mall:
+		products = list(Product.objects.filter(Q(**params)|Q(**weizoom_mall_params)).order_by('-id'))
+	else:
+		products = list(Product.objects.filter(**params).order_by('-id'))
 	return products
 
 # unused zhaolei 2015-11-23
