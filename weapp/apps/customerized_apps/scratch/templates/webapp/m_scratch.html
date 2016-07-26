@@ -446,7 +446,7 @@
                     console.log(data);
                     var member_info = data.member_info;
                     renderDynamicData(member_info);
-                    getHistory(data.lottery_history);
+                    getHistory(data.scratch_history);
                     initLottery();
                     loadingStatus(false);
                 },
@@ -462,7 +462,7 @@
         }
 
         function renderDynamicData(member_info){
-            lottery_status = member_info.lottery_status;
+            lottery_status = member_info.scratch_status;
             activity_status = member_info.activity_status;
             W.isMember = member_info.isMember;
             //可参与次数

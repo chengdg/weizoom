@@ -407,8 +407,8 @@
                     return false;
                 }else{
                     W.getApi().call({
-                        app: 'm/apps/lottery',
-                        resource: 'lottery_prize',
+                        app: 'm/apps/egg',
+                        resource: 'egg_prize',
                         method: 'put',
                         args:{
                             id: W.appRecordId,
@@ -435,8 +435,8 @@
         function getDynamicData(){
             loadingStatus(true);
             W.getApi().call({
-                app: 'm/apps/lottery',
-                resource: 'm_lottery',
+                app: 'm/apps/egg',
+                resource: 'm_egg',
                 method: 'get',
                 args: {
                     webapp_owner_id: W.webappOwnerId,
@@ -446,7 +446,7 @@
                     console.log(data);
                     var member_info = data.member_info;
                     renderDynamicData(member_info);
-                    getHistory(data.lottery_history);
+                    getHistory(data.egg_history);
                     initLottery();
                     loadingStatus(false);
                 },
@@ -462,7 +462,7 @@
         }
 
         function renderDynamicData(member_info){
-            lottery_status = member_info.lottery_status;
+            lottery_status = member_info.egg_status;
             activity_status = member_info.activity_status;
             W.isMember = member_info.isMember;
             //可参与次数
