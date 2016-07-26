@@ -13,7 +13,7 @@
     </div>
 <div
     class="wui-surveyDescription xa-prizeContainer"
-    style="min-height:100px; background-color:#652f83;"
+    style="min-height:100px; background-color:{% if component.model.background_color %}{{ component.model.background_color }}{% else %}#652f83{% endif %};"
 >
     <div class="wui-i-subtitle wui-i-eggSubtitle">
         <h2 class="xa-subtitle" style="font-weight: 700;color: #ffc207;">活动说明</h2>

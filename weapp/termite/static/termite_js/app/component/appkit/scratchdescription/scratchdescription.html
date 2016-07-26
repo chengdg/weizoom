@@ -2,7 +2,7 @@
 
 
 {% ifequal component.type 'appkit.scratchdescription' %}
-    <div class="wui-surveyDescription wui-lotterydescription xa-scratchdescription">
+    <div class="wui-surveyDescription wui-lotterydescription xa-scratchdescription" {% if component.model.scratch_bg_image %}style="background-image: url({{ component.model.scratch_bg_image }})"{% endif %}>
         <div class="wui-i-roulette wui-i-title">
             <h1 class="wui-i-innerTitle">
                 <p class="xa-title">{{component.model.title}}</p>
@@ -111,7 +111,7 @@
     </div>
 <div
     class="wui-surveyDescription xa-prizeContainer"
-    style="min-height:100px; background-color:#8d00ab;"
+    style="min-height:100px; background-color:{% if component.model.background_color %}{{ component.model.background_color }}{% else %}#8d00ab{% endif %};"
 >
     <div class="wui-i-subtitle" style="background-color: #8d00ab;left: 35%;position: relative;text-align: center;top: 10px;width: 30%;">
         <h2 class=" xa-subtitle" style="font-weight: 700;color: #ffffff;">活动说明</h2>
