@@ -19,7 +19,7 @@ from tools.regional.views import get_str_value_by_string_ids_new,get_str_value_b
 from modules.member.models import Member, WebAppUser, MemberFollowRelation, SOURCE_SELF_SUB, SOURCE_MEMBER_QRCODE, SOURCE_BY_URL
 from mall.models import *
 from market_tools.tools.channel_qrcode.models import ChannelQrcodeHasMember
-
+import time
 
 DEFAULT_CREATE_TIME = '2000-01-01 00:00:00'
 
@@ -309,6 +309,7 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
             tmp_line = 1
             write_order_count = 0
             for order in order_list:
+                time.sleep(2)
                 # order= __filter_order(order)
                 # 获取order对应的member的显示名
                 if webappuser2member:
