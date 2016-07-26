@@ -118,7 +118,7 @@
 				   <a 
 					class="xui-ellipsisFox" 
 					limit="15" 
-					href="/apps/lottery/lottery/?id=${item.id}&related_page_id=${item.related_page_id}"
+					href="/apps/egg/egg/?id=${item.id}&related_page_id=${item.related_page_id}"
 					style="text-overflow: -o-ellipsis-lastline;overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;"
 					>
 						${item.name}
@@ -176,8 +176,8 @@ $(document).ready(function() {
 			msg: '确定删除？',
 			confirm: function() {
 				W.getApi().call({
-					app: 'apps/lottery',
-					resource: 'lottery',
+					app: 'apps/egg',
+					resource: 'egg',
 					method: 'delete',
 					args: {
 						id: id
@@ -200,8 +200,8 @@ $(document).ready(function() {
 		var $el = $(event.target);
 		var id = $el.data('id');
 		W.getApi().call({
-			app: 'apps/lottery',
-			resource: 'lottery_status',
+			app: 'apps/egg',
+			resource: 'egg_status',
 			method: 'post',
 			args: {
 				id: id,
@@ -222,7 +222,7 @@ $(document).ready(function() {
 	$('body').delegate('.xa-preview', 'click', function(event) {
 		var $el = $(event.target);
 		var id = $el.data('id');
-		var previewUrl = '/m/apps/lottery/m_lottery/?woid='+W.mid+'&id='+id;
+		var previewUrl = '/m/apps/egg/m_egg/?woid='+W.mid+'&id='+id;
 		window.open('/termite2/app_preview/?preview_url='+encodeURIComponent(previewUrl), '_tab');
 	});
 	

@@ -12,15 +12,15 @@
 	<ul class="breadcrumb" style="margin-bottom:-12px;">
 		<li>您当前所在位置</li>
 		<li><a href="/apps/egg/eggs/">百宝箱</a></li>
-		<li><a href="/apps/egg/eggs/">微信抽奖</a></li>
-		<li class="active">新建微信抽奖</li>
+		<li><a href="/apps/egg/eggs/">砸金蛋</a></li>
+		<li class="active">新建砸金蛋</li>
 	</ul>
-	
-	<form 
-		class="form-horizontal xui-app-form pl20 pr20" 
-		method="post" 
-		id="editForm" 
-		data-id="{% if lottery_participance %}{{ lottery_participance.id }}{% else %}0{% endif %}"
+
+	<form
+		class="form-horizontal xui-app-form pl20 pr20"
+		method="post"
+		id="editForm"
+		data-id="{% if egg_participance %}{{ egg_participance.id }}{% else %}0{% endif %}"
 	>
 		<fieldset >
 			<legend>
@@ -29,12 +29,12 @@
 			<div class="form-group ">
 				<label class="control-label fl" for="name">name：</label>
 				<div class="fl">
-					<input 
-						type="text" 
-						class="form-control w490 mr20 ml5" 
+					<input
+						type="text"
+						class="form-control w490 mr20 ml5"
 						id="name" name="name"
 						placeholder=""
-						value="{% if lottery_participance %}{{ lottery_participance.name }}{% endif %}"
+						value="{% if egg_participance %}{{ egg_participance.name }}{% endif %}"
 						data-validate="require-notempty"
 						maxlength="20"
 					/>
@@ -51,12 +51,12 @@
 						id="start_time"
 						name="start_time"
 						style=""
-					    value="{{lottery_participance.start_time|date:"Y-m-d H:i"}}"
+					    value="{{egg_participance.start_time|date:"Y-m-d H:i"}}"
 					    readonly="readonly"
 						data-enable-select-time="true"
 						data-validate="require-notempty"
 						data-ui-role="date-picker"
-					    data-format="yy-mm-dd HH:MM" 
+					    data-format="yy-mm-dd HH:MM"
 					/>
 					至
 					<input
@@ -65,7 +65,7 @@
 						class="form-control xui-datePicker xui-inline"
 						id="end_time"
 						name="end_time"
-					    value="{{lottery_participance.end_time|date:"Y-m-d H:i"}}"
+					    value="{{egg_participance.end_time|date:"Y-m-d H:i"}}"
 					    readonly="readonly"
 					    data-enable-select-time="true"
 						data-validate="require-notempty"
@@ -74,9 +74,9 @@
 					    data-min-el="#start_time"
 					/>
 				</div>
-			</div>	
+			</div>
 		</fieldset>
-		
+
 		<div class="mt20 xui-i-buttons">
 			<a class="btn btn-primary mr40 xa-submit xui-fontBold" href="javascript:void(0);">保存</a>
 			<!--
@@ -90,7 +90,7 @@
 
 {% block js %}
 <script type="text/javascript">
-	var inUpdateMode = {% if lottery_participance %}true{% else %}false{% endif %};
+	var inUpdateMode = {% if egg_participance %}true{% else %}false{% endif %};
 	$(document).ready(function() {
 		$('.xa-submit').click(function() {
 			if (!W.validate()) {
@@ -99,14 +99,14 @@
 			var $form = $('form');
 			var data = $form.serializeObject();
 			W.getApi().call({
-				app: 'apps/lottery',
-				resource: 'lottery_participance',
+				app: 'apps/egg',
+				resource: 'egg_participance',
 				method: 'put',
 				args: data,
 				success: function(data) {
 					W.showHint('success', '创建成功');
 					_.delay(function() {
-						window.location.href = '/apps/lottery/lotteries/';
+						window.location.href = '/apps/egg/eggs/';
 					}, 500);
 				},
 				error: function(resp) {
