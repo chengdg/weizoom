@@ -91,17 +91,17 @@
       </div>
     </div>
       <div id="rightPanel" class="fl xui-workbench-rightPanel xui-hide" style="margin-bottom: 90px;"></div>
-        {% if lottery and lottery.status_text == "进行中"%}<div style="position: absolute;height: 100%;width: 100%"></div>{% endif %}
+        {% if scratch and scratch.status_text == "进行中"%}<div style="position: absolute;height: 100%;width: 100%"></div>{% endif %}
       <div class="xui-bottomActionBar xa-stickyBar">
-          {% if not lottery %}
+          {% if not scratch %}
             <button class="xa-save btn btn-primary">保存</button>
             <button class="xa-preview btn btn-default ml20">预览</button>
           {% else %}
-            {% if lottery.status_text == "未开始" or lottery.status_text == "进行中"%}
+            {% if scratch.status_text == "未开始" or scratch.status_text == "进行中"%}
             <button class="xa-save btn btn-primary">保存</button>
             <button class="xa-preview btn btn-default ml20">预览</button>
             {% endif %}
-            {% if lottery.status_text == "已结束" %}
+            {% if scratch.status_text == "已结束" %}
             已结束，不可更改
             {% endif %}
           {% endif %}
@@ -125,7 +125,7 @@
   <script type="text/javascript">
     W.uid = "{{request.manager.id}}";
     W.projectId = "{{project_id}}";
-    W.activityId = "{{lottery.id}}";
+    W.activityId = "{{scratch.id}}";
     W.host = "{{request.META.HTTP_HOST}}";
     W.API_VERSION = 1;
     var isCreateNewData = {% if is_create_new_data %}true{% else %}false{% endif %};
@@ -201,7 +201,7 @@
 				});
 			});
             W.Broadcaster.on('page:rendered', function () {
-                if ("{{ lottery.status_text }}" == "进行中" ){
+                if ("{{ scratch.status_text }}" == "进行中" ){
                     W.getApi().call({
                         method: 'get',
                         app: 'apps/scratch',
@@ -402,7 +402,7 @@
       $(document).click(function(event) {
         // 点击空白处，触发事件
           if(event.target.id == 'lottery_chance_dialog_trigger'){
-                W.dialog.showDialog('W.dialog.lottery.InstructionDialog',{
+                W.dialog.showDialog('W.dialog.scratch.InstructionDialog',{
                     success: function(data){}
                 });
           }
@@ -423,8 +423,8 @@
         //}
 
         //初始化中奖率说明dialog
-        ensureNS('W.dialog.lottery');
-        W.dialog.lottery.InstructionDialog = W.dialog.Dialog.extend({
+        ensureNS('W.dialog.scratch');
+        W.dialog.scratch.InstructionDialog = W.dialog.Dialog.extend({
             getTemplate: function() {
                 $('#lottery-chance-dialog-tmpl-src').template('lottery-chance-dialog-tmpl');
                 return "lottery-chance-dialog-tmpl";
