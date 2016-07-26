@@ -98,15 +98,19 @@
             min-width: 30%;
         }      
     }
-    @media screen and (min-width: 321px) and (max-width: 360px) {
+    @media screen and (min-width: 321px) and (max-width: 374px) {
         .wui-eggDescription{
-            height: 510px;
+            height: 517px;
+        }
+        .wui-eggDescription .wui-i-egg {
+            bottom: 62px;
         }
         .wui-eggDescription .wui-i-eggBroken {
             width: 288px;
             height: 209px;
             position: absolute;
-            left: 6%;
+            left: 4%;
+            bottom: 62px;
         }
         .wui-eggDescription .wui-i-egg {
             width: 156px;
@@ -114,7 +118,7 @@
             margin-left: -78px;
         }
     }
-    @media screen and (min-width: 375px) and (max-width: 414px) {
+    @media screen and (min-width: 375px) and (max-width: 412px) {
         .wui-eggDescription{
             height: 529px;
         }
@@ -137,7 +141,7 @@
             height: 32px;
         }
     }
-    @media screen and (min-width: 414px) {
+    @media screen and (min-width: 412px) {
         .wui-eggDescription{
             height: 592px;
         }
@@ -197,7 +201,7 @@
             <button type="button" class="wui-i-dialog-btn wui-i-closeDialog xa-closeDialog xa-closeBtn xa-moreChance">再来一次</button>
         </div>
     </div>
-    <audio src="/termite_static/egg.mp3" class="wa-music"></audio>
+    <audio src="/termite_static/egg.mp3" class="wa-music xui-hide"></audio>
 </audio>
 {% endblock %}
 
@@ -205,7 +209,7 @@
     <script>
         function afterStop(data){
             //更新剩余积分
-            $('.xa-remainedIntegral p>b').html(data.remained_integral);
+            $('.xa-remainedIntegral > span').html(data.remained_integral);
             //更新中奖历史
             var newRecord = data.newRecord;
             if(!$.isEmptyObject(newRecord)){
@@ -267,6 +271,7 @@
                 $('.wui-i-eggBroken').hide();
                 $('.wui-i-egg').show();
                 flag = false;
+                canShake = 1;
             });
             this.$el.find('.xa-closeDialog').on('click',function(){
                 that.close();
@@ -337,7 +342,7 @@
     </script>
     <script type="text/javascript">
         var lottery_status, can_play_count, resultDialog, activity_status, prizeIndex;
-        var last_update,SHAKE_THRESHOLD;
+        var last_update,SHAKE_THRESHOLD,canShake;
         var flag = false;
         if(!W.isPC){
             $(function(){
@@ -347,17 +352,15 @@
 
         function initLottery(){
             resultDialog = new ResultDialog();
-            // $('.wa-egg').click(function(){
-            //     doResult();
-            // })
-            SHAKE_THRESHOLD = 800;
+            canShake = 1;
+            SHAKE_THRESHOLD = 3000;
             last_update = 0;
             var x = y = z = last_x = last_y = last_z = 0;
 
             if (window.DeviceMotionEvent) {
                 window.addEventListener('devicemotion', deviceMotionHandler, false);
             } else {
-                alert('本设备不支持devicemotion事件');
+                wuiAlert('您的手机不支持摇一摇！');
             }         
         }
 
@@ -397,7 +400,7 @@
             can_play_count = member_info.can_play_count;
             //会员信息
             var remained_integral = member_info.remained_integral;
-            $('.xa-remainedIntegral b').html(remained_integral);
+            $('.xa-remainedIntegral>span').html(remained_integral);
         }
 
         function getHistory(hisData){
@@ -418,7 +421,7 @@
             var acceleration = eventData.accelerationIncludingGravity;
             var curTime = new Date().getTime();
 
-            if ((curTime - last_update) > 100) {
+            if ((curTime - last_update) > 100 && canShake==1) {
                 var diffTime = curTime - last_update;
                 last_update = curTime;
                 x = acceleration.x;
@@ -428,7 +431,7 @@
                 var status = document.getElementById("status");
 
                 if (speed > SHAKE_THRESHOLD) {
-                    if(flag) return;
+                    canShake=0;
                     doResult();
                 }
                 last_x = x;
