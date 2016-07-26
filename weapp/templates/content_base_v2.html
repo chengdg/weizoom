@@ -263,7 +263,7 @@
 		setTimeout(function(){
 			common_interval_check_func();
 			{% if not under_develop %}
-				var common_interval_check = setInterval(common_interval_check_func, 10000);
+				var common_interval_check = setInterval(common_interval_check_func, 60000);
 			{% endif %}
 		}, 1500);
 
