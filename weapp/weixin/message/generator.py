@@ -10,6 +10,7 @@ import base64
 from modules.member import member_settings
 from weixin2.models import WeixinUser
 from utils.string_util import hex_to_byte
+from weixin2.export import NEWS_TEXT_USERNAME
 
 
 REQUEST_TEXT_TMPL = u"""
@@ -180,7 +181,7 @@ def get_news_response(from_user_name, to_user_name, newses, token):
 		if len(url.strip()) > 0:
 			member_check = base64.encodestring(from_user_name).replace('=', '').strip()
 			#如果是weshop帐号，title,Description的替换
-			if user_profile.user.username == 'jobs':
+			if user_profile.user.username in NEWS_TEXT_USERNAME:
 				weixinusers = WeixinUser.objects.filter(username=from_user_name,webapp_id=user_profile.webapp_id)
 				nick_name = u''
 				if weixinusers.count() > 0:

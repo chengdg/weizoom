@@ -31,6 +31,8 @@ import weixin
 
 from weixin.user.module_api import get_mp_nick_name
 
+from weixin2.export import NEWS_TEXT_USERNAME
+
 FIRSTT_NAV_NAME = weixin.NAV_NAME
 WEIXIN_SECOND_NAVS = weixin.get_weixin_second_navs()
 
@@ -41,7 +43,7 @@ def show_news_detail(request, newsid):
 	try:
 		news = News.objects.get(id=newsid)
 		#如果是weshop或weizoomjx帐号，title,Description的替换
-		if news.user.username == 'jobs':
+		if news.user.username in NEWS_TEXT_USERNAME:
 			member_username = request.member.username
 			news.title = news.title.replace('{{username}}', member_username)
 			news.text = news.text.replace('{{username}}', member_username)
