@@ -347,18 +347,18 @@
 
         function initLottery(){
             resultDialog = new ResultDialog();
-            $('.wa-egg').click(function(){
-                doResult();
-            })
-            // SHAKE_THRESHOLD = 800;
-            // last_update = 0;
-            // var x = y = z = last_x = last_y = last_z = 0;
+            // $('.wa-egg').click(function(){
+            //     doResult();
+            // })
+            SHAKE_THRESHOLD = 800;
+            last_update = 0;
+            var x = y = z = last_x = last_y = last_z = 0;
 
-            // if (window.DeviceMotionEvent) {
-            //     window.addEventListener('devicemotion', deviceMotionHandler, false);
-            // } else {
-            //     alert('本设备不支持devicemotion事件');
-            // }         
+            if (window.DeviceMotionEvent) {
+                window.addEventListener('devicemotion', deviceMotionHandler, false);
+            } else {
+                alert('本设备不支持devicemotion事件');
+            }         
         }
 
         function getDynamicData(){
@@ -438,6 +438,7 @@
         }
 
         function doResult() {
+            if(flag) return;
             flag = true;
             if(!lottery_status || can_play_count==0){
                 if(activity_status == '未开始'){
