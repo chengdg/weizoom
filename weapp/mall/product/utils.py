@@ -190,13 +190,16 @@ def sorted_products(mall_type, manager_id, product_categories, reverse):
     models.Product.fill_sales_detail(manager_id, products, productIds)
     #id2product = dict([(product.id, product) for product in products])
     id2product = {}
+    producte_id = []
     for product in products:
         if mall_type and product_pool2status:
             if product.id in product_pool2status.keys():
                 status_pool = product_pool2status[product.id]
                 if status_pool == models.PP_STATUS_ON:
+                    product.shelve_type = models.PRODUCT_SHELVE_TYPE_ON
                     status = u'在售'
                 elif status_pool == models.PP_STATUS_OFF:
+                    product.shelve_type = models.PRODUCT_SHELVE_TYPE_OFF
                     status = u'待售'
                 elif status_pool == models.PP_STATUS_DELETE:
                     status = u'已删除'
