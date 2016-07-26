@@ -76,6 +76,24 @@ W.component.appkit.ScratchDescription = W.component.Component.extend({
 			isUserProperty: true,
 			default: ''
 		}, {
+			name: 'scratch_bg_image',
+			type: 'image_dialog_select_v2',
+			displayName: '刮奖背景图',
+			isUserProperty: true,
+			isShowCloseButton: true,
+			triggerButton: {nodata:'选择图片', hasdata:'修改'},
+			selectedButton: '选择图片',
+			dialog: 'W.dialog.termite.SelectImagesDialog',
+			dialogParameter: '{"multiSelection": false}',
+			help: '提示:建议图片长宽640px*500px',
+			default: ""
+		}, {
+            name: 'background_color',
+            type: 'color_picker',
+            displayName: '刮奖背景颜色',
+            isUserProperty: true,
+            default: ''
+        }, {
 			name: 'expend',
 			type: 'text_with_annotation',
 			displayName: '消耗积分',
@@ -210,6 +228,45 @@ W.component.appkit.ScratchDescription = W.component.Component.extend({
 				$header.removeClass('wui-lotterydescription-hide').find('p b').html(value);
 			}
 
+		},
+		scratch_bg_image: function($node, model, value, $propertyViewNode){
+			var image = {url:''};
+            var data = {type:null};
+            if (value !== '') {
+                data = $.parseJSON(value);
+                image = data.images[0];
+            }
+            model.set({
+                scratch_bg_image: image.url
+            }, {silent: true});
+
+            if (data.type === 'newImage') {
+                W.resource.termite2.Image.put({
+                    data: image,
+                    success: function(data) {
+                    },
+                    error: function(resp) {
+                    }
+                })
+            }
+			var $target = $('#phoneIFrame').contents().find('.xa-scratchdescription');//找到子frame中的相应元素
+			if (value) {
+				//更新propertyView中的图片
+				$target.css("background-image","url("+image.url+")");
+			}
+            this.refresh($node, {refreshPropertyView: true});
+		},
+		background_color: function($node, model, value, $propertyViewNode){
+			if (value) {
+				var $target = $('#phoneIFrame').contents().find('.xa-prizeContainer');//找到子frame中的相应元素
+				var $target_2 = $('#phoneIFrame').contents().find('.xa-prizeContainer .xa-subtitle');
+				var $target_3 = $('#phoneIFrame').contents().find('.xa-prizeContainer .xa-time');
+				var $target_4 = $('#phoneIFrame').contents().find('.xa-prizeContainer .xa-description');
+				$target.css("background-color", value);
+				$target_2.css("background-color", value);
+				$target_3.css("border-top", "1px solid #e5e5e5");
+				$target_4.css("border-top", "1px solid #e5e5e5");
+			}
 		}
 	},
 
