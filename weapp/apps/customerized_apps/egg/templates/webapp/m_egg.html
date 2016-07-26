@@ -5,7 +5,6 @@
 	h1 {
 		color: #00F;
 	}
-
 	.xui-record .xui-inner-content {
 		color: #8F8F8F;
 	}
@@ -93,6 +92,64 @@
         color: #454545;
         background: white;
     }
+    @media screen and (max-width: 320px) {
+        .wui-eggDescription .wui-i-integral > p {
+            margin-right: 0;
+            min-width: 30%;
+        }      
+    }
+    @media screen and (min-width: 321px) and (max-width: 414px) {
+        .wui-eggDescription{
+            height: 529px;
+        }
+        .wui-eggDescription .wui-i-egg{
+            width: 156px;
+            height: 206px;
+            margin-left: -78px;
+        }
+        .wui-eggDescription .wui-i-eggBroken{
+            width: 288px;
+            height: 209px;
+            position: absolute;
+            left: 6%;
+        }
+    }
+    @media screen and (min-width: 414px) {
+        .wui-eggDescription{
+            height: 592px;
+        }
+        .wui-eggDescription .wui-i-eggBroken {
+            left: 7%;
+            bottom: 70px;
+            width: 312px;
+            height: 227px;
+        }
+        .wui-eggDescription .wui-i-egg{
+            width: 172px;
+            height: 226px;
+            margin-left: -86px;
+            bottom: 70px;
+        }
+        .wui-surveyDescription .wui-i-eggSubtitle h2 {
+            line-height: 30px;
+        }
+        .wui-surveyDescription .wui-i-eggSubtitle {
+            background-size: auto 31.5px;
+            height: 32px;
+        }
+        .wui-surveyDescription .wui-i-subtitle {
+            margin-top: 0;
+        }
+        .wui-eggDescription .wui-i-integral {
+            position: absolute;
+            bottom: 15px;
+            width: 88%;
+            background: rgba(0,0,0,0.1);
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 14px;
+        }
+    }
 </style>
 {% endblock %}
 
@@ -114,7 +171,7 @@
         </div>
         <div class="wui-i-bottom xa-dialog-bottom">
             <button type="button" class="wui-i-dialog-btn wui-i-userCenter xa-userCenter">个人中心</button>
-            <button type="button" class="wui-i-dialog-btn wui-i-closeDialog xa-closeDialog xa-closeBtn">再来一次</button>
+            <button type="button" class="wui-i-dialog-btn wui-i-closeDialog xa-closeDialog xa-closeBtn xa-moreChance">再来一次</button>
         </div>
     </div>
 {% endblock %}
@@ -142,6 +199,7 @@
             this.$entitySubmitBtn = this.$entityContent.find('button');
             this.$userCenter = this.$el.find('.xa-userCenter');
             this.$closeBtn = this.$el.find('.xa-closeBtn');
+            this.$moreChanceBtn = this.$el.find('.xa-moreChance');
 
             this.$entitySubmitBtn.on('click', function(){
                 var tel = that.$entityContent.find('input').val().trim();
@@ -179,6 +237,10 @@
                     window.location.href = '/termite/workbench/jqm/preview/?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id=' + W.webappOwnerId;
                 }
 
+            });
+            this.$moreChanceBtn.on('click',function(){
+                $('.wui-i-eggBroken').hide();
+                $('.wui-i-egg').show();
             });
             this.$el.find('.xa-closeDialog').on('click',function(){
                 that.close();
@@ -249,6 +311,8 @@
     </script>
     <script type="text/javascript">
         var lottery_status, can_play_count, resultDialog, activity_status, prizeIndex;
+        var last_update,SHAKE_THRESHOLD;
+        var flag = false;
         if(!W.isPC){
             $(function(){
                 getDynamicData();
@@ -257,54 +321,21 @@
 
         function initLottery(){
             resultDialog = new ResultDialog();
+            // $('.wui-i-egg').click(function(){
+            //     doResult();
+            // })
 
-            $(".wui-i-egg").click(function(){
-                var _that = this;
-                if(!lottery_status || can_play_count==0){
-                    if(activity_status == '未开始'){
-                        resultDialog.render({
-                            prize_type: 'notready'
-                        });
-                    }else if(activity_status == '已结束'){
-                        resultDialog.render({
-                            prize_type: 'gameover'
-                        });
-                    }else{
-                        resultDialog.render()
-                    }
-                    return false;
-                }else{
-                    W.getApi().call({
-                        app: 'm/apps/egg',
-                        resource: 'egg_prize',
-                        method: 'put',
-                        args:{
-                            id: W.appRecordId,
-                            webapp_owner_id: W.webappOwnerId
-                        },
-                        success: function(data){
-                            resultDialog = resultDialog || new ResultDialog();
-                            resultDialog.render({
-                                'prize_type': data.prize_type,
-                                'prize_name': data.prize_name,
-                                'delay': true
-                            });
-                            afterStop(data);
-                        },
-                        error: function(error){
-                            if(error.errMsg == '奖品已抽光'){
-                                resultDialog.render({
-                                    prize_type: 'none',
-                                    prize_name: ''
-                                });
-                            }else{
-                                wuiAlert(error.errMsg);
-                            }
-                        }
-                    });
-                }
-            });
+            SHAKE_THRESHOLD = 800;
+            last_update = 0;
+            var x = y = z = last_x = last_y = last_z = 0;
+
+            if (window.DeviceMotionEvent) {
+                window.addEventListener('devicemotion', deviceMotionHandler, false);
+            } else {
+                alert('本设备不支持devicemotion事件');
+            }         
         }
+
         function getDynamicData(){
             loadingStatus(true);
             W.getApi().call({
@@ -355,6 +386,82 @@
                 $('.wui-i-record').find('.xa-recordData').html(str_array);
             }else{
                 $('.wui-i-record').find('.xa-recordData').html('<p>还未中奖~</p>');
+            }
+        }
+
+        function deviceMotionHandler(eventData) {
+            var acceleration = eventData.accelerationIncludingGravity;
+            var curTime = new Date().getTime();
+
+            if ((curTime - last_update) > 100) {
+                var diffTime = curTime - last_update;
+                last_update = curTime;
+                x = acceleration.x;
+                y = acceleration.y;
+                z = acceleration.z;
+                var speed = Math.abs(x + y + z - last_x - last_y - last_z) / diffTime * 10000;
+                var status = document.getElementById("status");
+
+                if (speed > SHAKE_THRESHOLD) {
+                    doResult();
+                }
+                last_x = x;
+                last_y = y;
+                last_z = z;
+            }
+        }
+
+        function doResult() {
+            if(flag) return;
+            flag = true;
+            loadingStatus(true);
+            if(!lottery_status || can_play_count==0){
+                if(activity_status == '未开始'){
+                    resultDialog.render({
+                        prize_type: 'notready'
+                    });
+                }else if(activity_status == '已结束'){
+                    resultDialog.render({
+                        prize_type: 'gameover'
+                    });
+                }else{
+                    resultDialog.render()
+                }
+                return false;
+            }else{
+                W.getApi().call({
+                    app: 'm/apps/egg',
+                    resource: 'egg_prize',
+                    method: 'put',
+                    args:{
+                        id: W.appRecordId,
+                        webapp_owner_id: W.webappOwnerId
+                    },
+                    success: function(data){
+                        $('.wui-i-egg').hide();
+                        $('.wui-i-eggBroken').show();
+                        resultDialog = resultDialog || new ResultDialog();
+                        resultDialog.render({
+                            'prize_type': data.prize_type,
+                            'prize_name': data.prize_name,
+                            'delay': true
+                        });
+                        afterStop(data);
+                        loadingStatus(false);
+                        flag = false;
+                    },
+                    error: function(error){
+                        if(error.errMsg == '奖品已抽光'){
+                            resultDialog.render({
+                                prize_type: 'none',
+                                prize_name: ''
+                            });
+                        }else{
+                            wuiAlert(error.errMsg);
+                        }
+                        flag = false;
+                    }
+                });
             }
         }
     </script>
