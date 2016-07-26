@@ -12,7 +12,6 @@
         {% if component.model.displayMode == 'swipe' %}
             {% if in_production_mode %}
                 <div 
-                    testTag="test"
                     data-ui-role="swipeimage" 
                     data-jsondata='{{component|to_swipe_images_json}}' 
                     data-showtitle='true'
