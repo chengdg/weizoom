@@ -194,7 +194,7 @@ class RealtimeMessages(resource.Resource):
                                 nick_name = hex_to_byte(session.weixin_user.nick_name)
                                 for news in newses:
                                     news.title = news.title.replace('{{username}}', nick_name)
-                                    news.summary = news.summary.replace('{{username}}',nick_name)
+                                    news.summary = news.summary.replace('{{username}}', nick_name)
                             articles = weixin_module_api.get_articles_object(newses)
                             custom_message = NewsCustomMessage(articles)
 

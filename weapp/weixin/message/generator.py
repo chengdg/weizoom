@@ -8,6 +8,8 @@ import time
 import base64
 
 from modules.member import member_settings
+from weixin2.models import WeixinUser
+from utils.string_util import hex_to_byte
 
 
 REQUEST_TEXT_TMPL = u"""
@@ -179,8 +181,13 @@ def get_news_response(from_user_name, to_user_name, newses, token):
 			member_check = base64.encodestring(from_user_name).replace('=', '').strip()
 			#如果是weshop帐号，title,Description的替换
 			if user_profile.user.username == 'jobs':
-				news.title = news.title.replace('{{username}}',from_user_name.split('_')[0])
-				news.summary = news.summary.replace('{{username}}',from_user_name.split('_')[0])
+				weixinusers = WeixinUser.objects.filter(username=from_user_name,webapp_id=user_profile.webapp_id)
+				nick_name = u''
+				if weixinusers.count() > 0:
+					weixinuser = weixinusers[0]
+					nick_name = hex_to_byte(weixinuser.nick_name)
+				news.title = news.title.replace('{{username}}', nick_name)
+				news.summary = news.summary.replace('{{username}}', nick_name)
 			buf.append(NEWS_ITEM_WITH_URL_TMPL % (news.title, news.summary,pic_url, url.replace("${member}", from_user_name).replace("${member_check}", member_check)))
 		else:
 			buf.append(NEWS_ITEM_WITHOUT_URL_TMPL % (news.title, news.summary, pic_url))
