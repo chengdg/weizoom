@@ -74,7 +74,7 @@ Scenario:1 会员参加砸金蛋活动,需要消耗积分
 	#积分充足时，可以参加抽奖活动
 	When bill访问jobs的webapp
 	When bill参加砸金蛋活动'砸金蛋抽奖'
-	Then bill获得抽奖结果
+	Then bill获得砸金蛋结果
 		"""
 		[{
 			"prize_grade":"一等奖",
@@ -104,7 +104,7 @@ Scenario:1 会员参加砸金蛋活动,需要消耗积分
 		"""
 	#积分不足时，无法参加抽奖活动
 	When bill参加砸金蛋活动'砸金蛋抽奖'
-	Then bill获得抽奖错误提示'积分不足'
+	Then bill获得砸金蛋错误提示'积分不足'
 
 	#增加积分后，则可正常参加抽奖活动
 	Given jobs登录系统
@@ -120,7 +120,7 @@ Scenario:1 会员参加砸金蛋活动,需要消耗积分
 	Then bill在jobs的webapp中拥有15会员积分
 
 	When bill参加砸金蛋活动'砸金蛋抽奖'
-	Then bill获得抽奖结果
+	Then bill获得砸金蛋结果
 		"""
 		[{
 			"prize_grade":"一等奖",
@@ -177,7 +177,7 @@ Scenario:2 非会员通过分享链接参加砸金蛋活动
 
 	When tom点击bill分享的砸金蛋活动'砸金蛋抽奖'的活动链接
 	When tom参加砸金蛋活动'砸金蛋抽奖'
-	Then tom获得抽奖结果
+	Then tom获得砸金蛋结果
 		"""
 		[{
 			"prize_grade":"一等奖",
@@ -226,7 +226,7 @@ Scenario:3 会员参加砸金蛋活动，抽奖限制为一人一次
 
 	When 清空浏览器
 	When bill参加砸金蛋活动'砸金蛋抽奖'
-	Then bill获得抽奖错误提示'您今天的抽奖机会已经用完~'
+	Then bill获得砸金蛋错误提示'您今天的抽奖机会已经用完~'
 
 	When tom关注jobs的公众号
 	When tom参加砸金蛋活动'砸金蛋抽奖'
@@ -236,7 +236,7 @@ Scenario:3 会员参加砸金蛋活动，抽奖限制为一人一次
 	When bill取消关注jobs的公众号
 	When bill点击tom分享的砸金蛋活动'砸金蛋抽奖'的活动链接
 	When bill参加砸金蛋活动'砸金蛋抽奖'
-	Then bill获得抽奖错误提示'您今天的抽奖机会已经用完~'
+	Then bill获得砸金蛋错误提示'您今天的抽奖机会已经用完~'
 
 @mall2 @apps @apps_egg @users_participate_egg
 Scenario:4 会员参加砸金蛋活动，抽奖限制为一天两次
@@ -288,7 +288,7 @@ Scenario:4 会员参加砸金蛋活动，抽奖限制为一天两次
 
 	When 清空浏览器
 	When bill参加砸金蛋活动'砸金蛋抽奖'
-	Then bill获得抽奖错误提示'您今天的抽奖机会已经用完~'
+	Then bill获得砸金蛋错误提示'您今天的抽奖机会已经用完~'
 
 #补充：张雪 2015.12.02 (目前不存在概率为0的场景)
 #@mall2 @apps @apps_lottery @users_participate_lottery @apps_lottery_frontend
@@ -330,7 +330,7 @@ Scenario:4 会员参加砸金蛋活动，抽奖限制为一天两次
 #		"""
 #
 #	When bill参加砸金蛋活动'砸金蛋抽奖'
-#	Then bill获得抽奖结果
+#	Then bill获得砸金蛋结果
 #		"""
 #		[{
 #			"prize_grade":"谢谢参与"
@@ -425,7 +425,7 @@ Scenario:6 优惠券数量为0，用户无法获得优惠券奖励
 	#优惠券库存为0的情况下，用户参加抽奖将不会获得奖励
 	When tom关注jobs的公众号
 	When tom参加砸金蛋活动'砸金蛋抽奖'
-	Then tom获得抽奖结果
+	Then tom获得砸金蛋结果
 		"""
 		[{
 			"prize_grade":"谢谢参与"
@@ -433,7 +433,7 @@ Scenario:6 优惠券数量为0，用户无法获得优惠券奖励
 		"""
 
 	When tom参加砸金蛋活动'砸金蛋抽奖'
-	Then tom获得抽奖结果
+	Then tom获得砸金蛋结果
 		"""
 		[{
 			"prize_grade":"谢谢参与"
@@ -509,7 +509,7 @@ Scenario:7 优惠券有领取限制，用户无法获得优惠券奖励
 
 	When tom关注jobs的公众号
 	When tom参加砸金蛋活动'砸金蛋抽奖'
-	Then tom获得抽奖结果
+	Then tom获得砸金蛋结果
 		"""
 		[{
 			"prize_grade":"一等奖",
@@ -528,7 +528,7 @@ Scenario:7 优惠券有领取限制，用户无法获得优惠券奖励
 		"""
 
 	When tom参加砸金蛋活动'砸金蛋抽奖'
-	Then tom获得抽奖结果
+	Then tom获得砸金蛋结果
 		"""
 		[{
 			"prize_grade":"谢谢参与"
@@ -630,7 +630,7 @@ Scenario:8 奖品机会被抽完，手机端提示信息奖品被抽完，下次
 	When tom关注jobs的公众号
 	When tom访问jobs的webapp
 	When tom参加砸金蛋活动'砸金蛋抽奖'
-	Then tom获得抽奖结果
+	Then tom获得砸金蛋结果
 		"""
 		[{
 			"prize_grade":"一等奖",
@@ -684,7 +684,7 @@ Scenario:8 奖品机会被抽完，手机端提示信息奖品被抽完，下次
 		"""
 
 	When tom参加砸金蛋活动'砸金蛋抽奖'
-	Then tom获得抽奖错误提示'奖品已抽光'
+	Then tom获得砸金蛋错误提示'奖品已抽光'
 
 	Given jobs登录系统
 	When jobs编辑砸金蛋活动'砸金蛋抽奖'
@@ -724,7 +724,7 @@ Scenario:8 奖品机会被抽完，手机端提示信息奖品被抽完，下次
 		"""
 
 	When tom参加砸金蛋活动'砸金蛋抽奖'
-	Then tom获得抽奖结果
+	Then tom获得砸金蛋结果
 		"""
 		[{
 			"prize_grade":"一等奖",
