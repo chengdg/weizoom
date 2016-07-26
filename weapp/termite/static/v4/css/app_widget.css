@@ -2726,4 +2726,10 @@ li.wui-selectBox-display-table {
 .wui-surveyDescription .wui-i-eggSubtitle h2{
 	line-height: 26px;
 }
+.wui-eggDescription  > .wui-i-innerTitle {
+	margin-top: 156px;
+	color: #07fff7;
+	transform: rotateZ(-6deg);
+	text-indent: 20px;
+}
 /*百宝箱 egg CSS ---- end */

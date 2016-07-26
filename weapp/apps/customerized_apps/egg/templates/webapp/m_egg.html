@@ -99,6 +99,9 @@
         }      
     }
     @media screen and (min-width: 321px) and (max-width: 374px) {
+        .wui-eggDescription  > .wui-i-innerTitle{
+            margin-top: 177px;
+        }
         .wui-eggDescription{
             height: 517px;
         }
@@ -140,8 +143,15 @@
             background-size: auto 32.5px;
             height: 32px;
         }
+        .wui-eggDescription  > .wui-i-innerTitle{
+            margin-top: 185px;
+        }
     }
     @media screen and (min-width: 412px) {
+        .wui-eggDescription  > .wui-i-innerTitle{
+            margin-top: 206px;
+            font-size: 23px;
+        }
         .wui-eggDescription{
             height: 592px;
         }
@@ -320,7 +330,7 @@
                 this.$closeBtn.hide();
             }else if(prize_type == 'notready'){
                 this.$title.html('请耐心等待').show();
-                this.$contentHeader.html("抽奖活动还未开始！");
+                this.$contentHeader.html("砸金蛋活动还未开始！");
                 this.$userCenter.show();
                 this.$closeBtn.hide();
             }
@@ -361,6 +371,9 @@
                 window.addEventListener('devicemotion', deviceMotionHandler, false);
             } else {
                 wuiAlert('您的手机不支持摇一摇！');
+                $('.wa-egg').bind('click',function(){
+                    doResult();
+                });
             }         
         }
 
