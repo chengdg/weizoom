@@ -40,7 +40,7 @@ WEIXIN_SECOND_NAVS = weixin.get_weixin_second_navs()
 def show_news_detail(request, newsid):
 	try:
 		news = News.objects.get(id=newsid)
-		#如果是weshop帐号，title,Description的替换
+		#如果是weshop或weizoomjx帐号，title,Description的替换
 		if news.user.username == 'jobs':
 			member_username = request.member.username
 			news.title = news.title.replace('{{username}}', member_username)

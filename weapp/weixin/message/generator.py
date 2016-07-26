@@ -265,7 +265,7 @@ def get_text_response(from_user_name, to_user_name, content, token, user_profile
 			beg = quote_end_pos
 		content = ''.join(items).strip()
 
-		#如果是weshop帐号，content的替换
+		#如果是weshop或weizoomjx帐号，content的替换
 		if user_profile.user.username == 'jobs':
 			weixinusers = WeixinUser.objects.filter(username=from_user_name,webapp_id=user_profile.webapp_id)
 			nick_name = u''

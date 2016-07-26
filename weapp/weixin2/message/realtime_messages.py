@@ -185,11 +185,16 @@ class RealtimeMessages(resource.Resource):
                     if is_active:
                         if type == u'text':
                             #文本消息
+                            #如果是weshop或weizoomjx帐号，title,Description的替换
+                            if request.user.username == 'jobs':
+                                nick_name = hex_to_byte(session.weixin_user.nick_name)
+                                answer = answer.replace('{{username}}', nick_name)
+
                             custom_message = TextCustomMessage(answer)
                         else:
                             #图文消息
                             newses = weixin_module_api.get_material_news_info(material_id)
-                            #如果是weshop帐号，title,Description的替换
+                            #如果是weshop或weizoomjx帐号，title,Description的替换
                             if request.user.username == 'jobs':
                                 nick_name = hex_to_byte(session.weixin_user.nick_name)
                                 for news in newses:
