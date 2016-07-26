@@ -113,6 +113,13 @@
             position: absolute;
             left: 6%;
         }
+        .wui-surveyDescription .wui-i-eggSubtitle h2 {
+            line-height: 32px;
+        }
+        .wui-surveyDescription .wui-i-eggSubtitle {
+            background-size: auto 32.5px;
+            height: 32px;
+        }
     }
     @media screen and (min-width: 414px) {
         .wui-eggDescription{
@@ -174,6 +181,8 @@
             <button type="button" class="wui-i-dialog-btn wui-i-closeDialog xa-closeDialog xa-closeBtn xa-moreChance">再来一次</button>
         </div>
     </div>
+    <audio src="/termite_static/egg.mp3" class="wa-music"></audio>
+</audio>
 {% endblock %}
 
 {% block js %}
@@ -241,6 +250,7 @@
             this.$moreChanceBtn.on('click',function(){
                 $('.wui-i-eggBroken').hide();
                 $('.wui-i-egg').show();
+                flag = false;
             });
             this.$el.find('.xa-closeDialog').on('click',function(){
                 that.close();
@@ -321,19 +331,19 @@
 
         function initLottery(){
             resultDialog = new ResultDialog();
-            // $('.wui-i-egg').click(function(){
-            //     doResult();
-            // })
+            $('.wui-i-egg').click(function(){
+                doResult();
+            })
 
-            SHAKE_THRESHOLD = 800;
-            last_update = 0;
-            var x = y = z = last_x = last_y = last_z = 0;
+            // SHAKE_THRESHOLD = 800;
+            // last_update = 0;
+            // var x = y = z = last_x = last_y = last_z = 0;
 
-            if (window.DeviceMotionEvent) {
-                window.addEventListener('devicemotion', deviceMotionHandler, false);
-            } else {
-                alert('本设备不支持devicemotion事件');
-            }         
+            // if (window.DeviceMotionEvent) {
+            //     window.addEventListener('devicemotion', deviceMotionHandler, false);
+            // } else {
+            //     alert('本设备不支持devicemotion事件');
+            // }         
         }
 
         function getDynamicData(){
@@ -403,6 +413,7 @@
                 var status = document.getElementById("status");
 
                 if (speed > SHAKE_THRESHOLD) {
+                    if(flag) return;
                     doResult();
                 }
                 last_x = x;
@@ -412,9 +423,7 @@
         }
 
         function doResult() {
-            if(flag) return;
             flag = true;
-            loadingStatus(true);
             if(!lottery_status || can_play_count==0){
                 if(activity_status == '未开始'){
                     resultDialog.render({
@@ -438,6 +447,7 @@
                         webapp_owner_id: W.webappOwnerId
                     },
                     success: function(data){
+                        $('.wa-music').get(0).play();
                         $('.wui-i-egg').hide();
                         $('.wui-i-eggBroken').show();
                         resultDialog = resultDialog || new ResultDialog();
@@ -447,8 +457,6 @@
                             'delay': true
                         });
                         afterStop(data);
-                        loadingStatus(false);
-                        flag = false;
                     },
                     error: function(error){
                         if(error.errMsg == '奖品已抽光'){
