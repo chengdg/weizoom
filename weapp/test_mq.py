@@ -9,7 +9,7 @@ from django.core.management import execute_from_command_line
 
 execute_from_command_line(sys.argv)
 
-from apps import send_task
+from weapp.celery import send_task
 
 """
 测试模版消息队列

@@ -211,6 +211,100 @@ class TestGroupTemplate(resource.Resource):
 
 		return response.get_response()
 
+# def send_group_template_message(activity_info, member_info_list):
+# 	"""
+# 	团购活动发送模板消息
+# 	@param activity_info: 活动信息
+# 		owner_id       登录商家id,
+# 		record_id      (大)团购id,
+# 		group_id	   (小)活动id
+# 		fid			   活动所有者id
+# 		price          团购价格(订单价格),
+# 		product_name   参与团购的商品名称
+# 		status         团购活动的状态: success  fail
+# 		如果 status 是fail
+# 		miss           未下单或未支付的人数
+#
+# 	@param member_info_list: 参与的会员列表
+# 		[{
+# 			member_id		会员id,
+# 			order_id		订单号,
+#
+# 		},...]
+# 	@return: 发送失败的会员id
+# 	"""
+# 	owner_id = int(activity_info['owner_id'])
+# 	status = activity_info['status']
+# 	app_url = 'http://%s/m/apps/group/m_group/?webapp_owner_id=%d&id=%s&group_relation_id=%s&fid=%s' % (settings.DOMAIN, owner_id, str(activity_info['record_id']), activity_info['group_id'], str(activity_info['fid']))
+# 	member_ids = [m['member_id'] for m in member_info_list]
+# 	member_id2openid = {m.member.id: m.account.openid for m in MemberHasSocialAccount.objects.filter(member_id__in=member_ids)}
+# 	#获取模板内容
+# 	um = UserappHasTemplateMessages.objects(owner_id=owner_id, apps_type="group")
+# 	if um.count() <= 0:
+# 		#没有配置过模板消息
+# 		return
+# 	um = um.first()
+# 	template_data = um.data_control
+# 	if not template_data:
+# 		#没有配置过模板消息
+# 		return
+#
+# 	detail_data = dict()
+# 	template_id = ''
+# 	if status == 'success':
+# 		success_data = template_data.get('success', None)
+# 		if not success_data:
+# 			#没有设置拼团成功的模板
+# 			return
+# 		else:
+# 			template_id = success_data['template_id']
+# 			detail_data = {
+# 				"first": u"您参团的商品[%s]已组团成功,%s" % (activity_info['product_name'], success_data['first']),
+# 				"remark": u"点击查看团购活动详情"
+# 			}
+#
+# 	if status == 'fail':
+# 		fail_data = template_data.get('fail', None)
+# 		if not fail_data:
+# 			#没有设置拼团失败的模板
+# 			return
+# 		else:
+# 			template_id = fail_data['template_id']
+# 			detail_data = {
+# 				"first": fail_data['first'],
+# 				"remark": u"点击查看团购活动详情"
+# 			}
+#
+# 	failed_member_ids = []
+# 	for member_info in member_info_list:
+# 		member_id = int(member_info['member_id'])
+# 		if status == 'success':
+# 			detail_data['keywords'] = {
+# 				"keyword1": u"￥%s" % str(activity_info['price']),
+# 				"keyword2": member_info['order_id']
+# 			}
+# 		elif status == 'fail':
+# 			detail_data['keywords'] = {
+# 				"keyword1": member_info['order_id'],
+# 				"keyword2":	activity_info['product_name'],
+# 				"keyword3": u"[差%d人] 成团" % int(activity_info['miss']),
+# 				"keyword4": u"[￥%s] 将在5~7个工作日内完成退款" % str(activity_info['price'])
+# 			}
+# 		if template_id == "" or not template_id:
+# 			#没有配置模板
+# 			continue
+# 		temp_dict = {
+# 			"openid": member_id2openid[member_id],
+# 			"app_url": app_url,
+# 			"template_id": template_id,
+# 			"member_id": member_id,
+# 			"detail_data": detail_data
+# 		}
+# 		result, member_id = send_apps_template_message(owner_id, temp_dict)
+# 		if not result:
+# 			failed_member_ids.append(member_id)
+# 	return failed_member_ids
+
 def send_group_template_message(activity_info, member_info_list):
 	"""
 	团购活动发送模板消息
