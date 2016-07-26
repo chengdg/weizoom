@@ -65,10 +65,21 @@ W.preloadImgsOnPage = function(option) {
                 return;
             }
             switch(module) {
+                case 'imageNav':
+                    $itemsImg.map(function(idx, item) {
+                        $item = $(item);
+                        $item.attr('data-url', $item.attr('src'));
+                        $item.removeAttr('src');
+                    });
+                    $lazyImgs = $('[data-url]');
+                    lazyloadImg($lazyImgs, {threshold: 0});
+                    break;
                 case 'imageGroup':
+                    /*
                     $itemsImg.map(function(idx, item) {
                         $item = $(item);
                     });
+                     * */
                     break;
                 case 'productList':
                     $itemsImg.map(function(idx, item) {
