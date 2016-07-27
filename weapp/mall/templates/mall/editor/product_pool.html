@@ -107,14 +107,20 @@
                         ${product.store_name}
                     </td>
                     <td>
-                        ${product.price}
+                        {{if product.is_use_custom_model}}
+                            <div class="xa-priceText">${product.display_price_range}</div>
+                        {{else}}
+                            <div class="xa-priceText">${product.price}</div>
+                        {{/if}}
                     </td>
                     <td>
-                    {{if product.stocks == 0}}
-                        无限
-                    {{else}}
-                        ${product.stocks}
-                    {{/if}}
+                        {{if !product.is_use_custom_model}}
+                            {{if product.stocks == 0}}
+                                无限
+                            {{else}}
+                                ${product.stocks}
+                            {{/if}}
+                        {{/if}}
                     </td>
                     <td>
                         <a href="javascript:void(0);" class="xa-offshelf">上架</a>

@@ -575,7 +575,8 @@ class ProductPool(resource.Resource):
                 'stocks': product.stocks,
                 'price':product.price,
                 'is_use_custom_model': product.is_use_custom_model,
-                'models': product.models[1:]
+                'models': product.models[1:],
+                'display_price_range': product.display_price_range
                # 'sync_time': mall_product_id2relation[product['id']].sync_time.strftime('%Y-%m-%d %H:%M') if mall_product_id2relation.has_key(product['id']) else ''
             })
 
