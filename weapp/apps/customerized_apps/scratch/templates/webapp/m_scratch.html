@@ -227,6 +227,7 @@
             });
             this.$el.find('.xa-closeDialog').on('click',function(){
                 that.close();
+                isOkFlag = true;
             });
         }
         /**
@@ -294,6 +295,7 @@
     </script>
     <script type="text/javascript">
         var lottery_status, can_play_count, resultDialog, activity_status, prizeIndex,isScratching,prize_data,scratch_card;
+        var isOkFlag = true;
         if(!W.isPC){
             $(function(){
                 getDynamicData();
@@ -322,7 +324,6 @@
                 },
                 success: function(data) {
                     var member_info = data.member_info;
-                    console.log(member_info);
                     if (!member_info.isMember) {
                         showQrcode(W.qrcodeUrl);
                         return;
@@ -409,8 +410,6 @@
             eventUp: function(e){
                 e.preventDefault();
                 var a = this.ctx.getImageData(0,0,this.c1.width,this.c1.height);
-                console.log(a);
-                console.log(this.isOk);
                 var j=0;
                 for(var i=3;i<a.data.length;i+=4){
                         if(a.data[i]==0)j++;
@@ -419,6 +418,9 @@
                     this.isOk = 1;
                 }
                 this.ismousedown=false; 
+                if(!lottery_status || can_play_count==0 ){
+                    this.initialize();
+                }
             },
             eventMove: function(e){
                 e.preventDefault();     
@@ -427,20 +429,21 @@
                     if(e.changedTouches){
                         e=e.changedTouches[e.changedTouches.length-1];
                     }
-                var containerY = document.getElementById("cardContainer").offsetTop;
-                var containerX = document.getElementById("cardContainer").offsetLeft;
-                var oX = this.c1.offsetLeft+containerX;
-                    oY = this.c1.offsetTop+containerY;
-                var x = (e.clientX + document.body.scrollLeft) - oX || 0,
-                    y = (e.clientY + document.body.scrollTop) - oY || 0;
-                this.ctx.beginPath();
-                this.ctx.arc(x, y, 20, 0, Math.PI * 2,true);
-                this.c1.style.display = 'none';
-                this.c1.offsetHeight;
-                this.c1.style.display = 'inherit'; 
-                this.ctx.fill();   
+                    var containerY = document.getElementById("cardContainer").offsetTop;
+                    var containerX = document.getElementById("cardContainer").offsetLeft;
+                    var oX = this.c1.offsetLeft+containerX;
+                        oY = this.c1.offsetTop+containerY;
+                    var x = (e.clientX + document.body.scrollLeft) - oX || 0,
+                        y = (e.clientY + document.body.scrollTop) - oY || 0;
+                    this.ctx.beginPath();
+                    this.ctx.arc(x, y, 20, 0, Math.PI * 2,true);
+                    this.c1.style.display = 'none';
+                    this.c1.offsetHeight;
+                    this.c1.style.display = 'inherit'; 
+                    this.ctx.fill();   
                 }
-                if(this.isOk){
+                if(this.isOk && isOkFlag){
+                    isOkFlag = false;
                     $('.wui-i-cardInfo').get(0).style.zIndex = '3';
                     resultDialog = resultDialog || new ResultDialog();
                     resultDialog.render({
