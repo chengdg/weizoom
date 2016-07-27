@@ -157,4 +157,4 @@ def get_weixin_second_navs(request):
 
 
 #可以通过配置图文和文本自动带上用户昵称的帐号
-NEWS_TEXT_USERNAME = ["jobs","ceshi01","weshop","weizoomjx"]
+NEWS_TEXT_USERNAME = ["weshop","weizoomjx"]
