@@ -376,7 +376,6 @@
         }
 
         function getDynamicData(){
-            loadingStatus(true);
             W.getApi().call({
                 app: 'm/apps/egg',
                 resource: 'm_egg',
@@ -387,10 +386,13 @@
                 },
                 success: function(data) {
                     var member_info = data.member_info;
+                    if (member_info.isMember) {
+                        showQrcode(W.qrcodeUrl);
+                        return;
+                    }
                     renderDynamicData(member_info);
                     getHistory(data.egg_history);
-                    initLottery();
-                    loadingStatus(false);
+                    initLottery();        
                 },
                 error: function(data) {
                     if(data.errMsg == 'is_deleted'){
@@ -398,7 +400,6 @@
                     }else{
                         wuiAlert(data.errMsg)
                     }
-                    loadingStatus(false);
                 }
             });
         }
@@ -407,10 +408,6 @@
             lottery_status = member_info.egg_status;
             activity_status = member_info.activity_status;
             W.isMember = member_info.isMember;
-            if (!W.isMember) {
-                showQrcode(W.qrcodeUrl);
-                return;
-            }
             //可参与次数
             can_play_count = member_info.can_play_count;
             //会员信息

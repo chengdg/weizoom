@@ -297,10 +297,6 @@
         var lottery_status, can_play_count, resultDialog, activity_status, prizeIndex;
         if(!W.isPC){
             $(function(){
-                // if (!W.isMember) {
-                //     showQrcode(W.qrcodeUrl);
-                //     return;
-                // }
                 getDynamicData();
                 $('.xa-retry').click(function(){
                     window.location.reload();
@@ -360,7 +356,6 @@
             // });
         }
         function getDynamicData(){
-            loadingStatus(true);
             W.getApi().call({
                 app: 'm/apps/scratch',
                 resource: 'm_scratch',
@@ -371,10 +366,13 @@
                 },
                 success: function(data) {
                     var member_info = data.member_info;
+                    if (!member_info.isMember) {
+                        showQrcode(W.qrcodeUrl);
+                        return;
+                    }
                     renderDynamicData(member_info);
                     getHistory(data.scratch_history);
                     initLottery();
-                    loadingStatus(false);
                 },
                 error: function(data) {
                     if(data.errMsg == 'is_deleted'){
@@ -382,7 +380,6 @@
                     }else{
                         wuiAlert(data.errMsg)
                     }
-                    loadingStatus(false);
                 }
             });
         }
@@ -448,22 +445,6 @@
             },
             eventDown: function(e){
                 e.preventDefault();
-                
-                if(!lottery_status || can_play_count==0){
-                    if(lottery.isRolling) return false;
-                    if(activity_status == '未开始'){
-                        resultDialog.render({
-                            prize_type: 'notready'
-                        });
-                    }else if(activity_status == '已结束'){
-                        resultDialog.render({
-                            prize_type: 'gameover'
-                        });
-                    }else{
-                        resultDialog.render()
-                    }
-                    return false;
-                }
                 this.ismousedown=true;
             },
             eventUp: function(e){
@@ -480,6 +461,23 @@
             },
             eventMove: function(e){
                 e.preventDefault();
+              
+                if(!lottery_status || can_play_count==0){
+                    if(activity_status == '未开始'){
+                        resultDialog.render({
+                            prize_type: 'notready'
+                        });
+                    }else if(activity_status == '已结束'){
+                        resultDialog.render({
+                            prize_type: 'gameover'
+                        });
+                    }else{
+                        resultDialog.render()
+                    }
+                    return false;
+                }else{
+
+                }
                 $('.wui-i-hand').hide();
                 if(this.ismousedown) {
                     if(e.changedTouches){
