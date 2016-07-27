@@ -156,7 +156,7 @@ def process_item_group_data(request, component):
 	if request.in_design_mode == False:
 		# 非编辑模式，显示空的div占位符
 		component['_has_data'] = False
-		component['empty_placeholder'] = "<div class='xa-wepage-item-group' data-items='{}'></div>".format(component['model'])
+		component['empty_placeholder'] = "<div data-ui-role='async-component' data-type='{}' data-model='{}'></div>".format(component['type'], component['model'])
 		return
 
 	if len(component['components']) == 0 and request.in_design_mode:
