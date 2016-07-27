@@ -386,7 +386,7 @@
                 },
                 success: function(data) {
                     var member_info = data.member_info;
-                    if (member_info.isMember) {
+                    if (!member_info.isMember) {
                         showQrcode(W.qrcodeUrl);
                         return;
                     }
