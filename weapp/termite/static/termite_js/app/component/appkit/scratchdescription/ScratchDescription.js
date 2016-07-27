@@ -129,7 +129,7 @@ W.component.appkit.ScratchDescription = W.component.Component.extend({
 		},{
 			name: 'limitation',
 			type: 'radio',
-			displayName: '抽奖限制',
+			displayName: '刮奖限制',
 			isUserProperty: true,
 			source: [{
 				name: '一人一次',
@@ -249,7 +249,7 @@ W.component.appkit.ScratchDescription = W.component.Component.extend({
                     }
                 })
             }
-			var $target = $('#phoneIFrame').contents().find('.xa-scratchdescription');//找到子frame中的相应元素
+			var $target = $('#phoneIFrame').contents().find('.xa-scratchDescription');//找到子frame中的相应元素
 			if (value) {
 				//更新propertyView中的图片
 				$target.css("background-image","url("+image.url+")");
