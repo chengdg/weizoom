@@ -663,12 +663,13 @@ class Product(models.Model):
 			# 	ProductModelProperty.objects.filter(
 			# 		owner=webapp_owner))
 
-			#TODO bert prodcut_pool 增加默认商品规格 owner
-			properties = ProductModelProperty.objects.filter(
-				owner=webapp_owner)
-
-			#TODO bert prodcut_pool 增加默认商品规格 owner
-			properties = ProductModelProperty.objects.filter(
+			pool_weapp_profile = UserProfile.objects.filter(webapp_type=2).first()
+			if pool_weapp_profile:
+				properties = ProductModelProperty.objects.filter(
+					Q(owner=webapp_owner) | Q(owner=pool_weapp_profile.user))
+			else:
+				# TODO bert prodcut_pool 增加默认商品规格 owner
+				properties = ProductModelProperty.objects.filter(
 					owner=webapp_owner)
 			property_ids = [property.id for property in properties]
 			id2property = dict([(str(property.id), property)
