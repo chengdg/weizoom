@@ -291,10 +291,12 @@
         ResultDialog.prototype.close = function(){
             mask('hide');
             this.$el.hide();
+            scratch_card.initialize();
+            isScratching = false;
         };
     </script>
     <script type="text/javascript">
-        var lottery_status, can_play_count, resultDialog, activity_status, prizeIndex;
+        var lottery_status, can_play_count, resultDialog, activity_status, prizeIndex,isScratching,prize_data,scratch_card;
         if(!W.isPC){
             $(function(){
                 getDynamicData();
@@ -305,7 +307,7 @@
         }
 
         function initLottery(){
-            var scratch_card = new scratchCard();
+            scratch_card = new scratchCard();
             resultDialog = new ResultDialog();
 
             // $(".xa-lottery-go").click(function(){
@@ -366,6 +368,7 @@
                 },
                 success: function(data) {
                     var member_info = data.member_info;
+                    console.log(member_info);
                     if (!member_info.isMember) {
                         showQrcode(W.qrcodeUrl);
                         return;
@@ -460,24 +463,7 @@
                 this.ismousedown=false; 
             },
             eventMove: function(e){
-                e.preventDefault();
-              
-                if(!lottery_status || can_play_count==0){
-                    if(activity_status == '未开始'){
-                        resultDialog.render({
-                            prize_type: 'notready'
-                        });
-                    }else if(activity_status == '已结束'){
-                        resultDialog.render({
-                            prize_type: 'gameover'
-                        });
-                    }else{
-                        resultDialog.render()
-                    }
-                    return false;
-                }else{
-
-                }
+                e.preventDefault();     
                 $('.wui-i-hand').hide();
                 if(this.ismousedown) {
                     if(e.changedTouches){
@@ -498,6 +484,59 @@
                 }
                 if(this.isOk){
                     $('.wui-i-cardInfo').get(0).style.zIndex = '3';
+                    resultDialog = resultDialog || new ResultDialog();
+                    resultDialog.render({
+                        'prize_type': prize_data.prize_type,
+                        'prize_name': prize_data.prize_name
+                    });
+                    afterStop(prize_data);
+                }
+                if(!lottery_status || can_play_count==0 || isScratching){
+                    if(isScratching) return;
+                    if(activity_status == '未开始'){
+                        resultDialog.render({
+                            prize_type: 'notready'
+                        });
+                    }else if(activity_status == '已结束'){
+                        resultDialog.render({
+                            prize_type: 'gameover'
+                        });
+                    }else{
+                        resultDialog.render()
+                    }
+                    return false;
+                }else{
+                    isScratching = true
+                    W.getApi().call({
+                        app: 'm/apps/scratch',
+                        resource: 'scratch_prize',
+                        method: 'put',
+                        args:{
+                            id: W.appRecordId,
+                            webapp_owner_id: W.webappOwnerId
+                        },
+                        success: function(data){
+                            console.log(data);
+                            prize_data = data;
+                            $('.wa-prizeName').html(data.prize_name);
+                            if(data.can_play_count == 0){
+                                $('.xa-retry').hide();
+                            }
+                            if(data.result){
+                                $('.wa-grade').html(data.result); 
+                            }
+                        },
+                        error: function(error){
+                            if(error.errMsg == '奖品已抽光'){
+                                resultDialog.render({
+                                    prize_type: 'none',
+                                    prize_name: ''
+                                });
+                            }else{
+                                wuiAlert(error.errMsg);
+                            }
+                        }
+                    });
                 }
             }
         }
