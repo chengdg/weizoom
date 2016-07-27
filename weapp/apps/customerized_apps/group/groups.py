@@ -18,6 +18,8 @@ from mall import export as mall_export
 from mall.order.util import update_order_status_by_group_status
 from apps.customerized_apps.group.group_participance import send_group_template_message
 
+import weixin2.models as weixin_models
+
 FIRST_NAV = mall_export.MALL_PROMOTION_AND_APPS_FIRST_NAV
 COUNT_PER_PAGE = 10
 
@@ -32,13 +34,22 @@ class Groups(resource.Resource):
 		"""
 		has_data = app_models.Group.objects.count()
 		#从数据库中获取模板配置
-		templates = UserHasTemplateMessages.objects(owner_id=request.manager.id)
-		um = UserappHasTemplateMessages.objects(owner_id=request.manager.id, apps_type="group")
+		templates = weixin_models.UserHasTemplateMessages.objects.filter(owner_id=request.manager.id)
+		um = weixin_models.UserTemplateSettings.objects.filter(owner_id=request.manager.id, usage__in=[1,2])
 		control_data = 0
 		tem_list = []
 		if um.count() > 0:
-			um = um.first()
-			control_data = um.data_control
+			for u in um:
+				if u.usage == 1:
+					control_data['success'] = {
+						'template_id': u.template_id,
+						'first': u.first
+					}
+				elif u.usage == 2:
+					control_data['fail'] = {
+						'template_id': u.template_id,
+						'first': u.first
+					}
 		for t in templates:
 			tem_list.append({
 				"template_id": t.template_id,

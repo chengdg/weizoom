@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from account.util import get_binding_weixin_mpuser, get_mpuser_accesstoken
 from apps.customerized_apps.red_packet.models import RedPacketCertSettings
+import weixin2.models as weixin_models
 
 __author__ = 'liupeiyu, chuter'
 import json
@@ -340,22 +341,25 @@ def get_template_message_list(request):
 	@return:
 	"""
 	print 'in get_template_message_list-----------------------'
-	action = request.GET.get('action', None) #全量更新
 	apps_type = request.GET.get('apps_type', "") #全量更新
 	#首先从数据库中获取
-	template_ids = [t.template_id for t in UserHasTemplateMessages.objects(owner_id=request.manager.id)]
-	if action or len(template_ids) <= 0:
-		#发起api请求，从微信获取
-		get_templates(request.manager)
-		template_ids = [t.template_id for t in UserHasTemplateMessages.objects(owner_id=request.manager.id)]
 
-	items = UserHasTemplateMessages.objects(owner_id=request.manager.id, template_id__in=template_ids)
+	items = weixin_models.UserHasTemplateMessages.objects.filter(owner_id=request.manager.id)
 	#获取历史数据
-	um = UserappHasTemplateMessages.objects(owner_id=request.manager.id, apps_type=apps_type)
+	um = weixin_models.UserTemplateSettings.objects.filter(owner_id=request.manager.id, usage__in=[1, 2])
 	control_data = 0
 	if um.count() > 0:
-		um = um.first()
-		control_data = um.data_control
+		for u in um:
+			if u.usage == 1:
+				control_data['success'] = {
+					'template_id': u.template_id,
+					'first': u.first
+				}
+			elif u.usage == 2:
+				control_data['fail'] = {
+					'template_id': u.template_id,
+					'first': u.first
+				}
 	templates = []
 	for t in items:
 		templates.append({
@@ -379,14 +383,32 @@ def save_apps_use_template(request):
 		fields = request.POST
 
 		template_settings = json.loads(fields.get('template_settings', "{}"))
-		apps_type = fields.get('apps_type', "")
-		selected_template_ids = fields.get('template_ids','')
-		UserappHasTemplateMessages.objects(owner_id=request.manager.id, apps_type=apps_type).delete()
-		UserappHasTemplateMessages(owner_id=request.manager.id, apps_type=apps_type, data_control=template_settings).save()
+
+		weixin_models.UserTemplateSettings.objects.filter(owner_id=request.manager.id, usage__in=[1, 2]).delete()
+
+		success_data = template_settings['success']
+		weixin_models.UserTemplateSettings(
+			owner_id = request.manager.id,
+			usage = 1,
+			template_id = success_data['template_id'],
+			first = success_data['first'],
+			remark = u'点击查看团购活动详情'
+		).save()
+
+		fail_data = template_settings['fail']
+		weixin_models.UserTemplateSettings(
+			owner_id = request.manager.id,
+			usage = 2,
+			template_id = fail_data['template_id'],
+			first = fail_data['first'],
+			remark = u'点击查看团购活动详情'
+		).save()
 		response = create_response(200)
-	except Exception, e:
-		print e
+	except:
+		err = u'配置团购模板出错，cause: \n{}'.format(unicode_full_stack())
+		watchdog_alert(err)
 		response.errMsg =  u"配置模板出错"
+		response.innerErrMsg = err
 	return response.get_response()
 
 def get_templates(user):

@@ -738,20 +738,32 @@ $(document).ready(function() {
 				this.render();
 			}else{
 				args = args || {};
-				W.getApi().call({
-					app: 'apps',
-					api: 'template_message_list/get',
-					method: 'get',
-					args: $.extend(args, {"apps_type": APPS_TYPE}),
-					success: function(data) {
-						that.data = data;
-						that.render();
-					},
-					error: function(resp) {
-						that.data = {};
-						console.log(resp.errMsg);
-					}
-				});
+                //首先同步模版
+                W.resource.new_weixin.NewTemplateMessages.post({
+                    data: {
+                        woid: W.mid
+                    },
+                    success: function(data){
+                        W.getApi().call({
+                            app: 'apps',
+                            api: 'template_message_list/get',
+                            method: 'get',
+                            args: $.extend(args, {"apps_type": APPS_TYPE}),
+                            success: function(data) {
+                                that.data = data;
+                                that.render();
+                            },
+                            error: function(resp) {
+                                that.data = {};
+                                console.log(resp.errMsg);
+                            }
+                        });
+                    },
+                    error: function(resp){
+                        W.showHint('error', resp.errMsg);
+                    }
+                });
+
 			}
 		}
 	});
