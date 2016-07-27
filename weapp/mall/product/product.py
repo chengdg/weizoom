@@ -64,7 +64,6 @@ class ProductList(resource.Resource):
                 shelve_type=shelve_type,
                 is_deleted=False
             ).exists()
-        print has_product,"<<<D<D<D<D<D<D<D<D<D<<<<<<<<<"
         c = RequestContext(
             request,
             {'first_nav_name': export.PRODUCT_FIRST_NAV,
