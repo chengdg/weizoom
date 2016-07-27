@@ -168,14 +168,14 @@
 
   <ul class="nav nav-tabs mt14 ">
   {% if mall_type %}
-      {% for supplier in suppliers %}
-          <li class="xa-count {% if forloop.first %}active{% endif %}" data-total-status-value="{{ supplier.id }}" data-supplier-type="s">
-            <a href="javascript:void(0);" class="text_nowrap" title="{{ supplier.name }}">{{ supplier.name }}</a>
+      {% for supplier_store in supplier_stores %}
+          <li class="xa-count {% if forloop.first %}active{% endif %}" data-total-status-value="{{ supplier_store.user_id }}" data-supplier-type="u">
+            <a href="javascript:void(0);" class="text_nowrap" title="{{ supplier_store.store_name }}">{{ supplier_store.store_name }}</a>
           </li>
       {% endfor %}
-      {% for supplier_store in supplier_stores %}
-          <li class="xa-count {% if forloop.first and suppliers|length == 0 %}active{% endif %}" data-total-status-value="{{ supplier_store.user_id }}" data-supplier-type="u">
-            <a href="javascript:void(0);" class="text_nowrap" title="{{ supplier_store.store_name }}">{{ supplier_store.store_name }}</a>
+      {% for supplier in suppliers %}
+          <li class="xa-count {% if forloop.first and supplier_store|length == 0 %}active{% endif %}" data-total-status-value="{{ supplier.id }}" data-supplier-type="s">
+            <a href="javascript:void(0);" class="text_nowrap" title="{{ supplier.name }}">{{ supplier.name }}</a>
           </li>
       {% endfor %}
   {% else %}
@@ -285,14 +285,14 @@
             {% for product in order.products %}
             <tr>
               {% if mall_type %}
-                  {% if product.supplier %}
-                    {% ifchanged product.supplier %}
-                        <td rowspan="{{product.supplier_length}}" style="text-align:center;border-right:1px solid #ddd;" width="80">{{ product.supplier_name }}</td>
-                    {% endifchanged %}
-                  {% endif %}
                   {% if product.supplier_user_id %}
                     {% ifchanged product.supplier_user_id %}
                         <td rowspan="{{product.supplier_user_length}}" style="text-align:center;border-right:1px solid #ddd;" width="80"><i class="xui-icon-sync">同</i>{{ product.supplier_store_name }}</td>
+                    {% endifchanged %}
+                  {% endif %}
+                  {% if product.supplier %}
+                    {% ifchanged product.supplier %}
+                        <td rowspan="{{product.supplier_length}}" style="text-align:center;border-right:1px solid #ddd;" width="80">{{ product.supplier_name }}</td>
                     {% endifchanged %}
                   {% endif %}
               {% endif %}
