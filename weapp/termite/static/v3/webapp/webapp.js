@@ -74,6 +74,15 @@ W.preloadImgsOnPage = function(option) {
                     $lazyImgs = $('[data-url]');
                     lazyloadImg($lazyImgs, {threshold: 200});
                     break;
+                case 'imageGroup':
+                    $itemsImg.map(function(idx, item) {
+                        $item = $(item);
+                        srcImg = $item.attr('src');
+                        $item.attr('data-url', compressImgUrl(srcImg, '!/quality/80'));
+                        $item.attr('src', compressImgUrl(srcImg, '!/quality/7'));
+                    });
+                    $lazyImgs = $('[data-url]');
+                    break;
                 case 'singleImageWithTitle':
                     $itemsImg.map(function(idx, item) {
                         $item = $(item);
@@ -97,6 +106,17 @@ W.preloadImgsOnPage = function(option) {
             }
         });
     });
+}
+
+// 如果是upaiyun图片则增加压缩参数
+function compressImgUrl(imgUrl, paramStr) {
+		if (imgUrl) {
+				var upaiyunKey = /upaiyun\.com/;
+				var compressStr = paramStr;
+				if (upaiyunKey.test(imgUrl)){
+					return [imgUrl, compressStr].join('');
+				}
+		}
 }
 
 function lazyloadImg($imgs, options) {
