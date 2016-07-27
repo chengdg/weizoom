@@ -143,7 +143,7 @@ class egg_prize(resource.Resource):
 		if int(limitation) != -1:
 			if egg_participance.can_play_count <= 0:
 				response = create_response(500)
-				response.errMsg = u'您今天的抽奖机会已经用完~'
+				response.errMsg = u'您今天的砸金蛋机会已经用完~'
 				return response.get_response()
 
 		if not allow_repeat and egg_participance.has_prize:
@@ -230,7 +230,7 @@ class egg_prize(resource.Resource):
 					egg_prize_dict[temp_prize_title]['prize_count'] = int(egg_prize_dict[temp_prize_title]['prize_count']) - 1
 			elif egg_prize_type == 'integral':
 				#积分
-				member.consume_integral(-int(egg_prize['prize_data']), u'参与抽奖，抽中积分奖项')
+				member.consume_integral(-int(egg_prize['prize_data']), u'参与砸金蛋，抽中积分奖项')
 				egg_prize_data = egg_prize['prize_data']
 				prize_value = u'%s积分' % egg_prize_data
 				egg_prize_dict[temp_prize_title]['prize_count'] = int(egg_prize_dict[temp_prize_title]['prize_count']) - 1
@@ -261,9 +261,9 @@ class egg_prize(resource.Resource):
 
 		#根据送积分规则，查询当前用户是否已中奖
 		if delivery_setting == 'false':
-			member.consume_integral(-delivery, u'参与抽奖，获得参与积分')
+			member.consume_integral(-delivery, u'参与砸金蛋，获得参与积分')
 		elif not egg_participance.has_prize and not has_prize:
-			member.consume_integral(-delivery, u'参与抽奖，获得参与积分')
+			member.consume_integral(-delivery, u'参与砸金蛋，获得参与积分')
 
 		if has_prize:
 			egg_participance.update(**{"set__has_prize":has_prize, "inc__total_count":1})
