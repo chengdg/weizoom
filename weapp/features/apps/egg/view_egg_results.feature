@@ -64,7 +64,7 @@ Background:
 	When tom1关注jobs的公众号
 	When tom1取消关注jobs的公众号
 
-	When 砸金蛋用户批量参加jobs的砸金蛋活动
+	When 微信用户批量参加jobs的砸金蛋活动
 		| name      |member_name| prize_grade | prize_name |lottery_time| receive_status |
 		|砸金蛋抽奖01 |bill       | 一等奖       | 优惠券1     |前天      | 已领取         |
 		|砸金蛋抽奖01 |bill       | 一等奖       | 优惠券1     |昨天      | 已领取         |

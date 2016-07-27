@@ -65,7 +65,7 @@ class scratch_prize(resource.Resource):
 		data = {}
 		now_datetime = datetime.today()
 		if not record_id:
-			response.errMsg = u'抽奖活动信息出错'
+			response.errMsg = u'刮奖活动信息出错'
 			return response.get_response()
 
 		scratch = app_models.Scratch.objects.get(id=record_id)
@@ -77,7 +77,7 @@ class scratch_prize(resource.Resource):
 		status_text = scratch.status_text
 		if status_text != u'进行中':
 			response = create_response(500)
-			response.errMsg = u'参与抽奖失败，请刷新页面重试~'
+			response.errMsg = u'参与刮奖失败，请刷新页面重试~'
 			return response.get_response()
 
 		chance = scratch.chance / 100.0 #中奖率
@@ -143,7 +143,7 @@ class scratch_prize(resource.Resource):
 		if int(limitation) != -1:
 			if scratch_participance.can_play_count <= 0:
 				response = create_response(500)
-				response.errMsg = u'您今天的抽奖机会已经用完~'
+				response.errMsg = u'您今天的刮奖机会已经用完~'
 				return response.get_response()
 
 		if not allow_repeat and scratch_participance.has_prize:
@@ -198,7 +198,7 @@ class scratch_prize(resource.Resource):
 				return response.get_response()
 
 		#扣除抽奖消耗的积分
-		member.consume_integral(expend, u'参与抽奖，消耗积分')
+		member.consume_integral(expend, u'参与刮奖，消耗积分')
 		#判定是否中奖
 		scratch_prize_type = "no_prize"
 		scratch_prize_data = ''
@@ -230,7 +230,7 @@ class scratch_prize(resource.Resource):
 					scratch_prize_dict[temp_prize_title]['prize_count'] = int(scratch_prize_dict[temp_prize_title]['prize_count']) - 1
 			elif scratch_prize_type == 'integral':
 				#积分
-				member.consume_integral(-int(scratch_prize['prize_data']), u'参与抽奖，抽中积分奖项')
+				member.consume_integral(-int(scratch_prize['prize_data']), u'参与刮奖，抽中积分奖项')
 				scratch_prize_data = scratch_prize['prize_data']
 				prize_value = u'%s积分' % scratch_prize_data
 				scratch_prize_dict[temp_prize_title]['prize_count'] = int(scratch_prize_dict[temp_prize_title]['prize_count']) - 1
@@ -261,9 +261,9 @@ class scratch_prize(resource.Resource):
 
 		#根据送积分规则，查询当前用户是否已中奖
 		if delivery_setting == 'false':
-			member.consume_integral(-delivery, u'参与抽奖，获得参与积分')
+			member.consume_integral(-delivery, u'参与刮奖，获得参与积分')
 		elif not scratch_participance.has_prize and not has_prize:
-			member.consume_integral(-delivery, u'参与抽奖，获得参与积分')
+			member.consume_integral(-delivery, u'参与刮奖，获得参与积分')
 
 		if has_prize:
 			scratch_participance.update(**{"set__has_prize":has_prize, "inc__total_count":1})
