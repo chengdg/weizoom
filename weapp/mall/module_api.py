@@ -2177,9 +2177,8 @@ def get_order_products(order):
 		product['supplier_user_length'] = supplier_user_ids.count(product['supplier_user_id'])
 
 	def __sorted_by_supplier(s):
-		return (s['supplier'], s['supplier_user_length'])
-	sorted(products, key=__sorted_by_supplier)  # 相同supplier排到一起
-
+		return "%d-%d" % (s['supplier'], s['supplier_user_id'])
+	products = sorted(products, key=__sorted_by_supplier)  # 相同supplier排到一起
 	return products
 
 
