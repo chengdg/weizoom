@@ -616,7 +616,7 @@ def __Update_Egg(context,text,page_id,egg_id):
 	page = 1
 	enable_paginate = 1
 
-	rec_egg_url ="/apps/egg/api/lotteries/?design_mode={}&version={}&count_per_page={}&page={}&enable_paginate={}".format(design_mode,version,count_per_page,page,enable_paginate)
+	rec_egg_url ="/apps/egg/api/eggs/?design_mode={}&version={}&count_per_page={}&page={}&enable_paginate={}".format(design_mode,version,count_per_page,page,enable_paginate)
 	rec_egg_response = context.client.get(rec_egg_url)
 
 def __Delete_egg(context,egg_id):

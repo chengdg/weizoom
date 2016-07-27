@@ -226,7 +226,7 @@ Scenario:3 会员参加砸金蛋活动，抽奖限制为一人一次
 
 	When 清空浏览器
 	When bill参加砸金蛋活动'砸金蛋抽奖'
-	Then bill获得砸金蛋错误提示'您今天的抽奖机会已经用完~'
+	Then bill获得砸金蛋错误提示'您今天的砸金蛋机会已经用完~'
 
 	When tom关注jobs的公众号
 	When tom参加砸金蛋活动'砸金蛋抽奖'
@@ -236,7 +236,7 @@ Scenario:3 会员参加砸金蛋活动，抽奖限制为一人一次
 	When bill取消关注jobs的公众号
 	When bill点击tom分享的砸金蛋活动'砸金蛋抽奖'的活动链接
 	When bill参加砸金蛋活动'砸金蛋抽奖'
-	Then bill获得砸金蛋错误提示'您今天的抽奖机会已经用完~'
+	Then bill获得砸金蛋错误提示'您今天的砸金蛋机会已经用完~'
 
 @mall2 @apps @apps_egg @users_participate_egg
 Scenario:4 会员参加砸金蛋活动，抽奖限制为一天两次
@@ -288,7 +288,7 @@ Scenario:4 会员参加砸金蛋活动，抽奖限制为一天两次
 
 	When 清空浏览器
 	When bill参加砸金蛋活动'砸金蛋抽奖'
-	Then bill获得砸金蛋错误提示'您今天的抽奖机会已经用完~'
+	Then bill获得砸金蛋错误提示'您今天的砸金蛋机会已经用完~'
 
 #补充：张雪 2015.12.02 (目前不存在概率为0的场景)
 #@mall2 @apps @apps_lottery @users_participate_lottery @apps_lottery_frontend
