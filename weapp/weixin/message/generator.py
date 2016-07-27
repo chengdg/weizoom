@@ -186,7 +186,7 @@ def get_news_response(from_user_name, to_user_name, newses, token):
 				nick_name = u''
 				if weixinusers.count() > 0:
 					weixinuser = weixinusers[0]
-					nick_name = weixinuser.nickname_for_html
+					nick_name = weixinuser.nick_name.decode('hex').decode('utf-8')
 				re_str = ur'\{\{u\}\}|｛｛u｝｝'
 				news.title = re.sub(re_str, nick_name, news.title)
 				news.summary = re.sub(re_str, nick_name, news.summary)
@@ -275,7 +275,8 @@ def get_text_response(from_user_name, to_user_name, content, token, user_profile
 			nick_name = u''
 			if weixinusers.count() > 0:
 				weixinuser = weixinusers[0]
-				nick_name = weixinuser.nickname_for_html
+				nick_name = weixinuser.nick_name.decode('hex').decode('utf-8')
+				# nick_name = weixinuser.nickname_for_html
 			re_str = ur'\{\{u\}\}|｛｛u｝｝'
 			content = re.sub(re_str, nick_name, content)
 			# content = content.replace('{{username}}', nick_name)

@@ -190,7 +190,7 @@ class RealtimeMessages(resource.Resource):
                             #文本消息
                             #如果是weshop或weizoomjx帐号，title,Description的替换
                             if request.user.username in NEWS_TEXT_USERNAME:
-                                nick_name = session.weixin_user.nickname_for_html
+                                nick_name = session.weixin_user.nick_name.decode('hex').decode('utf-8')
                                 re_str = ur'\{\{u\}\}|｛｛u｝｝'
                                 answer = re.sub(re_str, nick_name, answer)
                                 # answer = answer.replace('{{username}}', nick_name)
@@ -201,7 +201,7 @@ class RealtimeMessages(resource.Resource):
                             newses = weixin_module_api.get_material_news_info(material_id)
                             #如果是weshop或weizoomjx帐号，title,Description的替换
                             if request.user.username in NEWS_TEXT_USERNAME:
-                                nick_name = session.weixin_user.nickname_for_html
+                                nick_name = session.weixin_user.nick_name.decode('hex').decode('utf-8')
                                 for news in newses:
                                     re_str = ur'\{\{u\}\}|｛｛u｝｝'
                                     news.title = re.sub(re_str, nick_name, news.title)
