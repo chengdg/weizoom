@@ -468,9 +468,19 @@ Scenario: 4 发送优惠券总数超出优惠券库存
 		}
 		"""
 
-@promotion @promotionSendCoupon
+@mall2 @promotion @promotionSendCoupon
 Scenario: 5 给用户发放'仅未下单用户可领取'的优惠券
 	Given jobs登录系统
+	And jobs已添加支付方式
+		"""
+		[{
+			"type": "微众卡支付"
+		}, {
+			"type": "货到付款"
+		}, {
+			"type": "微信支付"
+		}]
+		"""
 	And jobs已添加了优惠券规则
 		"""
 		[{
@@ -481,7 +491,7 @@ Scenario: 5 给用户发放'仅未下单用户可领取'的优惠券
 			"is_no_order_user":"true",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"coupon_id_prefix": "coupon3_id_",
+			"coupon_id_prefix": "coupon5_id_",
 			"coupon_product": "商品1"
 		},{
 			"name": "未下单用户全体券",
@@ -532,14 +542,14 @@ Scenario: 5 给用户发放'仅未下单用户可领取'的优惠券
 					"name": "未下单用户单品券",
 					"count": 1,
 					"members": ["bill"],
-					"coupon_ids": ["coupon3_id_1"]
+					"coupon_ids": ["coupon5_id_1"]
 				}
 				"""
 			When bill访问jobs的webapp
 			Then bill能获得webapp优惠券列表
 				"""
 				[{
-					"coupon_id": "coupon3_id_1",
+					"coupon_id": "coupon5_id_1",
 					"money": 10.00,
 					"status": "未使用"
 				}]
@@ -581,7 +591,7 @@ Scenario: 5 给用户发放'仅未下单用户可领取'的优惠券
 					"name": "未下单用户单品券",
 					"count": 1,
 					"members": ["tom"],
-					"coupon_ids": ["coupon3_id_2"]
+					"coupon_ids": ["coupon5_id_2"]
 				}
 				"""
 			When tom访问jobs的webapp
@@ -636,7 +646,7 @@ Scenario: 5 给用户发放'仅未下单用户可领取'的优惠券
 					"name": "未下单用户单品券",
 					"count": 1,
 					"members": ["tom1"],
-					"coupon_ids": ["coupon3_id_2"]
+					"coupon_ids": ["coupon5_id_2"]
 				}
 				"""
 			When tom1访问jobs的webapp
@@ -693,7 +703,7 @@ Scenario: 5 给用户发放'仅未下单用户可领取'的优惠券
 					"name": "未下单用户单品券",
 					"count": 1,
 					"members": ["tom2"],
-					"coupon_ids": ["coupon3_id_2"]
+					"coupon_ids": ["coupon5_id_2"]
 				}
 				"""
 			When tom2访问jobs的webapp
@@ -752,14 +762,14 @@ Scenario: 5 给用户发放'仅未下单用户可领取'的优惠券
 					"name": "未下单用户单品券",
 					"count": 1,
 					"members": ["tom3"],
-					"coupon_ids": ["coupon3_id_2"]
+					"coupon_ids": ["coupon5_id_2"]
 				}
 				"""
 			When tom3访问jobs的webapp
 			Then tom3能获得webapp优惠券列表
 				"""
 				[{
-					"coupon_id": "coupon3_id_2",
+					"coupon_id": "coupon5_id_2",
 					"money": 10.00,
 					"status": "未使用"
 				}]
@@ -774,24 +784,25 @@ Scenario: 5 给用户发放'仅未下单用户可领取'的优惠券
 					"name": "未下单用户单品券",
 					"count": 1,
 					"members": ["tom3"],
-					"coupon_ids": ["coupon3_id_3"]
+					"coupon_ids": ["coupon5_id_3"]
 				}
 				"""
 			When tom3访问jobs的webapp
 			Then tom3能获得webapp优惠券列表
 				"""
 				[{
-					"coupon_id": "coupon3_id_2",
+					"coupon_id": "coupon5_id_2",
 					"money": 10.00,
 					"status": "未使用"
 				},{
-					"coupon_id": "coupon3_id_3",
+					"coupon_id": "coupon5_id_3",
 					"money": 10.00,
 					"status": "未使用"
 				}]
 				"""
 
 		#已取消订单用户，可以领取优惠券
+			Given tom4关注jobs的公众号
 			When tom4访问jobs的webapp::apiserver
 			When tom4购买jobs的商品::apiserver
 				"""
@@ -828,14 +839,14 @@ Scenario: 5 给用户发放'仅未下单用户可领取'的优惠券
 					"name": "未下单用户单品券",
 					"count": 1,
 					"members": ["tom4"],
-					"coupon_ids": ["coupon3_id_4"]
+					"coupon_ids": ["coupon5_id_4"]
 				}
 				"""
 			When tom4访问jobs的webapp
 			Then tom4能获得webapp优惠券列表
 				"""
 				[{
-					"coupon_id": "coupon3_id_4",
+					"coupon_id": "coupon5_id_4",
 					"money": 10.00,
 					"status": "未使用"
 				}]
@@ -846,7 +857,7 @@ Scenario: 5 给用户发放'仅未下单用户可领取'的优惠券
 		When jobs创建优惠券发放规则发放优惠券
 			"""
 			{
-				"name": "未下单用户单品券",
+				"name": "未下单用户全体券",
 				"count": 1,
 				"members": ["bill","tom","tom1","tom2","tom3","tom4"],
 				"coupon_ids": ["coupon4_id_1","coupon4_id_2","coupon4_id_3","coupon4_id_4","coupon4_id_5","coupon4_id_6"]
@@ -860,7 +871,7 @@ Scenario: 5 给用户发放'仅未下单用户可领取'的优惠券
 				"money": 100.00,
 				"status": "未使用"
 			},{
-				"coupon_id": "coupon3_id_1",
+				"coupon_id": "coupon5_id_1",
 				"money": 10.00,
 				"status": "未使用"
 			}]
@@ -892,11 +903,11 @@ Scenario: 5 给用户发放'仅未下单用户可领取'的优惠券
 				"money": 100.00,
 				"status": "未使用"
 			},{
-				"coupon_id": "coupon3_id_3",
+				"coupon_id": "coupon5_id_3",
 				"money": 10.00,
 				"status": "未使用"
 			},{
-				"coupon_id": "coupon3_id_2",
+				"coupon_id": "coupon5_id_2",
 				"money": 10.00,
 				"status": "未使用"
 			}]
@@ -910,7 +921,7 @@ Scenario: 5 给用户发放'仅未下单用户可领取'的优惠券
 				"money": 100.00,
 				"status": "未使用"
 			},{
-				"coupon_id": "coupon3_id_4",
+				"coupon_id": "coupon5_id_4",
 				"money": 10.00,
 				"status": "未使用"
 			}]
@@ -935,7 +946,7 @@ Scenario: 5 给用户发放'仅未下单用户可领取'的优惠券
 				"money": 100.00,
 				"status": "未使用"
 			},{
-				"coupon_id": "coupon3_id_1",
+				"coupon_id": "coupon5_id_1",
 				"money": 10.00,
 				"status": "未使用"
 			}]

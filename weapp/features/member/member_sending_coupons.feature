@@ -40,6 +40,16 @@ Feature: 群发优惠券
 
 Background:
 	Given jobs登录系统
+	And jobs已添加支付方式
+		"""
+		[{
+			"type": "微众卡支付"
+		}, {
+			"type": "货到付款"
+		}, {
+			"type": "微信支付"
+		}]
+		"""
 	And jobs已添加商品
 		"""
 		[{
@@ -730,7 +740,7 @@ Scenario:3 给筛选出会员发送优惠券
 			}
 			"""
 
-@memberList @promotionCoupon
+@mall2 @memberList @promotionCoupon 
 Scenario:4 给部分会员发放'仅未下单用户可领取的'优惠券
 	Given jobs登录系统
 	And jobs已添加了优惠券规则
@@ -738,17 +748,18 @@ Scenario:4 给部分会员发放'仅未下单用户可领取的'优惠券
 		[{
 			"name": "未下单用户全体券",
 			"money": 100.00,
-			"each_limit": "1",
-			"limit_counts": 10,
+			"limit_counts": "1",
+			"count": 10,
 			"is_no_order_user":"true",
 			"start_date": "今天",
 			"end_date": "2天后",
 			"using_limit": "满50元可以使用",
-			"coupon_id_prefix": "coupon4_id_"
+			"coupon_id_prefix": "coupon6_id_"
 		}]
 		"""
 	#给存在不同订单状态的用户发放优惠券
 		#未支付订单用户，可以领取优惠券
+			And bill关注jobs的公众号
 			When bill访问jobs的webapp::apiserver
 			When bill购买jobs的商品::apiserver
 				"""
@@ -933,24 +944,6 @@ Scenario:4 给部分会员发放'仅未下单用户可领取的'优惠券
 			
 			When jobs'申请退款'订单'005'
 
-			When jobs创建优惠券发放规则发放优惠券
-				"""
-				{
-					"name": "未下单用户单品券",
-					"count": 1,
-					"members": ["tom3"],
-					"coupon_ids": ["coupon3_id_2"]
-				}
-				"""
-			When tom3访问jobs的webapp
-			Then tom3能获得webapp优惠券列表
-				"""
-				[{
-					"coupon_id": "coupon3_id_2",
-					"money": 10.00,
-					"status": "未使用"
-				}]
-				"""
 
 			Given jobs登录系统
 			When jobs通过财务审核'退款成功'订单'005'
@@ -1054,14 +1047,14 @@ Scenario:4 给部分会员发放'仅未下单用户可领取的'优惠券
 			[{
 				"modification_method":"给选中的人发优惠券(已取消关注的除外)",
 				"coupon_name":"未下单用户全体券",
-				"count":2
+				"count":1
 			}]
 			"""
 		When bill访问jobs的webapp
 		Then bill能获得webapp优惠券列表
 			"""
 			[{
-				"coupon_id": "coupon4_id_1",
+				"coupon_id": "coupon6_id_1",
 				"money": 100.00,
 				"status": "未使用"
 			}]
@@ -1089,7 +1082,7 @@ Scenario:4 给部分会员发放'仅未下单用户可领取的'优惠券
 		Then tom3能获得webapp优惠券列表
 			"""
 			[{
-				"coupon_id": "coupon4_id_2",
+				"coupon_id": "coupon6_id_2",
 				"money": 100.00,
 				"status": "未使用"
 			}]
@@ -1099,7 +1092,7 @@ Scenario:4 给部分会员发放'仅未下单用户可领取的'优惠券
 		Then tom4能获得webapp优惠券列表
 			"""
 			[{
-				"coupon_id": "coupon4_id_3",
+				"coupon_id": "coupon6_id_3",
 				"money": 100.00,
 				"status": "未使用"
 			}]
@@ -1108,9 +1101,5 @@ Scenario:4 给部分会员发放'仅未下单用户可领取的'优惠券
 		When tom5访问jobs的webapp
 		Then tom5能获得webapp优惠券列表
 			"""
-			[{
-				"coupon_id": "coupon4_id_4",
-				"money": 100.00,
-				"status": "未使用"
-			}]
+			[]
 			"""

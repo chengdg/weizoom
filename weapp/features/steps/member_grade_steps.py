@@ -152,7 +152,13 @@ def step_impl(context, user):
 
     url = "/mall2/api/issuing_coupons_record/?_method=put"
     if data['modification_method'] == '给选中的人发优惠券(已取消关注的除外)':
-        args['member_id'] = json.dumps([m.id for m in Member.objects.filter(id__in=context.member_ids) if m.is_subscribed == 1])
+        # args['member_id'] = json.dumps([m.id for m in Member.objects.filter(id__in=context.member_ids) if m.is_subscribed == 1])
+        not_subscribe_member_ids = [m.id for m in Member.objects.filter(id__in=context.member_ids) if m.is_subscribed == 0]
+        subscribe_member_ids = context.member_ids
+        subscribe_member_ids = [ int(id) for id in subscribe_member_ids]
+        for member_id in not_subscribe_member_ids:
+            subscribe_member_ids.remove(member_id)
+        args['member_id'] = json.dumps(subscribe_member_ids)
         context.member_ids = args['member_id']
     elif data['modification_method'] == '给筛选出来的所有人发优惠券(已取消关注的除外)':
         response = context.client.get('/member/api/member_list/?count_per_page=999999999999'+context.filter_str)

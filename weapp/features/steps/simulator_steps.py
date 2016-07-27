@@ -153,6 +153,8 @@ def step_impl(context, user, mp_user_name, date):
 
 @when(u"{webapp_user_name}访问{webapp_owner_name}的webapp")
 def step_impl(context, webapp_user_name, webapp_owner_name):
+	if not hasattr(context, 'client'):
+		context.client = bdd_util.login(webapp_owner_name)
 	client = context.client
 	openid = '%s_%s' % (webapp_user_name, webapp_owner_name)
 	context.openid = openid

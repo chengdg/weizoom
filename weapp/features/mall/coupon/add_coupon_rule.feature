@@ -326,7 +326,7 @@ Scenario:5 添加优惠券规则,包含备注信息
 
 #补充:张三香 2016.07.14
 
-@promotion @promotionCoupon
+@promotion @promotionCoupon @mall2
 Scenario:6 添加优惠券规则-仅限未下单用户可领取
 	Given jobs登录系统
 	When jobs添加优惠券规则
