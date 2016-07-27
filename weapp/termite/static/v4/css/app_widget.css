@@ -2800,4 +2800,10 @@ li.wui-selectBox-display-table {
 .wui-scratchContainer .wui-i-cardContainer{
 	display: none;
 }
+.wui-scratchDescription .wui-i-cardInfo{
+	display: none;
+}
+.wui-scratchDescription canvas{
+	display: none;
+}
 /*百宝箱 scratch CSS ---- end */
