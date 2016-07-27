@@ -37,12 +37,12 @@ class Megg(resource.Resource):
 			project_id = id
 			activity_status = u"未开始"
 		else:
-			# if not is_pc:
+			if not is_pc:
 				#从redis缓存获取静态页面
-				# cache_data = GET_CACHE(cache_key)
-				# if cache_data:
-				# 	print 'redis---return'
-				# 	return HttpResponse(cache_data)
+				cache_data = GET_CACHE(cache_key)
+				if cache_data:
+					print 'redis---return'
+					return HttpResponse(cache_data)
 
 			try:
 				record = app_models.Egg.objects.get(id=id)
@@ -76,8 +76,8 @@ class Megg(resource.Resource):
 			'share_img_url': thumbnails_url
 		})
 		response = render_to_string('egg/templates/webapp/m_egg.html', c)
-		# if not is_pc:
-		# 	SET_CACHE(cache_key, response)
+		if not is_pc:
+			SET_CACHE(cache_key, response)
 		return HttpResponse(response)
 
 
