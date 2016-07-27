@@ -202,8 +202,10 @@ def sorted_products(mall_type, manager_id, product_categories, reverse):
                     product.shelve_type = models.PRODUCT_SHELVE_TYPE_OFF
                     status = u'待售'
                 elif status_pool == models.PP_STATUS_DELETE:
+                    product.shelve_type = models.PRODUCT_SHELVE_TYPE_OFF
                     status = u'已删除'
                 else:
+                    product.shelve_type = models.PRODUCT_SHELVE_TYPE_OFF
                     status = u'商品池中'
             else:
                 status = product.status
@@ -222,7 +224,10 @@ def sorted_products(mall_type, manager_id, product_categories, reverse):
                 products.append(product)
 
         products_is_0 = filter(lambda p: p.display_index == 0 or p.shelve_type != models.PRODUCT_SHELVE_TYPE_ON, products)
-        products_not_0 = filter(lambda p: p.display_index != 0, products)
+        if mall_type:
+            products_not_0 = filter(lambda p: p.display_index != 0 and p.shelve_type == models.PRODUCT_SHELVE_TYPE_ON, products)
+        else:
+            products_not_0 = filter(lambda p: p.display_index != 0, products)
         products_is_0 = sorted(products_is_0, key=attrgetter('shelve_type', 'join_category_time', 'id'), reverse=True)
         products_not_0 = sorted(products_not_0, key=attrgetter('display_index'))
         products = products_not_0 + products_is_0

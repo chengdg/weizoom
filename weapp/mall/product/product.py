@@ -112,7 +112,6 @@ class ProductList(resource.Resource):
         if not sort_attr:
             sort_attr = '-display_index'
 
-        print "1>>>>>>>"*10
         #处理商品分类
         product_pool2display_index = {}
         if _type == 'offshelf':
@@ -122,7 +121,6 @@ class ProductList(resource.Resource):
             if mall_type:
                 product_pool = models.ProductPool.objects.filter(woid=request.manager.id, status=models.PP_STATUS_OFF)
                 product_pool2display_index = dict([(pool.product_id, pool.display_index) for pool in product_pool])
-            print "2222"*10,products
             # products = models.Product.objects.filter(
             #     owner=request.manager,
             #     shelve_type=models.PRODUCT_SHELVE_TYPE_OFF,
