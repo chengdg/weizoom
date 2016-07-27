@@ -277,13 +277,11 @@
                 }
 
             });
-            this.$moreChanceBtn.on('click',function(){
+            this.$el.find('.xa-closeDialog').on('click',function(){
                 $('.wui-i-eggBroken').hide();
                 $('.wui-i-egg').show();
                 flag = false;
                 canShake = 1;
-            });
-            this.$el.find('.xa-closeDialog').on('click',function(){
                 that.close();
             });
         }
@@ -361,6 +359,9 @@
         }
 
         function initLottery(){
+                // $('.wa-egg').bind('click',function(){
+                //     doResult();
+                // });
             resultDialog = new ResultDialog();
             canShake = 1;
             SHAKE_THRESHOLD = 3000;
@@ -370,10 +371,7 @@
             if (window.DeviceMotionEvent) {
                 window.addEventListener('devicemotion', deviceMotionHandler, false);
             } else {
-                wuiAlert('您的手机不支持摇一摇！');
-                $('.wa-egg').bind('click',function(){
-                    doResult();
-                });
+                wuiAlert('您的手机不支持摇一摇！请点击金蛋');
             }         
         }
 
