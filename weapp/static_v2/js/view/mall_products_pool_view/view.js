@@ -8,14 +8,15 @@ Copyright (c) 2011-2012 Weizoom Inc
  */
 ensureNS('W.view.mall');
 W.view.mall.ProductsPoolView = Backbone.View.extend({
-    // getModelInfoTemplate: function() {
-    //     $('#mall-product-list-view-model-info-tmpl-src').template('mall-product-list-view-model-info-tmpl');
-    //     return 'mall-product-list-view-model-info-tmpl';
-    // },
+    getModelInfoTemplate: function() {
+        $('#mall-product-pool-view-model-info-tmpl-src').template('mall-product-pool-view-model-info-tmpl');
+        return 'mall-product-pool-view-model-info-tmpl';
+    },
 
     initialize: function(options) {
         this.$el = $(this.el);
         this.options = options || {};
+        this.modelInfoTemplate = this.getModelInfoTemplate();
         this.table = this.$('[data-ui-role="pool-advanced-table"]').data('view');
     },
 
@@ -24,7 +25,8 @@ W.view.mall.ProductsPoolView = Backbone.View.extend({
         'click .xa-batchOffshelf': 'onClickBatchAddOffShelf',
         'click .xa-update': 'onClickUpdateBtn',
         'click .xa-offshelf': 'onClickCreateProductOffShelf',
-        'click .xa-selectAll':'onClickSelectAll'
+        'click .xa-selectAll':'onClickSelectAll',
+        'click .xa-showAllModels': 'onClickShowAllModelsButton'
     },
 
     render: function() {
@@ -149,6 +151,25 @@ W.view.mall.ProductsPoolView = Backbone.View.extend({
                 })
             }
         })
+    },
+    /**
+     * onClickShowAllModelsButton: 鼠标点击“查看规格”区域的响应函数
+     */
+    onClickShowAllModelsButton: function(event) {
+        var $target = $(event.currentTarget);
+        var $tr = $target.parents('tr');
+        var id = $tr.data('id');
+        var product = this.table.getDataItem(id);
+        var models = product.get('models');
+        console.log(models);
+        var properties = _.pluck(models[0].property_values, 'propertyName');
+        var $node = $.tmpl(this.modelInfoTemplate, {properties: properties, models: models});
+        W.popup({
+            $el: $target,
+            position:'top',
+            isTitle: false,
+            msg: $node
+        });
     },
 });
 W.view.mall.ProductsPoolTable = W.view.common.AdvancedTable.extend({

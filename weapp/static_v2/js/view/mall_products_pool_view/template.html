@@ -1,4 +1,4 @@
-<script id="mall-product-list-view-model-info-tmpl-src" type="text/x-jquery-tmpl">
+<script id="mall-product-pool-view-model-info-tmpl-src" type="text/x-jquery-tmpl">
 <table class="table xb-noTdBorder xb-bottomBorder" style="margin-bottom: 0px;">
 	<thead>
 		<tr>
@@ -8,6 +8,7 @@
 			<th>价格（元）</th>
 			<th>库存</th>
 			<th>商品编码</th>
+			<th>商品毛利</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -19,6 +20,7 @@
 			<td>${model.price}</th>
 			<td>{{if (model.stock_type == 0)}}无限{{else}}${model.stocks}{{/if}}</th>
 			<td>${model.user_code}</th>
+			<td>${model.gross_profit}</th>
 		</tr>
 		{{/each}}
 	</tbody>

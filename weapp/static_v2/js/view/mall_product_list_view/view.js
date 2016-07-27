@@ -294,7 +294,7 @@ W.view.mall.ProductListView = Backbone.View.extend({
                     }
 
                     var sortedModels = _.sortBy(models, function(model) {
-                        return model.price*1; 
+                        return model.price*1;
                     });
                     if(sortedModels[0].price == sortedModels[sortedModels.length-1].price){
                         $td.find('.xa-priceText').text(Number(sortedModels[0].price).toFixed(2));
@@ -632,7 +632,7 @@ W.registerUIRole('div[data-ui-role="products-advanced-table"]', function() {
     var outerSelecter = $div.data('outer-selecter');
 
     var selectableTrSelector = $div.data('selecttableTr');
-    
+
     var advancedTable = new W.view.mall.offshelfProductsTable({
         el: $div[0],
         template: template,

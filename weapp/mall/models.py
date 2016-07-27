@@ -409,7 +409,8 @@ class Product(models.Model):
 				"stock_type": model.stock_type,
 				"stocks": model.stocks if model.stock_type == PRODUCT_STOCK_TYPE_LIMIT else u'无限',
 				"user_code": model.user_code,
-				"market_price": '%.2f' % model.market_price}
+				"market_price": '%.2f' % model.market_price,
+				"gross_profit": '%.2f' % (model.price - model.purchase_price)}
 
 			'''
 			获取model关联的property信息
@@ -664,6 +665,10 @@ class Product(models.Model):
 
 			#TODO bert prodcut_pool 增加默认商品规格 owner
 			properties = ProductModelProperty.objects.filter(
+				owner=webapp_owner)
+
+			#TODO bert prodcut_pool 增加默认商品规格 owner
+			properties = ProductModelProperty.objects.filter(
 					owner=webapp_owner)
 			property_ids = [property.id for property in properties]
 			id2property = dict([(str(property.id), property)
@@ -835,8 +840,8 @@ class Product(models.Model):
 			except:
 				model = None
 			product = self
-			if model:			
-				
+			if model:
+
 				product.price = model.price
 				product.weight = model.weight
 				product.stock_type = model.stock_type
@@ -851,7 +856,7 @@ class Product(models.Model):
 				if model.is_deleted:
 					product.is_model_deleted = True
 				#raise ValueError("product model is deleted: %s" % model_name)
-				
+
 			else:
 				product.price = product.price
 				product.weight = product.weight
@@ -1315,6 +1320,7 @@ class ProductModel(models.Model):
 	is_standard = models.BooleanField(default=True)  # 是否是标准规格
 	price = models.FloatField(default=0.0)  # 商品价格
 	market_price = models.FloatField(default=0.0)  # 商品市场价格
+	purchase_price = models.FloatField(default=0.0)  # 商品结算价格
 	weight = models.FloatField(default=0.0)  # 重量
 	stock_type = models.IntegerField(
 		default=PRODUCT_STOCK_TYPE_UNLIMIT)  # 0:无限 1:有限

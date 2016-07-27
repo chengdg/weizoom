@@ -357,11 +357,11 @@ class ProductList(resource.Resource):
 
             prev_shelve_type = models.Product.objects.get(
                 id=ids[0]).shelve_type
-            
-            
 
 
-            
+
+
+
 
             products = models.Product.objects.filter(owner=request.manager, id__in=ids)
             product_id2product = {}
@@ -451,10 +451,9 @@ class ProductPool(resource.Resource):
 
         manager_user_profile = UserProfile.objects.filter(webapp_type=2)[0]
         product_pool = models.ProductPool.objects.filter(woid=request.manager.id, status=models.PP_STATUS_ON_POOL)
-        
+
         product_ids = [pool.product_id for pool in product_pool]
         products = models.Product.objects.filter(id__in=product_ids)
-
 
 
         if supplier_name:
@@ -483,7 +482,7 @@ class ProductPool(resource.Resource):
         #products = all_mall_product.filter(id__in=standard_model_product_ids)
         models.Product.fill_details(request.manager, products, {
             "with_product_model": True,
-            "with_model_property_info": False,
+            "with_model_property_info": True,
             "with_selected_category": True,
             'with_image': False,
             'with_property': True,
@@ -546,7 +545,7 @@ class ProductPool(resource.Resource):
 
         items = []
         for product in products:
-            
+
             # if (mall_product_id2weizoom_product_id.has_key(product['id']) and
             #     product_id2relation.has_key(mall_product_id2weizoom_product_id[product['id']]) and
             #     product_id2relation[mall_product_id2weizoom_product_id[product['id']]].promotion.status in [promotion_model.PROMOTION_STATUS_STARTED, promotion_model.PROMOTION_STATUS_NOT_START]):
@@ -560,8 +559,8 @@ class ProductPool(resource.Resource):
             #     product_has_group = 0
             # product = product.to_dict()
             # print ">>>>>>>>>>>>>>price", product
-            # product = product.to_dict()
-            product.fill_standard_model()
+            # product = product.to_dict()zai
+            # product.fill_standard_model()
 
 
             items.append({
@@ -575,6 +574,8 @@ class ProductPool(resource.Resource):
                 'store_name': supplier_ids2name.get(product.supplier, product.supplier),#user_id2userprofile[product['owner_id']].store_name,
                 'stocks': product.stocks,
                 'price':product.price,
+                'is_use_custom_model': product.is_use_custom_model,
+                'models': product.models[1:]
                # 'sync_time': mall_product_id2relation[product['id']].sync_time.strftime('%Y-%m-%d %H:%M') if mall_product_id2relation.has_key(product['id']) else ''
             })
 
@@ -828,7 +829,7 @@ class Product(resource.Resource):
         if mall_type and not has_product_id and request.manager.username not in ['weshop', 'weizoomjx']:
             return HttpResponseRedirect(
             '/mall2/product_pool/')
-        
+
         has_store_name = False
         store_name = ''
 
@@ -1510,7 +1511,7 @@ class ProductPos(resource.Resource):
             id = request.POST.get('id')
             pos = int(request.POST.get('pos'))
             mall_type = request.user_profile.webapp_type
-            
+
             if mall_type and models.ProductPool.objects.filter(woid=request.manager.id, product_id=id).count():
                 models.ProductPool.objects.filter(woid=request.manager.id, product_id=id).update(display_index=pos)
             elif request.POST.get('update_type', '') == 'update_pos':
