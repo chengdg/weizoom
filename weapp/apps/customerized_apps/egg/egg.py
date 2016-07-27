@@ -107,7 +107,7 @@ class Egg(resource.Resource):
 		data = request_util.get_fields_to_be_save(request)
 		data = add_extra_data(data, request.POST)
 		update_data = {}
-		update_fields = set(['name', 'start_time', 'end_time', 'expend', 'delivery', 'delivery_setting', 'limitation', 'chance', 'type', 'prize'])
+		update_fields = set(['name', 'start_time', 'end_time', 'allow_repeat', 'expend', 'delivery', 'delivery_setting', 'limitation', 'chance', 'type', 'prize'])
 		for key, value in data.items():
 			if key in update_fields:
 				update_data['set__'+key] = value
