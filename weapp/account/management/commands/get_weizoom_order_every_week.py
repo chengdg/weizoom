@@ -57,6 +57,7 @@ class Command(BaseCommand):
 	args = ''
 	
 	def handle(self,*args, **options):
+			print args
 
 			week_day = datetime.now().weekday()
 			current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -64,12 +65,13 @@ class Command(BaseCommand):
 			last_week_days = []
 			#获取上周的时间(多取1天的时间，最后1天为本周1)
 			for i in xrange(8):
-				date = (datetime.now()-timedelta(week_day-i)).strftime(DATE_FORMAT)
+				date = (datetime.now()-timedelta(week_day-i+7)).strftime(DATE_FORMAT)
 				last_week_days.append(date)
 
 			nick_names = [u'微众商城', u'微众家', u'微众妈妈', u'微众学生', u'微众白富美', u'微众俱乐部']
+			# nick_names = [u'微众商城']
 
-			heads = [u'总订单', u'首单', u'复购' ]
+			heads = [u'总订单', u'首单', u'复购', u'客单价' ]
 			tmp_line= 1
 			head_lists = []
 			for last_week_day in last_week_days[:7]:
@@ -91,10 +93,20 @@ class Command(BaseCommand):
 				webapp_id = UserProfile.objects.filter(user_id=user_id)[0].webapp_id
 				statistics_days = [nick_name]
 				for i in xrange(7):
-					orders_total_count = Order.objects.filter(webapp_id=webapp_id, created_at__gte=last_week_days[i], created_at__lt=last_week_days[i+1], status__in=[2,3,4,5], origin_order_id__lte=0).count()
+					orders_total = Order.objects.filter(webapp_id=webapp_id, created_at__gte=last_week_days[i], created_at__lt=last_week_days[i+1], status__in=[2,3,4,5], origin_order_id__lte=0)
+					orders_total_count = orders_total.count()
 					orders_first_count = Order.objects.filter(webapp_id=webapp_id, created_at__gte=last_week_days[i], created_at__lt=last_week_days[i+1], status__in=[2,3,4,5], is_first_order=True, origin_order_id__lte=0).count()
 					orders_not_first_count = Order.objects.filter(webapp_id=webapp_id, created_at__gte=last_week_days[i], created_at__lt=last_week_days[i+1], status__in=[2,3,4,5], is_first_order=False, origin_order_id__lte=0).count()
-					statistics_days.extend([orders_total_count, orders_first_count, orders_not_first_count])
+					paid_amount = 0.0
+					for order in orders_total:
+						tmp_paid_amount = order.final_price + order.weizoom_card_money
+						paid_amount += tmp_paid_amount
+					if orders_total_count>0:
+						unit_price = paid_amount/orders_total_count
+						unit_price_float = '%.2f' % unit_price
+					else:
+						unit_price_float = 0.00
+					statistics_days.extend([orders_total_count, orders_first_count, orders_not_first_count, unit_price_float])
 
 				table.write_row('A{}'.format(tmp_line), statistics_days)
 
@@ -110,6 +122,9 @@ class Command(BaseCommand):
 			smtp_server = 'smtp.qq.com'
 			# 输入收件人地址:
 			receivers = ['891470084@qq.com', 'houtingfei@weizoom.com', 'zhangzhiyong@weizoom.com', 'guoyucheng@weizoom.com']
+			if len(args) == 1:
+				if args[0] == 'test':
+					receivers = ['891470084@qq.com']
 
 			to_addr = ';'.join(receivers)
 
