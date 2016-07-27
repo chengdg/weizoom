@@ -354,14 +354,15 @@
         var flag = false;
         if(!W.isPC){
             $(function(){
+                if (!W.isMember) {
+                    showQrcode(W.qrcodeUrl);
+                    return;
+                }
                 getDynamicData();
             });
         }
 
         function initLottery(){
-                $('.wa-egg').bind('click',function(){
-                    doResult();
-                });
             resultDialog = new ResultDialog();
             canShake = 1;
             SHAKE_THRESHOLD = 3000;
@@ -372,6 +373,9 @@
                 window.addEventListener('devicemotion', deviceMotionHandler, false);
             } else {
                 wuiAlert('您的手机不支持摇一摇！请点击金蛋');
+                $('.wa-egg').bind('click',function(){
+                    doResult();
+                });
             }         
         }
 
@@ -483,8 +487,7 @@
                         resultDialog = resultDialog || new ResultDialog();
                         resultDialog.render({
                             'prize_type': data.prize_type,
-                            'prize_name': data.prize_name,
-                            'delay': true
+                            'prize_name': data.prize_name
                         });
                         afterStop(data);
                     },

@@ -263,7 +263,6 @@ W.component.appkit.ScratchDescription = W.component.Component.extend({
 				var $target_3 = $('#phoneIFrame').contents().find('.xa-prizeContainer .xa-time');
 				var $target_4 = $('#phoneIFrame').contents().find('.xa-prizeContainer .xa-description');
 				$target.css("background-color", value);
-				$target_2.css("background-color", value);
 				$target_3.css("border-top", "1px solid #e5e5e5");
 				$target_4.css("border-top", "1px solid #e5e5e5");
 			}

@@ -93,29 +93,43 @@
         color: #454545;
         background: white;
     }
-    .wui-scratchDescription .wui-sctatch-container{
+    .wui-scratchDescription .wui-i-cardContainer{
         position: relative;
-        width: 80%;
-        margin: 0 auto;
-        height: 100px;
-        background: red;
+        width: 92%;
+        height: 80px;
+        margin: 10px auto;
     }
-    .wui-scratchDescription .wui-sctatch-container .wui-sctatch-info{
+    .wui-scratchDescription .wui-i-cardContainer .wui-i-cardInfo{
         position: absolute;
         top: 0;
         left: 0;
         width: 100%;
-        height: 100px;
-        line-height: 100px;
+        height: 80px;
         text-align: center;
+        background: url('/termite_static/img/component/scratch/prize_bg.png') no-repeat;
+        background-size: cover;
     }
-    .wui-scratchDescription .wui-sctatch-container canvas{
+    .wui-scratchDescription .wui-i-cardContainer .wui-i-cardInfo h2{
+        height: 60px;
+        line-height: 80px;
+        color: #e5322e;
+        font-size: 24px;
+    }
+    .wui-scratchDescription .wui-i-cardContainer .wui-i-cardInfo > div{
+        text-align: right;
+        color: #2587cc;
+        padding-right: 5px;
+    }
+    .wui-scratchDescription .wui-i-cardContainer canvas{
         position: absolute;
         top: 0;
         left: 0; 
         width: 100%;  
-        height: 100px;   
+        height: 80px;   
         z-index: 2;
+    }
+    .wui-scratchDescription .wui-i-cardMask{
+        display: none;
     }
 </style>
 {% endblock %}
@@ -253,11 +267,11 @@
                 this.$closeBtn.hide();
             }else if(prize_type == 'timesout'){
                 this.$title.hide();
-                this.$contentHeader.html("您今天的抽奖机会已经用完，<br>明天再来吧~");
+                this.$contentHeader.html("您今天的刮刮卡机会已经用完，<br>明天再来吧~");
                 this.$closeBtn.hide();
             }else if(prize_type == 'notready'){
                 this.$title.html('请耐心等待').show();
-                this.$contentHeader.html("抽奖活动还未开始！");
+                this.$contentHeader.html("刮刮卡活动还未开始！");
                 this.$userCenter.show();
                 this.$closeBtn.hide();
             }
@@ -281,7 +295,14 @@
         var lottery_status, can_play_count, resultDialog, activity_status, prizeIndex;
         if(!W.isPC){
             $(function(){
+                // if (!W.isMember) {
+                //     showQrcode(W.qrcodeUrl);
+                //     return;
+                // }
                 getDynamicData();
+                $('.xa-retry').click(function(){
+                    window.location.reload();
+                })
             });
         }
 
@@ -289,52 +310,52 @@
             var scratch_card = new scratchCard();
             resultDialog = new ResultDialog();
 
-            $(".xa-lottery-go").click(function(){
-                var _that = this;
-                $(this).addClass('xa-lottery-go-to');
-                window.setTimeout(function(){
-                    $(_that).removeClass('xa-lottery-go-to');
-                }, 100);
-                if(lottery.isRolling || !lottery_status || can_play_count==0){
-                    if(lottery.isRolling) return false;
-                    if(activity_status == '未开始'){
-                        resultDialog.render({
-                            prize_type: 'notready'
-                        });
-                    }else if(activity_status == '已结束'){
-                        resultDialog.render({
-                            prize_type: 'gameover'
-                        });
-                    }else{
-                        resultDialog.render()
-                    }
-                    return false;
-                }else{
-                    W.getApi().call({
-                        app: 'm/apps/scratch',
-                        resource: 'scratch_prize',
-                        method: 'put',
-                        args:{
-                            id: W.appRecordId,
-                            webapp_owner_id: W.webappOwnerId
-                        },
-                        success: function(data){
-                            lottery.roll();
-                            lottery.stop(data);
-                        },
-                        error: function(error){
-                            if(error.errMsg == '奖品已抽光'){
-                                resultDialog.render({
-                                    prize_type: 'none',
-                                    prize_name: ''
-                                });
-                            }else{
-                                wuiAlert(error.errMsg);
-                            }
-                        }
-                    });
-                }
-            });
+            // $(".xa-lottery-go").click(function(){
+            //     var _that = this;
+            //     $(this).addClass('xa-lottery-go-to');
+            //     window.setTimeout(function(){
+            //         $(_that).removeClass('xa-lottery-go-to');
+            //     }, 100);
+            //     if(lottery.isRolling || !lottery_status || can_play_count==0){
+            //         if(lottery.isRolling) return false;
+            //         if(activity_status == '未开始'){
+            //             resultDialog.render({
+            //                 prize_type: 'notready'
+            //             });
+            //         }else if(activity_status == '已结束'){
+            //             resultDialog.render({
+            //                 prize_type: 'gameover'
+            //             });
+            //         }else{
+            //             resultDialog.render()
+            //         }
+            //         return false;
+            //     }else{
+            //         W.getApi().call({
+            //             app: 'm/apps/scratch',
+            //             resource: 'scratch_prize',
+            //             method: 'put',
+            //             args:{
+            //                 id: W.appRecordId,
+            //                 webapp_owner_id: W.webappOwnerId
+            //             },
+            //             success: function(data){
+            //                 lottery.roll();
+            //                 lottery.stop(data);
+            //             },
+            //             error: function(error){
+            //                 if(error.errMsg == '奖品已抽光'){
+            //                     resultDialog.render({
+            //                         prize_type: 'none',
+            //                         prize_name: ''
+            //                     });
+            //                 }else{
+            //                     wuiAlert(error.errMsg);
+            //                 }
+            //             }
+            //         });
+            //     }
+            // });
         }
         function getDynamicData(){
             loadingStatus(true);
@@ -409,13 +430,13 @@
                 this.c1.width = this.c1.clientWidth;  
                 this.c1.height = this.c1.clientHeight; 
                 this.bindEvent(); 
-                this.ctx.fillStyle = '#aaaaaa';
+                this.ctx.fillStyle = '#cccccc';
                 this.ctx.fillRect(0,0,this.c1.width,this.c1.height);  
                 this.ctx.fill();
                 this.ctx.font = 'Bold 30px Microsoft Yahei';
                 this.ctx.textAlign = 'center';
                 this.ctx.fillStyle = "#999999";
-                this.ctx.fillText("刮一刮",this.c1.width/2,this.c1.height/2);
+                this.ctx.fillText("刮开此图层",this.c1.width/2,this.c1.height/1.6);
                 this.ctx.globalCompositeOperation = 'destination-out';
             },
             bindEvent: function(){
@@ -425,6 +446,22 @@
             },
             eventDown: function(e){
                 e.preventDefault();
+                
+                if(!lottery_status || can_play_count==0){
+                    if(lottery.isRolling) return false;
+                    if(activity_status == '未开始'){
+                        resultDialog.render({
+                            prize_type: 'notready'
+                        });
+                    }else if(activity_status == '已结束'){
+                        resultDialog.render({
+                            prize_type: 'gameover'
+                        });
+                    }else{
+                        resultDialog.render()
+                    }
+                    return false;
+                }
                 this.ismousedown=true;
             },
             eventUp: function(e){
@@ -434,20 +471,20 @@
                 for(var i=3;i<a.data.length;i+=4){
                         if(a.data[i]==0)j++;
                 }
-                if(j>=a.data.length/8){
+                if(j>=a.data.length/10){
                     this.isOk = 1;
                 }
                 this.ismousedown=false; 
             },
             eventMove: function(e){
-                console.log(e);
                 e.preventDefault();
+                $('.wui-i-hand').hide();
                 if(this.ismousedown) {
                     if(e.changedTouches){
                         e=e.changedTouches[e.changedTouches.length-1];
                     }
-                var containerY = document.getElementById("container").offsetTop;
-                var containerX = document.getElementById("container").offsetLeft;
+                var containerY = document.getElementById("cardContainer").offsetTop;
+                var containerX = document.getElementById("cardContainer").offsetLeft;
                 var oX = this.c1.offsetLeft+containerX;
                     oY = this.c1.offsetTop+containerY;
                 var x = (e.clientX + document.body.scrollLeft) - oX || 0,
@@ -460,7 +497,7 @@
                 this.ctx.fill();   
                 }
                 if(this.isOk){
-                    //发奖
+                    $('.wui-i-cardInfo').get(0).style.zIndex = '3';
                 }
             }
         }
