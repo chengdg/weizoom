@@ -36,7 +36,7 @@ class Groups(resource.Resource):
 		#从数据库中获取模板配置
 		templates = weixin_models.UserHasTemplateMessages.objects.filter(owner_id=request.manager.id)
 		um = weixin_models.UserTemplateSettings.objects.filter(owner_id=request.manager.id, usage__in=[1,2])
-		control_data = 0
+		control_data = dict()
 		tem_list = []
 		if um.count() > 0:
 			for u in um:

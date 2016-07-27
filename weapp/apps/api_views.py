@@ -347,7 +347,7 @@ def get_template_message_list(request):
 	items = weixin_models.UserHasTemplateMessages.objects.filter(owner_id=request.manager.id)
 	#获取历史数据
 	um = weixin_models.UserTemplateSettings.objects.filter(owner_id=request.manager.id, usage__in=[1, 2])
-	control_data = 0
+	control_data = dict()
 	if um.count() > 0:
 		for u in um:
 			if u.usage == 1:
