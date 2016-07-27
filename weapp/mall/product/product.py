@@ -480,7 +480,7 @@ class ProductPool(resource.Resource):
         # mall_product_id2relation = dict([(relation.mall_product_id, relation) for relation in models.WeizoomHasMallProductRelation.objects.filter(owner=request.manager, is_deleted=False)])
 
         #products = all_mall_product.filter(id__in=standard_model_product_ids)
-        models.Product.fill_details(request.manager, products, {
+        models.Product.fill_details(manager_user_profile.user, products, {
             "with_product_model": True,
             "with_model_property_info": True,
             "with_selected_category": True,
