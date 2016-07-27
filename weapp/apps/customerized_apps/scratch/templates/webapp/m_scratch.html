@@ -93,14 +93,14 @@
         color: #454545;
         background: white;
     }
-    .container{
+    .wui-scratchDescription .wui-sctatch-container{
         position: relative;
         width: 80%;
         margin: 0 auto;
         height: 100px;
         background: red;
     }
-    .container .info{
+    .wui-scratchDescription .wui-sctatch-container .wui-sctatch-info{
         position: absolute;
         top: 0;
         left: 0;
@@ -109,7 +109,7 @@
         line-height: 100px;
         text-align: center;
     }
-    .container canvas{
+    .wui-scratchDescription .wui-sctatch-container canvas{
         position: absolute;
         top: 0;
         left: 0; 
@@ -430,6 +430,13 @@
             eventUp: function(e){
                 e.preventDefault();
                 var a = this.ctx.getImageData(0,0,this.c1.width,this.c1.height);
+                var j=0;
+                for(var i=3;i<a.data.length;i+=4){
+                        if(a.data[i]==0)j++;
+                }
+                if(j>=a.data.length/8){
+                    this.isOk = 1;
+                }
                 this.ismousedown=false; 
             },
             eventMove: function(e){
@@ -451,6 +458,9 @@
                 this.c1.offsetHeight;
                 this.c1.style.display = 'inherit'; 
                 this.ctx.fill();   
+                }
+                if(this.isOk){
+                    //发奖
                 }
             }
         }

@@ -324,7 +324,7 @@
                 this.$closeBtn.hide();
             }else if(prize_type == 'timesout'){
                 this.$title.hide();
-                this.$contentHeader.html("您今天的抽奖机会已经用完，<br>明天再来吧~");
+                this.$contentHeader.html("您今天的砸金蛋机会已经用完，<br>明天再来吧~");
                 this.$closeBtn.hide();
             }else if(prize_type == 'notready'){
                 this.$title.html('请耐心等待').show();
@@ -359,9 +359,9 @@
         }
 
         function initLottery(){
-                // $('.wa-egg').bind('click',function(){
-                //     doResult();
-                // });
+                $('.wa-egg').bind('click',function(){
+                    doResult();
+                });
             resultDialog = new ResultDialog();
             canShake = 1;
             SHAKE_THRESHOLD = 3000;
@@ -498,6 +498,7 @@
                             wuiAlert(error.errMsg);
                         }
                         flag = false;
+                        canShake = 1;
                     }
                 });
             }

@@ -2,7 +2,7 @@
 
 
 {% ifequal component.type 'appkit.scratchdescription' %}
-    <div class="wui-surveyDescription wui-lotterydescription xa-scratchdescription" {% if component.model.scratch_bg_image %}style="background-image: url({{ component.model.scratch_bg_image }})"{% endif %}>
+    <div class="wui-surveyDescription wui-lotterydescription wui-scratchDescription xa-scratchDescription" {% if component.model.scratch_bg_image %}style="background-image: url({{ component.model.scratch_bg_image }})"{% endif %}>
         <div class="wui-i-roulette wui-i-title">
             <h1 class="wui-i-innerTitle">
                 <p class="xa-title">{{component.model.title}}</p>
@@ -17,11 +17,6 @@
         </div>
         <div class="wui-i-roulette wui-i-header xa-remainedIntegral">
             需要消耗<strong>{{ component.model.expend }}</strong>积分, <p style="display: inline-block">剩余<b></b>积分</p>
-        </div>
-        <div class="container" id="container">
-            <div class="info" id="info"></div>
-            <canvas id="cvs">
-            </canvas>
         </div>
     </div>
 <div
