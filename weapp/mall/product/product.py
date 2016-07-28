@@ -1671,7 +1671,7 @@ class GroupProductList(resource.Resource):
 
         # 筛选出单规格的商品id
         standard_model_product_ids = [model.product_id for model in models.ProductModel.objects.filter(owner=request.manager, name='standard', is_deleted=False)]
-        from_pool_product_id = [model.product_id for model in models.ProductPool.objects.filter(woid=request.manager.id, status=mdoels.PP_STATUS_ON)]
+        from_pool_product_id = [model.product_id for model in models.ProductPool.objects.filter(woid=request.manager.id, status=models.PP_STATUS_ON)]
         promotion_ids = [promotion.id for promotion in promotion_model.Promotion.objects.filter(owner=request.manager, status__in=[promotion_model.PROMOTION_STATUS_NOT_START, promotion_model.PROMOTION_STATUS_STARTED])]
         has_promotion_product_ids = [relation.product_id for relation in promotion_model.ProductHasPromotion.objects.filter(promotion_id__in=promotion_ids)]
         woid = request.webapp_owner_id
