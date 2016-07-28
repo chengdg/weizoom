@@ -418,7 +418,7 @@
                     this.isOk = 1;
                 }
                 this.ismousedown=false; 
-                if(!lottery_status || can_play_count==0 ){
+                if(!lottery_status || can_play_count==0 || error_mes){
                     this.initialize();
                 }
             },
@@ -477,7 +477,6 @@
                             webapp_owner_id: W.webappOwnerId
                         },
                         success: function(data){
-                            console.log(data);
                             prize_data = data;
                             $('.wa-grade').html(data.result);
                             if(data.can_play_count == 0){
@@ -488,6 +487,7 @@
                             }               
                         },
                         error: function(error){
+                            error_mes = error;
                             if(error.errMsg == '奖品已抽光'){
                                 resultDialog.render({
                                     prize_type: 'none',
@@ -496,6 +496,7 @@
                             }else{
                                 wuiAlert(error.errMsg);
                             }
+                            isScratching = false;
                         }
                     });
                 }
