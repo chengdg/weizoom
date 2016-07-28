@@ -1679,11 +1679,14 @@ class GroupProductList(resource.Resource):
         if pids:
             has_promotion_product_ids.extend(pids)
 
-        group_product_ids = [id for id in standard_model_product_ids + from_pool_product_id if id not in has_promotion_product_ids]
+        group_product_ids = [id for id in standard_model_product_ids if id not in has_promotion_product_ids]
+        group_from_pool_product_ids = [id for id in from_pool_product_id if id not in has_promotion_product_ids]
         products = models.Product.objects.filter(
-                #owner=request.manager,
+                Q(owner=request.manager,
                 id__in=group_product_ids,
-                shelve_type=models.PRODUCT_SHELVE_TYPE_ON,
+                shelve_type=models.PRODUCT_SHELVE_TYPE_ON)|Q(
+                id__in=group_from_pool_product_ids
+                ),
                 is_deleted=False,
                 is_member_product=False,
                 stocks__lte=1,
