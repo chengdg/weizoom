@@ -89,13 +89,13 @@ def get_webapp_link_menu_objectes(request):
 				'name': '砸金蛋',
 				'type': 'egg',
 				'add_btn_title': '新建砸金蛋',
-				'add_link': '/apps/egg/egg/'
+				'add_link': '/apps/egg/egg/',
 				'users': ['jobs','njtest', 'ceshi01']
 			}, {
 				'name': '刮刮卡',
 				'type': 'scratch',
 				'add_btn_title': '新建刮刮卡',
-				'add_link': '/apps/scratch/scratch/'
+				'add_link': '/apps/scratch/scratch/',
 				'users': ['jobs','njtest', 'ceshi01']
 			}, {
 				'name': '抽奖',
