@@ -236,6 +236,10 @@
                     $('.wa-prizeName').html('');
                     $('.wa-grade').html('');
                 }
+                if(error_mes){
+                   $('.xa-retry').hide(); 
+                    error_mes = '';
+                }
             });
         }
         /**
