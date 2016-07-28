@@ -354,11 +354,11 @@ class ProductList(resource.Resource):
 
             prev_shelve_type = models.Product.objects.get(
                 id=ids[0]).shelve_type
+            
+            
 
 
-
-
-
+            
 
             products = models.Product.objects.filter(owner=request.manager, id__in=ids)
             product_id2product = {}
@@ -448,7 +448,7 @@ class ProductPool(resource.Resource):
 
         manager_user_profile = UserProfile.objects.filter(webapp_type=2)[0]
         product_pool = models.ProductPool.objects.filter(woid=request.manager.id, status=models.PP_STATUS_ON_POOL)
-
+        
         product_ids = [pool.product_id for pool in product_pool]
         products = models.Product.objects.filter(id__in=product_ids)
 
@@ -543,7 +543,7 @@ class ProductPool(resource.Resource):
 
         items = []
         for product in products:
-
+            
             # if (mall_product_id2weizoom_product_id.has_key(product['id']) and
             #     product_id2relation.has_key(mall_product_id2weizoom_product_id[product['id']]) and
             #     product_id2relation[mall_product_id2weizoom_product_id[product['id']]].promotion.status in [promotion_model.PROMOTION_STATUS_STARTED, promotion_model.PROMOTION_STATUS_NOT_START]):
@@ -825,7 +825,7 @@ class Product(resource.Resource):
         if mall_type and not has_product_id and request.manager.username not in ['weshop', 'weizoomjx']:
             return HttpResponseRedirect(
             '/mall2/product_pool/')
-
+        
         has_store_name = False
         store_name = ''
 
@@ -1507,7 +1507,7 @@ class ProductPos(resource.Resource):
             id = request.POST.get('id')
             pos = int(request.POST.get('pos'))
             mall_type = request.user_profile.webapp_type
-
+            
             if mall_type and models.ProductPool.objects.filter(woid=request.manager.id, product_id=id).count():
                 models.ProductPool.objects.filter(woid=request.manager.id, product_id=id).update(display_index=pos)
             elif request.POST.get('update_type', '') == 'update_pos':
@@ -1671,7 +1671,6 @@ class GroupProductList(resource.Resource):
 
         # 筛选出单规格的商品id
         standard_model_product_ids = [model.product_id for model in models.ProductModel.objects.filter(owner=request.manager, name='standard', is_deleted=False)]
-        from_pool_product_id = [model.product_id for model in models.ProductPool.objects.filter(woid=request.manager.id, status=mdoels.PP_STATUS_ON)]
         promotion_ids = [promotion.id for promotion in promotion_model.Promotion.objects.filter(owner=request.manager, status__in=[promotion_model.PROMOTION_STATUS_NOT_START, promotion_model.PROMOTION_STATUS_STARTED])]
         has_promotion_product_ids = [relation.product_id for relation in promotion_model.ProductHasPromotion.objects.filter(promotion_id__in=promotion_ids)]
         woid = request.webapp_owner_id
@@ -1679,9 +1678,9 @@ class GroupProductList(resource.Resource):
         if pids:
             has_promotion_product_ids.extend(pids)
 
-        group_product_ids = [id for id in standard_model_product_ids + from_pool_product_id if id not in has_promotion_product_ids]
+        group_product_ids = [id for id in standard_model_product_ids if id not in has_promotion_product_ids]
         products = models.Product.objects.filter(
-                #owner=request.manager,
+                owner=request.manager,
                 id__in=group_product_ids,
                 shelve_type=models.PRODUCT_SHELVE_TYPE_ON,
                 is_deleted=False,
