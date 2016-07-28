@@ -228,6 +228,13 @@
             this.$el.find('.xa-closeDialog').on('click',function(){
                 that.close();
                 isOkFlag = true;
+                if(!lottery_status || can_play_count==0 || error_mes){
+                    scratch_card.initialize();
+                    isScratching = false;
+                    $('.wui-i-cardInfo').get(0).style.zIndex = '1';
+                    $('.wa-prizeName').html('');
+                    $('.wa-grade').html('');
+                }
             });
         }
         /**
@@ -306,16 +313,6 @@
                     $('.wa-prizeName').html('');
                     $('.wa-grade').html('');
                 });
-                $('#cvs').on('touchstart',function(e){
-                    e.stopPropagation();
-                    if(!lottery_status || can_play_count==0 || error_mes){
-                        scratch_card.initialize();
-                        isScratching = false;
-                        $('.wui-i-cardInfo').get(0).style.zIndex = '1';
-                        $('.wa-prizeName').html('');
-                        $('.wa-grade').html('');
-                    }
-                })
             });
         }
 
@@ -388,7 +385,6 @@
                     this.c1 = document.getElementById('cvs');
                     this.ctx = this.c1.getContext('2d');
                     this.isOk = 0;
-                    var fontem = parseInt(window.getComputedStyle(document.documentElement, null)["font-size"]);
                     this.initialize();
                 }
 
