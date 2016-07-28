@@ -417,6 +417,10 @@
             },
             eventUp: function(e){
                 e.preventDefault();
+                this.ismousedown=false; 
+            },
+            eventMove: function(e){
+                e.preventDefault();  
                 var a = this.ctx.getImageData(0,0,this.c1.width,this.c1.height);
                 var j=0;
                 for(var i=3;i<a.data.length;i+=4){
@@ -424,11 +428,7 @@
                 }
                 if(j>=a.data.length/8){
                     this.isOk = 1;
-                }
-                this.ismousedown=false; 
-            },
-            eventMove: function(e){
-                e.preventDefault();     
+                }   
                 $('.wui-i-hand').hide();
                 if(this.ismousedown) {
                     if(e.changedTouches){
