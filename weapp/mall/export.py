@@ -318,7 +318,7 @@ MALL_APPS_GROUP_NAV = 'groups'
 MALL_APPS_SHVOTE_NAV = 'shvotes'
 MALL_APPS_REBATE_NAV = 'rebate'
 MALL_APPS_EXSIGN_NAV = 'exsign'
-MALL_APPS_EGG_NAV = 'edd'
+MALL_APPS_EGG_NAV = 'egg'
 MALL_APPS_SCRATCH_NAV = 'scratch'
 
 #
@@ -419,12 +419,14 @@ MALL_PROMOTION_AND_APPS_SECOND_NAV = {
                     'name': MALL_APPS_EGG_NAV,
                     'title': "砸金蛋",
                     'url': '/apps/egg/eggs/',
-                    'permission': ''
+                    'permission': '',
+					'users': ['jobs','njtest', 'ceshi01']
                 }, {
                     'name': MALL_APPS_SCRATCH_NAV,
                     'title': "刮刮卡",
                     'url': '/apps/scratch/scratches/',
                     'permission': '',
+					'users': ['jobs','njtest', 'ceshi01']
                 }, {
                     'name': MALL_APPS_LOTTERY_NAV,
                     'title': "微信抽奖",
