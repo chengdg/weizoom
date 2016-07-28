@@ -57,7 +57,7 @@ def get_coupon(request):
 				if WebAppUser.objects.filter(member_id=member_id).count() >0:
 					webapp_user_id = WebAppUser.objects.filter(member_id=member_id)[0].id
 					order_count = Order.objects.filter(webapp_user_id=webapp_user_id, status__in=
-						[mall_models.ORDER_STATUS_PAYED_NOT_SHIP, mall_models.ORDER_STATUS_PAYED_SHIPED, mall_models.ORDER_STATUS_SUCCESSED] ).count()
+						[ORDER_STATUS_PAYED_NOT_SHIP, ORDER_STATUS_PAYED_SHIPED, ORDER_STATUS_SUCCESSED] ).count()
 					if order_count > 0:
 						msg= '该优惠券仅未下单用户可领取'
 
