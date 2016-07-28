@@ -65,9 +65,18 @@ W.preloadImgsOnPage = function(option) {
                 return;
             }
             switch(module) {
+                case 'imageDisplay':
+                    $itemsImg.map(function(idx, item) {
+                        var $item = $(item);
+                        $item.attr('data-url', $item.attr('src'));
+                        $item.removeAttr('src');
+                    });
+                    $lazyImgs = $('[data-url]');
+                    lazyloadImg($lazyImgs, {threshold: 200});
+                    break;
                 case 'imageNav':
                     $itemsImg.map(function(idx, item) {
-                        $item = $(item);
+                        var $item = $(item);
                         $item.attr('data-url', $item.attr('src'));
                         $item.removeAttr('src');
                     });
@@ -76,25 +85,17 @@ W.preloadImgsOnPage = function(option) {
                     break;
                 case 'imageGroup':
                     $itemsImg.map(function(idx, item) {
-                        $item = $(item);
-                        srcImg = $item.attr('src');
+                        var $item = $(item);
+                        var srcImg = $item.attr('src');
                         $item.attr('data-url', compressImgUrl(srcImg, '!/quality/80'));
-                        $item.attr('src', compressImgUrl(srcImg, '!/quality/7'));
+                        $item.attr('src', compressImgUrl(srcImg, '!/quality/10'));
                     });
                     $lazyImgs = $('[data-url]');
-                    break;
-                case 'singleImageWithTitle':
-                    $itemsImg.map(function(idx, item) {
-                        $item = $(item);
-                        $item.attr('data-url', $item.attr('src'));
-                        $item.removeAttr('src');
-                    });
-                    $lazyImgs = $('[data-url]');
-                    lazyloadImg($lazyImgs, {threshold: 0, placeholder: ""});
+                    lazyloadImg($lazyImgs, {threshold: 400});
                     break;
                 case 'productList':
                     $itemsImg.map(function(idx, item) {
-                        $item = $(item);
+                        var $item = $(item);
                         $item.attr('data-url', $item.attr('src'));
                         $item.removeAttr('src');
                     });
@@ -111,11 +112,13 @@ W.preloadImgsOnPage = function(option) {
 // 如果是upaiyun图片则增加压缩参数
 function compressImgUrl(imgUrl, paramStr) {
 		if (imgUrl) {
-				var upaiyunKey = /upaiyun\.com/;
+        var upaiyunKey = /upaiyun\.com/;
+				//var upaiyunKey = /static/;
 				var compressStr = paramStr;
 				if (upaiyunKey.test(imgUrl)){
 					return [imgUrl, compressStr].join('');
 				}
+        return imgUrl;
 		}
 }
 
