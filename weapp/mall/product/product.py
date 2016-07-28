@@ -1757,6 +1757,7 @@ class GroupProductListWoid(resource.Resource):
             return response.get_jsonp_response(request)
         # 筛选出单规格的商品id
         standard_model_product_ids = [model.product_id for model in models.ProductModel.objects.filter(owner=woid, name='standard', is_deleted=False)]
+        from_pool_product_id = [model.product_id for model in models.ProductPool.objects.filter(woid=request.manager.id, status=mdoels.PP_STATUS_ON)]
         promotion_ids = [promotion.id for promotion in promotion_model.Promotion.objects.filter(owner=woid, status__in=[promotion_model.PROMOTION_STATUS_NOT_START, promotion_model.PROMOTION_STATUS_STARTED])]
         has_promotion_product_ids = [relation.product_id for relation in promotion_model.ProductHasPromotion.objects.filter(promotion_id__in=promotion_ids)]
         pids = utils.get_pids(woid)
@@ -1764,10 +1765,13 @@ class GroupProductListWoid(resource.Resource):
             has_promotion_product_ids.extend(pids)
 
         group_product_ids = [id for id in standard_model_product_ids if id not in has_promotion_product_ids]
+        group_from_pool_product_ids = [id for id in from_pool_product_id if id not in has_promotion_product_ids]
         products = models.Product.objects.filter(
-                owner=woid,
+                Q(owner=request.manager,
                 id__in=group_product_ids,
-                shelve_type=models.PRODUCT_SHELVE_TYPE_ON,
+                shelve_type=models.PRODUCT_SHELVE_TYPE_ON)|Q(
+                id__in=group_from_pool_product_ids
+                ),
                 is_deleted=False,
                 is_member_product=False,
                 stocks__lte=1,
