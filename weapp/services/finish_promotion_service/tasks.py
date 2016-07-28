@@ -6,7 +6,7 @@ finish_promotion_service 的Celery task实现
 import sys
 from django.conf import settings
 from core.exceptionutil import unicode_full_stack
-from watchdog.utils import watchdog_error, watchdog_info, watchdog_warning
+from watchdog.utils import watchdog_error, watchdog_info, watchdog_warning, watchdog_alert
 from datetime import datetime
 
 from mall.promotion import models as promotion_models
@@ -111,4 +111,22 @@ def finish_promotion(request0, args):
 		update_product_cache(product.owner_id, product.id)
 
 	cancel_order_for_promotion(promotion_ids)
+
+	from utils.cache_util import DeleteCacheException
+	try:
+		webapp_owner_id = products[0].owner_id
+		key = 'webapp_products_categories_{wo:%s}' % webapp_owner_id
+		cache_util.delete_cache(key)
+		watchdog_info({
+			'msg_id': 'delete_products_categories_cache',
+			'woid': webapp_owner_id
+		})
+	except DeleteCacheException:
+		pass
+	except:
+		watchdog_alert({
+			'msg_id': 'delete_products_categories_cache',
+			'traceback': unicode_full_stack()
+		})
+
 	return "OK"
