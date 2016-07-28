@@ -112,6 +112,11 @@ W.preloadImgsOnPage = function(option) {
 // 如果是upaiyun图片则增加压缩参数
 function compressImgUrl(imgUrl, paramStr) {
 		if (imgUrl) {
+        var idxCompressed = imgUrl.lastIndexOf('!/');
+        // 压缩过, 清理压缩参数
+        if ( idxCompressed > -1) {
+          imgUrl = imgUrl.substring(0, idxCompressed);
+        }
         var upaiyunKey = /upaiyun\.com/;
 				//var upaiyunKey = /static/;
 				var compressStr = paramStr;
