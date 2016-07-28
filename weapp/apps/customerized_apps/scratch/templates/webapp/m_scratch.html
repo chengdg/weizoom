@@ -228,7 +228,7 @@
             this.$el.find('.xa-closeDialog').on('click',function(){
                 that.close();
                 isOkFlag = true;
-                if(!lottery_status || can_play_count==0 || error_mes){
+                if(!lottery_status || can_play_count==0 || error_mes || prize_data.prize_type == 'no_prize'){
                     scratch_card.initialize();
                     isScratching = false;
                     $('.wui-i-cardInfo').get(0).style.zIndex = '1';
@@ -498,6 +498,10 @@
                                 });
                             }else{
                                 wuiAlert(error.errMsg);
+                                scratch_card.initialize();
+                                $('.wui-i-cardInfo').get(0).style.zIndex = '1';
+                                $('.wa-prizeName').html('');
+                                $('.wa-grade').html('');                              
                             }
                             isScratching = false;
                         }
