@@ -228,7 +228,8 @@
             this.$el.find('.xa-closeDialog').on('click',function(){
                 that.close();
                 isOkFlag = true;
-                if(!lottery_status || can_play_count==0 || error_mes || prize_data.prize_type == 'no_prize'){
+                $('.xa-retry').show();
+                if(!lottery_status || can_play_count==0 || error_mes){
                     scratch_card.initialize();
                     isScratching = false;
                     $('.wui-i-cardInfo').get(0).style.zIndex = '1';
@@ -312,6 +313,7 @@
                     $('.wui-i-cardInfo').get(0).style.zIndex = '1';
                     $('.wa-prizeName').html('');
                     $('.wa-grade').html('');
+                    $(this).hide();
                 });
             });
         }
@@ -390,6 +392,7 @@
 
         scratchCard.prototype = {
             initialize: function(){
+                $('.xa-retry').show();
                 this.isOk = 0;
                 this.ctx.globalCompositeOperation = "source-over";
                 this.c1.width = this.c1.clientWidth;  
@@ -420,7 +423,7 @@
                 for(var i=3;i<a.data.length;i+=4){
                         if(a.data[i]==0)j++;
                 }
-                if(j>=a.data.length/10){
+                if(j>=a.data.length/8){
                     this.isOk = 1;
                 }
                 this.ismousedown=false; 

@@ -2749,7 +2749,7 @@ li.wui-selectBox-display-table {
     padding-top: 0;
 }
 .wui-scratchDescription .wui-i-card{
-	background: url('/termite_static/img/component/scratch/card_bg.png') no-repeat;
+	background: url('') no-repeat;
 	background-size: 100% 116px;
 	height: 116px;
 	width: 100%;
@@ -2804,6 +2804,9 @@ li.wui-selectBox-display-table {
 	display: none;
 }
 .wui-scratchDescription canvas{
+	display: none;
+}
+.wui-scratchDescription .xui-i-retry{
 	display: none;
 }
 /*百宝箱 scratch CSS ---- end */
