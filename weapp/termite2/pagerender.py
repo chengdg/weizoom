@@ -153,17 +153,12 @@ def __get_template(component_category, component):
 
 
 def process_item_group_data(request, component):
-	if request.in_design_mode == False:
-		# 非编辑模式，显示空的div占位符
-		component['_has_data'] = False
-		component['empty_placeholder'] = "<div data-ui-role='async-component' data-type='{}' data-model='{}'></div>".format(component['type'], component['model'])
-		return
-
 	if len(component['components']) == 0 and request.in_design_mode:
 		#空商品，需要显示占位结果
 		component['_has_data'] = True
 		return
 
+	model_product_ids = []
 	product_ids = set()
 	for sub_component in component['components']:
 		sub_component['runtime_data'] = {}
@@ -175,11 +170,21 @@ def process_item_group_data(request, component):
 				product_ids.add(product_id)
 				sub_component['__is_valid'] = True
 				sub_component['runtime_data']['product_id'] = product_id
+				model_product_ids.append(product_id)
 			except:
 				#TODO: 记录watchdog
 				sub_component['__is_valid'] = False
 		else:
 			sub_component['__is_valid'] = False
+
+
+	if request.in_design_mode == False:
+		# 非编辑模式，显示空的div占位符
+		component['_has_data'] = False
+		component_model = component['model']
+		component_model['items'] = model_product_ids
+		component['empty_placeholder'] = "<div data-ui-role='async-component' data-type='{}' data-model='{}'></div>".format(component['type'], json.dumps(component_model))
+		return
 
 	#products = [product for product in mall_models.Product.objects.filter(id__in=product_ids) if product.shelve_type == mall_models.PRODUCT_SHELVE_TYPE_ON]
 	valid_product_count = 0
