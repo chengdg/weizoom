@@ -2749,7 +2749,7 @@ li.wui-selectBox-display-table {
     padding-top: 0;
 }
 .wui-scratchDescription .wui-i-card{
-	background: url('') no-repeat;
+	background: url(/termite_static/img/component/scratch/card_bg.png) no-repeat;
 	background-size: 100% 116px;
 	height: 116px;
 	width: 100%;
