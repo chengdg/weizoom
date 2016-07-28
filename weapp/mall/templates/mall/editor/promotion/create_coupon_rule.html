@@ -200,8 +200,10 @@ margin-top: -29px;"></div>
     <div class="form-group h40">
        <label class="control-label col-sm-2 col-sm-offset-1 w110" for="receive_rule">领取权限：</label>
         
-        <input type="checkbox" name='receive_rule' id='receive_rule' value="1" {% if coupon_rule %} disabled="disabled" {% endif %} />
-        
+        <input type="checkbox" name='receive_rule' id='receive_rule' value="1" 
+        {% if coupon_rule %} disabled="disabled" {% endif %}
+        {% if coupon_rule.receive_rule %} disabled="disabled" checked {% endif %}
+         />        
         <b style="vertical-align: text-bottom;font-weight:normal;display:inline-block;">仅未下单用户可领取</b>
     </div>
 
@@ -406,19 +408,6 @@ $(function(){
       is_need_check_limit_product=true;
     }
   });
- 
-   //  // 仅未下单用户可领取
-   // $('[name="receive_rule"]').click(function(o) {
-   //  if($('[name="receive_rule"]').is(":checked")){
-   //   $(this).val("1")
-     
-   //     console.log($(this).val())
-   //  }else{
-   //    $(this).val("");
-   //     console.log($(this).val())
-   //  }
-   // });
-
 
   var updateInputProductIds = function() {
       var ids = '';
@@ -524,7 +513,7 @@ $(function(){
         if (data.save_success) {
           _.delay(function() {
             window.location.href = '/mall2/coupon_rule_list/';
-          }, 5000);
+          }, 500);
         } else {
           W.showHint('error', '部分商品已发生其他操作，请查证后再操作');
           data.error_product_ids.forEach(function(id) {
