@@ -394,7 +394,5 @@ class Category(resource.Resource):
                 owner=request.manager,
                 id=category_id
             ).delete()
-        from cache.webapp_cache import update_product_list_cache
-        # 手动调用,django的信号似乎在delete之前执行了,生产了错误的缓存
-        update_product_list_cache(request.manager.id)
+
         return create_response(200).get_response()
