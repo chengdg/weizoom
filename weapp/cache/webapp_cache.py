@@ -909,7 +909,7 @@ def update_product_list_cache(webapp_owner_id):
     except:
         pass
 
-    from cache.tasks import update_product_list_cache_task
-    update_product_list_cache_task.delay(webapp_owner_id)
+    # from cache.tasks import update_product_list_cache_task
+    # update_product_list_cache_task.delay(webapp_owner_id)
 
 
