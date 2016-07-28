@@ -294,7 +294,7 @@
         };
     </script>
     <script type="text/javascript">
-        var lottery_status, can_play_count, resultDialog, activity_status, prizeIndex,isScratching,prize_data,scratch_card;
+        var lottery_status, can_play_count, resultDialog, activity_status, prizeIndex,isScratching,prize_data,scratch_card,error_mes;
         var isOkFlag = true;
         if(!W.isPC){
             $(function(){
@@ -306,6 +306,16 @@
                     $('.wa-prizeName').html('');
                     $('.wa-grade').html('');
                 });
+                $('#cvs').on('touchstart',function(e){
+                    e.stopPropagation();
+                    if(!lottery_status || can_play_count==0 || error_mes){
+                        scratch_card.initialize();
+                        isScratching = false;
+                        $('.wui-i-cardInfo').get(0).style.zIndex = '1';
+                        $('.wa-prizeName').html('');
+                        $('.wa-grade').html('');
+                    }
+                })
             });
         }
 
@@ -418,9 +428,6 @@
                     this.isOk = 1;
                 }
                 this.ismousedown=false; 
-                if(!lottery_status || can_play_count==0 || error_mes){
-                    this.initialize();
-                }
             },
             eventMove: function(e){
                 e.preventDefault();     
