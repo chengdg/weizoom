@@ -23,7 +23,9 @@ var AsyncComponentLoadView = BackboneLite.View.extend({
         console.log('>>>>>>>>>> options: ', options, this.component);
         this.handlebarTmpl = $("#componentTemplates").html();
         this.template = Handlebars.compile(this.handlebarTmpl);
-        this.sendApi();
+        _.delay(function(){
+          _this.sendApi();
+        }, 0);
     },
 
     sendApi: function() {
@@ -70,11 +72,10 @@ var AsyncComponentLoadView = BackboneLite.View.extend({
         var product_ids = this.componentModel['items'];
         var products = data['products'];
         var sub_component_htmls = [];
-        product_ids.forEach(function(product_id) {
+        product_ids.forEach(function(product_id, idx) {
             var product = _.find(products, function(item){return item.id === product_id});
-            console.log(product_id, product);
             // TODO: 将该html加入到sub_component中的html属性中
-            var sub_component_html = _this.addSubComponetRender(product);
+            var sub_component_html = _this.addSubComponetRender(product, idx);
             sub_component_htmls.push(sub_component_html);
         });
 
@@ -83,13 +84,14 @@ var AsyncComponentLoadView = BackboneLite.View.extend({
 
     },
 
-    addSubComponetRender: function(product) {
+    addSubComponetRender: function(product, idx) {
         // TODO: 使用handlebar-template 渲染 
         var _this = this;
         var itemComponent = {
             component: {
                 type: 'wepage.item',
                 runtime_data: {product: product},
+                model: { index: idx },
                 parent_component: _this.component.component
             },
             product: product
