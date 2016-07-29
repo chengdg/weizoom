@@ -71,15 +71,15 @@
             <div class="wui-swiper-wrapper">
                 <div class="wui-swiper-slide" id="xa-wrapper">
                     <div class="wui-content-slide">
-                        {% if lotteries_items %}
-                            {% for lotteries_item in lotteries_items %}
+                        {% if all_lotteries_items %}
+                            {% for lotteries_item in all_lotteries_items %}
                                 <ul class="xui-listItem">
                                 <li data-icon="true" class="xui-listInner pl15 pr15">
                                     <a href="{{ lotteries_item.url }}">
                                         <div class="xui-i-title">
                                           <i class="wui-my_activities_lottery"></i><span class="disTc pl15 em1">{{ lotteries_item.name }}</span>
                                         </div>
-                                        <div class="xui-i-time">{{ lotteries_item.participant_time }}参加了抽奖</div>
+                                        <div class="xui-i-time">{{ lotteries_item.participant_time }}参加了<span>{{ lotteries_item.type }}</span></div>
                                     </a>
                                 </li>
                                 </ul>
