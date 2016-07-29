@@ -19,10 +19,33 @@ from tools.regional.views import get_str_value_by_string_ids_new,get_str_value_b
 from modules.member.models import Member, WebAppUser, MemberFollowRelation, SOURCE_SELF_SUB, SOURCE_MEMBER_QRCODE, SOURCE_BY_URL
 from mall.models import *
 from market_tools.tools.channel_qrcode.models import ChannelQrcodeHasMember
-
+from core.send_phone_msg import send_chargeback_message
 
 DEFAULT_CREATE_TIME = '2000-01-01 00:00:00'
 
+@task(bind=True)
+def send_message_chargeback_to_customer(self, order_id):
+    order = Order.objects.filter(order_id=order_id).first()
+    if order.status == ORDER_STATUS_NOT:
+        return True
+    if order.origin_order_id > 0:
+        __send_message(order.order_id, order.supplier, order.ship_name)
+    elif order.origin_order_id == -1:
+        child_orders = Order.objects.filter(origin_order_id=order.id)
+        for child_order in child_orders:
+            __send_message(child_order.order_id, child_order.supplier, child_order.ship_name)
+
+def __send_message(order_id, supplier, ship_name):
+    message_content = u"您好，订单号：%s，收货人：%s。已退单，请知晓！【微众传媒】"
+    #获取手机号
+    if not supplier:
+        return False
+    supplier = Supplier.objects.filter(id=supplier).first()
+    phone_number = None
+    if supplier:
+        phone_number = supplier.supplier_tel
+    if phone_number:
+        send_chargeback_message(phone_number, message_content % (order_id, ship_name))
 
 
 @task(bind=True, time_limit=7200, max_retries=2)
@@ -560,7 +583,7 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
                     else:
                         order_express_number = (order.express_number if not fackorder else fackorder.express_number).encode('utf8')
                         express_name = express_util.get_name_by_value(order.express_company_name if not fackorder else fackorder.express_company_name).encode('utf8')
-                        
+
                         tmp_order=[
                             order_id,
                             order.created_at.strftime('%Y-%m-%d %H:%M').encode('utf8'),
