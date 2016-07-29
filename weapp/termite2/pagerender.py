@@ -327,7 +327,10 @@ def __render_component(request, page, component, project):
 			process_item_list_data(request, component)
 
 		if not component['_has_data']:
-			return component['empty_placeholder']
+		        if component['empty_placeholder']:
+			        return component['empty_placeholder'] 
+
+
 	component['app_name'] = request.GET.get('app_name', '')
 	# if request.in_production_mode:
 	# 	#获得数据
