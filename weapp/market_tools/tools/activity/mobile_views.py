@@ -221,12 +221,16 @@ from apps.customerized_apps.event import models as event_models
 from apps.customerized_apps.vote import models as vote_models
 from apps.customerized_apps.survey import models as survey_models
 from apps.customerized_apps.lottery import models as lottery_models
+from apps.customerized_apps.exlottery import models as exlottery_models
+from apps.customerized_apps.egg import models as egg_models
+from apps.customerized_apps.scratch import models as scratch_models
 
 def get_member_activites(request):
 	profile = request.user_profile
 	webapp_user = request.webapp_user
 	member = member_util.get_member(request)
 	activities_items = []
+	all_lotteries_items = []
 	#活动
 	events = event_models.eventParticipance.objects.filter(member_id=member.id).order_by('-created_at')
 	events_items = []
@@ -286,7 +290,60 @@ def get_member_activites(request):
 				'id': str(lottery_id),
 				'name': lottery_details.name,
 				'url': '/m/apps/lottery/m_lottery/?webapp_owner_id=%d&id=%s' % (lottery_details.owner_id, str(lottery_id)),
-				'participant_time': lottery.created_at.strftime('%m月%d日')
+				'participant_time': lottery.created_at.strftime('%m月%d日'),
+				'type': u'抽奖'
+			})
+		except:
+			pass
+
+	# 幸运码抽奖
+	exlotteries = exlottery_models.ExlottoryRecord.objects.filter(member_id=member.id).order_by('-created_at')
+	exlotteries_items = []
+	for exlottery in exlotteries:
+		try:
+			exlottery_id = exlottery.belong_to
+			code = exlottery.code
+			exlottery_details = exlottery_models.Exlottery.objects.get(id=exlottery_id)
+			exlotteries_items.append({
+				'id': str(exlottery_id),
+				'name': exlottery_details.name,
+				'url': '/m/apps/exlottery/m_exlottery/?webapp_owner_id=%d&id=%s&ex_code=%s' % (exlottery_details.owner_id, str(exlottery_id), code),
+				'participant_time': exlottery.created_at.strftime('%m月%d日'),
+				'type': u'幸运码抽奖'
+			})
+		except:
+			pass
+
+	# 砸金蛋
+	eggs = egg_models.EggRecord.objects.filter(member_id=member.id).order_by('-created_at')
+	eggs_items = []
+	for egg in eggs:
+		try:
+			egg_id = egg.belong_to
+			egg_details = egg_models.Egg.objects.get(id=egg_id)
+			eggs_items.append({
+				'id': str(egg_id),
+				'name': egg_details.name,
+				'url': '/m/apps/egg/m_egg/?webapp_owner_id=%d&id=%s' % (egg_details.owner_id, str(egg_id)),
+				'participant_time': egg.created_at.strftime('%m月%d日'),
+				'type': u'砸金蛋'
+			})
+		except:
+			pass
+
+	# 刮刮卡
+	scratches = scratch_models.ScratchRecord.objects.filter(member_id=member.id).order_by('-created_at')
+	scratches_items = []
+	for scratch in scratches:
+		try:
+			scratch_id = scratch.belong_to
+			scratch_details = scratch_models.Scratch.objects.get(id=scratch_id)
+			scratches_items.append({
+				'id': str(scratch_id),
+				'name': scratch_details.name,
+				'url': '/m/apps/scratch/m_scratch/?webapp_owner_id=%d&id=%s' % (scratch_details.owner_id, str(scratch_id)),
+				'participant_time': scratch.created_at.strftime('%m月%d日'),
+				'type': u'刮刮卡'
 			})
 		except:
 			pass
@@ -298,10 +355,20 @@ def get_member_activites(request):
 	for surveies_item in surveies_items:
 		activities_items.append(surveies_item)
 
+	#微信抽奖&幸运码抽奖&砸金蛋&刮刮卡(add by sunhan 2016-7-29)
+	for lotteries_item in lotteries_items:
+		all_lotteries_items.append(lotteries_item)
+	for exlotteries_item in exlotteries_items:
+		all_lotteries_items.append(exlotteries_item)
+	for eggs_item in eggs_items:
+		all_lotteries_items.append(eggs_item)
+	for scratches_items in scratches_items:
+		all_lotteries_items.append(scratches_items)
+
 	c = RequestContext(request, {
 		'page_title': u'我的活动列表',
 		'activities_items': sorted(activities_items, key=operator.itemgetter('participant_time'), reverse=True),
-		'lotteries_items': lotteries_items,
+		'all_lotteries_items': sorted(all_lotteries_items, key=operator.itemgetter('participant_time'), reverse=True),
 		'is_hide_weixin_option_menu':True
 	})
 	return render_to_response('activity/webapp/my_activities.html', c)
