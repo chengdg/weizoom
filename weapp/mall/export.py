@@ -419,14 +419,12 @@ MALL_PROMOTION_AND_APPS_SECOND_NAV = {
                     'name': MALL_APPS_EGG_NAV,
                     'title': "砸金蛋",
                     'url': '/apps/egg/eggs/',
-                    'permission': '',
-					'users': ['jobs','njtest', 'ceshi01']
+                    'permission': ''
                 }, {
                     'name': MALL_APPS_SCRATCH_NAV,
                     'title': "刮刮卡",
                     'url': '/apps/scratch/scratches/',
-                    'permission': '',
-					'users': ['jobs','njtest', 'ceshi01']
+                    'permission': ''
                 }, {
                     'name': MALL_APPS_LOTTERY_NAV,
                     'title': "微信抽奖",

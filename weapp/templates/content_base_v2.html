@@ -113,7 +113,7 @@
 						<!-- 三级导航 -->
 						{% if nav.third_navs %}
 							{% for third_nav in nav.third_navs %}
-                                {% if third_nav.name == 'exsurveies' or third_nav.name == 'cardExchange' or third_nav.name == 'shvotes' or third_nav.name == 'virtualProducts' or third_nav.name == 'rebate' or third_nav.name == 'exsign' or third_nav.name == 'egg' or third_nav.name == 'scratch'%}
+                                {% if third_nav.name == 'exsurveies' or third_nav.name == 'cardExchange' or third_nav.name == 'shvotes' or third_nav.name == 'virtualProducts' or third_nav.name == 'rebate' or third_nav.name == 'exsign' %}
                                     {% if request.manager.username in third_nav.users %}
                                     <li class="xui-sideBar-third {% ifequal third_nav_name third_nav.name %}active_third{% endifequal %}">
                                         <a href="{{third_nav.url}}" title="{{third_nav.title}}" name="{{third_nav.name}}">
