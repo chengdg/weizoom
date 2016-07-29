@@ -51,7 +51,8 @@ class ProductMember(resource.Resource):
         has_product_id = request.GET.get('id')
         if has_product_id:
             try:
-                product = models.Product.objects.get(owner=request.manager, id=has_product_id)
+                # todo 临时解决方案
+                product = models.Product.objects.get(id=has_product_id)
             except models.Product.DoesNotExist:
                 return Http404
         else:
