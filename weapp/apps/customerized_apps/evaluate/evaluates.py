@@ -278,7 +278,7 @@ class EvaluateReview(resource.Resource):
 				review = app_models.ProductEvaluates.objects(owner_id=request.webapp_owner_id, id=product_review_id)
 				first_review = review.first()
 				if status == '2' or status == '1':
-					if review.count() == 1 and int(first_review.status) == 0:
+					if review.count() == 1 and (int(first_review.status) == 0 or int(first_review.status) == -1):
 						settings = member_models.IntegralStrategySttings.objects.get(
 							webapp_id=request.user_profile.webapp_id)
 						if settings.review_increase > 0:
