@@ -21,7 +21,7 @@ from cache import webapp_cache
 from mall import module_api as mall_api
 from weixin.user import module_api as weixin_api
 from weixin.user.models import set_share_img
-from eaglet.core import watchdog
+
 
 type2template = {}
 
@@ -158,7 +158,6 @@ def process_item_group_data(request, component):
 		component['_has_data'] = True
 		return
 
-	model_product_ids = []
 	product_ids = set()
 	for sub_component in component['components']:
 		sub_component['runtime_data'] = {}
@@ -170,21 +169,11 @@ def process_item_group_data(request, component):
 				product_ids.add(product_id)
 				sub_component['__is_valid'] = True
 				sub_component['runtime_data']['product_id'] = product_id
-				model_product_ids.append(product_id)
 			except:
 				#TODO: 记录watchdog
 				sub_component['__is_valid'] = False
 		else:
 			sub_component['__is_valid'] = False
-
-
-	if request.in_design_mode == False:
-		# 非编辑模式，显示空的div占位符
-		component['_has_data'] = False
-		component_model = component['model']
-		component_model['items'] = model_product_ids
-		component['empty_placeholder'] = "<div data-ui-role='async-component' data-type='{}' data-model='{}'></div>".format(component['type'], json.dumps(component_model))
-		return
 
 	#products = [product for product in mall_models.Product.objects.filter(id__in=product_ids) if product.shelve_type == mall_models.PRODUCT_SHELVE_TYPE_ON]
 	valid_product_count = 0
@@ -315,8 +304,6 @@ def process_item_list_data(request, component):
 # create_mobile_page : 创建移动页面
 #===============================================================================
 def __render_component(request, page, component, project):
-	start_date = datetime.now()
-
 	# 检查是否需要在server端处理component的数据
 	if component.get('need_server_process_component_data', 'no') == 'yes':
 		if component['type'] == 'wepage.item_group':
@@ -329,10 +316,7 @@ def __render_component(request, page, component, project):
 			process_item_list_data(request, component)
 
 		if not component['_has_data']:
-		        if component['empty_placeholder']:
-			        return component['empty_placeholder'] 
-
-
+			return ''
 	component['app_name'] = request.GET.get('app_name', '')
 	# if request.in_production_mode:
 	# 	#获得数据
@@ -405,21 +389,6 @@ def __render_component(request, page, component, project):
 	# print component
 	# print content
 	# print '<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'
-
-	## start watchdog.info
-	if component['type'] not in ['wepage.item', 'wepage.textnav', 'wepage.imagedisplay_image', 'wepage.imagegroup_image', 'wepage.image_nav']:
-		end_date = datetime.now()
-		url = '{}{}'.format(request.get_host(), request.get_full_path())
-		timestamp = end_date - start_date
-		message_info = {
-			'message_service': 'WEPAGE',
-			'message_type': component['type'],
-			'url': url,
-			'timestamp': str(timestamp),
-			'user_id': request.user_profile.user_id
-		}
-		watchdog.info(message_info)
-	## end watchdog.info
 	return content
 
 
