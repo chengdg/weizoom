@@ -2415,10 +2415,10 @@ def update_order_status(user, action, order, request=None):
 		child_orders = Order.objects.filter(origin_order_id=order.id)
 		if child_orders.count() == 1 or (child_orders.count() > 1 and target_status in [ORDER_STATUS_SUCCESSED, ORDER_STATUS_REFUNDING, ORDER_STATUS_CANCEL]):
 			child_orders.update(status=target_status)
-		if request and request.user_profile.webapp_type and child_orders.count() == 1:
+		if request and request.user_profile.webapp_type:
 			for child in child_orders:
 				record_status_log(child.order_id, operation_name, child.status, target_status)
-				record_operation_log(child.order_id, operation_name, action_msg, child)
+				record_operation_log(child.order_id, operation_name, action_msg)
 		if target_status in [ORDER_STATUS_SUCCESSED, ORDER_STATUS_REFUNDING, ORDER_STATUS_CANCEL]:
 			auto_update_grade(webapp_user_id=order.webapp_user_id)
 
