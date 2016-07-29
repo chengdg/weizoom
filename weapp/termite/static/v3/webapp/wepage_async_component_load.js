@@ -11,6 +11,7 @@ var AsyncComponentLoadView = BackboneLite.View.extend({
     },
 
     initialize: function(options) {
+        var _this = this;
         this.$el = $(this.el);
         this.componentType = options.componentType;
         this.componentModel = options.componentModel;
