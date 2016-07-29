@@ -31,16 +31,6 @@ var AsyncComponentLoadView = BackboneLite.View.extend({
         var _this = this;
         var product_ids = this.componentModel['items'];
         console.log('要加载的商品列表：', product_ids);
-        // 尝试慢的问题
-        var new_ids = [];
-        if (product_ids.length > 10) {
-            for (var i=0; i<10; i++) {
-                new_ids.push(product_ids[i]);
-            }
-        }
-        product_ids = new_ids;
-        console.log('新的商品列表：', product_ids);
-        /////////////////
         // 第一次渲染
         var orgHtml = _this.renderComponent(_this.component);
         _this.$el.html(orgHtml);
@@ -78,16 +68,6 @@ var AsyncComponentLoadView = BackboneLite.View.extend({
         var _this = this;
         console.log('>>>>>>>>> 异步接口: ', data);
         var product_ids = this.componentModel['items'];
-        // 尝试慢的问题
-        var new_ids = [];
-        if (product_ids.length > 10) {
-            for (var i=0; i<10; i++) {
-                new_ids.push(product_ids[i]);
-            }
-        }
-        product_ids = new_ids;
-        console.log('新的商品列表：', product_ids);
-        /////////////////
         var products = data['products'];
         var sub_component_htmls = [];
         product_ids.forEach(function(product_id, idx) {
