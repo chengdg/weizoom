@@ -1746,7 +1746,10 @@ def get_order_operation_logs(order_id, child_order_length=None):
 	if child_order_length and child_order_length == 1:
 		return OrderOperationLog.objects.filter(order_id=order_id)
 	else:
-		return OrderOperationLog.objects.filter(order_id__contains=order_id).exclude(~Q(order_id=order_id), action__in=[u'下单', u'支付']).exclude(order_id=order_id, action__in=[u'发货', u'完成'])
+		return OrderOperationLog.objects.filter(order_id__contains=order_id).exclude(
+			~Q(order_id=order_id),
+			action__in=[u'下单', u'支付', u'退款', u'退款完成']
+		).exclude(order_id=order_id, action__in=[u'发货', u'完成'])
 
 
 ########################################################################
@@ -2335,7 +2338,9 @@ def update_order_status(user, action, order, request=None):
 	if target_status:
 		if 'cancel' in action and request:
 			Order.objects.filter(id=order_id).update(status=target_status, reason=request.POST.get('reason', ''))
-
+			# 发短信
+			from mall.order.tasks import send_message_chargeback_to_customer
+			send_message_chargeback_to_customer.delay(order.order_id)
 		elif 'pay' == action:
 			payment_time = datetime.now()
 			Order.objects.filter(id=order_id).update(status=target_status, payment_time=payment_time)
@@ -2360,6 +2365,10 @@ def update_order_status(user, action, order, request=None):
 				watchdog_error(alert_message)
 
 		else:
+			if target_status == ORDER_STATUS_REFUNDED:
+				# 发短信
+				from mall.order.tasks import send_message_chargeback_to_customer
+				send_message_chargeback_to_customer.delay(order.order_id)
 			Order.objects.filter(id=order_id).update(status=target_status)
 			Order.objects.filter(origin_order_id=order_id).update(status=target_status)
 		operate_log = u' 修改状态'
