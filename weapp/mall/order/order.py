@@ -211,8 +211,8 @@ class OrderList(resource.Resource):
                 "id":0,
                 "file_path":0,
                 }
-        
-        
+
+
         c = RequestContext(request, {
             'first_nav_name': FIRST_NAV,
             'second_navs': export.get_mall_order_second_navs(request),
@@ -453,6 +453,9 @@ class GroupOrderRefunded(resource.Resource):
                     update_order_status(webapp_id2user[order.webapp_id], 'return_success', order)
                     order.status = ORDER_STATUS_GROUP_REFUNDED
                     order.save()
+                    # 发短信
+                    from mall.order.tasks import send_message_chargeback_to_customer
+                    send_message_chargeback_to_customer.delay(order.order_id)
                 response.updated_order_ids = refunding_order_ids + refund_order_ids
                 response.not_update_order_ids = [id for id in order_ids if id not in (refunding_order_ids + refund_order_ids)]
             except:
@@ -664,7 +667,7 @@ class OrderGetFile(resource.Resource):
     """
     app = "mall2"
     resource ="export_order_param"
-    
+
     @login_required
     def api_get(request):
         woid = request.webapp_owner_id
@@ -673,9 +676,9 @@ class OrderGetFile(resource.Resource):
         now = datetime.now()
         #判断用户是否存在导出数据任务
         if type in [1,3] :
-            
+
             param = util.get_param_from(request)
-           
+
         exportjob = ExportJob.objects.create(
                                     woid = woid,
                                     type = type,
