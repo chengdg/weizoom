@@ -1050,6 +1050,20 @@ def get_page_products(request):
 
 	_, products = webapp_cache.get_webapp_products_new(request.user_profile, False, category_id)
 
+	woid = request.user_profile.user_id
+	if woid==1120:
+		try:
+			length = len(products)
+		except:
+			length = -1
+		watchdog_info({
+			'woid':woid,
+			'type_products':str(type(products)),
+			'length':length,
+			'location':1,
+			'msg_id': '1120products'
+		})
+
 	if product_ids:
 		product_ids = map(lambda x: int(x), product_ids.split(','))
 		products = filter(lambda x: x.id in product_ids, products)
@@ -1063,6 +1077,20 @@ def get_page_products(request):
 			"display_price": product.display_price,
 			"is_member_product": product.is_member_product,
 			"promotion_js": json.dumps(product.promotion) if product.promotion else ""
+		})
+
+
+	if woid==1120:
+		try:
+			length = len(products_data)
+		except:
+			length = -1
+		watchdog_info({
+			'woid':woid,
+			'type_products':str(type(products_data)),
+			'length':length,
+			'location':2,
+			'msg_id': '1120products'
 		})
 
 	response = create_response(200)
