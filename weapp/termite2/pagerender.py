@@ -153,6 +153,8 @@ def __get_template(component_category, component):
 
 
 def process_item_group_data(request, component):
+	woid = request.user_profile.woid
+
 	if len(component['components']) == 0 and request.in_design_mode:
 		#空商品，需要显示占位结果
 		component['_has_data'] = True
@@ -183,6 +185,20 @@ def process_item_group_data(request, component):
 		component['_has_data'] = True
 		products = []
 		category, cached_products = webapp_cache.get_webapp_products_new(request.user_profile, False, 0)
+		try:
+			if woid == 1120:
+				watchdog_info({
+					'msg_id': 'wtf1120',
+					'component': len(cached_products),
+					'location': 1
+				})
+		except:
+			from core.exceptionutil import unicode_full_stack
+			watchdog_info({
+				'msg_id': 'wtf1120',
+				'traceback': unicode_full_stack(),
+				'location': 1
+			})
 		for product in cached_products:
 			if product.id in product_ids:
 				products.append(product) 
@@ -212,6 +228,21 @@ def process_item_group_data(request, component):
 	if valid_product_count == 0 and request.in_design_mode:
 		valid_product_count = -1
 	component['valid_product_count'] = valid_product_count
+
+	try:
+		if woid==1120:
+			watchdog_info({
+				'msg_id':'wtf1120',
+				'component':str(component),
+				'location':2
+			})
+	except:
+		from core.exceptionutil import unicode_full_stack
+		watchdog_info({
+			'msg_id': 'wtf1120',
+			'traceback':unicode_full_stack(),
+			'location': 2
+		})
 
 
 def _set_empty_product_list(request, component):
