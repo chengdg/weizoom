@@ -1060,7 +1060,8 @@ def get_page_products(request):
 			'woid':woid,
 			'type_products':str(type(products)),
 			'length':length,
-			'location':1
+			'location':1,
+			'msg_id': '1120products'
 		})
 
 	if product_ids:
@@ -1088,7 +1089,8 @@ def get_page_products(request):
 			'woid':woid,
 			'type_products':str(type(products_data)),
 			'length':length,
-			'location':2
+			'location':2,
+			'msg_id': '1120products'
 		})
 
 	response = create_response(200)

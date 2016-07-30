@@ -121,7 +121,8 @@ def get_webapp_products_new(webapp_owner_user_profile,
                 'woid': woid,
                 'type_products': str(type(products)),
                 'length': length,
-                'location': 3
+                'location': 3,
+                'msg_id':'1120products'
             })
     else:
         cache_products = get_webapp_products_detail(webapp_owner_user_profile.user_id,category_pros_data)
@@ -136,7 +137,8 @@ def get_webapp_products_new(webapp_owner_user_profile,
                 'woid': woid,
                 'type_products': str(type(products)),
                 'length': length,
-                'location': 4
+                'location': 4,
+                'msg_id':'1120products'
             })
 
         if products:
