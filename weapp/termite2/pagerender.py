@@ -14,6 +14,7 @@ from django.shortcuts import render_to_response
 from django.conf import settings
 from django.template import Template
 from termite.core import stripper
+from watchdog.utils import watchdog_info
 from webapp import views as webapp_views 
 from models import *
 from mall import models as mall_models
@@ -153,6 +154,7 @@ def __get_template(component_category, component):
 
 
 def process_item_group_data(request, component):
+	woid = request.user_profile.user_id
 	if len(component['components']) == 0 and request.in_design_mode:
 		#空商品，需要显示占位结果
 		component['_has_data'] = True
@@ -183,6 +185,21 @@ def process_item_group_data(request, component):
 		component['_has_data'] = True
 		products = []
 		category, cached_products = webapp_cache.get_webapp_products_new(request.user_profile, False, 0)
+		try:
+			if woid ==1120:
+				watchdog_info({
+					'msg_id':'wtf1120',
+					'location':1,
+					'length':len(cached_products)
+				})
+		except:
+			from core.exceptionutil import unicode_full_stack
+			watchdog_info({
+				'msg_id': 'wtf1120',
+				'location': 1,
+				'traceback':unicode_full_stack()
+			})
+
 		for product in cached_products:
 			if product.id in product_ids:
 				products.append(product) 
@@ -212,6 +229,21 @@ def process_item_group_data(request, component):
 	if valid_product_count == 0 and request.in_design_mode:
 		valid_product_count = -1
 	component['valid_product_count'] = valid_product_count
+
+	try:
+		if woid == 1120:
+			watchdog_info({
+				'msg_id': 'wtf1120',
+				'location': 2,
+				'component': str(component)
+			})
+	except:
+		from core.exceptionutil import unicode_full_stack
+		watchdog_info({
+			'msg_id': 'wtf1120',
+			'location': 2,
+			'traceback': unicode_full_stack()
+		})
 
 
 def _set_empty_product_list(request, component):
