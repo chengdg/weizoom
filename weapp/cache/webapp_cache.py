@@ -17,6 +17,7 @@ from mall.promotion.models import PROMOTION_TYPE_FLASH_SALE
 from django.core.exceptions import ObjectDoesNotExist
 import json
 
+from watchdog.utils import watchdog_info
 from weapp.hack_django import post_update_signal, post_delete_signal
 
 def get_product_display_price(product, webapp_owner_id, member_grade_id=None):
@@ -97,6 +98,7 @@ def get_webapp_products_new(webapp_owner_user_profile,
                         is_access_weizoom_mall,
                         category_id):
     # 商城下分类对应的商品id
+    woid = webapp_owner_user_profile.user_id
     categories_products_key = '{wo:%s}_{co:%s}_products' % (webapp_owner_user_profile.user_id,category_id)
     category_pros_data = cache_util.get_set_from_redis(categories_products_key)
     if len(category_pros_data)==0:
@@ -110,9 +112,33 @@ def get_webapp_products_new(webapp_owner_user_profile,
                 # 添加promation
             cache_util.add_set_to_redis(categories_products_key,*productid_display_list)
         cache_products = products
+        if woid == 1120:
+            try:
+                length = len(products)
+            except:
+                length = -1
+            watchdog_info({
+                'woid': woid,
+                'type_products': str(type(products)),
+                'length': length,
+                'location': 3
+            })
     else:
         cache_products = get_webapp_products_detail(webapp_owner_user_profile.user_id,category_pros_data)
         products = get_webapp_product_ids_from_db_new(webapp_owner_user_profile, is_access_weizoom_mall,category_id)
+
+        if woid == 1120:
+            try:
+                length = len(products)
+            except:
+                length = -1
+            watchdog_info({
+                'woid': woid,
+                'type_products': str(type(products)),
+                'length': length,
+                'location': 4
+            })
+
         if products:
             if len(cache_products) == len(products):
                 pass
