@@ -71,8 +71,7 @@ class QrcodeMember(api_resource.ApiResource):
 					channel_qrcode_id2member_id[qs.id] = [qs.bing_member_id]
 				else:
 					channel_qrcode_id2member_id[qs.id].append(qs.bing_member_id)
-				if qs.bing_member_id != 60:
-					q_member_id2created_at[qs.bing_member_id] = qs.created_at.strftime('%Y-%m-%d %H:%M:%S')
+				q_member_id2created_at[qs.bing_member_id] = qs.created_at.strftime('%Y-%m-%d %H:%M:%S')
 
 		#处理分页
 		count_per_page = int(args.get('count_per_page', '20'))

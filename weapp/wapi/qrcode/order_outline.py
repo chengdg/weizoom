@@ -98,7 +98,9 @@ class QrcodeOrderOutline(api_resource.ApiResource):
 							if channel_qrcode_id2user_created_at.get(str(channel_qrcode_id)):
 								if channel_qrcode_id2user_created_at.get(
 										str(channel_qrcode_id)) <= order.created_at.strftime('%Y-%m-%d %H:%M:%S'):
+
 									if channel_qrcode_id2bing_member_id.get(channel_qrcode_id):
+
 										if curr_qrcode_id2member_id.get(
 												channel_qrcode_id) and member_id in curr_qrcode_id2member_id.get(
 											channel_qrcode_id):
@@ -135,11 +137,44 @@ class QrcodeOrderOutline(api_resource.ApiResource):
 			"final_price": u'%.2f' % final_price
 		}
 
-		total_webapp_user_ids = [order.webapp_user_id for order in orders]
-
 		total_member_order_count = set()
-		for webapp_user_id in total_webapp_user_ids:
-			total_member_order_count.add(webapp_user_id2member_id[webapp_user_id])
+		for order in orders:
+			webapp_user_id = order.webapp_user_id
+			member_id = webapp_user_id2member_id.get(webapp_user_id)
+			q_created_at = member_id2created_at.get(member_id)
+			flag = False
+			for channel_qrcode_id, member_ids in channel_qrcode_id2member_id.items():
+				if member_id in member_ids:
+					if q_created_at:
+						if member_id in q_has_member_ids:
+							if channel_qrcode_id2user_created_at.get(str(channel_qrcode_id)):
+								if channel_qrcode_id2user_created_at.get(
+										str(channel_qrcode_id)) <= order.created_at.strftime(
+									'%Y-%m-%d %H:%M:%S'):
+									if channel_qrcode_id2bing_member_id.get(channel_qrcode_id):
+										if curr_qrcode_id2member_id.get(
+												channel_qrcode_id) and member_id in curr_qrcode_id2member_id.get(
+											channel_qrcode_id):
+											if order.created_at.strftime('%Y-%m-%d %H:%M:%S') <= q_created_at:
+												flag = True
+										else:
+											if order.created_at.strftime('%Y-%m-%d %H:%M:%S') > q_created_at:
+												flag = True
+						else:
+							if channel_qrcode_id2user_created_at.get(
+									str(channel_qrcode_id)) <= order.created_at.strftime(
+								'%Y-%m-%d %H:%M:%S'):
+								flag = True
+					else:
+						for channel_qrcode_id, member_ids in channel_qrcode_id2member_id.items():
+							if member_id in member_ids:
+								if channel_qrcode_id2user_created_at.get(str(channel_qrcode_id)):
+									if order.created_at.strftime(
+											'%Y-%m-%d %H:%M:%S') >= channel_qrcode_id2user_created_at.get(
+										str(channel_qrcode_id)):
+										flag = True
+			if flag:
+				total_member_order_count.add(order.webapp_user_id)
 
 		channel_members = []
 		webapp_user_ids = []
@@ -150,13 +185,78 @@ class QrcodeOrderOutline(api_resource.ApiResource):
 			for tcm in total_channel_members:
 				created_at = tcm.created_at.strftime('%Y-%m-%d %H:%M:%S')
 				if created_at >= start_time and created_at <= end_time:
-					channel_members.append(tcm)
+					member_id = tcm.member_id
+					created_at = member_id2created_at.get(member_id)
+					for channel_qrcode_id, member_ids in channel_qrcode_id2member_id.items():
+						if member_id in member_ids:
+							flag = False
+							if created_at:
+								if member_id in q_has_member_ids:
+									if channel_qrcode_id2user_created_at.get(str(channel_qrcode_id)):
+										if channel_qrcode_id2user_created_at.get(
+												str(channel_qrcode_id)) <= order.created_at.strftime(
+											'%Y-%m-%d %H:%M:%S'):
+											if channel_qrcode_id2bing_member_id.get(channel_qrcode_id):
+												if curr_qrcode_id2member_id.get(
+														channel_qrcode_id) and member_id in curr_qrcode_id2member_id.get(
+													channel_qrcode_id):
+													if order.created_at.strftime('%Y-%m-%d %H:%M:%S') <= created_at:
+														flag = True
+												else:
+													if order.created_at.strftime('%Y-%m-%d %H:%M:%S') > created_at:
+														flag = True
+								else:
+									if channel_qrcode_id2user_created_at.get(
+											str(channel_qrcode_id)) <= order.created_at.strftime(
+										'%Y-%m-%d %H:%M:%S'):
+										flag = True
+							else:
+								for channel_qrcode_id, member_ids in channel_qrcode_id2member_id.items():
+									if member_id in member_ids:
+										if channel_qrcode_id2user_created_at.get(str(channel_qrcode_id)):
+											if order.created_at.strftime(
+													'%Y-%m-%d %H:%M:%S') >= channel_qrcode_id2user_created_at.get(
+												str(channel_qrcode_id)):
+												flag = True
+							if flag:
+								channel_members.append(tcm)
 			for order in orders:
 				created_at = order.created_at.strftime('%Y-%m-%d %H:%M:%S')
+				webapp_user_id = order.webapp_user_id
+				member_id = webapp_user_id2member_id.get(webapp_user_id)
+				q_created_at = member_id2created_at.get(member_id)
 				if created_at >= start_time and created_at <= end_time:
-					webapp_user_ids.append(order.webapp_user_id)
-			for webapp_user_id in webapp_user_ids:
-				member_order_count.add(webapp_user_id2member_id[webapp_user_id])
+					flag = False
+					for channel_qrcode_id, member_ids in channel_qrcode_id2member_id.items():
+						if member_id in member_ids:
+							if q_created_at:
+								if member_id in q_has_member_ids:
+									if channel_qrcode_id2user_created_at.get(str(channel_qrcode_id)):
+										if channel_qrcode_id2user_created_at.get(
+												str(channel_qrcode_id)) <= order.created_at.strftime(
+											'%Y-%m-%d %H:%M:%S'):
+											if channel_qrcode_id2bing_member_id.get(channel_qrcode_id):
+												if curr_qrcode_id2member_id.get(
+														channel_qrcode_id) and member_id in curr_qrcode_id2member_id.get(
+													channel_qrcode_id):
+													if order.created_at.strftime('%Y-%m-%d %H:%M:%S') <= q_created_at:
+														flag = True
+												else:
+													if order.created_at.strftime('%Y-%m-%d %H:%M:%S') > q_created_at:
+														flag = True
+								else:
+									if channel_qrcode_id2user_created_at.get(
+											str(channel_qrcode_id)) <= order.created_at.strftime(
+										'%Y-%m-%d %H:%M:%S'):
+										flag = True
+							else:
+								for channel_qrcode_id, member_ids in channel_qrcode_id2member_id.items():
+									if member_id in member_ids:
+										if channel_qrcode_id2user_created_at.get(str(channel_qrcode_id)):
+											if order.created_at.strftime('%Y-%m-%d %H:%M:%S') >= channel_qrcode_id2user_created_at.get(str(channel_qrcode_id)):
+												flag = True
+					if flag:
+						member_order_count.add(order.webapp_user_id)
 
 		member_outline_info = {
 			"increase_member_count": len(channel_members),
