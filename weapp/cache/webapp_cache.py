@@ -887,8 +887,9 @@ def update_webapp_product_pool_cache(**kwargs):
         pattern = 'webapp_product_detail_{wo:%s}_*' % webapp_owner_id
         cache_util.delete_pattern(pattern)
 
-        pattern_categories = "webapp_products_categories_{wo:%s}" % webapp_owner_id
-        cache_util.delete_pattern(pattern_categories)
+        # pattern_categories = "webapp_products_categories_{wo:%s}" % webapp_owner_id
+        # cache_util.delete_pattern(pattern_categories)
+        update_product_list_cache(webapp_owner_id)
 
            
 
