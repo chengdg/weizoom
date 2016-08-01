@@ -24,6 +24,8 @@ from weixin.user import module_api as weixin_api
 from weixin.user.models import set_share_img
 from eaglet.core import watchdog
 
+from account.models import UserProfile
+
 type2template = {}
 
 
@@ -161,6 +163,8 @@ def process_item_group_data(request, component):
 		woid = request.user.id
 		user_profile = request.user_profile
 
+	if user_profile.manager_id != woid and user_profile.manager_id > 2:
+		user_profile = UserProfile.objects.filter(user_id=user_profile.manager_id).first()
 
 	#woid = request.user_profile.user_id
 	if len(component['components']) == 0 and request.in_design_mode:
@@ -294,10 +298,6 @@ def process_item_list_data(request, component):
 		woid = request.user.id
 		user_profile = request.user_profile
 
-	if not woid:
-		woid = request.user.id
-		user_profile = request.user_profile
-
 	component['_has_data'] = True
 	count = int(component['model']['count'])
 
@@ -317,6 +317,9 @@ def process_item_list_data(request, component):
 		#分类已被删除，直接返回
 		_set_empty_product_list(request, component)
 		return
+
+	if user_profile.manager_id != woid and user_profile.manager_id > 2:
+		user_profile = UserProfile.objects.filter(user_id=user_profile.manager_id).first()
 
 	category, products = webapp_cache.get_webapp_products_new(user_profile, False, int(category_id))
 	# product_ids = set([r.product_id for r in mall_models.CategoryHasProduct.objects.filter(category_id=category_id)])
