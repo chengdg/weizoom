@@ -644,8 +644,23 @@ class UserManagerMiddleware(object):
 	def process_request(self, request):
 		user = request.user
 		manager = user
+
+		if "page_id=preview" in request.get_full_path():
+			if isinstance(request.user, User):
+			#更改manager获取方式 duhao 20151016
+				if not user.is_superuser:
+					profile = user.get_profile()
+					if profile.manager_id != user.id and profile.manager_id > 2:
+						manager = User.objects.get(id=profile.manager_id)
+
+				# departmentUser = auth_models.DepartmentHasUser.objects.filter(user=request.user)
+				# if len(departmentUser) == 1:
+				# 	manager = User.objects.get(id=departmentUser[0].owner_id)
+				request.manager = manager
+
 		if is_pay_request(request) or is_wapi_request(request) or request.is_access_webapp or request.is_access_webapp_api:
 			return None
+
 		if isinstance(request.user, User):
 			#更改manager获取方式 duhao 20151016
 			if not user.is_superuser:

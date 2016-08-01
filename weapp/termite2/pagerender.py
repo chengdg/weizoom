@@ -154,7 +154,11 @@ def __get_template(component_category, component):
 
 
 def process_item_group_data(request, component):
-	woid = request.user_profile.user_id
+	woid = request.manager.id
+	user_profile = request.manager.get_profile()
+
+
+	#woid = request.user_profile.user_id
 	if len(component['components']) == 0 and request.in_design_mode:
 		#空商品，需要显示占位结果
 		component['_has_data'] = True
@@ -184,7 +188,7 @@ def process_item_group_data(request, component):
 	else:
 		component['_has_data'] = True
 		products = []
-		category, cached_products = webapp_cache.get_webapp_products_new(request.user_profile, False, 0)
+		category, cached_products = webapp_cache.get_webapp_products_new(user_profile, False, 0)
 		try:
 			if woid ==1120:
 				watchdog_info({
@@ -279,6 +283,9 @@ def _update_product_display_count_by_type(request, products, component):
 	return products
 
 def process_item_list_data(request, component):
+	woid = request.manager.id
+	user_profile = request.manager.get_profile()
+
 	component['_has_data'] = True
 	count = int(component['model']['count'])
 
@@ -299,7 +306,7 @@ def process_item_list_data(request, component):
 		_set_empty_product_list(request, component)
 		return
 
-	category, products = webapp_cache.get_webapp_products_new(request.user_profile, False, int(category_id))
+	category, products = webapp_cache.get_webapp_products_new(user_profile, False, int(category_id))
 	# product_ids = set([r.product_id for r in mall_models.CategoryHasProduct.objects.filter(category_id=category_id)])
 	# product_ids.sort()
 	# products = [product for product in mall_models.Product.objects.filter(id__in=product_ids) if product.shelve_type == mall_models.PRODUCT_SHELVE_TYPE_ON]
