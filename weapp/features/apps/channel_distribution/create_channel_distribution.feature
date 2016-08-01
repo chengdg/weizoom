@@ -85,7 +85,7 @@ Background:
 			"distribution_prize_type": "无",
 			"commission_return_rate":"10",
 			"minimum_cash_discount":"80",
-			"commission_return_standard":"500",
+			"commission_return_standard":500.00,
 			"is_seven_day_settlement_standard":"false",
 			"tags": "未分组",
 			"prize_type": "无",
@@ -98,7 +98,7 @@ Background:
 			"distribution_prize_type": "佣金",
 			"commission_return_rate":"10",
 			"minimum_cash_discount":"80",
-			"commission_return_standard":"500",
+			"commission_return_standard":500.00,
 			"is_seven_day_settlement_standard":"false",
 			"tags": "分组1",
 			"prize_type": "积分",
@@ -112,7 +112,7 @@ Background:
 			"distribution_prize_type": "佣金",
 			"commission_return_rate":"10",
 			"minimum_cash_discount":"80",
-			"commission_return_standard":"500",
+			"commission_return_standard":500.00,
 			"is_seven_day_settlement_standard":"true",
 			"tags": "分组2",
 			"prize_type": "优惠券",
@@ -131,27 +131,27 @@ Scenario:1 渠道分销二维码的查看
 			[{
 				"code_name": "渠道分销二维码-优惠券奖励",
 				"relation_member": "tom",
-				"attention_number": 0,
+				"attention_number": "0",
 				"total_transaction_money": 0.00,
-				"cash_back_amount":"0",
+				"cash_back_amount":0.00,
 				"prize": "[优惠券]优惠券1",
 				"distribution_prize":"无",
 				"create_time": "2015-10-12 10:20:30"
 			},{
 				"code_name": "渠道分销二维码-积分奖励",
 				"relation_member": "bill",
-				"attention_number": 0,
+				"attention_number": "0",
 				"total_transaction_money": 0.00,
-				"cash_back_amount":"0",
+				"cash_back_amount":0.00,
 				"prize": "[积分]10",
 				"distribution_prize":"佣金",
 				"create_time": "2015-10-11 10:20:30"
 			},{
 				"code_name": "渠道分销二维码-默认设置",
 				"relation_member": "bigs",
-				"attention_number": 0,
+				"attention_number": "0",
 				"total_transaction_money": 0.00,
-				"cash_back_amount":"0",
+				"cash_back_amount":0.00,
 				"prize": "无",
 				"distribution_prize":"佣金",
 				"create_time": "2015-10-10 10:20:30"
@@ -175,27 +175,27 @@ Scenario:2 渠道分销二维码的查询
 			[{
 				"code_name": "渠道分销二维码-优惠券奖励",
 				"relation_member": "tom",
-				"attention_number": 0,
+				"attention_number": "0",
 				"total_transaction_money": 0.00,
-				"cash_back_amount":"0",
+				"cash_back_amount":0.00,
 				"prize": "[优惠券]优惠券1",
 				"distribution_prize":"无",
 				"create_time": "2015-10-12 10:20:30"
 			},{
 				"code_name": "渠道分销二维码-积分奖励",
 				"relation_member": "bill",
-				"attention_number": 0,
+				"attention_number": "0",
 				"total_transaction_money": 0.00,
-				"cash_back_amount":"0",
+				"cash_back_amount":0.00,
 				"prize": "[积分]10",
 				"distribution_prize":"佣金",
 				"create_time": "2015-10-11 10:20:30"
 			},{
 				"code_name": "渠道分销二维码-默认设置",
 				"relation_member": "bigs",
-				"attention_number": 0,
+				"attention_number": "0",
 				"total_transaction_money": 0.00,
-				"cash_back_amount":"0",
+				"cash_back_amount":0.00,
 				"prize": "无",
 				"distribution_prize":"佣金",
 				"create_time": "2015-10-10 10:20:30"
@@ -214,9 +214,9 @@ Scenario:2 渠道分销二维码的查询
 			[{
 				"code_name": "渠道分销二维码-积分奖励",
 				"relation_member": "bill",
-				"attention_number": 0,
+				"attention_number": "0",
 				"total_transaction_money": 0.00,
-				"cash_back_amount":"0",
+				"cash_back_amount":0.00,
 				"prize": "[积分]10",
 				"distribution_prize":"佣金",
 				"create_time": "2015-10-11 10:20:30"
@@ -235,9 +235,9 @@ Scenario:2 渠道分销二维码的查询
 			[{
 				"code_name": "渠道分销二维码-优惠券奖励",
 				"relation_member": "tom",
-				"attention_number": 0,
+				"attention_number": "0",
 				"total_transaction_money": 0.00,
-				"cash_back_amount":"0",
+				"cash_back_amount":0.00,
 				"prize": "[优惠券]优惠券1",
 				"distribution_prize":"无",
 				"create_time": "2015-10-12 10:20:30"
@@ -274,9 +274,9 @@ Scenario:3 渠道分销二维码的分页
 		[{
 				"code_name": "渠道分销二维码-优惠券奖励",
 				"relation_member": "tom",
-				"attention_number": 0,
+				"attention_number": "0",
 				"total_transaction_money": 0.00,
-				"cash_back_amount":"0",
+				"cash_back_amount":0.00,
 				"prize": "[优惠券]优惠券1",
 				"distribution_prize":"无",
 				"create_time": "2015-10-12 10:20:30"
@@ -288,9 +288,9 @@ Scenario:3 渠道分销二维码的分页
 		[{
 				"code_name": "渠道分销二维码-积分奖励",
 				"relation_member": "bill",
-				"attention_number": 0,
+				"attention_number": "0",
 				"total_transaction_money": 0.00,
-				"cash_back_amount":"0",
+				"cash_back_amount":0.00,
 				"prize": "[积分]10",
 				"distribution_prize":"佣金",
 				"create_time": "2015-10-11 10:20:30"
@@ -302,9 +302,9 @@ Scenario:3 渠道分销二维码的分页
 		[{
 				"code_name": "渠道分销二维码-默认设置",
 				"relation_member": "bigs",
-				"attention_number": 0,
+				"attention_number": "0",
 				"total_transaction_money": 0.00,
-				"cash_back_amount":"0",
+				"cash_back_amount":0.00,
 				"prize": "无",
 				"distribution_prize":"佣金",
 				"create_time": "2015-10-10 10:20:30"
@@ -316,9 +316,9 @@ Scenario:3 渠道分销二维码的分页
 		[{
 				"code_name": "渠道分销二维码-积分奖励",
 				"relation_member": "bill",
-				"attention_number": 0,
+				"attention_number": "0",
 				"total_transaction_money": 0.00,
-				"cash_back_amount":"0",
+				"cash_back_amount":0.00,
 				"prize": "[积分]10",
 				"distribution_prize":"佣金",
 				"create_time": "2015-10-11 10:20:30"
