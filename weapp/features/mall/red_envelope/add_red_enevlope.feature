@@ -1,12 +1,12 @@
 #editor 新新 2015.10.19
-
+#editor 许韦 2016.08.01
 
 Feature: 添加分享红包
 """
 	Jobs能通过管理系统添加"添加红包"
 
 	1、【活动名称】：最多可以输入18个字
-	2、【奖励】：选择现有的优惠券，只能选择到【每人限领】为无限的优惠券
+	2、【奖励】：选择现有的优惠券，只能选择到【每人限领】为无限的优惠券，不展示【领取权限】为仅未下单用户可领取的优惠券
 	3、【奖励时间】：开始结束时间只能选择今天及其之后的时间，结束时间必须在开始时间之后
 		勾选"永久"：开始结束与结束时间失效，活动永久有效,除非手动结束活动，活动才结束
 	4、【领取方式】：下单领取勾选上时，订单满多少元【奖励条件】有效
@@ -62,10 +62,42 @@ Background:
 			"using_limit": "满50元可以使用",
 			"coupon_id_prefix": "coupon4_id_",
 			"coupon_product": "商品2"
+		}, {
+			"name": "单品券5",
+			"money": 5.00,
+			"limit_counts": "无限",
+			"start_date": "今天",
+			"end_date": "1天后",
+			"coupon_id_prefix": "coupon5_id_",
+			"is_no_order_user":"true"
+		}, {
+			"name": "单品券6",
+			"money": 5.00,
+			"limit_counts": "5",
+			"start_date": "今天",
+			"end_date": "2天后",
+			"coupon_id_prefix": "coupon6_id_",
+			"coupon_product": "商品1",
+			"is_no_order_user":"true"
 		}]
 		"""
 @mall2 @promotion @promotionRedbag
-Scenario: 1 添加分享红包
+Scenario: 1 添加分享红包，获取优惠券列表
+	jobs添加"分享红包"活动，添加优惠券列表只展示【每人限领】为无限的优惠券，不展示【领取权限】为仅未下单用户可领取的优惠券
+	Given jobs登录系统
+	Then jobs能获取添加"分享红包"优惠券列表
+		"""
+		[{
+			"name": "全体券1"
+		},{
+			"name": "全体券3"
+		},{
+			"name": "单品券4"
+		}]
+		"""
+
+@mall2 @promotion @promotionRedbag
+Scenario: 2 添加分享红包
 	jobs添加"分享红包"后，"红包"列表会按照添加的倒序排列
 	1.bill能获取红包列表
 
