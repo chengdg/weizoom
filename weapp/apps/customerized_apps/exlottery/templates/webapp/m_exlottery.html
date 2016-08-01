@@ -93,6 +93,9 @@
         color: #454545;
         background: white;
     }
+    .wui-resultDialog .wui-i-content{
+        font-weight: bold;
+    }
 </style>
 {% endblock %}
 
@@ -106,10 +109,7 @@
         <div class="wui-i-body xa-dialog-content">
             <div class="wui-i-contentHeader xa-dialog-contentHeader"></div>
             <div class="wui-i-content xa-entity-content" style="display: none">
-                <label>手机号
-                    <input type="tel" placeholder="请输入手机号码">
-                </label>
-                <button class="wui-i-dialog-btn" style="margin: 0;display: inline-block">提&nbsp;交</button>
+                工作人员会尽快与您联系，<br>请保持手机开机
             </div>
         </div>
         <div class="wui-i-bottom xa-dialog-bottom">
@@ -145,38 +145,13 @@
             this.$el = $(selector || '#resultDialog');
             this.$title = this.$el.find('.xa-dialog-title');
             this.$contentHeader = this.$el.find('.xa-dialog-contentHeader');
-            this.$entityContent = this.$el.find('.xa-entity-content');
-            this.$entitySubmitBtn = this.$entityContent.find('button');
             this.$userCenter = this.$el.find('.xa-userCenter');
             this.$closeBtn = this.$el.find('.xa-closeBtn');
+            this.$entityContent = this.$el.find('.xa-entity-content');
+            this.$title.hide();
+            this.$userCenter.show();
+            this.$closeBtn.show();
 
-            this.$entitySubmitBtn.on('click', function(){
-                var tel = that.$entityContent.find('input').val().trim();
-                if(!/^0{0,1}(13[0-9]|15[0-9]|17[0-9]|18[0-9])[0-9]{8}$/g.test(tel)){
-                    wuiAlert('请输入正确的手机号~');
-                    return false;
-                }
-                 W.getApi().call({
-                        app: 'm/apps/exlottery',
-                        resource: 'exlottery_prize',
-                        method: 'post',
-                        args:{
-                            id: W.appRecordId,
-                            webapp_owner_id: W.webappOwnerId,
-                            tel: tel
-                        },
-                        success: function(data){
-                            that.$title.hide();
-                            that.$entityContent.hide();
-                            that.$contentHeader.html('工作人员会尽快与您联系，<br>请保持手机开机~');
-                            that.$userCenter.show();
-                            that.$closeBtn.show();
-                        },
-                        error: function(error){
-                            wuiAlert('请重试~');
-                        }
-                    });
-            });
             this.$userCenter.on('click', function(){
                 if (!W.isMember) {
                     that.$el.hide();
@@ -208,15 +183,14 @@
             var prize_type = options ? options.prize_type||'timesout' : 'timesout';
             var prize_name = options ? options.prize_name : '';
             var delay = options ? options.delay || false : false;
-            this.$entityContent.hide();
             this.$el.hide();
             this.$title.show();
             if(prize_type == 'entity'){
                 this.$title.html('中奖了耶').show();
                 this.$contentHeader.html("恭喜您获得了<br>"+prize_name+'！');
                 this.$entityContent.show();
-                this.$userCenter.hide();
-                this.$closeBtn.hide();
+                this.$userCenter.show()
+                this.$closeBtn.show();
             }else if(prize_type == 'no_prize'){
                 this.$title.html('很遗憾').show();
                 this.$contentHeader.html("没有中奖，再接再厉吧~");
