@@ -337,10 +337,17 @@ def get_products_in_webapp(webapp_id, is_access_weizoom_mall, webapp_owner_id, c
 
 	weizoom_mall_params = {}
 	if category_id!=0:
-
 		category_has_products = CategoryHasProduct.objects.filter(category_id = category_id)
 		product_ids = [p.product_id for p in category_has_products]
 		params['id__in'] = product_ids
+
+		if is_access_weizoom_mall:
+			product_pool = ProductPool.objects.filter(woid=webapp_owner_id, status=PP_STATUS_ON)
+			product_pool_ids = [pool.product_id for pool in product_pool]
+
+			product_pool_ids = list(set(product_ids) & set(product_pool_ids))
+			if product_pool_ids:
+				weizoom_mall_params['id__in'] = product_pool_ids
 	else:
 		if is_access_weizoom_mall:
 			product_pool = ProductPool.objects.filter(woid=webapp_owner_id, status=PP_STATUS_ON)
@@ -3139,6 +3146,8 @@ def check_product_in_wishlist(request):
 
 def get_member_product_info_dict(request):
 	result_data = dict()
+	if not request.webapp_user:
+		return result_data
 	shopping_cart_count = ShoppingCart.objects.filter(webapp_user_id=request.webapp_user.id).count()
 	result_data['count'] = shopping_cart_count
 	webapp_owner_id = request.webapp_owner_id
