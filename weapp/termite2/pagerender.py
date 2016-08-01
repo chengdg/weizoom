@@ -337,7 +337,7 @@ def process_item_list_data(request, component):
 				"name": product.name,
 				"thumbnails_url": product.thumbnails_url,
 				"display_price": product.display_price,
-				"url": './?module=mall&model=product&action=get&rid=%d&webapp_owner_id=%d&workspace_id=mall' % (product.id, product.owner_id),
+				"url": './?module=mall&model=product&action=get&rid=%d&webapp_owner_id=%d&workspace_id=mall' % (product.id, woid),
 				"is_member_product": product.is_member_product,
 				"promotion_js": json.dumps(product.promotion) if product.promotion else ""
 			})
