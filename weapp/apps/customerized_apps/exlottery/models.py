@@ -33,7 +33,7 @@ class ExlottoryRecord(models.Document):
 	prize_title = models.StringField(default="", max_length=16) #奖项标题
 	prize_name = models.StringField(default="", max_length=100) #奖项名称
 	prize_data = models.StringField(default="", max_length=100) #奖项数据
-	tel = models.StringField(default="", max_length=20)
+	tel = models.StringField(default="", max_length=20) #手机号
 	status = models.BooleanField(default=False) #是否已领取
 	created_at = models.DateTimeField() #创建时间
 	code = models.StringField(default="", max_length=20)  # 抽奖码
