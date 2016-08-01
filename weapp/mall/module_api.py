@@ -1743,7 +1743,7 @@ def get_order_operation_logs(order_id, child_order_length=None):
 	else:
 		return OrderOperationLog.objects.filter(order_id__contains=order_id).exclude(
 			~Q(order_id=order_id),
-			action__in=[u'下单', u'支付', u'退款', u'退款完成']
+			action__in=[u'下单', u'支付', u'退款', u'退款完成', u'取消订单']
 		).exclude(order_id=order_id, action__in=[u'发货', u'完成'])
 
 
@@ -2294,7 +2294,6 @@ def update_order_status(user, action, order, request=None):
 	elif action == 'return_pay':
 		action_msg = '退款'
 		target_status = ORDER_STATUS_REFUNDING
-		operation_name = u"退款中"
 	elif 'cancel' in action or 'return_success' == action:
 		actions = action.split('-')
 		operation_name = u'{} {}'.format(operation_name, (actions[1] if len(actions) > 1 else ''))
@@ -2304,7 +2303,6 @@ def update_order_status(user, action, order, request=None):
 		else:
 			action_msg = '退款完成'
 			target_status = ORDER_STATUS_REFUNDED
-			operation_name = u"退款完成"
 		try:
 			# 返回订单使用的积分
 			if order.integral:
@@ -2386,7 +2384,6 @@ def update_order_status(user, action, order, request=None):
 				MemberSharedUrlInfo.objects.filter(shared_url=order_record.url, member_id=followed_member.id).update(leadto_buy_count=F('leadto_buy_count')+1)
 				order_record.is_updated = True
 				order_record.save()
-				#print '>>>>>.aaaaaaaaaaaaaaaaaaaaaaaaffffff>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>'
 	except:
 		notify_message = u"订单状态为已完成时为贡献者增加积分,order_id:{}，cause:\n{}".format(order_id, unicode_full_stack())
 		watchdog_error(notify_message)

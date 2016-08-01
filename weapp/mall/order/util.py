@@ -833,7 +833,7 @@ def get_detail_response(request):
 
         # 获得子订单
         child_orders = list(Order.objects.filter(origin_order_id=order.id).all())
-        if (not child_orders and order.supplier_user_id):
+        if (not child_orders and (order.supplier_user_id or order.supplier)):
             child_orders = [order]
         if len(child_orders) > 1 and order.status > ORDER_STATUS_CANCEL:
             order.actions = get_order_actions(order, is_detail_page=True, is_list_parent=True,
@@ -846,7 +846,7 @@ def get_detail_response(request):
                 mall_type=request.user_profile.webapp_type,
                 is_group_buying=is_group_buying)
         else:
-            child_orders = [order]
+            #child_orders = [order]
             if is_group_buying:
                 order.actions = get_order_actions(
                     order,
