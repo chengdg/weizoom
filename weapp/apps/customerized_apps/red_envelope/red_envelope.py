@@ -53,7 +53,7 @@ class RedEnvelopeRule(resource.Resource):
         else:
             coupon_rules = promotion_models.CouponRule.objects.filter(owner=request.manager, is_active=True,
                                                                       end_date__gt=datetime.now(), limit_counts=-1,
-                                                                      receive_rule=False)
+                                                                      receive_rule=False).order_by('id')
             c = RequestContext(request, {
                 'first_nav_name': FIRST_NAV_NAME,
                 'second_navs': export.get_promotion_and_apps_second_navs(request),
