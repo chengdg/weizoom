@@ -223,7 +223,7 @@ Scenario:3 微信用户进入专项抽奖活动首页，验证码正确，抽奖
 	When bill在专项抽奖活动首页中输入抽奖码'el8s539t18'
 	When bill在专项抽奖活动首页中输入手机号码'13758899565'
 	When bill点击'立即抽奖'进入专项抽奖活动内容页
-	When bill参加专项抽奖活动'专项抽奖'
+	When bill参加专项抽奖活动"专项抽奖"
 	Then bill获得专项抽奖结果
 	"""
 		{
@@ -232,7 +232,7 @@ Scenario:3 微信用户进入专项抽奖活动首页，验证码正确，抽奖
 		}
 	"""
 	When jobs查看专项抽奖活动'专项抽奖'
-	Then jobs获得幸运码抽奖活动'专项抽奖'的结果列表
+	Then jobs获得专项抽奖活动'专项抽奖'的结果列表
 		|member_name|mobile      | prize_grade | prize_name |lottery_time| receive_status |actions|
 		|bill       |13758899565 | 一等奖      | 1000积分   |今天        | 已领取         |       |
 		
@@ -288,7 +288,7 @@ Scenario:4 微信用户进入专项抽奖活动首页，验证码正确，活动
 	When bill在专项抽奖活动首页中输入抽奖码'el8s539t18'
 	When bill在专项抽奖活动首页中输入手机号码'13758899565'
 	When bill点击'立即抽奖'进入专项抽奖活动内容页
-	When bill参加专项抽奖活动'专项抽奖'
+	When bill参加专项抽奖活动"专项抽奖"
 	Then bill获得专项抽奖结果
 	"""
 		{
@@ -360,7 +360,7 @@ Scenario:5 微信用户进入专项抽奖活动首页，验证码正确，活动
 	When bill在专项抽奖活动首页中输入抽奖码'el8s539t18'
 	When bill在专项抽奖活动首页中输入手机号码'13758899565'
 	When bill点击'立即抽奖'进入专项抽奖活动内容页
-	When bill参加专项抽奖活动'专项抽奖'
+	When bill参加专项抽奖活动"专项抽奖"
 	Then bill获得专项抽奖结果
 	"""
 		{

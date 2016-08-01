@@ -106,7 +106,7 @@ Scenario:1 抽奖码校验通过
 	When bill在专项抽奖活动首页中输入抽奖码'el8s539t18'
 	When bill在专项抽奖活动首页中输入手机号码'13758899565'
 	When bill点击'立即抽奖'进入专项抽奖活动内容页
-	When bill参加专项抽奖活动'专项抽奖'
+	When bill参加专项抽奖活动"专项抽奖"
 	Then bill获得专项抽奖结果
 	"""
 		{

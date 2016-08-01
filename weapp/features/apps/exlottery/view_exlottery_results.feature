@@ -342,7 +342,7 @@ Scenario:3 查看结果列表分页
 	And jobs设置分页查询参数
 		"""
 		{
-			"count_per_page":2
+			"count_per_page":1
 		}
 		"""
 	When jobs查看专项抽奖活动'专项抽奖'
