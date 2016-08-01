@@ -16,6 +16,7 @@ class ExlotteryParticipance(models.Document):
 	created_at = models.DateTimeField()  # 领取时间
 	code = models.StringField(default="", max_length=20, unique=True)  # 抽奖码
 	status = models.IntField(default=NOT_USED) # 抽奖码有没有被使用
+	tel = models.StringField(default="", max_length=20)  # 手机号
 
 	meta = {
 		'collection': 'exlottery_exlottery_participance',
