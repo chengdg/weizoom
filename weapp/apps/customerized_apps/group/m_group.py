@@ -29,7 +29,11 @@ class MGroup(resource.Resource):
 	resource = 'm_group'
 
 	def api_get(request):
+		response = create_response(500)
 		record_id = request.GET.get('id', None)
+		if not record_id:
+			response.errMsg = u'活动信息出错'
+			return response.get_response()
 		group_relation_id = request.GET.get('group_relation_id', None)
 		member = request.member
 		isMember = False
@@ -55,15 +59,14 @@ class MGroup(resource.Resource):
 			is_from_pay_result = True
 		else:
 			is_from_pay_result = False
-		response = create_response(500)
 
-		record = app_models.Group.objects(id=record_id)
+		webapp_owner_id = int(request.GET.get('webapp_owner_id', 0))
+		watchdog_info(u'团购流程日志：request.GET[webapp_owner_id]=={}'.format(webapp_owner_id))
+		record = app_models.Group.objects(id=record_id, owner_id=webapp_owner_id)
 		if record.count() <= 0:
 			response.errMsg = 'is_deleted'
 			return response.get_response()
-		elif not record_id:
-			response.errMsg = u'活动信息出错'
-			return response.get_response()
+
 		record = record.first()
 		#获取活动状态
 		activity_status = record.status_text
@@ -85,7 +88,6 @@ class MGroup(resource.Resource):
 				record.update(set__product_img=pic_url)
 				record.reload()
 		except:
-			response = create_response(500)
 			response.errMsg = u'团购商品已不存在！'
 			return response.get_response()
 		if member:
@@ -94,7 +96,7 @@ class MGroup(resource.Resource):
 			if fid == 'null':
 				fid = member_id
 			isMember =member.is_subscribed
-			if u"进行中" or u'已结束' == activity_status:
+			if activity_status in [u"进行中", u'已结束']:
 				if not group_relation_id:
 					group_relation = app_models.GroupRelations.objects(belong_to=record_id,member_id=str(member_id))
 					if group_relation.count() > 0:
@@ -138,9 +140,8 @@ class MGroup(resource.Resource):
 
 									member_info_list = [{"member_id": group_detail.grouped_member_id, "order_id": group_detail.order_id} for group_detail in group_details]
 									send_group_template_message(activity_info, member_info_list)
-								except Exception, e:
-									print e
-									pass
+								except:
+									watchdog_alert(u'发送团购失败模版消息失败， cause：\n{}'.format(unicode_full_stack()))
 
 						# 获取该主页帮助者列表
 						helpers = app_models.GroupDetail.objects(relation_belong_to=str(group_relation_id), owner_id=fid, order_id__ne='').order_by('created_at')
@@ -172,8 +173,8 @@ class MGroup(resource.Resource):
 									is_helper_unpaid = True
 						except:
 							pass
-					except Exception,e:
-						print e
+					except:
+						watchdog_alert(u'该团购已不存在！cause: \n{}'.format(unicode_full_stack()))
 						response = create_response(500)
 						response.errMsg = u'该团购已不存在！'
 						return response.get_response()
@@ -280,7 +281,9 @@ class MGroup(resource.Resource):
 				# 	print 'redis---return'
 				# 	return HttpResponse(cache_data)
 
-				record = app_models.Group.objects(id=record_id)
+				webapp_owner_id = int(request.GET.get('webapp_owner_id', 0))
+				watchdog_info(u'团购流程日志：request.GET[webapp_owner_id]=={}'.format(webapp_owner_id))
+				record = app_models.Group.objects(id=record_id, owner_id=webapp_owner_id)
 				if record.count() > 0:
 					record = record.first()
 					record.update(add_to_set__visited_member=member_id)
