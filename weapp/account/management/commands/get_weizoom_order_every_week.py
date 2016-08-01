@@ -71,7 +71,7 @@ class Command(BaseCommand):
 			nick_names = [u'微众商城', u'微众家', u'微众妈妈', u'微众学生', u'微众白富美', u'微众俱乐部']
 			# nick_names = [u'微众商城']
 
-			heads = [u'总订单', u'首单', u'复购', u'客单价' ]
+			heads = [u'总订单', u'总订单金额', u'首单', u'首单金额', u'复购', u'复购金额']
 			tmp_line= 1
 			head_lists = []
 			for last_week_day in last_week_days[:7]:
@@ -95,18 +95,26 @@ class Command(BaseCommand):
 				for i in xrange(7):
 					orders_total = Order.objects.filter(webapp_id=webapp_id, created_at__gte=last_week_days[i], created_at__lt=last_week_days[i+1], status__in=[2,3,4,5], origin_order_id__lte=0)
 					orders_total_count = orders_total.count()
-					orders_first_count = Order.objects.filter(webapp_id=webapp_id, created_at__gte=last_week_days[i], created_at__lt=last_week_days[i+1], status__in=[2,3,4,5], is_first_order=True, origin_order_id__lte=0).count()
-					orders_not_first_count = Order.objects.filter(webapp_id=webapp_id, created_at__gte=last_week_days[i], created_at__lt=last_week_days[i+1], status__in=[2,3,4,5], is_first_order=False, origin_order_id__lte=0).count()
-					paid_amount = 0.0
+					orders_first = Order.objects.filter(webapp_id=webapp_id, created_at__gte=last_week_days[i], created_at__lt=last_week_days[i+1], status__in=[2,3,4,5], is_first_order=True, origin_order_id__lte=0)
+					orders_first_count = orders_first.count()
+					orders_not_first= Order.objects.filter(webapp_id=webapp_id, created_at__gte=last_week_days[i], created_at__lt=last_week_days[i+1], status__in=[2,3,4,5], is_first_order=False, origin_order_id__lte=0)
+					orders_not_first_count = orders_not_first.count()
+					paid_amount_total = 0.0
+					paid_amount_total_first = 0.0
+					paid_amount_total_not_first = 0.0
 					for order in orders_total:
 						tmp_paid_amount = order.final_price + order.weizoom_card_money
-						paid_amount += tmp_paid_amount
-					if orders_total_count>0:
-						unit_price = paid_amount/orders_total_count
-						unit_price_float = '%.2f' % unit_price
-					else:
-						unit_price_float = 0.00
-					statistics_days.extend([orders_total_count, orders_first_count, orders_not_first_count, unit_price_float])
+						paid_amount_total += tmp_paid_amount
+
+					for order in orders_first:
+						tmp_paid_amount = order.final_price + order.weizoom_card_money
+						paid_amount_total_first += tmp_paid_amount
+
+					for order in orders_not_first:
+						tmp_paid_amount = order.final_price + order.weizoom_card_money
+						paid_amount_total_not_first += tmp_paid_amount
+
+					statistics_days.extend([orders_total_count, paid_amount_total, orders_first_count, paid_amount_total_first, orders_not_first_count, paid_amount_total_not_first])
 
 				table.write_row('A{}'.format(tmp_line), statistics_days)
 
