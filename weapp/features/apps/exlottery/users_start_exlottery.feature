@@ -104,8 +104,9 @@ Scenario:1 抽奖码校验通过
 	Then bill在专项抽奖活动首页获得验证码'tudf'
 	When bill在专项抽奖活动首页中输入验证码'tudf'
 	When bill在专项抽奖活动首页中输入抽奖码'el8s539t18'
+	When bill在专项抽奖活动首页中输入手机号码'13758899565'
 	When bill点击'立即抽奖'进入专项抽奖活动内容页
-	When bill参加专项抽奖活动'专项抽奖'
+	When bill参加专项抽奖活动"专项抽奖"
 	Then bill获得专项抽奖结果
 	"""
 		{
@@ -145,6 +146,7 @@ Scenario:2 其他微信用户通过回复分享至朋友圈的专项抽奖活动
 	Then bill在专项抽奖活动首页获得验证码'tudf'
 	When bill在专项抽奖活动首页中输入验证码'tudf'
 	When bill在专项抽奖活动首页中输入抽奖码'el8s539t18'
+	When bill在专项抽奖活动首页中输入手机号码'13758899565'
 	When bill点击'立即抽奖'进入专项抽奖活动内容页	
 	When bill把jobs的'专项抽奖'活动链接分享到朋友圈
 
