@@ -154,8 +154,12 @@ def __get_template(component_category, component):
 
 
 def process_item_group_data(request, component):
-	woid = request.manager.id
-	user_profile = request.manager.get_profile()
+	if hasattr(request, 'manager'):
+		woid = request.manager.id
+		user_profile = request.manager.get_profile()
+	else:
+		woid = request.user.id
+		user_profile = request.user_profile
 
 
 	#woid = request.user_profile.user_id
@@ -283,8 +287,12 @@ def _update_product_display_count_by_type(request, products, component):
 	return products
 
 def process_item_list_data(request, component):
-	woid = request.manager.id
-	user_profile = request.manager.get_profile()
+	if hasattr(request, 'manager'):
+		woid = request.manager.id
+		user_profile = request.manager.get_profile()
+	else:
+		woid = request.user.id
+		user_profile = request.user_profile
 
 	component['_has_data'] = True
 	count = int(component['model']['count'])
