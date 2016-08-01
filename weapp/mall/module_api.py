@@ -1509,11 +1509,6 @@ def ship_order(order_id, express_company_name,
 				user = UserProfile.objects.get(webapp_id=order.webapp_id).user
 			if operator_name != user.username:
 				user = UserProfile.objects.get(webapp_id=order.webapp_id).user
-			if Order.objects.filter(origin_order_id=order.origin_order_id).count() == 1:
-				origin_order = Order.objects.get(id=order.origin_order_id)
-				Order.objects.filter(id=origin_order.id).update(**order_params)
-				record_operation_log(origin_order.order_id, operator_name, action, origin_order)
-				record_status_log(origin_order.order_id, operator_name, origin_order.status, target_status)
 			set_origin_order_status(order, user, 'ship')
 		else:
 			if Order.objects.filter(origin_order_id=order.id).count() == 1:
@@ -2230,14 +2225,11 @@ def get_product_ids_in_weizoom_mall(webapp_id):
 def set_origin_order_status(child_order, user, action, request=None):
 	children_order_status = [order.status for order in Order.objects.filter(origin_order_id=child_order.origin_order_id)]
 	origin_order = Order.objects.get(id=child_order.origin_order_id)
-	if origin_order.status != min(children_order_status):
-		if action == 'ship':
-			origin_order.status = min(children_order_status)
-			origin_order.save()
-			if min(children_order_status) == ORDER_STATUS_PAYED_SHIPED and len(children_order_status) > 1:
-				update_order_status(user, action, origin_order, request)
-		else:
-			update_order_status(user, action, origin_order, request)
+	if len(children_order_status) == 1:
+		update_order_status(user, action, origin_order, request)
+	else:
+		origin_order.status = min(children_order_status)
+		origin_order.save()
 
 
 def update_order_status(user, action, order, request=None):
