@@ -94,9 +94,9 @@
 				{% for second_nav in second_navs %}
 					{% for nav in second_nav.navs %}
 						{% if nav.name == 'orderMoney' %}
-							{% if request.user_profile.webapp_type == 1 %}
+							{% if request.user_profile.webapp_type == 0 %}
 								<li class="{% ifequal second_nav_name nav.name %}active{% endifequal %}">
-									<a href="{{nav.url}}" title="{{nav.title}}" name="{{nav.name}}">
+									<a href="{{nav.url}}{% if nav.need_token %}?token={{token}}{% endif %}" {% if nav.need_token %}target="_blank"{% endif %} title="{{nav.title}}" name="{{nav.name}}">
 										<i class="xui-icon-sideBar xui-sideBar-{{nav.name}}"></i> {{nav.title|safe}}
 										<i class="xui-icon-arrow"></i>
 									</a>
