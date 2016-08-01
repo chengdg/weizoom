@@ -28,10 +28,11 @@ import json
 from excel_response import ExcelResponse
 from modules.member.module_api import get_member_by_id_list, get_member_by_id
 from core.wxapi import get_weixin_api
+from mall import export as mall_export
 
 #COUNT_PER_PAGE = 2
 COUNT_PER_PAGE = 50
-FIRST_NAV = export.WEIXIN_HOME_FIRST_NAV
+FIRST_NAV = mall_export.MALL_PROMOTION_AND_APPS_FIRST_NAV
 
 #DEFAULT_CATEGORY_NAME=u"未分组"
 
@@ -47,7 +48,7 @@ class Qrcodes(resource.Resource):
 		"""
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
-			'second_navs': export.get_weixin_second_navs(request),
+			'second_navs': mall_export.get_promotion_and_apps_second_navs(request),
 			'second_nav_name': export.WEIXIN_ADVANCE_SECOND_NAV,
 			'third_nav_name': export.ADVANCE_MANAGE_QRCODE_NAV,
 		})
@@ -367,7 +368,7 @@ class Qrcode(resource.Resource):
 			tag_id = qrcode.tag_id
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
-			'second_navs': export.get_weixin_second_navs(request),
+			'second_navs': mall_export.get_promotion_and_apps_second_navs(request),
 			'second_nav_name': export.WEIXIN_ADVANCE_SECOND_NAV,
 			'third_nav_name': export.ADVANCE_MANAGE_QRCODE_NAV,
 			'webapp_id': webapp_id,
@@ -583,7 +584,7 @@ class QrcodeMember(resource.Resource):
 		setting_id = request.GET['setting_id']
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
-			'second_navs': export.get_weixin_second_navs(request),
+			'second_navs': mall_export.get_promotion_and_apps_second_navs(request),
 			'second_nav_name': export.WEIXIN_ADVANCE_SECOND_NAV,
 			'third_nav_name': export.ADVANCE_MANAGE_QRCODE_NAV,
 			'setting_id': setting_id
