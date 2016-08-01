@@ -81,11 +81,11 @@ Background:
 			"is_no_order_user":"true"
 		}]
 		"""
-@mall2 @promotion @promotionRedbag
+@mall2 @promotion @promotionRedbag @cl_r
 Scenario: 1 添加分享红包，获取优惠券列表
 	jobs添加"分享红包"活动，添加优惠券列表只展示【每人限领】为无限的优惠券，不展示【领取权限】为仅未下单用户可领取的优惠券
 	Given jobs登录系统
-	Then jobs能获取添加"分享红包"优惠券列表
+	Then jobs能获取添加分享红包优惠券列表
 		"""
 		[{
 			"name": "全体券1"
