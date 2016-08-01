@@ -183,6 +183,7 @@
             var prize_type = options ? options.prize_type||'timesout' : 'timesout';
             var prize_name = options ? options.prize_name : '';
             var delay = options ? options.delay || false : false;
+            this.$entityContent.hide();
             this.$el.hide();
             this.$title.show();
             if(prize_type == 'entity'){
