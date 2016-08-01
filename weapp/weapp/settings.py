@@ -519,6 +519,7 @@ INSTALLED_TASKS = [
     'member',
     'mall.product',
     'mall.order',
+    'cache',
     # for services
     'services.example_service',
     'services.send_order_email_service',
@@ -626,6 +627,7 @@ if 'develop' == MODE:
     WAPI_SECRET_ACCESS_TOKEN = 'akoANSpqVzuNBAeVscHB1lQnjNosByMcdV8sqpKOv2nlQssB0V'
     WAPI_HOST = 'http://dev.weapp.com'
     MONEY_HOST = 'http://dev.money.com'
+    IMAGE_HOST = 'http://dev.weapp.com'
 
 elif 'test' == MODE:
     DOMAIN = 'testweapp.weizoom.com'
@@ -641,6 +643,7 @@ elif 'test' == MODE:
     USE_MOCK_PAY_API = False
     CDN_HOST = ''
     H5_HOST = 'http://h5.zhifu.weapp.weizzz.com'
+    IMAGE_HOST = 'http://dev.weapp.com'
 
     #WAPI_SECRET_ACCESS_TOKEN = 'simple_wapi_key'
     WAPI_SECRET_ACCESS_TOKEN = 'akoANSpqVzuNBAeVscHB1lQnjNosByMcdV8sqpKOv2nlQssB0V'
@@ -669,6 +672,7 @@ else:
     WAPI_SECRET_ACCESS_TOKEN = 'akoANSpqVzuNBAeVscHB1lQnjNosByMcdV8sqpKOv2nlQssB0V'
     WAPI_HOST = 'http://api.weizoom.com'
     MONEY_HOST = 'http://money.weizom.com'
+    IMAGE_HOST = 'http://dev.weapp.com'
 
 
 IN_DEVELOP_MODE = (MODE == 'develop')

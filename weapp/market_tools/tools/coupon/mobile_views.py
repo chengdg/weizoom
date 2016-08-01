@@ -51,6 +51,16 @@ def get_coupon(request):
 			msg = '该优惠券已领光'
 		elif promotion.status >= PROMOTION_STATUS_FINISHED:
 			msg = '该优惠券使用期已过，不能领取'
+		elif rule.receive_rule:
+			if request.member:
+				member_id = request.member.id
+				if WebAppUser.objects.filter(member_id=member_id).count() >0:
+					webapp_user_id = WebAppUser.objects.filter(member_id=member_id)[0].id
+					order_count = Order.objects.filter(webapp_user_id=webapp_user_id, status__in=
+						[ORDER_STATUS_PAYED_NOT_SHIP, ORDER_STATUS_PAYED_SHIPED, ORDER_STATUS_SUCCESSED] ).count()
+					if order_count > 0:
+						msg= '该优惠券仅未下单用户可领取'
+
 	try:
 		is_subscribed = request.member.is_subscribed
 	except:

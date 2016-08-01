@@ -195,6 +195,19 @@
       <div class="errorHint" data-error-hint="请选择一个商品" style="margin-left: 415px;
 margin-top: -29px;"></div>
     </div>
+
+
+    <div class="form-group h40">
+       <label class="control-label col-sm-2 col-sm-offset-1 w110" for="receive_rule">领取权限：</label>
+        
+        <input type="checkbox" name='receive_rule' id='receive_rule' value="1" 
+        {% if coupon_rule %} disabled="disabled" {% endif %}
+        {% if coupon_rule.receive_rule %} disabled="disabled" checked {% endif %}
+         />        
+        <b style="vertical-align: text-bottom;font-weight:normal;display:inline-block;">仅未下单用户可领取</b>
+    </div>
+
+ 
     <div class="panel-body mb0 xui-promotion-createFlashSalePage xa-product">
       {% if coupon_rule and promotion.products %}
       <table id="productListTable" style="background:#fff;" class="table table-bordered table-condensed mb0  xb-noTdBorder xui-productList">
@@ -403,7 +416,7 @@ $(function(){
       });
       if(ids.length > 0){
           ids = ids.substring(1);          
-      }
+      } 
       xlog(ids)
       $('[name="product_ids"]').val(ids)    
   };
@@ -487,6 +500,7 @@ $(function(){
     }
     $submit.bottonLoading({status: 'show'});
     var args = $('.xa-form').serializeObject();
+    console.log("____________",args)
     W.getApi().call({
       method: 'post',
       app: 'mall2',
@@ -534,7 +548,7 @@ $(document).ready(function(){
 	}
 });
 
-$('.xa-valid-restrictions').on('click', function(e){
+$('.xa-valid-restrictions').on('click', function(e){ 
 	var $input = $(e.target);
 	if($input.prop('checked')){
 		$('.xa-valid-restrictions-input').attr('data-validate', 'require-int::金额必须为数字')
