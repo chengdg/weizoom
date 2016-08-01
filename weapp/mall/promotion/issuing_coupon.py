@@ -172,12 +172,26 @@ class IssuingCouponsRecord(resource.Resource):
         member_ids = request.POST.get('member_id', None)  # 获取会员id 组
         member_ids = json.loads(member_ids)
         coupon_rule_id = int(request.POST.get('coupon_rule_id'))  # 优惠券规则
+        # 对应优惠券的库存
+        coupon_rule = promotion_models.CouponRule.objects.get(id=coupon_rule_id)
+        member_ids_old = []
+        if coupon_rule.receive_rule:
+            import copy
+            member_ids_old = copy.copy(member_ids)
+            webapp_id = request.user_profile.webapp_id
+            webapp_user_ids = WebAppUser.objects.filter(member_id__in=member_ids, webapp_id=webapp_id).values_list('id', flat=True)
+            has_order_webapp_user_ids = mall_models.Order.objects.filter(webapp_id=webapp_id, webapp_user_id__in=webapp_user_ids, status__in=
+                [mall_models.ORDER_STATUS_PAYED_NOT_SHIP, mall_models.ORDER_STATUS_PAYED_SHIPED, mall_models.ORDER_STATUS_SUCCESSED]).values_list('webapp_user_id', flat=True)
+            has_order_member_ids = WebAppUser.objects.filter(id__in=has_order_webapp_user_ids, webapp_id=webapp_id).values_list('member_id', flat=True)
+            for member_id in has_order_member_ids:
+                member_ids.remove(member_id)
+
+            
         pre_person_count = int(request.POST.get('pre_person_count'))  # 每人几张
         person_count = len(member_ids)  # 发放的人数
         send_count = pre_person_count * person_count  # 发放的张数
 
-        # 对应优惠券的库存
-        coupon_rule = promotion_models.CouponRule.objects.get(id=coupon_rule_id)
+
         coupon_count = coupon_rule.remained_count
         if coupon_count < send_count:
             response = create_response(500)
@@ -192,7 +206,7 @@ class IssuingCouponsRecord(resource.Resource):
             person_count=person_count,
             coupon_count=send_count)
         coupon_record.save()
-        if member_ids:  # 会员列表
+        if member_ids or member_ids_old:  # 会员列表
             # 对每个会员创建优惠券
             real_person_count = 0
             real_coupon_count = 0

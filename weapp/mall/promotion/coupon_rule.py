@@ -157,7 +157,8 @@ class CouponRuleInfo(resource.Resource):
         end_date = request.POST.get('end_date', None)
         if not end_date:
             end_date = '2000-01-01 00:00'
-
+        print 'ttttttttttttttt>>>>>',request.POST.get('receive_rule')
+        receive_rule = request.POST.get('receive_rule', '0')
         couponRule = CouponRule.objects.create(
             owner=request.manager,
             name=request.POST.get('name', ''),
@@ -172,7 +173,8 @@ class CouponRuleInfo(resource.Resource):
             limit_product=limit_product == '1',
             limit_product_id=limit_product_id,
             start_date=start_date,
-            end_date=end_date
+            end_date=end_date,
+            receive_rule=receive_rule == '1',
         )
 
         promotion = Promotion.objects.create(
