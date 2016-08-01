@@ -36,7 +36,7 @@ def send_message_chargeback_to_customer(self, order_id):
             __send_message(child_order.order_id, child_order.supplier, child_order.ship_name)
 
 def __send_message(order_id, supplier, ship_name):
-    message_content = u"【微众传媒】您好，订单号：%s，收货人：%s。已退单，请知晓！"
+    message_content = u"您好，订单号：%s，收货人：%s。已退单，请知晓！【微众传媒】"
     #获取手机号
     if not supplier:
         return False
