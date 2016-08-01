@@ -592,6 +592,45 @@ class Product(models.Model):
 				})
 
 	@staticmethod
+	def fill_flash_sale(products):
+		from mall.promotion import models as promotion_models
+		for p in products:
+			p.promotion = None
+
+		product_ids = []
+		id2product = {}
+		for product in products:
+			product_ids.append(product.id)
+			id2product[product.id] = product
+
+		#创建promotions业务对象集合
+		product_promotion_relations = promotion_models.ProductHasPromotion.objects.filter(product_id__in=product_ids)
+		promotion_ids = list()
+		promotion2product = dict()
+		for relation in product_promotion_relations:
+			promotion_ids.append(relation.promotion_id)
+			promotion2product[relation.promotion_id] = id2product.get(relation.product_id)
+
+		promotion_db_models = promotion_models.Promotion.objects.filter(id__in=promotion_ids)
+		for promotion_db_model in promotion_db_models:
+			if promotion_db_model.type != promotion_models.PROMOTION_TYPE_FLASH_SALE or ((promotion_db_model.status != promotion_models.PROMOTION_STATUS_STARTED) and (promotion_db_model.status != promotion_models.PROMOTION_STATUS_NOT_START)):
+				#跳过已结束、已删除的促销活动
+				continue
+
+			flash_sale = promotion_models.FlashSale.objects.get(id=promotion_db_model.detail_id)
+
+			product = promotion2product.get(promotion_db_model.id)
+			if product:
+
+				product.promotion = {
+					'detail': {'promotion_price': flash_sale.promotion_price},
+					'member_grade_id':promotion_db_model.member_grade_id
+				}
+
+
+
+
+	@staticmethod
 	def fill_promotion_detail(webapp_owner, products, product_ids):
 		from mall.promotion import models as promotion_models
 		today = datetime.today()
@@ -719,6 +758,14 @@ class Product(models.Model):
 
 		if options.get('with_sales', False):
 			Product.fill_sales_detail(webapp_owner, products, product_ids)
+
+		# 商品列表页缓存专用
+		if options.get('with_price', False):
+			Product.fill_display_price(products)
+
+		# 商品列表页缓存专用
+		if options.get('flash_sale', False):
+			Product.fill_flash_sale(products)
 
 	@staticmethod
 	def get_from_model(product_id, product_model_name):
