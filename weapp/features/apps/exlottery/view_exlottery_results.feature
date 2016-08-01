@@ -59,16 +59,95 @@ Background:
 			}]
 		}]
 		"""
-	When bill关注jobs的公众号于'2015-10-01'
-	When tom关注jobs的公众号于'2015-10-05'
-
-	When 微信用户批量参加jobs的专项抽奖活动
-		| name    |member_name|mobile      | prize_grade | prize_name |lottery_time| receive_status |
-		|专项抽奖 |bill       |13758899565 | 一等奖      | 1000积分   |今天        | 已领取         |
-		|专项抽奖 |bill       |13758899565 | 一等奖      | 1000积分   |昨天        | 已领取         |
-		|专项抽奖 |tom        |13773373502 | 一等奖      | 1000积分   |昨天        | 已领取         |
-		
-		
+	Then jobs生成'专项抽奖'码库
+	"""
+		["el8s539t18","el64fe82bh","el0vb4f22r","elab5c28r2","elk5fw7e4f"]
+	"""
+	When jobs已添加单图文
+		"""
+		[{
+			"title":"百事抽奖活动单图文",
+			"cover": [{
+				"url": "3.jpg"
+			}],
+			"cover_in_the_text":"true",
+			"summary":"百事抽奖",
+			"content":"百事抽奖",
+			"jump_url":"专项抽奖"
+		}]
+		"""
+	When jobs已添加关键词自动回复规则
+		"""
+		[{
+			"rules_name":"抽奖规则",
+			"keyword":
+				[{
+					"keyword": "百事抽奖",
+					"type": "equal"
+				}],
+			"keyword_reply":
+				[{
+					"reply_content":"百事抽奖活动单图文",
+					"reply_type":"text_picture"
+				}]
+		}]
+		"""
+	Given tom关注jobs的公众号
+	When tom访问jobs的webapp
+	When tom在微信中向jobs的公众号发送消息'百事抽奖'
+	Then tom收到自动回复'百事抽奖活动单图文'
+	When tom点击图文'百事抽奖活动单图文'进入专项抽奖活动页面
+	Then tom在专项抽奖活动首页获得验证码'tudf'
+	When tom在专项抽奖活动首页中输入验证码'tudf'
+	When tom在专项抽奖活动首页中输入抽奖码'el8s539t18'
+	When tom在专项抽奖活动首页中输入手机号码'13773373502'
+	When tom点击'立即抽奖'进入专项抽奖活动内容页
+	When tom于'昨天'参加专项抽奖活动'专项抽奖'
+	Then tom获得专项抽奖结果
+	"""
+		{
+			"prize_grade":"一等奖",
+			"prize_name":"1000积分"
+		}
+	"""
+	When 清空浏览器
+	Given bill关注jobs的公众号
+	When bill访问jobs的webapp
+	When bill在微信中向jobs的公众号发送消息'百事抽奖'
+	Then bill收到自动回复'百事抽奖活动单图文'
+	When bill点击图文'百事抽奖活动单图文'进入专项抽奖活动页面
+	Then bill在专项抽奖活动首页获得验证码'af8d'
+	When bill在专项抽奖活动首页中输入验证码'af8d'
+	When bill在专项抽奖活动首页中输入抽奖码'el0vb4f22r'
+	When bill在专项抽奖活动首页中输入手机号码'13758899565'
+	When bill点击'立即抽奖'进入专项抽奖活动内容页
+	When bill于'昨天'参加专项抽奖活动'专项抽奖'
+	Then bill获得专项抽奖结果
+	"""
+		{
+			"prize_grade":"一等奖",
+			"prize_name":"1000积分"
+		}
+	"""
+	When 清空浏览器
+	Given bill关注jobs的公众号
+	When bill访问jobs的webapp
+	When bill在微信中向jobs的公众号发送消息'百事抽奖'
+	Then bill收到自动回复'百事抽奖活动单图文'
+	When bill点击图文'百事抽奖活动单图文'进入专项抽奖活动页面
+	Then bill在专项抽奖活动首页获得验证码'3ufz'
+	When bill在专项抽奖活动首页中输入验证码'3ufz'
+	When bill在专项抽奖活动首页中输入抽奖码'el64fe82bh'
+	When bill在专项抽奖活动首页中输入手机号码'13758899565'
+	When bill点击'立即抽奖'进入专项抽奖活动内容页
+	When bill于'今天'参加专项抽奖活动'专项抽奖'
+	Then bill获得专项抽奖结果
+	"""
+		{
+			"prize_grade":"一等奖",
+			"prize_name":"1000积分"
+		}
+	"""		
 
 @mall2 @apps @apps_egg @view_exlottery_results
 Scenario:1 查看结果列表
