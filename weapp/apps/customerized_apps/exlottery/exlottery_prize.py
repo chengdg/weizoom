@@ -35,23 +35,6 @@ class exlottery_prize(resource.Resource):
 	app = 'apps/exlottery'
 	resource = 'exlottery_prize'
 
-	def api_post(request):
-		"""
-		响应POST
-		"""
-		tel = request.POST['tel']
-		exlottery_id = request.POST['id']
-		member_id = request.member.id
-		try:
-			if tel:
-				latest_record = app_models.ExlottoryRecord.objects(member_id=member_id, belong_to=exlottery_id).first()
-				latest_record.update(set__tel=tel)
-			response = create_response(200)
-		except:
-			response = create_response(500)
-			response.errMsg = u'更新数据失败'
-		return response.get_response()
-
 	def api_put(request):
 		"""
 		响应PUT
