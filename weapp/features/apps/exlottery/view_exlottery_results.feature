@@ -70,7 +70,7 @@ Background:
 		
 		
 
-@mall2 @apps @apps_egg @view_egg_results
+@mall2 @apps @apps_egg @view_exlottery_results
 Scenario:1 查看结果列表
 	Given jobs登录系统
 	Then jobs获得专项抽奖活动列表
@@ -87,7 +87,7 @@ Scenario:1 查看结果列表
 		|bill       |13758899565  | 一等奖       | 1000积分     |昨天        | 已领取      |       |
 		|tom        |13773373502  | 一等奖       | 1000积分     |昨天        | 已领取      |       |
 		
-@mall2 @apps @apps_egg @view_egg_results
+@mall2 @apps @apps_egg @view_exlottery_results
 Scenario:2 查看结果列表查询
 	Given jobs登录系统
 	When jobs查看专项抽奖活动'专项抽奖'
@@ -257,7 +257,7 @@ Scenario:2 查看结果列表查询
 		|bill       |13758899565  | 一等奖       | 1000积分     |今天        | 已领取      |       |
 		|bill       |13758899565  | 一等奖       | 1000积分     |昨天        | 已领取      |       |
 
-@mall2 @apps @apps_egg @view_egg_results
+@mall2 @apps @apps_egg @view_exlottery_results
 Scenario:3 查看结果列表分页
 	Given jobs登录系统
 	And jobs设置分页查询参数
