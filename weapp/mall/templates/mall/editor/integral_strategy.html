@@ -62,7 +62,7 @@
 		</div>
 
 			<div class="xui-introduce xa-errorHintContainer">
-				1元 ＝<span class="ml10 mr10"> <input type="text" class="form-control xui-inline" style="width: 65px" name="integral_each_yuan" value="{{integral_strategy.integral_each_yuan}}" data-validate="require-int"/></span>积分
+				1元 ＝<span class="ml10 mr10"> <input type="text" class="form-control xui-inline" style="width: 65px" name="integral_each_yuan" value="{{integral_strategy.integral_each_yuan}}" data-validate="require-nonnegative-0"/></span>积分
 				<div class="errorHint" style="line-height:16px;"></div>
 			</div>
 
@@ -78,20 +78,20 @@
 				<tbody>
 					<tr>
 						<td>关注公众号</td>
-						<td><input type="text" class="form-control" name="be_member_increase_count" value="{{integral_strategy.be_member_increase_count}}" data-validate="require-int"/><div class="errorHint"></div></td>
+						<td><input type="text" class="form-control" name="be_member_increase_count" value="{{integral_strategy.be_member_increase_count}}" data-validate="require-nonnegative-0"/><div class="errorHint"></div></td>
 						<td>用户关注公众号</td>
 						<td>暂无</td>
 					</tr>
 					<tr>
 						<td>分享链接给好友点击</td>
-						<td><input type="text" class="form-control" name="click_shared_url_increase_count" value="{{integral_strategy.click_shared_url_increase_count}}" data-validate="require-int"/>
+						<td><input type="text" class="form-control" name="click_shared_url_increase_count" value="{{integral_strategy.click_shared_url_increase_count}}" data-validate="require-nonnegative-0"/>
 						<div class="errorHint"></div></td>
 						<td>一个链接，不同好友点击，都会增加一次积分</td>
 						<td>暂无</td>
 					</tr>
 					<tr>
 						<td>购买商品返积分</td>
-						<td><input type="text" class="form-control" name="buy_award_count_for_buyer" value="{{integral_strategy.buy_award_count_for_buyer}}" data-validate="require-int"/></td>
+						<td><input type="text" class="form-control" name="buy_award_count_for_buyer" value="{{integral_strategy.buy_award_count_for_buyer}}" data-validate="require-nonnegative-0"/><div class="errorHint"></div></td>
 						<td>每次购买都会获得基础奖励</td>
 						<td>
 							<input  name="order_money_percentage_for_each_buy" value="{{integral_strategy.order_money_percentage_for_each_buy}}" style="width: 60px;" data-validate="require-float"/>
@@ -103,13 +103,13 @@
 					</tr>
 					<tr>
 						<td>分享链接购买</tda>
-						<td><input type="text" class="form-control" name="buy_via_shared_url_increase_count_for_author" value="{{integral_strategy.buy_via_shared_url_increase_count_for_author}}" data-validate="require-int"/><div class="errorHint"></div></td>
+						<td><input type="text" class="form-control" name="buy_via_shared_url_increase_count_for_author" value="{{integral_strategy.buy_via_shared_url_increase_count_for_author}}" data-validate="require-nonnegative-0"/><div class="errorHint"></div></td>
 						<td>好友通过分享链接购买后给分享者增加积分</td>
 						<td>暂无</td>
 					</tr>
 					<tr>
 						<td style="padding-right:15px;">推荐关注的好友购买奖励</td>
-						<td><input type="text" class="form-control" name="buy_via_offline_increase_count_for_author" value="{{integral_strategy.buy_via_offline_increase_count_for_author}}" data-validate="require-int"/><div class="errorHint"></div></td>
+						<td><input type="text" class="form-control" name="buy_via_offline_increase_count_for_author" value="{{integral_strategy.buy_via_offline_increase_count_for_author}}" data-validate="require-nonnegative-0"/><div class="errorHint"></div></td>
 						<td>用户推荐的线下会员每次购买给推荐者增加积分<a href="javascript:void(0);"></a></td>
 						<td>
 							<input  name="buy_via_offline_increase_count_percentage_for_author" value="{{integral_strategy.buy_via_offline_increase_count_percentage_for_author}}" style="width: 60px;" data-validate="require-float"/>
@@ -121,7 +121,7 @@
 					</tr>
 					<tr>
 						<td>商品好评送积分</td>
-						<td><input type="text" class="form-control" name="review_increase" value="{{integral_strategy.review_increase}}" data-validate="require-int"/>
+						<td><input type="text" class="form-control" name="review_increase" value="{{integral_strategy.review_increase}}" data-validate="require-nonnegative-0"/>
 						<div class="errorHint"></div>
 						</td>
 						<td colspan="2">用户评价已购买商品，评价内容审核后增加积分</td>
