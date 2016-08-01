@@ -3,19 +3,22 @@ from __future__ import absolute_import
 from operator import attrgetter
 import time
 import urllib2
+
+import itertools
 from django.conf import settings
 from django.db.models import signals
 
 import cache
 from account.models import UserProfile
 from utils import cache_util
-from mall.models import WeizoomMall
+from mall.models import WeizoomMall, ProductCategory, CategoryHasProduct
 from mall import module_api as mall_api
 from mall import models as mall_models
 from mall.promotion import models as promotion_models
 from mall.promotion.models import PROMOTION_TYPE_FLASH_SALE
 from django.core.exceptions import ObjectDoesNotExist
 import json
+from django.db.models import Q
 
 from weapp.hack_django import post_update_signal, post_delete_signal
 
@@ -112,7 +115,8 @@ def get_webapp_products_new(webapp_owner_user_profile,
         cache_products = products
     else:
         cache_products = get_webapp_products_detail(webapp_owner_user_profile.user_id,category_pros_data)
-        products = get_webapp_product_ids_from_db_new(webapp_owner_user_profile, is_access_weizoom_mall,category_id)
+
+        products = get_webapp_product_ids_from_db_new(webapp_owner_user_profile, is_access_weizoom_mall, category_id)
         if products:
             if len(cache_products) == len(products):
                 pass
@@ -334,8 +338,9 @@ def update_webapp_product_cache(**kwargs):
                     key = 'webapp_product_detail_{wo:%s}_{pid:%s}' % (webapp_owner_id, product_id)
                     cache_util.delete_pattern(key)
 
-        pattern_categories = "webapp_products_categories_{wo:%s}" % webapp_owner_id
-        cache_util.delete_pattern(pattern_categories)
+        # pattern_categories = "webapp_products_categories_{wo:%s}" % webapp_owner_id
+        # cache_util.delete_pattern(pattern_categories)
+        update_product_list_cache(webapp_owner_id)
 
         key_termite_page = 'termite_webapp_page_%s_*' % webapp_owner_id
         cache_util.delete_pattern(key_termite_page)
@@ -383,8 +388,9 @@ def update_webapp_category_cache(**kwargs):
         #         request.get_method = lambda: 'PURGE'
         #         urllib2.urlopen(request)
 
-        pattern_categories = "webapp_products_categories_{wo:%s}" % webapp_owner_id
-        cache_util.delete_pattern(pattern_categories)
+        # pattern_categories = "webapp_products_categories_{wo:%s}" % webapp_owner_id
+        # cache_util.delete_pattern(pattern_categories)
+        update_product_list_cache(webapp_owner_id)
 
 post_update_signal.connect(
     update_webapp_product_cache, sender=mall_models.Product, dispatch_uid="product.update")
@@ -527,8 +533,9 @@ def update_webapp_product_detail_cache(**kwargs):
             pattern = 'webapp_product_detail_{wo:%s}_*' % webapp_owner_id
             cache_util.delete_pattern(pattern)
 
-            pattern_categories = "webapp_products_categories_{wo:%s}" % webapp_owner_id
-            cache_util.delete_pattern(pattern_categories)
+            # pattern_categories = "webapp_products_categories_{wo:%s}" % webapp_owner_id
+            # cache_util.delete_pattern(pattern_categories)
+            update_product_list_cache(webapp_owner_id)
 
             instance = kwargs.get('instance', None)
             if instance:
@@ -574,8 +581,9 @@ def update_webapp_product_detail_cache_when_update_model_property_value(**kwargs
             key = 'webapp_product_detail_{wo:%s}_{pid:*}' % (owner_id)
             cache_util.delete_pattern(key)
 
-            key = 'webapp_products_categories_{wo:%s' % (owner_id)
-            cache_util.delete_pattern(key)
+            # key = 'webapp_products_categories_{wo:%s' % (owner_id)
+            # cache_util.delete_pattern(key)
+            update_product_list_cache(owner_id)
 
 post_update_signal.connect(update_webapp_product_detail_cache_when_update_model_property_value,
                            sender=mall_models.ProductModelPropertyValue, dispatch_uid="mall_product_model_property_value.update")
@@ -831,8 +839,9 @@ def update_product_cache(webapp_owner_id, product_id, deleteRedis=True, deleteVa
         key = 'webapp_product_detail_{wo:%s}_{pid:%s}' % (webapp_owner_id, product_id)
         cache_util.delete_cache(key)
 
-        key = 'webapp_products_categories_{wo:%s}' % webapp_owner_id
-        cache_util.delete_cache(key)
+        # key = 'webapp_products_categories_{wo:%s}' % webapp_owner_id
+        # cache_util.delete_cache(key)
+        update_product_list_cache(webapp_owner_id)
 
     # if settings.EN_VARNISH:
     #     if not settings.IS_UNDER_BDD and deleteVarnish:
@@ -867,6 +876,7 @@ def update_product_list(webapp_owner_id):
     #     urllib2.urlopen(request)
 
 
+
 def update_webapp_product_pool_cache(**kwargs):
     """
     更新商品详情缓存
@@ -888,3 +898,19 @@ post_update_signal.connect(update_webapp_product_pool_cache,
                            sender=mall_models.ProductPool, dispatch_uid="product_pool.update")
 signals.post_save.connect(update_webapp_product_pool_cache,
                           sender=mall_models.ProductPool, dispatch_uid="product_pool.save")
+
+def update_product_list_cache(webapp_owner_id):
+
+    # 先清缓存,以防异步任务失败
+    key = 'webapp_products_categories_{wo:%s}' % webapp_owner_id
+    api_key = 'api' + key
+    try:
+        cache_util.delete_cache(key)
+        cache_util.delete_cache(api_key)
+    except:
+        pass
+
+    from cache.tasks import update_product_list_cache_task
+    update_product_list_cache_task.delay(webapp_owner_id)
+
+
