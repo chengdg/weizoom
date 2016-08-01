@@ -506,7 +506,7 @@
                         error: function(error){
                             error_mes = error;
                             if(error.errMsg == '奖品已抽光'){
-                                $('.wa-grade').html('很遗憾');
+                                $('.wa-grade').html('谢谢参与');
                             }else{
                                 wuiAlert(error.errMsg);
                                 scratch_card.initialize();
