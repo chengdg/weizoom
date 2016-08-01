@@ -1516,11 +1516,6 @@ def ship_order(order_id, express_company_name,
 				user = UserProfile.objects.get(webapp_id=order.webapp_id).user
 			if operator_name != user.username:
 				user = UserProfile.objects.get(webapp_id=order.webapp_id).user
-			if Order.objects.filter(origin_order_id=order.origin_order_id).count() == 1:
-				origin_order = Order.objects.get(id=order.origin_order_id)
-				Order.objects.filter(id=origin_order.id).update(**order_params)
-				record_operation_log(origin_order.order_id, operator_name, action, origin_order)
-				record_status_log(origin_order.order_id, operator_name, origin_order.status, target_status)
 			set_origin_order_status(order, user, 'ship')
 		else:
 			if Order.objects.filter(origin_order_id=order.id).count() == 1:
@@ -1753,7 +1748,10 @@ def get_order_operation_logs(order_id, child_order_length=None):
 	if child_order_length and child_order_length == 1:
 		return OrderOperationLog.objects.filter(order_id=order_id)
 	else:
-		return OrderOperationLog.objects.filter(order_id__contains=order_id).exclude(~Q(order_id=order_id), action__in=[u'下单', u'支付']).exclude(order_id=order_id, action__in=[u'发货', u'完成'])
+		return OrderOperationLog.objects.filter(order_id__contains=order_id).exclude(
+			~Q(order_id=order_id),
+			action__in=[u'下单', u'支付', u'退款', u'退款完成', u'取消订单']
+		).exclude(order_id=order_id, action__in=[u'发货', u'完成'])
 
 
 ########################################################################
@@ -2234,14 +2232,11 @@ def get_product_ids_in_weizoom_mall(webapp_id):
 def set_origin_order_status(child_order, user, action, request=None):
 	children_order_status = [order.status for order in Order.objects.filter(origin_order_id=child_order.origin_order_id)]
 	origin_order = Order.objects.get(id=child_order.origin_order_id)
-	if origin_order.status != min(children_order_status):
-		if action == 'ship':
-			origin_order.status = min(children_order_status)
-			origin_order.save()
-			if min(children_order_status) == ORDER_STATUS_PAYED_SHIPED and len(children_order_status) > 1:
-				update_order_status(user, action, origin_order, request)
-		else:
-			update_order_status(user, action, origin_order, request)
+	if len(children_order_status) == 1:
+		update_order_status(user, action, origin_order, request)
+	else:
+		origin_order.status = min(children_order_status)
+		origin_order.save()
 
 
 def update_order_status(user, action, order, request=None):
@@ -2306,7 +2301,6 @@ def update_order_status(user, action, order, request=None):
 	elif action == 'return_pay':
 		action_msg = '退款'
 		target_status = ORDER_STATUS_REFUNDING
-		operation_name = u"退款中"
 	elif 'cancel' in action or 'return_success' == action:
 		actions = action.split('-')
 		operation_name = u'{} {}'.format(operation_name, (actions[1] if len(actions) > 1 else ''))
@@ -2316,7 +2310,6 @@ def update_order_status(user, action, order, request=None):
 		else:
 			action_msg = '退款完成'
 			target_status = ORDER_STATUS_REFUNDED
-			operation_name = u"退款完成"
 		try:
 			# 返回订单使用的积分
 			if order.integral:
@@ -2342,7 +2335,9 @@ def update_order_status(user, action, order, request=None):
 	if target_status:
 		if 'cancel' in action and request:
 			Order.objects.filter(id=order_id).update(status=target_status, reason=request.POST.get('reason', ''))
-
+			# 发短信
+			from mall.order.tasks import send_message_chargeback_to_customer
+			send_message_chargeback_to_customer.delay(order.order_id)
 		elif 'pay' == action:
 			payment_time = datetime.now()
 			Order.objects.filter(id=order_id).update(status=target_status, payment_time=payment_time)
@@ -2367,6 +2362,10 @@ def update_order_status(user, action, order, request=None):
 				watchdog_error(alert_message)
 
 		else:
+			if target_status == ORDER_STATUS_REFUNDED:
+				# 发短信
+				from mall.order.tasks import send_message_chargeback_to_customer
+				send_message_chargeback_to_customer.delay(order.order_id)
 			Order.objects.filter(id=order_id).update(status=target_status)
 			Order.objects.filter(origin_order_id=order_id).update(status=target_status)
 		operate_log = u' 修改状态'
@@ -2392,7 +2391,6 @@ def update_order_status(user, action, order, request=None):
 				MemberSharedUrlInfo.objects.filter(shared_url=order_record.url, member_id=followed_member.id).update(leadto_buy_count=F('leadto_buy_count')+1)
 				order_record.is_updated = True
 				order_record.save()
-				#print '>>>>>.aaaaaaaaaaaaaaaaaaaaaaaaffffff>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>'
 	except:
 		notify_message = u"订单状态为已完成时为贡献者增加积分,order_id:{}，cause:\n{}".format(order_id, unicode_full_stack())
 		watchdog_error(notify_message)
