@@ -294,6 +294,10 @@ def process_item_list_data(request, component):
 		woid = request.user.id
 		user_profile = request.user_profile
 
+	if not woid:
+		woid = request.user.id
+		user_profile = request.user_profile
+
 	component['_has_data'] = True
 	count = int(component['model']['count'])
 
