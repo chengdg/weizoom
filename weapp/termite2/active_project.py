@@ -38,7 +38,7 @@ class ActiveProject(resource.Resource):
 		创建active project
 		"""
 		project_id = request.POST['id']
-		webapp_models.Project.objects.filter(owner=request.user, is_active=True).update(is_active=False)
+		webapp_models.Project.objects.filter(owner=request.manager, is_active=True).update(is_active=False)
 		webapp_models.Project.objects.filter(id=project_id).update(is_active=True)
 
 		ActiveProject.delete_webapp_page_cache(request.manager.id, project_id)
