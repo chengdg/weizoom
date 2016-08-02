@@ -21,8 +21,12 @@ var AsyncComponentLoadView = BackboneLite.View.extend({
             }
         };
         console.log('>>>>>>>>>> options: ', options, this.component);
+        alert('获取模版');
         this.handlebarTmpl = $("#componentTemplates").html();
+        alert('获取完毕');
+        console.log($("#componentTemplates").html());
         this.template = Handlebars.compile(this.handlebarTmpl);
+        alert('模版编译完毕');
         var deferred = $.Deferred();
         this.sendApi(deferred);
         var _this = this;
@@ -33,8 +37,11 @@ var AsyncComponentLoadView = BackboneLite.View.extend({
             _this.component['component']['components'] = {};
             console.log('>>>>>>>>>>>> 异步获取数据后补充component：', _this.component);
             // 第一次渲染
-            var orgHtml = _this.renderComponent(_this.component, data);
+            //var orgHtml = _this.renderComponent(_this.component, data);
+            alert('模版整合');
+            var orgHtml = _this.template(_this.component);
             _this.$el.html(orgHtml);
+            alert('整合完毕');
             //var $eleUl = _this.$el.find('ul');
             //_this.renderSub($eleUl, data);
             alert('渲染组件完成');
