@@ -95,13 +95,19 @@ var AsyncComponentLoadView = BackboneLite.View.extend({
             product: product
         };
         var html = this.renderComponent(itemComponent, {});
+        console.log('html >>>>>>>>>>>>>', html);
         return html;
     }
 });
 
+var allComponents = [];
 $(function(){
     $('div[data-ui-role="async-component"]').each(function() {
         var $div = $(this);
+        allComponents.push($div);
+    });
+    allComponents.map(function(component){
+        var $div = component;
         var componentType = $div.attr('data-type');
         var componentModel = $.parseJSON($div.attr('data-model') || '{}');
         var asyncComponent = new AsyncComponentLoadView({
