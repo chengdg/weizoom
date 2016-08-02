@@ -233,6 +233,7 @@ class MGroup(resource.Resource):
 		响应GET
 		"""
 		try:
+			watchdog_info(u'团购流程日志：进入页面')
 			record_id = request.GET.get('id','id')
 			mpUserPreviewName = ''
 			activity_status = u"未开始"
@@ -296,12 +297,14 @@ class MGroup(resource.Resource):
 					product_id = record.product_id
 					project_id = 'new_app:group:%s' % record.related_page_id
 				else:
+					watchdog_info(u'团购流程日志：没有查询到对应的团购活动')
 					c = RequestContext(request, {
 						'is_deleted_data': True
 					})
 					return render_to_response('group/templates/webapp/m_group.html', c)
 
 			else:
+				watchdog_info(u'团购流程日志：request.member杯具了')
 				record = app_models.Group.objects(id=record_id)
 				if record.count() >0:
 					record = record.first()
