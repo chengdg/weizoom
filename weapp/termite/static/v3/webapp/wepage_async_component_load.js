@@ -95,6 +95,7 @@ var AsyncComponentLoadView = BackboneLite.View.extend({
             product: product
         };
         var html = this.renderComponent(itemComponent, {});
+        html = html.replace('src=', 'data-url=');
         console.log('html >>>>>>>>>>>>>', html);
         return html;
     }
