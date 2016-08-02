@@ -995,6 +995,8 @@ class ChannelDistribution(resource.Resource):
 			'second_nav_name': export.WEIXIN_ADVANCE_SECOND_NAV,
 			'third_nav_name': export.ADVANCE_MANAGE_QRCODE_NAV,
 			'tags': tags,
+			'webapp_id': webapp_id,
+			# 'selectedMemberIds': json.dumps(selectedMemberIds),
 		})
 		return render_to_response('weixin/channels/channel_distribution.html', c)
 
@@ -1002,5 +1004,6 @@ class ChannelDistribution(resource.Resource):
 		"""新建渠道分销二维码"""
 
 
+
 		response = create_response(200)
-		return response.get_response()
+		return response.get_response

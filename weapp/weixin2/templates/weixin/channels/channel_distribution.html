@@ -23,7 +23,8 @@
     </div>
     <div>
         <label>关联会员：</label>
-        <button id="select_member">选择关注会员</button>
+        <span class="xa-selectMemberName ml10"></span>
+        <button class="xa-selectMemberDailog" type="button">选择关注会员</button>
     </div>
 
  <hr/>
@@ -51,9 +52,10 @@
         <input type="text" /> 元（佣金取现最低金额）
     </div>
     <div>
-        <label>7天结算标准：</label>
-        <input name="standardMethod" type="radio" value="1" />是
-        <input name="standardMethod" type="radio" value="0" />否
+        <label>多少天结算标准：</label>
+        <input type="text" />
+{#        <input name="standardMethod" type="radio" value="1" />是#}
+{#        <input name="standardMethod" type="radio" value="0" />否#}
     </div>
     <div>扫码设置</div>
     <hr/>
@@ -97,4 +99,19 @@
 		</div>
 
 </form>
+{% endblock %}
+{% block js %}
+    <script type="text/javascript">
+    		$(document).delegate('.xa-selectMemberDailog', 'click', function(event) {
+			options = {
+				webapp_id:{{webapp_id}},
+				selectedMemberIds:[]
+			};
+			options.success = function(data) {
+            	$('.xa-selectMemberName').html("会员昵称："+data[0].username_truncated).attr('data-id', data[0].id);
+            	$('.xa-selectMemberDailog').text("修改关注会员");
+            };
+			W.dialog.showDialog('W.dialog.mall.SelectMemberDialog', options);
+		});
+    </script>
 {% endblock %}
