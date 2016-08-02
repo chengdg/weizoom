@@ -520,7 +520,7 @@ MALL_PROMOTION_AND_APPS_SECOND_NAV = {
         {
             'name': MALL_APPS_SECOND_NAV,
             'title': u'推广与分销',
-            'url': '/apps/lottery/lotteries/',
+            'url': '/new_weixin/qrcodes/',
             'permission': 'manage_apps',
             'third_navs': [
                 {
