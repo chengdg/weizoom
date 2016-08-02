@@ -102,19 +102,17 @@ var AsyncComponentLoadView = BackboneLite.View.extend({
 
 $(document).load(function(){
     $('div[data-ui-role="async-component"]').each(function() {
-        _.delay(function(){
-            var $div = $(this);
-            var componentType = $div.attr('data-type');
-            var componentModel = $.parseJSON($div.attr('data-model') || '{}');
-            var asyncComponent = new AsyncComponentLoadView({
-                el: $div[0],
-                componentType: componentType,
-                componentModel: componentModel,
-            });
+        var $div = $(this);
+        var componentType = $div.attr('data-type');
+        var componentModel = $.parseJSON($div.attr('data-model') || '{}');
+        var asyncComponent = new AsyncComponentLoadView({
+            el: $div[0],
+            componentType: componentType,
+            componentModel: componentModel,
+        });
 
-            $div.data('view', asyncComponent);
-            console.log('>>>>>>>>>>>>>>>> async components: ');
-        }, 1000);
+        $div.data('view', asyncComponent);
+        console.log('>>>>>>>>>>>>>>>> async components: ');
     });
 });
 
