@@ -54,6 +54,13 @@ W.ValidaterClass = function() {
             regex: /^\d+$/g,
             errorHint: '请输入非负整数'
         },
+        'require-nonnegative-0': {
+            /*0或者正整数*/
+            type: 'regex',
+            extract: 'value',
+            regex: /^\d+$/g,
+            errorHint: '格式不正确，请输入整数'
+        },
         'require-float': {
             type: 'regex',
             extract: 'value',
