@@ -113,6 +113,7 @@ $(document).load(function(){
             });
 
             $div.data('view', asyncComponent);
+            console.log('>>>>>>>>>>>>>>>> async components: ');
         }, 1000);
     });
 });
