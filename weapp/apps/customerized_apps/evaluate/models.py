@@ -36,6 +36,7 @@ class ProductEvaluates(models.Document):
 	top_time = models.DateTimeField() # 置顶时间
 	status = models.IntField(default=STATUS_WAITTING)  # 审核状态
 	shop_reply = models.StringField(max_length=512, default='')  #商家留言
+	has_increase_integral = models.BooleanField(default=False)  # 是否已奖励积分
 
 	old_id = models.LongField(default=0) #mysql中的id，用于迁移数据
 
