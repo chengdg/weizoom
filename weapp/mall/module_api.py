@@ -2228,8 +2228,11 @@ def set_origin_order_status(child_order, user, action, request=None):
 	if len(children_order_status) == 1:
 		update_order_status(user, action, origin_order, request)
 	else:
+		expired_status = origin_order.status
 		origin_order.status = min(children_order_status)
 		origin_order.save()
+		if origin_order.status == ORDER_STATUS_SUCCESSED:
+			__increase_after_order_finsh(expired_status, ORDER_STATUS_SUCCESSED, origin_order)
 
 
 def update_order_status(user, action, order, request=None):
@@ -2366,36 +2369,11 @@ def update_order_status(user, action, order, request=None):
 			record_status_log(order.order_id, operation_name, order.status, target_status)
 			record_operation_log(order.order_id, operation_name, action_msg, order)
 
-	try:
-		# TODO 返还用户积分
-		from modules.member import integral
-		if expired_status < ORDER_STATUS_SUCCESSED and int(target_status) == ORDER_STATUS_SUCCESSED \
-				and expired_status != ORDER_STATUS_CANCEL and order.origin_order_id <= 0:
-			if MallOrderFromSharedRecord.objects.filter(order_id=order.id).count() > 0:
-				order_record = MallOrderFromSharedRecord.objects.filter(order_id=order.id)[0]
-				fmt = order_record.fmt
-			else:
-				order_record = None
-				fmt = None
-			integral.increase_after_payed_finsh(fmt, order)
-			if order_record and order_record.url and order_record.is_updated == False:
-				from modules.member.models import MemberSharedUrlInfo, Member
-				followed_member = Member.objects.get(token=fmt)
-				MemberSharedUrlInfo.objects.filter(shared_url=order_record.url, member_id=followed_member.id).update(leadto_buy_count=F('leadto_buy_count')+1)
-				order_record.is_updated = True
-				order_record.save()
-	except:
-		notify_message = u"订单状态为已完成时为贡献者增加积分,order_id:{}，cause:\n{}".format(order_id, unicode_full_stack())
-		watchdog_error(notify_message)
+	__increase_after_order_finsh(expired_status, target_status, order)
 	from webapp.handlers import event_handler_util
 	from utils import json_util
 	event_data = {'order':json.dumps(Order.objects.get(id=order_id).to_dict(),cls=json_util.DateEncoder)}
 	event_handler_util.handle(event_data, 'send_order_email')
-	# try:
-	# 	mall_util.email_order(order=Order.objects.get(id=order_id))
-	# except :
-	# 	notify_message = u"订单状态改变时发邮件失败，cause:\n{}".format(unicode_full_stack())
-	# 	watchdog_alert(notify_message)
 
 	if order.origin_order_id > 0 and target_status in [ORDER_STATUS_PAYED_SHIPED, ORDER_STATUS_SUCCESSED, ORDER_STATUS_REFUNDING, ORDER_STATUS_REFUNDED]:
 		# 如果更新子订单，更新父订单状态
@@ -2419,6 +2397,29 @@ def update_order_status(user, action, order, request=None):
 				record_operation_log(child.order_id, operation_name, action_msg)
 		if target_status in [ORDER_STATUS_SUCCESSED, ORDER_STATUS_REFUNDING, ORDER_STATUS_CANCEL]:
 			auto_update_grade(webapp_user_id=order.webapp_user_id)
+
+def __increase_after_order_finsh(expired_status, target_status, order):
+	try:
+		# 给用户加积分
+		from modules.member import integral
+		if expired_status < ORDER_STATUS_SUCCESSED and int(target_status) == ORDER_STATUS_SUCCESSED \
+				and expired_status != ORDER_STATUS_CANCEL and order.origin_order_id <= 0:
+			if MallOrderFromSharedRecord.objects.filter(order_id=order.id).count() > 0:
+				order_record = MallOrderFromSharedRecord.objects.filter(order_id=order.id)[0]
+				fmt = order_record.fmt
+			else:
+				order_record = None
+				fmt = None
+			integral.increase_after_payed_finsh(fmt, order)
+			if order_record and order_record.url and order_record.is_updated == False:
+				from modules.member.models import MemberSharedUrlInfo, Member
+				followed_member = Member.objects.get(token=fmt)
+				MemberSharedUrlInfo.objects.filter(shared_url=order_record.url, member_id=followed_member.id).update(leadto_buy_count=F('leadto_buy_count')+1)
+				order_record.is_updated = True
+				order_record.save()
+	except:
+		notify_message = u"订单状态为已完成时为贡献者增加积分,order_id:{}，cause:\n{}".format(order_id, unicode_full_stack())
+		watchdog_error(notify_message)
 
 def __restore_product_stock_by_order(order):
 	"""
