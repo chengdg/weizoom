@@ -107,17 +107,19 @@ $(function(){
         var $div = $(this);
         allComponents.push($div);
     });
-    allComponents.map(function(component){
-        var $div = component;
-        var componentType = $div.attr('data-type');
-        var componentModel = $.parseJSON($div.attr('data-model') || '{}');
-        var asyncComponent = new AsyncComponentLoadView({
-            el: $div[0],
-            componentType: componentType,
-            componentModel: componentModel,
-        });
+    allComponents.map(function(component, idx){
+        if (idx <= 1) {
+            var $div = component;
+            var componentType = $div.attr('data-type');
+            var componentModel = $.parseJSON($div.attr('data-model') || '{}');
+            var asyncComponent = new AsyncComponentLoadView({
+                el: $div[0],
+                componentType: componentType,
+                componentModel: componentModel,
+            });
 
-        $div.data('view', asyncComponent);
+            $div.data('view', asyncComponent);
+        }
     });
 });
 
