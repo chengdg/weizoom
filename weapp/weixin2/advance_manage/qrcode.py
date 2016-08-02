@@ -186,7 +186,8 @@ def _get_qrcode_items(request):
 		if prize_info['name'] == '_score-prize_':
 			setting.cur_prize = '[%s]%d' % (prize_info['type'], prize_info['id'])
 		elif prize_info['name'] == 'non-prize':
-			setting.cur_prize = prize_info['type']
+			setting.cur_prize = u'无奖励'
+			# setting.cur_prize = prize_info['type']
 		else:
 			setting.cur_prize = '[%s]%s' % (prize_info['type'], prize_info['name'])
 
@@ -952,3 +953,54 @@ class GetCanUseCoupon(resource.Resource):
 		response = create_response(200)
 		return response.get_response()
 
+
+class ChannelDistributions(resource.Resource):
+	app = 'new_weixin'
+	resource = 'channel_distributions'
+
+	@login_required
+	def get(request):
+		"""渠道分销"""
+		c = RequestContext(request, {
+			'first_nav_name': FIRST_NAV,
+			'second_navs': export.get_weixin_second_navs(request),
+			'second_nav_name': export.WEIXIN_ADVANCE_SECOND_NAV,
+			'third_nav_name': export.ADVANCE_MANAGE_QRCODE_NAV,
+		})
+		return render_to_response('weixin/channels/channel_distributions.html', c)
+
+
+class ChannelDistribution(resource.Resource):
+	app = 'new_weixin'
+	resource = 'channel_distribution'
+
+	@login_required
+	def get(request):
+		"""渠道分销,新建二维码"""
+		webapp_id = request.user_profile.webapp_id
+		groups = MemberGrade.get_all_grades_list(webapp_id)
+		member_tags = MemberTag.get_member_tags(webapp_id)
+		#调整排序，将为分组放在最前面
+		tags = []
+		for tag in member_tags:
+			if tag.name == '未分组':
+				tags = [tag] + tags
+			else:
+				tags.append(tag)
+
+
+		c = RequestContext(request, {
+			'first_nav_name': FIRST_NAV,
+			'second_navs': export.get_weixin_second_navs(request),
+			'second_nav_name': export.WEIXIN_ADVANCE_SECOND_NAV,
+			'third_nav_name': export.ADVANCE_MANAGE_QRCODE_NAV,
+			'tags': tags,
+		})
+		return render_to_response('weixin/channels/channel_distribution.html', c)
+
+	def api_get(request):
+		"""新建渠道分销二维码"""
+
+
+		response = create_response(200)
+		return response.get_response()

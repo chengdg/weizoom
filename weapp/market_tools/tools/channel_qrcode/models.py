@@ -139,3 +139,46 @@ class MemberChannelQrcodeHasMember(models.Model):
 		db_table = 'market_tool_member_channel_qrcode_has_member'
 		verbose_name = '扫描会员渠道码带来的会员'
 		verbose_name_plural = '扫描会员渠道码带来的会员'
+
+class ChannelDistributionQrcodeSettings(models.Model):
+	"""
+	渠道分销二维码
+	"""
+	owner = models.ForeignKey(User)  # 所有者?
+	bing_member_title = models.CharField(max_length=512)  # 关联会员头衔
+	name = models.CharField(max_length=500)  # 二维码名称
+	award_prize_info = models.TextField(default='{"id":-1,"name":"no-prize"}')  # 关注奖励,奖品信息
+	reply_type = models.IntegerField(max_length=1, default=0)  # 扫码后行为：0普通关注一致，1回复文字，2回复图文
+	reply_detail = models.TextField(default='')  # 回复文字, 当reply_type为1时有效
+	reply_material_id = models.IntegerField(default=0) # 素材id，reply_type为2时有效 ?
+	remark = models.CharField(max_length=5000)  # 备注 ?
+	ticket = models.CharField(max_length=256, default='')  # ?优惠券?
+	bing_member_id = models.IntegerField(default=0) # 创建二维码时选择关联的会员的ID
+	bing_member_count = models.IntegerField()  # 关注数量,该二维码下边的关注人数
+	total_transaction_volume = models.DecimalField(max_digits=65, decimal_places=2)  # 总交易额:二维码自创建以来的所有交易额
+	total_return = models.DecimalField(max_digits=65, decimal_places=2)  # 返现总额: 二维码所有的返现总额, 只包含已经体现的金额
+	minimum_return_amount = models.DecimalField(max_digits=65, decimal_places=2)  # 最低返现金额: 达到此数值才能返现
+	seven_day_return = models.BooleanField(default=False)  # 7天结算标准
+	group_id = models.IntegerField(default=-1)  # 会员分组
+	distribution_rewards = models.BooleanField(default=False)  # 分销奖励 False:没有 True:佣金
+	commission_rate = models.IntegerField(max_digits=5)  # 佣金返现率
+	minimun_return_rate = models.IntegerField(max_digits=5)  # 最低返现折扣
+	commission_return_standard = models.DecimalField(max_digits=65, decimal_places=2)  # 佣金返现标准
+	created_at = models.DateTimeField(auto_now_add=True) # 添加时间
+
+	class Meta:
+		db_table = 'market_tool_channel_distribution_qrcode_setting'
+		ordering = ['-id']
+
+
+class ChannelDistributionQrcodeHasMember(models.Model):
+	"""
+	渠道分销扫码的会员,关注会有奖励,重复扫码没有奖励
+	"""
+	channel_qrcode = models.ForeignKey(ChannelDistributionQrcodeSettings)
+	member = models.ForeignKey(Member)
+	is_new = models.BooleanField(default=True)  # 新关注
+	created_at = models.DateTimeField(auto_now_add=True) #添加时间
+
+	class Meta:
+		db_table = 'market_tool_channel_distribution_qrcode_has_member'

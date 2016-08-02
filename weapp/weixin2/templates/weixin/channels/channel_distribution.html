@@ -1,0 +1,100 @@
+{% extends "content_base_v2.html" %}
+{% block css %}
+<style>
+
+</style>
+{% endblock %}
+{% block content-panel %}
+<div class="xui-weixin-qrcodePage xa-weixin-materialsPage">
+	<div class="xui-rightPanel pr" style="border:0;">
+<ul class="breadcrumb">
+	<li>您当前所在位置</li>
+	<li>
+		<a href="/new_weixin/materials/">高级管理</a>
+	</li>
+	<li><a href="/new_weixin/qrcodes/">带参数二维码</a></li>
+	<li class="active">{% if qrcode.id %}编辑{% else %}新建{% endif %}二维码</li>
+</ul>
+
+<form class="form-horizontal" method="post" id="editForm" action="/new_weixin/api/channel_distribution/">
+    <div>
+        <label>会员头衔：</label>
+        <input type="text" />
+    </div>
+    <div>
+        <label>关联会员：</label>
+        <button id="select_member">选择关注会员</button>
+    </div>
+
+ <hr/>
+    <div>
+        奖励设置 奖励给代言人
+    </div>
+    <hr/>
+    <div>
+        <label>分销奖励：</label>
+        <select>
+            <option>无</option>
+            <option>佣金</option>
+        </select>
+    </div>
+    <div>
+        <label>佣金返现率：</label>
+        <input type="text">%（注：返现率不得高于20%；佣金=优惠后的价格X返现率）
+    </div>
+    <div>
+        <label>最低返现折扣：</label>
+        <input type="text">%（注：若设置为80，则商品在优惠的价格在80%以下不参与返佣金）
+    </div>
+    <div>
+        <label>佣金返现标准：</label>
+        <input type="text" /> 元（佣金取现最低金额）
+    </div>
+    <div>
+        <label>7天结算标准：</label>
+        <input name="standardMethod" type="radio" value="1" />是
+        <input name="standardMethod" type="radio" value="0" />否
+    </div>
+    <div>扫码设置</div>
+    <hr/>
+    <div>
+        <label>
+            添加到分组：
+        </label>
+        <select>
+            {% for tag in tags %}
+            <option value="{{tag.id}}"{% if qrcode.tag_id == tag.id or not qrcode.tag_id and tag.name == '未分组' %}selected="selected"{% endif%}>{{tag.name}}</option>
+            {% endfor %}
+        </select>
+        <div>内置分组为会员分组</div>
+    </div>
+    <div>
+        <label>扫描奖励：</label>
+        <div>
+        <div></div>
+        </div>
+
+    </div>
+    <div>
+        <label>扫码回复:</label>
+	<div class="tab-content" style="margin: 20px 0 5px 160px;">
+				<div id="weixinMessageEdite r-textMessageZone" style="width: 350px">
+					<div class="control-group mr5 mt5">
+						<div class="controls ml20">
+							<textarea class="input-xlarge hide xa-a" id="reply_detail" name="reply_detail" data-ui-role="richtext-editor" data-height="300" data-width="350"></textarea>
+						</div>
+					</div>
+				</div>
+
+				<div id="weixinMessageEditer-newsMessageZone" style="width: 350px">
+					<input id="reply_material_id" name="reply_material_id" class="hide" value="">
+				</div>
+			</div>
+    </div>
+		<div class="xui-footerBtn xa-footerBtn">
+			<input type="button" class="btn btn-success w105 h30 mr20 xa-submit" id="submitBtn" value="保&nbsp;&nbsp;存">
+			<input type="button" class="btn btn-defalte w105 h30 xa-cancel" style="background:#fff;" id="submitBtn" value="取&nbsp;&nbsp;消">
+		</div>
+
+</form>
+{% endblock %}

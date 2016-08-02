@@ -1,0 +1,28 @@
+{% extends "content_base_v2.html" %}
+{% block css %}
+<style>
+
+</style>
+{% endblock %}
+{% block content-panel %}
+
+	<div class="relative">
+		<ul class="breadcrumb">
+			<li>您当前所在位置</li>
+			<li><a href="/new_weixin/materials/">高级管理</a></li>
+			<li><a href="/new_weixin/qrcodes/">带参数二维码</a></li>
+			<li class="active">关注会员</li>
+		</ul>
+	</div>
+	<div class="xui-filterPanel" >
+        <div class="xui-form disT ml20">
+            <div class="xui-i-item">
+			<input
+				type="text"
+				class="form-control"
+                placeholder="二维码名称"
+            />
+			<div class="xui-btnBox">
+				<a class="btn btn-primary xa-search xui-fontBold " href="javascript:void(0);">查询</a>
+			</div>
+		</div>{% endblock %}
