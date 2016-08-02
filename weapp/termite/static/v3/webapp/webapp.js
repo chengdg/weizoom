@@ -15,17 +15,17 @@ W.alertEditTemplateLinkTarget = function() {
  * interceptLinkClick: 拦截点击链接的行为，加上project_id参数
  */
 W.interceptLinkClick = function() {
-	$('a').click(function(event) {
-	    var $link = $(event.currentTarget);
-	    var href = $link.attr('href');
-	    if ((href[0] === '/') || (href.indexOf('?') !== -1)) {
-	        if ((href.indexOf('project_id=') === -1) && W.projectId) {
-	            href = (href + '&project_id=' + W.projectId);
-	        }
-	    }
+  $('a').click(function(event) {
+      var $link = $(event.currentTarget);
+      var href = $link.attr('href');
+      if ((href[0] === '/') || (href.indexOf('?') !== -1)) {
+          if ((href.indexOf('project_id=') === -1) && W.projectId) {
+              href = (href + '&project_id=' + W.projectId);
+          }
+      }
 
-	    $link.attr('href', href);
-	});
+      $link.attr('href', href);
+  });
 }
 
 W.showVisitHistory = function(title, url) {
@@ -111,20 +111,24 @@ W.preloadImgsOnPage = function(option) {
 
 // 如果是upaiyun图片则增加压缩参数
 function compressImgUrl(imgUrl, paramStr) {
-		if (imgUrl) {
+    if (imgUrl) {
         var idxCompressed = imgUrl.lastIndexOf('!/');
+        var upaiyunKey = /upaiyun\.com/;
+        // 在又拍云里做
+        // 替换"/termite_static/upload/"为"/static/upload/"
+        if (upaiyunKey.test(imgUrl)){
+            imgUrl = imgUrl.replace('/termite_static/upload/','/static/upload/');
+        }
         // 压缩过, 清理压缩参数
         if ( idxCompressed > -1) {
-          imgUrl = imgUrl.substring(0, idxCompressed);
+            imgUrl = imgUrl.substring(0, idxCompressed);
         }
-        var upaiyunKey = /upaiyun\.com/;
-				//var upaiyunKey = /static/;
-				var compressStr = paramStr;
-				if (upaiyunKey.test(imgUrl)){
-					return [imgUrl, compressStr].join('');
-				}
+        var compressStr = paramStr;
+        if (upaiyunKey.test(imgUrl)){
+            return [imgUrl, compressStr].join('');
+        }
         return imgUrl;
-		}
+    }
 }
 
 function lazyloadImg($imgs, options) {
