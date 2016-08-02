@@ -75,13 +75,12 @@ class Mexlottery(resource.Resource):
 		ex_code = request.GET['excode']
 		verify = request.GET['verify_code'].encode('utf8')
 		_code = request.session['checkcode']
+		tel = request.GET['tel']
 
 		#BDD专用
 		verify_for_bdd = request.GET.get('verify_code_for_bdd', None)
 		if verify_for_bdd:
 			_code = verify_for_bdd
-
-		# request.session['checkcode'] = ''
 
 		response = create_response(500)
 		# 检查验证码是否正确
@@ -107,7 +106,8 @@ class Mexlottery(resource.Resource):
 				belong_to=record_id,
 				created_at=datetime.now(),
 				code=ex_code,
-				status=app_models.NOT_USED
+				status=app_models.NOT_USED,
+				tel=tel
 			)
 			try:
 				exlottery_participance.save()
