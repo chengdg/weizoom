@@ -36,10 +36,9 @@ var AsyncComponentLoadView = BackboneLite.View.extend({
             _this.component['component']['valid_product_count'] = data['products'].length;
             _this.component['component']['components'] = {};
             console.log('>>>>>>>>>>>> 异步获取数据后补充component：', _this.component);
-            // 第一次渲染
-            //var orgHtml = _this.renderComponent(_this.component, data);
             alert('模版整合');
-            var orgHtml = _this.template(_this.component);
+            var orgHtml = _this.renderComponent(_this.component, data);
+            //var orgHtml = _this.template(_this.component);
             _this.$el.html(orgHtml);
             alert('整合完毕');
             var $eleUl = _this.$el.find('ul');
@@ -133,6 +132,7 @@ $(function(){
         $div.attr('src', '');
     });
 
+    var componentsTmpl = $("#componentTemplates").html();
     allComponents.map(function(component, idx){
         alert('进入组件循环创建');
         if (idx < 1) {
