@@ -76,6 +76,7 @@ var AsyncComponentLoadView = BackboneLite.View.extend({
 
     // 渲染子标签
     renderSub: function($el, data) {
+        alert('进入子组件');
         var _this = this;
         console.log('>>>>>>>>> 异步接口: ', data);
         var product_ids = this.componentModel['items'];
@@ -91,6 +92,7 @@ var AsyncComponentLoadView = BackboneLite.View.extend({
 
         // TODO: 使用handlebar-template 渲染 
         $el.html(sub_component_htmls.join(''));
+        alert('离开子组件');
 
     },
 
