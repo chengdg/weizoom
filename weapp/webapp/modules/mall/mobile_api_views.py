@@ -214,3 +214,9 @@ def get_member_subscribed_status(request):
 	会员的关注状态
 	"""
 	return request_api_util.get_member_subscribed_status(request)
+
+def get_page_products(request):
+	"""
+	微页面中的商品列表
+	"""
+	return request_api_util.get_page_products(request)
