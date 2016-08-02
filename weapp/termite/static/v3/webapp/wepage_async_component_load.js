@@ -34,6 +34,8 @@ var AsyncComponentLoadView = BackboneLite.View.extend({
             app: 'webapp',
             api: 'project_api/call',
             method: 'get',
+            cache: true,
+            async: true,
             args: {
                 woid: W.webappOwnerId,
                 module: 'mall',
@@ -108,7 +110,7 @@ $(function(){
         allComponents.push($div);
     });
     allComponents.map(function(component, idx){
-        if (idx <= 1) {
+        if (idx < 1) {
             var $div = component;
             var componentType = $div.attr('data-type');
             var componentModel = $.parseJSON($div.attr('data-model') || '{}');
