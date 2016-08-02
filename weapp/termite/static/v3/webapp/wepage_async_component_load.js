@@ -99,8 +99,7 @@ var AsyncComponentLoadView = BackboneLite.View.extend({
     }
 });
 
-
-$(document).load(function(){
+$(function(){
     $('div[data-ui-role="async-component"]').each(function() {
         var $div = $(this);
         var componentType = $div.attr('data-type');
