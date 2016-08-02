@@ -96,7 +96,7 @@ W.preloadImgsOnPage = function(option) {
                 case 'productList':
                     $itemsImg.map(function(idx, item) {
                         var $item = $(item);
-                        $item.attr('data-url', $item.attr('src'));
+                        $item.attr('data-url', compressImgUrl($item.attr('src'), ""));
                         $item.removeAttr('src');
                     });
                     $lazyImgs = $('[data-url]');
@@ -112,7 +112,6 @@ W.preloadImgsOnPage = function(option) {
 // 如果是upaiyun图片则增加压缩参数
 function compressImgUrl(imgUrl, paramStr) {
     if (imgUrl) {
-        var idxCompressed = imgUrl.lastIndexOf('!/');
         var chaozhiKey = /chaozhi\.weizoom\.com/;
         // 遇到chaozhi.weizoom.com
         // 替换"/termite_static/upload/"为"/static/upload/"
@@ -126,11 +125,12 @@ function compressImgUrl(imgUrl, paramStr) {
             imgUrl = imgUrl.replace('/termite_static/upload/','/static/upload/');
         }
         // 压缩过, 清理压缩参数
+        var idxCompressed = imgUrl.lastIndexOf('!/');
         if ( idxCompressed > -1) {
             imgUrl = imgUrl.substring(0, idxCompressed);
         }
         var compressStr = paramStr;
-        if (upaiyunKey.test(imgUrl)){
+        if (compressStr != "" && upaiyunKey.test(imgUrl)){
             return [imgUrl, compressStr].join('');
         }
         return imgUrl;
