@@ -14,6 +14,7 @@ class Command(BaseCommand):
 		"""
 		try:
 			print 'start update evaluate integral status'
+			evaluate_models.ProductEvaluates.objects(status__in=[evaluate_models.STATUS_WAITTING, evaluate_models.STATUS_DENIED]).update(set__has_increase_integral=False)
 			evaluate_models.ProductEvaluates.objects(status__in=[evaluate_models.STATUS_PASSED, evaluate_models.STATUS_TOP]).update(set__has_increase_integral=True)
 			print 'stop update evaluate integral status'
 		except:
