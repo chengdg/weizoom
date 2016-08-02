@@ -113,6 +113,13 @@ $(function(){
         var $div = $(this);
         allComponents.push($div);
     });
+
+    $('img[data-url], img[src]').each(function() {
+        var $div = $(this);
+        $div.attr('data-url', '');
+        $div.attr('src', '');
+    });
+
     allComponents.map(function(component, idx){
         if (idx < 1) {
             var $div = component;
