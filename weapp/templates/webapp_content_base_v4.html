@@ -121,7 +121,6 @@
             </div>
             {% endfor %}
         </div>
-        {% include "weapp_jssdk_base.html" %}
         <!-- 公告超出滚动 -->
         <script type="text/javascript">
             // 定时器
@@ -636,5 +635,6 @@
         {% if not is_deleted_data %}
             {% block js %}{% endblock %}
         {% endif %}
+        {% include "weapp_jssdk_base.html" %}
     </body>
 </html>

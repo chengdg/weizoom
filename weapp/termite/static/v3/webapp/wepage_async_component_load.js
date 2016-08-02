@@ -23,10 +23,23 @@ var AsyncComponentLoadView = BackboneLite.View.extend({
         console.log('>>>>>>>>>> options: ', options, this.component);
         this.handlebarTmpl = $("#componentTemplates").html();
         this.template = Handlebars.compile(this.handlebarTmpl);
-        this.sendApi();
+        var deferred = $.Deferred();
+        this.sendApi(deferred);
+        var _this = this;
+        $.when(deferred).done(function(data){
+            // 根据商品数量填补component对象
+            _this.component['component']['valid_product_count'] = data['products'].length;
+            _this.component['component']['components'] = {};
+            console.log('>>>>>>>>>>>> 异步获取数据后补充component：', _this.component);
+            // 第一次渲染
+            var orgHtml = _this.renderComponent(_this.component, data);
+            _this.$el.html(orgHtml);
+            var $eleUl = _this.$el.find('ul');
+            _this.renderSub($eleUl, data);
+        });
     },
 
-    sendApi: function() {
+    sendApi: function(deferred) {
         var _this = this;
         var product_ids = this.componentModel['items'];
         console.log(product_ids);
@@ -43,18 +56,9 @@ var AsyncComponentLoadView = BackboneLite.View.extend({
                 product_ids: product_ids
             },
             success: function(data) {
-                // 根据商品数量填补component对象
-                _this.component['component']['valid_product_count'] = data['products'].length;
-                _this.component['component']['components'] = {};
-                console.log('>>>>>>>>>>>> 异步获取数据后补充component：', _this.component);
-                // 第一次渲染
-                var orgHtml = _this.renderComponent(_this.component, data);
-                _this.$el.html(orgHtml);
-                var $eleUl = _this.$el.find('ul');
-                _this.renderSub($eleUl, data);
+                deferred.resolve(data);
             },
             error: function(data) {
-
             }
         });
     },
