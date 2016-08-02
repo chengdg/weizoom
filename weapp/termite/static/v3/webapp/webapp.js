@@ -58,6 +58,9 @@ W.preloadImgsOnPage = function(option) {
     if (!option) return;
     $(function(){
         option.map(function(ele){
+            var noLazy = {
+                'imageNav': 20,
+            };
             var module = ele['moduleName'];
             var tagId = ele['tagId'];
             var $itemsImg = $(tagId);
@@ -77,8 +80,10 @@ W.preloadImgsOnPage = function(option) {
                 case 'imageNav':
                     $itemsImg.map(function(idx, item) {
                         var $item = $(item);
-                        $item.attr('data-url', $item.attr('src'));
-                        $item.removeAttr('src');
+                        if (idx > noLazy['imageNav']) {
+                            $item.attr('data-url', $item.attr('src'));
+                            $item.removeAttr('src');
+                        }
                     });
                     $lazyImgs = $('[data-url]');
                     lazyloadImg($lazyImgs, {threshold: 200});
@@ -96,7 +101,7 @@ W.preloadImgsOnPage = function(option) {
                 case 'productList':
                     $itemsImg.map(function(idx, item) {
                         var $item = $(item);
-                        $item.attr('data-url', $item.attr('src'));
+                        $item.attr('data-url', compressImgUrl($item.attr('src'), ""));
                         $item.removeAttr('src');
                     });
                     $lazyImgs = $('[data-url]');
@@ -112,19 +117,25 @@ W.preloadImgsOnPage = function(option) {
 // 如果是upaiyun图片则增加压缩参数
 function compressImgUrl(imgUrl, paramStr) {
     if (imgUrl) {
-        var idxCompressed = imgUrl.lastIndexOf('!/');
-        var upaiyunKey = /upaiyun\.com/;
+        var chaozhiKey = /chaozhi\.weizoom\.com/;
+        // 遇到chaozhi.weizoom.com
+        // 替换"/termite_static/upload/"为"/static/upload/"
+        if (chaozhiKey.test(imgUrl)){
+            imgUrl = imgUrl.replace('/termite_static/upload/','/static/upload/');
+        }
         // 在又拍云里做
+        var upaiyunKey = /upaiyun\.com/;
         // 替换"/termite_static/upload/"为"/static/upload/"
         if (upaiyunKey.test(imgUrl)){
             imgUrl = imgUrl.replace('/termite_static/upload/','/static/upload/');
         }
         // 压缩过, 清理压缩参数
+        var idxCompressed = imgUrl.lastIndexOf('!/');
         if ( idxCompressed > -1) {
             imgUrl = imgUrl.substring(0, idxCompressed);
         }
         var compressStr = paramStr;
-        if (upaiyunKey.test(imgUrl)){
+        if (compressStr != "" && upaiyunKey.test(imgUrl)){
             return [imgUrl, compressStr].join('');
         }
         return imgUrl;
