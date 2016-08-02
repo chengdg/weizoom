@@ -42,8 +42,8 @@ var AsyncComponentLoadView = BackboneLite.View.extend({
             var orgHtml = _this.template(_this.component);
             _this.$el.html(orgHtml);
             alert('整合完毕');
-            //var $eleUl = _this.$el.find('ul');
-            //_this.renderSub($eleUl, data);
+            var $eleUl = _this.$el.find('ul');
+            _this.renderSub($eleUl, data);
             alert('渲染组件完成');
         });
     },
