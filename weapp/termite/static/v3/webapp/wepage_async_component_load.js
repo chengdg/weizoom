@@ -27,6 +27,7 @@ var AsyncComponentLoadView = BackboneLite.View.extend({
         this.sendApi(deferred);
         var _this = this;
         $.when(deferred).done(function(data){
+            alert('开始渲染组件');
             // 根据商品数量填补component对象
             _this.component['component']['valid_product_count'] = data['products'].length;
             _this.component['component']['components'] = {};
@@ -36,6 +37,7 @@ var AsyncComponentLoadView = BackboneLite.View.extend({
             _this.$el.html(orgHtml);
             var $eleUl = _this.$el.find('ul');
             _this.renderSub($eleUl, data);
+            alert('渲染组件完成');
         });
     },
 
@@ -43,6 +45,7 @@ var AsyncComponentLoadView = BackboneLite.View.extend({
         var _this = this;
         var product_ids = this.componentModel['items'];
         console.log(product_ids);
+        alert('异步开始');
         W.getApi().call({
             app: 'webapp',
             api: 'project_api/call',
@@ -56,9 +59,11 @@ var AsyncComponentLoadView = BackboneLite.View.extend({
                 product_ids: product_ids
             },
             success: function(data) {
+                alert('异步结束');
                 deferred.resolve(data);
             },
             error: function(data) {
+                alert('异步出错');
             }
         });
     },
@@ -102,7 +107,6 @@ var AsyncComponentLoadView = BackboneLite.View.extend({
         };
         var html = this.renderComponent(itemComponent, {});
         html = html.replace('src=', 'data-url=');
-        console.log('html >>>>>>>>>>>>>', html);
         return html;
     }
 });
@@ -121,6 +125,7 @@ $(function(){
     });
 
     allComponents.map(function(component, idx){
+        alert('进入组件循环创建');
         if (idx < 1) {
             var $div = component;
             var componentType = $div.attr('data-type');
@@ -131,6 +136,7 @@ $(function(){
                 componentModel: componentModel,
             });
 
+            alert('开始创建view');
             $div.data('view', asyncComponent);
         }
     });
