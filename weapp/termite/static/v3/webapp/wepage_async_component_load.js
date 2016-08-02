@@ -35,8 +35,8 @@ var AsyncComponentLoadView = BackboneLite.View.extend({
             // 第一次渲染
             var orgHtml = _this.renderComponent(_this.component, data);
             _this.$el.html(orgHtml);
-            var $eleUl = _this.$el.find('ul');
-            _this.renderSub($eleUl, data);
+            //var $eleUl = _this.$el.find('ul');
+            //_this.renderSub($eleUl, data);
             alert('渲染组件完成');
         });
     },
