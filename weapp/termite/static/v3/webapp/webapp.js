@@ -113,8 +113,14 @@ W.preloadImgsOnPage = function(option) {
 function compressImgUrl(imgUrl, paramStr) {
     if (imgUrl) {
         var idxCompressed = imgUrl.lastIndexOf('!/');
-        var upaiyunKey = /upaiyun\.com/;
+        var chaozhiKey = /chaozhi\.weizoom\.com/;
+        // 遇到chaozhi.weizoom.com
+        // 替换"/termite_static/upload/"为"/static/upload/"
+        if (chaozhiKey.test(imgUrl)){
+            imgUrl = imgUrl.replace('/termite_static/upload/','/static/upload/');
+        }
         // 在又拍云里做
+        var upaiyunKey = /upaiyun\.com/;
         // 替换"/termite_static/upload/"为"/static/upload/"
         if (upaiyunKey.test(imgUrl)){
             imgUrl = imgUrl.replace('/termite_static/upload/','/static/upload/');
