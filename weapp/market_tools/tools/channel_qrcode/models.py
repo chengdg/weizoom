@@ -149,7 +149,7 @@ class ChannelDistributionQrcodeSettings(models.Model):
 	award_prize_info = models.TextField(default='{"id":-1,"name":"no-prize"}')  # 关注奖励,奖品信息
 	reply_type = models.IntegerField(max_length=1, default=0)  # 扫码后行为：0普通关注一致，1回复文字，2回复图文
 	reply_detail = models.TextField(default='')  # 回复文字, 当reply_type为1时有效
-	reply_material_id = models.IntegerField(default=0) # 素材id，reply_type为2时有效 ?
+	reply_material_id = models.IntegerField(default=0) # 图文id，reply_type为2时有效 ?
 	coupon_ids = models.TextField()  # 配置过的优惠券id集合
 	bing_member_id = models.IntegerField(default=0) # 关联会员:创建二维码时选择关联的会员的ID
 	return_standard = models.IntegerField(default=0)  # 多少天结算标准

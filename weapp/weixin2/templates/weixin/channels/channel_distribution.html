@@ -22,12 +22,17 @@
 <div class="xui-setting">
     <div class="xui-row pr">
         <label class="xui-i-left fl">会员头衔：</label>
-        <input type="text" name="bing_member_title"/>
+        <input type="text" name="bing_member_title" {% if qrcode %}value="{{ qrcode.bing_member_title }}"{% endif %}/>
     </div>
     <div class="xui-row pr">
         <label class="xui-i-left fl">关联会员：</label>
         <span class="xa-selectMemberName ml10"></span>
-        <button class="xa-selectMemberDailog" type="button">选择关注会员</button>
+        {% if qrcode %}
+            会员昵称:{{ qrcode.bing_member_id }}
+            {% else %}
+              <button class="xa-selectMemberDailog" type="button">选择关注会员</button>
+        {% endif %}
+
     </div>
 
  <hr/>
@@ -37,26 +42,29 @@
     <hr/>
     <div class="xui-row pr">
         <label class="xui-i-left fl">分销奖励：</label>
-        <select name="distribution_rewards">
-            <option value="0">无</option>
-            <option value="1">佣金</option>
+        <select name="distribution_rewards" {% if qrcode %} disabled="disabled"{% endif %}>
+        {{ qrcode.distribution_rewards }}
+            <option value="0" {% ifequal qrcode.distribution_rewards 'False' %}selected="selected"{% endifequal %}>无</option>
+            <option value="1" {% ifequal qrcode.distribution_rewards 1 %}selected="selected"{% endifequal %}>佣金</option>
         </select>
     </div>
     <div class="xui-row pr">
         <label class="xui-i-left fl">佣金返现率：</label>
-        <input name="commission_rate" type="text">%（注：返现率不得高于20%；佣金=优惠后的价格X返现率）
+        <input name="commission_rate" type="text" {% if qrcode %}value="{{ qrcode.commission_rate }}" disabled="disabled"{% endif %}>%
+        （注：返现率不得高于20%；佣金=优惠后的价格X返现率）
     </div>
     <div class="xui-row pr">
         <label class="xui-i-left fl">最低返现折扣：</label>
-        <input name="minimun_return_rate" type="text">%（注：若设置为80，则商品在优惠的价格在80%以下不参与返佣金）
+        <input name="minimun_return_rate" type="text" {% if qrcode %}value="{{ qrcode.minimun_return_rate }}" disabled="disabled"{% endif %}>
+        %（注：若设置为80，则商品在优惠的价格在80%以下不参与返佣金）
     </div>
     <div class="xui-row pr">
         <label class="xui-i-left fl">佣金返现标准：</label>
-        <input name="minimum_return_amount" type="text" /> 元（佣金取现最低金额）
+        <input name="commission_return_standard" type="text" {% if qrcode %}value="{{ qrcode.commission_return_standard }}" disabled="disabled"{% endif %}/> 元（佣金取现最低金额）
     </div>
     <div class="xui-row pr">
         <label class="xui-i-left fl">多少天结算标准：</label>
-        <input name="return_standard" type="text" />
+        <input name="return_standard" type="text" {% if qrcode %}value="{{ qrcode.return_standard }}" disabled="disabled"{% endif %}/>
 {#        <input name="standardMethod" type="radio" value="1" />是#}
 {#        <input name="standardMethod" type="radio" value="0" />否#}
     </div>
@@ -68,7 +76,7 @@
         </label>
         <select name="group_id">
             {% for tag in tags %}
-            <option value="{{tag.id}}"{% if qrcode.tag_id == tag.id or not qrcode.tag_id and tag.name == '未分组' %}selected="selected"{% endif%}>{{tag.name}}</option>
+            <option value="{{tag.id}}"{% if qrcode.group_id == tag.id or not qrcode.group_id and tag.name == '未分组' %}selected="selected"{% endif%}>{{tag.name}}</option>
             {% endfor %}
         </select>
         <div>内置分组为会员分组</div>
@@ -79,7 +87,6 @@
         <div class="controls" id="prize_selector" data-ui-role="prize-selector" data-init-prizeinfo='{% if qrcode %}{{ qrcode.award_prize_info|safe }}{% else %}{% endif %}'></div>
         <input id="prize_info" name="prize_info" class="hide" value="">
         </div>
-
     </div>
 {#    <div class="xui-row pr">#}
 {#        <label class="xui-i-left fl">扫码回复:</label>#}
@@ -98,21 +105,22 @@
 {#			</div>#}
 {#    </div>#}
 			<div class="xui-Sweep1 mt20 disT" style="float:none;">
-					<div class="xui-i-left lh42 tr xui-Sweep pr10 disTc vt" style="width:133px;">扫码后回复：</div>
+					<div class="xui-i-left lh42 tr xui-Sweep pr10 disTc vt" style="width:133px;">扫码回复：</div>
 					<div class="fl" id="prize_qrcode">
 						<div id="edit-message-panel"></div>
 					</div>
 				<!-- </div> -->
 			</div>
+
 			<div class="tab-content" style="margin: 20px 0 5px 160px;">
 				<div id="weixinMessageEdite r-textMessageZone" style="width: 350px">
 					<div class="control-group mr5 mt5">
 						<div class="controls ml20">
-							<textarea class="input-xlarge hide xa-a" id="reply_detail" name="reply_detail" data-ui-role="richtext-editor" data-height="300" data-width="350">{% if qrcode %}{{ qrcode.reply_detail|safe }}{% endif %}</textarea>
+
+							<textarea class="input-xlarge hide xa-a" id="reply_detail" name="reply_detail" data-ui-role="richtext-editor" data-height="300" data-width="350">{% if qrcode %}{{ qrcode.reply_detail|format_emotion|safe }}{% endif %}</textarea>
 						</div>
 					</div>
 				</div>
-
 				<div id="weixinMessageEditer-newsMessageZone" style="width: 350px">
 					<input id="reply_material_id" name="reply_material_id" class="hide" value="">
 				</div>
@@ -196,16 +204,14 @@
         // 提交表单
         $(document).delegate('.xa-submit', 'click', function (event) {
             $('.xa-submit').attr('disabled','disabled');
-			if(!('{{ edit_qrcode }}' === 'None')){
-				var bingMemberTitle = '';
-			}else {
-                var bingMemberTitle = $.trim($('[name="bing_member_title"]').val());
-                if (bingMemberTitle === '') {
-                    W.showHint('error', '二维码名称不能为空');
-                    $('.xa-submit').removeAttr('disabled');
-                    return;
-                }
+
+            var bingMemberTitle = $.trim($('[name="bing_member_title"]').val());
+            if (bingMemberTitle === '') {
+                W.showHint('error', '二维码名称不能为空');
+                $('.xa-submit').removeAttr('disabled');
+                return;
             }
+
             if(!$('.xa-selectMemberName').attr('data-id')){
                 W.showHint('error', '请选择关联会员');
                 $('.xa-submit').removeAttr('disabled');
@@ -302,19 +308,42 @@
                 reply_detail: textContent,
                 reply_material_id: materialId
             };
-            console.log(data);
-            W.resource.new_weixin.ChannelDistribution.put({
-                data:data,
-                success: function(data) {
-                    W.showHint('success', '保存成功');
-                    window.location.href="/new_weixin/qrcodes/";
-                },
-                error: function(resp) {
-                    $('.xa-submit').removeAttr('disabled');
-                    W.showHint('error', '保存失败！');
+            console.log(data); // todo 删除
+            if('{{ qrcode }}' !== 'None') {
+                  W.resource.new_weixin.ChannelDistribution.post({
+                        data: data,
+                        success: function (data) {
+                            W.showHint('success', '保存成功');
+                            window.location.href = "/new_weixin/channel_distributions/";
+                        },
+                        error: function (resp) {
+                            $('.xa-submit').removeAttr('disabled');
+                            W.showHint('error', '保存失败！');
+                        }
+                    });
+            }else {
+                data = {
+                    bing_member_title: bingMemberTitle,
+                    group_id: groupId,
+                    prize_info: prizeInfo,
+                    reply_type: replyType,
+                    reply_detail: textContent,
+                    reply_material_id: materialId
                 }
-            });
+                W.resource.new_weixin.ChannelDistribution.put({
+                    data: data,
+                    success: function (data) {
+                        W.showHint('success', '保存成功');
+                        window.location.href = "/new_weixin/channel_distributions/";
+                    },
+                    error: function (resp) {
+                        $('.xa-submit').removeAttr('disabled');
+                        W.showHint('error', '保存失败！');
+                    }
+                });
+            }
         });
+
 
 
     </script>
