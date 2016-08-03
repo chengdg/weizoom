@@ -2866,6 +2866,10 @@ class ProductLimitPurchasePrice(models.Model):
         verbose_name_plural = "商品池商品"
         db_table = "product_limit_purchase_price"
 
+
+FIRST_CLASSIFICATION = 1
+SECONDARY_CLASSIFICATION = 2
+
 class Classification(models.Model):
 	"""
 	商品分类

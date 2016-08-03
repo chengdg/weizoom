@@ -2,14 +2,37 @@
 <div class="xui-form disT w">
 	<div class="xui-col disTc">
 		<div class="xui-i-item">
-			<label class="">商品名称：</label>
-			<input type="text" class="form-control" id="name" name="name" value="" />
+			<label class="">商品编号：</label>
+			<input type="text" class="form-control" id="productCode" name="productCode" value="" />
 		</div>
 	</div>
 	<div class="xui-col disTc">
 		<div class="xui-i-item">
+			<label class="">商品名称：</label>
+			<input type="text" class="form-control" id="name" name="name" value="" />
+		</div>
+	</div>
+</div>
+<div class="xui-form disT w">
+	<div class="xui-col disTc">
+		<div class="xui-i-item">
 			<label class="">供货商：</label>
 			<input type="text" class="form-control" id="supplier" name="supplier" value="" />
+		</div>
+	</div>
+	<div class="xui-col disTc">
+		<div class="xui-i-item">
+			<label class="">商品分类：</label>
+			<select id="firstClassification" name="firstClassification" >
+				<option value="-1">一级分类</option>
+				{{each(i, classification) classifications}}
+				<option value="${classification.id}" name="classification">${classification.name}</option>
+				{{/each}}
+			</select>
+			<select id="secondaryClassification" name="secondaryClassification">
+				<option value="-1">二级分类</option>
+
+			</select>
 		</div>
 	</div>
 </div>

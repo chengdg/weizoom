@@ -1838,3 +1838,29 @@ class CheckProductHasPromotion(resource.Resource):
                 return create_response(200).get_response()
         else:
             return create_response(500).get_response()
+
+class ProductClassification(resource.Resource):
+    app = 'mall2'
+    resource = 'product_classification'
+
+    @login_required
+    def api_get(request):
+        level = int(request.GET.get('level', '0'))
+        father_id = int(request.GET.get('father_id', '0'))
+        if not level:
+            return create_response(500).get_response()
+        classifications = models.Classification.objects.filter(
+                                    level=level,
+                                    father_id=father_id)
+        items = []
+        response = create_response(200)
+        for classification in classifications:
+            items.append({
+                    'id': classification.id,
+                    'name': classification.name
+                })
+        response.data = {
+            'items': items,
+            'level': level
+        }
+        return response.get_response()
