@@ -32,13 +32,6 @@ Background:
 				}],
 			"cover_in_the_text":"true",
 			"content":"单条图文1文本内容"
-		},{
-			"title":"图文2",
-			"cover": [{
-				"url": "/standard_static/test_resource_img/hangzhou2.jpg"
-				}],
-			"cover_in_the_text":"true",
-			"content":"单条图文2文本内容"
 		}]
 		"""
 	And bigs关注jobs的公众号于'2015-10-01'
@@ -60,20 +53,6 @@ Background:
 			"reply_type": "文字",
 			"scan_code_reply": "扫码后回复文本",
 			"create_time": "2015-10-10 10:20:30"
-		},{
-			"code_name": "渠道分销二维码-优惠券奖励",
-			"relation_member": "tom",
-			"distribution_prize_type": "佣金",
-			"commission_return_rate":"10",
-			"minimum_cash_discount":"80",
-			"commission_return_standard":500.00,
-			"is_seven_day_settlement_standard":"true",
-			"tags": "分组2",
-			"prize_type": "优惠券",
-			"coupon":"优惠券1",
-			"reply_type": "图文",
-			"scan_code_reply": "图文2",
-			"create_time": "2015-10-12 10:20:30"
 		}]
 		"""
 
@@ -88,15 +67,6 @@ Background:
 				"prize": "[优惠券]优惠券1",
 				"distribution_prize":"无",
 				"create_time": "2015-10-12 10:20:30"
-			},{
-				"code_name": "渠道分销二维码-默认设置",
-				"relation_member": "bigs",
-				"attention_number": "0",
-				"total_transaction_money": 0.00,
-				"cash_back_amount":0.00,
-				"prize": "无",
-				"distribution_prize":"佣金",
-				"create_time": "2015-10-10 10:20:30"
 			}]
 			"""
 @mall2 @apps @senior @channel_distribution
@@ -117,7 +87,7 @@ Scenario:1 修改渠道分销二维码
 			"prize_type": "优惠券",
 			"coupon":"优惠券1",
 			"reply_type": "图文",
-			"scan_code_reply": "图文2",
+			"scan_code_reply": "图文1",
 			"create_time": "2015-10-12 10:20:30"
 		}
 		
