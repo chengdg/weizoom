@@ -216,13 +216,7 @@ $(function(){
     };
 
     allComponents.map(function(component, idx){
-        if (idx > 1) {
-            _.delay(function(){
-                initComponent(component, idx);
-            }, 500);
-        } else {
-           initComponent(component, idx);
-        }
+        initComponent(component, idx);
     });
 });
 

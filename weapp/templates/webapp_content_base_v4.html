@@ -4,7 +4,6 @@
 <html class="{% if user.is_from_android %} android{% endif %}{% if not user.is_from_weixin %} notweixin {% ifequal app_name 'lottery' %}{% ifequal activity_status '进行中' %}notweixin-lottery_active{% endifequal %}{% endifequal %}{% endif %} " style="background:#f2f2f2;">
     <head>
         <meta charset="UTF-8" />
-        <meta http-equiv="expires" content="Sat Sep 03 2016 19:40:00 GMT+0800" />
         <title>{{ page_title }}</title>
         {% if request.enable_sql_monitor %}
         <link type="text/css" rel="stylesheet" media="all" href="/static/bootstrap/css/bootstrap.css">
