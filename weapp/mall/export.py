@@ -321,7 +321,7 @@ MALL_APPS_EXSIGN_NAV = 'exsign'
 MALL_APPS_EGG_NAV = 'egg'
 MALL_APPS_SCRATCH_NAV = 'scratch'
 ADVANCE_MANAGE_QRCODE_NAV = 'qrcode'
-
+ADVANCE_MANAGE_CHANNEL_DISTRIBUTIONS_NAV = 'channel_distributions'
 #
 # 应用和营销左侧垂直方向二级导航信息
 #
@@ -527,6 +527,12 @@ MALL_PROMOTION_AND_APPS_SECOND_NAV = {
                     'name': ADVANCE_MANAGE_QRCODE_NAV,
                     'title': u'活动推广码',
                     'url': '/new_weixin/qrcodes/',
+                    'permission': ''
+                },
+                {
+                    'name': ADVANCE_MANAGE_CHANNEL_DISTRIBUTIONS_NAV,
+                    'title': u'渠道分销',
+                    'url': '/new_weixin/channel_distributions/',
                     'permission': ''
                 },
             ]

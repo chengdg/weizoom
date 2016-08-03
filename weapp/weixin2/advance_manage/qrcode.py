@@ -18,7 +18,9 @@ from weixin2.models import MessageRemarkMessage,Message,FanCategory,FanHasCatego
 from modules.member.models import *
 from .util import get_members
 from .fans_category import DEFAULT_CATEGORY_NAME
-from market_tools.tools.channel_qrcode.models import ChannelQrcodeSettings,ChannelQrcodeHasMember,ChannelQrcodeBingMember
+from market_tools.tools.channel_qrcode.models import ChannelQrcodeSettings,ChannelQrcodeHasMember, \
+													ChannelQrcodeBingMember, ChannelDistributionQrcodeSettings,\
+													ChannelDistributionQrcodeHasMember
 from modules.member import models as member_model
 from account.util import get_binding_weixin_mpuser, get_mpuser_accesstoken
 from weixin2.message.util import get_member_groups
@@ -964,9 +966,9 @@ class ChannelDistributions(resource.Resource):
 		"""渠道分销"""
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
-			'second_navs': export.get_weixin_second_navs(request),
+			'second_navs': mall_export.get_promotion_and_apps_second_navs(request),
 			'second_nav_name': export.WEIXIN_ADVANCE_SECOND_NAV,
-			'third_nav_name': export.ADVANCE_MANAGE_QRCODE_NAV,
+			'third_nav_name': mall_export.ADVANCE_MANAGE_CHANNEL_DISTRIBUTIONS_NAV,
 		})
 		return render_to_response('weixin/channels/channel_distributions.html', c)
 
@@ -977,10 +979,13 @@ class ChannelDistribution(resource.Resource):
 
 	@login_required
 	def get(request):
-		"""渠道分销,新建二维码"""
+		"""渠道分销,新建二维码 和 编辑二维码页面"""
+		setting_id = request.GET.get('setting_id')
+
 		webapp_id = request.user_profile.webapp_id
 		groups = MemberGrade.get_all_grades_list(webapp_id)
 		member_tags = MemberTag.get_member_tags(webapp_id)
+		edit_qrcode = None
 		#调整排序，将为分组放在最前面
 		tags = []
 		for tag in member_tags:
@@ -989,22 +994,103 @@ class ChannelDistribution(resource.Resource):
 			else:
 				tags.append(tag)
 
-
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
-			'second_navs': export.get_weixin_second_navs(request),
+			'second_navs': mall_export.get_promotion_and_apps_second_navs(request),
 			'second_nav_name': export.WEIXIN_ADVANCE_SECOND_NAV,
-			'third_nav_name': export.ADVANCE_MANAGE_QRCODE_NAV,
+			'third_nav_name': mall_export.ADVANCE_MANAGE_CHANNEL_DISTRIBUTIONS_NAV,
 			'tags': tags,
 			'webapp_id': webapp_id,
+			'edit_qrcode': edit_qrcode,
 			# 'selectedMemberIds': json.dumps(selectedMemberIds),
 		})
 		return render_to_response('weixin/channels/channel_distribution.html', c)
 
-	def api_get(request):
+	def api_put(request):
 		"""新建渠道分销二维码"""
 
+		award_prize_info = request.POST['prize_info'].strip()  # 扫描奖励
+		coupon_id = ''
 
+		info_dict = json.loads(award_prize_info)
+		if info_dict['type'] == u'优惠券':
+			coupon_id = str(info_dict['id'])
+		if not (info_dict.has_key('id') and info_dict.has_key('name') and info_dict.has_key('type')):
+			response = create_response(401)
+			response.errMsg = u'不合法的award_prize_info：' + award_prize_info
+			return response.get_response()
 
-		response = create_response(200)
-		return response.get_response
+		bing_member_title = request.POST["bing_member_title"]  # 会员头衔
+		bing_member_id = request.POST["bing_member_id"]  # 关联会员
+		distribution_rewards = request.POST["distribution_rewards"]  # 分销奖励 0:无 1:佣金
+		if distribution_rewards == '0':  # 如果分销奖励是无
+			commission_rate = 0
+			minimun_return_rate = 0
+			commission_return_standard = 0
+			return_standard = 0
+			distribution_rewards = False
+		else:
+			commission_rate = request.POST.get("commission_rate", 0)  # 佣金返现率
+			minimun_return_rate = request.POST.get("minimun_return_rate", 0)  # 最低返现折扣
+			commission_return_standard = request.POST.get("commission_return_standard", 0)  # 佣金返现标准
+			return_standard = request.POST.get("return_standard", 0)  # 多少天返现标准  TODO 需要修改
+			distribution_rewards = False
+		group_id = request.POST["group_id"]  # 添加到分组,会员分组
+		reply_type = request.POST['reply_type']  # 回复类型
+		reply_material_id = request.POST['reply_material_id']  # 图文
+
+		if reply_type == '0':
+			reply_material_id = 0
+			reply_detail = ''
+		elif reply_type == '1':
+			reply_material_id = 0
+			reply_detail = request.POST['reply_detail']
+		elif reply_type == '2':
+			reply_detail = ''
+
+		cur_setting = ChannelDistributionQrcodeSettings.objects.create(
+			owner = request.manager,
+			bing_member_title = bing_member_title,
+			bing_member_id = bing_member_id,
+			award_prize_info = award_prize_info,
+			distribution_rewards = distribution_rewards,
+			commission_rate = commission_rate,
+			minimun_return_rate = minimun_return_rate,
+			commission_return_standard = commission_return_standard,
+			return_standard = return_standard,
+			group_id = group_id,
+			coupon_ids = coupon_id,
+			reply_type = reply_type,
+			reply_detail = reply_detail,
+			reply_material_id = reply_material_id,
+
+		)
+
+		# if cur_setting.bing_member_id:
+		# 	ChannelQrcodeBingMember.objects.create(
+		# 		channel_qrcode=cur_setting,
+		# 		member_id=bing_member_id
+		# 	)
+
+		if settings.MODE != 'develop':
+			mp_user = get_binding_weixin_mpuser(request.manager)
+			mpuser_access_token = get_mpuser_accesstoken(mp_user)
+			weixin_api = get_weixin_api(mpuser_access_token)
+
+			try:
+				qrcode_ticket = weixin_api.create_qrcode_ticket(int(cur_setting.id), QrcodeTicket.PERMANENT)
+				ticket = qrcode_ticket.ticket
+			except Exception, e:
+				print 'get qrcode_ticket fail:', e
+				ticket = ''
+		else:
+			ticket = ''
+		cur_setting.ticket = ticket
+		cur_setting.save()
+
+		if cur_setting:
+			response = create_response(200)
+		else:
+			response = create_response(400)
+
+		return response.get_response()
