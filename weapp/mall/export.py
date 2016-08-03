@@ -435,7 +435,7 @@ MALL_PROMOTION_AND_APPS_SECOND_NAV = {
                     'name': MALL_APPS_EXLOTTERY_NAV,
                     'title': "幸运码抽奖",
                     'url': '/apps/exlottery/exlotteries/',
-                    'permission': '',
+                    'permission': ''
                 },
                 # {
                     # 'name': MALL_APPS_FEEDBACK_NAV,
@@ -446,8 +446,9 @@ MALL_PROMOTION_AND_APPS_SECOND_NAV = {
                  {
                     'name': MALL_APPS_SURVEY_NAV,
                     'title': "用户调研",
-                    'url': '/apps/survey/surveies/',
-                    'permission': ''
+                    'url': 'http://marketapp.weapp.com/apps/survey/surveies/',
+                    'permission': '',
+                     'need_token': True
                 },
                 {
                     'name': MALL_APPS_EVENT_NAV,
