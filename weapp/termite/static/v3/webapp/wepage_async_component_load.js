@@ -32,7 +32,6 @@ var AsyncComponentLoadView = BackboneLite.View.extend({
                 type: options.componentType
             }
         };
-        console.log('>>>>>>>>>> 渲染前的对象值: ', this.component);
         //this.handlebarTmpl = $("#componentTemplates").html();
         var productListTemplate = '\
             <div class="xa-products-box wui-product wui-productTitle"> \
@@ -41,7 +40,7 @@ var AsyncComponentLoadView = BackboneLite.View.extend({
                         <li data-component-cid="{{component.cid}}" \
                           data-index="{{component.model.index}}"> \
                               <a class="wui-inner-box{{index}}{{#if product.is_member_product}} xa-member-product{{/if}} wa-item-product" href="javascript:void(0);" data-handlebar-data=\'{ "index":"{{index}}", "product":{"thumbnails_url":"{{this.thumbnails_url}}", "name":"{{this.name}}", "display_price":"{{this.display_price}}"} }\' data-product-promotion="{{this.promotion_js}}" data-product-price="{{this.display_price}}"> \
-                                <div class="wui-inner-pic"> <img data-url="{{this.thumbnails_url}}" /> </p> </div> \
+                                <div class="wui-inner-pic"> <img data-url="{{this.thumbnails_url}}" /></div> \
                                  <div class="wui-inner-titleAndprice"> \
                                     <p class="wa-inner-title xui-inner-title" {{this.is_itemname_hidden}}> \
                                         {{this.name}}</p> \
@@ -70,7 +69,6 @@ var AsyncComponentLoadView = BackboneLite.View.extend({
                 product['is_price_hidden'] = _this.component['component'].model['is_price_hidden'];
                 _this.component['component']['components'].push(product);
             });
-            console.log('>>>>>>>>>>>> 异步获取数据后补充component：', _this.component);
             var orgHtml = _this.renderComponent(_this.component, data);
             //var orgHtml = _this.template(_this.component);
             _this.$el.html(orgHtml);
@@ -89,7 +87,6 @@ var AsyncComponentLoadView = BackboneLite.View.extend({
     sendApi: function(deferred) {
         var _this = this;
         var product_ids = this.componentModel['items'];
-        console.log(product_ids);
         W.getApi().call({
             app: 'webapp',
             api: 'project_api/call',
@@ -112,24 +109,18 @@ var AsyncComponentLoadView = BackboneLite.View.extend({
 
     // 渲染主标签
     renderComponent: function (component, subData) {
-        console.log('渲染主标签：');
-        console.log('>>>>>>>>> component: ', component, subData);
-        console.log('>>>>>>>>>> renderComponent begin ', component);
         var html = this.template(component);
-        console.log('>>>>>>>>>> renderComponent end ', html);
         return html;
     },
 
     // 渲染子标签
     renderSub: function($el, data) {
         var _this = this;
-        console.log('>>>>>>>>> 异步接口: ', data);
         var product_ids = this.componentModel['items'];
         var products = data['products'];
         var sub_component_htmls = [];
         product_ids.forEach(function(product_id) {
             var product = _.find(products, function(item){return item.id === product_id});
-            console.log(product_id, product);
             // TODO: 将该html加入到sub_component中的html属性中
             var sub_component_html = _this.addSubComponetRender(product);
             sub_component_htmls.push(sub_component_html);
@@ -176,18 +167,16 @@ $(function(){
     //var componentsTmpl = $("#componentTemplates").html();
     var componentsTmpl = $("#productListTemplate").html();
     allComponents.map(function(component, idx){
-        if (true || idx < 1) {
-            var $div = component;
-            var componentType = $div.attr('data-type');
-            var componentModel = $.parseJSON($div.attr('data-model') || '{}');
-            var asyncComponent = new AsyncComponentLoadView({
-                el: $div[0],
-                componentType: componentType,
-                componentModel: componentModel,
-            });
+        var $div = component;
+        var componentType = $div.attr('data-type');
+        var componentModel = $.parseJSON($div.attr('data-model') || '{}');
+        var asyncComponent = new AsyncComponentLoadView({
+            el: $div[0],
+            componentType: componentType,
+            componentModel: componentModel,
+        });
 
-            $div.data('view', asyncComponent);
-        }
+        $div.data('view', asyncComponent);
     });
 });
 
