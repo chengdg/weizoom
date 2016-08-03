@@ -21,7 +21,6 @@ var AsyncComponentLoadView = BackboneLite.View.extend({
             }
         };
         console.log('>>>>>>>>>> options: ', options, this.component);
-        alert('获取模版');
         //this.handlebarTmpl = $("#componentTemplates").html();
         var productListTemplate = '\
             <div class="xa-products-box wui-product wui-productTitle"> \
@@ -37,15 +36,12 @@ var AsyncComponentLoadView = BackboneLite.View.extend({
                 </ul> \
             </div>\
         ';
-        alert('获取完毕');
         //this.template = Handlebars.compile(this.handlebarTmpl);
         this.template = Handlebars.compile(productListTemplate);
-        alert('模版编译完毕');
         var deferred = $.Deferred();
         this.sendApi(deferred);
         var _this = this;
         $.when(deferred).done(function(data){
-            alert('开始渲染组件');
             // 根据商品数量填补component对象
             _this.component['component']['valid_product_count'] = data['products'].length;
             _this.component['component']['components'] = [];
@@ -53,15 +49,12 @@ var AsyncComponentLoadView = BackboneLite.View.extend({
                 _this.component['component']['components'].push(product);
             });
             console.log('>>>>>>>>>>>> 异步获取数据后补充component：', _this.component);
-            alert('模版整合');
             var orgHtml = _this.renderComponent(_this.component, data);
             //var orgHtml = _this.template(_this.component);
             _this.$el.html(orgHtml);
-            alert('整合完毕');
             // 停止渲染子组件
             //var $eleUl = _this.$el.find('ul');
             //_this.renderSub($eleUl, data);
-            alert('渲染组件完成');
         });
     },
 
@@ -69,7 +62,6 @@ var AsyncComponentLoadView = BackboneLite.View.extend({
         var _this = this;
         var product_ids = this.componentModel['items'];
         console.log(product_ids);
-        alert('异步开始');
         W.getApi().call({
             app: 'webapp',
             api: 'project_api/call',
@@ -83,11 +75,9 @@ var AsyncComponentLoadView = BackboneLite.View.extend({
                 product_ids: product_ids
             },
             success: function(data) {
-                alert('异步结束');
                 deferred.resolve(data);
             },
             error: function(data) {
-                alert('异步出错');
             }
         });
     },
@@ -104,7 +94,6 @@ var AsyncComponentLoadView = BackboneLite.View.extend({
 
     // 渲染子标签
     renderSub: function($el, data) {
-        alert('进入子组件');
         var _this = this;
         console.log('>>>>>>>>> 异步接口: ', data);
         var product_ids = this.componentModel['items'];
@@ -120,7 +109,6 @@ var AsyncComponentLoadView = BackboneLite.View.extend({
 
         // TODO: 使用handlebar-template 渲染 
         $el.html(sub_component_htmls.join(''));
-        alert('离开子组件');
 
     },
 
@@ -160,7 +148,6 @@ $(function(){
     //var componentsTmpl = $("#componentTemplates").html();
     var componentsTmpl = $("#productListTemplate").html();
     allComponents.map(function(component, idx){
-        alert('进入组件循环创建');
         if (idx < 1) {
             var $div = component;
             var componentType = $div.attr('data-type');
@@ -171,7 +158,6 @@ $(function(){
                 componentModel: componentModel,
             });
 
-            alert('开始创建view');
             $div.data('view', asyncComponent);
         }
     });
