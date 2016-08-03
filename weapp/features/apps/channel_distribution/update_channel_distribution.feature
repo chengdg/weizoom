@@ -69,7 +69,7 @@ Background:
 				"create_time": "2015-10-12 10:20:30"
 			}]
 			"""
-@mall2 @apps @senior @channel_distribution
+@mall2 @apps @senior @update_distribution
 Scenario:1 修改渠道分销二维码
 	#修改：会员头衔、扫码设置
 	Given jobs登录系统
