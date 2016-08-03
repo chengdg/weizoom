@@ -148,7 +148,7 @@ $(function(){
     //var componentsTmpl = $("#componentTemplates").html();
     var componentsTmpl = $("#productListTemplate").html();
     allComponents.map(function(component, idx){
-        if (idx < 1) {
+        if (true || idx < 1) {
             var $div = component;
             var componentType = $div.attr('data-type');
             var componentModel = $.parseJSON($div.attr('data-model') || '{}');
