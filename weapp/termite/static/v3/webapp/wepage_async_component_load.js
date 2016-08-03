@@ -132,7 +132,8 @@ $(function(){
         $div.attr('src', '');
     });
 
-    var componentsTmpl = $("#componentTemplates").html();
+    //var componentsTmpl = $("#componentTemplates").html();
+    var componentsTmpl = $("#productListTemplate").html();
     allComponents.map(function(component, idx){
         alert('进入组件循环创建');
         if (idx < 1) {
