@@ -14,13 +14,25 @@ var AsyncComponentLoadView = BackboneLite.View.extend({
         this.$el = $(this.el);
         this.componentType = options.componentType;
         this.componentModel = options.componentModel;
+        this.componentModel.is_itemname_hidden = '';
+        this.componentModel.is_price_hidden = '';
+        // 判断价格和商品名称是否显示
+        if (this.componentModel.type != '3' && 
+            this.componentModel.card_type != '1' &&
+            this.componentModel.itemname == false ) {
+                this.componentModel.is_itemname_hidden = ' style=display:none ';
+        }
+        if (this.componentModel.type != '3' &&
+            this.componentModel.price == false ) {
+                this.componentModel.is_price_hidden = ' style=display:none ';
+        }
         this.component = {
             component: {
                 model: options.componentModel,
                 type: options.componentType
             }
         };
-        console.log('>>>>>>>>>> options: ', options, this.component);
+        console.log('>>>>>>>>>> 渲染前的对象值: ', this.component);
         //this.handlebarTmpl = $("#componentTemplates").html();
         var productListTemplate = '\
             <div class="xa-products-box wui-product wui-productTitle"> \
@@ -28,8 +40,14 @@ var AsyncComponentLoadView = BackboneLite.View.extend({
                     {{#each component.components}} \
                         <li data-component-cid="{{component.cid}}" \
                           data-index="{{component.model.index}}"> \
-                              <a class="wui-inner-box xa-member-product wa-item-product" href="javascript:void(0);" data-handlebar-data=\'{ "index":"{{index}}", "product":{"thumbnails_url":"{{this.thumbnails_url}}", "name":"{{this.name}}", "display_price":"{{this.display_price}}"} }\' data-product-promotion="{{this.promotion_js}}" data-product-price="{{this.display_price}}"> \
-                                <div class="wui-inner-pic"> <img src="{{this.thumbnails_url}}" /> <p>{{this.name}}</p> </div> \
+                              <a class="wui-inner-box{{index}}{{#if product.is_member_product}} xa-member-product{{/if}} wa-item-product" href="javascript:void(0);" data-handlebar-data=\'{ "index":"{{index}}", "product":{"thumbnails_url":"{{this.thumbnails_url}}", "name":"{{this.name}}", "display_price":"{{this.display_price}}"} }\' data-product-promotion="{{this.promotion_js}}" data-product-price="{{this.display_price}}"> \
+                                <div class="wui-inner-pic"> <img data-url="{{this.thumbnails_url}}" /> </p> </div> \
+                                 <div class="wui-inner-titleAndprice"> \
+                                    <p class="wa-inner-title xui-inner-title" {{this.is_itemname_hidden}}> \
+                                        {{this.name}}</p> \
+                                    <p class="wa-inner-price xui-inner-price" {{this.is_price_hidden}}> \
+                                        <span>¥</span>{{this.display_price}}</p> \
+                              </div> \
                             </a> \
                         </li> \
                     {{/each}} \
@@ -45,13 +63,23 @@ var AsyncComponentLoadView = BackboneLite.View.extend({
             // 根据商品数量填补component对象
             _this.component['component']['valid_product_count'] = data['products'].length;
             _this.component['component']['components'] = [];
+            // 将产品子数据，放到component.components中
+            // 并把是否显示价格和名字的开关也放进去
             data.products.map(function(product){
+                product['is_itemname_hidden'] = _this.component['component'].model['is_itemname_hidden'];
+                product['is_price_hidden'] = _this.component['component'].model['is_price_hidden'];
                 _this.component['component']['components'].push(product);
             });
             console.log('>>>>>>>>>>>> 异步获取数据后补充component：', _this.component);
             var orgHtml = _this.renderComponent(_this.component, data);
             //var orgHtml = _this.template(_this.component);
             _this.$el.html(orgHtml);
+            $lazyImgs = $('[data-ui-role="async-component"] a img');
+            lazyloadImg($lazyImgs, {
+                threshold: 0,
+                effect : "fadeIn",
+                placeholder: "/static_v2/img/webapp/mall/info_placeholder.png"
+            });
             // 停止渲染子组件
             //var $eleUl = _this.$el.find('ul');
             //_this.renderSub($eleUl, data);
