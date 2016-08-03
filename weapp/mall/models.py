@@ -592,7 +592,7 @@ class Product(models.Model):
 				})
 
 	@staticmethod
-	def fill_flash_sale(products):
+	def fill_flash_sale(products,webapp_owner):
 		from mall.promotion import models as promotion_models
 		for p in products:
 			p.promotion = None
@@ -604,7 +604,7 @@ class Product(models.Model):
 			id2product[product.id] = product
 
 		#创建promotions业务对象集合
-		product_promotion_relations = promotion_models.ProductHasPromotion.objects.filter(product_id__in=product_ids)
+		product_promotion_relations = promotion_models.ProductHasPromotion.objects.filter(product_id__in=product_ids, promotion__owner=webapp_owner)
 		promotion_ids = list()
 		promotion2product = dict()
 		for relation in product_promotion_relations:
@@ -765,7 +765,7 @@ class Product(models.Model):
 
 		# 商品列表页缓存专用
 		if options.get('flash_sale', False):
-			Product.fill_flash_sale(products)
+			Product.fill_flash_sale(products, webapp_owner)
 
 	@staticmethod
 	def get_from_model(product_id, product_model_name):
