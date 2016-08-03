@@ -39,7 +39,9 @@ var AsyncComponentLoadView = BackboneLite.View.extend({
                     {{#each component.components}} \
                         <li data-component-cid="{{component.cid}}" \
                           data-index="{{component.model.index}}"> \
-                              <a class="wui-inner-box{{index}}{{#if product.is_member_product}} xa-member-product{{/if}} wa-item-product" href="javascript:void(0);" data-handlebar-data=\'{ "index":"{{index}}", "product":{"thumbnails_url":"{{this.thumbnails_url}}", "name":"{{this.name}}", "display_price":"{{this.display_price}}"} }\' data-product-promotion="{{this.promotion_js}}" data-product-price="{{this.display_price}}"> \
+                              <a class="wui-inner-box{{index}}{{#if product.is_member_product}} xa-member-product{{/if}} wa-item-product" \
+                                  href="{{this.link_url}}" \
+                                  data-handlebar-data=\'{ "index":"{{index}}", "product":{"thumbnails_url":"{{this.thumbnails_url}}", "name":"{{this.name}}", "display_price":"{{this.display_price}}"} }\' data-product-promotion="{{this.promotion_js}}" data-product-price="{{this.display_price}}"> \
                                 <div class="wui-inner-pic"> <img data-url="{{this.thumbnails_url}}" /></div> \
                                  <div class="wui-inner-titleAndprice"> \
                                     <p class="wa-inner-title xui-inner-title" {{this.is_itemname_hidden}}> \
@@ -67,8 +69,10 @@ var AsyncComponentLoadView = BackboneLite.View.extend({
             data.products.map(function(product){
                 product['is_itemname_hidden'] = _this.component['component'].model['is_itemname_hidden'];
                 product['is_price_hidden'] = _this.component['component'].model['is_price_hidden'];
+                product['link_url'] = "http://mall.weizoom.com/mall/product/?woid="+W.webappOwnerId+"&product_id="+product['id']+"&referrer=weapp_product_list";
                 _this.component['component']['components'].push(product);
             });
+            console.log('>>>>>>>>>>>>>>>>>> product: ', data, W);
             var orgHtml = _this.renderComponent(_this.component, data);
             //var orgHtml = _this.template(_this.component);
             _this.$el.html(orgHtml);
