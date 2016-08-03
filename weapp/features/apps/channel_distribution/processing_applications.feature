@@ -193,7 +193,7 @@ Background:
 			"""
 		
 @mall2 @apps @senior @processing_applications
-Scenario:1 分销会员结算页等待审核状态
+Scenario:1 分销会员结算页初次没有提交时的显示
 		When jack完成订单"002"
 		When jack完成订单"003"
 		When jack完成订单"004"
@@ -227,7 +227,7 @@ Scenario:1 分销会员结算页等待审核状态
 			}]
 			"""
 @mall2 @apps @senior @processing_applications
-Scenario:1 分销会员结算页等待审核状态
+Scenario:2 分销会员结算页等待审核状态
 		When jack完成订单"002"
 		When jack完成订单"003"
 		When jack完成订单"004"
@@ -252,7 +252,7 @@ Scenario:1 分销会员结算页等待审核状态
 			"""
 
 @mall2 @apps @senior @processing_applications
-Scenario:2 分销会员结算页正在返现状态
+Scenario:3 分销会员结算页正在返现状态
 		When jack完成订单"002"
 		When jack完成订单"003"
 		When jack完成订单"004"
@@ -277,7 +277,7 @@ Scenario:2 分销会员结算页正在返现状态
 			}]
 			"""
 @mall2 @apps @senior @processing_applications
-Scenario:3 分销会员结算页已完成/切换为无状态
+Scenario:4 分销会员结算页已完成/切换为无状态
 		When jack完成订单"002"
 		When jack完成订单"003"
 		When jack完成订单"004"
