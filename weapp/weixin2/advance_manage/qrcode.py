@@ -1134,16 +1134,19 @@ class ChannelDistribution(resource.Resource):
 	@login_required
 	def api_post(request):
 		"""更新渠道分销二维码"""
-		setting_id = request.GET['setting_id']
+
+		qrcode_id = request.POST.get('qrcode_id', None)
 		group_id = request.POST['group_id']
 		prize_info = request.POST['prize_info']
 		reply_type = request.POST['reply_type']
 		reply_detail = request.POST['reply_detail']
 		reply_material_id = request.POST['reply_material_id']
+		bing_member_title =request.POST['bing_member_title']
 
-		ChannelDistributionQrcodeSettings.objects.filter(id=setting_id).update(
+		ChannelDistributionQrcodeSettings.objects.filter(id=qrcode_id).update(
+			bing_member_title=bing_member_title,
 			group_id = group_id,
-			prize_info = prize_info,
+			award_prize_info = prize_info,
 			reply_type = reply_type,
 			reply_detail = reply_detail,
 			reply_material_id = reply_material_id

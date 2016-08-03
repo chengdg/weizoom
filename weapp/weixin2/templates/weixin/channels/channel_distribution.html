@@ -131,7 +131,7 @@
 			<input type="button" class="btn btn-defalte w105 h30 xa-cancel" style="background:#fff;" id="submitBtn" value="取&nbsp;&nbsp;消">
 		</div>
 </div>
-
+<input id="qrcode_id" name="qrcode_id" class="hide" value="{{ qrcode.id }}">
 </form>
 </div>
 
@@ -203,6 +203,11 @@
 
         // 提交表单
         $(document).delegate('.xa-submit', 'click', function (event) {
+            var edit_status = 1;
+            if('{{ qrcode }}' === 'None'){
+                edit_status = 0;
+            }
+
             $('.xa-submit').attr('disabled','disabled');
 
             var bingMemberTitle = $.trim($('[name="bing_member_title"]').val());
@@ -211,14 +216,14 @@
                 $('.xa-submit').removeAttr('disabled');
                 return;
             }
-
-            if(!$('.xa-selectMemberName').attr('data-id')){
-                W.showHint('error', '请选择关联会员');
-                $('.xa-submit').removeAttr('disabled');
-                return;
-             }else{
-                var bingMemberId = $('.xa-selectMemberName').attr('data-id');
-
+            if(edit_status === 0) {
+                if (!$('.xa-selectMemberName').attr('data-id')) {
+                    W.showHint('error', '请选择关联会员');
+                    $('.xa-submit').removeAttr('disabled');
+                    return;
+                } else {
+                    var bingMemberId = $('.xa-selectMemberName').attr('data-id');
+                }
             }
             var distributionRewards = $('[name="distribution_rewards"]').val();
             if(distributionRewards==="0"){
@@ -308,9 +313,9 @@
                 reply_detail: textContent,
                 reply_material_id: materialId
             };
-            console.log(data); // todo 删除
-            if('{{ qrcode }}' !== 'None') {
-                  W.resource.new_weixin.ChannelDistribution.post({
+
+            if(edit_status === 0) {
+                  W.resource.new_weixin.ChannelDistribution.put({
                         data: data,
                         success: function (data) {
                             W.showHint('success', '保存成功');
@@ -322,19 +327,21 @@
                         }
                     });
             }else {
+                var qrcode_id = $.trim($('#qrcode_id').val());
                 data = {
+                    qrcode_id: qrcode_id,
                     bing_member_title: bingMemberTitle,
                     group_id: groupId,
                     prize_info: prizeInfo,
                     reply_type: replyType,
                     reply_detail: textContent,
                     reply_material_id: materialId
-                }
-                W.resource.new_weixin.ChannelDistribution.put({
+                };
+                W.resource.new_weixin.ChannelDistribution.post({
                     data: data,
                     success: function (data) {
                         W.showHint('success', '保存成功');
-                        window.location.href = "/new_weixin/channel_distributions/";
+                        //window.location.href = "/new_weixin/channel_distributions/";
                     },
                     error: function (resp) {
                         $('.xa-submit').removeAttr('disabled');
