@@ -2876,7 +2876,7 @@ class Classification(models.Model):
 	"""
 	name = models.CharField(max_length=1024) #分类名
 	level = models.IntegerField(default=-1) #分类等级
-	status = models.IntegerField(default=-1)
+	status = models.IntegerField(default=1) # 1表示上线0表示下线
 	father_id = models.IntegerField(default=-1) #父级分类id
 	created_at = models.DateTimeField(auto_now_add=True)  # 添加时间
 
