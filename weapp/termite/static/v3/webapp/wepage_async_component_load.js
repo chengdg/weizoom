@@ -69,7 +69,7 @@ var AsyncComponentLoadView = BackboneLite.View.extend({
             data.products.map(function(product){
                 product['is_itemname_hidden'] = _this.component['component'].model['is_itemname_hidden'];
                 product['is_price_hidden'] = _this.component['component'].model['is_price_hidden'];
-                product['link_url'] = "http://mall.weizoom.com/mall/product/?woid="+W.webappOwnerId+"&product_id="+product['id']+"&referrer=weapp_product_list";
+                product['link_url'] = W.H5_HOST+"/mall/product/?woid="+W.webappOwnerId+"&product_id="+product['id']+"&referrer=weapp_product_list";
                 _this.component['component']['components'].push(product);
             });
             console.log('>>>>>>>>>>>>>>>>>> product: ', data, W);
