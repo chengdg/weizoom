@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from weapp.settings import MONEY_HOST
+from weapp.settings import MONEY_HOST, MARKETAPP_DOMAIN
 
 MALL_HOME_FIRST_NAV = 'mall_outline'
 WEIXIN_HOME_FIRST_NAV = 'weixin_outline'
@@ -333,6 +333,7 @@ MALL_APPS_EGG_NAV = 'egg'
 MALL_APPS_SCRATCH_NAV = 'scratch'
 ADVANCE_MANAGE_QRCODE_NAV = 'qrcode'
 ADVANCE_MANAGE_CHANNEL_DISTRIBUTIONS_NAV = 'channel_distributions'
+MALL_APPS_SURVEY_NAV_RE = 'survey_re'
 #
 # 应用和营销左侧垂直方向二级导航信息
 #
@@ -460,23 +461,32 @@ MALL_PROMOTION_AND_APPS_SECOND_NAV = {
                     # 'url': '/apps/feedback/feedbacks/',
                     # 'permission': []
                 # },
-                 {
+                {
                     'name': MALL_APPS_SURVEY_NAV,
                     'title': "用户调研",
                     'url': '/apps/survey/surveies/',
                     'permission': ''
                 },
                 {
+                    'name': MALL_APPS_SURVEY_NAV_RE,
+                    'title': "用户调研(重)",
+                    'url': 'http://%s/apps/survey/surveies/' % MARKETAPP_DOMAIN,
+                    'permission': '',
+                    'need_token': True,
+                    'need_blank': True,
+                    'users': ['jobs', 'ceshi01']
+                },
+                {
                     'name': MALL_APPS_EVENT_NAV,
                     'title': "活动报名",
                     'url': '/apps/event/events/',
-                    'permission': []
+                    'permission': [],
                 },
                 {
                     'name': MALL_APPS_VOTE_NAV,
                     'title': "微信投票",
                     'url': '/apps/vote/votes/',
-                    'permission': ''
+                    'permission': '',
                 },
                 {
                     'name': MALL_APPS_RED_ENVELOPE_NAV,

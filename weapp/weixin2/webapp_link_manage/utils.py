@@ -4,9 +4,13 @@ from market_tools.tools.card_exchange.export import get_card_exchange_link
 __author__ = 'liupeiyu'
 
 import json
+import requests
+import copy
 from datetime import timedelta, datetime
 from django.conf import settings
 from django.db.models import Q
+
+from eaglet.utils.resource_client import Resource
 
 from mall.models import Product, ProductCategory, PRODUCT_SHELVE_TYPE_ON, ProductPool, PP_STATUS_ON
 from mall.promotion.models import CouponRule, Promotion, PROMOTION_TYPE_COUPON
@@ -31,6 +35,10 @@ from apps.customerized_apps.sign.export import get_sign_webapp_link
 
 from apps.customerized_apps.exsign.export import get_exsign_webapp_link
 from account.models import UserProfile
+from account.account_util import get_token_for_logined_user
+
+from core.exceptionutil import unicode_full_stack
+from watchdog.utils import watchdog_error, watchdog_info
 
 def get_webapp_link_menu_objectes(request):
 	"""
@@ -127,7 +135,7 @@ def get_webapp_link_menu_objectes(request):
 				'name': '微信投票',
 				'type': 'vote',
 				'add_btn_title': '新建投票',
-				'add_link': '/apps/vote/vote/'
+				'add_link': '/apps/vote/vote'
 			}, {
 				'name': '用户调研',
 				'type': 'survey',
@@ -202,11 +210,6 @@ def get_webapp_link_menu_objectes(request):
 			'name': '我的订单',
 			'link': './?module=mall&model=order_list&action=get&workspace_id=mall&webapp_owner_id=%d' % request.manager.id
 		},
-		# 'complain': {
-		# 	'id': 7,
-		# 	'name': '用户反馈',
-		# 	'link': '/apps/feedback/m_feedback/?webapp_owner_id=%d' % request.manager.id
-		# },
 		'shengjingCustom': {
 			'id': 9,
 			'name': '盛景定制APP',
@@ -237,13 +240,32 @@ def get_webapp_link_menu_objectes(request):
 			'name': '专项签到',
 			'link': get_exsign_webapp_link(request),
 			'users': ['jobs', 'ceshi01', 'weshop']
-		},
-		# 'feedback': {
-		# 	'id': 12,
-		# 	'name': '用户反馈',
-		# 	'link': '/m/apps/feedback/m_feedback/?webapp_owner_id=%d' % request.manager.id
-		# },
+		}
 	}
+
+
+	#替换menu中的百宝箱app 百宝箱独立
+	try:
+		api_resp = Resource.use('marketapp_apiserver').get({
+			'resource':'apps.get_apps_link_menu',
+			'data':{'webapp_owner_id': str(request.manager.id)}
+		})
+		watchdog_info('call marketapp_apiserver: apps.get_apps_link_menu, resp==> \n{}'.format(api_resp))
+
+		if api_resp and api_resp['code'] == 200:
+			resp_data = api_resp['data']
+			token = get_token_for_logined_user(request.user)
+			token_str = '?token=' + token
+
+			for app in copy.deepcopy(menus['marketPage']['title']):
+				app_name = app['type']
+				if app_name in resp_data.keys():
+					menus['marketPage']['title'].remove(app)
+					resp_data[app_name]['add_link'] += token_str  # 增加免登录token
+					menus['marketPage']['title'].append(resp_data[app_name])
+	except:
+		notify_message = u"从marketapp获取活动列表失败，cause: \n{}".format(unicode_full_stack())
+		watchdog_error(notify_message)
 
 	return menus
 
