@@ -23,10 +23,23 @@ var AsyncComponentLoadView = BackboneLite.View.extend({
         console.log('>>>>>>>>>> options: ', options, this.component);
         alert('获取模版');
         //this.handlebarTmpl = $("#componentTemplates").html();
-        this.handlebarTmpl = $("#productListTemplate").html();
+        var productListTemplate = '\
+            <div class="xa-products-box wui-product wui-productTitle"> \
+                <ul class="wui-block-type{{component.model.type}} wui-card-type-{{component.model.card_type}}"> \
+                    {{#each component.components}} \
+                        <li data-component-cid="{{component.cid}}" \
+                          data-index="{{component.model.index}}"> \
+                              <a class="wui-inner-box xa-member-product wa-item-product" href="javascript:void(0);" data-handlebar-data=\'{ "index":"{{index}}", "product":{"thumbnails_url":"{{this.thumbnails_url}}", "name":"{{this.name}}", "display_price":"{{this.display_price}}"} }\' data-product-promotion="{{this.promotion_js}}" data-product-price="{{this.display_price}}"> \
+                                <div class="wui-inner-pic"> <img src="{{this.thumbnails_url}}" /> <p>{{this.name}}</p> </div> \
+                            </a> \
+                        </li> \
+                    {{/each}} \
+                </ul> \
+            </div>\
+        ';
         alert('获取完毕');
-        console.log($("#componentTemplates").html());
-        this.template = Handlebars.compile(this.handlebarTmpl);
+        //this.template = Handlebars.compile(this.handlebarTmpl);
+        this.template = Handlebars.compile(productListTemplate);
         alert('模版编译完毕');
         var deferred = $.Deferred();
         this.sendApi(deferred);
@@ -83,10 +96,9 @@ var AsyncComponentLoadView = BackboneLite.View.extend({
     renderComponent: function (component, subData) {
         console.log('渲染主标签：');
         console.log('>>>>>>>>> component: ', component, subData);
-        var component = {
-            people: [ "Yehuda Katz", "Alan Johnson", "Charles Jolley" ]
-        };
+        console.log('>>>>>>>>>> renderComponent begin ', component);
         var html = this.template(component);
+        console.log('>>>>>>>>>> renderComponent end ', html);
         return html;
     },
 
@@ -136,11 +148,14 @@ $(function(){
         allComponents.push($div);
     });
 
+    // 关闭所有图片
+    /*
     $('img[data-url], img[src]').each(function() {
         var $div = $(this);
         $div.attr('data-url', '');
         $div.attr('src', '');
     });
+     * */
 
     //var componentsTmpl = $("#componentTemplates").html();
     var componentsTmpl = $("#productListTemplate").html();
