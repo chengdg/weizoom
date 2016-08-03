@@ -22,7 +22,8 @@ var AsyncComponentLoadView = BackboneLite.View.extend({
         };
         console.log('>>>>>>>>>> options: ', options, this.component);
         alert('获取模版');
-        this.handlebarTmpl = $("#componentTemplates").html();
+        //this.handlebarTmpl = $("#componentTemplates").html();
+        this.handlebarTmpl = $("#productListTemplate").html();
         alert('获取完毕');
         console.log($("#componentTemplates").html());
         this.template = Handlebars.compile(this.handlebarTmpl);
@@ -34,15 +35,19 @@ var AsyncComponentLoadView = BackboneLite.View.extend({
             alert('开始渲染组件');
             // 根据商品数量填补component对象
             _this.component['component']['valid_product_count'] = data['products'].length;
-            _this.component['component']['components'] = {};
+            _this.component['component']['components'] = [];
+            data.products.map(function(product){
+                _this.component['component']['components'].push(product);
+            });
             console.log('>>>>>>>>>>>> 异步获取数据后补充component：', _this.component);
             alert('模版整合');
             var orgHtml = _this.renderComponent(_this.component, data);
             //var orgHtml = _this.template(_this.component);
             _this.$el.html(orgHtml);
             alert('整合完毕');
-            var $eleUl = _this.$el.find('ul');
-            _this.renderSub($eleUl, data);
+            // 停止渲染子组件
+            //var $eleUl = _this.$el.find('ul');
+            //_this.renderSub($eleUl, data);
             alert('渲染组件完成');
         });
     },
@@ -76,6 +81,11 @@ var AsyncComponentLoadView = BackboneLite.View.extend({
 
     // 渲染主标签
     renderComponent: function (component, subData) {
+        console.log('渲染主标签：');
+        console.log('>>>>>>>>> component: ', component, subData);
+        var component = {
+            people: [ "Yehuda Katz", "Alan Johnson", "Charles Jolley" ]
+        };
         var html = this.template(component);
         return html;
     },
