@@ -152,6 +152,7 @@ var allComponents = [];
 $(function(){
     $('div[data-ui-role="async-component"]').each(function() {
         var $div = $(this);
+        $div.append('<div style="text-align:center;"><img src="/static_v2/img/product_list_loading.gif"></div>');
         allComponents.push($div);
     });
 
