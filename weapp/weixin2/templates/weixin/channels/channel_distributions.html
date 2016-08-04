@@ -50,17 +50,20 @@
 			<table class="table table-condensed xb-stripedTable xb-theadBg">
 				<thead>
 					<tr>
-						<th style="width:16%;">
-								<span class="">二维码名称</span>
-						</th>
-
-						<th style="width:10%;" class="tx_sortable xa-sorting" data-sort-attr='count' data-sort-direction="up"><a href="javascript:;">关注数量</a> <img class="xa-storingimg" src="" alt=""> </th>
-						<th style="width:15%;" class="tx_sortable" data-sort-attr='total_final_price'><a href="javascript:void(0);">扫码后成交金额</a></th>
-						<th style="width:15%;">扫码奖励</th>
-						<th style="width:10%;" class="tx_sortable" data-sort-attr='created_at'><a href="javascript:void(0);">创建时间</a></th>
-						<th style="width:10%;">备注</th>
-						<th style="width:100px;">关联会员</th>
-						<th style="width:10%;">操作</th>
+                    <th style="width:16%;">
+                        <p class=" m0">
+                            <span class="">二维码名称</span>
+                        </p>
+                    </th>
+                    <th style="width:10%;" >关联会员</th>
+                    <th style="width:15%;" class="tx_sortable" data-sort-attr='total_final_price'>关注数量</th>
+                    <th style="width:15%;">总交易额/元</th>
+                    <th style="width:10%;">返现总额</th>
+                    <th style="width:10%;">关注奖励</th>
+                    <th style="width:10%;">分销奖励</th>
+                    <th style="width:10%;">创建时间</th>
+                    <th style="width:10%;">会员结算</th>
+                    <th style="width:10%;">二维码操作</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -84,6 +87,18 @@
 							    </td>
 							    <td>
 							        ${qrcode.award_prize_info}
+							    </td>
+							    <td>
+                                    ${qrcode.distribution_rewards}
+							    </td>
+							    <td>
+							        ${qrcode.created_at}
+							    </td>
+							    <td>
+							        ${qrcode.clearing}
+							    </td>
+							    <td>
+							    <button type="button"><a href='/new_weixin/channel_distribution/?settion_id=${qrcode.id}'>修改</a></button><button type="button">查看</button>
 							    </td>
 							</tr>
 						{{/each}}
