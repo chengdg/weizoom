@@ -15,7 +15,8 @@ TOOLS = [
     'delivery_plan',
     'store',
     'template_message',
-    'card_exchange'
+    'card_exchange',
+    'distribution'
 
 ]
 
