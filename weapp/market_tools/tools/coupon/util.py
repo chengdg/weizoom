@@ -81,6 +81,13 @@ def consume_coupon(owner_id, rule_id, member_id, coupon_record_id=0,not_block=Fa
 	rules = promotion_models.CouponRule.objects.filter(id=rule_id, owner_id=owner_id)
 	if len(rules) != 1:
 		return None, u'该优惠券使用期已过，不能领取！'
+	if rules[0].receive_rule:
+		webapp_user_ids = WebAppUser.objects.filter(member_id=member_id).values_list('id', flat=True)
+		orders = Order.objects.filter(webapp_user_id__in=webapp_user_ids, status__in=
+			[ORDER_STATUS_PAYED_NOT_SHIP, ORDER_STATUS_PAYED_SHIPED, ORDER_STATUS_SUCCESSED])
+		if orders.count() > 0:
+			return None, u'该优惠券仅未下单用户可领取'
+
 	coupon_count = promotion_models.Coupon.objects.filter(coupon_rule_id=rule_id, member_id=member_id).count()
 	if coupon_count >= rules[0].limit_counts and rules[0].limit_counts > 0:
 		return None, u'该优惠券每人限领%s张，你已经领取过了！' % rules[0].limit_counts
