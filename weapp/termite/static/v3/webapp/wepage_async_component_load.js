@@ -33,6 +33,7 @@ var AsyncComponentLoadView = BackboneLite.View.extend({
             }
         };
         //this.handlebarTmpl = $("#componentTemplates").html();
+        /*
         var productListTemplate = '\
             <div class="xa-products-box wui-product wui-productTitle"> \
                 <ul class="wui-block-type{{component.model.type}} wui-card-type-{{component.model.card_type}}"> \
@@ -57,6 +58,7 @@ var AsyncComponentLoadView = BackboneLite.View.extend({
         ';
         //this.template = Handlebars.compile(this.handlebarTmpl);
         this.template = Handlebars.compile(productListTemplate);
+         * */
         var deferred = $.Deferred();
         this.sendApi(deferred);
         var _this = this;
@@ -69,7 +71,7 @@ var AsyncComponentLoadView = BackboneLite.View.extend({
             data.products.map(function(product){
                 product['is_itemname_hidden'] = _this.component['component'].model['is_itemname_hidden'];
                 product['is_price_hidden'] = _this.component['component'].model['is_price_hidden'];
-                product['link_url'] = "http://mall.weizoom.com/mall/product/?woid="+W.webappOwnerId+"&product_id="+product['id']+"&referrer=weapp_product_list";
+                product['link_url'] = W.H5_HOST+"/mall/product/?woid="+W.webappOwnerId+"&product_id="+product['id']+"&referrer=weapp_product_list";
                 _this.component['component']['components'].push(product);
             });
             console.log('>>>>>>>>>>>>>>>>>> product: ', data, W);
@@ -113,11 +115,12 @@ var AsyncComponentLoadView = BackboneLite.View.extend({
 
     // 渲染主标签
     renderComponent: function (component, subData) {
-        var html = this.template(component);
+        var html = templateProductList(component);
         return html;
     },
 
     // 渲染子标签
+    /*
     renderSub: function($el, data) {
         var _this = this;
         var product_ids = this.componentModel['items'];
@@ -150,9 +153,11 @@ var AsyncComponentLoadView = BackboneLite.View.extend({
         html = html.replace('src=', 'data-url=');
         return html;
     }
+     * */
 });
 
 var allComponents = [];
+var templateProductList = null;
 $(function(){
     $('div[data-ui-role="async-component"]').each(function() {
         var $div = $(this);
@@ -169,9 +174,35 @@ $(function(){
     });
      * */
 
-    //var componentsTmpl = $("#componentTemplates").html();
     var componentsTmpl = $("#productListTemplate").html();
-    allComponents.map(function(component, idx){
+
+    // 优先编译好模版
+    var productListTemplate = '\
+        <div class="xa-products-box wui-product wui-productTitle"> \
+            <ul class="wui-block-type{{component.model.type}} wui-card-type-{{component.model.card_type}}"> \
+                {{#each component.components}} \
+                    <li data-component-cid="{{component.cid}}" \
+                      data-index="{{component.model.index}}"> \
+                          <a class="wui-inner-box{{index}}{{#if product.is_member_product}} xa-member-product{{/if}} wa-item-product" \
+                              href="{{this.link_url}}" \
+                              data-handlebar-data=\'{ "index":"{{index}}", "product":{"thumbnails_url":"{{this.thumbnails_url}}", "name":"{{this.name}}", "display_price":"{{this.display_price}}"} }\' data-product-promotion="{{this.promotion_js}}" data-product-price="{{this.display_price}}"> \
+                            <div class="wui-inner-pic"> <img data-url="{{this.thumbnails_url}}" /></div> \
+                             <div class="wui-inner-titleAndprice"> \
+                                <p class="wa-inner-title xui-inner-title" {{this.is_itemname_hidden}}> \
+                                    {{this.name}}</p> \
+                                <p class="wa-inner-price xui-inner-price" {{this.is_price_hidden}}> \
+                                    <span>¥</span>{{this.display_price}}</p> \
+                          </div> \
+                        </a> \
+                    </li> \
+                {{/each}} \
+            </ul> \
+        </div>\
+    ';
+    templateProductList = Handlebars.compile(productListTemplate);
+
+    // 初始化view    
+    var initComponent = function(component, idx){
         var $div = component;
         var componentType = $div.attr('data-type');
         var componentModel = $.parseJSON($div.attr('data-model') || '{}');
@@ -182,6 +213,10 @@ $(function(){
         });
 
         $div.data('view', asyncComponent);
+    };
+
+    allComponents.map(function(component, idx){
+        initComponent(component, idx);
     });
 });
 

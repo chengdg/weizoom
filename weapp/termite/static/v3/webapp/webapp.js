@@ -60,6 +60,7 @@ W.preloadImgsOnPage = function(option) {
         option.map(function(ele){
             var noLazy = {
                 'imageNav': 20,
+                'imageGroup': 15,
             };
             var module = ele['moduleName'];
             var tagId = ele['tagId'];
@@ -92,8 +93,13 @@ W.preloadImgsOnPage = function(option) {
                     $itemsImg.map(function(idx, item) {
                         var $item = $(item);
                         var srcImg = $item.attr('src');
-                        $item.attr('data-url', compressImgUrl(srcImg, '!/quality/80'));
-                        $item.attr('src', compressImgUrl(srcImg, '!/quality/10'));
+                        if (idx > noLazy['imageGroup']) {
+                            $item.attr('data-url', compressImgUrl(srcImg, '!/quality/80'));
+                            $item.attr('src', compressImgUrl(srcImg, '!/quality/10'));
+                        } else {
+                            $item.attr('src', compressImgUrl(srcImg, '!/quality/75'));
+                            $item.removeAttr('data-url');
+                        }
                     });
                     $lazyImgs = $('[data-url]');
                     lazyloadImg($lazyImgs, {threshold: 400});
