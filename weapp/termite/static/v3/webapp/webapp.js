@@ -152,8 +152,9 @@ function lazyloadImg($imgs, options) {
     var defOptions = {
             data_attribute:"url",
             skip_invisible : false,
-            effect : "fadeIn",
-            placeholder: "/static_v2/img/webapp/mall/info_placeholder.png"
+            //effect : "fadeIn",
+            placeholder: "/static_v2/img/webapp/mall/info_placeholder.png",
+            failurelimit: 10
         };
 
     var options = _.defaults(options, defOptions);
