@@ -98,11 +98,16 @@ gmu.define('SwipeImage', {
         var view = new Swiper('#'+this.__id, {
 	        mode:'horizontal',
 	        loop: true,
-	        autoplay: 5000,
+	        autoplay: 4000,
             updateOnImagesReady: false,
 	        onInit:function(){
+                view.stopAutoplay();
                 if(swipeImages.length == 1){
                     view.stopAutoplay();
+                }else {
+                    window.setTimeout(function(){
+                        view.startAutoplay();
+                    }, 10000);
                 }
 	        }
 	        //pagination: '.wui-swiper-pagination'
