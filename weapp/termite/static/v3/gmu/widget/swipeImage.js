@@ -102,9 +102,7 @@ gmu.define('SwipeImage', {
             updateOnImagesReady: false,
 	        onInit:function(){
                 view.stopAutoplay();
-                if(swipeImages.length == 1){
-                    view.stopAutoplay();
-                }else {
+                if(swipeImages.length > 1){
                     window.setTimeout(function(){
                         view.startAutoplay();
                     }, 10000);
