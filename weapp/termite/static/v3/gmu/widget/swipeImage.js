@@ -5,6 +5,7 @@ Copyright (c) 2011-2012 Weizoom Inc
 /**
  * weizoom.swipeimage widget
  */
+
 (function( $, undefined ) {
 var idIndex = 1;
 
@@ -35,7 +36,7 @@ gmu.define('SwipeImage', {
 			for (var i = 0; i < swipeImages.length; ++i) {
 				var image = swipeImages[i];
 				if (image.link_url && positionMode === 'dot') {
-					htmls.push('<div class="wui-swiper-slide"><a href="'+image.link_url+'"><img src="'+image.url+'" style="width:100%;vertical-align: middle;" /></a></div>')
+					htmls.push('<div class="wui-swiper-slide"><a href="'+image.link_url+'"><img src="'+image.url+'" style="width:100%;vertical-align: middle;"/></a></div>')
 				} else {
 					htmls.push('<div class="wui-swiper-slide"><img src="'+image.url+'" style="width:100%;vertical-align: middle;" /></div>')
 				}
@@ -72,36 +73,37 @@ gmu.define('SwipeImage', {
 	    	$title.show();	
 	    }
 
-	    W.onloadHandlers.push(function(){
-			var $imgs = $el.find('img');
-			var imgsHeightArr = [];
-			$imgs.each(function() {
-	            imgsHeightArr.push($(this).height());
-	            console.log(imgsHeightArr,"!!!!!!!!!!!")
-	        }); 
-	        var maxHeight = Math.max.apply(Math,imgsHeightArr);
+        W.onloadHandlers.push(function(){
+            var $imgs = $el.find('img');
+            var imgsHeightArr = [];
+            $imgs.each(function() {
+                imgsHeightArr.push($(this).height());
+            }); 
+            var maxHeight = Math.max.apply(Math,imgsHeightArr);
             var $swiperSlide = $el.find('.wui-swiper-slide');
             var $swiperWrapper = $el.children('.wui-swiper-wrapper');
             $el.height(maxHeight);
             $swiperWrapper.height(maxHeight);
             $swiperSlide.css({
-                height: maxHeight,
-                lineHeight: maxHeight +'px'
+              height: maxHeight,
+              lineHeight: maxHeight +'px'
             });   
-		});
+        });
 	},
 
 	refresh: function() {
 		var $el = this.$el;
+
 		var swipeImages = this._options.jsondata;
         var view = new Swiper('#'+this.__id, {
 	        mode:'horizontal',
 	        loop: true,
-	        autoplay: 3000,
+	        autoplay: 5000,
+            updateOnImagesReady: false,
 	        onInit:function(){
-	        	if(swipeImages.length == 1){
-	        		view.stopAutoplay();
-	        	}
+                if(swipeImages.length == 1){
+                    view.stopAutoplay();
+                }
 	        }
 	        //pagination: '.wui-swiper-pagination'
 	    });
