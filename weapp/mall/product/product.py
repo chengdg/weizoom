@@ -433,24 +433,35 @@ class ProductPool(resource.Resource):
 
     @login_required
     def api_get(request):
+        product_code = request.GET.get('productCode', '')
         product_name = request.GET.get('name', '')
         supplier_name = request.GET.get('supplier', '')
-        #status = request.GET.get('status', '-1')
-
-        # 获取所有供货商的id
-        #OLD CODE
-        # all_user_ids = get_all_active_mp_user_ids()
-        # all_mall_userprofiles = UserProfile.objects.filter(user_id__in=all_user_ids, webapp_type=0)
-        # user_id2userprofile = dict([(profile.user_id, profile) for profile in all_mall_userprofiles])
-        # owner_ids = user_id2userprofile.keys()
-        # if not owner_ids:
-        #     return create_response(200).get_response()
+        first_classification = int(request.GET.get('first_classification', '-1'))
+        secondary_classification = int(request.GET.get('secondary_classification', '-1'))
 
         manager_user_profile = UserProfile.objects.filter(webapp_type=2)[0]
-        product_pool = models.ProductPool.objects.filter(woid=request.manager.id, status=models.PP_STATUS_ON_POOL)
+        # 根据分类来筛选
+        if first_classification > 0:
+            if secondary_classification == -1:
+                subclassification_ids = [model.id for model in models.Classification.objects.filter(father_id=first_classification, level=2)]
+                product_ids = [model.product_id for model in models.ClassificationHasProduct.objects.filter(
+                                        woid=request.manager.id,
+                                        classification_id__in=subclassification_ids
+                                        )]
+            elif secondary_classification > 0:
+                product_ids = [model.product_id for model in models.ClassificationHasProduct.objects.filter(
+                                        woid=request.manager.id,
+                                        classification_id=secondary_classification
+                                        )]
+            else:
+                product_ids = []
+            product_ids = [model.product_id for model in models.ProductPool.objects.filter(product_id__in=product_ids, status=models.PP_STATUS_ON_POOL)]
+            products = models.Product.objects.filter(id__in=product_ids)
+        else:
+            product_pool = models.ProductPool.objects.filter(woid=request.manager.id, status=models.PP_STATUS_ON_POOL)
 
-        product_ids = [pool.product_id for pool in product_pool]
-        products = models.Product.objects.filter(id__in=product_ids)
+            product_ids = [pool.product_id for pool in product_pool]
+            products = models.Product.objects.filter(id__in=product_ids)
 
 
         if supplier_name:
