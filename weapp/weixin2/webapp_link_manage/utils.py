@@ -89,14 +89,12 @@ def get_webapp_link_menu_objectes(request):
 				'name': '砸金蛋',
 				'type': 'egg',
 				'add_btn_title': '新建砸金蛋',
-				'add_link': '/apps/egg/egg/',
-				'users': ['jobs','njtest', 'ceshi01']
+				'add_link': '/apps/egg/egg/'
 			}, {
 				'name': '刮刮卡',
 				'type': 'scratch',
 				'add_btn_title': '新建刮刮卡',
-				'add_link': '/apps/scratch/scratch/',
-				'users': ['jobs','njtest', 'ceshi01']
+				'add_link': '/apps/scratch/scratch/'
 			}, {
 				'name': '抽奖',
 				'type': 'lottery',
@@ -107,6 +105,12 @@ def get_webapp_link_menu_objectes(request):
 				'type': 'exlottery',
 				'add_btn_title': '新建幸运码抽奖',
 				'add_link': '/apps/exlottery/exlottery/'
+			}, {
+				'name': '扫码抽奖',
+				'type': 'scanlottery',
+				'add_btn_title': '新建扫码抽奖',
+				'add_link': '/apps/scanlottery/scanlottery/',
+				'users': ['jobs', 'ceshi01']
 			},
 			# {
 			# 	'name': '红包',
