@@ -157,7 +157,7 @@ class ScanlotteryParticipances_Export(resource.Resource):
 		#Excel Process Part
 		try:
 			import xlwt
-			datas, member_id2tel = ScanlotteryParticipances.get_datas(request)
+			datas = ScanlotteryParticipances.get_datas(request)
 			fields_raw = []
 			export_data = []
 
@@ -191,7 +191,7 @@ class ScanlotteryParticipances_Export(resource.Resource):
 						name = cur_member.username_hexstr
 				else:
 					name = u'未知'
-				tel = member_id2tel.get(member_id, '') if not record['tel'] else record['tel']
+				tel = record['tel']
 				prize_title = record['prize_title']
 				prize_name = record['prize_name']
 				created_at = record['created_at'].strftime("%Y-%m-%d %H:%M:%S")
