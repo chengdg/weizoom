@@ -28,7 +28,7 @@
         <label class="xui-i-left fl">关联会员：</label>
         <span class="xa-selectMemberName ml10"></span>
         {% if qrcode %}
-            会员昵称:{{ qrcode.bing_member_id }}
+            会员昵称:{{ member_name }}
             {% else %}
               <button class="xa-selectMemberDailog" type="button">选择关注会员</button>
         {% endif %}
@@ -285,7 +285,7 @@
 				$('.xa-submit').removeAttr('disabled');
 				return;
 			}
-            // start
+
 			var replyType = 0;
 			var activeLink = $('#edit-message-panel li[class="active"]').text();
 			if(activeLink === '图文消息' && materialId > 0) {
@@ -294,10 +294,7 @@
 			} else {
 				replyType = 1;
 			}
-
 			var prizeInfo = JSON.stringify($('#prize_selector').data('view').getPrizeInfo());
-
-			// end
 
 			var data = {
                 bing_member_title: bingMemberTitle,
@@ -315,13 +312,14 @@
             };
 
             if(edit_status === 0) {
+                // 新增状态
                   W.resource.new_weixin.ChannelDistribution.put({
                         data: data,
                         success: function (data) {
                             W.showHint('success', '保存成功');
                             window.location.href = "/new_weixin/channel_distributions/";
                         },
-                        error: function (resp) {
+                        error: function (data) {
                             $('.xa-submit').removeAttr('disabled');
                             W.showHint('error', '保存失败！');
                         }
@@ -341,9 +339,9 @@
                     data: data,
                     success: function (data) {
                         W.showHint('success', '保存成功');
-                        //window.location.href = "/new_weixin/channel_distributions/";
+                        window.location.href = "/new_weixin/channel_distributions/";
                     },
-                    error: function (resp) {
+                    error: function (data) {
                         $('.xa-submit').removeAttr('disabled');
                         W.showHint('error', '保存失败！');
                     }

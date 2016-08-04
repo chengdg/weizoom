@@ -983,6 +983,8 @@ class ChannelDistribution(resource.Resource):
 		"""渠道分销,新建二维码 和 编辑二维码页面"""
 		setting_id = int(request.GET.get('setting_id', '-1'))
 		qrcode = None
+		jsons = []
+		member_name = ''  # 绑定昵称
 		if setting_id > 0:
 			qrcode = ChannelDistributionQrcodeSettings.objects.get(id=setting_id)
 			if qrcode:
@@ -998,27 +1000,30 @@ class ChannelDistribution(resource.Resource):
 						info_dict['coupon_type'] = u'全店通用券'
 					qrcode.award_prize_info = json.dumps(info_dict)
 
-		answer_content = {}
-		if qrcode.reply_material_id > 0:
-			answer_content['type'] = 'news'
-			answer_content['newses'] = []
-			answer_content['content'] = qrcode.reply_material_id
-			newses = News.get_news_by_material_id(qrcode.reply_material_id)
+				answer_content = {}
+				if qrcode.reply_material_id > 0:
+					answer_content['type'] = 'news'
+					answer_content['newses'] = []
+					answer_content['content'] = qrcode.reply_material_id
+					newses = News.get_news_by_material_id(qrcode.reply_material_id)
 
-			news_array = []
-			for news in newses:
-				news_dict = {}
-				news_dict['id'] = news.id
-				news_dict['title'] = news.title
-				answer_content['newses'].append(news_dict)
-		else:
-			answer_content['type'] = 'text'
-			answer_content['content'] = emotion.change_emotion_to_img(qrcode.reply_detail)
+					news_array = []
+					for news in newses:
+						news_dict = {}
+						news_dict['id'] = news.id
+						news_dict['title'] = news.title
+						answer_content['newses'].append(news_dict)
+				else:
+					answer_content['type'] = 'text'
+					answer_content['content'] = emotion.change_emotion_to_img(qrcode.reply_detail)
+				# jsons : 扫码回复的数据
+				jsons = [{
+					"name": "qrcode_answer",
+					"content": answer_content
+				}]
+				member = Member.objects.get(id=qrcode.bing_member_id)
+				member_name = member.username_for_title
 
-		jsons = [{
-			"name": "qrcode_answer",
-			"content": answer_content
-		}]
 
 		webapp_id = request.user_profile.webapp_id
 		groups = MemberGrade.get_all_grades_list(webapp_id)
@@ -1042,6 +1047,7 @@ class ChannelDistribution(resource.Resource):
 			'edit_qrcode': edit_qrcode,
 			'qrcode': qrcode,
 			'jsons': jsons,
+			'member_name': member_name,
 			# 'selectedMemberIds': json.dumps(selectedMemberIds),
 		})
 		return render_to_response('weixin/channels/channel_distribution.html', c)
