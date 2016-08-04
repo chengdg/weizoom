@@ -9,6 +9,7 @@ from mall.promotion import models as promotion_models
 from mall.promotion.models import Coupon
 from mall.promotion.utils import coupon_id_maker
 from mall.models import *
+from modules.member.models import WebAppUser
 
 # from market_tools.tools.coupon.tasks import send_message_to_member
 
