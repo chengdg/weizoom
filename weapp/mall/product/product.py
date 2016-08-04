@@ -144,6 +144,21 @@ class ProductList(resource.Resource):
                 owner=request.manager,
                 is_deleted=False)
 
+
+        #临时兼容自营平台供货商查询 待所以商品都更新成商品池商品进行重构
+        if mall_type:
+            store_name = request.GET.get('supplier', '')
+            if store_name:
+                userprofile_manager = UserProfile.objects.filter(webapp_type=2).first()
+
+                mananger_supplier_ids = [supplier.id for supplier in models.Supplier.objects.filter(
+                                            owner=userprofile_manager.user_id,
+                                            name__contains=store_name,
+                                            is_delete=False
+                                        )]
+                if products:
+                    products = products.filter(supplier__in=mananger_supplier_ids)
+
         # import pdb
         # pdb.set_trace()
         #未回收的商品
@@ -170,7 +185,9 @@ class ProductList(resource.Resource):
         products_not_0 = sorted(products_not_0, key=operator.attrgetter('display_index'))
 
         if mall_type:
-            products = utils.weizoom_filter_products(request, products_not_0 + products_is_0)
+            #products = utils.weizoom_filter_products(request, products_not_0 + products_is_0)
+
+            products = utils.filter_products(request, products_not_0 + products_is_0)
             supplier_type = request.GET.get('orderSupplierType', '')
             if supplier_type == '0':
                 products = filter(lambda p: p.supplier_user_id > 0, products)

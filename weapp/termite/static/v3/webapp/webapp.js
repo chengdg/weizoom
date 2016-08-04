@@ -15,17 +15,17 @@ W.alertEditTemplateLinkTarget = function() {
  * interceptLinkClick: 拦截点击链接的行为，加上project_id参数
  */
 W.interceptLinkClick = function() {
-	$('a').click(function(event) {
-	    var $link = $(event.currentTarget);
-	    var href = $link.attr('href');
-	    if ((href[0] === '/') || (href.indexOf('?') !== -1)) {
-	        if ((href.indexOf('project_id=') === -1) && W.projectId) {
-	            href = (href + '&project_id=' + W.projectId);
-	        }
-	    }
+  $('a').click(function(event) {
+      var $link = $(event.currentTarget);
+      var href = $link.attr('href');
+      if ((href[0] === '/') || (href.indexOf('?') !== -1)) {
+          if ((href.indexOf('project_id=') === -1) && W.projectId) {
+              href = (href + '&project_id=' + W.projectId);
+          }
+      }
 
-	    $link.attr('href', href);
-	});
+      $link.attr('href', href);
+  });
 }
 
 W.showVisitHistory = function(title, url) {
@@ -58,6 +58,10 @@ W.preloadImgsOnPage = function(option) {
     if (!option) return;
     $(function(){
         option.map(function(ele){
+            var noLazy = {
+                'imageNav': 20,
+                'imageGroup': 15,
+            };
             var module = ele['moduleName'];
             var tagId = ele['tagId'];
             var $itemsImg = $(tagId);
@@ -77,8 +81,10 @@ W.preloadImgsOnPage = function(option) {
                 case 'imageNav':
                     $itemsImg.map(function(idx, item) {
                         var $item = $(item);
-                        $item.attr('data-url', $item.attr('src'));
-                        $item.removeAttr('src');
+                        if (idx > noLazy['imageNav']) {
+                            $item.attr('data-url', $item.attr('src'));
+                            $item.removeAttr('src');
+                        }
                     });
                     $lazyImgs = $('[data-url]');
                     lazyloadImg($lazyImgs, {threshold: 200});
@@ -87,8 +93,13 @@ W.preloadImgsOnPage = function(option) {
                     $itemsImg.map(function(idx, item) {
                         var $item = $(item);
                         var srcImg = $item.attr('src');
-                        $item.attr('data-url', compressImgUrl(srcImg, '!/quality/80'));
-                        $item.attr('src', compressImgUrl(srcImg, '!/quality/10'));
+                        if (idx > noLazy['imageGroup']) {
+                            $item.attr('data-url', compressImgUrl(srcImg, '!/quality/80'));
+                            $item.attr('src', compressImgUrl(srcImg, '!/quality/10'));
+                        } else {
+                            $item.attr('src', compressImgUrl(srcImg, '!/quality/75'));
+                            $item.removeAttr('data-url');
+                        }
                     });
                     $lazyImgs = $('[data-url]');
                     lazyloadImg($lazyImgs, {threshold: 400});
@@ -96,7 +107,7 @@ W.preloadImgsOnPage = function(option) {
                 case 'productList':
                     $itemsImg.map(function(idx, item) {
                         var $item = $(item);
-                        $item.attr('data-url', $item.attr('src'));
+                        $item.attr('data-url', compressImgUrl($item.attr('src'), ""));
                         $item.removeAttr('src');
                     });
                     $lazyImgs = $('[data-url]');
@@ -111,20 +122,30 @@ W.preloadImgsOnPage = function(option) {
 
 // 如果是upaiyun图片则增加压缩参数
 function compressImgUrl(imgUrl, paramStr) {
-		if (imgUrl) {
-        var idxCompressed = imgUrl.lastIndexOf('!/');
-        // 压缩过, 清理压缩参数
-        if ( idxCompressed > -1) {
-          imgUrl = imgUrl.substring(0, idxCompressed);
+    if (imgUrl) {
+        var chaozhiKey = /chaozhi\.weizoom\.com/;
+        // 遇到chaozhi.weizoom.com
+        // 替换"/termite_static/upload/"为"/static/upload/"
+        if (chaozhiKey.test(imgUrl)){
+            imgUrl = imgUrl.replace('/termite_static/upload/','/static/upload/');
         }
+        // 在又拍云里做
         var upaiyunKey = /upaiyun\.com/;
-				//var upaiyunKey = /static/;
-				var compressStr = paramStr;
-				if (upaiyunKey.test(imgUrl)){
-					return [imgUrl, compressStr].join('');
-				}
+        // 替换"/termite_static/upload/"为"/static/upload/"
+        if (upaiyunKey.test(imgUrl)){
+            imgUrl = imgUrl.replace('/termite_static/upload/','/static/upload/');
+        }
+        // 压缩过, 清理压缩参数
+        var idxCompressed = imgUrl.lastIndexOf('!/');
+        if ( idxCompressed > -1) {
+            imgUrl = imgUrl.substring(0, idxCompressed);
+        }
+        var compressStr = paramStr;
+        if (compressStr != "" && upaiyunKey.test(imgUrl)){
+            return [imgUrl, compressStr].join('');
+        }
         return imgUrl;
-		}
+    }
 }
 
 function lazyloadImg($imgs, options) {
