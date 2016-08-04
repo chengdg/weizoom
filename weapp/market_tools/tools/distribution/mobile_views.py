@@ -6,11 +6,6 @@ import os
 
 from django.template import Context, RequestContext
 from django.shortcuts import render_to_response
-
-# from mall.promotion.card_exchange import CardExchange
-# from modules.member.models import MemberInfo
-# from mall.promotion import models as promotion_models
-# from market_tools.tools.weizoom_card import models as card_models
 from weixin2 import models
 
 template_path_items = os.path.dirname(__file__).split(os.sep)

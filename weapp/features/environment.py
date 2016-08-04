@@ -547,7 +547,7 @@ def __create_weapp_product():
 
 	manager = User.objects.get(username='manager')
 	workspace_ids = ','.join([str(workspace.id) for workspace in webapp_models.Workspace.objects.filter(owner=manager)])
-	market_tool_names = 'vote,member_qrcode,research,activity,coupon,lottery,complain,test_game,red_envelope,delivery_plan,point_card,channel_qrcode,thanks_card,weizoom_card,store,template_message,card_exchange'
+	market_tool_names = 'vote,member_qrcode,research,activity,coupon,lottery,complain,test_game,red_envelope,delivery_plan,point_card,channel_qrcode,thanks_card,weizoom_card,store,template_message,card_exchange, distribution'
 
 	weapp_product_models.Product.objects.create(
 		name = u'完整版',
