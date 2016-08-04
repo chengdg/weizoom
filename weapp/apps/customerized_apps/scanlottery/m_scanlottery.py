@@ -57,7 +57,7 @@ class Mscanlottery(resource.Resource):
 		share_page_desc = record.share_description
 		activity_status, record = update_scanlottery_status(record)
 
-		project_id = 'new_app:exlottery:%s' % record.related_page_id
+		project_id = 'new_app:scanlottery:%s' % record.related_page_id
 
 		request.GET._mutable = True
 		request.GET.update({"project_id": project_id})

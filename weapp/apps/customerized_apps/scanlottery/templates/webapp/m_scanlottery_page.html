@@ -92,7 +92,7 @@
                 wuiAlert('您的二维码有误');
                 return false;
             }
-            window.location.href = '/m/apps/scanlottery/m_scanlottery/?webapp_owner_id=' + W.webappOwnerId + '&name=' + name + '&phone=' + phone + '&scan_code=' + scanCode + '&id=' + W.recordId;
+            window.location.href = '/m/apps/scanlottery/m_scanlottery/?webapp_owner_id=' + W.webappOwnerId + '&name=' + name + '&phone=' + phone + '&scan_code=' + scanCode + '&id=' + W.appRecordId;
         });
 
         $('.wa-again').on('click', scanQrcode);
