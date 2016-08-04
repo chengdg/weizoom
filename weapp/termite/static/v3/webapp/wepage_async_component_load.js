@@ -18,9 +18,13 @@ var AsyncComponentLoadView = BackboneLite.View.extend({
         this.componentModel.is_price_hidden = '';
         // 判断价格和商品名称是否显示
         if (this.componentModel.type != '3' && 
-            this.componentModel.card_type != '1' &&
             this.componentModel.itemname == false ) {
                 this.componentModel.is_itemname_hidden = ' style=display:none ';
+        }
+        if (this.componentModel.type != '3' && 
+            this.componentModel.card_type != '1' &&
+            this.componentModel.itemname == true ) {
+                this.componentModel.is_border_show = ' xui-border ';
         }
         if (this.componentModel.type != '3' &&
             this.componentModel.price == false ) {
@@ -32,37 +36,11 @@ var AsyncComponentLoadView = BackboneLite.View.extend({
                 type: options.componentType
             }
         };
-        //this.handlebarTmpl = $("#componentTemplates").html();
-        /*
-        var productListTemplate = '\
-            <div class="xa-products-box wui-product wui-productTitle"> \
-                <ul class="wui-block-type{{component.model.type}} wui-card-type-{{component.model.card_type}}"> \
-                    {{#each component.components}} \
-                        <li data-component-cid="{{component.cid}}" \
-                          data-index="{{component.model.index}}"> \
-                              <a class="wui-inner-box{{index}}{{#if product.is_member_product}} xa-member-product{{/if}} wa-item-product" \
-                                  href="{{this.link_url}}" \
-                                  data-handlebar-data=\'{ "index":"{{index}}", "product":{"thumbnails_url":"{{this.thumbnails_url}}", "name":"{{this.name}}", "display_price":"{{this.display_price}}"} }\' data-product-promotion="{{this.promotion_js}}" data-product-price="{{this.display_price}}"> \
-                                <div class="wui-inner-pic"> <img data-url="{{this.thumbnails_url}}" /></div> \
-                                 <div class="wui-inner-titleAndprice"> \
-                                    <p class="wa-inner-title xui-inner-title" {{this.is_itemname_hidden}}> \
-                                        {{this.name}}</p> \
-                                    <p class="wa-inner-price xui-inner-price" {{this.is_price_hidden}}> \
-                                        <span>¥</span>{{this.display_price}}</p> \
-                              </div> \
-                            </a> \
-                        </li> \
-                    {{/each}} \
-                </ul> \
-            </div>\
-        ';
-        //this.template = Handlebars.compile(this.handlebarTmpl);
-        this.template = Handlebars.compile(productListTemplate);
-         * */
         var deferred = $.Deferred();
         this.sendApi(deferred);
         var _this = this;
         $.when(deferred).done(function(data){
+            var componentIndex = data['componentIndex'];
             // 根据商品数量填补component对象
             _this.component['component']['valid_product_count'] = data['products'].length;
             _this.component['component']['components'] = [];
@@ -71,28 +49,25 @@ var AsyncComponentLoadView = BackboneLite.View.extend({
             data.products.map(function(product){
                 product['is_itemname_hidden'] = _this.component['component'].model['is_itemname_hidden'];
                 product['is_price_hidden'] = _this.component['component'].model['is_price_hidden'];
+                product['is_border_show'] = _this.component['component'].model['is_border_show'];
                 product['link_url'] = W.H5_HOST+"/mall/product/?woid="+W.webappOwnerId+"&product_id="+product['id']+"&referrer=weapp_product_list";
                 _this.component['component']['components'].push(product);
             });
-            console.log('>>>>>>>>>>>>>>>>>> product: ', data, W);
             var orgHtml = _this.renderComponent(_this.component, data);
-            //var orgHtml = _this.template(_this.component);
             _this.$el.html(orgHtml);
-            $lazyImgs = $('[data-ui-role="async-component"] a img');
+            $lazyImgs = $('[data-ui-role="async-component"][component-index="'+componentIndex+'"] a img');
             lazyloadImg($lazyImgs, {
                 threshold: 0,
                 effect : "fadeIn",
                 placeholder: "/static_v2/img/webapp/mall/info_placeholder.png"
             });
-            // 停止渲染子组件
-            //var $eleUl = _this.$el.find('ul');
-            //_this.renderSub($eleUl, data);
         });
     },
 
     sendApi: function(deferred) {
         var _this = this;
         var product_ids = this.componentModel['items'];
+        var componentIndex = this.componentModel['index'];
         W.getApi().call({
             app: 'webapp',
             api: 'project_api/call',
@@ -106,6 +81,7 @@ var AsyncComponentLoadView = BackboneLite.View.extend({
                 product_ids: product_ids
             },
             success: function(data) {
+                data['componentIndex'] = componentIndex;
                 deferred.resolve(data);
             },
             error: function(data) {
@@ -119,41 +95,6 @@ var AsyncComponentLoadView = BackboneLite.View.extend({
         return html;
     },
 
-    // 渲染子标签
-    /*
-    renderSub: function($el, data) {
-        var _this = this;
-        var product_ids = this.componentModel['items'];
-        var products = data['products'];
-        var sub_component_htmls = [];
-        product_ids.forEach(function(product_id) {
-            var product = _.find(products, function(item){return item.id === product_id});
-            // TODO: 将该html加入到sub_component中的html属性中
-            var sub_component_html = _this.addSubComponetRender(product);
-            sub_component_htmls.push(sub_component_html);
-        });
-
-        // TODO: 使用handlebar-template 渲染 
-        $el.html(sub_component_htmls.join(''));
-
-    },
-
-    addSubComponetRender: function(product) {
-        // TODO: 使用handlebar-template 渲染 
-        var _this = this;
-        var itemComponent = {
-            component: {
-                type: 'wepage.item',
-                runtime_data: {product: product},
-                parent_component: _this.component.component
-            },
-            product: product
-        };
-        var html = this.renderComponent(itemComponent, {});
-        html = html.replace('src=', 'data-url=');
-        return html;
-    }
-     * */
 });
 
 var allComponents = [];
@@ -164,17 +105,6 @@ $(function(){
         $div.append('<div style="text-align:center;"><img src="/static_v2/img/product_list_loading.gif"></div>');
         allComponents.push($div);
     });
-
-    // 关闭所有图片
-    /*
-    $('img[data-url], img[src]').each(function() {
-        var $div = $(this);
-        $div.attr('data-url', '');
-        $div.attr('src', '');
-    });
-     * */
-
-    var componentsTmpl = $("#productListTemplate").html();
 
     // 优先编译好模版
     var productListTemplate = '\
@@ -190,7 +120,7 @@ $(function(){
                              <div class="wui-inner-titleAndprice"> \
                                 <p class="wa-inner-title xui-inner-title" {{this.is_itemname_hidden}}> \
                                     {{this.name}}</p> \
-                                <p class="wa-inner-price xui-inner-price" {{this.is_price_hidden}}> \
+                                <p class="wa-inner-price xui-inner-price {{this.is_border_show}}" {{this.is_price_hidden}}> \
                                     <span>¥</span>{{this.display_price}}</p> \
                           </div> \
                         </a> \
@@ -202,10 +132,16 @@ $(function(){
     templateProductList = Handlebars.compile(productListTemplate);
 
     // 初始化view    
-    var initComponent = function(component, idx){
+    var initComponent = function(component){
         var $div = component;
         var componentType = $div.attr('data-type');
         var componentModel = $.parseJSON($div.attr('data-model') || '{}');
+        // 给每个组件一个属性索引
+        var componentIndex = componentModel['index'];
+        if (componentIndex > -1) {
+            $div.attr('component-index', componentIndex);
+        }
+
         var asyncComponent = new AsyncComponentLoadView({
             el: $div[0],
             componentType: componentType,
@@ -215,8 +151,8 @@ $(function(){
         $div.data('view', asyncComponent);
     };
 
-    allComponents.map(function(component, idx){
-        initComponent(component, idx);
+    allComponents.map(function(component){
+        initComponent(component);
     });
 });
 
