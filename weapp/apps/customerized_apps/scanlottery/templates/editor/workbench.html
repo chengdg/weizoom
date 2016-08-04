@@ -126,7 +126,7 @@
         "task": "weizoom-load-termite-components"
       }
     -->
-  {{ '["appkit.page", "appkit.exlotterydescription", "appkit.submitbutton"]'|load_termite_components|safe }}
+  {{ '["appkit.page", "appkit.scanlotterydescription", "appkit.submitbutton"]'|load_termite_components|safe }}
   <!-- *end_prunt_task* -->
 
 {% if not is_deleted_data %}
@@ -311,12 +311,9 @@
           var name = descriptionModel.get('title');
           var startTime = descriptionModel.get('start_time');
           var endTime = descriptionModel.get('end_time');
-{#          var expend = descriptionModel.get('expend');#}
-{#          var delivery = descriptionModel.get('delivery');#}
           var chance = descriptionModel.get('chance');
           var allow_repeat = descriptionModel.get('allow_repeat');
             var share_description = descriptionModel.get('share_description');
-            var lottery_code_count = descriptionModel.get('lottery_code_count');
             var homepage_image = descriptionModel.get('homepage_image');
             var exlottery_bg_image = descriptionModel.get('exlottery_bg_image');
           var relatedPageId = data['project_id'];
@@ -344,13 +341,10 @@
             "name": name,
             "start_time": startTime,
             "end_time": endTime,
-{#            "expend": expend,#}
-{#            "delivery": delivery,#}
             "chance": chance,
             "allow_repeat": allow_repeat,
               "prize":JSON.stringify(prizeData),
               "share_description": share_description,
-              "lottery_code_count": lottery_code_count,
               "homepage_image": homepage_image,
               "exlottery_bg_image": exlottery_bg_image
           };

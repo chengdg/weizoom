@@ -31,7 +31,7 @@ class ScanlotteryParticipances(resource.Resource):
 		"""
 		响应GET
 		"""
-		has_data = app_models.ScanlotteryParticipance.objects(belong_to=request.GET['id']).count()
+		has_data = app_models.ScanlotteryRecord.objects(belong_to=request.GET['id']).count()
 
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
@@ -77,24 +77,23 @@ class ScanlotteryParticipances(resource.Resource):
 		if status != '-1':
 			params['status'] = True if status == '1' else False
 
-		datas = app_models.ScanlottoryRecord.objects(**params)
-		#member_id与手机号映射
-		member_id2tel = {par.member_id:par.tel for par in app_models.ScanlotteryParticipance.objects(belong_to=belong_to)}
+		datas = app_models.ScanlotteryRecord.objects(**params)
+
 		if not export_id:
 			#进行分页
 			count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
 			cur_page = int(request.GET.get('page', '1'))
 			pageinfo, datas = paginator.paginate(datas, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
-			return pageinfo, datas, member_id2tel
+			return pageinfo, datas
 		else:
-			return datas, member_id2tel
+			return datas
 
 	@login_required
 	def api_get(request):
 		"""
 		响应API GET
 		"""
-		pageinfo, datas, member_id2tel = ScanlotteryParticipances.get_datas(request)
+		pageinfo, datas = ScanlotteryParticipances.get_datas(request)
 
 		tmp_member_ids = []
 		for data in datas:
@@ -109,7 +108,7 @@ class ScanlotteryParticipances(resource.Resource):
 				'id': str(data.id),
 				'participant_name': member_id2member[member_id].username_truncated if member_id2member.get(member_id) else u'未知',
 				'participant_icon': member_id2member[member_id].user_icon if member_id2member.get(member_id) else '/static/img/user-1.jpg',
-				'tel': member_id2tel.get(member_id, '') if not data.tel else data.tel,
+				'tel': data.tel,
 				'prize_title': data.prize_title,
 				'prize_name': data.prize_name,
 				'status': data.status,
@@ -130,7 +129,7 @@ class ScanlotteryParticipances(resource.Resource):
 		"""
 		领取奖品
 		"""
-		app_models.ScanlottoryRecord.objects(id=request.POST['id']).update(set__status=True)
+		app_models.ScanlotteryRecord.objects(id=request.POST['id']).update(set__status=True)
 		response = create_response(200)
 		return response.get_response()
 
@@ -147,10 +146,8 @@ class ScanlotteryParticipances_Export(resource.Resource):
 		"""
 		export_id = request.GET.get('export_id','')
 
-		# app_name = lotteryParticipances_Export.app.split('/')[1]
-		# excel_file_name = ('%s_id%s_%s.xls') % (app_name,export_id,datetime.now().strftime('%Y%m%d%H%m%M%S'))
-		download_excel_file_name = u'幸运码抽奖详情.xls'
-		excel_file_name = 'exlottery_details_'+datetime.now().strftime('%H_%M_%S')+'.xls'
+		download_excel_file_name = u'扫码抽奖详情.xls'
+		excel_file_name = 'scanlottery_details_'+datetime.now().strftime('%H_%M_%S')+'.xls'
 		dir_path_suffix = '%d_%s' % (request.user.id, date.today())
 		dir_path = os.path.join(settings.UPLOAD_DIR, dir_path_suffix)
 

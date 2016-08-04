@@ -22,7 +22,7 @@ NEW_PAGE_JSON = """
                 "force_display_in_property_view": "no",
                 "components": [],
                 "selectable": "no",
-                "type": "appkit.exlotteryitem",
+                "type": "appkit.scanlotteryitem",
                 "model": {
                     "index": 3,
                     "name": "",
@@ -38,7 +38,7 @@ NEW_PAGE_JSON = """
                 "force_display_in_property_view": "no",
                 "components": [],
                 "selectable": "no",
-                "type": "appkit.exlotteryitem",
+                "type": "appkit.scanlotteryitem",
                 "model": {
                     "index": 3,
                     "name": "",
@@ -54,7 +54,7 @@ NEW_PAGE_JSON = """
                 "force_display_in_property_view": "no",
                 "components": [],
                 "selectable": "no",
-                "type": "appkit.exlotteryitem",
+                "type": "appkit.scanlotteryitem",
                 "model": {
                     "index": 3,
                     "name": "",
@@ -65,7 +65,7 @@ NEW_PAGE_JSON = """
                 "has_global_content": "no"
             }],
             "selectable": "yes",
-            "type": "appkit.exlotterydescription",
+            "type": "appkit.scanlotterydescription",
             "model": {
                 "index": 2,
                 "name": "",

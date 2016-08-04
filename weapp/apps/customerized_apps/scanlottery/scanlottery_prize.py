@@ -44,12 +44,14 @@ class Scanlottery_prize(resource.Resource):
 		post = request.POST
 		response = create_response(500)
 		record_id = post.get('id', None)
-		code = post.get('ex_code', None)
+		code = post.get('scan_code', None)
+		name =  post.get('name', None)
+		phone =  post.get('phone', None)
 		now_datetime = datetime.today()
 
 		member = request.member
 		member_id = member.id
-		webapp_user_id = request.webapp_user.id
+		isMember = member.is_subscribed
 
 		if not record_id:
 			response.errMsg = u'抽奖活动信息出错'
@@ -62,15 +64,15 @@ class Scanlottery_prize(resource.Resource):
 
 		#检查码有没有被使用过
 		can_play_count = 0
-		scanlottery_participance = app_models.ScanlotteryParticipance.objects(code=code, belong_to=record_id, member_id=member_id)
-		if scanlottery_participance.count() == 1:
-			# 如果绑定，验证抽奖码有没有抽奖
-			if scanlottery_participance.first().status == app_models.NOT_USED:
+		scanlottery_record = app_models.ScanlotteryRecord.objects(code=code)
+		if scanlottery_record.count() == 0:
+			# 非会员不可参与
+			if isMember:
 				can_play_count = 1
 		# 如果当前可玩次数为0，则直接返回
 		if can_play_count <= 0:
 			response = create_response(500)
-			response.errMsg = u'该抽奖码已经被使用过~'
+			response.errMsg = u'该码已经参与'
 			return response.get_response()
 
 		#首先检查活动状态
@@ -85,13 +87,6 @@ class Scanlottery_prize(resource.Resource):
 		winner_count = scanlottery.winner_count #中奖人数
 		#根据抽奖限制，对比抽奖时间
 		allow_repeat = True if scanlottery.allow_repeat == 'true' else False
-		# expend = exlottery.expend
-		# delivery = exlottery.delivery
-
-		# if not member or member.integral < expend:
-		# 	response = create_response(500)
-		# 	response.errMsg = u'积分不足'
-		# 	return response.get_response()
 
 		#构造奖项池
 		prize_tank = []
@@ -119,17 +114,13 @@ class Scanlottery_prize(resource.Resource):
 			response.errMsg = u'奖品已抽光'
 			return response.get_response()
 
-		member_has_record = app_models.ScanlottoryRecord.objects(belong_to=record_id, member_id=member_id, prize_type__in=['integral','coupon','entity'])
+		member_has_record = app_models.ScanlotteryRecord.objects(belong_to=record_id, member_id=member_id, prize_type__in=['integral','coupon','entity'])
 		#如果不能重复中奖，则判断是否之前抽中过
 		if not allow_repeat and member_has_record:
 			response = create_response(500)
 			response.errMsg = u'您已经抽到奖品了,不能重复中奖~'
 			return response.get_response()
 
-		#扣除抽奖消耗的积分
-		# member.consume_integral(expend, u'参与抽奖，消耗积分')
-		#奖励抽奖赠送积分
-		# member.consume_integral(-delivery, u'参与抽奖，获得参与积分')
 		#判定是否中奖
 		scanlottery_prize_type = "no_prize"
 		scanlottery_prize_data = ''
@@ -155,13 +146,13 @@ class Scanlottery_prize(resource.Resource):
 				coupon, msg, _ = get_consume_coupon(scanlottery.owner_id, 'exlottery',str(scanlottery.id), scanlottery_prize_data, member_id)
 				if not coupon:
 					result = u'谢谢参与'
-					exlottery_prize_type = 'no_prize'
+					scanlottery_prize_type = 'no_prize'
 				else:
 					prize_value = scanlottery_prize['prize_data']['name']
 					scanlottery_prize_dict[temp_prize_title]['prize_count'] = int(scanlottery_prize_dict[temp_prize_title]['prize_count']) - 1
 			elif scanlottery_prize_type == 'integral':
 				#积分
-				member.consume_integral(-int(scanlottery_prize['prize_data']), u'参与抽奖，抽中积分奖项')
+				member.consume_integral(-int(scanlottery_prize['prize_data']), u'参与扫码抽奖，抽中积分奖项')
 				scanlottery_prize_data = scanlottery_prize['prize_data']
 				prize_value = u'%s积分' % scanlottery_prize_data
 				scanlottery_prize_dict[temp_prize_title]['prize_count'] = int(scanlottery_prize_dict[temp_prize_title]['prize_count']) - 1
@@ -184,18 +175,16 @@ class Scanlottery_prize(resource.Resource):
 			"prize_data": str(scanlottery_prize_data),
 			"status": False if scanlottery_prize_type=='entity' else True,
 			"created_at": now_datetime,
-			"code": code
+			"code": code,
+			"tel": phone,
+			"name": name
 		}
-		scanlottery_record = app_models.ScanlottoryRecord(**log_data)
+		scanlottery_record = app_models.ScanlotteryRecord(**log_data)
 		scanlottery_record.save()
-		#更新码的使用时间
-		scanlottery_code = app_models.ScanlotteryCode.objects(belong_to=record_id, code=code).first()
-		scanlottery_code.update(set__use_time=scanlottery_record.created_at)
+
 		#抽奖后，更新数据
 		has_prize = False if result == u'谢谢参与' else True
 
-		scanlottery_participance.update(set__status=app_models.HAS_USED)
-		scanlottery_participance.first().reload()
 		#调整参与数量和中奖人数
 		newRecord = {}
 		if has_prize:
@@ -214,6 +203,5 @@ class Scanlottery_prize(resource.Resource):
 			"prize_name": prize_value,
 			'prize_type': scanlottery_prize_type,
 			'can_play_count': 0,
-			# 'remained_integral': member_models.objects.get(id=member_id).integral
 		}
 		return response.get_response()
