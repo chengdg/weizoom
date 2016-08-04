@@ -973,6 +973,50 @@ class ChannelDistributions(resource.Resource):
 		})
 		return render_to_response('weixin/channels/channel_distributions.html', c)
 
+	def api_get(request):
+		distribution_rewards_status = {
+			0: u'无',
+			1: u'佣金'
+		}
+
+		sort_attr = request.GET.get('sort_attr', '-created_at')
+
+		member_dict = {}  # {id: name}
+		members = Member.objects.all()
+		for member in members:
+			member_dict[member.id] = member.username_for_title
+
+		qrcodes = ChannelDistributionQrcodeSettings.objects.all()
+		items = []
+		for qrcode in qrcodes:
+			qrcode_dict = {}
+			qrcode_dict['title'] = qrcode.bing_member_title  # 标题
+			qrcode_dict['bing_member_name'] = member_dict[qrcode.bing_member_id]  # 关联会员: 是名字
+			qrcode_dict['bing_member_count'] = qrcode.bing_member_count  # 关注数量
+			qrcode_dict['total_transaction_volume'] = str(qrcode.total_transaction_volume)  # 总交易额
+			qrcode_dict['total_return'] = str(qrcode.total_return)  # 总返现额
+			qrcode_dict['award_prize_info'] = qrcode.award_prize_info  # 关注奖励 TODO
+			qrcode_dict['distribution_rewards'] = str(distribution_rewards_status[qrcode.distribution_rewards])  # 分销奖励
+			qrcode_dict['created_at'] = str(qrcode.created_at)  # 创建时间
+			qrcode_dict['clearing'] = ''  # 会员结算 TODO
+			# qrcode_dict['']
+			items.append(qrcode_dict)
+
+		count_per_page = int(request.GET.get('count_per_page', 15))
+		cur_page = int(request.GET.get('page', '1'))
+		pageinfo, items = paginator.paginate(items, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
+
+		response = create_response(200)
+		response.data = {
+			'items': items,
+			'pageinfo': paginator.to_dict(pageinfo),
+			'sortAttr': sort_attr,
+			'data': {}
+		}
+		return response.get_response()
+
+
+
 
 class ChannelDistribution(resource.Resource):
 	app = 'new_weixin'
