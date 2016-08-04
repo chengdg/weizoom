@@ -790,3 +790,16 @@ class TemplateMessageLogs(models.Model):
 		db_table = 'weixin_template_message_logs'
 		verbose_name = '模版消息记录'
 		verbose_name_plural = '模版消息记录'
+
+class EnchashmentProcess(models.Model):
+	"""
+	取现进度记录
+	"""
+	owner_id = models.IntegerField() #所属商家
+	step = models.IntegerField() #取现进度
+	created_at = models.DateTimeField(auto_now_add=True) #创建时间
+
+	class Meta(object):
+		db_table = 'weixin_enchashment_process'
+		ordering=['-id']
+		
