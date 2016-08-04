@@ -55,7 +55,12 @@ W.view.mall.ProductsPoolFilterView = Backbone.View.extend({
             data: {'level': 2, 'father_id': father_id},
             success: function(data) {
                 console.log(data);
+            var option = '';
+            _.each(data.items,function(data,i){
+                option+='<option id='+i+'>'+data.name+'</option>';
+                });
 
+                $('.xa-secondCategory').html(option);
             },
             error: function() {
                 alert('加载失败！请刷新页面重试！');

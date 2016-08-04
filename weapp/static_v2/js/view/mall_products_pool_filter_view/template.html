@@ -23,15 +23,14 @@
 	<div class="xui-col disTc">
 		<div class="xui-i-item">
 			<label class="">商品分类：</label>
-			<select id="firstClassification" name="firstClassification" >
+			<select id="firstClassification" name="firstClassification" class="xa-firstCategory">
 				<option value="-1">一级分类</option>
 				{{each(i, classification) classifications}}
 				<option value="${classification.id}" name="classification">${classification.name}</option>
 				{{/each}}
 			</select>
-			<select id="secondaryClassification" name="secondaryClassification">
+			<select id="secondaryClassification" name="secondaryClassification" class="xa-secondCategory">
 				<option value="-1">二级分类</option>
-
 			</select>
 		</div>
 	</div>
