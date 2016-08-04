@@ -9,9 +9,9 @@
     <div class="relative">
         <ul class="breadcrumb">
             <li>您当前所在位置</li>
-            <li><a href="/new_weixin/materials/">高级管理</a></li>
-            <li><a href="/new_weixin/qrcodes/">带参数二维码</a></li>
-            <li class="active">关注会员</li>
+            <li><a href="/new_weixin/channel_distributions/">推广与分销</a></li>
+            <li>渠道分销</li>
+
         </ul>
     </div>
     <div class="xui-filterPanel" >
@@ -98,12 +98,12 @@
 							        ${qrcode.clearing}
 							    </td>
 							    <td>
-							    <button type="button"><a href='/new_weixin/channel_distribution/?settion_id=${qrcode.id}'>修改</a></button><button type="button">查看</button>
+							    <button type="button"><a href='/new_weixin/channel_distribution/?setting_id=${qrcode.id}'>修改</a></button><button type="button">查看</button>
 							    </td>
 							</tr>
 						{{/each}}
 					{{else}}
-						<tr><td colspan='9'>还没有数据</td></tr>
+						<tr><td colspan='10'>还没有数据</td></tr>
 					{{/if}}
 				</tbody>
 			</table>

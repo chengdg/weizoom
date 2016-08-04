@@ -18,9 +18,8 @@ from weixin2.models import MessageRemarkMessage,Message,FanCategory,FanHasCatego
 from modules.member.models import *
 from .util import get_members
 from .fans_category import DEFAULT_CATEGORY_NAME
-from market_tools.tools.channel_qrcode.models import ChannelQrcodeSettings,ChannelQrcodeHasMember, \
-													ChannelQrcodeBingMember, ChannelDistributionQrcodeSettings,\
-													ChannelDistributionQrcodeHasMember
+from market_tools.tools.channel_qrcode.models import ChannelQrcodeSettings,ChannelQrcodeHasMember, ChannelQrcodeBingMember
+from market_tools.tools.distribution.models import ChannelDistributionQrcodeSettings, ChannelDistributionQrcodeHasMember
 from modules.member import models as member_model
 from account.util import get_binding_weixin_mpuser, get_mpuser_accesstoken
 from weixin2.message.util import get_member_groups
@@ -957,6 +956,18 @@ class GetCanUseCoupon(resource.Resource):
 		response = create_response(200)
 		return response.get_response()
 
+def format_award_prize_info(info):
+	"""
+	{"id":2,"name":"_score-prize_","type":"积分"} => 2积分
+
+	"""
+	info = json.loads(info)
+	if info['type'] == u'积分':
+		return u"%s积分"% info['id']
+	else:
+		return info['type']
+
+
 
 class ChannelDistributions(resource.Resource):
 	app = 'new_weixin'
@@ -990,12 +1001,14 @@ class ChannelDistributions(resource.Resource):
 		items = []
 		for qrcode in qrcodes:
 			qrcode_dict = {}
+			qrcode_dict['id'] = qrcode.id
 			qrcode_dict['title'] = qrcode.bing_member_title  # 标题
 			qrcode_dict['bing_member_name'] = member_dict[qrcode.bing_member_id]  # 关联会员: 是名字
 			qrcode_dict['bing_member_count'] = qrcode.bing_member_count  # 关注数量
 			qrcode_dict['total_transaction_volume'] = str(qrcode.total_transaction_volume)  # 总交易额
 			qrcode_dict['total_return'] = str(qrcode.total_return)  # 总返现额
-			qrcode_dict['award_prize_info'] = qrcode.award_prize_info  # 关注奖励 TODO
+			# qrcode_dict['award_prize_info'] = qrcode.award_prize_info  # 关注奖励
+			qrcode_dict['award_prize_info'] = format_award_prize_info(qrcode.award_prize_info)  # 关注奖励 TODO
 			qrcode_dict['distribution_rewards'] = str(distribution_rewards_status[qrcode.distribution_rewards])  # 分销奖励
 			qrcode_dict['created_at'] = str(qrcode.created_at)  # 创建时间
 			qrcode_dict['clearing'] = ''  # 会员结算 TODO
