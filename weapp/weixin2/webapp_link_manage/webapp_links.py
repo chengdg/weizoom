@@ -6,6 +6,7 @@ __author__ = 'liupeiyu'
 
 import os
 import json
+import requests
 
 from django.http import HttpResponseRedirect
 from django.template import RequestContext
@@ -20,6 +21,8 @@ from core import resource
 from core import paginator
 from core.jsonresponse import create_response
 import utils as webapp_link_utils
+from core.exceptionutil import unicode_full_stack
+from watchdog.utils import watchdog_error
 
 
 COUNT_PER_PAGE = 20
@@ -59,7 +62,7 @@ class WebappItemLinks(resource.Resource):
 	resource = 'webapp_item_links'
 
 	LOTTER_TYPE = [u'刮刮卡', u'砸金蛋', u'大转盘']
-	
+
 	@login_required
 	def api_get(request):
 		"""
@@ -75,31 +78,34 @@ class WebappItemLinks(resource.Resource):
 		# 根据link_target获取已选的id跟type
 		selected_id, is_selected_type = webapp_link_utils.get_selected_by_link_target(request, menu_type, link_type, selected_link_target)
 		request.selected_id = selected_id
-		
-		apps_dir = os.path.join(settings.PROJECT_HOME, '../apps/customerized_apps')
-		if os.path.isdir(os.path.join(apps_dir, link_type)):
-			#如果是app
-			app_name = link_type
-			export_module_path = 'apps.customerized_apps.%s.export' % app_name
-			export_module = __import__(export_module_path, {}, {}, ['*',])
-			func = getattr(export_module, 'get_link_targets', None)
-			if func:
-				pageinfo, link_targets = func(request)
-				response = create_response(200)
-				response.data = {
-					'items': link_targets,
-					'pageinfo': paginator.to_dict(pageinfo),
-					'sortAttr': '-id',
-					'data': {},
-					'type': app_name
-				}
-			else:
-				response = create_response(500)
-				response.errMsg = 'no get_link_targets in export.py'
-				return response.get_response()
-		else:
+
+		URL = "http://%s/apps/export/api/get_app_items/?webapp_owner_id=%s&link_type=%s&query=%s" % (settings.MARKETAPP_DOMAIN, str(request.manager.id), link_type, query)
+
+
+		try:
+			api_resp_text = requests.get(URL).text
+			print URL, 'marketapp get_app_items===============>>>', api_resp_text
+			api_resp = json.loads(api_resp_text)
+		except:
+			api_resp = {}
+			notify_message = u"api request marketapp get_app_link failed:::: ".format(unicode_full_stack())
+			watchdog_error(notify_message)
+
+		if api_resp.get('data', None):
+			api_data = api_resp['data']
+			link_targets = api_data['link_targets']
+			pageinfo = api_data['pageinfo']
+			response = create_response(200)
+			response.data = {
+				'items': link_targets,
+				'pageinfo': pageinfo,
+				'sortAttr': order_by,
+				'data': {},
+				'type': link_type
+			}
+		elif api_resp.get('errMsg', None) and 'invalid' == api_resp['errMsg']:
 			objects, menu_item = webapp_link_utils.get_webapp_link_objectes_for_type(request, link_type, query, order_by)
-			
+
 			if link_type == "shengjing_app":
 				items = []
 				for item in objects[0]['data']:
@@ -114,11 +120,11 @@ class WebappItemLinks(resource.Resource):
 					'items':items,
 					'type': link_type
 				}
-				
-			else:	
+
+			else:
 				count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
 				cur_page = int(request.GET.get('page', '1'))
-				pageinfo, objects = paginator.paginate(objects, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])	
+				pageinfo, objects = paginator.paginate(objects, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
 				items = []
 				for item in objects:
 					data = dict()
@@ -161,5 +167,7 @@ class WebappItemLinks(resource.Resource):
 					'data': {},
 					'type': link_type
 				}
-
+		else:
+			response = create_response(500)
+			response.errMsg = 'get %s datas failed' % link_type
 		return response.get_response()
