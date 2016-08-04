@@ -88,7 +88,7 @@
                 wuiAlert('请输入正确的手机号');
                 return false;
             }
-            if(scanCode.length != 20){
+            if(scanCode.length != 20 || !/^\d+$/g.test(scanCode)){
                 wuiAlert('您的二维码有误');
                 return false;
             }
