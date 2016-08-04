@@ -278,7 +278,8 @@ class EvaluateReview(resource.Resource):
 				review = app_models.ProductEvaluates.objects(owner_id=request.webapp_owner_id, id=product_review_id)
 				first_review = review.first()
 				if status == '2' or status == '1':
-					if review.count() == 1 and int(first_review.status) == 0:
+					#待审核或者之前被屏蔽所以没有奖励积分的
+					if review.count() == 1 and (int(first_review.status) == 0 or not first_review.has_increase_integral):
 						settings = member_models.IntegralStrategySttings.objects.get(
 							webapp_id=request.user_profile.webapp_id)
 						if settings.review_increase > 0:
@@ -286,6 +287,8 @@ class EvaluateReview(resource.Resource):
 							if len(member):
 								temp_integral = member[0].integral
 								increase_member_integral(member[0], settings.review_increase, '商品评价奖励')
+								#更新评价是否奖励积分状态
+								review.update(set__has_increase_integral=True)
 								#发送积分变动模版
 								send_task('services.weixin_template_service.task.service_template_message', {
 									'user_id': request.webapp_owner_id,
@@ -346,17 +349,20 @@ class EvaluateReview(resource.Resource):
 						# 处理增加积分
 						increase_integral_member_ids = []
 						for review in reviews:
-							if int(review.status) == 0:
+							if int(review.status) == 0 or not review.has_increase_integral:
 								increase_integral_member_ids.append(review.member_id)
 
 						if len(increase_integral_member_ids) > 0:
 							members = member_models.Member.objects.filter(id__in=increase_integral_member_ids)
 							id2member = dict((member.id, member) for member in members)
 							for review in reviews:
-								if int(review.status) == 0:
+								if int(review.status) == 0 or not review.has_increase_integral:
 									temp_integral = id2member[review.member_id].integral
 									increase_member_integral(id2member[review.member_id], settings.review_increase,
 															 '商品评价奖励')
+									# 更新评价是否奖励积分状态
+									review.has_increase_integral = True
+									review.save()
 									#发送积分变动模版
 									send_task('services.weixin_template_service.task.service_template_message', {
 										'user_id': request.webapp_owner_id,
