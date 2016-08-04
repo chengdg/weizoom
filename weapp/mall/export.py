@@ -276,7 +276,7 @@ MALL_ORDER_SECOND_NAV = {
             'url': 'http://finance.weizoom.com/balance_account/account_profile/',
             'permission': 'manage_order_settle',
             'need_token': True,
-            'users': ["shengcheng", "ertongshazi", "saihanshiye", "zhongtulvan", "yuanyezhenshi", "bojing", "xinhuadanpin", "zhongdan"]
+            'users': ["ceshi01", "shengcheng", "ertongshazi", "saihanshiye", "zhongtulvan", "yuanyezhenshi", "bojing", "xinhuadanpin", "zhongdan"]
         }
     ]
 }
