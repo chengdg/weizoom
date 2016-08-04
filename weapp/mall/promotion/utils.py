@@ -8,6 +8,7 @@ from . import models as promotion_models
 from mall import models
 from core import search_util
 from apps.customerized_apps.group import models as group_models
+from modules.member.models import WebAppUser
 
 def get_coupon_rules(owner):
     """
@@ -31,6 +32,13 @@ def consume_coupon(owner_id, rule_id, member_id, coupon_record_id=0):
                                                        owner_id=owner_id)
     if len(rules) != 1:
         return None, u'该优惠券使用期已过，不能领取！'
+    if rules[0].receive_rule:
+        webapp_user_ids = WebAppUser.objects.filter(member_id=member_id).values_list('id', flat=True)
+        orders = models.Order.objects.filter(webapp_user_id__in=webapp_user_ids, status__in=
+            [models.ORDER_STATUS_PAYED_NOT_SHIP, models.ORDER_STATUS_PAYED_SHIPED, models.ORDER_STATUS_SUCCESSED])
+        if orders.count() > 0:
+            return None, u'该优惠券仅未下单用户可领取'
+
     coupon_count = promotion_models.Coupon.objects.filter(
                                             coupon_rule_id=rule_id,
                                             member_id=member_id).count()
