@@ -98,7 +98,7 @@ gmu.define('SwipeImage', {
         var view = new Swiper('#'+this.__id, {
 	        mode:'horizontal',
 	        loop: true,
-	        autoplay: 4000,
+	        autoplay: 6000,
             updateOnImagesReady: false,
 	        onInit:function(){
                 view.stopAutoplay();
