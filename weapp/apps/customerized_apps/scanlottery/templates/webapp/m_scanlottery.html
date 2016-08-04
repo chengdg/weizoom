@@ -371,10 +371,6 @@
                     showQrcode(W.qrcodeUrl);
                     return false;
                 }
-                if(!is_member_self){
-                    wuiAlert('请使用抽奖码进行抽奖');
-                    return false;
-                }
                 var _that = this;
                 $(this).addClass('xa-lottery-go-to');
                 window.setTimeout(function(){
@@ -410,7 +406,9 @@
                         args:{
                             id: W.appRecordId,
                             webapp_owner_id: W.webappOwnerId,
-                            ex_code: "{{code}}"
+                            scan_code: "{{code}}",
+                            name: "{{name}}",
+                            phone: "{{phone}}"
                         },
                         success: function(data){
                             lottery.roll();
@@ -439,7 +437,7 @@
                 args: {
                     webapp_owner_id: W.webappOwnerId,
                     id: W.appRecordId,
-                    ex_code: "{{code}}"
+                    scan_code: "{{code}}"
                 },
                 success: function(data) {
                     var member_info = data.member_info;
@@ -462,7 +460,6 @@
         function renderDynamicData(member_info){
             exlottery_status = member_info.exlottery_status;
             activity_status = member_info.activity_status;
-            is_member_self = member_info.is_member_self;
             W.isMember = member_info.isMember;
             //可参与次数
             can_play_count = member_info.can_play_count;
@@ -485,7 +482,7 @@
                 for(var i=0;i<len;i++){
                     str_array.push("<li>" + hisData[i].prize_title+'&nbsp;&nbsp;&nbsp;&nbsp;'+ hisData[i].prize_name + "</li>");
                 }
-                str_array = str_array.toString().replace(/,/g,'');
+                str_array = str_array.join('');
                 $('.wui-i-record').find('.xa-recordData').html(str_array);
             }else{
                 $('.wui-i-record').find('.xa-recordData').html('<p>还未中奖~</p>');
