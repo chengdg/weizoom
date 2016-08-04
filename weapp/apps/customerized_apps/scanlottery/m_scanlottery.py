@@ -17,7 +17,7 @@ from modules.member.module_api import get_member_by_openid
 
 
 
-class Mexlottery(resource.Resource):
+class Mscanlottery(resource.Resource):
 	app = 'apps/scanlottery'
 	resource = 'm_scanlottery'
 
@@ -25,13 +25,15 @@ class Mexlottery(resource.Resource):
 		"""
 		响应GET
 		"""
-		id = request.GET['id']
-		code = request.GET.get('ex_code', None)
-		# expend = 0
+		record_id = request.GET['id']
+		code = request.GET.get('scan_code', None)
+		name = request.GET.get('name', None)
+		phone = request.GET.get('phone', None)
+
 		auth_appid_info = None
 		share_page_desc = ''
 		thumbnails_url = '/static_v2/img/thumbnails_lottery.png'
-		cache_key = 'apps_scanlottery_%s_html' % id
+		cache_key = 'apps_scanlottery_%s_html' % record_id
 		record = None
 		member = request.member
 		is_pc = False if member else True
@@ -44,14 +46,14 @@ class Mexlottery(resource.Resource):
 		# 		return HttpResponse(cache_data)
 
 		try:
-			record = app_models.Scanlottery.objects.get(id=id)
+			record = app_models.Scanlottery.objects.get(id=record_id)
 			scanlottery_bg_image = record.scanlottery_bg_image
 		except:
 			c = RequestContext(request,{
 				'is_deleted_data': True
 			})
-			return render_to_response('exlottery/templates/webapp/m_exlottery.html', c)
-		# expend = record.expend
+			return render_to_response('scanlottery/templates/webapp/m_scanlottery.html', c)
+
 		share_page_desc = record.share_description
 		activity_status, record = update_scanlottery_status(record)
 
@@ -62,10 +64,9 @@ class Mexlottery(resource.Resource):
 		request.GET._mutable = False
 		html = pagecreater.create_page(request, return_html_snippet=True)
 		c = RequestContext(request, {
-			# 'expend_integral': expend,
-			'record_id': id,
+			'record_id': record_id,
 			'activity_status': activity_status,
-			'page_title': record.name if record else u'幸运码抽奖',
+			'page_title': record.name if record else u'扫码抽奖',
 			'page_html_content': html,
 			'app_name': "scanlottery",
 			'resource': "scanlottery",
@@ -74,9 +75,11 @@ class Mexlottery(resource.Resource):
 			'auth_appid_info': auth_appid_info,
 			'share_page_desc': share_page_desc,
 			'share_img_url': scanlottery_bg_image if scanlottery_bg_image else thumbnails_url,
-			'code': code
+			'code': code,
+			'name': name,
+			'phone': phone
 		})
-		response = render_to_string('exlottery/templates/webapp/m_exlottery.html', c)
+		response = render_to_string('scanlottery/templates/webapp/m_scanlottery.html', c)
 		# if not is_pc:
 		# 	SET_CACHE(cache_key, response)
 		return HttpResponse(response)
@@ -90,8 +93,12 @@ class Mexlottery(resource.Resource):
 		scanlottery_status = False
 
 		member = request.member
-		code = request.GET.get('ex_code',None)
+		code = request.GET.get('scan_code',None)
 		response = create_response(500)
+
+		if not code or len(code) != 20 or not code.isdigit():
+			response.errMsg = u'您的二维码有误'
+			return response.get_response()
 
 		if not record_id or not member:
 			response.errMsg = u'活动信息出错'
@@ -108,19 +115,13 @@ class Mexlottery(resource.Resource):
 		activity_status, record = update_scanlottery_status(record)
 
 		can_play_count = 0
-		is_member_self = True
 
-		#首先验证抽奖码有没有和本会员绑定
-		member_has_code = app_models.ScanlotteryParticipance.objects(code=code, belong_to=record_id,member_id=member_id)
-		if member_has_code.count() == 1:
+		#验证抽奖码有没有使用
+		scanlottery_record = app_models.ScanlotteryRecord.objects(code=code)
+		if scanlottery_record.count() == 0:
 			# 非会员不可参与
 			if isMember:
-				# 如果绑定，验证抽奖码有没有抽奖
-				if member_has_code.first().status == app_models.NOT_USED:
-					can_play_count = 1
-		#分享处理(如果分享出去，别人访问页面is_member_self为false)
-		elif member_has_code.count() == 0:
-			is_member_self = False
+				can_play_count = 1
 
 		if can_play_count != 0:
 			scanlottery_status = True
@@ -129,21 +130,19 @@ class Mexlottery(resource.Resource):
 		member_info = {
 			'isMember': isMember,
 			'member_id': member_id,
-			# 'remained_integral': member.integral,
 			'activity_status': activity_status,
 			'exlottery_status': scanlottery_status if activity_status == u'进行中' else False,
 			'can_play_count': can_play_count if scanlottery_status else 0,
-			'is_member_self': is_member_self
 		}
 		#历史中奖记录
 		all_prize_type_list = ['integral', 'coupon', 'entity']
-		exlotteries = app_models.ScanlottoryRecord.objects(belong_to=record_id, member_id=member_id, prize_type__in=all_prize_type_list)
+		scanlotteries = app_models.ScanlotteryRecord.objects(belong_to=record_id, member_id=member_id, prize_type__in=all_prize_type_list)
 
 		scanlottery_history = [{
 			'created_at': l.created_at.strftime('%Y-%m-%d'),
 			'prize_name': l.prize_name,
 			'prize_title': l.prize_title
-		} for l in exlotteries]
+		} for l in scanlotteries]
 
 		response = create_response(200)
 		response.data = {

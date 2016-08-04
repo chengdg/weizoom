@@ -24,6 +24,14 @@ class Mexlottery(resource.Resource):
 		"""
 		响应GET
 		"""
+		id = request.GET.get('id', '')
+		homepage_img = ''
+		try:
+			scanlottery = app_models.Scanlottery.objects.get(id=id)
+			homepage_img = scanlottery.homepage_image
+		except:
+			pass
+
 		member = request.member
 		is_pc = False if member else True
 		thumbnails_url = '/static_v2/img/thumbnails_lottery.png'
@@ -31,13 +39,15 @@ class Mexlottery(resource.Resource):
 
 
 		c = RequestContext(request, {
+			'record_id': id,
 			'page_title': u'扫码抽奖',
 			'app_name': "scanlottery",
 			'resource': "scanlottery",
 			'hide_non_member_cover': True, #非会员也可使用该页面
 			'isPC': is_pc,
 			'share_img_url': thumbnails_url,
-			'share_page_desc': share_page_desc
+			'share_page_desc': share_page_desc,
+			'homepage_image': homepage_img
 		})
 		response = render_to_string('scanlottery/templates/webapp/m_scanlottery_page.html', c)
 

@@ -111,7 +111,7 @@ class Scanlottery(resource.Resource):
 			if key in update_fields:
 				update_data['set__'+key] = value
 
-		record = app_models.Exlottery.objects(id=record_id)
+		record = app_models.Scanlottery.objects(id=record_id)
 		record.update_one(**update_data)
 
 		response = create_response(200)
@@ -122,7 +122,7 @@ class Scanlottery(resource.Resource):
 		"""
 		响应DELETE
 		"""
-		app_models.Exlottery.objects(id=request.POST['id']).delete()
+		app_models.Scanlottery.objects(id=request.POST['id']).delete()
 		
 		response = create_response(200)
 		return response.get_response()
