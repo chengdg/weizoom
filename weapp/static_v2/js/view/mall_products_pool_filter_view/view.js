@@ -55,7 +55,7 @@ W.view.mall.ProductsPoolFilterView = Backbone.View.extend({
             data: {'level': 2, 'father_id': father_id},
             success: function(data) {
                 console.log(data);
-            var option = '';
+            var option = '<option value="-1">二级分类</option>';
             _.each(data.items,function(data,i){
                 option+='<option id='+i+'>'+data.name+'</option>';
                 });
