@@ -186,7 +186,7 @@
           }
 
           W.Broadcaster.on('page:rendered', function () {
-              if ("{{ exlottery.status_text }}" == "进行中" ){
+              if ("{{ scanlottery.status_text }}" == "进行中" ){
                   W.getApi().call({
                       method: 'get',
                       app: 'apps/scanlottery',
