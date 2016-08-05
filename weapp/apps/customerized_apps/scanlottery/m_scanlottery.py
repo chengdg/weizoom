@@ -26,7 +26,7 @@ class Mscanlottery(resource.Resource):
 		响应GET
 		"""
 		record_id = request.GET['id']
-		code = request.GET.get('scan_code', '12345678901234567890')
+		code = request.GET.get('scan_code', '')
 		name = request.GET.get('name', None)
 		phone = request.GET.get('phone', None)
 
