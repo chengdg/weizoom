@@ -74,10 +74,10 @@ class exSignParticipance(resource.Resource):
 				'type': u'页面签到',
 				'prize': {
 					'integral': 0,
-					'coupon': {
+					'coupon': [{
 						'id': 0,
 						'name': ''
-					}
+					}]
 				}
 			}
 			if return_data['status_code'] == app_models.RETURN_STATUS_CODE['SUCCESS']:
