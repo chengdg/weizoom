@@ -2814,3 +2814,6 @@ li.wui-selectBox-display-table {
 	background: url(/termite_static/img/component/scanlottery/lottery_bg.jpg) no-repeat;
 	background-size: 100% auto;
 }
+.wui-scanlotteryDescription {
+	padding-top: 2px;
+}
