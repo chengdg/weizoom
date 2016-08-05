@@ -1,30 +1,123 @@
 {% extends "content_base_v2.html" %}
 {% block css %}
-<style>
+    <style>
 
-</style>
+    </style>
 {% endblock %}
 {% block content-panel %}
 
-	<div class="relative">
-		<ul class="breadcrumb">
-			<li>您当前所在位置</li>
-			<li><a href="/new_weixin/materials/">高级管理</a></li>
-			<li><a href="/new_weixin/qrcodes/">带参数二维码</a></li>
-			<li class="active">关注会员</li>
-		</ul>
-	</div>
-	<div class="xui-filterPanel" >
+    <div class="relative">
+        <ul class="breadcrumb">
+            <li>您当前所在位置</li>
+            <li><a href="/new_weixin/channel_distributions/">推广与分销</a></li>
+            <li>渠道分销</li>
+
+        </ul>
+    </div>
+    <div class="xui-filterPanel" >
         <div class="xui-form disT ml20">
             <div class="xui-i-item">
-				<input
-					type="text"
-					class="form-control"
-	                placeholder="二维码名称"
-	            />
-			</div>
-			<a class="btn btn-primary xa-search xui-fontBold " href="javascript:void(0);">查询</a>
-			<a class="btn btn-success lh20 xui-i-btnWidth xa-addQrcode fr mr10" href="/new_weixin/channel_distribution/"><span class="xui-add-btn-icon">+</span>新建二维码</a>
-		</div>
-	</div>
+                <input
+                        type="text"
+                        class="form-control"
+                        placeholder="二维码名称"
+                />
+            </div>
+            <a class="btn btn-primary xa-search xui-fontBold " href="javascript:void(0);">查询</a>
+            <a class="btn btn-success lh20 xui-i-btnWidth xa-addQrcode fr mr10" href="/new_weixin/channel_distribution/">
+                <span class="xui-add-btn-icon">+</span>新建二维码
+            </a>
+        </div>
+    </div>
+
+    <div
+            data-ui-role="advanced-table"
+            data-app="new_weixin"
+            data-resource="channel_distributions"
+            data-template-id="#setting_list_view"
+            data-init-sort="-created_at"
+            data-item-count-per-page="20"
+            data-enable-paginator="true"
+            class="panel-body mt40"
+    >
+    </div>
+{#    <div id="qrcode_table"></div>#}
+{% endblock %}
+{% block js %}
+    {% verbatim %}
+        <script id="setting_list_view" type="text/x-jquery-tmpl">
+		{{if items}}
+			<table class="table table-condensed xb-stripedTable xb-theadBg">
+				<thead>
+					<tr>
+                    <th style="width:16%;">
+                        <p class=" m0">
+                            <span class="">二维码名称</span>
+                        </p>
+                    </th>
+                    <th style="width:10%;" >关联会员</th>
+                    <th style="width:15%;" class="tx_sortable" data-sort-attr='total_final_price'>关注数量</th>
+                    <th style="width:15%;">总交易额/元</th>
+                    <th style="width:10%;">返现总额</th>
+                    <th style="width:10%;">关注奖励</th>
+                    <th style="width:10%;">分销奖励</th>
+                    <th style="width:10%;">创建时间</th>
+                    <th style="width:10%;">会员结算</th>
+                    <th style="width:10%;">二维码操作</th>
+					</tr>
+				</thead>
+				<tbody>
+					{{if items.length}}
+						{{each(i, qrcode) items}}
+							<tr>
+							    <td>
+							        ${qrcode.title}
+							    </td>
+							    <td>
+							        ${qrcode.bing_member_name}
+							    </td>
+							    <td>
+							        ${qrcode.bing_member_count}
+							    </td>
+							    <td>
+							        ${qrcode.total_transaction_volume}
+							    </td>
+							    <td>
+							        ${qrcode.total_return}
+							    </td>
+							    <td>
+							        ${qrcode.award_prize_info}
+							    </td>
+							    <td>
+                                    ${qrcode.distribution_rewards}
+							    </td>
+							    <td>
+							        ${qrcode.created_at}
+							    </td>
+							    <td>
+							        ${qrcode.clearing}
+							    </td>
+							    <td>
+							    <button type="button"><a href='/new_weixin/channel_distribution/?setting_id=${qrcode.id}'>修改</a></button><button type="button">查看</button>
+							    </td>
+							</tr>
+						{{/each}}
+					{{else}}
+						<tr><td colspan='10'>还没有数据</td></tr>
+					{{/if}}
+				</tbody>
+			</table>
+						{{else}}
+				当前还没有二维码，请添加二维码
+			{{/if}}
+        </script>
+    {% endverbatim %}
+
+    <script>
+
+  //  var myTemplate = Handlebars.compile($("#table-template").html());
+
+  //  $('#tableList').html(myTemplate(data));
+    </script>
+
 {% endblock %}

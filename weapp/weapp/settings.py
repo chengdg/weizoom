@@ -304,6 +304,8 @@ DEFAULT_MSG_HANDLER_CLASSES = (
     # 'weixin.message.message_handler.exlottery_handler.ExlotteryHandler',
     'market_tools.tools.member_qrcode.ticket_messge_handler.QrcodeHandler',
     'market_tools.tools.channel_qrcode.channel_qrcode_handler.ChannelQrcodeHandler',
+    'market_tools.tools.distribution.channel_distribution_handle.ChannelDistributionQrcodeHandler',
+
     'apps.customerized_apps.rebate.rebate_qrcode_handler.RebateQrcodeHandler',
     'modules.member.send_mass_msg_result_handler.SendMassMessageResultHandler',
     'weixin.message.impl_handlers.default_event_handler.DefaultEventHandler',
@@ -324,6 +326,7 @@ OPTIMIZATION_MSG_HANDLER_CLASSES = (
     # 'weixin.message.message_handler.exlottery_handler.ExlotteryHandler',
     'market_tools.tools.member_qrcode.ticket_messge_handler.QrcodeHandler',
     'market_tools.tools.channel_qrcode.channel_qrcode_handler.ChannelQrcodeHandler',
+    'market_tools.tools.distribution.channel_distribution_handle.ChannelDistributionQrcodeHandler',
     'apps.customerized_apps.rebate.rebate_qrcode_handler.RebateQrcodeHandler',
     'modules.member.send_mass_msg_result_handler.SendMassMessageResultHandler',
     'weixin.message.message_handler.default_event_handler.DefaultEventHandler',
