@@ -2810,3 +2810,10 @@ li.wui-selectBox-display-table {
 	display: none;
 }
 /*百宝箱 scratch CSS ---- end */
+.wui-scanlotterydescription {
+	background: url(/termite_static/img/component/scanlottery/lottery_bg.jpg) no-repeat;
+	background-size: 100% 100%;
+}
+.wui-scanlotteryDescription {
+	padding-top: 2px;
+}

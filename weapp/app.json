@@ -1,9 +1,9 @@
 {
-	"name": "exlottery",
+	"name": "scanlottery",
 	"resources": [{
-		"name": "Exlottery",
+		"name": "Scanlottery",
 		"need_user_participant": true,
-		"display_name": "幸运码抽奖",
+		"display_name": "扫码抽奖",
 		"enable_termite": true
 	}]
 }

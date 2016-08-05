@@ -309,6 +309,7 @@ MALL_PROMOTION_CARD_EXCHANGE_NAV = 'cardExchange'
 
 MALL_APPS_LOTTERY_NAV = 'lotteries'
 MALL_APPS_EXLOTTERY_NAV = 'exlotteries'
+MALL_APPS_SCANLOTTERY_NAV = 'scanlotteries'
 MALL_APPS_FEEDBACK_NAV = 'exsurveies'
 MALL_APPS_SURVEY_NAV = 'surveies'
 MALL_APPS_EVENT_NAV = 'events'
@@ -437,6 +438,11 @@ MALL_PROMOTION_AND_APPS_SECOND_NAV = {
                     'name': MALL_APPS_EXLOTTERY_NAV,
                     'title': "幸运码抽奖",
                     'url': '/apps/exlottery/exlotteries/',
+                    'permission': '',
+                },{
+                    'name': MALL_APPS_SCANLOTTERY_NAV,
+                    'title': "扫码抽奖",
+                    'url': '/apps/scanlottery/scanlotteries/',
                     'permission': '',
                 },
                 # {

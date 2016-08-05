@@ -60,7 +60,7 @@ def config(request):
       "nonceStr: '%s',"+\
       "signature: '%s',"+\
       "jsApiList: ["+\
-      	"'onMenuShareAppMessage','onMenuShareTimeline','onMenuShareQQ','previewImage','hideOptionMenu','showOptionMenu','chooseImage',"+\
+      	"'scanQRCode', 'onMenuShareAppMessage','onMenuShareTimeline','onMenuShareQQ','previewImage','hideOptionMenu','showOptionMenu','chooseImage',"+\
       "]"+\
     "});"
 	response = HttpResponse(result % (appId, timestamp, noncestr, signature), content_type='application/x-javascript')
