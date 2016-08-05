@@ -17,7 +17,7 @@
         background-size: 100% auto;
     }
     .wui-scanlottery-title {
-        height: 13rem;
+        height: 17rem;
     }
     .wui-scanlottery-container {
         width: 70%;
@@ -78,6 +78,8 @@
     }
     .wui-verify-btn {
         font-size: 1.1rem;
+        height: 3rem;
+        line-height: 3rem;
         color: #3992ff;
         display: inline-block;
         width: 30%;
@@ -85,7 +87,10 @@
     @media screen and (max-width: 320px) {
         .wui-verify-btn {
             font-size: 1rem;
-        }          
+        }        
+        .wui-scanlottery-title {
+            height: 13rem;
+        }  
     }
 </style>
 {% endblock %}
@@ -162,22 +167,22 @@
             }
         });
     });
-    var scanCode = '';
-    loadingStatus(true);
-    wx.ready(scanQrcode);
+    // var scanCode = '';
+    // loadingStatus(true);
+    // wx.ready(scanQrcode);
 
-    function scanQrcode(){
-        wx.scanQRCode({
-            needResult: 1, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
-            scanType: ["qrCode"], // 可以指定扫二维码还是一维码，默认二者都有
-            success: function (res) {
-                loadingStatus(false);
-                var result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
-                scanCode = result.substr(result.length - 20);
-                console.log(result, scanCode);
+    // function scanQrcode(){
+    //     wx.scanQRCode({
+    //         needResult: 1, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
+    //         scanType: ["qrCode"], // 可以指定扫二维码还是一维码，默认二者都有
+    //         success: function (res) {
+    //             loadingStatus(false);
+    //             var result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
+    //             scanCode = result.substr(result.length - 20);
+    //             console.log(result, scanCode);
                 $('.wa-scanlottery-container').show();
-            }
-        });
-    }
+    //         }
+    //     });
+    // }
 </script>
 {% endblock %}
