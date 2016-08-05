@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from weixin.message.handler.message_handler import MessageHandler
-from apps.customerized_apps.rebate import models as rebate_models
 from market_tools.tools.distribution.models import ChannelDistributionQrcodeSettings, ChannelDistributionQrcodeHasMember
-from modules.member.models import MemberTag, MemberHasTag
+from modules.member.models import MemberHasTag
 
 class ChannelDistributionQrcodeHandler(MessageHandler):
 
