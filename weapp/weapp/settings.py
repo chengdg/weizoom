@@ -824,7 +824,6 @@ RESOURCES = ['stats', 'termite2', 'weixin2', 'mall','openapi']
 ENAPISERVER = False
 
 
-VARNISH_HOST = "varnish"
 
 WEIZOOM_ACCOUNTS = ['devceshi', 'wzjx001', 'ceshi001', 'weizoomxs', 'weizoommm', 'weshop', 'weizoomclub', 'weizoomshop', 'weizoombfm', 'jobs', 'wz01', 'wz02', 'wz03', 'test003', 'fulilaile']
 # settings for WAPI Logger
