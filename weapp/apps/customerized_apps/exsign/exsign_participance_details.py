@@ -43,6 +43,7 @@ class exSignParticipances(resource.Resource):
 			cur_page = int(request.GET.get('page', '1'))
 			date_list.reverse()
 			pageinfo, date_list = paginator.paginate(date_list, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
+			pageinfo =paginator.to_dict(pageinfo)
 
 			start_date = low_date.strftime("%Y-%m-%d %H:%M:%S")
 			#现在的时间
@@ -65,11 +66,11 @@ class exSignParticipances(resource.Resource):
 			for item in items:
 				prize_str = u''
 				if item['prize'].get('integral', None):
-					prize_str += u'积分+%s<br/>' % str(t['prize']['integral'])
+					prize_str += u'积分+%s<br/>' % str(item['prize']['integral'])
 				if item['prize'].get('coupon', None):
 					coupon = item['prize']['coupon']
 					for c in coupon:
-						prize_str += u'%s<br/>' % coupon_id2name.get(c['id'],'')
+						prize_str += u'%s<br/>' % coupon_id2name.get(c['id'], '')
 				time2prize[item.created_at.strftime("%Y.%m.%d")] = {
 					"created_at": item.created_at.strftime("%Y.%m.%d %H:%M:%S"),
 					"created_at_f": item.created_at.strftime("%Y-%m-%d %H:%M:%S"),
@@ -78,7 +79,7 @@ class exSignParticipances(resource.Resource):
 				}
 			for date_d in date_list:
 				date_ymd = date_d.strftime("%Y.%m.%d")
-				if time2prize.get(date_ymd,None):
+				if time2prize.get(date_ymd, None):
 					returnDataList.append(time2prize[date_ymd])
 				else:
 					returnDataList.append({
@@ -89,7 +90,8 @@ class exSignParticipances(resource.Resource):
 					})
 		else:
 			returnDataList = []
+			pageinfo = None
 		response = create_response(200)
 		response.data.items = returnDataList
-		response.data.pageinfo = paginator.to_dict(pageinfo)
+		response.data.pageinfo = pageinfo
 		return response.get_response()
