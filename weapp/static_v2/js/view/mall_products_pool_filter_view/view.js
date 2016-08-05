@@ -30,6 +30,7 @@ W.view.mall.ProductsPoolFilterView = Backbone.View.extend({
         $('#name').val('');
         $('#supplier').val('');
         $('#status').val('-1');
+        $('#supplier_type').val('-1');
     },
 
     // 获取条件数据
@@ -46,10 +47,14 @@ W.view.mall.ProductsPoolFilterView = Backbone.View.extend({
         //状态
         var status = this.$('#status').val();
 
+        //状态
+        var supplier_type = this.$('#supplier_type').val();
+
         var data = {
             name: name,
             supplier: supplier,
-            status: status
+            status: status,
+            supplier_type:supplier_type
         }
         this.trigger('search', data);
     },

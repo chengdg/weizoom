@@ -452,6 +452,7 @@ class ProductPool(resource.Resource):
     def api_get(request):
         product_name = request.GET.get('name', '')
         supplier_name = request.GET.get('supplier', '')
+        supplier_type = request.GET.get('supplier_type', -1)
         #status = request.GET.get('status', '-1')
 
         # 获取所有供货商的id
@@ -469,13 +470,27 @@ class ProductPool(resource.Resource):
         product_ids = [pool.product_id for pool in product_pool]
         products = models.Product.objects.filter(id__in=product_ids)
 
+        if int(supplier_type) != -1 or supplier_name:
+            params = {}
+            params['owner_id'] = manager_user_profile.user_id
+            if int(supplier_type) != -1:
+                params['type'] = int(supplier_type)
 
-        if supplier_name:
-            supplier_ids = [s.id for s in models.Supplier.objects.filter(owner_id=manager_user_profile.user_id, name__contains=supplier_name)]
+            if supplier_name:
+                params['name__contains'] = supplier_name
+
+            supplier_ids = [s.id for s in models.Supplier.objects.filter(**params)]
             if supplier_ids:
                 products = products.filter(supplier__in=supplier_ids)
             else:
                 products = []
+
+        # if supplier_name:
+        #     supplier_ids = [s.id for s in models.Supplier.objects.filter(owner_id=manager_user_profile.user_id, name__contains=supplier_name)]
+        #     if supplier_ids:
+        #         products = products.filter(supplier__in=supplier_ids)
+        #     else:
+        #         products = []
         # 筛选出所有商品
         if product_name and products:
             products = products.filter(name__contains=product_name)
