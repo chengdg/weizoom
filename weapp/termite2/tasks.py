@@ -22,28 +22,28 @@ def purge_webapp_page_from_varnish_cache(self, woid, project_id=0):
         if project_id == 0:
             #首先清理首页varnish
             home_project = webapp_models.Project.objects.filter(owner=woid, is_active=True)[0]
-            url = "http://{}/termite2/webapp_page/?workspace_id=home_page&webapp_owner_id={}&workspace_id={}&project_id=0".format(settings.DOMAIN, woid,home_project.workspace_id)
+            url = "http://{}/termite2/webapp_page/?workspace_id=home_page&webapp_owner_id={}&workspace_id={}&project_id=0".format(settings.VARNISH_HOST, woid,home_project.workspace_id)
             url2method[url] = "BAN"
             
 
-            url = "http://{}/termite2/webapp_page/?workspace_id={}&webapp_owner_id={}&project_id=0".format(settings.DOMAIN, home_project.workspace_id, woid)
+            url = "http://{}/termite2/webapp_page/?workspace_id={}&webapp_owner_id={}&project_id=0".format(settings.VARNISH_HOST, home_project.workspace_id, woid)
             url2method[url] = "PURGE"
 
         else:
             project = webapp_models.Project.objects.get(id=project_id)
             if project.is_active:
                 home_project = webapp_models.Project.objects.filter(owner=woid, is_active=True)[0]
-                url = "http://{}/termite2/webapp_page/?workspace_id=home_page&webapp_owner_id={}&workspace_id={}&project_id=0".format(settings.DOMAIN, woid, home_project.workspace_id)
+                url = "http://{}/termite2/webapp_page/?workspace_id=home_page&webapp_owner_id={}&workspace_id={}&project_id=0".format(settings.VARNISH_HOST, woid, home_project.workspace_id)
                 url2method[url] = "PURGE"
              
-            url = "http://{}/termite2/webapp_page/?workspace_id=home_page&project_id={}&webapp_owner_id={}".format(settings.DOMAIN, project.id, woid)
+            url = "http://{}/termite2/webapp_page/?workspace_id=home_page&project_id={}&webapp_owner_id={}".format(settings.VARNISH_HOST, project.id, woid)
             url2method[url] = "PURGE"
           
 
-            url = "http://{}/termite2/webapp_page/?workspace_id=home_page&pwebapp_owner_id={}&roject_id={}".format(settings.DOMAIN,  woid, project.id)
+            url = "http://{}/termite2/webapp_page/?workspace_id=home_page&pwebapp_owner_id={}&roject_id={}".format(settings.VARNISH_HOST,  woid, project.id)
             url2method[url] = "PURGE"
 
-            url = "http://{}/termite2/webapp_page/?workspace_id={}&webapp_owner_id={}&project_id=0".format(settings.DOMAIN, project.workspace_id, woid)
+            url = "http://{}/termite2/webapp_page/?workspace_id={}&webapp_owner_id={}&project_id=0".format(settings.VARNISH_HOST, project.workspace_id, woid)
             url2method[url] = "PURGE"
 
         request_url(url2method)
