@@ -83,10 +83,6 @@ class Scanlottery_prize(resource.Resource):
 			return response.get_response()
 
 		chance = scanlottery.chance / 100.0 #中奖率
-		participants_count = scanlottery.participant_count #所有参与的人数
-		winner_count = scanlottery.winner_count #中奖人数
-		#根据抽奖限制，对比抽奖时间
-		allow_repeat = True if scanlottery.allow_repeat == 'true' else False
 
 		#构造奖项池
 		prize_tank = []
@@ -112,13 +108,6 @@ class Scanlottery_prize(resource.Resource):
 		if len(prize_tank) <= 0:
 			response = create_response(500)
 			response.errMsg = u'奖品已抽光'
-			return response.get_response()
-
-		member_has_record = app_models.ScanlotteryRecord.objects(belong_to=record_id, member_id=member_id, prize_type__in=['integral','coupon','entity'])
-		#如果不能重复中奖，则判断是否之前抽中过
-		if not allow_repeat and member_has_record:
-			response = create_response(500)
-			response.errMsg = u'您已经抽到奖品了,不能重复中奖~'
 			return response.get_response()
 
 		#判定是否中奖

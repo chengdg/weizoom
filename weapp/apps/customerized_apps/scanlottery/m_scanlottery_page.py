@@ -25,18 +25,16 @@ class Mexlottery(resource.Resource):
 		响应GET
 		"""
 		id = request.GET.get('id', '')
-		homepage_img = ''
+		share_page_desc = ''
 		try:
 			scanlottery = app_models.Scanlottery.objects.get(id=id)
-			homepage_img = scanlottery.homepage_image
+			share_page_desc = scanlottery.name
 		except:
 			pass
 
 		member = request.member
 		is_pc = False if member else True
 		thumbnails_url = '/static_v2/img/thumbnails_lottery.png'
-		share_page_desc = ''
-
 
 		c = RequestContext(request, {
 			'record_id': id,
@@ -47,7 +45,6 @@ class Mexlottery(resource.Resource):
 			'isPC': is_pc,
 			'share_img_url': thumbnails_url,
 			'share_page_desc': share_page_desc,
-			'homepage_image': homepage_img
 		})
 		response = render_to_string('scanlottery/templates/webapp/m_scanlottery_page.html', c)
 

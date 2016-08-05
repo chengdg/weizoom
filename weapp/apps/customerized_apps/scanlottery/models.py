@@ -45,11 +45,7 @@ class Scanlottery(models.Document):
 	related_page_id = models.StringField(default="", max_length=100) #termite page的id
 	created_at = models.DateTimeField() #创建时间
 	chance = models.IntField(default=0) #中奖几率
-	allow_repeat = models.StringField(default="true", max_length=10) #是否允许重复中奖
 	prize = models.DynamicField() #每个奖项的奖品数量
-	share_description = models.StringField(default="", max_length=30) #分享说明
-	homepage_image = models.StringField(default="", max_length=256) #首页背景图
-	scanlottery_bg_image = models.StringField(default="", max_length=256)  # 抽奖背景图
 	#证书文存放件路径
 	cert_pem_path = models.StringField(default="", max_length=256) #证书
 	key_pem_path = models.StringField(default="", max_length=256) #证书密钥

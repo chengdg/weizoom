@@ -34,18 +34,6 @@ W.component.appkit.ScanlotteryItem = W.component.Component.extend({
 			displayName: '活动奖励',
 			isUserProperty: true,
 			default: {type:"integral", data:0}
-		},{
-			name: 'image',
-			type: 'image_dialog_select',
-			displayName: '上传图片',
-			isUserProperty: true,
-			isShowCloseButton: true,
-			triggerButton: {nodata:'选择图片', hasdata:'修改'},
-			selectedButton: '选择图片',
-			dialog: 'W.dialog.termite.SelectImagesDialog',
-			dialogParameter: '{"multiSelection": false}',
-			help: '格式：建议jpg.png 尺寸：50*50 不超过1M',
-			default: ''
 		}]
 	}],
 
@@ -68,58 +56,6 @@ W.component.appkit.ScanlotteryItem = W.component.Component.extend({
 					break;
 			}
 			$propertyViewNode.find('input').eq(0).val(bak);
-		},
-		image: function($node, model, value, $propertyViewNode) {
-			var image = {url:''};
-			var data = {type:null};
-			if (value !== '') {
-				data = $.parseJSON(value);
-				image = data.images[0];
-			}
-			model.set({
-				image: image.url
-			}, {silent: true});
-
-			if (data.type === 'newImage') {
-				W.resource.termite2.Image.put({
-					data: image,
-					success: function(data) {
-					},
-					error: function(resp) {
-					}
-				})
-			}
-			var currCid = $propertyViewNode.attr('data-dynamic-cid');
-			var targetClass,alt;
-			switch (currCid){
-				case '4':
-					targetClass = '.xa-lottery-first';
-					alt = '一等奖';
-					break;
-				case '5':
-					targetClass = '.xa-lottery-second';
-					alt = '二等奖';
-					break;
-				case '6':
-					targetClass = '.xa-lottery-third';
-					alt = '三等奖';
-					break;
-				default:
-					targetClass = '.xa-lottery-first';
-					alt = '一等奖';
-					break;
-			}
-
-			var $target = $('#phoneIFrame').contents().find(targetClass);//找到子frame中的相应元素
-			if (value) {
-				//更新propertyView中的图片
-				//$propertyViewNode.find('.propertyGroup_property_dialogSelectField .xa-dynamicComponentControlImgBox').removeClass('xui-hide').find('img').attr('src',image.url);
-				//$propertyViewNode.find('.propertyGroup_property_dialogSelectField .propertyGroup_property_input').find('.xui-i-triggerButton').text('修改');
-				//更新phoneView中的图片
-				//$target.html("<img style='height:50px;width:50px;vertical-align:middle;' src='"+image.url+"' alt='"+alt+"'>");
-				$target.html("<img src='"+image.url+"'>");
-			}
-			this.refresh($node, {refreshPropertyView: true, dynamicComponentId: $propertyViewNode.attr('data-parent-cid')});
 		},
 		prize: function($node, model, value, $propertyViewNode) {
 			var data_cid = $propertyViewNode.attr('data-dynamic-cid');
