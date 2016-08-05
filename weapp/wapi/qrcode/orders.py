@@ -5,10 +5,10 @@ from core import api_resource, paginator
 from market_tools.tools.channel_qrcode.models import ChannelQrcodeSettings, ChannelQrcodeHasMember
 from wapi.decorators import param_required
 from modules.member.models import *
-from mall.models import Order, ORDER_STATUS_SUCCESSED, ORDER_STATUS_REFUNDED, OrderHasProduct, Product, ProductModel,OrderOperationLog
+from mall.models import Order, STATUS2TEXT, OrderHasProduct, Product, ProductModel,OrderOperationLog
 
 
-class QrcodeMember(api_resource.ApiResource):
+class QrcodeOrder(api_resource.ApiResource):
 	"""
 	二维码
 	"""
@@ -42,22 +42,23 @@ class QrcodeMember(api_resource.ApiResource):
 		status = args.get('status')
 		start_date = args.get('start_date', None)
 		end_date = args.get('end_date', None)
-		if status == '-1':
-			filter_data_args["status__in"] = [ORDER_STATUS_SUCCESSED, ORDER_STATUS_REFUNDED]
-		else:
+		is_first_order = int(args.get('is_first_order', '0'))
+		if status != '-1':
 			filter_data_args["status"] = status
 		if start_date and end_date:
 			start_time = start_date + ' 00:00:00'
 			end_time = end_date + ' 23:59:59'
-			order_numbers = [op.order_id for op in OrderOperationLog.objects.filter(action=u'完成',created_at__gte=start_time,created_at__lte=end_time)]
+			order_numbers = [op.order_id for op in OrderOperationLog.objects.filter(created_at__gte=start_time,created_at__lte=end_time)]
 			filter_data_args["order_id__in"] = order_numbers
+		if is_first_order:
+			filter_data_args["is_first_order"] = True
 
 		channel_orders = Order.objects.filter(**filter_data_args).order_by('-created_at')
 
-		#计算总的销售额
-		total_sale_price = 0
-		for order in channel_orders:
-			total_sale_price += order.final_price + order.coupon_money + order.integral_money + order.weizoom_card_money + order.promotion_saved_money + order.edit_money
+		# #计算总的销售额
+		# total_sale_price = 0
+		# for order in channel_orders:
+		# 	total_sale_price += order.final_price + order.coupon_money + order.integral_money + order.weizoom_card_money + order.promotion_saved_money + order.edit_money
 
 		#处理分页
 		count_per_page = int(args.get('count_per_page', '20'))
@@ -151,15 +152,18 @@ class QrcodeMember(api_resource.ApiResource):
 					products.append(order_product)
 			sale_price = channel_order.final_price + channel_order.coupon_money + channel_order.integral_money + channel_order.weizoom_card_money + channel_order.promotion_saved_money + channel_order.edit_money
 			orders.append({
+				"order_id": channel_order.id,
 				"order_number": channel_order.order_id,
+				"is_first_order": channel_order.is_first_order,
 				"member_name": member.username_for_html if member else u'未知',
 				"products": products,
 				"sale_price": u'%.2f' % sale_price,  #销售额
+				"status_text": STATUS2TEXT[channel_order.status],
 				"finished_at": order_number2finished_at.get(channel_order.order_id, channel_order.update_at).strftime('%Y-%m-%d %H:%M:%S')
 			})
 
 		return {
 			'items': orders,
-			'total_sale_price':  u'%.2f' % total_sale_price,
+			# 'total_sale_price':  u'%.2f' % total_sale_price,
 			'pageinfo': paginator.to_dict(pageinfo) if pageinfo else ''
 		}
