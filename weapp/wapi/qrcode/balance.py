@@ -51,7 +51,13 @@ class QrcodeBalance(api_resource.ApiResource):
 		if start_date and end_date:
 			start_time = start_date + ' 00:00:00'
 			end_time = end_date + ' 23:59:59'
-			order_numbers = [op.order_id for op in OrderOperationLog.objects.filter(created_at__gte=start_time,created_at__lte=end_time)]
+			start = time.time()
+
+			# order_numbers = [op.order_id for op in OrderOperationLog.objects.filter(created_at__gte=start_time,created_at__lte=end_time)]
+
+			order_numbers = [op.order_id for op in OrderOperationLog.objects.filter(action__in=[u'完成', u'退款完成'],created_at__gte=start_time,created_at__lte=end_time)]
+			end = time.time()
+			print end - start,"pppppppppp"
 			filter_data_args["order_id__in"] = order_numbers
 
 		channel_orders = Order.objects.filter(**filter_data_args).order_by('-created_at')
