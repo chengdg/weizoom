@@ -34,6 +34,9 @@
           width: 100% !important;
           padding: 10px 10px !important;
         }
+        .propertyGroup_property_dynamicControlField_control:nth-child(3) {
+          display: none;
+        }
         input[value*='等奖']{
             border: none;
         }
@@ -99,7 +102,7 @@
       </div>
     </div>
       <div id="rightPanel" class="fl xui-workbench-rightPanel xui-hide" style="margin-bottom: 90px;"></div>
-        {% if scanlottery and scanlottery.status_text == "进行中"%}<div style="position: absolute;height: 100%;width: 100%"></div>{% endif %}
+{#        {% if scanlottery and scanlottery.status_text == "进行中"%}<div style="position: absolute;height: 100%;width: 100%"></div>{% endif %}#}
       <div class="xui-bottomActionBar xa-stickyBar">
           {% if not scanlottery %}
             <button class="xa-save btn btn-primary">保存</button>

@@ -147,22 +147,22 @@
                             </li>
                         {% endif %}
                     {% endif %}
-                    {% if component.components.2.model.prize_count != '0' %}
-                        {% if component.components.2.model.prize_count != '' %}
-                            <li data_cid="6" >
-                                三等奖:&nbsp;&nbsp;
-                                {% if component.components.2.model.prize.type == 'coupon' %}
-                                    <p>{{component.components.2.model.prize.data.name}}</p>
-                                {% else %}
-                                    {% if component.components.2.model.prize.type == 'integral' %}
-                                        <p>{{component.components.2.model.prize.data}}&nbsp;积分</P>
-                                    {% else %}
-                                        <p>{{component.components.2.model.prize.data}}</P>
-                                    {% endif %}
-                                {% endif %}
-                            </li>
-                        {% endif %}
-                    {% endif %}
+{#                    {% if component.components.2.model.prize_count != '0' %}#}
+{#                        {% if component.components.2.model.prize_count != '' %}#}
+{#                            <li data_cid="6" >#}
+{#                                三等奖:&nbsp;&nbsp;#}
+{#                                {% if component.components.2.model.prize.type == 'coupon' %}#}
+{#                                    <p>{{component.components.2.model.prize.data.name}}</p>#}
+{#                                {% else %}#}
+{#                                    {% if component.components.2.model.prize.type == 'integral' %}#}
+{#                                        <p>{{component.components.2.model.prize.data}}&nbsp;积分</P>#}
+{#                                    {% else %}#}
+{#                                        <p>{{component.components.2.model.prize.data}}</P>#}
+{#                                    {% endif %}#}
+{#                                {% endif %}#}
+{#                            </li>#}
+{#                        {% endif %}#}
+{#                    {% endif %}#}
                 </ul>
             </div>
         </div>
