@@ -106,7 +106,7 @@ class Scanlottery(resource.Resource):
 		data = request_util.get_fields_to_be_save(request)
 		record_id = request.POST['id']
 		update_data = {}
-		update_fields = set(['name', 'start_time', 'end_time', 'expend', 'allow_repeat', 'lottery_code_count', 'delivery', 'chance', 'prize', 'share_description', 'homepage_image', 'exlottery_bg_image'])
+		update_fields = set(['name', 'start_time', 'end_time', 'chance', 'prize'])
 		for key, value in data.items():
 			if key in update_fields:
 				update_data['set__'+key] = value

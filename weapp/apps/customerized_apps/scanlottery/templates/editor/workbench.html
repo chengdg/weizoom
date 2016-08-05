@@ -182,43 +182,6 @@
             pageManagerView.activePage(page);
           }
 
-          W.Broadcaster.on("image_dialog_select:deleteImage", function(options){
-            if(options.anchor == 'items'){
-              var cid = options.cid
-      				var comp = W.component.CID2COMPONENT[cid],
-      					targetClass;
-      				switch (cid){
-      					case '4':
-      						targetClass = '.xa-lottery-first';
-      						break;
-      					case '5':
-      						targetClass = '.xa-lottery-second';
-      						break;
-      					case '6':
-      						targetClass = '.xa-lottery-third';
-      						break;
-      					default:
-      						targetClass = '.xa-lottery-first';
-      						break;
-      				}
-      				var $target = $('#phoneIFrame').contents().find(targetClass);//找到子frame中的相应元素
-      				var defaultPosition = $target.attr('defaultPosition');
-      				$target.html("<span style='background-position:"+ defaultPosition + ";'></span>");
-
-      				comp.model.set({
-      					image: ''
-      				});
-            }else{
-              if(options.anchor == 'homepage_image'){
-                var comp = W.component.CID2COMPONENT[2];
-                comp.model.set({
-                  homepage_image: ''
-                });                
-              }else{
-                $('#phoneIFrame').contents().find('.xa-exlotterydescription').css("background-image","");
-              }
-            }
-		      });
           W.Broadcaster.on('page:rendered', function () {
               if ("{{ exlottery.status_text }}" == "进行中" ){
                   W.getApi().call({
@@ -312,10 +275,6 @@
           var startTime = descriptionModel.get('start_time');
           var endTime = descriptionModel.get('end_time');
           var chance = descriptionModel.get('chance');
-          var allow_repeat = descriptionModel.get('allow_repeat');
-            var share_description = descriptionModel.get('share_description');
-            var homepage_image = descriptionModel.get('homepage_image');
-            var exlottery_bg_image = descriptionModel.get('exlottery_bg_image');
           var relatedPageId = data['project_id'];
             var prizeData = {
                 "一等奖": {
@@ -342,11 +301,7 @@
             "start_time": startTime,
             "end_time": endTime,
             "chance": chance,
-            "allow_repeat": allow_repeat,
-              "prize":JSON.stringify(prizeData),
-              "share_description": share_description,
-              "homepage_image": homepage_image,
-              "exlottery_bg_image": exlottery_bg_image
+              "prize":JSON.stringify(prizeData)
           };
           if (isCreateNewData) {
             var method = 'put';
@@ -424,20 +379,7 @@
                 });
           }
         W.Broadcaster.trigger('designpage:cancel_delete');
-
-          //禁用不限次数选择(临时)，存在高并发bug
-          //if(!$temp_disabled_radio || $temp_disabled_radio.length <= 0){
-          //    $temp_disabled_radio = $("input[value='no_limit']");
-          //    hideNoLimitOption($temp_disabled_radio);
-          //}
       });
-
-        //function hideNoLimitOption($el){
-         //   if(!$temp_disabled_radio || $temp_disabled_radio.length <= 0) return;
-         //   $el = $("input[value='no_limit']");
-         //     $el.parent().after("<span class='radio-mask' data-toggle='tooltip' title='因近期出现个别粉丝违规操作（刷票）的情况，该功能暂停使用！'></span>");
-         //     $('[data-toggle="tooltip"]').tooltip();
-        //}
 
         //初始化中奖率说明dialog
         ensureNS('W.dialog.scanlottery');

@@ -38,26 +38,18 @@ class Mscanlottery(resource.Resource):
 		member = request.member
 		is_pc = False if member else True
 
-		# if not is_pc:
-		# 	#从redis缓存获取静态页面
-		# 	cache_data = GET_CACHE(cache_key)
-		# 	if cache_data:
-		# 		print 'redis---return'
-		# 		return HttpResponse(cache_data)
-
 		try:
 			record = app_models.Scanlottery.objects.get(id=record_id)
-			scanlottery_bg_image = record.scanlottery_bg_image
 		except:
 			c = RequestContext(request,{
 				'is_deleted_data': True
 			})
 			return render_to_response('scanlottery/templates/webapp/m_scanlottery.html', c)
 
-		share_page_desc = record.share_description
+		share_page_desc = record.name
 		activity_status, record = update_scanlottery_status(record)
 
-		project_id = 'new_app:exlottery:%s' % record.related_page_id
+		project_id = 'new_app:scanlottery:%s' % record.related_page_id
 
 		request.GET._mutable = True
 		request.GET.update({"project_id": project_id})
@@ -74,14 +66,13 @@ class Mscanlottery(resource.Resource):
 			'isPC': is_pc,
 			'auth_appid_info': auth_appid_info,
 			'share_page_desc': share_page_desc,
-			'share_img_url': scanlottery_bg_image if scanlottery_bg_image else thumbnails_url,
+			'share_img_url': thumbnails_url,
 			'code': code,
 			'name': name,
 			'phone': phone
 		})
 		response = render_to_string('scanlottery/templates/webapp/m_scanlottery.html', c)
-		# if not is_pc:
-		# 	SET_CACHE(cache_key, response)
+
 		return HttpResponse(response)
 
 
