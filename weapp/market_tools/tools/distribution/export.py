@@ -30,9 +30,9 @@ def get_link_targets(request):
 # 	return None
 
 def get_distribution_link(request):
-	# workspace_template_info = 'webapp_owner_id=%d&project_id=0&workspace_id=market_tool:distribution' % request.user.id
-	# webapp_id = request.user_profile.webapp_id
-	# if CardExchange.objects.filter(webapp_id=webapp_id).count() > 0 and webapp_id:
-	# 	return './?module=market_tool:distribution&model=page&action=get&webapp_id=%s&%s' % (webapp_id, workspace_template_info)
+	workspace_template_info = 'webapp_owner_id=%d&project_id=0&workspace_id=market_tool:distribution' % request.user.id
+	webapp_id = request.user_profile.webapp_id
+	if CardExchange.objects.filter(webapp_id=webapp_id).count() > 0 and webapp_id:
+		return './?module=market_tool:distribution&model=page&action=get&webapp_id=%s&%s' % (webapp_id, workspace_template_info)
 
 	return None
