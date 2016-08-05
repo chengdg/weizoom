@@ -37,7 +37,7 @@ class ScanlotteryParticipances(resource.Resource):
 			'first_nav_name': FIRST_NAV,
 			'second_navs': export.get_promotion_and_apps_second_navs(request),
 			'second_nav_name': export.MALL_APPS_SECOND_NAV,
-            'third_nav_name': export.MALL_APPS_EXLOTTERY_NAV,
+            'third_nav_name': export.MALL_APPS_SCANLOTTERY_NAV,
 			'has_data': has_data,
 			'activity_id': request.GET['id']
 		})

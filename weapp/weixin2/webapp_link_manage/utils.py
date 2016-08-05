@@ -110,7 +110,7 @@ def get_webapp_link_menu_objectes(request):
 				'type': 'scanlottery',
 				'add_btn_title': '新建扫码抽奖',
 				'add_link': '/apps/scanlottery/scanlottery/',
-				'users': ['jobs', 'ceshi01']
+				'users': ['jobs', 'ceshi01', 'sudao']
 			},
 			# {
 			# 	'name': '红包',
