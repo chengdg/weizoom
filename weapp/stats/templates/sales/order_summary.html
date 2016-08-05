@@ -449,6 +449,12 @@
 				name: '翼支付'
 			});
 		}
+		if(stats_data.kangou_amount > 0) {
+			data_array.push({
+				value: stats_data.kangou_amount.toFixed(2),
+				name: '看购支付'
+			});
+		}
 		if(data_array.length == 0){
 			data_array.push({});
 		}
@@ -457,7 +463,7 @@
 		var username = "{{request.manager.username}}";
 		var legendData = [ '支付宝', '微信支付', '货到付款', '微众卡支付' ];
 		if(username === 'weshop') {
-			legendData = [ '支付宝', '微信支付', '货到付款', '微众卡支付', '翼支付' ];
+			legendData = [ '支付宝', '微信支付', '货到付款', '微众卡支付', '翼支付', '看购支付' ];
 		}
 		option = {
 				tooltip : {
