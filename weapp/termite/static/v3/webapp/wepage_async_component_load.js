@@ -64,6 +64,17 @@ var AsyncComponentLoadView = BackboneLite.View.extend({
         });
     },
 
+    sortByIds: function(products, ids) {
+        var objIds = {};
+        ids.map(function(id, idx){
+            objIds[id] = idx;
+        });
+        products.map(function(product){
+            product['index'] = objIds[product['id']];
+        });
+        return _.sortBy(products, 'index');
+    },
+
     sendApi: function(deferred) {
         var _this = this;
         var product_ids = this.componentModel['items'];
@@ -81,6 +92,7 @@ var AsyncComponentLoadView = BackboneLite.View.extend({
                 product_ids: product_ids
             },
             success: function(data) {
+                data.products = _this.sortByIds(data.products, product_ids);
                 data['componentIndex'] = componentIndex;
                 deferred.resolve(data);
             },
@@ -132,6 +144,7 @@ $(function(){
     templateProductList = Handlebars.compile(productListTemplate);
 
     // 初始化view    
+    // 目前只针对商品模块
     var initComponent = function(component){
         var $div = component;
         var componentType = $div.attr('data-type');
