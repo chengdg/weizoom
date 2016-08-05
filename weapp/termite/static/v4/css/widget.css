@@ -886,7 +886,7 @@ ul.wui-relatelink li h3{
 .wui-productlist .wui-block-type1 a[class^="wui-inner-box"] .wui-inner-pic,
 .wui-product .wui-block-type2 a[class^="wui-inner-box"] .wui-inner-pic,
 .wui-productlist .wui-block-type2 a[class^="wui-inner-box"] .wui-inner-pic{
-    height: 135px;
+    height: 150px;
     line-height: 188px;
 }
 .wui-product .wui-block-type1 a[class^="wui-inner-box"] .wui-inner-pic img,
