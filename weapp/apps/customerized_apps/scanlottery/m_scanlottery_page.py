@@ -50,6 +50,7 @@ class Mexlottery(resource.Resource):
 			'isPC': is_pc,
 			'share_img_url': thumbnails_url,
 			'share_page_desc': share_page_desc,
+			'is_hide_weixin_option_menu': True
 		})
 		response = render_to_string('scanlottery/templates/webapp/m_scanlottery_page.html', c)
 

@@ -69,7 +69,8 @@ class Mscanlottery(resource.Resource):
 			'share_img_url': thumbnails_url,
 			'code': code,
 			'name': name,
-			'phone': phone
+			'phone': phone,
+			'is_hide_weixin_option_menu': True
 		})
 		response = render_to_string('scanlottery/templates/webapp/m_scanlottery.html', c)
 
