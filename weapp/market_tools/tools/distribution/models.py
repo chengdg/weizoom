@@ -38,17 +38,45 @@ class ChannelDistributionQrcodeSettings(models.Model):
 class ChannelDistributionQrcodeHasMember(models.Model):
 	"""
 	渠道分销扫码的会员,关注会有奖励,重复扫码没有奖励
-	每次
 	"""
-	channel_qrcode = models.ForeignKey(ChannelDistributionQrcodeSettings)
-	member = models.ForeignKey(Member)
-	is_new = models.BooleanField(default=True)  # 新关注 ?
-	cost_money = models.DecimalField(max_digits=65, decimal_places=2, default=0)  # 花费时间
-	# 带来的佣金
-	# 购买次数
-
-
+	channel_qrcode_id = models.IntegerField()  # 渠道分销id
+	member_id = models.IntegerField()  # 渠道分销商下的会员
+	# is_new = models.BooleanField(default=True)  # 新关注 ?
+	cost_money = models.DecimalField(max_digits=65, decimal_places=2, default=0)  # 消费金额
+	commission = models.DecimalField(max_digits=65, decimal_places=2, default=0)  # 带来的佣金
+	buy_times = models.IntegerField(default=0)  # 购买次数
 	created_at = models.DateTimeField(auto_now_add=True)  # 添加时间
 
 	class Meta:
 		db_table = 'market_tool_channel_distribution_qrcode_has_member'
+
+
+class ChannelDistributionDetail(models.Model):
+	"""
+	渠道分销明细表
+	"""
+	channel_qrcode_id = models.IntegerField()  # 渠道分销id
+	money = models.DecimalField(max_digits=65, decimal_places=2, default=0)  # 操作金额 正为收入,负为提现
+	member_id = models.IntegerField()  # 对应的会员id
+	last_extract_time = models.DateTimeField(blank=True, null=True)  # 上次提现时间
+	created_at = models.DateTimeField(auto_now_add=True)  # 添加时间
+	effect_status = models.BooleanField(default=False)  # 生效状态
+	order_id = models.IntegerField(default=0)  # 订单id
+	effect_time = models.DateTimeField(blank=True, null=True)  # 生效时间
+
+	class Meta:
+		db_table = 'market_tool_channel_distribution_detail'
+
+
+class ChannelDistributionEnchashmentProcess(models.Model):
+	"""
+	取现进度记录
+	"""
+	channel_qrcode_id = models.IntegerField()  # 渠道分销id
+	member_id = models.IntegerField()  # 对应的会员id
+	step = models.IntegerField()  # 取现进度
+	money = models.DecimalField(max_digits=65, decimal_places=2, default=2)  # 提取的金额
+	created_at = models.DateTimeField(auto_now_add=True)  # 创建时间
+
+	class Meta(object):
+		db_table = 'market_tool_channel_distribution_enchashment_process'

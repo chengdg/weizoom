@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from weixin.mp_decorators import mp_required
 from django.shortcuts import render_to_response
 from django.conf import settings
-
+from django.http import HttpResponseRedirect
 from weixin2 import export
 from core.exceptionutil import unicode_full_stack
 from core import resource
@@ -997,7 +997,7 @@ class ChannelDistributions(resource.Resource):
 		for member in members:
 			member_dict[member.id] = member.username_for_title
 
-		qrcodes = ChannelDistributionQrcodeSettings.objects.all()
+		qrcodes = ChannelDistributionQrcodeSettings.objects.filter(owner=request.user)
 		items = []
 		for qrcode in qrcodes:
 			qrcode_dict = {}
@@ -1007,11 +1007,10 @@ class ChannelDistributions(resource.Resource):
 			qrcode_dict['bing_member_count'] = qrcode.bing_member_count  # 关注数量
 			qrcode_dict['total_transaction_volume'] = str(qrcode.total_transaction_volume)  # 总交易额
 			qrcode_dict['total_return'] = str(qrcode.total_return)  # 总返现额
-			# qrcode_dict['award_prize_info'] = qrcode.award_prize_info  # 关注奖励
 			qrcode_dict['award_prize_info'] = format_award_prize_info(qrcode.award_prize_info)  # 关注奖励 TODO
 			qrcode_dict['distribution_rewards'] = str(distribution_rewards_status[qrcode.distribution_rewards])  # 分销奖励
 			qrcode_dict['created_at'] = str(qrcode.created_at)  # 创建时间
-			qrcode_dict['clearing'] = ''  # 会员结算 TODO
+			qrcode_dict['clearing'] = ''  # 会员结算 TODO 有新的提现请求显示new
 			# qrcode_dict['']
 			items.append(qrcode_dict)
 
@@ -1029,9 +1028,7 @@ class ChannelDistributions(resource.Resource):
 		return response.get_response()
 
 
-
-
-class ChannelDistribution(resource.Resource):
+class ChannelDistribution(resource.Resource): # TODO 关联会员不可以有两个码 ,关联过推广码的也不能关联这个码了
 	app = 'new_weixin'
 	resource = 'channel_distribution'
 
@@ -1042,9 +1039,10 @@ class ChannelDistribution(resource.Resource):
 		qrcode = None
 		jsons = []
 		member_name = ''  # 绑定昵称
+
 		if setting_id > 0:
 			qrcode = ChannelDistributionQrcodeSettings.objects.get(id=setting_id)
-			if qrcode:
+			if qrcode and (qrcode.owner_id == request.user.id): # 如果有二维码,
 				# 获取优惠券剩余个数
 				award_prize_info = qrcode.award_prize_info
 				info_dict = json.loads(award_prize_info)
@@ -1080,13 +1078,14 @@ class ChannelDistribution(resource.Resource):
 				}]
 				member = Member.objects.get(id=qrcode.bing_member_id)
 				member_name = member.username_for_title
-
+			else:
+				return HttpResponseRedirect('/new_weixin/channel_distributions/')  # 阻止非该二维码所有者访问
 
 		webapp_id = request.user_profile.webapp_id
 		groups = MemberGrade.get_all_grades_list(webapp_id)
 		member_tags = MemberTag.get_member_tags(webapp_id)
 		edit_qrcode = None
-		#调整排序，将为分组放在最前面
+		# 调整排序，将为分组放在最前面
 		tags = []
 		for tag in member_tags:
 			if tag.name == '未分组':
@@ -1199,21 +1198,27 @@ class ChannelDistribution(resource.Resource):
 		"""更新渠道分销二维码"""
 
 		qrcode_id = request.POST.get('qrcode_id', None)
-		group_id = request.POST['group_id']
-		prize_info = request.POST['prize_info']
-		reply_type = request.POST['reply_type']
-		reply_detail = request.POST['reply_detail']
-		reply_material_id = request.POST['reply_material_id']
-		bing_member_title =request.POST['bing_member_title']
 
-		ChannelDistributionQrcodeSettings.objects.filter(id=qrcode_id).update(
-			bing_member_title=bing_member_title,
-			group_id = group_id,
-			award_prize_info = prize_info,
-			reply_type = reply_type,
-			reply_detail = reply_detail,
-			reply_material_id = reply_material_id
-		)
+		# 如果修改者操作的二维码不是自己的 不执行任何操作
+		if ChannelDistributionQrcodeSettings.objects.filter(id=qrcode_id, owner_id=request.user.id).exists():
+			group_id = request.POST['group_id']
+			prize_info = request.POST['prize_info']
+			reply_type = request.POST['reply_type']
+			reply_detail = request.POST['reply_detail']
+			reply_material_id = request.POST['reply_material_id']
+			bing_member_title =request.POST['bing_member_title']
 
-		response = create_response(200)
-		return response.get_response()
+			ChannelDistributionQrcodeSettings.objects.filter(id=qrcode_id).update(
+				bing_member_title = bing_member_title,
+				group_id = group_id,
+				award_prize_info = prize_info,
+				reply_type = reply_type,
+				reply_detail = reply_detail,
+				reply_material_id = reply_material_id
+			)
+
+			response = create_response(200)
+			return response.get_response()
+		else:
+			response = create_response(400)
+			return response.get_response()
