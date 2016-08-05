@@ -12,18 +12,18 @@ template_path_items = os.path.dirname(__file__).split(os.sep)
 TEMPLATE_DIR = '%s/templates' % template_path_items[-1]
 
 COUNT_PER_PAGE = 15
-# def get_page(request):
-# 	"""
-# 	手机端推广分销页面
-# 	"""
-# 	webapp_id = request.user_profile.webapp_id
-# 	member_id = request.member.id
-# 	c = RequestContext(request, {
+def get_page(request):
+	"""
+	手机端推广分销页面
+	"""
+	webapp_id = request.user_profile.webapp_id
+	member_id = request.member.id
+	c = RequestContext(request, {
 
-# 	})
+	})
 
 
-# 	return render_to_response('%s/distribution/webapp/xxx.html' % TEMPLATE_DIR, c)
+	return render_to_response('%s/distribution/webapp/m_process.html' % TEMPLATE_DIR, c)
 
 def get(request):
 	"""
