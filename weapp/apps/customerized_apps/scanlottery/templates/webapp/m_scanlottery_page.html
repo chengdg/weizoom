@@ -2,19 +2,20 @@
 
 {% block css %}
 <style type="text/css">
-    html,body{
+    html,body {
         height: 100%;
         font-family: "黑体";
     }
-    .wui-scanlottery-page{
-        position: relative;
-        height: 100%;
-        background-size: 100% 100%;
-    }
-    .wui-hidden{
+    .wui-hidden {
         display: none;
     }
-    .wui-scanlottery-container{
+    .wui-scanlottery-page {
+        position: relative;
+        height: 100%;
+        background: url();
+        background-size: 100% 100%;
+    }
+    .wui-scanlottery-container {
         width: 70%;
         margin: 0 auto;
         position: relative;
@@ -22,11 +23,11 @@
         text-align: center;
         font-size: 0;
     }
-    .wui-scanlottery-container > div{
+    .wui-scanlottery-container > div {
         text-align: center;
         margin-bottom: 20px;
     }
-    .wui-scanlottery-btn{
+    .wui-scanlottery-container .wui-scanlottery-btn {
         border:none;
         border-radius: .2rem;
         height: 2.5rem;
@@ -39,12 +40,12 @@
         box-shadow: 0 2px 0px #ac0101;
         font-family: "黑体";
     }  
-    .wui-again{
+    .wui-scanlottery-container .wui-again {
         margin-right: 10%;
         background: -webkit-gradient(linear, left top, left bottom, from(#81a8cb), to(#4477a1) );
         box-shadow: 0 2px 0px #1f6377;
     }
-    .wui-scanlottery-container input{
+    .wui-scanlottery-container input {
         border: 1px solid #dbdbdb;
         box-sizing: border-box;
         font-size: 1rem;
@@ -56,17 +57,38 @@
         padding: 0 0 0 .3rem;
         font-family: "黑体";
     }
+    .wui-scanlottery-container .wui-verify-input {
+        width: 67%;
+        margin-right: 3%;
+    }
+    .wui-scanlottery-container .wui-verify-container {
+        width: 30%;
+        height: 2.4rem;
+        display: inline-block;
+        vertical-align: top;
+    }
+    .wui-scanlottery-container .wui-verify-refresh {
+        width: 100%;
+        height: 100%;
+        pointer-events: none; 
+    }
 </style>
 {% endblock %}
 
 {% block content-panel %}
-<div class="wui-scanlottery-page" style="background-image: url({{homepage_image}});">
+<div class="wui-scanlottery-page">
     <div class="wui-scanlottery-container wui-hidden wa-scanlottery-container">
         <div> 
             <input type="text" placeholder="请输入姓名" class="wui-excode-input wa-name">
         </div>
         <div> 
             <input type="text" placeholder="请输入手机号码" class="wui-phone-input wa-phone" maxlength="11">
+        </div>
+        <div>
+            <input type="text" placeholder="验证码" class="wui-verify-input wa-verify-input" maxlength="4">
+            <div class="wui-verify-container wa-verify-container">
+                <img class="codeimg wui-verify-refresh" src="/m/apps/scanlottery/api/m_captcha/?webapp_owner_id={{ request.webapp_owner_id}}"/>
+            </div>
         </div>
         <button type="button" class="wui-again wa-again wui-scanlottery-btn">重新扫码</button>
         <button type="button" class="wui-submit wa-submit wui-scanlottery-btn">开始抽奖</button>
@@ -77,25 +99,54 @@
 {% block js %}
 <script type="text/javascript">
     $(function(){
+        //重置验证码
+        $('.wa-verify-container').click(function(){
+            $(this).find('img').attr('src','/m/apps/scanlottery/api/m_captcha/?webapp_owner_id={{ request.webapp_owner_id}}&nocache='+Math.random());
+        });
+
+        //重新扫码
+        $('.wa-again').on('click', scanQrcode);
+        
+        //立即抽奖
         $('.wa-submit').on('click', function(){
             var name = $('.wa-name').val();
             var phone = $('.wa-phone').val();
-            if(!name || !phone){
-                wuiAlert('请填写姓名和手机号~');
+            var verify_code = $.trim($('.wa-verify-input').val());
+            if(!name){
+                wuiAlert('请输入姓名');
                 return;
-            }
-            if(!/^0{0,1}(13[0-9]|15[0-9]|17[0-9]|18[0-9])[0-9]{8}$/g.test(phone)){
-                wuiAlert('请输入正确的手机号');
-                return false;
-            }
-            if(scanCode.length != 20 || !/^\d+$/g.test(scanCode)){
+            }else if(!phone){
+                wuiAlert('请输入手机号');
+                return;
+            }else if(!verify_code){
+                wuiAlert('请填写验证码');
+                return;               
+            }else if(!/^0{0,1}(13[0-9]|15[0-9]|17[0-9]|18[0-9])[0-9]{8}$/g.test(phone)){
+                wuiAlert('请填写正确的手机号码');
+                return;
+            }else if(scanCode.length != 20 || !/^\d+$/g.test(scanCode)){
                 wuiAlert('您的二维码有误');
-                return false;
+                return;
+            }else{
+                W.getApi().call({
+                    app: 'm/apps/scanlottery',
+                    resource: 'm_scanlottery_page',
+                    method: 'get',
+                    args: {
+                        webapp_owner_id: W.webappOwnerId,
+                        id: W.appRecordId,
+                        verify_code: verify_code
+                    },
+                    success: function(data){
+                        var link = '/m/apps/scanlottery/m_scanlottery/?webapp_owner_id=' + W.webappOwnerId + '&name=' + name + '&phone=' + phone + '&scan_code=' + scanCode + '&id=' + W.recordId;
+                        window.location.href = link;
+                    },
+                    error: function(resp){
+                        wuiAlert(resp.errMsg);
+                    }
+                });
             }
-            window.location.href = '/m/apps/scanlottery/m_scanlottery/?webapp_owner_id=' + W.webappOwnerId + '&name=' + name + '&phone=' + phone + '&scan_code=' + scanCode + '&id=' + W.recordId;
-        });
-
-        $('.wa-again').on('click', scanQrcode);
+        });  
     });
     var scanCode = '';
     loadingStatus(true);
