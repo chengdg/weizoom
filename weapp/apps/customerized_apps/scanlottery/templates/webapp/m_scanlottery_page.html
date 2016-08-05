@@ -5,6 +5,7 @@
     html,body {
         height: 100%;
         font-family: "黑体";
+        background: #92191e!important;
     }
     .wui-hidden {
         display: none;
@@ -12,14 +13,15 @@
     .wui-scanlottery-page {
         position: relative;
         height: 100%;
-        background: url();
-        background-size: 100% 100%;
+        background: url(/termite_static/img/component/scanlottery/m_lottery_bg.jpg) no-repeat;
+        background-size: 100% auto;
+    }
+    .wui-scanlottery-title {
+        height: 13rem;
     }
     .wui-scanlottery-container {
         width: 70%;
         margin: 0 auto;
-        position: relative;
-        top: 50%;
         text-align: center;
         font-size: 0;
     }
@@ -29,54 +31,68 @@
     }
     .wui-scanlottery-container .wui-scanlottery-btn {
         border:none;
-        border-radius: .2rem;
-        height: 2.5rem;
-        line-height: 2.4rem;
+        border-radius: .1rem;
+        height: 3rem;
+        line-height: 3rem;
         color: #fff;
-        width: 45%;
-        font-size: 1rem;
+        width: 70%;
+        font-size: 1.1rem;
         outline: none;
-        background: -webkit-gradient(linear, left top, left bottom, from(#E84B6E), to(#D82741) );
-        box-shadow: 0 2px 0px #ac0101;
+        background: #ff7800;
         font-family: "黑体";
+        margin-top: 10px;
     }  
-    .wui-scanlottery-container .wui-again {
-        margin-right: 10%;
-        background: -webkit-gradient(linear, left top, left bottom, from(#81a8cb), to(#4477a1) );
-        box-shadow: 0 2px 0px #1f6377;
-    }
     .wui-scanlottery-container input {
         border: 1px solid #dbdbdb;
         box-sizing: border-box;
-        font-size: 1rem;
-        height: 2.4rem;
-        line-height: 2.4rem;
-        border-radius: .2rem;
+        font-size: 1.1rem;
+        height: 3rem;
+        line-height: 3rem;
+        border-radius: .3rem;
         width: 100%;
         outline: none;
-        padding: 0 0 0 .3rem;
+        padding: 0 0 0 1rem;
         font-family: "黑体";
     }
     .wui-scanlottery-container .wui-verify-input {
-        width: 67%;
-        margin-right: 3%;
+        width: 37%;
+        margin-right: 5%;
     }
     .wui-scanlottery-container .wui-verify-container {
-        width: 30%;
-        height: 2.4rem;
+        width: 28%;
+        height: 3rem;
         display: inline-block;
         vertical-align: top;
     }
     .wui-scanlottery-container .wui-verify-refresh {
         width: 100%;
-        height: 100%;
+        height: 2.4rem;
+        margin-top: 5px;
         pointer-events: none; 
+    }
+    .wui-scanlottery-container > p {
+        margin-top: 2rem;
+        font-size: 1rem;
+        text-align: left;
+        color: #ed6b04;
+    }
+    .wui-verify-btn {
+        font-size: 1.1rem;
+        color: #3992ff;
+        display: inline-block;
+        width: 30%;
+    }
+    @media screen and (max-width: 320px) {
+        .wui-verify-btn {
+            font-size: 1rem;
+        }          
     }
 </style>
 {% endblock %}
 
 {% block content-panel %}
 <div class="wui-scanlottery-page">
+    <div class="wui-scanlottery-title"></div>
     <div class="wui-scanlottery-container wui-hidden wa-scanlottery-container">
         <div> 
             <input type="text" placeholder="请输入姓名" class="wui-excode-input wa-name">
@@ -86,12 +102,13 @@
         </div>
         <div>
             <input type="text" placeholder="验证码" class="wui-verify-input wa-verify-input" maxlength="4">
-            <div class="wui-verify-container wa-verify-container">
+            <div class="wui-verify-container">
                 <img class="codeimg wui-verify-refresh" src="/m/apps/scanlottery/api/m_captcha/?webapp_owner_id={{ request.webapp_owner_id}}"/>
             </div>
+            <span class="wa-verify-btn wui-verify-btn">点击刷新</span>
         </div>
-        <button type="button" class="wui-again wa-again wui-scanlottery-btn">重新扫码</button>
-        <button type="button" class="wui-submit wa-submit wui-scanlottery-btn">开始抽奖</button>
+        <button type="button" class="wui-submit wa-submit wui-scanlottery-btn">立即抽奖</button>
+        <p>注：填写真实信息，参与抽奖，否则您的奖品将无法获取哦。</p>
     </div>
 </div>
 {% endblock %}
@@ -100,12 +117,9 @@
 <script type="text/javascript">
     $(function(){
         //重置验证码
-        $('.wa-verify-container').click(function(){
-            $(this).find('img').attr('src','/m/apps/scanlottery/api/m_captcha/?webapp_owner_id={{ request.webapp_owner_id}}&nocache='+Math.random());
+        $('.wa-verify-btn').click(function(){
+            $('.codeimg').attr('src','/m/apps/scanlottery/api/m_captcha/?webapp_owner_id={{ request.webapp_owner_id}}&nocache='+Math.random());
         });
-
-        //重新扫码
-        $('.wa-again').on('click', scanQrcode);
         
         //立即抽奖
         $('.wa-submit').on('click', function(){
