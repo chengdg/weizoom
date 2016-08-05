@@ -3,7 +3,7 @@
 from weixin.message.handler.message_handler import MessageHandler
 from apps.customerized_apps.rebate import models as rebate_models
 from market_tools.tools.distribution.models import ChannelDistributionQrcodeSettings, ChannelDistributionQrcodeHasMember
-
+from modules.member.models import MemberTag, MemberHasTag
 
 class ChannelDistributionQrcodeHandler(MessageHandler):
 
@@ -38,11 +38,6 @@ class ChannelDistributionQrcodeHandler(MessageHandler):
 		if hasattr(context, 'is_member_qrcode') and (context.is_member_qrcode is True):
 			return None
 
-		# #检查是否返利活动中有这个
-		# if rebate_models.Rebate.objects(ticket=ticket, status=rebate_models.STATUS_RUNNING):
-		# 	print 'apps.Rebate has the same ticket: %s, so let rebate handler handle it' % ticket
-		# 	return None
-
 		# 一 将信息添加到ChannelDistributionQrcodeHasMember中
 		# 二 将扫码的会员添加到新分组中
 		channel_distribution_qrcode_has_member = ChannelDistributionQrcodeHasMember.objects.filter(member_id=member)
@@ -55,9 +50,11 @@ class ChannelDistributionQrcodeHandler(MessageHandler):
 					channel_qrcode_id = qrcode[0].id,
 					member_id = member,
 				)
+				# 得到需要绑定的member分组
+				group_id = qrcode[0].group_id
+				# 添加到得到的分组
+				MemberHasTag.add_tag_member_relation(member, [group_id])
 
 			else:
 				return None
-
-
 		return None
