@@ -64,7 +64,7 @@ class SignParticipances(resource.Resource):
 			for item in items:
 				prize_str = u''
 				if item['prize'].get('integral', None):
-					prize_str += u'积分+%s<br/>' % str(t['prize']['integral'])
+					prize_str += u'积分+%s<br/>' % str(item['prize']['integral'])
 				if item['prize'].get('coupon', None):
 					if item['prize']['coupon']['id']:
 						prize_str += u'%s<br/>' % coupon_id2name.get(item['prize']['coupon']['id'],'')
