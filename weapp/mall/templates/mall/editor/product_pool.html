@@ -71,6 +71,7 @@
                 <th width="100">供货商</th>
                 <th width="55">商品价格</th>
                 <th width="50">库存</th>
+                <th width="50">扣点类型</th>
                 <th width="90">操作</th>
             </tr>
         </thead>
@@ -113,6 +114,7 @@
                             <div class="xa-priceText">${product.price}</div>
                         {{/if}}
                     </td>
+                    
                     <td>
                         {{if !product.is_use_custom_model}}
                             {{if product.stocks == 0}}
@@ -120,6 +122,12 @@
                             {{else}}
                                 ${product.stocks}
                             {{/if}}
+                        {{/if}}
+                    </td>
+                    <td>
+                        {{if product.supplier_type == 0}}
+                            首月55分成
+                        {{else}}
                         {{/if}}
                     </td>
                     <td>

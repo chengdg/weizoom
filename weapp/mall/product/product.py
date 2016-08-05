@@ -539,8 +539,11 @@ class ProductPool(resource.Resource):
             manager_product_user_id = UserProfile.objects.filter(webapp_type=2)[0].user_id
 
         supplier_ids2name = {}
+        supplier_ids2supplier = {}
         if manager_product_user_id:
-            supplier_ids2name = dict([(s.id, s.name) for s in models.Supplier.objects.filter(owner_id=manager_product_user_id)])
+            suppliers = models.Supplier.objects.filter(owner_id=manager_product_user_id)
+            supplier_ids2name = dict([(s.id, s.name) for s in suppliers])
+            supplier_ids2supplier = dict([(s.id, s) for s in suppliers])
 
         # 对应商品营销活动信息
         # product_ids = [product['id'] for product in products]
@@ -575,7 +578,14 @@ class ProductPool(resource.Resource):
             # print ">>>>>>>>>>>>>>price", product
             # product = product.to_dict()zai
             # product.fill_standard_model()
-
+            if supplier_ids2supplier:
+                supplier = supplier_ids2supplier.get(product.supplier, None)
+                if supplier:
+                    supplier_type = supplier.type
+                else:
+                    supplier_type = -1
+            else:
+                supplier_type = -1
 
             items.append({
                 'id': product.id,
@@ -590,7 +600,8 @@ class ProductPool(resource.Resource):
                 'price':product.price,
                 'is_use_custom_model': product.is_use_custom_model,
                 'models': product.models[1:],
-                'display_price_range': product.display_price_range
+                'display_price_range': product.display_price_range,
+                'supplier_type': supplier_type
                # 'sync_time': mall_product_id2relation[product['id']].sync_time.strftime('%Y-%m-%d %H:%M') if mall_product_id2relation.has_key(product['id']) else ''
             })
 
