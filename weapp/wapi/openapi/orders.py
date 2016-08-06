@@ -110,10 +110,10 @@ class Orders(api_resource.ApiResource):
 						return_model['name'] = model['name']
 						product_model_properties.append(return_model)
 				product = {
-					'total_price':inner_product['total_price'] if 'total_price' in inner_product else inner_product['price']*inner_product['count'] ,
+					# 'total_price':inner_product['total_price'] if 'total_price' in inner_product else inner_product['price']*inner_product['count'] ,
 					'goods_pic':inner_product['thumbnails_url'],
 					'count':inner_product['count'],
-					'unit_price':inner_product['price'],
+					# 'unit_price':inner_product['price'],
 					'goods_name':inner_product['name'],
 					'goods_number':inner_product['user_code'],
 					'custom_model_properties': product_model_properties
@@ -123,8 +123,8 @@ class Orders(api_resource.ApiResource):
 			items.append({
 				'order_id': order.order_id,
 				'order_status': order.status,
-				'order_price': float(
-					'%.2f' % order.final_price) if order.pay_interface_type != 9 or order.status == 5 else 0,
+				# 'order_price': float(
+				# 	'%.2f' % order.final_price) if order.pay_interface_type != 9 or order.status == 5 else 0,
 				"express_info": {
 					"logistics_number": order.express_number,
 					"buyer_message": order.customer_message,
@@ -144,11 +144,12 @@ class Orders(api_resource.ApiResource):
 				'pay_mode': order.pay_interface_type,
 				'store_message': order.remark,
 				'freight': '%.2f' % order.postage,
-				'p_price': float(models.Order.get_order_has_price_number(order)) + float(order.postage) - float(
-					order.final_price) - float(order.weizoom_card_money),
-				'weizoom_card_money': float('%.2f' % order.weizoom_card_money),
-				'cash': '%.2f' % (order.final_price + order.weizoom_card_money),
-				'products':products_result
+				# 'p_price': float(models.Order.get_order_has_price_number(order)) + float(order.postage) - float(
+				# 	order.final_price) - float(order.weizoom_card_money),
+				# 'weizoom_card_money': float('%.2f' % order.weizoom_card_money),
+				# 'cash': '%.2f' % (order.final_price + order.weizoom_card_money),
+				'products':products_result,
+				'order_total_price': float(models.Order.get_order_has_price_number(order)) + float(order.postage)
 
 			})
 		return items,pageinfo,order_return_count

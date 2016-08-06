@@ -19,6 +19,10 @@ class OrderShip(api_resource.ApiResource):
 		"""
 
 		"""
+
+		user = args['user']
+		webapp_id = user.get_profile().webapp_id
+
 		order_id = args['order_id']
 		logistics_name = args['logistics_name']
 		logistics_number = args['logistics_number']
@@ -28,7 +32,7 @@ class OrderShip(api_resource.ApiResource):
 			if logistics_name == express['value']:
 				is_100 = True
 		is_update_express = False
-		order = models.Order.objects.filter(order_id=order_id)
+		order = models.Order.objects.filter(order_id=order_id, webapp_id=webapp_id)
 		if len(order):
 			order = order[0]
 			err_msg = None
