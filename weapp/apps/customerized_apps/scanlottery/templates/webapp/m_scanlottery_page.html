@@ -96,9 +96,9 @@
 {% endblock %}
 
 {% block content-panel %}
-<div class="wui-scanlottery-page">
+<div class="wui-scanlottery-page wui-hidden ">
     <div class="wui-scanlottery-title"></div>
-    <div class="wui-scanlottery-container wui-hidden wa-scanlottery-container">
+    <div class="wui-scanlottery-container wa-scanlottery-container">
         <div> 
             <input type="text" placeholder="请输入姓名" class="wui-excode-input wa-name">
         </div>
@@ -116,14 +116,31 @@
         <p>注：填写真实信息，参与抽奖，否则您的奖品将无法获取哦。</p>
     </div>
 </div>
+<div class="wui-guide wa-guide">
+    <h1 class="wui-i-title">扫一扫，码上有好礼</h1>
+    <button type="button" class="wui-i-scanBtn wa-scanBtn">点我扫码</button>
+    <div>
+        <p>注：</p>
+        <p>1、点击扫码按钮，将商品上方的防伪码放入识别框内，识别后参与抽奖。</p>
+        <p>2、一个防伪码只有一次抽奖机会，100%中奖。</p>
+        <p>3、抽奖完成后在个人中心可查看奖品内容，抽奖的信息要真实有效才能领到奖品哦。</p>
+    </div>
+</div>
 {% endblock %}
 
 {% block js %}
 <script type="text/javascript">
+    var scanCode = '';
+
     $(function(){
         //重置验证码
         $('.wa-verify-btn').click(function(){
             $('.codeimg').attr('src','/m/apps/scanlottery/api/m_captcha/?webapp_owner_id={{ request.webapp_owner_id}}&nocache='+Math.random());
+        });
+
+        //扫码
+        wx.ready(function(){
+            $('.wa-scanBtn').on('click', scanQrcode);
         });
         
         //立即抽奖
@@ -134,52 +151,53 @@
             if(!name){
                 wuiAlert('请输入姓名');
                 return;
-            }else if(!phone){
+            }
+            if(!phone){
                 wuiAlert('请输入手机号');
                 return;
-            }else if(!verify_code){
+            }
+            if(!verify_code){
                 wuiAlert('请填写验证码');
                 return;               
-            }else if(!/^0{0,1}(13[0-9]|15[0-9]|17[0-9]|18[0-9])[0-9]{8}$/g.test(phone)){
+            }
+            if(!/^0{0,1}(13[0-9]|15[0-9]|17[0-9]|18[0-9])[0-9]{8}$/g.test(phone)){
                 wuiAlert('请填写正确的手机号码');
                 return;
-            }else if(scanCode.length != 20 || !/^\d+$/g.test(scanCode)){
+            }
+            if(scanCode.length != 20 || !/^\d+$/g.test(scanCode)){
                 wuiAlert('您的二维码有误');
                 return;
-            }else{
-                W.getApi().call({
-                    app: 'm/apps/scanlottery',
-                    resource: 'm_scanlottery_page',
-                    method: 'get',
-                    args: {
-                        webapp_owner_id: W.webappOwnerId,
-                        id: W.appRecordId,
-                        verify_code: verify_code
-                    },
-                    success: function(data){
-                        var link = '/m/apps/scanlottery/m_scanlottery/?webapp_owner_id=' + W.webappOwnerId + '&name=' + name + '&phone=' + phone + '&scan_code=' + scanCode + '&id=' + W.appRecordId;
-                        window.location.href = link;
-                    },
-                    error: function(resp){
-                        wuiAlert(resp.errMsg);
-                    }
-                });
             }
+
+            W.getApi().call({
+                app: 'm/apps/scanlottery',
+                resource: 'm_scanlottery_page',
+                method: 'get',
+                args: {
+                    webapp_owner_id: W.webappOwnerId,
+                    id: W.appRecordId,
+                    verify_code: verify_code
+                },
+                success: function(data){
+                    var link = '/m/apps/scanlottery/m_scanlottery/?webapp_owner_id=' + W.webappOwnerId + '&name=' + name + '&phone=' + phone + '&scan_code=' + scanCode + '&id=' + W.appRecordId;
+                    window.location.href = link;
+                },
+                error: function(resp){
+                    wuiAlert(resp.errMsg);
+                }
+            });
         });
     });
-    var scanCode = '';
-    loadingStatus(true);
-    wx.ready(scanQrcode);
 
     function scanQrcode(){
         wx.scanQRCode({
             needResult: 1, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
             scanType: ["qrCode"], // 可以指定扫二维码还是一维码，默认二者都有
             success: function (res) {
-                loadingStatus(false);
                 var result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
                 scanCode = result.substr(result.length - 20);
-                $('.wa-scanlottery-container').show();
+                $('.wa-guide').hide();
+                $('.wa-scanlottery-page').show();
             }
         });
     }
