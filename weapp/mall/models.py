@@ -2816,7 +2816,7 @@ class ProductPool(models.Model):
 	product_id = models.IntegerField() #商品管理上传的商品id
 	status = models.IntegerField(default=PP_STATUS_ON_POOL) #商品状态
 	display_index = models.IntegerField(default=0, blank=True)  # 显示的排序
-	sync_at = models.DateTimeField(blank=True, default='')  # 上架时间
+	sync_at = models.DateTimeField(blank=True,null=True)  # 上架时间
 	created_at = models.DateTimeField(auto_now_add=True)  # 添加时间
 
 	class Meta(object):
