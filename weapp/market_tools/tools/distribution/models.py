@@ -68,7 +68,7 @@ class ChannelDistributionDetail(models.Model):
 		db_table = 'market_tool_channel_distribution_detail'
 
 
-class ChannelDistributionEnchashmentProcess(models.Model):
+class ChannelDistributionProcess(models.Model):
 	"""
 	取现进度记录
 	"""
