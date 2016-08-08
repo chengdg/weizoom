@@ -1087,7 +1087,7 @@ class MemberTag(models.Model):
 		if webapp_id:
 			if MemberTag.objects.filter(webapp_id=webapp_id, name="未分组").count() == 0:
 				MemberTag.objects.create(webapp_id=webapp_id, name="未分组")
-			return list(MemberTag.objects.filter(webapp_id=webapp_id))
+			return MemberTag.objects.filter(webapp_id=webapp_id)
 		else:
 			return []
 

@@ -85,7 +85,7 @@
 				<th width="105">商品价格（元）</th>
 				<th width="50">库存</th>
 				<th width="50">总销量</th>
-				<th width="120">{{if data.data.mall_type == 1 }}创建{{else}}创建{{/if}}时间</th>
+				<th width="120">{{if data.data.mall_type == 1 }}同步{{else}}创建{{/if}}时间</th>
 				<th width="110">操作</th>
 			</tr>
 		</thead>
@@ -161,7 +161,7 @@
 						{{/if}}
 					</td>
 					<td>${product.sales}</td>
-					<td>{{if data.data.mall_type == 1 }}${product.sync_time}{{else}}${product.created_at}{{/if}}</td>
+					<td>{{if data.data.mall_type == 1 }}${product.sync_at}{{else}}${product.created_at}{{/if}}</td>
 					<td>
 					   <div style=" width:74px; margin:auto;">
 						<a href="/mall2/product/?id=${product.id}" class="xa-modify fl" style="width: 39px;">

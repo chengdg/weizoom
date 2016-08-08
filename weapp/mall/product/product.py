@@ -111,15 +111,30 @@ class ProductList(resource.Resource):
         if not sort_attr:
             sort_attr = '-display_index'
 
+        start_date = request.GET.get('startDate', '')
+        end_date = request.GET.get('endDate', '')
+
+        product_pool_param = {}
+        if mall_type:
+            product_pool_param['woid'] = request.manager.id
+            if start_date and end_date:
+                product_pool_param["sync_at__gte"] = start_date
+                product_pool_param["sync_at__lte"] = end_date
+
         #处理商品分类
         product_pool2display_index = {}
+        product_pool_id2product_pool = {}
         if _type == 'offshelf':
             sort_attr = '-update_time'
             products = models.Product.objects.belong_to(mall_type, request.manager, models.PRODUCT_SHELVE_TYPE_OFF)
 
             if mall_type:
-                product_pool = models.ProductPool.objects.filter(woid=request.manager.id, status=models.PP_STATUS_OFF)
-                product_pool2display_index = dict([(pool.product_id, pool.display_index) for pool in product_pool])
+                product_pool_param['status'] = models.PP_STATUS_OFF
+                product_pool = models.ProductPool.objects.filter(**product_pool_param)
+                product_pool_id2product_pool = dict([(pool.product_id, pool) for pool in product_pool])
+
+                if start_date and end_date:
+                    products = products.filter(id__in=product_pool_id2product_pool.keys())                 
             # products = models.Product.objects.filter(
             #     owner=request.manager,
             #     shelve_type=models.PRODUCT_SHELVE_TYPE_OFF,
@@ -127,8 +142,12 @@ class ProductList(resource.Resource):
         elif _type == 'onshelf':
             products = models.Product.objects.belong_to(mall_type, request.manager, models.PRODUCT_SHELVE_TYPE_ON)
             if mall_type:
-                product_pool = models.ProductPool.objects.filter(woid=request.manager.id, status=models.PP_STATUS_ON)
-                product_pool2display_index = dict([(pool.product_id, pool.display_index) for pool in product_pool])
+                product_pool_param['status'] = models.PP_STATUS_ON
+                product_pool = models.ProductPool.objects.filter(**product_pool_param)
+                product_pool_id2product_pool = dict([(pool.product_id, pool) for pool in product_pool])
+
+                if start_date and end_date:
+                    products = products.filter(id__in=product_pool_id2product_pool.keys()) 
             # products = models.Product.objects.filter(
             #     owner=request.manager,
             #     shelve_type=models.PRODUCT_SHELVE_TYPE_ON,
@@ -147,7 +166,9 @@ class ProductList(resource.Resource):
 
         #临时兼容自营平台供货商查询 待所以商品都更新成商品池商品进行重构
         if mall_type:
+           
             store_name = request.GET.get('supplier', '')
+
             if store_name:
                 userprofile_manager = UserProfile.objects.filter(webapp_type=2).first()
 
@@ -158,6 +179,8 @@ class ProductList(resource.Resource):
                                         )]
                 if products:
                     products = products.filter(supplier__in=mananger_supplier_ids)
+
+            
 
         # import pdb
         # pdb.set_trace()
@@ -187,7 +210,7 @@ class ProductList(resource.Resource):
         if mall_type:
             #products = utils.weizoom_filter_products(request, products_not_0 + products_is_0)
 
-            products = utils.filter_products(request, products_not_0 + products_is_0)
+            products = utils.filter_products(request, products_not_0 + products_is_0, mall_type)
             supplier_type = request.GET.get('orderSupplierType', '')
             if supplier_type == '0':
                 products = filter(lambda p: p.supplier_user_id > 0, products)
@@ -255,8 +278,12 @@ class ProductList(resource.Resource):
             product_dict['sync_time'] = product_id2sync_time.get(product.id, product.created_at.strftime('%Y-%m-%d %H:%M'))
             product_dict['is_sync'] = is_sync
 
-            if product.id in product_pool2display_index.keys():
-                product_dict['display_index'] = product_pool2display_index[product.id]
+            if product.id in product_pool_id2product_pool.keys():
+                product_dict['display_index'] = product_pool_id2product_pool[product.id].display_index
+                product_dict['sync_at'] = product_pool_id2product_pool[product.id].sync_at.strftime('%Y-%m-%d %H:%M') if product_pool_id2product_pool[product.id].sync_at else ""
+                print product.id,">>>>>>>>>>DS>D>E.f>D>",product_dict['sync_at']
+            else:
+                product_dict['sync_at'] = ""
             #增加团购属性
             if product2group.has_key(product.id):
                 product_dict["is_group_buying"] = product2group[product.id]
@@ -273,10 +300,10 @@ class ProductList(resource.Resource):
             items.append(product_dict)
 
         # 微众系列待售排序
-        if mall_type and _type == 'offshelf':
-            items1 = sorted(items1, key=lambda item:item['sync_time'], reverse=True)
-            items2 = sorted(items2, key=lambda item:item['sync_time'], reverse=True)
-            items = items1 + items2
+        # if mall_type and _type == 'offshelf':
+        #     items1 = sorted(items1, key=lambda item:item['sync_time'], reverse=True)
+        #     items2 = sorted(items2, key=lambda item:item['sync_time'], reverse=True)
+        #     items = items1 + items2
 
         data = dict()
         data['owner_id'] = request.manager.id
@@ -645,6 +672,7 @@ class ProductPool(resource.Resource):
 
 
         models.ProductPool.objects.filter(woid=request.manager.id, product_id__in=product_ids).update(status=models.PP_STATUS_ON)
+        models.ProductPool.objects.filter(woid=request.manager.id, product_id__in=product_ids, sync_at=None).update(sync_at=datetime.now())
         return create_response(200).get_response()
         #for product in products:
 
