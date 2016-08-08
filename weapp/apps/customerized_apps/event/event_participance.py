@@ -17,7 +17,7 @@ import models as app_models
 import export
 from apps import request_util
 from modules.member import integral as integral_api
-from mall.promotion import utils as mall_api
+from apps.request_util import get_consume_coupon
 
 COUNT_PER_PAGE = 20
 
@@ -44,7 +44,8 @@ class eventParticipance(resource.Resource):
 		响应PUT
 		"""
 		member_id = request.member.id
-		eventParticipance = app_models.eventParticipance.objects.filter(belong_to=request.POST['belong_to'],member_id=member_id)
+		record_id = request.POST['belong_to']
+		eventParticipance = app_models.eventParticipance.objects.filter(belong_to=record_id,member_id=member_id)
 		if eventParticipance.count() >0:
 			response = create_response(500)
 			response.data = u"您已参加过该活动！"
@@ -55,7 +56,7 @@ class eventParticipance(resource.Resource):
 			event_participance.save()
 
 			#调整参与数量
-			app_models.event.objects(id=data['belong_to']).update(**{"inc__participant_count":1})
+			app_models.event.objects(id=record_id).update(**{"inc__participant_count":1})
 
 			#活动奖励
 			prize = data.get('prize', None)
@@ -75,7 +76,7 @@ class eventParticipance(resource.Resource):
 						pass #非会员，不进行优惠券发放
 					else:
 						coupon_rule_id = int(prize['data']['id'])
-						coupon, msg = mall_api.consume_coupon(request.webapp_owner_id, coupon_rule_id, request.member.id)
+						coupon, msg = get_consume_coupon(request.webapp_owner_id, 'event', record_id, coupon_rule_id, request.member.id)
 						if not coupon:
 							error_msg = msg
 

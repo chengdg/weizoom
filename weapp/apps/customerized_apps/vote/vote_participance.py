@@ -8,7 +8,7 @@ import models as app_models
 from apps import request_util
 from modules.member import integral as integral_api
 from modules.member import models as member_models
-from mall.promotion import utils as mall_api
+from apps.request_util import get_consume_coupon
 from utils.string_util import byte_to_hex
 
 COUNT_PER_PAGE = 20
@@ -159,7 +159,7 @@ class voteParticipance(resource.Resource):
 						pass #非会员，不进行优惠券发放
 					else:
 						coupon_rule_id = int(prize['data']['id'])
-						coupon, msg = mall_api.consume_coupon(request.webapp_owner_id, coupon_rule_id, request.member.id)
+						coupon, msg = get_consume_coupon(request.webapp_owner_id, 'vote', data['belong_to'], coupon_rule_id, request.member.id)
 						if not coupon:
 							error_msg = msg
 
