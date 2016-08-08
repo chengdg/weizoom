@@ -915,3 +915,388 @@ Scenario:6 带参数二维码-扫码后回复
 			#此不是想实现取消关注的会员扫码再关注，看一下怎么实现合适
 
 			Then marry收到自动回复'图文1'
+
+@senior @bandParameterCode
+Scenario:7 带参数二维码-扫码奖励(限领一张优惠券)
+	Given jobs登录系统
+	When jobs添加优惠券规则
+		"""
+		[{
+			"name": "限领一张优惠券",
+			"money": 10.00,
+			"limit_counts": "1",
+			"count": 5,
+			"is_no_order_user":"true",
+			"start_date": "2015-09-10 10:20:30",
+			"end_date": "1天后",
+			"coupon_id_prefix": "coupon5_id_"
+		}]
+		"""
+	When jobs添加带参数二维码
+		"""
+		[{
+			"code_name": "带参数二维码-扫码奖励(限领一张优惠券),
+			"create_time": "2015-10-10 10:20:30",
+			"prize_type": "优惠券",
+			"coupon": "限领一张优惠券",
+			"member_rank": "普通会员",
+			"tags": "未分组",
+			"is_attention_in": "false",
+			"remarks": "",
+			"is_relation_member": "false",
+			"reply_type": "文字",
+			"scan_code_reply": "扫码后回复文本"
+		}]
+		"""
+	#给bill方法限领一张优惠券
+		Given bill关注jobs的公众号
+
+		Given jobs登录系统
+		When jobs创建优惠券发放规则发放优惠券
+			"""
+			{
+				"name": "限领一张优惠券",
+				"count": 1,
+				"members": ["bill"]
+			}
+			"""
+
+		When bill访问jobs的webapp
+		Then bill能获得webapp优惠券列表
+			"""
+			[{
+				"coupon_id": "coupon5_id_1",
+				"money": 10.00,
+				"status": "未使用"
+			}]
+			"""
+
+	#会员扫码奖励优惠券，不能获得优惠券奖励
+	When 清空浏览器
+	When bill访问jobs的webapp
+	When bill扫描带参数二维码"带参数二维码-扫码奖励(限领一张优惠券)"
+	Then bill能获得webapp优惠券列表
+			"""
+			[{
+				"coupon_id": "coupon5_id_1",
+				"money": 10.00,
+				"status": "未使用"
+			}]
+			"""
+
+@senior @bandParameterCode
+Scenario:8 活动报名-优惠券奖励(仅未下单优惠券)-无需关注即可参与
+	Given 重置'apiserver'的bdd环境
+	Given jobs登录系统
+	And jobs已添加商品
+		"""
+		[{
+			"name": "商品1",
+			"price": 200.00
+		}]
+		"""
+	When jobs添加优惠券规则
+		"""
+		[{
+			"name": "优惠券1",
+			"money": 100.00,
+			"count": 6,
+			"limit_counts": "不限",
+			"is_no_order_user":"true",
+			"start_date": "2015-09-10 10:20:30",
+			"end_date": "10天后",
+			"coupon_id_prefix": "coupon1_id_"
+		}]
+		"""
+	When jobs添加带参数二维码
+		"""
+		[{
+			"code_name": "带参数二维码-扫码奖励(仅未下单优惠券),
+			"create_time": "2015-10-10 10:20:30",
+			"prize_type": "优惠券",
+			"coupon": "限领一张优惠券",
+			"member_rank": "普通会员",
+			"tags": "未分组",
+			"is_attention_in": "false",
+			"remarks": "",
+			"is_relation_member": "false",
+			"reply_type": "文字",
+			"scan_code_reply": "扫码后回复文本"
+		}]
+		"""
+
+	#给存在不同订单状态的用户参与活动
+		#未支付订单用户，可以领取优惠券
+			Given bill关注jobs的公众号
+			When bill访问jobs的webapp::apiserver
+			When bill购买jobs的商品::apiserver
+				"""
+				{
+					"order_id":"001",
+					"pay_type": "微信支付",
+					"products":[{
+						"name":"商品1",
+						"price":200.00,
+						"count":1
+					}]
+				}
+				"""
+			Then bill成功创建订单::apiserver
+				"""
+				{
+					"order_no":"001",
+					"status": "待支付",
+					"final_price": 200.00,
+					"product_price": 200.00,
+					"products":[{
+						"name":"商品1",
+						"price":200.00,
+						"count":1
+					}]
+				}
+				"""
+
+			When 清空浏览器
+			When bill访问jobs的webapp
+			When bill扫描带参数二维码"带参数二维码-扫码奖励(限领一张优惠券)"
+			When bill访问jobs的webapp
+			Then bill能获得webapp优惠券列表
+				"""
+				[{
+					"coupon_id": "coupon1_id_1",
+					"money": 100.00,
+					"status": "未使用"
+				}]
+				"""
+
+		#待发货订单用户，不可以领取优惠券
+			Given tom关注jobs的公众号
+			When tom访问jobs的webapp::apiserver
+			When tom购买jobs的商品::apiserver
+				"""
+				{
+					"order_id":"002",
+					"pay_type": "货到付款",
+					"products":[{
+						"name":"商品1",
+						"price":200.00,
+						"count":1
+					}]
+				}
+				"""
+			Then tom成功创建订单::apiserver
+				"""
+				{
+					"order_no":"002",
+					"status": "待发货",
+					"final_price": 200.00,
+					"product_price": 200.00,
+					"products":[{
+						"name":"商品1",
+						"price":200.00,
+						"count":1
+					}]
+				}
+				"""
+
+			When 清空浏览器
+			When tom访问jobs的webapp
+			When tom扫描带参数二维码"带参数二维码-扫码奖励(限领一张优惠券)"
+			When tom访问jobs的webapp
+			Then tom能获得webapp优惠券列表
+				"""
+				[]
+				"""
+
+		#已发货订单用户，不可以领取优惠券
+			Given tom1关注jobs的公众号
+			When tom1访问jobs的webapp::apiserver
+			When tom1购买jobs的商品::apiserver
+				"""
+				{
+					"order_id":"003",
+					"pay_type": "货到付款",
+					"products":[{
+						"name":"商品1",
+						"price":200.00,
+						"count":1
+					}]
+				}
+				"""
+			Then tom1成功创建订单::apiserver
+				"""
+				{
+					"order_no":"003",
+					"status": "待发货",
+					"final_price": 200.00,
+					"product_price": 200.00,
+					"products":[{
+						"name":"商品1",
+						"price":200.00,
+						"count":1
+					}]
+				}
+				"""
+
+			When 清空浏览器
+			When tom1访问jobs的webapp
+			When tom1扫描带参数二维码"带参数二维码-扫码奖励(限领一张优惠券)"
+			When tom1访问jobs的webapp
+			Then tom1能获得webapp优惠券列表
+				"""
+				[]
+				"""
+
+		#已完成订单用户，不可以领取优惠券
+			Given tom2关注jobs的公众号
+			When tom2访问jobs的webapp::apiserver
+			When tom2购买jobs的商品::apiserver
+				"""
+				{
+					"order_id":"004",
+					"pay_type": "货到付款",
+					"products":[{
+						"name":"商品1",
+						"price":200.00,
+						"count":1
+					}]
+				}
+				"""
+			Then tom2成功创建订单::apiserver
+				"""
+				{
+					"order_no":"004",
+					"status": "待发货",
+					"final_price": 200.00,
+					"product_price": 200.00,
+					"products":[{
+						"name":"商品1",
+						"price":200.00,
+						"count":1
+					}]
+				}
+				"""
+
+			Given jobs登录系统
+			When jobs对订单进行发货
+				"""
+				{
+					"order_no": "004",
+					"logistics": "申通快递",
+					"number": "229388967650",
+					"shipper": "jobs"
+				}
+				"""
+			When jobs完成订单'004'
+
+			When 清空浏览器
+			When tom2访问jobs的webapp
+			When tom2扫描带参数二维码"带参数二维码-扫码奖励(限领一张优惠券)"
+			When tom2访问jobs的webapp
+			Then tom2能获得webapp优惠券列表
+				"""
+				[]
+				"""
+		
+		#退款中和退款完成订单用户，可以领取优惠券
+			Given tom3关注jobs的公众号
+			When tom3访问jobs的webapp::apiserver
+			When tom3购买jobs的商品::apiserver
+				"""
+				{
+					"order_id":"005",
+					"pay_type": "微信支付",
+					"products":[{
+						"name":"商品1",
+						"price":200.00,
+						"count":1
+					}]
+				}
+				"""
+			When tom3使用支付方式'微信支付'进行支付
+			Then tom3成功创建订单::apiserver
+				"""
+				{
+					"order_no":"005",
+					"status": "待发货",
+					"final_price": 200.00,
+					"product_price": 200.00,
+					"products":[{
+						"name":"商品1",
+						"price":200.00,
+						"count":1
+					}]
+				}
+				"""
+
+			Given jobs登录系统
+			When jobs对订单进行发货
+				"""
+				{
+					"order_no": "004",
+					"logistics": "申通快递",
+					"number": "229388967650",
+					"shipper": "jobs"
+				}
+				"""
+			
+			When jobs'申请退款'订单'005'
+
+			When 清空浏览器
+			When tom3访问jobs的webapp
+			When tom3扫描带参数二维码"带参数二维码-扫码奖励(限领一张优惠券)"
+			When tom3访问jobs的webapp
+			Then tom3能获得webapp优惠券列表
+				"""
+				[{
+					"coupon_id": "coupon1_id_2",
+					"money": 100.00,
+					"status": "未使用"
+				}]
+				"""
+
+		#已取消订单用户，可以领取优惠券
+			Given tom4关注jobs的公众号
+			When tom4访问jobs的webapp::apiserver
+			When tom4购买jobs的商品::apiserver
+				"""
+				{
+					"order_id":"006",
+					"pay_type": "微信支付",
+					"products":[{
+						"name":"商品1",
+						"price":200.00,
+						"count":1
+					}]
+				}
+				"""
+			Then tom4成功创建订单::apiserver
+				"""
+				{
+					"order_no":"006",
+					"status": "待支付",
+					"final_price": 200.00,
+					"product_price": 200.00,
+					"products":[{
+						"name":"商品1",
+						"price":200.00,
+						"count":1
+					}]
+				}
+				"""
+
+			Given jobs登录系统
+			When jobs取消订单'006'
+
+			When 清空浏览器
+			When tom4访问jobs的webapp
+			When tom4扫描带参数二维码"带参数二维码-扫码奖励(限领一张优惠券)"
+			When tom4访问jobs的webapp
+			Then tom4能获得webapp优惠券列表
+				"""
+				[{
+					"coupon_id": "coupon1_id_3",
+					"money": 100.00,
+					"status": "未使用"
+				}]
+				"""
