@@ -11,6 +11,7 @@ from modules.member.module_api import get_member_by_openid
 from modules.member import models as member_models
 from mall.promotion.models import CouponRule
 from termite import pagestore as pagestore_manager
+from apps.request_util import get_consume_coupon
 
 class SignDetails(models.Document):
 	"""
@@ -165,7 +166,6 @@ class SignParticipance(models.Document):
 		member.consume_integral(-int(curr_prize_integral), u'参与签到，积分奖项')
 		curr_prize_coupon_count = 0
 		if curr_prize_coupon_id != '':
-			from apps.request_util import get_consume_coupon
 			coupon, msg, coupon_count = get_consume_coupon(sign.owner_id,'sign', str(sign.id), curr_prize_coupon_id, self.member_id)
 			curr_prize_coupon_count = coupon_count
 		return_data['curr_prize_integral'] = curr_prize_integral
