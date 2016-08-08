@@ -112,7 +112,8 @@ class ScanlotteryParticipances(resource.Resource):
 				'prize_title': data.prize_title,
 				'prize_name': data.prize_name,
 				'status': data.status,
-				'created_at': data.created_at.strftime("%Y-%m-%d %H:%M:%S")
+				'created_at': data.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+				'name': data.name
 			})
 		response_data = {
 			'items': items,
@@ -164,6 +165,7 @@ class ScanlotteryParticipances_Export(resource.Resource):
 			#from sample to get fields4excel_file
 			fields_raw.append(u'编号')
 			fields_raw.append(u'用户名')
+			fields_raw.append(u'姓名')
 			fields_raw.append(u'会员ID')
 			fields_raw.append(u'手机号')
 			fields_raw.append(u'获奖等级')
@@ -186,11 +188,12 @@ class ScanlotteryParticipances_Export(resource.Resource):
 				cur_member = member_id2member.get(member_id, None)
 				if cur_member:
 					try:
-						name = cur_member.username.decode('utf8')
+						user_name = cur_member.username.decode('utf8')
 					except:
-						name = cur_member.username_hexstr
+						user_name = cur_member.username_hexstr
 				else:
-					name = u'未知'
+					user_name = u'未知'
+				name = record['name']
 				tel = record['tel']
 				prize_title = record['prize_title']
 				prize_name = record['prize_name']
@@ -201,6 +204,7 @@ class ScanlotteryParticipances_Export(resource.Resource):
 					status = u'未领取'
 
 				export_record.append(num)
+				export_record.append(user_name)
 				export_record.append(name)
 				export_record.append(cur_member.id)
 				export_record.append(tel)

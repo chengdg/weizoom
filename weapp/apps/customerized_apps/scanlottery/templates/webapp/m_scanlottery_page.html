@@ -5,7 +5,7 @@
     html,body {
         height: 100%;
         font-family: "黑体";
-        background: #92191e!important;
+        background: #92191e !important;
     }
     .wui-hidden {
         display: none;
@@ -92,13 +92,39 @@
             height: 13rem;
         }  
     }
+    .wui-guide{
+        width: 100%;
+        height: 100%;
+        background: url(/termite_static/img/component/scanlottery/scanlottery_guide.jpg) no-repeat;
+        background-size: 100% auto;
+        position: relative;
+        background-color: #1C4A98;
+    }
+    .wui-guide .wui-guide-scan{
+        height: 20%;
+        width: 32%;
+        position: absolute;
+        top: 53%;
+        left: 34%;
+        background: url(/termite_static/img/component/scanlottery/scan.png) no-repeat;
+        background-size: 100% auto;
+    }
+    .wui-guide .wui-guide-scan-desc{
+        height: 20%;
+        width: 70%;
+        position: absolute;
+        top: 72%;
+        left: 14%;
+        background: url(/termite_static/img/component/scanlottery/scan_desc.png) no-repeat;
+        background-size: 100% auto;
+    }
 </style>
 {% endblock %}
 
 {% block content-panel %}
-<div class="wui-scanlottery-page">
+<div class="wui-scanlottery-page wui-hidden wa-scanlottery-page">
     <div class="wui-scanlottery-title"></div>
-    <div class="wui-scanlottery-container wui-hidden wa-scanlottery-container">
+    <div class="wui-scanlottery-container wa-scanlottery-container">
         <div> 
             <input type="text" placeholder="请输入姓名" class="wui-excode-input wa-name">
         </div>
@@ -116,16 +142,27 @@
         <p>注：填写真实信息，参与抽奖，否则您的奖品将无法获取哦。</p>
     </div>
 </div>
+<div class="wui-guide wa-guide">
+    <div class="wui-guide-scan wa-guide-scan"></div>
+    <div class="wui-guide-scan-desc"></div>
+</div>
 {% endblock %}
 
 {% block js %}
 <script type="text/javascript">
+    var scanCode = '';
+
     $(function(){
         //重置验证码
         $('.wa-verify-btn').click(function(){
             $('.codeimg').attr('src','/m/apps/scanlottery/api/m_captcha/?webapp_owner_id={{ request.webapp_owner_id}}&nocache='+Math.random());
         });
-        
+
+        //扫码
+        wx.ready(function(){
+            $('.wa-guide-scan').on('click' ,scanQrcode);
+        });
+
         //立即抽奖
         $('.wa-submit').on('click', function(){
             var name = $('.wa-name').val();
@@ -134,52 +171,54 @@
             if(!name){
                 wuiAlert('请输入姓名');
                 return;
-            }else if(!phone){
+            }
+            if(!phone){
                 wuiAlert('请输入手机号');
                 return;
-            }else if(!verify_code){
+            }
+            if(!verify_code){
                 wuiAlert('请填写验证码');
                 return;               
-            }else if(!/^0{0,1}(13[0-9]|15[0-9]|17[0-9]|18[0-9])[0-9]{8}$/g.test(phone)){
+            }
+            if(!/^0{0,1}(13[0-9]|15[0-9]|17[0-9]|18[0-9])[0-9]{8}$/g.test(phone)){
                 wuiAlert('请填写正确的手机号码');
                 return;
-            }else if(scanCode.length != 20 || !/^\d+$/g.test(scanCode)){
+            }
+            if(scanCode.length != 20 || !/^\d+$/g.test(scanCode)){
                 wuiAlert('您的二维码有误');
                 return;
-            }else{
-                W.getApi().call({
-                    app: 'm/apps/scanlottery',
-                    resource: 'm_scanlottery_page',
-                    method: 'get',
-                    args: {
-                        webapp_owner_id: W.webappOwnerId,
-                        id: W.appRecordId,
-                        verify_code: verify_code
-                    },
-                    success: function(data){
-                        var link = '/m/apps/scanlottery/m_scanlottery/?webapp_owner_id=' + W.webappOwnerId + '&name=' + name + '&phone=' + phone + '&scan_code=' + scanCode + '&id=' + W.appRecordId;
-                        window.location.href = link;
-                    },
-                    error: function(resp){
-                        wuiAlert(resp.errMsg);
-                    }
-                });
             }
+
+            W.getApi().call({
+                app: 'm/apps/scanlottery',
+                resource: 'm_scanlottery_page',
+                method: 'get',
+                args: {
+                    webapp_owner_id: W.webappOwnerId,
+                    id: W.appRecordId,
+                    verify_code: verify_code
+                },
+                success: function(data){
+                    var link = '/m/apps/scanlottery/m_scanlottery/?webapp_owner_id=' + W.webappOwnerId + '&name=' + name + '&phone=' + phone + '&scan_code=' + scanCode + '&id=' + W.appRecordId;
+                    window.location.href = link;
+                },
+                error: function(resp){
+                    wuiAlert(resp.errMsg);
+                }
+            });
         });
     });
-    var scanCode = '';
-    loadingStatus(true);
-    wx.ready(scanQrcode);
 
     function scanQrcode(){
         wx.scanQRCode({
             needResult: 1, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
             scanType: ["qrCode"], // 可以指定扫二维码还是一维码，默认二者都有
             success: function (res) {
-                loadingStatus(false);
+                console.log(33333)
                 var result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
                 scanCode = result.substr(result.length - 20);
-                $('.wa-scanlottery-container').show();
+                $('.wa-guide').hide();
+                $('.wa-scanlottery-page').show();
             }
         });
     }
