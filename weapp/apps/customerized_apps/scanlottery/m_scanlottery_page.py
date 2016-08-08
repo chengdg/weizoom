@@ -84,6 +84,25 @@ class Mexlottery(resource.Resource):
 		response = create_response(200)
 		return response.get_response()
 
+class MscanlotteryCodeTest(resource.Resource):
+	app = 'apps/scanlottery'
+	resource = 'scan_code_test'
+
+	def api_get(request):
+		"""
+		响应GET
+		"""
+		scan_code = request.GET.get('scan_code', '')
+		scanlottery_record = app_models.ScanlotteryRecord.objects(code=scan_code)
+		if scanlottery_record:
+			response = create_response(500)
+			response.errMsg = u'该码已经参与'
+			return response.get_response()
+		else:
+			response = create_response(200)
+			return response.get_response()
+
+
 class MscanlotteryCaptcha(resource.Resource):
 	app = 'apps/scanlottery'
 	resource = 'm_captcha'
