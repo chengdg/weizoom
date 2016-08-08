@@ -1,0 +1,159 @@
+{% extends "content_base_v2.html" %}
+{% block css %}
+    <style>
+        .xui-btnBox{
+            padding-left: 370px;
+            margin-top: 30px;
+        }
+        .form-control{
+            width:150px;
+        }
+    </style>
+{% endblock %}
+{% block content-panel %}
+
+    <div class="relative">
+        <ul class="breadcrumb">
+            <li>您当前所在位置</li>
+            <li><a href="/new_weixin/qrcodes/">推广与分销</a></li>
+            <li><a href="/new_weixin/channel_distributions/">渠道分销</a></li>
+            <li>分销会员结算</li>
+        </ul>
+    </div>
+
+    <div class="xui-filterPanel " >
+        <div class="xui-form disT ml20">
+            <div class="xui-i-item">
+                <label>返还额度：</label>
+                <input
+                        type="text"
+                        class="form-control"
+                        name="return_min"/>
+                <span class="ml5 mr5">至</span>
+                <input
+                        type="text"
+                        class="form-control"
+                        name="return_max"/>
+                <label>返还时间：</label>
+                <input
+                        type="text"
+                        class="form-control xui-datePicker"
+                        id="start_date"
+                        name="start_date"
+                        style=""
+                        value=""
+                        readonly="readonly"
+                        data-validate="require-notempty"
+                        data-enable-select-time="true"
+                        data-ui-role="datepicker"
+                        data-format="yy-mm-dd"
+                        data-max="now"/>
+                <span class="ml5 mr5">至</span>
+                <input
+                        type="text"
+                        class="form-control xui-datePicker mr130"
+                        id="end_date"
+                        name="end_date"
+                        value=""
+                        readonly="readonly"
+                        data-validate="require-notempty"
+                        data-ui-role="datepicker"
+                        data-enable-select-time="true"
+                        data-format="yy-mm-dd"
+                        data-max="now"
+                        data-min-el="#start_date"/>
+
+                <div class="xui-btnBox">
+                    <a class="btn btn-primary xa-search xui-fontBold mr30" href="javascript:void(0);">查询</a>
+                    <a class="xa-reset btn btn-default xui-fontBold" href="javascript:void(0);">重置</a>
+                </div>
+            </div>
+
+        </div>
+        <div>
+            整体概括: 已返现总额 未返现总额 本期返现总额 总交易额
+        </div>
+
+    </div>
+    <div
+            data-ui-role="advanced-table"
+            data-app="new_weixin"
+            data-resource="distribution_clearing"
+            data-template-id="#clearing_list_view"
+            data-init-sort="-created_at"
+            data-item-count-per-page="20"
+            data-enable-paginator="true"
+            class="panel-body mt40"
+    >
+    </div>
+
+{% endblock %}
+{% block js %}
+    {% verbatim %}
+    <script id="clearing_list_view" type="text/x-jquery-tmpl">
+		{{if items}}
+			<table class="table table-condensed xb-stripedTable xb-theadBg">
+				<thead>
+					<tr>
+                    <th>用户名</th>
+                    <th style="width:10%;" >提交时间</th>
+                    <th style="width:15%;" >本期交易额</th>
+                    <th style="width:15%;">返现标准</th>
+                    <th style="width:10%;">返现率</th>
+                    <th style="width:10%;">已有奖励</th>
+                    <th style="width:10%;">返现金额</th>
+                    <th style="width:10%;">返现状态</th>
+                    <th style="width:10%;">操作</th>
+					</tr>
+				</thead>
+				<tbody>
+					{{if items.length}}
+						{{each(i, qrcode) items}}
+							<tr>
+							    <td>
+							        ${qrcode.name}
+							    </td>
+							    <td>
+							        ${qrcode.commit_time}
+							    </td>
+							    <td>
+							        ${qrcode.current_transaction_amount}
+							    </td>
+							    <td>
+							        ${qrcode.commission_return_standard}
+							    </td>
+							    <td>
+							        ${qrcode.commission_rate}
+							    </td>
+							    <td>
+							        ${qrcode.will_return_reward}
+							    </td>
+							    <td>
+							        ${qrcode.money}
+							    </td>
+							    <td>
+							        <select>
+							            <option value=0 {{if qrcode.status == 0}}selected="selected"{{/if}}>无状态</option>
+							            <option value=1 {{if qrcode.status == 1}}selected="selected"{{/if}}>等待审核</option>
+							            <option value=2 {{if qrcode.status == 2}}selected="selected"{{/if}}>正在返现中</option>
+							            <option value=3 {{if qrcode.status == 3}}selected="selected"{{/if}}>已完成/切换成无状态</option>
+							        </select>
+
+							    </td>
+							    <td>
+							    </td>
+
+
+							</tr>
+						{{/each}}
+					{{else}}
+						<tr><td colspan='9'>还没有数据</td></tr>
+					{{/if}}
+				</tbody>
+			</table>
+						{{else}}
+
+			{{/if}}
+        </script>
+    {% endverbatim %}
+{% endblock %}

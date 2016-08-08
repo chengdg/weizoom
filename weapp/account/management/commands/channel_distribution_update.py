@@ -63,7 +63,8 @@ class Command(BaseCommand):
                     ChannelDistributionQrcodeSettings.objects.filter(id=order_qrcode.id).update(
                         will_return_reward = F('will_return_reward') + order.final_price * order_qrcode.commission_rate,
                         total_transaction_volume = F('total_transaction_volume') + order.final_price,
-                        total_return = F('total_return') + order.final_price * order_qrcode.commission_rate
+                        total_return = F('total_return') + order.final_price * order_qrcode.commission_rate,
+                   
                     )
                     ChannelDistributionDetail.objects.create(
                         money = order.final_price * order_qrcode.commission_rate,
