@@ -17,7 +17,7 @@ Background:
 			"name": "单品券1",
 			"money": 5.00,
 			"count": 10,
-			"each_limit": "不限",
+			"limit_counts": "不限",
 			"using_limit": "满50元可以使用",
 			"start_date": "今天",
 			"end_date": "1天后",
@@ -27,7 +27,7 @@ Background:
 			"name": "全体券2",
 			"money": 20.00,
 			"count": 5,
-			"each_limit": "不限",
+			"limit_counts": "不限",
 			"start_date": "今天",
 			"end_date": "2天后",
 			"coupon_id_prefix": "coupon2_id_"
@@ -35,7 +35,7 @@ Background:
 			"name": "全体券3",
 			"money": 30.00,
 			"count": 5,
-			"each_limit": "不限",
+			"limit_counts": "不限",
 			"start_date": "今天",
 			"end_date": "3天后",
 			"coupon_id_prefix": "coupon3_id_"

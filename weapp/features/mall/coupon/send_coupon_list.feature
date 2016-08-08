@@ -31,7 +31,7 @@ Background:
 		[{
 			"name": "单品券2",
 			"money": 10.00,
-			"each_limit": "不限",
+			"limit_counts": "不限",
 			"start_date": "今天",
 			"end_date": "1天后",
 			"coupon_id_prefix": "coupon1_id_",

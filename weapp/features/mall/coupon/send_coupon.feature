@@ -19,7 +19,7 @@ Background:
 		[{
 			"name": "单品券2",
 			"money": 10.00,
-			"each_limit": "不限",
+			"limit_counts": "不限",
 			"start_date": "今天",
 			"end_date": "1天后",
 			"coupon_id_prefix": "coupon2_id_",
@@ -486,8 +486,8 @@ Scenario: 5 给用户发放'仅未下单用户可领取'的优惠券
 		[{
 			"name": "未下单用户单品券",
 			"money": 10.00,
-			"each_limit": "不限",
-			"limit_counts": 5,
+			"limit_counts": "不限",
+			"count": 5,
 			"is_no_order_user":"true",
 			"start_date": "今天",
 			"end_date": "1天后",
@@ -496,8 +496,8 @@ Scenario: 5 给用户发放'仅未下单用户可领取'的优惠券
 		},{
 			"name": "未下单用户全体券",
 			"money": 100.00,
-			"each_limit": "1",
-			"limit_counts": 6,
+			"limit_counts": "1",
+			"count": 6,
 			"is_no_order_user":"true",
 			"start_date": "今天",
 			"end_date": "2天后",
