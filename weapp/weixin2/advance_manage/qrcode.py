@@ -19,8 +19,7 @@ from modules.member.models import *
 from .util import get_members
 from .fans_category import DEFAULT_CATEGORY_NAME
 from market_tools.tools.channel_qrcode.models import ChannelQrcodeSettings,ChannelQrcodeHasMember, ChannelQrcodeBingMember
-from market_tools.tools.distribution.models import ChannelDistributionQrcodeSettings, ChannelDistributionQrcodeHasMember, \
-													ChannelDistributionProcess
+from market_tools.tools.distribution.models import ChannelDistributionQrcodeSettings, ChannelDistributionQrcodeHasMember
 from modules.member import models as member_model
 from account.util import get_binding_weixin_mpuser, get_mpuser_accesstoken
 from weixin2.message.util import get_member_groups
@@ -1249,7 +1248,7 @@ class ChannelDistributionClearing(resource.Resource):
 		count_per_page = int(request.GET.get('count_per_page', 15))
 		cur_page = int(request.GET.get('page', '1'))
 
-		# ChannelDistributionProcess.objects.all()
+
 		qrcodes = ChannelDistributionQrcodeSettings.objects.all()
 
 		member_dict = {}  # {id: name}
@@ -1257,34 +1256,35 @@ class ChannelDistributionClearing(resource.Resource):
 		for member in members:
 			member_dict[member.id] = member.username_for_title
 
-		process_dict = {}
-		channel_distribution_process = ChannelDistributionProcess.objects.all()
-		for process in channel_distribution_process:
-			process_dict[process.id] = process
+		# process_dict = {}
+		# channel_distribution_process = ChannelDistributionProcess.objects.all()
+		# for process in channel_distribution_process:
+		# 	process_dict[process.id] = process
 
 		items = []
 
 		for qrcode in qrcodes:
 			return_dict = {}
 
-			if process_dict.has_key(qrcode.id):
-				status = process_dict[qrcode.id].status
-				commit_time = str(process_dict[qrcode.id].created_time)
-				money = str(process_dict[qrcode.id].money)
-			else:
-				status = 0
-				commit_time = u'---'
-				money = '0.00'
+			# if process_dict.has_key(qrcode.id):
+			# 	status = process_dict[qrcode.id].status
+			# 	commit_time = str(process_dict[qrcode.id].created_time)
+			# 	money = str(process_dict[qrcode.id].money)
+			# else:
+			# 	status = 0
+			# 	commit_time = u'---'
+			# 	money = '0.00'
+
 
 			return_dict['qrcode_id'] = qrcode.id
 			return_dict['name'] = member_dict[qrcode.bing_member_id]  # 用户名
-			return_dict['commit_time'] = commit_time  # 提交时间
-			return_dict['current_transaction_amount'] = ''  # 本期交易额
+			return_dict['commit_time'] = str(qrcode.commit_time)  # 提交时间
+			return_dict['current_transaction_amount'] = str(qrcode.current_transaction_amount)  # 本期交易额
 			return_dict['commission_return_standard']  = str(qrcode.commission_return_standard)  # 返现标准
 			return_dict['commission_rate'] = qrcode.commission_rate  # 返现率
 			return_dict['will_return_reward'] = str(qrcode.will_return_reward)  # 实施奖励
-			return_dict['money'] = money
-			return_dict['status'] = status  # 返现状态
+			return_dict['extraction_money'] = str(qrcode.extraction_money)  # 返现金额
+			return_dict['status'] = qrcode.status  # 返现状态
 
 			items.append(return_dict)
 

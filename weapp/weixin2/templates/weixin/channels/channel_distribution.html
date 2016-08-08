@@ -229,13 +229,13 @@
             if(distributionRewards==="0"){
                 var commissionRate = 0;
                 var minimunReturnRate = 0;
-                var minimumReturnAmount = 0;
+                var commission_return_standard = 0;
                 var returnStandard = 0;
 
             }else{
                 var commissionRate = $.trim($('[name="commission_rate"]').val());
                 var minimunReturnRate = $.trim($('[name="minimun_return_rate"]').val());
-                var minimumReturnAmount = $.trim($('[name="minimum_return_amount"]').val());
+                var commission_return_standard = $.trim($('[name="commission_return_standard"]').val());
                 var returnStandard = $.trim($('[name="return_standard"]').val());
             }
             var groupId = $.trim($('[name="group_id"]').val());
@@ -295,20 +295,19 @@
 				replyType = 1;
 			}
 			var prizeInfo = JSON.stringify($('#prize_selector').data('view').getPrizeInfo());
-
 			var data = {
                 bing_member_title: bingMemberTitle,
                 bing_member_id: bingMemberId,
                 distribution_rewards: distributionRewards,
                 commission_rate: commissionRate,
                 minimun_return_rate: minimunReturnRate,
-                minimum_return_amount: minimumReturnAmount,
                 return_standard: returnStandard,
                 group_id: groupId,
                 prize_info: prizeInfo,
                 reply_type: replyType,
                 reply_detail: textContent,
-                reply_material_id: materialId
+                reply_material_id: materialId,
+                commission_return_standard:commission_return_standard
             };
 
             if(edit_status === 0) {

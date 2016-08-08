@@ -129,7 +129,7 @@
 							        ${qrcode.will_return_reward}
 							    </td>
 							    <td>
-							        ${qrcode.money}
+							        ${qrcode.extraction_money}
 							    </td>
 							    <td>
 							        <select>
@@ -138,12 +138,9 @@
 							            <option value=2 {{if qrcode.status == 2}}selected="selected"{{/if}}>正在返现中</option>
 							            <option value=3 {{if qrcode.status == 3}}selected="selected"{{/if}}>已完成/切换成无状态</option>
 							        </select>
-
 							    </td>
 							    <td>
 							    </td>
-
-
 							</tr>
 						{{/each}}
 					{{else}}

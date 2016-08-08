@@ -64,7 +64,7 @@ class Command(BaseCommand):
                         will_return_reward = F('will_return_reward') + order.final_price * order_qrcode.commission_rate,
                         total_transaction_volume = F('total_transaction_volume') + order.final_price,
                         total_return = F('total_return') + order.final_price * order_qrcode.commission_rate,
-                   
+                        current_transaction_amount = F('current_transaction_amount') + order.final_price
                     )
                     ChannelDistributionDetail.objects.create(
                         money = order.final_price * order_qrcode.commission_rate,

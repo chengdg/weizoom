@@ -28,6 +28,12 @@ class ChannelDistributionQrcodeSettings(models.Model):
 	bing_member_count = models.IntegerField(default=0)  # 关注数量,该二维码下边的关注人数
 	total_transaction_volume = models.DecimalField(max_digits=65, decimal_places=2, default=0)  # 总交易额:二维码自创建以来的所有交易额
 	total_return = models.DecimalField(max_digits=65, decimal_places=2, default=0)  # 返现总额: 二维码所有的返现总额, 只包含已经体现的金额
+
+	status = models.IntegerField(default=0)  # 取现进度
+	extraction_money = models.DecimalField(max_digits=65, decimal_places=2, default=0)  # 提取的金额
+	current_transaction_amount = models.DecimalField(max_digits=65, decimal_places=2, default=0)  # 本期交易额
+	commit_time = models.DateTimeField(auto_now_add=True)  # 提交时间
+
 	created_at = models.DateTimeField(auto_now_add=True) # 添加时间
 
 	class Meta:
