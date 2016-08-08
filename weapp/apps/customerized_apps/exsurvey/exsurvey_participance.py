@@ -7,7 +7,7 @@ from core.jsonresponse import create_response
 import models as app_models
 from apps import request_util
 from modules.member import integral as integral_api
-from mall.promotion import utils as mall_api
+from apps.request_util import get_consume_coupon
 from modules.member.models import Member
 from utils.string_util import byte_to_hex
 
@@ -178,7 +178,7 @@ class exsurveyParticipance(resource.Resource):
 					pass #非会员，不进行优惠券发放
 				else:
 					coupon_rule_id = int(prize['data']['id'])
-					coupon, msg = mall_api.consume_coupon(request.webapp_owner_id, coupon_rule_id, request.member.id)
+					coupon, msg = get_consume_coupon(request.webapp_owner_id, 'exsurvey', data['belong_to'], coupon_rule_id, request.member.id)
 					if not coupon:
 						error_msg = msg
 
