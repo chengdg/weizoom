@@ -90,7 +90,8 @@ def get_request_members_list(request, export=False):
 				filter_data_args["grade_id"] = value
 
 			if key == 'tag_id':
-				member_ids = [member.id for member in  MemberHasTag.get_member_list_by_tag_id(value)]
+				# member_ids = [member.id for member in  MemberHasTag.get_member_list_by_tag_id(value)]
+				member_ids = MemberHasTag.objects.filter(member_tag_id=value).values_list('member_id', flat=True)
 				filter_data_args["id__in"] = member_ids
 
 			if key == 'status':
