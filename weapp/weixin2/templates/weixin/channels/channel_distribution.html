@@ -3,7 +3,84 @@
 {% load account_filter %}
 {% block css %}
 <style>
-
+    body, label {
+        font-size: 12px;
+        font-weight: 100;
+    }
+    input, select, .xa-selectMemberDailog {
+        width: 120px;
+    }
+    .xui-input-style {
+        float: left;
+        margin: 18px 0 0 20px;
+    }
+    .ml0 {
+        margin-left: 0;
+    }
+    .xui-weixin-qrcodePage .xui-setting .xui-row {
+        width: 80%;
+    }
+    .xui-weixin-qrcodePage .xui-setting .xui-row {
+        margin-left: 10px;
+        border-bottom: 0;
+    }
+    .xui-weixin-qrcodePage .xui-Sweep1 {
+        margin: 0;
+        margin-left: 10px !important;
+    }
+    .xui-hint {
+        display: inline-block;
+        float: left;
+        margin: 20px 0 0 10px;
+        font-size: 10px;
+        color: #999;
+    }
+    .xui-weixin-qrcodePage .edui-editor {
+        width: 640px !important;
+    }
+    .xui-qr-header {
+        text-align: left;
+        margin-left: 65px;
+        padding-top: 20px;
+        font-size: 16px;
+        font-weight: 700;
+    }
+    .xui-qr-header span {
+        margin-left: 10px;
+        font-size: 10px;
+        font-weight: 100;
+        color: #999;
+    }
+    .xui-qr-hint {
+        display: inline-block;
+        float: left;
+        margin: 20px 0 0 5px;
+        font-size: 15px;
+        font-weight: 700;
+    }
+    .xui-qr-hint .xui-qr-symbol {
+        font-size: 17px;
+        color: #3399ff;
+    }
+    .xui-qr-hint .xui-qr-text-red {
+        margin-left: 10px;
+        color: #ff0000;
+    }
+    .xui-qr-hint .xui-qr-text-red .xui-qr-text-black {
+        font-size: 18px;
+        color: #000;
+    }
+    .xui-qr-hint .xui-qr-text-blue {
+        color: #3399ff;
+    }
+    .xui-qr-hint .xui-qr-text-grey {
+        margin-left: 10px;
+        color: #666;
+        font-weight: 100;
+    }
+    #prizeTypesSelector {
+        margin-left: 20px;
+    }
 </style>
 {% endblock %}
 {% block content-panel %}
@@ -22,7 +99,7 @@
 <div class="xui-setting">
     <div class="xui-row pr">
         <label class="xui-i-left fl">会员头衔：</label>
-        <input type="text" name="bing_member_title" {% if qrcode %}value="{{ qrcode.bing_member_title }}"{% endif %}/>
+        <input id="xa-input-limit" class="xui-input-style" type="text" name="bing_member_title" onblur="valueLessFive()" {% if qrcode %}value="{{ qrcode.bing_member_title }}"{% endif %}/><p class="xui-hint">请输入5个字符以内</p>
     </div>
     <div class="xui-row pr">
         <label class="xui-i-left fl">关联会员：</label>
@@ -30,19 +107,19 @@
         {% if qrcode %}
             会员昵称:{{ member_name }}
             {% else %}
-              <button class="xa-selectMemberDailog" type="button">选择关注会员</button>
+              <button class="xa-selectMemberDailog xui-input-style" type="button">选择关注会员</button>
         {% endif %}
 
     </div>
 
  <hr/>
     <div class="xui-row pr">
-        奖励设置 奖励给代言人
+        <p class="xui-qr-header">奖励设置<span>奖励给代言人</span></p>
     </div>
     <hr/>
     <div class="xui-row pr">
         <label class="xui-i-left fl">分销奖励：</label>
-        <select name="distribution_rewards" {% if qrcode %} disabled="disabled"{% endif %}>
+        <select class="xui-input-style" name="distribution_rewards" {% if qrcode %} disabled="disabled"{% endif %}>
         {{ qrcode.distribution_rewards }}
             <option value="0" {% ifequal qrcode.distribution_rewards 'False' %}selected="selected"{% endifequal %}>无</option>
             <option value="1" {% ifequal qrcode.distribution_rewards 1 %}selected="selected"{% endifequal %}>佣金</option>
@@ -50,40 +127,40 @@
     </div>
     <div class="xui-row pr">
         <label class="xui-i-left fl">佣金返现率：</label>
-        <input name="commission_rate" type="text" {% if qrcode %}value="{{ qrcode.commission_rate }}" disabled="disabled"{% endif %}>%
-        （注：返现率不得高于20%；佣金=优惠后的价格X返现率）
+        <input class="xui-input-style" name="commission_rate" type="text" {% if qrcode %}value="{{ qrcode.commission_rate }}" disabled="disabled"{% endif %}>
+        <p class="xui-qr-hint"><span class="xui-qr-symbol">%</span><span class="xui-qr-text-red">（注：返现率不得高于<span class="xui-qr-text-black">20</span>%；</span><span class="xui-qr-text-blue">佣金=优惠后的价格X返现率</span><span class="xui-qr-text-red ml0">）</span></p>
     </div>
     <div class="xui-row pr">
         <label class="xui-i-left fl">最低返现折扣：</label>
-        <input name="minimun_return_rate" type="text" {% if qrcode %}value="{{ qrcode.minimun_return_rate }}" disabled="disabled"{% endif %}>
-        %（注：若设置为80，则商品在优惠的价格在80%以下不参与返佣金）
+        <input class="xui-input-style" name="minimun_return_rate" type="text" {% if qrcode %}value="{{ qrcode.minimun_return_rate }}" disabled="disabled"{% endif %}>
+        <p class="xui-qr-hint"><span class="xui-qr-symbol">%</span><span class="xui-qr-text-red">（注：若设置为80，则商品在优惠的价格在80%以下不参与返佣金）</span></p>
     </div>
     <div class="xui-row pr">
         <label class="xui-i-left fl">佣金返现标准：</label>
-        <input name="commission_return_standard" type="text" {% if qrcode %}value="{{ qrcode.commission_return_standard }}" disabled="disabled"{% endif %}/> 元（佣金取现最低金额）
+        <input class="xui-input-style" name="commission_return_standard" type="text" {% if qrcode %}value="{{ qrcode.commission_return_standard }}" disabled="disabled"{% endif %}/> <p class="xui-qr-hint"><span class="xui-qr-symbol">元</span><span class="xui-qr-text-grey">（佣金取现最低金额）</span></p>
     </div>
     <div class="xui-row pr">
         <label class="xui-i-left fl">多少天结算标准：</label>
-        <input name="return_standard" type="text" {% if qrcode %}value="{{ qrcode.return_standard }}" disabled="disabled"{% endif %}/>
+        <input class="xui-input-style" name="return_standard" type="text" {% if qrcode %}value="{{ qrcode.return_standard }}" disabled="disabled"{% endif %}/>
 {#        <input name="standardMethod" type="radio" value="1" />是#}
 {#        <input name="standardMethod" type="radio" value="0" />否#}
     </div>
-    <div class="xui-row pr">扫码设置</div>
+    <div class="xui-row pr"><p class="xui-qr-header">扫码设置</p></div>
     <hr/>
     <div class="xui-row pr">
         <label class="xui-i-left fl">
             添加到分组：
         </label>
-        <select name="group_id">
+        <select class="xui-input-style" name="group_id">
             {% for tag in tags %}
-            <option value="{{tag.id}}"{% if qrcode.group_id == tag.id or not qrcode.group_id and tag.name == '未分组' %}selected="selected"{% endif%}>{{tag.name}}</option>
+            <option class="xui-input-style" value="{{tag.id}}"{% if qrcode.group_id == tag.id or not qrcode.group_id and tag.name == '未分组' %}selected="selected"{% endif%}>{{tag.name}}</option>
             {% endfor %}
         </select>
-        <div>内置分组为会员分组</div>
+        <div><p class="xui-hint">内置分组为会员分组</p></div>
     </div>
-    <div class="xui-row pr">
+    <div class="xui-row mb20 pr">
         <label class="xui-i-left fl">扫描奖励：</label>
-        <div class=" fl mt18 ml20">
+        <div class=" fl mt18">
         <div class="controls" id="prize_selector" data-ui-role="prize-selector" data-init-prizeinfo='{% if qrcode %}{{ qrcode.award_prize_info|safe }}{% else %}{% endif %}'></div>
         <input id="prize_info" name="prize_info" class="hide" value="">
         </div>
@@ -348,7 +425,19 @@
                 });
             }
         });
-
+        
+        function valueLessFive() {
+            var obj = document.getElementById('xa-input-limit');
+            var level = obj.value;
+            //console.log(level);
+            level = level.replace(/\s/g,"");
+            //console.log(level);
+            if (level.length > 5) {
+                W.showHint('error', '请输入5个字符以内');
+                obj.focus();
+                obj.value = '';
+            }
+        }
 
 
     </script>
