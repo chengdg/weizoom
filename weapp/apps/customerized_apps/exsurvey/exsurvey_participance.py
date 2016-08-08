@@ -178,7 +178,7 @@ class exsurveyParticipance(resource.Resource):
 					pass #非会员，不进行优惠券发放
 				else:
 					coupon_rule_id = int(prize['data']['id'])
-					coupon, msg = get_consume_coupon(request.webapp_owner_id, 'exsurvey', data['belong_to'], coupon_rule_id, request.member.id)
+					coupon, msg, _ = get_consume_coupon(request.webapp_owner_id, 'exsurvey', data['belong_to'], coupon_rule_id, request.member.id)
 					if not coupon:
 						error_msg = msg
 
