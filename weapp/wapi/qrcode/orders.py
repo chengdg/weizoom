@@ -159,6 +159,7 @@ class QrcodeOrder(api_resource.ApiResource):
 				"products": products,
 				"sale_price": u'%.2f' % sale_price,  #销售额
 				"status_text": STATUS2TEXT[channel_order.status],
+				"created_at": channel_order.created_at.strftime('%Y-%m-%d %H:%M:%S'),
 				"finished_at": order_number2finished_at.get(channel_order.order_id, channel_order.update_at).strftime('%Y-%m-%d %H:%M:%S')
 			})
 
