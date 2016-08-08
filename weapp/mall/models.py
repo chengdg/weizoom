@@ -604,7 +604,7 @@ class Product(models.Model):
 			id2product[product.id] = product
 
 		#创建promotions业务对象集合
-		product_promotion_relations = promotion_models.ProductHasPromotion.objects.filter(product_id__in=product_ids, promotion__owner=webapp_owner)
+		product_promotion_relations = promotion_models.ProductHasPromotion.objects.filter(product_id__in=product_ids, promotion__owner=webapp_owner, promotion__status=promotion_models.PROMOTION_STATUS_STARTED)
 		promotion_ids = list()
 		promotion2product = dict()
 		for relation in product_promotion_relations:
