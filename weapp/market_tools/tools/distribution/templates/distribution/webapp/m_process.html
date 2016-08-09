@@ -1,172 +1,58 @@
-<!doctype html>
-<head>
+{% extends "webapp_content_base.html" %}
+{% load common_tag %}
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="format-detection" content="telephone=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
-<!-- {% load staticfiles %}
-<link rel="stylesheet" href="/markettools_static/distribution/css/m_distribution.css">
-<link rel="stylesheet" href="/markettools_static/weizoom_card/css/wzcoin.css"> -->
 
+{% block css%}
+<link type="text/css" rel="stylesheet" href="/markettools_static/distribution/css/m_weixin_style_v1.css">
 <style>
-/*reset css*/
-html{font-family: Arial, "Microsoft Yahei", "SimSun", sans-serif;-webkit-text-size-adjust:100%;-moz-text-size-adjust:100%;-ms-text-size-adjust:100%;}
-body{-webkit-overflow-scrolling:touch;margin:0;}
-ul{margin:0;padding:0;list-style:none;outline:none;}
-dl,dd{margin:0;}
-a{display:inline-block;margin:0;padding:0;text-decoration:none;background:transparent;outline:none;color:#000;}
-a:link,a:visited,a:hover,a:active{text-decoration:none;color:currentColor;}
-a,dt,dd{-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent;}
-img{border:0;}
-p{margin:0;}
-input,button,select,textarea{margin:0;padding:0;border:0;outline:0;background-color:transparent;}
-/*page css*/
-.xui-wrapper {margin:0 auto;width:100%;max-width:750px;height:100vh;background-color:#efeff4;}
-.xui-wrapper .xui-header-bar {
-    overflow: hidden;
-    position: fixed;
-    top: 0;
-    width: 100%;
-    max-width: 750px;
-    height: 40px;
-    font-size: 17px;
-    text-align: center;
-    line-height: 40px;
-    color: #fff;
-    background-color: rgba(28,28,28,.9);
-    z-index: 999;
-    box-shadow: 0 1px 1px rgba(0,0,0,.1);
-}
-.xui-wrapper .xui-header-bar .back {
-    float:left;
-    margin-left: 15px;
-}
-.xui-wrapper .xui-header-bar .back i {
-    margin-right: 5px;
-}
-.xui-wrapper .xui-header-bar .menu {
-    float: right;
-    margin-right: 15px;
-}
-.xui-wrapper .xui-header-bar .menu i {
-    display: inline-block;
-    margin-right: 3px;
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
-    background-color: #fff;
-}
-.xui-wrapper .xui-mEnchashmentProcess {
-    padding-top: 50px;
-}
-.xui-wrapper .xui-list {
-    height: 90px;
-    margin-bottom: 10px;
-    padding: 15px;
-    border-top: 1px solid #dedede;
-    border-bottom: 1px solid #dedede;
-    background-color: #fff;
-}
-.xui-wrapper .xui-time {
-    margin-bottom: 20px;
-    font-size: 14px;
-    color: #999;
-}
-.xui-wrapper .xui-process {
-    overflow: hidden;
-    text-align: center;
-}
-.xui-wrapper .xui-step {
-    display: inline-block;
-    width: 90px;
-    height: 30px;
-    font-size: 14px;
-    line-height: 30px;
-    color: #2388e4;
-    border: 1px solid #2388e4;
-    border-radius: 5px;
-}
-.xui-wrapper .xui-step:first-child {
-    float: left;
-}
-.xui-wrapper .xui-step:last-child {
-    float: right;
-}
-.xui-wrapper .cur {
-    color: #fff;
-    background-color: #2388e4;
-}
-.xui-wrapper .xui-step .icon-right {
-    margin-left: 6px;
-}
-.xui-wrapper .xui-step .icon-rect-white {
-    display: inline-block;
-    vertical-align: middle;
-    width: 5px;
-    height: 4px;
-    background-color: #fff;
-}
-.xui-wrapper .xui-step .icon-rect-blue {
-    display: inline-block;
-    vertical-align: middle;
-    width: 5px;
-    height: 4px;
-    background-color: #2388e4;
-}
-.xui-wrapper .xui-step .icon-tri-white {
-    display: inline-block;
-    width: 0;
-    height: 0;
-    border-top: 4px solid transparent;
-    border-left: 7px solid #fff;
-    border-bottom: 4px solid transparent;
-}
-.xui-wrapper .xui-step .icon-tri-blue {
-    display: inline-block;
-    width: 0;
-    height: 0;
-    border-top: 4px solid transparent;
-    border-left: 7px solid #2388e4;
-    border-bottom: 4px solid transparent;
-}
+   
 </style>
-</head>
-<body>
-<div class="xui-wrapper">
-    <div class="xui-header-bar">
-        <a class="back" href="#"><i>&lt;</i>返回</a>
-        <span>取现进度</span>
-        <a class="menu" href="#"><i></i><i></i><i></i></a>
-    </div>
-    <div class="xui-mEnchashmentProcess">
-        {% if owner_lists %}
-            {% for owner_list in owner_lists reversed %}
+{% endblock %}
+{% block content-panel %}
+<div class="xui-wrapper xui-process-wrapper">
+    <div class="xui-mainContain pt50">
+        {% if cur_list %}
+            <div class="xui-list">
+                <div class="xui-time">时间：{{ cur_list.created_at|date:"Y/m/d H:i" }}</div>
+                <ul class="xui-process">
+                    {% if cur_list.state == 1 %}
+                        <li class="xui-step cur">已申请<span class="icon-right icon-moveRight"><i class="icon-rect-white"></i><i class="icon-tri-white"></i>
+                        <li class="xui-step">正在返现<span class="icon-right"><i class="icon-rect-blue"></i><i class="icon-tri-blue"></i></span></li>
+                        <li class="xui-step">已完成</li>
+                    {% endif %}
+                    {% if cur_list.state == 2 %}
+                        <li class="xui-step">已申请<span class="icon-right"><i class="icon-rect-blue"></i><i class="icon-tri-blue"></i>
+                        <li class="xui-step cur">正在返现<span class="icon-right icon-moveRight"><i class="icon-rect-white"></i><i class="icon-tri-white"></i></span></li>
+                        <li class="xui-step">已完成</li>
+                    {% endif %}
+                    {% if cur_list.state == 3 %}
+                        <li class="xui-step">已申请<span class="icon-right"><i class="icon-rect-blue"></i><i class="icon-tri-blue"></i>
+                        <li class="xui-step">正在返现<span class="icon-right"><i class="icon-rect-blue"></i><i class="icon-tri-blue"></i></span></li>
+                        <li class="xui-step cur">已完成</li>
+                    {% endif %}
+                </ul>
+            </div>
+        {% endif %}
+
+        {% if prev_lists %}
+            {% for prev_list in prev_lists %}
                 <div class="xui-list">
-                    <div class="xui-time">时间：{{ owner_list.created_at|date:"Y/m/d H:i" }}</div>
+                    <div class="xui-time">时间：{{ prev_list.created_at|date:"Y/m/d H:i" }}</div>
                     <ul class="xui-process">
-                        {% if owner_list.step == 1 %}
-                            <li class="xui-step cur">已申请<span class="icon-right"><i class="icon-rect-white"></i><i class="icon-tri-white"></i></span></li>
-                        {% else %}
-                            <li class="xui-step">已申请<span class="icon-right"><i class="icon-rect-blue"></i><i class="icon-tri-blue"></i></span></li>
-                        {% endif %}
-                        {% if owner_list.step == 2 %}
-                              <li class="xui-step cur">正在返现<span class="icon-right"><i class="icon-rect-white"></i><i class="icon-tri-white"></i></span></li>
-                        {% else %}
-                             <li class="xui-step">正在返现<span class="icon-right"><i class="icon-rect-blue"></i><i class="icon-tri-blue"></i></span></li>
-                        {% endif %}
-                        {% if owner_list.step == 3 %}
-                            <li class="xui-step cur">已完成</li>
-                        {% else %}
-                            <li class="xui-step">已完成</li>
-                        {% endif %}
+                        <li class="xui-step">已申请<span class="icon-right"><i class="icon-rect-blue"></i><i class="icon-tri-blue"></i>
+                        <li class="xui-step">正在返现<span class="icon-right"><i class="icon-rect-blue"></i><i class="icon-tri-blue"></i></span></li>
+                        <li class="xui-step cur">已完成</li>
                     </ul>
-                </div>
             {% endfor %}
-        {% else %}
-            没有记录
         {% endif %}
     </div>
-</div>
-</body>
-</html>
+{% endblock %}
+
+{% block js %}
+<script>
+</script>
+{% endblock %}

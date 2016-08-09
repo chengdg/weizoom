@@ -1,0 +1,65 @@
+{% extends "webapp_content_base.html" %}
+{% load common_tag %}
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="format-detection" content="telephone=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+{% block css%}
+<link type="text/css" rel="stylesheet" href="/markettools_static/distribution/css/m_weixin_style_v1.css">
+<style>
+   .xui-icon-flag {
+   		background: url('{{ user_icon }}') no-repeat;
+   }
+</style>
+{% endblock %}
+{% block content-panel %}
+<div class="xui-wrapper xui-process-wrapper">
+	<div class="xui-mainContain pt50 bg_fff">
+		<div class="xui-returnCommission">
+			<div class="xui-message">
+				<i class="xui-icon-person"></i>
+				<span class="ml15">已提取</span>
+				<span>￥{{ total_return }}</span>
+				<span class="ml15">收入</span>
+				<span>￥{{ total_earn }}</span>
+			</div>
+			<div class="xui-process">
+				<i id="icon-flag" class="xui-icon-flag"></i>
+				<div class="xui-process-static"></div>
+				<div id="process-bar" class="xui-process-active"></div>
+			</div>
+			<span class="xui-total-money xui-text-num">{{ commission_return_standard }}元</span>
+			<p class="xui-text">已获得奖励<span class="xui-text-num">{{ will_return_reward }}元</span></p>
+			<p class="xui-text">还差<span class="xui-text-num">{{ diff_reward }}元</span>就可以取现了！</p>
+			<p class="xui-btn-return"><a href="javascript:void(0)">申请返还</a></p>
+			<p class="xui-text xui-text-method">商家选择了<span class="xui-text-day">{{ return_standard }}天</span>结算方式，交易完成后的佣金将在<span class="xui-text-day">{{ return_standard }}天</span>后显示并取现</p>
+		</div>
+	</div>
+	<ul class="xui-link bg_fff">
+		<li class="xui-link-list"><a href="./?
+
+module=market_tool:distribution&model=process&action=get&webapp_id={{webapp_id}}&member_id={{member_id}}">资金交易明细<span>&gt;</span></a></li>
+		<li class="xui-link-list"><a href="#">二维码推广<span>&gt;</span></a></li>
+		<li class="xui-link-list"><a href="#">会员记录<span>&gt;</span></a></li>
+	</ul>
+	<div class="xui-explain bg_fff">
+		<p class="xui-explain-header">推广分销使用说明：</p>
+		<p class="xui-explain-text">此二维码为分配的分销二维码，微信用户可以通过扫描此二维码成为您的会员，关注后的会员每笔消费都会产生相应的奖励佣金，并返还至您的账户。当奖励达到设置的取现标准后，可以申请提现。</p>
+	</div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+function activeProcess(hasGet, totalGet) {
+	var flag = document.getElementById('icon-flag');
+	var processBar = document.getElementById('process-bar');
+	var widthPercentage = Math.round(hasGet/totalGet*100);
+	flag.style.left = (widthPercentage-1) + '%';
+	processBar.style.width = widthPercentage + '%';
+}
+activeProcess({{ will_return_reward }}, {{ commission_return_standard }});
+</script>
+{% endblock %}

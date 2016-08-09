@@ -1,0 +1,583 @@
+@charset "utf-8";
+/*css reset*/
+html{font-family: Arial, "Microsoft Yahei", "SimSun", sans-serif;-webkit-text-size-adjust:100%;-moz-text-size-adjust:100%;-ms-text-size-adjust:100%;}
+body{-webkit-overflow-scrolling:touch;margin:0;}
+ul{margin:0;padding:0;list-style:none;outline:none;}
+dl,dd{margin:0;}
+a{display:inline-block;margin:0;padding:0;text-decoration:none;background:transparent;outline:none;color:#000;}
+a:link,a:visited,a:hover,a:active{text-decoration:none;color:currentColor;}
+a,dt,dd{-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent;}
+img{border:0;}
+p{margin:0;}
+input,button,select,textarea{margin:0;padding:0;border:0;outline:0;background-color:transparent;}
+
+/*公共样式*/
+html {
+    font-size: 62.5%;
+}
+.ml10 {
+    margin-left: 10px;
+}
+.ml15 {
+    margin-left: 15px;
+}
+.mb30 {
+    margin-bottom: 30px;
+}
+.pt30 {
+    padding-top: 30px;
+}
+.pt45 {
+    padding-top: 45px;
+}
+.pt50 {
+    padding-top: 50px;
+}
+.bg_fff {
+    background-color: #fff;
+}
+.xui-wrapper {
+    margin:0 auto;
+    width:100%;
+    max-width:750px;
+    height:100vh;
+    background-color:#efeff4;
+}
+.xui-wrapper img {
+    display: block;
+    width: 100%;
+}
+.xui-wrapper .xui-header {
+	overflow: hidden;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    max-width: 750px;
+    height: 40px;
+    font-size: 1.7rem;
+    text-align: center;
+    line-height: 40px;
+    color: #fff;
+    background-color: rgba(28,28,28,.9);
+    box-shadow: 0 1px 1px rgba(0,0,0,.1);
+    z-index: 999;
+}
+.xui-wrapper .xui-header .xui-back {
+	float:left;
+	margin-left: 15px;
+}
+.xui-wrapper .xui-header .xui-back i {
+	margin-right: 5px;
+}
+.xui-wrapper .xui-header .xui-menu {
+	float: right;
+	margin-right: 15px;
+}
+.xui-wrapper .xui-header .xui-menu i {
+	display: inline-block;
+	margin-right: 3px;
+	width: 5px;
+	height: 5px;
+	border-radius: 50%;
+	background-color: #fff;
+}
+
+/* m_process 取现进度 */
+.xui-process-wrapper .xui-list {
+    height: 90px;
+    margin-bottom: 10px;
+    padding: 15px;
+    border-top: 1px solid #dedede;
+    border-bottom: 1px solid #dedede;
+    background-color: #fff;
+}
+.xui-process-wrapper .xui-time {
+    margin-bottom: 20px;
+    font-size: 1.4rem;
+    color: #999;
+}
+.xui-process-wrapper .xui-process {
+	overflow: hidden;
+	text-align: center;
+}
+.xui-process-wrapper .xui-step {
+	display: inline-block;
+    width: 90px;
+    height: 30px;
+    font-size: 1.4rem;
+    line-height: 30px;
+    color: #2388e4;
+    border: 1px solid #2388e4;
+    border-radius: 5px;
+}
+.xui-process-wrapper .xui-step:first-child {
+	float: left;
+}
+.xui-process-wrapper .xui-step:last-child {
+	float: right;
+}
+.xui-process-wrapper .cur {
+	color: #fff;
+	background-color: #2388e4;
+}
+.xui-process-wrapper .xui-step .icon-right {
+    display: inline-block;
+	margin-left: 6px;
+}
+.xui-process-wrapper .xui-step .icon-moveRight {
+    -webkit-animation: arrowMoveRight 1s linear infinite alternate;
+    -moz-animation: arrowMoveRight 1s linear infinite alternate;
+    -ms-animation: arrowMoveRight 1s linear infinite alternate;
+    -o-animation: arrowMoveRight 1s linear infinite alternate;
+    animation: arrowMoveRight 1s linear infinite alternate;
+}
+.xui-process-wrapper .xui-step .icon-rect-white {
+	display: inline-block;
+	vertical-align: middle;
+	width: 5px;
+	height: 4px;
+	background-color: #fff;
+}
+.xui-process-wrapper .xui-step .icon-rect-blue {
+	display: inline-block;
+	vertical-align: middle;
+	width: 5px;
+	height: 4px;
+	background-color: #2388e4;
+}
+.xui-process-wrapper .xui-step .icon-tri-white {
+	display: inline-block;
+	width: 0;
+    height: 0;
+    border-top: 4px solid transparent;
+    border-left: 7px solid #fff;
+    border-bottom: 4px solid transparent;
+}
+.xui-process-wrapper .xui-step .icon-tri-blue {
+	display: inline-block;
+	width: 0;
+    height: 0;
+    border-top: 4px solid transparent;
+    border-left: 7px solid #2388e4;
+    border-bottom: 4px solid transparent;
+}
+
+/* m_weixin_promotion 二维码推广 */
+.xui-promption-wrapper {
+    background-color: #fff;
+}
+.xui-promption-wrapper .xui-text-area {
+    font-size: 1.6rem;
+    text-align: center;
+    font-weight: 700;
+    color: #333;
+}
+.xui-promption-wrapper .xui-qrCode-content {
+    position: relative;
+	width: 100%;
+    background: url('../styles/images/promotion-bg.png');
+    background-size: 120px;
+}
+.xui-promption-wrapper .xui-qrCode-bg {
+    display: block;
+    position: relative;
+    width: 100%;
+}
+.xui-promption-wrapper .xui-qrCode-content:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-left: 12px solid transparent;
+    border-right: 12px solid transparent;
+    border-top: 15px solid #fff;
+    -webkit-transform: translate(-50%, 0);
+    -moz-transform: translate(-50%, 0);
+    -ms-transform: translate(-50%, 0);
+    -o-transform: translate(-50%, 0);
+    transform: translate(-50%, 0);
+}
+.xui-promption-wrapper .xui-qrCode-content .icon-down {
+    position: absolute;
+    display: block;
+    top: 25px;
+    left: 50%;
+    width: 14%;
+    height: 6%;
+    background: url("../styles/images/promotion-icon.png") no-repeat;
+    background-size: 55%;
+    -webkit-transform: translate(-28%, 0);
+    -moz-transform: translate(-28%, 0);
+    -ms-transform: translate(-28%, 0);
+    -o-transform: translate(-28%, 0);
+    transform: translate(-28%, 0);
+}
+.xui-promption-wrapper .xui-qrCode-content .icon-moveDown {
+    -webkit-animation: arrowMoveDown 1s linear infinite alternate;
+    -moz-animation: arrowMoveDown 1s linear infinite alternate;
+    -ms-animation: arrowMoveDown 1s linear infinite alternate;
+    -o-animation: arrowMoveDown 1s linear infinite alternate;
+    animation: arrowMoveDown 1s linear infinite alternate;
+}
+.xui-promption-wrapper .xui-qrCode-content .xui-quCode-box {
+    display: inline-block;
+    position: relative;
+    margin-top: 148px;
+    margin-left: 50%;
+    padding: 14px;
+    width: 118px;
+    height: 118px;
+    background-color: #fff;
+    -webkit-transform: translate(-50%, 0);
+    -moz-transform: translate(-50%, 0);
+    -ms-transform: translate(-50%, 0);
+    -o-transform: translate(-50%, 0);
+    transform: translate(-50%, 0);
+    z-index: 5;
+}
+.xui-promption-wrapper .xui-qrCode-content .xui-shadow-box {
+    position: absolute;
+    top: 80px;
+    left: 50%;
+    margin-left: -140px;
+    width: 280px;
+    opacity: .7;
+    /*-webkit-transform: translate(-50%, 0);
+    -moz-transform: translate(-50%, 0);
+    -ms-transform: translate(-50%, 0);
+    -o-transform: translate(-50%, 0);
+    transform: translate(-50%, 0);*/
+}
+.xui-promption-wrapper .xui-qrCode-content .xui-nickname {
+    padding-top: 30px;
+    font-size: 1.9rem;
+    text-align: center;
+    color: #fff;
+}
+.xui-promption-wrapper .xui-qrCode-content .xui-slogan {
+    margin: 0 2rem;
+    padding: 30px 0 196px;
+}
+
+/* m_my_promotion 推广分销*/
+.xui-myPromption-wrapper .xui-returnCommission {
+    margin: 0 10px;
+    color: #333;
+}
+.xui-myPromption-wrapper .xui-returnCommission:before {
+    content: "";
+    position: absolute;
+    top: 40px;
+    left: 0;
+    width: 100%;
+    height: 10px;
+    border-bottom: 1px solid #dedede;
+    background-color: #efeff4;
+}
+.xui-myPromption-wrapper .xui-returnCommission .xui-message {
+    padding: 10px 0;
+    border-bottom: 1px solid #dedede;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.xui-myPromption-wrapper .xui-returnCommission .xui-icon-person {
+    display: inline-block;
+    vertical-align: middle;
+    width: 47px;
+    height: 47px;
+    background: #fff url('../styles/images/myPromotion-icon-person.png') no-repeat;
+    background-size: 47px;
+}
+.xui-myPromption-wrapper .xui-returnCommission .xui-message span {
+    display: inline-block;
+    vertical-align: middle;
+    font-size: 1.5rem;
+}
+.xui-myPromption-wrapper .xui-returnCommission .xui-process {
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+    padding: 28px 0 12px;
+    width: 82%;
+}
+.xui-myPromption-wrapper .xui-process .xui-icon-flag {
+    position: absolute;
+    top: 10px;
+    left: 0;
+    width: 12px;
+    height: 18px;
+    background-size: 11px;
+}
+.xui-myPromption-wrapper .xui-process .xui-process-static {
+    width: 100%;
+    height: 15px;
+    border-radius: 10px;
+    box-shadow: 0 0 5px rgba(0, 198, 255,.6);
+    background-color: rgba(0, 198, 255,.6);
+}
+.xui-myPromption-wrapper .xui-process .xui-process-active {
+    position: absolute;
+    top: 28px;
+    left: 0;
+    width: 0;
+    height: 12px;
+    border: 1px solid #4dafe2;
+    border-radius: 10px;
+    background-image: linear-gradient(45deg, transparent 0rem, transparent 0.8rem, #4dafe2 0.9rem, #4dafe2 2.1rem, transparent 2.1rem, transparent 2.9rem, #4dafe2 3.1rem);
+    background-color: #008cd5;
+    background-size: 25px 38px;
+    box-shadow: 1px 1px 5px rgba(0, 140, 213, .8);
+    -webkit-animation: process 750ms infinite linear;
+    -moz-animation: process 750ms infinite linear;
+    -ms-animation: process 750ms infinite linear;
+    animation: process 750ms infinite linear;
+}
+.xui-myPromption-wrapper .xui-process .xui-process-active:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 100%;
+    border-radius: 10px;
+    background-image: linear-gradient(to bottom, #4dafe2, rgba(0, 140, 213, .6) 15%, transparent 60%, #4dafe2);
+}
+.xui-myPromption-wrapper .xui-returnCommission .xui-total-money {
+    display: inline-block;
+    padding-top: 10px;
+    vertical-align: middle;
+}
+.xui-myPromption-wrapper .xui-text {
+    padding-top: 10px;
+    font-size: 1.5rem;
+    color: #333;
+}
+.xui-myPromption-wrapper .xui-text-num {
+    margin-left: 4px;
+    font-size: 1.5rem;
+    color: #f10000;
+}
+.xui-myPromption-wrapper .xui-returnCommission .xui-btn-return {
+    display: block;
+    margin-top: 20px;
+    font-size: 1.5rem;
+    text-align: center;
+    color: #fff;
+}
+.xui-myPromption-wrapper .xui-returnCommission .xui-btn-return a {
+    display: inline-block;
+    padding: 12px 18px;
+    border: 1px solid #008cd5;
+    border-radius: 5px;
+    box-shadow: 1px 1px 5px rgba(0, 140, 213, .8);
+    background-color: #008cd5;
+}
+.xui-myPromption-wrapper .xui-returnCommission .xui-text-method {
+    margin: 0 20px;
+    padding-bottom: 20px;
+    text-align: center;
+}
+.xui-myPromption-wrapper .xui-returnCommission .xui-text-day {
+    font-size: 1.5rem;
+    color: #008cd5;
+}
+.xui-myPromption-wrapper .xui-mainContain {
+    margin-bottom: 10px;
+    border-bottom: 1px solid #dedede;
+}
+.xui-myPromption-wrapper .xui-link {
+    margin-bottom: 10px;
+    font-size: 1.4rem;
+    color: #333;
+    border-top: 1px solid #dedede;
+}
+.xui-myPromption-wrapper .xui-link-list {
+    overflow: hidden;
+    padding: 15px 0;
+    border-bottom: 1px solid #dedede;
+}
+.xui-myPromption-wrapper .xui-link-list a {
+    display: block;
+    margin: 0 10px;
+}
+.xui-myPromption-wrapper .xui-link-list span {
+    display: inline-block;
+    float: right;
+}
+.xui-myPromption-wrapper .xui-explain {
+    position: relative;
+    padding: 20px 10px 30px;
+    font-size: 1.3rem;
+    color: #666; 
+}
+.xui-myPromption-wrapper .xui-explain:after {
+    content: "";
+    display: inline-block;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 15px;
+    border-top: 1px solid #dedede;
+    background-color: #efeff4;
+}
+.xui-myPromption-wrapper .xui-explain .xui-explain-header {
+    margin-bottom: 10px;
+    font-size: 1.5rem;
+    color: #333;
+}
+.xui-myPromption-wrapper .xui-explain .xui-explain-text {
+    line-height: 1.4rem;
+}
+
+/* m_details 我的推广-返现明细 */
+.xui-details-wrapper .xui-mainContain .xui-details-header {
+    padding: 14px 0;
+    font-size: 1.5rem;
+    color: #f10000;
+    border-top: 1px solid #dedede;
+    border-bottom: 1px solid #dedede;
+    background-color: #eaeaea;
+}
+.xui-details-wrapper .xui-details-header .xui-text {
+    display: inline-block;
+    margin-left: 10px;
+    color: #333;
+}
+.xui-details-wrapper .xui-details-header .xui-balance {
+    float: right;
+    margin-right: 10px;
+}
+.xui-details-wrapper .xui-mainContain .xui-details-list {
+    position: relative;
+    padding: 10px 0;
+    font-size: 1.4rem;
+    color: #333;
+    border-bottom: 1px solid #dedede;
+}
+.xui-details-wrapper .xui-details-list .xui-text-box {
+    margin-left: 10px;
+}
+.xui-details-wrapper .xui-details-list .xui-day {
+    font-size: 1.2rem;
+    color: #999;
+}
+.xui-details-wrapper .xui-details-list .xui-time {
+    margin-left: 10px;
+}
+.xui-details-wrapper .xui-details-list  .xui-num {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    font-size: 1.5rem;
+    color: #ff8a00;
+    -webkit-transform: translate(0, -50%);
+    -moz-transform: translate(0, -50%);
+    -ms-transform: translate(0, -50%);
+    transform: translate(0, -50%);
+}
+
+/* m_vip 已有会员 */
+.xui-vip-wrapper .xui-vip-form  {
+    font-size: 1.6rem;
+    color: #333;
+}
+.xui-vip-wrapper .xui-vip-form .xui-vip-list {
+    margin-bottom: 10px;
+    padding: 10px;
+    border-top: 1px solid #dedede;
+    border-bottom: 1px solid #dedede;
+}
+.xui-vip-wrapper .xui-vip-list .xui-vip-header {
+    overflow: hidden;
+    padding: 10px 0;
+    border-bottom: 1px solid #dedede;
+}
+.xui-vip-wrapper .xui-vip-list .xui-vip-header .xui-nickname {
+    display: inline-block;
+}
+.xui-vip-wrapper .xui-vip-list .xui-vip-header span {
+    float: right;
+    font-size: 1.3rem;
+    line-height: 21px;
+    color: #999;
+}
+.xui-vip-wrapper .xui-vip-list .xui-vip-content {
+    overflow: hidden;
+    padding: 10px 10px 10px 0;
+    font-size: 1.4rem;
+    color: #333;
+}
+.xui-vip-wrapper .xui-vip-list .xui-vip-content span {
+    color: #008cd5;
+}
+.xui-vip-wrapper .xui-vip-list .xui-vip-content .xui-vip-commission {
+    display: inline-block;
+}
+.xui-vip-wrapper .xui-vip-list .xui-vip-content .xui-vip-consume {
+    float: right;
+}
+.xui-vip-wrapper .xui-vip-list .xui-vip-consume .xui-vip-num {
+    padding-top: 6px;
+}
+
+/* 动画 */
+@-webkit-keyframes arrowMoveRight {
+    0% { margin-left: 5px; }
+    100% { margin-left: 12px; }
+}
+@-moz-keyframes arrowMoveRight {
+    0% { margin-left: 5px; }
+    100% { margin-left: 12px; }
+}
+@-ms-keyframes arrowMoveRight {
+    0% { margin-left: 5px; }
+    100% { margin-left: 12px; }
+}
+@keyframes arrowMoveRight {
+    0% { margin-left: 5px; }
+    100% { margin-left: 12px; }
+}
+
+/*@keyframes arrowMoveDown {
+    0% { transform: translateY(10px); }
+    100% { transform: translateY(0); }
+}
+*/
+@-webkit-keyframes arrowMoveDown {
+    0% { margin-top: 0px; }
+    100% { margin-top: 14px; }
+}
+@-moz-keyframes arrowMoveDown {
+    0% { margin-top: 0px; }
+    100% { margin-top: 14px; }
+}
+@-ms-keyframes arrowMoveDown {
+    0% { margin-top: 0px; }
+    100% { margin-top: 14px; }
+}
+@keyframes arrowMoveDown {
+    0% { margin-top: 0px; }
+    100% { margin-top: 14px; }
+}
+
+@-webkit-keyframes process {
+    0% { background-position: 0 0; }
+    100% { background-position: 2em 0; }
+}
+@-moz-keyframes process {
+    0% { background-position: 0 0; }
+    100% { background-position: 2em 0; }
+}
+@-ms-keyframes process {
+    0% { background-position: 0 0; }
+    100% { background-position: 2em 0; }
+}
+@keyframes process {
+    0% { background-position: 0 0; }
+    100% { background-position: 2em 0; }
+}
