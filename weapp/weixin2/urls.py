@@ -8,7 +8,7 @@ import mp_user
 import message
 import webapp_link_manage
 import home
-# import process
+
 
 urlpatterns = [
 ]
