@@ -1,0 +1,57 @@
+<script id="channel-distribution-log-dialog-tmpl-src" type="text/x-jquery-tmpl">
+ <div class="modal fade xui-selectCouponDialog" id="commonSelectCouponDialog">
+    <div class="modal-dialog modal-lg" style="width: 820px;">
+    <div class="modal-content">
+    <div class="modal-header">
+            <button aria-hidden="true" data-dismiss="modal" class="close" type="button"><span class="xui-closeColor" aria-hidden="true">&times;</span></button>
+            <h3 class="modal-title">交易总额</h3>
+    </div>
+        <div class="xui-log-head">交易总额:xxx元</div>
+
+
+                <div class="modal-body" style="min-height: 300px; max-height: 500px; overflow: auto;">
+
+                    <div>
+                        <select name='log_select'>
+                            <option value="0">本期交易</option>
+                            <option value="1">所有交易</option>
+                        </select>
+                    </div>
+                    <div style="display:inline-block;" class="xa-searchMember"></div>
+                    <div
+                            data-ui-role="advanced-table"
+                            data-app="member"
+                            data-api="member_list"
+                            data-template-id="#channel-distribution-log-dialog-tmpl"
+                            data-enable-paginator="true"
+                            data-enable-sort="false"
+                            data-item-count-per-page="8"
+                            data-auto-load="false"
+                            class="mt10 mb20"
+                        ></div>
+                </div>
+        </div>
+        </div>
+    </div>
+
+</div>
+</script>
+
+<script id="channel-distribution-log-dialog-tmpl" type="text/x-jquery-tmpl">
+   <table id="channelLogTable" class="table table-bordered table-condensed xb-stripedTable xui-tablePosition mb10">
+        <thead style="background:#c8d2e5;">
+            <tr>
+                <th >用户名称</th>
+                <th>消费</th>
+                <th>返现金额</th>
+            </tr>
+        </thead>
+        <tbody id='vip_list'>
+                <tr>
+                <td>1</td>
+                <td>2</td>
+                <td>3</td>
+                </tr>
+        </tbody>
+    </table>
+</script>

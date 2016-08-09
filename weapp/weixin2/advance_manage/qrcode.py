@@ -1011,6 +1011,7 @@ class ChannelDistributions(resource.Resource):
 			qrcode_dict['distribution_rewards'] = str(distribution_rewards_status[qrcode.distribution_rewards])  # 分销奖励
 			qrcode_dict['created_at'] = str(qrcode.created_at)  # 创建时间
 			qrcode_dict['clearing'] = ''  # 会员结算 TODO 有新的提现请求显示new
+			qrcode_dict['ticket'] = qrcode.ticket
 			# qrcode_dict['']
 			items.append(qrcode_dict)
 
@@ -1298,3 +1299,13 @@ class ChannelDistributionClearing(resource.Resource):
 			'data': {}
 		}
 		return response.get_response()
+
+
+class ChannelDistributionTransactionAmount(resource.Resource):
+	app = 'new_weixin'
+	resource = 'channel_distribution_transaction_amount'
+
+	def api_get(request):
+		member_id = request.POST.get('member_id')
+
+

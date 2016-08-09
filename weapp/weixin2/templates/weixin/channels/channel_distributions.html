@@ -1,7 +1,18 @@
 {% extends "content_base_v2.html" %}
 {% block css %}
     <style>
-
+a:link,a:visited,a:hover,a:active{text-decoration:none;color:currentColor;}
+.xui-link {
+  display:inline-block;
+  margin:0;
+  padding: 4px 8px;
+    font-size: 12px;
+  text-decoration:none;
+  outline:none;
+  color: #333;
+    background-color: #fff;
+    box-shadow: 0 0 1px rgba(0,0,0,0.8);
+}
     </style>
 {% endblock %}
 {% block content-panel %}
@@ -95,10 +106,10 @@
 							        ${qrcode.created_at}
 							    </td>
 							    <td>
-							        <button type="button"><a href='/new_weixin/distribution_clearing/'>操作${qrcode.clearing}</a></button>
+							        <a class="xui-link" href='/new_weixin/distribution_clearing/'>操作${qrcode.clearing}</a>
 							    </td>
 							    <td>
-							    <button type="button"><a href='/new_weixin/channel_distribution/?setting_id=${qrcode.id}'>修改</a></button><button type="button">查看</button>
+							    <a class="xui-link" href='/new_weixin/channel_distribution/?setting_id=${qrcode.id}'>修改</a><a class="xui-link" target="_blank" href="https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=${qrcode.ticket}">查看</a>
 							    </td>
 							</tr>
 						{{/each}}
