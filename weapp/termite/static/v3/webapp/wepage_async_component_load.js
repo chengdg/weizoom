@@ -47,6 +47,11 @@ var AsyncComponentLoadView = BackboneLite.View.extend({
             // 将产品子数据，放到component.components中
             // 并把是否显示价格和名字的开关也放进去
             data.products.map(function(product){
+                // 判断是否为又拍云图片
+                var upaiyunKey = /upaiyun\.com/;
+                if (upaiyunKey.test(product['thumbnails_url'])) {
+                    product['thumbnails_url'] = product['thumbnails_url'] + '!list';
+                }
                 product['is_itemname_hidden'] = _this.component['component'].model['is_itemname_hidden'];
                 product['is_price_hidden'] = _this.component['component'].model['is_price_hidden'];
                 product['is_border_show'] = _this.component['component'].model['is_border_show'];
