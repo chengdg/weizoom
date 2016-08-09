@@ -93,14 +93,19 @@ class MscanlotteryCodeTest(resource.Resource):
 		响应GET
 		"""
 		scan_code = request.GET.get('scan_code', '')
+		if not scan_code or len(scan_code) != 20 or not scan_code.isdigit():
+			response = create_response(500)
+			response.errMsg = u'您的二维码有误'
+			return response.get_response()
+
 		scanlottery_record = app_models.ScanlotteryRecord.objects(code=scan_code)
 		if scanlottery_record:
 			response = create_response(500)
 			response.errMsg = u'该码已经参与'
-			return response.get_response()
 		else:
 			response = create_response(200)
-			return response.get_response()
+
+		return response.get_response()
 
 
 class MscanlotteryCaptcha(resource.Resource):

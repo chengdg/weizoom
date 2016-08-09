@@ -81,11 +81,11 @@ class Mscanlottery(resource.Resource):
 		"""
 		响应GET
 		"""
-		record_id = request.GET.get('id',None)
+		record_id = request.GET.get('id', None)
 		scanlottery_status = False
 
 		member = request.member
-		code = request.GET.get('scan_code',None)
+		code = request.GET.get('scan_code', None)
 		response = create_response(500)
 
 		if not code or len(code) != 20 or not code.isdigit():
