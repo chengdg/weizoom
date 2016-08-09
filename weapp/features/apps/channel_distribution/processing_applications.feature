@@ -194,15 +194,15 @@ Background:
 		
 @mall2 @apps @senior @processing_applications
 Scenario:1 分销会员结算页初次没有提交时的显示
-		When jack完成订单"002"
-		When jack完成订单"003"
-		When jack完成订单"004"
-		When jack完成订单"005"
-		When jack完成订单"006"
-		When jack完成订单"007"
-		When nokia完成订单"008"
-		When nokia完成订单"009"
-		When nokia完成订单"010"
+		When jobs完成订单"002"
+		When jobs完成订单"003"
+		When jobs完成订单"004"
+		When jobs完成订单"005"
+		When jobs完成订单"006"
+		When jobs完成订单"007"
+		When jobs完成订单"008"
+		When jobs完成订单"009"
+		When jobs完成订单"010"
 		Given jobs登录系统		
 		Then jobs获得分销会员结算列表
 			"""
@@ -228,12 +228,12 @@ Scenario:1 分销会员结算页初次没有提交时的显示
 			"""
 @mall2 @apps @senior @processing_applications
 Scenario:2 分销会员结算页等待审核状态
-		When jack完成订单"002"
-		When jack完成订单"003"
-		When jack完成订单"004"
-		When jack完成订单"005"
-		When jack完成订单"006"
-		When jack访问jobs的webapp
+		When jobs完成订单"002"
+		When jobs完成订单"003"
+		When jobs完成订单"004"
+		When jobs完成订单"005"
+		When jobs完成订单"006"
+		When bigs访问jobs的webapp
 		When bigs申请返现于2015-08-12 10:00:00
 		Given jobs登录系统
 		
@@ -253,13 +253,13 @@ Scenario:2 分销会员结算页等待审核状态
 
 @mall2 @apps @senior @processing_applications
 Scenario:3 分销会员结算页正在返现状态
-		When jack完成订单"002"
-		When jack完成订单"003"
-		When jack完成订单"004"
-		When jack完成订单"005"
-		When jack完成订单"006"
-		When jack完成订单"007"
-		When jack访问jobs的webapp
+		When jobs完成订单"002"
+		When jobs完成订单"003"
+		When jobs完成订单"004"
+		When jobs完成订单"005"
+		When jobs完成订单"006"
+		When jobs完成订单"007"
+		When bigs访问jobs的webapp
 		When bigs申请返现于2015-08-12 10:00:00
 		Given jobs登录系统
 		When jobs更改返现状态为"正在返现"
@@ -278,13 +278,13 @@ Scenario:3 分销会员结算页正在返现状态
 			"""
 @mall2 @apps @senior @processing_applications
 Scenario:4 分销会员结算页已完成/切换为无状态
-		When jack完成订单"002"
-		When jack完成订单"003"
-		When jack完成订单"004"
-		When jack完成订单"005"
-		When jack完成订单"006"
-		When jack完成订单"007"
-		When jack访问jobs的webapp
+		When jobs完成订单"002"
+		When jobs完成订单"003"
+		When jobs完成订单"004"
+		When jobs完成订单"005"
+		When jobs完成订单"006"
+		When jobs完成订单"007"
+		When bigs访问jobs的webapp
 		When bigs申请返现于2015-08-12 10:00:00
 		Given jobs登录系统
 		When jobs更改返现状态为"已完成/切换为无状态"
