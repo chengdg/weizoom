@@ -287,12 +287,12 @@ Background:
 
 @mall2 @apps @senior @trading_reward
 Scenario:1 一个微信用户扫码下单交易记录列表
-		When jack完成订单"002"
-		When jack完成订单"003"
-		When jack完成订单"004"
-		When jack完成订单"005"
-		When jack完成订单"006"
-		When jack访问jobs的webapp
+		When jobs完成订单"002"
+		When jobs完成订单"003"
+		When jobs完成订单"004"
+		When jobs完成订单"005"
+		When jobs完成订单"006"
+		When bigs访问jobs的webapp
 		When bigs申请返现于2015-08-12 10:00:00
 		When jobs已返现给jack金额"50.00"
 		
@@ -308,23 +308,23 @@ Scenario:1 一个微信用户扫码下单交易记录列表
 
 @mall2 @apps @senior @trading_reward
 Scenario:2 一个微信用户扫码下单2次交易记录列表
-		When jack完成订单"002"
-		When jack完成订单"003"
-		When jack完成订单"004"
-		When jack完成订单"005"
-		When jack完成订单"006"
+		When jobs完成订单"002"
+		When jobs完成订单"003"
+		When jobs完成订单"004"
+		When jobs完成订单"005"
+		When jobs完成订单"006"
 
-		When jack访问jobs的webapp
+		When bigs访问jobs的webapp
 		When bigs申请返现于2015-08-12 10:00:00
-		When jobs已返现给jack金额"50.00"
+		When jobs已返现给bigs金额"50.00"
 
-		When jack完成订单"022"
-		When jack完成订单"033"
-		When jack完成订单"044"
-		When jack完成订单"055"
-		When jack完成订单"066"
+		When jobs完成订单"022"
+		When jobs完成订单"033"
+		When jobs完成订单"044"
+		When jobs完成订单"055"
+		When jobs完成订单"066"
 		When bigs申请返现于2015-08-15 10:00:00
-		When jobs已返现给jack金额"50.00"
+		When jobs已返现给bigs金额"50.00"
 		When jobs设置查看条件
 			"""
 			{
@@ -358,28 +358,28 @@ Scenario:2 一个微信用户扫码下单2次交易记录列表
 			"""
 @mall2 @apps @senior @trading_reward
 Scenario:3 一个微信用户扫码下单1另一个微信用户下单2次交易记录列表
-		When jack完成订单"002"
-		When jack完成订单"003"
-		When jack完成订单"004"
-		When jack完成订单"005"
-		When jack完成订单"006"
+		When jobs完成订单"002"
+		When jobs完成订单"003"
+		When jobs完成订单"004"
+		When jobs完成订单"005"
+		When jobs完成订单"006"
 
-		When jack访问jobs的webapp
+		When bigs访问jobs的webapp
 		When bigs申请返现于2015-08-12 10:00:00
-		When jobs已返现给jack金额"50.00"
+		When jobs已返现给bigs金额"50.00"
 
-		When jack完成订单"022"
-		When jack完成订单"033"
-		When jack完成订单"044"
-		When jack完成订单"055"
-		When jack完成订单"066"
-		When marry完成订单"222"
-		When marry完成订单"333"
-		When marry完成订单"444"
-		When marry完成订单"555"
-		When marry完成订单"666"
+		When jobs完成订单"022"
+		When jobs完成订单"033"
+		When jobs完成订单"044"
+		When jobs完成订单"055"
+		When jobs完成订单"066"
+		When jobs完成订单"222"
+		When jobs完成订单"333"
+		When jobs完成订单"444"
+		When jobs完成订单"555"
+		When jobs完成订单"666"
 		When bigs申请返现于2015-08-15 10:00:00
-		When jobs已返现给jack金额"100.00"
+		When jobs已返现给bigs金额"100.00"
 		When jobs设置查看条件
 			"""
 			{
@@ -424,14 +424,14 @@ Scenario:3 一个微信用户扫码下单1另一个微信用户下单2次交易�
 
 @mall2 @apps @senior @trading_reward
 Scenario:4 奖励明细列表一条记录
-		When jack完成订单"002"
-		When jack完成订单"003"
-		When jack完成订单"004"
-		When jack完成订单"005"
-		When jack完成订单"006"
+		When jobs完成订单"002"
+		When jobs完成订单"003"
+		When jobs完成订单"004"
+		When jobs完成订单"005"
+		When jobs完成订单"006"
 		When jack访问jobs的webapp
 		When bigs申请返现于2015-08-12 10:00:00
-		When jobs已返现给jack金额"50.00"
+		When jobs已返现给bigs金额"50.00"
 		
 		Then jobs获得奖励明细列表
 			"""
@@ -447,28 +447,28 @@ Scenario:4 奖励明细列表一条记录
 
 @mall2 @apps @senior @trading_reward
 Scenario:5 奖励明细列表2条记录
-		When jack完成订单"002"
-		When jack完成订单"003"
-		When jack完成订单"004"
-		When jack完成订单"005"
-		When jack完成订单"006"
+		When jobs完成订单"002"
+		When jobs完成订单"003"
+		When jobs完成订单"004"
+		When jobs完成订单"005"
+		When jobs完成订单"006"
 
 		When jack访问jobs的webapp
 		When bigs申请返现于2015-08-12 10:00:00
-		When jobs已返现给jack金额"50.00"
+		When jobs已返现给bigs金额"50.00"
 
-		When jack完成订单"022"
-		When jack完成订单"033"
-		When jack完成订单"044"
-		When jack完成订单"055"
-		When jack完成订单"066"
-		When marry完成订单"222"
-		When marry完成订单"333"
-		When marry完成订单"444"
-		When marry完成订单"555"
-		When marry完成订单"666"
+		When jobs完成订单"022"
+		When jobs完成订单"033"
+		When jobs完成订单"044"
+		When jobs完成订单"055"
+		When jobs完成订单"066"
+		When jobs完成订单"222"
+		When jobs完成订单"333"
+		When jobs完成订单"444"
+		When jobs完成订单"555"
+		When jobs完成订单"666"
 		When bigs申请返现于2015-08-15 10:00:00
-		When jobs已返现给jack金额"100.00"
+		When jobs已返现给bigs金额"100.00"
 
 		Then jobs获得奖励明细列表
 			"""
