@@ -1113,9 +1113,20 @@ class ChannelDistribution(resource.Resource): # TODO 关联会员不可以有两
 	def api_put(request):
 		"""新建渠道分销二维码"""
 		bing_member_title = request.POST["bing_member_title"]  # 会员头衔
-		if  ChannelDistributionQrcodeSettings.objects.filter(bing_member_title=bing_member_title).exists():
+		if  ChannelDistributionQrcodeSettings.objects.filter(bing_member_title=bing_member_title).exists():  # 检测重复
 			response = create_response(400)
 			response.errMsg = u"重复的会员头衔"
+			return response.get_response()
+
+		bing_member_id = request.POST["bing_member_id"]  # 关联会员
+		if ChannelDistributionQrcodeSettings.objects.filter(bing_member_id=bing_member_id).exists():
+			response = create_response(400)
+			response.errMsg = u"一个会员只能绑定一个二维码"
+			return response.get_response()
+
+		if ChannelQrcodeSettings.objects.filter(bing_member_id=bing_member_id).exists():
+			response = create_response(400)
+			response.errMsg = u"一个会员只能绑定一个二维码"
 			return response.get_response()
 
 		award_prize_info = request.POST['prize_info'].strip()  # 扫描奖励
@@ -1129,7 +1140,7 @@ class ChannelDistribution(resource.Resource): # TODO 关联会员不可以有两
 			response.errMsg = u'不合法的award_prize_info：' + award_prize_info
 			return response.get_response()
 
-		bing_member_id = request.POST["bing_member_id"]  # 关联会员
+
 		distribution_rewards = request.POST["distribution_rewards"]  # 分销奖励 0:无 1:佣金
 		if distribution_rewards == '0':  # 如果分销奖励是无
 			commission_rate = 0
@@ -1234,11 +1245,31 @@ class ChannelDistributionClearing(resource.Resource):
 		"""
 		分销会员结算
 		"""
+		qrcodes = ChannelDistributionQrcodeSettings.objects.filter(owner__id=request.user.id)
+		return_money_total = 0  # 已返现总额
+		not_return_money_total = 0  # 未返现总额
+		current_total_return = 0# 本期返现总额
+		total_transaction_volume = 0 # 总交易额
+		extraction_money = 0  # 所有的extraction_money 之和
+
+		for qrcode in qrcodes:
+			total_transaction_volume += qrcode.total_transaction_volume
+			return_money_total += qrcode.total_return
+			current_total_return += qrcode.will_return_reward
+			extraction_money += qrcode.extraction_money
+
+		not_return_money_total = extraction_money + current_total_return
+
+
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
 			'second_navs': mall_export.get_promotion_and_apps_second_navs(request),
 			'second_nav_name': export.WEIXIN_ADVANCE_SECOND_NAV,
 			'third_nav_name': mall_export.ADVANCE_MANAGE_CHANNEL_DISTRIBUTIONS_NAV,
+			'return_money_total': return_money_total,
+			'not_return_money_total': not_return_money_total,
+			'current_total_return': current_total_return,
+			'total_transaction_volume': total_transaction_volume
 		})
 		return render_to_response('weixin/channels/channel_distribution_clearing.html', c)
 
@@ -1248,7 +1279,6 @@ class ChannelDistributionClearing(resource.Resource):
 		sort_attr = request.GET.get('sort_attr', '-created_at')
 		count_per_page = int(request.GET.get('count_per_page', 15))
 		cur_page = int(request.GET.get('page', '1'))
-
 
 		qrcodes = ChannelDistributionQrcodeSettings.objects.all()
 
@@ -1306,6 +1336,11 @@ class ChannelDistributionTransactionAmount(resource.Resource):
 	resource = 'channel_distribution_transaction_amount'
 
 	def api_get(request):
+		"""
+		查看记录的一个页面
+		"""
 		member_id = request.POST.get('member_id')
+
+
 
 

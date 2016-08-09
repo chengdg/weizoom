@@ -82,7 +82,7 @@
 
         </div>
         <div>
-            整体概括: 已返现总额 未返现总额 本期返现总额 总交易额
+            整体概括: 已返现总额{{ return_money_total }} 未返现总额 {{ not_return_money_total }}本期返现总额 {{ current_total_return }}总交易额{{ total_transaction_volume }}
         </div>
 
     </div>
@@ -172,10 +172,8 @@
         $(document).delegate('.xa-viewLog', 'click', function(event) {
             options = {
                 webapp_id:3186,
-                selectedMemberIds:[] // TODO 需要修改
             };
             options.success = function(data) {
-
             };
             W.dialog.showDialog('W.dialog.mall.ChannelDistributionLog', options);
         });
