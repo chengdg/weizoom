@@ -81,8 +81,9 @@ W.preloadImgsOnPage = function(option) {
                 case 'imageNav':
                     $itemsImg.map(function(idx, item) {
                         var $item = $(item);
+                        var srcImg = $item.attr('src');
                         if (idx > noLazy['imageNav']) {
-                            $item.attr('data-url', $item.attr('src'));
+                            $item.attr('data-url', compressImgUrl(srcImg, '!/quality/80'));
                             $item.removeAttr('src');
                         }
                     });
@@ -107,7 +108,7 @@ W.preloadImgsOnPage = function(option) {
                 case 'productList':
                     $itemsImg.map(function(idx, item) {
                         var $item = $(item);
-                        $item.attr('data-url', compressImgUrl($item.attr('src'), ""));
+                        $item.attr('data-url', compressImgUrl($item.attr('src'), "!list"));
                         $item.removeAttr('src');
                     });
                     $lazyImgs = $('[data-url]');
