@@ -6,6 +6,11 @@ Feature:分销会员结算页返现状态转换
 		2.正在返现中,当前台用户申请返现时
 		3.已完成/切换为无状态,管理返现完成时切换到当前状态,系统自动转为无状态
 		4.最低返现折扣若设置为80，则商品在优惠的价格在80%以下不参与返佣金
+		5.整体概况(包括已返现总额:所有已返现金额；未返现总金额：目前未返现的金额；总交易额：所有的交易流水额。)
+		6.会员结算列表查询
+			按返现金额查询:(1)满足(2)未满足
+			按提交时间查询:(1)满足(2)未满足
+			混合查询
 """
 
 Background:
@@ -269,7 +274,7 @@ Scenario:3 分销会员结算页正在返现状态
 				"relation_member": "bigs",
 				"submit_time":"2015-08-12 10:00:00",
 				"current_transaction_amount":600.00,
-				"commission_return_standard":50.00,
+				"commission_return_standard":60.00,
 				"commission_return_rate":"10",
 				"already_reward":60.00,
 				"cash_back_amount":60.00,
@@ -294,10 +299,189 @@ Scenario:4 分销会员结算页已完成/切换为无状态
 				"relation_member": "bigs",
 				"submit_time":"2015-08-12 10:00:00",
 				"current_transaction_amount":600.00,
+				"commission_return_standard":60.00,
+				"commission_return_rate":"10",
+				"already_reward":0,
+				"cash_back_amount":0,
+				"cash_back_state":"无状态"
+			}]
+			"""
+
+@mall2 @apps @senior @processing_applications
+Scenario:5 整体概况
+		When jobs完成订单"002"
+		When jobs完成订单"003"
+		When jobs完成订单"004"
+		When jobs完成订单"005"
+		When jobs完成订单"006"
+		When jobs完成订单"007"
+		When jobs完成订单"008"
+		When jobs完成订单"009"
+		When jobs完成订单"010"
+		Given jobs登录系统
+		Then jobs获得分销会员整体概况
+			"""
+			{
+				"cash_back_total":0,
+				"not_return_total":70.00,
+				"current_return":70.00,
+				"turnover_total":750.00
+			}
+			"""
+		When bigs访问jobs的webapp
+		When bigs申请返现于2015-08-12 10:00:00
+		Given jobs登录系统
+		When jobs更改返现状态为"已完成/切换为无状态"
+
+		Then jobs获得分销会员整体概况
+			"""
+			{
+				"cash_back_total":60.00,
+				"not_return_total":0,
+				"current_return":10.00,
+				"turnover_total":750.00
+			}
+			"""
+
+@mall2 @apps @senior @processing_applications
+Scenario:6 会员结算列表查询
+		When jobs完成订单"002"
+		When jobs完成订单"003"
+		When jobs完成订单"004"
+		When jobs完成订单"005"
+		When jobs完成订单"006"
+		When jobs完成订单"007"
+		When bigs访问jobs的webapp
+		When bigs申请返现于2015-08-12 10:00:00
+		Given jobs登录系统
+		When jobs更改返现状态为"已完成/切换为无状态"
+		Then jobs获得分销会员结算列表
+			"""
+			[{
+				"relation_member": "bigs",
+				"submit_time":"2015-08-12 10:00:00",
+				"current_transaction_amount":600.00,
+				"commission_return_standard":60.00,
+				"commission_return_rate":"10",
+				"already_reward":0,
+				"cash_back_amount":0,
+				"cash_back_state":"无状态"
+			}]
+			"""
+		#返现金额不满足
+		When jobs设置分销会员结算查询条件
+			"""
+			{
+				"cash_back_amount_in":0,
+				"cash_back_amount_to":10.00
+			}
+			""" 
+		Then jobs获得分销会员结算列表
+			"""
+			[]
+			"""
+		#返现金额满足
+		When jobs设置分销会员结算查询条件
+			"""
+			{
+				"cash_back_amount_in":0,
+				"cash_back_amount_to":60.00
+			}
+			""" 
+		Then jobs获得分销会员结算列表
+			"""
+			[{
+				"relation_member": "bigs",
+				"submit_time":"2015-08-12 10:00:00",
+				"current_transaction_amount":600.00,
 				"commission_return_standard":50.00,
 				"commission_return_rate":"10",
 				"already_reward":0,
 				"cash_back_amount":0,
 				"cash_back_state":"无状态"
 			}]
+			"""
+		#提交时间不满足,金额满足
+		When jobs设置分销会员结算查询条件
+			"""
+			{
+				"cash_back_amount_in":0,
+				"cash_back_amount_to":60.00,
+				"submit_time_start":"2015-08-10 10:00:00",
+				"submit_time_end":"2015-08-11 10:00:00"
+			}
+			""" 
+		Then jobs获得分销会员结算列表
+			"""
+			[]
+			"""
+		#提交时间满足,金额不满足
+		When jobs设置分销会员结算查询条件
+			"""
+			{
+				"cash_back_amount_in":0,
+				"cash_back_amount_to":10.00,
+				"submit_time_start":"2015-08-12 10:00:00",
+				"submit_time_end":"2015-08-13 10:00:00"
+			}
+			""" 
+		Then jobs获得分销会员结算列表
+			"""
+			[]
+			"""
+		#提交时间满足,金额满足
+		When jobs设置分销会员结算查询条件
+			"""
+			{
+				"cash_back_amount_in":0,
+				"cash_back_amount_to":60.00,
+				"submit_time_start":"2015-08-12 10:00:00",
+				"submit_time_end":"2015-08-13 10:00:00"
+			}
+			""" 
+		Then jobs获得分销会员结算列表
+			"""
+			[{
+				"relation_member": "bigs",
+				"submit_time":"2015-08-12 10:00:00",
+				"current_transaction_amount":600.00,
+				"commission_return_standard":50.00,
+				"commission_return_rate":"10",
+				"already_reward":0,
+				"cash_back_amount":0,
+				"cash_back_state":"无状态"
+			}]
+			"""
+		#提交时间满足
+		When jobs设置分销会员结算查询条件
+			"""
+			{
+				"submit_time_start":"2015-08-12 10:00:00",
+				"submit_time_end":"2015-08-13 10:00:00"
+			}
+			""" 
+		Then jobs获得分销会员结算列表
+			"""
+			[{
+				"relation_member": "bigs",
+				"submit_time":"2015-08-12 10:00:00",
+				"current_transaction_amount":600.00,
+				"commission_return_standard":50.00,
+				"commission_return_rate":"10",
+				"already_reward":0,
+				"cash_back_amount":0,
+				"cash_back_state":"无状态"
+			}]
+			"""
+		#提交时间不满足
+		When jobs设置分销会员结算查询条件
+			"""
+			{
+				"submit_time_start":"2015-08-11 10:00:00",
+				"submit_time_end":"2015-08-11 10:00:00"
+			}
+			""" 
+		Then jobs获得分销会员结算列表
+			"""
+			[]
 			"""
