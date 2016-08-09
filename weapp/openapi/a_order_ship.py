@@ -16,7 +16,7 @@ class OrderShip(resource.Resource):
 		response = create_response(200)
 		response.data = {}
 		access_token = request.POST.get('access_token','')
-		order_id = request.POST.get('order_id','')
+		
 		logistics_name = request.POST.get('logistics_name','')
 		logistics_number = request.POST.get('logistics_number','')
 		result = api_resource.post('open', 'order_ship', {'order_id':order_id,'logistics_number':logistics_number,

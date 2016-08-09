@@ -25,6 +25,7 @@ from . import utils
 from mall import export
 from weixin.user.module_api import get_all_active_mp_user_ids
 from apps.customerized_apps.group import models as group_models
+from export_job.models import ExportJob
 
 import logging
 
@@ -64,13 +65,34 @@ class ProductList(resource.Resource):
                 shelve_type=shelve_type,
                 is_deleted=False
             ).exists()
+        #获取未完成的任务
+        woid = request.webapp_owner_id
+        export_jobs = ExportJob.objects.filter(woid=woid,type=4,is_download=0).order_by("-id")
+        if export_jobs:
+            export2data = {
+                "woid":int(export_jobs[0].woid) ,#
+                "status":1 if export_jobs[0].status else 0,
+                "is_download":1 if export_jobs[0].is_download else 0,
+                "id":int(export_jobs[0].id),
+                # "file_path": export_jobs[0].file_path,
+                }
+        else:
+            export2data = {
+                "woid":0,
+                "status":1,
+                "is_download":1,
+                "id":0,
+                "file_path":0,
+                }
+
         c = RequestContext(
             request,
             {'first_nav_name': export.PRODUCT_FIRST_NAV,
              'second_navs': export.get_mall_product_second_navs(request),
              'has_product': has_product,
              'high_stocks': request.GET.get('high_stocks', '-1'),
-             'mall_type': mall_type
+             'mall_type': mall_type,
+             'export2data':export2data
              }
         )
         if shelve_type == models.PRODUCT_SHELVE_TYPE_ON:
@@ -1909,3 +1931,73 @@ class CheckProductHasPromotion(resource.Resource):
                 return create_response(200).get_response()
         else:
             return create_response(500).get_response()
+
+
+class ProductGetFile(resource.Resource):
+    """
+    所有订单/财务审核中的订单导出
+    获取参数，构建成文件，上传到u盘运
+    """
+    app = "mall2"
+    resource ="export_product_param"
+
+    @login_required
+    def api_get(request):
+        woid = request.webapp_owner_id
+        type = int(request.GET.get('type', 4))
+
+        now = datetime.now()
+        #判断用户是否存在导出数据任务
+
+        param = get_product_param_from(request)
+
+        exportjob = ExportJob.objects.create(
+                                    woid = woid,
+                                    type = type,
+                                    status = 0,
+                                    param = param,
+                                    created_at = now,
+                                    processed_count =0,
+                                    count =0,
+                                    )
+        from mall.product.tasks import send_product_export_job_task
+        send_product_export_job_task.delay(exportjob.id, param, type)
+
+        response = create_response(200)
+        response.data = {
+            'ok':'ok',
+            "exportjob_id":exportjob.id,
+        }
+        return response.get_response()
+
+def get_product_param_from(request):
+    # webapp_id = request.user_profile.webapp_id
+    mall_type = request.user_profile.webapp_type
+    product_name = request.GET.get('name', '')
+    supplier_name = request.GET.get('supplier', '')
+    
+
+    start_date = request.GET.get('startDate', '')
+    end_date = request.GET.get('endDate', '')
+
+    lowSales = request.GET.get('lowSales', '')
+    highSales = request.GET.get('highSales', '')
+
+    category =  request.GET.get('category', '')
+    barCode =  request.GET.get('barCode', '')
+
+    #model
+    lowPrice = request.GET.get('lowPrice', '')
+    highPrice = request.GET.get('highPrice', '')
+
+    lowStocks = request.GET.get('lowStocks', '')
+    highStocks = request.GET.get('highStocks', '')
+
+
+    woid = request.webapp_owner_id
+    
+    param = {'mall_type':mall_type, 'woid':woid, 'name':product_name, 'supplier_name':supplier_name, 'startDate':start_date, 'endDate':end_date, 
+        'lowSales':lowSales, 'highSales':highSales, 'category':category, 'barCode':barCode, 'lowPrice':lowPrice, 'highPrice':highPrice,
+         'lowStocks':lowStocks, 'highStocks':highStocks}
+    return param
+

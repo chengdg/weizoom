@@ -1,6 +1,19 @@
 {% extends "content_base_v2.html" %}
 
 {% block content-panel %}
+<style type="text/css">
+#exportProgress{
+	float:right;
+	margin:4px 10px;
+}
+#exportProgress .exportProgress_msg{
+	margin-right:0;
+}
+#downloadLink{
+  margin:4px 10px!important;
+}
+</style>
+
 <div class="xui-productsPage">
 
 	<div class="relative">
@@ -15,12 +28,15 @@
 	<div class="xa-productFilterView xui-filterPanel"></div>
 	{% if has_product %}
 	<div class="panel panel-default mt20 xb-rightPanel">
-		<div class="panel-heading">
+		<div class="panel-heading div_export">
 			<label for="topSelectAll" class="xui-selectAll ml15">
 				<input type="checkbox" id="topSelectAll" class="xa-selectAll">全选
 			</label>
 			<a href="javascript:void(0);" class="btn btn-default ml10 xa-batchOffshelf">批量下架</a>
 			<a href="javascript:void(0);" class="btn btn-default ml10 xa-batchDelete">彻底删除</a>
+			{% if mall_type %}
+				<a href="javascript:void(0);" class="btn fr btn-default xa-export mr20 " id="export_data_file">导出结果</a>
+			{% endif %}
 			{% if not mall_type %}
 			<a href="/mall2/product/" class="btn btn-success xui-addProductBtn ml10 xa-addProduct fr">
 				<span style="padding-right:5px;"><img src="/static_v2/img/editor/plusOpcity.png"></span>
@@ -188,12 +204,18 @@
 {% endverbatim %}
 <script type="text/javascript">
 $(document).ready(function() {
+
+	var woid = {{ request.manager.id }};
+	var export2data = {{export2data|safe}};
+
 	var view = new W.view.mall.ProductListView({
 		el: '.xui-productsPage',
 		type: 'onshelf',
 		low_stocks: '{{high_stocks}}',  //支持从首页店铺提醒“库存不足商品”过来的请求，这过来的请求是0~0，所以这块就直接用high_stocks了 duhao 20150925
 		high_stocks: '{{high_stocks}}',
-		mall_type: '{{ mall_type }}'
+		mall_type: '{{ mall_type }}',
+		export2data:export2data,
+		woid:woid
 	});
 	view.render();
 });
