@@ -25,6 +25,7 @@ from . import utils
 from mall import export
 from weixin.user.module_api import get_all_active_mp_user_ids
 from apps.customerized_apps.group import models as group_models
+from export_job.models import ExportJob
 
 import logging
 
@@ -64,13 +65,34 @@ class ProductList(resource.Resource):
                 shelve_type=shelve_type,
                 is_deleted=False
             ).exists()
+        #获取未完成的任务
+        woid = request.webapp_owner_id
+        export_jobs = ExportJob.objects.filter(woid=woid,type=0,is_download=0).order_by("-id")
+        if export_jobs:
+            export2data = {
+                "woid":int(export_jobs[0].woid) ,#
+                "status":1 if export_jobs[0].status else 0,
+                "is_download":1 if export_jobs[0].is_download else 0,
+                "id":int(export_jobs[0].id),
+                # "file_path": export_jobs[0].file_path,
+                }
+        else:
+            export2data = {
+                "woid":0,
+                "status":1,
+                "is_download":1,
+                "id":0,
+                "file_path":0,
+                }
+
         c = RequestContext(
             request,
             {'first_nav_name': export.PRODUCT_FIRST_NAV,
              'second_navs': export.get_mall_product_second_navs(request),
              'has_product': has_product,
              'high_stocks': request.GET.get('high_stocks', '-1'),
-             'mall_type': mall_type
+             'mall_type': mall_type,
+             'export2data':export2data
              }
         )
         if shelve_type == models.PRODUCT_SHELVE_TYPE_ON:
