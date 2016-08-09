@@ -91,7 +91,7 @@ Background:
 		"""
 		[{
 			"name": "商品1",
-			"price": 50.00,
+			"price": 100.00,
 			"count":"10",
 			"discount":"0.5"
 		},{

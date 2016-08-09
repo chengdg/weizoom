@@ -60,7 +60,7 @@ Background:
 		"""
 		[{
 			"name": "商品1",
-			"price": 50.00,
+			"price": 100.00,
 			"discount":"0.5"
 		},{
 			"name": "商品2",
