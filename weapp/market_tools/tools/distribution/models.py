@@ -32,7 +32,7 @@ class ChannelDistributionQrcodeSettings(models.Model):
 	status = models.IntegerField(default=0)  # 取现进度
 	extraction_money = models.DecimalField(max_digits=65, decimal_places=2, default=0)  # 提取的金额
 	current_transaction_amount = models.DecimalField(max_digits=65, decimal_places=2, default=0)  # 本期交易额
-	commit_time = models.DateTimeField(auto_now_add=True)  # 提交时间
+	commit_time = models.DateTimeField(blank=True, null=True)  # 提交时间
 
 	created_at = models.DateTimeField(auto_now_add=True) # 添加时间
 
@@ -66,26 +66,26 @@ class ChannelDistributionDetail(models.Model):
 	member_id = models.IntegerField()  # 对应的会员id
 	last_extract_time = models.DateTimeField(blank=True, null=True)  # 上次提现时间
 	created_at = models.DateTimeField(auto_now_add=True)  # 添加时间
-	effect_status = models.BooleanField(default=False)  # 生效状态 ??????
+	# effect_status = models.BooleanField(default=False)  # 生效状态 ??????
 	order_id = models.IntegerField(default=0)  # 订单id
-	effect_time = models.DateTimeField(blank=True, null=True)  # 生效时间 ????
+	# effect_time = models.DateTimeField(blank=True, null=True)  # 生效时间 ????
 
 	class Meta:
 		db_table = 'market_tool_channel_distribution_detail'
 
 
-class ChannelDistributionProcess(models.Model):
-	"""
-	取现进度记录
-	"""
-	channel_qrcode_id = models.IntegerField()  # 渠道分销id
-	member_id = models.IntegerField()  # 对应的会员id
-	status = models.IntegerField()  # 取现进度
-	money = models.DecimalField(max_digits=65, decimal_places=2, default=2)  # 提取的金额
-	created_at = models.DateTimeField(auto_now_add=True)  # 创建时间
-
-	class Meta(object):
-		db_table = 'market_tool_channel_distribution_process'
+# class ChannelDistributionProcess(models.Model):
+# 	"""
+# 	取现进度记录
+# 	"""
+# 	channel_qrcode_id = models.IntegerField()  # 渠道分销id
+# 	member_id = models.IntegerField()  # 对应的会员id
+# 	status = models.IntegerField()  # 取现进度
+# 	money = models.DecimalField(max_digits=65, decimal_places=2, default=2)  # 提取的金额
+# 	created_at = models.DateTimeField(auto_now_add=True)  # 创建时间
+#
+# 	class Meta(object):
+# 		db_table = 'market_tool_channel_distribution_process'
 
 
 class ChannelDistributionFinish(models.Model):

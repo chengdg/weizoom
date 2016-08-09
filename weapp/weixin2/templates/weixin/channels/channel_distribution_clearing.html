@@ -8,6 +8,17 @@
         .form-control{
             width:150px;
         }
+        .xui-link{
+            display:inline-block;
+            margin:0;
+            padding: 4px 8px;
+            font-size: 12px;
+            text-decoration:none;
+            outline:none;
+            color: #333;
+            background-color: #fff;
+            box-shadow: 0 0 1px rgba(0,0,0,0.8);
+        }
     </style>
 {% endblock %}
 {% block content-panel %}
@@ -24,7 +35,7 @@
     <div class="xui-filterPanel " >
         <div class="xui-form disT ml20">
             <div class="xui-i-item">
-                <label>返还额度：</label>
+                <label>返现金额：</label>
                 <input
                         type="text"
                         class="form-control"
@@ -34,7 +45,7 @@
                         type="text"
                         class="form-control"
                         name="return_max"/>
-                <label>返还时间：</label>
+                <label>提交时间：</label>
                 <input
                         type="text"
                         class="form-control xui-datePicker"
@@ -140,6 +151,8 @@
 							        </select>
 							    </td>
 							    <td>
+							    <a class="xui-link xa-viewLog">查看记录</a>
+							    <a class="xui-link">奖励明细</a>
 							    </td>
 							</tr>
 						{{/each}}
@@ -153,4 +166,19 @@
 			{{/if}}
         </script>
     {% endverbatim %}
+
+    <script>
+        // 弹出关联会员
+        $(document).delegate('.xa-viewLog', 'click', function(event) {
+            options = {
+                webapp_id:3186,
+                selectedMemberIds:[] // TODO 需要修改
+            };
+            options.success = function(data) {
+
+            };
+            W.dialog.showDialog('W.dialog.mall.ChannelDistributionLog', options);
+        });
+
+    </script>
 {% endblock %}
