@@ -53,7 +53,7 @@ Background:
 	When jobs新建渠道分销二维码
 		"""
 		[{
-			"code_name": "渠道分销二维码-佣金设置1",
+			"code_name": "分销二维码1",
 			"relation_member": "bigs",
 			"distribution_prize_type": "佣金",
 			"commission_return_rate":"10",
@@ -66,7 +66,7 @@ Background:
 			"scan_code_reply": "扫码后回复文本",
 			"create_time": "2015-10-10 10:20:30"
 		},{
-			"code_name": "渠道分销二维码-佣金设置2",
+			"code_name": "分销二维码2",
 			"relation_member": "bill",
 			"distribution_prize_type": "佣金",
 			"commission_return_rate":"10",
@@ -109,11 +109,11 @@ Background:
 
 	#扫码关注成为会员
 		When 清空浏览器
-		And jack扫描带参数二维码"渠道分销二维码-佣金设置1"于2015-08-10 10:00:00
+		And jack扫描带参数二维码"分销二维码1"于2015-08-10 10:00:00
 		And jack访问jobs的webapp
 
 		When 清空浏览器
-		And nokia扫描带参数二维码"渠道分销二维码-佣金设置2"于2015-08-11 10:00:00
+		And nokia扫描带参数二维码"分销二维码2"于2015-08-11 10:00:00
 		And nokia访问jobs的webapp
 
 	#会员购买
