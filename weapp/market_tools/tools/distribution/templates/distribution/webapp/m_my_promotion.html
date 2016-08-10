@@ -33,16 +33,21 @@
 			<span class="xui-total-money xui-text-num">{{ commission_return_standard }}元</span>
 			<p class="xui-text">已获得奖励<span class="xui-text-num">{{ will_return_reward }}元</span></p>
 			<p class="xui-text">还差<span class="xui-text-num">{{ diff_reward }}元</span>就可以取现了！</p>
-			<p class="xui-btn-return"><a href="javascript:void(0)">申请返还</a></p>
-			<p class="xui-text xui-text-method">商家选择了<span class="xui-text-day">{{ return_standard }}天</span>结算方式，交易完成后的佣金将在<span class="xui-text-day">{{ return_standard }}天</span>后显示并取现</p>
+			<p class="xui-btn-return">
+			{% if valid %}
+				<a class="xui-a-valid-blue" href="javascript:void(0)" onclick="checkValid()">申请返还</a>
+			{% else %}
+				<a class="xui-a-valid-grey" href="javascript:void(0)" onclick="checkValid()">申请返还</a>
+			{% endif %}
+			</p>
+			<p class="xui-text xui-text-method"></p>
 		</div>
 	</div>
 	<ul class="xui-link bg_fff">
-		<li class="xui-link-list"><a href="./?
-
-module=market_tool:distribution&model=process&action=get&webapp_id={{webapp_id}}&member_id={{member_id}}">资金交易明细<span>&gt;</span></a></li>
+		<li class="xui-link-list"><a href="./?module=market_tool:distribution&model=details&action=get">资金交易明细<span>&gt;</span></a></li>
 		<li class="xui-link-list"><a href="#">二维码推广<span>&gt;</span></a></li>
-		<li class="xui-link-list"><a href="#">会员记录<span>&gt;</span></a></li>
+		<li class="xui-link-list"><a href="./?module=market_tool:distribution&model=vip_message&action=get">会员记录<span>&gt;</span></a></li>
+		<li class="xui-link-list"><a href="./?module=market_tool:distribution&model=process&action=get">提取进度<span>&gt;</span></a></li>
 	</ul>
 	<div class="xui-explain bg_fff">
 		<p class="xui-explain-header">推广分销使用说明：</p>
@@ -61,5 +66,31 @@ function activeProcess(hasGet, totalGet) {
 	processBar.style.width = widthPercentage + '%';
 }
 activeProcess({{ will_return_reward }}, {{ commission_return_standard }});
+
+function checkValid() {
+	if ({{ will_return_reward }} >= {{ commission_return_standard }}) {
+		alert('未达到返现标准');
+	} else {
+		W.getApi().call({
+			app: 'webapp',
+			api: 'project_api/call',
+			method: 'post',
+			args: _.extend({
+				woid: W.webappOwnerId,
+				project_id: W.projectId,
+				module: 'distribution',
+
+				target_api: 'state/change',
+				member_id: {{ member_id }}
+			}),
+			success: function(data) {
+				alert('申请成功');
+			},
+			error: function(resp) {
+				alert('申请失败');
+			}
+		})
+	}
+}
 </script>
 {% endblock %}
