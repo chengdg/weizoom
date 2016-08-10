@@ -44,10 +44,10 @@
 		</div>
 	</div>
 	<ul class="xui-link bg_fff">
-		<li class="xui-link-list"><a href="./?module=market_tool:distribution&model=details&action=get">资金交易明细<span>&gt;</span></a></li>
-		<li class="xui-link-list"><a href="#">二维码推广<span>&gt;</span></a></li>
-		<li class="xui-link-list"><a href="./?module=market_tool:distribution&model=vip_message&action=get">会员记录<span>&gt;</span></a></li>
-		<li class="xui-link-list"><a href="./?module=market_tool:distribution&model=process&action=get">提取进度<span>&gt;</span></a></li>
+		<li class="xui-link-list"><a href="./?module=market_tool:distribution&model=details&action=get&webapp_owner_id={{ request.webapp_owner_id }}">资金交易明细<span>&gt;</span></a></li>
+		<li class="xui-link-list"><a href="./?module=market_tool:distribution&model=weixin_code&action=get&webapp_owner_id={{ request.webapp_owner_id }}">二维码推广<span>&gt;</span></a></li>
+		<li class="xui-link-list"><a href="./?module=market_tool:distribution&model=vip_message&action=get&webapp_owner_id={{ request.webapp_owner_id }}">会员记录<span>&gt;</span></a></li>
+		<li class="xui-link-list"><a href="./?module=market_tool:distribution&model=process&action=get&webapp_owner_id={{ request.webapp_owner_id }}">提取进度<span>&gt;</span></a></li>
 	</ul>
 	<div class="xui-explain bg_fff">
 		<p class="xui-explain-header">推广分销使用说明：</p>
