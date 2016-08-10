@@ -1,6 +1,6 @@
 <script id="channel-distribution-log-dialog-tmpl-src" type="text/x-jquery-tmpl">
  <div class="modal fade xui-selectCouponDialog" id="commonSelectCouponDialog">
-    <div class="modal-dialog modal-lg" style="width: 820px;">
+    <div class="modal-dialog modal-lg" style="width: 600px;">
     <div class="modal-content">
     <div class="modal-header">
             <button aria-hidden="true" data-dismiss="modal" class="close" type="button"><span class="xui-closeColor" aria-hidden="true">&times;</span></button>
@@ -8,11 +8,10 @@
     </div>
         <div class="xui-log-head">交易总额:xxx元</div>
 
-
-                <div class="modal-body" style="min-height: 300px; max-height: 500px; overflow: auto;">
+                <div class="modal-body" style="min-height: 200px; max-height: 500px; overflow: auto;">
 
                     <div>
-                        <select name='log_select'>
+                        <select id='log_select' class="xa-change">
                             <option value="0">本期交易</option>
                             <option value="1">所有交易</option>
                         </select>
@@ -20,8 +19,8 @@
                     <div style="display:inline-block;" class="xa-searchMember"></div>
                     <div
                             data-ui-role="advanced-table"
-                            data-app="member"
-                            data-api="member_list"
+                            data-app="new_weixin"
+                            data-api="channel_distribution_transaction_amount"
                             data-template-id="#channel-distribution-log-dialog-tmpl"
                             data-enable-paginator="true"
                             data-enable-sort="false"
@@ -47,11 +46,17 @@
             </tr>
         </thead>
         <tbody id='vip_list'>
+                  {{if items.length}}
+                  {{each(i, item) items}}
                 <tr>
-                <td>1</td>
-                <td>2</td>
-                <td>3</td>
+                <td style="width:80px">${item.name}</td>
+                <td>${item.cost}</td>
+                <td>${item.return_money}</td>
                 </tr>
+                {{/each}}
+					{{else}}
+				<tr><td colspan='3'>还没有数据</td></tr>
+           {{/if}}
         </tbody>
     </table>
 </script>
