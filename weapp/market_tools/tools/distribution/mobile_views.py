@@ -74,7 +74,7 @@ def get_vip_message(request):
 	vip_lists = models.ChannelDistributionQrcodeHasMember.objects.get(member_id=member_id)
 	for vip_list in vip_lists:
 		vip_list={
-			'nick_name': member_models.Member.objects.get(id=member_id).username_for_html
+			'nick_name': member_models.Member.objects.get(id=member_id).username_for_html,
 			'cost_money': vip_list.cost_money,  #消费金额
 			'commission': vip_list.commission,  #带来的佣金
 			'buy_times': vip_list.buy_times,  #购买次数
