@@ -151,7 +151,7 @@
 							        </select>
 							    </td>
 							    <td>
-							    <a class="xui-link xa-viewLog">查看记录</a>
+							    <a class="xui-link xa-viewLog" data-qrcode_id=${qrcode.qrcode_id}>查看记录</a>
 							    <a class="xui-link">奖励明细</a>
 							    </td>
 							</tr>
@@ -170,8 +170,11 @@
     <script>
         // 弹出关联会员
         $(document).delegate('.xa-viewLog', 'click', function(event) {
+         //   console.log($(this).data('qrcode_id'));
+         //   console.log(111111111111111111);
+            var qrocdeId = $(this).data('qrcode_id');
             options = {
-                webapp_id:3186,
+                qrocdeId: qrocdeId
             };
             options.success = function(data) {
             };
