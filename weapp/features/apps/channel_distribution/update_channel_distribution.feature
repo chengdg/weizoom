@@ -41,7 +41,7 @@ Background:
 	When jobs新建渠道分销二维码
 		"""
 		[{
-			"code_name": "渠道分销二维码-默认设置",
+			"code_name": "渠道分销二维码",
 			"relation_member": "bigs",
 			"distribution_prize_type": "无",
 			"commission_return_rate":"10",
@@ -59,25 +59,25 @@ Background:
 		Then jobs获得渠道分销二维码列表
 			"""
 			[{
-				"code_name": "渠道分销二维码-优惠券奖励",
-				"relation_member": "tom",
+				"code_name": "渠道分销二维码",
+				"relation_member": "bigs",
 				"attention_number": "0",
 				"total_transaction_money": 0.00,
 				"cash_back_amount":0.00,
-				"prize": "[优惠券]优惠券1",
-				"distribution_prize":"无",
-				"create_time": "2015-10-12 10:20:30"
+				"prize": "无",
+				"distribution_prize":"佣金",
+				"create_time": "2015-10-10 10:20:30"
 			}]
 			"""
 @mall2 @apps @senior @update_distribution
 Scenario:1 修改渠道分销二维码
 	#修改：会员头衔、扫码设置
 	Given jobs登录系统
-	When jobs更新带参数二维码'带参数二维码-默认设置'
+	When jobs更新渠道分销二维码'渠道分销二维码'
 		"""
 		{
-			"code_name": "渠道分销二维码-优惠券奖励",
-			"relation_member": "tom",
+			"code_name": "渠道分销二维码2",
+			"relation_member": "bigs",
 			"distribution_prize_type": "无",
 			"commission_return_rate":"10",
 			"minimum_cash_discount":"80",
@@ -92,22 +92,16 @@ Scenario:1 修改渠道分销二维码
 		}
 		
 		"""
-	Then jobs获得带参数二维码'带参数二维码-优惠券奖励'
+	Then jobs获得渠道分销二维码'渠道分销二维码2'
 		"""
-		{
-			"code_name": "带参数二维码-优惠券奖励",
-			"create_time": "今天",
-			"prize_type": "优惠券",
-			"coupon":"优惠券1",
-			"member_rank": "金牌会员",
-			"tags": "分组2",
-			"is_attention_in": "true",
-			"remarks": "带参数二维码备注",
-			"is_relation_member": "true",
-			"relation_member": "tom",
-			"title": "星级代言人",
-			"code_description": "星级代言人二维码描述",
-			"reply_type": "图文",
-			"scan_code_reply": "图文1"
-		}
+			[{
+				"code_name": "渠道分销二维码2",
+				"relation_member": "bigs",
+				"attention_number": "0",
+				"total_transaction_money": 0.00,
+				"cash_back_amount":0.00,
+				"prize": "无",
+				"distribution_prize":"佣金",
+				"create_time": "2015-10-10 10:20:30"
+			}]
 		"""
