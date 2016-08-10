@@ -13,6 +13,7 @@ from mall import models
 from . import utils
 from datetime import datetime
 from export_job.models import ExportJob
+from account.models import UserProfile
 import os
 import xlsxwriter
 
@@ -194,6 +195,7 @@ def send_product_export_job_task(self, exportjob_id, filter_data_args, type):
 
             if type == 4:
                 owner = User.objects.get(id=filter_data_args['woid'])
+                webapp_id = UserProfile.objects.filter(user=owner)[0].webapp_id
                 products = models.Product.objects.belong_to(mall_type, owner, models.PRODUCT_SHELVE_TYPE_ON)
                 
                 # product_id2onshelvetime = for product_id_sync_at in product_id_sync_ats
@@ -216,8 +218,8 @@ def send_product_export_job_task(self, exportjob_id, filter_data_args, type):
                 for product in products:
                     processed_count += 1
                     export_jobs.update(processed_count=processed_count, update_at=datetime.now())
-                    product_sales = models.OrderHasProduct.objects.filter(product_id=product.id, promotion_id=0, order__status=models.ORDER_STATUS_SUCCESSED, order__origin_order_id__lte=0).aggregate(Sum('number'))['number__sum']
-                    product_sales_money = models.OrderHasProduct.objects.filter(product_id=product.id, promotion_id=0, order__status=models.ORDER_STATUS_SUCCESSED, order__origin_order_id__lte=0).aggregate(Sum('total_price'))['total_price__sum']
+                    product_sales = models.OrderHasProduct.objects.filter(product_id=product.id, promotion_id=0, order__status=models.ORDER_STATUS_SUCCESSED, order__origin_order_id__lte=0, order__webapp_id=webapp_id).aggregate(Sum('number'))['number__sum']
+                    product_sales_money = models.OrderHasProduct.objects.filter(product_id=product.id, promotion_id=0, order__status=models.ORDER_STATUS_SUCCESSED, order__origin_order_id__lte=0, order__webapp_id=webapp_id).aggregate(Sum('total_price'))['total_price__sum']
                     if not product_sales:
                         product_sales = 0
                     if not product_sales_money:
