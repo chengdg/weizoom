@@ -14,16 +14,6 @@
 			<input type="text" class="form-control" id="bar_code" name="bar_code" value="" />
 			{{/if}}
 		</div>
-		{{if mall_type == 1}}
-			<div class="xui-i-item">
-				<label>供货商类型：</label>
-				<select id="orderSupplierType" name="orderSupplierType">
-					<option value="-1">全部</option>
-					<option value="0">同步供货商</option>
-					<option value="1">自建供货商</option>
-				</select>
-			</div>
-		{{/if}}
 	</div>
 
 	<div class="xui-col disTc">
@@ -60,7 +50,7 @@
 
 		<div class="xui-i-item">
 		{{if mall_type == 1}}
-			<label>同步时间：</label>
+			<label>首次上架时间：</label>
 		{{else}}
 			<label>创建时间：</label>
 		{{/if}}

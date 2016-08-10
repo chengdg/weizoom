@@ -60,6 +60,7 @@ W.preloadImgsOnPage = function(option) {
         option.map(function(ele){
             var noLazy = {
                 'imageNav': 20,
+                'imageGroup': 0,
             };
             var module = ele['moduleName'];
             var tagId = ele['tagId'];
@@ -80,8 +81,9 @@ W.preloadImgsOnPage = function(option) {
                 case 'imageNav':
                     $itemsImg.map(function(idx, item) {
                         var $item = $(item);
+                        var srcImg = $item.attr('src');
                         if (idx > noLazy['imageNav']) {
-                            $item.attr('data-url', $item.attr('src'));
+                            $item.attr('data-url', compressImgUrl(srcImg, '!/quality/80'));
                             $item.removeAttr('src');
                         }
                     });
@@ -92,8 +94,13 @@ W.preloadImgsOnPage = function(option) {
                     $itemsImg.map(function(idx, item) {
                         var $item = $(item);
                         var srcImg = $item.attr('src');
-                        $item.attr('data-url', compressImgUrl(srcImg, '!/quality/80'));
-                        $item.attr('src', compressImgUrl(srcImg, '!/quality/10'));
+                        if (idx <= noLazy['imageGroup']) {
+                            $item.attr('src', compressImgUrl(srcImg, '!/quality/75'));
+                            $item.removeAttr('data-url');
+                        } else {
+                            $item.attr('data-url', compressImgUrl(srcImg, '!/quality/80'));
+                            $item.attr('src', compressImgUrl(srcImg, '!/quality/10'));
+                        }
                     });
                     $lazyImgs = $('[data-url]');
                     lazyloadImg($lazyImgs, {threshold: 400});
@@ -101,7 +108,7 @@ W.preloadImgsOnPage = function(option) {
                 case 'productList':
                     $itemsImg.map(function(idx, item) {
                         var $item = $(item);
-                        $item.attr('data-url', compressImgUrl($item.attr('src'), ""));
+                        $item.attr('data-url', compressImgUrl($item.attr('src'), "!list"));
                         $item.removeAttr('src');
                     });
                     $lazyImgs = $('[data-url]');
@@ -146,8 +153,9 @@ function lazyloadImg($imgs, options) {
     var defOptions = {
             data_attribute:"url",
             skip_invisible : false,
-            effect : "fadeIn",
-            placeholder: "/static_v2/img/webapp/mall/info_placeholder.png"
+            //effect : "fadeIn",
+            placeholder: "/static_v2/img/webapp/mall/info_placeholder.png",
+            failurelimit: 10
         };
 
     var options = _.defaults(options, defOptions);

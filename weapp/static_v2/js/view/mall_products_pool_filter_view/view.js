@@ -45,6 +45,8 @@ W.view.mall.ProductsPoolFilterView = Backbone.View.extend({
         $('#supplier').val('');
         $('#firstClassification').val('-1');
         $('#secondaryClassification').val('-1');
+        $('#status').val('-1');
+        $('#supplier_type').val('-1');
     },
 
     onChangeEvent: function() {
@@ -84,12 +86,17 @@ W.view.mall.ProductsPoolFilterView = Backbone.View.extend({
         //二级分类
         var secondaryClassification = this.$('#secondaryClassification').val();
 
+        //状态
+        var supplier_type = this.$('#supplier_type').val();
+
         var data = {
             product_code: productCode,
             name: name,
             supplier: supplier,
             first_classification: firstClassification,
             secondary_classification: secondaryClassification
+            status: status,
+            supplier_type:supplier_type
         }
         this.trigger('search', data);
     },

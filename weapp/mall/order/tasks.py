@@ -72,7 +72,8 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
         '3': u'微众卡支付',
         '9': u'货到付款',
         '10': u'优惠抵扣',
-        '11': u'翼支付'
+        '11': u'翼支付',
+        '12': u'看购支付',
     }
 
     source_list = {

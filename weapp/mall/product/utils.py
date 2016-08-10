@@ -131,14 +131,58 @@ PRODUCT_FILTERS = {
     }]
 }
 
+MALL_PRODUCT_FILTERS = {
+    'product': [{
+        'comparator': lambda product, filter_value: filter_value in product.name,
+        'query_string_field': 'name'
+    }, {
+        'comparator': lambda product, filter_value: product.sales >= int(filter_value),
+        'query_string_field': 'lowSales'
+    }, {
+        'comparator': lambda product, filter_value: product.sales <= int(filter_value),
+        'query_string_field': 'highSales'
+    }, {
+        'comparator': lambda product, filter_value: (int(filter_value) == -1) or (int(filter_value) in [category['id'] for category in product.categories if category['is_selected']]),
+        'query_string_field': 'category'
+    }, {
+        'comparator': lambda product, filter_value: filter_value == product.bar_code,
+        'query_string_field': 'barCode'
+    }
+    # , {
+    #     'comparator': lambda product, filter_value: product.created_at >= datetime.strptime(filter_value, '%Y-%m-%d %H:%M'),
+    #     'query_string_field': 'startDate'
+    # }, {
+    #     'comparator': lambda product, filter_value: product.created_at <= datetime.strptime(filter_value, '%Y-%m-%d %H:%M'),
+    #     'query_string_field': 'endDate'
+    # }
+    ],
+    'models': [{
+        'comparator': lambda model, filter_value: float(model['price']) >= float(filter_value),
+        'query_string_field': 'lowPrice'
+    }, {
+        'comparator': lambda model, filter_value: float(model['price']) <= float(filter_value),
+        'query_string_field': 'highPrice'
+    }, {
+        'comparator': lambda model, filter_value: model['stock_type'] == models.PRODUCT_STOCK_TYPE_UNLIMIT or model['stocks'] >= int(filter_value),
+        'query_string_field': 'lowStocks'
+    }, {
+        'comparator': lambda model, filter_value: model['stock_type'] != models.PRODUCT_STOCK_TYPE_UNLIMIT and 0 <= model['stocks'] <= int(filter_value) or int(filter_value) < 0,
+        'query_string_field': 'highStocks'
+    }]
+}
 
-def filter_products(request, products):
-    has_filter = search_util.init_filters(request, PRODUCT_FILTERS)
+def filter_products(request, products ,mall_type=False):
+    if mall_type:
+        current_product_filters = MALL_PRODUCT_FILTERS
+    else:
+        current_product_filters = PRODUCT_FILTERS
+
+    has_filter = search_util.init_filters(request, current_product_filters)
     if not has_filter:
         return products
 
     filtered_products = []
-    products = search_util.filter_objects(products, PRODUCT_FILTERS['product'])
+    products = search_util.filter_objects(products, current_product_filters['product'])
     if not products:
         return filtered_products
 
@@ -146,7 +190,7 @@ def filter_products(request, products):
         models = copy.copy(product.models)
         if None in models:
             models.remove(None)
-        models = search_util.filter_objects(models, PRODUCT_FILTERS['models'])
+        models = search_util.filter_objects(models, current_product_filters['models'])
         if models:
             filtered_products.append(product)
     return filtered_products

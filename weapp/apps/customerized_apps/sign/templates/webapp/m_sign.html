@@ -371,7 +371,7 @@
               if(day_integral <= 0 && !day_coupon){
                     continue;
                 }
-              str_int = j + ".连续签到至" + day_num + "天, 获得";
+              str_int = j + ".连续签到至" + day_num + "天, 额外奖励";
               if(day_integral > 0){
                   str_int +=  day_integral + "积分奖励";
               }
@@ -430,7 +430,7 @@
         console.log(temp_prize);
         if(!$.isEmptyObject(temp_prize)){
             $('.wa-prize-board').find('div').css('display', 'block');
-            $('.wa-prize-board').find('.wa-serial_title').html("连续签到" + temp_prize.count + "天可领取 ");
+            $('.wa-prize-board').find('.wa-serial_title').html("连续签到" + temp_prize.count + "天可额外奖励 ");
             if (temp_prize.prize.integral != 0) {
                 $('.wa-prize-board').find('.serial_points').html(temp_prize.prize.integral + "  积分").show();
             }else{

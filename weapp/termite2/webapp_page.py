@@ -16,7 +16,7 @@ from webapp import models as webapp_models
 from termite2 import pagecreater
 from termite.workbench import jqm_views
 from eaglet.core import watchdog
-
+from django.conf import settings
 
 class WebappPage(resource.Resource):
 	app = 'termite2'
@@ -111,7 +111,8 @@ class WebappPage(resource.Resource):
 			'share_to_timeline_use_desc': True,  #分享到朋友圈的时候信息变成分享给朋友的描述
 			'current_page_name': current_page_name,
 			'is_preview': is_preview,
-			'hide_non_member_cover': True #非会员也可使用该页面
+			'hide_non_member_cover': True, #非会员也可使用该页面
+			'H5_HOST':  settings.H5_HOST
 		})
 
 		## start watchdog.info

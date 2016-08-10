@@ -1,0 +1,287 @@
+{% extends "content_base_v2.html" %}
+{% load apps_filter %}
+
+{% block css %}
+    <style>
+        .tl.pl25 img{
+            height: 60px;
+            width: 60px;
+        }
+    </style>
+{% endblock %}
+
+{% block content-panel %}
+<div class="xui-lotteryParticipancesAppPage xui-appPage-commonStyle">
+	<div class="relative">
+		<ul class="breadcrumb">
+			<li>您当前所在位置</li>
+			<li><a href="/apps/lottery/lotteries/">百宝箱</a></li>
+			<li><a href="/apps/scanlottery/scanlotteries/">扫码抽奖</a></li>
+			<li class="active">查看结果</li>
+		</ul>
+	</div>
+	
+	<div class="xui-formPanel pb10 mb15">
+		<div class="xui-i-col">
+			<div class="xui-i-item">
+				<label class="">用户名：</label>
+				<input type="text" class="form-control" id="participant_name" name="participant_name" value="" />
+			</div>
+            <div class="xui-i-item">
+                <label>奖品类型：</label>
+                <select class="" id="prize_type" name="prize_type">
+                    <option value="-1">全部</option>
+                    <option value="integral">积分</option>
+                    <option value="coupon">优惠券</option>
+                    <option value="entity">实物</option>
+					<option value="no_prize">未中奖</option>
+                </select>
+            </div>
+		</div>
+		<div class="xui-i-col">
+			<div class="xui-i-item ml10">
+				<label>抽奖时间
+				：</label>
+				<input
+					type="text"
+					class="form-control xui-datePicker"
+					id="start_time"
+					name="start_time"
+					style=""
+					value=""
+					readonly="readonly"
+					data-enable-select-time="true"
+					data-validate="require-notempty"
+					data-ui-role="date-picker"
+					data-format="yy-mm-dd HH:MM" />
+				至
+				<input
+					type="text"
+					class="form-control xui-datePicker"
+					id="end_time"
+					name="end_time"
+					value=""
+					readonly="readonly"
+					data-enable-select-time="true"
+					data-validate="require-notempty"
+					data-ui-role="date-picker"
+					data-format="yy-mm-dd HH:MM"
+					data-min-el="#start_time"/>
+			</div>
+            <div class="xui-i-item ml10">
+                <label>领取状态：</label>
+                <select class="" id="status" name="status">
+                    <option value="-1">全部</option>
+                    <option value="0">未领取</option>
+                    <option value="1">已领取</option>
+                </select>
+            </div>
+		</div>
+		<div class="xui-i-col">
+			<div class="ml80">
+				<a class="btn btn-primary mr30 xa-search xui-fontBold" href="javascript:void(0);">查&nbsp;&nbsp;&nbsp;&nbsp;询</a>
+				<a class="btn btn-default xa-export xui-fontBold" href="javascript:void(0);">批量导出</a>
+				<a id="export_href" style="display: none ">DownloadXLS</a>
+			</div>
+		</div>
+	</div>
+	
+	<div class="panel panel-default xui-tableBox">
+		<div 
+			class="panel-body panel-table p0 mt10"
+			data-ui-role="advanced-table" 
+			data-app="apps/scanlottery"
+			data-resource="scanlottery_participances"
+			data-args='{"id": "{{activity_id}}"}'
+			data-template-id="#table" 
+			data-enable-paginator="true" 
+			data-enable-sort="false" 
+			data-selectable="false" 
+			data-disable-header-select="true" 
+			data-item-count-per-page="10" 
+		>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+
+{% block js %}
+<!-- *start_prunt_task* -->
+	<!-- [prunt_task] 
+	  {
+	    "task": "weizoom-load-app-views-dialogs"
+	  }
+	-->
+{{ "scanlottery"|load_app_views_and_dialogs|safe }}
+<!-- *end_prunt_task* -->
+{% verbatim %}
+<script id="table" type="text/x-jquery-tmpl">
+	{{if items!='' }}
+	<table class="table table-bordered xb-stripedTable xb-noTdBorder xb-noBottom xb-noBorder xb-theadBg mb10">
+		<thead>
+			<tr>
+				<th>用户名</th>
+				<th>姓名</th>
+				<th>手机号</th>
+				<th>获奖等级</th>
+				<th>奖品名称</th>
+				<th>抽奖时间</th>
+				<th>领取状态</th>
+				<th>操作</th>
+			</tr>
+		</thead>
+		<tbody>
+		  {{each(i, item) items}}
+			<tr data-id="${item.id}">
+				<td 
+					class="tl pl25"
+					style="width:250px; height:60px;" 
+				>
+					<img src="${item.participant_icon}" />
+					{{html item.participant_name}}
+				</td>
+				<td>
+					${item.name}
+				</td>
+				<td>
+					${item.tel}
+				</td>
+				<td>
+					${item.prize_title}
+				</td>
+				<td>
+					${item.prize_name}
+				</td>
+				<td>
+					${item.created_at}
+				</td>
+				<td>
+				    {{if !item.status}}
+				        未领取
+					{{else}}
+					    已领取
+					{{/if}}
+				</td>
+				<td>
+				    {{if !item.status}}
+					    <a href="javascript:void(0);" class="ml5 xa-getLottery" data-id=${item.id}>领取</a>
+					{{/if}}
+				</td>
+			</tr>
+			{{/each}}
+		</tbody>
+		<div class="cb"></div>
+	</table>
+	{{else}}
+		<div class="xui-emptyBox m10">
+			<img src="/static_v2/img/editor/empty.png">
+			<span class="ml20">您还没有相关数据！</span>
+		</div>
+	{{/if}}
+	<br>
+</script>
+{% endverbatim %}
+
+<script type="text/javascript">
+$(document).ready(function() {
+	$('body').delegate('.xa-viewData', 'click', function(event) {
+		var activityId = $(event.currentTarget).parents('tr').data('id');
+		W.dialog.showDialog('W.dialog.app.scanlottery.ViewParticipanceDataDialog', {
+			activityId: activityId,
+			success: function(data) {
+
+			}
+		});
+	});
+	var participant_name,startTime,endTime,prize_type,status;
+	$('.xa-search').click(function(event) {
+		participant_name = $.trim($('[name="participant_name"]').val());
+		startTime = $.trim($('[name="start_time"]').val());
+		endTime = $.trim($('[name="end_time"]').val());
+		prize_type = $.trim($('[name="prize_type"]').val());
+        status = $.trim($('[name="status"]').val());
+		var table = $('[data-ui-role="advanced-table"]').data('view');
+		table.reload({
+			participant_name: participant_name,
+			start_time: startTime,
+			end_time: endTime,
+            prize_type: prize_type,
+            status: status
+		}, {
+			emptyDataHint: '没有符合条件的数据'
+		});
+	});
+
+	//export
+    $('.xa-export').click(function(event){
+        W.getLoadingView();
+		participant_name = $.trim($('[name="participant_name"]').val());
+		startTime = $.trim($('[name="start_time"]').val());
+		endTime = $.trim($('[name="end_time"]').val());
+		prize_type = $.trim($('[name="prize_type"]').val());
+        status = $.trim($('[name="status"]').val());
+        var export_id =window.location.search.split('?id=')[1];
+        W.getApi().call({
+            method: 'get',
+            app: 'apps/scanlottery',
+            resource: 'scanlottery_participances-export',
+            args: {
+				'export_id':export_id,
+				'participant_name': participant_name,
+				'start_time': startTime,
+				'end_time': endTime,
+				'prize_type': prize_type,
+				'status': status
+			},
+            success: function(resp){
+                if(resp.code == 200){
+                    $('#export_href').prop({
+                        'href': resp.download_path,
+                        'download': resp.filename
+                    }).get(0).click();
+
+                }
+                console.log("导出成功");
+            },
+            error: function(error){
+                console.log('导出失败');
+            }
+        });
+    });
+{#	领取实物奖品#}
+	$('body').delegate('.xa-getLottery', 'click', function(event) {
+		var $el = $(event.target);
+		var id = $el.data('id');
+		W.requireConfirm({
+			$el: $el,
+			width: 420,
+			height: 55,
+			position: 'right-middle',
+			isTitle: false,
+			msg: '确定领取该奖品？',
+			confirm: function() {
+				W.getApi().call({
+					app: 'apps/scanlottery',
+					resource: 'scanlottery_participances',
+					method: 'post',
+					args: {
+						id: id
+					},
+					success: function(data) {
+						W.showHint('success', '领取奖品成功！');
+						setTimeout(function() {
+							location.reload()
+						}, 500);
+					},
+					error: function(response) {
+						W.showHint('error', '领取奖品失败，请稍后再试！');
+					}
+				});
+			}
+		});
+	});
+});
+</script>
+{% endblock %}
+

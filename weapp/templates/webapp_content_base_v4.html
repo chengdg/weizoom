@@ -60,6 +60,8 @@
         <script type="text/javascript" src="/termite_static/v3/system/validate.js"></script>
         <script type="text/javascript" src="/termite_static/v3/gmu/widget/swipeImage.js"></script>
         <script type="text/javascript" src="/termite_static/v3/lib/lazyload.js"></script>
+        <script type="text/javascript" src="/static_v2/lib/handlebars-v3.0.1.js"></script>
+        <script type="text/javascript" src="/static_v2/js/system/handlebar_helper.js"></script>
 
         <script type="text/javascript" src="/termite_static/v3/gmu/widget/weshopBottomNav.js"></script>
         <script type="text/javascript" src="/termite_static/v3/gmu/widget/weshopSideNav.js"></script>
@@ -77,6 +79,8 @@
         <script type="text/javascript" src="/termite_static/v3/gmu/widget/addImg.js"></script>
 
         <script type="text/javascript" src="/termite_static/v3/system/debug.js"></script>
+        <script type="text/javascript" src="/termite_static/v3/webapp/wepage_async_component_load.js"></script>
+
         <!-- *end_prunt_task* -->
 
 
@@ -117,7 +121,6 @@
             </div>
             {% endfor %}
         </div>
-        {% include "weapp_jssdk_base.html" %}
         <!-- 公告超出滚动 -->
         <script type="text/javascript">
             // 定时器
@@ -291,14 +294,23 @@
                     return;
                 }
 
-                if (isUserCenterLink(url) && W.isSubscribedMember == false) {
-                    /* 非会员显示二维码 */
-                    $('.xa-qrcodeMask').swipeMask('show');
-                } else {
+                // [微众商城]非会员可看个人中心（看购需求）
+                if ( W.webappOwnerId == 6 || W.webappOwnerId == 216 ) {
                     if( url.indexOf('http://') == 0 || url.indexOf('https://') == 0){
                         window.location.href = url;
                     }else{
                         window.location.href = "http://"+ window.location.host + url;
+                    }
+                }else{
+                    if (isUserCenterLink(url) && W.isSubscribedMember == false) {
+                        /* 非会员显示二维码 */
+                        $('.xa-qrcodeMask').swipeMask('show');
+                    } else {
+                        if( url.indexOf('http://') == 0 || url.indexOf('https://') == 0){
+                            window.location.href = url;
+                        }else{
+                            window.location.href = "http://"+ window.location.host + url;
+                        }
                     }
                 }
             });
@@ -327,6 +339,7 @@
             W.isSubscribedMember = true;   
 
             W.errorMessage = null;
+            W.H5_HOST = "{{ H5_HOST }}";
 
             {% if messages %}
             {% for message in messages %}
@@ -632,5 +645,6 @@
         {% if not is_deleted_data %}
             {% block js %}{% endblock %}
         {% endif %}
+        {% include "weapp_jssdk_base.html" %}
     </body>
 </html>

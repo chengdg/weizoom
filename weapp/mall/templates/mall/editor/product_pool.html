@@ -72,6 +72,8 @@
                 <th width="100">供货商</th>
                 <th width="55">商品价格</th>
                 <th width="50">库存</th>
+                <th width="100">商品毛利</th>
+                <th width="50">扣点类型</th>
                 <th width="90">操作</th>
             </tr>
         </thead>
@@ -104,7 +106,9 @@
                             </div>
                         </div>
                     </td>
-                    <td></td>
+                    <td>
+                        ${product.classification}
+                    </td>
                     <td>
                         ${product.store_name}
                     </td>
@@ -122,6 +126,15 @@
                             {{else}}
                                 ${product.stocks}
                             {{/if}}
+                        {{/if}}
+                    </td>
+                    <td>
+                        ${product.gross_profit}
+                    </td>
+                    <td>
+                        {{if product.supplier_type == 0}}
+                            首月55分成
+                        {{else}}
                         {{/if}}
                     </td>
                     <td>

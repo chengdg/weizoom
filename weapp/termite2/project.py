@@ -312,7 +312,6 @@ def delete_webapp_page_cache(**kwargs):
 	if hasattr(cache, 'request') and cache.request.user_profile:
 		webapp_owner_id = cache.request.user_profile.user_id
 		for project in webapp_models.Project.objects.filter(owner_id=webapp_owner_id, type='wepage'):
-			print "in>>>>>>>>>>>>>"
 			key = 'termite_webapp_page_%s_%s' % (webapp_owner_id, project.id)
 			cache_util.delete_cache(key)
 			purge_webapp_page_from_varnish_cache.delay(webapp_owner_id,  project.id)

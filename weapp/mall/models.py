@@ -592,7 +592,7 @@ class Product(models.Model):
 				})
 
 	@staticmethod
-	def fill_flash_sale(products):
+	def fill_flash_sale(products,webapp_owner):
 		from mall.promotion import models as promotion_models
 		for p in products:
 			p.promotion = None
@@ -604,7 +604,7 @@ class Product(models.Model):
 			id2product[product.id] = product
 
 		#创建promotions业务对象集合
-		product_promotion_relations = promotion_models.ProductHasPromotion.objects.filter(product_id__in=product_ids)
+		product_promotion_relations = promotion_models.ProductHasPromotion.objects.filter(product_id__in=product_ids, promotion__owner=webapp_owner, promotion__status=promotion_models.PROMOTION_STATUS_STARTED)
 		promotion_ids = list()
 		promotion2product = dict()
 		for relation in product_promotion_relations:
@@ -765,7 +765,7 @@ class Product(models.Model):
 
 		# 商品列表页缓存专用
 		if options.get('flash_sale', False):
-			Product.fill_flash_sale(products)
+			Product.fill_flash_sale(products, webapp_owner)
 
 	@staticmethod
 	def get_from_model(product_id, product_model_name):
@@ -2182,6 +2182,7 @@ PAY_INTERFACE_WEIXIN_PAY = 2
 PAY_INTERFACE_COD = 9
 PAY_INTERFACE_PREFERENCE = 10
 PAY_INTERFACE_BEST_PAY = 11
+PAY_INTERFACE_KANGOU = 12
 ###########################
 # ADD BY BERT  AT 16
 ###########################
@@ -2194,6 +2195,7 @@ PAYTYPE2LOGO = {
 	PAY_INTERFACE_COD: '/standard_static/img/mockapi/cod.png',
 	PAY_INTERFACE_WEIZOOM_COIN: '/standard_static/img/mockapi/wzcoin.png',
 	PAY_INTERFACE_BEST_PAY: '/standard_static/img/mockapi/best_pay.png',
+	PAY_INTERFACE_BEST_PAY: '/standard_static/img/mockapi/kangou.png',
 }
 PAYTYPE2NAME = {
 	-1: u'',
@@ -2203,7 +2205,8 @@ PAYTYPE2NAME = {
 	PAY_INTERFACE_WEIXIN_PAY: u'微信支付',
 	PAY_INTERFACE_COD: u'货到付款',
 	PAY_INTERFACE_WEIZOOM_COIN: u"微众卡支付",
-	PAY_INTERFACE_BEST_PAY:u"翼支付"
+	PAY_INTERFACE_BEST_PAY:u"翼支付",
+	PAY_INTERFACE_KANGOU:u"看购支付"
 }
 PAYNAME2TYPE = {
 	u'优惠抵扣':PAY_INTERFACE_PREFERENCE,
@@ -2212,7 +2215,8 @@ PAYNAME2TYPE = {
 	u'微信支付': PAY_INTERFACE_WEIXIN_PAY,
 	u'货到付款': PAY_INTERFACE_COD,
 	u"微众卡支付": PAY_INTERFACE_WEIZOOM_COIN,
-	u"翼支付": PAY_INTERFACE_BEST_PAY
+	u"翼支付": PAY_INTERFACE_BEST_PAY,
+	u"看购支付": PAY_INTERFACE_KANGOU
 }
 
 VALID_PAY_INTERFACES = [
@@ -2220,12 +2224,14 @@ VALID_PAY_INTERFACES = [
 	PAY_INTERFACE_COD,
 	PAY_INTERFACE_WEIZOOM_COIN,
 	PAY_INTERFACE_ALIPAY,
+	PAY_INTERFACE_KANGOU,
 	PAY_INTERFACE_BEST_PAY]
 ONLINE_PAY_INTERFACE = [
 	PAY_INTERFACE_WEIXIN_PAY,
 	PAY_INTERFACE_ALIPAY,
 	PAY_INTERFACE_WEIZOOM_COIN,
 	PAY_INTERFACE_TENPAY,
+	PAY_INTERFACE_KANGOU,
 PAY_INTERFACE_BEST_PAY]
 
 
@@ -2721,6 +2727,7 @@ class Supplier(models.Model):
 	supplier_address = models.CharField(max_length=256) # 供货商地址
 	remark = models.CharField(max_length=256) # 备注
 	is_delete = models.BooleanField(default=False)  # 是否已经删除
+	type = models.IntegerField(default=-1)# 是否55分  0 55分成
 	created_at = models.DateTimeField(auto_now_add=True)  # 添加时间
 
 	class Meta(object):
@@ -2809,6 +2816,7 @@ class ProductPool(models.Model):
 	product_id = models.IntegerField() #商品管理上传的商品id
 	status = models.IntegerField(default=PP_STATUS_ON_POOL) #商品状态
 	display_index = models.IntegerField(default=0, blank=True)  # 显示的排序
+	sync_at = models.DateTimeField(blank=True,null=True)  # 上架时间
 	created_at = models.DateTimeField(auto_now_add=True)  # 添加时间
 
 	class Meta(object):
