@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from weapp.settings import MONEY_HOST
+from weapp.settings import MONEY_HOST, MARKETAPP_DOMAIN
 
 MALL_HOME_FIRST_NAV = 'mall_outline'
 WEIXIN_HOME_FIRST_NAV = 'weixin_outline'
@@ -446,7 +446,7 @@ MALL_PROMOTION_AND_APPS_SECOND_NAV = {
                  {
                     'name': MALL_APPS_SURVEY_NAV,
                     'title': "用户调研",
-                    'url': 'http://marketapp.weapp.com/apps/survey/surveies/',
+                    'url': 'http://%s/apps/survey/surveies/' % MARKETAPP_DOMAIN,
                     'permission': '',
                      'need_token': True
                 },
