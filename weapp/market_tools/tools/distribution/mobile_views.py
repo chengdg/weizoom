@@ -6,8 +6,8 @@ import os
 
 from django.template import Context, RequestContext
 from django.shortcuts import render_to_response
-from market_tools.tools.distribution import models
-from modules.member.models import *
+import models
+from modules.member.models import Member
 template_path_items = os.path.dirname(__file__).split(os.sep)
 TEMPLATE_DIR = '%s/templates' % template_path_items[-1]
 

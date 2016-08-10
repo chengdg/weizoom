@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
-from modules.member.models import *
 from django.contrib.auth.models import Group, User
 
 class ChannelDistributionQrcodeSettings(models.Model):
