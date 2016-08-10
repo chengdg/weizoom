@@ -9,7 +9,184 @@
 {% block css%}
 <link type="text/css" rel="stylesheet" href="/markettools_static/distribution/css/m_weixin_style_v1.css">
 <style>
-   
+/*css reset*/
+html{font-family: Arial, "Microsoft Yahei", "SimSun", sans-serif;-webkit-text-size-adjust:100%;-moz-text-size-adjust:100%;-ms-text-size-adjust:100%;}
+body{-webkit-overflow-scrolling:touch;margin:0;}
+ul{margin:0;padding:0;list-style:none;outline:none;}
+dl,dd{margin:0;}
+a{display:inline-block;margin:0;padding:0;text-decoration:none;background:transparent;outline:none;color:#000;}
+a:link,a:visited,a:hover,a:active{text-decoration:none;color:currentColor;}
+a,dt,dd{-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent;}
+img{border:0;}
+p{margin:0;}
+input,button,select,textarea{margin:0;padding:0;border:0;outline:0;background-color:transparent;}
+
+/*公共样式*/
+html {
+    font-size: 62.5%;
+}
+.ml10 {
+    margin-left: 10px;
+}
+.ml15 {
+    margin-left: 15px;
+}
+.mb30 {
+    margin-bottom: 30px;
+}
+.pt30 {
+    padding-top: 30px;
+}
+.pt45 {
+    padding-top: 45px;
+}
+.pt50 {
+    padding-top: 50px;
+}
+.bg_fff {
+    background-color: #fff;
+}
+.xui-wrapper {
+    margin:0 auto;
+    width:100%;
+    max-width:750px;
+    height:100vh;
+    background-color:#efeff4;
+}
+.xui-wrapper img {
+    display: block;
+    width: 100%;
+}
+.xui-wrapper .xui-header {
+    overflow: hidden;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    max-width: 750px;
+    height: 40px;
+    font-size: 1.7rem;
+    text-align: center;
+    line-height: 40px;
+    color: #fff;
+    background-color: rgba(28,28,28,.9);
+    box-shadow: 0 1px 1px rgba(0,0,0,.1);
+    z-index: 999;
+}
+.xui-wrapper .xui-header .xui-back {
+    float:left;
+    margin-left: 15px;
+}
+.xui-wrapper .xui-header .xui-back i {
+    margin-right: 5px;
+}
+.xui-wrapper .xui-header .xui-menu {
+    float: right;
+    margin-right: 15px;
+}
+.xui-wrapper .xui-header .xui-menu i {
+    display: inline-block;
+    margin-right: 3px;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background-color: #fff;
+} 
+/* m_process 取现进度 */
+.xui-process-wrapper .xui-list {
+    height: 90px;
+    margin-bottom: 10px;
+    padding: 15px;
+    border-top: 1px solid #dedede;
+    border-bottom: 1px solid #dedede;
+    background-color: #fff;
+}
+.xui-process-wrapper .xui-time {
+    margin-bottom: 20px;
+    font-size: 1.4rem;
+    color: #999;
+}
+.xui-process-wrapper .xui-process {
+    overflow: hidden;
+    text-align: center;
+}
+.xui-process-wrapper .xui-step {
+    display: inline-block;
+    width: 90px;
+    height: 30px;
+    font-size: 1.4rem;
+    line-height: 30px;
+    color: #2388e4;
+    border: 1px solid #2388e4;
+    border-radius: 5px;
+}
+.xui-process-wrapper .xui-step:first-child {
+    float: left;
+}
+.xui-process-wrapper .xui-step:last-child {
+    float: right;
+}
+.xui-process-wrapper .cur {
+    color: #fff;
+    background-color: #2388e4;
+}
+.xui-process-wrapper .xui-step .icon-right {
+    display: inline-block;
+    margin-left: 6px;
+}
+.xui-process-wrapper .xui-step .icon-moveRight {
+    -webkit-animation: arrowMoveRight 1s linear infinite alternate;
+    -moz-animation: arrowMoveRight 1s linear infinite alternate;
+    -ms-animation: arrowMoveRight 1s linear infinite alternate;
+    -o-animation: arrowMoveRight 1s linear infinite alternate;
+    animation: arrowMoveRight 1s linear infinite alternate;
+}
+.xui-process-wrapper .xui-step .icon-rect-white {
+    display: inline-block;
+    vertical-align: middle;
+    width: 5px;
+    height: 4px;
+    background-color: #fff;
+}
+.xui-process-wrapper .xui-step .icon-rect-blue {
+    display: inline-block;
+    vertical-align: middle;
+    width: 5px;
+    height: 4px;
+    background-color: #2388e4;
+}
+.xui-process-wrapper .xui-step .icon-tri-white {
+    display: inline-block;
+    width: 0;
+    height: 0;
+    border-top: 4px solid transparent;
+    border-left: 7px solid #fff;
+    border-bottom: 4px solid transparent;
+}
+.xui-process-wrapper .xui-step .icon-tri-blue {
+    display: inline-block;
+    width: 0;
+    height: 0;
+    border-top: 4px solid transparent;
+    border-left: 7px solid #2388e4;
+    border-bottom: 4px solid transparent;
+}
+/* 动画 */
+@-webkit-keyframes arrowMoveRight {
+    0% { margin-left: 5px; }
+    100% { margin-left: 12px; }
+}
+@-moz-keyframes arrowMoveRight {
+    0% { margin-left: 5px; }
+    100% { margin-left: 12px; }
+}
+@-ms-keyframes arrowMoveRight {
+    0% { margin-left: 5px; }
+    100% { margin-left: 12px; }
+}
+@keyframes arrowMoveRight {
+    0% { margin-left: 5px; }
+    100% { margin-left: 12px; }
+}
 </style>
 {% endblock %}
 {% block content-panel %}
