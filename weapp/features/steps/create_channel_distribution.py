@@ -6,8 +6,7 @@ from mall.promotion.models import CouponRule
 from modules.member.models import MemberGrade, MemberTag, Member
 from test import bdd_util
 import logging
-
-
+from market_tools.tools.distribution.models import ChannelDistributionQrcodeSettings
 from utils.string_util import byte_to_hex
 
 @When(u"{user}新建渠道分销二维码")
@@ -92,7 +91,7 @@ def step_impl(context, user):
 
 
 @When(u"{user}设置渠道分销二维码查询条件")
-def setp_impl(context, user):
+def step_impl(context, user):
 	code_name = json.loads(context.text)['code_name']
 	context.distribution_query_name = code_name
 
@@ -120,3 +119,54 @@ def step_impl(context, user):
 def step_impl(context, user):
 	if hasattr(context, 'distribution_page'):
 		context.distribution_page -= 1
+
+
+@When(u"{user}更新渠道分销二维码'{qrcode_name}'")
+def step_impl(context, user, qrcode_name):
+	expected = json.loads(context.text)
+	qrcode = ChannelDistributionQrcodeSettings.objects.get(bing_member_title=qrcode_name)
+
+	distribution_rewards_type = {u'无': 0, u'佣金': 1}
+
+	name = expected['relation_member']
+	name = byte_to_hex(name)
+	bing_member_id = Member.objects.filter(username_hexstr__contains=name)[0].id
+	group_id = MemberTag.objects.get(webapp_id=context.webapp_id, name=expected['tags']).id
+	if expected['prize_type'] == u"无":
+		prize_info = '{"id":-1,"name":"non-prize","type":"无奖励"}'
+	elif expected['prize_type'] == u'优惠券':
+		coupon_rule_id = CouponRule.objects.filter(name=expected['coupon']).order_by('-id')[0].id
+		prize_info = '{"id":%s,"name":"%s","type":"优惠券"}' % (coupon_rule_id, expected['coupon'])
+	elif expected['prize_type'] == u'积分':
+		prize_info = '{"id":%s,"name":"_score-prize_","type":"积分"}' % expected['integral']
+
+	reply_type_type = {u'文字': 1, u'图文': 2}
+	# 图文
+	reply_detail = ''
+	reply_material_id = 0
+	if reply_type_type[expected['reply_type']] == 1:
+		reply_detail = expected['scan_code_reply']
+	elif reply_type_type[expected['reply_type']] == 2:
+		reply_material_id = 1
+
+	params = {}
+	params['qrcode_id'] = qrcode.id
+	params['bing_member_title'] = expected['code_name']
+	params['bing_member_id'] = bing_member_id
+	params['distribution_rewards'] = distribution_rewards_type[expected['distribution_prize_type']]
+	params['commission_rate'] = expected['commission_return_rate']
+	params['minimun_return_rate'] = expected['minimum_cash_discount']
+	params['commission_return_standard'] = expected['commission_return_standard']
+	params['return_standard'] = expected['setlement_time']
+	params['group_id'] = group_id
+	params['prize_info'] = prize_info
+	params['reply_type'] = reply_type_type[expected['reply_type']]
+	params['reply_material_id'] = reply_material_id
+	params['reply_detail'] = reply_detail
+	params['create_time'] = expected['create_time']
+
+
+	response = context.client.post('/new_weixin/api/channel_distribution/', params)
+	# logging.info('11111111111')
+	# logging.info(response)
+
