@@ -463,7 +463,6 @@ class ProductPool(resource.Resource):
             product_ids = [pool.product_id for pool in product_pool]
             products = models.Product.objects.filter(id__in=product_ids)
 
-
         if supplier_name:
             supplier_ids = [s.id for s in models.Supplier.objects.filter(owner_id=manager_user_profile.user_id, name__contains=supplier_name)]
             if supplier_ids:

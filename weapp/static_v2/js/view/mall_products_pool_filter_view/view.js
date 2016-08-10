@@ -57,7 +57,7 @@ W.view.mall.ProductsPoolFilterView = Backbone.View.extend({
                 console.log(data);
             var option = '<option value="-1">二级分类</option>';
             _.each(data.items,function(data,i){
-                option+='<option id='+i+'>'+data.name+'</option>';
+                option+='<option value='+data.id+'>'+data.name+'</option>';
                 });
 
                 $('.xa-secondCategory').html(option);
