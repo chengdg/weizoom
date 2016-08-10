@@ -86,7 +86,7 @@ Background:
 			"commission_return_rate":"10",
 			"minimum_cash_discount":"80",
 			"commission_return_standard":500.00,
-			"is_seven_day_settlement_standard":"false",
+			"settlement_time":"0",
 			"tags": "未分组",
 			"prize_type": "无",
 			"reply_type": "文字",
@@ -99,7 +99,7 @@ Background:
 			"commission_return_rate":"10",
 			"minimum_cash_discount":"80",
 			"commission_return_standard":500.00,
-			"is_seven_day_settlement_standard":"false",
+			"settlement_time":"0",
 			"tags": "分组1",
 			"prize_type": "积分",
 			"integral": 10,
@@ -113,7 +113,7 @@ Background:
 			"commission_return_rate":"10",
 			"minimum_cash_discount":"80",
 			"commission_return_standard":500.00,
-			"is_seven_day_settlement_standard":"true",
+			"settlement_time":"7",
 			"tags": "分组2",
 			"prize_type": "优惠券",
 			"coupon":"优惠券1",
@@ -122,7 +122,7 @@ Background:
 			"create_time": "2015-10-12 10:20:30"
 		}]
 		"""
-@mall2 @apps @senior @channel_distribution
+@mall2 @apps @senior @channel_distribution_dgl
 Scenario:1 渠道分销二维码的查看
 	Given jobs登录系统
 
@@ -134,8 +134,8 @@ Scenario:1 渠道分销二维码的查看
 				"attention_number": "0",
 				"total_transaction_money": 0.00,
 				"cash_back_amount":0.00,
-				"prize": "[优惠券]优惠券1",
-				"distribution_prize":"无",
+				"prize": "优惠券1",
+				"distribution_prize":"佣金",
 				"create_time": "2015-10-12 10:20:30"
 			},{
 				"code_name": "分销二维码2",
@@ -143,7 +143,7 @@ Scenario:1 渠道分销二维码的查看
 				"attention_number": "0",
 				"total_transaction_money": 0.00,
 				"cash_back_amount":0.00,
-				"prize": "[积分]10",
+				"prize": "10积分",
 				"distribution_prize":"佣金",
 				"create_time": "2015-10-11 10:20:30"
 			},{
@@ -152,8 +152,8 @@ Scenario:1 渠道分销二维码的查看
 				"attention_number": "0",
 				"total_transaction_money": 0.00,
 				"cash_back_amount":0.00,
-				"prize": "无",
-				"distribution_prize":"佣金",
+				"prize": "无奖励",
+				"distribution_prize":"无",
 				"create_time": "2015-10-10 10:20:30"
 			}]
 			"""
@@ -178,8 +178,8 @@ Scenario:2 渠道分销二维码的查询
 				"attention_number": "0",
 				"total_transaction_money": 0.00,
 				"cash_back_amount":0.00,
-				"prize": "[优惠券]优惠券1",
-				"distribution_prize":"无",
+				"prize": "优惠券1",
+				"distribution_prize":"佣金",
 				"create_time": "2015-10-12 10:20:30"
 			},{
 				"code_name": "分销二维码2",
@@ -187,7 +187,7 @@ Scenario:2 渠道分销二维码的查询
 				"attention_number": "0",
 				"total_transaction_money": 0.00,
 				"cash_back_amount":0.00,
-				"prize": "[积分]10",
+				"prize": "10积分",
 				"distribution_prize":"佣金",
 				"create_time": "2015-10-11 10:20:30"
 			},{
@@ -196,8 +196,8 @@ Scenario:2 渠道分销二维码的查询
 				"attention_number": "0",
 				"total_transaction_money": 0.00,
 				"cash_back_amount":0.00,
-				"prize": "无",
-				"distribution_prize":"佣金",
+				"prize": "无奖励",
+				"distribution_prize":"无",
 				"create_time": "2015-10-10 10:20:30"
 			}]
 			"""
@@ -217,7 +217,7 @@ Scenario:2 渠道分销二维码的查询
 				"attention_number": "0",
 				"total_transaction_money": 0.00,
 				"cash_back_amount":0.00,
-				"prize": "[积分]10",
+				"prize": "10积分",
 				"distribution_prize":"佣金",
 				"create_time": "2015-10-11 10:20:30"
 			}]
@@ -238,8 +238,8 @@ Scenario:2 渠道分销二维码的查询
 				"attention_number": "0",
 				"total_transaction_money": 0.00,
 				"cash_back_amount":0.00,
-				"prize": "[优惠券]优惠券1",
-				"distribution_prize":"无",
+				"prize": "优惠券1",
+				"distribution_prize":"佣金",
 				"create_time": "2015-10-12 10:20:30"
 			}]
 			"""
@@ -277,8 +277,8 @@ Scenario:3 渠道分销二维码的分页
 				"attention_number": "0",
 				"total_transaction_money": 0.00,
 				"cash_back_amount":0.00,
-				"prize": "[优惠券]优惠券1",
-				"distribution_prize":"无",
+				"prize": "优惠券1",
+				"distribution_prize":"佣金",
 				"create_time": "2015-10-12 10:20:30"
 		}]
 		"""
@@ -291,7 +291,7 @@ Scenario:3 渠道分销二维码的分页
 				"attention_number": "0",
 				"total_transaction_money": 0.00,
 				"cash_back_amount":0.00,
-				"prize": "[积分]10",
+				"prize": "10积分",
 				"distribution_prize":"佣金",
 				"create_time": "2015-10-11 10:20:30"
 		}]
@@ -305,8 +305,8 @@ Scenario:3 渠道分销二维码的分页
 				"attention_number": "0",
 				"total_transaction_money": 0.00,
 				"cash_back_amount":0.00,
-				"prize": "无",
-				"distribution_prize":"佣金",
+				"prize": "无奖励",
+				"distribution_prize":"无",
 				"create_time": "2015-10-10 10:20:30"
 		}]
 		"""
@@ -319,7 +319,7 @@ Scenario:3 渠道分销二维码的分页
 				"attention_number": "0",
 				"total_transaction_money": 0.00,
 				"cash_back_amount":0.00,
-				"prize": "[积分]10",
+				"prize": "10积分",
 				"distribution_prize":"佣金",
 				"create_time": "2015-10-11 10:20:30"
 		}]
