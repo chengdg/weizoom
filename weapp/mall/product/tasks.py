@@ -165,3 +165,19 @@ def send_review_export_job_task(self, exportjob_id, filter_data_args, sort_attr,
             export_jobs.update(status=2,is_download=1)
             watchdog_error(notify_message)
 
+@task(bind=True, time_limit=7200, max_retries=2)
+def send_product_export_job_task(self, exportjob_id, filter_data_args, type):
+    export_jobs = ExportJob.objects.filter(id=exportjob_id)
+    
+    filename = "product_review_{}.xlsx".format(exportjob_id)
+    dir_path_excel = "excel"
+    dir_path = os.path.join(settings.UPLOAD_DIR, dir_path_excel)
+    file_path = "{}/{}".format(dir_path,filename)
+    workbook   = xlsxwriter.Workbook(file_path)
+    table = workbook.add_worksheet()
+
+
+    workbook.close()
+    upyun_path = '/upload/excel/{}'.format(filename)
+    yun_url = upyun_util.upload_image_to_upyun(file_path, upyun_path)
+    export_jobs.update(status=1,file_path=yun_url,update_at=datetime.now())

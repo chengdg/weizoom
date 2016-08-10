@@ -1931,3 +1931,82 @@ class CheckProductHasPromotion(resource.Resource):
                 return create_response(200).get_response()
         else:
             return create_response(500).get_response()
+
+
+class ProductGetFile(resource.Resource):
+    """
+    所有订单/财务审核中的订单导出
+    获取参数，构建成文件，上传到u盘运
+    """
+    app = "mall2"
+    resource ="export_product_param"
+
+    @login_required
+    def api_get(request):
+        woid = request.webapp_owner_id
+        type = int(request.GET.get('type', 4))
+
+        now = datetime.now()
+        #判断用户是否存在导出数据任务
+
+        param = get_product_param_from(request)
+
+        exportjob = ExportJob.objects.create(
+                                    woid = woid,
+                                    type = type,
+                                    status = 0,
+                                    param = param,
+                                    created_at = now,
+                                    processed_count =0,
+                                    count =0,
+                                    )
+        from mall.product.tasks import send_product_export_job_task
+        send_product_export_job_task.delay(exportjob.id, param, type)
+
+        response = create_response(200)
+        response.data = {
+            'ok':'ok',
+            "exportjob_id":exportjob.id,
+        }
+        return response.get_response()
+
+def get_product_param_from(request):
+    print "request.GET>>>>>>>>>",request.GET
+    # webapp_id = request.user_profile.webapp_id
+    mall_type = request.user_profile.webapp_type
+    product_name = request.GET.get('name', '')
+    supplier_name = request.GET.get('supplier', '')
+    
+
+    start_date = request.GET.get('startDate', '')
+    end_date = request.GET.get('endDate', '')
+
+    lowSales = request.GET.get('lowSales', '')
+    highSales = request.GET.get('highSales', '')
+
+    category =  request.GET.get('category', '')
+    barCode =  request.GET.get('barCode', '')
+
+    #model
+    lowPrice = request.GET.get('lowPrice', '')
+    highPrice = request.GET.get('highPrice', '')
+
+    lowStocks = request.GET.get('lowStocks', '')
+    highStocks = request.GET.get('highStocks', '')
+
+
+    # product_pool_param = {}
+    # if mall_type:
+    #     product_pool_param['woid'] = request.manager.id
+    #     if start_date and end_date:
+    #         product_pool_param["sync_at__gte"] = start_date
+    #         product_pool_param["sync_at__lte"] = end_date
+
+    # user_profile = request.user_profile
+    woid = request.webapp_owner_id
+    
+    param = {'mall_type':mall_type, 'woid':woid, 'name':product_name, 'supplier_name':supplier_name, 'start_date':start_date, 'end_date':end_date, 
+        'lowSales':lowSales, 'highSales':highSales, 'category':'category', 'barCode':barCode, 'lowPrice':lowPrice, 'highPrice':highPrice,
+         'lowStocks':lowStocks, 'highStocks':highStocks}
+    return param
+

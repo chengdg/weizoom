@@ -98,8 +98,8 @@ W.view.mall.ProductListView = Backbone.View.extend({
                             jobId:0,
                             filter_value:filter_value,
                             isAlreadyExport : true,
-                            app: 'product',
-                            resource: 'export_file_param',
+                            app: 'mall2',
+                            resource: 'export_product_param',
                             timelinesOptions: {
                                 
                             }
@@ -118,7 +118,7 @@ W.view.mall.ProductListView = Backbone.View.extend({
         var table = $('div[data-ui-role="advanced-table"]').data('view');
 
         var export2data = this.export2data;
-        var woid = "{{ request.manager.id }}";
+        // var woid = "{{ request.manager.id }}";
         if(export2data["status"] ===1 && export2data["is_download"] ===0 ){
             table.afterload = function(){
                 var options = {
