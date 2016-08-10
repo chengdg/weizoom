@@ -59,18 +59,20 @@ def step_impl(context, user):
 		params['_method'] = 'put'
 
 		response = context.client.post('/new_weixin/api/channel_distribution/', params)
-		# if response['code'] != 200:
-		# 	assert Exception('...')
+
 
 @Then(u"{user}获得渠道分销二维码列表")
 def step_impl(context, user):
 	expected = json.loads(context.text)
-
 	params = {}
+	if hasattr(context, 'distribution_query_name'):
+		params['query_name'] = context.distribution_query_name
+	if hasattr(context, 'count_per_page'):
+		params['count_per_page'] = context.count_per_page
+	if hasattr(context, 'distribution_page'):
+		params['page'] = context.distribution_page
+
 	response = context.client.get('/new_weixin/api/channel_distributions/', params)
-	# logging.info(dir(response))
-	# logging.info(response.context)
-	# logging.info(response.content)
 
 	datas = json.loads(response.content)['data']['items']
 	actual_list = []
@@ -89,3 +91,32 @@ def step_impl(context, user):
 	bdd_util.assert_list(expected, actual_list)
 
 
+@When(u"{user}设置渠道分销二维码查询条件")
+def setp_impl(context, user):
+	code_name = json.loads(context.text)['code_name']
+	context.distribution_query_name = code_name
+
+
+@When(u"{user}设置分页查询参数")
+def set_paginate_args(context, user):
+	count_per_page = json.loads(context.text)['count_per_page']
+	context.count_per_page = count_per_page
+
+
+@When(u"{user}访问渠道分销二维码列表第'{num}'页")
+def step_impl(context, user, num):
+	context.distribution_page = int(num)
+
+
+@When(u"{user}访问渠道分销二维码列表下一页")
+def step_impl(context, user):
+	if hasattr(context, 'distribution_page'):
+		context.distribution_page += 1
+	else:
+		context.distribution_page = 2
+
+
+@When(u"{user}访问渠道分销二维码列表上一页")
+def step_impl(context, user):
+	if hasattr(context, 'distribution_page'):
+		context.distribution_page -= 1

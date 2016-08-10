@@ -30,7 +30,7 @@ a:link,a:visited,a:hover,a:active{text-decoration:none;color:currentColor;}
             <div class="xui-i-item">
                 <input
                         type="text"
-                        class="form-control"
+                        class="form-control xa-search-title"
                         placeholder="二维码名称"
                 />
             </div>
@@ -125,10 +125,10 @@ a:link,a:visited,a:hover,a:active{text-decoration:none;color:currentColor;}
     {% endverbatim %}
 
     <script>
-
-  //  var myTemplate = Handlebars.compile($("#table-template").html());
-
-  //  $('#tableList').html(myTemplate(data));
+    $(document).ready(function() {
+        var qrcodeView = new W.view.weixin.Distributions({
+            el: $("body")
+        });
+    });
     </script>
-
 {% endblock %}

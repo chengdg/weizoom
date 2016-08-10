@@ -990,14 +990,21 @@ class ChannelDistributions(resource.Resource):
 			1: u'佣金'
 		}
 
+		query_name = request.GET.get('query_name')
 		sort_attr = request.GET.get('sort_attr', '-created_at')
+		count_per_page = int(request.GET.get('count_per_page', 15))
+		# count_per_page = 1
+		cur_page = int(request.GET.get('page', '1'))
 
 		member_dict = {}  # {id: name}
 		members = Member.objects.all()
 		for member in members:
 			member_dict[member.id] = member.username_for_title
 
-		qrcodes = ChannelDistributionQrcodeSettings.objects.filter(owner=request.user)
+		if query_name:
+			qrcodes = ChannelDistributionQrcodeSettings.objects.filter(owner=request.user, bing_member_title__icontains=query_name)
+		else:
+			qrcodes = ChannelDistributionQrcodeSettings.objects.filter(owner=request.user)
 		items = []
 		for qrcode in qrcodes:
 			qrcode_dict = {}
@@ -1007,16 +1014,15 @@ class ChannelDistributions(resource.Resource):
 			qrcode_dict['bing_member_count'] = qrcode.bing_member_count  # 关注数量
 			qrcode_dict['total_transaction_volume'] = str(qrcode.total_transaction_volume)  # 总交易额
 			qrcode_dict['total_return'] = str(qrcode.total_return)  # 总返现额
-			qrcode_dict['award_prize_info'] = format_award_prize_info(qrcode.award_prize_info)  # 关注奖励 TODO
+			qrcode_dict['award_prize_info'] = format_award_prize_info(qrcode.award_prize_info)  # 关注奖励
 			qrcode_dict['distribution_rewards'] = str(distribution_rewards_status[qrcode.distribution_rewards])  # 分销奖励
 			qrcode_dict['created_at'] = str(qrcode.created_at)  # 创建时间
 			qrcode_dict['clearing'] = ''  # 会员结算 TODO 有新的提现请求显示new
 			qrcode_dict['ticket'] = qrcode.ticket
-			# qrcode_dict['']
+
 			items.append(qrcode_dict)
 
-		count_per_page = int(request.GET.get('count_per_page', 15))
-		cur_page = int(request.GET.get('page', '1'))
+
 		pageinfo, items = paginator.paginate(items, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
 
 		response = create_response(200)
@@ -1141,13 +1147,13 @@ class ChannelDistribution(resource.Resource): # TODO 关联会员不可以有两
 			return response.get_response()
 
 
-		distribution_rewards = request.POST["distribution_rewards"]  # 分销奖励 0:无 1:佣金
-		if distribution_rewards == '0':  # 如果分销奖励是无
+		distribution_rewards = int(request.POST["distribution_rewards"])  # 分销奖励 0:无 1:佣金
+		if distribution_rewards == 0:  # 如果分销奖励是无
 			commission_rate = 0
 			minimun_return_rate = 0
 			commission_return_standard = 0
 			return_standard = 0
-		else:
+		elif distribution_rewards == 1:
 			commission_rate = request.POST.get("commission_rate", 0)  # 佣金返现率
 			minimun_return_rate = request.POST.get("minimun_return_rate", 0)  # 最低返现折扣
 			commission_return_standard = request.POST.get("commission_return_standard", 0)  # 佣金返现标准
@@ -1191,7 +1197,7 @@ class ChannelDistribution(resource.Resource): # TODO 关联会员不可以有两
 				qrcode_ticket = weixin_api.create_qrcode_ticket(int(cur_setting.id), QrcodeTicket.PERMANENT)
 				ticket = qrcode_ticket.ticket
 			except Exception, e:
-				print 'get qrcode_ticket fail:', e
+				# print 'get qrcode_ticket fail:', e
 				ticket = ''
 		else:
 			ticket = ''

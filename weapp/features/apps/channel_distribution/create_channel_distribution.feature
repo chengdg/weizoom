@@ -122,7 +122,7 @@ Background:
 			"create_time": "2015-10-12 10:20:30"
 		}]
 		"""
-@mall2 @apps @senior @channel_distribution_dgl
+@mall2 @apps @senior @channel_distribution
 Scenario:1 渠道分销二维码的查看
 	Given jobs登录系统
 
@@ -134,7 +134,7 @@ Scenario:1 渠道分销二维码的查看
 				"attention_number": "0",
 				"total_transaction_money": 0.00,
 				"cash_back_amount":0.00,
-				"prize": "优惠券1",
+				"prize": "优惠券",
 				"distribution_prize":"佣金",
 				"create_time": "2015-10-12 10:20:30"
 			},{
@@ -178,7 +178,7 @@ Scenario:2 渠道分销二维码的查询
 				"attention_number": "0",
 				"total_transaction_money": 0.00,
 				"cash_back_amount":0.00,
-				"prize": "优惠券1",
+				"prize": "优惠券",
 				"distribution_prize":"佣金",
 				"create_time": "2015-10-12 10:20:30"
 			},{
@@ -206,7 +206,7 @@ Scenario:2 渠道分销二维码的查询
 		When jobs设置渠道分销二维码查询条件
 			"""
 			{
-				"code_name": "积分"
+				"code_name": "维码2"
 			}
 			"""
 		Then jobs获得渠道分销二维码列表
@@ -238,7 +238,7 @@ Scenario:2 渠道分销二维码的查询
 				"attention_number": "0",
 				"total_transaction_money": 0.00,
 				"cash_back_amount":0.00,
-				"prize": "优惠券1",
+				"prize": "优惠券",
 				"distribution_prize":"佣金",
 				"create_time": "2015-10-12 10:20:30"
 			}]
@@ -260,7 +260,7 @@ Scenario:2 渠道分销二维码的查询
 Scenario:3 渠道分销二维码的分页
 	Given jobs登录系统
 
-	And jobs设置分页查询参数
+	When jobs设置分页查询参数
 		"""
 		{
 			"count_per_page":1
@@ -277,7 +277,7 @@ Scenario:3 渠道分销二维码的分页
 				"attention_number": "0",
 				"total_transaction_money": 0.00,
 				"cash_back_amount":0.00,
-				"prize": "优惠券1",
+				"prize": "优惠券",
 				"distribution_prize":"佣金",
 				"create_time": "2015-10-12 10:20:30"
 		}]
