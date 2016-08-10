@@ -1195,7 +1195,12 @@ class ChannelDistribution(resource.Resource): # TODO 关联会员不可以有两
 				ticket = ''
 		else:
 			ticket = ''
+
 		cur_setting.ticket = ticket
+
+		create_time = request.POST.get('create_time')
+		if create_time:
+			cur_setting.created_at = create_time
 		cur_setting.save()
 
 		if cur_setting:
@@ -1298,16 +1303,6 @@ class ChannelDistributionClearing(resource.Resource):
 		for qrcode in qrcodes:
 			return_dict = {}
 
-			# if process_dict.has_key(qrcode.id):
-			# 	status = process_dict[qrcode.id].status
-			# 	commit_time = str(process_dict[qrcode.id].created_time)
-			# 	money = str(process_dict[qrcode.id].money)
-			# else:
-			# 	status = 0
-			# 	commit_time = u'---'
-			# 	money = '0.00'
-
-
 			return_dict['qrcode_id'] = qrcode.id
 			return_dict['name'] = member_dict[qrcode.bing_member_id]  # 用户名
 			return_dict['commit_time'] = str(qrcode.commit_time)  # 提交时间
@@ -1336,6 +1331,7 @@ class ChannelDistributionTransactionAmount(resource.Resource):
 	app = 'new_weixin'
 	resource = 'channel_distribution_transaction_amount'
 
+	@login_required
 	def api_get(request):
 		"""
 		查看记录的一个页面
