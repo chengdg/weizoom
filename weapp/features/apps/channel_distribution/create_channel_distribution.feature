@@ -80,7 +80,7 @@ Background:
 	When jobs新建渠道分销二维码
 		"""
 		[{
-			"code_name": "渠道分销二维码-默认设置",
+			"code_name": "分销二维码1",
 			"relation_member": "bigs",
 			"distribution_prize_type": "无",
 			"commission_return_rate":"10",
@@ -93,7 +93,7 @@ Background:
 			"scan_code_reply": "扫码后回复文本",
 			"create_time": "2015-10-10 10:20:30"
 		},{
-			"code_name": "渠道分销二维码-积分奖励",
+			"code_name": "分销二维码2",
 			"relation_member": "bill",
 			"distribution_prize_type": "佣金",
 			"commission_return_rate":"10",
@@ -107,7 +107,7 @@ Background:
 			"scan_code_reply": "图文1",
 			"create_time": "2015-10-11 10:20:30"
 		},{
-			"code_name": "渠道分销二维码-优惠券奖励",
+			"code_name": "分销二维码3",
 			"relation_member": "tom",
 			"distribution_prize_type": "佣金",
 			"commission_return_rate":"10",
@@ -129,7 +129,7 @@ Scenario:1 渠道分销二维码的查看
 		Then jobs获得渠道分销二维码列表
 			"""
 			[{
-				"code_name": "渠道分销二维码-优惠券奖励",
+				"code_name": "分销二维码3",
 				"relation_member": "tom",
 				"attention_number": "0",
 				"total_transaction_money": 0.00,
@@ -138,7 +138,7 @@ Scenario:1 渠道分销二维码的查看
 				"distribution_prize":"无",
 				"create_time": "2015-10-12 10:20:30"
 			},{
-				"code_name": "渠道分销二维码-积分奖励",
+				"code_name": "分销二维码2",
 				"relation_member": "bill",
 				"attention_number": "0",
 				"total_transaction_money": 0.00,
@@ -147,7 +147,7 @@ Scenario:1 渠道分销二维码的查看
 				"distribution_prize":"佣金",
 				"create_time": "2015-10-11 10:20:30"
 			},{
-				"code_name": "渠道分销二维码-默认设置",
+				"code_name": "分销二维码1",
 				"relation_member": "bigs",
 				"attention_number": "0",
 				"total_transaction_money": 0.00,
@@ -173,7 +173,7 @@ Scenario:2 渠道分销二维码的查询
 		Then jobs获得渠道分销二维码列表
 			"""
 			[{
-				"code_name": "渠道分销二维码-优惠券奖励",
+				"code_name": "分销二维码3",
 				"relation_member": "tom",
 				"attention_number": "0",
 				"total_transaction_money": 0.00,
@@ -182,7 +182,7 @@ Scenario:2 渠道分销二维码的查询
 				"distribution_prize":"无",
 				"create_time": "2015-10-12 10:20:30"
 			},{
-				"code_name": "渠道分销二维码-积分奖励",
+				"code_name": "分销二维码2",
 				"relation_member": "bill",
 				"attention_number": "0",
 				"total_transaction_money": 0.00,
@@ -191,7 +191,7 @@ Scenario:2 渠道分销二维码的查询
 				"distribution_prize":"佣金",
 				"create_time": "2015-10-11 10:20:30"
 			},{
-				"code_name": "渠道分销二维码-默认设置",
+				"code_name": "分销二维码1",
 				"relation_member": "bigs",
 				"attention_number": "0",
 				"total_transaction_money": 0.00,
@@ -212,7 +212,7 @@ Scenario:2 渠道分销二维码的查询
 		Then jobs获得渠道分销二维码列表
 			"""
 			[{
-				"code_name": "渠道分销二维码-积分奖励",
+				"code_name": "分销二维码2",
 				"relation_member": "bill",
 				"attention_number": "0",
 				"total_transaction_money": 0.00,
@@ -227,13 +227,13 @@ Scenario:2 渠道分销二维码的查询
 		When jobs设置渠道分销二维码查询条件
 			"""
 			{
-				"code_name": "渠道分销二维码-优惠券奖励"
+				"code_name": "分销二维码3"
 			}
 			"""
 		Then jobs获得渠道分销二维码列表
 			"""
 			[{
-				"code_name": "渠道分销二维码-优惠券奖励",
+				"code_name": "分销二维码3",
 				"relation_member": "tom",
 				"attention_number": "0",
 				"total_transaction_money": 0.00,
@@ -272,7 +272,7 @@ Scenario:3 渠道分销二维码的分页
 	Then jobs获得渠道分销二维码列表
 		"""
 		[{
-				"code_name": "渠道分销二维码-优惠券奖励",
+				"code_name": "分销二维码3",
 				"relation_member": "tom",
 				"attention_number": "0",
 				"total_transaction_money": 0.00,
@@ -286,7 +286,7 @@ Scenario:3 渠道分销二维码的分页
 	Then jobs获得渠道分销二维码列表
 		"""
 		[{
-				"code_name": "渠道分销二维码-积分奖励",
+				"code_name": "分销二维码2",
 				"relation_member": "bill",
 				"attention_number": "0",
 				"total_transaction_money": 0.00,
@@ -300,7 +300,7 @@ Scenario:3 渠道分销二维码的分页
 	Then jobs获得渠道分销二维码列表
 		"""
 		[{
-				"code_name": "渠道分销二维码-默认设置",
+				"code_name": "分销二维码1",
 				"relation_member": "bigs",
 				"attention_number": "0",
 				"total_transaction_money": 0.00,
@@ -314,7 +314,7 @@ Scenario:3 渠道分销二维码的分页
 	Then jobs获得渠道分销二维码列表
 		"""
 		[{
-				"code_name": "渠道分销二维码-积分奖励",
+				"code_name": "分销二维码2",
 				"relation_member": "bill",
 				"attention_number": "0",
 				"total_transaction_money": 0.00,
