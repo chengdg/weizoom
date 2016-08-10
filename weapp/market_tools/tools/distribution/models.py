@@ -27,12 +27,12 @@ class ChannelDistributionQrcodeSettings(models.Model):
 	will_return_reward = models.DecimalField(max_digits=65, decimal_places=2, default=0)  # 实施奖励
 	bing_member_count = models.IntegerField(default=0)  # 关注数量,该二维码下边的关注人数
 	total_transaction_volume = models.DecimalField(max_digits=65, decimal_places=2, default=0)  # 总交易额:二维码自创建以来的所有交易额
-	total_return = models.DecimalField(max_digits=65, decimal_places=2, default=0)  # 返现总额: 二维码所有的返现总额, 只包含已经体现的金额
+	total_return = models.DecimalField(max_digits=65, decimal_places=2, default=0)  # 返现总额: 二维码所有的返现总额, 只包含已经提现的金额
 
-	status = models.IntegerField(default=0)  # 取现进度
-	extraction_money = models.DecimalField(max_digits=65, decimal_places=2, default=0)  # 提取的金额
-	current_transaction_amount = models.DecimalField(max_digits=65, decimal_places=2, default=0)  # 本期交易额
-	commit_time = models.DateTimeField(blank=True, null=True)  # 提交时间
+	status = models.IntegerField(default=0)  # 取现进度 (0无状态,1等待审核,2正在返现,)
+	extraction_money = models.DecimalField(max_digits=65, decimal_places=2, default=0)  # 提取的金额 (当用户提取佣金的时候,才会变动)
+	current_transaction_amount = models.DecimalField(max_digits=65, decimal_places=2, default=0)  # 本期交易额 (点击取现后,清空)????
+	commit_time = models.DateTimeField(default='0001-01-01')  # 提交时间
 
 	created_at = models.DateTimeField(auto_now_add=True) # 添加时间
 

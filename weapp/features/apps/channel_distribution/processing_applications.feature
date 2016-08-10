@@ -11,6 +11,7 @@ Feature:分销会员结算页返现状态转换
 			按返现金额查询:(1)满足(2)未满足
 			按提交时间查询:(1)满足(2)未满足
 			混合查询
+		7.上一期未完成,微信用户扫码下单返现的整体概况和分销会员列表
 """
 
 Background:
@@ -52,7 +53,7 @@ Background:
 	When jobs新建渠道分销二维码
 		"""
 		[{
-			"code_name": "渠道分销二维码-佣金设置1",
+			"code_name": "分销二维码1",
 			"relation_member": "bigs",
 			"distribution_prize_type": "佣金",
 			"commission_return_rate":"10",
@@ -65,7 +66,7 @@ Background:
 			"scan_code_reply": "扫码后回复文本",
 			"create_time": "2015-10-10 10:20:30"
 		},{
-			"code_name": "渠道分销二维码-佣金设置2",
+			"code_name": "分销二维码2",
 			"relation_member": "bill",
 			"distribution_prize_type": "佣金",
 			"commission_return_rate":"10",
@@ -95,7 +96,7 @@ Background:
 		"""
 		[{
 			"name": "商品1",
-			"price": 50.00,
+			"price": 100.00,
 			"count":"10",
 			"discount":"0.5"
 		},{
@@ -108,11 +109,11 @@ Background:
 
 	#扫码关注成为会员
 		When 清空浏览器
-		And jack扫描带参数二维码"渠道分销二维码-佣金设置1"于2015-08-10 10:00:00
+		And jack扫描带参数二维码"分销二维码1"于2015-08-10 10:00:00
 		And jack访问jobs的webapp
 
 		When 清空浏览器
-		And nokia扫描带参数二维码"渠道分销二维码-佣金设置2"于2015-08-11 10:00:00
+		And nokia扫描带参数二维码"分销二维码2"于2015-08-11 10:00:00
 		And nokia访问jobs的webapp
 
 	#会员购买
@@ -238,6 +239,9 @@ Scenario:2 分销会员结算页等待审核状态
 		When jobs完成订单"004"
 		When jobs完成订单"005"
 		When jobs完成订单"006"
+		When jobs完成订单"008"
+		When jobs完成订单"009"
+		When jobs完成订单"010"
 		When bigs访问jobs的webapp
 		When bigs申请返现于2015-08-12 10:00:00
 		Given jobs登录系统
@@ -253,6 +257,15 @@ Scenario:2 分销会员结算页等待审核状态
 				"already_reward":50.00,
 				"cash_back_amount":50.00,
 				"cash_back_state":"等待审核"
+			}{
+				"relation_member": "bill",
+				"submit_time":"----",
+				"current_transaction_amount":100.00,
+				"commission_return_standard":50.00,
+				"commission_return_rate":"10",
+				"already_reward":10.00,
+				"cash_back_amount":"暂无",
+				"cash_back_state":"无状态"
 			}]
 			"""
 
@@ -264,6 +277,9 @@ Scenario:3 分销会员结算页正在返现状态
 		When jobs完成订单"005"
 		When jobs完成订单"006"
 		When jobs完成订单"007"
+		When jobs完成订单"008"
+		When jobs完成订单"009"
+		When jobs完成订单"010"
 		When bigs访问jobs的webapp
 		When bigs申请返现于2015-08-12 10:00:00
 		Given jobs登录系统
@@ -279,6 +295,15 @@ Scenario:3 分销会员结算页正在返现状态
 				"already_reward":60.00,
 				"cash_back_amount":60.00,
 				"cash_back_state":"正在返现"
+			}{
+				"relation_member": "bill",
+				"submit_time":"----",
+				"current_transaction_amount":100.00,
+				"commission_return_standard":50.00,
+				"commission_return_rate":"10",
+				"already_reward":10.00,
+				"cash_back_amount":"暂无",
+				"cash_back_state":"无状态"
 			}]
 			"""
 @mall2 @apps @senior @processing_applications
@@ -289,6 +314,9 @@ Scenario:4 分销会员结算页已完成/切换为无状态
 		When jobs完成订单"005"
 		When jobs完成订单"006"
 		When jobs完成订单"007"
+		When jobs完成订单"008"
+		When jobs完成订单"009"
+		When jobs完成订单"010"
 		When bigs访问jobs的webapp
 		When bigs申请返现于2015-08-12 10:00:00
 		Given jobs登录系统
@@ -303,6 +331,15 @@ Scenario:4 分销会员结算页已完成/切换为无状态
 				"commission_return_rate":"10",
 				"already_reward":0,
 				"cash_back_amount":0,
+				"cash_back_state":"无状态"
+			}{
+				"relation_member": "bill",
+				"submit_time":"----",
+				"current_transaction_amount":100.00,
+				"commission_return_standard":50.00,
+				"commission_return_rate":"10",
+				"already_reward":10.00,
+				"cash_back_amount":"暂无",
 				"cash_back_state":"无状态"
 			}]
 			"""
@@ -325,7 +362,7 @@ Scenario:5 整体概况
 				"cash_back_total":0,
 				"not_return_total":70.00,
 				"current_return":70.00,
-				"turnover_total":750.00
+				"turnover_total":800.00
 			}
 			"""
 		When bigs访问jobs的webapp
@@ -339,7 +376,7 @@ Scenario:5 整体概况
 				"cash_back_total":60.00,
 				"not_return_total":0,
 				"current_return":10.00,
-				"turnover_total":750.00
+				"turnover_total":800.00
 			}
 			"""
 
@@ -351,6 +388,9 @@ Scenario:6 会员结算列表查询
 		When jobs完成订单"005"
 		When jobs完成订单"006"
 		When jobs完成订单"007"
+		When jobs完成订单"008"
+		When jobs完成订单"009"
+		When jobs完成订单"010"
 		When bigs访问jobs的webapp
 		When bigs申请返现于2015-08-12 10:00:00
 		Given jobs登录系统
@@ -366,6 +406,15 @@ Scenario:6 会员结算列表查询
 				"already_reward":0,
 				"cash_back_amount":0,
 				"cash_back_state":"无状态"
+			}{
+				"relation_member": "bill",
+				"submit_time":"----",
+				"current_transaction_amount":100.00,
+				"commission_return_standard":50.00,
+				"commission_return_rate":"10",
+				"already_reward":10.00,
+				"cash_back_amount":"暂无",
+				"cash_back_state":"无状态"
 			}]
 			"""
 		#返现金额不满足
@@ -378,7 +427,16 @@ Scenario:6 会员结算列表查询
 			""" 
 		Then jobs获得分销会员结算列表
 			"""
-			[]
+			[{
+				"relation_member": "bill",
+				"submit_time":"----",
+				"current_transaction_amount":100.00,
+				"commission_return_standard":50.00,
+				"commission_return_rate":"10",
+				"already_reward":10.00,
+				"cash_back_amount":"暂无",
+				"cash_back_state":"无状态"
+			}]
 			"""
 		#返现金额满足
 		When jobs设置分销会员结算查询条件
@@ -398,6 +456,15 @@ Scenario:6 会员结算列表查询
 				"commission_return_rate":"10",
 				"already_reward":0,
 				"cash_back_amount":0,
+				"cash_back_state":"无状态"
+			}{
+				"relation_member": "bill",
+				"submit_time":"----",
+				"current_transaction_amount":100.00,
+				"commission_return_standard":50.00,
+				"commission_return_rate":"10",
+				"already_reward":10.00,
+				"cash_back_amount":"暂无",
 				"cash_back_state":"无状态"
 			}]
 			"""
@@ -484,4 +551,103 @@ Scenario:6 会员结算列表查询
 		Then jobs获得分销会员结算列表
 			"""
 			[]
+			"""
+@mall2 @apps @senior @processing_applications
+Scenario:7 上一期未完成,微信用户扫码下单返现的整体概况和分销会员列表
+		When jobs完成订单"002"
+		When jobs完成订单"003"
+		When jobs完成订单"004"
+		When jobs完成订单"005"
+		When jobs完成订单"006"
+		When bigs访问jobs的webapp
+		When bigs申请返现于2015-08-12 10:00:00
+		Given jobs登录系统
+		Then jobs获得分销会员整体概况
+			"""
+			{
+				"cash_back_total":0,
+				"not_return_total":50,
+				"current_return":50.00,
+				"turnover_total":500.00
+			}
+			"""
+		Then jobs获得分销会员结算列表
+			"""
+			[{
+				"relation_member": "bigs",
+				"submit_time":"2015-08-12 10:00:00",
+				"current_transaction_amount":500.00,
+				"commission_return_standard":50.00,
+				"commission_return_rate":"10",
+				"already_reward":50.00,
+				"cash_back_amount":50.00,
+				"cash_back_state":"等待审核"
+			}]
+			"""
+		When jobs完成订单"007"
+		When jobs完成订单"008"
+		When jobs完成订单"009"
+		When jobs完成订单"010"
+		Then jobs获得分销会员整体概况
+			"""
+			{
+				"cash_back_total":70.00,
+				"not_return_total":100.00,
+				"current_return":50.00,
+				"turnover_total":800.00
+			}
+			"""
+		Then jobs获得分销会员结算列表
+			"""
+			[{
+				"relation_member": "bigs",
+				"submit_time":"2015-08-12 10:00:00",
+				"current_transaction_amount":500.00,
+				"commission_return_standard":50.00,
+				"commission_return_rate":"10",
+				"already_reward":60.00,
+				"cash_back_amount":50.00,
+				"cash_back_state":"等待审核"
+			},{
+				"relation_member": "bill",
+				"submit_time":"----",
+				"current_transaction_amount":100.00,
+				"commission_return_standard":50.00,
+				"commission_return_rate":"10",
+				"already_reward":10.00,
+				"cash_back_amount":"暂无",
+				"cash_back_state":"无状态"
+			}]
+			"""
+		When jobs更改返现状态为"已完成/切换为无状态"
+		Then jobs获得分销会员整体概况
+			"""
+			{
+				"cash_back_total":70.00,
+				"not_return_total":20.00,
+				"current_return":20.00,
+				"turnover_total":800.00
+			}
+			"""
+		Then jobs获得分销会员结算列表
+			"""
+			[{
+				"relation_member": "bigs",
+				"submit_time":"2015-08-12 10:00:00",
+				"current_transaction_amount":500.00,
+				"commission_return_standard":50.00,
+				"commission_return_rate":"10",
+				"already_reward":10.00,
+				"cash_back_amount":"暂无",
+				"cash_back_state":"无状态"
+			},{
+				"relation_member": "bill",
+				"submit_time":"----",
+				"current_transaction_amount":100.00,
+				"commission_return_standard":50.00,
+				"commission_return_rate":"10",
+				"already_reward":10.00,
+				"cash_back_amount":"暂无",
+				"cash_back_state":"无状态"
+			}]
 			"""

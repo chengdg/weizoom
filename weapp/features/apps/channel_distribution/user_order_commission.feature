@@ -31,7 +31,7 @@ Background:
 	When jobs新建渠道分销二维码
 		"""
 		[{
-			"code_name": "渠道分销二维码-默认设置",
+			"code_name": "分销二维码1",
 			"relation_member": "bigs",
 			"distribution_prize_type": "佣金",
 			"commission_return_rate":"10",
@@ -60,7 +60,7 @@ Background:
 		"""
 		[{
 			"name": "商品1",
-			"price": 50.00,
+			"price": 100.00,
 			"discount":"0.5"
 		},{
 			"name": "商品2",
@@ -71,7 +71,7 @@ Background:
 
 	#扫码关注成为会员
 		When 清空浏览器
-		And jack扫描带参数二维码"带参数二维码-默认设置"于2015-08-10 10:00:00
+		And jack扫描带参数二维码"分销二维码1"于2015-08-10 10:00:00
 		And jack访问jobs的webapp
 
 	#会员购买

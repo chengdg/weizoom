@@ -7,7 +7,7 @@ Background:
 	When jobs新建渠道分销二维码
 		"""
 		[{
-			"code_name": "渠道分销二维码-默认设置",
+			"code_name": "分销二维码1",
 			"relation_member": "bigs",
 			"distribution_prize_type": "佣金",
 			"commission_return_rate":"10",
@@ -64,7 +64,7 @@ Scenario:1 前台会员列表详情
 	When jobs新建渠道分销二维码
 		"""
 		[{
-			"code_name": "渠道分销二维码-默认设置",
+			"code_name": "分销二维码1",
 			"relation_member": "bigs",
 			"distribution_prize_type": "佣金",
 			"commission_return_rate":"10",
@@ -79,10 +79,10 @@ Scenario:1 前台会员列表详情
 		}]
 		"""
 		When 清空浏览器
-		And jack扫描带参数二维码"带参数二维码-默认设置"于'2015-08-10 10:00:00'
+		And jack扫描带参数二维码"分销二维码1"于'2015-08-10 10:00:00'
 		And jack访问jobs的webapp
 		When 清空浏览器
-		And bill扫描带参数二维码"渠道分销二维码-佣金设置"于'2015-08-11 10:00:00'
+		And bill扫描带参数二维码"分销二维码1"于'2015-08-11 10:00:00'
 		And bill访问jobs的webapp
 
 	#会员购买
