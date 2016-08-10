@@ -65,7 +65,6 @@ W.view.mall.ProductListView = Backbone.View.extend({
 
         var woid = this.woid;
         var view = this.filterView;
-        console.log('woid>>>>>>>>',woid)
         $('.panel-heading').delegate('.xa-export', 'click', function(event){
             W.getApi().call({
                 app: 'export_job',
@@ -84,7 +83,6 @@ W.view.mall.ProductListView = Backbone.View.extend({
                         
                     }
                     else{
-                        console.log('woid>>>>>>aaaa>>',woid)
                         var url ='';
                         var filter_value = '';
                         if (view.filter_value) {
@@ -115,45 +113,38 @@ W.view.mall.ProductListView = Backbone.View.extend({
             
         });
         
-        var table = $('div[data-ui-role="advanced-table"]').data('view');
-
         var export2data = this.export2data;
-        // var woid = "{{ request.manager.id }}";
         if(export2data["status"] ===1 && export2data["is_download"] ===0 ){
-            table.afterload = function(){
-                var options = {
-                    el: '.div_export',
-                    topic_id: '',
-                    type: 4,
-                    url: "",
-                    jobId:export2data["id"],
-                    isAlreadyExport : true,
-                    app: 'product',
-                    timelinesOptions: {
-                    }
+            var options = {
+                el: '.div_export',
+                topic_id: '',
+                type: 4,
+                url: "",
+                jobId:export2data["id"],
+                isAlreadyExport : true,
+                app: 'product',
+                timelinesOptions: {
                 }
-                var productExportFileView = new W.dialog.ExportFileView(options);
-                productExportFileView.finish();
-            };
+            }
+            var productExportFileView = new W.dialog.ExportFileView(options);
+            productExportFileView.finish();
         }
         else if(export2data["status"] ===0 && export2data["is_download"] ===0 ){
-            table.afterload = function(){
 
-                var jobId = export2data["id"];
-                var options = {
-                    el: '.div_export',
-                    topic_id: '',
-                    type: 4,
-                    url: "",
-                    jobId:export2data["id"],
-                    isAlreadyExport : true,
-                    app: 'product',
-                    timelinesOptions: {
-                    }
+            var jobId = export2data["id"];
+            var options = {
+                el: '.div_export',
+                topic_id: '',
+                type: 4,
+                url: "",
+                jobId:export2data["id"],
+                isAlreadyExport : true,
+                app: 'product',
+                timelinesOptions: {
                 }
-                var productExportFileView = new W.dialog.ExportFileView(options);
-                productExportFileView.doExportAfterApi();
-            };
+            }
+            var productExportFileView = new W.dialog.ExportFileView(options);
+            productExportFileView.doExportAfterApi();
         }
 
     },

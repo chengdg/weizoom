@@ -67,7 +67,7 @@ class ProductList(resource.Resource):
             ).exists()
         #获取未完成的任务
         woid = request.webapp_owner_id
-        export_jobs = ExportJob.objects.filter(woid=woid,type=0,is_download=0).order_by("-id")
+        export_jobs = ExportJob.objects.filter(woid=woid,type=4,is_download=0).order_by("-id")
         if export_jobs:
             export2data = {
                 "woid":int(export_jobs[0].woid) ,#
@@ -1971,7 +1971,6 @@ class ProductGetFile(resource.Resource):
         return response.get_response()
 
 def get_product_param_from(request):
-    print "request.GET>>>>>>>>>",request.GET
     # webapp_id = request.user_profile.webapp_id
     mall_type = request.user_profile.webapp_type
     product_name = request.GET.get('name', '')
@@ -1995,18 +1994,10 @@ def get_product_param_from(request):
     highStocks = request.GET.get('highStocks', '')
 
 
-    # product_pool_param = {}
-    # if mall_type:
-    #     product_pool_param['woid'] = request.manager.id
-    #     if start_date and end_date:
-    #         product_pool_param["sync_at__gte"] = start_date
-    #         product_pool_param["sync_at__lte"] = end_date
-
-    # user_profile = request.user_profile
     woid = request.webapp_owner_id
     
     param = {'mall_type':mall_type, 'woid':woid, 'name':product_name, 'supplier_name':supplier_name, 'start_date':start_date, 'end_date':end_date, 
-        'lowSales':lowSales, 'highSales':highSales, 'category':'category', 'barCode':barCode, 'lowPrice':lowPrice, 'highPrice':highPrice,
+        'lowSales':lowSales, 'highSales':highSales, 'category':category, 'barCode':barCode, 'lowPrice':lowPrice, 'highPrice':highPrice,
          'lowStocks':lowStocks, 'highStocks':highStocks}
     return param
 

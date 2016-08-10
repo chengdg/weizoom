@@ -2,6 +2,8 @@
 
 from core.exceptionutil import unicode_full_stack
 from django.conf import settings
+from django.contrib.auth.models import User
+from django.db.models import Sum
 from watchdog.utils import watchdog_error
 import json
 from celery import task
@@ -169,13 +171,149 @@ def send_review_export_job_task(self, exportjob_id, filter_data_args, sort_attr,
 def send_product_export_job_task(self, exportjob_id, filter_data_args, type):
     export_jobs = ExportJob.objects.filter(id=exportjob_id)
     
-    filename = "product_review_{}.xlsx".format(exportjob_id)
+    filename = "product_{}.xlsx".format(exportjob_id)
     dir_path_excel = "excel"
     dir_path = os.path.join(settings.UPLOAD_DIR, dir_path_excel)
     file_path = "{}/{}".format(dir_path,filename)
     workbook   = xlsxwriter.Workbook(file_path)
     table = workbook.add_worksheet()
+    try:
+        mall_type = int(filter_data_args['mall_type'])
+        if mall_type:
+            head_format=workbook.add_format()
+            # head_format.set_bold() # 设置粗体字
+            head_format.set_font_color('white')
+            head_format.set_bg_color('#5A9BD5') # 背景颜色
+            head_list = [u'商品ID', u'商品编号', u'供货商', u'商品名称', u'商品规格名称', u'商品价格', u'商品最低价格', u'采购价', u'商品毛利', u'商品最低毛利', u'扣点类型', 
+            u'规格库存', u'最低库存', u'总库存', u'分组', u'总销量', u'总销售额', u'上架时间']
+            table.write_row('A1' , head_list, head_format)
+            tmp_line = 1
 
+            cell_format=workbook.add_format()
+            cell_format.set_align('vcenter') #垂直居中
+
+            if type == 4:
+                owner = User.objects.get(id=filter_data_args['woid'])
+                products = models.Product.objects.belong_to(mall_type, owner, models.PRODUCT_SHELVE_TYPE_ON)
+                
+                # product_id2onshelvetime = for product_id_sync_at in product_id_sync_ats
+                models.Product.fill_details(owner, products, {
+                    "with_product_model": True,
+                    "with_model_property_info": True,
+                    "with_selected_category": True,
+                    'with_image': False,
+                    'with_property': True,
+                    'with_sales': True
+                })
+                products = utils.filter_products(None, products, filter_data_args)
+
+                product_ids = [product.id for product in products]
+                product_id2onshelvetime = dict(models.ProductPool.objects.filter(product_id__in=product_ids).values_list('product_id', 'sync_at'))
+
+                product_count = len(product_ids)
+                export_jobs.update(count=product_count)
+                processed_count = 0 
+                for product in products:
+                    processed_count += 1
+                    export_jobs.update(processed_count=processed_count, update_at=datetime.now())
+                    product_sales = models.OrderHasProduct.objects.filter(product_id=product.id, promotion_id=0, order__status=models.ORDER_STATUS_SUCCESSED, order__origin_order_id__lte=0).aggregate(Sum('number'))['number__sum']
+                    product_sales_money = models.OrderHasProduct.objects.filter(product_id=product.id, promotion_id=0, order__status=models.ORDER_STATUS_SUCCESSED, order__origin_order_id__lte=0).aggregate(Sum('total_price'))['total_price__sum']
+                    if not product_sales:
+                        product_sales = 0
+                    if not product_sales_money:
+                        product_sales_money = 0
+                    onshelvetime = product_id2onshelvetime.get(product.id, '')
+                    #供货商提前取
+
+                    try:
+                        if product.supplier:
+                            supplier = Supplier.objects.get(id=product.supplier)
+                            supplier_name = supplier.name
+                            supplier_name_export = u'自[{}]'.format(supplier_name)
+                        else:
+                            supplier_store = UserProfile.objects.get(user_id=product.supplier_user_id)
+                            supplier_name_export = u'同[{}]'.format(supplier_store.store_name)
+                    except:
+                        supplier_name_export = ''
+                    point_type = '' #扣点类型先为空
+
+                    categories = []
+                    if product.categories:
+                        for product_category in product.categories:
+                            categories.append(product_category['name'])
+                    categories_str = ' '.join(categories)
+                    if product.is_use_custom_model:
+                        merge_row = [] #合并单元格使用
+
+                        low_price = product.display_price
+                        gross_profit_lowest = 0 #最低商品毛利
+                        gross_profits = [] #商品毛利集合
+                        stocks_lowest = 0
+                        stocks_list = []
+                        total_stocks = product.total_stocks
+
+                        models_count = len(product.models)
+                        tmp_models_count = 0 
+                        for model in product.custom_models:
+                            tmp_line += 1
+                            merge_row.append(tmp_line-1)
+                            model_name = []
+                            for key,value in model['property2value'].items():
+
+                                model_name.append( key +':'+ value['name'])
+                            model_name_str = ' '.join(model_name)
+                            purchase_price = float(model['price']) - float(model['gross_profit'])
+                            gross_profit = model['gross_profit']
+                            gross_profits.append(gross_profit)
+
+                            if model['stock_type'] == 1:
+                                stocks = model['stocks']
+                                stocks_list.append(stocks)
+                            elif model['stock_type'] == 0:
+                                stocks = u'无限'
+
+
+
+
+                            alist = [product.id, model['user_code'], supplier_name_export, product.name, model_name_str, model['price'], low_price, purchase_price, gross_profit, '', point_type, stocks,
+                            '', total_stocks, categories_str, product_sales, product_sales_money, onshelvetime]
+
+                            tmp_models_count += 1
+                            if tmp_models_count == models_count:
+                                if gross_profits:
+                                    gross_profit_lowest = list(set(gross_profits))[0]
+                                alist[9] = gross_profit_lowest
+
+                                if stocks_list:
+                                    stocks_lowest = list(set(stocks_list))
+                                alist[12] = stocks_lowest
+                            
+                            table.write_row("A{}".format(tmp_line), alist, cell_format)
+                        #合并单元格
+                        # list(set(merge_row))
+                        if models_count > 1:
+                            merge_columns = [2, 3, 6, 9,10, 12,13,14,15,16,17]
+                            for i in merge_columns:
+                                table.merge.append((merge_row[0], i, merge_row[-1],i))
+
+                    else:
+                        tmp_line += 1
+                        model = product.standard_model
+
+                        total_stocks = product.total_stocks
+
+                        alist = [product.id, model['user_code'], supplier_name_export, product.name, product.name, model['price'], model['price'], float(model['price'])-float(model['gross_profit']) , model['gross_profit'], model['gross_profit'], point_type, total_stocks,
+                            total_stocks, total_stocks, categories_str, product_sales, product_sales_money, onshelvetime]
+
+                        table.write_row("A{}".format(tmp_line), alist, cell_format)
+
+
+
+
+    except:
+        notify_message = "导出商品任务失败,response:{}".format(unicode_full_stack())
+        export_jobs.update(status=2,is_download=1)
+        watchdog_error(notify_message)
 
     workbook.close()
     upyun_path = '/upload/excel/{}'.format(filename)
