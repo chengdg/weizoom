@@ -14,7 +14,7 @@
 {% endblock %}
 {% block content-panel %}
 <div class="xui-wrapper xui-promption-wrapper">
-	<div class="xui-mainContain pt50">
+	<div class="xui-mainContain pt10">
 		<div class="xui-text-area mb30 pt30">
 			<span>扫码关注</span>
 			<span class="ml10">好礼相送</span>
@@ -22,13 +22,14 @@
 		<div class="xui-qrCode-content">
 			<i class="icon-down icon-moveDown"></i>
 			<div class="xui-quCode-box">
-				<img src="{{ weixin_code }}" />
+				<!-- <img src="{{ weixin_code }}" /> -->
+				<img src="/markettools_static/distribution/images/promotion-shadow.png" />
 			</div>
 			<div class="xui-shadow-box">
-				<img src="styles/images/promotion-shadow.png" />
+				<img src="/markettools_static/distribution/images/promotion-shadow.png" />
 			</div>
 			<p class="xui-nickname">{{ nick_name }}</p>
-			<div class="xui-slogan"><img src="styles/images/promotion-slogan.png" /></div>
+			<div class="xui-slogan"><img src="/markettools_static/distribution/images/promotion-slogan.png" /></div>
 		</div>
 	</div>
 </div>
