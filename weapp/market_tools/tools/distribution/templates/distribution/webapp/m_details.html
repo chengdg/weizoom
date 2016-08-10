@@ -1,0 +1,57 @@
+{% extends "webapp_content_base.html" %}
+{% load common_tag %}
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="format-detection" content="telephone=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+{% block css%}
+<link type="text/css" rel="stylesheet" href="/markettools_static/distribution/css/m_weixin_style_v1.css">
+<style>
+   
+</style>
+{% endblock %}
+{% block content-panel %}
+<div class="xui-wrapper xui-details-wrapper">
+	<div class="xui-header">
+		<a class="xui-back" href="#"><i>&lt;</i>返回</a>
+		<span>我的推广-返现明细</span>
+		<a class="xui-menu" href="#"><i></i><i></i><i></i></a>
+	</div>
+	<div class="xui-mainContain pt50">
+		<dl>
+			<dt class="xui-details-header">
+				<p class="xui-text">奖励交易明细列表</p>
+				<span class="xui-balance">余额：￥{{ will_return_reward }}</span>
+			</dt>
+			{% if details_lists %}
+				{% for details_list in details_lists %}
+					{% if order_id == 0 %}
+						<dd class="xui-details-list bg_fff">
+							<div class="xui-text-box">
+								<p class="xui-text">提现</p>
+								<p class="xui-day">{{ details_list.created_at|date:"Y年m月d日 H:i" }}</p>
+							</div>
+							<span class="xui-num">-{{ details_list.money }}</span>
+						</dd>
+					{% else %}
+						<dd class="xui-details-list bg_fff">
+							<div class="xui-text-box">
+								<p class="xui-text">订单收入</p>
+								<p class="xui-day">{{ details_list.created_at|date:"Y年m月d日 H:i" }}</p>
+							</div>
+							<span class="xui-num">+{{ details_list.money }}</span>
+						</dd>
+					{% endif %}
+				{% endfor %}
+			{% endif %}
+		</dl>
+	</div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+</script>
+{% endblock %}

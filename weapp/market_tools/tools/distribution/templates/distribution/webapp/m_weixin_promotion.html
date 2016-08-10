@@ -1,0 +1,44 @@
+{% extends "webapp_content_base.html" %}
+{% load common_tag %}
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="format-detection" content="telephone=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+{% block css%}
+<link type="text/css" rel="stylesheet" href="/markettools_static/distribution/css/m_weixin_style_v1.css">
+<style>
+</style>
+{% endblock %}
+{% block content-panel %}
+<div class="xui-wrapper xui-promption-wrapper">
+	<div class="xui-header">
+		<a class="xui-back" href="#"><i>&lt;</i>返回</a>
+		<span>二维码推广</span>
+		<a class="xui-menu" href="#"><i></i><i></i><i></i></a>
+	</div>
+	<div class="xui-mainContain pt50">
+		<div class="xui-text-area mb30 pt30">
+			<span>扫码关注</span>
+			<span class="ml10">好礼相送</span>
+		</div>
+		<div class="xui-qrCode-content">
+			<i class="icon-down icon-moveDown"></i>
+			<div class="xui-quCode-box">
+				<img src="{{ weixin_code }}" />
+			</div>
+			<div class="xui-shadow-box">
+				<img src="styles/images/promotion-shadow.png" />
+			</div>
+			<p class="xui-nickname">{{ nick_name }}</p>
+			<div class="xui-slogan"><img src="styles/images/promotion-slogan.png" /></div>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+</script>
+{% endblock %}

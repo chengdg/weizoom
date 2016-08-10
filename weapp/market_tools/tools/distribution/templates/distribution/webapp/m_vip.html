@@ -1,0 +1,41 @@
+{% extends "webapp_content_base.html" %}
+{% load common_tag %}
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="format-detection" content="telephone=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+{% block css%}
+<link type="text/css" rel="stylesheet" href="/markettools_static/distribution/css/m_weixin_style_v1.css">
+<style>
+</style>
+{% endblock %}
+{% block content-panel %}
+<div class="xui-wrapper xui-vip-wrapper">
+	<div class="xui-mainContain pt50">
+	{%  if vip_lists %}
+		<ul class="xui-vip-form">
+		{% for vip_list in vip_lists %}
+			<li class="xui-vip-list bg_fff">
+				<div class="xui-vip-header">
+					<p class="xui-nickname">{{ vip_list.nick_name }}</p>
+					<span>关注时间：{{ vip_list.created_at|date:"Y/m/d H:i" }}</span>
+				</div>
+				<div class="xui-vip-content">
+					<p class="xui-vip-commission">带来的佣金：<span>{{ vip_list.commission }}元</span></p>
+					<div class="xui-vip-consume">
+						<p class="xui-vip-money">消费金额：<span>{{ vip_list.cost_money }}元</span></p>
+						<p class="xui-vip-num">购买次数：{{ vip_list.buy_times }}次</p>
+					</div>
+				</div>
+			</li>
+		{% endfor %}
+		</ul>
+	{% endif %}
+	</div>
+</div>
+{% endblock %}
+
+{% block js %}
+{% endblock %}

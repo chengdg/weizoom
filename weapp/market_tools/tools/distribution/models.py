@@ -67,7 +67,7 @@ class ChannelDistributionDetail(models.Model):
 	last_extract_time = models.DateTimeField(blank=True, null=True)  # 上次提现时间
 	created_at = models.DateTimeField(auto_now_add=True)  # 添加时间
 	# effect_status = models.BooleanField(default=False)  # 生效状态 ??????
-	order_id = models.IntegerField(default=0)  # 订单id
+	order_id = models.IntegerField(default=0)  # 订单id 
 	# effect_time = models.DateTimeField(blank=True, null=True)  # 生效时间 ????
 
 	class Meta:

@@ -104,7 +104,7 @@
             <div class="xui-setting">
                 <div class="xui-row pr">
                     <label class="xui-i-left fl">会员头衔：</label>
-                    <input id="xa-input-limit" class="xui-input-style" type="text" name="bing_member_title" onblur="valueLessFive()" {% if qrcode %}value="{{ qrcode.bing_member_title }}"{% endif %}/><p class="xui-hint">请输入5个字符以内</p>
+                    <input id="xa-input-limit" class="xui-input-style" type="text" name="bing_member_title" onblur="valueLessFive()" {% if qrcode %}value="{{ qrcode.bing_member_title }}"{% endif %}/><p class="xui-hint">请输入10个字符以内</p>
                 </div>
                 <div class="xui-row pr">
                     <label class="xui-i-left fl">关联会员：</label>
@@ -436,8 +436,8 @@
             //console.log(level);
             level = level.replace(/\s/g,"");
             //console.log(level);
-            if (level.length > 5) {
-                W.showHint('error', '请输入5个字符以内');
+            if (level.length > 10) {
+                W.showHint('error', '请输入10个字符以内');
                 obj.focus();
                 obj.value = '';
             }
