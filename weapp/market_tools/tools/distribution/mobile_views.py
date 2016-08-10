@@ -7,7 +7,7 @@ import os
 from django.template import Context, RequestContext
 from django.shortcuts import render_to_response
 from market_tools.tools.distribution import models
-from static.modules.member import models as member_models
+from modules.member.models import *
 template_path_items = os.path.dirname(__file__).split(os.sep)
 TEMPLATE_DIR = '%s/templates' % template_path_items[-1]
 
@@ -74,7 +74,7 @@ def get_vip_message(request):
 	vip_lists = models.ChannelDistributionQrcodeHasMember.objects.get(member_id=member_id)
 	for vip_list in vip_lists:
 		vip_list={
-			'nick_name': member_models.Member.objects.get(id=member_id).username_for_html,
+			'nick_name': Member.objects.get(id=member_id).username_for_html,
 			'cost_money': vip_list.cost_money,  #消费金额
 			'commission': vip_list.commission,  #带来的佣金
 			'buy_times': vip_list.buy_times,  #购买次数
@@ -97,8 +97,8 @@ def get_details(request):
 	for details_list in details_lists:
 		details_list={
 			'will_return_reward': will_return_reward,
-			'order_id': details_list.order_id  #订单id，id为0，则为提取
-			'money': details_list.money  #操作金额
+			'order_id': details_list.order_id,  #订单id，id为0，则为提取
+			'money': details_list.money,  #操作金额
 			'created_at': details_list.created_at  #添加时间
 		}
 		details_lists.append(details_list)
