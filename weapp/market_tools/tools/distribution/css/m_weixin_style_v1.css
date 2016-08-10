@@ -175,7 +175,7 @@ html {
 .xui-promption-wrapper .xui-qrCode-content {
     position: relative;
 	width: 100%;
-    background: url('/markettools_static/distribution/styles/images/promotion-bg.png');
+    background: url('/markettools_static/distribution/images/promotion-bg.png');
     background-size: 120px;
 }
 .xui-promption-wrapper .xui-qrCode-bg {
