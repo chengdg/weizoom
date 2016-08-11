@@ -1162,8 +1162,9 @@ class ChannelDistribution(resource.Resource): # TODO 关联会员不可以有两
 			if  7 >= return_standard >= 0:
 				pass
 			else:
-				return_error(400, u"请输入大于等于0且小于等于7的数字")
-
+				response = create_response(400)
+				response.errMsg = u'请输入大于等于0且小于等于7的数字'
+				return response.get_response()
 
 		group_id = request.POST["group_id"]  # 添加到分组,会员分组
 		reply_type = request.POST['reply_type']  # 回复类型
@@ -1377,6 +1378,7 @@ class ChannelDistributionTransactionAmount(resource.Resource):
 		elif log_select == 0:
 			# 得到本期交易
 			qrcode = ChannelDistributionQrcodeSettings.objects.get(id=qrcode_id)
+			# 得到上一次提现的日期
 			details = ChannelDistributionDetail.objects.filter(created_at__gt=qrcode.commit_time)
 
 

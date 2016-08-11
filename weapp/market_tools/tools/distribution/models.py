@@ -71,7 +71,7 @@ class ChannelDistributionDetail(models.Model):
 
 	class Meta:
 		db_table = 'market_tool_channel_distribution_detail'
-
+		ordering = ['-id']
 
 # class ChannelDistributionProcess(models.Model):
 # 	"""
