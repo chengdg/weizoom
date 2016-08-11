@@ -108,10 +108,10 @@
                 </div>
                 <div class="xui-row pr">
                     <label class="xui-i-left fl">关联会员：</label>
-                    <span class="xa-selectMemberName ml10"></span>
                     {% if qrcode %}
-                        会员昵称:{{ member_name }}
+                        <span class="xui-input-style">会员昵称:{{ member_name }}</span>
                     {% else %}
+                        <span class="xa-selectMemberName ml10"></span>
                         <button class="xa-selectMemberDailog xui-input-style" type="button">选择已关注会员</button>
                     {% endif %}
 
