@@ -1248,12 +1248,18 @@ class ChannelDistribution(resource.Resource): # TODO 关联会员不可以有两
 
 		# 如果修改者操作的二维码不是自己的 不执行任何操作
 		if ChannelDistributionQrcodeSettings.objects.filter(id=qrcode_id, owner_id=request.user.id).exists():
+
+			bing_member_title = request.POST["bing_member_title"]  # 会员头衔
+			if ChannelDistributionQrcodeSettings.objects.filter(bing_member_title=bing_member_title).exists():  # 检测重复
+				response = create_response(400)
+				response.errMsg = u"重复的会员头衔"
+				return response.get_response()
+
 			group_id = request.POST['group_id']
 			prize_info = request.POST['prize_info']
 			reply_type = request.POST['reply_type']
 			reply_detail = request.POST['reply_detail']
 			reply_material_id = request.POST['reply_material_id']
-			bing_member_title =request.POST['bing_member_title']
 
 			ChannelDistributionQrcodeSettings.objects.filter(id=qrcode_id).update(
 				bing_member_title = bing_member_title,
@@ -1403,5 +1409,36 @@ class ChannelDistributionTransactionAmount(resource.Resource):
 		return response.get_response()
 
 
+class ChannelDistributionRewardDetail(resource.Resource):
+	"""奖励明细"""
+	app = 'new_weixin'
+	resource = 'channel_distribution_detail'
 
+	def api_get(request):
+		count_per_page = int(request.GET.get('count_per_page', 15))
+		cur_page = int(request.GET.get('page', '1'))
+		qrcode_id = request.GET.get('qrcode_id')
+		qrocde = ChannelDistributionQrcodeSettings.objects.get(id=qrcode_id)
+
+		details = ChannelDistributionDetail.objects.filter(channel_qrcode_id=qrcode_id, order_id=0)
+
+		pageinfo, details = paginator.paginate(details, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
+
+		items = []
+		for detail in details:
+			dict = {}
+			dict['time_cycle_start'] = str(detail.last_extract_time)
+			dict['time_cycle_end'] = str(detail.created_at)
+			dict['commission_rate'] = str(qrocde.commission_rate)
+			dict['total_money'] = str(detail.money)
+			dict['commission'] = str(qrocde.commission_rate * detail.moeny)
+
+			items.append(dict)
+
+		response = create_response(200)
+		response.data = {
+			'items': items,
+			'pageinfo': paginator.to_dict(pageinfo),
+		}
+		return response.get_response()
 

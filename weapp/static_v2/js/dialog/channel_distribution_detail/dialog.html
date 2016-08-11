@@ -1,26 +1,17 @@
-<script id="channel-distribution-log-dialog-tmpl-src" type="text/x-jquery-tmpl">
+<script id="channel-distribution-detail-dialog-tmpl-src" type="text/x-jquery-tmpl">
  <div class="modal fade xui-selectCouponDialog" id="commonSelectCouponDialog">
     <div class="modal-dialog modal-lg" style="width: 600px;">
     <div class="modal-content">
     <div class="modal-header">
             <button aria-hidden="true" data-dismiss="modal" class="close" type="button"><span class="xui-closeColor" aria-hidden="true">&times;</span></button>
-            <h3 class="modal-title">交易总额</h3>
+            <h3 class="modal-title">奖励明细</h3>
     </div>
-        <div class="xui-log-head">交易总额:元</div>
-
                 <div class="modal-body" style="min-height: 200px; max-height: 500px; overflow: auto;">
-
-                    <div>
-                    <!--    <select id='log_select' class="xa-change">
-                            <option value="0">本期交易</option>
-                            <option value="1">所有交易</option>
-                        </select>  -->
-                    </div>
                     <div style="display:inline-block;" class="xa-searchMember"></div>
                     <div
                             data-ui-role="advanced-table"
                             data-app="new_weixin"
-                            data-api="channel_distribution_transaction_amount"
+                            data-api="channel_distribution_detail"
                             data-template-id="#channel-distribution-log-dialog-tmpl"
                             data-enable-paginator="true"
                             data-enable-sort="false"
@@ -37,12 +28,12 @@
 </script>
 
 <script id="channel-distribution-log-dialog-tmpl" type="text/x-jquery-tmpl">
-----${total_money}---
    <table id="channelLogTable" class="table table-bordered table-condensed xb-stripedTable xui-tablePosition mb10">
         <thead style="background:#c8d2e5;">
             <tr>
-                <th >用户名称</th>
-                <th>消费</th>
+                <th >时间周期</th>
+                <th>单品返现率</th>
+                <th>参与返现交易额</th>
                 <th>返现金额</th>
             </tr>
         </thead>
@@ -53,10 +44,11 @@
                 <td style="width:80px">${item.name}</td>
                 <td>${item.cost}</td>
                 <td>${item.return_money}</td>
+                <td>${item.return_money}</td>
                 </tr>
                 {{/each}}
 					{{else}}
-				<tr><td colspan='3'>还没有数据${total_money}</td></tr>
+				<tr><td colspan='4'>还没有数据</td></tr>
            {{/if}}
         </tbody>
     </table>

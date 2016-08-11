@@ -8,7 +8,7 @@ class ChannelDistributionQrcodeSettings(models.Model):
 	渠道分销二维码
 	"""
 	owner = models.ForeignKey(User)  # 所有者
-	bing_member_title = models.CharField(max_length=512)  # 关联会员头衔
+	bing_member_title = models.CharField(max_length=254, unique=True)  # 关联会员头衔
 	award_prize_info = models.TextField(default='{"id":-1,"name":"no-prize"}')  # 关注奖励,奖品信息
 	reply_type = models.IntegerField(max_length=1, default=0)  # 扫码后行为：0普通关注一致，1回复文字，2回复图文
 	reply_detail = models.TextField(default='')  # 回复文字, 当reply_type为1时有效

@@ -411,7 +411,11 @@
                     },
                     error: function (data) {
                         $('.xa-submit').removeAttr('disabled');
-                        W.showHint('error', '保存失败！');
+                        if(data['errMsg']){
+                            W.showHint('error', data['errMsg']);
+                        }else{
+                            W.showHint('error', '保存失败')
+                        }
                     }
                 });
             }
