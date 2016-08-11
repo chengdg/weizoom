@@ -13,11 +13,12 @@ W.component.appkit.GroupItem = W.component.Component.extend({
 		groupClass: 'xui-propertyView-app-DynamicGroupItems ',
 		fields: [{
             name: 'group_type',
-            type: 'select',
+            type: 'number_with_annotation',
             displayName: '类型',
-			source: [2,3,4,5,6,7,8,9,10],
-			after: "人团",
-            default: 3,
+			annotation: "人团",
+            size:'28px',
+			max: 999,
+			min: 2,
 			isUserProperty: true
 
         },{
