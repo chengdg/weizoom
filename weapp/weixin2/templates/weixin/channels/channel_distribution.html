@@ -94,7 +94,7 @@
     <ul class="breadcrumb">
         <li>您当前所在位置</li>
         <li>
-            <a href="/new_weixin/channel_distributions/">推广与分销</a>
+            <a href="/new_weixin/qrcodes/">推广与分销</a>
         </li>
         <li><a href="/new_weixin/channel_distributions/">渠道分销</a></li>
         <li class="active">{% if qrcode.id %}编辑{% else %}新建{% endif %}二维码</li>
@@ -205,6 +205,9 @@
     <script type="text/javascript">
 
         // 弹出关联会员
+        $('.xa-cancel').click(function(){
+            window.location.href="/new_weixin/channel_distributions/"
+        });
         $(document).delegate('.xa-selectMemberDailog', 'click', function(event) {
             options = {
                 webapp_id:{{webapp_id}},
@@ -411,7 +414,11 @@
                     },
                     error: function (data) {
                         $('.xa-submit').removeAttr('disabled');
-                        W.showHint('error', '保存失败！');
+                        if(data['errMsg']){
+                            W.showHint('error', data['errMsg']);
+                        }else{
+                            W.showHint('error', '保存失败')
+                        }
                     }
                 });
             }

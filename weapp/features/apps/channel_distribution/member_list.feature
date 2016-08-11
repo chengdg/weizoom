@@ -13,7 +13,7 @@ Background:
 			"commission_return_rate":"10",
 			"minimum_cash_discount":"80",
 			"commission_return_standard":50.00,
-			"is_seven_day_settlement_standard":"false",
+			"settlement_time":"0",
 			"tags": "未分组",
 			"prize_type": "无",
 			"reply_type": "文字",
@@ -21,7 +21,14 @@ Background:
 			"create_time": "2015-10-10 10:20:30"
 		}]
 		"""
-	Given jobs登录系统
+	And jobs添加会员分组
+		"""
+		{
+			"tag_id_1": "分组1",
+			"tag_id_2": "分组2"
+		}
+		"""
+	
 	And jobs已添加多图文
 		"""
 		[{
@@ -70,7 +77,7 @@ Scenario:1 前台会员列表详情
 			"commission_return_rate":"10",
 			"minimum_cash_discount":"80",
 			"commission_return_standard":50.00,
-			"is_seven_day_settlement_standard":"false",
+			"settlement_time":"0",
 			"tags": "未分组",
 			"prize_type": "无",
 			"reply_type": "文字",

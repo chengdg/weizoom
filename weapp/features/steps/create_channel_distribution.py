@@ -58,7 +58,8 @@ def step_impl(context, user):
 		params['_method'] = 'put'
 
 		response = context.client.post('/new_weixin/api/channel_distribution/', params)
-
+		logging.info(response)
+		logging.info('////////////////////')
 
 @Then(u"{user}获得渠道分销二维码列表")
 def step_impl(context, user):

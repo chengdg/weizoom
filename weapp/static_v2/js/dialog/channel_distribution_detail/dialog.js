@@ -1,13 +1,13 @@
 ensureNS('W.dialog.mall');
 
-W.dialog.mall.ChannelDistributionLog = W.dialog.Dialog.extend({
+W.dialog.mall.ChannelDistributionDetail = W.dialog.Dialog.extend({
     events: _.extend({
-
+        'change .xa-change': 'onChangeSelect'
     }, W.dialog.Dialog.prototype.events),
 
     getTemplate: function() {
-        $('#channel-distribution-log-dialog-tmpl-src').template('channel-distribution-log-dialog-tmpl-src-dialog-tmpl');
-        return "channel-distribution-log-dialog-tmpl-src-dialog-tmpl";
+        $('#channel-distribution-detail-dialog-tmpl-src').template('channel-distribution-detail-dialog-tmpl-src-dialog-tmpl');
+        return "channel-distribution-detail-dialog-tmpl-src-dialog-tmpl";
     },
 
     getSearchMemberTepmplate: function() {

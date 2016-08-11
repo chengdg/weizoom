@@ -19,7 +19,9 @@ from modules.member.models import *
 from .util import get_members
 from .fans_category import DEFAULT_CATEGORY_NAME
 from market_tools.tools.channel_qrcode.models import ChannelQrcodeSettings,ChannelQrcodeHasMember, ChannelQrcodeBingMember
-from market_tools.tools.distribution.models import ChannelDistributionQrcodeSettings, ChannelDistributionQrcodeHasMember
+from market_tools.tools.distribution.models import ChannelDistributionQrcodeSettings, ChannelDistributionQrcodeHasMember,\
+		ChannelDistributionDetail
+from mall.models import Order
 from modules.member import models as member_model
 from account.util import get_binding_weixin_mpuser, get_mpuser_accesstoken
 from weixin2.message.util import get_member_groups
@@ -1154,10 +1156,33 @@ class ChannelDistribution(resource.Resource): # TODO 关联会员不可以有两
 			commission_return_standard = 0
 			return_standard = 0
 		elif distribution_rewards == 1:
-			commission_rate = request.POST.get("commission_rate", 0)  # 佣金返现率
-			minimun_return_rate = request.POST.get("minimun_return_rate", 0)  # 最低返现折扣
+			commission_rate = int(request.POST.get("commission_rate", 0))  # 佣金返现率
+			minimun_return_rate = int(request.POST.get("minimun_return_rate", 0))  # 最低返现折扣
 			commission_return_standard = request.POST.get("commission_return_standard", 0)  # 佣金返现标准
-			return_standard = request.POST.get("return_standard", 0)  # 多少天返现标准  TODO 需要修改
+			return_standard = int(request.POST.get("return_standard", 0))  # 多少天返现标准  TODO 需要修改
+
+			if commission_rate > 20 or commission_rate < 0:
+				response = create_response(400)
+				response.errMsg = u'佣金返现率输入错误'
+				return response.get_response()
+
+			if minimun_return_rate > 100 or minimun_return_rate < 0:
+				response = create_response(400)
+				response.errMsg = u'最低返现折扣输入错误'
+				return response.get_response()
+
+			if return_standard < 0:
+				response = create_response(400)
+				response.errMsg = u'佣金返现标准输入错误'
+				return response.get_response()
+
+			if  7 >= return_standard >= 0:
+				pass
+			else:
+				response = create_response(400)
+				response.errMsg = u'请输入大于等于0且小于等于7的数字'
+				return response.get_response()
+
 		group_id = request.POST["group_id"]  # 添加到分组,会员分组
 		reply_type = request.POST['reply_type']  # 回复类型
 		reply_material_id = request.POST['reply_material_id']  # 图文
@@ -1197,7 +1222,6 @@ class ChannelDistribution(resource.Resource): # TODO 关联会员不可以有两
 				qrcode_ticket = weixin_api.create_qrcode_ticket(int(cur_setting.id), QrcodeTicket.PERMANENT)
 				ticket = qrcode_ticket.ticket
 			except Exception, e:
-				# print 'get qrcode_ticket fail:', e
 				ticket = ''
 		else:
 			ticket = ''
@@ -1220,16 +1244,21 @@ class ChannelDistribution(resource.Resource): # TODO 关联会员不可以有两
 	def api_post(request):
 		"""更新渠道分销二维码"""
 
-		qrcode_id = request.POST.get('qrcode_id', None)
+		qrcode_id = int(request.POST.get('qrcode_id'))
+		group_id = request.POST['group_id']
+		prize_info = request.POST['prize_info']
+		reply_type = request.POST['reply_type']
+		reply_detail = request.POST['reply_detail']
+		reply_material_id = request.POST['reply_material_id']
 
 		# 如果修改者操作的二维码不是自己的 不执行任何操作
 		if ChannelDistributionQrcodeSettings.objects.filter(id=qrcode_id, owner_id=request.user.id).exists():
-			group_id = request.POST['group_id']
-			prize_info = request.POST['prize_info']
-			reply_type = request.POST['reply_type']
-			reply_detail = request.POST['reply_detail']
-			reply_material_id = request.POST['reply_material_id']
-			bing_member_title =request.POST['bing_member_title']
+
+			bing_member_title = request.POST["bing_member_title"]  # 会员头衔
+			if ChannelDistributionQrcodeSettings.objects.filter(bing_member_title=bing_member_title).exclude(id=qrcode_id):  # 检测重复
+				response = create_response(400)
+				response.errMsg = u"重复的会员头衔"
+				return response.get_response()
 
 			ChannelDistributionQrcodeSettings.objects.filter(id=qrcode_id).update(
 				bing_member_title = bing_member_title,
@@ -1307,11 +1336,16 @@ class ChannelDistributionClearing(resource.Resource):
 		items = []
 
 		for qrcode in qrcodes:
+			commit_time = qrcode.commit_time
+			if str(commit_time) == '0001-01-01 00:00:00':
+				commit_time = '----'
+			else:
+				commit_time = str(qrcode.commit_time)
 			return_dict = {}
 
 			return_dict['qrcode_id'] = qrcode.id
 			return_dict['name'] = member_dict[qrcode.bing_member_id]  # 用户名
-			return_dict['commit_time'] = str(qrcode.commit_time)  # 提交时间
+			return_dict['commit_time'] = commit_time  # 提交时间
 			return_dict['current_transaction_amount'] = str(qrcode.current_transaction_amount)  # 本期交易额
 			return_dict['commission_return_standard']  = str(qrcode.commission_return_standard)  # 返现标准
 			return_dict['commission_rate'] = qrcode.commission_rate  # 返现率
@@ -1342,34 +1376,25 @@ class ChannelDistributionTransactionAmount(resource.Resource):
 		"""
 		查看记录的一个页面
 		"""
-		log_select = request.POST.get('log_select', 0)
+		log_select = int(request.POST.get('log_select', 0))  # 0 本期, 1总的
 		qrcode_id = request.POST.get('qrcode_id')
 
-		# qrcodes = ChannelDistributionQrcodeSettings.objects.filter(owner__id=request.user.id)
-		# bind_qrcode_ids = []  # 该店铺的所有二维码id
-		# for qrcode in qrcodes:
-		# 	bind_qrcode_ids.append(qrcode.id)
-
-		if log_select == '1':
+		items = []
+		total_money = 0
+		if log_select == 1:
 			# 得到该店铺下所有绑定会员
-			channel_distribution_has_members = ChannelDistributionQrcodeHasMember.objects.filter(channel_qrcode_id=qrcode_id)
-		else:
+			channel_distribution_has_members = ChannelDistributionQrcodeHasMember.objects.filter(
+				channel_qrcode_id=qrcode_id)
+			for channel_distribution_has_member in channel_distribution_has_members:
+				dict = {}
+				dict['name'] = channel_distribution_has_member.member_id
+				dict['cost_money'] = channel_distribution_has_member.cost_money  # 花费的金额
+				dict['commission'] = channel_distribution_has_member.commission  #　带来的佣金
+				total_money += channel_distribution_has_member.cost_money
+				items.append(dict)
+		elif log_select == 0:
 			pass
 
-		member_dict = {}  # {id: name}
-		members = Member.objects.all()
-		for member in members:
-			member_dict[member.id] = member.username_for_title
-		items = []
-
-		for channel_distribution_has_member in channel_distribution_has_members:
-			dict = {}
-			dict['name'] = channel_distribution_has_member.member_id
-			dict['cost_money'] = channel_distribution_has_member.cost_money  # 花费的金额
-			dict['commission'] = channel_distribution_has_member.commission  #　带来的佣金
-			items.append(dict)
-
-		sort_attr = request.GET.get('sort_attr', '-created_at')
 		count_per_page = int(request.GET.get('count_per_page', 15))
 		cur_page = int(request.GET.get('page', '1'))
 		pageinfo, items = paginator.paginate(items, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
@@ -1377,10 +1402,42 @@ class ChannelDistributionTransactionAmount(resource.Resource):
 		response = create_response(200)
 		response.data = {
 			'items': items,
+			'total_money': total_money,
 			'pageinfo': paginator.to_dict(pageinfo),
 		}
 		return response.get_response()
 
 
+class ChannelDistributionRewardDetail(resource.Resource):
+	"""奖励明细"""
+	app = 'new_weixin'
+	resource = 'channel_distribution_detail'
 
+	def api_get(request):
+		count_per_page = int(request.GET.get('count_per_page', 15))
+		cur_page = int(request.GET.get('page', '1'))
+		qrcode_id = request.GET.get('qrcode_id')
+		qrocde = ChannelDistributionQrcodeSettings.objects.get(id=qrcode_id)
+
+		details = ChannelDistributionDetail.objects.filter(channel_qrcode_id=qrcode_id, order_id=0)
+
+		pageinfo, details = paginator.paginate(details, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
+
+		items = []
+		for detail in details:
+			dict = {}
+			dict['time_cycle_start'] = str(detail.last_extract_time)
+			dict['time_cycle_end'] = str(detail.created_at)
+			dict['commission_rate'] = str(qrocde.commission_rate)
+			dict['total_money'] = str(detail.money)
+			dict['commission'] = str(qrocde.commission_rate * detail.moeny)
+
+			items.append(dict)
+
+		response = create_response(200)
+		response.data = {
+			'items': items,
+			'pageinfo': paginator.to_dict(pageinfo),
+		}
+		return response.get_response()
 

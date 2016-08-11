@@ -162,7 +162,7 @@
 							    </td>
 							    <td>
 							    <a class="xui-link xa-viewLog" data-qrcode_id=${qrcode.qrcode_id}>查看记录</a>
-							    <a class="xui-link">奖励明细</a>
+							    <a class="xui-link xa-viewDetail" data-qrcode_id=${qrcode.qrcode_id} >奖励明细</a>
 							    </td>
 							</tr>
 						{{/each}}
@@ -189,6 +189,15 @@
             };
             W.dialog.showDialog('W.dialog.mall.ChannelDistributionLog', options);
         });
+        $(document).delegate('.xa-viewDetail', 'click', function(event) {
 
+            var qrocdeId = $(this).data('qrcode_id');
+            options = {
+                qrocdeId: qrocdeId
+            };
+            options.success = function(data) {
+            };
+            W.dialog.showDialog('W.dialog.mall.ChannelDistributionDetail', options);
+        });
     </script>
 {% endblock %}
