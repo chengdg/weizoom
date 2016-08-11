@@ -19,7 +19,8 @@ from modules.member.models import *
 from .util import get_members
 from .fans_category import DEFAULT_CATEGORY_NAME
 from market_tools.tools.channel_qrcode.models import ChannelQrcodeSettings,ChannelQrcodeHasMember, ChannelQrcodeBingMember
-from market_tools.tools.distribution.models import ChannelDistributionQrcodeSettings, ChannelDistributionQrcodeHasMember
+from market_tools.tools.distribution.models import ChannelDistributionQrcodeSettings, ChannelDistributionQrcodeHasMember,\
+	ChannelDistributionDetail
 from modules.member import models as member_model
 from account.util import get_binding_weixin_mpuser, get_mpuser_accesstoken
 from weixin2.message.util import get_member_groups
@@ -1119,22 +1120,22 @@ class ChannelDistribution(resource.Resource): # TODO 关联会员不可以有两
 	def api_put(request):
 		"""新建渠道分销二维码"""
 
-		def return_error(code, msg):
-			def return_error(code, msg):
-				response = create_response(code)
-				response.errMsg = msg
-				return response.get_response()
-
 		bing_member_title = request.POST["bing_member_title"]  # 会员头衔
 		if  ChannelDistributionQrcodeSettings.objects.filter(bing_member_title=bing_member_title).exists():  # 检测重复
-			return_error(400, u'重复的会员头衔')
+			response = create_response(400)
+			response.errMsg = u'重复的会员头衔'
+			return response.get_response()
 
 		bing_member_id = request.POST["bing_member_id"]  # 关联会员
 		if ChannelDistributionQrcodeSettings.objects.filter(bing_member_id=bing_member_id).exists():
-			return_error(400, u'一个会员只能绑定一个二维码')
+			response = create_response(400)
+			response.errMsg = u'一个会员只能绑定一个二维码'
+			return response.get_response()
 
 		if ChannelQrcodeSettings.objects.filter(bing_member_id=bing_member_id).exists():
-			return_error(400, u'该会员已经绑定过推广二维码')
+			response = create_response(400)
+			response.errMsg = u'该会员已经绑定过推广二维码'
+			return response.get_response()
 
 		award_prize_info = request.POST['prize_info'].strip()  # 扫描奖励
 		coupon_id = ''
@@ -1143,8 +1144,9 @@ class ChannelDistribution(resource.Resource): # TODO 关联会员不可以有两
 		if info_dict['type'] == u'优惠券':
 			coupon_id = str(info_dict['id'])
 		if not (info_dict.has_key('id') and info_dict.has_key('name') and info_dict.has_key('type')):
-			return_error(400, u'不合法的award_prize_info：' + award_prize_info)
-
+			response = create_response(400)
+			response.errMsg = u'不合法的award_prize_info：' + award_prize_info
+			return response.get_response()
 
 		distribution_rewards = int(request.POST["distribution_rewards"])  # 分销奖励 0:无 1:佣金
 		if distribution_rewards == 0:  # 如果分销奖励是无
@@ -1376,11 +1378,6 @@ class ChannelDistributionTransactionAmount(resource.Resource):
 			# 得到本期交易
 			qrcode = ChannelDistributionQrcodeSettings.objects.get(id=qrcode_id)
 			details = ChannelDistributionDetail.objects.filter(created_at__gt=qrcode.commit_time)
-
-
-
-
-
 
 
 		count_per_page = int(request.GET.get('count_per_page', 15))

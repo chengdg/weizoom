@@ -63,7 +63,7 @@ class ChannelDistributionDetail(models.Model):
 	channel_qrcode_id = models.IntegerField()  # 渠道分销id
 	money = models.DecimalField(max_digits=65, decimal_places=2, default=0)  # 操作金额 正为收入,负为提现
 	member_id = models.IntegerField()  # 对应的会员id
-	last_extract_time = models.DateTimeField(blank=True, null=True)  # 上次提现时间
+	last_extract_time = models.DateTimeField(default='0001-01-01')  # 上次提现时间
 	created_at = models.DateTimeField(auto_now_add=True)  # 添加时间
 	# effect_status = models.BooleanField(default=False)  # 生效状态 ??????
 	order_id = models.IntegerField(default=0)  # 订单id 

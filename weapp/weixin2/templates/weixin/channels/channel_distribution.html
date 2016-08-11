@@ -112,7 +112,7 @@
                     {% if qrcode %}
                         会员昵称:{{ member_name }}
                     {% else %}
-                        <button class="xa-selectMemberDailog xui-input-style" type="button">选择关注会员</button>
+                        <button class="xa-selectMemberDailog xui-input-style" type="button">选择已关注会员</button>
                     {% endif %}
 
                 </div>
@@ -385,7 +385,11 @@
                     },
                     error: function (data) {
                         $('.xa-submit').removeAttr('disabled');
-                        W.showHint('error', '保存失败！');
+                        if(data['errMsg']){
+                            W.showHint('error', data['errMsg']);
+                        }else{
+                            W.showHint('error', '保存失败')
+                        }
                     }
                 });
             }else {
