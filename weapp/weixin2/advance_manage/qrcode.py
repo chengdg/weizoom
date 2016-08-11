@@ -1316,11 +1316,16 @@ class ChannelDistributionClearing(resource.Resource):
 		items = []
 
 		for qrcode in qrcodes:
+			commit_time = qrcode.commit_time
+			if str(commit_time) == '0001-01-01 00:00:00':
+				commit_time = '----'
+			else:
+				commit_time = str(qrcode.commit_time)
 			return_dict = {}
 
 			return_dict['qrcode_id'] = qrcode.id
 			return_dict['name'] = member_dict[qrcode.bing_member_id]  # 用户名
-			return_dict['commit_time'] = str(qrcode.commit_time)  # 提交时间
+			return_dict['commit_time'] = commit_time  # 提交时间
 			return_dict['current_transaction_amount'] = str(qrcode.current_transaction_amount)  # 本期交易额
 			return_dict['commission_return_standard']  = str(qrcode.commission_return_standard)  # 返现标准
 			return_dict['commission_rate'] = qrcode.commission_rate  # 返现率
@@ -1351,7 +1356,7 @@ class ChannelDistributionTransactionAmount(resource.Resource):
 		"""
 		查看记录的一个页面
 		"""
-		log_select = request.POST.get('log_select', 0)
+		log_select = int(request.POST.get('log_select', 0))
 		qrcode_id = request.POST.get('qrcode_id')
 
 		# qrcodes = ChannelDistributionQrcodeSettings.objects.filter(owner__id=request.user.id)
@@ -1359,7 +1364,7 @@ class ChannelDistributionTransactionAmount(resource.Resource):
 		# for qrcode in qrcodes:
 		# 	bind_qrcode_ids.append(qrcode.id)
 
-		if log_select == '1':
+		if log_select == 1:
 			# 得到该店铺下所有绑定会员
 			channel_distribution_has_members = ChannelDistributionQrcodeHasMember.objects.filter(channel_qrcode_id=qrcode_id)
 		else:
@@ -1388,7 +1393,6 @@ class ChannelDistributionTransactionAmount(resource.Resource):
 			details = ChannelDistributionDetail.objects.filter(created_at__gt=qrcode.commit_time)
 
 
-		sort_attr = request.GET.get('sort_attr', '-created_at')
 		count_per_page = int(request.GET.get('count_per_page', 15))
 		cur_page = int(request.GET.get('page', '1'))
 		pageinfo, items = paginator.paginate(items, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
