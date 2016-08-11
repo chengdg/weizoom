@@ -1350,34 +1350,39 @@ class ChannelDistributionTransactionAmount(resource.Resource):
 		"""
 		查看记录的一个页面
 		"""
-		log_select = request.POST.get('log_select', 0)
-		qrcode_id = request.POST.get('qrcode_id')
+		log_select = int(request.GET.get('log_select', 0))
+		qrcode_id = request.GET.get('qrcode_id')
 
 		# qrcodes = ChannelDistributionQrcodeSettings.objects.filter(owner__id=request.user.id)
 		# bind_qrcode_ids = []  # 该店铺的所有二维码id
 		# for qrcode in qrcodes:
 		# 	bind_qrcode_ids.append(qrcode.id)
-
-		if log_select == '1':
-			# 得到该店铺下所有绑定会员
-			channel_distribution_has_members = ChannelDistributionQrcodeHasMember.objects.filter(channel_qrcode_id=qrcode_id)
-		else:
-			pass
-
 		member_dict = {}  # {id: name}
 		members = Member.objects.all()
 		for member in members:
 			member_dict[member.id] = member.username_for_title
 		items = []
 
-		for channel_distribution_has_member in channel_distribution_has_members:
-			dict = {}
-			dict['name'] = channel_distribution_has_member.member_id
-			dict['cost_money'] = channel_distribution_has_member.cost_money  # 花费的金额
-			dict['commission'] = channel_distribution_has_member.commission  #　带来的佣金
-			items.append(dict)
+		if log_select == 1:
+			# 得到该店铺下所有绑定会员
+			channel_distribution_has_members = ChannelDistributionQrcodeHasMember.objects.filter(channel_qrcode_id=qrcode_id)
+			for channel_distribution_has_member in channel_distribution_has_members:
+				dict = {}
+				dict['name'] = channel_distribution_has_member.member_id
+				dict['cost_money'] = channel_distribution_has_member.cost_money  # 花费的金额
+				dict['commission'] = channel_distribution_has_member.commission  #　带来的佣金
+				items.append(dict)
+		elif log_select == 0:
+			# 得到本期交易
+			qrcode = ChannelDistributionQrcodeSettings.objects.get(id=qrcode_id)
+			details = ChannelDistributionDetail.objects.filter(created_at__gt=qrcode.commit_time)
 
-		sort_attr = request.GET.get('sort_attr', '-created_at')
+
+
+
+
+
+
 		count_per_page = int(request.GET.get('count_per_page', 15))
 		cur_page = int(request.GET.get('page', '1'))
 		pageinfo, items = paginator.paginate(items, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
