@@ -145,10 +145,11 @@
                     <input class="xui-input-style" name="commission_return_standard" type="text" {% if qrcode %}value="{{ qrcode.commission_return_standard }}" disabled="disabled"{% endif %}/> <p class="xui-qr-hint"><span class="xui-qr-symbol">元</span><span class="xui-qr-text-grey">（佣金取现最低金额）</span></p>
                 </div>
                 <div class="xui-row pr">
-                    <label class="xui-i-left fl">多少天结算标准：</label>
+                    <label class="xui-i-left fl">结算时间节点：</label>
                     <input class="xui-input-style" name="return_standard" type="text" {% if qrcode %}value="{{ qrcode.return_standard }}" disabled="disabled"{% endif %}/>
                     {#        <input name="standardMethod" type="radio" value="1" />是#}
                     {#        <input name="standardMethod" type="radio" value="0" />否#}
+                    <p class="xui-qr-hint"><span class="xui-qr-text-red">（注：时间节点为订单确认收货后的分销结算时间，最长时间为7天）</span></p>
                 </div>
                 <div class="xui-row pr"><p class="xui-qr-header">扫码设置</p></div>
                 <hr/>

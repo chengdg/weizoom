@@ -1,6 +1,6 @@
 {% extends "content_base_v2.html" %}
 {% block css %}
-    <style>
+<style>
 a:link,a:visited,a:hover,a:active{text-decoration:none;color:currentColor;}
 .xui-link {
   display:inline-block;
@@ -13,7 +13,65 @@ a:link,a:visited,a:hover,a:active{text-decoration:none;color:currentColor;}
     background-color: #fff;
     box-shadow: 0 0 1px rgba(0,0,0,0.8);
 }
-    </style>
+.xui-btn-search {
+    padding-top: 7px;
+    padding-bottom: 7px; 
+    color: #fff !important;
+} 
+.xui-btn-new {
+    float: right;
+    margin-top: 10px;
+    margin-right: 65px;
+    color: #fff !important;
+}
+.xui-seach-bar {
+    padding-left: 15px;
+    border-radius: 20px;
+}
+.xui-search-box {
+    overflow: hidden;
+    display: block;
+}
+.xui-search-contain {
+    display: inline-block;
+}
+.xui-link {
+    display: inline-block;
+}
+.xui-icon-new {
+    position: relative;
+}
+td {
+    position: relative;
+}
+.xui-icon-new {
+    position: absolute;
+    top: 4px;
+    right: 12px;
+    width: 27px;
+    height: 14px;
+    font-size: 5px;
+    line-height: 14px;
+    color: #fff;
+    border-top-left-radius: 2px;
+    border-top-right-radius: 2px;
+    border-bottom-right-radius: 2px;
+    background-color: #ea8247;
+}
+.xui-icon-new:after {
+    content: "";
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 0;
+    height: 0;
+    border-top: 4px solid #ea8247;
+    border-right: 4px solid transparent;
+}
+.xui-icon-pd {
+    margin-right: 15px;
+}
+</style>
 {% endblock %}
 {% block content-panel %}
 
@@ -26,16 +84,16 @@ a:link,a:visited,a:hover,a:active{text-decoration:none;color:currentColor;}
         </ul>
     </div>
     <div class="xui-filterPanel" >
-        <div class="xui-form disT ml20">
-            <div class="xui-i-item">
+        <div class="xui-form ml20 xui-search-box">
+            <div class="xui-i-item xui-search-contain">
                 <input
                         type="text"
-                        class="form-control xa-search-title"
+                        class="form-control xa-search-title xui-seach-bar"
                         placeholder="二维码名称"
                 />
             </div>
-            <a class="btn btn-primary xa-search xui-fontBold " href="javascript:void(0);">查询</a>
-            <a class="btn btn-success lh20 xui-i-btnWidth xa-addQrcode fr mr10" href="/new_weixin/channel_distribution/">
+            <a class="btn btn-primary xa-search xui-fontBold xui-btn-search" href="javascript:void(0);">查询</a>
+            <a class="btn btn-success lh20 xui-i-btnWidth xa-addQrcode fr xui-btn-new" href="/new_weixin/channel_distribution/">
                 <span class="xui-add-btn-icon">+</span>新建二维码
             </a>
         </div>
@@ -61,20 +119,20 @@ a:link,a:visited,a:hover,a:active{text-decoration:none;color:currentColor;}
 			<table class="table table-condensed xb-stripedTable xb-theadBg">
 				<thead>
 					<tr>
-                    <th style="width:16%;">
+                    <th style="width:10%;">
                         <p class=" m0">
                             <span class="">二维码名称</span>
                         </p>
                     </th>
-                    <th style="width:10%;" >关联会员</th>
-                    <th style="width:15%;" class="tx_sortable" data-sort-attr='total_final_price'>关注数量</th>
-                    <th style="width:15%;">总交易额/元</th>
+                    <th style="width:9%;" >关联会员</th>
+                    <th style="width:9%;" class="tx_sortable" data-sort-attr='total_final_price'>关注数量</th>
+                    <th style="width:10%;">总交易额/元</th>
                     <th style="width:10%;">返现总额</th>
                     <th style="width:10%;">关注奖励</th>
                     <th style="width:10%;">分销奖励</th>
                     <th style="width:10%;">创建时间</th>
-                    <th style="width:10%;">会员结算</th>
-                    <th style="width:10%;">二维码操作</th>
+                    <th style="width:12%;">会员结算</th>
+                    <th style="width:20%;">二维码操作</th>
 					</tr>
 				</thead>
 				<tbody>

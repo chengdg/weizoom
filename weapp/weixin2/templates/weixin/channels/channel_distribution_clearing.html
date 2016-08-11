@@ -19,6 +19,16 @@
             background-color: #fff;
             box-shadow: 0 0 1px rgba(0,0,0,0.8);
         }
+        .xui-illustrate-text {
+            padding-top: 10px;
+            text-align: center;
+        }
+        .xui-link {
+            display: inline-block;
+        }
+        .ml100 {
+            margin-left: 100px;
+        }
     </style>
 {% endblock %}
 {% block content-panel %}
@@ -45,7 +55,7 @@
                         type="text"
                         class="form-control"
                         name="return_max"/>
-                <label>提交时间：</label>
+                <label class="ml100">提交时间：</label>
                 <input
                         type="text"
                         class="form-control xui-datePicker"
@@ -81,9 +91,9 @@
             </div>
 
         </div>
-        <div>
+        <p class="xui-illustrate-text">
             整体概括: 已返现总额{{ return_money_total }} 未返现总额 {{ not_return_money_total }}本期返现总额 {{ current_total_return }}总交易额{{ total_transaction_volume }}
-        </div>
+        </p>
 
     </div>
     <div
@@ -106,15 +116,15 @@
 			<table class="table table-condensed xb-stripedTable xb-theadBg">
 				<thead>
 					<tr>
-                    <th>用户名</th>
+                    <th style="width:10%;"">用户名</th>
                     <th style="width:10%;" >提交时间</th>
-                    <th style="width:15%;" >本期交易额</th>
-                    <th style="width:15%;">返现标准</th>
+                    <th style="width:10%;" >本期交易额</th>
+                    <th style="width:10%;">返现标准</th>
                     <th style="width:10%;">返现率</th>
                     <th style="width:10%;">已有奖励</th>
                     <th style="width:10%;">返现金额</th>
                     <th style="width:10%;">返现状态</th>
-                    <th style="width:10%;">操作</th>
+                    <th style="width:20%;">操作</th>
 					</tr>
 				</thead>
 				<tbody>
