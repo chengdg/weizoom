@@ -93,6 +93,7 @@ def get_request_members_list(request, export=False):
 				# member_ids = [member.id for member in  MemberHasTag.get_member_list_by_tag_id(value)]
 				member_ids = MemberHasTag.objects.filter(member_tag_id=value).values_list('member_id', flat=True)
 				filter_data_args["id__in"] = member_ids
+				export_tag_id = value #会员导出使用
 
 			if key == 'status':
 				#无论如何这地方都要带有status参数，不然从“数据罗盘-会员分析-关注会员链接”过来的查询结果会有问题
@@ -160,6 +161,9 @@ def get_request_members_list(request, export=False):
 
 	if export:
 		# return members
+		if filter_data_args.has_key('id__in'):
+			filter_data_args['tag_id'] = export_tag_id
+			filter_data_args.pop('id__in')
 		return filter_data_args,sort_attr
 
 	total_count = members.count()
