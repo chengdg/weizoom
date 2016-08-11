@@ -94,7 +94,7 @@ W.view.mall.ProductsPoolFilterView = Backbone.View.extend({
             name: name,
             supplier: supplier,
             first_classification: firstClassification,
-            secondary_classification: secondaryClassification
+            secondary_classification: secondaryClassification,
             status: status,
             supplier_type:supplier_type
         }
