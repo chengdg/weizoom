@@ -1244,22 +1244,21 @@ class ChannelDistribution(resource.Resource): # TODO 关联会员不可以有两
 	def api_post(request):
 		"""更新渠道分销二维码"""
 
-		qrcode_id = request.POST.get('qrcode_id', None)
+		qrcode_id = int(request.POST.get('qrcode_id'))
+		group_id = request.POST['group_id']
+		prize_info = request.POST['prize_info']
+		reply_type = request.POST['reply_type']
+		reply_detail = request.POST['reply_detail']
+		reply_material_id = request.POST['reply_material_id']
 
 		# 如果修改者操作的二维码不是自己的 不执行任何操作
 		if ChannelDistributionQrcodeSettings.objects.filter(id=qrcode_id, owner_id=request.user.id).exists():
 
 			bing_member_title = request.POST["bing_member_title"]  # 会员头衔
-			if ChannelDistributionQrcodeSettings.objects.filter(bing_member_title=bing_member_title).exists():  # 检测重复
+			if ChannelDistributionQrcodeSettings.objects.filter(bing_member_title=bing_member_title).exclude(id=qrcode_id):  # 检测重复
 				response = create_response(400)
 				response.errMsg = u"重复的会员头衔"
 				return response.get_response()
-
-			group_id = request.POST['group_id']
-			prize_info = request.POST['prize_info']
-			reply_type = request.POST['reply_type']
-			reply_detail = request.POST['reply_detail']
-			reply_material_id = request.POST['reply_material_id']
 
 			ChannelDistributionQrcodeSettings.objects.filter(id=qrcode_id).update(
 				bing_member_title = bing_member_title,

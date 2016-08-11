@@ -205,6 +205,9 @@
     <script type="text/javascript">
 
         // 弹出关联会员
+        $('.xa-cancel').click(function(){
+            window.location.href="/new_weixin/channel_distributions/"
+        });
         $(document).delegate('.xa-selectMemberDailog', 'click', function(event) {
             options = {
                 webapp_id:{{webapp_id}},
