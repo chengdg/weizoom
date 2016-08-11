@@ -54,7 +54,7 @@ Background:
 			"commission_return_rate":"10",
 			"minimum_cash_discount":"80",
 			"commission_return_standard":50.00,
-			"is_seven_day_settlement_standard":"false",
+			"settlement_time":"0",
 			"tags": "未分组",
 			"prize_type": "无",
 			"reply_type": "文字",
@@ -67,7 +67,7 @@ Background:
 			"commission_return_rate":"10",
 			"minimum_cash_discount":"80",
 			"commission_return_standard":50.00,
-			"is_seven_day_settlement_standard":"false",
+			"settlement_time":"0",
 			"tags": "分组1",
 			"prize_type": "优惠券",
 			"coupon":"优惠券1",
@@ -76,7 +76,7 @@ Background:
 			"create_time": "2015-10-10 10:20:30"
 		}]
 		"""
-	And jobs已添加支付方式
+	When jobs添加支付方式
 		"""
 		[{
 			"type":"货到付款"
@@ -104,15 +104,15 @@ Background:
 
 	#扫码关注成为会员
 		When 清空浏览器
-		And jack扫描带参数二维码"分销二维码1"于2015-08-10 10:00:00
+		And jack扫描带渠道二维码"分销二维码1"于2015-08-10 10:00:00
 		And jack访问jobs的webapp
 
 		When 清空浏览器
-		And nokia扫描带参数二维码"分销二维码2"于2015-08-11 10:00:00
+		And nokia扫描渠道二维码"分销二维码2"于2015-08-11 10:00:00
 		And nokia访问jobs的webapp
 	
 		When 清空浏览器
-		And marry扫描带参数二维码"分销二维码1"于2015-08-12 10:00:00
+		And marry扫描渠道二维码"分销二维码1"于2015-08-12 10:00:00
 		And marry访问jobs的webapp
 
 	#会员购买
