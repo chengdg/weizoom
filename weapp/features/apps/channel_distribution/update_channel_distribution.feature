@@ -47,7 +47,7 @@ Background:
 			"commission_return_rate":"10",
 			"minimum_cash_discount":"80",
 			"commission_return_standard":500.00,
-			"is_seven_day_settlement_standard":"false",
+			"settlement_time":0,
 			"tags": "未分组",
 			"prize_type": "无",
 			"reply_type": "文字",
@@ -64,8 +64,8 @@ Background:
 				"attention_number": "0",
 				"total_transaction_money": 0.00,
 				"cash_back_amount":0.00,
-				"prize": "无",
-				"distribution_prize":"佣金",
+				"prize": "无奖励",
+				"distribution_prize":"无",
 				"create_time": "2015-10-10 10:20:30"
 			}]
 			"""
@@ -82,7 +82,7 @@ Scenario:1 修改渠道分销二维码
 			"commission_return_rate":"10",
 			"minimum_cash_discount":"80",
 			"commission_return_standard":500.00,
-			"is_seven_day_settlement_standard":"true",
+			"setlement_time":7,
 			"tags": "分组2",
 			"prize_type": "优惠券",
 			"coupon":"优惠券1",
@@ -90,18 +90,18 @@ Scenario:1 修改渠道分销二维码
 			"scan_code_reply": "图文1",
 			"create_time": "2015-10-12 10:20:30"
 		}
-		
 		"""
-	Then jobs获得渠道分销二维码'渠道分销二维码2'
-		"""
+
+	Then jobs获得渠道分销二维码列表
+			"""
 			[{
 				"code_name": "渠道分销二维码2",
 				"relation_member": "bigs",
 				"attention_number": "0",
 				"total_transaction_money": 0.00,
 				"cash_back_amount":0.00,
-				"prize": "无",
-				"distribution_prize":"佣金",
+				"prize": "优惠券",
+				"distribution_prize":"无",
 				"create_time": "2015-10-10 10:20:30"
 			}]
-		"""
+			"""
