@@ -1158,7 +1158,7 @@ class ChannelDistribution(resource.Resource): # TODO 关联会员不可以有两
 			commission_rate = request.POST.get("commission_rate", 0)  # 佣金返现率
 			minimun_return_rate = request.POST.get("minimun_return_rate", 0)  # 最低返现折扣
 			commission_return_standard = request.POST.get("commission_return_standard", 0)  # 佣金返现标准
-			return_standard = request.POST.get("return_standard", 0)  # 多少天返现标准  TODO 需要修改
+			return_standard = int(request.POST.get("return_standard", 0))  # 多少天返现标准  TODO 需要修改
 
 			if  7 >= return_standard >= 0:
 				pass
