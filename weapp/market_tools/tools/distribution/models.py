@@ -42,13 +42,14 @@ class ChannelDistributionQrcodeSettings(models.Model):
 
 class ChannelDistributionQrcodeHasMember(models.Model):
 	"""
-	渠道分销扫码的会员,关注会有奖励,重复扫码没有奖励
+	渠道分销的会员,关注会有奖励,重复扫码没有奖励,
+	扫码二维码的时候,创建,会员购买商品时修改 cost_money, commission, buy_times
 	"""
 	channel_qrcode_id = models.IntegerField()  # 渠道分销id
 	member_id = models.IntegerField()  # 渠道分销商下的会员
 	# is_new = models.BooleanField(default=True)  # 新关注 ?
-	cost_money = models.DecimalField(max_digits=65, decimal_places=2, default=0)  # 消费金额
-	commission = models.DecimalField(max_digits=65, decimal_places=2, default=0)  # 带来的佣金
+	cost_money = models.DecimalField(max_digits=65, decimal_places=2, default=0)  # 消费总金额
+	commission = models.DecimalField(max_digits=65, decimal_places=2, default=0)  # 带来的总佣金
 	buy_times = models.IntegerField(default=0)  # 购买次数
 	created_at = models.DateTimeField(auto_now_add=True)  # 添加时间
 
@@ -58,12 +59,13 @@ class ChannelDistributionQrcodeHasMember(models.Model):
 
 class ChannelDistributionDetail(models.Model):
 	"""
-	渠道分销明细表
+	渠道分销明细表,
+	提现 和获得佣金 时 创建
 	"""
 	channel_qrcode_id = models.IntegerField()  # 渠道分销id
 	money = models.DecimalField(max_digits=65, decimal_places=2, default=0)  # 操作金额 正为收入,负为提现
 	member_id = models.IntegerField()  # 对应的会员id
-	last_extract_time = models.DateTimeField(blank=True, null=True)  # 上次提现时间
+	last_extract_time = models.DateTimeField(default='0001-01-01')  # 上次提现时间
 	created_at = models.DateTimeField(auto_now_add=True)  # 添加时间
 	# effect_status = models.BooleanField(default=False)  # 生效状态 ??????
 	order_id = models.IntegerField(default=0)  # 订单id 
