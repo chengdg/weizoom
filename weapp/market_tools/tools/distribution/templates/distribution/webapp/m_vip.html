@@ -9,7 +9,12 @@
 {% block css %}
 <link type="text/css" rel="stylesheet" href="/markettools_static/distribution/css/m_weixin_style_v1.css">
 <style>
-
+.xui-no-vip {
+	padding: 80px;
+	font-size: 2rem;
+	text-align: center;
+	color: #999;
+}
 </style>
 {% endblock %}
 {% block content-panel %}
@@ -33,6 +38,8 @@
 			</li>
 		{% endfor %}
 		</ul>
+	{% else %}
+		<p class="xui-no-vip">暂时没有会员记录</p>
 	{% endif %}
 	</div>
 </div>

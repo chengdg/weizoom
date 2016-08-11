@@ -59,6 +59,8 @@ html {
     line-height: 40px;
     color: #fff;
     background-color: rgba(28,28,28,.9);
+    -webkit-box-shadow: 0 1px 1px rgba(0,0,0,.1);
+    -moz-box-shadow: 0 1px 1px rgba(0,0,0,.1);
     box-shadow: 0 1px 1px rgba(0,0,0,.1);
     z-index: 999;
 }
@@ -288,7 +290,7 @@ html {
     vertical-align: middle;
     width: 47px;
     height: 47px;
-    background: #fff url('/markettools_static/distribution/images/myPromotion-icon-person.png') no-repeat;
+    border-radius: 50%;
     background-size: 47px;
 }
 .xui-myPromption-wrapper .xui-returnCommission .xui-message span {
@@ -301,7 +303,7 @@ html {
     display: inline-block;
     vertical-align: middle;
     padding: 28px 0 12px;
-    width: 82%;
+    width: 76%;
 }
 .xui-myPromption-wrapper .xui-process .xui-icon-flag {
     position: absolute;
@@ -315,6 +317,8 @@ html {
     width: 100%;
     height: 15px;
     border-radius: 10px;
+    -webkit-box-shadow: 0 0 5px rgba(0, 198, 255,.6);
+    -moz-box-shadow: 0 0 5px rgba(0, 198, 255,.6);
     box-shadow: 0 0 5px rgba(0, 198, 255,.6);
     background-color: rgba(0, 198, 255,.6);
 }
@@ -329,6 +333,8 @@ html {
     background-image: linear-gradient(45deg, transparent 0rem, transparent 0.8rem, #4dafe2 0.9rem, #4dafe2 2.1rem, transparent 2.1rem, transparent 2.9rem, #4dafe2 3.1rem);
     background-color: #008cd5;
     background-size: 25px 38px;
+    -box-shadow: box-shadow: 1px 1px 5px rgba(0, 140, 213, .8);
+    -moz-box-shadow: 1px 1px 5px rgba(0, 140, 213, .8);
     box-shadow: 1px 1px 5px rgba(0, 140, 213, .8);
     -webkit-animation: process 750ms infinite linear;
     -moz-animation: process 750ms infinite linear;
@@ -358,7 +364,7 @@ html {
 }
 .xui-myPromption-wrapper .xui-text-num {
     margin-left: 4px;
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     color: #f10000;
 }
 .xui-myPromption-wrapper .xui-returnCommission .xui-btn-return {
@@ -373,6 +379,8 @@ html {
     padding: 12px 18px;
     border: 1px solid #008cd5;
     border-radius: 5px;
+    -webkit-box-shadow: 1px 1px 5px rgba(0, 140, 213, .8);
+    -moz-box-shadow: 1px 1px 5px rgba(0, 140, 213, .8);
     box-shadow: 1px 1px 5px rgba(0, 140, 213, .8);
     background-color: #008cd5;
 }
@@ -380,6 +388,8 @@ html {
     display: inline-block;
     padding: 12px 18px;
     border-radius: 5px;
+    -webkit-box-shadow: 0px 0px 2px rgba(0, 0, 0, .2);
+    -moz-box-shadow: 0px 0px 2px rgba(0, 0, 0, .2);
     box-shadow: 0px 0px 2px rgba(0, 0, 0, .2);
     background-color: #ddd;
 }
@@ -438,7 +448,7 @@ html {
     color: #333;
 }
 .xui-myPromption-wrapper .xui-explain .xui-explain-text {
-    line-height: 1.4rem;
+    line-height: 1.5rem;
 }
 
 /* m_details 我的推广-返现明细 */
