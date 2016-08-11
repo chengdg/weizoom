@@ -251,18 +251,7 @@ def send_product_export_job_task(self, exportjob_id, filter_data_args, type):
                     if not product_sales_money:
                         product_sales_money = 0
                     onshelvetime = product_id2onshelvetime.get(product.id, '')
-                    # #供货商提前取
 
-                    # try:
-                    #     if product.supplier:
-                    #         supplier = Supplier.objects.get(id=product.supplier)
-                    #         supplier_name = supplier.name
-                    #         supplier_name_export = u'自[{}]'.format(supplier_name)
-                    #     else:
-                    #         supplier_store = UserProfile.objects.get(user_id=product.supplier_user_id)
-                    #         supplier_name_export = u'同[{}]'.format(supplier_store.store_name)
-                    # except:
-                    #     supplier_name_export = ''
                     if store_name:
                         if is_sync:
                             supplier_name_export = u'同[{}]'.format(store_name)
@@ -307,9 +296,6 @@ def send_product_export_job_task(self, exportjob_id, filter_data_args, type):
                             elif model['stock_type'] == 0:
                                 stocks = u'无限'
 
-
-
-
                             alist = [product.id, model['user_code'], supplier_name_export, product.name, model_name_str, float(model['price']), float(low_price), purchase_price, float(gross_profit), '', point_type, stocks,
                             '', total_stocks, categories_str, product_sales, product_sales_money, onshelvetime]
 
@@ -348,8 +334,6 @@ def send_product_export_job_task(self, exportjob_id, filter_data_args, type):
                             total_stocks, total_stocks, categories_str, product_sales, product_sales_money, onshelvetime]
 
                         table.write_row("A{}".format(tmp_line), alist, cell_format)
-
-
 
 
     except:
