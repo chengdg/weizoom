@@ -24,6 +24,10 @@ def send_export_job_task(self, exportjob_id, filter_data_args, sort_attr, type):
 		workbook   = xlsxwriter.Workbook(file_path)
 		table = workbook.add_worksheet()
 		try:
+			if filter_data_args.has_key('tag_id'):
+				tag_id = filter_data_args.pop('tag_id')
+				member_ids = MemberHasTag.objects.filter(member_tag_id=tag_id).values_list('member_id', flat=True)
+				filter_data_args['id__in']=member_ids
 			members = Member.objects.filter(**filter_data_args).order_by(sort_attr)
 
 			members_info = [u'ID', u'昵称',u'性别',u'备注名',
