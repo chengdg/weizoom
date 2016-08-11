@@ -491,17 +491,18 @@ class ProductPool(resource.Resource):
             if secondary_classification == -1:
                 subclassification_ids = [model.id for model in models.Classification.objects.filter(father_id=first_classification, level=2)]
                 product_ids = [model.product_id for model in models.ClassificationHasProduct.objects.filter(
-                                        woid=request.manager.id,
                                         classification_id__in=subclassification_ids
                                         )]
             elif secondary_classification > 0:
                 product_ids = [model.product_id for model in models.ClassificationHasProduct.objects.filter(
-                                        woid=request.manager.id,
                                         classification_id=secondary_classification
                                         )]
             else:
                 product_ids = []
-            product_ids = [model.product_id for model in models.ProductPool.objects.filter(product_id__in=product_ids, status=models.PP_STATUS_ON_POOL)]
+            product_ids = [model.product_id for model in models.ProductPool.objects.filter(
+                woid=request.manager.id,
+                product_id__in=product_ids,
+                status=models.PP_STATUS_ON_POOL)]
             products = models.Product.objects.filter(id__in=product_ids)
         else:
             product_pool = models.ProductPool.objects.filter(woid=request.manager.id, status=models.PP_STATUS_ON_POOL)
