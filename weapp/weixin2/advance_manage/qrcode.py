@@ -1118,22 +1118,23 @@ class ChannelDistribution(resource.Resource): # TODO 关联会员不可以有两
 	@login_required
 	def api_put(request):
 		"""新建渠道分销二维码"""
+
+		def return_error(code, msg):
+			def return_error(code, msg):
+				response = create_response(code)
+				response.errMsg = msg
+				return response.get_response()
+
 		bing_member_title = request.POST["bing_member_title"]  # 会员头衔
 		if  ChannelDistributionQrcodeSettings.objects.filter(bing_member_title=bing_member_title).exists():  # 检测重复
-			response = create_response(400)
-			response.errMsg = u"重复的会员头衔"
-			return response.get_response()
+			return_error(400, u'重复的会员头衔')
 
 		bing_member_id = request.POST["bing_member_id"]  # 关联会员
 		if ChannelDistributionQrcodeSettings.objects.filter(bing_member_id=bing_member_id).exists():
-			response = create_response(400)
-			response.errMsg = u"一个会员只能绑定一个二维码"
-			return response.get_response()
+			return_error(400, u'一个会员只能绑定一个二维码')
 
 		if ChannelQrcodeSettings.objects.filter(bing_member_id=bing_member_id).exists():
-			response = create_response(400)
-			response.errMsg = u"一个会员只能绑定一个二维码"
-			return response.get_response()
+			return_error(400, u'该会员已经绑定过推广二维码')
 
 		award_prize_info = request.POST['prize_info'].strip()  # 扫描奖励
 		coupon_id = ''
@@ -1142,9 +1143,7 @@ class ChannelDistribution(resource.Resource): # TODO 关联会员不可以有两
 		if info_dict['type'] == u'优惠券':
 			coupon_id = str(info_dict['id'])
 		if not (info_dict.has_key('id') and info_dict.has_key('name') and info_dict.has_key('type')):
-			response = create_response(401)
-			response.errMsg = u'不合法的award_prize_info：' + award_prize_info
-			return response.get_response()
+			return_error(400, u'不合法的award_prize_info：' + award_prize_info)
 
 
 		distribution_rewards = int(request.POST["distribution_rewards"])  # 分销奖励 0:无 1:佣金
@@ -1158,6 +1157,12 @@ class ChannelDistribution(resource.Resource): # TODO 关联会员不可以有两
 			minimun_return_rate = request.POST.get("minimun_return_rate", 0)  # 最低返现折扣
 			commission_return_standard = request.POST.get("commission_return_standard", 0)  # 佣金返现标准
 			return_standard = request.POST.get("return_standard", 0)  # 多少天返现标准  TODO 需要修改
+			if  7 >= return_standard >= 0:
+				pass
+			else:
+				return_error(400, u"请输入大于等于0且小于等于7的数字")
+
+
 		group_id = request.POST["group_id"]  # 添加到分组,会员分组
 		reply_type = request.POST['reply_type']  # 回复类型
 		reply_material_id = request.POST['reply_material_id']  # 图文
@@ -1299,19 +1304,22 @@ class ChannelDistributionClearing(resource.Resource):
 		for member in members:
 			member_dict[member.id] = member.username_for_title
 
-		# process_dict = {}
-		# channel_distribution_process = ChannelDistributionProcess.objects.all()
-		# for process in channel_distribution_process:
-		# 	process_dict[process.id] = process
-
 		items = []
 
 		for qrcode in qrcodes:
+			commit_time = qrcode.commit_time
+			if str(commit_time) == '0001-01-01 00:00:00':
+				commit_time = '----'
+			else:
+				commit_time = str(qrcode.commit_time)
+
 			return_dict = {}
 
 			return_dict['qrcode_id'] = qrcode.id
 			return_dict['name'] = member_dict[qrcode.bing_member_id]  # 用户名
-			return_dict['commit_time'] = str(qrcode.commit_time)  # 提交时间
+
+			return_dict['commit_time'] = commit_time  # 提交时间
+
 			return_dict['current_transaction_amount'] = str(qrcode.current_transaction_amount)  # 本期交易额
 			return_dict['commission_return_standard']  = str(qrcode.commission_return_standard)  # 返现标准
 			return_dict['commission_rate'] = qrcode.commission_rate  # 返现率
