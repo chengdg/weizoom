@@ -65,6 +65,7 @@ def get_request_members_list(request, export=False):
 	#处理来自“数据罗盘-会员分析-关注会员链接”过来的查看关注会员的请求
 	#add by duhao 2015-07-13
 	status = request.GET.get('status', '-1')
+	export_tag_id = 0 #会员导出使用
 	if not filter_value:
 		if status == '1':
 			filter_data_args['is_subscribed'] = True
@@ -158,11 +159,14 @@ def get_request_members_list(request, export=False):
 			filter_data_args['id__in'] = session_member_ids
 		#最后对话时间和分组的处理
 	members = Member.objects.filter(**filter_data_args).order_by(sort_attr)
-
 	if export:
 		# return members
-		if filter_data_args.has_key('id__in'):
+		if export_tag_id:
 			filter_data_args['tag_id'] = export_tag_id
+			
+		if filter_value and session_member_ids:
+			filter_data_args['session_filter'] = session_filter
+		if filter_data_args.get('id__in'):
 			filter_data_args.pop('id__in')
 		return filter_data_args,sort_attr
 
