@@ -2,13 +2,13 @@
 
 {% block css %}
 <style type="text/css">
-	h1 {
-		color: #00F;
-	}
+    h1 {
+        color: #00F;
+    }
 
-	.xui-record .xui-inner-content {
-		color: #8F8F8F;
-	}
+    .xui-record .xui-inner-content {
+        color: #8F8F8F;
+    }
 
     .wui-resultDialog{
         background: url("/termite_static/img/component/lottery/roulette_mobile_dialog_bg.png") no-repeat;
@@ -96,6 +96,31 @@
     .wui-resultDialog .wui-i-content{
         font-weight: bold;
     }
+    .wui-first-prize {
+        background: url("/termite_static/img/component/scanlottery/roulette_dialog_bg1.png") no-repeat;
+        background-size: 100% 100%;
+        height: 328px;
+        color: #fff;
+        font-size: 1.1rem;
+    }
+    .wui-second-prize {
+        background: url("/termite_static/img/component/scanlottery/roulette_dialog_bg2.png") no-repeat;
+        background-size: 100% 100%;
+        height: 350px;
+        color: #fff;
+        font-size: 1.1rem;
+    }
+    .wui-first-prize .wui-i-contentHeader {
+        font-size: 2rem;
+        font-weight: 900;
+        color: #ffffff;
+        margin-top: 77px;
+    }
+    .wui-second-prize .wui-i-contentHeader {
+        font-size: 2rem;
+        color: #ffffff;
+        margin-top: 30px;
+    }
 </style>
 {% endblock %}
 
@@ -114,7 +139,7 @@
         </div>
         <div class="wui-i-bottom xa-dialog-bottom">
             <button type="button" class="wui-i-dialog-btn wui-i-userCenter xa-userCenter">个人中心</button>
-            <a href="/m/apps/scanlottery/m_scanlottery_page/?webapp_owner_id={{ request.webapp_owner_id }}&id={{ record_id }}"><button type="button" class="wui-i-dialog-btn wui-i-closeDialog xa-closeDialog xa-closeBtn" style="color:#FFF">再来一次</button></a>
+            <a href="/m/apps/scanlottery/m_scanlottery_page/?webapp_owner_id={{ request.webapp_owner_id }}&id={{ record_id }}"><button type="button" class="wui-i-dialog-btn wui-i-closeDialog xa-closeDialog xa-closeBtn xa-retryBtn" style="color:#FFF">再来一次</button></a>
         </div>
     </div>
 {% endblock %}
@@ -147,6 +172,7 @@
             this.$contentHeader = this.$el.find('.xa-dialog-contentHeader');
             this.$userCenter = this.$el.find('.xa-userCenter');
             this.$closeBtn = this.$el.find('.xa-closeBtn');
+            this.$retryBtn = this.$el.find('.xa-retryBtn')
             this.$entityContent = this.$el.find('.xa-entity-content');
             this.$title.hide();
             this.$userCenter.show();
@@ -182,15 +208,32 @@
         ResultDialog.prototype.render = function(options){
             var prize_type = options ? options.prize_type||'timesout' : 'timesout';
             var prize_name = options ? options.prize_name : '';
+            var result = options ? options.result : '';
             var delay = options ? options.delay || false : false;
+            this.$el.removeClass('wui-first-prize');
+            this.$el.removeClass('wui-second-prize');
             this.$entityContent.hide();
             this.$el.hide();
             this.$title.show();
-            if(prize_type == 'entity'){
+            if(result == '一等奖'){
+                this.$el.addClass('wui-first-prize');
+                this.$title.html('').hide();
+                this.$contentHeader.html("恭喜您获得迪士尼门票一张！");
+                this.$closeBtn.show();
+                this.$retryBtn.hide();
+                this.$userCenter.hide();
+            }else if(result == '二等奖'){
+                this.$el.addClass('wui-second-prize');
+                this.$title.html('').hide();
+                this.$contentHeader.html("恭喜您获得5元优惠券！");
+                this.$closeBtn.show();
+                this.$retryBtn.hide();
+                this.$userCenter.hide();
+            }else if(prize_type == 'entity'){
                 this.$title.html('中奖了耶').show();
                 this.$contentHeader.html("恭喜您获得了<br>"+prize_name+'！');
                 this.$entityContent.show();
-                this.$userCenter.show()
+                this.$userCenter.show();
                 this.$closeBtn.show();
             }else if(prize_type == 'no_prize'){
                 this.$title.html('很遗憾').show();
@@ -337,6 +380,7 @@
                     prizeIndex = this.index;
                     resultDialog = resultDialog || new ResultDialog();
                     resultDialog.render({
+                        'result': this.retuenData.result,
                         'prize_type': this.retuenData.prize_type,
                         'prize_name': this.retuenData.prize_name,
                         'delay': true
