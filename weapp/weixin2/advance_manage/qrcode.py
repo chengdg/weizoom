@@ -1157,13 +1157,23 @@ class ChannelDistribution(resource.Resource): # TODO 关联会员不可以有两
 			return_standard = 0
 		elif distribution_rewards == 1:
 			commission_rate = int(request.POST.get("commission_rate", 0))  # 佣金返现率
-			minimun_return_rate = request.POST.get("minimun_return_rate", 0)  # 最低返现折扣
+			minimun_return_rate = int(request.POST.get("minimun_return_rate", 0))  # 最低返现折扣
 			commission_return_standard = request.POST.get("commission_return_standard", 0)  # 佣金返现标准
 			return_standard = int(request.POST.get("return_standard", 0))  # 多少天返现标准  TODO 需要修改
 
-			if commission_rate >= 20 or commission_rate <= 0:
+			if commission_rate > 20 or commission_rate < 0:
 				response = create_response(400)
 				response.errMsg = u'佣金返现率输入错误'
+				return response.get_response()
+
+			if minimun_return_rate > 100 or minimun_return_rate < 0:
+				response = create_response(400)
+				response.errMsg = u'最低返现折扣输入错误'
+				return response.get_response()
+
+			if return_standard < 0:
+				response = create_response(400)
+				response.errMsg = u'佣金返现标准输入错误'
 				return response.get_response()
 
 			if  7 >= return_standard >= 0:
@@ -1212,7 +1222,6 @@ class ChannelDistribution(resource.Resource): # TODO 关联会员不可以有两
 				qrcode_ticket = weixin_api.create_qrcode_ticket(int(cur_setting.id), QrcodeTicket.PERMANENT)
 				ticket = qrcode_ticket.ticket
 			except Exception, e:
-				# print 'get qrcode_ticket fail:', e
 				ticket = ''
 		else:
 			ticket = ''
@@ -1362,28 +1371,11 @@ class ChannelDistributionTransactionAmount(resource.Resource):
 		"""
 		查看记录的一个页面
 		"""
-		log_select = int(request.POST.get('log_select', 0))
+		log_select = int(request.POST.get('log_select', 0))  # 0 本期, 1总的
 		qrcode_id = request.POST.get('qrcode_id')
 
-		# qrcodes = ChannelDistributionQrcodeSettings.objects.filter(owner__id=request.user.id)
-		# bind_qrcode_ids = []  # 该店铺的所有二维码id
-		# for qrcode in qrcodes:
-		# 	bind_qrcode_ids.append(qrcode.id)
-
-		if log_select == 1:
-			# 得到该店铺下所有绑定会员
-			channel_distribution_has_members = ChannelDistributionQrcodeHasMember.objects.filter(channel_qrcode_id=qrcode_id)
-		else:
-			pass
-
-		member_dict = {}  # {id: name}
-		total_money = 0
-		members = Member.objects.all()
-		for member in members:
-			member_dict[member.id] = member.username_for_title
 		items = []
-
-
+		total_money = 0
 		if log_select == 1:
 			# 得到该店铺下所有绑定会员
 			channel_distribution_has_members = ChannelDistributionQrcodeHasMember.objects.filter(
@@ -1396,18 +1388,7 @@ class ChannelDistributionTransactionAmount(resource.Resource):
 				total_money += channel_distribution_has_member.cost_money
 				items.append(dict)
 		elif log_select == 0:
-			channel_distribution_has_members = ChannelDistributionQrcodeHasMember.objects.filter(
-				channel_qrcode_id=qrcode_id)
-
-			# 得到本期交易
-			qrcode = ChannelDistributionQrcodeSettings.objects.get(id=qrcode_id)
-			# 得到上一次提现的日期
-			details = ChannelDistributionDetail.objects.filter(channel_qrcode_id=qrcode_id, order_id__ne=0)
-			if details:
-				if str(details[0].last_extract_time) != '0001-01-01 00:00:00':
-					pass
-
-			# orders = Order.objects.filter(created_at__range=(,))
+			pass
 
 		count_per_page = int(request.GET.get('count_per_page', 15))
 		cur_page = int(request.GET.get('page', '1'))
