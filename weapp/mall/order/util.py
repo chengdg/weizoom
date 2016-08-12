@@ -1093,8 +1093,8 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
         order_supplier_type = query_dict.get('order_supplier_type')
 
     # 除掉同步过来的订单中未支付的
-    if not mall_type:
-        pass
+    # if not mall_type:
+    #     pass
 
     orders = __get_orders_by_params(query_dict, date_interval, date_interval_type, orders, user_profile)
 
@@ -1149,6 +1149,15 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
         weizoom_product_id2mall_product_id = dict([(relation.weizoom_product_id, relation.mall_product_id) for relation in WeizoomHasMallProductRelation.objects.filter(weizoom_product_id__in=sync_product_ids)])
         id2mall_product = dict([(product.id, product)for product in Product.objects.filter(id__in=weizoom_product_id2mall_product_id.values())])
 
+        order2fackorders = {}
+        fackorders = Order.objects.filter(origin_order_id__in=order_ids)
+        for order in fackorders:
+            origin_order_id = order.origin_order_id
+            # order_supplier = order.supplier
+            order2fackorders.setdefault(origin_order_id, [])
+            # order2fackorders[origin_order_id].setdefault(order_supplier, {})
+            order2fackorders[origin_order_id].append(order)
+    
     # 构造返回的order数据
     for order in orders:
         # 获取order对应的member的显示名
@@ -1185,7 +1194,7 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
 
         if order.come is 'weizoom_mall' and user.is_weizoom_mall is False:
             order.member_id = 0
-
+            
     # 构造返回的order数据
     items = []
     for order in orders:
@@ -1193,7 +1202,7 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
         order.is_refund = is_refund
         # 用于微众精选拆单
         groups = []
-        if mall_type:
+        if order2fackorders:
             # 自营平台所有的订单都会拆单
             if order2fackorders.get(order.id) and order.status > ORDER_STATUS_CANCEL:
                 multi_child_orders = True

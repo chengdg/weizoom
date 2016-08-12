@@ -895,7 +895,7 @@ class Product(resource.Resource):
         mall_type = request.user_profile.webapp_type
 
         #自营平台去掉添加新商品
-        if mall_type and not has_product_id and request.manager.username not in ['weshop', 'weizoomjx']:
+        if mall_type == 1 and not has_product_id and request.manager.username not in ['weshop', 'weizoomjx']:
             return HttpResponseRedirect(
             '/mall2/product_pool/')
 
@@ -1000,6 +1000,8 @@ class Product(resource.Resource):
             woid = request.webapp_owner_id
             product.is_group_buying = product_is_group(product.id, woid)
 
+        if not mall_type:
+            supplier = []
 
         c = RequestContext(request, {
             'first_nav_name': export.PRODUCT_FIRST_NAV,
@@ -1027,6 +1029,7 @@ class Product(resource.Resource):
     def put(request):
         """创建商品or update product
         """
+        mall_type = request.user_profile.webapp_type
 
         standard_model, custom_models = utils.extract_product_model(request)
         postage_type = request.POST['postage_type']
@@ -1067,6 +1070,16 @@ class Product(resource.Resource):
             is_enable_bill = False
             is_delivery = False
 
+        if mall_type == 3:
+            try:
+                supplier = models.Supplier.objects.get(owner_id=request.manager.id, name="自营")
+            except:
+                supplier = models.Supplier.objects.create(owner_id=request.manager.id, name="自营")
+            supplier_id = supplier.id
+        else:
+            supplier_id = request.POST.get("supplier", 0)
+            
+
         product = models.Product.objects.create(
             owner=request.manager,
             name=request.POST.get('name', '').strip(),
@@ -1085,7 +1098,7 @@ class Product(resource.Resource):
             weshop_sync=request.POST.get('weshop_sync', 0),
             stocks=min_limit,
             is_member_product=request.POST.get("is_member_product", False) == 'on',
-            supplier=request.POST.get("supplier", 0),
+            supplier=supplier_id,
             purchase_price=purchase_price,
             is_enable_bill=is_enable_bill,
             is_delivery=is_delivery

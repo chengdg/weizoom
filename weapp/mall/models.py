@@ -1817,7 +1817,7 @@ def belong_to(webapp_id):
 	if webapp_type:
 		orders = Order.objects.filter(webapp_id=webapp_id, origin_order_id__lte=0)
 	else:
-		orders = Order.objects.filter(Q(webapp_id=webapp_id)|Q(supplier_user_id=user_id, origin_order_id__gt=0,status__in=sync_able_status_list))
+		orders = Order.objects.filter(Q(webapp_id=webapp_id, origin_order_id__in=[-1,0])|Q(supplier_user_id=user_id, origin_order_id__gt=0,status__in=sync_able_status_list))
 
 	group_order_relations = OrderHasGroup.objects.filter(webapp_id=webapp_id)
 	if group_order_relations.count() > 0:

@@ -33,6 +33,17 @@
 		</li>
 	</ul>
     {% endifequal %}
+
+    {% ifequal mall_type 3 %}
+	<ul class="nav nav-tabs" style="border:none;">
+		<li class="active">
+			<a href="/mall2/product/">添加新商品</a>
+		</li>
+		<li>
+			<a href="/mall2/product_pool/">商品池</a>
+		</li>
+	</ul>
+    {% endifequal %}
 	<form class="form-horizontal xui-mall-addProductForm xa-addProductForm" method="POST"
         action={% if product %}"/mall2/product/?id={{product.id}}&shelve_type={{product.shelve_type}}"{% else %}"/mall2/product/?_method=put"{%endif%}
         id="editForm" data-id="{% if product %}{{ product.id }}{% else %}0{% endif %}"
@@ -64,7 +75,7 @@
 				</p>
 			</div>
 			<!-- 微众精选开始 -->
-			{% if mall_type and has_store_name %}
+			{% if mall_type == 1 and has_store_name %}
 			<!-- 微众系列的供货商 -->
 			<div class="form-group">
 				<label class="control-label fl star_show" for="supplier">供货商：</label>
@@ -83,15 +94,15 @@
 			</div>
 			{% else %}
 			<!-- 微众精选结束 -->
-				{% if supplier|length %}
+				{% if supplier|length and mall_type == 1 %}
 				<div class="form-group">
-					<label class="control-label fl star_show" for="supplier">供货商：</label>
+					<label class="control-label fl " for="supplier">供货商：</label>
 					<div class="fl">
 	                {% if product.supplier %}
 	                        <input type="hidden" name="supplier" value="{{ product.supplier }}"/>
 	                        <select disabled="disabled" class="w106 ml5" id="supplier" name="supplier" data-origin="{% if product %}{{ product.supplier }}{% endif %}" style="white-space: nowrap;">
 	                {% else %}
-	                        <select class="w106 ml5" id="supplier" name="supplier" data-origin="{% if product %}{{ product.supplier }}{% endif %}" data-validate="require-notempty" style="white-space: nowrap;">
+	                        <select class="w106 ml5" id="supplier" name="supplier" data-origin="{% if product %}{{ product.supplier }}{% endif %}" style="white-space: nowrap;">
 	                {% endif %}
 							<option value="">请选择</option>
 							{% for id, name in supplier %}
@@ -103,7 +114,7 @@
 				</div>
 
 				<!-- weshop微众商城定制功能start -->
-				{% if request.manager.username == 'jobs' or request.manager.username == 'weshop' %}
+				{% if request.manager.username == 'jobs1' or request.manager.username == 'weshop' %}
 				<div class="form-group">
 					<label class="control-label fl" for="type">商品类型：</label>
 					<div class="fl">
