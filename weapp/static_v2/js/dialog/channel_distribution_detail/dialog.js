@@ -2,7 +2,6 @@ ensureNS('W.dialog.mall');
 
 W.dialog.mall.ChannelDistributionDetail = W.dialog.Dialog.extend({
     events: _.extend({
-        'change .xa-change': 'onChangeSelect'
     }, W.dialog.Dialog.prototype.events),
 
     getTemplate: function() {
@@ -39,13 +38,6 @@ W.dialog.mall.ChannelDistributionDetail = W.dialog.Dialog.extend({
         });
     },
 
-    onChangeSelect: function(event){
-        var logSelect = $.trim($('#log_select').val());
-        this.table.reload({
-            'log_select': 1,
-            'qrocde_id': this.qrocdeId
-        })
-    },
 
     onGetData: function(options) {
         var data = [];

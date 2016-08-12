@@ -63,7 +63,7 @@ Background:
 			"commission_return_rate":"10",
 			"minimum_cash_discount":"80",
 			"commission_return_standard":50.00,
-			"is_seven_day_settlement_standard":"false",
+			"settlement_time":"0",
 			"tags": "未分组",
 			"prize_type": "优惠券",
 			"coupon":"优惠券1",
@@ -77,15 +77,16 @@ Background:
 			"commission_return_rate":"10",
 			"minimum_cash_discount":"80",
 			"commission_return_standard":50.00,
-			"is_seven_day_settlement_standard":"false",
+			"settlement_time":"0",
 			"tags": "分组1",
-			"prize": "100积分",
+			"prize_type": "积分",
+			"integral": "100",
 			"reply_type": "图文",
 			"scan_code_reply": "图文1",
 			"create_time": "2015-10-10 10:20:30"
 		}]
 		"""
-	And jobs已添加支付方式
+	When jobs添加支付方式
 		"""
 		[{
 			"type":"货到付款"
@@ -111,30 +112,32 @@ Background:
 
 	#扫码关注成为会员
 		When 清空浏览器
-		And jack扫描带参数二维码"分销二维码1"于2015-08-10 10:00:00
+		And jack扫描渠道二维码"分销二维码1"于2015-08-10 10:00:00
 		And jack访问jobs的webapp
 
 		When 清空浏览器
-		And nokia扫描带参数二维码"分销二维码2"于2015-08-11 10:00:00
+
+		And nokia扫描渠道二维码"分销二维码2"于2015-08-11 10:00:00
 		And nokia关注jobs的公众号于'2015-08-11 10:00:00'
+
 		And nokia访问jobs的webapp
 	
 		When 清空浏览器
-		And marry扫描带参数二维码"分销二维码1"于2015-08-12 10:00:00
+		And marry扫描渠道二维码"分销二维码1"于2015-08-12 10:00:00
 		And marry访问jobs的webapp
 
 		When jobs为会员发放优惠券
 			"""
-			[{
+			{
 				"name": "优惠券00",
 				"count": 2,
 				"members": ["nokia"],
 				"coupon_ids": ["coupon2_id_2", "coupon2_id_1"]
-			}]
+			}
 			"""
 
 	#会员购买
-		When jack批量消费jobs的商品
+		When jack购买jobs的商品
 			"""
 			[{
 				"relation_member":"bigs",
@@ -186,7 +189,7 @@ Background:
 				}]
 			}]
 			"""
-		When jack批量消费jobs的商品
+		When jack购买jobs的商品
 			"""
 			[{
 				"relation_member":"bigs",
@@ -230,7 +233,7 @@ Background:
 				}]
 			}
 			"""
-		When marry批量消费jobs的商品
+		When marry购买jobs的商品
 			"""
 			[{
 				"relation_member":"bigs",
@@ -274,7 +277,7 @@ Background:
 				}]
 			}
 			"""
-		When nokia批量消费jobs的商品
+		When nokia购买jobs的商品
 			"""
 			[{
 				"relation_member":"bill",
@@ -309,7 +312,7 @@ Background:
 			}]
 			"""
 
-@mall2 @apps @senior @trading_reward
+@mall2 @apps @senior @trading_reward_1
 Scenario:1 一个微信用户扫码下单交易记录列表
 		When jobs完成订单"002"
 		When jobs完成订单"003"

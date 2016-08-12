@@ -83,7 +83,8 @@ Background:
 			"commission_return_standard":50.00,
 			"is_seven_day_settlement_standard":"false",
 			"tags": "分组1",
-			"prize": "100积分",
+			"prize_type": "积分",
+			"integral": "100",
 			"reply_type": "图文",
 			"scan_code_reply": "图文1",
 			"create_time": "2015-10-10 10:20:30"
@@ -115,11 +116,11 @@ Background:
 
 	#扫码关注成为会员
 		When 清空浏览器
-		And jack扫描带参数二维码"分销二维码1"于2015-08-10 10:00:00
+		And jack扫描渠道二维码"分销二维码1"于2015-08-10 10:00:00
 		And jack访问jobs的webapp
 
 		When 清空浏览器
-		And nokia扫描带参数二维码"分销二维码2"于2015-08-11 10:00:00
+		And nokia扫描渠道二维码"分销二维码2"于2015-08-11 10:00:00
 		And nokia关注jobs的公众号于'2015-08-11 10:00:00'
 		And nokia访问jobs的webapp
 
@@ -134,7 +135,7 @@ Background:
 			"""
 
 	#会员购买
-		When jack批量消费jobs的商品
+		When jack购买jobs的商品
 			"""
 			[{
 				"relation_member":"bigs",
@@ -186,7 +187,7 @@ Background:
 				}]
 			}]
 			"""
-		When nokia批量消费jobs的商品
+		When nokia购买jobs的商品
 			"""
 			[{
 				"relation_member":"bill",
