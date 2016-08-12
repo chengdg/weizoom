@@ -1745,7 +1745,7 @@ class Order(models.Model):
 		numbers = Order.by_webapp_user_id(webapp_user_ids).filter(
 			status__gte=ORDER_STATUS_PAYED_SUCCESSED).aggregate(
 			Sum("final_price"))
-		number = 0
+		number = 0.0
 		if numbers["final_price__sum"] is not None:
 			number = numbers["final_price__sum"]
 		return number

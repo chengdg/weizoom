@@ -259,9 +259,9 @@
 					</td>
 					{{if j == 0 }}
 					<td width="140px" rowspan="${order.groups.length}">
-						{{if order.save_money != 0 }}
+						{{if order.save_money > 0 }}
 							{{if !(order.supplier_user_id > 0 && data.mall_type == 0)}}
-								${ order.save_money.toFixed(2)}
+								${ order.save_money.toFixed(2) }
 							{{/if}}
 						{{/if}}
 					</td>
