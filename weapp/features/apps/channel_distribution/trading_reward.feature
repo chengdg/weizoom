@@ -128,12 +128,12 @@ Background:
 
 		When jobs为会员发放优惠券
 			"""
-			[{
+			{
 				"name": "优惠券00",
 				"count": 2,
 				"members": ["nokia"],
 				"coupon_ids": ["coupon2_id_2", "coupon2_id_1"]
-			}]
+			}
 			"""
 
 	#会员购买
