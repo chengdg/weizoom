@@ -5,32 +5,39 @@ from mall.promotion.models import CouponRule
 from modules.member.models import MemberGrade, MemberTag, Member
 from test import bdd_util
 import logging
-from market_tools.tools.distribution.models import ChannelDistributionQrcodeSettings
+from market_tools.tools.distribution.models import ChannelDistributionQrcodeSettings, ChannelDistributionQrcodeHasMember
 from utils.string_util import byte_to_hex
-
+from django.contrib.auth.models import User
 
 @When(u'{user}扫描渠道二维码"{qrcode_name}"')
 def step_impl(context, user, qrcode_name):
 	qrcode = ChannelDistributionQrcodeSettings.objects.get(bing_member_title=qrcode_name)
-	owner_id = qrcode.owner
-	
-	
-    # 模拟收到的消息
-    openid = '%s_%s' % (webapp_user_name, owner.username)
-    url = '/simulator/api/mp_user/qr_subscribe/?version=2'
-    data = {
-        "timestamp": "1402211023857",
-        "webapp_id": webapp_id,
-        "ticket": ticket,
-        "from_user": openid
-    }
-    response = context.client.post(url, data)
-    response_data = json.loads(response.content)
-    context.qa_result = response_data
+	ticket = qrcode.ticket
+
+	owner = User.objects.get(id=qrcode.owner.id)
+	webapp_id = bdd_util.get_webapp_id_via_owner_id(qrcode.owner.id)
+
+	# 模拟收到的消息
+	openid = '%s_%s' % (user, owner.username)
+	url = '/simulator/api/mp_user/qr_subscribe/?version=2'
+	data = {
+		"timestamp": "1402211023857",
+		"webapp_id": webapp_id,
+		"ticket": ticket,
+		"from_user": openid
+	}
+	response = context.client.post(url, data)
+	response_data = json.loads(response.content)
+	context.qa_result = response_data
 
 
-@When(u'{user}扫描带渠道二维码"{qrcode_name}"于{scan_qrcode_time}')
-def step_impl(context, user, qrcode_name, scan_qrcode_time):
-	context.execute_steps(u'when %s扫描带参数二维码"%s"' % (user, qrcode_name))
-	scan_qrcode_time = ChannelDistributionQrcodeSettings.objects.get()
-	relation = ChannelQrcodeHasMember
+@When(u'{webapp_user_name}扫描渠道二维码"{qrcode_name}"于{scan_qrcode_time}')
+def step_impl(context, webapp_user_name, qrcode_name, scan_qrcode_time):
+	context.execute_steps(u'when %s扫描渠道二维码"%s"' % (webapp_user_name, qrcode_name))
+
+	scan_qrcode_time = bdd_util.get_date(scan_qrcode_time)
+	qrcode = ChannelDistributionQrcodeSettings.objects.get(bing_member_title=qrcode_name)
+	member = ChannelDistributionQrcodeHasMember.objects.get(channel_qrcode_id=qrcode.id)
+	member.created_at = scan_qrcode_time
+	member.save()
+

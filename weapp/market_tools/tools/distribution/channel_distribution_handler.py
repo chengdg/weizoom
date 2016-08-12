@@ -39,7 +39,7 @@ class ChannelDistributionQrcodeHandler(MessageHandler):
 
 		# 一 将信息添加到ChannelDistributionQrcodeHasMember中
 		# 二 将扫码的会员添加到新分组中
-		channel_distribution_qrcode_has_member = ChannelDistributionQrcodeHasMember.objects.filter(member_id=member)
+		channel_distribution_qrcode_has_member = ChannelDistributionQrcodeHasMember.objects.filter(member_id=member.id)
 		if channel_distribution_qrcode_has_member:  # 如果这个会员已经绑定到别人的二维码下:
 			return None
 		else:
@@ -47,7 +47,7 @@ class ChannelDistributionQrcodeHandler(MessageHandler):
 			if qrcode:
 				ChannelDistributionQrcodeHasMember.objects.create(
 					channel_qrcode_id = qrcode[0].id,
-					member_id = member,
+					member_id = member.id,
 				)
 				# 得到需要绑定的member分组
 				group_id = qrcode[0].group_id

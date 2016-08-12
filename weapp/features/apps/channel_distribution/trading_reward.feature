@@ -104,7 +104,7 @@ Background:
 
 	#扫码关注成为会员
 		When 清空浏览器
-		And jack扫描带渠道二维码"分销二维码1"于2015-08-10 10:00:00
+		And jack扫描渠道二维码"分销二维码1"于2015-08-10 10:00:00
 		And jack访问jobs的webapp
 
 		When 清空浏览器
@@ -285,7 +285,7 @@ Background:
 			}]
 			"""
 
-@mall2 @apps @senior @trading_reward
+@mall2 @apps @senior @trading_reward_1
 Scenario:1 一个微信用户扫码下单交易记录列表
 		When jobs完成订单"002"
 		When jobs完成订单"003"
