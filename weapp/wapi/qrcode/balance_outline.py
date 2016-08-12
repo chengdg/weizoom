@@ -76,6 +76,12 @@ class QrcodeBalanceOutline(api_resource.ApiResource):
 		first_orders = []
 		all_order = []
 		for order in orders:
+			print order.final_price,"final_price"
+			print order.coupon_money,"order.coupon_money"
+			print order.integral_money,"order.integral_money"
+			print order.weizoom_card_money,"order.weizoom_card_money"
+			print order.promotion_saved_money ,"order.promotion_saved_money"
+			print order.edit_money,"order.edit_money"
 			sale_price = order.final_price
 			if order.coupon_money:
 				sale_price += order.coupon_money
@@ -86,7 +92,7 @@ class QrcodeBalanceOutline(api_resource.ApiResource):
 			if order.promotion_saved_money:
 				sale_price += order.promotion_saved_money
 			if order.edit_money:
-				sale_price += order.promotion_saved_money
+				sale_price += order.edit_money
 			#除退款和已取消的订单
 			if order.status not in [ORDER_STATUS_CANCEL,ORDER_STATUS_GROUP_REFUNDING,ORDER_STATUS_REFUNDING]:
 				all_order.append({
