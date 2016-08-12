@@ -135,7 +135,7 @@ Background:
 			"""
 
 	#会员购买
-		When jack批量消费jobs的商品
+		When jack购买jobs的商品
 			"""
 			[{
 				"relation_member":"bigs",
@@ -187,7 +187,7 @@ Background:
 				}]
 			}]
 			"""
-		When nokia批量消费jobs的商品
+		When nokia购买jobs的商品
 			"""
 			[{
 				"relation_member":"bill",
