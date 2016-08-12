@@ -4,7 +4,7 @@ from core.exceptionutil import unicode_full_stack
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.db.models import Sum
-from watchdog.utils import watchdog_error
+from watchdog.utils import watchdog_error, watchdog_warning
 import json
 from celery import task
 from core import upyun_util
@@ -179,6 +179,7 @@ def send_product_export_job_task(self, exportjob_id, filter_data_args, type):
     file_path = "{}/{}".format(dir_path,filename)
     workbook   = xlsxwriter.Workbook(file_path)
     table = workbook.add_worksheet()
+    sales_order_status = [models.ORDER_STATUS_PAYED_NOT_SHIP, models.ORDER_STATUS_PAYED_SHIPED, models.ORDER_STATUS_SUCCESSED, models.ORDER_STATUS_REFUNDING, models.ORDER_STATUS_GROUP_REFUNDING]
     try:
         mall_type = int(filter_data_args['mall_type'])
         if mall_type:
@@ -194,48 +195,59 @@ def send_product_export_job_task(self, exportjob_id, filter_data_args, type):
             cell_format=workbook.add_format()
             cell_format.set_align('vcenter') #垂直居中
 
-            if type == 4:
-                owner = User.objects.get(id=filter_data_args['woid'])
-                webapp_id = UserProfile.objects.filter(user=owner)[0].webapp_id
-                manager_product_user_id = UserProfile.objects.filter(webapp_type=2)[0].user_id
-                manager_supplier_ids2name = dict([(s.id, s.name) for s in models.Supplier.objects.filter(owner_id=manager_product_user_id)])
-                supplier_ids2name = dict([(s.id, s.name) for s in models.Supplier.objects.filter(owner=owner, is_delete=False)])
+            owner = User.objects.get(id=filter_data_args['woid'])
+            webapp_id = UserProfile.objects.filter(user=owner)[0].webapp_id
+            manager_product_user_id = UserProfile.objects.filter(webapp_type=2)[0].user_id
+            manager_supplier_ids2name = dict([(s.id, s.name) for s in models.Supplier.objects.filter(owner_id=manager_product_user_id)])
+            supplier_ids2name = dict([(s.id, s.name) for s in models.Supplier.objects.filter(owner=owner, is_delete=False)])
 
-                products = models.Product.objects.belong_to(mall_type, owner, models.PRODUCT_SHELVE_TYPE_ON)
-                if filter_data_args['startDate'] and filter_data_args['endDate']:
-                    product_pool_param= {}
-                    product_pool_param["sync_at__gte"] = filter_data_args['startDate']
-                    product_pool_param["sync_at__lte"] = filter_data_args['endDate']
-                    product_pool_param["woid"] = filter_data_args["woid"]
+            products = models.Product.objects.belong_to(mall_type, owner, models.PRODUCT_SHELVE_TYPE_ON)
+            if filter_data_args['supplier_name']:
+                store_name = filter_data_args['supplier_name']
+                if store_name:
+                    mananger_supplier_ids = [supplier.id for supplier in models.Supplier.objects.filter(
+                                                owner=manager_product_user_id,
+                                                name__contains=store_name,
+                                                is_delete=False
+                                            )]
+                    if products:
+                        products = products.filter(supplier__in=mananger_supplier_ids)
 
-                    product_pool = models.ProductPool.objects.filter(**product_pool_param)
-                    product_pool_id2product_pool = dict([(pool.product_id, pool) for pool in product_pool])
-                    products = products.filter(id__in=product_pool_id2product_pool.keys())
-                # product_id2onshelvetime = for product_id_sync_at in product_id_sync_ats
-                models.Product.fill_details(owner, products, {
-                    "with_product_model": True,
-                    "with_model_property_info": True,
-                    "with_selected_category": True,
-                    'with_image': False,
-                    'with_property': True,
-                    'with_sales': True
-                })
-                sort_attr = '-display_index'
-                products = sorted(products, key=operator.attrgetter('id'), reverse=True)
-                products = sorted(products, key=operator.attrgetter('display_index'), reverse=True)
-                products_is_0 = filter(lambda p: p.display_index == 0, products)
-                products_not_0 = filter(lambda p: p.display_index != 0, products)
-                products_not_0 = sorted(products_not_0, key=operator.attrgetter('display_index'))
-                products = utils.filter_products(None, products_not_0 + products_is_0, filter_data_args)
+            if filter_data_args['startDate'] and filter_data_args['endDate']:
+                product_pool_param= {}
+                product_pool_param["sync_at__gte"] = filter_data_args['startDate']
+                product_pool_param["sync_at__lte"] = filter_data_args['endDate']
+                product_pool_param["woid"] = filter_data_args["woid"]
 
-                product_ids = [product.id for product in products]
-                product_id2onshelvetime = dict(models.ProductPool.objects.filter(product_id__in=product_ids).values_list('product_id', 'sync_at'))
-                product_id2store_name, product_id2sync_time = utils.get_sync_product_store_name(product_ids)
+                product_pool = models.ProductPool.objects.filter(**product_pool_param)
+                product_pool_id2product_pool = dict([(pool.product_id, pool) for pool in product_pool])
+                products = products.filter(id__in=product_pool_id2product_pool.keys())
+            # product_id2onshelvetime = for product_id_sync_at in product_id_sync_ats
+            models.Product.fill_details(owner, products, {
+                "with_product_model": True,
+                "with_model_property_info": True,
+                "with_selected_category": True,
+                'with_image': False,
+                'with_property': True,
+                'with_sales': True
+            })
+            sort_attr = '-display_index'
+            products = sorted(products, key=operator.attrgetter('id'), reverse=True)
+            products = sorted(products, key=operator.attrgetter('display_index'), reverse=True)
+            products_is_0 = filter(lambda p: p.display_index == 0, products)
+            products_not_0 = filter(lambda p: p.display_index != 0, products)
+            products_not_0 = sorted(products_not_0, key=operator.attrgetter('display_index'))
+            products = utils.filter_products(None, products_not_0 + products_is_0, 1, params=filter_data_args)
 
-                product_count = len(product_ids)
-                export_jobs.update(count=product_count)
-                processed_count = 0 
-                for product in products:
+            product_ids = [product.id for product in products]
+            product_id2onshelvetime = dict(models.ProductPool.objects.filter(product_id__in=product_ids).values_list('product_id', 'sync_at'))
+            product_id2store_name, product_id2sync_time = utils.get_sync_product_store_name(product_ids)
+
+            product_count = len(product_ids)
+            export_jobs.update(count=product_count)
+            processed_count = 0 
+            for product in products:
+                try:
                     processed_count += 1
                     export_jobs.update(processed_count=processed_count, update_at=datetime.now())
                     store_name = manager_supplier_ids2name.get(product.supplier, "")
@@ -244,13 +256,15 @@ def send_product_export_job_task(self, exportjob_id, filter_data_args, type):
                     if not store_name:
                         store_name = supplier_ids2name[product.supplier] if product.supplier and supplier_ids2name.has_key(product.supplier) else product_id2store_name.get(product.id, "")
                         is_sync = product_id2store_name.has_key(product.id)
-                    product_sales = models.OrderHasProduct.objects.filter(product_id=product.id, promotion_id=0, order__status=models.ORDER_STATUS_SUCCESSED, order__origin_order_id__lte=0, order__webapp_id=webapp_id).aggregate(Sum('number'))['number__sum']
-                    product_sales_money = models.OrderHasProduct.objects.filter(product_id=product.id, promotion_id=0, order__status=models.ORDER_STATUS_SUCCESSED, order__origin_order_id__lte=0, order__webapp_id=webapp_id).aggregate(Sum('total_price'))['total_price__sum']
+                    product_sales = models.OrderHasProduct.objects.filter(product_id=product.id, order__status__in=sales_order_status, order__origin_order_id__lte=0, order__webapp_id=webapp_id).aggregate(Sum('number'))['number__sum']
+                    product_sales_money = models.OrderHasProduct.objects.filter(product_id=product.id, order__status__in=sales_order_status, order__origin_order_id__lte=0, order__webapp_id=webapp_id).aggregate(Sum('total_price'))['total_price__sum']
                     if not product_sales:
                         product_sales = 0
                     if not product_sales_money:
                         product_sales_money = 0
                     onshelvetime = product_id2onshelvetime.get(product.id, '')
+                    if onshelvetime:
+                        onshelvetime = onshelvetime.strftime('%Y-%m-%d %H:%M:%S')
 
                     if store_name:
                         if is_sync:
@@ -334,12 +348,14 @@ def send_product_export_job_task(self, exportjob_id, filter_data_args, type):
                             total_stocks, total_stocks, categories_str, product_sales, product_sales_money, onshelvetime]
 
                         table.write_row("A{}".format(tmp_line), alist, cell_format)
-
+                except:
+                    notify_message = "导出商品任务存在问题,product_id:{},response:{}".format(product.id, unicode_full_stack())
+                    watchdog_warning(notify_message, 'EXPORT')
 
     except:
         notify_message = "导出商品任务失败,response:{}".format(unicode_full_stack())
         export_jobs.update(status=2,is_download=1)
-        watchdog_error(notify_message)
+        watchdog_error(notify_message, 'EXPORT')
 
     workbook.close()
     upyun_path = '/upload/excel/{}'.format(filename)
