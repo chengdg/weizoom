@@ -8,6 +8,8 @@ import logging
 from market_tools.tools.distribution.models import ChannelDistributionQrcodeSettings, ChannelDistributionQrcodeHasMember
 from utils.string_util import byte_to_hex
 from django.contrib.auth.models import User
+from mall.models import Order
+
 
 @When(u'{user}扫描渠道二维码"{qrcode_name}"')
 def step_impl(context, user, qrcode_name):
@@ -41,3 +43,14 @@ def step_impl(context, webapp_user_name, qrcode_name, scan_qrcode_time):
 	member = ChannelDistributionQrcodeHasMember.objects.all().order_by('-id')[0]
 	member.created_at = scan_qrcode_time
 	member.save()
+
+@When(u'{user}完成订单"{order_id}"')
+def step_impl(context, user, order_id):
+	order = Order.objects.get(order_id=order_id)
+	order.status = 5
+	order.save()
+
+
+# @When(u'{user}申请返现于{operation_time}')
+# def step_impl(context, user, operation_time):
+# 	pass
