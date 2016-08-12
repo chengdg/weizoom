@@ -24,6 +24,7 @@ class QrcodeBalanceOutline(api_resource.ApiResource):
 		start = time.time()
 		channel_qrcode_id = int(args.get('channel_qrcode_id'))
 		order_numbers = json.loads(args.get('order_numbers', ''))
+		balance_time_from = args.get('balance_time_from','')
 
 		channel_qrcode = ChannelQrcodeSettings.objects.filter(id=channel_qrcode_id)
 		user_id = 0
@@ -54,7 +55,8 @@ class QrcodeBalanceOutline(api_resource.ApiResource):
 
 		# 获取在某段时间内的已完成和退款完成的订单时间
 		orderoperationlogs = OrderOperationLog.objects.filter(
-			action__in=[u"完成", u"退款完成"]
+			action__in=[u"完成", u"退款完成"],
+			created_at__gte=balance_time_from
 		).exclude(order_id__contains='^')
 
 		order_number2finished_at = {opl.order_id: opl.created_at for opl in orderoperationlogs}
