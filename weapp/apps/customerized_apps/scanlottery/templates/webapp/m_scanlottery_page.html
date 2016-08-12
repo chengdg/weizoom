@@ -17,19 +17,22 @@
         background-size: 100% auto;
     }
     .wui-scanlottery-title {
-        height: 17rem;
+        height: 14rem;
     }
     .wui-scanlottery-container {
-        width: 70%;
+        width: 100%;
+    }
+    .wui-inputBlock {
         margin: 0 auto;
+        width: 70%;
         text-align: center;
         font-size: 0;
     }
-    .wui-scanlottery-container > div {
+    .wui-scanlottery-container .wui-inputBlock> div {
         text-align: center;
         margin-bottom: 20px;
     }
-    .wui-scanlottery-container .wui-scanlottery-btn {
+    .wui-scanlottery-container .wui-inputBlock .wui-scanlottery-btn {
         border:none;
         border-radius: .1rem;
         height: 3rem;
@@ -42,8 +45,8 @@
         font-family: "黑体";
         margin-top: 10px;
     }  
-    .wui-scanlottery-container input {
-        border: 1px solid #dbdbdb;
+    .wui-scanlottery-container .wui-inputBlock input {
+        border: 1px solid #e60012;
         box-sizing: border-box;
         font-size: 1.1rem;
         height: 3rem;
@@ -54,29 +57,29 @@
         padding: 0 0 0 1rem;
         font-family: "黑体";
     }
-    .wui-scanlottery-container .wui-verify-input {
+    .wui-scanlottery-container .wui-inputBlock .wui-verify-input {
         width: 37%;
         margin-right: 5%;
     }
-    .wui-scanlottery-container .wui-verify-container {
+    .wui-scanlottery-container .wui-inputBlock .wui-verify-container {
         width: 28%;
         height: 3rem;
         display: inline-block;
         vertical-align: top;
     }
-    .wui-scanlottery-container .wui-verify-refresh {
+    .wui-scanlottery-container .wui-inputBlock .wui-verify-refresh {
         width: 100%;
         height: 2.4rem;
         margin-top: 5px;
         pointer-events: none; 
     }
-    .wui-scanlottery-container > p {
+    .wui-scanlottery-container .wui-inputBlock > p {
         margin-top: 2rem;
         font-size: 1rem;
         text-align: left;
         color: #24326a;
     }
-    .wui-verify-btn {
+    .wui-inputBlock .wui-verify-btn {
         font-size: 1rem;
         height: 3rem;
         line-height: 3rem;
@@ -103,19 +106,27 @@
         background-size: 100% 100%;
     }
     .wui-guide .wui-guide-scan-desc {
-        height: 26%;
-        width: 85%;
-        margin: 0 auto; 
+        height: 11%;
+        width: 82%;
+        margin: 3rem auto 0; 
         background: url(/termite_static/img/component/scanlottery/scan_desc.png) no-repeat;
         background-size: 100% 100%;
+    }
+    .wui-scanlottery-container .wui-guide-item {
+        text-align: right;
+        margin-top: 10px;
+        padding-right: 15px;
+    }
+    .wui-guide-item img{
+        pointer-events: none;
     }
     @media screen and (max-width: 320px) {
         .wui-guide .wui-guide-top {
             height: 55%;
         }
         .wui-guide .wui-guide-scan-desc {
-            width: 90%;
-            height: 30%;
+            width: 82%;
+            height: 11%;
         }
         .wui-guide .wui-guide-scan {
             height: 19%;
@@ -124,7 +135,7 @@
             font-size: 1rem;
         }        
         .wui-scanlottery-title {
-            height: 13rem;
+            height: 10rem;
         }  
     }
     @media screen and (max-width: 320px) and (max-height: 480px) {
@@ -132,21 +143,19 @@
             background: #fff!important;            
         }
         .wui-guide .wui-guide-top {
-            height: 60%;
+            height: 56%;
         }
         .wui-guide .wui-guide-scan-desc {
-            width: 90%;
-            height: 33%;
+            width: 85%;
+            height: 13%;
+            margin-top: 1rem;
         }
         .wui-guide .wui-guide-scan {
             height: 22%;
         }
         .wui-verify-btn {
             font-size: 1rem;
-        }        
-        .wui-scanlottery-title {
-            height: 13rem;
-        }         
+        }              
     }
 </style>
 {% endblock %}
@@ -155,21 +164,26 @@
 <div class="wui-scanlottery-page wui-hidden wa-scanlottery-page">
     <div class="wui-scanlottery-title"></div>
     <div class="wui-scanlottery-container wa-scanlottery-container">
-        <div> 
-            <input type="text" placeholder="请输入姓名" class="wui-excode-input wa-name">
-        </div>
-        <div> 
-            <input type="text" placeholder="请输入手机号" class="wui-phone-input wa-phone" maxlength="11">
-        </div>
-        <div>
-            <input type="text" placeholder="验证码" class="wui-verify-input wa-verify-input" maxlength="4">
-            <div class="wui-verify-container">
-                <img class="codeimg wui-verify-refresh" src="/m/apps/scanlottery/api/m_captcha/?webapp_owner_id={{ request.webapp_owner_id}}"/>
+        <div class="wui-inputBlock">
+            <div> 
+                <input type="text" placeholder="请输入姓名" class="wui-excode-input wa-name">
             </div>
-            <span class="wa-verify-btn wui-verify-btn">点击刷新</span>
+            <div> 
+                <input type="text" placeholder="请输入手机号" class="wui-phone-input wa-phone" maxlength="11">
+            </div>
+            <div>
+                <input type="text" placeholder="验证码" class="wui-verify-input wa-verify-input" maxlength="4">
+                <div class="wui-verify-container">
+                    <img class="codeimg wui-verify-refresh" src="/m/apps/scanlottery/api/m_captcha/?webapp_owner_id={{ request.webapp_owner_id}}"/>
+                </div>
+                <span class="wa-verify-btn wui-verify-btn">点击刷新</span>
+            </div>
+            <button type="button" class="wui-submit wa-submit wui-scanlottery-btn">立即抽奖</button>
+            <p>注：请填写真实信息，参与抽奖，这样  才能保证奖品顺利到达您的手中。</p>
         </div>
-        <button type="button" class="wui-submit wa-submit wui-scanlottery-btn">立即抽奖</button>
-        <p>注：填写真实信息，参与抽奖，否则您的奖品将无法获取哦。</p>
+        <div class="wui-guide-item">
+            <img src="/termite_static/img/component/scanlottery/scan_guide_item.png" width='133px' height='90px'>
+        </div>
     </div>
 </div>
 <div class="wui-guide wa-guide">
@@ -190,9 +204,9 @@
         });
 
         //扫码
-        // wx.ready(function(){
+        wx.ready(function(){
             $('.wa-guide-scan').on('click' ,scanQrcode);
-        // });
+        });
 
         //立即抽奖
         $('.wa-submit').on('click', function(){
@@ -258,8 +272,6 @@
                     success: function(data){
                         $('.wa-guide').hide();
                         $('.wa-scanlottery-page').show();
-                        $('html').css({background: '#a5b8dc!important'});
-                        $('body').css({background: '#a5b8dc!important'});
                     },
                     error: function(resp){
                         wuiAlert(resp.errMsg);

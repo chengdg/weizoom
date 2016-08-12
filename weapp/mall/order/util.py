@@ -906,14 +906,15 @@ def get_detail_response(request):
             is_sync = True
         else:
             is_sync = False
-
+        child_orders = sorted(child_orders, key=lambda order: "%d-%d" % (order.supplier, order.supplier_user_id))
         c = RequestContext(request, {
             'first_nav_name': FIRST_NAV,
             'second_navs': export.get_mall_order_second_navs(request),
             'second_nav_name': export.ORDER_ALL,
             'mall_type': mall_type,
             'order': order,
-            'child_orders': sorted(child_orders, key=lambda order: "%d-%d" % (order.supplier, order.supplier_user_id)),
+            'child_orders': child_orders,
+            'child_order_postages': dict([(child.supplier, child.postage)for child in child_orders]),
             'suppliers': suppliers,
             'supplier_stores': supplier_stores,
             'is_order_not_payed': (order.status == ORDER_STATUS_NOT),

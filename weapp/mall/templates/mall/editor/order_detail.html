@@ -3,6 +3,7 @@
 {% load account_filter %}
 {% load mall_filter %}
 {% load express_filter %}
+{% load child_order_postage_filter %}
 
 
 {% block css %}
@@ -277,10 +278,13 @@
                 <th class="xui-td-first">商品信息</th>
                 <th class="xui-td-second">单价（元）/数量</th>
                 <th class="xui-td-third">单品优惠</th>
+                {% if mall_type %}<th class="xui-td-third">运费</th>{% endif %}
                 {% if mall_type and is_show_order_status %}<th class="xui-td-third">订单状态</th>{% endif %}
                 <th class="xui-td-fourth" style="width:160px;">整单优惠</th>
                 <th class="xui-td-fifth" style="width:120px;">微众卡支付金额</th>
+                {% if not mall_type %}
                 <th class="xui-td-sixth" style="width:90px;">运费</th>
+                {% endif %}
             </tr>
             {% for product in order.products %}
             <tr>
@@ -349,6 +353,14 @@
                 {% endif %}
               {% endif %}
               </td>
+                {% if mall_type %}
+                  {% if product.supplier %}
+                    {% ifchanged product.supplier %}
+                        <td rowspan="{{product.supplier_length}}" style="text-align:center;border-right:1px solid #ddd;">{{ child_order_postages|get_child_order_postage:product.supplier|floatformat:"2" }}</td>
+                    {% endifchanged %}
+                  {% endif %}
+                {% endif %}
+
 
                 {% if mall_type and is_show_order_status %}
                   {% if product.supplier %}
@@ -396,7 +408,9 @@
                   </span>
                 {% endif %}
               </td>
+              {% if not mall_type %}
               <td class="xui-td-sixth" rowspan="{{ forloop.revcounter }}">{% if not is_sync %}{{ order.postage|floatformat:"2" }}{% endif %}</td>
+              {% endif %}
               </td>
               {% endif %}
             </tr>
