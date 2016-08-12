@@ -115,11 +115,11 @@ Background:
 
 	#扫码关注成为会员
 		When 清空浏览器
-		And jack扫描带参数二维码"分销二维码1"于2015-08-10 10:00:00
+		And jack扫描渠道二维码"分销二维码1"于2015-08-10 10:00:00
 		And jack访问jobs的webapp
 
 		When 清空浏览器
-		And nokia扫描带参数二维码"分销二维码2"于2015-08-11 10:00:00
+		And nokia扫描渠道二维码"分销二维码2"于2015-08-11 10:00:00
 		And nokia关注jobs的公众号于'2015-08-11 10:00:00'
 		And nokia访问jobs的webapp
 
