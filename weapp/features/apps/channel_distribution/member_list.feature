@@ -57,11 +57,11 @@ Background:
 		[{
 			"name": "商品1",
 			"price": 50.00,
-			"discount":"0.5"
+			"count":"10"
 		},{
 			"name": "商品2",
 			"price": 100.00,
-			"discount":"1"
+			"count":"10"
 		}]
 		"""
 @mall2 @apps @senior @member_list

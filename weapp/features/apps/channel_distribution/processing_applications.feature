@@ -23,11 +23,20 @@ Background:
 			"name": "优惠券1",
 			"money": 100.00,
 			"count": 5,
-			"limit_counts": 1,
-			"using_limit": "满50元可以使用",
+			"limit_counts": "无限",
+			"using_limit": "满200元可以使用",
 			"start_date": "今天",
 			"end_date": "1天后",
 			"coupon_id_prefix": "coupon1_id_"
+		},{
+			"name": "优惠券00",
+			"money": 25.00,
+			"count": 5,
+			"limit_counts": "无限",
+			"using_limit": "满1元可以使用",
+			"start_date": "今天",
+			"end_date": "1天后",
+			"coupon_id_prefix": "coupon2_id_"
 		}]
 		"""
 	And jobs添加会员分组
@@ -74,8 +83,7 @@ Background:
 			"commission_return_standard":50.00,
 			"is_seven_day_settlement_standard":"false",
 			"tags": "分组1",
-			"prize_type": "优惠券",
-			"coupon":"优惠券1",
+			"prize": "100积分",
 			"reply_type": "图文",
 			"scan_code_reply": "图文1",
 			"create_time": "2015-10-10 10:20:30"
@@ -97,13 +105,11 @@ Background:
 		[{
 			"name": "商品1",
 			"price": 100.00,
-			"count":"10",
-			"discount":"0.5"
+			"count":"10"
 		},{
 			"name": "商品2",
 			"price": 100.00,
-			"count":"10",
-			"discount":"1"
+			"count":"10"
 		}]
 		"""
 
@@ -114,7 +120,18 @@ Background:
 
 		When 清空浏览器
 		And nokia扫描带参数二维码"分销二维码2"于2015-08-11 10:00:00
+		And nokia关注jobs的公众号于'2015-08-11 10:00:00'
 		And nokia访问jobs的webapp
+
+		When jobs为会员发放优惠券
+			"""
+			[{
+				"name": "优惠券00",
+				"count": 2,
+				"members": ["nokia"],
+				"coupon_ids": ["coupon2_id_2", "coupon2_id_1"]
+			}]
+			"""
 
 	#会员购买
 		When jack批量消费jobs的商品
@@ -183,6 +200,9 @@ Background:
 				"relation_member":"bill",
 				"order_id": "009",
 				"pay_type": "货到付款",
+				"integral_money":25.00,
+				"integral":50.00,
+				"coupon_id":"coupon2_id_1",
 				"products":[{
 					"name":"商品1",
 					"count":1 
@@ -191,6 +211,9 @@ Background:
 				"relation_member":"bill",
 				"order_id": "010",
 				"pay_type": "货到付款",
+				"integral_money":25.00,
+				"integral":50.00,
+				"coupon_id":"coupon2_id_2",
 				"products":[{
 					"name":"商品1",
 					"count":1 
