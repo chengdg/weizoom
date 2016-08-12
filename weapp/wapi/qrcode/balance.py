@@ -45,7 +45,7 @@ class QrcodeBalance(api_resource.ApiResource):
 			"webapp_id": webapp_id,
 			"webapp_user_id__in": webapp_user_ids,
 			"origin_order_id__lte": 0,
-			"balance_time_from": balance_time_from
+			"created_at__gte": balance_time_from
 
 		}
 		cur_start_date = args.get('start_date', None)
