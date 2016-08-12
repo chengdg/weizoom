@@ -45,6 +45,7 @@ class QrcodeBalanceOutline(api_resource.ApiResource):
 			"webapp_id": webapp_id,
 			"webapp_user_id__in": webapp_user_ids,
 			"origin_order_id__lte": 0,
+			"created_at__gte": balance_time_from
 		}
 
 		start_time = start_date + ' 00:00:00'
@@ -75,7 +76,17 @@ class QrcodeBalanceOutline(api_resource.ApiResource):
 		first_orders = []
 		all_order = []
 		for order in orders:
-			sale_price = order.final_price + order.coupon_money + order.integral_money + order.weizoom_card_money + order.promotion_saved_money + order.edit_money
+			sale_price = order.final_price
+			if order.coupon_money:
+				sale_price += order.coupon_money
+			if order.integral_money:
+				sale_price += order.integral_money
+			if order.weizoom_card_money:
+				sale_price += order.weizoom_card_money
+			if order.promotion_saved_money:
+				sale_price += order.promotion_saved_money
+			if order.edit_money:
+				sale_price += order.promotion_saved_money
 			#除退款和已取消的订单
 			if order.status not in [ORDER_STATUS_CANCEL,ORDER_STATUS_GROUP_REFUNDING,ORDER_STATUS_REFUNDING]:
 				all_order.append({
