@@ -65,7 +65,12 @@ class QrcodeBalanceOutline(api_resource.ApiResource):
 			if opl.action == u'退款完成':
 				refund_order_number.append(opl.order_id)
 
-		orders = Order.objects.filter(**filter_data_args).exclude(order_id__in=(set(order_numbers) - set(refund_order_number)))
+		if order_numbers:
+			curr_order_numbers = set(order_numbers) - set(refund_order_number)
+		else:
+			curr_order_numbers = refund_order_number
+
+		orders = Order.objects.filter(**filter_data_args).exclude(order_id__in=curr_order_numbers)
 
 		first_orders = []
 		all_order = []
