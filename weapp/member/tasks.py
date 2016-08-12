@@ -11,9 +11,10 @@ from mall.models import Order, STATUS2TEXT,ORDER_STATUS_SUCCESSED,ProductReview,
 import xlsxwriter
 import os
 import time
+import json 
 
 @task(bind=True, time_limit=7200, max_retries=2)
-def send_export_job_task(self, exportjob_id, filter_data_args, sort_attr, type):
+def send_export_job_task(self, exportjob_id, filter_data_args, sort_attr, type, ids=None):
 
 	export_jobs = ExportJob.objects.filter(id=exportjob_id)
 	if type == 0:
@@ -24,6 +25,8 @@ def send_export_job_task(self, exportjob_id, filter_data_args, sort_attr, type):
 		workbook   = xlsxwriter.Workbook(file_path)
 		table = workbook.add_worksheet()
 		try:
+			if ids:
+				filter_data_args['id__in'] = json.loads(ids)
 			members = Member.objects.filter(**filter_data_args).order_by(sort_attr)
 
 			members_info = [u'ID', u'昵称',u'性别',u'备注名',
