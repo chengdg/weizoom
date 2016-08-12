@@ -34,10 +34,10 @@ def step_impl(context, user, qrcode_name):
 @When(u'{webapp_user_name}扫描渠道二维码"{qrcode_name}"于{scan_qrcode_time}')
 def step_impl(context, webapp_user_name, qrcode_name, scan_qrcode_time):
 	context.execute_steps(u'when %s扫描渠道二维码"%s"' % (webapp_user_name, qrcode_name))
-
-	scan_qrcode_time = bdd_util.get_date(scan_qrcode_time)
-	qrcode = ChannelDistributionQrcodeSettings.objects.get(bing_member_title=qrcode_name)
-	member = ChannelDistributionQrcodeHasMember.objects.get(channel_qrcode_id=qrcode.id)
+	# name = byte_to_hex(webapp_user_name)
+	# member_id = Member.objects.filter(username_hexstr__contains=name)[0].id
+	# scan_qrcode_time = bdd_util.get_date(scan_qrcode_time)
+	# qrcode = ChannelDistributionQrcodeSettings.objects.get(bing_member_title=qrcode_name)
+	member = ChannelDistributionQrcodeHasMember.objects.all().order_by('-id')[0]
 	member.created_at = scan_qrcode_time
 	member.save()
-
