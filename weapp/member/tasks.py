@@ -30,7 +30,7 @@ def send_export_job_task(self, exportjob_id, filter_data_args, sort_attr, type, 
 			members = Member.objects.filter(**filter_data_args).order_by(sort_attr)
 
 			members_info = [u'ID', u'昵称',u'性别',u'备注名',
-				 u'姓名',u'绑定手机号',u'备注',u'积分',u'会员等级',u'好友数',u'好友关系',
+				 u'姓名',u'绑定手机号',u'备注',u'积分',u'会员等级',u'分组', u'好友数',u'好友关系',
 				 u'贡献数',u'贡献好友',u'来源',u'加入时间',u'分享总数',u'分享链接',u'链接点击',u'订单数',u'订单号',u'金额',u'状态',u'购买次数',u'收货人',u'电话',u'地址']
 			for i in range(len(members_info)):
 				table.write(0, i, members_info[i])
@@ -46,6 +46,12 @@ def send_export_job_task(self, exportjob_id, filter_data_args, sort_attr, type, 
 					nike_name = nike_name.decode('utf8')
 				except:
 					nike_name = member.username_hexstr
+				#会员分组
+				member_tag_names = []
+				for member_has_tag in MemberHasTag.get_member_has_tags(member):
+					member_tag_names.append(member_has_tag.member_tag.name)
+				member_tag_names_str = '/'.join(member_tag_names)
+
 				remarks_name = member.remarks_name
 				integral = member.integral
 				grade = member.grade.name
@@ -168,6 +174,7 @@ def send_export_job_task(self, exportjob_id, filter_data_args, sort_attr, type, 
 								member_remarks,
 								integral,
 								grade,
+								member_tag_names_str,
 								friend_count,
 								friend_name,
 								fans_count,
