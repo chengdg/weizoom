@@ -133,6 +133,7 @@ def get_weixin_code(request):
 	member_id = request.member.id
 	nick_name = request.member.username_for_html  #当前登入用户的昵称
 	weixin_code = models.ChannelDistributionQrcodeSettings.objects.get(bing_member_id=member_id).ticket  #二维码
+	weixin_code = 'https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=' + weixin_code
 	c = RequestContext(request, {
 		'nick_name': nick_name,
 		'weixin_code': weixin_code
