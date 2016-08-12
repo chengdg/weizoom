@@ -53,16 +53,17 @@ class QrcodeBalanceOutline(api_resource.ApiResource):
 
 
 		# 获取在某段时间内的已完成和退款完成的订单时间
-		orderoperationlogs = OrderOperationLog.objects.filter(action__in=[u"完成", u"退款完成"]).exclude(order_id__contains='^')
+		orderoperationlogs = OrderOperationLog.objects.filter(
+			action__in=[u"完成", u"退款完成"],
+			created_at__gte=start_time,
+			created_at__lte=end_time,
+		).exclude(order_id__contains='^')
 
 		order_number2finished_at = {opl.order_id: opl.created_at for opl in orderoperationlogs}
 		refund_order_number = []
 		for opl in orderoperationlogs:
 			if opl.action == u'退款完成':
 				refund_order_number.append(opl.order_id)
-		print orderoperationlogs,"oppppppppppp"
-
-		print order_numbers,"order_numbers",refund_order_number,"refund_order_number"
 
 		orders = Order.objects.filter(**filter_data_args).exclude(order_id__in=(set(order_numbers) - set(refund_order_number)))
 
