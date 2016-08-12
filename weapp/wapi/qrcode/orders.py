@@ -15,7 +15,7 @@ class QrcodeOrder(api_resource.ApiResource):
 	app = 'qrcode'
 	resource = 'orders'
 
-	@param_required(['channel_qrcode_id', 'status'])
+	@param_required(['channel_qrcode_id'])
 	def get(args):
 		"""
 		获取订单
@@ -39,7 +39,7 @@ class QrcodeOrder(api_resource.ApiResource):
 			"origin_order_id__lte": 0,
 
 		}
-		status = args.get('status')
+		status = args.get('status', '-1')
 		start_date = args.get('start_date', None)
 		end_date = args.get('end_date', None)
 		is_first_order = int(args.get('is_first_order', '0'))
@@ -48,7 +48,7 @@ class QrcodeOrder(api_resource.ApiResource):
 		if start_date and end_date:
 			start_time = start_date + ' 00:00:00'
 			end_time = end_date + ' 23:59:59'
-			order_numbers = [op.order_id for op in OrderOperationLog.objects.filter(created_at__gte=start_time,created_at__lte=end_time)]
+			order_numbers = [op.order_id for op in OrderOperationLog.objects.filter(created_at__gte=start_time,created_at__lte=end_time).exclude(order_id__contains='^')]
 			filter_data_args["order_id__in"] = order_numbers
 		if is_first_order:
 			filter_data_args["is_first_order"] = True
@@ -75,7 +75,7 @@ class QrcodeOrder(api_resource.ApiResource):
 
 
 		#订单的操作日志
-		order_number2finished_at = {opl.order_id:opl.created_at for opl in OrderOperationLog.objects.filter(order_id__in=order_numbers,action=u'完成')}
+		order_number2finished_at = {opl.order_id:opl.created_at for opl in OrderOperationLog.objects.filter(order_id__in=order_numbers,action=u'完成').exclude(order_id__contains='^')}
 
 		#子单的信息
 		origin_orders = Order.objects.filter(origin_order_id__in=order_ids)
@@ -160,6 +160,7 @@ class QrcodeOrder(api_resource.ApiResource):
 				"sale_price": u'%.2f' % sale_price,  #销售额
 				"status_text": STATUS2TEXT[channel_order.status],
 				"created_at": channel_order.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+				"update_at": channel_order.update_at.strftime('%Y-%m-%d %H:%M:%S'),
 				"finished_at": order_number2finished_at.get(channel_order.order_id, channel_order.update_at).strftime('%Y-%m-%d %H:%M:%S')
 			})
 
