@@ -54,9 +54,7 @@ class QrcodeBalanceOutline(api_resource.ApiResource):
 
 		# 获取在某段时间内的已完成和退款完成的订单时间
 		orderoperationlogs = OrderOperationLog.objects.filter(
-			action__in=[u"完成", u"退款完成"],
-			created_at__gte=start_time,
-			created_at__lte=end_time,
+			action__in=[u"完成", u"退款完成"]
 		).exclude(order_id__contains='^')
 
 		order_number2finished_at = {opl.order_id: opl.created_at for opl in orderoperationlogs}
@@ -77,14 +75,14 @@ class QrcodeBalanceOutline(api_resource.ApiResource):
 		for order in orders:
 			sale_price = order.final_price + order.coupon_money + order.integral_money + order.weizoom_card_money + order.promotion_saved_money + order.edit_money
 			#除退款和已取消的订单
-			if order.status not in [ORDER_STATUS_CANCEL,ORDER_STATUS_GROUP_REFUNDING,ORDER_STATUS_REFUNDING] and not order.is_first_order:
+			if order.status not in [ORDER_STATUS_CANCEL,ORDER_STATUS_GROUP_REFUNDING,ORDER_STATUS_REFUNDING]:
 				all_order.append({
 					'order_id': order.id,
 					'finished_at': order_number2finished_at.get(order.order_id,order.created_at).strftime("%Y-%m-%d %H:%M:%S"),
 					'status_text': STATUS2TEXT[order.status],
 					'sale_price': sale_price
 				})
-			elif order.status in [ORDER_STATUS_GROUP_REFUNDED,ORDER_STATUS_REFUNDED] and not order.is_first_order:
+			elif order.status in [ORDER_STATUS_GROUP_REFUNDED,ORDER_STATUS_REFUNDED]:
 				all_order.append({
 					'order_id': order.id,
 					'finished_at': order_number2finished_at.get(order.order_id, order.created_at).strftime("%Y-%m-%d %H:%M:%S"),
