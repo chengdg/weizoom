@@ -670,8 +670,8 @@ class ProductPool(resource.Resource):
                     id2first_classification[id2secondary_classification[product_id2classification_id[product.id]].father_id].name,
                     id2secondary_classification[product_id2classification_id[product.id]].name
                     ) if product.id in product_id2classification_id.keys() else "",
-                'gross_profit': "%s~%s" % (round(min([model['gross_profit'] for model in product.models[1:]]), 2),
-                                           round(max([model['gross_profit'] for model in product.models[1:]]), 2)) if product.is_use_custom_model else round((product.price - product.purchase_price), 2)
+                'gross_profit': "%s~%s" % (min([model['gross_profit'] for model in product.models[1:]]), max([model['gross_profit'] for model in product.models[1:]]))
+                 if product.is_use_custom_model else round(float((product.price - product.purchase_price)))
                # 'sync_time': mall_product_id2relation[product['id']].sync_time.strftime('%Y-%m-%d %H:%M') if mall_product_id2relation.has_key(product['id']) else ''
             })
 
