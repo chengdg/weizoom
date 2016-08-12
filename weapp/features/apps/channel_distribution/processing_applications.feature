@@ -83,7 +83,8 @@ Background:
 			"commission_return_standard":50.00,
 			"is_seven_day_settlement_standard":"false",
 			"tags": "分组1",
-			"prize": "100积分",
+			"prize_type": "积分",
+			"integral": "100",
 			"reply_type": "图文",
 			"scan_code_reply": "图文1",
 			"create_time": "2015-10-10 10:20:30"
