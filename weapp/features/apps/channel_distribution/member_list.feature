@@ -21,7 +21,14 @@ Background:
 			"create_time": "2015-10-10 10:20:30"
 		}]
 		"""
-	Given jobs登录系统
+	And jobs添加会员分组
+		"""
+		{
+			"tag_id_1": "分组1",
+			"tag_id_2": "分组2"
+		}
+		"""
+	
 	And jobs已添加多图文
 		"""
 		[{
@@ -50,11 +57,11 @@ Background:
 		[{
 			"name": "商品1",
 			"price": 50.00,
-			"discount":"0.5"
+			"count":"10"
 		},{
 			"name": "商品2",
 			"price": 100.00,
-			"discount":"1"
+			"count":"10"
 		}]
 		"""
 @mall2 @apps @senior @member_list

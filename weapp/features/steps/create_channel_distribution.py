@@ -187,3 +187,37 @@ def step_impl(context, user, qrcode_name):
 	# logging.info('11111111111')
 	# logging.info(response)
 
+
+
+# @When(u"{qrcode_name}访问'{user}'的webapp")
+# def step_impl(context, user, qrcode_name):
+# 	if not expected['order'] and not expected['extraction_money']
+	
+# Scenario:1 没有订单,没有佣金
+@Then(u"{user}获得推广分销详情")
+def step_impl(context,user):
+	expected = json.loads(context.text)
+	name = byte_to_hex(user)
+	qrcode = ChannelDistributionQrcodeSettings.objects.get(bing_member_title=name)
+
+	params = {}
+	params['already_extracted'] = qrcode.total_return
+	params['income'] = qrcode.will_return_reward
+	params['commission_return_standard'] = qrcode.commission_return_standard
+	params['already_reward'] = qrcode.total_return
+	params['difference_value'] = qrcode.will_return_reward
+
+	actual_list = []
+	for param in params:
+		param_dict = {}
+		param_dict['already_extracted'] = params['already_extracted']
+		param_dict['income'] = params['income']
+		param_dict['commission_return_standard'] =float(param['commission_return_standard'])
+		param_dict['already_reward'] = param['already_reward']
+		param_dict['difference_value'] = float(param['difference_value'])
+		actual_list.append(param_dict)
+
+	bdd_util.assert_list(expected, actual_list)
+
+	
+
