@@ -32,6 +32,7 @@ from datetime import datetime
 import time
 #from modules.member.models import *
 from utils.dateutil import now,get_date_after_days
+import copy
 
 
 COUNT_PER_PAGE = 20
@@ -91,7 +92,7 @@ def get_request_members_list(request, export=False):
 
 			if key == 'tag_id':
 				# member_ids = [member.id for member in  MemberHasTag.get_member_list_by_tag_id(value)]
-				member_ids = MemberHasTag.objects.filter(member_tag_id=value).values_list('member_id', flat=True)
+				member_ids = list(MemberHasTag.objects.filter(member_tag_id=value).values_list('member_id', flat=True))
 				filter_data_args["id__in"] = member_ids
 
 			if key == 'status':
@@ -1048,19 +1049,27 @@ class MemberGetFile(resource.Resource):
 
 		now = datetime.now()
 		#判断用户是否存在导出数据任务
-		if type == 0:
-			param ,sort_attr = get_request_members_list(request, True)
+
+		param ,sort_attr = get_request_members_list(request, True)
+		param_no_id = copy.copy(param)
+		param_no_id['id__in'] = []
 		exportjob = ExportJob.objects.create(
 									woid = woid,
 									type = type,
 									status = 0,
-									param = param,
+									param = param_no_id,
 									created_at = now,
 									processed_count =0,
 									count =0,
 									)
+		import json
+		ids = []
+		if param.has_key('id__in'):
+			ids = param.pop('id__in')
+			ids = json.dumps(ids)
 		from member.tasks import send_export_job_task
-		send_export_job_task.delay(exportjob.id, param, sort_attr, type)
+
+		send_export_job_task.delay(exportjob.id, param, sort_attr, type, ids)
 
 		response = create_response(200)
 		response.data = {
