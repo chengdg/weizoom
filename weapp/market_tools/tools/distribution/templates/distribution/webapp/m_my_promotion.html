@@ -37,11 +37,15 @@
 			<p class="xui-text">已获得奖励<span class="xui-text-num">{{ will_return_reward }}元</span></p>
 			<p class="xui-text">还差<span class="xui-text-num">{{ diff_reward }}元</span>就可以取现了！</p>
 			<p class="xui-btn-return">
-			{% if valid %}
+			{% if state == 1 %}
 				<a class="xui-a-valid-blue" href="javascript:void(0)" onclick="checkValid()">申请返还</a>
-			{% else %}
-				<a class="xui-a-valid-grey" href="javascript:void(0)" onclick="checkValid()">申请返还</a>
 			{% endif %}
+			{% if state == 2 %}
+				<a class="xui-a-valid-grey" href="#">申请返还</a>
+			{% endif %}
+			{% if state == 3 %}
+				<a class="xui-a-valid-blue" href="#">申 请 中</a>
+			{% endif %}		
 			</p>
 			<p class="xui-text xui-text-method"></p>
 		</div>
