@@ -1320,18 +1320,30 @@ class ChannelDistributionClearing(resource.Resource):
 		sort_attr = request.GET.get('sort_attr', '-created_at')
 		count_per_page = int(request.GET.get('count_per_page', 15))
 		cur_page = int(request.GET.get('page', '1'))
+		return_min = request.GET.get('return_min')
+		return_max = request.GET.get('return_max')
+		start_date = request.GET.get('start_date')
+		end_date = request.GET.get('end_date')
 
 		qrcodes = ChannelDistributionQrcodeSettings.objects.all()
+		if return_min:
+			if return_max:
+				qrcodes = qrcodes.filter(extraction_money__range=(return_min, return_max))
+			else:
+				qrcodes =  qrcodes.filter(extraction_money__gte=return_min)
+		elif return_max:
+			qrcodes = qrcodes.filter(extraction_money__lte=return_max)
+
+		if start_date and end_date:
+			qrcodes = qrcodes.filter(commit_time__range=(start_date, end_date))
+
+
+
 
 		member_dict = {}  # {id: name}
 		members = Member.objects.all()
 		for member in members:
 			member_dict[member.id] = member.username_for_title
-
-		# process_dict = {}
-		# channel_distribution_process = ChannelDistributionProcess.objects.all()
-		# for process in channel_distribution_process:
-		# 	process_dict[process.id] = process
 
 		items = []
 
@@ -1440,4 +1452,3 @@ class ChannelDistributionRewardDetail(resource.Resource):
 			'pageinfo': paginator.to_dict(pageinfo),
 		}
 		return response.get_response()
-
