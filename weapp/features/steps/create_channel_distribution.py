@@ -219,5 +219,18 @@ def step_impl(context,user):
 
 	bdd_util.assert_list(expected, actual_list)
 
+
+# @Then(u"{user}获得分销会员结算列表")
+# def step_impl(context,user):
+# 	expected = json.loads(context.text)
+
+# 	name = expected['relation_member']
+# 	name = byte_to_hex(name)
+	
+	
+
+
+
+
 	
 
