@@ -1426,11 +1426,11 @@ class ChannelDistributionRewardDetail(resource.Resource):
 		items = []
 		for detail in details:
 			dict = {}
-			dict['time_cycle_start'] = str(detail.last_extract_time)
-			dict['time_cycle_end'] = str(detail.created_at)
-			dict['commission_rate'] = str(qrocde.commission_rate)
-			dict['total_money'] = str(detail.money)
-			dict['commission'] = str(qrocde.commission_rate * detail.moeny)
+			dict['time_cycle_start'] = str(detail.last_extract_time)  #上次提现时间
+			dict['time_cycle_end'] = str(detail.created_at)  # 添加时间
+			dict['commission_rate'] = str(qrocde.commission_rate)  # 佣金返现率
+			dict['total_money'] = str(detail.money)  # 操作金额 正为收入,负为提现
+			dict['commission'] = str(qrocde.commission_rate * detail.moeny)  #佣金
 
 			items.append(dict)
 

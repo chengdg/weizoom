@@ -220,14 +220,67 @@ def step_impl(context,user):
 	bdd_util.assert_list(expected, actual_list)
 
 
-# @Then(u"{user}获得分销会员结算列表")
+@Then(u"{user}获得分销会员结算列表")
+def step_impl(context,user):
+	expected = json.loads(context.text)
+
+	params = {}
+	if hasattr(context, 'sort_attr'):
+		params['query_name'] = context.sort_attr
+	if hasattr(context, 'count_per_page'):
+		params['count_per_page'] = context.count_per_page
+	if hasattr(context, 'distribution_page'):
+		params['page'] = context.distribution_page
+	
+	response = context.client.get('/new_weixin/api/distribution_clearing/', params)
+
+	datas = json.loads(response.content)['data']['items']
+	actual_list = []
+	for data in datas:
+		data_dict = {}
+		data_dict['relation_member'] = items.return_dict['name']
+		data_dict['submit_time'] = items.return_dict['commit_time']
+		data_dict['current_transaction_amount'] = items.return_dict['current_transaction_amount']
+		data_dict['commission_return_standard'] = items.return_dict['commission_return_standard']
+		data_dict['commission_return_rate'] = items.return_dict['commission_rate']
+		data_dict['already_reward'] = items.return_dict['will_return_reward']
+		data_dict['cash_back_amount'] = items.return_dict['extraction_money']
+		data_dict['cash_back_state'] = items.return_dict['status']
+		actual_list.append(data_dict)
+
+	bdd_util.assert_list(expected, actual_list)
+
+	
+
+# @Then(u"{user}获得分销会员整体概况")
 # def step_impl(context,user):
 # 	expected = json.loads(context.text)
 
-# 	name = expected['relation_member']
-# 	name = byte_to_hex(name)
+# 	params = {}
+# 	if hasattr(context, 'sort_attr'):
+# 		params['query_name'] = context.sort_attr
+# 	if hasattr(context, 'count_per_page'):
+# 		params['count_per_page'] = context.count_per_page
+# 	if hasattr(context, 'distribution_page'):
+# 		params['page'] = context.distribution_page
 	
-	
+# 	response = context.client.get('/new_weixin/api/distribution_clearing/', params)
+
+# 	datas = json.loads(response.content)['data']['items']
+# 	actual_list = []
+# 	for data in datas:
+# 		data_dict = {}
+# 		data_dict['relation_member'] = items.return_dict['name']
+# 		data_dict['submit_time'] = items.return_dict['commit_time']
+# 		data_dict['current_transaction_amount'] = items.return_dict['current_transaction_amount']
+# 		data_dict['commission_return_standard'] = items.return_dict['commission_return_standard']
+# 		data_dict['commission_return_rate'] = items.return_dict['commission_rate']
+# 		data_dict['already_reward'] = items.return_dict['will_return_reward']
+# 		data_dict['cash_back_amount'] = items.return_dict['extraction_money']
+# 		data_dict['cash_back_state'] = items.return_dict['status']
+# 		actual_list.append(data_dict)
+
+# 	bdd_util.assert_list(expected, actual_list)
 
 
 
