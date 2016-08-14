@@ -199,5 +199,12 @@
             };
             W.dialog.showDialog('W.dialog.mall.ChannelDistributionDetail', options);
         });
+
+    $(document).ready(function() {
+        var qrcodeView = new W.view.weixin.DistributionsClear({
+            el: $("body")
+        });
+    });
+
     </script>
 {% endblock %}
