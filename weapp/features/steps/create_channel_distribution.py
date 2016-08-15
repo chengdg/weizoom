@@ -3,6 +3,7 @@
 import time
 import json
 import random
+import datetime
 from behave import *
 from mall.promotion.models import CouponRule
 from modules.member.models import MemberGrade, MemberTag, Member
@@ -299,7 +300,7 @@ def step_impl(context,user,time):
 		and  not qrcode[0].extraction_money :
 		qrcode.update (
 			state = 1,
-			commit_time = datetime.datetime.now(),
+			commit_time = time,
 			extraction_money = F('will_return_reward')
 		)
 

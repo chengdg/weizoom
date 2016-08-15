@@ -66,7 +66,7 @@ def step_impl(context, user, member_name):
 
 	member_name = byte_to_hex(member_name)
 	bing_member_id = Member.objects.filter(username_hexstr__contains=member_name)[0].id
-	qrcode = ChannelDistributionQrcodeSettings.get(bing_member_id=bing_member_id)
+	qrcode = ChannelDistributionQrcodeSettings.objects.get(bing_member_id=bing_member_id)
 
 	data = {
 		'status': 3,
@@ -75,10 +75,10 @@ def step_impl(context, user, member_name):
 	response = context.client.post('new_weixin/api/channel_distribution_change_status', data)
 	print(response)
 
-# @Then(u'{user}获得交易记录列表')
-# def step_impl(context, user):
-# 	expecteds = json.loads(context.text)
-# 	for expected in expecteds:
-# 		relation_member = expected['relation_member']
+@Then(u'{user}获得{vip_name}交易记录列表')
+def step_impl(context, user, vip_name):
+	expecteds = json.loads(context.text)
+	for expected in expecteds:
+		relation_member = expected['relation_member']
 
 
