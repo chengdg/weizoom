@@ -1452,10 +1452,10 @@ class ChannelDistributionRewardDetail(resource.Resource):
 			dict = {}
 
 			dict['time_cycle_start'] = time_cycle_start  # 上次提现时间
-			dict['time_cycle_end'] = str(detail.created_at)
+			dict['time_cycle_end'] = str(detail.next_extract_time)
 			dict['commission_rate'] = str(qrocde.commission_rate)  # 佣金返现率
-			dict['total_money'] = str(detail.money)
-			dict['commission'] = str(qrocde.commission_rate * detail.moeny)
+			dict['total_money'] = str(detail.transaction_volume)
+			dict['commission'] = str(detail.money)
 
 			items.append(dict)
 
@@ -1481,23 +1481,18 @@ class ChannelDistributionChangeStatus(resource.Resource):
 
 		qrcode = ChannelDistributionQrcodeSettings.objects.filter(id=qrcode_id, owner=request.user)
 
-		if status == 1 and qrcode[0].status > status:
-			# 切换状态
-			qrcode.update(status=status, extraction_money=F('will_return_reward'))
+		# if status == 2 and qrcode[0].status > status:
+		if status == 2:
+			# 等待返现--> 正在返现中
+			qrcode.update(status=status)
 
 		if status == 3:
 			# 商家已打款
 			extraction_money = qrcode[0].extraction_money
-			qrcode.update(
-				total_return = F('total_return')+F('extraction_money'),
-				status = 0,
-				commit_time = datetime.strptime('0001-01-01', '%Y-%m-%d'),
-				extraction_money = 0
-			)
 
 			channel_distribution_detail = ChannelDistributionDetail.objects.filter(channel_qrcode_id=qrcode[0].id, order_id=0)
 			if channel_distribution_detail:
-				last_extract_time = channel_distribution_detail[0].created_at
+				last_extract_time = channel_distribution_detail[0].next_extract_time
 			else:
 				last_extract_time = qrcode[0].created_at
 
@@ -1505,12 +1500,24 @@ class ChannelDistributionChangeStatus(resource.Resource):
 			ChannelDistributionDetail.objects.create(
 				channel_qrcode_id = qrcode_id,
 				money = extraction_money,
+				transaction_volume = qrcode[0].current_transaction_amount,
 				member_id = qrcode[0].bing_member_id,
-				last_extract_time = last_extract_time
+				last_extract_time = last_extract_time,  # start
+				next_extract_time = qrcode[0].commit_time  # end
 			)
 			# 修改member的返现总额
 			ChannelDistributionQrcodeHasMember.objects.filter(channel_qrcode_id=qrcode[0].id).update(
-				commission = F('commission') + extraction_money
+				commission = F('commission_not_add') + F('commission'),
+				commission_not_add = 0
+			)
+			qrcode.update(
+				total_return = F('total_return')+F('extraction_money'),
+				status = 0,
+				commit_time = datetime.strptime('0001-01-01', '%Y-%m-%d'),
+				will_return_reward = F('will_return_reward') - F('extraction_money'),
+				extraction_money = 0,
+				current_transaction_amount = 0, # 本期交易额,清零
+
 			)
 
 		response = create_response(200)

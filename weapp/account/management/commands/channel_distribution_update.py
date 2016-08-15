@@ -55,33 +55,50 @@ class Command(BaseCommand):
                 order_qrcode = qrcodes_dict[members_dict[order.webapp_user_id]]  # 此订单会员绑定的二维码
                 conform_minimun_return_rate = True if order.final_price /order.product_price > order_qrcode.minimun_return_rate / 100.0 else False  # 满足最低返现折扣
                 print '订单已绑定'
-                if order_qrcode.distribution_rewards and conform_minimun_return_rate:  # 如果返佣金
+                if order_qrcode.distribution_rewards:  # 如果返佣金
                     if order_qrcode.return_standard:  # 有返回天数限制
-                        if order.created_at > datetime.datetime.now() - datetime.timedelta(days=order_qrcode.return_standard):
+                        if order.created_at > datetime.datetime.now() - datetime.timedelta(
+                                days=order_qrcode.return_standard):
                             return None
-                    commission = order.final_price * (order_qrcode.commission_rate / 100.0)
+                    if conform_minimun_return_rate:  # 如果满足最低返现标准
 
-                    ChannelDistributionQrcodeHasMember.objects.filter(member_id=order.webapp_user_id).update(
-                        cost_money = F('cost_money') + order.final_price,
-                        buy_times = F('buy_times') + 1,
-                        # commission = F('commission') + commission
-                    )
-                    ChannelDistributionQrcodeSettings.objects.filter(id=order_qrcode.id).update(
-                        will_return_reward = F('will_return_reward') + commission,
-                        total_transaction_volume = F('total_transaction_volume') + order.final_price,
-                        current_transaction_amount = F('current_transaction_amount') + order.final_price
-                    )
+                        commission = order.final_price * (order_qrcode.commission_rate / 100.0)
+
+                        ChannelDistributionQrcodeHasMember.objects.filter(member_id=order.webapp_user_id).update(
+                            cost_money = F('cost_money') + order.final_price,
+                            buy_times = F('buy_times') + 1,
+                            commission_not_add = F('commission_not_add') + commission
+                        )
+                        ChannelDistributionQrcodeSettings.objects.filter(id=order_qrcode.id).update(
+                            will_return_reward=F('will_return_reward') + commission,
+                            total_transaction_volume=F('total_transaction_volume') + order.final_price,
+                            current_transaction_amount=F('current_transaction_amount') + order.final_price
+                        )
+                        print u'订单号%s已处理,满足返现标准' % order.id
+                        print ChannelDistributionQrcodeHasMember.objects.get(member_id=order.webapp_user_id).commission_not_add
+                    else:
+                        ChannelDistributionQrcodeHasMember.objects.filter(member_id=order.webapp_user_id).update(
+                            cost_money = F('cost_money') + order.final_price,
+                            buy_times = F('buy_times') + 1,
+                        )
+                        ChannelDistributionQrcodeSettings.objects.filter(id=order_qrcode.id).update(
+                            total_transaction_volume=F('total_transaction_volume') + order.final_price,
+                            current_transaction_amount=F('current_transaction_amount') + order.final_price
+                        )
+                        print u'订单号%s已处理,不满足返现标准' % order.id
+
                     ChannelDistributionDetail.objects.create(
-                        channel_qrcode_id = order_qrcode.bing_member_id,
-                        money = order.final_price,
-                        member_id = order_qrcode.bing_member_id,
-                        order_id = order.id
+                        channel_qrcode_id=order_qrcode.id,
+                        money=order.final_price,
+                        # member_id=order_qrcode.bing_member_id,
+                        member_id=order.webapp_user_id,
+                        order_id=order.id
                     )
                     ChannelDistributionFinish.objects.create(
-                        order_id = order.id,
-                        order_time = order.created_at
+                        order_id=order.id,
+                        order_time=order.created_at
                     )
-                    print u'订单号%s已处理'% order.id
+
 
             else:  # 没有绑定过不处理
                 pass

@@ -372,7 +372,7 @@ Background:
 			}
 			"""
 
-@mall2 @apps @senior @trading_reward_1
+@mall2 @apps @senior @trading_reward
 Scenario:1 一个微信用户扫码下单交易记录列表
 		When jobs完成订单"002"
 		When jobs完成订单"003"
@@ -397,7 +397,7 @@ Scenario:1 一个微信用户扫码下单交易记录列表
 			}]
 			"""
 
-@mall2 @apps @senior @trading_reward_2
+@mall2 @apps @senior @trading_reward
 Scenario:2 一个微信用户扫码下单2次交易记录列表
 		When jobs完成订单"002"
 		When jobs完成订单"003"
@@ -425,7 +425,7 @@ Scenario:2 一个微信用户扫码下单2次交易记录列表
 				"user_name":"jack",
 				"pay_money":1000.00,
 				"cash_back_amount":100.00
-			}{
+			},{
 				"user_name":"marry",
 				"pay_money":0.00,
 				"cash_back_amount":0.00
@@ -438,11 +438,10 @@ Scenario:3 一个微信用户扫码下单1另一个微信用户下单2次交易�
 		When jobs完成订单"004"
 		When jobs完成订单"005"
 		When jobs完成订单"006"
-
+		When 后台执行channel_distribution_update
 		Given jobs登录系统
 		When bigs申请返现于2015-08-12 10:00:00
 		When jobs已返现给bigs金额"50.00"
-
 		When jobs完成订单"022"
 		When jobs完成订单"033"
 		When jobs完成订单"044"
@@ -453,6 +452,7 @@ Scenario:3 一个微信用户扫码下单1另一个微信用户下单2次交易�
 		When jobs完成订单"444"
 		When jobs完成订单"555"
 		When jobs完成订单"666"
+		When 后台执行channel_distribution_update
 		When bigs申请返现于2015-08-15 10:00:00
 		When jobs已返现给bigs金额"100.00"
 		
@@ -476,15 +476,16 @@ Scenario:4 奖励明细列表一条记录
 		When jobs完成订单"004"
 		When jobs完成订单"005"
 		When jobs完成订单"006"
+		When 后台执行channel_distribution_update
 		Given jobs登录系统
-		When bigs申请返现于2015-08-12 10:00:00
+		When bigs申请返现于2015-11-12 10:00:00
 		When jobs已返现给bigs金额"50.00"
 		
 		Then jobs获得bigs的奖励明细列表
 			"""
 			[{
-				"cycle_time_start":"2015-08-12 10:00:00",
-				"cycle_time_end":"今天",
+				"cycle_time_start":"2015-10-10 10:20:30",
+				"cycle_time_end":"2015-11-12 10:00:00",
 				"commission_return_rate":"10",
 				"pay_money":500.00,
 				"cash_back_amount":50.00
@@ -493,14 +494,15 @@ Scenario:4 奖励明细列表一条记录
 
 @mall2 @apps @senior @trading_reward
 Scenario:5 奖励明细列表2条记录
+		Given jobs登录系统
 		When jobs完成订单"002"
 		When jobs完成订单"003"
 		When jobs完成订单"004"
 		When jobs完成订单"005"
 		When jobs完成订单"006"
+		When 后台执行channel_distribution_update
 
-		Given jobs登录系统
-		When bigs申请返现于2015-08-12 10:00:00
+		When bigs申请返现于2015-10-11 10:00:00
 		When jobs已返现给bigs金额"50.00"
 
 		When jobs完成订单"022"
@@ -513,20 +515,21 @@ Scenario:5 奖励明细列表2条记录
 		When jobs完成订单"444"
 		When jobs完成订单"555"
 		When jobs完成订单"666"
-		When bigs申请返现于2015-08-15 10:00:00
+		When 后台执行channel_distribution_update
+		When bigs申请返现于2015-11-12 10:00:00
 		When jobs已返现给bigs金额"100.00"
 
 		Then jobs获得bigs的奖励明细列表
 			"""
 			[{
-				"cycle_time_start":"2015-08-15 10:00:00",
-				"cycle_time_end":"今天",
+				"cycle_time_start":"2015-10-11 10:00:00",
+				"cycle_time_end":"2015-11-12 10:00:00",
 				"commission_return_rate":"10",
 				"pay_money":1000.00,
 				"cash_back_amount":100.00
 			},{
-				"cycle_time_start":"2015-08-12 10:00:00",
-				"cycle_time_end":"2015-08-15 10:00:00",
+				"cycle_time_start":"2015-10-10 10:20:30",
+				"cycle_time_end":"2015-10-11 10:00:00",
 				"commission_return_rate":"10",
 				"pay_money":500.00,
 				"cash_back_amount":50.00

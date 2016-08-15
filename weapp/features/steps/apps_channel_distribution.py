@@ -5,7 +5,9 @@ from mall.promotion.models import CouponRule
 from modules.member.models import MemberGrade, MemberTag, Member
 from test import bdd_util
 import logging
-from market_tools.tools.distribution.models import ChannelDistributionQrcodeSettings, ChannelDistributionQrcodeHasMember
+from market_tools.tools.distribution.models import ChannelDistributionQrcodeSettings, ChannelDistributionQrcodeHasMember,\
+ChannelDistributionDetail
+from django.core.serializers import serialize
 from utils.string_util import byte_to_hex
 from django.contrib.auth.models import User
 from mall.models import Order
@@ -44,17 +46,13 @@ def step_impl(context, webapp_user_name, qrcode_name, scan_qrcode_time):
 	member.created_at = scan_qrcode_time
 	member.save()
 
+
 @When(u'{user}完成订单"{order_id}"')
 def step_impl(context, user, order_id):
 	order = Order.objects.get(order_id=order_id)
 	order.status = 5
 	order.save()
 
-
-# @When(u'{user}申请返现于{operation_time}')
-# def step_impl(context, user, operation_time):
-#
-# 	pass
 
 @When(u'后台执行channel_distribution_update')
 def step_impl(context):
@@ -63,7 +61,8 @@ def step_impl(context):
 
 @When(u'{user}已返现给{member_name}金额"{money}"')
 def step_impl(context, user, member_name, money):
-
+	logging.info('11111111111111111111111111')
+	logging.info(serialize('json',ChannelDistributionQrcodeHasMember.objects.all()))
 	member_name = byte_to_hex(member_name)
 	bing_member_id = Member.objects.filter(username_hexstr__contains=member_name)[0].id
 	qrcode = ChannelDistributionQrcodeSettings.objects.get(bing_member_id=bing_member_id)
@@ -74,7 +73,9 @@ def step_impl(context, user, member_name, money):
 	}
 	response = context.client.post('/new_weixin/api/channel_distribution_change_status/', data)
 	logging.info(response)
-	logging.info('..................')
+	logging.info('222222222222222222222222')
+	logging.info(serialize('json',ChannelDistributionQrcodeHasMember.objects.all()))
+
 
 @Then(u'{user}获得{vip_name}的交易记录列表')
 def step_impl(context, user, vip_name):
@@ -109,14 +110,14 @@ def step_impl(context, user, vip_name):
 	expected = json.loads(context.text)
 	# for expected in expecteds:
 	# 	user_name = expected['user_name']
-	data = {'qrocde_id': qrcode.id}
+	data = {'qrcode_id': qrcode.id}
 	response = context.client.get('/new_weixin/api/channel_distribution_detail/', data)
 	datas = json.loads(response.content)['data']['items']
 	actual_list = []
 	for data in datas:
 		dict = {}
 		dict['cycle_time_start'] = data['time_cycle_start']
-		dict['cycle_time_end'] = data['cycle_time_end']
+		dict['cycle_time_end'] = data['time_cycle_end']
 		dict['commission_return_rate'] = float(data['commission_rate'])
 		dict['pay_money'] = float(data['total_money'])
 		dict['cash_back_amount'] = float(data['commission'])

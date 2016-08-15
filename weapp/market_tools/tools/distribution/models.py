@@ -50,6 +50,7 @@ class ChannelDistributionQrcodeHasMember(models.Model):
 	# is_new = models.BooleanField(default=True)  # 新关注 ?
 	cost_money = models.DecimalField(max_digits=65, decimal_places=2, default=0)  # 消费总金额
 	commission = models.DecimalField(max_digits=65, decimal_places=2, default=0)  # 带来的总佣金
+	commission_not_add = models.DecimalField(max_digits=65, decimal_places=2, default=0)  # 未增加的佣金
 	buy_times = models.IntegerField(default=0)  # 购买次数
 	created_at = models.DateTimeField(auto_now_add=True)  # 添加时间
 
@@ -63,9 +64,11 @@ class ChannelDistributionDetail(models.Model):
 	提现 和获得佣金 时 创建
 	"""
 	channel_qrcode_id = models.IntegerField()  # 渠道分销id
-	money = models.DecimalField(max_digits=65, decimal_places=2, default=0)  # 操作金额 正为收入,负为提现
+	money = models.DecimalField(max_digits=65, decimal_places=2, default=0)  # 操作金额
+	transaction_volume = models.DecimalField(max_digits=65, decimal_places=2, default=0)  # 参与返现的交易额
 	member_id = models.IntegerField()  # 对应的会员id
 	last_extract_time = models.DateTimeField(default='0001-01-01')  # 上次提现时间
+	next_extract_time = models.DateTimeField(default='0001-01-01')  # 下次提现时间
 	created_at = models.DateTimeField(auto_now_add=True)  # 添加时间
 	# effect_status = models.BooleanField(default=False)  # 生效状态 ??????
 	order_id = models.IntegerField(default=0)  # 订单id 

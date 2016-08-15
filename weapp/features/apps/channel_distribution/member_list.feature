@@ -99,7 +99,7 @@ Background:
 			"count":"10"
 		}]
 		"""
-@mall2 @apps @senior @member_list
+@mall2 @apps @senior @member_list_1
 Scenario:1 前台会员列表详情
 	#扫码关注成为会员
 		Given jobs登录系统
