@@ -414,28 +414,7 @@ Scenario:2 一个微信用户扫码下单2次交易记录列表
 		When 后台执行channel_distribution_update
 		When bigs申请返现于2015-08-15 10:00:00
 		When jobs已返现给bigs金额"50.00"
-		When jobs设置查看条件
-			"""
-			{
-				"type":"本期交易"
-			}
-			"""
-		Then jobs获得交易记录列表
-			"""
-			[{
-				"relation_member": "bigs",
-				"user_name":"jack",
-				"pay_money":500.00,
-				"cash_back_amount":50.00
-			}]
-			"""
 
-		When jobs设置查看条件
-			"""
-			{
-				"type":"所有交易"
-			}
-			"""
 		Then jobs获得交易记录列表
 			"""
 			[{
