@@ -240,7 +240,7 @@ def send_product_export_job_task(self, exportjob_id, filter_data_args, type):
             products = utils.filter_products(None, products_not_0 + products_is_0, 1, params=filter_data_args)
 
             product_ids = [product.id for product in products]
-            product_id2onshelvetime = dict(models.ProductPool.objects.filter(product_id__in=product_ids).values_list('product_id', 'sync_at'))
+            product_id2onshelvetime = dict(models.ProductPool.objects.filter(product_id__in=product_ids, woid=filter_data_args["woid"]).values_list('product_id', 'sync_at'))
             product_id2store_name, product_id2sync_time = utils.get_sync_product_store_name(product_ids)
 
             product_count = len(product_ids)
