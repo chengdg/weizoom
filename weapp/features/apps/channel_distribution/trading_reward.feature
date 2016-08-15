@@ -23,6 +23,15 @@ Background:
 			"start_date": "今天",
 			"end_date": "1天后",
 			"coupon_id_prefix": "coupon1_id_"
+		},{
+			"name": "优惠券00",
+			"money": 25.00,
+			"count": 5,
+			"limit_counts": "无限",
+			"using_limit": "满1元可以使用",
+			"start_date": "今天",
+			"end_date": "1天后",
+			"coupon_id_prefix": "coupon2_id_"
 		}]
 		"""
 	And jobs添加会员分组
@@ -54,9 +63,10 @@ Background:
 			"commission_return_rate":"10",
 			"minimum_cash_discount":"80",
 			"commission_return_standard":50.00,
-			"is_seven_day_settlement_standard":"false",
+			"settlement_time":"0",
 			"tags": "未分组",
-			"prize_type": "无",
+			"prize_type": "优惠券",
+			"coupon":"优惠券1",
 			"reply_type": "文字",
 			"scan_code_reply": "扫码后回复文本",
 			"create_time": "2015-10-10 10:20:30"
@@ -67,16 +77,16 @@ Background:
 			"commission_return_rate":"10",
 			"minimum_cash_discount":"80",
 			"commission_return_standard":50.00,
-			"is_seven_day_settlement_standard":"false",
+			"settlement_time":"0",
 			"tags": "分组1",
-			"prize_type": "优惠券",
-			"coupon":"优惠券1",
+			"prize_type": "积分",
+			"integral": "100",
 			"reply_type": "图文",
 			"scan_code_reply": "图文1",
 			"create_time": "2015-10-10 10:20:30"
 		}]
 		"""
-	And jobs已添加支付方式
+	When jobs添加支付方式
 		"""
 		[{
 			"type":"货到付款"
@@ -92,33 +102,44 @@ Background:
 		[{
 			"name": "商品1",
 			"price": 100.00,
-			"count":"10",
-			"discount":"0.5"
+			"count":"10"
 		},{
 			"name": "商品2",
 			"price": 100.00,
-			"count":"10",
-			"discount":"1"
+			"count":"10"
 		}]
 		"""
 
 	#扫码关注成为会员
 		When 清空浏览器
-		And jack扫描带参数二维码"分销二维码1"于2015-08-10 10:00:00
+		And jack扫描渠道二维码"分销二维码1"于2015-08-10 10:00:00
 		And jack访问jobs的webapp
 
 		When 清空浏览器
-		And nokia扫描带参数二维码"分销二维码2"于2015-08-11 10:00:00
+
+		And nokia扫描渠道二维码"分销二维码2"于2015-08-11 10:00:00
+		And nokia关注jobs的公众号于'2015-08-11 10:00:00'
+
 		And nokia访问jobs的webapp
 	
 		When 清空浏览器
-		And marry扫描带参数二维码"分销二维码1"于2015-08-12 10:00:00
+		And marry扫描渠道二维码"分销二维码1"于2015-08-12 10:00:00
 		And marry访问jobs的webapp
 
-	#会员购买
-		When jack批量消费jobs的商品
+		When jobs为会员发放优惠券
 			"""
-			[{
+			{
+				"name": "优惠券00",
+				"count": 2,
+				"members": ["nokia"],
+				"coupon_ids": ["coupon2_id_2", "coupon2_id_1"]
+			}
+			"""
+
+	#会员购买
+		When jack购买jobs的商品
+			"""
+			{
 				"relation_member":"bigs",
 				"order_id": "002",
 				"pay_type": "货到付款",
@@ -126,7 +147,11 @@ Background:
 					"name":"商品2",
 					"count":1 
 				}]
-			},{
+			}
+			"""
+		When jack购买jobs的商品
+			"""
+			{
 				"relation_member":"bigs",
 				"order_id": "003",
 				"pay_type": "货到付款",
@@ -134,7 +159,11 @@ Background:
 					"name":"商品2",
 					"count":1 
 				}]
-			},{
+			}
+			"""
+		When jack购买jobs的商品
+			"""
+			{
 				"relation_member":"bigs",
 				"order_id": "004",
 				"pay_type": "货到付款",
@@ -142,7 +171,11 @@ Background:
 					"name":"商品2",
 					"count":1 
 				}]
-			},{
+			}
+			"""
+		When jack购买jobs的商品
+			"""
+			{
 				"relation_member":"bigs",
 				"order_id": "005",
 				"pay_type": "货到付款",
@@ -150,7 +183,11 @@ Background:
 					"name":"商品2",
 					"count":1 
 				}]
-			},{
+			}
+			"""
+		When jack购买jobs的商品
+			"""
+			{
 				"relation_member":"bigs",
 				"order_id": "006",
 				"pay_type": "货到付款",
@@ -158,7 +195,11 @@ Background:
 					"name":"商品2",
 					"count":1 
 				}]
-			},{
+			}
+			"""
+		When jack购买jobs的商品
+			"""
+			{
 				"relation_member":"bigs",
 				"order_id": "007",
 				"pay_type": "货到付款",
@@ -166,11 +207,11 @@ Background:
 					"name":"商品2",
 					"count":1 
 				}]
-			}]
+			}
 			"""
-		When jack批量消费jobs的商品
+		When jack购买jobs的商品
 			"""
-			[{
+			{
 				"relation_member":"bigs",
 				"order_id": "022",
 				"pay_type": "货到付款",
@@ -178,7 +219,11 @@ Background:
 					"name":"商品2",
 					"count":1 
 				}]
-			},{
+			}
+			"""
+		When jack购买jobs的商品
+			"""
+			{
 				"relation_member":"bigs",
 				"order_id": "033",
 				"pay_type": "货到付款",
@@ -186,7 +231,11 @@ Background:
 					"name":"商品2",
 					"count":1 
 				}]
-			},{
+			}
+			"""
+		When jack购买jobs的商品
+			"""
+			{
 				"relation_member":"bigs",
 				"order_id": "044",
 				"pay_type": "货到付款",
@@ -194,7 +243,11 @@ Background:
 					"name":"商品2",
 					"count":1 
 				}]
-			},{
+			}
+			"""
+		When jack购买jobs的商品
+			"""
+			{
 				"relation_member":"bigs",
 				"order_id": "055",
 				"pay_type": "货到付款",
@@ -202,7 +255,11 @@ Background:
 					"name":"商品2",
 					"count":1 
 				}]
-			},{
+			}
+			"""
+		When jack购买jobs的商品
+			"""
+			{
 				"relation_member":"bigs",
 				"order_id": "066",
 				"pay_type": "货到付款",
@@ -212,9 +269,9 @@ Background:
 				}]
 			}
 			"""
-		When marry批量消费jobs的商品
+		When marry购买jobs的商品
 			"""
-			[{
+			{
 				"relation_member":"bigs",
 				"order_id": "222",
 				"pay_type": "货到付款",
@@ -222,7 +279,11 @@ Background:
 					"name":"商品2",
 					"count":1 
 				}]
-			},{
+			}
+			"""
+		When marry购买jobs的商品
+		"""
+			{
 				"relation_member":"bigs",
 				"order_id": "333",
 				"pay_type": "货到付款",
@@ -230,7 +291,11 @@ Background:
 					"name":"商品2",
 					"count":1 
 				}]
-			},{
+			}
+			"""
+		When marry购买jobs的商品
+		"""
+			{
 				"relation_member":"bigs",
 				"order_id": "444",
 				"pay_type": "货到付款",
@@ -238,7 +303,11 @@ Background:
 					"name":"商品2",
 					"count":1 
 				}]
-			},{
+			}
+						"""
+		When marry购买jobs的商品
+		"""
+			{
 				"relation_member":"bigs",
 				"order_id": "555",
 				"pay_type": "货到付款",
@@ -246,7 +315,11 @@ Background:
 					"name":"商品2",
 					"count":1 
 				}]
-			},{
+			}
+						"""
+		When marry购买jobs的商品
+		"""
+			{
 				"relation_member":"bigs",
 				"order_id": "666",
 				"pay_type": "货到付款",
@@ -256,9 +329,9 @@ Background:
 				}]
 			}
 			"""
-		When nokia批量消费jobs的商品
+		When nokia购买jobs的商品
 			"""
-			[{
+			{
 				"relation_member":"bill",
 				"order_id": "008",
 				"pay_type": "货到付款",
@@ -266,43 +339,61 @@ Background:
 					"name":"商品2",
 					"count":1 
 				}]
-			},{
+			}
+			"""
+		When nokia购买jobs的商品
+			"""
+			{
 				"relation_member":"bill",
 				"order_id": "009",
 				"pay_type": "货到付款",
+				"integral_money":25.00,
+				"integral":50.00,
+				"coupon_id":"coupon2_id_1",
 				"products":[{
 					"name":"商品1",
 					"count":1 
 				}]
-			},{
+			}
+			"""
+		When nokia购买jobs的商品
+			"""
+			{
 				"relation_member":"bill",
 				"order_id": "010",
 				"pay_type": "货到付款",
+				"integral_money":25.00,
+				"integral":50.00,
+				"coupon_id":"coupon2_id_2",
 				"products":[{
 					"name":"商品1",
 					"count":1 
 				}]
-			}]
+			}
 			"""
 
-@mall2 @apps @senior @trading_reward
+@mall2 @apps @senior @trading_reward_1
 Scenario:1 一个微信用户扫码下单交易记录列表
 		When jobs完成订单"002"
 		When jobs完成订单"003"
 		When jobs完成订单"004"
 		When jobs完成订单"005"
 		When jobs完成订单"006"
+		When 后台执行channel_distribution_update
 		When bigs访问jobs的webapp
 		When bigs申请返现于2015-08-12 10:00:00
 		When jobs已返现给jack金额"50.00"
 		
-		Then jobs获得交易记录列表
+		Then jobs获得bigs的交易记录列表
 			"""
 			[{
-				"relation_member": "bigs",
 				"user_name":"jack",
 				"pay_money":500.00,
 				"cash_back_amount":50.00
+			},{
+				"user_name":"marry",
+				"pay_money":0.00,
+				"cash_back_amount":0.00
 			}]
 			"""
 
@@ -323,37 +414,21 @@ Scenario:2 一个微信用户扫码下单2次交易记录列表
 		When jobs完成订单"044"
 		When jobs完成订单"055"
 		When jobs完成订单"066"
+
+		When 后台执行channel_distribution_update
 		When bigs申请返现于2015-08-15 10:00:00
 		When jobs已返现给bigs金额"50.00"
-		When jobs设置查看条件
-			"""
-			{
-				"type":"本期交易"
-			}
-			"""
-		Then jobs获得交易记录列表
-			"""
-			[{
-				"relation_member": "bigs",
-				"user_name":"jack",
-				"pay_money":500.00,
-				"cash_back_amount":50.00
-			}]
-			"""
 
-		When jobs设置查看条件
-			"""
-			{
-				"type":"所有交易"
-			}
-			"""
-		Then jobs获得交易记录列表
+		Then jobs获得bigs的交易记录列表
 			"""
 			[{
-				"relation_member": "bigs",
 				"user_name":"jack",
 				"pay_money":1000.00,
 				"cash_back_amount":100.00
+			}{
+				"user_name":"marry",
+				"pay_money":0.00,
+				"cash_back_amount":0.00
 			}]
 			"""
 @mall2 @apps @senior @trading_reward
@@ -380,43 +455,15 @@ Scenario:3 一个微信用户扫码下单1另一个微信用户下单2次交易�
 		When jobs完成订单"666"
 		When bigs申请返现于2015-08-15 10:00:00
 		When jobs已返现给bigs金额"100.00"
-		When jobs设置查看条件
-			"""
-			{
-				"type":"本期交易"
-			}
-			"""
-		Then jobs获得交易记录列表
+		
+		Then jobs获得bigs的交易记录列表
 			"""
 			[{
-				"relation_member": "bigs",
-				"user_name":"marry",
-				"pay_money":500.00,
-				"cash_back_amount":50.00
-			},{
-				"relation_member": "bigs",
-				"user_name":"jack",
-				"pay_money":500.00,
-				"cash_back_amount":50.00
-			}]
-			"""
-
-		When jobs设置查看条件
-			"""
-			{
-				"type":"所有交易"
-			}
-			"""
-		Then jobs获得交易记录列表
-			"""
-			[{
-				"relation_member": "bigs",
 				"user_name":"jack",
 				"pay_money":1000.00,
 				"cash_back_amount":100.00
 			},{
-				"relation_member": "bigs",
-				"user_name":"jack",
+				"user_name":"marry",
 				"pay_money":500.00,
 				"cash_back_amount":50.00
 			}]
@@ -433,10 +480,9 @@ Scenario:4 奖励明细列表一条记录
 		When bigs申请返现于2015-08-12 10:00:00
 		When jobs已返现给bigs金额"50.00"
 		
-		Then jobs获得奖励明细列表
+		Then jobs获得bigs的奖励明细列表
 			"""
 			[{
-				"relation_member": "bigs",
 				"cycle_time_start":"2015-08-12 10:00:00",
 				"cycle_time_end":"今天",
 				"commission_return_rate":"10",
@@ -470,17 +516,15 @@ Scenario:5 奖励明细列表2条记录
 		When bigs申请返现于2015-08-15 10:00:00
 		When jobs已返现给bigs金额"100.00"
 
-		Then jobs获得奖励明细列表
+		Then jobs获得bigs的奖励明细列表
 			"""
 			[{
-				"relation_member": "bigs",
 				"cycle_time_start":"2015-08-15 10:00:00",
 				"cycle_time_end":"今天",
 				"commission_return_rate":"10",
 				"pay_money":1000.00,
 				"cash_back_amount":100.00
 			},{
-				"relation_member": "bigs",
 				"cycle_time_start":"2015-08-12 10:00:00",
 				"cycle_time_end":"2015-08-15 10:00:00",
 				"commission_return_rate":"10",

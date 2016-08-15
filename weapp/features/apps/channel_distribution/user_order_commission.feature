@@ -61,71 +61,85 @@ Background:
 		[{
 			"name": "商品1",
 			"price": 100.00,
-			"discount":"0.5"
+			"count":"10"
 		},{
 			"name": "商品2",
 			"price": 100.00,
-			"discount":"1"
+			"count":"10"
 		}]
 		"""
 
 	#扫码关注成为会员
 		When 清空浏览器
-		And jack扫描带参数二维码"分销二维码1"于2015-08-10 10:00:00
+		And jack扫描渠道二维码"分销二维码1"于2015-08-10 10:00:00
 		And jack访问jobs的webapp
 
 	#会员购买
-		When 微信用户批量消费jobs的商品
+		When jack购买jobs的商品
 			"""
-			[{
-				"wx_name":"jack",
+			{
 				"order_id": "002",
 				"pay_type": "货到付款",
 				"products":[{
 					"name":"商品2",
 					"count":1 
 				}]
-			},{
-				"wx_name":"jack",
+			}
+			"""
+		When jack购买jobs的商品
+			"""
+			{
 				"order_id": "003",
 				"pay_type": "货到付款",
 				"products":[{
 					"name":"商品2",
 					"count":1 
 				}]
-			},{
-				"wx_name":"jack",
+			}
+			"""
+		When jack购买jobs的商品
+			"""
+			{
 				"order_id": "004",
 				"pay_type": "货到付款",
 				"products":[{
 					"name":"商品2",
 					"count":1 
 				}]
-			},{
-				"wx_name":"jack",
+			}
+			"""
+		When jack购买jobs的商品
+			"""
+			{
 				"order_id": "005",
 				"pay_type": "货到付款",
 				"products":[{
 					"name":"商品2",
 					"count":1 
 				}]
-			},{
-				"wx_name":"jack",
+			}
+			"""
+		When jack购买jobs的商品
+			"""
+			{
 				"order_id": "006",
 				"pay_type": "货到付款",
 				"products":[{
 					"name":"商品2",
 					"count":1 
 				}]
-			},{
-				"wx_name":"jack",
+			}
+			"""
+		When jack购买jobs的商品
+			"""
+			{
 				"order_id": "007",
 				"pay_type": "货到付款",
 				"products":[{
 					"name":"商品2",
 					"count":1 
 				}]
-			}]
+			}
 			"""
 		
 @mall2 @apps @senior @user_order_commission
