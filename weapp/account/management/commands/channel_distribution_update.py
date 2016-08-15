@@ -25,7 +25,6 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         # 所有的绑过的{memberid: qrcode_id}
-        print 'start????????????'
         members_dict = {}
         members = ChannelDistributionQrcodeHasMember.objects.all()
         for member in members:

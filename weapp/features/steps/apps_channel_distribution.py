@@ -53,4 +53,26 @@ def step_impl(context, user, order_id):
 
 # @When(u'{user}申请返现于{operation_time}')
 # def step_impl(context, user, operation_time):
+#
 # 	pass
+
+@When(u'后台执行channel_distribution_update')
+def step_impl(context):
+	import os
+	os.system('python manage.py channel_distribution_update')
+
+@When(u'{user}已返现给{member_name}金额"50.00"')
+def step_impl(context, user, member_name):
+
+	member_name = byte_to_hex(member_name)
+	bing_member_id = Member.objects.filter(username_hexstr__contains=member_name)[0].id
+	qrcode = ChannelDistributionQrcodeSettings.get(bing_member_id=bing_member_id)
+
+	data = {
+		'status': 3,
+		'qrcode_id': qrcode.id
+	}
+	response = context.client.post('new_weixin/api/channel_distribution_change_status', data)
+	print response
+
+

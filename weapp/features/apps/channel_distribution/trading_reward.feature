@@ -410,6 +410,8 @@ Scenario:2 一个微信用户扫码下单2次交易记录列表
 		When jobs完成订单"044"
 		When jobs完成订单"055"
 		When jobs完成订单"066"
+
+		When 后台执行channel_distribution_update
 		When bigs申请返现于2015-08-15 10:00:00
 		When jobs已返现给bigs金额"50.00"
 		When jobs设置查看条件
