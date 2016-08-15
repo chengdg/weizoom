@@ -14,7 +14,7 @@ def change_state(request):
 	"""
 	member_id = request.member.id
 	qrcode = models.ChannelDistributionQrcodeSettings.objects.filter(bing_member_id=member_id)
-	if qrcode[0].commission_return_standard  < qrcode[0].will_return_reward \
+	if qrcode[0].commission_return_standard  <= qrcode[0].will_return_reward \
 		and  not qrcode[0].extraction_money :
 		qrcode.update (
 			state = 1,

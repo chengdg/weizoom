@@ -4,6 +4,7 @@ Feature:渠道分销-前台会员列表
 
 Background:
 	Given jobs登录系统
+	And bigs关注jobs的公众号于'2015-10-01'
 	When jobs新建渠道分销二维码
 		"""
 		[{
@@ -21,6 +22,7 @@ Background:
 			"create_time": "2015-10-10 10:20:30"
 		}]
 		"""
+
 		When 清空浏览器
 		And jack扫描渠道二维码"分销二维码1"于'2015-08-10 10:00:00'
 		And jack访问jobs的webapp

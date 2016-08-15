@@ -19,16 +19,29 @@
             background-color: #fff;
             box-shadow: 0 0 1px rgba(0,0,0,0.8);
         }
-        .xui-illustrate-text {
-            padding-top: 10px;
-            text-align: center;
-        }
         .xui-link {
             display: inline-block;
             cursor: pointer;
         }
         .ml100 {
             margin-left: 100px;
+        }
+        .xui-illustrate-form {
+            overflow: hidden;
+            margin: 0 60px;
+            padding-top: 20px;    
+            font-size: 16px;
+            text-align: center;
+        }
+        .xui-illustrate-header {
+            float: left;
+            width: 12%;
+            color: #3366FF;
+        }
+        .xui-illustrate-list {
+            float: left;
+            width: 22%;
+            color: #33CCFF;
         }
     </style>
 {% endblock %}
@@ -92,9 +105,13 @@
             </div>
 
         </div>
-        <p class="xui-illustrate-text">
-            整体概括: 已返现总额{{ return_money_total }} 未返现总额 {{ not_return_money_total }}本期返现总额 {{ current_total_return }}总交易额{{ total_transaction_volume }}
-        </p>
+        <dl class="xui-illustrate-form">
+            <dt class="xui-illustrate-header">整体概括:</dt>
+            <dd class="xui-illustrate-list">已返现总额：{{ return_money_total }} 元</dd>
+            <dd class="xui-illustrate-list">未返现总额：{{ not_return_money_total }} 元</dd>
+            <dd class="xui-illustrate-list">本期返现总额：{{ current_total_return }} 元</dd>
+            <dd class="xui-illustrate-list">总交易额：{{ total_transaction_volume }} 元</dd>
+        </dl>
 
     </div>
     <div
