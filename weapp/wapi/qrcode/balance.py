@@ -44,10 +44,12 @@ class QrcodeBalance(api_resource.ApiResource):
 		filter_data_args = {
 			"webapp_id": webapp_id,
 			"webapp_user_id__in": webapp_user_ids,
-			"origin_order_id__lte": 0,
-			"created_at__gte": balance_time_from
-
+			"origin_order_id__lte": 0
 		}
+		print balance_time_from,"dddddddddd"
+		if balance_time_from:
+			filter_data_args["created_at__gte"] = balance_time_from
+
 		cur_start_date = args.get('start_date', None)
 		cur_end_date = args.get('end_date', None)
 		filter_data_args["status__in"] = [ORDER_STATUS_SUCCESSED, ORDER_STATUS_REFUNDED]
