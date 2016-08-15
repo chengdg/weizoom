@@ -28,7 +28,7 @@ class QrcodeBalance(api_resource.ApiResource):
 		"""
 		start = time.time()
 		channel_qrcode_id = int(args.get('channel_qrcode_id'))
-		balance_time_from = args.get('balance_time_from')
+		balance_time_from = args.get('balance_time_from','2016-06-24 00:00:00')
 		channel_qrcode = ChannelQrcodeSettings.objects.filter(id=channel_qrcode_id)
 		user_id = 0
 		if channel_qrcode.count() > 0:
