@@ -191,10 +191,14 @@
 {% endverbatim %}
 <script type="text/javascript">
 $(document).ready(function() {
+	var woid = {{ request.manager.id }};
+	var export2data = {{export2data|safe}};
 	var view = new W.view.mall.ProductListView({
 		el: '.xui-productsPage',
 		type: 'offshelf',
-		mall_type: '{{ mall_type }}'
+		mall_type: '{{ mall_type }}',
+		export2data:export2data,
+		woid:woid
 	});
 	view.render();
 });
