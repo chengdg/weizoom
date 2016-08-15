@@ -191,11 +191,6 @@ def step_impl(context, user, qrcode_name):
 
 
 
-# @When(u"{qrcode_name}访问'{user}'的webapp")
-# def step_impl(context, user, qrcode_name):
-# 	if not expected['order'] and not expected['extraction_money']
-	
-# Scenario:1 没有订单,没有佣金
 @Then(u"{user}获得推广分销详情")
 def step_impl(context,user):
 	expected = json.loads(context.text)
@@ -221,10 +216,48 @@ def step_impl(context,user):
 
 	bdd_util.assert_list(expected, actual_list)
 
+
+
 @When(u"{user}设置分销会员结算查询条件")
 def step_impl(context, user):
 	expected = json.loads(context.text)
-	data = {}
+	if hasattr(context, 'cash_back_amount_in'):
+		context.cash_back_amount_in = expected('cash_back_amount_in')
+	if hasattr(context, 'cash_back_amount_to'):
+		context.cash_back_amount_in = expected('cash_back_amount_to')
+	if hasattr(context, 'submit_time_start'):
+		context.cash_back_amount_in = expected('submit_time_start')
+	if hasattr(context, 'submit_time_end'):
+		context.cash_back_amount_in = expected('submit_time_end')
+
+
+@Then(u"{user}获得分销会员整体概况")
+def step_impl(context, user):
+	expected = json.loads(context.text)
+	name = byte_to_hex(user)
+	qrcode = ChannelDistributionQrcodeSettings.objects.get(bing_member_title=name)
+
+	return_money_total = 0  # 已返现总额
+	not_return_money_total = 0  # 未返现总额
+	current_total_return = 0 # 本期返现总额
+	total_transaction_volume = 0 # 总交易额
+	extraction_money = 0  # 所有的extraction_money 之和
+
+	for qrcode in qrcodes:
+		total_transaction_volume += qrcode.total_transaction_volume  # 总交易额
+		return_money_total += qrcode.total_return  # 已返现总额
+		current_total_return += qrcode.will_return_reward  # 本期返现总额
+		extraction_money += qrcode.extraction_money 
+
+	not_return_money_total = extraction_money + current_total_return # 未返现总额
+
+	actual_list = []
+	actual_list['cash_back_total'] = return_money_total
+	actual_list['not_return_total'] = not_return_money_total
+	actual_list['current_return'] = current_total_return
+	actual_list['turnover_total'] = total_transaction_volume
+
+	bdd_util.assert_list(expected, actual_list)
 
 
 @Then(u"{user}获得分销会员结算列表")
@@ -232,12 +265,14 @@ def step_impl(context, user):
 	expected = json.loads(context.text)
 
 	params = {}
-	if hasattr(context, 'sort_attr'):
-		params['query_name'] = context.sort_attr
-	if hasattr(context, 'count_per_page'):
-		params['count_per_page'] = context.count_per_page
-	if hasattr(context, 'distribution_page'):
-		params['page'] = context.distribution_page
+	if hasattr(context, 'cash_back_amount_in'):
+		params['cash_back_amount_in'] = context.cash_back_amount_in
+	if hasattr(context, 'cash_back_amount_to'):
+		params['cash_back_amount_to'] = context.cash_back_amount_to
+	if hasattr(context, 'submit_time_start'):
+		params['submit_time_start'] = context.submit_time_start
+	if hasattr(context, 'submit_time_end'):
+		params['submit_time_end'] = context.submit_time_end
 	
 	response = context.client.get('/new_weixin/api/distribution_clearing/', params)
 
@@ -256,39 +291,7 @@ def step_impl(context, user):
 		actual_list.append(data_dict)
 
 	bdd_util.assert_list(expected, actual_list)
-
 	
-
-# @Then(u"{user}获得分销会员整体概况")
-# def step_impl(context,user):
-# 	expected = json.loads(context.text)
-
-# 	params = {}
-# 	if hasattr(context, 'sort_attr'):
-# 		params['query_name'] = context.sort_attr
-# 	if hasattr(context, 'count_per_page'):
-# 		params['count_per_page'] = context.count_per_page
-# 	if hasattr(context, 'distribution_page'):
-# 		params['page'] = context.distribution_page
-	
-# 	response = context.client.get('/new_weixin/api/distribution_clearing/', params)
-
-# 	datas = json.loads(response.content)['data']['items']
-# 	actual_list = []
-# 	for data in datas:
-# 		data_dict = {}
-# 		data_dict['relation_member'] = items.return_dict['name']
-# 		data_dict['submit_time'] = items.return_dict['commit_time']
-# 		data_dict['current_transaction_amount'] = items.return_dict['current_transaction_amount']
-# 		data_dict['commission_return_standard'] = items.return_dict['commission_return_standard']
-# 		data_dict['commission_return_rate'] = items.return_dict['commission_rate']
-# 		data_dict['already_reward'] = items.return_dict['will_return_reward']
-# 		data_dict['cash_back_amount'] = items.return_dict['extraction_money']
-# 		data_dict['cash_back_state'] = items.return_dict['status']
-# 		actual_list.append(data_dict)
-
-# 	bdd_util.assert_list(expected, actual_list)
-
 
 
 @When(u"{user}申请返现于{time}")
@@ -305,26 +308,27 @@ def step_impl(context,user,time):
 		)
 
 
-# @Then(u"{user}获得交易记录列表")
-# def step_impl(context,user):
-# 	expected = json.loads(context.text)
 
-# 	name = expected['relation_member']
-# 	name = byte_to_hex(name)
-# 	member_id = Member.objects.filter(username_hexstr__contains=name)[0].id
-# 	response = context.client.get('./?module=market_tool:distribution&model=vip_message&action=get&member_id='+member_id)
+@Then(u"{user}获得已有会员列表详情")
+def step_impl(context,user):
+	expected = json.loads(context.text)
 
-# 	datas = json.loads(response.content)['data']['items']
-# 	actual_list = []
-# 	for data in datas:
-# 		data_dict = {}
-# 		data_dict['relation_member'] = data['name']
-# 		data_dict['user_name'] = data['nick_name']
-# 		data_dict['pay_money'] = data['cost_money']
-# 		data_dict['cash_back_amount'] = data['commission']
-# 		actual_list.append(data_dict)
+	user = byte_to_hex(user)
+	member_id = Member.objects.filter(username_hexstr__contains=user)[0].id
+	response = context.client.get('./?module=market_tool:distribution&model=vip_message&action=get&member_id='+member_id)
 
-# 	bdd_util.assert_list(expected, actual_list)
+	datas = json.loads(response.content)['data']['items']
+	actual_list = []
+	for data in datas:
+		data_dict = {}
+		data_dict['wx_name'] = data['nick_name']
+		data_dict['order_money'] = data['cost_money']
+		data_dict['commision'] = data['commission']
+		data_dict['purchase_count'] = data['buy_times']
+		data_dict['concern_time'] = data['created_at']
+		actual_list.append(data_dict)
+
+	bdd_util.assert_list(expected, actual_list)
 
 
 
