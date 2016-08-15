@@ -113,12 +113,14 @@ W.view.weixin.DistributionsClear = Backbone.View.extend({
 
     events: {
         'click .xa-search': 'onClickSearchButton',
-        'click .xa-reset': 'onClickResetButtion'
+        'click .xa-reset': 'onClickResetButtion',
+        'change .xa-changeStatus': 'onChangeStatusButtion'
     },
 
     initialize: function(options) {
     	this.options = options || {};
         this.$el = $(options.el);
+        this.selectOption = $(this);
         this.table = $('[data-ui-role="advanced-table"]').data('view');
         this.on('search', _.bind(this.onSearch, this));
     },
@@ -134,6 +136,13 @@ W.view.weixin.DistributionsClear = Backbone.View.extend({
         });
     },
 
+    onChangeStatusButtion: function(){
+        var checkbox = $(event.currentTarget);
+      // console.log(this.selectOption.data('id'));
+      console.log(checkbox);
+
+    },
+
     render: function() {
         var html = $.tmpl(this.getTemplate(), {
             promotionType: this.promotionType
@@ -141,6 +150,7 @@ W.view.weixin.DistributionsClear = Backbone.View.extend({
         this.$el.append(html);
         W.createWidgets(this.$el);
     },
+
     getFilterData: function(){
         var return_min = $.trim(this.$('[name="return_min"]').val());
         var return_max = $.trim(this.$('[name="return_max"]').val());
@@ -153,6 +163,7 @@ W.view.weixin.DistributionsClear = Backbone.View.extend({
             end_date: end_date
         }
     },
+
     onSearch: function(data) {
         this.table.reload(data, {
             emptyDataHint: '没有符合条件的记录'
