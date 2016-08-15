@@ -137,7 +137,7 @@ Background:
 	#会员购买
 		When jack购买jobs的商品
 			"""
-			[{
+			{
 				"relation_member":"bigs",
 				"order_id": "002",
 				"pay_type": "货到付款",
@@ -145,7 +145,11 @@ Background:
 					"name":"商品2",
 					"count":1 
 				}]
-			},{
+			}
+			"""
+		When jack购买jobs的商品
+			"""
+			{
 				"relation_member":"bigs",
 				"order_id": "003",
 				"pay_type": "货到付款",
@@ -153,7 +157,11 @@ Background:
 					"name":"商品2",
 					"count":1 
 				}]
-			},{
+			}
+			"""
+		When jack购买jobs的商品
+			"""
+			{
 				"relation_member":"bigs",
 				"order_id": "004",
 				"pay_type": "货到付款",
@@ -161,7 +169,11 @@ Background:
 					"name":"商品2",
 					"count":1 
 				}]
-			},{
+			}
+			"""
+		When jack购买jobs的商品
+			"""
+			{
 				"relation_member":"bigs",
 				"order_id": "005",
 				"pay_type": "货到付款",
@@ -169,7 +181,11 @@ Background:
 					"name":"商品2",
 					"count":1 
 				}]
-			},{
+			}
+			"""
+		When jack购买jobs的商品
+			"""
+			{
 				"relation_member":"bigs",
 				"order_id": "006",
 				"pay_type": "货到付款",
@@ -177,7 +193,11 @@ Background:
 					"name":"商品2",
 					"count":1 
 				}]
-			},{
+			}
+			"""
+		When jack购买jobs的商品
+			"""
+			{
 				"relation_member":"bigs",
 				"order_id": "007",
 				"pay_type": "货到付款",
@@ -185,11 +205,11 @@ Background:
 					"name":"商品2",
 					"count":1 
 				}]
-			}]
+			}
 			"""
 		When nokia购买jobs的商品
 			"""
-			[{
+			{
 				"relation_member":"bill",
 				"order_id": "008",
 				"pay_type": "货到付款",
@@ -197,7 +217,11 @@ Background:
 					"name":"商品2",
 					"count":1 
 				}]
-			},{
+			}
+			"""
+		When nokia购买jobs的商品
+			"""
+			{
 				"relation_member":"bill",
 				"order_id": "009",
 				"pay_type": "货到付款",
@@ -208,7 +232,11 @@ Background:
 					"name":"商品1",
 					"count":1 
 				}]
-			},{
+			}
+			"""
+		When nokia购买jobs的商品
+			"""
+			{
 				"relation_member":"bill",
 				"order_id": "010",
 				"pay_type": "货到付款",
@@ -219,7 +247,7 @@ Background:
 					"name":"商品1",
 					"count":1 
 				}]
-			}]
+			}
 			"""
 		
 @mall2 @apps @senior @processing_applications
