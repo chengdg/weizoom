@@ -93,45 +93,55 @@ Scenario:1 前台会员列表详情
 		And bill访问jobs的webapp
 
 	#会员购买
-		When 微信用户批量消费jobs的商品
+		When jack购买jobs的商品
 			"""
-			[{
-				"wx_name":"jack",
+			{
+				
 				"order_id": "001",
 				"pay_type": "货到付款",
 				"products":[{
 					"name":"商品1",
 					"count":1 
 				}]
-			},{
-				"wx_name":"jack",
-				"order_id": "002",
+			}
+			"""
+		When jack购买jobs的商品
+			"""
+			{
+				
+				"order_id": "001",
 				"pay_type": "货到付款",
 				"products":[{
 					"name":"商品2",
 					"count":1 
 				}]
-			}]
+			}
 			"""
-		When bill批量消费jobs的商品
+		When bill购买jobs的商品
 			"""
-			[{
-				"wx_name":"bill",
+			{
+				
 				"order_id": "003",
 				"pay_type": "货到付款",
 				"products":[{
 					"name":"商品1",
 					"count":1 
 				}]
-			},{
-				"wx_name":"bill",
-				"order_id": "004",
+			}
+
+			"""
+		When bill购买jobs的商品
+			"""
+			{
+				
+				"order_id": "003",
 				"pay_type": "货到付款",
 				"products":[{
 					"name":"商品2",
 					"count":1 
 				}]
-			}]
+			}
+
 			"""
 		Given jobs登录系统
 		Then jobs获得已有会员列表详情
