@@ -374,6 +374,7 @@ Background:
 
 @mall2 @apps @senior @trading_reward_1
 Scenario:1 一个微信用户扫码下单交易记录列表
+		Given jobs登录系统
 		When jobs完成订单"002"
 		When jobs完成订单"003"
 		When jobs完成订单"004"
@@ -381,7 +382,6 @@ Scenario:1 一个微信用户扫码下单交易记录列表
 		When jobs完成订单"006"
 		When 后台执行channel_distribution_update
 #		When bigs访问jobs的webapp
-		Given jobs登录系统
 		When bigs申请返现于2015-08-12 10:00:00
 		When jobs已返现给bigs金额"50.00"
 		Then jobs获得bigs的交易记录列表
@@ -399,13 +399,15 @@ Scenario:1 一个微信用户扫码下单交易记录列表
 
 @mall2 @apps @senior @trading_reward_2
 Scenario:2 一个微信用户扫码下单2次交易记录列表
+		Given jobs登录系统
 		When jobs完成订单"002"
 		When jobs完成订单"003"
 		When jobs完成订单"004"
 		When jobs完成订单"005"
 		When jobs完成订单"006"
 
-		Given jobs登录系统
+		When 后台执行channel_distribution_update
+
 		When bigs申请返现于2015-08-12 10:00:00
 		When jobs已返现给bigs金额"50.00"
 
@@ -433,13 +435,14 @@ Scenario:2 一个微信用户扫码下单2次交易记录列表
 			"""
 @mall2 @apps @senior @trading_reward
 Scenario:3 一个微信用户扫码下单1另一个微信用户下单2次交易记录列表
+		Given jobs登录系统
 		When jobs完成订单"002"
 		When jobs完成订单"003"
 		When jobs完成订单"004"
 		When jobs完成订单"005"
 		When jobs完成订单"006"
 
-		Given jobs登录系统
+		When 后台执行channel_distribution_update
 		When bigs申请返现于2015-08-12 10:00:00
 		When jobs已返现给bigs金额"50.00"
 
@@ -471,12 +474,14 @@ Scenario:3 一个微信用户扫码下单1另一个微信用户下单2次交易�
 
 @mall2 @apps @senior @trading_reward
 Scenario:4 奖励明细列表一条记录
+		Given jobs登录系统
 		When jobs完成订单"002"
 		When jobs完成订单"003"
 		When jobs完成订单"004"
 		When jobs完成订单"005"
 		When jobs完成订单"006"
-		Given jobs登录系统
+		
+		When 后台执行channel_distribution_update
 		When bigs申请返现于2015-08-12 10:00:00
 		When jobs已返现给bigs金额"50.00"
 		
@@ -493,13 +498,13 @@ Scenario:4 奖励明细列表一条记录
 
 @mall2 @apps @senior @trading_reward
 Scenario:5 奖励明细列表2条记录
+		Given jobs登录系统
 		When jobs完成订单"002"
 		When jobs完成订单"003"
 		When jobs完成订单"004"
 		When jobs完成订单"005"
 		When jobs完成订单"006"
-
-		Given jobs登录系统
+		When 后台执行channel_distribution_update
 		When bigs申请返现于2015-08-12 10:00:00
 		When jobs已返现给bigs金额"50.00"
 
@@ -513,6 +518,7 @@ Scenario:5 奖励明细列表2条记录
 		When jobs完成订单"444"
 		When jobs完成订单"555"
 		When jobs完成订单"666"
+		When 后台执行channel_distribution_update
 		When bigs申请返现于2015-08-15 10:00:00
 		When jobs已返现给bigs金额"100.00"
 

@@ -252,6 +252,7 @@ Background:
 		
 @mall2 @apps @senior @processing_applications
 Scenario:1 分销会员结算页初次没有提交时的显示
+		Given jobs登录系统
 		When jobs完成订单"002"
 		When jobs完成订单"003"
 		When jobs完成订单"004"
@@ -261,7 +262,7 @@ Scenario:1 分销会员结算页初次没有提交时的显示
 		When jobs完成订单"008"
 		When jobs完成订单"009"
 		When jobs完成订单"010"
-		Given jobs登录系统		
+				
 		Then jobs获得分销会员结算列表
 			"""
 			[{
@@ -286,6 +287,7 @@ Scenario:1 分销会员结算页初次没有提交时的显示
 			"""
 @mall2 @apps @senior @processing_applications
 Scenario:2 分销会员结算页等待审核状态
+		Given jobs登录系统
 		When jobs完成订单"002"
 		When jobs完成订单"003"
 		When jobs完成订单"004"
@@ -296,7 +298,6 @@ Scenario:2 分销会员结算页等待审核状态
 		When jobs完成订单"010"
 		When bigs访问jobs的webapp
 		When bigs申请返现于2015-08-12 10:00:00
-		Given jobs登录系统
 		
 		Then jobs获得分销会员结算列表
 			"""
@@ -323,6 +324,7 @@ Scenario:2 分销会员结算页等待审核状态
 
 @mall2 @apps @senior @processing_applications
 Scenario:3 分销会员结算页正在返现状态
+		Given jobs登录系统
 		When jobs完成订单"002"
 		When jobs完成订单"003"
 		When jobs完成订单"004"
@@ -335,7 +337,7 @@ Scenario:3 分销会员结算页正在返现状态
 		When 后台执行channel_distribution_update
 		When bigs访问jobs的webapp
 		When bigs申请返现于2015-08-12 10:00:00
-		Given jobs登录系统
+		
 		When jobs更改返现状态为"正在返现"
 		Then jobs获得分销会员结算列表
 			"""
@@ -361,6 +363,7 @@ Scenario:3 分销会员结算页正在返现状态
 			"""
 @mall2 @apps @senior @processing_applications
 Scenario:4 分销会员结算页已完成/切换为无状态
+		Given jobs登录系统
 		When jobs完成订单"002"
 		When jobs完成订单"003"
 		When jobs完成订单"004"
@@ -373,7 +376,6 @@ Scenario:4 分销会员结算页已完成/切换为无状态
 		When 后台执行channel_distribution_update
 		When bigs访问jobs的webapp
 		When bigs申请返现于2015-08-12 10:00:00
-		Given jobs登录系统
 		When jobs更改返现状态为"已完成/切换为无状态"
 		Then jobs获得分销会员结算列表
 			"""
@@ -400,6 +402,7 @@ Scenario:4 分销会员结算页已完成/切换为无状态
 
 @mall2 @apps @senior @processing_applications
 Scenario:5 整体概况
+		Given jobs登录系统
 		When jobs完成订单"002"
 		When jobs完成订单"003"
 		When jobs完成订单"004"
@@ -410,7 +413,6 @@ Scenario:5 整体概况
 		When jobs完成订单"009"
 		When jobs完成订单"010"
 		When 后台执行channel_distribution_update
-		Given jobs登录系统
 		Then jobs获得分销会员整体概况
 			"""
 			{
@@ -422,7 +424,6 @@ Scenario:5 整体概况
 			"""
 		When bigs访问jobs的webapp
 		When bigs申请返现于2015-08-12 10:00:00
-		Given jobs登录系统
 		When jobs更改返现状态为"已完成/切换为无状态"
 
 		Then jobs获得分销会员整体概况
@@ -437,6 +438,7 @@ Scenario:5 整体概况
 
 @mall2 @apps @senior @processing_applications
 Scenario:6 会员结算列表查询
+		Given jobs登录系统
 		When jobs完成订单"002"
 		When jobs完成订单"003"
 		When jobs完成订单"004"
@@ -449,7 +451,6 @@ Scenario:6 会员结算列表查询
 		When 后台执行channel_distribution_update
 		When bigs访问jobs的webapp
 		When bigs申请返现于2015-08-12 10:00:00
-		Given jobs登录系统
 		When jobs更改返现状态为"已完成/切换为无状态"
 		Then jobs获得分销会员结算列表
 			"""
@@ -610,6 +611,7 @@ Scenario:6 会员结算列表查询
 			"""
 @mall2 @apps @senior @processing_applications
 Scenario:7 上一期未完成,微信用户扫码下单返现的整体概况和分销会员列表
+		Given jobs登录系统
 		When jobs完成订单"002"
 		When jobs完成订单"003"
 		When jobs完成订单"004"
@@ -618,7 +620,6 @@ Scenario:7 上一期未完成,微信用户扫码下单返现的整体概况和�
 		When 后台执行channel_distribution_update
 		When bigs访问jobs的webapp
 		When bigs申请返现于2015-08-12 10:00:00
-		Given jobs登录系统
 		Then jobs获得分销会员整体概况
 			"""
 			{
