@@ -59,7 +59,8 @@ class Command(BaseCommand):
                     if order_qrcode.return_standard:  # 有返回天数限制
                         if order.created_at > datetime.datetime.now() - datetime.timedelta(days=order_qrcode.return_standard):
                             return None
-                    commission = order.final_price * (order_qrcode.commission_rate / 100)
+                    commission = order.final_price * (order_qrcode.commission_rate / 100.0)
+
                     ChannelDistributionQrcodeHasMember.objects.filter(member_id=order.webapp_user_id).update(
                         cost_money = F('cost_money') + order.final_price,
                         buy_times = F('buy_times') + 1,
@@ -72,7 +73,7 @@ class Command(BaseCommand):
                     )
                     ChannelDistributionDetail.objects.create(
                         channel_qrcode_id = order_qrcode.bing_member_id,
-                        money = order.final_price * order_qrcode.commission_rate,
+                        money = order.final_price,
                         member_id = order_qrcode.bing_member_id,
                         order_id = order.id
                     )

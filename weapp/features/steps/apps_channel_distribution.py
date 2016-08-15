@@ -61,8 +61,8 @@ def step_impl(context):
 	import os
 	os.system('python manage.py channel_distribution_update')
 
-@When(u'{user}已返现给{member_name}金额"50.00"')
-def step_impl(context, user, member_name):
+@When(u'{user}已返现给{member_name}金额"{money}"')
+def step_impl(context, user, member_name, money):
 
 	member_name = byte_to_hex(member_name)
 	bing_member_id = Member.objects.filter(username_hexstr__contains=member_name)[0].id
@@ -72,13 +72,54 @@ def step_impl(context, user, member_name):
 		'status': 3,
 		'qrcode_id': qrcode.id
 	}
-	response = context.client.post('new_weixin/api/channel_distribution_change_status', data)
-	print(response)
+	response = context.client.post('/new_weixin/api/channel_distribution_change_status/', data)
+	logging.info(response)
+	logging.info('..................')
 
-@Then(u'{user}获得{vip_name}交易记录列表')
+@Then(u'{user}获得{vip_name}的交易记录列表')
 def step_impl(context, user, vip_name):
-	expecteds = json.loads(context.text)
-	for expected in expecteds:
-		relation_member = expected['relation_member']
+	member_name = byte_to_hex(vip_name)
+	bing_member_id = Member.objects.filter(username_hexstr__contains=member_name)[0].id
+	qrcode = ChannelDistributionQrcodeSettings.objects.get(bing_member_id=bing_member_id)
+	expected = json.loads(context.text)
+	# for expected in expecteds:
+	# 	user_name = expected['user_name']
+	data = {'qrcode_id': qrcode.id}
+	logging.info(data)
+	logging.info('...........................')
+	response = context.client.get('/new_weixin/api/channel_distribution_transaction_amount/', data)
+	logging.info(response)
+	datas = json.loads(response.content)['data']['items']
+	actual_list = []
+	for data in datas:
+		dict = {}
+		dict['user_name'] = data['name']
+		dict['pay_money'] = float(data['cost_money'])
+		dict['cash_back_amount'] = float(data['commission'])
+		actual_list.append(dict)
+
+	bdd_util.assert_list(expected, actual_list)
 
 
+@Then(u'{user}获得{vip_name}的奖励明细列表')
+def step_impl(context, user, vip_name):
+	member_name = byte_to_hex(vip_name)
+	bing_member_id = Member.objects.filter(username_hexstr__contains=member_name)[0].id
+	qrcode = ChannelDistributionQrcodeSettings.objects.get(bing_member_id=bing_member_id)
+	expected = json.loads(context.text)
+	# for expected in expecteds:
+	# 	user_name = expected['user_name']
+	data = {'qrocde_id': qrcode.id}
+	response = context.client.get('/new_weixin/api/channel_distribution_detail/', data)
+	datas = json.loads(response.content)['data']['items']
+	actual_list = []
+	for data in datas:
+		dict = {}
+		dict['cycle_time_start'] = data['time_cycle_start']
+		dict['cycle_time_end'] = data['cycle_time_end']
+		dict['commission_return_rate'] = float(data['commission_rate'])
+		dict['pay_money'] = float(data['total_money'])
+		dict['cash_back_amount'] = float(data['commission'])
+		actual_list.append(dict)
+
+	bdd_util.assert_list(expected, actual_list)

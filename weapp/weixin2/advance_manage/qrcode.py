@@ -1479,40 +1479,40 @@ class ChannelDistributionChangeStatus(resource.Resource):
 		qrcode_id = request.POST.get('qrcode_id')
 		status = int(request.POST.get('status'))
 
-		qrcode = ChannelDistributionQrcodeSettings.objects.get(id=qrcode_id, owner=request.user)
+		qrcode = ChannelDistributionQrcodeSettings.objects.filter(id=qrcode_id, owner=request.user)
 
-		if status == 1 and qrcode.status > status:
+		if status == 1 and qrcode[0].status > status:
 			# 切换状态
 			qrcode.update(status=status, extraction_money=F('will_return_reward'))
 
 		if status == 3:
 			# 商家已打款
-			extraction_money = qrcode.extraction_money
+			extraction_money = qrcode[0].extraction_money
 			qrcode.update(
 				total_return = F('total_return')+F('extraction_money'),
 				status = 0,
-				commit_time = '00001-01-01',
+				commit_time = datetime.strptime('0001-01-01', '%Y-%m-%d'),
 				extraction_money = 0
 			)
 
-			channel_distribution_detail = ChannelDistributionDetail.objects.filter(channel_qrcode_id=qrcode.id, order_id=0)
+			channel_distribution_detail = ChannelDistributionDetail.objects.filter(channel_qrcode_id=qrcode[0].id, order_id=0)
 			if channel_distribution_detail:
 				last_extract_time = channel_distribution_detail[0].created_at
 			else:
-				last_extract_time = qrcode.created_at
+				last_extract_time = qrcode[0].created_at
 
 			# 新建奖励明细列表
 			ChannelDistributionDetail.objects.create(
 				channel_qrcode_id = qrcode_id,
 				money = extraction_money,
-				member_id = qrcode.bing_member_id,
+				member_id = qrcode[0].bing_member_id,
 				last_extract_time = last_extract_time
 			)
 			# 修改member的返现总额
-			ChannelDistributionQrcodeHasMember.filter(channel_qrcode_id=qrcode.id).update(
+			ChannelDistributionQrcodeHasMember.objects.filter(channel_qrcode_id=qrcode[0].id).update(
 				commission = F('commission') + extraction_money
 			)
 
 		response = create_response(200)
 		return response.get_response()
-		# TODO 如果记录里面的返现金额是收到后增加的话,要修改 hasMember
+

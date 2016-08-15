@@ -296,10 +296,10 @@ def step_impl(context,user,time):
 	user = byte_to_hex(user)
 	member_id = Member.objects.filter(username_hexstr__contains=user)[0].id
 	qrcode = ChannelDistributionQrcodeSettings.objects.filter(bing_member_id=member_id)
-	if qrcode[0].commission_return_standard  < qrcode[0].will_return_reward \
+	if qrcode[0].commission_return_standard  <= qrcode[0].will_return_reward \
 		and  not qrcode[0].extraction_money :
 		qrcode.update (
-			state = 1,
+			status = 1,
 			commit_time = time,
 			extraction_money = F('will_return_reward')
 		)
