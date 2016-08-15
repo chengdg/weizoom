@@ -1450,9 +1450,10 @@ class ChannelDistributionRewardDetail(resource.Resource):
 			if time_cycle_start == '0001-01-01 00:00:00':
 				time_cycle_start = '----'
 			dict = {}
-			dict['time_cycle_start'] = time_cycle_start
+
+			dict['time_cycle_start'] = time_cycle_start  # 上次提现时间
 			dict['time_cycle_end'] = str(detail.created_at)
-			dict['commission_rate'] = str(qrocde.commission_rate)
+			dict['commission_rate'] = str(qrocde.commission_rate)  # 佣金返现率
 			dict['total_money'] = str(detail.money)
 			dict['commission'] = str(qrocde.commission_rate * detail.moeny)
 
