@@ -379,6 +379,7 @@ Scenario:1 一个微信用户扫码下单交易记录列表
 		When jobs完成订单"004"
 		When jobs完成订单"005"
 		When jobs完成订单"006"
+		When 后台执行channel_distribution_update
 		When bigs访问jobs的webapp
 		When bigs申请返现于2015-08-12 10:00:00
 		When jobs已返现给jack金额"50.00"
