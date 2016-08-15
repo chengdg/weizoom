@@ -10,6 +10,7 @@ from test import bdd_util
 import logging
 from market_tools.tools.distribution.models import ChannelDistributionQrcodeSettings
 from utils.string_util import byte_to_hex
+from django.db.models import F
 
 
 def __create_random_ticket():
@@ -238,14 +239,14 @@ def step_impl(context,user):
 	actual_list = []
 	for data in datas:
 		data_dict = {}
-		data_dict['relation_member'] = items.return_dict['name']
-		data_dict['submit_time'] = items.return_dict['commit_time']
-		data_dict['current_transaction_amount'] = items.return_dict['current_transaction_amount']
-		data_dict['commission_return_standard'] = items.return_dict['commission_return_standard']
-		data_dict['commission_return_rate'] = items.return_dict['commission_rate']
-		data_dict['already_reward'] = items.return_dict['will_return_reward']
-		data_dict['cash_back_amount'] = items.return_dict['extraction_money']
-		data_dict['cash_back_state'] = items.return_dict['status']
+		data_dict['relation_member'] = data['name']
+		data_dict['submit_time'] = data['commit_time']
+		data_dict['current_transaction_amount'] = data['current_transaction_amount']
+		data_dict['commission_return_standard'] = data['commission_return_standard']
+		data_dict['commission_return_rate'] = data['commission_rate']
+		data_dict['already_reward'] = data['will_return_reward']
+		data_dict['cash_back_amount'] = data['extraction_money']
+		data_dict['cash_back_state'] = data['status']
 		actual_list.append(data_dict)
 
 	bdd_util.assert_list(expected, actual_list)
@@ -284,32 +285,40 @@ def step_impl(context,user):
 
 
 
-@When(u"{user}申请返现于'{time}'")
-def step_impl(context,user):
+@When(u"{user}申请返现于{time}")
+def step_impl(context,user,time):
+	user = byte_to_hex(user)
 	member_id = Member.objects.filter(username_hexstr__contains=user)[0].id
-	response = context.client.post('/new_weixin/api/channel_distribution/', params)
+	qrcode = ChannelDistributionQrcodeSettings.objects.filter(bing_member_id=member_id)
+	if qrcode[0].commission_return_standard  < qrcode[0].will_return_reward \
+		and  not qrcode[0].extraction_money :
+		qrcode.update (
+			state = 1,
+			commit_time = datetime.datetime.now(),
+			extraction_money = F('will_return_reward')
+		)
 
 
-@Then(u"{user}获得交易记录列表")
-def step_impl(context,user):
-	expected = json.loads(context.text)
+# @Then(u"{user}获得交易记录列表")
+# def step_impl(context,user):
+# 	expected = json.loads(context.text)
 
-	name = expected['relation_member']
-	name = byte_to_hex(name)
-	member_id = Member.objects.filter(username_hexstr__contains=name)[0].id
-	response = context.client.get('./?module=market_tool:distribution&model=vip_message&action=get&member_id='+member_id)
+# 	name = expected['relation_member']
+# 	name = byte_to_hex(name)
+# 	member_id = Member.objects.filter(username_hexstr__contains=name)[0].id
+# 	response = context.client.get('./?module=market_tool:distribution&model=vip_message&action=get&member_id='+member_id)
 
-	datas = json.loads(response.content)['data']['items']
-	actual_list = []
-	for data in datas:
-		data_dict = {}
-		data_dict['relation_member'] = items.return_dict['name']
-		data_dict['user_name'] = items.return_dict['nick_name']
-		data_dict['pay_money'] = items.return_dict['cost_money']
-		data_dict['cash_back_amount'] = items.return_dict['commission']
-		actual_list.append(data_dict)
+# 	datas = json.loads(response.content)['data']['items']
+# 	actual_list = []
+# 	for data in datas:
+# 		data_dict = {}
+# 		data_dict['relation_member'] = data['name']
+# 		data_dict['user_name'] = data['nick_name']
+# 		data_dict['pay_money'] = data['cost_money']
+# 		data_dict['cash_back_amount'] = data['commission']
+# 		actual_list.append(data_dict)
 
-	bdd_util.assert_list(expected, actual_list)
+# 	bdd_util.assert_list(expected, actual_list)
 
 
 
