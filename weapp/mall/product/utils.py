@@ -171,13 +171,13 @@ MALL_PRODUCT_FILTERS = {
     }]
 }
 
-def filter_products(request, products ,mall_type=False):
+def filter_products(request, products ,mall_type=False, params=None):
     if mall_type:
         current_product_filters = MALL_PRODUCT_FILTERS
     else:
         current_product_filters = PRODUCT_FILTERS
 
-    has_filter = search_util.init_filters(request, current_product_filters)
+    has_filter = search_util.init_filters(request, current_product_filters, params)
     if not has_filter:
         return products
 
