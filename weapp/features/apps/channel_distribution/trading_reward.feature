@@ -384,10 +384,9 @@ Scenario:1 一个微信用户扫码下单交易记录列表
 		When bigs申请返现于2015-08-12 10:00:00
 		When jobs已返现给jack金额"50.00"
 		
-		Then jobs获得交易记录列表
+		Then jobs获得bigs的交易记录列表
 			"""
 			[{
-				"relation_member": "bigs",
 				"user_name":"jack",
 				"pay_money":500.00,
 				"cash_back_amount":50.00
@@ -416,10 +415,9 @@ Scenario:2 一个微信用户扫码下单2次交易记录列表
 		When bigs申请返现于2015-08-15 10:00:00
 		When jobs已返现给bigs金额"50.00"
 
-		Then jobs获得交易记录列表
+		Then jobs获得bigs的交易记录列表
 			"""
 			[{
-				"relation_member": "bigs",
 				"user_name":"jack",
 				"pay_money":1000.00,
 				"cash_back_amount":100.00
@@ -449,42 +447,14 @@ Scenario:3 一个微信用户扫码下单1另一个微信用户下单2次交易�
 		When jobs完成订单"666"
 		When bigs申请返现于2015-08-15 10:00:00
 		When jobs已返现给bigs金额"100.00"
-		When jobs设置查看条件
-			"""
-			{
-				"type":"本期交易"
-			}
-			"""
-		Then jobs获得交易记录列表
+		
+		Then jobs获得bigs的交易记录列表
 			"""
 			[{
-				"relation_member": "bigs",
-				"user_name":"marry",
-				"pay_money":500.00,
-				"cash_back_amount":50.00
-			},{
-				"relation_member": "bigs",
-				"user_name":"jack",
-				"pay_money":500.00,
-				"cash_back_amount":50.00
-			}]
-			"""
-
-		When jobs设置查看条件
-			"""
-			{
-				"type":"所有交易"
-			}
-			"""
-		Then jobs获得交易记录列表
-			"""
-			[{
-				"relation_member": "bigs",
 				"user_name":"jack",
 				"pay_money":1000.00,
 				"cash_back_amount":100.00
 			},{
-				"relation_member": "bigs",
 				"user_name":"jack",
 				"pay_money":500.00,
 				"cash_back_amount":50.00
@@ -502,10 +472,9 @@ Scenario:4 奖励明细列表一条记录
 		When bigs申请返现于2015-08-12 10:00:00
 		When jobs已返现给bigs金额"50.00"
 		
-		Then jobs获得奖励明细列表
+		Then jobs获得bigs的奖励明细列表
 			"""
 			[{
-				"relation_member": "bigs",
 				"cycle_time_start":"2015-08-12 10:00:00",
 				"cycle_time_end":"今天",
 				"commission_return_rate":"10",
@@ -539,17 +508,15 @@ Scenario:5 奖励明细列表2条记录
 		When bigs申请返现于2015-08-15 10:00:00
 		When jobs已返现给bigs金额"100.00"
 
-		Then jobs获得奖励明细列表
+		Then jobs获得bigs的奖励明细列表
 			"""
 			[{
-				"relation_member": "bigs",
 				"cycle_time_start":"2015-08-15 10:00:00",
 				"cycle_time_end":"今天",
 				"commission_return_rate":"10",
 				"pay_money":1000.00,
 				"cash_back_amount":100.00
 			},{
-				"relation_member": "bigs",
 				"cycle_time_start":"2015-08-12 10:00:00",
 				"cycle_time_end":"2015-08-15 10:00:00",
 				"commission_return_rate":"10",
