@@ -12,8 +12,8 @@ def change_state(request):
 	"""
 	修改订单状态
 	"""
-	member_id = request.POST.get('member_id','')
-	qrocde = models.ChannelDistributionQrcodeSettings.objects.filter(bing_member_id=member_id)
+	member_id = request.member.id
+	qrcode = models.ChannelDistributionQrcodeSettings.objects.filter(bing_member_id=member_id)
 	if qrcode[0].commission_return_standard  < qrcode[0].will_return_reward \
 		and  not qrcode[0].extraction_money :
 		qrcode.update (

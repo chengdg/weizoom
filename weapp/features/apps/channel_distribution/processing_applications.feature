@@ -332,6 +332,7 @@ Scenario:3 分销会员结算页正在返现状态
 		When jobs完成订单"008"
 		When jobs完成订单"009"
 		When jobs完成订单"010"
+		When 后台执行channel_distribution_update
 		When bigs访问jobs的webapp
 		When bigs申请返现于2015-08-12 10:00:00
 		Given jobs登录系统
@@ -369,6 +370,7 @@ Scenario:4 分销会员结算页已完成/切换为无状态
 		When jobs完成订单"008"
 		When jobs完成订单"009"
 		When jobs完成订单"010"
+		When 后台执行channel_distribution_update
 		When bigs访问jobs的webapp
 		When bigs申请返现于2015-08-12 10:00:00
 		Given jobs登录系统
@@ -407,6 +409,7 @@ Scenario:5 整体概况
 		When jobs完成订单"008"
 		When jobs完成订单"009"
 		When jobs完成订单"010"
+		When 后台执行channel_distribution_update
 		Given jobs登录系统
 		Then jobs获得分销会员整体概况
 			"""
@@ -443,6 +446,7 @@ Scenario:6 会员结算列表查询
 		When jobs完成订单"008"
 		When jobs完成订单"009"
 		When jobs完成订单"010"
+		When 后台执行channel_distribution_update
 		When bigs访问jobs的webapp
 		When bigs申请返现于2015-08-12 10:00:00
 		Given jobs登录系统
@@ -611,6 +615,7 @@ Scenario:7 上一期未完成,微信用户扫码下单返现的整体概况和�
 		When jobs完成订单"004"
 		When jobs完成订单"005"
 		When jobs完成订单"006"
+		When 后台执行channel_distribution_update
 		When bigs访问jobs的webapp
 		When bigs申请返现于2015-08-12 10:00:00
 		Given jobs登录系统
@@ -640,6 +645,7 @@ Scenario:7 上一期未完成,微信用户扫码下单返现的整体概况和�
 		When jobs完成订单"008"
 		When jobs完成订单"009"
 		When jobs完成订单"010"
+		When 后台执行channel_distribution_update
 		Then jobs获得分销会员整体概况
 			"""
 			{

@@ -73,12 +73,12 @@ def step_impl(context, user, member_name):
 		'qrcode_id': qrcode.id
 	}
 	response = context.client.post('new_weixin/api/channel_distribution_change_status', data)
-	print response
+	print(response)
 
-@Then(u'{user}获得交易记录列表')
-def step_impl(context, user):
-	expecteds = json.loads(context.text)
-	for expected in expecteds:
-		relation_member = expected['relation_member']
+# @Then(u'{user}获得交易记录列表')
+# def step_impl(context, user):
+# 	expecteds = json.loads(context.text)
+# 	for expected in expecteds:
+# 		relation_member = expected['relation_member']
 
 
