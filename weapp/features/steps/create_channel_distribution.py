@@ -284,6 +284,35 @@ def step_impl(context,user):
 
 
 
+@When(u"{user}申请返现于'{time}'")
+def step_impl(context,user):
+	member_id = Member.objects.filter(username_hexstr__contains=user)[0].id
+	response = context.client.post('/new_weixin/api/channel_distribution/', params)
+
+
+@Then(u"{user}获得交易记录列表")
+def step_impl(context,user):
+	expected = json.loads(context.text)
+
+	name = expected['relation_member']
+	name = byte_to_hex(name)
+	member_id = Member.objects.filter(username_hexstr__contains=name)[0].id
+	response = context.client.get('./?module=market_tool:distribution&model=vip_message&action=get&member_id='+member_id)
+
+	datas = json.loads(response.content)['data']['items']
+	actual_list = []
+	for data in datas:
+		data_dict = {}
+		data_dict['relation_member'] = items.return_dict['name']
+		data_dict['user_name'] = items.return_dict['nick_name']
+		data_dict['pay_money'] = items.return_dict['cost_money']
+		data_dict['cash_back_amount'] = items.return_dict['commission']
+		actual_list.append(data_dict)
+
+	bdd_util.assert_list(expected, actual_list)
+
+
+
 
 	
 
