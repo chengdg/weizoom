@@ -467,7 +467,8 @@ MALL_PROMOTION_AND_APPS_SECOND_NAV = {
                     'name': MALL_APPS_VOTE_NAV,
                     'title': "微信投票",
                     'url': 'http://%s/apps/vote/votes/' % MARKETAPP_DOMAIN,
-                    'permission': ''
+                    'permission': '',
+                    'need_token': True
                 },
                 {
                     'name': MALL_APPS_RED_ENVELOPE_NAV,

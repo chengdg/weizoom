@@ -95,14 +95,12 @@
 					{% for nav in second_nav.navs %}
 						{% if nav.name == 'orderMoney' %}
 							{% if request.user_profile.webapp_type == 0 %}
-								{% if request.manager.username in nav.users %}
-									<li class="{% ifequal second_nav_name nav.name %}active{% endifequal %}">
-										<a href="{{nav.url}}{% if nav.need_token %}?token={{token}}{% endif %}" {% if nav.need_token %}target="_blank"{% endif %} title="{{nav.title}}" name="{{nav.name}}">
-											<i class="xui-icon-sideBar xui-sideBar-{{nav.name}}"></i> {{nav.title|safe}}
-											<i class="xui-icon-arrow"></i>
-										</a>
-									</li>
-								{% endif %}
+								<li class="{% ifequal second_nav_name nav.name %}active{% endifequal %}">
+									<a href="{{nav.url}}{% if nav.need_token %}?token={{token}}{% endif %}" {% if nav.need_token %}target="_blank"{% endif %} title="{{nav.title}}" name="{{nav.name}}">
+										<i class="xui-icon-sideBar xui-sideBar-{{nav.name}}"></i> {{nav.title|safe}}
+										<i class="xui-icon-arrow"></i>
+									</a>
+								</li>
 							{% endif %}
 						{% else %}
 							<li class="{% ifequal second_nav_name nav.name %}active{% endifequal %}">
@@ -115,7 +113,7 @@
 						<!-- 三级导航 -->
 						{% if nav.third_navs %}
 							{% for third_nav in nav.third_navs %}
-                                {% if third_nav.name == 'exsurveies' or third_nav.name == 'cardExchange' or third_nav.name == 'shvotes' or third_nav.name == 'virtualProducts' or third_nav.name == 'rebate' or third_nav.name == 'exsign' or third_nav.name == 'scanlottery' %}
+                                {% if third_nav.name == 'exsurveies' or third_nav.name == 'cardExchange' or third_nav.name == 'shvotes' or third_nav.name == 'virtualProducts' or third_nav.name == 'rebate' or third_nav.name == 'exsign' %}
                                     {% if request.manager.username in third_nav.users %}
                                     <li class="xui-sideBar-third {% ifequal third_nav_name third_nav.name %}active_third{% endifequal %}">
                                         <a href="{{third_nav.url}}" title="{{third_nav.title}}" name="{{third_nav.name}}">
@@ -135,7 +133,7 @@
                                     </li>
                                 {% else %}
                                     <li class="xui-sideBar-third {% ifequal third_nav_name third_nav.name %}active_third{% endifequal %}">
-                                        <a href="{{third_nav.url}}" title="{{third_nav.title}}" name="{{third_nav.name}}">
+                                        <a href="{{third_nav.url}}{% if third_nav.need_token %}?token={{token}}{% endif %}" title="{{third_nav.title}}" name="{{third_nav.name}}">
                                             &nbsp;&nbsp;&nbsp;&nbsp;{{third_nav.title|safe}}
                                             <i class="xui-icon-arrow"></i>
                                             {% if third_nav.class_name %}<i class="xui-noticyTip {{third_nav.class_name}}"></i>{% endif %}
