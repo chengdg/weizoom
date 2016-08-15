@@ -75,57 +75,71 @@ Background:
 		And jack访问jobs的webapp
 
 	#会员购买
-		When 微信用户批量消费jobs的商品
+		When jack购买jobs的商品
 			"""
-			[{
-				"wx_name":"jack",
+			{
 				"order_id": "002",
 				"pay_type": "货到付款",
 				"products":[{
 					"name":"商品2",
 					"count":1 
 				}]
-			},{
-				"wx_name":"jack",
+			}
+			"""
+		When jack购买jobs的商品
+			"""
+			{
 				"order_id": "003",
 				"pay_type": "货到付款",
 				"products":[{
 					"name":"商品2",
 					"count":1 
 				}]
-			},{
-				"wx_name":"jack",
+			}
+			"""
+		When jack购买jobs的商品
+			"""
+			{
 				"order_id": "004",
 				"pay_type": "货到付款",
 				"products":[{
 					"name":"商品2",
 					"count":1 
 				}]
-			},{
-				"wx_name":"jack",
+			}
+			"""
+		When jack购买jobs的商品
+			"""
+			{
 				"order_id": "005",
 				"pay_type": "货到付款",
 				"products":[{
 					"name":"商品2",
 					"count":1 
 				}]
-			},{
-				"wx_name":"jack",
+			}
+			"""
+		When jack购买jobs的商品
+			"""
+			{
 				"order_id": "006",
 				"pay_type": "货到付款",
 				"products":[{
 					"name":"商品2",
 					"count":1 
 				}]
-			},{
-				"wx_name":"jack",
+			}
+			"""
+		When jack购买jobs的商品
+			"""
+			{
 				"order_id": "007",
 				"pay_type": "货到付款",
 				"products":[{
 					"name":"商品2",
 					"count":1 
 				}]
-			}]
+			}
 			"""
 		
 @mall2 @apps @senior @user_order_commission

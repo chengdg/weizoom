@@ -33,7 +33,6 @@ from modules.member.module_api import get_member_by_id_list, get_member_by_id
 from core.wxapi import get_weixin_api
 from mall import export as mall_export
 from mall.promotion.models import CouponRule
-from django.db.models import F
 
 #COUNT_PER_PAGE = 2
 COUNT_PER_PAGE = 50
@@ -1321,30 +1320,18 @@ class ChannelDistributionClearing(resource.Resource):
 		sort_attr = request.GET.get('sort_attr', '-created_at')
 		count_per_page = int(request.GET.get('count_per_page', 15))
 		cur_page = int(request.GET.get('page', '1'))
-		return_min = request.GET.get('return_min')
-		return_max = request.GET.get('return_max')
-		start_date = request.GET.get('start_date')
-		end_date = request.GET.get('end_date')
 
 		qrcodes = ChannelDistributionQrcodeSettings.objects.all()
-		if return_min:
-			if return_max:
-				qrcodes = qrcodes.filter(extraction_money__range=(return_min, return_max))
-			else:
-				qrcodes =  qrcodes.filter(extraction_money__gte=return_min)
-		elif return_max:
-			qrcodes = qrcodes.filter(extraction_money__lte=return_max)
-
-		if start_date and end_date:
-			qrcodes = qrcodes.filter(commit_time__range=(start_date, end_date))
-
-
-
 
 		member_dict = {}  # {id: name}
 		members = Member.objects.all()
 		for member in members:
 			member_dict[member.id] = member.username_for_title
+
+		# process_dict = {}
+		# channel_distribution_process = ChannelDistributionProcess.objects.all()
+		# for process in channel_distribution_process:
+		# 	process_dict[process.id] = process
 
 		items = []
 
@@ -1389,32 +1376,24 @@ class ChannelDistributionTransactionAmount(resource.Resource):
 		"""
 		查看记录的一个页面
 		"""
-		# log_select = int(request.POST.get('log_select', 1))  # 0 本期, 1总的
-		qrcode_id = request.GET.get('qrcode_id')
+		log_select = int(request.POST.get('log_select', 0))  # 0 本期, 1总的
+		qrcode_id = request.POST.get('qrcode_id')
+
 		items = []
 		total_money = 0
-
-		# 得到该店铺下所有绑定会员
-		channel_distribution_has_members = ChannelDistributionQrcodeHasMember.objects.filter(
-			channel_qrcode_id=qrcode_id)
-
-		member_ids = []
-		for channel_distribution_has_member in channel_distribution_has_members:
-			member_ids.append(channel_distribution_has_member.member_id)
-
-		member_dict = {}  # {id: name}
-		members = Member.objects.filter(id__in=member_ids)
-
-		for member in members:
-			member_dict[member.id] = member.username_for_title
-
-		for channel_distribution_has_member in channel_distribution_has_members:
-			dict = {}
-			dict['name'] = member_dict[channel_distribution_has_member.member_id]
-			dict['cost_money'] = str(channel_distribution_has_member.cost_money)  # 花费的金额
-			dict['commission'] = str(channel_distribution_has_member.commission)  #　带来的佣金
-			total_money += channel_distribution_has_member.cost_money
-			items.append(dict)
+		if log_select == 1:
+			# 得到该店铺下所有绑定会员
+			channel_distribution_has_members = ChannelDistributionQrcodeHasMember.objects.filter(
+				channel_qrcode_id=qrcode_id)
+			for channel_distribution_has_member in channel_distribution_has_members:
+				dict = {}
+				dict['name'] = channel_distribution_has_member.member_id
+				dict['cost_money'] = channel_distribution_has_member.cost_money  # 花费的金额
+				dict['commission'] = channel_distribution_has_member.commission  #　带来的佣金
+				total_money += channel_distribution_has_member.cost_money
+				items.append(dict)
+		elif log_select == 0:
+			pass
 
 		count_per_page = int(request.GET.get('count_per_page', 15))
 		cur_page = int(request.GET.get('page', '1'))
@@ -1423,7 +1402,7 @@ class ChannelDistributionTransactionAmount(resource.Resource):
 		response = create_response(200)
 		response.data = {
 			'items': items,
-			'total_money': str(total_money),
+			'total_money': total_money,
 			'pageinfo': paginator.to_dict(pageinfo),
 		}
 		return response.get_response()
@@ -1446,14 +1425,10 @@ class ChannelDistributionRewardDetail(resource.Resource):
 
 		items = []
 		for detail in details:
-			time_cycle_start = str(detail.last_extract_time)
-			if time_cycle_start == '0001-01-01 00:00:00':
-				time_cycle_start = '----'
 			dict = {}
-
-			dict['time_cycle_start'] = time_cycle_start  # 上次提现时间
+			dict['time_cycle_start'] = str(detail.last_extract_time)
 			dict['time_cycle_end'] = str(detail.created_at)
-			dict['commission_rate'] = str(qrocde.commission_rate)  # 佣金返现率
+			dict['commission_rate'] = str(qrocde.commission_rate)
 			dict['total_money'] = str(detail.money)
 			dict['commission'] = str(qrocde.commission_rate * detail.moeny)
 
@@ -1466,53 +1441,3 @@ class ChannelDistributionRewardDetail(resource.Resource):
 		}
 		return response.get_response()
 
-
-class ChannelDistributionChangeStatus(resource.Resource):
-	app = 'new_weixin'
-	resource = 'channel_distribution_change_status'
-
-	@login_required
-	def api_post(request):
-		"""
-		修改返款状态
-		"""
-		qrcode_id = request.POST.get('qrcode_id')
-		status = int(request.POST.get('status'))
-
-		qrcode = ChannelDistributionQrcodeSettings.objects.get(id=qrcode_id, owner=request.user)
-
-		if status == 1 and qrcode.status > status:
-			# 切换状态
-			qrcode.update(status=status, extraction_money=F('will_return_reward'))
-
-		if status == 3:
-			# 商家已打款
-			extraction_money = qrcode.extraction_money
-			qrcode.update(
-				total_return = F('total_return')+F('extraction_money'),
-				status = 0,
-				commit_time = '00001-01-01',
-				extraction_money = 0
-			)
-
-			channel_distribution_detail = ChannelDistributionDetail.objects.filter(channel_qrcode_id=qrcode.id, order_id=0)
-			if channel_distribution_detail:
-				last_extract_time = channel_distribution_detail[0].created_at
-			else:
-				last_extract_time = qrcode.created_at
-
-			# 新建奖励明细列表
-			ChannelDistributionDetail.objects.create(
-				channel_qrcode_id = qrcode_id,
-				money = extraction_money,
-				member_id = qrcode.bing_member_id,
-				last_extract_time = last_extract_time
-			)
-			# 修改member的返现总额
-			ChannelDistributionQrcodeHasMember.filter(channel_qrcode_id=qrcode.id).update(
-				commission = F('commission') + extraction_money
-			)
-
-		response = create_response(200)
-		return response.get_response()
-		# TODO 如果记录里面的返现金额是收到后增加的话,要修改 hasMember

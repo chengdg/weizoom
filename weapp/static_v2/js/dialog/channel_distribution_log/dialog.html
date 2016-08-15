@@ -37,22 +37,22 @@
 </script>
 
 <script id="channel-distribution-log-dialog-tmpl" type="text/x-jquery-tmpl">
-
+----${total_money}---
    <table id="channelLogTable" class="table table-bordered table-condensed xb-stripedTable xui-tablePosition mb10">
         <thead style="background:#c8d2e5;">
             <tr>
-                <th style="width:189px">用户名称</th>
-                <th style="width:189px">消费</th>
-                <th style="width:189px">返现金额</th>
+                <th >用户名称</th>
+                <th>消费</th>
+                <th>返现金额</th>
             </tr>
         </thead>
         <tbody id='vip_list'>
                   {{if items.length}}
                   {{each(i, item) items}}
                 <tr>
-                <td>${item.name}</td>
-                <td>${item.cost_money}</td>
-                <td>${item.commission}</td>
+                <td style="width:80px">${item.name}</td>
+                <td>${item.cost}</td>
+                <td>${item.return_money}</td>
                 </tr>
                 {{/each}}
 					{{else}}

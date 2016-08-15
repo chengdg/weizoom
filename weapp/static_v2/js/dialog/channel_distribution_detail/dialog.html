@@ -12,7 +12,7 @@
                             data-ui-role="advanced-table"
                             data-app="new_weixin"
                             data-api="channel_distribution_detail"
-                            data-template-id="#channel-distribution-detail-dialog-tmpl"
+                            data-template-id="#channel-distribution-log-dialog-tmpl"
                             data-enable-paginator="true"
                             data-enable-sort="false"
                             data-item-count-per-page="8"
@@ -27,7 +27,7 @@
 </div>
 </script>
 
-<script id="channel-distribution-detail-dialog-tmpl" type="text/x-jquery-tmpl">
+<script id="channel-distribution-log-dialog-tmpl" type="text/x-jquery-tmpl">
    <table id="channelLogTable" class="table table-bordered table-condensed xb-stripedTable xui-tablePosition mb10">
         <thead style="background:#c8d2e5;">
             <tr>
@@ -41,10 +41,10 @@
                   {{if items.length}}
                   {{each(i, item) items}}
                 <tr>
-				<td>${item.time_cycle_start}至${item.time_cycle_end}</td>
-                <td>${item.commission_rate}</td>
-                <td>${item.total_money}</td>
-                <td>${item.commission}</td>
+                <td style="width:80px">${item.name}</td>
+                <td>${item.cost}</td>
+                <td>${item.return_money}</td>
+                <td>${item.return_money}</td>
                 </tr>
                 {{/each}}
 					{{else}}

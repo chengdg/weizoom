@@ -25,7 +25,6 @@
         }
         .xui-link {
             display: inline-block;
-            cursor: pointer;
         }
         .ml100 {
             margin-left: 100px;
@@ -154,7 +153,7 @@
 							        ${qrcode.extraction_money}
 							    </td>
 							    <td>
-							        <select class='xa-changeStatus' data-id='${qrcode.id}'>
+							        <select>
 							            <option value=0 {{if qrcode.status == 0}}selected="selected"{{/if}}>无状态</option>
 							            <option value=1 {{if qrcode.status == 1}}selected="selected"{{/if}}>等待审核</option>
 							            <option value=2 {{if qrcode.status == 2}}selected="selected"{{/if}}>正在返现中</option>
@@ -183,7 +182,6 @@
         $(document).delegate('.xa-viewLog', 'click', function(event) {
 
             var qrocdeId = $(this).data('qrcode_id');
-            console.log(qrocdeId)
             options = {
                 qrocdeId: qrocdeId
             };
@@ -192,8 +190,8 @@
             W.dialog.showDialog('W.dialog.mall.ChannelDistributionLog', options);
         });
         $(document).delegate('.xa-viewDetail', 'click', function(event) {
+
             var qrocdeId = $(this).data('qrcode_id');
-            console.log(qrocdeId)
             options = {
                 qrocdeId: qrocdeId
             };
@@ -201,12 +199,5 @@
             };
             W.dialog.showDialog('W.dialog.mall.ChannelDistributionDetail', options);
         });
-
-    $(document).ready(function() {
-        var qrcodeView = new W.view.weixin.DistributionsClear({
-            el: $("body")
-        });
-    });
-
     </script>
 {% endblock %}

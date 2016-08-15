@@ -16,16 +16,14 @@ W.dialog.mall.ChannelDistributionLog = W.dialog.Dialog.extend({
     },
 
     onInitialize: function(options) {
+        this.qrocdeId = options.qrocdeId;
         $.tmpl(this.getTemplate(), {selectedMemberIds: 1});
         this.searchMemberTepmplate = this.getSearchMemberTepmplate();
         this.table = this.$('[data-ui-role="advanced-table"]').data('view');
     },
 
     beforeShow: function(options) {
-        this.qrocdeId = options.qrocdeId;
-        this.table.reload({
-            'qrcode_id': this.qrocdeId
-        });
+        this.table.reset();
     },
 
     onShow: function(options) {
@@ -36,6 +34,17 @@ W.dialog.mall.ChannelDistributionLog = W.dialog.Dialog.extend({
     },
 
     afterShow: function(options) {
+        this.table.reload({
+            'qrcode_id': this.qrocdeId
+        });
+    },
+
+    onChangeSelect: function(event){
+        var logSelect = $.trim($('#log_select').val());
+        this.table.reload({
+            'log_select': 1,
+            'qrocde_id': this.qrocdeId
+        })
     },
 
     onGetData: function(options) {

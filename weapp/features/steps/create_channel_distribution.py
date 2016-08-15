@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import time
 import json
-import random
 from behave import *
 from mall.promotion.models import CouponRule
 from modules.member.models import MemberGrade, MemberTag, Member
@@ -10,16 +8,6 @@ from test import bdd_util
 import logging
 from market_tools.tools.distribution.models import ChannelDistributionQrcodeSettings
 from utils.string_util import byte_to_hex
-from django.db.models import F
-
-
-def __create_random_ticket():
-    ticket = time.strftime("%Y%m%d%H%M%S", time.localtime())
-    ticket = '%s%03d' % (ticket, random.randint(1, 999))
-    if ChannelDistributionQrcodeSettings.objects.filter(ticket=ticket).count() > 0:
-        return __create_random_ticket()
-    else:
-        return ticket
 
 @When(u"{user}新建渠道分销二维码")
 def step_impl(context, user):
@@ -70,13 +58,8 @@ def step_impl(context, user):
 		params['_method'] = 'put'
 
 		response = context.client.post('/new_weixin/api/channel_distribution/', params)
-
-		# 给二维码ticket添加个随机值
-		qrcode = ChannelDistributionQrcodeSettings.objects.get(bing_member_title=params['bing_member_title'])
-		qrcode.ticket = __create_random_ticket()
-		qrcode.save()
-		# logging.info(response)
-		# logging.info('////////////////////')
+		logging.info(response)
+		logging.info('////////////////////')
 
 @Then(u"{user}获得渠道分销二维码列表")
 def step_impl(context, user):

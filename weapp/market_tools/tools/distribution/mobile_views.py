@@ -25,16 +25,8 @@ def get_page(request):
 	total_earn = total_return + will_return_reward  #收入
 	diff_reward = commission_return_standard - will_return_reward  #还差多少元可以取现
 	return_standard = propotion_data.return_standard  #多少天的计算方式
-	return_standard = propotion_data.return_standard  #多少天的计算方式
-	status = request.member.status  # 取现进度
+	user_icon = request.member.user_icon
 	valid = will_return_reward >= commission_return_standard
-	if valid:
-		state = 1
-	else:
-		state = 2
-
-	if statue != 0:
-		state = 3
 
 	c = RequestContext(request, {
 		'propotion_data': propotion_data,
@@ -47,7 +39,7 @@ def get_page(request):
 		'user_icon': user_icon,
 		'webapp_id': webapp_id,
 		'member_id': member_id,
-		'state': state,
+		'valid': valid,
 		'member_id': member_id
 	})
 
@@ -141,7 +133,6 @@ def get_weixin_code(request):
 	member_id = request.member.id
 	nick_name = request.member.username_for_html  #当前登入用户的昵称
 	weixin_code = models.ChannelDistributionQrcodeSettings.objects.get(bing_member_id=member_id).ticket  #二维码
-	weixin_code = 'https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=' + weixin_code
 	c = RequestContext(request, {
 		'nick_name': nick_name,
 		'weixin_code': weixin_code

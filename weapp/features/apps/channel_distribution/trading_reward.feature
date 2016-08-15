@@ -319,7 +319,7 @@ Background:
 						"""
 		When marry购买jobs的商品
 		"""
-		{
+			{
 				"relation_member":"bigs",
 				"order_id": "666",
 				"pay_type": "货到付款",
@@ -390,6 +390,10 @@ Scenario:1 一个微信用户扫码下单交易记录列表
 				"user_name":"jack",
 				"pay_money":500.00,
 				"cash_back_amount":50.00
+			},{
+				"user_name":"marry",
+				"pay_money":0.00,
+				"cash_back_amount":0.00
 			}]
 			"""
 
@@ -421,6 +425,10 @@ Scenario:2 一个微信用户扫码下单2次交易记录列表
 				"user_name":"jack",
 				"pay_money":1000.00,
 				"cash_back_amount":100.00
+			}{
+				"user_name":"marry",
+				"pay_money":0.00,
+				"cash_back_amount":0.00
 			}]
 			"""
 @mall2 @apps @senior @trading_reward
@@ -455,7 +463,7 @@ Scenario:3 一个微信用户扫码下单1另一个微信用户下单2次交易�
 				"pay_money":1000.00,
 				"cash_back_amount":100.00
 			},{
-				"user_name":"jack",
+				"user_name":"marry",
 				"pay_money":500.00,
 				"cash_back_amount":50.00
 			}]
