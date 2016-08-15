@@ -4,23 +4,6 @@ Feature:渠道分销-前台会员列表
 
 Background:
 	Given jobs登录系统
-	When jobs新建渠道分销二维码
-		"""
-		[{
-			"code_name": "分销二维码1",
-			"relation_member": "bigs",
-			"distribution_prize_type": "佣金",
-			"commission_return_rate":"10",
-			"minimum_cash_discount":"80",
-			"commission_return_standard":50.00,
-			"settlement_time":"0",
-			"tags": "未分组",
-			"prize_type": "无",
-			"reply_type": "文字",
-			"scan_code_reply": "扫码后回复文本",
-			"create_time": "2015-10-10 10:20:30"
-		}]
-		"""
 	And jobs添加会员分组
 		"""
 		{
@@ -97,7 +80,7 @@ Scenario:1 前台会员列表详情
 			"""
 			[{
 				"wx_name":"jack",
-				"order_id": "001",
+				"order_id": "002",
 				"pay_type": "货到付款",
 				"products":[{
 					"name":"商品1",
@@ -105,7 +88,7 @@ Scenario:1 前台会员列表详情
 				}]
 			},{
 				"wx_name":"jack",
-				"order_id": "002",
+				"order_id": "003",
 				"pay_type": "货到付款",
 				"products":[{
 					"name":"商品2",
@@ -117,7 +100,7 @@ Scenario:1 前台会员列表详情
 			"""
 			[{
 				"wx_name":"bill",
-				"order_id": "003",
+				"order_id": "004",
 				"pay_type": "货到付款",
 				"products":[{
 					"name":"商品1",
@@ -125,7 +108,7 @@ Scenario:1 前台会员列表详情
 				}]
 			},{
 				"wx_name":"bill",
-				"order_id": "004",
+				"order_id": "005",
 				"pay_type": "货到付款",
 				"products":[{
 					"name":"商品2",

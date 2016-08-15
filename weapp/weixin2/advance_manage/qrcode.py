@@ -1508,6 +1508,10 @@ class ChannelDistributionChangeStatus(resource.Resource):
 				member_id = qrcode.bing_member_id,
 				last_extract_time = last_extract_time
 			)
+			# 修改member的返现总额
+			ChannelDistributionQrcodeHasMember.filter(channel_qrcode_id=qrcode.id).update(
+				commission = F('commission') + extraction_money
+			)
 
 		response = create_response(200)
 		return response.get_response()

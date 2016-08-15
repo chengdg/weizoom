@@ -220,9 +220,14 @@ def step_impl(context,user):
 
 	bdd_util.assert_list(expected, actual_list)
 
+@When(u"{user}设置分销会员结算查询条件")
+def step_impl(context, user):
+	expected = json.loads(context.text)
+	data = {}
+
 
 @Then(u"{user}获得分销会员结算列表")
-def step_impl(context,user):
+def step_impl(context, user):
 	expected = json.loads(context.text)
 
 	params = {}
