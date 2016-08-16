@@ -300,8 +300,13 @@ def send_product_export_job_task(self, exportjob_id, filter_data_args, type):
 
                                 model_name.append( key +':'+ value['name'])
                             model_name_str = ' '.join(model_name)
-                            purchase_price = float(model['price']) - float(model['gross_profit'])
                             gross_profit = model['gross_profit']
+                            if product.owner_id == manager_product_user_id:
+                                purchase_price = float(model['price']) - float(model['gross_profit'])
+                            else:
+                                purchase_price = product.purchase_price
+                                gross_profit = float(model['price']) - purchase_price
+                            
                             gross_profits.append(float(gross_profit))
 
                             if model['stock_type'] == 1:
@@ -344,8 +349,13 @@ def send_product_export_job_task(self, exportjob_id, filter_data_args, type):
 
                         total_stocks = product.total_stocks
 
-                        alist = [product.id, model['user_code'], supplier_name_export, product.name, product.name, float(model['price']), float(model['price']), float(model['price'])-float(model['gross_profit']) , float(model['gross_profit']), float(model['gross_profit']), point_type, total_stocks,
-                            total_stocks, total_stocks, categories_str, product_sales, product_sales_money, onshelvetime]
+                        if product.owner_id == manager_product_user_id:
+                            alist = [product.id, model['user_code'], supplier_name_export, product.name, product.name, float(model['price']), float(model['price']), float(model['price'])-float(model['gross_profit']) , float(model['gross_profit']), float(model['gross_profit']), point_type, total_stocks,
+                                total_stocks, total_stocks, categories_str, product_sales, product_sales_money, onshelvetime]
+                        else:
+                            gross_profit = float(model['price']) - product.purchase_price
+                            alist = [product.id, model['user_code'], supplier_name_export, product.name, product.name, float(model['price']), float(model['price']), product.purchase_price , gross_profit, gross_profit, point_type, total_stocks,
+                                total_stocks, total_stocks, categories_str, product_sales, product_sales_money, onshelvetime]
 
                         table.write_row("A{}".format(tmp_line), alist, cell_format)
                 except:
