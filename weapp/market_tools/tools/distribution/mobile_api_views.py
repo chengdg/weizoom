@@ -17,7 +17,7 @@ def change_state(request):
 	if qrcode[0].commission_return_standard  <= qrcode[0].will_return_reward \
 		and  not qrcode[0].extraction_money :
 		qrcode.update (
-			state = 1,
+			status = 1,
 			commit_time = datetime.datetime.now(),
 			extraction_money = F('will_return_reward')
 		)

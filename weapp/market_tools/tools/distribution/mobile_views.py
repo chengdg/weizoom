@@ -90,7 +90,7 @@ def get_vip_message(request):
 	if vip_datas:
 		for vip_data in vip_datas[0]:
 			vip_list={
-				'nick_name': Member.objects.get(id=member_id).username_for_html,
+				'nick_name': Member.objects.get(id=vip_data.member_id).username_for_html,
 				'cost_money': vip_data.cost_money,  #消费金额
 				'commission': vip_data.commission,  #带来的佣金
 				'buy_times': vip_data.buy_times,  #购买次数
