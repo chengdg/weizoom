@@ -43,8 +43,6 @@ def __get_member_by_openid(webapp_id, openid):
 def __send_coupons(context, webapp_owner_name):
     webapp_owner_id = bdd_util.get_user_id_for(webapp_owner_name)
     coupon_info = json.loads(context.text)
-    print(coupon_info['name'])
-    print('----------------------------------------------------------------------------------------------------------------')
     coupon_rule_name = coupon_info['name']
 
 
@@ -67,6 +65,4 @@ def __send_coupons(context, webapp_owner_name):
     }
 
     response = context.client.post(url, data)
-    print(response)
-    print('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^')
     context.response = response

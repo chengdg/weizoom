@@ -1286,7 +1286,7 @@ class ChannelDistributionClearing(resource.Resource):
 		"""
 		分销会员结算
 		"""
-		qrcodes = ChannelDistributionQrcodeSettings.objects.filter(owner__id=request.user.id)
+		qrcodes = ChannelDistributionQrcodeSettings.objects.filter(owner__id=request.user.id).order_by('id')
 		return_money_total = 0  # 已返现总额
 		not_return_money_total = 0  # 未返现总额
 		current_total_return = 0# 本期返现总额

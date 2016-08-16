@@ -126,12 +126,12 @@ Background:
 
 		When jobs为会员发放优惠券
 			"""
-			[{
+			{
 				"name": "优惠券00",
 				"count": 1,
 				"members": ["nokia"],
 				"coupon_ids": ["coupon2_id_1"]
-			}]
+			}
 			"""
 
 	#会员购买
@@ -232,20 +232,20 @@ Background:
 				}]
 			}
 			"""
-		When nokia购买jobs的商品
-			"""
-			{
-				"relation_member":"bill",
-				"order_id": "010",
-				"pay_type": "货到付款",
-				"integral_money":50.00,
-				"integral":100.00,
-				"products":[{
-					"name":"商品1",
-					"count":1 
-				}]
-			}
-			"""
+		#When nokia购买jobs的商品
+		#	"""
+		#	{
+		#		"relation_member":"bill",
+		#		"order_id": "010",
+		#		"pay_type": "货到付款",
+		#		"integral_money":50.00,
+		#		"integral":100.00,
+		#		"products":[{
+		#			"name":"商品1",
+		#			"count":1 
+		#		}]
+		#	}
+		#	"""
 		
 @mall2 @apps @senior @processing_applications @sjq
 Scenario:1 分销会员结算页初次没有提交时的显示
@@ -258,7 +258,7 @@ Scenario:1 分销会员结算页初次没有提交时的显示
 		When jobs完成订单"007"
 		When jobs完成订单"008"
 		When jobs完成订单"009"
-		When jobs完成订单"010"
+		#When jobs完成订单"010"
 		When 后台执行channel_distribution_update		
 		Then jobs获得分销会员结算列表
 			"""
