@@ -101,11 +101,17 @@ Background:
 			"""
 	
 
-@mall2 @apps @senior @member_list_1 @sjq
+@mall2 @apps @senior @member_list @sjq
 
 Scenario:1 前台会员列表详情
 	#扫码关注成为会员
 		Given jobs登录系统
+		When jobs完成订单"002"
+		When jobs完成订单"003"
+		When jobs完成订单"004"
+		When jobs完成订单"005"
+		When 后台执行channel_distribution_update
+		Given bigs登录系统
 		Then bigs获得已有会员列表详情
 			"""
 			[{
