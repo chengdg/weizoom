@@ -101,7 +101,7 @@ Background:
 			"""
 	
 
-@mall2 @apps @senior @member_list @sjq
+@mall2 @apps @senior @member_list
 
 Scenario:1 前台会员列表详情
 	#扫码关注成为会员
