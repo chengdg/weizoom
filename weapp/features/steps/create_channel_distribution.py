@@ -277,6 +277,8 @@ def step_impl(context, user):
 
 @Then(u"{user}获得分销会员结算列表")
 def step_impl(context, user):
+
+	status = {0:u'无状态', 1:u'等待审核', 2:u'正在返现'}
 	expected = json.loads(context.text)
 
 	params = {}
@@ -302,7 +304,7 @@ def step_impl(context, user):
 		data_dict['commission_return_rate'] = data['commission_rate']
 		data_dict['already_reward'] = data['will_return_reward']
 		data_dict['cash_back_amount'] = data['extraction_money']
-		data_dict['cash_back_state'] = data['status']
+		data_dict['cash_back_state'] = status[data['status']]
 		actual_list.append(data_dict)
 	
 	print('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^')

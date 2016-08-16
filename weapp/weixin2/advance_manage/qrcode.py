@@ -1025,7 +1025,6 @@ class ChannelDistributions(resource.Resource):
 			qrcode_dict['is_new'] = qrcode.is_new
 			items.append(qrcode_dict)
 
-
 		pageinfo, items = paginator.paginate(items, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
 
 		response = create_response(200)
