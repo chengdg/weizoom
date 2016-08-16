@@ -59,6 +59,7 @@ class Mvote(resource.Resource):
 				#termite类型数据
 				try:
 					record = app_models.vote.objects.get(id=id)
+					thumbnails_url = record.image if not record.image else thumbnails_url
 				except:
 					c = RequestContext(request, {
 						'is_deleted_data': True
@@ -97,7 +98,8 @@ class Mvote(resource.Resource):
 					'q_vote': result_list,
 					'hide_non_member_cover': True, #非会员也可使用该页面
 					'isMember': isMember,
-					'auth_appid_info': auth_appid_info
+					'auth_appid_info': auth_appid_info,
+					'is_hide_weixin_option_menu': True
 				})
 				return render_to_response('vote/templates/webapp/result_vote.html', c)
 			else:
@@ -120,6 +122,7 @@ class Mvote(resource.Resource):
 					'isMember': isMember,
 					'auth_appid_info': auth_appid_info,
 					'permission': permission,
+					'share_page_title': request.webapp_owner_info.auth_appid_info.nick_name,
 					'share_page_desc': share_page_desc,
 					'share_img_url': thumbnails_url
 				})

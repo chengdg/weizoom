@@ -124,18 +124,36 @@
             if(!W.wxShareData)
               return;
             res = res.checkResult;
-            if(res.onMenuShareAppMessage)
-              wx.onMenuShareAppMessage(W.wxShareData);
-            if(res.onMenuShareTimeline)
-              wx.onMenuShareTimeline(W.wxShareTimelineData);
-            if(res.onMenuShareQQ)
-              wx.onMenuShareQQ(W.wxShareData);
-            if(res.previewImage)
-              W.ImagePreview(wx);
-            if(res.hideOptionMenu && isHideWeixinOptionMenu)
-              wx.hideOptionMenu();
-            if(res.showOptionMenu && !isHideWeixinOptionMenu)
-              wx.showOptionMenu()
+            if(res.onMenuShareAppMessage){
+                wx.onMenuShareAppMessage(W.wxShareData);
+                console.log('支持发送给朋友');
+            }
+
+            if(res.onMenuShareTimeline){
+                wx.onMenuShareTimeline(W.wxShareTimelineData);
+                console.log('支持分享到朋友圈');
+            }
+
+            if(res.onMenuShareQQ){
+                wx.onMenuShareQQ(W.wxShareData);
+                console.log('支持分享到QQ');
+            }
+
+            if(res.previewImage){
+                W.ImagePreview(wx);
+                console.log('开启图片全屏查看功能');
+            }
+
+            if(res.hideOptionMenu && isHideWeixinOptionMenu){
+                wx.hideOptionMenu();
+                console.log('隐藏菜单');
+            }
+
+            if(res.showOptionMenu && !isHideWeixinOptionMenu){
+                wx.showOptionMenu();
+                console.log('展示菜单');
+            }
+
           }
         });
       });

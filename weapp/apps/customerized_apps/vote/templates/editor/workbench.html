@@ -11,6 +11,19 @@
         .propertyGroup_property_horizontalField .propertyGroup_property_label{
             min-width: 70px;
         }
+        .xui-i-triggerButton{
+            position: absolute;
+            margin-top: -23px !important;
+            background: rgba(0,0,0,0.6);
+            color: white !important;
+            font-size: 15px;
+            text-align: center !important;
+            width: 100px;
+            font-weight: bold;
+        }
+        Button.xui-removeImageButton{
+            display: none;
+        }
     </style>
 {% endblock %}
 
@@ -78,7 +91,7 @@
         "task": "weizoom-load-termite-components"
       }
     -->
-  {{ '["appkit.page", "appkit.componentadder", "appkit.commondescription", "appkit.textselection", "appkit.imageselection", "appkit.textlist", "appkit.submitbutton"]'|load_termite_components|safe }}
+  {{ '["appkit.page", "appkit.componentadder", "appkit.votedescription", "appkit.textselection", "appkit.imageselection", "appkit.textlist", "appkit.submitbutton"]'|load_termite_components|safe }}
   <!-- *end_prunt_task* -->
 {% if not is_deleted_data %}
   <script type="text/javascript">
@@ -179,11 +192,13 @@
           var name = descriptionModel.get('title');
           var startTime = descriptionModel.get('start_time')+":00";
           var endTime = descriptionModel.get('end_time')+":00";
+            var image = descriptionModel.get('image');
           var relatedPageId = data['project_id'];
           var args = {
             "name": name,
             "start_time": startTime,
-            "end_time": endTime
+            "end_time": endTime,
+              "image": image
           }
           if (isCreateNewData) {
             var method = 'put';

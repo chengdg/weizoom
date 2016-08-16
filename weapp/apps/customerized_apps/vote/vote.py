@@ -100,7 +100,7 @@ class vote(resource.Resource):
 		"""
 		data = request_util.get_fields_to_be_save(request)
 		update_data = {}
-		update_fields = set(['name', 'start_time', 'end_time'])
+		update_fields = set(['name', 'image', 'start_time', 'end_time'])
 		for key, value in data.items():
 			if key in update_fields:
 				update_data['set__'+key] = value
