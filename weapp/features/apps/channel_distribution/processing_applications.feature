@@ -90,10 +90,11 @@ Background:
 			"create_time": "2015-10-10 10:20:30"
 		}]
 		"""
-	When jobs设定会员积分策略
+	Given jobs设定会员积分策略
 		"""
 		{
-			"integral_each_yuan": 2
+			"integral_each_yuan": 10,		
+			"use_ceiling ": 50
 		}
 		"""
 	And jobs已添加支付方式
@@ -238,20 +239,20 @@ Background:
 				}]
 			}
 			"""
-		#When nokia购买jobs的商品
-		#	"""
-		#	{
-		#		"relation_member":"bill",
-		#		"order_id": "010",
-		#		"pay_type": "货到付款",
-		#		"integral_money":50.00,
-		#		"integral":100.00,
-		#		"products":[{
-		#			"name":"商品1",
-		#			"count":1 
-		#		}]
-		#	}
-		#	"""
+		When nokia购买jobs的商品
+			"""
+			{
+				"relation_member":"bill",
+				"order_id": "010",
+				"pay_type": "货到付款",
+				"integral_money":10.00,
+				"integral": 100.00,
+				"products":[{
+					"name":"商品1",
+					"count":1 
+				}]
+			}
+			"""
 		
 @mall2 @apps @senior @processing_applications @sjq
 Scenario:1 分销会员结算页初次没有提交时的显示
@@ -264,7 +265,7 @@ Scenario:1 分销会员结算页初次没有提交时的显示
 		When jobs完成订单"007"
 		When jobs完成订单"008"
 		When jobs完成订单"009"
-		#When jobs完成订单"010"
+		When jobs完成订单"010"
 		When 后台执行channel_distribution_update		
 		Then jobs获得分销会员结算列表
 			"""

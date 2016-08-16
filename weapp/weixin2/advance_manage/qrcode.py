@@ -1286,7 +1286,7 @@ class ChannelDistributionClearing(resource.Resource):
 		"""
 		分销会员结算
 		"""
-		qrcodes = ChannelDistributionQrcodeSettings.objects.filter(owner__id=request.user.id).order_by('id')
+		qrcodes = ChannelDistributionQrcodeSettings.objects.filter(owner__id=request.user.id)
 		return_money_total = 0  # 已返现总额
 		not_return_money_total = 0  # 未返现总额
 		current_total_return = 0# 本期返现总额
@@ -1326,7 +1326,7 @@ class ChannelDistributionClearing(resource.Resource):
 		start_date = request.GET.get('start_date')
 		end_date = request.GET.get('end_date')
 
-		qrcodes = ChannelDistributionQrcodeSettings.objects.all()
+		qrcodes = ChannelDistributionQrcodeSettings.objects.filter(owner=request.user).order_by('-status', '-commit_time')
 		if return_min:
 			if return_max:
 				qrcodes = qrcodes.filter(extraction_money__range=(return_min, return_max))
