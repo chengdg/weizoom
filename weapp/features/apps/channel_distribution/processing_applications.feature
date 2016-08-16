@@ -30,8 +30,8 @@ Background:
 			"coupon_id_prefix": "coupon1_id_"
 		},{
 			"name": "优惠券00",
-			"money": 25.00,
-			"count": 5,
+			"money": 50.00,
+			"count": 3,
 			"limit_counts": "无限",
 			"using_limit": "满1元可以使用",
 			"start_date": "今天",
@@ -128,9 +128,9 @@ Background:
 			"""
 			[{
 				"name": "优惠券00",
-				"count": 2,
+				"count": 1,
 				"members": ["nokia"],
-				"coupon_ids": ["coupon2_id_2", "coupon2_id_1"]
+				"coupon_ids": ["coupon2_id_1"]
 			}]
 			"""
 
@@ -225,8 +225,6 @@ Background:
 				"relation_member":"bill",
 				"order_id": "009",
 				"pay_type": "货到付款",
-				"integral_money":25.00,
-				"integral":50.00,
 				"coupon_id":"coupon2_id_1",
 				"products":[{
 					"name":"商品1",
@@ -240,9 +238,8 @@ Background:
 				"relation_member":"bill",
 				"order_id": "010",
 				"pay_type": "货到付款",
-				"integral_money":25.00,
-				"integral":50.00,
-				"coupon_id":"coupon2_id_2",
+				"integral_money":50.00,
+				"integral":100.00,
 				"products":[{
 					"name":"商品1",
 					"count":1 

@@ -200,26 +200,36 @@ def step_impl(context, user, qrcode_name):
 def step_impl(context,user):
 	expected = json.loads(context.text)
 	name = byte_to_hex(user)
-	qrcode = ChannelDistributionQrcodeSettings.objects.get(bing_member_title=name)
+
+	member_id = Member.objects.filter(username_hexstr__contains=name)[0].id
+
+	qrcode = ChannelDistributionQrcodeSettings.objects.get(bing_member_id=member_id)
+
+	# params = {}
+	# params['already_extracted'] = qrcode.total_return
+	# params['income'] = qrcode.will_return_reward
+	# params['commission_return_standard'] = qrcode.commission_return_standard
+	# params['already_reward'] = qrcode.total_return
+	# params['difference_value'] = qrcode.will_return_reward
+    #
+	# actual_list = []
+	# for param in params:
+	# 	param_dict = {}
+	# 	param_dict['already_extracted'] = params['already_extracted']
+	# 	param_dict['income'] = params['income']
+	# 	param_dict['commission_return_standard'] =float(param['commission_return_standard'])
+	# 	param_dict['already_reward'] = param['already_reward']
+	# 	param_dict['difference_value'] = float(param['difference_value'])
+	# 	actual_list.append(param_dict)
 
 	params = {}
-	params['already_extracted'] = qrcode.total_return
-	params['income'] = qrcode.will_return_reward
-	params['commission_return_standard'] = qrcode.commission_return_standard
-	params['already_reward'] = qrcode.total_return
-	params['difference_value'] = qrcode.will_return_reward
-
-	actual_list = []
-	for param in params:
-		param_dict = {}
-		param_dict['already_extracted'] = params['already_extracted']
-		param_dict['income'] = params['income']
-		param_dict['commission_return_standard'] =float(param['commission_return_standard'])
-		param_dict['already_reward'] = param['already_reward']
-		param_dict['difference_value'] = float(param['difference_value'])
-		actual_list.append(param_dict)
-
-	bdd_util.assert_list(expected, actual_list)
+	params['already_extracted'] = float(qrcode.total_return)  # 已提取
+	params['income'] = qrcode.total_return + qrcode.will_return_reward  # 收入
+	params['commission_return_standard'] = float(qrcode.commission_return_standard)
+	params['already_reward'] = qrcode.will_return_reward  # 已获得奖励
+	params['difference_value'] = float(qrcode.commission_return_standard-qrcode.will_return_reward)
+	logging.info(params)
+	bdd_util.assert_list(expected, [params])
 
 
 
