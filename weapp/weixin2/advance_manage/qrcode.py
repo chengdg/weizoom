@@ -1520,13 +1520,9 @@ class ChannelDistributionChangeStatus(resource.Resource):
 
 			for has_member in has_members:
 				commission_not_add = has_member.commission_not_add
-				print(commission_not_add)
-				print('----------------------comm_not_add up')
 				has_member.commission = has_member.commission + commission_not_add
 				has_member.commission_not_add = 0
-				print(has_member.commission)
 				has_member.save()
-				print(has_member)
 
 			extraction_money = qrcode[0].extraction_money
 			qrcode.update(

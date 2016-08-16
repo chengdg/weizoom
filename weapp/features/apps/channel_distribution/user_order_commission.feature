@@ -15,7 +15,7 @@ Feature:分销会员前台分销推广页
 
 Background:
 	Given jobs登录系统
-	And jobs已添加多图文
+	When jobs已添加多图文
 		"""
 		[{
 			"title":"图文1",
@@ -26,7 +26,7 @@ Background:
 			"content":"单条图文1文本内容"
 		}]
 		"""
-	And bigs关注jobs的公众号于'2015-10-01'
+	When bigs关注jobs的公众号于'2015-10-01'
 	Given jobs登录系统
 	When jobs新建渠道分销二维码
 		"""
@@ -37,7 +37,7 @@ Background:
 			"commission_return_rate":"10",
 			"minimum_cash_discount":"80",
 			"commission_return_standard":50.00,
-			"is_seven_day_settlement_standard":"false",
+			"settlement_time":"0",
 			"tags": "未分组",
 			"prize_type": "无",
 			"reply_type": "文字",
@@ -142,7 +142,7 @@ Background:
 			}
 			"""
 		
-@mall2 @apps @senior @user_order_commission
+@mall2 @apps @senior @user_order_commission @user_order_commission_1
 Scenario:1 没有订单,没有佣金
 	
 		When bigs访问jobs的webapp
@@ -158,7 +158,7 @@ Scenario:1 没有订单,没有佣金
 			}]
 			"""
 
-@mall2 @apps @senior @user_order_commission
+@mall2 @apps @senior @user_order_commission @user_order_commission_2
 Scenario:2 有订单完成,佣金收入
 	Given jobs登录系统
 	When jobs完成订单"002"
@@ -168,14 +168,14 @@ Scenario:2 有订单完成,佣金收入
 		Then bigs获得推广分销详情
 			"""
 			[{
-				"already_extracted":0,
+				"already_extracted":0.0,
 				"income":10.00,
 				"commission_return_standard":50.00,
-				"already_reward":10,
+				"already_reward":10.0,
 				"difference_value":40.00
 			}]
 			"""
-@mall2 @apps @senior @user_order_commission
+@mall2 @apps @senior @user_order_commission @user_order_commission_3
 Scenario:3 达到提取金额
 		Given jobs登录系统
 		When jobs完成订单"002"
@@ -191,15 +191,15 @@ Scenario:3 达到提取金额
 		Then bigs获得推广分销详情
 			"""
 			[{
-				"already_extracted": 0,
+				"already_extracted": 50.00,
 				"income":50.00,
 				"commission_return_standard":50.00,
-				"already_reward":50.00,
+				"already_reward":0.00,
 				"difference_value":50.00
 			}]
 			"""
 
-@mall2 @apps @senior @user_order_commission
+@mall2 @apps @senior @user_order_commission @user_order_commission_4
 Scenario:4 已返现
 		Given jobs登录系统
 		When jobs完成订单"002"
@@ -215,7 +215,44 @@ Scenario:4 已返现
 		Then bigs获得推广分销详情
 			"""
 			[{
-				"already_extracted": 50,
+				"already_extracted": 60.00,
+				"income":60.00,
+				"commission_return_standard":50.00,
+				"already_reward":0.00,
+				"difference_value":50.00
+			}]
+			"""
+
+@mall2 @apps @senior @user_order_commission @user_order_commission_5
+Scenario:5 返现一次，完成订单
+		Given jobs登录系统
+		When jobs完成订单"002"
+		When jobs完成订单"003"
+		When jobs完成订单"004"
+		When jobs完成订单"005"
+		When jobs完成订单"006"
+		When 后台执行channel_distribution_update
+		When bigs申请返现于2015-08-12 10:00:00
+		When jobs已返现给bigs金额"50.00"
+		When bigs访问jobs的webapp
+		Then bigs获得推广分销详情
+			"""
+			[{
+				"already_extracted": 50.00,
+				"income":50.00,
+				"commission_return_standard":50.00,
+				"already_reward":0.00,
+				"difference_value":50.00
+			}]
+			"""
+
+		When jobs完成订单"007"
+		When 后台执行channel_distribution_update
+		When bigs访问jobs的webapp
+		Then bigs获得推广分销详情
+			"""
+			[{
+				"already_extracted": 50.00,
 				"income":60.00,
 				"commission_return_standard":50.00,
 				"already_reward":10.00,
