@@ -175,6 +175,7 @@
 						{{/if}}
 					</td>
 					<td width="100">
+						{{if order.is_first_order }}<i class="xui-firstTag">首</i>{{/if}}
 						{{if order.buyer_id > 0}}
 							<a href="/member/detail/?id=${ order.buyer_id }" target='_blank'>{{html order.buyer_name}}</a>
 						{{else}}
