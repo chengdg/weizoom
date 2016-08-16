@@ -171,11 +171,19 @@
 							        ${qrcode.extraction_money}
 							    </td>
 							    <td>
-							        <select class='xa-changeStatus' data-id='${qrcode.id}'>
-							            <option value=0 {{if qrcode.status == 0}}selected="selected"{{/if}}>无状态</option>
-							            <option value=1 {{if qrcode.status == 1}}selected="selected"{{/if}}>等待审核</option>
-							            <option value=2 {{if qrcode.status == 2}}selected="selected"{{/if}}>正在返现中</option>
-							            <option value=3 {{if qrcode.status == 3}}selected="selected"{{/if}}>已完成/切换成无状态</option>
+							        <select class='xa-changeStatus' data-id='${qrcode.qrcode_id}'>
+                                    {{if qrcode.status == '0'}}
+                                    <option value='0'>无状态</option>
+                                    <option value='1' disabled="disabled">等待审核</option>
+                                    <option value='2'disabled="disabled">正在返现中</option>
+                                    <option value='3' disabled="disabled">已完成/切换成无状态</option>
+                                    {{else}}
+                                    <option value='0' disabled="disabled">无状态</option>
+                                    <option value='1' {{if qrcode.status > 1 }}disabled="disabled"{{/if}}>等待审核</option>
+                                    <option value='2' {{if qrcode.status > 2}}disabled="disabled"{{/if}}>正在返现中</option>
+                                    <option value='3'>已完成/切换成无状态</option>
+                                    {{/if}}
+
 							        </select>
 							    </td>
 							    <td>
@@ -217,6 +225,30 @@
             options.success = function(data) {
             };
             W.dialog.showDialog('W.dialog.mall.ChannelDistributionDetail', options);
+        });
+
+        $(document).delegate('.xa-changeStatus', 'change', function(event){
+            console.log($(this));
+            console.log($(this).val());
+            var status = $(this).val();
+            var qrcode_id = ($(this).data('id'));
+            $.ajax({
+                type:"POST",
+                url:"/new_weixin/api/channel_distribution_change_status/",
+                data:{status:status, qrcode_id:qrcode_id},
+                success: function(resp){
+                    W.showHint('success', resp.errMsg);
+                        setTimeout(function() {
+                            location.reload()
+                        }, 1000);
+                },
+                error:function(resp){
+                    W.showHint('error', '修改失败');
+                    setTimeout(function() {
+                        location.reload()
+                    }, 1000);
+                }
+            });
         });
 
     $(document).ready(function() {

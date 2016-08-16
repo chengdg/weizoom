@@ -61,7 +61,7 @@ def step_impl(context):
 
 @When(u'{user}已返现给{member_name}金额"{money}"')
 def step_impl(context, user, member_name, money):
-	logging.info('11111111111111111111111111')
+
 	logging.info(serialize('json',ChannelDistributionQrcodeHasMember.objects.all()))
 	member_name = byte_to_hex(member_name)
 	bing_member_id = Member.objects.filter(username_hexstr__contains=member_name)[0].id
@@ -72,9 +72,8 @@ def step_impl(context, user, member_name, money):
 		'qrcode_id': qrcode.id
 	}
 	response = context.client.post('/new_weixin/api/channel_distribution_change_status/', data)
-	logging.info(response)
-	logging.info('222222222222222222222222')
-	logging.info(serialize('json',ChannelDistributionQrcodeHasMember.objects.all()))
+
+
 
 
 @Then(u'{user}获得{vip_name}的交易记录列表')
@@ -83,11 +82,9 @@ def step_impl(context, user, vip_name):
 	bing_member_id = Member.objects.filter(username_hexstr__contains=member_name)[0].id
 	qrcode = ChannelDistributionQrcodeSettings.objects.get(bing_member_id=bing_member_id)
 	expected = json.loads(context.text)
-	# for expected in expecteds:
-	# 	user_name = expected['user_name']
+
 	data = {'qrcode_id': qrcode.id}
-	logging.info(data)
-	logging.info('...........................')
+
 	response = context.client.get('/new_weixin/api/channel_distribution_transaction_amount/', data)
 	logging.info(response)
 	datas = json.loads(response.content)['data']['items']

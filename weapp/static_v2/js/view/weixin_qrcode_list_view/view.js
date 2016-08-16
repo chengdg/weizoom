@@ -113,8 +113,7 @@ W.view.weixin.DistributionsClear = Backbone.View.extend({
 
     events: {
         'click .xa-search': 'onClickSearchButton',
-        'click .xa-reset': 'onClickResetButtion',
-        'change .xa-changeStatus': 'onChangeStatusButtion'
+        'click .xa-reset': 'onClickResetButtion'
     },
 
     initialize: function(options) {
@@ -134,13 +133,6 @@ W.view.weixin.DistributionsClear = Backbone.View.extend({
         $('input:text').each(function(){
             $(this).val('') ;
         });
-    },
-
-    onChangeStatusButtion: function(){
-        var checkbox = $(event.currentTarget);
-      // console.log(this.selectOption.data('id'));
-      console.log(checkbox);
-
     },
 
     render: function() {
