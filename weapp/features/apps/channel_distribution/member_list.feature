@@ -100,30 +100,6 @@ Background:
 			"""
 	
 
-	And bigs关注jobs的公众号于'2015-10-01'
-	And jobs已添加支付方式
-		"""
-		[{
-			"type":"货到付款"
-		},{
-			"type":"微信支付"
-		},{
-			"type":"支付宝"
-		}]
-		"""
-
-	And jobs已添加商品
-		"""
-		[{
-			"name": "商品1",
-			"price": 50.00,
-			"count":"10"
-		},{
-			"name": "商品2",
-			"price": 100.00,
-			"count":"10"
-		}]
-		"""
 @mall2 @apps @senior @member_list_1
 
 Scenario:1 前台会员列表详情
