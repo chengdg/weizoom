@@ -319,7 +319,8 @@ def step_impl(context,user,time):
 		qrcode.update (
 			status = 1,
 			commit_time = time,
-			extraction_money = F('will_return_reward')
+			extraction_money = F('will_return_reward'),
+			is_new = True
 		)
 
 

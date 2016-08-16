@@ -164,7 +164,12 @@ td {
 							        ${qrcode.created_at}
 							    </td>
 							    <td>
-							        <a class="xui-link" href='/new_weixin/distribution_clearing/'>操作${qrcode.clearing}</a>
+                                    {{if qrcode.is_new}}
+                                    <a class="xui-link xui-icon-pd" href='/new_weixin/distribution_clearing/'>操作${qrcode.clearing}
+							        </a><span class="xui-icon-new">new</span>
+                                    {{else}}
+                                    <a class="xui-link" href='/new_weixin/distribution_clearing/'>操作${qrcode.clearing}</a>
+                                    {{/if}}
 							    </td>
 							    <td>
 							    <a class="xui-link" href='/new_weixin/channel_distribution/?setting_id=${qrcode.id}'>修改</a><a class="xui-link" target="_blank" href="https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=${qrcode.ticket}">查看</a>

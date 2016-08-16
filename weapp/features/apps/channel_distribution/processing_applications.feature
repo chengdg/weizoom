@@ -374,7 +374,7 @@ Scenario:4 分销会员结算页已完成/切换为无状态
 		When 后台执行channel_distribution_update
 		When bigs访问jobs的webapp
 		When bigs申请返现于2015-08-12 10:00:00
-		When jobs更改返现状态为"已完成/切换为无状态"
+		When jobs已返现给bigs金额"100.00"
 		Then jobs获得分销会员结算列表
 			"""
 			[{
