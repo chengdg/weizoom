@@ -145,9 +145,9 @@ class ProductList(resource.Resource):
                 product_pool_param['status'] = models.PP_STATUS_ON
                 product_pool = models.ProductPool.objects.filter(**product_pool_param)
                 product_pool_id2product_pool = dict([(pool.product_id, pool) for pool in product_pool])
-
                 if start_date and end_date:
                     products = products.filter(id__in=product_pool_id2product_pool.keys()) 
+
             # products = models.Product.objects.filter(
             #     owner=request.manager,
             #     shelve_type=models.PRODUCT_SHELVE_TYPE_ON,
@@ -173,14 +173,13 @@ class ProductList(resource.Resource):
                 userprofile_manager = UserProfile.objects.filter(webapp_type=2).first()
 
                 mananger_supplier_ids = [supplier.id for supplier in models.Supplier.objects.filter(
-                                            owner=userprofile_manager.user_id,
+                                            owner_id__in=[userprofile_manager.user_id, request.manager.id],
                                             name__contains=store_name,
                                             is_delete=False
                                         )]
                 if products:
                     products = products.filter(supplier__in=mananger_supplier_ids)
 
-            
 
         # import pdb
         # pdb.set_trace()
@@ -260,6 +259,7 @@ class ProductList(resource.Resource):
         items1 = []
         items2 = []
         for product in products:
+
             product_dict = product.format_to_dict()
             product_dict['is_self'] = (request.manager.id == product.owner_id)
 
@@ -281,7 +281,6 @@ class ProductList(resource.Resource):
             if product.id in product_pool_id2product_pool.keys():
                 product_dict['display_index'] = product_pool_id2product_pool[product.id].display_index
                 product_dict['sync_at'] = product_pool_id2product_pool[product.id].sync_at.strftime('%Y-%m-%d %H:%M') if product_pool_id2product_pool[product.id].sync_at else ""
-                print product.id,">>>>>>>>>>DS>D>E.f>D>",product_dict['sync_at']
             else:
                 product_dict['sync_at'] = ""
             #增加团购属性

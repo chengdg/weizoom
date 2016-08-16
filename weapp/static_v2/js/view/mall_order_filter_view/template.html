@@ -89,6 +89,8 @@
 			<a href="javascript:void(0);" class='ml10 xui-dateFilter recently-week-day' data-day=7>最近7天</a>&nbsp;
 			<a href="javascript:void(0);" class='xui-dateFilter ml20 recently-week-day' data-day=30>最近30天</a>
 		</div>
+		{{if mallType == 3}}
+		{{else}}
 		<div class="xui-i-item" style="margin-left:-48px;">
 			{{if mallType == 0}}
 			<label>订单来源：</label>
@@ -107,6 +109,7 @@
 			</select>
 			{{/if}}
 		</div>
+		{{/if}}
 		<div class="xui-i-item" style="margin-left:-48px;">
 			<label>订单状态：</label>
 			<select id="orderStatus" name="orderStatus" class="w120 m0">

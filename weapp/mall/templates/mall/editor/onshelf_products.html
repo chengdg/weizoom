@@ -81,7 +81,7 @@
 		<thead>
 			<tr>
 				<th width="250">商品信息</th>
-				<th width="100">{{if data.data.mall_type == 1}}供货商{{else}}条码{{/if}}</th>
+				<th width="100">{{if data.data.mall_type > 1}}供货商{{else}}条码{{/if}}</th>
 				<th width="100">分组</th>
 				<th width="115">商品价格（元）</th>
 				<th width="50">库存</th>
@@ -122,7 +122,7 @@
 							</div>
 						</div>
 					</td>
-					<td>{{if data.data.mall_type == 1}}
+					<td>{{if data.data.mall_type > 0}}
 							{{if product.is_sync }}<i class="xui-icon-sync">同</i>{{/if}}
 							${product.store_name}
 						{{else}}
