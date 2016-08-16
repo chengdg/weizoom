@@ -362,7 +362,7 @@ def step_impl(context,user):
 		data_dict['purchase_count'] = data.buy_times
 		data_dict['concern_date'] = data.created_at
 		actual_list.append(data_dict)
-	print(data_dict)
+	print(actual_list)
 	print('---------------------------------------------------------------------------')
 
 	# for vip_data in vip_datas[0]:
