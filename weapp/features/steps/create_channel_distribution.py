@@ -10,8 +10,11 @@ from modules.member.models import MemberGrade, MemberTag, Member
 from test import bdd_util
 import logging
 from market_tools.tools.distribution.models import ChannelDistributionQrcodeSettings
+from market_tools.tools.distribution.models import ChannelDistributionQrcodeHasMember
 from utils.string_util import byte_to_hex
 from django.db.models import F
+from django.contrib.auth.models import User
+from account.models import UserProfile
 
 
 def __create_random_ticket():
@@ -71,6 +74,8 @@ def step_impl(context, user):
 		params['_method'] = 'put'
 
 		response = context.client.post('/new_weixin/api/channel_distribution/', params)
+		# logging.info(response)
+		# logging.info('12315456422134163541563415634156341')
 
 		# 给二维码ticket添加个随机值
 		qrcode = ChannelDistributionQrcodeSettings.objects.get(bing_member_title=params['bing_member_title'])
@@ -299,14 +304,24 @@ def step_impl(context,user,time):
 	user = byte_to_hex(user)
 	member_id = Member.objects.filter(username_hexstr__contains=user)[0].id
 	qrcode = ChannelDistributionQrcodeSettings.objects.filter(bing_member_id=member_id)
-	if qrcode[0].commission_return_standard  <= qrcode[0].will_return_reward \
+	if qrcode[0].commission_return_standard  < qrcode[0].will_return_reward \
 		and  not qrcode[0].extraction_money :
 		qrcode.update (
-			status = 1,
-			commit_time = time,
+			state = 1,
+			commit_time = datetime.datetime.now(),
 			extraction_money = F('will_return_reward')
 		)
 
+
+
+def __date2time(date_str):
+	"""
+	字符串 今天/明天……
+	转化为字符串 "%Y-%m-%d %H:%M"
+	"""
+	cr_date = date_str
+	p_time = "{} 00:00".format(bdd_util.get_date_str(cr_date))
+	return p_time
 
 
 @Then(u"{user}获得已有会员列表详情")
@@ -314,22 +329,59 @@ def step_impl(context,user):
 	expected = json.loads(context.text)
 
 	user = byte_to_hex(user)
+	webapp_id = Member.objects.filter(username_hexstr__contains=user)[0].webapp_id
 	member_id = Member.objects.filter(username_hexstr__contains=user)[0].id
-	response = context.client.get('./?module=market_tool:distribution&model=vip_message&action=get&member_id='+member_id)
+	channel_qrcode_id = ChannelDistributionQrcodeSettings.objects.filter(bing_member_id=member_id)[0].id
+	print(webapp_id)
+	print('------------------------------------')
+	print(member_id)
+	print('------------------------------------')
+	# webapp_id = UserProfile.objects.filter(id=user_id)[0].webapp_id
+	# response = context.client.get('./?module=market_tool:distribution&model=vip_message&action=get&webapp_owner_id='+webapp_id)
 
-	datas = json.loads(response.content)['data']['items']
+	# datas = json.loads(response.content)['data']['items']
+	# actual_list = []
+	# for data in datas:
+	# 	data_dict = {}
+	# 	data_dict['wx_name'] = data['nick_name']
+	# 	data_dict['order_money'] = data['cost_money']
+	# 	data_dict['commision'] = data['commission']
+	# 	data_dict['purchase_count'] = data['buy_times']
+	# 	data_dict['concern_date'] = data['created_at']
+	# 	actual_list.append(data_dict)
+
+	datas = ChannelDistributionQrcodeHasMember.objects.filter(channel_qrcode_id=channel_qrcode_id)
+	print(datas)
+	print('---------------------------------------------------------------------------')
 	actual_list = []
 	for data in datas:
 		data_dict = {}
-		data_dict['wx_name'] = data['nick_name']
-		data_dict['order_money'] = data['cost_money']
-		data_dict['commision'] = data['commission']
-		data_dict['purchase_count'] = data['buy_times']
-		data_dict['concern_time'] = data['created_at']
+		data_dict['wx_name'] = Member.objects.get(id=data.member_id).username_for_html,
+		data_dict['order_money'] = data.cost_money
+		data_dict['commision'] = data.commission
+		data_dict['purchase_count'] = data.buy_times
+		data_dict['concern_date'] = data.created_at
 		actual_list.append(data_dict)
+	print(data_dict)
+	print('---------------------------------------------------------------------------')
+
+	# for vip_data in vip_datas[0]:
+	# 	vip_list={
+	# 		'nick_name': Member.objects.get(id=member_id).username_for_html,
+	# 		'cost_money': vip_data.cost_money,  #消费金额
+	# 		'commission': vip_data.commission,  #带来的佣金
+	# 		'buy_times': vip_data.buy_times,  #购买次数
+	# 		'created_at': vip_data.created_at  #关注时间
+	# 	}
+	# 	vip_lists.append(vip_list)
+
+
+	for expect in expected:
+		if 'concern_time' in expect:
+			expect['start_date'] = __date2time(expect['concern_time'])
+			del expect['concern_time']
 
 	bdd_util.assert_list(expected, actual_list)
-
 
 
 

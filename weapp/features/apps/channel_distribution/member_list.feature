@@ -4,7 +4,8 @@ Feature:渠道分销-前台会员列表
 
 Background:
 	Given jobs登录系统
-	And bigs关注jobs的公众号于'2015-10-01'
+	When bigs关注jobs的公众号于'2015-10-01'
+	Given jobs登录系统
 	When jobs新建渠道分销二维码
 		"""
 		[{
@@ -100,12 +101,12 @@ Background:
 			"""
 	
 
-@mall2 @apps @senior @member_list_1
+@mall2 @apps @senior @member_list_1 @sjq
 
 Scenario:1 前台会员列表详情
 	#扫码关注成为会员
 		Given jobs登录系统
-		Then jobs获得已有会员列表详情
+		Then bigs获得已有会员列表详情
 			"""
 			[{
 				"wx_name": "jack",
