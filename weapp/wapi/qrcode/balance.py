@@ -58,6 +58,7 @@ class QrcodeBalance(api_resource.ApiResource):
 		order_number2index = {}
 		date_range = []
 		order_log_numbers = []
+		order_number2finished_at = {}
 		#处理筛选
 		if cur_start_date and cur_end_date:
 			date_last = cur_end_date
@@ -84,6 +85,7 @@ class QrcodeBalance(api_resource.ApiResource):
 				order_id__in=order_numbers,
 				action__in=[u'完成', u'退款完成'],
 				created_at__range=('%d-%d-01' % (start_y, start_m), date_last))
+
 			for date_list in date_range:
 				i = 1
 				for op in orderoperationlogs:
@@ -92,6 +94,7 @@ class QrcodeBalance(api_resource.ApiResource):
 					if op.created_at.strftime("%Y-%m-%d") >= date_list[0] and op.created_at.strftime("%Y-%m-%d") <= date_list[1] and op.action == u'完成':
 						order_number2index[op.order_id] = i
 						i += 1
+					order_number2finished_at[op.order_id] = op.created_at
 
 		orders = []
 		for channel_order in channel_orders:
@@ -103,6 +106,7 @@ class QrcodeBalance(api_resource.ApiResource):
 					"is_first_order": channel_order.is_first_order,
 					"status_text": STATUS2TEXT[channel_order.status],
 					"sale_price": sale_price,  #销售额
+					"finished_at": order_number2finished_at.get(channel_order.order_id, channel_order.update_at).strftime('%Y-%m-%d %H:%M:%S')
 				})
 		end = time.time()
 		print end - start, "pppppppppp"
