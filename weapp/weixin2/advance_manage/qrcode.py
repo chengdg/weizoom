@@ -1326,7 +1326,7 @@ class ChannelDistributionClearing(resource.Resource):
 		start_date = request.GET.get('start_date')
 		end_date = request.GET.get('end_date')
 
-		qrcodes = ChannelDistributionQrcodeSettings.objects.all()
+		qrcodes = ChannelDistributionQrcodeSettings.objects.filter(owner=request.user).order_by('-status', '-commit_time')
 		if return_min:
 			if return_max:
 				qrcodes = qrcodes.filter(extraction_money__range=(return_min, return_max))
@@ -1337,9 +1337,6 @@ class ChannelDistributionClearing(resource.Resource):
 
 		if start_date and end_date:
 			qrcodes = qrcodes.filter(commit_time__range=(start_date, end_date))
-
-
-
 
 		member_dict = {}  # {id: name}
 		members = Member.objects.all()
