@@ -99,7 +99,9 @@ class Mvote(resource.Resource):
 					'hide_non_member_cover': True, #非会员也可使用该页面
 					'isMember': isMember,
 					'auth_appid_info': auth_appid_info,
-					'is_hide_weixin_option_menu': True
+					'share_page_title': request.webapp_owner_info.auth_appid_info.nick_name,
+					'share_page_desc': share_page_desc,
+					'share_img_url': thumbnails_url
 				})
 				return render_to_response('vote/templates/webapp/result_vote.html', c)
 			else:
