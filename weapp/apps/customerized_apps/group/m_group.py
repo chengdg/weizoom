@@ -334,7 +334,7 @@ class MGroup(resource.Resource):
 				'isPC': False if request.member else True,
 				'share_page_title': mpUserPreviewName,
 				'share_img_url': record.material_image if record else '',
-				'share_page_desc': record.share_description.replace('<br>', '\n') if record else u"团购",
+				'share_page_desc': record.share_description.replace('<br>', ' ') if record else u"团购",
 				'share_to_timeline_use_desc': True,  #分享到朋友圈的时候信息变成分享给朋友的描述
 				'settings_domain': settings.APPS_H5_DOMAIN
 			})

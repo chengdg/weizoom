@@ -59,7 +59,7 @@ class Mvote(resource.Resource):
 				#termite类型数据
 				try:
 					record = app_models.vote.objects.get(id=id)
-					thumbnails_url = record.image if not record.image else thumbnails_url
+					thumbnails_url = record.image if record.image else thumbnails_url
 				except:
 					c = RequestContext(request, {
 						'is_deleted_data': True
