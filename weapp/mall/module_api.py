@@ -1516,6 +1516,10 @@ def ship_order(order_id, express_company_name,
 				user = UserProfile.objects.get(webapp_id=order.webapp_id).user
 			if operator_name != user.username:
 				user = UserProfile.objects.get(webapp_id=order.webapp_id).user
+			if Order.objects.filter(origin_order_id=order.origin_order_id).count() == 1:
+				origin_order = Order.objects.get(id=order.origin_order_id)
+				Order.objects.filter(id=origin_order.id).update(**order_params)
+
 			set_origin_order_status(order, user, 'ship')
 		else:
 			if Order.objects.filter(origin_order_id=order.id).count() == 1:
