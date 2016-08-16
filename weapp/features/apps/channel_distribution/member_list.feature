@@ -54,17 +54,17 @@ Background:
 		And bill访问jobs的webapp
 
 	#会员购买
-		When jack购买jobs的商品
-			"""
-			{
-				"order_id": "002",
-				"pay_type": "货到付款",
-				"products":[{
-					"name":"商品1",
-					"count":1 
-				}]
-			}
-			"""
+		#When jack购买jobs的商品
+		#	"""
+		#	{
+		#		"order_id": "002",
+		#		"pay_type": "货到付款",
+		#		"products":[{
+		#			"name":"商品1",
+		#			"count":1 
+		#		}]
+		#	}
+		#	"""
 		When jack购买jobs的商品
 			"""
 			{
@@ -106,25 +106,27 @@ Background:
 Scenario:1 前台会员列表详情
 	#扫码关注成为会员
 		Given jobs登录系统
-		When jobs完成订单"002"
+		#When jobs完成订单"002"
 		When jobs完成订单"003"
 		When jobs完成订单"004"
 		When jobs完成订单"005"
 		When 后台执行channel_distribution_update
-		Given bigs登录系统
+		When bigs申请返现于2015-08-12 10:00:00
+		When jobs已返现给bigs金额"50.00"
+		# Given bigs登录系统
 		Then bigs获得已有会员列表详情
 			"""
 			[{
 				"wx_name": "jack",
-				"order_money": 150.00,
-				"commision":15.00,
-				"purchase_count":2,
-				"concern_time":"今天"
+				"order_money": 100.00,
+				"commision":10.00,
+				"purchase_count":1,
+				"concern_time":"2015-08-10 10:00:00"
 			},{
 				"wx_name": "bill",
 				"order_money": 150.00,
 				"commision":15.00,
 				"purchase_count":2,
-				"concern_time":"昨天"
+				"concern_time":"2015-08-11 10:00:00"
 			}]
 			"""

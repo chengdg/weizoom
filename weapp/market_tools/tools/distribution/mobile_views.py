@@ -86,31 +86,20 @@ def get_vip_message(request):
 	"""
 	webapp_id = request.user_profile.webapp_id
 	member_id = request.member.id
-	datas = models.ChannelDistributionQrcodeHasMember.objects.filter(member_id=member_id)
-	actual_list = []
-	if datas:
-		for data in datas:
-			data_dict = {}
-			data_dict['wx_name'] = Member.objects.get(id=data.member_id).username_for_html,
-			data_dict['order_money'] = data.cost_money
-			data_dict['commision'] = data.commission
-			data_dict['purchase_count'] = data.buy_times
-			data_dict['concern_date'] = data.created_at
-			actual_lists.append(data_dict)
-	# if vip_datas:
-	# 	for vip_data in vip_datas[0]:
-	# 		vip_list={
-	# 			'nick_name': Member.objects.get(id=vip_data.member_id).username_for_html,
-	# 			'cost_money': vip_data.cost_money,  #消费金额
-	# 			'commission': vip_data.commission,  #带来的佣金
-	# 			'buy_times': vip_data.buy_times,  #购买次数
-	# 			'created_at': vip_data.created_at  #关注时间
-	# 		}
-	# 		vip_lists.append(vip_list)
+	vip_datas = models.ChannelDistributionQrcodeHasMember.objects.filter(member_id=member_id)
+	if vip_datas:
+		for vip_data in vip_datas[0]:
+			vip_list={
+				'nick_name': Member.objects.get(id=vip_data.member_id).username_for_html
+				'cost_money': vip_data.cost_money,  #消费金额
+				'commission': vip_data.commission,  #带来的佣金
+				'buy_times': vip_data.buy_times,  #购买次数
+				'created_at': vip_data.created_at  #关注时间
+			}
+			vip_lists.append(vip_list)
 
 		c = RequestContext(request, {
-			# 'vip_lists': vip_lists,
-			'actual_lists': actual_lists
+			'vip_lists': vip_lists
 		})
 		return render_to_response('%s/distribution/webapp/m_vip.html' % TEMPLATE_DIR, c)
 	else:
