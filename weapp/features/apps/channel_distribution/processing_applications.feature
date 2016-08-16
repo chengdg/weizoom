@@ -250,7 +250,7 @@ Background:
 			}
 			"""
 		
-@mall2 @apps @senior @processing_applications
+@mall2 @apps @senior @processing_applications @sjq
 Scenario:1 分销会员结算页初次没有提交时的显示
 		Given jobs登录系统
 		When jobs完成订单"002"
