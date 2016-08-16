@@ -819,7 +819,8 @@ class QrcodeOrder(resource.Resource):
 				'postage': '%.2f' % order.postage,
 				'save_money': '%.2f' % (float(Order.get_order_has_price_number(order)) + float(order.postage) - float(order.final_price) - float(order.weizoom_card_money)),
 				'weizoom_card_money': float('%.2f' % order.weizoom_card_money),
-				'pay_money': '%.2f' % (order.final_price + order.weizoom_card_money)
+				'pay_money': '%.2f' % (order.final_price + order.weizoom_card_money),
+				'is_first_order': order.is_first_order
 			 })
 
 		response = create_response(200)
