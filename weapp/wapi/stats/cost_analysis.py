@@ -55,6 +55,7 @@ class CostAnalysis(api_resource.ApiResource):
 			coupon_count = 1 if order.coupon_id else 0
 			sale_money = order.weizoom_card_money + order.final_price + order.coupon_money + order.integral_money  #销售额
 			loss_money = sale_money - order.total_purchase_price
+			kangou_money = order.final_price if order.pay_interface_type == PAY_INTERFACE_KANGOU else 0
 			if not webapp_id2cost.has_key(weapp_id):
 				webapp_id2cost[order.webapp_id] = {
 					"order_count": 1,
@@ -66,7 +67,8 @@ class CostAnalysis(api_resource.ApiResource):
 					"final_price": order.final_price,
 					"total_purchase_price": order.total_purchase_price,
 					"loss_money": loss_money,
-					"sale_money": sale_money
+					"sale_money": sale_money,
+					"kangou_money": kangou_money
 				}
 			else:
 				cur_cost = webapp_id2cost[order.webapp_id]
@@ -80,6 +82,7 @@ class CostAnalysis(api_resource.ApiResource):
 				cur_cost["total_purchase_price"] += order.total_purchase_price
 				cur_cost["loss_money"] += loss_money
 				cur_cost["sale_money"] += sale_money
+				cur_cost["kangou_money"] += kangou_money
 
 		webapp_id2order_card_info = {}
 		start_time = time.time()
@@ -187,7 +190,8 @@ class CostAnalysis(api_resource.ApiResource):
 				"publish_money": u"%.2f" % (coupon["money"] if coupon else 0),
 				"get_count": coupon["get_count"] if coupon else 0,
 				"get_money": u"%.2f" % (coupon["get_money"] if coupon else 0),
-				"increase_integral": webapp_id2integral.get(webapp_id,0)
+				"increase_integral": webapp_id2integral.get(webapp_id, 0),
+				"kangou_money": u"%.2f" % (cost["kangou_money"] if cost else 0)
 			})
 
 		return cost_list

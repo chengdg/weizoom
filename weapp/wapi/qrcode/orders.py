@@ -43,6 +43,7 @@ class QrcodeOrder(api_resource.ApiResource):
 		start_date = args.get('start_date', None)
 		end_date = args.get('end_date', None)
 		is_first_order = int(args.get('is_first_order', '0'))
+		order_number = args.get('order_number', None)
 		if status != '-1':
 			filter_data_args["status"] = status
 		if start_date and end_date:
@@ -52,6 +53,8 @@ class QrcodeOrder(api_resource.ApiResource):
 			filter_data_args["order_id__in"] = order_numbers
 		if is_first_order:
 			filter_data_args["is_first_order"] = True
+		if order_number:
+			filter_data_args["order_id"] = order_number
 
 		channel_orders = Order.objects.filter(**filter_data_args).order_by('-created_at')
 
