@@ -68,7 +68,9 @@ class Command(BaseCommand):
 				date = (datetime.now()-timedelta(week_day-i+7)).strftime(DATE_FORMAT)
 				last_week_days.append(date)
 
-			nick_names = [u'微众商城', u'微众家', u'微众妈妈', u'微众学生', u'微众白富美', u'微众俱乐部']
+			# nick_names = [u'微众商城', u'微众家', u'微众妈妈', u'微众学生', u'微众白富美', u'微众俱乐部']
+			nick_names = [u'微众商城', u'微众家', u'微众妈妈', u'微众学生', u'微众白富美', u'微众俱乐部', u'微众Life', u'微众一家人', u'惠惠来啦', u'微众居委汇', u'微众中海', u'微众club', u'微众吃货', u'微众圈', u'微众少先队', u'津美汇']
+
 			# nick_names = [u'微众商城']
 
 			heads = [u'总订单', u'总订单金额', u'首单', u'首单金额', u'复购', u'复购金额']
@@ -89,7 +91,12 @@ class Command(BaseCommand):
 			for nick_name in nick_names:
 				tmp_line += 1
 
-				user_id = ComponentAuthedAppidInfo.objects.get(nick_name=nick_name).auth_appid.user_id
+				# user_id = ComponentAuthedAppidInfo.objects.get(nick_name=nick_name).auth_appid.user_id
+				if nick_name == u'津美汇':
+					# user_id = UserProfile.objects.filter(store_name=nick_name)[1].user_id
+					user_id = 1146
+				else:
+					user_id = UserProfile.objects.get(store_name=nick_name).user_id
 				webapp_id = UserProfile.objects.filter(user_id=user_id)[0].webapp_id
 				statistics_days = [nick_name]
 				for i in xrange(7):
