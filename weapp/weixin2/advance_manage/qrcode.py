@@ -1510,8 +1510,9 @@ class ChannelDistributionChangeStatus(resource.Resource):
 				commission = F('commission_not_add') + F('commission'),
 				commission_not_add = 0
 			)
+			extraction_money = qrcode[0].extraction_money
 			qrcode.update(
-				total_return = F('total_return')+F('extraction_money'),
+				total_return = F('total_return')+extraction_money,
 				status = 0,
 				commit_time = datetime.strptime('0001-01-01', '%Y-%m-%d'),
 				will_return_reward = F('will_return_reward') - F('extraction_money'),

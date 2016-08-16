@@ -474,7 +474,7 @@ Scenario:3 一个微信用户扫码下单1另一个微信用户下单2次交易�
 			}]
 			"""
 
-@mall2 @apps @senior @trading_reward @dgltest
+@mall2 @apps @senior @trading_reward
 Scenario:4 奖励明细列表一条记录
 		Given jobs登录系统
 		When jobs完成订单"002"
