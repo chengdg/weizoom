@@ -90,6 +90,7 @@ Background:
 			"create_time": "2015-10-10 10:20:30"
 		}]
 		"""
+
 	Given jobs设定会员积分策略
 		"""
 		{
@@ -97,6 +98,7 @@ Background:
 			"use_ceiling ": 50
 		}
 		"""
+
 	And jobs已添加支付方式
 		"""
 		[{
@@ -138,6 +140,15 @@ Background:
 				"count": 1,
 				"members": ["nokia"],
 				"coupon_ids": ["coupon2_id_1"]
+			}
+			"""
+		When jobs为会员发放优惠券
+			"""
+			{
+				"name": "优惠券00",
+				"count": 1,
+				"members": ["nokia"],
+				"coupon_ids": ["coupon2_id_2"]
 			}
 			"""
 
@@ -245,8 +256,7 @@ Background:
 				"relation_member":"bill",
 				"order_id": "010",
 				"pay_type": "货到付款",
-				"integral_money":10.00,
-				"integral": 100.00,
+				"coupon_id":"coupon2_id_2",
 				"products":[{
 					"name":"商品1",
 					"count":1 
