@@ -90,6 +90,12 @@ Background:
 			"create_time": "2015-10-10 10:20:30"
 		}]
 		"""
+	When jobs设定会员积分策略
+		"""
+		{
+			"integral_each_yuan": 2
+		}
+		"""
 	And jobs已添加支付方式
 		"""
 		[{
