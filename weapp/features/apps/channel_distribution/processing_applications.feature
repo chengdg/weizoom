@@ -262,7 +262,7 @@ Scenario:1 分销会员结算页初次没有提交时的显示
 		When jobs完成订单"008"
 		When jobs完成订单"009"
 		When jobs完成订单"010"
-				
+		When 后台执行channel_distribution_update		
 		Then jobs获得分销会员结算列表
 			"""
 			[{
@@ -296,6 +296,7 @@ Scenario:2 分销会员结算页等待审核状态
 		When jobs完成订单"008"
 		When jobs完成订单"009"
 		When jobs完成订单"010"
+		When 后台执行channel_distribution_update
 		When bigs访问jobs的webapp
 		When bigs申请返现于2015-08-12 10:00:00
 		
