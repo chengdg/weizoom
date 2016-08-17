@@ -65,7 +65,7 @@ Background:
 		#		}]
 		#	}
 		#	"""
-		When jack购买jobs的商品
+		When jack购买jobs的商品::apiserver
 			"""
 			{
 				"wx_name":"jack",
@@ -77,7 +77,7 @@ Background:
 				}]
 			}
 			"""
-		When bill购买jobs的商品
+		When bill购买jobs的商品::apiserver
 			"""
 			{
 				"order_id": "004",
@@ -88,7 +88,7 @@ Background:
 				}]
 			}
 			"""
-		When bill购买jobs的商品
+		When bill购买jobs的商品::apiserver
 			"""
 			{
 				"order_id": "005",

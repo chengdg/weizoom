@@ -153,7 +153,7 @@ Background:
 			"""
 
 	#会员购买
-		When jack购买jobs的商品
+		When jack购买jobs的商品::apiserver
 			"""
 			{
 				"relation_member":"bigs",
@@ -165,7 +165,7 @@ Background:
 				}]
 			}
 			"""
-		When jack购买jobs的商品
+		When jack购买jobs的商品::apiserver
 			"""
 			{
 				"relation_member":"bigs",
@@ -177,7 +177,7 @@ Background:
 				}]
 			}
 			"""
-		When jack购买jobs的商品
+		When jack购买jobs的商品::apiserver
 			"""
 			{
 				"relation_member":"bigs",
@@ -189,7 +189,7 @@ Background:
 				}]
 			}
 			"""
-		When jack购买jobs的商品
+		When jack购买jobs的商品::apiserver
 			"""
 			{
 				"relation_member":"bigs",
@@ -201,7 +201,7 @@ Background:
 				}]
 			}
 			"""
-		When jack购买jobs的商品
+		When jack购买jobs的商品::apiserver
 			"""
 			{
 				"relation_member":"bigs",
@@ -213,7 +213,7 @@ Background:
 				}]
 			}
 			"""
-		When jack购买jobs的商品
+		When jack购买jobs的商品::apiserver
 			"""
 			{
 				"relation_member":"bigs",
@@ -225,7 +225,7 @@ Background:
 				}]
 			}
 			"""
-		When nokia购买jobs的商品
+		When nokia购买jobs的商品::apiserver
 			"""
 			{
 				"relation_member":"bill",
@@ -237,7 +237,7 @@ Background:
 				}]
 			}
 			"""
-		When nokia购买jobs的商品
+		When nokia购买jobs的商品::apiserver
 			"""
 			{
 				"relation_member":"bill",
@@ -250,7 +250,7 @@ Background:
 				}]
 			}
 			"""
-		When nokia购买jobs的商品
+		When nokia购买jobs的商品::apiserver
 			"""
 			{
 				"relation_member":"bill",
