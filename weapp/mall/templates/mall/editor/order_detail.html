@@ -354,6 +354,11 @@
               {% endif %}
               </td>
                 {% if mall_type %}
+                  {%if product.supplier_user_id %}
+                    {% ifchanged product.supplier_user_id %}
+                        <td rowspan="{{product.supplier_user_length}}" style="text-align:center;border-right:1px solid #ddd;">0.00</td>
+                    {% endifchanged %}
+                  {% endif %}
                   {% if product.supplier %}
                     {% ifchanged product.supplier %}
                         <td rowspan="{{product.supplier_length}}" style="text-align:center;border-right:1px solid #ddd;">{{ child_order_postages|get_child_order_postage:product.supplier|floatformat:"2" }}</td>
