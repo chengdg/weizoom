@@ -154,6 +154,7 @@ class QrcodeOrder(api_resource.ApiResource):
 				for order_product in order_products:
 					products.append(order_product)
 			sale_price = channel_order.final_price + channel_order.coupon_money + channel_order.integral_money + channel_order.weizoom_card_money + channel_order.promotion_saved_money + channel_order.edit_money
+			final_price = channel_order.final_price + channel_order.weizoom_card_money
 			orders.append({
 				"order_id": channel_order.id,
 				"order_number": channel_order.order_id,
@@ -161,11 +162,12 @@ class QrcodeOrder(api_resource.ApiResource):
 				"member_name": member.username_for_html if member else u'未知',
 				"products": products,
 				"sale_price": u'%.2f' % sale_price,  #销售额
-				"price": sale_price,  # 销售额
+				"price": final_price,  # 销售额
 				"status_text": STATUS2TEXT[channel_order.status],
 				"created_at": channel_order.created_at.strftime('%Y-%m-%d %H:%M:%S'),
 				"update_at": channel_order.update_at.strftime('%Y-%m-%d %H:%M:%S'),
-				"finished_at": order_number2finished_at.get(channel_order.order_id, channel_order.update_at).strftime('%Y-%m-%d %H:%M:%S')
+				"finished_at": order_number2finished_at.get(channel_order.order_id, channel_order.update_at).strftime('%Y-%m-%d %H:%M:%S'),
+				"final_price": u'%.2f' % final_price
 			})
 
 		return {

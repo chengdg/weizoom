@@ -100,13 +100,15 @@ class QrcodeBalance(api_resource.ApiResource):
 		for channel_order in channel_orders:
 			if channel_order.order_id in order_log_numbers:
 				sale_price = channel_order.final_price + channel_order.coupon_money + channel_order.integral_money + channel_order.weizoom_card_money + channel_order.promotion_saved_money + channel_order.edit_money
+				final_price = channel_order.final_price + channel_order.weizoom_card_money
 				orders.append({
 					"order_id": channel_order.id,
 					"order_number": channel_order.order_id,
 					"is_first_order": channel_order.is_first_order,
 					"status_text": STATUS2TEXT[channel_order.status],
 					"sale_price": sale_price,  #销售额
-					"finished_at": order_number2finished_at.get(channel_order.order_id, channel_order.update_at).strftime('%Y-%m-%d %H:%M:%S')
+					"finished_at": order_number2finished_at.get(channel_order.order_id, channel_order.update_at).strftime('%Y-%m-%d %H:%M:%S'),
+					"final_price": final_price
 				})
 		end = time.time()
 		print end - start, "pppppppppp"

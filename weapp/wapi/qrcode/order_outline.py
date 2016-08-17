@@ -53,9 +53,11 @@ class QrcodeMemberOutline(api_resource.ApiResource):
 
 		first_orders = []
 		sale_price = 0
+		final_price = 0
 		for order in orders:
 			if order.status not in [ORDER_STATUS_CANCEL,ORDER_STATUS_GROUP_REFUNDING,ORDER_STATUS_GROUP_REFUNDED,ORDER_STATUS_REFUNDING,ORDER_STATUS_REFUNDED]:
 				sale_price += order.final_price + order.coupon_money + order.integral_money + order.weizoom_card_money + order.promotion_saved_money + order.edit_money
+				final_price = order.final_price + order.weizoom_card_money
 			if order.is_first_order and order.status != ORDER_STATUS_NOT:
 				first_orders.append(order)
 
@@ -64,6 +66,7 @@ class QrcodeMemberOutline(api_resource.ApiResource):
 			"increase_order_count": len(orders),
 			"first_order_count": len(first_orders),
 			"order_sale_money": u'%.2f' % sale_price,
+			"final_price": u'%.2f' % final_price
 		}
 		end = time.time()
 		print end - start, "pppppppppp"

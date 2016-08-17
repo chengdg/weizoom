@@ -77,13 +77,15 @@ class QrcodeBalanceOutline(api_resource.ApiResource):
 		all_order = []
 		for order in orders:
 			sale_price = order.final_price + order.coupon_money + order.integral_money + order.weizoom_card_money + order.promotion_saved_money + order.edit_money
+			final_price = order.final_price + order.weizoom_card_money
 			#除已取消的订单
 			if order.status not in [ORDER_STATUS_CANCEL]:
 				all_order.append({
 					'order_id': order.id,
 					'finished_at': order_number2finished_at.get(order.order_id,order.created_at).strftime("%Y-%m-%d %H:%M:%S"),
 					'status_text': STATUS2TEXT[order.status],
-					'sale_price': sale_price
+					'sale_price': sale_price,
+					'final_price': final_price
 				})
 
 			if order.is_first_order and order.status != ORDER_STATUS_NOT:
@@ -91,7 +93,8 @@ class QrcodeBalanceOutline(api_resource.ApiResource):
 					'order_id': order.id,
 					'finished_at': order.created_at.strftime("%Y-%m-%d %H:%M:%S"),
 					'status_text': STATUS2TEXT[order.status],
-					'sale_price': sale_price
+					'sale_price': sale_price,
+					'final_price': final_price
 				})
 
 		member_outline_info = {
