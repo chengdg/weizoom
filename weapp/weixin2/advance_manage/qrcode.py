@@ -1511,17 +1511,17 @@ class ChannelDistributionChangeStatus(resource.Resource):
 				next_extract_time = qrcode[0].commit_time  # end
 			)
 			# 修改member带来的总佣金
-			# ChannelDistributionQrcodeHasMember.objects.filter(channel_qrcode_id=qrcode[0].id).update(
-			# 	commission = F('commission_not_add') + F('commission'),
-			# 	commission_not_add = 0
-			# )
-			has_members = ChannelDistributionQrcodeHasMember.objects.filter(channel_qrcode_id=qrcode[0].id)
+			ChannelDistributionQrcodeHasMember.objects.filter(channel_qrcode_id=qrcode[0].id).update(
+				commission = F('commission_not_add') + F('commission'),
+				commission_not_add = 0
+			)
+			# has_members = ChannelDistributionQrcodeHasMember.objects.filter(channel_qrcode_id=qrcode[0].id)
 
-			for has_member in has_members:
-				commission_not_add = has_member.commission_not_add
-				has_member.commission = has_member.commission + commission_not_add
-				has_member.commission_not_add = 0
-				has_member.save()
+			# for has_member in has_members:
+			# 	commission_not_add = has_member.commission_not_add
+			# 	has_member.commission = has_member.commission + commission_not_add
+			# 	has_member.commission_not_add = 0
+			# 	has_member.save()
 
 			extraction_money = qrcode[0].extraction_money
 			qrcode.update(

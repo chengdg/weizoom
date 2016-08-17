@@ -33,7 +33,7 @@ def get_page(request):
 	else:
 		state = 2
 
-	if statue != 0:
+	if status != 0:
 		state = 3
 
 	c = RequestContext(request, {
