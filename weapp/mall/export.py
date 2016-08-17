@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from weapp.settings import MONEY_HOST
+from weapp.settings import MONEY_HOST, MARKETAPP_DOMAIN
 
 MALL_HOME_FIRST_NAV = 'mall_outline'
 WEIXIN_HOME_FIRST_NAV = 'weixin_outline'
@@ -438,12 +438,7 @@ MALL_PROMOTION_AND_APPS_SECOND_NAV = {
                     'name': MALL_APPS_EXLOTTERY_NAV,
                     'title': "幸运码抽奖",
                     'url': '/apps/exlottery/exlotteries/',
-                    'permission': '',
-                },{
-                    'name': MALL_APPS_SCANLOTTERY_NAV,
-                    'title': "扫码抽奖",
-                    'url': '/apps/scanlottery/scanlotteries/',
-                    'permission': '',
+                    'permission': ''
                 },
                 # {
                     # 'name': MALL_APPS_FEEDBACK_NAV,
@@ -454,8 +449,9 @@ MALL_PROMOTION_AND_APPS_SECOND_NAV = {
                  {
                     'name': MALL_APPS_SURVEY_NAV,
                     'title': "用户调研",
-                    'url': '/apps/survey/surveies/',
-                    'permission': ''
+                    'url': 'http://%s/apps/survey/surveies/' % MARKETAPP_DOMAIN,
+                    'permission': '',
+                    'need_token': True
                 },
                 {
                     'name': MALL_APPS_EVENT_NAV,
@@ -466,8 +462,9 @@ MALL_PROMOTION_AND_APPS_SECOND_NAV = {
                 {
                     'name': MALL_APPS_VOTE_NAV,
                     'title': "微信投票",
-                    'url': '/apps/vote/votes/',
-                    'permission': ''
+                    'url': 'http://%s/apps/vote/votes/' % MARKETAPP_DOMAIN,
+                    'permission': '',
+                    'need_token': True
                 },
                 {
                     'name': MALL_APPS_RED_ENVELOPE_NAV,
