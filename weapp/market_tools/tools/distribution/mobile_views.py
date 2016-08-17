@@ -18,6 +18,7 @@ def get_page(request):
 	"""
 	webapp_id = request.user_profile.webapp_id
 	member_id = request.member.id
+	user_icon = request.member.user_icon
 	propotion_data = models.ChannelDistributionQrcodeSettings.objects.get(bing_member_id=member_id)
 	total_return = propotion_data.total_return   #已提取
 	commission_return_standard = propotion_data.commission_return_standard  #佣金返现标准（即最低取现标准）
@@ -26,7 +27,7 @@ def get_page(request):
 	diff_reward = commission_return_standard - will_return_reward  #还差多少元可以取现
 	return_standard = propotion_data.return_standard  #多少天的计算方式
 	return_standard = propotion_data.return_standard  #多少天的计算方式
-	status = request.member.status  # 取现进度
+	status = propotion_data.status  # 取现进度
 	valid = will_return_reward >= commission_return_standard
 	if valid:
 		state = 1
