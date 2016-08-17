@@ -341,15 +341,17 @@ def _get_member_qrcode_rank(webapp_id, low_date, high_date):
 	member_qrcode_logs = MemberQrcodeLog.objects.filter(member_qrcode_id__in = qrcode_ids)
 
 	member_id2count = {}  #发起会员扫码的会员带来的会员个数
-
+	member_id2follower_member_id = {}
 	#处理通过扫码新增的用户列表
 	for log in member_qrcode_logs:
 		#已经取消关注的也计算在内
 		member_id = qrcode_id2member_id[log.member_qrcode_id]
-		if not member_id2count.has_key(member_id):
-			member_id2count[member_id] = 0
-		member_id2count[member_id] += 1
-
+		if not member_id2follower_member_id.has_key(member_id):
+			member_id2follower_member_id[member_id] = []
+		member_id2follower_member_id[member_id].append(log.member_id)
+	for member_id, values in member_id2follower_member_id.items():
+		fans_count = MemberFollowRelation.objects.filter(member_id=member_id, follower_member_id__in=values, is_fans=True).count()
+		member_id2count[member_id] = fans_count
 	#按带来的会员个数倒序
 	sorted_member_id2count = sorted(member_id2count.items(), key=lambda d:d[1], reverse = True)
 
