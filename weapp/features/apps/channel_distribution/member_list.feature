@@ -133,7 +133,7 @@ Background:
 			"""
 	
 
-@mall2 @apps @senior @member_list @member_list1
+@mall2 @apps @senior @member_list
 
 Scenario:1 前台会员列表详情,未达到返现标准
 	#扫码关注成为会员
@@ -150,7 +150,7 @@ Scenario:1 前台会员列表详情,未达到返现标准
 			"""
 			[]
 			"""
-@mall2 @apps @senior @member_list @member_list2
+@mall2 @apps @senior @member_list
 
 Scenario:2 前台会员列表详情，达到返现标准
 	#扫码关注成为会员
