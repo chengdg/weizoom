@@ -7,7 +7,9 @@ from django.core.management.base import BaseCommand, CommandError
 from market_tools.tools.distribution.models import ChannelDistributionQrcodeSettings, ChannelDistributionQrcodeHasMember, \
                                                     ChannelDistributionDetail, ChannelDistributionFinish
 from mall.models import Order
+from modules.member.models import WebAppUser
 from django.db.models import F
+
 
 class Command(BaseCommand):
     """
@@ -30,6 +32,10 @@ class Command(BaseCommand):
         for member in members:
             members_dict[member.member_id] = member.channel_qrcode_id
 
+        web_app_users = WebAppUser.objects.filter(member_id__in=(members_dict.keys()))
+        web_app_user_list = [web_app_user.id for web_app_user in web_app_users]
+
+
         # 取出所有的订单
         orders = Order.objects.filter(created_at__gt=self.start_time, status=5)  # 搜索大于启动时间, 并已完成的订单
 
@@ -50,7 +56,8 @@ class Command(BaseCommand):
             print order.webapp_user_id
             # 如果此订单的购买者之前绑过渠道分销二维码
 
-            if members_dict.has_key(order.webapp_user_id) and order.id not in finish_order_list:
+            # if members_dict.has_key(order.webapp_user_id) and order.id not in finish_order_list:
+            if order.webapp_user_id in web_app_user_list and order.id not in finish_order_list:
                 # qrcode = ChannelDistributionQrcodeSettings.objects.filter(id=members_dict[order.webapp_user_id])
                 order_qrcode = qrcodes_dict[members_dict[order.webapp_user_id]]  # 此订单会员绑定的二维码
                 conform_minimun_return_rate = True if order.final_price /order.product_price > order_qrcode.minimun_return_rate / 100.0 else False  # 满足最低返现折扣
