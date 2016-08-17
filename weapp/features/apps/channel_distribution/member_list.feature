@@ -44,6 +44,10 @@ Background:
 			"name": "商品2",
 			"price": 100.00,
 			"count":"10"
+		},{
+			"name": "商品3",
+			"price": 500.00,
+			"count":"10"
 		}]
 		"""
 		When 清空浏览器
@@ -52,6 +56,12 @@ Background:
 		When 清空浏览器
 		And bill扫描渠道二维码"分销二维码1"于2015-08-11 10:00:00
 		And bill访问jobs的webapp
+		When 清空浏览器
+		And marry扫描渠道二维码"分销二维码1"于2015-08-10 10:00:00
+		And marry访问jobs的webapp
+		When 清空浏览器
+		And tom扫描渠道二维码"分销二维码1"于2015-08-11 10:00:00
+		And tom访问jobs的webapp
 
 	#会员购买
 		#When jack购买jobs的商品
@@ -65,7 +75,7 @@ Background:
 		#		}]
 		#	}
 		#	"""
-		When jack购买jobs的商品::apiserver
+		When jack购买jobs的商品
 			"""
 			{
 				"wx_name":"jack",
@@ -77,7 +87,7 @@ Background:
 				}]
 			}
 			"""
-		When bill购买jobs的商品::apiserver
+		When bill购买jobs的商品
 			"""
 			{
 				"order_id": "004",
@@ -88,10 +98,32 @@ Background:
 				}]
 			}
 			"""
-		When bill购买jobs的商品::apiserver
+		When bill购买jobs的商品
 			"""
 			{
 				"order_id": "005",
+				"pay_type": "货到付款",
+				"products":[{
+					"name":"商品2",
+					"count":1 
+				}]
+			}
+			"""
+		When marry购买jobs的商品
+			"""
+			{
+				"order_id": "006",
+				"pay_type": "货到付款",
+				"products":[{
+					"name":"商品3",
+					"count":1 
+				}]
+			}
+			"""
+		When tom购买jobs的商品
+			"""
+			{
+				"order_id": "007",
 				"pay_type": "货到付款",
 				"products":[{
 					"name":"商品2",
@@ -103,7 +135,7 @@ Background:
 
 @mall2 @apps @senior @member_list
 
-Scenario:1 前台会员列表详情
+Scenario:1 前台会员列表详情,未达到返现标准
 	#扫码关注成为会员
 		Given jobs登录系统
 		#When jobs完成订单"002"
@@ -111,22 +143,41 @@ Scenario:1 前台会员列表详情
 		When jobs完成订单"004"
 		When jobs完成订单"005"
 		When 后台执行channel_distribution_update
+		#When bigs申请返现于2015-08-12 10:00:00
+		#When jobs已返现给bigs金额"50.00"
+		# Given bigs登录系统
+		Then bigs获得已有会员列表详情
+			"""
+			[]
+			"""
+@mall2 @apps @senior @member_list
+
+Scenario:2 前台会员列表详情，达到返现标准
+	#扫码关注成为会员
+		Given jobs登录系统
+		#When jobs完成订单"002"
+		#When jobs完成订单"003"
+		#When jobs完成订单"004"
+		#When jobs完成订单"005"
+		When jobs完成订单"006"
+		When jobs完成订单"007"
+		When 后台执行channel_distribution_update
 		When bigs申请返现于2015-08-12 10:00:00
-		When jobs已返现给bigs金额"50.00"
+		When jobs已返现给bigs金额"60.00"
 		# Given bigs登录系统
 		Then bigs获得已有会员列表详情
 			"""
 			[{
-				"wx_name": "jack",
-				"order_money": 100.00,
-				"commision":10.00,
+				"wx_name": "marry",
+				"order_money": 500.00,
+				"commission":50.00,
 				"purchase_count":1,
 				"concern_time":"2015-08-10 10:00:00"
 			},{
-				"wx_name": "bill",
-				"order_money": 150.00,
-				"commision":15.00,
-				"purchase_count":2,
+				"wx_name": "tom",
+				"order_money": 100.00,
+				"commission":10.00,
+				"purchase_count":1,
 				"concern_time":"2015-08-11 10:00:00"
 			}]
 			"""

@@ -354,17 +354,16 @@ def step_impl(context,user):
 	member_id = Member.objects.filter(username_hexstr__contains=user)[0].id
 	channel_qrcode_id = ChannelDistributionQrcodeSettings.objects.filter(bing_member_id=member_id)[0].id
 
-	datas = ChannelDistributionQrcodeHasMember.objects.filter(channel_qrcode_id=channel_qrcode_id)
+	datas = ChannelDistributionQrcodeHasMember.objects.filter(channel_qrcode_id=channel_qrcode_id, commission__gt=0)
 	actual_list = []
 	for data in datas:
 		data_dict = {}
 		data_dict['wx_name'] = Member.objects.get(id=data.member_id).username_for_html
 		data_dict['order_money'] = data.cost_money
-		data_dict['commision'] = data.commission
+		data_dict['commission'] = data.commission
 		data_dict['purchase_count'] = data.buy_times
 		data_dict['concern_time'] = str(data.created_at)
 		actual_list.append(data_dict)
-
 
 	bdd_util.assert_list(expected, actual_list)
 
