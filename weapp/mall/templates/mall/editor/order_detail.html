@@ -310,7 +310,7 @@
                     {% elif product.promotion.type == 'premium_sale:premium_product' %}
                       [赠品]
                     {% endif %}
-                    {% if product.grade_discounted_money %}
+                    {% if product.grade_discounted_money > 0 %}
                       [会员优惠]
                     {% endif %}
                   {% endif %}
@@ -348,7 +348,7 @@
                 {% if product.integral_count %}
                   <p>{{ product.integral_count }}积分，抵扣{{ product.integral_money }}元</p>
                 {% endif %}
-                {% if product.grade_discounted_money %}
+                {% if product.grade_discounted_money > 0 %}
                   会员优惠：{{ product.grade_discounted_money }}
                 {% endif %}
               {% endif %}
