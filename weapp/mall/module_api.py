@@ -2079,7 +2079,7 @@ def get_order_products(order):
 			'product_model_name': relation.product_model_name,
 			'physical_unit': product.physical_unit,
 			'is_deleted': product.is_deleted,
-			'grade_discounted_money': '%.2f' % round(relation.grade_discounted_money, 2),
+			'grade_discounted_money': round(relation.grade_discounted_money, 2),
 			'supplier': product.supplier,
 			'supplier_user_id': product.supplier_user_id,
 			'user_code':product.user_code,
