@@ -64,7 +64,8 @@ def update_product_list_cache_task(self,webapp_owner_id):
             "display_price": product.display_price,
             "promotion_js": json.dumps(product.promotion),
             "thumbnails_url": thumbnails_url,
-            "categories": list(product2categories.get(product.id, []))
+            "categories": list(product2categories.get(product.id, [])),
+            "supplier": product.supplier
         })
 
     # for product_data in product_datas:
