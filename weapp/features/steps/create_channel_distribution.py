@@ -249,8 +249,9 @@ def step_impl(context, user):
 @Then(u"{user}获得分销会员整体概况")
 def step_impl(context, user):
 	expected = json.loads(context.text)
-	name = byte_to_hex(user)
-	qrcode = ChannelDistributionQrcodeSettings.objects.get(bing_member_title=name)
+	# name = byte_to_hex(user)
+	user_id = User.objects.get(username=user).id
+	qrcodes = ChannelDistributionQrcodeSettings.objects.filter(owner__id=user_id)
 
 	return_money_total = 0  # 已返现总额
 	not_return_money_total = 0  # 未返现总额
@@ -327,7 +328,6 @@ def step_impl(context, user):
 			
 
 	bdd_util.assert_list(expected, actual_list)
-	
 
 
 @When(u"{user}申请返现于{time}")
@@ -343,17 +343,6 @@ def step_impl(context,user,time):
 			extraction_money = F('will_return_reward'),
 			is_new = True
 		)
-
-
-
-def __date2time(date_str):
-	"""
-	字符串 今天/明天……
-	转化为字符串 "%Y-%m-%d %H:%M"
-	"""
-	cr_date = date_str
-	p_time = "{} 00:00".format(bdd_util.get_date_str(cr_date))
-	return p_time
 
 
 @Then(u"{user}获得已有会员列表详情")
@@ -379,6 +368,18 @@ def step_impl(context,user):
 
 	bdd_util.assert_list(expected, actual_list)
 
+
+
+
+
+def __date2time(date_str):
+	"""
+	字符串 今天/明天……
+	转化为字符串 "%Y-%m-%d %H:%M"
+	"""
+	cr_date = date_str
+	p_time = "{} 00:00".format(bdd_util.get_date_str(cr_date))
+	return p_time
 
 
 	
