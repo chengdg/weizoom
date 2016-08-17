@@ -161,6 +161,7 @@ class QrcodeOrder(api_resource.ApiResource):
 				"member_name": member.username_for_html if member else u'未知',
 				"products": products,
 				"sale_price": u'%.2f' % sale_price,  #销售额
+				"price": sale_price,  # 销售额
 				"status_text": STATUS2TEXT[channel_order.status],
 				"created_at": channel_order.created_at.strftime('%Y-%m-%d %H:%M:%S'),
 				"update_at": channel_order.update_at.strftime('%Y-%m-%d %H:%M:%S'),
