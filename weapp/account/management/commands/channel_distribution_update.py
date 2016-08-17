@@ -27,14 +27,20 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         # 所有的绑过的{memberid: qrcode_id}
-        members_dict = {}
+        member_ids = []
+
+        member_id_to_qrocde_id ={}
         members = ChannelDistributionQrcodeHasMember.objects.all()
         for member in members:
-            members_dict[member.member_id] = member.channel_qrcode_id
+            # members_dict[member.member_id] = member.channel_qrcode_id
+            member_id_to_qrocde_id[member.member_id] = member.channel_qrcode_id
 
-        web_app_users = WebAppUser.objects.filter(member_id__in=(members_dict.keys()))
+        web_app_users = WebAppUser.objects.filter(member_id__in=(member_id_to_qrocde_id.keys()))
         web_app_user_list = [web_app_user.id for web_app_user in web_app_users]
 
+        members_dict = {}
+        for web_app_user in web_app_users:
+            members_dict[web_app_user.id] = member_id_to_qrocde_id[web_app_user.member_id]
 
         # 取出所有的订单
         orders = Order.objects.filter(created_at__gt=self.start_time, status=5)  # 搜索大于启动时间, 并已完成的订单
@@ -48,7 +54,7 @@ class Command(BaseCommand):
 
         qrcodes = ChannelDistributionQrcodeSettings.objects.all()
         print 'members_dict', members_dict
-        for qrcode in qrcodes:
+        for qrcode in qrcodes:  # 二维码id: 二维码
             qrcodes_dict[qrcode.id] = qrcode
         for order in orders:
             # print '>>>order.id=', order.id
