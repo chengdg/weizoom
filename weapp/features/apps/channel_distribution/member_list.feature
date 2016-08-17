@@ -75,7 +75,7 @@ Background:
 		#		}]
 		#	}
 		#	"""
-		When jack购买jobs的商品::apiserver
+		When jack购买jobs的商品
 			"""
 			{
 				"wx_name":"jack",
@@ -87,7 +87,7 @@ Background:
 				}]
 			}
 			"""
-		When bill购买jobs的商品::apiserver
+		When bill购买jobs的商品
 			"""
 			{
 				"order_id": "004",
@@ -98,7 +98,7 @@ Background:
 				}]
 			}
 			"""
-		When bill购买jobs的商品::apiserver
+		When bill购买jobs的商品
 			"""
 			{
 				"order_id": "005",
@@ -109,7 +109,7 @@ Background:
 				}]
 			}
 			"""
-		When marry购买jobs的商品::apiserver
+		When marry购买jobs的商品
 			"""
 			{
 				"order_id": "006",
@@ -120,7 +120,7 @@ Background:
 				}]
 			}
 			"""
-		When tom购买jobs的商品::apiserver
+		When tom购买jobs的商品
 			"""
 			{
 				"order_id": "007",
@@ -133,7 +133,7 @@ Background:
 			"""
 	
 
-@mall2 @apps @senior @member_list
+@mall2 @apps @senior @member_list @member_list1
 
 Scenario:1 前台会员列表详情
 	#扫码关注成为会员
@@ -162,15 +162,15 @@ Scenario:1 前台会员列表详情
 				"concern_time":"2015-08-11 10:00:00"
 			}]
 			"""
-@mall2 @apps @senior @member_list
+@mall2 @apps @senior @member_list @member_list2
 
 Scenario:2 前台会员列表详情
 	#扫码关注成为会员
 		Given jobs登录系统
 		#When jobs完成订单"002"
-		When jobs完成订单"003"
-		When jobs完成订单"004"
-		When jobs完成订单"005"
+		#When jobs完成订单"003"
+		#When jobs完成订单"004"
+		#When jobs完成订单"005"
 		When jobs完成订单"006"
 		When jobs完成订单"007"
 		When 后台执行channel_distribution_update
