@@ -75,7 +75,7 @@ Background:
 		And jack访问jobs的webapp
 
 	#会员购买
-		When jack购买jobs的商品::apiserver
+		When jack购买jobs的商品
 			"""
 			{
 				"order_id": "002",
@@ -86,7 +86,7 @@ Background:
 				}]
 			}
 			"""
-		When jack购买jobs的商品::apiserver
+		When jack购买jobs的商品
 			"""
 			{
 				"order_id": "003",
@@ -97,7 +97,7 @@ Background:
 				}]
 			}
 			"""
-		When jack购买jobs的商品::apiserver
+		When jack购买jobs的商品
 			"""
 			{
 				"order_id": "004",
@@ -108,7 +108,7 @@ Background:
 				}]
 			}
 			"""
-		When jack购买jobs的商品::apiserver
+		When jack购买jobs的商品
 			"""
 			{
 				"order_id": "005",
@@ -119,7 +119,7 @@ Background:
 				}]
 			}
 			"""
-		When jack购买jobs的商品::apiserver
+		When jack购买jobs的商品
 			"""
 			{
 				"order_id": "006",
@@ -130,7 +130,7 @@ Background:
 				}]
 			}
 			"""
-		When jack购买jobs的商品::apiserver
+		When jack购买jobs的商品
 			"""
 			{
 				"order_id": "007",
