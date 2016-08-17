@@ -267,13 +267,13 @@ def step_impl(context, user):
 
 	not_return_money_total = extraction_money + current_total_return # 未返现总额
 
-	actual_list = []
+	actual_list = {}
 	actual_list['cash_back_total'] = return_money_total
 	actual_list['not_return_total'] = not_return_money_total
 	actual_list['current_return'] = current_total_return
 	actual_list['turnover_total'] = total_transaction_volume
 
-	bdd_util.assert_list(expected, actual_list)
+	bdd_util.assert_dict(expected, actual_list)
 
 
 @Then(u"{user}获得分销会员结算列表")
