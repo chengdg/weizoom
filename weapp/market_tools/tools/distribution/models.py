@@ -32,6 +32,7 @@ class ChannelDistributionQrcodeSettings(models.Model):
 	extraction_money = models.DecimalField(max_digits=65, decimal_places=2, default=0)  # 提取的金额 (当用户提取佣金的时候,才会变动)
 	current_transaction_amount = models.DecimalField(max_digits=65, decimal_places=2, default=0)  # 本期交易额 (点击取现后,清空)????
 	commit_time = models.DateTimeField(default='0001-01-01')  # 提交时间
+	is_new = models.BooleanField(default=False)  # 是否有新的审核
 
 	created_at = models.DateTimeField(auto_now_add=True) # 添加时间
 

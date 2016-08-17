@@ -6,6 +6,8 @@ from market_tools.tools.distribution.models import ChannelDistributionQrcodeSett
 from modules.member.models import MemberHasTag
 from modules.member.integral import increase_member_integral
 from market_tools.tools.coupon.util import consume_coupon
+from django.db.models import F
+
 
 class ChannelDistributionQrcodeHandler(MessageHandler):
 
@@ -52,6 +54,7 @@ class ChannelDistributionQrcodeHandler(MessageHandler):
 					channel_qrcode_id = qrcode[0].id,
 					member_id = member.id,
 				)
+				qrcode.update(bing_member_count = F('bing_member_count') + 1)
 				# 得到需要绑定的member分组
 				group_id = qrcode[0].group_id
 				# 添加到得到的分组

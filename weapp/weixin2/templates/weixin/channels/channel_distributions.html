@@ -124,8 +124,8 @@ td {
                             <span class="">二维码名称</span>
                         </p>
                     </th>
-                    <th style="width:9%;" >关联会员</th>
-                    <th style="width:9%;" class="tx_sortable" data-sort-attr='total_final_price'>关注数量</th>
+                    <th style="width:9%;">关联会员</th>
+                    <th style="width:9%;">关注数量</th>
                     <th style="width:10%;">总交易额/元</th>
                     <th style="width:10%;">返现总额</th>
                     <th style="width:10%;">关注奖励</th>
@@ -164,7 +164,12 @@ td {
 							        ${qrcode.created_at}
 							    </td>
 							    <td>
-							        <a class="xui-link" href='/new_weixin/distribution_clearing/'>操作${qrcode.clearing}</a>
+                                    {{if qrcode.is_new}}
+                                    <a class="xui-link xui-icon-pd" href='/new_weixin/distribution_clearing/'>操作${qrcode.clearing}
+							        </a><span class="xui-icon-new">new</span>
+                                    {{else}}
+                                    <a class="xui-link" href='/new_weixin/distribution_clearing/'>操作${qrcode.clearing}</a>
+                                    {{/if}}
 							    </td>
 							    <td>
 							    <a class="xui-link" href='/new_weixin/channel_distribution/?setting_id=${qrcode.id}'>修改</a><a class="xui-link" target="_blank" href="https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=${qrcode.ticket}">查看</a>

@@ -15,14 +15,13 @@ W.dialog.mall.ChannelDistributionDetail = W.dialog.Dialog.extend({
     },
 
     onInitialize: function(options) {
-        this.qrocdeId = options.qrocdeId;
-
         $.tmpl(this.getTemplate(), {selectedMemberIds: 1});
         this.searchMemberTepmplate = this.getSearchMemberTepmplate();
         this.table = this.$('[data-ui-role="advanced-table"]').data('view');
     },
 
     beforeShow: function(options) {
+        this.qrocdeId = options.qrocdeId;
         this.table.reset();
     },
 

@@ -277,6 +277,8 @@ def step_impl(context, user):
 
 @Then(u"{user}获得分销会员结算列表")
 def step_impl(context, user):
+
+	status = {0:u'无状态', 1:u'等待审核', 2:u'正在返现'}
 	expected = json.loads(context.text)
 
 	params = {}
@@ -302,21 +304,26 @@ def step_impl(context, user):
 		data_dict['commission_return_rate'] = data['commission_rate']
 		data_dict['already_reward'] = data['will_return_reward']
 		data_dict['cash_back_amount'] = data['extraction_money']
-		data_dict['cash_back_state'] = data['status']
+		data_dict['cash_back_state'] = status[data['status']]
 		actual_list.append(data_dict)
 	
+	print('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^')
+	print('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^')
 	print('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^')
 	print(actual_list)
 	print('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^')
 	print('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^')
 	print('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^')
 	print('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^')
-	print('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^')
-	print('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^')
+	
 
 	for expect in expected:
 		if expect['cash_back_amount'] == "暂无":
 			expect['cash_back_amount'] = '0.00'
+		if expect['cash_back_state'] == "等待审核":
+			expect['cash_back_amount'] = '1'
+		if expect['cash_back_state'] == "无状态":
+			expect['cash_back_amount'] = '0'
 			
 
 	bdd_util.assert_list(expected, actual_list)
@@ -333,7 +340,8 @@ def step_impl(context,user,time):
 		qrcode.update (
 			status = 1,
 			commit_time = time,
-			extraction_money = F('will_return_reward')
+			extraction_money = F('will_return_reward'),
+			is_new = True
 		)
 
 

@@ -1005,9 +1005,9 @@ class ChannelDistributions(resource.Resource):
 			member_dict[member.id] = member.username_for_title
 
 		if query_name:
-			qrcodes = ChannelDistributionQrcodeSettings.objects.filter(owner=request.user, bing_member_title__icontains=query_name)
+			qrcodes = ChannelDistributionQrcodeSettings.objects.filter(owner=request.user, bing_member_title__icontains=query_name).order_by('-is_new', sort_attr)
 		else:
-			qrcodes = ChannelDistributionQrcodeSettings.objects.filter(owner=request.user)
+			qrcodes = ChannelDistributionQrcodeSettings.objects.filter(owner=request.user).order_by('-is_new', sort_attr)
 		items = []
 		for qrcode in qrcodes:
 			qrcode_dict = {}
@@ -1022,9 +1022,8 @@ class ChannelDistributions(resource.Resource):
 			qrcode_dict['created_at'] = str(qrcode.created_at)  # 创建时间
 			qrcode_dict['clearing'] = ''  # 会员结算 TODO 有新的提现请求显示new
 			qrcode_dict['ticket'] = qrcode.ticket
-
+			qrcode_dict['is_new'] = qrcode.is_new
 			items.append(qrcode_dict)
-
 
 		pageinfo, items = paginator.paginate(items, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
 
@@ -1286,7 +1285,7 @@ class ChannelDistributionClearing(resource.Resource):
 		"""
 		分销会员结算
 		"""
-		qrcodes = ChannelDistributionQrcodeSettings.objects.filter(owner__id=request.user.id).order_by('id')
+		qrcodes = ChannelDistributionQrcodeSettings.objects.filter(owner__id=request.user.id)
 		return_money_total = 0  # 已返现总额
 		not_return_money_total = 0  # 未返现总额
 		current_total_return = 0# 本期返现总额
@@ -1313,6 +1312,8 @@ class ChannelDistributionClearing(resource.Resource):
 			'total_transaction_volume': total_transaction_volume,
 			'webapp_id': webapp_id,
 		})
+
+		qrcodes.update(is_new=False)
 		return render_to_response('weixin/channels/channel_distribution_clearing.html', c)
 
 	@login_required
@@ -1326,7 +1327,7 @@ class ChannelDistributionClearing(resource.Resource):
 		start_date = request.GET.get('start_date')
 		end_date = request.GET.get('end_date')
 
-		qrcodes = ChannelDistributionQrcodeSettings.objects.all()
+		qrcodes = ChannelDistributionQrcodeSettings.objects.filter(owner=request.user).order_by('-status', '-commit_time')
 		if return_min:
 			if return_max:
 				qrcodes = qrcodes.filter(extraction_money__range=(return_min, return_max))
@@ -1337,9 +1338,6 @@ class ChannelDistributionClearing(resource.Resource):
 
 		if start_date and end_date:
 			qrcodes = qrcodes.filter(commit_time__range=(start_date, end_date))
-
-
-
 
 		member_dict = {}  # {id: name}
 		members = Member.objects.all()
@@ -1365,6 +1363,7 @@ class ChannelDistributionClearing(resource.Resource):
 			return_dict['will_return_reward'] = str(qrcode.will_return_reward)  # 实施奖励
 			return_dict['extraction_money'] = str(qrcode.extraction_money)  # 返现金额
 			return_dict['status'] = qrcode.status  # 返现状态
+
 
 			items.append(return_dict)
 

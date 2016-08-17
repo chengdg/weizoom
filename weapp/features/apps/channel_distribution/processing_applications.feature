@@ -90,12 +90,15 @@ Background:
 			"create_time": "2015-10-10 10:20:30"
 		}]
 		"""
-#	When jobs设定会员积分策略
-#		"""
-#		{
-#			"integral_each_yuan": 2
-#		}
-#		"""
+
+	Given jobs设定会员积分策略
+		"""
+		{
+			"integral_each_yuan": 10,		
+			"use_ceiling ": 50
+		}
+		"""
+
 	And jobs已添加支付方式
 		"""
 		[{
@@ -272,7 +275,7 @@ Scenario:1 分销会员结算页初次没有提交时的显示
 		When jobs完成订单"007"
 		When jobs完成订单"008"
 		When jobs完成订单"009"
-		#When jobs完成订单"010"
+		When jobs完成订单"010"
 		When 后台执行channel_distribution_update		
 		Then jobs获得分销会员结算列表
 			"""
@@ -296,7 +299,7 @@ Scenario:1 分销会员结算页初次没有提交时的显示
 				"cash_back_state":"无状态"
 			}]
 			"""
-@mall2 @apps @senior @processing_applications
+@mall2 @apps @senior @processing_applications @processing_applications_2
 Scenario:2 分销会员结算页等待审核状态
 		Given jobs登录系统
 		When jobs完成订单"002"
@@ -308,7 +311,7 @@ Scenario:2 分销会员结算页等待审核状态
 		When jobs完成订单"009"
 		When jobs完成订单"010"
 		When 后台执行channel_distribution_update
-		When bigs访问jobs的webapp
+#		When bigs访问jobs的webapp
 		When bigs申请返现于2015-08-12 10:00:00
 		
 		Then jobs获得分销会员结算列表
@@ -322,7 +325,7 @@ Scenario:2 分销会员结算页等待审核状态
 				"already_reward":50.00,
 				"cash_back_amount":50.00,
 				"cash_back_state":"等待审核"
-			}{
+			},{
 				"relation_member": "bill",
 				"submit_time":"----",
 				"current_transaction_amount":100.00,
@@ -388,7 +391,9 @@ Scenario:4 分销会员结算页已完成/切换为无状态
 		When 后台执行channel_distribution_update
 		When bigs访问jobs的webapp
 		When bigs申请返现于2015-08-12 10:00:00
-		When jobs已返现给bigs金额"60.00"
+
+		When jobs已返现给bigs金额"100.00"
+
 		Then jobs获得分销会员结算列表
 			"""
 			[{
