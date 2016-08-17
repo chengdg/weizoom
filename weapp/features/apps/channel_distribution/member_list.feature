@@ -163,7 +163,7 @@ Scenario:2 前台会员列表详情，达到返现标准
 		When jobs完成订单"007"
 		When 后台执行channel_distribution_update
 		When bigs申请返现于2015-08-12 10:00:00
-		When jobs已返现给bigs金额"50.00"
+		When jobs已返现给bigs金额"60.00"
 		# Given bigs登录系统
 		Then bigs获得已有会员列表详情
 			"""
