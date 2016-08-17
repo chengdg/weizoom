@@ -135,7 +135,7 @@ Background:
 
 @mall2 @apps @senior @member_list @member_list1
 
-Scenario:1 前台会员列表详情
+Scenario:1 前台会员列表详情,未达到返现标准
 	#扫码关注成为会员
 		Given jobs登录系统
 		#When jobs完成订单"002"
@@ -143,28 +143,16 @@ Scenario:1 前台会员列表详情
 		When jobs完成订单"004"
 		When jobs完成订单"005"
 		When 后台执行channel_distribution_update
-		When bigs申请返现于2015-08-12 10:00:00
-		When jobs已返现给bigs金额"50.00"
+		#When bigs申请返现于2015-08-12 10:00:00
+		#When jobs已返现给bigs金额"50.00"
 		# Given bigs登录系统
 		Then bigs获得已有会员列表详情
 			"""
-			[{
-				"wx_name": "jack",
-				"order_money": 100.00,
-				"commision":10.00,
-				"purchase_count":1,
-				"concern_time":"2015-08-10 10:00:00"
-			},{
-				"wx_name": "bill",
-				"order_money": 150.00,
-				"commision":15.00,
-				"purchase_count":2,
-				"concern_time":"2015-08-11 10:00:00"
-			}]
+			[]
 			"""
 @mall2 @apps @senior @member_list @member_list2
 
-Scenario:2 前台会员列表详情
+Scenario:2 前台会员列表详情，达到返现标准
 	#扫码关注成为会员
 		Given jobs登录系统
 		#When jobs完成订单"002"
@@ -182,13 +170,13 @@ Scenario:2 前台会员列表详情
 			[{
 				"wx_name": "marry",
 				"order_money": 500.00,
-				"commision":50.00,
+				"commission":50.00,
 				"purchase_count":1,
 				"concern_time":"2015-08-10 10:00:00"
 			},{
 				"wx_name": "tom",
 				"order_money": 100.00,
-				"commision":10.00,
+				"commission":10.00,
 				"purchase_count":1,
 				"concern_time":"2015-08-11 10:00:00"
 			}]
