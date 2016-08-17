@@ -354,7 +354,7 @@ def step_impl(context,user):
 	member_id = Member.objects.filter(username_hexstr__contains=user)[0].id
 	channel_qrcode_id = ChannelDistributionQrcodeSettings.objects.filter(bing_member_id=member_id)[0].id
 
-	datas = ChannelDistributionQrcodeHasMember.objects.filter(channel_qrcode_id=channel_qrcode_id)
+	datas = ChannelDistributionQrcodeHasMember.objects.filter(channel_qrcode_id=channel_qrcode_id, commision__gt=0)
 	actual_list = []
 	for data in datas:
 		data_dict = {}
