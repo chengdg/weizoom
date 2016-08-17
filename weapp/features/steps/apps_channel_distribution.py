@@ -121,3 +121,12 @@ def step_impl(context, user, vip_name):
 		actual_list.append(dict)
 
 	bdd_util.assert_list(expected, actual_list)
+
+
+@When(u'{user}更改{vip_name}的返现状态为"{status}"')
+def step_impl(context, user, vip_name, status):
+	member_name = byte_to_hex(vip_name)
+	bing_member_id = Member.objects.filter(username_hexstr__contains=member_name)[0].id
+	qrcode = ChannelDistributionQrcodeSettings.objects.filter(bing_member_id=bing_member_id)
+	if status == u"正在返现":
+		qrcode.update(status=2)
