@@ -1,12 +1,16 @@
 # -*- coding: utf-8 -*-
 
 import json
+from django.db.models import F
 from weixin.message.handler.message_handler import MessageHandler
 from market_tools.tools.distribution.models import ChannelDistributionQrcodeSettings, ChannelDistributionQrcodeHasMember
 from modules.member.models import MemberHasTag
 from modules.member.integral import increase_member_integral
 from market_tools.tools.coupon.util import consume_coupon
-from django.db.models import F
+from market_tools.tools.channel_qrcode.channel_qrcode_util import get_material_news_info
+from weixin.message import generator
+from core import emotion
+
 
 
 class ChannelDistributionQrcodeHandler(MessageHandler):
@@ -68,6 +72,33 @@ class ChannelDistributionQrcodeHandler(MessageHandler):
 					# 发放积分
 					award = award_prize_info['id']  # 扫码奖励积分
 					increase_member_integral(member, award, u'推荐扫码奖励')
+
+				# 扫码回复
+				msg_type, detail = get_response_msg_info_restructure(qrcode[0], user_profile)
+				if msg_type != None:
+					# from_weixin_user = self._get_from_weixin_user(message)
+					# token = self._get_token_for_weixin_user(user_profile, from_weixin_user, is_from_simulator)
+					if msg_type == 'text' and detail:
+						if is_from_simulator:
+							return generator.get_text_response(username, message.toUserName,
+								emotion.change_emotion_to_img(detail), username,
+								user_profile)
+						else:
+							return generator.get_text_response(username, message.toUserName, detail, username,
+															   user_profile)
+					if msg_type == 'news' and get_material_news_info(detail):
+						news = get_material_news_info(detail)
+						return generator.get_news_response(username, message.toUserName, news, username)
 			else:
 				return None
 		return None
+
+def get_response_msg_info_restructure(channel_qrcode_setting, user_profile):
+	if channel_qrcode_setting.reply_type == 0:
+		return None, None
+	elif channel_qrcode_setting.reply_type == 1:
+		return 'text', channel_qrcode_setting.reply_detail
+	elif channel_qrcode_setting.reply_type == 2:
+		return 'news', channel_qrcode_setting.reply_material_id
+	else:
+		return None, None
