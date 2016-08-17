@@ -365,6 +365,8 @@ def step_impl(context,user):
 		data_dict['concern_time'] = str(data.created_at)
 		actual_list.append(data_dict)
 
+	print(actual_list)
+
 
 	bdd_util.assert_list(expected, actual_list)
 
