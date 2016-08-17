@@ -113,7 +113,8 @@ class ScanlotteryParticipances(resource.Resource):
 				'prize_name': data.prize_name,
 				'status': data.status,
 				'created_at': data.created_at.strftime("%Y-%m-%d %H:%M:%S"),
-				'name': data.name
+				'name': data.name,
+				'code': data.code
 			})
 		response_data = {
 			'items': items,
