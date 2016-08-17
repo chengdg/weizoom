@@ -44,7 +44,7 @@ class Command(BaseCommand):
             members_dict[web_app_user.id] = member_id_to_qrocde_id[web_app_user.member_id]
 
         # 取出所有的订单
-        orders = Order.objects.filter(created_at__gt=self.start_time, status=5)  # 搜索大于启动时间, 并已完成的订单
+        orders = Order.objects.filter(created_at__gt=self.start_time, status=5, supplier_user_id=0)  # 搜索大于启动时间, 并已完成的订单
 
         finish_order_list = []  # 从数据库取出所有结算过的信息
         finish_orders = ChannelDistributionFinish.objects.all()
@@ -88,7 +88,7 @@ class Command(BaseCommand):
                             total_transaction_volume=F('total_transaction_volume') + order.final_price,
                             current_transaction_amount=F('current_transaction_amount') + order.final_price
                         )
-                        print u'订单号%s已处理,满足返现标准' % order.id
+                        print u'Order %s is finish, satisfy the standard of cashback' % order.id
                         print ChannelDistributionQrcodeHasMember.objects.get(member_id=web_app_user_dict[order.webapp_user_id]).commission_not_add
                     else:
                         ChannelDistributionQrcodeHasMember.objects.filter(member_id=web_app_user_dict[order.webapp_user_id]).update(
@@ -99,7 +99,7 @@ class Command(BaseCommand):
                             total_transaction_volume=F('total_transaction_volume') + order.final_price,
                             current_transaction_amount=F('current_transaction_amount') + order.final_price
                         )
-                        print u'订单号%s已处理,不满足返现标准' % order.id
+                        print u'Order %s is finish, dont satisfy the standard of cashback' % order.id
 
                     ChannelDistributionDetail.objects.create(
                         channel_qrcode_id=order_qrcode.id,
