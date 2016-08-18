@@ -89,7 +89,8 @@ def get_vip_message(request):
 	"""
 	webapp_id = request.user_profile.webapp_id
 	member_id = request.member.id
-	vip_datas = models.ChannelDistributionQrcodeHasMember.objects.filter(channel_qrcode_id=member_id, commission__gt=0)
+	vip_member_id = models.ChannelDistributionQrcodeSettings.objects.get(bing_member_id=member_id).id
+	vip_datas = models.ChannelDistributionQrcodeHasMember.objects.filter(channel_qrcode_id=vip_member_id, commission__gt=0)
 	if vip_datas:
 		vip_lists = []
 		for vip_data in vip_datas:
