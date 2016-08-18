@@ -167,9 +167,9 @@ class ProductList(resource.Resource):
                 product_pool_param['status'] = models.PP_STATUS_ON
                 product_pool = models.ProductPool.objects.filter(**product_pool_param)
                 product_pool_id2product_pool = dict([(pool.product_id, pool) for pool in product_pool])
-
                 if start_date and end_date:
                     products = products.filter(id__in=product_pool_id2product_pool.keys())
+
             # products = models.Product.objects.filter(
             #     owner=request.manager,
             #     shelve_type=models.PRODUCT_SHELVE_TYPE_ON,
@@ -195,14 +195,12 @@ class ProductList(resource.Resource):
                 userprofile_manager = UserProfile.objects.filter(webapp_type=2).first()
 
                 mananger_supplier_ids = [supplier.id for supplier in models.Supplier.objects.filter(
-                                            owner=userprofile_manager.user_id,
+                                            owner_id__in=[userprofile_manager.user_id, request.manager.id],
                                             name__contains=store_name,
                                             is_delete=False
                                         )]
                 if products:
                     products = products.filter(supplier__in=mananger_supplier_ids)
-
-
 
         # import pdb
         # pdb.set_trace()
@@ -282,6 +280,7 @@ class ProductList(resource.Resource):
         items1 = []
         items2 = []
         for product in products:
+
             product_dict = product.format_to_dict()
             product_dict['is_self'] = (request.manager.id == product.owner_id)
 
@@ -303,7 +302,6 @@ class ProductList(resource.Resource):
             if product.id in product_pool_id2product_pool.keys():
                 product_dict['display_index'] = product_pool_id2product_pool[product.id].display_index
                 product_dict['sync_at'] = product_pool_id2product_pool[product.id].sync_at.strftime('%Y-%m-%d %H:%M') if product_pool_id2product_pool[product.id].sync_at else ""
-                print product.id,">>>>>>>>>>DS>D>E.f>D>",product_dict['sync_at']
             else:
                 product_dict['sync_at'] = ""
             #增加团购属性
@@ -945,7 +943,7 @@ class Product(resource.Resource):
         mall_type = request.user_profile.webapp_type
 
         #自营平台去掉添加新商品
-        if mall_type and not has_product_id and request.manager.username not in ['weshop', 'weizoomjx']:
+        if mall_type == 1 and not has_product_id and request.manager.username not in ['weshop', 'weizoomjx']:
             return HttpResponseRedirect(
             '/mall2/product_pool/')
 
@@ -1050,6 +1048,8 @@ class Product(resource.Resource):
             woid = request.webapp_owner_id
             product.is_group_buying = product_is_group(product.id, woid)
 
+        if not mall_type:
+            supplier = []
 
         c = RequestContext(request, {
             'first_nav_name': export.PRODUCT_FIRST_NAV,
@@ -1077,6 +1077,7 @@ class Product(resource.Resource):
     def put(request):
         """创建商品or update product
         """
+        mall_type = request.user_profile.webapp_type
 
         standard_model, custom_models = utils.extract_product_model(request)
         postage_type = request.POST['postage_type']
@@ -1117,6 +1118,16 @@ class Product(resource.Resource):
             is_enable_bill = False
             is_delivery = False
 
+        if mall_type == 3:
+            try:
+                supplier = models.Supplier.objects.get(owner_id=request.manager.id, name="自营")
+            except:
+                supplier = models.Supplier.objects.create(owner_id=request.manager.id, name="自营")
+            supplier_id = supplier.id
+        else:
+            supplier_id = request.POST.get("supplier", 0)
+            
+
         product = models.Product.objects.create(
             owner=request.manager,
             name=request.POST.get('name', '').strip(),
@@ -1135,7 +1146,7 @@ class Product(resource.Resource):
             weshop_sync=request.POST.get('weshop_sync', 0),
             stocks=min_limit,
             is_member_product=request.POST.get("is_member_product", False) == 'on',
-            supplier=request.POST.get("supplier", 0),
+            supplier=supplier_id,
             purchase_price=purchase_price,
             is_enable_bill=is_enable_bill,
             is_delivery=is_delivery
@@ -1527,12 +1538,17 @@ class Product(resource.Resource):
                 'postage_type': postage_type,
                 'stocks': min_limit,
                 'is_member_product': request.POST.get("is_member_product", False) == 'on',
-                'supplier': request.POST.get("supplier", 0),
-                'purchase_price': purchase_price,
+                #'supplier': request.POST.get("supplier", 0),
+                #'purchase_price': purchase_price,
                 'is_enable_bill': is_enable_bill,
                 'is_delivery': is_delivery,
                 'buy_in_supplier': int(request.POST.get('buy_in_supplier', False))
             }
+
+            if mall_type == 1:
+                param['supplier'] = request.POST.get("supplier", 0)
+                param['purchase_price'] = request.POST.get("purchase_price", 0)
+
             # 微众商城代码
             # if request.POST.get('weshop_sync', None):
             #     param['weshop_sync'] = request.POST['weshop_sync'][0]
