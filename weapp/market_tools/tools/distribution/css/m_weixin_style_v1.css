@@ -327,10 +327,10 @@ html {
     top: 28px;
     left: 0;
     width: 0;
-    height: 12px;
+    height: 14px;
     border: 1px solid #4dafe2;
     border-radius: 10px;
-    background-image: linear-gradient(45deg, transparent 0rem, transparent 0.8rem, #4dafe2 0.9rem, #4dafe2 2.1rem, transparent 2.1rem, transparent 2.9rem, #4dafe2 3.1rem);
+    background-image: linear-gradient(55deg, transparent 0rem, transparent 0.8rem, #4dafe2 0.9rem, #4dafe2 2.1rem, transparent 2.1rem, transparent 2.9rem, #4dafe2 3.1rem);
     background-color: #008cd5;
     background-size: 25px 38px;
     -box-shadow: box-shadow: 1px 1px 5px rgba(0, 140, 213, .8);
@@ -350,7 +350,7 @@ html {
     bottom: 0;
     height: 100%;
     border-radius: 10px;
-    background-image: linear-gradient(to bottom, #4dafe2, rgba(0, 140, 213, .6) 15%, transparent 60%, #4dafe2);
+    background-image: linear-gradient(to bottom,rgba(0, 140, 213, .6), rgba(0, 140, 213, .6) 15%, transparent 60%, rgba(0, 140, 213, .6));
 }
 .xui-myPromption-wrapper .xui-returnCommission .xui-total-money {
     display: inline-block;
@@ -596,5 +596,5 @@ html {
 }
 @keyframes process {
     0% { background-position: 0 0; }
-    100% { background-position: 2em 0; }
+    100% { background-position: 2.2em 0; }
 }
