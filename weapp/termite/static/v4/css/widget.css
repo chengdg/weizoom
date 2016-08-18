@@ -1817,3 +1817,21 @@ div[data-type='wepage.specialTemplate_group'] .xui-designPage-actionPanel{
 .async-component ul.wui-block-type2.wui-card-type-0 div.wui-inner-pic img{ 
     width: 100%;
 }
+
+/**
+*微众商城加客服按钮
+**/
+.xui-server{
+    position: fixed;
+    bottom: 99px;
+    right: 8px;
+    z-index: 10002;
+    width: 40px;
+    height: 40px;
+    background: #95CFF1;
+    border-radius: 20px;
+    -webkit-border-radius:20px;
+}
+.xui-server img{
+    width: 100%;
+}
