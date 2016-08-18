@@ -1490,7 +1490,7 @@ class Product(resource.Resource):
                 'stocks': min_limit,
                 'is_member_product': request.POST.get("is_member_product", False) == 'on',
                 #'supplier': request.POST.get("supplier", 0),
-                'purchase_price': purchase_price,
+                #'purchase_price': purchase_price,
                 'is_enable_bill': is_enable_bill,
                 'is_delivery': is_delivery,
                 'buy_in_supplier': int(request.POST.get('buy_in_supplier', False))
@@ -1498,6 +1498,7 @@ class Product(resource.Resource):
 
             if mall_type == 1:
                 param['supplier'] = request.POST.get("supplier", 0)
+                param['purchase_price'] = request.POST.get("purchase_price", 0)
 
             # 微众商城代码
             # if request.POST.get('weshop_sync', None):
