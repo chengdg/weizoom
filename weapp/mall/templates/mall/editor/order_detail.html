@@ -310,7 +310,7 @@
                     {% elif product.promotion.type == 'premium_sale:premium_product' %}
                       [赠品]
                     {% endif %}
-                    {% if product.grade_discounted_money %}
+                    {% if product.grade_discounted_money > 0 %}
                       [会员优惠]
                     {% endif %}
                   {% endif %}
@@ -346,14 +346,19 @@
                 {% endif %}
  -->
                 {% if product.integral_count %}
-                  <p>{{ product.integral_count }}积分，抵扣{{ product.integral_money }}元</p>
+                  <p>{{ product.integral_count }}积分，抵扣{{ product.integral_money|floatformat:"2" }}元</p>
                 {% endif %}
-                {% if product.grade_discounted_money %}
-                  会员优惠：{{ product.grade_discounted_money }}
+                {% if product.grade_discounted_money > 0 %}
+                  会员优惠：{{ product.grade_discounted_money|floatformat:"2" }}
                 {% endif %}
               {% endif %}
               </td>
                 {% if mall_type %}
+                  {%if product.supplier_user_id %}
+                    {% ifchanged product.supplier_user_id %}
+                        <td rowspan="{{product.supplier_user_length}}" style="text-align:center;border-right:1px solid #ddd;">0.00</td>
+                    {% endifchanged %}
+                  {% endif %}
                   {% if product.supplier %}
                     {% ifchanged product.supplier %}
                         <td rowspan="{{product.supplier_length}}" style="text-align:center;border-right:1px solid #ddd;">{{ child_order_postages|get_child_order_postage:product.supplier|floatformat:"2" }}</td>
