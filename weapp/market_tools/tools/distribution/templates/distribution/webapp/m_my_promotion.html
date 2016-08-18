@@ -69,6 +69,9 @@ function activeProcess(hasGet, totalGet) {
 	var flag = document.getElementById('icon-flag');
 	var processBar = document.getElementById('process-bar');
 	var widthPercentage = Math.round(hasGet/totalGet*100);
+	if (widthPercentage >= 100) {
+		widthPercentage = 100;
+	}
 	flag.style.left = (widthPercentage-1) + '%';
 	processBar.style.width = widthPercentage + '%';
 	if (widthPercentage == 0) {
@@ -78,7 +81,7 @@ function activeProcess(hasGet, totalGet) {
 activeProcess({{ will_return_reward }}, {{ commission_return_standard }});
 
 function checkValid() {
-	if ({{ will_return_reward }} >= {{ commission_return_standard }}) {
+	if ({{ will_return_reward }} < {{ commission_return_standard }}) {
 		alert('未达到返现标准');
 	} else {
 		W.getApi().call({

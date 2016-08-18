@@ -25,6 +25,8 @@ def get_page(request):
 	will_return_reward = propotion_data.will_return_reward  #已获得奖励
 	total_earn = total_return + will_return_reward  #收入
 	diff_reward = commission_return_standard - will_return_reward  #还差多少元可以取现
+	if diff_reward < 0:
+		diff_reward = 0
 	return_standard = propotion_data.return_standard  #多少天的计算方式
 	return_standard = propotion_data.return_standard  #多少天的计算方式
 	status = propotion_data.status  # 取现进度
