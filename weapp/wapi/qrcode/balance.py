@@ -61,47 +61,40 @@ class QrcodeBalance(api_resource.ApiResource):
 		order_number2finished_at = {}
 		#处理筛选
 		if cur_start_date and cur_end_date:
-			# date_last = cur_end_date
-			# start_y_str, start_m_str, start_d_str = cur_start_date.split('-')
-			# end_y_str, end_m_str, end_d_str = cur_end_date.split('-')
-			# start_y = int(start_y_str)
-			# start_m = int(start_m_str)
-			# end_y = int(end_y_str)
-			# end_m = int(end_m_str)
-			# if start_y == end_y:
-			# 	if start_m == end_m:
-			# 		#获取开始时间的当月第一天
-			# 		date_first = '%s-%s-01' % (start_y_str, start_m_str)
-			# 		date_last = (datetime.datetime(start_y, start_m + 1, 1) - datetime.timedelta(1)).strftime("%Y-%m-%d")
-			# 		date_range.append([date_first, date_last])
-			# 	else:
-			# 		diff_m = end_m - start_m
-			# 		for i in range(diff_m+1):
-			# 			cur_m = start_m + i
-			# 			date_first = '%s-%s-01' % (start_y_str, str(cur_m) if len(str(cur_m)) >2 else '0'+ str(cur_m))
-			# 			date_last = (datetime.datetime(start_y, cur_m + 1, 1) - datetime.timedelta(1)).strftime("%Y-%m-%d")
-			# 			date_range.append([date_first, date_last])
-			# orderoperationlogs = OrderOperationLog.objects.filter(
-			# 	order_id__in=order_numbers,
-			# 	action__in=[u'完成', u'退款完成'],
-			# 	created_at__range=('%d-%d-01' % (start_y, start_m), date_last))
-			#
-			# for date_list in date_range:
-			# 	i = 1
-			# 	for op in orderoperationlogs:
-			# 		if op.created_at.strftime("%Y-%m-%d") >= cur_start_date and op.created_at.strftime("%Y-%m-%d") <= cur_end_date:
-			# 			order_log_numbers.append(op.order_id)
-			# 		if op.created_at.strftime("%Y-%m-%d") >= date_list[0] and op.created_at.strftime("%Y-%m-%d") <= date_list[1] and op.action == u'完成':
-			# 			order_number2index[op.order_id] = i
-			# 			i += 1
-			# 		order_number2finished_at[op.order_id] = op.created_at
+			date_last = cur_end_date
+			start_y_str, start_m_str, start_d_str = cur_start_date.split('-')
+			end_y_str, end_m_str, end_d_str = cur_end_date.split('-')
+			start_y = int(start_y_str)
+			start_m = int(start_m_str)
+			end_y = int(end_y_str)
+			end_m = int(end_m_str)
+			if start_y == end_y:
+				if start_m == end_m:
+					#获取开始时间的当月第一天
+					date_first = '%s-%s-01' % (start_y_str, start_m_str)
+					date_last = (datetime.datetime(start_y, start_m + 1, 1) - datetime.timedelta(1)).strftime("%Y-%m-%d %H:%M:%S")
+					date_range.append([date_first, date_last])
+				else:
+					diff_m = end_m - start_m
+					for i in range(diff_m+1):
+						cur_m = start_m + i
+						date_first = '%s-%s-01' % (start_y_str, str(cur_m) if len(str(cur_m)) >2 else '0'+ str(cur_m))
+						date_last = (datetime.datetime(start_y, cur_m + 1, 1) - datetime.timedelta(1)).strftime("%Y-%m-%d %H:%M:%S")
+						date_range.append([date_first, date_last])
 			orderoperationlogs = OrderOperationLog.objects.filter(
 				order_id__in=order_numbers,
 				action__in=[u'完成', u'退款完成'],
-				created_at__range=(cur_start_date, cur_end_date))
+				created_at__range=('%d-%d-01' % (start_y, start_m), date_last))
 
-			for op in orderoperationlogs:
-				order_number2finished_at[op.order_id] = op.created_at
+			for date_list in date_range:
+				i = 1
+				for op in orderoperationlogs:
+					if op.created_at.strftime("%Y-%m-%d %H:%M:%S") >= cur_start_date and op.created_at.strftime("%Y-%m-%d %H:%M:%S") <= cur_end_date:
+						order_log_numbers.append(op.order_id)
+					if op.created_at.strftime("%Y-%m-%d %H:%M:%S") >= date_list[0] and op.created_at.strftime("%Y-%m-%d %H:%M:%S") <= date_list[1] and op.action == u'完成':
+						order_number2index[op.order_id] = i
+						i += 1
+					order_number2finished_at[op.order_id] = op.created_at
 
 		orders = []
 		for channel_order in channel_orders:
