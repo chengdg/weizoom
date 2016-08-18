@@ -58,6 +58,7 @@ Background:
 		"""
 	And bigs关注jobs的公众号于'2015-10-01 10:00:00'
 	And bill关注jobs的公众号于'2015-10-02 10:00:00'
+	And nokia关注jobs的公众号于'2015-08-10 10:00:00'
 	Given jobs登录系统
 	When jobs新建渠道分销二维码
 		"""
@@ -122,18 +123,7 @@ Background:
 			"count":"10"
 		}]
 		"""
-
-	#扫码关注成为会员
-		When 清空浏览器
-		And jack扫描渠道二维码"分销二维码1"于2015-08-10 10:00:00
-		And jack访问jobs的webapp
-
-		When 清空浏览器
-		And nokia扫描渠道二维码"分销二维码2"于2015-08-11 10:00:00
-		And nokia关注jobs的公众号于'2015-08-11 10:00:00'
-		And nokia访问jobs的webapp
-
-		Given jobs登录系统
+	Given jobs登录系统
 
 		When jobs为会员发放优惠券
 			"""
@@ -153,6 +143,17 @@ Background:
 				"coupon_ids": ["coupon2_id_2"]
 			}
 			"""
+
+	#扫码关注成为会员
+		When 清空浏览器
+		And jack扫描渠道二维码"分销二维码1"于2015-08-10 10:00:00
+		And jack访问jobs的webapp
+
+		When 清空浏览器
+		And nokia扫描渠道二维码"分销二维码2"于2015-08-11 10:00:00
+		And nokia访问jobs的webapp
+
+		
 
 	#会员购买
 		When jack购买jobs的商品
