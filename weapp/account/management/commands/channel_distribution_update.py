@@ -17,9 +17,9 @@ class Command(BaseCommand):
 
     """
     def __init__(self):
-        # start_datetime = '2016-8-5 17:12'
-        start_datetime = datetime.datetime.now() - datetime.timedelta(days=11)  # 只处理11天之前的数据
-        self.start_time = start_datetime
+        start_datetime = datetime.datetime.strptime('2016-8-18 10:59', "%Y-%m-%d %H:%M")
+        eleven_days_ago = datetime.datetime.now() - datetime.timedelta(days=11)  # 只处理11天之前的数据
+        self.start_time = max(start_datetime, eleven_days_ago)
         super(Command , self).__init__()
 
     help = ''

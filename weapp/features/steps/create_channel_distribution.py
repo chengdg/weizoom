@@ -316,16 +316,6 @@ def step_impl(context, user):
 	print('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^')
 	print('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^')
 	print('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^')
-	
-
-	# for expect in expected:
-	# 	if expect['cash_back_amount'] == "暂无":
-	# 		expect['cash_back_amount'] = '0.00'
-	# 	if expect['cash_back_state'] == "等待审核":
-	# 		expect['cash_back_amount'] = '1'
-	# 	if expect['cash_back_state'] == "无状态":
-	# 		expect['cash_back_amount'] = '0'
-			
 
 	bdd_util.assert_list(expected, actual_list)
 
