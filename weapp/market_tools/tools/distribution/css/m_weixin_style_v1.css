@@ -336,10 +336,10 @@ html {
     -box-shadow: box-shadow: 1px 1px 5px rgba(0, 140, 213, .8);
     -moz-box-shadow: 1px 1px 5px rgba(0, 140, 213, .8);
     box-shadow: 1px 1px 5px rgba(0, 140, 213, .8);
-    -webkit-animation: process 750ms infinite linear;
-    -moz-animation: process 750ms infinite linear;
-    -ms-animation: process 750ms infinite linear;
-    animation: process 750ms infinite linear;
+    -webkit-animation: process 200ms infinite linear;
+    -moz-animation: process 200ms infinite linear;
+    -ms-animation: process 200ms infinite linear;
+    animation: process 200ms infinite linear;
 }
 .xui-myPromption-wrapper .xui-process .xui-process-active:after {
     content: '';
@@ -584,17 +584,17 @@ html {
 
 @-webkit-keyframes process {
     0% { background-position: 0 0; }
-    100% { background-position: 2.2em 0; }
+    100% { background-position: 25px 0; }
 }
 @-moz-keyframes process {
     0% { background-position: 0 0; }
-    100% { background-position: 2.2em 0; }
+    100% { background-position: 25px 0; }
 }
 @-ms-keyframes process {
     0% { background-position: 0 0; }
-    100% { background-position: 2.2em 0; }
+    100% { background-position: 25px 0; }
 }
 @keyframes process {
     0% { background-position: 0 0; }
-    100% { background-position: 2.2em 0; }
+    100% { background-position: 25px 0; }
 }
