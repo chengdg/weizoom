@@ -20,24 +20,19 @@
 {% block content-panel %}
 <div class="xui-wrapper xui-process-wrapper">
     <div class="xui-mainContain pt10">
-        {% if cur_list %}
+        {% if cur_list.status == 1 or cur_list.status == 2 %}
             <div class="xui-list">
                 <div class="xui-time">时间：{{ cur_list.created_at|date:"Y/m/d H:i" }}</div>
                 <ul class="xui-process">
-                    {% if cur_list.state == 1 %}
+                    {% if cur_list.status == 1 %}
                         <li class="xui-step cur">已申请<span class="icon-right icon-moveRight"><i class="icon-rect-white"></i><i class="icon-tri-white"></i>
                         <li class="xui-step">正在返现<span class="icon-right"><i class="icon-rect-blue"></i><i class="icon-tri-blue"></i></span></li>
                         <li class="xui-step">已完成</li>
                     {% endif %}
-                    {% if cur_list.state == 2 %}
+                    {% if cur_list.status == 2 %}
                         <li class="xui-step">已申请<span class="icon-right"><i class="icon-rect-blue"></i><i class="icon-tri-blue"></i>
                         <li class="xui-step cur">正在返现<span class="icon-right icon-moveRight"><i class="icon-rect-white"></i><i class="icon-tri-white"></i></span></li>
                         <li class="xui-step">已完成</li>
-                    {% endif %}
-                    {% if cur_list.state == 3 %}
-                        <li class="xui-step">已申请<span class="icon-right"><i class="icon-rect-blue"></i><i class="icon-tri-blue"></i>
-                        <li class="xui-step">正在返现<span class="icon-right"><i class="icon-rect-blue"></i><i class="icon-tri-blue"></i></span></li>
-                        <li class="xui-step cur">已完成</li>
                     {% endif %}
                 </ul>
             </div>
