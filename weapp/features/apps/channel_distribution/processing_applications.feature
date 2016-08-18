@@ -245,7 +245,7 @@ Background:
 				"relation_member":"bill",
 				"order_id": "009",
 				"pay_type": "货到付款",
-				"coupon_id":"coupon2_id_1",
+				"coupon":"coupon2_id_1",
 				"products":[{
 					"name":"商品1",
 					"count":1 
@@ -258,7 +258,7 @@ Background:
 				"relation_member":"bill",
 				"order_id": "010",
 				"pay_type": "货到付款",
-				"coupon_id":"coupon2_id_2",
+				"coupon":"coupon2_id_2",
 				"products":[{
 					"name":"商品1",
 					"count":1 
@@ -288,16 +288,16 @@ Scenario:1 分销会员结算页初次没有提交时的显示
 				"commission_return_standard":50.00,
 				"commission_return_rate":"10",
 				"already_reward":60.00,
-				"cash_back_amount":"暂无",
+				"cash_back_amount":0.00,
 				"cash_back_state":"无状态"
 			},{
 				"relation_member": "bill",
 				"submit_time":"----",
-				"current_transaction_amount":100.00,
+				"current_transaction_amount":200.00,
 				"commission_return_standard":50.00,
 				"commission_return_rate":"10",
 				"already_reward":10.00,
-				"cash_back_amount":"暂无",
+				"cash_back_amount":0.00,
 				"cash_back_state":"无状态"
 			}]
 			"""
