@@ -45,7 +45,9 @@ class Command(BaseCommand):
 
         # 取出所有的订单
         orders = Order.objects.filter(created_at__gt=self.start_time, status=5, supplier_user_id=0)  # 搜索大于启动时间, 并已完成的订单
-
+        print('orders length:%s'%len(orders))
+        print(self.start_time)
+        print(orders)
         finish_order_list = []  # 从数据库取出所有结算过的信息
         finish_orders = ChannelDistributionFinish.objects.all()
         for finish_order in finish_orders:
