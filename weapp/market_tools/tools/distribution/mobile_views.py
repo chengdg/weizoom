@@ -119,7 +119,8 @@ def get_details(request):
 	will_return_reward = models.ChannelDistributionQrcodeSettings.objects.get(bing_member_id=member_id).will_return_reward  #已获得奖励
 	details_datas = models.ChannelDistributionDetail.objects.filter(member_id=member_id)
 	if details_datas:
-		for details_data in details_datas[0]:
+		details_lists = []
+		for details_data in details_datas:
 			details_list={			
 				'order_id': details_data.order_id,  #订单id，id为0，则为提取
 				'money': details_data.money,  #操作金额
