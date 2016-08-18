@@ -63,10 +63,13 @@ class QrcodeOrder(api_resource.ApiResource):
 		# for order in channel_orders:
 		# 	total_sale_price += order.final_price + order.coupon_money + order.integral_money + order.weizoom_card_money + order.promotion_saved_money + order.edit_money
 
-		#处理分页
-		count_per_page = int(args.get('count_per_page', '20'))
-		cur_page = int(args.get('cur_page', '1'))
-		pageinfo, channel_orders = paginator.paginate(channel_orders, cur_page, count_per_page)
+		is_export = args.get('is_export', 0)
+		if not is_export:
+			#处理分页
+			count_per_page = int(args.get('count_per_page', '20'))
+			cur_page = int(args.get('cur_page', '1'))
+			pageinfo, channel_orders = paginator.paginate(channel_orders, cur_page, count_per_page)
+
 
 		channel_webapp_user_ids = []
 		order_ids = []
@@ -155,11 +158,19 @@ class QrcodeOrder(api_resource.ApiResource):
 					products.append(order_product)
 			sale_price = channel_order.final_price + channel_order.coupon_money + channel_order.integral_money + channel_order.weizoom_card_money + channel_order.promotion_saved_money + channel_order.edit_money
 			final_price = channel_order.final_price + channel_order.weizoom_card_money
+			if member:
+				try:
+					name = member.username.decode('utf8')
+				except:
+					name = member.username_hexstr
+			else:
+				name = u'未知'
 			orders.append({
 				"order_id": channel_order.id,
 				"order_number": channel_order.order_id,
 				"is_first_order": channel_order.is_first_order,
 				"member_name": member.username_for_html if member else u'未知',
+				"member_name_for_export": name,
 				"products": products,
 				"sale_price": u'%.2f' % sale_price,  #销售额
 				"price": final_price,  # 销售额
@@ -169,9 +180,13 @@ class QrcodeOrder(api_resource.ApiResource):
 				"finished_at": order_number2finished_at.get(channel_order.order_id, channel_order.update_at).strftime('%Y-%m-%d %H:%M:%S'),
 				"final_price": u'%.2f' % final_price
 			})
-
-		return {
-			'items': orders,
-			# 'total_sale_price':  u'%.2f' % total_sale_price,
-			'pageinfo': paginator.to_dict(pageinfo) if pageinfo else ''
-		}
+		if not is_export:
+			return {
+				'items': orders,
+				# 'total_sale_price':  u'%.2f' % total_sale_price,
+				'pageinfo': paginator.to_dict(pageinfo) if pageinfo else ''
+			}
+		else:
+			return {
+				'items': orders
+			}
