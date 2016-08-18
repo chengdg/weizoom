@@ -52,6 +52,7 @@ class QrcodeBalance(api_resource.ApiResource):
 
 		cur_start_date = args.get('start_date', None)
 		cur_end_date = args.get('end_date', None)
+		print cur_start_date,cur_end_date,"ppppppppppppppppp"
 		filter_data_args["status__in"] = [ORDER_STATUS_SUCCESSED, ORDER_STATUS_REFUNDED]
 		channel_orders = Order.objects.filter(**filter_data_args).order_by('-created_at')
 		order_numbers = [co.order_id for co in channel_orders]
@@ -84,7 +85,9 @@ class QrcodeBalance(api_resource.ApiResource):
 			orderoperationlogs = OrderOperationLog.objects.filter(
 				order_id__in=order_numbers,
 				action__in=[u'完成', u'退款完成'],
-				created_at__range=('%d-%d-01' % (start_y, start_m), date_last))
+				created_at__gte=cur_start_date,
+				created_at__lte=cur_end_date
+			)
 
 			for date_list in date_range:
 				i = 1
