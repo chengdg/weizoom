@@ -112,6 +112,12 @@
             </div>
 
             {% block content-panel %}{% endblock %}
+            <!-- 微众商城添加客服按钮 -->
+            <div class="xui-server xa-server xui-hide">
+                <a href="http://13718183044.udesk.cn/im_client/">
+                    <img src="/static_v2/img/server.png" alt="">
+                </a>
+            </div>
         {% endif %}
 
         <div id="jsons" style="display: none;">
@@ -165,6 +171,11 @@
             }
 
             $(document).ready(function() {
+                // 微众商城添加客服按钮判断
+                if( W.webappOwnerId == 216){
+                    $('.xa-server').removeClass('xui-hide');
+                }
+
                 //如果是来自h5的请求，修改所有链接
                 if (window.location.href.indexOf('from_h5=1') !== -1) {
                     $('a').each(function() {
