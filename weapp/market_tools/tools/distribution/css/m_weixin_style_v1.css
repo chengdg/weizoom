@@ -584,15 +584,15 @@ html {
 
 @-webkit-keyframes process {
     0% { background-position: 0 0; }
-    100% { background-position: 2em 0; }
+    100% { background-position: 2.2em 0; }
 }
 @-moz-keyframes process {
     0% { background-position: 0 0; }
-    100% { background-position: 2em 0; }
+    100% { background-position: 2.2em 0; }
 }
 @-ms-keyframes process {
     0% { background-position: 0 0; }
-    100% { background-position: 2em 0; }
+    100% { background-position: 2.2em 0; }
 }
 @keyframes process {
     0% { background-position: 0 0; }
