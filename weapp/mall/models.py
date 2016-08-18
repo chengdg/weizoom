@@ -2890,3 +2890,37 @@ class ProductLimitPurchasePrice(models.Model):
         verbose_name = "商品池商品"
         verbose_name_plural = "商品池商品"
         db_table = "product_limit_purchase_price"
+
+
+FIRST_CLASSIFICATION = 1
+SECONDARY_CLASSIFICATION = 2
+
+class Classification(models.Model):
+	"""
+	商品分类
+	"""
+	name = models.CharField(max_length=1024) #分类名
+	level = models.IntegerField(default=-1) #分类等级
+	status = models.IntegerField(default=1) # 1表示上线0表示下线
+	father_id = models.IntegerField(default=-1) #父级分类id
+	created_at = models.DateTimeField(auto_now_add=True)  # 添加时间
+
+	class Meta(object):
+		verbose_name = "商品分类"
+		verbose_name_plural = "商品分类"
+		db_table = "mall_classification"
+
+class ClassificationHasProduct(models.Model):
+	"""
+	商品分类拥有商品的关系表
+	"""
+	classification = models.ForeignKey(Classification)
+	product_id = models.IntegerField(default=-1)
+	woid = models.IntegerField(default=-1)
+	display_index = models.IntegerField(default=-1)
+	created_at = models.DateTimeField(auto_now_add=True)  # 添加时间
+
+	class Meta(object):
+		verbose_name = "商品分类与商品的关系"
+		verbose_name_plural = "商品分类与商品的关系"
+		db_table = "mall_classification_has_product"
