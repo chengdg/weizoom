@@ -349,7 +349,7 @@
                   <p>{{ product.integral_count }}积分，抵扣{{ product.integral_money|floatformat:"2" }}元</p>
                 {% endif %}
                 {% if product.grade_discounted_money > 0 %}
-                  会员优惠：{{ product.grade_discounted_money }}
+                  会员优惠：{{ product.grade_discounted_money|floatformat:"2" }}
                 {% endif %}
               {% endif %}
               </td>
