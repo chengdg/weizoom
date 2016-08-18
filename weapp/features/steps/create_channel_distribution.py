@@ -236,14 +236,28 @@ def step_impl(context,user):
 @When(u"{user}设置分销会员结算查询条件")
 def step_impl(context, user):
 	expected = json.loads(context.text)
+	import logging
 	if hasattr(context, 'cash_back_amount_in'):
-		context.cash_back_amount_in = expected('cash_back_amount_in')
+		delattr(context, 'cash_back_amount_in')
 	if hasattr(context, 'cash_back_amount_to'):
-		context.cash_back_amount_in = expected('cash_back_amount_to')
+		delattr(context, 'cash_back_amount_to')
 	if hasattr(context, 'submit_time_start'):
-		context.cash_back_amount_in = expected('submit_time_start')
+		delattr(context, 'submit_time_start')
 	if hasattr(context, 'submit_time_end'):
-		context.cash_back_amount_in = expected('submit_time_end')
+		delattr(context, 'submit_time_end')
+	
+	
+	
+	
+	if expected.has_key('cash_back_amount_in'):
+		context.cash_back_amount_in = expected['cash_back_amount_in']
+	if expected.has_key('cash_back_amount_to'):
+		context.cash_back_amount_to = expected['cash_back_amount_to']
+	if expected.has_key('submit_time_start'):
+		context.submit_time_start = expected['submit_time_start']
+	if expected.has_key('submit_time_end'):
+		context.submit_time_end = expected['submit_time_end']
+	logging.info(dir(context))
 
 
 @Then(u"{user}获得分销会员整体概况")
@@ -260,12 +274,22 @@ def step_impl(context, user):
 	extraction_money = 0  # 所有的extraction_money 之和
 
 	for qrcode in qrcodes:
-		total_transaction_volume += qrcode.total_transaction_volume  # 总交易额
-		return_money_total += qrcode.total_return  # 已返现总额
-		current_total_return += qrcode.will_return_reward  # 本期返现总额
-		extraction_money += qrcode.extraction_money 
+		total_transaction_volume += qrcode.total_transaction_volume
+		return_money_total += qrcode.total_return
+		# current_total_return += qrcode.will_return_reward
+		extraction_money += qrcode.extraction_money
+		not_return_money_total += qrcode.will_return_reward
+		if qrcode.status > 0:
+			current_total_return += qrcode.extraction_money
 
-	not_return_money_total = extraction_money + current_total_return # 未返现总额
+	# not_return_money_total = extraction_money
+	# for qrcode in qrcodes:
+	# 	total_transaction_volume += qrcode.total_transaction_volume  # 总交易额
+	# 	return_money_total += qrcode.total_return  # 已返现总额
+	# 	current_total_return += qrcode.will_return_reward  # 本期返现总额
+	# 	extraction_money += qrcode.extraction_money 
+
+	# not_return_money_total = extraction_money  # 未返现总额
 
 	actual_list = {}
 	actual_list['cash_back_total'] = return_money_total
@@ -281,19 +305,25 @@ def step_impl(context, user):
 
 	status = {0:u'无状态', 1:u'等待审核', 2:u'正在返现'}
 	expected = json.loads(context.text)
-
+	import logging
+	logging.info(dir(context))
+	logging.info('//////////////////////////////context')
 	params = {}
 	if hasattr(context, 'cash_back_amount_in'):
-		params['cash_back_amount_in'] = context.cash_back_amount_in
+		params['return_min'] = context.cash_back_amount_in
 	if hasattr(context, 'cash_back_amount_to'):
-		params['cash_back_amount_to'] = context.cash_back_amount_to
+		params['return_max'] = context.cash_back_amount_to
 	if hasattr(context, 'submit_time_start'):
-		params['submit_time_start'] = context.submit_time_start
+		params['start_date'] = context.submit_time_start
 	if hasattr(context, 'submit_time_end'):
-		params['submit_time_end'] = context.submit_time_end
+		params['end_date'] = context.submit_time_end
 	
+	logging.info(params)
+	logging.info('=========================123123')
 	response = context.client.get('/new_weixin/api/distribution_clearing/', params)
 
+	logging.info(response)
+	logging.info('===================')
 	datas = json.loads(response.content)['data']['items']
 	actual_list = []
 	for data in datas:

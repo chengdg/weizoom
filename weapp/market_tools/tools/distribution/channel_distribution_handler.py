@@ -89,6 +89,8 @@ class ChannelDistributionQrcodeHandler(MessageHandler):
 					if msg_type == 'news' and get_material_news_info(detail):
 						news = get_material_news_info(detail)
 						return generator.get_news_response(username, message.toUserName, news, username)
+				else:
+					return None
 			else:
 				return None
 		return None

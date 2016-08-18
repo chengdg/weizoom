@@ -1295,10 +1295,13 @@ class ChannelDistributionClearing(resource.Resource):
 		for qrcode in qrcodes:
 			total_transaction_volume += qrcode.total_transaction_volume
 			return_money_total += qrcode.total_return
-			current_total_return += qrcode.will_return_reward
+			# current_total_return += qrcode.will_return_reward
 			extraction_money += qrcode.extraction_money
+			not_return_money_total += qrcode.will_return_reward
+			if qrcode.status > 0:
+				current_total_return += qrcode.extraction_money
 
-		not_return_money_total = extraction_money + current_total_return
+		# not_return_money_total = extraction_money
 		webapp_id = request.user_profile.webapp_id
 
 		c = RequestContext(request, {
@@ -1527,7 +1530,7 @@ class ChannelDistributionChangeStatus(resource.Resource):
 			qrcode.update(
 				total_return = F('total_return') + extraction_money,
 				status = 0,
-				commit_time = datetime.strptime('0001-01-01', '%Y-%m-%d'),
+				# commit_time = datetime.strptime('0001-01-01', '%Y-%m-%d'),
 				will_return_reward = F('will_return_reward') - F('extraction_money'),
 				extraction_money = 0,
 				current_transaction_amount = 0, # 本期交易额,清零
