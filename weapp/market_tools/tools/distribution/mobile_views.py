@@ -65,7 +65,7 @@ def get_process(request):
 	prev_datas = models.ChannelDistributionDetail.objects.filter(member_id=member_id, order_id=0).order_by('-created_at')[0:10]
 	if prev_datas:
 		prev_lists = []
-		for prev_data in prev_datas[0]:
+		for prev_data in prev_datas:
 			prev_list={
 				'created_at': prev_data.created_at
 			}
@@ -91,7 +91,8 @@ def get_vip_message(request):
 	member_id = request.member.id
 	vip_datas = models.ChannelDistributionQrcodeHasMember.objects.filter(member_id=member_id, commission__gt=0)
 	if vip_datas:
-		for vip_data in vip_datas[0]:
+		vip_lists = []
+		for vip_data in vip_datas:
 			vip_list={
 				'nick_name': Member.objects.get(id=vip_data.member_id).username_for_html,
 				'cost_money': vip_data.cost_money,  #消费金额
