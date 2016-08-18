@@ -133,6 +133,8 @@ Background:
 		And nokia关注jobs的公众号于'2015-08-11 10:00:00'
 		And nokia访问jobs的webapp
 
+		Given jobs登录系统
+
 		When jobs为会员发放优惠券
 			"""
 			{
