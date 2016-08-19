@@ -122,9 +122,9 @@ def get_details(request):
 		details_lists = []
 		for details_data in details_datas:
 			if details_data.order_id == 0:
-				money = details_data.money * ChannelDistributionQrcodeSettings.commission_rate / 100.0
+				money = details_data.money 
 			else:
-				money = details_data.money
+				money = details_data.money * ChannelDistributionQrcodeSettings.commission_rate / 100.0
 
 			details_list = {			
 				'order_id': details_data.order_id,  #订单id，id为0，则为提取
