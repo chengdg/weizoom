@@ -28,17 +28,17 @@ def get_page(request):
 	if diff_reward < 0:
 		diff_reward = 0
 	return_standard = propotion_data.return_standard  #多少天的计算方式
-	return_standard = propotion_data.return_standard  #多少天的计算方式
 	status = propotion_data.status  # 取现进度
 	valid = will_return_reward >= commission_return_standard
 	if valid:
 		state = 1
 	else:
 		state = 2
-
 	if status != 0:
 		state = 3
-
+	# if status != 0:
+	# 	state = 3
+	# elif state = 2
 	c = RequestContext(request, {
 		'propotion_data': propotion_data,
 		'total_return': total_return,
@@ -62,7 +62,7 @@ def get_process(request):
 	"""
 	member_id = request.member.id
 	cur_list = models.ChannelDistributionQrcodeSettings.objects.get(bing_member_id=member_id)
-	prev_datas = models.ChannelDistributionDetail.objects.filter(member_id=member_id, order_id=0).order_by('-created_at')[0:10]
+	prev_datas = models.ChannelDistributionDetail.objects.filter(member_id=member_id, order_id=0).order_by('-created_at')
 	if prev_datas:
 		prev_lists = []
 		for prev_data in prev_datas:
@@ -75,11 +75,11 @@ def get_process(request):
 			"cur_list": cur_list,
 			"prev_lists": prev_lists
 		})
-		return render_to_response('%s/distribution/webapp/m_process.html' % TEMPLATE_DIR, c)
 	else:
 		c = RequestContext(request, {
 		})
-		return render_to_response('%s/distribution/webapp/m_process.html' % TEMPLATE_DIR, c)
+
+	return render_to_response('%s/distribution/webapp/m_process.html' % TEMPLATE_DIR, c)
 
 	
 
@@ -106,28 +106,29 @@ def get_vip_message(request):
 		c = RequestContext(request, {
 			'vip_lists': vip_lists
 		})
-		return render_to_response('%s/distribution/webapp/m_vip.html' % TEMPLATE_DIR, c)
 	else:
 		c = RequestContext(request, {
 		})
-		return render_to_response('%s/distribution/webapp/m_vip.html' % TEMPLATE_DIR, c)
+
+	return render_to_response('%s/distribution/webapp/m_vip.html' % TEMPLATE_DIR, c)
 
 def get_details(request):
 	"""
 	获取交易明细页面
 	"""
 	member_id = request.member.id
-	will_return_reward = models.ChannelDistributionQrcodeSettings.objects.get(bing_member_id=member_id).will_return_reward  #已获得奖励
-	channel_qrcode_id = models.ChannelDistributionQrcodeSettings.objects.get(bing_member_id=member_id).id
-	
-	details_datas = models.ChannelDistributionDetail.objects.filter(channel_qrcode_id=channel_qrcode_id)
+	ChannelDistributionQrcodeSettings = models.ChannelDistributionQrcodeSettings.objects.get(bing_member_id=member_id)
+	will_return_reward = ChannelDistributionQrcodeSettings.will_return_reward  #已获得奖励
+	channel_qrcode_id = ChannelDistributionQrcodeSettings.id  #提取进度的会员的id
+	details_datas = models.ChannelDistributionDetail.objects.filter(channel_qrcode_id=channel_qrcode_id) #提取记录
 	if details_datas:
 		details_lists = []
 		for details_data in details_datas:
 			details_list={			
 				'order_id': details_data.order_id,  #订单id，id为0，则为提取
 				'money': details_data.money,  #操作金额
-				'created_at': details_data.created_at  #添加时间
+				'created_at': details_data.created_at,  #添加时间
+				'commission_rate': ChannelDistributionQrcodeSettings.commission_rate  #利率
 			}
 			details_lists.append(details_list)
 
@@ -135,24 +136,26 @@ def get_details(request):
 			'will_return_reward': will_return_reward,
 			'details_lists': details_lists
 		})
-		return render_to_response('%s/distribution/webapp/m_details.html' % TEMPLATE_DIR, c)
 	else:
 		c = RequestContext(request, {
 			'will_return_reward': will_return_reward
 		})
-		return render_to_response('%s/distribution/webapp/m_details.html' % TEMPLATE_DIR, c)
+
+	return render_to_response('%s/distribution/webapp/m_details.html' % TEMPLATE_DIR, c)
 
 def get_weixin_code(request):
 	"""
 	获取二维码推广页面
 	"""
 	member_id = request.member.id
-	nick_name = request.member.username_for_html  #当前登入用户的昵称
-	weixin_code = models.ChannelDistributionQrcodeSettings.objects.get(bing_member_id=member_id).ticket  #二维码
-	weixin_code = 'https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=' + weixin_code
+	ChannelDistributionQrcodeSettings = models.ChannelDistributionQrcodeSettings.objects.get(bing_member_id=member_id)
+	nick_name = ChannelDistributionQrcodeSettings.bing_member_title  #当前登入用户的关联会员头衔
+	weixin_code = ChannelDistributionQrcodeSettings.ticket  #二维码
+	weixin_code = 'https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=' + weixin_code #二维码url
 	c = RequestContext(request, {
 		'nick_name': nick_name,
 		'weixin_code': weixin_code
 	})
+
 	return render_to_response('%s/distribution/webapp/m_weixin_promotion.html' % TEMPLATE_DIR, c)
 

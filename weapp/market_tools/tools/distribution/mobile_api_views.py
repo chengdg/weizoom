@@ -19,7 +19,8 @@ def change_state(request):
 		qrcode.update (
 			status = 1,
 			commit_time = datetime.datetime.now(),
-			extraction_money = F('will_return_reward')
+			extraction_money = F('will_return_reward'),
+			is_new = True
 		)
 
 		response = create_response(200)
