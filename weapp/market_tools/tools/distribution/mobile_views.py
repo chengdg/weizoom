@@ -36,9 +36,6 @@ def get_page(request):
 		state = 2
 	if status != 0:
 		state = 3
-	# if status != 0:
-	# 	state = 3
-	# elif state = 2
 	c = RequestContext(request, {
 		'propotion_data': propotion_data,
 		'total_return': total_return,
@@ -124,17 +121,17 @@ def get_details(request):
 	if details_datas:
 		details_lists = []
 		for details_data in details_datas:
+			if details_data.order_id == 0:
+				money = details_data.money * ChannelDistributionQrcodeSettings.commission_rate / 100.0
+			else:
+				money = details_data.money
+
 			details_list = {			
 				'order_id': details_data.order_id,  #订单id，id为0，则为提取
-				'money': details_data.money,  #操作金额
+				'money': money,  #操作金额
 				'created_at': details_data.created_at,  #添加时间
-				'commission_rate': ChannelDistributionQrcodeSettings.commission_rate  #利率
 			}
-			details_lists.append(details_list)
-
-		for details_list in details_lists:
-			if details_list['order_id'] == 0:
-				details_list['money'] = details_list['money'] * details_list['commission_rate']
+			details_lists.append(details_list)	
 
 		c = RequestContext(request, {
 			'will_return_reward': will_return_reward,
