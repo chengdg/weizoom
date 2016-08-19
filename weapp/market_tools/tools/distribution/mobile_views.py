@@ -63,10 +63,10 @@ def get_process(request):
 	member_id = request.member.id
 	cur_list = models.ChannelDistributionQrcodeSettings.objects.get(bing_member_id=member_id)
 	prev_datas = models.ChannelDistributionDetail.objects.filter(member_id=member_id, order_id=0).order_by('-created_at')
-	if prev_datas:
+	if cur_list or prev_datas:
 		prev_lists = []
 		for prev_data in prev_datas:
-			prev_list={
+			prev_list = {
 				'created_at': prev_data.created_at
 			}
 			prev_lists.append(prev_list)
@@ -94,7 +94,7 @@ def get_vip_message(request):
 	if vip_datas:
 		vip_lists = []
 		for vip_data in vip_datas:
-			vip_list={
+			vip_list = {
 				'nick_name': Member.objects.get(id=vip_data.member_id).username_for_html,
 				'cost_money': vip_data.cost_money,  #消费金额
 				'commission': vip_data.commission,  #带来的佣金
@@ -124,7 +124,7 @@ def get_details(request):
 	if details_datas:
 		details_lists = []
 		for details_data in details_datas:
-			details_list={			
+			details_list = {			
 				'order_id': details_data.order_id,  #订单id，id为0，则为提取
 				'money': details_data.money,  #操作金额
 				'created_at': details_data.created_at,  #添加时间

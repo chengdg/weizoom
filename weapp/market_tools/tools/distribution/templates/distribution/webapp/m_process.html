@@ -21,12 +21,12 @@
                 <div class="xui-time">时间：{{ cur_list.created_at|date:"Y/m/d H:i" }}</div>
                 <ul class="xui-process">
                     {% if cur_list.status == 1 %}
-                        <li class="xui-step cur">已申请<span class="icon-right icon-moveRight"><i class="icon-rect-white"></i><i class="icon-tri-white"></i>
+                        <li class="xui-step cur">已申请<span class="icon-right icon-moveRight"><i class="icon-rect-white"></i><i class="icon-tri-white"></i></span></li>
                         <li class="xui-step">正在返现<span class="icon-right"><i class="icon-rect-blue"></i><i class="icon-tri-blue"></i></span></li>
                         <li class="xui-step">已完成</li>
                     {% endif %}
                     {% if cur_list.status == 2 %}
-                        <li class="xui-step">已申请<span class="icon-right"><i class="icon-rect-blue"></i><i class="icon-tri-blue"></i>
+                        <li class="xui-step">已申请<span class="icon-right"><i class="icon-rect-blue"></i><i class="icon-tri-blue"></i></span></li>
                         <li class="xui-step cur">正在返现<span class="icon-right icon-moveRight"><i class="icon-rect-white"></i><i class="icon-tri-white"></i></span></li>
                         <li class="xui-step">已完成</li>
                     {% endif %}
@@ -34,16 +34,17 @@
             </div>
         {% endif %}
 
-        {% if prev_lists %}
-            {% for prev_list in prev_lists %}
-                <div class="xui-list">
-                    <div class="xui-time">时间：{{ prev_list.created_at|date:"Y/m/d H:i" }}</div>
-                    <ul class="xui-process">
-                        <li class="xui-step">已申请<span class="icon-right"><i class="icon-rect-blue"></i><i class="icon-tri-blue"></i>
-                        <li class="xui-step">正在返现<span class="icon-right"><i class="icon-rect-blue"></i><i class="icon-tri-blue"></i></span></li>
-                        <li class="xui-step cur">已完成</li>
-                    </ul>
-            {% endfor %}
+        {% if prev_lists %} 
+            <div class="xui-list">
+                {% for prev_list in prev_lists %}
+                <div class="xui-time">时间：{{ prev_list.created_at|date:"Y/m/d H:i" }}</div>
+                <ul class="xui-process">
+                    <li class="xui-step">已申请<span class="icon-right"><i class="icon-rect-blue"></i><i class="icon-tri-blue"></i></span></li>
+                    <li class="xui-step">正在返现<span class="icon-right"><i class="icon-rect-blue"></i><i class="icon-tri-blue"></i></span></li>
+                    <li class="xui-step cur">已完成</li>
+                </ul>
+                {% endfor %}
+            </div>
         {% endif %}
 
         {% if not cur_list and not prev_lists %}
