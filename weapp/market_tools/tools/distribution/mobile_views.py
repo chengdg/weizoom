@@ -62,7 +62,7 @@ def get_process(request):
 	"""
 	member_id = request.member.id
 	cur_list = models.ChannelDistributionQrcodeSettings.objects.get(bing_member_id=member_id)
-	prev_datas = models.ChannelDistributionDetail.objects.filter(member_id=member_id, order_id=0).order_by('-created_at')
+	prev_datas = models.ChannelDistributionDetail.objects.filter(member_id=member_id, order_id=0).order_by('-created_at')[0:20]
 	if cur_list or prev_datas:
 		prev_lists = []
 		for prev_data in prev_datas:
@@ -120,7 +120,7 @@ def get_details(request):
 	ChannelDistributionQrcodeSettings = models.ChannelDistributionQrcodeSettings.objects.get(bing_member_id=member_id)
 	will_return_reward = ChannelDistributionQrcodeSettings.will_return_reward  #已获得奖励
 	channel_qrcode_id = ChannelDistributionQrcodeSettings.id  #提取进度的会员的id
-	details_datas = models.ChannelDistributionDetail.objects.filter(channel_qrcode_id=channel_qrcode_id) #提取记录
+	details_datas = models.ChannelDistributionDetail.objects.filter(channel_qrcode_id=channel_qrcode_id)[0:20] #提取记录
 	if details_datas:
 		details_lists = []
 		for details_data in details_datas:
@@ -131,6 +131,10 @@ def get_details(request):
 				'commission_rate': ChannelDistributionQrcodeSettings.commission_rate  #利率
 			}
 			details_lists.append(details_list)
+
+		for details_list in details_lists:
+			if details_list.order_id == 0:
+				details_list.money = details_list.money * details_list.commission_rate
 
 		c = RequestContext(request, {
 			'will_return_reward': will_return_reward,
