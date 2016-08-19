@@ -20,7 +20,7 @@
 								<p class="xui-text">提现</p>
 								<p class="xui-day">{{ details_list.created_at|date:"Y年m月d日 H:i" }}</p>
 							</div>
-							<span class="xui-num">-{{ widthratio details_list.money 1 details_list.commission_rate }}</span>
+							<span class="xui-num">-{% widthratio details_list.money 1 details_list.commission_rate %}</span>
 						</dd>
 					{% else %}
 						<dd class="xui-details-list bg_fff">
