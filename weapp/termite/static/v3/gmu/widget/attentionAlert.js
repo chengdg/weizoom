@@ -31,7 +31,7 @@ Copyright (c) 2011-2012 Weizoom Inc
         initView: function () {
             // 微众商城未关注会员点击黄条显示看购专属二维码
             if(W.webappOwnerId == 216){
-                this.qrcode_image = '/static/img/mobile/kangouQrcodeImg.jpg'
+                this.qrcode_image = '/static_v2/img/kangouQrcodeImg.jpg'
             }else{
                 this.qrcode_image = this.setting.getQrcodeImage(this);
             }
