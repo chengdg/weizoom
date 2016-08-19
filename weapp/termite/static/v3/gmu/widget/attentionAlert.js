@@ -29,7 +29,12 @@ Copyright (c) 2011-2012 Weizoom Inc
         },
 
         initView: function () {
-            this.qrcode_image = this.setting.getQrcodeImage(this);
+            // 微众商城未关注会员点击黄条显示看购专属二维码
+            if(W.webappOwnerId == 3){
+                this.qrcode_image = '/static/img/mobile/kangouQrcodeImg.jpg'
+            }else{
+                this.qrcode_image = this.setting.getQrcodeImage(this);
+            }
             var height = window.screen.height;
             if('True' === this.$el.data('varnish')){
                 this.$el.data('view', this);
