@@ -372,7 +372,7 @@ Background:
 			}
 			"""
 
-@mall2 @apps @senior @trading_reward @dgl1
+@mall2 @apps @senior @trading_reward
 Scenario:1 一个微信用户扫码下单交易记录列表
 		Given jobs登录系统
 		When jobs完成订单"002"

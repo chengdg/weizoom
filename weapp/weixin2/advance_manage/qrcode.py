@@ -998,9 +998,14 @@ class ChannelDistributions(resource.Resource):
 		count_per_page = int(request.GET.get('count_per_page', 15))
 		# count_per_page = 1
 		cur_page = int(request.GET.get('page', '1'))
+		# 取出管理员的所有二维码
+		qrcodes = ChannelDistributionQrcodeSettings.objects.filter(owner=request.user)
+		member_ids = []
+		for qrcode in qrcodes:
+			member_ids.append(qrcode.bing_member_id)
 
 		member_dict = {}  # {id: name}
-		members = Member.objects.all()
+		members = Member.objects.filter(id__in=member_ids)
 		for member in members:
 			member_dict[member.id] = member.username_for_title
 
@@ -1008,6 +1013,12 @@ class ChannelDistributions(resource.Resource):
 			qrcodes = ChannelDistributionQrcodeSettings.objects.filter(owner=request.user, bing_member_title__icontains=query_name).order_by('-is_new', sort_attr)
 		else:
 			qrcodes = ChannelDistributionQrcodeSettings.objects.filter(owner=request.user).order_by('-is_new', sort_attr)
+
+
+
+
+		pageinfo, qrcodes = paginator.paginate(qrcodes, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
+
 		items = []
 		for qrcode in qrcodes:
 			qrcode_dict = {}
@@ -1024,8 +1035,6 @@ class ChannelDistributions(resource.Resource):
 			qrcode_dict['ticket'] = qrcode.ticket
 			qrcode_dict['is_new'] = qrcode.is_new
 			items.append(qrcode_dict)
-
-		pageinfo, items = paginator.paginate(items, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
 
 		response = create_response(200)
 		response.data = {
@@ -1197,7 +1206,7 @@ class ChannelDistribution(resource.Resource): # TODO 关联会员不可以有两
 			reply_detail = ''
 
 		cur_setting = ChannelDistributionQrcodeSettings.objects.create(
-			owner = request.manager,
+			owner = request.user,
 			bing_member_title = bing_member_title,
 			bing_member_id = bing_member_id,
 			award_prize_info = award_prize_info,
@@ -1214,7 +1223,7 @@ class ChannelDistribution(resource.Resource): # TODO 关联会员不可以有两
 		)
 
 		if settings.MODE != 'develop':
-			mp_user = get_binding_weixin_mpuser(request.manager)
+			mp_user = get_binding_weixin_mpuser(request.user)
 			mpuser_access_token = get_mpuser_accesstoken(mp_user)
 			weixin_api = get_weixin_api(mpuser_access_token)
 
@@ -1301,7 +1310,7 @@ class ChannelDistributionClearing(resource.Resource):
 			if qrcode.status > 0:
 				current_total_return += qrcode.extraction_money
 
-		# not_return_money_total = extraction_money
+		qrcodes.update(is_new=False)
 		webapp_id = request.user_profile.webapp_id
 
 		c = RequestContext(request, {
@@ -1316,7 +1325,7 @@ class ChannelDistributionClearing(resource.Resource):
 			'webapp_id': webapp_id,
 		})
 
-		qrcodes.update(is_new=False)
+
 		return render_to_response('weixin/channels/channel_distribution_clearing.html', c)
 
 	@login_required
@@ -1330,6 +1339,16 @@ class ChannelDistributionClearing(resource.Resource):
 		start_date = request.GET.get('start_date')
 		end_date = request.GET.get('end_date')
 
+		# 取出管理员的所有二维码
+		qrcodes = ChannelDistributionQrcodeSettings.objects.filter(owner=request.user)
+		member_ids = []
+		for qrcode in qrcodes:
+			member_ids.append(qrcode.bing_member_id)
+		member_dict = {}  # {id: name}
+		members = Member.objects.filter(id__in=member_ids)
+		for member in members:
+			member_dict[member.id] = member.username_for_title
+
 		qrcodes = ChannelDistributionQrcodeSettings.objects.filter(owner=request.user).order_by('-status', '-commit_time')
 		if return_min:
 			if return_max:
@@ -1338,17 +1357,13 @@ class ChannelDistributionClearing(resource.Resource):
 				qrcodes =  qrcodes.filter(extraction_money__gte=return_min)
 		elif return_max:
 			qrcodes = qrcodes.filter(extraction_money__lte=return_max)
-
 		if start_date and end_date:
 			qrcodes = qrcodes.filter(commit_time__range=(start_date, end_date))
 
-		member_dict = {}  # {id: name}
-		members = Member.objects.all()
-		for member in members:
-			member_dict[member.id] = member.username_for_title
+
+		pageinfo, qrcodes = paginator.paginate(qrcodes, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
 
 		items = []
-
 		for qrcode in qrcodes:
 			commit_time = qrcode.commit_time
 			if str(commit_time) == '0001-01-01 00:00:00':
@@ -1366,11 +1381,7 @@ class ChannelDistributionClearing(resource.Resource):
 			return_dict['will_return_reward'] = str(qrcode.will_return_reward)  # 实施奖励
 			return_dict['extraction_money'] = str(qrcode.extraction_money)  # 返现金额
 			return_dict['status'] = qrcode.status  # 返现状态
-
-
 			items.append(return_dict)
-
-		pageinfo, items = paginator.paginate(items, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
 
 		response = create_response(200)
 		response.data = {
@@ -1393,6 +1404,8 @@ class ChannelDistributionTransactionAmount(resource.Resource):
 		"""
 		# log_select = int(request.POST.get('log_select', 1))  # 0 本期, 1总的
 		qrcode_id = request.GET.get('qrcode_id')
+		count_per_page = int(request.GET.get('count_per_page', 15))
+		cur_page = int(request.GET.get('page', '1'))
 		items = []
 		total_money = 0
 
@@ -1410,6 +1423,8 @@ class ChannelDistributionTransactionAmount(resource.Resource):
 		for member in members:
 			member_dict[member.id] = member.username_for_title
 
+		pageinfo, channel_distribution_has_members = paginator.paginate(channel_distribution_has_members, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
+
 		for channel_distribution_has_member in channel_distribution_has_members:
 			dict = {}
 			dict['name'] = member_dict[channel_distribution_has_member.member_id]
@@ -1418,9 +1433,6 @@ class ChannelDistributionTransactionAmount(resource.Resource):
 			total_money += channel_distribution_has_member.cost_money
 			items.append(dict)
 
-		count_per_page = int(request.GET.get('count_per_page', 15))
-		cur_page = int(request.GET.get('page', '1'))
-		pageinfo, items = paginator.paginate(items, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
 
 		response = create_response(200)
 		response.data = {
@@ -1436,6 +1448,7 @@ class ChannelDistributionRewardDetail(resource.Resource):
 	app = 'new_weixin'
 	resource = 'channel_distribution_detail'
 
+	@login_required
 	def api_get(request):
 		count_per_page = int(request.GET.get('count_per_page', 15))
 		cur_page = int(request.GET.get('page', '1'))
