@@ -102,7 +102,8 @@ class QrcodeBalance(api_resource.ApiResource):
 					"is_first_order": channel_order.is_first_order,
 					"status_text": STATUS2TEXT[channel_order.status],
 					"sale_price": sale_price,  #销售额
-					"final_price": final_price
+					"final_price": final_price,
+					"created_at": channel_order.created_at.strftime("%Y-%m-%d %H:%M:%S")
 				})
 		end = time.time()
 		print end - start, "pppppppppp"

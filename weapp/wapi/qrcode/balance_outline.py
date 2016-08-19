@@ -85,7 +85,8 @@ class QrcodeBalanceOutline(api_resource.ApiResource):
 					'finished_at': order_number2finished_at.get(order.order_id,order.created_at).strftime("%Y-%m-%d %H:%M:%S"),
 					'status_text': STATUS2TEXT[order.status],
 					'sale_price': sale_price,
-					'final_price': final_price
+					'final_price': final_price,
+					'created_at': order.created_at.strftime("%Y-%m-%d %H:%M:%S")
 				})
 
 			if order.is_first_order and order.status != ORDER_STATUS_NOT:
@@ -94,7 +95,8 @@ class QrcodeBalanceOutline(api_resource.ApiResource):
 					'finished_at': order.created_at.strftime("%Y-%m-%d %H:%M:%S"),
 					'status_text': STATUS2TEXT[order.status],
 					'sale_price': sale_price,
-					'final_price': final_price
+					'final_price': final_price,
+					'created_at': order.created_at.strftime("%Y-%m-%d %H:%M:%S")
 				})
 
 		member_outline_info = {

@@ -111,7 +111,8 @@ class QrcodeBalance(api_resource.ApiResource):
 					"status_text": STATUS2TEXT[channel_order.status],
 					"sale_price": sale_price,  #销售额
 					"finished_at": order_number2finished_at.get(channel_order.order_id, channel_order.update_at).strftime('%Y-%m-%d %H:%M:%S'),
-					"final_price": final_price
+					"final_price": final_price,
+					"created_at": channel_order.created_at.strftime('%Y-%m-%d %H:%M:%S'),
 				})
 		end = time.time()
 		print end - start, "pppppppppp"
