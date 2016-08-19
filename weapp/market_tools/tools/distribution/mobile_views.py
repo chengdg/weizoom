@@ -8,6 +8,9 @@ from django.template import Context, RequestContext
 from django.shortcuts import render_to_response
 import models
 from modules.member.models import Member
+from mall.models import Order
+
+
 template_path_items = os.path.dirname(__file__).split(os.sep)
 TEMPLATE_DIR = '%s/templates' % template_path_items[-1]
 
@@ -113,17 +116,34 @@ def get_details(request):
 	"""
 	获取交易明细页面
 	"""
+	
+
 	member_id = request.member.id
 	ChannelDistributionQrcodeSettings = models.ChannelDistributionQrcodeSettings.objects.get(bing_member_id=member_id)
 	will_return_reward = ChannelDistributionQrcodeSettings.will_return_reward  #已获得奖励
 	channel_qrcode_id = ChannelDistributionQrcodeSettings.id  #提取进度的会员的id
 	details_datas = models.ChannelDistributionDetail.objects.filter(channel_qrcode_id=channel_qrcode_id)[0:20] #提取记录
+	order_ids = []
+	for details_data in details_datas:
+		order_ids.append(details_data.order_id)
+
+	order_dict = {}  # order_id : order
+	orders = Orders.objects.filter(id__in=order_ids, supplier_user_id=0)
+	for order in orders:
+		order_dict[order.id] = order
+
+
 	if details_datas:
 		details_lists = []
 		for details_data in details_datas:
+
 			if details_data.order_id == 0:
 				money = details_data.money 
 			else:
+				# conform_minimun_return_rate = True if order.final_price /order.product_price > order_qrcode.minimun_return_rate / 100.0 else False
+				conform_minimun_return_rate = True if order_dict[details_data.order_id].final_price /order_dict[details_data.order_id].product_price > ChannelDistributionQrcodeSettings.minimun_return_rate / 100.0 else False
+				if not conform_minimun_return_rate:
+					continue
 				money = details_data.money * ChannelDistributionQrcodeSettings.commission_rate / 100
 
 			details_list = {			
