@@ -45,7 +45,9 @@ class Command(BaseCommand):
 
         # 取出所有的订单
         orders = Order.objects.filter(created_at__gt=self.start_time, status=5, supplier_user_id=0)  # 搜索大于启动时间, 并已完成的订单
-
+        print('orders length:%s'%len(orders))
+        print(self.start_time)
+        print(orders)
         finish_order_list = []  # 从数据库取出所有结算过的信息
         finish_orders = ChannelDistributionFinish.objects.all()
         for finish_order in finish_orders:
@@ -63,16 +65,20 @@ class Command(BaseCommand):
             print order.webapp_user_id
             # 如果此订单的购买者之前绑过渠道分销二维码
 
+            if order.id in finish_order_list:
+                print 'order has complete!!!'
+                return None
             # if members_dict.has_key(order.webapp_user_id) and order.id not in finish_order_list:
-            if order.webapp_user_id in web_app_user_dict.keys() and order.id not in finish_order_list:
+            if order.webapp_user_id in web_app_user_dict.keys():
                 # qrcode = ChannelDistributionQrcodeSettings.objects.filter(id=members_dict[order.webapp_user_id])
                 order_qrcode = qrcodes_dict[members_dict[order.webapp_user_id]]  # 此订单会员绑定的二维码
                 conform_minimun_return_rate = True if order.final_price /order.product_price > order_qrcode.minimun_return_rate / 100.0 else False  # 满足最低返现折扣
-                print '订单已绑定'
+                print 'member has bind!'
                 if order_qrcode.distribution_rewards:  # 如果返佣金
                     if order_qrcode.return_standard:  # 有返回天数限制
                         if order.created_at > datetime.datetime.now() - datetime.timedelta(
                                 days=order_qrcode.return_standard):
+                            print('return day limit')
                             return None
                     if conform_minimun_return_rate:  # 如果满足最低返现标准
 
