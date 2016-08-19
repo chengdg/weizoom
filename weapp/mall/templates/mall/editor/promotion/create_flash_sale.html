@@ -126,7 +126,7 @@
 
 				<div class="xui-i-item pa" style="top:50px;">
 					<label>单人单次限购：</label>
-					<input type="text" class="form-control w70" id="count_per_purchase" name="count_per_purchase" data-validate="require-positive-int" value="{% if promotion and promotion.detail.count_per_purchase != 9999999 %}{{promotion.detail.count_per_purchase}}{% endif %}" />
+					<input type="text" class="form-control w70" id="count_per_purchase" name="count_per_purchase" data-validate="norequire,,require-positive-int" value="{% if promotion and promotion.detail.count_per_purchase != 9999999 %}{{promotion.detail.count_per_purchase}}{% endif %}" />
 					<span class="xui-i-help ml5">注：空为不限制</span>
 					<div class="errorHint ml110 mt" data-error-hint="请输入正整数"></div>
 				</div>
