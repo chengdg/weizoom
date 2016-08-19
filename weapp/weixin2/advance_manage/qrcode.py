@@ -1131,18 +1131,18 @@ class ChannelDistribution(resource.Resource): # TODO 关联会员不可以有两
 		"""新建渠道分销二维码"""
 		bing_member_title = request.POST["bing_member_title"]  # 会员头衔
 		if  ChannelDistributionQrcodeSettings.objects.filter(bing_member_title=bing_member_title).exists():  # 检测重复
-			response = create_response(400)
+			response = create_response(500)
 			response.errMsg = u"重复的会员头衔"
 			return response.get_response()
 
 		bing_member_id = request.POST["bing_member_id"]  # 关联会员
 		if ChannelDistributionQrcodeSettings.objects.filter(bing_member_id=bing_member_id).exists():
-			response = create_response(400)
+			response = create_response(500)
 			response.errMsg = u"一个会员只能绑定一个二维码"
 			return response.get_response()
 
 		if ChannelQrcodeSettings.objects.filter(bing_member_id=bing_member_id).exists():
-			response = create_response(400)
+			response = create_response(500)
 			response.errMsg = u"一个会员只能绑定一个二维码"
 			return response.get_response()
 
@@ -1153,7 +1153,7 @@ class ChannelDistribution(resource.Resource): # TODO 关联会员不可以有两
 		if info_dict['type'] == u'优惠券':
 			coupon_id = str(info_dict['id'])
 		if not (info_dict.has_key('id') and info_dict.has_key('name') and info_dict.has_key('type')):
-			response = create_response(401)
+			response = create_response(500)
 			response.errMsg = u'不合法的award_prize_info：' + award_prize_info
 			return response.get_response()
 
@@ -1171,24 +1171,24 @@ class ChannelDistribution(resource.Resource): # TODO 关联会员不可以有两
 			return_standard = int(request.POST.get("return_standard", 0))  # 多少天返现标准  TODO 需要修改
 
 			if commission_rate > 20 or commission_rate < 0:
-				response = create_response(400)
+				response = create_response(500)
 				response.errMsg = u'佣金返现率输入错误'
 				return response.get_response()
 
 			if minimun_return_rate > 100 or minimun_return_rate < 0:
-				response = create_response(400)
+				response = create_response(500)
 				response.errMsg = u'最低返现折扣输入错误'
 				return response.get_response()
 
 			if return_standard < 0:
-				response = create_response(400)
+				response = create_response(500)
 				response.errMsg = u'佣金返现标准输入错误'
 				return response.get_response()
 
 			if  7 >= return_standard >= 0:
 				pass
 			else:
-				response = create_response(400)
+				response = create_response(500)
 				response.errMsg = u'请输入大于等于0且小于等于7的数字'
 				return response.get_response()
 
@@ -1245,7 +1245,7 @@ class ChannelDistribution(resource.Resource): # TODO 关联会员不可以有两
 		if cur_setting:
 			response = create_response(200)
 		else:
-			response = create_response(400)
+			response = create_response(500)
 
 		return response.get_response()
 
@@ -1265,7 +1265,7 @@ class ChannelDistribution(resource.Resource): # TODO 关联会员不可以有两
 
 			bing_member_title = request.POST["bing_member_title"]  # 会员头衔
 			if ChannelDistributionQrcodeSettings.objects.filter(bing_member_title=bing_member_title).exclude(id=qrcode_id):  # 检测重复
-				response = create_response(400)
+				response = create_response(500)
 				response.errMsg = u"重复的会员头衔"
 				return response.get_response()
 
@@ -1281,7 +1281,7 @@ class ChannelDistribution(resource.Resource): # TODO 关联会员不可以有两
 			response = create_response(200)
 			return response.get_response()
 		else:
-			response = create_response(400)
+			response = create_response(500)
 			return response.get_response()
 
 
