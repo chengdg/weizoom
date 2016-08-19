@@ -40,6 +40,7 @@ class QrcodeOrder(api_resource.ApiResource):
 
 		}
 		status = args.get('status', '-1')
+		#下单时间
 		start_date = args.get('start_date', None)
 		end_date = args.get('end_date', None)
 		is_first_order = int(args.get('is_first_order', '0'))
@@ -49,8 +50,10 @@ class QrcodeOrder(api_resource.ApiResource):
 		if start_date and end_date:
 			start_time = start_date + ' 00:00:00'
 			end_time = end_date + ' 23:59:59'
-			order_numbers = [op.order_id for op in OrderOperationLog.objects.filter(created_at__gte=start_time,created_at__lte=end_time).exclude(order_id__contains='^')]
-			filter_data_args["order_id__in"] = order_numbers
+			# order_numbers = [op.order_id for op in OrderOperationLog.objects.filter(created_at__gte=start_time,created_at__lte=end_time).exclude(order_id__contains='^')]
+			# filter_data_args["order_id__in"] = order_numbers
+			filter_data_args["created_at__gte"] = start_time
+			filter_data_args["created_at__lte"] = end_time
 		if is_first_order:
 			filter_data_args["is_first_order"] = True
 		if order_number:
@@ -73,15 +76,15 @@ class QrcodeOrder(api_resource.ApiResource):
 
 		channel_webapp_user_ids = []
 		order_ids = []
-		order_numbers = [] #订单编号
+		# order_numbers = [] #订单编号
 		for channel in channel_orders:
 			channel_webapp_user_ids.append(channel.webapp_user_id)
 			order_ids.append(channel.id)
-			order_numbers.append(channel.order_id)
+			# order_numbers.append(channel.order_id)
 
 
 		#订单的操作日志
-		order_number2finished_at = {opl.order_id:opl.created_at for opl in OrderOperationLog.objects.filter(order_id__in=order_numbers,action=u'完成').exclude(order_id__contains='^')}
+		# order_number2finished_at = {opl.order_id:opl.created_at for opl in OrderOperationLog.objects.filter(order_id__in=order_numbers,action=u'完成').exclude(order_id__contains='^')}
 
 		#子单的信息
 		origin_orders = Order.objects.filter(origin_order_id__in=order_ids)
@@ -178,7 +181,7 @@ class QrcodeOrder(api_resource.ApiResource):
 				"status_text": STATUS2TEXT[channel_order.status],
 				"created_at": channel_order.created_at.strftime('%Y-%m-%d %H:%M:%S'),
 				"update_at": channel_order.update_at.strftime('%Y-%m-%d %H:%M:%S'),
-				"finished_at": order_number2finished_at.get(channel_order.order_id, channel_order.update_at).strftime('%Y-%m-%d %H:%M:%S'),
+				# "finished_at": order_number2finished_at.get(channel_order.order_id, channel_order.update_at).strftime('%Y-%m-%d %H:%M:%S'),
 				"final_price": u'%.2f' % final_price
 			})
 		if not is_export:
