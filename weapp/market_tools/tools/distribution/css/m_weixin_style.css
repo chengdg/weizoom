@@ -327,8 +327,8 @@ html {
     background-size: 20px 38px;
     -box-shadow: box-shadow: 1px 1px 5px rgba(0, 140, 213, .8);
     box-shadow: 1px 1px 5px rgba(0, 140, 213, .8);
-    -webkit-animation: process 600ms infinite linear;
-    animation: process 600ms infinite linear;
+    -webkit-animation: process 800ms infinite linear;
+    animation: process 800ms infinite linear;
 }
 .xui-myPromption-wrapper .xui-process .xui-process-active:after {
     content: '';
