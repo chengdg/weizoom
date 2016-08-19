@@ -28,14 +28,12 @@ def get_page(request):
 	if diff_reward < 0:
 		diff_reward = 0
 	return_standard = propotion_data.return_standard  #多少天的计算方式
-	return_standard = propotion_data.return_standard  #多少天的计算方式
 	status = propotion_data.status  # 取现进度
 	valid = will_return_reward >= commission_return_standard
 	if valid:
 		state = 1
 	else:
 		state = 2
-
 	if status != 0:
 		state = 3
 
@@ -117,10 +115,10 @@ def get_details(request):
 	获取交易明细页面
 	"""
 	member_id = request.member.id
-	will_return_reward = models.ChannelDistributionQrcodeSettings.objects.get(bing_member_id=member_id).will_return_reward  #已获得奖励
-	channel_qrcode_id = models.ChannelDistributionQrcodeSettings.objects.get(bing_member_id=member_id).id
-	
-	details_datas = models.ChannelDistributionDetail.objects.filter(channel_qrcode_id=channel_qrcode_id)
+	ChannelDistributionQrcodeSettings = models.ChannelDistributionQrcodeSettings.objects.get(bing_member_id=member_id)
+	will_return_reward = ChannelDistributionQrcodeSettings.will_return_reward  #已获得奖励
+	channel_qrcode_id = ChannelDistributionQrcodeSettings.id  #提取进度的会员的id
+	details_datas = models.ChannelDistributionDetail.objects.filter(channel_qrcode_id=channel_qrcode_id) #提取记录
 	if details_datas:
 		details_lists = []
 		for details_data in details_datas:
@@ -147,8 +145,9 @@ def get_weixin_code(request):
 	获取二维码推广页面
 	"""
 	member_id = request.member.id
-	nick_name = request.member.username_for_html  #当前登入用户的昵称
-	weixin_code = models.ChannelDistributionQrcodeSettings.objects.get(bing_member_id=member_id).ticket  #二维码
+	ChannelDistributionQrcodeSettings = models.ChannelDistributionQrcodeSettings.objects.get(bing_member_id=member_id)
+	nick_name = ChannelDistributionQrcodeSettings.bing_member_title  #当前登入用户的关联会员头衔
+	weixin_code = ChannelDistributionQrcodeSettings.ticket  #二维码
 	weixin_code = 'https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=' + weixin_code
 	c = RequestContext(request, {
 		'nick_name': nick_name,
