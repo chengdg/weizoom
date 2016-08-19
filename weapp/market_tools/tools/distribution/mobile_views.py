@@ -118,7 +118,9 @@ def get_details(request):
 	"""
 	member_id = request.member.id
 	will_return_reward = models.ChannelDistributionQrcodeSettings.objects.get(bing_member_id=member_id).will_return_reward  #已获得奖励
-	details_datas = models.ChannelDistributionDetail.objects.filter(member_id=member_id)
+	channel_qrcode_id = models.ChannelDistributionQrcodeSettings.objects.get(bing_member_id=member_id).id
+	
+	details_datas = models.ChannelDistributionDetail.objects.filter(channel_qrcode_id=channel_qrcode_id)
 	if details_datas:
 		details_lists = []
 		for details_data in details_datas:
