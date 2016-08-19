@@ -35,16 +35,16 @@
         {% endif %}
 
         {% if prev_lists %} 
-            <div class="xui-list">
-                {% for prev_list in prev_lists %}
+            {% for prev_list in prev_lists %}
+            <div class="xui-list">        
                 <div class="xui-time">时间：{{ prev_list.created_at|date:"Y/m/d H:i" }}</div>
                 <ul class="xui-process">
                     <li class="xui-step">已申请<span class="icon-right"><i class="icon-rect-blue"></i><i class="icon-tri-blue"></i></span></li>
                     <li class="xui-step">正在返现<span class="icon-right"><i class="icon-rect-blue"></i><i class="icon-tri-blue"></i></span></li>
                     <li class="xui-step cur">已完成</li>
-                </ul>
-                {% endfor %}
+                </ul>          
             </div>
+            {% endfor %}
         {% endif %}
 
         {% if not cur_list and not prev_lists %}
