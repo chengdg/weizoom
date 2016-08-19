@@ -128,7 +128,7 @@ def get_details(request):
 		order_ids.append(details_data.order_id)
 
 	order_dict = {}  # order_id : order
-	orders = Orders.objects.filter(id__in=order_ids, supplier_user_id=0)
+	orders = Order.objects.filter(id__in=order_ids, supplier_user_id=0)
 	for order in orders:
 		order_dict[order.id] = order
 
