@@ -17,7 +17,7 @@ class Command(BaseCommand):
 
     """
     def __init__(self):
-        start_datetime = datetime.datetime.strptime('2016-8-18 10:59', "%Y-%m-%d %H:%M")
+        start_datetime = datetime.datetime.strptime('2016-8-19 10:05', "%Y-%m-%d %H:%M")
         eleven_days_ago = datetime.datetime.now() - datetime.timedelta(days=11)  # 只处理11天之前的数据
         self.start_time = max(start_datetime, eleven_days_ago)
         super(Command , self).__init__()
@@ -46,8 +46,8 @@ class Command(BaseCommand):
         # 取出所有的订单
         orders = Order.objects.filter(created_at__gt=self.start_time, status=5, supplier_user_id=0)  # 搜索大于启动时间, 并已完成的订单
         print('orders length:%s'%len(orders))
-        print(self.start_time)
-        print(orders)
+        # print(self.start_time)
+        # print(orders)
         finish_order_list = []  # 从数据库取出所有结算过的信息
         finish_orders = ChannelDistributionFinish.objects.all()
         for finish_order in finish_orders:
@@ -67,7 +67,7 @@ class Command(BaseCommand):
 
             if order.id in finish_order_list:
                 print 'order has complete!!!'
-                return None
+                continue
             # if members_dict.has_key(order.webapp_user_id) and order.id not in finish_order_list:
             if order.webapp_user_id in web_app_user_dict.keys():
                 # qrcode = ChannelDistributionQrcodeSettings.objects.filter(id=members_dict[order.webapp_user_id])
@@ -79,7 +79,7 @@ class Command(BaseCommand):
                         if order.created_at > datetime.datetime.now() - datetime.timedelta(
                                 days=order_qrcode.return_standard):
                             print('return day limit')
-                            return None
+                            continue
                     if conform_minimun_return_rate:  # 如果满足最低返现标准
 
                         commission = order.final_price * (order_qrcode.commission_rate / 100.0)
