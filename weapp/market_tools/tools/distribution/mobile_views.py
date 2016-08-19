@@ -133,8 +133,8 @@ def get_details(request):
 			details_lists.append(details_list)
 
 		for details_list in details_lists:
-			if details_list.order_id == 0:
-				details_list.money = details_list.money * details_list.commission_rate
+			if details_list['order_id'] == 0:
+				details_list['money'] = details_list['money'] * details_list['commission_rate']
 
 		c = RequestContext(request, {
 			'will_return_reward': will_return_reward,
