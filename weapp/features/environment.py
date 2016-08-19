@@ -63,6 +63,8 @@ from market_tools.tools.test_game import models as test_game_models
 from market_tools.tools.store import models as store_models
 from market_tools.tools.lottery import models as lottery_models
 from market_tools.tools.channel_qrcode import models as channel_qrcode_models
+from market_tools.tools.distribution.models import ChannelDistributionQrcodeSettings, ChannelDistributionQrcodeHasMember,\
+										ChannelDistributionFinish, ChannelDistributionDetail
 from market_tools.tools.member_qrcode import models as member_qrcode_models
 from market_tools.tools.weizoom_card.models import AccountHasWeizoomCardPermissions, WeizoomCardHasOrder, WeizoomCard
 from weixin2 import models as weixin2_models
@@ -436,6 +438,12 @@ def __clear_all_app_data():
 	apps_exlottery_models.ExlotteryControl.objects.all().delete()
 	apps_exlottery_models.ExlotteryCode.objects.all().delete()
 
+	# 促销二维码
+	ChannelDistributionFinish.objects.all().delete()
+	ChannelDistributionDetail.objects.all().delete()
+	ChannelDistributionQrcodeHasMember.objects.all().delete()
+	ChannelDistributionQrcodeSettings.objects.all().delete()
+
 	# weixin_user_models.ComponentInfo.objects.all().delete()
 	# weixin_user_models.ComponentAuthedAppid.objects.all().delete()
 	# 缓存
@@ -547,7 +555,7 @@ def __create_weapp_product():
 
 	manager = User.objects.get(username='manager')
 	workspace_ids = ','.join([str(workspace.id) for workspace in webapp_models.Workspace.objects.filter(owner=manager)])
-	market_tool_names = 'vote,member_qrcode,research,activity,coupon,lottery,complain,test_game,red_envelope,delivery_plan,point_card,channel_qrcode,thanks_card,weizoom_card,store,template_message,card_exchange'
+	market_tool_names = 'vote,member_qrcode,research,activity,coupon,lottery,complain,test_game,red_envelope,delivery_plan,point_card,channel_qrcode,thanks_card,weizoom_card,store,template_message,card_exchange, distribution'
 
 	weapp_product_models.Product.objects.create(
 		name = u'完整版',

@@ -44,6 +44,8 @@ def __send_coupons(context, webapp_owner_name):
     webapp_owner_id = bdd_util.get_user_id_for(webapp_owner_name)
     coupon_info = json.loads(context.text)
     coupon_rule_name = coupon_info['name']
+
+
     count = coupon_info['count']
     member_names = coupon_info['members']
 

@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from weixin.mp_decorators import mp_required
 from django.shortcuts import render_to_response
 from django.conf import settings
-
+from django.http import HttpResponseRedirect
 from weixin2 import export
 from core.exceptionutil import unicode_full_stack
 from core import resource
@@ -18,7 +18,10 @@ from weixin2.models import MessageRemarkMessage,Message,FanCategory,FanHasCatego
 from modules.member.models import *
 from .util import get_members
 from .fans_category import DEFAULT_CATEGORY_NAME
-from market_tools.tools.channel_qrcode.models import ChannelQrcodeSettings,ChannelQrcodeHasMember,ChannelQrcodeBingMember
+from market_tools.tools.channel_qrcode.models import ChannelQrcodeSettings,ChannelQrcodeHasMember, ChannelQrcodeBingMember
+from market_tools.tools.distribution.models import ChannelDistributionQrcodeSettings, ChannelDistributionQrcodeHasMember,\
+		ChannelDistributionDetail
+from mall.models import Order
 from modules.member import models as member_model
 from account.util import get_binding_weixin_mpuser, get_mpuser_accesstoken
 from weixin2.message.util import get_member_groups
@@ -28,10 +31,13 @@ import json
 from excel_response import ExcelResponse
 from modules.member.module_api import get_member_by_id_list, get_member_by_id
 from core.wxapi import get_weixin_api
+from mall import export as mall_export
+from mall.promotion.models import CouponRule
+from django.db.models import F
 
 #COUNT_PER_PAGE = 2
 COUNT_PER_PAGE = 50
-FIRST_NAV = export.WEIXIN_HOME_FIRST_NAV
+FIRST_NAV = mall_export.MALL_PROMOTION_AND_APPS_FIRST_NAV
 
 #DEFAULT_CATEGORY_NAME=u"未分组"
 
@@ -47,7 +53,7 @@ class Qrcodes(resource.Resource):
 		"""
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
-			'second_navs': export.get_weixin_second_navs(request),
+			'second_navs': mall_export.get_promotion_and_apps_second_navs(request),
 			'second_nav_name': export.WEIXIN_ADVANCE_SECOND_NAV,
 			'third_nav_name': export.ADVANCE_MANAGE_QRCODE_NAV,
 		})
@@ -186,7 +192,8 @@ def _get_qrcode_items(request):
 		if prize_info['name'] == '_score-prize_':
 			setting.cur_prize = '[%s]%d' % (prize_info['type'], prize_info['id'])
 		elif prize_info['name'] == 'non-prize':
-			setting.cur_prize = prize_info['type']
+			setting.cur_prize = u'无奖励'
+			# setting.cur_prize = prize_info['type']
 		else:
 			setting.cur_prize = '[%s]%s' % (prize_info['type'], prize_info['name'])
 
@@ -367,7 +374,7 @@ class Qrcode(resource.Resource):
 			tag_id = qrcode.tag_id
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
-			'second_navs': export.get_weixin_second_navs(request),
+			'second_navs': mall_export.get_promotion_and_apps_second_navs(request),
 			'second_nav_name': export.WEIXIN_ADVANCE_SECOND_NAV,
 			'third_nav_name': export.ADVANCE_MANAGE_QRCODE_NAV,
 			'webapp_id': webapp_id,
@@ -583,7 +590,7 @@ class QrcodeMember(resource.Resource):
 		setting_id = request.GET['setting_id']
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
-			'second_navs': export.get_weixin_second_navs(request),
+			'second_navs': mall_export.get_promotion_and_apps_second_navs(request),
 			'second_nav_name': export.WEIXIN_ADVANCE_SECOND_NAV,
 			'third_nav_name': export.ADVANCE_MANAGE_QRCODE_NAV,
 			'setting_id': setting_id
@@ -951,5 +958,599 @@ class GetCanUseCoupon(resource.Resource):
 					return response.get_response()
 
 		response = create_response(200)
+		return response.get_response()
+
+def format_award_prize_info(info):
+	"""
+	{"id":2,"name":"_score-prize_","type":"积分"} => 2积分
+
+	"""
+	info = json.loads(info)
+	if info['type'] == u'积分':
+		return u"%s积分"% info['id']
+	else:
+		return info['type']
+
+
+
+class ChannelDistributions(resource.Resource):
+	app = 'new_weixin'
+	resource = 'channel_distributions'
+
+	@login_required
+	def get(request):
+		"""渠道分销"""
+		c = RequestContext(request, {
+			'first_nav_name': FIRST_NAV,
+			'second_navs': mall_export.get_promotion_and_apps_second_navs(request),
+			'second_nav_name': export.WEIXIN_ADVANCE_SECOND_NAV,
+			'third_nav_name': mall_export.ADVANCE_MANAGE_CHANNEL_DISTRIBUTIONS_NAV,
+		})
+		return render_to_response('weixin/channels/channel_distributions.html', c)
+
+	def api_get(request):
+		distribution_rewards_status = {
+			0: u'无',
+			1: u'佣金'
+		}
+
+		query_name = request.GET.get('query_name')
+		sort_attr = request.GET.get('sort_attr', '-created_at')
+		count_per_page = int(request.GET.get('count_per_page', 15))
+		# count_per_page = 1
+		cur_page = int(request.GET.get('page', '1'))
+		# 取出管理员的所有二维码
+		qrcodes = ChannelDistributionQrcodeSettings.objects.filter(owner=request.user)
+		member_ids = []
+		for qrcode in qrcodes:
+			member_ids.append(qrcode.bing_member_id)
+
+		member_dict = {}  # {id: name}
+		members = Member.objects.filter(id__in=member_ids)
+		for member in members:
+			member_dict[member.id] = member.username_for_title
+
+		if query_name:
+			qrcodes = ChannelDistributionQrcodeSettings.objects.filter(owner=request.user, bing_member_title__icontains=query_name).order_by('-is_new', sort_attr)
+		else:
+			qrcodes = ChannelDistributionQrcodeSettings.objects.filter(owner=request.user).order_by('-is_new', sort_attr)
+
+
+
+
+		pageinfo, qrcodes = paginator.paginate(qrcodes, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
+
+		items = []
+		for qrcode in qrcodes:
+			qrcode_dict = {}
+			qrcode_dict['id'] = qrcode.id
+			qrcode_dict['title'] = qrcode.bing_member_title  # 标题
+			qrcode_dict['bing_member_name'] = member_dict[qrcode.bing_member_id]  # 关联会员: 是名字
+			qrcode_dict['bing_member_count'] = qrcode.bing_member_count  # 关注数量
+			qrcode_dict['total_transaction_volume'] = str(qrcode.total_transaction_volume)  # 总交易额
+			qrcode_dict['total_return'] = str(qrcode.total_return)  # 总返现额
+			qrcode_dict['award_prize_info'] = format_award_prize_info(qrcode.award_prize_info)  # 关注奖励
+			qrcode_dict['distribution_rewards'] = str(distribution_rewards_status[qrcode.distribution_rewards])  # 分销奖励
+			qrcode_dict['created_at'] = str(qrcode.created_at)  # 创建时间
+			qrcode_dict['clearing'] = ''  # 会员结算 TODO 有新的提现请求显示new
+			qrcode_dict['ticket'] = qrcode.ticket
+			qrcode_dict['is_new'] = qrcode.is_new
+			items.append(qrcode_dict)
+
+		response = create_response(200)
+		response.data = {
+			'items': items,
+			'pageinfo': paginator.to_dict(pageinfo),
+			'sortAttr': sort_attr,
+			'data': {}
+		}
+		return response.get_response()
+
+
+class ChannelDistribution(resource.Resource): # TODO 关联会员不可以有两个码 ,关联过推广码的也不能关联这个码了
+	app = 'new_weixin'
+	resource = 'channel_distribution'
+
+	@login_required
+	def get(request):
+		"""渠道分销,新建二维码 和 编辑二维码页面"""
+		setting_id = int(request.GET.get('setting_id', '-1'))
+		qrcode = None
+		jsons = []
+		member_name = ''  # 绑定昵称
+
+		if setting_id > 0:
+			qrcode = ChannelDistributionQrcodeSettings.objects.get(id=setting_id)
+			if qrcode and (qrcode.owner_id == request.user.id): # 如果有二维码,
+				# 获取优惠券剩余个数
+				award_prize_info = qrcode.award_prize_info
+				info_dict = json.loads(award_prize_info)
+				if info_dict['type'] == u'优惠券':
+					coupon_rule = CouponRule.objects.get(id=info_dict['id'])
+					info_dict['remained_count'] = coupon_rule.remained_count
+					if coupon_rule.limit_product:
+						info_dict['coupon_type'] = u'单品券'
+					else:
+						info_dict['coupon_type'] = u'全店通用券'
+					qrcode.award_prize_info = json.dumps(info_dict)
+
+				answer_content = {}
+				if qrcode.reply_material_id > 0:
+					answer_content['type'] = 'news'
+					answer_content['newses'] = []
+					answer_content['content'] = qrcode.reply_material_id
+					newses = News.get_news_by_material_id(qrcode.reply_material_id)
+
+					news_array = []
+					for news in newses:
+						news_dict = {}
+						news_dict['id'] = news.id
+						news_dict['title'] = news.title
+						answer_content['newses'].append(news_dict)
+				else:
+					answer_content['type'] = 'text'
+					answer_content['content'] = emotion.change_emotion_to_img(qrcode.reply_detail)
+				# jsons : 扫码回复的数据
+				jsons = [{
+					"name": "qrcode_answer",
+					"content": answer_content
+				}]
+				member = Member.objects.get(id=qrcode.bing_member_id)
+				member_name = member.username_for_title
+			else:
+				return HttpResponseRedirect('/new_weixin/channel_distributions/')  # 阻止非该二维码所有者访问
+
+		webapp_id = request.user_profile.webapp_id
+		groups = MemberGrade.get_all_grades_list(webapp_id)
+		member_tags = MemberTag.get_member_tags(webapp_id)
+		edit_qrcode = None
+		# 调整排序，将为分组放在最前面
+		tags = []
+		for tag in member_tags:
+			if tag.name == '未分组':
+				tags = [tag] + tags
+			else:
+				tags.append(tag)
+
+		c = RequestContext(request, {
+			'first_nav_name': FIRST_NAV,
+			'second_navs': mall_export.get_promotion_and_apps_second_navs(request),
+			'second_nav_name': export.WEIXIN_ADVANCE_SECOND_NAV,
+			'third_nav_name': mall_export.ADVANCE_MANAGE_CHANNEL_DISTRIBUTIONS_NAV,
+			'tags': tags,
+			'webapp_id': webapp_id,
+			'edit_qrcode': edit_qrcode,
+			'qrcode': qrcode,
+			'jsons': jsons,
+			'member_name': member_name,
+			# 'selectedMemberIds': json.dumps(selectedMemberIds),
+		})
+		return render_to_response('weixin/channels/channel_distribution.html', c)
+
+	@login_required
+	def api_put(request):
+		"""新建渠道分销二维码"""
+		bing_member_title = request.POST["bing_member_title"]  # 会员头衔
+		if  ChannelDistributionQrcodeSettings.objects.filter(bing_member_title=bing_member_title).exists():  # 检测重复
+			response = create_response(500)
+			response.errMsg = u"重复的会员头衔"
+			return response.get_response()
+
+		bing_member_id = request.POST["bing_member_id"]  # 关联会员
+		if ChannelDistributionQrcodeSettings.objects.filter(bing_member_id=bing_member_id).exists():
+			response = create_response(500)
+			response.errMsg = u"一个会员只能绑定一个二维码"
+			return response.get_response()
+
+		if ChannelQrcodeSettings.objects.filter(bing_member_id=bing_member_id).exists():
+			response = create_response(500)
+			response.errMsg = u"一个会员只能绑定一个二维码"
+			return response.get_response()
+
+		award_prize_info = request.POST['prize_info'].strip()  # 扫描奖励
+		coupon_id = ''
+
+		info_dict = json.loads(award_prize_info)
+		if info_dict['type'] == u'优惠券':
+			coupon_id = str(info_dict['id'])
+		if not (info_dict.has_key('id') and info_dict.has_key('name') and info_dict.has_key('type')):
+			response = create_response(500)
+			response.errMsg = u'不合法的award_prize_info：' + award_prize_info
+			return response.get_response()
+
+
+		distribution_rewards = int(request.POST["distribution_rewards"])  # 分销奖励 0:无 1:佣金
+		if distribution_rewards == 0:  # 如果分销奖励是无
+			commission_rate = 0
+			minimun_return_rate = 0
+			commission_return_standard = 0
+			return_standard = 0
+		elif distribution_rewards == 1:
+			commission_rate = int(request.POST.get("commission_rate", 0))  # 佣金返现率
+			minimun_return_rate = int(request.POST.get("minimun_return_rate", 0))  # 最低返现折扣
+			commission_return_standard = request.POST.get("commission_return_standard", 0)  # 佣金返现标准
+			return_standard = int(request.POST.get("return_standard", 0))  # 多少天返现标准  TODO 需要修改
+
+			if commission_rate > 20 or commission_rate < 0:
+				response = create_response(500)
+				response.errMsg = u'佣金返现率输入错误'
+				return response.get_response()
+
+			if minimun_return_rate > 100 or minimun_return_rate < 0:
+				response = create_response(500)
+				response.errMsg = u'最低返现折扣输入错误'
+				return response.get_response()
+
+			if return_standard < 0:
+				response = create_response(500)
+				response.errMsg = u'佣金返现标准输入错误'
+				return response.get_response()
+
+			if  7 >= return_standard >= 0:
+				pass
+			else:
+				response = create_response(500)
+				response.errMsg = u'请输入大于等于0且小于等于7的数字'
+				return response.get_response()
+
+		group_id = request.POST["group_id"]  # 添加到分组,会员分组
+		reply_type = request.POST['reply_type']  # 回复类型
+		reply_material_id = request.POST['reply_material_id']  # 图文
+
+		if reply_type == '0':
+			reply_material_id = 0
+			reply_detail = ''
+		elif reply_type == '1':
+			reply_material_id = 0
+			reply_detail = request.POST['reply_detail']
+		elif reply_type == '2':
+			reply_detail = ''
+
+		cur_setting = ChannelDistributionQrcodeSettings.objects.create(
+			owner = request.user,
+			bing_member_title = bing_member_title,
+			bing_member_id = bing_member_id,
+			award_prize_info = award_prize_info,
+			distribution_rewards = distribution_rewards,
+			commission_rate = commission_rate,
+			minimun_return_rate = minimun_return_rate,
+			commission_return_standard = commission_return_standard,
+			return_standard = return_standard,
+			group_id = group_id,
+			coupon_ids = coupon_id,
+			reply_type = reply_type,
+			reply_detail = reply_detail,
+			reply_material_id = reply_material_id,
+		)
+
+		if settings.MODE != 'develop':
+			mp_user = get_binding_weixin_mpuser(request.user)
+			mpuser_access_token = get_mpuser_accesstoken(mp_user)
+			weixin_api = get_weixin_api(mpuser_access_token)
+
+			try:
+				qrcode_ticket = weixin_api.create_qrcode_ticket(int(cur_setting.id), QrcodeTicket.PERMANENT)
+				ticket = qrcode_ticket.ticket
+			except Exception, e:
+				ticket = ''
+		else:
+			ticket = ''
+
+		cur_setting.ticket = ticket
+
+		create_time = request.POST.get('create_time')
+		if create_time:
+			cur_setting.created_at = create_time
+		cur_setting.save()
+
+		if cur_setting:
+			response = create_response(200)
+		else:
+			response = create_response(500)
+
+		return response.get_response()
+
+	@login_required
+	def api_post(request):
+		"""更新渠道分销二维码"""
+
+		qrcode_id = int(request.POST.get('qrcode_id'))
+		group_id = request.POST['group_id']
+		prize_info = request.POST['prize_info']
+		reply_type = request.POST['reply_type']
+		reply_detail = request.POST['reply_detail']
+		reply_material_id = request.POST['reply_material_id']
+
+		# 如果修改者操作的二维码不是自己的 不执行任何操作
+		if ChannelDistributionQrcodeSettings.objects.filter(id=qrcode_id, owner_id=request.user.id).exists():
+
+			bing_member_title = request.POST["bing_member_title"]  # 会员头衔
+			if ChannelDistributionQrcodeSettings.objects.filter(bing_member_title=bing_member_title).exclude(id=qrcode_id):  # 检测重复
+				response = create_response(500)
+				response.errMsg = u"重复的会员头衔"
+				return response.get_response()
+
+			ChannelDistributionQrcodeSettings.objects.filter(id=qrcode_id).update(
+				bing_member_title = bing_member_title,
+				group_id = group_id,
+				award_prize_info = prize_info,
+				reply_type = reply_type,
+				reply_detail = reply_detail,
+				reply_material_id = reply_material_id
+			)
+
+			response = create_response(200)
+			return response.get_response()
+		else:
+			response = create_response(500)
+			return response.get_response()
+
+
+class ChannelDistributionClearing(resource.Resource):
+	app = 'new_weixin'
+	resource = 'distribution_clearing'
+
+	@login_required
+	def get(request):
+		"""
+		分销会员结算
+		"""
+		qrcodes = ChannelDistributionQrcodeSettings.objects.filter(owner__id=request.user.id)
+		return_money_total = 0  # 已返现总额
+		not_return_money_total = 0  # 未返现总额
+		current_total_return = 0# 本期返现总额
+		total_transaction_volume = 0 # 总交易额
+		extraction_money = 0  # 所有的extraction_money 之和
+
+		for qrcode in qrcodes:
+			total_transaction_volume += qrcode.total_transaction_volume
+			return_money_total += qrcode.total_return
+			# current_total_return += qrcode.will_return_reward
+			extraction_money += qrcode.extraction_money
+			not_return_money_total += qrcode.will_return_reward
+			if qrcode.status > 0:
+				current_total_return += qrcode.extraction_money
+
+		qrcodes.update(is_new=False)
+		webapp_id = request.user_profile.webapp_id
+
+		c = RequestContext(request, {
+			'first_nav_name': FIRST_NAV,
+			'second_navs': mall_export.get_promotion_and_apps_second_navs(request),
+			'second_nav_name': export.WEIXIN_ADVANCE_SECOND_NAV,
+			'third_nav_name': mall_export.ADVANCE_MANAGE_CHANNEL_DISTRIBUTIONS_NAV,
+			'return_money_total': return_money_total,
+			'not_return_money_total': not_return_money_total,
+			'current_total_return': current_total_return,
+			'total_transaction_volume': total_transaction_volume,
+			'webapp_id': webapp_id,
+		})
+
+
+		return render_to_response('weixin/channels/channel_distribution_clearing.html', c)
+
+	@login_required
+	def api_get(request):
+
+		sort_attr = request.GET.get('sort_attr', '-created_at')
+		count_per_page = int(request.GET.get('count_per_page', 15))
+		cur_page = int(request.GET.get('page', '1'))
+		return_min = request.GET.get('return_min')
+		return_max = request.GET.get('return_max')
+		start_date = request.GET.get('start_date')
+		end_date = request.GET.get('end_date')
+
+		# 取出管理员的所有二维码
+		qrcodes = ChannelDistributionQrcodeSettings.objects.filter(owner=request.user)
+		member_ids = []
+		for qrcode in qrcodes:
+			member_ids.append(qrcode.bing_member_id)
+		member_dict = {}  # {id: name}
+		members = Member.objects.filter(id__in=member_ids)
+		for member in members:
+			member_dict[member.id] = member.username_for_title
+
+		qrcodes = ChannelDistributionQrcodeSettings.objects.filter(owner=request.user).order_by('-status', '-commit_time')
+		if return_min:
+			if return_max:
+				qrcodes = qrcodes.filter(extraction_money__range=(return_min, return_max))
+			else:
+				qrcodes =  qrcodes.filter(extraction_money__gte=return_min)
+		elif return_max:
+			qrcodes = qrcodes.filter(extraction_money__lte=return_max)
+		if start_date and end_date:
+			qrcodes = qrcodes.filter(commit_time__range=(start_date, end_date))
+
+
+		pageinfo, qrcodes = paginator.paginate(qrcodes, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
+
+		items = []
+		for qrcode in qrcodes:
+			commit_time = qrcode.commit_time
+			if str(commit_time) == '0001-01-01 00:00:00':
+				commit_time = '----'
+			else:
+				commit_time = str(qrcode.commit_time)
+			return_dict = {}
+
+			return_dict['qrcode_id'] = qrcode.id
+			return_dict['name'] = member_dict[qrcode.bing_member_id]  # 用户名
+			return_dict['commit_time'] = commit_time  # 提交时间
+			return_dict['current_transaction_amount'] = str(qrcode.current_transaction_amount)  # 本期交易额
+			return_dict['commission_return_standard']  = str(qrcode.commission_return_standard)  # 返现标准
+			return_dict['commission_rate'] = qrcode.commission_rate  # 返现率
+			return_dict['will_return_reward'] = str(qrcode.will_return_reward)  # 实施奖励
+			return_dict['extraction_money'] = str(qrcode.extraction_money)  # 返现金额
+			return_dict['status'] = qrcode.status  # 返现状态
+			items.append(return_dict)
+
+		response = create_response(200)
+		response.data = {
+			'items': items,
+			'pageinfo': paginator.to_dict(pageinfo),
+			'sortAttr': sort_attr,
+			'data': {}
+		}
+		return response.get_response()
+
+
+class ChannelDistributionTransactionAmount(resource.Resource):
+	app = 'new_weixin'
+	resource = 'channel_distribution_transaction_amount'
+
+	@login_required
+	def api_get(request):
+		"""
+		查看记录的一个页面
+		"""
+		# log_select = int(request.POST.get('log_select', 1))  # 0 本期, 1总的
+		qrcode_id = request.GET.get('qrcode_id')
+		count_per_page = int(request.GET.get('count_per_page', 15))
+		cur_page = int(request.GET.get('page', '1'))
+		items = []
+		total_money = 0
+
+		# 得到该店铺下所有绑定会员
+		channel_distribution_has_members = ChannelDistributionQrcodeHasMember.objects.filter(
+			channel_qrcode_id=qrcode_id)
+
+		member_ids = []
+		for channel_distribution_has_member in channel_distribution_has_members:
+			member_ids.append(channel_distribution_has_member.member_id)
+
+		member_dict = {}  # {id: name}
+		members = Member.objects.filter(id__in=member_ids)
+
+		for member in members:
+			member_dict[member.id] = member.username_for_title
+
+		pageinfo, channel_distribution_has_members = paginator.paginate(channel_distribution_has_members, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
+
+		for channel_distribution_has_member in channel_distribution_has_members:
+			dict = {}
+			dict['name'] = member_dict[channel_distribution_has_member.member_id]
+			dict['cost_money'] = str(channel_distribution_has_member.cost_money)  # 花费的金额
+			dict['commission'] = str(channel_distribution_has_member.commission)  #　带来的佣金
+			total_money += channel_distribution_has_member.cost_money
+			items.append(dict)
+
+
+		response = create_response(200)
+		response.data = {
+			'items': items,
+			'total_money': str(total_money),
+			'pageinfo': paginator.to_dict(pageinfo),
+		}
+		return response.get_response()
+
+
+class ChannelDistributionRewardDetail(resource.Resource):
+	"""奖励明细"""
+	app = 'new_weixin'
+	resource = 'channel_distribution_detail'
+
+	@login_required
+	def api_get(request):
+		count_per_page = int(request.GET.get('count_per_page', 15))
+		cur_page = int(request.GET.get('page', '1'))
+		qrcode_id = request.GET.get('qrcode_id')
+		qrocde = ChannelDistributionQrcodeSettings.objects.get(id=qrcode_id)
+
+		details = ChannelDistributionDetail.objects.filter(channel_qrcode_id=qrcode_id, order_id=0)
+
+		pageinfo, details = paginator.paginate(details, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
+
+		items = []
+		for detail in details:
+			time_cycle_start = str(detail.last_extract_time)
+			if time_cycle_start == '0001-01-01 00:00:00':
+				time_cycle_start = '----'
+			dict = {}
+
+			dict['time_cycle_start'] = time_cycle_start  # 上次提现时间
+			dict['time_cycle_end'] = str(detail.next_extract_time)
+			dict['commission_rate'] = str(qrocde.commission_rate)  # 佣金返现率
+			dict['total_money'] = str(detail.transaction_volume)
+			dict['commission'] = str(detail.money)
+
+			items.append(dict)
+
+		response = create_response(200)
+		response.data = {
+			'items': items,
+			'pageinfo': paginator.to_dict(pageinfo),
+		}
+		return response.get_response()
+
+
+class ChannelDistributionChangeStatus(resource.Resource):
+	app = 'new_weixin'
+	resource = 'channel_distribution_change_status'
+
+	@login_required
+	def api_post(request):
+		"""
+		修改返款状态
+		"""
+		qrcode_id = request.POST.get('qrcode_id')
+		status = int(request.POST.get('status'))
+
+		qrcode = ChannelDistributionQrcodeSettings.objects.filter(id=qrcode_id, owner=request.user)
+
+		# if status == 2 and qrcode[0].status > status:
+		if qrcode[0].status < 1:
+			response = create_response(200)
+			response.errMsg = u"请等待会员申请返现"
+			return response.get_response()
+
+
+		if status == 2:
+			# 等待审核--> 正在返现中
+			qrcode.update(status=status)
+
+		if status == 3:
+			# 商家已打款
+			extraction_money = qrcode[0].extraction_money
+
+			channel_distribution_detail = ChannelDistributionDetail.objects.filter(channel_qrcode_id=qrcode[0].id, order_id=0)
+			if channel_distribution_detail:
+				last_extract_time = channel_distribution_detail[0].next_extract_time
+			else:
+				last_extract_time = qrcode[0].created_at
+
+			# 新建奖励明细列表
+			ChannelDistributionDetail.objects.create(
+				channel_qrcode_id = qrcode_id,
+				money = extraction_money,
+				transaction_volume = qrcode[0].current_transaction_amount,
+				member_id = qrcode[0].bing_member_id,
+				last_extract_time = last_extract_time,  # start
+				next_extract_time = qrcode[0].commit_time  # end
+			)
+			# 修改member带来的总佣金
+			# ChannelDistributionQrcodeHasMember.objects.filter(channel_qrcode_id=qrcode[0].id).update(
+			# 	commission = F('commission_not_add') + F('commission'),
+			# 	commission_not_add = 0
+			# )
+			has_members = ChannelDistributionQrcodeHasMember.objects.filter(channel_qrcode_id=qrcode[0].id)
+
+			for has_member in has_members:
+				commission_not_add = has_member.commission_not_add
+				has_member.commission = has_member.commission + commission_not_add
+				has_member.commission_not_add = 0
+				has_member.save()
+
+			extraction_money = qrcode[0].extraction_money
+			qrcode.update(
+				total_return = F('total_return') + extraction_money,
+				status = 0,
+				# commit_time = datetime.strptime('0001-01-01', '%Y-%m-%d'),
+				will_return_reward = F('will_return_reward') - F('extraction_money'),
+				extraction_money = 0,
+				current_transaction_amount = 0, # 本期交易额,清零
+			)
+
+		response = create_response(200)
+		response.errMsg = u'修改成功'
 		return response.get_response()
 

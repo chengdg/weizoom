@@ -1,0 +1,55 @@
+<script id="channel-distribution-detail-dialog-tmpl-src" type="text/x-jquery-tmpl">
+ <div class="modal fade xui-selectCouponDialog" id="commonSelectCouponDialog">
+    <div class="modal-dialog modal-lg" style="width: 600px;">
+    <div class="modal-content">
+    <div class="modal-header">
+            <button aria-hidden="true" data-dismiss="modal" class="close" type="button"><span class="xui-closeColor" aria-hidden="true">&times;</span></button>
+            <h3 class="modal-title">奖励明细</h3>
+    </div>
+                <div class="modal-body" style="min-height: 200px; max-height: 500px; overflow: auto;">
+                    <div style="display:inline-block;" class="xa-searchMember"></div>
+                    <div
+                            data-ui-role="advanced-table"
+                            data-app="new_weixin"
+                            data-api="channel_distribution_detail"
+                            data-template-id="#channel-distribution-detail-dialog-tmpl"
+                            data-enable-paginator="true"
+                            data-enable-sort="false"
+                            data-item-count-per-page="8"
+                            data-auto-load="false"
+                            class="mt10 mb20"
+                        ></div>
+                </div>
+        </div>
+        </div>
+    </div>
+
+</div>
+</script>
+
+<script id="channel-distribution-detail-dialog-tmpl" type="text/x-jquery-tmpl">
+   <table id="channelLogTable" class="table table-bordered table-condensed xb-stripedTable xui-tablePosition mb10">
+        <thead style="background:#c8d2e5;">
+            <tr>
+                <th >时间周期</th>
+                <th>单品返现率</th>
+                <th>参与返现交易额</th>
+                <th>返现金额</th>
+            </tr>
+        </thead>
+        <tbody id='vip_list'>
+                  {{if items.length}}
+                  {{each(i, item) items}}
+                <tr>
+				<td>${item.time_cycle_start}至${item.time_cycle_end}</td>
+                <td>${item.commission_rate}</td>
+                <td>${item.total_money}</td>
+                <td>${item.commission}</td>
+                </tr>
+                {{/each}}
+					{{else}}
+				<tr><td colspan='4'>还没有数据</td></tr>
+           {{/if}}
+        </tbody>
+    </table>
+</script>

@@ -1,0 +1,259 @@
+{% extends "content_base_v2.html" %}
+{% block css %}
+    <style>
+        .xui-btnBox{
+            padding-left: 370px;
+            margin-top: 30px;
+        }
+        .form-control{
+            width:150px;
+        }
+        .xui-link{
+            display:inline-block;
+            margin:0;
+            padding: 4px 8px;
+            font-size: 12px;
+            text-decoration:none;
+            outline:none;
+            color: #333;
+            background-color: #fff;
+            box-shadow: 0 0 1px rgba(0,0,0,0.8);
+        }
+        .xui-link {
+            display: inline-block;
+            cursor: pointer;
+        }
+        .ml100 {
+            margin-left: 100px;
+        }
+        .xui-illustrate-form {
+            overflow: hidden;
+            margin: 0 60px;
+            padding-top: 20px;    
+            font-size: 16px;
+            text-align: center;
+        }
+        .xui-illustrate-header {
+            float: left;
+            width: 12%;
+            color: #3366FF;
+        }
+        .xui-illustrate-list {
+            float: left;
+            width: 22%;
+            color: #33CCFF;
+        }
+    </style>
+{% endblock %}
+{% block content-panel %}
+
+    <div class="relative">
+        <ul class="breadcrumb">
+            <li>您当前所在位置</li>
+            <li><a href="/new_weixin/qrcodes/">推广与分销</a></li>
+            <li><a href="/new_weixin/channel_distributions/">渠道分销</a></li>
+            <li>分销会员结算</li>
+        </ul>
+    </div>
+
+    <div class="xui-filterPanel " >
+        <div class="xui-form disT ml20">
+            <div class="xui-i-item">
+                <label>返现金额：</label>
+                <input
+                        type="text"
+                        class="form-control"
+                        name="return_min"/>
+                <span class="ml5 mr5">至</span>
+                <input
+                        type="text"
+                        class="form-control"
+                        name="return_max"/>
+                <label class="ml100">提交时间：</label>
+                <input
+                        type="text"
+                        class="form-control xui-datePicker"
+                        id="start_date"
+                        name="start_date"
+                        style=""
+                        value=""
+                        readonly="readonly"
+                        data-validate="require-notempty"
+                        data-enable-select-time="true"
+                        data-ui-role="datepicker"
+                        data-format="yy-mm-dd"
+                        data-max="now"/>
+                <span class="ml5 mr5">至</span>
+                <input
+                        type="text"
+                        class="form-control xui-datePicker mr130"
+                        id="end_date"
+                        name="end_date"
+                        value=""
+                        readonly="readonly"
+                        data-validate="require-notempty"
+                        data-ui-role="datepicker"
+                        data-enable-select-time="true"
+                        data-format="yy-mm-dd"
+                        data-max="now"
+                        data-min-el="#start_date"/>
+
+                <div class="xui-btnBox">
+                    <a class="btn btn-primary xa-search xui-fontBold mr30" href="javascript:void(0);">查询</a>
+                    <a class="xa-reset btn btn-default xui-fontBold" href="javascript:void(0);">重置</a>
+                </div>
+            </div>
+
+        </div>
+        <dl class="xui-illustrate-form">
+            <dt class="xui-illustrate-header">整体概括:</dt>
+            <dd class="xui-illustrate-list">已返现总额：{{ return_money_total }} 元</dd>
+            <dd class="xui-illustrate-list">未返现总额：{{ not_return_money_total }} 元</dd>
+            <dd class="xui-illustrate-list">本期返现总额：{{ current_total_return }} 元</dd>
+            <dd class="xui-illustrate-list">总交易额：{{ total_transaction_volume }} 元</dd>
+        </dl>
+
+    </div>
+    <div
+            data-ui-role="advanced-table"
+            data-app="new_weixin"
+            data-resource="distribution_clearing"
+            data-template-id="#clearing_list_view"
+            data-init-sort="-created_at"
+            data-item-count-per-page="20"
+            data-enable-paginator="true"
+            class="panel-body mt40"
+    >
+    </div>
+
+{% endblock %}
+{% block js %}
+    {% verbatim %}
+    <script id="clearing_list_view" type="text/x-jquery-tmpl">
+		{{if items}}
+			<table class="table table-condensed xb-stripedTable xb-theadBg">
+				<thead>
+					<tr>
+                    <th style="width:10%;"">用户名</th>
+                    <th style="width:10%;" >提交时间</th>
+                    <th style="width:10%;" >本期交易额</th>
+                    <th style="width:10%;">返现标准</th>
+                    <th style="width:10%;">返现率</th>
+                    <th style="width:10%;">已有奖励</th>
+                    <th style="width:10%;">返现金额</th>
+                    <th style="width:10%;">返现状态</th>
+                    <th style="width:20%;">操作</th>
+					</tr>
+				</thead>
+				<tbody>
+					{{if items.length}}
+						{{each(i, qrcode) items}}
+							<tr>
+							    <td>
+							        ${qrcode.name}
+							    </td>
+							    <td>
+							        ${qrcode.commit_time}
+							    </td>
+							    <td>
+							        ${qrcode.current_transaction_amount}
+							    </td>
+							    <td>
+							        ${qrcode.commission_return_standard}
+							    </td>
+							    <td>
+							        ${qrcode.commission_rate}%
+							    </td>
+							    <td>
+							        ${qrcode.will_return_reward}
+							    </td>
+							    <td>
+							        ${qrcode.extraction_money}
+							    </td>
+							    <td>
+							        <select class='xa-changeStatus' data-id='${qrcode.qrcode_id}'>
+                                    {{if qrcode.status == '0'}}
+                                    <option value='0'>无状态</option>
+                                    <option value='1' disabled="disabled">等待审核</option>
+                                    <option value='2'disabled="disabled">正在返现中</option>
+                                    <option value='3' disabled="disabled">已完成/切换成无状态</option>
+                                    {{else}}
+                                    <option value='0' disabled="disabled">无状态</option>
+                                    <option value='1' {{if qrcode.status > 1 }}disabled="disabled"{{/if}}>等待审核</option>
+                                    <option value='2' {{if qrcode.status > 2}}disabled="disabled"{{/if}}>正在返现中</option>
+                                    <option value='3'>已完成/切换成无状态</option>
+                                    {{/if}}
+
+							        </select>
+							    </td>
+							    <td>
+							    <a class="xui-link xa-viewLog" data-qrcode_id=${qrcode.qrcode_id}>查看记录</a>
+							    <a class="xui-link xa-viewDetail" data-qrcode_id=${qrcode.qrcode_id} >奖励明细</a>
+							    </td>
+							</tr>
+						{{/each}}
+					{{else}}
+						<tr><td colspan='9'>还没有数据</td></tr>
+					{{/if}}
+				</tbody>
+			</table>
+						{{else}}
+
+			{{/if}}
+        </script>
+    {% endverbatim %}
+
+    <script>
+        // 弹出关联会员
+        $(document).delegate('.xa-viewLog', 'click', function(event) {
+
+            var qrocdeId = $(this).data('qrcode_id');
+            options = {
+                qrocdeId: qrocdeId
+            };
+            options.success = function(data) {
+            };
+            W.dialog.showDialog('W.dialog.mall.ChannelDistributionLog', options);
+        });
+        $(document).delegate('.xa-viewDetail', 'click', function(event) {
+            var qrocdeId = $(this).data('qrcode_id');
+            options = {
+                qrocdeId: qrocdeId
+            };
+            options.success = function(data) {
+            };
+            W.dialog.showDialog('W.dialog.mall.ChannelDistributionDetail', options);
+        });
+
+        $(document).delegate('.xa-changeStatus', 'change', function(event){
+            console.log($(this));
+            console.log($(this).val());
+            var status = $(this).val();
+            var qrcode_id = ($(this).data('id'));
+            $.ajax({
+                type:"POST",
+                url:"/new_weixin/api/channel_distribution_change_status/",
+                data:{status:status, qrcode_id:qrcode_id},
+                success: function(resp){
+                    W.showHint('success', resp.errMsg);
+                        setTimeout(function() {
+                            location.reload()
+                        }, 1000);
+                },
+                error:function(resp){
+                    W.showHint('error', '修改失败');
+                    setTimeout(function() {
+                        location.reload()
+                    }, 1000);
+                }
+            });
+        });
+
+    $(document).ready(function() {
+        var qrcodeView = new W.view.weixin.DistributionsClear({
+            el: $("body")
+        });
+    });
+
+    </script>
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends "webapp_content_base.html" %}
+{% load common_tag %}
+
+{% block css %}
+<link type="text/css" rel="stylesheet" href="/markettools_static/distribution/css/m_weixin_style.css">
+{% endblock %}
+{% block content-panel %}
+<div class="xui-wrapper xui-details-wrapper">
+	<div class="xui-mainContain pt10">
+		<dl>
+			<dt class="xui-details-header">
+				<p class="xui-text">奖励交易明细列表</p>
+				<span class="xui-balance">余额：￥{{ will_return_reward }}</span>
+			</dt>
+			{% if details_lists %}
+				{% for details_list in details_lists %}
+					{% if details_list.order_id == 0 %}
+						<dd class="xui-details-list bg_fff">
+							<div class="xui-text-box">
+								<p class="xui-text">提现</p>
+								<p class="xui-day">{{ details_list.created_at|date:"Y年m月d日 H:i" }}</p>
+							</div>
+							<span class="xui-num">-{{ details_list.money }}</span>
+						</dd>
+					{% else %}
+						<dd class="xui-details-list bg_fff">
+							<div class="xui-text-box">
+								<p class="xui-text">订单收入</p>
+								<p class="xui-day">{{ details_list.created_at|date:"Y年m月d日 H:i" }}</p>
+							</div>
+							<span class="xui-num">+{{ details_list.money }}</span>
+						</dd>
+					{% endif %}
+				{% endfor %}
+			{% endif %}
+		</dl>
+	</div>
+</div>
+{% endblock %}

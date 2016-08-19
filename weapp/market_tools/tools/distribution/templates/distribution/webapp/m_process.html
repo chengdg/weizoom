@@ -1,0 +1,61 @@
+{% extends "webapp_content_base.html" %}
+{% load common_tag %}
+
+{% block css %}
+<link type="text/css" rel="stylesheet" href="/markettools_static/distribution/css/m_weixin_style.css">
+<style>
+.xui-no-vip {
+    padding: 80px;
+    font-size: 2rem;
+    text-align: center;
+    color: #999;
+}
+.xui-list li:first-child: {
+    border-top: 1px solid #2388e4 !important;
+}
+.xui-list li:last-child {
+    border-bottom: 1px solid #2388e4 !important;
+}
+</style>
+{% endblock %}
+
+{% block content-panel %}
+<div class="xui-wrapper xui-process-wrapper">
+    <div class="xui-mainContain pt10">
+        {% if cur_list.status == 1 or cur_list.status == 2 %}
+            <div class="xui-list">
+                <div class="xui-time">时间：{{ cur_list.created_at|date:"Y/m/d H:i" }}</div>
+                <ul class="xui-process">
+                    {% if cur_list.status == 1 %}
+                        <li class="xui-step cur" style="border-top: 1px solid #2388e4;">已申请<span class="icon-right icon-moveRight"><i class="icon-rect-white"></i><i class="icon-tri-white"></i></span></li>
+                        <li class="xui-step">正在返现<span class="icon-right"><i class="icon-rect-blue"></i><i class="icon-tri-blue"></i></span></li>
+                        <li class="xui-step" style="border-bottom: 1px solid #2388e4;">已完成</li>
+                    {% endif %}
+                    {% if cur_list.status == 2 %}
+                        <li class="xui-step" style="border-top: 1px solid #2388e4;">已申请<span class="icon-right"><i class="icon-rect-blue"></i><i class="icon-tri-blue"></i></span></li>
+                        <li class="xui-step cur">正在返现<span class="icon-right icon-moveRight"><i class="icon-rect-white"></i><i class="icon-tri-white"></i></span></li>
+                        <li class="xui-step" style="border-bottom: 1px solid #2388e4;">已完成</li>
+                    {% endif %}
+                </ul>
+            </div>
+        {% endif %}
+
+        {% if prev_lists %} 
+            {% for prev_list in prev_lists %}
+            <div class="xui-list">        
+                <div class="xui-time">时间：{{ prev_list.created_at|date:"Y/m/d H:i" }}</div>
+                <ul class="xui-process">
+                    <li class="xui-step" style="border-top: 1px solid #2388e4;">已申请<span class="icon-right"><i class="icon-rect-blue"></i><i class="icon-tri-blue"></i></span></li>
+                    <li class="xui-step">正在返现<span class="icon-right"><i class="icon-rect-blue"></i><i class="icon-tri-blue"></i></span></li>
+                    <li class="xui-step cur" style="border-bottom: 1px solid #2388e4;">已完成</li>
+                </ul>          
+            </div>
+            {% endfor %}
+        {% endif %}
+
+        {% if not cur_list and not prev_lists %}
+            <p class="xui-no-vip">暂时没有提取记录</p>
+        {% endif %}
+    </div>
+{% endblock %}
+

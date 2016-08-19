@@ -790,3 +790,4 @@ class TemplateMessageLogs(models.Model):
 		db_table = 'weixin_template_message_logs'
 		verbose_name = '模版消息记录'
 		verbose_name_plural = '模版消息记录'
+

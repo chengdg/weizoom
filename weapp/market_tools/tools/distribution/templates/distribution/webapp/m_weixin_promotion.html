@@ -1,0 +1,28 @@
+{% extends "webapp_content_base.html" %}
+{% load common_tag %}
+
+{% block css %}
+<link type="text/css" rel="stylesheet" href="/markettools_static/distribution/css/m_weixin_style.css">
+{% endblock %}
+
+{% block content-panel %}
+<div class="xui-wrapper xui-promption-wrapper">
+	<div class="xui-mainContain pt10">
+		<div class="xui-text-area mb30 pt30">
+			<span>扫码关注</span>
+			<span class="ml10">好礼相送</span>
+		</div>
+		<div class="xui-qrCode-content">
+			<i class="icon-down icon-moveDown"></i>
+			<div class="xui-quCode-box">
+				<img src="{{ weixin_code }}" data-allow-autoplay="false" />
+			</div>
+			<div class="xui-shadow-box">
+				<img src="/markettools_static/distribution/images/promotion-shadow.png" data-allow-autoplay="false" />
+			</div>
+			<p class="xui-nickname">{{ nick_name }}</p>
+			<div class="xui-slogan"><img src="/markettools_static/distribution/images/promotion-slogan.png" data-allow-autoplay="false" /></div>
+		</div>
+	</div>
+</div>
+{% endblock %}

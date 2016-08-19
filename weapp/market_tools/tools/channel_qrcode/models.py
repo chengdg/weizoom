@@ -139,3 +139,4 @@ class MemberChannelQrcodeHasMember(models.Model):
 		db_table = 'market_tool_member_channel_qrcode_has_member'
 		verbose_name = '扫描会员渠道码带来的会员'
 		verbose_name_plural = '扫描会员渠道码带来的会员'
+

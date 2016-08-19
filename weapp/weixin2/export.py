@@ -104,12 +104,12 @@ WEIXIN_SECOND_NAV = {
                     'url': '/new_weixin/materials/',
                     'permission': ''
                 },
-                {
-                    'name': ADVANCE_MANAGE_QRCODE_NAV,
-                    'title': u'带参数二维码',
-                    'url': '/new_weixin/qrcodes/',
-                    'permission': ''
-                }
+                # {
+                #     'name': ADVANCE_MANAGE_QRCODE_NAV,
+                #     'title': u'带参数二维码',
+                #     'url': '/new_weixin/qrcodes/',
+                #     'permission': ''
+                # }
             ]
         }, {
             'name': MPUSER_MENU_NAV,

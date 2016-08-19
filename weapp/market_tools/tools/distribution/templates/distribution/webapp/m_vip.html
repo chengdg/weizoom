@@ -1,0 +1,42 @@
+{% extends "webapp_content_base.html" %}
+{% load common_tag %}
+
+{% block css %}
+<link type="text/css" rel="stylesheet" href="/markettools_static/distribution/css/m_weixin_style.css">
+<style>
+.xui-no-vip {
+	padding: 80px;
+	font-size: 2rem;
+	text-align: center;
+	color: #999;
+}
+</style>
+{% endblock %}
+
+{% block content-panel %}
+<div class="xui-wrapper xui-vip-wrapper">
+	<div class="xui-mainContain pt10">
+	{%  if vip_lists %}
+		<ul class="xui-vip-form">
+		{% for vip_list in vip_lists %}
+			<li class="xui-vip-list bg_fff">
+				<div class="xui-vip-header">
+					<p class="xui-nickname">{{ vip_list.nick_name }}</p>
+					<span>扫码时间：{{ vip_list.created_at|date:"Y/m/d H:i" }}</span>
+				</div>
+				<div class="xui-vip-content">
+					<p class="xui-vip-commission">带来的佣金：<span>{{ vip_list.commission }}元</span></p>
+					<div class="xui-vip-consume">
+						<p class="xui-vip-money">消费金额：<span>{{ vip_list.cost_money }}元</span></p>
+						<p class="xui-vip-num">购买次数：{{ vip_list.buy_times }}次</p>
+					</div>
+				</div>
+			</li>
+		{% endfor %}
+		</ul>
+	{% else %}
+		<p class="xui-no-vip">暂时没有会员记录</p>
+	{% endif %}
+	</div>
+</div>
+{% endblock %}

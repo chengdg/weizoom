@@ -1,0 +1,103 @@
+{% extends "webapp_content_base.html" %}
+{% load common_tag %}
+
+{% block css %}
+<link type="text/css" rel="stylesheet" href="/markettools_static/distribution/css/m_weixin_style.css">
+<style>
+.xui-icon-person {
+	background: #ddd url('{{ user_icon }}') no-repeat;
+}
+.xui-icon-flag {
+	background: url('/markettools_static/distribution/images/myPromotion-icon-flag.png') no-repeat;
+}
+</style>
+{% endblock %}
+
+{% block content-panel %}
+<div class="xui-wrapper xui-myPromption-wrapper">
+	<div class="xui-mainContain pt10 bg_fff">
+		<div class="xui-returnCommission">
+			<div class="xui-message">
+				<i class="xui-icon-person"></i>
+				<span class="ml15">已提取</span>
+				<span>￥{{ total_return }}</span>
+				<span class="ml15">收入</span>
+				<span>￥{{ total_earn }}</span>
+			</div>
+			<div class="xui-process">
+				<i id="icon-flag" class="xui-icon-flag"></i>
+				<div class="xui-process-static"></div>
+				<div id="process-bar" class="xui-process-active"></div>
+			</div>
+			<span class="xui-total-money xui-text-num">{{ commission_return_standard }}元</span>
+			<p class="xui-text">已获得奖励<span class="xui-text-num">{{ will_return_reward }}元</span></p>
+			<p class="xui-text">还差<span class="xui-text-num">{{ diff_reward }}元</span>就可以取现了！</p>
+			<p class="xui-btn-return">
+			{% if state == 1 %}
+				<a class="xui-a-valid-blue" href="javascript:void(0)" onclick="checkValid()">申请返还</a>
+			{% endif %}
+			{% if state == 2 %}
+				<a class="xui-a-valid-grey" href="#">申请返还</a>
+			{% endif %}
+			{% if state == 3 %}
+				<a class="xui-a-valid-blue" href="#">申 请 中</a>
+			{% endif %}		
+			</p>
+			<p class="xui-text xui-text-method"></p>
+		</div>
+	</div>
+	<ul class="xui-link bg_fff">
+		<li class="xui-link-list"><a href="./?module=market_tool:distribution&model=details&action=get&webapp_owner_id={{ request.webapp_owner_id }}">资金交易明细<span>&gt;</span></a></li>
+		<li class="xui-link-list"><a href="./?module=market_tool:distribution&model=weixin_code&action=get&webapp_owner_id={{ request.webapp_owner_id }}">二维码推广<span>&gt;</span></a></li>
+		<li class="xui-link-list"><a href="./?module=market_tool:distribution&model=vip_message&action=get&webapp_owner_id={{ request.webapp_owner_id }}">会员记录<span>&gt;</span></a></li>
+		<li class="xui-link-list"><a href="./?module=market_tool:distribution&model=process&action=get&webapp_owner_id={{ request.webapp_owner_id }}">提取进度<span>&gt;</span></a></li>
+	</ul>
+	<div class="xui-explain bg_fff">
+		<p class="xui-explain-header">推广分销使用说明：</p>
+		<p class="xui-explain-text">此二维码为分配的分销二维码，微信用户可以通过扫描此二维码成为您的会员，关注后的会员每笔消费都会产生相应的奖励佣金，并返还至您的账户。当奖励达到设置的取现标准后，可以申请提现。</p>
+	</div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+(function (hasGet, totalGet) {
+	var flag = document.getElementById('icon-flag');
+	var processBar = document.getElementById('process-bar');
+	var widthPercentage = Math.round(hasGet/totalGet*100);
+	if (widthPercentage >= 100) {
+		widthPercentage = 100;
+	}
+	flag.style.left = (widthPercentage-1) + '%';
+	processBar.style.width = widthPercentage + '%';
+	if (widthPercentage == 0) {
+		processBar.style.borderStyle = 'none';
+	}
+})({{ will_return_reward }}, {{ commission_return_standard }});
+
+function checkValid() {
+	if ({{ will_return_reward }} < {{ commission_return_standard }}) {
+		$('body').alert('未达到返现标准');
+	} else {
+		W.getApi().call({
+			app: 'webapp',
+			api: 'project_api/call',
+			method: 'post',
+			args: _.extend({
+				woid: W.webappOwnerId,
+				project_id: W.projectId,
+				module: 'distribution',
+
+				target_api: 'state/change',
+			}),
+			success: function(data) {
+				$('body').alert('申请成功');
+			},
+			error: function(resp) {
+				$('body').alert('申请失败');
+			}
+		})
+	}
+}
+</script>
+{% endblock %}
