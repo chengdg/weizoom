@@ -50,13 +50,14 @@ class CouponOrder(api_resource.ApiResource):
 			price = 0
 			first_order_count = 0
 			coupon_ids = coupon_rule_id2coupon_ids.get(coupon_rule.id)
-			for coupon_id in coupon_ids:
-				order = coupon_id2order[coupon_id]
-				order_count += 1
-				if order.status not in [ORDER_STATUS_CANCEL, ORDER_STATUS_REFUNDING, ORDER_STATUS_REFUNDED, ORDER_STATUS_GROUP_REFUNDING, ORDER_STATUS_GROUP_REFUNDED]:
-					price += order.final_price
-				if order.is_first_order:
-					first_order_count += 1
+			if coupon_ids:
+				for coupon_id in coupon_ids:
+					order = coupon_id2order[coupon_id]
+					order_count += 1
+					if order.status not in [ORDER_STATUS_CANCEL, ORDER_STATUS_REFUNDING, ORDER_STATUS_REFUNDED, ORDER_STATUS_GROUP_REFUNDING, ORDER_STATUS_GROUP_REFUNDED]:
+						price += order.final_price
+					if order.is_first_order:
+						first_order_count += 1
 
 			coupon_infos.append({
 				"id": coupon_rule.id,
