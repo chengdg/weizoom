@@ -211,10 +211,8 @@ def _get_shop_hint_data(request):
     """
     获取首页店铺提醒数据
     """
-    onshelf_products = mall_models.Product.objects.filter(
-        owner=request.manager,
-        shelve_type=mall_models.PRODUCT_SHELVE_TYPE_ON,
-        is_deleted=False)
+    mall_type = request.user_profile.webapp_type
+    onshelf_products = mall_models.Product.objects.belong_to(mall_type, request.manager, mall_models.PRODUCT_SHELVE_TYPE_ON)
     #在售商品数
     onshelf_product_count = len(onshelf_products)
     sellout_products = []
