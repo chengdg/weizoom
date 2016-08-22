@@ -32,15 +32,15 @@ class MemberQrcode(resource.Resource):
 
 	@login_required
 	def get(request):
-		mpuser = get_system_user_binded_mpuser(request.user)
+		mpuser = get_system_user_binded_mpuser(request.manager)
 
 		if (mpuser is None) or (not mpuser.is_certified) or (not mpuser.is_service):
 			should_show_authorize_cover = True
 		else:
 			should_show_authorize_cover = False
 
-		coupon_rules = get_coupon_rules(request.user)
-		member_qrcode_settings = MemberQrcodeSettings.objects.filter(owner=request.user)
+		coupon_rules = get_coupon_rules(request.manager)
+		member_qrcode_settings = MemberQrcodeSettings.objects.filter(owner=request.manager)
 		member_qrcode_setting = member_qrcode_settings[0] if member_qrcode_settings.count() > 0 else None
 		if member_qrcode_setting:
 			award_contents = MemberQrcodeAwardContent.objects.filter(member_qrcode_settings=member_qrcode_setting)
