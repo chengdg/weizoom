@@ -133,12 +133,12 @@ def get_webapp_link_menu_objectes(request):
 				'name': '微信投票',
 				'type': 'vote',
 				'add_btn_title': '新建投票',
-				'add_link': 'http://%s/apps/vote/vote/?token=%s' % (settings.MARKETAPP_DOMAIN, token)
+				'add_link': '/apps/vote/vote'
 			}, {
 				'name': '用户调研',
 				'type': 'survey',
 				'add_btn_title': '新建调研',
-				'add_link': 'http://%s/apps/survey/survey/?token=%s' % (settings.MARKETAPP_DOMAIN, token)
+				'add_link': '/apps/survey/survey'
 			}, {
 				'name': '活动报名',
 				'type': 'event',
@@ -258,20 +258,25 @@ def get_webapp_link_menu_objectes(request):
 		api_resp_text = requests.get(URL).text
 		print URL, 'marketapp get_app_link_menu===============>>>', api_resp_text
 		api_resp = json.loads(api_resp_text)
+
+		if api_resp.get('data', None):
+			resp_data = api_resp['data']
+			token = get_token_for_logined_user(request.user)
+			token_str = '?token=' + token
+
+			count = 0
+			for app in copy.deepcopy(menus['marketPage']['title']):
+				app_name = unicode(app['type'])
+				if app_name in resp_data.keys():
+					del menus['marketPage']['title'][count]
+					resp_data[app_name]['add_link'] += token_str  # 增加免登录token
+					menus['marketPage']['title'].append(resp_data[app_name])
+				count += 1
 	except:
 		notify_message = u"从marketapp获取活动列表失败，cause: \n{}".format(unicode_full_stack())
 		watchdog_error(notify_message)
 
-	token = get_token_for_logined_user(request.user)
-	token_str = '?token=' + token
-
-	for app in copy.deepcopy(menus['marketPage']['title']):
-		app_name = app['name']
-		if app_name in api_resp['data'].keys():
-			menus['marketPage']['title'].remove(app)
-			api_resp['app_name']['add_link'] += token_str #增加免登录token
-			menus['marketPage']['title'].append(api_resp['app_name'])
-
+	print menus
 	return menus
 
 
