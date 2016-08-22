@@ -34,8 +34,8 @@ def get_link_targets(request):
 
 
 def get_member_qrcode_webapp_link(request):
-	workspace_template_info = 'webapp_owner_id=%d&project_id=0&workspace_id=market_tool:member_qrcode' % request.user.id
-	member_qrcode_settings = MemberQrcodeSettings.objects.filter(owner_id=request.user.id)
+	workspace_template_info = 'webapp_owner_id=%d&project_id=0&workspace_id=market_tool:member_qrcode' % request.manager.id
+	member_qrcode_settings = MemberQrcodeSettings.objects.filter(owner_id=request.manager.id)
 	if member_qrcode_settings.count() > 0:
 		return './?module=market_tool:member_qrcode&model=settings&action=get&settings_id=%d&%s' % (member_qrcode_settings[0].id, workspace_template_info)
 
