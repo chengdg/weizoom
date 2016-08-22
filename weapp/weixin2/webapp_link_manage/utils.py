@@ -4,6 +4,8 @@ from market_tools.tools.card_exchange.export import get_card_exchange_link
 __author__ = 'liupeiyu'
 
 import json
+import requests
+import copy
 from datetime import timedelta, datetime
 from django.conf import settings
 from django.db.models import Q
@@ -33,6 +35,9 @@ from apps.customerized_apps.exsign.export import get_exsign_webapp_link
 from account.models import UserProfile
 from account.account_util import get_token_for_logined_user
 
+from core.exceptionutil import unicode_full_stack
+from watchdog.utils import watchdog_error
+
 def get_webapp_link_menu_objectes(request):
 	"""
 	获取微站内部链接的menu的json数据
@@ -40,8 +45,6 @@ def get_webapp_link_menu_objectes(request):
 	webapp_owner_id = request.manager.id
 	workspace_id = request.user_profile.homepage_workspace_id
 	mall_type = request.user_profile.webapp_type
-
-	token = get_token_for_logined_user(request.user)
 
 	menus = {
 		'webappPage': {
@@ -247,6 +250,27 @@ def get_webapp_link_menu_objectes(request):
 		# 	'link': '/m/apps/feedback/m_feedback/?webapp_owner_id=%d' % request.manager.id
 		# },
 	}
+
+
+	#替换menu中的百宝箱app 百宝箱独立
+	URL = "http://%s/apps/export/api/get_app_link_menu/?webapp_owner_id=%s" % (settings.MARKETAPP_DOMAIN, str(request.manager.id))
+	try:
+		api_resp_text = requests.get(URL).text
+		print URL, 'marketapp get_app_link_menu===============>>>', api_resp_text
+		api_resp = json.loads(api_resp_text)
+	except:
+		notify_message = u"从marketapp获取活动列表失败，cause: \n{}".format(unicode_full_stack())
+		watchdog_error(notify_message)
+
+	token = get_token_for_logined_user(request.user)
+	token_str = '?token=' + token
+
+	for app in copy.deepcopy(menus['marketPage']['title']):
+		app_name = app['name']
+		if app_name in api_resp['data'].keys():
+			menus['marketPage']['title'].remove(app)
+			api_resp['app_name']['add_link'] += token_str #增加免登录token
+			menus['marketPage']['title'].append(api_resp['app_name'])
 
 	return menus
 
