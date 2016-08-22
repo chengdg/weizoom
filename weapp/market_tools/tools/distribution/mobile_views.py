@@ -63,21 +63,17 @@ def get_process(request):
 	member_id = request.member.id
 	cur_list = models.ChannelDistributionQrcodeSettings.objects.get(bing_member_id=member_id)
 	prev_datas = models.ChannelDistributionDetail.objects.filter(member_id=member_id, order_id=0).order_by('-created_at')[0:20]
-	if cur_list or prev_datas:
-		prev_lists = []
-		for prev_data in prev_datas:
-			prev_list = {
-				'created_at': prev_data.created_at
-			}
-			prev_lists.append(prev_list)
+	prev_lists = []
+	for prev_data in prev_datas:
+		prev_list = {
+			'created_at': prev_data.created_at
+		}
+		prev_lists.append(prev_list)
 
-		c = RequestContext(request, {
-			"cur_list": cur_list,
-			"prev_lists": prev_lists
-		})
-	else:
-		c = RequestContext(request, {
-		})
+	c = RequestContext(request, {
+		"cur_list": cur_list,
+		"prev_lists": prev_lists
+	})
 
 	return render_to_response('%s/distribution/webapp/m_process.html' % TEMPLATE_DIR, c)
 
