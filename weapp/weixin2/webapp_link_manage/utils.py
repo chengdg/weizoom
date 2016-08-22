@@ -31,6 +31,7 @@ from apps.customerized_apps.sign.export import get_sign_webapp_link
 
 from apps.customerized_apps.exsign.export import get_exsign_webapp_link
 from account.models import UserProfile
+from account.account_util import get_token_for_logined_user
 
 def get_webapp_link_menu_objectes(request):
 	"""
@@ -39,6 +40,8 @@ def get_webapp_link_menu_objectes(request):
 	webapp_owner_id = request.manager.id
 	workspace_id = request.user_profile.homepage_workspace_id
 	mall_type = request.user_profile.webapp_type
+
+	token = get_token_for_logined_user(request.user)
 
 	menus = {
 		'webappPage': {
@@ -127,12 +130,12 @@ def get_webapp_link_menu_objectes(request):
 				'name': '微信投票',
 				'type': 'vote',
 				'add_btn_title': '新建投票',
-				'add_link': '/apps/vote/vote/'
+				'add_link': 'http://%s/apps/vote/vote/?token=%s' % (settings.MARKETAPP_DOMAIN, token)
 			}, {
 				'name': '用户调研',
 				'type': 'survey',
 				'add_btn_title': '新建调研',
-				'add_link': '/apps/survey/survey'
+				'add_link': 'http://%s/apps/survey/survey/?token=%s' % (settings.MARKETAPP_DOMAIN, token)
 			}, {
 				'name': '活动报名',
 				'type': 'event',
