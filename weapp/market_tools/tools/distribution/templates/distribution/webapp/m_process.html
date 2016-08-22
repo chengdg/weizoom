@@ -53,6 +53,10 @@
             {% endfor %}
         {% endif %}
 
+        {% if cur_list.status == 0 and not prev_lists %}
+            <p class="xui-no-vip">暂时没有提取记录</p>
+        {% endif %}
+
         {% if not cur_list and not prev_lists %}
             <p class="xui-no-vip">暂时没有提取记录</p>
         {% endif %}
