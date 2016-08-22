@@ -19,6 +19,8 @@ W.view.mall.ProductListView = Backbone.View.extend({
         this.table = this.$('[data-ui-role="products-advanced-table"]').data('view');
         this.modelInfoTemplate = this.getModelInfoTemplate();
         this.type = options.type || 'onshelf';
+        this.export2data = options.export2data;
+        this.woid = options.woid;
     },
 
     events: {
@@ -60,6 +62,91 @@ W.view.mall.ProductListView = Backbone.View.extend({
         this.filterView.render();
 
         this.$('input[type="text"]').eq(0).focus();
+
+        var woid = this.woid;
+        var view = this.filterView;
+        $('.panel-heading').delegate('.xa-export', 'click', function(event){
+            W.getApi().call({
+                app: 'export_job',
+                resource: 'export_is_download',
+                method: 'get',
+                args: {
+                    woid: woid,
+                    type: 4,
+                },
+                success: function(data) {
+                    if (data["status"] === 1 && data["is_download"] === 0){
+                        W.showHint('error', '导出的文件尚未下载，请刷新页面进行下载！');
+                    }
+                    else if(data["status"] === 0 && data["is_download"] === 0){
+                        W.showHint('success', '文件正在导出，请刷新页面进行查看！');
+                        
+                    }
+                    else{
+                        var url ='';
+                        var filter_value = '';
+                        if (view.filter_value) {
+                            filter_value = view.filter_value;
+                        };
+                        var options = {
+                            el: '.panel-body',
+                            topic_id: '',
+                            type: 4,
+                            url: url,
+                            jobId:0,
+                            filter_value:filter_value,
+                            isAlreadyExport : true,
+                            app: 'mall2',
+                            resource: 'export_product_param',
+                            timelinesOptions: {
+                                
+                            }
+                        }
+
+                        var customersView = new W.CustomersView(options);
+                    }
+                },
+                error: function(response) {
+                    W.showHint('error', '网络超时，导出中断，请重试！');
+                }
+            });
+            
+        });
+        
+        var export2data = this.export2data;
+        if(export2data["status"] ===1 && export2data["is_download"] ===0 ){
+            var options = {
+                el: '.div_export',
+                topic_id: '',
+                type: 4,
+                url: "",
+                jobId:export2data["id"],
+                isAlreadyExport : true,
+                app: 'product',
+                timelinesOptions: {
+                }
+            }
+            var productExportFileView = new W.dialog.ExportFileView(options);
+            productExportFileView.finish();
+        }
+        else if(export2data["status"] ===0 && export2data["is_download"] ===0 ){
+
+            var jobId = export2data["id"];
+            var options = {
+                el: '.div_export',
+                topic_id: '',
+                type: 4,
+                url: "",
+                jobId:export2data["id"],
+                isAlreadyExport : true,
+                app: 'product',
+                timelinesOptions: {
+                }
+            }
+            var productExportFileView = new W.dialog.ExportFileView(options);
+            productExportFileView.doExportAfterApi();
+        }
+
     },
 
     onClickBatchUpdateProductShelveTypeLink: function(event) {

@@ -237,7 +237,7 @@
                     $('.wa-grade').html('');
                 }
                 if(error_mes){
-                   $('.xa-retry').hide(); 
+                    $('.xa-retry').hide(); 
                     error_mes = '';
                 }
             });
@@ -453,6 +453,14 @@
                 }
                 if(this.isOk && isOkFlag){
                     isOkFlag = false;
+                    if( error_mes && error_mes.errMsg == '奖品已抽光'){
+                        resultDialog.render({
+                            prize_type: 'none',
+                            prize_name: ''
+                        });
+                        isOkFlag = true;
+                        return false;
+                    }
                     $('.wui-i-cardInfo').get(0).style.zIndex = '3';
                     resultDialog = resultDialog || new ResultDialog();
                     resultDialog.render({
@@ -498,18 +506,15 @@
                         error: function(error){
                             error_mes = error;
                             if(error.errMsg == '奖品已抽光'){
-                                resultDialog.render({
-                                    prize_type: 'none',
-                                    prize_name: ''
-                                });
+                                $('.wa-grade').html('谢谢参与');
                             }else{
                                 wuiAlert(error.errMsg);
                                 scratch_card.initialize();
                                 $('.wui-i-cardInfo').get(0).style.zIndex = '1';
                                 $('.wa-prizeName').html('');
-                                $('.wa-grade').html('谢谢参与');                              
+                                $('.wa-grade').html('谢谢参与');  
+                                isScratching = false;                            
                             }
-                            isScratching = false;
                         }
                     });
                 }

@@ -229,7 +229,7 @@
 										{{if product.promotion.type == "flash_sale"}}【限时抢购】{{/if}}
 										{{if product.promotion.type == "premium_sale:premium_product"}}【赠品】 {{/if}}
 									{{/if}}
-									{{if product.grade_discounted_money}}【会员优惠】{{/if}}
+									{{if product.grade_discounted_money > 0}}【会员优惠】{{/if}}
 								{{/if}}
 									${product.name}{{if order.fackorders && order.fackorders[product.supplier]}}-${order.fackorders[product.supplier].order_id}{{/if}}
 								</span></p>
@@ -259,9 +259,9 @@
 					</td>
 					{{if j == 0 }}
 					<td width="140px" rowspan="${order.groups.length}">
-						{{if order.save_money != 0 }}
+						{{if order.save_money > 0 }}
 							{{if !(order.supplier_user_id > 0 && data.mall_type == 0)}}
-								${ order.save_money.toFixed(2)}
+								${ order.save_money.toFixed(2) }
 							{{/if}}
 						{{/if}}
 					</td>
@@ -808,7 +808,7 @@ $(document).ready(function() {
 				}
 				else if(data["status"] === 0 && data["is_download"] === 0){
 					W.showHint('success', '文件正在导出，请刷新页面进行查看！');
-					
+
 				}
 				else{
 					var url ='';
@@ -827,7 +827,7 @@ $(document).ready(function() {
 						app: 'mall2',
 						resource:'export_order_param',
 						timelinesOptions: {
-							
+
 						}
 					}
 
@@ -838,11 +838,11 @@ $(document).ready(function() {
 				W.showHint('error', '网络超时，导出中断，请重试！');
 			}
 		});
-		
+
 	});
-	
+
 	var table = $('div[data-ui-role="advanced-table"]').data('view');
-	
+
 
 	var export2data = {{export2data|safe}};
 	var woid = "{{ request.manager.id }}";
@@ -889,6 +889,7 @@ $(document).ready(function() {
 	if(username === "weshop") {
 		setTimeout(function(){
 			$('#payType').append('<option value="11" data-value="11" data-name="翼支付">翼支付</option>');
+			$('#payType').append('<option value="12" data-value="12" data-name="看购支付">看购支付</option>');
 		}, 500);
 	}
 });

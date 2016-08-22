@@ -269,11 +269,14 @@ MALL_ORDER_SECOND_NAV = {
             'title': u'批量发货',
             'url': 'javascript:void(0);',
             'permission': 'manage_order_batch_delivery'
-        },{
+        },
+        {
             'name': ORDER_MONEY,
             'title': u'结算管理',
-            'url': '/mall2/orders_to_money/',
+            'url': 'http://finance.weizoom.com/balance_account/account_profile/',
             'permission': 'manage_order_settle',
+            'need_token': True,
+            'users': ["ceshi01", "shengcheng", "ertongshazi", "saihanshiye", "zhongtulvan", "yuanyezhenshi", "bojing", "xinhuadanpin", "zhongdan"]
         }
     ]
 }
@@ -306,6 +309,7 @@ MALL_PROMOTION_CARD_EXCHANGE_NAV = 'cardExchange'
 
 MALL_APPS_LOTTERY_NAV = 'lotteries'
 MALL_APPS_EXLOTTERY_NAV = 'exlotteries'
+MALL_APPS_SCANLOTTERY_NAV = 'scanlotteries'
 MALL_APPS_FEEDBACK_NAV = 'exsurveies'
 MALL_APPS_SURVEY_NAV = 'surveies'
 MALL_APPS_EVENT_NAV = 'events'
@@ -436,6 +440,11 @@ MALL_PROMOTION_AND_APPS_SECOND_NAV = {
                     'title': "幸运码抽奖",
                     'url': '/apps/exlottery/exlotteries/',
                     'permission': '',
+                },{
+                    'name': MALL_APPS_SCANLOTTERY_NAV,
+                    'title': "扫码抽奖",
+                    'url': '/apps/scanlottery/scanlotteries/',
+                    'permission': '',
                 },
                 # {
                     # 'name': MALL_APPS_FEEDBACK_NAV,
@@ -533,7 +542,8 @@ MALL_PROMOTION_AND_APPS_SECOND_NAV = {
                     'name': ADVANCE_MANAGE_CHANNEL_DISTRIBUTIONS_NAV,
                     'title': u'渠道分销',
                     'url': '/new_weixin/channel_distributions/',
-                    'permission': ''
+                    'permission': '',
+                    'users': ['jobs', 'ceshi01', 'aromilia']
                 },
             ]
         }

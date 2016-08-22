@@ -25,6 +25,7 @@ from . import utils
 from mall import export
 from weixin.user.module_api import get_all_active_mp_user_ids
 from apps.customerized_apps.group import models as group_models
+from export_job.models import ExportJob
 
 import logging
 
@@ -64,13 +65,34 @@ class ProductList(resource.Resource):
                 shelve_type=shelve_type,
                 is_deleted=False
             ).exists()
+        #获取未完成的任务
+        woid = request.webapp_owner_id
+        export_jobs = ExportJob.objects.filter(woid=woid,type=4,is_download=0).order_by("-id")
+        if export_jobs:
+            export2data = {
+                "woid":int(export_jobs[0].woid) ,#
+                "status":1 if export_jobs[0].status else 0,
+                "is_download":1 if export_jobs[0].is_download else 0,
+                "id":int(export_jobs[0].id),
+                # "file_path": export_jobs[0].file_path,
+                }
+        else:
+            export2data = {
+                "woid":0,
+                "status":1,
+                "is_download":1,
+                "id":0,
+                "file_path":0,
+                }
+
         c = RequestContext(
             request,
             {'first_nav_name': export.PRODUCT_FIRST_NAV,
              'second_navs': export.get_mall_product_second_navs(request),
              'has_product': has_product,
              'high_stocks': request.GET.get('high_stocks', '-1'),
-             'mall_type': mall_type
+             'mall_type': mall_type,
+             'export2data':export2data
              }
         )
         if shelve_type == models.PRODUCT_SHELVE_TYPE_ON:
@@ -111,15 +133,30 @@ class ProductList(resource.Resource):
         if not sort_attr:
             sort_attr = '-display_index'
 
+        start_date = request.GET.get('startDate', '')
+        end_date = request.GET.get('endDate', '')
+
+        product_pool_param = {}
+        if mall_type:
+            product_pool_param['woid'] = request.manager.id
+            if start_date and end_date:
+                product_pool_param["sync_at__gte"] = start_date
+                product_pool_param["sync_at__lte"] = end_date
+
         #处理商品分类
         product_pool2display_index = {}
+        product_pool_id2product_pool = {}
         if _type == 'offshelf':
             sort_attr = '-update_time'
             products = models.Product.objects.belong_to(mall_type, request.manager, models.PRODUCT_SHELVE_TYPE_OFF)
 
             if mall_type:
-                product_pool = models.ProductPool.objects.filter(woid=request.manager.id, status=models.PP_STATUS_OFF)
-                product_pool2display_index = dict([(pool.product_id, pool.display_index) for pool in product_pool])
+                product_pool_param['status'] = models.PP_STATUS_OFF
+                product_pool = models.ProductPool.objects.filter(**product_pool_param)
+                product_pool_id2product_pool = dict([(pool.product_id, pool) for pool in product_pool])
+
+                if start_date and end_date:
+                    products = products.filter(id__in=product_pool_id2product_pool.keys())
             # products = models.Product.objects.filter(
             #     owner=request.manager,
             #     shelve_type=models.PRODUCT_SHELVE_TYPE_OFF,
@@ -127,8 +164,12 @@ class ProductList(resource.Resource):
         elif _type == 'onshelf':
             products = models.Product.objects.belong_to(mall_type, request.manager, models.PRODUCT_SHELVE_TYPE_ON)
             if mall_type:
-                product_pool = models.ProductPool.objects.filter(woid=request.manager.id, status=models.PP_STATUS_ON)
-                product_pool2display_index = dict([(pool.product_id, pool.display_index) for pool in product_pool])
+                product_pool_param['status'] = models.PP_STATUS_ON
+                product_pool = models.ProductPool.objects.filter(**product_pool_param)
+                product_pool_id2product_pool = dict([(pool.product_id, pool) for pool in product_pool])
+                if start_date and end_date:
+                    products = products.filter(id__in=product_pool_id2product_pool.keys())
+
             # products = models.Product.objects.filter(
             #     owner=request.manager,
             #     shelve_type=models.PRODUCT_SHELVE_TYPE_ON,
@@ -143,6 +184,23 @@ class ProductList(resource.Resource):
             products = models.Product.objects.filter(
                 owner=request.manager,
                 is_deleted=False)
+
+
+        #临时兼容自营平台供货商查询 待所以商品都更新成商品池商品进行重构
+        if mall_type:
+
+            store_name = request.GET.get('supplier', '')
+
+            if store_name:
+                userprofile_manager = UserProfile.objects.filter(webapp_type=2).first()
+
+                mananger_supplier_ids = [supplier.id for supplier in models.Supplier.objects.filter(
+                                            owner_id__in=[userprofile_manager.user_id, request.manager.id],
+                                            name__contains=store_name,
+                                            is_delete=False
+                                        )]
+                if products:
+                    products = products.filter(supplier__in=mananger_supplier_ids)
 
         # import pdb
         # pdb.set_trace()
@@ -170,7 +228,9 @@ class ProductList(resource.Resource):
         products_not_0 = sorted(products_not_0, key=operator.attrgetter('display_index'))
 
         if mall_type:
-            products = utils.weizoom_filter_products(request, products_not_0 + products_is_0)
+            #products = utils.weizoom_filter_products(request, products_not_0 + products_is_0)
+
+            products = utils.filter_products(request, products_not_0 + products_is_0, mall_type)
             supplier_type = request.GET.get('orderSupplierType', '')
             if supplier_type == '0':
                 products = filter(lambda p: p.supplier_user_id > 0, products)
@@ -220,6 +280,7 @@ class ProductList(resource.Resource):
         items1 = []
         items2 = []
         for product in products:
+
             product_dict = product.format_to_dict()
             product_dict['is_self'] = (request.manager.id == product.owner_id)
 
@@ -238,8 +299,11 @@ class ProductList(resource.Resource):
             product_dict['sync_time'] = product_id2sync_time.get(product.id, product.created_at.strftime('%Y-%m-%d %H:%M'))
             product_dict['is_sync'] = is_sync
 
-            if product.id in product_pool2display_index.keys():
-                product_dict['display_index'] = product_pool2display_index[product.id]
+            if product.id in product_pool_id2product_pool.keys():
+                product_dict['display_index'] = product_pool_id2product_pool[product.id].display_index
+                product_dict['sync_at'] = product_pool_id2product_pool[product.id].sync_at.strftime('%Y-%m-%d %H:%M') if product_pool_id2product_pool[product.id].sync_at else ""
+            else:
+                product_dict['sync_at'] = ""
             #增加团购属性
             if product2group.has_key(product.id):
                 product_dict["is_group_buying"] = product2group[product.id]
@@ -256,10 +320,10 @@ class ProductList(resource.Resource):
             items.append(product_dict)
 
         # 微众系列待售排序
-        if mall_type and _type == 'offshelf':
-            items1 = sorted(items1, key=lambda item:item['sync_time'], reverse=True)
-            items2 = sorted(items2, key=lambda item:item['sync_time'], reverse=True)
-            items = items1 + items2
+        # if mall_type and _type == 'offshelf':
+        #     items1 = sorted(items1, key=lambda item:item['sync_time'], reverse=True)
+        #     items2 = sorted(items2, key=lambda item:item['sync_time'], reverse=True)
+        #     items = items1 + items2
 
         data = dict()
         data['owner_id'] = request.manager.id
@@ -433,32 +497,59 @@ class ProductPool(resource.Resource):
 
     @login_required
     def api_get(request):
+        product_code = request.GET.get('productCode', '')
         product_name = request.GET.get('name', '')
         supplier_name = request.GET.get('supplier', '')
+        first_classification = int(request.GET.get('first_classification', '-1'))
+        secondary_classification = int(request.GET.get('secondary_classification', '-1'))
+        supplier_type = request.GET.get('supplier_type', -1)
         #status = request.GET.get('status', '-1')
 
-        # 获取所有供货商的id
-        #OLD CODE
-        # all_user_ids = get_all_active_mp_user_ids()
-        # all_mall_userprofiles = UserProfile.objects.filter(user_id__in=all_user_ids, webapp_type=0)
-        # user_id2userprofile = dict([(profile.user_id, profile) for profile in all_mall_userprofiles])
-        # owner_ids = user_id2userprofile.keys()
-        # if not owner_ids:
-        #     return create_response(200).get_response()
-
         manager_user_profile = UserProfile.objects.filter(webapp_type=2)[0]
-        product_pool = models.ProductPool.objects.filter(woid=request.manager.id, status=models.PP_STATUS_ON_POOL)
+        # 根据分类来筛选
+        if first_classification > 0:
+            if secondary_classification == -1:
+                subclassification_ids = [model.id for model in models.Classification.objects.filter(father_id=first_classification, level=2)]
+                product_ids = [model.product_id for model in models.ClassificationHasProduct.objects.filter(
+                                        classification_id__in=subclassification_ids
+                                        )]
+            elif secondary_classification > 0:
+                product_ids = [model.product_id for model in models.ClassificationHasProduct.objects.filter(
+                                        classification_id=secondary_classification
+                                        )]
+            else:
+                product_ids = []
+            product_ids = [model.product_id for model in models.ProductPool.objects.filter(
+                woid=request.manager.id,
+                product_id__in=product_ids,
+                status=models.PP_STATUS_ON_POOL)]
+            products = models.Product.objects.filter(id__in=product_ids)
+        else:
+            product_pool = models.ProductPool.objects.filter(woid=request.manager.id, status=models.PP_STATUS_ON_POOL)
+            product_ids = [pool.product_id for pool in product_pool]
+            products = models.Product.objects.filter(id__in=product_ids)
 
-        product_ids = [pool.product_id for pool in product_pool]
-        products = models.Product.objects.filter(id__in=product_ids)
+        if int(supplier_type) != -1 or supplier_name:
+            params = {}
+            params['owner_id'] = manager_user_profile.user_id
+            if int(supplier_type) != -1:
+                params['type'] = int(supplier_type)
 
+            if supplier_name:
+                params['name__contains'] = supplier_name
 
-        if supplier_name:
-            supplier_ids = [s.id for s in models.Supplier.objects.filter(owner_id=manager_user_profile.user_id, name__contains=supplier_name)]
+            supplier_ids = [s.id for s in models.Supplier.objects.filter(**params)]
             if supplier_ids:
                 products = products.filter(supplier__in=supplier_ids)
             else:
                 products = []
+
+        # if supplier_name:
+        #     supplier_ids = [s.id for s in models.Supplier.objects.filter(owner_id=manager_user_profile.user_id, name__contains=supplier_name)]
+        #     if supplier_ids:
+        #         products = products.filter(supplier__in=supplier_ids)
+        #     else:
+        #         products = []
         # 筛选出所有商品
         if product_name and products:
             products = products.filter(name__contains=product_name)
@@ -522,8 +613,22 @@ class ProductPool(resource.Resource):
             manager_product_user_id = UserProfile.objects.filter(webapp_type=2)[0].user_id
 
         supplier_ids2name = {}
+        supplier_ids2supplier = {}
         if manager_product_user_id:
-            supplier_ids2name = dict([(s.id, s.name) for s in models.Supplier.objects.filter(owner_id=manager_product_user_id)])
+            suppliers = models.Supplier.objects.filter(owner_id=manager_product_user_id)
+            supplier_ids2name = dict([(s.id, s.name) for s in suppliers])
+            supplier_ids2supplier = dict([(s.id, s) for s in suppliers])
+
+        product_ids = [product.id for product in products]
+        relations = models.ClassificationHasProduct.objects.filter(
+                                        woid=request.manager.id,
+                                        product_id__in=product_ids
+                                        )
+        product_id2classification_id = dict([(r.product_id, r.classification_id) for r in relations])
+        secondary_classifications = models.Classification.objects.filter(id__in=[r.classification_id for r in relations])
+        id2secondary_classification = dict([(classification.id, classification) for classification in secondary_classifications])
+        first_classifications = models.Classification.objects.filter(id__in=[r.father_id for r in secondary_classifications])
+        id2first_classification = dict([(classification.id, classification) for classification in first_classifications])
 
         # 对应商品营销活动信息
         # product_ids = [product['id'] for product in products]
@@ -558,8 +663,14 @@ class ProductPool(resource.Resource):
             # print ">>>>>>>>>>>>>>price", product
             # product = product.to_dict()zai
             # product.fill_standard_model()
-
-
+            if supplier_ids2supplier:
+                supplier = supplier_ids2supplier.get(product.supplier, None)
+                if supplier:
+                    supplier_type = supplier.type
+                else:
+                    supplier_type = -1
+            else:
+                supplier_type = -1
             items.append({
                 'id': product.id,
                 # 'product_has_promotion': product_has_promotion,
@@ -573,7 +684,14 @@ class ProductPool(resource.Resource):
                 'price':product.price,
                 'is_use_custom_model': product.is_use_custom_model,
                 'models': product.models[1:],
-                'display_price_range': product.display_price_range
+                'display_price_range': product.display_price_range,
+                'supplier_type': supplier_type,
+                'classification': "%s-%s" % (
+                    id2first_classification[id2secondary_classification[product_id2classification_id[product.id]].father_id].name,
+                    id2secondary_classification[product_id2classification_id[product.id]].name
+                    ) if product.id in product_id2classification_id.keys() else "",
+                'gross_profit': "%s~%s" % (min([model['gross_profit'] for model in product.models[1:]]), max([model['gross_profit'] for model in product.models[1:]]))
+                 if product.is_use_custom_model else round(float((product.price - product.purchase_price)))
                # 'sync_time': mall_product_id2relation[product['id']].sync_time.strftime('%Y-%m-%d %H:%M') if mall_product_id2relation.has_key(product['id']) else ''
             })
 
@@ -602,6 +720,7 @@ class ProductPool(resource.Resource):
 
 
         models.ProductPool.objects.filter(woid=request.manager.id, product_id__in=product_ids).update(status=models.PP_STATUS_ON)
+        models.ProductPool.objects.filter(woid=request.manager.id, product_id__in=product_ids, sync_at=None).update(sync_at=datetime.now())
         return create_response(200).get_response()
         #for product in products:
 
@@ -824,7 +943,7 @@ class Product(resource.Resource):
         mall_type = request.user_profile.webapp_type
 
         #自营平台去掉添加新商品
-        if mall_type and not has_product_id and request.manager.username not in ['weshop', 'weizoomjx']:
+        if mall_type == 1 and not has_product_id and request.manager.username not in ['weshop', 'weizoomjx']:
             return HttpResponseRedirect(
             '/mall2/product_pool/')
 
@@ -929,6 +1048,8 @@ class Product(resource.Resource):
             woid = request.webapp_owner_id
             product.is_group_buying = product_is_group(product.id, woid)
 
+        if not mall_type:
+            supplier = []
 
         c = RequestContext(request, {
             'first_nav_name': export.PRODUCT_FIRST_NAV,
@@ -956,6 +1077,7 @@ class Product(resource.Resource):
     def put(request):
         """创建商品or update product
         """
+        mall_type = request.user_profile.webapp_type
 
         standard_model, custom_models = utils.extract_product_model(request)
         postage_type = request.POST['postage_type']
@@ -996,6 +1118,16 @@ class Product(resource.Resource):
             is_enable_bill = False
             is_delivery = False
 
+        if mall_type == 3:
+            try:
+                supplier = models.Supplier.objects.get(owner_id=request.manager.id, name="自营")
+            except:
+                supplier = models.Supplier.objects.create(owner_id=request.manager.id, name="自营")
+            supplier_id = supplier.id
+        else:
+            supplier_id = request.POST.get("supplier", 0)
+            
+
         product = models.Product.objects.create(
             owner=request.manager,
             name=request.POST.get('name', '').strip(),
@@ -1014,7 +1146,7 @@ class Product(resource.Resource):
             weshop_sync=request.POST.get('weshop_sync', 0),
             stocks=min_limit,
             is_member_product=request.POST.get("is_member_product", False) == 'on',
-            supplier=request.POST.get("supplier", 0),
+            supplier=supplier_id,
             purchase_price=purchase_price,
             is_enable_bill=is_enable_bill,
             is_delivery=is_delivery
@@ -1406,12 +1538,17 @@ class Product(resource.Resource):
                 'postage_type': postage_type,
                 'stocks': min_limit,
                 'is_member_product': request.POST.get("is_member_product", False) == 'on',
-                'supplier': request.POST.get("supplier", 0),
-                'purchase_price': purchase_price,
+                #'supplier': request.POST.get("supplier", 0),
+                #'purchase_price': purchase_price,
                 'is_enable_bill': is_enable_bill,
                 'is_delivery': is_delivery,
                 'buy_in_supplier': int(request.POST.get('buy_in_supplier', False))
             }
+
+            if mall_type == 1:
+                param['supplier'] = request.POST.get("supplier", 0)
+                param['purchase_price'] = request.POST.get("purchase_price", 0)
+
             # 微众商城代码
             # if request.POST.get('weshop_sync', None):
             #     param['weshop_sync'] = request.POST['weshop_sync'][0]
@@ -1838,3 +1975,99 @@ class CheckProductHasPromotion(resource.Resource):
                 return create_response(200).get_response()
         else:
             return create_response(500).get_response()
+
+class ProductClassification(resource.Resource):
+    app = 'mall2'
+    resource = 'product_classification'
+
+    @login_required
+    def api_get(request):
+        level = int(request.GET.get('level', '0'))
+        father_id = int(request.GET.get('father_id', '0'))
+        if not level:
+            return create_response(500).get_response()
+        classifications = models.Classification.objects.filter(
+                                    level=level,
+                                    father_id=father_id)
+        items = []
+        response = create_response(200)
+        for classification in classifications:
+            items.append({
+                    'id': classification.id,
+                    'name': classification.name
+                })
+        response.data = {
+            'items': items,
+            'level': level
+        }
+        return response.get_response()
+
+
+class ProductGetFile(resource.Resource):
+    """
+    所有订单/财务审核中的订单导出
+    获取参数，构建成文件，上传到u盘运
+    """
+    app = "mall2"
+    resource ="export_product_param"
+
+    @login_required
+    def api_get(request):
+        woid = request.webapp_owner_id
+        type = int(request.GET.get('type', 4))
+
+        now = datetime.now()
+        #判断用户是否存在导出数据任务
+
+        param = get_product_param_from(request)
+
+        exportjob = ExportJob.objects.create(
+                                    woid = woid,
+                                    type = type,
+                                    status = 0,
+                                    param = param,
+                                    created_at = now,
+                                    processed_count =0,
+                                    count =0,
+                                    )
+        from mall.product.tasks import send_product_export_job_task
+        send_product_export_job_task.delay(exportjob.id, param, type)
+
+        response = create_response(200)
+        response.data = {
+            'ok':'ok',
+            "exportjob_id":exportjob.id,
+        }
+        return response.get_response()
+
+def get_product_param_from(request):
+    # webapp_id = request.user_profile.webapp_id
+    mall_type = request.user_profile.webapp_type
+    product_name = request.GET.get('name', '')
+    supplier_name = request.GET.get('supplier', '')
+
+
+    start_date = request.GET.get('startDate', '')
+    end_date = request.GET.get('endDate', '')
+
+    lowSales = request.GET.get('lowSales', '')
+    highSales = request.GET.get('highSales', '')
+
+    category =  request.GET.get('category', '')
+    barCode =  request.GET.get('barCode', '')
+
+    #model
+    lowPrice = request.GET.get('lowPrice', '')
+    highPrice = request.GET.get('highPrice', '')
+
+    lowStocks = request.GET.get('lowStocks', '')
+    highStocks = request.GET.get('highStocks', '')
+
+
+    woid = request.webapp_owner_id
+
+    param = {'mall_type':mall_type, 'woid':woid, 'name':product_name, 'supplier_name':supplier_name, 'startDate':start_date, 'endDate':end_date,
+        'lowSales':lowSales, 'highSales':highSales, 'category':category, 'barCode':barCode, 'lowPrice':lowPrice, 'highPrice':highPrice,
+         'lowStocks':lowStocks, 'highStocks':highStocks}
+    return param
+

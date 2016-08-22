@@ -80,12 +80,12 @@
 		<thead>
 			<tr>
 				<th width="308">商品信息</th>
-				<th width="100">{{if data.data.mall_type == 1}}供货商{{else}}条码{{/if}}</th>
+				<th width="100">{{if data.data.mall_type > 0}}供货商{{else}}条码{{/if}}</th>
 				<th width="100">分组</th>
 				<th width="105">商品价格（元）</th>
 				<th width="50">库存</th>
 				<th width="50">总销量</th>
-				<th width="120">{{if data.data.mall_type == 1 }}同步{{else}}创建{{/if}}时间</th>
+				<th width="120">{{if data.data.mall_type == 1 }}首次上架{{else}}创建{{/if}}时间</th>
 				<th width="110">操作</th>
 			</tr>
 		</thead>
@@ -124,7 +124,7 @@
 						</div>
 					</td>
 					<td>
-					{{if data.data.mall_type == 1 }}
+					{{if data.data.mall_type > 0 }}
 						{{if product.is_sync }}<i class="xui-icon-sync">同</i>{{/if}}
 						${product.store_name}
 					{{else}}
@@ -161,7 +161,7 @@
 						{{/if}}
 					</td>
 					<td>${product.sales}</td>
-					<td>{{if data.data.mall_type == 1 }}${product.sync_time}{{else}}${product.created_at}{{/if}}</td>
+					<td>{{if data.data.mall_type == 1 }}${product.sync_at}{{else}}${product.created_at}{{/if}}</td>
 					<td>
 					   <div style=" width:74px; margin:auto;">
 						<a href="/mall2/product/?id=${product.id}" class="xa-modify fl" style="width: 39px;">
@@ -191,10 +191,14 @@
 {% endverbatim %}
 <script type="text/javascript">
 $(document).ready(function() {
+	var woid = {{ request.manager.id }};
+	var export2data = {{export2data|safe}};
 	var view = new W.view.mall.ProductListView({
 		el: '.xui-productsPage',
 		type: 'offshelf',
-		mall_type: '{{ mall_type }}'
+		mall_type: '{{ mall_type }}',
+		export2data:export2data,
+		woid:woid
 	});
 	view.render();
 });

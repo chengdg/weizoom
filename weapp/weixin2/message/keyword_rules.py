@@ -17,6 +17,7 @@ from core import paginator
 from core import emotion
 from core.jsonresponse import create_response
 from util import *
+from utils import cache_util
 
 COUNT_PER_PAGE = 20
 FIRST_NAV = export.WEIXIN_HOME_FIRST_NAV
@@ -232,6 +233,10 @@ class KeywordRules(resource.Resource):
                 type = type
             )
 
+            #修改后清除缓存，解决相同的关键字修改回复内容后微信端不生效的问题  add by aix 2016.8.15
+            cache_keys = ['auto_qa_message_webapp_id_%s_query_%s' % (request.user_profile.webapp_id, query['keyword']) for query in json.loads(patterns)]
+            for cache_key in cache_keys:
+                cache_util.delete_cache(cache_key)
             response = create_response(200)
         return response.get_response()
 

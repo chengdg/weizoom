@@ -4,7 +4,11 @@
 {% load apps_filter %}
 {% block css %}
     <style>
-
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none !important;
+            margin: 0;
+        }
         .propertyGroup_property_horizontalField .propertyGroup_property_label{
               width: 90px;
         }
@@ -194,7 +198,10 @@
         app: 'apps',
         api: 'dynamic_pages/get',
         args: {
-          project_id: W.projectId
+          project_id: W.projectId,
+            need_switch: true,
+            old_name: 'appkit.groupdescription',
+            new_name: 'appkit.exgroupdescription'
         },
         showLoading: false,
         success: function(data) {
@@ -432,7 +439,7 @@
       for(var i=0;i<GroupArray.length;i++){
         var $group_div =$(GroupArray[i]);
         var cid =$group_div.attr('data-dynamic-cid');
-        var group_type = $group_div.find('select[data-field="group_type"]').val();
+        var group_type = $group_div.find('input[data-field="group_type"]').val();
         var group_days = $group_div.find('input[data-field="group_days"]').val();
         var group_price = $group_div.find('input[data-field="group_price"]').val();
         var group_item_data = {
@@ -464,8 +471,8 @@
           for(var i=0;i<group_items.length;i++){
               group_one = group_items[i];
               for(var index in group_one){
-                  if(group_one[index]===undefined | group_one[index]==""){
-                      group_error_type.push('group_blank');
+                  if(!isInteger(group_one['group_type']) || group_one['group_type'] <2 || group_one['group_type'] > 999){
+                      group_error_type.push('group_out_area');
                   }
                   var group_days_tmp = group_one['group_days'];
                   if(!isInteger(group_days_tmp)){
@@ -498,8 +505,8 @@
       if(validate_group_type){
         if(validate_group_type=='product'){
             W.showHint('error', '请选择团购商品！');
-        }else if(validate_group_type=='group_blank'){
-            W.showHint('error', '团购设置和数据不能为空！');
+        }else if(validate_group_type=='group_out_area'){
+            W.showHint('error', '团购人数只能设置2-999之间');
         }else if(validate_group_type=='group_same'){
             W.showHint('error', '团购类型不能相同！');
         }else if(validate_group_type=='group_notInt'){

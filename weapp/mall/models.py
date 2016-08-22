@@ -592,6 +592,45 @@ class Product(models.Model):
 				})
 
 	@staticmethod
+	def fill_flash_sale(products,webapp_owner):
+		from mall.promotion import models as promotion_models
+		for p in products:
+			p.promotion = None
+
+		product_ids = []
+		id2product = {}
+		for product in products:
+			product_ids.append(product.id)
+			id2product[product.id] = product
+
+		#创建promotions业务对象集合
+		product_promotion_relations = promotion_models.ProductHasPromotion.objects.filter(product_id__in=product_ids, promotion__owner=webapp_owner, promotion__status=promotion_models.PROMOTION_STATUS_STARTED)
+		promotion_ids = list()
+		promotion2product = dict()
+		for relation in product_promotion_relations:
+			promotion_ids.append(relation.promotion_id)
+			promotion2product[relation.promotion_id] = id2product.get(relation.product_id)
+
+		promotion_db_models = promotion_models.Promotion.objects.filter(id__in=promotion_ids)
+		for promotion_db_model in promotion_db_models:
+			if promotion_db_model.type != promotion_models.PROMOTION_TYPE_FLASH_SALE or ((promotion_db_model.status != promotion_models.PROMOTION_STATUS_STARTED) and (promotion_db_model.status != promotion_models.PROMOTION_STATUS_NOT_START)):
+				#跳过已结束、已删除的促销活动
+				continue
+
+			flash_sale = promotion_models.FlashSale.objects.get(id=promotion_db_model.detail_id)
+
+			product = promotion2product.get(promotion_db_model.id)
+			if product:
+
+				product.promotion = {
+					'detail': {'promotion_price': flash_sale.promotion_price},
+					'member_grade_id':promotion_db_model.member_grade_id
+				}
+
+
+
+
+	@staticmethod
 	def fill_promotion_detail(webapp_owner, products, product_ids):
 		from mall.promotion import models as promotion_models
 		today = datetime.today()
@@ -719,6 +758,14 @@ class Product(models.Model):
 
 		if options.get('with_sales', False):
 			Product.fill_sales_detail(webapp_owner, products, product_ids)
+
+		# 商品列表页缓存专用
+		if options.get('with_price', False):
+			Product.fill_display_price(products)
+
+		# 商品列表页缓存专用
+		if options.get('flash_sale', False):
+			Product.fill_flash_sale(products, webapp_owner)
 
 	@staticmethod
 	def get_from_model(product_id, product_model_name):
@@ -1698,7 +1745,7 @@ class Order(models.Model):
 		numbers = Order.by_webapp_user_id(webapp_user_ids).filter(
 			status__gte=ORDER_STATUS_PAYED_SUCCESSED).aggregate(
 			Sum("final_price"))
-		number = 0
+		number = 0.0
 		if numbers["final_price__sum"] is not None:
 			number = numbers["final_price__sum"]
 		return number
@@ -1770,7 +1817,7 @@ def belong_to(webapp_id):
 	if webapp_type:
 		orders = Order.objects.filter(webapp_id=webapp_id, origin_order_id__lte=0)
 	else:
-		orders = Order.objects.filter(Q(webapp_id=webapp_id)|Q(supplier_user_id=user_id, origin_order_id__gt=0,status__in=sync_able_status_list))
+		orders = Order.objects.filter(Q(webapp_id=webapp_id, origin_order_id__in=[-1,0])|Q(supplier_user_id=user_id, origin_order_id__gt=0,status__in=sync_able_status_list))
 
 	group_order_relations = OrderHasGroup.objects.filter(webapp_id=webapp_id)
 	if group_order_relations.count() > 0:
@@ -2135,6 +2182,7 @@ PAY_INTERFACE_WEIXIN_PAY = 2
 PAY_INTERFACE_COD = 9
 PAY_INTERFACE_PREFERENCE = 10
 PAY_INTERFACE_BEST_PAY = 11
+PAY_INTERFACE_KANGOU = 12
 ###########################
 # ADD BY BERT  AT 16
 ###########################
@@ -2147,6 +2195,7 @@ PAYTYPE2LOGO = {
 	PAY_INTERFACE_COD: '/standard_static/img/mockapi/cod.png',
 	PAY_INTERFACE_WEIZOOM_COIN: '/standard_static/img/mockapi/wzcoin.png',
 	PAY_INTERFACE_BEST_PAY: '/standard_static/img/mockapi/best_pay.png',
+	PAY_INTERFACE_BEST_PAY: '/standard_static/img/mockapi/kangou.png',
 }
 PAYTYPE2NAME = {
 	-1: u'',
@@ -2156,7 +2205,8 @@ PAYTYPE2NAME = {
 	PAY_INTERFACE_WEIXIN_PAY: u'微信支付',
 	PAY_INTERFACE_COD: u'货到付款',
 	PAY_INTERFACE_WEIZOOM_COIN: u"微众卡支付",
-	PAY_INTERFACE_BEST_PAY:u"翼支付"
+	PAY_INTERFACE_BEST_PAY:u"翼支付",
+	PAY_INTERFACE_KANGOU:u"看购支付"
 }
 PAYNAME2TYPE = {
 	u'优惠抵扣':PAY_INTERFACE_PREFERENCE,
@@ -2165,7 +2215,8 @@ PAYNAME2TYPE = {
 	u'微信支付': PAY_INTERFACE_WEIXIN_PAY,
 	u'货到付款': PAY_INTERFACE_COD,
 	u"微众卡支付": PAY_INTERFACE_WEIZOOM_COIN,
-	u"翼支付": PAY_INTERFACE_BEST_PAY
+	u"翼支付": PAY_INTERFACE_BEST_PAY,
+	u"看购支付": PAY_INTERFACE_KANGOU
 }
 
 VALID_PAY_INTERFACES = [
@@ -2173,12 +2224,14 @@ VALID_PAY_INTERFACES = [
 	PAY_INTERFACE_COD,
 	PAY_INTERFACE_WEIZOOM_COIN,
 	PAY_INTERFACE_ALIPAY,
+	PAY_INTERFACE_KANGOU,
 	PAY_INTERFACE_BEST_PAY]
 ONLINE_PAY_INTERFACE = [
 	PAY_INTERFACE_WEIXIN_PAY,
 	PAY_INTERFACE_ALIPAY,
 	PAY_INTERFACE_WEIZOOM_COIN,
 	PAY_INTERFACE_TENPAY,
+	PAY_INTERFACE_KANGOU,
 PAY_INTERFACE_BEST_PAY]
 
 
@@ -2674,12 +2727,30 @@ class Supplier(models.Model):
 	supplier_address = models.CharField(max_length=256) # 供货商地址
 	remark = models.CharField(max_length=256) # 备注
 	is_delete = models.BooleanField(default=False)  # 是否已经删除
+	type = models.IntegerField(default=-1)# 是否55分  0 55分成
 	created_at = models.DateTimeField(auto_now_add=True)  # 添加时间
 
 	class Meta(object):
 		verbose_name = "供货商"
 		verbose_name_plural = "供货商操作"
 		db_table = "mall_supplier"
+
+class SupplierPostageConfig(models.Model):
+	supplier_id = models.IntegerField(default=0)
+	product_id = models.IntegerField(default=0)
+	condition_type = models.CharField(
+		max_length=25,
+		default='money')  # 免邮条件类型, 共有'count', 'money'两种
+	condition_money = models.DecimalField(max_digits=65, decimal_places=2, null=True) #免邮的消费金额
+	condition_count = models.IntegerField(default=0)  # 免邮商品数量
+	postage = models.DecimalField(max_digits=65, decimal_places=2, null=True) #邮费
+	status = models.BooleanField(default=True) # 是否启用邮费配置
+	created_at = models.DateTimeField(auto_now_add=True)  # 添加时间
+
+	class Meta(object):
+		db_table = 'mall_supplier_postage_config'
+		verbose_name = '供货商邮费配置'
+		verbose_name_plural = '供货商邮费配置'
 
 
 
@@ -2762,6 +2833,7 @@ class ProductPool(models.Model):
 	product_id = models.IntegerField() #商品管理上传的商品id
 	status = models.IntegerField(default=PP_STATUS_ON_POOL) #商品状态
 	display_index = models.IntegerField(default=0, blank=True)  # 显示的排序
+	sync_at = models.DateTimeField(blank=True,null=True)  # 上架时间
 	created_at = models.DateTimeField(auto_now_add=True)  # 添加时间
 
 	class Meta(object):
@@ -2818,3 +2890,37 @@ class ProductLimitPurchasePrice(models.Model):
         verbose_name = "商品池商品"
         verbose_name_plural = "商品池商品"
         db_table = "product_limit_purchase_price"
+
+
+FIRST_CLASSIFICATION = 1
+SECONDARY_CLASSIFICATION = 2
+
+class Classification(models.Model):
+	"""
+	商品分类
+	"""
+	name = models.CharField(max_length=1024) #分类名
+	level = models.IntegerField(default=-1) #分类等级
+	status = models.IntegerField(default=1) # 1表示上线0表示下线
+	father_id = models.IntegerField(default=-1) #父级分类id
+	created_at = models.DateTimeField(auto_now_add=True)  # 添加时间
+
+	class Meta(object):
+		verbose_name = "商品分类"
+		verbose_name_plural = "商品分类"
+		db_table = "mall_classification"
+
+class ClassificationHasProduct(models.Model):
+	"""
+	商品分类拥有商品的关系表
+	"""
+	classification = models.ForeignKey(Classification)
+	product_id = models.IntegerField(default=-1)
+	woid = models.IntegerField(default=-1)
+	display_index = models.IntegerField(default=-1)
+	created_at = models.DateTimeField(auto_now_add=True)  # 添加时间
+
+	class Meta(object):
+		verbose_name = "商品分类与商品的关系"
+		verbose_name_plural = "商品分类与商品的关系"
+		db_table = "mall_classification_has_product"

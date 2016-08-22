@@ -93,6 +93,9 @@
 <div class="wui-exlottery-page" style="background-image: url({{homepage_image}});">
     <div class="wui-exlottery-container"> 
         <div> 
+            <input type="text" placeholder="请输入手机号码" class="wui-phone-input wa-phone-input" maxlength="11">
+        </div>
+        <div> 
             <input type="text" placeholder="请输入抽奖码" class="wui-excode-input wa-excode-input">
         </div>
         <div>
@@ -129,6 +132,11 @@
         }
         //点击抽奖
         $('.wa-exlottery-btn').click(function(){
+            var tel = $('.wa-phone-input').val().trim();
+            if(!/^0{0,1}(13[0-9]|15[0-9]|17[0-9]|18[0-9])[0-9]{8}$/g.test(tel)){
+                wuiAlert('请输入正确的手机号');
+                return false;
+            }
             var excode = $.trim($('.wa-excode-input').val());
             var verify_code = $.trim($('.wa-verify-input').val());
             if(!verify_code){
@@ -146,7 +154,8 @@
                         webapp_owner_id: W.webappOwnerId,
                         id: W.appRecordId,
                         excode: excode,
-                        verify_code: verify_code
+                        verify_code: verify_code,
+                        tel: tel
                     },
                     success: function(data){
                         var link = '/m/apps/exlottery/m_exlottery/?webapp_owner_id='+W.webappOwnerId+'&id='+W.appRecordId+'&ex_code='+excode;

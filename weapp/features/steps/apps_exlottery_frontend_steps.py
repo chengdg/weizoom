@@ -147,7 +147,7 @@ def step_impl(context, webapp_user_name_new, webapp_user_name, lottery_name):
 	})
 	context.errMsg = json.loads(response.content)['errMsg']
 
-@when(u"{webapp_user_name}参加专项抽奖活动'{lottery_name}'")
+@when(u'{webapp_user_name}参加专项抽奖活动"{lottery_name}"')
 def step_impl(context, webapp_user_name, lottery_name):
 	context.exlottery_detail = {
 		'webapp_owner_id': context.webapp_owner_id,
@@ -163,6 +163,26 @@ def step_impl(context, webapp_user_name, lottery_name):
 		"args": context.exlottery_detail
 	})
 	context.lottery_result = json.loads(response.content)
+
+@when(u"{webapp_user_name}于'{lottery_time}'参加专项抽奖活动'{lottery_name}'")
+def step_impl(context, webapp_user_name, lottery_time, lottery_name):
+	exlottery_time = bdd_util.get_datetime_str(lottery_time)
+
+	context.exlottery_detail = {
+		'webapp_owner_id': context.webapp_owner_id,
+		'id': context.exlottery_id,
+		'ex_code': context.exlottery_code
+	}
+
+	response = app_utils.get_response(context, {
+		"app": "m/apps/exlottery",
+		"resource": "exlottery_prize",
+		"method": "put",
+		"type": "api",
+		"args": context.exlottery_detail
+	})
+	context.lottery_result = json.loads(response.content)
+	ExlottoryRecord.objects(code=context.exlottery_code).update(created_at=exlottery_time)
 
 @When(u"{webapp_user_name}点击图文'{title}'进入专项抽奖活动页面")
 def step_impl(context, webapp_user_name, title):
@@ -216,6 +236,10 @@ def step_impl(context, webapp_user_name, verify_code):
 def step_impl(context, webapp_user_name, exlottery_code):
 	context.exlottery_code = exlottery_code
 
+@when(u"{webapp_user_name}在专项抽奖活动首页中输入手机号码'{tel}'")
+def step_impl(context, webapp_user_name, tel):
+	context.tel = tel
+
 @when(u"{webapp_user_name}点击'立即抽奖'进入专项抽奖活动内容页")
 def step_impl(context, webapp_user_name):
 	user = User.objects.get(id=context.webapp_owner_id)
@@ -232,7 +256,8 @@ def step_impl(context, webapp_user_name):
 			"id": context.exlottery_id,
 			"excode": context.exlottery_code,
 			"verify_code": context.verify_code,
-			"verify_code_for_bdd": context.verify_code_for_bdd
+			"verify_code_for_bdd": context.verify_code_for_bdd,
+			"tel": context.tel
 		}
 	})
 	context.errMsg = json.loads(response.content)['errMsg']
@@ -244,4 +269,3 @@ def step_impl(context, webapp_user_name):
 	if errMsg == u'该抽奖码已经被使用过~':
 		errMsg = u'该抽奖码已使用'
 	context.tc.assertEquals(expected, errMsg)
-

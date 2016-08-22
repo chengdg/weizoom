@@ -884,6 +884,30 @@
                                 </div>
                                 {{/if}}
 
+                                {{if (dynamicComponentField.type == 'number_with_annotation')}}
+                                <div class="propertyGroup_property_textField propertyGroup_property_horizontalField  {{if field.className}}${field.className}{{/if}}">
+                                    <div class="propertyGroup_property_label {{if dynamicComponentField.validate}}star_show{{/if}}">${dynamicComponentField.displayName}</div>
+                                    <div class="propertyGroup_property_input">
+                                        <input
+                                            type="number"
+                                            style="width:${dynamicComponentField.size};position:relative;z-index:1000"
+                                            class="input-small xui-propertyGroup-input"
+                                            data-field="${dynamicComponentField.name}"
+                                            value="{{if dynamicComponentField.placeholder != dynamicComponent.model.get(dynamicComponentField.name)}}${dynamicComponent.model.get(dynamicComponentField.name)}{{/if}}"
+                                            placeholder="${dynamicComponentField.placeholder}"
+                                            {{if dynamicComponentField.max}}max="${dynamicComponentField.max}"{{/if}}
+                                            {{if dynamicComponentField.min}}min="${dynamicComponentField.min}"{{/if}}
+                                            {{if dynamicComponentField.validate}}{{html dynamicComponentField.validate}}{{/if}} />
+                                        {{if dynamicComponentField.annotation}}
+                                        <span style="color: #888;">
+                                               {{html dynamicComponentField.annotation}}
+                                        </span>
+                                        {{/if}}
+                                        <div class="errorHint"></div>
+                                    </div>
+                                </div>
+                                {{/if}}
+
 								{{if (dynamicComponentField.type == 'text_with_annotation_v2')}}
                                 <div class="propertyGroup_property_textField propertyGroup_property_horizontalField">
                                     <div class="propertyGroup_property_label {{if dynamicComponentField.validate}}star_show{{/if}}">${dynamicComponentField.displayName}</div>

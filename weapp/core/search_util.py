@@ -48,14 +48,17 @@ def filter_objects(objects, filters):
 	return filtered_objs
 
 
-def init_filters(request, scope2filters):
+def init_filters(request, scope2filters, params=None):
 	"""
 	初始化filter
 	"""
 	has_filter = False
 	for scope, filters in scope2filters.items():
 		for one_filter in filters:
-			one_filter['value'] = request.GET.get(one_filter['query_string_field'], None)
+			if request:
+				one_filter['value'] = request.GET.get(one_filter['query_string_field'], None)
+			elif params:
+				one_filter['value'] = params.get(one_filter['query_string_field'], None)
 			value = one_filter['value']
 			if value and value != -1 and value != '-1':
 				has_filter = True

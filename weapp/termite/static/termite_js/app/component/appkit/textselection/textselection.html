@@ -12,7 +12,9 @@
             {% endif %}
         >
             {% for sub_component in component.components %}
+
                 {{ sub_component.html|safe }}
+
             {% endfor %}
         </ul>
     </div>

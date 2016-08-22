@@ -65,6 +65,20 @@ def __get_red_envelope_rule_id(red_envelope_rule_name):
     red_envelope_rule = promotion_models.RedEnvelopeRule.objects.get(name=red_envelope_rule_name,receive_method=receive_method)
     return red_envelope_rule.id
 
+
+@then(u'{user}能获取添加分享红包优惠券列表')
+def step_impl(context, user):
+    expected_coupon_rule = json.loads(context.text)
+    response = context.client.get('/apps/red_envelope/red_envelope_rule/')
+    coupon_rules = response.context["coupon_rules"]
+
+    actual_coupon_rule = []
+    for coupon_rule in coupon_rules:
+        actual_coupon_rule.append({
+            "name": coupon_rule.name
+        })
+    bdd_util.assert_list(expected_coupon_rule, actual_coupon_rule)
+
 @given(u'{user}已添加分享红包')
 def step_impl(context, user):
     step_add_red_envelope_rule(context, user)

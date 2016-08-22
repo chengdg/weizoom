@@ -40,7 +40,7 @@ def get_link_targets(request):
 		link_targets.append({
 			"id": data['id'],
 			"name": data['name'],
-			"link": '/apps/group/m_group/?webapp_owner_id=%d&id=%s' % (request.manager.id, data['id']),
+			"link": '/m/apps/group/m_group/?webapp_owner_id=%d&id=%s' % (request.manager.id, data['id']),
 			"isChecked": False,
 			"created_at": data['created_at']
 		})

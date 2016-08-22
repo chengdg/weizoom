@@ -687,7 +687,8 @@ def str_split(str, arg='|'):
 
 
 @register.filter(name='load_app_components_handlebar_templates')
-def load_app_components_handlebar_templates(component_category):
+def load_app_components_handlebar_templates(component_category):	
+	from utils import component_template_util
 	components_dir = '%s/../termite/static/termite_js/app/component/%s' % (settings.PROJECT_HOME, component_category)
 	handlebar_template = component_template_util.generate_handlebar_template(components_dir)
 	return handlebar_template

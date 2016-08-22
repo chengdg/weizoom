@@ -27,7 +27,7 @@ from market_tools.tools.coupon import util as coupon_util
 
 from webapp.handlers import event_handler_util
 from webapp import cache_util
-
+from cache import webapp_cache
 
 def product_stocks(request):
 	"""
@@ -1036,3 +1036,35 @@ def get_member_subscribed_status(request):
 		response = create_response(200)
 		response.data = {'is_subscribed': True}
 		return response.get_response()
+
+
+def _set_empty_product_list():
+	pass
+
+
+def get_page_products(request):
+	product_ids = request.GET.get('product_ids', '')
+	category_id = int(request.GET.get('category_id', 0))
+
+	products_data = []
+
+	_, products = webapp_cache.get_webapp_products_new(request.user_profile, False, category_id)
+
+	if product_ids:
+		product_ids = map(lambda x: int(x), product_ids.split(','))
+		products = filter(lambda x: x.id in product_ids, products)
+
+	for product in products:
+
+		products_data.append({
+			"id": product.id,
+			"name": product.name,
+			"thumbnails_url": product.thumbnails_url,
+			"display_price": product.display_price,
+			"is_member_product": product.is_member_product,
+			"promotion_js": json.dumps(product.promotion) if product.promotion else ""
+		})
+
+	response = create_response(200)
+	response.data = {'products': products_data}
+	return response.get_response()

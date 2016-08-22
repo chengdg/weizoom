@@ -25,6 +25,7 @@ STATUS_STOPED = 2
 class vote(models.Document):
 	owner_id = models.LongField() #创建人id
 	name = models.StringField(default="", max_length=100) #名称
+	image = models.StringField(default="", max_length=2048) #分享图片
 	start_time = models.DateTimeField() #开始时间
 	end_time = models.DateTimeField() #结束时间
 	status = models.IntField(default=0) #状态

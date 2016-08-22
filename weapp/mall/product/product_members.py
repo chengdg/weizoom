@@ -53,10 +53,15 @@ class ProductMember(resource.Resource):
             try:
                 # todo 临时解决方案
                 product = models.Product.objects.get(id=has_product_id)
-            except models.Product.DoesNotExist:
-                return Http404
+                if product.owner_id == request.manager.id:
+                    status = product.shelve_type
+                else:
+                    product_pool = models.ProductPool.objects.get(woid=request.manager.id, product_id=product.id)
+                    status = product_pool.status
+            except:
+                raise Http404
         else:
-            return Http404
+            raise Http404
         member_tags = MemberTag.get_member_tags(webapp_id)
         member_grades = MemberGrade.get_all_grades_list(webapp_id)
         #调整排序，将为分组放在最前面
@@ -68,7 +73,8 @@ class ProductMember(resource.Resource):
                 tags.append(tag)
         member_tags = tags
         #0:下架（待售） 1:上架（在售）
-        if product.shelve_type == 0:
+
+        if status == 0:
             second_nav_name = export.PRODUCT_MANAGE_OFF_SHELF_PRODUCT_NAV
         else:
             second_nav_name = export.PRODUCT_MANAGE_ON_SHELF_PRODUCT_NAV
@@ -79,7 +85,7 @@ class ProductMember(resource.Resource):
              'second_nav_name': second_nav_name,
              'product_name': product.name,
              'mall_type': mall_type,
-             'shelve_type':product.shelve_type,
+             'shelve_type':status,
              'id':has_product_id,
              'user_tags': member_tags,
              'grades': member_grades,

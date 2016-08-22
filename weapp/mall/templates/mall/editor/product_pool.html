@@ -68,9 +68,12 @@
         <thead>
             <tr>
                 <th width="250">商品信息</th>
+                <th width="100">分类</th>
                 <th width="100">供货商</th>
                 <th width="55">商品价格</th>
                 <th width="50">库存</th>
+                <th width="100">商品毛利</th>
+                <th width="50">扣点类型</th>
                 <th width="90">操作</th>
             </tr>
         </thead>
@@ -104,6 +107,9 @@
                         </div>
                     </td>
                     <td>
+                        ${product.classification}
+                    </td>
+                    <td>
                         ${product.store_name}
                     </td>
                     <td>
@@ -123,6 +129,15 @@
                         {{/if}}
                     </td>
                     <td>
+                        ${product.gross_profit}
+                    </td>
+                    <td>
+                        {{if product.supplier_type == 0}}
+                            首月55分成
+                        {{else}}
+                        {{/if}}
+                    </td>
+                    <td>
                         <a href="javascript:void(0);" class="xa-offshelf">上架</a>
                        <!--  {{if product.status == 1}}
                         <a href="javascript:void(0);" class="xa-update">更新</a>
@@ -137,7 +152,7 @@
                 </tr>
                 {{/each}}
             {{else}}
-                <tr><td colspan='7'>还没有数据</td></tr>
+                <tr><td colspan='8'>还没有数据</td></tr>
             {{/if}}
         </tbody>
     </table>

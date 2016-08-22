@@ -833,7 +833,7 @@ def get_detail_response(request):
 
         # 获得子订单
         child_orders = list(Order.objects.filter(origin_order_id=order.id).all())
-        if (not child_orders and order.supplier_user_id):
+        if not child_orders:
             child_orders = [order]
         if len(child_orders) > 1 and order.status > ORDER_STATUS_CANCEL:
             order.actions = get_order_actions(order, is_detail_page=True, is_list_parent=True,
@@ -846,7 +846,7 @@ def get_detail_response(request):
                 mall_type=request.user_profile.webapp_type,
                 is_group_buying=is_group_buying)
         else:
-            child_orders = [order]
+            #child_orders = [order]
             if is_group_buying:
                 order.actions = get_order_actions(
                     order,
@@ -906,14 +906,15 @@ def get_detail_response(request):
             is_sync = True
         else:
             is_sync = False
-
+        child_orders = sorted(child_orders, key=lambda order: "%d-%d" % (order.supplier, order.supplier_user_id))
         c = RequestContext(request, {
             'first_nav_name': FIRST_NAV,
             'second_navs': export.get_mall_order_second_navs(request),
             'second_nav_name': export.ORDER_ALL,
             'mall_type': mall_type,
             'order': order,
-            'child_orders': sorted(child_orders, key=lambda order: "%d-%d" % (order.supplier, order.supplier_user_id)),
+            'child_orders': child_orders,
+            'child_order_postages': dict([(child.supplier, child.postage)for child in child_orders]),
             'suppliers': suppliers,
             'supplier_stores': supplier_stores,
             'is_order_not_payed': (order.status == ORDER_STATUS_NOT),
@@ -1093,8 +1094,8 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
         order_supplier_type = query_dict.get('order_supplier_type')
 
     # 除掉同步过来的订单中未支付的
-    if not mall_type:
-        pass
+    # if not mall_type:
+    #     pass
 
     orders = __get_orders_by_params(query_dict, date_interval, date_interval_type, orders, user_profile)
 
@@ -1149,6 +1150,15 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
         weizoom_product_id2mall_product_id = dict([(relation.weizoom_product_id, relation.mall_product_id) for relation in WeizoomHasMallProductRelation.objects.filter(weizoom_product_id__in=sync_product_ids)])
         id2mall_product = dict([(product.id, product)for product in Product.objects.filter(id__in=weizoom_product_id2mall_product_id.values())])
 
+        order2fackorders = {}
+        fackorders = Order.objects.filter(origin_order_id__in=order_ids)
+        for order in fackorders:
+            origin_order_id = order.origin_order_id
+            # order_supplier = order.supplier
+            order2fackorders.setdefault(origin_order_id, [])
+            # order2fackorders[origin_order_id].setdefault(order_supplier, {})
+            order2fackorders[origin_order_id].append(order)
+    
     # 构造返回的order数据
     for order in orders:
         # 获取order对应的member的显示名
@@ -1185,7 +1195,7 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
 
         if order.come is 'weizoom_mall' and user.is_weizoom_mall is False:
             order.member_id = 0
-
+            
     # 构造返回的order数据
     items = []
     for order in orders:
@@ -1193,7 +1203,7 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
         order.is_refund = is_refund
         # 用于微众精选拆单
         groups = []
-        if mall_type:
+        if order2fackorders:
             # 自营平台所有的订单都会拆单
             if order2fackorders.get(order.id) and order.status > ORDER_STATUS_CANCEL:
                 multi_child_orders = True
@@ -1347,8 +1357,7 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
             'remark': order.remark,
             'postage': '%.2f' % order.postage,
             'delivery_time': order.delivery_time,
-            'save_money': float(Order.get_order_has_price_number(order)) + float(order.postage) - float(
-                order.final_price) - float(order.weizoom_card_money),
+            'save_money': round(Order.get_order_has_price_number(order), 2) + round(order.postage, 2) - round(order.final_price, 2) - round(order.weizoom_card_money, 2),
             'weizoom_card_money': float('%.2f' % order.weizoom_card_money),
             # 'weizoom_card_money_huihui': float('%.2f' % order.weizoom_card_money_huihui),
             # 'weizoom_card_money_rest': float('%.2f' % order.weizoom_card_money_rest),

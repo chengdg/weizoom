@@ -24,6 +24,8 @@ from weixin.user import module_api as weixin_api
 from weixin.user.models import set_share_img
 from eaglet.core import watchdog
 
+from account.models import UserProfile
+
 type2template = {}
 
 
@@ -161,6 +163,8 @@ def process_item_group_data(request, component):
 		woid = request.user.id
 		user_profile = request.user_profile
 
+	if user_profile.manager_id != woid and user_profile.manager_id > 2:
+		user_profile = UserProfile.objects.filter(user_id=user_profile.manager_id).first()
 
 	#woid = request.user_profile.user_id
 	if len(component['components']) == 0 and request.in_design_mode:
@@ -168,6 +172,7 @@ def process_item_group_data(request, component):
 		component['_has_data'] = True
 		return
 
+	model_product_ids = []
 	product_ids = set()
 	for sub_component in component['components']:
 		sub_component['runtime_data'] = {}
@@ -179,11 +184,21 @@ def process_item_group_data(request, component):
 				product_ids.add(product_id)
 				sub_component['__is_valid'] = True
 				sub_component['runtime_data']['product_id'] = product_id
+				model_product_ids.append(product_id)
 			except:
 				#TODO: 记录watchdog
 				sub_component['__is_valid'] = False
 		else:
 			sub_component['__is_valid'] = False
+
+
+	if request.in_design_mode == False:
+		# 非编辑模式，显示空的div占位符
+		component['_has_data'] = False
+		component_model = component['model']
+		component_model['items'] = model_product_ids
+		component['empty_placeholder'] = "<div data-ui-role='async-component' data-type='{}' data-model='{}'></div>".format(component['type'], json.dumps(component_model))
+		return
 
 	#products = [product for product in mall_models.Product.objects.filter(id__in=product_ids) if product.shelve_type == mall_models.PRODUCT_SHELVE_TYPE_ON]
 	valid_product_count = 0
@@ -314,6 +329,9 @@ def process_item_list_data(request, component):
 		_set_empty_product_list(request, component)
 		return
 
+	if user_profile.manager_id != woid and user_profile.manager_id > 2:
+		user_profile = UserProfile.objects.filter(user_id=user_profile.manager_id).first()
+
 	category, products = webapp_cache.get_webapp_products_new(user_profile, False, int(category_id))
 	# product_ids = set([r.product_id for r in mall_models.CategoryHasProduct.objects.filter(category_id=category_id)])
 	# product_ids.sort()
@@ -337,7 +355,7 @@ def process_item_list_data(request, component):
 				"name": product.name,
 				"thumbnails_url": product.thumbnails_url,
 				"display_price": product.display_price,
-				"url": './?module=mall&model=product&action=get&rid=%d&webapp_owner_id=%d&workspace_id=mall' % (product.id, product.owner_id),
+				"url": './?module=mall&model=product&action=get&rid=%d&webapp_owner_id=%d&workspace_id=mall' % (product.id, user_profile.user_id),
 				"is_member_product": product.is_member_product,
 				"promotion_js": json.dumps(product.promotion) if product.promotion else ""
 			})
@@ -365,7 +383,10 @@ def __render_component(request, page, component, project):
 			process_item_list_data(request, component)
 
 		if not component['_has_data']:
-			return ''
+		        if component['empty_placeholder']:
+			        return component['empty_placeholder'] 
+
+
 	component['app_name'] = request.GET.get('app_name', '')
 	# if request.in_production_mode:
 	# 	#获得数据

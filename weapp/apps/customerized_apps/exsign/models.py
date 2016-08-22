@@ -58,20 +58,20 @@ class exSignParticipance(models.Document):
 		return_data = {
 			'status_code': RETURN_STATUS_CODE['SUCCESS'],
 		}
-		nowDate = datetime.datetime.now()
+		now_date = datetime.datetime.now()
 		#用户签到操作
 		user_update_data = {
-			'set__latest_date': nowDate,
+			'set__latest_date': now_date,
 			'inc__total_count': 1
 		}
 		latest_date = self.latest_date
 		#判断是否已签到
-		if latest_date and latest_date.strftime('%Y-%m-%d') == nowDate.strftime('%Y-%m-%d') and self.serial_count != 0:
+		if latest_date and latest_date.strftime('%Y-%m-%d') == now_date.strftime('%Y-%m-%d') and self.serial_count != 0:
 			return_data['status_code'] = RETURN_STATUS_CODE['ALREADY']
 			return_data['errMsg'] = u'今日已签到'
 			return return_data
 		#判断是否连续签到，否则重置为1
-		if latest_date and latest_date.strftime('%Y-%m-%d') == (nowDate - datetime.timedelta(days=1)).strftime('%Y-%m-%d'):
+		if latest_date and latest_date.strftime('%Y-%m-%d') == (now_date - datetime.timedelta(days=1)).strftime('%Y-%m-%d'):
 			user_update_data['inc__serial_count'] = 1
 			curr_serial_count = temp_curr_serial_count = int(self.serial_count) + 1
 		else:
@@ -94,15 +94,15 @@ class exSignParticipance(models.Document):
 		prize_settings = exsign.prize_settings
 		bingo = 0
 		flag = False
-		for name in sorted(map(lambda x: (int(x),x), prize_settings.keys())):
+		for name in sorted(map(lambda x: (int(x), x), prize_settings.keys())):
 			setting = prize_settings[name[1]]
 			name = int(name[0])
 			if flag or name > curr_serial_count:
 				next_serial_count = name
-				for type, value in setting.items():
-					if type == 'integral':
+				for price_type, value in setting.items():
+					if price_type == 'integral':
 						next_serial_integral = value
-					elif type == 'coupon':
+					elif price_type == 'coupon':
 						for v in value:
 							if int(v['grade_id']) == grade_id:
 								next_serial_coupon.append({
@@ -119,10 +119,10 @@ class exSignParticipance(models.Document):
 				break
 			if name == 0:
 				#每日奖励和达到连续签到要求的奖励
-				for type, value in setting.items():
-					if type == 'integral':
+				for price_type, value in setting.items():
+					if price_type == 'integral':
 						daily_integral = int(value)
-					elif type == 'coupon':
+					elif price_type == 'coupon':
 						for v in value:
 							if int(v['grade_id']) == grade_id:
 								daily_coupon.append({
@@ -140,10 +140,10 @@ class exSignParticipance(models.Document):
 				#达到连续签到要求的奖励
 				bingo = curr_serial_count
 				flag = True
-				for type, value in setting.items():
-					if type == 'integral':
+				for price_type, value in setting.items():
+					if price_type == 'integral':
 						serial_integral = int(value)
-					elif type == 'coupon':
+					elif price_type == 'coupon':
 						for v in value:
 							if int(v['grade_id']) == grade_id:
 								serial_coupon.append({
@@ -184,7 +184,7 @@ class exSignParticipance(models.Document):
 			{'__raw__': {'$or':
 							[
 								{'latest_date': None},
-								{'latest_date': {'$lt': datetime.datetime(nowDate.year, nowDate.month, nowDate.day, 0, 0)}}
+								{'latest_date': {'$lt': datetime.datetime(now_date.year, now_date.month, now_date.day, 0, 0)}}
 							]
 						}
 			},
@@ -204,7 +204,7 @@ class exSignParticipance(models.Document):
 		if curr_prize_coupon:
 			from apps.request_util import get_consume_coupon
 			for c in curr_prize_coupon:
-				coupon, msg, coupon_count = get_consume_coupon(exsign.owner_id,'exsign', str(exsign.id), c['id'], self.member_id)
+				coupon, msg, coupon_count = get_consume_coupon(exsign.owner_id, 'exsign', str(exsign.id), c['id'], self.member_id)
 				c["count"] = coupon_count
 		return_data['curr_prize_integral'] = curr_prize_integral
 		return_data['curr_prize_coupon'] = curr_prize_coupon

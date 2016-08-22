@@ -394,7 +394,7 @@ class PageStore(object):
 						# 组件中删除该分组信息，但保留控件 by liupeiyu
 						pages[i]["components"][j]["model"]["category"] = ""
 						# delete_ids.append(j)
-				if component["type"] == 'appkit.item_list':
+				elif component["type"] == 'appkit.item_list':
 					component = self.__update_category(component)
 					if component:
 						pages[i]["components"][j] = self.__update_category(component)

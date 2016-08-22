@@ -297,7 +297,7 @@ def step_impl(context, user, rule_name):
     actual = {
         "name": promotion.name,
         "money": coupon_rule.money,
-        "limit_counts": coupon_rule.limit_counts,
+        "limit_counts": u'无限' if coupon_rule.limit_counts == -1 else coupon_rule.limit_counts,
         "using_limit": "满{}元可以使用".format(coupon_rule.valid_restrictions),
         "count": coupon_rule.count,
         # "cr_start_date":coupon_rule.get('start_date', u'今天'),
@@ -305,7 +305,8 @@ def step_impl(context, user, rule_name):
         # "cr_end_date": coupon_rule.get('end_date', u'1天后'),
         # "end_date ":"{} 00:00".format(bdd_util.get_date_str(cr_end_date))
         "description": coupon_rule.remark,
-        "note": coupon_rule.note
+        "note": coupon_rule.note,
+        "is_no_order_user": 'true' if coupon_rule.receive_rule == True else False,
     }
 
     actual['coupon_product'] = ','.join([p.name for p in promotion.products])
@@ -382,6 +383,8 @@ def __add_coupon_rule(context, webapp_owner_name):
 
             post_data['product_ids'] = ','.join(map(lambda x: str(x), product_ids))
 
+        if coupon_rule.get('is_no_order_user', 'false') == 'true':
+            post_data['receive_rule'] = 1
         url = '/mall2/api/coupon_rule/'
         response = context.client.post(url, post_data)
         context.tc.assertEquals(200, response.status_code)

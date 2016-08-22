@@ -76,23 +76,25 @@ class ExlotteryParticipances(resource.Resource):
 			params['prize_type'] = prize_type
 		if status != '-1':
 			params['status'] = True if status == '1' else False
-		# datas = app_models.lotteryParticipance.objects(**params).order_by('-id')
+
 		datas = app_models.ExlottoryRecord.objects(**params)
+		#member_id与手机号映射
+		member_id2tel = {par.member_id:par.tel for par in app_models.ExlotteryParticipance.objects(belong_to=belong_to)}
 		if not export_id:
 			#进行分页
 			count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
 			cur_page = int(request.GET.get('page', '1'))
 			pageinfo, datas = paginator.paginate(datas, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
-			return pageinfo, datas
+			return pageinfo, datas, member_id2tel
 		else:
-			return datas
+			return datas, member_id2tel
 
 	@login_required
 	def api_get(request):
 		"""
 		响应API GET
 		"""
-		pageinfo, datas = ExlotteryParticipances.get_datas(request)
+		pageinfo, datas, member_id2tel = ExlotteryParticipances.get_datas(request)
 
 		tmp_member_ids = []
 		for data in datas:
@@ -102,11 +104,12 @@ class ExlotteryParticipances(resource.Resource):
 
 		items = []
 		for data in datas:
+			member_id = data.member_id
 			items.append({
 				'id': str(data.id),
-				'participant_name': member_id2member[data.member_id].username_truncated if member_id2member.get(data.member_id) else u'未知',
-				'participant_icon': member_id2member[data.member_id].user_icon if member_id2member.get(data.member_id) else '/static/img/user-1.jpg',
-				'tel': data.tel,
+				'participant_name': member_id2member[member_id].username_truncated if member_id2member.get(member_id) else u'未知',
+				'participant_icon': member_id2member[member_id].user_icon if member_id2member.get(member_id) else '/static/img/user-1.jpg',
+				'tel': member_id2tel.get(member_id, '') if not data.tel else data.tel,
 				'prize_title': data.prize_title,
 				'prize_name': data.prize_name,
 				'status': data.status,
@@ -147,7 +150,7 @@ class ExlotteryParticipances_Export(resource.Resource):
 		# app_name = lotteryParticipances_Export.app.split('/')[1]
 		# excel_file_name = ('%s_id%s_%s.xls') % (app_name,export_id,datetime.now().strftime('%Y%m%d%H%m%M%S'))
 		download_excel_file_name = u'幸运码抽奖详情.xls'
-		excel_file_name = 'lottery_details_'+datetime.now().strftime('%H_%M_%S')+'.xls'
+		excel_file_name = 'exlottery_details_'+datetime.now().strftime('%H_%M_%S')+'.xls'
 		dir_path_suffix = '%d_%s' % (request.user.id, date.today())
 		dir_path = os.path.join(settings.UPLOAD_DIR, dir_path_suffix)
 
@@ -157,7 +160,7 @@ class ExlotteryParticipances_Export(resource.Resource):
 		#Excel Process Part
 		try:
 			import xlwt
-			datas = ExlotteryParticipances.get_datas(request)
+			datas, member_id2tel = ExlotteryParticipances.get_datas(request)
 			fields_raw = []
 			export_data = []
 
@@ -180,9 +183,10 @@ class ExlotteryParticipances_Export(resource.Resource):
 			#processing data
 			num = 0
 			for record in datas:
+				member_id = record['member_id']
 				export_record = []
 				num = num+1
-				cur_member = member_id2member.get(record['member_id'], None)
+				cur_member = member_id2member.get(member_id, None)
 				if cur_member:
 					try:
 						name = cur_member.username.decode('utf8')
@@ -190,7 +194,7 @@ class ExlotteryParticipances_Export(resource.Resource):
 						name = cur_member.username_hexstr
 				else:
 					name = u'未知'
-				tel = record['tel']
+				tel = member_id2tel.get(member_id, '') if not record['tel'] else record['tel']
 				prize_title = record['prize_title']
 				prize_name = record['prize_name']
 				created_at = record['created_at'].strftime("%Y-%m-%d %H:%M:%S")

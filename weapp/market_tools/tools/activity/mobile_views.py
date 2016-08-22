@@ -224,6 +224,7 @@ from apps.customerized_apps.lottery import models as lottery_models
 from apps.customerized_apps.exlottery import models as exlottery_models
 from apps.customerized_apps.egg import models as egg_models
 from apps.customerized_apps.scratch import models as scratch_models
+from apps.customerized_apps.scanlottery import models as scanlottery_models
 
 def get_member_activites(request):
 	profile = request.user_profile
@@ -348,6 +349,24 @@ def get_member_activites(request):
 		except:
 			pass
 
+	# 扫码抽奖
+	scanlotteries= scanlottery_models.ScanlotteryRecord.objects.filter(member_id=member.id).order_by('-created_at')
+	scanlotteries_items = []
+	for scanlottery in scanlotteries:
+		try:
+			scanlottery_id = scanlottery.belong_to
+			scanlottery_details = scanlottery_models.Scanlottery.objects.get(id=scanlottery_id)
+			scanlotteries_items.append({
+				'id': str(scanlottery_id),
+				'name': scanlottery_details.name,
+				'url': '/m/apps/scanlottery/m_scanlottery/?webapp_owner_id=%d&id=%s' % (
+					scanlottery_details.owner_id, str(scanlottery_id)),
+				'participant_time': scanlottery.created_at.strftime('%m月%d日'),
+				'type': u'扫码抽奖'
+			})
+		except:
+			pass
+
 	for events_item in events_items:
 		activities_items.append(events_item)
 	for votes_item in votes_items:
@@ -355,7 +374,7 @@ def get_member_activites(request):
 	for surveies_item in surveies_items:
 		activities_items.append(surveies_item)
 
-	#微信抽奖&幸运码抽奖&砸金蛋&刮刮卡(add by sunhan 2016-7-29)
+	#微信抽奖&幸运码抽奖&砸金蛋&刮刮卡&扫码抽奖(add by sunhan 2016-7-29)
 	for lotteries_item in lotteries_items:
 		all_lotteries_items.append(lotteries_item)
 	for exlotteries_item in exlotteries_items:
@@ -364,6 +383,8 @@ def get_member_activites(request):
 		all_lotteries_items.append(eggs_item)
 	for scratches_items in scratches_items:
 		all_lotteries_items.append(scratches_items)
+	for scanlotteries_item in scanlotteries_items:
+		all_lotteries_items.append(scanlotteries_item)
 
 	c = RequestContext(request, {
 		'page_title': u'我的活动列表',

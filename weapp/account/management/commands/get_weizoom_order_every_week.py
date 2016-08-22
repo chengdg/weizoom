@@ -2,6 +2,7 @@
 #__auth__='justiing'
 import logging
 from django.core.management.base import BaseCommand, CommandError
+from django.conf import settings
 
 #邮件部分
 from email import encoders
@@ -51,6 +52,58 @@ ORDER_STATUS_REFUNDED = 7  # 退款完成(回退销量)
 ORDER_STATUS_GROUP_REFUNDING = 8 #团购退款（没有退款完成按钮）
 ORDER_STATUS_GROUP_REFUNDED = 9 #团购退款完成
 '''
+class MyMail (object ):
+	def __init__ (self):
+		self.account = settings.MAIL_NOTIFY_USERNAME
+		self.password = settings.MAIL_NOTIFY_PASSWORD
+		self.smtp_server = settings.MAIL_NOTIFY_ACCOUNT_SMTP
+
+	def send (self, receivers, title, content, mode=None, file_path=None):
+		if mode == 'test':
+			receivers = receivers[0:1]
+		to_addr = ';'.join(receivers)
+
+		date = datetime.now().strftime('%Y-%m-%d')
+		msg = MIMEMultipart('alternative')
+		msg['From' ] = self.account
+		msg['To' ] = to_addr
+		msg['Subject'] = str(Header('%s' % title, 'utf-8'))
+		c = MIMEText(content, _subtype='html', _charset='utf-8')
+		msg.attach(c)
+
+		#添加附件
+		if file_path:
+			filename = file_path.split('.')[0]
+			with open(file_path ,'rb') as f:
+				#设置附件的mime和文件名，这里是py类型
+				mime = MIMEBase('txt', 'xlsx', filename=filename)
+				#加上头信息
+				mime.add_header('Content-Disposition', 'attachment', filename=file_path)
+				mime.add_header('Content-ID', '<0>')
+				mime.add_header('X-Attachment-Id', '0')
+
+				#把附件的内容读进来
+				mime.set_payload(f.read())
+
+				#用Base64编码
+				encoders.encode_base64(mime)
+
+				#添加到MIMEMultipart
+				msg.attach(mime)
+
+
+		server = smtplib.SMTP(self.smtp_server)
+		#server.docmd("EHLO server" )
+		#server.starttls()
+		server.login(self.account,self.password)
+		server.sendmail(self.account, receivers, msg.as_string())
+		server.close()	
+
+
+m = MyMail()
+def sendmail(receivers, title, content, mode=None, file_path=None):
+	m.send(receivers, title, content, mode, file_path)
+
 
 class Command(BaseCommand):
 	help = "get weizoom order every week"
@@ -68,10 +121,12 @@ class Command(BaseCommand):
 				date = (datetime.now()-timedelta(week_day-i+7)).strftime(DATE_FORMAT)
 				last_week_days.append(date)
 
-			nick_names = [u'微众商城', u'微众家', u'微众妈妈', u'微众学生', u'微众白富美', u'微众俱乐部']
+			# nick_names = [u'微众商城', u'微众家', u'微众妈妈', u'微众学生', u'微众白富美', u'微众俱乐部']
+			nick_names = [u'微众商城', u'微众家', u'微众妈妈', u'微众学生', u'微众白富美', u'微众俱乐部', u'微众Life', u'微众一家人', u'惠惠来啦', u'微众居委汇', u'微众中海', u'微众club', u'微众吃货', u'微众圈', u'微众少先队', u'津美汇']
+
 			# nick_names = [u'微众商城']
 
-			heads = [u'总订单', u'首单', u'复购', u'客单价' ]
+			heads = [u'总订单', u'总订单金额', u'首单', u'首单金额', u'复购', u'复购金额']
 			tmp_line= 1
 			head_lists = []
 			for last_week_day in last_week_days[:7]:
@@ -89,80 +144,48 @@ class Command(BaseCommand):
 			for nick_name in nick_names:
 				tmp_line += 1
 
-				user_id = ComponentAuthedAppidInfo.objects.get(nick_name=nick_name).auth_appid.user_id
+				# user_id = ComponentAuthedAppidInfo.objects.get(nick_name=nick_name).auth_appid.user_id
+				if nick_name == u'津美汇':
+					# user_id = UserProfile.objects.filter(store_name=nick_name)[1].user_id
+					user_id = 1146
+				else:
+					user_id = UserProfile.objects.get(store_name=nick_name).user_id
 				webapp_id = UserProfile.objects.filter(user_id=user_id)[0].webapp_id
 				statistics_days = [nick_name]
 				for i in xrange(7):
 					orders_total = Order.objects.filter(webapp_id=webapp_id, created_at__gte=last_week_days[i], created_at__lt=last_week_days[i+1], status__in=[2,3,4,5], origin_order_id__lte=0)
 					orders_total_count = orders_total.count()
-					orders_first_count = Order.objects.filter(webapp_id=webapp_id, created_at__gte=last_week_days[i], created_at__lt=last_week_days[i+1], status__in=[2,3,4,5], is_first_order=True, origin_order_id__lte=0).count()
-					orders_not_first_count = Order.objects.filter(webapp_id=webapp_id, created_at__gte=last_week_days[i], created_at__lt=last_week_days[i+1], status__in=[2,3,4,5], is_first_order=False, origin_order_id__lte=0).count()
-					paid_amount = 0.0
+					orders_first = Order.objects.filter(webapp_id=webapp_id, created_at__gte=last_week_days[i], created_at__lt=last_week_days[i+1], status__in=[2,3,4,5], is_first_order=True, origin_order_id__lte=0)
+					orders_first_count = orders_first.count()
+					orders_not_first= Order.objects.filter(webapp_id=webapp_id, created_at__gte=last_week_days[i], created_at__lt=last_week_days[i+1], status__in=[2,3,4,5], is_first_order=False, origin_order_id__lte=0)
+					orders_not_first_count = orders_not_first.count()
+					paid_amount_total = 0.0
+					paid_amount_total_first = 0.0
+					paid_amount_total_not_first = 0.0
 					for order in orders_total:
 						tmp_paid_amount = order.final_price + order.weizoom_card_money
-						paid_amount += tmp_paid_amount
-					if orders_total_count>0:
-						unit_price = paid_amount/orders_total_count
-						unit_price_float = '%.2f' % unit_price
-					else:
-						unit_price_float = 0.00
-					statistics_days.extend([orders_total_count, orders_first_count, orders_not_first_count, unit_price_float])
+						paid_amount_total += tmp_paid_amount
+
+					for order in orders_first:
+						tmp_paid_amount = order.final_price + order.weizoom_card_money
+						paid_amount_total_first += tmp_paid_amount
+
+					for order in orders_not_first:
+						tmp_paid_amount = order.final_price + order.weizoom_card_money
+						paid_amount_total_not_first += tmp_paid_amount
+
+					statistics_days.extend([orders_total_count, round(paid_amount_total, 2), orders_first_count, round(paid_amount_total_first, 2), orders_not_first_count, round(paid_amount_total_not_first, 2)])
 
 				table.write_row('A{}'.format(tmp_line), statistics_days)
 
 			workbook.close()
 
-			#邮件部分
-			#msg = MIMEText('hello, send by Python...', 'plain', 'utf-8')
-			# 输入Email地址和口令:
-
-			from_addr = '903214406@qq.com'
-			password = 'opfengexhapqbfae'
-			# 输入SMTP服务器地址:
-			smtp_server = 'smtp.qq.com'
-			# 输入收件人地址:
-			receivers = ['891470084@qq.com', 'houtingfei@weizoom.com', 'zhangzhiyong@weizoom.com', 'guoyucheng@weizoom.com']
+			receivers = ['houtingfei@weizoom.com', 'zhangzhiyong@weizoom.com', 'guoyucheng@weizoom.com']
+			mode = ''
 			if len(args) == 1:
 				if args[0] == 'test':
-					receivers = ['891470084@qq.com']
+					mode = 'test'
+			title = u'微众自运营平台订单数量{}'.format(current_time)
+			content = u'您好，这是上周统计的微众自运营平台订单数量'
 
-			to_addr = ';'.join(receivers)
-
-			#msg = MIMEText(u'hello, 每周报表', 'plain', 'utf-8')
-			#邮件对象
-			msg = MIMEMultipart()
-			msg['From'] = from_addr
-			msg['To'] = to_addr
-			msg['Subject'] = Header(u'微众自运营平台订单数量{}'.format(current_time) , 'utf-8').encode()
-
-			#邮件正文是MIMETEXT
-			msg.attach(MIMEText(u'您好，这是上周统计的微众自运营平台订单数量', 'plain', 'utf-8'))
-
-			#添加附件
-			filename = file_path.split('.')[0]
-			with open(file_path ,'rb') as f:
-				#设置福建的mime和文件名，这里是py类型
-				mime = MIMEBase('txt', 'xlsx', filename=filename)
-				#加上头信息
-				mime.add_header('Content-Disposition', 'attachment', filename=file_path)
-				mime.add_header('Content-ID', '<0>')
-				mime.add_header('X-Attachment-Id', '0')
-
-				#把附件的内容读进来
-				mime.set_payload(f.read())
-
-				#用Base64编码
-				encoders.encode_base64(mime)
-
-				#添加到MIMEMultipart
-				msg.attach(mime)
-
-			import smtplib
-
-			#server = smtplib.SMTP(smtp_server, 25) # SMTP协议默认端口是25
-			server = smtplib.SMTP_SSL(smtp_server, 465)
-			server.set_debuglevel(1)
-			server.login(from_addr, password)
-			server.sendmail(from_addr, receivers, msg.as_string())
-			server.quit()
-
+			sendmail(receivers, title, content, mode, file_path)

@@ -1,5 +1,7 @@
 {% extends "webapp_content_base_v4.html" %}
 
+{% load workbench_filter %}
+
 {% block css %}
 {% endblock %}
 
@@ -8,6 +10,11 @@
 {% endblock %}
 
 {% block js %}
+
+<script type="text/x-handlebar-template" id="componentTemplates" data-component-template="true">
+	{{'wepage'|load_app_components_handlebar_templates|safe}}
+</script>
+
 <script type="text/javascript">
     W.preloadImgsOnPage([
         { moduleName: 'imageGroup', tagId: '.wui-imageGroup a img' },
@@ -17,6 +24,7 @@
         
    ]);
 </script>
+
 {% endblock %}
 
 
