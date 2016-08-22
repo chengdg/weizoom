@@ -620,10 +620,7 @@ class ProductPool(resource.Resource):
             supplier_ids2supplier = dict([(s.id, s) for s in suppliers])
 
         product_ids = [product.id for product in products]
-        relations = models.ClassificationHasProduct.objects.filter(
-                                        # woid=request.manager.id,
-                                        product_id__in=product_ids
-                                        )
+        relations = models.ClassificationHasProduct.objects.filter(product_id__in=product_ids)
         product_id2classification_id = dict([(r.product_id, r.classification_id) for r in relations])
         secondary_classifications = models.Classification.objects.filter(id__in=[r.classification_id for r in relations])
         id2secondary_classification = dict([(classification.id, classification) for classification in secondary_classifications])
