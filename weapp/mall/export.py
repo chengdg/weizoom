@@ -542,7 +542,8 @@ MALL_PROMOTION_AND_APPS_SECOND_NAV = {
                     'name': ADVANCE_MANAGE_CHANNEL_DISTRIBUTIONS_NAV,
                     'title': u'渠道分销',
                     'url': '/new_weixin/channel_distributions/',
-                    'permission': ''
+                    'permission': '',
+                    'users': ['jobs', 'ceshi01', 'aromilia']
                 },
             ]
         }
