@@ -1983,9 +1983,9 @@ class ProductClassification(resource.Resource):
         father_id = int(request.GET.get('father_id', '0'))
         if not level:
             return create_response(500).get_response()
-        classifications = models.Classification.objects.filter(
-                                    level=level,
-                                    father_id=father_id)
+        classifications = models.Classification.objects.filter(level=level,
+                                                               father_id=father_id,
+                                                               status=1)
         items = []
         response = create_response(200)
         for classification in classifications:
