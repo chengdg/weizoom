@@ -208,11 +208,6 @@ def get_webapp_link_menu_objectes(request):
 			'name': '我的订单',
 			'link': './?module=mall&model=order_list&action=get&workspace_id=mall&webapp_owner_id=%d' % request.manager.id
 		},
-		# 'complain': {
-		# 	'id': 7,
-		# 	'name': '用户反馈',
-		# 	'link': '/apps/feedback/m_feedback/?webapp_owner_id=%d' % request.manager.id
-		# },
 		'shengjingCustom': {
 			'id': 9,
 			'name': '盛景定制APP',
@@ -243,12 +238,7 @@ def get_webapp_link_menu_objectes(request):
 			'name': '专项签到',
 			'link': get_exsign_webapp_link(request),
 			'users': ['jobs', 'ceshi01', 'weshop']
-		},
-		# 'feedback': {
-		# 	'id': 12,
-		# 	'name': '用户反馈',
-		# 	'link': '/m/apps/feedback/m_feedback/?webapp_owner_id=%d' % request.manager.id
-		# },
+		}
 	}
 
 
@@ -264,19 +254,16 @@ def get_webapp_link_menu_objectes(request):
 			token = get_token_for_logined_user(request.user)
 			token_str = '?token=' + token
 
-			count = 0
 			for app in copy.deepcopy(menus['marketPage']['title']):
-				app_name = unicode(app['type'])
+				app_name = app['type']
 				if app_name in resp_data.keys():
-					del menus['marketPage']['title'][count]
+					menus['marketPage']['title'].remove(app)
 					resp_data[app_name]['add_link'] += token_str  # 增加免登录token
 					menus['marketPage']['title'].append(resp_data[app_name])
-				count += 1
 	except:
 		notify_message = u"从marketapp获取活动列表失败，cause: \n{}".format(unicode_full_stack())
 		watchdog_error(notify_message)
 
-	print menus
 	return menus
 
 

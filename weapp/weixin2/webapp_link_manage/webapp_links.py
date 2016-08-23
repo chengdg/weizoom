@@ -80,7 +80,7 @@ class WebappItemLinks(resource.Resource):
 		request.selected_id = selected_id
 
 		#首先请求marketapp
-		URL = "http://%s/apps/export/api/get_app_items/?webapp_owner_id=%s&link_type=%s&query=%s" % (settings.MARKETAPP_DOMAIN, str(request.manager.id), link_type, query)
+		URL = "http://%s/apps/export/api/get_app_items/?webapp_owner_id=%s&link_type=%s" % (settings.MARKETAPP_DOMAIN, str(request.manager.id), link_type)
 		try:
 			api_resp_text = requests.get(URL).text
 			print URL, 'marketapp get_app_items===============>>>', api_resp_text
