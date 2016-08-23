@@ -544,7 +544,7 @@ MALL_PROMOTION_AND_APPS_SECOND_NAV = {
                     'title': u'渠道分销',
                     'url': '/new_weixin/channel_distributions/',
                     'permission': '',
-                    'users': ['jobs', 'ceshi01', 'aromilia']
+                    'users': ['jobs', 'ceshi01', 'aromilia', 'weizoomxiaoyuan']
                 },
             ]
         }
