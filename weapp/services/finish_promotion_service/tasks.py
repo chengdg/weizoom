@@ -114,13 +114,14 @@ def finish_promotion(request0, args):
 
 	from utils.cache_util import DeleteCacheException
 	try:
-		webapp_owner_id = products[0].owner_id
-		key = 'webapp_products_categories_{wo:%s}' % webapp_owner_id
-		cache_util.delete_cache(key)
-		watchdog_info({
-			'msg_id': 'delete_products_categories_cache',
-			'woid': webapp_owner_id
-		})
+		if len(products):
+			webapp_owner_id = products[0].owner_id
+			key = 'webapp_products_categories_{wo:%s}' % webapp_owner_id
+			cache_util.delete_cache(key)
+			watchdog_info({
+				'msg_id': 'delete_products_categories_cache',
+				'woid': webapp_owner_id
+			})
 	except DeleteCacheException:
 		pass
 	except:
