@@ -85,6 +85,7 @@ W.view.mall.ProductFilterView = Backbone.View.extend({
         $('#category').val('-1');
         $('#supplier').val('');
         $('#orderSupplierType').val('-1');
+        $('#supplier_type').val('-1');
     },
 
     // 获取条件数据
@@ -181,6 +182,8 @@ W.view.mall.ProductFilterView = Backbone.View.extend({
         //供货商类型
         var orderSupplierType = this.$('#orderSupplierType').val();
 
+        var supplier_type = this.$('#supplier_type').val();
+
         var data = {
             name: name,
             startDate: startDate,
@@ -192,7 +195,8 @@ W.view.mall.ProductFilterView = Backbone.View.extend({
             lowStocks: lowStocks,
             highStocks: highStocks,
             lowSales: lowSales,
-            highSales: highSales
+            highSales: highSales,
+            supplier_type:supplier_type
         }
         //微众系列 筛选‘供货商’
         if(this.$('#supplier').val()){

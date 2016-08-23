@@ -97,11 +97,14 @@
 		<thead>
 			<tr>
 				<th width="250">商品信息</th>
-				<th width="100">{{if data.data.mall_type > 1}}供货商{{else}}条码{{/if}}</th>
+				<th width="100">{{if data.data.mall_type > 0}}供货商{{else}}条码{{/if}}</th>
 				<th width="100">分组</th>
 				<th width="115">商品价格（元）</th>
 				<th width="50">库存</th>
 				<th width="78">总销量</th>
+				{{if mall_type == 1}}
+				<th width="78">扣点类型</th>
+				{{/if}}
 				<th width="120">{{if data.data.mall_type == 1}}首次上架{{else}}创建{{/if}}时间</th>
 				<th width="58">排序</th>
 				<th width="90">操作</th>
@@ -176,6 +179,12 @@
 						{{/if}}
 					</td>
 					<td>${product.sales}</td>
+					{{if mall_type == 1}}
+					<td>{{if product.supplier_type == 0}}
+                            首月55分成
+                        {{else}}
+                        {{/if}}</td>
+					{{/if}}
 					<td>{{if data.data.mall_type == 1 }}${product.sync_at}{{else}}${product.created_at}{{/if}}</td>
 					<td style="padding:0 15px;">
 						<input width="38" type="text" class="xa-rank" data-id="${product.id}" style="width:100%;"
