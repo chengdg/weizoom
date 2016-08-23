@@ -54,8 +54,8 @@ class Qrcodes(resource.Resource):
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
 			'second_navs': mall_export.get_promotion_and_apps_second_navs(request),
-			'second_nav_name': export.WEIXIN_ADVANCE_SECOND_NAV,
-			'third_nav_name': export.ADVANCE_MANAGE_QRCODE_NAV,
+			'second_nav_name': mall_export.MALL_CHANNEL_QRCODE_SECOND_NAV,
+			'third_nav_name': mall_export.ADVANCE_MANAGE_QRCODE_NAV,
 		})
 		return render_to_response('weixin/advance_manage/qrcodes.html', c)
 
@@ -375,8 +375,8 @@ class Qrcode(resource.Resource):
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
 			'second_navs': mall_export.get_promotion_and_apps_second_navs(request),
-			'second_nav_name': export.WEIXIN_ADVANCE_SECOND_NAV,
-			'third_nav_name': export.ADVANCE_MANAGE_QRCODE_NAV,
+			'second_nav_name': mall_export.MALL_CHANNEL_QRCODE_SECOND_NAV,
+			'third_nav_name': mall_export.ADVANCE_MANAGE_QRCODE_NAV,
 			'webapp_id': webapp_id,
 			'qrcode': qrcode,
 			'groups': groups,
@@ -591,8 +591,8 @@ class QrcodeMember(resource.Resource):
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
 			'second_navs': mall_export.get_promotion_and_apps_second_navs(request),
-			'second_nav_name': export.WEIXIN_ADVANCE_SECOND_NAV,
-			'third_nav_name': export.ADVANCE_MANAGE_QRCODE_NAV,
+			'second_nav_name': mall_export.MALL_CHANNEL_QRCODE_SECOND_NAV,
+			'third_nav_name': mall_export.ADVANCE_MANAGE_QRCODE_NAV,
 			'setting_id': setting_id
 		})
 
@@ -685,9 +685,9 @@ class QrcodeOrder(resource.Resource):
 		setting_id = request.GET.get('setting_id', None)
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
-			'second_navs': export.get_weixin_second_navs(request),
-			'second_nav_name': export.WEIXIN_ADVANCE_SECOND_NAV,
-			'third_nav_name': export.ADVANCE_MANAGE_QRCODE_NAV,
+			'second_navs': mall_export.get_promotion_and_apps_second_navs(request),
+			'second_nav_name': mall_export.MALL_CHANNEL_QRCODE_SECOND_NAV,
+			'third_nav_name': mall_export.ADVANCE_MANAGE_QRCODE_NAV,
 			'setting_id': setting_id
 		})
 
