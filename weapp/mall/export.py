@@ -528,7 +528,7 @@ MALL_PROMOTION_AND_APPS_SECOND_NAV = {
             ]
         },
         {
-            'name': MALL_APPS_SECOND_NAV,
+            'name': MALL_CHANNEL_QRCODE_SECOND_NAV,
             'title': u'推广与分销',
             'url': '/new_weixin/qrcodes/',
             'permission': 'manage_channel_qrcode',
