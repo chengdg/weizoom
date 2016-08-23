@@ -983,7 +983,7 @@ class ChannelDistributions(resource.Resource):
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
 			'second_navs': mall_export.get_promotion_and_apps_second_navs(request),
-			'second_nav_name': mall_export.MALL_APPS_SECOND_NAV,
+			'second_nav_name': mall_export.MALL_CHANNEL_QRCODE_SECOND_NAV,
 			'third_nav_name': mall_export.ADVANCE_MANAGE_CHANNEL_DISTRIBUTIONS_NAV,
 		})
 		return render_to_response('weixin/channels/channel_distributions.html', c)
@@ -1115,7 +1115,7 @@ class ChannelDistribution(resource.Resource): # TODO 关联会员不可以有两
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
 			'second_navs': mall_export.get_promotion_and_apps_second_navs(request),
-			'second_nav_name': mall_export.MALL_APPS_SECOND_NAV,
+			'second_nav_name': mall_export.MALL_CHANNEL_QRCODE_SECOND_NAV,
 			'third_nav_name': mall_export.ADVANCE_MANAGE_CHANNEL_DISTRIBUTIONS_NAV,
 			'tags': tags,
 			'webapp_id': webapp_id,
@@ -1317,7 +1317,7 @@ class ChannelDistributionClearing(resource.Resource):
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
 			'second_navs': mall_export.get_promotion_and_apps_second_navs(request),
-			'second_nav_name': mall_export.MALL_APPS_SECOND_NAV,
+			'second_nav_name': mall_export.MALL_CHANNEL_QRCODE_SECOND_NAV,
 			'third_nav_name': mall_export.ADVANCE_MANAGE_CHANNEL_DISTRIBUTIONS_NAV,
 			'return_money_total': return_money_total,
 			'not_return_money_total': not_return_money_total,
