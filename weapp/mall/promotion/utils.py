@@ -442,7 +442,6 @@ def verification_multi_product_promotion(webapp_owner, product_ids, promotion_ty
 
     # 检测活动互斥,状态为“未开始”和“进行中”的活动属于检测互斥范围
     error_products = promotion_models.ProductHasPromotion.objects.filter(product_id__in=usable_product_ids,
-                                                                         promotion__owner=webapp_owner,
                                                                          promotion__status__in=[
                                                                              promotion_models.PROMOTION_STATUS_NOT_START,
                                                                              promotion_models.PROMOTION_STATUS_STARTED])
