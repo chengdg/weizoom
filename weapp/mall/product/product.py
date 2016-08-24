@@ -318,6 +318,22 @@ class ProductList(resource.Resource):
 
             product_dict = product.format_to_dict()
             product_dict['is_self'] = (request.manager.id == product.owner_id)
+            if product_dict['is_self'] :
+                if product_dict['is_use_custom_model']:
+                    if len(product_dict["models"]) == 1:
+                        pass
+                    else:
+                        pass
+                else:
+                    product_dict['display_gross_range'] = float(product_dict['standard_model']['price']) - product.purchase_price
+            else:
+                if product_dict['is_use_custom_model']:
+                    if len(product_dict["models"]) == 1:
+                        product_dict['display_gross_range'] = product_dict["models"][0]['gross_profit']
+                    else:
+                        pass
+                else:
+                    product_dict['display_gross_range'] = product_dict['standard_model']['gross_profit']
             product_dict['classification'] = ''
             if mall_type:
                 secondary_classification = product_id2classification.get(product.id,'')
