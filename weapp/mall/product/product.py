@@ -206,6 +206,11 @@ class ProductList(resource.Resource):
 
             #add by bert 增加扣点类型查询
             manager_user_profile = UserProfile.objects.filter(webapp_type=2)[0]
+            try:
+                supplier_type = int(supplier_type)
+            except:
+                supplier_type = -1
+                
             if int(supplier_type) != -1:
                 params = {}
                 params['owner_id'] = manager_user_profile.user_id
