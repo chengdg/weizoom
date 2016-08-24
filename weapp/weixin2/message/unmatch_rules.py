@@ -16,6 +16,7 @@ from core import resource
 from core import paginator
 from core.jsonresponse import create_response
 from .util import is_valid_time
+from utils import cache_util
 
 COUNT_PER_PAGE = 20
 FIRST_NAV = export.WEIXIN_HOME_FIRST_NAV
@@ -141,6 +142,10 @@ class UnmatchRules(resource.Resource):
                     end_hour = end_hour,
                     material_id = material_id
                 )
+                #清除缓存
+                cache_key = 'auto_qa_message_webapp_id_%s_type_%s' % (request.user_profile.webapp_id, UNMATCH_TYPE)
+                cache_util.delete_cache(cache_key)
+
                 response = create_response(200)
             else:
                 response = create_response(401)
