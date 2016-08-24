@@ -56,11 +56,11 @@ DATABASES = {
         'USER': 'weapp',                      # Not used with sqlite3.
         'PASSWORD': 'weizoom',                  # Not used with sqlite3.
         # Set to empty string for localhost. Not used with sqlite3.
-        'HOST': 'db.weapp.com',
+        'HOST': '42.62.1.104',
         # Set to empty string for default. Not used with sqlite3.
-        'PORT': '',
+        'PORT': '12506',
         'CONN_MAX_AGE': 100,
-        'OPTIONS': {'charset':'utf8mb4'}
+        # 'OPTIONS': {'charset':'utf8mb4'}
     },
     'watchdog': {
         # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.

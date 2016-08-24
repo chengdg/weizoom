@@ -5,7 +5,8 @@ from core import api_resource, paginator
 from market_tools.tools.channel_qrcode.models import ChannelQrcodeSettings, ChannelQrcodeHasMember
 from wapi.decorators import param_required
 from modules.member.models import *
-from mall.models import Order, ORDER_STATUS_SUCCESSED, ORDER_STATUS_REFUNDED, STATUS2TEXT, OrderHasProduct, Product, ProductModel,OrderOperationLog
+from mall.models import Order, ORDER_STATUS_SUCCESSED, ORDER_STATUS_REFUNDED, STATUS2TEXT, OrderHasProduct, Product, ProductModel,OrderOperationLog, \
+	ORDER_STATUS_GROUP_REFUNDING, ORDER_STATUS_GROUP_REFUNDED
 # from datetime import datetime
 import datetime
 
@@ -29,6 +30,7 @@ class QrcodeBalance(api_resource.ApiResource):
 		start = time.time()
 		channel_qrcode_id = int(args.get('channel_qrcode_id'))
 		balance_time_from = args.get('balance_time_from', '')
+		order_status = args.get('order_status', '-1')
 		channel_qrcode = ChannelQrcodeSettings.objects.filter(id=channel_qrcode_id)
 		user_id = 0
 		if channel_qrcode.count() > 0:
@@ -46,8 +48,9 @@ class QrcodeBalance(api_resource.ApiResource):
 			"webapp_user_id__in": webapp_user_ids,
 			"origin_order_id__lte": 0,
 			"created_at__gte": balance_time_from
-
 		}
+		if order_status != '-1':
+			filter_data_args["status__in"] = [ORDER_STATUS_REFUNDED,ORDER_STATUS_GROUP_REFUNDING,ORDER_STATUS_GROUP_REFUNDED]
 		cur_start_date = args.get('start_date', None)
 		cur_end_date = args.get('end_date', None)
 		filter_data_args["status__in"] = [ORDER_STATUS_SUCCESSED, ORDER_STATUS_REFUNDED]
@@ -78,10 +81,16 @@ class QrcodeBalance(api_resource.ApiResource):
 						date_first = '%s-%s-01' % (start_y_str, str(cur_m) if len(str(cur_m)) >2 else '0'+ str(cur_m))
 						date_last = (datetime.datetime(start_y, cur_m + 1, 1) - datetime.timedelta(1)).strftime("%Y-%m-%d")
 						date_range.append([date_first, date_last])
-			orderoperationlogs = OrderOperationLog.objects.filter(
-				order_id__in=order_numbers,
-				action__in=[u'完成', u'退款完成'],
-				created_at__range=('%d-%d-01' % (start_y, start_m), date_last))
+			if order_status != '-1':
+				orderoperationlogs = OrderOperationLog.objects.filter(
+					order_id__in=order_numbers,
+					action=u'退款完成',
+					created_at__range=('%d-%d-01' % (start_y, start_m), date_last))
+			else:
+				orderoperationlogs = OrderOperationLog.objects.filter(
+					order_id__in=order_numbers,
+					action__in=[u'完成', u'退款完成'],
+					created_at__range=('%d-%d-01' % (start_y, start_m), date_last))
 			for date_list in date_range:
 				i = 1
 				for op in orderoperationlogs:
