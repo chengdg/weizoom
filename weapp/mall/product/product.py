@@ -185,6 +185,31 @@ class ProductList(resource.Resource):
                 owner=request.manager,
                 is_deleted=False)
 
+#添加商品分类的过滤
+        first_classification = int(request.GET.get('first_classification', '-1'))
+        secondary_classification = int(request.GET.get('secondary_classification', '-1'))
+        if first_classification > 0:
+            if secondary_classification == -1:
+                subclassification_ids = [model.id for model in models.Classification.objects.filter(father_id=first_classification, level=2)]
+                product_ids = [model.product_id for model in models.ClassificationHasProduct.objects.filter(
+                                        classification_id__in=subclassification_ids
+                                        )]
+            elif secondary_classification > 0:
+                product_ids = [model.product_id for model in models.ClassificationHasProduct.objects.filter(
+                                        classification_id=secondary_classification
+                                        )]
+            else:
+                product_ids = []
+            if product_pool_param.has_key('status'):
+                pool_status = product_pool_param['status']
+            else:
+                pool_status = models.PP_STATUS_ON_POOL
+            product_ids = [model.product_id for model in models.ProductPool.objects.filter(
+                woid=request.manager.id,
+                product_id__in=product_ids,
+                status=pool_status)]
+            products = products.filter(id__in=product_ids)
+
 
         #临时兼容自营平台供货商查询 待所以商品都更新成商品池商品进行重构
         if mall_type:
@@ -279,10 +304,28 @@ class ProductList(resource.Resource):
         items = []
         items1 = []
         items2 = []
+
+        #获取商品的商品分类信息
+        if mall_type:
+            # product_ids = pids
+            relations = models.ClassificationHasProduct.objects.filter(product_id__in=pids)
+            product_id2classification = dict([(r.product_id, r.classification) for r in relations])
+            father_ids = [classification.father_id for classification in product_id2classification.values()]
+            first_classifications = models.Classification.objects.filter(id__in=father_ids)
+            id2first_classification = dict([(classification.id, classification) for classification in first_classifications])
+
         for product in products:
 
             product_dict = product.format_to_dict()
             product_dict['is_self'] = (request.manager.id == product.owner_id)
+
+            product_dict['classification'] = ''
+            if mall_type:
+                secondary_classification = product_id2classification.get(product.id,'')
+                if secondary_classification:
+                    secondary_classification_name = secondary_classification.name
+                    first_classification_name = id2first_classification[secondary_classification.father_id].name
+                    product_dict['classification'] = '{}-{}'.format(first_classification_name, secondary_classification_name)
 
             if manager_supplier_ids2name:
                 store_name = manager_supplier_ids2name.get(product.supplier, "")
@@ -1993,6 +2036,7 @@ class ProductClassification(resource.Resource):
                     'id': classification.id,
                     'name': classification.name
                 })
+        print ">>>>>>>items>>>>>>>>>>>>>",items
         response.data = {
             'items': items,
             'level': level
