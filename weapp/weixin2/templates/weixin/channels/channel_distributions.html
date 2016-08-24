@@ -20,8 +20,7 @@ a:link,a:visited,a:hover,a:active{text-decoration:none;}
 } 
 .xui-btn-new {
     float: right;
-    margin-top: 10px;
-    margin-right: 65px;
+    margin: 15px 25px 15px 0;
     color: #fff !important;
 }
 .xui-seach-bar {
@@ -71,6 +70,12 @@ td {
 .xui-icon-pd {
     margin-right: 15px;
 }
+.table {
+    border: 1px solid #ddd;
+}
+.panel-body {
+    padding: 10px 0;
+}
 </style>
 {% endblock %}
 {% block content-panel %}
@@ -93,12 +98,11 @@ td {
                 />
             </div>
             <a class="btn btn-primary xa-search xui-fontBold xui-btn-search" href="javascript:void(0);">查询</a>
-            <a class="btn btn-success lh20 xui-i-btnWidth xa-addQrcode fr xui-btn-new" href="/new_weixin/channel_distribution/">
-                <span class="xui-add-btn-icon">+</span>新建二维码
-            </a>
         </div>
     </div>
-
+    <a class="btn btn-success lh20 xui-i-btnWidth xa-addQrcode fr xui-btn-new" href="/new_weixin/channel_distribution/">
+        <span class="xui-add-btn-icon">+</span>新建二维码
+    </a>
     <div
             data-ui-role="advanced-table"
             data-app="new_weixin"
@@ -107,7 +111,7 @@ td {
             data-init-sort="-created_at"
             data-item-count-per-page="20"
             data-enable-paginator="true"
-            class="panel-body mt40"
+            class="panel-table"
     >
     </div>
 
