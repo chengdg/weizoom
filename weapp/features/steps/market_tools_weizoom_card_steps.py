@@ -2,6 +2,8 @@
 __author__ = 'guoliyan'
 import json
 import time
+
+from behave import *
 from test import bdd_util
 from market_tools.tools.weizoom_card.models import *
 import logging

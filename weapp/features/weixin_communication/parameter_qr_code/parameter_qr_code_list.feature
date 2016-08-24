@@ -438,3 +438,68 @@ Scenario:3 带参数二维码的导出
 				"create_time": "今天"
 			}]
 			"""
+@mall2 @senior @bandParameterCode
+Scenario:4 带参数二维码[批量修改]
+	Given jobs登录系统
+	Then jobs获得带参数二维码列表
+		"""
+		[{
+			"code_name": "带参数二维码-优惠券奖励",
+			"attention_number": 0,
+			"order_money": 0.00,
+			"prize": "[优惠券]优惠券1",
+			"create_time": "今天",
+			"remarks": "带参数二维码备注",
+			"relation_member": "tom"
+		},{
+			"code_name": "带参数二维码-积分奖励",
+			"attention_number": 0,
+			"order_money": 0.00,
+			"prize": "[积分]10",
+			"create_time": "2015-10-11 10:20:30",
+			"remarks": "带参数二维码备注",
+			"relation_member": "bill"
+		},{
+			"code_name": "带参数二维码-默认设置",
+			"attention_number": 0,
+			"order_money": 0.00,
+			"prize": "无奖励",
+			"create_time": "2015-10-10 10:20:30",
+			"remarks": "",
+			"relation_member": ""
+		}]
+		"""
+	When jobs选择二维码
+		| name                      |attention_number |  create_time             |scan_reward|
+		| 带参数二维码-优惠券奖励     |   0             | 今天                      |优惠券1    |
+		| 带参数二维码-默认设置       |   0             | 2015-10-10 10:20:30       |           |
+
+	When jobs批量修改二维码
+		"""
+		{
+			"code_name": ["带参数二维码-优惠券奖励","带参数二维码-默认设置"],
+			"prize_type": "无奖励",
+			"member_rank": "普通会员",
+			"tags": "分组2",
+			"is_attention_in": "false",
+			"remarks": "",
+			"reply_type": "文字",
+			"scan_code_reply": "扫码后回复批量修改"
+		}
+		"""
+	Then jobs获得带参数二维码'带参数二维码-默认设置'
+		"""
+		{
+			"code_name": "带参数二维码-默认设置",
+			"create_time": "2015-10-10 10:20:30",
+			"prize_type": "无奖励",
+			"member_rank": "普通会员",
+			"tags": "分组2",
+			"is_attention_in": "false",
+			"remarks": "",
+			"is_relation_member": "false",
+			"reply_type": "文字",
+			"scan_code_reply": "扫码后回复批量修改"
+		}
+		"""
+
