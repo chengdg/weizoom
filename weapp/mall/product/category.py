@@ -80,7 +80,7 @@ class CategoryProducts(resource.Resource):
 
         product_ids = set([relation.product_id for relation in relations])
         if mall_type == 1:
-            _, error_product_id = verification_multi_product_promotion_weizoom_mall(request.manager, product_ids, promotion_type)
+            _, error_product_ids = verification_multi_product_promotion_weizoom_mall(request.manager, product_ids, promotion_type)
         else:
             _, error_product_ids = verification_multi_product_promotion(request.manager, product_ids, promotion_type)
 
