@@ -1105,7 +1105,7 @@ def products_not_online_handler_for_promotions(product_ids, request, shelve_type
 
     target_promotion_ids = []
     promotionIds =[relation.promotion_id for relation in promotion_models.ProductHasPromotion.objects.filter(
-        product_id__in=product_ids)]
+        product_id__in=product_ids, promotion__owner=request.manager)]
     for promotion in promotion_models.Promotion.objects.filter(id__in=promotionIds).filter(~Q(status = promotion_models.PROMOTION_STATUS_DELETED)):
 
         if promotion.type in types_finish_after_delete_all_products:
@@ -1114,6 +1114,7 @@ def products_not_online_handler_for_promotions(product_ids, request, shelve_type
                 # 该promotion未删除的商品数
                 not_deleted_promotion_product_count = promotion_models.ProductHasPromotion.objects.filter(
                     promotion=promotion,
+                    promotion__owner=request.manager,
                     product__is_deleted=False).count()
                 if not_deleted_promotion_product_count == 0:
 
