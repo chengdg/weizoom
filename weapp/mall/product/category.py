@@ -86,8 +86,11 @@ class CategoryProducts(resource.Resource):
 
         product_ids = list(set(product_ids) - set(error_product_ids))
 
-        products = list(mall_models.Product.objects.filter(
-            owner=request.manager, is_deleted=False, shelve_type=mall_models.PRODUCT_SHELVE_TYPE_ON,id__in=product_ids))
+        if mall_type == 1:
+            products = list(mall_models.Product.objects.filter(id__in=product_ids))
+        else:
+            products = list(mall_models.Product.objects.filter(
+                owner=request.manager, is_deleted=False, shelve_type=mall_models.PRODUCT_SHELVE_TYPE_ON,id__in=product_ids))
 
         mall_models.Product.fill_details(request.manager,
                                          products,
