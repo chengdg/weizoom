@@ -189,25 +189,7 @@ class ProductList(resource.Resource):
         first_classification = int(request.GET.get('first_classification', '-1'))
         secondary_classification = int(request.GET.get('secondary_classification', '-1'))
         if first_classification > 0:
-            if secondary_classification == -1:
-                subclassification_ids = [model.id for model in models.Classification.objects.filter(father_id=first_classification, level=2)]
-                product_ids = [model.product_id for model in models.ClassificationHasProduct.objects.filter(
-                                        classification_id__in=subclassification_ids
-                                        )]
-            elif secondary_classification > 0:
-                product_ids = [model.product_id for model in models.ClassificationHasProduct.objects.filter(
-                                        classification_id=secondary_classification
-                                        )]
-            else:
-                product_ids = []
-            if product_pool_param.has_key('status'):
-                pool_status = product_pool_param['status']
-            else:
-                pool_status = models.PP_STATUS_ON_POOL
-            product_ids = [model.product_id for model in models.ProductPool.objects.filter(
-                woid=request.manager.id,
-                product_id__in=product_ids,
-                status=pool_status)]
+            product_ids = utils.get_product_ids_by_classification(first_classification, secondary_classification, request.manager.id, product_pool_param)
             products = products.filter(id__in=product_ids)
 
 
@@ -551,21 +533,7 @@ class ProductPool(resource.Resource):
         manager_user_profile = UserProfile.objects.filter(webapp_type=2)[0]
         # 根据分类来筛选
         if first_classification > 0:
-            if secondary_classification == -1:
-                subclassification_ids = [model.id for model in models.Classification.objects.filter(father_id=first_classification, level=2)]
-                product_ids = [model.product_id for model in models.ClassificationHasProduct.objects.filter(
-                                        classification_id__in=subclassification_ids
-                                        )]
-            elif secondary_classification > 0:
-                product_ids = [model.product_id for model in models.ClassificationHasProduct.objects.filter(
-                                        classification_id=secondary_classification
-                                        )]
-            else:
-                product_ids = []
-            product_ids = [model.product_id for model in models.ProductPool.objects.filter(
-                woid=request.manager.id,
-                product_id__in=product_ids,
-                status=models.PP_STATUS_ON_POOL)]
+            product_ids = utils.get_product_ids_by_classification(first_classification, secondary_classification, request.manager.id)
             products = models.Product.objects.filter(id__in=product_ids)
         else:
             product_pool = models.ProductPool.objects.filter(woid=request.manager.id, status=models.PP_STATUS_ON_POOL)
