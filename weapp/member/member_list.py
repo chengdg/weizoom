@@ -506,7 +506,7 @@ class MemberDetail(resource.Resource):
 			member.unit_price = '%.2f' % member.unit_price
 
 		if member.pay_money > 0:
-			member.pay_money = '%.2f' % 0
+			member.pay_money = '%.2f' % member.pay_money
 
 		member_browse_records = MemberBrowseRecord.objects.filter(~Q(title=''), member=member).order_by('-created_at')
 
