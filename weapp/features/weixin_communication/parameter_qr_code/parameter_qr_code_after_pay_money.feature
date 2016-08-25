@@ -46,23 +46,6 @@ Background:
 				"is_active": "启用"
 			}]
 			"""
-		Given jobs已创建微众卡
-			"""
-			{
-				"cards":[{
-					"id":"0000001",
-					"password":"1234567",
-					"status":"未使用",
-					"price":100.00
-				},{
-					"id":"0000002",
-					"password":"1234567",
-					"status":"未使用",
-					"price":90.00
-				}]
-			}
-			"""
-
 		When jobs添加商品规格
 			"""
 			[{
@@ -128,52 +111,110 @@ Background:
 			"""
 
 		#必须添加分组和等级数据库中才会有默认分组和等级
-			When jobs添加会员等级
-				"""
-				[{
-					"name": "铜牌会员",
-					"upgrade": "手动升级",
-					"discount": "9"
-				}]
-				"""
-			And jobs添加会员分组
-				"""
-				{
-					"tag_id_1": "分组1"
-				}
-				"""
+		When jobs添加会员等级
+			"""
+			[{
+				"name": "铜牌会员",
+				"upgrade": "手动升级",
+				"discount": "9"
+			}]
+			"""
+		And jobs添加会员分组
+			"""
+			{
+				"tag_id_1": "分组1"
+			}
+			"""
+		#创建微众卡
+		Given test登录管理系统::weizoom_card
+		When test新建通用卡::weizoom_card
+			"""
+			[{
+				"name":"100元微众卡",
+				"prefix_value":"001",
+				"type":"virtual",
+				"money":"100.00",
+				"num":"1",
+				"comments":"微众卡"
+			},{
+				"name":"90元微众卡",
+				"prefix_value":"002",
+				"type":"virtual",
+				"money":"90.00",
+				"num":"1",
+				"comments":"微众卡"
+			}]
+			"""
+
+		#微众卡审批出库
+		When test下订单::weizoom_card
+			"""
+			[{
+				"card_info":[{
+					"name":"100元微众卡",
+					"order_num":"1",
+					"start_date":"2015-01-01 00:00",
+					"end_date":"2026-06-16 00:00"
+				},{
+					"name":"90元微众卡",
+					"order_num":"1",
+					"start_date":"2015-01-01 00:00",
+					"end_date":"2026-06-16 00:00"	
+				}],
+				"order_info":{
+					"order_id":"0001"
+					}
+			}]
+			"""
+
+		#激活微众卡
+		When test批量激活订单'0001'的卡::weizoom_card
 
 		When bill关注jobs的公众号于'2015-05-10 10:00:00'
-		And tom关注jobs的公众号于'2015-05-11 10:00:00'
+		#bill在jobs绑定卡001000001
+		When bill访问jobs的webapp
+		When bill绑定微众卡
+			"""
+			{
+				"binding_date":"2015-05-10",
+				"binding_shop":"jobs",
+				"weizoom_card_info":
+					{
+						"id":"001000001",
+						"password":"1234567"
+					}
+			}
+			"""
+		When tom关注jobs的公众号于'2015-05-11 10:00:00'
 		And tom取消关注jobs的公众号
 
-	Given jobs登录系统
-	When jobs添加带参数二维码
-		"""
-		[{
-			"code_name": "带参数二维码-默认设置",
-			"create_time": "2015-06-09 10:00:00",
-			"prize_type": "无奖励",
-			"member_rank": "普通会员",
-			"tags": "未分组",
-			"is_attention_in": "true",
-			"remarks": "",
-			"is_relation_member": "false",
-			"reply_type": "文字",
-			"scan_code_reply": "扫码后回复文本"
-		},{
-			"code_name": "带参数二维码-第二个二维码",
-			"create_time": "2015-06-08 10:00:00",
-			"prize_type": "无奖励",
-			"member_rank": "普通会员",
-			"tags": "未分组",
-			"is_attention_in": "true",
-			"remarks": "",
-			"is_relation_member": "false",
-			"reply_type": "文字",
-			"scan_code_reply": "扫码后回复文本"
-		}]
-		"""
+		Given jobs登录系统
+		When jobs添加带参数二维码
+			"""
+			[{
+				"code_name": "带参数二维码-默认设置",
+				"create_time": "2015-06-09 10:00:00",
+				"prize_type": "无奖励",
+				"member_rank": "普通会员",
+				"tags": "未分组",
+				"is_attention_in": "true",
+				"remarks": "",
+				"is_relation_member": "false",
+				"reply_type": "文字",
+				"scan_code_reply": "扫码后回复文本"
+			},{
+				"code_name": "带参数二维码-第二个二维码",
+				"create_time": "2015-06-08 10:00:00",
+				"prize_type": "无奖励",
+				"member_rank": "普通会员",
+				"tags": "未分组",
+				"is_attention_in": "true",
+				"remarks": "",
+				"is_relation_member": "false",
+				"reply_type": "文字",
+				"scan_code_reply": "扫码后回复文本"
+			}]
+			"""
 
 	#扫码关注成为会员
 		When 清空浏览器
@@ -187,6 +228,19 @@ Background:
 		When 清空浏览器
 		And marry扫描带参数二维码"带参数二维码-默认设置"
 		And marry访问jobs的webapp
+		#marry在jobs绑定卡002000001
+		When marry绑定微众卡
+			"""
+			{
+				"binding_date":"2015-05-10",
+				"binding_shop":"jobs",
+				"weizoom_card_info":
+					{
+						"id":"002000001",
+						"password":"1234567"
+					}
+			}
+			"""
 
 	#已关注或者取消关注的会员，扫码
 		When bill扫描带参数二维码"带参数二维码-默认设置"于2015-06-10 10:00:00
