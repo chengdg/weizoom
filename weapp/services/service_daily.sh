@@ -24,3 +24,7 @@ python manage.py update_member_purchase_frequency
 echo ">> calling 'apps_rebate_timer_task'"
 echo "--------------------------------------------------------" >> $LOG
 python manage.py apps_rebate_timer_task
+
+echo ">> calling 'send_product_pool_55'"
+echo "--------------------------------------------------------" >> $LOG
+python manage.py send_product_pool_55
