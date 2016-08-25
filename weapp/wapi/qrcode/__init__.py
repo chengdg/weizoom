@@ -8,3 +8,5 @@ import balance_outline
 import balance_order
 import coupon_order
 import shop_balance_outline
+import shop_members
+import shop_member_details

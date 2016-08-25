@@ -26,28 +26,19 @@ class QrcodeBalanceOutline(api_resource.ApiResource):
 		order_numbers = json.loads(args.get('order_numbers', ''))
 
 		channel_qrcodes = ChannelQrcodeSettings.objects.filter(id__in=channel_qrcode_ids)
-		print channel_qrcodes,"fffffffffffffffffff"
-		user_id = 0
-		if channel_qrcodes.count() > 0:
-			user_id = channel_qrcodes[0].owner_id
-		userprofile = UserProfile.objects.filter(user_id=user_id)
-		webapp_id = 0
-		if userprofile.count() > 0:
-			webapp_id = userprofile[0].webapp_id
+		created_at = channel_qrcodes.first().created_at.strftime("%Y-%m-%d %H:%M:%S")
 
 		total_channel_members = ChannelQrcodeHasMember.objects.filter(channel_qrcode_id__in=channel_qrcode_ids).order_by('-created_at')
 		channel_qrcode_id2member_id = {}
+		total_member_ids = []
 		for tcm in total_channel_members:
 			if not channel_qrcode_id2member_id.has_key(tcm.channel_qrcode_id):
 				channel_qrcode_id2member_id[tcm.channel_qrcode_id] = [tcm.member_id]
 			else:
 				channel_qrcode_id2member_id[tcm.channel_qrcode_id].append(tcm.member_id)
-		total_member_ids = []
-		for member_ids in channel_qrcode_id2member_id.values():
-			for member_id in member_ids:
-				total_member_ids.append(member_id)
+			total_member_ids.append(tcm.member_id)
 
-		webappusers = WebAppUser.objects.filter(webapp_id=webapp_id, member_id__in=total_member_ids)
+		webappusers = WebAppUser.objects.filter(member_id__in=total_member_ids)
 
 		webapp_user_ids = []
 		webapp_user_id2member_id = {}
@@ -56,15 +47,16 @@ class QrcodeBalanceOutline(api_resource.ApiResource):
 			webapp_user_id2member_id[webappuser.id] = webappuser.member_id
 
 		filter_data_args = {
-			"webapp_id": webapp_id,
 			"webapp_user_id__in": webapp_user_ids,
-			"origin_order_id__lte": 0
+			"origin_order_id__lte": 0,
+			'created_at__gte': created_at
 		}
 
 
 		# 获取在某段时间内的已完成和退款完成的订单时间
 		orderoperationlogs = OrderOperationLog.objects.filter(
-			action__in=[u"完成", u"退款完成"]
+			action__in=[u"完成", u"退款完成"],
+			created_at__gte=created_at
 		).exclude(order_id__contains='^')
 
 		order_number2finished_at = {opl.order_id: opl.created_at for opl in orderoperationlogs}
@@ -136,7 +128,7 @@ class QrcodeBalanceOutline(api_resource.ApiResource):
 			"channel_qrcode_id2all_order": channel_qrcode_id2all_order,
 		}
 		end = time.time()
-		print end - start, "bbbbbbbbbbb"
+		print end - start, "shop_balance_outline@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 
 		return {
 			'items': member_outline_info
