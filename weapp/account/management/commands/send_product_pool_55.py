@@ -49,7 +49,7 @@ class Command(BaseCommand):
 			
 			product_ids = ProductPool.objects.filter(status=PP_STATUS_ON_POOL, product_id__in=product_ids).filter(~Q(woid__in=[968, 930,816, 16,529])).values_list('product_id', flat=True)
 			id2products =  dict([(s.id, s) for s in Product.objects.filter(id__in=product_ids)])
-			woid_pids2pool = dict([(str(p.woid)+'_'+str(p.product_id), p) for p in ProductPool.objects.filter(status=PP_STATUS_ON_POOL, product_id__in=product_ids).filter(~Q(woid__in=[968, 930,816, 16,529]))])
+			woid_pids2pool = dict([(str(p.woid)+'_'+str(p.product_id), p) for p in ProductPool.objects.filter(product_id__in=product_ids).filter(~Q(woid__in=[968, 930,816, 16,529]))])
 			woid_pids = woid_pids2pool.keys()
 			for id, value in id2usr_profiles.items():
 				alist.append(value.store_name)
