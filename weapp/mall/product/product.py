@@ -318,32 +318,7 @@ class ProductList(resource.Resource):
 
             product_dict = product.format_to_dict()
             product_dict['is_self'] = (request.manager.id == product.owner_id)
-            product_dict['display_gross_range'] = ''
-            if product_dict['is_self'] :
-                if product_dict['is_use_custom_model']:
-                    if len(product_dict["models"]) == 1:
-                        product_dict['display_gross_range'] = product_dict['models']['price'] - product.purchase_price
-                    elif len(product_dict["models"]) > 1:
-                        gross_profits = []
-                        for product_model in product_dict["models"]:
-                            gross_profits.append(float(product_model['price'])-product.purchase_price)
-                        gross_profits.sort()
-                        product_dict['display_gross_range'] = '%s-%s' %(gross_profits[0], gross_profits[-1])
 
-                else:
-                    product_dict['display_gross_range'] = float(product_dict['standard_model']['price']) - product.purchase_price
-            else:
-                if product_dict['is_use_custom_model']:
-                    if len(product_dict["models"]) == 1:
-                        product_dict['display_gross_range'] = product_dict["models"][0]['gross_profit']
-                    else:
-                        gross_profits = []
-                        for product_model in product_dict["models"]:
-                            gross_profits.append(float(product_model['gross_profit']))
-                        gross_profits.sort()
-                        product_dict['display_gross_range'] = '%s-%s' %(gross_profits[0], gross_profits[-1])
-                else:
-                    product_dict['display_gross_range'] = product_dict['standard_model']['gross_profit']
             product_dict['classification'] = ''
             if mall_type:
                 secondary_classification = product_id2classification.get(product.id,'')
