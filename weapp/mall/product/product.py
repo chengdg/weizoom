@@ -127,6 +127,7 @@ class ProductList(resource.Resource):
         mall_type = request.user_profile.webapp_type
         COUNT_PER_PAGE = 10
         _type = request.GET.get('type', 'onshelf')
+        supplier_type = request.GET.get('supplier_type', -1)
 
         #处理排序
         sort_attr = request.GET.get('sort_attr', None)
@@ -209,6 +210,23 @@ class ProductList(resource.Resource):
                 if products:
                     products = products.filter(supplier__in=mananger_supplier_ids)
 
+
+            #add by bert 增加扣点类型查询
+            manager_user_profile = UserProfile.objects.filter(webapp_type=2)[0]
+            try:
+                supplier_type = int(supplier_type)
+            except:
+                supplier_type = -1
+                
+            if int(supplier_type) != -1:
+                params = {}
+                params['owner_id'] = manager_user_profile.user_id
+                if int(supplier_type) != -1:
+                    params['type'] = int(supplier_type)
+
+                supplier_ids = [s.id for s in models.Supplier.objects.filter(**params)]
+                products = products.filter(supplier__in=supplier_ids)
+
         # import pdb
         # pdb.set_trace()
         #未回收的商品
@@ -262,13 +280,13 @@ class ProductList(resource.Resource):
             product_id2store_name, product_id2sync_time = utils.get_sync_product_store_name(product_ids)
 
             manager_product_user_id = UserProfile.objects.filter(webapp_type=2)[0].user_id
-            manager_supplier_ids2name = dict([(s.id, s.name) for s in models.Supplier.objects.filter(owner_id=manager_product_user_id)])
+            manager_supplier_ids2supplier = dict([(s.id, s) for s in models.Supplier.objects.filter(owner_id=manager_product_user_id)])
 
 
         else:
             product_id2store_name = {}
             product_id2sync_time = {}
-            manager_supplier_ids2name = {}
+            manager_supplier_ids2supplier = {}
 
         # 手动添加供货商的信息
         supplier_ids2name = dict([(s.id, s.name) for s in models.Supplier.objects.filter(owner=request.manager, is_delete=False)])
@@ -309,12 +327,18 @@ class ProductList(resource.Resource):
                     first_classification_name = id2first_classification[secondary_classification.father_id].name
                     product_dict['classification'] = '{}-{}'.format(first_classification_name, secondary_classification_name)
 
-            if manager_supplier_ids2name:
-                store_name = manager_supplier_ids2name.get(product.supplier, "")
+            if manager_supplier_ids2supplier:
+                supplier = manager_supplier_ids2supplier.get(product.supplier, "")
+                store_name = supplier.name if supplier else ''
                 if store_name:
                     is_sync = True
+                if supplier and supplier.type == 0:
+                    product_dict['supplier_type'] = 0
+                else:
+                    product_dict['supplier_type'] = -1
             else:
                 store_name = ''
+                product_dict['supplier_type'] = -1
 
             if not store_name:
                 store_name = supplier_ids2name[product.supplier] if product.supplier and supplier_ids2name.has_key(product.supplier) else product_id2store_name.get(product.id, "")

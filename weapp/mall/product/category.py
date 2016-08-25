@@ -7,7 +7,7 @@ from django.shortcuts import render_to_response
 from django.contrib.auth.decorators import login_required
 from django.db.models import F, Q
 
-from mall.promotion.utils import verification_multi_product_promotion
+from mall.promotion.utils import verification_multi_product_promotion, verification_multi_product_promotion_weizoom_mall
 from .. import models as mall_models
 from .. import export
 from . import utils as category_ROA_utils
@@ -15,6 +15,8 @@ from core import resource, paginator
 from core.jsonresponse import create_response
 from core.exceptionutil import unicode_full_stack
 from watchdog.utils import watchdog_warning
+
+from account.models import UserProfile
 
 
 class Categories(resource.Resource):
@@ -70,19 +72,25 @@ class CategoryProducts(resource.Resource):
         @param promotion_type:支持coupon,integral_sale
         @return promotion_type: 促销类型
         """
+        mall_type = UserProfile.objects.get(user_id=request.manager.id).webapp_type
         category_ids = request.GET.get('category_ids', '').split(',')
         promotion_type = request.GET.get('promotion_type', 'coupon')
         relations = mall_models.CategoryHasProduct.objects.filter(
             category_id__in=category_ids)
 
         product_ids = set([relation.product_id for relation in relations])
-
-        _, error_product_ids = verification_multi_product_promotion(request.manager, product_ids, promotion_type)
+        if mall_type == 1:
+            _, error_product_ids = verification_multi_product_promotion_weizoom_mall(request.manager, product_ids, promotion_type)
+        else:
+            _, error_product_ids = verification_multi_product_promotion(request.manager, product_ids, promotion_type)
 
         product_ids = list(set(product_ids) - set(error_product_ids))
 
-        products = list(mall_models.Product.objects.filter(
-            owner=request.manager, is_deleted=False, shelve_type=mall_models.PRODUCT_SHELVE_TYPE_ON,id__in=product_ids))
+        if mall_type == 1:
+            products = list(mall_models.Product.objects.filter(id__in=product_ids))
+        else:
+            products = list(mall_models.Product.objects.filter(
+                owner=request.manager, is_deleted=False, shelve_type=mall_models.PRODUCT_SHELVE_TYPE_ON,id__in=product_ids))
 
         mall_models.Product.fill_details(request.manager,
                                          products,

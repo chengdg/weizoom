@@ -100,12 +100,15 @@
 				<th width="100">{{if data.data.mall_type > 0}}供货商{{else}}条码{{/if}}</th>
 				<th width="100">分组</th>
 				<th width="115">商品价格（元）</th>
-				<th width="40">库存</th>
-				<th width="60">总销量</th>
-				<th width="100">{{if data.data.mall_type == 1}}首次上架{{else}}创建{{/if}}时间</th>
+				<th width="50">库存</th>
+				<th width="78">总销量</th>
+				{{if mall_type == 1}}
+				<th width="78">扣点类型</th>
+				{{/if}}
+				<th width="120">{{if data.data.mall_type == 1}}首次上架{{else}}创建{{/if}}时间</th>
 				{{if data.data.mall_type > 0 && data.data.mall_type != 3}}<th width="50">分类</th>{{/if}}
-				<th width="38">排序</th>
-				<th width="80">操作</th>
+				<th width="58">排序</th>
+				<th width="90">操作</th>
 			</tr>
 		</thead>
 		<tbody id='product_list'>
@@ -177,6 +180,12 @@
 						{{/if}}
 					</td>
 					<td>${product.sales}</td>
+					{{if mall_type == 1}}
+					<td>{{if product.supplier_type == 0}}
+                            首月55分成
+                        {{else}}
+                        {{/if}}</td>
+					{{/if}}
 					<td>{{if data.data.mall_type == 1 }}${product.sync_at}{{else}}${product.created_at}{{/if}}</td>
 					{{if data.data.mall_type > 0 && data.data.mall_type != 3}}<td>${product.classification}</td>{{/if}}
 
