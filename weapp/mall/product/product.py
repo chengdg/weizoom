@@ -2028,7 +2028,6 @@ class ProductClassification(resource.Resource):
                     'id': classification.id,
                     'name': classification.name
                 })
-        print ">>>>>>>items>>>>>>>>>>>>>",items
         response.data = {
             'items': items,
             'level': level

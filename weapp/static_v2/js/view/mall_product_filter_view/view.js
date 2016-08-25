@@ -133,7 +133,15 @@ W.view.mall.ProductFilterView = Backbone.View.extend({
     // 获取条件数据
     getFilterData: function(){
         var first_classification = $.trim(this.$('#firstClassification').val());
+        if (!first_classification){
+            first_classification = -1
+        }
+
         var secondary_classification = $.trim(this.$('#secondaryClassification').val());
+        if (!secondary_classification){
+            secondary_classification = -1
+        }
+        
         //上架时间
         var startDate = $.trim(this.$('#start_date').val());
         var endDate = $.trim(this.$('#end_date').val());
