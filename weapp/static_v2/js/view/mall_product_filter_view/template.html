@@ -14,20 +14,22 @@
 			<input type="text" class="form-control" id="bar_code" name="bar_code" value="" />
 			{{/if}}
 		</div>
+		{{if mall_type > 0 && mall_type != 3}}
 		<div class="xui-col disTc">
-			<div class="xui-i-item w800">
+			<div class="xui-i-item">
 				<label class="">商品分类：</label>
-				<select id="firstClassification" name="firstClassification" class="xa-firstCategory">
+				<select id="firstClassification" name="firstClassification" class="xa-firstCategory w88">
 					<option value="-1">一级分类</option>
 					{{each(i, classification) classifications}}
 					<option value="${classification.id}" name="classification">${classification.name}</option>
 					{{/each}}
 				</select>
-				<select id="secondaryClassification" name="secondaryClassification" class="xa-secondCategory">
+				<select id="secondaryClassification" name="secondaryClassification" class="xa-secondCategory w88">
 					<option value="-1">二级分类</option>
 				</select>
 			</div>
 		</div>
+		{{/if}}
 	</div>
 
 	<div class="xui-col disTc">
