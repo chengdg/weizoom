@@ -43,13 +43,13 @@ class Command(BaseCommand):
 			pool_weapp_profile = UserProfile.objects.filter(webapp_type=2).first()
 			owner_pool = User.objects.get(id=pool_weapp_profile.user_id)
 
-			id2usr_profiles = dict([(s.id, s) for s in UserProfile.objects.filter(webapp_type = 1)])
+			id2usr_profiles = dict([(s.id, s) for s in UserProfile.objects.filter(webapp_type = 1).filter(~Q(user_id__in=[968, 930,816, 16,529]))])
 			manager_supplier_ids2name = dict([(s.id, s.name) for s in Supplier.objects.filter(owner_id=pool_weapp_profile.user_id, type = 0)])
 			product_ids = Product.objects.filter(owner=owner_pool, supplier__in=manager_supplier_ids2name.keys()).values_list('id', flat=True)
 			
-			product_ids = ProductPool.objects.filter(status=PP_STATUS_ON_POOL, product_id__in=product_ids).filter(~Q(woid__in=[968, 930])).values_list('product_id', flat=True)
+			product_ids = ProductPool.objects.filter(status=PP_STATUS_ON_POOL, product_id__in=product_ids).filter(~Q(woid__in=[968, 930,816, 16,529])).values_list('product_id', flat=True)
 			id2products =  dict([(s.id, s) for s in Product.objects.filter(id__in=product_ids)])
-			woid_pids2pool = dict([(str(p.woid)+'_'+str(p.product_id), p) for p in ProductPool.objects.filter(status=PP_STATUS_ON_POOL, product_id__in=product_ids).filter(~Q(woid__in=[968, 930]))])
+			woid_pids2pool = dict([(str(p.woid)+'_'+str(p.product_id), p) for p in ProductPool.objects.filter(status=PP_STATUS_ON_POOL, product_id__in=product_ids).filter(~Q(woid__in=[968, 930,816, 16,529]))])
 			woid_pids = woid_pids2pool.keys()
 			for id, value in id2usr_profiles.items():
 				alist.append(value.store_name)
