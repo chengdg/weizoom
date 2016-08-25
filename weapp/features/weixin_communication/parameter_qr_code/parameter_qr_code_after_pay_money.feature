@@ -171,20 +171,6 @@ Background:
 		When test批量激活订单'0001'的卡::weizoom_card
 
 		When bill关注jobs的公众号于'2015-05-10 10:00:00'
-		#bill在jobs绑定卡001000001
-		When bill访问jobs的webapp
-		When bill绑定微众卡
-			"""
-			{
-				"binding_date":"2015-05-10",
-				"binding_shop":"jobs",
-				"weizoom_card_info":
-					{
-						"id":"001000001",
-						"password":"1234567"
-					}
-			}
-			"""
 		When tom关注jobs的公众号于'2015-05-11 10:00:00'
 		And tom取消关注jobs的公众号
 
@@ -228,19 +214,6 @@ Background:
 		When 清空浏览器
 		And marry扫描带参数二维码"带参数二维码-默认设置"
 		And marry访问jobs的webapp
-		#marry在jobs绑定卡002000001
-		When marry绑定微众卡
-			"""
-			{
-				"binding_date":"2015-05-10",
-				"binding_shop":"jobs",
-				"weizoom_card_info":
-					{
-						"id":"002000001",
-						"password":"1234567"
-					}
-			}
-			"""
 
 	#已关注或者取消关注的会员，扫码
 		When bill扫描带参数二维码"带参数二维码-默认设置"于2015-06-10 10:00:00
