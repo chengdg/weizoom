@@ -79,14 +79,13 @@
 	<table id="productListTable" class="table table-bordered table-condensed xui-productList xb-stripedTable xb-noTdBorder xb-noBottom xb-noBorder xb-theadBg">
 		<thead>
 			<tr>
-				<th width="250">商品信息</th>
+				<th width="308">商品信息</th>
 				<th width="100">{{if data.data.mall_type > 0}}供货商{{else}}条码{{/if}}</th>
 				<th width="100">分组</th>
 				<th width="105">商品价格（元）</th>
 				<th width="50">库存</th>
 				<th width="50">总销量</th>
 				<th width="120">{{if data.data.mall_type == 1 }}首次上架{{else}}创建{{/if}}时间</th>
-				{{if data.data.mall_type > 0 && data.data.mall_type != 3}}<th width="50">分类</th>{{/if}}
 				<th width="110">操作</th>
 			</tr>
 		</thead>
@@ -163,7 +162,6 @@
 					</td>
 					<td>${product.sales}</td>
 					<td>{{if data.data.mall_type == 1 }}${product.sync_at}{{else}}${product.created_at}{{/if}}</td>
-					{{if data.data.mall_type > 0 && data.data.mall_type != 3}}<td>${product.classification}</td>{{/if}}
 					<td>
 					   <div style=" width:74px; margin:auto;">
 						<a href="/mall2/product/?id=${product.id}" class="xa-modify fl" style="width: 39px;">
