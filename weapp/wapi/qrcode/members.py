@@ -64,7 +64,7 @@ class QrcodeMember(api_resource.ApiResource):
 		webapp_user_id2member_id = dict([(u.id, u.member_id) for u in webapp_users])
 		webapp_user_ids = set(webapp_user_id2member_id.keys())
 		if webapp_user_ids:
-			orders = Order.by_webapp_user_id(webapp_user_ids).filter(status__in=[ORDER_STATUS_NOT,ORDER_STATUS_PAYED_SUCCESSED, ORDER_STATUS_PAYED_NOT_SHIP, ORDER_STATUS_PAYED_SHIPED, ORDER_STATUS_SUCCESSED]).order_by('-created_at')
+			orders = Order.by_webapp_user_id(webapp_user_ids).filter(status__in=[ORDER_STATUS_SUCCESSED]).order_by('-created_at')
 		else:
 			orders = []
 
