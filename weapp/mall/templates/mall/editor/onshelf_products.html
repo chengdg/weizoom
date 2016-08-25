@@ -102,10 +102,11 @@
 				<th width="115">商品价格（元）</th>
 				<th width="50">库存</th>
 				<th width="78">总销量</th>
-				{{if mall_type == 1}}
+				{{if data.data.mall_type == 1}}
 				<th width="78">扣点类型</th>
 				{{/if}}
 				<th width="120">{{if data.data.mall_type == 1}}首次上架{{else}}创建{{/if}}时间</th>
+				{{if data.data.mall_type > 0 && data.data.mall_type != 3}}<th width="50">分类</th>{{/if}}
 				<th width="58">排序</th>
 				<th width="90">操作</th>
 			</tr>
@@ -179,19 +180,21 @@
 						{{/if}}
 					</td>
 					<td>${product.sales}</td>
-					{{if mall_type == 1}}
+					{{if data.data.mall_type == 1}}
 					<td>{{if product.supplier_type == 0}}
                             首月55分成
                         {{else}}
                         {{/if}}</td>
 					{{/if}}
 					<td>{{if data.data.mall_type == 1 }}${product.sync_at}{{else}}${product.created_at}{{/if}}</td>
-					<td style="padding:0 15px;">
+					{{if data.data.mall_type > 0 && data.data.mall_type != 3}}<td>${product.classification}</td>{{/if}}
+
+					<td>
 						<input width="38" type="text" class="xa-rank" data-id="${product.id}" style="width:100%;"
 						 			 value="${product.display_index}" data-display-index="${product.display_index}">
 					</td>
 					<td>
-					<div style=" width:74px; margin:auto;">
+					<div style="width:74px; margin:auto;">
 						<a href="/mall2/product/?id=${product.id}&shelve_type=1" class="xa-modify fl" style="width: 37px;">
 						{{if product.is_self}}修改{{else}}查看{{/if}}</a>
 						<a href="javascript:void(0);" class="xa-offshelf fl" style="width: 30px;">下架</a>
