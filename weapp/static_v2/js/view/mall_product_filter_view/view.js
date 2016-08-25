@@ -27,10 +27,7 @@ W.view.mall.ProductFilterView = Backbone.View.extend({
             success: function(data) {
                 this.classifications = data.items;
                 var a = data.items;
-                console.log('this.classifications>>>>>>>>>>>>>>',this.classifications);
 
-                console.log('this.classifications>>>>>>222222>>>>>>>>',this.classifications);
-                // console.log('a>>>>>>>>>>>>>>',a);
                 var _this = this;
                 low_stocks = this.options.low_stocks || -1;
                 if(low_stocks < 0) {
