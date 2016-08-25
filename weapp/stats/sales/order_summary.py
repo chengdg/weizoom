@@ -83,6 +83,7 @@ def _get_test_data(start_time, end_time):
 		'refunded_num': 16
 	}
 	
+	#买家来源
 	buyer_source_stats = {
 		# “直接关注购买”：=∑订单.个数
 		'sub_source_num': 60,
@@ -94,7 +95,7 @@ def _get_test_data(start_time, end_time):
 		'other_source_num': 50
 	}
 	
-		# 优惠抵扣统计
+	# 优惠抵扣统计
 	discount_stats = {
 		# 订单总量：=∑订单.个数
 		'discount_order_num': 221,
@@ -310,10 +311,11 @@ def _get_stats_data(user, start_time, end_time):
 		# __report_performance(t0, t1, "get member")
 		
 		# 检查复购订单
-		# t0 = time.clock()
-		# t1 = time.time()
+		t0 = time.clock()
+		t1 = time.time()
+		print "______________________________________>>>>>"
 		repeated_num += _get_repeated_num_increment(order.webapp_user_id, wuid_dict, tmp_member, webappuser2member, pre_status_qualified_orders)
-		# __report_performance(t0, t1, "repeat counter")
+		__report_performance(t0, t1, "repeat counter")
 		
 		# 统计不同买家来源的订单数
 		_do_buyer_source_stats(buyer_source_stats, tmp_member)
@@ -355,7 +357,7 @@ def _get_stats_data(user, start_time, end_time):
 	}
 
 	return result
-
+#业绩报告
 def __report_performance(clock_t, wall_t, title):
 	clock_x = time.clock() - clock_t
 	wall_x = time.time() - wall_t
@@ -385,7 +387,7 @@ def _get_repeated_num_increment(wuid, wuid_dict, member, webappuser2member, pre_
 				if tmp_member.id == member.id:
 					wuid_dict['pos'] = index + 1
 					return 1
-
+	print "+++++++++++++++++++++++++++++++++"
 	return result
 
 def _do_discount_stats(discount_stats, order):
