@@ -91,8 +91,8 @@ class QrcodeMember(api_resource.ApiResource):
 			pay_money = 0
 			for webapp_user_id,member_id in webapp_user_id2member_id.items():
 				if member_id == channel_member.id:
-					final_price = webapp_user_id2final_price[webapp_user_id]
-					pay_money = webapp_user_id2sale_money[webapp_user_id]
+					final_price = webapp_user_id2final_price.get(webapp_user_id, 0)
+					pay_money = webapp_user_id2sale_money.get(webapp_user_id, 0)
 			members.append({
 				"member_name": channel_member.username_for_html,
 				"follow_time": channel_member.created_at.strftime('%Y-%m-%d %H:%M:%S'),

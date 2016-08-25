@@ -100,9 +100,9 @@ class QrcodeMember(api_resource.ApiResource):
 			final_price = 0
 			pay_money = 0
 			for webapp_user_id,member_id in webapp_user_id2member_id.items():
-				final_price = webapp_user_id2final_price[webapp_user_id]
 				if member_id == channel_member.id:
-					pay_money = webapp_user_id2sale_money[webapp_user_id]
+					final_price = webapp_user_id2final_price.get(webapp_user_id, 0)
+					pay_money = webapp_user_id2sale_money.get(webapp_user_id, 0)
 
 			channel_qrcode_id = 0
 			for channel_qrcode_id, member_ids in channel_qrcode_id2member_id.items():
