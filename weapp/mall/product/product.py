@@ -2098,9 +2098,11 @@ def get_product_param_from(request):
 
 
     woid = request.webapp_owner_id
+    first_classification = int(request.GET.get('first_classification', '-1'))
+    secondary_classification = int(request.GET.get('secondary_classification', '-1'))
 
     param = {'mall_type':mall_type, 'woid':woid, 'name':product_name, 'supplier_name':supplier_name, 'startDate':start_date, 'endDate':end_date,
         'lowSales':lowSales, 'highSales':highSales, 'category':category, 'barCode':barCode, 'lowPrice':lowPrice, 'highPrice':highPrice,
-         'lowStocks':lowStocks, 'highStocks':highStocks}
+         'lowStocks':lowStocks, 'highStocks':highStocks, 'first_classification':first_classification, 'secondary_classification':secondary_classification}
     return param
 

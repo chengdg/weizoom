@@ -202,6 +202,8 @@ def send_product_export_job_task(self, exportjob_id, filter_data_args, type):
             supplier_ids2name = dict([(s.id, s.name) for s in models.Supplier.objects.filter(owner=owner, is_delete=False)])
 
             products = models.Product.objects.belong_to(mall_type, owner, models.PRODUCT_SHELVE_TYPE_ON)
+            if filter_data_args['first_classification'] > 0:
+                product_ids = utils.get_product_ids_by_classification(filter_data_args['first_classification'], filter_data_args['secondary_classification'], filter_data_args['woid'])
             if filter_data_args['supplier_name']:
                 store_name = filter_data_args['supplier_name']
                 if store_name:
