@@ -456,7 +456,7 @@ MALL_PROMOTION_AND_APPS_SECOND_NAV = {
                 {
                     'name': MALL_APPS_EVENT_NAV,
                     'title': "活动报名",
-                    'url': '/apps/event/events/',
+                    'url': 'http://%s/apps/event/events/' % MARKETAPP_DOMAIN,
                     'permission': []
                 },
                 {
