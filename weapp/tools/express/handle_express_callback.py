@@ -115,12 +115,21 @@ class ExpressCallbackHandle(object):
 					display_index = display_index
 				)
 				display_index = display_index + 1
-
-			watchdog_info(u'保存快递100的 推送数据成功，url:{}, json:{}'.format(
-					self.callback_post_request.get_full_path(),
-					json
-				), self.express_config.watchdog_type
-			)
+			try:
+				watchdog_info(u'保存快递100的 推送数据成功，url:{}, json:{}'.format(
+						self.callback_post_request.get_full_path(),
+						json
+					), self.express_config.watchdog_type
+				)
+			except:
+				try:
+					watchdog_info(u'保存快递100的 推送数据成功，url:{}, json:{}'.format(
+							self.callback_post_request.get_full_path(),
+							json
+						), self.express_config.watchdog_type
+					)
+				except:
+					pass
 			self.express.receive_count = self.express.receive_count + 1
 			self.express.save()
 
