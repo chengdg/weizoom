@@ -14,15 +14,7 @@ reload(sys)
 sys.setdefaultencoding('utf-8')
 
 import os
-from django.contrib.auth.models import User
-from tools.regional.models import *
-from modules.member.models import Member,MemberHasSocialAccount,MemberIntegralLog,MemberHasTag,MemberGrade
 from mall.models import *
-from mall.promotion.models import *
-from member.member_list import get_member_orders,get_member_info,get_member_ship_info
-from weixin.user.models import ComponentAuthedAppid,ComponentAuthedAppidInfo
-from account.models import UserProfile
-from mall.product import utils
 import xlsxwriter
 
 from utils import dateutil
@@ -55,7 +47,6 @@ class Command(BaseCommand):
 				alist.append(dateutil.date2string(d))
 
 			table.write_row('A1',alist)
-			webappid2usr_profiles = dict([(s.webapp_id, s) for s in UserProfile.objects.filter(webapp_type = 1).filter(~Q(user_id__in=[968, 930,816, 16,529]))])	
 
 			for i in range(24):
 				table.write(i+1,0,"%s:00 ~ %s:59" % (i,i))
@@ -65,7 +56,6 @@ class Command(BaseCommand):
 				tmp_line += 1
 				date_str = dateutil.date2string(d)
 				end_datetime = "%s 23:59:00" % date_str
-			#	table.write(0,tmp_line, "t")
 				orders = Order.objects.filter(status__in=[2,3,5], payment_time__gte=d, payment_time__lte=end_datetime)
 
 				for i in range(24):
