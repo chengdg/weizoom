@@ -151,7 +151,7 @@ class ShopOrderDetails(api_resource.ApiResource):
 				for order_product in order_products:
 					products.append(order_product)
 			sale_price = channel_order.final_price + channel_order.coupon_money + channel_order.integral_money + channel_order.weizoom_card_money + channel_order.promotion_saved_money + channel_order.edit_money
-			final_price = channel_order.final_price + channel_order.weizoom_card_money
+			final_price = channel_order.final_price
 			if member:
 				try:
 					name = member.username.decode('utf8')

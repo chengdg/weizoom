@@ -75,7 +75,7 @@ class ShopMemberDetails(api_resource.ApiResource):
 		webapp_user_id2sale_money = {}
 		final_price = 0
 		for order in orders:
-			final_price+=order.final_price
+			final_price += order.final_price
 			if not webapp_user_id2final_price.has_key(order.webapp_user_id):
 				webapp_user_id2final_price[order.webapp_user_id] = order.final_price
 			else:
@@ -87,7 +87,7 @@ class ShopMemberDetails(api_resource.ApiResource):
 			else:
 				webapp_user_id2sale_money[order.webapp_user_id] += sale_price
 
-		channel_members = Member.objects.filter(id__in=member_ids)
+		channel_members = Member.objects.filter(id__in=member_ids).order_by('-created_at')
 		members = []
 		for channel_member in channel_members:
 			final_price = 0

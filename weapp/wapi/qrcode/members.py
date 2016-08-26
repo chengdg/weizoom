@@ -83,7 +83,7 @@ class QrcodeMember(api_resource.ApiResource):
 			else:
 				webapp_user_id2sale_money[order.webapp_user_id] += sale_price
 
-		channel_members = Member.objects.filter(id__in=member_ids)
+		channel_members = Member.objects.filter(id__in=member_ids).order_by('-created_at')
 		members = []
 		for channel_member in channel_members:
 			final_price = 0

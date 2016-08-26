@@ -61,7 +61,7 @@ class QrcodeBalanceOutline(api_resource.ApiResource):
 		all_order = []
 		for order in orders:
 			sale_price = order.final_price + order.coupon_money + order.integral_money + order.weizoom_card_money + order.promotion_saved_money + order.edit_money
-			final_price = order.final_price + order.weizoom_card_money
+			final_price = order.final_price
 			#除已取消的订单
 			if order.status not in [ORDER_STATUS_CANCEL]:
 				all_order.append({

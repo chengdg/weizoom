@@ -82,7 +82,7 @@ class ShopOrders(api_resource.ApiResource):
 						channel_qrcode_id2order_count[channel_qrcode_id] += 1
 					if order.status not in [ORDER_STATUS_CANCEL,ORDER_STATUS_GROUP_REFUNDING,ORDER_STATUS_GROUP_REFUNDED,ORDER_STATUS_REFUNDING,ORDER_STATUS_REFUNDED]:
 						sale_price = order.final_price + order.coupon_money + order.integral_money + order.weizoom_card_money + order.promotion_saved_money + order.edit_money
-						final_price = order.final_price + order.weizoom_card_money
+						final_price = order.final_price
 						if not channel_qrcode_id2order_sale_money.has_key(channel_qrcode_id):
 							channel_qrcode_id2order_sale_money[channel_qrcode_id] = sale_price
 						else:

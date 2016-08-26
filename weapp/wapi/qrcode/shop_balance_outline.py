@@ -76,7 +76,7 @@ class ShopBalanceOutline(api_resource.ApiResource):
 		for order in orders:
 			member_id = webapp_user_id2member_id[order.webapp_user_id]
 			sale_price = order.final_price + order.coupon_money + order.integral_money + order.weizoom_card_money + order.promotion_saved_money + order.edit_money
-			final_price = order.final_price + order.weizoom_card_money
+			final_price = order.final_price
 			#除已取消的订单
 			if order.status not in [ORDER_STATUS_CANCEL]:
 				for channel_qrcode_id,member_ids in channel_qrcode_id2member_id.items():
