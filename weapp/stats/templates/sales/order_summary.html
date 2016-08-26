@@ -14,6 +14,7 @@
     
     <div class="xb-rightPanel pl10 pr10 pb30">
         <div id="stats-order-summary-filter-view" class="xui-filter xui-filterPanel "></div>
+
         <table class="xui-summary"  style="height:103px;">
             <tr>
                 <td class="xui-i-left" style="height:103px;"><p class="xui-i-title">订单概况</p></td>
@@ -137,27 +138,232 @@
             <div class="xui-i-chart pl20 pt10" id="discount_stats" style="height:380px;width:1000px"></div>
         </div> 
     </div>
-     <div class="cb"></div>
+
+    <div class="hidden">
+        <div 
+            data-ui-role="member-summary-base-data-advanced-table"
+            data-app="stats"
+            data-resource="member_summary"
+            data-template-id="#member-date-table-view"
+            data-enable-paginator="false"
+            data-enable-sort="false"
+            data-selectable="false"
+            data-item-count-per-page="10"
+            data-disable-header-select="true"
+            data-args='{"start_date":"{{start_date}}", "end_date":"{{end_date}}"}' 
+        ></div>
+    </div>
+    <div class="xui-chart">
+    
+    <div class="xui-charWrap" style="height:400px;">
+        <div class="xui-i-title"> <div class="xui-i-block"></div>  <span class="ml5">会员增长趋势</span></div>
+        <div 
+            class="xui-ChartBody" 
+            id="memberIncreasement" 
+            data-ui-role="statsMemberIncreasementEchart" 
+            data-app="stats" 
+            data-resource="member_increasement" 
+            data-wrap-el=".xa-message-tips-wrap"
+        ></div>
+    </div> 
+    <div class="xui-charWrap" style="height:420px;">
+        <div class="xui-i-title"> <div class="xui-i-block"></div>  <span class="ml5">分享链接排行TOP10</span></div>
+        <div
+            data-ui-role="advanced-table"
+            data-app="stats"
+            data-resource="member_share_url_rank"
+            data-template-id="#member-share-url-rank-view"
+            data-enable-paginator="false"
+            data-enable-sort="false"
+            data-selectable="false"
+            data-item-count-per-page="10"
+            data-disable-header-select="true"
+            class="panel-body" 
+            data-args='{"start_date":"{{start_date}}", "end_date":"{{end_date}}"}' 
+            class="xa-share-url-data"
+            style="padding-top:0px;padding-left:0px;padding-right:0px;"
+        ></div>
+    </div>
+    <div class="xui-charWrap" style="height:420px;">
+        <div class="xui-i-title"> <div class="xui-i-block"></div>  <span class="ml5">推广扫码排行TOP10</span></div>
+        <div
+            data-ui-role="advanced-table"
+            data-app="stats"
+            data-resource="member_qrcode_rank"
+            data-template-id="#member-qrcode-rank-view"
+            data-enable-paginator="false"
+            data-enable-sort="false"
+            data-selectable="false"
+            data-item-count-per-page="10"
+            data-disable-header-select="true"
+            class="panel-body" 
+            data-args='{"start_date":"{{start_date}}", "end_date":"{{end_date}}"}'
+            style="padding-top:0px;padding-left:0px;padding-right:0px;"
+        ></div>
+    </div>  
+    <div class="xui-charWrap" >
+        <div class="xui-i-title"> <div class="xui-i-block"></div>  <span class="ml5">详细数据</span></div>
+        <div
+            data-ui-role="advanced-table"
+            data-app="stats"
+            data-resource="member_detail_data"
+            data-template-id="#member-detail-data-view"
+            data-enable-paginator="true"
+            data-enable-sort="false"
+            data-selectable="false"
+            data-item-count-per-page="10"
+            data-disable-header-select="true"
+            class="panel-body" 
+            data-args='{"start_date":"{{start_date}}", "end_date":"{{end_date}}"}'
+            style="padding-top:0px;padding-left:0px;padding-right:0px;"
+        ></div>
+    </div> 
+    </div>
+    <div class="cb"></div>
+    
 </div>
-{% endblock %} {% block js %} {% verbatim %} {% endverbatim %}
+
+    <div class="cb"></div>
+</div>
+{% endblock %} {% block js %} 
+
+{% verbatim %}
+<script id="member-date-table-view" type="text/x-jquery-tmpl">
+    
+</script>
+<script id="member-share-url-rank-view" type="text/x-jquery-tmpl">
+    <table class="table xb-theadBg xui-gradeTab">
+        <thead>
+            <tr>
+                <th>排行</th>
+                <th>昵称</th>
+                <th>推荐人数</th>
+            </tr>
+        </thead>
+        <tbody class="xui-tbodyBg">
+            {{if items.length}}
+                {{each(i, item) items}}
+                <tr>
+                    <td>
+                        ${item.rank}
+                    </td>
+                    <td>
+                        <a href="/member/detail/?id=${item.member_id}" target='_blank'>
+                            {{html item.username}}
+                        </a>
+                    </td>
+                    <td>
+                        ${item.followers}
+                    </td>
+                </tr>
+                {{/each}}
+            {{else}}
+                <tr><td colspan="3"><p style="margin-top:125px;"><img class="xui-i-img xui-i-hide" src="/static_v2/img/editor/warning.png"/><span style="color:#999999;font-size:16px;font-weight:bold;padding-left:10px;">没有相应的数据</span></p></td></tr>
+            {{/if}}
+        </tbody>
+    </table>
+</script>
+
+<script id="member-qrcode-rank-view" type="text/x-jquery-tmpl">
+    <table class="table xb-theadBg xui-gradeTab">
+        <thead>
+            <tr style="background: #f5faff;">
+                <th>排行</th>
+                <th>昵称</th>
+                <th>推荐人数</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{if items.length}}
+                {{each(i, item) items}}
+                <tr>
+                    <td>
+                        ${item.rank}
+                    </td>
+                    <td>
+                        <a href="/member/detail/?id=${item.member_id}" target='_blank'>
+                            {{html item.username}}
+                        </a>
+                    </td>
+                    <td>
+                        ${item.followers}
+                    </td>
+                </tr>
+                {{/each}}
+            {{else}}
+                <tr><td colspan="3"><p style="margin-top:125px;"><img class="xui-i-img xui-i-hide" src="/static_v2/img/editor/warning.png"/><span style="color:#999999;font-size:16px;font-weight:bold;padding-left:10px;">没有相应的数据</span></p></td></tr>
+            {{/if}}
+        </tbody>
+    </table>
+</script>
+
+<script id="member-detail-data-view" type="text/x-jquery-tmpl">
+    <table class="table xb-theadBg xui-gradeTab">
+        <thead>
+            <tr>
+                <th>日期</th>
+                <th>新增会员</th>
+                <th>手机绑定</th>
+                <th>发起分享链接</th>
+                <th>发起链接新增</th>
+                <th>发起扫码</th>
+                <th>扫码新增</th>
+                <th>下单会员</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{if items.length}}
+                {{each(i, item) items}}
+                <tr>
+                    <td>${item.date}</td>
+                    <td>${item.new_member_count}</td>
+                    <td>${item.binding_phone_member_count}</td>
+                    <td>${item.share_url_member_count}</td>
+                    <td>${item.member_from_share_url_count}</td>
+                    <td>${item.ori_qrcode_member_count}</td>
+                    <td>${item.member_from_qrcode_count}</td>
+                    <td>${item.bought_member_count}</td>
+                </tr>
+                {{/each}}
+            {{else}}
+                <tr><td colspan="8">没有相应的数据</td></tr>
+            {{/if}}
+        </tbody>
+    </table>
+</script>
+{% endverbatim %}
 
 <script type="text/javascript">
 	var stats_data = null;
 	$(document).ready(function() {
-		var view = new W.view.stats.OrderSummaryFilterView({
-			el : '#stats-order-summary-filter-view'
-		});
-		view.render();
-		
-		stats_data = W.loadJSON('stats_data');
-		var start_array = stats_data.start_time.split(" ");
-		var end_array = stats_data.end_time.split(" ");
-		$("#start_date").val(start_array[0]);
-		$("#end_date").val(end_array[0]);
-		view.updateTimeTags();
-		updateStatsData();
-	});
-	
+		var view = new W.view.stats.DateFilterView({
+            el : '#stats-date-filter-view'
+        });
+        view.render();
+
+        $('#start_date').val('{{start_date}}');
+        $('#end_date').val('{{end_date}}');
+        view.updateTimeTags();
+
+        $(document).delegate('.xa-date-search','click',function(event) {
+            var args = {};
+            args.start_date = $('#start_date').val();
+            args.end_date = $('#end_date').val();
+
+            //更新基础数据的数据
+            $('[data-ui-role="member-summary-base-data-advanced-table"]').data('view').reload(args);
+
+            //更新其他advanced table数据
+            $('[data-ui-role="advanced-table"]').each(function(){
+                $(this).data('view').reload(args);
+            });
+
+            //更新会员增长趋势数据
+            $('[data-ui-role="statsMemberIncreasementEchart"]').data('view').reload(args);
+
+            view.updateTimeTags();
+        });
+        
 	function updateStatsData() {
 		updateSummaryData();
 		updateOrderTrendData();

@@ -62,16 +62,78 @@ class OrderSummary(resource.Resource):
 		# 时间区间
 		start_time = request.GET.get('start_time', '')
 		end_time = request.GET.get('end_time', '')
+
+		webapp_id = request.user_profile.webapp_id
+		total_orders = belong_to(webapp_id)
+		qualified_orders = total_orders.prefetch_related('orderhasproduct_set').filter(
+			#created_at__gte=start_time, created_at__lt=end_time,
+			created_at__range=(start_time, end_time),
+			status__in=[models.ORDER_STATUS_PAYED_NOT_SHIP, models.ORDER_STATUS_PAYED_SHIPED, models.ORDER_STATUS_SUCCESSED]
+			)
+
+		order_num = qualified_orders.count()
+		# 【成交金额】=∑订单.实付金额
+		paid_amount = 0.0
+		# 【成交商品】=∑订单.商品件数
+		product_num = 0
+		# 【优惠抵扣】=∑订单.积分抵扣金额 + +∑订单.优惠券抵扣金额
+		discount_amount = 0.0
+
+		for order in qualified_orders:
+		# debug
+		# order_id_str += order.order_id + "\n"
+			if order.origin_order_id > 0:
+				#商户从微众自营商城同步的子订单需要计算采购价
+				tmp_paid_amount = order.total_purchase_price
+			else:
+				tmp_paid_amount = order.final_price + order.weizoom_card_money
+			paid_amount += tmp_paid_amount
+
+			for r in order.orderhasproduct_set.all():
+				product_num += r.number
+			
+			discount_amount += float(order.integral_money) + float(order.coupon_money)
+			#postage_amount += float(order.postage)
+
+		print ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+		print "--------- order_num:",order_num
+		print "--------- paid_amount:",paid_amount
+		print "--------- product_num:",product_num
+		print "--------- discount_amount:",discount_amount
+		print ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+
+		item = {
+			# 【成交订单】=∑订单.个数
+			'order_num': order_num,
+			# 【成交金额】=∑订单.实付金额
+			'paid_amount': paid_amount,
+			# 【成交商品】=∑订单.商品件数
+			'product_num': paid_amount,
+			# 【优惠抵扣】=∑订单.积分抵扣金额 + +∑订单.优惠券抵扣金额
+			'discount_amount': paid_amount
+		}
+
 		
 		if start_time and end_time:
 			response = create_response(200)
-			response.data = _get_stats_data(request.user, start_time, end_time)
+			response.data = {
+				'items': item,
+				'sortAttr': ''
+			}
 			return response.get_response()
 		else:
 			response = create_response(500)
 			response.errMsg = u'未指定查询时间段'
 			return response.get_response()
-		
+
+''''
+class OrderSource(resource.Resource)
+	"""
+	买家来源
+	"""
+	app = 'stats'
+	resource = 'order_summary_source'
+	'''
 def _get_test_data(start_time, end_time):
 	order_trend_stats = {
 		'wait_num': 20,
@@ -313,7 +375,7 @@ def _get_stats_data(user, start_time, end_time):
 		# 检查复购订单
 		t0 = time.clock()
 		t1 = time.time()
-		print "______________________________________>>>>>"
+		print ">>>>>"
 		repeated_num += _get_repeated_num_increment(order.webapp_user_id, wuid_dict, tmp_member, webappuser2member, pre_status_qualified_orders)
 		__report_performance(t0, t1, "repeat counter")
 		
