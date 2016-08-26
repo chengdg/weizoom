@@ -137,7 +137,19 @@
                             {{if product.basic_rebate}}
                             	<span style="color:red;">(${product.basic_rebate}%)</span>
                             {{/if}}
-                        {{else}}
+
+                        {{/if}}
+                        {{if product.supplier_type == 1}}
+                            零售返点
+
+                        {{/if}}
+                        {{if product.supplier_type == 2}}
+                            固定低价
+
+                        {{/if}}
+                        {{if product.supplier_type == -1}}
+
+
                         {{/if}}
                     </td>
                     <td>

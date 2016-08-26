@@ -2718,7 +2718,14 @@ class MallOrderFromSharedRecord(models.Model):
         verbose_name_plural = "通过分享链接订单"
         db_table = "mall_order_from_shared_record"
 # #######        供货商实现        ####
-
+# 五五分成
+SUPPLIER_TYPE_DIVIDE = 0
+# 零售返点
+SUPPLIER_TYPE_RETAIL = 1
+# 固定低价
+SUPPLIER_TYPE_FIXED = 2
+# 普通供货商
+SUPPLIER_TYPE_NORMAL = -1
 class Supplier(models.Model):
 	owner = models.ForeignKey(User)
 	name = models.CharField(max_length=16)  # 供货商名称
@@ -2727,7 +2734,7 @@ class Supplier(models.Model):
 	supplier_address = models.CharField(max_length=256) # 供货商地址
 	remark = models.CharField(max_length=256) # 备注
 	is_delete = models.BooleanField(default=False)  # 是否已经删除
-	type = models.IntegerField(default=-1)# 是否55分  0 55分成
+	type = models.IntegerField(SUPPLIER_TYPE_NORMAL)# 是否55分  0 55分成
 	created_at = models.DateTimeField(auto_now_add=True)  # 添加时间
 
 	class Meta(object):
