@@ -21,6 +21,8 @@ class ShopOrders(api_resource.ApiResource):
 		帐号管理
 		"""
 		channel_qrcode_ids = json.loads(args.get('channel_qrcode_ids'))
+		channel_qrcode = ChannelQrcodeSettings.objects.filter(id__in=channel_qrcode_ids).first()
+		created_at = channel_qrcode.created_at.strftime("%Y-%m-%d %H:%M:%S")
 
 		total_channel_members = ChannelQrcodeHasMember.objects.filter(channel_qrcode_id__in=channel_qrcode_ids).order_by('-created_at')
 		channel_qrcode_id2member_id = {}
@@ -38,7 +40,8 @@ class ShopOrders(api_resource.ApiResource):
 		end_date = args.get('end_date', None)
 		filter_data_args = {
 			"webapp_user_id__in": webapp_user_id2member_id.keys(),
-			"origin_order_id__lte": 0
+			"origin_order_id__lte": 0,
+			"created_at__gte": created_at
 		}
 
 		orders = Order.objects.filter(**filter_data_args)

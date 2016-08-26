@@ -22,8 +22,8 @@ class ShopOrderDetails(api_resource.ApiResource):
 		获取订单
 		"""
 		channel_qrcode_ids = json.loads(args.get('channel_qrcode_ids'))
-		print channel_qrcode_ids,"channel_qrcode_idsGGGGGGGGGGGGGGGGGGG"
-		channel_qrcode = ChannelQrcodeSettings.objects.filter(id__in=channel_qrcode_ids)
+		channel_qrcode = ChannelQrcodeSettings.objects.filter(id__in=channel_qrcode_ids).first()
+		created_at = channel_qrcode.created_at.strftime("%Y-%m-%d %H:%M:%S")
 
 		channel_members = ChannelQrcodeHasMember.objects.filter(channel_qrcode_id__in=channel_qrcode_ids)
 		channel_qrcode_id2member_id = {}
@@ -39,7 +39,7 @@ class ShopOrderDetails(api_resource.ApiResource):
 		filter_data_args = {
 			"webapp_user_id__in": webapp_user_ids,
 			"origin_order_id__lte": 0,
-
+			"created_at__gte": created_at
 		}
 		status = args.get('status', '-1')
 		#下单时间
