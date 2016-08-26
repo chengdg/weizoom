@@ -788,6 +788,11 @@ $(document).ready(function() {
 
 	var export2data = {{export2data|safe}};
 	var woid = "{{ request.manager.id }}";
+	$('body').on('downloaded',function(){
+		export2data["status"] = 0;
+		export2data["is_download"] = 0;
+	});
+
 	if(export2data["status"] ===1 && export2data["is_download"] ===0 ){
 		table.afterload = function(){
 			var options = {

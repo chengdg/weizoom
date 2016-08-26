@@ -183,6 +183,7 @@ W.dialog.ExportFileView = Backbone.View.extend({
 					},
 					success: function(data) {
 						console.log("download over!");
+						$('body').trigger('downloaded');
 					},
 					error: function(response) {
 						console.log("download over,but push database fail!");
