@@ -134,6 +134,9 @@
                     <td>
                         {{if product.supplier_type == 0}}
                             首月55分成
+                            {{if product.basic_rebate}}
+                            	<span style="color:red;">(${product.basic_rebate}%)</span>
+                            {{/if}}
                         {{else}}
                         {{/if}}
                     </td>

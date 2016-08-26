@@ -2924,3 +2924,23 @@ class ClassificationHasProduct(models.Model):
 		verbose_name = "商品分类与商品的关系"
 		verbose_name_plural = "商品分类与商品的关系"
 		db_table = "mall_classification_has_product"
+
+
+
+class SupplierDivideRebateInfo(models.Model):
+    """
+    供货商五五分成信息(不一定是五成)--目前只有首月五五分成,以后可能扩展成,不同额度不同返点.
+    """
+    # 供货商id
+    supplier_id = models.IntegerField()
+    # 钱额度
+    divide_money = models.IntegerField()
+    # 基础返点
+    basic_rebate = models.IntegerField()
+    # 在此额度内返点
+    rebate = models.IntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_deleted = models.BooleanField(default=False)
+
+    class Meta(object):
+        db_table = 'supplier_divide_rebate_info'

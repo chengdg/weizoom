@@ -273,13 +273,20 @@ class ProductList(resource.Resource):
             product_id2store_name, product_id2sync_time = utils.get_sync_product_store_name(product_ids)
 
             manager_product_user_id = UserProfile.objects.filter(webapp_type=2)[0].user_id
-            manager_supplier_ids2supplier = dict([(s.id, s) for s in models.Supplier.objects.filter(owner_id=manager_product_user_id)])
-
+            suppliers = models.Supplier.objects.filter(owner_id=manager_product_user_id)
+            manager_supplier_ids2supplier = dict([(s.id, s) for s in suppliers])
+            # 五五分成供货商的基础扣点
+            suppliers = suppliers.filter(type=0)
+            supplier_ids = [supplier.id for supplier in suppliers]
+            rebate_infos = models.SupplierDivideRebateInfo.objects.filter(supplier_id__in=supplier_ids,
+                                                                          is_deleted=False)
+            supplier2divide_rebate = dict([(rebate.supplier_id, rebate.basic_rebate) for rebate in rebate_infos])
 
         else:
             product_id2store_name = {}
             product_id2sync_time = {}
             manager_supplier_ids2supplier = {}
+            supplier2divide_rebate = {}
 
         # 手动添加供货商的信息
         supplier_ids2name = dict([(s.id, s.name) for s in models.Supplier.objects.filter(owner=request.manager, is_delete=False)])
@@ -339,7 +346,8 @@ class ProductList(resource.Resource):
                 items1.append(product_dict)
             else:
                 items2.append(product_dict)
-
+            if supplier2divide_rebate:
+                product_dict.update({'rebate': supplier2divide_rebate.get(product.supplier)})
 
             items.append(product_dict)
 
@@ -638,10 +646,18 @@ class ProductPool(resource.Resource):
 
         supplier_ids2name = {}
         supplier_ids2supplier = {}
+        # 供货商对应五五分成的基础扣点
+        supplier_divide_rebate = {}
         if manager_product_user_id:
             suppliers = models.Supplier.objects.filter(owner_id=manager_product_user_id)
             supplier_ids2name = dict([(s.id, s.name) for s in suppliers])
             supplier_ids2supplier = dict([(s.id, s) for s in suppliers])
+            # 保险期间,查询出五五分成的供货商suppliers
+            suppliers = suppliers.filter(type=0)
+            supplier_ids = [supplier.id for supplier in suppliers]
+            rebate_infos = models.SupplierDivideRebateInfo.objects.filter(supplier_id__in=supplier_ids,
+                                                                          is_deleted=False)
+            supplier_divide_rebate = dict([(rebate.supplier_id, rebate.basic_rebate) for rebate in rebate_infos])
 
         product_ids = [product.id for product in products]
         relations = models.ClassificationHasProduct.objects.filter(product_id__in=product_ids)
@@ -686,12 +702,16 @@ class ProductPool(resource.Resource):
             # product.fill_standard_model()
             if supplier_ids2supplier:
                 supplier = supplier_ids2supplier.get(product.supplier, None)
+
                 if supplier:
                     supplier_type = supplier.type
                 else:
                     supplier_type = -1
             else:
                 supplier_type = -1
+            # 五五分成的基础扣点(只有五五分成才有此数据)
+            basic_rebate = supplier_divide_rebate.get(product.supplier, '')
+
             items.append({
                 'id': product.id,
                 # 'product_has_promotion': product_has_promotion,
@@ -707,6 +727,7 @@ class ProductPool(resource.Resource):
                 'models': product.models[1:],
                 'display_price_range': product.display_price_range,
                 'supplier_type': supplier_type,
+                'basic_rebate': basic_rebate,
                 'classification': "%s-%s" % (
                     id2first_classification[id2secondary_classification[product_id2classification_id[product.id]].father_id].name,
                     id2secondary_classification[product_id2classification_id[product.id]].name
