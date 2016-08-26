@@ -108,7 +108,7 @@ class Command(BaseCommand):
 
 			workbook.close()
 
-			receivers = ['houtingfei@weizoom.com', 'zhangzhiyong@weizoom.com', 'guoyucheng@weizoom.com']
+			receivers = ['houtingfei@weizoom.com', 'zhangzhiyong@weizoom.com', 'guoyucheng@weizoom.com', 'mengqi@weizoom.com']
 			mode = ''
 			if len(args) == 1:
 				if args[0] == 'test':
