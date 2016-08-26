@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import json
 
 from core import api_resource, paginator
 from mall.models import Order, ORDER_STATUS_SUCCESSED, ORDER_STATUS_PAYED_SHIPED, ORDER_STATUS_PAYED_NOT_SHIP, \
@@ -21,24 +22,22 @@ class QrcodeMember(api_resource.ApiResource):
 		获取会员
 		"""
 		channel_qrcode_id = int(args.get('channel_qrcode_id'))
-		channel_qrcode = ChannelQrcodeSettings.objects.filter(id=channel_qrcode_id)
-		user_id = 0
-		if channel_qrcode.count() > 0:
-			user_id = channel_qrcode[0].owner_id
-		userprofile = UserProfile.objects.filter(user_id=user_id)
-		webapp_id = 0
-		if userprofile.count() > 0:
-			webapp_id = userprofile[0].webapp_id
+		channel_qrcode_ids = json.loads(args.get('channel_qrcode_ids',"[]"))
 
-		filter_data_args = {
-			"channel_qrcode_id": channel_qrcode_id
-		}
+		if channel_qrcode_ids:
+			filter_data_args = {
+				"channel_qrcode_id__in": channel_qrcode_ids
+			}
+		else:
+			filter_data_args = {
+				"channel_qrcode_id": channel_qrcode_id
+			}
 
 		member_name = args.get('member_name', None)
 		start_date = args.get('start_date', None)
 		end_date = args.get('end_date', None)
 		if member_name:
-			members = Member.objects.filter(webapp_id=webapp_id, username_hexstr__contains=byte_to_hex(member_name))
+			members = Member.objects.filter(username_hexstr__contains=byte_to_hex(member_name))
 			member_ids = []
 			for member in members:
 				member_ids.append(member.id)
@@ -47,7 +46,7 @@ class QrcodeMember(api_resource.ApiResource):
 		if start_date and end_date:
 			start_time = start_date + ' 00:00:00'
 			end_time = end_date + ' 23:59:59'
-			members = Member.objects.filter(webapp_id=webapp_id, created_at__gte=start_time, created_at__lte=end_time)
+			members = Member.objects.filter(created_at__gte=start_time, created_at__lte=end_time)
 			member_ids = []
 			for member in members:
 				member_ids.append(member.id)
@@ -72,7 +71,7 @@ class QrcodeMember(api_resource.ApiResource):
 		webapp_user_id2sale_money = {}
 		final_price = 0
 		for order in orders:
-			final_price+=order.final_price
+			final_price += order.final_price
 			if not webapp_user_id2final_price.has_key(order.webapp_user_id):
 				webapp_user_id2final_price[order.webapp_user_id] = order.final_price
 			else:

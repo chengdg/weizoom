@@ -9,9 +9,9 @@ from wapi.decorators import param_required
 from modules.member.models import *
 from utils.string_util import hex_to_byte, byte_to_hex
 
-class QrcodeMember(api_resource.ApiResource):
+class ShopMemberDetails(api_resource.ApiResource):
 	"""
-	二维码
+	帐号管理
 	"""
 	app = 'qrcode'
 	resource = 'shop_member_details'
@@ -23,13 +23,6 @@ class QrcodeMember(api_resource.ApiResource):
 		"""
 		channel_qrcode_ids = json.loads(args.get('channel_qrcode_ids'))
 		channel_qrcodes = ChannelQrcodeSettings.objects.filter(id__in=channel_qrcode_ids)
-		user_id = 0
-		if channel_qrcodes.count() > 0:
-			user_id = channel_qrcodes[0].owner_id
-		userprofile = UserProfile.objects.filter(user_id=user_id)
-		webapp_id = 0
-		if userprofile.count() > 0:
-			webapp_id = userprofile[0].webapp_id
 
 		filter_data_args = {
 			"channel_qrcode_id__in": channel_qrcode_ids
@@ -39,7 +32,7 @@ class QrcodeMember(api_resource.ApiResource):
 		start_date = args.get('start_date', None)
 		end_date = args.get('end_date', None)
 		if member_name:
-			members = Member.objects.filter(webapp_id=webapp_id, username_hexstr__contains=byte_to_hex(member_name))
+			members = Member.objects.filter(username_hexstr__contains=byte_to_hex(member_name))
 			member_ids = []
 			for member in members:
 				member_ids.append(member.id)
@@ -48,7 +41,7 @@ class QrcodeMember(api_resource.ApiResource):
 		if start_date and end_date:
 			start_time = start_date + ' 00:00:00'
 			end_time = end_date + ' 23:59:59'
-			members = Member.objects.filter(webapp_id=webapp_id, created_at__gte=start_time, created_at__lte=end_time)
+			members = Member.objects.filter(created_at__gte=start_time, created_at__lte=end_time)
 			member_ids = []
 			for member in members:
 				member_ids.append(member.id)

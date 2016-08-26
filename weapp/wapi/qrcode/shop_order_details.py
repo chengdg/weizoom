@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import json
 import time
 
 from core import api_resource, paginator
@@ -8,22 +9,31 @@ from modules.member.models import *
 from mall.models import Order, STATUS2TEXT, OrderHasProduct, Product, ProductModel,OrderOperationLog
 
 
-class QrcodeOrder(api_resource.ApiResource):
+class ShopOrderDetails(api_resource.ApiResource):
 	"""
 	二维码
 	"""
 	app = 'qrcode'
-	resource = 'orders'
+	resource = 'shop_order_details'
 
-	@param_required(['channel_qrcode_id'])
+	@param_required(['channel_qrcode_ids'])
 	def get(args):
 		"""
 		获取订单
 		"""
-		channel_qrcode_id = int(args.get('channel_qrcode_id'))
-		channel_qrcode = ChannelQrcodeSettings.objects.get(id=channel_qrcode_id)
+		channel_qrcode_ids = json.loads(args.get('channel_qrcode_ids'))
+		print channel_qrcode_ids,"channel_qrcode_idsGGGGGGGGGGGGGGGGGGG"
+		channel_qrcode = ChannelQrcodeSettings.objects.filter(id__in=channel_qrcode_ids)
 
-		member_ids = [member_log.member_id for member_log in ChannelQrcodeHasMember.objects.filter(channel_qrcode_id=channel_qrcode_id)]
+		channel_members = ChannelQrcodeHasMember.objects.filter(channel_qrcode_id__in=channel_qrcode_ids)
+		channel_qrcode_id2member_id = {}
+		member_ids = []
+		for member_log in channel_members:
+			member_ids.append(member_log.member_id)
+			if not channel_qrcode_id2member_id.has_key(member_log.channel_qrcode_id):
+				channel_qrcode_id2member_id[member_log.channel_qrcode_id] = [member_log.member_id]
+			else:
+				channel_qrcode_id2member_id[member_log.channel_qrcode_id].append(member_log.member_id)
 		webapp_user_ids = [webappuser.id for webappuser in WebAppUser.objects.filter(member_id__in=member_ids)]
 
 		filter_data_args = {
@@ -149,7 +159,13 @@ class QrcodeOrder(api_resource.ApiResource):
 					name = member.username_hexstr
 			else:
 				name = u'未知'
+
+			channel_qrcode_id = 0
+			for channel_qrcode_id, member_ids in channel_qrcode_id2member_id.items():
+				if member_id in member_ids:
+					channel_qrcode_id = channel_qrcode_id
 			orders.append({
+				"channel_qrcode_id": channel_qrcode_id,
 				"order_id": channel_order.id,
 				"order_number": channel_order.order_id,
 				"is_first_order": channel_order.is_first_order,
@@ -167,7 +183,7 @@ class QrcodeOrder(api_resource.ApiResource):
 		if not is_export:
 			return {
 				'items': orders,
-				'pageinfo': paginator.to_dict(pageinfo) if pageinfo else ''
+				'pageinfo': paginator.to_dict(pageinfo)
 			}
 		else:
 			return {

@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
+import json
 
 from core import api_resource, paginator
 from market_tools.tools.channel_qrcode.models import ChannelQrcodeSettings, ChannelQrcodeHasMember
 from wapi.decorators import param_required
 from modules.member.models import *
-from utils.string_util import hex_to_byte, byte_to_hex
 from mall.models import Order
 import time
 
@@ -15,29 +15,27 @@ class QrcodeMemberOutline(api_resource.ApiResource):
 	app = 'qrcode'
 	resource = 'member_outline'
 
-	@param_required(['channel_qrcode_id'])
+	@param_required([])
 	def get(args):
 		"""
 		获取会员
 		"""
 		start = time.time()
-		channel_qrcode_id = int(args.get('channel_qrcode_id'))
-		channel_qrcode = ChannelQrcodeSettings.objects.filter(id=channel_qrcode_id)
-		user_id = 0
-		if channel_qrcode.count() > 0:
-			user_id = channel_qrcode[0].owner_id
-		userprofile = UserProfile.objects.filter(user_id=user_id)
-		webapp_id = 0
-		if userprofile.count() > 0:
-			webapp_id = userprofile[0].webapp_id
+		channel_qrcode_id = int(args.get('channel_qrcode_id', 0))
+		channel_qrcode_ids = json.loads(args.get('channel_qrcode_ids', "[]"))
+		if channel_qrcode_ids:
+			filter_data_args = {
+				"channel_qrcode_id__in": channel_qrcode_ids
+			}
+		else:
+			filter_data_args = {
+				"channel_qrcode_id": channel_qrcode_id
+			}
 
-		filter_data_args = {
-			"channel_qrcode_id": channel_qrcode_id
-		}
 		total_channel_members = ChannelQrcodeHasMember.objects.filter(**filter_data_args).order_by('-created_at')
 		total_member_ids = [tcm.member_id for tcm in total_channel_members]
-		webapp_user_id2member_id = {webappuser.id: webappuser.member_id for webappuser in WebAppUser.objects.filter(webapp_id=webapp_id, member_id__in=total_member_ids)}
-		orders = Order.objects.filter(webapp_id=webapp_id, webapp_user_id__in=webapp_user_id2member_id.keys(), origin_order_id__lte=0)
+		webapp_user_id2member_id = {webappuser.id: webappuser.member_id for webappuser in WebAppUser.objects.filter(member_id__in=total_member_ids)}
+		orders = Order.objects.filter(webapp_user_id__in=webapp_user_id2member_id.keys(), origin_order_id__lte=0)
 		total_webapp_user_ids = [order.webapp_user_id for order in orders]
 
 		total_member_order_count = set()

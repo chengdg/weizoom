@@ -5,13 +5,12 @@ from core import api_resource, paginator
 from market_tools.tools.channel_qrcode.models import ChannelQrcodeSettings, ChannelQrcodeHasMember
 from wapi.decorators import param_required
 from modules.member.models import *
-from utils.string_util import hex_to_byte, byte_to_hex
 from mall.models import Order, ORDER_STATUS_NOT,ORDER_STATUS_CANCEL,ORDER_STATUS_GROUP_REFUNDING,ORDER_STATUS_GROUP_REFUNDED,ORDER_STATUS_REFUNDING,ORDER_STATUS_REFUNDED, OrderOperationLog,STATUS2TEXT
 import time
 
-class QrcodeBalanceOutline(api_resource.ApiResource):
+class ShopBalanceOutline(api_resource.ApiResource):
 	"""
-	二维码
+	帐号管理
 	"""
 	app = 'qrcode'
 	resource = 'shop_balance_outline'

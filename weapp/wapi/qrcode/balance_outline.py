@@ -5,7 +5,6 @@ from core import api_resource, paginator
 from market_tools.tools.channel_qrcode.models import ChannelQrcodeSettings, ChannelQrcodeHasMember
 from wapi.decorators import param_required
 from modules.member.models import *
-from utils.string_util import hex_to_byte, byte_to_hex
 from mall.models import Order, ORDER_STATUS_NOT,ORDER_STATUS_CANCEL,ORDER_STATUS_GROUP_REFUNDING,ORDER_STATUS_GROUP_REFUNDED,ORDER_STATUS_REFUNDING,ORDER_STATUS_REFUNDED, OrderOperationLog,STATUS2TEXT
 import time
 
@@ -24,40 +23,25 @@ class QrcodeBalanceOutline(api_resource.ApiResource):
 		start = time.time()
 		channel_qrcode_id = int(args.get('channel_qrcode_id'))
 		order_numbers = json.loads(args.get('order_numbers', ''))
-		balance_time_from = args.get('balance_time_from','')
 
-		channel_qrcode = ChannelQrcodeSettings.objects.filter(id=channel_qrcode_id)
-		user_id = 0
-		if channel_qrcode.count() > 0:
-			user_id = channel_qrcode[0].owner_id
-		userprofile = UserProfile.objects.filter(user_id=user_id)
-		webapp_id = 0
-		if userprofile.count() > 0:
-			webapp_id = userprofile[0].webapp_id
+		channel_qrcode = ChannelQrcodeSettings.objects.get(id=channel_qrcode_id)
+		created_at = channel_qrcode.created_at.strftime("%Y-%m-%d %H:%M:%S")
 
 		total_channel_members = ChannelQrcodeHasMember.objects.filter(channel_qrcode_id=channel_qrcode_id).order_by('-created_at')
 		total_member_ids = [tcm.member_id for tcm in total_channel_members]
-		webapp_user_ids = [webappuser.id for webappuser in WebAppUser.objects.filter(webapp_id=webapp_id, member_id__in=total_member_ids)]
+		webapp_user_ids = [webappuser.id for webappuser in WebAppUser.objects.filter(member_id__in=total_member_ids)]
 
-		start_date = args.get('start_date', None)
-		end_date = args.get('end_date', None)
 		filter_data_args = {
-			"webapp_id": webapp_id,
 			"webapp_user_id__in": webapp_user_ids,
 			"origin_order_id__lte": 0,
-			"created_at__gte": balance_time_from
+			"created_at__gte": created_at
 		}
-
-		start_time = start_date + ' 00:00:00'
-		end_time = end_date + ' 23:59:59'
-			# filter_data_args["created_at__gte"] = start_time
-			# filter_data_args["created_at__lte"] = end_time
 
 
 		# 获取在某段时间内的已完成和退款完成的订单时间
 		orderoperationlogs = OrderOperationLog.objects.filter(
 			action__in=[u"完成", u"退款完成"],
-			created_at__gte=balance_time_from
+			created_at__gte=created_at
 		).exclude(order_id__contains='^')
 
 		order_number2finished_at = {opl.order_id: opl.created_at for opl in orderoperationlogs}

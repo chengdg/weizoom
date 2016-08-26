@@ -6,9 +6,8 @@ from mall.models import Order
 from market_tools.tools.channel_qrcode.models import ChannelQrcodeSettings, ChannelQrcodeHasMember
 from wapi.decorators import param_required
 from modules.member.models import *
-from utils.string_util import hex_to_byte, byte_to_hex
 
-class QrcodeMember(api_resource.ApiResource):
+class ShopMembers(api_resource.ApiResource):
 	"""
 	二维码
 	"""
@@ -18,19 +17,9 @@ class QrcodeMember(api_resource.ApiResource):
 	@param_required(['channel_qrcode_ids'])
 	def get(args):
 		"""
-		获取会员
+		帐号管理
 		"""
 		channel_qrcode_ids = json.loads(args.get('channel_qrcode_ids'))
-		channel_qrcodes = ChannelQrcodeSettings.objects.filter(id__in=channel_qrcode_ids)
-
-		channel_qrcode_ids = [c.id for c in channel_qrcodes]
-		user_id = 0
-		if channel_qrcodes.count() > 0:
-			user_id = channel_qrcodes[0].owner_id
-		userprofile = UserProfile.objects.filter(user_id=user_id)
-		webapp_id = 0
-		if userprofile.count() > 0:
-			webapp_id = userprofile[0].webapp_id
 
 		filter_data_args = {
 			"channel_qrcode_id__in": channel_qrcode_ids
@@ -45,8 +34,8 @@ class QrcodeMember(api_resource.ApiResource):
 			else:
 				channel_qrcode_id2channel_member[m.channel_qrcode_id].append(m)
 
-		webapp_user_id2member_id = {webappuser.id: webappuser.member_id for webappuser in WebAppUser.objects.filter(webapp_id=webapp_id, member_id__in=total_member_ids)}
-		orders = Order.objects.filter(webapp_id=webapp_id, webapp_user_id__in=webapp_user_id2member_id.keys(),origin_order_id__lte=0)
+		webapp_user_id2member_id = {webappuser.id: webappuser.member_id for webappuser in WebAppUser.objects.filter(member_id__in=total_member_ids)}
+		orders = Order.objects.filter(webapp_user_id__in=webapp_user_id2member_id.keys(), origin_order_id__lte=0)
 		total_webapp_user_ids = [order.webapp_user_id for order in orders]
 
 		channel_qrcode_id2total_member_order = {}

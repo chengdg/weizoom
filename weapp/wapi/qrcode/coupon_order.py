@@ -5,10 +5,7 @@ from core import api_resource, paginator
 from mall.models import Order, ORDER_STATUS_CANCEL, ORDER_STATUS_REFUNDING, \
 	ORDER_STATUS_REFUNDED, ORDER_STATUS_GROUP_REFUNDING, ORDER_STATUS_GROUP_REFUNDED
 from mall.promotion.models import CouponRule, Coupon, COUPON_STATUS_USED
-from market_tools.tools.channel_qrcode.models import ChannelQrcodeSettings, ChannelQrcodeHasMember
 from wapi.decorators import param_required
-from modules.member.models import *
-from utils.string_util import hex_to_byte, byte_to_hex
 
 class CouponOrder(api_resource.ApiResource):
 	"""
@@ -23,7 +20,6 @@ class CouponOrder(api_resource.ApiResource):
 		优惠券统计
 		"""
 		coupon_rule_ids = json.loads(args.get('coupon_rule_ids'))
-		# coupon_rule_ids = [int(coupon_rule_id) for coupon_rule_id in coupon_rule_ids]
 		coupon_rules = CouponRule.objects.filter(id__in=coupon_rule_ids)
 
 		# 处理分页
