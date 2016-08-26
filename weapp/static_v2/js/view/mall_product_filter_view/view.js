@@ -7,49 +7,89 @@ W.view.mall.ProductFilterView = Backbone.View.extend({
 
     events: {
         'click .xa-search': 'onClickSearchButton',
-        'click .xa-reset': 'onClickResetButton'
+        'click .xa-reset': 'onClickResetButton',
+        'change #firstClassification': 'onChangeEvent'
     },
 
     initialize: function(options) {
         this.options = options || {};
         this.$el = $(options.el);
         this.filter_value = '';
+        this.classifications='';
         this.bind('clickStatusBox', this.clickStatusBox);
+
     },
 
     render: function() {
-        var _this = this;
-        low_stocks = this.options.low_stocks || -1;
-        if(low_stocks < 0) {
-            low_stocks = '';
-        }
-        high_stocks = this.options.high_stocks || -1;
-        if(high_stocks < 0) {
-            high_stocks = '';
-        }
-        mall_type = this.options.mall_type || 0;
-        W.getApi().call({
-            method: 'get',
-            app: 'mall2',
-            resource: 'product_filter_param',
-            args:{},
+        W.resource.mall2.ProductClassification.get({
+            scope: this,
+            data: {'level': 1},
             success: function(data) {
-                var html = $.tmpl(this.getTemplate(), {
-                    categories: data.categories,
-                    low_stocks: low_stocks,  //支持从首页店铺提醒“库存不足商品”过来的请求 duhao 20150925
-                    high_stocks: high_stocks,  //支持从首页店铺提醒“库存不足商品”过来的请求 duhao 20150925
-                    mall_type: mall_type // 支持微众自营平台，按照供货商筛选
+                this.classifications = data.items;
+                var a = data.items;
+
+                var _this = this;
+                low_stocks = this.options.low_stocks || -1;
+                if(low_stocks < 0) {
+                    low_stocks = '';
+                }
+                high_stocks = this.options.high_stocks || -1;
+                if(high_stocks < 0) {
+                    high_stocks = '';
+                }
+                mall_type = this.options.mall_type || 0;
+                W.getApi().call({
+                    method: 'get',
+                    app: 'mall2',
+                    resource: 'product_filter_param',
+                    args:{},
+                    success: function(data) {
+                        var html = $.tmpl(this.getTemplate(), {
+                            classifications: this.classifications,
+                            categories: data.categories,
+                            low_stocks: low_stocks,  //支持从首页店铺提醒“库存不足商品”过来的请求 duhao 20150925
+                            high_stocks: high_stocks,  //支持从首页店铺提醒“库存不足商品”过来的请求 duhao 20150925
+                            mall_type: mall_type // 支持微众自营平台，按照供货商筛选
+                            
+                        });
+                        this.$el.append(html);
+                        _this.addDatepicker();
+                        //$('.xa-showFilterBox').append($('.xa-timelineControl'));
+                    },
+                    error: function(response) {
+                        alert('加载失败！请刷新页面重试！');
+                    },
+                    scope: this
                 });
-                this.$el.append(html);
-                _this.addDatepicker();
-                //$('.xa-showFilterBox').append($('.xa-timelineControl'));
             },
-            error: function(response) {
+            error: function() {
                 alert('加载失败！请刷新页面重试！');
-            },
-            scope: this
+            }
         });
+        
     },
+
+    onChangeEvent: function() {
+        var $target = $(event.target);
+        var father_id = $target.val();
+        W.resource.mall2.ProductClassification.get({
+            scope: this,
+            data: {'level': 2, 'father_id': father_id},
+            success: function(data) {
+                console.log(data);
+            var option = '<option value="-1">二级分类</option>';
+            _.each(data.items,function(data,i){
+                option+='<option value='+data.id+'>'+data.name+'</option>';
+                });
+
+                $('.xa-secondCategory').html(option);
+            },
+            error: function() {
+                alert('加载失败！请刷新页面重试！');
+            }
+        })
+    },
+
 
     // 点击‘最近7天’或‘最近30天’
     setDateText: function(event){
@@ -73,6 +113,8 @@ W.view.mall.ProductFilterView = Backbone.View.extend({
         xlog('reset');
         $('#name').val('');
         $('#bar_code').val('');
+        $('#firstClassification').val('-1');
+        $('#secondaryClassification').val('-1');
         $('#low_price').val('');
         $('#high_price').val('');
         $('#end_date').val('');
@@ -90,6 +132,16 @@ W.view.mall.ProductFilterView = Backbone.View.extend({
 
     // 获取条件数据
     getFilterData: function(){
+        var first_classification = $.trim(this.$('#firstClassification').val());
+        if (!first_classification){
+            first_classification = -1
+        }
+
+        var secondary_classification = $.trim(this.$('#secondaryClassification').val());
+        if (!secondary_classification){
+            secondary_classification = -1
+        }
+        
         //上架时间
         var startDate = $.trim(this.$('#start_date').val());
         var endDate = $.trim(this.$('#end_date').val());
@@ -196,6 +248,8 @@ W.view.mall.ProductFilterView = Backbone.View.extend({
             highStocks: highStocks,
             lowSales: lowSales,
             highSales: highSales,
+            first_classification: first_classification,
+            secondary_classification: secondary_classification,
             supplier_type:supplier_type
         }
         //微众系列 筛选‘供货商’

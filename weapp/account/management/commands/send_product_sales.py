@@ -44,7 +44,7 @@ class Command(BaseCommand):
 			file_path = 'product_pool_sales.xlsx'
 			workbook   = xlsxwriter.Workbook(file_path)
 			table = workbook.add_worksheet()
-			alist = [u'商品', u'供货商', u'销量', u'微众卡', u'微众优惠券', u'微众积分', u'现金', u'总金额']
+			alist = [u'商品', u'供货商', u'分类', u'销量', u'微众卡', u'微众优惠券', u'微众积分', u'现金', u'总金额']
 			table.write_row('A1',alist)
 			pool_weapp_profile = UserProfile.objects.filter(webapp_type=2).first()
 			owner_pool = User.objects.get(id=pool_weapp_profile.user_id)
@@ -54,6 +54,11 @@ class Command(BaseCommand):
 
 			supplier_ids2name = {}
 			product_id2store_name, product_id2sync_time = utils.get_sync_product_store_name(product_ids)
+			#添加分类
+			product_id2classification = {}
+			relations = ClassificationHasProduct.objects.filter(product_id__in=product_ids)
+			for r in relations:
+				product_id2classification[r.product_id] = r.classification.name
 			tmp_line = 1
 			for product_id in product_ids:
 				tmp_line += 1
@@ -81,7 +86,7 @@ class Command(BaseCommand):
 				cash = 0.0
 				total = 0.0
 
-				order_has_products = OrderHasProduct.objects.filter(product_id=product_id, order__origin_order_id__lte=0, order__status__in=sales_order_status, order__payment_time__gte='2016-08-01')
+				order_has_products = OrderHasProduct.objects.filter(product_id=product_id, order__origin_order_id__lte=0, order__status__in=sales_order_status, order__payment_time__gte=first_day)
 				for order_has_product in order_has_products:
 					product_sales += order_has_product.number
 					weizoom_card += order_has_product.order.weizoom_card_money
@@ -98,7 +103,7 @@ class Command(BaseCommand):
 					cash += order_has_product.order.final_price
 					total += order_has_product.price* order_has_product.number
 
-				tmp_list = [product_name, supplier_name_export, product_sales, round(weizoom_card, 2), round(coupon_money,2), round(integral_money,2) , round(cash,2), round(total,2)]
+				tmp_list = [product_name, supplier_name_export, product_id2classification.get(product_id,''), product_sales, round(weizoom_card, 2), round(coupon_money,2), round(integral_money,2) , round(cash,2), round(total,2)]
 				table.write_row('A{}'.format(tmp_line),tmp_list)
 
 			workbook.close()
