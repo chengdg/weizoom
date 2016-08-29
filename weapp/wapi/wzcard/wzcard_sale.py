@@ -41,7 +41,7 @@ class WzcardSale(api_resource.ApiResource):
 		members = member_models.Member.objects.filter(id__in=member_ids)
 		member_id2name = {}
 		for member in members:
-			member_id2name[str(member.id)] = member.username
+			member_id2name[str(member.id)] = member.username_for_html
 
 		items = []
 		for wzcard in wzcards:
