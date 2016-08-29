@@ -2951,3 +2951,22 @@ class SupplierDivideRebateInfo(models.Model):
 
     class Meta(object):
         db_table = 'supplier_divide_rebate_info'
+
+
+
+class SupplierRetailRebateInfo(models.Model):
+    """
+    零售返点的供货商的返点信息(包括团购)
+    """
+    # 供货商id
+    supplier_id = models.IntegerField()
+    # 平台id(如果支持团购) 0的表示改供货商的基础扣点; 0的默认值表示改供货商的基础扣点
+    # 如果有owner_id说明该扣点是属于团购扣点
+    owner_id = models.IntegerField(default=0)
+    # 扣点
+    rebate = models.IntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_deleted = models.BooleanField(default=False)
+
+    class Meta(object):
+        db_table = 'supplier_retail_rebate_info'

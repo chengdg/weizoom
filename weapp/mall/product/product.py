@@ -659,17 +659,35 @@ class ProductPool(resource.Resource):
         supplier_ids2supplier = {}
         # 供货商对应五五分成的基础扣点
         supplier_divide_rebate = {}
+        # 零售返点信息
+        # 基础的
+        supplier_id_2_retail_rebate = {}
+        # 对应此平台特殊团购反点
+        supplier_id_2_self_retail_rebate = {}
+        # 本页的所有商品的所有供货商
+        supplier_ids = [product.supplier for product in products]
+
         if manager_product_user_id:
-            suppliers = models.Supplier.objects.filter(owner_id=manager_product_user_id)
+            suppliers = models.Supplier.objects.filter(id__in=supplier_ids)
             supplier_ids2name = dict([(s.id, s.name) for s in suppliers])
             supplier_ids2supplier = dict([(s.id, s) for s in suppliers])
-            # 保险期间,查询出五五分成的供货商suppliers
-            suppliers = suppliers.filter(type=0)
-            supplier_ids = [supplier.id for supplier in suppliers]
+            # 保险起见,查询出五五分成的供货商suppliers
             rebate_infos = models.SupplierDivideRebateInfo.objects.filter(supplier_id__in=supplier_ids,
                                                                           is_deleted=False)
             supplier_divide_rebate = dict([(rebate.supplier_id, rebate.basic_rebate) for rebate in rebate_infos])
 
+            # 零售返点(目前只有基础返点逻辑)
+            basic_retail_info = models.SupplierRetailRebateInfo.objects.filter(supplier_id__in=supplier_ids,
+                                                                               owner_id=0,
+                                                                               is_deleted=False)
+            # 某些供货商的对应改平台的团购返点
+            self_retail_info = models.SupplierRetailRebateInfo.objects.filter(supplier_id__in=supplier_ids,
+                                                                              owner_id=request.manager.id,
+                                                                              is_deleted=False)
+            supplier_id_2_retail_rebate = dict([(rebate_info.supplier_id, rebate_info.rebate)
+                                                for rebate_info in basic_retail_info])
+            supplier_id_2_self_retail_rebate = dict([(rebate_info.supplier_id, rebate_info.rebate)
+                                                     for rebate_info in self_retail_info])
         product_ids = [product.id for product in products]
         relations = models.ClassificationHasProduct.objects.filter(product_id__in=product_ids)
         product_id2classification_id = dict([(r.product_id, r.classification_id) for r in relations])
@@ -722,7 +740,8 @@ class ProductPool(resource.Resource):
                 supplier_type = -1
             # 五五分成的基础扣点(只有五五分成才有此数据)
             basic_rebate = supplier_divide_rebate.get(product.supplier, '')
-
+            basic_retail_rebate = supplier_id_2_retail_rebate.get(product.supplier, None)
+            self_retail_rebate = supplier_id_2_self_retail_rebate.get(product.supplier, None)
             items.append({
                 'id': product.id,
                 # 'product_has_promotion': product_has_promotion,
@@ -738,7 +757,10 @@ class ProductPool(resource.Resource):
                 'models': product.models[1:],
                 'display_price_range': product.display_price_range,
                 'supplier_type': supplier_type,
+                # 五五分成基础扣点
                 'basic_rebate': basic_rebate,
+                # 零售返点的对应此平台的反点
+                'retail_rebate': basic_retail_rebate if not self_retail_rebate else self_retail_rebate,
                 'classification': "%s-%s" % (
                     id2first_classification[id2secondary_classification[product_id2classification_id[product.id]].father_id].name,
                     id2secondary_classification[product_id2classification_id[product.id]].name
