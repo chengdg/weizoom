@@ -279,21 +279,36 @@ class ProductList(resource.Resource):
             product_ids = [product.id for product in products]
             product_id2store_name, product_id2sync_time = utils.get_sync_product_store_name(product_ids)
 
-            manager_product_user_id = UserProfile.objects.filter(webapp_type=2)[0].user_id
-            suppliers = models.Supplier.objects.filter(owner_id=manager_product_user_id)
+            # manager_product_user_id = UserProfile.objects.filter(webapp_type=2)[0].user_id
+            supplier_ids = [product.supplier for product in products]
+            suppliers = models.Supplier.objects.filter(id__in=supplier_ids)
             manager_supplier_ids2supplier = dict([(s.id, s) for s in suppliers])
             # 五五分成供货商的基础扣点
-            suppliers = suppliers.filter(type=0)
-            supplier_ids = [supplier.id for supplier in suppliers]
+            # suppliers = suppliers.filter(type=0)
+
             rebate_infos = models.SupplierDivideRebateInfo.objects.filter(supplier_id__in=supplier_ids,
                                                                           is_deleted=False)
             supplier2divide_rebate = dict([(rebate.supplier_id, rebate.basic_rebate) for rebate in rebate_infos])
 
+            # 零售返点(目前只有基础返点逻辑)
+            basic_retail_info = models.SupplierRetailRebateInfo.objects.filter(supplier_id__in=supplier_ids,
+                                                                               owner_id=0,
+                                                                               is_deleted=False)
+            # 某些供货商的对应改平台的团购返点
+            self_retail_info = models.SupplierRetailRebateInfo.objects.filter(supplier_id__in=supplier_ids,
+                                                                              owner_id=request.manager.id,
+                                                                              is_deleted=False)
+            supplier_id_2_retail_rebate = dict([(rebate_info.supplier_id, rebate_info.rebate)
+                                                for rebate_info in basic_retail_info])
+            supplier_id_2_self_retail_rebate = dict([(rebate_info.supplier_id, rebate_info.rebate)
+                                                     for rebate_info in self_retail_info])
         else:
             product_id2store_name = {}
             product_id2sync_time = {}
             manager_supplier_ids2supplier = {}
             supplier2divide_rebate = {}
+            supplier_id_2_retail_rebate = {}
+            supplier_id_2_self_retail_rebate = {}
 
         # 手动添加供货商的信息
         supplier_ids2name = dict([(s.id, s.name) for s in models.Supplier.objects.filter(owner=request.manager, is_delete=False)])
@@ -342,7 +357,7 @@ class ProductList(resource.Resource):
                 if supplier and supplier.type == 0:
                     product_dict['supplier_type'] = 0
                 else:
-                    product_dict['supplier_type'] = -1
+                    product_dict['supplier_type'] = supplier.type
             else:
                 store_name = ''
                 product_dict['supplier_type'] = -1
@@ -373,7 +388,12 @@ class ProductList(resource.Resource):
                 items2.append(product_dict)
             if supplier2divide_rebate:
                 product_dict.update({'rebate': supplier2divide_rebate.get(product.supplier)})
-
+            # supplier_id_2_retail_rebate = {}
+            # supplier_id_2_self_retail_rebate = {}
+            retail_rebate = supplier_id_2_self_retail_rebate.get(product.supplier)
+            if not retail_rebate:
+                retail_rebate = supplier_id_2_retail_rebate.get(product.supplier, None)
+            product_dict.update({'retail_rebate': retail_rebate})
             items.append(product_dict)
 
         # 微众系列待售排序

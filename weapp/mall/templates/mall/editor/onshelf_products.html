@@ -181,13 +181,29 @@
 					</td>
 					<td>${product.sales}</td>
 					{{if data.data.mall_type == 1}}
-					<td>{{if product.supplier_type == 0}}
+					<td>
+						{{if product.supplier_type == 0}}
                             首月55分成
                             {{if product.rebate}}
-                            	<span style="color:red;">(${product.rebate}%)</span>
+                            	<span style="color:red;">(%)</span>
                             {{/if}}
-                        {{else}}
-                        {{/if}}</td>
+                        {{/if}}
+                        {{if product.supplier_type == 1}}
+                            零售返点
+                            {{if product.retail_rebate}}
+                            	<span style="color:red;">(${product.retail_rebate}%)</span>
+                            {{/if}}
+                        {{/if}}
+                        {{if product.supplier_type == 2}}
+                            固定低价
+
+                        {{/if}}
+                        {{if product.supplier_type == -1}}
+
+
+                        {{/if}}
+
+                    </td>
 					{{/if}}
 					<td>{{if data.data.mall_type == 1 }}${product.sync_at}{{else}}${product.created_at}{{/if}}</td>
 					{{if data.data.mall_type > 0 && data.data.mall_type != 3}}<td>${product.classification}</td>{{/if}}
