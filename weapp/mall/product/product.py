@@ -357,7 +357,7 @@ class ProductList(resource.Resource):
                 if supplier and supplier.type == 0:
                     product_dict['supplier_type'] = 0
                 else:
-                    product_dict['supplier_type'] = supplier.type
+                    product_dict['supplier_type'] = supplier.type if supplier else -1
             else:
                 store_name = ''
                 product_dict['supplier_type'] = -1
