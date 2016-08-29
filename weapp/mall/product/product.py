@@ -210,7 +210,6 @@ class ProductList(resource.Resource):
                 if products:
                     products = products.filter(supplier__in=mananger_supplier_ids)
 
-
             #add by bert 增加扣点类型查询
             manager_user_profile = UserProfile.objects.filter(webapp_type=2)[0]
             try:
