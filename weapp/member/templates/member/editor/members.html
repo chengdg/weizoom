@@ -127,6 +127,12 @@
 					    </li>
 					</ul>
 				</div>
+				<div class="w500 pa pr30 div_export" style="top:10px;left:430px;line-height:30px;">
+					
+
+					<a href="javascript:void(0);" class="btn fr btn-default xa-export mr20 " id="export_data_file">导出结果</a>
+					
+				</div>
 			</div>
 		</div>
 		<div
@@ -267,12 +273,7 @@
 {% block js %}
 {% verbatim %}
 <script id="members-view" type="text/x-jquery-tmpl">
-	<div class="w500 pa pr30 div_export" style="top:10px;left:500px;line-height:30px;">
-		<label class="fr">筛选结果：${data.total_count}人</label>
 
-		<a href="javascript:void(0);" class="btn fr btn-default xa-export mr20 " id="export_data_file">导出结果</a>
-		
-	</div>
 	<table class="table table-bordered xui-productList xb-stripedTable xb-noTdBorder xb-noBottom xb-noBorder xb-theadBg" >
 		<thead>
 		<tr>
@@ -734,8 +735,7 @@ $(document).ready(function() {
 	});
 
 	
-	
-	$('.panel-body').delegate('.xa-export', 'click', function(event){
+	$('.panel-heading').delegate('.xa-export', 'click', function(event){
 		W.getApi().call({
 			app: 'export_job',
 			resource: 'export_is_download',
@@ -789,40 +789,35 @@ $(document).ready(function() {
 	var export2data = {{export2data|safe}};
 	var woid = "{{ request.manager.id }}";
 	if(export2data["status"] ===1 && export2data["is_download"] ===0 ){
-		table.afterload = function(){
-			var options = {
-				el: '.div_export',
-				topic_id: '',
-				type: '',
-				url: "",
-				jobId:export2data["id"],
-				isAlreadyExport : true,
-				app: 'member',
-				timelinesOptions: {
-				}
+		var options = {
+			el: '.div_export',
+			topic_id: '',
+			type: '',
+			url: "",
+			jobId:export2data["id"],
+			isAlreadyExport : true,
+			app: 'member',
+			timelinesOptions: {
 			}
-			var memberExportFileView = new W.dialog.ExportFileView(options);
-			memberExportFileView.finish();
-		};
+		}
+		var memberExportFileView = new W.dialog.ExportFileView(options);
+		memberExportFileView.finish();
 	}
 	else if(export2data["status"] ===0 && export2data["is_download"] ===0 ){
-		table.afterload = function(){
-
-			var jobId = export2data["id"];
-			var options = {
-				el: '.div_export',
-				topic_id: '',
-				type: '',
-				url: "",
-				jobId:export2data["id"],
-				isAlreadyExport : true,
-				app: 'member',
-				timelinesOptions: {
-				}
+		var jobId = export2data["id"];
+		var options = {
+			el: '.div_export',
+			topic_id: '',
+			type: '',
+			url: "",
+			jobId:export2data["id"],
+			isAlreadyExport : true,
+			app: 'member',
+			timelinesOptions: {
 			}
-			var memberExportFileView = new W.dialog.ExportFileView(options);
-			memberExportFileView.doExportAfterApi();
-		};
+		}
+		var memberExportFileView = new W.dialog.ExportFileView(options);
+		memberExportFileView.doExportAfterApi();
 	}
 
 	$('.panel').delegate('.relation-text', 'click', function(event) {
