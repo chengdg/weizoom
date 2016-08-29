@@ -61,7 +61,7 @@ class ShopOrderDetails(api_resource.ApiResource):
 
 		channel_orders = Order.objects.filter(**filter_data_args).order_by('-created_at')
 
-		is_export = args.get('is_export', 0)
+		is_export = int(args.get('is_export', 0))
 		if not is_export:
 			#处理分页
 			count_per_page = int(args.get('count_per_page', '20'))

@@ -38,15 +38,30 @@ class ShopOrders(api_resource.ApiResource):
 
 		start_date = args.get('start_date', None)
 		end_date = args.get('end_date', None)
-		filter_data_args = {
-			"webapp_user_id__in": webapp_user_id2member_id.keys(),
-			"origin_order_id__lte": 0,
-			"created_at__gte": created_at
-		}
+		is_export = args.get('is_export', None)
+		if is_export:
+			filter_data_args = {
+				"webapp_user_id__in": webapp_user_id2member_id.keys(),
+				"origin_order_id__lte": 0,
+				"created_at__gte": created_at
+			}
+		else:
+			filter_data_args = {
+				"webapp_user_id__in": webapp_user_id2member_id.keys(),
+				"origin_order_id__lte": 0,
+				"created_at__gte": created_at,
+			}
+			if start_date and end_date:
+				start_time = start_date + ' 00:00:00'
+				end_time = end_date + ' 23:59:59'
+				filter_data_args["created_at__gte"] = start_time
+				filter_data_args["created_at__lte"] = end_time
 
 		orders = Order.objects.filter(**filter_data_args)
 		channel_qrcode_id2increase_order_count = {}
 		channel_qrcode_id2first_order_count = {}
+		channel_qrcode_id2final_price = {}
+		channel_qrcode_id2order_sale_money = {}
 		#下单时间
 		if start_date and end_date:
 			start_time = start_date + ' 00:00:00'
@@ -58,6 +73,8 @@ class ShopOrders(api_resource.ApiResource):
 				if created_at >= start_time and created_at <= end_time:
 					for channel_qrcode_id, member_ids in channel_qrcode_id2member_id.items():
 						if member_id in member_ids:
+							sale_price = order.final_price + order.coupon_money + order.integral_money + order.weizoom_card_money + order.promotion_saved_money + order.edit_money
+							final_price = order.final_price
 							if not channel_qrcode_id2increase_order_count.has_key(channel_qrcode_id):
 								channel_qrcode_id2increase_order_count[channel_qrcode_id] = 1
 							else:
@@ -68,35 +85,63 @@ class ShopOrders(api_resource.ApiResource):
 								else:
 									channel_qrcode_id2first_order_count[channel_qrcode_id] += 1
 
-		channel_qrcode_id2order_count = {}
-		channel_qrcode_id2order_sale_money = {}
-		channel_qrcode_id2final_price = {}
-		for order in orders:
-			webapp_user_id = order.webapp_user_id
-			member_id = webapp_user_id2member_id.get(webapp_user_id)
-			for channel_qrcode_id, member_ids in channel_qrcode_id2member_id.items():
-				if member_id in member_ids:
-					if not channel_qrcode_id2order_count.has_key(channel_qrcode_id):
-						channel_qrcode_id2order_count[channel_qrcode_id] = 1
-					else:
-						channel_qrcode_id2order_count[channel_qrcode_id] += 1
-					if order.status not in [ORDER_STATUS_CANCEL,ORDER_STATUS_GROUP_REFUNDING,ORDER_STATUS_GROUP_REFUNDED,ORDER_STATUS_REFUNDING,ORDER_STATUS_REFUNDED]:
-						sale_price = order.final_price + order.coupon_money + order.integral_money + order.weizoom_card_money + order.promotion_saved_money + order.edit_money
-						final_price = order.final_price
-						if not channel_qrcode_id2order_sale_money.has_key(channel_qrcode_id):
-							channel_qrcode_id2order_sale_money[channel_qrcode_id] = sale_price
-						else:
-							channel_qrcode_id2order_sale_money[channel_qrcode_id] += sale_price
+							if not channel_qrcode_id2final_price.has_key(channel_qrcode_id):
+								channel_qrcode_id2final_price[channel_qrcode_id] = final_price
+							else:
+								channel_qrcode_id2final_price[channel_qrcode_id] += final_price
 
-						if not channel_qrcode_id2final_price.has_key(channel_qrcode_id):
-							channel_qrcode_id2final_price[channel_qrcode_id] = final_price
-						else:
-							channel_qrcode_id2final_price[channel_qrcode_id] += final_price
+							if not channel_qrcode_id2order_sale_money.has_key(channel_qrcode_id):
+								channel_qrcode_id2order_sale_money[channel_qrcode_id] = sale_price
+							else:
+								channel_qrcode_id2order_sale_money[channel_qrcode_id] += sale_price
 
-		return {
-			"channel_qrcode_id2increase_order_count": channel_qrcode_id2increase_order_count,
-			"channel_qrcode_id2first_order_count": channel_qrcode_id2first_order_count,
-			"channel_qrcode_id2order_count": channel_qrcode_id2order_count,
-			"channel_qrcode_id2order_sale_money": channel_qrcode_id2order_sale_money,
-			"channel_qrcode_id2final_price": channel_qrcode_id2final_price
-		}
+		if is_export:
+			channel_qrcode_id2order_count = {}
+			channel_qrcode_id2total_order_sale_money = {}
+			channel_qrcode_id2total_final_price = {}
+			channel_qrcode_id2total_first_order_count = {}
+			for order in orders:
+				webapp_user_id = order.webapp_user_id
+				member_id = webapp_user_id2member_id.get(webapp_user_id)
+				for channel_qrcode_id, member_ids in channel_qrcode_id2member_id.items():
+					if member_id in member_ids:
+						if not channel_qrcode_id2order_count.has_key(channel_qrcode_id):
+							channel_qrcode_id2order_count[channel_qrcode_id] = 1
+						else:
+							channel_qrcode_id2order_count[channel_qrcode_id] += 1
+						if order.status not in [ORDER_STATUS_CANCEL,ORDER_STATUS_GROUP_REFUNDING,ORDER_STATUS_GROUP_REFUNDED,ORDER_STATUS_REFUNDING,ORDER_STATUS_REFUNDED]:
+							sale_price = order.final_price + order.coupon_money + order.integral_money + order.weizoom_card_money + order.promotion_saved_money + order.edit_money
+							final_price = order.final_price
+							if not channel_qrcode_id2total_order_sale_money.has_key(channel_qrcode_id):
+								channel_qrcode_id2total_order_sale_money[channel_qrcode_id] = sale_price
+							else:
+								channel_qrcode_id2total_order_sale_money[channel_qrcode_id] += sale_price
+
+							if not channel_qrcode_id2total_final_price.has_key(channel_qrcode_id):
+								channel_qrcode_id2total_final_price[channel_qrcode_id] = final_price
+							else:
+								channel_qrcode_id2total_final_price[channel_qrcode_id] += final_price
+
+						if order.is_first_order and order.status != ORDER_STATUS_NOT:
+							if not channel_qrcode_id2total_first_order_count.has_key(channel_qrcode_id):
+								channel_qrcode_id2total_first_order_count[channel_qrcode_id] = 1
+							else:
+								channel_qrcode_id2total_first_order_count[channel_qrcode_id] += 1
+
+			return {
+				"channel_qrcode_id2increase_order_count": channel_qrcode_id2increase_order_count,
+				"channel_qrcode_id2first_order_count": channel_qrcode_id2first_order_count,
+				"channel_qrcode_id2order_count": channel_qrcode_id2order_count,
+				"channel_qrcode_id2total_first_order_count": channel_qrcode_id2total_first_order_count,
+				"channel_qrcode_id2total_order_sale_money": channel_qrcode_id2total_order_sale_money,
+				"channel_qrcode_id2total_final_price": channel_qrcode_id2total_final_price,
+				"channel_qrcode_id2order_sale_money": channel_qrcode_id2order_sale_money,
+				"channel_qrcode_id2final_price": channel_qrcode_id2final_price
+			}
+		else:
+			return {
+				"channel_qrcode_id2increase_order_count": channel_qrcode_id2increase_order_count,
+				"channel_qrcode_id2first_order_count": channel_qrcode_id2first_order_count,
+				"channel_qrcode_id2order_sale_money": channel_qrcode_id2order_sale_money,
+				"channel_qrcode_id2final_price": channel_qrcode_id2final_price
+			}
