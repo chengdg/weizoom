@@ -11,140 +11,145 @@
             <li class="active">订单概况分析</li>
         </ul>
     </div>
-    
-    <div class="xb-rightPanel pl10 pr10 pb30">
-        <div id="stats-order-summary-filter-view" class="xui-filter xui-filterPanel "></div>
 
+    <div class="xb-rightPanel pl10 pr10 pb30">
+        <div id="stats-date-filter-view" class="xui-filter xui-filterPanel "></div>
         <table class="xui-summary"  style="height:103px;">
             <tr>
                 <td class="xui-i-left" style="height:103px;"><p class="xui-i-title">订单概况</p></td>
                 <td>
-                	<div class="xui-i-wrap"><span class="xui-i-money" id="order_num"></span><br/>
-                		<img class="xui-i-img xui-i-hide"  src="/static_v2/img/editor/help.png"/>
-                		<span class="xui-i-name">成交订单</span>
-                		<img class="xui-i-img" id="order_num_help" src="/static_v2/img/editor/help.png"/>
-                	</div>
+                    <div class="xui-i-wrap">
+                        <span class="xui-i-money" id="order_num">0</span><br/>
+                        <img class="xui-i-img xui-i-hide"  src="/static_v2/img/editor/help.png"/>
+                        <span class="xui-i-name">成交订单</span>
+                        <img class="xui-i-img" id="order_num_help" src="/static_v2/img/editor/help.png"/>
+                    </div>
                 </td>
                 <td>
-                	<div class="xui-i-wrap">
-                		<span class="xui-i-money" id="paid_amount"></span><br/>
-                		<img class="xui-i-img xui-i-hide"  src="/static_v2/img/editor/help.png"/>
-                		<span class="xui-i-name">成交金额</span>
-                		<img class="xui-i-img" id="paid_amount_help" src="/static_v2/img/editor/help.png"/>
-                	</div>
+                    <div class="xui-i-wrap">
+                        <span class="xui-i-money" id="paid_amount"></span><br/>
+                        <img class="xui-i-img xui-i-hide"  src="/static_v2/img/editor/help.png"/>
+                        <span class="xui-i-name">成交金额</span>
+                        <img class="xui-i-img" id="paid_amount_help" src="/static_v2/img/editor/help.png"/>
+                    </div>
                 </td>
                 <td>
-                	<div class="xui-i-wrap">
-                		<span class="xui-i-money" id="unit_price"></span><br/>
-                		<img class="xui-i-img xui-i-hide"  src="/static_v2/img/editor/help.png"/><span class="xui-i-name">客单价</span>
-                		<img class="xui-i-img" id="unit_price_help" src="/static_v2/img/editor/help.png"/>
-                	</div>
+                    <div class="xui-i-wrap">
+                        <span class="xui-i-money" id="unit_price"></span><br/>
+                        <img class="xui-i-img xui-i-hide"  src="/static_v2/img/editor/help.png"/><span class="xui-i-name">客单价</span>
+                        <img class="xui-i-img" id="unit_price_help" src="/static_v2/img/editor/help.png"/>
+                    </div>
                 </td>
                 <td>
-                	<div class="xui-i-wrap">
-                		<span class="xui-i-money" id="product_num"></span><br/>
-                		<img class="xui-i-img xui-i-hide"  src="/static_v2/img/editor/help.png"/>
-                		<span class="xui-i-name">成交商品</span>
-                		<img class="xui-i-img" id="product_num_help" src="/static_v2/img/editor/help.png"/>
-                	</div>
+                    <div class="xui-i-wrap">
+                        <span class="xui-i-money" id="product_num"></span><br/>
+                        <img class="xui-i-img xui-i-hide"  src="/static_v2/img/editor/help.png"/>
+                        <span class="xui-i-name">成交商品</span>
+                        <img class="xui-i-img" id="product_num_help" src="/static_v2/img/editor/help.png"/>
+                    </div>
                 </td>
                 <td>
-                	<div class="xui-i-wrap">
-                		<span class="xui-i-money" id="discount_amount"></span><br/>
-                		<img class="xui-i-img xui-i-hide"  src="/static_v2/img/editor/help.png"/>
-                		<span class="xui-i-name">优惠抵扣</span>
-                		<img class="xui-i-img" id="discount_amount_help" src="/static_v2/img/editor/help.png"/>
-                	</div>
+                    <div class="xui-i-wrap">
+                        <span class="xui-i-money" id="discount_amount"></span><br/>
+                        <img class="xui-i-img xui-i-hide"  src="/static_v2/img/editor/help.png"/>
+                        <span class="xui-i-name">优惠抵扣</span>
+                        <img class="xui-i-img" id="discount_amount_help" src="/static_v2/img/editor/help.png"/>
+                    </div>
                 </td>
             </tr>
 
             <!-- tr>
                 <td>
-                	<div class="xui-i-wrap">
-                		<span class="xui-i-money" id="postage_amount"></span><br/>
-                		<img class="xui-i-img xui-i-hide"  src="/static_v2/img/editor/help.png"/>
-                		<span class="xui-i-name">总运费</span>
-                		<img class="xui-i-img" id="postage_amount_help" src="/static_v2/img/editor/help.png"/>
-                	</div>
+                    <div class="xui-i-wrap">
+                        <span class="xui-i-money" id="postage_amount"></span><br/>
+                        <img class="xui-i-img xui-i-hide"  src="/static_v2/img/editor/help.png"/>
+                        <span class="xui-i-name">总运费</span>
+                        <img class="xui-i-img" id="postage_amount_help" src="/static_v2/img/editor/help.png"/>
+                    </div>
                 </td>
                 <td>
-                	<div class="xui-i-wrap">
-                		<span class="xui-i-money" id="online_paid_amount"></span><br/>
-                		<img class="xui-i-img xui-i-hide"  src="/static_v2/img/editor/help.png"/>
-                		<span class="xui-i-name">在线支付金额</span>
-                		<img class="xui-i-img" id="online_paid_amount_help" src="/static_v2/img/editor/help.png"/>
-                	</div>
+                    <div class="xui-i-wrap">
+                        <span class="xui-i-money" id="online_paid_amount"></span><br/>
+                        <img class="xui-i-img xui-i-hide"  src="/static_v2/img/editor/help.png"/>
+                        <span class="xui-i-name">在线支付金额</span>
+                        <img class="xui-i-img" id="online_paid_amount_help" src="/static_v2/img/editor/help.png"/>
+                    </div>
                 </td>
                 <td>
-                	<div class="xui-i-wrap">
-                		<span class="xui-i-money" id="cod_amount"></span><br/>
-                		<img class="xui-i-img xui-i-hide"  src="/static_v2/img/editor/help.png"/>
-                		<span class="xui-i-name">货到付款金额</span>
-                		<img class="xui-i-img" id="cod_amount_help" src="/static_v2/img/editor/help.png"/>
-                	</div>
+                    <div class="xui-i-wrap">
+                        <span class="xui-i-money" id="cod_amount"></span><br/>
+                        <img class="xui-i-img xui-i-hide"  src="/static_v2/img/editor/help.png"/>
+                        <span class="xui-i-name">货到付款金额</span>
+                        <img class="xui-i-img" id="cod_amount_help" src="/static_v2/img/editor/help.png"/>
+                    </div>
                 </td>
                 <td>
-                	<div class="xui-i-wrap">
-                		<span class="xui-i-money" id="online_order_num"></span><br/>
-                		<img class="xui-i-img xui-i-hide"  src="/static_v2/img/editor/help.png"/>
-                		<span class="xui-i-name">在线支付订单</span>
-                		<img class="xui-i-img" id="online_order_num_help" src="/static_v2/img/editor/help.png"/>
-                	</div>
+                    <div class="xui-i-wrap">
+                        <span class="xui-i-money" id="online_order_num"></span><br/>
+                        <img class="xui-i-img xui-i-hide"  src="/static_v2/img/editor/help.png"/>
+                        <span class="xui-i-name">在线支付订单</span>
+                        <img class="xui-i-img" id="online_order_num_help" src="/static_v2/img/editor/help.png"/>
+                    </div>
                 </td>
                 <td>
-                	<div class="xui-i-wrap">
-                		<span class="xui-i-money" id="cod_order_num"></span><br/>
-                		<img class="xui-i-img xui-i-hide"  src="/static_v2/img/editor/help.png"/>
-                		<span class="xui-i-name">货到付款订单</span>
-                		<img class="xui-i-img" id="cod_order_num_help" src="/static_v2/img/editor/help.png"/>
-                	</div>
+                    <div class="xui-i-wrap">
+                        <span class="xui-i-money" id="cod_order_num"></span><br/>
+                        <img class="xui-i-img xui-i-hide"  src="/static_v2/img/editor/help.png"/>
+                        <span class="xui-i-name">货到付款订单</span>
+                        <img class="xui-i-img" id="cod_order_num_help" src="/static_v2/img/editor/help.png"/>
+                    </div>
                 </td>
             </tr -->
         </table>
+
         <div class="xui-charWrap">
-        	<div class="xui-i-title">
-        		<div class="xui-i-block"></div>
-        		<span class="ml5">订单趋势</span>
-        	</div>
+            <div class="xui-i-title">
+                <div class="xui-i-block"></div>
+                <span class="ml5">订单趋势</span>
+            </div>
             <div class="xui-i-chart pl20 pt10" id="order_trend_stats" style="height:300px;"></div>
         </div>  
         <div class="xui-charWrap">
-        	<div class="xui-i-title">
-        		<div class="xui-i-block"></div>
-        		<span class="ml5">复购率</span>
-        	</div>
+            <div class="xui-i-title">
+                <div class="xui-i-block"></div>
+                <span class="ml5">复购率</span>
+            </div>
             <div class="xui-i-chart pl20 pt10" id="repeated_ratio_stats" style="height:300px;"></div>
         </div> 
         <div class="xui-charWrap">
-        	<div class="xui-i-title">
-        		<div class="xui-i-block"></div>
-        		<span class="ml5">买家来源</span>
-        	</div>
+            <div class="xui-i-title">
+                <div class="xui-i-block"></div>
+                <span class="ml5">买家来源</span>
+            </div>
             <div class="xui-i-chart pl20 pt10" id="buyer_source_stats" style="height:300px;"></div>
         </div> 
         <div class="xui-charWrap">
-        	<div class="xui-i-title">
-        		<div class="xui-i-block"></div>
-        		<span class="ml5">支付金额</span>
-        	</div>
+            <div class="xui-i-title">
+                <div class="xui-i-block"></div>
+                <span class="ml5">支付金额</span>
+            </div>
             <div class="xui-i-chart pl20 pt10" id="payments_stats" style="height:300px;"></div>
         </div> 
         <div class="cb"></div>
         <div class="xui-charWrap">
-        	<div class="xui-i-title">
-        		<div class="xui-i-block"></div>
-        		<span class="ml5">优惠抵扣</span>
-        	</div>
+            <div class="xui-i-title">
+                <div class="xui-i-block"></div>
+                <span class="ml5">优惠抵扣</span>
+            </div>
             <div class="xui-i-chart pl20 pt10" id="discount_stats" style="height:380px;width:1000px"></div>
+            <!-- 调用封装的ecaht-bar写法 -->
+            <!-- <div class="xui-i-chart pl20 pt10" id="discount_stats" style="height:380px;width:1000px" data-ui-role="fansEchart" data-app="stats" data-resource="preferential_discount" data-wrap-el=".xa-message-tips-wrap"></div> -->
         </div> 
+        <!--<div class="xui-i-title"> <div class="xui-i-block"></div>  <span class="ml5">下单单量排行TOP10</span></div>-->
     </div>
+     <div class="cb"></div>
 
-    <div class="hidden">
+     <div class="hidden">
         <div 
-            data-ui-role="member-summary-base-data-advanced-table"
+            data-ui-role="order-summary-base-data-advanced-table"
             data-app="stats"
-            data-resource="member_summary"
-            data-template-id="#member-date-table-view"
+            data-resource="order_summary"
+            data-template-id="#order-date-table-view"
             data-enable-paginator="false"
             data-enable-sort="false"
             data-selectable="false"
@@ -153,196 +158,23 @@
             data-args='{"start_date":"{{start_date}}", "end_date":"{{end_date}}"}' 
         ></div>
     </div>
-    <div class="xui-chart">
-    
-    <div class="xui-charWrap" style="height:400px;">
-        <div class="xui-i-title"> <div class="xui-i-block"></div>  <span class="ml5">会员增长趋势</span></div>
-        <div 
-            class="xui-ChartBody" 
-            id="memberIncreasement" 
-            data-ui-role="statsMemberIncreasementEchart" 
-            data-app="stats" 
-            data-resource="member_increasement" 
-            data-wrap-el=".xa-message-tips-wrap"
-        ></div>
-    </div> 
-    <div class="xui-charWrap" style="height:420px;">
-        <div class="xui-i-title"> <div class="xui-i-block"></div>  <span class="ml5">分享链接排行TOP10</span></div>
-        <div
-            data-ui-role="advanced-table"
-            data-app="stats"
-            data-resource="member_share_url_rank"
-            data-template-id="#member-share-url-rank-view"
-            data-enable-paginator="false"
-            data-enable-sort="false"
-            data-selectable="false"
-            data-item-count-per-page="10"
-            data-disable-header-select="true"
-            class="panel-body" 
-            data-args='{"start_date":"{{start_date}}", "end_date":"{{end_date}}"}' 
-            class="xa-share-url-data"
-            style="padding-top:0px;padding-left:0px;padding-right:0px;"
-        ></div>
-    </div>
-    <div class="xui-charWrap" style="height:420px;">
-        <div class="xui-i-title"> <div class="xui-i-block"></div>  <span class="ml5">推广扫码排行TOP10</span></div>
-        <div
-            data-ui-role="advanced-table"
-            data-app="stats"
-            data-resource="member_qrcode_rank"
-            data-template-id="#member-qrcode-rank-view"
-            data-enable-paginator="false"
-            data-enable-sort="false"
-            data-selectable="false"
-            data-item-count-per-page="10"
-            data-disable-header-select="true"
-            class="panel-body" 
-            data-args='{"start_date":"{{start_date}}", "end_date":"{{end_date}}"}'
-            style="padding-top:0px;padding-left:0px;padding-right:0px;"
-        ></div>
-    </div>  
-    <div class="xui-charWrap" >
-        <div class="xui-i-title"> <div class="xui-i-block"></div>  <span class="ml5">详细数据</span></div>
-        <div
-            data-ui-role="advanced-table"
-            data-app="stats"
-            data-resource="member_detail_data"
-            data-template-id="#member-detail-data-view"
-            data-enable-paginator="true"
-            data-enable-sort="false"
-            data-selectable="false"
-            data-item-count-per-page="10"
-            data-disable-header-select="true"
-            class="panel-body" 
-            data-args='{"start_date":"{{start_date}}", "end_date":"{{end_date}}"}'
-            style="padding-top:0px;padding-left:0px;padding-right:0px;"
-        ></div>
-    </div> 
-    </div>
-    <div class="cb"></div>
-    
+        
 </div>
-
-    <div class="cb"></div>
-</div>
-{% endblock %} {% block js %} 
-
-{% verbatim %}
-<script id="member-date-table-view" type="text/x-jquery-tmpl">
-    
-</script>
-<script id="member-share-url-rank-view" type="text/x-jquery-tmpl">
-    <table class="table xb-theadBg xui-gradeTab">
-        <thead>
-            <tr>
-                <th>排行</th>
-                <th>昵称</th>
-                <th>推荐人数</th>
-            </tr>
-        </thead>
-        <tbody class="xui-tbodyBg">
-            {{if items.length}}
-                {{each(i, item) items}}
-                <tr>
-                    <td>
-                        ${item.rank}
-                    </td>
-                    <td>
-                        <a href="/member/detail/?id=${item.member_id}" target='_blank'>
-                            {{html item.username}}
-                        </a>
-                    </td>
-                    <td>
-                        ${item.followers}
-                    </td>
-                </tr>
-                {{/each}}
-            {{else}}
-                <tr><td colspan="3"><p style="margin-top:125px;"><img class="xui-i-img xui-i-hide" src="/static_v2/img/editor/warning.png"/><span style="color:#999999;font-size:16px;font-weight:bold;padding-left:10px;">没有相应的数据</span></p></td></tr>
-            {{/if}}
-        </tbody>
-    </table>
-</script>
-
-<script id="member-qrcode-rank-view" type="text/x-jquery-tmpl">
-    <table class="table xb-theadBg xui-gradeTab">
-        <thead>
-            <tr style="background: #f5faff;">
-                <th>排行</th>
-                <th>昵称</th>
-                <th>推荐人数</th>
-            </tr>
-        </thead>
-        <tbody>
-            {{if items.length}}
-                {{each(i, item) items}}
-                <tr>
-                    <td>
-                        ${item.rank}
-                    </td>
-                    <td>
-                        <a href="/member/detail/?id=${item.member_id}" target='_blank'>
-                            {{html item.username}}
-                        </a>
-                    </td>
-                    <td>
-                        ${item.followers}
-                    </td>
-                </tr>
-                {{/each}}
-            {{else}}
-                <tr><td colspan="3"><p style="margin-top:125px;"><img class="xui-i-img xui-i-hide" src="/static_v2/img/editor/warning.png"/><span style="color:#999999;font-size:16px;font-weight:bold;padding-left:10px;">没有相应的数据</span></p></td></tr>
-            {{/if}}
-        </tbody>
-    </table>
-</script>
-
-<script id="member-detail-data-view" type="text/x-jquery-tmpl">
-    <table class="table xb-theadBg xui-gradeTab">
-        <thead>
-            <tr>
-                <th>日期</th>
-                <th>新增会员</th>
-                <th>手机绑定</th>
-                <th>发起分享链接</th>
-                <th>发起链接新增</th>
-                <th>发起扫码</th>
-                <th>扫码新增</th>
-                <th>下单会员</th>
-            </tr>
-        </thead>
-        <tbody>
-            {{if items.length}}
-                {{each(i, item) items}}
-                <tr>
-                    <td>${item.date}</td>
-                    <td>${item.new_member_count}</td>
-                    <td>${item.binding_phone_member_count}</td>
-                    <td>${item.share_url_member_count}</td>
-                    <td>${item.member_from_share_url_count}</td>
-                    <td>${item.ori_qrcode_member_count}</td>
-                    <td>${item.member_from_qrcode_count}</td>
-                    <td>${item.bought_member_count}</td>
-                </tr>
-                {{/each}}
-            {{else}}
-                <tr><td colspan="8">没有相应的数据</td></tr>
-            {{/if}}
-        </tbody>
-    </table>
-</script>
-{% endverbatim %}
+{% endblock %} {% block js %} {% verbatim %} {% endverbatim %}
 
 <script type="text/javascript">
-	var stats_data = null;
-	$(document).ready(function() {
-		var view = new W.view.stats.DateFilterView({
+    $(document).ready(function() {
+        var view = new W.view.stats.DateFilterView({
             el : '#stats-date-filter-view'
         });
         view.render();
 
         $('#start_date').val('{{start_date}}');
         $('#end_date').val('{{end_date}}');
+
+        updateSummaryData();
+        updateStatsData();
+
         view.updateTimeTags();
 
         $(document).delegate('.xa-date-search','click',function(event) {
@@ -351,563 +183,554 @@
             args.end_date = $('#end_date').val();
 
             //更新基础数据的数据
-            $('[data-ui-role="member-summary-base-data-advanced-table"]').data('view').reload(args);
+            $('[data-ui-role="order-summary-base-data-advanced-table"]').data('view').reload(args);
 
-            //更新其他advanced table数据
-            $('[data-ui-role="advanced-table"]').each(function(){
-                $(this).data('view').reload(args);
-            });
-
-            //更新会员增长趋势数据
-            $('[data-ui-role="statsMemberIncreasementEchart"]').data('view').reload(args);
-
+            updateStatsData();
             view.updateTimeTags();
         });
+
+    });
+    
+    function updateStatsData() {
+
+        var orderState = $(this).children('option:selected').val();
+        is_subscribed = orderState;
+        // 订单趋势
+        orderTrends();   
+        //复购率
+        repeatPurchaseRate();
+        //买家来源                
+        buyerSources();
+        //支付金额                      
+        paymentAmount();                     
+        //优惠折扣
+        preferentialDiscount();
+    }
+    
+    // 订单趋势
+    function orderTrends(){
+        W.getApi().call({
+            app: 'stats',
+            resource: 'order_trends',
+            method: 'get',
+            args: {
+                is_subscribed: is_subscribed
+            },
+            scope: this,
+            success: function(data) {
+                var all = 0;
+                for(var i in data.series[0].data){
+                    all += data.series[0].data[i].value;
+                }
+                var formatter_func = function(params, ticket, callback) {
+                    var res = "<b>" + params.name + "</b><br/>订单量：" + params.value + "<br/>订单量占比：" + params.percent + "%";
+                    return res;
+                }
+                if(all != 0){
+                    option = {
+                        tooltip : {
+                            trigger : 'item',
+                            showDelay : 0,
+                            hideDelay : 50,
+                            transitionDuration : 0,
+                            backgroundColor : 'white',
+                            borderColor : 'grey',
+                            // borderRadius : 8,
+                            borderWidth : 1,
+                            // padding: 10,    // [5, 10, 15, 20]
+                            textStyle : {
+                                color : 'black'
+                            // decoration: 'none',
+                            // fontFamily: 'Verdana, sans-serif',
+                            // fontSize: 15,
+                            // fontStyle: 'italic',
+                            // fontWeight: 'bold'
+                            },
+                            hideDelay : 200,
+                            enterable : true,
+                            formatter : formatter_func
+                        },
+                        legend : {
+                            orient : 'vertical',
+                            x : 'left',
+                            data : [ '待发货', '已发货', '已完成']
+                        },
+                        series : [
+                            {
+                                type:'pie',
+                                radius : '55%',
+                                center: ['50%','60%'],
+                                data: data.series[0].data
+                            }
+                        ]
+                    };
+                    var theChart = echarts.init(document.getElementById('order_trend_stats'));
+                    theChart.setOption(option);
+                }else{
+                    $('#order_trend_stats')[0].innerHTML ='<div class="xui-noData"></div>';
+                }
+
+            },
+            error: function(resp) {
+                alert('获取统计数据失败!');
+            }
+        });
+    }
+    
+    // 复购率
+    function repeatPurchaseRate(){
+        W.getApi().call({
+            app: 'stats',
+            resource: 'repeat_purchase_rate',
+            method: 'get',
+            args: {
+                is_subscribed: is_subscribed
+            },
+            scope: this,
+            success: function(data) {
+                var all = 0;
+                for(var i in data.series[0].data){
+                    all += data.series[0].data[i].value;
+                }
+                var formatter_func = function(params, ticket, callback) {
+                    var res = "<b>" + params.name + "</b><br/>订单量：" + params.value + "<br/>订单量占比：" + params.percent + "%";
+                    return res;
+                }
+                if(all != 0){
+                    option = {
+                            tooltip : {
+                                trigger : 'item',
+                                showDelay : 0,
+                                hideDelay : 50,
+                                transitionDuration : 0,
+                                backgroundColor : 'white',
+                                borderColor : 'grey',   
+                                borderWidth : 1,
+                                textStyle : {
+                                    color : 'black'
+                                },
+                                hideDelay : 200,
+                                enterable : true,
+                                formatter : formatter_func
+                            },
+                            legend : {
+                                orient : 'vertical',
+                                x : 'left',
+                                data : [ '初次购买', '重复购买' ]
+                            },
+                            series : [
+                                {
+                                    type:'pie',
+                                    radius : '55%',
+                                    center: ['50%','60%'],
+                                    data: data.series[0].data
+                                }
+                            ]
+                        };
+                    var theChart = echarts.init(document.getElementById('repeated_ratio_stats'));
+                    theChart.setOption(option);
+                }else{
+                    $('#repeated_ratio_stats')[0].innerHTML ='<div class="xui-noData"></div>';
+                }
+
+            },
+            error: function(resp) {
+                alert('获取统计数据失败!');
+            }
+        });
+    }
+
+    // 买家来源
+    function buyerSources(){
+        W.getApi().call({
+            app: 'stats',
+            resource: 'buyer_sources',
+            method: 'get',
+            args: {
+                is_subscribed: is_subscribed
+            },
+            scope: this,
+            success: function(data) {
+                var all = 0;
+                for(var i in data.series[0].data){
+                    all += data.series[0].data[i].value;
+                }
+                var formatter_func = function(params, ticket, callback) {
+                    var res = "<b>" + params.name + "</b><br/>订单量：" + params.value + "<br/>订单量占比：" + params.percent + "%";
+                    return res;
+                }
+                if(all != 0){
+                    option = {
+                            tooltip : {
+                                trigger : 'item',
+                                showDelay : 0,
+                                hideDelay : 50,
+                                transitionDuration : 0,
+                                backgroundColor : 'white',
+                                borderColor : 'grey',   
+                                borderWidth : 1,
+                                textStyle : {
+                                    color : 'black'
+                                },
+                                hideDelay : 200,
+                                enterable : true,
+                                formatter : formatter_func
+                            },
+                            legend : {
+                                orient : 'vertical',
+                                x : 'left',
+                                data : [ '直接关注购买', '推广扫码关注购买', '分享链接关注购买', '其他' ]
+                            },
+                            series : [
+                                {
+                                    type:'pie',
+                                    radius : '55%',
+                                    center: ['50%','60%'],
+                                    data: data.series[0].data
+                                }
+                            ]
+                        };
+                    var theChart = echarts.init(document.getElementById('buyer_source_stats'));
+                    theChart.setOption(option);
+                }else{
+                    $('#buyer_source_stats')[0].innerHTML ='<div class="xui-noData"></div>';
+                }
+
+            },
+            error: function(resp) {
+                alert('获取统计数据失败!');
+            }
+        });
+    }
+
+    // 支付金额
+    function paymentAmount(){
+        W.getApi().call({
+            app: 'stats',
+            resource: 'payment_amount',
+            method: 'get',
+            args: {
+                is_subscribed: is_subscribed
+            },
+            scope: this,
+            success: function(data) {
+                var all = 0;
+                for(var i in data.series[0].data){
+                    all += data.series[0].data[i].value;
+                }
+                //微众商城增加翼支付数据 duhao 20160602
+                var username = "{{request.manager.username}}";
+                var legendData = [ '支付宝', '微信支付', '货到付款', '微众卡支付' ];
+                if(username === 'weshop') {
+                    legendData = [ '支付宝', '微信支付', '货到付款', '微众卡支付', '翼支付', '看购支付' ];
+                }
+                if(all != 0){
+                    option = {
+                            tooltip : {
+                                trigger : 'item',
+                                showDelay : 0,
+                                hideDelay : 50,
+                                transitionDuration : 0,
+                                backgroundColor : 'white',
+                                borderColor : 'grey',
+                                borderWidth : 1,
+                                textStyle : {
+                                    color : 'black'
+                                },
+                                hideDelay : 200,
+                                enterable : true,
+                                formatter : "<b>{b}</b> <br/>金额 : {c} <br/>金额占比: {d}%"
+                            },
+                            legend : {
+                                orient : 'vertical',
+                                x : 'left',
+                                data : legendData
+                            },
+                            series : [ {
+                                name : '支付金额',
+                                type : 'pie',
+                                radius : '55%',
+                                center : [ '50%', '60%' ],
+                                data: data.series[0].data
+                            } ]
+                        };
+                    var theChart = echarts.init(document.getElementById('payments_stats'));
+                    theChart.setOption(option);
+                }else{
+                    $('#payments_stats')[0].innerHTML ='<div class="xui-noData"></div>';
+                }
+
+            },
+            error: function(resp) {
+                alert('获取统计数据失败!');
+            }
+        });
+    }
+
+    // 优惠折扣 原生echats写法
+    function preferentialDiscount_native(){
+        W.getApi().call({
+            app: 'stats',
+            resource: 'preferential_discount',
+            method: 'get',
+            args: {
+                is_subscribed: is_subscribed
+            },
+            scope: this,
+            success: function(data) {
+                    option = {
+                        tooltip : {
+                            trigger: 'axis'
+                        },      
+                        toolbox: {
+                            show : true,
+                            feature : {
+                                mark : {show: true},
+                                dataView : {show: true, readOnly: false},
+                                magicType : {show: true, type: ['line', 'bar']},
+                                restore : {show: true},
+                                saveAsImage : {show: true}
+                            }
+                        },
+                        calculable : true,
+                        xAxis : [
+                            {
+                                type : 'category',
+                                data : ['微众卡支付','积分折扣','优惠券','微众卡+积分','微众卡+优惠券']
+                            }
+                        ],
+                        yAxis : [
+                            {
+                                type : 'value'
+                            }
+                        ],
+                        series : [
+                            {
+                                name:'优惠折扣',
+                                type:'bar',
+                                data:[4,discount_stats['integral_num'],discount_stats['coupon_num'],discount_stats['wezoom_integral_num'],discount_stats['wezoom_coupon_num']]
+                            }
+                        ]
+                    };
+                    var theChart = echarts.init(document.getElementById('discount_stats'));
+                    theChart.setOption(option);
+            },
+            error: function(resp) {
+                alert('获取统计数据失败!');
+            }
+        });
+    }
+
+    //优惠折扣 改写原先的写法
+    function preferentialDiscount(){
+        W.getApi().call({
+            app: 'stats',
+            resource: 'preferential_discount',
+            method: 'get',
+            args: {
+                is_subscribed: is_subscribed
+            },
+            scope: this,
+            success: function(data) {
+                var discount_stats = data.discount_stats;
+                var formatter_func = function(params, ticket, callback) {
+                    console.log(params)
+                    var res = '<b>' + params[0].name + '</b>';
+                    for (var i = 0, l = params.length; i < l; i++) {
+                        res += '<br/>' + params[i].seriesName + ' : '
+                                + params[i].value;
+                        res += '<br/>订单量占比: ';
+                        if(discount_stats.discount_order_num > 0) {
+                            res += (params[i].value / discount_stats.discount_order_num * 100).toFixed(2) + "%";
+                        } else {
+                            res += "0%";
+                        }
+                        res += '<br/>订单金额: ' + params[i].data.extra[0];
+                    }
+
+                    return res;
+                }
+                option = {
+                    tooltip : {
+                        trigger : 'axis',
+                        showDelay : 0,
+                        hideDelay : 50,
+                        transitionDuration : 0,
+                        backgroundColor : 'white',
+                        borderColor : 'grey',
+                        borderWidth : 1,
+                        textStyle : {
+                            color : 'black',
+                        },
+                        hideDelay : 200,
+                        enterable : true,
+                        formatter : formatter_func
+                    },
+                    xAxis : [ {
+                        axisLabel : {
+                            textStyle : {
+                                fontSize : 16
+                            }
+                        },
+                        type : 'category',
+                        data : [ '微众卡支付', '积分抵扣', '优惠券', '微众卡+积分', '微众卡+优惠券' ]
+                        // data : [ '微众卡支付', '积分抵扣', '优惠券', '微众卡+积分', '微众卡+优惠券', '积分+优惠券', '微众卡+积分+优惠券' ]
+                    } ],
+                    yAxis : [ {
+                        type : 'value'
+                    } ],
+                    series : [ {
+                        name : '订单量',
+                        type : 'bar',
+                        itemStyle : {
+                            normal : {
+                                color : function(params) {
+                                    var colorList = [ '#d87a80', '#2ec7c9', '#b6a2de', '#5ab1ef', '#ffb980', '#66d19b', '#e98fc8' ];
+                                    var colorList = [ '#d87a80', '#2ec7c9', '#b6a2de', '#5ab1ef', '#ffb980' ];
+                                    return colorList[params.dataIndex]
+                                }
+                            }
+                        },
+                        data : [
+                                {
+                                    value : discount_stats.wezoom_num,
+                                    extra : [ discount_stats.wezoom_amount.toFixed(2), 'iswzcard_pay' ]
+                                },
+                                {
+                                    value : discount_stats.integral_num,
+                                    extra : [ discount_stats.integral_amount.toFixed(2), 'isintegral_deduction' ]
+                                },
+                                {
+                                    value : discount_stats.coupon_num,
+                                    extra : [ discount_stats.coupon_amount.toFixed(2), 'isfavorable_coupon' ]
+                                },
+                                {
+                                    value : discount_stats.wezoom_integral_num,
+                                    extra : [ discount_stats.wezoom_integral_amount.toFixed(2), 'iswzcard_integral' ]
+                                },
+                                {
+                                    value : discount_stats.wezoom_coupon_num,
+                                    extra : [ discount_stats.wezoom_coupon_amount.toFixed(2), 'iswzcard_discountcoupon' ]
+                                }
+                            ]
+                    } ]
+                };
+                var theChart = echarts.init(document.getElementById('discount_stats'));
+                theChart.setOption(option);
+            },
+            error: function(resp) {
+                alert('获取统计数据失败!');
+            }
+        });
+    }
+
+    //方法未用到 暂时保留
+    function getWhere2go(with_time, with_status, params) {
+        var result = "/stats/order_list?"
+        if(with_time) {
+            result += "start_time=" + stats_data.start_time + "&end_time=" + stats_data.end_time + "&";
+        }
         
-	function updateStatsData() {
-		updateSummaryData();
-		updateOrderTrendData();
-		updateRepeatedRatioData();
-		updateBuyerSourceData();
-		updatePaymentsData();
-		updateDiscountData();
-	}
-	
-	function getWhere2go(with_time, with_status, params) {
-		var result = "/stats/order_list?"
-		if(with_time) {
-			result += "start_time=" + stats_data.start_time + "&end_time=" + stats_data.end_time + "&";
-		}
-		
-		if(with_status) {
-			result +="order_status=iswait_send,isalready_send,isalready_complete&";
-		}
-		
-		if(params) {
-			for(var p in params) {
-				result += p + "=" + params[p] + "&";
-			}
-		}
-		
-		return result;
-	}
+        if(with_status) {
+            result +="order_status=iswait_send,isalready_send,isalready_complete&";
+        }
+        
+        if(params) {
+            for(var p in params) {
+                result += p + "=" + params[p] + "&";
+            }
+        }
+        
+        return result;
+    }
 
-	function updateOrderTrendData() {
-		var order_trend_stats = stats_data.order_trend_stats;
-		var data_array = new Array();
+    //基础数据说明
+    function updateSummaryData() {
+        //$('#order_num').text(stats_data.order_num);
+        $('#order_num_help').popover({
+            content : "<div class='xui-i-alert'>当前所选时段内该店铺已发货、待发货、已完成的订单数之和</div>",
+            trigger : "hover",
+            html : true,
+            placement : "bottom"
+        });
 
-		if(order_trend_stats.not_shipped_num > 0) {
-			data_array.push({
-				value: order_trend_stats.not_shipped_num,
-				name: '待发货'
-			});
-		}
+        //$('#paid_amount').text("￥" + stats_data.paid_amount.toFixed(2));
+        $('#paid_amount_help').popover({
+            content : "<div class='xui-i-alert'>当前所选时段内该店铺已支付订单和货到付款提交成功订单的总金额</div>",
+            trigger : "hover",
+            html : true,
+            placement : "bottom"
+        });
 
-		if(order_trend_stats.shipped_num > 0) {
-			data_array.push({
-				value: order_trend_stats.shipped_num,
-				name: '已发货'
-			});
-		}
+        // var unit_price = 0.0;
+        // if (stats_data.order_num > 0) {
+        //     unit_price = stats_data.paid_amount / stats_data.order_num;
+        // }
+        // $('#unit_price').text("￥" + unit_price.toFixed(2));
+        $('#unit_price_help').popover({
+            content : "<div class='xui-i-alert'>当前所选时段内平均每个订单的金额</div>",
+            trigger : "hover",
+            html : true,
+            placement : "bottom"
+        });
 
-		if(order_trend_stats.succeeded_num > 0) {
-			data_array.push({
-				value: order_trend_stats.succeeded_num,
-				name: '已完成'
-			});
-		}
-		if(data_array.length == 0){
-			data_array.push({});
-		}
+        //$('#product_num').text(stats_data.product_num);
+        $('#product_num_help').popover({
+            content : "<div class='xui-i-alert'>当前所选时段内所有成交订单内商品总件数</div>",
+            trigger : "hover",
+            html : true,
+            placement : "bottom"
+        });
 
-		var formatter_func = function(params, ticket, callback) {
-			var res = "<b>" + params.name + "</b><br/>订单量：" + params.value + "<br/>订单量占比：" + params.percent + "%";
-			return res;
-		}
-		option = {
-			tooltip : {
-				trigger : 'item',
-				showDelay : 0,
-				hideDelay : 50,
-				transitionDuration : 0,
-				backgroundColor : 'white',
-				borderColor : 'grey',
-				// borderRadius : 8,
-				borderWidth : 1,
-				// padding: 10,    // [5, 10, 15, 20]
-				textStyle : {
-					color : 'black'
-				// decoration: 'none',
-				// fontFamily: 'Verdana, sans-serif',
-				// fontSize: 15,
-				// fontStyle: 'italic',
-				// fontWeight: 'bold'
-				},
-				hideDelay : 200,
-				enterable : true,
-				formatter : formatter_func
-			},
-			legend : {
-				orient : 'vertical',
-				x : 'left',
-				data : [ '待发货', '已发货', '已完成' ]
-			},
-			// calculable : true,
-			series : [ {
-				name : '订单趋势',
-				type : 'pie',
-				radius : '55%',
-				center : [ '50%', '60%' ],
-				data : data_array
-			} ]
-		};
+        //$('#discount_amount').text("￥" + stats_data.discount_amount.toFixed(2));
+        $('#discount_amount_help').popover({
+            content : "<div class='xui-i-alert'>当前所选时段内成交订单中使用积分或优惠券抵扣的总金额</div>",
+            trigger : "hover",
+            html : true,
+            placement : "bottom"
+        });
 
-		var theChart = echarts.init(document
-				.getElementById('order_trend_stats'));
-		theChart.setOption(option);
-	}
+        //$('#postage_amount').text("￥" + stats_data.postage_amount.toFixed(2));
+        $('#postage_amount_help').popover({
+            content : "<div class='xui-i-alert'>当前所选时段内所有成交订单中总支付的运费金额</div>",
+            trigger : "hover",
+            html : true,
+            placement : "bottom"
+        });
 
-	function updateRepeatedRatioData() {
-		var total_num = stats_data.order_num;
-		var repeated_num = stats_data.repeated_num;
-		var first_num = total_num - repeated_num;
-		var data_array = new Array();
+        //$('#online_paid_amount').text(
+        //        "￥" + stats_data.online_paid_amount.toFixed(2));
+        $('#online_paid_amount_help').popover({
+            content : "<div class='xui-i-alert'>当前所选时段内除货到付款之外的成交订单金额</div>",
+            trigger : "hover",
+            html : true,
+            placement : "bottom"
+        });
 
-		if(first_num > 0) {
-			data_array.push({
-				value: first_num,
-				name: '初次购买'
-			});
-		}
+        //$('#cod_amount').text("￥" + stats_data.cod_amount.toFixed(2));
+        $('#cod_amount_help').popover({
+            content : "<div class='xui-i-alert'>当前所选时段内使用货到付款方式的订单支付现金总计</div>",
+            trigger : "hover",
+            html : true,
+            placement : "bottom"
+        });
 
-		if(repeated_num > 0) {
-			data_array.push({
-				value: repeated_num,
-				name: '重复购买'
-			});
-		}
-		if(data_array.length == 0){
-			data_array.push({});
-		}
-		
-		var formatter_func = function(params, ticket, callback) {
-			var res = "<b>" + params.name + "</b><br/>订单量：" + params.value + "<br/>订单量占比：" + params.percent + "%";
-			return res;
-		}
-		option = {
-				tooltip : {
-					trigger : 'item',
-					showDelay : 0,
-					hideDelay : 50,
-					transitionDuration : 0,
-					backgroundColor : 'white',
-					borderColor : 'grey',	
-					// borderRadius : 8,
-					borderWidth : 1,
-					// padding: 10,    // [5, 10, 15, 20]
-					textStyle : {
-						color : 'black'
-					// decoration: 'none',
-					// fontFamily: 'Verdana, sans-serif',
-					// fontSize: 15,
-					// fontStyle: 'italic',
-					// fontWeight: 'bold'
-					},
-					hideDelay : 200,
-					enterable : true,
-					formatter : formatter_func
-				},
-				legend : {
-					orient : 'vertical',
-					x : 'left',
-					data : [ '初次购买', '重复购买' ]
-				},
-				// calculable : true,
-				series : [ {
-					name : '复购率',
-					type : 'pie',
-					radius : '55%',
-					center : [ '50%', '60%' ],
-					data : data_array
-				} ]
-			};
-		
-		var theChart = echarts.init(document
-				.getElementById('repeated_ratio_stats'));
-		theChart.setOption(option);
-	}
-	
-	function updateBuyerSourceData() {
-		var buyer_source_stats = stats_data.buyer_source_stats;
-		var data_array = new Array();
+        //$('#online_order_num').text(stats_data.online_order_num);
+        $('#online_order_num_help').popover({
+            content : "<div class='xui-i-alert'>当前所选时段内除货到付款之外的成交订单数</div>",
+            trigger : "hover",
+            html : true,
+            placement : "bottom"
+        });
 
-		if(buyer_source_stats.sub_source_num > 0) {
-			data_array.push({
-				value: buyer_source_stats.sub_source_num,
-				name: '直接关注购买'
-			});
-		}
-
-		if(buyer_source_stats.qrcode_source_num > 0) {
-			data_array.push({
-				value: buyer_source_stats.qrcode_source_num,
-				name: '推广扫码关注购买'
-			});
-		}
-
-		if(buyer_source_stats.url_source_num > 0) {
-			data_array.push({
-				value: buyer_source_stats.url_source_num,
-				name: '分享链接关注购买'
-			});
-		}
-
-		if(buyer_source_stats.other_source_num > 0) {
-			data_array.push({
-				value: buyer_source_stats.other_source_num,
-				name: '其他'
-			});
-		}
-		if(data_array.length == 0){
-			data_array.push({});
-		}
-		
-		var formatter_func = function(params, ticket, callback) {
-			var res = "<b>" + params.name + "</b><br/>订单量：" + params.value + "<br/>订单量占比：" + params.percent + "%";
-			return res;
-		}
-		option = {
-				tooltip : {
-					trigger : 'item',
-					showDelay : 0,
-					hideDelay : 50,
-					transitionDuration : 0,
-					backgroundColor : 'white',
-					borderColor : 'grey',
-					// borderRadius : 8,
-					borderWidth : 1,
-					// padding: 10,    // [5, 10, 15, 20]
-					textStyle : {
-						color : 'black'
-					// decoration: 'none',
-					// fontFamily: 'Verdana, sans-serif',
-					// fontSize: 15,
-					// fontStyle: 'italic',
-					// fontWeight: 'bold'
-					},
-					hideDelay : 200,
-					enterable : true,
-					formatter : formatter_func
-				},
-				legend : {
-					orient : 'vertical',
-					x : 'left',
-					data : [ '直接关注购买', '推广扫码关注购买', '分享链接关注购买', '其他' ]
-				},
-				// calculable : true,
-				series : [ {
-					name : '买家来源',
-					type : 'pie',
-					radius : '55%',
-					center : [ '50%', '60%' ],
-					data : data_array
-				} ]
-			};
-		
-		var theChart = echarts.init(document
-				.getElementById('buyer_source_stats'));
-		theChart.setOption(option);
-	}
-
-	function updatePaymentsData() {
-		var data_array = new Array();
-
-		if(stats_data.alipay_amount > 0) {
-			data_array.push({
-				value: stats_data.alipay_amount.toFixed(2),
-				name: '支付宝'
-			});
-		}
-
-		if(stats_data.weixinpay_amount > 0) {
-			data_array.push({
-				value: stats_data.weixinpay_amount.toFixed(2),
-				name: '微信支付'
-			});
-		}
-
-		if(stats_data.cod_amount > 0) {
-			data_array.push({
-				value: stats_data.cod_amount.toFixed(2),
-				name: '货到付款'
-			});
-		}
-
-		if(stats_data.wezoom_card_amount > 0) {
-			data_array.push({
-				value: stats_data.wezoom_card_amount.toFixed(2),
-				name: '微众卡支付'
-			});
-		}
-		if(stats_data.bestpay_amount > 0) {
-			data_array.push({
-				value: stats_data.bestpay_amount.toFixed(2),
-				name: '翼支付'
-			});
-		}
-		if(stats_data.kangou_amount > 0) {
-			data_array.push({
-				value: stats_data.kangou_amount.toFixed(2),
-				name: '看购支付'
-			});
-		}
-		if(data_array.length == 0){
-			data_array.push({});
-		}
-
-		//微众商城增加翼支付数据 duhao 20160602
-		var username = "{{request.manager.username}}";
-		var legendData = [ '支付宝', '微信支付', '货到付款', '微众卡支付' ];
-		if(username === 'weshop') {
-			legendData = [ '支付宝', '微信支付', '货到付款', '微众卡支付', '翼支付', '看购支付' ];
-		}
-		option = {
-				tooltip : {
-					trigger : 'item',
-					showDelay : 0,
-					hideDelay : 50,
-					transitionDuration : 0,
-					backgroundColor : 'white',
-					borderColor : 'grey',
-					// borderRadius : 8,
-					borderWidth : 1,
-					// padding: 10,    // [5, 10, 15, 20]
-					textStyle : {
-						color : 'black'
-					// decoration: 'none',
-					// fontFamily: 'Verdana, sans-serif',
-					// fontSize: 15,
-					// fontStyle: 'italic',
-					// fontWeight: 'bold'
-					},
-					hideDelay : 200,
-					enterable : true,
-					formatter : "<b>{b}</b> <br/>金额 : {c} <br/>金额占比: {d}%"
-				},
-				legend : {
-					orient : 'vertical',
-					x : 'left',
-					data : legendData
-				},
-				// calculable : true,
-				series : [ {
-					name : '支付金额',
-					type : 'pie',
-					radius : '55%',
-					center : [ '50%', '60%' ],
-					data : data_array
-				} ]
-			};
-		
-		var theChart = echarts.init(document
-				.getElementById('payments_stats'));
-		theChart.setOption(option);
-	}
-
-	function updateDiscountData() {
-		var discount_stats = stats_data.discount_stats;
-		var formatter_func = function(params, ticket, callback) {
-			console.log(params)
-			var res = '<b>' + params[0].name + '</b>';
-			for (var i = 0, l = params.length; i < l; i++) {
-				res += '<br/>' + params[i].seriesName + ' : '
-						+ params[i].value;
-				res += '<br/>订单量占比: ';
-				if(discount_stats.discount_order_num > 0) {
-					res += (params[i].value / discount_stats.discount_order_num * 100).toFixed(2) + "%";
-				} else {
-					res += "0%";
-				}
-				res += '<br/>订单金额: ' + params[i].data.extra[0];
-			}
-
-			return res;
-		}
-		option = {
-			tooltip : {
-				trigger : 'axis',
-				showDelay : 0,
-				hideDelay : 50,
-				transitionDuration : 0,
-				backgroundColor : 'white',
-				borderColor : 'grey',
-				// borderRadius : 8,
-				borderWidth : 1,
-				// padding: 10,    // [5, 10, 15, 20]
-				textStyle : {
-					color : 'black',
-					//decoration: 'none',
-					//fontFamily: 'Verdana, sans-serif',
-					//fontSize: 15,
-					//fontStyle: 'italic',
-					//fontWeight: 'bold'
-				},
-				hideDelay : 200,
-				enterable : true,
-				formatter : formatter_func
-			},
-			// calculable : true,
-			xAxis : [ {
-				axisLabel : {
-					textStyle : {
-						fontSize : 16
-					}
-				},
-				type : 'category',
-				data : [ '微众卡支付', '积分抵扣', '优惠券', '微众卡+积分', '微众卡+优惠券' ]
-				// data : [ '微众卡支付', '积分抵扣', '优惠券', '微众卡+积分', '微众卡+优惠券', '积分+优惠券', '微众卡+积分+优惠券' ]
-			} ],
-			yAxis : [ {
-				type : 'value'
-			} ],
-			series : [ {
-				name : '订单量',
-				type : 'bar',
-				itemStyle : {
-					normal : {
-						color : function(params) {
-							// build a color map as your need.
-							// var colorList = [ '#d87a80', '#2ec7c9', '#b6a2de', '#5ab1ef', '#ffb980', '#66d19b', '#e98fc8' ];
-							var colorList = [ '#d87a80', '#2ec7c9', '#b6a2de', '#5ab1ef', '#ffb980' ];
-							return colorList[params.dataIndex]
-						}
-					}
-				},
-				data : [
-						{
-							value : discount_stats.wezoom_num,
-							extra : [ discount_stats.wezoom_amount.toFixed(2), 'iswzcard_pay' ]
-						},
-						{
-							value : discount_stats.integral_num,
-							extra : [ discount_stats.integral_amount.toFixed(2), 'isintegral_deduction' ]
-						},
-						{
-							value : discount_stats.coupon_num,
-							extra : [ discount_stats.coupon_amount.toFixed(2), 'isfavorable_coupon' ]
-						},
-						{
-							value : discount_stats.wezoom_integral_num,
-							extra : [ discount_stats.wezoom_integral_amount.toFixed(2), 'iswzcard_integral' ]
-						},
-						{
-							value : discount_stats.wezoom_coupon_num,
-							extra : [ discount_stats.wezoom_coupon_amount.toFixed(2), 'iswzcard_discountcoupon' ]
-						}
-						/*,
-						{
-							value : discount_stats.integral_coupon_num,
-							extra : discount_stats.integral_coupon_amount
-									.toFixed(2)
-						},
-						{
-							value : discount_stats.wezoom_integral_coupon_num,
-							extra : discount_stats.wezoom_integral_coupon_amount
-									.toFixed(2)
-						} */ ]
-			} ]
-		};
-
-		var theChart = echarts.init(document.getElementById('discount_stats'));
-		theChart.setOption(option);
-	}
-
-	function updateSummaryData() {
-		$('#order_num').text(stats_data.order_num);
-		$('#order_num_help').popover({
-			content : "<div class='xui-i-alert'>当前所选时段内该店铺已发货、待发货、已完成的订单数之和</div>",
-			trigger : "hover",
-			html : true,
-			placement : "bottom"
-		});
-
-		$('#paid_amount').text("￥" + stats_data.paid_amount.toFixed(2));
-		$('#paid_amount_help').popover({
-			content : "<div class='xui-i-alert'>当前所选时段内该店铺已支付订单和货到付款提交成功订单的总金额</div>",
-			trigger : "hover",
-			html : true,
-			placement : "bottom"
-		});
-
-		var unit_price = 0.0;
-		if (stats_data.order_num > 0) {
-			unit_price = stats_data.paid_amount / stats_data.order_num;
-		}
-		$('#unit_price').text("￥" + unit_price.toFixed(2));
-		$('#unit_price_help').popover({
-			content : "<div class='xui-i-alert'>当前所选时段内平均每个订单的金额</div>",
-			trigger : "hover",
-			html : true,
-			placement : "bottom"
-		});
-
-		$('#product_num').text(stats_data.product_num);
-		$('#product_num_help').popover({
-			content : "<div class='xui-i-alert'>当前所选时段内所有成交订单内商品总件数</div>",
-			trigger : "hover",
-			html : true,
-			placement : "bottom"
-		});
-
-		$('#discount_amount').text("￥" + stats_data.discount_amount.toFixed(2));
-		$('#discount_amount_help').popover({
-			content : "<div class='xui-i-alert'>当前所选时段内成交订单中使用积分或优惠券抵扣的总金额</div>",
-			trigger : "hover",
-			html : true,
-			placement : "bottom"
-		});
-
-		$('#postage_amount').text("￥" + stats_data.postage_amount.toFixed(2));
-		$('#postage_amount_help').popover({
-			content : "<div class='xui-i-alert'>当前所选时段内所有成交订单中总支付的运费金额</div>",
-			trigger : "hover",
-			html : true,
-			placement : "bottom"
-		});
-
-		$('#online_paid_amount').text(
-				"￥" + stats_data.online_paid_amount.toFixed(2));
-		$('#online_paid_amount_help').popover({
-			content : "<div class='xui-i-alert'>当前所选时段内除货到付款之外的成交订单金额</div>",
-			trigger : "hover",
-			html : true,
-			placement : "bottom"
-		});
-
-		$('#cod_amount').text("￥" + stats_data.cod_amount.toFixed(2));
-		$('#cod_amount_help').popover({
-			content : "<div class='xui-i-alert'>当前所选时段内使用货到付款方式的订单支付现金总计</div>",
-			trigger : "hover",
-			html : true,
-			placement : "bottom"
-		});
-
-		$('#online_order_num').text(stats_data.online_order_num);
-		$('#online_order_num_help').popover({
-			content : "<div class='xui-i-alert'>当前所选时段内除货到付款之外的成交订单数</div>",
-			trigger : "hover",
-			html : true,
-			placement : "bottom"
-		});
-
-		$('#cod_order_num').text(stats_data.cod_order_num);
-		$('#cod_order_num_help').popover({
-			content : "<div class='xui-i-alert'>当前所选时段内使用货到付款方式的订单数</div>",
-			trigger : "hover",
-			html : true,
-			placement : "bottom"
-		});
-	}
+        //$('#cod_order_num').text(stats_data.cod_order_num);
+        $('#cod_order_num_help').popover({
+            content : "<div class='xui-i-alert'>当前所选时段内使用货到付款方式的订单数</div>",
+            trigger : "hover",
+            html : true,
+            placement : "bottom"
+        });
+    }
 </script>
 
 {% endblock %}
