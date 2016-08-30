@@ -236,7 +236,9 @@ class ProductList(resource.Resource):
             "with_selected_category": True,
             'with_image': False,
             'with_property': True,
-            'with_sales': True
+            'with_sales': True,
+            'mall_type': mall_type,
+            'product_pool_id2product_pool': product_pool_id2product_pool
         })
         # pdb.set_trace()
         # products = products.order_by(sort_attr)

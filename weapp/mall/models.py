@@ -720,9 +720,17 @@ class Product(models.Model):
 
 		product_ids = [product.id for product in products]
 
+		mall_type = options.get('mall_type', False)
+		product_pool_id2product_pool = options.get('product_pool_id2product_pool', {})
 		for product in products:
 			if product.id!=None:
 				product.detail_link = '/mall2/product/?id=%d&source=onshelf' % product.id
+
+				if mall_type == 1 and product_pool_id2product_pool:
+					pool = product_pool_id2product_pool.get(product.id, None)
+					if pool:
+						product.display_index = pool.display_index
+
 
 		if options.get('with_product_model', False):
 			Product.fill_model_detail(
