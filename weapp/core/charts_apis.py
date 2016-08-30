@@ -188,7 +188,7 @@ class MyEcharts(object):
 		option[self.SERIES_OPTION_NAME] = []
 
 		if not show_legend:
-			option[self.LEGEND_OPTION_NAME]['show'] = True
+			option[self.LEGEND_OPTION_NAME]['show'] = False
 
 		if reverse:  #横向柱状图
 			option['xAxis'] = {
@@ -226,8 +226,6 @@ class MyEcharts(object):
 				one_series_options['tooltip'] = y_values['tooltip']
 			if y_values.has_key('barWidth'):
 				one_series_options['barWidth'] = y_values['barWidth']
-			if y_values.has_key('barHeight'):
-				one_series_options['barHeight'] = y_values['barHeight']
 
 			lagend_data_arr.append(name)
 			series_options.append(one_series_options)
