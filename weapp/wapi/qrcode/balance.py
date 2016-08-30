@@ -48,7 +48,7 @@ class QrcodeBalance(api_resource.ApiResource):
 		order_number2finished_at = {}
 		#处理筛选
 		if cur_start_date and cur_end_date:
-			if cur_start_date > created_at:
+			if cur_start_date < created_at:
 				cur_start_date = created_at
 			orderoperationlogs = OrderOperationLog.objects.filter(
 				order_id__in=order_numbers,
