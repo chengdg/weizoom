@@ -2,6 +2,7 @@
 
 {% if component.type == 'wepage.item_group' %}
 <div 
+    data-ui-role="async-component"
     class="xa-products-box wui-product {% if component.model.itemname %}wui-productTitle{% endif %}" 
     data-component-cid="{{component.cid}}" 
     data-index="{{component.model.index}}" 
