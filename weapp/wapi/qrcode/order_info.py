@@ -16,7 +16,7 @@ class QrcodeOrderInfo(api_resource.ApiResource):
 	app = 'qrcode'
 	resource = 'order_info'
 
-	@param_required(['channel_qrcode_id'])
+	@param_required(['order_ids'])
 	def get(args):
 		"""
 		获取订单
