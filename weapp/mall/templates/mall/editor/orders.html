@@ -27,7 +27,7 @@
 			<li class="active xa-pageType">{{ page_type }}</li>
 		</ul>
 	<!-- 筛选 -->
-	<div class="xa-orderFilterView xui-filterPanel"></div>
+	<div class="xa-orderFilterView xui-filterPanel pr"></div>
 
 	{% if has_order %}
         {%ifequal page_type '所有订单' %}
@@ -96,12 +96,12 @@
 	</ul>
 	{{if data.pageinfo.object_count != 0}}
   <!-- 订单打印 2016.04.08 start -->
-    <div class="print－all-orders-row div_export">
+    <div class="print－all-orders-row">
 		<input type="checkBox" name="selectAllPrintOrders">
 		<span class="ml5 mr10">全选</span>
 		<a title="批量打印发货单" class="xa-order-print" href="javascript:void(0);">批量打印发货单</a>
-		<a href="javascript:void(0);" class="btn fr btn-default xa-export" style="margin:4px 10px;" id="export_data_file">导出结果</a>
-
+		<!--<a href="javascript:void(0);" class="btn fr btn-default xa-export" style="margin:4px 10px;" id="export_data_file">导出结果</a>
+		-->
     </div>
   <!-- 订单打印 2016.04.08 end -->
 	<table class="table table-condensed mb0 xui-tableHead">
@@ -498,12 +498,14 @@ $(document).ready(function() {
         status = 'audit';
         type = 3;
     }
+    var export2data = {{export2data|safe}};
 	var filterBox = new W.view.mall.order.orderFilter({
 		el: ".xa-orderFilterView",
 		dataView: $('[data-ui-role="advanced-table"]').data('view'),
 		userWebappId: {{user.get_profile.webapp_id}},
 		status:status,
 		orderStatus:{{order_status}},
+		export2data:export2data
 	});
 	filterBox.$el.bind('end_click', function(){
 		// $('#start_date').val('');
@@ -843,46 +845,7 @@ $(document).ready(function() {
 
 	var table = $('div[data-ui-role="advanced-table"]').data('view');
 
-
-	var export2data = {{export2data|safe}};
 	var woid = "{{ request.manager.id }}";
-	if(export2data["status"] ===1 && export2data["is_download"] ===0 ){
-		table.afterload = function(){
-			var options = {
-				el: '.div_export',
-				topic_id: '',
-				type: '',
-				url: "",
-				jobId:export2data["id"],
-				isAlreadyExport : true,
-				app: 'mall2/order',
-				timelinesOptions: {
-				}
-			}
-			var memberExportFileView = new W.dialog.ExportFileView(options);
-			memberExportFileView.finish();
-		};
-	}
-	else if(export2data["status"] ===0 && export2data["is_download"] ===0 ){
-		table.afterload = function(){
-
-			var jobId = export2data["id"];
-			var options = {
-				el: '.div_export',
-				topic_id: '',
-				type: '',
-				url: "",
-				jobId:export2data["id"],
-				isAlreadyExport : true,
-				app: 'mall2/order',
-				timelinesOptions: {
-				}
-			}
-			var memberExportFileView = new W.dialog.ExportFileView(options);
-			memberExportFileView.doExportAfterApi();
-		};
-	};
-
 
 	//微众商城的支付方式显示翼支付选项 duhao 20160602
 	var username = "{{request.manager.username}}";

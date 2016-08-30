@@ -2726,7 +2726,14 @@ class MallOrderFromSharedRecord(models.Model):
         verbose_name_plural = "通过分享链接订单"
         db_table = "mall_order_from_shared_record"
 # #######        供货商实现        ####
-
+# 五五分成
+SUPPLIER_TYPE_DIVIDE = 0
+# 零售返点
+SUPPLIER_TYPE_RETAIL = 1
+# 固定低价
+SUPPLIER_TYPE_FIXED = 2
+# 普通供货商
+SUPPLIER_TYPE_NORMAL = -1
 class Supplier(models.Model):
 	owner = models.ForeignKey(User)
 	name = models.CharField(max_length=16)  # 供货商名称
@@ -2735,7 +2742,7 @@ class Supplier(models.Model):
 	supplier_address = models.CharField(max_length=256) # 供货商地址
 	remark = models.CharField(max_length=256) # 备注
 	is_delete = models.BooleanField(default=False)  # 是否已经删除
-	type = models.IntegerField(default=-1)# 是否55分  0 55分成
+	type = models.IntegerField(SUPPLIER_TYPE_NORMAL)# 是否55分  0 55分成
 	created_at = models.DateTimeField(auto_now_add=True)  # 添加时间
 
 	class Meta(object):
@@ -2952,3 +2959,22 @@ class SupplierDivideRebateInfo(models.Model):
 
     class Meta(object):
         db_table = 'supplier_divide_rebate_info'
+
+
+
+class SupplierRetailRebateInfo(models.Model):
+    """
+    零售返点的供货商的返点信息(包括团购)
+    """
+    # 供货商id
+    supplier_id = models.IntegerField()
+    # 平台id(如果支持团购) 0的表示改供货商的基础扣点; 0的默认值表示改供货商的基础扣点
+    # 如果有owner_id说明该扣点是属于团购扣点
+    owner_id = models.IntegerField(default=0)
+    # 扣点
+    rebate = models.IntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_deleted = models.BooleanField(default=False)
+
+    class Meta(object):
+        db_table = 'supplier_retail_rebate_info'
