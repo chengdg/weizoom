@@ -62,7 +62,6 @@ class OrderSummary(resource.Resource):
 		start_time = low_date
 		end_time = high_date
 
-		print "================>",start_time,end_time
 		webapp_id = request.user_profile.webapp_id
 		total_orders = belong_to(webapp_id)
 		qualified_orders = total_orders.prefetch_related('orderhasproduct_set').filter(
@@ -95,13 +94,6 @@ class OrderSummary(resource.Resource):
 			discount_amount += float(order.integral_money) + float(order.coupon_money)
 			#postage_amount += float(order.postage)
 
-		print ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
-		print "--------- order_num:",order_num
-		print "--------- paid_amount:",paid_amount
-		print "--------- product_num:",product_num
-		print "--------- discount_amount:",discount_amount
-		print ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
-
 		item = {
 			# 【成交订单】=∑订单.个数
 			'order_num': order_num,
@@ -126,7 +118,7 @@ class OrderSummary(resource.Resource):
 			response.errMsg = u'未指定查询时间段'
 			return response.get_response()
 
-class orderTrends(resource.Resource):
+class OrderTrends(resource.Resource):
 	"""
 	订单趋势
 	"""
@@ -181,7 +173,7 @@ class orderTrends(resource.Resource):
 				}
 			)
 
-class repeatPurchaseRate(resource.Resource):
+class RepeatPurchaseRate(resource.Resource):
 	"""
 	复购率
 	"""
@@ -225,7 +217,7 @@ class repeatPurchaseRate(resource.Resource):
 
 			t0 = time.clock()
 			t1 = time.time()
-			print ">>>>>"
+			# print ">>>>>"
 			repeated_num += _get_repeated_num_increment(order.webapp_user_id, wuid_dict, tmp_member, webappuser2member, pre_status_qualified_orders)
 			# __report_performance(t0, t1, "repeat counter")
 
@@ -239,7 +231,7 @@ class repeatPurchaseRate(resource.Resource):
 				}
 			)
 	
-class buyerSources(resource.Resource):
+class BuyerSources(resource.Resource):
 	"""
 	买家来源
 	"""
@@ -308,7 +300,7 @@ class buyerSources(resource.Resource):
 				}
 			)
 
-class paymentAmount(resource.Resource):
+class PaymentAmount(resource.Resource):
 	"""
 	支付金额
 	"""
@@ -412,7 +404,7 @@ class paymentAmount(resource.Resource):
 				}
 			)
 
-class preferentialDiscount(resource.Resource):
+class PreferentialDiscount(resource.Resource):
 	"""
 	优惠折扣
 	"""
@@ -472,28 +464,6 @@ class preferentialDiscount(resource.Resource):
 			_do_discount_stats(discount_stats, order)
 			discount_stats['discount_order_num'] = discount_stats['wezoom_num'] + discount_stats['coupon_num'] + discount_stats['integral_num'] + discount_stats['wezoom_coupon_num'] + discount_stats['wezoom_integral_num']
 
-		x_values = ["微众卡支付", "积分折扣", "优惠券", "微众卡+积分","微众卡+优惠券"]
-		y_values = [discount_stats['wezoom_num'],discount_stats['integral_num'],discount_stats['coupon_num'],discount_stats['wezoom_integral_num'],discount_stats['wezoom_coupon_num']]
-
-		print "========================================>",y_values
-		# for item in discount_stats:
-		# 	# x_values.append(item['rank'])
-		# 	y_values.append(item['num'])
-
-		if len(y_values) == 0:
-			y_values = [0, 0, 0, 0, 0]
-		y_values_list = [{
-			"name": "下单次数",
-			"values" : y_values,
-			"tooltip" : {
-				"trigger" : "item",
-				"formatter" : u"次数:{c}"
-			},
-			"barWidth": 120,
-			"barHeight": 300
-		}]
-
-		#return create_bar_chart_response(x_values, y_values_list)
 		response = create_response(200)
 		response.data = {
 			'discount_stats': discount_stats,
@@ -510,9 +480,9 @@ def __report_performance(clock_t, wall_t, title):
 	wall_x = time.time() - wall_t
 	clock_msg = "seconds process time for " + title
 	wall_msg = "seconds wall time for " + title
-	print clock_x, clock_msg
-	print wall_x, wall_msg
-	print "=========================================="
+	# print clock_x, clock_msg
+	# print wall_x, wall_msg
+	# print "=========================================="
 
 def _get_repeated_num_increment(wuid, wuid_dict, member, webappuser2member, pre_status_qualified_orders):
 	if wuid_dict.has_key(wuid):
@@ -534,7 +504,7 @@ def _get_repeated_num_increment(wuid, wuid_dict, member, webappuser2member, pre_
 				if tmp_member.id == member.id:
 					wuid_dict['pos'] = index + 1
 					return 1
-	print "+++++++++++++++++++++++++++++++++"
+	# print "+++++++++++++++++++++++++++++++++"
 	return result
 
 #统计买家来源函数
