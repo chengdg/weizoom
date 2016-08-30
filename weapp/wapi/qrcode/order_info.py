@@ -9,12 +9,12 @@ from modules.member.models import *
 from mall.models import Order, STATUS2TEXT, OrderHasProduct, Product, ProductModel,OrderOperationLog
 
 
-class QrcodeOrder(api_resource.ApiResource):
+class QrcodeOrderInfo(api_resource.ApiResource):
 	"""
 	二维码
 	"""
 	app = 'qrcode'
-	resource = 'orders'
+	resource = 'order_info'
 
 	@param_required(['channel_qrcode_id'])
 	def get(args):
