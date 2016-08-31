@@ -134,7 +134,24 @@
                     <td>
                         {{if product.supplier_type == 0}}
                             首月55分成
-                        {{else}}
+                            {{if product.basic_rebate}}
+                            	<span style="color:red;">(${product.basic_rebate}%)</span>
+                            {{/if}}
+
+                        {{/if}}
+                        {{if product.supplier_type == 1}}
+                            零售返点
+                            {{if product.retail_rebate}}
+                            	<span style="color:red;">(${product.retail_rebate}%)</span>
+                            {{/if}}
+                        {{/if}}
+                        {{if product.supplier_type == 2}}
+                            固定低价
+
+                        {{/if}}
+                        {{if product.supplier_type == -1}}
+
+
                         {{/if}}
                     </td>
                     <td>

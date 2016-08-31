@@ -186,6 +186,13 @@ class ProductList(resource.Resource):
                 owner=request.manager,
                 is_deleted=False)
 
+#添加商品分类的过滤
+        first_classification = int(request.GET.get('first_classification', '-1'))
+        secondary_classification = int(request.GET.get('secondary_classification', '-1'))
+        if first_classification > 0:
+            product_ids = utils.get_product_ids_by_classification(first_classification, secondary_classification, request.manager.id, product_pool_param)
+            products = products.filter(id__in=product_ids)
+
 
         #临时兼容自营平台供货商查询 待所以商品都更新成商品池商品进行重构
         if mall_type:
@@ -202,7 +209,6 @@ class ProductList(resource.Resource):
                                         )]
                 if products:
                     products = products.filter(supplier__in=mananger_supplier_ids)
-
 
             #add by bert 增加扣点类型查询
             manager_user_profile = UserProfile.objects.filter(webapp_type=2)[0]
@@ -229,7 +235,9 @@ class ProductList(resource.Resource):
             "with_selected_category": True,
             'with_image': False,
             'with_property': True,
-            'with_sales': True
+            'with_sales': True,
+            'mall_type': mall_type,
+            'product_pool_id2product_pool': product_pool_id2product_pool
         })
         # pdb.set_trace()
         # products = products.order_by(sort_attr)
@@ -272,14 +280,36 @@ class ProductList(resource.Resource):
             product_ids = [product.id for product in products]
             product_id2store_name, product_id2sync_time = utils.get_sync_product_store_name(product_ids)
 
-            manager_product_user_id = UserProfile.objects.filter(webapp_type=2)[0].user_id
-            manager_supplier_ids2supplier = dict([(s.id, s) for s in models.Supplier.objects.filter(owner_id=manager_product_user_id)])
+            # manager_product_user_id = UserProfile.objects.filter(webapp_type=2)[0].user_id
+            supplier_ids = [product.supplier for product in products]
+            suppliers = models.Supplier.objects.filter(id__in=supplier_ids)
+            manager_supplier_ids2supplier = dict([(s.id, s) for s in suppliers])
+            # 五五分成供货商的基础扣点
+            # suppliers = suppliers.filter(type=0)
 
+            rebate_infos = models.SupplierDivideRebateInfo.objects.filter(supplier_id__in=supplier_ids,
+                                                                          is_deleted=False)
+            supplier2divide_rebate = dict([(rebate.supplier_id, rebate.basic_rebate) for rebate in rebate_infos])
 
+            # 零售返点(目前只有基础返点逻辑)
+            basic_retail_info = models.SupplierRetailRebateInfo.objects.filter(supplier_id__in=supplier_ids,
+                                                                               owner_id=0,
+                                                                               is_deleted=False)
+            # 某些供货商的对应改平台的团购返点
+            self_retail_info = models.SupplierRetailRebateInfo.objects.filter(supplier_id__in=supplier_ids,
+                                                                              owner_id=request.manager.id,
+                                                                              is_deleted=False)
+            supplier_id_2_retail_rebate = dict([(rebate_info.supplier_id, rebate_info.rebate)
+                                                for rebate_info in basic_retail_info])
+            supplier_id_2_self_retail_rebate = dict([(rebate_info.supplier_id, rebate_info.rebate)
+                                                     for rebate_info in self_retail_info])
         else:
             product_id2store_name = {}
             product_id2sync_time = {}
             manager_supplier_ids2supplier = {}
+            supplier2divide_rebate = {}
+            supplier_id_2_retail_rebate = {}
+            supplier_id_2_self_retail_rebate = {}
 
         # 手动添加供货商的信息
         supplier_ids2name = dict([(s.id, s.name) for s in models.Supplier.objects.filter(owner=request.manager, is_delete=False)])
@@ -297,10 +327,28 @@ class ProductList(resource.Resource):
         items = []
         items1 = []
         items2 = []
+
+        #获取商品的商品分类信息
+        if mall_type:
+            # product_ids = pids
+            relations = models.ClassificationHasProduct.objects.filter(product_id__in=pids)
+            product_id2classification = dict([(r.product_id, r.classification) for r in relations])
+            father_ids = [classification.father_id for classification in product_id2classification.values()]
+            first_classifications = models.Classification.objects.filter(id__in=father_ids)
+            id2first_classification = dict([(classification.id, classification) for classification in first_classifications])
+
         for product in products:
 
             product_dict = product.format_to_dict()
             product_dict['is_self'] = (request.manager.id == product.owner_id)
+
+            product_dict['classification'] = ''
+            if mall_type:
+                secondary_classification = product_id2classification.get(product.id,'')
+                if secondary_classification:
+                    secondary_classification_name = secondary_classification.name
+                    first_classification_name = id2first_classification[secondary_classification.father_id].name
+                    product_dict['classification'] = '{}-{}'.format(first_classification_name, secondary_classification_name)
 
             if manager_supplier_ids2supplier:
                 supplier = manager_supplier_ids2supplier.get(product.supplier, "")
@@ -310,7 +358,7 @@ class ProductList(resource.Resource):
                 if supplier and supplier.type == 0:
                     product_dict['supplier_type'] = 0
                 else:
-                    product_dict['supplier_type'] = -1
+                    product_dict['supplier_type'] = supplier.type if supplier else -1
             else:
                 store_name = ''
                 product_dict['supplier_type'] = -1
@@ -339,8 +387,14 @@ class ProductList(resource.Resource):
                 items1.append(product_dict)
             else:
                 items2.append(product_dict)
-
-
+            if supplier2divide_rebate:
+                product_dict.update({'rebate': supplier2divide_rebate.get(product.supplier)})
+            # supplier_id_2_retail_rebate = {}
+            # supplier_id_2_self_retail_rebate = {}
+            retail_rebate = supplier_id_2_self_retail_rebate.get(product.supplier)
+            if not retail_rebate:
+                retail_rebate = supplier_id_2_retail_rebate.get(product.supplier, None)
+            product_dict.update({'retail_rebate': retail_rebate})
             items.append(product_dict)
 
         # 微众系列待售排序
@@ -532,21 +586,7 @@ class ProductPool(resource.Resource):
         manager_user_profile = UserProfile.objects.filter(webapp_type=2)[0]
         # 根据分类来筛选
         if first_classification > 0:
-            if secondary_classification == -1:
-                subclassification_ids = [model.id for model in models.Classification.objects.filter(father_id=first_classification, level=2)]
-                product_ids = [model.product_id for model in models.ClassificationHasProduct.objects.filter(
-                                        classification_id__in=subclassification_ids
-                                        )]
-            elif secondary_classification > 0:
-                product_ids = [model.product_id for model in models.ClassificationHasProduct.objects.filter(
-                                        classification_id=secondary_classification
-                                        )]
-            else:
-                product_ids = []
-            product_ids = [model.product_id for model in models.ProductPool.objects.filter(
-                woid=request.manager.id,
-                product_id__in=product_ids,
-                status=models.PP_STATUS_ON_POOL)]
+            product_ids = utils.get_product_ids_by_classification(first_classification, secondary_classification, request.manager.id)
             products = models.Product.objects.filter(id__in=product_ids)
         else:
             product_pool = models.ProductPool.objects.filter(woid=request.manager.id, status=models.PP_STATUS_ON_POOL)
@@ -638,11 +678,37 @@ class ProductPool(resource.Resource):
 
         supplier_ids2name = {}
         supplier_ids2supplier = {}
+        # 供货商对应五五分成的基础扣点
+        supplier_divide_rebate = {}
+        # 零售返点信息
+        # 基础的
+        supplier_id_2_retail_rebate = {}
+        # 对应此平台特殊团购反点
+        supplier_id_2_self_retail_rebate = {}
+        # 本页的所有商品的所有供货商
+        supplier_ids = [product.supplier for product in products]
+
         if manager_product_user_id:
-            suppliers = models.Supplier.objects.filter(owner_id=manager_product_user_id)
+            suppliers = models.Supplier.objects.filter(id__in=supplier_ids)
             supplier_ids2name = dict([(s.id, s.name) for s in suppliers])
             supplier_ids2supplier = dict([(s.id, s) for s in suppliers])
+            # 保险起见,查询出五五分成的供货商suppliers
+            rebate_infos = models.SupplierDivideRebateInfo.objects.filter(supplier_id__in=supplier_ids,
+                                                                          is_deleted=False)
+            supplier_divide_rebate = dict([(rebate.supplier_id, rebate.basic_rebate) for rebate in rebate_infos])
 
+            # 零售返点(目前只有基础返点逻辑)
+            basic_retail_info = models.SupplierRetailRebateInfo.objects.filter(supplier_id__in=supplier_ids,
+                                                                               owner_id=0,
+                                                                               is_deleted=False)
+            # 某些供货商的对应改平台的团购返点
+            self_retail_info = models.SupplierRetailRebateInfo.objects.filter(supplier_id__in=supplier_ids,
+                                                                              owner_id=request.manager.id,
+                                                                              is_deleted=False)
+            supplier_id_2_retail_rebate = dict([(rebate_info.supplier_id, rebate_info.rebate)
+                                                for rebate_info in basic_retail_info])
+            supplier_id_2_self_retail_rebate = dict([(rebate_info.supplier_id, rebate_info.rebate)
+                                                     for rebate_info in self_retail_info])
         product_ids = [product.id for product in products]
         relations = models.ClassificationHasProduct.objects.filter(product_id__in=product_ids)
         product_id2classification_id = dict([(r.product_id, r.classification_id) for r in relations])
@@ -686,12 +752,17 @@ class ProductPool(resource.Resource):
             # product.fill_standard_model()
             if supplier_ids2supplier:
                 supplier = supplier_ids2supplier.get(product.supplier, None)
+
                 if supplier:
                     supplier_type = supplier.type
                 else:
                     supplier_type = -1
             else:
                 supplier_type = -1
+            # 五五分成的基础扣点(只有五五分成才有此数据)
+            basic_rebate = supplier_divide_rebate.get(product.supplier, '')
+            basic_retail_rebate = supplier_id_2_retail_rebate.get(product.supplier, None)
+            self_retail_rebate = supplier_id_2_self_retail_rebate.get(product.supplier, None)
             items.append({
                 'id': product.id,
                 # 'product_has_promotion': product_has_promotion,
@@ -707,6 +778,10 @@ class ProductPool(resource.Resource):
                 'models': product.models[1:],
                 'display_price_range': product.display_price_range,
                 'supplier_type': supplier_type,
+                # 五五分成基础扣点
+                'basic_rebate': basic_rebate,
+                # 零售返点的对应此平台的反点
+                'retail_rebate': basic_retail_rebate if not self_retail_rebate else self_retail_rebate,
                 'classification': "%s-%s" % (
                     id2first_classification[id2secondary_classification[product_id2classification_id[product.id]].father_id].name,
                     id2secondary_classification[product_id2classification_id[product.id]].name
@@ -2086,9 +2161,11 @@ def get_product_param_from(request):
 
 
     woid = request.webapp_owner_id
+    first_classification = int(request.GET.get('first_classification', '-1'))
+    secondary_classification = int(request.GET.get('secondary_classification', '-1'))
 
     param = {'mall_type':mall_type, 'woid':woid, 'name':product_name, 'supplier_name':supplier_name, 'startDate':start_date, 'endDate':end_date,
         'lowSales':lowSales, 'highSales':highSales, 'category':category, 'barCode':barCode, 'lowPrice':lowPrice, 'highPrice':highPrice,
-         'lowStocks':lowStocks, 'highStocks':highStocks}
+         'lowStocks':lowStocks, 'highStocks':highStocks, 'first_classification':first_classification, 'secondary_classification':secondary_classification}
     return param
 

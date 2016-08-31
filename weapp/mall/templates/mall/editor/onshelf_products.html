@@ -51,6 +51,7 @@
 		data-template-id="#products-view"
 		data-enable-paginator="true"
 		data-enable-sort="false"
+		data-args='{"highStocks": "{{high_stocks}}"}'
 		data-selectable="true"
 		data-item-count-per-page="30"
 		data-disable-header-select="true"
@@ -102,10 +103,11 @@
 				<th width="115">商品价格（元）</th>
 				<th width="50">库存</th>
 				<th width="78">总销量</th>
-				{{if mall_type == 1}}
+				{{if data.data.mall_type == 1}}
 				<th width="78">扣点类型</th>
 				{{/if}}
 				<th width="120">{{if data.data.mall_type == 1}}首次上架{{else}}创建{{/if}}时间</th>
+				{{if data.data.mall_type > 0 && data.data.mall_type != 3}}<th width="50">分类</th>{{/if}}
 				<th width="58">排序</th>
 				<th width="90">操作</th>
 			</tr>
@@ -179,13 +181,34 @@
 						{{/if}}
 					</td>
 					<td>${product.sales}</td>
-					{{if mall_type == 1}}
-					<td>{{if product.supplier_type == 0}}
+					{{if data.data.mall_type == 1}}
+					<td>
+						{{if product.supplier_type == 0}}
                             首月55分成
-                        {{else}}
-                        {{/if}}</td>
+                            {{if product.rebate}}
+                            	<span style="color:red;">(${product.rebate}%)</span>
+                            {{/if}}
+                        {{/if}}
+                        {{if product.supplier_type == 1}}
+                            零售返点
+                            {{if product.retail_rebate}}
+                            	<span style="color:red;">(${product.retail_rebate}%)</span>
+                            {{/if}}
+                        {{/if}}
+                        {{if product.supplier_type == 2}}
+                            固定低价
+
+                        {{/if}}
+                        {{if product.supplier_type == -1}}
+
+
+                        {{/if}}
+
+                    </td>
 					{{/if}}
 					<td>{{if data.data.mall_type == 1 }}${product.sync_at}{{else}}${product.created_at}{{/if}}</td>
+					{{if data.data.mall_type > 0 && data.data.mall_type != 3}}<td>${product.classification}</td>{{/if}}
+
 					<td style="padding:0 15px;">
 						<input width="38" type="text" class="xa-rank" data-id="${product.id}" style="width:100%;"
 						 			 value="${product.display_index}" data-display-index="${product.display_index}">
