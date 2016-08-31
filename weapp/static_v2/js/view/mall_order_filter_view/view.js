@@ -189,6 +189,28 @@ W.view.mall.order.orderFilter = Backbone.View.extend({
        	 		this.$el.append(html);
                 _this.addDatepicker();
        	 		$('.xa-showFilterBox').append($('.xa-timelineControl'));
+                var export2data = this.export2data;
+                var options = {
+                        el: '.div_export',
+                        topic_id: '',
+                        type: '',
+                        url: "",
+                        jobId:export2data["id"],
+                        isAlreadyExport : true,
+                        app: 'mall2/order',
+                        timelinesOptions: {
+                        }
+                    }
+                if(export2data["status"] ===1 && export2data["is_download"] ===0 ){
+                    var memberExportFileView = new W.dialog.ExportFileView(options);
+                    memberExportFileView.finish();
+                    
+                }
+                else if(export2data["status"] ===0 && export2data["is_download"] ===0 ){
+                    var memberExportFileView = new W.dialog.ExportFileView(options);
+                    memberExportFileView.doExportAfterApi();
+                    
+                };
             },
             error: function(response) {
                 alert('加载失败！请刷新页面重试！');
@@ -268,6 +290,7 @@ W.view.mall.order.orderFilter = Backbone.View.extend({
         var status = this.options.status || '';
     	this.filter_value = '&status='+status;
         this.bind('clickStatusBox', this.clickStatusBox);
+        this.export2data = options.export2data;
     },
 
     // 导出按钮事件
