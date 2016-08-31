@@ -51,7 +51,7 @@ W.AsyncComponentLoadView = BackboneLite.View.extend({
 
     initialize: function(options) {
         this.$el = $(this.el);
-        console.log('###########', this.$el);
+        
         var componentType = this.$el.attr('data-type');
         if (componentType !== 'wepage.item_group') return ;
 
@@ -103,6 +103,7 @@ W.AsyncComponentLoadView = BackboneLite.View.extend({
 
     __sendApi: function(deferred, componentData) {
         if (typeof(componentData) === 'undefined') return;
+        
         var _this = this;
         var product_ids = componentData['model']['items'];
         var componentIndex = componentData['model']['index'];
