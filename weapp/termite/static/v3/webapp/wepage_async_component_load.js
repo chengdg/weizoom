@@ -146,11 +146,12 @@ W.AsyncComponentLoadView = BackboneLite.View.extend({
             // 将产品子数据，放到component.components中
             // 并把是否显示价格和名字的开关也放进去
             data.products.map(function(product, idx){
-                // 判断是否为又拍云图片
+                // 若是又拍云图片，则压缩成list所用的大小
                 var upaiyunKey = /upaiyun\.com/;
                 if (upaiyunKey.test(product['thumbnails_url'])) {
                     product['thumbnails_url'] = product['thumbnails_url'] + '!list';
                 }
+
 
                 product['is_itemname_hidden'] = _this.data['model']['is_itemname_hidden'];
                 product['is_price_hidden'] = _this.data['model']['is_price_hidden'];
@@ -165,6 +166,20 @@ W.AsyncComponentLoadView = BackboneLite.View.extend({
             if (compiledTemplate) {
                 var html = compiledTemplate(_this.data);
                 _this.$el.html(html);
+            }
+
+            // 预览模式下禁止点击
+            var isInFrame = (parent !== window);
+            if (isInFrame) {
+                if (parent.setWebappPageTitle) {
+                    parent.setWebappPageTitle(W.pageTitle);
+                }
+
+                //在预览模式下，修改a，禁止点击
+                $('a').each(function() {
+                    var $link = $(this);
+                    $link.attr('href', 'javascript:void(0);');
+                })
             }
 
             // 重新定义图片延迟加载, lazyloadImg已由页面定义
