@@ -65,7 +65,7 @@ Scenario:1 添加限定区域配置
 	Then jobs能获得限定区域列表
 		"""
 		[{
-			"name": "仅售地区",
+			"name": "仅售地区1",
 			"limit_area": [{
 				"area": "直辖市",
 				"city": ["北京市","天津市"]
