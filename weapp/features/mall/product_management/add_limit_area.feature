@@ -16,7 +16,7 @@ Scenario:1 添加限定区域配置
 	1. jobs能获得限定区域配置列表
 
 	Given jobs登录系统
-	Then jobs能获取限定区域列表
+	Then jobs能获得限定区域列表
 		"""
 		[]
 		"""
@@ -62,7 +62,7 @@ Scenario:1 添加限定区域配置
 			}]
 		}
 		"""
-	Then jobs能获取限定区域列表
+	Then jobs能获得限定区域列表
 		"""
 		[{
 			"name": "仅售地区",
@@ -87,7 +87,7 @@ Scenario:1 添加限定区域配置
 			"name": "仅售地区",
 			"limit_area": [{
 				"area": "直辖市",
-				"city": "已全选"
+				"city": ["北京市","天津市","上海市","重庆市"]
 			}],
 			"actions": ["修改","删除"]
 		},{
