@@ -642,7 +642,7 @@ Scenario:9 添加新商品,禁售地区和仅售地区
 			"name": "禁售商品地区",
 			"limit_area": [{
 				"area": "其他",
-				"city": ["香港"]
+				"province": ["香港"]
 			}]
 		}
 		"""
@@ -652,10 +652,26 @@ Scenario:9 添加新商品,禁售地区和仅售地区
 			"name": "仅售商品地区",
 			"limit_area": [{
 				"area": "直辖市",
-				"city": ["北京市","天津市","上海市","重庆市"]
+				"province": ["北京市","天津市","上海市","重庆市"]
 			}]
 		}
 		"""
+	When jobs添加限定区域配置
+		"""
+		{
+			"name": "仅售商品多地区",
+			"limit_area": [{
+				"area": "华北-东北",
+				"province": "河北省",
+				"city": ["石家庄市","唐山市","沧州市"]
+			},{
+				"area": "西北-西南",
+				"province": "陕西省",
+				"city": ["西安市"]
+			}]
+		}
+		"""
+
 	And jobs已添加商品
 		"""
 		[{
@@ -686,6 +702,26 @@ Scenario:9 添加新商品,禁售地区和仅售地区
 			"limit_zone_type": {
 				"仅售地区": {
 					"limit_zone": "仅售商品地区"
+				}
+			},
+			"model": {
+					"models": {
+						"standard": {
+							"price": 12.00,
+							"weight": 5.5,
+							"stock_type": "有限",
+							"stocks": 3
+						}
+					}
+				}
+		}, {
+			"name": "仅售地区商品1",
+			"category": "",
+			"detail": "商品的详情",
+			"status": "待售",
+			"limit_zone_type": {
+				"仅售地区": {
+					"limit_zone": "仅售商品多地区"
 				}
 			},
 			"model": {
@@ -732,6 +768,29 @@ Scenario:9 添加新商品,禁售地区和仅售地区
 			"limit_zone_type": {
 				"仅售地区": {
 					"limit_zone": "仅售商品地区"
+				}
+			},
+			"model": {
+					"models": {
+						"standard": {
+							"price": 12.00,
+							"weight": 5.5,
+							"stock_type": "有限",
+							"stocks": 3
+						}
+					}
+				}
+		}
+		"""
+	Then jobs能获取商品'仅售地区商品1'
+		"""
+		{
+			"name": "仅售地区商品1",
+			"category": "",
+			"detail": "商品的详情",
+			"limit_zone_type": {
+				"仅售地区": {
+					"limit_zone": "仅售商品多地区"
 				}
 			},
 			"model": {
