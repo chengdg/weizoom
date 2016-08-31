@@ -102,6 +102,7 @@ W.AsyncComponentLoadView = BackboneLite.View.extend({
     },
 
     __sendApi: function(deferred, componentData) {
+        if (typeof(componentData) === 'undefined') return;
         var _this = this;
         var product_ids = componentData['model']['items'];
         var componentIndex = componentData['model']['index'];
