@@ -12,7 +12,7 @@ Background:
 			"name": "禁售地区",
 			"limit_area": [{
 				"area": "直辖市",
-				"city": ["北京市","天津市"]
+				"province": ["北京市","天津市"]
 			}]
 		}
 		"""
@@ -22,11 +22,11 @@ Background:
 			"name": "仅售地区",
 			"limit_area": [{
 				"area": "直辖市",
-				"city": ["北京市","天津市"]
+				"province": ["北京市","天津市"]
 			},{
 				"area": "华北-东北",
 				"province": "河北省",
-				"city": ["石家庄","唐山","沧州"]
+				"city": ["石家庄市","唐山市","沧州市"]
 			},{
 				"area": "西北-西南",
 				"province": "陕西省",
@@ -51,7 +51,7 @@ Scenario:1 更新限定区域配置
 			"name": "禁售地区",
 			"limit_area": [{
 				"area": "直辖市",
-				"city": ["北京市","天津市"]
+				"province": ["北京市","天津市"]
 			},{
 				"area": "西北-西南",
 				"province": "陕西省",
@@ -66,25 +66,25 @@ Scenario:1 更新限定区域配置
 			"limit_area": [{
 				"area": "华北-东北",
 				"province": "河北省",
-				"city": ["石家庄","唐山","沧州"]
+				"city": ["石家庄市","唐山市","沧州市"]
 			}]
 		}
 		"""
-	Then jobs能获取限定区域列表
+	Then jobs能获得限定区域列表
 		"""
 		[{
 			"name": "仅售地区",
 			"limit_area": [{
 				"area": "华北-东北",
 				"province": "河北省",
-				"city": ["石家庄","唐山","沧州"]
+				"city": ["石家庄市","唐山市","沧州市"]
 			}],
 			"actions": ["修改","删除"]
 		},{
 			"name": "禁售地区",
 			"limit_area": [{
 				"area": "直辖市",
-				"city": ["北京市","天津市"]
+				"province": ["北京市","天津市"]
 			},{
 				"area": "西北-西南",
 				"province": "陕西省",
