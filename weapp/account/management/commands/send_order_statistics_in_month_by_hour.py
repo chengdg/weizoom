@@ -56,11 +56,11 @@ class Command(BaseCommand):
 				tmp_line += 1
 				date_str = dateutil.date2string(d)
 				end_datetime = "%s 23:59:00" % date_str
-				orders = Order.objects.filter(status__in=[2,3,5], payment_time__gte=d, payment_time__lte=end_datetime)
+				orders = Order.objects.filter(status__in=[2,3,5], payment_time__gte=d, payment_time__lte=end_datetime, origin_order_id__in=[0,-1])
 
 				for i in range(24):
-					print "%s %s:00" % (date_str, i), "----", "%s %s:59" % (date_str,i) ,"count()==",orders.filter(payment_time__gte="%s %s:00" % (date_str, i), payment_time__lte="%s %s:59" % (date_str,i)).count()
-					total_price = orders.filter(payment_time__gte="%s %s:00" % (date_str, i), payment_time__lte="%s %s:59" % (date_str,i)).aggregate(Sum('product_price'))['product_price__sum']
+					print "%s %s:00" % (date_str, i), "----", "%s %s:59" % (date_str,i) ,"count()==",orders.filter(payment_time__gte="%s %s:00" % (date_str, i), payment_time__lte="%s %s:59" % (date_str,i), origin_order_id__in=[0,-1]).count()
+					total_price = orders.filter(payment_time__gte="%s %s:00" % (date_str, i), payment_time__lte="%s %s:59" % (date_str,i), origin_order_id__in=[0,-1]).aggregate(Sum('product_price'))['product_price__sum']
 					if  not total_price:
 						total_price = 0
 					table.write(i+1,tmp_line-1, total_price)
