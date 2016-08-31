@@ -191,6 +191,21 @@ def process_item_group_data(request, component):
 		else:
 			sub_component['__is_valid'] = False
 			
+	# 开始配置异步所需的节点
+	# 预览模式/编辑模式，显示空的div占位符, 将cid信息加入标签的属性中
+	component['_has_data'] = False
+	component_model = component['model']
+	component_model['cid'] = component['cid']
+	component_model['components'] = []
+	for sub_component in component['components']:
+		component_model['components'].append({
+			"cid": sub_component['cid'],
+			"index": sub_component['model']['index']
+		})
+	component_model['items'] = model_product_ids
+	component['empty_placeholder'] = "<div display_mode='design' data-ui-role='async-component' data-type='{}' data-model='{}'></div>".format(component['type'], json.dumps(component_model))
+	return 	
+	
 	#products = [product for product in mall_models.Product.objects.filter(id__in=product_ids) if product.shelve_type == mall_models.PRODUCT_SHELVE_TYPE_ON]
 	valid_product_count = 0
 	if len(product_ids) == 0:
@@ -244,19 +259,6 @@ def process_item_group_data(request, component):
 		valid_product_count = -1
 	component['valid_product_count'] = valid_product_count
 
-	# 开始配置异步所需的节点
-	# 预览模式/编辑模式，显示空的div占位符, 将cid信息加入标签的属性中
-	component['_has_data'] = False
-	component_model = component['model']
-	component_model['cid'] = component['cid']
-	component_model['components'] = []
-	for sub_component in component['components']:
-		component_model['components'].append({
-			"cid": sub_component['cid'],
-			"index": sub_component['model']['index']
-		})
-	component_model['items'] = model_product_ids
-	component['empty_placeholder'] = "<div display_mode='design' data-ui-role='async-component' data-type='{}' data-model='{}'></div>".format(component['type'], json.dumps(component_model))
 
 	try:
 		if woid == 1120:
