@@ -22,7 +22,8 @@ from core import paginator
 from core.jsonresponse import create_response
 import utils as webapp_link_utils
 from core.exceptionutil import unicode_full_stack
-from watchdog.utils import watchdog_error
+from eaglet.utils.resource_client import Resource
+from watchdog.utils import watchdog_error, watchdog_info
 
 
 COUNT_PER_PAGE = 20
@@ -80,11 +81,23 @@ class WebappItemLinks(resource.Resource):
 		request.selected_id = selected_id
 
 		#首先请求marketapp
-		URL = "http://%s/apps/export/api/get_app_items/?webapp_owner_id=%s&link_type=%s" % (settings.MARKETAPP_DOMAIN, str(request.manager.id), link_type)
 		try:
-			api_resp_text = requests.get(URL).text
-			print URL, 'marketapp get_app_items===============>>>', api_resp_text
-			api_resp = json.loads(api_resp_text)
+			api_resp = Resource.use('marketapp_apiserver').get({
+				'resource': 'apps.get_app_records',
+				'data': {
+					'webapp_owner_id': str(request.manager.id),
+					'app_name': link_type,
+					'record_name': query,
+					'count_per_page': request.GET.get('count_per_page', 15),
+					'page': request.GET.get('page', 1)
+				}
+			})
+			watchdog_info('call marketapp_apiserver: apps.get_app_records, resp==> \n{}'.format(api_resp))
+
+			if not api_resp:
+				response = create_response(500)
+				response.errMsg = u'网络问题，获取活动列表失败'
+				return response.get_response()
 		except:
 			notify_message = u"从marketapp获取活动列表失败，cause: \n{}".format(unicode_full_stack())
 			watchdog_error(notify_message)
@@ -92,7 +105,7 @@ class WebappItemLinks(resource.Resource):
 			response.errMsg = u'网络问题，获取活动列表失败'
 			return response.get_response()
 
-		if api_resp.get('data', None):
+		if api_resp.get('code', 0) == 200:
 			api_data = api_resp['data']
 			link_targets = api_data['link_targets']
 			pageinfo = api_data['pageinfo']
@@ -104,7 +117,7 @@ class WebappItemLinks(resource.Resource):
 				'data': {},
 				'type': link_type
 			}
-		elif api_resp.get('errMsg', None) and 'invalid appname' == api_resp['errMsg']:
+		elif api_resp.get('code', 0) == 500 and 'invalid appname' == api_resp['errMsg']:
 			temp_data = getLocalLinkData(request, link_type)
 			if temp_data:
 				response = create_response(200)

@@ -10,6 +10,8 @@ from datetime import timedelta, datetime
 from django.conf import settings
 from django.db.models import Q
 
+from eaglet.utils.resource_client import Resource
+
 from mall.models import Product, ProductCategory, PRODUCT_SHELVE_TYPE_ON, ProductPool, PP_STATUS_ON
 from mall.promotion.models import CouponRule, Promotion, PROMOTION_TYPE_COUPON
 from market_tools.tools.vote.models import Vote
@@ -36,7 +38,7 @@ from account.models import UserProfile
 from account.account_util import get_token_for_logined_user
 
 from core.exceptionutil import unicode_full_stack
-from watchdog.utils import watchdog_error
+from watchdog.utils import watchdog_error, watchdog_info
 
 def get_webapp_link_menu_objectes(request):
 	"""
@@ -243,13 +245,14 @@ def get_webapp_link_menu_objectes(request):
 
 
 	#替换menu中的百宝箱app 百宝箱独立
-	URL = "http://%s/apps/export/api/get_app_link_menu/?webapp_owner_id=%s" % (settings.MARKETAPP_DOMAIN, str(request.manager.id))
 	try:
-		api_resp_text = requests.get(URL).text
-		print URL, 'marketapp get_app_link_menu===============>>>', api_resp_text
-		api_resp = json.loads(api_resp_text)
+		api_resp = Resource.use('marketapp_apiserver').get({
+			'resource':'apps.get_apps_link_menu',
+			'data':{'webapp_owner_id': str(request.manager.id)}
+		})
+		watchdog_info('call marketapp_apiserver: apps.get_apps_link_menu, resp==> \n{}'.format(api_resp))
 
-		if api_resp.get('data', None):
+		if api_resp and api_resp['code'] == 200:
 			resp_data = api_resp['data']
 			token = get_token_for_logined_user(request.user)
 			token_str = '?token=' + token
