@@ -1051,8 +1051,11 @@ def get_page_products(request):
 	_, products = webapp_cache.get_webapp_products_new(request.user_profile, False, category_id)
 
 	if product_ids:
-		product_ids = map(lambda x: int(x), product_ids.split(','))
-		products = filter(lambda x: x.id in product_ids, products)
+		product_ids.split(',')
+		id2products = {product.id: product for product in products}
+		products = [id2products[pid] for pid in product_ids]
+		# product_ids = map(lambda x: int(x), product_ids.split(','))
+		# products = filter(lambda x: x.id in product_ids, products)
 
 	for product in products:
 
