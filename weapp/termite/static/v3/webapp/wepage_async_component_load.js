@@ -51,7 +51,7 @@ W.AsyncComponentLoadView = BackboneLite.View.extend({
 
     initialize: function(options) {
         this.$el = $(this.el);
-        
+
         var componentType = this.$el.attr('data-type');
         if (componentType !== 'wepage.item_group') return ;
 
@@ -170,9 +170,9 @@ W.AsyncComponentLoadView = BackboneLite.View.extend({
                 _this.$el.html(html);
             }
 
-            // 预览模式下禁止点击
             var isInFrame = (parent !== window);
             if (isInFrame) {
+                // 预览模式下禁止点击
                 if (parent.setWebappPageTitle) {
                     parent.setWebappPageTitle(W.pageTitle);
                 }
@@ -182,14 +182,22 @@ W.AsyncComponentLoadView = BackboneLite.View.extend({
                     var $link = $(this);
                     $link.attr('href', 'javascript:void(0);');
                 })
+
+                // 装修／预览模式下，不延迟加载图片
+                var $itemImg = $('a img', _this.$el);
+                var srcImg = $itemImg.attr('data-url');
+                $itemImg.attr('src', srcImg);
+                
+            } else {
+                // 手机模式下
+                // 重新定义图片延迟加载, lazyloadImg已由页面定义
+                W.lazyloadImg($('a img', _this.$el), {
+                    threshold: 0,
+                    effect : "fadeIn",
+                    placeholder: "/static_v2/img/webapp/mall/info_placeholder.png"
+                });
             }
 
-            // 重新定义图片延迟加载, lazyloadImg已由页面定义
-            W.lazyloadImg($('a img', _this.$el), {
-                threshold: 0,
-                effect : "fadeIn",
-                placeholder: "/static_v2/img/webapp/mall/info_placeholder.png"
-            });
         });
     }
 
