@@ -59,7 +59,7 @@ class ProvincialCity(resource.Resource):
 
     @login_required
     def api_get(request):
-        template_id = int(request.GET.get('templateId', '0'))
+        template_id = int(request.GET.get('template_id', '0'))
         select_province_ids = []
         select_city_ids = []
         if ProductLimitZoneTemplate.objects.filter(id=template_id).count() > 0:
@@ -73,24 +73,38 @@ class ProvincialCity(resource.Resource):
         provinces = []
         for id in id2province.keys():
             province_has_city = {
-                    'province_id': id,
-                    'province_name': id2province[id].name,
-                    'is_selected': True if id in select_province_ids else False,
+                    'provinceId': id,
+                    'provinceName': id2province[id].name,
+                    'isSelected': True if id in select_province_ids else False,
                     'cities': []
                     }
+            if province_has_city['provinceId'] == 5:
+                province_has_city['provinceName'] = u'内蒙古'
+            elif province_has_city['provinceId'] == 20:
+                province_has_city['provinceName'] = u'广西'
+            elif province_has_city['provinceId'] == 26:
+                province_has_city['provinceName'] = u'西藏'
+            elif province_has_city['provinceId'] == 30:
+                province_has_city['provinceName'] = u'宁夏'
+            elif province_has_city['provinceId'] == 31:
+                province_has_city['provinceName'] = u'新疆'
+            elif province_has_city['provinceId'] == 32:
+                province_has_city['provinceName'] = u'香港'
+            elif province_has_city['provinceId'] == 33:
+                province_has_city['provinceName'] = u'澳门'
             for city in filter(lambda city: city.province_id == id, all_cities):
                 province_has_city['cities'].append({
-                        'city_id': city.id,
-                        'city_name': city.name,
-                        'is_selected': True if city.id in select_city_ids else False
+                        'cityId': city.id,
+                        'cityName': city.name,
+                        'isSelected': True if city.id in select_city_ids else False
                     })
             provinces.append(province_has_city)
 
         zones = []
         for zone_name in ZONE_NAMES:
             zones.append({
-                'zone_name': zone_name,
-                'provinces': filter(lambda province: PROVINCE_ID2ZONE[province['province_id']] == zone_name, provinces)
+                'zoneName': zone_name,
+                'provinces': filter(lambda province: PROVINCE_ID2ZONE[province['provinceId']] == zone_name, provinces)
                 })
 
         response = create_response(200)
