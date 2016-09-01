@@ -1,13 +1,148 @@
 {% extends "content_base_v2.html" %}
 
 {% block content-panel %}
-<div class="xui-productPropertyPage">
-	<ul class="breadcrumb">
-		<li>您当前所在位置</li>
-		<li>
-			<a href="/mall2/product_list/?shelve_type">商品管理</a>
-		</li>
-		<li class="active">限定区域</li>
-	</ul>
+<div class="xui-LimitedAreaConfigsPage">
+    <ul class="breadcrumb">
+        <li>您当前所在位置</li>
+        <li>商品管理</li>
+        <li class="active">限定区域</li>
+    </ul>
+    <div class="xui-i-content pr">
+        <a class="btn btn-success xui-addNewGroup pa xui-btnPosition" href="/mall2/product_limit_zone_template/">+ &nbsp;&nbsp;添加限定区域</a>
+        <section class="xui-limitArea-section">
+        <fieldset class="xui-limitArea">
+        	<legend class="clearfix">
+        		<title class="fl">仅售模版名称11111111</title>
+        		<span class="fr xui-btnGroup">
+        			<a href="/mall2/product_limit_zone_template/">修改</a>
+        			<a href="javascript:void(0);" class="xa-delete">删除</a>
+        		</span>
+        	</legend>
+        	<div class="pl30 pr30">
+	        	<table class="table xui-limitedAreaConfigTable">
+	                <thead>
+	                    <tr>
+	                        <th width="210">区域</th>
+	                        <th width="127">省</th>
+	                        <th class="tl">市</th>
+	                    </tr>	
+	                </thead>
+	                <tbody>
+	                    <tr>
+	                        <td>直辖市</td>
+	                        <td></td>
+	                        <td class="tl">北京</td>
+	                    </tr>
+	                    <tr>
+	                        <td>直辖市</td>
+	                        <td></td>
+	                        <td class="tl">上海</td>
+	                    </tr>
+	                </tbody>
+	            </table>
+            </div>
+        </fieldset>
+        <fieldset class="xui-limitArea">
+        	<legend class="clearfix">
+        		<title class="fl">禁售模版名称2222222222</title>
+        		<span class="fr xui-btnGroup">
+        			<a href="/mall2/product_limit_zone_template/">修改</a>
+        			<a href="javascript:void(0);" class="xa-delete">删除</a>
+        		</span>
+        	</legend>
+        	<div class="pl30 pr30">
+	        	<table class="table xui-limitedAreaConfigTable">
+	                <thead>
+	                    <tr>
+	                        <th width="210">区域</th>
+	                        <th width="127">省</th>
+	                        <th class="tl">市</th>
+	                    </tr>	
+	                </thead>
+	                <tbody>
+	                    <tr>
+	                        <td>西北</td>
+	                        <td>西藏</td>
+	                        <td class="tl">已全选</td>
+	                    </tr>
+	                    <tr>
+	                        <td>西北</td>
+	                        <td>新疆</td>
+	                        <td class="tl">已全选</td>
+	                    </tr>
+	                    <tr>
+	                        <td>华北-东北</td>
+	                        <td>黑龙江</td>
+	                        <td class="tl">漠河市</td>
+	                    </tr>
+	                </tbody>
+	            </table>
+            </div>
+        </fieldset>
+        <!-- <div class="xui-emptyBox" style="background:rgba(0,0,0,0)">
+            <div class="xui-i-emptyHint">
+                <img src="/static_v2/img/editor/empty.png">
+                <div><span style="">您还没有限定区域模板，赶快添加！</span> </div>
+            </div>
+        </div> -->
+        </section>
+    </div>
+
 </div>
 {% endblock %}
+{% block js %}
+<script type="text/javascript">
+$(document).ready(function() {
+    $('body').delegate('.xa-deleteBtn', 'click', function(event) {
+        event.stopPropagation();
+        event.preventDefault();
+        $el = $(event.target);
+        var $template = $el.parents('section');
+        var templateId = $template.data('limitedArea-template-id');
+        W.requireConfirm({
+            $el:$(this),
+            width:380,
+            position:'top',
+            isTitle: false,
+            privateContainerClass:'wui-confirmDelete',
+            msg:'是否确定删除',
+            confirm:function(){
+                W.getApi().call({
+                    method: 'delete',
+                    app: 'mall2',
+                    resource: 'postage',
+                    args: {id: templateId},
+                    success: function(data) {
+                        window.location.reload();
+                    },
+                    error: function(resp) {
+                        alert('删除运费模板失败');
+                    }
+                })
+            }
+        })
+    });
+
+    $('[name="is_used"]').click(function(event) {
+        var $input = $(event.currentTarget);
+        var $template = $input.parents('section');
+        var templateId = $template.data('limitedArea-template-id');
+        W.getApi().call({
+            method: 'post',
+            app: 'mall2',
+            resource: 'postage',
+            args: {
+                id: templateId,
+                is_used: 1,
+            },
+            success: function() {
+                W.showHint('success', '切换运费模板成功');
+            },
+            error: function() {
+                W.showHint('error', '切换运费模板失败');
+            }
+        })
+    });
+});
+</script>
+{% endblock js%}
