@@ -21,7 +21,7 @@
 	data-api="category_list"
 	data-template-id="#category-view"
 	data-enable-paginator="true"
-	data-item-count-per-page="3"
+	data-item-count-per-page="15"
 ></div>
 {% else %}
 	目前还没有数据
@@ -94,7 +94,8 @@ $(document).ready(function() {
 					resource: 'category',
 					args: data,
 					success: function(data) {
-						window.location.reload();
+						this.table = this.$('[data-ui-role="advanced-table"]').data('view');
+                        this.table.reload();
 					},
 					error: function(resp) {
 
@@ -122,7 +123,8 @@ $(document).ready(function() {
 						id: categoryId
 					}),
 					success: function(data) {
-						window.location.reload();
+						this.table = this.$('[data-ui-role="advanced-table"]').data('view');
+                        this.table.reload();
 					},
 					error: function(resp) {
                         W.showHint('error', resp.data.msg);
@@ -152,7 +154,8 @@ $(document).ready(function() {
 						category_id: categoryId
 					},
 					success: function(data) {
-						window.location.reload();
+						this.table = this.$('[data-ui-role="advanced-table"]').data('view');
+                        this.table.reload();
 					},
 					error: function(resp) {
 
@@ -185,7 +188,8 @@ $(document).ready(function() {
 						product_id: productId
 					},
 					success: function(data) {
-						window.location.reload();
+						this.table = this.$('[data-ui-role="advanced-table"]').data('view');
+                        this.table.reload();
 					},
 					error: function(resp) {
                         W.showHint('error', '删除分组失败');
