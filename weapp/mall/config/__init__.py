@@ -6,3 +6,4 @@ import pay_interface
 import email_notify
 import wx_certificate
 import supplier
+import product_limit_zone
