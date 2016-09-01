@@ -205,8 +205,6 @@ W.design.DesignPage = Backbone.View.extend({
 
 			var height = document.body.clientHeight;
 			W.Broadcaster.trigger('designpage:resize', height);
-			// 加载异步模块
-			W.initAsyncComponent();
 		} else {
 			var prevComponent = this.page.getPrevComponentOf(component);
 			if (prevComponent) {
@@ -230,6 +228,8 @@ W.design.DesignPage = Backbone.View.extend({
 			var height = document.body.clientHeight;
 			W.Broadcaster.trigger('designpage:resize', height);
 		}
+		// 加载异步模块
+		W.initAsyncComponent();
 	},
 
 	/**

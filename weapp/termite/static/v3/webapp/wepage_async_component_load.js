@@ -184,9 +184,11 @@ W.AsyncComponentLoadView = BackboneLite.View.extend({
                 })
 
                 // 装修／预览模式下，不延迟加载图片
-                var $itemImg = $('a img', _this.$el);
-                var srcImg = $itemImg.attr('data-url');
-                $itemImg.attr('src', srcImg);
+                $('a img', _this.el).each(function() {
+                    var $itemImg = $(this);
+                    var srcImg = $itemImg.attr('data-url');
+                    $itemImg.attr('src', srcImg);
+                })
                 
             } else {
                 // 手机模式下
