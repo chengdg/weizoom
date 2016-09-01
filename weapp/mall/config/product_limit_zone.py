@@ -94,5 +94,5 @@ class ProvincialCity(resource.Resource):
                 })
 
         response = create_response(200)
-        response.data = {'zones': zones}
+        response.data = {'items': zones}
         return response.get_response()

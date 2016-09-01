@@ -26,7 +26,7 @@ W.dialog.mall.SelectLimitedAreaDialog = W.dialog.Dialog.extend({
     onInitialize: function(options) {
         this.table = this.$('[data-ui-role="advanced-table"]').data('view');
         console.log('---------------------------',this.table)
-        
+
     },
 
     beforeShow: function() {
@@ -57,7 +57,7 @@ W.dialog.mall.SelectLimitedAreaDialog = W.dialog.Dialog.extend({
             $input.prop('checked',false);
         }else{
             $input.prop('checked',true);
-            $('.xa-open-cityPanel').addClass('xui-checked')
+            // $target.parents('.xa-open-cityPanel').addClass('xui-checked')
         }
         isChecked = $input.is(":checked");
         var $li = $target.parents('.xa-city-panel').find('ul li').children('input').prop('checked', isChecked);
@@ -70,7 +70,7 @@ W.dialog.mall.SelectLimitedAreaDialog = W.dialog.Dialog.extend({
             $inputCurrent.prop('checked',false);
         }else{
             $inputCurrent.prop('checked',true);
-            $('.xa-open-cityPanel').addClass('xui-checked')
+            // $target.parents('.xa-open-cityPanel').addClass('xui-checked')
         }
         if($target.hasClass('xa-unique')){
             return;

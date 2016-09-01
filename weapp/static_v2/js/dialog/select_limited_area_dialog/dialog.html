@@ -14,7 +14,6 @@
 				data-template-id="#limit-area-view"
 				data-enable-paginator="false"
 				data-enable-sort="false"
-				data-auto-load="false"
 			></div>
 			
 		</div>
@@ -27,7 +26,7 @@
 </script>
 <script id="limit-area-view" type="text/x-jquery-tmpl">
 	<table class="w">
-	{{each(i, zone) zones}}
+	{{each(i, zone) items}}
 		<tr>
 			<td>${zone_name}</td>
 			<td>
@@ -39,7 +38,7 @@
 							<i class="xui-checkbox xa-checkbox xa-unique"></i>${province.province_name}
 						{{else}}
 							<input type="checkbox" name="" class="hidden"/>
-							<i class="xui-plus xa-open-cityPanel"></i>河北省
+							<i class="xui-plus xa-open-cityPanel"></i>${province.province_name}
 							<div class="xui-inner-panel xa-city-panel">
 								<div class="xui-inner-province">
 									<input type="checkbox" name="" class="hidden"/>
