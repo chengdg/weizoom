@@ -650,7 +650,7 @@ elif 'test' == MODE:
     WAPI_SECRET_ACCESS_TOKEN = 'akoANSpqVzuNBAeVscHB1lQnjNosByMcdV8sqpKOv2nlQssB0V'
     WAPI_HOST = 'http://dev.weapp.com'
     MONEY_HOST = 'http://money.weizoom.com'
-    MARKETAPP_DOMAIN = 'marketapp.martest.weapp.weizzz.com'
+    MARKETAPP_DOMAIN = 'marketapp.nj.weapp.weizzz.com'
 else:
     DEBUG = False
     BATMAN_API_IMPL = 'memory'
