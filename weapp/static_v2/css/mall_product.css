@@ -314,6 +314,10 @@
     margin-right: 6px;
     position:relative;
 }
+.xui-mallSelectLimitedAreaDialog input[type='checkbox']:checked ~ i.xui-checkbox{
+	background:url(/static_v2/img/editor/limit_check.png) no-repeat; 
+	background-position: -1px;
+}
 .xui-mallSelectLimitedAreaDialog .xui-plus:before,
 .xui-mallSelectLimitedAreaDialog .xui-minus:before,
 .xui-mallSelectLimitedAreaDialog .xui-plus:after{
@@ -322,10 +326,13 @@
 	background: #a0a0a0;
 	position:absolute;
 }
-.xui-mallSelectLimitedAreaDialog .xui-minus{
+.xui-mallSelectLimitedAreaDialog .xui-minus,
+.xui-mallSelectLimitedAreaDialog .xui-plus.xui-checked{
 	border-color: #1262b7;
 }
-.xui-mallSelectLimitedAreaDialog .xui-minus:before{
+.xui-mallSelectLimitedAreaDialog .xui-minus:before,
+.xui-mallSelectLimitedAreaDialog .xui-plus.xui-checked:after,
+.xui-mallSelectLimitedAreaDialog .xui-plus.xui-checked:before{
 	background: #1262b7;
 }
 .xui-mallSelectLimitedAreaDialog .xui-plus:before,
@@ -360,7 +367,7 @@
 	position: relative;
 }
 .xui-mallSelectLimitedAreaDialog .xui-inner-province,
-.xui-mallSelectLimitedAreaDialog .xui-inner-distr{
+.xui-mallSelectLimitedAreaDialog .xui-inner-city{
 	background:#f7f7f7;
 	border: 1px solid #d2d2d2;
 	padding: 8px;
@@ -370,13 +377,13 @@
 	border-bottom: 0;
 
 }
-.xui-mallSelectLimitedAreaDialog .xui-inner-distr{
+.xui-mallSelectLimitedAreaDialog .xui-inner-city{
 	position: relative;
 	width: 200px;
 	padding-right: 0;
 	padding-top:0;
 }
-.xui-mallSelectLimitedAreaDialog .xui-inner-distr li{
+.xui-mallSelectLimitedAreaDialog .xui-inner-city li{
 	display: inline-block;
 	/*width: 78px;*/
 	-webkit-box-sizing:border-box;
@@ -384,11 +391,11 @@
 	float:left;
 	margin-top:8px;
 }
-.xui-mallSelectLimitedAreaDialog .xui-inner-distr li:nth-child(n+1){
+.xui-mallSelectLimitedAreaDialog .xui-inner-city li:nth-child(n+1){
 	margin-right: 5px;
 	width: 90px;
 }
-.xui-mallSelectLimitedAreaDialog .xui-inner-distr:before{
+.xui-mallSelectLimitedAreaDialog .xui-inner-city:before{
 	content:"";
 	width: 109px;
 	height: 1px;
@@ -400,8 +407,9 @@
 .xui-mallSelectLimitedAreaDialog .xui-inner-panel{
 	position: absolute;
 	z-index: 1;
-    top: -10px;
-    left: -10px;
+    top: -9px;
+    left: -9px;
+    display: none;
 }
 /*
 * 物流名称管理页

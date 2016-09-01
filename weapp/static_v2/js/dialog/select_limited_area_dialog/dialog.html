@@ -7,75 +7,16 @@
 			<h3 class="modal-title">限定区域模板111111</h3>
 		</div>
 		<div class="modal-body">
-			<table class="w100p">
-				<tr>
-					<td>直辖市</td>
-					<td>
-						<ul class="clearfix">
-							<li class="xui-province">
-								<input type="checkbox" name="" class="hidden"/>
-								<i class="xui-checkbox"></i>北京市
-							</li>
-							<li class="xui-province">
-								<input type="checkbox" name="" class="hidden"/>
-								<i class="xui-checkbox"></i>天津市
-							</li>
-						</ul>
-					</td>
-				</tr>
-				<tr>
-					<td>华北-东北</td>
-					<td>
-						<ul class="clearfix">
-							<li class="xui-province">
-								<input type="checkbox" name="" class="hidden"/>
-								<i class="xui-plus"></i>河北省
-								<div class="xui-inner-panel xa-distr-panel hidden">
-									<div class="xui-inner-province">
-										<i class="xui-minus"></i>
-										<i class="xui-checkbox"></i>
-										河北省
-									</div>
-									<ul class="xui-inner-distr clearfix">
-										<li>
-											<input type="checkbox" name="" class="hidden"/>
-											<i class="xui-checkbox"></i>拉萨
-										</li>
-									</ul>
-								</div>
-							</li>
-							<li class="xui-province">
-								<input type="checkbox" name="" class="hidden"/>
-								<i class="xui-plus"></i>河北省
-							</li>
-							<li class="xui-province">
-								<input type="checkbox" name="" class="hidden"/>
-								<i class="xui-plus"></i>河北省
-							</li>
-							<li class="xui-province">
-								<input type="checkbox" name="" class="hidden"/>
-								<i class="xui-plus"></i>河北省
-							</li>
-							<li class="xui-province">
-								<input type="checkbox" name="" class="hidden"/>
-								<i class="xui-plus"></i>河北省
-							</li>
-							<li class="xui-province">
-								<input type="checkbox" name="" class="hidden"/>
-								<i class="xui-plus"></i>河北省
-							</li>
-							<li class="xui-province">
-								<input type="checkbox" name="" class="hidden"/>
-								<i class="xui-plus"></i>河北省
-							</li>
-							<li class="xui-province">
-								<input type="checkbox" name="" class="hidden"/>
-								<i class="xui-plus"></i>河北省
-							</li>
-						</ul>
-					</td>
-				</tr>
-			</table>
+			<div
+				data-ui-role="advanced-table"
+				data-app="mall2"
+				data-api="provincial_city"
+				data-template-id="#limit-area-view"
+				data-enable-paginator="false"
+				data-enable-sort="false"
+				data-auto-load="false"
+			></div>
+			
 		</div>
 		<div class="modal-footer modal-footerBg">
 			<button class="btn btn-primary">确&nbsp;定</button>
@@ -83,4 +24,44 @@
 	</div>
 	</div>
 	</div>
+</script>
+<script id="limit-area-view" type="text/x-jquery-tmpl">
+	<table class="w">
+	{{each(i, zone) zones}}
+		<tr>
+			<td>${zone_name}</td>
+			<td>
+				<ul class="clearfix">
+				{{each(j, province) zone.provinces}}
+					<li class="xui-province">
+						{{if zone_name == '直辖市' || zone_name == '其它' }}
+							<input type="checkbox" name="" class="hidden"/>
+							<i class="xui-checkbox xa-checkbox xa-unique"></i>${province.province_name}
+						{{else}}
+							<input type="checkbox" name="" class="hidden"/>
+							<i class="xui-plus xa-open-cityPanel"></i>河北省
+							<div class="xui-inner-panel xa-city-panel">
+								<div class="xui-inner-province">
+									<input type="checkbox" name="" class="hidden"/>
+									<i class="xui-minus xa-close-city-panel"></i>
+									<i class="xui-checkbox xa-selectAllCity"></i>
+									${province.province_name}
+								</div>
+								<ul class="xui-inner-city clearfix">
+									{{each(j, city) province.cities}}
+										<li>
+											<input type="checkbox" name="" class="hidden"/>
+											<i class="xui-checkbox xa-checkbox"></i>${city.city_name}
+										</li>
+									{{/each}}
+								</ul>
+							</div>
+						{{/if}}
+					</li>
+				{{/each}}
+				</ul>
+			</td>
+		</tr>
+	{{/each}}
+	</table>
 </script>

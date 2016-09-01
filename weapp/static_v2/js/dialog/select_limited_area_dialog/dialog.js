@@ -17,15 +17,21 @@ W.dialog.mall.SelectLimitedAreaDialog = W.dialog.Dialog.extend({
     },
     events: _.extend({
         'click .xa-selectAllProvince': 'onClickSelectAllProvince',
-        'click input[type="checkbox"]': 'onClickSelectProvince'
+        'click .xa-checkbox': 'onClickSelectCity',
+        'click .xa-selectAllCity': 'onClickSelectAllCity',
+        'click .xa-open-cityPanel': 'onClickOpenCityPanel',
+        'click .xa-close-city-panel': 'onClickCloseCityPanel'
     }, W.dialog.Dialog.prototype.events),
 
     onInitialize: function(options) {
+        this.table = this.$('[data-ui-role="advanced-table"]').data('view');
+        console.log('---------------------------',this.table)
         
     },
 
     beforeShow: function() {
         // this.$('input[type="checkbox"]').prop('checked', false).prop('disabled', false);
+        
     },
 
     onShow: function(options) {
@@ -35,41 +41,51 @@ W.dialog.mall.SelectLimitedAreaDialog = W.dialog.Dialog.extend({
 
     afterShow: function(options) {
     },
-
-    onClickSelectAllProvince: function(event) {
-        var $checkbox = $(event.target);
-        var isChecked = $checkbox.is(":checked");
-
-        var $tr = $checkbox.parents('tr');
-        $tr.find('input[type="checkbox"]').each(function() {
-            var $checkbox = $(this);
-            if (!$checkbox.hasClass('xa-selectAllProvince')) {
-                $checkbox.prop('checked', isChecked);
-            }
-        });
+    onClickOpenCityPanel:function(event){
+        var $panel = $(event.target).siblings('.xa-city-panel');
+        $panel.show();
+    },
+    onClickCloseCityPanel:function(event){
+        var $panel = $(event.target).parents('.xa-city-panel');
+        $panel.hide();
+    },
+    onClickSelectAllCity: function(event) {
+        var $target = $(event.target);
+        var $input = $target.siblings('input');
+        var isChecked = $input.is(":checked");
+        if(isChecked){
+            $input.prop('checked',false);
+        }else{
+            $input.prop('checked',true);
+            $('.xa-open-cityPanel').addClass('xui-checked')
+        }
+        isChecked = $input.is(":checked");
+        var $li = $target.parents('.xa-city-panel').find('ul li').children('input').prop('checked', isChecked);
     },
 
-    onClickSelectProvince: function(event) {
-        var $checkbox = $(event.target);
-        if ($checkbox.hasClass('xa-selectAllProvince')) {
+    onClickSelectCity: function(event) {
+        var $target = $(event.target);
+        var $inputCurrent = $target.siblings('input[type="checkbox"]');
+        if($inputCurrent.is(':checked')){
+            $inputCurrent.prop('checked',false);
+        }else{
+            $inputCurrent.prop('checked',true);
+            $('.xa-open-cityPanel').addClass('xui-checked')
+        }
+        if($target.hasClass('xa-unique')){
             return;
         }
-
-        var $tr = $checkbox.parents('tr');
+        var $li = $target.parent().parent('ul').children();
         var isAllChecked = true;
-        var $checkboxes = $tr.find('input[type="checkbox"]');
-        var checkboxCount = $checkboxes.length;
-        for (var i = 0; i < checkboxCount; ++i) {
-            var $checkbox = $checkboxes.eq(i);
-            if (!$checkbox.hasClass('xa-selectAllProvince')) {
-                if (!$checkbox.is(':checked')) {
+        var cityCount = $li.length;
+        for (var i = 0; i < cityCount; ++i) {
+            var $input = $li.eq(i).find('input');
+                if (!$input.is(':checked')) {
                     isAllChecked = false;
                     break;
                 }
-            }
         }
-
-        $tr.find('.xa-selectAllProvince').prop('checked', isAllChecked);
+       $target.parents('.xa-city-panel').find('.xa-selectAllCity').siblings('input[type="checkbox"]').prop('checked', isAllChecked);
     },
 
     onGetData: function(event) {
