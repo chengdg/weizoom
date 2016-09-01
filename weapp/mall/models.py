@@ -1899,6 +1899,7 @@ class OrderHasRefund(models.Model):
 	cash = models.FloatField(default=0.0)
 	weizoom_card_money = models.FloatField(default=0.0)  # 微众卡抵扣金额
 	integral = models.IntegerField(default=0)  # 积分
+	integral_money = models.FloatField(default=0) # 积分对应金额,退款当时的
 	coupon_money = models.FloatField(default=0)  # 优惠券金额
 	created_at = models.DateTimeField(auto_now_add=True)  # 添加时间
 	total = models.FloatField(default=0)  # 积分

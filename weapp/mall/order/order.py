@@ -16,7 +16,7 @@ from tools.regional import views as regional_util
 from core.jsonresponse import create_response
 from core import paginator
 from mall.models import *
-from market_tools.tools.channel_qrcode.models import ChannelQrcodeHasMember
+from market_tools.tools.channel_qrcode.models import ChannelQrcodeHasMember, IntegralStrategySttings
 import mall.module_api as mall_api
 from watchdog.utils import watchdog_error, watchdog_info, watchdog_warning
 from core.exceptionutil import unicode_full_stack
@@ -718,11 +718,18 @@ class OrderReturnInfo(resource.Resource):
         integral = request.POST['integral']
         coupon_money = request.POST['coupon_money']
 
+        integral_each_yuan = IntegralStrategySttings.objects.get(webapp_id=request.manager.get_profile().webapp_id).integral_each_yuan
+        integral_money = integral_each_yuan * integral
+
         OrderHasRefund.objects.create(
             order_id=order_id,
             delivery_item_id=delivery_item_id,
             cash=cash,
             weizoom_card_money=weizoom_card_money,
             integral=integral,
+            integral_money=integral_money,
             coupon_money=coupon_money
         )
+        response = create_response(200)
+        response.data = {}
+        return response.get_response()
