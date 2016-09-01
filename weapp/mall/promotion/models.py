@@ -153,7 +153,10 @@ class Promotion(models.Model):
 		id2promotion = dict([(promotion.id, promotion) for promotion in promotions])
 		promotion_ids = [promotion.id for promotion in promotions]
 		product_ids = [relation.product_id for relation in ProductHasPromotion.objects.filter(promotion_id__in=promotion_ids)]
-		product_pool_id2product_pool = dict([(pool.product_id, pool) for pool in ProductPool.objects.filter(product_id__in=product_ids)])
+		if webapp_owner
+			product_pool_id2product_pool = dict([(pool.product_id, pool) for pool in ProductPool.objects.filter(woid=webapp_owner.id,product_id__in=product_ids)])
+		else:
+			product_pool_id2product_pool = {}
 		products = list(Product.objects.filter(id__in=product_ids))
 	
 
