@@ -698,3 +698,31 @@ class OrderGetFile(resource.Resource):
         }
         return response.get_response()
 
+
+
+class OrderReturnInfo(resource.Resource):
+    """
+    退款信息
+    """
+
+    app = "mall2"
+    resource = "OrderReturnInfo"
+
+    @login_required()
+    def api_put(request):
+        order_id = request.POST['order_id']
+        delivery_item_id = request.POST['delivery_item_id']
+
+        cash = request.POST['cash']
+        weizoom_card_money = request.POST['weizoom_card_money']
+        integral = request.POST['integral']
+        coupon_money = request.POST['coupon_money']
+
+        OrderHasRefund.objects.create(
+            order_id=order_id,
+            delivery_item_id=delivery_item_id,
+            cash=cash,
+            weizoom_card_money=weizoom_card_money,
+            integral=integral,
+            coupon_money=coupon_money
+        )

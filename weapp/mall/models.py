@@ -1893,6 +1893,23 @@ class OrderPaymentInfo(models.Model):
 		verbose_name_plural = '订单支付信息'
 
 
+class OrderHasRefund(models.Model):
+	order_id = models.IntegerField(default=0)  # 原始订单id，用于微众精选拆单
+	delivery_item_id = models.IntegerField(default=0)  # 对应子订单主键id
+	cash = models.FloatField(default=0.0)
+	weizoom_card_money = models.FloatField(default=0.0)  # 微众卡抵扣金额
+	integral = models.IntegerField(default=0)  # 积分
+	coupon_money = models.FloatField(default=0)  # 优惠券金额
+	created_at = models.DateTimeField(auto_now_add=True)  # 添加时间
+	total = models.FloatField(default=0)  # 积分
+
+
+	class Meta(object):
+		db_table = 'mall_order_has_refund'
+		verbose_name = '子订单退款信息'
+		verbose_name_plural = '子订单退款信息'
+
+
 class OrderHasProduct(models.Model):
 	"""
 	<order, product>关联
