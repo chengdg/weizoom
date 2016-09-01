@@ -730,6 +730,15 @@ class Product(models.Model):
 					pool = product_pool_id2product_pool.get(product.id, None)
 					if pool:
 						product.display_index = pool.display_index
+						if pool.status == PP_STATUS_ON:
+							product._status = u'在售'
+						elif pool.status == PP_STATUS_OFF:
+							product._status = u'待售'
+						elif pool.status == PP_STATUS_DELETE:
+							product._status = u'已删除'
+						else:
+							product._status = u'商品池中'
+
 
 
 		if options.get('with_product_model', False):
