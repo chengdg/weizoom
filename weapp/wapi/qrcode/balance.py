@@ -28,7 +28,7 @@ class QrcodeBalance(api_resource.ApiResource):
 		start = time.time()
 		channel_qrcode_ids = json.loads(args.get('channel_qrcode_ids'))
 		balance_time_from = args.get('balance_time_from','2016-06-24 00:00:00')
-		channel_qrcodes = ChannelQrcodeSettings.objects.filter(id__in=channel_qrcode_ids)
+		channel_qrcodes = ChannelQrcodeSettings.objects.filter(id__in=channel_qrcode_ids).order_by('created_at')
 		created_at = channel_qrcodes.first().created_at.strftime("%Y-%m-%d %H:%M:%S")
 
 		member_ids = [member_log.member_id for member_log in ChannelQrcodeHasMember.objects.filter(channel_qrcode_id__in=channel_qrcode_ids)]

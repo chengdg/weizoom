@@ -3,9 +3,7 @@ import json
 import time
 
 from core import api_resource, paginator
-from market_tools.tools.channel_qrcode.models import ChannelQrcodeSettings, ChannelQrcodeHasMember
 from wapi.decorators import param_required
-from modules.member.models import *
 from mall.models import Order, STATUS2TEXT, OrderHasProduct, Product, ProductModel,OrderOperationLog
 
 
