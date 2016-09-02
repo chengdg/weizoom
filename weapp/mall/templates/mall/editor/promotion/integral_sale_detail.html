@@ -36,9 +36,7 @@
 			                {% if product.is_deleted %}
 			                <div class="xui-i-sellout">已删除</div>
 			                {% else %}
-			                  {% if product.shelve_type == 0 %}
-			                  <div class="xui-i-sellout">待售</div>
-			                  {% endif %}
+			                  <div class="xui-i-sellout">{{ product.status }}</div>
 			                {% endif %}
 
 						</div>

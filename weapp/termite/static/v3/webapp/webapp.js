@@ -76,7 +76,7 @@ W.preloadImgsOnPage = function(option) {
                         $item.removeAttr('src');
                     });
                     $lazyImgs = $('[data-url]');
-                    lazyloadImg($lazyImgs, {threshold: 200});
+                    W.lazyloadImg($lazyImgs, {threshold: 200});
                     break;
                 case 'imageNav':
                     $itemsImg.map(function(idx, item) {
@@ -88,7 +88,7 @@ W.preloadImgsOnPage = function(option) {
                         }
                     });
                     $lazyImgs = $('[data-url]');
-                    lazyloadImg($lazyImgs, {threshold: 200});
+                    W.lazyloadImg($lazyImgs, {threshold: 200});
                     break;
                 case 'imageGroup':
                     $itemsImg.map(function(idx, item) {
@@ -103,7 +103,7 @@ W.preloadImgsOnPage = function(option) {
                         }
                     });
                     $lazyImgs = $('[data-url]');
-                    lazyloadImg($lazyImgs, {threshold: 400});
+                    W.lazyloadImg($lazyImgs, {threshold: 400});
                     break;
                 case 'productList':
                     $itemsImg.map(function(idx, item) {
@@ -112,13 +112,29 @@ W.preloadImgsOnPage = function(option) {
                         $item.removeAttr('src');
                     });
                     $lazyImgs = $('[data-url]');
-                    lazyloadImg($lazyImgs, {threshold: 0});
+                    W.lazyloadImg($lazyImgs, {threshold: 0});
                     break;
                 default:
                     break;
             }
         });
     });
+}
+
+W.lazyloadImg = function($imgs, options) {
+    var defOptions = {
+            data_attribute:"url",
+            skip_invisible : false,
+            //effect : "fadeIn",
+            placeholder: "/static_v2/img/webapp/mall/info_placeholder.png",
+            failurelimit: 10
+        };
+
+    var options = _.defaults(options, defOptions);
+
+    if ($imgs) {
+        $imgs.lazyload(options);
+    }
 }
 
 // 如果是upaiyun图片则增加压缩参数
@@ -149,21 +165,6 @@ function compressImgUrl(imgUrl, paramStr) {
     }
 }
 
-function lazyloadImg($imgs, options) {
-    var defOptions = {
-            data_attribute:"url",
-            skip_invisible : false,
-            //effect : "fadeIn",
-            placeholder: "/static_v2/img/webapp/mall/info_placeholder.png",
-            failurelimit: 10
-        };
-
-    var options = _.defaults(options, defOptions);
-
-    if ($imgs) {
-        $imgs.lazyload(options);
-    }
-}
 
 function redirectTo(newHref) {
     var originalNewHref = newHref;
