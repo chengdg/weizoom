@@ -90,9 +90,9 @@ W.AsyncComponentLoadView = BackboneLite.View.extend({
         };
     },
 
-    sortByIds: function(products, ids) {
+    sortByIds: function(products, productIds) {
         var objIds = {};
-        ids.map(function(id, idx){
+        productIds.split(',').map(function(id, idx){
             objIds[id] = idx;
         });
         products.map(function(product){
@@ -105,7 +105,7 @@ W.AsyncComponentLoadView = BackboneLite.View.extend({
         if (typeof(componentData) === 'undefined') return;
         
         var _this = this;
-        var product_ids = componentData['model']['items'];
+        var productIds = componentData['model']['items'].join(',');
         var componentIndex = componentData['model']['index'];
         W.getApi().call({
             app: 'webapp',
@@ -117,10 +117,11 @@ W.AsyncComponentLoadView = BackboneLite.View.extend({
                 woid: W.webappOwnerId,
                 module: 'mall',
                 target_api: 'page_products/get',
-                product_ids: product_ids
+                product_ids: productIds
             },
             success: function(data) {
-                data.products = _this.sortByIds(data.products, product_ids);
+                data.products = _this.duplicatedProduct(data.products, productIds);
+                data.products = _this.sortByIds(data.products, productIds);
                 data['componentIndex'] = componentIndex;
                 deferred.resolve(data);
             },
@@ -128,6 +129,25 @@ W.AsyncComponentLoadView = BackboneLite.View.extend({
                 console.log('取商品模块异步数据异常：', data);
             }
         });
+    },
+
+    // 
+    duplicatedProduct: function (products, productIds) {
+        var objProducts = {};
+        if (products) {
+            products.map(function(product){
+                objProducts[product.id] = product;
+            });
+        }
+
+        var newProducts = [];
+        if (productIds) {
+            productIds.split(',').map(function(productId){
+                newProducts.push(objProducts[productId]);
+            });
+        }
+
+        return newProducts;
     },
 
     // 渲染组件节点
@@ -143,7 +163,6 @@ W.AsyncComponentLoadView = BackboneLite.View.extend({
             var componentIndex = data['componentIndex'];
             // 根据商品数量填补component对象
             _this.data['valid_product_count'] = data['products'].length;
-            //_this.component['component']['components'] = [];
 
             // 将产品子数据，放到component.components中
             // 并把是否显示价格和名字的开关也放进去
