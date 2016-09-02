@@ -168,6 +168,11 @@ W.AsyncComponentLoadView = BackboneLite.View.extend({
             if (compiledTemplate) {
                 var html = compiledTemplate(_this.data);
                 _this.$el.html(html);
+
+                // 异步渲染完成后，重新刷新右侧属性框
+                _.delay(function(){
+                    // W.Broadcaster.trigger('mobilewidget:select', _this.data.model.cid);
+                }, 100);
             }
 
             var isInFrame = (parent !== window);
@@ -184,9 +189,11 @@ W.AsyncComponentLoadView = BackboneLite.View.extend({
                 })
 
                 // 装修／预览模式下，不延迟加载图片
-                var $itemImg = $('a img', _this.$el);
-                var srcImg = $itemImg.attr('data-url');
-                $itemImg.attr('src', srcImg);
+                $('a img', _this.el).each(function() {
+                    var $itemImg = $(this);
+                    var srcImg = $itemImg.attr('data-url');
+                    $itemImg.attr('src', srcImg);
+                })
                 
             } else {
                 // 手机模式下
@@ -198,6 +205,7 @@ W.AsyncComponentLoadView = BackboneLite.View.extend({
                 });
             }
 
+
         });
     }
 
@@ -205,14 +213,22 @@ W.AsyncComponentLoadView = BackboneLite.View.extend({
 });
 //END of W.AsyncComponentLoadView
 
-W.initAsyncComponent = function() {
+W.initAsyncComponent = function(cid) {
     // 初始化view, 目前只针对商品模块
     var allComponents = [];
-    $('div[data-ui-role="async-component"]').each(function() {
-        var $node = $(this);
-        $node.append('<div style="text-align:center;"><img src="/static_v2/img/product_list_loading.gif"></div>');
-        allComponents.push($node);
-    });
+    if (false && cid) {
+        $('div.xa-componentContainer[data-contained-cid="'+cid+'"]').find('div[data-ui-role="async-component"]').each(function() {
+            var $node = $(this);
+            $node.append('<div style="text-align:center;"><img src="/static_v2/img/product_list_loading.gif"></div>');
+            allComponents.push($node);
+        });
+    } else {
+        $('div[data-ui-role="async-component"]').each(function() {
+            var $node = $(this);
+            $node.append('<div style="text-align:center;"><img src="/static_v2/img/product_list_loading.gif"></div>');
+            allComponents.push($node);
+        });
+    }
 
     allComponents.map(function($component){
         var asyncComponentView = new W.AsyncComponentLoadView({el: $component[0]});

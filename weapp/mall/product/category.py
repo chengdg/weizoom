@@ -285,7 +285,7 @@ class CategoryList(resource.Resource):
         """
         功能: 获得商品分组列表
         """
-        COUNT_PER_PAGE = 3
+        COUNT_PER_PAGE = 15
         #获取category集合
         product_categories = mall_models.ProductCategory.objects.filter(
             owner=request.manager)
