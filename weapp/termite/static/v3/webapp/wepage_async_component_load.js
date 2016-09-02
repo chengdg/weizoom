@@ -171,24 +171,24 @@ W.AsyncComponentLoadView = BackboneLite.View.extend({
 
                 // 异步渲染完成后，重新刷新右侧属性框
                 _.delay(function(){
-                    // W.Broadcaster.trigger('mobilewidget:select', _this.data.model.cid);
+                    W.Broadcaster.trigger('mobilewidget:select', _this.data.model.cid, {autoScroll:true, forceUpdatePropertyView:true});
                 }, 100);
             }
 
             var isInFrame = (parent !== window);
             if (isInFrame) {
-                // 预览模式下禁止点击
+                // 装修／预览模式下
                 if (parent.setWebappPageTitle) {
                     parent.setWebappPageTitle(W.pageTitle);
                 }
 
-                //在预览模式下，修改a，禁止点击
-                $('a').each(function() {
+                //修改a，禁止点击
+                $('a', _this.el).each(function() {
                     var $link = $(this);
                     $link.attr('href', 'javascript:void(0);');
                 })
 
-                // 装修／预览模式下，不延迟加载图片
+                // 不延迟加载图片
                 $('a img', _this.el).each(function() {
                     var $itemImg = $(this);
                     var srcImg = $itemImg.attr('data-url');
@@ -197,7 +197,7 @@ W.AsyncComponentLoadView = BackboneLite.View.extend({
                 
             } else {
                 // 手机模式下
-                // 重新定义图片延迟加载, lazyloadImg已由页面定义
+                // 重新定义图片延迟加载, W.lazyloadImg已由页面定义
                 W.lazyloadImg($('a img', _this.$el), {
                     threshold: 0,
                     effect : "fadeIn",
@@ -216,7 +216,7 @@ W.AsyncComponentLoadView = BackboneLite.View.extend({
 W.initAsyncComponent = function(cid) {
     // 初始化view, 目前只针对商品模块
     var allComponents = [];
-    if (false && cid) {
+    if (cid) {
         $('div.xa-componentContainer[data-contained-cid="'+cid+'"]').find('div[data-ui-role="async-component"]').each(function() {
             var $node = $(this);
             $node.append('<div style="text-align:center;"><img src="/static_v2/img/product_list_loading.gif"></div>');
