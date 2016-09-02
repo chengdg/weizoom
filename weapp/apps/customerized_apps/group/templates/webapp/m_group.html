@@ -466,7 +466,15 @@
 
     // 直接参团
     function openJoinGruop(){
-        var link = window.location.origin + '/m/apps/group/m_group_list/?webapp_owner_id='+W.webappOwnerId;
+    	var link;
+    	//当商家是【微众便利店】时，添加isWzbld=1
+		if (1142 == W.webappOwnerId) {
+			var isWzbld = 1;
+			link = window.location.origin + '/m/apps/group/m_group_list/?webapp_owner_id=' + W.webappOwnerId + "&is_wzbld=" + isWzbld;
+		}else{
+			link = window.location.origin + '/m/apps/group/m_group_list/?webapp_owner_id=' + W.webappOwnerId;
+		}
+
         window.location.href = link;
     }
 
