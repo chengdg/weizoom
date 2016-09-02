@@ -289,6 +289,15 @@ class CategoryList(resource.Resource):
         #获取category集合
         product_categories = mall_models.ProductCategory.objects.filter(
             owner=request.manager)
+        #查询
+        category_name = request.GET.get('category_name','')
+        product_name = request.GET.get('product_name','')
+        if category_name:
+            product_categories = product_categories.filter(name__icontains=category_name)
+        if product_name:
+            products = mall_models.Product.objects.filter(name__icontains=product_name)
+            category_ids = mall_models.CategoryHasProduct.objects.filter(product__in=products).values_list('category_id', flat=True)
+            product_categories = product_categories.filter(id__in=category_ids)
 
         mall_type = request.user_profile.webapp_type
 
@@ -452,3 +461,64 @@ class Category(resource.Resource):
         # 手动调用,django的信号似乎在delete之前执行了,生产了错误的缓存
         update_product_list_cache(request.manager.id)
         return create_response(200).get_response()
+
+
+class UpdateProductCategory(resource.Resource):
+    """
+    商品列表：编辑商品分组
+    """
+    app = 'mall2'
+    resource = 'update_product_category'
+
+    @login_required
+    def api_post(request):
+        product_id = request.POST.get('product_id')
+        category_ids = request.POST.get('category_ids')
+        category_ids = category_ids.split('-')
+
+        update_product_categories(request, product_id, category_ids)
+
+        response = create_response(200)
+        return response.get_response()
+
+class BatchUpdateProductCategory(resource.Resource):
+    """
+    商品列表：编辑商品分组
+    """
+    app = 'mall2'
+    resource = 'batch_update_product_category'
+
+    @login_required
+    def api_post(request):
+        product_ids = request.POST.get('product_ids')
+        category_ids = request.POST.get('category_ids')
+        product_ids = product_ids.split('-')
+        category_ids = category_ids.split('-')
+
+        for product_id in product_ids:
+            update_product_categories(request, product_id, category_ids)
+
+        response = create_response(200)
+        return response.get_response()
+
+def update_product_categories(request, product_id, category_ids):
+    #删除勾去的
+    category_has_products_by_product_id = mall_models.CategoryHasProduct.objects.filter(product_id=product_id, category__owner=request.manager)
+    category_has_products = category_has_products_by_product_id.exclude(id__in=category_ids)
+    decrease_category_ids = [category_has_product.category_id for category_has_product in category_has_products]
+    mall_models.ProductCategory.objects.filter(id__in=decrease_category_ids, owner=request.manager).update(product_count=F('product_count')-1)
+
+    #去掉存在的分组id
+    category_ids_by_product_id = [category_has_product.category_id for category_has_product in category_has_products_by_product_id]
+    for category_id in category_ids_by_product_id:
+        category_ids.remove(category_id)
+    #创建CategoryHasProduct及商品分组数量+1
+    category_has_product_models = []
+    for category_id in category_ids:
+        category_has_product_models.append(mall_models.CategoryHasProduct(
+            category_id=category_id,
+            product_id=product_id,
+            )
+        )
+    mall_models.CategoryHasProduct.objects.bulk_create(category_has_product_models)
+    mall_models.ProductCategory.objects.filter(id__in=category_ids).update(product_count=F('product_count')+1)
