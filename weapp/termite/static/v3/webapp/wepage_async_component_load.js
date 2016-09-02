@@ -200,6 +200,9 @@ W.AsyncComponentLoadView = BackboneLite.View.extend({
                 });
             }
 
+            // 异步渲染完成后，重新刷新右侧属性框
+            W.Broadcaster.trigger('mobilewidget:select', _this.data.model.cid, {autoScroll:true, forceUpdatePropertyView:true});
+
         });
     }
 
