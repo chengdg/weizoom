@@ -16,22 +16,16 @@ class QrcodeMember(api_resource.ApiResource):
 	app = 'qrcode'
 	resource = 'members'
 
-	@param_required(['channel_qrcode_id'])
+	@param_required(['channel_qrcode_ids'])
 	def get(args):
 		"""
 		获取会员
 		"""
-		channel_qrcode_id = int(args.get('channel_qrcode_id'))
 		channel_qrcode_ids = json.loads(args.get('channel_qrcode_ids',"[]"))
 
-		if channel_qrcode_ids:
-			filter_data_args = {
-				"channel_qrcode_id__in": channel_qrcode_ids
-			}
-		else:
-			filter_data_args = {
-				"channel_qrcode_id": channel_qrcode_id
-			}
+		filter_data_args = {
+			"channel_qrcode_id__in": channel_qrcode_ids
+		}
 
 		member_name = args.get('member_name', None)
 		start_date = args.get('start_date', None)
@@ -58,7 +52,15 @@ class QrcodeMember(api_resource.ApiResource):
 		count_per_page = int(args.get('count_per_page', '20'))
 		cur_page = int(args.get('cur_page', '1'))
 		pageinfo, channel_members = paginator.paginate(channel_members, cur_page, count_per_page)
-		member_ids = [member_log.member_id for member_log in channel_members]
+		member_ids = []
+		channel_qrcode_id2member_id = {}
+		for member_log in channel_members:
+			member_ids.append(member_log.member_id)
+			if not channel_qrcode_id2member_id.has_key(member_log.channel_qrcode_id):
+				channel_qrcode_id2member_id[member_log.channel_qrcode_id] = [member_log.member_id]
+			else:
+				channel_qrcode_id2member_id[member_log.channel_qrcode_id].append(member_log.member_id)
+
 		webapp_users = WebAppUser.objects.filter(member_id__in=member_ids)
 		webapp_user_id2member_id = dict([(u.id, u.member_id) for u in webapp_users])
 		webapp_user_ids = set(webapp_user_id2member_id.keys())
@@ -92,7 +94,13 @@ class QrcodeMember(api_resource.ApiResource):
 				if member_id == channel_member.id:
 					final_price = webapp_user_id2final_price.get(webapp_user_id, 0)
 					pay_money = webapp_user_id2sale_money.get(webapp_user_id, 0)
+
+			channel_qrcode_id = 0
+			for channel_qrcode_id, member_ids in channel_qrcode_id2member_id.items():
+				if channel_member.id in member_ids:
+					channel_qrcode_id = channel_qrcode_id
 			members.append({
+				"channel_qrcode_id": channel_qrcode_id,
 				"member_name": channel_member.username_for_html,
 				"follow_time": channel_member.created_at.strftime('%Y-%m-%d %H:%M:%S'),
 				"pay_times": channel_member.pay_times,

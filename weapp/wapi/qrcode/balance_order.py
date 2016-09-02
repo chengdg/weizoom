@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import json
 import time
 
 from core import api_resource, paginator
@@ -16,7 +17,7 @@ class QrcodeBalanceOrder(api_resource.ApiResource):
 	app = 'qrcode'
 	resource = 'balance_order'
 
-	@param_required(['channel_qrcode_id'])
+	@param_required(['channel_qrcode_ids'])
 	def get(args):
 		"""
 		获取结算的数据
@@ -27,13 +28,13 @@ class QrcodeBalanceOrder(api_resource.ApiResource):
 		店铺退款金额：该订单上次已结算过，但本期次订单发生了退款，这类的退款订单金额
 		"""
 		start = time.time()
-		channel_qrcode_id = int(args.get('channel_qrcode_id'))
+		channel_qrcode_ids = json.loads(args.get('channel_qrcode_ids'))
 		balance_time_from = args.get('balance_time_from', '')
 		order_status = args.get('order_status', '-1')
-		channel_qrcode = ChannelQrcodeSettings.objects.get(id=channel_qrcode_id)
-		created_at = channel_qrcode.created_at.strftime("%Y-%m-%d %H:%M:%S")
+		channel_qrcodes = ChannelQrcodeSettings.objects.filter(id__in=channel_qrcode_ids)
+		created_at = channel_qrcodes.first().created_at.strftime("%Y-%m-%d %H:%M:%S")
 
-		member_ids = [member_log.member_id for member_log in ChannelQrcodeHasMember.objects.filter(channel_qrcode_id=channel_qrcode_id)]
+		member_ids = [member_log.member_id for member_log in ChannelQrcodeHasMember.objects.filter(channel_qrcode_id__in=channel_qrcode_ids)]
 		webapp_user_ids = [webappuser.id for webappuser in WebAppUser.objects.filter(member_id__in=member_ids)]
 
 		filter_data_args = {

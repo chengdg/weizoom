@@ -25,6 +25,7 @@ class ShopBalanceOutline(api_resource.ApiResource):
 		order_numbers = json.loads(args.get('order_numbers', ''))
 
 		channel_qrcodes = ChannelQrcodeSettings.objects.filter(id__in=channel_qrcode_ids)
+		print channel_qrcode_ids,channel_qrcodes,"poooooooooooo"
 		created_at = channel_qrcodes.first().created_at.strftime("%Y-%m-%d %H:%M:%S")
 
 		total_channel_members = ChannelQrcodeHasMember.objects.filter(channel_qrcode_id__in=channel_qrcode_ids).order_by('-created_at')
