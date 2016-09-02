@@ -18,6 +18,8 @@ class ProductLimitZoneTemplate(resource.Resource):
         商品限购区域列表
         @return:
         """
+
+
         c = RequestContext(request, {
             'first_nav_name': export.PRODUCT_FIRST_NAV,
             'second_navs': export.get_mall_product_second_navs(request),
