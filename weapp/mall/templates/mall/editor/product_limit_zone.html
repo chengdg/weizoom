@@ -32,12 +32,8 @@
                         {% for zone in template.zones %}
 	                        {% for province in zone.provinces %}
                             <tr>
-                                {% if forloop.first %}
-	                                <td>{{ zone.zoneName }}</td>
-                                {% else %}
-                                    <td></td>
-                                {% endif %}
-	                            <td>{{ province.provinceName }}</td>
+                                <td>{{ zone.zoneName }}</td>
+	                            <td>{% if zone.zoneName != '直辖市' %}{{ province.provinceName }}{% endif %}</td>
                                 {% if province.cities|length > 0  %}
                                     <td class="tl">
                                     {% for city in province.cities %}
