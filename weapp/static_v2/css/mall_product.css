@@ -379,7 +379,7 @@
 }
 .xui-mallSelectLimitedAreaDialog .xui-inner-city{
 	position: relative;
-	width: 200px;
+	width: 280px;
 	padding-right: 0;
 	padding-top:0;
 }
@@ -393,7 +393,7 @@
 }
 .xui-mallSelectLimitedAreaDialog .xui-inner-city li:nth-child(n+1){
 	margin-right: 5px;
-	width: 90px;
+	width: 130px;
 }
 .xui-mallSelectLimitedAreaDialog .xui-inner-city:before{
 	content:"";

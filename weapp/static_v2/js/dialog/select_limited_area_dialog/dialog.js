@@ -25,25 +25,25 @@ W.dialog.mall.SelectLimitedAreaDialog = W.dialog.Dialog.extend({
 
     onInitialize: function(options) {
         this.table = this.$('[data-ui-role="advanced-table"]').data('view');
-        console.log('---------------------------',this.table)
 
     },
 
     beforeShow: function() {
-        // this.$('input[type="checkbox"]').prop('checked', false).prop('disabled', false);
-        
+        $('.xa-city-panel').hide();
     },
 
     onShow: function(options) {
-        // this.checkedProvinces = options.provinces || [];
-        // this.disabledProvinceSet = options.disabledProvinceSet || {};
     },
 
     afterShow: function(options) {
     },
     onClickOpenCityPanel:function(event){
         var $panel = $(event.target).siblings('.xa-city-panel');
+        var siblingsTrPanel = $(event.target).parents('tr').siblings().find('.xa-city-panel');
+        var siblingsLiPanel = $(event.target).parent('li').siblings().find('.xa-city-panel');
         $panel.show();
+        $(siblingsTrPanel).hide();
+        $(siblingsLiPanel).hide();
     },
     onClickCloseCityPanel:function(event){
         var $panel = $(event.target).parents('.xa-city-panel');
@@ -55,9 +55,10 @@ W.dialog.mall.SelectLimitedAreaDialog = W.dialog.Dialog.extend({
         var isChecked = $input.is(":checked");
         if(isChecked){
             $input.prop('checked',false);
+            $target.parents('.xa-city-panel').siblings('.xa-open-cityPanel').removeClass('xui-checked')
         }else{
             $input.prop('checked',true);
-            // $target.parents('.xa-open-cityPanel').addClass('xui-checked')
+            $target.parents('.xa-city-panel').siblings('.xa-open-cityPanel').addClass('xui-checked')
         }
         isChecked = $input.is(":checked");
         var $li = $target.parents('.xa-city-panel').find('ul li').children('input').prop('checked', isChecked);
@@ -85,31 +86,65 @@ W.dialog.mall.SelectLimitedAreaDialog = W.dialog.Dialog.extend({
                     break;
                 }
         }
-       $target.parents('.xa-city-panel').find('.xa-selectAllCity').siblings('input[type="checkbox"]').prop('checked', isAllChecked);
+        var isAllNotChecked = true;
+        for (var i = 0; i < cityCount; ++i) {
+            var $input = $li.eq(i).find('input');
+                if ($input.is(':checked')) {
+                    isAllNotChecked = false;
+                    break;
+                }
+        }
+        var $plus = $target.parents('.xa-city-panel').siblings('.xa-open-cityPanel');
+        if(!isAllNotChecked){
+            $plus.addClass('xui-checked');
+        }else{
+            $plus.removeClass('xui-checked');
+
+        }
+        $target.parents('.xa-city-panel').find('.xa-selectAllCity').siblings('input[type="checkbox"]').prop('checked', isAllChecked);
+
     },
 
     onGetData: function(event) {
-        var provinces = [];
+        var provinces = {};
         this.$('input[type="checkbox"]:checked').each(function() {
             var $checkbox = $(this);
-            if (!$checkbox.hasClass('xa-selectAllProvince')) {
-                provinces.push({
-                    id: $checkbox.val(),
-                    name: $checkbox.parent().text()
-                });
+            var provinceId = $checkbox.attr('data-provinceId');
+
+            if($checkbox.data('type') == 1){
+                provinces[provinceId] =
+                    {
+                        provinceId:provinceId,
+                        provinceName:$checkbox.attr('name'),
+                        zoneName:$checkbox.attr('data-zoneName'),
+                        cities:[]
+                    };
+            }else if($checkbox.data('type') == 2){
+                if(!$checkbox.parents('.xa-city-panel').find('.xa-selectAll').is(':checked')){
+                    if(!provinces[provinceId]){
+                        provinces[provinceId] =
+                            {
+                                provinceId:provinceId,
+                                provinceName:$checkbox.attr('data-provinceName'),
+                                zoneName:$checkbox.attr('data-zoneName'),
+                                cities:[{
+                                    cityId:$checkbox.attr('data-cityId'),
+                                    cityName:$checkbox.attr('name')
+                                }]
+                            }
+                    }else{
+                        provinces[provinceId].cities.push({cityId:$checkbox.attr('data-cityId'),cityName:$checkbox.attr('name')});
+                    }
+                }
             }
         });
-
-        provinces = _.sortBy(provinces, function(province) { return province.id; });
-        var province_ids = [];
-        var province_names = [];
-        _.each(provinces, function(province) {
-            province_ids.push(province.id);
-            province_names.push(province.name);
-        })
+        
+        var provincesArray =[];
+        var provinceObj = _.map(provinces,function(province,i){
+            provincesArray.push(province);
+        });
         return {
-            ids: province_ids,
-            names: province_names
+            provinces: provincesArray,
         };
     }
 });

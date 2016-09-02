@@ -10,7 +10,7 @@
 		<li>限定区域</li>
         <li>编辑限定区域</li>
 	</ul>
-	<div class="xui-i-content p30">
+	<div class="xui-i-content p30 xa-limitedAreaSelector">
 		<section class="mb20">
 			<p class="clearfix">
 				<label class="fl" style="padding-top:4px;">模板名称</label>
@@ -20,44 +20,47 @@
 			<p>禁售地区：有些地区不能够买</p>
 			<p>仅售地区：只有此地区可以购买</p>
 		</section>
-		<table class="table xui-editLimitedAreaConfigTable">
-            <thead>
-                <tr>
-                    <th width="200">区域</th>
-                    <th width="134">省</th>
-                    <th>市</th>
-                    <th width="84">操作</th>
-                    <th width="65" class="tl"><a href="javascript:void(0);" class="xa-edit">编辑</a></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>直辖市</td>
-                    <td>北京市</td>
-                    <td></td>
-                    <td><a href="javascript:void(0);" class="xa-delete">删除</a></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>华北-东北</td>
-                    <td>河北</td>
-                    <td>张家口市 廊坊市</td>
-                    <td><a href="javascript:void(0);" class="xa-delete">删除</a></td>
-                    <td></td>
+		<section class="xa-selectedLimitedArea">
+			<!--<table class="table xui-editLimitedAreaConfigTable">
+		        <thead>
+		            <tr>
+		                <th width="200">区域</th>
+		                <th width="134">省</th>
+		                <th>市</th>
+		                <th width="84">操作</th>
+		                <th width="65" class="tl"><a href="javascript:void(0);" class="xa-edit">编辑</a></th>
+		            </tr>
+		        </thead>
+		        <tbody>
+		            <tr>
+		                <td>直辖市</td>
+		                <td>北京市</td>
+		                <td></td>
+		                <td><a href="javascript:void(0);" class="xa-delete">删除</a></td>
+		                <td></td>
+		            </tr>
+		            <tr>
+		                <td>华北-东北</td>
+		                <td>河北</td>
+		                <td>张家口市 廊坊市</td>
+		                <td><a href="javascript:void(0);" class="xa-delete">删除</a></td>
+		                <td></td>
 
-                </tr>
-                <tr>
-                    <td>华北-东北</td>
-                    <td>辽宁</td>
-                    <td>葫芦岛市 长春市</td>
-                    <td><a href="javascript:void(0);" class="xa-delete">删除</a></td>
-                    <td></td>
-                </tr>
-                <!-- <tr>
-                	<td colspan="5" class="tl">未添加任何地区</td>
-                </tr> -->
-            </tbody>
-        </table>
+		            </tr>
+		            <tr>
+		                <td>华北-东北</td>
+		                <td>辽宁</td>
+		                <td>葫芦岛市 长春市</td>
+		                <td><a href="javascript:void(0);" class="xa-delete">删除</a></td>
+		                <td></td>
+		            </tr>
+		             <tr>
+		            	<td colspan="5" class="tl">未添加任何地区</td>
+		            </tr>
+		        </tbody>
+		    </table> -->
+		</section>
+		
         <div class="tc mt50">
 			<button class="btn btn-primary xa-submit mt20">保&nbsp;存</button>
 		</div>
@@ -67,14 +70,11 @@
 {% block js %}
 <script type="text/javascript">
 $(document).ready(function(){
-	$('.xa-edit').click(function(){		
-		W.dialog.showDialog('W.dialog.mall.SelectLimitedAreaDialog', {
-			provinces: 1,
-			disabledProvinceSet: 1,
-			success: function(data) {
-			}
-		});
+	var limitedAreaSelector = new W.view.mall.limitedAreaSelectorView({
+		el: '.xa-limitedAreaSelector',
+		tableTemplate: 'selected-limited-area-view-tmpl-src',
 	});
+	limitedAreaSelector.render();
 });
 </script>
 {% endblock %}

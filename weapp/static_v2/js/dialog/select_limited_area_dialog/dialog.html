@@ -4,7 +4,7 @@
 	<div class="modal-content">
 		<div class="modal-header">
 			<button aria-hidden="true" data-dismiss="modal" class="close" type="button"><span aria-hidden="true">&times;</span></button>
-			<h3 class="modal-title">限定区域模板111111</h3>
+			<h3 class="modal-title">添加地区</h3>
 		</div>
 		<div class="modal-body">
 			<div
@@ -18,7 +18,7 @@
 
 		</div>
 		<div class="modal-footer modal-footerBg">
-			<button class="btn btn-primary">确&nbsp;定</button>
+			<button class="btn btn-primary btn-success">确&nbsp;定</button>
 		</div>
 	</div>
 	</div>
@@ -27,21 +27,28 @@
 <script id="limit-area-view" type="text/x-jquery-tmpl">
 	<table class="w">
 	{{each(i, zone) items}}
-		<tr>
+		<tr data-zone="${zoneName}">
 			<td>${zoneName}</td>
 			<td>
 				<ul class="clearfix">
 				{{each(j, province) zone.provinces}}
 					<li class="xui-province">
 						{{if zoneName == '直辖市' || zoneName == '其它' }}
-							<input type="checkbox" name="" class="hidden"/>
+
+
+							<input type="checkbox" name="${province.provinceName}" class="hidden" data-provinceId="${province.provinceId}" data-type="1" data-zoneName="${zoneName}"/>
+
+
 							<i class="xui-checkbox xa-checkbox xa-unique"></i>${province.provinceName}
 						{{else}}
-							<input type="checkbox" name="" class="hidden"/>
 							<i class="xui-plus xa-open-cityPanel"></i>${province.provinceName}
 							<div class="xui-inner-panel xa-city-panel">
 								<div class="xui-inner-province">
-									<input type="checkbox" name="" class="hidden"/>
+
+
+									<input type="checkbox" name="${province.provinceName}" data-provinceId="${province.provinceId}" class="hidden xa-selectAll" data-type="1" data-zoneName="${zoneName}"/>
+
+
 									<i class="xui-minus xa-close-city-panel"></i>
 									<i class="xui-checkbox xa-selectAllCity"></i>
 									${province.provinceName}
@@ -49,7 +56,7 @@
 								<ul class="xui-inner-city clearfix">
 									{{each(j, city) province.cities}}
 										<li>
-											<input type="checkbox" name="" class="hidden"/>
+											<input type="checkbox" name="${city.cityName}" data-cityId="${city.cityId}" class="hidden" data-type="2" data-provinceId="${province.provinceId}" data-provinceName="${province.provinceName}" data-zoneName="${zoneName}"/>
 											<i class="xui-checkbox xa-checkbox"></i>${city.cityName}
 										</li>
 									{{/each}}
