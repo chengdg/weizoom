@@ -155,12 +155,15 @@ W.AsyncComponentLoadView = BackboneLite.View.extend({
             // 将产品子数据，放到component.components中
             // 并把是否显示价格和名字的开关也放进去
             data.products.map(function(product, idx){
-                // 若是又拍云图片，则压缩成list所用的大小
+                // 若是又拍云图片，则压缩成list所用的大小, 
                 var upaiyunKey = /upaiyun\.com/;
-                if (upaiyunKey.test(product['thumbnails_url'])) {
-                    product['thumbnails_url'] = product['thumbnails_url'] + '!list';
+                var imgSrc = product['thumbnails_url'];
+                if (upaiyunKey.test(imgSrc)) {
+                    // 清理upaiyun链接里的特殊符号
+                    imgSrc = imgSrc.substring(0, imgSrc.lastIndexOf('!'))
+                    // 增加‘!list’参数
+                    product['thumbnails_url'] = imgSrc + '!list';
                 }
-
 
                 product['is_itemname_hidden'] = _this.data['model']['is_itemname_hidden'];
                 product['is_price_hidden'] = _this.data['model']['is_price_hidden'];
