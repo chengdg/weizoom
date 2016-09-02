@@ -160,7 +160,9 @@ W.AsyncComponentLoadView = BackboneLite.View.extend({
                 var imgSrc = product['thumbnails_url'];
                 if (upaiyunKey.test(imgSrc)) {
                     // 清理upaiyun链接里的特殊符号
-                    imgSrc = imgSrc.substring(0, imgSrc.lastIndexOf('!'))
+                    if (imgSrc.indexOf('!') > 0) {
+                        imgSrc = imgSrc.substring(0, imgSrc.indexOf('!'))
+                    }
                     // 增加‘!list’参数
                     product['thumbnails_url'] = imgSrc + '!list';
                 }
