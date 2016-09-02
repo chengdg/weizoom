@@ -226,19 +226,12 @@ class ProductList(resource.Resource):
                 supplier_ids = [s.id for s in models.Supplier.objects.filter(**params)]
                 products = products.filter(supplier__in=supplier_ids)
 
+        product_name = request.GET.get('name', '')
+        if product_name:
+            products = products.filter(name__icontains=product_name)
         # import pdb
         # pdb.set_trace()
         #未回收的商品
-        models.Product.fill_details(request.manager, products, {
-            "with_product_model": True,
-            "with_model_property_info": True,
-            "with_selected_category": True,
-            'with_image': False,
-            'with_property': True,
-            'with_sales': True,
-            'mall_type': mall_type,
-            'product_pool_id2product_pool': product_pool_id2product_pool
-        })
         # pdb.set_trace()
         # products = products.order_by(sort_attr)
         if '-' in sort_attr:
@@ -254,16 +247,27 @@ class ProductList(resource.Resource):
         products_not_0 = sorted(products_not_0, key=operator.attrgetter('display_index'))
 
         if mall_type:
-            #products = utils.weizoom_filter_products(request, products_not_0 + products_is_0)
-
-            products = utils.filter_products(request, products_not_0 + products_is_0, mall_type)
-            supplier_type = request.GET.get('orderSupplierType', '')
-            if supplier_type == '0':
-                products = filter(lambda p: p.supplier_user_id > 0, products)
-            elif supplier_type == '1':
-                products = filter(lambda p: p.supplier > 0, products)
+                current_product_filters = utils.MALL_PRODUCT_FILTERS
         else:
-            products = utils.filter_products(request, products_not_0 + products_is_0)
+            current_product_filters = utils.PRODUCT_FILTERS
+        #通过has_filter 判断当前填充属性还是在分页后填充属性
+        has_filter = utils.search_util.init_filters(request, current_product_filters)
+        if has_filter:
+            models.Product.fill_details(request.manager, products, {
+                "with_product_model": True,
+                "with_model_property_info": True,
+                "with_selected_category": True,
+                'with_image': False,
+                'with_property': True,
+                'with_sales': True,
+                'mall_type': mall_type,
+                'product_pool_id2product_pool': product_pool_id2product_pool
+            })
+
+            if mall_type:
+                products = utils.filter_products(request, products_not_0 + products_is_0, mall_type)
+            else:
+                products = utils.filter_products(request, products_not_0 + products_is_0)
 
 
 
@@ -275,6 +279,18 @@ class ProductList(resource.Resource):
             cur_page,
             count_per_page,
             query_string=request.META['QUERY_STRING'])
+        if not has_filter:
+            models.Product.fill_details(request.manager, products, {
+                "with_product_model": True,
+                "with_model_property_info": True,
+                "with_selected_category": True,
+                'with_image': False,
+                'with_property': True,
+                'with_sales': True,
+                'mall_type': mall_type,
+                'product_pool_id2product_pool': product_pool_id2product_pool
+            })
+
 
         if mall_type:
             product_ids = [product.id for product in products]
