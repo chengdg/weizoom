@@ -155,13 +155,9 @@ class ProductList(resource.Resource):
                 product_pool_param['status'] = models.PP_STATUS_OFF
                 product_pool = models.ProductPool.objects.filter(**product_pool_param)
                 product_pool_id2product_pool = dict([(pool.product_id, pool) for pool in product_pool])
-
                 if start_date and end_date:
                     products = products.filter(id__in=product_pool_id2product_pool.keys())
-            # products = models.Product.objects.filter(
-            #     owner=request.manager,
-            #     shelve_type=models.PRODUCT_SHELVE_TYPE_OFF,
-            #     is_deleted=False)
+
         elif _type == 'onshelf':
             products = models.Product.objects.belong_to(mall_type, request.manager, models.PRODUCT_SHELVE_TYPE_ON)
             if mall_type:
@@ -171,16 +167,9 @@ class ProductList(resource.Resource):
                 if start_date and end_date:
                     products = products.filter(id__in=product_pool_id2product_pool.keys())
 
-            # products = models.Product.objects.filter(
-            #     owner=request.manager,
-            #     shelve_type=models.PRODUCT_SHELVE_TYPE_ON,
-            #     is_deleted=False)
         elif _type == 'recycled':
             products = models.Product.objects.belong_to(mall_type, request.manager, models.PRODUCT_SHELVE_TYPE_RECYCLED)
-            # products = models.Product.objects.filter(
-            #     owner=request.manager,
-            #     shelve_type=models.PRODUCT_SHELVE_TYPE_RECYCLED,
-            #     is_deleted=False)
+
         else:
             products = models.Product.objects.filter(
                 owner=request.manager,
@@ -202,11 +191,11 @@ class ProductList(resource.Resource):
             if store_name:
                 userprofile_manager = UserProfile.objects.filter(webapp_type=2).first()
 
-                mananger_supplier_ids = [supplier.id for supplier in models.Supplier.objects.filter(
+                mananger_supplier_ids = models.Supplier.objects.filter(
                                             owner_id__in=[userprofile_manager.user_id, request.manager.id],
                                             name__contains=store_name,
                                             is_delete=False
-                                        )]
+                                        ).values_list('id', flat=True)
                 if products:
                     products = products.filter(supplier__in=mananger_supplier_ids)
 
@@ -223,7 +212,7 @@ class ProductList(resource.Resource):
                 if int(supplier_type) != -1:
                     params['type'] = int(supplier_type)
 
-                supplier_ids = [s.id for s in models.Supplier.objects.filter(**params)]
+                supplier_ids = models.Supplier.objects.filter(**params).values_list('id', flat=True)
                 products = products.filter(supplier__in=supplier_ids)
 
         product_name = request.GET.get('name', '')
