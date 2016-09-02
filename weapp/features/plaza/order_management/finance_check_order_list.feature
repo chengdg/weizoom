@@ -236,11 +236,11 @@ Scenario:1 查看自营平台财务审核订单列表（多子订单的母订单
 					"商家3"：{
 						"order_no":"101-商家3",
 						"status":"退款中",
-						"actions":["退款成功"],
 						"refund_details":
 							{
 								"cash":10.00
 							},
+						"actions":["退款成功"],
 						"products":
 							[{
 								"name":"商品3a",
@@ -286,11 +286,11 @@ Scenario:1 查看自营平台财务审核订单列表（多子订单的母订单
 					"商家3"：{
 						"order_no":"101-商家3",
 						"status":"退款中",
-						"actions":["退款成功"],
 						"refund_details":
 							{
 								"cash":10.00
 							},
+						"actions":["退款成功"],
 						"products":
 							[{
 								"name":"商品3a",
@@ -368,11 +368,11 @@ Scenario:1 查看自营平台财务审核订单列表（多子订单的母订单
 					"商家3"：{
 						"order_no":"101-商家3",
 						"status":"退款中",
-						"actions":["退款成功"],
 						"refund_details":
 							{
 								"cash":10.00
 							},
+						"actions":["退款成功"],
 						"products":
 							[{
 								"name":"商品3a",
@@ -426,11 +426,11 @@ Scenario:1 查看自营平台财务审核订单列表（多子订单的母订单
 					"商家3"：{
 						"order_no":"101-商家3",
 						"status":"退款中",
-						"actions":["退款成功"],
 						"refund_details":
 							{
 								"cash":10.00
 							},
+						"actions":["退款成功"],
 						"products":
 							[{
 								"name":"商品3a",
@@ -447,14 +447,14 @@ Scenario:1 查看自营平台财务审核订单列表（多子订单的母订单
 			"""
 
 Scenario:2 查看自营平台财务审核订单列表（多子订单的母订单中包含退款成功、不包含退款中子订单）
-	#101待发货（现金/退微众卡）（待发货/待发货/退款成功）
+	#101待发货（现金/退现金+优惠券）（待发货/待发货/退款成功）
 		Given jobs登录系统
 		When jobs'申请退款'自营订单'101-商家3'
 			"""
 			{
-				"cash":0.00,
-				"weizoom_card":10.00,
-				"coupon_money":0.00,
+				"cash":5.00,
+				"weizoom_card":0.00,
+				"coupon_money":5.00,
 				"intergal_money":0.00
 			}
 			"""
@@ -465,7 +465,7 @@ Scenario:2 查看自营平台财务审核订单列表（多子订单的母订单
 				"order_no":"101",
 				"buyer":"bill",
 				"status": "待发货",
-				"final_price":20.00,
+				"final_price":25.00,
 				"save_money":"",
 				"methods_of_payment": "微信支付",
 				"group":[{
@@ -494,11 +494,12 @@ Scenario:2 查看自营平台财务审核订单列表（多子订单的母订单
 					"商家3"：{
 						"order_no":"101-商家3",
 						"status":"退款成功",
-						"actions":[],
 						"refund_details":
 							{
-								"weizoom_card":10.00
+								"cash":5.00,
+								"coupon_money":5.00
 							},
+						"actions":[],
 						"products":
 							[{
 								"name":"商品3a",
@@ -519,7 +520,7 @@ Scenario:2 查看自营平台财务审核订单列表（多子订单的母订单
 				"order_no":"101",
 				"buyer":"bill",
 				"status": "待发货",
-				"final_price":20.00,
+				"final_price":25.00,
 				"save_money":"",
 				"methods_of_payment": "微信支付",
 				"group":[{
@@ -548,11 +549,12 @@ Scenario:2 查看自营平台财务审核订单列表（多子订单的母订单
 					"商家3"：{
 						"order_no":"101-商家3",
 						"status":"退款成功",
-						"actions":[],
 						"refund_details":
 							{
-								"weizoom_card":10.00
+								"cash":5.00,
+								"coupon_money":5.00
 							},
+						"actions":[],
 						"products":
 							[{
 								"name":"商品3a",
@@ -564,7 +566,7 @@ Scenario:2 查看自营平台财务审核订单列表（多子订单的母订单
 			}]
 			"""
 
-	#101待发货（现金/退微众卡）（退款成功/退款成功/退款成功）
+	#101待发货（现金/退现金;退现金;退现金+优惠券）（退款成功/退款成功/退款成功）
 		When jobs对自营订单进行发货
 				"""
 				{
@@ -577,8 +579,8 @@ Scenario:2 查看自营平台财务审核订单列表（多子订单的母订单
 		When jobs'申请退款'自营订单'101-商家2'
 			"""
 			{
-				"cash":0.00,
-				"weizoom_card":10.00,
+				"cash":10.00,
+				"weizoom_card":0.00,
 				"coupon_money":0.00,
 				"intergal_money":0.00
 			}
@@ -586,8 +588,8 @@ Scenario:2 查看自营平台财务审核订单列表（多子订单的母订单
 		When jobs'申请退款'自营订单'101-商家1'
 			"""
 			{
-				"cash":0.00,
-				"weizoom_card":10.00,
+				"cash":10.00,
+				"weizoom_card":0.00,
 				"coupon_money":0.00,
 				"intergal_money":0.00
 			}
@@ -600,7 +602,7 @@ Scenario:2 查看自营平台财务审核订单列表（多子订单的母订单
 				"order_no":"101",
 				"buyer":"bill",
 				"status": "退款成功",
-				"final_price":0.00,
+				"final_price":5.00,
 				"save_money":"",
 				"methods_of_payment": "微信支付",
 				"group":[{
@@ -609,7 +611,7 @@ Scenario:2 查看自营平台财务审核订单列表（多子订单的母订单
 						"status":"退款成功",
 						"refund_details":
 							{
-								"weizoom_card":10.00
+								"cash":10.00
 							},
 						"actions":[],
 						"products":
@@ -624,7 +626,7 @@ Scenario:2 查看自营平台财务审核订单列表（多子订单的母订单
 						"status":"退款成功",
 						"refund_details":
 							{
-								"weizoom_card":10.00
+								"cash":10.00
 							},
 						"actions":[],
 						"products":
@@ -639,13 +641,10 @@ Scenario:2 查看自营平台财务审核订单列表（多子订单的母订单
 						"status":"退款成功",
 						"refund_details":
 							{
-								"weizoom_card":10.00
+								"cash":5.00,
+								"coupon_money":5.00
 							},
 						"actions":[],
-						"refund_details":
-							{
-								"weizoom_card":10.00
-							},
 						"products":
 							[{
 								"name":"商品3a",
@@ -666,7 +665,7 @@ Scenario:2 查看自营平台财务审核订单列表（多子订单的母订单
 				"order_no":"101",
 				"buyer":"bill",
 				"status": "退款成功",
-				"final_price":0.00,
+				"final_price":5.00,
 				"save_money":"",
 				"methods_of_payment": "微信支付",
 				"group":[{
@@ -675,7 +674,7 @@ Scenario:2 查看自营平台财务审核订单列表（多子订单的母订单
 						"status":"退款成功",
 						"refund_details":
 							{
-								"weizoom_card":10.00
+								"cash":10.00
 							},
 						"actions":[],
 						"products":
@@ -690,7 +689,7 @@ Scenario:2 查看自营平台财务审核订单列表（多子订单的母订单
 						"status":"退款成功",
 						"refund_details":
 							{
-								"weizoom_card":10.00
+								"cash":10.00
 							},
 						"actions":[],
 						"products":
@@ -705,13 +704,10 @@ Scenario:2 查看自营平台财务审核订单列表（多子订单的母订单
 						"status":"退款成功",
 						"refund_details":
 							{
-								"weizoom_card":10.00
+								"cash":5.00,
+								"coupon_money":5.00
 							},
 						"actions":[],
-						"refund_details":
-							{
-								"weizoom_card":10.00
-							},
 						"products":
 							[{
 								"name":"商品3a",
@@ -724,7 +720,7 @@ Scenario:2 查看自营平台财务审核订单列表（多子订单的母订单
 			"""
 
 Scenario:3 查看自营平台财务审核订单列表（多子订单的母订单中包含退款中和退款成功子订单）
-	#101待发货（现金/退现金;退微众卡）（待发货/退款中/退款成功）
+	#101待发货（现金/退现金;退现金+积分）（待发货/退款中/退款成功）
 		Given jobs登录系统
 		When jobs'申请退款'自营订单'101-商家2'
 			"""
@@ -738,10 +734,10 @@ Scenario:3 查看自营平台财务审核订单列表（多子订单的母订单
 		When jobs'申请退款'自营订单'101-商家3'
 			"""
 			{
-				"cash":0.00,
-				"weizoom_card":10.00,
+				"cash":5.00,
+				"weizoom_card":0.00,
 				"coupon_money":0.00,
-				"intergal_money":0.00
+				"intergal_money":5.00
 			}
 			"""
 		When jobs通过财务审核'退款成功'自营订单'101-商家3'
@@ -751,7 +747,7 @@ Scenario:3 查看自营平台财务审核订单列表（多子订单的母订单
 				"order_no":"101",
 				"buyer":"bill",
 				"status": "待发货",
-				"final_price":20.00,
+				"final_price":25.00,
 				"save_money":"",
 				"methods_of_payment": "微信支付",
 				"group":[{
@@ -786,7 +782,8 @@ Scenario:3 查看自营平台财务审核订单列表（多子订单的母订单
 						"status":"退款成功",
 						"refund_details":
 							{
-								"weizoom_card":10.00
+								"cash":5.00,
+								"integral_money":5.00
 							},
 						"actions":[],
 						"products":
@@ -805,7 +802,7 @@ Scenario:3 查看自营平台财务审核订单列表（多子订单的母订单
 				"order_no":"101",
 				"buyer":"bill",
 				"status": "待发货",
-				"final_price":20.00,
+				"final_price":25.00,
 				"save_money":"",
 				"methods_of_payment": "微信支付",
 				"group":[{
@@ -840,7 +837,8 @@ Scenario:3 查看自营平台财务审核订单列表（多子订单的母订单
 						"status":"退款成功",
 						"refund_details":
 							{
-								"weizoom_card":10.00
+								"cash":5.00,
+								"integral_money":5.00
 							},
 						"actions":[],
 						"products":
@@ -859,7 +857,7 @@ Scenario:3 查看自营平台财务审核订单列表（多子订单的母订单
 				"order_no":"101",
 				"buyer":"bill",
 				"status": "待发货",
-				"final_price":20.00,
+				"final_price":25.00,
 				"save_money":"",
 				"methods_of_payment": "微信支付",
 				"group":[{
@@ -894,7 +892,8 @@ Scenario:3 查看自营平台财务审核订单列表（多子订单的母订单
 						"status":"退款成功",
 						"refund_details":
 							{
-								"weizoom_card":10.00
+								"cash":5.00,
+								"integral_money":5.00
 							},
 						"actions":[],
 						"products":
@@ -907,7 +906,7 @@ Scenario:3 查看自营平台财务审核订单列表（多子订单的母订单
 					}]
 			}]
 			"""
-	#101已发货（现金/退现金;退微众卡）（已发货/退款中/退款成功）
+	#101已发货（现金/退现金;退现金+积分）（已发货/退款中/退款成功）
 		When jobs对自营订单进行发货
 			"""
 			{
@@ -923,7 +922,7 @@ Scenario:3 查看自营平台财务审核订单列表（多子订单的母订单
 				"order_no":"101",
 				"buyer":"bill",
 				"status": "已发货",
-				"final_price":20.00,
+				"final_price":25.00,
 				"save_money":"",
 				"methods_of_payment": "微信支付",
 				"group":[{
@@ -958,7 +957,8 @@ Scenario:3 查看自营平台财务审核订单列表（多子订单的母订单
 						"status":"退款成功",
 						"refund_details":
 							{
-								"weizoom_card":10.00
+								"cash":5.00,
+								"integral_money":5.00
 							},
 						"actions":[],
 						"products":
@@ -977,7 +977,7 @@ Scenario:3 查看自营平台财务审核订单列表（多子订单的母订单
 				"order_no":"101",
 				"buyer":"bill",
 				"status": "已发货",
-				"final_price":20.00,
+				"final_price":25.00,
 				"save_money":"",
 				"methods_of_payment": "微信支付",
 				"group":[{
@@ -1012,7 +1012,8 @@ Scenario:3 查看自营平台财务审核订单列表（多子订单的母订单
 						"status":"退款成功",
 						"refund_details":
 							{
-								"weizoom_card":10.00
+								"cash":5.00,
+								"integral_money":5.00
 							},
 						"actions":[],
 						"products":
@@ -1031,7 +1032,7 @@ Scenario:3 查看自营平台财务审核订单列表（多子订单的母订单
 				"order_no":"101",
 				"buyer":"bill",
 				"status": "已发货",
-				"final_price":20.00,
+				"final_price":25.00,
 				"save_money":"",
 				"methods_of_payment": "微信支付",
 				"group":[{
@@ -1066,7 +1067,8 @@ Scenario:3 查看自营平台财务审核订单列表（多子订单的母订单
 						"status":"退款成功",
 						"refund_details":
 							{
-								"weizoom_card":10.00
+								"cash":5.00,
+								"integral_money":5.00
 							},
 						"actions":[],
 						"products":
@@ -1079,7 +1081,7 @@ Scenario:3 查看自营平台财务审核订单列表（多子订单的母订单
 					}]
 			}]
 			"""
-	#101退款中（现金/退现金;退微众卡）（已完成/退款中/退款成功）
+	#101退款中（现金/退现金;退现金+积分）（已完成/退款中/退款成功）
 		When jobs'完成'自营订单'101-商家1'
 		Then jobs获得自营财务审核'全部'订单列表
 			"""
@@ -1087,7 +1089,7 @@ Scenario:3 查看自营平台财务审核订单列表（多子订单的母订单
 				"order_no":"101",
 				"buyer":"bill",
 				"status": "退款中",
-				"final_price":20.00,
+				"final_price":25.00,
 				"save_money":"",
 				"methods_of_payment": "微信支付",
 				"group":[{
@@ -1122,7 +1124,8 @@ Scenario:3 查看自营平台财务审核订单列表（多子订单的母订单
 						"status":"退款成功",
 						"refund_details":
 							{
-								"weizoom_card":10.00
+								"cash":5.00,
+								"integral_money":5.00
 							},
 						"actions":[],
 						"products":
@@ -1141,7 +1144,7 @@ Scenario:3 查看自营平台财务审核订单列表（多子订单的母订单
 				"order_no":"101",
 				"buyer":"bill",
 				"status": "退款中",
-				"final_price":20.00,
+				"final_price":25.00,
 				"save_money":"",
 				"methods_of_payment": "微信支付",
 				"group":[{
@@ -1176,7 +1179,8 @@ Scenario:3 查看自营平台财务审核订单列表（多子订单的母订单
 						"status":"退款成功",
 						"refund_details":
 							{
-								"weizoom_card":10.00
+								"cash":5.00,
+								"integral_money":5.00
 							},
 						"actions":[],
 						"products":
@@ -1195,7 +1199,7 @@ Scenario:3 查看自营平台财务审核订单列表（多子订单的母订单
 				"order_no":"101",
 				"buyer":"bill",
 				"status": "退款中",
-				"final_price":20.00,
+				"final_price":25.00,
 				"save_money":"",
 				"methods_of_payment": "微信支付",
 				"group":[{
@@ -1230,7 +1234,8 @@ Scenario:3 查看自营平台财务审核订单列表（多子订单的母订单
 						"status":"退款成功",
 						"refund_details":
 							{
-								"weizoom_card":10.00
+								"cash":5.00,
+								"integral_money":5.00
 							},
 						"actions":[],
 						"products":
@@ -1243,7 +1248,7 @@ Scenario:3 查看自营平台财务审核订单列表（多子订单的母订单
 					}]
 			}]
 			"""
-	#101退款中（现金/退现金;退现金;退微众卡）（退款中/退款中/退款成功）
+	#101退款中（现金/退现金;退现金;退现金+积分）（退款中/退款中/退款成功）
 		When jobs'申请退款'自营订单'101-商家1'
 			"""
 			{
@@ -1259,7 +1264,7 @@ Scenario:3 查看自营平台财务审核订单列表（多子订单的母订单
 				"order_no":"101",
 				"buyer":"bill",
 				"status": "退款中",
-				"final_price":20.00,
+				"final_price":25.00,
 				"save_money":"",
 				"methods_of_payment": "微信支付",
 				"group":[{
@@ -1297,7 +1302,8 @@ Scenario:3 查看自营平台财务审核订单列表（多子订单的母订单
 						"status":"退款成功",
 						"refund_details":
 							{
-								"weizoom_card":10.00
+								"cash":5.00,
+								"integral_money":5.00
 							},
 						"actions":[],
 						"products":
@@ -1316,7 +1322,7 @@ Scenario:3 查看自营平台财务审核订单列表（多子订单的母订单
 				"order_no":"101",
 				"buyer":"bill",
 				"status": "退款中",
-				"final_price":20.00,
+				"final_price":25.00,
 				"save_money":"",
 				"methods_of_payment": "微信支付",
 				"group":[{
@@ -1354,7 +1360,8 @@ Scenario:3 查看自营平台财务审核订单列表（多子订单的母订单
 						"status":"退款成功",
 						"refund_details":
 							{
-								"weizoom_card":10.00
+								"cash":5.00,
+								"integral_money":5.00
 							},
 						"actions":[],
 						"products":
@@ -1373,7 +1380,7 @@ Scenario:3 查看自营平台财务审核订单列表（多子订单的母订单
 				"order_no":"101",
 				"buyer":"bill",
 				"status": "退款中",
-				"final_price":20.00,
+				"final_price":25.00,
 				"save_money":"",
 				"methods_of_payment": "微信支付",
 				"group":[{
@@ -1411,7 +1418,8 @@ Scenario:3 查看自营平台财务审核订单列表（多子订单的母订单
 						"status":"退款成功",
 						"refund_details":
 							{
-								"weizoom_card":10.00
+								"cash":5.00,
+								"integral_money":5.00
 							},
 						"actions":[],
 						"products":
@@ -1424,7 +1432,7 @@ Scenario:3 查看自营平台财务审核订单列表（多子订单的母订单
 					}]
 			}]
 			"""
-	#101退款中（现金/退现金;退现金;退微众卡）（退款成功/退款中/退款成功）
+	#101退款中（现金/退现金;退现金;退现金+积分）（退款成功/退款中/退款成功）
 		When jobs通过财务审核'退款成功'自营订单'101-商家1'
 		Then jobs获得自营财务审核'全部'订单列表
 			"""
@@ -1432,7 +1440,7 @@ Scenario:3 查看自营平台财务审核订单列表（多子订单的母订单
 				"order_no":"101",
 				"buyer":"bill",
 				"status": "退款中",
-				"final_price":10.00,
+				"final_price":15.00,
 				"save_money":"",
 				"methods_of_payment": "微信支付",
 				"group":[{
@@ -1470,7 +1478,8 @@ Scenario:3 查看自营平台财务审核订单列表（多子订单的母订单
 						"status":"退款成功",
 						"refund_details":
 							{
-								"weizoom_card":10.00
+								"cash":5.00,
+								"integral_money":5.00
 							},
 						"actions":[],
 						"products":
@@ -1489,7 +1498,7 @@ Scenario:3 查看自营平台财务审核订单列表（多子订单的母订单
 				"order_no":"101",
 				"buyer":"bill",
 				"status": "退款中",
-				"final_price":10.00,
+				"final_price":15.00,
 				"save_money":"",
 				"methods_of_payment": "微信支付",
 				"group":[{
@@ -1527,7 +1536,8 @@ Scenario:3 查看自营平台财务审核订单列表（多子订单的母订单
 						"status":"退款成功",
 						"refund_details":
 							{
-								"weizoom_card":10.00
+								"cash":5.00,
+								"integral_money":5.00
 							},
 						"actions":[],
 						"products":
@@ -1546,7 +1556,7 @@ Scenario:3 查看自营平台财务审核订单列表（多子订单的母订单
 				"order_no":"101",
 				"buyer":"bill",
 				"status": "退款中",
-				"final_price":10.00,
+				"final_price":15.00,
 				"save_money":"",
 				"methods_of_payment": "微信支付",
 				"group":[{
@@ -1584,7 +1594,8 @@ Scenario:3 查看自营平台财务审核订单列表（多子订单的母订单
 						"status":"退款成功",
 						"refund_details":
 							{
-								"weizoom_card":10.00
+								"cash":5.00,
+								"integral_money":5.00
 							},
 						"actions":[],
 						"products":
