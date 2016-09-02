@@ -8,7 +8,7 @@
 	<li><a href="/mall2/product_list/?shelve_type=1">商品管理</a></li>
 	<li class="active">分组管理</li>
 </ul>
-
+<div class="xa-categoryListView xui-filterPanel"></div>
 <div class="fr">
 	<button class="btn mt20 mr10 btn-success xui-addProductBtn xa-addCategory xui-addNewGroup"><span style="padding-right:5px;"><img src="/static_v2/img/editor/plusOpcity.png"></span>新建分组</button>
 </div>
@@ -84,6 +84,11 @@
 {% endverbatim %}
 <script type="text/javascript">
 $(document).ready(function() {
+	
+	var view = new W.view.CategoryListView ({
+		el: '.xa-categoryListView',
+		dataView: $('[data-ui-role="advanced-table"]').data('view') ,
+	});
 	$('.xa-addCategory').click(function() {
 		W.dialog.showDialog('W.dialog.mall.AddProductCategoryDialog', {
 			canEditTitle: true,
