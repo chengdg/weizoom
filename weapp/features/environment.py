@@ -577,7 +577,13 @@ def __create_system_user(username):
 	product = weapp_product_models.Product.objects.get(name=u'完整版')
 	weapp_product_api.install_product_for_user(user, product.id)
 	__binding_wexin_mp_account(user)
-
+	if username.startswith('zy'):
+		profile = user.get_profile()
+		if username.startswith('zymanager'):
+			profile.webapp_type = 2
+		else:
+			profile.webapp_type = 1
+		profile.save()
 	"""
 	临时方案：解决 benchi 没有会员等级情况
 	"""
@@ -700,6 +706,9 @@ def before_all(context):
 	__create_system_user('nokia')
 	__create_system_user('bill')
 	__create_system_user('tom')
+	__create_system_user('zymanager')
+	__create_system_user('zy1')
+	__create_system_user('zy2')
 	# __create_system_user('weizoom')
 	# __create_system_user('tom1')
 	# __create_system_user('tom2')
@@ -787,7 +796,8 @@ def after_scenario(context, scenario):
 		context.webapp_driver.quit()
 
 	if UserProfile.objects.filter(webapp_type=1).count() > 0:
-		UserProfile.objects.filter(webapp_type=1).update(webapp_type=0)
+		if not scenario.name.find('ziying') > 0:
+			UserProfile.objects.filter(webapp_type=1).update(webapp_type=0)
 
 
 def enhance_django_model_class():
