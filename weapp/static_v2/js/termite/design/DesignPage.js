@@ -206,9 +206,9 @@ W.design.DesignPage = Backbone.View.extend({
 
 			var height = document.body.clientHeight;
 			W.Broadcaster.trigger('designpage:resize', height);
-			
+
 			// 异步处理
-			W.initAsyncComponent();
+			W.initAsyncComponent(component.cid);
 
 		} else {
 			var prevComponent = this.page.getPrevComponentOf(component);

@@ -213,14 +213,22 @@ W.AsyncComponentLoadView = BackboneLite.View.extend({
 });
 //END of W.AsyncComponentLoadView
 
-W.initAsyncComponent = function() {
+W.initAsyncComponent = function(cid) {
     // 初始化view, 目前只针对商品模块
     var allComponents = [];
-    $('div[data-ui-role="async-component"]').each(function() {
-        var $node = $(this);
-        $node.append('<div style="text-align:center;"><img src="/static_v2/img/product_list_loading.gif"></div>');
-        allComponents.push($node);
-    });
+    if (false && cid) {
+        $('div.xa-componentContainer[data-contained-cid="'+cid+'"]').find('div[data-ui-role="async-component"]').each(function() {
+            var $node = $(this);
+            $node.append('<div style="text-align:center;"><img src="/static_v2/img/product_list_loading.gif"></div>');
+            allComponents.push($node);
+        });
+    } else {
+        $('div[data-ui-role="async-component"]').each(function() {
+            var $node = $(this);
+            $node.append('<div style="text-align:center;"><img src="/static_v2/img/product_list_loading.gif"></div>');
+            allComponents.push($node);
+        });
+    }
 
     allComponents.map(function($component){
         var asyncComponentView = new W.AsyncComponentLoadView({el: $component[0]});
