@@ -59,7 +59,7 @@ class Command(BaseCommand):
 				tmp_line += 1
 				date_str = dateutil.date2string(d)
 				end_datetime = "%s 23:59:00" % date_str
-				orders = Order.objects.filter(webapp_id__in=webapp_ids, status__in=[2,3,5], payment_time__gte=d, payment_time__lte=end_datetime, origin_order_id__in=[0,-1])
+				orders = Order.objects.filter(webapp_id__in=webapp_ids, status__in=[3,4,5], payment_time__gte=d, payment_time__lte=end_datetime, origin_order_id__in=[0,-1])
 
 				for i in range(24):
 					print "%s %s:00" % (date_str, i), "----", "%s %s:59" % (date_str,i) ,"count()==",orders.filter(webapp_id__in=webapp_ids, payment_time__gte="%s %s:00" % (date_str, i), payment_time__lte="%s %s:59" % (date_str,i), origin_order_id__in=[0,-1]).count()
