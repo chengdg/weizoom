@@ -24,7 +24,7 @@ class ShopBalanceOutline(api_resource.ApiResource):
 		channel_qrcode_ids = json.loads(args.get('channel_qrcode_ids'))
 		order_numbers = json.loads(args.get('order_numbers', ''))
 
-		channel_qrcodes = ChannelQrcodeSettings.objects.filter(id__in=channel_qrcode_ids)
+		channel_qrcodes = ChannelQrcodeSettings.objects.filter(id__in=channel_qrcode_ids).order_by('created_at')
 		created_at = channel_qrcodes.first().created_at.strftime("%Y-%m-%d %H:%M:%S")
 		print created_at,"cccccccccccccccc"
 
@@ -71,7 +71,6 @@ class ShopBalanceOutline(api_resource.ApiResource):
 			curr_order_numbers = refund_order_number
 
 		orders = Order.objects.filter(**filter_data_args).exclude(order_id__in=curr_order_numbers)
-		print orders,"ppppppppppp"
 
 		channel_qrcode_id2first_order = {}
 		channel_qrcode_id2all_order = {}
