@@ -43,10 +43,15 @@ Backgroud:
 	Given 重置'weizoom_card'的bdd环境
 	Given 重置'apiserver'的bdd环境
 	Given jobs登录系统
+	And jobs设定会员积分策略
+		"""
+		{
+			"integral_each_yuan":2
+		}
+		"""
 	And 设置jobs为自营平台账号
-	Given jobs登录系统::weapp
-	And jobs已有微众卡支付权限::weapp
-	And jobs已添加支付方式::weapp
+	And jobs已有微众卡支付权限
+	And jobs已添加支付方式
 		"""
 		[{
 			"type":"货到付款"
@@ -197,6 +202,7 @@ Scenario:1 查看自营平台财务审核订单列表（多子订单的母订单
 				"cash":10.00,
 				"weizoom_card":0.00,
 				"coupon_money":0.00,
+				"intergal":0,
 				"intergal_money":0.00
 			}
 			"""
@@ -313,6 +319,7 @@ Scenario:1 查看自营平台财务审核订单列表（多子订单的母订单
 				"cash":10.00,
 				"weizoom_card":0.00,
 				"coupon_money":0.00,
+				"intergal":0,
 				"intergal_money":0.00
 			}
 			"""
@@ -322,6 +329,7 @@ Scenario:1 查看自营平台财务审核订单列表（多子订单的母订单
 					"cash":10.00,
 					"weizoom_card":0.00,
 					"coupon_money":0.00,
+					"intergal":0,
 					"intergal_money":0.00
 				}
 				"""
@@ -455,6 +463,7 @@ Scenario:2 查看自营平台财务审核订单列表（多子订单的母订单
 				"cash":5.00,
 				"weizoom_card":0.00,
 				"coupon_money":5.00,
+				"intergal":0,
 				"intergal_money":0.00
 			}
 			"""
@@ -582,6 +591,7 @@ Scenario:2 查看自营平台财务审核订单列表（多子订单的母订单
 				"cash":10.00,
 				"weizoom_card":0.00,
 				"coupon_money":0.00,
+				"intergal":0,
 				"intergal_money":0.00
 			}
 			"""
@@ -591,6 +601,7 @@ Scenario:2 查看自营平台财务审核订单列表（多子订单的母订单
 				"cash":10.00,
 				"weizoom_card":0.00,
 				"coupon_money":0.00,
+				"intergal":0,
 				"intergal_money":0.00
 			}
 			"""
@@ -728,6 +739,7 @@ Scenario:3 查看自营平台财务审核订单列表（多子订单的母订单
 				"cash":10.00,
 				"weizoom_card":0.00,
 				"coupon_money":0.00,
+				"intergal":0,
 				"intergal_money":0.00
 			}
 			"""
@@ -737,6 +749,7 @@ Scenario:3 查看自营平台财务审核订单列表（多子订单的母订单
 				"cash":5.00,
 				"weizoom_card":0.00,
 				"coupon_money":0.00,
+				"intergal":10,
 				"intergal_money":5.00
 			}
 			"""
@@ -1255,6 +1268,7 @@ Scenario:3 查看自营平台财务审核订单列表（多子订单的母订单
 				"cash":10.00,
 				"weizoom_card":0.00,
 				"coupon_money":0.00,
+				"intergal":0,
 				"intergal_money":0.00
 			}
 			"""
@@ -1618,6 +1632,7 @@ Scenario:4 查看自营平台财务审核订单列表（单个子订单的母订
 					"cash":0.00,
 					"weizoom_card":0.00,
 					"coupon_money":5.00,
+					"intergal":10,
 					"intergal_money":5.00
 				}
 				"""
@@ -1753,6 +1768,7 @@ Scenario:4 查看自营平台财务审核订单列表（单个子订单的母订
 					"cash":0.00,
 					"weizoom_card":21.00,
 					"coupon_money":5.00,
+					"intergal":10,
 					"intergal_money":5.00
 				}
 				"""

@@ -21,9 +21,14 @@ Backgroud:
 	Given 重置'apiserver'的bdd环境
 	Given jobs登录系统
 	And 设置jobs为自营平台账号
-	Given jobs登录系统::weapp
-	And jobs已有微众卡支付权限::weapp
-	And jobs已添加支付方式::weapp
+	And jobs设定会员积分策略
+		"""
+		{
+			"integral_each_yuan":2
+		}
+		"""
+	And jobs已有微众卡支付权限
+	And jobs已添加支付方式
 		"""
 		[{
 			"type":"货到付款"
@@ -170,6 +175,7 @@ Backgroud:
 					"cash":0.00,
 					"weizoom_card":0.00,
 					"coupon_money":5.00,
+					"intergal":10,
 					"intergal_money":5.00
 				}
 				"""
@@ -179,6 +185,7 @@ Backgroud:
 					"cash":0.00,
 					"weizoom_card":21.00,
 					"coupon_money":5.00,
+					"intergal":10,
 					"intergal_money":5.00
 				}
 				"""
@@ -238,6 +245,7 @@ Backgroud:
 						"cash":0.00,
 						"weizoom_card":0.00,
 						"coupon_money":5.00,
+						"intergal":10,
 						"intergal_money":5.00
 					}
 					"""
@@ -247,6 +255,7 @@ Backgroud:
 						"cash":10.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
+						"intergal":0,
 						"intergal_money":0.00
 					}
 					"""
@@ -320,6 +329,7 @@ Backgroud:
 						"cash":0.00,
 						"weizoom_card":0.00,
 						"coupon_money":5.00,
+						"intergal":10,
 						"intergal_money":5.00
 					}
 					"""
@@ -329,6 +339,7 @@ Backgroud:
 						"cash":10.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
+						"intergal":0,
 						"intergal_money":0.00
 					}
 					"""
@@ -386,6 +397,7 @@ Backgroud:
 						"cash":0.00,
 						"weizoom_card":0.00,
 						"coupon_money":5.00,
+						"intergal":10,
 						"intergal_money":5.00
 					}
 					"""
@@ -395,6 +407,7 @@ Backgroud:
 						"cash":10.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
+						"intergal":0,
 						"intergal_money":0.00
 					}
 					"""
@@ -404,6 +417,7 @@ Backgroud:
 						"cash":10.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
+						"intergal":0,
 						"intergal_money":0.00
 					}
 					"""
@@ -413,6 +427,7 @@ Backgroud:
 						"cash":10.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
+						"intergal":0,
 						"intergal_money":0.00
 					}
 					"""
@@ -488,6 +503,7 @@ Backgroud:
 						"cash":0.00,
 						"weizoom_card":0.00,
 						"coupon_money":5.00,
+						"intergal":10,
 						"intergal_money":5.00
 					}
 					"""
@@ -497,6 +513,7 @@ Backgroud:
 						"cash":10.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
+						"intergal":0,
 						"intergal_money":0.00
 					}
 					"""
@@ -532,6 +549,7 @@ Backgroud:
 						"cash":0.00,
 						"weizoom_card":0.00,
 						"coupon_money":5.00,
+						"intergal":10,
 						"intergal_money":5.00
 					}
 					"""
@@ -541,6 +559,7 @@ Backgroud:
 						"cash":10.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
+						"intergal":0,
 						"intergal_money":0.00
 					}
 					"""
@@ -619,6 +638,7 @@ Backgroud:
 						"cash":10.00,
 						"weizoom_card":0.00,
 						"coupon_money":5.00,
+						"intergal":10,
 						"intergal_money":5.00
 					}
 					"""
@@ -646,6 +666,7 @@ Backgroud:
 						"cash":20.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
+						"intergal":0,
 						"intergal_money":0.00
 					}
 					"""
@@ -734,6 +755,7 @@ Backgroud:
 						"cash":20.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
+						"intergal":0,
 						"intergal_money":0.00
 					}
 					"""
@@ -743,6 +765,7 @@ Backgroud:
 						"cash":10.00,
 						"weizoom_card":0.00,
 						"coupon_money":5.00,
+						"intergal":10,
 						"intergal_money":5.00
 					}
 					"""
@@ -761,6 +784,7 @@ Backgroud:
 						"cash":20.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
+						"intergal":0,
 						"intergal_money":0.00
 					}
 					"""
@@ -789,6 +813,7 @@ Backgroud:
 						"cash":20.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
+						"intergal":0,
 						"intergal_money":0.00
 					}
 					"""
@@ -798,6 +823,7 @@ Backgroud:
 						"cash":10.00,
 						"weizoom_card":0.00,
 						"coupon_money":5.00,
+						"intergal":10,
 						"intergal_money":5.00
 					}
 					"""
@@ -851,6 +877,7 @@ Backgroud:
 						"cash":20.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
+						"intergal":0,
 						"intergal_money":0.00
 					}
 					"""
@@ -894,6 +921,7 @@ Backgroud:
 						"cash":20.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
+						"intergal":0,
 						"intergal_money":0.00
 					}
 					"""
@@ -904,6 +932,7 @@ Backgroud:
 						"cash":20.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
+						"intergal":0,
 						"intergal_money":0.00
 					}
 					"""
@@ -984,6 +1013,7 @@ Backgroud:
 						"cash":10.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
+						"intergal":0,
 						"intergal_money":0.00
 					}
 					"""
@@ -993,6 +1023,7 @@ Backgroud:
 						"cash":10.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
+						"intergal":0,
 						"intergal_money":0.00
 					}
 					"""
@@ -1002,6 +1033,7 @@ Backgroud:
 						"cash":20.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
+						"intergal":0,
 						"intergal_money":0.00
 					}
 					"""
@@ -1011,6 +1043,7 @@ Backgroud:
 						"cash":10.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
+						"intergal":0,
 						"intergal_money":0.00
 					}
 					"""
@@ -1020,6 +1053,7 @@ Backgroud:
 						"cash":10.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
+						"intergal":0,
 						"intergal_money":0.00
 					}
 					"""
@@ -1039,6 +1073,7 @@ Backgroud:
 						"cash":10.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
+						"intergal":0,
 						"intergal_money":0.00
 					}
 					"""
@@ -1048,6 +1083,7 @@ Backgroud:
 						"cash":10.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
+						"intergal":0,
 						"intergal_money":0.00
 					}
 					"""
@@ -1057,6 +1093,7 @@ Backgroud:
 						"cash":20.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
+						"intergal":0,
 						"intergal_money":0.00
 					}
 					"""
@@ -1113,6 +1150,7 @@ Backgroud:
 						"cash":10.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
+						"intergal":0,
 						"intergal_money":0.00
 					}
 					"""
@@ -1142,6 +1180,7 @@ Backgroud:
 						"cash":10.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
+						"intergal":0,
 						"intergal_money":0.00
 					}
 					"""
@@ -1161,6 +1200,7 @@ Backgroud:
 						"cash":20.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
+						"intergal":0,
 						"intergal_money":0.00
 					}
 					"""
@@ -1195,6 +1235,7 @@ Backgroud:
 						"cash":10.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
+						"intergal":0,
 						"intergal_money":0.00
 					}
 					"""
@@ -1204,6 +1245,7 @@ Backgroud:
 						"cash":10.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
+						"intergal":0,
 						"intergal_money":0.00
 					}
 					"""
@@ -1214,6 +1256,7 @@ Backgroud:
 						"cash":20.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
+						"intergal":0,
 						"intergal_money":0.00
 					}
 					"""
@@ -1269,6 +1312,7 @@ Backgroud:
 						"cash":20.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
+						"intergal":0,
 						"intergal_money":0.00
 					}
 					"""
@@ -1313,6 +1357,7 @@ Backgroud:
 						"cash":10.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
+						"intergal":0,
 						"intergal_money":0.00
 					}
 					"""
@@ -1323,6 +1368,7 @@ Backgroud:
 						"cash":20.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
+						"intergal":0,
 						"intergal_money":0.00
 					}
 					"""
@@ -1358,6 +1404,7 @@ Backgroud:
 						"cash":10.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
+						"intergal":0,
 						"intergal_money":0.00
 					}
 					"""
@@ -1368,6 +1415,7 @@ Backgroud:
 						"cash":10.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
+						"intergal":0,
 						"intergal_money":0.00
 					}
 					"""
@@ -1378,6 +1426,7 @@ Backgroud:
 						"cash":20.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
+						"intergal":0,
 						"intergal_money":0.00
 					}
 					"""
