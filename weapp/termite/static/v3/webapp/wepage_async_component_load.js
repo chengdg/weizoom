@@ -90,17 +90,6 @@ W.AsyncComponentLoadView = BackboneLite.View.extend({
         };
     },
 
-    sortByIds: function(products, productIds) {
-        var objIds = {};
-        productIds.split(',').map(function(id, idx){
-            objIds[id] = idx;
-        });
-        products.map(function(product){
-            product['index'] = objIds[product['id']];
-        });
-        return _.sortBy(products, 'index');
-    },
-
     __sendApi: function(deferred, componentData) {
         if (typeof(componentData) === 'undefined') return;
         
@@ -120,8 +109,7 @@ W.AsyncComponentLoadView = BackboneLite.View.extend({
                 product_ids: productIds
             },
             success: function(data) {
-                data.products = _this.duplicatedProduct(data.products, productIds);
-                data.products = _this.sortByIds(data.products, productIds);
+                data.products = _this.__duplicatedProduct(data.products, productIds);
                 data['componentIndex'] = componentIndex;
                 deferred.resolve(data);
             },
@@ -132,7 +120,7 @@ W.AsyncComponentLoadView = BackboneLite.View.extend({
     },
 
     // 
-    duplicatedProduct: function (products, productIds) {
+    __duplicatedProduct: function (products, productIds) {
         var objProducts = {};
         if (products) {
             products.map(function(product){
