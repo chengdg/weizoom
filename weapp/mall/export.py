@@ -419,6 +419,7 @@ MALL_PROMOTION_AND_APPS_SECOND_NAV = {
             'url': 'http://%s/apps/survey/surveies/' % MARKETAPP_DOMAIN,
             'permission': 'manage_apps',
             'need_blank': True,
+            'need_token': True,
             'third_navs': [
                 {
                     'name': MALL_APPS_EGG_NAV,
