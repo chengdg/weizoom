@@ -119,7 +119,7 @@ W.AsyncComponentLoadView = BackboneLite.View.extend({
         });
     },
 
-    // 
+    // 重新整理返回的商品对象，防止请求的ids和返回的商品不一致的问题
     __duplicatedProduct: function (products, productIds) {
         var objProducts = {};
         if (products) {
