@@ -189,6 +189,13 @@
 <div class="wui-guide wa-guide">
     <div class="wui-guide-top"></div>
     <div class="wui-guide-scan wa-guide-scan"></div>
+    <div style="width: 82%;margin: 1rem auto 0;" class="wui-guide-input">
+        <span class="wui-guide-input-note" style="font-size: 0.9rem">若扫码未成功，输入20位数字防伪码，点击抽奖即可参与</span>
+        <div>
+            <input class="wa-guide-input-text" type="input" />
+            <button class="wa-guide-input-btn">抽奖</button>
+        </div>
+    </div>
     <div class="wui-guide-scan-desc"></div>
 </div>
 {% endblock %}
@@ -200,12 +207,23 @@
     $(function(){
         //重置验证码
         $('.wa-verify-btn').click(function(){
-            $('.codeimg').attr('src','/m/apps/scanlottery/api/m_captcha/?webapp_owner_id={{ request.webapp_owner_id}}&nocache='+Math.random());
+            $('.codeimg').attr('src', '/m/apps/scanlottery/api/m_captcha/?webapp_owner_id={{ request.webapp_owner_id}}&nocache='+Math.random());
         });
 
         //扫码
         wx.ready(function(){
-            $('.wa-guide-scan').on('click' ,scanQrcode);
+            $('.wa-guide-scan').on('click', scanQrcode);
+        });
+
+        //用户输入码抽奖
+        $('.wa-guide-input-btn').on('click', function(){
+           var scanCode = $.trim($('.wa-guide-input-text').val());
+            if(/^\d{20}$/.test(scanCode)){
+                $('.wa-guide').hide();
+                $('.wa-scanlottery-page').show();
+            }else{
+                wuiAlert('请填写正确的防伪码');
+            }
         });
 
         //立即抽奖
