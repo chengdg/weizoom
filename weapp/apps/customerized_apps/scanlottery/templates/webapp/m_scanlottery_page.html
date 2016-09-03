@@ -271,7 +271,7 @@
 
         //用户输入码抽奖
         $('.wa-guide-input-btn').on('click', function(){
-           var scanCode = $.trim($('.wa-guide-input-text').val());
+            scanCode = $.trim($('.wa-guide-input-text').val());
             if(/^\d{20}$/.test(scanCode)){
                 $('.wa-guide').hide();
                 $('.wa-scanlottery-page').show();
