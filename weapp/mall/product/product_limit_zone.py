@@ -124,6 +124,7 @@ class ProductLimitZone(resource.Resource):
         if template_id:
             try:
                 mall_models.ProductLimitZoneTemplate.objects.filter(owner=owner, id=template_id).delete()
+                mall_models.Product.objects.filter(limit_zone=template_id).update(limit_zone_type=0, limit_zone=0)
                 return create_response(200).get_response()
             except:
                 return create_response(500).get_response()
