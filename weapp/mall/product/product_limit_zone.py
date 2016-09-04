@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
+import json
 
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render_to_response
 
+from watchdog.utils import watchdog_warning, watchdog_error
+from core.exceptionutil import unicode_full_stack
 from core import resource
 from core.jsonresponse import create_response
 
@@ -116,7 +119,6 @@ class ProductLimitZone(resource.Resource):
     @login_required
     def api_delete(request):
         template_id = request.POST.get('template_id', 0)
-        print template_id
         owner = request.user
         if template_id:
             try:
@@ -125,6 +127,8 @@ class ProductLimitZone(resource.Resource):
             except:
                 return create_response(500).get_response()
         else:
+            error_msg = u"删除商品限购区域模板失败, cause:\n{}".format(unicode_full_stack())
+            watchdog_error(error_msg)
             return create_response(500).get_response()
 
 class ProductLimitZoneTemplate(resource.Resource):
@@ -158,7 +162,6 @@ class ProductLimitZoneTemplate(resource.Resource):
                             'cityName': city.name
                         })
                 zones.append(zone)
-        print zones
         c = RequestContext(request, {
             'first_nav_name': export.PRODUCT_FIRST_NAV,
             'second_navs': export.get_mall_product_second_navs(request),
@@ -175,7 +178,7 @@ class ProductLimitZoneTemplate(resource.Resource):
             owner = request.user
             province_ids = json.loads(request.POST.get('province_ids', '[]'))
             city_ids = json.loads(request.POST.get('city_ids', '[]'))
-            template_name = json.loads(request.POST.get('template_name', ''))
+            template_name = request.POST.get('template_name', '')
             mall_models.ProductLimitZoneTemplate.objects.create(
                     owner=owner,
                     name=template_name,
@@ -184,6 +187,8 @@ class ProductLimitZoneTemplate(resource.Resource):
                 )
             return create_response(200).get_response()
         except:
+            error_msg = u"创建商品限购区域模板失败, cause:\n{}".format(unicode_full_stack())
+            watchdog_error(error_msg)
             return create_response(500).get_response()
 
 class ProvincialCity(resource.Resource):

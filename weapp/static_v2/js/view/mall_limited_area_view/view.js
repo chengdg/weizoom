@@ -19,7 +19,7 @@ W.view.mall.limitedAreaSelectorView = Backbone.View.extend({
 
 	render: function() {
 		var $node = $.tmpl(this.getTemplate(), {provinces:[]});
-		this.$('.xa-selectedLimitedArea').empty().append($node);
+		//this.$('.xa-selectedLimitedArea').empty().append($node);
 		// if (this.promotionId !== 0) {
 		// 	W.getApi().call({
 		// 		app: 'mall2',
@@ -54,7 +54,7 @@ W.view.mall.limitedAreaSelectorView = Backbone.View.extend({
 		});
 		return {
 			provincesIds:provincesIds,
-			citiesIds:citiesIds			
+			citiesIds:citiesIds
 		};
 	},
 	onClickSubmit:function(event){
@@ -140,7 +140,7 @@ W.view.mall.limitedAreaSelectorView = Backbone.View.extend({
 				category_ids: category_ids.join(','),
 			},
 			scope: this,
-			success: function(successData) { 
+			success: function(successData) {
 				_this.addProducts(successData.products);
 			},
 			error: function() {
@@ -169,7 +169,7 @@ W.view.mall.limitedAreaSelectorView = Backbone.View.extend({
 			}
 		};
 		this.products = _.filter(this.products, function(product){ return product.id !== productId; });
-		
+
 		this.trigger('finish-select-products', this.products);
 	},
 	onClickBatchDelete:function(event){
@@ -180,7 +180,7 @@ W.view.mall.limitedAreaSelectorView = Backbone.View.extend({
 			this.selectedProductIds.pop(id);
 			$('[data-id="'+id+'"]').remove();
 		};
-		
+
 		if (this.$('tbody tr').length === 0) {
 			this.$('.xa-selectedProductList').empty().text('请通过查询选择参与活动的商品');
 		}
