@@ -191,6 +191,27 @@ class ProductLimitZoneTemplate(resource.Resource):
             watchdog_error(error_msg)
             return create_response(500).get_response()
 
+    @login_required
+    def api_post(request):
+        template_id = int(request.POST.get('template_id', '0'))
+        template_name = request.POST.get('template_name', '')
+
+        province_ids = json.loads(request.POST.get('province_ids', '[]'))
+        city_ids = json.loads(request.POST.get('city_ids', '[]'))
+
+        if template_id and template_name:
+            mall_models.ProductLimitZoneTemplate.objects.filter(
+                    owner=request.user,
+                    id=template_id
+                ).update(
+                    name=template_name,
+                    provinces=','.join(province_ids),
+                    cities=','.join(city_ids)
+                )
+            return create_response.get_response(200)
+        else:
+            return create_response.get_response(500)
+
 class ProvincialCity(resource.Resource):
     app = 'mall2'
     resource = 'provincial_city'
