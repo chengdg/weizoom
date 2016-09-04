@@ -15,12 +15,12 @@
 	        	<tr data-provinceId=${province.provinceId}>
 	                <td>${province.zoneName}</td>
 	                <td>${province.provinceName}</td>
-	                <td>
+	                <td class="xa-city">
 	                	{{if cities.length == 0 && province.zoneName != "直辖市" && province.zoneName != "其它"}}
 	                		已全选
 	                	{{else}}
 		                	{{each(j, city) province.cities}}
-		                		<span class="mr10">${city.cityName}</span>
+		                		<span class="mr10" data-cityId=${city.cityId}>${city.cityName}</span>
 		                	{{/each}}
 	                	{{/if}}
 	                </td>

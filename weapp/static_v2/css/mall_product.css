@@ -411,6 +411,10 @@
     left: -9px;
     display: none;
 }
+.xui-mallSelectLimitedAreaDialog .btn-success{
+	background:#207cbe;
+}
+
 /*
 * 物流名称管理页
 */

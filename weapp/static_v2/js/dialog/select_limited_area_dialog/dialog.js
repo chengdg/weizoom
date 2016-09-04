@@ -39,8 +39,8 @@ W.dialog.mall.SelectLimitedAreaDialog = W.dialog.Dialog.extend({
     },
     onClickOpenCityPanel:function(event){
         var $panel = $(event.target).siblings('.xa-city-panel');
-        var siblingsTrPanel = $(event.target).parents('tr').siblings().find('.xa-city-panel');
-        var siblingsLiPanel = $(event.target).parent('li').siblings().find('.xa-city-panel');
+        var siblingsTrPanel = $(event.target).parents('tr').siblings('tr').find('.xa-city-panel');
+        var siblingsLiPanel = $(event.target).parent('li').siblings('li').find('.xa-city-panel');
         $panel.show();
         $(siblingsTrPanel).hide();
         $(siblingsLiPanel).hide();

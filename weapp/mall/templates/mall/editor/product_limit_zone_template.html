@@ -12,11 +12,11 @@
 	</ul>
 	<div class="xui-i-content p30 xa-limitedAreaSelector">
 		<section class="mb20">
-			<p class="clearfix">
+			<div class="clearfix mb10">
 				<label class="fl" style="padding-top:4px;">模板名称</label>
-				<input class="form-control w350 fl ml10" name="name" data-validate="require-string" >
-			</p>
-			<div class="errorHint"></div>
+				<input class="form-control w350 fl ml10" name="templateName" data-validate="require-string" maxlength="20"/>
+				<div class="errorHint fl ml5" data-error-hint="模板名称不能为空"></div>
+			</div>
 			<p>禁售地区：有些地区不能够买</p>
 			<p>仅售地区：只有此地区可以购买</p>
 		</section>
