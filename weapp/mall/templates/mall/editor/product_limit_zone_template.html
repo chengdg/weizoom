@@ -34,7 +34,7 @@
 		        <tbody>
 		            {% if zones %}
 			            {% for zone in zones %}
-				            <tr data-provinceId={{zone.provinceId}}>
+				            <tr data-provinceId="{{zone.provinceId}}">
 				                <td>{{ zone.zoneName }}</td>
 				                <td>{{ zone.provinceName }}</td>
 				                <td class="xa-city">
@@ -70,6 +70,7 @@
 $(document).ready(function(){
 	var limitedAreaSelector = new W.view.mall.limitedAreaSelectorView({
 		el: '.xa-limitedAreaSelector',
+		templateId:'{{ templateId }}',
 		tableTemplate: 'selected-limited-area-view-tmpl-src',
 	});
 	limitedAreaSelector.render();

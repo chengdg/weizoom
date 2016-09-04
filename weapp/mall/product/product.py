@@ -217,7 +217,7 @@ class ProductList(resource.Resource):
                 supplier_type = int(supplier_type)
             except:
                 supplier_type = -1
-                
+
             if int(supplier_type) != -1:
                 params = {}
                 params['owner_id'] = manager_user_profile.user_id
@@ -1103,6 +1103,7 @@ class Product(resource.Resource):
 
         if not mall_type:
             supplier = []
+        limte_zone_templates = models.ProductLimitZoneTemplate.objects.filter(owner=request.user)
 
         c = RequestContext(request, {
             'first_nav_name': export.PRODUCT_FIRST_NAV,
@@ -1119,7 +1120,8 @@ class Product(resource.Resource):
             'mall_type': mall_type,
             'has_store_name': has_store_name,
             'store_name': store_name,
-            'pool_mall_type': pool_mall_type
+            'pool_mall_type': pool_mall_type,
+            'limit_zone_templates': limte_zone_templates
         })
         if _type == models.PRODUCT_INTEGRAL_TYPE:
             return render_to_response('mall/editor/edit_integral_product.html', c)
@@ -1179,7 +1181,6 @@ class Product(resource.Resource):
             supplier_id = supplier.id
         else:
             supplier_id = request.POST.get("supplier", 0)
-            
 
         product = models.Product.objects.create(
             owner=request.manager,

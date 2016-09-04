@@ -174,10 +174,8 @@
 					{% if product.is_group_buying %}readonly{% endif %}/>
 					<div class="errorHint"></div>
 				</div>
-			</div>
-			<div class="form-group nostar ">
-				<label class="control-label fl" for="min_limit">起购数量：</label>
-				<div class="fl w700 pl5 pr">
+				<label class="control-label fl ml10" for="min_limit">起购数量：</label>
+				<div class="fl w450 pl5 pr">
 				{% if product.is_in_flash_sale%}
 					<input type="hidden" class="form-control w106" id="min_limit" name="min_limit" placeholder="" value="{{ product.min_limit }}" maxlength="5" data-validate="norequire,,require-int"/>
 					<input type="text" disabled class="form-control w106 fl" placeholder="" value="{% if product %}{{ product.min_limit }}{% endif %}" maxlength="5" data-validate="norequire,,require-int"/>
@@ -187,6 +185,31 @@
 				{% endif %}
 					<span class="xui-fontGary pa" style="top:2px;left:115px">（设置起购数量大于1的商品，将不能参加限时抢购活动）</span>
 					<div class="errorHint"></div>
+				</div>
+			</div>
+			<div class="form-group nostar ">
+				<label class="control-label fl" for="limit_zone_type">限定类型：</label>
+				<div class="col-sm-2 fl pl5">
+					<select class="w106" id="limit_zone_type" name="limit_zone_type">
+                		<option value="0" {% if product.limit_zone_type == '0' %}selected='selected'{% endif %}>无限制</option>
+                		<option value="1" {% if product.limit_zone_type == '1' %}selected='selected'{% endif %}>禁售地区</option>
+                		<option value="2" {% if product.limit_zone_type == '2' %}selected='selected'{% endif %}>仅售地区</option>
+                	</select>
+				</div>
+				<label class="control-label fl ml10" for="limit_zone_template">限定区域：</label>
+				<div class="fl w450 pl5 pr">
+				{% if limit_zone_templates|length == 0 %}
+					<a class="ml5" href="/mall2/product_limit_zone_template/" target="_blank">+添加新模板</a>
+				{% else %}
+					<select class="w106" id="limit_zone_template" name="limit_zone_template">
+						{% for template in limit_zone_templates %}
+							<option value="{{ template.id }}" {% if template.id == product.limit_zone %}selected='selected'{% endif %}>{{ template.name }}</option>
+						{% endfor %}
+
+                	</select>
+					<button class="btn-primary m0 xa-limit-zone-detail">查看</button>
+					<a class="ml5" href="/mall2/product_limit_zone_template/" target="_blank">+添加新模板</a>
+				{% endif %}
 				</div>
 			</div>
 			{% if mall_type and has_store_name %}
