@@ -66,13 +66,14 @@ W.view.mall.limitedAreaSelectorView = Backbone.View.extend({
 		var provincesIds = this.getData().provincesIds;
 		var citiesIds = this.getData().citiesIds;
 		var templateName = $('input[name="templateName"]').val();
+		console.log('------------',JSON.stringify(provincesIds),JSON.stringify(citiesIds))
 		W.getApi().call({
 			method: 'put',
 			app: 'mall2',
 			resource: 'product_limit_zone_template',
 			args: {
-				province_ids:provincesIds,
-				city_ids:citiesIds,
+				province_ids:JSON.stringify(provincesIds),
+				city_ids:JSON.stringify(citiesIds),
 				template_name:templateName
 			},
 			scope: this,
