@@ -137,6 +137,7 @@ W.view.mall.limitedAreaSelectorView = Backbone.View.extend({
 			success: function(data) {
 				var $node = $.tmpl(_this.getTemplate(), {provinces: data.provinces});
 				_this.$('.xa-selectedLimitedArea').empty().append($node);
+				$('.xa-submit').show();
 				_this.getAllSelectedIds();
 			}
 		});
@@ -144,8 +145,14 @@ W.view.mall.limitedAreaSelectorView = Backbone.View.extend({
 	onClickDelete: function(event){
 		var $tr = $(event.target).parents('tr');
 		var provinceId = $tr.attr('data-provinceId');
+		var $tbody = $tr.parents('tbody')
 		$tr.remove();
+		if($tbody.find('tr').length == 0 ){
+			$tbody.append('<tr><td colspan="5" class="tl">未添加任何地区</td></tr>');
+			$('.xa-submit').hide();
+		}
 		this.getAllSelectedIds();
+
 	},
 	// getAllSelectedItems: function() {
 	// 	var $trs = [];

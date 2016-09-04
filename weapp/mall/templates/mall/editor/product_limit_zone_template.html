@@ -36,9 +36,16 @@
 			            {% for zone in zones %}
 				            <tr data-provinceId="{{zone.provinceId}}">
 				                <td>{{ zone.zoneName }}</td>
-				                <td>{{ zone.provinceName }}</td>
+				                <td>
+				                	{% if zone.zoneName != "直辖市" and province.zoneName != "其它" %}
+				                		{{ zone.provinceName }}
+				                	{% endif %}
+				                	</td>
 				                <td class="xa-city">
-									{% if zone.cities|length == 0 and zone.provinceName != "直辖市" and province.zoneName != "其它" %}
+				                	{% if zone.zoneName == "直辖市" or province.zoneName == "其它" %}
+				                		{{ zone.provinceName }}
+				                	{% endif %}
+									{% if zone.cities.length == 0 and zone.zoneName != "直辖市" and province.zoneName != "其它" %}
 										已全选
 				                	{% else %}
 					                	{% for city in zone.cities %}
