@@ -83,6 +83,7 @@ class ProductLimitZone(resource.Resource):
                     'provinceName': id2province[id].name,
                     'cities': []
                 }
+                province_has_city = rename_zone(province_has_city)
                 for city in filter(lambda city: city.province_id == id, template_cities):
                     province_has_city['cities'].append({
                         'cityId': city.id,
@@ -144,10 +145,14 @@ class ProductLimitZoneTemplate(resource.Resource):
         template_id = request.GET.get('template_id', 0)
         zones = []
         template_name = ''
+        provinces = []
+        cities = []
         if template_id:
             template_model = mall_models.ProductLimitZoneTemplate.objects.filter(id=template_id).first()
-            provinces = Province.objects.filter(id__in=template_model.provinces.split(','))
-            cities = City.objects.filter(id__in=template_model.cities.split(','))
+            if template_model.provinces:
+                provinces = Province.objects.filter(id__in=template_model.provinces.split(','))
+            if template_model.cities:
+                cities = City.objects.filter(id__in=template_model.cities.split(','))
             template_name = template_model.name
             for province in provinces:
                 zone = {
@@ -156,6 +161,7 @@ class ProductLimitZoneTemplate(resource.Resource):
                     'zoneName': PROVINCE_ID2ZONE[province.id],
                     'cities': []
                 }
+                zone = rename_zone(zone)
                 for city in filter(lambda city: city.province_id == province.id, cities):
                     zone['cities'].append({
                             'cityId': city.id,
@@ -237,20 +243,8 @@ class ProvincialCity(resource.Resource):
                     'isSelected': True if id in select_province_ids else False,
                     'cities': []
                     }
-            if province_has_city['provinceId'] == 5:
-                province_has_city['provinceName'] = u'内蒙古'
-            elif province_has_city['provinceId'] == 20:
-                province_has_city['provinceName'] = u'广西'
-            elif province_has_city['provinceId'] == 26:
-                province_has_city['provinceName'] = u'西藏'
-            elif province_has_city['provinceId'] == 30:
-                province_has_city['provinceName'] = u'宁夏'
-            elif province_has_city['provinceId'] == 31:
-                province_has_city['provinceName'] = u'新疆'
-            elif province_has_city['provinceId'] == 32:
-                province_has_city['provinceName'] = u'香港'
-            elif province_has_city['provinceId'] == 33:
-                province_has_city['provinceName'] = u'澳门'
+            province_has_city = rename_zone(province_has_city)
+
             for city in filter(lambda city: city.province_id == id, all_cities):
                 province_has_city['cities'].append({
                         'cityId': city.id,
@@ -269,3 +263,22 @@ class ProvincialCity(resource.Resource):
         response = create_response(200)
         response.data = {'items': zones}
         return response.get_response()
+
+def rename_zone(zone):
+    if zone['provinceId'] == 5:
+        zone['provinceName'] = u'内蒙古'
+    elif zone['provinceId'] == 20:
+        zone['provinceName'] = u'广西'
+    elif zone['provinceId'] == 26:
+        zone['provinceName'] = u'西藏'
+    elif zone['provinceId'] == 30:
+        zone['provinceName'] = u'宁夏'
+    elif zone['provinceId'] == 31:
+        zone['provinceName'] = u'新疆'
+    elif zone['provinceId'] == 32:
+        zone['provinceName'] = u'香港'
+    elif zone['provinceId'] == 33:
+        zone['provinceName'] = u'澳门'
+    elif zone['provinceId'] == 34:
+        zone['provinceName'] = u'台湾'
+    return zone

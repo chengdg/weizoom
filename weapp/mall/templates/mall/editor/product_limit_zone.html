@@ -34,7 +34,7 @@
 	                        {% for province in zone.provinces %}
                             <tr>
                                 <td>{{ zone.zoneName }}</td>
-	                            <td>{% if zone.zoneName != '直辖市' %}{{ province.provinceName }}{% endif %}</td>
+	                            <td>{% if zone.zoneName != '直辖市' and zone.zoneName != '其它' %}{{ province.provinceName }}{% endif %}</td>
                                 {% if province.cities|length > 0  %}
                                     <td class="tl">
                                     {% for city in province.cities %}
@@ -42,7 +42,11 @@
                                     {% endfor %}
                                     </td>
                                 {% else %}
+                                {% if zone.zoneName != '直辖市' and zone.zoneName != '其它' %}
                                     <td class="tl">已全选</td>
+                                {% else %}
+                                    <td class="tl">{{ province.provinceName }}</td>
+                                {% endif %}
                                 {% endif %}
 	                        </tr>
                             {% endfor %}
