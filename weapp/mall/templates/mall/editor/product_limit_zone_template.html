@@ -34,13 +34,17 @@
 		        <tbody>
 		            {% if zones %}
 			            {% for zone in zones %}
-				            <tr>
+				            <tr data-provinceId="{{ zone.provinceId }}">
 				                <td>{{ zone.zoneName }}</td>
-				                <td data-province-id={{ zone.provinceId }}>{{ zone.provinceName }}</td>
-				                <td>
-				                	{% for city in zone.cities %}
-									{{ city.cityName }}&nbsp;&nbsp;
-				                	{% endfor %}
+				                <td>{{ zone.provinceName }}</td>
+				                <td class="xa-city">
+				                	{% if not zone.cities and zone.zoneName != '直辖市' and zone.zoneName != '其它' %}
+				                		已全选
+				                	{% else %}
+					                	{% for city in zone.cities %}
+										<span class="mr10" data-cityId='{{city.cityId}}'>{{ city.cityName }}</span>
+					                	{% endfor %}
+				                	{% endif %}
 				                </td>
 				                <td><a href="javascript:void(0);" class="xa-delete">删除</a></td>
 				                <td></td>
@@ -66,6 +70,7 @@
 $(document).ready(function(){
 	var limitedAreaSelector = new W.view.mall.limitedAreaSelectorView({
 		el: '.xa-limitedAreaSelector',
+		templateId:'{{ templateId }}',
 		tableTemplate: 'selected-limited-area-view-tmpl-src',
 	});
 	limitedAreaSelector.render();

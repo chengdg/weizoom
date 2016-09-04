@@ -25,7 +25,7 @@
 	</div>
 </script>
 <script id="limit-area-view" type="text/x-jquery-tmpl">
-	<table class="w">
+	<table class="w xa-table">
 	{{each(i, zone) items}}
 		<tr data-zone="${zoneName}">
 			<td>${zoneName}</td>
@@ -36,7 +36,7 @@
 						{{if zoneName == '直辖市' || zoneName == '其它' }}
 
 
-							<input type="checkbox" name="${province.provinceName}" class="hidden" data-provinceId="${province.provinceId}" data-type="1" data-zoneName="${zoneName}"/>
+							<input type="checkbox" name="${province.provinceName}" class="hidden" data-provinceId="${province.provinceId}" data-type="1" data-zoneName="${zoneName}" data-uid="${province.provinceId}"/>
 
 
 							<i class="xui-checkbox xa-checkbox xa-unique"></i>${province.provinceName}
@@ -46,7 +46,7 @@
 								<div class="xui-inner-province">
 
 
-									<input type="checkbox" name="${province.provinceName}" data-provinceId="${province.provinceId}" class="hidden xa-selectAll" data-type="1" data-zoneName="${zoneName}"/>
+									<input type="checkbox" name="${province.provinceName}" data-provinceId="${province.provinceId}" class="hidden xa-selectAll" data-type="1" data-zoneName="${zoneName}"  data-uid="${province.provinceId}"/>
 
 
 									<i class="xui-minus xa-close-city-panel"></i>
@@ -56,7 +56,7 @@
 								<ul class="xui-inner-city clearfix">
 									{{each(j, city) province.cities}}
 										<li>
-											<input type="checkbox" name="${city.cityName}" data-cityId="${city.cityId}" class="hidden" data-type="2" data-provinceId="${province.provinceId}" data-provinceName="${province.provinceName}" data-zoneName="${zoneName}"/>
+											<input type="checkbox" name="${city.cityName}" data-cityId="${city.cityId}" class="hidden" data-type="2" data-provinceId="${province.provinceId}" data-provinceName="${province.provinceName}" data-zoneName="${zoneName}"  data-uid="${province.provinceId}_${city.cityId}"/>
 											<i class="xui-checkbox xa-checkbox"></i>${city.cityName}
 										</li>
 									{{/each}}

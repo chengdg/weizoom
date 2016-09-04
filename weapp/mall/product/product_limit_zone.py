@@ -166,6 +166,7 @@ class ProductLimitZoneTemplate(resource.Resource):
             'first_nav_name': export.PRODUCT_FIRST_NAV,
             'second_navs': export.get_mall_product_second_navs(request),
             'second_nav_name': export.PRODUCT_LIMIT_ZONE,
+            'templateId' : template_id,
             'templateName': template_name,
             'zones': zones
         })
@@ -208,9 +209,9 @@ class ProductLimitZoneTemplate(resource.Resource):
                     provinces=','.join(province_ids),
                     cities=','.join(city_ids)
                 )
-            return create_response.get_response(200)
+            return create_response(200).get_response()
         else:
-            return create_response.get_response(500)
+            return create_response(500).get_response()
 
 class ProvincialCity(resource.Resource):
     app = 'mall2'

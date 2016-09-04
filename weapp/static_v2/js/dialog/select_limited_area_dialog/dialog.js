@@ -25,17 +25,23 @@ W.dialog.mall.SelectLimitedAreaDialog = W.dialog.Dialog.extend({
 
     onInitialize: function(options) {
         this.table = this.$('[data-ui-role="advanced-table"]').data('view');
-
+        this.selectedIds = options.selectedIds;
     },
 
-    beforeShow: function() {
+    beforeShow: function(options) {
+        this.selectedIds = options.selectedIds;
         $('.xa-city-panel').hide();
+        this.table.reload();
     },
 
     onShow: function(options) {
+        
     },
 
     afterShow: function(options) {
+        this.selectedIds.map(function(uid){
+            $('input[data-uid='+ uid+']'[0]).siblings('i.xui-checkbox').trigger('click');
+        })
     },
     onClickOpenCityPanel:function(event){
         var $panel = $(event.target).siblings('.xa-city-panel');
