@@ -157,7 +157,7 @@ class ProductLimitZoneTemplate(resource.Resource):
                             'cityId': city.id,
                             'cityName': city.name
                         })
-            zones.append(zone)
+                zones.append(zone)
         print zones
         c = RequestContext(request, {
             'first_nav_name': export.PRODUCT_FIRST_NAV,
