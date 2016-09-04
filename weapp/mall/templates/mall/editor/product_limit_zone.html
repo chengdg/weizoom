@@ -9,6 +9,7 @@
     </ul>
     <div class="xui-i-content pr">
         <a class="btn btn-success xui-addNewGroup pa xui-btnPosition" href="/mall2/product_limit_zone_template/">+ &nbsp;&nbsp;添加限定区域</a>
+        {% if templates.length > 0 %}
         {% for template in templates %}
         <section class="xui-limitArea-section" data-limitedArea-template-id="{{ template.templateId }}">
             <fieldset class="xui-limitArea">
@@ -52,14 +53,14 @@
         </fieldset>
         </section>
         {% endfor %}
-
-        <!-- <div class="xui-emptyBox" style="background:rgba(0,0,0,0)">
+        {% else %}
+        <div class="xui-emptyBox" style="background:rgba(0,0,0,0)">
             <div class="xui-i-emptyHint">
                 <img src="/static_v2/img/editor/empty.png">
                 <div><span style="">您还没有限定区域模板，赶快添加！</span> </div>
             </div>
-        </div> -->
-
+        </div>
+        {% endif %}
     </div>
 
 </div>

@@ -84,7 +84,7 @@ W.view.mall.limitedAreaSelectorView = Backbone.View.extend({
 			},
 			error: function(resp) {
 				W.showHint('error', '创建限定区域模板失败');
-				$(this).attr("disabled",false);
+				$(event.target).attr("disabled",false);
 			}
 		})
 	},
