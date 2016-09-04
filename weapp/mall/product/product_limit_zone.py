@@ -7,7 +7,7 @@ from django.shortcuts import render_to_response
 from core import resource
 from core.jsonresponse import create_response
 
-from mall.models import ProductLimitZoneTemplate
+from mall import models as mall_models
 from tools.regional.models import City, Province
 
 from .. import export
@@ -61,7 +61,7 @@ class ProductLimitZone(resource.Resource):
         商品限购区域列表
         @return:
         """
-        template_models = ProductLimitZoneTemplate.objects.filter(owner=request.user).order_by('-id')
+        template_models = mall_models.ProductLimitZoneTemplate.objects.filter(owner=request.user).order_by('-id')
         all_cities = City.objects.all()
         all_provinces = Province.objects.all()
         templates = []
@@ -115,17 +115,75 @@ class ProductLimitZone(resource.Resource):
 
     @login_required
     def api_delete(request):
-        print ">>>>>+++<<<<<<"
         template_id = request.POST.get('template_id', 0)
         print template_id
         owner = request.user
         if template_id:
-            # try:
-            ProductLimitZoneTemplate.objects.filter(owner=owner, id=template_id).delete()
-            return create_response(200).get_response()
-            # except:
-            #     return create_response(500).get_response()
+            try:
+                mall_models.ProductLimitZoneTemplate.objects.filter(owner=owner, id=template_id).delete()
+                return create_response(200).get_response()
+            except:
+                return create_response(500).get_response()
         else:
+            return create_response(500).get_response()
+
+class ProductLimitZoneTemplate(resource.Resource):
+    app = 'mall2'
+    resource = 'product_limit_zone_template'
+
+    @login_required
+    def get(request):
+        """
+        商品限购区域列表
+        @return:
+        """
+        template_id = request.GET.get('template_id', 0)
+        zones = []
+        template_name = ''
+        if template_id:
+            template_model = mall_models.ProductLimitZoneTemplate.objects.filter(id=template_id).first()
+            provinces = Province.objects.filter(id__in=template_model.provinces.split(','))
+            cities = City.objects.filter(id__in=template_model.cities.split(','))
+            template_name = template_model.name
+            for province in provinces:
+                zone = {
+                    'provinceId': province.id,
+                    'provinceName': province.name,
+                    'zoneName': PROVINCE_ID2ZONE[province.id],
+                    'cities': []
+                }
+                for city in filter(lambda city: city.province_id == province.id, cities):
+                    zone['cities'].append({
+                            'cityId': city.id,
+                            'cityName': city.name
+                        })
+            zones.append(zone)
+        print zones
+        c = RequestContext(request, {
+            'first_nav_name': export.PRODUCT_FIRST_NAV,
+            'second_navs': export.get_mall_product_second_navs(request),
+            'second_nav_name': export.PRODUCT_LIMIT_ZONE,
+            'templateName': template_name,
+            'zones': zones
+        })
+
+        return render_to_response('mall/editor/product_limit_zone_template.html', c)
+
+    @login_required
+    def api_put(request):
+        try:
+            owner = request.user
+            province_ids = json.loads(request.POST.get('province_ids', '[]'))
+            city_ids = json.loads(request.POST.get('city_ids', '[]'))
+            template_name = json.loads(request.POST.get('template_name', ''))
+            mall_models.ProductLimitZoneTemplate.objects.create(
+                    owner=owner,
+                    name=template_name,
+                    provinces=','.join(province_ids),
+                    cities=','.join(city_ids)
+                )
+            return create_response(200).get_response()
+        except:
             return create_response(500).get_response()
 
 class ProvincialCity(resource.Resource):
@@ -137,8 +195,8 @@ class ProvincialCity(resource.Resource):
         template_id = int(request.GET.get('template_id', '0'))
         select_province_ids = []
         select_city_ids = []
-        if ProductLimitZoneTemplate.objects.filter(id=template_id).count() > 0:
-            template = ProductLimitZoneTemplate.objects.filter(id=template_id).first()
+        if mall_models.ProductLimitZoneTemplate.objects.filter(id=template_id).count() > 0:
+            template = mall_models.ProductLimitZoneTemplate.objects.filter(id=template_id).first()
             select_province_ids = template.provinces.split(',')
             select_city_ids = template.cities.split(',')
         all_cities = City.objects.all()
