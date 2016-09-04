@@ -14,14 +14,14 @@
 		<section class="mb20">
 			<div class="clearfix mb10">
 				<label class="fl" style="padding-top:4px;">模板名称</label>
-				<input class="form-control w350 fl ml10" name="templateName" data-validate="require-string" maxlength="20"/>
+				<input class="form-control w350 fl ml10" name="templateName" data-validate="require-string" maxlength="20" value="{% if templateName %}{{ templateName }}{% endif %}" />
 				<div class="errorHint fl ml5" data-error-hint="模板名称不能为空"></div>
 			</div>
 			<p>禁售地区：有些地区不能够买</p>
 			<p>仅售地区：只有此地区可以购买</p>
 		</section>
 		<section class="xa-selectedLimitedArea">
-			<!--<table class="table xui-editLimitedAreaConfigTable">
+			<table class="table xui-editLimitedAreaConfigTable">
 		        <thead>
 		            <tr>
 		                <th width="200">区域</th>
@@ -32,13 +32,25 @@
 		            </tr>
 		        </thead>
 		        <tbody>
-		            <tr>
-		                <td>直辖市</td>
-		                <td>北京市</td>
-		                <td></td>
-		                <td><a href="javascript:void(0);" class="xa-delete">删除</a></td>
-		                <td></td>
-		            </tr>
+		            {% if zones %}
+			            {% for zone in zones %}
+				            <tr>
+				                <td>{{ zone.zoneName }}</td>
+				                <td data-province-id={{ zone.provinceId }}>{{ zone.provinceName }}</td>
+				                <td>
+				                	{% for city in zone.cities %}
+									{{ city.cityName }}&nbsp;&nbsp;
+				                	{% endfor %}
+				                </td>
+				                <td><a href="javascript:void(0);" class="xa-delete">删除</a></td>
+				                <td></td>
+				            </tr>
+				        {% endfor %}
+		            {% else %}
+			            <tr>
+			            	<td colspan="5" class="tl">未添加任何地区</td>
+			            </tr>
+		            {% endif %}
 		            <tr>
 		                <td>华北-东北</td>
 		                <td>河北</td>
@@ -54,13 +66,10 @@
 		                <td><a href="javascript:void(0);" class="xa-delete">删除</a></td>
 		                <td></td>
 		            </tr>
-		             <tr>
-		            	<td colspan="5" class="tl">未添加任何地区</td>
-		            </tr>
 		        </tbody>
-		    </table> -->
+		    </table>
 		</section>
-		
+
         <div class="tc mt50">
 			<button class="btn btn-primary xa-submit mt20">保&nbsp;存</button>
 		</div>
