@@ -7,12 +7,14 @@ W.view.mall.limitedAreaSelectorView = Backbone.View.extend({
 
 	events: {
 		'click .xa-edit': 'onClickEdit',
+		'click .xa-delete': 'onClickDelete',
+		'click .xa-submit': 'onClickSubmit'
 	},
 
 	initialize: function(options) {
 		this.$el = $(options.el);
 		// 已经选择的商品id
-		this.selectedProductIds = [];
+		this.selectedIds = [];
 	},
 
 	render: function() {
@@ -36,94 +38,70 @@ W.view.mall.limitedAreaSelectorView = Backbone.View.extend({
 	},
 
 	getData: function() {
-		var products = [];
+		var provincesIds = [];
+		var citiesIds = [];
 		this.$('tbody tr').each(function() {
 			var $tr = $(this);
-			var productId = $tr.data('id');
-			var modelId = $tr.data('modelId');
-			var data = {
-				id: productId,
-				model_id: modelId
-			}
+			var provinceId = $tr.attr('data-provinceid');
+			var $cities = $tr.children('td.xa-city').find('span');
 
-			var $inputs = $tr.find('input[name]');
-			var inputCount = $inputs.length;
-			for (var i = 0; i < inputCount; ++i) {
-				var $input = $inputs.eq(i);
-				data[$input.attr('name')] = $input.val();
+			var citiesCount = $cities.length;
+			for (var i = 0; i < citiesCount; ++i) {
+				var cityId = $cities.eq(i).attr('data-cityId');
+				citiesIds.push(cityId)
 			}
-
-			products.push(data);
+			provincesIds.push(provinceId);
 		});
-		return products;
+		return {
+			provincesIds:provincesIds,
+			citiesIds:citiesIds			
+		};
+	},
+	onClickSubmit:function(event){
+		$(event.target).attr("disabled",true);
+		if (!W.validate()) {
+			$(event.target).attr("disabled",false);
+			return false;
+		}
+		var provincesIds = this.getData().provincesIds;
+		var citiesIds = this.getData().citiesIds;
+		var templateName = $('input[name="templateName"]').val();
+		W.getApi().call({
+			method: 'put',
+			app: 'mall2',
+			resource: 'product_limit_zone_template',
+			args: {
+				province_ids:provincesIds,
+				city_ids:citiesIds,
+				template_name:templateName
+			},
+			scope: this,
+			success: function(data) {
+				W.showHint('success', '创建限定区域模板成功');
+				_.delay(function() {
+					window.location.href = '/mall2/product_limit_zone/';
+				}, 500)
+			},
+			error: function(resp) {
+				W.showHint('error', '创建限定区域模板失败');
+				$(this).attr("disabled",false);
+			}
+		})
 	},
 	onClickEdit:function(){
 		var _this = this;
 		W.dialog.showDialog('W.dialog.mall.SelectLimitedAreaDialog', {
+			selectedIds:_this.selectedIds,
 			success: function(data) {
-				console.log('---------------',data.provinces)
 				var $node = $.tmpl(_this.getTemplate(), {provinces: data.provinces});
 				_this.$('.xa-selectedLimitedArea').empty().append($node);
 			}
 		});
 	},
-	addProducts: function(products) {
-		this.$('.errorHint').hide();
-
-		if (this.enableMultiSelection) {
-			if (!this.products) {
-				this.products = products;
-			} else {
-				this.products = this.products.concat(products);
-			}
-		} else {
-			this.products = products;
-		}
-		// 按照id去重
-		this.products = _.uniq(this.products, false, 'id');
-
-		if (this.filter_type === 'integral_sale') {
-			// 积分应用
-			var $node = $.tmpl(this.tableTemplate, {products: this.products});
-
-			this.$('.xa-selectedProductList').empty().append($node);
-			$node.find('input[type="text"]').eq(0).focus();
-		} else {			
-			var $node = $.tmpl(this.tableTemplate, {products: products});
-
-			if (this.enableTableItemSelectable) {
-				$node.find('thead tr').prepend('<th width="30"><input type="checkbox" class="xa-selectAll" /></th>');
-				$node.find('tbody tr').each(function() {
-					var $tr = $(this);
-					$tr.prepend('<td><input type="checkbox" class="xa-select" /></td>');
-				});
-			}
-			if(this.tableOutAllSelectable){
-				$node.find('thead tr').prepend('<th width="30"></th>');
-				$node.find('tbody tr').each(function() {
-					var $tr = $(this);
-					$tr.prepend('<td><input type="checkbox" class="xa-select" /></td>');
-				});
-			}
-			if (this.enableMultiSelection) {
-				var $tbody = this.$('.xa-selectedProductList tbody');
-				if ($tbody.length > 0) {
-					$tbody.append($node.find('tbody tr'));
-				} else {
-					this.$('.xa-selectedProductList').empty().append($node);
-				}
-			} else {
-				this.$('.xa-selectedProductList').empty().append($node);
-				$node.find('input[type="text"]').eq(0).focus();
-			}
-
-		}
-		this.selectedProductIds = [];
-		for (var i = 0; i < this.products.length; i++) {
-			this.selectedProductIds.push(this.products[i].id);
-		};
-
-		this.trigger('finish-select-products', this.products);
+	onClickDelete: function(event){
+		var $tr = $(event.target).parents('tr');
+		var provinceId = $tr.attr('data-provinceId');
+		$tr.remove();
 	},
 	getAllSelectedItems: function() {
 		var $trs = [];
