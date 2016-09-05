@@ -775,9 +775,19 @@ class RefundSuccessfulSubOrder(resource.Resource):
         """
         order_id = request.POST['order_id']
         delivery_item_id = request.POST['delivery_item_id']
+        
+        sub_order = Order.objects.filter(id=delivery_item_id).first()
+
+        if sub_order and sub_order.origin_order_id == order_id and sub_order.webapp_id == request.user_profile.webapp_id:
+            pass
+        else:
+            response = create_response(500)
+            response.data = {'msg': "非法操作，订单状态不允许进行该操作"}
+            return response.get_response()
 
         order = Order.objects.get(id=order_id)
         sub_order = Order.objects.get(id=delivery_item_id)
+        #获取子订单的金额
         refund_money = sub_order.refund_money
         #下一步的订单状态：退款成功
         sub_order_target_status = ORDER_STATUS_GROUP_REFUNDED
