@@ -89,7 +89,7 @@ class Scanlottery_prize(resource.Resource):
 		prize_tank = []
 		scanlottery_prize_dict = scanlottery.prize
 		for _, item in scanlottery_prize_dict.items():
-			if is_user_input:
+			if is_user_input != '0':
 				if item['title'] == '一等奖':
 					continue
 			prize_count = int(item['prize_count'])
