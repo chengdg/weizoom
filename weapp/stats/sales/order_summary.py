@@ -273,7 +273,7 @@ class BuyerSources(resource.Resource):
 			webapp_user_ids = set([order.webapp_user_id for order in past_status_qualified_orders])
 			webappuser2member = Member.members_from_webapp_user_ids(webapp_user_ids)
 			tmp_member = webappuser2member.get(order.webapp_user_id, None)
-		    _do_buyer_source_stats(buyer_source_stats, tmp_member)
+            _do_buyer_source_stats(buyer_source_stats, tmp_member)
 
 		return create_pie_chart_response('',
 				{
