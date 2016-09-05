@@ -16,6 +16,7 @@ W.dialog.mall.EditProductLimitedAreaTemplateDialog = W.dialog.Dialog.extend({
         return "mall-edit-product-limited-area-template-tmpl";
     },
     events: _.extend({
+        'click .xa-edit': 'onClickEdit'
     }, W.dialog.Dialog.prototype.events),
 
     onInitialize: function(options) {
@@ -26,14 +27,18 @@ W.dialog.mall.EditProductLimitedAreaTemplateDialog = W.dialog.Dialog.extend({
 
     beforeShow: function(options) {
         this.templateId = options.templateId;
+        this.table.reload({template_id: this.templateId})
+        console.log('~~~~~~~~~~',this.templateId)
     },
-
+    onClickEdit: function(options){
+        window.location.href="/mall2/product_limit_zone_template/?template_id=" + this.templateId;
+    },
     onShow: function(options) {
-        
+        this.templateName = options.templateName;
+        $('.xui-limited-area-template-dialog').find('.modal-title').text(this.templateName)
     },
 
     afterShow: function(options) {
-         this.table.reload({id: this.templateId})
     },
 
     onGetData: function(event) {
