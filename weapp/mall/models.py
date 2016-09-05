@@ -1469,6 +1469,27 @@ ORDER_STATUS_REFUNDED = 7  # 退款完成(回退销量)
 ORDER_STATUS_GROUP_REFUNDING = 8 #团购退款（没有退款完成按钮）
 ORDER_STATUS_GROUP_REFUNDED = 9 #团购退款完成
 
+# 权重小的优先
+ORDER_STATUS2DELIVERY_ITEM_WEIGHT = {
+	ORDER_STATUS_NOT: 1,
+	ORDER_STATUS_PAYED_NOT_SHIP: 2,
+	ORDER_STATUS_PAYED_SHIPED: 3,
+	ORDER_STATUS_REFUNDING: 4,
+	ORDER_STATUS_SUCCESSED: 5,
+	ORDER_STATUS_CANCEL: 6
+}
+
+DELIVERY_ITEM_WEIGHT2ORDER_STATUS = {
+	1: ORDER_STATUS_NOT,
+	2: ORDER_STATUS_PAYED_NOT_SHIP,
+	3: ORDER_STATUS_PAYED_SHIPED,
+	4: ORDER_STATUS_REFUNDING,
+	5: ORDER_STATUS_SUCCESSED,
+	6: ORDER_STATUS_CANCEL
+}
+
+
+
 ORDER_BILL_TYPE_NONE = 0  # 无发票
 ORDER_BILL_TYPE_PERSONAL = 1  # 个人发票
 ORDER_BILL_TYPE_COMPANY = 2  # 公司发票
@@ -1580,6 +1601,7 @@ class Order(models.Model):
 	is_first_order = models.BooleanField(default=False) # 是否是用户的首单
 	supplier_user_id = models.IntegerField(default=0) # 订单供货商user的id，用于系列拆单
 	total_purchase_price = models.FloatField(default=0)  # 总订单采购价格
+	refund_money = models.FloatField(default=0)     # 订单的退款金额
 
 	class Meta(object):
 		db_table = 'mall_order'
