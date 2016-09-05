@@ -12,6 +12,7 @@ class surveyParticipance(models.Document):
 	termite_data = models.DynamicField(default="") #termite数据
 	prize = models.DynamicField(default="") #活动奖励
 	created_at = models.DateTimeField() #创建时间
+	related_page_id = models.StringField(default="", max_length=100)  # termite page的id
 
 	meta = {
 		'collection': 'survey_survey_participance',
@@ -35,15 +36,19 @@ STATUS_NOT_START = 0
 STATUS_RUNNING = 1
 STATUS_STOPED = 2
 class survey(models.Document):
-	owner_id = models.LongField() #创建人id
-	name = models.StringField(default="", max_length=100) #名称
-	start_time = models.DateTimeField() #开始时间
-	end_time = models.DateTimeField() #结束时间
-	status = models.IntField(default=0) #状态
-	participant_count = models.IntField(default=0) #参与者数量
-	tag_id = models.IntField(default=0) #添加到分组，默认为不添加
-	related_page_id = models.StringField(default="", max_length=100) #termite page的id
-	created_at = models.DateTimeField() #创建时间
+	owner_id = models.LongField()  # 创建人id
+	name = models.StringField(default="", max_length=100)  # 名称
+	subtitle = models.StringField(default="", max_length=100)  # 副标题
+	description = models.StringField(default="", max_length=2048)  # 活动描述
+	start_time = models.DateTimeField()  # 开始时间
+	end_time = models.DateTimeField()  # 结束时间
+	prize = models.DynamicField()  # 奖励
+	status = models.IntField(default=0)  # 状态
+	permission = models.StringField(default='member', max_length=15)  # 非会员是否可参与
+	participant_count = models.IntField(default=0)  # 参与者数量
+	related_page_id = models.StringField(default="", max_length=100)  # termite page的id
+	tag_id = models.IntField(default=0)  # 添加到分组，默认为不添加
+	created_at = models.DateTimeField()  # 创建时间
 	
 	meta = {
 		'collection': 'survey_survey',
