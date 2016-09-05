@@ -11,7 +11,7 @@ Background:
 		Then 可以查到一个叫-商品池商品供货商-的供货商
 ###特殊说明：zy1, zy2表示自营商家, zymanager表示特殊商品池的那个商家webapp_type=2的那个
 
-@product_pool_sync_product
+@product_pool_sync_product @bert-g
 Scenario:1 给商品池同步商品，ziying
 	#给商品池同步商品，
 		Given 给zy1, zy2两个自营平台同步商品，供货商是-商品池商品供货商
@@ -32,3 +32,11 @@ Scenario:1 给商品池同步商品，ziying
 
 			"""
 
+		Given zy1登录系统
+		When zy1上架商品池商品“商品池商品测试zy”
+		Then zy1能获得'在售'商品列表
+		"""
+		[{
+			"name": "商品池商品测试zy"
+		}]
+		"""
