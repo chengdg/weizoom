@@ -108,8 +108,10 @@ class ProductLimitZone(resource.Resource):
             zones = get_zones(id2province, template_cities)
             print zones
             response = create_response(200)
-            response.data = zones
+            response.data.items = zones
             return response.get_response()
+        else:
+            return create_response(500).get_response()
 
 
     @login_required
