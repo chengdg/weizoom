@@ -280,6 +280,7 @@ def get_zones(id2province, cities):
         province_has_city = {
             'provinceId': id,
             'provinceName': id2province[id].name,
+            'zoneName': PROVINCE_ID2ZONE[id],
             'cities': []
         }
         province_has_city = rename_zone(province_has_city)
