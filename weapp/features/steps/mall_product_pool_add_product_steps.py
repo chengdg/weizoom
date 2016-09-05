@@ -15,6 +15,8 @@ from mall.models import *
 from weixin.user.models import *
 from eaglet.utils.resource_client import Resource
 
+import logging
+
 
 STATUS2TEXT = {
     1: u'待更新',
@@ -33,9 +35,9 @@ STATUS2ACTION = {
 def step_impl(context, zy1, zy2, supplier_name):
 
     context = json.loads(context.text)
-    print 'context %s' % context
-    print 'zy2 %s' % zy2
-    print 'zy1 %s' % zy1
+    # print 'context %s' % context
+    # print 'zy2 %s' % zy2
+    # print 'zy1 %s' % zy1
 
     EAGLET_CLIENT_ZEUS_HOST = 'api.zeus.com'
     ZEUS_SERVICE_NAME = 'zeus'
@@ -116,10 +118,14 @@ def step_impl(context, zy1, zy2, product_name):
     pool = ProductPool.objects.filter(product_id__in=product_ids,
                                       woid=user.id)
     assert pool.count() > 0
-    # auth_users = User.objects.filter(username__in=[zy1, zy2])
-    # user_ids = [user.id for user in auth_users]
-    # UserProfile.objects.filter(user_id__in=user_ids).update(webapp_type=1)
-    # print '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>.'
-    # print user_ids
-    # print '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>.'
-    # assert False
+
+
+@When(u'{zy1}上架商品池商品“{product_name}”')
+def step_impl(context, zy1, product_name):
+    url = '/mall2/api/product_pool/?_method=put'
+    product = Product.objects.get(name=product_name)
+    data = {
+        'product_ids': "[%s]" % product.id
+    }
+    response = context.client.post(url, data)
+    bdd_util.assert_api_call_success(response)
