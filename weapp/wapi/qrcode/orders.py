@@ -160,9 +160,9 @@ class QrcodeOrder(api_resource.ApiResource):
 			else:
 				name = u'未知'
 			channel_qrcode_id = 0
-			for channel_qrcode_id, member_ids in channel_qrcode_id2member_id.items():
+			for qrcode_id, member_ids in channel_qrcode_id2member_id.items():
 				if member_id in member_ids:
-					channel_qrcode_id = channel_qrcode_id
+					channel_qrcode_id = qrcode_id
 			orders.append({
 				"channel_qrcode_id": channel_qrcode_id,
 				"order_id": channel_order.id,
