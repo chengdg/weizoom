@@ -22,7 +22,6 @@ W.view.stats.OrderSummaryBaseDataAdvancedTable = W.view.common.AdvancedTable.ext
             discount_amount = item.get('discount_amount').toFixed(2);
         });
         if (order_num > 0) {
-
             unit_price = (paid_amount / order_num).toFixed(2);
         }
 
