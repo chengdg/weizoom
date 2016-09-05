@@ -1203,7 +1203,9 @@ class Product(resource.Resource):
             supplier=supplier_id,
             purchase_price=purchase_price,
             is_enable_bill=is_enable_bill,
-            is_delivery=is_delivery
+            is_delivery=is_delivery,
+            limit_zone_type=int(request.POST.get('limit_zone_type', '0')),
+            limit_zone=int(request.POST.get('limit_zone_template', '0'))
         )
         # 设置新商品显示顺序
         # product.display_index = models.Product.objects.filter(
@@ -1596,7 +1598,9 @@ class Product(resource.Resource):
                 #'purchase_price': purchase_price,
                 'is_enable_bill': is_enable_bill,
                 'is_delivery': is_delivery,
-                'buy_in_supplier': int(request.POST.get('buy_in_supplier', False))
+                'buy_in_supplier': int(request.POST.get('buy_in_supplier', False)),
+                'limit_zone_type': int(request.POST.get('limit_zone_type', '0')),
+                'limit_zone': int(request.POST.get('limit_zone_template', '0'))
             }
 
             if mall_type == 1:
