@@ -140,6 +140,8 @@ W.view.mall.limitedAreaSelectorView = Backbone.View.extend({
 				_this.getAllSelectedIds();
 				if(data.provinces.length > 0){
 					$('.xa-submit').show();
+				}else{
+					$('.xa-submit').hide();
 				}
 			}
 		});

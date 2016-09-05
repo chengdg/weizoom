@@ -767,7 +767,10 @@
 	width: 100px;
 }
 .xui-limited-area-template-dialog table tr.xui-province td:nth-child(2){
-	width: 80px;
+	width: 66px;
+}
+.xui-limited-area-template-dialog .modal-dialog tbody tr td:last-child{
+	width: initial;
 }
 /*选择产品规格弹窗*/
 .xui-selectProductModelPropertyDialog .modal-dialog{
