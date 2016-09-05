@@ -39,7 +39,8 @@ class Flashsale(api_resource.ApiResource):
 		"""
 
 		product_infos = json.loads(args.get('product_infos', '[]'))
-		owner = User.objects.get(username='jobs')
+		#【微众商城】帐号
+		owner = User.objects.get(username='weshop')
 		#使得webapp_cache.py能够有user_profile
 		cache.request.user_profile = UserProfile.objects.get(user=owner)
 
@@ -57,8 +58,10 @@ class Flashsale(api_resource.ApiResource):
 
 		product_name2product_id = {product.name: product.id for product in products}
 
+		#已经配置过促销活动的商品
 		product_id2promotion_id = {psp.product_id: psp.promotion_id for psp in promotion_models.ProductHasPromotion.objects.filter(product_id__in=product_name2product_id.values())}
 
+		#已经配置过促销活动的商品，在进行中并且不能同时参加的活动
 		product_id2type = {}
 		for p in promotion_models.Promotion.objects.filter(status=promotion_models.PROMOTION_STATUS_STARTED, id__in=product_id2promotion_id.values()):
 			if p.type in [promotion_models.PROMOTION_TYPE_FLASH_SALE, promotion_models.PROMOTION_TYPE_PREMIUM_SALE, promotion_models.PROMOTION_TYPE_COUPON]:
