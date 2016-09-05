@@ -238,20 +238,6 @@ class BuyerSources(resource.Resource):
 	app = 'stats'
 	resource = 'buyer_sources'
 
-	#统计买家来源函数
-	def _do_buyer_source_stats(buyer_source_stats, member):
-		if member:
-			if member.source == SOURCE_SELF_SUB:
-				buyer_source_stats['sub_source_num'] += 1
-			elif member.source == SOURCE_MEMBER_QRCODE:
-				buyer_source_stats['qrcode_source_num'] += 1
-			elif member.source == SOURCE_BY_URL:
-				buyer_source_stats['url_source_num'] += 1
-			else:
-				buyer_source_stats['other_source_num'] += 1
-		else:
-			buyer_source_stats['other_source_num'] += 1
-
 	@login_required
 	def api_get(request):
 
