@@ -73,27 +73,28 @@ class ShopOrders(api_resource.ApiResource):
 				if created_at >= start_time and created_at <= end_time:
 					for channel_qrcode_id, member_ids in channel_qrcode_id2member_id.items():
 						if member_id in member_ids:
-							sale_price = order.final_price + order.coupon_money + order.integral_money + order.weizoom_card_money + order.promotion_saved_money + order.edit_money
-							final_price = order.final_price
-							if not channel_qrcode_id2increase_order_count.has_key(channel_qrcode_id):
-								channel_qrcode_id2increase_order_count[channel_qrcode_id] = 1
-							else:
-								channel_qrcode_id2increase_order_count[channel_qrcode_id] += 1
+							if order.status not in [ORDER_STATUS_CANCEL, ORDER_STATUS_GROUP_REFUNDING, ORDER_STATUS_GROUP_REFUNDED, ORDER_STATUS_REFUNDING, ORDER_STATUS_REFUNDED]:
+								sale_price = order.final_price + order.coupon_money + order.integral_money + order.weizoom_card_money + order.promotion_saved_money + order.edit_money
+								final_price = order.final_price
+								if not channel_qrcode_id2increase_order_count.has_key(channel_qrcode_id):
+									channel_qrcode_id2increase_order_count[channel_qrcode_id] = 1
+								else:
+									channel_qrcode_id2increase_order_count[channel_qrcode_id] += 1
+
+								if not channel_qrcode_id2final_price.has_key(channel_qrcode_id):
+									channel_qrcode_id2final_price[channel_qrcode_id] = final_price
+								else:
+									channel_qrcode_id2final_price[channel_qrcode_id] += final_price
+
+								if not channel_qrcode_id2order_sale_money.has_key(channel_qrcode_id):
+									channel_qrcode_id2order_sale_money[channel_qrcode_id] = sale_price
+								else:
+									channel_qrcode_id2order_sale_money[channel_qrcode_id] += sale_price
 							if order.is_first_order and order.status != ORDER_STATUS_NOT:
 								if not channel_qrcode_id2first_order_count.has_key(channel_qrcode_id):
 									channel_qrcode_id2first_order_count[channel_qrcode_id] = 1
 								else:
 									channel_qrcode_id2first_order_count[channel_qrcode_id] += 1
-
-							if not channel_qrcode_id2final_price.has_key(channel_qrcode_id):
-								channel_qrcode_id2final_price[channel_qrcode_id] = final_price
-							else:
-								channel_qrcode_id2final_price[channel_qrcode_id] += final_price
-
-							if not channel_qrcode_id2order_sale_money.has_key(channel_qrcode_id):
-								channel_qrcode_id2order_sale_money[channel_qrcode_id] = sale_price
-							else:
-								channel_qrcode_id2order_sale_money[channel_qrcode_id] += sale_price
 
 		if is_export:
 			channel_qrcode_id2order_count = {}

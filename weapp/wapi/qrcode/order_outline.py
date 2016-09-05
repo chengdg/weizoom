@@ -51,18 +51,20 @@ class QrcodeOrderOutline(api_resource.ApiResource):
 
 		orders = Order.objects.filter(**filter_data_args)
 
+		increase_orders = []
 		first_orders = []
 		sale_price = 0
 		final_price = 0
 		for order in orders:
-			if order.status not in [ORDER_STATUS_CANCEL,ORDER_STATUS_GROUP_REFUNDING,ORDER_STATUS_GROUP_REFUNDED,ORDER_STATUS_REFUNDING,ORDER_STATUS_REFUNDED]:
+			if order.status not in [ORDER_STATUS_CANCEL, ORDER_STATUS_GROUP_REFUNDING, ORDER_STATUS_GROUP_REFUNDED, ORDER_STATUS_REFUNDING, ORDER_STATUS_REFUNDED]:
 				sale_price += order.final_price + order.coupon_money + order.integral_money + order.weizoom_card_money + order.promotion_saved_money + order.edit_money
 				final_price += order.final_price
+				increase_orders.append(order)
 			if order.is_first_order and order.status != ORDER_STATUS_NOT:
 				first_orders.append(order)
 
 		member_outline_info = {
-			"increase_order_count": len(orders),
+			"increase_order_count": len(increase_orders),
 			"first_order_count": len(first_orders),
 			"order_sale_money": u'%.2f' % sale_price,
 			"final_price": u'%.2f' % final_price
