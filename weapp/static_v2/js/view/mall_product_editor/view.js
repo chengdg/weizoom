@@ -172,7 +172,7 @@ W.view.mall.ProductEditor = Backbone.View.extend({
 		var _this = this;
 		var templateId,
 			templateName;
-		if($(event.target).hasAttr('data-template-id')){
+		if($(event.currentTarget).siblings().length == 0){
 			templateId = $(event.target).attr('data-template-id');
 			templateName = $(event.target).attr('data-template-name');
 		}else{
