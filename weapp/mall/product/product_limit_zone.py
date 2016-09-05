@@ -77,7 +77,7 @@ class ProductLimitZone(resource.Resource):
 
             provinces = []
             zone_names = []
-            for id in id2province.keys():
+            for id in sorted(id2province.keys()):
                 province_has_city = {
                     'provinceId': id,
                     'provinceName': id2province[id].name,
@@ -226,13 +226,6 @@ class ProvincialCity(resource.Resource):
 
     @login_required
     def api_get(request):
-        template_id = int(request.GET.get('template_id', '0'))
-        select_province_ids = []
-        select_city_ids = []
-        if mall_models.ProductLimitZoneTemplate.objects.filter(id=template_id).count() > 0:
-            template = mall_models.ProductLimitZoneTemplate.objects.filter(id=template_id).first()
-            select_province_ids = template.provinces.split(',')
-            select_city_ids = template.cities.split(',')
         all_cities = City.objects.all()
         all_provinces = Province.objects.all()
         id2province = dict([(p.id, p) for p in all_provinces])
@@ -242,7 +235,6 @@ class ProvincialCity(resource.Resource):
             province_has_city = {
                     'provinceId': id,
                     'provinceName': id2province[id].name,
-                    'isSelected': True if id in select_province_ids else False,
                     'cities': []
                     }
             province_has_city = rename_zone(province_has_city)
@@ -251,7 +243,6 @@ class ProvincialCity(resource.Resource):
                 province_has_city['cities'].append({
                         'cityId': city.id,
                         'cityName': city.name,
-                        'isSelected': True if city.id in select_city_ids else False
                     })
             provinces.append(province_has_city)
 
