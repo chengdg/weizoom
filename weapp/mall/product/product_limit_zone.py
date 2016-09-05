@@ -74,31 +74,8 @@ class ProductLimitZone(resource.Resource):
             template_cities = filter(lambda city: str(city.id) in city_ids, all_cities)
             template_provinces = filter(lambda province: str(province.id) in province_ids, all_provinces)
             id2province = dict([(p.id, p) for p in template_provinces])
+            zones = get_zones(id2province, template_cities)
 
-            provinces = []
-            zone_names = []
-            for id in sorted(id2province.keys()):
-                province_has_city = {
-                    'provinceId': id,
-                    'provinceName': id2province[id].name,
-                    'cities': []
-                }
-                province_has_city = rename_zone(province_has_city)
-                for city in filter(lambda city: city.province_id == id, template_cities):
-                    province_has_city['cities'].append({
-                        'cityId': city.id,
-                        'cityName': city.name
-                    })
-                provinces.append(province_has_city)
-                if PROVINCE_ID2ZONE[id] not in zone_names:
-                    zone_names.append(PROVINCE_ID2ZONE[id])
-            zones = []
-            for zone_name in zone_names:
-                zones.append({
-                    'zoneName': zone_name,
-                    'provinces': filter(lambda province: PROVINCE_ID2ZONE[province['provinceId']] == zone_name,
-                                        provinces)
-                })
             templates.append({
                 'templateId': temp.id,
                 'templateName': temp.name,
@@ -115,7 +92,25 @@ class ProductLimitZone(resource.Resource):
 
     @login_required
     def api_get(request):
-        pass
+        template_id = int(request.GET.get('template_id', '0'))
+        if template_id:
+            template_model = mall_models.ProductLimitZoneTemplate.objects.get(id=template_id)
+            city_ids = template_model.cities.split(',')
+            province_ids = template_model.provinces.split(',')
+            template_cities = []
+            if template_model.cities:
+                template_cities = City.objects.filter(id__in=city_ids)
+            template_provinces = []
+            if template_model.provinces:
+                template_provinces = Province.objects.filter(id__in=province_ids)
+            id2province = dict([(p.id, p) for p in template_provinces])
+
+            zones = get_zones(id2province, template_cities)
+            print zones
+            response = create_response(200)
+            response.data = zones
+            return response.get_response()
+
 
     @login_required
     def api_delete(request):
@@ -275,3 +270,30 @@ def rename_zone(zone):
     elif zone['provinceId'] == 34:
         zone['provinceName'] = u'台湾'
     return zone
+
+def get_zones(id2province, cities):
+    provinces = []
+    zone_names = []
+    for id in sorted(id2province.keys()):
+        province_has_city = {
+            'provinceId': id,
+            'provinceName': id2province[id].name,
+            'cities': []
+        }
+        province_has_city = rename_zone(province_has_city)
+        for city in filter(lambda city: city.province_id == id, cities):
+            province_has_city['cities'].append({
+                'cityId': city.id,
+                'cityName': city.name
+            })
+        provinces.append(province_has_city)
+        if PROVINCE_ID2ZONE[id] not in zone_names:
+            zone_names.append(PROVINCE_ID2ZONE[id])
+    zones = []
+    for zone_name in zone_names:
+        zones.append({
+            'zoneName': zone_name,
+            'provinces': filter(lambda province: PROVINCE_ID2ZONE[province['provinceId']] == zone_name,
+                                provinces)
+        })
+    return zones
