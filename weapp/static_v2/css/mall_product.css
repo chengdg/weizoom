@@ -292,7 +292,8 @@
 /*
 * 编辑限定区域页--弹窗样式
 */
-.xui-mallSelectLimitedAreaDialog .modal-dialog{
+.xui-mallSelectLimitedAreaDialog .modal-dialog,
+.xui-limited-area-template-dialog .modal-dialog{
 	width: 580px;
     height: 390px;
     position: absolute;
@@ -301,8 +302,13 @@
     margin-left: -290px;
     margin-top: -195px;
 }
-.xui-mallSelectLimitedAreaDialog .modal-dialog .modal-footer{
+.xui-mallSelectLimitedAreaDialog .modal-dialog .modal-footer,
+.xui-limited-area-template-dialog .modal-dialog .modal-footer{
 	height:57px;
+}
+.xui-mallSelectLimitedAreaDialog .modal-footer button,
+.xui-limited-area-template-dialog .modal-footer button{
+	margin-bottom: 15px;
 }
 .xui-mallSelectLimitedAreaDialog i{
 	cursor: pointer;
@@ -369,13 +375,11 @@
 .xui-mallSelectLimitedAreaDialog .xui-inner-province,
 .xui-mallSelectLimitedAreaDialog .xui-inner-city{
 	background:#f7f7f7;
-	border: 1px solid #d2d2d2;
+/*	border: 1px solid #d2d2d2;*/
 	padding: 8px;
 }
 .xui-mallSelectLimitedAreaDialog .xui-inner-province{
-	width: 110px;
-	border-bottom: 0;
-
+	width: 280px;
 }
 .xui-mallSelectLimitedAreaDialog .xui-inner-city{
 	position: relative;
@@ -395,7 +399,7 @@
 	margin-right: 5px;
 	width: 130px;
 }
-.xui-mallSelectLimitedAreaDialog .xui-inner-city:before{
+/*.xui-mallSelectLimitedAreaDialog .xui-inner-city:before{
 	content:"";
 	width: 109px;
 	height: 1px;
@@ -403,13 +407,14 @@
 	position: absolute;
 	left: 0;
 	top:-1px;
-}
+}*/
 .xui-mallSelectLimitedAreaDialog .xui-inner-panel{
 	position: absolute;
 	z-index: 1;
     top: -9px;
     left: -9px;
     display: none;
+    border: 1px solid #d2d2d2; 
 }
 .xui-mallSelectLimitedAreaDialog .btn-success{
 	background:#207cbe;
@@ -739,6 +744,20 @@
     border-radius: 0px;
     box-shadow: none;
     padding: 6px 8px;
+}
+.xui-editProductPage .xui-limitZone-btn{
+	height: 30px;
+    width: 48px;
+    margin: -3px 0 0 5px;
+}
+.xui-editProductPage .xui-showlimitZone-btn{
+	height: 30px;
+	margin:-4px 0 0 50px;
+}
+/*查看商品选定区域模版弹窗*/
+.xui-limited-area-template-dialog .modal-footer button{
+	background: #fff;
+	color:#333;
 }
 /*选择产品规格弹窗*/
 .xui-selectProductModelPropertyDialog .modal-dialog{

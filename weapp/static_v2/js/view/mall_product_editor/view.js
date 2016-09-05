@@ -45,6 +45,7 @@ W.view.mall.ProductEditor = Backbone.View.extend({
 		'change .xa-propertyTemplateSelector': 'onSelectPropertyTemplate',
 		'click .xa-deleteProperty': 'onClickDeletePropertyLink',
 		'click .xa-addProperty': 'onClickAddPropertyLink',
+		'click .xa-limit-zone-detail': 'onClickShowLimitZone'
 	},
 
 	render: function() {
@@ -158,6 +159,13 @@ W.view.mall.ProductEditor = Backbone.View.extend({
 		var $node = $.tmpl(this.propertyTemplate, {});
 		$node.editable();
 		this.$('div.xa-customProperties ul').append($node);
+	},
+	onClickShowLimitZone: function(event){
+		var _this = this;
+		W.dialog.showDialog('W.dialog.mall.EditProductLimitedAreaTemplateDialog', {
+			success: function(data) {
+			}
+		});
 	},
 	onSubmit:function(){
 		var buy_in_supplier = parseInt(this.$("input[name='buy_in_supplier']:checked").val());

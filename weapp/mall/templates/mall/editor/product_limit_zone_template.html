@@ -7,7 +7,7 @@
 		<li>
 			<a href="/mall2/product_list/?shelve_type">商品管理</a>
 		</li>
-		<li>限定区域</li>
+		<li><a href="/mall2/product_limit_zone/">限定区域</a></li>
         <li>编辑限定区域</li>
 	</ul>
 	<div class="xui-i-content p30 xa-limitedAreaSelector">
@@ -17,7 +17,7 @@
 				<input class="form-control w350 fl ml10" name="templateName" data-validate="require-string" maxlength="20" value="{% if templateName %}{{ templateName }}{% endif %}" />
 				<div class="errorHint fl ml5" data-error-hint="模板名称不能为空"></div>
 			</div>
-			<p>禁售地区：有些地区不能够买</p>
+			<p>禁售地区：此地区不能够买</p>
 			<p>仅售地区：只有此地区可以购买</p>
 		</section>
 		<section class="xa-selectedLimitedArea">
@@ -37,15 +37,15 @@
 				            <tr data-provinceId="{{zone.provinceId}}">
 				                <td>{{ zone.zoneName }}</td>
 				                <td>
-				                	{% if zone.zoneName != "直辖市" and province.zoneName != "其它" %}
+				                	{% if zone.zoneName != "直辖市" and zone.zoneName != "其它" %}
 				                		{{ zone.provinceName }}
 				                	{% endif %}
 				                	</td>
 				                <td class="xa-city">
-				                	{% if zone.zoneName == "直辖市" or province.zoneName == "其它" %}
+				                	{% if zone.zoneName == "直辖市" or zone.zoneName == "其它" %}
 				                		{{ zone.provinceName }}
 				                	{% endif %}
-									{% if zone.cities.length == 0 and zone.zoneName != "直辖市" and province.zoneName != "其它" %}
+									{% if not zone.cities and zone.zoneName != "直辖市" and zone.zoneName != "其它" %}
 										已全选
 				                	{% else %}
 					                	{% for city in zone.cities %}
@@ -67,7 +67,7 @@
 		</section>
 
         <div class="tc mt50">
-			<button class="btn btn-primary xa-submit mt20">保&nbsp;存</button>
+			<button class="btn btn-primary xa-submit mt20 "{% if not zones %} style="display:none;"{% endif %}>保&nbsp;存</button>
 		</div>
 	</div>
 </div>
