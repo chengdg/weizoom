@@ -33,7 +33,7 @@ from weixin.user.module_api import get_all_active_mp_user_ids
 from account.models import UserProfile
 from market_tools.tools.weizoom_card.models import WeizoomCardHasOrder,WeizoomCard
 from core.exceptionutil import unicode_full_stack
-
+from market_tools.tools.channel_qrcode.models import ChannelQrcodeHasMember, IntegralStrategySttings
 COUNT_PER_PAGE = 20
 
 DEFAULT_CREATE_TIME = '2000-01-01 00:00:00'
@@ -1019,7 +1019,9 @@ def get_orders_response(request, is_refund=False):
         'order_return_count': order_return_count,
         'current_status_value': current_status_value,
         'is_refund': is_refund,
-        'mall_type': mall_type
+        'mall_type': mall_type,
+        'integral_each_yuan': IntegralStrategySttings.objects.get(
+            webapp_id=request.manager.get_profile().webapp_id).integral_each_yuan
     }
 
     if query_dict or date_interval:
