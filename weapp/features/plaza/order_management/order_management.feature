@@ -181,11 +181,11 @@ Background:
 		"""
 	And test批量激活订单'0001'的卡::weizoom_card
 
-					"weizoom_card_info":
-					{
-						"id":"200000001",
-						"password":"1234567"
-					}
+#					"weizoom_card_info":
+#					{
+#						"id":"200000001",
+#						"password":"1234567"
+#					}
 
 	When jobs已添加商品规格
 		"""
@@ -199,6 +199,7 @@ Background:
 			}]
 		}]
 		"""
+	#所有商品开通所有支付方式
 	When jobs已添加商品
 		"""
 		[{
@@ -1805,6 +1806,866 @@ Scenario:2 两个供应商商品订单-支付宝+积分(一个不满足满额包
 			| 完成-供应商2            | jobs     |
 			| 退款完成-供货商1        | jobs     |
 
-Scenario:3 两个供应商商品订单-货到付款(一个满足满额包邮，一个无运费)
+Scenario:3 两个供应商商品订单(限时抢购)-货到付款(一个满足满额包邮，一个无运费)
+	Given jobs登录系统
+	When jobs创建限时抢购活动
+		"""
+		[{
+			"name": "商品1-1限时抢购",
+			"promotion_title":"",
+			"start_date": "2010-01-01 10:00:00",
+			"end_date": "1天后",
+			"product_name":"商品1-1",
+			"member_grade": "全部会员",
+			"count_per_purchase": 4,
+			"promotion_price": 20.00,
+			"limit_period": 1
+		}]
+		"""
+
+	When bill访问jobs的webapp::apiserver
+	When bill购买jobs的商品::apiserver
+		"""
+		{
+			"order_id":"003",
+			"date":"2016-01-03 10:00:00",
+			"ship_name": "bill",
+			"ship_tel": "13811223344",
+			"ship_area": "北京市 北京市 海淀区",
+			"ship_address": "泰兴大厦",
+			"pay_type": "货到付款",
+			"products":[{
+				"name":"商品1-1",
+				"price":20.00,
+				"count":2
+			},{
+				"name":"商品2-1",
+				"price":30.00,
+				"count":1
+			}],
+			"postage": 0.00,
+			"customer_message": "bill的订单备注"
+		}
+		"""
+
+	#待发货订单
+		#手机端订单列表
+		Then bill获得手机端订单列表::apiserver
+			"""
+			[{
+				"status": "待发货",
+				"order_time":"2016-01-03 10:00:00",
+				"products"[{
+					"name":"商品1-1"
+				},{
+					"name":"商品2-1"
+				}],
+				"products_count": 3,
+				"final_price": 70.00
+			}]
+			"""
+
+		#手机端订单详情
+		Then bill获取手机端订单'003'::apiserver
+			"""
+			{
+				"order_no": "003",
+				"status":"待发货",
+				"ship_name": "bill",
+				"ship_tel": "13811223344",
+				"ship_area": "北京市 北京市 海淀区",
+				"ship_address": "泰兴大厦",
+				"group":[{
+					"供货商1":{
+						"products": [{
+							"name": "商品1-1",
+							"price": 20.00,
+							"count": 2
+						}],
+						"postage": 0.00
+					},
+					"供货商2":{
+						"products": [{
+							"name": "商品2-1",
+							"price": 30.00,
+							"count": 1
+						}],
+						"postage": 0.00
+					}
+				}],
+				"methods_of_payment":"货到付款",
+				"product_price": 70.00,
+				"postage": 0.00,
+				"final_price": 70.00,
+				"order_time":"2016-01-03 10:00:00",
+			}
+			"""
+
+		#后台订单列表
+		Given jobs登录系统
+		Then jobs获得自营订单列表
+			"""
+			[{
+				"order_no":"003",
+				"methods_of_payment":"货到付款",
+				"order_time":"2016-01-03 10:00:00",
+				"payment_time":"2016-01-03 10:00:00",
+				"save_money": 60.00,
+				"buyer":"bill",
+				"ship_name":"bill",
+				"ship_tel":"13811223344",
+				"ship_area": "北京市 北京市 海淀区",
+				"ship_address": "泰兴大厦",
+				"invoice":"--",
+				"final_price": 70.00,
+				"postage": 0.00,
+				"status":"待发货",
+				"group":[{
+					"供货商1":{
+						"order_no":"003-供货商1",
+						"products":[{
+							"name":"商品1-1",
+							"price":50.00,
+							"count":2
+						}],
+						"status":"待发货",
+						"actions": ["发货","申请退款"],
+					},
+					"供货商2":{
+						"order_no":"002-供货商2",
+						"products":[{
+							"name":"商品2-2",
+							"price":20.00,
+							"count":1
+						}],
+						"status":"待发货",
+						"actions": ["发货","申请退款"],
+					}
+				}]
+			}]
+			"""
+		Then jobs获得自营订单'002'
+			"""
+			{
+				"order_no":"002",
+				"status":"待发货",
+				"ship_name":"bill",
+				"ship_tel":"13811223344",
+				"ship_area": "北京市 北京市 海淀区",
+				"ship_address": "泰兴大厦",
+				"invoice":"--",
+				"business_message":"",
+				"methods_of_payment":"支付宝",
+				"group":[{
+					"供货商1":{
+						"order_no":"002-供货商1",
+						"products":[{
+							"name":"商品1-2",
+							"price":10.00,
+							"count":2,
+							"single_save":"20积分，抵扣10.00元"
+						}],
+						"postage": 10.00,
+						"status":"待发货"
+					},
+					"供货商2":{
+						"order_no":"002-供货商2",
+						"products":[{
+							"name":"商品2-2",
+							"price":20.00,
+							"count":1,
+							"single_save":"20积分，抵扣10.00元"
+						}],
+						"postage": 0.00,
+						"status":"待发货"
+					}
+				}],
+				"total_save":"",
+				"weizoom_card":"",
+				"products_count":3,
+				"product_price": 40.00,
+				"postage": 10.00,
+				"save_money": -20.00,
+				"cash":30.00,
+				"final_price": 30.00
+			}
+			"""
+		Then jobs能获得订单'001'操作日志
+			| action                  | operator |
+			| 下单                    | 客户     |
+			| 支付                    | 客户     |
+
+	#已发货
+		Given jobs登录系统
+		When jobs对订单进行发货
+			"""
+			{
+				"order_no": "002-供货商1",
+				"logistics": "申通快递",
+				"number": "229388967650",
+				"shipper": "jobs"
+			}
+			"""
+
+		#手机端订单列表
+		Then bill获得手机端订单列表::apiserver
+			"""
+			[{
+				"status": "待发货",
+				"order_time":"2016-01-02 10:00:00",
+				"products"[{
+					"name":"商品1-2"
+				},{
+					"name":"商品2-2"
+				}],
+				"products_count": 3,
+				"final_price": 30.00
+			}]
+			"""
+
+		#手机端订单详情
+		Then bill获取手机端订单'002'::apiserver
+			"""
+			{
+				"order_no": "002",
+				"status":"待发货",
+				"ship_name": "bill",
+				"ship_tel": "13811223344",
+				"ship_area": "北京市 北京市 海淀区",
+				"ship_address": "泰兴大厦",
+				"group":[{
+					"供货商1":{
+						"status":"已发货",
+						"products": [{
+							"name": "商品1-2",
+							"price": 10.00,
+							"count": 2
+						}],
+						"postage": 10.00
+					},
+					"供货商2":{
+						"status":"待发货",
+						"products": [{
+							"name": "商品2-2",
+							"price": 20.00,
+							"count": 1
+						}],
+						"postage": 0.00
+					}
+				}],
+				"methods_of_payment":"支付宝",
+				"product_price": 40.00,
+				"postage": 10.00,
+				"save_money": -20.00,
+				"final_price": 30.00,
+				"order_time":"2016-01-02 10:00:00",
+			}
+			"""
+
+		#后台订单列表
+		Given jobs登录系统
+		Then jobs获得自营订单列表
+			"""
+			[{
+				"order_no":"002",
+				"methods_of_payment":"支付宝",
+				"order_time":"2016-01-02 10:00:00",
+				"payment_time":"2016-01-03 10:00:00",
+				"save_money": 20.00,
+				"buyer":"bill",
+				"ship_name":"bill",
+				"ship_tel":"13811223344",
+				"ship_area": "北京市 北京市 海淀区",
+				"ship_address": "泰兴大厦",
+				"invoice":"--",
+				"final_price": 30.00,
+				"postage": 10.00,
+				"status":"待发货",
+				"group":[{
+					"供货商1":{
+						"order_no":"002-供货商1",
+						"products":[{
+							"name":"商品1-2",
+							"price":10.00,
+							"count":2
+						}],
+						"status":"已发货",
+						"actions": ["标记完成"],
+					},
+					"供货商2":{
+						"order_no":"002-供货商2",
+						"products":[{
+							"name":"商品2-2",
+							"price":20.00,
+							"count":1
+						}],
+						"status":"待发货",
+						"actions": ["发货","申请退款"],
+					}
+				}]
+			}]
+			"""
+		Then jobs获得自营订单'002'
+			"""
+			{
+				"order_no":"002",
+				"status":"待发货",
+				"ship_name":"bill",
+				"ship_tel":"13811223344",
+				"ship_area": "北京市 北京市 海淀区",
+				"ship_address": "泰兴大厦",
+				"invoice":"--",
+				"business_message":"",
+				"methods_of_payment":"支付宝",
+				"group":[{
+					"供货商1":{
+						"order_no":"002-供货商1",
+						"products":[{
+							"name":"商品1-2",
+							"price":10.00,
+							"count":2,
+							"single_save":"20积分，抵扣10.00元"
+						}],
+						"postage": 10.00,
+						"status":"已发货"
+					},
+					"供货商2":{
+						"order_no":"002-供货商2",
+						"products":[{
+							"name":"商品2-2",
+							"price":20.00,
+							"count":1,
+							"single_save":"20积分，抵扣10.00元"
+						}],
+						"postage": 0.00,
+						"status":"待发货"
+					}
+				}],
+				"total_save":"",
+				"weizoom_card":"",
+				"products_count":3,
+				"product_price": 40.00,
+				"postage": 10.00,
+				"save_money": -20.00,
+				"cash":30.00,
+				"final_price": 30.00
+			}
+			"""
+		Then jobs能获得订单'002'操作日志
+			| action                  | operator |
+			| 下单                    | 客户     |
+			| 支付                    | 客户     |
+			| 订单发货-供应商1        | jobs     |
+
+	#已完成
+		Given jobs登录系统
+		When jobs完成订单'002-供货商1'
+		When jobs对订单进行发货
+			"""
+			{
+				"order_no": "002-供货商2",
+				"logistics": "圆通快递",
+				"number": "22200000000",
+				"shipper": "jobs"
+			}
+			"""
+
+		#手机端订单列表
+		Then bill获得手机端订单列表::apiserver
+			"""
+			[{
+				"status": "已发货",
+				"order_time":"2016-01-02 10:00:00",
+				"products"[{
+					"name":"商品1-2"
+				},{
+					"name":"商品2-2"
+				}],
+				"products_count": 3,
+				"final_price": 30.00
+			}]
+			"""
+
+		#手机端订单详情
+		Then bill获取手机端订单'002'::apiserver
+			"""
+			{
+				"order_no": "002",
+				"status":"已发货",
+				"ship_name": "bill",
+				"ship_tel": "13811223344",
+				"ship_area": "北京市 北京市 海淀区",
+				"ship_address": "泰兴大厦",
+				"group":[{
+					"供货商1":{
+						"status":"已完成",
+						"products": [{
+							"name": "商品1-2",
+							"price": 10.00,
+							"count": 2
+						}],
+						"postage": 10.00
+					},
+					"供货商2":{
+						"status":"已发货",
+						"products": [{
+							"name": "商品2-2",
+							"price": 20.00,
+							"count": 1
+						}],
+						"postage": 0.00
+					}
+				}],
+				"methods_of_payment":"支付宝",
+				"product_price": 40.00,
+				"postage": 10.00,
+				"save_money": -20.00,
+				"final_price": 30.00,
+				"order_time":"2016-01-02 10:00:00",
+			}
+			"""
+
+		#后台订单列表
+		Given jobs登录系统
+		Then jobs获得自营订单列表
+			"""
+			[{
+				"order_no":"002",
+				"methods_of_payment":"支付宝",
+				"order_time":"2016-01-02 10:00:00",
+				"payment_time":"2016-01-03 10:00:00",
+				"save_money": 20.00,
+				"buyer":"bill",
+				"ship_name":"bill",
+				"ship_tel":"13811223344",
+				"ship_area": "北京市 北京市 海淀区",
+				"ship_address": "泰兴大厦",
+				"invoice":"--",
+				"final_price": 30.00,
+				"postage": 10.00,
+				"status":"已发货",
+				"group":[{
+					"供货商1":{
+						"order_no":"002-供货商1",
+						"products":[{
+							"name":"商品1-2",
+							"price":10.00,
+							"count":2
+						}],
+						"status":"已完成",
+						"actions": ["申请退款"],
+					},
+					"供货商2":{
+						"order_no":"002-供货商2",
+						"products":[{
+							"name":"商品2-2",
+							"price":20.00,
+							"count":1
+						}],
+						"status":"待发货",
+						"actions": ["发货","申请退款"],
+					}
+				}]
+			}]
+			"""
+		Then jobs获得自营订单'002'
+			"""
+			{
+				"order_no":"002",
+				"status":"已发货",
+				"ship_name":"bill",
+				"ship_tel":"13811223344",
+				"ship_area": "北京市 北京市 海淀区",
+				"ship_address": "泰兴大厦",
+				"invoice":"--",
+				"business_message":"",
+				"methods_of_payment":"支付宝",
+				"group":[{
+					"供货商1":{
+						"order_no":"002-供货商1",
+						"products":[{
+							"name":"商品1-2",
+							"price":10.00,
+							"count":2,
+							"single_save":"20积分，抵扣10.00元"
+						}],
+						"postage": 10.00,
+						"status":"已完成"
+					},
+					"供货商2":{
+						"order_no":"002-供货商2",
+						"products":[{
+							"name":"商品2-2",
+							"price":20.00,
+							"count":1,
+							"single_save":"20积分，抵扣10.00元"
+						}],
+						"postage": 0.00,
+						"status":"已发货"
+					}
+				}],
+				"total_save":"",
+				"weizoom_card":"",
+				"products_count":3,
+				"product_price": 40.00,
+				"postage": 10.00,
+				"save_money": -20.00,
+				"cash":30.00,
+				"final_price": 30.00
+			}
+			"""
+		Then jobs能获得订单'002'操作日志
+			| action                  | operator |
+			| 下单                    | 客户     |
+			| 支付                    | 客户     |
+			| 订单发货-供应商1        | jobs     |
+			| 订单完成-供应商1        | jobs     |
+			| 订单发货-供应商2        | jobs     |
+
+	#退款中
+		Given jobs登录系统
+		When jobs'申请退款'自营订单'002-供货商1'
+			"""
+			{
+				"cash":10.00,
+				"weizoom_card":0.00,
+				"coupon_money":10.00,
+				"intergal": 30,
+				"intergal_money":10.00
+			}
+			"""
+		When jobs完成订单'002-供货商2'
+
+		#手机端订单列表
+		Then bill获得手机端订单列表::apiserver
+			"""
+			[{
+				"status": "退款中",
+				"order_time":"2016-01-02 10:00:00",
+				"products"[{
+					"name":"商品1-2"
+				},{
+					"name":"商品2-2"
+				}],
+				"products_count": 3,
+				"final_price": 30.00
+			}]
+			"""
+
+		#手机端订单详情
+		Then bill获取手机端订单'002'::apiserver
+			"""
+			{
+				"order_no": "002",
+				"status":"退款中",
+				"ship_name": "bill",
+				"ship_tel": "13811223344",
+				"ship_area": "北京市 北京市 海淀区",
+				"ship_address": "泰兴大厦",
+				"group":[{
+					"供货商1":{
+						"status":"退款中",
+						"products": [{
+							"name": "商品1-2",
+							"price": 10.00,
+							"count": 2
+						}],
+						"postage": 10.00
+					},
+					"供货商2":{
+						"status":"已完成",
+						"products": [{
+							"name": "商品2-2",
+							"price": 20.00,
+							"count": 1
+						}],
+						"postage": 0.00
+					}
+				}],
+				"methods_of_payment":"支付宝",
+				"product_price": 40.00,
+				"postage": 10.00,
+				"save_money": -20.00,
+				"final_price": 30.00,
+				"order_time":"2016-01-02 10:00:00",
+			}
+			"""
+
+		#后台订单列表
+		Given jobs登录系统
+		Then jobs获得自营订单列表
+			"""
+			[{
+				"order_no":"002",
+				"methods_of_payment":"支付宝",
+				"order_time":"2016-01-02 10:00:00",
+				"payment_time":"2016-01-03 10:00:00",
+				"save_money": 20.00,
+				"buyer":"bill",
+				"ship_name":"bill",
+				"ship_tel":"13811223344",
+				"ship_area": "北京市 北京市 海淀区",
+				"ship_address": "泰兴大厦",
+				"invoice":"--",
+				"final_price": 30.00,
+				"postage": 10.00,
+				"status":"退款中",
+				"group":[{
+					"供货商1":{
+						"order_no":"002-供货商1",
+						"products":[{
+							"name":"商品1-2",
+							"price":10.00,
+							"count":2
+						}],
+						"status":"退款中",
+						"refund_details":{
+							"cash": 10.00,
+							"weizoom_card": 0.00,
+							"coupon_money": 10.00,
+							"integral_money": 10.00
+						},
+						"actions": [],
+					},
+					"供货商2":{
+						"order_no":"002-供货商2",
+						"products":[{
+							"name":"商品2-2",
+							"price":20.00,
+							"count":1
+						}],
+						"status":"已完成",
+						"actions": ["申请退款"],
+					}
+				}]
+			}]
+			"""
+		Then jobs获得自营订单'002'
+			"""
+			{
+				"order_no":"002",
+				"status":"退款中",
+				"ship_name":"bill",
+				"ship_tel":"13811223344",
+				"ship_area": "北京市 北京市 海淀区",
+				"ship_address": "泰兴大厦",
+				"invoice":"--",
+				"business_message":"",
+				"methods_of_payment":"支付宝",
+				"group":[{
+					"供货商1":{
+						"order_no":"002-供货商1",
+						"products":[{
+							"name":"商品1-2",
+							"price":10.00,
+							"count":2,
+							"single_save":"20积分，抵扣10.00元"
+						}],
+						"postage": 10.00,
+						"status":"退款中"
+					},
+					"供货商2":{
+						"order_no":"002-供货商2",
+						"products":[{
+							"name":"商品2-2",
+							"price":20.00,
+							"count":1,
+							"single_save":"20积分，抵扣10.00元"
+						}],
+						"postage": 0.00,
+						"status":"已完成"
+					}
+				}],
+				"total_save":"",
+				"weizoom_card":"",
+				"products_count":3,
+				"product_price": 40.00,
+				"postage": 10.00,
+				"save_money": -20.00,
+				"cash":30.00,
+				"final_price": 30.00
+			}
+			"""
+		Then jobs能获得订单'002'操作日志
+			| action                  | operator |
+			| 下单                    | 客户     |
+			| 支付                    | 客户     |
+			| 订单发货-供应商1        | jobs     |
+			| 完成-供应商1            | jobs     |
+			| 订单发货-供应商2        | jobs     |
+			| 退款-供应商1            | jobs     |
+			| 完成-供应商2            | jobs     |
+
+	#退款完成
+		Given jobs登录系统
+		When jobs通过财务审核'退款成功'自营订单'002-供货商1'
+
+		#手机端订单列表
+		Then bill获得手机端订单列表::apiserver
+			"""
+			[{
+				"status": "已完成",
+				"order_time":"2016-01-02 10:00:00",
+				"products"[{
+					"name":"商品1-2"
+				},{
+					"name":"商品2-2"
+				}],
+				"products_count": 3,
+				"final_price": 20.00
+			}]
+			"""
+
+		#手机端订单详情
+		Then bill获取手机端订单'002'::apiserver
+			"""
+			{
+				"order_no": "002",
+				"status":"已完成",
+				"ship_name": "bill",
+				"ship_tel": "13811223344",
+				"ship_area": "北京市 北京市 海淀区",
+				"ship_address": "泰兴大厦",
+				"group":[{
+					"供货商1":{
+						"status":"退款成功",
+						"products": [{
+							"name": "商品1-2",
+							"price": 10.00,
+							"count": 2
+						}],
+						"postage": 10.00
+					},
+					"供货商2":{
+						"status":"已完成",
+						"products": [{
+							"name": "商品2-2",
+							"price": 20.00,
+							"count": 1
+						}],
+						"postage": 0.00
+					}
+				}],
+				"methods_of_payment":"支付宝",
+				"product_price": 40.00,
+				"postage": 10.00,
+				"save_money": -20.00,
+				"refund_money": 10.00,
+				"final_price": 20.00,
+				"order_time":"2016-01-02 10:00:00",
+			}
+			"""
+
+		#后台订单列表
+		Given jobs登录系统
+		Then jobs获得自营订单列表
+			"""
+			[{
+				"order_no":"002",
+				"methods_of_payment":"支付宝",
+				"order_time":"2016-01-02 10:00:00",
+				"payment_time":"2016-01-03 10:00:00",
+				"save_money": 20.00,
+				"buyer":"bill",
+				"ship_name":"bill",
+				"ship_tel":"13811223344",
+				"ship_area": "北京市 北京市 海淀区",
+				"ship_address": "泰兴大厦",
+				"invoice":"--",
+				"final_price": 10.00,
+				"postage": 10.00,
+				"status":"已完成",
+				"group":[{
+					"供货商1":{
+						"order_no":"002-供货商1",
+						"products":[{
+							"name":"商品1-2",
+							"price":10.00,
+							"count":2
+						}],
+						"status":"退款成功",
+						"refund_details":{
+							"cash": 10.00,
+							"weizoom_card": 0.00,
+							"coupon_money": 10.00,
+							"integral_money": 10.00
+						},
+						"actions": [],
+					},
+					"供货商2":{
+						"order_no":"002-供货商2",
+						"products":[{
+							"name":"商品2-2",
+							"price":20.00,
+							"count":1
+						}],
+						"status":"已完成",
+						"actions": ["申请退款"],
+					}
+				}]
+			}]
+			"""
+		Then jobs获得自营订单'002'
+			"""
+			{
+				"order_no":"002",
+				"status":"已完成",
+				"ship_name":"bill",
+				"ship_tel":"13811223344",
+				"ship_area": "北京市 北京市 海淀区",
+				"ship_address": "泰兴大厦",
+				"invoice":"--",
+				"business_message":"",
+				"methods_of_payment":"支付宝",
+				"group":[{
+					"供货商1":{
+						"order_no":"002-供货商1",
+						"products":[{
+							"name":"商品1-2",
+							"price":10.00,
+							"count":2,
+							"single_save":"20积分，抵扣10.00元"
+						}],
+						"postage": 10.00,
+						"status":"退款成功"
+					},
+					"供货商2":{
+						"order_no":"002-供货商2",
+						"products":[{
+							"name":"商品2-2",
+							"price":20.00,
+							"count":1,
+							"single_save":"20积分，抵扣10.00元"
+						}],
+						"postage": 0.00,
+						"status":"已完成"
+					}
+				}],
+				"total_save":"",
+				"weizoom_card":"",
+				"products_count":3,
+				"product_price": 40.00,
+				"postage": 10.00,
+				"save_money": -20.00,
+				"cash":20.00,
+				"final_price": 20.00,
+				"refund_details":{
+					"cash": 10.00,
+					"weizoom_card": 0.00,
+					"coupon_money": 10.00,
+					"integral_money": 10.00
+				}
+			}
+			"""
+		Then jobs能获得订单'002'操作日志
+			| action                  | operator |
+			| 下单                    | 客户     |
+			| 支付                    | 客户     |
+			| 订单发货-供应商1        | jobs     |
+			| 完成-供应商1            | jobs     |
+			| 订单发货-供应商2        | jobs     |
+			| 退款-供应商1            | jobs     |
+			| 完成-供应商2            | jobs     |
+			| 退款完成-供货商1        | jobs     |
 
 Scenario:4 一个供应商多个商品订单-优惠券抵扣(一个不满足满额包邮，一个有运费)
