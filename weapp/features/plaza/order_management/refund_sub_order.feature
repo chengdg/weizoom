@@ -171,7 +171,7 @@ Background:
 					"card_name":"100000001",
 					"card_pass":"1234567"
 					}],
-				"pay_type":"货到付款",
+				"pay_type":"微信支付",
 				"ship_name":"bill",
 				"ship_tel":"13811223344",
 				"ship_area": "北京市 北京市 海淀区",
