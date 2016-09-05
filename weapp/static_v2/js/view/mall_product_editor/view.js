@@ -162,7 +162,11 @@ W.view.mall.ProductEditor = Backbone.View.extend({
 	},
 	onClickShowLimitZone: function(event){
 		var _this = this;
+		var templateId = this.$el.find('#limit_zone_template').val();
+		var templateName = this.$el.find('#limit_zone_template option:selected').text();
 		W.dialog.showDialog('W.dialog.mall.EditProductLimitedAreaTemplateDialog', {
+			templateId:templateId,
+			templateName:templateName,
 			success: function(data) {
 			}
 		});

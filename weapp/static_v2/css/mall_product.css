@@ -772,6 +772,10 @@
 .xui-limited-area-template-dialog .modal-dialog tbody tr td:last-child{
 	width: initial;
 }
+.xui-limited-area-template-dialog .modal-dialog .modal-body{
+	min-height: 290px;
+    overflow-y: auto;
+}
 /*选择产品规格弹窗*/
 .xui-selectProductModelPropertyDialog .modal-dialog{
 	width: 500px;
