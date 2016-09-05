@@ -419,7 +419,6 @@
 .xui-mallSelectLimitedAreaDialog .btn-success{
 	background:#207cbe;
 }
-
 /*
 * 物流名称管理页
 */
@@ -758,6 +757,24 @@
 .xui-limited-area-template-dialog .modal-footer button{
 	background: #fff;
 	color:#333;
+	font-weight: bold;
+}
+.xui-limited-area-template-dialog table tr td{
+	text-align: left;
+	border-top:none;
+}
+.xui-limited-area-template-dialog table tr td:first-child{
+	width: 100px;
+}
+.xui-limited-area-template-dialog table tr.xui-province td:nth-child(2){
+	width: 66px;
+}
+.xui-limited-area-template-dialog .modal-dialog tbody tr td:last-child{
+	width: initial;
+}
+.xui-limited-area-template-dialog .modal-dialog .modal-body{
+	min-height: 290px;
+    overflow-y: auto;
 }
 /*选择产品规格弹窗*/
 .xui-selectProductModelPropertyDialog .modal-dialog{

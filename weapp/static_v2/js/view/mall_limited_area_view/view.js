@@ -137,8 +137,12 @@ W.view.mall.limitedAreaSelectorView = Backbone.View.extend({
 			success: function(data) {
 				var $node = $.tmpl(_this.getTemplate(), {provinces: data.provinces});
 				_this.$('.xa-selectedLimitedArea').empty().append($node);
-				$('.xa-submit').show();
 				_this.getAllSelectedIds();
+				if(data.provinces.length > 0){
+					$('.xa-submit').show();
+				}else{
+					$('.xa-submit').hide();
+				}
 			}
 		});
 	},
