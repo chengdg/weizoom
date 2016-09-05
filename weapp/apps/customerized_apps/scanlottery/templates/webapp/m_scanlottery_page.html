@@ -255,6 +255,7 @@
 {% block js %}
 <script type="text/javascript">
     var scanCode = '';
+    var isUserInput = 0; //用户手动输入二维码
 
     $(function(){
         var height = document.body.scrollHeight;
@@ -274,6 +275,7 @@
         $('.wa-guide-input-btn').on('click', function(){
             scanCode = $.trim($('.wa-guide-input-text').val());
             if(/^\d{20}$/.test(scanCode)){
+                isUserInput = 1;
                 $('.wa-guide').hide();
                 $('.wa-scanlottery-page').show();
             }else{
@@ -317,7 +319,7 @@
                     verify_code: verify_code
                 },
                 success: function(data){
-                    var link = '/m/apps/scanlottery/m_scanlottery/?webapp_owner_id=' + W.webappOwnerId + '&name=' + name + '&phone=' + phone + '&scan_code=' + scanCode + '&id=' + W.appRecordId;
+                    var link = '/m/apps/scanlottery/m_scanlottery/?webapp_owner_id=' + W.webappOwnerId + '&name=' + name + '&phone=' + phone + '&scan_code=' + scanCode + '&id=' + W.appRecordId + '&is_user_input=' + isUserInput;
                     window.location.href = link;
                 },
                 error: function(resp){

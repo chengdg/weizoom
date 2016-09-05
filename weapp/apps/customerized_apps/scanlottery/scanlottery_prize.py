@@ -48,6 +48,7 @@ class Scanlottery_prize(resource.Resource):
 		name =  post.get('name', None)
 		phone =  post.get('phone', None)
 		now_datetime = datetime.today()
+		is_user_input = post.get('is_user_input', '0')
 
 		member = request.member
 		member_id = member.id
@@ -88,6 +89,9 @@ class Scanlottery_prize(resource.Resource):
 		prize_tank = []
 		scanlottery_prize_dict = scanlottery.prize
 		for _, item in scanlottery_prize_dict.items():
+			if is_user_input:
+				if item['title'] == '一等奖':
+					continue
 			prize_count = int(item['prize_count'])
 			for i in range(prize_count):
 				prize_item = {
@@ -97,6 +101,7 @@ class Scanlottery_prize(resource.Resource):
 					'prize_data': item['prize_data']
 				}
 				prize_tank.append(prize_item)
+
 		curr_tank_size = len(prize_tank)
 		cache_key = 'apps_scanlottery_%s_noprizecount' % record_id
 		cache_count = GET_CACHE(cache_key)
@@ -166,7 +171,8 @@ class Scanlottery_prize(resource.Resource):
 			"created_at": now_datetime,
 			"code": code,
 			"tel": phone,
-			"name": name
+			"name": name,
+			"participate_type": int(is_user_input)
 		}
 		scanlottery_record = app_models.ScanlotteryRecord(**log_data)
 		scanlottery_record.save()
