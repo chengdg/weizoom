@@ -63,7 +63,7 @@ class Flashsale(api_resource.ApiResource):
 
 		#已经配置过促销活动的商品，在进行中并且不能同时参加的活动
 		product_id2type = {}
-		for p in promotion_models.Promotion.objects.filter(status=promotion_models.PROMOTION_STATUS_STARTED, id__in=product_id2promotion_id.values()):
+		for p in promotion_models.Promotion.objects.filter(owner_id=owner.id, status=promotion_models.PROMOTION_STATUS_STARTED, id__in=product_id2promotion_id.values()):
 			if p.type in [promotion_models.PROMOTION_TYPE_FLASH_SALE, promotion_models.PROMOTION_TYPE_PREMIUM_SALE, promotion_models.PROMOTION_TYPE_COUPON]:
 				for product_id, promotion_id in product_id2promotion_id.items():
 					if p.id == promotion_id:
