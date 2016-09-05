@@ -700,13 +700,13 @@ class OrderGetFile(resource.Resource):
 
 
 
-class OrderReturnInfo(resource.Resource):
+class OrderRefundInfo(resource.Resource):
     """
     退款信息
     """
 
     app = "mall2"
-    resource = "OrderReturnInfo"
+    resource = "OrderRefundInfo"
 
     @login_required()
     def api_put(request):
@@ -729,7 +729,7 @@ class OrderReturnInfo(resource.Resource):
         Order.objects.filter(id=delivery_item_id).update(refund_money=F('refund_money'))
 
         OrderHasRefund.objects.create(
-            order_id=order_id,
+            origin_order_id=order_id,
             delivery_item_id=delivery_item_id,
             cash=cash,
             weizoom_card_money=weizoom_card_money,

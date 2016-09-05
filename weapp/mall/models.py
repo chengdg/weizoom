@@ -1916,7 +1916,7 @@ class OrderPaymentInfo(models.Model):
 
 
 class OrderHasRefund(models.Model):
-	order_id = models.IntegerField(default=0)  # 原始订单id，用于微众精选拆单
+	origin_order_id = models.IntegerField(default=0)  # 原始订单id，用于微众精选拆单
 	delivery_item_id = models.IntegerField(default=0)  # 对应子订单主键id
 	cash = models.FloatField(default=0.0)
 	weizoom_card_money = models.FloatField(default=0.0)  # 微众卡抵扣金额
