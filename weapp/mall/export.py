@@ -331,6 +331,7 @@ ADVANCE_MANAGE_CHANNEL_DISTRIBUTIONS_NAV = 'channel_distributions'
 #
 MALL_PROMOTION_SECOND_NAV = MALL_PROMOTION_FLASH_SALE_NAV
 MALL_APPS_SECOND_NAV = MALL_APPS_LOTTERY_NAV
+MALL_CHANNEL_QRCODE_SECOND_NAV = ADVANCE_MANAGE_QRCODE_NAV
 
 
 MALL_PROMOTION_AND_APPS_SECOND_NAV = {
@@ -493,7 +494,7 @@ MALL_PROMOTION_AND_APPS_SECOND_NAV = {
                     'title': u'用户反馈',
                     'url': '/apps/exsurvey/exsurveies/',
                     'permission': '',
-                    'users': ['jobs','njtest','ceshi01', 'wzjx001', 'weizoomxs', 'weizoommm', 'weshop', 'weizoomclub', 'weizoomshop'] #这些帐号可以显示用户反馈
+                    'users': ['jobs', 'ceshi01', 'wzjx001', 'weizoomxs', 'weizoommm', 'weshop', 'weizoomclub', 'weizoomshop', 'Aierkang'] #这些帐号可以显示用户反馈
                 },{
                     'name': MALL_APPS_GROUP_NAV,
                     'title': u'团购',
@@ -510,13 +511,13 @@ MALL_PROMOTION_AND_APPS_SECOND_NAV = {
                     'title': u'返利活动',
                     'url': '/apps/rebate/rebates/',
                     'permission': '',
-                    'users': ['jobs','njtest', 'ceshi01', 'weshop']
+                    'users': ['jobs', 'ceshi01', 'weshop', 'Aierkang']
                 },{
                     'name': MALL_APPS_EXSIGN_NAV,
                     'title': u'专项签到',
                     'url': '/apps/exsign/exsign/',
                     'permission': '',
-                    'users': ['jobs', 'ceshi01', 'weshop']
+                    'users': ['jobs', 'ceshi01', 'weshop', 'Aierkang']
                 },
                 # {
                 #     'name': MALL_APPS_REDPACKET_NAV,
@@ -527,10 +528,10 @@ MALL_PROMOTION_AND_APPS_SECOND_NAV = {
             ]
         },
         {
-            'name': MALL_APPS_SECOND_NAV,
+            'name': MALL_CHANNEL_QRCODE_SECOND_NAV,
             'title': u'推广与分销',
             'url': '/new_weixin/qrcodes/',
-            'permission': 'manage_apps',
+            'permission': 'manage_channel_qrcode',
             'third_navs': [
                 {
                     'name': ADVANCE_MANAGE_QRCODE_NAV,
@@ -543,7 +544,7 @@ MALL_PROMOTION_AND_APPS_SECOND_NAV = {
                     'title': u'渠道分销',
                     'url': '/new_weixin/channel_distributions/',
                     'permission': '',
-                    'users': ['jobs', 'ceshi01', 'aromilia']
+                    'users': ['jobs', 'ceshi01', 'aromilia', 'weizoomxiaoyuan']
                 },
             ]
         }

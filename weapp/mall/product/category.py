@@ -7,7 +7,7 @@ from django.shortcuts import render_to_response
 from django.contrib.auth.decorators import login_required
 from django.db.models import F, Q
 
-from mall.promotion.utils import verification_multi_product_promotion
+from mall.promotion.utils import verification_multi_product_promotion, verification_multi_product_promotion_weizoom_mall
 from .. import models as mall_models
 from .. import export
 from . import utils as category_ROA_utils
@@ -15,6 +15,8 @@ from core import resource, paginator
 from core.jsonresponse import create_response
 from core.exceptionutil import unicode_full_stack
 from watchdog.utils import watchdog_warning
+
+from account.models import UserProfile
 
 
 class Categories(resource.Resource):
@@ -70,19 +72,25 @@ class CategoryProducts(resource.Resource):
         @param promotion_type:支持coupon,integral_sale
         @return promotion_type: 促销类型
         """
+        mall_type = UserProfile.objects.get(user_id=request.manager.id).webapp_type
         category_ids = request.GET.get('category_ids', '').split(',')
         promotion_type = request.GET.get('promotion_type', 'coupon')
         relations = mall_models.CategoryHasProduct.objects.filter(
             category_id__in=category_ids)
 
         product_ids = set([relation.product_id for relation in relations])
-
-        _, error_product_ids = verification_multi_product_promotion(request.manager, product_ids, promotion_type)
+        if mall_type == 1:
+            _, error_product_ids = verification_multi_product_promotion_weizoom_mall(request.manager, product_ids, promotion_type)
+        else:
+            _, error_product_ids = verification_multi_product_promotion(request.manager, product_ids, promotion_type)
 
         product_ids = list(set(product_ids) - set(error_product_ids))
 
-        products = list(mall_models.Product.objects.filter(
-            owner=request.manager, is_deleted=False, shelve_type=mall_models.PRODUCT_SHELVE_TYPE_ON,id__in=product_ids))
+        if mall_type == 1:
+            products = list(mall_models.Product.objects.filter(id__in=product_ids))
+        else:
+            products = list(mall_models.Product.objects.filter(
+                owner=request.manager, is_deleted=False, shelve_type=mall_models.PRODUCT_SHELVE_TYPE_ON,id__in=product_ids))
 
         mall_models.Product.fill_details(request.manager,
                                          products,
@@ -108,33 +116,11 @@ class CategoryProducts(resource.Resource):
         }
         return response.get_response()
 
-
-
-class CategoryList(resource.Resource):
+class CategoryProductList(resource.Resource):
     app = 'mall2'
-    resource = 'category_list'
+    resource = 'category_product_list'
 
-    @login_required
-    def get(request):
-        """
-        商品分类列表页面
-        """
-        #获取category集合
-        product_categories = mall_models.ProductCategory.objects.filter(
-            owner=request.manager)
-
-        mall_type = request.user_profile.webapp_type
-
-        category_ROA_utils.sorted_products(mall_type,request.manager.id, product_categories, True)
-
-        c = RequestContext(request, {
-                    'first_nav_name': export.PRODUCT_FIRST_NAV,
-                    'second_navs': export.get_mall_product_second_navs(request),
-                    'second_nav_name': export.PRODUCT_MANAGE_CATEGORY_NAV,
-                    'product_categories': product_categories}
-        )
-        return render_to_response('mall/editor/product_categories.html', c)
-
+    
     @login_required
     def api_get(request):
         """
@@ -277,6 +263,74 @@ class CategoryList(resource.Resource):
             }
             return response.get_response()
 
+class CategoryList(resource.Resource):
+    app = 'mall2'
+    resource = 'category_list'
+
+    @login_required
+    def get(request):
+        """
+        商品分类列表页面
+        """
+        c = RequestContext(request, {
+                    'first_nav_name': export.PRODUCT_FIRST_NAV,
+                    'second_navs': export.get_mall_product_second_navs(request),
+                    'second_nav_name': export.PRODUCT_MANAGE_CATEGORY_NAV,
+                    'has_categories':True}
+        )
+        return render_to_response('mall/editor/product_categories.html', c)
+
+    @login_required
+    def api_get(request):
+        """
+        功能: 获得商品分组列表
+        """
+        COUNT_PER_PAGE = 15
+        #获取category集合
+        product_categories = mall_models.ProductCategory.objects.filter(
+            owner=request.manager)
+
+        mall_type = request.user_profile.webapp_type
+
+        category_ROA_utils.sorted_products(mall_type,request.manager.id, product_categories, True)
+        #进行分页
+        count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
+        cur_page = int(request.GET.get('page', '1'))
+        pageinfo, product_categories = paginator.paginate(
+            product_categories,
+            cur_page,
+            count_per_page,
+            query_string=request.META['QUERY_STRING'])
+
+        #构造返回数据
+        items = []
+        for category in product_categories:
+            items1 = []
+            for product in category.products:
+                product_data = {
+                    'id':product.id,
+                    'name':product.name,
+                    'display_price':product.display_price,
+                    'status':str(product.status),
+                    'display_index':product.display_index,
+                    'sales':product.sales,
+                    'join_category_time':product.join_category_time.strftime('%Y-%m-%d %H:%M')
+                }
+                items1.append(product_data)
+            data = {
+                'id': category.id,
+                'name': category.name,
+                'products':items1
+            }
+            items.append(data)
+        response = create_response(200)
+        response.data = {
+            'items': items,
+            'pageinfo': paginator.to_dict(pageinfo),
+            'sortAttr': '',
+            'data': {}
+        }
+        return response.get_response()
 
     @login_required
     def put(request):

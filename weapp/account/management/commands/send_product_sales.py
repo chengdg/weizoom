@@ -5,13 +5,7 @@ from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
 
 #邮件部分
-from email import encoders
-from email.header import Header
-from email.mime.text import MIMEText
-from email.MIMEMultipart import MIMEMultipart
-from email.MIMEBase import MIMEBase
-from email.utils import parseaddr, formataddr
-import smtplib
+from core.sendmail import sendmail
 
 
 import sys
@@ -35,59 +29,6 @@ DATE_FORMAT="%Y-%m-%d"
 sales_order_status = [ORDER_STATUS_PAYED_NOT_SHIP, ORDER_STATUS_PAYED_SHIPED, ORDER_STATUS_SUCCESSED, ORDER_STATUS_REFUNDING, ORDER_STATUS_GROUP_REFUNDING]
 
 
-class MyMail (object ):
-	def __init__ (self):
-		self.account = settings.MAIL_NOTIFY_USERNAME
-		self.password = settings.MAIL_NOTIFY_PASSWORD
-		self.smtp_server = settings.MAIL_NOTIFY_ACCOUNT_SMTP
-
-	def send (self, receivers, title, content, mode=None, file_path=None):
-		if mode == 'test':
-			receivers = receivers[0:1]
-		to_addr = ';'.join(receivers)
-
-		date = datetime.now().strftime('%Y-%m-%d')
-		msg = MIMEMultipart('alternative')
-		msg['From' ] = self.account
-		msg['To' ] = to_addr
-		msg['Subject'] = str(Header('%s' % title, 'utf-8'))
-		c = MIMEText(content, _subtype='html', _charset='utf-8')
-		msg.attach(c)
-
-		#添加附件
-		if file_path:
-			filename = file_path.split('.')[0]
-			with open(file_path ,'rb') as f:
-				#设置附件的mime和文件名，这里是py类型
-				mime = MIMEBase('txt', 'xlsx', filename=filename)
-				#加上头信息
-				mime.add_header('Content-Disposition', 'attachment', filename=file_path)
-				mime.add_header('Content-ID', '<0>')
-				mime.add_header('X-Attachment-Id', '0')
-
-				#把附件的内容读进来
-				mime.set_payload(f.read())
-
-				#用Base64编码
-				encoders.encode_base64(mime)
-
-				#添加到MIMEMultipart
-				msg.attach(mime)
-
-
-		server = smtplib.SMTP(self.smtp_server)
-		#server.docmd("EHLO server" )
-		#server.starttls()
-		server.login(self.account,self.password)
-		server.sendmail(self.account, receivers, msg.as_string())
-		server.close()	
-
-
-m = MyMail()
-def sendmail(receivers, title, content, mode=None, file_path=None):
-	m.send(receivers, title, content, mode, file_path)
-
-
 class Command(BaseCommand):
 	help = "send product sales email"
 	args = ''
@@ -103,7 +44,7 @@ class Command(BaseCommand):
 			file_path = 'product_pool_sales.xlsx'
 			workbook   = xlsxwriter.Workbook(file_path)
 			table = workbook.add_worksheet()
-			alist = [u'商品', u'供货商', u'销量', u'微众卡', u'微众优惠券', u'微众积分', u'现金', u'总金额']
+			alist = [u'商品', u'供货商', u'分类', u'销量', u'微众卡', u'微众优惠券', u'微众积分', u'现金', u'总金额']
 			table.write_row('A1',alist)
 			pool_weapp_profile = UserProfile.objects.filter(webapp_type=2).first()
 			owner_pool = User.objects.get(id=pool_weapp_profile.user_id)
@@ -113,6 +54,11 @@ class Command(BaseCommand):
 
 			supplier_ids2name = {}
 			product_id2store_name, product_id2sync_time = utils.get_sync_product_store_name(product_ids)
+			#添加分类
+			product_id2classification = {}
+			relations = ClassificationHasProduct.objects.filter(product_id__in=product_ids)
+			for r in relations:
+				product_id2classification[r.product_id] = r.classification.name
 			tmp_line = 1
 			for product_id in product_ids:
 				tmp_line += 1
@@ -140,7 +86,7 @@ class Command(BaseCommand):
 				cash = 0.0
 				total = 0.0
 
-				order_has_products = OrderHasProduct.objects.filter(product_id=product_id, order__origin_order_id__lte=0, order__status__in=sales_order_status, order__payment_time__gte='2016-08-01')
+				order_has_products = OrderHasProduct.objects.filter(product_id=product_id, order__origin_order_id__lte=0, order__status__in=sales_order_status, order__payment_time__gte=first_day)
 				for order_has_product in order_has_products:
 					product_sales += order_has_product.number
 					weizoom_card += order_has_product.order.weizoom_card_money
@@ -157,12 +103,12 @@ class Command(BaseCommand):
 					cash += order_has_product.order.final_price
 					total += order_has_product.price* order_has_product.number
 
-				tmp_list = [product_name, supplier_name_export, product_sales, round(weizoom_card, 2), round(coupon_money,2), round(integral_money,2) , round(cash,2), round(total,2)]
+				tmp_list = [product_name, supplier_name_export, product_id2classification.get(product_id,''), product_sales, round(weizoom_card, 2), round(coupon_money,2), round(integral_money,2) , round(cash,2), round(total,2)]
 				table.write_row('A{}'.format(tmp_line),tmp_list)
 
 			workbook.close()
 
-			receivers = ['houtingfei@weizoom.com', 'zhangzhiyong@weizoom.com', 'guoyucheng@weizoom.com']
+			receivers = ['houtingfei@weizoom.com', 'zhangzhiyong@weizoom.com', 'guoyucheng@weizoom.com', 'mengqi@weizoom.com']
 			mode = ''
 			if len(args) == 1:
 				if args[0] == 'test':

@@ -11,6 +11,7 @@ from weixin2 import export
 from weixin2.models import *
 from core import resource
 from util import *
+from utils import cache_util
 import json
 
 COUNT_PER_PAGE = 20
@@ -118,6 +119,10 @@ class FollowRules(resource.Resource):
                 answer = answer,
                 material_id = material_id
             )
+            #清除缓存
+            cache_key = 'auto_qa_message_webapp_id_%s_type_%s' % (request.user_profile.webapp_id, FOLLOW_TYPE)
+            cache_util.delete_cache(cache_key)
+
             response = create_response(200)
 
         return response.get_response()

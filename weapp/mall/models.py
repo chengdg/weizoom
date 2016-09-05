@@ -720,9 +720,26 @@ class Product(models.Model):
 
 		product_ids = [product.id for product in products]
 
+		mall_type = options.get('mall_type', False)
+		product_pool_id2product_pool = options.get('product_pool_id2product_pool', {})
 		for product in products:
 			if product.id!=None:
 				product.detail_link = '/mall2/product/?id=%d&source=onshelf' % product.id
+
+				if mall_type == 1 and product_pool_id2product_pool:
+					pool = product_pool_id2product_pool.get(product.id, None)
+					if pool:
+						product.display_index = pool.display_index
+						if pool.status == PP_STATUS_ON:
+							product._status = u'在售'
+						elif pool.status == PP_STATUS_OFF:
+							product._status = u'待售'
+						elif pool.status == PP_STATUS_DELETE:
+							product._status = u'已删除'
+						else:
+							product._status = u'商品池中'
+
+
 
 		if options.get('with_product_model', False):
 			Product.fill_model_detail(
@@ -2718,7 +2735,14 @@ class MallOrderFromSharedRecord(models.Model):
         verbose_name_plural = "通过分享链接订单"
         db_table = "mall_order_from_shared_record"
 # #######        供货商实现        ####
-
+# 五五分成
+SUPPLIER_TYPE_DIVIDE = 0
+# 零售返点
+SUPPLIER_TYPE_RETAIL = 1
+# 固定低价
+SUPPLIER_TYPE_FIXED = 2
+# 普通供货商
+SUPPLIER_TYPE_NORMAL = -1
 class Supplier(models.Model):
 	owner = models.ForeignKey(User)
 	name = models.CharField(max_length=16)  # 供货商名称
@@ -2727,7 +2751,7 @@ class Supplier(models.Model):
 	supplier_address = models.CharField(max_length=256) # 供货商地址
 	remark = models.CharField(max_length=256) # 备注
 	is_delete = models.BooleanField(default=False)  # 是否已经删除
-	type = models.IntegerField(default=-1)# 是否55分  0 55分成
+	type = models.IntegerField(SUPPLIER_TYPE_NORMAL)# 是否55分  0 55分成
 	created_at = models.DateTimeField(auto_now_add=True)  # 添加时间
 
 	class Meta(object):
@@ -2924,3 +2948,42 @@ class ClassificationHasProduct(models.Model):
 		verbose_name = "商品分类与商品的关系"
 		verbose_name_plural = "商品分类与商品的关系"
 		db_table = "mall_classification_has_product"
+
+
+
+class SupplierDivideRebateInfo(models.Model):
+    """
+    供货商五五分成信息(不一定是五成)--目前只有首月五五分成,以后可能扩展成,不同额度不同返点.
+    """
+    # 供货商id
+    supplier_id = models.IntegerField()
+    # 钱额度
+    divide_money = models.IntegerField()
+    # 基础返点
+    basic_rebate = models.IntegerField()
+    # 在此额度内返点
+    rebate = models.IntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_deleted = models.BooleanField(default=False)
+
+    class Meta(object):
+        db_table = 'supplier_divide_rebate_info'
+
+
+
+class SupplierRetailRebateInfo(models.Model):
+    """
+    零售返点的供货商的返点信息(包括团购)
+    """
+    # 供货商id
+    supplier_id = models.IntegerField()
+    # 平台id(如果支持团购) 0的表示改供货商的基础扣点; 0的默认值表示改供货商的基础扣点
+    # 如果有owner_id说明该扣点是属于团购扣点
+    owner_id = models.IntegerField(default=0)
+    # 扣点
+    rebate = models.IntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_deleted = models.BooleanField(default=False)
+
+    class Meta(object):
+        db_table = 'supplier_retail_rebate_info'

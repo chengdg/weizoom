@@ -284,13 +284,20 @@ $(document).ready(function($) {
         $('.xa-all_groups_can_open').removeClass('wui-inner-active');
     });
     //我要参团tab
-    $('.xa-all_groups_can_open').on('touchstart', function(){
+    $('.xa-all_groups_can_open').on('touchstart', function(e){
+        e.stopPropagation();
         $('.xui-all_groups_can_join-slide').addClass('none');
         $('.xui-all_groups_can_join-list').addClass('none');
         $('.xui-all_groups_can_open-slide').removeClass('none');
         $('.xa-all_groups_can_join').removeClass('wui-inner-active');
         $('.xa-all_groups_can_open').addClass('wui-inner-active');
     });
+
+    //当前商家是【微众便利店】，则首先切换到‘我要开团’标签
+	var isWzbld = {% if isWzbld %} true {% else %} false {% endif %};
+    if(1142 == W.webappOwnerId && !isWzbld){
+        $('.xa-all_groups_can_open').trigger('touchstart');
+    }
 });
 
 function getDynamicData(recordId){

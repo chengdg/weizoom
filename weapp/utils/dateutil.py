@@ -4,7 +4,7 @@
 # 参考自 com.wintim.common.util.DateUtil
 
 import datetime as dt
-
+from datetime import timedelta
 
 DATETIME_FORMAT="%Y-%m-%d %H:%M:%S"
 DATE_FORMAT="%Y-%m-%d"
@@ -51,3 +51,15 @@ def parse_date(str):
 # 得到n天后的时间
 def get_date_after_days(date, days):
 	return date + dt.timedelta(days=days)
+
+#===============================================================================
+# get_date_range_list : 获取一段时间的日期列表
+#===============================================================================
+def get_date_range_list(low_date, high_date):
+	date_list = []
+	loop_date = low_date
+	while loop_date <= high_date:
+		date_list.append(loop_date)
+		loop_date += timedelta(1)
+
+	return date_list

@@ -49,7 +49,6 @@ def get_page(request):
 		'return_standard': return_standard,
 		'user_icon': user_icon,
 		'webapp_id': webapp_id,
-		'member_id': member_id,
 		'state': state,
 		'member_id': member_id
 	})
@@ -63,16 +62,15 @@ def get_process(request):
 	member_id = request.member.id
 	cur_list = models.ChannelDistributionQrcodeSettings.objects.get(bing_member_id=member_id)
 	prev_datas = models.ChannelDistributionDetail.objects.filter(member_id=member_id, order_id=0).order_by('-created_at')[0:20]
-	prev_lists = []
+	prev_list = []
 	for prev_data in prev_datas:
-		prev_list = {
+		prev_list.append({
 			'created_at': prev_data.created_at
-		}
-		prev_lists.append(prev_list)
+		})
 
 	c = RequestContext(request, {
 		"cur_list": cur_list,
-		"prev_lists": prev_lists
+		"prev_lists": prev_list
 	})
 
 	return render_to_response('%s/distribution/webapp/m_process.html' % TEMPLATE_DIR, c)
@@ -83,30 +81,26 @@ def get_vip_message(request):
 	"""
 	获取已有会员页面
 	"""
-	webapp_id = request.user_profile.webapp_id
 	member_id = request.member.id
 	vip_member_id = models.ChannelDistributionQrcodeSettings.objects.get(bing_member_id=member_id).id
 	vip_datas = models.ChannelDistributionQrcodeHasMember.objects.filter(channel_qrcode_id=vip_member_id, commission__gt=0)
+	request_params = {}
 	if vip_datas:
-		vip_lists = []
+		vip_list = []
 		for vip_data in vip_datas:
-			vip_list = {
+			vip_list.append({
 				'nick_name': Member.objects.get(id=vip_data.member_id).username_for_html,
 				'cost_money': vip_data.cost_money,  #消费金额
 				'commission': vip_data.commission,  #带来的佣金
 				'buy_times': vip_data.buy_times,  #购买次数
 				'created_at': vip_data.created_at  #关注时间
-			}
-			vip_lists.append(vip_list)
+			})
 
-		c = RequestContext(request, {
-			'vip_lists': vip_lists
-		})
-	else:
-		c = RequestContext(request, {
-		})
+		request_params = {
+			'vip_lists': vip_list
+		}
 
-	return render_to_response('%s/distribution/webapp/m_vip.html' % TEMPLATE_DIR, c)
+	return render_to_response('%s/distribution/webapp/m_vip.html' % TEMPLATE_DIR, RequestContext(request, request_params))
 
 def get_details(request):
 	"""

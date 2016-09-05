@@ -60,6 +60,14 @@
 		<script type="text/javascript" src="/static_v2/js/view/common_drop_box/view.js"></script>
 		<script type="text/javascript" src="/static_v2/js/view/common_popup_confirm_view/view.js"></script>
 
+        <script type="text/javascript" src="/termite_static/v3/webapp/webapp.js"></script>
+        <script type="text/javascript" src="/termite_static/v3/lib/lazyload.js"></script>
+        <script type="text/javascript" src="/termite_static/v3/system/debug.js"></script>
+        <script type="text/javascript" src="/termite_static/v3/webapp/backbone_lite.js"></script>
+        <script type="text/javascript" src="/static_v2/lib/handlebars-v3.0.1.js"></script>
+        <script type="text/javascript" src="/static_v2/js/system/handlebar_helper.js"></script>
+        <script type="text/javascript" src="/termite_static/v3/webapp/wepage_async_component_load.js"></script>
+
 		<script type="text/javascript">
 			/*按扭LOADING*/
 			$.fn.bottonLoading = function (options) {
@@ -81,6 +89,7 @@
 
 			W.isSystemManager = true;//{% if user|is_system_manager %}true{% else %}false{% endif %};
 			W.projectId = "{{project_id}}";
+            W.webappOwnerId = "{{request.webapp_owner_id}}";
 			var detectParentTask = function() {
 				_.delay(function() {
 					if (parent.W && parent.W.Broadcaster) {

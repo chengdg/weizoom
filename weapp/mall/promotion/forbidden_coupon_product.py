@@ -76,12 +76,13 @@ class ForbiddenCouponProduct(resource.Resource):
 
 		forbidden_coupon_products = promotion_models.ForbiddenCouponProduct.objects.filter(**args).order_by('-id')
 
+		pageinfo, forbidden_coupon_products = paginator.paginate(forbidden_coupon_products, cur_page, count_per_page, None)
+
 		items = []
 		for product in forbidden_coupon_products:
 			if not product.is_overdue:
 				items.append(product.to_dict())
 
-		pageinfo, items = paginator.paginate(items, cur_page, count_per_page, None)
 		response = create_response(200)
 		response.data = {
 			'items': items,
