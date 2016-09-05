@@ -167,11 +167,12 @@ Backgroud:
 					"name": "商品1a",
 					"count": 1
 				}],
-				"pay_type":"货到付款",
+				"pay_type":"微信支付",
 				"ship_area": "北京市 北京市 海淀区",
 				"ship_address": "海淀科技大厦"
 			}
 			"""
+		And bill使用支付方式'微信支付'进行支付::apiserver
 		When bill购买jobs的商品::apiserver
 			"""
 			{
@@ -1644,7 +1645,7 @@ Scenario:4 查看自营平台财务审核订单列表（单个子订单的母订
 					"status": "退款中",
 					"final_price":10.00,
 					"save_money":"",
-					"methods_of_payment": "货到付款",
+					"methods_of_payment": "微信支付",
 					"group":[{
 						"商家1"：{
 							"order_no":"102-商家1",
@@ -1673,7 +1674,7 @@ Scenario:4 查看自营平台财务审核订单列表（单个子订单的母订
 					"status": "退款中",
 					"final_price":10.00,
 					"save_money":"",
-					"methods_of_payment": "货到付款",
+					"methods_of_payment": "微信支付",
 					"group":[{
 						"商家1"：{
 							"order_no":"102-商家1",
@@ -1707,7 +1708,7 @@ Scenario:4 查看自营平台财务审核订单列表（单个子订单的母订
 				"status": "退款成功",
 				"final_price":10.00,
 				"save_money":"",
-				"methods_of_payment": "货到付款",
+				"methods_of_payment": "微信支付",
 				"group":[{
 					"商家1"：{
 						"order_no":"102-商家1",
@@ -1740,7 +1741,7 @@ Scenario:4 查看自营平台财务审核订单列表（单个子订单的母订
 				"status": "退款成功",
 				"final_price":10.00,
 				"save_money":"",
-				"methods_of_payment": "货到付款",
+				"methods_of_payment": "微信支付",
 				"group":[{
 					"商家1"：{
 						"order_no":"102-商家1",

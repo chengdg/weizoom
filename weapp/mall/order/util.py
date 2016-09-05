@@ -1198,6 +1198,9 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
             
     # 构造返回的order数据
     items = []
+
+    refund_infos = OrderHasRefund.objects.filter(origin_order_id__in=order_ids)
+    fackorder2refund_info = {o.delivery_item_id:o for o in refund_infos}
     for order in orders:
         products = mall_api.get_order_products(order)
         order.is_refund = is_refund
@@ -1217,6 +1220,17 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
                             fackorder.save()
                     if len(order2fackorders[order.id]) == 1:
                         fackorder.pay_interface_type = order.pay_interface_type
+
+                    refund_info = fackorder2refund_info.get(fackorder.id,None)
+                    if refund_info:
+                        refund_info_dict = {
+                            'cash': refund_info.cash,
+                            'weizoom_card_money': refund_info.weizoom_card_money,
+                            'integral_money': refund_info.integral_money,
+                            'coupon_money': refund_info.coupon_money,
+                        }
+                    else:
+                        refund_info_dict = {}
                     group_order = {
                         "id": fackorder.id,
                         "status": fackorder.get_status_text(),
@@ -1228,6 +1242,8 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
                             multi_child_orders=multi_child_orders,
                             is_group_buying=True if order.order_id in group_order_ids else False),
                         'type': fackorder.type,
+                        'refund_money': fackorder.refund_money,
+                        'refund_info': refund_info_dict
                     }
                     if fackorder.supplier or (not fackorder.supplier and not fackorder.supplier_user_id):
                         group = {
@@ -1253,6 +1269,8 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
                     'actions': get_order_actions(order, is_refund=is_refund, mall_type=mall_type,
                         is_group_buying=True if order.order_id in group_order_ids else False),
                     'type': order.type,
+                    'refund_money': 0,
+                    'refund_info_dict': {}
                 }
                 if order2fackorders.get(order.id) and len(order2fackorders.get(order.id)) == 1:
                     fackorder = order2fackorders[order.id][0]
@@ -1287,6 +1305,7 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
                 actions = get_order_actions(order, is_refund=is_refund, mall_type=mall_type, is_group_buying=True)
             else:
                 actions = get_order_actions(order, is_refund=is_refund, mall_type=mall_type)
+            print('------actions',actions)
             group_order = {
                 "id": order.id,
                 "status": order.get_status_text(),
@@ -1709,7 +1728,10 @@ def get_order_actions(order, is_refund=False, is_detail_page=False, is_list_pare
     result = []
     if not is_refund:
         if order.status == ORDER_STATUS_NOT:
-            result = [ORDER_PAY_ACTION, ORDER_UPDATE_PRICE_ACTION, ORDER_CANCEL_ACTION]
+            if mall_type:
+                result = [ORDER_PAY_ACTION, ORDER_CANCEL_ACTION]
+            else:
+                result = [ORDER_PAY_ACTION, ORDER_UPDATE_PRICE_ACTION, ORDER_CANCEL_ACTION]
         elif order.status == ORDER_STATUS_PAYED_NOT_SHIP:
             if order.pay_interface_type in [PAY_INTERFACE_ALIPAY, PAY_INTERFACE_TENPAY, PAY_INTERFACE_WEIXIN_PAY, PAY_INTERFACE_BEST_PAY]:
                 result = [ORDER_SHIP_ACTION, ORDER_REFUNDIND_ACTION]
@@ -1781,6 +1803,7 @@ def get_order_actions(order, is_refund=False, is_detail_page=False, is_list_pare
 
     if multi_child_orders:
         result = filter(lambda x: x not in able_actions_for_list_parent, result)
+    print('-------result',result)
     return result
 
 

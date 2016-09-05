@@ -2464,6 +2464,20 @@ def __restore_product_stock_by_order(order):
 			)
 
 
+def update_order_status_by_sub_order(sub_order):
+	"""
+	申请退款时使用
+	@param order:
+	@return:
+	"""
+	sub_order_status_list = [o.status for o in Order.objects.filter(origin_order_id=sub_order.origin_order_id)]
+
+	sub_order_weights = [ORDER_STATUS2DELIVERY_ITEM_WEIGHT[status] for status in sub_order_status_list]
+
+	order_status = DELIVERY_ITEM_WEIGHT2ORDER_STATUS[min(sub_order_weights)]
+
+	Order.objects.filter(id=sub_order.origin_order_id).update(status=order_status)
+
 
 ########################################################################
 # get_order_fitlers_by_user: 获取该用户的所有订单筛选

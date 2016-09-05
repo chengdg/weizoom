@@ -700,36 +700,48 @@ class OrderGetFile(resource.Resource):
 
 
 
-class OrderReturnInfo(resource.Resource):
+class OrderRefundInfo(resource.Resource):
     """
     退款信息
     """
 
     app = "mall2"
-    resource = "OrderReturnInfo"
+    resource = "OrderRefundInfo"
 
     @login_required()
     def api_put(request):
         order_id = request.POST['order_id']
         delivery_item_id = request.POST['delivery_item_id']
 
-        cash = request.POST['cash']
-        weizoom_card_money = request.POST['weizoom_card_money']
-        integral = request.POST['integral']
-        coupon_money = request.POST['coupon_money']
+        cash = request.POST.get('cash', 0)
+        weizoom_card_money = request.POST.get('weizoom_card_money', 0)
+        coupon_money = request.POST.get('coupon_money', 0)
 
-        integral_each_yuan = IntegralStrategySttings.objects.get(webapp_id=request.manager.get_profile().webapp_id).integral_each_yuan
+        integral = request.POST.get('integral', 0)
+
+        integral_each_yuan = IntegralStrategySttings.objects.get(
+            webapp_id=request.manager.get_profile().webapp_id).integral_each_yuan
         integral_money = integral_each_yuan * integral
 
+        total = cash + weizoom_card_money + coupon_money + integral_money
+
+        Order.objects.filter(id=order_id).update(refund_money=F('refund_money'))
+        Order.objects.filter(id=delivery_item_id).update(refund_money=F('refund_money'))
+
         OrderHasRefund.objects.create(
-            order_id=order_id,
+            origin_order_id=order_id,
             delivery_item_id=delivery_item_id,
             cash=cash,
             weizoom_card_money=weizoom_card_money,
             integral=integral,
             integral_money=integral_money,
-            coupon_money=coupon_money
+            coupon_money=coupon_money,
+            total=total
         )
+
+        sub_order = Order.objects.get(id=delivery_item_id)
+
+        mall_api.update_order_status_by_sub_order(sub_order)
         response = create_response(200)
         response.data = {}
         return response.get_response()
