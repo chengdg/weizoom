@@ -258,13 +258,7 @@ class BuyerSources(resource.Resource):
 		pre_status_qualified_orders = status_qualified_orders.filter(created_at__lt=start_time)
 		past_status_qualified_orders = status_qualified_orders.filter(created_at__lt=end_time)
 
-		for order in qualified_orders:
-			webapp_user_ids = set([order.webapp_user_id for order in past_status_qualified_orders])
-			webappuser2member = Member.members_from_webapp_user_ids(webapp_user_ids)
-
-			tmp_member = webappuser2member.get(order.webapp_user_id, None)
-
-		#买家来源
+        #买家来源
 		buyer_source_stats = {
 			# “直接关注购买”：=∑订单.个数
 			'sub_source_num': 0,
@@ -275,7 +269,11 @@ class BuyerSources(resource.Resource):
 			# “其他”：=∑订单.个数
 			'other_source_num': 0
 		}
-		_do_buyer_source_stats(buyer_source_stats, tmp_member)
+		for order in qualified_orders:
+			webapp_user_ids = set([order.webapp_user_id for order in past_status_qualified_orders])
+			webappuser2member = Member.members_from_webapp_user_ids(webapp_user_ids)
+			tmp_member = webappuser2member.get(order.webapp_user_id, None)
+		    _do_buyer_source_stats(buyer_source_stats, tmp_member)
 
 		return create_pie_chart_response('',
 				{
