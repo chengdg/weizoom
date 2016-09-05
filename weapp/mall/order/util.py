@@ -1803,7 +1803,7 @@ def get_order_actions(order, is_refund=False, is_detail_page=False, is_list_pare
 
     if multi_child_orders:
         result = filter(lambda x: x not in able_actions_for_list_parent, result)
-    print('-------result',result)
+
     return result
 
 

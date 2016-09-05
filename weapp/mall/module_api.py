@@ -2464,7 +2464,7 @@ def __restore_product_stock_by_order(order):
 			)
 
 
-def update_order_status_by_sub_order(sub_order):
+def update_order_status_by_sub_order(sub_order,operation_name,action_msg):
 	"""
 	申请退款时使用
 	@param order:
@@ -2474,9 +2474,19 @@ def update_order_status_by_sub_order(sub_order):
 
 	sub_order_weights = [ORDER_STATUS2DELIVERY_ITEM_WEIGHT[status] for status in sub_order_status_list]
 
-	order_status = DELIVERY_ITEM_WEIGHT2ORDER_STATUS[min(sub_order_weights)]
+	order_target_status = DELIVERY_ITEM_WEIGHT2ORDER_STATUS[min(sub_order_weights)]
 
-	Order.objects.filter(id=sub_order.origin_order_id).update(status=order_status)
+	origin_order = Order.objects.get(id=sub_order.origin_order_id)
+
+	current_status = order_target_status
+	if current_status != order_target_status:
+		origin_order.status = order_target_status
+		origin_order.save()
+		record_status_log(origin_order.order_id, operation_name, current_status, order_target_status)
+		record_operation_log(origin_order.order_id, operation_name, action_msg)
+
+
+
 
 
 ########################################################################

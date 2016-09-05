@@ -552,7 +552,7 @@ Scenario:1 单个供应商商品订单-微信支付+优惠券(不满足满额包
 			"""
 
 		#手机端订单列表
-		When bill方位jobs的webapp::apiserver
+		When bill访问jobs的webapp::apiserver
 		Then bill获得手机端订单列表::apiserver
 			"""
 			[{
