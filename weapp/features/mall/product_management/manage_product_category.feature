@@ -495,7 +495,7 @@ Scenario:6 分组管理查询
 		"""
 		{
 			"name": [],
-			"product": "叫花鸡"
+			"product": "东坡肘子"
 		}
 		"""
 	Then jobs能获取商品分类列表
@@ -505,6 +505,11 @@ Scenario:6 分组管理查询
 			"products": [{
 				"name": "叫花鸡"
 			}, {
+				"name": "东坡肘子"
+			}]
+		}, {
+			"name": "分类2",
+			"products": [{
 				"name": "东坡肘子"
 			}]
 		}]
