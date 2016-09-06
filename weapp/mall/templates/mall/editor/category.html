@@ -1,7 +1,7 @@
 {% extends "content_base_v2.html" %}
 
 {% block content-panel %}
-<div class="xui-updateProductCategoriesPage">
+<div class="xui-categoryPage">
 	<ul class="breadcrumb">
 		<li>您当前所在位置</li>
 		<li><a href="/mall2/product_list/?shelve_type=1">商品管理</a></li>
@@ -9,9 +9,9 @@
 		<li class="active">编辑分组</li>
 	</ul>
 
-	<div class="input-group mt20 xui-i-name">
+	<div class="input-group mt20 xui-i-name ">
 		<span class="input-group-addon">分组名称:</span>
-		<input type="text" class="form-control">
+		<input type="text" class="form-control xa-name">
 		<span class="input-group-addon">(20字以内)</span>
 	</div>
 
@@ -42,9 +42,7 @@
 {% block js %}
 {% verbatim %}
 <script id="category-view" type="text/x-jquery-tmpl">
-	${( $data.category = items[0] ),''}
-	<input type="hidden" value="${category.name}" id="db_category_name">
-	<table class="table  mt20  table-bordered" data-category-id="${category.id}">
+	<table class="table  mt20  table-bordered">
 		<thead>
 			<tr>
 				<th width="315" class="xui-i-product-name">商品名称</th>
@@ -59,11 +57,11 @@
 			</tr>
 		</thead>
 		<tbody>
-			{{each(i, product) category.products}}
-			<tr data-product-id="${product.id}" data-category-id="${category.id}" {% if product.status == '待售' %}class="xui-color-mark"{% endif %}>
+			{{each(i, product) items}}
+			<tr data-product-id="${product.id}" {% if product.status == '待售' %}class="xui-color-mark"{% endif %}>
 				<td width="315" class="xui-i-product-name">${product.name}</td>
 				<td width="120">
-				<a class="btn btn-default" data-product-id="${product.id}">更多 (6) </a>
+				<span class="label label-default cursor-pointer xa-edit-product-category" style="color:#c5c5c5">更多 (6) </span>
 					{{if product.categories && product.categories.length > 0}}
 						<div>
 							${product.categories[0].name}
@@ -95,12 +93,17 @@
 {% endverbatim %}
 <script type="text/javascript">
 	$(document).ready(function () {
-		$('#category_name').val($('#db_category_name').val());
+		var categoryId = "{{category_id}}";
+		$(document).ajaxSuccess(function (event, jqXHR,ajaxOptions, data) {
+			if(ajaxOptions.type == 'GET' && /api\/category/.test(ajaxOptions.url) && data.success){
+				// after load
+				$('.xa-name').val(data.data.name);
+			}
+		});
+
 		$(document).delegate('.xa-editCategory', 'click', function (event) {
 			var $table =  $('#categories-list-view table');
-			var categoryId = $table.data('categoryId');
-			var title = $('#db_category_name').val();
-			console.log('title');
+			var title = $('.xa-name').val();
 			W.dialog.showDialog('W.dialog.mall.AddProductCategoryDialog', {
 				canEditTitle: true,
 				title: title,
@@ -128,7 +131,6 @@
 		$(document).delegate('.xa-deleteProductFromCategory', 'click', function (event) {
 			var $link = $(event.currentTarget);
 			var productId = $link.parents('tr').data('productId');
-			var categoryId = $link.parents('table').data('categoryId');
 
 			W.requireConfirm({
 				$el: $(this),
@@ -160,7 +162,6 @@
 
 		var onConfirmRankInput = function (event) {
 			var $link = $(event.currentTarget);
-			var category_id = $(event.currentTarget).parents('tr').data('category-id');
 			var product_id = $(event.currentTarget).parents('tr').data('product-id');
 			var rankText = $.trim($(event.currentTarget).val());
 			/*文本框的值*/
@@ -177,7 +178,7 @@
 						app: 'mall2',
 						resource: 'category_list',
 						args: {
-							category_id: category_id,
+							category_id: categoryId,
 							product_id: product_id,
 							position: rankText,
 						},

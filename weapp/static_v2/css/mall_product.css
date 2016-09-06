@@ -1094,7 +1094,7 @@
 *编辑分组页面↓
 *
 */
-.xui-updateProductCategoriesPage .table-bordered > tbody > tr > td.xui-i-product-name{
+.xui-categoryPage .table-bordered > tbody > tr > td.xui-i-product-name{
 	text-align: left;
 	white-space: nowrap;
 	overflow: hidden;
@@ -1104,27 +1104,27 @@
 
 }
 
-.xui-updateProductCategoriesPage .table-bordered > tbody > tr > td.xui-i-disaplay-index {
+.xui-categoryPage .table-bordered > tbody > tr > td.xui-i-disaplay-index {
 	padding: 4px 15px;
 }
 
-.xui-updateProductCategoriesPage .table > tbody > tr > td,
-.xui-updateProductCategoriesPage .table > tbody > tr > th,
-.xui-updateProductCategoriesPage .table > thead > tr > th {
+.xui-categoryPage .table > tbody > tr > td,
+.xui-categoryPage .table > tbody > tr > th,
+.xui-categoryPage .table > thead > tr > th {
 	padding: 0;
 }
 
-.xui-updateProductCategoriesPage .table-bordered > tbody > tr > td {
+.xui-categoryPage .table-bordered > tbody > tr > td {
 	text-align: center;
 }
 
-.xui-updateProductCategoriesPage .table > thead > tr > th.xui-i-product-name {
+.xui-categoryPage .table > thead > tr > th.xui-i-product-name {
 	text-align: left;
 	padding-left: 44px;
 	/*width:415px;*/
 }
 
-.xui-updateProductCategoriesPage .xui-editCategory {
+.xui-categoryPage .xui-editCategory {
 	width: 40px;
 	min-width: 20px;
 	font-size: 12px;
@@ -1136,7 +1136,7 @@
 	border: none;
 }
 
-.xui-updateProductCategoriesPage .xui-cutLine {
+.xui-categoryPage .xui-cutLine {
 	height: 12px;
 	width: 1px;
 	background-color: #666666;
@@ -1146,7 +1146,7 @@
 
 }
 
-.xui-updateProductCategoriesPage .xui-deleteCategory {
+.xui-categoryPage .xui-deleteCategory {
 	border: none;
 	padding-left: 10px;
 	width: 60px;
@@ -1158,60 +1158,60 @@
 	height: 14px;
 }
 
-.xui-updateProductCategoriesPage .table {
+.xui-categoryPage .table {
 	width: 973px;
 	margin: auto;
 }
 
-.xui-updateProductCategoriesPage .table-bordered > thead > tr > th {
+.xui-categoryPage .table-bordered > thead > tr > th {
 	text-align: center;
 	font-weight: normal;
 }
 
-.xui-updateProductCategoriesPage {
+.xui-categoryPage {
 	background-color: #EFF5FF;
 	padding-bottom: 25px;
 }
-.xui-updateProductCategoriesPage .xui-i-name.input-group{
+.xui-categoryPage .xui-i-name.input-group{
 	width:400px;
 }
-.xui-updateProductCategoriesPage .xui-i-name.input-group .input-group-addon{
+.xui-categoryPage .xui-i-name.input-group .input-group-addon{
 	background-color: transparent;border-color: transparent;
 }
-.xui-updateProductCategoriesPage .xui-i-name.input-group .form-control{
+.xui-categoryPage .xui-i-name.input-group .form-control{
 	height: 28px;line-height: 28px;
 }
 
-.xui-updateProductCategoriesPage .xui-i-title {
+.xui-categoryPage .xui-i-title {
 	background: #F1EFEF;
 	position: relative;
 }
 
-.xui-updateProductCategoriesPage .table thead tr:last-child {
+.xui-categoryPage .table thead tr:last-child {
 	background-color: #C7D1E5;
 }
 
-.xui-updateProductCategoriesPage .table td {
+.xui-categoryPage .table td {
 	height: 32px;
 }
 
-.xui-updateProductCategoriesPage .xui-content {
+.xui-categoryPage .xui-content {
 	background: #EFF5FF;
 }
 
-.xui-updateProductCategoriesPage .table > tbody > tr:nth-child(odd) > td {
+.xui-categoryPage .table > tbody > tr:nth-child(odd) > td {
 	background-color: #fff;
 }
 
-.xui-updateProductCategoriesPage .table > tbody > tr:nth-child(even) > td {
+.xui-categoryPage .table > tbody > tr:nth-child(even) > td {
 	background-color: #F1F9FD;
 }
 
-.xui-updateProductCategoriesPage .table-bordered > thead > tr > td, .table-bordered > thead > tr > th {
+.xui-categoryPage .table-bordered > thead > tr > td, .table-bordered > thead > tr > th {
 	border-bottom: none;
 }
 
-.xui-updateProductCategoriesPage .xui-i-actionBar {
+.xui-categoryPage .xui-i-actionBar {
 	height: 3px;
 	position: absolute;
 	top: -2px;
@@ -1303,6 +1303,7 @@
 	line-height: 24px;
 	margin-bottom: 6px;
 }
+
 .xui-productPropertyPage .xui-operationBtn{
 	margin-left: 128px;
 	line-height: 32px;
