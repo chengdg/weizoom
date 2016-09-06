@@ -8,14 +8,14 @@
 	<li><a href="/mall2/product_list/?shelve_type=1">商品管理</a></li>
 	<li class="active">分组管理</li>
 </ul>
-
+<div class="xa-productCategoriesFilterView xui-filterPanel"></div>
 <div class="fr">
 	<button class="btn mt20 mr10 btn-success xui-addProductBtn xa-addCategory xui-addNewGroup"><span style="padding-right:5px;"><img src="/static_v2/img/editor/plusOpcity.png"></span>新建分组</button>
 </div>
 <hr  class="mt70" style="border:1px solid #1183C9;">
 <!-- glyphicon glyphicon-plus-sign -->
-{% if has_categories %}
 <div
+    id="categories-list-view"
 	data-ui-role="advanced-table"
 	data-app="mall2"
 	data-api="category_list"
@@ -23,9 +23,6 @@
 	data-enable-paginator="true"
 	data-item-count-per-page="15"
 ></div>
-{% else %}
-	目前还没有数据
-{% endif %}
 </div>
 {% endblock %}
 
@@ -78,12 +75,16 @@
             </table>
         {{/each}}
     {{else}}
-        <tr><td>还没有数据</td></tr>
+        <tr class="text-center"><td class="p10">没有数据</td></tr>
     {{/if}}
 </script>
 {% endverbatim %}
 <script type="text/javascript">
 $(document).ready(function() {
+	this.filterView = new W.view.mall.ProductCategoriesFilterView({
+		el: '.xa-productCategoriesFilterView'
+	});
+	this.filterView.render();
 	$('.xa-addCategory').click(function() {
 		W.dialog.showDialog('W.dialog.mall.AddProductCategoryDialog', {
 			canEditTitle: true,

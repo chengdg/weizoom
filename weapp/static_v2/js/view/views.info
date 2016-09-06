@@ -17,6 +17,7 @@ mall_product_custom_model_editor
 mall_product_model_property_editor
 mall_product_editor
 mall_product_filter_view
+mall_product_categories_filter_view
 mall_product_list_view
 mall_promotion_filter_view
 mall_promotion_list_view
