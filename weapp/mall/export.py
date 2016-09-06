@@ -417,10 +417,8 @@ MALL_PROMOTION_AND_APPS_SECOND_NAV = {
         {
             'name': MALL_APPS_SECOND_NAV,
             'title': u'百宝箱',
-            'url': 'http://%s/apps/survey/surveies/' % MARKETAPP_DOMAIN,
+            'url': '/apps/lottery/lotteries/',
             'permission': 'manage_apps',
-            'need_blank': True,
-            'need_token': True,
             'third_navs': [
                 {
                     'name': MALL_APPS_EGG_NAV,
@@ -455,7 +453,7 @@ MALL_PROMOTION_AND_APPS_SECOND_NAV = {
                     'url': '/apps/survey/surveies/',
                     'permission': ''
                 },
-                 {
+                {
                     'name': MALL_APPS_SURVEY_NAV_RE,
                     'title': "用户调研(重)",
                     'url': 'http://%s/apps/survey/surveies/' % MARKETAPP_DOMAIN,
@@ -463,21 +461,18 @@ MALL_PROMOTION_AND_APPS_SECOND_NAV = {
                     'need_token': True,
                     'need_blank': True,
                     'users': ['jobs', 'ceshi01']
-                 },
+                },
                 {
                     'name': MALL_APPS_EVENT_NAV,
                     'title': "活动报名",
-                    'url': 'http://%s/apps/event/events/' % MARKETAPP_DOMAIN,
+                    'url': '/apps/event/events/',
                     'permission': [],
-                    'need_blank': True
                 },
                 {
                     'name': MALL_APPS_VOTE_NAV,
                     'title': "微信投票",
-                    'url': 'http://%s/apps/vote/votes/' % MARKETAPP_DOMAIN,
+                    'url': '/apps/vote/votes/',
                     'permission': '',
-                    'need_token': True,
-                    'need_blank': True
                 },
                 {
                     'name': MALL_APPS_RED_ENVELOPE_NAV,
