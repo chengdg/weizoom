@@ -324,6 +324,7 @@ MALL_APPS_REBATE_NAV = 'rebate'
 MALL_APPS_EXSIGN_NAV = 'exsign'
 MALL_APPS_EGG_NAV = 'egg'
 MALL_APPS_SCRATCH_NAV = 'scratch'
+MALL_APPS_SURVEY_NAV_RE = 'survey_re'
 
 #
 # 应用和营销左侧垂直方向二级导航信息
@@ -448,14 +449,21 @@ MALL_PROMOTION_AND_APPS_SECOND_NAV = {
                     # 'url': '/apps/feedback/feedbacks/',
                     # 'permission': []
                 # },
-                 {
+                {
                     'name': MALL_APPS_SURVEY_NAV,
                     'title': "用户调研",
+                    'url': '/apps/survey/surveies/',
+                    'permission': ''
+                },
+                 {
+                    'name': MALL_APPS_SURVEY_NAV_RE,
+                    'title': "用户调研(重)",
                     'url': 'http://%s/apps/survey/surveies/' % MARKETAPP_DOMAIN,
                     'permission': '',
                     'need_token': True,
-                    'need_blank': True
-                },
+                    'need_blank': True,
+                    'users': ['jobs', 'ceshi01']
+                 },
                 {
                     'name': MALL_APPS_EVENT_NAV,
                     'title': "活动报名",
