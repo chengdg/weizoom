@@ -129,3 +129,28 @@ def step_impl(context, zy1, product_name):
     }
     response = context.client.post(url, data)
     bdd_util.assert_api_call_success(response)
+
+
+@then(u'给供货商"{supplier_name}"添加运费配置')
+def step_impl(context, supplier_name):
+    context = json.loads(context.text)
+    postage = context.get('postage')
+    condition_money = context.get('condition_money')
+    supplier = Supplier.objects.filter(name=supplier_name).first()
+    if not supplier:
+        assert False
+    params = {
+        'supplier_id': supplier.id,
+        'condition_type': 'money',
+        'postage': postage,
+        'condition_money': condition_money
+    }
+
+    resp = Resource.use('zeus', 'api.zeus.com').put(
+        {
+            'resource': 'mall.supplier_postage_config',
+            'data': params
+        }
+    )
+    if resp and resp.get('code') == 200:
+        assert True

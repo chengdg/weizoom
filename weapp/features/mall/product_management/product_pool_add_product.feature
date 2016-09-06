@@ -27,6 +27,14 @@ Scenario:1 给商品池同步商品，ziying
 				"detail": "大家好，这个是bdd测试的商品池商品"
 			}
 			"""
+
+		Then 给供货商"商品池商品供货商"添加运费配置
+			"""
+			{
+				"postage":5,
+				"condition_money": "10"
+			}
+			"""
 		Then zy1,zy2可以查看到商品里有一个商品叫-商品池商品测试zy
 			"""
 
@@ -40,3 +48,5 @@ Scenario:1 给商品池同步商品，ziying
 			"name": "商品池商品测试zy"
 		}]
 		"""
+
+
