@@ -221,8 +221,17 @@
             scope: this,
             success: function(data) {
                 var all = 0;
-                for(var i in data.series[0].data){
-                    all += data.series[0].data[i].value;
+                data_array = new Array();
+                data_name_array = new Array('待发货', '已发货', '已完成');
+                data_value_array = new Array(data.not_shipped_num,data.shipped_num,data.succeeded_num);
+                for(var i in data_value_array){
+                    if(data_value_array[i] > 0){
+                        data_array.push({
+                            value: data_value_array[i],
+                            name: data_name_array[i]
+                        });
+                        all ++;
+                    }
                 }
                 var formatter_func = function(params, ticket, callback) {
                     var res = "<b>" + params.name + "</b><br/>订单量：" + params.value + "<br/>订单量占比：" + params.percent + "%";
@@ -262,7 +271,7 @@
                                 type:'pie',
                                 radius : '55%',
                                 center: ['50%','60%'],
-                                data: data.series[0].data
+                                data: data_array
                             }
                         ]
                     };
@@ -293,8 +302,17 @@
             scope: this,
             success: function(data) {
                 var all = 0;
-                for(var i in data.series[0].data){
-                    all += data.series[0].data[i].value;
+                data_array = new Array();
+                data_name_array = new Array('初次购买', '重复购买');
+                data_value_array = new Array(data.first_buy,data.repeated_num);
+                for(var i in data_value_array){
+                    if(data_value_array[i] > 0){
+                        data_array.push({
+                            value: data_value_array[i],
+                            name: data_name_array[i]
+                        });
+                        all ++;
+                    }
                 }
                 var formatter_func = function(params, ticket, callback) {
                     var res = "<b>" + params.name + "</b><br/>订单量：" + params.value + "<br/>订单量占比：" + params.percent + "%";
@@ -327,7 +345,7 @@
                                     type:'pie',
                                     radius : '55%',
                                     center: ['50%','60%'],
-                                    data: data.series[0].data
+                                    data: data_array
                                 }
                             ]
                         };
@@ -358,8 +376,18 @@
             scope: this,
             success: function(data) {
                 var all = 0;
-                for(var i in data.series[0].data){
-                    all += data.series[0].data[i].value;
+                data_array = new Array();
+                data_name_array = new Array('直接关注购买', '推广扫码关注购买', '分享链接关注购买', '其他');
+                data_value_array = new Array(data.sub_source_num,data.qrcode_source_num,data.url_source_num,
+                                                data.other_source_num);
+                for(var i in data_value_array){
+                    if(data_value_array[i] > 0){
+                        data_array.push({
+                            value: data_value_array[i],
+                            name: data_name_array[i]
+                        });
+                        all ++;
+                    }
                 }
                 var formatter_func = function(params, ticket, callback) {
                     var res = "<b>" + params.name + "</b><br/>订单量：" + params.value + "<br/>订单量占比：" + params.percent + "%";
@@ -392,7 +420,7 @@
                                     type:'pie',
                                     radius : '55%',
                                     center: ['50%','60%'],
-                                    data: data.series[0].data
+                                    data: data_array
                                 }
                             ]
                         };
@@ -423,15 +451,28 @@
             scope: this,
             success: function(data) {
                 var all = 0;
-                for(var i in data.series[0].data){
-                    all += data.series[0].data[i].value;
-                }
                 //微众商城增加翼支付数据 duhao 20160602
+                data_value_array = new Array(data.alipay_amount,data.weixinpay_amount,data.cod_amount,
+                                                data.wezoom_card_amount);
                 var username = "{{request.manager.username}}";
                 var legendData = [ '支付宝', '微信支付', '货到付款', '微众卡支付' ];
+                data_name_array = new Array('支付宝', '微信支付', '货到付款', '微众卡支付');
+                data_array = new Array();
+
                 if(username === 'weshop') {
                     legendData = [ '支付宝', '微信支付', '货到付款', '微众卡支付', '翼支付', '看购支付' ];
+                    data_value_array.push(data.bestpay_amount,data.kangou_amount);
+                    data_name_array.push('翼支付','看购支付');
                 }
+                for(var i in data_value_array){
+                    if(data_value_array[i] > 0){
+                        data_array.push({
+                            value: data_value_array[i],
+                            name: data_name_array[i]
+                        });
+                        all ++;
+                    }
+                }                
                 if(all != 0){
                     option = {
                             tooltip : {
@@ -459,7 +500,7 @@
                                 type : 'pie',
                                 radius : '55%',
                                 center : [ '50%', '60%' ],
-                                data: data.series[0].data
+                                data: data_array
                             } ]
                         };
                     var theChart = echarts.init(document.getElementById('payments_stats'));
@@ -518,7 +559,7 @@
                             {
                                 name:'优惠折扣',
                                 type:'bar',
-                                data:[4,discount_stats['integral_num'],discount_stats['coupon_num'],discount_stats['wezoom_integral_num'],discount_stats['wezoom_coupon_num']]
+                                data:[data.discount_stats['wezoom_num'],data.discount_stats['integral_num'],data.discount_stats['coupon_num'],data.discount_stats['wezoom_integral_num'],data.discount_stats['wezoom_coupon_num']]
                             }
                         ]
                     };

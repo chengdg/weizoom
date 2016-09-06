@@ -165,13 +165,23 @@ class OrderTrends(resource.Resource):
 			# 已完成：自下单10日后自动置为已完成状态
 			succeeded_num = 0
 		
-		return create_pie_chart_response('',
-				{
-					"待发货":not_shipped_num, 
-				 	"已发货":shipped_num, 
-				 	"已完成":succeeded_num
-				}
-			)
+		# 系统封装的饼图方法，由于数据次序不统一，故舍弃使用
+		# return create_pie_chart_response('',
+		# 		{
+		# 			"待发货":not_shipped_num, 
+		# 		 	"已发货":shipped_num, 
+		# 		 	"已完成":succeeded_num
+		# 		}
+		# 	)
+	
+		response = create_response(200)
+		response.data = {
+			"not_shipped_num": not_shipped_num,
+			"shipped_num": shipped_num,
+			"succeeded_num": succeeded_num
+		}
+
+		return response.get_response()
 
 class RepeatPurchaseRate(resource.Resource):
 	"""
@@ -224,12 +234,21 @@ class RepeatPurchaseRate(resource.Resource):
 		# 初次购买
 		first_buy = order_num - repeated_num
 
-		return create_pie_chart_response('',
-				{
-					"重复购买":repeated_num, 
-				 	"初次购买":first_buy
-				}
-			)
+		# 系统封装的饼图方法，由于数据次序不统一，故舍弃使用
+		# return create_pie_chart_response('',
+		# 		{
+		# 			"重复购买":repeated_num, 
+		# 		 	"初次购买":first_buy
+		# 		}
+		# 	)
+
+		response = create_response(200)
+		response.data = {
+			"first_buy": first_buy,
+			"repeated_num": repeated_num
+		}
+
+		return response.get_response()
 	
 class BuyerSources(resource.Resource):
 	"""
@@ -287,14 +306,25 @@ class BuyerSources(resource.Resource):
 			else:
 				buyer_source_stats['other_source_num'] += 1
 
-		return create_pie_chart_response('',
-				{
-					"直接关注购买":buyer_source_stats['sub_source_num'], 
-				 	"推广扫码购买":buyer_source_stats['qrcode_source_num'],
-				 	"分享链接购买":buyer_source_stats['url_source_num'], 
-				 	"其他":buyer_source_stats['other_source_num']
-				}
-			)
+		# 系统封装的饼图方法，由于数据次序不统一，故舍弃使用
+		# return create_pie_chart_response('',
+		# 		{
+		# 			"直接关注购买":buyer_source_stats['sub_source_num'], 
+		# 		 	"推广扫码购买":buyer_source_stats['qrcode_source_num'],
+		# 		 	"分享链接购买":buyer_source_stats['url_source_num'], 
+		# 		 	"其他":buyer_source_stats['other_source_num']
+		# 		}
+		# 	)
+
+		response = create_response(200)
+		response.data = {
+			"sub_source_num": buyer_source_stats['sub_source_num'],
+			"qrcode_source_num": buyer_source_stats['qrcode_source_num'],
+			"url_source_num": buyer_source_stats['url_source_num'],
+			"other_source_num": buyer_source_stats['other_source_num']
+		}
+
+		return response.get_response()
 
 class PaymentAmount(resource.Resource):
 	"""
@@ -384,21 +414,34 @@ class PaymentAmount(resource.Resource):
 		#online_order_num = order_num - cod_order_num
 		#online_paid_amount = paid_amount - cod_amount
 
-		return create_pie_chart_response('',
-				{
-					# 'discount_amount': discount_amount,
-					# 'postage_amount': postage_amount,
-					# 'online_order_num': online_order_num,
-					# 'online_paid_amount': online_paid_amount,
-					# 'cod_order_num': cod_order_num,
-					'货到付款': round(cod_amount,2),
-					'支付宝': round(alipay_amount,2),
-					'翼支付': round(bestpay_amount,2),
-					'看购支付': round(kangou_amount,2),
-					'微信支付': round(weixinpay_amount,2),
-					'微众卡支付': round(wezoom_card_amount,2)
-				}
-			)
+		# 系统封装的饼图方法，由于数据次序不统一，故舍弃使用
+		# return create_pie_chart_response('',
+		# 		{
+		# 			# 'discount_amount': discount_amount,
+		# 			# 'postage_amount': postage_amount,
+		# 			# 'online_order_num': online_order_num,
+		# 			# 'online_paid_amount': online_paid_amount,
+		# 			# 'cod_order_num': cod_order_num,			
+		# 			'支付宝': round(alipay_amount,2),
+		# 			'微信支付': round(weixinpay_amount,2),
+		# 			'货到付款': round(cod_amount,2),
+		# 			'微众卡支付': round(wezoom_card_amount,2),
+		# 			'翼支付': round(bestpay_amount,2),
+		# 			'看购支付': round(kangou_amount,2)
+		# 		}
+		# 	)
+
+		response = create_response(200)
+		response.data = {
+			"alipay_amount": round(alipay_amount,2),
+			"weixinpay_amount": round(weixinpay_amount,2),
+			"cod_amount": round(cod_amount,2),
+			"wezoom_card_amount": round(wezoom_card_amount,2),
+			"bestpay_amount": round(bestpay_amount,2),
+			"kangou_amount": round(kangou_amount,2)
+		}
+
+		return response.get_response()
 
 class PreferentialDiscount(resource.Resource):
 	"""
