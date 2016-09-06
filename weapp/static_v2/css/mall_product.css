@@ -1089,6 +1089,134 @@
 	margin-left: -452.5px;
 }
 
+/*
+*
+*编辑分组页面↓
+*
+*/
+.xui-updateProductCategoriesPage .table-bordered > tbody > tr > td.xui-i-product-name{
+	text-align: left;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	/*width:415px;*/
+	padding-left: 44px;
+
+}
+
+.xui-updateProductCategoriesPage .table-bordered > tbody > tr > td.xui-i-disaplay-index {
+	padding: 4px 15px;
+}
+
+.xui-updateProductCategoriesPage .table > tbody > tr > td,
+.xui-updateProductCategoriesPage .table > tbody > tr > th,
+.xui-updateProductCategoriesPage .table > thead > tr > th {
+	padding: 0;
+}
+
+.xui-updateProductCategoriesPage .table-bordered > tbody > tr > td {
+	text-align: center;
+}
+
+.xui-updateProductCategoriesPage .table > thead > tr > th.xui-i-product-name {
+	text-align: left;
+	padding-left: 44px;
+	/*width:415px;*/
+}
+
+.xui-updateProductCategoriesPage .xui-editCategory {
+	width: 40px;
+	min-width: 20px;
+	font-size: 12px;
+	background: transparent;
+	color: #666666;
+	padding-top: 0px;
+	height: 14px;
+	padding: 0px 0px;
+	border: none;
+}
+
+.xui-updateProductCategoriesPage .xui-cutLine {
+	height: 12px;
+	width: 1px;
+	background-color: #666666;
+	position: relative;
+	top: 16px;
+	left: 57px;
+
+}
+
+.xui-updateProductCategoriesPage .xui-deleteCategory {
+	border: none;
+	padding-left: 10px;
+	width: 60px;
+	min-width: 40px;
+	font-size: 12px;
+	background: transparent;
+	color: #666666;
+	padding-top: 0px;
+	height: 14px;
+}
+
+.xui-updateProductCategoriesPage .table {
+	width: 973px;
+	margin: auto;
+}
+
+.xui-updateProductCategoriesPage .table-bordered > thead > tr > th {
+	text-align: center;
+	font-weight: normal;
+}
+
+.xui-updateProductCategoriesPage {
+	background-color: #EFF5FF;
+	padding-bottom: 25px;
+}
+.xui-updateProductCategoriesPage .xui-i-name.input-group{
+	width:400px;
+}
+.xui-updateProductCategoriesPage .xui-i-name.input-group .input-group-addon{
+	background-color: transparent;border-color: transparent;
+}
+.xui-updateProductCategoriesPage .xui-i-name.input-group .form-control{
+	height: 28px;line-height: 28px;
+}
+
+.xui-updateProductCategoriesPage .xui-i-title {
+	background: #F1EFEF;
+	position: relative;
+}
+
+.xui-updateProductCategoriesPage .table thead tr:last-child {
+	background-color: #C7D1E5;
+}
+
+.xui-updateProductCategoriesPage .table td {
+	height: 32px;
+}
+
+.xui-updateProductCategoriesPage .xui-content {
+	background: #EFF5FF;
+}
+
+.xui-updateProductCategoriesPage .table > tbody > tr:nth-child(odd) > td {
+	background-color: #fff;
+}
+
+.xui-updateProductCategoriesPage .table > tbody > tr:nth-child(even) > td {
+	background-color: #F1F9FD;
+}
+
+.xui-updateProductCategoriesPage .table-bordered > thead > tr > td, .table-bordered > thead > tr > th {
+	border-bottom: none;
+}
+
+.xui-updateProductCategoriesPage .xui-i-actionBar {
+	height: 3px;
+	position: absolute;
+	top: -2px;
+	right: 20px;
+}
 /**
  * 属性管理页面
  */
@@ -1255,6 +1383,7 @@
 	margin-top: -250px;
 	margin-left: -194px;
 }
+
 .xui-updateProductModelStocksDialog .modal-dialog .modal-body{
 	overflow: auto;
 }

@@ -460,6 +460,19 @@ class UpdateProductCategory(resource.Resource):
     """
     app = 'mall2'
     resource = 'update_product_category'
+    
+    @login_required
+    def get(request):
+        """
+         编辑商品分类页面
+        """
+        c = RequestContext(request, {
+                    'category_id':request.GET.get('id'),
+                    'first_nav_name': export.PRODUCT_FIRST_NAV,
+                    'second_navs': export.get_mall_product_second_navs(request),
+                    'second_nav_name': export.PRODUCT_MANAGE_CATEGORY_NAV}
+        )
+        return render_to_response('mall/editor/update_product_category.html', c)
 
     @login_required
     def api_post(request):
