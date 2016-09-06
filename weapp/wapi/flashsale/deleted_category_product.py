@@ -58,7 +58,7 @@ class DeletedCategoryProduct(api_resource.ApiResource):
 					if php.product_id in product_ids:
 						product_ids.remove(php.product_id)
 			category_has_products = mall_models.CategoryHasProduct.objects.filter(category_id=product_category[0].id, product_id__in=product_ids)
-			product_id2product_name = {p.id: p.name for p in mall_models.Product.objects.filter(owner_id=owner.id, id__in=product_ids)}
+			product_id2product_name = {p.id: p.name for p in mall_models.Product.objects.filter(id__in=product_ids)}
 
 			for chp in category_has_products:
 				chp.delete()

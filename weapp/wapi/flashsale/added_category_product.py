@@ -43,7 +43,16 @@ class AddedCategoryProduct(api_resource.ApiResource):
 				product_names.append(p["product_name"])
 
 		#获取商品
-		produt_name2product_id = {p.name: p.id for p in mall_models.Product.objects.filter(owner_id=owner.id, name__in=product_names)}
+		products = mall_models.Product.objects.filter(name__in=product_names)
+
+		product_ids = [product.id for product in products]
+		product_pools = mall_models.ProductPool.objects.filter(woid=owner.id, product_id__in=product_ids)
+		product_pool_product_ids = [pp.product_id for pp in product_pools]
+
+		product_name2product_id = {}
+		for product in products:
+			if product.id in product_pool_product_ids:
+				product_name2product_id[product.name] = product.id
 
 		#获取商品分组
 		result = []
@@ -51,7 +60,7 @@ class AddedCategoryProduct(api_resource.ApiResource):
 		if product_category.count() > 0:
 			for p in products:
 				product_name = p["product_name"]
-				product_id = produt_name2product_id.get(product_name)
+				product_id = product_name2product_id.get(product_name)
 				if product_id:
 					mall_models.CategoryHasProduct.objects.create(
 						product_id=product_id,

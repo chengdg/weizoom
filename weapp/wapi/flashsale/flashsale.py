@@ -61,13 +61,16 @@ class Flashsale(api_resource.ApiResource):
 		products = Product.objects.filter(name__in=product_names)
 
 		product_ids = [product.id for product in products]
-		product_pools = mall_models.ProductPool.objects.filter(woid=owner.id, product_id__in=product_ids)
+		product_pools = mall_models.ProductPool.objects.filter(woid=owner.id, product_id__in=product_ids, status=mall_models.PP_STATUS_ON)
 		product_pool_product_ids = [pp.product_id for pp in product_pools]
 
 		product_name2product_id = {}
 		for product in products:
 			if product.id in product_pool_product_ids:
 				product_name2product_id[product.name] = product.id
+			else:
+				if product.owner_id == owner.id:
+					product_name2product_id[product.name] = product.id
 
 		#已经配置过促销活动的商品
 		product_id2promotion_id = {psp.product_id: psp.promotion_id for psp in promotion_models.ProductHasPromotion.objects.filter(product_id__in=product_name2product_id.values())}
