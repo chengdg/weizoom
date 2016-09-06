@@ -507,6 +507,22 @@ class UpdateProductCategory(resource.Resource):
     resource = 'update_product_category'
 
     @login_required
+    def api_get(request):
+        id2name = dict(mall_models.ProductCategory.objects.filter(owner=request.manager).values_list('id', 'name'))
+        items = []
+        for category_id,name in id2name.items():
+            items.append({
+                "id": category_id,
+                "name": name
+            })
+
+        response = create_response(200)
+        response.data = {
+            'items': items,
+        }
+
+        return response.get_response()
+    @login_required
     def api_post(request):
         product_id = request.POST.get('product_id')
         category_ids = request.POST.get('category_ids')
