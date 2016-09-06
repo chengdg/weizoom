@@ -190,7 +190,7 @@
 			<div class="form-group nostar ">
 				<label class="control-label fl" for="limit_zone_type">限定类型：</label>
 				<div class="col-sm-2 fl pl5">
-					<select class="w106" id="limit_zone_type" name="limit_zone_type" {% if pool_mall_type %}disabled{% endif %}>
+					<select class="w106" id="limit_zone_type" name="limit_zone_type" {% if pool_mall_type or product.is_group_buying  %}disabled{% endif %}>
                 		<option value="0" {% if product.limit_zone_type == 0 %}selected='selected'{% endif %}>无限制</option>
                 		<option value="1" {% if product.limit_zone_type == 1 %}selected='selected'{% endif %}>禁售地区</option>
                 		<option value="2" {% if product.limit_zone_type == 2 %}selected='selected'{% endif %}>仅售地区</option>
@@ -207,7 +207,7 @@
 							<a class="ml5" href="/mall2/product_limit_zone_template/" target="_blank">+添加新模板</a>
 							<div class="errorHint" data-error-hint="请添加区域模板"></div>
 						{% else %}
-							<select class="w106 vm" id="limit_zone_template" name="limit_zone_template" data-validate="require-custom-function" data-validate-function="validateLimitZoneTemp">
+							<select class="w106 vm" id="limit_zone_template" name="limit_zone_template" data-validate="require-custom-function" data-validate-function="validateLimitZoneTemp" {% if product.is_group_buying  %}disabled{% endif %}>
 								<option value="0">选择区域模板</option>
 								{% for template in limit_zone_templates %}
 									<option value="{{ template.id }}" {% if template.id == product.limit_zone %}selected='selected'{% endif %}>{{ template.name }}</option>
