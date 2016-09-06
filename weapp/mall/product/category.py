@@ -295,7 +295,7 @@ class CategoryList(resource.Resource):
         if category_name:
             product_categories = product_categories.filter(name__icontains=category_name)
         if product_name:
-            products = mall_models.Product.objects.filter(name__icontains=product_name)
+            products = mall_models.Product.objects.filter(name__icontains=product_name, is_deleted=False)
             category_ids = mall_models.CategoryHasProduct.objects.filter(product__in=products).values_list('category_id', flat=True)
             product_categories = product_categories.filter(id__in=category_ids)
 
