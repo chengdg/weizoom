@@ -1103,7 +1103,7 @@ class Product(resource.Resource):
 
         if not mall_type:
             supplier = []
-        limte_zone_templates = models.ProductLimitZoneTemplate.objects.filter(owner=request.user)
+        limte_zone_templates = models.ProductLimitZoneTemplate.objects.filter(owner=request.user).order_by('-id')
 
         c = RequestContext(request, {
             'first_nav_name': export.PRODUCT_FIRST_NAV,
