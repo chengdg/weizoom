@@ -1,5 +1,6 @@
 # __author__ : "冯雪静"
 #editor:王丽 2015.10.14
+#editor:冯雪静 2016.9.6
 @func:webapp.modules.mall.views.update_productcategory
 Feature: 管理商品分组列表
 """
@@ -413,4 +414,169 @@ Scenario:5 向分类中添加商品排序
 		|  商品2   |
 		|  商品5   |
 		|  商品4   |
+
+
+#根据功能后续添加-雪静
+@mall2 @product @group @ProductList  @mall.product_category @mall
+Scenario:6 分组管理查询
+	在分组列表中查询分组名称和商品
+	1.查询条件可以为空
+	2.查询条件支持部分匹配
+
+	Given jobs登录系统
+	Then jobs能获取商品分类列表
+		"""
+		[{
+			"name": "分类1",
+			"products": [{
+				"name": "叫花鸡"
+			}, {
+				"name": "东坡肘子"
+			}]
+		}, {
+			"name": "分类2",
+			"products": [{
+				"name": "东坡肘子"
+			}]
+		}, {
+			"name": "分类3",
+			"products": []
+		}]
+		"""
+	#新添加的step按照现在的方式和名称
+	#默认查询（空查询）
+	When jobs设置商品分组列表查询条件
+		"""
+		{
+			"name": [],
+			"product": []
+		}
+		"""
+	Then jobs能获取商品分类列表
+		"""
+		[{
+			"name": "分类1",
+			"products": [{
+				"name": "叫花鸡"
+			}, {
+				"name": "东坡肘子"
+			}]
+		}, {
+			"name": "分类2",
+			"products": [{
+				"name": "东坡肘子"
+			}]
+		}, {
+			"name": "分类3",
+			"products": []
+		}]
+		"""
+	#分组名称查询
+	When jobs设置商品分组列表查询条件
+		"""
+		{
+			"name": "分类1",
+			"product": []
+		}
+		"""
+	Then jobs能获取商品分类列表
+		"""
+		[{
+			"name": "分类1",
+			"products": [{
+				"name": "叫花鸡"
+			}, {
+				"name": "东坡肘子"
+			}]
+		}]
+		"""
+	#商品名称查询
+	When jobs设置商品分组列表查询条件
+		"""
+		{
+			"name": [],
+			"product": "东坡肘子"
+		}
+		"""
+	Then jobs能获取商品分类列表
+		"""
+		[{
+			"name": "分类1",
+			"products": [{
+				"name": "叫花鸡"
+			}, {
+				"name": "东坡肘子"
+			}]
+		}, {
+			"name": "分类2",
+			"products": [{
+				"name": "东坡肘子"
+			}]
+		}]
+		"""
+	#分组和商品名称查询
+	When jobs设置商品分组列表查询条件
+		"""
+		{
+			"name": "分类1",
+			"product": "东坡肘子"
+		}
+		"""
+	Then jobs能获取商品分类列表
+		"""
+		[{
+			"name": "分类1",
+			"products": [{
+				"name": "叫花鸡"
+			}, {
+				"name": "东坡肘子"
+			}]
+		}]
+		"""
+	#分组和商品名称查询部分查询
+	When jobs设置商品分组列表查询条件
+		"""
+		{
+			"name": "分类",
+			"product": "花鸡"
+		}
+		"""
+	Then jobs能获取商品分类列表
+		"""
+		[{
+			"name": "分类1",
+			"products": [{
+				"name": "叫花鸡"
+			}, {
+				"name": "东坡肘子"
+			}]
+		}]
+		"""
+	#查询的分组名字中包含空格
+	When jobs设置商品分组列表查询条件
+		"""
+		{
+			"name": "分类  1",
+			"product": []
+		}
+		"""
+	Then jobs能获取商品分类列表
+		"""
+		[]
+		"""
+	#查询的商品名字不在分组中
+	When jobs设置商品分组列表查询条件
+		"""
+		{
+			"name": [],
+			"product": "水晶虾仁"
+		}
+		"""
+	Then jobs能获取商品分类列表
+		"""
+		[]
+		"""
+
+
+
 

@@ -289,6 +289,15 @@ class CategoryList(resource.Resource):
         #获取category集合
         product_categories = mall_models.ProductCategory.objects.filter(
             owner=request.manager)
+        #查询
+        category_name = request.GET.get('category_name','')
+        product_name = request.GET.get('product_name','')
+        if category_name:
+            product_categories = product_categories.filter(name__icontains=category_name)
+        if product_name:
+            products = mall_models.Product.objects.filter(name__icontains=product_name)
+            category_ids = mall_models.CategoryHasProduct.objects.filter(product__in=products).values_list('category_id', flat=True)
+            product_categories = product_categories.filter(id__in=category_ids)
 
         mall_type = request.user_profile.webapp_type
 
@@ -452,3 +461,4 @@ class Category(resource.Resource):
         # 手动调用,django的信号似乎在delete之前执行了,生产了错误的缓存
         update_product_list_cache(request.manager.id)
         return create_response(200).get_response()
+
