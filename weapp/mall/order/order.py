@@ -734,8 +734,15 @@ class OrderRefundInfo(resource.Resource):
 
         total = cash + weizoom_card_money + coupon_money + integral_money
 
-        Order.objects.filter(id=order_id).update(refund_money=F('refund_money'))
-        Order.objects.filter(id=delivery_item_id).update(refund_money=F('refund_money'))
+        origin_order = Order.objects.filter(id=order_id).first()
+        if origin_order.refund_money == -1:
+            origin_order.refund_money = total
+        else:
+            origin_order.refund_money += total
+        origin_order.save()
+
+        sub_order.refund_money = total
+        sub_order.save()
 
         OrderHasRefund.objects.create(
             origin_order_id=order_id,
