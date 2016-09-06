@@ -61,7 +61,7 @@
 			<tr data-product-id="${product.id}" {% if product.status == '待售' %}class="xui-color-mark"{% endif %}>
 				<td width="315" class="xui-i-product-name">${product.name}</td>
 				<td width="120">
-				<span class="label label-default cursor-pointer xa-edit-product-category" style="color:#c5c5c5">更多 (6) </span>
+				<a class="btn xui-i-more xa-edit-product-category">更多 (6) </a>
 					{{if product.categories && product.categories.length > 0}}
 						<div>
 							${product.categories[0].name}
