@@ -56,7 +56,8 @@ class Flashsale(api_resource.ApiResource):
 			else:
 				product_name2count[product_name] += 1
 
-		products = Product.objects.filter(owner_id=owner.id, name__in=[u"830多规格"])
+		products = Product.objects.filter(owner_id=owner.id, name__in=product_name)
+		print products,"oiiiiiiiiiiiiii"
 
 		product_name2product_id = {product.name: product.id for product in products}
 
