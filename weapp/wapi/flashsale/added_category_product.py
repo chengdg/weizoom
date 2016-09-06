@@ -43,14 +43,14 @@ class AddedCategoryProduct(api_resource.ApiResource):
 				product_names.append(p["product_name"])
 
 		#获取商品
-		products = mall_models.Product.objects.filter(name__in=product_names)
+		mall_products = mall_models.Product.objects.filter(name__in=product_names)
 
-		product_ids = [product.id for product in products]
+		product_ids = [product.id for product in mall_products]
 		product_pools = mall_models.ProductPool.objects.filter(woid=owner.id, product_id__in=product_ids)
 		product_pool_product_ids = [pp.product_id for pp in product_pools]
 
 		product_name2product_id = {}
-		for product in products:
+		for product in mall_products:
 			if product.id in product_pool_product_ids:
 				product_name2product_id[product.name] = product.id
 

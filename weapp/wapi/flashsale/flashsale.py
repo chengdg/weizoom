@@ -86,7 +86,6 @@ class Flashsale(api_resource.ApiResource):
 
 		# 过滤参团的商品
 		group_records = group_models.Group.objects(owner_id=owner.id, status__lte=1)
-		print group_models.Group.objects(owner_id=930, status__lte=1),"fffffffffffffff"
 		product_id2record = dict([(record.product_id, record) for record in group_records])
 
 		print group_records,product_id2record, "product_id2recordWWWWWWWWWWWWWWWWWWWW"
