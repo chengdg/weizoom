@@ -391,12 +391,12 @@ class PaymentAmount(resource.Resource):
 					# 'online_order_num': online_order_num,
 					# 'online_paid_amount': online_paid_amount,
 					# 'cod_order_num': cod_order_num,
-					'货到付款': cod_amount,
-					'支付宝': alipay_amount,
-					'翼支付': bestpay_amount,
-					'看购支付': kangou_amount,
-					'微信支付': weixinpay_amount,
-					'微众卡支付': wezoom_card_amount
+					'货到付款': round(cod_amount,2),
+					'支付宝': round(alipay_amount,2),
+					'翼支付': round(bestpay_amount,2),
+					'看购支付': round(kangou_amount,2),
+					'微信支付': round(weixinpay_amount,2),
+					'微众卡支付': round(wezoom_card_amount,2)
 				}
 			)
 
