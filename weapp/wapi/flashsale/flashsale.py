@@ -50,13 +50,13 @@ class Flashsale(api_resource.ApiResource):
 		product_name2count = {}
 		for product_info in product_infos:
 			product_name = product_info.get('product_name')
-			product_names.append(product_name.encode("utf-8"))
+			product_names.append(product_name)
 			if not product_name2count.has_key(product_name):
 				product_name2count[product_name] = 1
 			else:
 				product_name2count[product_name] += 1
 
-		products = Product.objects.filter(owner_id=owner.id, name__in=product_names)
+		products = Product.objects.filter(owner_id=owner.id, name__in=[u"830多规格"])
 
 		product_name2product_id = {product.name: product.id for product in products}
 
