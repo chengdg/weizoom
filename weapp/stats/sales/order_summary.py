@@ -275,8 +275,17 @@ class BuyerSources(resource.Resource):
 			webappuser2member = Member.members_from_webapp_user_ids(webapp_user_ids)
 
 			tmp_member = webappuser2member.get(order.webapp_user_id, None)
-
-			_do_buyer_source_stats(buyer_source_stats, tmp_member)
+			if tmp_member:
+				if tmp_member.source == SOURCE_SELF_SUB:
+					buyer_source_stats['sub_source_num'] += 1
+				elif tmp_member.source == SOURCE_MEMBER_QRCODE:
+					buyer_source_stats['qrcode_source_num'] += 1
+				elif tmp_member.source == SOURCE_BY_URL:
+					buyer_source_stats['url_source_num'] += 1
+				else:
+					buyer_source_stats['other_source_num'] += 1
+			else:
+				buyer_source_stats['other_source_num'] += 1
 
 		return create_pie_chart_response('',
 				{
@@ -493,20 +502,6 @@ def _get_repeated_num_increment(wuid, wuid_dict, member, webappuser2member, pre_
 					return 1
 	# print "+++++++++++++++++++++++++++++++++"
 	return result
-
-#统计买家来源函数
-def _do_buyer_source_stats(buyer_source_stats, member):
-	if member:
-		if member.source == SOURCE_SELF_SUB:
-			buyer_source_stats['sub_source_num'] += 1
-		elif member.source == SOURCE_MEMBER_QRCODE:
-			buyer_source_stats['qrcode_source_num'] += 1
-		elif member.source == SOURCE_BY_URL:
-			buyer_source_stats['url_source_num'] += 1
-		else:
-			buyer_source_stats['other_source_num'] += 1
-	else:
-		buyer_source_stats['other_source_num'] += 1
 
 def _do_discount_stats(discount_stats, order):
 	weizoom_used = order.weizoom_card_money > 0
