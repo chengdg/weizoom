@@ -370,6 +370,37 @@ class Category(resource.Resource):
     resource = 'category'
 
     @login_required
+    def api_get(request):
+        category_id = request.GET.get('category_id')
+        mall_type = request.user_profile.webapp_type
+        product_categories = mall_models.ProductCategory.objects.filter(
+            owner=request.manager,
+            id=category_id
+        )
+        if product_categories:
+            category_ROA_utils.sorted_products(mall_type,request.manager.id, product_categories, True)
+            items = []
+            for product in product_categories[0].products:
+                product_data = {
+                    'id':product.id,
+                    'name':product.name,
+                    'display_price':product.display_price,
+                    'status':str(product.status),
+                    'display_index':product.display_index,
+                    'sales':product.sales,
+                    'join_category_time':product.join_category_time.strftime('%Y-%m-%d %H:%M')
+                }
+                items.append(product_data)
+            response = create_response(200)
+            response.data = {
+                'items': items,
+            }
+            return response.get_response()
+        else:
+            response = create_response(500)
+            response.data = {'msg':"该商品分类已不存在"}
+            return response.get_response()
+    @login_required
     def api_put(request):
         """创建商品分类
 
