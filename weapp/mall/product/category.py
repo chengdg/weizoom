@@ -369,6 +369,18 @@ class Category(resource.Resource):
     app = 'mall2'
     resource = 'category'
 
+    def get(request):
+        """
+        分类商品列表页面
+        """
+        c = RequestContext(request, {
+                    'first_nav_name': export.PRODUCT_FIRST_NAV,
+                    'second_navs': export.get_mall_product_second_navs(request),
+                    'second_nav_name': export.PRODUCT_MANAGE_CATEGORY_NAV,
+                    'has_categories':True}
+        )
+        return render_to_response('mall/editor/category.html', c)
+
     @login_required
     def get(request):
         """
@@ -394,6 +406,10 @@ class Category(resource.Resource):
             category_ROA_utils.sorted_products(mall_type,request.manager.id, product_categories, True)
             items = []
             for product in product_categories[0].products:
+                category_has_products = mall_models.CategoryHasProduct.objects.filter(product_id=product.id)
+                category_list = []
+                for category_has_product in category_has_products:
+                    category_list.append(category_has_product.category.name)
                 product_data = {
                     'id':product.id,
                     'name':product.name,
@@ -401,13 +417,15 @@ class Category(resource.Resource):
                     'status':str(product.status),
                     'display_index':product.display_index,
                     'sales':product.sales,
-                    'join_category_time':product.join_category_time.strftime('%Y-%m-%d %H:%M')
+                    'join_category_time':product.join_category_time.strftime('%Y-%m-%d %H:%M'),
+                    'categories':category_list
                 }
                 items.append(product_data)
             response = create_response(200)
             response.data = {
                 'name':product_categories[0].name,
                 'items': items,
+                'category_name':product_categories[0].name
             }
             return response.get_response()
         else:
