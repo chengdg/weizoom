@@ -203,7 +203,9 @@
 					<label class="control-label fl ml10" for="limit_zone_template">限定区域：</label>
 					<div class="fl w450 pl5 pr">
 						{% if limit_zone_templates|length == 0 %}
+							<input type="hidden" value='0' data-validate="require-custom-function" data-validate-function="validateLimitZoneTemp" data-force-validate="true"/>
 							<a class="ml5" href="/mall2/product_limit_zone_template/" target="_blank">+添加新模板</a>
+							<div class="errorHint" data-error-hint="请添加区域模板"></div>
 						{% else %}
 							<select class="w106 vm" id="limit_zone_template" name="limit_zone_template" data-validate="require-custom-function" data-validate-function="validateLimitZoneTemp">
 								<option value="0">选择区域模板</option>
