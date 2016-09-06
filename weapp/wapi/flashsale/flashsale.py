@@ -76,8 +76,6 @@ class Flashsale(api_resource.ApiResource):
 		#已经配置过促销活动的商品
 		promotion_id2product_id = {psp.promotion_id: psp.product_id for psp in promotion_models.ProductHasPromotion.objects.filter(product_id__in=product_name2product_id.values())}
 
-		print promotion_id2product_id,"fggggggggggggg"
-
 		#已经配置过促销活动的商品，在进行中并且不能同时参加的活动
 		product_id2type = {}
 		for p in promotion_models.Promotion.objects.filter(owner_id=owner.id, status__in=[promotion_models.PROMOTION_STATUS_STARTED,promotion_models.PROMOTION_STATUS_NOT_START], id__in=promotion_id2product_id.keys()):
@@ -85,13 +83,13 @@ class Flashsale(api_resource.ApiResource):
 				for promotion_id, product_id in promotion_id2product_id.items():
 					if p.id == promotion_id:
 						product_id2type[product_id] = p.type
-		print product_id2type,"product_id2typeWWWWWWWWWWWWWWWWWWWW"
 
 		# 过滤参团的商品
 		group_records = group_models.Group.objects(owner_id=owner.id, status__lte=1)
+		print group_models.Group.objects(owner_id=930, status__lte=1),"fffffffffffffff"
 		product_id2record = dict([(record.product_id, record) for record in group_records])
 
-		print product_id2record,"product_id2recordWWWWWWWWWWWWWWWWWWWW"
+		print group_records,product_id2record, "product_id2recordWWWWWWWWWWWWWWWWWWWW"
 
 		result = []
 		for product_info in product_infos:
