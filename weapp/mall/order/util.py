@@ -954,9 +954,6 @@ def get_orders_response(request, is_refund=False):
       count_per_page: 15
       cur_page: 1
     """
-    is_weizoom_mall_partner = AccountHasWeizoomCardPermissions.is_can_use_weizoom_card_by_owner_id(request.manager.id)
-    if request.manager.is_weizoom_mall:
-        is_weizoom_mall_partner = False
 
     # 商城的类型
     mall_type = request.user_profile.webapp_type
@@ -1307,7 +1304,6 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
                 actions = get_order_actions(order, is_refund=is_refund, mall_type=mall_type, is_group_buying=True)
             else:
                 actions = get_order_actions(order, is_refund=is_refund, mall_type=mall_type)
-            print('------actions',actions)
             group_order = {
                 "id": order.id,
                 "status": order.get_status_text(),
