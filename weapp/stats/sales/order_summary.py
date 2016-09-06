@@ -213,12 +213,12 @@ class RepeatPurchaseRate(resource.Resource):
 			webapp_user_ids = set([order.webapp_user_id for order in past_status_qualified_orders])
 			webappuser2member = Member.members_from_webapp_user_ids(webapp_user_ids)
 
-			tmp_member = webappuser2member.get(order.webapp_user_id, None)
+			tmp_member_two = webappuser2member.get(order.webapp_user_id, None)
 
 			t0 = time.clock()
 			t1 = time.time()
 			# print ">>>>>"
-			repeated_num += _get_repeated_num_increment(order.webapp_user_id, wuid_dict, tmp_member, webappuser2member, pre_status_qualified_orders)
+			repeated_num += _get_repeated_num_increment(order.webapp_user_id, wuid_dict, tmp_member_two, webappuser2member, pre_status_qualified_orders)
 			# __report_performance(t0, t1, "repeat counter")
 
 		# 初次购买
@@ -269,6 +269,7 @@ class BuyerSources(resource.Resource):
 			# “其他”：=∑订单.个数
 			'other_source_num': 0
 		}
+
 		for order in qualified_orders:
 			webapp_user_ids = set([order.webapp_user_id for order in past_status_qualified_orders])
 			webappuser2member = Member.members_from_webapp_user_ids(webapp_user_ids)
@@ -485,9 +486,9 @@ def _get_repeated_num_increment(wuid, wuid_dict, member, webappuser2member, pre_
 				return 1
 
 			wuid_dict[tmp_wuid] = ""
-			tmp_member = webappuser2member.get(tmp_wuid, None)
-			if member and tmp_member:
-				if tmp_member.id == member.id:
+			tmp_member_two = webappuser2member.get(tmp_wuid, None)
+			if member and tmp_member_two:
+				if tmp_member_two.id == member.id:
 					wuid_dict['pos'] = index + 1
 					return 1
 	# print "+++++++++++++++++++++++++++++++++"
