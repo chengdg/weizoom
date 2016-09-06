@@ -9,7 +9,7 @@
 	<ul class="breadcrumb">
 		<li>您当前所在位置</li>
 		<li>
-			<a href="/mall2/product_list/?shelve_type=1">商品管理11</a>
+			<a href="/mall2/product_list/?shelve_type=1">商品管理</a>
 		</li>
 		<li class="active">{% if product %}更新{% else %}添加新{% endif %}商品</li>
 	</ul>
@@ -191,31 +191,34 @@
 				<label class="control-label fl" for="limit_zone_type">限定类型：</label>
 				<div class="col-sm-2 fl pl5">
 					<select class="w106" id="limit_zone_type" name="limit_zone_type" {% if pool_mall_type %}disabled{% endif %}>
-                		<option value="0" {% if product.limit_zone_type == '0' %}selected='selected'{% endif %}>无限制</option>
-                		<option value="1" {% if product.limit_zone_type == '1' %}selected='selected'{% endif %}>禁售地区</option>
-                		<option value="2" {% if product.limit_zone_type == '2' %}selected='selected'{% endif %}>仅售地区</option>
+                		<option value="0" {% if product.limit_zone_type == 0 %}selected='selected'{% endif %}>无限制</option>
+                		<option value="1" {% if product.limit_zone_type == 1 %}selected='selected'{% endif %}>禁售地区</option>
+                		<option value="2" {% if product.limit_zone_type == 2 %}selected='selected'{% endif %}>仅售地区</option>
                 	</select>
 				</div>
-				
-				{% if pool_mall_type %}
-					<button class="btn-primary xa-limit-zone-detail xui-showlimitZone-btn" type="button">+&nbsp;&nbsp;显示限定区域</button>
-				{% else %}
-				<label class="control-label fl ml10" for="limit_zone_template">限定区域：</label>
-				<div class="fl w450 pl5 pr">
-					{% if limit_zone_templates|length == 0 %}
-						<a class="ml5" href="/mall2/product_limit_zone_template/" target="_blank">+添加新模板</a>
+				<div class="xa-limit-temp-section fl">
+					{% if pool_mall_type %}
+						<button class="btn-primary xa-limit-zone-detail xui-showlimitZone-btn" type="button" data-template-id="{{ template.id }}" data-template-name="{{ template.name }}">+&nbsp;&nbsp;显示限定区域</button>
 					{% else %}
-						<select class="w106 vm" id="limit_zone_template" name="limit_zone_template">
-							{% for template in limit_zone_templates %}
-								<option value="{{ template.id }}" {% if template.id == product.limit_zone %}selected='selected'{% endif %}>{{ template.name }}</option>
-							{% endfor %}
+					<label class="control-label fl ml10" for="limit_zone_template">限定区域：</label>
+					<div class="fl w450 pl5 pr">
+						{% if limit_zone_templates|length == 0 %}
+							<a class="ml5" href="/mall2/product_limit_zone_template/" target="_blank">+添加新模板</a>
+						{% else %}
+							<select class="w106 vm" id="limit_zone_template" name="limit_zone_template" data-validate="require-custom-function" data-validate-function="validateLimitZoneTemp">
+								<option value="0">选择区域模板</option>
+								{% for template in limit_zone_templates %}
+									<option value="{{ template.id }}" {% if template.id == product.limit_zone %}selected='selected'{% endif %}>{{ template.name }}</option>
+								{% endfor %}
 
-	                	</select>
-						<button class="btn-primary xui-limitZone-btn xa-limit-zone-detail" type="button">查看</button>
-						<a class="ml5" href="/mall2/product_limit_zone_template/" target="_blank">+添加新模板</a>
+		                	</select>
+							<button class="btn-primary xui-limitZone-btn xa-limit-zone-detail xa-limit-zone-btn" type="button">查看</button>
+							<a class="ml5" href="/mall2/product_limit_zone_template/" target="_blank">+添加新模板</a>
+							<div class="errorHint" data-error-hint="请选择区域模板"></div>
+						{% endif %}
+					</div>
 					{% endif %}
 				</div>
-				{% endif %}
 			</div>
 			{% if mall_type and has_store_name %}
 			<div class="form-group">
@@ -735,6 +738,24 @@ function validateBarCode($el){
 	  errorHint: "请输入数字"
 	}
   }
+}
+function validateLimitZoneTemp($el){
+	if($el.parents('.xa-limit-temp-section').siblings('div').find('#limit_zone_type').val() == 0){
+		return {
+			isValidate: true
+		}
+	}else{
+		if($el.val() == '0'){
+			return{
+				isValidate: false,
+		  		errorHint: "请选择区域模板"
+		  	}
+		  }else{
+		  	return {
+				isValidate: true
+			}
+		  }
+	}
 }
 function validateUserCode($el){
   var hasValue= $.trim($el.val());
