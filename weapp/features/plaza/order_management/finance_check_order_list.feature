@@ -93,35 +93,65 @@ Backgroud:
 			"""
 		#激活微众
 		When test激活卡号'100000001'的卡::weizoom_card
-	When jobs已添加商品
-		"""
-		[{
-			"name":"商品1a",
-			"supplier":"商家1",
-			"price":10.00,
-			"stock_type":"有限"
-			"stocks":10,
-		},{
-			"name":"商品1b",
-			"supplier":"商家1",
-			"price":20.00,
-			"stock_type":"有限"
-			"stocks":20,
-			"postage":1.00
-		},{
-			"name":"商品2a",
-			"supplier":"商家2",
-			"price":10.00,
-			"stock_type":"有限"
-			"stocks":10
-		},{
-			"name":"商品3a",
-			"supplier":"商家3",
-			"price":10.00,
-			"stock_type":"有限"
-			"stocks":10
-		}]
-		"""
+
+	#创建商品
+		Given 给jobs, nokia两个自营平台同步商品，供货商是-商家1
+				"""
+				{
+					"name": "商品1a",
+					"promotion_title": "商品1a促销",
+					"purchase_price": 9.00,
+					"price": 10.00,
+					"weight": 1,
+					"image": "love.png",
+					"stocks": 100,
+					"detail": "商品1a描述信息"
+				}
+				"""
+		Given 给jobs, nokia两个自营平台同步商品，供货商是-商家1
+				"""
+				{
+					"name": "商品1b",
+					"promotion_title": "商品1b促销",
+					"purchase_price": 19.00,
+					"price": 20.00,
+					"weight": 1,
+					"image": "love.png",
+					"stocks": 200,
+					"detail": "商品1b描述信息"
+				}
+				"""
+		Given 给jobs, nokia两个自营平台同步商品，供货商是-商家2
+				"""
+				{
+					"name": "商品2a",
+					"promotion_title": "商品2a促销",
+					"purchase_price": 9.00,
+					"price": 10.00,
+					"weight": 1,
+					"image": "love.png",
+					"stocks": 100,
+					"detail": "商品2a描述信息"
+				}
+				"""
+		Given 给jobs, nokia两个自营平台同步商品，供货商是-商家3
+				"""
+				{
+					"name": "商品3a",
+					"promotion_title": "商品3a促销",
+					"purchase_price": 9.00,
+					"price": 10.00,
+					"weight": 1,
+					"image": "love.png",
+					"stocks": 100,
+					"detail": "商品3a描述信息"
+				}
+				"""
+		Given jobs登录系统
+		When jobs上架商品池商品"商品1a"
+		When jobs上架商品池商品"商品2a"
+		When jobs上架商品池商品"商品3a"
+
 	When bill关注jobs的公众号
 	When bill访问jobs的webapp::apiserver
 	#bill购买多个供货商的商品
