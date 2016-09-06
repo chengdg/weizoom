@@ -1890,7 +1890,7 @@ Scenario:1 自营平台所有订单列表查询
 				"order_type":"全部"
 			}
 			"""
-		Then jobs获得自营'待支付'订单列表
+		Then jobs获得自营订单列表
 			"""
 			[{
 				"order_no":"70101"
@@ -1912,7 +1912,7 @@ Scenario:1 自营平台所有订单列表查询
 				"order_type":"全部"
 			}
 			"""
-		Then jobs获得自营'待发货'订单列表
+		Then jobs获得自营订单列表
 			"""
 			[{
 				"order_no":"20501"
@@ -1950,7 +1950,7 @@ Scenario:1 自营平台所有订单列表查询
 				"order_type":"全部"
 			}
 			"""
-		Then jobs获得自营'已发货'订单列表
+		Then jobs获得自营订单列表
 			"""
 			[{
 				"order_no":"30401"
@@ -1984,7 +1984,7 @@ Scenario:1 自营平台所有订单列表查询
 				"order_type":"全部"
 			}
 			"""
-		Then jobs获得自营'退款中'订单列表
+		Then jobs获得自营订单列表
 			"""
 			[{
 				"order_no":"40301"
@@ -2038,7 +2038,7 @@ Scenario:1 自营平台所有订单列表查询
 				"order_type":"全部"
 			}
 			"""
-		Then jobs获得自营'已完成'订单列表
+		Then jobs获得自营订单列表
 			"""
 			[{
 				"order_no":"50201"
@@ -2076,7 +2076,7 @@ Scenario:1 自营平台所有订单列表查询
 				"order_type":"全部"
 			}
 			"""
-		Then jobs获得自营'退款成功'订单列表
+		Then jobs获得自营订单列表
 			"""
 			[{
 				"order_no":"60101"
