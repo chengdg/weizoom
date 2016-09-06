@@ -41,8 +41,8 @@ class Flashsale(api_resource.ApiResource):
 		"""
 
 		product_infos = json.loads(args.get('product_infos', '[]'))
-		#【微众商城】帐号
-		owner = User.objects.get(username='ceshi01')
+		#【微众商城】帐号:weshop,用于测试的帐号devceshi
+		owner = User.objects.get(username='devceshi')
 		#使得webapp_cache.py能够有user_profile
 		cache.request.user_profile = UserProfile.objects.get(user=owner)
 
