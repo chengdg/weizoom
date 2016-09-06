@@ -214,7 +214,9 @@
             resource: 'order_trends',
             method: 'get',
             args: {
-                is_subscribed: is_subscribed
+                is_subscribed: is_subscribed,
+                start_date: $('#start_date').val(),
+                end_date: $('#end_date').val()
             },
             scope: this,
             success: function(data) {
@@ -284,7 +286,9 @@
             resource: 'repeat_purchase_rate',
             method: 'get',
             args: {
-                is_subscribed: is_subscribed
+                is_subscribed: is_subscribed,
+                start_date: $('#start_date').val(),
+                end_date: $('#end_date').val()
             },
             scope: this,
             success: function(data) {
@@ -347,7 +351,9 @@
             resource: 'buyer_sources',
             method: 'get',
             args: {
-                is_subscribed: is_subscribed
+                is_subscribed: is_subscribed,
+                start_date: $('#start_date').val(),
+                end_date: $('#end_date').val()
             },
             scope: this,
             success: function(data) {
@@ -410,7 +416,9 @@
             resource: 'payment_amount',
             method: 'get',
             args: {
-                is_subscribed: is_subscribed
+                is_subscribed: is_subscribed,
+                start_date: $('#start_date').val(),
+                end_date: $('#end_date').val()
             },
             scope: this,
             success: function(data) {
@@ -474,7 +482,9 @@
             resource: 'preferential_discount',
             method: 'get',
             args: {
-                is_subscribed: is_subscribed
+                is_subscribed: is_subscribed,
+                start_date: $('#start_date').val(),
+                end_date: $('#end_date').val()
             },
             scope: this,
             success: function(data) {
@@ -528,7 +538,9 @@
             resource: 'preferential_discount',
             method: 'get',
             args: {
-                is_subscribed: is_subscribed
+                is_subscribed: is_subscribed,
+                start_date: $('#start_date').val(),
+                end_date: $('#end_date').val()
             },
             scope: this,
             success: function(data) {
