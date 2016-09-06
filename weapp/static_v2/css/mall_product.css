@@ -773,7 +773,8 @@
 	width: initial;
 }
 .xui-limited-area-template-dialog .modal-dialog .modal-body{
-	min-height: 290px;
+	min-height: 250px;
+	max-height: 300px;
     overflow-y: auto;
 }
 /*选择产品规格弹窗*/
