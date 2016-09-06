@@ -18,9 +18,9 @@ import cache
 
 from apps.customerized_apps.group import models as group_models
 
-class Flashsale(api_resource.ApiResource):
+class DeletedCategoryProduct(api_resource.ApiResource):
 	app = 'flashsale'
-	resource = 'delete_category_product'
+	resource = 'deleted_category_product'
 
 	@param_required([])
 	def get(args):

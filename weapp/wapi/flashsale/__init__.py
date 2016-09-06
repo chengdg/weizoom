@@ -1,3 +1,4 @@
 # -*- coding: utf-8 -*-
 import flashsale
-import delete_category_product
+import added_category_product
+import deleted_category_product
