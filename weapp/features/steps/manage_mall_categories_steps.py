@@ -36,36 +36,43 @@ def step_get_category(context, user):
     context.client = bdd_util.login(user)
     client = context.client
 
-    response = client.get('/mall2/category_list/')
-    actual = response.context['product_categories']
+    if hasattr(context, 'params'):
+        from urllib import urlencode
+        params = urlencode(context.params)
+        response = client.get('/mall2/api/category_list/?{}'.format(params))
+        del context.params
+    else:
+        response = client.get('/mall2/api/category_list/')
+    actual = json.loads(response.content)['data']['items']
+    # actual = response.context['product_categories']
     actual_list = []
     for a in actual:
-        chp_list = mall_models.CategoryHasProduct.objects.filter(
-        category_id=a.id)
-        product_id2chp = dict(map(lambda chp: (chp.product_id, chp), chp_list))
-        product_ids = [chp.product_id for chp in chp_list]
-        cache_products = mall_models.Product.objects.filter(id__in=product_ids,is_deleted=False)
-        mall_models.Product.fill_display_price(cache_products)
-        for product in cache_products:
-            product.display_index = product_id2chp[product.id].display_index
-            product.join_category_time = product_id2chp[product.id].created_at
-        # 1.shelve_type, 2.display_index, 3.id
-        products_is_0 = filter(lambda p: p.display_index == 0,
-                                             cache_products)
-        products_not_0 = filter(lambda p: p.display_index != 0,
-                                              cache_products)
-        products_is_0 = sorted(products_is_0, key=attrgetter('join_category_time','id'), reverse=True)
-        products_not_0 = sorted(products_not_0, key=attrgetter('display_index'))
-        cache_products = products_not_0 + products_is_0
+        # chp_list = mall_models.CategoryHasProduct.objects.filter(
+        # category_id=a.id)
+        # product_id2chp = dict(map(lambda chp: (chp.product_id, chp), chp_list))
+        # product_ids = [chp.product_id for chp in chp_list]
+        # cache_products = mall_models.Product.objects.filter(id__in=product_ids,is_deleted=False)
+        # mall_models.Product.fill_display_price(cache_products)
+        # for product in cache_products:
+        #     product.display_index = product_id2chp[product.id].display_index
+        #     product.join_category_time = product_id2chp[product.id].created_at
+        # # 1.shelve_type, 2.display_index, 3.id
+        # products_is_0 = filter(lambda p: p.display_index == 0,
+        #                                      cache_products)
+        # products_not_0 = filter(lambda p: p.display_index != 0,
+        #                                       cache_products)
+        # products_is_0 = sorted(products_is_0, key=attrgetter('join_category_time','id'), reverse=True)
+        # products_not_0 = sorted(products_not_0, key=attrgetter('display_index'))
+        # cache_products = products_not_0 + products_is_0
         product_dict = {}
         product_dict['products'] = []
-        product_dict['name'] = a.name
-        for c_product in cache_products:
+        product_dict['name'] = a['name']
+        for c_product in a['products']:
             dict_one = {
-            "name": c_product.name,
-            "status": "在售" if c_product.shelve_type==1 else "待售",
-            "display_price": c_product.display_price,
-            "display_index": c_product.display_index
+            "name": c_product['name'],
+            "status": c_product['status'],
+            "display_price": c_product['display_price'],
+            "display_index": c_product['display_index']
             }
             product_dict['products'].append(dict_one)
         actual_list.append(product_dict)
@@ -116,7 +123,7 @@ def step_delete_p_in_categroy(context, user, category_name, product_name):
 @then(u"{user}能获得商品分类'{category_name}'的可选商品集合为")
 def step_get_p_from_category(context, user, category_name):
     existed_product_category = ProductCategoryFactory(name=category_name)
-    url = '/mall2/api/category_list/?id={}'.format(existed_product_category.id)
+    url = '/mall2/api/category_product_list/?id={}'.format(existed_product_category.id)
     response = context.client.get(url)
 
     actual = json.loads(response.content)['data']['items']
@@ -154,3 +161,12 @@ def step_impl(context, user, category_name, product_name, position):
     context.client.post(url, data)
 
 
+@When(u"{user}设置商品分组列表查询条件")
+def step_impl(context, user):
+    search_data = json.loads(context.text)
+    params = {}
+    if search_data['name']:
+        params['category_name'] = search_data['name']
+    if search_data['product']:
+        params['product_name'] = search_data['product']
+    context.params = params

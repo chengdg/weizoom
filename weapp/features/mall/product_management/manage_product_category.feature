@@ -417,7 +417,7 @@ Scenario:5 向分类中添加商品排序
 
 
 #根据功能后续添加-雪静
-#@mall2 @product @group @ProductList  @mall.product_category @mall
+@mall2 @product @group @ProductList  @mall.product_category @mall
 Scenario:6 分组管理查询
 	在分组列表中查询分组名称和商品
 	1.查询条件可以为空
@@ -445,11 +445,11 @@ Scenario:6 分组管理查询
 		"""
 	#新添加的step按照现在的方式和名称
 	#默认查询（空查询）
-	When jobs设置商品分组查询条件
+	When jobs设置商品分组列表查询条件
 		"""
 		{
-			name: [],
-			product: []
+			"name": [],
+			"product": []
 		}
 		"""
 	Then jobs能获取商品分类列表
@@ -472,11 +472,11 @@ Scenario:6 分组管理查询
 		}]
 		"""
 	#分组名称查询
-	When jobs设置商品分组查询条件
+	When jobs设置商品分组列表查询条件
 		"""
 		{
-			name: "分类1",
-			product: []
+			"name": "分类1",
+			"product": []
 		}
 		"""
 	Then jobs能获取商品分类列表
@@ -491,11 +491,11 @@ Scenario:6 分组管理查询
 		}]
 		"""
 	#商品名称查询
-	When jobs设置商品分组查询条件
+	When jobs设置商品分组列表查询条件
 		"""
 		{
-			name: [],
-			product: "叫花鸡"
+			"name": [],
+			"product": "叫花鸡"
 		}
 		"""
 	Then jobs能获取商品分类列表
@@ -510,11 +510,11 @@ Scenario:6 分组管理查询
 		}]
 		"""
 	#分组和商品名称查询
-	When jobs设置商品分组查询条件
+	When jobs设置商品分组列表查询条件
 		"""
 		{
-			name: "分类1",
-			product: "东坡肘子"
+			"name": "分类1",
+			"product": "东坡肘子"
 		}
 		"""
 	Then jobs能获取商品分类列表
@@ -529,11 +529,11 @@ Scenario:6 分组管理查询
 		}]
 		"""
 	#分组和商品名称查询部分查询
-	When jobs设置商品分组查询条件
+	When jobs设置商品分组列表查询条件
 		"""
 		{
-			name: "分类",
-			product: "花鸡"
+			"name": "分类",
+			"product": "花鸡"
 		}
 		"""
 	Then jobs能获取商品分类列表
@@ -548,11 +548,11 @@ Scenario:6 分组管理查询
 		}]
 		"""
 	#查询的分组名字中包含空格
-	When jobs设置商品分组查询条件
+	When jobs设置商品分组列表查询条件
 		"""
 		{
-			name: "分类  1",
-			product: []
+			"name": "分类  1",
+			"product": []
 		}
 		"""
 	Then jobs能获取商品分类列表
@@ -560,11 +560,11 @@ Scenario:6 分组管理查询
 		[]
 		"""
 	#查询的商品名字不在分组中
-	When jobs设置商品分组查询条件
+	When jobs设置商品分组列表查询条件
 		"""
 		{
-			name: [],
-			product: "水晶虾仁"
+			"name": [],
+			"product": "水晶虾仁"
 		}
 		"""
 	Then jobs能获取商品分类列表
