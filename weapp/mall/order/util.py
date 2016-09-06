@@ -1798,6 +1798,7 @@ def get_order_actions(order, is_refund=False, is_detail_page=False, is_list_pare
                                              ORDER_FINISH_ACTION]
 
     # 订单列表页有子订单的父母订单
+    # able_actions_for_list_parent = [ORDER_CANCEL_ACTION, ORDER_REFUNDIND_ACTION, ORDER_REFUND_SUCCESS_ACTION]
     able_actions_for_list_parent = [ORDER_CANCEL_ACTION, ORDER_REFUNDIND_ACTION, ORDER_REFUND_SUCCESS_ACTION]
 
     # 同步订单操作
