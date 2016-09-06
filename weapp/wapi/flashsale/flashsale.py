@@ -57,7 +57,10 @@ class Flashsale(api_resource.ApiResource):
 				product_name2count[product_name] += 1
 
 		products = Product.objects.filter(owner_id=owner.id, name__in=product_names)
-		print products,"poooooooooooooo"
+
+		manager_id = UserProfile.objects.get(user_id=owner.id).manager_id
+
+		print product_names,owner.id,manager_id,"poooooooooooooo"
 
 		product_name2product_id = {product.name: product.id for product in products}
 
