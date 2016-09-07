@@ -1,0 +1,19 @@
+<script id="mall_product_update_categories-dialog-tmpl-src" type="text/x-jquery-tmpl">
+<div class="xa-i-content clearfix p5">
+<div class="form-group">
+	 {{each(i,item) items}}
+		<div class="checkbox xa-categories-list" >
+			<label for="checkbox-update-category-${item.id}">
+			  <input type="checkbox" id="checkbox-update-category-${item.id}" data-id="${item.id}" {{if selectedIdMap[item.id]}}checked{{/if}}> ${item.name}
+			</label>
+    </div>
+	 {{/each}}
+ </div>
+</div>
+<div class="tc" style="padding:7px 0 10px 0;background:#eaeef7;border-radius:0 0 4px 4px">
+	<div class="xa-order-ship-info">
+	</div>
+	<button class="btn btn-primary xa-submit">应用</button>
+</div>
+
+</script>
