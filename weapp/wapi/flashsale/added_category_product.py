@@ -32,7 +32,7 @@ class AddedCategoryProduct(api_resource.ApiResource):
 		#商品分组的名称
 		products = json.loads(args.get('products', u''))
 		#【微众商城】帐号:weshop,用于测试的帐号devceshi
-		owner = User.objects.get(username='jobs')
+		owner = User.objects.get(username='devceshi')
 		#使得webapp_cache.py能够有user_profile
 		cache.request.user_profile = UserProfile.objects.get(user=owner)
 
