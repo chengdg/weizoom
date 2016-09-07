@@ -933,11 +933,11 @@ def step_impl(context, user, order_code):
     #
     # order.order_no = order.order_id
     #
-    # order.invoice=order.bill
-    # order.business_message=order.remark
-    # order.methods_of_payment = order.pay_interface_name
-    # order.weizoom_card = order.weizoom_card_money
-    #
+    order.invoice=order.bill
+    order.business_message=order.remark
+    order.methods_of_payment = order.pay_interface_name
+    order.weizoom_card = order.weizoom_card_money
+
     # group = []
     #
     # for sub_order in child_orders:
@@ -946,9 +946,14 @@ def step_impl(context, user, order_code):
     final_price = order.final_price
     order.final_price = order.pay_money
     order.product_price =order.total_price
+    order.cash = final_price
+
+
+    order.weizoom_card =order.weizoom_card_money
 
     expected.pop('group')
     expected.pop('status')
+    expected.pop('order_no')
 
 
     print('--------xxx')

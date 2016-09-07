@@ -333,13 +333,13 @@ Scenario:1 ziying自营平台子订单退款（全退现金）
 						"status":"待发货"
 					}],
 				"total_save":"",
-				"weizoom_card":"",
+				"weizoom_card":0.00,
 				"products_count":3,
 				"total_price": 40.00,
-				"postage": 1.00,
-				"save_money": -5.00,
-				"cash":36.00,
-				"final_price": 36.00
+				"postage": 0.00,
+				"save_money": 5.00,
+				"cash":35.00,
+				"final_price": 35.00
 			}
 			"""
 
