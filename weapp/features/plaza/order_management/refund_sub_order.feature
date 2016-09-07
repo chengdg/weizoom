@@ -18,16 +18,15 @@ Feature:自营平台退款子订单
 Background:
 	Given 重置'weizoom_card'的bdd环境
 	Given 重置'apiserver'的bdd环境
-	Given jobs登录系统
-	And jobs设定会员积分策略
+	Given zy1登录系统
+	And zy1设定会员积分策略
 		"""
 		{
 			"integral_each_yuan":2
 		}
 		"""
-	And 设置jobs为自营平台账号
-	And jobs已有微众卡支付权限
-	And jobs已添加支付方式
+	And zy1已有微众卡支付权限
+	And zy1已添加支付方式
 		"""
 		[{
 			"type":"货到付款"
@@ -39,6 +38,7 @@ Background:
 			"type":"微众卡支付"
 		}]
 		"""
+
 	#创建微众卡
 		Given test登录管理系统::weizoom_card
 		When test新建通用卡::weizoom_card
@@ -69,37 +69,105 @@ Background:
 			"""
 		#激活微众
 		When test激活卡号'100000001'的卡::weizoom_card
-	Given jobs登录系统
-	When jobs已添加商品
-		"""
-		[{
-			"name":"商品1a",
-			"supplier":"商家1",
-			"price":10.00,
-			"stock_type":"有限"
-			"stocks":10,
-		},{
-			"name":"商品1b",
-			"supplier":"商家1",
-			"price":20.00,
-			"stock_type":"有限"
-			"stocks":20,
-			"postage":1.00
-		},{
-			"name":"商品2a",
-			"supplier":"商家2",
-			"price":10.00,
-			"stock_type":"有限"
-			"stocks":10
-		},{
-			"name":"商品3a",
-			"supplier":"商家3",
-			"price":10.00,
-			"stock_type":"有限"
-			"stocks":10
-		}]
-		"""
-	When jobs创建限时抢购活动
+	#创建供货商、设置商家运费、同步商品到自营平台
+		#创建供货商
+			Given 创建一个特殊的供货商
+				"""
+				{
+					"supplier_name":"商家1"
+				}
+				"""
+			Given 创建一个特殊的供货商
+				"""
+				{
+					"supplier_name":"商家2"
+				}
+				"""
+			Given 创建一个特殊的供货商
+				"""
+				{
+					"supplier_name":"商家3"
+				}
+				"""
+		#设置商家运费
+			#商家1设置运费-满20包邮，否则收取统一运费1元
+			Then 给供货商"商家1"添加运费配置
+				"""
+				{
+					"postage":1,
+					"condition_money": "20"
+				}
+				"""
+		#同步商品到自营平台
+			Given 给自营平台同步商品
+				"""
+				{
+					"account":["zy1"],
+					"supplier_name":"商家1",
+					"name": "商品1a",
+					"promotion_title": "商品1a促销",
+					"purchase_price": 9.00,
+					"price": 10.00,
+					"weight": 1,
+					"image": "love.png",
+					"stocks": 100,
+					"detail": "商品1a描述信息"
+				}
+				"""
+			Given 给自营平台同步商品
+				"""
+				{
+					"account":["zy1"],
+					"supplier_name":"商家1",
+					"name": "商品1b",
+					"promotion_title": "商品1b促销",
+					"purchase_price": 19.00,
+					"price": 20.00,
+					"weight": 1,
+					"image": "love.png",
+					"stocks": 100,
+					"detail": "商品1b描述信息"
+				}
+				"""
+			Given 给自营平台同步商品
+				"""
+				{
+					"account":["zy1"],
+					"supplier_name":"商家2",
+					"name": "商品2a",
+					"promotion_title": "商品2a促销",
+					"purchase_price": 9.00,
+					"price": 10.00,
+					"weight": 1,
+					"image": "love.png",
+					"stocks": 100,
+					"detail": "商品2a描述信息"
+				}
+				"""
+			Given 给自营平台同步商品
+				"""
+				{
+					"account":["zy1"],
+					"supplier_name":"商家3",
+					"name": "商品3a",
+					"promotion_title": "商品3a促销",
+					"purchase_price": 9.00,
+					"price": 10.00,
+
+					"weight": 1,
+					"image": "love.png",
+					"stocks": 100,
+					"detail": "商品3a描述信息"
+				}
+				"""
+	#自营平台从商品池上架商品
+		Given jobs登录系统
+		When jobs上架商品池商品"商品1a"
+		When jobs上架商品池商品"商品1b"
+		When jobs上架商品池商品"商品2a"
+		When jobs上架商品池商品"商品3a"
+	Given zy1登录系统
+	When zy1创建限时抢购活动
 		"""
 		[{
 			"name": "商品1b限时抢购",
@@ -114,101 +182,101 @@ Background:
 		}]
 		"""
 	#bill购买多个供货商的商品
-		When bill关注jobs的公众号
-		When bill访问jobs的webapp::apiserver
+		When bill关注zy1的公众号
+		When bill访问zy1的webapp::apiserver
 		#10101-微信支付（商品1b(限时抢购、运费)+商品2a+商品3a）
-		When bill购买jobs的商品::apiserver
-			"""
-			{
-				"order_id": "10101",
-				"products": [{
-					"name": "商品1b",
-					"count": 1
-				},{
-					"name": "商品2a",
-					"count": 1
-				},{
-					"name": "商品3a",
-					"count": 1
-				}],
-				"pay_type":"微信支付",
-				"ship_name":"bill",
-				"ship_tel":"13811223344",
-				"ship_area": "北京市 北京市 海淀区",
-				"ship_address": "海淀科技大厦"
-			}
-			"""
-		And bill使用支付方式'微信支付'进行支付::apiserver
-		When bill访问jobs的webapp::apiserver
-		When bill绑定微众卡
-			"""
-			{
-				"binding_date":"2016-06-16",
-				"binding_shop":"jobs",
-				"weizoom_card_info":
-					{
-						"id":"100000001",
-						"password":"1234567"
-					}
-			}
-			"""
-		#10102-优惠抵扣（微众卡全额支付）-商品1a+商品2a+商品3a
-		When bill购买jobs的商品::apiserver
-			"""
-			{
-				"order_id": "10102",
-				"products": [{
-					"name": "商品1a",
-					"count": 2
-				},{
-					"name": "商品2a",
-					"count": 1
-				},{
-					"name": "商品3a",
-					"count": 1
-				}],
-				"weizoom_card":[{
-					"card_name":"100000001",
-					"card_pass":"1234567"
+			When bill购买jobs的商品::apiserver
+				"""
+				{
+					"order_id": "10101",
+					"products": [{
+						"name": "商品1b",
+						"count": 1
+					},{
+						"name": "商品2a",
+						"count": 1
+					},{
+						"name": "商品3a",
+						"count": 1
 					}],
-				"pay_type":"微信支付",
-				"ship_name":"bill",
-				"ship_tel":"13811223344",
-				"ship_area": "北京市 北京市 海淀区",
-				"ship_address": "海淀科技大厦"
-			}
-			"""
-		#10103-微信支付（现金+微众卡）-商品1a+商品2a+商品3a
-		When bill购买jobs的商品::apiserver
-			"""
-			{
-				"order_id": "10103",
-				"products": [{
-					"name": "商品1a",
-					"count": 1
-				},{
-					"name": "商品2a",
-					"count": 1
-				},{
-					"name": "商品3a",
-					"count": 1
-				}],
-				"weizoom_card":[{
-					"card_name":"100000001",
-					"card_pass":"1234567"
+					"pay_type":"微信支付",
+					"ship_name":"bill",
+					"ship_tel":"13811223344",
+					"ship_area": "北京市 北京市 海淀区",
+					"ship_address": "海淀科技大厦"
+				}
+				"""
+			And bill使用支付方式'微信支付'进行支付::apiserver
+			When bill访问jobs的webapp::apiserver
+			When bill绑定微众卡
+				"""
+				{
+					"binding_date":"2016-06-16",
+					"binding_shop":"zy1",
+					"weizoom_card_info":
+						{
+							"id":"100000001",
+							"password":"1234567"
+						}
+				}
+				"""
+		#10102-优惠抵扣（微众卡全额支付,满额包邮）-商品1a,2+商品2a,1+商品3a,1
+			When bill购买jobs的商品::apiserver
+				"""
+				{
+					"order_id": "10102",
+					"products": [{
+						"name": "商品1a",
+						"count": 2
+					},{
+						"name": "商品2a",
+						"count": 1
+					},{
+						"name": "商品3a",
+						"count": 1
 					}],
-				"pay_type":"微信支付",
-				"ship_name":"bill",
-				"ship_tel":"13811223344",
-				"ship_area": "北京市 北京市 海淀区",
-				"ship_address": "海淀科技大厦"
-			}
-			"""
-		And bill使用支付方式'微信支付'进行支付::apiserver
+					"weizoom_card":[{
+						"card_name":"100000001",
+						"card_pass":"1234567"
+						}],
+					"pay_type":"微信支付",
+					"ship_name":"bill",
+					"ship_tel":"13811223344",
+					"ship_area": "北京市 北京市 海淀区",
+					"ship_address": "海淀科技大厦"
+				}
+				"""
+		#10103-微信支付（现金+微众卡，不满足满额包邮）-商品1a,1+商品2a,1+商品3a,1
+			When bill购买jobs的商品::apiserver
+				"""
+				{
+					"order_id": "10103",
+					"products": [{
+						"name": "商品1a",
+						"count": 1
+					},{
+						"name": "商品2a",
+						"count": 1
+					},{
+						"name": "商品3a",
+						"count": 1
+					}],
+					"weizoom_card":[{
+						"card_name":"100000001",
+						"card_pass":"1234567"
+						}],
+					"pay_type":"微信支付",
+					"ship_name":"bill",
+					"ship_tel":"13811223344",
+					"ship_area": "北京市 北京市 海淀区",
+					"ship_address": "海淀科技大厦"
+				}
+				"""
+			And bill使用支付方式'微信支付'进行支付::apiserver
 
 Scenario:1 自营平台子订单退款（全退现金）
-	Given jobs登录系统
-	When jobs'申请退款'自营订单'10101-商家1'
+	Given zy1登录系统
+	When zy1'申请退款'自营订单'10101-商家1'
 		"""
 		{
 			"cash":16.00,
@@ -218,7 +286,7 @@ Scenario:1 自营平台子订单退款（全退现金）
 			"intergal_money":0.00
 		}
 		"""
-	Then jobs获得自营订单'10101'
+	Then zy1获得自营订单'10101'
 			"""
 			{
 				"order_no":"10101",
@@ -277,8 +345,8 @@ Scenario:1 自营平台子订单退款（全退现金）
 			"""
 
 Scenario:2 自营平台子订单退款（全退微众卡）
-	Given jobs登录系统
-	When jobs'申请退款'自营订单'10102-商家1'
+	Given zy1登录系统
+	When zy1'申请退款'自营订单'10102-商家1'
 		"""
 		{
 			"cash":0.00,
@@ -288,7 +356,7 @@ Scenario:2 自营平台子订单退款（全退微众卡）
 			"intergal_money":0.00
 		}
 		"""
-	Then jobs获得自营订单'10102'
+	Then zy1获得自营订单'10102'
 			"""
 			{
 				"order_no":"10102",
@@ -346,8 +414,8 @@ Scenario:2 自营平台子订单退款（全退微众卡）
 			"""
 
 Scenario:3 自营平台子订单退款（全退优惠券、全退积分、退优惠券+积分）
-	Given jobs登录系统
-	When jobs'申请退款'自营订单'10101-商家1'
+	Given zy1登录系统
+	When zy1'申请退款'自营订单'10101-商家1'
 		"""
 		{
 			"cash":0.00,
@@ -357,7 +425,7 @@ Scenario:3 自营平台子订单退款（全退优惠券、全退积分、退优
 			"intergal_money":0.00
 		}
 		"""
-	When jobs'申请退款'自营订单'10101-商家2'
+	When zy1'申请退款'自营订单'10101-商家2'
 		"""
 		{
 			"cash":0.00,
@@ -367,7 +435,7 @@ Scenario:3 自营平台子订单退款（全退优惠券、全退积分、退优
 			"intergal_money":10.00
 		}
 		"""
-	When jobs'申请退款'自营订单'10101-商家3'
+	When zy1'申请退款'自营订单'10101-商家3'
 		"""
 		{
 			"cash":0.00,
@@ -377,7 +445,7 @@ Scenario:3 自营平台子订单退款（全退优惠券、全退积分、退优
 			"intergal_money":5.00
 		}
 		"""
-	Then jobs获得自营订单'10101'
+	Then zy1获得自营订单'10101'
 			"""
 			{
 				"order_no":"10101",
@@ -436,19 +504,19 @@ Scenario:3 自营平台子订单退款（全退优惠券、全退积分、退优
 			"""
 
 Scenario:4 自营平台子订单退款（退现金+微众卡+优惠券+积分）
-	Given jobs登录系统
-	#10103-现金20.00+微众卡10+优惠券0.00+积分0.00=30.00
-	When jobs'申请退款'自营订单'10103-商家1'
+	Given zy1登录系统
+	#10103-现金21.00+微众卡10+优惠券0.00+积分0.00=31.00
+	When zy1'申请退款'自营订单'10103-商家1'
 		"""
 		{
-			"cash":5.00,
+			"cash":6.00,
 			"weizoom_card":5.00,
 			"coupon_money":0.00,
 			"intergal":0,
 			"intergal_money":0.00
 		}
 		"""
-	When jobs'申请退款'自营订单'10103-商家2'
+	When zy1'申请退款'自营订单'10103-商家2'
 		"""
 		{
 			"cash":0.00,
@@ -458,7 +526,7 @@ Scenario:4 自营平台子订单退款（退现金+微众卡+优惠券+积分）
 			"intergal_money":3.00
 		}
 		"""
-	When jobs'申请退款'自营订单'10103-商家3'
+	When zy1'申请退款'自营订单'10103-商家3'
 		"""
 		{
 			"cash":5.00,
@@ -468,10 +536,10 @@ Scenario:4 自营平台子订单退款（退现金+微众卡+优惠券+积分）
 			"intergal_money":3.00
 		}
 		"""
-	When jobs通过财务审核'退款成功'自营订单'10103-商家1'
-	When jobs通过财务审核'退款成功'自营订单'10103-商家2'
-	When jobs通过财务审核'退款成功'自营订单'10103-商家3'
-	Then jobs获得自营订单'10103'
+	When zy1通过财务审核'退款成功'自营订单'10103-商家1'
+	When zy1通过财务审核'退款成功'自营订单'10103-商家2'
+	When zy1通过财务审核'退款成功'自营订单'10103-商家3'
+	Then zy1获得自营订单'10103'
 			"""
 			{
 				"order_no":"10101",
@@ -492,7 +560,7 @@ Scenario:4 自营平台子订单退款（退现金+微众卡+优惠券+积分）
 							"count":1,
 							"single_save":""
 						}],
-						"postage": 0.00,
+						"postage": 1.00,
 						"status":"退款成功"
 						},
 					"商家2":{
@@ -522,11 +590,11 @@ Scenario:4 自营平台子订单退款（退现金+微众卡+优惠券+积分）
 				"weizoom_card":10.00,
 				"products_count":3,
 				"product_price": 30.00,
-				"postage": 0.00,
-				"cash":30.00,
-				"final_price": 40.00,
+				"postage": 1.00,
+				"cash":21.00,
+				"final_price": 31.00,
 				"refund_details":{
-					"cash": 10.00,
+					"cash": 11.00,
 					"weizoom_card": 10.00,
 					"coupon_money": 4.00,
 					"integral_money": 6.00
