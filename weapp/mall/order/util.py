@@ -990,7 +990,7 @@ def get_orders_response(request, is_refund=False):
     existed_pay_interfaces = mall_api.get_pay_interfaces_by_user(user)
 
     # 构造供货商的信息，supplier（手动添加的供货商）；supplier_users（系统用户的供货商）
-    mamager_user_id = UserProfile.objects.filter(webapp_type=0)[0].user_id
+    mamager_user_id = UserProfile.objects.filter(webapp_type=2)[0].user_id
     supplier = dict((supplier.id, supplier.name) for supplier in Supplier.objects.filter(owner_id__in=[request.manager.id, mamager_user_id]))
     all_user_ids = get_all_active_mp_user_ids()
     all_mall_userprofiles = UserProfile.objects.filter(user_id__in=all_user_ids, webapp_type=0)
