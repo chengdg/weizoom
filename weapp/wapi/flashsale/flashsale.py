@@ -44,14 +44,14 @@ class Flashsale(api_resource.ApiResource):
 
 		product_infos = json.loads(args.get('product_infos', '[]'))
 		#【微众商城】帐号:weshop,用于测试的帐号devceshi
-		owner = User.objects.get(username='devceshi')
+		owner = User.objects.get(username='jobs')
 		#使得webapp_cache.py能够有user_profile
 		cache.request.user_profile = UserProfile.objects.get(user=owner)
 
 		product_names = []
 		product_name2count = {}
 		for product_info in product_infos:
-			product_name = product_info.get('product_name')
+			product_name = product_info.get('product_name').strip()
 			product_names.append(product_name)
 			if not product_name2count.has_key(product_name):
 				product_name2count[product_name] = 1
@@ -78,11 +78,17 @@ class Flashsale(api_resource.ApiResource):
 
 		#已经配置过促销活动的商品，在进行中并且不能同时参加的活动
 		product_id2type = {}
-		for p in promotion_models.Promotion.objects.filter(owner_id=owner.id, status__in=[promotion_models.PROMOTION_STATUS_STARTED,promotion_models.PROMOTION_STATUS_NOT_START], id__in=promotion_id2product_id.keys()):
+		promotions = promotion_models.Promotion.objects.filter(owner_id=owner.id, status__in=[promotion_models.PROMOTION_STATUS_STARTED, promotion_models.PROMOTION_STATUS_NOT_START,promotion_models.PROMOTION_STATUS_DISABLE], id__in=promotion_id2product_id.keys())
+		for p in promotions:
 			if p.type in [promotion_models.PROMOTION_TYPE_FLASH_SALE, promotion_models.PROMOTION_TYPE_PREMIUM_SALE, promotion_models.PROMOTION_TYPE_COUPON]:
 				for promotion_id, product_id in promotion_id2product_id.items():
 					if p.id == promotion_id:
-						product_id2type[product_id] = p.type
+						# 优惠券如果是已过期可以参加团购,如果是失效的不可以参加
+						if p.type == promotion_models.PROMOTION_TYPE_COUPON:
+							if p.status == promotion_models.PROMOTION_STATUS_DISABLE:
+								product_id2type[product_id] = p.type
+						else:
+							product_id2type[product_id] = p.type
 
 		# 过滤参团的商品
 		group_records = group_models.Group.objects(owner_id=owner.id, status__lte=1)
@@ -91,8 +97,9 @@ class Flashsale(api_resource.ApiResource):
 
 		result = []
 		for product_info in product_infos:
-			product_id = product_name2product_id.get(product_info["product_name"])
-			if product_name2count[product_info["product_name"]] > 1:
+			product_name = product_info["product_name"].strip()
+			product_id = product_name2product_id.get(product_name)
+			if product_name2count[product_name] > 1:
 				result.append({
 					"result": "配置失败，该商品名称重复"
 				})
