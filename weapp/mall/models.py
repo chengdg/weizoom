@@ -2873,7 +2873,7 @@ def product_belong_to(mall_type, owner, type):
 			status = PP_STATUS_OFF
 		else:
 			status = PP_STATUS_ON
-		product_pool_ids = [pool.product_id for pool in ProductPool.objects.filter(woid=owner.id, status=status)]
+		product_pool_ids = ProductPool.objects.filter(woid=owner.id, status=status).values_list('product_id', flat=True)
 
 		products = Product.objects.filter(
 				Q(owner=owner,

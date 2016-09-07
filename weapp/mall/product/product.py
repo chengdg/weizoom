@@ -1728,8 +1728,15 @@ class ProductPos(resource.Resource):
             is_index_exists = False
             owner = request.manager
             pos = int(request.GET.get('pos'))
-            obj_bs = models.Product.objects.filter(
-                owner=owner, display_index=pos, is_deleted=False, shelve_type=models.PRODUCT_SHELVE_TYPE_ON)
+            mall_type = request.user_profile.webapp_type
+            if mall_type:
+                product_pool_ids = models.ProductPool.objects.filter(woid=owner.id, status=models.PP_STATUS_ON, display_index=pos).values_list('product_id', flat=True)
+                obj_bs = models.Product.objects.filter(
+                    Q(owner=owner, display_index=pos, is_deleted=False, shelve_type=models.PRODUCT_SHELVE_TYPE_ON)|Q(id__in=product_pool_ids)
+                    )
+            else:
+                obj_bs = models.Product.objects.filter(
+                    owner=owner, display_index=pos, is_deleted=False, shelve_type=models.PRODUCT_SHELVE_TYPE_ON)
             if obj_bs.exists():
                 is_index_exists = True
 
@@ -1761,6 +1768,9 @@ class ProductPos(resource.Resource):
             mall_type = request.user_profile.webapp_type
 
             if mall_type and models.ProductPool.objects.filter(woid=request.manager.id, product_id=id).count():
+                obj_bs = models.ProductPool.objects.filter(woid=request.manager.id, display_index=pos)
+                if obj_bs.exists():
+                    obj_bs.update(display_index=0)
                 models.ProductPool.objects.filter(woid=request.manager.id, product_id=id).update(display_index=pos)
             elif request.POST.get('update_type', '') == 'update_pos':
                 product = models.Product.objects.get(id=id)
