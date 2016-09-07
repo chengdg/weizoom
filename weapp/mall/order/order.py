@@ -798,13 +798,14 @@ class RefundSuccessfulSubOrder(resource.Resource):
         sub_order = Order.objects.get(id=delivery_item_id)
         #获取子订单的金额
 
-        refund_money = OrderHasRefund.objects.get(delivery_item_id=sub_order.id).total
+        refund_cash_money = OrderHasRefund.objects.get(delivery_item_id=sub_order.id).cash
+        refund_weizoom_card_money = OrderHasRefund.objects.get(delivery_item_id=sub_order.id).weizoom_card_money
         # refund_money = sub_order.refund_money
         #下一步的订单状态：退款成功
         sub_order_target_status = ORDER_STATUS_GROUP_REFUNDED
         #更新母订单的总金额
         Order.objects.filter(id=delivery_item_id).update(status=sub_order_target_status)
-        Order.objects.filter(id=order_id).update(final_price=(F('final_price')-refund_money))
+        Order.objects.filter(id=order_id).update(final_price=(F('final_price')-refund_cash_money-refund_weizoom_card_money))
         
         operation_name = request.user.username
         action_msg = '退款成功'
