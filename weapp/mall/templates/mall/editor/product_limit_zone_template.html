@@ -1,0 +1,86 @@
+{% extends "content_base_v2.html" %}
+
+{% block content-panel %}
+<div class="xui-editLimitedAreaConfigsPage">
+	<ul class="breadcrumb">
+		<li>您当前所在位置</li>
+		<li>
+			<a href="/mall2/product_list/?shelve_type">商品管理</a>
+		</li>
+		<li><a href="/mall2/product_limit_zone/">限定区域</a></li>
+        <li>编辑限定区域</li>
+	</ul>
+	<div class="xui-i-content p30 xa-limitedAreaSelector">
+		<section class="mb20">
+			<div class="clearfix mb10">
+				<label class="fl" style="padding-top:4px;">模板名称</label>
+				<input class="form-control w350 fl ml10" name="templateName" data-validate="require-string" maxlength="20" value="{% if templateName %}{{ templateName }}{% endif %}" />
+				<div class="errorHint fl ml5" data-error-hint="模板名称不能为空"></div>
+			</div>
+			<p>禁售地区：此地区不能够买</p>
+			<p>仅售地区：只有此地区可以购买</p>
+		</section>
+		<section class="xa-selectedLimitedArea">
+			<table class="table xui-editLimitedAreaConfigTable">
+		        <thead>
+		            <tr>
+		                <th width="200">区域</th>
+		                <th width="134">省</th>
+		                <th>市</th>
+		                <th width="84">操作</th>
+		                <th width="65" class="tl"><a href="javascript:void(0);" class="xa-edit">编辑</a></th>
+		            </tr>
+		        </thead>
+		        <tbody>
+		            {% if zones %}
+			            {% for zone in zones %}
+				            <tr data-provinceId="{{zone.provinceId}}">
+				                <td>{{ zone.zoneName }}</td>
+				                <td>
+				                	{% if zone.zoneName != "直辖市" and zone.zoneName != "其它" %}
+				                		{{ zone.provinceName }}
+				                	{% endif %}
+				                	</td>
+				                <td class="xa-city">
+				                	{% if zone.zoneName == "直辖市" or zone.zoneName == "其它" %}
+				                		{{ zone.provinceName }}
+				                	{% endif %}
+									{% if not zone.cities and zone.zoneName != "直辖市" and zone.zoneName != "其它" %}
+										已全选
+				                	{% else %}
+					                	{% for city in zone.cities %}
+					                	<span class="mr10" data-cityId={{city.cityId}}>{{city.cityName}}</span>
+					                	{% endfor %}
+				                	{% endif %}
+				                </td>
+				                <td><a href="javascript:void(0);" class="xa-delete">删除</a></td>
+				                <td></td>
+				            </tr>
+				        {% endfor %}
+		            {% else %}
+			            <tr>
+			            	<td colspan="5" class="tl">未添加任何地区</td>
+			            </tr>
+		            {% endif %}
+		        </tbody>
+		    </table>
+		</section>
+
+        <div class="tc mt50">
+			<button class="btn btn-primary xa-submit mt20 "{% if not zones %} style="display:none;"{% endif %}>保&nbsp;存</button>
+		</div>
+	</div>
+</div>
+{% endblock %}
+{% block js %}
+<script type="text/javascript">
+$(document).ready(function(){
+	var limitedAreaSelector = new W.view.mall.limitedAreaSelectorView({
+		el: '.xa-limitedAreaSelector',
+		templateId:'{{ templateId }}',
+		tableTemplate: 'selected-limited-area-view-tmpl-src',
+	});
+	limitedAreaSelector.render();
+});
+</script>
+{% endblock %}

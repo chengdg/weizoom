@@ -157,6 +157,7 @@ PRODUCT_MANAGE_IMAGE_NAV = 'pictureManagement'
 PRODUCT_MANAGE_CATEGORY_NAV = 'groupManagement'
 PRODUCT_MANAGE_MODEL_NAV = 'attrModelManagement'
 PRODUCT_REVIEW_NAV = 'reviewManagement'
+PRODUCT_LIMIT_ZONE = 'limitZoneManagement'
 
 MALL_PRODUCT_SECOND_NAV = {
     'section': u'商品',
@@ -211,6 +212,12 @@ MALL_PRODUCT_SECOND_NAV = {
             # 'url': '/mall2/product_review_list/',
             'url': '/apps/evaluate/evaluates/',
             'permission': 'manage_product_review'
+        },
+        {
+            'name': PRODUCT_LIMIT_ZONE,
+            'title': u'限定区域',
+            'url': '/mall2/product_limit_zone/',
+            'permission': 'manage_product_limit_zone'
         },
     ]
 }

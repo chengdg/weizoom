@@ -7,3 +7,4 @@ from . import review
 from . import properties
 from . import model_property
 from . import product_members
+from . import product_limit_zone

@@ -205,7 +205,7 @@ class ProductList(resource.Resource):
                 supplier_type = int(supplier_type)
             except:
                 supplier_type = -1
-                
+
             if int(supplier_type) != -1:
                 params = {}
                 params['owner_id'] = manager_user_profile.user_id
@@ -1151,6 +1151,7 @@ class Product(resource.Resource):
 
         if not mall_type:
             supplier = []
+        limte_zone_templates = models.ProductLimitZoneTemplate.objects.filter(owner=request.user).order_by('-id')
 
         c = RequestContext(request, {
             'first_nav_name': export.PRODUCT_FIRST_NAV,
@@ -1167,7 +1168,8 @@ class Product(resource.Resource):
             'mall_type': mall_type,
             'has_store_name': has_store_name,
             'store_name': store_name,
-            'pool_mall_type': pool_mall_type
+            'pool_mall_type': pool_mall_type,
+            'limit_zone_templates': limte_zone_templates
         })
         if _type == models.PRODUCT_INTEGRAL_TYPE:
             return render_to_response('mall/editor/edit_integral_product.html', c)
@@ -1227,7 +1229,6 @@ class Product(resource.Resource):
             supplier_id = supplier.id
         else:
             supplier_id = request.POST.get("supplier", 0)
-            
 
         product = models.Product.objects.create(
             owner=request.manager,
@@ -1250,7 +1251,9 @@ class Product(resource.Resource):
             supplier=supplier_id,
             purchase_price=purchase_price,
             is_enable_bill=is_enable_bill,
-            is_delivery=is_delivery
+            is_delivery=is_delivery,
+            limit_zone_type=int(request.POST.get('limit_zone_type', '0')),
+            limit_zone=int(request.POST.get('limit_zone_template', '0'))
         )
         # 设置新商品显示顺序
         # product.display_index = models.Product.objects.filter(
@@ -1643,7 +1646,9 @@ class Product(resource.Resource):
                 #'purchase_price': purchase_price,
                 'is_enable_bill': is_enable_bill,
                 'is_delivery': is_delivery,
-                'buy_in_supplier': int(request.POST.get('buy_in_supplier', False))
+                'buy_in_supplier': int(request.POST.get('buy_in_supplier', False)),
+                'limit_zone_type': int(request.POST.get('limit_zone_type', '0')),
+                'limit_zone': int(request.POST.get('limit_zone_template', '0'))
             }
 
             if mall_type == 1:

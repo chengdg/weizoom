@@ -1,0 +1,45 @@
+<script id="selected-limited-area-view-tmpl-src" type="text/x-jquery-tmpl">
+	<table class="table xui-editLimitedAreaConfigTable">
+        <thead>
+            <tr>
+                <th width="200">区域</th>
+                <th width="134">省</th>
+                <th>市</th>
+                <th width="84">操作</th>
+                <th width="65" class="tl"><a href="javascript:void(0);" class="xa-edit">编辑</a></th>
+            </tr>
+        </thead>
+        <tbody>
+        {{if provinces.length > 0 }}
+	        {{each(i, province) provinces}}
+	        	<tr data-provinceId=${province.provinceId}>
+	                <td>${province.zoneName}</td>
+	                <td>
+	                	{{if province.zoneName != "直辖市" && province.zoneName != "其它"}}
+		                	${province.provinceName}
+		                {{/if}}
+	                </td>
+	                <td class="xa-city">
+	                	{{if province.zoneName == "直辖市" || province.zoneName == "其它"}}
+		                	${province.provinceName}
+		                {{/if}}
+	                	{{if cities.length == 0 && province.zoneName != "直辖市" && province.zoneName != "其它"}}
+	                		已全选
+	                	{{else}}
+		                	{{each(j, city) province.cities}}
+		                		<span class="mr10" data-cityId=${city.cityId}>${city.cityName}</span>
+		                	{{/each}}
+	                	{{/if}}
+	                </td>
+	                <td><a href="javascript:void(0);" class="xa-delete">删除</a></td>
+	                <td></td>
+	            </tr>
+	        {{/each}}
+        {{else}}
+             <tr>
+            	<td colspan="5" class="tl">未添加任何地区</td>
+            </tr>
+        {{/if}}
+        </tbody>
+    </table>
+</script>
