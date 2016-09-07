@@ -1406,8 +1406,10 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
 
 def get_order_ids_has_refund_sub_orders(webapp_id, status, webappp_type):
     if webappp_type:
-        sub_refund_orders = Order.objects.filter(status__in=status, webapp_id=webapp_id, origin_order_id__gt=0)
-        order_ids = [o.origin_order_id for o in sub_refund_orders]
+        # sub_refund_orders = Order.objects.filter(status__in=status, webapp_id=webapp_id, origin_order_id__gt=0)
+        # order_ids = [o.origin_order_id for o in sub_refund_orders]
+        sub_refund_orders = Order.objects.filter(status__in=status, webapp_id=webapp_id, origin_order_id__gt=0).values('id')
+        order_ids = [x.values()[0] for x in sub_refund_orders]
         return order_ids
     else:
         return []
@@ -1798,6 +1800,7 @@ def get_order_actions(order, is_refund=False, is_detail_page=False, is_list_pare
                                              ORDER_FINISH_ACTION]
 
     # 订单列表页有子订单的父母订单
+    # able_actions_for_list_parent = [ORDER_CANCEL_ACTION, ORDER_REFUNDIND_ACTION, ORDER_REFUND_SUCCESS_ACTION]
     able_actions_for_list_parent = [ORDER_CANCEL_ACTION, ORDER_REFUNDIND_ACTION, ORDER_REFUND_SUCCESS_ACTION]
 
     # 同步订单操作
