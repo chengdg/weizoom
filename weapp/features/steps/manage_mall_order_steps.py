@@ -1028,7 +1028,7 @@ def step_impl(context, user):
             if group['status'] in ['退款中', '退款成功']:
                 actual_order['group']['refund_details'] = group['refund_details']
             #获取子订单状态对应的操作
-            group['actions'] = set(name for name in group['fackorder']['action']])
+            group['actions'] = set(name for name in group['fackorder']['action'])
             actual_order['group'].appemd(group)
         
         actual_orders.append(actual_order)
