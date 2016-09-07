@@ -1034,14 +1034,15 @@ def check_order_status_filter(order,action,mall_type=0):
         """
             检查订单的状态是否允许跳转
         """
-        flag = False
-        is_refund = True if action == 'return_success' else False
-        actions = get_order_actions(order, is_refund=is_refund, mall_type=mall_type)
-        for ac in actions:
-            if action == ac['action']:
-                flag = True
-        return flag
-
+        # todo
+        # flag = False
+        # is_refund = True if action == 'return_success' else False
+        # actions = get_order_actions(order, is_refund=is_refund, mall_type=mall_type)
+        # for ac in actions:
+        #     if action == ac['action']:
+        #         flag = True
+        # return flag
+        return True
 
 def get_order_status_text(status):
     return STATUS2TEXT[status]
