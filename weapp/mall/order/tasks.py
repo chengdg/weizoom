@@ -590,24 +590,6 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
                             u'首单' if order.is_first_order else u'非首单'
 
                         ]
-                        if mall_type:
-                            tmp_order.insert(25, supplier_type)
-                            if fackorder and fackorder2refund.has_key(fackorder.id):
-                                tmp_order.insert(18, fackorder2refund[fackorder.id].integral_money)
-                                tmp_order.insert(18, fackorder2refund[fackorder.id].coupon_money)
-                                tmp_order.insert(18, fackorder2refund[fackorder.id].weizoom_card_money)
-                                tmp_order.insert(18, fackorder2refund[fackorder.id].cash)
-                            else:
-                                for i in xrange(4):
-                                    tmp_order.insert(18,'-')
-                        if has_supplier:
-                            tmp_order.append( u'-' if 0.0 == product.purchase_price else product.purchase_price)
-                            tmp_order.append(u'-'  if 0.0 ==product.purchase_price else product.purchase_price*relation.number)
-                        # orders.append(tmp_order)
-                        tmp_line += 1
-
-                        table.write_row("A{}".format(tmp_line), tmp_order)
-                        total_product_money += relation.price * relation.number
                     else:
                         order_express_number = (order.express_number if not fackorder else fackorder.express_number).encode('utf8')
                         express_name = express_util.get_name_by_value(order.express_company_name if not fackorder else fackorder.express_company_name).encode('utf8')
@@ -652,23 +634,23 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
                             u'首单' if order.is_first_order else u'非首单'
 
                         ]
-                        if mall_type:
-                            tmp_order.insert(25, supplier_type)
-                            if fackorder and fackorder2refund.has_key(fackorder.id):
-                                tmp_order.insert(18, fackorder2refund[fackorder.id].integral_money)
-                                tmp_order.insert(18, fackorder2refund[fackorder.id].coupon_money)
-                                tmp_order.insert(18, fackorder2refund[fackorder.id].weizoom_card_money)
-                                tmp_order.insert(18, fackorder2refund[fackorder.id].cash)
-                            else:
-                                for i in xrange(4):
-                                    tmp_order.insert(18,'-')
-                        if has_supplier:
-                            tmp_order.append(u'' if 0.0 == product.purchase_price else product.purchase_price)
-                            tmp_order.append(u'' if 0.0 ==product.purchase_price else product.purchase_price*relation.number)
-                        # orders.append(tmp_order)
-                        tmp_line += 1
-                        table.write_row("A{}".format(tmp_line), tmp_order)
-                        total_product_money += relation.price * relation.number
+                    if mall_type:
+                        tmp_order.insert(25, supplier_type)
+                        if fackorder and fackorder2refund.has_key(fackorder.id):
+                            tmp_order.insert(18, fackorder2refund[fackorder.id].integral_money)
+                            tmp_order.insert(18, fackorder2refund[fackorder.id].coupon_money)
+                            tmp_order.insert(18, fackorder2refund[fackorder.id].weizoom_card_money)
+                            tmp_order.insert(18, fackorder2refund[fackorder.id].cash)
+                        else:
+                            for i in xrange(4):
+                                tmp_order.insert(18,'-')
+                    if has_supplier:
+                        tmp_order.append(u'-' if 0.0 == product.purchase_price else product.purchase_price)
+                        tmp_order.append(u'-'  if 0.0 ==product.purchase_price else product.purchase_price*relation.number)
+                    # orders.append(tmp_order)
+                    tmp_line += 1
+                    table.write_row("A{}".format(tmp_line), tmp_order)
+                    total_product_money += relation.price * relation.number
                     i += 1
                     if order.id in order2premium_product and not temp_premium_id:
                         premium_products = order2premium_product[order.id].get(relation.promotion_id, [])
