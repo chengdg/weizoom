@@ -397,8 +397,9 @@ class Category(resource.Resource):
                 category_has_products = mall_models.CategoryHasProduct.objects.filter(product_id=product.id)
                 category_list = []
                 for category_has_product in category_has_products:
-                    category = category_has_product.category
-                    category_list.append({"name":category.name,"id":category.id})
+                    category_list.append({
+                        'id':category_has_product.category.id,'name':category_has_product.category.name
+                        })
                 product_data = {
                     'id':product.id,
                     'name':product.name,
