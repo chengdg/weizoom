@@ -374,6 +374,17 @@
     -webkit-background-size: 100%;
     background-size: 100%;
 }
+/* 申请退款，提示框 */
+.xui-refundingHintDropBox {
+    color:#666;
+    border: 1px solid #d6d4d1;
+    border-radius: 4px;
+    box-shadow: 0 0 5px rgba(214, 212, 209, 0.7);
+    padding: 20px 13px 10px 10px;
+    font-size: 12px;
+    line-height: 24px;
+}
+
 .xui-buyerHintDropBox {
     color:#666;
     border: 1px solid #d6d4d1;

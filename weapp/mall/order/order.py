@@ -212,7 +212,6 @@ class OrderList(resource.Resource):
                 "file_path":0,
                 }
 
-
         c = RequestContext(request, {
             'first_nav_name': FIRST_NAV,
             'second_navs': export.get_mall_order_second_navs(request),

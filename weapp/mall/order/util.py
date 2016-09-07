@@ -1709,7 +1709,9 @@ def get_order_actions(order, is_refund=False, is_detail_page=False, is_list_pare
     result = []
     if not is_refund:
         if order.status == ORDER_STATUS_NOT:
-            result = [ORDER_PAY_ACTION, ORDER_UPDATE_PRICE_ACTION, ORDER_CANCEL_ACTION]
+            # result = [ORDER_PAY_ACTION, ORDER_UPDATE_PRICE_ACTION, ORDER_CANCEL_ACTION]
+            # 待支付状态的订单，去掉“修改价格”操作
+            result = [ORDER_PAY_ACTION, ORDER_CANCEL_ACTION]
         elif order.status == ORDER_STATUS_PAYED_NOT_SHIP:
             if order.pay_interface_type in [PAY_INTERFACE_ALIPAY, PAY_INTERFACE_TENPAY, PAY_INTERFACE_WEIXIN_PAY, PAY_INTERFACE_BEST_PAY]:
                 result = [ORDER_SHIP_ACTION, ORDER_REFUNDIND_ACTION]

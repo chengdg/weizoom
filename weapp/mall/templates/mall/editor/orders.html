@@ -177,11 +177,13 @@
 						<p class="fl" style="width:90px;text-align:center;margin-left:4px;">
 					    {{html formatOrderStatus(order.status)}}
 					    </p>
+					    <!-- 订单：已发货状态，在第一行的表头里，关闭申请退款
 					    <p class="fl ml20 mr20 xa-actions" data-order-id="${order.id}">
                             {{each(i,x) order.parent_action}}
                                 <a href='javascript:void(0);' class="${x.class_name}">${x.name}</a>
                             {{/each}}
 					    </p>
+					    -->
 					{{/if}}
 					</div>
 					</td>
@@ -483,7 +485,7 @@
 function formatOrderStatus(status) {
 	var color = '#333333';
 	if (status === '退款中') {
-		return '<img src="/static_v2/img/editor/refund.jpg" class="mr5"><span style="color:red">' + status + '</span>';
+		return '<img class="xa-refundingHintImg" src="/static_v2/img/editor/refund.jpg" class="mr5"><span style="color:red">' + status + '</span>';
 	} else {
 		return '<span style="color: ' + color + '">' + status + '</span>';
 	}
@@ -627,6 +629,25 @@ $(document).ready(function() {
 	});
 
 
+	// 申请退款提示
+	$('body').delegate('.xa-refundingHintImg','mouseenter',function(event){
+		var $el = $(event.currentTarget);
+		var refundingHintView = W.getRefundingHintView({
+			width: 380,
+			isTitle: false,
+			isArrow: true,
+			privateContainerClass:'xui-refundingHintDropBox xa-refundingHintDropBox',
+			position:'top'
+		});
+		refundingHintView.show({
+			$action: $el,
+			cash: '50.00',
+			card: '50.00',
+			coupon: '5.00',
+			integral: '5.00'
+		});
+	});
+
 	// 买家信息提示
 	$('body').delegate('.xa-buyerHintImg','mouseenter',function(event){
 		var $el = $(event.currentTarget);
@@ -665,6 +686,8 @@ $(document).ready(function() {
 	$('body').delegate('.xa-buyerHintImg','mouseleave',function(){
 		$('.xa-buyerHintDropBox').hide();
 	});
+
+
 	<!-- 订单打印 2016.04.08 start -->
 	(function () {
 		var isBusy = 0;

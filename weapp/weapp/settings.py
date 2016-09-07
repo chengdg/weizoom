@@ -873,3 +873,5 @@ WZCARD_ENCRYPT_INFO = {
     'token': '23d0d602ffb6k3f47d7ec49d0a80k9',
     'encodingAESKey': 'BPQSp7DFZSs1lz7EBToIGe6RVC8CFTnGZm2mzJw5W4I'
 }
+
+ENABLE_API_AUTH = False

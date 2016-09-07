@@ -184,8 +184,12 @@ W.view.mall.OrderAction = Backbone.View.extend({
         $('body').delegate('.xa-refund', 'click', function(event) {
             event.stopPropagation();
             event.preventDefault();
+
+            // modified by Liugenbin
             var $el = $(event.currentTarget);
             var orderId = $el.parents('.xa-actions').data('order-id');
+            // 修改申请退款的"确认框"，为“录入退款的弹框”
+            console.log('申请退款：', orderId);
             W.requireConfirm({
                 $el: $(this),
                 width:380,
