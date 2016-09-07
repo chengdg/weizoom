@@ -978,80 +978,64 @@ def step_impl(context, user, order_code):
     expected.pop('total_save')
     bdd_util.assert_dict(expected, order)
 
-# <<<<<<< 44e722a1d8a4446dbf9b083d5c41d74ba7ced5c8
-#             group['products'] = buy_product_results
-#             group['supplier_name'] = order_supplier
-#             group['order_no'] = order_item['order_id'] + order_supplier
-#
-#             if group['status'] in ['退款中', '退款成功']:
-#                 actual_order['group']['refund_details'] = group['refund_details']
-#             #获取子订单状态对应的操作
-#             group['actions'] = set(name for name in group['fackorder']['action'])
-#             actual_order['group'].appemd(group)
-#
-#         actual_orders.append(actual_order)
-# =======
-#     bdd_util.assert_dict(expected,order)
-# >>>>>>> update
 
+@then(u"{user}获得自营订单列表")
+def step_impl(context, user):
+    user_id = User.objects.get(username=user).id
+    mall_type = UserProfile.objects.get(user_id=user_id).webapp_type
+    if user != context.client.user.username:
+        context.client.logout()
+        context.client = bdd_util.login(user)
 
-# @then(u"{user}获得自营订单列表")
-# def step_impl(context, user):
-#     user_id = User.objects.get(username=user).id
-#     mall_type = UserProfile.objects.get(user_id=user_id).webapp_type
-#     if user != context.client.user.username:
-#         context.client.logout()
-#         context.client = bdd_util.login(user)
-#
-#     response = context.client.get('/mall2/api/order_list/')
-#     items = json.loads(response.content)['data']['items']
-#
-#     actual_orders = []
-#     for order_item in items:
-#         actual_order = {}
-#         actual_order['order_no'] = order_item['order_id']
-#         actual_order["methods_of_payment"] = order_item['methods_of_payment']
-#         actual_order['order_time'] = order_item['created_at']
-#         actual_order['payment_time'] = order_item['payment_time']
-#         actual_order['save_money'] = order_item['save_money']
-#         actual_order['buyer'] = order_item['buyer_name']
-#         actual_order['ship_name'] = order_item['ship_name']
-#         actual_order['ship_tel'] = order_item['ship_tel']
-#         actual_order['ship_area'] = order_item['ship_area']
-#         actual_order['ship_address'] = order_item['ship_address']
-#         actual_order['invoice'] = order_item['invoice'] or '--'
-#         actual_order['final_price'] = order_item['final_price']
-#         actual_order['postage'] = order_item['postage']
-#         actual_order['status'] = order_item['status']
-#
-#         actual_order['group'] = []
-#         buy_product_results = []
-#         for group in order_item['groups']:
-#             group['status'] = group['fackorder']['status']
-#             order_supplier = ''
-#             for buy_product in group['products']:
-#                 buy_product_result = {}
-#                 buy_product_result['name'] = buy_product['name']
-#                 buy_product_result['count'] = buy_product['count']
-#                 buy_product_result['price'] = buy_product['price']
-#                 order_supplier = buy_product['supplier_name'] or ''
-#                 buy_product_results.append(buy_product_result)
-#
-#             group['products'] = buy_product_results
-#             group['supplier_name'] = order_supplier
-#             group['order_no'] = order_item['order_id'] + order_supplier
-#
-#             if group['status'] in ['退款中', '退款成功']:
-#                 actual_order['group']['refund_details'] = group['refund_details']
-#             #获取子订单状态对应的操作
-#             group['actions'] = set(name for name in group['fackorder']['action']])
-#             actual_order['group'].appemd(group)
-#
-#         actual_orders.append(actual_order)
-#
-#     expected = json.loads(context.text)
-#     for order in expected:
-#         if 'actions' in order:
-#             order['actions'] = set(order['actions'])  # 暂时不验证顺序
-#
-#     bdd_util.assert_list(expected, actual_orders)
+    response = context.client.get('/mall2/api/order_list/')
+    items = json.loads(response.content)['data']['items']
+  
+    actual_orders = []
+    for order_item in items:
+        actual_order = {}
+        actual_order['order_no'] = order_item['order_id']
+        actual_order["methods_of_payment"] = order_item['methods_of_payment']
+        actual_order['order_time'] = order_item['created_at']
+        actual_order['payment_time'] = order_item['payment_time']
+        actual_order['save_money'] = order_item['save_money']
+        actual_order['buyer'] = order_item['buyer_name']
+        actual_order['ship_name'] = order_item['ship_name']
+        actual_order['ship_tel'] = order_item['ship_tel']
+        actual_order['ship_area'] = order_item['ship_area']
+        actual_order['ship_address'] = order_item['ship_address']
+        actual_order['invoice'] = order_item['invoice'] or '--'
+        actual_order['final_price'] = order_item['final_price']
+        actual_order['postage'] = order_item['postage']
+        actual_order['status'] = order_item['status']
+        
+        actual_order['group'] = []
+        buy_product_results = []
+        for group in order_item['groups']:
+            group['status'] = group['fackorder']['status']
+            order_supplier = ''
+            for buy_product in group['products']:
+                buy_product_result = {}
+                buy_product_result['name'] = buy_product['name']
+                buy_product_result['count'] = buy_product['count']
+                buy_product_result['price'] = buy_product['price']
+                order_supplier = buy_product['supplier_name'] or ''
+                buy_product_results.append(buy_product_result)
+
+            group['products'] = buy_product_results
+            group['supplier_name'] = order_supplier
+            group['order_no'] = order_item['order_id'] + order_supplier
+            
+            if group['status'] in ['退款中', '退款成功']:
+                actual_order['group']['refund_details'] = group['refund_details']
+            #获取子订单状态对应的操作
+            group['actions'] = set(name for name in group['fackorder']['action']])
+            actual_order['group'].appemd(group)
+        
+        actual_orders.append(actual_order)
+
+    expected = json.loads(context.text)
+    for order in expected:
+        if 'actions' in order:
+            order['actions'] = set(order['actions'])  # 暂时不验证顺序
+
+    bdd_util.assert_list(expected, actual_orders)
