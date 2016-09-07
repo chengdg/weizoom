@@ -947,13 +947,15 @@ def step_impl(context, user, order_code):
     order.final_price = order.pay_money
     order.product_price =order.total_price
     order.cash = final_price
+    order.products_count = order.number
+    order.ship_area = order.area
+    order.total_save = order.save_money
 
-
-    order.weizoom_card =order.weizoom_card_money
 
     expected.pop('group')
     expected.pop('status')
     expected.pop('order_no')
+    expected.pop('total_save')
 
 
     print('--------xxx')

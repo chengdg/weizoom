@@ -1282,7 +1282,7 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
                     'actions': get_order_actions(order, is_refund=is_refund, mall_type=mall_type,
                         is_group_buying=True if order.order_id in group_order_ids else False),
                     'type': order.type,
-                    'refund_info_dict': {}
+                    'refund_info': {}
                 }
                 if order2fackorders.get(order.id) and len(order2fackorders.get(order.id)) == 1:
                     fackorder = order2fackorders[order.id][0]
