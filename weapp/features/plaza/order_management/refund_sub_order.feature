@@ -298,41 +298,41 @@ Scenario:1 ziying自营平台子订单退款（全退现金）
 				"invoice":"--",
 				"business_message":"",
 				"methods_of_payment":"微信支付",
-				"group":[{
-					"商家1":{
+				"group":
+					[{
 						"order_no":"10101-商家1",
+						"supplier":"商家1",
 						"products":[{
 							"name":"商品1b",
 							"price":20.00,
 							"count":1,
 							"single_save":"直降5.00元"
-						}],
+							}],
 						"postage": 1.00,
 						"status":"退款中"
-						},
-					"商家2":{
-							"order_no":"10101-商家2",
-							"products":[{
-								"name":"商品2a",
-								"price":10.00,
-								"count":1,
-								"single_save":""
+					},{
+						"order_no":"10101-商家2",
+						"supplier":"商家2",
+						"products":[{
+							"name":"商品2a",
+							"price":10.00,
+							"count":1,
+							"single_save":""
 							}],
-							"postage": 0.00,
-							"status":"待发货"
-						},
-					"商家3":{
-							"order_no":"10101-商家3",
-							"products":[{
-								"name":"商品3a",
-								"price":10.00,
-								"count":1,
-								"single_save":""
+						"postage": 0.00,
+						"status":"待发货"
+					},{
+						"order_no":"10101-商家3",
+						"supplier":"商家3",
+						"products":[{
+							"name":"商品3a",
+							"price":10.00,
+							"count":1,
+							"single_save":""
 							}],
-							"postage": 0.00,
-							"status":"待发货"
-						}
-				}],
+						"postage": 0.00,
+						"status":"待发货"
+					}],
 				"total_save":"",
 				"weizoom_card":"",
 				"products_count":3,
@@ -368,41 +368,41 @@ Scenario:2 ziying自营平台子订单退款（全退微众卡）
 				"invoice":"--",
 				"business_message":"",
 				"methods_of_payment":"优惠抵扣",
-				"group":[{
-					"商家1":{
+				"group":
+					[{
 						"order_no":"10102-商家1",
+						"supplier":"商家1",
 						"products":[{
 							"name":"商品1a",
 							"price":10.00,
 							"count":2,
 							"single_save":""
-						}],
+							}],
 						"postage": 0.00,
 						"status":"退款中"
-						},
-					"商家2":{
-							"order_no":"10102-商家2",
-							"products":[{
-								"name":"商品2a",
-								"price":10.00,
-								"count":1,
-								"single_save":""
+					},{
+						"order_no":"10102-商家2",
+						"supplier":"商家2",
+						"products":[{
+							"name":"商品2a",
+							"price":10.00,
+							"count":1,
+							"single_save":""
 							}],
-							"postage": 0.00,
-							"status":"待发货"
-							},
-					"商家3":{
-							"order_no":"10102-商家3",
-							"products":[{
-								"name":"商品3a",
-								"price":10.00,
-								"count":1,
-								"single_save":""
+						"postage": 0.00,
+						"status":"待发货"
+					},{
+						"order_no":"10102-商家3",
+						"supplier":"商家3",
+						"products":[{
+							"name":"商品3a",
+							"price":10.00,
+							"count":1,
+							"single_save":""
 							}],
-							"postage": 0.00,
-							"status":"待发货"
-							}
-				}],
+						"postage": 0.00,
+						"status":"待发货"
+					}],
 				"total_save":"",
 				"weizoom_card":40.00,
 				"products_count":4,
@@ -457,41 +457,41 @@ Scenario:3 ziying自营平台子订单退款（全退优惠券、全退积分、
 				"invoice":"--",
 				"business_message":"",
 				"methods_of_payment":"微信支付",
-				"group":[{
-					"商家1":{
+				"group":
+					[{
 						"order_no":"10101-商家1",
+						"supplier":"商家1",
 						"products":[{
 							"name":"商品1b",
 							"price":20.00,
 							"count":1,
 							"single_save":"直降5.00元"
-						}],
+							}],
 						"postage": 1.00,
 						"status":"退款中"
-						},
-					"商家2":{
-							"order_no":"10101-商家2",
-							"products":[{
-								"name":"商品2a",
-								"price":10.00,
-								"count":1,
-								"single_save":""
-							}],
-							"postage": 0.00,
-							"status":"退款中"
-						},
-					"商家3":{
-							"order_no":"10101-商家3",
-							"products":[{
-								"name":"商品3a",
-								"price":10.00,
-								"count":1,
-								"single_save":""
-							}],
-							"postage": 0.00,
-							"status":"退款中"
-						}
-				}],
+					},{
+						"order_no":"10101-商家2",
+						"supplier":"商家2",
+						"products":[{
+							"name":"商品2a",
+							"price":10.00,
+							"count":1,
+							"single_save":""
+						}],
+						"postage": 0.00,
+						"status":"退款中"
+					},{
+						"order_no":"10101-商家3",
+						"supplier":"商家3",
+						"products":[{
+							"name":"商品3a",
+							"price":10.00,
+							"count":1,
+							"single_save":""
+						}],
+						"postage": 0.00,
+						"status":"退款中"
+					}],
 				"total_save":"",
 				"weizoom_card":"",
 				"products_count":3,
@@ -551,41 +551,41 @@ Scenario:4 ziying自营平台子订单退款（退现金+微众卡+优惠券+积
 				"invoice":"--",
 				"business_message":"",
 				"methods_of_payment":"微信支付",
-				"group":[{
-					"商家1":{
+				"group":
+					[{
 						"order_no":"10103-商家1",
+						"supplier":"商家1",
 						"products":[{
 							"name":"商品1a",
 							"price":10.00,
 							"count":1,
 							"single_save":""
-						}],
+							}],
 						"postage": 1.00,
 						"status":"退款成功"
-						},
-					"商家2":{
-							"order_no":"10103-商家2",
-							"products":[{
-								"name":"商品2a",
-								"price":10.00,
-								"count":1,
-								"single_save":""
+					},{
+						"order_no":"10103-商家2",
+						"supplier":"商家2",
+						"products":[{
+							"name":"商品2a",
+							"price":10.00,
+							"count":1,
+							"single_save":""
 							}],
-							"postage": 0.00,
-							"status":"退款成功"
-						},
-					"商家3":{
-							"order_no":"10103-商家3",
-							"products":[{
-								"name":"商品3a",
-								"price":10.00,
-								"count":1,
-								"single_save":""
+						"postage": 0.00,
+						"status":"退款成功"
+					},{
+						"order_no":"10103-商家3",
+						"supplier":"商家3",
+						"products":[{
+							"name":"商品3a",
+							"price":10.00,
+							"count":1,
+							"single_save":""
 							}],
-							"postage": 0.00,
-							"status":"退款成功"
-						}
-				}],
+						"postage": 0.00,
+						"status":"退款成功"
+					}],
 				"total_save":"",
 				"weizoom_card":9.00,
 				"products_count":3,
@@ -598,6 +598,6 @@ Scenario:4 ziying自营平台子订单退款（退现金+微众卡+优惠券+积
 					"weizoom_card": 9.00,
 					"coupon_money": 4.00,
 					"integral_money": 6.00
-				}
+					}
 			}
 			"""
