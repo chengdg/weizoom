@@ -1406,8 +1406,10 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
 
 def get_order_ids_has_refund_sub_orders(webapp_id, status, webappp_type):
     if webappp_type:
-        sub_refund_orders = Order.objects.filter(status__in=status, webapp_id=webapp_id, origin_order_id__gt=0)
-        order_ids = [o.origin_order_id for o in sub_refund_orders]
+        # sub_refund_orders = Order.objects.filter(status__in=status, webapp_id=webapp_id, origin_order_id__gt=0)
+        # order_ids = [o.origin_order_id for o in sub_refund_orders]
+        sub_refund_orders = Order.objects.filter(status__in=status, webapp_id=webapp_id, origin_order_id__gt=0).values('id')
+        order_ids = [x.values()[0] for x in sub_refund_orders]
         return order_ids
     else:
         return []
