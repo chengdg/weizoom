@@ -19,16 +19,15 @@ Feature:自营平台所有订单列表查询
 Backgroud:
 	Given 重置'weizoom_card'的bdd环境
 	Given 重置'apiserver'的bdd环境
-	Given jobs登录系统
-	And 设置jobs为自营平台账号
-	And jobs设定会员积分策略
+	Given zy1登录系统
+	And zy1设定会员积分策略
 		"""
 		{
 			"integral_each_yuan":2
 		}
 		"""
-	And jobs已有微众卡支付权限
-	And jobs已添加支付方式
+	And zy1已有微众卡支付权限
+	And zy1已添加支付方式
 		"""
 		[{
 			"type":"货到付款"
@@ -70,58 +69,146 @@ Backgroud:
 			"""
 		#激活微众
 		When test激活卡号'100000001'的卡::weizoom_card
-	When jobs已添加商品
-		"""
-		[{
-			"name":"商品1a",
-			"supplier":"商家1",
-			"price":10.00,
-			"stock_type":"有限"
-			"stocks":100,
-		},{
-			"name":"商品1b",
-			"supplier":"商家1",
-			"price":20.00,
-			"stock_type":"有限"
-			"stocks":200,
-			"postage":1.00
-		},{
-			"name":"商品2a",
-			"supplier":"商家2",
-			"price":10.00,
-			"stock_type":"有限"
-			"stocks":100
-		},{
-			"name":"商品2b",
-			"supplier":"商家2",
-			"price":20.00,
-			"stock_type":"有限"
-			"stocks":100
-		},{
-			"name":"商品3a",
-			"supplier":"商家3",
-			"price":10.00,
-			"stock_type":"有限"
-			"stocks":100
-		},{
-			"name":"商品3b",
-			"supplier":"商家3",
-			"price":20.00,
-			"stock_type":"有限"
-			"stocks":100
-		}]
-		"""
-	When bill关注jobs的公众号
-	When tom关注jobs的公众号
-	When lily关注jobs的公众号
+	#创建供货商、设置商家运费、同步商品到自营平台
+		#创建供货商
+			Given 创建一个特殊的供货商
+				"""
+				{
+					"supplier_name":"商家1"
+				}
+				"""
+			Given 创建一个特殊的供货商
+				"""
+				{
+					"supplier_name":"商家2"
+				}
+				"""
+			Given 创建一个特殊的供货商
+				"""
+				{
+					"supplier_name":"商家3"
+				}
+				"""
+		#设置商家运费
+			#商家1设置运费-满10包邮，否则收取统一运费1元
+			Then 给供货商添加运费配置
+				"""
+				{
+					"supplier_name": "商家1",
+					"postage":1,
+					"condition_money": "10"
+				}
+				"""
+		#同步商品到自营平台
+			Given 给自营平台同步商品
+				"""
+				{
+					"account":["zy1"],
+					"supplier_name":"商家1",
+					"name": "商品1a",
+					"promotion_title": "商品1a促销",
+					"purchase_price": 9.00,
+					"price": 10.00,
+					"weight": 1,
+					"image": "love.png",
+					"stocks": 100,
+					"detail": "商品1a描述信息"
+				}
+				"""
+			Given 给自营平台同步商品
+				"""
+				{
+					"account":["zy1"],
+					"supplier_name":"商家1",
+					"name": "商品1b",
+					"promotion_title": "商品1b促销",
+					"purchase_price": 8.00,
+					"price": 9.00,
+					"weight": 1,
+					"image": "love.png",
+					"stocks": 100,
+					"detail": "商品1b描述信息"
+				}
+				"""
+			Given 给自营平台同步商品
+				"""
+				{
+					"account":["zy1"],
+					"supplier_name":"商家2",
+					"name": "商品2a",
+					"promotion_title": "商品2a促销",
+					"purchase_price": 9.00,
+					"price": 10.00,
+					"weight": 1,
+					"image": "love.png",
+					"stocks": 100,
+					"detail": "商品2a描述信息"
+				}
+				"""
+			Given 给自营平台同步商品
+				"""
+				{
+					"account":["zy1"],
+					"supplier_name":"商家2",
+					"name": "商品2b",
+					"promotion_title": "商品2b促销",
+					"purchase_price": 19.00,
+					"price": 20.00,
+					"weight": 1,
+					"image": "love.png",
+					"stocks": 100,
+					"detail": "商品2b描述信息"
+				}
+				"""
+			Given 给自营平台同步商品
+				"""
+				{
+					"account":["zy1"],
+					"supplier_name":"商家3",
+					"name": "商品3a",
+					"promotion_title": "商品3a促销",
+					"purchase_price": 9.00,
+					"price": 10.00,
+					"weight": 1,
+					"image": "love.png",
+					"stocks": 100,
+					"detail": "商品3a描述信息"
+				}
+				"""
+			Given 给自营平台同步商品
+				"""
+				{
+					"account":["zy1"],
+					"supplier_name":"商家3",
+					"name": "商品3b",
+					"promotion_title": "商品3b促销",
+					"purchase_price": 19.00,
+					"price": 20.00,
+					"weight": 1,
+					"image": "love.png",
+					"stocks": 100,
+					"detail": "商品3b描述信息"
+				}
+				"""
+	#自营平台从商品池上架商品
+		Given zy1登录系统
+		When zy1上架商品池商品"商品1a"
+		When zy1上架商品池商品"商品1b"
+		When zy1上架商品池商品"商品2a"
+		When zy1上架商品池商品"商品2b"
+		When zy1上架商品池商品"商品3a"
+		When zy1上架商品池商品"商品3b"
+	When bill关注zy1的公众号
+	When tom关注zy1的公众号
+	When lily关注zy1的公众号
 	#订单数据
 		#单个子订单（101-退款中；102-退款成功）
-			When bill访问jobs的webapp::apiserver
+			When bill访问zy1的webapp::apiserver
 			When bill绑定微众卡
 				"""
 				{
 					"binding_date":"2016-06-16",
-					"binding_shop":"jobs",
+					"binding_shop":"zy1",
 					"weizoom_card_info":
 						{
 							"id":"100000001",
@@ -129,7 +216,7 @@ Backgroud:
 						}
 				}
 				"""
-			When bill购买jobs的商品::apiserver
+			When bill购买zy1的商品::apiserver
 				"""
 				{
 					"order_id": "10101",
@@ -146,7 +233,7 @@ Backgroud:
 				}
 				"""
 			And bill使用支付方式'微信支付'进行支付::apiserver
-			When bill购买jobs的商品::apiserver
+			When bill购买zy1的商品::apiserver
 				"""
 				{
 					"order_id": "10201",
@@ -169,8 +256,8 @@ Backgroud:
 					"ship_address": "海淀科技大厦"
 				}
 				"""
-			Given jobs登录系统
-			When jobs'申请退款'自营订单'10101-商家1'
+			Given zy1登录系统
+			When zy1'申请退款'自营订单'10101-商家1'
 				"""
 				{
 					"cash":0.00,
@@ -180,21 +267,21 @@ Backgroud:
 					"intergal_money":5.00
 				}
 				"""
-			When jobs'申请退款'自营订单'10201-商家1'
+			When zy1'申请退款'自营订单'10201-商家1'
 				"""
 				{
 					"cash":0.00,
-					"weizoom_card":21.00,
+					"weizoom_card":10.00,
 					"coupon_money":5.00,
 					"intergal":10,
 					"intergal_money":5.00
 				}
 				"""
-			When jobs通过财务审核'退款成功'自营订单'10201-商家1'
+			When zy1通过财务审核'退款成功'自营订单'10201-商家1'
 		#多个子订单
 			#商品1a,商品2a,商品3a-bill
 			#201-待发货（待发货/待发货/退款中（退款成功））
-				When bill购买jobs的商品::apiserver
+				When bill购买zy1的商品::apiserver
 					"""
 					{
 						"order_id": "20101",
@@ -217,7 +304,7 @@ Backgroud:
 					}
 					"""
 				And bill使用支付方式'微信支付'进行支付::apiserver
-				When bill购买jobs的商品::apiserver
+				When bill购买zy1的商品::apiserver
 					"""
 					{
 						"order_id": "20102",
@@ -240,8 +327,8 @@ Backgroud:
 					}
 					"""
 				And bill使用支付方式'微信支付'进行支付::apiserver
-				Given jobs登录系统
-				When jobs'申请退款'自营订单'20101-商家3'
+				Given zy1登录系统
+				When zy1'申请退款'自营订单'20101-商家3'
 					"""
 					{
 						"cash":0.00,
@@ -251,7 +338,7 @@ Backgroud:
 						"intergal_money":5.00
 					}
 					"""
-				When jobs'申请退款'自营订单'20102-商家3'
+				When zy1'申请退款'自营订单'20102-商家3'
 					"""
 					{
 						"cash":10.00,
@@ -261,9 +348,9 @@ Backgroud:
 						"intergal_money":0.00
 					}
 					"""
-				When jobs通过财务审核'退款成功'自营订单'20102-商家3'
+				When zy1通过财务审核'退款成功'自营订单'20102-商家3'
 			#202-待发货（待发货/已发货/退款中（退款成功））
-				When bill购买jobs的商品::apiserver
+				When bill购买zy1的商品::apiserver
 					"""
 					{
 						"order_id": "20201",
@@ -286,7 +373,7 @@ Backgroud:
 					}
 					"""
 				And bill使用支付方式'微信支付'进行支付::apiserver
-				When bill购买jobs的商品::apiserver
+				When bill购买zy1的商品::apiserver
 					"""
 					{
 						"order_id": "20202",
@@ -309,24 +396,26 @@ Backgroud:
 					}
 					"""
 				And bill使用支付方式'微信支付'进行支付::apiserver
-				Given jobs登录系统
-				When jobs对自营订单进行发货
+				Given zy1登录系统
+				When zy1对自营订单进行发货
 					"""
 					{
 						"order_no": "20201-商家2",
 						"logistics": "申通快递",
 						"number": "2020101",
-						"shipper": "jobs"
+						"shipper": "zy1"
 					}
-				When jobs对自营订单进行发货
+					"""
+				When zy1对自营订单进行发货
 					"""
 					{
 						"order_no": "20202-商家2",
 						"logistics": "申通快递",
 						"number": "2020202",
-						"shipper": "jobs"
+						"shipper": "zy1"
 					}
-				When jobs'申请退款'自营订单'20201-商家3'
+					"""
+				When zy1'申请退款'自营订单'20201-商家3'
 					"""
 					{
 						"cash":0.00,
@@ -336,7 +425,7 @@ Backgroud:
 						"intergal_money":5.00
 					}
 					"""
-				When jobs'申请退款'自营订单'20202-商家3'
+				When zy1'申请退款'自营订单'20202-商家3'
 					"""
 					{
 						"cash":10.00,
@@ -346,9 +435,9 @@ Backgroud:
 						"intergal_money":0.00
 					}
 					"""
-				When jobs通过财务审核'退款成功'自营订单'20202-商家3'
+				When zy1通过财务审核'退款成功'自营订单'20202-商家3'
 			#203-待发货（待发货/退款中/退款中（退款成功））
-				When bill购买jobs的商品::apiserver
+				When bill购买zy1的商品::apiserver
 					"""
 					{
 						"order_id": "20301",
@@ -371,7 +460,7 @@ Backgroud:
 					}
 					"""
 				And bill使用支付方式'微信支付'进行支付::apiserver
-				When bill购买jobs的商品::apiserver
+				When bill购买zy1的商品::apiserver
 					"""
 					{
 						"order_id": "20302",
@@ -394,8 +483,8 @@ Backgroud:
 					}
 					"""
 				And bill使用支付方式'微信支付'进行支付::apiserver
-				Given jobs登录系统
-				When jobs'申请退款'自营订单'20301-商家3'
+				Given zy1登录系统
+				When zy1'申请退款'自营订单'20301-商家3'
 					"""
 					{
 						"cash":0.00,
@@ -405,7 +494,7 @@ Backgroud:
 						"intergal_money":5.00
 					}
 					"""
-				When jobs'申请退款'自营订单'20302-商家3'
+				When zy1'申请退款'自营订单'20302-商家3'
 					"""
 					{
 						"cash":10.00,
@@ -415,7 +504,7 @@ Backgroud:
 						"intergal_money":0.00
 					}
 					"""
-				When jobs'申请退款'自营订单'20301-商家2'
+				When zy1'申请退款'自营订单'20301-商家2'
 					"""
 					{
 						"cash":10.00,
@@ -425,7 +514,7 @@ Backgroud:
 						"intergal_money":0.00
 					}
 					"""
-				When jobs'申请退款'自营订单'20302-商家2'
+				When zy1'申请退款'自营订单'20302-商家2'
 					"""
 					{
 						"cash":10.00,
@@ -435,9 +524,9 @@ Backgroud:
 						"intergal_money":0.00
 					}
 					"""
-				When jobs通过财务审核'退款成功'自营订单'20302-商家3'
+				When zy1通过财务审核'退款成功'自营订单'20302-商家3'
 			#204-待发货（待发货/已完成/退款中（退款成功））
-				When bill购买jobs的商品::apiserver
+				When bill购买zy1的商品::apiserver
 					"""
 					{
 						"order_id": "20401",
@@ -460,7 +549,7 @@ Backgroud:
 					}
 					"""
 				And bill使用支付方式'微信支付'进行支付::apiserver
-				When bill购买jobs的商品::apiserver
+				When bill购买zy1的商品::apiserver
 					"""
 					{
 						"order_id": "20402",
@@ -483,26 +572,28 @@ Backgroud:
 					}
 					"""
 				And bill使用支付方式'微信支付'进行支付::apiserver
-				Given jobs登录系统
-				When jobs对自营订单进行发货
+				Given zy1登录系统
+				When zy1对自营订单进行发货
 					"""
 					{
 						"order_no": "20401-商家2",
 						"logistics": "申通快递",
 						"number": "2040101",
-						"shipper": "jobs"
+						"shipper": "zy1"
 					}
-				When jobs对自营订单进行发货
+					"""
+				When zy1对自营订单进行发货
 					"""
 					{
 						"order_no": "20402-商家2",
 						"logistics": "申通快递",
 						"number": "2040202",
-						"shipper": "jobs"
+						"shipper": "zy1"
 					}
-				When jobs'完成'自营订单'20401-商家2'
-				When jobs'完成'自营订单'20402-商家2'
-				When jobs'申请退款'自营订单'20401-商家3'
+					"""
+				When zy1'完成'自营订单'20401-商家2'
+				When zy1'完成'自营订单'20402-商家2'
+				When zy1'申请退款'自营订单'20401-商家3'
 					"""
 					{
 						"cash":0.00,
@@ -512,7 +603,7 @@ Backgroud:
 						"intergal_money":5.00
 					}
 					"""
-				When jobs'申请退款'自营订单'20402-商家3'
+				When zy1'申请退款'自营订单'20402-商家3'
 					"""
 					{
 						"cash":10.00,
@@ -522,9 +613,9 @@ Backgroud:
 						"intergal_money":0.00
 					}
 					"""
-				When jobs通过财务审核'退款成功'自营订单'20402-商家3'
+				When zy1通过财务审核'退款成功'自营订单'20402-商家3'
 			#205-待发货（待发货/退款成功/退款成功）
-				When bill购买jobs的商品::apiserver
+				When bill购买zy1的商品::apiserver
 					"""
 					{
 						"order_id": "20501",
@@ -547,8 +638,8 @@ Backgroud:
 					}
 					"""
 				And bill使用支付方式'微信支付'进行支付::apiserver
-				Given jobs登录系统
-				When jobs'申请退款'自营订单'20501-商家3'
+				Given zy1登录系统
+				When zy1'申请退款'自营订单'20501-商家3'
 					"""
 					{
 						"cash":0.00,
@@ -558,7 +649,7 @@ Backgroud:
 						"intergal_money":5.00
 					}
 					"""
-				When jobs'申请退款'自营订单'20501-商家2'
+				When zy1'申请退款'自营订单'20501-商家2'
 					"""
 					{
 						"cash":10.00,
@@ -568,11 +659,11 @@ Backgroud:
 						"intergal_money":0.00
 					}
 					"""
-				When jobs通过财务审核'退款成功'自营订单'20501-商家3'
-				When jobs通过财务审核'退款成功'自营订单'20501-商家2'
+				When zy1通过财务审核'退款成功'自营订单'20501-商家3'
+				When zy1通过财务审核'退款成功'自营订单'20501-商家2'
 			#商品1a,商品2b,商品3b-tom
 			#301-已发货（已发货/已发货/退款中（退款成功））
-				When tom购买jobs的商品::apiserver
+				When tom购买zy1的商品::apiserver
 					"""
 					{
 						"order_id": "30101",
@@ -595,7 +686,7 @@ Backgroud:
 					}
 					"""
 				And tom使用支付方式'微信支付'进行支付::apiserver
-				When tom购买jobs的商品::apiserver
+				When tom购买zy1的商品::apiserver
 					"""
 					{
 						"order_id": "30102",
@@ -618,26 +709,26 @@ Backgroud:
 					}
 					"""
 				And tom使用支付方式'支付宝'进行支付::apiserver
-				Given jobs登录系统
-				When jobs对自营订单进行发货
+				Given zy1登录系统
+				When zy1对自营订单进行发货
 					"""
 					{
 						"order_no": "30101-商家1",
 						"logistics": "申通快递",
 						"number": "3010101",
-						"shipper": "jobs"
+						"shipper": "zy1"
 					}
 					"""
-				When jobs对自营订单进行发货
+				When zy1对自营订单进行发货
 					"""
 					{
 						"order_no": "30101-商家2",
 						"logistics": "申通快递",
 						"number": "3010202",
-						"shipper": "jobs"
+						"shipper": "zy1"
 					}
 					"""
-				When jobs'申请退款'自营订单'30101-商家3'
+				When zy1'申请退款'自营订单'30101-商家3'
 					"""
 					{
 						"cash":10.00,
@@ -647,25 +738,25 @@ Backgroud:
 						"intergal_money":5.00
 					}
 					"""
-				When jobs对自营订单进行发货
+				When zy1对自营订单进行发货
 					"""
 					{
 						"order_no": "30102-商家1",
 						"logistics": "申通快递",
 						"number": "3010201",
-						"shipper": "jobs"
+						"shipper": "zy1"
 					}
 					"""
-				When jobs对自营订单进行发货
+				When zy1对自营订单进行发货
 					"""
 					{
 						"order_no": "30102-商家2",
 						"logistics": "申通快递",
 						"number": "3010202",
-						"shipper": "jobs"
+						"shipper": "zy1"
 					}
 					"""
-				When jobs'申请退款'自营订单'30102-商家3'
+				When zy1'申请退款'自营订单'30102-商家3'
 					"""
 					{
 						"cash":20.00,
@@ -675,9 +766,9 @@ Backgroud:
 						"intergal_money":0.00
 					}
 					"""
-				When jobs通过财务审核'退款成功'自营订单'30102-商家3'
+				When zy1通过财务审核'退款成功'自营订单'30102-商家3'
 			#302-已发货（已发货/退款中/退款中（已完成）（退款成功））
-				When tom购买jobs的商品::apiserver
+				When tom购买zy1的商品::apiserver
 					"""
 					{
 						"order_id": "30201",
@@ -700,7 +791,7 @@ Backgroud:
 					}
 					"""
 				And tom使用支付方式'微信支付'进行支付::apiserver
-				When tom购买jobs的商品::apiserver
+				When tom购买zy1的商品::apiserver
 					"""
 					{
 						"order_id": "30202",
@@ -723,7 +814,7 @@ Backgroud:
 					}
 					"""
 				And tom使用支付方式'微信支付'进行支付::apiserver
-				When tom购买jobs的商品::apiserver
+				When tom购买zy1的商品::apiserver
 					"""
 					{
 						"order_id": "30203",
@@ -746,17 +837,17 @@ Backgroud:
 					}
 					"""
 				And tom使用支付方式'微信支付'进行支付::apiserver
-				Given jobs登录系统
-				When jobs对自营订单进行发货
+				Given zy1登录系统
+				When zy1对自营订单进行发货
 					"""
 					{
 						"order_no": "30201-商家1",
 						"logistics": "申通快递",
 						"number": "3020101",
-						"shipper": "jobs"
+						"shipper": "zy1"
 					}
 					"""
-				When jobs'申请退款'自营订单'30201-商家2'
+				When zy1'申请退款'自营订单'30201-商家2'
 					"""
 					{
 						"cash":20.00,
@@ -766,7 +857,7 @@ Backgroud:
 						"intergal_money":0.00
 					}
 					"""
-				When jobs'申请退款'自营订单'30201-商家3'
+				When zy1'申请退款'自营订单'30201-商家3'
 					"""
 					{
 						"cash":10.00,
@@ -776,16 +867,16 @@ Backgroud:
 						"intergal_money":5.00
 					}
 					"""
-				When jobs对自营订单进行发货
+				When zy1对自营订单进行发货
 					"""
 					{
 						"order_no": "30202-商家1",
 						"logistics": "申通快递",
 						"number": "3020201",
-						"shipper": "jobs"
+						"shipper": "zy1"
 					}
 					"""
-				When jobs'申请退款'自营订单'30202-商家2'
+				When zy1'申请退款'自营订单'30202-商家2'
 					"""
 					{
 						"cash":20.00,
@@ -795,26 +886,26 @@ Backgroud:
 						"intergal_money":0.00
 					}
 					"""
-				When jobs对自营订单进行发货
+				When zy1对自营订单进行发货
 					"""
 					{
 						"order_no": "30202-商家3",
 						"logistics": "申通快递",
 						"number": "3020203",
-						"shipper": "jobs"
+						"shipper": "zy1"
 					}
 					"""
-				When jobs'完成'自营订单'30202-商家3'
-				When jobs对自营订单进行发货
+				When zy1'完成'自营订单'30202-商家3'
+				When zy1对自营订单进行发货
 					"""
 					{
 						"order_no": "30203-商家1",
 						"logistics": "申通快递",
 						"number": "3020301",
-						"shipper": "jobs"
+						"shipper": "zy1"
 					}
 					"""
-				When jobs'申请退款'自营订单'30203-商家2'
+				When zy1'申请退款'自营订单'30203-商家2'
 					"""
 					{
 						"cash":20.00,
@@ -824,7 +915,7 @@ Backgroud:
 						"intergal_money":0.00
 					}
 					"""
-				When jobs'申请退款'自营订单'30203-商家3'
+				When zy1'申请退款'自营订单'30203-商家3'
 					"""
 					{
 						"cash":10.00,
@@ -834,9 +925,9 @@ Backgroud:
 						"intergal_money":5.00
 					}
 					"""
-				When jobs通过财务审核'退款成功'自营订单'30203-商家3'
+				When zy1通过财务审核'退款成功'自营订单'30203-商家3'
 			#303-已发货（已发货/已完成/退款成功）
-				When tom购买jobs的商品::apiserver
+				When tom购买zy1的商品::apiserver
 					"""
 					{
 						"order_id": "30301",
@@ -859,27 +950,27 @@ Backgroud:
 					}
 					"""
 				And tom使用支付方式'微信支付'进行支付::apiserver
-				Given jobs登录系统
-				When jobs对自营订单进行发货
+				Given zy1登录系统
+				When zy1对自营订单进行发货
 					"""
 					{
 						"order_no": "30301-商家1",
 						"logistics": "申通快递",
 						"number": "3030101",
-						"shipper": "jobs"
+						"shipper": "zy1"
 					}
 					"""
-				When jobs对自营订单进行发货
+				When zy1对自营订单进行发货
 					"""
 					{
 						"order_no": "30301-商家2",
 						"logistics": "申通快递",
 						"number": "3030102",
-						"shipper": "jobs"
+						"shipper": "zy1"
 					}
 					"""
-				When jobs'完成'自营订单'30301-商家2'
-				When jobs'申请退款'自营订单'30301-商家3'
+				When zy1'完成'自营订单'30301-商家2'
+				When zy1'申请退款'自营订单'30301-商家3'
 					"""
 					{
 						"cash":20.00,
@@ -889,9 +980,9 @@ Backgroud:
 						"intergal_money":0.00
 					}
 					"""
-				When jobs通过财务审核'退款成功'自营订单'30301-商家3'
+				When zy1通过财务审核'退款成功'自营订单'30301-商家3'
 			#304-已发货（已发货/退款成功/退款成功）
-				When tom购买jobs的商品::apiserver
+				When tom购买zy1的商品::apiserver
 					"""
 					{
 						"order_id": "30401",
@@ -914,17 +1005,17 @@ Backgroud:
 					}
 					"""
 				And tom使用支付方式'微信支付'进行支付::apiserver
-				Given jobs登录系统
-				When jobs对自营订单进行发货
+				Given zy1登录系统
+				When zy1对自营订单进行发货
 					"""
 					{
 						"order_no": "30401-商家1",
 						"logistics": "申通快递",
 						"number": "3040101",
-						"shipper": "jobs"
+						"shipper": "zy1"
 					}
 					"""
-				When jobs'申请退款'自营订单'30401-商家2'
+				When zy1'申请退款'自营订单'30401-商家2'
 					"""
 					{
 						"cash":20.00,
@@ -934,8 +1025,8 @@ Backgroud:
 						"intergal_money":0.00
 					}
 					"""
-				When jobs通过财务审核'退款成功'自营订单'30401-商家2'
-				When jobs'申请退款'自营订单'30401-商家4'
+				When zy1通过财务审核'退款成功'自营订单'30401-商家2'
+				When zy1'申请退款'自营订单'30401-商家4'
 					"""
 					{
 						"cash":20.00,
@@ -945,11 +1036,11 @@ Backgroud:
 						"intergal_money":0.00
 					}
 					"""
-				When jobs通过财务审核'退款成功'自营订单'30401-商家3'
+				When zy1通过财务审核'退款成功'自营订单'30401-商家3'
 
 			#商品1a,商品2a,商品3b-lily
 			#401-退款中（退款中/退款中/退款中（已完成）（退款成功））
-				When lily购买jobs的商品::apiserver
+				When lily购买zy1的商品::apiserver
 					"""
 					{
 						"order_id": "40101",
@@ -972,7 +1063,7 @@ Backgroud:
 					}
 					"""
 				And lily使用支付方式'微信支付'进行支付::apiserver
-				When lily购买jobs的商品::apiserver
+				When lily购买zy1的商品::apiserver
 					"""
 					{
 						"order_id": "40102",
@@ -995,7 +1086,7 @@ Backgroud:
 					}
 					"""
 				And lily使用支付方式'微信支付'进行支付::apiserver
-				When lily购买jobs的商品::apiserver
+				When lily购买zy1的商品::apiserver
 					"""
 					{
 						"order_id": "40103",
@@ -1018,8 +1109,8 @@ Backgroud:
 					}
 					"""
 				And lily使用支付方式'微信支付'进行支付::apiserver
-				Given jobs登录系统
-				When jobs'申请退款'自营订单'40101-商家1'
+				Given zy1登录系统
+				When zy1'申请退款'自营订单'40101-商家1'
 					"""
 					{
 						"cash":10.00,
@@ -1029,7 +1120,7 @@ Backgroud:
 						"intergal_money":0.00
 					}
 					"""
-				When jobs'申请退款'自营订单'40101-商家2'
+				When zy1'申请退款'自营订单'40101-商家2'
 					"""
 					{
 						"cash":10.00,
@@ -1039,7 +1130,7 @@ Backgroud:
 						"intergal_money":0.00
 					}
 					"""
-				When jobs'申请退款'自营订单'40101-商家3'
+				When zy1'申请退款'自营订单'40101-商家3'
 					"""
 					{
 						"cash":20.00,
@@ -1049,7 +1140,7 @@ Backgroud:
 						"intergal_money":0.00
 					}
 					"""
-				When jobs'申请退款'自营订单'40102-商家1'
+				When zy1'申请退款'自营订单'40102-商家1'
 					"""
 					{
 						"cash":10.00,
@@ -1059,7 +1150,7 @@ Backgroud:
 						"intergal_money":0.00
 					}
 					"""
-				When jobs'申请退款'自营订单'40102-商家2'
+				When zy1'申请退款'自营订单'40102-商家2'
 					"""
 					{
 						"cash":10.00,
@@ -1069,17 +1160,17 @@ Backgroud:
 						"intergal_money":0.00
 					}
 					"""
-				When jobs对自营订单进行发货
+				When zy1对自营订单进行发货
 					"""
 					{
 						"order_no": "40102-商家3",
 						"logistics": "申通快递",
 						"number": "4010203",
-						"shipper": "jobs"
+						"shipper": "zy1"
 					}
 					"""
-				When jobs'完成'自营订单'40102-商家3'
-				When jobs'申请退款'自营订单'40103-商家1'
+				When zy1'完成'自营订单'40102-商家3'
+				When zy1'申请退款'自营订单'40103-商家1'
 					"""
 					{
 						"cash":10.00,
@@ -1089,7 +1180,7 @@ Backgroud:
 						"intergal_money":0.00
 					}
 					"""
-				When jobs'申请退款'自营订单'40103-商家2'
+				When zy1'申请退款'自营订单'40103-商家2'
 					"""
 					{
 						"cash":10.00,
@@ -1099,7 +1190,7 @@ Backgroud:
 						"intergal_money":0.00
 					}
 					"""
-				When jobs'申请退款'自营订单'40103-商家3'
+				When zy1'申请退款'自营订单'40103-商家3'
 					"""
 					{
 						"cash":20.00,
@@ -1109,9 +1200,9 @@ Backgroud:
 						"intergal_money":0.00
 					}
 					"""
-				When jobs通过财务审核'退款成功'自营订单'40103-商家3'
+				When zy1通过财务审核'退款成功'自营订单'40103-商家3'
 			#402-退款中（退款中/已完成/已完成（退款成功））
-				When lily购买jobs的商品::apiserver
+				When lily购买zy1的商品::apiserver
 					"""
 					{
 						"order_id": "40201",
@@ -1134,7 +1225,7 @@ Backgroud:
 					}
 					"""
 				And lily使用支付方式'微信支付'进行支付::apiserver
-				When lily购买jobs的商品::apiserver
+				When lily购买zy1的商品::apiserver
 					"""
 					{
 						"order_id": "40202",
@@ -1157,8 +1248,8 @@ Backgroud:
 					}
 					"""
 				And lily使用支付方式'微信支付'进行支付::apiserver
-				Given jobs登录系统
-				When jobs'申请退款'自营订单'40201-商家1'
+				Given zy1登录系统
+				When zy1'申请退款'自营订单'40201-商家1'
 					"""
 					{
 						"cash":10.00,
@@ -1168,27 +1259,27 @@ Backgroud:
 						"intergal_money":0.00
 					}
 					"""
-				When jobs对自营订单进行发货
+				When zy1对自营订单进行发货
 					"""
 					{
 						"order_no": "40201-商家2",
 						"logistics": "申通快递",
 						"number": "4020102",
-						"shipper": "jobs"
+						"shipper": "zy1"
 					}
 					"""
-				When jobs'完成'自营订单'40201-商家2'
-				When jobs对自营订单进行发货
+				When zy1'完成'自营订单'40201-商家2'
+				When zy1对自营订单进行发货
 					"""
 					{
 						"order_no": "40201-商家3",
 						"logistics": "申通快递",
 						"number": "4020103",
-						"shipper": "jobs"
+						"shipper": "zy1"
 					}
 					"""
-				When jobs'完成'自营订单'40201-商家3'
-				When jobs'申请退款'自营订单'40202-商家1'
+				When zy1'完成'自营订单'40201-商家3'
+				When zy1'申请退款'自营订单'40202-商家1'
 					"""
 					{
 						"cash":10.00,
@@ -1198,17 +1289,17 @@ Backgroud:
 						"intergal_money":0.00
 					}
 					"""
-				When jobs对自营订单进行发货
+				When zy1对自营订单进行发货
 					"""
 					{
 						"order_no": "40202-商家2",
 						"logistics": "申通快递",
 						"number": "4020202",
-						"shipper": "jobs"
+						"shipper": "zy1"
 					}
 					"""
-				When jobs'完成'自营订单'40202-商家2'
-				When jobs'申请退款'自营订单'40202-商家3'
+				When zy1'完成'自营订单'40202-商家2'
+				When zy1'申请退款'自营订单'40202-商家3'
 					"""
 					{
 						"cash":20.00,
@@ -1218,9 +1309,9 @@ Backgroud:
 						"intergal_money":0.00
 					}
 					"""
-				When jobs通过财务审核'退款成功'自营订单'40202-商家3'
+				When zy1通过财务审核'退款成功'自营订单'40202-商家3'
 			#403-退款中（退款中/退款成功/退款成功）
-				When lily购买jobs的商品::apiserver
+				When lily购买zy1的商品::apiserver
 						"""
 						{
 							"order_id": "40301",
@@ -1243,8 +1334,8 @@ Backgroud:
 						}
 						"""
 				And lily使用支付方式'微信支付'进行支付::apiserver
-				Given jobs登录系统
-				When jobs'申请退款'自营订单'40301-商家1'
+				Given zy1登录系统
+				When zy1'申请退款'自营订单'40301-商家1'
 					"""
 					{
 						"cash":10.00,
@@ -1254,7 +1345,7 @@ Backgroud:
 						"intergal_money":0.00
 					}
 					"""
-				When jobs'申请退款'自营订单'40301-商家2'
+				When zy1'申请退款'自营订单'40301-商家2'
 					"""
 					{
 						"cash":10.00,
@@ -1264,8 +1355,8 @@ Backgroud:
 						"intergal_money":0.00
 					}
 					"""
-				When jobs通过财务审核'退款成功'自营订单'40301-商家2'
-				When jobs'申请退款'自营订单'40301-商家3'
+				When zy1通过财务审核'退款成功'自营订单'40301-商家2'
+				When zy1'申请退款'自营订单'40301-商家3'
 					"""
 					{
 						"cash":20.00,
@@ -1275,10 +1366,10 @@ Backgroud:
 						"intergal_money":0.00
 					}
 					"""
-				When jobs通过财务审核'退款成功'自营订单'40301-商家3'
+				When zy1通过财务审核'退款成功'自营订单'40301-商家3'
 
 			#501-已完成（已完成/已完成/退款成功）
-				When lily购买jobs的商品::apiserver
+				When lily购买zy1的商品::apiserver
 						"""
 						{
 							"order_id": "50101",
@@ -1301,28 +1392,28 @@ Backgroud:
 						}
 						"""
 				And lily使用支付方式'微信支付'进行支付::apiserver
-				Given jobs登录系统
-				When jobs对自营订单进行发货
+				Given zy1登录系统
+				When zy1对自营订单进行发货
 					"""
 					{
 						"order_no": "50101-商家1",
 						"logistics": "申通快递",
 						"number": "5010101",
-						"shipper": "jobs"
+						"shipper": "zy1"
 					}
 					"""
-				When jobs'完成'自营订单'50101-商家1'
-				When jobs对自营订单进行发货
+				When zy1'完成'自营订单'50101-商家1'
+				When zy1对自营订单进行发货
 					"""
 					{
 						"order_no": "50101-商家2",
 						"logistics": "申通快递",
 						"number": "5010102",
-						"shipper": "jobs"
+						"shipper": "zy1"
 					}
 					"""
-				When jobs'完成'自营订单'50101-商家2'
-				When jobs'申请退款'自营订单'50101-商家3'
+				When zy1'完成'自营订单'50101-商家2'
+				When zy1'申请退款'自营订单'50101-商家3'
 					"""
 					{
 						"cash":20.00,
@@ -1332,9 +1423,9 @@ Backgroud:
 						"intergal_money":0.00
 					}
 					"""
-				When jobs通过财务审核'退款成功'自营订单'50101-商家3'
+				When zy1通过财务审核'退款成功'自营订单'50101-商家3'
 			#502-已完成（已完成/退款成功/退款成功）
-				When lily购买jobs的商品::apiserver
+				When lily购买zy1的商品::apiserver
 						"""
 						{
 							"order_id": "50201",
@@ -1357,18 +1448,18 @@ Backgroud:
 						}
 						"""
 				And lily使用支付方式'微信支付'进行支付::apiserver
-				Given jobs登录系统
-				When jobs对自营订单进行发货
+				Given zy1登录系统
+				When zy1对自营订单进行发货
 					"""
 					{
 						"order_no": "50201-商家1",
 						"logistics": "申通快递",
 						"number": "5020101",
-						"shipper": "jobs"
+						"shipper": "zy1"
 					}
 					"""
-				When jobs'完成'自营订单'50201-商家1'
-				When jobs'申请退款'自营订单'50201-商家2'
+				When zy1'完成'自营订单'50201-商家1'
+				When zy1'申请退款'自营订单'50201-商家2'
 					"""
 					{
 						"cash":10.00,
@@ -1378,8 +1469,8 @@ Backgroud:
 						"intergal_money":0.00
 					}
 					"""
-				When jobs通过财务审核'退款成功'自营订单'50201-商家2'
-				When jobs'申请退款'自营订单'50201-商家3'
+				When zy1通过财务审核'退款成功'自营订单'50201-商家2'
+				When zy1'申请退款'自营订单'50201-商家3'
 					"""
 					{
 						"cash":20.00,
@@ -1389,10 +1480,10 @@ Backgroud:
 						"intergal_money":0.00
 					}
 					"""
-				When jobs通过财务审核'退款成功'自营订单'50201-商家3'
+				When zy1通过财务审核'退款成功'自营订单'50201-商家3'
 
 			#601-退款成功（退款成功/退款成功/退款成功）
-				When lily购买jobs的商品::apiserver
+				When lily购买zy1的商品::apiserver
 						"""
 						{
 							"order_id": "60101",
@@ -1415,8 +1506,8 @@ Backgroud:
 						}
 						"""
 				And lily使用支付方式'微信支付'进行支付::apiserver
-				Given jobs登录系统
-				When jobs'申请退款'自营订单'60101-商家1'
+				Given zy1登录系统
+				When zy1'申请退款'自营订单'60101-商家1'
 					"""
 					{
 						"cash":10.00,
@@ -1426,8 +1517,8 @@ Backgroud:
 						"intergal_money":0.00
 					}
 					"""
-				When jobs通过财务审核'退款成功'自营订单'60101-商家1'
-				When jobs'申请退款'自营订单'60101-商家2'
+				When zy1通过财务审核'退款成功'自营订单'60101-商家1'
+				When zy1'申请退款'自营订单'60101-商家2'
 					"""
 					{
 						"cash":10.00,
@@ -1437,8 +1528,8 @@ Backgroud:
 						"intergal_money":0.00
 					}
 					"""
-				When jobs通过财务审核'退款成功'自营订单'60101-商家2'
-				When jobs'申请退款'自营订单'60101-商家3'
+				When zy1通过财务审核'退款成功'自营订单'60101-商家2'
+				When zy1'申请退款'自营订单'60101-商家3'
 					"""
 					{
 						"cash":20.00,
@@ -1448,10 +1539,10 @@ Backgroud:
 						"intergal_money":0.00
 					}
 					"""
-				When jobs通过财务审核'退款成功'自营订单'60101-商家3'
+				When zy1通过财务审核'退款成功'自营订单'60101-商家3'
 
 			#701-待支付
-					When lily购买jobs的商品::apiserver
+					When lily购买zy1的商品::apiserver
 						"""
 						{
 							"order_id": "70101",
@@ -1554,14 +1645,14 @@ Backgroud:
 		# |          |          | [商品3a,10.00,1] 退款中   |             |       |            |         |             |         |
 
 		# | 10201    | 退款成功  | [商品1a,10.00,1] 退款成功 | 10.00       | bill  | 2016-08-30 | 张大大  | 18121223344 |优惠抵扣 |
-		# |          |           | [商品1b,20.00,1]  运费1   |             |       |            |         |             |         |
-		# | 10101    | 退出中    | [商品1a,10.00,1] 退款中   | 30.00       | bill  | 2016-08-29 | 张大大  | 18111223344 |微信支付 |
+		# |          |           | [商品1b,9.00,1]  运费1   |             |       |            |         |             |         |
+		# | 10101    | 退款中    | [商品1a,10.00,1] 退款中   | 30.00       | bill  | 2016-08-29 | 张大大  | 18111223344 |微信支付 |
 
 Scenario:1 自营平台所有订单列表查询
-	Given jobs登录系统
+	Given zy1登录系统
 	#按照'订单编号'查询
 		#默认查询
-		When jobs设置自营所有订单列表查询条件
+		When zy1设置自营所有订单列表查询条件
 			"""
 			{
 				"order_no":"",
@@ -1576,7 +1667,7 @@ Scenario:1 自营平台所有订单列表查询
 				"order_type":"全部"
 			}
 			"""
-		Then jobs获得自营订单列表
+		Then zy1获得自营订单列表
 			"""
 			[{
 				"order_no":"60101"
@@ -1635,7 +1726,7 @@ Scenario:1 自营平台所有订单列表查询
 			}]
 			"""
 		#完全匹配查询
-		When jobs设置自营所有订单列表查询条件
+		When zy1设置自营所有订单列表查询条件
 			"""
 			{
 				"order_no":"60101",
@@ -1650,14 +1741,14 @@ Scenario:1 自营平台所有订单列表查询
 				"order_type":"全部"
 			}
 			"""
-		Then jobs获得自营订单列表
+		Then zy1获得自营订单列表
 			"""
 			[{
 				"order_no":"60101"
 			}]
 			"""
 		#查询结果为空
-		When jobs设置自营所有订单列表查询条件
+		When zy1设置自营所有订单列表查询条件
 			"""
 			{
 				"order_no":"123",
@@ -1672,12 +1763,12 @@ Scenario:1 自营平台所有订单列表查询
 				"order_type":"全部"
 			}
 			"""
-		Then jobs获得自营订单列表
+		Then zy1获得自营订单列表
 			"""
 			[]
 			"""
 	#按照'下单时间'查询
-		When jobs设置自营所有订单列表查询条件
+		When zy1设置自营所有订单列表查询条件
 			"""
 			{
 				"order_no":"",
@@ -1692,7 +1783,7 @@ Scenario:1 自营平台所有订单列表查询
 				"order_type":"全部"
 			}
 			"""
-		Then jobs获得自营订单列表
+		Then zy1获得自营订单列表
 			"""
 			[{
 				"order_no":"10201"
@@ -1700,7 +1791,7 @@ Scenario:1 自营平台所有订单列表查询
 				"order_no":"10101"
 			}]
 			"""
-		When jobs设置自营所有订单列表查询条件
+		When zy1设置自营所有订单列表查询条件
 			"""
 			{
 				"order_no":"",
@@ -1715,13 +1806,13 @@ Scenario:1 自营平台所有订单列表查询
 				"order_type":"全部"
 			}
 			"""
-		Then jobs获得自营订单列表
+		Then zy1获得自营订单列表
 			"""
 			[]
 			"""
 	#按照'收货人姓名'查询
 		#完全匹配
-		When jobs设置自营所有订单列表查询条件
+		When zy1设置自营所有订单列表查询条件
 			"""
 			{
 				"order_no":"",
@@ -1736,7 +1827,7 @@ Scenario:1 自营平台所有订单列表查询
 				"order_type":"全部"
 			}
 			"""
-		Then jobs获得自营订单列表
+		Then zy1获得自营订单列表
 			"""
 			[{
 				"order_no":"10201"
@@ -1745,7 +1836,7 @@ Scenario:1 自营平台所有订单列表查询
 			}]
 			"""
 		#查询结果为空
-		When jobs设置自营所有订单列表查询条件
+		When zy1设置自营所有订单列表查询条件
 			"""
 			{
 				"order_no":"",
@@ -1760,12 +1851,12 @@ Scenario:1 自营平台所有订单列表查询
 				"order_type":"全部"
 			}
 			"""
-		Then jobs获得自营订单列表
+		Then zy1获得自营订单列表
 			"""
 			[]
 			"""
 	#按照'支付方式'查询
-		When jobs设置自营所有订单列表查询条件
+		When zy1设置自营所有订单列表查询条件
 			"""
 			{
 				"order_no":"",
@@ -1780,7 +1871,7 @@ Scenario:1 自营平台所有订单列表查询
 				"order_type":"全部"
 			}
 			"""
-		Then jobs获得自营订单列表
+		Then zy1获得自营订单列表
 			"""
 			[{
 				"order_no":"10201"
@@ -1788,7 +1879,7 @@ Scenario:1 自营平台所有订单列表查询
 			"""
 	#按照'收货人电话'查询
 		#完全匹配
-		When jobs设置自营所有订单列表查询条件
+		When zy1设置自营所有订单列表查询条件
 			"""
 			{
 				"order_no":"",
@@ -1803,7 +1894,7 @@ Scenario:1 自营平台所有订单列表查询
 				"order_type":"全部"
 			}
 			"""
-		Then jobs获得自营订单列表
+		Then zy1获得自营订单列表
 			"""
 			[{
 				"order_no":"10201"
@@ -1812,7 +1903,7 @@ Scenario:1 自营平台所有订单列表查询
 			}]
 			"""
 		#查询结果为空
-		When jobs设置自营所有订单列表查询条件
+		When zy1设置自营所有订单列表查询条件
 			"""
 			{
 				"order_no":"",
@@ -1827,12 +1918,12 @@ Scenario:1 自营平台所有订单列表查询
 				"order_type":"全部"
 			}
 			"""
-		Then jobs获得自营订单列表
+		Then zy1获得自营订单列表
 			"""
 			[]
 			"""
 	#按照'物流单号'查询
-		When jobs设置自营所有订单列表查询条件
+		When zy1设置自营所有订单列表查询条件
 			"""
 			{
 				"order_no":"",
@@ -1847,14 +1938,14 @@ Scenario:1 自营平台所有订单列表查询
 				"order_type":"全部"
 			}
 			"""
-		Then jobs获得自营订单列表
+		Then zy1获得自营订单列表
 			"""
 			[{
 				"order_no":"30101"
 			}]
 			"""
 		#查询结果为空
-		When jobs设置自营所有订单列表查询条件
+		When zy1设置自营所有订单列表查询条件
 			"""
 			{
 				"order_no":"",
@@ -1869,13 +1960,13 @@ Scenario:1 自营平台所有订单列表查询
 				"order_type":"全部"
 			}
 			"""
-		Then jobs获得自营订单列表
+		Then zy1获得自营订单列表
 			"""
 			[]
 			"""
 	#按照'订单状态'查询
 		#查询'待支付'状态的订单
-		When jobs设置自营所有订单列表查询条件
+		When zy1设置自营所有订单列表查询条件
 			"""
 			{
 				"order_no":"",
@@ -1890,14 +1981,14 @@ Scenario:1 自营平台所有订单列表查询
 				"order_type":"全部"
 			}
 			"""
-		Then jobs获得自营订单列表
+		Then zy1获得自营订单列表
 			"""
 			[{
 				"order_no":"70101"
 			}]
 			"""
 		#查询'待发货'状态的订单
-		When jobs设置自营所有订单列表查询条件
+		When zy1设置自营所有订单列表查询条件
 			"""
 			{
 				"order_no":"",
@@ -1912,7 +2003,7 @@ Scenario:1 自营平台所有订单列表查询
 				"order_type":"全部"
 			}
 			"""
-		Then jobs获得自营订单列表
+		Then zy1获得自营订单列表
 			"""
 			[{
 				"order_no":"20501"
@@ -1935,7 +2026,7 @@ Scenario:1 自营平台所有订单列表查询
 			}]
 			"""
 		#查询'已发货'状态的订单
-		When jobs设置自营所有订单列表查询条件
+		When zy1设置自营所有订单列表查询条件
 			"""
 			{
 				"order_no":"",
@@ -1950,7 +2041,7 @@ Scenario:1 自营平台所有订单列表查询
 				"order_type":"全部"
 			}
 			"""
-		Then jobs获得自营订单列表
+		Then zy1获得自营订单列表
 			"""
 			[{
 				"order_no":"30401"
@@ -1969,7 +2060,7 @@ Scenario:1 自营平台所有订单列表查询
 			}]
 			"""
 		#查询'退款中'状态的订单
-		When jobs设置自营所有订单列表查询条件
+		When zy1设置自营所有订单列表查询条件
 			"""
 			{
 				"order_no":"",
@@ -1984,7 +2075,7 @@ Scenario:1 自营平台所有订单列表查询
 				"order_type":"全部"
 			}
 			"""
-		Then jobs获得自营订单列表
+		Then zy1获得自营订单列表
 			"""
 			[{
 				"order_no":"40301"
@@ -2023,7 +2114,7 @@ Scenario:1 自营平台所有订单列表查询
 			}]
 			"""
 		#查询'已完成'状态的订单
-		When jobs设置自营所有订单列表查询条件
+		When zy1设置自营所有订单列表查询条件
 			"""
 			{
 				"order_no":"",
@@ -2038,7 +2129,7 @@ Scenario:1 自营平台所有订单列表查询
 				"order_type":"全部"
 			}
 			"""
-		Then jobs获得自营订单列表
+		Then zy1获得自营订单列表
 			"""
 			[{
 				"order_no":"50201"
@@ -2061,7 +2152,7 @@ Scenario:1 自营平台所有订单列表查询
 			}]
 			"""
 		#查询'退款成功'状态的订单
-		When jobs设置自营所有订单列表查询条件
+		When zy1设置自营所有订单列表查询条件
 			"""
 			{
 				"order_no":"",
@@ -2076,7 +2167,7 @@ Scenario:1 自营平台所有订单列表查询
 				"order_type":"全部"
 			}
 			"""
-		Then jobs获得自营订单列表
+		Then zy1获得自营订单列表
 			"""
 			[{
 				"order_no":"60101"
@@ -2114,7 +2205,7 @@ Scenario:1 自营平台所有订单列表查询
 			"""
 	#按照'商品名称'查询
 		#模糊匹配
-		When jobs设置自营所有订单列表查询条件
+		When zy1设置自营所有订单列表查询条件
 			"""
 			{
 				"order_no":"",
@@ -2129,7 +2220,7 @@ Scenario:1 自营平台所有订单列表查询
 				"order_type":"全部"
 			}
 			"""
-		Then jobs获得自营订单列表
+		Then zy1获得自营订单列表
 			"""
 			[{
 				"order_no":"60101"
@@ -2188,7 +2279,7 @@ Scenario:1 自营平台所有订单列表查询
 			}]
 			"""
 		#完全匹配
-		When jobs设置自营所有订单列表查询条件
+		When zy1设置自营所有订单列表查询条件
 			"""
 			{
 				"order_no":"",
@@ -2203,14 +2294,14 @@ Scenario:1 自营平台所有订单列表查询
 				"order_type":"全部"
 			}
 			"""
-		Then jobs获得自营订单列表
+		Then zy1获得自营订单列表
 			"""
 			[{
 				"order_no":"10201"
 			}]
 			"""
 	#按照'订单类型'查询
-		When jobs设置自营所有订单列表查询条件
+		When zy1设置自营所有订单列表查询条件
 			"""
 			{
 				"order_no":"",
@@ -2230,7 +2321,7 @@ Scenario:1 自营平台所有订单列表查询
 			[]
 			"""
 	#组合查询
-		When jobs设置自营所有订单列表查询条件
+		When zy1设置自营所有订单列表查询条件
 				"""
 				{
 					"order_no":"30102",
