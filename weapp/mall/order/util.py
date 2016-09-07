@@ -1088,7 +1088,6 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
             query_dict.pop('status')
             order_ids_has_refund_sub_orders = get_order_ids_has_refund_sub_orders(webapp_id, [ORDER_STATUS_REFUNDING], mall_type)
             orders = orders.filter(Q(id__in=order_ids_has_refund_sub_orders))
-            print(orders.count())
         elif query_dict.get('status') and query_dict.get('status') == ORDER_STATUS_REFUNDED:
             query_dict['status__in'] = [ORDER_STATUS_GROUP_REFUNDED, ORDER_STATUS_REFUNDED]
             query_dict.pop('status')
@@ -1220,9 +1219,9 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
         if order2fackorders:
             # 自营平台所有的订单都会拆单
             if order2fackorders.get(order.id) and order.status > ORDER_STATUS_CANCEL:
-                multi_child_orders = True
-                if len(order2fackorders[order.id]) == 1:
-                    multi_child_orders = False
+                # multi_child_orders = True
+                # if len(order2fackorders[order.id]) == 1:
+                #     multi_child_orders = False
                 for fackorder in sorted(order2fackorders.get(order.id), key = lambda obj:obj.supplier):
                     if order.status > ORDER_STATUS_CANCEL:
                         if fackorder.status == ORDER_STATUS_NOT:
@@ -1242,6 +1241,8 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
                         }
                     else:
                         refund_info_dict = {}
+
+                    is_group_buying = True if order.order_id in group_order_ids else False
                     group_order = {
                         "id": fackorder.id,
                         "status": fackorder.get_status_text(),
@@ -1249,9 +1250,10 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
                         'express_company_name': fackorder.express_company_name,
                         'express_number': fackorder.express_number,
                         'leader_name': fackorder.leader_name,
-                        'actions': get_order_actions(fackorder, is_refund=is_refund, mall_type=mall_type,
-                            multi_child_orders=multi_child_orders,
-                            is_group_buying=True if order.order_id in group_order_ids else False),
+                        # 'actions': get_order_actions(fackorder, is_refund=is_refund, mall_type=mall_type,
+                        #     multi_child_orders=multi_child_orders,
+                        #     is_group_buying=True if order.order_id in group_order_ids else False),
+                        'action': get_actions_for_sub_order(fackorder, is_refund, is_group_buying),
                         'type': fackorder.type,
                         'refund_money': fackorder.refund_money,
                         'refund_info': refund_info_dict
@@ -1349,8 +1351,13 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
                     "products": products
                 }
             groups.append(group)
-        if len(groups) > 1:
-            parent_action = get_order_actions(order, is_refund=is_refund, is_list_parent=True, mall_type=mall_type)
+        # if len(groups) > 1:
+        #     parent_action = get_order_actions(order, is_refund=is_refund, is_list_parent=True, mall_type=mall_type)
+        # else:
+        #     parent_action = None
+
+        if mall_type:
+            parent_action = get_actions_for_parent_order(order)
         else:
             parent_action = None
 
@@ -1405,10 +1412,10 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
 
 def get_order_ids_has_refund_sub_orders(webapp_id, status, webappp_type):
     if webappp_type:
-        # sub_refund_orders = Order.objects.filter(status__in=status, webapp_id=webapp_id, origin_order_id__gt=0)
-        # order_ids = [o.origin_order_id for o in sub_refund_orders]
-        sub_refund_orders = Order.objects.filter(status__in=status, webapp_id=webapp_id, origin_order_id__gt=0).values('id')
-        order_ids = [x.values()[0] for x in sub_refund_orders]
+        sub_refund_orders = Order.objects.filter(status__in=status, webapp_id=webapp_id, origin_order_id__gt=0)
+        order_ids = [o.origin_order_id for o in sub_refund_orders]
+        # sub_refund_orders = Order.objects.filter(status__in=status, webapp_id=webapp_id, origin_order_id__gt=0).values('id')
+        # order_ids = [x.values()[0] for x in sub_refund_orders]
         return order_ids
     else:
         return []
@@ -1725,18 +1732,21 @@ ORDER_REFUND_SUCCESS_ACTION = {
 }
 
 
-def get_actions_for_sub_order(order, is_refund=False):
+def get_actions_for_sub_order(sub_order, is_refund, is_group_buying):
     result = []
-
     if not is_refund:
-        if order.status == ORDER_STATUS_PAYED_NOT_SHIP:  # 待发货
+        if sub_order.status == ORDER_STATUS_PAYED_NOT_SHIP:  # 待发货
             result = [ORDER_SHIP_ACTION, ORDER_REFUNDIND_ACTION]
-        elif order.status == ORDER_STATUS_PAYED_SHIPED:  # 已发货
+        elif sub_order.status == ORDER_STATUS_PAYED_SHIPED:  # 已发货
             result = [ORDER_FINISH_ACTION, ORDER_UPDATE_EXPREDSS_ACTION, ORDER_REFUNDIND_ACTION]
-        elif order.status == ORDER_STATUS_SUCCESSED:  # 已完成
+        elif sub_order.status == ORDER_STATUS_SUCCESSED:  # 已完成
             result = [ORDER_REFUNDIND_ACTION]
+        if is_group_buying:
+            # 团购订单不能申请退款
+            result.remove(ORDER_REFUNDIND_ACTION)
+
     else:
-        if order.status == ORDER_STATUS_REFUNDING:
+        if sub_order.status == ORDER_STATUS_REFUNDING:  # 退款中
             result = [ORDER_REFUND_SUCCESS_ACTION]
 
     return result
@@ -1819,8 +1829,7 @@ def get_order_actions(order, is_refund=False, is_detail_page=False, is_list_pare
 
     # 同步订单操作
     sync_order_actions = [ORDER_PAY_ACTION, ORDER_UPDATE_PRICE_ACTION, ORDER_SHIP_ACTION, ORDER_UPDATE_EXPREDSS_ACTION, ORDER_FINISH_ACTION]
-    # print(order.order_id, order.is_sub_order, order.origin_order_id)
-    # print(result)
+
     # 订单被同步后查看
     if not mall_type and order.supplier_user_id:
         result = filter(lambda x: x in sync_order_actions, result)
