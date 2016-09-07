@@ -920,47 +920,49 @@ def step_impl(context, user, order_code):
     # 'is_show_order_status': True if len(supplier_ids) + len(supplier_user_ids) > 1 else False,
     # 'is_group_buying': is_group_buying,
     # 'zypt_customer_message_is_str': zypt_customer_message_is_str
+    expected = json.loads(context.text)
 
+    # expected.pop('group')
+    # expected.pop('status')
+    expected.pop('total_save')
     order = response.context['order']
     child_orders = response.context['child_orders']
 
-    print('------order',order)
-    print('------child_orders',child_orders)
-    # sub_orders = response.context['sub_orders']
-
-
-    print(order)
-    print(child_orders)
-    print(order.products)
-    # print('------child_orders',child_orders)
-    # # sub_orders = response.context['sub_orders']
-    #
-    #
-    #
     order.order_no = order.order_id
     order.invoice=order.bill
     order.business_message=order.remark
     order.methods_of_payment = order.pay_interface_name
     order.weizoom_card = order.weizoom_card_money
 
-    group = []
+    sub_orders = []
 
     for sub_order in child_orders:
-        sub_order.order_no = u'{}-{}'.format(order.order_id, order.products[0]['supplier_name'])
-        _products = []
-        for p in order.products:
-            p['supplier'] = p['supplier_name']
-            if p['promotion']:
-                p['single_save'] =p['promotion']['promotion_saved_money']
-            else:
-                p['single_save'] = ''
+        supplier_name = Supplier.objects.get(id=sub_order.supplier).name
+        sub_order.order_no = u'{}-{}'.format(order.order_id, supplier_name)
+        sub_order.status = sub_order.get_status_text()
+        sub_order.products = []
 
-            _products.append(p)
-        sub_order.products = _products
+        sub_orders.append(sub_order)
 
-        group.append(sub_order)
+    _products = []
 
-    order.group = group
+    for p in order.products:
+        p['supplier_id'] = p['supplier']
+        p['supplier'] = p['supplier_name']
+        if p['promotion']:
+            p['single_save'] = p['promotion']['promotion_saved_money']
+        else:
+            p['single_save'] = ''
+
+        _products.append(p)
+
+    for p in _products:
+        for o in sub_orders:
+            if o.supplier == p['supplier_id']:
+                o.products.append(p)
+
+
+    order.group = sub_orders
 
     final_price = order.final_price
     order.final_price = order.pay_money
@@ -971,11 +973,7 @@ def step_impl(context, user, order_code):
     order.total_save = order.save_money
     order.status = order.get_status_text()
 
-    expected = json.loads(context.text)
 
-    expected.pop('group')
-    # expected.pop('status')
-    expected.pop('total_save')
     bdd_util.assert_dict(expected, order)
 
 

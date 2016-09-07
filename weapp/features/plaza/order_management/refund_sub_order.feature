@@ -306,9 +306,9 @@ Scenario:1 ziying自营平台子订单退款（全退现金）
 							"supplier":"商家1",
 							"price":20.00,
 							"count":1,
-							"single_save":"直降5.00元"
+							"single_save":"5.00"
 							}],
-						"postage": 1.00,
+						"postage": 0.00,
 						"status":"退款中"
 					},{
 						"order_no":"10101-商家2",
