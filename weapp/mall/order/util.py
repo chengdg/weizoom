@@ -1256,7 +1256,6 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
                         #     is_group_buying=True if order.order_id in group_order_ids else False),
                         'action': get_actions_for_sub_order(fackorder, is_refund, is_group_buying),
                         'type': fackorder.type,
-                        'refund_money': fackorder.refund_money,
                         'refund_info': refund_info_dict
                     }
                     if fackorder.supplier or (not fackorder.supplier and not fackorder.supplier_user_id):
@@ -1283,7 +1282,6 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
                     'actions': get_order_actions(order, is_refund=is_refund, mall_type=mall_type,
                         is_group_buying=True if order.order_id in group_order_ids else False),
                     'type': order.type,
-                    'refund_money': 0,
                     'refund_info_dict': {}
                 }
                 if order2fackorders.get(order.id) and len(order2fackorders.get(order.id)) == 1:
