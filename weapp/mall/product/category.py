@@ -534,7 +534,7 @@ class UpdateProductCategory(resource.Resource):
     def api_post(request):
         product_id = request.POST.get('product_id')
         category_ids = request.POST.get('category_ids')
-        category_ids = category_ids.split('-')
+        category_ids = category_ids.split(',')
 
         update_product_categories(request, product_id, category_ids)
 

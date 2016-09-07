@@ -33,18 +33,26 @@ W.view.mall.MallProductUpdateCategoriesView = W.view.common.DropBox.extend({
             W.showHint('error', "请选择至少一个分类");
             return;
         }
-        this.submitSendApi(this.productIds, categoryIds)
+
+        this.submitSendApi( categoryIds)
     },
 
-    submitSendApi: function(productIds, categoryIds){
+    submitSendApi: function(categoryIds){
         this.hide();
         var _this = this;
+        var resource ;
+        if(_this.productId){
+            resource = 'update_product_category';
+        }
+        var productIds = _this.productIds || [];
+        var productId = _this.productId;
         W.getApi().call({
             app: 'mall2',
-            resource: 'batch_update_product_category',
+            resource: resource,
             scope: this,
             method: 'post',
             args: {
+                product_id:productId,
                 product_ids: productIds.join(','),
                 category_ids: categoryIds.join(','),
             },
@@ -107,6 +115,7 @@ W.view.mall.MallProductUpdateCategoriesView = W.view.common.DropBox.extend({
         this.dataView = options.dataView;
         this.selectedIds = options.selectedIds;
         this.productIds = options.productIds;
+        this.productId = options.productId;
     },
 });
 
