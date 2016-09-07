@@ -245,13 +245,3 @@ class AppsWeizoomCard(mongo_models.Document):
 		@param weizoom_card_ids: list
 		"""
 		AppsWeizoomCard.objects(weizoom_card_id__in=weizoom_card_ids).update(status=1, grant_time=datetime.now())
-
-
-class PageHtml(mongo_models.Document):
-	related_page_id = mongo_models.StringField(default="", max_length=100) #termite page的id
-	html = mongo_models.StringField() #html snippet
-
-	meta = {
-		'collection': 'page_html',
-		'indexes': ['related_page_id']
-	}
