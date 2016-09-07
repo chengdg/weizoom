@@ -71,19 +71,19 @@ Background:
 		When test激活卡号'100000001'的卡::weizoom_card
 	#创建供货商、设置商家运费、同步商品到自营平台
 		#创建供货商
-			Given 创建一个特殊的供货商
+			Given 创建一个特殊的供货商，就是专门针对商品池供货商
 				"""
 				{
 					"supplier_name":"商家1"
 				}
 				"""
-			Given 创建一个特殊的供货商
+			Given 创建一个特殊的供货商，就是专门针对商品池供货商
 				"""
 				{
 					"supplier_name":"商家2"
 				}
 				"""
-			Given 创建一个特殊的供货商
+			Given 创建一个特殊的供货商，就是专门针对商品池供货商
 				"""
 				{
 					"supplier_name":"商家3"
@@ -154,7 +154,6 @@ Background:
 					"promotion_title": "商品3a促销",
 					"purchase_price": 9.00,
 					"price": 10.00,
-
 					"weight": 1,
 					"image": "love.png",
 					"stocks": 100,
@@ -162,11 +161,11 @@ Background:
 				}
 				"""
 	#自营平台从商品池上架商品
-		Given jobs登录系统
-		When jobs上架商品池商品"商品1a"
-		When jobs上架商品池商品"商品1b"
-		When jobs上架商品池商品"商品2a"
-		When jobs上架商品池商品"商品3a"
+		Given zy1登录系统
+		When zy1上架商品池商品"商品1a"
+		When zy1上架商品池商品"商品1b"
+		When zy1上架商品池商品"商品2a"
+		When zy1上架商品池商品"商品3a"
 	Given zy1登录系统
 	When zy1创建限时抢购活动
 		"""
@@ -186,7 +185,7 @@ Background:
 		When bill关注zy1的公众号
 		When bill访问zy1的webapp::apiserver
 		#10101-微信支付（商品1b(限时抢购、运费)+商品2a+商品3a）
-			When bill购买jobs的商品::apiserver
+			When bill购买zy1的商品::apiserver
 				"""
 				{
 					"order_id": "10101",
@@ -208,8 +207,8 @@ Background:
 				}
 				"""
 			And bill使用支付方式'微信支付'进行支付::apiserver
-			When bill访问jobs的webapp::apiserver
-			When bill绑定微众卡
+			When bill访问zy1的webapp::apiserver
+			When bill绑定微众卡::apiserver
 				"""
 				{
 					"binding_date":"2016-06-16",
@@ -222,7 +221,7 @@ Background:
 				}
 				"""
 		#10102-优惠抵扣（微众卡全额支付,满额包邮）-商品1a,2+商品2a,1+商品3a,1
-			When bill购买jobs的商品::apiserver
+			When bill购买zy1的商品::apiserver
 				"""
 				{
 					"order_id": "10102",
@@ -248,7 +247,7 @@ Background:
 				}
 				"""
 		#10103-微信支付（现金+微众卡，不满足满额包邮）-商品1a,1+商品2a,1+商品3a,1
-			When bill购买jobs的商品::apiserver
+			When bill购买zy1的商品::apiserver
 				"""
 				{
 					"order_id": "10103",
@@ -421,7 +420,7 @@ Scenario:3 ziying自营平台子订单退款（全退优惠券、全退积分、
 		{
 			"cash":0.00,
 			"weizoom_card":0.00,
-			"coupon_money":21.00,
+			"coupon_money":16.00,
 			"intergal":0,
 			"intergal_money":0.00
 		}
@@ -498,7 +497,7 @@ Scenario:3 ziying自营平台子订单退款（全退优惠券、全退积分、
 				"products_count":3,
 				"product_price": 40.00,
 				"postage": 1.00,
-				"save_money": -5.00,
+				"save_money":-5.00,
 				"cash":36.00,
 				"final_price": 36.00
 			}
@@ -506,12 +505,12 @@ Scenario:3 ziying自营平台子订单退款（全退优惠券、全退积分、
 
 Scenario:4 ziying自营平台子订单退款（退现金+微众卡+优惠券+积分）
 	Given zy1登录系统
-	#10103-现金21.00+微众卡10+优惠券0.00+积分0.00=31.00
+	#10103-现金22.00+微众卡9+优惠券0.00+积分0.00=31.00
 	When zy1'申请退款'自营订单'10103-商家1'
 		"""
 		{
-			"cash":6.00,
-			"weizoom_card":5.00,
+			"cash":7.00,
+			"weizoom_card":4.00,
 			"coupon_money":0.00,
 			"intergal":0,
 			"intergal_money":0.00
@@ -588,15 +587,15 @@ Scenario:4 ziying自营平台子订单退款（退现金+微众卡+优惠券+积
 						}
 				}],
 				"total_save":"",
-				"weizoom_card":10.00,
+				"weizoom_card":9.00,
 				"products_count":3,
 				"product_price": 30.00,
 				"postage": 1.00,
-				"cash":21.00,
+				"cash":22.00,
 				"final_price": 31.00,
 				"refund_details":{
-					"cash": 11.00,
-					"weizoom_card": 10.00,
+					"cash":12.00,
+					"weizoom_card": 9.00,
 					"coupon_money": 4.00,
 					"integral_money": 6.00
 				}

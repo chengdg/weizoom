@@ -96,19 +96,19 @@ Backgroud:
 
 	#创建供货商、设置商家运费、同步商品
 		#创建供货商
-			Given 创建一个特殊的供货商
+			Given 创建一个特殊的供货商，就是专门针对商品池供货商
 				"""
 				{
 					"supplier_name":"商家1"
 				}
 				"""
-			Given 创建一个特殊的供货商
+			Given 创建一个特殊的供货商，就是专门针对商品池供货商
 				"""
 				{
 					"supplier_name":"商家2"
 				}
 				"""
-			Given 创建一个特殊的供货商
+			Given 创建一个特殊的供货商，就是专门针对商品池供货商
 				"""
 				{
 					"supplier_name":"商家3"
@@ -233,7 +233,7 @@ Backgroud:
 		And bill使用支付方式'微信支付'进行支付::apiserver
 	#bill购买单个供货商的商品(102-商品1a-微信支付;103-商品1a,1+商品1b,1-优惠抵扣（微众卡全额））
 		When bill访问zy1的webapp::apiserver
-		When bill绑定微众卡
+		When bill绑定微众卡::apiserver
 			"""
 			{
 				"binding_date":"2016-06-16",

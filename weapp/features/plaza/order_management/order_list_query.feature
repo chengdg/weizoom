@@ -71,19 +71,19 @@ Backgroud:
 		When test激活卡号'100000001'的卡::weizoom_card
 	#创建供货商、设置商家运费、同步商品到自营平台
 		#创建供货商
-			Given 创建一个特殊的供货商
+			Given 创建一个特殊的供货商，就是专门针对商品池供货商
 				"""
 				{
 					"supplier_name":"商家1"
 				}
 				"""
-			Given 创建一个特殊的供货商
+			Given 创建一个特殊的供货商，就是专门针对商品池供货商
 				"""
 				{
 					"supplier_name":"商家2"
 				}
 				"""
-			Given 创建一个特殊的供货商
+			Given 创建一个特殊的供货商，就是专门针对商品池供货商
 				"""
 				{
 					"supplier_name":"商家3"
@@ -204,7 +204,7 @@ Backgroud:
 	#订单数据
 		#单个子订单（101-退款中；102-退款成功）
 			When bill访问zy1的webapp::apiserver
-			When bill绑定微众卡
+			When bill绑定微众卡::apiserver
 				"""
 				{
 					"binding_date":"2016-06-16",
