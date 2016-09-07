@@ -94,10 +94,7 @@ def extract_product_model(request):
     return (standard_model, custom_models)
 
 PRODUCT_FILTERS = {
-    'product': [{
-        'comparator': lambda product, filter_value: filter_value in product.name,
-        'query_string_field': 'name'
-    }, {
+    'product': [ {
         'comparator': lambda product, filter_value: product.sales >= int(filter_value),
         'query_string_field': 'lowSales'
     }, {
@@ -133,9 +130,6 @@ PRODUCT_FILTERS = {
 
 MALL_PRODUCT_FILTERS = {
     'product': [{
-        'comparator': lambda product, filter_value: filter_value in product.name,
-        'query_string_field': 'name'
-    }, {
         'comparator': lambda product, filter_value: product.sales >= int(filter_value),
         'query_string_field': 'lowSales'
     }, {

@@ -157,6 +157,7 @@ PRODUCT_MANAGE_IMAGE_NAV = 'pictureManagement'
 PRODUCT_MANAGE_CATEGORY_NAV = 'groupManagement'
 PRODUCT_MANAGE_MODEL_NAV = 'attrModelManagement'
 PRODUCT_REVIEW_NAV = 'reviewManagement'
+PRODUCT_LIMIT_ZONE = 'limitZoneManagement'
 
 MALL_PRODUCT_SECOND_NAV = {
     'section': u'商品',
@@ -211,6 +212,12 @@ MALL_PRODUCT_SECOND_NAV = {
             # 'url': '/mall2/product_review_list/',
             'url': '/apps/evaluate/evaluates/',
             'permission': 'manage_product_review'
+        },
+        {
+            'name': PRODUCT_LIMIT_ZONE,
+            'title': u'限定区域',
+            'url': '/mall2/product_limit_zone/',
+            'permission': 'manage_product_limit_zone'
         },
     ]
 }
@@ -494,7 +501,7 @@ MALL_PROMOTION_AND_APPS_SECOND_NAV = {
                     'title': u'用户反馈',
                     'url': '/apps/exsurvey/exsurveies/',
                     'permission': '',
-                    'users': ['jobs', 'ceshi01', 'wzjx001', 'weizoomxs', 'weizoommm', 'weshop', 'weizoomclub', 'weizoomshop', 'Aierkang'] #这些帐号可以显示用户反馈
+                    'users': ['jobs', 'ceshi01', 'wzjx001', 'weizoomxs', 'weizoommm', 'weshop', 'weizoomclub', 'weizoomshop', 'Aierkang', 'BITC'] #这些帐号可以显示用户反馈
                 },{
                     'name': MALL_APPS_GROUP_NAV,
                     'title': u'团购',
@@ -511,13 +518,13 @@ MALL_PROMOTION_AND_APPS_SECOND_NAV = {
                     'title': u'返利活动',
                     'url': '/apps/rebate/rebates/',
                     'permission': '',
-                    'users': ['jobs', 'ceshi01', 'weshop', 'Aierkang']
+                    'users': ['jobs', 'ceshi01', 'weshop', 'Aierkang', 'BITC']
                 },{
                     'name': MALL_APPS_EXSIGN_NAV,
                     'title': u'专项签到',
                     'url': '/apps/exsign/exsign/',
                     'permission': '',
-                    'users': ['jobs', 'ceshi01', 'weshop', 'Aierkang']
+                    'users': ['jobs', 'ceshi01', 'weshop', 'Aierkang', 'BITC']
                 },
                 # {
                 #     'name': MALL_APPS_REDPACKET_NAV,

@@ -17,6 +17,7 @@ mall_product_custom_model_editor
 mall_product_model_property_editor
 mall_product_editor
 mall_product_filter_view
+mall_product_categories_filter_view
 mall_product_list_view
 mall_promotion_filter_view
 mall_promotion_list_view
@@ -115,3 +116,4 @@ mall_virtual_product_list_view
 mall_vritual_product_filter_view
 mall_vritual_product_codes_filter_view
 mall_virtual_product_codes_view
+mall_limited_area_view
