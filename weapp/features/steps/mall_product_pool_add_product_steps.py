@@ -138,7 +138,7 @@ def step_impl(context):
     assert pool.count() > 0
 
 
-@When(u'{zy1}上架商品池商品“{product_name}”')
+@When(u'{zy1}上架商品池商品"{product_name}"')
 def step_impl(context, zy1, product_name):
     url = '/mall2/api/product_pool/?_method=put'
     product = Product.objects.get(name=product_name)
