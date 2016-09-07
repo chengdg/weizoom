@@ -72,7 +72,7 @@ Feature: 自营平台订单管理
 				收货地址：
 				买家留言：
 			2）发票信息
-				发票抬头：没有发票抬头显示"--"
+				发票抬头：没有发票抬头显示" "
 			3）供货商备注
 				点击编辑按钮可以添加供货商备注
 
@@ -434,7 +434,7 @@ Scenario:1 ziying单个供应商商品订单-微信支付+优惠券(不满足满
 				"ship_tel":"13811223344",
 				"ship_area": "北京市 北京市 海淀区",
 				"ship_address": "泰兴大厦",
-				"invoice":"--",
+				"invoice":" ",
 				"final_price": 50.00,
 				"postage": 10.00,
 				"status":"待支付",
@@ -451,22 +451,20 @@ Scenario:1 ziying单个供应商商品订单-微信支付+优惠券(不满足满
 				"ship_tel":"13811223344",
 				"ship_area": "北京市 北京市 海淀区",
 				"ship_address": "泰兴大厦",
-				"invoice":"--",
+				"invoice":" ",
 				"business_message":"",
 				"methods_of_payment":"微信支付",
 				"group":[{
-					"供货商1":{
-						"order_no":"001-供货商1",
-						"供货商1":
-						"products":[{
-							"name":"商品1-1",
-							"price":50.00,
-							"count":1,
-							"single_save":""
-						}],
-						"postage": 10.00,
-						"status":"待支付"
-					}
+					"order_no":"001-供货商1",
+					"supplier":"供货商1",
+					"products":[{
+						"name":"商品1-1",
+						"price":50.00,
+						"count":1,
+						"single_save":""
+					}],
+					"postage": 10.00,
+					"status":"待支付"
 				}],
 				"total_save":"多品券：10.00(coupon1_id_1)",
 				"weizoom_card":"",
@@ -540,21 +538,20 @@ Scenario:1 ziying单个供应商商品订单-微信支付+优惠券(不满足满
 				"ship_tel":"13811223344",
 				"ship_area": "北京市 北京市 海淀区",
 				"ship_address": "泰兴大厦",
-				"invoice":"--",
+				"invoice":" ",
 				"final_price": 50.00,
 				"postage": 10.00,
 				"status":"待发货",
 				"group":[{
-					"供货商1":{
-						"order_no":"001-供货商1",
-						"products":[{
-							"name":"商品1-1",
-							"price":50.00,
-							"count":1
-						}],
-						"status":"待发货",
-						"actions": ["发货","申请退款"],
-					}
+					"order_no":"001-供货商1",
+					"supplier":"供货商1",
+					"products":[{
+						"name":"商品1-1",
+						"price":50.00,
+						"count":1
+					}],
+					"status":"待发货",
+					"actions": ["发货","申请退款"]
 				}]
 			}]
 			"""
@@ -567,21 +564,20 @@ Scenario:1 ziying单个供应商商品订单-微信支付+优惠券(不满足满
 				"ship_tel":"13811223344",
 				"ship_area": "北京市 北京市 海淀区",
 				"ship_address": "泰兴大厦",
-				"invoice":"--",
+				"invoice":" ",
 				"business_message":"",
 				"methods_of_payment":"微信支付",
 				"group":[{
-					"供货商1":{
-						"order_no":"001-供货商1",
-						"products":[{
-							"name":"商品1-1",
-							"price":50.00,
-							"count":1,
-							"single_save":""
-						}],
-						"postage": 10.00,
-						"status":"待发货"
-					}
+					"order_no":"001-供货商1",
+					"supplier":"供货商1",
+					"products":[{
+						"name":"商品1-1",
+						"price":50.00,
+						"count":1,
+						"single_save":""
+					}],
+					"postage": 10.00,
+					"status":"待发货"
 				}],
 				"total_save":"多品券：10.00(coupon1_id_1)",
 				"weizoom_card":"",
@@ -666,27 +662,26 @@ Scenario:1 ziying单个供应商商品订单-微信支付+优惠券(不满足满
 				"ship_tel":"13811223344",
 				"ship_area": "北京市 北京市 海淀区",
 				"ship_address": "泰兴大厦",
-				"invoice":"--",
+				"invoice":" ",
 				"final_price": 50.00,
 				"postage": 10.00,
 				"status":"退款中",
 				"group":[{
-					"供货商1":{
-						"order_no":"001-供货商1",
-						"products":[{
-							"name":"商品1-1",
-							"price":50.00,
-							"count":1
-						}],
-						"status":"退款中",
-						"refund_details":{
-							"cash": 10.00,
-							"weizoom_card": 0.00,
-							"coupon_money": 50.00,
-							"integral_money": 0.00
-						},
-						"actions": []
-					}
+					"order_no":"001-供货商1",
+					"supplier":"供货商1",
+					"products":[{
+						"name":"商品1-1",
+						"price":50.00,
+						"count":1
+					}],
+					"status":"退款中",
+					"refund_details":{
+						"cash": 10.00,
+						"weizoom_card": 0.00,
+						"coupon_money": 50.00,
+						"integral_money": 0.00
+					},
+					"actions": []
 				}]
 			}]
 			"""
@@ -699,21 +694,20 @@ Scenario:1 ziying单个供应商商品订单-微信支付+优惠券(不满足满
 				"ship_tel":"13811223344",
 				"ship_area": "北京市 北京市 海淀区",
 				"ship_address": "泰兴大厦",
-				"invoice":"--",
+				"invoice":" ",
 				"business_message":"",
 				"methods_of_payment":"微信支付",
 				"group":[{
-					"供货商1":{
-						"order_no":"001-供货商1",
-						"products":[{
-							"name":"商品1-1",
-							"price":50.00,
-							"count":1,
-							"single_save":""
-						}],
-						"postage": 10.00,
-						"status":"退款中"
-					}
+					"order_no":"001-供货商1",
+					"supplier":"供货商1",
+					"products":[{
+						"name":"商品1-1",
+						"price":50.00,
+						"count":1,
+						"single_save":""
+					}],
+					"postage": 10.00,
+					"status":"退款中"
 				}],
 				"total_save":"多品券：10.00(coupon1_id_1)",
 				"weizoom_card":"",
@@ -791,27 +785,26 @@ Scenario:1 ziying单个供应商商品订单-微信支付+优惠券(不满足满
 				"ship_tel":"13811223344",
 				"ship_area": "北京市 北京市 海淀区",
 				"ship_address": "泰兴大厦",
-				"invoice":"--",
+				"invoice":" ",
 				"final_price": 50.00,
 				"postage": 10.00,
 				"status":"退款成功",
 				"group":[{
-					"供货商1":{
-						"order_no":"001-供货商1",
-						"products":[{
-							"name":"商品1-1",
-							"price":50.00,
-							"count":1
-						}],
-						"status":"退款成功",
-						"refund_details":{
-							"cash": 10.00,
-							"weizoom_card": 0.00,
-							"coupon_money": 50.00,
-							"integral_money": 0.00
-						},
-						"actions": []
-					}
+					"order_no":"001-供货商1",
+					"supplier":"供货商1",
+					"products":[{
+						"name":"商品1-1",
+						"price":50.00,
+						"count":1
+					}],
+					"status":"退款成功",
+					"refund_details":{
+						"cash": 10.00,
+						"weizoom_card": 0.00,
+						"coupon_money": 50.00,
+						"integral_money": 0.00
+					},
+					"actions": []
 				}]
 			}]
 			"""
@@ -824,21 +817,20 @@ Scenario:1 ziying单个供应商商品订单-微信支付+优惠券(不满足满
 				"ship_tel":"13811223344",
 				"ship_area": "北京市 北京市 海淀区",
 				"ship_address": "泰兴大厦",
-				"invoice":"--",
+				"invoice":" ",
 				"business_message":"",
 				"methods_of_payment":"微信支付",
 				"group":[{
-					"供货商1":{
-						"order_no":"001-供货商1",
-						"products":[{
-							"name":"商品1-1",
-							"price":50.00,
-							"count":1,
-							"single_save":""
-						}],
-						"postage": 10.00,
-						"status":"退款成功"
-					}
+					"order_no":"001-供货商1",
+					"supplier":"供货商1",
+					"products":[{
+						"name":"商品1-1",
+						"price":50.00,
+						"count":1,
+						"single_save":""
+					}],
+					"postage": 10.00,
+					"status":"退款成功"
 				}],
 				"total_save":"多品券：10.00(coupon1_id_1)",
 				"weizoom_card":"",
@@ -955,7 +947,7 @@ Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满
 				"ship_tel":"13811223344",
 				"ship_area": "北京市 北京市 海淀区",
 				"ship_address": "泰兴大厦",
-				"invoice":"--",
+				"invoice":" ",
 				"final_price": 30.00,
 				"postage": 10.00,
 				"status":"待支付",
@@ -981,32 +973,31 @@ Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满
 				"ship_tel":"13811223344",
 				"ship_area": "北京市 北京市 海淀区",
 				"ship_address": "泰兴大厦",
-				"invoice":"--",
+				"invoice":" ",
 				"business_message":"",
 				"methods_of_payment":"支付宝",
 				"group":[{
-					"供货商1":{
-						"order_no":"002-供货商1",
-						"products":[{
-							"name":"商品1-2",
-							"price":10.00,
-							"count":2,
-							"single_save":"20积分，抵扣10.00元"
-						}],
-						"postage": 10.00,
-						"status":"待支付"
-					},
-					"供货商2":{
-						"order_no":"002-供货商2",
-						"products":[{
-							"name":"商品2-2",
-							"price":10.00,
-							"count":1,
-							"single_save":"20积分，抵扣10.00元"
-						}],
-						"postage": 0.00,
-						"status":"待支付"
-					}
+					"order_no":"002-供货商1",
+					"supplier":"供货商1",
+					"products":[{
+						"name":"商品1-2",
+						"price":10.00,
+						"count":2,
+						"single_save":"20积分，抵扣10.00元"
+					}],
+					"postage": 10.00,
+					"status":"待支付"
+				},{
+					"order_no":"002-供货商2",
+					"supplier":"供货商2",
+					"products":[{
+						"name":"商品2-2",
+						"price":10.00,
+						"count":1,
+						"single_save":"20积分，抵扣10.00元"
+					}],
+					"postage": 0.00,
+					"status":"待支付"
 				}],
 				"total_save":"",
 				"weizoom_card":"",
@@ -1055,22 +1046,21 @@ Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满
 				"ship_area": "北京市 北京市 海淀区",
 				"ship_address": "泰兴大厦",
 				"group":[{
-					"供货商1":{
-						"products": [{
-							"name": "商品1-2",
-							"price": 10.00,
-							"count": 2
-						}],
-						"postage": 10.00
-					},
-					"供货商2":{
-						"products": [{
-							"name": "商品2-2",
-							"price": 20.00,
-							"count": 1
-						}],
-						"postage": 0.00
-					}
+					"supplier":"供货商1",
+					"products": [{
+						"name": "商品1-2",
+						"price": 10.00,
+						"count": 2
+					}],
+					"postage": 10.00
+				},{
+					"supplier":"供货商2",
+					"products": [{
+						"name": "商品2-2",
+						"price": 20.00,
+						"count": 1
+					}],
+					"postage": 0.00
 				}],
 				"methods_of_payment":"支付宝",
 				"product_price": 40.00,
@@ -1096,31 +1086,30 @@ Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满
 				"ship_tel":"13811223344",
 				"ship_area": "北京市 北京市 海淀区",
 				"ship_address": "泰兴大厦",
-				"invoice":"--",
+				"invoice":" ",
 				"final_price": 30.00,
 				"postage": 10.00,
 				"status":"待发货",
 				"group":[{
-					"供货商1":{
-						"order_no":"002-供货商1",
-						"products":[{
-							"name":"商品1-2",
-							"price":10.00,
-							"count":2
-						}],
-						"status":"待发货",
-						"actions": ["发货","申请退款"]
-					},
-					"供货商2":{
-						"order_no":"002-供货商2",
-						"products":[{
-							"name":"商品2-2",
-							"price":20.00,
-							"count":1
-						}],
-						"status":"待发货",
-						"actions": ["发货","申请退款"]
-					}
+					"order_no":"002-供货商1",
+					"supplier":"供货商1",
+					"products":[{
+						"name":"商品1-2",
+						"price":10.00,
+						"count":2
+					}],
+					"status":"待发货",
+					"actions": ["发货","申请退款"]
+				},{
+					"order_no":"002-供货商2",
+					"supplier":"供货商2",
+					"products":[{
+						"name":"商品2-2",
+						"price":20.00,
+						"count":1
+					}],
+					"status":"待发货",
+					"actions": ["发货","申请退款"]
 				}]
 			}]
 			"""
@@ -1133,32 +1122,31 @@ Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满
 				"ship_tel":"13811223344",
 				"ship_area": "北京市 北京市 海淀区",
 				"ship_address": "泰兴大厦",
-				"invoice":"--",
+				"invoice":" ",
 				"business_message":"",
 				"methods_of_payment":"支付宝",
 				"group":[{
-					"供货商1":{
-						"order_no":"002-供货商1",
-						"products":[{
-							"name":"商品1-2",
-							"price":10.00,
-							"count":2,
-							"single_save":"20积分，抵扣10.00元"
-						}],
-						"postage": 10.00,
-						"status":"待发货"
-					},
-					"供货商2":{
-						"order_no":"002-供货商2",
-						"products":[{
-							"name":"商品2-2",
-							"price":20.00,
-							"count":1,
-							"single_save":"20积分，抵扣10.00元"
-						}],
-						"postage": 0.00,
-						"status":"待发货"
-					}
+					"order_no":"002-供货商1",
+					"supplier":"供货商1",
+					"products":[{
+						"name":"商品1-2",
+						"price":10.00,
+						"count":2,
+						"single_save":"20积分，抵扣10.00元"
+					}],
+					"postage": 10.00,
+					"status":"待发货"
+				},{
+					"order_no":"002-供货商2",
+					"supplier":"供货商2",
+					"products":[{
+						"name":"商品2-2",
+						"price":20.00,
+						"count":1,
+						"single_save":"20积分，抵扣10.00元"
+					}],
+					"postage": 0.00,
+					"status":"待发货"
 				}],
 				"total_save":"",
 				"weizoom_card":"",
@@ -1216,24 +1204,23 @@ Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满
 				"ship_area": "北京市 北京市 海淀区",
 				"ship_address": "泰兴大厦",
 				"group":[{
-					"供货商1":{
-						"status":"已发货",
-						"products": [{
-							"name": "商品1-2",
-							"price": 10.00,
-							"count": 2
-						}],
-						"postage": 10.00
-					},
-					"供货商2":{
-						"status":"待发货",
-						"products": [{
-							"name": "商品2-2",
-							"price": 20.00,
-							"count": 1
-						}],
-						"postage": 0.00
-					}
+					"supplier":"供货商1",
+					"status":"已发货",
+					"products": [{
+						"name": "商品1-2",
+						"price": 10.00,
+						"count": 2
+					}],
+					"postage": 10.00
+				},{
+					"supplier":"供货商2",
+					"status":"待发货",
+					"products": [{
+						"name": "商品2-2",
+						"price": 20.00,
+						"count": 1
+					}],
+					"postage": 0.00
 				}],
 				"methods_of_payment":"支付宝",
 				"product_price": 40.00,
@@ -1259,31 +1246,30 @@ Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满
 				"ship_tel":"13811223344",
 				"ship_area": "北京市 北京市 海淀区",
 				"ship_address": "泰兴大厦",
-				"invoice":"--",
+				"invoice":" ",
 				"final_price": 30.00,
 				"postage": 10.00,
 				"status":"待发货",
 				"group":[{
-					"供货商1":{
-						"order_no":"002-供货商1",
-						"products":[{
-							"name":"商品1-2",
-							"price":10.00,
-							"count":2
-						}],
-						"status":"已发货",
-						"actions": ["标记完成"]
-					},
-					"供货商2":{
-						"order_no":"002-供货商2",
-						"products":[{
-							"name":"商品2-2",
-							"price":20.00,
-							"count":1
-						}],
-						"status":"待发货",
-						"actions": ["发货","申请退款"]
-					}
+					"order_no":"002-供货商1",
+					"supplier":"供货商1",
+					"products":[{
+						"name":"商品1-2",
+						"price":10.00,
+						"count":2
+					}],
+					"status":"已发货",
+					"actions": ["标记完成"]
+				},{
+					"order_no":"002-供货商2",
+					"supplier":"供货商2",
+					"products":[{
+						"name":"商品2-2",
+						"price":20.00,
+						"count":1
+					}],
+					"status":"待发货",
+					"actions": ["发货","申请退款"]
 				}]
 			}]
 			"""
@@ -1296,32 +1282,31 @@ Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满
 				"ship_tel":"13811223344",
 				"ship_area": "北京市 北京市 海淀区",
 				"ship_address": "泰兴大厦",
-				"invoice":"--",
+				"invoice":" ",
 				"business_message":"",
 				"methods_of_payment":"支付宝",
 				"group":[{
-					"供货商1":{
-						"order_no":"002-供货商1",
-						"products":[{
-							"name":"商品1-2",
-							"price":10.00,
-							"count":2,
-							"single_save":"20积分，抵扣10.00元"
-						}],
-						"postage": 10.00,
-						"status":"已发货"
-					},
-					"供货商2":{
-						"order_no":"002-供货商2",
-						"products":[{
-							"name":"商品2-2",
-							"price":20.00,
-							"count":1,
-							"single_save":"20积分，抵扣10.00元"
-						}],
-						"postage": 0.00,
-						"status":"待发货"
-					}
+					"order_no":"002-供货商1",
+					"supplier":"供货商1",
+					"products":[{
+						"name":"商品1-2",
+						"price":10.00,
+						"count":2,
+						"single_save":"20积分，抵扣10.00元"
+					}],
+					"postage": 10.00,
+					"status":"已发货"
+				},{
+					"order_no":"002-供货商2",
+					"supplier":"供货商2",
+					"products":[{
+						"name":"商品2-2",
+						"price":20.00,
+						"count":1,
+						"single_save":"20积分，抵扣10.00元"
+					}],
+					"postage": 0.00,
+					"status":"待发货"
 				}],
 				"total_save":"",
 				"weizoom_card":"",
@@ -1381,24 +1366,23 @@ Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满
 				"ship_area": "北京市 北京市 海淀区",
 				"ship_address": "泰兴大厦",
 				"group":[{
-					"供货商1":{
-						"status":"已完成",
-						"products": [{
-							"name": "商品1-2",
-							"price": 10.00,
-							"count": 2
-						}],
-						"postage": 10.00
-					},
-					"供货商2":{
-						"status":"已发货",
-						"products": [{
-							"name": "商品2-2",
-							"price": 20.00,
-							"count": 1
-						}],
-						"postage": 0.00
-					}
+					"supplier":"供货商1",
+					"status":"已完成",
+					"products": [{
+						"name": "商品1-2",
+						"price": 10.00,
+						"count": 2
+					}],
+					"postage": 10.00
+				},{
+					"supplier":"供货商2",
+					"status":"已发货",
+					"products": [{
+						"name": "商品2-2",
+						"price": 20.00,
+						"count": 1
+					}],
+					"postage": 0.00
 				}],
 				"methods_of_payment":"支付宝",
 				"product_price": 40.00,
@@ -1424,31 +1408,30 @@ Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满
 				"ship_tel":"13811223344",
 				"ship_area": "北京市 北京市 海淀区",
 				"ship_address": "泰兴大厦",
-				"invoice":"--",
+				"invoice":" ",
 				"final_price": 30.00,
 				"postage": 10.00,
 				"status":"已发货",
 				"group":[{
-					"供货商1":{
-						"order_no":"002-供货商1",
-						"products":[{
-							"name":"商品1-2",
-							"price":10.00,
-							"count":2
-						}],
-						"status":"已完成",
-						"actions": ["申请退款"]
-					},
-					"供货商2":{
-						"order_no":"002-供货商2",
-						"products":[{
-							"name":"商品2-2",
-							"price":20.00,
-							"count":1
-						}],
-						"status":"待发货",
-						"actions": ["发货","申请退款"]
-					}
+					"order_no":"002-供货商1",
+					"supplier":"供货商1",
+					"products":[{
+						"name":"商品1-2",
+						"price":10.00,
+						"count":2
+					}],
+					"status":"已完成",
+					"actions": ["申请退款"]
+				},{
+					"order_no":"002-供货商2",
+					"supplier":"供货商2",
+					"products":[{
+						"name":"商品2-2",
+						"price":20.00,
+						"count":1
+					}],
+					"status":"待发货",
+					"actions": ["发货","申请退款"]
 				}]
 			}]
 			"""
@@ -1461,32 +1444,31 @@ Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满
 				"ship_tel":"13811223344",
 				"ship_area": "北京市 北京市 海淀区",
 				"ship_address": "泰兴大厦",
-				"invoice":"--",
+				"invoice":" ",
 				"business_message":"",
 				"methods_of_payment":"支付宝",
 				"group":[{
-					"供货商1":{
-						"order_no":"002-供货商1",
-						"products":[{
-							"name":"商品1-2",
-							"price":10.00,
-							"count":2,
-							"single_save":"20积分，抵扣10.00元"
-						}],
-						"postage": 10.00,
-						"status":"已完成"
-					},
-					"供货商2":{
-						"order_no":"002-供货商2",
-						"products":[{
-							"name":"商品2-2",
-							"price":20.00,
-							"count":1,
-							"single_save":"20积分，抵扣10.00元"
-						}],
-						"postage": 0.00,
-						"status":"已发货"
-					}
+					"order_no":"002-供货商1",
+					"supplier":"供货商1",
+					"products":[{
+						"name":"商品1-2",
+						"price":10.00,
+						"count":2,
+						"single_save":"20积分，抵扣10.00元"
+					}],
+					"postage": 10.00,
+					"status":"已完成"
+				},{
+					"order_no":"002-供货商2",
+					"supplier":"供货商2",
+					"products":[{
+						"name":"商品2-2",
+						"price":20.00,
+						"count":1,
+						"single_save":"20积分，抵扣10.00元"
+					}],
+					"postage": 0.00,
+					"status":"已发货"
 				}],
 				"total_save":"",
 				"weizoom_card":"",
@@ -1555,24 +1537,23 @@ Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满
 				"ship_area": "北京市 北京市 海淀区",
 				"ship_address": "泰兴大厦",
 				"group":[{
-					"供货商1":{
-						"status":"退款中",
-						"products": [{
-							"name": "商品1-2",
-							"price": 10.00,
-							"count": 2
-						}],
-						"postage": 10.00
-					},
-					"供货商2":{
-						"status":"已完成",
-						"products": [{
-							"name": "商品2-2",
-							"price": 20.00,
-							"count": 1
-						}],
-						"postage": 0.00
-					}
+					"supplier":"供货商1",
+					"status":"退款中",
+					"products": [{
+						"name": "商品1-2",
+						"price": 10.00,
+						"count": 2
+					}],
+					"postage": 10.00
+				},{
+					"supplier":"供货商2",
+					"status":"已完成",
+					"products": [{
+						"name": "商品2-2",
+						"price": 20.00,
+						"count": 1
+					}],
+					"postage": 0.00
 				}],
 				"methods_of_payment":"支付宝",
 				"product_price": 40.00,
@@ -1598,37 +1579,36 @@ Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满
 				"ship_tel":"13811223344",
 				"ship_area": "北京市 北京市 海淀区",
 				"ship_address": "泰兴大厦",
-				"invoice":"--",
+				"invoice":" ",
 				"final_price": 30.00,
 				"postage": 10.00,
 				"status":"退款中",
 				"group":[{
-					"供货商1":{
-						"order_no":"002-供货商1",
-						"products":[{
-							"name":"商品1-2",
-							"price":10.00,
-							"count":2
-						}],
-						"status":"退款中",
-						"refund_details":{
-							"cash": 10.00,
-							"weizoom_card": 0.00,
-							"coupon_money": 10.00,
-							"integral_money": 10.00
-						},
-						"actions": [],
+					"order_no":"002-供货商1",
+					"supplier":"供货商1",
+					"products":[{
+						"name":"商品1-2",
+						"price":10.00,
+						"count":2
+					}],
+					"status":"退款中",
+					"refund_details":{
+						"cash": 10.00,
+						"weizoom_card": 0.00,
+						"coupon_money": 10.00,
+						"integral_money": 10.00
 					},
-					"供货商2":{
-						"order_no":"002-供货商2",
-						"products":[{
-							"name":"商品2-2",
-							"price":20.00,
-							"count":1
-						}],
-						"status":"已完成",
-						"actions": ["申请退款"],
-					}
+					"actions": []
+				},{
+					"order_no":"002-供货商2",
+					"supplier":"供货商2",
+					"products":[{
+						"name":"商品2-2",
+						"price":20.00,
+						"count":1
+					}],
+					"status":"已完成",
+					"actions": ["申请退款"]
 				}]
 			}]
 			"""
@@ -1641,32 +1621,31 @@ Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满
 				"ship_tel":"13811223344",
 				"ship_area": "北京市 北京市 海淀区",
 				"ship_address": "泰兴大厦",
-				"invoice":"--",
+				"invoice":" ",
 				"business_message":"",
 				"methods_of_payment":"支付宝",
 				"group":[{
-					"供货商1":{
-						"order_no":"002-供货商1",
-						"products":[{
-							"name":"商品1-2",
-							"price":10.00,
-							"count":2,
-							"single_save":"20积分，抵扣10.00元"
-						}],
-						"postage": 10.00,
-						"status":"退款中"
-					},
-					"供货商2":{
-						"order_no":"002-供货商2",
-						"products":[{
-							"name":"商品2-2",
-							"price":20.00,
-							"count":1,
-							"single_save":"20积分，抵扣10.00元"
-						}],
-						"postage": 0.00,
-						"status":"已完成"
-					}
+					"order_no":"002-供货商1",
+					"supplier":"供货商1",
+					"products":[{
+						"name":"商品1-2",
+						"price":10.00,
+						"count":2,
+						"single_save":"20积分，抵扣10.00元"
+					}],
+					"postage": 10.00,
+					"status":"退款中"
+				},{
+					"order_no":"002-供货商2",
+					"supplier":"供货商2",
+					"products":[{
+						"name":"商品2-2",
+						"price":20.00,
+						"count":1,
+						"single_save":"20积分，抵扣10.00元"
+					}],
+					"postage": 0.00,
+					"status":"已完成"
 				}],
 				"total_save":"",
 				"weizoom_card":"",
@@ -1720,24 +1699,23 @@ Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满
 				"ship_area": "北京市 北京市 海淀区",
 				"ship_address": "泰兴大厦",
 				"group":[{
-					"供货商1":{
-						"status":"退款成功",
-						"products": [{
-							"name": "商品1-2",
-							"price": 10.00,
-							"count": 2
-						}],
-						"postage": 10.00
-					},
-					"供货商2":{
-						"status":"已完成",
-						"products": [{
-							"name": "商品2-2",
-							"price": 20.00,
-							"count": 1
-						}],
-						"postage": 0.00
-					}
+					"supplier":"供货商1",
+					"status":"退款成功",
+					"products": [{
+						"name": "商品1-2",
+						"price": 10.00,
+						"count": 2
+					}],
+					"postage": 10.00
+				},{
+					"supplier":"供货商2",
+					"status":"已完成",
+					"products": [{
+						"name": "商品2-2",
+						"price": 20.00,
+						"count": 1
+					}],
+					"postage": 0.00
 				}],
 				"methods_of_payment":"支付宝",
 				"product_price": 40.00,
@@ -1764,37 +1742,36 @@ Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满
 				"ship_tel":"13811223344",
 				"ship_area": "北京市 北京市 海淀区",
 				"ship_address": "泰兴大厦",
-				"invoice":"--",
+				"invoice":" ",
 				"final_price": 20.00,
 				"postage": 10.00,
 				"status":"已完成",
 				"group":[{
-					"供货商1":{
-						"order_no":"002-供货商1",
-						"products":[{
-							"name":"商品1-2",
-							"price":10.00,
-							"count":2
-						}],
-						"status":"退款成功",
-						"refund_details":{
-							"cash": 10.00,
-							"weizoom_card": 0.00,
-							"coupon_money": 10.00,
-							"integral_money": 10.00
-						},
-						"actions": []
+					"order_no":"002-供货商1",
+					"supplier":"供货商1",
+					"products":[{
+						"name":"商品1-2",
+						"price":10.00,
+						"count":2
+					}],
+					"status":"退款成功",
+					"refund_details":{
+						"cash": 10.00,
+						"weizoom_card": 0.00,
+						"coupon_money": 10.00,
+						"integral_money": 10.00
 					},
-					"供货商2":{
-						"order_no":"002-供货商2",
-						"products":[{
-							"name":"商品2-2",
-							"price":20.00,
-							"count":1
-						}],
-						"status":"已完成",
-						"actions": ["申请退款"]
-					}
+					"actions": []
+				},{
+					"order_no":"002-供货商2",
+					"supplier":"供货商1",
+					"products":[{
+						"name":"商品2-2",
+						"price":20.00,
+						"count":1
+					}],
+					"status":"已完成",
+					"actions": ["申请退款"]
 				}]
 			}]
 			"""
@@ -1807,32 +1784,31 @@ Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满
 				"ship_tel":"13811223344",
 				"ship_area": "北京市 北京市 海淀区",
 				"ship_address": "泰兴大厦",
-				"invoice":"--",
+				"invoice":" ",
 				"business_message":"",
 				"methods_of_payment":"支付宝",
 				"group":[{
-					"供货商1":{
-						"order_no":"002-供货商1",
-						"products":[{
-							"name":"商品1-2",
-							"price":10.00,
-							"count":2,
-							"single_save":"20积分，抵扣10.00元"
-						}],
-						"postage": 10.00,
-						"status":"退款成功"
-					},
-					"供货商2":{
-						"order_no":"002-供货商2",
-						"products":[{
-							"name":"商品2-2",
-							"price":20.00,
-							"count":1,
-							"single_save":"20积分，抵扣10.00元"
-						}],
-						"postage": 0.00,
-						"status":"已完成"
-					}
+					"order_no":"002-供货商1",
+					"supplier":"供货商1",
+					"products":[{
+						"name":"商品1-2",
+						"price":10.00,
+						"count":2,
+						"single_save":"20积分，抵扣10.00元"
+					}],
+					"postage": 10.00,
+					"status":"退款成功"
+				},{
+					"order_no":"002-供货商2",
+					"supplier":"供货商2",
+					"products":[{
+						"name":"商品2-2",
+						"price":20.00,
+						"count":1,
+						"single_save":"20积分，抵扣10.00元"
+					}],
+					"postage": 0.00,
+					"status":"已完成"
 				}],
 				"total_save":"",
 				"weizoom_card":"",
@@ -1938,22 +1914,21 @@ Scenario:3 ziying两个供应商商品订单(限时抢购)-微众卡支付(一�
 				"ship_area": "北京市 北京市 海淀区",
 				"ship_address": "泰兴大厦",
 				"group":[{
-					"供货商1":{
-						"products": [{
-							"name": "商品1-1",
-							"price": 20.00,
-							"count": 2
-						}],
-						"postage": 0.00
-					},
-					"供货商2":{
-						"products": [{
-							"name": "商品2-1",
-							"price": 30.00,
-							"count": 1
-						}],
-						"postage": 0.00
-					}
+					"supplier":"供货商1",
+					"products": [{
+						"name": "商品1-1",
+						"price": 20.00,
+						"count": 2
+					}],
+					"postage": 0.00
+				},{
+					"supplier":"供货商2",
+					"products": [{
+						"name": "商品2-1",
+						"price": 30.00,
+						"count": 1
+					}],
+					"postage": 0.00
 				}],
 				"methods_of_payment":"优惠抵扣",
 				"product_price": 70.00,
@@ -1979,31 +1954,30 @@ Scenario:3 ziying两个供应商商品订单(限时抢购)-微众卡支付(一�
 				"ship_tel":"13811223344",
 				"ship_area": "北京市 北京市 海淀区",
 				"ship_address": "泰兴大厦",
-				"invoice":"--",
+				"invoice":" ",
 				"final_price": 70.00,
 				"postage": 0.00,
 				"status":"待发货",
 				"group":[{
-					"供货商1":{
-						"order_no":"003-供货商1",
-						"products":[{
-							"name":"商品1-1",
-							"price":50.00,
-							"count":2
-						}],
-						"status":"待发货",
-						"actions": ["发货","申请退款"]
-					},
-					"供货商2":{
-						"order_no":"003-供货商2",
-						"products":[{
-							"name":"商品2-1",
-							"price":30.00,
-							"count":1
-						}],
-						"status":"待发货",
-						"actions": ["发货","申请退款"]
-					}
+					"order_no":"003-供货商1",
+					"supplier":"供货商1",
+					"products":[{
+						"name":"商品1-1",
+						"price":50.00,
+						"count":2
+					}],
+					"status":"待发货",
+					"actions": ["发货","申请退款"]
+				},{
+					"order_no":"003-供货商2",
+					"supplier":"供货商2",
+					"products":[{
+						"name":"商品2-1",
+						"price":30.00,
+						"count":1
+					}],
+					"status":"待发货",
+					"actions": ["发货","申请退款"]
 				}]
 			}]
 			"""
@@ -2016,32 +1990,31 @@ Scenario:3 ziying两个供应商商品订单(限时抢购)-微众卡支付(一�
 				"ship_tel":"13811223344",
 				"ship_area": "北京市 北京市 海淀区",
 				"ship_address": "泰兴大厦",
-				"invoice":"--",
+				"invoice":" ",
 				"business_message":"",
 				"methods_of_payment":"优惠抵扣",
 				"group":[{
-					"供货商1":{
-						"order_no":"003-供货商1",
-						"products":[{
-							"name":"商品1-1",
-							"price":50.00,
-							"count":2,
-							"single_save":"直降60.00元"
-						}],
-						"postage": 0.00,
-						"status":"待发货"
-					},
-					"供货商2":{
-						"order_no":"003-供货商2",
-						"products":[{
-							"name":"商品2-1",
-							"price":30.00,
-							"count":1,
-							"single_save":""
-						}],
-						"postage": 0.00,
-						"status":"待发货"
-					}
+					"order_no":"003-供货商1",
+					"supplier":"供货商1",
+					"products":[{
+						"name":"商品1-1",
+						"price":50.00,
+						"count":2,
+						"single_save":"直降60.00元"
+					}],
+					"postage": 0.00,
+					"status":"待发货"
+				},{
+					"order_no":"003-供货商2",
+					"supplier":"供货商2",
+					"products":[{
+						"name":"商品2-1",
+						"price":30.00,
+						"count":1,
+						"single_save":""
+					}],
+					"postage": 0.00,
+					"status":"待发货"
 				}],
 				"total_save":"",
 				"weizoom_card":"70.00",
@@ -2100,24 +2073,23 @@ Scenario:3 ziying两个供应商商品订单(限时抢购)-微众卡支付(一�
 				"ship_area": "北京市 北京市 海淀区",
 				"ship_address": "泰兴大厦",
 				"group":[{
-					"供货商1":{
-						"status":"退款中",
-						"products": [{
-							"name": "商品1-1",
-							"price": 20.00,
-							"count": 2
-						}],
-						"postage": 0.00
-					},
-					"供货商2":{
-						"status":"待发货",
-						"products": [{
-							"name": "商品2-1",
-							"price": 30.00,
-							"count": 1
-						}],
-						"postage": 0.00
-					}
+					"supplier":"供货商1",
+					"status":"退款中",
+					"products": [{
+						"name": "商品1-1",
+						"price": 20.00,
+						"count": 2
+					}],
+					"postage": 0.00
+				},{
+					"supplier":"供货商2",
+					"status":"待发货",
+					"products": [{
+						"name": "商品2-1",
+						"price": 30.00,
+						"count": 1
+					}],
+					"postage": 0.00
 				}],
 				"methods_of_payment":"优惠抵扣",
 				"product_price": 70.00,
@@ -2143,37 +2115,36 @@ Scenario:3 ziying两个供应商商品订单(限时抢购)-微众卡支付(一�
 				"ship_tel":"13811223344",
 				"ship_area": "北京市 北京市 海淀区",
 				"ship_address": "泰兴大厦",
-				"invoice":"--",
+				"invoice":" ",
 				"final_price": 70.00,
 				"postage": 0.00,
 				"status":"待发货",
 				"group":[{
-					"供货商1":{
-						"order_no":"003-供货商1",
-						"products":[{
-							"name":"商品1-1",
-							"price":50.00,
-							"count":2
-						}],
-						"status":"退款中",
-						"refund_details":{
-							"cash": 0.00,
-							"weizoom_card": 30.00,
-							"coupon_money": 10.00,
-							"integral_money": 0.00
-						},
-						"actions": []
+					"order_no":"003-供货商1",
+					"supplier":"供货商1",
+					"products":[{
+						"name":"商品1-1",
+						"price":50.00,
+						"count":2
+					}],
+					"status":"退款中",
+					"refund_details":{
+						"cash": 0.00,
+						"weizoom_card": 30.00,
+						"coupon_money": 10.00,
+						"integral_money": 0.00
 					},
-					"供货商2":{
-						"order_no":"003-供货商2",
-						"products":[{
-							"name":"商品2-1",
-							"price":30.00,
-							"count":1
-						}],
-						"status":"待发货",
-						"actions": ["发货",申请退款"]
-					}
+					"actions": []
+				},{
+					"order_no":"003-供货商2",
+					"supplier":"供货商2",
+					"products":[{
+						"name":"商品2-1",
+						"price":30.00,
+						"count":1
+					}],
+					"status":"待发货",
+					"actions": ["发货",申请退款"]
 				}]
 			}]
 			"""
@@ -2186,32 +2157,31 @@ Scenario:3 ziying两个供应商商品订单(限时抢购)-微众卡支付(一�
 				"ship_tel":"13811223344",
 				"ship_area": "北京市 北京市 海淀区",
 				"ship_address": "泰兴大厦",
-				"invoice":"--",
+				"invoice":" ",
 				"business_message":"",
 				"methods_of_payment":"优惠抵扣",
 				"group":[{
-					"供货商1":{
-						"order_no":"003-供货商1",
-						"products":[{
-							"name":"商品1-1",
-							"price":5.00,
-							"count":2,
-							"single_save":"直降60.00元"
-						}],
-						"postage": 0.00,
-						"status":"退款中"
-					},
-					"供货商2":{
-						"order_no":"003-供货商2",
-						"products":[{
-							"name":"商品2-1",
-							"price":30.00,
-							"count":1,
-							"single_save":""
-						}],
-						"postage": 0.00,
-						"status":"待发货"
-					}
+					"order_no":"003-供货商1",
+					"supplier":"供货商1",
+					"products":[{
+						"name":"商品1-1",
+						"price":5.00,
+						"count":2,
+						"single_save":"直降60.00元"
+					}],
+					"postage": 0.00,
+					"status":"退款中"
+				},{
+					"order_no":"003-供货商2",
+					"supplier":"供货商2",
+					"products":[{
+						"name":"商品2-1",
+						"price":30.00,
+						"count":1,
+						"single_save":""
+					}],
+					"postage": 0.00,
+					"status":"待发货"
 				}],
 				"total_save":"",
 				"weizoom_card":"70.00",
@@ -2262,24 +2232,23 @@ Scenario:3 ziying两个供应商商品订单(限时抢购)-微众卡支付(一�
 				"ship_area": "北京市 北京市 海淀区",
 				"ship_address": "泰兴大厦",
 				"group":[{
-					"供货商1":{
-						"status":"退款成功",
-						"products": [{
-							"name": "商品1-1",
-							"price": 20.00,
-							"count": 2
-						}],
-						"postage": 0.00
-					},
-					"供货商2":{
-						"status":"待发货",
-						"products": [{
-							"name": "商品2-1",
-							"price": 30.00,
-							"count": 1
-						}],
-						"postage": 0.00
-					}
+					"supplier":"供货商1",
+					"status":"退款成功",
+					"products": [{
+						"name": "商品1-1",
+						"price": 20.00,
+						"count": 2
+					}],
+					"postage": 0.00
+				},{
+					"supplier":"供货商2",
+					"status":"待发货",
+					"products": [{
+						"name": "商品2-1",
+						"price": 30.00,
+						"count": 1
+					}],
+					"postage": 0.00
 				}],
 				"methods_of_payment":"优惠抵扣",
 				"product_price": 70.00,
@@ -2305,37 +2274,36 @@ Scenario:3 ziying两个供应商商品订单(限时抢购)-微众卡支付(一�
 				"ship_tel":"13811223344",
 				"ship_area": "北京市 北京市 海淀区",
 				"ship_address": "泰兴大厦",
-				"invoice":"--",
+				"invoice":" ",
 				"final_price": 40.00,
 				"postage": 0.00,
 				"status":"待发货",
 				"group":[{
-					"供货商1":{
-						"order_no":"003-供货商1",
-						"products":[{
-							"name":"商品1-1",
-							"price":50.00,
-							"count":2
-						}],
-						"status":"退款成功",
-						"refund_details":{
-							"cash": 0.00,
-							"weizoom_card": 30.00,
-							"coupon_money": 10.00,
-							"integral_money": 0.00
-						},
-						"actions": []
+					"order_no":"003-供货商1",
+					"supplier":"供货商1",
+					"products":[{
+						"name":"商品1-1",
+						"price":50.00,
+						"count":2
+					}],
+					"status":"退款成功",
+					"refund_details":{
+						"cash": 0.00,
+						"weizoom_card": 30.00,
+						"coupon_money": 10.00,
+						"integral_money": 0.00
 					},
-					"供货商2":{
-						"order_no":"003-供货商2",
-						"products":[{
-							"name":"商品2-1",
-							"price":30.00,
-							"count":1
-						}],
-						"status":"待发货",
-						"actions": ["发货",申请退款"]
-					}
+					"actions": []
+				},{
+					"order_no":"003-供货商2",
+					"supplier":"供货商2",
+					"products":[{
+						"name":"商品2-1",
+						"price":30.00,
+						"count":1
+					}],
+					"status":"待发货",
+					"actions": ["发货",申请退款"]
 				}]
 			}]
 			"""
@@ -2348,32 +2316,31 @@ Scenario:3 ziying两个供应商商品订单(限时抢购)-微众卡支付(一�
 				"ship_tel":"13811223344",
 				"ship_area": "北京市 北京市 海淀区",
 				"ship_address": "泰兴大厦",
-				"invoice":"--",
+				"invoice":" ",
 				"business_message":"",
 				"methods_of_payment":"优惠抵扣",
 				"group":[{
-					"供货商1":{
-						"order_no":"003-供货商1",
-						"products":[{
-							"name":"商品1-1",
-							"price":50.00,
-							"count":2,
-							"single_save":"直降60.00元"
-						}],
-						"postage": 0.00,
-						"status":"退款成功"
-					},
-					"供货商2":{
-						"order_no":"003-供货商2",
-						"products":[{
-							"name":"商品2-1",
-							"price":30.00,
-							"count":1,
-							"single_save":""
-						}],
-						"postage": 0.00,
-						"status":"待发货"
-					}
+					"order_no":"003-供货商1",
+					"supplier":"供货商1",
+					"products":[{
+						"name":"商品1-1",
+						"price":50.00,
+						"count":2,
+						"single_save":"直降60.00元"
+					}],
+					"postage": 0.00,
+					"status":"退款成功"
+				},{
+					"order_no":"003-供货商2",
+					"supplier":"供货商2",
+					"products":[{
+						"name":"商品2-1",
+						"price":30.00,
+						"count":1,
+						"single_save":""
+					}],
+					"postage": 0.00,
+					"status":"待发货"
 				}],
 				"total_save":"",
 				"weizoom_card":"70.00",
