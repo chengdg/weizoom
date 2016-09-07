@@ -128,7 +128,7 @@ Backgroud:
 			Given 给自营平台同步商品
 				"""
 				{
-					"account":["zy1"],
+					"accounts":["zy1"],
 					"supplier_name":"商家1",
 					"name": "商品1a",
 					"promotion_title": "商品1a促销",
@@ -143,7 +143,7 @@ Backgroud:
 			Given 给自营平台同步商品
 				"""
 				{
-					"account":["zy1"],
+					"accounts":["zy1"],
 					"supplier_name":"商家1",
 					"name": "商品1b",
 					"promotion_title": "商品1b促销",
@@ -158,7 +158,7 @@ Backgroud:
 			Given 给自营平台同步商品
 				"""
 				{
-					"account":["zy1"],
+					"accounts":["zy1"],
 					"supplier_name":"商家2",
 					"name": "商品2a",
 					"promotion_title": "商品2a促销",
@@ -173,7 +173,7 @@ Backgroud:
 			Given 给自营平台同步商品
 				"""
 				{
-					"account":["zy1"],
+					"accounts":["zy1"],
 					"supplier_name":"商家3",
 					"name": "商品3a",
 					"promotion_title": "商品3a促销",
