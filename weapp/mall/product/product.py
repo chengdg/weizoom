@@ -223,23 +223,11 @@ class ProductList(resource.Resource):
         #未回收的商品
         # pdb.set_trace()
         # products = products.order_by(sort_attr)
-        if '-' in sort_attr:
-            sort_attr = sort_attr.replace('-', '')
-            products = sorted(products, key=operator.attrgetter('id'), reverse=True)
-            products = sorted(products, key=operator.attrgetter(sort_attr), reverse=True)
-            sort_attr = '-' + sort_attr
-        else:
-            products = sorted(products, key=operator.attrgetter('id'))
-            products = sorted(products, key=operator.attrgetter(sort_attr))
-        products_is_0 = filter(lambda p: p.display_index == 0, products)
-        products_not_0 = filter(lambda p: p.display_index != 0, products)
-        products_not_0 = sorted(products_not_0, key=operator.attrgetter('display_index'))
-
         if mall_type:
                 current_product_filters = utils.MALL_PRODUCT_FILTERS
         else:
             current_product_filters = utils.PRODUCT_FILTERS
-        #通过has_filter 判断当前填充属性还是在分页后填充属性
+        #通过has_filter 判断当前填充属性还是在分页后填充属性(product_pool_id2product_pool除外，它要进行商品的排序)
         has_filter = utils.search_util.init_filters(request, current_product_filters)
         if has_filter:
             models.Product.fill_details(request.manager, products, {
@@ -252,12 +240,32 @@ class ProductList(resource.Resource):
                 'mall_type': mall_type,
                 'product_pool_id2product_pool': product_pool_id2product_pool
             })
+        else:
+            models.Product.fill_details(request.manager, products, {
+                'mall_type': mall_type,
+                'product_pool_id2product_pool': product_pool_id2product_pool
+            })
 
+
+        if '-' in sort_attr:
+            sort_attr = sort_attr.replace('-', '')
+            products = sorted(products, key=operator.attrgetter('id'), reverse=True)
+            products = sorted(products, key=operator.attrgetter(sort_attr), reverse=True)
+            sort_attr = '-' + sort_attr
+        else:
+            products = sorted(products, key=operator.attrgetter('id'))
+            products = sorted(products, key=operator.attrgetter(sort_attr))
+        products_is_0 = filter(lambda p: p.display_index == 0, products)
+        products_not_0 = filter(lambda p: p.display_index != 0, products)
+        products_not_0 = sorted(products_not_0, key=operator.attrgetter('display_index'))
+
+        if has_filter:
             if mall_type:
                 products = utils.filter_products(request, products_not_0 + products_is_0, mall_type)
             else:
                 products = utils.filter_products(request, products_not_0 + products_is_0)
-
+        else:
+            products = products_not_0 + products_is_0
 
 
         #进行分页
@@ -276,8 +284,7 @@ class ProductList(resource.Resource):
                 'with_image': False,
                 'with_property': True,
                 'with_sales': True,
-                'mall_type': mall_type,
-                'product_pool_id2product_pool': product_pool_id2product_pool
+                'mall_type': mall_type
             })
 
 
