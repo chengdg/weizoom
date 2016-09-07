@@ -91,7 +91,7 @@ Background:
 				"""
 		#设置商家运费
 			#商家1设置运费-满20包邮，否则收取统一运费1元
-			Then 给供货商添加运费配置
+			when 给供货商添加运费配置
 				"""
 				{
 					"supplier_name": "商家1",
@@ -103,7 +103,7 @@ Background:
 			Given 给自营平台同步商品
 				"""
 				{
-					"account":["zy1"],
+					"accounts":["zy1"],
 					"supplier_name":"商家1",
 					"name": "商品1a",
 					"promotion_title": "商品1a促销",
@@ -118,7 +118,7 @@ Background:
 			Given 给自营平台同步商品
 				"""
 				{
-					"account":["zy1"],
+					"accounts":["zy1"],
 					"supplier_name":"商家1",
 					"name": "商品1b",
 					"promotion_title": "商品1b促销",
@@ -133,7 +133,7 @@ Background:
 			Given 给自营平台同步商品
 				"""
 				{
-					"account":["zy1"],
+					"accounts":["zy1"],
 					"supplier_name":"商家2",
 					"name": "商品2a",
 					"promotion_title": "商品2a促销",
@@ -148,7 +148,7 @@ Background:
 			Given 给自营平台同步商品
 				"""
 				{
-					"account":["zy1"],
+					"accounts":["zy1"],
 					"supplier_name":"商家3",
 					"name": "商品3a",
 					"promotion_title": "商品3a促销",
@@ -182,7 +182,7 @@ Background:
 		}]
 		"""
 	#bill购买多个供货商的商品
-		When bill关注zy1的公众号
+		When bill关注zy1的公众号::apiserver
 		When bill访问zy1的webapp::apiserver
 		#10101-微信支付（商品1b(限时抢购、运费)+商品2a+商品3a）
 			When bill购买zy1的商品::apiserver
@@ -273,7 +273,7 @@ Background:
 				}
 				"""
 			And bill使用支付方式'微信支付'进行支付::apiserver
-
+@ztqb
 Scenario:1 ziying自营平台子订单退款（全退现金）
 	Given zy1登录系统
 	When zy1'申请退款'自营订单'10101-商家1'

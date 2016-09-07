@@ -875,3 +875,62 @@ def step_impl(context, action, user, order_code):
     }
     response = context.client.post(url, data)
     bdd_util.assert_api_call_success(response)
+
+@when(u"{user}'申请退款'自营订单'{order_code}'")
+def step_imple(context,user,order_code):
+    url = '/mall2/api/refunding_order/?_method=put'
+    order_id = bdd_util.get_order_by_order_no(order_code).origin_order_id
+    delivery_item_id = bdd_util.get_order_by_order_no(order_code).id
+
+    a = json.loads(context.text)
+    data = {
+        'order_id': order_id,
+        'delivery_item_id': delivery_item_id,
+        'cash': a.get('cash', 0),
+        'weizoom_card_money': a.get('weizoom_card_money', 0),
+        'integral': a.get('integral', 0),
+        'coupon_money': a.get('coupon_money', 0)
+    }
+
+    response = context.client.post(url, data)
+    bdd_util.assert_api_call_success(response)
+
+
+@then(u"{user}获得自营订单'{order_code}'")
+def step_impl(context, user, order_code):
+    order_db_id = bdd_util.get_order_by_order_no(order_code).id
+    response = context.client.get('/mall2/order/?order_id=%d' % order_db_id)
+
+    # 'first_nav_name': FIRST_NAV,
+    # 'second_navs': export.get_mall_order_second_navs(request),
+    # 'second_nav_name': export.ORDER_ALL,
+    # 'mall_type': mall_type,
+    # 'order': order,
+    # 'child_orders': child_orders,
+    # 'child_order_postages': dict([(child.supplier, child.postage) for child in child_orders]),
+    # 'suppliers': suppliers,
+    # 'supplier_stores': supplier_stores,
+    # 'is_order_not_payed': (order.status == ORDER_STATUS_NOT),
+    # 'coupon': coupon,
+    # 'order_operation_logs': order_operation_logs,
+    # 'order_status_logs': order_status_logs,
+    # 'log_count': log_count,
+    # 'show_first': show_first,
+    # 'is_sync': is_sync,
+    # 'is_show_order_status': True if len(supplier_ids) + len(supplier_user_ids) > 1 else False,
+    # 'is_group_buying': is_group_buying,
+    # 'zypt_customer_message_is_str': zypt_customer_message_is_str
+
+    order = response.context['order']
+    child_orders = response.context['child_orders']
+    print('------order',order)
+    print('------child_orders',child_orders)
+    # sub_orders = response.context['sub_orders']
+
+
+    print('------res')
+    print(order)
+
+    print('--------xxx')
+    print(child_orders)
+    assert False

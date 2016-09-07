@@ -149,7 +149,7 @@ def step_impl(context, zy1, product_name):
     bdd_util.assert_api_call_success(response)
 
 
-@then(u'给供货商添加运费配置')
+@when(u'给供货商添加运费配置')
 def step_impl(context):
     context = json.loads(context.text)
     postage = context.get('postage')

@@ -706,27 +706,29 @@ class OrderRefundInfo(resource.Resource):
     """
 
     app = "mall2"
-    resource = "OrderRefundInfo"
+    resource = "refunding_order"
 
     @login_required()
     def api_put(request):
-        order_id = request.POST['order_id']
-        delivery_item_id = request.POST['delivery_item_id']
+        order_id = int(request.POST['order_id'])
+        delivery_item_id = int(request.POST['delivery_item_id'])
 
         sub_order = Order.objects.filter(id=delivery_item_id).first()
 
         if sub_order and sub_order.origin_order_id == order_id and sub_order.webapp_id == request.user_profile.webapp_id:
             pass
         else:
+            print('------yy',sub_order.origin_order_id , order_id)
+            print('-----xxxx',sub_order.webapp_id,request.user_profile.webapp_id)
             response = create_response(500)
             response.data = {'msg': "非法操作，订单状态不允许进行该操作"}
             return response.get_response()
 
-        cash = request.POST.get('cash', 0)
-        weizoom_card_money = request.POST.get('weizoom_card_money', 0)
-        coupon_money = request.POST.get('coupon_money', 0)
+        cash = float(request.POST.get('cash', 0))
+        weizoom_card_money = float(request.POST.get('weizoom_card_money', 0))
+        coupon_money = float(request.POST.get('coupon_money', 0))
 
-        integral = request.POST.get('integral', 0)
+        integral = float(request.POST.get('integral', 0))
 
         integral_each_yuan = IntegralStrategySttings.objects.get(
             webapp_id=request.manager.get_profile().webapp_id).integral_each_yuan

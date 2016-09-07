@@ -172,6 +172,7 @@ def get_order_by_order_no(order_no):
 			order_no = '%s^%su' % (order_no_info[0], UserProfile.objects.get(store_name = order_no_info[1]).user_id)
 		else:
 			order_no = '%s^%ss' % (order_no_info[0], Supplier.objects.get(name = order_no_info[1]).id)
+			print('---------order_no',order_no)
 	return mall_models.Order.objects.get(order_id=order_no)
 
 
