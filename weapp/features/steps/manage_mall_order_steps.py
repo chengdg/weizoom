@@ -920,17 +920,37 @@ def step_impl(context, user, order_code):
     # 'is_show_order_status': True if len(supplier_ids) + len(supplier_user_ids) > 1 else False,
     # 'is_group_buying': is_group_buying,
     # 'zypt_customer_message_is_str': zypt_customer_message_is_str
-
+    expected = json.loads(context.text)
+    #
     order = response.context['order']
     child_orders = response.context['child_orders']
-    print('------order',order)
-    print('------child_orders',child_orders)
-    # sub_orders = response.context['sub_orders']
-
-
-    print('------res')
     print(order)
+    print(child_orders)
+    print(order.products)
+    # print('------child_orders',child_orders)
+    # # sub_orders = response.context['sub_orders']
+    #
+    #
+    # order.order_no = order.order_id
+    #
+    # order.invoice=order.bill
+    # order.business_message=order.remark
+    # order.methods_of_payment = order.pay_interface_name
+    # order.weizoom_card = order.weizoom_card_money
+    #
+    # group = []
+    #
+    # for sub_order in child_orders:
+    #     sub_order.order_no = ''
+
+    final_price = order.final_price
+    order.final_price = order.pay_money
+    order.product_price =order.total_price
+
+    expected.pop('group')
+    expected.pop('status')
+
 
     print('--------xxx')
     print(child_orders)
-    assert False
+    bdd_util.assert_dict(expected, order)
