@@ -3,7 +3,7 @@ import json
 import os
 import re
 import pymongo
-from datetime import datetime
+from bson.objectid import ObjectId
 
 from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
@@ -42,7 +42,7 @@ class Command(BaseCommand):
         #通过pymongo链接新的数据库market_app_data
         connection = pymongo.Connection('mongo.apps.com', 27017)
         db_market_app_data = connection.market_app_data
-        # db_termite = connection.termite
+        db_termite = connection.termite
         try:
             #泡脚本之前先把新数据库中的老数据删除
             db_market_app_data.survey_survey.remove({'is_old': True})
@@ -77,6 +77,12 @@ class Command(BaseCommand):
                     'html': html,
                     'is_old': True
                 })
+
+                #更新page里description中静态资源地址
+                component = db_termite.page.find_one({'_id': ObjectId(related_page_id)})['component']
+                description = component['components'][0]['model']['description']
+                component['components'][0]['model']['description'] = description.replace('/static/', 'http://' + settings.DOMAIN + '/static/')
+                db_termite.page.update({'_id': ObjectId(related_page_id)}, {'$set': {'component': component}})
 
             #构造调研活动related_page_id与活动id映射
             related_page_id2record_id = {str(survey['related_page_id']): str(survey['_id']) for survey in db_market_app_data.survey_survey.find({'is_old': True})}
