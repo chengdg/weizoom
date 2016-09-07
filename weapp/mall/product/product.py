@@ -1202,7 +1202,7 @@ class Product(resource.Resource):
 
         purchase_price = request.POST.get("purchase_price", '')
 
-        if purchase_price == '':
+        if purchase_price == '' or not purchase_price:
             purchase_price = 0
         is_enable_bill = request.POST.get('is_enable_bill', False)
         if is_enable_bill in [True, '1', 'True']:
@@ -1612,7 +1612,7 @@ class Product(resource.Resource):
             else:
                 min_limit = float(min_limit)
             purchase_price = request.POST.get("purchase_price", '')
-            if purchase_price == '':
+            if purchase_price == '' or not purchase_price:
                 purchase_price = 0
             is_enable_bill = request.POST.get('is_enable_bill', False)
             if is_enable_bill in [True, '1', 'True']:
@@ -1653,7 +1653,7 @@ class Product(resource.Resource):
 
             if mall_type == 1:
                 param['supplier'] = request.POST.get("supplier", 0)
-                param['purchase_price'] = request.POST.get("purchase_price", 0)
+                param['purchase_price'] = purchase_price
 
             # 微众商城代码
             # if request.POST.get('weshop_sync', None):

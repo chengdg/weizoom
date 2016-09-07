@@ -85,7 +85,7 @@
 			<div class="form-group ">
 				<label class="control-label fl" for="purchase_price">采购价：</label>
 				<div class="fl">
-					<input type="text" class="form-control w106 ml5" id="purchase_price" name="purchase_price" placeholder="" data-validate="norequire,,require-price,,require-notZero" value="{% if product.purchase_price %}{{ product.purchase_price }}{% endif %}"/>
+					<input type="text" class="form-control w106 ml5" id="purchase_price" name="purchase_price" placeholder="" data-validate="require-price" value="{% if product.purchase_price %}{{ product.purchase_price }}{% endif %}"/>
 					<div class="errorHint"></div>
 				</div>
 			</div>
@@ -128,7 +128,7 @@
 				<div class="form-group ">
 					<label class="control-label fl" for="purchase_price">采购价：</label>
 					<div class="fl">
-						<input type="text" class="form-control w106 ml5" id="purchase_price" name="purchase_price" placeholder="" data-validate="norequire,,require-price" value="{% if product and product.purchase_price%}{{ product.purchase_price }}{% endif %}"/>
+						<input type="text" class="form-control w106 ml5" id="purchase_price" name="purchase_price" placeholder="" data-validate="require-price" value="{% if product and product.purchase_price%}{{ product.purchase_price }}{% endif %}"/>
 						<div class="errorHint"></div>
 					</div>
 				</div>
