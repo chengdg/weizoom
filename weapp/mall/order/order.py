@@ -734,15 +734,15 @@ class OrderRefundInfo(resource.Resource):
 
         total = cash + weizoom_card_money + coupon_money + integral_money
 
-        origin_order = Order.objects.filter(id=order_id).first()
-        if origin_order.refund_money == -1:
-            origin_order.refund_money = total
-        else:
-            origin_order.refund_money += total
-        origin_order.save()
+        # origin_order = Order.objects.filter(id=order_id).first()
+        # if origin_order.refund_money == -1:
+        #     origin_order.refund_money = total
+        # else:
+        #     origin_order.refund_money += total
+        # origin_order.save()
 
-        sub_order.refund_money = total
-        sub_order.save()
+        # sub_order.refund_money = total
+        # sub_order.save()
 
         OrderHasRefund.objects.create(
             origin_order_id=order_id,
@@ -792,10 +792,11 @@ class RefundSuccessfulSubOrder(resource.Resource):
             response.data = {'msg': "非法操作，订单状态不允许进行该操作"}
             return response.get_response()
 
-        order = Order.objects.get(id=order_id)
         sub_order = Order.objects.get(id=delivery_item_id)
         #获取子订单的金额
-        refund_money = sub_order.refund_money
+
+        refund_money = OrderHasRefund.objects.get(delivery_item_id=sub_order.id).total
+        # refund_money = sub_order.refund_money
         #下一步的订单状态：退款成功
         sub_order_target_status = ORDER_STATUS_GROUP_REFUNDED
         #更新母订单的总金额
