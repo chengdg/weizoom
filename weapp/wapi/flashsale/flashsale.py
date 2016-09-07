@@ -88,7 +88,6 @@ class Flashsale(api_resource.ApiResource):
 		group_records = group_models.Group.objects(owner_id=owner.id, status__lte=1)
 		product_id2record = dict([(record.product_id, record) for record in group_records])
 
-		print group_records,product_id2record, "product_id2recordWWWWWWWWWWWWWWWWWWWW"
 
 		result = []
 		for product_info in product_infos:
@@ -102,12 +101,12 @@ class Flashsale(api_resource.ApiResource):
 					if product_id2type.get(product_id):
 						display_name = promotion_models.PROMOTION2TYPE[product_id2type.get(product_id)]["display_name"]
 						result.append({
-							"result": "配置失败，该商品参加过【%s】活动" % display_name
+							"result": "配置失败，该商品正在参加【%s】活动" % display_name
 						})
 					else:
 						if product_id2record.get(product_id):
 							result.append({
-								"result": "配置失败，该商品参加过【团购】活动" #% product_id2record.get(product_id).name
+								"result": "配置失败，该商品正在参加【团购】活动" #% product_id2record.get(product_id).name
 							})
 						else:
 							try:
