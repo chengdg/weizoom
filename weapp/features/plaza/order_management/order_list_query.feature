@@ -91,9 +91,10 @@ Backgroud:
 				"""
 		#设置商家运费
 			#商家1设置运费-满10包邮，否则收取统一运费1元
-			Then 给供货商"商家1"添加运费配置
+			Then 给供货商添加运费配置
 				"""
 				{
+					"supplier_name": "商家1",
 					"postage":1,
 					"condition_money": "10"
 				}

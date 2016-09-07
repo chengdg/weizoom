@@ -94,91 +94,103 @@ Backgroud:
 		#激活微众
 		When test激活卡号'100000001'的卡::weizoom_card
 
-	#创建供货商并同步商品到自营平台zy1
-		Given 创建一个特殊的供货商
-			"""
-			{
-				"supplier_name":"商家1"
-			}
-			"""
-		Given 创建一个特殊的供货商
-			"""
-			{
-				"supplier_name":"商家2"
-			}
-			"""
-		Given 创建一个特殊的供货商
-			"""
-			{
-				"supplier_name":"商家3"
-			}
-			"""
+	#创建供货商、设置商家运费、同步商品
+		#创建供货商
+			Given 创建一个特殊的供货商
+				"""
+				{
+					"supplier_name":"商家1"
+				}
+				"""
+			Given 创建一个特殊的供货商
+				"""
+				{
+					"supplier_name":"商家2"
+				}
+				"""
+			Given 创建一个特殊的供货商
+				"""
+				{
+					"supplier_name":"商家3"
+				}
+				"""
+		#设置商家运费
+			#商家2设置运费-满20包邮，否则收取统一运费1元
+			Then 给供货商添加运费配置
+				"""
+				{
+					"supplier_name": "商家2",
+					"postage":1,
+					"condition_money": "20"
+				}
+				"""
 		#同步商品到自营平台
-		Given 给自营平台同步商品
-			"""
-			{
-				"account":["zy1"],
-				"supplier_name":"商家1",
-				"name": "商品1a",
-				"promotion_title": "商品1a促销",
-				"purchase_price": 9.00,
-				"price": 10.00,
-				"weight": 1,
-				"image": "love.png",
-				"stocks": 100,
-				"detail": "商品1a描述信息"
-			}
-			"""
-		Given 给自营平台同步商品
-			"""
-			{
-				"account":["zy1"],
-				"supplier_name":"商家1",
-				"name": "商品1b",
-				"promotion_title": "商品1b促销",
-				"purchase_price": 19.00,
-				"price": 20.00,
-				"weight": 1,
-				"image": "love.png",
-				"stocks": 200,
-				"detail": "商品1b描述信息"
-			}
-			"""
-		Given 给自营平台同步商品
-			"""
-			{
-				"account":["zy1"],
-				"supplier_name":"商家2",
-				"name": "商品2a",
-				"promotion_title": "商品2a促销",
-				"purchase_price": 9.00,
-				"price": 10.00,
-				"weight": 1,
-				"image": "love.png",
-				"stocks": 100,
-				"detail": "商品2a描述信息"
-			}
-			"""
-		Given 给自营平台同步商品
-			"""
-			{
-				"account":["zy1"],
-				"supplier_name":"商家3",
-				"name": "商品3a",
-				"promotion_title": "商品3a促销",
-				"purchase_price": 9.00,
-				"price": 10.00,
-				"weight": 1,
-				"image": "love.png",
-				"stocks": 100,
-				"detail": "商品3a描述信息"
-			}
-			"""
-		#自营平台从商品池上架商品
-		Given zy1登录系统
-		When zy1上架商品池商品"商品1a"
-		When zy1上架商品池商品"商品2a"
-		When zy1上架商品池商品"商品3a"
+			Given 给自营平台同步商品
+				"""
+				{
+					"account":["zy1"],
+					"supplier_name":"商家1",
+					"name": "商品1a",
+					"promotion_title": "商品1a促销",
+					"purchase_price": 9.00,
+					"price": 10.00,
+					"weight": 1,
+					"image": "love.png",
+					"stocks": 100,
+					"detail": "商品1a描述信息"
+				}
+				"""
+			Given 给自营平台同步商品
+				"""
+				{
+					"account":["zy1"],
+					"supplier_name":"商家1",
+					"name": "商品1b",
+					"promotion_title": "商品1b促销",
+					"purchase_price": 19.00,
+					"price": 20.00,
+					"weight": 1,
+					"image": "love.png",
+					"stocks": 200,
+					"detail": "商品1b描述信息"
+				}
+				"""
+			Given 给自营平台同步商品
+				"""
+				{
+					"account":["zy1"],
+					"supplier_name":"商家2",
+					"name": "商品2a",
+					"promotion_title": "商品2a促销",
+					"purchase_price": 9.00,
+					"price": 10.00,
+					"weight": 1,
+					"image": "love.png",
+					"stocks": 100,
+					"detail": "商品2a描述信息"
+				}
+				"""
+			Given 给自营平台同步商品
+				"""
+				{
+					"account":["zy1"],
+					"supplier_name":"商家3",
+					"name": "商品3a",
+					"promotion_title": "商品3a促销",
+					"purchase_price": 9.00,
+					"price": 10.00,
+					"weight": 1,
+					"image": "love.png",
+					"stocks": 100,
+					"detail": "商品3a描述信息"
+				}
+				"""
+	#自营平台从商品池上架商品
+			Given zy1登录系统
+			When zy1上架商品池商品"商品1a"
+			When zy1上架商品池商品"商品1b"
+			When zy1上架商品池商品"商品2a"
+			When zy1上架商品池商品"商品3a"
 
 	#商品3a-限时抢购活动
 		When zy1创建限时抢购活动
@@ -196,7 +208,7 @@ Backgroud:
 			}]
 			"""
 
-	#bill购买多个供货商的商品（商品1a,2+商品2a,1+商品3a,1）
+	#bill购买多个供货商的商品（101-商品1a,2+商品2a,1+商品3a,1）
 		When bill关注zy1的公众号
 		When bill访问zy1的webapp::apiserver
 		When bill购买zy1的商品::apiserver
@@ -219,7 +231,7 @@ Backgroud:
 			}
 			"""
 		And bill使用支付方式'微信支付'进行支付::apiserver
-	#bill购买单个供货商的商品
+	#bill购买单个供货商的商品(102-商品1a-微信支付;103-商品1a,1+商品1b,1-优惠抵扣（微众卡全额））
 		When bill访问zy1的webapp::apiserver
 		When bill绑定微众卡
 			"""
