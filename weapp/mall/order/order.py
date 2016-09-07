@@ -718,8 +718,6 @@ class OrderRefundInfo(resource.Resource):
         if sub_order and sub_order.origin_order_id == order_id and sub_order.webapp_id == request.user_profile.webapp_id:
             pass
         else:
-            print('------yy',sub_order.origin_order_id , order_id)
-            print('-----xxxx',sub_order.webapp_id,request.user_profile.webapp_id)
             response = create_response(500)
             response.data = {'msg': "非法操作，订单状态不允许进行该操作"}
             return response.get_response()
@@ -758,14 +756,17 @@ class OrderRefundInfo(resource.Resource):
         )
 
         sub_order = Order.objects.get(id=delivery_item_id)
+        current_status = sub_order.status
+        sub_order.status = ORDER_STATUS_REFUNDING
+        sub_order.save()
 
         sub_order_target_status = ORDER_STATUS_REFUNDING
         operation_name = request.user.username
         action_msg = '退款'
-        mall_api.record_status_log(sub_order.order_id, operation_name, sub_order.status, sub_order_target_status)
+        mall_api.record_status_log(sub_order.order_id, operation_name, current_status, sub_order_target_status)
         mall_api.record_operation_log(sub_order.order_id, operation_name, sub_order_target_status)
 
-        mall_api.update_order_status_by_sub_order(sub_order, operation_name,action_msg)
+        mall_api.update_order_status_by_sub_order(sub_order, operation_name, action_msg)
         response = create_response(200)
         response.data = {}
         return response.get_response()
