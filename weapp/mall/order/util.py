@@ -1084,7 +1084,6 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
 
     else:
         if query_dict.get('status') and query_dict.get('status') == ORDER_STATUS_REFUNDING:
-            print('00000000')
             query_dict['status__in'] = [ORDER_STATUS_GROUP_REFUNDING, ORDER_STATUS_REFUNDING]
             query_dict.pop('status')
             order_ids_has_refund_sub_orders = get_order_ids_has_refund_sub_orders(webapp_id, [ORDER_STATUS_REFUNDING], mall_type)
@@ -1726,7 +1725,26 @@ ORDER_REFUND_SUCCESS_ACTION = {
 }
 
 
+def get_actions_for_sub_order(order, is_refund=False):
+    result = []
 
+    if not is_refund:
+        if order.status == ORDER_STATUS_PAYED_NOT_SHIP:  # 待发货
+            result = [ORDER_SHIP_ACTION, ORDER_REFUNDIND_ACTION]
+        elif order.status == ORDER_STATUS_PAYED_SHIPED:  # 已发货
+            result = [ORDER_FINISH_ACTION, ORDER_UPDATE_EXPREDSS_ACTION, ORDER_REFUNDIND_ACTION]
+        elif order.status == ORDER_STATUS_SUCCESSED:  # 已完成
+            result = [ORDER_REFUNDIND_ACTION]
+    else:
+        if order.status == ORDER_STATUS_REFUNDING:
+            result = [ORDER_REFUND_SUCCESS_ACTION]
+
+    return result
+
+
+def get_actions_for_parent_order(order):
+    if order.status == ORDER_STATUS_NOT:
+        return [ORDER_PAY_ACTION, ORDER_CANCEL_ACTION]
 
 
 
@@ -1750,10 +1768,7 @@ def get_order_actions(order, is_refund=False, is_detail_page=False, is_list_pare
     result = []
     if not is_refund:
         if order.status == ORDER_STATUS_NOT:
-            if mall_type:
-                result = [ORDER_PAY_ACTION, ORDER_CANCEL_ACTION]
-            else:
-                result = [ORDER_PAY_ACTION, ORDER_UPDATE_PRICE_ACTION, ORDER_CANCEL_ACTION]
+            result = [ORDER_PAY_ACTION, ORDER_UPDATE_PRICE_ACTION, ORDER_CANCEL_ACTION]
         elif order.status == ORDER_STATUS_PAYED_NOT_SHIP:
             if order.pay_interface_type in [PAY_INTERFACE_ALIPAY, PAY_INTERFACE_TENPAY, PAY_INTERFACE_WEIXIN_PAY, PAY_INTERFACE_BEST_PAY]:
                 result = [ORDER_SHIP_ACTION, ORDER_REFUNDIND_ACTION]
@@ -1800,7 +1815,6 @@ def get_order_actions(order, is_refund=False, is_detail_page=False, is_list_pare
                                              ORDER_FINISH_ACTION]
 
     # 订单列表页有子订单的父母订单
-    # able_actions_for_list_parent = [ORDER_CANCEL_ACTION, ORDER_REFUNDIND_ACTION, ORDER_REFUND_SUCCESS_ACTION]
     able_actions_for_list_parent = [ORDER_CANCEL_ACTION, ORDER_REFUNDIND_ACTION, ORDER_REFUND_SUCCESS_ACTION]
 
     # 同步订单操作
@@ -1826,7 +1840,6 @@ def get_order_actions(order, is_refund=False, is_detail_page=False, is_list_pare
 
     if multi_child_orders:
         result = filter(lambda x: x not in able_actions_for_list_parent, result)
-
     return result
 
 
