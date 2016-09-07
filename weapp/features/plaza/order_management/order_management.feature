@@ -73,23 +73,23 @@ Feature: 自营平台订单管理
 				买家留言：
 			2）发票信息
 				发票抬头：没有发票抬头显示"--"
-			3）商家备注
-				点击编辑按钮可以添加商家备注
+			3）供货商备注
+				点击编辑按钮可以添加供货商备注
 
 		3 物流信息
-			分页签显示不同子订单的不同商家的物流信息，页签名为同步商家名称
+			分页签显示不同子订单的不同供货商的物流信息，页签名为同步供货商名称
 			物流公司名称：发货时填写的物流公司名称
 			运单号：发货时填写的运单号
 			物流信息展示在下面
 
 		4 在物流信息后的最后一个页签"订单操作日志"
 			时间：精确到秒
-			操作：买家和后台对订单的每步操作；不同商家的操作展示成如下格式"XXX-商家名"
-			操作人：客户或者商家名
+			操作：买家和后台对订单的每步操作；不同供货商的操作展示成如下格式"XXX-供货商名"
+			操作人：客户或者供货商名
 
 		5 订单信息
 			1)支付方式：订单的支付方式
-			2)供货商：商品订单对应的商家名称
+			2)供货商：商品订单对应的供货商名称
 			3)商品信息：商品名称和商品图片
 			4)单价(元)/数量：商品的单价（商品的原始单价，不包含任何促销活动）和购买的数量
 			5)单品优惠：显示使用单品积分"XX积分，抵扣XX.XX元"
@@ -120,9 +120,9 @@ Feature: 自营平台订单管理
 			2）订单号：母订单的订单号
 			3）收货人：收货人姓名、电话、地址
 		2 订单商品信息
-			1）商家名称
-			2）本商家子订单状态，放在商家名称后，右对齐
-			3）购买商家的商品列表
+			1）供货商名称
+			2）本供货商子订单状态，放在供货商名称后，右对齐
+			3）购买供货商的商品列表
 				商品信息：商品图片（活动商品标记：积分抵扣、优惠券、赠品）、商品名称、商品售价（原价、限时抢购价、会员价）、购买数量
 				运费：运费信息和金额
 				物流信息：没有物流信息时显示"暂无物流信息"
@@ -141,15 +141,15 @@ Feature: 自营平台订单管理
 Background:
 	Given 重置'weizoom_card'的bdd环境
 	Given 重置'apiserver'的bdd环境
-	Given jobs登录系统
-	Given jobs设定会员积分策略
+	Given zy1登录系统
+	Given zy1设定会员积分策略
 		"""
 		{
 			"integral_each_yuan": 2
 		}
 		"""
-	When jobs开通使用微众卡权限
-	When jobs已添加支付方式
+	When zy1开通使用微众卡权限
+	When zy1已添加支付方式
 		"""
 		[{
 			"type": "货到付款",
@@ -196,7 +196,7 @@ Background:
 		"""
 	And test批量激活订单'0001'的卡::weizoom_card
 
-	When jobs已添加商品规格
+	When zy1已添加商品规格
 		"""
 		[{
 			"name": "尺寸",
@@ -209,50 +209,100 @@ Background:
 		}]
 		"""
 	#所有商品开通所有支付方式
-	When jobs已添加商品
-		"""
-		[{
-			"name": "商品1-1",
-			"supplier": "供货商1",
-			"postage":"满100包邮，否则收取运费10",
-			"price": 50.00,
-			"stock_type": "有限",
-			"stocks": 100
-		},{
-			"name": "商品1-2",
-			"supplier": "供货商1",
-			"postage":"满100包邮，否则收取运费10",
-			"model": {
-				"models": {
-					"M": {
-						"price": 10.00,
-						"stock_type": "有限",
-						"stocks": 100
-					},
-					"S": {
-						"price": 20,
-						"stock_type": "有限"
-						"stocks": 100
-					}
+	#创建供货商、设置供货商运费、同步商品到自营平台
+		#创建供货商
+			Given 创建一个特殊的供货商，就是专门针对商品池供货商
+				"""
+				{
+					"supplier_name":"供货商1"
 				}
-			}
-		},{
-			"name": "商品2-1",
-			"supplier": "供货商2",
-			"price": 30.00,
-			"stock_type": "有限",
-			"stocks": 100
-		},{
-			"name": "商品2-2",
-			"supplier": "供货商2",
-			"price": 20.00,
-			"stock_type": "有限",
-			"stocks": 100
-		}]
-		"""
+				"""
+			Given 创建一个特殊的供货商，就是专门针对商品池供货商
+				"""
+				{
+					"supplier_name":"供货商2"
+				}
+				"""
+		#设置供货商运费
+			#供货商1设置运费-满100包邮，否则收取运费10元
+			When 给供货商添加运费配置
+				"""
+				{
+					"supplier_name": "供货商1",
+					"postage":10,
+					"condition_money": "100"
+				}
+				"""
+		#同步商品到自营平台
+			Given 给自营平台同步商品
+				"""
+				{
+					"accounts":["zy1"],
+					"supplier_name":"供货商1",
+					"name": "商品1-1",
+					"promotion_title": "商品1-2促销",
+					"purchase_price": 40.00,
+					"price": 50.00,
+					"weight": 1,
+					"image": "love.png",
+					"stocks": 100,
+					"detail": "商品1-1描述信息"
+				}
+				"""
+			Given 给自营平台同步商品
+				"""
+				{
+					"account":["zy1"],
+					"supplier_name":"供货商1",
+					"name": "商品1-2",
+					"promotion_title": "商品1-2促销",
+					"purchase_price": 9.00,
+					"price": 10.00,
+					"weight": 1,
+					"image": "love.png",
+					"stocks": 100,
+					"detail": "商品1-2描述信息"
+				}
+				"""
+			Given 给自营平台同步商品
+				"""
+				{
+					"account":["zy1"],
+					"supplier_name":"供货商2",
+					"name": "商品2-1",
+					"promotion_title": "商品2-1促销",
+					"purchase_price": 20.00,
+					"price": 30.00,
+					"weight": 1,
+					"image": "love.png",
+					"stocks": 100,
+					"detail": "商品2-1描述信息"
+				}
+				"""
+			Given 给自营平台同步商品
+				"""
+				{
+					"account":["zy1"],
+					"supplier_name":"供货商2",
+					"name": "商品2-2",
+					"promotion_title": "商品2-2促销",
+					"purchase_price": 19.00,
+					"price": 20.00,
+					"weight": 1,
+					"image": "love.png",
+					"stocks": 100,
+					"detail": "商品2-2描述信息"
+				}
+				"""
+	#自营平台从商品池上架商品
+		Given zy1登录系统
+		When zy1上架商品池商品"商品1-1"
+		When zy1上架商品池商品"商品1-2"
+		When zy1上架商品池商品"商品2-1"
+		When zy1上架商品池商品"商品2-2"
 
 	#创建优惠券活动
-	When jobs添加优惠券规则
+	When zy1添加优惠券规则
 		"""
 		[{
 			"name": "全店通用券1",
@@ -267,7 +317,7 @@ Background:
 		"""
 
 	#创建积分活动
-	When jobs创建积分应用活动
+	When zy1创建积分应用活动
 		"""
 		[{
 			"name": "多商品券",
@@ -280,11 +330,11 @@ Background:
 		}]
 		"""
 
-	Given bill关注jobs的公众号
+	Given bill关注zy1的公众号
 
 	#给会员加积分
-	Given jobs登录系统
-	When jobs给"bill"加积分
+	Given zy1登录系统
+	When zy1给"bill"加积分
 		"""
 		{
 			"integral":500,
@@ -293,9 +343,9 @@ Background:
 		"""
 
 @order @allOrder
-Scenario:1 单个供应商商品订单-微信支付+优惠券(不满足满额包邮)；退现金优惠券
-	Given jobs登录系统
-	When jobs创建优惠券发放规则发放优惠券
+Scenario:1 ziying单个供应商商品订单-微信支付+优惠券(不满足满额包邮)；退现金优惠券
+	Given zy1登录系统
+	When zy1创建优惠券发放规则发放优惠券
 		"""
 		{
 			"name": "全店通用券1",
@@ -304,8 +354,8 @@ Scenario:1 单个供应商商品订单-微信支付+优惠券(不满足满额包
 		}
 		"""
 
-	When bill访问jobs的webapp::apiserver
-	When bill购买jobs的商品::apiserver
+	When bill访问zy1的webapp::apiserver
+	When bill购买zy1的商品::apiserver
 		"""
 		{
 			"order_id":"001",
@@ -366,11 +416,16 @@ Scenario:1 单个供应商商品订单-微信支付+优惠券(不满足满额包
 			"""
 
 		#后台订单列表
-		Given jobs登录系统
-		Then jobs获得自营订单列表
+		Given zy1登录系统
+		Then zy1获得自营订单列表
 			"""
 			[{
 				"order_no":"001",
+				"products":[{
+					"name":"商品1-1",
+					"price":50.00,
+					"count":1
+				}],
 				"methods_of_payment":"微信支付",
 				"order_time":"2016-01-01 10:00:00",
 				"save_money": 10.00,
@@ -383,20 +438,10 @@ Scenario:1 单个供应商商品订单-微信支付+优惠券(不满足满额包
 				"final_price": 50.00,
 				"postage": 10.00,
 				"status":"待支付",
-				"actions": ["支付","取消订单"],
-				"group":[{
-					"供货商1":{
-						"order_no":"001-供货商1",
-						"products":[{
-							"name":"商品1-1",
-							"price":50.00,
-							"count":1
-						}]
-					}
-				}]
+				"actions": ["支付","取消订单"]
 			}]
 			"""
-		Then jobs获得自营订单'001'
+		Then zy1获得自营订单'001'
 			"""
 			{
 				"order_no":"001",
@@ -433,12 +478,12 @@ Scenario:1 单个供应商商品订单-微信支付+优惠券(不满足满额包
 				"final_price": 50.00
 			}
 			"""
-		Then jobs能获得订单'001'操作日志
+		Then zy1能获得订单'001'操作日志
 			| action                  | operator |
 			| 下单                    | 客户     |
 
 	#待发货订单
-		When bill访问jobs的webapp::apiserver
+		When bill访问zy1的webapp::apiserver
 		When bill使用支付方式'微信支付'进行支付订单'001'于'2016-01-02 10:00:00'::apiserver
 
 		#手机端订单列表
@@ -480,8 +525,8 @@ Scenario:1 单个供应商商品订单-微信支付+优惠券(不满足满额包
 			"""
 
 		#后台订单列表
-		Given jobs登录系统
-		Then jobs获得自营订单列表
+		Given zy1登录系统
+		Then zy1获得自营订单列表
 			"""
 			[{
 				"order_no":"001",
@@ -512,7 +557,7 @@ Scenario:1 单个供应商商品订单-微信支付+优惠券(不满足满额包
 				}]
 			}]
 			"""
-		Then jobs获得自营订单'001'
+		Then zy1获得自营订单'001'
 			"""
 			{
 				"order_no":"001",
@@ -548,14 +593,14 @@ Scenario:1 单个供应商商品订单-微信支付+优惠券(不满足满额包
 				"final_price": 50.00
 			}
 			"""
-		Then jobs能获得订单'001'操作日志
+		Then zy1能获得订单'001'操作日志
 			| action                  | operator |
 			| 下单                    | 客户     |
 			| 支付                    | 客户     |
 
 	#退款中
-		Given jobs登录系统
-		When jobs'申请退款'自营订单'001-供货商1'
+		Given zy1登录系统
+		When zy1'申请退款'自营订单'001-供货商1'
 			"""
 			{
 				"cash":10.00,
@@ -567,7 +612,7 @@ Scenario:1 单个供应商商品订单-微信支付+优惠券(不满足满额包
 			"""
 
 		#手机端订单列表
-		When bill访问jobs的webapp::apiserver
+		When bill访问zy1的webapp::apiserver
 		Then bill获得手机端订单列表::apiserver
 			"""
 			[{
@@ -606,8 +651,8 @@ Scenario:1 单个供应商商品订单-微信支付+优惠券(不满足满额包
 			"""
 
 		#后台订单列表
-		Given jobs登录系统
-		Then jobs获得自营订单列表
+		Given zy1登录系统
+		Then zy1获得自营订单列表
 			"""
 			[{
 				"order_no":"001",
@@ -644,7 +689,7 @@ Scenario:1 单个供应商商品订单-微信支付+优惠券(不满足满额包
 				}]
 			}]
 			"""
-		Then jobs获得自营订单'001'
+		Then zy1获得自营订单'001'
 			"""
 			{
 				"order_no":"001",
@@ -680,18 +725,18 @@ Scenario:1 单个供应商商品订单-微信支付+优惠券(不满足满额包
 				"final_price": 50.00
 			}
 			"""
-		Then jobs能获得订单'001'操作日志
+		Then zy1能获得订单'001'操作日志
 			| action                  | operator |
 			| 下单                    | 客户     |
 			| 支付                    | 客户     |
-			| 退款                    | jobs     |
+			| 退款                    | zy1     |
 
 	#退款完成
-		Given jobs登录系统
-		When jobs通过财务审核'退款成功'自营订单'001-供货商1'
+		Given zy1登录系统
+		When zy1通过财务审核'退款成功'自营订单'001-供货商1'
 
 		#手机端订单列表
-		When bill访问jobs的webapp::apiserver
+		When bill访问zy1的webapp::apiserver
 		Then bill获得手机端订单列表::apiserver
 			"""
 			[{
@@ -731,8 +776,8 @@ Scenario:1 单个供应商商品订单-微信支付+优惠券(不满足满额包
 			"""
 
 		#后台订单列表
-		Given jobs登录系统
-		Then jobs获得自营订单列表
+		Given zy1登录系统
+		Then zy1获得自营订单列表
 			"""
 			[{
 				"order_no":"001",
@@ -769,7 +814,7 @@ Scenario:1 单个供应商商品订单-微信支付+优惠券(不满足满额包
 				}]
 			}]
 			"""
-		Then jobs获得自营订单'001'
+		Then zy1获得自营订单'001'
 			"""
 			{
 				"order_no":"001",
@@ -810,18 +855,18 @@ Scenario:1 单个供应商商品订单-微信支付+优惠券(不满足满额包
 				}
 			}
 			"""
-		Then jobs能获得订单'001'操作日志
+		Then zy1能获得订单'001'操作日志
 			| action                  | operator |
 			| 下单                    | 客户     |
 			| 支付                    | 客户     |
-			| 退款                    | jobs     |
-			| 退款完成                | jobs     |
+			| 退款                    | zy1     |
+			| 退款完成                | zy1     |
 
 @order @allOrder
-Scenario:2 两个供应商商品订单-支付宝+积分(一个不满足满额包邮，一个无运费)；退优惠券，积分(积分按照现在的比例)
+Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满额包邮，一个无运费)；退优惠券，积分(积分按照现在的比例)
 
-	When bill访问jobs的webapp::apiserver
-	When bill购买jobs的商品::apiserver
+	When bill访问zy1的webapp::apiserver
+	When bill购买zy1的商品::apiserver
 		"""
 		{
 			"order_id":"002",
@@ -833,7 +878,6 @@ Scenario:2 两个供应商商品订单-支付宝+积分(一个不满足满额包
 			"pay_type": "支付宝",
 			"products":[{
 				"name":"商品1-2",
-				"model": "M",
 				"price":10.00,
 				"count":2,
 				"integral": 20,
@@ -897,8 +941,8 @@ Scenario:2 两个供应商商品订单-支付宝+积分(一个不满足满额包
 			"""
 
 		#后台订单列表
-		Given jobs登录系统
-		Then jobs获得自营订单列表
+		Given zy1登录系统
+		Then zy1获得自营订单列表
 			"""
 			[{
 				"order_no":"002",
@@ -915,27 +959,18 @@ Scenario:2 两个供应商商品订单-支付宝+积分(一个不满足满额包
 				"postage": 10.00,
 				"status":"待支付",
 				"actions": ["支付","取消订单"],
-				"group":[{
-					"供货商1":{
-						"order_no":"002-供货商1",
-						"products":[{
-							"name":"商品1-2",
-							"price":10.00,
-							"count":2
-						}]
-					},
-					"供货商2":{
-						"order_no":"002-供货商2",
-						"products":[{
-							"name":"商品2-2",
-							"price":20.00,
-							"count":1
-						}]
-					}
-				}]
+				"products":[{
+					"name":"商品1-2",
+					"price":10.00,
+					"count":2
+				},{
+					"name":"商品2-2",
+					"price":20.00,
+					"count":1
+				}],
 			}]
 			"""
-		Then jobs获得自营订单'002'
+		Then zy1获得自营订单'002'
 			"""
 			{
 				"order_no":"002",
@@ -983,13 +1018,13 @@ Scenario:2 两个供应商商品订单-支付宝+积分(一个不满足满额包
 				"final_price": 30.00
 			}
 			"""
-		Then jobs能获得订单'001'操作日志
+		Then zy1能获得订单'001'操作日志
 			| action                  | operator |
 			| 下单                    | 客户     |
 
 	#待发货订单
-		When bill访问jobs的webapp::apiserver
-		When bill访问jobs的webapp::apiserver
+		When bill访问zy1的webapp::apiserver
+		When bill访问zy1的webapp::apiserver
 		When bill使用支付方式'支付宝'进行支付订单'002'于'2016-01-03 10:00:00'::apiserver
 
 		#手机端订单列表
@@ -1046,8 +1081,8 @@ Scenario:2 两个供应商商品订单-支付宝+积分(一个不满足满额包
 			"""
 
 		#后台订单列表
-		Given jobs登录系统
-		Then jobs获得自营订单列表
+		Given zy1登录系统
+		Then zy1获得自营订单列表
 			"""
 			[{
 				"order_no":"002",
@@ -1088,7 +1123,7 @@ Scenario:2 两个供应商商品订单-支付宝+积分(一个不满足满额包
 				}]
 			}]
 			"""
-		Then jobs获得自营订单'002'
+		Then zy1获得自营订单'002'
 			"""
 			{
 				"order_no":"002",
@@ -1135,25 +1170,25 @@ Scenario:2 两个供应商商品订单-支付宝+积分(一个不满足满额包
 				"final_price": 30.00
 			}
 			"""
-		Then jobs能获得订单'001'操作日志
+		Then zy1能获得订单'001'操作日志
 			| action                  | operator |
 			| 下单                    | 客户     |
 			| 支付                    | 客户     |
 
 	#已发货
-		Given jobs登录系统
-		When jobs对订单进行发货
+		Given zy1登录系统
+		When zy1对订单进行发货
 			"""
 			{
 				"order_no": "002-供货商1",
 				"logistics": "申通快递",
 				"number": "229388967650",
-				"shipper": "jobs"
+				"shipper": "zy1"
 			}
 			"""
 
 		#手机端订单列表
-		When bill访问jobs的webapp::apiserver
+		When bill访问zy1的webapp::apiserver
 		Then bill获得手机端订单列表::apiserver
 			"""
 			[{
@@ -1209,8 +1244,8 @@ Scenario:2 两个供应商商品订单-支付宝+积分(一个不满足满额包
 			"""
 
 		#后台订单列表
-		Given jobs登录系统
-		Then jobs获得自营订单列表
+		Given zy1登录系统
+		Then zy1获得自营订单列表
 			"""
 			[{
 				"order_no":"002",
@@ -1251,7 +1286,7 @@ Scenario:2 两个供应商商品订单-支付宝+积分(一个不满足满额包
 				}]
 			}]
 			"""
-		Then jobs获得自营订单'002'
+		Then zy1获得自营订单'002'
 			"""
 			{
 				"order_no":"002",
@@ -1298,27 +1333,27 @@ Scenario:2 两个供应商商品订单-支付宝+积分(一个不满足满额包
 				"final_price": 30.00
 			}
 			"""
-		Then jobs能获得订单'002'操作日志
+		Then zy1能获得订单'002'操作日志
 			| action                  | operator |
 			| 下单                    | 客户     |
 			| 支付                    | 客户     |
-			| 订单发货-供应商1        | jobs     |
+			| 订单发货-供应商1        | zy1     |
 
 	#已完成
-		Given jobs登录系统
-		When jobs完成订单'002-供货商1'
-		When jobs对订单进行发货
+		Given zy1登录系统
+		When zy1完成订单'002-供货商1'
+		When zy1对订单进行发货
 			"""
 			{
 				"order_no": "002-供货商2",
 				"logistics": "圆通快递",
 				"number": "22200000000",
-				"shipper": "jobs"
+				"shipper": "zy1"
 			}
 			"""
 
 		#手机端订单列表
-		When bill访问jobs的webapp::apiserver
+		When bill访问zy1的webapp::apiserver
 		Then bill获得手机端订单列表::apiserver
 			"""
 			[{
@@ -1374,8 +1409,8 @@ Scenario:2 两个供应商商品订单-支付宝+积分(一个不满足满额包
 			"""
 
 		#后台订单列表
-		Given jobs登录系统
-		Then jobs获得自营订单列表
+		Given zy1登录系统
+		Then zy1获得自营订单列表
 			"""
 			[{
 				"order_no":"002",
@@ -1416,7 +1451,7 @@ Scenario:2 两个供应商商品订单-支付宝+积分(一个不满足满额包
 				}]
 			}]
 			"""
-		Then jobs获得自营订单'002'
+		Then zy1获得自营订单'002'
 			"""
 			{
 				"order_no":"002",
@@ -1463,23 +1498,23 @@ Scenario:2 两个供应商商品订单-支付宝+积分(一个不满足满额包
 				"final_price": 30.00
 			}
 			"""
-		Then jobs能获得订单'002'操作日志
+		Then zy1能获得订单'002'操作日志
 			| action                  | operator |
 			| 下单                    | 客户     |
 			| 支付                    | 客户     |
-			| 订单发货-供应商1        | jobs     |
-			| 订单完成-供应商1        | jobs     |
-			| 订单发货-供应商2        | jobs     |
+			| 订单发货-供应商1        | zy1     |
+			| 订单完成-供应商1        | zy1     |
+			| 订单发货-供应商2        | zy1     |
 
 	#退款中
-		Given jobs登录系统
-		Given jobs设定会员积分策略
+		Given zy1登录系统
+		Given zy1设定会员积分策略
 			"""
 			{
 				"integral_each_yuan": 3
 			}
 			"""
-		When jobs'申请退款'自营订单'002-供货商1'
+		When zy1'申请退款'自营订单'002-供货商1'
 			"""
 			{
 				"cash":10.00,
@@ -1489,10 +1524,10 @@ Scenario:2 两个供应商商品订单-支付宝+积分(一个不满足满额包
 				"intergal_money":10.00
 			}
 			"""
-		When jobs完成订单'002-供货商2'
+		When zy1完成订单'002-供货商2'
 
 		#手机端订单列表
-		When bill访问jobs的webapp::apiserver
+		When bill访问zy1的webapp::apiserver
 		Then bill获得手机端订单列表::apiserver
 			"""
 			[{
@@ -1548,8 +1583,8 @@ Scenario:2 两个供应商商品订单-支付宝+积分(一个不满足满额包
 			"""
 
 		#后台订单列表
-		Given jobs登录系统
-		Then jobs获得自营订单列表
+		Given zy1登录系统
+		Then zy1获得自营订单列表
 			"""
 			[{
 				"order_no":"002",
@@ -1596,7 +1631,7 @@ Scenario:2 两个供应商商品订单-支付宝+积分(一个不满足满额包
 				}]
 			}]
 			"""
-		Then jobs获得自营订单'002'
+		Then zy1获得自营订单'002'
 			"""
 			{
 				"order_no":"002",
@@ -1642,22 +1677,22 @@ Scenario:2 两个供应商商品订单-支付宝+积分(一个不满足满额包
 				"final_price": 30.00
 			}
 			"""
-		Then jobs能获得订单'002'操作日志
+		Then zy1能获得订单'002'操作日志
 			| action                  | operator |
 			| 下单                    | 客户     |
 			| 支付                    | 客户     |
-			| 订单发货-供应商1        | jobs     |
-			| 完成-供应商1            | jobs     |
-			| 订单发货-供应商2        | jobs     |
-			| 退款-供应商1            | jobs     |
-			| 完成-供应商2            | jobs     |
+			| 订单发货-供应商1        | zy1     |
+			| 完成-供应商1            | zy1     |
+			| 订单发货-供应商2        | zy1     |
+			| 退款-供应商1            | zy1     |
+			| 完成-供应商2            | zy1     |
 
 	#退款完成
-		Given jobs登录系统
-		When jobs通过财务审核'退款成功'自营订单'002-供货商1'
+		Given zy1登录系统
+		When zy1通过财务审核'退款成功'自营订单'002-供货商1'
 
 		#手机端订单列表
-		When bill访问jobs的webapp::apiserver
+		When bill访问zy1的webapp::apiserver
 		Then bill获得手机端订单列表::apiserver
 			"""
 			[{
@@ -1714,8 +1749,8 @@ Scenario:2 两个供应商商品订单-支付宝+积分(一个不满足满额包
 			"""
 
 		#后台订单列表
-		Given jobs登录系统
-		Then jobs获得自营订单列表
+		Given zy1登录系统
+		Then zy1获得自营订单列表
 			"""
 			[{
 				"order_no":"002",
@@ -1762,7 +1797,7 @@ Scenario:2 两个供应商商品订单-支付宝+积分(一个不满足满额包
 				}]
 			}]
 			"""
-		Then jobs获得自营订单'002'
+		Then zy1获得自营订单'002'
 			"""
 			{
 				"order_no":"002",
@@ -1814,21 +1849,21 @@ Scenario:2 两个供应商商品订单-支付宝+积分(一个不满足满额包
 				}
 			}
 			"""
-		Then jobs能获得订单'002'操作日志
+		Then zy1能获得订单'002'操作日志
 			| action                  | operator |
 			| 下单                    | 客户     |
 			| 支付                    | 客户     |
-			| 订单发货-供应商1        | jobs     |
-			| 完成-供应商1            | jobs     |
-			| 订单发货-供应商2        | jobs     |
-			| 退款-供应商1            | jobs     |
-			| 完成-供应商2            | jobs     |
-			| 退款完成-供货商1        | jobs     |
+			| 订单发货-供应商1        | zy1     |
+			| 完成-供应商1            | zy1     |
+			| 订单发货-供应商2        | zy1     |
+			| 退款-供应商1            | zy1     |
+			| 完成-供应商2            | zy1     |
+			| 退款完成-供货商1        | zy1     |
 
 @order @allOrder
-Scenario:3 两个供应商商品订单(限时抢购)-微众卡支付(一个满足满额包邮，一个无运费)
-	Given jobs登录系统
-	When jobs创建限时抢购活动
+Scenario:3 ziying两个供应商商品订单(限时抢购)-微众卡支付(一个满足满额包邮，一个无运费)
+	Given zy1登录系统
+	When zy1创建限时抢购活动
 		"""
 		[{
 			"name": "商品1-1限时抢购",
@@ -1843,8 +1878,8 @@ Scenario:3 两个供应商商品订单(限时抢购)-微众卡支付(一个满�
 		}]
 		"""
 
-	When bill访问jobs的webapp::apiserver
-	When bill购买jobs的商品::apiserver
+	When bill访问zy1的webapp::apiserver
+	When bill购买zy1的商品::apiserver
 		"""
 		{
 			"order_id":"003",
@@ -1929,8 +1964,8 @@ Scenario:3 两个供应商商品订单(限时抢购)-微众卡支付(一个满�
 			"""
 
 		#后台订单列表
-		Given jobs登录系统
-		Then jobs获得自营订单列表
+		Given zy1登录系统
+		Then zy1获得自营订单列表
 			"""
 			[{
 				"order_no":"003",
@@ -1971,7 +2006,7 @@ Scenario:3 两个供应商商品订单(限时抢购)-微众卡支付(一个满�
 				}]
 			}]
 			"""
-		Then jobs获得自营订单'003'
+		Then zy1获得自营订单'003'
 			"""
 			{
 				"order_no":"003",
@@ -2018,14 +2053,14 @@ Scenario:3 两个供应商商品订单(限时抢购)-微众卡支付(一个满�
 				"final_price": 70.00
 			}
 			"""
-		Then jobs能获得订单'001'操作日志
+		Then zy1能获得订单'001'操作日志
 			| action                  | operator |
 			| 下单                    | 客户     |
 			| 支付                    | 客户     |
 
 	#退款中
-		Given jobs登录系统
-		When jobs'申请退款'自营订单'003-供货商1'
+		Given zy1登录系统
+		When zy1'申请退款'自营订单'003-供货商1'
 			"""
 			{
 				"cash":0.00,
@@ -2037,7 +2072,7 @@ Scenario:3 两个供应商商品订单(限时抢购)-微众卡支付(一个满�
 			"""
 
 		#手机端订单列表
-		When bill访问jobs的webapp::apiserver
+		When bill访问zy1的webapp::apiserver
 		Then bill获得手机端订单列表::apiserver
 			"""
 			[{
@@ -2093,8 +2128,8 @@ Scenario:3 两个供应商商品订单(限时抢购)-微众卡支付(一个满�
 			"""
 
 		#后台订单列表
-		Given jobs登录系统
-		Then jobs获得自营订单列表
+		Given zy1登录系统
+		Then zy1获得自营订单列表
 			"""
 			[{
 				"order_no":"003",
@@ -2141,7 +2176,7 @@ Scenario:3 两个供应商商品订单(限时抢购)-微众卡支付(一个满�
 				}]
 			}]
 			"""
-		Then jobs获得自营订单'003'
+		Then zy1获得自营订单'003'
 			"""
 			{
 				"order_no":"003",
@@ -2188,18 +2223,18 @@ Scenario:3 两个供应商商品订单(限时抢购)-微众卡支付(一个满�
 				"final_price": 70.00
 			}
 			"""
-		Then jobs能获得订单'002'操作日志
+		Then zy1能获得订单'002'操作日志
 			| action                  | operator |
 			| 下单                    | 客户     |
 			| 支付                    | 客户     |
-			| 退款-供应商1            | jobs     |
+			| 退款-供应商1            | zy1     |
 
 	#退款完成
-		Given jobs登录系统
-		When jobs通过财务审核'退款成功'自营订单'003-供货商1'
+		Given zy1登录系统
+		When zy1通过财务审核'退款成功'自营订单'003-供货商1'
 
 		#手机端订单列表
-		When bill访问jobs的webapp::apiserver
+		When bill访问zy1的webapp::apiserver
 		Then bill获得手机端订单列表::apiserver
 			"""
 			[{
@@ -2255,8 +2290,8 @@ Scenario:3 两个供应商商品订单(限时抢购)-微众卡支付(一个满�
 			"""
 
 		#后台订单列表
-		Given jobs登录系统
-		Then jobs获得自营订单列表
+		Given zy1登录系统
+		Then zy1获得自营订单列表
 			"""
 			[{
 				"order_no":"003",
@@ -2303,7 +2338,7 @@ Scenario:3 两个供应商商品订单(限时抢购)-微众卡支付(一个满�
 				}]
 			}]
 			"""
-		Then jobs获得自营订单'003'
+		Then zy1获得自营订单'003'
 			"""
 			{
 				"order_no":"003",
@@ -2356,9 +2391,9 @@ Scenario:3 两个供应商商品订单(限时抢购)-微众卡支付(一个满�
 				}
 			}
 			"""
-		Then jobs能获得订单'002'操作日志
+		Then zy1能获得订单'002'操作日志
 			| action                  | operator |
 			| 下单                    | 客户     |
 			| 支付                    | 客户     |
-			| 退款-供应商1            | jobs     |
-			| 退款完成-供货商1        | jobs     |
+			| 退款-供应商1            | zy1     |
+			| 退款完成-供货商1        | zy1     |
