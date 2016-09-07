@@ -1767,11 +1767,20 @@ class ProductPos(resource.Resource):
             pos = int(request.POST.get('pos'))
             mall_type = request.user_profile.webapp_type
 
-            if mall_type and models.ProductPool.objects.filter(woid=request.manager.id, product_id=id).count():
-                obj_bs = models.ProductPool.objects.filter(woid=request.manager.id, display_index=pos)
-                if obj_bs.exists():
-                    obj_bs.update(display_index=0)
-                models.ProductPool.objects.filter(woid=request.manager.id, product_id=id).update(display_index=pos)
+            if mall_type:
+                userprofile_manager = UserProfile.objects.filter(webapp_type=2).first()
+                #将之前该位置的product索引改为0
+                obj_bs = models.ProductPool.objects.filter(woid=request.manager.id, display_index=pos).update(display_index=0)
+                products = models.Product.objects.filter(owner=request.manager, display_index=pos).update(display_index=0)
+
+                #将product为该id的商品的位置改为pos
+                move_products = models.Product.objects.filter(id=id)
+                if move_products:
+                    if move_products[0].owner_id == userprofile_manager.manager_id:
+                        models.ProductPool.objects.filter(woid=request.manager.id, product_id=id).update(display_index=pos)
+                    else:
+                        move_products.update(display_index=pos)
+
             elif request.POST.get('update_type', '') == 'update_pos':
                 product = models.Product.objects.get(id=id)
                 product.move_to_position(pos)
