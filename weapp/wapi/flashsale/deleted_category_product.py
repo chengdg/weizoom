@@ -32,7 +32,7 @@ class DeletedCategoryProduct(api_resource.ApiResource):
 		#商品分组的名称
 		category_name = args.get('category_name', u'')
 		#【微众商城】帐号:weshop,用于测试的帐号devceshi
-		owner = User.objects.get(username='devceshi')
+		owner = User.objects.get(username='weshop')
 		#使得webapp_cache.py能够有user_profile
 		cache.request.user_profile = UserProfile.objects.get(user=owner)
 
