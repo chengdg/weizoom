@@ -4,7 +4,7 @@ import copy
 import json, time
 import logging
 from behave import when, then, given
-from mall.models import ProductCategory, Product, ProductModel
+from mall.models import ProductCategory, Product, ProductModel, ProductLimitZoneTemplate
 from webapp.models import WebApp
 from django.contrib.auth.models import User
 from django.db.models import Q
@@ -679,7 +679,9 @@ def __supplement_product(webapp_owner_id, product):
         "is_enable_cod_pay_interface": True,
         "is_enable_online_pay_interface": True,
         "is_delivery": False,
-        "buy_in_supplier": 0
+        "buy_in_supplier": 0,
+        "limit_zone_type": 0,
+        "limit_zone": 0
     }
     # 支付方式
     pay_interface_online, pay_interface_cod = __pay_interface(
@@ -784,6 +786,16 @@ def __supplement_product(webapp_owner_id, product):
             product_prototype['stock_type'] = mall_models.PRODUCT_STOCK_TYPE_LIMIT
             product_prototype['stocks'] = product.get('stocks', '0')
     product_prototype['market_price'] = product_prototype['market_price']
+    limit_zone_type = product.get('limit_zone_type', None)
+    if limit_zone_type:
+        limit_type = limit_zone_type.keys()[0]
+        limit_zone_template_name = limit_zone_type[limit_type]['limit_zone']
+        limit_zone = ProductLimitZoneTemplate.objects.filter(name=limit_zone_template_name).first().id
+        if limit_type == u'禁售地区':
+            product_prototype['limit_zone_type'] = 1
+        elif limit_type == u'仅售地区':
+            product_prototype['limit_zone_type'] = 2
+        product_prototype['limit_zone'] = limit_zone
     return product_prototype
 
 
