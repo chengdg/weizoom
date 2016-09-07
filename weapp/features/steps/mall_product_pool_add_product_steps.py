@@ -31,14 +31,14 @@ STATUS2ACTION = {
 }
 
 
-@given(u"给{zy1}, {zy2}两个自营平台同步商品，供货商是-{supplier_name}")
-def step_impl(context, zy1, zy2, supplier_name):
+@given(u"给自营平台同步商品")
+def step_impl(context):
 
     context = json.loads(context.text)
     # print 'context %s' % context
     # print 'zy2 %s' % zy2
     # print 'zy1 %s' % zy1
-
+    supplier_name = context.get('supplier_name')
     EAGLET_CLIENT_ZEUS_HOST = 'api.zeus.com'
     ZEUS_SERVICE_NAME = 'zeus'
     supplier = Supplier.objects.filter(name=supplier_name).first()
@@ -67,7 +67,7 @@ def step_impl(context, zy1, zy2, supplier_name):
         }
     )
     if resp and resp.get('code') == 200:
-        auth_users = User.objects.filter(username__in=[zy1, zy2])
+        auth_users = User.objects.filter(username__in=context.get('accounts'))
         user_ids = [user.id for user in auth_users]
         weapp_product_id = resp.get('data').get('product').get('id')
         # pool_params = {}
@@ -88,30 +88,48 @@ def step_impl(context, zy1, zy2, supplier_name):
         assert False
 
 
-@given(u'创建一个特殊的供货商叫-{supplier_name}')
-def step_impl(context, supplier_name):
+@given(u'创建一个特殊的供货商，就是专门针对商品池供货商')
+def step_impl(context):
+    context = json.loads(context.text)
+    supplier_name = context.get('supplier_name')
     pool_account = UserProfile.objects.filter(webapp_type=2).first()
     if pool_account:
-        Supplier.objects.create(owner_id=pool_account.user_id,
-                                 name=supplier_name,
-                                 supplier_tel=u'',
-                                 supplier_address=u'',
-                                 remark=u'商品池测试供货商')
-        assert True
+        params = {
+            'name': supplier_name,
+            'responsible_person': 'money',
+            'supplier_tel': '110',
+            'supplier_address': '北京'
+        }
+        #
+        resp = Resource.use('zeus', 'api.zeus.com').put(
+            {
+                'resource': 'mall.supplier',
+                'data': params
+            }
+        )
+        if resp and resp.get('code') == 200:
+
+            assert True
+        else:
+            assert False
     else:
         assert False
 
 
-@then(u"可以查到一个叫-{supplier_name}-的供货商")
-def step_impl(context, supplier_name):
+@then(u"可以查到该供货商")
+def step_impl(context):
+    context = json.loads(context.text)
+    supplier_name = context.get('supplier_name')
     suppliers = Supplier.objects.filter(name=supplier_name, is_delete=False)
     assert suppliers.count() > 0
 
 
-@then(u'{zy1},{zy2}可以查看到商品里有一个商品叫-{product_name}')
-def step_impl(context, zy1, zy2, product_name):
-    
-    user = User.objects.get(username=zy1)
+@then(u'自营平台可以在商品池看到该商品')
+def step_impl(context):
+    context = json.loads(context.text)
+    accounts = context.get('accounts')
+    user = User.objects.get(username=accounts[0])
+    product_name = context.get('product_name')
     products = Product.objects.filter(name=product_name)
     product_ids = [p.id for p in products]
 
@@ -131,10 +149,11 @@ def step_impl(context, zy1, product_name):
     bdd_util.assert_api_call_success(response)
 
 
-@then(u'给供货商"{supplier_name}"添加运费配置')
-def step_impl(context, supplier_name):
+@then(u'给供货商添加运费配置')
+def step_impl(context):
     context = json.loads(context.text)
     postage = context.get('postage')
+    supplier_name = context.get('supplier_name')
     condition_money = context.get('condition_money')
     supplier = Supplier.objects.filter(name=supplier_name).first()
     if not supplier:
