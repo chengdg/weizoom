@@ -420,10 +420,7 @@ Scenario:5 向分类中添加商品排序
 #editor:李娜 2016.09.07 补充运营人员查看在售待售商品列表可查看分组信息，及编辑分组按钮
 @mall2 @product @group @ProductList  @mall.product_category @mall
 Scenario:6 商品列表查询
-	When jobs设置商品查询条件
-		"""
-			{}
-		"""
+	Given jobs登录系统
 	Then jobs能获得'待售'商品列表
 		|  name     |   categories     | price    |  stocks  |   operate  |
 		|  水晶虾仁 |                  |   3.00   |    3     |   编辑分组 |
