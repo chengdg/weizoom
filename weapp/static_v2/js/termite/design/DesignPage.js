@@ -195,16 +195,21 @@ W.design.DesignPage = Backbone.View.extend({
 	},
 
 	insertComponentNode: function(component, $componentNode) {
+
 		$componentNode.find('a').attr('href', 'javascript:void(0);');
 		var $existedComponentNode = $('[data-cid="'+component.cid+'"]');
 		if ($existedComponentNode.length > 0) {
 			$existedComponentNode.eq(0).empty().append($componentNode.children());
 
-			//this.coverManager.refresh();
+
 			this.onSelectWidget(component.cid, {autoScroll:true, forceUpdatePropertyView:true});
 
 			var height = document.body.clientHeight;
 			W.Broadcaster.trigger('designpage:resize', height);
+
+			// 异步处理
+			W.initAsyncComponent(component.cid);
+
 		} else {
 			var prevComponent = this.page.getPrevComponentOf(component);
 			if (prevComponent) {
@@ -228,6 +233,7 @@ W.design.DesignPage = Backbone.View.extend({
 			var height = document.body.clientHeight;
 			W.Broadcaster.trigger('designpage:resize', height);
 		}
+
 	},
 
 	/**

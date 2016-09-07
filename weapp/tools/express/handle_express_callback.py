@@ -202,7 +202,8 @@ class ExpressCallbackHandle(object):
 		# 获取 改 快递公司 与 快递单号 对应的order
 		orders = self.get_orders()
 		if orders.count() == 0:
-			return self.error_json(u'该订单的状态不是已发货或待发货！')
+			# return self.error_json(u'该订单的状态不是已发货或待发货！')
+			return self.success_json()  #接收到推送后返回success
 
 		# 修改订单的状态
 		is_update_success = self.update_order_status(json, orders)

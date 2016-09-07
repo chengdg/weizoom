@@ -570,22 +570,22 @@ def get_pids(woid):
 
 def get_product_ids_by_classification(first_classification, secondary_classification, woid, product_pool_param={}):
     if secondary_classification == -1:
-        subclassification_ids = [model.id for model in models.Classification.objects.filter(father_id=first_classification, level=2)]
-        product_ids = [model.product_id for model in models.ClassificationHasProduct.objects.filter(
+        subclassification_ids = models.Classification.objects.filter(father_id=first_classification, level=2).values_list('id' ,flat=True)
+        product_ids = models.ClassificationHasProduct.objects.filter(
                                 classification_id__in=subclassification_ids
-                                )]
+                                ).values_list('product_id', flat=True)
     elif secondary_classification > 0:
-        product_ids = [model.product_id for model in models.ClassificationHasProduct.objects.filter(
+        product_ids = models.ClassificationHasProduct.objects.filter(
                                 classification_id=secondary_classification
-                                )]
+                                ).values_list('product_id', flat=True)
     else:
         product_ids = []
     if product_pool_param.has_key('status'):
         pool_status = product_pool_param['status']
     else:
         pool_status = models.PP_STATUS_ON_POOL
-    product_ids = [model.product_id for model in models.ProductPool.objects.filter(
+    product_ids = models.ProductPool.objects.filter(
         woid=woid,
         product_id__in=product_ids,
-        status=pool_status)]
+        status=pool_status).values_list('product_id', flat=True)
     return product_ids

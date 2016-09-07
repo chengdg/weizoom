@@ -862,3 +862,16 @@ def step_impl(context, user):
     # context.query_params = query_params
     # context.execute_steps(u"Then %s可以看到订单列表" % user)
     pass
+
+@when(u"{user}通过财务审核'{action}'自营订单'{order_code}'")
+def step_impl(context, action, user, order_code):
+    url = '/mall2/api/refund_successful_sub_order/'
+    order_id = bdd_util.get_order_by_order_no(order_code).origin_order_id
+    delivery_item_id = bdd_util.get_order_by_order_no(order_code).id
+    
+    data = {
+        'order_id': order_id,
+        'delivery_item_id': delivery_item_id
+    }
+    response = context.client.post(url, data)
+    bdd_util.assert_api_call_success(response)

@@ -6,7 +6,7 @@ from datetime import datetime
 from django.db import models
 from django.contrib.auth.models import User
 
-from mall.models import Product
+from mall.models import Product, ProductPool
 from modules.member.models import Member
 
 DEFAULT_DATETIME = datetime.strptime('2000-01-01', '%Y-%m-%d')
@@ -153,11 +153,24 @@ class Promotion(models.Model):
 		id2promotion = dict([(promotion.id, promotion) for promotion in promotions])
 		promotion_ids = [promotion.id for promotion in promotions]
 		product_ids = [relation.product_id for relation in ProductHasPromotion.objects.filter(promotion_id__in=promotion_ids)]
+		if webapp_owner:
+			product_pool_id2product_pool = dict([(pool.product_id, pool) for pool in ProductPool.objects.filter(woid=webapp_owner.id,product_id__in=product_ids)])
+		else:
+			product_pool_id2product_pool = {}
 		products = list(Product.objects.filter(id__in=product_ids))
+	
+
+		if product_pool_id2product_pool:
+			mall_type = 1
+		else:
+			mall_type = 0
+
 		Product.fill_details(webapp_owner, products, {
 			'with_product_model': True,
 			"with_model_property_info": True,
-			'with_sales': True
+			'with_sales': True,
+			'mall_type': mall_type,
+			'product_pool_id2product_pool': product_pool_id2product_pool
 		})
 		id2product = dict([(product.id, product) for product in products])
 

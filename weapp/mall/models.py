@@ -730,6 +730,15 @@ class Product(models.Model):
 					pool = product_pool_id2product_pool.get(product.id, None)
 					if pool:
 						product.display_index = pool.display_index
+						if pool.status == PP_STATUS_ON:
+							product._status = u'在售'
+						elif pool.status == PP_STATUS_OFF:
+							product._status = u'待售'
+						elif pool.status == PP_STATUS_DELETE:
+							product._status = u'已删除'
+						else:
+							product._status = u'商品池中'
+
 
 
 		if options.get('with_product_model', False):
@@ -1601,7 +1610,7 @@ class Order(models.Model):
 	is_first_order = models.BooleanField(default=False) # 是否是用户的首单
 	supplier_user_id = models.IntegerField(default=0) # 订单供货商user的id，用于系列拆单
 	total_purchase_price = models.FloatField(default=0)  # 总订单采购价格
-	refund_money = models.FloatField(default=0)     # 订单的退款金额
+	# refund_money = models.FloatField(default=-1)     # 订单的退款金额
 
 	class Meta(object):
 		db_table = 'mall_order'
@@ -1916,7 +1925,7 @@ class OrderPaymentInfo(models.Model):
 
 
 class OrderHasRefund(models.Model):
-	order_id = models.IntegerField(default=0)  # 原始订单id，用于微众精选拆单
+	origin_order_id = models.IntegerField(default=0)  # 原始订单id，用于微众精选拆单
 	delivery_item_id = models.IntegerField(default=0)  # 对应子订单主键id
 	cash = models.FloatField(default=0.0)
 	weizoom_card_money = models.FloatField(default=0.0)  # 微众卡抵扣金额
@@ -2782,7 +2791,7 @@ class Supplier(models.Model):
 	supplier_address = models.CharField(max_length=256) # 供货商地址
 	remark = models.CharField(max_length=256) # 备注
 	is_delete = models.BooleanField(default=False)  # 是否已经删除
-	type = models.IntegerField(SUPPLIER_TYPE_NORMAL)# 是否55分  0 55分成
+	type = models.IntegerField(default=SUPPLIER_TYPE_NORMAL)# 是否55分  0 55分成
 	created_at = models.DateTimeField(auto_now_add=True)  # 添加时间
 
 	class Meta(object):
