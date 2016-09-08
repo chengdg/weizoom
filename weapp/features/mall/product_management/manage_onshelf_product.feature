@@ -528,6 +528,41 @@ Scenario:5 在商品列表编辑分组信息
 				}
 			},
 			"actions": ["修改", "下架", "彻底删除","编辑分组"]
+		}, {
+			"name": "叫花鸡",
+			"is_enable_model": "启用规格",
+			"categories": ["分类1"],
+			"model": {
+				"models": {
+					"黑色 M": {
+						"user_code": "2",
+						"price": 8.10,
+						"stock_type": "有限",
+						"stocks": 3
+					},
+					"白色 M": {
+						"user_code": "3",
+						"price": 8.20,
+						"stock_type": "有限",
+						"stocks": 2
+					}
+				}
+			},
+			"actions": ["修改", "下架", "彻底删除","编辑分组"]
+		}, {
+			"name": "东坡肘子",
+			"is_enable_model": "不启用规格",
+			"categories": ["分类1", "分类2", "分类3"],
+			"model": {
+				"models": {
+					"standard": {
+						"user_code": "1",
+						"price": 11.00,
+						"stock_type": "无限"
+					}
+				}
+			},
+			"actions": ["修改", "下架", "彻底删除","编辑分组"]
 		}]
 		"""
 	And jobs可以获得分类列表
@@ -569,7 +604,7 @@ Scenario:5 在商品列表编辑分组信息
 		[{
 			"name": "水晶虾仁",
 			"is_enable_model": "启用规格",
-			"categories": [],
+			"categories": ["分类1"],
 			"model": {
 				"models": {
 					"白色 M": {
