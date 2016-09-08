@@ -945,7 +945,6 @@ def step_impl(context, user, order_code):
         sub_orders.append(sub_order)
 
     _products = []
-    print('---------------------x',order.refund_info)
     order.refund_details = {
         'cash':order.refund_info['total_cash'],
         'weizoom_card':order.refund_info['total_weizoom_card_money'],

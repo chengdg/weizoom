@@ -296,7 +296,7 @@
                   {% endif %}
                   {% if product.supplier %}
                     {% ifchanged product.supplier %}
-                        <td rowspan="{{product.supplier_length}}" style="text-align:center;border-right:1px solid #ddd;" width="80">{{ product.supplier_name }}</td>
+                        <td rowspan="{{product.supplier_length}}" style="text-align:center;border-right:1px solid #ddd;" width="80">{{ product.supplier_name }} .x {{ product.refund_info }}</td>
                     {% endifchanged %}
                   {% endif %}
               {% endif %}
