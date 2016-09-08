@@ -44,6 +44,8 @@ W.view.mall.MallProductUpdateCategoriesView = W.view.common.DropBox.extend({
         var resource ;
         if(_this.productId !== undefined){
             resource = 'update_product_category';
+        } else {
+            resource = 'batch_update_product_category';
         }
 
         var productIds = _this.productIds ? _this.productIds.join(',') : undefined;

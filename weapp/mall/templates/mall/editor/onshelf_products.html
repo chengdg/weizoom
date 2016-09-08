@@ -260,7 +260,7 @@ $(document).ready(function() {
 	view.render();
 	$(document).delegate('.xa-edit-categories', 'click', function (event) {
 	var $el = $(event.currentTarget);
-	var dataView = $('[data-ui-role="advanced-table"]').data('view');
+	var dataView = $('[data-ui-role="products-advanced-table"]').data('view');
 	var productId = $el.parents('tr').data('id');
 	var selectedIds = $el.data('categories').map(function(item){return item.id;});
 	var mallProductUpdateCategoriesView = W.getMallProductUpdateCategoriesView({
