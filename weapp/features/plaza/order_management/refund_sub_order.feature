@@ -184,7 +184,7 @@ Background:
 	#bill购买多个供货商的商品
 		When bill关注zy1的公众号::apiserver
 		When bill访问zy1的webapp::apiserver
-		#10101-微信支付（商品1b(限时抢购、运费)+商品2a+商品3a）
+		#10101-微信支付（商品1b(限时抢购)+商品2a+商品3a）
 			When bill购买zy1的商品::apiserver
 				"""
 				{
@@ -419,7 +419,7 @@ Scenario:3 ziying自营平台子订单退款（全退优惠券、全退积分、
 		{
 			"cash":0.00,
 			"weizoom_card":0.00,
-			"coupon_money":16.00,
+			"coupon_money":15.00,
 			"intergal":0,
 			"intergal_money":0.00
 		}
@@ -464,9 +464,9 @@ Scenario:3 ziying自营平台子订单退款（全退优惠券、全退积分、
 							"name":"商品1b",
 							"price":20.00,
 							"count":1,
-							"single_save":"直降5.00元"
+							"single_save":"5.00"
 							}],
-						"postage": 1.00,
+						"postage": 0.00,
 						"status":"退款中"
 					},{
 						"order_no":"10101-商家2",
@@ -495,10 +495,10 @@ Scenario:3 ziying自营平台子订单退款（全退优惠券、全退积分、
 				"weizoom_card":"",
 				"products_count":3,
 				"total_price": 40.00,
-				"postage": 1.00,
+				"postage": 0.00,
 				"save_money":-5.00,
-				"cash":36.00,
-				"final_price": 36.00
+				"cash":35.00,
+				"final_price": 35.00
 			}
 			"""
 
