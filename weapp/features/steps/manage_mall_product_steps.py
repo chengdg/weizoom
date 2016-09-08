@@ -628,6 +628,12 @@ def __get_product_from_web_page(context, product_name):
         actual['model']['models'] = models
         actual['price'] = models['standard']['price']
         actual['weight'] = models['standard']['weight']
+    if product.limit_zone_type:
+        limit_zone_type_name = u'禁售地区' if product.limit_zone_type == 1 else u'仅售地区'
+        limit_zone_template_name = mall_models.ProductLimitZoneTemplate.objects.get(id=product.limit_zone).name
+        actual['limit_zone_type'] = {limit_zone_type_name: {'limit_zone': limit_zone_template_name}}
+    else:
+        actual['limit_zone_type'] = u"无限制"
 
     return actual
 
@@ -681,7 +687,7 @@ def __supplement_product(webapp_owner_id, product):
         "is_delivery": False,
         "buy_in_supplier": 0,
         "limit_zone_type": 0,
-        "limit_zone": 0
+        "limit_zone_template": 0
     }
     # 支付方式
     pay_interface_online, pay_interface_cod = __pay_interface(
@@ -795,7 +801,7 @@ def __supplement_product(webapp_owner_id, product):
             product_prototype['limit_zone_type'] = 1
         elif limit_type == u'仅售地区':
             product_prototype['limit_zone_type'] = 2
-        product_prototype['limit_zone'] = limit_zone
+        product_prototype['limit_zone_template'] = limit_zone
     return product_prototype
 
 
