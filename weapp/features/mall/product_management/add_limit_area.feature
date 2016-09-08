@@ -13,7 +13,7 @@ Feature: 添加限定区域配置
 		商品详情页面的限定区域，只能查看不可做任何修改，限定区域数据是由商品管理系统配置
 	"""
 
-@product_limit_area @eugene
+@mall2 @product_limit_area @eugene
 Scenario:1 添加限定区域配置
 	Jobs添加"限定区域配置"
 	1. jobs能获得限定区域配置列表

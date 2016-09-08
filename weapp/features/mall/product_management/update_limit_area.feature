@@ -39,7 +39,7 @@ Background:
 		}
 		"""
 
-@product_limit_area @eugene
+@mall2 @product_limit_area @eugene
 Scenario:1 更新限定区域配置
 	Jobs更新"限定区域配置"
 	1. jobs能获得更新后的限定区域列表

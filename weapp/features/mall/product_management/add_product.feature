@@ -630,7 +630,7 @@ Scenario:8 添加新商品,不支持开票
 		}
 		"""
 
-@product_limit_area @eugene
+@mall2 @product_limit_area @eugene
 #根据需求后续添加-冯雪静
 Scenario:9 添加新商品,禁售地区和仅售地区
 	1.商品添加禁售地区，这些地区不支持售卖
