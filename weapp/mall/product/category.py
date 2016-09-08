@@ -404,7 +404,7 @@ class Category(resource.Resource):
             category_ROA_utils.sorted_products(mall_type,request.manager.id, product_categories, True)
             items = []
             for product in product_categories[0].products:
-                category_has_products = mall_models.CategoryHasProduct.objects.filter(product_id=product.id).order_by('category__created_at')
+                category_has_products = mall_models.CategoryHasProduct.objects.filter(product_id=product.id).order_by('category__id')
                 category_list = []
                 for category_has_product in category_has_products:
                     category_list.append({
