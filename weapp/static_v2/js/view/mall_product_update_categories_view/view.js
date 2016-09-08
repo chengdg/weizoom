@@ -26,36 +26,45 @@ W.view.mall.MallProductUpdateCategoriesView = W.view.common.DropBox.extend({
     },
     
     onClickSubmit: function(event) {
+
         var categoryIds = this.$content.find('.xa-categories-list input:checked').map(function (i,el) {
             return $(el).data('id');
         }).toArray();
-        if(!categoryIds.length){
+        if(!this.isSingleModel && !categoryIds.length){
             W.showHint('error', "请选择至少一个分类");
             return;
         }
 
-        this.submitSendApi( categoryIds)
+        this.submitSendApi(categoryIds)
     },
 
     submitSendApi: function(categoryIds){
         this.hide();
         var _this = this;
         var resource ;
-        if(_this.productId){
+        if(_this.productId !== undefined){
             resource = 'update_product_category';
         }
-        var productIds = _this.productIds || [];
+
+        var productIds = _this.productIds ? _this.productIds.join(',') : undefined;
         var productId = _this.productId;
+        var args = {
+                product_id:productId,
+                product_ids: productIds,
+                category_ids: categoryIds.join(','),
+        };
+
+        for(var k in args){
+            if(args[k] === undefined){
+               delete args[k];
+            }
+        }
         W.getApi().call({
             app: 'mall2',
             resource: resource,
             scope: this,
             method: 'post',
-            args: {
-                product_id:productId,
-                product_ids: productIds.join(','),
-                category_ids: categoryIds.join(','),
-            },
+            args: args,
             success: function(data) {
                 if (_this.dataView){
                     _this.dataView.reload();
@@ -81,18 +90,15 @@ W.view.mall.MallProductUpdateCategoriesView = W.view.common.DropBox.extend({
             selectedIdMap[id] = true;
         });
         this.getCategoriesData(function (items) {
-             _this.$content.html($.tmpl(_this.getTemplate(), {items:items,selectedIdMap:selectedIdMap}));
+            var context =  {items:items,selectedIdMap:selectedIdMap};
+             context.isSingleModel = _this.isSingleModel;
+             _this.$content.html($.tmpl(_this.getTemplate(), context));
         });
 
     },
     getCategoriesData:function (callback) {
           var _this = this;
-
-          // if(_this.items){
-          //     callback(_this.items);
-          //     return;
-          // }
-
+          var hiddenCategoryMap = this.hiddenCategoryMap;
           W.getApi().call({
             app: 'mall2',
             resource: 'categories',
@@ -102,8 +108,11 @@ W.view.mall.MallProductUpdateCategoriesView = W.view.common.DropBox.extend({
                 count_per_page: 1000000000,
             },
             success: function(data) {
-                _this.items = data.items;
-                callback(data.items);
+                var items = data.items.filter(function (item) {
+                    return !hiddenCategoryMap[item.id];
+                });
+                _this.items = items;
+                callback(items);
             },
             error: function(resp) {
                 W.showHint('error', '获取分组信息失败');
@@ -120,6 +129,8 @@ W.view.mall.MallProductUpdateCategoriesView = W.view.common.DropBox.extend({
         this.selectedIds = options.selectedIds;
         this.productIds = options.productIds;
         this.productId = options.productId;
+        this.hiddenCategoryMap = options.hiddenCategoryMap || {}; // {id:true}
+        this.isSingleModel = this.productId !== undefined;
     },
 });
 
