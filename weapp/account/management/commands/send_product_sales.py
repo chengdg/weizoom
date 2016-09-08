@@ -3,7 +3,7 @@
 import logging
 from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
-
+from django.db.models import Sum, F
 #邮件部分
 from core.sendmail import sendmail
 
@@ -44,7 +44,7 @@ class Command(BaseCommand):
 			file_path = 'product_pool_sales.xlsx'
 			workbook   = xlsxwriter.Workbook(file_path)
 			table = workbook.add_worksheet()
-			alist = [u'商品', u'供货商', u'分类', u'销量', u'微众卡', u'微众优惠券', u'微众积分', u'现金', u'总金额']
+			alist = [u'商品', u'供货商', u'分类', u'当月销量数量', u'当月销量金额', u'累计销售数量', u'累计销售金额']
 			table.write_row('A1',alist)
 			pool_weapp_profile = UserProfile.objects.filter(webapp_type=2).first()
 			owner_pool = User.objects.get(id=pool_weapp_profile.user_id)
@@ -87,23 +87,17 @@ class Command(BaseCommand):
 				total = 0.0
 
 				order_has_products = OrderHasProduct.objects.filter(product_id=product_id, order__origin_order_id__lte=0, order__status__in=sales_order_status, order__payment_time__gte=first_day)
-				for order_has_product in order_has_products:
-					product_sales += order_has_product.number
-					weizoom_card += order_has_product.order.weizoom_card_money
-					if order_has_product.order.coupon_money > 0:
-						coupon =  Coupon.objects.get(id=order_has_product.order.coupon_id)
-						if coupon.coupon_rule.limit_product:
-							product_ids = coupon.coupon_rule.limit_product_id.split(',')
-							if product_id in product_ids:
-								coupon_money += order_has_product.order.coupon_money
-						else:
-							coupon_money += order_has_product.order.coupon_money
+				product_sales = order_has_products.aggregate(Sum('number'))['number__sum']
+				product_sales = product_sales if product_sales else 0
+				product_price_sum = order_has_products.aggregate(Sum('total_price'))['total_price__sum']
+				product_price_sum = product_price_sum if product_price_sum else 0.0
 
-					integral_money += order_has_product.order.integral_money
-					cash += order_has_product.order.final_price
-					total += order_has_product.price* order_has_product.number
-
-				tmp_list = [product_name, supplier_name_export, product_id2classification.get(product_id,''), product_sales, round(weizoom_card, 2), round(coupon_money,2), round(integral_money,2) , round(cash,2), round(total,2)]
+				all_order_has_products = OrderHasProduct.objects.filter(product_id=product_id, order__origin_order_id__lte=0, order__status__in=sales_order_status)
+				all_product_sales = all_order_has_products.aggregate(Sum('number'))['number__sum']
+				all_product_sales = all_product_sales if all_product_sales else 0
+				all_product_sum = all_order_has_products.aggregate(Sum('total_price'))['total_price__sum']
+				all_product_sum = all_product_sum if all_product_sum else 0.0
+				tmp_list = [product_name, supplier_name_export, product_id2classification.get(product_id,''), product_sales, round(product_price_sum,2), all_product_sales, round(all_product_sum,2)]
 				table.write_row('A{}'.format(tmp_line),tmp_list)
 
 			workbook.close()
