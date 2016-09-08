@@ -329,3 +329,302 @@ Scenario:3 修改商品价格
 			"stocks": 2
 		}]
 		"""
+
+#editor:李娜 2016.09.07 补充运营人员查看在售待售商品列表可查看分类信息,及编辑分类按钮
+@mall2 @product @group @ProductList  @mall.product_category @mall
+Scenario:4 商品列表查看分类信息
+	Given jobs登录系统
+	Then jobs能获得'在售'商品列表
+		"""
+		[{
+			"name": "水晶虾仁",
+			"is_enable_model": "启用规格",
+			"categories": [],
+			"model": {
+				"models": {
+					"白色 M": {
+						"user_code": "4",
+						"price": 7.10,
+						"stock_type": "无限"
+					}
+				}
+			},
+			"actions": ["修改", "下架", "彻底删除","编辑分组"]
+		}, {
+			"name": "叫花鸡",
+			"is_enable_model": "启用规格",
+			"categories": ["分类1"],
+			"model": {
+				"models": {
+					"黑色 M": {
+						"user_code": "2",
+						"price": 8.10,
+						"stock_type": "有限",
+						"stocks": 3
+					},
+					"白色 M": {
+						"user_code": "3",
+						"price": 8.20,
+						"stock_type": "有限",
+						"stocks": 2
+					}
+				}
+			},
+			"actions": ["修改", "下架", "彻底删除","编辑分组"]
+		}, {
+			"name": "东坡肘子",
+			"is_enable_model": "不启用规格",
+			"categories": ["分类1", "分类2", "分类3"],
+			"model": {
+				"models": {
+					"standard": {
+						"user_code": "1",
+						"price": 11.00,
+						"stock_type": "无限"
+					}
+				}
+			},
+			"actions": ["修改", "下架", "彻底删除","编辑分组"]
+		}]
+		"""
+	When jobs批量下架商品
+		"""
+		[
+			"水晶虾仁", 
+			"叫花鸡"
+		]
+		"""
+	Then jobs能获得'在售'商品列表
+		"""
+		[{
+			"name": "东坡肘子",
+			"is_enable_model": "不启用规格",
+			"categories": ["分类1", "分类2", "分类3"],
+			"model": {
+				"models": {
+					"standard": {
+						"user_code": "1",
+						"price": 11.00,
+						"stock_type": "无限"
+					}
+				}
+			},
+			"actions": ["修改", "下架", "彻底删除","编辑分组"]
+		}]
+		"""
+	Then jobs能获得'待售'商品列表
+		"""
+		[{
+			"name": "水晶虾仁",
+			"is_enable_model": "启用规格",
+			"categories": [],
+			"model": {
+				"models": {
+					"白色 M": {
+						"user_code": "4",
+						"price": 7.10,
+						"stock_type": "无限"
+					}
+				}
+			},
+			"actions": ["修改", "上架", "彻底删除","编辑分组"]
+		}, {
+			"name": "叫花鸡",
+			"is_enable_model": "启用规格",
+			"categories": ["分类1"],
+			"model": {
+				"models": {
+					"黑色 M": {
+						"user_code": "2",
+						"price": 8.10,
+						"stock_type": "有限",
+						"stocks": 3
+					},
+					"白色 M": {
+						"user_code": "3",
+						"price": 8.20,
+						"stock_type": "有限",
+						"stocks": 2
+					}
+				}
+			},
+			"actions": ["修改", "上架", "彻底删除","编辑分组"]
+		}]
+		"""		
+
+@mall2 @product @group @ProductList  @mall.product_category @mall
+Scenario:5 在商品列表编辑分组信息
+	Given jobs登录系统
+	Then jobs能获得'在售'商品列表
+		"""
+		[{
+			"name": "水晶虾仁",
+			"is_enable_model": "启用规格",
+			"categories": [],
+			"model": {
+				"models": {
+					"白色 M": {
+						"user_code": "4",
+						"price": 7.10,
+						"stock_type": "无限"
+					}
+				}
+			},
+			"actions": ["修改", "下架", "彻底删除","编辑分组"]
+		}, {
+			"name": "叫花鸡",
+			"is_enable_model": "启用规格",
+			"categories": ["分类1"],
+			"model": {
+				"models": {
+					"黑色 M": {
+						"user_code": "2",
+						"price": 8.10,
+						"stock_type": "有限",
+						"stocks": 3
+					},
+					"白色 M": {
+						"user_code": "3",
+						"price": 8.20,
+						"stock_type": "有限",
+						"stocks": 2
+					}
+				}
+			},
+			"actions": ["修改", "下架", "彻底删除","编辑分组"]
+		}, {
+			"name": "东坡肘子",
+			"is_enable_model": "不启用规格",
+			"categories": ["分类1", "分类2", "分类3"],
+			"model": {
+				"models": {
+					"standard": {
+						"user_code": "1",
+						"price": 11.00,
+						"stock_type": "无限"
+					}
+				}
+			},
+			"actions": ["修改", "下架", "彻底删除","编辑分组"]
+		}]
+		"""
+	When jobs给商品'水晶虾仁'调分类
+		"""
+			["分类1"]
+		"""
+	Then jobs能获得'在售'商品列表
+		"""
+		[{
+			"name": "水晶虾仁",
+			"is_enable_model": "启用规格",
+			"categories": ["分类1"],
+			"model": {
+				"models": {
+					"白色 M": {
+						"user_code": "4",
+						"price": 7.10,
+						"stock_type": "无限"
+					}
+				}
+			},
+			"actions": ["修改", "下架", "彻底删除","编辑分组"]
+		}]
+		"""
+	And jobs可以获得分类列表
+		"""
+		[{
+			"name": "分类1",
+			"products": [{
+				"name": "水晶虾仁"
+			}, {
+				"name": "叫花鸡"
+			}, {
+				"name": "东坡肘子"
+			}]
+		}, {
+			"name": "分类2",
+			"products": [{
+				"name": "东坡肘子"
+			}]
+		}, {
+			"name": "分类3",
+			"products": [{
+				"name": "东坡肘子"
+			}]
+		}]
+		"""
+	When jobs批量下架商品
+		"""
+		[
+			"水晶虾仁", 
+			"叫花鸡"
+		]
+		"""
+	And jobs给商品'叫花鸡'调分类
+		"""
+			["分类2","分类3"]
+		"""
+	Then jobs能获得'待售'商品列表
+		"""
+		[{
+			"name": "水晶虾仁",
+			"is_enable_model": "启用规格",
+			"categories": [],
+			"model": {
+				"models": {
+					"白色 M": {
+						"user_code": "4",
+						"price": 7.10,
+						"stock_type": "无限"
+					}
+				}
+			},
+			"actions": ["修改", "上架", "彻底删除","编辑分组"]
+		}, {
+			"name": "叫花鸡",
+			"is_enable_model": "启用规格",
+			"categories": ["分类2","分类3"],
+			"model": {
+				"models": {
+					"黑色 M": {
+						"user_code": "2",
+						"price": 8.10,
+						"stock_type": "有限",
+						"stocks": 3
+					},
+					"白色 M": {
+						"user_code": "3",
+						"price": 8.20,
+						"stock_type": "有限",
+						"stocks": 2
+					}
+				}
+			},
+			"actions": ["修改", "上架", "彻底删除","编辑分组"]
+		}]
+		"""
+	And jobs可以获得分类列表
+		"""
+		[{
+			"name": "分类1",
+			"products": [{
+				"name": "水晶虾仁"
+			}, {
+				"name": "东坡肘子"
+			}]
+		}, {
+			"name": "分类2",
+			"products": [ {
+				"name": "叫花鸡"
+			},{
+				"name": "东坡肘子"
+			}]
+		}, {
+			"name": "分类3",
+			"products": [ {
+				"name": "叫花鸡"
+			},{
+				"name": "东坡肘子"
+			}]
+		}]
+		"""
