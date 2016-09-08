@@ -3023,7 +3023,8 @@ class ProductLabel(models.Model):
 	"""
 	商品标签
 	"""
-	property_id = models.IntegerField(default=0)
+	label_group_id = models.IntegerField(default=0)
+	owner_id = models.IntegerField(default=0)
 	name = models.CharField(max_length=256)
 	created_at = models.DateTimeField(auto_now_add=True)
 	is_deleted = models.BooleanField(default=False)
