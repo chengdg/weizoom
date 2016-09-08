@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
 import json
+import copy
 from operator import attrgetter
 from django.template import RequestContext
 from django.shortcuts import render_to_response
@@ -403,7 +404,7 @@ class Category(resource.Resource):
             category_ROA_utils.sorted_products(mall_type,request.manager.id, product_categories, True)
             items = []
             for product in product_categories[0].products:
-                category_has_products = mall_models.CategoryHasProduct.objects.filter(product_id=product.id)
+                category_has_products = mall_models.CategoryHasProduct.objects.filter(product_id=product.id).order_by('category__created_at')
                 category_list = []
                 for category_has_product in category_has_products:
                     category_list.append({
@@ -561,8 +562,8 @@ class BatchUpdateProductCategory(resource.Resource):
     def api_post(request):
         product_ids = request.POST.get('product_ids')
         category_ids = request.POST.get('category_ids')
-        product_ids = product_ids.split('-')
-        category_ids = category_ids.split('-')
+        product_ids = map(lambda x:int(x), product_ids.split(','))
+        category_ids = map(lambda x:int(x), category_ids.split(','))
 
         for category_id in category_ids:
             tmp_product_ids = copy.copy(product_ids)
