@@ -19,6 +19,7 @@ from datetime import datetime,timedelta,date
 from mall.models import *
 from tools.regional.models import *
 from utils import dateutil
+from account.models import UserProfile
 
 import xlsxwriter
 
@@ -50,15 +51,16 @@ class Command(BaseCommand):
 
 			tmp_line = 1
 			print (first_datetime, '--', datetime.now())
+			webapp_ids = UserProfile.objects.filter(webapp_type = 1).filter(~Q(user_id__in=[968, 930,816, 16,529])).values_list('webapp_id',flat=True)
 			for c in City.objects.all():
-				orders = Order.objects.filter(origin_order_id__lte=0, status__in=[2,3,4,5], payment_time__gte= first_datetime, payment_time__lte=datetime.now(), area__startswith="%s_%s" % (c.province_id, c.id))
+				orders = Order.objects.filter(webapp_id__in=webapp_ids, origin_order_id__lte=0, status__in=[3,4,5], payment_time__gte= first_datetime, payment_time__lte=datetime.now(), area__startswith="%s_%s_" % (c.province_id, c.id))
 				order_count = orders.count()
 				product_price_sum = orders.aggregate(Sum('product_price'))['product_price__sum'] 
 				#销量
 				number_sum = OrderHasProduct.objects.filter(order__in=orders).aggregate(Sum('number'))['number__sum']
 				
 
-				total_orders = Order.objects.filter(origin_order_id__lte=0, status__in=[2,3,4,5], area__startswith="%s_%s" % (c.province_id, c.id))
+				total_orders = Order.objects.filter(webapp_id__in=webapp_ids, origin_order_id__lte=0, status__in=[3,4,5], area__startswith="%s_%s_" % (c.province_id, c.id))
 				total_order_count = total_orders.count()
 				total_product_price_sum = total_orders.aggregate(Sum('product_price'))['product_price__sum'] 
 				total_number_sum = OrderHasProduct.objects.filter(order__in=total_orders).aggregate(Sum('number'))['number__sum']
