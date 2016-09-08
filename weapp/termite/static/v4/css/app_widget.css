@@ -2503,7 +2503,7 @@ li.wui-selectBox-display-table {
     width: 45px;
     height: 45px;
 }
-.wui-evaluate-container .wui-i-uploadimg .xui-productPhoto .xui-addPhoto,.wui-i-uploadimg .xui-productPhoto .xui-deletePhoto{
+.wui-evaluate-container .wui-i-uploadimg .xui-productPhoto .xui-addPhoto,.wui-evaluate-container .wui-i-uploadimg .xui-productPhoto .xui-deletePhoto{
     width: 46px;
     height: 45px;
     display: inline-block;

@@ -85,7 +85,7 @@
 			<div class="form-group ">
 				<label class="control-label fl" for="purchase_price">采购价：</label>
 				<div class="fl">
-					<input type="text" class="form-control w106 ml5" id="purchase_price" name="purchase_price" placeholder="" data-validate="norequire,,require-price,,require-notZero" value="{% if product.purchase_price %}{{ product.purchase_price }}{% endif %}"/>
+					<input type="text" class="form-control w106 ml5" id="purchase_price" name="purchase_price" placeholder="" data-validate="require-price" value="{% if product.purchase_price %}{{ product.purchase_price }}{% endif %}"/>
 					<div class="errorHint"></div>
 				</div>
 			</div>
@@ -128,8 +128,8 @@
 				<div class="form-group ">
 					<label class="control-label fl" for="purchase_price">采购价：</label>
 					<div class="fl">
-						<input type="text" class="form-control w106 ml5" id="purchase_price" name="purchase_price" placeholder="" data-validate="norequire,,require-price" value="{% if product and product.purchase_price%}{{ product.purchase_price }}{% endif %}"/>
-						<div class="errorHint"></div>
+						<input type="text" class="form-control w106 ml5" id="purchase_price" name="purchase_price" placeholder="" data-validate="require-price" value="{% if product and product.purchase_price%}{{ product.purchase_price }}{% endif %}"/>
+						<div class="errorHint" data-error-hint="请输入正确的价格" style="display: none;">请输入正确的价格</div>
 					</div>
 				</div>
 				{% endif %}
@@ -174,10 +174,8 @@
 					{% if product.is_group_buying %}readonly{% endif %}/>
 					<div class="errorHint"></div>
 				</div>
-			</div>
-			<div class="form-group nostar ">
-				<label class="control-label fl" for="min_limit">起购数量：</label>
-				<div class="fl w700 pl5 pr">
+				<label class="control-label fl ml10" for="min_limit">起购数量：</label>
+				<div class="fl w450 pl5 pr">
 				{% if product.is_in_flash_sale%}
 					<input type="hidden" class="form-control w106" id="min_limit" name="min_limit" placeholder="" value="{{ product.min_limit }}" maxlength="5" data-validate="norequire,,require-int"/>
 					<input type="text" disabled class="form-control w106 fl" placeholder="" value="{% if product %}{{ product.min_limit }}{% endif %}" maxlength="5" data-validate="norequire,,require-int"/>
@@ -187,6 +185,41 @@
 				{% endif %}
 					<span class="xui-fontGary pa" style="top:2px;left:115px">（设置起购数量大于1的商品，将不能参加限时抢购活动）</span>
 					<div class="errorHint"></div>
+				</div>
+			</div>
+			<div class="form-group nostar ">
+				<label class="control-label fl" for="limit_zone_type">限定类型：</label>
+				<div class="col-sm-2 fl pl5">
+					<select class="w106" id="limit_zone_type" name="limit_zone_type" {% if pool_mall_type or product.is_group_buying  %}disabled{% endif %}>
+                		<option value="0" {% if product.limit_zone_type == 0 %}selected='selected'{% endif %}>无限制</option>
+                		<option value="1" {% if product.limit_zone_type == 1 %}selected='selected'{% endif %}>禁售地区</option>
+                		<option value="2" {% if product.limit_zone_type == 2 %}selected='selected'{% endif %}>仅售地区</option>
+                	</select>
+				</div>
+				<div class="xa-limit-temp-section fl">
+					{% if pool_mall_type %}
+						<button class="btn-primary xa-limit-zone-detail xui-showlimitZone-btn" type="button" data-template-id="{{ template.id }}" data-template-name="{{ template.name }}">+&nbsp;&nbsp;显示限定区域</button>
+					{% else %}
+					<label class="control-label fl ml10" for="limit_zone_template">限定区域：</label>
+					<div class="fl w450 pl5 pr">
+						{% if limit_zone_templates|length == 0 %}
+							<input type="hidden" value='0' data-validate="require-custom-function" data-validate-function="validateLimitZoneTemp" data-force-validate="true"/>
+							<a class="ml5" href="/mall2/product_limit_zone_template/" target="_blank">+添加新模板</a>
+							<div class="errorHint" data-error-hint="请添加区域模板"></div>
+						{% else %}
+							<select class="w106 vm" id="limit_zone_template" name="limit_zone_template" data-validate="require-custom-function" data-validate-function="validateLimitZoneTemp" {% if product.is_group_buying  %}disabled{% endif %}>
+								<option value="0">选择区域模板</option>
+								{% for template in limit_zone_templates %}
+									<option value="{{ template.id }}" {% if template.id == product.limit_zone %}selected='selected'{% endif %}>{{ template.name }}</option>
+								{% endfor %}
+
+		                	</select>
+							<button class="btn-primary xui-limitZone-btn xa-limit-zone-detail xa-limit-zone-btn" type="button">查看</button>
+							<a class="ml5" href="/mall2/product_limit_zone_template/" target="_blank">+添加新模板</a>
+							<div class="errorHint" data-error-hint="请选择区域模板"></div>
+						{% endif %}
+					</div>
+					{% endif %}
 				</div>
 			</div>
 			{% if mall_type and has_store_name %}
@@ -707,6 +740,24 @@ function validateBarCode($el){
 	  errorHint: "请输入数字"
 	}
   }
+}
+function validateLimitZoneTemp($el){
+	if($el.parents('.xa-limit-temp-section').siblings('div').find('#limit_zone_type').val() == 0){
+		return {
+			isValidate: true
+		}
+	}else{
+		if($el.val() == '0'){
+			return{
+				isValidate: false,
+		  		errorHint: "请选择区域模板"
+		  	}
+		  }else{
+		  	return {
+				isValidate: true
+			}
+		  }
+	}
 }
 function validateUserCode($el){
   var hasValue= $.trim($el.val());

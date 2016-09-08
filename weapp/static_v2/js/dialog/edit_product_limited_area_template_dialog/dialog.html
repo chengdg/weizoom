@@ -1,0 +1,61 @@
+<script id="mall-edit-product-limited-area-template-tmpl-src" type="text/x-jquery-tmpl">
+	<div class="modal fade xui-limited-area-template-dialog">
+	<div class="modal-dialog modal-lg">
+	<div class="modal-content">
+		<div class="modal-header">
+			<button aria-hidden="true" data-dismiss="modal" class="close" type="button"><span aria-hidden="true">&times;</span></button>
+			<h3 class="modal-title">模板名称</h3>
+		</div>
+		<div class="modal-body">
+			<p class="xui-bold" style="padding-left:8px;">已选地区：</p>
+			<div
+				data-ui-role="advanced-table"
+				data-app="mall2"
+				data-api="product_limit_zone"
+				data-template-id="#edit-product-limit-area-template-view"
+				data-enable-paginator="false"
+				data-enable-sort="false"
+			></div>
+			
+		</div>
+		<div class="modal-footer modal-footerBg">
+			<button class="btn xa-edit">修&nbsp;改</button>
+		</div>
+	</div>
+	</div>
+	</div>
+</script>
+<script id="edit-product-limit-area-template-view" type="text/x-jquery-tmpl">
+	<table class="w table xb-stripedTable">
+		<tbody>
+			{{each(i, item) items}}
+				{{if item.zoneName == "其它" || item.zoneName == "直辖市"}}
+					<tr>
+						<td class="xui-bold">${item.zoneName}</td>
+						<td colspan="2">
+						{{each(j, province) item.provinces}}
+							<span class="mr30">${province.provinceName}</span>
+						{{/each}}
+						</td>
+					</tr>
+				{{else}}
+					{{each(j, province) item.provinces}}
+						<tr class="xui-province">
+							<td class="xui-bold">{{if j==0 }}${province.zoneName}{{/if}}</td>
+							<td class="xui-bold">${province.provinceName}</td>
+							<td class="tl">
+								{{if province.cities.length >0}}
+									{{each(k, city) province.cities}}
+										<span class="mr30">${city.cityName}</span>
+									{{/each}}
+								{{/if}}
+							</td>
+						</tr>
+					{{/each}}
+				{{/if}}
+			{{/each}}
+			
+
+		</tbody>
+	</table>
+</script>
