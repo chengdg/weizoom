@@ -506,7 +506,7 @@ Scenario:3 ziying自营平台子订单退款（全退优惠券、全退积分、
 			}
 			"""
 
-@ztqb @order @allOrder @refund
+@mall2 @ztq @order @allOrder @refund
 Scenario:4 ziying自营平台子订单退款（退现金+微众卡+优惠券+积分）
 	Given zy1登录系统
 	#10103-现金21.00+微众卡10+优惠券0.00+积分0.00=31.00
