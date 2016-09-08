@@ -62,7 +62,11 @@ W.view.mall.MallProductUpdateCategoriesView = W.view.common.DropBox.extend({
                 }
             },
             error: function(resp) {
-                W.showHint('error', resp.data.msg || '编辑分组失败');
+                var msg = '编辑分组失败';
+                if(resp && resp.data && resp.data.msg){
+                    msg = resp.data.msg;
+                }
+                W.showHint('error', msg);
             }
         });
     },
