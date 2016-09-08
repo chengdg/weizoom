@@ -2478,7 +2478,7 @@ def update_order_status_by_sub_order(sub_order,operation_name,action_msg):
 
 	origin_order = Order.objects.get(id=sub_order.origin_order_id)
 
-	current_status = order_target_status
+	current_status = origin_order.status
 	if current_status != order_target_status:
 		origin_order.status = order_target_status
 		origin_order.save()

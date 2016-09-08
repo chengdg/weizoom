@@ -865,7 +865,7 @@ def step_impl(context, user):
 
 @when(u"{user}通过财务审核'{action}'自营订单'{order_code}'")
 def step_impl(context, action, user, order_code):
-    url = '/mall2/api/refund_successful_sub_order/'
+    url = '/mall2/api/refund_successful_sub_order/?_method=put'
     order_id = bdd_util.get_order_by_order_no(order_code).origin_order_id
     delivery_item_id = bdd_util.get_order_by_order_no(order_code).id
     
@@ -875,3 +875,172 @@ def step_impl(context, action, user, order_code):
     }
     response = context.client.post(url, data)
     bdd_util.assert_api_call_success(response)
+
+@when(u"{user}'申请退款'自营订单'{order_code}'")
+def step_imple(context,user,order_code):
+    url = '/mall2/api/refunding_order/?_method=put'
+    order_id = bdd_util.get_order_by_order_no(order_code).origin_order_id
+    delivery_item_id = bdd_util.get_order_by_order_no(order_code).id
+
+    a = json.loads(context.text)
+    data = {
+        'order_id': order_id,
+        'delivery_item_id': delivery_item_id,
+        'cash': a.get('cash', 0),
+        'weizoom_card_money': a.get('weizoom_card', 0),
+        'integral': a.get('integral', 0),
+        'coupon_money': a.get('coupon_money', 0)
+    }
+
+    response = context.client.post(url, data)
+    bdd_util.assert_api_call_success(response)
+
+
+@then(u"{user}获得自营订单'{order_code}'")
+def step_impl(context, user, order_code):
+    order_db_id = bdd_util.get_order_by_order_no(order_code).id
+    response = context.client.get('/mall2/order/?order_id=%d' % order_db_id)
+
+    # 'first_nav_name': FIRST_NAV,
+    # 'second_navs': export.get_mall_order_second_navs(request),
+    # 'second_nav_name': export.ORDER_ALL,
+    # 'mall_type': mall_type,
+    # 'order': order,
+    # 'child_orders': child_orders,
+    # 'child_order_postages': dict([(child.supplier, child.postage) for child in child_orders]),
+    # 'suppliers': suppliers,
+    # 'supplier_stores': supplier_stores,
+    # 'is_order_not_payed': (order.status == ORDER_STATUS_NOT),
+    # 'coupon': coupon,
+    # 'order_operation_logs': order_operation_logs,
+    # 'order_status_logs': order_status_logs,
+    # 'log_count': log_count,
+    # 'show_first': show_first,
+    # 'is_sync': is_sync,
+    # 'is_show_order_status': True if len(supplier_ids) + len(supplier_user_ids) > 1 else False,
+    # 'is_group_buying': is_group_buying,
+    # 'zypt_customer_message_is_str': zypt_customer_message_is_str
+    expected = json.loads(context.text)
+
+    # expected.pop('group')
+    # expected.pop('status')
+    expected.pop('total_save')
+    order = response.context['order']
+    child_orders = response.context['child_orders']
+
+    order.order_no = order.order_id
+    order.invoice=order.bill
+    order.business_message=order.remark
+    order.methods_of_payment = order.pay_interface_name
+    order.weizoom_card = order.weizoom_card_money
+
+    sub_orders = []
+
+    for sub_order in child_orders:
+        supplier_name = Supplier.objects.get(id=sub_order.supplier).name
+        sub_order.order_no = u'{}-{}'.format(order.order_id, supplier_name)
+        sub_order.status = sub_order.get_status_text()
+        sub_order.products = []
+
+        sub_orders.append(sub_order)
+
+    _products = []
+    print('---------------------x',order.refund_info)
+    order.refund_details = {
+        'cash':order.refund_info['total_cash'],
+        'weizoom_card':order.refund_info['total_weizoom_card_money'],
+        'coupon_money':order.refund_info['total_coupon_money'],
+        'integral_money':order.refund_info['total_integral_money']
+    }
+
+    for p in order.products:
+        p['supplier_id'] = p['supplier']
+        p['supplier'] = p['supplier_name']
+        if p['promotion']:
+            p['single_save'] = p['promotion']['promotion_saved_money']
+        else:
+            p['single_save'] = ''
+
+        _products.append(p)
+
+    for p in _products:
+        for o in sub_orders:
+            if o.supplier == p['supplier_id']:
+                o.products.append(p)
+
+
+    order.group = sub_orders
+
+    final_price = order.final_price
+    order.final_price = order.pay_money
+    order.product_price =order.total_price
+    order.cash = final_price
+    order.products_count = order.number
+    order.ship_area = order.area
+    order.total_save = order.save_money
+    order.status = order.get_status_text()
+
+
+    bdd_util.assert_dict(expected, order)
+
+
+@then(u"{user}获得自营订单列表")
+def step_impl(context, user):
+    user_id = User.objects.get(username=user).id
+    mall_type = UserProfile.objects.get(user_id=user_id).webapp_type
+    if user != context.client.user.username:
+        context.client.logout()
+        context.client = bdd_util.login(user)
+
+    response = context.client.get('/mall2/api/order_list/')
+    items = json.loads(response.content)['data']['items']
+  
+    actual_orders = []
+    for order_item in items:
+        actual_order = {}
+        actual_order['order_no'] = order_item['order_id']
+        actual_order["methods_of_payment"] = order_item['methods_of_payment']
+        actual_order['order_time'] = order_item['created_at']
+        actual_order['payment_time'] = order_item['payment_time']
+        actual_order['save_money'] = order_item['save_money']
+        actual_order['buyer'] = order_item['buyer_name']
+        actual_order['ship_name'] = order_item['ship_name']
+        actual_order['ship_tel'] = order_item['ship_tel']
+        actual_order['ship_area'] = order_item['ship_area']
+        actual_order['ship_address'] = order_item['ship_address']
+        actual_order['invoice'] = order_item['invoice'] or '--'
+        actual_order['final_price'] = order_item['final_price']
+        actual_order['postage'] = order_item['postage']
+        actual_order['status'] = order_item['status']
+        
+        actual_order['group'] = []
+        buy_product_results = []
+        for group in order_item['groups']:
+            group['status'] = group['fackorder']['status']
+            order_supplier = ''
+            for buy_product in group['products']:
+                buy_product_result = {}
+                buy_product_result['name'] = buy_product['name']
+                buy_product_result['count'] = buy_product['count']
+                buy_product_result['price'] = buy_product['price']
+                order_supplier = buy_product['supplier_name'] or ''
+                buy_product_results.append(buy_product_result)
+
+            group['products'] = buy_product_results
+            group['supplier_name'] = order_supplier
+            group['order_no'] = order_item['order_id'] + order_supplier
+            
+            if group['status'] in ['退款中', '退款成功']:
+                actual_order['group']['refund_details'] = group['refund_details']
+            #获取子订单状态对应的操作
+            group['actions'] = set(name for name in group['fackorder']['action'])
+            actual_order['group'].appemd(group)
+        
+        actual_orders.append(actual_order)
+
+    expected = json.loads(context.text)
+    for order in expected:
+        if 'actions' in order:
+            order['actions'] = set(order['actions'])  # 暂时不验证顺序
+
+    bdd_util.assert_list(expected, actual_orders)

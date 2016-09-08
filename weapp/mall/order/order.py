@@ -699,18 +699,18 @@ class OrderGetFile(resource.Resource):
 
 
 
-class OrderRefundInfo(resource.Resource):
+class OrderRefundingOrder(resource.Resource):
     """
     退款信息
     """
 
     app = "mall2"
-    resource = "OrderRefundInfo"
+    resource = "refunding_order"
 
     @login_required()
     def api_put(request):
-        order_id = request.POST['order_id']
-        delivery_item_id = request.POST['delivery_item_id']
+        order_id = int(request.POST['order_id'])
+        delivery_item_id = int(request.POST['delivery_item_id'])
 
         sub_order = Order.objects.filter(id=delivery_item_id).first()
 
@@ -721,15 +721,15 @@ class OrderRefundInfo(resource.Resource):
             response.data = {'msg': "非法操作，订单状态不允许进行该操作"}
             return response.get_response()
 
-        cash = request.POST.get('cash', 0)
-        weizoom_card_money = request.POST.get('weizoom_card_money', 0)
-        coupon_money = request.POST.get('coupon_money', 0)
+        cash = float(request.POST.get('cash', 0))
+        weizoom_card_money = float(request.POST.get('weizoom_card_money', 0))
+        coupon_money = float(request.POST.get('coupon_money', 0))
 
-        integral = request.POST.get('integral', 0)
+        integral = float(request.POST.get('integral', 0))
 
         integral_each_yuan = IntegralStrategySttings.objects.get(
             webapp_id=request.manager.get_profile().webapp_id).integral_each_yuan
-        integral_money = integral_each_yuan * integral
+        integral_money = round(integral /integral_each_yuan,2)
 
         total = cash + weizoom_card_money + coupon_money + integral_money
 
@@ -755,14 +755,17 @@ class OrderRefundInfo(resource.Resource):
         )
 
         sub_order = Order.objects.get(id=delivery_item_id)
+        current_status = sub_order.status
+        sub_order.status = ORDER_STATUS_REFUNDING
+        sub_order.save()
 
         sub_order_target_status = ORDER_STATUS_REFUNDING
         operation_name = request.user.username
         action_msg = '退款'
-        mall_api.record_status_log(sub_order.order_id, operation_name, sub_order.status, sub_order_target_status)
+        mall_api.record_status_log(sub_order.order_id, operation_name, current_status, sub_order_target_status)
         mall_api.record_operation_log(sub_order.order_id, operation_name, sub_order_target_status)
 
-        mall_api.update_order_status_by_sub_order(sub_order, operation_name,action_msg)
+        mall_api.update_order_status_by_sub_order(sub_order, operation_name, action_msg)
         response = create_response(200)
         response.data = {}
         return response.get_response()
@@ -779,11 +782,12 @@ class RefundSuccessfulSubOrder(resource.Resource):
         """
         更新子订单和母订单的状态，并修改母订单总金额
         """
-        order_id = request.POST['order_id']
-        delivery_item_id = request.POST['delivery_item_id']
+        order_id = int(request.POST['order_id'])
+        delivery_item_id = int(request.POST['delivery_item_id'])
         
         sub_order = Order.objects.filter(id=delivery_item_id).first()
-
+        print('origin_order_id',sub_order.origin_order_id,order_id)
+        print('webapp_id',sub_order.webapp_id,request.user_profile.webapp_id)
         if sub_order and sub_order.origin_order_id == order_id and sub_order.webapp_id == request.user_profile.webapp_id:
             pass
         else:
@@ -794,13 +798,14 @@ class RefundSuccessfulSubOrder(resource.Resource):
         sub_order = Order.objects.get(id=delivery_item_id)
         #获取子订单的金额
 
-        refund_money = OrderHasRefund.objects.get(delivery_item_id=sub_order.id).total
+        refund_cash_money = OrderHasRefund.objects.get(delivery_item_id=sub_order.id).cash
+        refund_weizoom_card_money = OrderHasRefund.objects.get(delivery_item_id=sub_order.id).weizoom_card_money
         # refund_money = sub_order.refund_money
         #下一步的订单状态：退款成功
-        sub_order_target_status = ORDER_STATUS_GROUP_REFUNDED
+        sub_order_target_status = ORDER_STATUS_REFUNDED
         #更新母订单的总金额
         Order.objects.filter(id=delivery_item_id).update(status=sub_order_target_status)
-        Order.objects.filter(id=order_id).update(final_price=(F('final_price')-refund_money))
+        Order.objects.filter(id=order_id).update(final_price=(F('final_price')-refund_cash_money), weizoom_card_money=(F('weizoom_card_money')-refund_weizoom_card_money))
         
         operation_name = request.user.username
         action_msg = '退款成功'

@@ -91,7 +91,7 @@ Background:
 				"""
 		#设置商家运费
 			#商家1设置运费-满20包邮，否则收取统一运费1元
-			Then 给供货商添加运费配置
+			when 给供货商添加运费配置
 				"""
 				{
 					"supplier_name": "商家1",
@@ -103,7 +103,7 @@ Background:
 			Given 给自营平台同步商品
 				"""
 				{
-					"account":["zy1"],
+					"accounts":["zy1"],
 					"supplier_name":"商家1",
 					"name": "商品1a",
 					"promotion_title": "商品1a促销",
@@ -118,7 +118,7 @@ Background:
 			Given 给自营平台同步商品
 				"""
 				{
-					"account":["zy1"],
+					"accounts":["zy1"],
 					"supplier_name":"商家1",
 					"name": "商品1b",
 					"promotion_title": "商品1b促销",
@@ -133,7 +133,7 @@ Background:
 			Given 给自营平台同步商品
 				"""
 				{
-					"account":["zy1"],
+					"accounts":["zy1"],
 					"supplier_name":"商家2",
 					"name": "商品2a",
 					"promotion_title": "商品2a促销",
@@ -148,7 +148,7 @@ Background:
 			Given 给自营平台同步商品
 				"""
 				{
-					"account":["zy1"],
+					"accounts":["zy1"],
 					"supplier_name":"商家3",
 					"name": "商品3a",
 					"promotion_title": "商品3a促销",
@@ -182,9 +182,9 @@ Background:
 		}]
 		"""
 	#bill购买多个供货商的商品
-		When bill关注zy1的公众号
+		When bill关注zy1的公众号::apiserver
 		When bill访问zy1的webapp::apiserver
-		#10101-微信支付（商品1b(限时抢购、运费)+商品2a+商品3a）
+		#10101-微信支付（商品1b(限时抢购)+商品2a+商品3a）
 			When bill购买zy1的商品::apiserver
 				"""
 				{
@@ -274,6 +274,7 @@ Background:
 				"""
 			And bill使用支付方式'微信支付'进行支付::apiserver
 
+@mall2 @ztq  @order @allOrder @refund
 Scenario:1 ziying自营平台子订单退款（全退现金）
 	Given zy1登录系统
 	When zy1'申请退款'自营订单'10101-商家1'
@@ -282,8 +283,8 @@ Scenario:1 ziying自营平台子订单退款（全退现金）
 			"cash":16.00,
 			"weizoom_card":0.00,
 			"coupon_money":0.00,
-			"intergal":0,
-			"intergal_money":0.00
+			"integral":0,
+			"integral_money":0.00
 		}
 		"""
 	Then zy1获得自营订单'10101'
@@ -294,56 +295,57 @@ Scenario:1 ziying自营平台子订单退款（全退现金）
 				"ship_name":"bill",
 				"ship_tel":"13811223344",
 				"ship_area": "北京市 北京市 海淀区",
-				"ship_address": "海淀科技大厦"
-				"invoice":"--",
+				"ship_address": "海淀科技大厦",
+				"invoice":"",
 				"business_message":"",
 				"methods_of_payment":"微信支付",
-				"group":[{
-					"商家1":{
+				"group":
+					[{
 						"order_no":"10101-商家1",
 						"products":[{
 							"name":"商品1b",
+							"supplier":"商家1",
 							"price":20.00,
 							"count":1,
-							"single_save":"直降5.00元"
-						}],
-						"postage": 1.00,
+							"single_save":"5.00"
+							}],
+						"postage": 0.00,
 						"status":"退款中"
-						},
-					"商家2":{
-							"order_no":"10101-商家2",
-							"products":[{
-								"name":"商品2a",
-								"price":10.00,
-								"count":1,
-								"single_save":""
+					},{
+						"order_no":"10101-商家2",
+						"products":[{
+							"name":"商品2a",
+							"supplier":"商家2"
+							"price":10.00,
+							"count":1,
+							"single_save":""
 							}],
-							"postage": 0.00,
-							"status":"待发货"
-						},
-					"商家3":{
-							"order_no":"10101-商家3",
-							"products":[{
-								"name":"商品3a",
-								"price":10.00,
-								"count":1,
-								"single_save":""
+						"postage": 0.00,
+						"status":"待发货"
+					},{
+						"order_no":"10101-商家3",
+						"products":[{
+							"name":"商品3a",
+							"supplier":"商家3",
+							"price":10.00,
+							"count":1,
+							"single_save":""
 							}],
-							"postage": 0.00,
-							"status":"待发货"
-						}
-				}],
+						"postage": 0.00,
+						"status":"待发货"
+					}],
 				"total_save":"",
-				"weizoom_card":"",
+				"weizoom_card":0.00,
 				"products_count":3,
-				"product_price": 40.00,
-				"postage": 1.00,
-				"save_money": -5.00,
-				"cash":36.00,
-				"final_price": 36.00
+				"total_price": 40.00,
+				"postage": 0.00,
+				"save_money": 5.00,
+				"cash":35.00,
+				"final_price": 35.00
 			}
 			"""
 
+@mall2 @ztq @order @allOrder @refund 
 Scenario:2 ziying自营平台子订单退款（全退微众卡）
 	Given zy1登录系统
 	When zy1'申请退款'自营订单'10102-商家1'
@@ -352,8 +354,8 @@ Scenario:2 ziying自营平台子订单退款（全退微众卡）
 			"cash":0.00,
 			"weizoom_card":20.00,
 			"coupon_money":0.00,
-			"intergal":0,
-			"intergal_money":0.00
+			"integral":0,
+			"integral_money":0.00
 		}
 		"""
 	Then zy1获得自营订单'10102'
@@ -364,55 +366,56 @@ Scenario:2 ziying自营平台子订单退款（全退微众卡）
 				"ship_name":"bill",
 				"ship_tel":"13811223344",
 				"ship_area": "北京市 北京市 海淀区",
-				"ship_address": "海淀科技大厦"
-				"invoice":"--",
+				"ship_address": "海淀科技大厦",
+				"invoice":"",
 				"business_message":"",
 				"methods_of_payment":"优惠抵扣",
-				"group":[{
-					"商家1":{
+				"group":
+					[{
 						"order_no":"10102-商家1",
 						"products":[{
 							"name":"商品1a",
+							"supplier":"商家1",
 							"price":10.00,
 							"count":2,
 							"single_save":""
-						}],
+							}],
 						"postage": 0.00,
 						"status":"退款中"
-						},
-					"商家2":{
-							"order_no":"10102-商家2",
-							"products":[{
-								"name":"商品2a",
-								"price":10.00,
-								"count":1,
-								"single_save":""
+					},{
+						"order_no":"10102-商家2",
+						"products":[{
+							"name":"商品2a",
+							"supplier":"商家2",
+							"price":10.00,
+							"count":1,
+							"single_save":""
 							}],
-							"postage": 0.00,
-							"status":"待发货"
-							},
-					"商家3":{
-							"order_no":"10102-商家3",
-							"products":[{
-								"name":"商品3a",
-								"price":10.00,
-								"count":1,
-								"single_save":""
+						"postage": 0.00,
+						"status":"待发货"
+					},{
+						"order_no":"10102-商家3",
+						"products":[{
+							"name":"商品3a",
+							"supplier":"商家3",
+							"price":10.00,
+							"count":1,
+							"single_save":""
 							}],
-							"postage": 0.00,
-							"status":"待发货"
-							}
-				}],
+						"postage": 0.00,
+						"status":"待发货"
+					}],
 				"total_save":"",
 				"weizoom_card":40.00,
 				"products_count":4,
-				"product_price": 40.00,
+				"total_price": 40.00,
 				"postage": 0.00,
 				"cash":0.00,
 				"final_price": 40.00
 			}
 			"""
 
+@mall2 @ztqbb @order @allOrder @refund
 Scenario:3 ziying自营平台子订单退款（全退优惠券、全退积分、退优惠券+积分）
 	Given zy1登录系统
 	When zy1'申请退款'自营订单'10101-商家1'
@@ -420,9 +423,9 @@ Scenario:3 ziying自营平台子订单退款（全退优惠券、全退积分、
 		{
 			"cash":0.00,
 			"weizoom_card":0.00,
-			"coupon_money":16.00,
-			"intergal":0,
-			"intergal_money":0.00
+			"coupon_money":15.00,
+			"integral":0,
+			"integral_money":0.00
 		}
 		"""
 	When zy1'申请退款'自营订单'10101-商家2'
@@ -431,8 +434,8 @@ Scenario:3 ziying自营平台子订单退款（全退优惠券、全退积分、
 			"cash":0.00,
 			"weizoom_card":0.00,
 			"coupon_money":0.00,
-			"intergal":20,
-			"intergal_money":10.00
+			"integral":20,
+			"integral_money":10.00
 		}
 		"""
 	When zy1'申请退款'自营订单'10101-商家3'
@@ -441,8 +444,8 @@ Scenario:3 ziying自营平台子订单退款（全退优惠券、全退积分、
 			"cash":0.00,
 			"weizoom_card":0.00,
 			"coupon_money":5.00,
-			"intergal":10,
-			"intergal_money":5.00
+			"integral":10,
+			"integral_money":5.00
 		}
 		"""
 	Then zy1获得自营订单'10101'
@@ -453,67 +456,68 @@ Scenario:3 ziying自营平台子订单退款（全退优惠券、全退积分、
 				"ship_name":"bill",
 				"ship_tel":"13811223344",
 				"ship_area": "北京市 北京市 海淀区",
-				"ship_address": "海淀科技大厦"
-				"invoice":"--",
+				"ship_address": "海淀科技大厦",
+				"invoice":"",
 				"business_message":"",
 				"methods_of_payment":"微信支付",
-				"group":[{
-					"商家1":{
+				"group":
+					[{
 						"order_no":"10101-商家1",
 						"products":[{
 							"name":"商品1b",
+							"supplier":"商家1",
 							"price":20.00,
 							"count":1,
-							"single_save":"直降5.00元"
-						}],
-						"postage": 1.00,
+							"single_save":"5.00"
+							}],
+						"postage": 0.00,
 						"status":"退款中"
-						},
-					"商家2":{
-							"order_no":"10101-商家2",
-							"products":[{
-								"name":"商品2a",
-								"price":10.00,
-								"count":1,
-								"single_save":""
-							}],
-							"postage": 0.00,
-							"status":"退款中"
-						},
-					"商家3":{
-							"order_no":"10101-商家3",
-							"products":[{
-								"name":"商品3a",
-								"price":10.00,
-								"count":1,
-								"single_save":""
-							}],
-							"postage": 0.00,
-							"status":"退款中"
-						}
-				}],
-				"total_save":"",
-				"weizoom_card":"",
+					},{
+						"order_no":"10101-商家2",
+						"products":[{
+							"name":"商品2a",
+							"supplier":"商家2",
+							"price":10.00,
+							"count":1,
+							"single_save":""
+						}],
+						"postage": 0.00,
+						"status":"退款中"
+					},{
+						"order_no":"10101-商家3",
+						"products":[{
+							"name":"商品3a",
+							"supplier":"商家3",
+							"price":10.00,
+							"count":1,
+							"single_save":""
+						}],
+						"postage": 0.00,
+						"status":"退款中"
+					}],
+				"total_save":0,
+				"weizoom_card":0,
 				"products_count":3,
-				"product_price": 40.00,
-				"postage": 1.00,
-				"save_money":-5.00,
-				"cash":36.00,
-				"final_price": 36.00
+				"total_price": 40.00,
+				"postage": 0.00,
+				"save_money":5.00,
+				"cash":35.00,
+				"final_price": 35.00
 			}
 			"""
 
+@mall2 @ztq @order @allOrder @refund
 Scenario:4 ziying自营平台子订单退款（退现金+微众卡+优惠券+积分）
 	Given zy1登录系统
-	#10103-现金22.00+微众卡9+优惠券0.00+积分0.00=31.00
+	#10103-现金21.00+微众卡10+优惠券0.00+积分0.00=31.00
 	When zy1'申请退款'自营订单'10103-商家1'
 		"""
 		{
 			"cash":7.00,
 			"weizoom_card":4.00,
 			"coupon_money":0.00,
-			"intergal":0,
-			"intergal_money":0.00
+			"integral":0,
+			"integral_money":0.00
 		}
 		"""
 	When zy1'申请退款'自营订单'10103-商家2'
@@ -522,8 +526,8 @@ Scenario:4 ziying自营平台子订单退款（退现金+微众卡+优惠券+积
 			"cash":0.00,
 			"weizoom_card":5.00,
 			"coupon_money":2.00,
-			"intergal":6,
-			"intergal_money":3.00
+			"integral":6,
+			"integral_money":3.00
 		}
 		"""
 	When zy1'申请退款'自营订单'10103-商家3'
@@ -532,8 +536,8 @@ Scenario:4 ziying自营平台子订单退款（退现金+微众卡+优惠券+积
 			"cash":5.00,
 			"weizoom_card":0.00,
 			"coupon_money":2.00,
-			"intergal":6,
-			"intergal_money":3.00
+			"integral":6,
+			"integral_money":3.00
 		}
 		"""
 	When zy1通过财务审核'退款成功'自营订单'10103-商家1'
@@ -542,62 +546,63 @@ Scenario:4 ziying自营平台子订单退款（退现金+微众卡+优惠券+积
 	Then zy1获得自营订单'10103'
 			"""
 			{
-				"order_no":"10101",
+				"order_no":"10103",
 				"status":"退款成功",
 				"ship_name":"bill",
 				"ship_tel":"13811223344",
 				"ship_area": "北京市 北京市 海淀区",
-				"ship_address": "海淀科技大厦"
-				"invoice":"--",
+				"ship_address": "海淀科技大厦",
+				"invoice":"",
 				"business_message":"",
 				"methods_of_payment":"微信支付",
-				"group":[{
-					"商家1":{
+				"group":
+					[{
 						"order_no":"10103-商家1",
 						"products":[{
 							"name":"商品1a",
+							"supplier":"商家1",
 							"price":10.00,
 							"count":1,
 							"single_save":""
-						}],
+							}],
 						"postage": 1.00,
 						"status":"退款成功"
-						},
-					"商家2":{
-							"order_no":"10103-商家2",
-							"products":[{
-								"name":"商品2a",
-								"price":10.00,
-								"count":1,
-								"single_save":""
+					},{
+						"order_no":"10103-商家2",
+						"products":[{
+							"name":"商品2a",
+							"supplier":"商家2",
+							"price":10.00,
+							"count":1,
+							"single_save":""
 							}],
-							"postage": 0.00,
-							"status":"退款成功"
-						},
-					"商家3":{
-							"order_no":"10103-商家3",
-							"products":[{
-								"name":"商品3a",
-								"price":10.00,
-								"count":1,
-								"single_save":""
+						"postage": 0.00,
+						"status":"退款成功"
+					},{
+						"order_no":"10103-商家3",
+						"products":[{
+							"name":"商品3a",
+							"supplier":"商家3",
+							"price":10.00,
+							"count":1,
+							"single_save":""
 							}],
-							"postage": 0.00,
-							"status":"退款成功"
-						}
-				}],
+						"postage": 0.00,
+						"status":"退款成功"
+					}],
 				"total_save":"",
-				"weizoom_card":9.00,
+				"weizoom_card":1.00,
 				"products_count":3,
-				"product_price": 30.00,
+				"total_price": 30.00,
 				"postage": 1.00,
-				"cash":22.00,
-				"final_price": 31.00,
+				"cash":9.00,
+				"final_price": 10.00,
 				"refund_details":{
 					"cash":12.00,
 					"weizoom_card": 9.00,
 					"coupon_money": 4.00,
 					"integral_money": 6.00
-				}
+					}
+
 			}
 			"""
