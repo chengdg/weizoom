@@ -700,7 +700,7 @@ class OrderGetFile(resource.Resource):
 
 
 
-class OrderRefundInfo(resource.Resource):
+class OrderRefundingOrder(resource.Resource):
     """
     退款信息
     """
