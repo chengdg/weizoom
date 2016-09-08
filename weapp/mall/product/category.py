@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
 import json
+import copy
 from operator import attrgetter
 from django.template import RequestContext
 from django.shortcuts import render_to_response
@@ -403,7 +404,7 @@ class Category(resource.Resource):
             category_ROA_utils.sorted_products(mall_type,request.manager.id, product_categories, True)
             items = []
             for product in product_categories[0].products:
-                category_has_products = mall_models.CategoryHasProduct.objects.filter(product_id=product.id)
+                category_has_products = mall_models.CategoryHasProduct.objects.filter(product_id=product.id).order_by('category__created_at')
                 category_list = []
                 for category_has_product in category_has_products:
                     category_list.append({
@@ -542,8 +543,11 @@ class UpdateProductCategory(resource.Resource):
     @login_required
     def api_post(request):
         product_id = request.POST.get('product_id')
-        category_ids = request.POST.get('category_ids')
-        category_ids = map(lambda x:int(x), category_ids.split(','))
+        category_ids = request.POST.get('category_ids','')
+        if category_ids:
+            category_ids = map(lambda x:int(x), category_ids.split(','))
+        else:
+            category_ids = 0
         # category_ids = category_ids.split(',')
         update_product_categories(request, product_id, category_ids)
 
@@ -561,8 +565,8 @@ class BatchUpdateProductCategory(resource.Resource):
     def api_post(request):
         product_ids = request.POST.get('product_ids')
         category_ids = request.POST.get('category_ids')
-        product_ids = product_ids.split('-')
-        category_ids = category_ids.split('-')
+        product_ids = map(lambda x:int(x), product_ids.split(','))
+        category_ids = map(lambda x:int(x), category_ids.split(','))
 
         for category_id in category_ids:
             tmp_product_ids = copy.copy(product_ids)
@@ -584,25 +588,30 @@ class BatchUpdateProductCategory(resource.Resource):
         return response.get_response()
 
 def update_product_categories(request, product_id, category_ids):
+    if category_ids:
     #删除勾去的
-    category_has_products_by_product_id = mall_models.CategoryHasProduct.objects.filter(product_id=product_id, category__owner=request.manager)
-    category_has_products = category_has_products_by_product_id.exclude(id__in=category_ids)
-    decrease_category_ids = [category_has_product.category_id for category_has_product in category_has_products]
-    mall_models.CategoryHasProduct.objects.filter(product_id=product_id, category_id__in=decrease_category_ids).delete()
-    mall_models.ProductCategory.objects.filter(id__in=decrease_category_ids, owner=request.manager).update(product_count=F('product_count')-1)
+        category_has_products_by_product_id = mall_models.CategoryHasProduct.objects.filter(product_id=product_id, category__owner=request.manager)
+        category_has_products = category_has_products_by_product_id.exclude(id__in=category_ids)
+        decrease_category_ids = [category_has_product.category_id for category_has_product in category_has_products]
+        mall_models.CategoryHasProduct.objects.filter(product_id=product_id, category_id__in=decrease_category_ids).delete()
+        mall_models.ProductCategory.objects.filter(id__in=decrease_category_ids, owner=request.manager).update(product_count=F('product_count')-1)
 
-    #去掉存在的分组id
-    
-    exist_category_ids = category_has_products_by_product_id.filter(category_id__in=category_ids).values_list('category_id', flat=True)
-    for category_id in exist_category_ids:
-        category_ids.remove(category_id)
-    #创建CategoryHasProduct及商品分组数量+1
-    category_has_product_models = []
-    for category_id in category_ids:
-        category_has_product_models.append(mall_models.CategoryHasProduct(
-            category_id=category_id,
-            product_id=product_id,
+        #去掉存在的分组id
+        
+        exist_category_ids = category_has_products_by_product_id.filter(category_id__in=category_ids).values_list('category_id', flat=True)
+        for category_id in exist_category_ids:
+            category_ids.remove(category_id)
+        #创建CategoryHasProduct及商品分组数量+1
+        category_has_product_models = []
+        for category_id in category_ids:
+            category_has_product_models.append(mall_models.CategoryHasProduct(
+                category_id=category_id,
+                product_id=product_id,
+                )
             )
-        )
-    mall_models.CategoryHasProduct.objects.bulk_create(category_has_product_models)
-    mall_models.ProductCategory.objects.filter(id__in=category_ids).update(product_count=F('product_count')+1)
+        mall_models.CategoryHasProduct.objects.bulk_create(category_has_product_models)
+        mall_models.ProductCategory.objects.filter(id__in=category_ids).update(product_count=F('product_count')+1)
+    else:
+        decrease_category_ids = mall_models.CategoryHasProduct.objects.filter(product_id=product_id).values_list('category_id', flat=True)
+        mall_models.CategoryHasProduct.objects.filter(product_id=product_id).delete()
+        mall_models.ProductCategory.objects.filter(id__in=decrease_category_ids, owner=request.manager).update(product_count=F('product_count')-1)

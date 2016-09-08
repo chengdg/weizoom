@@ -118,15 +118,18 @@
 				return;
 			}
 			var mallProductUpdateCategoriesView = W.getMallProductUpdateCategoriesView({
-				width: 310,
+				width: 260,
 				title: '',
 				position: 'top',
 				isTitle: false,
 				privateContainerClass: 'xui-productUpdateCategoriesBox'
 			});
+			var hiddenCategoryMap = {};
+			hiddenCategoryMap[categoryId] = true;
 			mallProductUpdateCategoriesView.show({
 				$action: $el,
 				productIds: selectedIds,
+				hiddenCategoryMap:hiddenCategoryMap,
 				dataView: dataView
 			});
 			mallProductUpdateCategoriesView.render();
