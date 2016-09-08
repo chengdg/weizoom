@@ -273,7 +273,8 @@ Background:
 				}
 				"""
 			And bill使用支付方式'微信支付'进行支付::apiserver
-@ztqb
+
+@mall2 @ztq
 Scenario:1 ziying自营平台子订单退款（全退现金）
 	Given zy1登录系统
 	When zy1'申请退款'自营订单'10101-商家1'
@@ -342,7 +343,7 @@ Scenario:1 ziying自营平台子订单退款（全退现金）
 				"final_price": 35.00
 			}
 			"""
-
+@ztqb
 Scenario:2 ziying自营平台子订单退款（全退微众卡）
 	Given zy1登录系统
 	When zy1'申请退款'自营订单'10102-商家1'
@@ -370,9 +371,9 @@ Scenario:2 ziying自营平台子订单退款（全退微众卡）
 				"group":
 					[{
 						"order_no":"10102-商家1",
-						"supplier":"商家1",
 						"products":[{
 							"name":"商品1a",
+							"supplier":"商家1",
 							"price":10.00,
 							"count":2,
 							"single_save":""
@@ -381,9 +382,9 @@ Scenario:2 ziying自营平台子订单退款（全退微众卡）
 						"status":"退款中"
 					},{
 						"order_no":"10102-商家2",
-						"supplier":"商家2",
 						"products":[{
 							"name":"商品2a",
+							"supplier":"商家2",
 							"price":10.00,
 							"count":1,
 							"single_save":""
@@ -392,9 +393,9 @@ Scenario:2 ziying自营平台子订单退款（全退微众卡）
 						"status":"待发货"
 					},{
 						"order_no":"10102-商家3",
-						"supplier":"商家3",
 						"products":[{
 							"name":"商品3a",
+							"supplier":"商家3",
 							"price":10.00,
 							"count":1,
 							"single_save":""
@@ -459,9 +460,9 @@ Scenario:3 ziying自营平台子订单退款（全退优惠券、全退积分、
 				"group":
 					[{
 						"order_no":"10101-商家1",
-						"supplier":"商家1",
 						"products":[{
 							"name":"商品1b",
+							"supplier":"商家1",
 							"price":20.00,
 							"count":1,
 							"single_save":"5.00"
@@ -470,9 +471,9 @@ Scenario:3 ziying自营平台子订单退款（全退优惠券、全退积分、
 						"status":"退款中"
 					},{
 						"order_no":"10101-商家2",
-						"supplier":"商家2",
 						"products":[{
 							"name":"商品2a",
+							"supplier":"商家2",
 							"price":10.00,
 							"count":1,
 							"single_save":""
@@ -481,9 +482,9 @@ Scenario:3 ziying自营平台子订单退款（全退优惠券、全退积分、
 						"status":"退款中"
 					},{
 						"order_no":"10101-商家3",
-						"supplier":"商家3",
 						"products":[{
 							"name":"商品3a",
+							"supplier":"商家3",
 							"price":10.00,
 							"count":1,
 							"single_save":""
@@ -553,9 +554,9 @@ Scenario:4 ziying自营平台子订单退款（退现金+微众卡+优惠券+积
 				"group":
 					[{
 						"order_no":"10103-商家1",
-						"supplier":"商家1",
 						"products":[{
 							"name":"商品1a",
+							"supplier":"商家1",
 							"price":10.00,
 							"count":1,
 							"single_save":""
@@ -564,9 +565,9 @@ Scenario:4 ziying自营平台子订单退款（退现金+微众卡+优惠券+积
 						"status":"退款成功"
 					},{
 						"order_no":"10103-商家2",
-						"supplier":"商家2",
 						"products":[{
 							"name":"商品2a",
+							"supplier":"商家2",
 							"price":10.00,
 							"count":1,
 							"single_save":""
@@ -575,9 +576,9 @@ Scenario:4 ziying自营平台子订单退款（退现金+微众卡+优惠券+积
 						"status":"退款成功"
 					},{
 						"order_no":"10103-商家3",
-						"supplier":"商家3",
 						"products":[{
 							"name":"商品3a",
+							"supplier":"商家3",
 							"price":10.00,
 							"count":1,
 							"single_save":""
