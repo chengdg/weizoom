@@ -663,3 +663,70 @@ Scenario:5 在商品列表编辑分组信息
 			}]
 		}]
 		"""
+	When jobs给商品'叫花鸡'调分类
+		"""
+			["分类2","分类1"]
+		"""
+	Then jobs能获得'待售'商品列表
+		"""
+		[{
+			"name": "水晶虾仁",
+			"is_enable_model": "启用规格",
+			"categories": ["分类1"],
+			"model": {
+				"models": {
+					"白色 M": {
+						"user_code": "4",
+						"price": 7.10,
+						"stock_type": "无限"
+					}
+				}
+			},
+			"actions": ["修改", "上架", "彻底删除","编辑分组"]
+		}, {
+			"name": "叫花鸡",
+			"is_enable_model": "启用规格",
+			"categories": ["分类2","分类1"],
+			"model": {
+				"models": {
+					"黑色 M": {
+						"user_code": "2",
+						"price": 8.10,
+						"stock_type": "有限",
+						"stocks": 3
+					},
+					"白色 M": {
+						"user_code": "3",
+						"price": 8.20,
+						"stock_type": "有限",
+						"stocks": 2
+					}
+				}
+			},
+			"actions": ["修改", "上架", "彻底删除","编辑分组"]
+		}]
+		"""
+	And jobs可以获得分类列表
+		"""
+		[{
+			"name": "分类1",
+			"products": [{
+				"name": "水晶虾仁"
+			}, {
+				"name": "叫花鸡"
+			}, {
+				"name": "东坡肘子"
+			}]
+		}, {
+			"name": "分类2",
+			"products": [{
+				"name": "叫花鸡"
+			},{
+				"name": "东坡肘子"
+			}]
+		}, {
+			"name": "分类3",
+			"products": [{
+				"name": "东坡肘子"
+			}]
+		}]
