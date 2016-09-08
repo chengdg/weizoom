@@ -274,7 +274,7 @@ Background:
 				"""
 			And bill使用支付方式'微信支付'进行支付::apiserver
 
-@mall2 @ztq
+@mall2 @ztq  @order @allOrder @refund
 Scenario:1 ziying自营平台子订单退款（全退现金）
 	Given zy1登录系统
 	When zy1'申请退款'自营订单'10101-商家1'
@@ -344,7 +344,8 @@ Scenario:1 ziying自营平台子订单退款（全退现金）
 				"final_price": 35.00
 			}
 			"""
-@mall2 @ztq
+
+@mall2 @ztq @order @allOrder @refund 
 Scenario:2 ziying自营平台子订单退款（全退微众卡）
 	Given zy1登录系统
 	When zy1'申请退款'自营订单'10102-商家1'
@@ -414,7 +415,7 @@ Scenario:2 ziying自营平台子订单退款（全退微众卡）
 			}
 			"""
 
-@mall2 @ztqbb
+@mall2 @ztqbb @order @allOrder @refund
 Scenario:3 ziying自营平台子订单退款（全退优惠券、全退积分、退优惠券+积分）
 	Given zy1登录系统
 	When zy1'申请退款'自营订单'10101-商家1'
@@ -504,7 +505,8 @@ Scenario:3 ziying自营平台子订单退款（全退优惠券、全退积分、
 				"final_price": 35.00
 			}
 			"""
-@ztqb
+
+@ztqb @order @allOrder @refund
 Scenario:4 ziying自营平台子订单退款（退现金+微众卡+优惠券+积分）
 	Given zy1登录系统
 	#10103-现金21.00+微众卡10+优惠券0.00+积分0.00=31.00
@@ -589,18 +591,18 @@ Scenario:4 ziying自营平台子订单退款（退现金+微众卡+优惠券+积
 						"status":"退款成功"
 					}],
 				"total_save":"",
-				"weizoom_card":10.00,
+				"weizoom_card":1.00,
 				"products_count":3,
 				"total_price": 30.00,
 				"postage": 1.00,
-				"cash":21.00,
-				"final_price": 31.00,
+				"cash":9.00,
+				"final_price": 10.00,
 				"refund_details":{
-					  "cash":12.00,
-					  "weizoom_card": 9.00,
-					  "coupon_money": 4.00,
-					  "integral_money": 6.00
-					  }
+					"cash":12.00,
+					"weizoom_card": 9.00,
+					"coupon_money": 4.00,
+					"integral_money": 6.00
+					}
 
 			}
 			"""
