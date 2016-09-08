@@ -331,8 +331,8 @@ Scenario:3 修改商品价格
 		"""
 
 #editor:李娜 2016.09.07 补充运营人员查看在售待售商品列表可查看分类信息,及编辑分类按钮
-@mall2 @product @group @ProductList  @mall.product_category @mall
-#Scenario:4 商品列表查看分类信息
+#@mall2 @product @group @ProductList  @mall.product_category @mall
+Scenario:4 商品列表查看分类信息
 	Given jobs登录系统
 	Then jobs能获得'在售'商品列表
 		"""
