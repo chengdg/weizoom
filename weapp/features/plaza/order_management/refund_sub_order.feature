@@ -315,6 +315,7 @@ Scenario:1 ziying自营平台子订单退款（全退现金）
 						"order_no":"10101-商家2",
 						"products":[{
 							"name":"商品2a",
+							"supplier":"商家2"
 							"price":10.00,
 							"count":1,
 							"single_save":""
@@ -343,7 +344,7 @@ Scenario:1 ziying自营平台子订单退款（全退现金）
 				"final_price": 35.00
 			}
 			"""
-@mall3 @ztq
+@mall2 @ztq
 Scenario:2 ziying自营平台子订单退款（全退微众卡）
 	Given zy1登录系统
 	When zy1'申请退款'自营订单'10102-商家1'
@@ -413,7 +414,7 @@ Scenario:2 ziying自营平台子订单退款（全退微众卡）
 			}
 			"""
 
-@mall2 @ztq
+@mall2 @ztqbb
 Scenario:3 ziying自营平台子订单退款（全退优惠券、全退积分、退优惠券+积分）
 	Given zy1登录系统
 	When zy1'申请退款'自营订单'10101-商家1'
@@ -503,10 +504,10 @@ Scenario:3 ziying自营平台子订单退款（全退优惠券、全退积分、
 				"final_price": 35.00
 			}
 			"""
-
+@ztqb
 Scenario:4 ziying自营平台子订单退款（退现金+微众卡+优惠券+积分）
 	Given zy1登录系统
-	#10103-现金22.00+微众卡9+优惠券0.00+积分0.00=31.00
+	#10103-现金21.00+微众卡10+优惠券0.00+积分0.00=31.00
 	When zy1'申请退款'自营订单'10103-商家1'
 		"""
 		{
@@ -543,12 +544,12 @@ Scenario:4 ziying自营平台子订单退款（退现金+微众卡+优惠券+积
 	Then zy1获得自营订单'10103'
 			"""
 			{
-				"order_no":"10101",
+				"order_no":"10103",
 				"status":"退款成功",
 				"ship_name":"bill",
 				"ship_tel":"13811223344",
 				"ship_area": "北京市 北京市 海淀区",
-				"ship_address": "海淀科技大厦"
+				"ship_address": "海淀科技大厦",
 				"invoice":"",
 				"business_message":"",
 				"methods_of_payment":"微信支付",
@@ -588,17 +589,18 @@ Scenario:4 ziying自营平台子订单退款（退现金+微众卡+优惠券+积
 						"status":"退款成功"
 					}],
 				"total_save":"",
-				"weizoom_card":9.00,
+				"weizoom_card":10.00,
 				"products_count":3,
 				"total_price": 30.00,
 				"postage": 1.00,
-				"cash":22.00,
+				"cash":21.00,
 				"final_price": 31.00,
 				"refund_details":{
-					"cash":12.00,
-					"weizoom_card": 9.00,
-					"coupon_money": 4.00,
-					"integral_money": 6.00
-					}
+					  "cash":12.00,
+					  "weizoom_card": 9.00,
+					  "coupon_money": 4.00,
+					  "integral_money": 6.00
+					  }
+
 			}
 			"""

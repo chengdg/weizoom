@@ -865,7 +865,7 @@ def step_impl(context, user):
 
 @when(u"{user}通过财务审核'{action}'自营订单'{order_code}'")
 def step_impl(context, action, user, order_code):
-    url = '/mall2/api/refund_successful_sub_order/'
+    url = '/mall2/api/refund_successful_sub_order/?_method=put'
     order_id = bdd_util.get_order_by_order_no(order_code).origin_order_id
     delivery_item_id = bdd_util.get_order_by_order_no(order_code).id
     

@@ -783,11 +783,12 @@ class RefundSuccessfulSubOrder(resource.Resource):
         """
         更新子订单和母订单的状态，并修改母订单总金额
         """
-        order_id = request.POST['order_id']
-        delivery_item_id = request.POST['delivery_item_id']
+        order_id = int(request.POST['order_id'])
+        delivery_item_id = int(request.POST['delivery_item_id'])
         
         sub_order = Order.objects.filter(id=delivery_item_id).first()
-
+        print('origin_order_id',sub_order.origin_order_id,order_id)
+        print('webapp_id',sub_order.webapp_id,request.user_profile.webapp_id)
         if sub_order and sub_order.origin_order_id == order_id and sub_order.webapp_id == request.user_profile.webapp_id:
             pass
         else:
@@ -802,7 +803,7 @@ class RefundSuccessfulSubOrder(resource.Resource):
         refund_weizoom_card_money = OrderHasRefund.objects.get(delivery_item_id=sub_order.id).weizoom_card_money
         # refund_money = sub_order.refund_money
         #下一步的订单状态：退款成功
-        sub_order_target_status = ORDER_STATUS_GROUP_REFUNDED
+        sub_order_target_status = ORDER_STATUS_REFUNDED
         #更新母订单的总金额
         Order.objects.filter(id=delivery_item_id).update(status=sub_order_target_status)
         Order.objects.filter(id=order_id).update(final_price=(F('final_price')-refund_cash_money), weizoom_card_money=(F('weizoom_card_money')-refund_weizoom_card_money))

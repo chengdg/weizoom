@@ -791,12 +791,26 @@ def get_detail_response(request):
                 if coupon.product_id == product['id']:
                     product['has_coupon'] = True
                     break
+        # 退款数据
+        refund_infos = OrderHasRefund.objects.filter(origin_order_id=order.id)
+
+        # total_cash = [r.cash for r in refund_infos]
+
+        # todo 子订单退款数据
+
+        order.refund_info = {
+            'total_cash': sum([r.cash for r in refund_infos]),
+            'total_weizoom_card_money': sum([r.weizoom_card_money for r in refund_infos]),
+            'total_integral_money': sum([r.integral_money for r in refund_infos]),
+            'total_coupon_money': sum([r.coupon_money for r in refund_infos]),
+            'total_money': sum([r.total for r in refund_infos])
+        }
 
         order.area = regional_util.get_str_value_by_string_ids(order.area)
         order.pay_interface_name = PAYTYPE2NAME.get(order.pay_interface_type, u'')
         order.total_price = mall.models.Order.get_order_has_price_number(order)
         order.save_money = float(Order.get_order_has_price_number(order)) + float(order.postage) - float(
-            order.final_price) - float(order.weizoom_card_money)
+            order.final_price) - float(order.weizoom_card_money) - order.refund_info['total_money']
         order.pay_money = order.final_price + order.weizoom_card_money
         if mall_type and order.customer_message:
             try:
