@@ -41,7 +41,7 @@ class Command(BaseCommand):
 			
 			workbook   = xlsxwriter.Workbook(file_path)
 			table = workbook.add_worksheet()
-			alist = [u"省级", u"市级", u"销售额"]
+			alist = [u"省级", u"市级", u'当月订单量', u'当月销售数量', u"当月销售额", u'累计订单量', u'累计销售数量',u"累计销售额"]
 
 
 			table.write_row('A1',alist)
@@ -51,10 +51,20 @@ class Command(BaseCommand):
 			tmp_line = 1
 			print (first_datetime, '--', datetime.now())
 			for c in City.objects.all():
-				product_price_sum = Order.objects.filter(status__in=[2,3,5], payment_time__gte= first_datetime, payment_time__lte=datetime.now(), area__startswith="%s_%s" % (c.province_id, c.id)).aggregate(Sum('product_price'))['product_price__sum'] 
+				orders = Order.objects.filter(origin_order_id__lte=0, status__in=[2,3,4,5], payment_time__gte= first_datetime, payment_time__lte=datetime.now(), area__startswith="%s_%s" % (c.province_id, c.id))
+				order_count = orders.count()
+				product_price_sum = orders.aggregate(Sum('product_price'))['product_price__sum'] 
+				#销量
+				number_sum = OrderHasProduct.objects.filter(order__in=orders).aggregate(Sum('number'))['number__sum']
+				
+
+				total_orders = Order.objects.filter(origin_order_id__lte=0, status__in=[2,3,4,5], area__startswith="%s_%s" % (c.province_id, c.id))
+				total_order_count = total_orders.count()
+				total_product_price_sum = total_orders.aggregate(Sum('product_price'))['product_price__sum'] 
+				total_number_sum = OrderHasProduct.objects.filter(order__in=total_orders).aggregate(Sum('number'))['number__sum']
 				if product_price_sum:
 					tmp_line += 1
-					tmp_list = [id2provice_names[c.province_id], c.name, round(product_price_sum, 2)]
+					tmp_list = [id2provice_names[c.province_id], c.name, order_count, number_sum, round(product_price_sum, 2), total_order_count, total_number_sum, round(total_product_price_sum, 2)]
 					table.write_row('A{}'.format(tmp_line),tmp_list)
 
 			workbook.close()
