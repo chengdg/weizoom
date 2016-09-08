@@ -280,6 +280,7 @@ Backgroud:
 			}
 			"""
 
+@order @finance @refund
 Scenario:1 ziying查看自营平台财务审核订单列表（多子订单的母订单中包含退款中、不包含退款成功的子订单）
 	#101待发货（现金/退现金）（待发货/待发货/退款中）
 		Given zy1登录系统
@@ -304,9 +305,10 @@ Scenario:1 ziying查看自营平台财务审核订单列表（多子订单的母
 				"save_money":1.00,
 				"postage":1.00,
 				"methods_of_payment": "微信支付",
-				"group":[{
-					"商家1"：{
+				"group":
+					[{
 						"order_no":"101-商家1",
+						"supplier_name":"商家1",
 						"status":"待发货",
 						"actions":[],
 						"products":
@@ -315,9 +317,9 @@ Scenario:1 ziying查看自营平台财务审核订单列表（多子订单的母
 								"price":10.00,
 								"count":2
 							}]
-						},
-					"商家2"：{
+					},{
 						"order_no":"101-商家2",
+						"supplier_name":"商家2",
 						"status":"待发货",
 						"actions":[],
 						"products":
@@ -326,9 +328,9 @@ Scenario:1 ziying查看自营平台财务审核订单列表（多子订单的母
 								"price":10.00,
 								"count":1
 							}]
-						},
-					"商家3"：{
+					},{
 						"order_no":"101-商家3",
+						"supplier_name":"商家3",
 						"status":"退款中",
 						"refund_details":
 							{
@@ -341,7 +343,6 @@ Scenario:1 ziying查看自营平台财务审核订单列表（多子订单的母
 								"price":10.00,
 								"count":1
 							}]
-						}
 					}]
 			}]
 			"""
@@ -355,9 +356,10 @@ Scenario:1 ziying查看自营平台财务审核订单列表（多子订单的母
 				"postage":1.00,
 				"save_money":1.00,
 				"methods_of_payment": "微信支付",
-				"group":[{
-					"商家1"：{
+				"group":
+					[{
 						"order_no":"101-商家1",
+						"supplier_name":"商家1",
 						"status":"待发货",
 						"actions":[],
 						"products":
@@ -366,9 +368,9 @@ Scenario:1 ziying查看自营平台财务审核订单列表（多子订单的母
 								"price":10.00,
 								"count":2
 							}]
-						},
-					"商家2"：{
+					},{
 						"order_no":"101-商家2",
+						"supplier_name":"商家2",
 						"status":"待发货",
 						"actions":[],
 						"products":
@@ -377,9 +379,9 @@ Scenario:1 ziying查看自营平台财务审核订单列表（多子订单的母
 								"price":10.00,
 								"count":1
 							}]
-						},
-					"商家3"：{
+					},{
 						"order_no":"101-商家3",
+						"supplier_name":"商家3",
 						"status":"退款中",
 						"refund_details":
 							{
@@ -392,7 +394,6 @@ Scenario:1 ziying查看自营平台财务审核订单列表（多子订单的母
 								"price":10.00,
 								"count":1
 							}]
-						}
 					}]
 			}]
 			"""
@@ -432,9 +433,10 @@ Scenario:1 ziying查看自营平台财务审核订单列表（多子订单的母
 				"postage":1.00,
 				"save_money":1.00,
 				"methods_of_payment": "微信支付",
-				"group":[{
-					"商家1"：{
+				"group":
+					[{
 						"order_no":"101-商家1",
+						"supplier_name":"商家1",
 						"status":"退款中",
 						"refund_details":
 							{
@@ -447,9 +449,9 @@ Scenario:1 ziying查看自营平台财务审核订单列表（多子订单的母
 								"price":10.00,
 								"count":2
 							}]
-						},
-					"商家2"：{
+					},{
 						"order_no":"101-商家2",
+						"supplier_name":"商家2",
 						"status":"退款中",
 						"refund_details":
 							{
@@ -462,9 +464,9 @@ Scenario:1 ziying查看自营平台财务审核订单列表（多子订单的母
 								"price":10.00,
 								"count":1
 							}]
-						},
-					"商家3"：{
+					},{
 						"order_no":"101-商家3",
+						"supplier_name":"商家3",
 						"status":"退款中",
 						"refund_details":
 							{
@@ -477,7 +479,6 @@ Scenario:1 ziying查看自营平台财务审核订单列表（多子订单的母
 								"price":10.00,
 								"count":1
 							}]
-						}
 					}]
 			}]
 			"""
@@ -491,9 +492,10 @@ Scenario:1 ziying查看自营平台财务审核订单列表（多子订单的母
 				"postage":1.00,
 				"save_money":1.00,
 				"methods_of_payment": "微信支付",
-				"group":[{
-					"商家1"：{
+				"group":
+					[{
 						"order_no":"101-商家1",
+						"supplier_name":"商家1",
 						"status":"退款中",
 						"refund_details":
 							{
@@ -506,9 +508,9 @@ Scenario:1 ziying查看自营平台财务审核订单列表（多子订单的母
 								"price":10.00,
 								"count":2
 							}]
-						},
-					"商家2"：{
+					},{
 						"order_no":"101-商家2",
+						"supplier_name":"商家2",
 						"status":"退款中",
 						"refund_details":
 							{
@@ -521,9 +523,9 @@ Scenario:1 ziying查看自营平台财务审核订单列表（多子订单的母
 								"price":10.00,
 								"count":1
 							}]
-						},
-					"商家3"：{
+					},{
 						"order_no":"101-商家3",
+						"supplier_name":"商家3",
 						"status":"退款中",
 						"refund_details":
 							{
@@ -536,7 +538,6 @@ Scenario:1 ziying查看自营平台财务审核订单列表（多子订单的母
 								"price":10.00,
 								"count":1
 							}]
-						}
 					}]
 			}]
 			"""
@@ -545,6 +546,7 @@ Scenario:1 ziying查看自营平台财务审核订单列表（多子订单的母
 			[]
 			"""
 
+@order @finance @refund
 Scenario:2 ziying查看自营平台财务审核订单列表（多子订单的母订单中包含退款成功、不包含退款中子订单）
 	#101待发货（现金/退现金+优惠券）（待发货/待发货/退款成功）
 		Given zy1登录系统
@@ -569,9 +571,10 @@ Scenario:2 ziying查看自营平台财务审核订单列表（多子订单的母
 				"postage":1.00,
 				"save_money":1.00,
 				"methods_of_payment": "微信支付",
-				"group":[{
-					"商家1"：{
+				"group":
+					[{
 						"order_no":"101-商家1",
+						"supplier_name":"商家1",
 						"status":"待发货",
 						"actions":[],
 						"products":
@@ -580,9 +583,9 @@ Scenario:2 ziying查看自营平台财务审核订单列表（多子订单的母
 								"price":10.00,
 								"count":2
 							}]
-						},
-					"商家2"：{
+					},{
 						"order_no":"101-商家2",
+						"supplier_name":"商家2",
 						"status":"待发货",
 						"actions":[],
 						"products":
@@ -591,9 +594,9 @@ Scenario:2 ziying查看自营平台财务审核订单列表（多子订单的母
 								"price":10.00,
 								"count":1
 							}]
-						},
-					"商家3"：{
+					},{
 						"order_no":"101-商家3",
+						"supplier_name":"商家3",
 						"status":"退款成功",
 						"refund_details":
 							{
@@ -607,7 +610,6 @@ Scenario:2 ziying查看自营平台财务审核订单列表（多子订单的母
 								"price":10.00,
 								"count":1
 							}]
-						}
 					}]
 			}]
 			"""
@@ -625,9 +627,10 @@ Scenario:2 ziying查看自营平台财务审核订单列表（多子订单的母
 				"postage":1.00,
 				"save_money":1.00,
 				"methods_of_payment": "微信支付",
-				"group":[{
-					"商家1"：{
+				"group":
+					[{
 						"order_no":"101-商家1",
+						"supplier_name":"商家1",
 						"status":"待发货",
 						"actions":[],
 						"products":
@@ -636,9 +639,9 @@ Scenario:2 ziying查看自营平台财务审核订单列表（多子订单的母
 								"price":10.00,
 								"count":2
 							}]
-						},
-					"商家2"：{
+					},{
 						"order_no":"101-商家2",
+						"supplier_name":"商家2",
 						"status":"待发货",
 						"actions":[],
 						"products":
@@ -647,9 +650,9 @@ Scenario:2 ziying查看自营平台财务审核订单列表（多子订单的母
 								"price":10.00,
 								"count":1
 							}]
-						},
-					"商家3"：{
+					},{
 						"order_no":"101-商家3",
+						"supplier_name":"商家3",
 						"status":"退款成功",
 						"refund_details":
 							{
@@ -663,7 +666,6 @@ Scenario:2 ziying查看自营平台财务审核订单列表（多子订单的母
 								"price":10.00,
 								"count":1
 							}]
-						}
 					}]
 			}]
 			"""
@@ -710,9 +712,10 @@ Scenario:2 ziying查看自营平台财务审核订单列表（多子订单的母
 				"postage":1.00,
 				"save_money":1.00,
 				"methods_of_payment": "微信支付",
-				"group":[{
-					"商家1"：{
+				"group":
+					[{
 						"order_no":"101-商家1",
+						"supplier_name":"商家1",
 						"status":"退款成功",
 						"refund_details":
 							{
@@ -725,9 +728,9 @@ Scenario:2 ziying查看自营平台财务审核订单列表（多子订单的母
 								"price":10.00,
 								"count":2
 							}]
-						},
-					"商家2"：{
+					},{
 						"order_no":"101-商家2",
+						"supplier_name":"商家2",
 						"status":"退款成功",
 						"refund_details":
 							{
@@ -740,9 +743,9 @@ Scenario:2 ziying查看自营平台财务审核订单列表（多子订单的母
 								"price":10.00,
 								"count":1
 							}]
-						},
-					"商家3"：{
+					},{
 						"order_no":"101-商家3",
+						"supplier_name":"商家3",
 						"status":"退款成功",
 						"refund_details":
 							{
@@ -756,7 +759,6 @@ Scenario:2 ziying查看自营平台财务审核订单列表（多子订单的母
 								"price":10.00,
 								"count":1
 							}]
-						}
 					}]
 			}]
 			"""
@@ -774,9 +776,10 @@ Scenario:2 ziying查看自营平台财务审核订单列表（多子订单的母
 				"postage":1.00,
 				"save_money":1.00,
 				"methods_of_payment": "微信支付",
-				"group":[{
-					"商家1"：{
+				"group":
+					[{
 						"order_no":"101-商家1",
+						"supplier_name":"商家1",
 						"status":"退款成功",
 						"refund_details":
 							{
@@ -789,9 +792,9 @@ Scenario:2 ziying查看自营平台财务审核订单列表（多子订单的母
 								"price":10.00,
 								"count":2
 							}]
-						},
-					"商家2"：{
+					},{
 						"order_no":"101-商家2",
+						"supplier_name":"商家2",
 						"status":"退款成功",
 						"refund_details":
 							{
@@ -804,9 +807,9 @@ Scenario:2 ziying查看自营平台财务审核订单列表（多子订单的母
 								"price":10.00,
 								"count":1
 							}]
-						},
-					"商家3"：{
+					},{
 						"order_no":"101-商家3",
+						"supplier_name":"商家3",
 						"status":"退款成功",
 						"refund_details":
 							{
@@ -820,11 +823,11 @@ Scenario:2 ziying查看自营平台财务审核订单列表（多子订单的母
 								"price":10.00,
 								"count":1
 							}]
-						}
 					}]
 			}]
 			"""
 
+@order @finance @refund
 Scenario:3 ziying查看自营平台财务审核订单列表（多子订单的母订单中包含退款中和退款成功子订单）
 	#101待发货（现金/退现金;退现金+积分）（待发货/退款中/退款成功）
 		Given zy1登录系统
@@ -859,9 +862,10 @@ Scenario:3 ziying查看自营平台财务审核订单列表（多子订单的母
 				"postage":1.00,
 				"save_money":1.00,
 				"methods_of_payment": "微信支付",
-				"group":[{
-					"商家1"：{
+				"group":
+					[{
 						"order_no":"101-商家1",
+						"supplier_name":"商家1",
 						"status":"待发货",
 						"actions":[],
 						"products":
@@ -870,9 +874,9 @@ Scenario:3 ziying查看自营平台财务审核订单列表（多子订单的母
 								"price":10.00,
 								"count":2
 							}]
-						},
-					"商家2"：{
+					},{
 						"order_no":"101-商家2",
+						"supplier_name":"商家2",
 						"status":"退款中",
 						"refund_details":
 							{
@@ -885,9 +889,9 @@ Scenario:3 ziying查看自营平台财务审核订单列表（多子订单的母
 								"price":10.00,
 								"count":1
 							}]
-						},
-					"商家3"：{
+					},{
 						"order_no":"101-商家3",
+						"supplier_name":"商家3",
 						"status":"退款成功",
 						"refund_details":
 							{
@@ -901,7 +905,6 @@ Scenario:3 ziying查看自营平台财务审核订单列表（多子订单的母
 								"price":10.00,
 								"count":1
 							}]
-						}
 					}]
 			}]
 			"""
@@ -915,9 +918,10 @@ Scenario:3 ziying查看自营平台财务审核订单列表（多子订单的母
 				"postage":1.00,
 				"save_money":1.00,
 				"methods_of_payment": "微信支付",
-				"group":[{
-					"商家1"：{
+				"group":
+					[{
 						"order_no":"101-商家1",
+						"supplier_name":"商家1",
 						"status":"待发货",
 						"actions":[],
 						"products":
@@ -926,9 +930,9 @@ Scenario:3 ziying查看自营平台财务审核订单列表（多子订单的母
 								"price":10.00,
 								"count":2
 							}]
-						},
-					"商家2"：{
+					},{
 						"order_no":"101-商家2",
+						"supplier_name":"商家2",
 						"status":"退款中",
 						"refund_details":
 							{
@@ -941,9 +945,9 @@ Scenario:3 ziying查看自营平台财务审核订单列表（多子订单的母
 								"price":10.00,
 								"count":1
 							}]
-						},
-					"商家3"：{
+					},{
 						"order_no":"101-商家3",
+						"supplier_name":"商家3",
 						"status":"退款成功",
 						"refund_details":
 							{
@@ -957,7 +961,6 @@ Scenario:3 ziying查看自营平台财务审核订单列表（多子订单的母
 								"price":10.00,
 								"count":1
 							}]
-						}
 					}]
 			}]
 			"""
@@ -971,9 +974,10 @@ Scenario:3 ziying查看自营平台财务审核订单列表（多子订单的母
 				"postage":1.00,
 				"save_money":1.00,
 				"methods_of_payment": "微信支付",
-				"group":[{
-					"商家1"：{
+				"group":
+					[{
 						"order_no":"101-商家1",
+						"supplier_name":"商家1",
 						"status":"待发货",
 						"actions":[],
 						"products":
@@ -982,9 +986,9 @@ Scenario:3 ziying查看自营平台财务审核订单列表（多子订单的母
 								"price":10.00,
 								"count":2
 							}]
-						},
-					"商家2"：{
+					},{
 						"order_no":"101-商家2",
+						"supplier_name":"商家2",
 						"status":"退款中",
 						"refund_details":
 							{
@@ -997,9 +1001,9 @@ Scenario:3 ziying查看自营平台财务审核订单列表（多子订单的母
 								"price":10.00,
 								"count":1
 							}]
-						},
-					"商家3"：{
+					},{
 						"order_no":"101-商家3",
+						"supplier_name":"商家3",
 						"status":"退款成功",
 						"refund_details":
 							{
@@ -1013,7 +1017,6 @@ Scenario:3 ziying查看自营平台财务审核订单列表（多子订单的母
 								"price":10.00,
 								"count":1
 							}]
-						}
 					}]
 			}]
 			"""
@@ -1037,9 +1040,10 @@ Scenario:3 ziying查看自营平台财务审核订单列表（多子订单的母
 				"postage":1.00,
 				"save_money":1.00,
 				"methods_of_payment": "微信支付",
-				"group":[{
-					"商家1"：{
+				"group":
+					[{
 						"order_no":"101-商家1",
+						"supplier_name":"商家1",
 						"status":"已发货",
 						"actions":[],
 						"products":
@@ -1048,9 +1052,9 @@ Scenario:3 ziying查看自营平台财务审核订单列表（多子订单的母
 								"price":10.00,
 								"count":2
 							}]
-						},
-					"商家2"：{
+					},{
 						"order_no":"101-商家2",
+						"supplier_name":"商家2",
 						"status":"退款中",
 						"refund_details":
 							{
@@ -1063,9 +1067,9 @@ Scenario:3 ziying查看自营平台财务审核订单列表（多子订单的母
 								"price":10.00,
 								"count":1
 							}]
-						},
-					"商家3"：{
+					},{
 						"order_no":"101-商家3",
+						"supplier_name":"商家3",
 						"status":"退款成功",
 						"refund_details":
 							{
@@ -1079,7 +1083,6 @@ Scenario:3 ziying查看自营平台财务审核订单列表（多子订单的母
 								"price":10.00,
 								"count":1
 							}]
-						}
 					}]
 			}]
 			"""
@@ -1093,9 +1096,10 @@ Scenario:3 ziying查看自营平台财务审核订单列表（多子订单的母
 				"postage":1.00,
 				"save_money":1.00,
 				"methods_of_payment": "微信支付",
-				"group":[{
-					"商家1"：{
+				"group":
+					[{
 						"order_no":"101-商家1",
+						"supplier_name":"商家1",
 						"status":"已发货",
 						"actions":[],
 						"products":
@@ -1104,9 +1108,9 @@ Scenario:3 ziying查看自营平台财务审核订单列表（多子订单的母
 								"price":10.00,
 								"count":2
 							}]
-						},
-					"商家2"：{
+					},{
 						"order_no":"101-商家2",
+						"supplier_name":"商家2",
 						"status":"退款中",
 						"refund_details":
 							{
@@ -1119,9 +1123,9 @@ Scenario:3 ziying查看自营平台财务审核订单列表（多子订单的母
 								"price":10.00,
 								"count":1
 							}]
-						},
-					"商家3"：{
+					},{
 						"order_no":"101-商家3",
+						"supplier_name":"商家3",
 						"status":"退款成功",
 						"refund_details":
 							{
@@ -1135,7 +1139,6 @@ Scenario:3 ziying查看自营平台财务审核订单列表（多子订单的母
 								"price":10.00,
 								"count":1
 							}]
-						}
 					}]
 			}]
 			"""
@@ -1149,9 +1152,10 @@ Scenario:3 ziying查看自营平台财务审核订单列表（多子订单的母
 				"postage":1.00,
 				"save_money":1.00,
 				"methods_of_payment": "微信支付",
-				"group":[{
-					"商家1"：{
+				"group":
+					[{
 						"order_no":"101-商家1",
+						"supplier_name":"商家1",
 						"status":"已发货",
 						"actions":[],
 						"products":
@@ -1160,9 +1164,9 @@ Scenario:3 ziying查看自营平台财务审核订单列表（多子订单的母
 								"price":10.00,
 								"count":2
 							}]
-						},
-					"商家2"：{
+					},{
 						"order_no":"101-商家2",
+						"supplier_name":"商家2",
 						"status":"退款中",
 						"refund_details":
 							{
@@ -1175,9 +1179,9 @@ Scenario:3 ziying查看自营平台财务审核订单列表（多子订单的母
 								"price":10.00,
 								"count":1
 							}]
-						},
-					"商家3"：{
+					},{
 						"order_no":"101-商家3",
+						"supplier_name":"商家3",
 						"status":"退款成功",
 						"refund_details":
 							{
@@ -1191,7 +1195,6 @@ Scenario:3 ziying查看自营平台财务审核订单列表（多子订单的母
 								"price":10.00,
 								"count":1
 							}]
-						}
 					}]
 			}]
 			"""
@@ -1207,9 +1210,10 @@ Scenario:3 ziying查看自营平台财务审核订单列表（多子订单的母
 				"postage":1.00,
 				"save_money":1.00,
 				"methods_of_payment": "微信支付",
-				"group":[{
-					"商家1"：{
+				"group":
+					[{
 						"order_no":"101-商家1",
+						"supplier_name":"商家1",
 						"status":"已完成",
 						"actions":[],
 						"products":
@@ -1218,8 +1222,7 @@ Scenario:3 ziying查看自营平台财务审核订单列表（多子订单的母
 								"price":10.00,
 								"count":2
 							}]
-						},
-					"商家2"：{
+					},{
 						"order_no":"101-商家2",
 						"status":"退款中",
 						"refund_details":
@@ -1233,9 +1236,9 @@ Scenario:3 ziying查看自营平台财务审核订单列表（多子订单的母
 								"price":10.00,
 								"count":1
 							}]
-						},
-					"商家3"：{
+					},{
 						"order_no":"101-商家3",
+						"supplier_name":"商家3",
 						"status":"退款成功",
 						"refund_details":
 							{
@@ -1249,7 +1252,6 @@ Scenario:3 ziying查看自营平台财务审核订单列表（多子订单的母
 								"price":10.00,
 								"count":1
 							}]
-						}
 					}]
 			}]
 			"""
@@ -1263,9 +1265,10 @@ Scenario:3 ziying查看自营平台财务审核订单列表（多子订单的母
 				"postage":1.00,
 				"save_money":"",
 				"methods_of_payment": "微信支付",
-				"group":[{
-					"商家1"：{
+				"group":
+					[{
 						"order_no":"101-商家1",
+						"supplier_name":"商家1",
 						"status":"已完成",
 						"actions":[],
 						"products":
@@ -1274,9 +1277,9 @@ Scenario:3 ziying查看自营平台财务审核订单列表（多子订单的母
 								"price":10.00,
 								"count":2
 							}]
-						},
-					"商家2"：{
+					},{
 						"order_no":"101-商家2",
+						"supplier_name":"商家2",
 						"status":"退款中",
 						"refund_details":
 							{
@@ -1289,9 +1292,9 @@ Scenario:3 ziying查看自营平台财务审核订单列表（多子订单的母
 								"price":10.00,
 								"count":1
 							}]
-						},
-					"商家3"：{
+					},{
 						"order_no":"101-商家3",
+						"supplier_name":"商家3",
 						"status":"退款成功",
 						"refund_details":
 							{
@@ -1305,7 +1308,6 @@ Scenario:3 ziying查看自营平台财务审核订单列表（多子订单的母
 								"price":10.00,
 								"count":1
 							}]
-						}
 					}]
 			}]
 			"""
@@ -1319,9 +1321,10 @@ Scenario:3 ziying查看自营平台财务审核订单列表（多子订单的母
 				"postage":1.00,
 				"save_money":-1.00,
 				"methods_of_payment": "微信支付",
-				"group":[{
-					"商家1"：{
+				"group":
+					[{
 						"order_no":"101-商家1",
+						"supplier_name":"商家1",
 						"status":"已完成",
 						"actions":[],
 						"products":
@@ -1330,9 +1333,9 @@ Scenario:3 ziying查看自营平台财务审核订单列表（多子订单的母
 								"price":10.00,
 								"count":2
 							}]
-						},
-					"商家2"：{
+					},{
 						"order_no":"101-商家2",
+						"supplier_name":"商家2",
 						"status":"退款中",
 						"refund_details":
 							{
@@ -1345,9 +1348,9 @@ Scenario:3 ziying查看自营平台财务审核订单列表（多子订单的母
 								"price":10.00,
 								"count":1
 							}]
-						},
-					"商家3"：{
+					},{
 						"order_no":"101-商家3",
+						"supplier_name":"商家3",
 						"status":"退款成功",
 						"refund_details":
 							{
@@ -1361,7 +1364,6 @@ Scenario:3 ziying查看自营平台财务审核订单列表（多子订单的母
 								"price":10.00,
 								"count":1
 							}]
-						}
 					}]
 			}]
 			"""
@@ -1386,9 +1388,10 @@ Scenario:3 ziying查看自营平台财务审核订单列表（多子订单的母
 				"postage":1.00,
 				"save_money":1.00,
 				"methods_of_payment": "微信支付",
-				"group":[{
-					"商家1"：{
+				"group":
+					[{
 						"order_no":"101-商家1",
+						"supplier_name":"商家1",
 						"status":"退款中",
 						"refund_details":{
 							"cash":20.00
@@ -1400,9 +1403,9 @@ Scenario:3 ziying查看自营平台财务审核订单列表（多子订单的母
 								"price":10.00,
 								"count":2
 							}]
-						},
-					"商家2"：{
+					},{
 						"order_no":"101-商家2",
+						"supplier_name":"商家2",
 						"status":"退款中",
 						"refund_details":
 							{
@@ -1415,9 +1418,9 @@ Scenario:3 ziying查看自营平台财务审核订单列表（多子订单的母
 								"price":10.00,
 								"count":1
 							}]
-						},
-					"商家3"：{
+					},{
 						"order_no":"101-商家3",
+						"supplier_name":"商家3",
 						"status":"退款成功",
 						"refund_details":
 							{
@@ -1431,7 +1434,6 @@ Scenario:3 ziying查看自营平台财务审核订单列表（多子订单的母
 								"price":10.00,
 								"count":1
 							}]
-						}
 					}]
 			}]
 			"""
@@ -1445,9 +1447,10 @@ Scenario:3 ziying查看自营平台财务审核订单列表（多子订单的母
 				"postage":1.00,
 				"save_money":1.00,
 				"methods_of_payment": "微信支付",
-				"group":[{
-					"商家1"：{
+				"group":
+					[{
 						"order_no":"101-商家1",
+						"supplier_name":"商家1",
 						"status":"退款中",
 						"refund_details":{
 							"cash":20.00
@@ -1459,9 +1462,9 @@ Scenario:3 ziying查看自营平台财务审核订单列表（多子订单的母
 								"price":10.00,
 								"count":2
 							}]
-						},
-					"商家2"：{
+					},{
 						"order_no":"101-商家2",
+						"supplier_name":"商家2",
 						"status":"退款中",
 						"refund_details":
 							{
@@ -1474,9 +1477,9 @@ Scenario:3 ziying查看自营平台财务审核订单列表（多子订单的母
 								"price":10.00,
 								"count":1
 							}]
-						},
-					"商家3"：{
+					},{
 						"order_no":"101-商家3",
+						"supplier_name":"商家3",
 						"status":"退款成功",
 						"refund_details":
 							{
@@ -1490,7 +1493,6 @@ Scenario:3 ziying查看自营平台财务审核订单列表（多子订单的母
 								"price":10.00,
 								"count":1
 							}]
-						}
 					}]
 			}]
 			"""
@@ -1504,9 +1506,10 @@ Scenario:3 ziying查看自营平台财务审核订单列表（多子订单的母
 				"postage":1.00,
 				"save_money":1.00,
 				"methods_of_payment": "微信支付",
-				"group":[{
-					"商家1"：{
+				"group":
+					[{
 						"order_no":"101-商家1",
+						"supplier_name":"商家1",
 						"status":"退款中",
 						"refund_details":{
 							"cash":20.00
@@ -1518,9 +1521,9 @@ Scenario:3 ziying查看自营平台财务审核订单列表（多子订单的母
 								"price":10.00,
 								"count":2
 							}]
-						},
-					"商家2"：{
+					},{
 						"order_no":"101-商家2",
+						"supplier_name":"商家2",
 						"status":"退款中",
 						"refund_details":
 							{
@@ -1533,9 +1536,9 @@ Scenario:3 ziying查看自营平台财务审核订单列表（多子订单的母
 								"price":10.00,
 								"count":1
 							}]
-						},
-					"商家3"：{
+					},{
 						"order_no":"101-商家3",
+						"supplier_name":"商家3",
 						"status":"退款成功",
 						"refund_details":
 							{
@@ -1549,7 +1552,6 @@ Scenario:3 ziying查看自营平台财务审核订单列表（多子订单的母
 								"price":10.00,
 								"count":1
 							}]
-						}
 					}]
 			}]
 			"""
@@ -1565,9 +1567,10 @@ Scenario:3 ziying查看自营平台财务审核订单列表（多子订单的母
 				"postage":1.00,
 				"save_money":1.00,
 				"methods_of_payment": "微信支付",
-				"group":[{
-					"商家1"：{
+				"group":
+					[{
 						"order_no":"101-商家1",
+						"supplier_name":"商家1",
 						"status":"退款成功",
 						"refund_details":{
 							"cash":20.00
@@ -1579,9 +1582,9 @@ Scenario:3 ziying查看自营平台财务审核订单列表（多子订单的母
 								"price":10.00,
 								"count":2
 							}]
-						},
-					"商家2"：{
+					},{
 						"order_no":"101-商家2",
+						"supplier_name":"商家2",
 						"status":"退款中",
 						"refund_details":
 							{
@@ -1594,9 +1597,9 @@ Scenario:3 ziying查看自营平台财务审核订单列表（多子订单的母
 								"price":10.00,
 								"count":1
 							}]
-						},
-					"商家3"：{
+					},{
 						"order_no":"101-商家3",
+						"supplier_name":"商家3",
 						"status":"退款成功",
 						"refund_details":
 							{
@@ -1610,7 +1613,6 @@ Scenario:3 ziying查看自营平台财务审核订单列表（多子订单的母
 								"price":10.00,
 								"count":1
 							}]
-						}
 					}]
 			}]
 			"""
@@ -1624,9 +1626,10 @@ Scenario:3 ziying查看自营平台财务审核订单列表（多子订单的母
 				"postage":1.00,
 				"save_money":1.00,
 				"methods_of_payment": "微信支付",
-				"group":[{
-					"商家1"：{
+				"group":
+					[{
 						"order_no":"101-商家1",
+						"supplier_name":"商家1",
 						"status":"退款成功",
 						"refund_details":{
 							"cash":20.00
@@ -1638,9 +1641,9 @@ Scenario:3 ziying查看自营平台财务审核订单列表（多子订单的母
 								"price":10.00,
 								"count":2
 							}]
-						},
-					"商家2"：{
+					},{
 						"order_no":"101-商家2",
+						"supplier_name":"商家2",
 						"status":"退款中",
 						"refund_details":
 							{
@@ -1653,9 +1656,9 @@ Scenario:3 ziying查看自营平台财务审核订单列表（多子订单的母
 								"price":10.00,
 								"count":1
 							}]
-						},
-					"商家3"：{
+					},{
 						"order_no":"101-商家3",
+						"supplier_name":"商家3",
 						"status":"退款成功",
 						"refund_details":
 							{
@@ -1669,7 +1672,6 @@ Scenario:3 ziying查看自营平台财务审核订单列表（多子订单的母
 								"price":10.00,
 								"count":1
 							}]
-						}
 					}]
 			}]
 			"""
@@ -1683,9 +1685,10 @@ Scenario:3 ziying查看自营平台财务审核订单列表（多子订单的母
 				"postage":1.00,
 				"save_money":1.00,
 				"methods_of_payment": "微信支付",
-				"group":[{
-					"商家1"：{
+				"group":
+					[{
 						"order_no":"101-商家1",
+						"supplier_name":"商家1",
 						"status":"退款成功",
 						"refund_details":{
 							"cash":20.00
@@ -1697,9 +1700,9 @@ Scenario:3 ziying查看自营平台财务审核订单列表（多子订单的母
 								"price":10.00,
 								"count":2
 							}]
-						},
-					"商家2"：{
+					},{
 						"order_no":"101-商家2",
+						"supplier_name":"商家2",
 						"status":"退款中",
 						"refund_details":
 							{
@@ -1712,9 +1715,9 @@ Scenario:3 ziying查看自营平台财务审核订单列表（多子订单的母
 								"price":10.00,
 								"count":1
 							}]
-						},
-					"商家3"：{
+					},{
 						"order_no":"101-商家3",
+						"supplier_name":"商家3",
 						"status":"退款成功",
 						"refund_details":
 							{
@@ -1728,11 +1731,11 @@ Scenario:3 ziying查看自营平台财务审核订单列表（多子订单的母
 								"price":10.00,
 								"count":1
 							}]
-						}
 					}]
 			}]
 			"""
 
+@order @finance @refund
 Scenario:4 ziying查看自营平台财务审核订单列表（单个子订单的母订单）
 	Given zy1登录系统
 	#102-单个子订单-货到付款-退优惠券+积分
@@ -1755,9 +1758,10 @@ Scenario:4 ziying查看自营平台财务审核订单列表（单个子订单的
 					"final_price":10.00,
 					"save_money":"",
 					"methods_of_payment": "微信支付",
-					"group":[{
-						"商家1"：{
+					"group":
+						[{
 							"order_no":"102-商家1",
+							"supplier_name":"商家1",
 							"status":"退款中",
 							"refund_details":
 								{
@@ -1771,7 +1775,6 @@ Scenario:4 ziying查看自营平台财务审核订单列表（单个子订单的
 									"price":10.00,
 									"count":1
 								}]
-							}
 						}]
 				}]
 				"""
@@ -1784,9 +1787,10 @@ Scenario:4 ziying查看自营平台财务审核订单列表（单个子订单的
 					"final_price":10.00,
 					"save_money":"",
 					"methods_of_payment": "微信支付",
-					"group":[{
-						"商家1"：{
+					"group":
+						[{
 							"order_no":"102-商家1",
+							"supplier_name":"商家1",
 							"status":"退款中",
 							"refund_details":
 								{
@@ -1800,7 +1804,6 @@ Scenario:4 ziying查看自营平台财务审核订单列表（单个子订单的
 									"price":10.00,
 									"count":1
 								}]
-							}
 						}]
 				}]
 				"""
@@ -1818,9 +1821,10 @@ Scenario:4 ziying查看自营平台财务审核订单列表（单个子订单的
 				"final_price":10.00,
 				"save_money":"",
 				"methods_of_payment": "微信支付",
-				"group":[{
-					"商家1"：{
+				"group":
+					[{
 						"order_no":"102-商家1",
+						"supplier_name":"商家1",
 						"status":"退款成功",
 						"refund_details":
 							{
@@ -1834,7 +1838,6 @@ Scenario:4 ziying查看自营平台财务审核订单列表（单个子订单的
 								"price":10.00,
 								"count":1
 							}]
-						}
 					}]
 			}]
 			"""
@@ -1851,9 +1854,10 @@ Scenario:4 ziying查看自营平台财务审核订单列表（单个子订单的
 				"final_price":10.00,
 				"save_money":"",
 				"methods_of_payment": "微信支付",
-				"group":[{
-					"商家1"：{
+				"group":
+					[{
 						"order_no":"102-商家1",
+						"supplier_name":"商家1",
 						"status":"退款成功",
 						"refund_details":
 							{
@@ -1867,7 +1871,6 @@ Scenario:4 ziying查看自营平台财务审核订单列表（单个子订单的
 								"price":10.00,
 								"count":1
 							}]
-						}
 					}]
 			}]
 			"""
@@ -1892,9 +1895,10 @@ Scenario:4 ziying查看自营平台财务审核订单列表（单个子订单的
 					"final_price":10.00,
 					"save_money":"",
 					"methods_of_payment": "优惠抵扣",
-					"group":[{
-						"商家1"：{
+					"group":
+						[{
 							"order_no":"103-商家1",
+							"supplier_name":"商家1",
 							"status":"退款成功",
 							"refund_details":
 								{
@@ -1913,7 +1917,6 @@ Scenario:4 ziying查看自营平台财务审核订单列表（单个子订单的
 									"price":20.00,
 									"count":1
 								}]
-							}
 						}]
 				},{
 					"order_no":"102",
@@ -1922,9 +1925,10 @@ Scenario:4 ziying查看自营平台财务审核订单列表（单个子订单的
 					"final_price":10.00,
 					"save_money":"",
 					"methods_of_payment": "货到付款",
-					"group":[{
-						"商家1"：{
+					"group":
+						[{
 							"order_no":"102-商家1",
+							"supplier_name":"商家1",
 							"status":"退款成功",
 							"refund_details":
 								{
@@ -1938,7 +1942,6 @@ Scenario:4 ziying查看自营平台财务审核订单列表（单个子订单的
 									"price":10.00,
 									"count":1
 								}]
-							}
 						}]
 				}]
 				"""
@@ -1955,9 +1958,10 @@ Scenario:4 ziying查看自营平台财务审核订单列表（单个子订单的
 					"final_price":10.00,
 					"save_money":"",
 					"methods_of_payment": "优惠抵扣",
-					"group":[{
-						"商家1"：{
+					"group":
+						[{
 							"order_no":"103-商家1",
+							"supplier_name":"商家1",
 							"status":"退款成功",
 							"refund_details":
 								{
@@ -1976,7 +1980,6 @@ Scenario:4 ziying查看自营平台财务审核订单列表（单个子订单的
 									"price":20.00,
 									"count":1
 								}]
-							}
 						}]
 				},{
 					"order_no":"102",
@@ -1985,9 +1988,10 @@ Scenario:4 ziying查看自营平台财务审核订单列表（单个子订单的
 					"final_price":10.00,
 					"save_money":"",
 					"methods_of_payment": "货到付款",
-					"group":[{
-						"商家1"：{
+					"group":
+						[{
 							"order_no":"102-商家1",
+							"supplier_name":"商家1",
 							"status":"退款成功",
 							"refund_details":
 								{
@@ -2001,7 +2005,6 @@ Scenario:4 ziying查看自营平台财务审核订单列表（单个子订单的
 									"price":10.00,
 									"count":1
 								}]
-							}
 						}]
 				}]
 				"""
