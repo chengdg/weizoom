@@ -886,9 +886,11 @@ def get_detail_response(request):
         supplier_product_ids = []
         if supplier_ids:
             # 获取<供货商，订单状态文字显示>，因为子订单的状态是跟随供货商走的 在这个场景下
-            supplier2status = dict([(tmp_order.supplier, tmp_order.get_status_text()) for tmp_order in filter(lambda o: o.supplier > 0, child_orders)])
+            supplier2status_text = dict([(tmp_order.supplier, tmp_order.get_status_text()) for tmp_order in filter(lambda o: o.supplier > 0, child_orders)])
+            supplier2status = dict([(tmp_order.supplier, tmp_order.status) for tmp_order in filter(lambda o: o.supplier > 0, child_orders)])
             for product in order.products:
-                product['order_status'] = supplier2status.get(product['supplier'], '')
+                product['order_status'] = supplier2status_text.get(product['supplier'], '')
+                product['status'] = supplier2status.get(product['supplier'], '')
                 if product['supplier']:
                     supplier_product_ids.append(product['id'])
 
