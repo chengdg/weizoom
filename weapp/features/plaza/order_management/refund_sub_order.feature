@@ -315,10 +315,10 @@ Scenario:1 ziying自营平台子订单退款（全退现金）
 						"order_no":"10101-商家2",
 						"products":[{
 							"name":"商品2a",
-							"supplier":"商家2"
+							"supplier":"商家2",
 							"price":10.00,
 							"count":1,
-							"single_save":""
+							"single_save":0
 							}],
 						"postage": 0.00,
 						"status":"待发货"
@@ -329,7 +329,7 @@ Scenario:1 ziying自营平台子订单退款（全退现金）
 							"supplier":"商家3",
 							"price":10.00,
 							"count":1,
-							"single_save":""
+							"single_save":0
 							}],
 						"postage": 0.00,
 						"status":"待发货"
@@ -345,7 +345,7 @@ Scenario:1 ziying自营平台子订单退款（全退现金）
 			}
 			"""
 
-@mall2 @ztq @order @allOrder @refund 
+@mall2 @ztq @order @allOrder @refund  @ztqb
 Scenario:2 ziying自营平台子订单退款（全退微众卡）
 	Given zy1登录系统
 	When zy1'申请退款'自营订单'10102-商家1'
@@ -378,7 +378,7 @@ Scenario:2 ziying自营平台子订单退款（全退微众卡）
 							"supplier":"商家1",
 							"price":10.00,
 							"count":2,
-							"single_save":""
+							"single_save":0
 							}],
 						"postage": 0.00,
 						"status":"退款中"
@@ -389,7 +389,7 @@ Scenario:2 ziying自营平台子订单退款（全退微众卡）
 							"supplier":"商家2",
 							"price":10.00,
 							"count":1,
-							"single_save":""
+							"single_save":0
 							}],
 						"postage": 0.00,
 						"status":"待发货"
@@ -400,7 +400,7 @@ Scenario:2 ziying自营平台子订单退款（全退微众卡）
 							"supplier":"商家3",
 							"price":10.00,
 							"count":1,
-							"single_save":""
+							"single_save":0
 							}],
 						"postage": 0.00,
 						"status":"待发货"
@@ -479,7 +479,7 @@ Scenario:3 ziying自营平台子订单退款（全退优惠券、全退积分、
 							"supplier":"商家2",
 							"price":10.00,
 							"count":1,
-							"single_save":""
+							"single_save":0
 						}],
 						"postage": 0.00,
 						"status":"退款中"
@@ -490,7 +490,7 @@ Scenario:3 ziying自营平台子订单退款（全退优惠券、全退积分、
 							"supplier":"商家3",
 							"price":10.00,
 							"count":1,
-							"single_save":""
+							"single_save":0
 						}],
 						"postage": 0.00,
 						"status":"退款中"
@@ -563,7 +563,7 @@ Scenario:4 ziying自营平台子订单退款（退现金+微众卡+优惠券+积
 							"supplier":"商家1",
 							"price":10.00,
 							"count":1,
-							"single_save":""
+							"single_save":0
 							}],
 						"postage": 1.00,
 						"status":"退款成功"
@@ -574,7 +574,7 @@ Scenario:4 ziying自营平台子订单退款（退现金+微众卡+优惠券+积
 							"supplier":"商家2",
 							"price":10.00,
 							"count":1,
-							"single_save":""
+							"single_save":0
 							}],
 						"postage": 0.00,
 						"status":"退款成功"
@@ -585,7 +585,7 @@ Scenario:4 ziying自营平台子订单退款（退现金+微众卡+优惠券+积
 							"supplier":"商家3",
 							"price":10.00,
 							"count":1,
-							"single_save":""
+							"single_save":0
 							}],
 						"postage": 0.00,
 						"status":"退款成功"

@@ -809,8 +809,14 @@ def get_detail_response(request):
         order.area = regional_util.get_str_value_by_string_ids(order.area)
         order.pay_interface_name = PAYTYPE2NAME.get(order.pay_interface_type, u'')
         order.total_price = mall.models.Order.get_order_has_price_number(order)
-        order.save_money = float(Order.get_order_has_price_number(order)) + float(order.postage) - float(
-            order.final_price) - float(order.weizoom_card_money) - order.refund_info['total_money']
+
+        if order.status == ORDER_STATUS_REFUNDED:
+            order.save_money = float(Order.get_order_has_price_number(order)) + float(order.postage) - float(
+                order.final_price) - float(order.weizoom_card_money) - order.refund_info['total_cash'] - order.refund_info['total_weizoom_card_money']
+        else:
+
+            order.save_money = float(Order.get_order_has_price_number(order)) + float(order.postage) - float(
+                order.final_price) - float(order.weizoom_card_money)
         order.pay_money = order.final_price + order.weizoom_card_money
         if mall_type and order.customer_message:
             try:

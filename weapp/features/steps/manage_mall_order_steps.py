@@ -958,7 +958,7 @@ def step_impl(context, user, order_code):
         if p['promotion']:
             p['single_save'] = p['promotion']['promotion_saved_money']
         else:
-            p['single_save'] = ''
+            p['single_save'] = 0
 
         _products.append(p)
 
