@@ -543,8 +543,8 @@ class UpdateProductCategory(resource.Resource):
     def api_post(request):
         product_id = request.POST.get('product_id')
         category_ids = request.POST.get('category_ids')
-        category_ids = category_ids.split(',')
-
+        category_ids = map(lambda x:int(x), category_ids.split(','))
+        # category_ids = category_ids.split(',')
         update_product_categories(request, product_id, category_ids)
 
         response = create_response(200)
@@ -588,11 +588,13 @@ def update_product_categories(request, product_id, category_ids):
     category_has_products_by_product_id = mall_models.CategoryHasProduct.objects.filter(product_id=product_id, category__owner=request.manager)
     category_has_products = category_has_products_by_product_id.exclude(id__in=category_ids)
     decrease_category_ids = [category_has_product.category_id for category_has_product in category_has_products]
+    mall_models.CategoryHasProduct.objects.filter(product_id=product_id, category_id__in=decrease_category_ids).delete()
     mall_models.ProductCategory.objects.filter(id__in=decrease_category_ids, owner=request.manager).update(product_count=F('product_count')-1)
 
     #去掉存在的分组id
-    category_ids_by_product_id = [category_has_product.category_id for category_has_product in category_has_products_by_product_id]
-    for category_id in category_ids_by_product_id:
+    
+    exist_category_ids = category_has_products_by_product_id.filter(category_id__in=category_ids).values_list('category_id', flat=True)
+    for category_id in exist_category_ids:
         category_ids.remove(category_id)
     #创建CategoryHasProduct及商品分组数量+1
     category_has_product_models = []
