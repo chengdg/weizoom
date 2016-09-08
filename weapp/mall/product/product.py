@@ -1776,7 +1776,7 @@ class ProductPos(resource.Resource):
                 #将product为该id的商品的位置改为pos
                 move_products = models.Product.objects.filter(id=id)
                 if move_products:
-                    if move_products[0].owner_id == userprofile_manager.manager_id:
+                    if move_products[0].owner_id == userprofile_manager.user_id:
                         models.ProductPool.objects.filter(woid=request.manager.id, product_id=id).update(display_index=pos)
                     else:
                         move_products.update(display_index=pos)
