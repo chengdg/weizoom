@@ -409,7 +409,7 @@ Scenario:1 ziying单个供应商商品订单-微信支付+优惠券(不满足满
 				"methods_of_payment":"微信支付",
 				"product_price": 50.00,
 				"postage": 10.00,
-				"save_money": -10.00,
+				"save_money": 10.00,
 				"final_price": 50.00,
 				"order_time":"2016-01-01 10:00:00"
 			}
@@ -516,7 +516,7 @@ Scenario:1 ziying单个供应商商品订单-微信支付+优惠券(不满足满
 				"methods_of_payment":"微信支付",
 				"product_price": 50.00,
 				"postage": 10.00,
-				"save_money": -10.00,
+				"save_money": 10.00,
 				"final_price": 50.00,
 				"order_time":"2016-01-01 10:00:00"
 			}
@@ -639,7 +639,7 @@ Scenario:1 ziying单个供应商商品订单-微信支付+优惠券(不满足满
 				"methods_of_payment":"微信支付",
 				"product_price": 50.00,
 				"postage": 10.00,
-				"save_money": -10.00,
+				"save_money": 10.00,
 				"final_price": 50.00,
 				"order_time":"2016-01-01 10:00:00"
 			}
@@ -760,7 +760,7 @@ Scenario:1 ziying单个供应商商品订单-微信支付+优惠券(不满足满
 				"methods_of_payment":"微信支付",
 				"product_price": 50.00,
 				"postage": 10.00,
-				"save_money": -10.00,
+				"save_money": 10.00,
 				"final_price": 40.00,
 				"refund_money": 10.00,
 				"order_time":"2016-01-01 10:00:00"
@@ -924,7 +924,7 @@ Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满
 				"methods_of_payment":"支付宝",
 				"product_price": 40.00,
 				"postage": 10.00,
-				"save_money": -20.00,
+				"save_money": 20.00,
 				"final_price": 30.00,
 				"order_time":"2016-01-02 10:00:00"
 			}
@@ -1061,7 +1061,7 @@ Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满
 				"methods_of_payment":"支付宝",
 				"product_price": 40.00,
 				"postage": 10.00,
-				"save_money": -20.00,
+				"save_money": 20.00,
 				"final_price": 30.00,
 				"order_time":"2016-01-02 10:00:00"
 			}
@@ -1220,7 +1220,7 @@ Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满
 				"methods_of_payment":"支付宝",
 				"product_price": 40.00,
 				"postage": 10.00,
-				"save_money": -20.00,
+				"save_money": 20.00,
 				"final_price": 30.00,
 				"order_time":"2016-01-02 10:00:00"
 			}
@@ -1381,7 +1381,7 @@ Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满
 				"methods_of_payment":"支付宝",
 				"product_price": 40.00,
 				"postage": 10.00,
-				"save_money": -20.00,
+				"save_money": 20.00,
 				"final_price": 30.00,
 				"order_time":"2016-01-02 10:00:00"
 			}
@@ -1551,7 +1551,7 @@ Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满
 				"methods_of_payment":"支付宝",
 				"product_price": 40.00,
 				"postage": 10.00,
-				"save_money": -20.00,
+				"save_money": 20.00,
 				"final_price": 30.00,
 				"order_time":"2016-01-02 10:00:00"
 			}
@@ -1712,7 +1712,7 @@ Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满
 				"methods_of_payment":"支付宝",
 				"product_price": 40.00,
 				"postage": 10.00,
-				"save_money": -20.00,
+				"save_money": 20.00,
 				"refund_money": 10.00,
 				"final_price": 20.00,
 				"order_time":"2016-01-02 10:00:00"
@@ -2085,7 +2085,7 @@ Scenario:3 ziying两个供应商商品订单(限时抢购)-微众卡支付(一�
 				"methods_of_payment":"优惠抵扣",
 				"product_price": 70.00,
 				"postage": 0.00,
-				"weizoom-card": -70.00,
+				"weizoom-card": 70.00,
 				"final_price": 0.00,
 				"order_time":"2016-01-03 10:00:00"
 			}
