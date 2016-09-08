@@ -283,8 +283,8 @@ Scenario:1 ziying自营平台子订单退款（全退现金）
 			"cash":16.00,
 			"weizoom_card":0.00,
 			"coupon_money":0.00,
-			"intergal":0,
-			"intergal_money":0.00
+			"integral":0,
+			"integral_money":0.00
 		}
 		"""
 	Then zy1获得自营订单'10101'
@@ -354,8 +354,8 @@ Scenario:2 ziying自营平台子订单退款（全退微众卡）
 			"cash":0.00,
 			"weizoom_card":20.00,
 			"coupon_money":0.00,
-			"intergal":0,
-			"intergal_money":0.00
+			"integral":0,
+			"integral_money":0.00
 		}
 		"""
 	Then zy1获得自营订单'10102'
@@ -424,8 +424,8 @@ Scenario:3 ziying自营平台子订单退款（全退优惠券、全退积分、
 			"cash":0.00,
 			"weizoom_card":0.00,
 			"coupon_money":15.00,
-			"intergal":0,
-			"intergal_money":0.00
+			"integral":0,
+			"integral_money":0.00
 		}
 		"""
 	When zy1'申请退款'自营订单'10101-商家2'
@@ -434,8 +434,8 @@ Scenario:3 ziying自营平台子订单退款（全退优惠券、全退积分、
 			"cash":0.00,
 			"weizoom_card":0.00,
 			"coupon_money":0.00,
-			"intergal":20,
-			"intergal_money":10.00
+			"integral":20,
+			"integral_money":10.00
 		}
 		"""
 	When zy1'申请退款'自营订单'10101-商家3'
@@ -444,8 +444,8 @@ Scenario:3 ziying自营平台子订单退款（全退优惠券、全退积分、
 			"cash":0.00,
 			"weizoom_card":0.00,
 			"coupon_money":5.00,
-			"intergal":10,
-			"intergal_money":5.00
+			"integral":10,
+			"integral_money":5.00
 		}
 		"""
 	Then zy1获得自营订单'10101'
@@ -516,8 +516,8 @@ Scenario:4 ziying自营平台子订单退款（退现金+微众卡+优惠券+积
 			"cash":7.00,
 			"weizoom_card":4.00,
 			"coupon_money":0.00,
-			"intergal":0,
-			"intergal_money":0.00
+			"integral":0,
+			"integral_money":0.00
 		}
 		"""
 	When zy1'申请退款'自营订单'10103-商家2'
@@ -526,8 +526,8 @@ Scenario:4 ziying自营平台子订单退款（退现金+微众卡+优惠券+积
 			"cash":0.00,
 			"weizoom_card":5.00,
 			"coupon_money":2.00,
-			"intergal":6,
-			"intergal_money":3.00
+			"integral":6,
+			"integral_money":3.00
 		}
 		"""
 	When zy1'申请退款'自营订单'10103-商家3'
@@ -536,8 +536,8 @@ Scenario:4 ziying自营平台子订单退款（退现金+微众卡+优惠券+积
 			"cash":5.00,
 			"weizoom_card":0.00,
 			"coupon_money":2.00,
-			"intergal":6,
-			"intergal_money":3.00
+			"integral":6,
+			"integral_money":3.00
 		}
 		"""
 	When zy1通过财务审核'退款成功'自营订单'10103-商家1'

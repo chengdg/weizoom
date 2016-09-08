@@ -887,7 +887,7 @@ def step_imple(context,user,order_code):
         'order_id': order_id,
         'delivery_item_id': delivery_item_id,
         'cash': a.get('cash', 0),
-        'weizoom_card_money': a.get('weizoom_card_money', 0),
+        'weizoom_card_money': a.get('weizoom_card', 0),
         'integral': a.get('integral', 0),
         'coupon_money': a.get('coupon_money', 0)
     }
@@ -945,6 +945,13 @@ def step_impl(context, user, order_code):
         sub_orders.append(sub_order)
 
     _products = []
+    print('---------------------x',order.refund_info)
+    order.refund_details = {
+        'cash':order.refund_info['total_cash'],
+        'weizoom_card':order.refund_info['total_weizoom_card_money'],
+        'coupon_money':order.refund_info['total_coupon_money'],
+        'integral_money':order.refund_info['total_integral_money']
+    }
 
     for p in order.products:
         p['supplier_id'] = p['supplier']
