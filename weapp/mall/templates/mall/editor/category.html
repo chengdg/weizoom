@@ -220,7 +220,7 @@
 
 		var onConfirmRankInput = function (event) {
 			var $link = $(event.currentTarget);
-			var product_id = $(event.currentTarget).parents('tr').data('product-id');
+			var product_id = $(event.currentTarget).parents('tr').data('id');
 			var rankText = $.trim($(event.currentTarget).val());
 			/*文本框的值*/
 			var oldPos = $.trim($(event.currentTarget).data('display-index'));
