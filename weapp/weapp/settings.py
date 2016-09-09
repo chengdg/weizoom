@@ -678,7 +678,7 @@ else:
     WAPI_HOST = 'http://api.weizoom.com'
     MONEY_HOST = 'http://money.weizom.com'
     IMAGE_HOST = 'http://dev.weapp.com'
-    MARKETAPP_DOMAIN = 'marketapp.weizoom.com'
+    MARKETAPP_DOMAIN = 'marketapp.weapp.weizoom.com'
 
 IN_DEVELOP_MODE = (MODE == 'develop')
 ALLOWED_HOSTS = ['*', ]
