@@ -399,7 +399,7 @@ Background:
 					"""
 				And bill使用支付方式'微信支付'进行支付::apiserver
 				Given zy1登录系统
-				When zy1对自营订单进行发货
+				When zy1对订单进行发货
 					"""
 					{
 						"order_no": "20201-商家2",
@@ -408,7 +408,7 @@ Background:
 						"shipper": "zy1"
 					}
 					"""
-				When zy1对自营订单进行发货
+				When zy1对订单进行发货
 					"""
 					{
 						"order_no": "20202-商家2",
@@ -575,7 +575,7 @@ Background:
 					"""
 				And bill使用支付方式'微信支付'进行支付::apiserver
 				Given zy1登录系统
-				When zy1对自营订单进行发货
+				When zy1对订单进行发货
 					"""
 					{
 						"order_no": "20401-商家2",
@@ -584,7 +584,7 @@ Background:
 						"shipper": "zy1"
 					}
 					"""
-				When zy1'完成'自营订单'20401-商家2'
+				When zy1完成订单'20401-商家2'
 				When zy1'申请退款'自营订单'20401-商家3'
 					"""
 					{
@@ -595,7 +595,7 @@ Background:
 						"integral_money":5.00
 					}
 					"""
-				When zy1对自营订单进行发货
+				When zy1对订单进行发货
 					"""
 					{
 						"order_no": "20402-商家2",
@@ -604,7 +604,7 @@ Background:
 						"shipper": "zy1"
 					}
 					"""
-				When zy1'完成'自营订单'20402-商家2'
+				When zy1完成订单'20402-商家2'
 				When zy1'申请退款'自营订单'20402-商家3'
 					"""
 					{
@@ -713,7 +713,7 @@ Background:
 					"""
 				And tom使用支付方式'支付宝'进行支付::apiserver
 				Given zy1登录系统
-				When zy1对自营订单进行发货
+				When zy1对订单进行发货
 					"""
 					{
 						"order_no": "30101-商家1",
@@ -722,7 +722,7 @@ Background:
 						"shipper": "zy1"
 					}
 					"""
-				When zy1对自营订单进行发货
+				When zy1对订单进行发货
 					"""
 					{
 						"order_no": "30101-商家2",
@@ -741,7 +741,7 @@ Background:
 						"integral_money":5.00
 					}
 					"""
-				When zy1对自营订单进行发货
+				When zy1对订单进行发货
 					"""
 					{
 						"order_no": "30102-商家1",
@@ -750,7 +750,7 @@ Background:
 						"shipper": "zy1"
 					}
 					"""
-				When zy1对自营订单进行发货
+				When zy1对订单进行发货
 					"""
 					{
 						"order_no": "30102-商家2",
@@ -841,7 +841,7 @@ Background:
 					"""
 				And tom使用支付方式'微信支付'进行支付::apiserver
 				Given zy1登录系统
-				When zy1对自营订单进行发货
+				When zy1对订单进行发货
 					"""
 					{
 						"order_no": "30201-商家1",
@@ -870,7 +870,7 @@ Background:
 						"integral_money":5.00
 					}
 					"""
-				When zy1对自营订单进行发货
+				When zy1对订单进行发货
 					"""
 					{
 						"order_no": "30202-商家1",
@@ -889,7 +889,7 @@ Background:
 						"integral_money":0.00
 					}
 					"""
-				When zy1对自营订单进行发货
+				When zy1对订单进行发货
 					"""
 					{
 						"order_no": "30202-商家3",
@@ -898,8 +898,8 @@ Background:
 						"shipper": "zy1"
 					}
 					"""
-				When zy1'完成'自营订单'30202-商家3'
-				When zy1对自营订单进行发货
+				When zy1完成订单'30202-商家3'
+				When zy1对订单进行发货
 					"""
 					{
 						"order_no": "30203-商家1",
@@ -954,7 +954,7 @@ Background:
 					"""
 				And tom使用支付方式'微信支付'进行支付::apiserver
 				Given zy1登录系统
-				When zy1对自营订单进行发货
+				When zy1对订单进行发货
 					"""
 					{
 						"order_no": "30301-商家1",
@@ -963,7 +963,7 @@ Background:
 						"shipper": "zy1"
 					}
 					"""
-				When zy1对自营订单进行发货
+				When zy1对订单进行发货
 					"""
 					{
 						"order_no": "30301-商家2",
@@ -972,7 +972,7 @@ Background:
 						"shipper": "zy1"
 					}
 					"""
-				When zy1'完成'自营订单'30301-商家2'
+				When zy1完成订单'30301-商家2'
 				When zy1'申请退款'自营订单'30301-商家3'
 					"""
 					{
@@ -1009,7 +1009,7 @@ Background:
 					"""
 				And tom使用支付方式'微信支付'进行支付::apiserver
 				Given zy1登录系统
-				When zy1对自营订单进行发货
+				When zy1对订单进行发货
 					"""
 					{
 						"order_no": "30401-商家1",
@@ -1163,7 +1163,7 @@ Background:
 						"integral_money":0.00
 					}
 					"""
-				When zy1对自营订单进行发货
+				When zy1对订单进行发货
 					"""
 					{
 						"order_no": "40102-商家3",
@@ -1172,7 +1172,7 @@ Background:
 						"shipper": "zy1"
 					}
 					"""
-				When zy1'完成'自营订单'40102-商家3'
+				When zy1完成订单'40102-商家3'
 				When zy1'申请退款'自营订单'40103-商家1'
 					"""
 					{
@@ -1262,7 +1262,7 @@ Background:
 						"integral_money":0.00
 					}
 					"""
-				When zy1对自营订单进行发货
+				When zy1对订单进行发货
 					"""
 					{
 						"order_no": "40201-商家2",
@@ -1271,8 +1271,8 @@ Background:
 						"shipper": "zy1"
 					}
 					"""
-				When zy1'完成'自营订单'40201-商家2'
-				When zy1对自营订单进行发货
+				When zy1完成订单'40201-商家2'
+				When zy1对订单进行发货
 					"""
 					{
 						"order_no": "40201-商家3",
@@ -1281,7 +1281,7 @@ Background:
 						"shipper": "zy1"
 					}
 					"""
-				When zy1'完成'自营订单'40201-商家3'
+				When zy1完成订单'40201-商家3'
 				When zy1'申请退款'自营订单'40202-商家1'
 					"""
 					{
@@ -1292,7 +1292,7 @@ Background:
 						"integral_money":0.00
 					}
 					"""
-				When zy1对自营订单进行发货
+				When zy1对订单进行发货
 					"""
 					{
 						"order_no": "40202-商家2",
@@ -1301,7 +1301,7 @@ Background:
 						"shipper": "zy1"
 					}
 					"""
-				When zy1'完成'自营订单'40202-商家2'
+				When zy1完成订单'40202-商家2'
 				When zy1'申请退款'自营订单'40202-商家3'
 					"""
 					{
@@ -1396,7 +1396,7 @@ Background:
 						"""
 				And lily使用支付方式'微信支付'进行支付::apiserver
 				Given zy1登录系统
-				When zy1对自营订单进行发货
+				When zy1对订单进行发货
 					"""
 					{
 						"order_no": "50101-商家1",
@@ -1405,8 +1405,8 @@ Background:
 						"shipper": "zy1"
 					}
 					"""
-				When zy1'完成'自营订单'50101-商家1'
-				When zy1对自营订单进行发货
+				When zy1完成订单'50101-商家1'
+				When zy1对订单进行发货
 					"""
 					{
 						"order_no": "50101-商家2",
@@ -1415,7 +1415,7 @@ Background:
 						"shipper": "zy1"
 					}
 					"""
-				When zy1'完成'自营订单'50101-商家2'
+				When zy1完成订单'50101-商家2'
 				When zy1'申请退款'自营订单'50101-商家3'
 					"""
 					{
@@ -1452,7 +1452,7 @@ Background:
 						"""
 				And lily使用支付方式'微信支付'进行支付::apiserver
 				Given zy1登录系统
-				When zy1对自营订单进行发货
+				When zy1对订单进行发货
 					"""
 					{
 						"order_no": "50201-商家1",
@@ -1461,7 +1461,7 @@ Background:
 						"shipper": "zy1"
 					}
 					"""
-				When zy1'完成'自营订单'50201-商家1'
+				When zy1完成订单'50201-商家1'
 				When zy1'申请退款'自营订单'50201-商家2'
 					"""
 					{
