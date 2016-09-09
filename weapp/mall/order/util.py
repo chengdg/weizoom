@@ -912,9 +912,11 @@ def get_detail_response(request):
         if order.refund_info['has_refund_order']:
             order.refund_info['origin_weizoom_card_money'] = order.weizoom_card_money + order.refund_info['total_weizoom_card_money']
             order.refund_info['origin_final_price'] = order.final_price + order.refund_info['total_cash']
+            order.refund_info['origin_pay_money'] = order.refund_info['origin_weizoom_card_money'] + order.refund_info['origin_final_price']
         else:
             order.refund_info['origin_weizoom_card_money'] = order.weizoom_card_money
             order.refund_info['origin_final_price'] = order.final_price
+            order.refund_info['origin_pay_money'] = order.refund_info['origin_weizoom_card_money'] + order.refund_info['origin_final_price']
 
         # supplier2refund_info = {}
         # for child_order in child_orders:

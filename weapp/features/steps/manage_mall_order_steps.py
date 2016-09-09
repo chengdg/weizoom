@@ -901,29 +901,7 @@ def step_impl(context, user, order_code):
     order_db_id = bdd_util.get_order_by_order_no(order_code).id
     response = context.client.get('/mall2/order/?order_id=%d' % order_db_id)
 
-    # 'first_nav_name': FIRST_NAV,
-    # 'second_navs': export.get_mall_order_second_navs(request),
-    # 'second_nav_name': export.ORDER_ALL,
-    # 'mall_type': mall_type,
-    # 'order': order,
-    # 'child_orders': child_orders,
-    # 'child_order_postages': dict([(child.supplier, child.postage) for child in child_orders]),
-    # 'suppliers': suppliers,
-    # 'supplier_stores': supplier_stores,
-    # 'is_order_not_payed': (order.status == ORDER_STATUS_NOT),
-    # 'coupon': coupon,
-    # 'order_operation_logs': order_operation_logs,
-    # 'order_status_logs': order_status_logs,
-    # 'log_count': log_count,
-    # 'show_first': show_first,
-    # 'is_sync': is_sync,
-    # 'is_show_order_status': True if len(supplier_ids) + len(supplier_user_ids) > 1 else False,
-    # 'is_group_buying': is_group_buying,
-    # 'zypt_customer_message_is_str': zypt_customer_message_is_str
     expected = json.loads(context.text)
-
-    # expected.pop('group')
-    # expected.pop('status')
     expected.pop('total_save')
     order = response.context['order']
     child_orders = response.context['child_orders']
@@ -949,8 +927,13 @@ def step_impl(context, user, order_code):
         'cash':order.refund_info['total_cash'],
         'weizoom_card':order.refund_info['total_weizoom_card_money'],
         'coupon_money':order.refund_info['total_coupon_money'],
-        'integral_money':order.refund_info['total_integral_money']
+        'integral_money':order.refund_info['total_integral_money'],
+
     }
+
+    order.original_cash=order.refund_info['origin_final_price'],
+    order.original_weizoom_card= order.refund_info['origin_weizoom_card_money'],
+    order.original_final_price= order.refund_info['origin_pay_money']
 
     for p in order.products:
         p['supplier_id'] = p['supplier']

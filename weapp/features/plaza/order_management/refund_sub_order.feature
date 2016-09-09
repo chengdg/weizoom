@@ -274,7 +274,7 @@ Background:
 				"""
 			And bill使用支付方式'微信支付'进行支付::apiserver
 
-@mall2 @ztq  @order @allOrder @refund @ztqb
+@mall2 @ztq  @order @allOrder @refund
 Scenario:1 ziying自营平台子订单退款（全退现金）
 	Given zy1登录系统
 	When zy1'申请退款'自营订单'10101-商家1'
@@ -415,7 +415,7 @@ Scenario:2 ziying自营平台子订单退款（全退微众卡）
 			}
 			"""
 
-@mall2 @ztqbb @order @allOrder @refund
+@mall2 @ztqbb @order @allOrder
 Scenario:3 ziying自营平台子订单退款（全退优惠券、全退积分、退优惠券+积分）
 	Given zy1登录系统
 	When zy1'申请退款'自营订单'10101-商家1'
@@ -506,7 +506,7 @@ Scenario:3 ziying自营平台子订单退款（全退优惠券、全退积分、
 			}
 			"""
 
-@mall2 @ztq @order @allOrder @refund
+@mall2 @ztq @order @allOrder @refund @ztqb
 Scenario:4 ziying自营平台子订单退款（退现金+微众卡+优惠券+积分）
 	Given zy1登录系统
 	#10103-现金21.00+微众卡10+优惠券0.00+积分0.00=31.00
