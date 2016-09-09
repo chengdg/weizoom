@@ -16,7 +16,7 @@ Feature:自营平台所有订单列表查询
 		2、查询时是按照子订单进行筛选结果
 	"""
 
-Backgroud:
+Background:
 	Given 重置'weizoom_card'的bdd环境
 	Given 重置'apiserver'的bdd环境
 	Given zy1登录系统
