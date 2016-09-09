@@ -175,7 +175,7 @@ def step_impl(context, user):
 @when(u"{user}给商品'{product_name}'编辑分组")
 def step_impl(context, user, product_name):
     print "*"*100
-    url = '/mall2/api/update_proudct_category/'
+    url = '/mall2/api/update_product_category/'
     existed_product = mall_models.Product.objects.get(name=product_name)
     
     category_names = json.loads(context.text)
