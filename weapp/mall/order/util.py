@@ -803,7 +803,8 @@ def get_detail_response(request):
             'total_weizoom_card_money': sum([r.weizoom_card_money for r in refund_infos]),
             'total_integral_money': sum([r.integral_money for r in refund_infos]),
             'total_coupon_money': sum([r.coupon_money for r in refund_infos]),
-            'total_money': sum([r.total for r in refund_infos])
+            'total_money': sum([r.total for r in refund_infos]),
+            'has_refund_order':False
         }
 
         order.area = regional_util.get_str_value_by_string_ids(order.area)
@@ -890,7 +891,8 @@ def get_detail_response(request):
             if child_order.supplier:
                 supplier_ids.append(child_order.supplier)
                 supplier2sub_order[child_order.supplier] = child_order
-
+                if child_order.status == ORDER_STATUS_REFUNDED:
+                    order.refund_info['has_refund_order'] = True
                 refund_info = child_order_id2refund_info.get(child_order.id, {})
                 if refund_info:
                     refund_info = {
