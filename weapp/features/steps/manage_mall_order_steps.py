@@ -945,7 +945,6 @@ def step_impl(context, user, order_code):
         sub_orders.append(sub_order)
 
     _products = []
-    print('---------------------x',order.refund_info)
     order.refund_details = {
         'cash':order.refund_info['total_cash'],
         'weizoom_card':order.refund_info['total_weizoom_card_money'],
@@ -959,7 +958,7 @@ def step_impl(context, user, order_code):
         if p['promotion']:
             p['single_save'] = p['promotion']['promotion_saved_money']
         else:
-            p['single_save'] = ''
+            p['single_save'] = 0
 
         _products.append(p)
 
