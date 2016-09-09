@@ -156,8 +156,7 @@ def getLocalLinkData(request, link_type, selected_id, is_selected_type, query, o
 				shengjing['link'] = item['link'].format(item['id'])
 				shengjing['isChecked'] = True if is_selected_type and item['id'] == selected_id else False
 				items.append(shengjing)
-			response = create_response(200)
-			response.data = {
+			return {
 				'items': items,
 				'type': link_type
 			}
@@ -197,8 +196,7 @@ def getLocalLinkData(request, link_type, selected_id, is_selected_type, query, o
 
 					items.append(data)
 
-			response = create_response(200)
-			response.data = {
+			return {
 				'items': items,
 				'pageinfo': paginator.to_dict(pageinfo),
 				'sortAttr': order_by,
