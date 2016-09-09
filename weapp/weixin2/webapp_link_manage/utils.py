@@ -239,7 +239,7 @@ def get_webapp_link_menu_objectes(request):
 			'id': 15,
 			'name': '专项签到',
 			'link': get_exsign_webapp_link(request),
-			'users': ['jobs', 'ceshi01', 'weshop']
+			'users': ['jobs', 'ceshi01', 'weshop', 'BITC']
 		}
 	}
 
