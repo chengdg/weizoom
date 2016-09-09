@@ -202,7 +202,7 @@ Background:
 	When tom关注zy1的公众号
 	When lily关注zy1的公众号
 	#订单数据
-		#单个子订单（101-退款中；102-退款成功）
+		#单个子订单-10101-退款中-商品1a
 			When bill访问zy1的webapp::apiserver
 			When bill绑定微众卡::apiserver
 				"""
@@ -233,6 +233,18 @@ Background:
 				}
 				"""
 			And bill使用支付方式'微信支付'进行支付::apiserver
+			Given zy1登录系统
+			When zy1'申请退款'自营订单'10101-商家1'
+				"""
+				{
+					"cash":0.00,
+					"weizoom_card":0.00,
+					"coupon_money":5.00,
+					"integral":10,
+					"integral_money":5.00
+				}
+				"""
+		#单个子订单-10201-退款成功-商品1a,1+商品1b,b
 			When bill购买zy1的商品::apiserver
 				"""
 				{
@@ -257,21 +269,11 @@ Background:
 				}
 				"""
 			Given zy1登录系统
-			When zy1'申请退款'自营订单'10101-商家1'
-				"""
-				{
-					"cash":0.00,
-					"weizoom_card":0.00,
-					"coupon_money":5.00,
-					"integral":10,
-					"integral_money":5.00
-				}
-				"""
 			When zy1'申请退款'自营订单'10201-商家1'
 				"""
 				{
 					"cash":0.00,
-					"weizoom_card":10.00,
+					"weizoom_card":9.00,
 					"coupon_money":5.00,
 					"integral":10,
 					"integral_money":5.00
@@ -402,7 +404,7 @@ Background:
 					{
 						"order_no": "20201-商家2",
 						"logistics": "申通快递",
-						"number": "2020101",
+						"number": "2020102",
 						"shipper": "zy1"
 					}
 					"""
@@ -484,26 +486,6 @@ Background:
 					"""
 				And bill使用支付方式'微信支付'进行支付::apiserver
 				Given zy1登录系统
-				When zy1'申请退款'自营订单'20301-商家3'
-					"""
-					{
-						"cash":0.00,
-						"weizoom_card":0.00,
-						"coupon_money":5.00,
-						"integral":10,
-						"integral_money":5.00
-					}
-					"""
-				When zy1'申请退款'自营订单'20302-商家3'
-					"""
-					{
-						"cash":10.00,
-						"weizoom_card":0.00,
-						"coupon_money":0.00,
-						"integral":0,
-						"integral_money":0.00
-					}
-					"""
 				When zy1'申请退款'自营订单'20301-商家2'
 					"""
 					{
@@ -514,7 +496,27 @@ Background:
 						"integral_money":0.00
 					}
 					"""
+				When zy1'申请退款'自营订单'20301-商家3'
+					"""
+					{
+						"cash":0.00,
+						"weizoom_card":0.00,
+						"coupon_money":5.00,
+						"integral":10,
+						"integral_money":5.00
+					}
+					"""
 				When zy1'申请退款'自营订单'20302-商家2'
+					"""
+					{
+						"cash":10.00,
+						"weizoom_card":0.00,
+						"coupon_money":0.00,
+						"integral":0,
+						"integral_money":0.00
+					}
+					"""
+				When zy1'申请退款'自营订单'20302-商家3'
 					"""
 					{
 						"cash":10.00,
@@ -578,8 +580,19 @@ Background:
 					{
 						"order_no": "20401-商家2",
 						"logistics": "申通快递",
-						"number": "2040101",
+						"number": "2040102",
 						"shipper": "zy1"
+					}
+					"""
+				When zy1'完成'自营订单'20401-商家2'
+				When zy1'申请退款'自营订单'20401-商家3'
+					"""
+					{
+						"cash":0.00,
+						"weizoom_card":0.00,
+						"coupon_money":5.00,
+						"integral":10,
+						"integral_money":5.00
 					}
 					"""
 				When zy1对自营订单进行发货
@@ -591,18 +604,7 @@ Background:
 						"shipper": "zy1"
 					}
 					"""
-				When zy1'完成'自营订单'20401-商家2'
 				When zy1'完成'自营订单'20402-商家2'
-				When zy1'申请退款'自营订单'20401-商家3'
-					"""
-					{
-						"cash":0.00,
-						"weizoom_card":0.00,
-						"coupon_money":5.00,
-						"integral":10,
-						"integral_money":5.00
-					}
-					"""
 				When zy1'申请退款'自营订单'20402-商家3'
 					"""
 					{
@@ -639,16 +641,6 @@ Background:
 					"""
 				And bill使用支付方式'微信支付'进行支付::apiserver
 				Given zy1登录系统
-				When zy1'申请退款'自营订单'20501-商家3'
-					"""
-					{
-						"cash":0.00,
-						"weizoom_card":0.00,
-						"coupon_money":5.00,
-						"integral":10,
-						"integral_money":5.00
-					}
-					"""
 				When zy1'申请退款'自营订单'20501-商家2'
 					"""
 					{
@@ -659,8 +651,19 @@ Background:
 						"integral_money":0.00
 					}
 					"""
-				When zy1通过财务审核'退款成功'自营订单'20501-商家3'
 				When zy1通过财务审核'退款成功'自营订单'20501-商家2'
+				When zy1'申请退款'自营订单'20501-商家3'
+					"""
+					{
+						"cash":0.00,
+						"weizoom_card":0.00,
+						"coupon_money":5.00,
+						"integral":10,
+						"integral_money":5.00
+					}
+					"""
+				When zy1通过财务审核'退款成功'自营订单'20501-商家3'
+
 			#商品1a,商品2b,商品3b-tom
 			#301-已发货（已发货/已发货/退款中（退款成功））
 				When tom购买zy1的商品::apiserver
@@ -724,7 +727,7 @@ Background:
 					{
 						"order_no": "30101-商家2",
 						"logistics": "申通快递",
-						"number": "3010202",
+						"number": "3010102",
 						"shipper": "zy1"
 					}
 					"""
@@ -1026,7 +1029,7 @@ Background:
 					}
 					"""
 				When zy1通过财务审核'退款成功'自营订单'30401-商家2'
-				When zy1'申请退款'自营订单'30401-商家4'
+				When zy1'申请退款'自营订单'30401-商家3'
 					"""
 					{
 						"cash":20.00,
