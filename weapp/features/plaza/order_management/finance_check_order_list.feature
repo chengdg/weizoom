@@ -39,7 +39,7 @@ Feature:查看自营平台财务审核订单列表
 		8、财务审核订单列表查询时，按照子订单进行筛选结果
 	"""
 
-Backgroud:
+Background:
 	Given 重置'weizoom_card'的bdd环境
 	Given 重置'apiserver'的bdd环境
 	Given zy1登录系统
@@ -290,8 +290,8 @@ Scenario:1 ziying查看自营平台财务审核订单列表（多子订单的母
 				"cash":9.00,
 				"weizoom_card":0.00,
 				"coupon_money":0.00,
-				"intergal":0,
-				"intergal_money":0.00
+				"integral":0,
+				"integral_money":0.00
 			}
 			"""
 		Given zy1登录系统
@@ -409,8 +409,8 @@ Scenario:1 ziying查看自营平台财务审核订单列表（多子订单的母
 				"cash":11.00,
 				"weizoom_card":0.00,
 				"coupon_money":0.00,
-				"intergal":0,
-				"intergal_money":0.00
+				"integral":0,
+				"integral_money":0.00
 			}
 			"""
 		When zy1'申请退款'自营订单'101-商家1'
@@ -419,8 +419,8 @@ Scenario:1 ziying查看自营平台财务审核订单列表（多子订单的母
 					"cash":20.00,
 					"weizoom_card":0.00,
 					"coupon_money":0.00,
-					"intergal":0,
-					"intergal_money":0.00
+					"integral":0,
+					"integral_money":0.00
 				}
 				"""
 		Then zy1获得自营财务审核'全部'订单列表
@@ -556,8 +556,8 @@ Scenario:2 ziying查看自营平台财务审核订单列表（多子订单的母
 				"cash":5.00,
 				"weizoom_card":0.00,
 				"coupon_money":4.00,
-				"intergal":0,
-				"intergal_money":0.00
+				"integral":0,
+				"integral_money":0.00
 			}
 			"""
 		When zy1通过财务审核'退款成功'自营订单'101-商家3'
@@ -686,8 +686,8 @@ Scenario:2 ziying查看自营平台财务审核订单列表（多子订单的母
 				"cash":11.00,
 				"weizoom_card":0.00,
 				"coupon_money":0.00,
-				"intergal":0,
-				"intergal_money":0.00
+				"integral":0,
+				"integral_money":0.00
 			}
 			"""
 		When zy1'申请退款'自营订单'101-商家1'
@@ -696,8 +696,8 @@ Scenario:2 ziying查看自营平台财务审核订单列表（多子订单的母
 				"cash":20.00,
 				"weizoom_card":0.00,
 				"coupon_money":0.00,
-				"intergal":0,
-				"intergal_money":0.00
+				"integral":0,
+				"integral_money":0.00
 			}
 			"""
 		When zy1通过财务审核'退款成功'自营订单'101-商家2'
@@ -837,8 +837,8 @@ Scenario:3 ziying查看自营平台财务审核订单列表（多子订单的母
 				"cash":11.00,
 				"weizoom_card":0.00,
 				"coupon_money":0.00,
-				"intergal":0,
-				"intergal_money":0.00
+				"integral":0,
+				"integral_money":0.00
 			}
 			"""
 		When zy1'申请退款'自营订单'101-商家3'
@@ -847,8 +847,8 @@ Scenario:3 ziying查看自营平台财务审核订单列表（多子订单的母
 				"cash":5.00,
 				"weizoom_card":0.00,
 				"coupon_money":0.00,
-				"intergal":8,
-				"intergal_money":4.00
+				"integral":8,
+				"integral_money":4.00
 			}
 			"""
 		When zy1通过财务审核'退款成功'自营订单'101-商家3'
@@ -1374,8 +1374,8 @@ Scenario:3 ziying查看自营平台财务审核订单列表（多子订单的母
 				"cash":20.00,
 				"weizoom_card":0.00,
 				"coupon_money":0.00,
-				"intergal":0,
-				"intergal_money":0.00
+				"integral":0,
+				"integral_money":0.00
 			}
 			"""
 		Then zy1获得自营财务审核'全部'订单列表
@@ -1745,8 +1745,8 @@ Scenario:4 ziying查看自营平台财务审核订单列表（单个子订单的
 					"cash":0.00,
 					"weizoom_card":0.00,
 					"coupon_money":5.00,
-					"intergal":10,
-					"intergal_money":5.00
+					"integral":10,
+					"integral_money":5.00
 				}
 				"""
 		Then zy1获得自营财务审核'全部'订单列表
@@ -1881,8 +1881,8 @@ Scenario:4 ziying查看自营平台财务审核订单列表（单个子订单的
 					"cash":0.00,
 					"weizoom_card":21.00,
 					"coupon_money":5.00,
-					"intergal":10,
-					"intergal_money":5.00
+					"integral":10,
+					"integral_money":5.00
 				}
 				"""
 		When zy1通过财务审核'退款成功'自营订单'103-商家1'

@@ -16,7 +16,7 @@ Feature:自营平台财务审核订单列表查询
 		2、查询时是按照子订单进行筛选结果
 	"""
 
-Backgroud:
+Background:
 	Given 重置'weizoom_card'的bdd环境
 	Given 重置'apiserver'的bdd环境
 	Given zy1登录系统
@@ -263,8 +263,8 @@ Backgroud:
 					"cash":0.00,
 					"weizoom_card":0.00,
 					"coupon_money":5.00,
-					"intergal":10,
-					"intergal_money":5.00
+					"integral":10,
+					"integral_money":5.00
 				}
 				"""
 			When zy1'申请退款'自营订单'10201-商家1'
@@ -273,8 +273,8 @@ Backgroud:
 					"cash":0.00,
 					"weizoom_card":10.00,
 					"coupon_money":5.00,
-					"intergal":10,
-					"intergal_money":5.00
+					"integral":10,
+					"integral_money":5.00
 				}
 				"""
 			When zy1通过财务审核'退款成功'自营订单'10201-商家1'
@@ -334,8 +334,8 @@ Backgroud:
 						"cash":0.00,
 						"weizoom_card":0.00,
 						"coupon_money":5.00,
-						"intergal":10,
-						"intergal_money":5.00
+						"integral":10,
+						"integral_money":5.00
 					}
 					"""
 				When zy1'申请退款'自营订单'20102-商家3'
@@ -344,8 +344,8 @@ Backgroud:
 						"cash":10.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
-						"intergal":0,
-						"intergal_money":0.00
+						"integral":0,
+						"integral_money":0.00
 					}
 					"""
 				When zy1通过财务审核'退款成功'自营订单'20102-商家3'
@@ -421,8 +421,8 @@ Backgroud:
 						"cash":0.00,
 						"weizoom_card":0.00,
 						"coupon_money":5.00,
-						"intergal":10,
-						"intergal_money":5.00
+						"integral":10,
+						"integral_money":5.00
 					}
 					"""
 				When zy1'申请退款'自营订单'20202-商家3'
@@ -431,8 +431,8 @@ Backgroud:
 						"cash":10.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
-						"intergal":0,
-						"intergal_money":0.00
+						"integral":0,
+						"integral_money":0.00
 					}
 					"""
 				When zy1通过财务审核'退款成功'自营订单'20202-商家3'
@@ -490,8 +490,8 @@ Backgroud:
 						"cash":0.00,
 						"weizoom_card":0.00,
 						"coupon_money":5.00,
-						"intergal":10,
-						"intergal_money":5.00
+						"integral":10,
+						"integral_money":5.00
 					}
 					"""
 				When zy1'申请退款'自营订单'20302-商家3'
@@ -500,8 +500,8 @@ Backgroud:
 						"cash":10.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
-						"intergal":0,
-						"intergal_money":0.00
+						"integral":0,
+						"integral_money":0.00
 					}
 					"""
 				When zy1'申请退款'自营订单'20301-商家2'
@@ -510,8 +510,8 @@ Backgroud:
 						"cash":10.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
-						"intergal":0,
-						"intergal_money":0.00
+						"integral":0,
+						"integral_money":0.00
 					}
 					"""
 				When zy1'申请退款'自营订单'20302-商家2'
@@ -520,8 +520,8 @@ Backgroud:
 						"cash":10.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
-						"intergal":0,
-						"intergal_money":0.00
+						"integral":0,
+						"integral_money":0.00
 					}
 					"""
 				When zy1通过财务审核'退款成功'自营订单'20302-商家3'
@@ -599,8 +599,8 @@ Backgroud:
 						"cash":0.00,
 						"weizoom_card":0.00,
 						"coupon_money":5.00,
-						"intergal":10,
-						"intergal_money":5.00
+						"integral":10,
+						"integral_money":5.00
 					}
 					"""
 				When zy1'申请退款'自营订单'20402-商家3'
@@ -609,8 +609,8 @@ Backgroud:
 						"cash":10.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
-						"intergal":0,
-						"intergal_money":0.00
+						"integral":0,
+						"integral_money":0.00
 					}
 					"""
 				When zy1通过财务审核'退款成功'自营订单'20402-商家3'
@@ -645,8 +645,8 @@ Backgroud:
 						"cash":0.00,
 						"weizoom_card":0.00,
 						"coupon_money":5.00,
-						"intergal":10,
-						"intergal_money":5.00
+						"integral":10,
+						"integral_money":5.00
 					}
 					"""
 				When zy1'申请退款'自营订单'20501-商家2'
@@ -655,8 +655,8 @@ Backgroud:
 						"cash":10.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
-						"intergal":0,
-						"intergal_money":0.00
+						"integral":0,
+						"integral_money":0.00
 					}
 					"""
 				When zy1通过财务审核'退款成功'自营订单'20501-商家3'
@@ -734,8 +734,8 @@ Backgroud:
 						"cash":10.00,
 						"weizoom_card":0.00,
 						"coupon_money":5.00,
-						"intergal":10,
-						"intergal_money":5.00
+						"integral":10,
+						"integral_money":5.00
 					}
 					"""
 				When zy1对自营订单进行发货
@@ -762,8 +762,8 @@ Backgroud:
 						"cash":20.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
-						"intergal":0,
-						"intergal_money":0.00
+						"integral":0,
+						"integral_money":0.00
 					}
 					"""
 				When zy1通过财务审核'退款成功'自营订单'30102-商家3'
@@ -853,8 +853,8 @@ Backgroud:
 						"cash":20.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
-						"intergal":0,
-						"intergal_money":0.00
+						"integral":0,
+						"integral_money":0.00
 					}
 					"""
 				When zy1'申请退款'自营订单'30201-商家3'
@@ -863,8 +863,8 @@ Backgroud:
 						"cash":10.00,
 						"weizoom_card":0.00,
 						"coupon_money":5.00,
-						"intergal":10,
-						"intergal_money":5.00
+						"integral":10,
+						"integral_money":5.00
 					}
 					"""
 				When zy1对自营订单进行发货
@@ -882,8 +882,8 @@ Backgroud:
 						"cash":20.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
-						"intergal":0,
-						"intergal_money":0.00
+						"integral":0,
+						"integral_money":0.00
 					}
 					"""
 				When zy1对自营订单进行发货
@@ -911,8 +911,8 @@ Backgroud:
 						"cash":20.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
-						"intergal":0,
-						"intergal_money":0.00
+						"integral":0,
+						"integral_money":0.00
 					}
 					"""
 				When zy1'申请退款'自营订单'30203-商家3'
@@ -921,8 +921,8 @@ Backgroud:
 						"cash":10.00,
 						"weizoom_card":0.00,
 						"coupon_money":5.00,
-						"intergal":10,
-						"intergal_money":5.00
+						"integral":10,
+						"integral_money":5.00
 					}
 					"""
 				When zy1通过财务审核'退款成功'自营订单'30203-商家3'
@@ -976,8 +976,8 @@ Backgroud:
 						"cash":20.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
-						"intergal":0,
-						"intergal_money":0.00
+						"integral":0,
+						"integral_money":0.00
 					}
 					"""
 				When zy1通过财务审核'退款成功'自营订单'30301-商家3'
@@ -1021,8 +1021,8 @@ Backgroud:
 						"cash":20.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
-						"intergal":0,
-						"intergal_money":0.00
+						"integral":0,
+						"integral_money":0.00
 					}
 					"""
 				When zy1通过财务审核'退款成功'自营订单'30401-商家2'
@@ -1032,8 +1032,8 @@ Backgroud:
 						"cash":20.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
-						"intergal":0,
-						"intergal_money":0.00
+						"integral":0,
+						"integral_money":0.00
 					}
 					"""
 				When zy1通过财务审核'退款成功'自营订单'30401-商家3'
@@ -1116,8 +1116,8 @@ Backgroud:
 						"cash":10.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
-						"intergal":0,
-						"intergal_money":0.00
+						"integral":0,
+						"integral_money":0.00
 					}
 					"""
 				When zy1'申请退款'自营订单'40101-商家2'
@@ -1126,8 +1126,8 @@ Backgroud:
 						"cash":10.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
-						"intergal":0,
-						"intergal_money":0.00
+						"integral":0,
+						"integral_money":0.00
 					}
 					"""
 				When zy1'申请退款'自营订单'40101-商家3'
@@ -1136,8 +1136,8 @@ Backgroud:
 						"cash":20.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
-						"intergal":0,
-						"intergal_money":0.00
+						"integral":0,
+						"integral_money":0.00
 					}
 					"""
 				When zy1'申请退款'自营订单'40102-商家1'
@@ -1146,8 +1146,8 @@ Backgroud:
 						"cash":10.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
-						"intergal":0,
-						"intergal_money":0.00
+						"integral":0,
+						"integral_money":0.00
 					}
 					"""
 				When zy1'申请退款'自营订单'40102-商家2'
@@ -1156,8 +1156,8 @@ Backgroud:
 						"cash":10.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
-						"intergal":0,
-						"intergal_money":0.00
+						"integral":0,
+						"integral_money":0.00
 					}
 					"""
 				When zy1对自营订单进行发货
@@ -1176,8 +1176,8 @@ Backgroud:
 						"cash":10.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
-						"intergal":0,
-						"intergal_money":0.00
+						"integral":0,
+						"integral_money":0.00
 					}
 					"""
 				When zy1'申请退款'自营订单'40103-商家2'
@@ -1186,8 +1186,8 @@ Backgroud:
 						"cash":10.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
-						"intergal":0,
-						"intergal_money":0.00
+						"integral":0,
+						"integral_money":0.00
 					}
 					"""
 				When zy1'申请退款'自营订单'40103-商家3'
@@ -1196,8 +1196,8 @@ Backgroud:
 						"cash":20.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
-						"intergal":0,
-						"intergal_money":0.00
+						"integral":0,
+						"integral_money":0.00
 					}
 					"""
 				When zy1通过财务审核'退款成功'自营订单'40103-商家3'
@@ -1255,8 +1255,8 @@ Backgroud:
 						"cash":10.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
-						"intergal":0,
-						"intergal_money":0.00
+						"integral":0,
+						"integral_money":0.00
 					}
 					"""
 				When zy1对自营订单进行发货
@@ -1285,8 +1285,8 @@ Backgroud:
 						"cash":10.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
-						"intergal":0,
-						"intergal_money":0.00
+						"integral":0,
+						"integral_money":0.00
 					}
 					"""
 				When zy1对自营订单进行发货
@@ -1305,8 +1305,8 @@ Backgroud:
 						"cash":20.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
-						"intergal":0,
-						"intergal_money":0.00
+						"integral":0,
+						"integral_money":0.00
 					}
 					"""
 				When zy1通过财务审核'退款成功'自营订单'40202-商家3'
@@ -1341,8 +1341,8 @@ Backgroud:
 						"cash":10.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
-						"intergal":0,
-						"intergal_money":0.00
+						"integral":0,
+						"integral_money":0.00
 					}
 					"""
 				When zy1'申请退款'自营订单'40301-商家2'
@@ -1351,8 +1351,8 @@ Backgroud:
 						"cash":10.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
-						"intergal":0,
-						"intergal_money":0.00
+						"integral":0,
+						"integral_money":0.00
 					}
 					"""
 				When zy1通过财务审核'退款成功'自营订单'40301-商家2'
@@ -1362,8 +1362,8 @@ Backgroud:
 						"cash":20.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
-						"intergal":0,
-						"intergal_money":0.00
+						"integral":0,
+						"integral_money":0.00
 					}
 					"""
 				When zy1通过财务审核'退款成功'自营订单'40301-商家3'
@@ -1419,8 +1419,8 @@ Backgroud:
 						"cash":20.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
-						"intergal":0,
-						"intergal_money":0.00
+						"integral":0,
+						"integral_money":0.00
 					}
 					"""
 				When zy1通过财务审核'退款成功'自营订单'50101-商家3'
@@ -1465,8 +1465,8 @@ Backgroud:
 						"cash":10.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
-						"intergal":0,
-						"intergal_money":0.00
+						"integral":0,
+						"integral_money":0.00
 					}
 					"""
 				When zy1通过财务审核'退款成功'自营订单'50201-商家2'
@@ -1476,8 +1476,8 @@ Backgroud:
 						"cash":20.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
-						"intergal":0,
-						"intergal_money":0.00
+						"integral":0,
+						"integral_money":0.00
 					}
 					"""
 				When zy1通过财务审核'退款成功'自营订单'50201-商家3'
@@ -1513,8 +1513,8 @@ Backgroud:
 						"cash":10.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
-						"intergal":0,
-						"intergal_money":0.00
+						"integral":0,
+						"integral_money":0.00
 					}
 					"""
 				When zy1通过财务审核'退款成功'自营订单'60101-商家1'
@@ -1524,8 +1524,8 @@ Backgroud:
 						"cash":10.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
-						"intergal":0,
-						"intergal_money":0.00
+						"integral":0,
+						"integral_money":0.00
 					}
 					"""
 				When zy1通过财务审核'退款成功'自营订单'60101-商家2'
@@ -1535,8 +1535,8 @@ Backgroud:
 						"cash":20.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
-						"intergal":0,
-						"intergal_money":0.00
+						"integral":0,
+						"integral_money":0.00
 					}
 					"""
 				When zy1通过财务审核'退款成功'自营订单'60101-商家3'
