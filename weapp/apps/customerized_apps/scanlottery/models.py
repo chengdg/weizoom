@@ -23,6 +23,7 @@ class ScanlotteryRecord(models.Document):
 	status = models.BooleanField(default=False) #是否已领取
 	created_at = models.DateTimeField() #创建时间
 	code = models.StringField(default="", max_length=20)  # 抽奖二维码
+	participate_type = models.LongField(default=0)  # 用户参与方式 0：扫码 1：输入防伪码
 
 	meta = {
 		'collection': 'scanlottery_scanlottery_record',

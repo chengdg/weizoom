@@ -114,7 +114,8 @@ class ScanlotteryParticipances(resource.Resource):
 				'status': data.status,
 				'created_at': data.created_at.strftime("%Y-%m-%d %H:%M:%S"),
 				'name': data.name,
-				'code': data.code
+				'code': data.code,
+				'participate_type': u'用户输入' if data.participate_type else u'扫码'
 			})
 		response_data = {
 			'items': items,

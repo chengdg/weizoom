@@ -223,6 +223,8 @@ class Product(models.Model):
 	is_enable_bill = models.BooleanField(default=False)  # 商品是否开具发票
 	is_delivery = models.BooleanField(default=False) # 是否勾选配送时间
 	buy_in_supplier = models.BooleanField(default=False) # 记录下单位置是商城还是供货商，0是商城1是供货商
+	limit_zone_type = models.IntegerField(default=0) # 0不限制 1禁售 2仅售
+	limit_zone = models.IntegerField(default=0) # 限制地区的模板id
 
 	class Meta(object):
 		db_table = 'mall_product'
@@ -2913,7 +2915,7 @@ def product_belong_to(mall_type, owner, type):
 			status = PP_STATUS_OFF
 		else:
 			status = PP_STATUS_ON
-		product_pool_ids = [pool.product_id for pool in ProductPool.objects.filter(woid=owner.id, status=status)]
+		product_pool_ids = ProductPool.objects.filter(woid=owner.id, status=status).values_list('product_id', flat=True)
 
 		products = Product.objects.filter(
 				Q(owner=owner,
@@ -3012,7 +3014,6 @@ class SupplierDivideRebateInfo(models.Model):
         db_table = 'supplier_divide_rebate_info'
 
 
-
 class SupplierRetailRebateInfo(models.Model):
     """
     零售返点的供货商的返点信息(包括团购)
@@ -3029,3 +3030,18 @@ class SupplierRetailRebateInfo(models.Model):
 
     class Meta(object):
         db_table = 'supplier_retail_rebate_info'
+
+class ProductLimitZoneTemplate(models.Model):
+	"""
+	商品仅售和禁售的模板
+	"""
+	owner = models.ForeignKey(User)
+	name = models.CharField(max_length=64)  # 模板名称
+	provinces = models.CharField(max_length=1024) # 所有省id
+	cities = models.CharField(max_length=4096) # 所有城市id
+	created_at = models.DateTimeField(auto_now_add=True)  # 添加时间
+
+	class Meta(object):
+		verbose_name = "商品仅售和禁售的模板"
+		verbose_name_plural = "商品仅售和禁售的模板"
+		db_table = "mall_product_limit_zone_template"

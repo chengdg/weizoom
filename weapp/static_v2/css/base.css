@@ -604,6 +604,9 @@ select{
 .xui-mainPanel .xui-sideBar-configProdcutList{
 	background-position: -96px -200px;
 }
+.xui-mainPanel .xui-sideBar-limitZoneManagement{
+	background-position: -142px -83px;
+}
 .xui-mainPanel .xui-sideBar > ul{
 	margin-top:10px;
 }
@@ -1063,7 +1066,7 @@ button.xui-close{
 
 }*/
 .xui-noticyTip{/*导航提示*/
-	right:22px;
+	left: 75px;
 	top:2px;
 	font-style: normal;
 	font-size: 12px;
@@ -1072,21 +1075,39 @@ button.xui-close{
 	background-color: #da0909;
 	color: #fff;
 	height: 18px;
-	min-width: 18px;
-	-webkit-border-radius: 50%;
-	-moz-border-radius: 50%;
-	border-radius: 50%;
 	position: absolute;
 	text-align: center;
 	line-height: 18px;
 	box-sizing: border-box;
-	padding: 0 3px;
+	z-index: 1;
+	white-space: nowrap;
+}
+.xui-noticyTip::before,.xui-noticyTip::after{
+    content: "";
+    display: inline-block;
+    background: #da0909;
+    width: 9px;
+    height: 18px;
+    vertical-align: middle;
+    position: absolute;
+    z-index: -1;
+    top: 0;
+}
+.xui-noticyTip::before{
+    -webkit-border-radius: 18px 0 0 18px;
+    left: -7px;
+
+}
+.xui-noticyTip::after{
+    -webkit-border-radius: 0 18px 18px 0;
+    right: -7px;
 }
 .xui-sideBar-third .xui-noticyTip{/*左侧边栏实时消息提示*/
-	right: 56px;
+	left: 122px;
 }
 .xui-allOrders .xui-noticyTip{/*所有订单待发货提示*/
-	right:13px;
+	left: 76px;
+    top: -3px;
 }
 .xui-header .xui-headerActionBar .xui-noticyTip{
 	-moz-transform: scale(.8);

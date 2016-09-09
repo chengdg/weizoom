@@ -45,10 +45,19 @@ W.view.mall.ProductEditor = Backbone.View.extend({
 		'change .xa-propertyTemplateSelector': 'onSelectPropertyTemplate',
 		'click .xa-deleteProperty': 'onClickDeletePropertyLink',
 		'click .xa-addProperty': 'onClickAddPropertyLink',
+		'click .xa-limit-zone-detail': 'onClickShowLimitZone',
+		'change #limit_zone_type': 'onChangeLimitZoneType',
+		'change #limit_zone_template':'onChangeLimitZoneTemp'
 	},
 
 	render: function() {
 		// this.$('input[type="text"]').eq(0).focus();
+		if(this.$el.find('#limit_zone_type').val() == 0){
+			this.$el.find('.xa-limit-temp-section').hide();
+		}
+		if(this.$el.find('#limit_zone_template').val() == 0){
+			this.$el.find('.xa-limit-zone-btn').hide();
+		}
 	},
 
 	onClickSelectImageButton: function(event) {
@@ -158,6 +167,41 @@ W.view.mall.ProductEditor = Backbone.View.extend({
 		var $node = $.tmpl(this.propertyTemplate, {});
 		$node.editable();
 		this.$('div.xa-customProperties ul').append($node);
+	},
+	onClickShowLimitZone: function(event){
+		var _this = this;
+		var templateId,
+			templateName;
+		if($(event.currentTarget).siblings().length == 0){
+			templateId = $(event.target).attr('data-template-id');
+			templateName = $(event.target).attr('data-template-name');
+		}else{
+			templateId = this.$el.find('#limit_zone_template').val();
+			templateName = this.$el.find('#limit_zone_template option:selected').text();
+		}
+		W.dialog.showDialog('W.dialog.mall.EditProductLimitedAreaTemplateDialog', {
+			templateId:templateId,
+			templateName:templateName,
+			success: function(data) {
+			}
+		});
+	},
+	onChangeLimitZoneType: function(event){
+		var $limitTempSection = this.$el.find('.xa-limit-temp-section');
+		if($(event.target).val() == 0){
+			$limitTempSection.hide();
+		}else{
+			$limitTempSection.show();
+		}
+	},
+	onChangeLimitZoneTemp:function(event){
+		var $showlimitTempBtn = this.$el.find('.xa-limit-zone-btn');
+		if($(event.target).val() == 0){
+			$showlimitTempBtn.hide();
+		}else{
+			$showlimitTempBtn.show();
+		}
+		$(event.target).siblings('.errorHint').hide();
 	},
 	onSubmit:function(){
 		var buy_in_supplier = parseInt(this.$("input[name='buy_in_supplier']:checked").val());
