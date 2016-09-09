@@ -583,7 +583,7 @@ Scenario:6 分组管理查询
 		"""
 
 #根据功能后续添加-雪静
-#@mall2 @product @group @ProductList  @mall.product_category @mall
+@mall2 @product @group @ProductList  @mall.product_category @mall
 Scenario:7 商品可以批量添加分组
 	jobs创建分组时，添加商品后可以选择商品批量添加分组
 	1.商品已存在的分组，分组不会过滤掉，可以直接添加，对于重复添加的商品，商品分组不进行处理
@@ -666,7 +666,7 @@ Scenario:7 商品可以批量添加分组
 			"categories": ["分类3"]
 		}]
 		"""
-	When jobs批量添加分组
+	When jobs批量修改分组
 		"""
 		["分类1", "分类2", "分类3"]
 		"""
