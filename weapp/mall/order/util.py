@@ -806,6 +806,7 @@ def get_detail_response(request):
             'total_money': sum([r.total for r in refund_infos]),
             'has_refund_order': False
         }
+        order.refund_info['refund_money'] = order.refund_info['total_cash'] + order.refund_info['total_weizoom_card_money']
 
         order.area = regional_util.get_str_value_by_string_ids(order.area)
         order.pay_interface_name = PAYTYPE2NAME.get(order.pay_interface_type, u'')
