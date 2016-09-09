@@ -537,7 +537,7 @@ Scenario:6 添加无规格新商品,支持开票
 		}
 		"""
 
-@mall2 @product @addProduct 
+@mall2 @product @addProduct
 Scenario:7 添加多规格新商品,支持开票
 	Given jobs登录系统
 	And jobs已添加商品
@@ -586,7 +586,7 @@ Scenario:7 添加多规格新商品,支持开票
 		}
 		"""
 
-@mall2 @product @addProduct 
+@mall2 @product @addProduct
 Scenario:8 添加新商品,不支持开票
 	Given jobs登录系统
 	And jobs已添加商品
@@ -630,6 +630,7 @@ Scenario:8 添加新商品,不支持开票
 		}
 		"""
 
+@mall2 @product_limit_area @eugene
 #根据需求后续添加-冯雪静
 Scenario:9 添加新商品,禁售地区和仅售地区
 	1.商品添加禁售地区，这些地区不支持售卖

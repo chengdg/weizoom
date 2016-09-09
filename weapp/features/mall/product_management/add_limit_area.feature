@@ -13,6 +13,7 @@ Feature: 添加限定区域配置
 		商品详情页面的限定区域，只能查看不可做任何修改，限定区域数据是由商品管理系统配置
 	"""
 
+@mall2 @product_limit_area @eugene
 Scenario:1 添加限定区域配置
 	Jobs添加"限定区域配置"
 	1. jobs能获得限定区域配置列表
@@ -27,7 +28,7 @@ Scenario:1 添加限定区域配置
 		{
 			"name": "禁售地区",
 			"limit_area": [{
-				"area": "其他",
+				"area": "其它",
 				"province": ["香港"]
 			}]
 		}
@@ -66,7 +67,7 @@ Scenario:1 添加限定区域配置
 				"province": "陕西省",
 				"city": ["西安市"]
 			},{
-				"area": "其他",
+				"area": "其它",
 				"province": ["香港","澳门","台湾"]
 			}]
 		}
@@ -95,7 +96,7 @@ Scenario:1 添加限定区域配置
 				"province": "陕西省",
 				"city": ["西安市"]
 			},{
-				"area": "其他",
+				"area": "其它",
 				"province": ["香港","澳门","台湾"]
 			}],
 			"actions": ["修改","删除"]
@@ -109,7 +110,7 @@ Scenario:1 添加限定区域配置
 		},{
 			"name": "禁售地区",
 			"limit_area": [{
-				"area": "其他",
+				"area": "其它",
 				"province": ["香港"]
 			}],
 			"actions": ["修改","删除"]
