@@ -296,7 +296,7 @@
                   {% endif %}
                   {% if product.supplier %}
                     {% ifchanged product.supplier %}
-                        <td rowspan="{{product.supplier_length}}" style="text-align:center;border-right:1px solid #ddd;" width="80">{{ product.supplier_name }} .x {{ product.refund_info }}</td>
+                        <td rowspan="{{product.supplier_length}}" style="text-align:center;border-right:1px solid #ddd;" width="80">{{ product.supplier_name }}</td>
                     {% endifchanged %}
                   {% endif %}
               {% endif %}
@@ -370,7 +370,43 @@
                 {% if mall_type and is_show_order_status %}
                   {% if product.supplier %}
                     {% ifchanged product.supplier %}
-                        <td rowspan="{{product.supplier_length}}" style="text-align:center;border-right:1px solid #ddd;">{{ product.order_status }}</td>
+                        <td rowspan="{{product.supplier_length}}" style="text-align:center;border-right:1px solid #ddd;">
+                          <span class="pr {% if product.status == 6 or product.status == 7 %}xui-refund-info xa-refund-info{% endif %}">
+                            {{ product.order_status }}
+                            {% if product.status == 6 or product.status == 7 %}
+                            <div class="xui-refund-tip xa-refund-tip">
+                              {% if product.refund_info.only_you %}
+                                {% if product.refund_info.cash > 0 %}
+                                  现金￥{{product.refund_info.cash|floatformat:"2"}}
+                                {% endif %}
+                                {% if product.refund_info.weizoom_card_money > 0 %}
+                                  微众卡￥{{product.refund_info.weizoom_card_money|floatformat:"2"}}
+                                {% endif %}
+                                {% if product.refund_info.coupon_money > 0 %}
+                                  优惠券￥{{product.refund_info.coupon_money|floatformat:"2"}}
+                                {% endif %}
+                                {% if product.refund_info.integral_money > 0 %}
+                                  积分抵扣￥{{product.refund_info.integral_money|floatformat:"2"}}
+                                {% endif %}
+                              {% else %}
+                                {% if product.refund_info.cash > 0 %}
+                                  <span>现金￥{{product.refund_info.cash|floatformat:"2"}}</span>
+                                {% endif %}
+                                {% if product.refund_info.weizoom_card_money > 0 %}
+                                  <span>微众卡￥{{product.refund_info.weizoom_card_money|floatformat:"2"}}</span>
+                                {% endif %}
+                                {% if product.refund_info.coupon_money > 0 %}
+                                  <span>优惠券￥{{product.refund_info.coupon_money|floatformat:"2"}}</span>
+                                {% endif %}
+                                {% if product.refund_info.integral_money > 0 %}
+                                  <span>积分抵扣￥{{product.refund_info.integral_money|floatformat:"2"}}</span>
+                                {% endif %}
+                                =￥{{product.refund_info.total|floatformat:"2"}}
+                              {% endif %}
+                            </div>
+                            {% endif %}
+                          </span>
+                        </td>
                     {% endifchanged %}
                   {% endif %}
                   {%if product.supplier_user_id %}
@@ -534,7 +570,14 @@
         });
         $('body').delegate('.xa-wzcardHint','mouseleave',function(event){
               $(event.target).children('.xa-wzcardInfo').css('display','none');
-          });
+        });
+        //退款详细信息
+        $('body').delegate('.xa-refund-info','mouseenter',function(event){
+            $(event.target).children('.xa-refund-tip').css('display','block');
+        });
+        $('body').delegate('.xa-refund-info','mouseleave',function(event){
+              $(event.target).children('.xa-refund-tip').css('display','none');
+        });
     });
     //提交
 </script>

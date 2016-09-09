@@ -1012,6 +1012,17 @@
 .xui-orderDetialPage .xui-wSync-count{
     border-bottom:1px solid #ccc;
 }
+.xui-orderDetialPage .xui-refund-tip{
+    position: absolute;
+    border: 1px solid #ccc;
+    line-height: 40px;
+    padding: 0 10px;
+    background: #fff;
+    display:none;
+    left: -20px;
+    top: 20px;
+    white-space: nowrap;
+}
 .xui-orderDetialPage .xui-notify {
     width: 14px;
     height: 14px;
@@ -1020,7 +1031,8 @@
     top: -25px;
     left: -43px;
 }
-.xui-orderDetialPage .xui-wzcard::after{
+.xui-orderDetialPage .xui-wzcard::after,
+.xui-orderDetialPage .xui-refund-info::after{
     content:"i";
     display:inline-block;
     width:15px;
@@ -1036,6 +1048,9 @@
     -webkit-transform:scale(0.95);
     -moz-transform:scale(0.95);
     transform:scale(0.95);
+}
+.xui-orderDetialPage .xui-refund-tip span:not(:first-child)::before{
+    content: '+';
 }
 .xui-orderDetialPage .xui-wzcardInfo{
     background-color: #fff;
