@@ -721,7 +721,7 @@ Scenario:1 ziying单个供应商商品订单-微信支付+优惠券(不满足满
 			| action                  | operator |
 			| 下单                    | 客户     |
 			| 支付                    | 客户     |
-			| 退款                    | zy1     |
+			| 退款                    | zy1      |
 
 	#退款完成
 		Given zy1登录系统
@@ -834,9 +834,13 @@ Scenario:1 ziying单个供应商商品订单-微信支付+优惠券(不满足满
 				"total_price": 50.00,
 				"postage": 10.00,
 				"save_money": 10.00,
-				"cash":50.00,
+				"refund_money":10.00,
+				"cash":40.00,
 				"weizoom_card": 0.00,
-				"final_price": 50.00,
+				"final_price": 40.00,
+				"original_cash":50.00,
+				"original_weizoom_card":0.00,
+				"original_final_price":50.00,
 				"refund_details":{
 					"cash": 10.00,
 					"weizoom_card": 0.00,
@@ -849,8 +853,8 @@ Scenario:1 ziying单个供应商商品订单-微信支付+优惠券(不满足满
 			| action                  | operator |
 			| 下单                    | 客户     |
 			| 支付                    | 客户     |
-			| 退款                    | zy1     |
-			| 退款完成                | zy1     |
+			| 退款                    | zy1      |
+			| 退款完成                | zy1      |
 
 @refund @order @allOrder
 Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满额包邮，一个无运费)；退优惠券，积分(积分按照现在的比例)
@@ -1317,7 +1321,7 @@ Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满
 			| action                  | operator |
 			| 下单                    | 客户     |
 			| 支付                    | 客户     |
-			| 订单发货-供应商1        | zy1     |
+			| 订单发货-供应商1        | zy1      |
 
 	#已完成
 		Given zy1登录系统
@@ -1478,9 +1482,9 @@ Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满
 			| action                  | operator |
 			| 下单                    | 客户     |
 			| 支付                    | 客户     |
-			| 订单发货-供应商1        | zy1     |
-			| 订单完成-供应商1        | zy1     |
-			| 订单发货-供应商2        | zy1     |
+			| 订单发货-供应商1        | zy1      |
+			| 订单完成-供应商1        | zy1      |
+			| 订单发货-供应商2        | zy1      |
 
 	#退款中
 		Given zy1登录系统
@@ -1653,11 +1657,11 @@ Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满
 			| action                  | operator |
 			| 下单                    | 客户     |
 			| 支付                    | 客户     |
-			| 订单发货-供应商1        | zy1     |
-			| 完成-供应商1            | zy1     |
-			| 订单发货-供应商2        | zy1     |
-			| 退款-供应商1            | zy1     |
-			| 完成-供应商2            | zy1     |
+			| 订单发货-供应商1        | zy1      |
+			| 完成-供应商1            | zy1      |
+			| 订单发货-供应商2        | zy1      |
+			| 退款-供应商1            | zy1      |
+			| 完成-供应商2            | zy1      |
 
 	#退款完成
 		Given zy1登录系统
@@ -1807,9 +1811,13 @@ Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满
 				"total_price": 40.00,
 				"postage": 10.00,
 				"save_money": 20.00,
+				"refund_money":10.00,
 				"cash":20.00,
 				"weizoom_card": 0.00,
 				"final_price": 20.00,
+				"original_cash":30.00,
+				"original_weizoom_card":0.00,
+				"original_final_price":30.00,
 				"refund_details":{
 					"cash": 10.00,
 					"weizoom_card": 0.00,
@@ -1822,12 +1830,12 @@ Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满
 			| action                  | operator |
 			| 下单                    | 客户     |
 			| 支付                    | 客户     |
-			| 订单发货-供应商1        | zy1     |
-			| 完成-供应商1            | zy1     |
-			| 订单发货-供应商2        | zy1     |
-			| 退款-供应商1            | zy1     |
-			| 完成-供应商2            | zy1     |
-			| 退款完成-供货商1        | zy1     |
+			| 订单发货-供应商1        | zy1      |
+			| 完成-供应商1            | zy1      |
+			| 订单发货-供应商2        | zy1      |
+			| 退款-供应商1            | zy1      |
+			| 完成-供应商2            | zy1      |
+			| 退款完成-供货商1        | zy1      |
 
 @refund @order @allOrder
 Scenario:3 ziying两个供应商商品订单(限时抢购)-微众卡支付(一个满足满额包邮，一个无运费)
@@ -2188,7 +2196,7 @@ Scenario:3 ziying两个供应商商品订单(限时抢购)-微众卡支付(一�
 			| action                  | operator |
 			| 下单                    | 客户     |
 			| 支付                    | 客户     |
-			| 退款-供应商1            | zy1     |
+			| 退款-供应商1            | zy1      |
 
 	#退款完成
 		Given zy1登录系统
@@ -2337,9 +2345,13 @@ Scenario:3 ziying两个供应商商品订单(限时抢购)-微众卡支付(一�
 				"total_price": 130.00,
 				"postage": 0.00,
 				"save_money": 60.00,
+				"refund_money":30.00,
 				"cash":0.00,
 				"weizoom_card":40.00,
 				"final_price": 40.00,
+				"original_cash":0.00,
+				"original_weizoom_card":70.00,
+				"original_final_price":70.00,
 				"refund_details":{
 					"cash": 0.00,
 					"weizoom_card": 30.00,
@@ -2352,5 +2364,5 @@ Scenario:3 ziying两个供应商商品订单(限时抢购)-微众卡支付(一�
 			| action                  | operator |
 			| 下单                    | 客户     |
 			| 支付                    | 客户     |
-			| 退款-供应商1            | zy1     |
-			| 退款完成-供货商1        | zy1     |
+			| 退款-供应商1            | zy1      |
+			| 退款完成-供货商1        | zy1      |
