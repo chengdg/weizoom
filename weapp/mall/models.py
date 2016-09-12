@@ -3040,6 +3040,7 @@ class ProductHasLabel(models.Model):
 	"""
 	product_id = models.IntegerField(null=False)
 	label_id = models.IntegerField(null=False)
+	created_at = models.DateTimeField(auto_now_add=True)
 
 	class Meta(object):
 		db_table = 'mall_product_has_label'
@@ -3051,6 +3052,7 @@ class ClassificationHasLabel(models.Model):
 	"""
 	classification_id = models.IntegerField(default=-1)
 	label_id = models.CharField(max_length=1024, default='')
+	created_at = models.DateTimeField(auto_now_add=True)
 
 	class Meta(object):
 		db_table = 'mall_classification_has_label'
