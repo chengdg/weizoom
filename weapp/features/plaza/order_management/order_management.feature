@@ -483,7 +483,7 @@ Scenario:1 ziying单个供应商商品订单-微信支付+优惠券(不满足满
 
 	#待发货订单
 		When bill访问zy1的webapp::apiserver
-		When bill使用支付方式'微信支付'进行支付订单'001'于'2016-01-02 10:00:00'::apiserver
+		When bill使用支付方式'微信支付'进行支付订单'001'于2016-01-02 10:00:00::apiserver
 
 		#手机端订单列表
 		Then bill查看个人中心'全部'订单列表::apiserver
@@ -530,7 +530,7 @@ Scenario:1 ziying单个供应商商品订单-微信支付+优惠券(不满足满
 			[{
 				"order_no":"001",
 				"methods_of_payment":"微信支付",
-				"order_time":"2016-01-01 10:00:00",
+				"order_time":"2016-01-01 00:00:00",
 				"payment_time":"2016-01-02 10:00:00",
 				"save_money": 10.00,
 				"buyer":"bill",
@@ -563,7 +563,7 @@ Scenario:1 ziying单个供应商商品订单-微信支付+优惠券(不满足满
 				"ship_tel":"13811223344",
 				"ship_area": "北京市 北京市 海淀区",
 				"ship_address": "泰兴大厦",
-				"invoice":" ",
+				"invoice":"",
 				"business_message":"",
 				"methods_of_payment":"微信支付",
 				"group":[{
@@ -652,7 +652,7 @@ Scenario:1 ziying单个供应商商品订单-微信支付+优惠券(不满足满
 			[{
 				"order_no":"001",
 				"methods_of_payment":"微信支付",
-				"order_time":"2016-01-01 10:00:00",
+				"order_time":"2016-01-01 00:00:00",
 				"payment_time":"2016-01-02 10:00:00",
 				"save_money": 10.00,
 				"buyer":"bill",
@@ -691,7 +691,7 @@ Scenario:1 ziying单个供应商商品订单-微信支付+优惠券(不满足满
 				"ship_tel":"13811223344",
 				"ship_area": "北京市 北京市 海淀区",
 				"ship_address": "泰兴大厦",
-				"invoice":" ",
+				"invoice":"",
 				"business_message":"",
 				"methods_of_payment":"微信支付",
 				"group":[{
@@ -773,7 +773,7 @@ Scenario:1 ziying单个供应商商品订单-微信支付+优惠券(不满足满
 			[{
 				"order_no":"001",
 				"methods_of_payment":"微信支付",
-				"order_time":"2016-01-01 10:00:00",
+				"order_time":"2016-01-01 00:00:00",
 				"payment_time":"2016-01-02 10:00:00",
 				"save_money": 10.00,
 				"buyer":"bill",
@@ -812,7 +812,7 @@ Scenario:1 ziying单个供应商商品订单-微信支付+优惠券(不满足满
 				"ship_tel":"13811223344",
 				"ship_area": "北京市 北京市 海淀区",
 				"ship_address": "泰兴大厦",
-				"invoice":" ",
+				"invoice":"",
 				"business_message":"",
 				"methods_of_payment":"微信支付",
 				"group":[{
@@ -939,7 +939,7 @@ Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满
 			[{
 				"order_no":"002",
 				"methods_of_payment":"支付宝",
-				"order_time":"2016-01-02 10:00:00",
+				"order_time":"2016-01-02 00:00:00",
 				"save_money": 20.00,
 				"buyer":"bill",
 				"ship_name":"bill",
@@ -971,7 +971,7 @@ Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满
 				"ship_tel":"13811223344",
 				"ship_area": "北京市 北京市 海淀区",
 				"ship_address": "泰兴大厦",
-				"invoice":" ",
+				"invoice":"",
 				"business_message":"",
 				"methods_of_payment":"支付宝",
 				"group":[{
@@ -1014,7 +1014,7 @@ Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满
 	#待发货订单
 		When bill访问zy1的webapp::apiserver
 		When bill访问zy1的webapp::apiserver
-		When bill使用支付方式'支付宝'进行支付订单'002'于'2016-01-03 10:00:00'::apiserver
+		When bill使用支付方式'支付宝'进行支付订单'002'于2016-01-03 10:00:00::apiserver
 
 		#手机端订单列表
 		Then bill查看个人中心'全部'订单列表::apiserver
@@ -1075,7 +1075,7 @@ Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满
 			[{
 				"order_no":"002",
 				"methods_of_payment":"支付宝",
-				"order_time":"2016-01-02 10:00:00",
+				"order_time":"2016-01-02 00:00:00",
 				"payment_time":"2016-01-03 10:00:00",
 				"save_money": 20.00,
 				"buyer":"bill",
@@ -1118,7 +1118,7 @@ Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满
 				"ship_tel":"13811223344",
 				"ship_area": "北京市 北京市 海淀区",
 				"ship_address": "泰兴大厦",
-				"invoice":" ",
+				"invoice":"",
 				"business_message":"",
 				"methods_of_payment":"支付宝",
 				"group":[{
@@ -1233,7 +1233,7 @@ Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满
 			[{
 				"order_no":"002",
 				"methods_of_payment":"支付宝",
-				"order_time":"2016-01-02 10:00:00",
+				"order_time":"2016-01-02 00:00:00",
 				"payment_time":"2016-01-03 10:00:00",
 				"save_money": 20.00,
 				"buyer":"bill",
@@ -1276,7 +1276,7 @@ Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满
 				"ship_tel":"13811223344",
 				"ship_area": "北京市 北京市 海淀区",
 				"ship_address": "泰兴大厦",
-				"invoice":" ",
+				"invoice":"",
 				"business_message":"",
 				"methods_of_payment":"支付宝",
 				"group":[{
@@ -1393,7 +1393,7 @@ Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满
 			[{
 				"order_no":"002",
 				"methods_of_payment":"支付宝",
-				"order_time":"2016-01-02 10:00:00",
+				"order_time":"2016-01-02 00:00:00",
 				"payment_time":"2016-01-03 10:00:00",
 				"save_money": 20.00,
 				"buyer":"bill",
@@ -1436,7 +1436,7 @@ Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满
 				"ship_tel":"13811223344",
 				"ship_area": "北京市 北京市 海淀区",
 				"ship_address": "泰兴大厦",
-				"invoice":" ",
+				"invoice":"",
 				"business_message":"",
 				"methods_of_payment":"支付宝",
 				"group":[{
@@ -1562,7 +1562,7 @@ Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满
 			[{
 				"order_no":"002",
 				"methods_of_payment":"支付宝",
-				"order_time":"2016-01-02 10:00:00",
+				"order_time":"2016-01-02 00:00:00",
 				"payment_time":"2016-01-03 10:00:00",
 				"save_money": 20.00,
 				"buyer":"bill",
@@ -1611,7 +1611,7 @@ Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满
 				"ship_tel":"13811223344",
 				"ship_area": "北京市 北京市 海淀区",
 				"ship_address": "泰兴大厦",
-				"invoice":" ",
+				"invoice":"",
 				"business_message":"",
 				"methods_of_payment":"支付宝",
 				"group":[{
@@ -1723,7 +1723,7 @@ Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满
 			[{
 				"order_no":"002",
 				"methods_of_payment":"支付宝",
-				"order_time":"2016-01-02 10:00:00",
+				"order_time":"2016-01-02 00:00:00",
 				"payment_time":"2016-01-03 10:00:00",
 				"save_money": 20.00,
 				"buyer":"bill",
@@ -1772,7 +1772,7 @@ Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满
 				"ship_tel":"13811223344",
 				"ship_area": "北京市 北京市 海淀区",
 				"ship_address": "泰兴大厦",
-				"invoice":" ",
+				"invoice":"",
 				"business_message":"",
 				"methods_of_payment":"支付宝",
 				"group":[{
@@ -1938,7 +1938,7 @@ Scenario:3 ziying两个供应商商品订单(限时抢购)-微众卡支付(一�
 			[{
 				"order_no":"003",
 				"methods_of_payment":"优惠抵扣",
-				"order_time":"2016-01-03 10:00:00",
+				"order_time":"2016-01-03 00:00:00",
 				"payment_time":"2016-01-03 10:00:00",
 				"save_money": 60.00,
 				"buyer":"bill",
@@ -1981,7 +1981,7 @@ Scenario:3 ziying两个供应商商品订单(限时抢购)-微众卡支付(一�
 				"ship_tel":"13811223344",
 				"ship_area": "北京市 北京市 海淀区",
 				"ship_address": "泰兴大厦",
-				"invoice":" ",
+				"invoice":"",
 				"business_message":"",
 				"methods_of_payment":"优惠抵扣",
 				"group":[{
@@ -2097,7 +2097,7 @@ Scenario:3 ziying两个供应商商品订单(限时抢购)-微众卡支付(一�
 			[{
 				"order_no":"003",
 				"methods_of_payment":"优惠抵扣",
-				"order_time":"2016-01-03 10:00:00",
+				"order_time":"2016-01-03 00:00:00",
 				"payment_time":"2016-01-03 10:00:00",
 				"save_money": 60.00,
 				"buyer":"bill",
@@ -2146,7 +2146,7 @@ Scenario:3 ziying两个供应商商品订单(限时抢购)-微众卡支付(一�
 				"ship_tel":"13811223344",
 				"ship_area": "北京市 北京市 海淀区",
 				"ship_address": "泰兴大厦",
-				"invoice":" ",
+				"invoice":"",
 				"business_message":"",
 				"methods_of_payment":"优惠抵扣",
 				"group":[{
@@ -2254,7 +2254,7 @@ Scenario:3 ziying两个供应商商品订单(限时抢购)-微众卡支付(一�
 			[{
 				"order_no":"003",
 				"methods_of_payment":"优惠抵扣",
-				"order_time":"2016-01-03 10:00:00",
+				"order_time":"2016-01-03 00:00:00",
 				"payment_time":"2016-01-03 10:00:00",
 				"save_money": 60.00,
 				"buyer":"bill",
@@ -2303,7 +2303,7 @@ Scenario:3 ziying两个供应商商品订单(限时抢购)-微众卡支付(一�
 				"ship_tel":"13811223344",
 				"ship_area": "北京市 北京市 海淀区",
 				"ship_address": "泰兴大厦",
-				"invoice":" ",
+				"invoice":"",
 				"business_message":"",
 				"methods_of_payment":"优惠抵扣",
 				"group":[{

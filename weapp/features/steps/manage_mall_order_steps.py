@@ -974,7 +974,7 @@ def __get_order_items_for_self_order(items):
         actual_order['order_no'] = order_item['order_id']
         actual_order["methods_of_payment"] = order_item['pay_interface_name']
         actual_order['order_time'] = order_item['created_at']
-        #actual_order['payment_time'] = order_item['payment_time']
+        actual_order['payment_time'] = order_item['payment_time']
         actual_order['save_money'] = order_item['save_money']
         actual_order['buyer'] = order_item['buyer_name']
         actual_order['ship_name'] = order_item['ship_name']
@@ -989,8 +989,9 @@ def __get_order_items_for_self_order(items):
         action_list = []
         if order_item['order_status'] != 0:
             buy_product_results = []
+            group_dict = {}
             for group in order_item['groups']:
-                group['status'] = group['fackorder']['status']
+                group_dict['status'] = group['fackorder']['status']
                 order_supplier = ''
                 for buy_product in group['products']:
                     buy_product_result = {}
@@ -1000,15 +1001,16 @@ def __get_order_items_for_self_order(items):
                     order_supplier = buy_product['supplier_name'] or ''
                     buy_product_results.append(buy_product_result)
                 
-                group['products'] = buy_product_results
-                group['supplier'] = order_supplier
-                group['order_no'] = order_item['order_id'] + '-' + order_supplier
+                group_dict['products'] = buy_product_results
+                group_dict['supplier'] = order_supplier
+                group_dict['order_no'] = order_item['order_id'] + '-' + order_supplier
 
-                if group['status'] in ['退款中', '退款成功']:
-                    actual_order['group']['refund_details'] = group['refund_details']
+                if group_dict['status'] in ['退款中', '退款成功']:
+                    group_dict['refund_details'] = group['fackorder']['refund_info']
+                    group_dict['refund_details']['weizoom_card'] = group_dict['refund_details']['weizoom_card_money']
                 # 获取子订单状态对应的操作
-                group['actions'] = [action.get('name', '') for action in group['fackorder']['actions']]
-                actual_order['group'].append(group)
+                group_dict['actions'] = [action.get('name', '') for action in group['fackorder']['actions']]
+                actual_order['group'].append(group_dict)
         else:
             buy_product_results = []
 
@@ -1043,8 +1045,8 @@ def step_impl(context, user):
 
     expected = json.loads(context.text)
     for order in expected:
-        if order.get('payment_time',''):
-            del order['payment_time'] 
+        # if order.get('payment_time',''):
+        #     del order['payment_time'] 
         if 'actions' in order:
             order['actions'] = order['actions']  # 暂时不验证顺序
    
