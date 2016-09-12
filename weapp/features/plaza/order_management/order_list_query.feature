@@ -91,7 +91,7 @@ Background:
 				"""
 		#设置商家运费
 			#商家1设置运费-满10包邮，否则收取统一运费1元
-			Then 给供货商添加运费配置
+			When 给供货商添加运费配置
 				"""
 				{
 					"supplier_name": "商家1",
@@ -1651,7 +1651,7 @@ Background:
 		# |          |           | [商品1b,9.00,1]  运费1   |             |       |            |         |             |         |
 		# | 10101    | 退款中    | [商品1a,10.00,1] 退款中   | 30.00       | bill  | 2016-08-29 | 张大大  | 18111223344 |微信支付 |
 
-@order @allOrder @refund
+@order @allOrder @refund @ztqb
 Scenario:1 ziying自营平台所有订单列表查询
 	Given zy1登录系统
 	#按照'订单编号'查询
@@ -1674,6 +1674,8 @@ Scenario:1 ziying自营平台所有订单列表查询
 		Then zy1获得自营订单列表
 			"""
 			[{
+				"order_no":"70101"
+			},{
 				"order_no":"60101"
 			},{
 				"order_no":"50201"
@@ -1772,202 +1774,202 @@ Scenario:1 ziying自营平台所有订单列表查询
 			[]
 			"""
 	#按照'下单时间'查询
-		When zy1根据给定条件查询订单
-			"""
-			{
-				"order_no":"",
-				"order_time":"2016-08-28 00:00-2016-08-31 00:00",
-				"ship_name":"",
-				"pay_type":"全部",
-				"supplier_type":"全部",
-				"ship_tel":"",
-				"number":"",
-				"status":"全部",
-				"product_name":"",
-				"order_type":"全部"
-			}
-			"""
-		Then zy1获得自营订单列表
-			"""
-			[{
-				"order_no":"10201"
-			},{
-				"order_no":"10101"
-			}]
-			"""
-		When zy1根据给定条件查询订单
-			"""
-			{
-				"order_no":"",
-				"order_time":"2016-08-27 00:00-2016-08-28 00:00",
-				"ship_name":"",
-				"pay_type":"全部",
-				"supplier_type":"全部",
-				"ship_tel":"",
-				"number":"",
-				"status":"全部",
-				"product_name":"",
-				"order_type":"全部"
-			}
-			"""
-		Then zy1获得自营订单列表
-			"""
-			[]
-			"""
-	#按照'收货人姓名'查询
-		#完全匹配
-		When zy1根据给定条件查询订单
-			"""
-			{
-				"order_no":"",
-				"order_time":"",
-				"ship_name":"",
-				"pay_type":"全部",
-				"supplier_type":"全部",
-				"ship_tel":"张大大",
-				"number":"",
-				"status":"全部",
-				"product_name":"",
-				"order_type":"全部"
-			}
-			"""
-		Then zy1获得自营订单列表
-			"""
-			[{
-				"order_no":"10201"
-			},{
-				"order_no":"10101"
-			}]
-			"""
-		#查询结果为空
-		When zy1根据给定条件查询订单
-			"""
-			{
-				"order_no":"",
-				"order_time":"",
-				"ship_name":"",
-				"pay_type":"全部",
-				"supplier_type":"全部",
-				"ship_tel":"aa",
-				"number":"",
-				"status":"全部",
-				"product_name":"",
-				"order_type":"全部"
-			}
-			"""
-		Then zy1获得自营订单列表
-			"""
-			[]
-			"""
-	#按照'支付方式'查询
-		When zy1根据给定条件查询订单
-			"""
-			{
-				"order_no":"",
-				"order_time":"",
-				"ship_name":"",
-				"pay_type":"优惠抵扣",
-				"supplier_type":"全部",
-				"ship_tel":"张大大",
-				"number":"",
-				"status":"全部",
-				"product_name":"",
-				"order_type":"全部"
-			}
-			"""
-		Then zy1获得自营订单列表
-			"""
-			[{
-				"order_no":"10201"
-			}]
-			"""
-	#按照'收货人电话'查询
-		#完全匹配
-		When zy1根据给定条件查询订单
-			"""
-			{
-				"order_no":"",
-				"order_time":"",
-				"ship_name":"",
-				"pay_type":"全部",
-				"supplier_type":"全部",
-				"ship_tel":"18111223344",
-				"number":"",
-				"status":"全部",
-				"product_name":"",
-				"order_type":"全部"
-			}
-			"""
-		Then zy1获得自营订单列表
-			"""
-			[{
-				"order_no":"10201"
-			},{
-				"order_no":"10101"
-			}]
-			"""
-		#查询结果为空
-		When zy1根据给定条件查询订单
-			"""
-			{
-				"order_no":"",
-				"order_time":"",
-				"ship_name":"",
-				"pay_type":"全部",
-				"supplier_type":"全部",
-				"ship_tel":"181",
-				"number":"",
-				"status":"全部",
-				"product_name":"",
-				"order_type":"全部"
-			}
-			"""
-		Then zy1获得自营订单列表
-			"""
-			[]
-			"""
-	#按照'物流单号'查询
-		When zy1根据给定条件查询订单
-			"""
-			{
-				"order_no":"",
-				"order_time":"",
-				"ship_name":"",
-				"pay_type":"全部",
-				"supplier_type":"全部",
-				"ship_tel":"",
-				"number":"3010102",
-				"status":"全部",
-				"product_name":"",
-				"order_type":"全部"
-			}
-			"""
-		Then zy1获得自营订单列表
-			"""
-			[{
-				"order_no":"30101"
-			}]
-			"""
-		#查询结果为空
-		When zy1根据给定条件查询订单
-			"""
-			{
-				"order_no":"",
-				"order_time":"",
-				"ship_name":"",
-				"pay_type":"全部",
-				"supplier_type":"全部",
-				"ship_tel":"",
-				"number":"1122",
-				"status":"全部",
-				"product_name":"",
-				"order_type":"全部"
-			}
-			"""
-		Then zy1获得自营订单列表
-			"""
-			[]
-			"""
+#		When zy1根据给定条件查询订单
+#			"""
+#			{
+#				"order_no":"",
+#				"order_time":"2016-08-28 00:00-2016-08-31 00:00",
+#				"ship_name":"",
+#				"pay_type":"全部",
+#				"supplier_type":"全部",
+#				"ship_tel":"",
+#				"number":"",
+#				"status":"全部",
+#				"product_name":"",
+#				"order_type":"全部"
+#			}
+#			"""
+#		Then zy1获得自营订单列表
+#			"""
+#			[{
+#				"order_no":"10201"
+#			},{
+#				"order_no":"10101"
+#			}]
+#			"""
+#		When zy1根据给定条件查询订单
+#			"""
+#			{
+#				"order_no":"",
+#				"order_time":"2016-08-27 00:00-2016-08-28 00:00",
+#				"ship_name":"",
+#				"pay_type":"全部",
+#				"supplier_type":"全部",
+#				"ship_tel":"",
+#				"number":"",
+#				"status":"全部",
+#				"product_name":"",
+#				"order_type":"全部"
+#			}
+#			"""
+#		Then zy1获得自营订单列表
+#			"""
+#			[]
+#			"""
+#	#按照'收货人姓名'查询
+#		#完全匹配
+#		When zy1根据给定条件查询订单
+#			"""
+#			{
+#				"order_no":"",
+#				"order_time":"",
+#				"ship_name":"",
+#				"pay_type":"全部",
+#				"supplier_type":"全部",
+#				"ship_tel":"张大大",
+#				"number":"",
+#				"status":"全部",
+#				"product_name":"",
+#				"order_type":"全部"
+#			}
+#			"""
+#		Then zy1获得自营订单列表
+#			"""
+#			[{
+#				"order_no":"10201"
+#			},{
+#				"order_no":"10101"
+#			}]
+#			"""
+#		#查询结果为空
+#		When zy1根据给定条件查询订单
+#			"""
+#			{
+#				"order_no":"",
+#				"order_time":"",
+#				"ship_name":"",
+#				"pay_type":"全部",
+#				"supplier_type":"全部",
+#				"ship_tel":"aa",
+#				"number":"",
+#				"status":"全部",
+#				"product_name":"",
+#				"order_type":"全部"
+#			}
+#			"""
+#		Then zy1获得自营订单列表
+#			"""
+#			[]
+#			"""
+#	#按照'支付方式'查询
+#		When zy1根据给定条件查询订单
+#			"""
+#			{
+#				"order_no":"",
+#				"order_time":"",
+#				"ship_name":"",
+#				"pay_type":"优惠抵扣",
+#				"supplier_type":"全部",
+#				"ship_tel":"张大大",
+#				"number":"",
+#				"status":"全部",
+#				"product_name":"",
+#				"order_type":"全部"
+#			}
+#			"""
+#		Then zy1获得自营订单列表
+#			"""
+#			[{
+#				"order_no":"10201"
+#			}]
+#			"""
+#	#按照'收货人电话'查询
+#		#完全匹配
+#		When zy1根据给定条件查询订单
+#			"""
+#			{
+#				"order_no":"",
+#				"order_time":"",
+#				"ship_name":"",
+#				"pay_type":"全部",
+#				"supplier_type":"全部",
+#				"ship_tel":"18111223344",
+#				"number":"",
+#				"status":"全部",
+#				"product_name":"",
+#				"order_type":"全部"
+#			}
+#			"""
+#		Then zy1获得自营订单列表
+#			"""
+#			[{
+#				"order_no":"10201"
+#			},{
+#				"order_no":"10101"
+#			}]
+#			"""
+#		#查询结果为空
+#		When zy1根据给定条件查询订单
+#			"""
+#			{
+#				"order_no":"",
+#				"order_time":"",
+#				"ship_name":"",
+#				"pay_type":"全部",
+#				"supplier_type":"全部",
+#				"ship_tel":"181",
+#				"number":"",
+#				"status":"全部",
+#				"product_name":"",
+#				"order_type":"全部"
+#			}
+#			"""
+#		Then zy1获得自营订单列表
+#			"""
+#			[]
+#			"""
+#	#按照'物流单号'查询
+#		When zy1根据给定条件查询订单
+#			"""
+#			{
+#				"order_no":"",
+#				"order_time":"",
+#				"ship_name":"",
+#				"pay_type":"全部",
+#				"supplier_type":"全部",
+#				"ship_tel":"",
+#				"number":"3010102",
+#				"status":"全部",
+#				"product_name":"",
+#				"order_type":"全部"
+#			}
+#			"""
+#		Then zy1获得自营订单列表
+#			"""
+#			[{
+#				"order_no":"30101"
+#			}]
+#			"""
+#		#查询结果为空
+#		When zy1根据给定条件查询订单
+#			"""
+#			{
+#				"order_no":"",
+#				"order_time":"",
+#				"ship_name":"",
+#				"pay_type":"全部",
+#				"supplier_type":"全部",
+#				"ship_tel":"",
+#				"number":"1122",
+#				"status":"全部",
+#				"product_name":"",
+#				"order_type":"全部"
+#			}
+#			"""
+#		Then zy1获得自营订单列表
+#			"""
+#			[]
+#			"""
 	#按照'订单状态'查询
 		#查询'待支付'状态的订单
 		When zy1根据给定条件查询订单
@@ -1980,7 +1982,7 @@ Scenario:1 ziying自营平台所有订单列表查询
 				"supplier_type":"全部",
 				"ship_tel":"",
 				"number":"",
-				"status":"待支付",
+				"order_status":"待支付",
 				"product_name":"",
 				"order_type":"全部"
 			}
@@ -2207,103 +2209,103 @@ Scenario:1 ziying自营平台所有订单列表查询
 				"order_no":"10201"
 			}]
 			"""
-	#按照'商品名称'查询
-		#模糊匹配
-		When zy1根据给定条件查询订单
-			"""
-			{
-				"order_no":"",
-				"order_time":"",
-				"ship_name":"",
-				"pay_type":"全部",
-				"supplier_type":"全部",
-				"ship_tel":"",
-				"number":"",
-				"status":"全部",
-				"product_name":"商品",
-				"order_type":"全部"
-			}
-			"""
-		Then zy1获得自营订单列表
-			"""
-			[{
-				"order_no":"60101"
-			},{
-				"order_no":"50201"
-			},{
-				"order_no":"50101"
-			},{
-				"order_no":"40301"
-			},{
-				"order_no":"40202"
-			},{
-				"order_no":"40201"
-			},{
-				"order_no":"40103"
-			},{
-				"order_no":"40102"
-			},{
-				"order_no":"40101"
-			},{
-				"order_no":"30401"
-			},{
-				"order_no":"30301"
-			},{
-				"order_no":"30203"
-			},{
-				"order_no":"30202"
-			},{
-				"order_no":"30201"
-			},{
-				"order_no":"30102"
-			},{
-				"order_no":"30101"
-			},{
-				"order_no":"20501"
-			},{
-				"order_no":"20402"
-			},{
-				"order_no":"20401"
-			},{
-				"order_no":"20302"
-			},{
-				"order_no":"20301"
-			},{
-				"order_no":"20202"
-			},{
-				"order_no":"20201"
-			},{
-				"order_no":"20102"
-			},{
-				"order_no":"20101"
-			},{
-				"order_no":"10201"
-			},{
-				"order_no":"10101"
-			}]
-			"""
-		#完全匹配
-		When zy1根据给定条件查询订单
-			"""
-			{
-				"order_no":"",
-				"order_time":"",
-				"ship_name":"",
-				"pay_type":"全部",
-				"supplier_type":"全部",
-				"ship_tel":"",
-				"number":"",
-				"status":"全部",
-				"product_name":"商品1b",
-				"order_type":"全部"
-			}
-			"""
-		Then zy1获得自营订单列表
-			"""
-			[{
-				"order_no":"10201"
-			}]
-			"""
+#	#按照'商品名称'查询
+#		#模糊匹配
+#		When zy1根据给定条件查询订单
+#			"""
+#			{
+#				"order_no":"",
+#				"order_time":"",
+#				"ship_name":"",
+#				"pay_type":"全部",
+#				"supplier_type":"全部",
+#				"ship_tel":"",
+#				"number":"",
+#				"status":"全部",
+#				"product_name":"商品",
+#				"order_type":"全部"
+#			}
+#			"""
+#		Then zy1获得自营订单列表
+#			"""
+#			[{
+#				"order_no":"60101"
+#			},{
+#				"order_no":"50201"
+#			},{
+#				"order_no":"50101"
+#			},{
+#				"order_no":"40301"
+#			},{
+#				"order_no":"40202"
+#			},{
+#				"order_no":"40201"
+#			},{
+#				"order_no":"40103"
+#			},{
+#				"order_no":"40102"
+#			},{
+#				"order_no":"40101"
+#			},{
+#				"order_no":"30401"
+#			},{
+#				"order_no":"30301"
+#			},{
+#				"order_no":"30203"
+#			},{
+#				"order_no":"30202"
+#			},{
+#				"order_no":"30201"
+#			},{
+#				"order_no":"30102"
+#			},{
+#				"order_no":"30101"
+#			},{
+#				"order_no":"20501"
+#			},{
+#				"order_no":"20402"
+#			},{
+#				"order_no":"20401"
+#			},{
+#				"order_no":"20302"
+#			},{
+#				"order_no":"20301"
+#			},{
+#				"order_no":"20202"
+#			},{
+#				"order_no":"20201"
+#			},{
+#				"order_no":"20102"
+#			},{
+#				"order_no":"20101"
+#			},{
+#				"order_no":"10201"
+#			},{
+#				"order_no":"10101"
+#			}]
+#			"""
+#		#完全匹配
+#		When zy1根据给定条件查询订单
+#			"""
+#			{
+#				"order_no":"",
+#				"order_time":"",
+#				"ship_name":"",
+#				"pay_type":"全部",
+#				"supplier_type":"全部",
+#				"ship_tel":"",
+#				"number":"",
+#				"status":"全部",
+#				"product_name":"商品1b",
+#				"order_type":"全部"
+#			}
+#			"""
+#		Then zy1获得自营订单列表
+#			"""
+#			[{
+#				"order_no":"10201"
+#			}]
+#			"""
 	#按照'订单类型'查询
 		When zy1根据给定条件查询订单
 			"""
@@ -2324,25 +2326,25 @@ Scenario:1 ziying自营平台所有订单列表查询
 			"""
 			[]
 			"""
-	#组合查询
-		When zy1根据给定条件查询订单
-				"""
-				{
-					"order_no":"30102",
-					"order_time":"2016-08-28 00:00-2016-09-30 00:00",
-					"ship_name":"张山山",
-					"pay_type":"支付宝",
-					"supplier_type":"全部",
-					"ship_tel":"18311223344",
-					"number":"3010201",
-					"status":"退款成功",
-					"product_name":"商品2b",
-					"order_type":"全部"
-				}
-				"""
-		Then jobs获得自营财务审核'退款成功'订单列表
-			"""
-			[{
-				"order_no":"30102"
-			}]
-			"""
+#	#组合查询
+#		When zy1根据给定条件查询订单
+#				"""
+#				{
+#					"order_no":"30102",
+#					"order_time":"2016-08-28 00:00-2016-09-30 00:00",
+#					"ship_name":"张山山",
+#					"pay_type":"支付宝",
+#					"supplier_type":"全部",
+#					"ship_tel":"18311223344",
+#					"number":"3010201",
+#					"status":"退款成功",
+#					"product_name":"商品2b",
+#					"order_type":"全部"
+#				}
+#				"""
+#		Then jobs获得自营财务审核'退款成功'订单列表
+#			"""
+#			[{
+#				"order_no":"30102"
+#			}]
+#			"""

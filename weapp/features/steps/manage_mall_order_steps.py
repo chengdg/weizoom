@@ -1038,9 +1038,18 @@ def step_impl(context, user):
         context.client.logout()
         context.client = bdd_util.login(user)
 
-    response = context.client.get('/mall2/api/order_list/')
-    items = json.loads(response.content)['data']['items']
+    url='/mall2/api/order_list/'
 
+    query_params = dict()
+
+    if hasattr(context, 'query_params'):
+        query_params = context.query_params
+        query_params['count_per_page'] = 99999
+        delattr(context, 'query_params')
+    response = context.client.get(url, query_params)
+
+
+    items = json.loads(response.content)['data']['items']
     actual_orders = __get_order_items_for_self_order(items)
 
     expected = json.loads(context.text)
@@ -1062,13 +1071,19 @@ def step_impl(context, user, order_type):
         context.client = bdd_util.login(user)
 
     if order_type =='退款中':
-        url = '/mall2/api/order_list/?design_mode=0&version=1&belong=audit&orderSupplierType=undefined&order_status=6'
+        url = '/mall2/api/order_list/?design_mode=0&version=1&belong=audit&orderSupplierType=undefined&order_status=6&count_per_page=9999'
 
     elif order_type == '退款成功':
-        url = '/mall2/api/order_list/?design_mode=0&version=1&belong=audit&orderSupplierType=undefined&order_status=7&date_interval_type=1'
+        url = '/mall2/api/order_list/?design_mode=0&version=1&belong=audit&orderSupplierType=undefined&order_status=7&date_interval_type=1&count_per_page=9999'
     elif order_type =='全部':
-        url = '/mall2/api/order_list/?design_mode=0&version=1&belong=audit&orderSupplierType=undefined&order_status=-1&date_interval_type=1'
-    response = context.client.get(url)
+        url = '/mall2/api/order_list/?design_mode=0&version=1&belong=audit&orderSupplierType=undefined&order_status=-1&date_interval_type=1&count_per_page=9999'
+
+    query_params = dict()
+    if hasattr(context, 'query_params'):
+        query_params = context.query_params
+        delattr(context, 'query_params')
+    response = context.client.get(url, query_params)
+
     items = json.loads(response.content)['data']['items']
 
     actual_orders = __get_order_items_for_self_order(items)
