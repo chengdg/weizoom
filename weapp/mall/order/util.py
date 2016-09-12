@@ -1307,9 +1307,18 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
                             'weizoom_card_money': refund_info.weizoom_card_money,
                             'integral_money': refund_info.integral_money,
                             'coupon_money': refund_info.coupon_money,
+                            'should_total': mall.models.Order.get_order_has_price_number(order) + fackorder.postage,
+                            'finished':refund_info.finished
                         }
                     else:
-                        refund_info_dict = {}
+                        refund_info_dict = {
+                            'cash': 0,
+                            'weizoom_card_money': 0,
+                            'integral_money': 0,
+                            'coupon_money': 0,
+                            'should_total': mall.models.Order.get_order_has_price_number(order) + fackorder.postage,
+                            'finished': False
+                        }
 
                     is_group_buying = True if order.order_id in group_order_ids else False
                     group_order = {
@@ -1350,7 +1359,14 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
                     'actions': get_order_actions(order, is_refund=is_refund, mall_type=mall_type,
                         is_group_buying=True if order.order_id in group_order_ids else False),
                     'type': order.type,
-                    'refund_info': {}
+                    'refund_info': {
+                            'cash': 0,
+                            'weizoom_card_money': 0,
+                            'integral_money': 0,
+                            'coupon_money': 0,
+                            'should_total': mall.models.Order.get_order_has_price_number(order) + order.postage,
+                            'finished': False
+                        }
                 }
                 if order2fackorders.get(order.id) and len(order2fackorders.get(order.id)) == 1:
                     fackorder = order2fackorders[order.id][0]
@@ -1418,6 +1434,10 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
                     "products": products
                 }
             groups.append(group)
+
+        origin_weizoom_card_money = sum([group['fackorder']['refund_info']['weizoom_card_money'] for group in groups if group['fackorder']['refund_info']['finished']]) + order.weizoom_card_money
+        origin_final_money = sum([group['fackorder']['refund_info']['cash'] for group in groups if group['fackorder']['refund_info']['finished']]) + order.weizoom_card_money
+
         # if len(groups) > 1:
         #     parent_action = get_order_actions(order, is_refund=is_refund, is_list_parent=True, mall_type=mall_type)
         # else:
@@ -1434,6 +1454,8 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
             'status': order.get_status_text(),
             'total_price': float(
                 '%.2f' % order.final_price) if order.pay_interface_type != 9 or order.status == 5 else 0,
+            'origin_final_money': origin_final_money,
+            'origin_weizoom_card_money':origin_weizoom_card_money,
             'order_total_price': float('%.2f' % order.get_total_price()),
             'ship_name': order.ship_name,
             'ship_address': '%s %s' % (regional_util.get_str_value_by_string_ids(order.area), order.ship_address),

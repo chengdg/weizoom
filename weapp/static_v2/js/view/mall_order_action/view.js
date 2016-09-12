@@ -236,7 +236,11 @@ W.view.mall.OrderAction = Backbone.View.extend({
             event.preventDefault();
             var $el = $(event.currentTarget);
             var href = $el.attr('href');
-            var orderId = $el.parents('.xa-actions').attr('data-order-id');
+
+            var $el = $(event.currentTarget);
+            var orderId = $el.parents('.xa-actions').data('order-id');
+            var deliveryItemId = $el.parents('.xa-actions').data('delivery-item-id');
+
             W.requireConfirm({
                 $el: $(this),
                 width:442,
@@ -247,13 +251,13 @@ W.view.mall.OrderAction = Backbone.View.extend({
                 confirm:function(){
                     var args = {
                         'order_id': orderId,
-                        'action' : 'return_success'
+                        'delivery_item_id': deliveryItemId
                     }
                     W.getApi().call({
-                        method: 'post',
                         app: 'mall2',
-                        resource: 'order',
+                        resource: 'refund_successful_sub_order',
                         args: args,
+                        method: 'put',
                         success: function(data) {
                             pageReload();
                         },
