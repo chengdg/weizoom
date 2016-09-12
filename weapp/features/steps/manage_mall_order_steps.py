@@ -967,7 +967,6 @@ def step_impl(context, user, order_code):
     bdd_util.assert_dict(expected, order)
 
 
-
 def __get_order_items_for_self_order(items):
     actual_orders = []
     for order_item in items:
@@ -982,8 +981,8 @@ def __get_order_items_for_self_order(items):
         actual_order['ship_tel'] = order_item['ship_tel']
         actual_order['ship_area'] = order_item['ship_area']
         actual_order['ship_address'] = order_item['ship_address']
-        actual_order['invoice'] = order_item['invoice'] or '--'
-        actual_order['final_price'] = order_item['final_price']
+        actual_order['invoice'] = ""
+        actual_order['final_price'] = order_item['pay_money']
         actual_order['postage'] = order_item['postage']
         actual_order['status'] = order_item['status']
 
@@ -1007,8 +1006,9 @@ def __get_order_items_for_self_order(items):
             if group['status'] in ['退款中', '退款成功']:
                 actual_order['group']['refund_details'] = group['refund_details']
             # 获取子订单状态对应的操作
-            group['actions'] = set(name for name in group['fackorder']['action'])
-            actual_order['group'].appemd(group)
+            group['actions'] = set(action.get('name', '') for action in group['fackorder']['actions'])
+            print('sssssssssss=========================', group['actions'])
+            actual_order['group'].append(group)
 
         actual_orders.append(actual_order)
     return actual_orders
@@ -1031,7 +1031,7 @@ def step_impl(context, user):
     for order in expected:
         if 'actions' in order:
             order['actions'] = set(order['actions'])  # 暂时不验证顺序
-
+            print('sssssssssss=========================', order['actions'])
     bdd_util.assert_list(expected, actual_orders)
 
 
