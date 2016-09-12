@@ -828,7 +828,11 @@ def get_detail_response(request):
                 zypt_customer_message_is_str = True
         else:
             zypt_customer_message_is_str = False
-        order.actions = get_order_actions(order, is_detail_page=True, mall_type=request.user_profile.webapp_type)
+        # order.actions = get_order_actions(order, is_detail_page=True, mall_type=request.user_profile.webapp_type)
+        if mall_type:
+            order.actions = get_actions_for_parent_order(order)
+        else:
+            order.actions = get_order_actions(order, is_detail_page=True, mall_type=mall_type)
 
         show_first = True if OrderStatusLog.objects.filter(order_id=order.order_id,
                                                            to_status=ORDER_STATUS_PAYED_NOT_SHIP,
@@ -1818,6 +1822,8 @@ def get_actions_for_sub_order(sub_order, is_refund, is_group_buying):
 def get_actions_for_parent_order(order):
     if order.status == ORDER_STATUS_NOT:
         return [ORDER_PAY_ACTION, ORDER_CANCEL_ACTION]
+    else:
+        return []
 
 
 
