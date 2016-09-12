@@ -302,7 +302,6 @@ class CategoryList(resource.Resource):
 
         mall_type = request.user_profile.webapp_type
 
-        category_ROA_utils.sorted_products(mall_type,request.manager.id, product_categories, True)
         #进行分页
         count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
         cur_page = int(request.GET.get('page', '1'))
@@ -313,6 +312,7 @@ class CategoryList(resource.Resource):
             query_string=request.META['QUERY_STRING'])
 
         #构造返回数据
+        category_ROA_utils.sorted_products(mall_type,request.manager.id, product_categories, True)
         items = []
         for category in product_categories:
             items1 = []
