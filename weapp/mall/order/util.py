@@ -830,8 +830,10 @@ def get_detail_response(request):
             zypt_customer_message_is_str = False
         # order.actions = get_order_actions(order, is_detail_page=True, mall_type=request.user_profile.webapp_type)
         if mall_type:
+            print 111111
             order.actions = get_actions_for_parent_order(order)
         else:
+            print(222222222)
             order.actions = get_order_actions(order, is_detail_page=True, mall_type=mall_type)
 
         show_first = True if OrderStatusLog.objects.filter(order_id=order.order_id,
@@ -859,33 +861,33 @@ def get_detail_response(request):
 
         # 获得子订单
         child_orders = list(Order.objects.filter(origin_order_id=order.id).all())
-        if not child_orders:
-            child_orders = [order]
-        if len(child_orders) > 1 and order.status > ORDER_STATUS_CANCEL:
-            order.actions = get_order_actions(order, is_detail_page=True, is_list_parent=True,
-                mall_type=request.user_profile.webapp_type,
-                is_group_buying=is_group_buying
-                )
-        elif len(child_orders) == 1:
-            child_orders[0].pay_interface_type = order.pay_interface_type
-            order.actions = get_order_actions(child_orders[0], is_detail_page=True,
-                mall_type=request.user_profile.webapp_type,
-                is_group_buying=is_group_buying)
-        else:
-            #child_orders = [order]
-            if is_group_buying:
-                order.actions = get_order_actions(
-                    order,
-                    is_detail_page=True,
-                    mall_type=request.user_profile.webapp_type,
-                    is_group_buying=is_group_buying
-                    )
-            else:
-                order.actions = get_order_actions(
-                    order,
-                    is_detail_page=True,
-                    mall_type=request.user_profile.webapp_type
-                    )
+        # if not child_orders:
+        #     child_orders = [order]
+        # if len(child_orders) > 1 and order.status > ORDER_STATUS_CANCEL:
+        #     order.actions = get_order_actions(order, is_detail_page=True, is_list_parent=True,
+        #         mall_type=request.user_profile.webapp_type,
+        #         is_group_buying=is_group_buying
+        #         )
+        # elif len(child_orders) == 1:
+        #     child_orders[0].pay_interface_type = order.pay_interface_type
+        #     order.actions = get_order_actions(child_orders[0], is_detail_page=True,
+        #         mall_type=request.user_profile.webapp_type,
+        #         is_group_buying=is_group_buying)
+        # else:
+        #     #child_orders = [order]
+        #     if is_group_buying:
+        #         order.actions = get_order_actions(
+        #             order,
+        #             is_detail_page=True,
+        #             mall_type=request.user_profile.webapp_type,
+        #             is_group_buying=is_group_buying
+        #             )
+        #     else:
+        #         order.actions = get_order_actions(
+        #             order,
+        #             is_detail_page=True,
+        #             mall_type=request.user_profile.webapp_type
+        #             )
         supplier_ids = []
         supplier_user_ids = []
         supplier2sub_order = {}
