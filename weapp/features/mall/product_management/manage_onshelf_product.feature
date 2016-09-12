@@ -331,7 +331,7 @@ Scenario:3 修改商品价格
 		"""
 
 #editor:李娜 2016.09.07 补充运营人员查看在售待售商品列表可查看分类信息,及编辑分类按钮
-@mall2 @product @group @ProductList  @mall.product_category @mall
+#@mall2 @product @group @ProductList  @mall.product_category @mall
 Scenario:4 商品列表查看分类信息
 	Given jobs登录系统
 	Then jobs能获得'在售'商品列表
@@ -469,8 +469,7 @@ Scenario:5 在商品列表编辑分组信息
 						"stock_type": "无限"
 					}
 				}
-			},
-			"actions": ["修改", "下架", "彻底删除","编辑分组"]
+			}
 		}, {
 			"name": "叫花鸡",
 			"is_enable_model": "启用规格",
@@ -490,8 +489,7 @@ Scenario:5 在商品列表编辑分组信息
 						"stocks": 2
 					}
 				}
-			},
-			"actions": ["修改", "下架", "彻底删除","编辑分组"]
+			}
 		}, {
 			"name": "东坡肘子",
 			"is_enable_model": "不启用规格",
@@ -504,11 +502,10 @@ Scenario:5 在商品列表编辑分组信息
 						"stock_type": "无限"
 					}
 				}
-			},
-			"actions": ["修改", "下架", "彻底删除","编辑分组"]
+			}
 		}]
 		"""
-	When jobs给商品'水晶虾仁'调分类
+	When jobs给商品'水晶虾仁'编辑分组
 		"""
 			["分类1"]
 		"""
@@ -526,8 +523,7 @@ Scenario:5 在商品列表编辑分组信息
 						"stock_type": "无限"
 					}
 				}
-			},
-			"actions": ["修改", "下架", "彻底删除","编辑分组"]
+			}
 		}, {
 			"name": "叫花鸡",
 			"is_enable_model": "启用规格",
@@ -547,8 +543,7 @@ Scenario:5 在商品列表编辑分组信息
 						"stocks": 2
 					}
 				}
-			},
-			"actions": ["修改", "下架", "彻底删除","编辑分组"]
+			}
 		}, {
 			"name": "东坡肘子",
 			"is_enable_model": "不启用规格",
@@ -561,11 +556,10 @@ Scenario:5 在商品列表编辑分组信息
 						"stock_type": "无限"
 					}
 				}
-			},
-			"actions": ["修改", "下架", "彻底删除","编辑分组"]
+			}
 		}]
 		"""
-	And jobs可以获得分类列表
+	And jobs能获取商品分类列表
 		"""
 		[{
 			"name": "分类1",
@@ -595,7 +589,7 @@ Scenario:5 在商品列表编辑分组信息
 			"叫花鸡"
 		]
 		"""
-	And jobs给商品'叫花鸡'调分类
+	And jobs给商品'叫花鸡'编辑分组
 		"""
 			["分类2","分类3"]
 		"""
@@ -613,8 +607,7 @@ Scenario:5 在商品列表编辑分组信息
 						"stock_type": "无限"
 					}
 				}
-			},
-			"actions": ["修改", "上架", "彻底删除","编辑分组"]
+			}
 		}, {
 			"name": "叫花鸡",
 			"is_enable_model": "启用规格",
@@ -634,36 +627,35 @@ Scenario:5 在商品列表编辑分组信息
 						"stocks": 2
 					}
 				}
-			},
-			"actions": ["修改", "上架", "彻底删除","编辑分组"]
+			}
 		}]
 		"""
-	And jobs可以获得分类列表
+	And jobs能获取商品分类列表
 		"""
 		[{
 			"name": "分类1",
 			"products": [{
-				"name": "水晶虾仁"
-			}, {
 				"name": "东坡肘子"
+			},{
+				"name": "水晶虾仁"
 			}]
 		}, {
 			"name": "分类2",
-			"products": [ {
-				"name": "叫花鸡"
-			},{
+			"products": [{
 				"name": "东坡肘子"
+			},{
+				"name": "叫花鸡"
 			}]
 		}, {
 			"name": "分类3",
-			"products": [ {
-				"name": "叫花鸡"
-			},{
+			"products": [{
 				"name": "东坡肘子"
+			},{
+				"name": "叫花鸡"
 			}]
 		}]
 		"""
-	When jobs给商品'叫花鸡'调分类
+	When jobs给商品'叫花鸡'编辑分组
 		"""
 			["分类2","分类1"]
 		"""
@@ -681,8 +673,7 @@ Scenario:5 在商品列表编辑分组信息
 						"stock_type": "无限"
 					}
 				}
-			},
-			"actions": ["修改", "上架", "彻底删除","编辑分组"]
+			}
 		}, {
 			"name": "叫花鸡",
 			"is_enable_model": "启用规格",
@@ -702,27 +693,26 @@ Scenario:5 在商品列表编辑分组信息
 						"stocks": 2
 					}
 				}
-			},
-			"actions": ["修改", "上架", "彻底删除","编辑分组"]
+			}
 		}]
 		"""
-	And jobs可以获得分类列表
+	And jobs能获取商品分类列表
 		"""
 		[{
 			"name": "分类1",
 			"products": [{
-				"name": "水晶虾仁"
-			}, {
-				"name": "叫花鸡"
-			}, {
 				"name": "东坡肘子"
+			},{
+				"name": "叫花鸡"
+			},{
+				"name": "水晶虾仁"
 			}]
 		}, {
 			"name": "分类2",
 			"products": [{
-				"name": "叫花鸡"
-			},{
 				"name": "东坡肘子"
+			},{
+				"name": "叫花鸡"
 			}]
 		}, {
 			"name": "分类3",
@@ -730,3 +720,4 @@ Scenario:5 在商品列表编辑分组信息
 				"name": "东坡肘子"
 			}]
 		}]
+		"""

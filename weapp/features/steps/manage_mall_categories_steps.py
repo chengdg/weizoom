@@ -170,3 +170,55 @@ def step_impl(context, user):
     if search_data['product']:
         params['product_name'] = search_data['product']
     context.params = params
+
+
+@when(u"{user}给商品'{product_name}'编辑分组")
+def step_impl(context, user, product_name):
+    print "*"*100
+    url = '/mall2/api/update_product_category/'
+    existed_product = mall_models.Product.objects.get(name=product_name)
+    
+    category_names = json.loads(context.text)
+    category_ids = []
+    for category_name in category_names:
+        existed_product_category = ProductCategoryFactory(name=category_name)
+        category_ids.append(str(existed_product_category.id))
+    category_ids = ','.join(category_ids)
+    print "category_ids",category_ids
+    data = {'product_id': existed_product.id, 'category_ids':category_ids}
+
+    context.client.post(url, data)
+
+@when(u"{user}选择商品")
+def step_impl(context, user):
+    datas = json.loads(context.text)
+    product_ids = []
+    for data in datas:
+        product_name = data['name']
+        product = ProductFactory(name=product_name)
+        product_ids.append(str(product.id))
+    product_ids = ','.join(product_ids)
+    context.product_ids = product_ids
+
+
+
+@when(u"{user}批量修改分组")
+def step_impl(context, user):
+    if hasattr(context, 'product_ids'):
+        product_ids = context.product_ids
+        category_names = json.loads(context.text)
+        category_ids = []
+        for category_name in category_names:
+            existed_product_category = ProductCategoryFactory(name=category_name)
+            category_ids.append(str(existed_product_category.id))
+        category_ids = ','.join(category_ids)
+        print "*"*100
+        print "category_ids",category_ids
+        data =  {'product_ids': product_ids, 'category_ids':category_ids}
+
+        url = '/mall2/api/batch_update_product_category/'
+        response = context.client.post(url, data)
+        bdd_util.assert_api_call_success(response)
+
+    else:
+        raise False
