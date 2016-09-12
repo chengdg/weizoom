@@ -966,17 +966,8 @@ def step_impl(context, user, order_code):
     bdd_util.assert_dict(expected, order)
 
 
-@then(u"{user}获得自营订单列表")
-def step_impl(context, user):
-    user_id = User.objects.get(username=user).id
-    mall_type = UserProfile.objects.get(user_id=user_id).webapp_type
-    if user != context.client.user.username:
-        context.client.logout()
-        context.client = bdd_util.login(user)
 
-    response = context.client.get('/mall2/api/order_list/')
-    items = json.loads(response.content)['data']['items']
-  
+def __get_order_items_for_self_order(items):
     actual_orders = []
     for order_item in items:
         actual_order = {}
@@ -994,7 +985,7 @@ def step_impl(context, user):
         actual_order['final_price'] = order_item['final_price']
         actual_order['postage'] = order_item['postage']
         actual_order['status'] = order_item['status']
-        
+
         actual_order['group'] = []
         buy_product_results = []
         for group in order_item['groups']:
@@ -1011,14 +1002,57 @@ def step_impl(context, user):
             group['products'] = buy_product_results
             group['supplier_name'] = order_supplier
             group['order_no'] = order_item['order_id'] + order_supplier
-            
+
             if group['status'] in ['退款中', '退款成功']:
                 actual_order['group']['refund_details'] = group['refund_details']
-            #获取子订单状态对应的操作
+            # 获取子订单状态对应的操作
             group['actions'] = set(name for name in group['fackorder']['action'])
             actual_order['group'].appemd(group)
-        
+
         actual_orders.append(actual_order)
+    return actual_orders
+
+
+@then(u"{user}获得自营订单列表")
+def step_impl(context, user):
+    user_id = User.objects.get(username=user).id
+    mall_type = UserProfile.objects.get(user_id=user_id).webapp_type
+    if user != context.client.user.username:
+        context.client.logout()
+        context.client = bdd_util.login(user)
+
+    response = context.client.get('/mall2/api/order_list/')
+    items = json.loads(response.content)['data']['items']
+
+    actual_orders = __get_order_items_for_self_order(items)
+
+    expected = json.loads(context.text)
+    for order in expected:
+        if 'actions' in order:
+            order['actions'] = set(order['actions'])  # 暂时不验证顺序
+
+    bdd_util.assert_list(expected, actual_orders)
+
+
+@then(u"{user}获得自营财务审核'{order_type}'订单列表")
+def step_impl(context, user, order_type):
+    user_id = User.objects.get(username=user).id
+    mall_type = UserProfile.objects.get(user_id=user_id).webapp_type
+    if user != context.client.user.username:
+        context.client.logout()
+        context.client = bdd_util.login(user)
+
+    if order_type =='退款中':
+        url = '/mall2/api/order_list/?design_mode=0&version=1&belong=audit&orderSupplierType=undefined&order_status=6'
+
+    elif order_type == '退款成功':
+        url = '/mall2/api/order_list/?design_mode=0&version=1&belong=audit&orderSupplierType=undefined&order_status=7&date_interval_type=1'
+    elif order_type =='全部':
+        url = '/mall2/api/order_list/?design_mode=0&version=1&belong=audit&orderSupplierType=undefined&order_status=-1&date_interval_type=1'
+    response = context.client.get(url)
+    items = json.loads(response.content)['data']['items']
+
+    actual_orders = __get_order_items_for_self_order(items)
 
     expected = json.loads(context.text)
     for order in expected:
