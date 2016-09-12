@@ -379,6 +379,7 @@ class Category(resource.Resource):
     app = 'mall2'
     resource = 'category'
 
+    @login_required
     def get(request):
         """
         编辑商品分类页面
@@ -591,7 +592,7 @@ def update_product_categories(request, product_id, category_ids):
     if category_ids:
     #删除勾去的
         category_has_products_by_product_id = mall_models.CategoryHasProduct.objects.filter(product_id=product_id, category__owner=request.manager)
-        category_has_products = category_has_products_by_product_id.exclude(id__in=category_ids)
+        category_has_products = category_has_products_by_product_id.exclude(category_id__in=category_ids)
         decrease_category_ids = [category_has_product.category_id for category_has_product in category_has_products]
         mall_models.CategoryHasProduct.objects.filter(product_id=product_id, category_id__in=decrease_category_ids).delete()
         mall_models.ProductCategory.objects.filter(id__in=decrease_category_ids, owner=request.manager).update(product_count=F('product_count')-1)

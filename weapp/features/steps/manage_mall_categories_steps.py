@@ -76,7 +76,6 @@ def step_get_category(context, user):
             }
             product_dict['products'].append(dict_one)
         actual_list.append(product_dict)
-    print(actual_list)
     # print("111"+int(2))
     expected = json.loads(context.text)
     bdd_util.assert_list(expected, actual_list)
@@ -174,7 +173,6 @@ def step_impl(context, user):
 
 @when(u"{user}给商品'{product_name}'编辑分组")
 def step_impl(context, user, product_name):
-    print "*"*100
     url = '/mall2/api/update_product_category/'
     existed_product = mall_models.Product.objects.get(name=product_name)
     
@@ -184,7 +182,6 @@ def step_impl(context, user, product_name):
         existed_product_category = ProductCategoryFactory(name=category_name)
         category_ids.append(str(existed_product_category.id))
     category_ids = ','.join(category_ids)
-    print "category_ids",category_ids
     data = {'product_id': existed_product.id, 'category_ids':category_ids}
 
     context.client.post(url, data)
@@ -212,8 +209,6 @@ def step_impl(context, user):
             existed_product_category = ProductCategoryFactory(name=category_name)
             category_ids.append(str(existed_product_category.id))
         category_ids = ','.join(category_ids)
-        print "*"*100
-        print "category_ids",category_ids
         data =  {'product_ids': product_ids, 'category_ids':category_ids}
 
         url = '/mall2/api/batch_update_product_category/'
