@@ -209,7 +209,7 @@ Background:
 			"""
 
 	#bill购买多个供货商的商品（101-商品1a,2+商品2a,1+商品3a,1）
-		When bill关注zy1的公众号
+		When bill关注zy1的公众号::apiserver
 		When bill访问zy1的webapp::apiserver
 		When bill购买zy1的商品::apiserver
 			"""
@@ -280,7 +280,7 @@ Background:
 			}
 			"""
 
-@order @finance @refund @ztqb
+@order @finance @refund
 Scenario:1 ziying查看自营平台财务审核订单列表（多子订单的母订单中包含退款中、不包含退款成功的子订单）
 	#101待发货（现金/退现金）（待发货/待发货/退款中）
 		Given zy1登录系统

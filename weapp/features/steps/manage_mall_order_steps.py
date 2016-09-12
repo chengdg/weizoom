@@ -931,9 +931,10 @@ def step_impl(context, user, order_code):
 
     }
 
-    order.original_cash=order.refund_info['origin_final_price'],
-    order.original_weizoom_card= order.refund_info['origin_weizoom_card_money'],
+    order.original_cash=order.refund_info['origin_final_price']
+    order.original_weizoom_card= order.refund_info['origin_weizoom_card_money']
     order.original_final_price= order.refund_info['origin_pay_money']
+    order.refund_money = order.refund_info['refund_money']
 
     for p in order.products:
         p['supplier_id'] = p['supplier']
