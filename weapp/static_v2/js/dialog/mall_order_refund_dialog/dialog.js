@@ -57,8 +57,15 @@ W.dialog.mall.RefundOrderDialog = W.dialog.Dialog.extend({
         var subRefundInfo = [];
         mainOrder.groups.map(function(subOrder){
             var _subOrder = subOrder.fackorder;
-            if (_subOrder.id == _this.deliveryItemId && !_.isEmpty(_subOrder.refund_info)) {
-                subRefundInfo.push(_subOrder.refund_info);
+            // 找出退款中的订单
+            if (_subOrder.order_status == 6 && !_.isEmpty(_subOrder.refund_info)) {
+                var _subRI = _subOrder.refund_info;
+                subRefundInfo.push({
+                    cash: _subRI.cash,
+                    weizoomCardMoney: _subRI.weizoom_card_money,
+                    couponMoney: _subRI.coupon_money,
+                    integral: _subRI.integral_money
+                });
             }
         }); 
 
@@ -131,17 +138,20 @@ W.dialog.mall.RefundOrderDialog = W.dialog.Dialog.extend({
         }
 
         // 子订单支付信息
-        var subRI = data.subRefundInfo;
-        if (subRI && !_.isEmpty(subRI)) {
-            var subRITotal = subRI.cash*1 
-                + subRI.weizoomCardMoney*1 
-                + subRI.couponMoney*1 
-                + subRI.integral*1;
-            this.dialogMainData.subRefundInfo.orderType = '子订单';
-            this.dialogMainData.subRefundInfo.totalMoney = subRITotal;
-            var $tmplTopTip = $('#mall-order-refund-dialog-top-tips-tmpl-src').tmpl(subRI);
-            $('.xa-i-refund-info-show', $dialog).append($("<p>").text(subRITip));
-        }
+        var _this = this;
+        var subRIs = data.subRefundInfo;
+        subRIs.map(function(subRI){
+            if (subRI && !_.isEmpty(subRI)) {
+                var subRITotal = subRI.cash*1 
+                    + subRI.weizoomCardMoney*1 
+                    + subRI.couponMoney*1 
+                    + subRI.integral*1;
+                subRI.orderType = '子订单';
+                subRI.totalMoney = subRITotal;
+                var $subRITip = $('#mall-order-refund-dialog-top-tips-tmpl-src').tmpl(subRI);
+                $('.xa-i-refund-info-show', $dialog).append($subRITip);
+            }
+        });
 
         // 当前退款订单的: 退款总额
         if (data.targetOrder && data.targetOrder.totalMoney > 0) {
@@ -263,10 +273,10 @@ W.dialog.mall.RefundOrderDialog = W.dialog.Dialog.extend({
         var params = {
                 order_id: orderId,
                 delivery_item_id: deliveryItemId,
-                cash: cash,
-                weizoom_card_money: weizoomCardMoney,
-                coupon_money: couponMoney,
-                integral: integral 
+                cash: cash? cash : 0,
+                weizoom_card_money: weizoomCardMoney? weizoomCardMoney : 0,
+                coupon_money: couponMoney? couponMoney : 0,
+                integral: integral? integral : 0 
             };
 
         W.getApi().call({
