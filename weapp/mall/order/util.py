@@ -1307,6 +1307,7 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
                             'weizoom_card_money': refund_info.weizoom_card_money,
                             'integral_money': refund_info.integral_money,
                             'coupon_money': refund_info.coupon_money,
+                            'should_total': mall.models.Order.get_order_has_price_number(order) + fackorder.postage
                         }
                     else:
                         refund_info_dict = {}
