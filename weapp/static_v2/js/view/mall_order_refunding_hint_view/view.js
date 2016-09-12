@@ -21,16 +21,16 @@ W.view.mall.RefundingHintView = W.view.common.DropBox.extend({
     
     showPrivate: function(options) {
         this.cash = options.cash;
-        this.card = options.card;
+        this.weizoomCardMoney = options.card;
+        this.couponMoney = options.coupon;
         this.integral = options.integral;
-        this.coupon = options.coupon;
-        this.total = parseFloat(this.cash) + parseFloat(this.card) + parseFloat(this.integral) + parseFloat(this.coupon);
+        this.total = parseFloat(this.cash) + parseFloat(this.weizoomCardMoney) + parseFloat(this.integral) + parseFloat(this.couponMoney);
 
         this.$content.html($.tmpl(this.getTemplate(),{
             cash: this.cash,
-            card:this.card,
+            weizoomCardMoney:this.weizoomCardMoney,
+            conponMoney:this.conponMoney,
             integral:this.integral,
-            conpon:this.conpon,
             total: this.total.toFixed(2)
         }));
 	},

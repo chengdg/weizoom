@@ -148,36 +148,36 @@ W.view.mall.OrderAction = Backbone.View.extend({
 
         //标记完成
 	    $('body').delegate('.xa-finish', 'click', function(event){
-		event.stopPropagation();
-		event.preventDefault();
-		var orderId = $(event.currentTarget).parents('.xa-actions').data('order-id');
-		W.requireConfirm({
-			$el: $(this),
-			width:445,
-			position:'top',
-			isTitle: false,
-			privateContainerClass:'xui-orderConfirmPop',
-			msg:'确定将该订单标记为完成？',
-			confirm:function(){
-				var args = {
-					'order_id': orderId,
-					'action' : 'finish'
-				}
-				W.getApi().call({
-					method: 'post',
-					app: 'mall2',
-					resource: 'order',
-					args: args,
-					success: function(data) {
-						pageReload();
-					},
-					error: function() {
-                    }
-				})
+    		event.stopPropagation();
+    		event.preventDefault();
+    		var orderId = $(event.currentTarget).parents('.xa-actions').data('order-id');
+    		W.requireConfirm({
+    			$el: $(this),
+    			width:445,
+    			position:'top',
+    			isTitle: false,
+    			privateContainerClass:'xui-orderConfirmPop',
+    			msg:'确定将该订单标记为完成？',
+    			confirm:function(){
+    				var args = {
+    					'order_id': orderId,
+    					'action' : 'finish'
+    				}
+    				W.getApi().call({
+    					method: 'post',
+    					app: 'mall2',
+    					resource: 'order',
+    					args: args,
+    					success: function(data) {
+    						pageReload();
+    					},
+    					error: function() {
+                        }
+    				})
 
-			}
-		})
-	});
+    			}
+    		})
+    	});
 
 
         //申请退款
@@ -187,34 +187,45 @@ W.view.mall.OrderAction = Backbone.View.extend({
 
             // modified by Liugenbin
             var $el = $(event.currentTarget);
+            var deliveryItemId = $el.parents('.xa-actions').data('delivery-item-id');
             var orderId = $el.parents('.xa-actions').data('order-id');
-            // 修改申请退款的"确认框"，为“录入退款的弹框”
+            var integralPerYuan = $el.parents('.xa-actions').data('integral-per-yuan');
+            // 修改原申请退款的"确认框"，为“录入多个退款项目的对话框”
             console.log('申请退款：', orderId);
-            W.requireConfirm({
-                $el: $(this),
-                width:380,
-                position:'top',
-                isTitle: false,
-                privateContainerClass:'xui-orderConfirmPop',
-                msg:'确定申请退款？',
-                confirm:function(){
-                    var args = {
-                        'order_id': orderId,
-                        'action' : 'return_pay'
-                    }
-                    W.getApi().call({
-                        method: 'post',
-                        app: 'mall2',
-                        resource: 'order',
-                        args: args,
-                        success: function(data) {
-                            pageReload();
-                        },
-                        error: function() {
-                            }
-                    })
+            W.dialog.showDialog('W.dialog.mall.RefundOrderDialog', {
+                orderId: orderId,
+                deliveryItemId: deliveryItemId,
+                integralPerYuan: integralPerYuan,
+                isUpdatePrice: true,
+                success: function(data) {
+                    console.log(data);
                 }
-            })
+            });
+            // W.requireConfirm({
+            //     $el: $(this),
+            //     width:380,
+            //     position:'top',
+            //     isTitle: false,
+            //     privateContainerClass:'xui-orderConfirmPop',
+            //     msg:'确定申请退款？',
+            //     confirm:function(){
+            //         var args = {
+            //             'order_id': orderId,
+            //             'action' : 'return_pay'
+            //         }
+            //         W.getApi().call({
+            //             method: 'post',
+            //             app: 'mall2',
+            //             resource: 'order',
+            //             args: args,
+            //             success: function(data) {
+            //                 pageReload();
+            //             },
+            //             error: function() {
+            //                 }
+            //         })
+            //     }
+            // })
 
         });
 
