@@ -830,10 +830,8 @@ def get_detail_response(request):
             zypt_customer_message_is_str = False
         # order.actions = get_order_actions(order, is_detail_page=True, mall_type=request.user_profile.webapp_type)
         if mall_type:
-            print 111111
             order.actions = get_actions_for_parent_order(order)
         else:
-            print(222222222)
             order.actions = get_order_actions(order, is_detail_page=True, mall_type=mall_type)
 
         show_first = True if OrderStatusLog.objects.filter(order_id=order.order_id,
