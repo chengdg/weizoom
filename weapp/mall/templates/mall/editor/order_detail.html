@@ -261,7 +261,7 @@
               </table>
       </div>
   </div>
-<div class=" xuicontainer">
+<div class=" xuicontainer clearfix pb20">
     <div class="xui-containertop">
         <p class="xui-infotitle">订单信息</p>
     </div>
@@ -457,33 +457,48 @@
             </tr>
             {% endfor %}
         </table>
-        <div class="xui-summary">
+        <div class="xui-summary fr mr20">
           {% if not is_sync%}
-        	<p class="xui-field">
-        		<span class="pull-left">
-        			共计商品：<span class="xui-allnum">{{order.number}}</span> 件
-        		</span>
-        		商品金额：
-        	</p>
-        	<p class="xui-value">￥{{order.total_price|floatformat:"2"}}</p>
-          <p class="xui-field">运费：</p>
-          <p class="xui-value">+￥{{order.postage|floatformat:"2"}}</p>
-          {% if order.save_money > 0 %}
-        	<p class="xui-field">优惠金额：</p>
-          <p class="xui-value">-￥{{order.save_money|floatformat:"2"}}</p>
-          {% elif order.save_money < 0 %}
-          <p class="xui-field">优惠金额：</p>
-          <p class="xui-value">+￥{{order.save_money|floatformat:"2"|cut:'-'}}</p>
-          {% endif %}
-          <div class="xui-line-long"></div>
-          <p class="xui-field ml38" style="width:350px;">
-            <span class="pull-left">
-              支付金额：现金<span class="xui-money">￥{{order.final_price|floatformat:"2"}}</span>+微众卡<span class="xui-money">￥{{order.weizoom_card_money|floatformat:"2"}}</span>=<span class="xui-money" style="font-weigth:bolder;">￥{{order.pay_money|floatformat:"2"}}</span>
-            </span>
-          </p>
+          	<p class="disT xui-priceInfo">
+          		<span class="disTc">
+          			<span class="mr20">共计商品：<span class="xui-allnum">{{order.number}}</span> 件</span>
+          		  商品金额：
+              </span>
+              <span class="disTc xui-money">￥{{order.total_price|floatformat:"2"}}</span>
+          	</p>
+              <p class="disT xui-priceInfo">
+                <span class="disTc">运费：</span>
+                <span class="disTc xui-money">+￥{{order.postage|floatformat:"2"}}</span>
+              </p>
+            {% if order.save_money > 0 %}
+            	<p class="disT xui-priceInfo">
+                <span class="disTc">优惠金额：</span>
+                <span class="disTc xui-money">-￥{{order.save_money|floatformat:"2"}}</span>
+              </p>
+            {% elif order.save_money < 0 %}
+              <p class="disT xui-priceInfo">
+                <span class="disTc">优惠金额：</span>
+                <span class="disTc xui-money">+￥{{order.save_money|floatformat:"2"|cut:'-'}}</span>
+              </p>
+            {% endif %}
+            {% if order.refund_info.has_refund_order %}
+              <p class="disT xui-priceInfo">
+                <span class="disTc">实退金额：</span>
+                <span class="disTc xui-money">-￥{{order.refund_info.return_money|floatformat:"2"}}</span>
+              </p>
+            {% endif %}
+             <div class="xui-line-long"></div>
+              <p class="tr cb">
+                支付金额：现金<span class="xui-money">￥{{order.final_price|floatformat:"2"}}</span>+微众卡<span class="xui-money">￥{{order.weizoom_card_money|floatformat:"2"}}</span>=<span class="xui-money" style="font-weigth:bolder;">￥{{order.pay_money|floatformat:"2"}}</span>
+              </p>
+              {% if order.refund_info.has_refund_order %}
+                <div class="xui-line-long mt10"></div>
+                <p class="tr cb">原始支付金额：现金<span class="xui-money">￥{{order.refund_info.origin_final_price}}</span>+微众卡<span class="xui-money">￥{{order.refund_info.origin_weizoom_card_money}}</span>=<span class="xui-money">￥{{order.refund_info.origin_pay_money}}</span></p>
+                <p class="tr cb">已退款金额：现金<span class="xui-money">￥{{order.refund_info.total_cash}}</span>+微众卡<span class="xui-money">￥{{order.refund_info.total_weizoom_card_money}}</span>+优惠券<span class="xui-money">￥{{order.refund_info.total_coupon_money}}</span>+积分抵扣<span class="xui-money">￥{{order.refund_info.total_integral_money}}</span>=<span class="xui-money">￥{{order.refund_info.total_money}}</span></p>
+              {% endif %}
           {% else %}
-          <div class="xui-wSync-count">共计商品：<span class="xui-money fb">{{order.number}}</span> 件</div>
-          <div class="xui-wSync-pm">支付金额：<span class="xui-money fb">￥{{ order.total_purchase_price|floatformat:"2" }}</span></div>
+            <div class="xui-wSync-count">共计商品：<span class="xui-money fb">{{order.number}}</span> 件</div>
+            <div class="xui-wSync-pm">支付金额：<span class="xui-money fb">￥{{ order.total_purchase_price|floatformat:"2" }}</span></div>
           {% endif %}
         </div>
     </div>
