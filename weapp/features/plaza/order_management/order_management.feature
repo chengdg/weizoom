@@ -361,7 +361,7 @@ Scenario:1 ziying单个供应商商品订单-微信支付+优惠券(不满足满
 		"""
 		{
 			"order_id":"001",
-			"date":"2016-01-01 10:00:00",
+			"date":"2016-01-01",
 			"ship_name": "bill",
 			"ship_tel": "13811223344",
 			"ship_area": "北京市 北京市 海淀区",
@@ -384,7 +384,7 @@ Scenario:1 ziying单个供应商商品订单-微信支付+优惠券(不满足满
 			"""
 			[{
 				"status": "待支付",
-				"order_time":"2016-01-01 10:00:00",
+				"created_at":"2016.01.01 00:00",
 				"products":[{
 					"name":"商品1-1"
 				}],
@@ -411,9 +411,9 @@ Scenario:1 ziying单个供应商商品订单-微信支付+优惠券(不满足满
 				"methods_of_payment":"微信支付",
 				"product_price": 50.00,
 				"postage": 10.00,
-				"save_money": 10.00,
+				"coupon_money": 10.00,
 				"final_price": 50.00,
-				"order_time":"2016-01-01 10:00:00"
+				"order_time":"2016-01-01 00:00:00"
 			}
 			"""
 
@@ -491,7 +491,7 @@ Scenario:1 ziying单个供应商商品订单-微信支付+优惠券(不满足满
 			"""
 			[{
 				"status": "待发货",
-				"order_time":"2016-01-01 10:00:00",
+				"created_at":"2016.01.01 00:00",
 				"products":[{
 					"name":"商品1-1"
 				}],
@@ -614,7 +614,7 @@ Scenario:1 ziying单个供应商商品订单-微信支付+优惠券(不满足满
 			"""
 			[{
 				"status": "退款中",
-				"order_time":"2016-01-01 10:00:00",
+				"created_at":"2016.01.01 00:00",
 				"products":[{
 					"name":"商品1-1"
 				}],
@@ -735,7 +735,7 @@ Scenario:1 ziying单个供应商商品订单-微信支付+优惠券(不满足满
 			"""
 			[{
 				"status": "退款成功",
-				"order_time":"2016-01-01 10:00:00",
+				"created_at":"2016.01.01 00:00",
 				"products":[{
 					"name":"商品1-1"
 				}],
