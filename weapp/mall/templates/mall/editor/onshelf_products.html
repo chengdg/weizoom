@@ -159,8 +159,10 @@
 									更多 ${product.categories.length}
 									 <ul class="xui-i-product-categories xa-xui-i-product-categories">
 									 		{{each(i, item) product.categories}}
+											{{if i>0}}
 									 		 <li data-category-id="${item.id}">
 									 		 	${item.name}
+											{{/if}}
 									 		 </li>
 									 		{{/each}}
 									 </ul>
