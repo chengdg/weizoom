@@ -979,7 +979,7 @@ def __get_order_items_for_self_order(items):
         actual_order['buyer'] = order_item['buyer_name']
         actual_order['ship_name'] = order_item['ship_name']
         actual_order['ship_tel'] = order_item['ship_tel']
-        actual_order['ship_area'] = order_item['ship_area']
+        actual_order['ship_area'] = order_item['area']
         actual_order['ship_address'] = order_item['ship_address']
         actual_order['invoice'] = ""
         actual_order['final_price'] = order_item['pay_money']
