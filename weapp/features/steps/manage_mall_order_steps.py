@@ -900,17 +900,18 @@ def step_imple(context,user,order_code):
 def step_impl(context, user, order_code):
     order_db_id = bdd_util.get_order_by_order_no(order_code).id
     response = context.client.get('/mall2/order/?order_id=%d' % order_db_id)
-
+    
     expected = json.loads(context.text)
     expected.pop('total_save')
     order = response.context['order']
     child_orders = response.context['child_orders']
-
+    
     order.order_no = order.order_id
     order.invoice=order.bill
     order.business_message=order.remark
     order.methods_of_payment = order.pay_interface_name
     order.weizoom_card = order.weizoom_card_money
+    order.actions = [ action.get('name', '') for action in order.actions ]
 
     sub_orders = []
 
@@ -953,7 +954,6 @@ def step_impl(context, user, order_code):
 
 
     order.group = sub_orders
-
     final_price = order.final_price
     order.final_price = order.pay_money
     order.product_price =order.total_price
@@ -974,42 +974,56 @@ def __get_order_items_for_self_order(items):
         actual_order['order_no'] = order_item['order_id']
         actual_order["methods_of_payment"] = order_item['pay_interface_name']
         actual_order['order_time'] = order_item['created_at']
-        actual_order['payment_time'] = order_item['payment_time']
+        #actual_order['payment_time'] = order_item['payment_time']
         actual_order['save_money'] = order_item['save_money']
         actual_order['buyer'] = order_item['buyer_name']
         actual_order['ship_name'] = order_item['ship_name']
         actual_order['ship_tel'] = order_item['ship_tel']
-        actual_order['ship_area'] = order_item['area']
         actual_order['ship_address'] = order_item['ship_address']
         actual_order['invoice'] = ""
         actual_order['final_price'] = order_item['pay_money']
         actual_order['postage'] = order_item['postage']
-        actual_order['status'] = order_item['status']
-
+        actual_order['status'] = STATUS2TEXT[order_item['order_status']
+]
         actual_order['group'] = []
-        buy_product_results = []
-        for group in order_item['groups']:
-            group['status'] = group['fackorder']['status']
-            order_supplier = ''
-            for buy_product in group['products']:
-                buy_product_result = {}
-                buy_product_result['name'] = buy_product['name']
-                buy_product_result['count'] = buy_product['count']
-                buy_product_result['price'] = buy_product['price']
-                order_supplier = buy_product['supplier_name'] or ''
-                buy_product_results.append(buy_product_result)
+        action_list = []
+        if order_item['order_status'] != 0:
+            buy_product_results = []
+            for group in order_item['groups']:
+                group['status'] = group['fackorder']['status']
+                order_supplier = ''
+                for buy_product in group['products']:
+                    buy_product_result = {}
+                    buy_product_result['name'] = buy_product['name']
+                    buy_product_result['count'] = buy_product['count']
+                    buy_product_result['price'] = buy_product['price']
+                    order_supplier = buy_product['supplier_name'] or ''
+                    buy_product_results.append(buy_product_result)
+                
+                group['products'] = buy_product_results
+                group['supplier'] = order_supplier
+                group['order_no'] = order_item['order_id'] + '-' + order_supplier
 
-            group['products'] = buy_product_results
-            group['supplier_name'] = order_supplier
-            group['order_no'] = order_item['order_id'] + order_supplier
+                if group['status'] in ['退款中', '退款成功']:
+                    actual_order['group']['refund_details'] = group['refund_details']
+                # 获取子订单状态对应的操作
+                group['actions'] = [action.get('name', '') for action in group['fackorder']['actions']]
+                actual_order['group'].append(group)
+        else:
+            buy_product_results = []
 
-            if group['status'] in ['退款中', '退款成功']:
-                actual_order['group']['refund_details'] = group['refund_details']
-            # 获取子订单状态对应的操作
-            group['actions'] = set(action.get('name', '') for action in group['fackorder']['actions'])
-            print('sssssssssss=========================', group['actions'])
-            actual_order['group'].append(group)
-
+            for group in order_item['groups']:
+                for buy_product in group['products']:
+                    buy_product_result = {}
+                    buy_product_result['name'] = buy_product['name']
+                    buy_product_result['count'] = buy_product['count']
+                    buy_product_result['price'] = buy_product['price']
+                    buy_product_results.append(buy_product_result)
+                action_list = [action.get('name', '') for action in group['fackorder']['actions']]
+            print('=================action_list2222222222=================', action_list)
+            actual_order['products'] = buy_product_results
+            actual_order['actions'] = action_list
+        
         actual_orders.append(actual_order)
     return actual_orders
 
@@ -1029,9 +1043,11 @@ def step_impl(context, user):
 
     expected = json.loads(context.text)
     for order in expected:
+        if order.get('payment_time',''):
+            del order['payment_time'] 
         if 'actions' in order:
-            order['actions'] = set(order['actions'])  # 暂时不验证顺序
-            print('sssssssssss=========================', order['actions'])
+            order['actions'] = order['actions']  # 暂时不验证顺序
+   
     bdd_util.assert_list(expected, actual_orders)
 
 
