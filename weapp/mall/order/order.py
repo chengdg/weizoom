@@ -212,6 +212,7 @@ class OrderList(resource.Resource):
                 "file_path":0,
                 }
 
+
         c = RequestContext(request, {
             'first_nav_name': FIRST_NAV,
             'second_navs': export.get_mall_order_second_navs(request),
@@ -744,14 +745,15 @@ class OrderRefundingOrder(resource.Resource):
         # sub_order.save()
 
         OrderHasRefund.objects.create(
-            origin_order_id=order_id,
-            delivery_item_id=delivery_item_id,
-            cash=cash,
-            weizoom_card_money=weizoom_card_money,
-            integral=integral,
-            integral_money=integral_money,
-            coupon_money=coupon_money,
-            total=total
+	        origin_order_id=order_id,
+	        delivery_item_id=delivery_item_id,
+	        cash=cash,
+	        weizoom_card_money=weizoom_card_money,
+	        integral=integral,
+	        integral_money=integral_money,
+	        coupon_money=coupon_money,
+	        total=total,
+	        finished=False
         )
 
         sub_order = Order.objects.get(id=delivery_item_id)
@@ -806,7 +808,9 @@ class RefundSuccessfulSubOrder(resource.Resource):
         #更新母订单的总金额
         Order.objects.filter(id=delivery_item_id).update(status=sub_order_target_status)
         Order.objects.filter(id=order_id).update(final_price=(F('final_price')-refund_cash_money), weizoom_card_money=(F('weizoom_card_money')-refund_weizoom_card_money))
-        
+
+        OrderHasRefund.objects.filter(delivery_item_id=delivery_item_id).update(finished=True)
+
         operation_name = request.user.username
         action_msg = '退款完成'
         mall_api.record_status_log(sub_order.order_id, operation_name, sub_order.status, sub_order_target_status)
