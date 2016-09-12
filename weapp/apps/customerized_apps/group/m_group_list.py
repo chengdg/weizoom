@@ -87,6 +87,8 @@ class MGroupList(resource.Resource):
 		all_groups = []
 		all_groups_can_open = []
 		owner_id = request.webapp_owner_id
+		is_wzbld = int(request.GET.get('is_wzbld', 0)) # 判断是否是微众便利店点击团购活动页面里的【直接参团】
+		print is_wzbld,"poooooooooo"
 		#我要开团
 		member = request.member
 		groups = app_models.Group.objects(owner_id=owner_id,status=app_models.STATUS_RUNNING).order_by('-end_time')
@@ -140,6 +142,7 @@ class MGroupList(resource.Resource):
 			'resource': "group",
 			'hide_non_member_cover': True, #非会员也可使用该页面
 			'isPC': False if request.member else True,
-			'share_to_timeline_use_desc': True  #分享到朋友圈的时候信息变成分享给朋友的描述
+			'share_to_timeline_use_desc': True,  #分享到朋友圈的时候信息变成分享给朋友的描述
+			'isWzbld': True if is_wzbld else False
 		})
 		return render_to_response('group/templates/webapp/m_group_list.html', c)

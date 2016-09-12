@@ -1,0 +1,108 @@
+{% extends "content_base_v2.html" %}
+
+{% block content-panel %}
+<div class="xui-LimitedAreaConfigsPage">
+    <ul class="breadcrumb">
+        <li>您当前所在位置</li>
+        <li><a href="/mall2/product_list/?shelve_type">商品管理</a></li>
+        <li class="active">限定区域</li>
+    </ul>
+    <div class="xui-i-content pr">
+        <a class="btn btn-success xui-addNewGroup pa xui-btnPosition" href="/mall2/product_limit_zone_template/">+ &nbsp;&nbsp;添加限定区域</a>
+        {% if templates|length > 0 %}
+        {% for template in templates %}
+        <section class="xui-limitArea-section" data-limitedArea-template-id="{{ template.templateId }}">
+            <fieldset class="xui-limitArea">
+        	<legend class="clearfix">
+        		<title class="fl">{{ template.templateName }}</title>
+        		<span class="fr xui-btnGroup">
+        			<a href="/mall2/product_limit_zone_template/?template_id={{ template.templateId }}">修改</a>
+        			<a href="javascript:void(0);" class="xa-deleteBtn" style="color:#b71212">删除</a>
+        		</span>
+        	</legend>
+        	<div class="pl30 pr30">
+	        	<table class="table xui-limitedAreaConfigTable">
+	                <thead>
+	                    <tr>
+	                        <th width="210">区域</th>
+	                        <th width="127">省</th>
+	                        <th class="tl">市</th>
+	                    </tr>
+	                </thead>
+	                <tbody>
+                        {% for zone in template.zones %}
+	                        {% for province in zone.provinces %}
+                            <tr>
+                                <td>{{ zone.zoneName }}</td>
+	                            <td>{% if zone.zoneName != '直辖市' and zone.zoneName != '其它' %}{{ province.provinceName }}{% endif %}</td>
+                                {% if province.cities|length > 0  %}
+                                    <td class="tl">
+                                    {% for city in province.cities %}
+                                        {{ city.cityName }}&nbsp;&nbsp;
+                                    {% endfor %}
+                                    </td>
+                                {% else %}
+                                {% if zone.zoneName != '直辖市' and zone.zoneName != '其它' %}
+                                    <td class="tl">已全选</td>
+                                {% else %}
+                                    <td class="tl">{{ province.provinceName }}</td>
+                                {% endif %}
+                                {% endif %}
+	                        </tr>
+                            {% endfor %}
+                        {% endfor %}
+	                </tbody>
+	            </table>
+            </div>
+        </fieldset>
+        </section>
+        {% endfor %}
+        {% else %}
+        <div class="xui-emptyBox" style="background:rgba(0,0,0,0)">
+            <div class="xui-i-emptyHint">
+                <img src="/static_v2/img/editor/empty.png">
+                <div><span style="">您还没有限定区域模板，赶快添加！</span> </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+</div>
+{% endblock %}
+{% block js %}
+<script type="text/javascript">
+$(document).ready(function() {
+    $('body').delegate('.xa-deleteBtn', 'click', function(event) {
+        event.stopPropagation();
+        event.preventDefault();
+        $el = $(event.target);
+        var $template = $el.parents('section');
+        var templateId = $template.attr('data-limitedArea-template-id');
+        console.log('templateId', templateId);
+        W.requireConfirm({
+            $el:$(this),
+            width:380,
+            position:'top',
+            isTitle: false,
+            privateContainerClass:'wui-confirmDelete',
+            msg:'是否确定删除',
+            confirm:function(){
+                W.resource.mall2.ProductLimitZone.post({
+                    data: {
+                        '_method': 'delete',
+                        'template_id': templateId
+                    },
+                    success: function(data) {
+                        window.location.reload();
+                    },
+                    error: function(resp) {
+                        W.showHint('error', '删除限定区域模板失败！');
+                    }
+                })
+
+            }
+        })
+    });
+});
+</script>
+{% endblock js%}

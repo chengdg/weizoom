@@ -29,6 +29,7 @@ class Mscanlottery(resource.Resource):
 		code = request.GET.get('scan_code', '')
 		name = request.GET.get('name', None)
 		phone = request.GET.get('phone', None)
+		is_user_input = request.GET.get('is_user_input', '0')
 
 		auth_appid_info = None
 		share_page_desc = ''
@@ -70,7 +71,8 @@ class Mscanlottery(resource.Resource):
 			'code': code,
 			'name': name,
 			'phone': phone,
-			'is_hide_weixin_option_menu': True
+			'is_hide_weixin_option_menu': True,
+			'isUserInput': is_user_input
 		})
 		response = render_to_string('scanlottery/templates/webapp/m_scanlottery.html', c)
 

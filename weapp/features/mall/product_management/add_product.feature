@@ -1,5 +1,5 @@
 #editor：王丽 2015.10.14
-
+#editor：冯雪静 2016.08.31
 @func:webapp.modules.mall.views.list_products
 Feature: 添加新商品
 """
@@ -537,7 +537,7 @@ Scenario:6 添加无规格新商品,支持开票
 		}
 		"""
 
-@mall2 @product @addProduct 
+@mall2 @product @addProduct
 Scenario:7 添加多规格新商品,支持开票
 	Given jobs登录系统
 	And jobs已添加商品
@@ -586,7 +586,7 @@ Scenario:7 添加多规格新商品,支持开票
 		}
 		"""
 
-@mall2 @product @addProduct 
+@mall2 @product @addProduct
 Scenario:8 添加新商品,不支持开票
 	Given jobs登录系统
 	And jobs已添加商品
@@ -617,6 +617,183 @@ Scenario:8 添加新商品,不支持开票
 			"detail": "商品的详情",
 			"invoice":false,
 			"is_use_custom_model": "否",
+			"model": {
+					"models": {
+						"standard": {
+							"price": 12.00,
+							"weight": 5.5,
+							"stock_type": "有限",
+							"stocks": 3
+						}
+					}
+				}
+		}
+		"""
+
+@mall2 @product_limit_area @eugene
+#根据需求后续添加-冯雪静
+Scenario:9 添加新商品,禁售地区和仅售地区
+	1.商品添加禁售地区，这些地区不支持售卖
+	2.商品添加仅售地区，只有这些地区支持售卖
+
+	Given jobs登录系统
+	When jobs添加限定区域配置
+		"""
+		{
+			"name": "禁售商品地区",
+			"limit_area": [{
+				"area": "其他",
+				"province": ["香港"]
+			}]
+		}
+		"""
+	When jobs添加限定区域配置
+		"""
+		{
+			"name": "仅售商品地区",
+			"limit_area": [{
+				"area": "直辖市",
+				"province": ["北京市","天津市","上海市","重庆市"]
+			}]
+		}
+		"""
+	When jobs添加限定区域配置
+		"""
+		{
+			"name": "仅售商品多地区",
+			"limit_area": [{
+				"area": "华北-东北",
+				"province": "河北省",
+				"city": ["石家庄市","唐山市","沧州市"]
+			},{
+				"area": "西北-西南",
+				"province": "陕西省",
+				"city": ["西安市"]
+			}]
+		}
+		"""
+
+	And jobs已添加商品
+		"""
+		[{
+			"name": "禁售地区商品",
+			"category": "",
+			"detail": "商品的详情",
+			"status": "待售",
+			"limit_zone_type": {
+				"禁售地区": {
+					"limit_zone": "禁售商品地区"
+				}
+			},
+			"model": {
+					"models": {
+						"standard": {
+							"price": 12.00,
+							"weight": 5.5,
+							"stock_type": "有限",
+							"stocks": 3
+						}
+					}
+				}
+		}, {
+			"name": "仅售地区商品",
+			"category": "",
+			"detail": "商品的详情",
+			"status": "待售",
+			"limit_zone_type": {
+				"仅售地区": {
+					"limit_zone": "仅售商品地区"
+				}
+			},
+			"model": {
+					"models": {
+						"standard": {
+							"price": 12.00,
+							"weight": 5.5,
+							"stock_type": "有限",
+							"stocks": 3
+						}
+					}
+				}
+		}, {
+			"name": "仅售地区商品1",
+			"category": "",
+			"detail": "商品的详情",
+			"status": "待售",
+			"limit_zone_type": {
+				"仅售地区": {
+					"limit_zone": "仅售商品多地区"
+				}
+			},
+			"model": {
+					"models": {
+						"standard": {
+							"price": 12.00,
+							"weight": 5.5,
+							"stock_type": "有限",
+							"stocks": 3
+						}
+					}
+				}
+		}]
+		"""
+	Then jobs能获取商品'禁售地区商品'
+		"""
+		{
+			"name": "禁售地区商品",
+			"category": "",
+			"detail": "商品的详情",
+			"limit_zone_type": {
+				"禁售地区": {
+					"limit_zone": "禁售商品地区"
+				}
+			},
+			"model": {
+					"models": {
+						"standard": {
+							"price": 12.00,
+							"weight": 5.5,
+							"stock_type": "有限",
+							"stocks": 3
+						}
+					}
+				}
+		}
+		"""
+	Then jobs能获取商品'仅售地区商品'
+		"""
+		{
+			"name": "仅售地区商品",
+			"category": "",
+			"detail": "商品的详情",
+			"limit_zone_type": {
+				"仅售地区": {
+					"limit_zone": "仅售商品地区"
+				}
+			},
+			"model": {
+					"models": {
+						"standard": {
+							"price": 12.00,
+							"weight": 5.5,
+							"stock_type": "有限",
+							"stocks": 3
+						}
+					}
+				}
+		}
+		"""
+	Then jobs能获取商品'仅售地区商品1'
+		"""
+		{
+			"name": "仅售地区商品1",
+			"category": "",
+			"detail": "商品的详情",
+			"limit_zone_type": {
+				"仅售地区": {
+					"limit_zone": "仅售商品多地区"
+				}
+			},
 			"model": {
 					"models": {
 						"standard": {

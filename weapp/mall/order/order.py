@@ -763,7 +763,7 @@ class OrderRefundingOrder(resource.Resource):
         operation_name = request.user.username
         action_msg = '退款'
         mall_api.record_status_log(sub_order.order_id, operation_name, current_status, sub_order_target_status)
-        mall_api.record_operation_log(sub_order.order_id, operation_name, sub_order_target_status)
+        mall_api.record_operation_log(sub_order.order_id, operation_name, action_msg)
 
         mall_api.update_order_status_by_sub_order(sub_order, operation_name, action_msg)
         response = create_response(200)
@@ -808,11 +808,11 @@ class RefundSuccessfulSubOrder(resource.Resource):
         Order.objects.filter(id=order_id).update(final_price=(F('final_price')-refund_cash_money), weizoom_card_money=(F('weizoom_card_money')-refund_weizoom_card_money))
         
         operation_name = request.user.username
-        action_msg = '退款成功'
+        action_msg = '退款完成'
         mall_api.record_status_log(sub_order.order_id, operation_name, sub_order.status, sub_order_target_status)
-        mall_api.record_operation_log(sub_order.order_id, operation_name, sub_order_target_status)
+        mall_api.record_operation_log(sub_order.order_id, operation_name, action_msg)
         #更新母订单的状态
-        mall_api.update_order_status_by_sub_order(sub_order, operation_name,action_msg)
+        mall_api.update_order_status_by_sub_order(sub_order, operation_name, action_msg)
 
         response = create_response(200)
         return response.get_response()

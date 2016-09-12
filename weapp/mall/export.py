@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from weapp.settings import MONEY_HOST
+from weapp.settings import MONEY_HOST, MARKETAPP_DOMAIN
 
 MALL_HOME_FIRST_NAV = 'mall_outline'
 WEIXIN_HOME_FIRST_NAV = 'weixin_outline'
@@ -157,6 +157,7 @@ PRODUCT_MANAGE_IMAGE_NAV = 'pictureManagement'
 PRODUCT_MANAGE_CATEGORY_NAV = 'groupManagement'
 PRODUCT_MANAGE_MODEL_NAV = 'attrModelManagement'
 PRODUCT_REVIEW_NAV = 'reviewManagement'
+PRODUCT_LIMIT_ZONE = 'limitZoneManagement'
 
 MALL_PRODUCT_SECOND_NAV = {
     'section': u'商品',
@@ -211,6 +212,12 @@ MALL_PRODUCT_SECOND_NAV = {
             # 'url': '/mall2/product_review_list/',
             'url': '/apps/evaluate/evaluates/',
             'permission': 'manage_product_review'
+        },
+        {
+            'name': PRODUCT_LIMIT_ZONE,
+            'title': u'限定区域',
+            'url': '/mall2/product_limit_zone/',
+            'permission': 'manage_product_limit_zone'
         },
     ]
 }
@@ -326,6 +333,7 @@ MALL_APPS_EGG_NAV = 'egg'
 MALL_APPS_SCRATCH_NAV = 'scratch'
 ADVANCE_MANAGE_QRCODE_NAV = 'qrcode'
 ADVANCE_MANAGE_CHANNEL_DISTRIBUTIONS_NAV = 'channel_distributions'
+MALL_APPS_SURVEY_NAV_RE = 'survey_re'
 #
 # 应用和营销左侧垂直方向二级导航信息
 #
@@ -453,23 +461,32 @@ MALL_PROMOTION_AND_APPS_SECOND_NAV = {
                     # 'url': '/apps/feedback/feedbacks/',
                     # 'permission': []
                 # },
-                 {
+                {
                     'name': MALL_APPS_SURVEY_NAV,
                     'title': "用户调研",
                     'url': '/apps/survey/surveies/',
                     'permission': ''
                 },
                 {
+                    'name': MALL_APPS_SURVEY_NAV_RE,
+                    'title': "用户调研(重)",
+                    'url': 'http://%s/apps/survey/surveies/' % MARKETAPP_DOMAIN,
+                    'permission': '',
+                    'need_token': True,
+                    'need_blank': True,
+                    'users': ['jobs', 'ceshi01']
+                },
+                {
                     'name': MALL_APPS_EVENT_NAV,
                     'title': "活动报名",
                     'url': '/apps/event/events/',
-                    'permission': []
+                    'permission': [],
                 },
                 {
                     'name': MALL_APPS_VOTE_NAV,
                     'title': "微信投票",
                     'url': '/apps/vote/votes/',
-                    'permission': ''
+                    'permission': '',
                 },
                 {
                     'name': MALL_APPS_RED_ENVELOPE_NAV,
@@ -494,7 +511,7 @@ MALL_PROMOTION_AND_APPS_SECOND_NAV = {
                     'title': u'用户反馈',
                     'url': '/apps/exsurvey/exsurveies/',
                     'permission': '',
-                    'users': ['jobs', 'ceshi01', 'wzjx001', 'weizoomxs', 'weizoommm', 'weshop', 'weizoomclub', 'weizoomshop', 'Aierkang'] #这些帐号可以显示用户反馈
+                    'users': ['jobs', 'ceshi01', 'wzjx001', 'weizoomxs', 'weizoommm', 'weshop', 'weizoomclub', 'weizoomshop', 'Aierkang', 'BITC'] #这些帐号可以显示用户反馈
                 },{
                     'name': MALL_APPS_GROUP_NAV,
                     'title': u'团购',
@@ -511,13 +528,13 @@ MALL_PROMOTION_AND_APPS_SECOND_NAV = {
                     'title': u'返利活动',
                     'url': '/apps/rebate/rebates/',
                     'permission': '',
-                    'users': ['jobs', 'ceshi01', 'weshop', 'Aierkang']
+                    'users': ['jobs', 'ceshi01', 'weshop', 'Aierkang', 'BITC']
                 },{
                     'name': MALL_APPS_EXSIGN_NAV,
                     'title': u'专项签到',
                     'url': '/apps/exsign/exsign/',
                     'permission': '',
-                    'users': ['jobs', 'ceshi01', 'weshop', 'Aierkang']
+                    'users': ['jobs', 'ceshi01', 'weshop', 'Aierkang', 'BITC']
                 },
                 # {
                 #     'name': MALL_APPS_REDPACKET_NAV,

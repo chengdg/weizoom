@@ -95,17 +95,17 @@
 /**
  * 运费模板页面
  */
- .xui-editor-postageConfigsPage .xui-i-box{
+.xui-editor-postageConfigsPage .xui-i-box{
  	background: #EFF4FF;
  	padding-top: 15px;
  }
-.xui-editor-postageConfigsPage .xui-i-title {
-	background: #C7D1E5;
-	height: 40px;
+.xui-editor-postageConfigsPage .xui-i-title{
+	background: #f2f0f1;
+	height: 38px;
 	line-height: 40px;
 	padding: 0px 10px;
 }
-.xui-editor-postageConfigsPage .xui-i-actionItem {
+.xui-editor-postageConfigsPage .xui-i-actionItem{
 	display: inline-block;
 }
 .xui-editor-postageConfigsPage .xui-addNewGroup{
@@ -137,7 +137,8 @@
 .xui-editPostageTemplatePage .xui-postageTemplateName tr{
 	height: 42px;
 }
-.xui-defaultPostage legend,.xui-specialPostage legend,.xui-freePostage legend{
+.xui-defaultPostage legend,.xui-specialPostage legend,.xui-freePostage legend,
+.xui-limitArea legend{
 	background: #DBDBDB;
 	color: #333;
 	height: 30px;
@@ -146,7 +147,8 @@
 	font-size: 12px;
 	font-weight: bold;
 }
-.xui-specialPostage legend,.xui-freePostage legend{
+.xui-specialPostage legend,.xui-freePostage legend,
+.xui-limitArea legend{
 	padding-left: 52px;
 }
 .xui-specialPostage label,.xui-freePostage label{
@@ -164,12 +166,16 @@
 .xui-defaultPostage label{
 	font-weight: normal;
 }
-.xui-specialConfigTable thead,.xui-freeConfigTable thead{
+.xui-specialConfigTable thead,.xui-freeConfigTable thead,
+.xui-limitedAreaConfigTable thead,
+.xui-editLimitedAreaConfigTable thead{
 	height: 32px;
 	background: #D1E1FF;
 	border-top: 2px solid #0377E1; 
 }
-.xui-specialConfigTable tbody tr,.xui-freeConfigTable tbody tr{
+.xui-specialConfigTable tbody tr,.xui-freeConfigTable tbody tr,
+.xui-limitedAreaConfigTable tbody tr,
+.xui-editLimitedAreaConfigTable tbody tr{
 	border-bottom: 1px solid #D1E1FF;
 }
 .xui-specialPostage .xui-i-box,.xui-freePostage .xui-i-box{
@@ -226,6 +232,193 @@
     width: 90px;
 }
 
+/*
+* 限制区域列表页
+*/
+.xui-LimitedAreaConfigsPage .xui-i-content,
+.xui-editLimitedAreaConfigsPage .xui-i-content{
+	background: #e8f2fd;
+	min-height: 800px
+}
+.xui-LimitedAreaConfigsPage .xui-limitArea-section{
+	padding-top:50px;
+}
+.xui-LimitedAreaConfigsPage .xui-btnGroup a{
+	padding:0 10px;
+}
+.xui-LimitedAreaConfigsPage .xui-btnGroup a:last-child{
+	padding-right:30px;
+}
+.xui-LimitedAreaConfigsPage .xui-btnGroup a:first-child{
+	border-right:1px solid #333;
+}
+.xui-limitedAreaConfigTable thead th:last-child{
+	padding-left: 85px;
+}
+.xui-limitedAreaConfigTable tbody tr td:last-child{
+	padding-left: 50px;
+}
+.xui-limitedAreaConfigTable tbody tr>td,
+.xui-editLimitedAreaConfigTable tbody tr>td{
+	padding-top:16px!important;
+	padding-bottom:16px!important;
+	border-top:0; 
+}
+.xui-limitedAreaConfigTable{
+	margin-bottom: 8px;
+}
+.xui-LimitedAreaConfigsPage .xui-limitArea legend{
+	margin-bottom: 5px;
+}
+/*
+* 编辑限定区域页
+*/
+.xui-editLimitedAreaConfigsPage .xui-rightPanelBg{
+
+}
+.xui-editLimitedAreaConfigTable tbody tr td:first-child{
+	padding-left: 66px;
+	text-align:left;
+}
+.xui-editLimitedAreaConfigTable thead tr th:nth-child(3){
+	padding-left: 85px;
+	text-align: left;
+}
+.xui-editLimitedAreaConfigTable tbody tr td:nth-child(3){
+	padding-left: 55px;
+	text-align: left;
+}
+
+/*
+* 编辑限定区域页--弹窗样式
+*/
+.xui-mallSelectLimitedAreaDialog .modal-dialog,
+.xui-limited-area-template-dialog .modal-dialog{
+	width: 580px;
+    height: 390px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-left: -290px;
+    margin-top: -195px;
+}
+.xui-mallSelectLimitedAreaDialog .modal-dialog .modal-footer,
+.xui-limited-area-template-dialog .modal-dialog .modal-footer{
+	height:57px;
+}
+.xui-mallSelectLimitedAreaDialog .modal-footer button,
+.xui-limited-area-template-dialog .modal-footer button{
+	margin-bottom: 15px;
+}
+.xui-mallSelectLimitedAreaDialog i{
+	cursor: pointer;
+	display: inline-block;
+    width: 13px;
+    height: 13px;
+    border: 1px solid #a0a0a0;
+    vertical-align: middle;
+    margin-right: 6px;
+    position:relative;
+}
+.xui-mallSelectLimitedAreaDialog input[type='checkbox']:checked ~ i.xui-checkbox{
+	background:url(/static_v2/img/editor/limit_check.png) no-repeat; 
+	background-position: -1px;
+}
+.xui-mallSelectLimitedAreaDialog .xui-plus:before,
+.xui-mallSelectLimitedAreaDialog .xui-minus:before,
+.xui-mallSelectLimitedAreaDialog .xui-plus:after{
+	content:"";
+	display: inline-block;
+	background: #a0a0a0;
+	position:absolute;
+}
+.xui-mallSelectLimitedAreaDialog .xui-minus,
+.xui-mallSelectLimitedAreaDialog .xui-plus.xui-checked{
+	border-color: #1262b7;
+}
+.xui-mallSelectLimitedAreaDialog .xui-minus:before,
+.xui-mallSelectLimitedAreaDialog .xui-plus.xui-checked:after,
+.xui-mallSelectLimitedAreaDialog .xui-plus.xui-checked:before{
+	background: #1262b7;
+}
+.xui-mallSelectLimitedAreaDialog .xui-plus:before,
+.xui-mallSelectLimitedAreaDialog .xui-minus:before{
+    width: 7px;
+    height: 1px;
+    left: 2px;
+    top: 5px;
+}
+.xui-mallSelectLimitedAreaDialog .xui-plus:after{
+    width: 1px;
+    height: 7px;
+    top: 2px;
+    left: 5px;
+}
+.xui-mallSelectLimitedAreaDialog table tr td{
+	vertical-align: top;
+}
+.xui-mallSelectLimitedAreaDialog table tr td:first-child{
+	font-weight: bold;
+	width: 75px;
+}
+.xui-mallSelectLimitedAreaDialog .modal-dialog tbody tr td:last-child{
+	width: 473px;
+}
+.xui-mallSelectLimitedAreaDialog .xui-province{
+	width:78px;
+	float:left;
+	display: inline-block;
+	height: 30px;
+	/*cursor: pointer;*/
+	position: relative;
+}
+.xui-mallSelectLimitedAreaDialog .xui-inner-province,
+.xui-mallSelectLimitedAreaDialog .xui-inner-city{
+	background:#f7f7f7;
+/*	border: 1px solid #d2d2d2;*/
+	padding: 8px;
+}
+.xui-mallSelectLimitedAreaDialog .xui-inner-province{
+	width: 280px;
+}
+.xui-mallSelectLimitedAreaDialog .xui-inner-city{
+	position: relative;
+	width: 280px;
+	padding-right: 0;
+	padding-top:0;
+}
+.xui-mallSelectLimitedAreaDialog .xui-inner-city li{
+	display: inline-block;
+	/*width: 78px;*/
+	-webkit-box-sizing:border-box;
+	box-sizing:border-box;
+	float:left;
+	margin-top:8px;
+}
+.xui-mallSelectLimitedAreaDialog .xui-inner-city li:nth-child(n+1){
+	margin-right: 5px;
+	width: 130px;
+}
+/*.xui-mallSelectLimitedAreaDialog .xui-inner-city:before{
+	content:"";
+	width: 109px;
+	height: 1px;
+	background: #f7f7f7;
+	position: absolute;
+	left: 0;
+	top:-1px;
+}*/
+.xui-mallSelectLimitedAreaDialog .xui-inner-panel{
+	position: absolute;
+	z-index: 1;
+    top: -9px;
+    left: -9px;
+    display: none;
+    border: 1px solid #d2d2d2; 
+}
+.xui-mallSelectLimitedAreaDialog .btn-success{
+	background:#207cbe;
+}
 /*
 * 物流名称管理页
 */
@@ -550,6 +743,39 @@
     border-radius: 0px;
     box-shadow: none;
     padding: 6px 8px;
+}
+.xui-editProductPage .xui-limitZone-btn{
+	height: 30px;
+    width: 48px;
+    margin: -3px 0 0 5px;
+}
+.xui-editProductPage .xui-showlimitZone-btn{
+	height: 30px;
+	margin:-4px 0 0 50px;
+}
+/*查看商品选定区域模版弹窗*/
+.xui-limited-area-template-dialog .modal-footer button{
+	background: #fff;
+	color:#333;
+	font-weight: bold;
+}
+.xui-limited-area-template-dialog table tr td{
+	text-align: left;
+	border-top:none;
+}
+.xui-limited-area-template-dialog table tr td:first-child{
+	width: 100px;
+}
+.xui-limited-area-template-dialog table tr.xui-province td:nth-child(2){
+	width: 66px;
+}
+.xui-limited-area-template-dialog .modal-dialog tbody tr td:last-child{
+	width: initial;
+}
+.xui-limited-area-template-dialog .modal-dialog .modal-body{
+	min-height: 250px;
+	max-height: 300px;
+    overflow-y: auto;
 }
 /*选择产品规格弹窗*/
 .xui-selectProductModelPropertyDialog .modal-dialog{

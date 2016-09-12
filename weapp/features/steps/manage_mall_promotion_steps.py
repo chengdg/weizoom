@@ -52,7 +52,7 @@ def step_impl(context, user):
 			product_names = promotion['product_name'].split(',')
 			product_ids = []
 			for name in product_names:
-				db_product = Product.objects.get(owner_id=user_id, name=name)
+				db_product = Product.objects.get(name=name)
 				product_ids.append({
 					'id': db_product.id
 				})

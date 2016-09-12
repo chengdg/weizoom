@@ -757,6 +757,7 @@
     width: 100%;
     margin-top: 22px;
     border: 1px solid #d7e0e7;
+    background-color: #eaeef6;
 }
 
 .xui-orderDetialPage .xui-customerinfo {
@@ -817,11 +818,9 @@
 }
 
 .xui-orderDetialPage .xui-orderinfo {
-    background-color: #eaeef6;
     width: 100%;
     height: auto;
-    padding-top: 10px;
-    padding-bottom: 50px;
+    padding: 10px 10px 50px 10px;
 }
 
 .xui-orderDetialPage .xui-orderinfo .container {
@@ -956,12 +955,9 @@
 }
 
 .xui-orderDetialPage .xui-summary {
-    height: 120px;
-    width: 35%;
-    margin-left: 66%;
-    margin-top: 33px;
+    min-width: 350px;
 }
-
+/*
 .xui-orderDetialPage .xui-summary p {
     width: 172px;
     float: left;
@@ -983,33 +979,37 @@
     background-color: #ccc;
     margin-bottom: 5px;
 }
-
-.xui-orderDetialPage .xui-summary .xui-line-long {
-    height: 1px;
-    width: 300px;
-    float: left;
-    clear: both;
-    background-color: #ccc;
-    margin-bottom: 5px;
-}
-
 .xui-orderDetialPage .xui-summary .xui-value {
     margin-left: 24px;
     width: 80px;
     color: #CF0404;
 }
+*/
+.xui-orderDetialPage .xui-summary .xui-line-long {
+    height: 1px;
+    background-color: #ccc;
+    margin-bottom: 5px;
+    width: 300px;
+    float: right;
+}
 
+
+.xui-orderDetialPage .xui-summary p.xui-priceInfo{
+    width: 100%;
+    text-align: right;
+}
+.xui-orderDetialPage .xui-summary p.xui-priceInfo span:first-child{
+    width: 80%;
+}
 .xui-orderDetialPage .row p {
     color: #5E574C;
 }
 
 .xui-orderDetialPage .xui-allnum {
     color: red;
-    margin: 0, 23px, 0, 3px;
 }
 .xui-orderDetialPage .xui-money {
     color: #CF0404;
-    margin: 0, 23px, 0, 3px;
 }
 
 .xui-orderDetialPage .xui-bk {
@@ -1023,6 +1023,17 @@
 .xui-orderDetialPage .xui-wSync-count{
     border-bottom:1px solid #ccc;
 }
+.xui-orderDetialPage .xui-refund-tip{
+    position: absolute;
+    border: 1px solid #ccc;
+    line-height: 40px;
+    padding: 0 10px;
+    background: #fff;
+    display:none;
+    left: -20px;
+    top: 20px;
+    white-space: nowrap;
+}
 .xui-orderDetialPage .xui-notify {
     width: 14px;
     height: 14px;
@@ -1031,7 +1042,8 @@
     top: -25px;
     left: -43px;
 }
-.xui-orderDetialPage .xui-wzcard::after{
+.xui-orderDetialPage .xui-wzcard::after,
+.xui-orderDetialPage .xui-refund-info::after{
     content:"i";
     display:inline-block;
     width:15px;
@@ -1047,6 +1059,9 @@
     -webkit-transform:scale(0.95);
     -moz-transform:scale(0.95);
     transform:scale(0.95);
+}
+.xui-orderDetialPage .xui-refund-tip span:not(:first-child)::before{
+    content: '+';
 }
 .xui-orderDetialPage .xui-wzcardInfo{
     background-color: #fff;
@@ -1083,8 +1098,7 @@
 }
 
 .xui-orderDetialPage .xui-producttab {
-    width: 98%;
-    margin: auto;
+    margin-bottom: 30px;
     border: 1px solid #c3c9ce;
     background-color: #fff;
     text-align: center;

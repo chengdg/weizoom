@@ -90,22 +90,11 @@ W.AsyncComponentLoadView = BackboneLite.View.extend({
         };
     },
 
-    sortByIds: function(products, ids) {
-        var objIds = {};
-        ids.map(function(id, idx){
-            objIds[id] = idx;
-        });
-        products.map(function(product){
-            product['index'] = objIds[product['id']];
-        });
-        return _.sortBy(products, 'index');
-    },
-
     __sendApi: function(deferred, componentData) {
         if (typeof(componentData) === 'undefined') return;
         
         var _this = this;
-        var product_ids = componentData['model']['items'];
+        var productIds = componentData['model']['items'].join(',');
         var componentIndex = componentData['model']['index'];
         W.getApi().call({
             app: 'webapp',
@@ -117,10 +106,10 @@ W.AsyncComponentLoadView = BackboneLite.View.extend({
                 woid: W.webappOwnerId,
                 module: 'mall',
                 target_api: 'page_products/get',
-                product_ids: product_ids
+                product_ids: productIds
             },
             success: function(data) {
-                data.products = _this.sortByIds(data.products, product_ids);
+                data.products = _this.__duplicatedProduct(data.products, productIds);
                 data['componentIndex'] = componentIndex;
                 deferred.resolve(data);
             },
@@ -128,6 +117,25 @@ W.AsyncComponentLoadView = BackboneLite.View.extend({
                 console.log('取商品模块异步数据异常：', data);
             }
         });
+    },
+
+    // 重新整理返回的商品对象，防止请求的ids和返回的商品不一致的问题
+    __duplicatedProduct: function (products, productIds) {
+        var objProducts = {};
+        if (products) {
+            products.map(function(product){
+                objProducts[product.id] = product;
+            });
+        }
+
+        var newProducts = [];
+        if (productIds) {
+            productIds.split(',').map(function(productId){
+                newProducts.push(objProducts[productId]);
+            });
+        }
+
+        return newProducts;
     },
 
     // 渲染组件节点
@@ -143,17 +151,21 @@ W.AsyncComponentLoadView = BackboneLite.View.extend({
             var componentIndex = data['componentIndex'];
             // 根据商品数量填补component对象
             _this.data['valid_product_count'] = data['products'].length;
-            //_this.component['component']['components'] = [];
 
             // 将产品子数据，放到component.components中
             // 并把是否显示价格和名字的开关也放进去
             data.products.map(function(product, idx){
-                // 若是又拍云图片，则压缩成list所用的大小
+                // 若是又拍云图片，则压缩成list所用的大小, 
                 var upaiyunKey = /upaiyun\.com/;
-                if (upaiyunKey.test(product['thumbnails_url'])) {
-                    product['thumbnails_url'] = product['thumbnails_url'] + '!list';
+                var imgSrc = product['thumbnails_url'];
+                if (upaiyunKey.test(imgSrc)) {
+                    // 清理upaiyun链接里的特殊符号
+                    if (imgSrc.indexOf('!') > 0) {
+                        imgSrc = imgSrc.substring(0, imgSrc.indexOf('!'))
+                    }
+                    // 增加‘!list’参数
+                    product['thumbnails_url'] = imgSrc + '!list';
                 }
-
 
                 product['is_itemname_hidden'] = _this.data['model']['is_itemname_hidden'];
                 product['is_price_hidden'] = _this.data['model']['is_price_hidden'];
@@ -171,24 +183,24 @@ W.AsyncComponentLoadView = BackboneLite.View.extend({
 
                 // 异步渲染完成后，重新刷新右侧属性框
                 _.delay(function(){
-                    // W.Broadcaster.trigger('mobilewidget:select', _this.data.model.cid);
+                    W.Broadcaster.trigger('mobilewidget:select', _this.data.model.cid, {autoScroll:true, forceUpdatePropertyView:true});
                 }, 100);
             }
 
             var isInFrame = (parent !== window);
             if (isInFrame) {
-                // 预览模式下禁止点击
+                // 装修／预览模式下
                 if (parent.setWebappPageTitle) {
                     parent.setWebappPageTitle(W.pageTitle);
                 }
 
-                //在预览模式下，修改a，禁止点击
-                $('a').each(function() {
+                //修改a，禁止点击
+                $('a', _this.el).each(function() {
                     var $link = $(this);
                     $link.attr('href', 'javascript:void(0);');
                 })
 
-                // 装修／预览模式下，不延迟加载图片
+                // 不延迟加载图片
                 $('a img', _this.el).each(function() {
                     var $itemImg = $(this);
                     var srcImg = $itemImg.attr('data-url');
@@ -197,7 +209,7 @@ W.AsyncComponentLoadView = BackboneLite.View.extend({
                 
             } else {
                 // 手机模式下
-                // 重新定义图片延迟加载, lazyloadImg已由页面定义
+                // 重新定义图片延迟加载, W.lazyloadImg已由页面定义
                 W.lazyloadImg($('a img', _this.$el), {
                     threshold: 0,
                     effect : "fadeIn",
@@ -216,7 +228,7 @@ W.AsyncComponentLoadView = BackboneLite.View.extend({
 W.initAsyncComponent = function(cid) {
     // 初始化view, 目前只针对商品模块
     var allComponents = [];
-    if (false && cid) {
+    if (cid) {
         $('div.xa-componentContainer[data-contained-cid="'+cid+'"]').find('div[data-ui-role="async-component"]').each(function() {
             var $node = $(this);
             $node.append('<div style="text-align:center;"><img src="/static_v2/img/product_list_loading.gif"></div>');

@@ -16,7 +16,7 @@ Feature:自营平台财务审核订单列表查询
 		2、查询时是按照子订单进行筛选结果
 	"""
 
-Backgroud:
+Background:
 	Given 重置'weizoom_card'的bdd环境
 	Given 重置'apiserver'的bdd环境
 	Given zy1登录系统
@@ -202,7 +202,7 @@ Backgroud:
 	When tom关注zy1的公众号
 	When lily关注zy1的公众号
 	#订单数据
-		#单个子订单（101-退款中；102-退款成功）
+		#单个子订单-10101-退款中-商品1a
 			When bill访问zy1的webapp::apiserver
 			When bill绑定微众卡::apiserver
 				"""
@@ -233,6 +233,18 @@ Backgroud:
 				}
 				"""
 			And bill使用支付方式'微信支付'进行支付::apiserver
+			Given zy1登录系统
+			When zy1'申请退款'自营订单'10101-商家1'
+				"""
+				{
+					"cash":0.00,
+					"weizoom_card":0.00,
+					"coupon_money":5.00,
+					"integral":10,
+					"integral_money":5.00
+				}
+				"""
+		#单个子订单-10201-退款成功-商品1a,1+商品1b,b
 			When bill购买zy1的商品::apiserver
 				"""
 				{
@@ -257,24 +269,14 @@ Backgroud:
 				}
 				"""
 			Given zy1登录系统
-			When zy1'申请退款'自营订单'10101-商家1'
-				"""
-				{
-					"cash":0.00,
-					"weizoom_card":0.00,
-					"coupon_money":5.00,
-					"intergal":10,
-					"intergal_money":5.00
-				}
-				"""
 			When zy1'申请退款'自营订单'10201-商家1'
 				"""
 				{
 					"cash":0.00,
-					"weizoom_card":10.00,
+					"weizoom_card":9.00,
 					"coupon_money":5.00,
-					"intergal":10,
-					"intergal_money":5.00
+					"integral":10,
+					"integral_money":5.00
 				}
 				"""
 			When zy1通过财务审核'退款成功'自营订单'10201-商家1'
@@ -334,8 +336,8 @@ Backgroud:
 						"cash":0.00,
 						"weizoom_card":0.00,
 						"coupon_money":5.00,
-						"intergal":10,
-						"intergal_money":5.00
+						"integral":10,
+						"integral_money":5.00
 					}
 					"""
 				When zy1'申请退款'自营订单'20102-商家3'
@@ -344,8 +346,8 @@ Backgroud:
 						"cash":10.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
-						"intergal":0,
-						"intergal_money":0.00
+						"integral":0,
+						"integral_money":0.00
 					}
 					"""
 				When zy1通过财务审核'退款成功'自营订单'20102-商家3'
@@ -397,16 +399,16 @@ Backgroud:
 					"""
 				And bill使用支付方式'微信支付'进行支付::apiserver
 				Given zy1登录系统
-				When zy1对自营订单进行发货
+				When zy1对订单进行发货
 					"""
 					{
 						"order_no": "20201-商家2",
 						"logistics": "申通快递",
-						"number": "2020101",
+						"number": "2020102",
 						"shipper": "zy1"
 					}
 					"""
-				When zy1对自营订单进行发货
+				When zy1对订单进行发货
 					"""
 					{
 						"order_no": "20202-商家2",
@@ -421,8 +423,8 @@ Backgroud:
 						"cash":0.00,
 						"weizoom_card":0.00,
 						"coupon_money":5.00,
-						"intergal":10,
-						"intergal_money":5.00
+						"integral":10,
+						"integral_money":5.00
 					}
 					"""
 				When zy1'申请退款'自营订单'20202-商家3'
@@ -431,8 +433,8 @@ Backgroud:
 						"cash":10.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
-						"intergal":0,
-						"intergal_money":0.00
+						"integral":0,
+						"integral_money":0.00
 					}
 					"""
 				When zy1通过财务审核'退款成功'自营订单'20202-商家3'
@@ -484,34 +486,24 @@ Backgroud:
 					"""
 				And bill使用支付方式'微信支付'进行支付::apiserver
 				Given zy1登录系统
-				When zy1'申请退款'自营订单'20301-商家3'
-					"""
-					{
-						"cash":0.00,
-						"weizoom_card":0.00,
-						"coupon_money":5.00,
-						"intergal":10,
-						"intergal_money":5.00
-					}
-					"""
-				When zy1'申请退款'自营订单'20302-商家3'
-					"""
-					{
-						"cash":10.00,
-						"weizoom_card":0.00,
-						"coupon_money":0.00,
-						"intergal":0,
-						"intergal_money":0.00
-					}
-					"""
 				When zy1'申请退款'自营订单'20301-商家2'
 					"""
 					{
 						"cash":10.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
-						"intergal":0,
-						"intergal_money":0.00
+						"integral":0,
+						"integral_money":0.00
+					}
+					"""
+				When zy1'申请退款'自营订单'20301-商家3'
+					"""
+					{
+						"cash":0.00,
+						"weizoom_card":0.00,
+						"coupon_money":5.00,
+						"integral":10,
+						"integral_money":5.00
 					}
 					"""
 				When zy1'申请退款'自营订单'20302-商家2'
@@ -520,8 +512,18 @@ Backgroud:
 						"cash":10.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
-						"intergal":0,
-						"intergal_money":0.00
+						"integral":0,
+						"integral_money":0.00
+					}
+					"""
+				When zy1'申请退款'自营订单'20302-商家3'
+					"""
+					{
+						"cash":10.00,
+						"weizoom_card":0.00,
+						"coupon_money":0.00,
+						"integral":0,
+						"integral_money":0.00
 					}
 					"""
 				When zy1通过财务审核'退款成功'自营订单'20302-商家3'
@@ -573,16 +575,27 @@ Backgroud:
 					"""
 				And bill使用支付方式'微信支付'进行支付::apiserver
 				Given zy1登录系统
-				When zy1对自营订单进行发货
+				When zy1对订单进行发货
 					"""
 					{
 						"order_no": "20401-商家2",
 						"logistics": "申通快递",
-						"number": "2040101",
+						"number": "2040102",
 						"shipper": "zy1"
 					}
 					"""
-				When zy1对自营订单进行发货
+				When zy1完成订单'20401-商家2'
+				When zy1'申请退款'自营订单'20401-商家3'
+					"""
+					{
+						"cash":0.00,
+						"weizoom_card":0.00,
+						"coupon_money":5.00,
+						"integral":10,
+						"integral_money":5.00
+					}
+					"""
+				When zy1对订单进行发货
 					"""
 					{
 						"order_no": "20402-商家2",
@@ -591,26 +604,15 @@ Backgroud:
 						"shipper": "zy1"
 					}
 					"""
-				When zy1'完成'自营订单'20401-商家2'
-				When zy1'完成'自营订单'20402-商家2'
-				When zy1'申请退款'自营订单'20401-商家3'
-					"""
-					{
-						"cash":0.00,
-						"weizoom_card":0.00,
-						"coupon_money":5.00,
-						"intergal":10,
-						"intergal_money":5.00
-					}
-					"""
+				When zy1完成订单'20402-商家2'
 				When zy1'申请退款'自营订单'20402-商家3'
 					"""
 					{
 						"cash":10.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
-						"intergal":0,
-						"intergal_money":0.00
+						"integral":0,
+						"integral_money":0.00
 					}
 					"""
 				When zy1通过财务审核'退款成功'自营订单'20402-商家3'
@@ -639,28 +641,29 @@ Backgroud:
 					"""
 				And bill使用支付方式'微信支付'进行支付::apiserver
 				Given zy1登录系统
-				When zy1'申请退款'自营订单'20501-商家3'
-					"""
-					{
-						"cash":0.00,
-						"weizoom_card":0.00,
-						"coupon_money":5.00,
-						"intergal":10,
-						"intergal_money":5.00
-					}
-					"""
 				When zy1'申请退款'自营订单'20501-商家2'
 					"""
 					{
 						"cash":10.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
-						"intergal":0,
-						"intergal_money":0.00
+						"integral":0,
+						"integral_money":0.00
+					}
+					"""
+				When zy1通过财务审核'退款成功'自营订单'20501-商家2'
+				When zy1'申请退款'自营订单'20501-商家3'
+					"""
+					{
+						"cash":0.00,
+						"weizoom_card":0.00,
+						"coupon_money":5.00,
+						"integral":10,
+						"integral_money":5.00
 					}
 					"""
 				When zy1通过财务审核'退款成功'自营订单'20501-商家3'
-				When zy1通过财务审核'退款成功'自营订单'20501-商家2'
+
 			#商品1a,商品2b,商品3b-tom
 			#301-已发货（已发货/已发货/退款中（退款成功））
 				When tom购买zy1的商品::apiserver
@@ -710,7 +713,7 @@ Backgroud:
 					"""
 				And tom使用支付方式'支付宝'进行支付::apiserver
 				Given zy1登录系统
-				When zy1对自营订单进行发货
+				When zy1对订单进行发货
 					"""
 					{
 						"order_no": "30101-商家1",
@@ -719,12 +722,12 @@ Backgroud:
 						"shipper": "zy1"
 					}
 					"""
-				When zy1对自营订单进行发货
+				When zy1对订单进行发货
 					"""
 					{
 						"order_no": "30101-商家2",
 						"logistics": "申通快递",
-						"number": "3010202",
+						"number": "3010102",
 						"shipper": "zy1"
 					}
 					"""
@@ -734,11 +737,11 @@ Backgroud:
 						"cash":10.00,
 						"weizoom_card":0.00,
 						"coupon_money":5.00,
-						"intergal":10,
-						"intergal_money":5.00
+						"integral":10,
+						"integral_money":5.00
 					}
 					"""
-				When zy1对自营订单进行发货
+				When zy1对订单进行发货
 					"""
 					{
 						"order_no": "30102-商家1",
@@ -747,7 +750,7 @@ Backgroud:
 						"shipper": "zy1"
 					}
 					"""
-				When zy1对自营订单进行发货
+				When zy1对订单进行发货
 					"""
 					{
 						"order_no": "30102-商家2",
@@ -762,8 +765,8 @@ Backgroud:
 						"cash":20.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
-						"intergal":0,
-						"intergal_money":0.00
+						"integral":0,
+						"integral_money":0.00
 					}
 					"""
 				When zy1通过财务审核'退款成功'自营订单'30102-商家3'
@@ -838,7 +841,7 @@ Backgroud:
 					"""
 				And tom使用支付方式'微信支付'进行支付::apiserver
 				Given zy1登录系统
-				When zy1对自营订单进行发货
+				When zy1对订单进行发货
 					"""
 					{
 						"order_no": "30201-商家1",
@@ -853,8 +856,8 @@ Backgroud:
 						"cash":20.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
-						"intergal":0,
-						"intergal_money":0.00
+						"integral":0,
+						"integral_money":0.00
 					}
 					"""
 				When zy1'申请退款'自营订单'30201-商家3'
@@ -863,11 +866,11 @@ Backgroud:
 						"cash":10.00,
 						"weizoom_card":0.00,
 						"coupon_money":5.00,
-						"intergal":10,
-						"intergal_money":5.00
+						"integral":10,
+						"integral_money":5.00
 					}
 					"""
-				When zy1对自营订单进行发货
+				When zy1对订单进行发货
 					"""
 					{
 						"order_no": "30202-商家1",
@@ -882,11 +885,11 @@ Backgroud:
 						"cash":20.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
-						"intergal":0,
-						"intergal_money":0.00
+						"integral":0,
+						"integral_money":0.00
 					}
 					"""
-				When zy1对自营订单进行发货
+				When zy1对订单进行发货
 					"""
 					{
 						"order_no": "30202-商家3",
@@ -895,8 +898,8 @@ Backgroud:
 						"shipper": "zy1"
 					}
 					"""
-				When zy1'完成'自营订单'30202-商家3'
-				When zy1对自营订单进行发货
+				When zy1完成订单'30202-商家3'
+				When zy1对订单进行发货
 					"""
 					{
 						"order_no": "30203-商家1",
@@ -911,8 +914,8 @@ Backgroud:
 						"cash":20.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
-						"intergal":0,
-						"intergal_money":0.00
+						"integral":0,
+						"integral_money":0.00
 					}
 					"""
 				When zy1'申请退款'自营订单'30203-商家3'
@@ -921,8 +924,8 @@ Backgroud:
 						"cash":10.00,
 						"weizoom_card":0.00,
 						"coupon_money":5.00,
-						"intergal":10,
-						"intergal_money":5.00
+						"integral":10,
+						"integral_money":5.00
 					}
 					"""
 				When zy1通过财务审核'退款成功'自营订单'30203-商家3'
@@ -951,7 +954,7 @@ Backgroud:
 					"""
 				And tom使用支付方式'微信支付'进行支付::apiserver
 				Given zy1登录系统
-				When zy1对自营订单进行发货
+				When zy1对订单进行发货
 					"""
 					{
 						"order_no": "30301-商家1",
@@ -960,7 +963,7 @@ Backgroud:
 						"shipper": "zy1"
 					}
 					"""
-				When zy1对自营订单进行发货
+				When zy1对订单进行发货
 					"""
 					{
 						"order_no": "30301-商家2",
@@ -969,15 +972,15 @@ Backgroud:
 						"shipper": "zy1"
 					}
 					"""
-				When zy1'完成'自营订单'30301-商家2'
+				When zy1完成订单'30301-商家2'
 				When zy1'申请退款'自营订单'30301-商家3'
 					"""
 					{
 						"cash":20.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
-						"intergal":0,
-						"intergal_money":0.00
+						"integral":0,
+						"integral_money":0.00
 					}
 					"""
 				When zy1通过财务审核'退款成功'自营订单'30301-商家3'
@@ -1006,7 +1009,7 @@ Backgroud:
 					"""
 				And tom使用支付方式'微信支付'进行支付::apiserver
 				Given zy1登录系统
-				When zy1对自营订单进行发货
+				When zy1对订单进行发货
 					"""
 					{
 						"order_no": "30401-商家1",
@@ -1021,19 +1024,19 @@ Backgroud:
 						"cash":20.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
-						"intergal":0,
-						"intergal_money":0.00
+						"integral":0,
+						"integral_money":0.00
 					}
 					"""
 				When zy1通过财务审核'退款成功'自营订单'30401-商家2'
-				When zy1'申请退款'自营订单'30401-商家4'
+				When zy1'申请退款'自营订单'30401-商家3'
 					"""
 					{
 						"cash":20.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
-						"intergal":0,
-						"intergal_money":0.00
+						"integral":0,
+						"integral_money":0.00
 					}
 					"""
 				When zy1通过财务审核'退款成功'自营订单'30401-商家3'
@@ -1116,8 +1119,8 @@ Backgroud:
 						"cash":10.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
-						"intergal":0,
-						"intergal_money":0.00
+						"integral":0,
+						"integral_money":0.00
 					}
 					"""
 				When zy1'申请退款'自营订单'40101-商家2'
@@ -1126,8 +1129,8 @@ Backgroud:
 						"cash":10.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
-						"intergal":0,
-						"intergal_money":0.00
+						"integral":0,
+						"integral_money":0.00
 					}
 					"""
 				When zy1'申请退款'自营订单'40101-商家3'
@@ -1136,8 +1139,8 @@ Backgroud:
 						"cash":20.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
-						"intergal":0,
-						"intergal_money":0.00
+						"integral":0,
+						"integral_money":0.00
 					}
 					"""
 				When zy1'申请退款'自营订单'40102-商家1'
@@ -1146,8 +1149,8 @@ Backgroud:
 						"cash":10.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
-						"intergal":0,
-						"intergal_money":0.00
+						"integral":0,
+						"integral_money":0.00
 					}
 					"""
 				When zy1'申请退款'自营订单'40102-商家2'
@@ -1156,11 +1159,11 @@ Backgroud:
 						"cash":10.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
-						"intergal":0,
-						"intergal_money":0.00
+						"integral":0,
+						"integral_money":0.00
 					}
 					"""
-				When zy1对自营订单进行发货
+				When zy1对订单进行发货
 					"""
 					{
 						"order_no": "40102-商家3",
@@ -1169,15 +1172,15 @@ Backgroud:
 						"shipper": "zy1"
 					}
 					"""
-				When zy1'完成'自营订单'40102-商家3'
+				When zy1完成订单'40102-商家3'
 				When zy1'申请退款'自营订单'40103-商家1'
 					"""
 					{
 						"cash":10.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
-						"intergal":0,
-						"intergal_money":0.00
+						"integral":0,
+						"integral_money":0.00
 					}
 					"""
 				When zy1'申请退款'自营订单'40103-商家2'
@@ -1186,8 +1189,8 @@ Backgroud:
 						"cash":10.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
-						"intergal":0,
-						"intergal_money":0.00
+						"integral":0,
+						"integral_money":0.00
 					}
 					"""
 				When zy1'申请退款'自营订单'40103-商家3'
@@ -1196,8 +1199,8 @@ Backgroud:
 						"cash":20.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
-						"intergal":0,
-						"intergal_money":0.00
+						"integral":0,
+						"integral_money":0.00
 					}
 					"""
 				When zy1通过财务审核'退款成功'自营订单'40103-商家3'
@@ -1255,11 +1258,11 @@ Backgroud:
 						"cash":10.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
-						"intergal":0,
-						"intergal_money":0.00
+						"integral":0,
+						"integral_money":0.00
 					}
 					"""
-				When zy1对自营订单进行发货
+				When zy1对订单进行发货
 					"""
 					{
 						"order_no": "40201-商家2",
@@ -1268,8 +1271,8 @@ Backgroud:
 						"shipper": "zy1"
 					}
 					"""
-				When zy1'完成'自营订单'40201-商家2'
-				When zy1对自营订单进行发货
+				When zy1完成订单'40201-商家2'
+				When zy1对订单进行发货
 					"""
 					{
 						"order_no": "40201-商家3",
@@ -1278,18 +1281,18 @@ Backgroud:
 						"shipper": "zy1"
 					}
 					"""
-				When zy1'完成'自营订单'40201-商家3'
+				When zy1完成订单'40201-商家3'
 				When zy1'申请退款'自营订单'40202-商家1'
 					"""
 					{
 						"cash":10.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
-						"intergal":0,
-						"intergal_money":0.00
+						"integral":0,
+						"integral_money":0.00
 					}
 					"""
-				When zy1对自营订单进行发货
+				When zy1对订单进行发货
 					"""
 					{
 						"order_no": "40202-商家2",
@@ -1298,15 +1301,15 @@ Backgroud:
 						"shipper": "zy1"
 					}
 					"""
-				When zy1'完成'自营订单'40202-商家2'
+				When zy1完成订单'40202-商家2'
 				When zy1'申请退款'自营订单'40202-商家3'
 					"""
 					{
 						"cash":20.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
-						"intergal":0,
-						"intergal_money":0.00
+						"integral":0,
+						"integral_money":0.00
 					}
 					"""
 				When zy1通过财务审核'退款成功'自营订单'40202-商家3'
@@ -1341,8 +1344,8 @@ Backgroud:
 						"cash":10.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
-						"intergal":0,
-						"intergal_money":0.00
+						"integral":0,
+						"integral_money":0.00
 					}
 					"""
 				When zy1'申请退款'自营订单'40301-商家2'
@@ -1351,8 +1354,8 @@ Backgroud:
 						"cash":10.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
-						"intergal":0,
-						"intergal_money":0.00
+						"integral":0,
+						"integral_money":0.00
 					}
 					"""
 				When zy1通过财务审核'退款成功'自营订单'40301-商家2'
@@ -1362,8 +1365,8 @@ Backgroud:
 						"cash":20.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
-						"intergal":0,
-						"intergal_money":0.00
+						"integral":0,
+						"integral_money":0.00
 					}
 					"""
 				When zy1通过财务审核'退款成功'自营订单'40301-商家3'
@@ -1393,7 +1396,7 @@ Backgroud:
 						"""
 				And lily使用支付方式'微信支付'进行支付::apiserver
 				Given zy1登录系统
-				When zy1对自营订单进行发货
+				When zy1对订单进行发货
 					"""
 					{
 						"order_no": "50101-商家1",
@@ -1402,8 +1405,8 @@ Backgroud:
 						"shipper": "zy1"
 					}
 					"""
-				When zy1'完成'自营订单'50101-商家1'
-				When zy1对自营订单进行发货
+				When zy1完成订单'50101-商家1'
+				When zy1对订单进行发货
 					"""
 					{
 						"order_no": "50101-商家2",
@@ -1412,15 +1415,15 @@ Backgroud:
 						"shipper": "zy1"
 					}
 					"""
-				When zy1'完成'自营订单'50101-商家2'
+				When zy1完成订单'50101-商家2'
 				When zy1'申请退款'自营订单'50101-商家3'
 					"""
 					{
 						"cash":20.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
-						"intergal":0,
-						"intergal_money":0.00
+						"integral":0,
+						"integral_money":0.00
 					}
 					"""
 				When zy1通过财务审核'退款成功'自营订单'50101-商家3'
@@ -1449,7 +1452,7 @@ Backgroud:
 						"""
 				And lily使用支付方式'微信支付'进行支付::apiserver
 				Given zy1登录系统
-				When zy1对自营订单进行发货
+				When zy1对订单进行发货
 					"""
 					{
 						"order_no": "50201-商家1",
@@ -1458,15 +1461,15 @@ Backgroud:
 						"shipper": "zy1"
 					}
 					"""
-				When zy1'完成'自营订单'50201-商家1'
+				When zy1完成订单'50201-商家1'
 				When zy1'申请退款'自营订单'50201-商家2'
 					"""
 					{
 						"cash":10.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
-						"intergal":0,
-						"intergal_money":0.00
+						"integral":0,
+						"integral_money":0.00
 					}
 					"""
 				When zy1通过财务审核'退款成功'自营订单'50201-商家2'
@@ -1476,8 +1479,8 @@ Backgroud:
 						"cash":20.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
-						"intergal":0,
-						"intergal_money":0.00
+						"integral":0,
+						"integral_money":0.00
 					}
 					"""
 				When zy1通过财务审核'退款成功'自营订单'50201-商家3'
@@ -1513,8 +1516,8 @@ Backgroud:
 						"cash":10.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
-						"intergal":0,
-						"intergal_money":0.00
+						"integral":0,
+						"integral_money":0.00
 					}
 					"""
 				When zy1通过财务审核'退款成功'自营订单'60101-商家1'
@@ -1524,8 +1527,8 @@ Backgroud:
 						"cash":10.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
-						"intergal":0,
-						"intergal_money":0.00
+						"integral":0,
+						"integral_money":0.00
 					}
 					"""
 				When zy1通过财务审核'退款成功'自营订单'60101-商家2'
@@ -1535,13 +1538,39 @@ Backgroud:
 						"cash":20.00,
 						"weizoom_card":0.00,
 						"coupon_money":0.00,
-						"intergal":0,
-						"intergal_money":0.00
+						"integral":0,
+						"integral_money":0.00
 					}
 					"""
 				When zy1通过财务审核'退款成功'自营订单'60101-商家3'
+
+			#701-待支付
+					When lily购买zy1的商品::apiserver
+						"""
+						{
+							"order_id": "70101",
+							"date":"2016-09-17",
+							"products": [{
+								"name": "商品1a",
+								"count": 1
+							},{
+								"name": "商品2a",
+								"count": 1
+							},{
+								"name": "商品3b",
+								"count": 1
+							}],
+							"pay_type":"微信支付",
+							"ship_name":"张大大",
+							"ship_tel":"18711223344",
+							"ship_area": "北京市 北京市 海淀区",
+							"ship_address": "海淀科技大厦"
+						}
+						"""
+
 	#方便校验数据（已注释，请勿删除）
 		# | order_no | status   |       group               | final_price | buyer | order_date |ship_name|  ship_tel   |pay_type |
+		# | 70101    | 待支付   | [商品1a,10.00,1] 待支付   | 0.00        | lily  | 2016-09-17 | 张小七  | 18711223344 |微信支付 |
 		# | 60101    | 退款成功 | [商品1a,10.00,1] 退款成功 | 0.00        | lily  | 2016-09-16 | 张小六  | 18611223344 |微信支付 |
 		# |          |          | [商品2a,10.00,1] 退款成功 |             |       |            |         |             |         |
 		# |          |          | [商品3b,20.00,1] 退款成功 |             |       |            |         |             |         |
@@ -1619,7 +1648,7 @@ Backgroud:
 		# |          |          | [商品3a,10.00,1] 退款中   |             |       |            |         |             |         |
 
 		# | 10201    | 退款成功  | [商品1a,10.00,1] 退款成功 | 10.00       | bill  | 2016-08-30 | 张大大  | 18121223344 |优惠抵扣 |
-		# |          |           | [商品1b,9.00,1]  运费1    |             |       |            |         |             |         |
+		# |          |           | [商品1b,9.00,1]  运费1   |             |       |            |         |             |         |
 		# | 10101    | 退款中    | [商品1a,10.00,1] 退款中   | 30.00       | bill  | 2016-08-29 | 张大大  | 18111223344 |微信支付 |
 
 @order @finance @refund
