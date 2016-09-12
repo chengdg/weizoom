@@ -972,7 +972,7 @@ def __get_order_items_for_self_order(items):
     for order_item in items:
         actual_order = {}
         actual_order['order_no'] = order_item['order_id']
-        actual_order["methods_of_payment"] = order_item['methods_of_payment']
+        actual_order["methods_of_payment"] = order_item['pay_interface_name']
         actual_order['order_time'] = order_item['created_at']
         actual_order['payment_time'] = order_item['payment_time']
         actual_order['save_money'] = order_item['save_money']
