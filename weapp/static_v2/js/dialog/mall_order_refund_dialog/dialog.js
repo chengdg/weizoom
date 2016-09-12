@@ -269,12 +269,6 @@ W.dialog.mall.RefundOrderDialog = W.dialog.Dialog.extend({
                 integral: integral 
             };
 
-        //////////////////////////////
-        // 调试时，暂时关闭提交
-        alert(JSON.stringify(params));
-        return;
-        //////////////////////////////
-
         W.getApi().call({
             app: 'mall2',
             resource: 'refunding_order',
