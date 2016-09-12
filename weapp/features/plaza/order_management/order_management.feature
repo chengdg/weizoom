@@ -439,7 +439,7 @@ Scenario:1 ziying单个供应商商品订单-微信支付+优惠券(不满足满
 				"final_price": 50.00,
 				"postage": 10.00,
 				"status":"0",
-				"actions": ["修改价格","支付","取消订单"]
+				"actions": ["支付","取消订单"]
 			}]
 			"""
 		Then zy1获得自营订单'001'
@@ -447,7 +447,7 @@ Scenario:1 ziying单个供应商商品订单-微信支付+优惠券(不满足满
 			{
 				"order_no":"001",
 				"status":"待支付",
-				"actions": ["修改价格","支付","取消订单"],
+				"actions": ["支付","取消订单"],
 				"ship_name":"bill",
 				"ship_tel":"13811223344",
 				"ship_address": "北京市 北京市 海淀区 泰兴大厦",
