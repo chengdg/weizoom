@@ -484,7 +484,7 @@
             {% if order.refund_info.has_refund_order %}
               <p class="disT xui-priceInfo">
                 <span class="disTc">实退金额：</span>
-                <span class="disTc xui-money">-￥{{order.refund_info.return_money|floatformat:"2"}}</span>
+                <span class="disTc xui-money">-￥{{order.refund_info.refund_money|floatformat:"2"}}</span>
               </p>
             {% endif %}
              <div class="xui-line-long"></div>
