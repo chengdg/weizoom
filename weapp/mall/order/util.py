@@ -1308,7 +1308,7 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
                             'integral_money': refund_info.integral_money,
                             'coupon_money': refund_info.coupon_money,
                             'should_total': mall.models.Order.get_order_has_price_number(order) + fackorder.postage,
-                            'finished':refund_info.finished
+                            'finished': refund_info.finished
                         }
                     else:
                         refund_info_dict = {
@@ -1438,6 +1438,10 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
         origin_weizoom_card_money = sum([group['fackorder']['refund_info']['weizoom_card_money'] for group in groups if group['fackorder']['refund_info']['finished']]) + order.weizoom_card_money
         origin_final_money = sum([group['fackorder']['refund_info']['cash'] for group in groups if group['fackorder']['refund_info']['finished']]) + order.final_price
 
+        _save_money = round(Order.get_order_has_price_number(order), 2) + round(order.postage, 2) - round(
+            origin_final_money,
+            2) - round(
+            origin_weizoom_card_money, 2)
         # if len(groups) > 1:
         #     parent_action = get_order_actions(order, is_refund=is_refund, is_list_parent=True, mall_type=mall_type)
         # else:
@@ -1447,15 +1451,6 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
             parent_action = get_actions_for_parent_order(order)
         else:
             parent_action = None
-
-
-        if order.status == ORDER_STATUS_REFUNDED:
-            _save_money = float(Order.get_order_has_price_number(order)) + float(order.postage) - float(
-                order.final_price) - float(order.weizoom_card_money) - order.refund_info['total_cash'] - order.refund_info['total_weizoom_card_money']
-        else:
-
-            _save_money = float(Order.get_order_has_price_number(order)) + float(order.postage) - float(
-                order.final_price) - float(order.weizoom_card_money)
 
         items.append({
             'id': order.id,
