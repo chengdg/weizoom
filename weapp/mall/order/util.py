@@ -1487,6 +1487,7 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
             'postage': '%.2f' % order.postage,
             'delivery_time': order.delivery_time,
             'save_money': _save_money,
+            'coupon_money': order.coupon_money,
             'weizoom_card_money': float('%.2f' % order.weizoom_card_money),
             # 'weizoom_card_money_huihui': float('%.2f' % order.weizoom_card_money_huihui),
             # 'weizoom_card_money_rest': float('%.2f' % order.weizoom_card_money_rest),
