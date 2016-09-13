@@ -373,37 +373,39 @@
                         <td rowspan="{{product.supplier_length}}" style="text-align:center;border-right:1px solid #ddd;">
                           <span class="pr {% if product.status == 6 or product.status == 7 %}xui-refund-info xa-refund-info{% endif %}">
                             {{ product.order_status }}
-                            {% if product.status == 6 or product.status == 7 %}
-                            <div class="xui-refund-tip xa-refund-tip">
-                              {% if product.refund_info.only_you %}
-                                {% if product.refund_info.cash > 0 %}
-                                  现金￥{{product.refund_info.cash|floatformat:"2"}}
+                            {% if product.refund_info %}
+                              {% if product.status == 6 or product.status == 7 %}
+                              <div class="xui-refund-tip xa-refund-tip">
+                                {% if product.refund_info.only_you %}
+                                  {% if product.refund_info.cash > 0 %}
+                                    现金￥{{product.refund_info.cash|floatformat:"2"}}
+                                  {% endif %}
+                                  {% if product.refund_info.weizoom_card_money > 0 %}
+                                    微众卡￥{{product.refund_info.weizoom_card_money|floatformat:"2"}}
+                                  {% endif %}
+                                  {% if product.refund_info.coupon_money > 0 %}
+                                    优惠券￥{{product.refund_info.coupon_money|floatformat:"2"}}
+                                  {% endif %}
+                                  {% if product.refund_info.integral_money > 0 %}
+                                    积分抵扣￥{{product.refund_info.integral_money|floatformat:"2"}}
+                                  {% endif %}
+                                {% else %}
+                                  {% if product.refund_info.cash > 0 %}
+                                    <span>现金￥{{product.refund_info.cash|floatformat:"2"}}</span>
+                                  {% endif %}
+                                  {% if product.refund_info.weizoom_card_money > 0 %}
+                                    <span>微众卡￥{{product.refund_info.weizoom_card_money|floatformat:"2"}}</span>
+                                  {% endif %}
+                                  {% if product.refund_info.coupon_money > 0 %}
+                                    <span>优惠券￥{{product.refund_info.coupon_money|floatformat:"2"}}</span>
+                                  {% endif %}
+                                  {% if product.refund_info.integral_money > 0 %}
+                                    <span>积分抵扣￥{{product.refund_info.integral_money|floatformat:"2"}}</span>
+                                  {% endif %}
+                                  =￥{{product.refund_info.total|floatformat:"2"}}
                                 {% endif %}
-                                {% if product.refund_info.weizoom_card_money > 0 %}
-                                  微众卡￥{{product.refund_info.weizoom_card_money|floatformat:"2"}}
-                                {% endif %}
-                                {% if product.refund_info.coupon_money > 0 %}
-                                  优惠券￥{{product.refund_info.coupon_money|floatformat:"2"}}
-                                {% endif %}
-                                {% if product.refund_info.integral_money > 0 %}
-                                  积分抵扣￥{{product.refund_info.integral_money|floatformat:"2"}}
-                                {% endif %}
-                              {% else %}
-                                {% if product.refund_info.cash > 0 %}
-                                  <span>现金￥{{product.refund_info.cash|floatformat:"2"}}</span>
-                                {% endif %}
-                                {% if product.refund_info.weizoom_card_money > 0 %}
-                                  <span>微众卡￥{{product.refund_info.weizoom_card_money|floatformat:"2"}}</span>
-                                {% endif %}
-                                {% if product.refund_info.coupon_money > 0 %}
-                                  <span>优惠券￥{{product.refund_info.coupon_money|floatformat:"2"}}</span>
-                                {% endif %}
-                                {% if product.refund_info.integral_money > 0 %}
-                                  <span>积分抵扣￥{{product.refund_info.integral_money|floatformat:"2"}}</span>
-                                {% endif %}
-                                =￥{{product.refund_info.total|floatformat:"2"}}
+                              </div>
                               {% endif %}
-                            </div>
                             {% endif %}
                           </span>
                         </td>
