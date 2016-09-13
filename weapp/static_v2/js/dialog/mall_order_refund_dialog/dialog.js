@@ -108,22 +108,23 @@ W.dialog.mall.RefundOrderDialog = W.dialog.Dialog.extend({
         var weizoomCardMoney = $('[name="weizoom_card_money"]', $dialog).val() * 1;
         var couponMoney = $('[name="coupon_money"]', $dialog).val() * 1;
         var integralCount = $('[name="integral"]', $dialog).val() * 1;
-        var integral = integralCount/integralPerYuan * 1;
+        var integralMoney = integralCount/integralPerYuan * 1;
 
         // 不能为负数
         var cash = cash > 0? cash : 0;
         var weizoomCardMoney = weizoomCardMoney > 0? weizoomCardMoney : 0;
         var couponMoney = couponMoney > 0? couponMoney : 0;
-        var integral = integral > 0? integral : 0;
+        var integralMoney = integralMoney > 0? integralMoney : 0;
 
-        var totalMoney = cash + weizoomCardMoney + couponMoney + integral;
+        var totalMoney = cash + weizoomCardMoney + couponMoney + integralMoney;
 
         // 保存至this.dialogMainData
         var targetRefundInfo = {
             "cash": cash,
             "weizoomCardMoney": weizoomCardMoney,
             "couponMoney": couponMoney,
-            "integral": integral,
+            "integral": integralMoney,
+            "integralCount": integralCount,
             "totalMoney": totalMoney.toFixed(2)
         };
         this.dialogMainData.targetRefundInfo = _.extend(this.dialogMainData.targetRefundInfo, targetRefundInfo);
@@ -311,7 +312,7 @@ W.dialog.mall.RefundOrderDialog = W.dialog.Dialog.extend({
         var integralCount = $('[name="integral"]', $dialog).val() * 1;
 
         var regNum =/^[0-9]+([.]\d{1,2})?$/;
-        var regInt =/^[1-9]\d*$/;
+        var regInt =/^[0-9]\d*$/;
         var errTip = '';
         if(!regNum.test(cash)){
             errTip = '现金: 须非负数，保留两位小数';
@@ -383,10 +384,10 @@ W.dialog.mall.RefundOrderDialog = W.dialog.Dialog.extend({
                 cash: cash? cash : 0,
                 weizoom_card_money: weizoomCardMoney? weizoomCardMoney : 0,
                 coupon_money: couponMoney? couponMoney : 0,
-                integral: integral? integral : 0 
+                integral: integralCount? integralCount : 0 
             };
 
-        if (this.onChangeRefundItem() &&  this.__validate()) {
+        if (this.__validate() || this.onChangeRefundItem()) {
             W.getApi().call({
                 app: 'mall2',
                 resource: 'refunding_order',
