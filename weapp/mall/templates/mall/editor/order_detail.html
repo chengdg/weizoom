@@ -481,7 +481,7 @@
                 <span class="disTc xui-money">+￥{{order.save_money|floatformat:"2"|cut:'-'}}</span>
               </p>
             {% endif %}
-            {% if order.refund_info.has_refund_order %}
+            {% if order.refund_info.has_refund_order and mall_type %}
               <p class="disT xui-priceInfo">
                 <span class="disTc">实退金额：</span>
                 <span class="disTc xui-money">-￥{{order.refund_info.refund_money|floatformat:"2"}}</span>
@@ -491,7 +491,7 @@
               <p class="tr cb">
                 支付金额：现金<span class="xui-money">￥{{order.final_price|floatformat:"2"}}</span>+微众卡<span class="xui-money">￥{{order.weizoom_card_money|floatformat:"2"}}</span>=<span class="xui-money" style="font-weigth:bolder;">￥{{order.pay_money|floatformat:"2"}}</span>
               </p>
-              {% if order.refund_info.has_refund_order %}
+              {% if order.refund_info.has_refund_order and mall_type %}
                 <div class="xui-line-long mt10"></div>
                 <p class="tr cb">原始支付金额：现金<span class="xui-money">￥{{order.refund_info.origin_final_price}}</span>+微众卡<span class="xui-money">￥{{order.refund_info.origin_weizoom_card_money}}</span>=<span class="xui-money">￥{{order.refund_info.origin_pay_money}}</span></p>
                 <p class="tr cb">已退款金额：现金<span class="xui-money">￥{{order.refund_info.total_cash}}</span>+微众卡<span class="xui-money">￥{{order.refund_info.total_weizoom_card_money}}</span>+优惠券<span class="xui-money">￥{{order.refund_info.total_coupon_money}}</span>+积分抵扣<span class="xui-money">￥{{order.refund_info.total_integral_money}}</span>=<span class="xui-money">￥{{order.refund_info.total_money}}</span></p>
