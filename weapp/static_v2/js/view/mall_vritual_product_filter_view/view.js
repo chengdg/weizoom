@@ -70,11 +70,15 @@ W.view.mall.VirtualProductFilterView = Backbone.View.extend({
         //商品名
         var productName = $.trim(this.$('#product_name').val());
 
+        //卡券状态
+        var couponStatus = $.trim(this.$('#status').val());
+
         return {
             name: name,
             product_name: productName,
             start_time: startDate,
             end_time: endDate,
+            coupon_status: couponStatus
         };
     }
 });
