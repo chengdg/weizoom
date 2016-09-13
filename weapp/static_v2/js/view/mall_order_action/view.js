@@ -17,20 +17,26 @@ W.view.mall.OrderAction = Backbone.View.extend({
             }
         }
 
-        // 发货
-        $('body').delegate('.xa-order-delivery', 'click', function(event){
-            event.stopPropagation();
-            event.preventDefault();
-            var $el = $(event.currentTarget);
-
+        // 根据mall_type,返回相应的orderId, 母订单还是子订单
+        function getOrderId($el) {
             // 从页面中的数据中提取mall_type
             var allData = JSON.parse($('#origin-data').text());
-            mallType = allData.mall_type*1;
+            var mallType = allData.mall_type*1;
 
             var orderId = $el.parents('.xa-actions').data('order-id');
             if (mallType > 0) {
                 orderId = $el.parents('.xa-actions').data('delivery-item-id');
             }
+            return orderId;
+        }
+
+        // 发货
+        $('body').delegate('.xa-order-delivery', 'click', function(event){
+            event.stopPropagation();
+            event.preventDefault();
+
+            var $el = $(event.currentTarget);
+            var orderId = getOrderId($el);
 
             var expressCompanyValue = $el.data('express-company-name');
             var expressNumber = $el.data('express-number');
@@ -160,7 +166,10 @@ W.view.mall.OrderAction = Backbone.View.extend({
 	    $('body').delegate('.xa-finish', 'click', function(event){
     		event.stopPropagation();
     		event.preventDefault();
-    		var orderId = $(event.currentTarget).parents('.xa-actions').data('order-id');
+
+            var $el = $(event.currentTarget);
+            var orderId = getOrderId($el);
+
     		W.requireConfirm({
     			$el: $(this),
     			width:445,
