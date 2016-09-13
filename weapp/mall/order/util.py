@@ -1148,6 +1148,9 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
             status = [ORDER_STATUS_GROUP_REFUNDING, ORDER_STATUS_GROUP_REFUNDED]
         else:
             status = [ORDER_STATUS_REFUNDING, ORDER_STATUS_REFUNDED]
+            # order_status = int(query_dict.get('order_status',0))
+            # if order_status:
+            #     status = [order_status]
         order_ids_has_refund_sub_orders = get_order_ids_has_refund_sub_orders(webapp_id, status, mall_type)
         orders = orders.filter(Q(status__in=status) | Q(id__in=order_ids_has_refund_sub_orders))
 
@@ -1278,6 +1281,18 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
     # 构造返回的order数据
     items = []
 
+    ohs_list = OrderHasProduct.objects.filter(order_id__in=order_ids)
+
+    origin_order_id2ohs = {}
+
+    for ohs in ohs_list:
+        print(ohs.product)
+        if ohs.order_id in origin_order_id2ohs:
+            origin_order_id2ohs[ohs.order_id].append(ohs)
+        else:
+            origin_order_id2ohs[ohs.order_id] = [ohs]
+
+
     refund_infos = OrderHasRefund.objects.filter(origin_order_id__in=order_ids)
     fackorder2refund_info = {o.delivery_item_id:o for o in refund_infos}
     for order in orders:
@@ -1301,13 +1316,21 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
                         fackorder.pay_interface_type = order.pay_interface_type
 
                     refund_info = fackorder2refund_info.get(fackorder.id,None)
+
+                    ohs_list = origin_order_id2ohs[fackorder.origin_order_id]
+
+                    fackorder._product_price = 0
+                    for ohs in ohs_list:
+                        if ohs.product.supplier == fackorder.supplier:
+                            fackorder._product_price += ohs.price * ohs.number
+
                     if refund_info:
                         refund_info_dict = {
                             'cash': refund_info.cash,
                             'weizoom_card_money': refund_info.weizoom_card_money,
                             'integral_money': refund_info.integral_money,
                             'coupon_money': refund_info.coupon_money,
-                            'should_total': mall.models.Order.get_order_has_price_number(order) + fackorder.postage,
+                            'should_total': round(fackorder._product_price + fackorder.postage,2),
                             'finished': refund_info.finished
                         }
                     else:
@@ -1316,7 +1339,7 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
                             'weizoom_card_money': 0,
                             'integral_money': 0,
                             'coupon_money': 0,
-                            'should_total': mall.models.Order.get_order_has_price_number(order) + fackorder.postage,
+                            'should_total': round(fackorder._product_price + fackorder.postage,2),
                             'finished': False
                         }
 
@@ -1364,7 +1387,7 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
                             'weizoom_card_money': 0,
                             'integral_money': 0,
                             'coupon_money': 0,
-                            'should_total': mall.models.Order.get_order_has_price_number(order) + order.postage,
+                            'should_total': 0 + order.postage,
                             'finished': False
                         }
                 }
@@ -1506,6 +1529,7 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
 
 def get_order_ids_has_refund_sub_orders(webapp_id, status, webappp_type):
     if webappp_type:
+        print('-status',status)
         sub_refund_orders = Order.objects.filter(status__in=status, webapp_id=webapp_id, origin_order_id__gt=0)
         order_ids = [o.origin_order_id for o in sub_refund_orders]
         # sub_refund_orders = Order.objects.filter(status__in=status, webapp_id=webapp_id, origin_order_id__gt=0).values('id')

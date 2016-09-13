@@ -1651,7 +1651,7 @@ Background:
 		# |          |           | [商品1b,9.00,1]  运费1   |             |       |            |         |             |         |
 		# | 10101    | 退款中    | [商品1a,10.00,1] 退款中   | 30.00       | bill  | 2016-08-29 | 张大大  | 18111223344 |微信支付 |
 
-@order @allOrder @refund @ztqb
+@order @allOrder @refund
 Scenario:1 ziying自营平台所有订单列表查询
 	Given zy1登录系统
 	#按照'订单编号'查询
