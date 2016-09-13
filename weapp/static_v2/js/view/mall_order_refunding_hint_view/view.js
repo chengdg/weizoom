@@ -20,18 +20,28 @@ W.view.mall.RefundingHintView = W.view.common.DropBox.extend({
 	},
     
     showPrivate: function(options) {
-        this.cash = options.cash;
-        this.weizoomCardMoney = options.card;
-        this.couponMoney = options.coupon;
-        this.integral = options.integral;
+        this.cash = options.cash*1;
+        this.weizoomCardMoney = options.card*1;
+        this.couponMoney = options.coupon*1;
+        this.integral = options.integral*1;
         this.total = parseFloat(this.cash) + parseFloat(this.weizoomCardMoney) + parseFloat(this.integral) + parseFloat(this.couponMoney);
+
+        var numbers = [this.cash, this.weizoomCardMoney, this.couponMoney, this.integral];
+        var noZero = _.filter(numbers, function(number){
+            return number != 0;
+        });
+        var isShowTotal = 0;
+        if (noZero.length > 1) {
+            isShowTotal = 1;
+        }
 
         this.$content.html($.tmpl(this.getTemplate(),{
             cash: this.cash,
             weizoomCardMoney:this.weizoomCardMoney,
-            conponMoney:this.conponMoney,
+            couponMoney:this.couponMoney,
             integral:this.integral,
-            total: this.total.toFixed(2)
+            isShowTotal: isShowTotal,
+            total: this.total
         }));
 	},
 

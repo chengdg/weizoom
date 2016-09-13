@@ -1,11 +1,70 @@
 <script id="refundingHint-view" type="text/x-jquery-tmpl">
-	<span>现金</span>¥<span>${cash}</span>
-	<span><b>+</b></span>
-	<span>微众卡</span>¥<span>${weizoomCardMoney}</span>
-	<span><b>+</b></span>
-	<span>优惠券</span>¥<span>${conponMoney}</span>
-	<span><b>+</b></span>
-	<span>积分抵扣</span>¥<span>${integral}</span>
-	<span><b>=</b></span>
-	<span>${total}</span>
+	{{if cash > 0}}
+		<span>现金</span>¥
+		<span>${cash.toFixed(2)}</span>
+	{{/if}}
+	{{if weizoomCardMoney > 0 }}
+		{{if cash > 0}}
+			<span><b>+</b></span>
+		{{/if}}
+		<span>微众卡</span>¥
+		<span>${weizoomCardMoney.toFixed(2)}</span>
+	{{/if}}
+	{{if couponMoney > 0}}
+		{{if cash == 0 && weizoomCardMoney ==0}}
+		{{else}}
+			<span><b>+</b></span>
+		{{/if}}
+		<span>优惠券</span>¥
+		<span>${couponMoney.toFixed(2)}</span>
+	{{/if}}
+	{{if integral > 0}}
+		{{if cash == 0 && weizoomCardMoney == 0 && couponMoney == 0}}
+		{{else}}
+			<span><b>+</b></span>
+		{{/if}}
+		<span>积分抵扣</span>¥
+		<span>${integral.toFixed(2)}</span>
+	{{/if}}
+	{{if total > 0}}
+		{{if isShowTotal == 1}}
+			<span><b>=</b></span>
+			¥<span>${total.toFixed(2)}</span>
+		{{/if}}
+	{{/if}}
+</script>
+<script id="refundedHint-view" type="text/x-jquery-tmpl">
+	{{if cash > 0}}
+		<span>现金</span>¥
+		<span>${cash.toFixed(2)}</span>
+	{{/if}}
+	{{if weizoomCardMoney > 0 }}
+		{{if cash > 0}}
+			<span><b>+</b></span>
+		{{/if}}
+		<span>微众卡</span>¥
+		<span>${weizoomCardMoney.toFixed(2)}</span>
+	{{/if}}
+	{{if couponMoney > 0}}
+		{{if cash == 0 && weizoomCardMoney ==0}}
+		{{else}}
+			<span><b>+</b></span>
+		{{/if}}
+		<span>优惠券</span>¥
+		<span>${couponMoney.toFixed(2)}</span>
+	{{/if}}
+	{{if integral > 0}}
+		{{if cash == 0 && weizoomCardMoney == 0 && couponMoney == 0}}
+		{{else}}
+			<span><b>+</b></span>
+		{{/if}}
+		<span>积分抵扣</span>¥
+		<span>${integral.toFixed(2)}</span>
+	{{/if}}
+	{{if total > 0}}
+		{{if isShowTotal == 1}}
+			<span><b>=</b></span>
+			¥<span>${total.toFixed(2)}</span>
+		{{/if}}
+	{{/if}}
 </script>

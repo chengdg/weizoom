@@ -383,6 +383,30 @@
     padding: 20px 13px 10px 10px;
     font-size: 12px;
     line-height: 24px;
+    min-width: 50px;
+}
+/* 退款完成提示框 */
+.xui-i-refunding-tip, .xui-i-refunded-tip {
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    line-height: 15px;
+    border: 1px solid #666;
+    -moz-border-radius: 50%;
+    -webkit-border-radius: 50%;
+    border-radius: 50%;
+    cursor: pointer;
+    font-style: normal;
+    -webkit-transform: scale(0.95);
+    -moz-transform: scale(0.95);
+    transform: scale(0.95);
+}
+.xui-i-refunding-tip {
+    color: red;
+    border-color: red;
+}
+.xui-i-refunded-tip {
+    color: #666;
 }
 
 .xui-buyerHintDropBox {
