@@ -879,8 +879,8 @@ Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满
 				"name":"商品2-2",
 				"price":20.00,
 				"count":1,
-				"integral": 20,
-				"integral_money": 10.00,
+				"integral": 10,
+				"integral_money": 5.00,
 				"postage": 0.00
 			}],
 			"postage": 10.00,
@@ -900,7 +900,7 @@ Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满
 					"name":"商品2-2"
 				}],
 				"products_count": 3,
-				"final_price": 30.00
+				"final_price": 35.00
 			}]
 			"""
 
@@ -926,8 +926,8 @@ Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满
 				"methods_of_payment":"支付宝",
 				"product_price": 40.00,
 				"postage": 10.00,
-				"coupon_money": 20.00,
-				"final_price": 30.00,
+				"integral_money": 15.00,
+				"final_price": 35.00,
 				"order_time":"2016-01-02 00:00:00"
 			}
 			"""
@@ -940,13 +940,13 @@ Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满
 				"order_no":"002",
 				"methods_of_payment":"支付宝",
 				"order_time":"2016-01-02 00:00:00",
-				"save_money": 20.00,
+				"save_money": 15.00,
 				"buyer":"bill",
 				"ship_name":"bill",
 				"ship_tel":"13811223344",
 				"ship_address": "北京市 北京市 海淀区 泰兴大厦",
 				"invoice":"",
-				"final_price": 30.00,
+				"final_price": 35.00,
 				"postage": 10.00,
 				"status":"待支付",
 				"actions": ["支付","取消订单"],
@@ -992,7 +992,7 @@ Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满
 						"supplier":"供货商2",
 						"price":10.00,
 						"count":1,
-						"single_save":10.00
+						"single_save":5.00
 					}],
 					"postage": 0.00,
 					"status":"待支付"
@@ -1001,10 +1001,10 @@ Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满
 				"products_count":3,
 				"total_price": 40.00,
 				"postage": 10.00,
-				"save_money": 20.00,
-				"cash":30.00,
+				"save_money": 15.00,
+				"cash":35.00,
 				"weizoom_card": 0.00,
-				"final_price": 30.00
+				"final_price": 35.00
 			}
 			"""
 		Then zy1能获得订单'001'操作日志
@@ -1028,7 +1028,7 @@ Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满
 					"name":"商品2-2"
 				}],
 				"products_count": 3,
-				"final_price": 30.00
+				"final_price": 35.00
 			}]
 			"""
 
@@ -1062,8 +1062,8 @@ Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满
 				"methods_of_payment":"支付宝",
 				"product_price": 40.00,
 				"postage": 10.00,
-				"coupon_money": 20.00,
-				"final_price": 30.00,
+				"integral_money": 15.00,
+				"final_price": 35.00,
 				"order_time":"2016-01-02 00:00:00"
 			}
 			"""
@@ -1077,13 +1077,13 @@ Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满
 				"methods_of_payment":"支付宝",
 				"order_time":"2016-01-02 00:00:00",
 				"payment_time":"2016-01-03 10:00:00",
-				"save_money": 20.00,
+				"save_money": 15.00,
 				"buyer":"bill",
 				"ship_name":"bill",
 				"ship_tel":"13811223344",
 				"ship_address": "北京市 北京市 海淀区 泰兴大厦",
 				"invoice":"",
-				"final_price": 30.00,
+				"final_price": 35.00,
 				"postage": 10.00,
 				"status":"待发货",
 				"group":[{
@@ -1139,7 +1139,7 @@ Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满
 						"supplier":"供货商2",
 						"price":20.00,
 						"count":1,
-						"single_save":10.00
+						"single_save":5.00
 					}],
 					"postage": 0.00,
 					"status":"待发货"
@@ -1148,10 +1148,10 @@ Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满
 				"products_count":3,
 				"total_price": 40.00,
 				"postage": 10.00,
-				"save_money": 20.00,
-				"cash":30.00,
+				"save_money": 15.00,
+				"cash":35.00,
 				"weizoom_card": 0.00,
-				"final_price": 30.00
+				"final_price": 35.00
 			}
 			"""
 		Then zy1能获得订单'001'操作日志
@@ -1184,7 +1184,7 @@ Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满
 					"name":"商品2-2"
 				}],
 				"products_count": 3,
-				"final_price": 30.00
+				"final_price": 35.00
 			}]
 			"""
 
@@ -1220,8 +1220,8 @@ Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满
 				"methods_of_payment":"支付宝",
 				"product_price": 40.00,
 				"postage": 10.00,
-				"coupon_money": 20.00,
-				"final_price": 30.00,
+				"integral_money": 15.00,
+				"final_price": 35.00,
 				"order_time":"2016-01-02 00:00:00"
 			}
 			"""
@@ -1235,13 +1235,13 @@ Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满
 				"methods_of_payment":"支付宝",
 				"order_time":"2016-01-02 00:00:00",
 				"payment_time":"2016-01-03 10:00:00",
-				"save_money": 20.00,
+				"save_money": 15.00,
 				"buyer":"bill",
 				"ship_name":"bill",
 				"ship_tel":"13811223344",
 				"ship_address": "北京市 北京市 海淀区 泰兴大厦",
 				"invoice":"",
-				"final_price": 30.00,
+				"final_price": 35.00,
 				"postage": 10.00,
 				"status":"待发货",
 				"group":[{
@@ -1297,7 +1297,7 @@ Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满
 						"supplier":"供货商2",
 						"price":20.00,
 						"count":1,
-						"single_save":10.00
+						"single_save":5.00
 					}],
 					"postage": 0.00,
 					"status":"待发货"
@@ -1306,10 +1306,10 @@ Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满
 				"products_count":3,
 				"total_price": 40.00,
 				"postage": 10.00,
-				"save_money": 20.00,
-				"cash":30.00,
+				"save_money": 15.00,
+				"cash":35.00,
 				"weizoom_card": 0.00,
-				"final_price": 30.00
+				"final_price": 35.00
 			}
 			"""
 		Then zy1能获得订单'002'操作日志
@@ -1344,7 +1344,7 @@ Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满
 					"name":"商品2-2"
 				}],
 				"products_count": 3,
-				"final_price": 30.00
+				"final_price": 35.00
 			}]
 			"""
 
@@ -1380,8 +1380,8 @@ Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满
 				"methods_of_payment":"支付宝",
 				"product_price": 40.00,
 				"postage": 10.00,
-				"coupon_money": 20.00,
-				"final_price": 30.00,
+				"integral_money": 15.00,
+				"final_price": 35.00,
 				"order_time":"2016-01-02 00:00:00"
 			}
 			"""
@@ -1395,13 +1395,13 @@ Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满
 				"methods_of_payment":"支付宝",
 				"order_time":"2016-01-02 00:00:00",
 				"payment_time":"2016-01-03 10:00:00",
-				"save_money": 20.00,
+				"save_money": 15.00,
 				"buyer":"bill",
 				"ship_name":"bill",
 				"ship_tel":"13811223344",
 				"ship_address": "北京市 北京市 海淀区 泰兴大厦",
 				"invoice":"",
-				"final_price": 30.00,
+				"final_price": 35.00,
 				"postage": 10.00,
 				"status":"已发货",
 				"group":[{
@@ -1457,7 +1457,7 @@ Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满
 						"supplier":"供货商2",
 						"price":20.00,
 						"count":1,
-						"single_save":10.00
+						"single_save":5.00
 					}],
 					"postage": 0.00,
 					"status":"已发货"
@@ -1466,10 +1466,10 @@ Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满
 				"products_count":3,
 				"total_price": 40.00,
 				"postage": 10.00,
-				"save_money": 20.00,
-				"cash":30.00,
+				"save_money": 15.00,
+				"cash":35.00,
 				"weizoom_card": 0.00,
-				"final_price": 30.00
+				"final_price": 35.00
 			}
 			"""
 		Then zy1能获得订单'002'操作日志
@@ -1513,7 +1513,7 @@ Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满
 					"name":"商品2-2"
 				}],
 				"products_count": 3,
-				"final_price": 30.00
+				"final_price": 35.00
 			}]
 			"""
 
@@ -1549,8 +1549,8 @@ Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满
 				"methods_of_payment":"支付宝",
 				"product_price": 40.00,
 				"postage": 10.00,
-				"coupon_money": 20.00,
-				"final_price": 30.00,
+				"integral_money": 15.00,
+				"final_price": 35.00,
 				"order_time":"2016-01-02 00:00:00"
 			}
 			"""
@@ -1564,13 +1564,13 @@ Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满
 				"methods_of_payment":"支付宝",
 				"order_time":"2016-01-02 00:00:00",
 				"payment_time":"2016-01-03 10:00:00",
-				"save_money": 20.00,
+				"save_money": 15.00,
 				"buyer":"bill",
 				"ship_name":"bill",
 				"ship_tel":"13811223344",
 				"ship_address": "北京市 北京市 海淀区 泰兴大厦",
 				"invoice":"",
-				"final_price": 30.00,
+				"final_price": 35.00,
 				"postage": 10.00,
 				"status":"退款中",
 				"group":[{
@@ -1632,7 +1632,7 @@ Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满
 						"supplier":"供货商2",
 						"price":20.00,
 						"count":1,
-						"single_save":10.00
+						"single_save":5.00
 					}],
 					"postage": 0.00,
 					"status":"已完成"
@@ -1641,9 +1641,9 @@ Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满
 				"products_count":3,
 				"total_price": 40.00,
 				"postage": 10.00,
-				"save_money": 20.00,
-				"cash":30.00,
-				"final_price": 30.00
+				"save_money": 15.00,
+				"cash":35.00,
+				"final_price": 35.00
 			}
 			"""
 		Then zy1能获得订单'002'操作日志
@@ -1673,7 +1673,7 @@ Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满
 					"name":"商品2-2"
 				}],
 				"products_count": 3,
-				"final_price": 20.00
+				"final_price": 25.00
 			}]
 			"""
 
@@ -1709,9 +1709,9 @@ Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满
 				"methods_of_payment":"支付宝",
 				"product_price": 40.00,
 				"postage": 10.00,
-				"coupon_money": 20.00,
+				"integral_money": 15.00,
 				"refund_money": 10.00,
-				"final_price": 20.00,
+				"final_price": 25.00,
 				"order_time":"2016-01-02 00:00:00"
 			}
 			"""
@@ -1725,13 +1725,13 @@ Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满
 				"methods_of_payment":"支付宝",
 				"order_time":"2016-01-02 00:00:00",
 				"payment_time":"2016-01-03 10:00:00",
-				"save_money": 20.00,
+				"save_money": 15.00,
 				"buyer":"bill",
 				"ship_name":"bill",
 				"ship_tel":"13811223344",
 				"ship_address": "北京市 北京市 海淀区 泰兴大厦",
 				"invoice":"",
-				"final_price": 20.00,
+				"final_price": 25.00,
 				"postage": 10.00,
 				"status":"已完成",
 				"group":[{
@@ -1793,7 +1793,7 @@ Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满
 						"supplier":"供货商2",
 						"price":20.00,
 						"count":1,
-						"single_save":10.00
+						"single_save":5.00
 					}],
 					"postage": 0.00,
 					"status":"已完成"
@@ -1802,14 +1802,14 @@ Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满
 				"products_count":3,
 				"total_price": 40.00,
 				"postage": 10.00,
-				"save_money": 20.00,
+				"save_money": 15.00,
 				"refund_money":10.00,
-				"cash":20.00,
+				"cash":25.00,
 				"weizoom_card": 0.00,
-				"final_price": 20.00,
-				"original_cash":30.00,
+				"final_price": 25.00,
+				"original_cash":35.00,
 				"original_weizoom_card":0.00,
-				"original_final_price":30.00,
+				"original_final_price":35.00,
 				"refund_details":{
 					"cash": 10.00,
 					"weizoom_card": 0.00,
