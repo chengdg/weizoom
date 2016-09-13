@@ -1022,7 +1022,6 @@ def __get_order_items_for_self_order(items):
                     buy_product_result['price'] = buy_product['price']
                     buy_product_results.append(buy_product_result)
                 action_list = [action.get('name', '') for action in group['fackorder']['actions']]
-            print('=================action_list2222222222=================', action_list)
             actual_order['products'] = buy_product_results
             actual_order['actions'] = action_list
         

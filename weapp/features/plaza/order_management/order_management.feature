@@ -781,7 +781,7 @@ Scenario:1 ziying单个供应商商品订单-微信支付+优惠券(不满足满
 				"ship_tel":"13811223344",
 				"ship_address": "北京市 北京市 海淀区 泰兴大厦",
 				"invoice":"",
-				"final_price": 50.00,
+				"final_price": 40.00,
 				"postage": 10.00,
 				"status":"退款成功",
 				"group":[{
