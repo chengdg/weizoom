@@ -225,11 +225,7 @@ W.dialog.mall.RefundOrderDialog = W.dialog.Dialog.extend({
 
         // 计算必须满足的总退款金额合计，可由优惠券和积分补充，提交前必须满足
         var limitTotal = 0;
-        // subRIs.map(function(subRI){
-        //     limitTotal += subRI.totalMoney;
-        // });
-        // limitTotal = mainRI.totalMoney - limitTotal;
-        limitTotal = limitCash + limitCard;
+        limitTotal = target.shouldTotal;
 
         // 开始判断金额部分
         var tipCash = "";
