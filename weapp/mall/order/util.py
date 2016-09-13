@@ -965,6 +965,7 @@ def get_detail_response(request):
         child_orders = sorted(child_orders, key=lambda order: "%d-%d" % (order.supplier, order.supplier_user_id))
 
         if order.refund_info['has_refund_order']:
+
             order.save_money = float(Order.get_order_has_price_number(order)) + float(order.postage) - float(
                 order.final_price) - float(order.weizoom_card_money) - order.refund_info['total_cash'] - order.refund_info['total_weizoom_card_money']
         else:
