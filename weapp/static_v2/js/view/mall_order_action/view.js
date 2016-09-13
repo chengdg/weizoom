@@ -209,7 +209,7 @@ W.view.mall.OrderAction = Backbone.View.extend({
                     }
                 });
             } else {
-                // 旧的申请退款确认框
+                // 申请退款确认框
                 W.requireConfirm({
                     $el: $(this),
                     width:380,
@@ -249,32 +249,63 @@ W.view.mall.OrderAction = Backbone.View.extend({
             var $el = $(event.currentTarget);
             var orderId = $el.parents('.xa-actions').data('order-id');
             var deliveryItemId = $el.parents('.xa-actions').data('delivery-item-id');
+            // 
+            var allData = JSON.parse($('#origin-data').text());
+            var mallType = allData.mall_type;
 
-            W.requireConfirm({
-                $el: $(this),
-                width:442,
-                position:'top',
-                isTitle: false,
-                privateContainerClass:'xui-orderAuditConfirmPop',
-                msg:'请您与买家私下协商退款且退款成功后，再使用该功能哦!',
-                confirm:function(){
-                    var args = {
-                        'order_id': orderId,
-                        'delivery_item_id': deliveryItemId
+            if (mallType > 0) {
+                W.requireConfirm({
+                    $el: $(this),
+                    width:442,
+                    position:'top',
+                    isTitle: false,
+                    privateContainerClass:'xui-orderAuditConfirmPop',
+                    msg:'请您与买家私下协商退款且退款成功后，再使用该功能哦!',
+                    confirm:function(){
+                        var args = {
+                            'order_id': orderId,
+                            'delivery_item_id': deliveryItemId
+                        }
+                        W.getApi().call({
+                            app: 'mall2',
+                            resource: 'refund_successful_sub_order',
+                            args: args,
+                            method: 'put',
+                            success: function(data) {
+                                pageReload();
+                            },
+                            error: function() {
+                                }
+                        })
                     }
-                    W.getApi().call({
-                        app: 'mall2',
-                        resource: 'refund_successful_sub_order',
-                        args: args,
-                        method: 'put',
-                        success: function(data) {
-                            pageReload();
-                        },
-                        error: function() {
-                            }
-                    })
-                }
-            })
+                })
+            } else {
+                W.requireConfirm({
+                    $el: $(this),
+                    width:442,
+                    position:'top',
+                    isTitle: false,
+                    privateContainerClass:'xui-orderAuditConfirmPop',
+                    msg:'请您与买家私下协商退款且退款成功后，再使用该功能哦!',
+                    confirm:function(){
+                        var args = {
+                            'order_id': orderId,
+                            'action' : 'return_success'
+                        }
+                        W.getApi().call({
+                            method: 'post',
+                            app: 'mall2',
+                            resource: 'order',
+                            args: args,
+                            success: function(data) {
+                                pageReload();
+                            },
+                            error: function() {}
+                        })
+                    }
+                })
+
+            }
         });
 
 
