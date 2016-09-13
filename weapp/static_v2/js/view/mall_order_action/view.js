@@ -190,43 +190,52 @@ W.view.mall.OrderAction = Backbone.View.extend({
             var deliveryItemId = $el.parents('.xa-actions').data('delivery-item-id');
             var orderId = $el.parents('.xa-actions').data('order-id');
             var integralPerYuan = $el.parents('.xa-actions').data('integral-per-yuan');
-            // 修改原申请退款的"确认框"，为“录入多个退款项目的对话框”
-            console.log('申请退款：', orderId);
-            W.dialog.showDialog('W.dialog.mall.RefundOrderDialog', {
-                orderId: orderId,
-                deliveryItemId: deliveryItemId,
-                integralPerYuan: integralPerYuan,
-                isUpdatePrice: true,
-                success: function(data) {
-                    console.log(data);
-                }
-            });
-            // W.requireConfirm({
-            //     $el: $(this),
-            //     width:380,
-            //     position:'top',
-            //     isTitle: false,
-            //     privateContainerClass:'xui-orderConfirmPop',
-            //     msg:'确定申请退款？',
-            //     confirm:function(){
-            //         var args = {
-            //             'order_id': orderId,
-            //             'action' : 'return_pay'
-            //         }
-            //         W.getApi().call({
-            //             method: 'post',
-            //             app: 'mall2',
-            //             resource: 'order',
-            //             args: args,
-            //             success: function(data) {
-            //                 pageReload();
-            //             },
-            //             error: function() {
-            //                 }
-            //         })
-            //     }
-            // })
 
+            // 
+            var allData = JSON.parse($('#origin-data').text());
+            var mallType = allData.mall_type;
+
+            console.log('申请退款orderID：%o, 商城类型：%o: ', orderId, mallType);
+
+            if (mallType > 0) {
+                // 根据商城类型，确定进入申请退款的"确认框"
+                W.dialog.showDialog('W.dialog.mall.RefundOrderDialog', {
+                    orderId: orderId,
+                    deliveryItemId: deliveryItemId,
+                    integralPerYuan: integralPerYuan,
+                    isUpdatePrice: true,
+                    success: function(data) {
+                        console.log(data);
+                    }
+                });
+            } else {
+                // 旧的申请退款确认框
+                W.requireConfirm({
+                    $el: $(this),
+                    width:380,
+                    position:'top',
+                    isTitle: false,
+                    privateContainerClass:'xui-orderConfirmPop',
+                    msg:'确定申请退款？',
+                    confirm:function(){
+                        var args = {
+                            'order_id': orderId,
+                            'action' : 'return_pay'
+                        }
+                        W.getApi().call({
+                            method: 'post',
+                            app: 'mall2',
+                            resource: 'order',
+                            args: args,
+                            success: function(data) {
+                                pageReload();
+                            },
+                            error: function() {
+                                }
+                        })
+                    }
+                })
+            }
         });
 
 
@@ -236,7 +245,11 @@ W.view.mall.OrderAction = Backbone.View.extend({
             event.preventDefault();
             var $el = $(event.currentTarget);
             var href = $el.attr('href');
-            var orderId = $el.parents('.xa-actions').attr('data-order-id');
+
+            var $el = $(event.currentTarget);
+            var orderId = $el.parents('.xa-actions').data('order-id');
+            var deliveryItemId = $el.parents('.xa-actions').data('delivery-item-id');
+
             W.requireConfirm({
                 $el: $(this),
                 width:442,
@@ -247,13 +260,13 @@ W.view.mall.OrderAction = Backbone.View.extend({
                 confirm:function(){
                     var args = {
                         'order_id': orderId,
-                        'action' : 'return_success'
+                        'delivery_item_id': deliveryItemId
                     }
                     W.getApi().call({
-                        method: 'post',
                         app: 'mall2',
-                        resource: 'order',
+                        resource: 'refund_successful_sub_order',
                         args: args,
+                        method: 'put',
                         success: function(data) {
                             pageReload();
                         },

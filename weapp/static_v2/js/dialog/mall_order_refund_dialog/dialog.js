@@ -43,35 +43,53 @@ W.dialog.mall.RefundOrderDialog = W.dialog.Dialog.extend({
             _this.allOrders[order.id] = order;
         });
 
-        // 找出母订单中支付金额
+        // 找出母订单中支付金额, 微众卡，等信息并保存
         var allOrders = this.allOrders;
         var mainOrder = allOrders[this.orderId];
         var mainRefundInfo = {
-            cash: mainOrder.pay_money,
-            weizoomCardMoney: mainOrder.weizoom_card_money,
+            cash: mainOrder.origin_final_money,
+            weizoomCardMoney: mainOrder.origin_weizoom_card_money,
             couponMoney: mainOrder.save_money,
             integral: mainOrder.integral
         };
 
-        // 找出母订单中的其它子订单的退款信息
+        // 找出其它子订单的已支付的金额、微众卡等信息
         var subRefundInfo = [];
+        var targetRefundInfo = {};
         mainOrder.groups.map(function(subOrder){
             var _subOrder = subOrder.fackorder;
-            if (_subOrder.id == _this.deliveryItemId && !_.isEmpty(_subOrder.refund_info)) {
-                subRefundInfo.push(_subOrder.refund_info);
+            if (_subOrder.order_status == 6 && !_.isEmpty(_subOrder.refund_info)) {
+                // 找出退款中的订单
+                var _subRI = _subOrder.refund_info;
+                subRefundInfo.push({
+                    cash: _subRI.cash,
+                    weizoomCardMoney: _subRI.weizoom_card_money,
+                    couponMoney: _subRI.coupon_money,
+                    integral: _subRI.integral_money
+                });
+            } else if (_subOrder.id == _this.deliveryItemId && !_.isEmpty(_subOrder.refund_info)) {
+                // 找出当前编辑的子订单
+                targetRefundInfo = {
+                   shouldTotal: _subOrder.refund_info.should_total 
+                }
             }
         }); 
 
+        // 保存mall_type属性，兼容老版本
+        var mallType = allData.mall_type;
+
         this.dialogMainData = {
-            'mainOrder': mainOrder,
-            'mainRefundInfo': mainRefundInfo,
-            'subRefundInfo': subRefundInfo
+            'mallType': mallType,               // 全部数据，包括订单和其它内容
+            'mainOrder': mainOrder,             // 字母订单
+            'mainRefundInfo': mainRefundInfo,   // 母订单
+            'subRefundInfo': subRefundInfo,     // 子订单
+            'targetRefundInfo': targetRefundInfo// 当前订单
         };
 
         // 校验并提示信息
         this.__validate();
 
-        console.log( '订单信息：%o', this.dialogMainData.mainOrder);
+        console.log( '订单信息：%o', this.dialogMainData);
     },
 
     // 实时计算退款总额
@@ -100,15 +118,17 @@ W.dialog.mall.RefundOrderDialog = W.dialog.Dialog.extend({
         var totalMoney = cash + weizoomCardMoney + couponMoney + integral;
 
         // 保存至this.dialogMainData
-        var targetOrder = {
+        var targetRefundInfo = {
             "cash": cash,
             "weizoomCardMoney": weizoomCardMoney,
             "couponMoney": couponMoney,
             "integral": integral,
             "totalMoney": totalMoney.toFixed(2)
         };
-        this.dialogMainData['targetOrder'] = targetOrder;
+        this.dialogMainData.targetRefundInfo = _.extend(this.dialogMainData.targetRefundInfo, targetRefundInfo);
         
+        // 处理提示信息
+        this.__validate();
     },
 
     // 申请退款对话框，刷新退款总额，错误信息等实时信息
@@ -123,7 +143,7 @@ W.dialog.mall.RefundOrderDialog = W.dialog.Dialog.extend({
                 + mainRI.weizoomCardMoney*1 
                 + mainRI.couponMoney*1 
                 + mainRI.integral*1;
-            this.dialogMainData.mainRefundInfo.orderType = '母订单';
+            this.dialogMainData.mainRefundInfo.orderType = '母订单原支付金额';
             this.dialogMainData.mainRefundInfo.totalMoney = mainRITotal;
             var $tmplTopTip = $('#mall-order-refund-dialog-top-tips-tmpl-src').tmpl(mainRI);
             $('.xa-i-refund-info-show', $dialog).html("");
@@ -131,29 +151,40 @@ W.dialog.mall.RefundOrderDialog = W.dialog.Dialog.extend({
         }
 
         // 子订单支付信息
-        var subRI = data.subRefundInfo;
-        if (subRI && !_.isEmpty(subRI)) {
-            var subRITotal = subRI.cash*1 
-                + subRI.weizoomCardMoney*1 
-                + subRI.couponMoney*1 
-                + subRI.integral*1;
-            this.dialogMainData.subRefundInfo.orderType = '子订单';
-            this.dialogMainData.subRefundInfo.totalMoney = subRITotal;
-            var $tmplTopTip = $('#mall-order-refund-dialog-top-tips-tmpl-src').tmpl(subRI);
-            $('.xa-i-refund-info-show', $dialog).append($("<p>").text(subRITip));
-        }
+        var _this = this;
+        var subRIs = data.subRefundInfo;
+        subRIs.map(function(subRI){
+            if (subRI && !_.isEmpty(subRI)) {
+                var subRITotal = subRI.cash*1 
+                    + subRI.weizoomCardMoney*1 
+                    + subRI.couponMoney*1 
+                    + subRI.integral*1;
+                subRI.orderType = '　子订单支付金额';
+                subRI.totalMoney = subRITotal;
+                var $subRITip = $('#mall-order-refund-dialog-top-tips-tmpl-src').tmpl(subRI);
+                $('.xa-i-refund-info-show', $dialog).append($subRITip);
+            }
+        });
 
         // 当前退款订单的: 退款总额
-        if (data.targetOrder && data.targetOrder.totalMoney > 0) {
-            var totalMoney = data.targetOrder.totalMoney;
+        if (data.targetRefundInfo && data.targetRefundInfo.totalMoney > 0) {
+            var totalMoney = data.targetRefundInfo.totalMoney;
             $('.xui-i-total-sum', $dialog).text(totalMoney);
         } else {
             $('.xui-i-total-sum', $dialog).text('0.00');
         }
 
+        // 当前退款订单的: 标题上的应退金额
+        if (data.targetRefundInfo && data.targetRefundInfo.shouldTotal > 0) {
+            var shouldTotal = data.targetRefundInfo.shouldTotal;
+            $('.xui-i-should-total', $dialog).text(shouldTotal);
+        } else {
+            $('.xui-i-should-total', $dialog).text(0.00);
+        }
+
         // 当前退款订单的: 积分后面的金额自动计算
-        if (data.targetOrder && data.targetOrder.integral > 0) {
-            $('.xa-i-integral-money').text(data.targetOrder.integral);
+        if (data.targetRefundInfo && data.targetRefundInfo.integral > 0) {
+            $('.xa-i-integral-money').text(data.targetRefundInfo.integral.toFixed(2));
         } else {
             $('.xa-i-integral-money').text('0.00');
         }
@@ -173,38 +204,81 @@ W.dialog.mall.RefundOrderDialog = W.dialog.Dialog.extend({
 
     // 判断是否正确
     __validate: function() {
+        var isPass = false;
         var mainRI = this.dialogMainData.mainRefundInfo;
-        var target = this.dialogMainData.targetOrder? this.dialogMainData.targetOrder : {};
+        var subRIs = this.dialogMainData.subRefundInfo;
+        var target = this.dialogMainData.targetRefundInfo? this.dialogMainData.targetRefundInfo : {};
 
+        // 计算最多可退金额
+        var limitCash = 0;
+        subRIs.map(function(subRI){
+            limitCash += subRI.cash;
+        });
+        limitCash = mainRI.cash - limitCash;
+
+        // 计算最多可退微众卡
+        var limitCard = 0;
+        subRIs.map(function(subRI){
+            limitCard += subRI.weizoomCardMoney;
+        });
+        limitCard = mainRI.weizoomCardMoney - limitCard;
+
+        // 计算必须满足的总退款金额合计，可由优惠券和积分补充，提交前必须满足
+        var limitTotal = 0;
+        // subRIs.map(function(subRI){
+        //     limitTotal += subRI.totalMoney;
+        // });
+        // limitTotal = mainRI.totalMoney - limitTotal;
+        limitTotal = limitCash + limitCard;
+
+        // 开始判断金额部分
         var tipCash = "";
         var tipTotalError = "";
-        if (target.cash && target.cash*1 > 0 && target.cash*1 > mainRI.cash) {
+        if (target.cash && target.cash*1 > 0 && target.cash*1 <= limitCash) {
+            tipCash = "";
+        } else if (target.cash && target.cash*1 > 0 && target.cash*1 > limitCash) {
             // 金额部分不能大于 “可退部分”
             if (mainRI.cash > 0) {
-                tipCash = "最多可退" + mainRI.cash + "元";
-                tipTotalError = "退款金额不等于"+target.cash+"元";
+                tipCash = "最多可退" + limitCash + "元";
             } else {
                 tipCash = "无可退金额";
-                tipTotalError = ""
             }
         } else if (target.cash && target.cash*1 < 0) {
             // 输入为负数
             tipCash = "请输入正确的金额";
-            tipTotalError = "输入的金额有误，请重新输入";
         }
 
         // 微众卡金额不能大于 “可退部分”
         var tipCard = "";
-        if (target.weizoomCardMoney 
-            && target.weizoomCardMoney*1 > 0 && target.weizoomCardMoney*1 > mainRI.weizoomCardMoney) {
+        if (target.weizoomCardMoney && target.weizoomCardMoney*1 > 0 && target.weizoomCardMoney*1 <= mainRI.weizoomCardMoney) {
+            tipCard = "";
+
+        } else if (target.weizoomCardMoney && target.weizoomCardMoney*1 > 0 && target.weizoomCardMoney*1 > mainRI.weizoomCardMoney) {
             if (mainRI.weizoomCardMoney > 0) {
                 tipCard = "最多可退" + mainRI.weizoomCardMoney + "元";
             } else {
-                tipCard = "无可退金额";
+                tipCard = "无可退微众卡";
             }
+
         } else if (target.weizoomCardMoney && target.weizoomCardMoney*1 < 0) {
             // 输入为负数
             tipCard = "请输入正确的金额";
+        }
+
+        // 计算最后提交前的退款金额
+        if (target.totalMoney && target.totalMoney*1 > 0 && target.totalMoney*1 === limitTotal*1) {
+            tipTotalError = "";
+
+        } else if (target.totalMoney && target.totalMoney*1 > 0 && target.totalMoney*1 !== limitTotal*1) {
+            if (target.totalMoney > 0) {
+                // 总退款金额不能大于 “可退部分”
+                tipTotalError = "退款金额不等于"+limitTotal+"元";
+            } else {
+                // 等于 0 的情况
+                tipTotalError = "无可退金额";
+            }
+        } else  {
+                tipTotalError = "请输入相应的退款金额";
         }
 
         // 保存提示信息，等待页面刷新
@@ -214,6 +288,20 @@ W.dialog.mall.RefundOrderDialog = W.dialog.Dialog.extend({
             'totalMoney': tipTotalError
         };
 
+        if (tipCash.length == 0 && tipCard.length == 0 && tipTotalError.length == 0) {
+            return true;
+        } else {
+            return false;
+        }
+
+    },
+
+    __initDialog: function() {
+        var $dialog = this.$dialog;
+        $('[name="cash"]', $dialog).val('').focus();
+        $('[name="weizoom_card_money"]', $dialog).val('');
+        $('[name="coupon_money"]', $dialog).val('');
+        $('[name="integral"]', $dialog).val('');
     },
 
     onChange: function() {
@@ -221,9 +309,6 @@ W.dialog.mall.RefundOrderDialog = W.dialog.Dialog.extend({
         var $dialog = this.$dialog;
         // 实时计算
         this.__calcCurrentOrderRefund();
-
-        // 处理提示信息
-        this.__validate();
 
         // 刷新对话框
         this.__renderDialog();
@@ -244,6 +329,7 @@ W.dialog.mall.RefundOrderDialog = W.dialog.Dialog.extend({
     },
 
     afterShow: function(options) {
+        this.__initDialog();
     },
 
     onClickSubmitButton: function(event) {
@@ -263,24 +349,28 @@ W.dialog.mall.RefundOrderDialog = W.dialog.Dialog.extend({
         var params = {
                 order_id: orderId,
                 delivery_item_id: deliveryItemId,
-                cash: cash,
-                weizoom_card_money: weizoomCardMoney,
-                coupon_money: couponMoney,
-                integral: integral 
+                cash: cash? cash : 0,
+                weizoom_card_money: weizoomCardMoney? weizoomCardMoney : 0,
+                coupon_money: couponMoney? couponMoney : 0,
+                integral: integral? integral : 0 
             };
 
-        W.getApi().call({
-            app: 'mall2',
-            resource: 'refunding_order',
-            args: params,
-            method: 'put',
-            success: function(data) {
-                console.log("W.getApi(): ", data, params);
-                _this.renderDialog(params);
-            },
-            error: function(resp) {
-            }
-        });
+        if (this.__validate()) {
+            W.getApi().call({
+                app: 'mall2',
+                resource: 'refunding_order',
+                args: params,
+                method: 'put',
+                success: function(data) {
+                    console.log("W.getApi(): ", data, params);
+                    _this.$dialog.modal('hide');
+                    $('[data-ui-role="advanced-table"]').data('view').reload();
+                },
+                error: function(resp) {
+                    console.log('mall2/refunding_order: %o', resp);
+                }
+            });
+        }
 
     },
 

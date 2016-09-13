@@ -39,7 +39,7 @@
 	<div class="modal-content">
 		<div class="modal-header">
 			<button aria-hidden="true" data-dismiss="modal" class="close" type="button"><span aria-hidden="true">&times;</span></button>
-			<h3 class="modal-title">退款录入，当前订单应退：xx.00</h3>
+			<h3 class="modal-title">退款录入，当前订单应退：<span class="xui-i-should-total"></span>元</h3>
 		</div>
 		<div class="modal-body">
 			<div class="xa-i-refund-info-show">
@@ -47,29 +47,29 @@
 			<div class="form-inline">
 				<div class="xui-i-item">    
 					<label class="">现　金：</label>    
-					<input type="text" class="form-control" id="cash" name="cash" value="${cash}">   
+					<input type="text" class="form-control" id="cash" name="cash" value="">   
 					<span>元</span>
-					<span class="xui-i-tips">xxxx<span>
+					<span class="xui-i-tips"><span>
 				</div>
 				<div class="xui-i-item">    
 					<label class="">优惠券：</label>    
-					<input type="text" class="form-control" id="coupon_money" name="coupon_money" value="${couponMoney}">   
+					<input type="text" class="form-control" id="coupon_money" name="coupon_money" value="">   
 					<span>元</span>
 				</div>
 			</div>
 			<div class="form-inline">
 				<div class="xui-i-item">    
 					<label class="">微众卡：</label>    
-					<input type="text" class="form-control" id="weizoom_card_money" name="weizoom_card_money" value="${weizoomCardMoney}">   
+					<input type="text" class="form-control" id="weizoom_card_money" name="weizoom_card_money" value="">   
 					<span>元</span>
 					<span class="xui-i-tips">xxxx<span>
 				</div>
 				<div class="xui-i-item">    
 					<label class="">积　分：</label>    
-					<input type="text" class="form-control" id="integral" name="integral" value="${integralCount}">   
-					<input type="hidden" id="integral_money" name="integralMoney" value="${integral}">   
+					<input type="text" class="form-control" id="integral" name="integral" value="">   
+					<input type="hidden" id="integral_money" name="integralMoney" value="">   
 					<span>=</span><span class="xa-i-integral-money">0.00</span><span>元</span>
-					<span class="xui-i-coupon-tips">(注：1元＝${integralPerYuan}积分)<span>
+					<span class="xui-i-coupon-tips">(注：1元＝${integralPerYuan.toFixed(2)}积分)<span>
 				</div>
 			</div>
 			<div class="xui-i-total">
@@ -89,9 +89,10 @@
 	</div>
 	</div>
 </script>
+
 <script id="mall-order-refund-dialog-top-tips-tmpl-src" type="text/x-jquery-tmpl">
     <p class="xui-i-top-tips"> 
-        <span>${orderType}支付金额：现金</span> 
+        <span>${orderType}：现金</span> 
         <span class="xui-i-number">¥${(cash*1).toFixed(2)}</span> 
         <span>+微众卡</span> 
         <span class="xui-i-number">¥${(weizoomCardMoney*1).toFixed(2)}</span> 
