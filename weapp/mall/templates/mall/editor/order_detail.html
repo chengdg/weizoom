@@ -477,11 +477,6 @@
                 <span class="disTc">优惠金额：</span>
                 <span class="disTc xui-money">-￥{{order.save_money|floatformat:"2"}}</span>
               </p>
-            {% elif order.save_money < 0 %}
-              <p class="disT xui-priceInfo">
-                <span class="disTc">优惠金额：</span>
-                <span class="disTc xui-money">+￥{{order.save_money|floatformat:"2"|cut:'-'}}</span>
-              </p>
             {% endif %}
             {% if order.refund_info.has_refund_order and mall_type %}
               <p class="disT xui-priceInfo">
