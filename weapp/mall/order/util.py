@@ -1145,10 +1145,12 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
             status = [ORDER_STATUS_GROUP_REFUNDING, ORDER_STATUS_GROUP_REFUNDED]
         else:
             status = [ORDER_STATUS_REFUNDING, ORDER_STATUS_REFUNDED]
-            # order_status = int(query_dict.get('order_status',0))
-            # if order_status:
-            #     status = [order_status]
-        order_ids_has_refund_sub_orders = get_order_ids_has_refund_sub_orders(webapp_id, status, mall_type)
+        _status = int(query_dict.get('status',0))
+        if _status:
+            _status = [_status]
+        else:
+            _status = status
+        order_ids_has_refund_sub_orders = get_order_ids_has_refund_sub_orders(webapp_id, _status, mall_type)
         orders = orders.filter(Q(status__in=status) | Q(id__in=order_ids_has_refund_sub_orders))
 
     else:
@@ -1283,7 +1285,6 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
     origin_order_id2ohs = {}
 
     for ohs in ohs_list:
-        print(ohs.product)
         if ohs.order_id in origin_order_id2ohs:
             origin_order_id2ohs[ohs.order_id].append(ohs)
         else:
@@ -1530,7 +1531,6 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
 
 def get_order_ids_has_refund_sub_orders(webapp_id, status, webappp_type):
     if webappp_type:
-        print('-status',status)
         sub_refund_orders = Order.objects.filter(status__in=status, webapp_id=webapp_id, origin_order_id__gt=0)
         order_ids = [o.origin_order_id for o in sub_refund_orders]
         # sub_refund_orders = Order.objects.filter(status__in=status, webapp_id=webapp_id, origin_order_id__gt=0).values('id')
