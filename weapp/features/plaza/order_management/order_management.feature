@@ -344,7 +344,7 @@ Background:
 		}
 		"""
 
-@refund @order @allOrder @chengdg
+@refund @order @allOrder
 Scenario:1 ziying单个供应商商品订单-微信支付+优惠券(不满足满额包邮)；退现金优惠券
 	Given zy1登录系统
 	When zy1创建优惠券发放规则发放优惠券
@@ -854,7 +854,7 @@ Scenario:1 ziying单个供应商商品订单-微信支付+优惠券(不满足满
 			| 退款                    | zy1      |
 			| 退款完成                | zy1      |
 
-@refund @order @allOrder
+@refund @order @allOrder @chengdg
 Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满额包邮，一个无运费)；退优惠券，积分(积分按照现在的比例)
 
 	When bill访问zy1的webapp::apiserver
@@ -881,7 +881,7 @@ Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满
 				"count":1,
 				"integral": 20,
 				"integral_money": 10.00,
-				"postage": 0.00,
+				"postage": 0.00
 			}],
 			"postage": 10.00,
 			"customer_message": "bill的订单备注"
@@ -893,7 +893,7 @@ Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满
 			"""
 			[{
 				"status": "待支付",
-				"order_time":"2016-01-02 10:00:00",
+				"order_time":"2016.01.02 00:00",
 				"products":[{
 					"name":"商品1-2"
 				},{
@@ -1021,7 +1021,7 @@ Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满
 			"""
 			[{
 				"status": "待发货",
-				"order_time":"2016-01-02 10:00:00",
+				"order_time":"2016.01.02 00:00",
 				"products":[{
 					"name":"商品1-2"
 				},{
