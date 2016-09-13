@@ -71,4 +71,8 @@ class IntegralStrategy(resource.Resource):
             review_increase=request.POST['review_increase']
         )
 
+        # 临时解决方案,手动调用
+        from cache.webapp_owner_cache import update_webapp_owner_info_cache_with_login
+        update_webapp_owner_info_cache_with_login(request.user_profile)
+
         return HttpResponseRedirect('/mall2/integral_strategy/')

@@ -3046,3 +3046,56 @@ class ProductLimitZoneTemplate(models.Model):
 		verbose_name = "商品仅售和禁售的模板"
 		verbose_name_plural = "商品仅售和禁售的模板"
 		db_table = "mall_product_limit_zone_template"
+
+
+class ProductLabelGroup(models.Model):
+	"""
+	商品标签的分类（分组）
+	"""
+	owner_id = models.IntegerField(default=0)
+	name = models.CharField(max_length=256, null=True)
+	is_deleted = models.BooleanField(default=False)
+	created_at = models.DateTimeField(auto_now_add=True)
+
+	class Meta(object):
+		db_table = 'mall_product_label_group'
+		verbose_name = '标签分类'
+
+
+class ProductLabel(models.Model):
+	"""
+	商品标签
+	"""
+	label_group_id = models.IntegerField(default=0)
+	owner_id = models.IntegerField(default=0)
+	name = models.CharField(max_length=256)
+	created_at = models.DateTimeField(auto_now_add=True)
+	is_deleted = models.BooleanField(default=False)
+
+	class Meta(object):
+		db_table = 'mall_product_label'
+		verbose_name = '标签'
+
+
+class ProductHasLabel(models.Model):
+	"""
+	商品有哪些标签
+	"""
+	product_id = models.IntegerField(null=False)
+	label_id = models.IntegerField(null=False)
+	created_at = models.DateTimeField(auto_now_add=True)
+
+	class Meta(object):
+		db_table = 'mall_product_has_label'
+
+
+class ClassificationHasLabel(models.Model):
+	"""
+	商品类目（分类)有什么标签
+	"""
+	classification_id = models.IntegerField(default=-1)
+	label_id = models.CharField(max_length=1024, default='')
+	created_at = models.DateTimeField(auto_now_add=True)
+
+	class Meta(object):
+		db_table = 'mall_classification_has_label'

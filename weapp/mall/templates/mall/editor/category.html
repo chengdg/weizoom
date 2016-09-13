@@ -1,0 +1,304 @@
+{% extends "content_base_v2.html" %}
+
+{% block content-panel %}
+<div class="xui-categoryPage xa-categoryPage">
+	<ul class="breadcrumb">
+		<li>您当前所在位置</li>
+		<li><a href="/mall2/product_list/?shelve_type=1">商品管理</a></li>
+		<li><a href="/mall2/category_list/">分组管理</a></li>
+		<li class="active">编辑分组</li>
+	</ul>
+	<form>
+		<div class="form-group">
+			<div class="input-group mt20 xui-i-name ">
+				<span class="input-group-addon">分组名称:</span>
+				<input type="text" class="form-control xa-name" maxlength="20" data-validate="require-notempty::不能为空">
+				<div class="errorHint"></div>
+				<span class="input-group-addon">(20字以内)</span>
+			</div>
+		</div>
+	</form>
+
+{#	<div class="panel panel-default mt20 xb-rightPanel">#}
+{#		<div class="panel-heading ">#}
+{#			<label for="topSelectAll" class="xui-selectAll ml15">#}
+{#				<input type="checkbox" id="topSelectAll" class="xa-selectAll">全选#}
+{#			</label>#}
+{#			<a href="javascript:void(0);" class="btn btn-default ml10 xa-batchOffshelf">批量修改</a>#}
+{#		</div>#}
+		<div id="categories-list-view"
+			 data-ui-role="advanced-table"
+			 data-app="mall2"
+			 data-api="category"
+			 data-selectable="true"
+			 data-args='{"category_id":"{{ category_id }}"}'
+			 data-template-id="#category-view"
+			 data-enable-paginator="false"></div>
+		<div class="xui-btn-group text-center">
+			<a class="btn btn-default xui-fontBold xa-editCategory" href="javascript:void(0);">添加</a>
+			<a class="btn btn-primary mr40  xui-fontBold xa-save" href="javascript:void(0);">保存</a>
+		</div>
+	</div>
+
+{#</div>#}
+{% endblock %}
+{% block js %}
+{% verbatim %}
+<script id="category-view" type="text/x-jquery-tmpl">
+	<table class="table  mt20 ">
+		<thead>
+			<tr>
+				<th width="215" class="xui-i-product-name"><span class="xui-i-selectAll-text">全选</span>商品名称</th>
+				<th >所属分组</th>
+				<th width="80">商品价格（元）</th>
+				<th width="80">状态</th>
+				<th width="35">排序</th>
+				<th width="75">销量</th>
+				<th width="110">加入分组时间</th>
+
+				<th width="42">操作</th>
+				<th width="55"><a href="javascript:void(0)" class="xa-batchModify">批量修改</a></th>
+			</tr>
+		</thead>
+		<tbody>
+			{{each(i, product) items}}
+			<tr data-id="${product.id}" {% if product.status == '待售' %}class="xui-color-mark"{% endif %}>
+				<td width="215" class="xui-i-product-name">${product.name}</td>
+				<td >
+					{{if product.categories && product.categories.length > 0}}
+						${product.categories[0].name}
+						{{if product.categories.length >1}}
+							- <a class="btn xui-i-more">
+								更多（${product.categories.length-1}）
+								 <ul class="xui-i-product-categories xa-xui-i-product-categories">
+								 		{{each(i, item) product.categories}}
+										{{if i > 0}}
+								 		 <li data-category-id="${item.id}">
+								 		 	${item.name}
+								 		 </li>
+										 {{/if}}
+								 		{{/each}}
+								 </ul>
+							</a>
+						{{/if}}
+					{{/if}}
+
+				</td>
+				<td width="80">${product.display_price}</td>
+				<td width="80">${product.status}</td>
+				<td width="35" class="xui-i-disaplay-index">
+					{{if product.status == '在售'}}
+						<input autocomplete="off" width="38" type="text" class="xa-rank" data-id="${product.id}" style="width:100%;"
+									 value="${product.display_index}" data-display-index="${product.display_index}">
+					{{/if}}
+				</td>
+				<td width="75">${product.sales}</td>
+				<td width="110">${product.join_category_time}</td>
+				<td width="42"><a class="xa-deleteProductFromCategory" href="javascript:void(0);">删除</a></td>
+				<td width="55"></td>
+			</tr>
+			{{/each}}
+		</tbody>
+	</table>
+</script>
+{% endverbatim %}
+<script type="text/javascript">
+	$(document).ready(function () {
+		var categoryId = "{{category_id}}";
+		var $content = $('.xa-categoryPage');
+		$(document).ajaxSuccess(function (event, jqXHR, ajaxOptions, data) {
+			if (ajaxOptions.type == 'GET' && /api\/category/.test(ajaxOptions.url) && data.success) {
+				$('.xa-name').val(data.data.name);
+			}
+		});
+		$(document).delegate('.xa-batchModify', 'click', function (event) {
+			var $el = $(event.currentTarget);
+			var dataView = $('[data-ui-role="advanced-table"]').data('view');
+			var selectedIds = dataView.getAllSelectedDataIds();
+			if(!selectedIds.length){
+				W.showHint('error','请选择至少一个商品');
+				return;
+			}
+			var mallProductUpdateCategoriesView = W.getMallProductUpdateCategoriesView({
+				width: 260,
+				title: '',
+				position: 'top',
+				isTitle: false,
+				privateContainerClass: 'xui-productUpdateCategoriesBox'
+			});
+			var hiddenCategoryMap = {};
+			hiddenCategoryMap[categoryId] = true;
+			mallProductUpdateCategoriesView.show({
+				$action: $el,
+				productIds: selectedIds,
+				hiddenCategoryMap:hiddenCategoryMap,
+				dataView: dataView
+			});
+			mallProductUpdateCategoriesView.render();
+		});
+		$(document).delegate('.xa-save', 'click', function (event) {
+			var name = $content.find('.xa-name').val();
+			name = (name + '').trim();
+			if (!name.length) {
+				W.showHint('error', '请输入分组名');
+				return;
+			}
+			W.getApi().call({
+				method: 'post',
+				app: 'mall2',
+				resource: 'category',
+				args: {
+					name:name,
+					product_ids:[],
+					id: categoryId
+				},
+				success: function (data) {
+{#					this.table = this.$('[data-ui-role="advanced-table"]').data('view');#}
+{#					this.table.reload();#}
+					history.back(-1);
+				},
+				error: function (resp) {
+					W.showHint('error', resp.data.msg || '保存分组失败');
+				}
+			})
+		});
+		$(document).delegate('.xa-editCategory', 'click', function (event) {
+			var title = $('.xa-name').val();
+			W.dialog.showDialog('W.dialog.mall.AddProductCategoryDialog', {
+				canEditTitle: true,
+				title: title,
+				categoryId: categoryId,
+				success: function (data) {
+					W.getApi().call({
+						method: 'post',
+						app: 'mall2',
+						resource: 'category',
+						args: _.extend(data, {
+							id: categoryId
+						}),
+						success: function (data) {
+							this.table = this.$('[data-ui-role="advanced-table"]').data('view');
+							this.table.reload();
+						},
+						error: function (resp) {
+							W.showHint('error', resp.data.msg);
+						}
+					})
+				}
+			})
+		});
+
+		$(document).delegate('.xa-deleteProductFromCategory', 'click', function (event) {
+			var $link = $(event.currentTarget);
+			var productId = $link.parents('tr').data('productId');
+
+			W.requireConfirm({
+				$el: $(this),
+				width: 380,
+				position: 'top',
+				isTitle: false,
+				privateContainerClass: 'xui-orderConfirmPop',
+				msg: '确定删除？',
+				confirm: function () {
+					W.getApi().call({
+						method: 'delete',
+						app: 'mall2',
+						resource: 'category',
+						args: {
+							category_id: categoryId,
+							product_id: productId
+						},
+						success: function (data) {
+							this.table = this.$('[data-ui-role="advanced-table"]').data('view');
+							this.table.reload();
+						},
+						error: function (resp) {
+							W.showHint('error', '删除分组失败');
+						}
+					});
+				}
+			})
+		});
+
+		var onConfirmRankInput = function (event) {
+			var $link = $(event.currentTarget);
+			var product_id = $(event.currentTarget).parents('tr').data('id');
+			var rankText = $.trim($(event.currentTarget).val());
+			/*文本框的值*/
+			var oldPos = $.trim($(event.currentTarget).data('display-index'));
+			var updateAction = function () {
+				try {
+					has_index.val('0').data('display-index', 0);
+				}
+				catch (e) {
+				}
+				finally {
+					W.getApi().call({
+						method: 'post',
+						app: 'mall2',
+						resource: 'category_list',
+						args: {
+							category_id: categoryId,
+							product_id: product_id,
+							position: rankText,
+						},
+						success: function (data) {
+							$(event.currentTarget).data('display-index', rankText).val(rankText);
+						},
+						error: function (response) {
+							W.showHint('error', '更新产品位置失效');
+						}
+
+					});
+				}
+			}
+			var has_index = false;
+			$(event.currentTarget).parents('tr').siblings().find('.xa-rank').each(function (i) {
+				var a_rank = $.trim($(this).data('display-index'));
+				if (rankText == a_rank && rankText != 0) {
+					has_index = $(this);
+				}
+			});
+			var cancel = function () {
+				$(event.currentTarget).val(oldPos);
+			}
+			if (has_index) {
+				var msg = "位置" + rankText + "已存在商品， 是否替换"
+				W.requireConfirm({
+					$el: $link,
+					width: 480,
+					height: 55,
+					position: 'top',
+					isTitle: false,
+					msg: msg,
+					confirm: updateAction,
+					cancel: cancel,
+					minClickTime: 1
+				});
+			} else {
+				updateAction();
+			}
+		}
+
+		$(document).delegate('.xa-rank', 'keypress', function (event) {
+			var keyCode = event.keyCode;
+			if (keyCode === 13) {
+				onConfirmRankInput(event);
+
+			}
+		});
+
+		$(document).delegate('.xa-rank', 'blur', function (event) {
+			var oldConfirmView = W.registry['common-popup-confirm-view'];
+			var oldPos = $.trim($(event.currentTarget).data('display-index'));
+			var rankText = $.trim($(event.currentTarget).val());
+			if (rankText == oldPos) {
+				return;
+			}
+			if (!oldConfirmView || oldConfirmView.$el.css('display') == 'none') {
+				onConfirmRankInput(event);
+			}
+		});
+	});
+</script>
+{% endblock %}

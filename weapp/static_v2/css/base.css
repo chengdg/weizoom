@@ -1095,11 +1095,13 @@ button.xui-close{
 }
 .xui-noticyTip::before{
     -webkit-border-radius: 18px 0 0 18px;
+    border-radius: 18px 0 0 18px;
     left: -7px;
 
 }
 .xui-noticyTip::after{
     -webkit-border-radius: 0 18px 18px 0;
+    border-radius: 0 18px 18px 0;
     right: -7px;
 }
 .xui-sideBar-third .xui-noticyTip{/*左侧边栏实时消息提示*/
