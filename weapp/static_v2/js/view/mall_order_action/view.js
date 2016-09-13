@@ -3,9 +3,9 @@ W.view.mall.OrderAction = Backbone.View.extend({
 
     initialize: function (options) {
 
+        var _this = this;
         this.options = options;
 
-        var _this = this;
 
         function pageReload(){
             if(_this.options.pageType == 'order_detail'){
@@ -22,10 +22,20 @@ W.view.mall.OrderAction = Backbone.View.extend({
             event.stopPropagation();
             event.preventDefault();
             var $el = $(event.currentTarget);
+
+            // 从页面中的数据中提取mall_type
+            var allData = JSON.parse($('#origin-data').text());
+            mallType = allData.mall_type*1;
+
             var orderId = $el.parents('.xa-actions').data('order-id');
+            if (mallType > 0) {
+                orderId = $el.parents('.xa-actions').data('delivery-item-id');
+            }
+
             var expressCompanyValue = $el.data('express-company-name');
             var expressNumber = $el.data('express-number');
             var leaderName = $el.data('leader-name');
+
             // 点击发货，不是点击修改
             if($el.data('is-update') !== true){
                 expressCompanyValue = -1;
