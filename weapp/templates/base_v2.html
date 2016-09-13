@@ -259,7 +259,7 @@
 				//渲染左侧导航
 				var secondNavName = "{{second_nav_name}}";
 				var thirdNavName = "{{third_nav_name}}";
-				
+
 				//二级导航
 				if(secondNavName.length > 0 && secondNavs.length > 0) {
 					hasPermission = false;  //如果有二级导航的话也要满足权限
@@ -371,13 +371,25 @@
 							{% if nav.third_navs %}
 								secondNav['thirdNavs'] = [];
 								{% for third_nav in nav.third_navs %}
-									secondNav['thirdNavs'].push({
-										'name': '{{third_nav.name}}',
-										'title': '{{third_nav.title}}',
-										'url': '{{third_nav.url}}',
-										'permission': '{{third_nav.permission}}',
-										'className': '{{third_nav.class_name}}'
-									});
+									{% if third_nav.name == 'survey_re' %}
+										{% if request.manager.username in third_nav.users %}
+										secondNav['thirdNavs'].push({
+											'name': '{{third_nav.name}}',
+											'title': '{{third_nav.title}}',
+											'url': '{{third_nav.url}}',
+											'permission': '{{third_nav.permission}}',
+											'className': '{{third_nav.class_name}}'
+										});
+										{% endif %}
+									{% else %}
+										secondNav['thirdNavs'].push({
+											'name': '{{third_nav.name}}',
+											'title': '{{third_nav.title}}',
+											'url': '{{third_nav.url}}',
+											'permission': '{{third_nav.permission}}',
+											'className': '{{third_nav.class_name}}'
+										});								
+									{% endif %}
 								{% endfor %}
 							{% endif %}
 							navTree.secondNavs.push(secondNav);
