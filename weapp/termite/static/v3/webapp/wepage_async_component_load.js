@@ -131,7 +131,9 @@ W.AsyncComponentLoadView = BackboneLite.View.extend({
         var newProducts = [];
         if (productIds) {
             productIds.split(',').map(function(productId){
-                newProducts.push(objProducts[productId]);
+                if (objProducts[productId]) {
+                    newProducts.push(objProducts[productId]);
+                }
             });
         }
 
