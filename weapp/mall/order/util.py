@@ -1448,6 +1448,15 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
         else:
             parent_action = None
 
+
+        if order.status == ORDER_STATUS_REFUNDED:
+            _save_money = float(Order.get_order_has_price_number(order)) + float(order.postage) - float(
+                order.final_price) - float(order.weizoom_card_money) - order.refund_info['total_cash'] - order.refund_info['total_weizoom_card_money']
+        else:
+
+            _save_money = float(Order.get_order_has_price_number(order)) + float(order.postage) - float(
+                order.final_price) - float(order.weizoom_card_money)
+
         items.append({
             'id': order.id,
             'order_id': order.order_id,
@@ -1482,7 +1491,7 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
             'remark': order.remark,
             'postage': '%.2f' % order.postage,
             'delivery_time': order.delivery_time,
-            'save_money': round(Order.get_order_has_price_number(order), 2) + round(order.postage, 2) - round(order.final_price, 2) - round(order.weizoom_card_money, 2),
+            'save_money': _save_money,
             'weizoom_card_money': float('%.2f' % order.weizoom_card_money),
             # 'weizoom_card_money_huihui': float('%.2f' % order.weizoom_card_money_huihui),
             # 'weizoom_card_money_rest': float('%.2f' % order.weizoom_card_money_rest),
