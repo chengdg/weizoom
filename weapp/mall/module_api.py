@@ -2240,8 +2240,9 @@ def set_origin_order_status(child_order, user, action, request=None):
 		update_order_status(user, action, origin_order, request)
 	else:
 		expired_status = origin_order.status
-		origin_order.status = min(children_order_status)
-		origin_order.save()
+		# origin_order.status = min(children_order_status)
+		# origin_order.save()
+		update_order_status_by_sub_order(child_order)
 		if origin_order.status == ORDER_STATUS_SUCCESSED:
 			__increase_after_order_finsh(expired_status, ORDER_STATUS_SUCCESSED, origin_order)
 
@@ -2464,7 +2465,7 @@ def __restore_product_stock_by_order(order):
 			)
 
 
-def update_order_status_by_sub_order(sub_order,operation_name,action_msg):
+def update_order_status_by_sub_order(sub_order,operation_name=None,action_msg=None):
 	"""
 	申请退款时使用
 	@param order:
@@ -2482,8 +2483,10 @@ def update_order_status_by_sub_order(sub_order,operation_name,action_msg):
 	if current_status != order_target_status:
 		origin_order.status = order_target_status
 		origin_order.save()
-		record_status_log(origin_order.order_id, operation_name, current_status, order_target_status)
-		record_operation_log(origin_order.order_id, operation_name, action_msg)
+		if operation_name:
+			record_status_log(origin_order.order_id, operation_name, current_status, order_target_status)
+		if action_msg:
+			record_operation_log(origin_order.order_id, operation_name, action_msg)
 
 
 
