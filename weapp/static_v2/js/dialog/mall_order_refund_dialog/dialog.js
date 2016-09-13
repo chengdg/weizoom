@@ -48,7 +48,7 @@ W.dialog.mall.RefundOrderDialog = W.dialog.Dialog.extend({
         var allOrders = this.allOrders;
         var mainOrder = allOrders[this.orderId];
         var mainRefundInfo = {
-            cash: mainOrder.origin_final_money,
+            cash: mainOrder.origin_final_price,
             weizoomCardMoney: mainOrder.origin_weizoom_card_money,
             couponMoney: mainOrder.coupon_money,
             integral: mainOrder.integral
