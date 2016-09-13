@@ -415,7 +415,7 @@ Scenario:2 ziying自营平台子订单退款（全退微众卡）
 			}
 			"""
 
-@mall2 @ztq @order @allOrder
+@mall2 @ztq @order @allOrder @ztqb
 Scenario:3 ziying自营平台子订单退款（全退优惠券、全退积分、退优惠券+积分）
 	Given zy1登录系统
 	When zy1'申请退款'自营订单'10101-商家1'
