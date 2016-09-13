@@ -664,13 +664,17 @@ $(document).ready(function() {
 		var couponMoney = $el.attr('data-coupon-money');
 		var integral = $el.attr('data-integral');
 
-		refundingHintView.show({
-			$action: $el,
-			cash: cash,
-			card: weizoomCardMoney,
-			coupon: couponMoney,
-			integral: integral
-		});
+		var total = cash*1 + weizoomCardMoney*1 + couponMoney*1 + integral*1;
+
+		if (total > 0) {
+			refundingHintView.show({
+				$action: $el,
+				cash: cash,
+				card: weizoomCardMoney,
+				coupon: couponMoney,
+				integral: integral
+			});
+		}
 	});
 	$('body').delegate('.xa-refundingHintImg','mouseleave',function(){
 		$('.xa-refundingHintDropBox').hide();

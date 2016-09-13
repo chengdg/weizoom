@@ -716,8 +716,12 @@ class OrderRefundingOrder(resource.Resource):
         sub_order = Order.objects.filter(id=delivery_item_id).first()
 
         if sub_order and sub_order.origin_order_id == order_id and sub_order.webapp_id == request.user_profile.webapp_id:
+            print 222222222222222222
+            print sub_order.origin_order_id, order_id, sub_order.webapp_id, request.user_profile.webapp_id
             pass
         else:
+            print 1111111111111111111111111
+            print sub_order.origin_order_id, order_id, sub_order.webapp_id, request.user_profile.webapp_id
             response = create_response(500)
             response.data = {'msg': "非法操作，订单状态不允许进行该操作"}
             return response.get_response()
