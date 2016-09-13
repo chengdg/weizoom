@@ -133,15 +133,25 @@
 					{{/if}}
 					</td>
 					<td>
-						<ul>
-							{{each(i, category) product.categories}}
-							{{if category.is_selected}}
-							<li>
-								<span style="font-size: 1.0em;">${category.name}</span>
-							</li>
+						{{if product.categories && product.categories.length > 0}}
+							${product.categories[0].name}
+							{{if product.categories.length >1}}
+								<br/>
+								 <a class="btn xui-i-more">
+									更多（${product.categories.length-1}）
+									 <ul class="xui-i-product-categories xa-xui-i-product-categories">
+									 		{{each(i, item) product.categories}}
+											{{if i>0}}
+									 		 <li data-category-id="${item.id}">
+									 		 	${item.name}
+									 		 </li>
+											 {{/if}}
+									 		{{/each}}
+									 </ul>
+								</a>
 							{{/if}}
-							{{/each}}
-						<ul></td>
+						{{/if}}
+					</td>
 					<td>
 						{{if product.is_use_custom_model}}
 						<div class="xa-priceText">${product.display_price_range}</div>
@@ -177,7 +187,8 @@
 						{{/if}}
 						</div>
 						</br>
-						<a href="javascript:void(0);" class="xa-delete">彻底删除</a>
+						<a href="javascript:void(0);" class="xa-delete xui-block">彻底删除</a>
+						<a href="javascript:void(0);" class="xa-edit-categories" data-categories="${ JSON.stringify(product.categories)}">编辑分组</a>
 						{{if data.data.mall_type == 1}}
 						<a href="/mall2/product_members/?id=${product.id}" class="xui-block" target="_blank">购买会员</a>
 						{{/if}}
@@ -203,6 +214,26 @@ $(document).ready(function() {
 		woid:woid
 	});
 	view.render();
+	$(document).delegate('.xa-edit-categories', 'click', function (event) {
+		var $el = $(event.currentTarget);
+		var dataView = $('[data-ui-role="products-advanced-table"]').data('view');
+		var productId = $el.parents('tr').data('id');
+		var selectedIds = $el.data('categories').map(function(item){return item.id;});
+		var mallProductUpdateCategoriesView = W.getMallProductUpdateCategoriesView({
+			width: 260,
+			title: '',
+			position: 'top',
+			isTitle: false,
+			privateContainerClass: 'xui-productUpdateCategoriesBox'
+		});
+		mallProductUpdateCategoriesView.show({
+			$action: $el,
+			selectedIds:selectedIds,
+			productId: productId,
+			dataView: dataView
+		});
+		mallProductUpdateCategoriesView.render();
+	});
 });
 
 </script>
