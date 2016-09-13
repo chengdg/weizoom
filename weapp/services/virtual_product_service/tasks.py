@@ -121,7 +121,11 @@ def deliver_virtual_product(request, args):
 				virtual_product = virtual_products[0]
 
 				#判断该订单里的这个商品是否已经被发过货了，如果发过则不重复发放，且can_update_order_status不变为False
-				existed_records = promotion_models.VirtualProductHasCode.objects.filter(virtual_product=virtual_product, oid=order.id)
+				oids = [order.id]
+				if order.origin_order_id > 0:
+					oids.append(order.origin_order_id)
+				existed_records = promotion_models.VirtualProductHasCode.objects.filter(virtual_product=virtual_product, oid__in=oids)
+
 				if existed_records.count() > 0:
 					message = u'该商品已经发过货，无需重复发货\n订单id:%s\n商品id:%d\n福利卡券活动id:%d\n商品名称:%s' % (order.order_id, product_id, virtual_product.id, virtual_product.product.name)
 					logging.info(message)
