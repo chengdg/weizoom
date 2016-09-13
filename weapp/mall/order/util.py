@@ -1455,11 +1455,15 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
                 }
             groups.append(group)
 
-        origin_weizoom_card_money = sum([group['fackorder']['refund_info']['weizoom_card_money'] for group in groups if group['fackorder']['refund_info']['finished']]) + order.weizoom_card_money
-        origin_final_money = sum([group['fackorder']['refund_info']['cash'] for group in groups if group['fackorder']['refund_info']['finished']]) + order.final_price
+        try:
+            origin_weizoom_card_money = sum([group['fackorder']['refund_info']['weizoom_card_money'] for group in groups if group['fackorder']['refund_info']['finished']]) + order.weizoom_card_money
+            origin_final_price = sum([group['fackorder']['refund_info']['cash'] for group in groups if group['fackorder']['refund_info']['finished']]) + order.final_price
+        except:
+            origin_weizoom_card_money = order.weizoom_card_money
+            origin_final_price = order.final_price
 
         _save_money = round(Order.get_order_has_price_number(order), 2) + round(order.postage, 2) - round(
-            origin_final_money,
+            origin_final_price,
             2) - round(
             origin_weizoom_card_money, 2)
         # if len(groups) > 1:
@@ -1478,7 +1482,7 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
             'status': order.get_status_text(),
             'total_price': float(
                 '%.2f' % order.final_price) if order.pay_interface_type != 9 or order.status == 5 else 0,
-            'origin_final_money': origin_final_money,
+            'origin_final_price': origin_final_price,
             'origin_weizoom_card_money':origin_weizoom_card_money,
             'order_total_price': float('%.2f' % order.get_total_price()),
             'ship_name': order.ship_name,
