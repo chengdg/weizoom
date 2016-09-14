@@ -57,17 +57,22 @@ W.dialog.mall.RefundOrderDialog = W.dialog.Dialog.extend({
         // 找出其它子订单的已支付的金额、微众卡等信息
         var subRefundInfo = [];
         var targetRefundInfo = {};
+        var mergeSubOrder = {
+            cash: 0,
+            weizoomCardMoney: 0,
+            couponMoney: 0,
+            integral: 0
+        };
         mainOrder.groups.map(function(subOrder){
             var _subOrder = subOrder.fackorder;
+            var _subRI = _subOrder.refund_info;
             if (_subOrder.order_status == 6 && !_.isEmpty(_subOrder.refund_info)) {
-                // 找出退款中的订单
-                var _subRI = _subOrder.refund_info;
-                subRefundInfo.push({
-                    cash: _subRI.cash,
-                    weizoomCardMoney: _subRI.weizoom_card_money,
-                    couponMoney: _subRI.coupon_money,
-                    integral: _subRI.integral_money
-                });
+                // 找出退款中的订单, 并合计
+                mergeSubOrder.cash += _subRI.cash;
+                mergeSubOrder.weizoomCardMoney += _subRI.weizoom_card_money,
+                mergeSubOrder.couponMoney += _subRI.coupon_money,
+                mergeSubOrder.integral += _subRI.integral_money
+
             } else if (_subOrder.id == _this.deliveryItemId && !_.isEmpty(_subOrder.refund_info)) {
                 // 找出当前编辑的子订单
                 targetRefundInfo = {
@@ -76,7 +81,10 @@ W.dialog.mall.RefundOrderDialog = W.dialog.Dialog.extend({
             }
         }); 
 
-        // 保存mall_type属性，兼容老版本
+        // 将合计后的子订单放入this.mainOrderData
+        subRefundInfo.push(mergeSubOrder);
+
+        // 保存mall_type属性，兼容非自营
         var mallType = allData.mall_type;
 
         this.dialogMainData = {
@@ -88,7 +96,7 @@ W.dialog.mall.RefundOrderDialog = W.dialog.Dialog.extend({
         };
 
         // 校验并提示信息
-        this.__validate();
+        this.__validate(false);
 
         console.log( '订单信息：%o', this.dialogMainData);
     },
@@ -130,7 +138,7 @@ W.dialog.mall.RefundOrderDialog = W.dialog.Dialog.extend({
         this.dialogMainData.targetRefundInfo = _.extend(this.dialogMainData.targetRefundInfo, targetRefundInfo);
         
         // 处理提示信息
-        this.__validate();
+        this.__validate(false);
     },
 
     // 申请退款对话框，刷新退款总额，错误信息等实时信息
@@ -145,7 +153,7 @@ W.dialog.mall.RefundOrderDialog = W.dialog.Dialog.extend({
                 + mainRI.weizoomCardMoney*1 
                 + mainRI.couponMoney*1 
                 + mainRI.integral*1;
-            this.dialogMainData.mainRefundInfo.orderType = '母订单原支付金额';
+            this.dialogMainData.mainRefundInfo.orderType = '母订单支付金额';
             this.dialogMainData.mainRefundInfo.totalMoney = mainRITotal;
             var $tmplTopTip = $('#mall-order-refund-dialog-top-tips-tmpl-src').tmpl(mainRI);
             $('.xa-i-refund-info-show', $dialog).html("");
@@ -161,7 +169,7 @@ W.dialog.mall.RefundOrderDialog = W.dialog.Dialog.extend({
                     + subRI.weizoomCardMoney*1 
                     + subRI.couponMoney*1 
                     + subRI.integral*1;
-                subRI.orderType = '　子订单支付金额';
+                subRI.orderType = '已录入退款金额';
                 subRI.totalMoney = subRITotal;
                 var $subRITip = $('#mall-order-refund-dialog-top-tips-tmpl-src').tmpl(subRI);
                 $('.xa-i-refund-info-show', $dialog).append($subRITip);
@@ -191,6 +199,11 @@ W.dialog.mall.RefundOrderDialog = W.dialog.Dialog.extend({
             $('.xa-i-integral-money').text('0.00');
         }
 
+        // 最终的校验，不符合应退金额时，将焦点定到cash对话框里
+        if (data.tips.totalMoney.length > 0) {
+            $('[name=cash]').focus();
+        }
+
         // 显示提示信息
         if (data.tips) {
             // 现金提示
@@ -199,14 +212,13 @@ W.dialog.mall.RefundOrderDialog = W.dialog.Dialog.extend({
             $('.xui-i-tips', $('#weizoom_card_money').parent()).text(data.tips.weizoomCardMoney) 
             // 总额提示
             $('.xui-i-total-error', $dialog).text(data.tips.totalMoney) 
-        
         }
 
     },
 
-    // 判断是否正确
-    __validate: function() {
-        var isPass = false;
+    // 判断提交的金额等数值是否符合要求
+    // isSumit: 提交时校验:true, 否则:false
+    __validate: function(isSubmit) {
         var mainRI = this.dialogMainData.mainRefundInfo;
         var subRIs = this.dialogMainData.subRefundInfo;
         var target = this.dialogMainData.targetRefundInfo? this.dialogMainData.targetRefundInfo : {};
@@ -281,7 +293,7 @@ W.dialog.mall.RefundOrderDialog = W.dialog.Dialog.extend({
         this.dialogMainData['tips'] = {
             'cash': tipCash,
             'weizoomCardMoney': tipCard,
-            'totalMoney': tipTotalError
+            'totalMoney': isSubmit? tipTotalError : ''
         };
 
         this.__renderDialog();
@@ -306,10 +318,15 @@ W.dialog.mall.RefundOrderDialog = W.dialog.Dialog.extend({
         var $dialog = this.$dialog;
 
         // 转换当前对话框中的退款信息
-        var cash = $('[name="cash"]', $dialog).val() * 1;
-        var weizoomCardMoney = $('[name="weizoom_card_money"]', $dialog).val() * 1;
-        var couponMoney = $('[name="coupon_money"]', $dialog).val() * 1;
-        var integralCount = $('[name="integral"]', $dialog).val() * 1;
+        var $cash = $('[name="cash"]', $dialog);
+        var $weizoomCardMoney = $('[name="weizoom_card_money"]', $dialog);
+        var $couponMoney = $('[name="coupon_money"]', $dialog);
+        var $integralCount = $('[name="integral"]', $dialog);
+
+        var cash = $cash.val() * 1;
+        var weizoomCardMoney = $weizoomCardMoney.val() * 1;
+        var couponMoney = $couponMoney.val() * 1;
+        var integralCount = $integralCount.val() * 1;
 
         var regNum =/^[0-9]+([.]\d{1,2})?$/;
         var regInt =/^[0-9]\d*$/;
@@ -317,19 +334,38 @@ W.dialog.mall.RefundOrderDialog = W.dialog.Dialog.extend({
         if(!regNum.test(cash)){
             errTip = '现金: 须非负数，保留两位小数';
             $('.xui-i-total-error').text(errTip);
+            $cash.addClass('form-control-error');
+            $cash.focus();
             return false;
-        } else if (!regNum.test(weizoomCardMoney)) {
+        } 
+
+        if (!regNum.test(weizoomCardMoney)) {
             errTip = '微众卡: 须非负数，保留两位小数';
             $('.xui-i-total-error').text(errTip);
+            $weizoomCardMoney.addClass('form-control-error');
+            $weizoomCardMoney.focus();
             return false;
-        } else if (!regNum.test(couponMoney)) {
+        } 
+
+        if (!regNum.test(couponMoney)) {
             errTip = '优惠券: 须非负数，保留两位小数';
             $('.xui-i-total-error').text(errTip);
+            $couponMoney.addClass('form-control-error');
             return false;
-        } else if (!regInt.test(integralCount)) {
-            errTip = '积分: 须正整数';
+        }  
+
+        if (!regInt.test(integralCount)) {
+            errTip = '积分: 须非负整数';
             $('.xui-i-total-error').text(errTip);
+            $integralCount.addClass('form-control-error');
             return false;
+        }  
+
+        if (errTip == '') {
+            $cash.removeClass('form-control-error');
+            $weizoomCardMoney.removeClass('form-control-error');
+            $couponMoney.removeClass('form-control-error');
+            $integralCount.removeClass('form-control-error');
         }
 
         $('.xui-i-total-error').text(errTip);
@@ -387,7 +423,8 @@ W.dialog.mall.RefundOrderDialog = W.dialog.Dialog.extend({
                 integral: integralCount? integralCount : 0 
             };
 
-        if (this.__validate() || this.onChangeRefundItem()) {
+        // TODO: 
+        if (this.__validate(true) && this.onChangeRefundItem()) {
             W.getApi().call({
                 app: 'mall2',
                 resource: 'refunding_order',
