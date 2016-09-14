@@ -1370,6 +1370,12 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
                         }
 
                     is_group_buying = True if order.order_id in group_order_ids else False
+                    if mall_type:
+                        actions = get_actions_for_sub_order(fackorder, is_refund, is_group_buying)
+                    else:
+                        actions = get_order_actions(fackorder, is_refund=is_refund, mall_type=mall_type,
+                                                    multi_child_orders=False,
+                                                    is_group_buying=True if order.order_id in group_order_ids else False),
                     group_order = {
                         "id": fackorder.id,
                         "status": fackorder.get_status_text(),
@@ -1380,7 +1386,7 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
                         # 'actions': get_order_actions(fackorder, is_refund=is_refund, mall_type=mall_type,
                         #     multi_child_orders=multi_child_orders,
                         #     is_group_buying=True if order.order_id in group_order_ids else False),
-                        'actions': get_actions_for_sub_order(fackorder, is_refund, is_group_buying),
+                        'actions': actions,
                         'type': fackorder.type,
                         'refund_info': refund_info_dict
                     }
