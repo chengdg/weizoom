@@ -1527,8 +1527,10 @@ def ship_order(order_id, express_company_name,
 				Order.objects.filter(id=child_order.id).update(**order_params)
 				from mall.order.util import set_children_order_status
 				set_children_order_status(order, target_status)
+				print('--------action111',action,operator_name)
 				record_operation_log(child_order.order_id, operator_name, action, child_order)
 				record_status_log(child_order.order_id, operator_name, child_order.status, target_status)
+	print('--------action2222', action, operator_name)
 	record_operation_log(order.order_id, operator_name, action, order)
 
 	#send post_ship_send_request_to_kuaidi signal
@@ -1754,8 +1756,8 @@ def get_order_operation_logs(order_id, child_order_length=None):
 	else:
 		return OrderOperationLog.objects.filter(order_id__contains=order_id).exclude(
 			~Q(order_id=order_id),
-			action__in=[u'下单', u'支付', u'退款', u'退款完成', u'取消订单']
-		).exclude(order_id=order_id, action__in=[u'发货', u'完成'])
+			action__in=[u'下单', u'支付',  u'取消订单']
+		).exclude(order_id=order_id, action__in=[u'发货', u'完成',u'退款', u'退款完成'])
 
 
 ########################################################################
