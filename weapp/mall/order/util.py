@@ -793,6 +793,7 @@ def get_detail_response(request):
                     break
         # 退款数据
         refund_infos = OrderHasRefund.objects.filter(origin_order_id=order.id)
+        has_refund_info = refund_infos.count()>0
         order.refund_info = {
             'total_cash': sum([r.cash for r in refund_infos if r.finished]),
             'total_weizoom_card_money': sum([r.weizoom_card_money for r in refund_infos if r.finished]),
@@ -884,7 +885,7 @@ def get_detail_response(request):
             if child_order.supplier:
                 supplier_ids.append(child_order.supplier)
                 supplier2sub_order[child_order.supplier] = child_order
-                if child_order.status == ORDER_STATUS_REFUNDED:
+                if child_order.status == ORDER_STATUS_REFUNDED and has_refund_info:
                     order.refund_info['has_refund_order'] = True
                 refund_info = child_order_id2refund_info.get(child_order.id, {})
                 if refund_info:
