@@ -24,7 +24,18 @@ class QrcodeOrder(api_resource.ApiResource):
 		channel_qrcode_ids = json.loads(args.get('channel_qrcode_ids'), '[]')
 		channel_qrcodes = ChannelQrcodeSettings.objects.filter(id__in=channel_qrcode_ids)
 
-		channel_members = ChannelQrcodeHasMember.objects.filter(channel_qrcode_id__in=channel_qrcode_ids)
+		member_name = args.get('member_name', None)
+		channel_filter_data_args = {
+			"channel_qrcode_id__in": channel_qrcode_ids
+		}
+		member_ids = []
+		if member_name:
+			members = Member.objects.filter(username_hexstr__contains=byte_to_hex(member_name))
+			for member in members:
+				member_ids.append(member.id)
+			channel_filter_data_args["member_id__in"] = member_ids
+
+		channel_members = ChannelQrcodeHasMember.objects.filter(**channel_filter_data_args)
 
 		channel_qrcode_id2member_id = {}
 		member_ids = []

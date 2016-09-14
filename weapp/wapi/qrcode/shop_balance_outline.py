@@ -7,6 +7,7 @@ from wapi.decorators import param_required
 from modules.member.models import *
 from mall.models import Order, ORDER_STATUS_NOT,ORDER_STATUS_CANCEL,ORDER_STATUS_GROUP_REFUNDING,ORDER_STATUS_GROUP_REFUNDED,ORDER_STATUS_REFUNDING,ORDER_STATUS_REFUNDED, OrderOperationLog,STATUS2TEXT
 import time
+from core import dateutil
 
 class ShopBalanceOutline(api_resource.ApiResource):
 	"""
@@ -23,10 +24,11 @@ class ShopBalanceOutline(api_resource.ApiResource):
 		start = time.time()
 		channel_qrcode_ids = json.loads(args.get('channel_qrcode_ids'))
 		order_numbers = json.loads(args.get('order_numbers', ''))
-
 		channel_qrcodes = ChannelQrcodeSettings.objects.filter(id__in=channel_qrcode_ids).order_by('created_at')
-		created_at = channel_qrcodes.first().created_at.strftime("%Y-%m-%d %H:%M:%S")
-		print created_at,"cccccccccccccccc"
+		if channel_qrcodes.count() > 0:
+			created_at = channel_qrcodes.first().created_at.strftime("%Y-%m-%d %H:%M:%S")
+		else:
+			created_at = dateutil.get_today()
 
 		total_channel_members = ChannelQrcodeHasMember.objects.filter(channel_qrcode_id__in=channel_qrcode_ids).order_by('-created_at')
 		channel_qrcode_id2member_id = {}

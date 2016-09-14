@@ -10,3 +10,4 @@ import shop_balance_outline
 import shop_members
 import shop_orders
 import order_info
+import balance_member

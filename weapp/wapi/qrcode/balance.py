@@ -7,6 +7,7 @@ from market_tools.tools.channel_qrcode.models import ChannelQrcodeSettings, Chan
 from wapi.decorators import param_required
 from modules.member.models import *
 from mall.models import Order, ORDER_STATUS_SUCCESSED, ORDER_STATUS_REFUNDED, STATUS2TEXT, OrderHasProduct, Product, ProductModel,OrderOperationLog
+from core import dateutil
 
 class QrcodeBalance(api_resource.ApiResource):
 	"""
@@ -29,7 +30,10 @@ class QrcodeBalance(api_resource.ApiResource):
 		channel_qrcode_ids = json.loads(args.get('channel_qrcode_ids'))
 		balance_time_from = args.get('balance_time_from','2016-06-24 00:00:00')
 		channel_qrcodes = ChannelQrcodeSettings.objects.filter(id__in=channel_qrcode_ids).order_by('created_at')
-		created_at = channel_qrcodes.first().created_at.strftime("%Y-%m-%d %H:%M:%S")
+		if channel_qrcodes.count() > 0:
+			created_at = channel_qrcodes.first().created_at.strftime("%Y-%m-%d %H:%M:%S")
+		else:
+			created_at = dateutil.get_today()
 
 		member_ids = [member_log.member_id for member_log in ChannelQrcodeHasMember.objects.filter(channel_qrcode_id__in=channel_qrcode_ids)]
 		webapp_user_ids = [webappuser.id for webappuser in WebAppUser.objects.filter(member_id__in=member_ids)]

@@ -20,13 +20,32 @@ class QrcodeOrderInfo(api_resource.ApiResource):
 		获取订单
 		"""
 		order_ids = json.loads(args.get('order_ids'))
+		is_first_order = int(args.get('is_first_order', 0))
 
-		orders = Order.objects.filter(id__in=order_ids)
+		filter_args = {
+			"id__in": order_ids
+		}
+
+		if is_first_order:
+			filter_args["is_first_order"] = is_first_order
+		orders = Order.objects.filter(**filter_args)
+
 
 		order_id2created_at = {}
+		curr_orders = []
 		for order in orders:
-			order_id2created_at[order.id] = order.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+			sale_price = order.final_price + order.coupon_money + order.integral_money + order.weizoom_card_money + order.promotion_saved_money + order.edit_money
+
+			order_id2created_at[order.id] = order.created_at.strftime('%Y-%m-%d %H:%M:%S')
+			curr_orders.append({
+				"order_id": order.id,
+				"order_number": order.order_id,
+				"final_price": order.final_price,
+				"status_text": STATUS2TEXT[order.status],
+				"sale_price": sale_price
+			})
 
 		return {
-			'items': order_id2created_at
+			'order_id2created_at': order_id2created_at,
+			'orders': curr_orders
 		}
