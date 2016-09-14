@@ -1139,32 +1139,19 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
     if query_dict.get('order_type') and query_dict['order_type'] == 2:
         orders = orders.filter(order_id__in=group_order_ids)
 
-    order_ids_has_refund_sub_orders = []
+
     if is_refund:
         if query_dict.get('status__in'):
-            status = [ORDER_STATUS_GROUP_REFUNDING, ORDER_STATUS_GROUP_REFUNDED]
+            orders = orders.filter(status__in=[ORDER_STATUS_GROUP_REFUNDING, ORDER_STATUS_GROUP_REFUNDED])
         else:
-            status = [ORDER_STATUS_REFUNDING, ORDER_STATUS_REFUNDED]
-        _status = int(query_dict.get('status',0))
-        if _status:
-            _status = [_status]
-        else:
-            _status = status
-        order_ids_has_refund_sub_orders = get_order_ids_has_refund_sub_orders(webapp_id, _status, mall_type)
-        orders = orders.filter(Q(status__in=status) | Q(id__in=order_ids_has_refund_sub_orders))
-
+            orders = orders.filter(status__in=[ORDER_STATUS_REFUNDING, ORDER_STATUS_REFUNDED])
     else:
         if query_dict.get('status') and query_dict.get('status') == ORDER_STATUS_REFUNDING:
             query_dict['status__in'] = [ORDER_STATUS_GROUP_REFUNDING, ORDER_STATUS_REFUNDING]
             query_dict.pop('status')
-            order_ids_has_refund_sub_orders = get_order_ids_has_refund_sub_orders(webapp_id, [ORDER_STATUS_REFUNDING], mall_type)
-            orders = orders.filter(Q(id__in=order_ids_has_refund_sub_orders))
         elif query_dict.get('status') and query_dict.get('status') == ORDER_STATUS_REFUNDED:
             query_dict['status__in'] = [ORDER_STATUS_GROUP_REFUNDED, ORDER_STATUS_REFUNDED]
             query_dict.pop('status')
-            order_ids_has_refund_sub_orders = get_order_ids_has_refund_sub_orders(webapp_id, [ORDER_STATUS_REFUNDED],
-                                                                          mall_type)
-            orders = orders.filter(Q(id__in=order_ids_has_refund_sub_orders))
     # 处理排序
     if sort_attr != 'created_at':
         orders = orders.order_by(sort_attr)
@@ -1178,7 +1165,7 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
     # if not mall_type:
     #     pass
 
-    orders = __get_orders_by_params(query_dict, date_interval, date_interval_type, orders, user_profile,order_ids_has_refund_sub_orders)
+    orders = __get_orders_by_params(query_dict, date_interval, date_interval_type, orders, user_profile)
 
     # 返回订单的数目
     try:
@@ -1610,7 +1597,7 @@ def __get_select_params(request):
 
     return query_dict, date_interval, date_interval_type
 
-def __get_orders_by_params(query_dict, date_interval, date_interval_type, orders, user_profile,order_ids_has_refund_sub_orders):
+def __get_orders_by_params(query_dict, date_interval, date_interval_type, orders, user_profile):
     """
     按照查询条件筛选符合条件的订单
     """
@@ -1677,7 +1664,7 @@ def __get_orders_by_params(query_dict, date_interval, date_interval_type, orders
 
     #添加惠惠卡order_type
     if len(query_dict):
-        orders = orders.filter(Q(**query_dict) | Q(id__in=order_ids_has_refund_sub_orders))
+        orders = orders.filter(**query_dict)
 
     # 处理 时间区间筛选
     if date_interval:
