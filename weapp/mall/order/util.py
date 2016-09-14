@@ -1915,6 +1915,7 @@ def get_actions_for_parent_order(order):
 
 def get_order_actions(order, is_refund=False, is_detail_page=False, is_list_parent=False, mall_type=0, multi_child_orders=False, is_group_buying=False):
     """
+    @warning 自营订单不再使用此函数
     :param order:
     :param is_refund:
     :param is_detail_page:
@@ -1933,9 +1934,7 @@ def get_order_actions(order, is_refund=False, is_detail_page=False, is_list_pare
     result = []
     if not is_refund:
         if order.status == ORDER_STATUS_NOT:
-            # result = [ORDER_PAY_ACTION, ORDER_UPDATE_PRICE_ACTION, ORDER_CANCEL_ACTION]
-            # 待支付状态的订单，去掉“修改价格”操作
-            result = [ORDER_PAY_ACTION, ORDER_CANCEL_ACTION]
+            result = [ORDER_PAY_ACTION, ORDER_UPDATE_PRICE_ACTION, ORDER_CANCEL_ACTION]
         elif order.status == ORDER_STATUS_PAYED_NOT_SHIP:
             if order.pay_interface_type in [PAY_INTERFACE_ALIPAY, PAY_INTERFACE_TENPAY, PAY_INTERFACE_WEIXIN_PAY, PAY_INTERFACE_BEST_PAY]:
                 result = [ORDER_SHIP_ACTION, ORDER_REFUNDIND_ACTION]
