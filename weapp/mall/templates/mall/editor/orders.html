@@ -536,7 +536,7 @@ function formatOrderStatus(order) {
 	var integral = refundInfo.integral_money? refundInfo.integral_money : 0;
 
 	var color = '#333333';
-	if (status === '退款中' && cash+weizoomCardMoney+couponMoney+integral > 0) {
+	if (status === '退款中') {
 		return '\
 			<span class="xui-i-refunding-tip xa-i-refunding-tip" \
 				data-cash="'+cash+'" \
