@@ -1404,6 +1404,11 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
                         }
                     groups.append(group)
             else:
+                if mall_type and order.status == ORDER_STATUS_NOT:
+                    actions = get_actions_for_parent_order(order)
+                else:
+                    actions = get_order_actions(order, is_refund=is_refund, mall_type=mall_type,
+                        is_group_buying=True if order.order_id in group_order_ids else False)
                 group_order = {
                     "id": order.id,
                     "status": order.get_status_text(),
@@ -1411,8 +1416,7 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
                     'express_company_name': order.express_company_name,
                     'express_number': order.express_number,
                     'leader_name': order.leader_name,
-                    'actions': get_order_actions(order, is_refund=is_refund, mall_type=mall_type,
-                        is_group_buying=True if order.order_id in group_order_ids else False),
+                    'actions': actions,
                     'type': order.type,
                     'refund_info': {
                             'cash': 0,
