@@ -371,7 +371,7 @@
 							{% if nav.third_navs %}
 								secondNav['thirdNavs'] = [];
 								{% for third_nav in nav.third_navs %}
-									{% if third_nav.name == 'survey_re' %}
+									{% if third_nav.name == 'exsurveies' or third_nav.name == 'cardExchange' or third_nav.name == 'shvotes' or third_nav.name == 'virtualProducts' or third_nav.name == 'rebate' or third_nav.name == 'exsign' or third_nav.name == 'scanlottery' or third_nav.name == 'channel_distributions' or third_nav.name == 'survey_re' %}
 										{% if request.manager.username in third_nav.users %}
 										secondNav['thirdNavs'].push({
 											'name': '{{third_nav.name}}',
