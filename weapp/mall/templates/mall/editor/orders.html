@@ -534,9 +534,10 @@ function formatOrderStatus(order) {
 	var weizoomCardMoney = refundInfo.weizoom_card_money? refundInfo.weizoom_card_money : 0;
 	var couponMoney = refundInfo.coupon_money? refundInfo.coupon_money: 0;
 	var integral = refundInfo.integral_money? refundInfo.integral_money : 0;
+	var isGroupBuying = order['is_group_buying'];
 
 	var color = '#333333';
-	if (status === '退款中') {
+	if (status === '退款中' && !isGroupBuying) {
 		return '\
 			<span class="xui-i-refunding-tip xa-i-refunding-tip" \
 				data-cash="'+cash+'" \
@@ -545,7 +546,7 @@ function formatOrderStatus(order) {
 				data-integral="'+integral+'" \
 			>i</span>\
 			<span style="color:red">' + status + '</span>';
-	} else if (status === '退款成功') {
+	} else if (status === '退款成功' && !isGroupBuying) {
 		return ' \
 			<span class="xui-i-refunded-tip xa-i-refunded-tip" \
 				data-cash="'+cash+'" \
