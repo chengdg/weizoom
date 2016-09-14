@@ -793,6 +793,7 @@ def get_detail_response(request):
                     break
         # 退款数据
         refund_infos = OrderHasRefund.objects.filter(origin_order_id=order.id)
+        has_refund_info = refund_infos.count()>0
         order.refund_info = {
             'total_cash': sum([r.cash for r in refund_infos if r.finished]),
             'total_weizoom_card_money': sum([r.weizoom_card_money for r in refund_infos if r.finished]),
@@ -884,7 +885,7 @@ def get_detail_response(request):
             if child_order.supplier:
                 supplier_ids.append(child_order.supplier)
                 supplier2sub_order[child_order.supplier] = child_order
-                if child_order.status == ORDER_STATUS_REFUNDED:
+                if child_order.status == ORDER_STATUS_REFUNDED and has_refund_info:
                     order.refund_info['has_refund_order'] = True
                 refund_info = child_order_id2refund_info.get(child_order.id, {})
                 if refund_info:
@@ -1139,7 +1140,7 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
     if query_dict.get('order_type') and query_dict['order_type'] == 2:
         orders = orders.filter(order_id__in=group_order_ids)
 
-    order_ids_has_refund_sub_orders = []
+
     if is_refund:
         if query_dict.get('status__in'):
             status = [ORDER_STATUS_GROUP_REFUNDING, ORDER_STATUS_GROUP_REFUNDED]
@@ -1152,6 +1153,8 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
             _status = status
         order_ids_has_refund_sub_orders = get_order_ids_has_refund_sub_orders(webapp_id, _status, mall_type)
         orders = orders.filter(Q(status__in=status) | Q(id__in=order_ids_has_refund_sub_orders))
+        if 'status' in query_dict:
+            query_dict.pop('status')
 
     else:
         if query_dict.get('status') and query_dict.get('status') == ORDER_STATUS_REFUNDING:
@@ -1178,7 +1181,7 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
     # if not mall_type:
     #     pass
 
-    orders = __get_orders_by_params(query_dict, date_interval, date_interval_type, orders, user_profile,order_ids_has_refund_sub_orders)
+    orders = __get_orders_by_params(query_dict, date_interval, date_interval_type, orders, user_profile)
 
     # 返回订单的数目
     try:
@@ -1610,7 +1613,7 @@ def __get_select_params(request):
 
     return query_dict, date_interval, date_interval_type
 
-def __get_orders_by_params(query_dict, date_interval, date_interval_type, orders, user_profile,order_ids_has_refund_sub_orders):
+def __get_orders_by_params(query_dict, date_interval, date_interval_type, orders, user_profile):
     """
     按照查询条件筛选符合条件的订单
     """
@@ -1677,7 +1680,7 @@ def __get_orders_by_params(query_dict, date_interval, date_interval_type, orders
 
     #添加惠惠卡order_type
     if len(query_dict):
-        orders = orders.filter(Q(**query_dict) | Q(id__in=order_ids_has_refund_sub_orders))
+        orders = orders.filter(**query_dict)
 
     # 处理 时间区间筛选
     if date_interval:
@@ -1708,6 +1711,8 @@ def __get_orders_by_params(query_dict, date_interval, date_interval_type, orders
     #         if value in card_ids:
     #             order_order_ids.append(int(key.split('_')[0]))
     #     orders = orders.filter(order_id__in=order_order_ids)
+    print('----query')
+    print(orders.query)
     return orders
 
 # def __filter_order(order):
@@ -1860,7 +1865,7 @@ def get_actions_for_sub_order(sub_order, is_refund, is_group_buying):
             result = [ORDER_FINISH_ACTION, ORDER_UPDATE_EXPREDSS_ACTION, ORDER_REFUNDIND_ACTION]
         elif sub_order.status == ORDER_STATUS_SUCCESSED:  # 已完成
             result = [ORDER_REFUNDIND_ACTION]
-        if is_group_buying:
+        if is_group_buying and ORDER_REFUNDIND_ACTION in result:
             # 团购订单不能申请退款
             result.remove(ORDER_REFUNDIND_ACTION)
 
