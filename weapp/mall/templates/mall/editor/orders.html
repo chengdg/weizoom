@@ -190,8 +190,8 @@
 						    </p>
 						{{else}}
 					    	<!-- mall_type > 0, 微众系列，拆单： -->
-						    <p class="fl ml20 mr20 xa-actions" data-order-id="${order.id}">
-	                            <a href='javascript:void(0);'>${order.status}</a>
+						    <p class="fl ml20 mr20 xa-actions xui-i-actions" data-order-id="${order.id}">
+	                            <span>${order.status}</span>
 						    </p>
 					    {{/if}}
 					{{/if}}
@@ -349,8 +349,8 @@
 							{{/if}}
 						</td>
 					{{else}}
-						<td class="nowrap" width="90"{{if order.groups.length > 1 }}style="{{if order.order_status != 7}}border-left:1px solid #ddd;{{/if}}{{if order.order_status == 7 || order.order_status == 8 || order.order_status == 9}}border-top:0;{{/if}}"{{/if}}>
-							{{if order.groups.length == 1 || order.order_status != 7}}
+						<td class="nowrap" width="90"{{if order.groups.length > 1 }}style="border-left:1px solid #ddd;"{{/if}}>
+							{{if order.groups.length == 1 || order.order_status > 0 }}
 								<div>
 									{{html formatOrderStatus(group.fackorder)}}
 								</div>
@@ -379,7 +379,7 @@
 	                        </div>
 						</td>
 					{{else}}
-						<td class="nowrap xui-operation" width="90"{{if order.groups.length > 1 && (order.order_status == 7)}}style="border-top:0;"{{/if}} >
+						<td class="nowrap xui-operation" width="90" {{if order.groups.length > 1}}style="border-top:1;"{{/if}} >
 							<div class="xa-actions" data-order-id="${order.id}" data-delivery-item-id="${group.fackorder.id}" data-integral-per-yuan="${data.integral_each_yuan}">
 							{{each(i,a) group.fackorder.actions}}
 								<!-- 团购订单，不显示'申请退款'、'取消订单'、'退款成功'按钮 -->

@@ -153,6 +153,10 @@
     padding: 0 !important;
 }
 
+.xui-order-firstTr .xui-i-actions {
+    color: #1262b7;
+}
+
 .xui-table-orderDetail {
     border-width: 0px 1px 1px 1px;
     border-color: #ddd;
