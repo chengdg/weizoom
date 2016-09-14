@@ -536,7 +536,7 @@ function formatOrderStatus(order) {
 	var integral = refundInfo.integral_money? refundInfo.integral_money : 0;
 
 	var color = '#333333';
-	if (status === '退款中') {
+	if (status === '退款中' && cash+weizoomCardMoney+couponMoney+integral > 0) {
 		return '\
 			<span class="xui-i-refunding-tip xa-i-refunding-tip" \
 				data-cash="'+cash+'" \
@@ -545,7 +545,7 @@ function formatOrderStatus(order) {
 				data-integral="'+integral+'" \
 			>i</span>\
 			<span style="color:red">' + status + '</span>';
-	} else if (status === '退款成功') {
+	} else if (status === '退款成功' && cash+weizoomCardMoney+couponMoney+integral > 0) {
 		return ' \
 			<span class="xui-i-refunded-tip xa-i-refunded-tip" \
 				data-cash="'+cash+'" \
