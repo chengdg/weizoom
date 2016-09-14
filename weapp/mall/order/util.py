@@ -1847,7 +1847,7 @@ def get_actions_for_sub_order(sub_order, is_refund, is_group_buying):
             result = [ORDER_FINISH_ACTION, ORDER_UPDATE_EXPREDSS_ACTION, ORDER_REFUNDIND_ACTION]
         elif sub_order.status == ORDER_STATUS_SUCCESSED:  # 已完成
             result = [ORDER_REFUNDIND_ACTION]
-        if is_group_buying:
+        if is_group_buying and ORDER_REFUNDIND_ACTION in result:
             # 团购订单不能申请退款
             result.remove(ORDER_REFUNDIND_ACTION)
 
