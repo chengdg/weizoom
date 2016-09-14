@@ -279,14 +279,11 @@ W.dialog.mall.RefundOrderDialog = W.dialog.Dialog.extend({
         if (target.totalMoney && target.totalMoney*1 > 0 && target.totalMoney*1 === limitTotal*1) {
             tipTotalError = "";
 
-        } else if (target.totalMoney && target.totalMoney*1 > 0 && target.totalMoney*1 !== limitTotal*1) {
-            if (target.totalMoney > 0) {
-                // 总退款金额不能大于 “可退部分”
-                tipTotalError = "退款金额不等于"+limitTotal+"元";
-            } else {
-                // 等于 0 的情况
-                tipTotalError = "无可退金额";
-            }
+        } else if (target.totalMoney && target.totalMoney*1 >= 0 && target.totalMoney*1 !== limitTotal*1) {
+            tipTotalError = "退款金额不等于"+limitTotal+"元";
+
+        } else if (_.isUndefined(target.totalMoney)) {
+            tipTotalError = "退款金额不等于"+limitTotal+"元";
         }
 
         // 保存提示信息，等待页面刷新
