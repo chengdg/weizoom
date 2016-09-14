@@ -1143,16 +1143,29 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
 
     if is_refund:
         if query_dict.get('status__in'):
-            orders = orders.filter(status__in=[ORDER_STATUS_GROUP_REFUNDING, ORDER_STATUS_GROUP_REFUNDED])
+            status = [ORDER_STATUS_GROUP_REFUNDING, ORDER_STATUS_GROUP_REFUNDED]
         else:
-            orders = orders.filter(status__in=[ORDER_STATUS_REFUNDING, ORDER_STATUS_REFUNDED])
+            status = [ORDER_STATUS_REFUNDING, ORDER_STATUS_REFUNDED]
+        _status = int(query_dict.get('status',0))
+        if _status:
+            _status = [_status]
+        else:
+            _status = status
+        order_ids_has_refund_sub_orders = get_order_ids_has_refund_sub_orders(webapp_id, _status, mall_type)
+        orders = orders.filter(Q(status__in=status) | Q(id__in=order_ids_has_refund_sub_orders))
+
     else:
         if query_dict.get('status') and query_dict.get('status') == ORDER_STATUS_REFUNDING:
             query_dict['status__in'] = [ORDER_STATUS_GROUP_REFUNDING, ORDER_STATUS_REFUNDING]
             query_dict.pop('status')
+            order_ids_has_refund_sub_orders = get_order_ids_has_refund_sub_orders(webapp_id, [ORDER_STATUS_REFUNDING], mall_type)
+            orders = orders.filter(Q(id__in=order_ids_has_refund_sub_orders))
         elif query_dict.get('status') and query_dict.get('status') == ORDER_STATUS_REFUNDED:
             query_dict['status__in'] = [ORDER_STATUS_GROUP_REFUNDED, ORDER_STATUS_REFUNDED]
             query_dict.pop('status')
+            order_ids_has_refund_sub_orders = get_order_ids_has_refund_sub_orders(webapp_id, [ORDER_STATUS_REFUNDED],
+                                                                          mall_type)
+            orders = orders.filter(Q(id__in=order_ids_has_refund_sub_orders))
     # 处理排序
     if sort_attr != 'created_at':
         orders = orders.order_by(sort_attr)
