@@ -1156,16 +1156,22 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
 
 
     if is_refund:
+        the_one = int(query_dict.get('status',0))
+
         if query_dict.get('status__in'):
+            # 团购
             status = [ORDER_STATUS_GROUP_REFUNDING, ORDER_STATUS_GROUP_REFUNDED]
         else:
-            status = [ORDER_STATUS_REFUNDING, ORDER_STATUS_REFUNDED]
-        _status = int(query_dict.get('status',0))
-        if _status:
-            _status = [_status]
-        else:
-            _status = status
-        order_ids_has_refund_sub_orders = get_order_ids_has_refund_sub_orders(webapp_id, _status, mall_type)
+            if the_one:
+                status = [the_one]
+            else:
+                status = [ORDER_STATUS_REFUNDING, ORDER_STATUS_REFUNDED]
+        # _status = int(query_dict.get('status',0))
+        # if _status:
+        #     _status = [_status]
+        # else:
+        #     _status = status
+        order_ids_has_refund_sub_orders = get_order_ids_has_refund_sub_orders(webapp_id, status, mall_type)
         orders = orders.filter(Q(status__in=status) | Q(id__in=order_ids_has_refund_sub_orders))
         if 'status' in query_dict:
             query_dict.pop('status')
@@ -1730,8 +1736,6 @@ def __get_orders_by_params(query_dict, date_interval, date_interval_type, orders
     #         if value in card_ids:
     #             order_order_ids.append(int(key.split('_')[0]))
     #     orders = orders.filter(order_id__in=order_order_ids)
-    print('----query')
-    print(orders.query)
     return orders
 
 # def __filter_order(order):
