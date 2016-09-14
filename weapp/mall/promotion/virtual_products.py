@@ -49,17 +49,11 @@ class VirtualProducts(resource.Resource):
 		cur_page = int(request.GET.get('page', '1'))
 		#获取每页个数
 		count_per_page = int(request.GET.get('count_per_page', 10))
-		#默认打开页面时卡券状态为进行中
-		# coupon_status = "0"
-
 		name = request.GET.get('name', '').strip()
 		product_name = request.GET.get('product_name', '').strip()
 		bar_code = request.GET.get('barCode', '').strip()
 		start_time = request.GET.get('start_time', '')
 		end_time = request.GET.get('end_time', '')
-		# coupon_status_req = request.GET.get('coupon_status', '').strip()
-		# if coupon_status_req:
-		# 	coupon_status = coupon_status_req
 
 		params = {
 			'owner': request.manager
@@ -72,10 +66,6 @@ class VirtualProducts(resource.Resource):
 			params['product__bar_code'] = bar_code
 		if start_time and end_time:
 			params['created_at__range'] = [start_time, end_time]
-		# if coupon_status == "0":
-		# 	params['is_finished'] = 0
-		# if coupon_status == "1":
-		# 	params['is_finished'] = 1
 
 		#默认打开页面时卡券状态为进行中
 		is_finished = int(request.GET.get('coupon_status', '0'))
