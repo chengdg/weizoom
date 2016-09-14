@@ -66,8 +66,8 @@ W.dialog.mall.RefundOrderDialog = W.dialog.Dialog.extend({
         mainOrder.groups.map(function(subOrder){
             var _subOrder = subOrder.fackorder;
             var _subRI = _subOrder.refund_info;
-            if (_subOrder.order_status == 6 && !_.isEmpty(_subOrder.refund_info)) {
-                // 找出退款中的订单, 并合计
+            if (_subOrder.order_status == 6 && _subOrder.order_status == 7 && !_.isEmpty(_subOrder.refund_info)) {
+                // 找出退款中, 退款完成的订单, 并合计
                 mergeSubOrder.cash += _subRI.cash;
                 mergeSubOrder.weizoomCardMoney += _subRI.weizoom_card_money,
                 mergeSubOrder.couponMoney += _subRI.coupon_money,
