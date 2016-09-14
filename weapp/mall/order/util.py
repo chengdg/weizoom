@@ -1029,6 +1029,7 @@ def get_orders_response(request, is_refund=False):
 
     # 获取查询条件字典和时间筛选条件
     query_dict, date_interval, date_interval_type = __get_select_params(request)
+    query_dict2 = copy.copy(query_dict)
     watchdog_message = "query_dict:" + json.dumps(query_dict) + ",date:" + str(date_interval) + ",date_type" \
                        + str(date_interval_type)
     # 处理排序
@@ -1063,15 +1064,28 @@ def get_orders_response(request, is_refund=False):
     supplier_users = dict([(profile.user_id, profile.store_name) for profile in all_mall_userprofiles])
 
     response = create_response(200)
-    if query_dict.has_key('status'):
-        current_status_value = query_dict['status']
-    elif query_dict.has_key('status__in'):
-        if query_dict['status__in'] == [ORDER_STATUS_GROUP_REFUNDED, ORDER_STATUS_GROUP_REFUNDING]:
+    # if query_dict.has_key('status'):
+    #     current_status_value = query_dict['status']
+    # elif query_dict.has_key('status__in'):
+    #     if query_dict['status__in'] == [ORDER_STATUS_GROUP_REFUNDED, ORDER_STATUS_GROUP_REFUNDING]:
+    #         current_status_value = ORDER_STATUS_GROUP_REFUNDING
+    #     elif query_dict['status__in'] == [ORDER_STATUS_GROUP_REFUNDING, ORDER_STATUS_REFUNDING]:
+    #         current_status_value = ORDER_STATUS_REFUNDING
+    #     elif query_dict['status__in'] == [ORDER_STATUS_REFUNDED, ORDER_STATUS_REFUNDED]:
+    #         current_status_value = ORDER_STATUS_REFUNDED
+    # else:
+    #     current_status_value = -1
+    
+    # 额....为了各种兼容
+    if query_dict2.has_key('status__in'):
+        if query_dict2['status__in'] == [ORDER_STATUS_GROUP_REFUNDED, ORDER_STATUS_GROUP_REFUNDING]:
             current_status_value = ORDER_STATUS_GROUP_REFUNDING
-        elif query_dict['status__in'] == [ORDER_STATUS_GROUP_REFUNDING, ORDER_STATUS_REFUNDING]:
+        elif query_dict2['status__in'] == [ORDER_STATUS_GROUP_REFUNDING, ORDER_STATUS_REFUNDING]:
             current_status_value = ORDER_STATUS_REFUNDING
-        elif query_dict['status__in'] == [ORDER_STATUS_REFUNDED, ORDER_STATUS_REFUNDED]:
+        elif query_dict2['status__in'] == [ORDER_STATUS_REFUNDED, ORDER_STATUS_REFUNDED]:
             current_status_value = ORDER_STATUS_REFUNDED
+    elif query_dict2.has_key('status'):
+        current_status_value = query_dict2['status']
     else:
         current_status_value = -1
 
