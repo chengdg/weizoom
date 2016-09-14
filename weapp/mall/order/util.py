@@ -1029,6 +1029,7 @@ def get_orders_response(request, is_refund=False):
 
     # 获取查询条件字典和时间筛选条件
     query_dict, date_interval, date_interval_type = __get_select_params(request)
+    query_dict2 = copy.copy(query_dict)
     watchdog_message = "query_dict:" + json.dumps(query_dict) + ",date:" + str(date_interval) + ",date_type" \
                        + str(date_interval_type)
     # 处理排序
@@ -1063,15 +1064,28 @@ def get_orders_response(request, is_refund=False):
     supplier_users = dict([(profile.user_id, profile.store_name) for profile in all_mall_userprofiles])
 
     response = create_response(200)
-    if query_dict.has_key('status'):
-        current_status_value = query_dict['status']
-    elif query_dict.has_key('status__in'):
-        if query_dict['status__in'] == [ORDER_STATUS_GROUP_REFUNDED, ORDER_STATUS_GROUP_REFUNDING]:
+    # if query_dict.has_key('status'):
+    #     current_status_value = query_dict['status']
+    # elif query_dict.has_key('status__in'):
+    #     if query_dict['status__in'] == [ORDER_STATUS_GROUP_REFUNDED, ORDER_STATUS_GROUP_REFUNDING]:
+    #         current_status_value = ORDER_STATUS_GROUP_REFUNDING
+    #     elif query_dict['status__in'] == [ORDER_STATUS_GROUP_REFUNDING, ORDER_STATUS_REFUNDING]:
+    #         current_status_value = ORDER_STATUS_REFUNDING
+    #     elif query_dict['status__in'] == [ORDER_STATUS_REFUNDED, ORDER_STATUS_REFUNDED]:
+    #         current_status_value = ORDER_STATUS_REFUNDED
+    # else:
+    #     current_status_value = -1
+    
+    # 额....为了各种兼容
+    if query_dict2.has_key('status__in'):
+        if query_dict2['status__in'] == [ORDER_STATUS_GROUP_REFUNDED, ORDER_STATUS_GROUP_REFUNDING]:
             current_status_value = ORDER_STATUS_GROUP_REFUNDING
-        elif query_dict['status__in'] == [ORDER_STATUS_GROUP_REFUNDING, ORDER_STATUS_REFUNDING]:
+        elif query_dict2['status__in'] == [ORDER_STATUS_GROUP_REFUNDING, ORDER_STATUS_REFUNDING]:
             current_status_value = ORDER_STATUS_REFUNDING
-        elif query_dict['status__in'] == [ORDER_STATUS_REFUNDED, ORDER_STATUS_REFUNDED]:
+        elif query_dict2['status__in'] == [ORDER_STATUS_REFUNDED, ORDER_STATUS_REFUNDED]:
             current_status_value = ORDER_STATUS_REFUNDED
+    elif query_dict2.has_key('status'):
+        current_status_value = query_dict2['status']
     else:
         current_status_value = -1
 
@@ -1142,16 +1156,22 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
 
 
     if is_refund:
+        the_one = int(query_dict.get('status',0))
+
         if query_dict.get('status__in'):
+            # 团购
             status = [ORDER_STATUS_GROUP_REFUNDING, ORDER_STATUS_GROUP_REFUNDED]
         else:
-            status = [ORDER_STATUS_REFUNDING, ORDER_STATUS_REFUNDED]
-        _status = int(query_dict.get('status',0))
-        if _status:
-            _status = [_status]
-        else:
-            _status = status
-        order_ids_has_refund_sub_orders = get_order_ids_has_refund_sub_orders(webapp_id, _status, mall_type)
+            if the_one:
+                status = [the_one]
+            else:
+                status = [ORDER_STATUS_REFUNDING, ORDER_STATUS_REFUNDED]
+        # _status = int(query_dict.get('status',0))
+        # if _status:
+        #     _status = [_status]
+        # else:
+        #     _status = status
+        order_ids_has_refund_sub_orders = get_order_ids_has_refund_sub_orders(webapp_id, status, mall_type)
         orders = orders.filter(Q(status__in=status) | Q(id__in=order_ids_has_refund_sub_orders))
         if 'status' in query_dict:
             query_dict.pop('status')
@@ -1350,6 +1370,12 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
                         }
 
                     is_group_buying = True if order.order_id in group_order_ids else False
+                    if mall_type:
+                        actions = get_actions_for_sub_order(fackorder, is_refund, is_group_buying)
+                    else:
+                        actions = get_order_actions(fackorder, is_refund=is_refund, mall_type=mall_type,
+                                                    multi_child_orders=False,
+                                                    is_group_buying=True if order.order_id in group_order_ids else False),
                     group_order = {
                         "id": fackorder.id,
                         "status": fackorder.get_status_text(),
@@ -1360,7 +1386,7 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
                         # 'actions': get_order_actions(fackorder, is_refund=is_refund, mall_type=mall_type,
                         #     multi_child_orders=multi_child_orders,
                         #     is_group_buying=True if order.order_id in group_order_ids else False),
-                        'actions': get_actions_for_sub_order(fackorder, is_refund, is_group_buying),
+                        'actions': actions,
                         'type': fackorder.type,
                         'refund_info': refund_info_dict
                     }
@@ -1716,8 +1742,6 @@ def __get_orders_by_params(query_dict, date_interval, date_interval_type, orders
     #         if value in card_ids:
     #             order_order_ids.append(int(key.split('_')[0]))
     #     orders = orders.filter(order_id__in=order_order_ids)
-    print('----query')
-    print(orders.query)
     return orders
 
 # def __filter_order(order):
