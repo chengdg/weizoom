@@ -6,7 +6,8 @@ from core import api_resource, paginator
 from market_tools.tools.channel_qrcode.models import ChannelQrcodeSettings, ChannelQrcodeHasMember
 from wapi.decorators import param_required
 from modules.member.models import *
-from mall.models import Order, ORDER_STATUS_SUCCESSED, ORDER_STATUS_REFUNDED, STATUS2TEXT, OrderHasProduct, Product, ProductModel,OrderOperationLog
+from mall.models import Order, ORDER_STATUS_SUCCESSED, ORDER_STATUS_REFUNDED, STATUS2TEXT, OrderHasProduct, Product, ProductModel,OrderOperationLog, \
+	ORDER_STATUS_GROUP_REFUNDED
 from core import dateutil
 
 class QrcodeBalance(api_resource.ApiResource):
@@ -28,6 +29,8 @@ class QrcodeBalance(api_resource.ApiResource):
 		"""
 		start = time.time()
 		channel_qrcode_ids = json.loads(args.get('channel_qrcode_ids'))
+		order_status = int(args.get('order_status', '-1'))
+		is_first_order = int(args.get('is_first_order', '-1'))
 		balance_time_from = args.get('balance_time_from','2016-06-24 00:00:00')
 		channel_qrcodes = ChannelQrcodeSettings.objects.filter(id__in=channel_qrcode_ids).order_by('created_at')
 		if channel_qrcodes.count() > 0:
@@ -46,7 +49,15 @@ class QrcodeBalance(api_resource.ApiResource):
 
 		cur_start_date = args.get('start_date', None)
 		cur_end_date = args.get('end_date', None)
-		filter_data_args["status__in"] = [ORDER_STATUS_SUCCESSED, ORDER_STATUS_REFUNDED]
+
+		if order_status == -1:
+			filter_data_args["status__in"] = [ORDER_STATUS_SUCCESSED, ORDER_STATUS_REFUNDED, ORDER_STATUS_GROUP_REFUNDED]
+		else:
+			filter_data_args["status__in"] = [ORDER_STATUS_REFUNDED, ORDER_STATUS_GROUP_REFUNDED]
+
+		if is_first_order != -1:
+			filter_data_args["is_first_order"] = is_first_order
+
 		channel_orders = Order.objects.filter(**filter_data_args).order_by('-created_at')
 		order_numbers = [co.order_id for co in channel_orders]
 		order_log_numbers = []
