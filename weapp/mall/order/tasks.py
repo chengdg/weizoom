@@ -13,7 +13,7 @@ from account.models import UserProfile
 import os
 import re
 import xlsxwriter
-from mall.order.util import get_orders_by_params,handle_member_nickname
+from mall.order.util import get_orders_by_params,handle_member_nickname,get_order_ids_has_refund_sub_orders
 
 from tools.regional.views import get_str_value_by_string_ids_new,get_str_value_by_string_ids
 from modules.member.models import Member, WebAppUser, MemberFollowRelation, SOURCE_SELF_SUB, SOURCE_MEMBER_QRCODE, SOURCE_BY_URL
@@ -140,13 +140,39 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
         try:
             order_list = Order.objects.belong_to(webapp_id).order_by('-id')
             if status_type:
+                the_one = int(query_dict.get('status',0))
                 if status_type == 'refund':
-                    order_list = order_list.filter(status__in=[ORDER_STATUS_REFUNDING, ORDER_STATUS_REFUNDED])
+                    tmp_status = [ORDER_STATUS_REFUNDING, ORDER_STATUS_REFUNDED]
+                    # order_list = order_list.filter(status__in=[ORDER_STATUS_REFUNDING, ORDER_STATUS_REFUNDED])
                 elif status_type == 'audit':
                     if order_status == '8':
-                        order_list = order_list.filter(status__in=[ORDER_STATUS_GROUP_REFUNDING,ORDER_STATUS_GROUP_REFUNDED])
+                        tmp_status = [ORDER_STATUS_GROUP_REFUNDING,ORDER_STATUS_GROUP_REFUNDED]
+                        # order_list = order_list.filter(status__in=[ORDER_STATUS_GROUP_REFUNDING,ORDER_STATUS_GROUP_REFUNDED])
                     else:
-                        order_list = order_list.filter(status__in=[ORDER_STATUS_REFUNDING, ORDER_STATUS_REFUNDED])
+                        tmp_status = [ORDER_STATUS_REFUNDING, ORDER_STATUS_REFUNDED]
+                        # order_list = order_list.filter(status__in=[ORDER_STATUS_REFUNDING, ORDER_STATUS_REFUNDED])
+
+                if query_dict.get('status__in'):
+                    tmp_status = [ORDER_STATUS_GROUP_REFUNDING, ORDER_STATUS_GROUP_REFUNDED]
+                else:
+                    if the_one:
+                        tmp_status = [the_one]
+
+                order_ids_has_refund_sub_orders = get_order_ids_has_refund_sub_orders(webapp_id, tmp_status, mall_type)
+                order_list = order_list.filter(Q(status__in=tmp_status) | Q(id__in=order_ids_has_refund_sub_orders))
+                if 'status' in query_dict:
+                    query_dict.pop('status')
+            else:
+                if query_dict.get('status') and query_dict.get('status') == ORDER_STATUS_REFUNDING:
+                    tmp_status = [ORDER_STATUS_GROUP_REFUNDING, ORDER_STATUS_REFUNDING]
+                    _status = int(query_dict.get('status', 0))
+                    if _status:
+                        _status = [_status]
+                    else:
+                        _status = status
+                    query_dict.pop('status')
+                    order_ids_has_refund_sub_orders = get_order_ids_has_refund_sub_orders(webapp_id, _status, mall_type)
+                    order_list = order_list.filter(Q(status__in=tmp_status)|Q(id__in=order_ids_has_refund_sub_orders))
 
             if not mall_type:
                 order_list = order_list.exclude(
@@ -165,7 +191,7 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
             if query_dict.get('order_type') and query_dict['order_type'] == 2:
                 order_list = order_list.filter(order_id__in=group_order_ids)
 
-            order_list = get_orders_by_params(query_dict, date_interval, date_interval_type, order_list, user_profile, [])
+            order_list = get_orders_by_params(query_dict, date_interval, date_interval_type, order_list, user_profile)
 
 
 
@@ -351,6 +377,7 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
             export_jobs.update(count=order_list.count(), update_at=datetime.now())
             tmp_line = 1
             write_order_count = 0
+            tmp_order_id = 0
             for order in order_list:
                 # order= __filter_order(order)
                 # 获取order对应的member的显示名
@@ -636,11 +663,12 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
                         ]
                     if mall_type:
                         tmp_order.insert(25, supplier_type)
-                        if fackorder and fackorder2refund.has_key(fackorder.id):
+                        if fackorder and fackorder2refund.has_key(fackorder.id) and tmp_order_id != order_id: #供货商相同只在第一列展示
                             tmp_order.insert(18, fackorder2refund[fackorder.id].integral_money)
                             tmp_order.insert(18, fackorder2refund[fackorder.id].coupon_money)
                             tmp_order.insert(18, fackorder2refund[fackorder.id].weizoom_card_money)
                             tmp_order.insert(18, fackorder2refund[fackorder.id].cash)
+                            tmp_order_id = order_id
                         else:
                             for i in xrange(4):
                                 tmp_order.insert(18,'-')
