@@ -377,6 +377,7 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
             export_jobs.update(count=order_list.count(), update_at=datetime.now())
             tmp_line = 1
             write_order_count = 0
+            tmp_order_id = 0
             for order in order_list:
                 # order= __filter_order(order)
                 # 获取order对应的member的显示名
@@ -662,11 +663,12 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
                         ]
                     if mall_type:
                         tmp_order.insert(25, supplier_type)
-                        if fackorder and fackorder2refund.has_key(fackorder.id):
+                        if fackorder and fackorder2refund.has_key(fackorder.id) and tmp_order_id != order_id: #供货商相同只在第一列展示
                             tmp_order.insert(18, fackorder2refund[fackorder.id].integral_money)
                             tmp_order.insert(18, fackorder2refund[fackorder.id].coupon_money)
                             tmp_order.insert(18, fackorder2refund[fackorder.id].weizoom_card_money)
                             tmp_order.insert(18, fackorder2refund[fackorder.id].cash)
+                            tmp_order_id = order_id
                         else:
                             for i in xrange(4):
                                 tmp_order.insert(18,'-')
