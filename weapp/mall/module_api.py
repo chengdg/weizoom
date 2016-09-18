@@ -1527,8 +1527,10 @@ def ship_order(order_id, express_company_name,
 				Order.objects.filter(id=child_order.id).update(**order_params)
 				from mall.order.util import set_children_order_status
 				set_children_order_status(order, target_status)
+				print('--------action111',action,operator_name)
 				record_operation_log(child_order.order_id, operator_name, action, child_order)
 				record_status_log(child_order.order_id, operator_name, child_order.status, target_status)
+	print('--------action2222', action, operator_name)
 	record_operation_log(order.order_id, operator_name, action, order)
 
 	#send post_ship_send_request_to_kuaidi signal
@@ -1754,8 +1756,8 @@ def get_order_operation_logs(order_id, child_order_length=None):
 	else:
 		return OrderOperationLog.objects.filter(order_id__contains=order_id).exclude(
 			~Q(order_id=order_id),
-			action__in=[u'下单', u'支付', u'退款', u'退款完成', u'取消订单']
-		).exclude(order_id=order_id, action__in=[u'发货', u'完成'])
+			action__in=[u'下单', u'支付',  u'取消订单']
+		).exclude(order_id=order_id, action__in=[u'发货', u'完成',u'退款', u'退款完成'])
 
 
 ########################################################################
@@ -2240,8 +2242,9 @@ def set_origin_order_status(child_order, user, action, request=None):
 		update_order_status(user, action, origin_order, request)
 	else:
 		expired_status = origin_order.status
-		origin_order.status = min(children_order_status)
-		origin_order.save()
+		# origin_order.status = min(children_order_status)
+		# origin_order.save()
+		update_order_status_by_sub_order(child_order)
 		if origin_order.status == ORDER_STATUS_SUCCESSED:
 			__increase_after_order_finsh(expired_status, ORDER_STATUS_SUCCESSED, origin_order)
 
@@ -2462,6 +2465,32 @@ def __restore_product_stock_by_order(order):
 				product_id=product.get('id'),
 				sales=0
 			)
+
+
+def update_order_status_by_sub_order(sub_order,operation_name=None,action_msg=None):
+	"""
+	申请退款时使用
+	@param order:
+	@return:
+	"""
+	sub_order_status_list = [o.status for o in Order.objects.filter(origin_order_id=sub_order.origin_order_id)]
+
+	sub_order_weights = [ORDER_STATUS2DELIVERY_ITEM_WEIGHT[status] for status in sub_order_status_list]
+
+	order_target_status = DELIVERY_ITEM_WEIGHT2ORDER_STATUS[min(sub_order_weights)]
+
+	origin_order = Order.objects.get(id=sub_order.origin_order_id)
+
+	current_status = origin_order.status
+	if current_status != order_target_status:
+		origin_order.status = order_target_status
+		origin_order.save()
+		if operation_name:
+			record_status_log(origin_order.order_id, operation_name, current_status, order_target_status)
+		if action_msg:
+			record_operation_log(origin_order.order_id, operation_name, action_msg)
+
+
 
 
 

@@ -261,7 +261,7 @@
               </table>
       </div>
   </div>
-<div class=" xuicontainer">
+<div class=" xuicontainer clearfix pb20">
     <div class="xui-containertop">
         <p class="xui-infotitle">订单信息</p>
     </div>
@@ -370,7 +370,45 @@
                 {% if mall_type and is_show_order_status %}
                   {% if product.supplier %}
                     {% ifchanged product.supplier %}
-                        <td rowspan="{{product.supplier_length}}" style="text-align:center;border-right:1px solid #ddd;">{{ product.order_status }}</td>
+                        <td rowspan="{{product.supplier_length}}" style="text-align:center;border-right:1px solid #ddd;">
+                          <span class="pr {% if product.refund_info %}{% if product.status == 6 or product.status == 7 %}xui-refund-info xa-refund-info{% endif %}{% endif %}" style="white-space: nowrap;">
+                            {{ product.order_status }}
+                            {% if product.refund_info %}
+                              {% if product.status == 6 or product.status == 7 %}
+                              <div class="xui-refund-tip xa-refund-tip">
+                                {% if product.refund_info.only_you %}
+                                  {% if product.refund_info.cash > 0 %}
+                                    现金￥{{product.refund_info.cash|floatformat:"2"}}
+                                  {% endif %}
+                                  {% if product.refund_info.weizoom_card_money > 0 %}
+                                    微众卡￥{{product.refund_info.weizoom_card_money|floatformat:"2"}}
+                                  {% endif %}
+                                  {% if product.refund_info.coupon_money > 0 %}
+                                    优惠券￥{{product.refund_info.coupon_money|floatformat:"2"}}
+                                  {% endif %}
+                                  {% if product.refund_info.integral_money > 0 %}
+                                    积分抵扣￥{{product.refund_info.integral_money|floatformat:"2"}}
+                                  {% endif %}
+                                {% else %}
+                                  {% if product.refund_info.cash > 0 %}
+                                    <span>现金￥{{product.refund_info.cash|floatformat:"2"}}</span>
+                                  {% endif %}
+                                  {% if product.refund_info.weizoom_card_money > 0 %}
+                                    <span>微众卡￥{{product.refund_info.weizoom_card_money|floatformat:"2"}}</span>
+                                  {% endif %}
+                                  {% if product.refund_info.coupon_money > 0 %}
+                                    <span>优惠券￥{{product.refund_info.coupon_money|floatformat:"2"}}</span>
+                                  {% endif %}
+                                  {% if product.refund_info.integral_money > 0 %}
+                                    <span>积分抵扣￥{{product.refund_info.integral_money|floatformat:"2"}}</span>
+                                  {% endif %}
+                                  =￥{{product.refund_info.total|floatformat:"2"}}
+                                {% endif %}
+                              </div>
+                              {% endif %}
+                            {% endif %}
+                          </span>
+                        </td>
                     {% endifchanged %}
                   {% endif %}
                   {%if product.supplier_user_id %}
@@ -421,33 +459,43 @@
             </tr>
             {% endfor %}
         </table>
-        <div class="xui-summary">
+        <div class="xui-summary fr mr20">
           {% if not is_sync%}
-        	<p class="xui-field">
-        		<span class="pull-left">
-        			共计商品：<span class="xui-allnum">{{order.number}}</span> 件
-        		</span>
-        		商品金额：
-        	</p>
-        	<p class="xui-value">￥{{order.total_price|floatformat:"2"}}</p>
-          <p class="xui-field">运费：</p>
-          <p class="xui-value">+￥{{order.postage|floatformat:"2"}}</p>
-          {% if order.save_money > 0 %}
-        	<p class="xui-field">优惠金额：</p>
-          <p class="xui-value">-￥{{order.save_money|floatformat:"2"}}</p>
-          {% elif order.save_money < 0 %}
-          <p class="xui-field">优惠金额：</p>
-          <p class="xui-value">+￥{{order.save_money|floatformat:"2"|cut:'-'}}</p>
-          {% endif %}
-          <div class="xui-line-long"></div>
-          <p class="xui-field ml38" style="width:350px;">
-            <span class="pull-left">
-              支付金额：现金<span class="xui-money">￥{{order.final_price|floatformat:"2"}}</span>+微众卡<span class="xui-money">￥{{order.weizoom_card_money|floatformat:"2"}}</span>=<span class="xui-money" style="font-weigth:bolder;">￥{{order.pay_money|floatformat:"2"}}</span>
-            </span>
-          </p>
+          	<p class="disT xui-priceInfo">
+          		<span class="disTc">
+          			<span class="mr20">共计商品：<span class="xui-allnum">{{order.number}}</span> 件</span>
+          		  商品金额：
+              </span>
+              <span class="disTc xui-money">￥{{order.total_price|floatformat:"2"}}</span>
+          	</p>
+              <p class="disT xui-priceInfo">
+                <span class="disTc">运费：</span>
+                <span class="disTc xui-money">+￥{{order.postage|floatformat:"2"}}</span>
+              </p>
+            {% if order.save_money > 0 %}
+            	<p class="disT xui-priceInfo">
+                <span class="disTc">优惠金额：</span>
+                <span class="disTc xui-money">-￥{{order.save_money|floatformat:"2"}}</span>
+              </p>
+            {% endif %}
+            {% if order.refund_info.has_refund_order and mall_type %}
+              <p class="disT xui-priceInfo">
+                <span class="disTc">实退金额：</span>
+                <span class="disTc xui-money">-￥{{order.refund_info.refund_money|floatformat:"2"}}</span>
+              </p>
+            {% endif %}
+             <div class="xui-line-long"></div>
+              <p class="tr cb">
+                支付金额：现金<span class="xui-money">￥{{order.final_price|floatformat:"2"}}</span>+微众卡<span class="xui-money">￥{{order.weizoom_card_money|floatformat:"2"}}</span>=<span class="xui-money" style="font-weigth:bolder;">￥{{order.pay_money|floatformat:"2"}}</span>
+              </p>
+              {% if order.refund_info.has_refund_order and mall_type %}
+                <div class="xui-line-long mt10"></div>
+                <p class="tr cb">原始支付金额：现金<span class="xui-money">￥{{order.refund_info.origin_final_price|floatformat:"2"}}</span>+微众卡<span class="xui-money">￥{{order.refund_info.origin_weizoom_card_money|floatformat:"2"}}</span>=<span class="xui-money">￥{{order.refund_info.origin_pay_money|floatformat:"2"}}</span></p>
+                <p class="tr cb">已退款金额：现金<span class="xui-money">￥{{order.refund_info.total_cash|floatformat:"2"}}</span>+微众卡<span class="xui-money">￥{{order.refund_info.total_weizoom_card_money|floatformat:"2"}}</span>+优惠券<span class="xui-money">￥{{order.refund_info.total_coupon_money|floatformat:"2"}}</span>+积分抵扣<span class="xui-money">￥{{order.refund_info.total_integral_money|floatformat:"2"}}</span>=<span class="xui-money">￥{{order.refund_info.total_money|floatformat:"2"}}</span></p>
+              {% endif %}
           {% else %}
-          <div class="xui-wSync-count">共计商品：<span class="xui-money fb">{{order.number}}</span> 件</div>
-          <div class="xui-wSync-pm">支付金额：<span class="xui-money fb">￥{{ order.total_purchase_price|floatformat:"2" }}</span></div>
+            <div class="xui-wSync-count">共计商品：<span class="xui-money fb">{{order.number}}</span> 件</div>
+            <div class="xui-wSync-pm">支付金额：<span class="xui-money fb">￥{{ order.total_purchase_price|floatformat:"2" }}</span></div>
           {% endif %}
         </div>
     </div>
@@ -534,7 +582,14 @@
         });
         $('body').delegate('.xa-wzcardHint','mouseleave',function(event){
               $(event.target).children('.xa-wzcardInfo').css('display','none');
-          });
+        });
+        //退款详细信息
+        $('body').delegate('.xa-refund-info','mouseenter',function(event){
+            $(event.target).children('.xa-refund-tip').css('display','block');
+        });
+        $('body').delegate('.xa-refund-info','mouseleave',function(event){
+              $(event.target).children('.xa-refund-tip').css('display','none');
+        });
     });
     //提交
 </script>

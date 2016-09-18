@@ -77,6 +77,10 @@
 {% block js %}
 {% verbatim %}
 <script id="mall-orders-view" type="text/x-jquery-tmpl">
+	<!-- 将异步的所有订单数据，放入页面暂存。便于在“申请退款”功能中，处理母子订单的退款金额关系 -->
+	<textarea id="origin-data" style="display: none">
+		${JSON.stringify(data)}	
+	</textarea>
 	<ul class="nav nav-tabs mt14 ">
 	{{if data.is_refund}}
 		<li class="xa-count {{if data.current_status_value==-1}}active{{/if}}" data-total-status-value="-1"><a href="javascript:void(0);">全部</a></li>
@@ -174,14 +178,22 @@
 						<a href='javascript:void(0);' class="xa-order-remark ml10" data-order-id="${order.id}" data-order-value="${order.remark}">备注</a>
 					</p>
 					{{if order.groups.length > 1}}
-						<p class="fl" style="width:90px;text-align:center;margin-left:4px;">
-					    {{html formatOrderStatus(order.status)}}
-					    </p>
-					    <p class="fl ml20 mr20 xa-actions" data-order-id="${order.id}">
-                            {{each(i,x) order.parent_action}}
-                                <a href='javascript:void(0);' class="${x.class_name}">${x.name}</a>
-                            {{/each}}
-					    </p>
+					    {{if data.mall_type == 0}}
+					    	<!-- mall_type == 0, 保持不变 -->
+							<p class="fl" style="width:90px;text-align:center;margin-left:4px;">
+						    {{html formatOrderStatus(order)}}
+						    </p>
+						    <p class="fl ml20 mr20 xa-actions" data-order-id="${order.id}">
+	                            {{each(i,x) order.parent_action}}
+	                                <a href='javascript:void(0);' class="${x.class_name}">${x.name}</a>
+	                            {{/each}}
+						    </p>
+						{{else}}
+					    	<!-- mall_type > 0, 微众系列，拆单： -->
+						    <p class="fl ml20 mr20 xa-actions xui-i-actions" data-order-id="${order.id}">
+	                            <span>${order.status}</span>
+						    </p>
+					    {{/if}}
 					{{/if}}
 					</div>
 					</td>
@@ -328,32 +340,65 @@
 						</div>
 					</td>
 					{{/if}}
-					<td class="nowrap" width="90"{{if order.groups.length > 1 }}style="{{if order.order_status != 6 && order.order_status != 7}}border-left:1px solid #ddd;{{/if}}{{if order.order_status == 6 || order.order_status == 7 || order.order_status == 8 || order.order_status == 9}}border-top:0;{{/if}}"{{/if}}>
-						{{if order.groups.length == 1 || order.order_status != 6 && order.order_status != 7}}
-							<div>
-								{{html formatOrderStatus(group.fackorder.status)}}
-							</div>
-						{{/if}}
-					</td>
-					<td class="nowrap xui-operation" width="90"{{if order.groups.length > 1 && (order.order_status == 6 || order.order_status == 7)}}style="border-top:0;"{{/if}} >
-						<div class="xa-actions" data-order-id="${group.fackorder.id}">
-						{{each(i,a) group.fackorder.actions}}
-							<!-- 团购订单，不显示'申请退款'、'取消订单'、'退款成功'按钮 -->
-							{{if order.is_group_buying &&
-								(a.class_name == 'xa-refund' || a.class_name == 'xa-cancelOrder' || a.class_name == 'xa-refundSuccess') }}
-							{{else}}
-							    <a href='javascript:void(0);' class="${a.class_name}"
-							    {{if a.action=="update_express"}}
-							        data-is-update=true
-							        data-express-company-name="${group.fackorder.express_company_name}"
-							        data-express-number="${group.fackorder.express_number}"
-									data-leader-name="${group.fackorder.leader_name}"
+					{{if data.mall_type == 0}}
+						<td class="nowrap" width="90"{{if order.groups.length > 1 }}style="{{if order.order_status != 6 && order.order_status != 7}}border-left:1px solid #ddd;{{/if}}{{if order.order_status == 6 || order.order_status == 7 || order.order_status == 8 || order.order_status == 9}}border-top:0;{{/if}}"{{/if}}>
+							{{if order.groups.length == 1 || order.order_status != 6 && order.order_status != 7}}
+								<div>
+									{{html formatOrderStatus(group.fackorder)}}
+								</div>
+							{{/if}}
+						</td>
+					{{else}}
+						<td class="nowrap" width="90"{{if order.groups.length > 1 }}style="border-left:1px solid #ddd;"{{/if}}>
+							{{if order.groups.length == 1 || order.order_status > 0 }}
+								<div>
+									{{html formatOrderStatus(group.fackorder)}}
+								</div>
+							{{/if}}
+						</td>
+					{{/if}}
+
+					{{if data.mall_type == 0}}
+						<td class="nowrap xui-operation" width="90"{{if order.groups.length > 1 && (order.order_status == 6 || order.order_status == 7)}}style="border-top:0;"{{/if}} >
+							<div class="xa-actions" data-order-id="${group.fackorder.id}">
+							{{each(i,a) group.fackorder.actions}}
+								<!-- 团购订单，不显示'申请退款'、'取消订单'、'退款成功'按钮 -->
+								{{if order.is_group_buying &&
+									(a.class_name == 'xa-refund' || a.class_name == 'xa-cancelOrder' || a.class_name == 'xa-refundSuccess') }}
+								{{else}}
+								    <a href='javascript:void(0);' class="${a.class_name}"
+								    {{if a.action=="update_express"}}
+								        data-is-update=true
+								        data-express-company-name="${group.fackorder.express_company_name}"
+								        data-express-number="${group.fackorder.express_number}"
+										data-leader-name="${group.fackorder.leader_name}"
+								    {{/if}}
+								    >${a.name}</a>
 							    {{/if}}
-							    >${a.name}</a>
-						    {{/if}}
-						{{/each}}
-                        </div>
-					</td>
+							{{/each}}
+	                        </div>
+						</td>
+					{{else}}
+						<td class="nowrap xui-operation" width="90" {{if order.groups.length > 1}}style="border-top:1;"{{/if}} >
+							<div class="xa-actions" data-order-id="${order.id}" data-delivery-item-id="${group.fackorder.id}" data-integral-per-yuan="${data.integral_each_yuan}">
+							{{each(i,a) group.fackorder.actions}}
+								<!-- 团购订单，不显示'申请退款'、'取消订单'、'退款成功'按钮 -->
+								{{if order.is_group_buying &&
+									(a.class_name == 'xa-refund' || a.class_name == 'xa-cancelOrder' || a.class_name == 'xa-refundSuccess') }}
+								{{else}}
+								    <a href='javascript:void(0);' class="${a.class_name}"
+								    {{if a.action=="update_express"}}
+								        data-is-update=true
+								        data-express-company-name="${group.fackorder.express_company_name}"
+								        data-express-number="${group.fackorder.express_number}"
+										data-leader-name="${group.fackorder.leader_name}"
+								    {{/if}}
+								    >${a.name}</a>
+							    {{/if}}
+							{{/each}}
+	                        </div>
+						</td>
+					{{/if}}
 				</tr>
 				{{/each}}
 				{{if order.remark }}
@@ -480,13 +525,41 @@
 <script src="/static_v2/lib/jquery/jquery.PrintArea.js"></script>
 <!-- 订单打印 2016.04.11 end -->
 <script type="text/javascript">
-function formatOrderStatus(status) {
+function formatOrderStatus(order) {
+	var status = order.status;
+
+	// 增加退款相关数据
+	var refundInfo = order['refund_info']? order['refund_info']:{};
+	var cash = refundInfo.cash? refundInfo.cash : 0;
+	var weizoomCardMoney = refundInfo.weizoom_card_money? refundInfo.weizoom_card_money : 0;
+	var couponMoney = refundInfo.coupon_money? refundInfo.coupon_money: 0;
+	var integral = refundInfo.integral_money? refundInfo.integral_money : 0;
+
 	var color = '#333333';
 	if (status === '退款中') {
-		return '<img src="/static_v2/img/editor/refund.jpg" class="mr5"><span style="color:red">' + status + '</span>';
+		return '\
+			<span class="xui-i-refunding-tip xa-i-refunding-tip" \
+				data-cash="'+cash+'" \
+				data-weizoom-card-money="'+weizoomCardMoney+'" \
+				data-coupon-money="'+couponMoney+'" \
+				data-integral="'+integral+'" \
+			>i</span>\
+			<span style="color:red">' + status + '</span>';
+	} else if (status === '退款成功' && cash+weizoomCardMoney+couponMoney+integral > 0) {
+		return ' \
+			<span class="xui-i-refunded-tip xa-i-refunded-tip" \
+				data-cash="'+cash+'" \
+				data-weizoom-card-money="'+weizoomCardMoney+'" \
+				data-coupon-money="'+couponMoney+'" \
+				data-integral="'+integral+'" \
+			>i</span>\
+			<span>' + status + '</span> \
+			';
 	} else {
 		return '<span style="color: ' + color + '">' + status + '</span>';
 	}
+
+	
 	return
 }
 var DATA_INTERVAL = '';
@@ -626,6 +699,35 @@ $(document).ready(function() {
 		$el.siblings('span').hide();
 	});
 
+	// 退款完成提示,申请退款提示
+	$('body').delegate('.xa-i-refunded-tip, .xa-i-refunding-tip','mouseenter',function(event){
+		var $el = $(event.currentTarget);
+		var refundingHintView = W.getRefundingHintView({
+			isTitle: false,
+			isArrow: true,
+			privateContainerClass:'xui-refundingHintDropBox xa-refundingHintDropBox',
+			position:'top'
+		});
+		var cash = $el.attr('data-cash');
+		var weizoomCardMoney = $el.attr('data-weizoom-card-money');
+		var couponMoney = $el.attr('data-coupon-money');
+		var integral = $el.attr('data-integral');
+
+		var total = cash*1 + weizoomCardMoney*1 + couponMoney*1 + integral*1;
+
+		if (total > 0) {
+			refundingHintView.show({
+				$action: $el,
+				cash: cash,
+				card: weizoomCardMoney,
+				coupon: couponMoney,
+				integral: integral
+			});
+		}
+	});
+	$('body').delegate('.xa-i-refunded-tip, .xa-i-refunding-tip','mouseleave',function(){
+		$('.xa-refundingHintDropBox').hide();
+	});
 
 	// 买家信息提示
 	$('body').delegate('.xa-buyerHintImg','mouseenter',function(event){
@@ -665,6 +767,8 @@ $(document).ready(function() {
 	$('body').delegate('.xa-buyerHintImg','mouseleave',function(){
 		$('.xa-buyerHintDropBox').hide();
 	});
+
+
 	<!-- 订单打印 2016.04.08 start -->
 	(function () {
 		var isBusy = 0;

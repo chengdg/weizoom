@@ -107,6 +107,16 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
         orders.insert(25, u'供货商类型')
 
         orders[12] = u"微众卡支付金额"
+        #退现金金额
+        total_refund_money = 0.0
+        #退微众卡金额
+        total_refund_weizoom_card_money = 0.0
+        #退优惠券金额
+        total_refund_coupon_money = 0.0
+        #退积分抵扣金额
+        total_refund_integral_money = 0.0
+        for i in [u'退积分抵扣金额', u'退优惠券金额', u'退微众卡金额', u'退现金金额']:
+            orders.insert(18, i)
 
     # 判断是否有供货商，如果有则显示该字段
 
@@ -155,7 +165,7 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
             if query_dict.get('order_type') and query_dict['order_type'] == 2:
                 order_list = order_list.filter(order_id__in=group_order_ids)
 
-            order_list = get_orders_by_params(query_dict, date_interval, date_interval_type, order_list, user_profile)
+            order_list = get_orders_by_params(query_dict, date_interval, date_interval_type, order_list, user_profile, [])
 
 
 
@@ -300,6 +310,15 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
             premium_product_id2weight = dict([(model.product_id, model.weight) for model in
                                               ProductModel.objects.filter(product_id__in=premium_product_ids)])
             fackorders = list(Order.objects.filter(origin_order_id__in=order_ids))
+            if mall_type:
+                order_has_refunds = list(OrderHasRefund.objects.filter(origin_order_id__in=order_ids))
+                fackorder2refund = {}
+                for order_has_refund in order_has_refunds:
+                    fackorder2refund[order_has_refund.delivery_item_id] = order_has_refund
+                    total_refund_money += order_has_refund.cash
+                    total_refund_weizoom_card_money += order_has_refund.weizoom_card_money
+                    total_refund_integral_money += order_has_refund.integral_money
+                    total_refund_coupon_money += order_has_refund.coupon_money
 
             # 获取order对应的供货商
 
@@ -571,16 +590,6 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
                             u'首单' if order.is_first_order else u'非首单'
 
                         ]
-                        if mall_type:
-                            tmp_order.insert(25, supplier_type)
-                        if has_supplier:
-                            tmp_order.append( u'-' if 0.0 == product.purchase_price else product.purchase_price)
-                            tmp_order.append(u'-'  if 0.0 ==product.purchase_price else product.purchase_price*relation.number)
-                        # orders.append(tmp_order)
-                        tmp_line += 1
-
-                        table.write_row("A{}".format(tmp_line), tmp_order)
-                        total_product_money += relation.price * relation.number
                     else:
                         order_express_number = (order.express_number if not fackorder else fackorder.express_number).encode('utf8')
                         express_name = express_util.get_name_by_value(order.express_company_name if not fackorder else fackorder.express_company_name).encode('utf8')
@@ -625,15 +634,23 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
                             u'首单' if order.is_first_order else u'非首单'
 
                         ]
-                        if mall_type:
-                            tmp_order.insert(25, supplier_type)
-                        if has_supplier:
-                            tmp_order.append(u'' if 0.0 == product.purchase_price else product.purchase_price)
-                            tmp_order.append(u'' if 0.0 ==product.purchase_price else product.purchase_price*relation.number)
-                        # orders.append(tmp_order)
-                        tmp_line += 1
-                        table.write_row("A{}".format(tmp_line), tmp_order)
-                        total_product_money += relation.price * relation.number
+                    if mall_type:
+                        tmp_order.insert(25, supplier_type)
+                        if fackorder and fackorder2refund.has_key(fackorder.id):
+                            tmp_order.insert(18, fackorder2refund[fackorder.id].integral_money)
+                            tmp_order.insert(18, fackorder2refund[fackorder.id].coupon_money)
+                            tmp_order.insert(18, fackorder2refund[fackorder.id].weizoom_card_money)
+                            tmp_order.insert(18, fackorder2refund[fackorder.id].cash)
+                        else:
+                            for i in xrange(4):
+                                tmp_order.insert(18,'-')
+                    if has_supplier:
+                        tmp_order.append(u'-' if 0.0 == product.purchase_price else product.purchase_price)
+                        tmp_order.append(u'-'  if 0.0 ==product.purchase_price else product.purchase_price*relation.number)
+                    # orders.append(tmp_order)
+                    tmp_line += 1
+                    table.write_row("A{}".format(tmp_line), tmp_order)
+                    total_product_money += relation.price * relation.number
                     i += 1
                     if order.id in order2premium_product and not temp_premium_id:
                         premium_products = order2premium_product[order.id].get(relation.promotion_id, [])
@@ -682,6 +699,14 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
                             ]
                             if mall_type:
                                 tmp_order.insert(25, supplier_type)
+                                if fackorder and fackorder2refund.has_key(fackorder.id):
+                                    tmp_order.insert(18, fackorder2refund[fackorder.id].integral_money)
+                                    tmp_order.insert(18, fackorder2refund[fackorder.id].coupon_money)
+                                    tmp_order.insert(18, fackorder2refund[fackorder.id].weizoom_card_money)
+                                    tmp_order.insert(18, fackorder2refund[fackorder.id].cash)
+                                else:
+                                    for i in xrange(4):
+                                        tmp_order.insert(18,'-')
                             if has_supplier:
                                 tmp_order.append( u'-' if 0.0 == premium_product['purchase_price'] else premium_product['purchase_price'])
                                 tmp_order.append(u'-' if 0.0 ==premium_product['purchase_price'] else premium_product['purchase_price']*premium_product['count'])
@@ -711,6 +736,14 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
                 u'积分抵扣总金额:' + str(use_integral_money).encode('utf8'),
                 u'优惠劵价值总额:' + str(coupon_money_count).encode('utf8'),
             ]
+            if mall_type:
+                webapp_type_list = [
+                u'退现金金额:{}'.format(total_refund_money) ,
+                u'退微众卡金额:{}'.format(total_refund_weizoom_card_money) ,
+                u'退优惠券金额:{}'.format(total_refund_coupon_money) ,
+                u'退积分抵扣金额:{}'.format(total_refund_integral_money) ,
+                ]
+                totals.extend(webapp_type_list)
             tmp_line += 1
             table.write_row("A{}".format(tmp_line), totals)
             #return orders

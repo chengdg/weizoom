@@ -31,12 +31,16 @@ body{
 }
 
 /*表单输入框*/
-.form-control{
+.form-control, .form-control-error{
 	border-radius:0;
 	border:1px solid #BFD7EB;
 	font-size: 12px;
 	padding: 0 5px;
 	height: 24px;
+}
+
+.form-control-error{
+	border:1px solid #f88;
 }
 
 /*按钮*/
