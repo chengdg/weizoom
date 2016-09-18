@@ -788,8 +788,6 @@ class RefundSuccessfulSubOrder(resource.Resource):
         delivery_item_id = int(request.POST['delivery_item_id'])
         
         sub_order = Order.objects.filter(id=delivery_item_id).first()
-        print('origin_order_id',sub_order.origin_order_id,order_id)
-        print('webapp_id',sub_order.webapp_id,request.user_profile.webapp_id)
         if sub_order and sub_order.origin_order_id == order_id and sub_order.webapp_id == request.user_profile.webapp_id:
             pass
         else:
@@ -799,9 +797,9 @@ class RefundSuccessfulSubOrder(resource.Resource):
 
         sub_order = Order.objects.get(id=delivery_item_id)
         #获取子订单的金额
-
-        refund_cash_money = OrderHasRefund.objects.get(delivery_item_id=sub_order.id).cash
-        refund_weizoom_card_money = OrderHasRefund.objects.get(delivery_item_id=sub_order.id).weizoom_card_money
+        order_has_refund = OrderHasRefund.objects.get(delivery_item_id=sub_order.id)
+        refund_cash_money = order_has_refund.cash
+        refund_weizoom_card_money = order_has_refund.weizoom_card_money
         # refund_money = sub_order.refund_money
         #下一步的订单状态：退款成功
         sub_order_target_status = ORDER_STATUS_REFUNDED
