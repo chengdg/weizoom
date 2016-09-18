@@ -2788,21 +2788,31 @@ SUPPLIER_TYPE_RETAIL = 1
 SUPPLIER_TYPE_FIXED = 2
 # 普通供货商
 SUPPLIER_TYPE_NORMAL = -1
+
+# 结算账期  1【自然月】   2【15天】   3【自然周】
+SUPPLIER_SETTLEMENT_PERIOD_MONTH = 1
+SUPPLIER_SETTLEMENT_PERIOD_15TH_DAY = 2
+SUPPLIER_SETTLEMENT_PERIOD_WEEK = 3
+
+
 class Supplier(models.Model):
 	owner = models.ForeignKey(User)
-	name = models.CharField(max_length=16)  # 供货商名称
-	responsible_person = models.CharField(max_length=100) # 供货商负责人
-	supplier_tel = models.CharField(max_length=100) # 供货商电话
-	supplier_address = models.CharField(max_length=256) # 供货商地址
-	remark = models.CharField(max_length=256) # 备注
+	name = models.CharField(max_length=200)  # 供货商名称
+	responsible_person = models.CharField(max_length=100)  # 供货商负责人
+	supplier_tel = models.CharField(max_length=100)  # 供货商电话
+	supplier_address = models.CharField(max_length=256)  # 供货商地址
+	remark = models.CharField(max_length=256)  # 备注
+	type = models.IntegerField(default=SUPPLIER_TYPE_NORMAL)
 	is_delete = models.BooleanField(default=False)  # 是否已经删除
-	type = models.IntegerField(default=SUPPLIER_TYPE_NORMAL)# 是否55分  0 55分成
 	created_at = models.DateTimeField(auto_now_add=True)  # 添加时间
+	settlement_period = models.IntegerField(default=SUPPLIER_SETTLEMENT_PERIOD_MONTH)
 
 	class Meta(object):
 		verbose_name = "供货商"
 		verbose_name_plural = "供货商操作"
 		db_table = "mall_supplier"
+
+
 
 class SupplierPostageConfig(models.Model):
 	supplier_id = models.IntegerField(default=0)
