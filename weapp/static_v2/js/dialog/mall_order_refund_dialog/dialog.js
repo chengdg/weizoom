@@ -191,7 +191,7 @@ W.dialog.mall.RefundOrderDialog = W.dialog.Dialog.extend({
         // 当前退款订单的: 标题上的应退金额
         if (data.targetRefundInfo && data.targetRefundInfo.shouldTotal > 0) {
             var shouldTotal = data.targetRefundInfo.shouldTotal;
-            $('.xui-i-should-total', $dialog).text(shouldTotal);
+            $('.xui-i-should-total', $dialog).text(shouldTotal.toFixed(2));
         } else {
             $('.xui-i-should-total', $dialog).text(0.00);
         }
