@@ -19,7 +19,7 @@ W.dialog.mall.RefundOrderDialog = W.dialog.Dialog.extend({
     events: _.extend({
         'click .xa-close': 'onClickCloseButton',
         'keyup .xui-commonOrderRefundDialog input': 'onKeyUpRefundItem',
-        'blur .xui-commonOrderRefundDialog input': 'onChangeRefundItem',
+        'change .xui-commonOrderRefundDialog input': 'onChangeRefundItem',
         'click .xa-submit': 'onClickSubmitButton'
     }, W.dialog.Dialog.prototype.events),
 
