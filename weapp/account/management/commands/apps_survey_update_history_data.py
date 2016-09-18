@@ -35,6 +35,7 @@ class Command(BaseCommand):
         print 'update survey history data start...'
         old_surveies = app_models.survey.objects()
         record_id2related_page_id = {str(survey.id): str(survey.related_page_id) for survey in old_surveies}
+        related_page_ids = [str(survey.related_page_id) for survey in old_surveies]
         record_ids = [str(survey.id) for survey in old_surveies]
         old_survey_participances = app_models.surveyParticipance.objects(belong_to__in=record_ids)
         pagestore = pagestore_manager.get_pagestore('mongo')
@@ -46,7 +47,7 @@ class Command(BaseCommand):
         try:
             #泡脚本之前先把新数据库中的老数据删除
             db_market_app_data.survey_survey.remove({'is_old': True})
-            db_market_app_data.page_html.remove({'is_old': True})
+            db_market_app_data.page_html.remove({'is_old': True, 'related_page_id': {'$in': related_page_ids}})
             db_market_app_data.survey_survey_participance.remove({'is_old': True})
             #然后将老数据写入新数据库
             for survey in old_surveies:
@@ -72,6 +73,7 @@ class Command(BaseCommand):
 
                 project_id = 'new_app:survey:%s' % related_page_id
                 html = create_page(project_id).replace('xa-submitTermite', 'xa-submitWepage').replace('/static/', 'http://' + settings.DOMAIN + '/static/')
+
                 db_market_app_data.page_html.insert({
                     'related_page_id': related_page_id,
                     'html': html,
@@ -81,8 +83,9 @@ class Command(BaseCommand):
                 #更新page里description中静态资源地址
                 component = db_termite.page.find_one({'_id': ObjectId(related_page_id)})['component']
                 description = component['components'][0]['model']['description']
-                component['components'][0]['model']['description'] = description.replace('/static/', 'http://' + settings.DOMAIN + '/static/')
-                db_termite.page.update({'_id': ObjectId(related_page_id)}, {'$set': {'component': component}})
+                if 'http://' not in description:
+                    component['components'][0]['model']['description'] = description.replace('/static/', 'http://' + settings.DOMAIN + '/static/')
+                    db_termite.page.update({'_id': ObjectId(related_page_id)}, {'$set': {'component': component}})
 
             #构造调研活动related_page_id与活动id映射
             related_page_id2record_id = {str(survey['related_page_id']): str(survey['_id']) for survey in db_market_app_data.survey_survey.find({'is_old': True})}
