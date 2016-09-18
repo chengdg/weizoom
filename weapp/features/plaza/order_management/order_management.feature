@@ -990,7 +990,7 @@ Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满
 					"products":[{
 						"name":"商品2-2",
 						"supplier":"供货商2",
-						"price":10.00,
+						"price":20.00,
 						"count":1
 					}],
 					"postage": 0.00,
@@ -1005,7 +1005,7 @@ Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满
 				"final_price": 35.00
 			}
 			"""
-		Then zy1能获得订单'001'操作日志
+		Then zy1能获得订单'002'操作日志
 			| action                  | operator |
 			| 下单                    | 客户     |
 
@@ -1149,7 +1149,7 @@ Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满
 				"final_price": 35.00
 			}
 			"""
-		Then zy1能获得订单'001'操作日志
+		Then zy1能获得订单'002'操作日志
 			| action                  | operator |
 			| 下单                    | 客户     |
 			| 支付                    | 客户     |
@@ -1998,7 +1998,7 @@ Scenario:3 ziying两个供应商商品订单(限时抢购)-微众卡支付(一�
 				"final_price": 70.00
 			}
 			"""
-		Then zy1能获得订单'001'操作日志
+		Then zy1能获得订单'003'操作日志
 			| action                  | operator |
 			| 下单                    | 客户     |
 			| 支付                    | 客户     |

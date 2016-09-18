@@ -902,7 +902,7 @@ def step_impl(context, user, order_code):
     response = context.client.get('/mall2/order/?order_id=%d' % order_db_id)
     
     expected = json.loads(context.text)
-    expected.pop('total_save')
+    #expected.pop('total_save')
     order = response.context['order']
     child_orders = response.context['child_orders']
     
@@ -940,10 +940,10 @@ def step_impl(context, user, order_code):
     for p in order.products:
         p['supplier_id'] = p['supplier']
         p['supplier'] = p['supplier_name']
-        if p['promotion']:
-            p['single_save'] = p['promotion']['promotion_saved_money']
-        else:
-            p['single_save'] = 0
+        # if p['promotion']:
+        #     p['single_save'] = p['promotion']['promotion_saved_money']
+        # else:
+        #     p['single_save'] = 0
 
         _products.append(p)
 
@@ -952,7 +952,7 @@ def step_impl(context, user, order_code):
             if o.supplier == p['supplier_id']:
                 o.products.append(p)
 
-
+    print('-------------------------------------------',repr(_products))
     order.group = sub_orders
     final_price = order.final_price
     order.final_price = order.pay_money
