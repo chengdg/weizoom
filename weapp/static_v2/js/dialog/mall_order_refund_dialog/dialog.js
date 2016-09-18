@@ -19,7 +19,7 @@ W.dialog.mall.RefundOrderDialog = W.dialog.Dialog.extend({
     events: _.extend({
         'click .xa-close': 'onClickCloseButton',
         'keyup .xui-commonOrderRefundDialog input': 'onKeyUpRefundItem',
-        'change .xui-commonOrderRefundDialog input': 'onChangeRefundItem',
+        'blur .xui-commonOrderRefundDialog input': 'onChangeRefundItem',
         'click .xa-submit': 'onClickSubmitButton'
     }, W.dialog.Dialog.prototype.events),
 
@@ -33,6 +33,7 @@ W.dialog.mall.RefundOrderDialog = W.dialog.Dialog.extend({
 
     // 获得页面中的所有订单信息，并筛选出字母订单的信息
     // 放入 this.dialogMainData
+    // 显示在退款对话框中
     __fetchOrdersInfos: function() {
         var _this = this;
         var allData = JSON.parse($('#origin-data').text());
@@ -54,7 +55,7 @@ W.dialog.mall.RefundOrderDialog = W.dialog.Dialog.extend({
             integral: mainOrder.integral
         };
 
-        // 找出其它子订单的已支付的金额、微众卡等信息
+        // 找出其它子订单的已支付的金额、微众卡等信息, 然后合并之
         var subRefundInfo = [];
         var targetRefundInfo = {};
         var mergeSubOrder = {
@@ -72,6 +73,7 @@ W.dialog.mall.RefundOrderDialog = W.dialog.Dialog.extend({
                 mergeSubOrder.weizoomCardMoney += _subRI.weizoom_card_money,
                 mergeSubOrder.couponMoney += _subRI.coupon_money,
                 mergeSubOrder.integral += _subRI.integral_money
+                mergeSubOrder.totalMoney = mergeSubOrder.cash + mergeSubOrder.weizoomCardMoney + mergeSubOrder.couponMoney + mergeSubOrder.integral;
 
             } else if (_subOrder.id == _this.deliveryItemId && !_.isEmpty(_subOrder.refund_info)) {
                 // 找出当前编辑的子订单
@@ -82,7 +84,9 @@ W.dialog.mall.RefundOrderDialog = W.dialog.Dialog.extend({
         }); 
 
         // 将合计后的子订单放入this.mainOrderData
-        subRefundInfo.push(mergeSubOrder);
+        if (mergeSubOrder && mergeSubOrder.totalMoney > 0) {
+            subRefundInfo.push(mergeSubOrder);
+        }
 
         // 保存mall_type属性，兼容非自营
         var mallType = allData.mall_type;
@@ -370,7 +374,6 @@ W.dialog.mall.RefundOrderDialog = W.dialog.Dialog.extend({
     },
 
     onKeyUpRefundItem: function() {
-        console.log('changed');
         var $dialog = this.$dialog;
         // 实时计算
         this.__calcCurrentOrderRefund();
