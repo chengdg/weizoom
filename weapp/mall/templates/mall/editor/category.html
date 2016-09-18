@@ -190,7 +190,7 @@
 
 		$(document).delegate('.xa-deleteProductFromCategory', 'click', function (event) {
 			var $link = $(event.currentTarget);
-			var productId = $link.parents('tr').data('productId');
+			var productId = $link.parents('tr').data('id');
 
 			W.requireConfirm({
 				$el: $(this),
