@@ -252,7 +252,7 @@ W.dialog.mall.RefundOrderDialog = W.dialog.Dialog.extend({
             tipCash = "";
         } else if (target.cash && target.cash*1 > 0 && target.cash*1 > limitCash) {
             // 金额部分不能大于 “可退部分”
-            if (mainRI.cash > 0) {
+            if (target.cash > 0) {
                 tipCash = "最多可退" + limitCash.toFixed(2) + "元";
             } else {
                 tipCash = "无可退金额";
@@ -264,12 +264,12 @@ W.dialog.mall.RefundOrderDialog = W.dialog.Dialog.extend({
 
         // 微众卡金额不能大于 “可退部分”
         var tipCard = "";
-        if (target.weizoomCardMoney && target.weizoomCardMoney*1 > 0 && target.weizoomCardMoney*1 <= mainRI.weizoomCardMoney) {
+        if (target.weizoomCardMoney && target.weizoomCardMoney*1 > 0 && target.weizoomCardMoney*1 <= limitCard) {
             tipCard = "";
 
-        } else if (target.weizoomCardMoney && target.weizoomCardMoney*1 > 0 && target.weizoomCardMoney*1 > mainRI.weizoomCardMoney) {
-            if (mainRI.weizoomCardMoney > 0) {
-                tipCard = "最多可退" + mainRI.weizoomCardMoney + "元";
+        } else if (target.weizoomCardMoney && target.weizoomCardMoney*1 > 0 && target.weizoomCardMoney*1 > limitCard) {
+            if (target.weizoomCardMoney > 0) {
+                tipCard = "最多可退" + limitCard + "元";
             } else {
                 tipCard = "无可退微众卡";
             }
