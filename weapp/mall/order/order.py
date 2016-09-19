@@ -806,10 +806,7 @@ class RefundSuccessfulSubOrder(resource.Resource):
         #更新母订单的总金额
         Order.objects.filter(id=delivery_item_id).update(status=sub_order_target_status)
         Order.objects.filter(id=order_id).update(final_price=(F('final_price')-refund_cash_money), weizoom_card_money=(F('weizoom_card_money')-refund_weizoom_card_money))
-        #更新商品的库存和销量
-        mall_api.update_product_stock(sub_order.product_id, sub_order.product_id,  )
         
-
         OrderHasRefund.objects.filter(delivery_item_id=delivery_item_id).update(finished=True)
 
         operation_name = request.user.username
