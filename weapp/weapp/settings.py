@@ -877,3 +877,17 @@ WZCARD_ENCRYPT_INFO = {
 }
 
 ENABLE_API_AUTH = False
+
+
+if 'deploy' == MODE:
+    MNS_ACCESS_KEY_ID = 'eJ8LylRwQERRqOot'
+    MNS_ACCESS_KEY_SECRET = 'xxPrfGcUlnsL7IPweJRqVekHTCu6Ad'
+    MNS_ENDPOINT = 'http://1615750970594173.mns.cn-hangzhou.aliyuncs.com/'
+    MNS_SECURITY_TOKEN = ''
+    SUBSCRIBE_QUEUE_NAME = 'order-close'
+else:
+    MNS_ACCESS_KEY_ID = 'eJ8LylRwQERRqOot'
+    MNS_ACCESS_KEY_SECRET = 'xxPrfGcUlnsL7IPweJRqVekHTCu6Ad'
+    MNS_ENDPOINT = 'http://1615750970594173.mns.cn-hangzhou.aliyuncs.com/'
+    MNS_SECURITY_TOKEN = ''
+    SUBSCRIBE_QUEUE_NAME = 'test-order-close'
