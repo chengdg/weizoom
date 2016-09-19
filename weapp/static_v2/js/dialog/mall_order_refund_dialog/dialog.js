@@ -336,16 +336,18 @@ W.dialog.mall.RefundOrderDialog = W.dialog.Dialog.extend({
             errTip = '现金: 须非负数，保留两位小数';
             $('.xui-i-total-error').text(errTip);
             $cash.addClass('form-control-error');
-            $cash.focus();
             return false;
-        } 
+        } else {
+            $cash.removeClass('form-control-error');
+        }
 
         if (!regNum.test(weizoomCardMoney)) {
             errTip = '微众卡: 须非负数，保留两位小数';
             $('.xui-i-total-error').text(errTip);
             $weizoomCardMoney.addClass('form-control-error');
-            $weizoomCardMoney.focus();
             return false;
+        } else {
+            $weizoomCardMoney.removeClass('form-control-error');
         } 
 
         if (!regNum.test(couponMoney)) {
@@ -353,6 +355,8 @@ W.dialog.mall.RefundOrderDialog = W.dialog.Dialog.extend({
             $('.xui-i-total-error').text(errTip);
             $couponMoney.addClass('form-control-error');
             return false;
+        } else {
+            $couponMoney.removeClass('form-control-error');
         }  
 
         if (!regInt.test(integralCount)) {
@@ -360,6 +364,8 @@ W.dialog.mall.RefundOrderDialog = W.dialog.Dialog.extend({
             $('.xui-i-total-error').text(errTip);
             $integralCount.addClass('form-control-error');
             return false;
+        } else {
+            $integralCount.removeClass('form-control-error');
         }  
 
         if (errTip == '') {
