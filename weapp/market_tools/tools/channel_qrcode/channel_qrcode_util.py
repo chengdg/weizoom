@@ -160,11 +160,15 @@ def create_channel_qrcode_has_memeber_restructure(channel_qrcode, user_profile, 
 		else:
 			coupon_ids = ""
 
+		print "========111111=======",member
+		print "========22222222=======", channel_qrcode
 		if ChannelQrcodeHasMember.objects.filter(channel_qrcode=channel_qrcode, member=member).count() == 0:
 			# 2016/9/18注释掉下面的代码
 			# ChannelQrcodeHasMember.objects.filter(member=member).delete()
+			print "========33333333333333======="
 			ChannelQrcodeHasMember.objects.create(channel_qrcode=channel_qrcode, member=member, is_new=is_new_member)
 		else:
+			print "========444444444444======="
 			try:
 				# if channel_qrcode.grade_id > 0:
 				# 	# updated by zhu tianqi,修改为会员等级高于目标等级时不降级，member_id->member

@@ -713,6 +713,7 @@ class QrcodeOrder(resource.Resource):
 		filter_data_args['status__in'] = (ORDER_STATUS_PAYED_SUCCESSED, ORDER_STATUS_PAYED_NOT_SHIP, ORDER_STATUS_PAYED_SHIPED, ORDER_STATUS_SUCCESSED)
 
 		relations = ChannelQrcodeHasMember.objects.filter(channel_qrcode_id=channel_qrcode_id)
+		print 1111111111111111111,relations.count()
 		setting_id2count = {}
 		member_id2setting_id = {}
 		member_ids = []
@@ -730,6 +731,8 @@ class QrcodeOrder(resource.Resource):
 				new_member_id2_create_at[r.member_id] = r.created_at
 			else:
 				old_member_id2_create_at[r.member_id] = r.created_at
+		print 2222222222222,old_member_id2_create_at
+		print 3333333333333,new_member_id2_create_at
 
 		if is_show == '1':
 			#获取新会员的webapp_user
@@ -743,7 +746,8 @@ class QrcodeOrder(resource.Resource):
 				created_at = old_member_id2_create_at[webapp_user.member_id]
 				for order in Order.by_webapp_user_id(webapp_user.id).filter(created_at__gte=created_at):
 					old_member_order_ids.append(order.id)
-
+			print 4444444444444,new_webapp_user_ids
+			print 5555555555555,old_member_order_ids
 			if new_webapp_user_ids and old_member_order_ids:
 				orders = Order.by_webapp_user_id(new_webapp_user_ids, order_id=old_member_order_ids).filter(**filter_data_args).order_by('-created_at')
 			elif new_webapp_user_ids:
@@ -770,7 +774,7 @@ class QrcodeOrder(resource.Resource):
 			final_price += order.final_price
 			weizoom_card_money += order.weizoom_card_money
 
-
+		print 6666666666,orders.count()
 		#进行分页
 		count_per_page = int(request.GET.get('count_per_page', 15))
 		cur_page = int(request.GET.get('page', '1'))
