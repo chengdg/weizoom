@@ -339,7 +339,9 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
             if mall_type:
                 order_has_refunds = list(OrderHasRefund.objects.filter(origin_order_id__in=order_ids))
                 fackorder2refund = {}
+                refund_order_ids = []
                 for order_has_refund in order_has_refunds:
+                    refund_order_ids.append(order_has_refund.origin_order_id)
                     fackorder2refund[order_has_refund.delivery_item_id] = order_has_refund
                     total_refund_money += order_has_refund.cash
                     total_refund_weizoom_card_money += order_has_refund.weizoom_card_money
@@ -453,6 +455,12 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
                         use_integral_money += order.integral_money
                     except:
                         pass
+                elif order.status == 7 and mall_type:
+                    if order.id in refund_order_ids:
+                        final_price = order.final_price
+                        weizoom_card_money = order.weizoom_card_money
+                        final_total_order_money += order.final_price
+                        weizoom_card_total_order_money += order.weizoom_card_money
 
                 area = get_str_value_by_string_ids(order.area)
                 if area:
