@@ -1,6 +1,6 @@
 # __author__ : "王丽"
 
-Feature: 自营平台订单管理-手机端
+Feature: 自营平台订单管理-手机端-两个供应商商品订单(限时抢购)-微众卡支付(一个满足满额包邮，一个无运费)
 """
 	一、后台订单列表
 		自营平台单或者多供货商品商品的订单，支付之前不拆单，支付之后拆单
@@ -157,13 +157,7 @@ Background:
 	When zy1已添加支付方式
 		"""
 		[{
-			"type": "货到付款",
-			"is_active": "启用"
-		},{
 			"type": "微信支付",
-			"is_active": "启用"
-		},{
-			"type": "支付宝",
 			"is_active": "启用"
 		},{
 			"type": "微众卡支付",
@@ -213,7 +207,6 @@ Background:
 			}]
 		}]
 		"""
-	#所有商品开通所有支付方式
 	#创建供货商、设置供货商运费、同步商品到自营平台
 		#创建供货商
 			Given 创建一个特殊的供货商，就是专门针对商品池供货商
@@ -258,21 +251,6 @@ Background:
 				"""
 				{
 					"accounts":["zy1"],
-					"supplier_name":"供货商1",
-					"name": "商品1-2",
-					"promotion_title": "商品1-2促销",
-					"purchase_price": 9.00,
-					"price": 10.00,
-					"weight": 1,
-					"image": "love.png",
-					"stocks": 100,
-					"detail": "商品1-2描述信息"
-				}
-				"""
-			Given 给自营平台同步商品
-				"""
-				{
-					"accounts":["zy1"],
 					"supplier_name":"供货商2",
 					"name": "商品2-1",
 					"promotion_title": "商品2-1促销",
@@ -284,691 +262,13 @@ Background:
 					"detail": "商品2-1描述信息"
 				}
 				"""
-			Given 给自营平台同步商品
-				"""
-				{
-					"accounts":["zy1"],
-					"supplier_name":"供货商2",
-					"name": "商品2-2",
-					"promotion_title": "商品2-2促销",
-					"purchase_price": 19.00,
-					"price": 20.00,
-					"weight": 1,
-					"image": "love.png",
-					"stocks": 100,
-					"detail": "商品2-2描述信息"
-				}
-				"""
 	#自营平台从商品池上架商品
 		Given zy1登录系统
 		When zy1上架商品池商品"商品1-1"
-		When zy1上架商品池商品"商品1-2"
 		When zy1上架商品池商品"商品2-1"
-		When zy1上架商品池商品"商品2-2"
-
-	#创建优惠券活动
-	When zy1添加优惠券规则
-		"""
-		[{
-			"name": "全店通用券1",
-			"money": 10.00,
-			"limit_counts": "无限",
-			"count": 5,
-			"start_date": "2013-10-10",
-			"end_date": "1天后",
-			"description":"使用说明",
-			"coupon_id_prefix": "coupon1_id_"
-		}]
-		"""
-
-	When zy1创建积分应用活动
-	    """
-	    [{
-	      "name": "多商品券",
-	      "start_date": "今天",
-	      "end_date": "1天后",
-	      "product_name": "商品1-2,商品2-2",
-	      "is_permanant_active": false,
-	      "rules": [{
-	        "member_grade": "全部",
-	        "discount": 50,
-	        "discount_money": 5.00
-	      }]
-	    }]
-	    """
 
 	Given bill关注zy1的公众号
 
-	#给会员加积分
-	Given zy1登录系统
-	When zy1给"bill"加积分
-		"""
-		{
-			"integral":500,
-			"reason":""
-		}
-		"""
-
-@refund @order @allOrder
-Scenario:1 ziying单个供应商商品订单-微信支付+优惠券(不满足满额包邮)；退现金优惠券
-	Given zy1登录系统
-	When zy1创建优惠券发放规则发放优惠券
-		"""
-		{
-			"name": "全店通用券1",
-			"count": 1,
-			"members": ["bill"]
-		}
-		"""
-
-	When bill访问zy1的webapp::apiserver
-	When bill购买zy1的商品::apiserver
-		"""
-		{
-			"order_id":"001",
-			"date":"2016-01-01",
-			"ship_name": "bill",
-			"ship_tel": "13811223344",
-			"ship_area": "北京市 北京市 海淀区",
-			"ship_address": "泰兴大厦",
-			"pay_type": "微信支付",
-			"coupon": "coupon1_id_1",
-			"products":[{
-				"name":"商品1-1",
-				"price":50.00,
-				"count":1,
-				"postage": 10.00
-			}],
-			"postage": 10.00,
-			"customer_message": "bill的订单备注"
-		}
-		"""
-	#待支付订单
-		#手机端订单列表
-		Then bill查看个人中心'全部'订单列表::apiserver
-			"""
-			[{
-				"status": "待支付",
-				"created_at":"2016.01.01 00:00",
-				"products":[{
-					"name":"商品1-1"
-				}],
-				"products_count": 1,
-				"final_price": 50.00
-			}]
-			"""
-
-		#手机端订单详情
-		Then bill手机端获取订单'001'::apiserver
-			"""
-			{
-				"order_no": "001",
-				"status":"待支付",
-				"ship_name": "bill",
-				"ship_tel": "13811223344",
-				"ship_area": "北京市 北京市 海淀区",
-				"ship_address": "泰兴大厦",
-				"products": [{
-					"name": "商品1-1",
-					"price": 50.00,
-					"count": 1
-				}],
-				"methods_of_payment":"微信支付",
-				"product_price": 50.00,
-				"postage": 10.00,
-				"coupon_money": 10.00,
-				"final_price": 50.00,
-				"order_time":"2016-01-01 00:00:00"
-			}
-			"""
-
-	#待发货订单
-		When bill访问zy1的webapp::apiserver
-		When bill使用支付方式'微信支付'进行支付订单'001'于2016-01-02 10:00:00::apiserver
-
-		#手机端订单列表
-		Then bill查看个人中心'全部'订单列表::apiserver
-			"""
-			[{
-				"status": "待发货",
-				"created_at":"2016.01.01 00:00",
-				"products":[{
-					"name":"商品1-1"
-				}],
-				"products_count": 1,
-				"final_price": 50.00
-			}]
-			"""
-
-		#手机端订单详情
-		Then bill手机端获取订单'001'::apiserver
-			"""
-			{
-				"order_no": "001",
-				"status":"待发货",
-				"ship_name": "bill",
-				"ship_tel": "13811223344",
-				"ship_area": "北京市 北京市 海淀区",
-				"ship_address": "泰兴大厦",
-				"products": [{
-					"name": "商品1-1",
-					"price": 50.00,
-					"count": 1
-				}],
-				"methods_of_payment":"微信支付",
-				"product_price": 50.00,
-				"postage": 10.00,
-				"coupon_money": 10.00,
-				"final_price": 50.00,
-				"order_time":"2016-01-01 00:00:00"
-			}
-			"""
-
-	#退款中
-		Given zy1登录系统
-		When zy1'申请退款'自营订单'001-供货商1'
-			"""
-			{
-				"cash":10.00,
-				"weizoom_card":0.00,
-				"coupon_money":50.00,
-				"intergal":0,
-				"intergal_money":0.00
-			}
-			"""
-
-		#手机端订单列表
-		When bill访问zy1的webapp::apiserver
-		Then bill查看个人中心'全部'订单列表::apiserver
-			"""
-			[{
-				"status": "退款中",
-				"created_at":"2016.01.01 00:00",
-				"products":[{
-					"name":"商品1-1"
-				}],
-				"products_count": 1,
-				"final_price": 50.00
-			}]
-			"""
-
-		#手机端订单详情
-		Then bill手机端获取订单'001'::apiserver
-			"""
-			{
-				"order_no": "001",
-				"status":"退款中",
-				"ship_name": "bill",
-				"ship_tel": "13811223344",
-				"ship_area": "北京市 北京市 海淀区",
-				"ship_address": "泰兴大厦",
-				"products": [{
-					"name": "商品1-1",
-					"price": 50.00,
-					"count": 1
-				}],
-				"methods_of_payment":"微信支付",
-				"product_price": 50.00,
-				"postage": 10.00,
-				"coupon_money": 10.00,
-				"final_price": 50.00,
-				"order_time":"2016-01-01 00:00:00"
-			}
-			"""
-
-	#退款完成
-		Given zy1登录系统
-		When zy1通过财务审核'退款成功'自营订单'001-供货商1'
-
-		#手机端订单列表
-		When bill访问zy1的webapp::apiserver
-		Then bill查看个人中心'全部'订单列表::apiserver
-			"""
-			[{
-				"status": "退款成功",
-				"created_at":"2016.01.01 00:00",
-				"products":[{
-					"name":"商品1-1"
-				}],
-				"products_count": 1,
-				"final_price": 40.00
-			}]
-			"""
-
-		#手机端订单详情
-		Then bill手机端获取订单'001'::apiserver
-			"""
-			{
-				"order_no": "001",
-				"status":"退款成功",
-				"ship_name": "bill",
-				"ship_tel": "13811223344",
-				"ship_area": "北京市 北京市 海淀区",
-				"ship_address": "泰兴大厦",
-				"products": [{
-					"name": "商品1-1",
-					"price": 50.00,
-					"count": 1
-				}],
-				"methods_of_payment":"微信支付",
-				"product_price": 50.00,
-				"postage": 10.00,
-				"coupon_money": 10.00,
-				"final_price": 40.00,
-				"refund_money": 10.00,
-				"order_time":"2016-01-01 00:00:00"
-			}
-			"""
-
-@refund @order @allOrder @chengdg
-#暂不实现订单详情中的单品优惠和整单优惠的校验
-Scenario:2 ziying两个供应商商品订单-支付宝+积分(一个不满足满额包邮，一个无运费)；退优惠券，积分(积分按照现在的比例)
-
-	When bill访问zy1的webapp::apiserver
-	When bill购买zy1的商品::apiserver
-		"""
-		{
-			"order_id":"002",
-			"date":"2016-01-02 10:00:00",
-			"ship_name": "bill",
-			"ship_tel": "13811223344",
-			"ship_area": "北京市 北京市 海淀区",
-			"ship_address": "泰兴大厦",
-			"pay_type": "支付宝",
-			"products":[{
-				"name":"商品1-2",
-				"price":10.00,
-				"count":2,
-				"integral": 20,
-				"integral_money": 10.00,
-				"postage": 10.00
-			},{
-				"name":"商品2-2",
-				"price":20.00,
-				"count":1,
-				"integral": 10,
-				"integral_money": 5.00,
-				"postage": 0.00
-			}],
-			"postage": 10.00,
-			"customer_message": "bill的订单备注"
-		}
-		"""
-	#待支付订单
-		#手机端订单列表
-		Then bill查看个人中心'全部'订单列表::apiserver
-			"""
-			[{
-				"status": "待支付",
-				"created_at":"2016.01.02 00:00",
-				"products":[{
-					"name":"商品1-2"
-				},{
-					"name":"商品2-2"
-				}],
-				"products_count": 3,
-				"final_price": 35.00
-			}]
-			"""
-
-		#手机端订单详情
-		Then bill手机端获取订单'002'::apiserver
-			"""
-			{
-				"order_no": "002",
-				"status":"待支付",
-				"ship_name": "bill",
-				"ship_tel": "13811223344",
-				"ship_area": "北京市 北京市 海淀区",
-				"ship_address": "泰兴大厦",
-				"products": [{
-					"name": "商品1-2",
-					"price": 10.00,
-					"count": 2
-				},{
-					"name": "商品2-2",
-					"price": 20.00,
-					"count": 1
-				}],
-				"methods_of_payment":"支付宝",
-				"product_price": 40.00,
-				"postage": 10.00,
-				"integral_money": 15.00,
-				"final_price": 35.00,
-				"order_time":"2016-01-02 00:00:00"
-			}
-			"""
-
-	#待发货订单
-		When bill访问zy1的webapp::apiserver
-		When bill访问zy1的webapp::apiserver
-		When bill使用支付方式'支付宝'进行支付订单'002'于2016-01-03 10:00:00::apiserver
-
-		#手机端订单列表
-		Then bill查看个人中心'全部'订单列表::apiserver
-			"""
-			[{
-				"status": "待发货",
-				"created_at":"2016.01.02 00:00",
-				"products":[{
-					"name":"商品1-2"
-				},{
-					"name":"商品2-2"
-				}],
-				"products_count": 3,
-				"final_price": 35.00
-			}]
-			"""
-
-		#手机端订单详情
-		Then bill手机端获取订单'002'::apiserver
-			"""
-			{
-				"order_no": "002",
-				"status":"待发货",
-				"ship_name": "bill",
-				"ship_tel": "13811223344",
-				"ship_area": "北京市 北京市 海淀区",
-				"ship_address": "泰兴大厦",
-				"group":[{
-					"supplier":"供货商1",
-					"products": [{
-						"name": "商品1-2",
-						"price": 10.00,
-						"count": 2
-					}],
-					"postage": 10.00
-				},{
-					"supplier":"供货商2",
-					"products": [{
-						"name": "商品2-2",
-						"price": 20.00,
-						"count": 1
-					}],
-					"postage": 0.00
-				}],
-				"methods_of_payment":"支付宝",
-				"product_price": 40.00,
-				"postage": 10.00,
-				"integral_money": 15.00,
-				"final_price": 35.00,
-				"order_time":"2016-01-02 00:00:00"
-			}
-			"""
-
-	#已发货
-		Given zy1登录系统
-		When zy1对订单进行发货
-			"""
-			{
-				"order_no": "002-供货商1",
-				"logistics": "申通快递",
-				"number": "229388967650",
-				"shipper": "zy1"
-			}
-			"""
-
-		#手机端订单列表
-		When bill访问zy1的webapp::apiserver
-		Then bill查看个人中心'全部'订单列表::apiserver
-			"""
-			[{
-				"status": "待发货",
-				"created_at":"2016.01.02 00:00",
-				"products":[{
-					"name":"商品1-2"
-				},{
-					"name":"商品2-2"
-				}],
-				"products_count": 3,
-				"final_price": 35.00
-			}]
-			"""
-
-		#手机端订单详情
-		Then bill手机端获取订单'002'::apiserver
-			"""
-			{
-				"order_no": "002",
-				"status":"待发货",
-				"ship_name": "bill",
-				"ship_tel": "13811223344",
-				"ship_area": "北京市 北京市 海淀区",
-				"ship_address": "泰兴大厦",
-				"group":[{
-					"supplier":"供货商1",
-					"status":"已发货",
-					"products": [{
-						"name": "商品1-2",
-						"price": 10.00,
-						"count": 2
-					}],
-					"postage": 10.00
-				},{
-					"supplier":"供货商2",
-					"status":"待发货",
-					"products": [{
-						"name": "商品2-2",
-						"price": 20.00,
-						"count": 1
-					}],
-					"postage": 0.00
-				}],
-				"methods_of_payment":"支付宝",
-				"product_price": 40.00,
-				"postage": 10.00,
-				"integral_money": 15.00,
-				"final_price": 35.00,
-				"order_time":"2016-01-02 00:00:00"
-			}
-			"""
-
-	#已完成
-		Given zy1登录系统
-		When zy1完成订单'002-供货商1'
-		When zy1对订单进行发货
-			"""
-			{
-				"order_no": "002-供货商2",
-				"logistics": "圆通快递",
-				"number": "22200000000",
-				"shipper": "zy1"
-			}
-			"""
-
-		#手机端订单列表
-		When bill访问zy1的webapp::apiserver
-		Then bill查看个人中心'全部'订单列表::apiserver
-			"""
-			[{
-				"status": "已发货",
-				"created_at":"2016.01.02 00:00",
-				"products":[{
-					"name":"商品1-2"
-				},{
-					"name":"商品2-2"
-				}],
-				"products_count": 3,
-				"final_price": 35.00
-			}]
-			"""
-
-		#手机端订单详情
-		Then bill手机端获取订单'002'::apiserver
-			"""
-			{
-				"order_no": "002",
-				"status":"已发货",
-				"ship_name": "bill",
-				"ship_tel": "13811223344",
-				"ship_area": "北京市 北京市 海淀区",
-				"ship_address": "泰兴大厦",
-				"group":[{
-					"supplier":"供货商1",
-					"status":"已完成",
-					"products": [{
-						"name": "商品1-2",
-						"price": 10.00,
-						"count": 2
-					}],
-					"postage": 10.00
-				},{
-					"supplier":"供货商2",
-					"status":"已发货",
-					"products": [{
-						"name": "商品2-2",
-						"price": 20.00,
-						"count": 1
-					}],
-					"postage": 0.00
-				}],
-				"methods_of_payment":"支付宝",
-				"product_price": 40.00,
-				"postage": 10.00,
-				"integral_money": 15.00,
-				"final_price": 35.00,
-				"order_time":"2016-01-02 00:00:00"
-			}
-			"""
-
-	#退款中
-		Given zy1登录系统
-		Given zy1设定会员积分策略
-			"""
-			{
-				"integral_each_yuan": 3
-			}
-			"""
-		When zy1'申请退款'自营订单'002-供货商1'
-			"""
-			{
-				"cash":10.00,
-				"weizoom_card":0.00,
-				"coupon_money":10.00,
-				"intergal": 30,
-				"intergal_money":10.00
-			}
-			"""
-		When zy1完成订单'002-供货商2'
-
-		#手机端订单列表
-		When bill访问zy1的webapp::apiserver
-		Then bill查看个人中心'全部'订单列表::apiserver
-			"""
-			[{
-				"status": "退款中",
-				"created_at":"2016.01.02 00:00",
-				"products":[{
-					"name":"商品1-2"
-				},{
-					"name":"商品2-2"
-				}],
-				"products_count": 3,
-				"final_price": 35.00
-			}]
-			"""
-
-		#手机端订单详情
-		Then bill手机端获取订单'002'::apiserver
-			"""
-			{
-				"order_no": "002",
-				"status":"退款中",
-				"ship_name": "bill",
-				"ship_tel": "13811223344",
-				"ship_area": "北京市 北京市 海淀区",
-				"ship_address": "泰兴大厦",
-				"group":[{
-					"supplier":"供货商1",
-					"status":"退款中",
-					"products": [{
-						"name": "商品1-2",
-						"price": 10.00,
-						"count": 2
-					}],
-					"postage": 10.00
-				},{
-					"supplier":"供货商2",
-					"status":"已完成",
-					"products": [{
-						"name": "商品2-2",
-						"price": 20.00,
-						"count": 1
-					}],
-					"postage": 0.00
-				}],
-				"methods_of_payment":"支付宝",
-				"product_price": 40.00,
-				"postage": 10.00,
-				"integral_money": 15.00,
-				"final_price": 35.00,
-				"order_time":"2016-01-02 00:00:00"
-			}
-			"""
-
-	#退款完成
-		Given zy1登录系统
-		When zy1通过财务审核'退款成功'自营订单'002-供货商1'
-
-		#手机端订单列表
-		When bill访问zy1的webapp::apiserver
-		Then bill查看个人中心'全部'订单列表::apiserver
-			"""
-			[{
-				"status": "已完成",
-				"created_at":"2016.01.02 00:00",
-				"products":[{
-					"name":"商品1-2"
-				},{
-					"name":"商品2-2"
-				}],
-				"products_count": 3,
-				"final_price": 25.00
-			}]
-			"""
-
-		#手机端订单详情
-		Then bill手机端获取订单'002'::apiserver
-			"""
-			{
-				"order_no": "002",
-				"status":"已完成",
-				"ship_name": "bill",
-				"ship_tel": "13811223344",
-				"ship_area": "北京市 北京市 海淀区",
-				"ship_address": "泰兴大厦",
-				"group":[{
-					"supplier":"供货商1",
-					"status":"退款成功",
-					"products": [{
-						"name": "商品1-2",
-						"price": 10.00,
-						"count": 2
-					}],
-					"postage": 10.00
-				},{
-					"supplier":"供货商2",
-					"status":"已完成",
-					"products": [{
-						"name": "商品2-2",
-						"price": 20.00,
-						"count": 1
-					}],
-					"postage": 0.00
-				}],
-				"methods_of_payment":"支付宝",
-				"product_price": 40.00,
-				"postage": 10.00,
-				"integral_money": 15.00,
-				"refund_money": 10.00,
-				"final_price": 25.00,
-				"order_time":"2016-01-02 00:00:00"
-			}
-			"""
-
-@refund @order @allOrder
-#暂不实现订单详情中的单品优惠和整单优惠的校验
-Scenario:3 ziying两个供应商商品订单(限时抢购)-微众卡支付(一个满足满额包邮，一个无运费)
 	Given zy1登录系统
 	When zy1创建限时抢购活动
 		"""
@@ -1016,6 +316,9 @@ Scenario:3 ziying两个供应商商品订单(限时抢购)-微众卡支付(一�
 		}
 		"""
 
+#暂不实现订单详情中的单品优惠和整单优惠的校验
+@refund @order @allOrder
+Scenario:1 ziying两个供应商商品订单(限时抢购)-微众卡支付-待发货
 	#待发货订单
 		#手机端订单列表
 		Then bill查看个人中心'全部'订单列表::apiserver
@@ -1069,6 +372,8 @@ Scenario:3 ziying两个供应商商品订单(限时抢购)-微众卡支付(一�
 			}
 			"""
 
+@refund @order @allOrder
+Scenario:2 ziying两个供应商商品订单(限时抢购)-微众卡支付-退款中
 	#退款中
 		Given zy1登录系统
 		When zy1'申请退款'自营订单'003-供货商1'
@@ -1137,8 +442,20 @@ Scenario:3 ziying两个供应商商品订单(限时抢购)-微众卡支付(一�
 			}
 			"""
 
+@refund @order @allOrder
+Scenario:3 ziying两个供应商商品订单(限时抢购)-微众卡支付-退款完成
 	#退款完成
 		Given zy1登录系统
+		When zy1'申请退款'自营订单'003-供货商1'
+			"""
+			{
+				"cash":0.00,
+				"weizoom_card":30.00,
+				"coupon_money":10.00,
+				"intergal": 0,
+				"intergal_money":0.00
+			}
+			"""
 		When zy1通过财务审核'退款成功'自营订单'003-供货商1'
 
 		#手机端订单列表
