@@ -161,7 +161,8 @@ def create_channel_qrcode_has_memeber_restructure(channel_qrcode, user_profile, 
 			coupon_ids = ""
 
 		if ChannelQrcodeHasMember.objects.filter(channel_qrcode=channel_qrcode, member=member).count() == 0:
-			ChannelQrcodeHasMember.objects.filter(member=member).delete()
+			# 2016/9/18注释掉下面的代码
+			# ChannelQrcodeHasMember.objects.filter(member=member).delete()
 			ChannelQrcodeHasMember.objects.create(channel_qrcode=channel_qrcode, member=member, is_new=is_new_member)
 		else:
 			try:
