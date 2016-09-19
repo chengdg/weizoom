@@ -42,7 +42,9 @@ class QrcodeOrderInfo(api_resource.ApiResource):
 				"order_number": order.order_id,
 				"final_price": order.final_price,
 				"status_text": STATUS2TEXT[order.status],
-				"sale_price": sale_price
+				"sale_price": sale_price,
+				"created_at": order.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+				"is_first_order": order.is_first_order
 			})
 
 		return {
