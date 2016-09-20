@@ -16,18 +16,16 @@ class Command(BaseCommand):
         """
         同步fans中账户类型(正式/体验)到weapp中
         """
-        user_profiles = UserProfile.objects.exclude(store_name='')
-        store_names = ','.join([user.store_name for user in user_profiles])
+        user_profiles = UserProfile.objects.all()
+        usernames = ','.join([user.user.username for user in user_profiles])
 
-        url = '%s/account/get_account_type_by_store_name/' % settings.FAN_HOST
+        url = '%s/account/get_account_type_by_user_name/' % settings.FAN_HOST
         param = {
-            'store_names': store_names
+            'usernames': usernames
         }
         resp = requests.post(url, data=param)
-        text = json.loads(resp.text)
-        store_name2account_type = text['data']
+        username2account_type = json.loads(resp.text)['data']
 
         for user in user_profiles:
-            user.is_formal = int(store_name2account_type.get(user.store_name, 1))
+            user.is_formal = int(username2account_type.get(user.user.username, 0))
             user.save()
-
