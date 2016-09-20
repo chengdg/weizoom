@@ -735,14 +735,8 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
                             ]
                             if mall_type:
                                 tmp_order.insert(25, supplier_type)
-                                if fackorder and fackorder2refund.has_key(fackorder.id):
-                                    tmp_order.insert(18, fackorder2refund[fackorder.id].integral_money)
-                                    tmp_order.insert(18, fackorder2refund[fackorder.id].coupon_money)
-                                    tmp_order.insert(18, fackorder2refund[fackorder.id].weizoom_card_money)
-                                    tmp_order.insert(18, fackorder2refund[fackorder.id].cash)
-                                else:
-                                    for i in xrange(4):
-                                        tmp_order.insert(18,'-')
+                                for i in xrange(4):
+                                    tmp_order.insert(18,'-')
                             if has_supplier:
                                 tmp_order.append( u'-' if 0.0 == premium_product['purchase_price'] else premium_product['purchase_price'])
                                 tmp_order.append(u'-' if 0.0 ==premium_product['purchase_price'] else premium_product['purchase_price']*premium_product['count'])
