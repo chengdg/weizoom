@@ -2331,7 +2331,7 @@ def update_order_status(user, action, order, request=None):
 				from market_tools.tools.coupon.util import restore_coupon
 				restore_coupon(order.coupon_id)
 			# 返回商品的数量
-			__restore_product_stock_by_order(order)
+			restore_product_stock_by_order(order)
 			mall_signals.cancel_order.send(sender=Order, order=order)
 
 
@@ -2434,7 +2434,7 @@ def __increase_after_order_finsh(expired_status, target_status, order):
 		notify_message = u"订单状态为已完成时为贡献者增加积分,order_id:{}，cause:\n{}".format(order.order_id, unicode_full_stack())
 		watchdog_error(notify_message)
 
-def __restore_product_stock_by_order(order):
+def restore_product_stock_by_order(order):
 	"""
 
 	返回商品的库存
