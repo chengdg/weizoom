@@ -305,7 +305,6 @@ Scenario:1 ziying单个供应商商品订单-微信支付+优惠券-待支付
 @refund @order @allOrder
 Scenario:2 ziying单个供应商商品订单-微信支付+优惠券-待发货
 	#待发货订单
-		When bill访问zy1的webapp::apiserver
 		When bill使用支付方式'微信支付'进行支付订单'001'于2016-01-02 10:00:00::apiserver
 
 		#手机端订单列表
@@ -349,7 +348,6 @@ Scenario:2 ziying单个供应商商品订单-微信支付+优惠券-待发货
 @refund @order @allOrder
 Scenario:3 ziying单个供应商商品订单-微信支付+优惠券-退款中
 	#退款中
-		When bill访问zy1的webapp::apiserver
 		When bill使用支付方式'微信支付'进行支付订单'001'于2016-01-02 10:00:00::apiserver
 
 		Given zy1登录系统
@@ -406,7 +404,6 @@ Scenario:3 ziying单个供应商商品订单-微信支付+优惠券-退款中
 @refund @order @allOrder
 Scenario:4 ziying单个供应商商品订单-微信支付+优惠券-退款完成
 	#退款完成
-		When bill访问zy1的webapp::apiserver
 		When bill使用支付方式'微信支付'进行支付订单'001'于2016-01-02 10:00:00::apiserver
 
 		Given zy1登录系统
