@@ -143,16 +143,8 @@ Feature: 自营平台订单管理-云商通管理系统后台-单个供应商商
 
 """
 Background:
-	Given 重置'weizoom_card'的bdd环境
 	Given 重置'apiserver'的bdd环境
 	Given zy1登录系统
-	Given zy1设定会员积分策略
-		"""
-		{
-			"integral_each_yuan": 2
-		}
-		"""
-	When zy1开通使用微众卡权限
 	When zy1已添加支付方式
 		"""
 		[{
@@ -161,18 +153,6 @@ Background:
 		}]
 		"""
 
-	When zy1已添加商品规格
-		"""
-		[{
-			"name": "尺寸",
-			"type": "文字",
-			"values": [{
-				"name": "M"
-			}, {
-				"name": "S"
-			}]
-		}]
-		"""
 	#创建供货商、设置供货商运费、同步商品到自营平台
 		#创建供货商
 			Given 创建一个特殊的供货商，就是专门针对商品池供货商
@@ -333,7 +313,6 @@ Scenario:1 ziying单个供应商商品订单-待支付
 @refund @order
 Scenario:2 ziying单个供应商商品订单-待发货
 	#待发货订单
-		When bill访问zy1的webapp::apiserver
 		When bill使用支付方式'微信支付'进行支付订单'001'于2016-01-02 10:00:00::apiserver
 
 		#后台订单列表
@@ -411,7 +390,6 @@ Scenario:2 ziying单个供应商商品订单-待发货
 @refund @order
 Scenario:3 ziying单个供应商商品订单-退款中
 	#退款中
-		When bill访问zy1的webapp::apiserver
 		When bill使用支付方式'微信支付'进行支付订单'001'于2016-01-02 10:00:00::apiserver
 
 		Given zy1登录系统
@@ -508,7 +486,6 @@ Scenario:3 ziying单个供应商商品订单-退款中
 @refund @order
 Scenario:4 ziying单个供应商商品订单-退款成功
 	#退款完成
-		When bill访问zy1的webapp::apiserver
 		When bill使用支付方式'微信支付'进行支付订单'001'于2016-01-02 10:00:00::apiserver
 
 		Given zy1登录系统
