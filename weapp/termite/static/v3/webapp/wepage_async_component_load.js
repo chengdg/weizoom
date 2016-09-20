@@ -100,7 +100,7 @@ W.AsyncComponentLoadView = BackboneLite.View.extend({
             app: 'webapp',
             api: 'project_api/call',
             method: 'get',
-            cache: false,
+            cache: true,
             async: true,
             args: {
                 woid: W.webappOwnerId,
