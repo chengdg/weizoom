@@ -378,7 +378,6 @@ Scenario:1 ziying两个供应商商品订单-待支付
 @refund @order @allOrder
 Scenario:2 ziying两个供应商商品订单-待发货
 	#待发货订单
-		When bill访问zy1的webapp::apiserver
 		When bill使用支付方式'支付宝'进行支付订单'002'于2016-01-03 10:00:00::apiserver
 
 		#后台订单列表
@@ -474,7 +473,6 @@ Scenario:2 ziying两个供应商商品订单-待发货
 @refund @order @allOrder
 Scenario:3 ziying两个供应商商品订单-已发货
 	#已发货
-		When bill访问zy1的webapp::apiserver
 		When bill使用支付方式'支付宝'进行支付订单'002'于2016-01-03 10:00:00::apiserver
 		Given zy1登录系统
 		When zy1对订单进行发货
@@ -488,7 +486,6 @@ Scenario:3 ziying两个供应商商品订单-已发货
 			"""
 
 		#后台订单列表
-		Given zy1登录系统
 		Then zy1获得自营订单列表
 			"""
 			[{
@@ -581,7 +578,6 @@ Scenario:3 ziying两个供应商商品订单-已发货
 @refund @order @allOrder
 Scenario:4 ziying两个供应商商品订单-已完成
 	#已完成
-		When bill访问zy1的webapp::apiserver
 		When bill使用支付方式'支付宝'进行支付订单'002'于2016-01-03 10:00:00::apiserver
 
 		Given zy1登录系统
@@ -606,7 +602,6 @@ Scenario:4 ziying两个供应商商品订单-已完成
 			"""
 
 		#后台订单列表
-		Given zy1登录系统
 		Then zy1获得自营订单列表
 			"""
 			[{
@@ -641,7 +636,7 @@ Scenario:4 ziying两个供应商商品订单-已完成
 						"price":20.00,
 						"count":1
 					}],
-					"status":"待发货",
+					"status":"已发货",
 					"actions": ["发货","申请退款"]
 				}]
 			}]
@@ -701,7 +696,6 @@ Scenario:4 ziying两个供应商商品订单-已完成
 @refund @order @allOrder
 Scenario:5 ziying两个供应商商品订单-退款中
 	#退款中
-		When bill访问zy1的webapp::apiserver
 		When bill使用支付方式'支付宝'进行支付订单'002'于2016-01-03 10:00:00::apiserver
 
 		Given zy1登录系统
@@ -845,7 +839,6 @@ Scenario:5 ziying两个供应商商品订单-退款中
 @refund @order @allOrder
 Scenario:6 ziying两个供应商商品订单-退款成功
 	#退款完成
-		When bill访问zy1的webapp::apiserver
 		When bill使用支付方式'支付宝'进行支付订单'002'于2016-01-03 10:00:00::apiserver
 
 		Given zy1登录系统
