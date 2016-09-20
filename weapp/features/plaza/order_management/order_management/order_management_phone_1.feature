@@ -144,15 +144,8 @@ Feature: 自营平台订单管理-手机端—单个供应商商品订单-微信
 """
 
 Background:
-	Given 重置'weizoom_card'的bdd环境
 	Given 重置'apiserver'的bdd环境
 	Given zy1登录系统
-	Given zy1设定会员积分策略
-		"""
-		{
-			"integral_each_yuan": 2
-		}
-		"""
 	When zy1已添加支付方式
 		"""
 		[{
@@ -161,18 +154,6 @@ Background:
 		}]
 		"""
 
-	When zy1已添加商品规格
-		"""
-		[{
-			"name": "尺寸",
-			"type": "文字",
-			"values": [{
-				"name": "M"
-			}, {
-				"name": "S"
-			}]
-		}]
-		"""
 	#创建供货商、设置供货商运费、同步商品到自营平台
 		#创建供货商
 			Given 创建一个特殊的供货商，就是专门针对商品池供货商
@@ -298,7 +279,7 @@ Scenario:1 ziying单个供应商商品订单-微信支付+优惠券-待支付
 				"postage": 10.00,
 				"coupon_money": 10.00,
 				"final_price": 50.00,
-				"order_time":"2016-01-01 00:00:00"
+				"		":"2016-01-01 00:00:00"
 			}
 			"""
 
@@ -453,8 +434,8 @@ Scenario:4 ziying单个供应商商品订单-微信支付+优惠券-退款完成
 				"product_price": 50.00,
 				"postage": 10.00,
 				"coupon_money": 10.00,
-				"final_price": 40.00,
 				"refund_money": 10.00,
+				"final_price": 40.00,
 				"order_time":"2016-01-01 00:00:00"
 			}
 			"""
