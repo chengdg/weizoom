@@ -118,6 +118,7 @@ def create_new_user_by_agent(request):
 	manager_name = request.POST.get('mn', None)
 	store_name = request.POST.get('stn', None)
 	settlement_period = int(request.POST.get('sp', 1))
+	is_formal = True if request.POST.get('at', 'formal') == 'formal' else False
 	
 	exist_users = User.objects.filter(username=username)
 	if exist_users.count() > 0:
@@ -139,6 +140,7 @@ def create_new_user_by_agent(request):
 		profile.host_name = host_name
 		profile.store_name = store_name
 		profile.settlement_period = settlement_period
+		profile.is_formal = is_formal
 
 		#add by duhao 20151016
 		#从fans创建子账号时，需要设置manager账号的id
@@ -391,6 +393,7 @@ def update_user_by_agent(request):
 	store_name = request.POST.get('stn', None)
 	key = request.POST.get('key', None)
 	settlement_period = request.POST.get('sp', None)
+	is_formal = True if request.POST.get('at', 'formal') == 'formal' else False
 
 	if KEY != key:
 		response = create_response(INVALID_KEY_ERROR_CODE)
@@ -407,6 +410,7 @@ def update_user_by_agent(request):
 	try:
 		user_profile = UserProfile.objects.get(user=to_operate_user)
 		user_profile.store_name = store_name
+		user_profile.is_formal = is_formal
 		if settlement_period:
 			user_profile.settlement_period = int(settlement_period)
 		user_profile.save()
