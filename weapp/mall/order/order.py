@@ -815,6 +815,8 @@ class RefundSuccessfulSubOrder(resource.Resource):
         mall_api.record_operation_log(sub_order.order_id, operation_name, action_msg,sub_order)
         #更新商品的库存和销量
         mall_api.restore_product_stock_by_order(sub_order)
+        #更新母订单的状态
+        mall_api.update_order_status_by_sub_order(sub_order, operation_name, action_msg)
         
         response = create_response(200)
         return response.get_response()
