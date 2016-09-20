@@ -2134,6 +2134,30 @@ class ProductClassification(resource.Resource):
         }
         return response.get_response()
 
+################################获取所有标签#############################################
+class ProductLabel(resource.Resource):
+    """
+    获取所有标签
+    """
+    app = "mall2"
+    resource = "product_label"
+
+    @login_required
+    def api_get(request):
+        return_data = {}
+        label_groups = models.ProductLabelGroup.objects.filter(is_deleted=False)
+        for label_group in label_groups:
+            return_data[label_group.name] = []
+            labels = models.ProductLabel.objects.filter(label_group_id=label_group.id).filter(is_deleted=False)
+            for label in labels:
+                return_data[label_group.name].append(label.name)
+
+        response = create_response(200)
+        response.data = {
+            'data': return_data
+        }
+        return response.get_response()        
+############################################################################################
 
 class ProductGetFile(resource.Resource):
     """
