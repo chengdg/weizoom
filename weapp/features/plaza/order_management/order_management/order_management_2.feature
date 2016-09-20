@@ -144,7 +144,6 @@ Feature: 自营平台订单管理-云商通管理系统后台-两个供应商商
 """
 
 Background:
-	Given 重置'weizoom_card'的bdd环境
 	Given 重置'apiserver'的bdd环境
 	Given zy1登录系统
 	Given zy1设定会员积分策略
@@ -153,7 +152,6 @@ Background:
 			"integral_each_yuan": 2
 		}
 		"""
-	When zy1开通使用微众卡权限
 	When zy1已添加支付方式
 		"""
 		[{
@@ -162,18 +160,6 @@ Background:
 		}]
 		"""
 
-	When zy1已添加商品规格
-		"""
-		[{
-			"name": "尺寸",
-			"type": "文字",
-			"values": [{
-				"name": "M"
-			}, {
-				"name": "S"
-			}]
-		}]
-		"""
 	#创建供货商、设置供货商运费、同步商品到自营平台
 		#创建供货商
 			Given 创建一个特殊的供货商，就是专门针对商品池供货商
@@ -237,7 +223,7 @@ Background:
 	When zy1创建积分应用活动
 	    """
 	    [{
-	      "name": "多商品券",
+	      "name": "积分活动",
 	      "start_date": "今天",
 	      "end_date": "1天后",
 	      "product_name": "商品1-2,商品2-2",
@@ -293,8 +279,10 @@ Background:
 		}
 		"""
 
-@refund @order @allOrder
+
 #暂不实现订单详情中的单品优惠和整单优惠的校验
+
+@refund @order @allOrder
 Scenario:1 ziying两个供应商商品订单-待支付
 	#待支付订单
 		#后台订单列表
@@ -511,7 +499,7 @@ Scenario:3 ziying两个供应商商品订单-已发货
 						"count":2
 					}],
 					"status":"已发货",
-					"actions": ["标记完成"]
+					"actions": ["标记完成","修改物流","申请退款"]
 				},{
 					"order_no":"002-供货商2",
 					"supplier":"供货商2",
@@ -637,7 +625,7 @@ Scenario:4 ziying两个供应商商品订单-已完成
 						"count":1
 					}],
 					"status":"已发货",
-					"actions": ["发货","申请退款"]
+					"actions": ["标记完成","修改物流","申请退款"]
 				}]
 			}]
 			"""
@@ -737,7 +725,6 @@ Scenario:5 ziying两个供应商商品订单-退款中
 		When zy1完成订单'002-供货商2'
 
 		#后台订单列表
-		Given zy1登录系统
 		Then zy1获得自营订单列表
 			"""
 			[{
@@ -881,7 +868,6 @@ Scenario:6 ziying两个供应商商品订单-退款成功
 		When zy1通过财务审核'退款成功'自营订单'002-供货商1'
 
 		#后台订单列表
-		Given zy1登录系统
 		Then zy1获得自营订单列表
 			"""
 			[{
