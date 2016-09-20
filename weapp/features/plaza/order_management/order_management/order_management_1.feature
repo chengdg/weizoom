@@ -290,13 +290,11 @@ Scenario:1 ziying单个供应商商品订单-待支付
 						"name":"商品1-1",
 						"supplier":"供货商1",
 						"price":50.00,
-						"count":1,
-						"single_save":0.00
+						"count":1
 					}],
 					"postage": 10.00,
 					"status":"待支付"
 				}],
-				"total_save":10.00,
 				"products_count":1,
 				"total_price": 50.00,
 				"postage": 10.00,
@@ -366,13 +364,11 @@ Scenario:2 ziying单个供应商商品订单-待发货
 						"name":"商品1-1",
 						"supplier":"供货商1",
 						"price":50.00,
-						"count":1,
-						"single_save":0.00
+						"count":1
 					}],
 					"postage": 10.00,
 					"status":"待发货"
 				}],
-				"total_save":10.00,
 				"products_count":1,
 				"total_price": 50.00,
 				"postage": 10.00,
@@ -405,7 +401,6 @@ Scenario:3 ziying单个供应商商品订单-退款中
 			"""
 
 		#后台订单列表
-		Given zy1登录系统
 		Then zy1获得自营订单列表
 			"""
 			[{
@@ -461,13 +456,11 @@ Scenario:3 ziying单个供应商商品订单-退款中
 						"name":"商品1-1",
 						"supplier":"供货商1",
 						"price":50.00,
-						"count":1,
-						"single_save":0.00
+						"count":1
 					}],
 					"postage": 10.00,
 					"status":"退款中"
 				}],
-				"total_save":10.00,
 				"products_count":1,
 				"total_price": 50.00,
 				"postage": 10.00,
@@ -502,7 +495,6 @@ Scenario:4 ziying单个供应商商品订单-退款成功
 		When zy1通过财务审核'退款成功'自营订单'001-供货商1'
 
 		#后台订单列表
-		Given zy1登录系统
 		Then zy1获得自营订单列表
 			"""
 			[{
@@ -558,13 +550,11 @@ Scenario:4 ziying单个供应商商品订单-退款成功
 						"name":"商品1-1",
 						"supplier":"供货商1",
 						"price":50.00,
-						"count":1,
-						"single_save":0.00
+						"count":1
 					}],
 					"postage": 10.00,
 					"status":"退款成功"
 				}],
-				"total_save":10.00,
 				"products_count":1,
 				"total_price": 50.00,
 				"postage": 10.00,
