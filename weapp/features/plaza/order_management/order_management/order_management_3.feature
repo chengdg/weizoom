@@ -147,12 +147,6 @@ Background:
 	Given 重置'weizoom_card'的bdd环境
 	Given 重置'apiserver'的bdd环境
 	Given zy1登录系统
-	Given zy1设定会员积分策略
-		"""
-		{
-			"integral_each_yuan": 2
-		}
-		"""
 	When zy1开通使用微众卡权限
 	When zy1已添加支付方式
 		"""
@@ -195,18 +189,6 @@ Background:
 		"""
 	And test批量激活订单'0001'的卡::weizoom_card
 
-	When zy1已添加商品规格
-		"""
-		[{
-			"name": "尺寸",
-			"type": "文字",
-			"values": [{
-				"name": "M"
-			}, {
-				"name": "S"
-			}]
-		}]
-		"""
 	#创建供货商、设置供货商运费、同步商品到自营平台
 		#创建供货商
 			Given 创建一个特殊的供货商，就是专门针对商品池供货商
@@ -426,7 +408,6 @@ Scenario:2 ziying两个供应商商品订单(限时抢购)-微众卡支付-退�
 			"""
 
 		#后台订单列表
-		Given zy1登录系统
 		Then zy1获得自营订单列表
 			"""
 			[{
@@ -491,7 +472,7 @@ Scenario:2 ziying两个供应商商品订单(限时抢购)-微众卡支付-退�
 					"products":[{
 						"name":"商品1-1",
 						"supplier":"供货商1",
-						"price":5.00,
+						"price":50.00,
 						"count":2
 					}],
 					"postage": 0.00,
@@ -516,7 +497,7 @@ Scenario:2 ziying两个供应商商品订单(限时抢购)-微众卡支付-退�
 				"final_price": 70.00
 			}
 			"""
-		Then zy1能获得订单'002'操作日志
+		Then zy1能获得订单'003'操作日志
 			| action                  | operator |
 			| 下单                    | 客户     |
 			| 支付                    | 客户     |
@@ -539,7 +520,6 @@ Scenario:3 ziying两个供应商商品订单(限时抢购)-微众卡支付-退�
 		When zy1通过财务审核'退款成功'自营订单'003-供货商1'
 
 		#后台订单列表
-		Given zy1登录系统
 		Then zy1获得自营订单列表
 			"""
 			[{
@@ -639,7 +619,7 @@ Scenario:3 ziying两个供应商商品订单(限时抢购)-微众卡支付-退�
 				}
 			}
 			"""
-		Then zy1能获得订单'002'操作日志
+		Then zy1能获得订单'003'操作日志
 			| action                  | operator |
 			| 下单                    | 客户     |
 			| 支付                    | 客户     |
