@@ -1047,7 +1047,7 @@ class ChannelDistributions(resource.Resource):
 		return response.get_response()
 
 
-class ChannelDistribution(resource.Resource): # TODO 关联会员不可以有两个码 ,关联过推广码的也不能关联这个码了
+class ChannelDistribution(resource.Resource):
 	app = 'new_weixin'
 	resource = 'channel_distribution'
 
@@ -1168,8 +1168,8 @@ class ChannelDistribution(resource.Resource): # TODO 关联会员不可以有两
 		elif distribution_rewards == 1:
 			commission_rate = int(request.POST.get("commission_rate", 0))  # 佣金返现率
 			minimun_return_rate = int(request.POST.get("minimun_return_rate", 0))  # 最低返现折扣
-			commission_return_standard = request.POST.get("commission_return_standard", 0)  # 佣金返现标准
-			return_standard = int(request.POST.get("return_standard", 0))  # 多少天返现标准  TODO 需要修改
+			commission_return_standard = float(request.POST.get("commission_return_standard", 0))  # 佣金返现标准
+			return_standard = int(request.POST.get("return_standard", 0))  # 多少天返现标准
 
 			if commission_rate > 20 or commission_rate < 0:
 				response = create_response(500)
@@ -1181,12 +1181,12 @@ class ChannelDistribution(resource.Resource): # TODO 关联会员不可以有两
 				response.errMsg = u'最低返现折扣输入错误'
 				return response.get_response()
 
-			if return_standard < 0:
+			if commission_return_standard < 0:
 				response = create_response(500)
 				response.errMsg = u'佣金返现标准输入错误'
 				return response.get_response()
 
-			if  7 >= return_standard >= 0:
+			if 7 >= return_standard >= 0:
 				pass
 			else:
 				response = create_response(500)
@@ -1260,6 +1260,10 @@ class ChannelDistribution(resource.Resource): # TODO 关联会员不可以有两
 		reply_type = request.POST['reply_type']
 		reply_detail = request.POST['reply_detail']
 		reply_material_id = request.POST['reply_material_id']
+		commission_rate = int(request.POST['commission_rate'])  # 佣金返现率
+		minimun_return_rate = int(request.POST['minimun_return_rate'])  # 最低返现折扣
+		commission_return_standard = float(request.POST['commission_return_standard'])  # 佣金返现标准
+
 
 		# 如果修改者操作的二维码不是自己的 不执行任何操作
 		if ChannelDistributionQrcodeSettings.objects.filter(id=qrcode_id, owner_id=request.user.id).exists():
@@ -1270,13 +1274,31 @@ class ChannelDistribution(resource.Resource): # TODO 关联会员不可以有两
 				response.errMsg = u"重复的会员头衔"
 				return response.get_response()
 
+			if commission_rate > 20 or commission_rate < 0:
+				response = create_response(500)
+				response.errMsg = u'佣金返现率输入错误'
+				return response.get_response()
+
+			if minimun_return_rate > 100 or minimun_return_rate < 0:
+				response = create_response(500)
+				response.errMsg = u'最低返现折扣输入错误'
+				return response.get_response()
+
+			if commission_return_standard < 0:
+				response = create_response(500)
+				response.errMsg = u'佣金返现标准输入错误'
+				return response.get_response()
+
 			ChannelDistributionQrcodeSettings.objects.filter(id=qrcode_id).update(
 				bing_member_title = bing_member_title,
 				group_id = group_id,
 				award_prize_info = prize_info,
 				reply_type = reply_type,
 				reply_detail = reply_detail,
-				reply_material_id = reply_material_id
+				reply_material_id = reply_material_id,
+				commission_rate = commission_rate,
+				minimun_return_rate = minimun_return_rate,
+				commission_return_standard = commission_return_standard
 			)
 
 			response = create_response(200)
