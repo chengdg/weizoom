@@ -635,9 +635,12 @@ class ProductPool(resource.Resource):
         #for product in products:
         #    now_product_ids.append(product.id)   
         if filter_labels:
+            #print "\\\\\\\\\\\\\\\\\\\\\\\\",filter_labels
+            filter_labels = json.loads(filter_labels)
             filter_label_ids = models.ProductLabel.objects.filter(name__in=filter_labels).values_list('id',flat=True)
             filter_label_product_ids = models.ProductHasLabel.objects.filter(label_id__in=filter_label_ids).values_list('product_id',flat=True)
             products = products.filter(id__in=filter_label_product_ids)
+        #print ";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;",products
         # else:
         #     all_mall_product = models.Product.objects.filter(
         #         owner__in=owner_ids,
