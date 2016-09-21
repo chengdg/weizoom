@@ -1278,7 +1278,7 @@ class ChannelDistribution(resource.Resource):
 				response.errMsg = u"重复的会员头衔"
 				return response.get_response()
 
-			if request.user.username == 'weizoomxiaoyuan': # 一个奇怪的需求,单独给这个用户添加修改3个字段的权限.
+			if request.user.username == 'jobs': # 一个奇怪的需求,单独给这个用户添加修改3个字段的权限.
 				if commission_rate > 20 or commission_rate < 0:
 					response = create_response(500)
 					response.errMsg = u'佣金返现率输入错误'
