@@ -1522,7 +1522,8 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
             'total_price': float(
                 '%.2f' % order.final_price) if order.pay_interface_type != 9 or order.status == 5 else 0,
             'origin_final_price': origin_final_price,
-            'origin_weizoom_card_money':origin_weizoom_card_money,
+            'origin_weizoom_card_money': origin_weizoom_card_money,
+            'origin_origin_integral_money': order.integral,
             'order_total_price': float('%.2f' % order.get_total_price()),
             'ship_name': order.ship_name,
             'ship_address': '%s %s' % (regional_util.get_str_value_by_string_ids(order.area), order.ship_address),
