@@ -54,6 +54,9 @@ class Command(BaseCommand):
                 related_page_id = survey.related_page_id
                 page = pagestore.get_page(related_page_id, 1)
                 page_details = page['component']['components'][0]['model']
+                description = page_details['description']
+                if 'http://' not in description:
+                    description = description.replace('/static/', 'http://' + settings.DOMAIN + '/static/')
                 db_market_app_data.survey_survey.insert({
                     'owner_id': survey.owner_id,
                     'name': survey.name,
@@ -65,7 +68,7 @@ class Command(BaseCommand):
                     'related_page_id': survey.related_page_id,
                     'created_at': survey.created_at,
                     'subtitle': page_details['subtitle'],
-                    'description': page_details['description'],
+                    'description': description,
                     'prize': page_details['prize'],
                     'permission': page_details['permission'],
                     'is_old': True
@@ -73,6 +76,7 @@ class Command(BaseCommand):
 
                 project_id = 'new_app:survey:%s' % related_page_id
                 html = create_page(project_id).replace('xa-submitTermite', 'xa-submitWepage')
+
                 if 'http://' not in html:
                     html = html.replace('/static/', 'http://' + settings.DOMAIN + '/static/')
 
