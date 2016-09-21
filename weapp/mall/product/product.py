@@ -2186,17 +2186,18 @@ class ProductLabel(resource.Resource):
 
     @login_required
     def api_get(request):
-        return_data = {}
+        return_data = []
         label_groups = models.ProductLabelGroup.objects.filter(is_deleted=False)
         for label_group in label_groups:
-            return_data[label_group.name] = []
+            label_data = {"firstname":label_group.name,"secondname":[]}
             labels = models.ProductLabel.objects.filter(label_group_id=label_group.id).filter(is_deleted=False)
             for label in labels:
-                return_data[label_group.name].append(label.name)
+                label_data['secondname'].append(label.name)
+            return_data.append(label_data)
 
         response = create_response(200)
         response.data = {
-            'data': return_data
+            'label_data': return_data
         }
         return response.get_response()        
 ############################################################################################
