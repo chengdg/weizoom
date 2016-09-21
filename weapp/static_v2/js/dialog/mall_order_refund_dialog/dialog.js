@@ -48,11 +48,17 @@ W.dialog.mall.RefundOrderDialog = W.dialog.Dialog.extend({
         // 找出母订单中支付金额, 微众卡，等信息并保存
         var allOrders = this.allOrders;
         var mainOrder = allOrders[this.orderId];
+
+        // 将母订单中的积分转换成金额
+        var integralPerYuan =  parseFloat(this.integralPerYuan);
+        integralPerYuan =  integralPerYuan > 0? integralPerYuan : 1;
+        mainOrder.integralMoney = parseInt(mainRoder.integral/integralPerYuan);
+
         var mainRefundInfo = {
             cash: mainOrder.origin_final_price,
             weizoomCardMoney: mainOrder.origin_weizoom_card_money,
             couponMoney: mainOrder.coupon_money,
-            integral: mainOrder.integral
+            integral: parseInt(mainOrder.integralMoney)
         };
 
         // 找出其它子订单的已支付的金额、微众卡等信息, 然后合并之
