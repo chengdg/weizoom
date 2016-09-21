@@ -593,6 +593,7 @@ class ProductPool(resource.Resource):
         first_classification = int(request.GET.get('first_classification', '-1'))
         secondary_classification = int(request.GET.get('secondary_classification', '-1'))
         supplier_type = request.GET.get('supplier_type', -1)
+        filter_labels = request.GET.get('labels',[])
         #status = request.GET.get('status', '-1')
 
         manager_user_profile = UserProfile.objects.filter(webapp_type=2)[0]
@@ -630,7 +631,13 @@ class ProductPool(resource.Resource):
         if product_name and products:
             products = products.filter(name__contains=product_name)
 
-
+        #now_product_ids = []
+        #for product in products:
+        #    now_product_ids.append(product.id)   
+        if filter_labels:
+            filter_label_ids = models.ProductLabel.objects.filter(name__in=filter_labels).values_list('id',flat=True)
+            filter_label_product_ids = models.ProductHasLabel.objects.filter(label_id__in=filter_label_ids).values_list('product_id',flat=True)
+            products = products.filter(id__in=filter_label_product_ids)
         # else:
         #     all_mall_product = models.Product.objects.filter(
         #         owner__in=owner_ids,
