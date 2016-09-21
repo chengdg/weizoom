@@ -1,11 +1,12 @@
 #_author_:田丰敏 2016.09.21
 
+
 Feature:自营平台查看商品池标签
 	"""
 		说明：需要先实现panda系统商品分类、标签、同步商品等step，该feature现只做数据参考
-		
 		1、商品二级分类配置标签，同步商品到自营平台；商品配置标签，同步商品到自营平台
-		2、商品同步到自营平台后，在panda系统修改商品分类（/商品分类标签/商品标签），标签可实时同步到自营平台
+		2、商品同步到自营平台后，在panda系统修改商品分类（/商品分类标签/商品标签），标签的变化可实时同步到自营平台；
+		   商品同步到自营平台后，在panda系统删除已使用的标签，标签的变化可实时同步到自营平台
 		3、在商品池根据商品标签进行筛选
 
 		备注：商品标签以商品为主，如果该商品修改了标签后，则不再根据分类标签的变化而变化
@@ -86,6 +87,13 @@ Background:
 			"tag":["男","女","新生儿","9-13岁","14-18岁","成年"]
 		}
 		"""
+	When yunying新增标签
+		"""
+		{
+			"tag_group":"地区",
+			"tag":["亚洲","欧洲"]
+		}
+		"""
 	#创建供货商、设置商家运费、同步商品到自营平台
 	#创建供货商
 	Given 创建一个特殊的供货商，就是专门针对商品池供货商
@@ -132,6 +140,13 @@ Background:
 						"label":[{
 							"tag_group":"基本信息",
 							"tag":["男","女","新生儿"]
+						}]
+					},{
+						"first_classify":"电子数码",
+						"second_classify":"手机",
+						"label":[{
+							"tag_group":"地区",
+							"tag":["亚洲","欧洲"]
 						}]
 					}]
 		}
@@ -182,6 +197,22 @@ Background:
 			"second_classify":"平板电脑"
 		}
 		"""
+
+	When '商家3'新增商品
+		"""
+		{
+			"name": "商品3a",
+			"promotion_title": "商品3a促销",
+			"purchase_price": 9.00,
+			"price": 10.00,
+			"weight": 1,
+			"image": "love.png",
+			"stocks": 100,
+			"detail": "商品3a描述信息",
+			"first_classify":"电子数码",
+			"second_classify":"手机"
+		}
+		"""
 	Given yunying登录系统::panda
 	When yunying给商品'商品1b'配置标签::panda
 		"""
@@ -198,6 +229,25 @@ Background:
 
 
 	#同步商品到自营平台
+
+	Given 给自营平台同步商品
+		"""
+		{
+			"accounts":["zy1"],
+			"supplier_name":"商家3",
+			"name": "商品3a",
+			"promotion_title": "商品3a促销",
+			"purchase_price": 9.00,
+			"price": 10.00,
+			"weight": 1,
+			"image": "love.png",
+			"stocks": 100,
+			"detail": "商品3a描述信息",
+			"first_classify":"电子数码",
+			"second_classify":"手机",
+			"tag":["亚洲","欧洲"]
+		}
+		"""
 
 	Given 给自营平台同步商品
 		"""
@@ -287,6 +337,15 @@ Scenario:1 自营平台查看商品池商品标签
 			"stocks":100,
 			"tag":["男","女","新生儿"],
 			"actions": ["上架"]
+		},{
+			"name": "商品3a",
+			"first_classify":"电子数码",
+			"second_classify":"手机",
+			"supplier":"商家3",
+			"price": 10.00,
+			"stocks": 100,
+			"tag":["亚洲","欧洲"],
+			"actions": ["上架"]
 		}]
 		"""
 Scenario:2 商品管理系统修改商品分类（分类标签，商品标签），查看商品池商品标签
@@ -315,7 +374,12 @@ Scenario:2 商品管理系统修改商品分类（分类标签，商品标签）
 					}]
 		}
 		"""
-
+	When yunying删除标签
+	"""
+	{
+		"tag_group":"地区"
+	}
+	"""
 	When 商家'商家1'编辑商品'商品1a'
 		"""
 		{
@@ -360,42 +424,6 @@ Scenario:2 商品管理系统修改商品分类（分类标签，商品标签）
 			"second_classify":"肥皂"
 		}
 		"""
-	Given 给自营平台同步商品
-		"""
-		{
-			"accounts":["zy1"],
-			"supplier_name":"商家1",
-			"name": "商品1b",
-			"promotion_title": "商品1b促销",
-			"purchase_price": 8.00,
-			"price": 9.00,
-			"weight": 1,
-			"image": "love.png",
-			"stocks": 100,
-			"detail": "商品1b描述信息",
-			"first_classify":"生活用品",
-			"second_classify":"肥皂",
-			"tag":["成年"]
-		}
-		"""
-	Given 给自营平台同步商品
-		"""
-		{
-			"accounts":["zy1"],
-			"supplier_name":"商家2",
-			"name": "商品2a",
-			"promotion_title": "商品2a促销",
-			"purchase_price": 9.00,
-			"price": 10.00,
-			"weight": 1,
-			"image": "love.png",
-			"stocks": 100,
-			"detail": "商品2a描述信息",
-			"first_classify":"电子数码",
-			"second_classify":"平板电脑",
-			"tag":["江苏","北京"]
-		}
-		"""
 
 	Given zy1登录系统
 	Then zy1获得商品池商品列表
@@ -426,6 +454,14 @@ Scenario:2 商品管理系统修改商品分类（分类标签，商品标签）
 			"price": 10.00,
 			"stocks":100,
 			"tag":["江苏","北京"]
+			"actions": ["上架"]
+		},{
+			"name": "商品3a",
+			"first_classify":"电子数码",
+			"second_classify":"手机",
+			"supplier":"商家3",
+			"price": 10.00,
+			"stocks": 100,
 			"actions": ["上架"]
 		}]
 		"""
@@ -467,6 +503,15 @@ Scenario:3 在商品池根据标签进行筛选
 			"price": 10.00,
 			"stocks":100,
 			"tag":["男","女","新生儿"],
+			"actions": ["上架"]
+		},{
+			"name": "商品3a",
+			"first_classify":"电子数码",
+			"second_classify":"手机",
+			"supplier":"商家3",
+			"price": 10.00,
+			"stocks": 100,
+			"tag":["亚洲","欧洲"],
 			"actions": ["上架"]
 		}]
 		"""
