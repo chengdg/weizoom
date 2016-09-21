@@ -1112,6 +1112,9 @@ class ChannelDistribution(resource.Resource):
 			else:
 				tags.append(tag)
 
+		input_disabled = True  # 前端修改3个字段的属性为disabled
+		if request.user.username == 'jobs':
+			input_disabled = False
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
 			'second_navs': mall_export.get_promotion_and_apps_second_navs(request),
@@ -1123,6 +1126,7 @@ class ChannelDistribution(resource.Resource):
 			'qrcode': qrcode,
 			'jsons': jsons,
 			'member_name': member_name,
+			'input_disabled' : input_disabled
 			# 'selectedMemberIds': json.dumps(selectedMemberIds),
 		})
 		return render_to_response('weixin/channels/channel_distribution.html', c)
@@ -1274,32 +1278,42 @@ class ChannelDistribution(resource.Resource):
 				response.errMsg = u"重复的会员头衔"
 				return response.get_response()
 
-			if commission_rate > 20 or commission_rate < 0:
-				response = create_response(500)
-				response.errMsg = u'佣金返现率输入错误'
-				return response.get_response()
+			if request.user.username == 'weizoomxiaoyuan': # 一个奇怪的需求,单独给这个用户添加修改3个字段的权限.
+				if commission_rate > 20 or commission_rate < 0:
+					response = create_response(500)
+					response.errMsg = u'佣金返现率输入错误'
+					return response.get_response()
 
-			if minimun_return_rate > 100 or minimun_return_rate < 0:
-				response = create_response(500)
-				response.errMsg = u'最低返现折扣输入错误'
-				return response.get_response()
+				if minimun_return_rate > 100 or minimun_return_rate < 0:
+					response = create_response(500)
+					response.errMsg = u'最低返现折扣输入错误'
+					return response.get_response()
 
-			if commission_return_standard < 0:
-				response = create_response(500)
-				response.errMsg = u'佣金返现标准输入错误'
-				return response.get_response()
+				if commission_return_standard < 0:
+					response = create_response(500)
+					response.errMsg = u'佣金返现标准输入错误'
+					return response.get_response()
 
-			ChannelDistributionQrcodeSettings.objects.filter(id=qrcode_id).update(
-				bing_member_title = bing_member_title,
-				group_id = group_id,
-				award_prize_info = prize_info,
-				reply_type = reply_type,
-				reply_detail = reply_detail,
-				reply_material_id = reply_material_id,
-				commission_rate = commission_rate,
-				minimun_return_rate = minimun_return_rate,
-				commission_return_standard = commission_return_standard
-			)
+				ChannelDistributionQrcodeSettings.objects.filter(id=qrcode_id).update(
+					bing_member_title = bing_member_title,
+					group_id = group_id,
+					award_prize_info = prize_info,
+					reply_type = reply_type,
+					reply_detail = reply_detail,
+					reply_material_id = reply_material_id,
+					commission_rate = commission_rate,
+					minimun_return_rate = minimun_return_rate,
+					commission_return_standard = commission_return_standard
+				)
+			else:
+				ChannelDistributionQrcodeSettings.objects.filter(id=qrcode_id).update(
+					bing_member_title=bing_member_title,
+					group_id=group_id,
+					award_prize_info=prize_info,
+					reply_type=reply_type,
+					reply_detail=reply_detail,
+					reply_material_id=reply_material_id,
+				)
 
 			response = create_response(200)
 			return response.get_response()
