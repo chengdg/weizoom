@@ -862,3 +862,234 @@ def step_impl(context, user):
     # context.query_params = query_params
     # context.execute_steps(u"Then %s可以看到订单列表" % user)
     pass
+
+@when(u"{user}通过财务审核'{action}'自营订单'{order_code}'")
+def step_impl(context, action, user, order_code):
+    url = '/mall2/api/refund_successful_sub_order/?_method=put'
+    order_id = bdd_util.get_order_by_order_no(order_code).origin_order_id
+    delivery_item_id = bdd_util.get_order_by_order_no(order_code).id
+    
+    data = {
+        'order_id': order_id,
+        'delivery_item_id': delivery_item_id
+    }
+    response = context.client.post(url, data)
+    bdd_util.assert_api_call_success(response)
+
+@when(u"{user}'申请退款'自营订单'{order_code}'")
+def step_imple(context,user,order_code):
+    url = '/mall2/api/refunding_order/?_method=put'
+    order_id = bdd_util.get_order_by_order_no(order_code).origin_order_id
+    delivery_item_id = bdd_util.get_order_by_order_no(order_code).id
+
+    a = json.loads(context.text)
+    data = {
+        'order_id': order_id,
+        'delivery_item_id': delivery_item_id,
+        'cash': a.get('cash', 0),
+        'weizoom_card_money': a.get('weizoom_card', 0),
+        'integral': a.get('integral', 0),
+        'coupon_money': a.get('coupon_money', 0)
+    }
+
+    response = context.client.post(url, data)
+    bdd_util.assert_api_call_success(response)
+
+
+@then(u"{user}获得自营订单'{order_code}'")
+def step_impl(context, user, order_code):
+    order_db_id = bdd_util.get_order_by_order_no(order_code).id
+    response = context.client.get('/mall2/order/?order_id=%d' % order_db_id)
+    
+    expected = json.loads(context.text)
+    #expected.pop('total_save')
+    order = response.context['order']
+    child_orders = response.context['child_orders']
+    
+    order.order_no = order.order_id
+    order.invoice=order.bill
+    order.business_message=order.remark
+    order.methods_of_payment = order.pay_interface_name
+    order.weizoom_card = order.weizoom_card_money
+    order.actions = [ action.get('name', '') for action in order.actions ]
+
+    sub_orders = []
+
+    for sub_order in child_orders:
+        supplier_name = Supplier.objects.get(id=sub_order.supplier).name
+        sub_order.order_no = u'{}-{}'.format(order.order_id, supplier_name)
+        sub_order.status = sub_order.get_status_text()
+        sub_order.products = []
+
+        sub_orders.append(sub_order)
+
+    _products = []
+    order.refund_details = {
+        'cash':order.refund_info['total_cash'],
+        'weizoom_card':order.refund_info['total_weizoom_card_money'],
+        'coupon_money':order.refund_info['total_coupon_money'],
+        'integral_money':order.refund_info['total_integral_money'],
+
+    }
+
+    order.original_cash=order.refund_info['origin_final_price']
+    order.original_weizoom_card= order.refund_info['origin_weizoom_card_money']
+    order.original_final_price= order.refund_info['origin_pay_money']
+    order.refund_money = order.refund_info['refund_money']
+
+    for p in order.products:
+        p['supplier_id'] = p['supplier']
+        p['supplier'] = p['supplier_name']
+        # if p['promotion']:
+        #     p['single_save'] = p['promotion']['promotion_saved_money']
+        # else:
+        #     p['single_save'] = 0
+
+        _products.append(p)
+
+    for p in _products:
+        for o in sub_orders:
+            if o.supplier == p['supplier_id']:
+                o.products.append(p)
+
+    print('-------------------------------------------',repr(_products))
+    order.group = sub_orders
+    final_price = order.final_price
+    order.final_price = order.pay_money
+    order.product_price =order.total_price
+    order.cash = final_price
+    order.products_count = order.number
+    order.ship_area = order.area
+    order.total_save = order.save_money
+    order.status = order.get_status_text()
+
+
+    bdd_util.assert_dict(expected, order)
+
+
+def __get_order_items_for_self_order(items):
+    actual_orders = []
+    for order_item in items:
+        actual_order = {}
+        actual_order['order_no'] = order_item['order_id']
+        actual_order["methods_of_payment"] = order_item['pay_interface_name']
+        actual_order['order_time'] = order_item['created_at']
+        actual_order['payment_time'] = order_item['payment_time']
+        actual_order['save_money'] = order_item['save_money']
+        actual_order['buyer'] = order_item['buyer_name']
+        actual_order['ship_name'] = order_item['ship_name']
+        actual_order['ship_tel'] = order_item['ship_tel']
+        actual_order['ship_address'] = order_item['ship_address']
+        actual_order['invoice'] = ""
+        actual_order['final_price'] = order_item['pay_money']
+        actual_order['postage'] = order_item['postage']
+        actual_order['status'] = STATUS2TEXT[order_item['order_status']
+]
+        actual_order['group'] = []
+        action_list = []
+        if order_item['order_status'] != 0:
+            buy_product_results = []
+            group_dict = {}
+            for group in order_item['groups']:
+                group_dict['status'] = group['fackorder']['status']
+                order_supplier = ''
+                for buy_product in group['products']:
+                    buy_product_result = {}
+                    buy_product_result['name'] = buy_product['name']
+                    buy_product_result['count'] = buy_product['count']
+                    buy_product_result['price'] = buy_product['price']
+                    order_supplier = buy_product['supplier_name'] or ''
+                    buy_product_results.append(buy_product_result)
+                
+                group_dict['products'] = buy_product_results
+                group_dict['supplier'] = order_supplier
+                group_dict['order_no'] = order_item['order_id'] + '-' + order_supplier
+
+                if group_dict['status'] in ['退款中', '退款成功']:
+                    group_dict['refund_details'] = group['fackorder']['refund_info']
+                    group_dict['refund_details']['weizoom_card'] = group_dict['refund_details']['weizoom_card_money']
+                # 获取子订单状态对应的操作
+                group_dict['actions'] = [action.get('name', '') for action in group['fackorder']['actions']]
+                actual_order['group'].append(group_dict)
+        else:
+            buy_product_results = []
+
+            for group in order_item['groups']:
+                for buy_product in group['products']:
+                    buy_product_result = {}
+                    buy_product_result['name'] = buy_product['name']
+                    buy_product_result['count'] = buy_product['count']
+                    buy_product_result['price'] = buy_product['price']
+                    buy_product_results.append(buy_product_result)
+                action_list = [action.get('name', '') for action in group['fackorder']['actions']]
+            actual_order['products'] = buy_product_results
+            actual_order['actions'] = action_list
+        
+        actual_orders.append(actual_order)
+    return actual_orders
+
+
+@then(u"{user}获得自营订单列表")
+def step_impl(context, user):
+    user_id = User.objects.get(username=user).id
+    mall_type = UserProfile.objects.get(user_id=user_id).webapp_type
+    if user != context.client.user.username:
+        context.client.logout()
+        context.client = bdd_util.login(user)
+
+    url='/mall2/api/order_list/'
+
+    query_params = dict()
+
+    if hasattr(context, 'query_params'):
+        query_params = context.query_params
+        query_params['count_per_page'] = 99999
+        delattr(context, 'query_params')
+    response = context.client.get(url, query_params)
+
+
+    items = json.loads(response.content)['data']['items']
+    actual_orders = __get_order_items_for_self_order(items)
+
+    expected = json.loads(context.text)
+    for order in expected:
+        # if order.get('payment_time',''):
+        #     del order['payment_time'] 
+        if 'actions' in order:
+            order['actions'] = order['actions']  # 暂时不验证顺序
+   
+    bdd_util.assert_list(expected, actual_orders)
+
+
+@then(u"{user}获得自营财务审核'{order_type}'订单列表")
+def step_impl(context, user, order_type):
+    user_id = User.objects.get(username=user).id
+    mall_type = UserProfile.objects.get(user_id=user_id).webapp_type
+    if user != context.client.user.username:
+        context.client.logout()
+        context.client = bdd_util.login(user)
+
+    if order_type =='退款中':
+        url = '/mall2/api/order_list/?design_mode=0&version=1&belong=audit&orderSupplierType=undefined&order_status=6&count_per_page=9999'
+
+    elif order_type == '退款成功':
+        url = '/mall2/api/order_list/?design_mode=0&version=1&belong=audit&orderSupplierType=undefined&order_status=7&date_interval_type=1&count_per_page=9999'
+    elif order_type =='全部':
+        url = '/mall2/api/order_list/?design_mode=0&version=1&belong=audit&orderSupplierType=undefined&order_status=-1&date_interval_type=1&count_per_page=9999'
+
+    query_params = dict()
+    if hasattr(context, 'query_params'):
+        query_params = context.query_params
+        delattr(context, 'query_params')
+    response = context.client.get(url, query_params)
+
+    items = json.loads(response.content)['data']['items']
+
+    actual_orders = __get_order_items_for_self_order(items)
+
+    expected = json.loads(context.text)
+    for order in expected:
+        if 'actions' in order:
+            order['actions'] = set(order['actions'])  # 暂时不验证顺序
+
+    bdd_util.assert_list(expected, actual_orders)

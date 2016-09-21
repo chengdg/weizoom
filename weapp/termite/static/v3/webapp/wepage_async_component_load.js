@@ -100,7 +100,7 @@ W.AsyncComponentLoadView = BackboneLite.View.extend({
             app: 'webapp',
             api: 'project_api/call',
             method: 'get',
-            cache: false,
+            cache: true,
             async: true,
             args: {
                 woid: W.webappOwnerId,
@@ -131,7 +131,9 @@ W.AsyncComponentLoadView = BackboneLite.View.extend({
         var newProducts = [];
         if (productIds) {
             productIds.split(',').map(function(productId){
-                newProducts.push(objProducts[productId]);
+                if (objProducts[productId]) {
+                    newProducts.push(objProducts[productId]);
+                }
             });
         }
 

@@ -55,6 +55,11 @@ OPERATION_TYPE = {
 WEBAPP_TYPE_MALL = 0 #普通商城
 WEBAPP_TYPE_WEIZOOM_MALL = 1 #微众商城
 
+# 结算账期  1【自然月】   2【15天】   3【自然周】
+SUPPLIER_SETTLEMENT_PERIOD_MONTH = 1
+SUPPLIER_SETTLEMENT_PERIOD_15TH_DAY = 2
+SUPPLIER_SETTLEMENT_PERIOD_WEEK = 3
+
 class UserProfile(models.Model):
 	user = models.ForeignKey(User, unique=True)
 	manager_id = models.IntegerField(default=0) #创建该用户的系统用户的id
@@ -90,6 +95,9 @@ class UserProfile(models.Model):
 	#wepage
 	is_use_wepage = models.BooleanField(default=True) #是否启用wepage
 	store_name = models.CharField(max_length=64, default="") #店铺名称
+	#结算账期
+	settlement_period = models.IntegerField(default=SUPPLIER_SETTLEMENT_PERIOD_MONTH)
+	is_formal = models.BooleanField(default=True) #账户类型是否是正式账号
 	class Meta(object):
 		db_table = 'account_user_profile'
 		verbose_name = '用户配置'

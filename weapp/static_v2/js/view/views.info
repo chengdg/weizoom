@@ -100,6 +100,7 @@ stats_order_list_filter_view
 stats-order-summary-filter-view
 stats_manage_summary_base_data_view
 mall_order_buyer_hint_view
+mall_order_refunding_hint_view
 termite_navbar_second_nav
 stats_manage_summary_base_data_view
 apps_prize_keywordpane

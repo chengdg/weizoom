@@ -1480,6 +1480,29 @@ ORDER_STATUS_REFUNDED = 7  # 退款完成(回退销量)
 ORDER_STATUS_GROUP_REFUNDING = 8 #团购退款（没有退款完成按钮）
 ORDER_STATUS_GROUP_REFUNDED = 9 #团购退款完成
 
+# 权重小的优先
+ORDER_STATUS2DELIVERY_ITEM_WEIGHT = {
+	ORDER_STATUS_NOT: 1,
+	ORDER_STATUS_PAYED_NOT_SHIP: 2,
+	ORDER_STATUS_PAYED_SHIPED: 3,
+	ORDER_STATUS_REFUNDING: 4,
+	ORDER_STATUS_SUCCESSED: 5,
+	ORDER_STATUS_REFUNDED:6,
+	ORDER_STATUS_CANCEL: 7
+}
+
+DELIVERY_ITEM_WEIGHT2ORDER_STATUS = {
+	1: ORDER_STATUS_NOT,
+	2: ORDER_STATUS_PAYED_NOT_SHIP,
+	3: ORDER_STATUS_PAYED_SHIPED,
+	4: ORDER_STATUS_REFUNDING,
+	5: ORDER_STATUS_SUCCESSED,
+	6: ORDER_STATUS_REFUNDED,
+	7: ORDER_STATUS_CANCEL
+}
+
+
+
 ORDER_BILL_TYPE_NONE = 0  # 无发票
 ORDER_BILL_TYPE_PERSONAL = 1  # 个人发票
 ORDER_BILL_TYPE_COMPANY = 2  # 公司发票
@@ -1591,6 +1614,7 @@ class Order(models.Model):
 	is_first_order = models.BooleanField(default=False) # 是否是用户的首单
 	supplier_user_id = models.IntegerField(default=0) # 订单供货商user的id，用于系列拆单
 	total_purchase_price = models.FloatField(default=0)  # 总订单采购价格
+	# refund_money = models.FloatField(default=-1)     # 订单的退款金额
 
 	class Meta(object):
 		db_table = 'mall_order'
@@ -1904,6 +1928,25 @@ class OrderPaymentInfo(models.Model):
 		verbose_name_plural = '订单支付信息'
 
 
+class OrderHasRefund(models.Model):
+	origin_order_id = models.IntegerField(default=0)  # 原始订单id，用于微众精选拆单
+	delivery_item_id = models.IntegerField(default=0)  # 对应子订单主键id
+	cash = models.FloatField(default=0.0)
+	weizoom_card_money = models.FloatField(default=0.0)  # 微众卡抵扣金额
+	integral = models.IntegerField(default=0)  # 积分
+	integral_money = models.FloatField(default=0) # 积分对应金额,退款当时的
+	coupon_money = models.FloatField(default=0)  # 优惠券金额
+	created_at = models.DateTimeField(auto_now_add=True)  # 添加时间
+	total = models.FloatField(default=0)  # 积分
+	finished = models.BooleanField(default=False)  # 是否退款完成
+
+
+	class Meta(object):
+		db_table = 'mall_order_has_refund'
+		verbose_name = '子订单退款信息'
+		verbose_name_plural = '子订单退款信息'
+
+
 class OrderHasProduct(models.Model):
 	"""
 	<order, product>关联
@@ -1923,6 +1966,7 @@ class OrderHasProduct(models.Model):
 	integral_sale_id = models.IntegerField(default=0) #使用的积分应用的id
 	origin_order_id = models.IntegerField(default=0) # 原始(母)订单id，用于微众精选拆单
 	purchase_price = models.FloatField(default=0)  # 采购单价
+	original_price = models.FloatField(default=0)  # 商品原价 add by bert 请勿随意赋值
 
 	class Meta(object):
 		db_table = 'mall_order_has_product'
@@ -2745,21 +2789,31 @@ SUPPLIER_TYPE_RETAIL = 1
 SUPPLIER_TYPE_FIXED = 2
 # 普通供货商
 SUPPLIER_TYPE_NORMAL = -1
+
+# 结算账期  1【自然月】   2【15天】   3【自然周】
+SUPPLIER_SETTLEMENT_PERIOD_MONTH = 1
+SUPPLIER_SETTLEMENT_PERIOD_15TH_DAY = 2
+SUPPLIER_SETTLEMENT_PERIOD_WEEK = 3
+
+
 class Supplier(models.Model):
 	owner = models.ForeignKey(User)
-	name = models.CharField(max_length=16)  # 供货商名称
-	responsible_person = models.CharField(max_length=100) # 供货商负责人
-	supplier_tel = models.CharField(max_length=100) # 供货商电话
-	supplier_address = models.CharField(max_length=256) # 供货商地址
-	remark = models.CharField(max_length=256) # 备注
+	name = models.CharField(max_length=200)  # 供货商名称
+	responsible_person = models.CharField(max_length=100)  # 供货商负责人
+	supplier_tel = models.CharField(max_length=100)  # 供货商电话
+	supplier_address = models.CharField(max_length=256)  # 供货商地址
+	remark = models.CharField(max_length=256)  # 备注
+	type = models.IntegerField(default=SUPPLIER_TYPE_NORMAL)
 	is_delete = models.BooleanField(default=False)  # 是否已经删除
-	type = models.IntegerField(SUPPLIER_TYPE_NORMAL)# 是否55分  0 55分成
 	created_at = models.DateTimeField(auto_now_add=True)  # 添加时间
+	settlement_period = models.IntegerField(default=SUPPLIER_SETTLEMENT_PERIOD_MONTH)
 
 	class Meta(object):
 		verbose_name = "供货商"
 		verbose_name_plural = "供货商操作"
 		db_table = "mall_supplier"
+
+
 
 class SupplierPostageConfig(models.Model):
 	supplier_id = models.IntegerField(default=0)

@@ -875,3 +875,19 @@ WZCARD_ENCRYPT_INFO = {
     'token': '23d0d602ffb6k3f47d7ec49d0a80k9',
     'encodingAESKey': 'BPQSp7DFZSs1lz7EBToIGe6RVC8CFTnGZm2mzJw5W4I'
 }
+
+ENABLE_API_AUTH = False
+
+
+if 'deploy' == MODE:
+    MNS_ACCESS_KEY_ID = 'eJ8LylRwQERRqOot'
+    MNS_ACCESS_KEY_SECRET = 'xxPrfGcUlnsL7IPweJRqVekHTCu6Ad'
+    MNS_ENDPOINT = 'http://1615750970594173.mns.cn-hangzhou.aliyuncs.com/'
+    MNS_SECURITY_TOKEN = ''
+    SUBSCRIBE_QUEUE_NAME = 'order-close'
+else:
+    MNS_ACCESS_KEY_ID = 'eJ8LylRwQERRqOot'
+    MNS_ACCESS_KEY_SECRET = 'xxPrfGcUlnsL7IPweJRqVekHTCu6Ad'
+    MNS_ENDPOINT = 'http://1615750970594173.mns.cn-hangzhou.aliyuncs.com/'
+    MNS_SECURITY_TOKEN = ''
+    SUBSCRIBE_QUEUE_NAME = 'test-order-close'

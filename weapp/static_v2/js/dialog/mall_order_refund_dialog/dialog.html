@@ -1,0 +1,106 @@
+<style>
+	.xui-commonOrderRefundDialog .modal-body .form-inline {
+		width: 50%;
+		display: table-cell;	
+  		line-height: 49px;
+		padding: 5px 5px 0 40px;
+	}	
+	.xui-commonOrderRefundDialog .modal-body .form-inline .xui-i-tips {
+		display: block;
+		padding: 0 10px 18px 52px;
+		margin: -10px 0 0 0;
+		line-height: 0;
+		color: #f00;
+		text-align: left;		
+	}
+	.xui-commonOrderRefundDialog .modal-body .form-inline .xui-i-coupon-tips {
+		display: block;
+		padding: 0 10px 0 52px;
+		margin: -10px 0 0 0;
+		line-height: 0;
+		color: #ccc;
+		text-align: left;		
+	}
+	.xui-commonOrderRefundDialog .modal-body .xui-i-total-error {
+		text-align: center;
+	  	color: #f00;
+	  	padding: 23px 0 0 0;
+	}
+	.xui-commonOrderRefundDialog .modal-body .form-control {
+		width: 110px;
+	}
+	.xui-i-top-tips .xui-i-number {
+		color: red;	
+	}
+</style>
+<script id="mall-order-refund-dialog-tmpl-src" type="text/x-jquery-tmpl">
+	<div class="modal fade" >
+	<div class="modal-dialog xui-commonOrderRefundDialog">
+	<div class="modal-content">
+		<div class="modal-header">
+			<button aria-hidden="true" data-dismiss="modal" class="close" type="button"><span aria-hidden="true">&times;</span></button>
+			<h3 class="modal-title">退款录入，当前订单应退：¥<span class="xui-i-should-total"></span></h3>
+		</div>
+		<div class="modal-body">
+			<div class="xa-i-refund-info-show">
+			</div>
+			<div class="form-inline">
+				<div class="xui-i-item">    
+					<label class="">现　金：</label>    
+					<input type="text" class="form-control" id="cash" name="cash" value="">   
+					<span>元</span>
+					<span class="xui-i-tips"><span>
+				</div>
+				<div class="xui-i-item">    
+					<label class="">优惠券：</label>    
+					<input type="text" class="form-control" id="coupon_money" name="coupon_money" value="">   
+					<span>元</span>
+				</div>
+			</div>
+			<div class="form-inline">
+				<div class="xui-i-item">    
+					<label class="">微众卡：</label>    
+					<input type="text" class="form-control" id="weizoom_card_money" name="weizoom_card_money" value="">   
+					<span>元</span>
+					<span class="xui-i-tips">xxxx<span>
+				</div>
+				<div class="xui-i-item">    
+					<label class="">积　分：</label>    
+					<input type="text" class="form-control" id="integral" name="integral" value="">   
+					<input type="hidden" id="integral_money" name="integralMoney" value="">   
+					<span>=</span><span class="xa-i-integral-money">0.00</span><span>元</span>
+					<span class="xui-i-coupon-tips">(注：1元＝${integralPerYuan}积分)<span>
+				</div>
+			</div>
+			<div class="xui-i-total">
+				<span>共计：</span><span class="xui-i-total-sum"></span><span>元</span>
+			</div>
+			<div class="xui-i-total-error">
+				<span></span>
+			</div>
+		</div>
+		<div class="modal-footer pr">
+		    <input type="hidden" id="order_id" name="order_id" value="${orderId}">   
+		    <input type="hidden" id="deliveryItemId" name="order_id" value="${deliveryItemId}">   
+			<button class="btn btn-primary xa-submit">提交</button>
+			<button class="btn btn-cancel xa-close">取消</button>
+		</div>
+	</div>
+	</div>
+	</div>
+</script>
+
+<script id="mall-order-refund-dialog-top-tips-tmpl-src" type="text/x-jquery-tmpl">
+    <p class="xui-i-top-tips"> 
+        <span>${orderType}：现金</span> 
+        <span class="xui-i-number">¥${(cash*1).toFixed(2)}</span> 
+        <span>+微众卡</span> 
+        <span class="xui-i-number">¥${(weizoomCardMoney*1).toFixed(2)}</span> 
+        <span>+优惠券</span> 
+        <span class="xui-i-number">¥${(couponMoney*1).toFixed(2)}</span> 
+        <span>+积分抵扣</span> 
+        <span class="xui-i-number">¥${(integral*1).toFixed(2)}</span> 
+        <span>=</span> 
+        <span class="xui-i-number">¥${(totalMoney*1).toFixed(2)}</span> 
+    </p>
+</script>
