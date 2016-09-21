@@ -1113,7 +1113,7 @@ class ChannelDistribution(resource.Resource):
 				tags.append(tag)
 
 		input_disabled = True  # 前端修改3个字段的属性为disabled
-		if request.user.username == 'jobs':
+		if request.user.username == 'ceshi01':
 			input_disabled = False
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
@@ -1278,8 +1278,7 @@ class ChannelDistribution(resource.Resource):
 				response.errMsg = u"重复的会员头衔"
 				return response.get_response()
 
-			# if request.user.username == 'jobs':  # 一个奇怪的需求,单独给这个用户添加修改3个字段的权限.
-			if True:
+			if request.user.username == 'ceshi01':  # 一个奇怪的需求,单独给这个用户添加修改3个字段的权限.
 				if commission_rate > 20 or commission_rate < 0:
 					response = create_response(500)
 					response.errMsg = u'佣金返现率输入错误'
