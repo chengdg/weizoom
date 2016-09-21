@@ -3052,7 +3052,7 @@ class ProductLimitZoneTemplate(models.Model):
 	provinces = models.CharField(max_length=1024) # 所有省id
 	cities = models.CharField(max_length=4096) # 所有城市id
 	created_at = models.DateTimeField(auto_now_add=True)  # 添加时间
-	is_deleted = models.BooleanField(default=False)
+	# is_deleted = models.BooleanField(default=False)
 
 	class Meta(object):
 		verbose_name = "商品仅售和禁售的模板"
