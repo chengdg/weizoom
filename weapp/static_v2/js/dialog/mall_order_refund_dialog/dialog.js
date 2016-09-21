@@ -52,7 +52,7 @@ W.dialog.mall.RefundOrderDialog = W.dialog.Dialog.extend({
         // 将母订单中的积分转换成金额
         var integralPerYuan =  parseFloat(this.integralPerYuan);
         integralPerYuan =  integralPerYuan > 0? integralPerYuan : 1;
-        mainOrder.integralMoney = parseInt(mainRoder.integral/integralPerYuan);
+        mainOrder.integralMoney = parseInt(mainOrder.integral/integralPerYuan);
 
         var mainRefundInfo = {
             cash: mainOrder.origin_final_price,
