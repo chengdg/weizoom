@@ -72,7 +72,9 @@ class Command(BaseCommand):
                 })
 
                 project_id = 'new_app:survey:%s' % related_page_id
-                html = create_page(project_id).replace('xa-submitTermite', 'xa-submitWepage').replace('/static/', 'http://' + settings.DOMAIN + '/static/')
+                html = create_page(project_id).replace('xa-submitTermite', 'xa-submitWepage')
+                if 'http://' not in html:
+                    html = html.replace('/static/', 'http://' + settings.DOMAIN + '/static/')
 
                 db_market_app_data.page_html.insert({
                     'related_page_id': related_page_id,
@@ -91,12 +93,22 @@ class Command(BaseCommand):
             related_page_id2record_id = {str(survey['related_page_id']): str(survey['_id']) for survey in db_market_app_data.survey_survey.find({'is_old': True})}
             for par in old_survey_participances:
                 related_page_id = record_id2related_page_id[str(par.belong_to)]
+                termite_data = par.termite_data
+                for key, value in termite_data.items():
+                    if value['type'] == 'appkit.uploadimg':
+                        img_list = []
+                        for img in value['value']:
+                            if 'http://' not in img:
+                                img = img.replace('/static/', 'http://' + settings.DOMAIN + '/static/')
+                            img_list.append(img)
+                        termite_data[key]['value'] = img_list
+
                 db_market_app_data.survey_survey_participance.insert({
                     'member_id': par.member_id,
                     'belong_to': related_page_id2record_id[related_page_id],
                     'related_page_id': related_page_id,
                     'tel': par.tel,
-                    'termite_data': par.termite_data,
+                    'termite_data': termite_data,
                     'prize': par.prize,
                     'created_at': par.created_at,
                     'is_old': True
