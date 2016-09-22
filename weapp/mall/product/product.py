@@ -1178,7 +1178,7 @@ class Product(resource.Resource):
             'has_store_name': has_store_name,
             'store_name': store_name,
             'template_id': product.limit_zone if product else 0,
-            'template_name': product_limit_zone.name if product and product else '',
+            'template_name': product_limit_zone.name if product and product_limit_zone else '',
             'pool_mall_type': pool_mall_type,
             'limit_zone_templates': limte_zone_templates
         })
