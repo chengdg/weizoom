@@ -638,7 +638,7 @@ class ProductPool(resource.Resource):
             #print "\\\\\\\\\\\\\\\\\\\\\\\\",filter_labels
             filter_labels_ids = json.loads(filter_labels)
             #filter_label_ids = models.ProductLabel.objects.filter(name__in=filter_labels).values_list('id',flat=True)
-            filter_label_product_ids = models.ProductHasLabel.objects.filter(label_id__in=filter_label_ids).values_list('product_id',flat=True)
+            filter_label_product_ids = models.ProductHasLabel.objects.filter(label_id__in=filter_labels_ids).values_list('product_id',flat=True)
             products = products.filter(id__in=filter_label_product_ids)
         #print ";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;",products
         # else:
