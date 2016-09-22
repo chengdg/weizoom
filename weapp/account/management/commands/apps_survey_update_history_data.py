@@ -36,19 +36,31 @@ class Command(BaseCommand):
         old_surveies = app_models.survey.objects()
         record_id2related_page_id = {str(survey.id): str(survey.related_page_id) for survey in old_surveies}
         related_page_ids = [str(survey.related_page_id) for survey in old_surveies]
+        related_page_ids_object = [ObjectId(survey.related_page_id) for survey in old_surveies]
         record_ids = [str(survey.id) for survey in old_surveies]
         old_survey_participances = app_models.surveyParticipance.objects(belong_to__in=record_ids)
         pagestore = pagestore_manager.get_pagestore('mongo')
 
-        #通过pymongo链接新的数据库market_app_data
-        connection = pymongo.Connection('mongo.apps.com', 27017)
+        # #通过pymongo链接新的数据库market_app_data
+        connection = pymongo.Connection(settings.APP_MONGO['HOST'], 27017)
         db_market_app_data = connection.market_app_data
         db_termite = connection.termite
+
         try:
             #泡脚本之前先把新数据库中的老数据删除
             db_market_app_data.survey_survey.remove({'is_old': True})
             db_market_app_data.page_html.remove({'is_old': True, 'related_page_id': {'$in': related_page_ids}})
             db_market_app_data.survey_survey_participance.remove({'is_old': True})
+
+            #复制termite里的page到market_page
+            for page in db_termite.page.find({'_id': {'$in': related_page_ids_object}}):
+                db_termite.market_page.remove(page)
+                # 更新market_page里description中静态资源地址
+                description = page['component']['components'][0]['model']['description']
+                if 'http://' not in description:
+                    page['component']['components'][0]['model']['description'] = description.replace('/static/', 'http://' + settings.DOMAIN + '/static/')
+                db_termite.market_page.insert(page)
+
             #然后将老数据写入新数据库
             for survey in old_surveies:
                 related_page_id = survey.related_page_id
@@ -85,13 +97,6 @@ class Command(BaseCommand):
                     'html': html,
                     'is_old': True
                 })
-
-                #更新page里description中静态资源地址
-                component = db_termite.page.find_one({'_id': ObjectId(related_page_id)})['component']
-                description = component['components'][0]['model']['description']
-                if 'http://' not in description:
-                    component['components'][0]['model']['description'] = description.replace('/static/', 'http://' + settings.DOMAIN + '/static/')
-                    db_termite.page.update({'_id': ObjectId(related_page_id)}, {'$set': {'component': component}})
 
             #构造调研活动related_page_id与活动id映射
             related_page_id2record_id = {str(survey['related_page_id']): str(survey['_id']) for survey in db_market_app_data.survey_survey.find({'is_old': True})}
