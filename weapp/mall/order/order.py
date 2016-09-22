@@ -784,10 +784,9 @@ class RefundSuccessfulSubOrder(resource.Resource):
         """
         更新子订单和母订单的状态，并修改母订单总金额
         """
+        order_id = int(request.POST['order_id'])
+        delivery_item_id = int(request.POST['delivery_item_id'])
         try:
-            order_id = int(request.POST['order_id'])
-            delivery_item_id = int(request.POST['delivery_item_id'])
-            
             sub_order = Order.objects.filter(id=delivery_item_id).first()
             if sub_order and sub_order.origin_order_id == order_id and sub_order.webapp_id == request.user_profile.webapp_id:
                 pass
@@ -822,5 +821,12 @@ class RefundSuccessfulSubOrder(resource.Resource):
             response = create_response(200)
             return response.get_response()
         except:
-            notify_message = u"子订单退款成功，cause:\n{}".format(unicode_full_stack())
-            watchdog_error(notify_message)
+            # notify_message = u"子订单退款成功，cause:\n{}".format(unicode_full_stack())
+            # watchdog_error(notify_message)
+            from eaglet.core import watchdog
+            watchdog.alert({
+                'uuid': 'refund_order_error',
+                'traceback': unicode_full_stack(),
+                'order_id': order_id,
+                'delivery_item_id': delivery_item_id
+            })
