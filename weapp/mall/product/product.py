@@ -1161,7 +1161,7 @@ class Product(resource.Resource):
         limte_zone_templates = models.ProductLimitZoneTemplate.objects.filter(owner=request.user).order_by('-id')
         product_limit_zone = None
         if product:
-            product_limit_zone = limte_zone_templates.filter(id=product.limit_zone).first()
+            product_limit_zone = models.ProductLimitZoneTemplate.objects.filter(id=product.limit_zone).first()
         c = RequestContext(request, {
             'first_nav_name': export.PRODUCT_FIRST_NAV,
             'second_navs': export.get_mall_product_second_navs(request),
