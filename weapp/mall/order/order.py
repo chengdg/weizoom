@@ -784,39 +784,43 @@ class RefundSuccessfulSubOrder(resource.Resource):
         """
         更新子订单和母订单的状态，并修改母订单总金额
         """
-        order_id = int(request.POST['order_id'])
-        delivery_item_id = int(request.POST['delivery_item_id'])
-        
-        sub_order = Order.objects.filter(id=delivery_item_id).first()
-        if sub_order and sub_order.origin_order_id == order_id and sub_order.webapp_id == request.user_profile.webapp_id:
-            pass
-        else:
-            response = create_response(500)
-            response.data = {'msg': "非法操作，订单状态不允许进行该操作"}
+        try:
+            order_id = int(request.POST['order_id'])
+            delivery_item_id = int(request.POST['delivery_item_id'])
+            
+            sub_order = Order.objects.filter(id=delivery_item_id).first()
+            if sub_order and sub_order.origin_order_id == order_id and sub_order.webapp_id == request.user_profile.webapp_id:
+                pass
+            else:
+                response = create_response(500)
+                response.data = {'msg': "非法操作，订单状态不允许进行该操作"}
+                return response.get_response()
+
+            sub_order = Order.objects.get(id=delivery_item_id)
+            #获取子订单的金额
+            order_has_refund = OrderHasRefund.objects.get(delivery_item_id=sub_order.id)
+            refund_cash_money = order_has_refund.cash
+            refund_weizoom_card_money = order_has_refund.weizoom_card_money
+            # refund_money = sub_order.refund_money
+            #下一步的订单状态：退款成功
+            sub_order_target_status = ORDER_STATUS_REFUNDED
+            #更新母订单的总金额
+            Order.objects.filter(id=delivery_item_id).update(status=sub_order_target_status)
+            Order.objects.filter(id=order_id).update(final_price=(F('final_price')-refund_cash_money), weizoom_card_money=(F('weizoom_card_money')-refund_weizoom_card_money))
+            
+            OrderHasRefund.objects.filter(delivery_item_id=delivery_item_id).update(finished=True)
+
+            operation_name = request.user.username
+            action_msg = '退款完成'
+            mall_api.record_status_log(sub_order.order_id, operation_name, sub_order.status, sub_order_target_status)
+            mall_api.record_operation_log(sub_order.order_id, operation_name, action_msg,sub_order)
+            #更新商品的库存和销量
+            mall_api.restore_product_stock_by_order(sub_order)
+            #更新母订单的状态
+            mall_api.update_order_status_by_sub_order(sub_order, operation_name, action_msg)
+            
+            response = create_response(200)
             return response.get_response()
-
-        sub_order = Order.objects.get(id=delivery_item_id)
-        #获取子订单的金额
-        order_has_refund = OrderHasRefund.objects.get(delivery_item_id=sub_order.id)
-        refund_cash_money = order_has_refund.cash
-        refund_weizoom_card_money = order_has_refund.weizoom_card_money
-        # refund_money = sub_order.refund_money
-        #下一步的订单状态：退款成功
-        sub_order_target_status = ORDER_STATUS_REFUNDED
-        #更新母订单的总金额
-        Order.objects.filter(id=delivery_item_id).update(status=sub_order_target_status)
-        Order.objects.filter(id=order_id).update(final_price=(F('final_price')-refund_cash_money), weizoom_card_money=(F('weizoom_card_money')-refund_weizoom_card_money))
-        
-        OrderHasRefund.objects.filter(delivery_item_id=delivery_item_id).update(finished=True)
-
-        operation_name = request.user.username
-        action_msg = '退款完成'
-        mall_api.record_status_log(sub_order.order_id, operation_name, sub_order.status, sub_order_target_status)
-        mall_api.record_operation_log(sub_order.order_id, operation_name, action_msg,sub_order)
-        #更新商品的库存和销量
-        mall_api.restore_product_stock_by_order(sub_order)
-        #更新母订单的状态
-        mall_api.update_order_status_by_sub_order(sub_order, operation_name, action_msg)
-        
-        response = create_response(200)
-        return response.get_response()
+        except:
+            notify_message = u"子订单退款成功，cause:\n{}".format(unicode_full_stack())
+            watchdog_error(notify_message)
