@@ -29,7 +29,6 @@ class QrcodeBalance(api_resource.ApiResource):
 		"""
 		start = time.time()
 		channel_qrcode_ids = json.loads(args.get('channel_qrcode_ids'))
-		print channel_qrcode_ids,"fffffffffffffffff"
 		order_status = int(args.get('order_status', '-1'))
 		is_first_order = int(args.get('is_first_order', '-1'))
 		balance_time_from = args.get('balance_time_from','2016-06-24 00:00:00')

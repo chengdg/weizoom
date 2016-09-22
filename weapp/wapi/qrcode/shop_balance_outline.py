@@ -178,7 +178,6 @@ class ShopBalanceOutline(api_resource.ApiResource):
 									'final_price': final_price,
 									'created_at': order.created_at.strftime("%Y-%m-%d %H:%M:%S")
 								})
-		print channel_qrcode_id2all_order,"dddddddddggggggggggggggggggggggggggggggg"
 
 		member_outline_info = {
 			"channel_qrcode_id2first_order": channel_qrcode_id2first_order,
