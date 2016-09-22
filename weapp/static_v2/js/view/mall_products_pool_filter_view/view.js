@@ -8,7 +8,8 @@ W.view.mall.ProductsPoolFilterView = Backbone.View.extend({
     events: {
         'click .xa-search': 'onClickSearchButton',
         'click .xa-reset': 'onClickResetButton',
-        'change #firstClassification': 'onChangeEvent'
+        'change #firstClassification': 'onChangeEvent',
+        'click .xa-selectProductLabel': 'onClickSelectLabels'
     },
 
     initialize: function(options) {
@@ -34,7 +35,24 @@ W.view.mall.ProductsPoolFilterView = Backbone.View.extend({
             }
         })
     },
-
+    onClickSelectLabels:function(){
+        var productLabelIds = $('#productLabels').val()?$('#productLabels').val().split(','):[];
+        W.dialog.showDialog('W.dialog.mall.SelectProductLabelDialog', {
+            productLabelIds: productLabelIds,
+            success: function(data) {
+                console.log(data)
+                var spans = [];
+                var labelIds = [];
+                data['names'].map(function(name){
+                    spans.push('<span class="xui-product-label" title="'+ name +'">'+ name +'</span>');
+                    labelIds.push()
+                })
+                var html = spans.join('') + '<a href="javascript:void(0);" class="xui-selectProductLabel xa-selectProductLabel">选择标签</a>'
+                $('.xa-labels-box').html(html);
+                $('#productLabels').val(data['ids']);
+            }
+        });
+    },
     onClickSearchButton: function(){
         var data = this.getFilterData();
     },
@@ -47,6 +65,9 @@ W.view.mall.ProductsPoolFilterView = Backbone.View.extend({
         $('#secondaryClassification').val('-1');
         $('#status').val('-1');
         $('#supplier_type').val('-1');
+
+        $('#productLabels').val('');
+        $('.xa-labels-box').html('<a href="javascript:void(0);" class="xui-selectProductLabel xa-selectProductLabel">选择标签</a>');
     },
 
     onChangeEvent: function() {
@@ -88,6 +109,8 @@ W.view.mall.ProductsPoolFilterView = Backbone.View.extend({
 
         //状态
         var supplier_type = this.$('#supplier_type').val();
+        //商品标签
+        var productLabels = this.$('#productLabels').val()?JSON.stringify(this.$('#productLabels').val().split(',')):"";
 
         var data = {
             product_code: productCode,
@@ -96,7 +119,8 @@ W.view.mall.ProductsPoolFilterView = Backbone.View.extend({
             first_classification: firstClassification,
             secondary_classification: secondaryClassification,
             status: status,
-            supplier_type:supplier_type
+            supplier_type:supplier_type,
+            labels:productLabels
         }
         this.trigger('search', data);
     },

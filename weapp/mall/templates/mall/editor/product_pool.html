@@ -14,7 +14,7 @@
 #downloadLink{
   margin:4px 10px!important;
 }
-.xui-productsPoolPage .xui-productList tbody tr:nth-child(even) td:first-child input[type="checkbox"]{
+.xui-productsPoolPage .xui-productList tbody tr:nth-child(even) td:first-child{
     display:none;
 }
 
@@ -186,16 +186,16 @@
 
                 </tr>
                 <tr style="height:20px;">
-					<td colspan="8" class="xui-remark xa-remark" style=''>
+					<td colspan="9" class="xui-remark xa-remark" style=''>
 					{{if product.product_label_names}}
 					    <!--${product.product_label_names}-->
 					    {{each(i, name) product.product_label_names}}
-					    <button>${name}</button>
+					    <span class="xui-product-label">${name}</span>
 					    {{/each}}
 					{{else}}
 					    <!--${product.classification_label_names}-->
 					    {{each(i, name) product.classification_label_names}}
-					    <button>${name}</button>
+					    <span>${name}</span>
 					    {{/each}}
 					{{/if}}
                         <!--{{product.product_label_names}}-->
