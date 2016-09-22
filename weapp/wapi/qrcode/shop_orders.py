@@ -38,6 +38,16 @@ class ShopOrders(api_resource.ApiResource):
 			else:
 				channel_qrcode_id2member_id[m.channel_qrcode_id].append(m.member_id)
 
+		member_id2created_at = {}
+		for cq in channel_qrcodes:
+			if cq.is_bing_member:
+				total_member_ids.append(cq.bing_member_id)
+				if not channel_qrcode_id2member_id.has_key(cq.id):
+					channel_qrcode_id2member_id[cq.id] = [cq.bing_member_id]
+				else:
+					channel_qrcode_id2member_id[cq.id].append(cq.bing_member_id)
+				member_id2created_at[cq.bing_member_id] = cq.created_at.strftime('%Y-%m-%d %H:%M:%S')
+
 		webapp_user_id2member_id = {webappuser.id: webappuser.member_id for webappuser in WebAppUser.objects.filter(member_id__in=total_member_ids)}
 
 		start_date = args.get('start_date', None)
@@ -74,31 +84,38 @@ class ShopOrders(api_resource.ApiResource):
 				webapp_user_id = order.webapp_user_id
 				member_id = webapp_user_id2member_id.get(webapp_user_id)
 				created_at = order.created_at.strftime("%Y-%m-%d %H:%M:%S")
-				if created_at >= start_time and created_at <= end_time:
-					for channel_qrcode_id, member_ids in channel_qrcode_id2member_id.items():
-						if member_id in member_ids:
-							if order.status not in [ORDER_STATUS_CANCEL, ORDER_STATUS_GROUP_REFUNDING, ORDER_STATUS_GROUP_REFUNDED, ORDER_STATUS_REFUNDING, ORDER_STATUS_REFUNDED]:
-								sale_price = order.final_price + order.coupon_money + order.integral_money + order.weizoom_card_money + order.promotion_saved_money + order.edit_money
-								final_price = order.final_price
-								if not channel_qrcode_id2increase_order_count.has_key(channel_qrcode_id):
-									channel_qrcode_id2increase_order_count[channel_qrcode_id] = 1
-								else:
-									channel_qrcode_id2increase_order_count[channel_qrcode_id] += 1
+				flag = True
+				if member_id2created_at.get(member_id):
+					if member_id2created_at.get(member_id) <= created_at:
+						flag = True
+					else:
+						flag = False
+				if flag:
+					if created_at >= start_time and created_at <= end_time:
+						for channel_qrcode_id, member_ids in channel_qrcode_id2member_id.items():
+							if member_id in member_ids:
+								if order.status not in [ORDER_STATUS_CANCEL, ORDER_STATUS_GROUP_REFUNDING, ORDER_STATUS_GROUP_REFUNDED, ORDER_STATUS_REFUNDING, ORDER_STATUS_REFUNDED]:
+									sale_price = order.final_price + order.coupon_money + order.integral_money + order.weizoom_card_money + order.promotion_saved_money + order.edit_money
+									final_price = order.final_price
+									if not channel_qrcode_id2increase_order_count.has_key(channel_qrcode_id):
+										channel_qrcode_id2increase_order_count[channel_qrcode_id] = 1
+									else:
+										channel_qrcode_id2increase_order_count[channel_qrcode_id] += 1
 
-								if not channel_qrcode_id2final_price.has_key(channel_qrcode_id):
-									channel_qrcode_id2final_price[channel_qrcode_id] = final_price
-								else:
-									channel_qrcode_id2final_price[channel_qrcode_id] += final_price
+									if not channel_qrcode_id2final_price.has_key(channel_qrcode_id):
+										channel_qrcode_id2final_price[channel_qrcode_id] = final_price
+									else:
+										channel_qrcode_id2final_price[channel_qrcode_id] += final_price
 
-								if not channel_qrcode_id2order_sale_money.has_key(channel_qrcode_id):
-									channel_qrcode_id2order_sale_money[channel_qrcode_id] = sale_price
-								else:
-									channel_qrcode_id2order_sale_money[channel_qrcode_id] += sale_price
-							if order.is_first_order and order.status != ORDER_STATUS_NOT:
-								if not channel_qrcode_id2first_order_count.has_key(channel_qrcode_id):
-									channel_qrcode_id2first_order_count[channel_qrcode_id] = 1
-								else:
-									channel_qrcode_id2first_order_count[channel_qrcode_id] += 1
+									if not channel_qrcode_id2order_sale_money.has_key(channel_qrcode_id):
+										channel_qrcode_id2order_sale_money[channel_qrcode_id] = sale_price
+									else:
+										channel_qrcode_id2order_sale_money[channel_qrcode_id] += sale_price
+								if order.is_first_order and order.status != ORDER_STATUS_NOT:
+									if not channel_qrcode_id2first_order_count.has_key(channel_qrcode_id):
+										channel_qrcode_id2first_order_count[channel_qrcode_id] = 1
+									else:
+										channel_qrcode_id2first_order_count[channel_qrcode_id] += 1
 
 		if is_export:
 			channel_qrcode_id2order_count = {}
@@ -108,30 +125,38 @@ class ShopOrders(api_resource.ApiResource):
 			for order in orders:
 				webapp_user_id = order.webapp_user_id
 				member_id = webapp_user_id2member_id.get(webapp_user_id)
-				for channel_qrcode_id, member_ids in channel_qrcode_id2member_id.items():
-					if member_id in member_ids:
-						if not channel_qrcode_id2order_count.has_key(channel_qrcode_id):
-							channel_qrcode_id2order_count[channel_qrcode_id] = 1
-						else:
-							channel_qrcode_id2order_count[channel_qrcode_id] += 1
-						if order.status not in [ORDER_STATUS_CANCEL,ORDER_STATUS_GROUP_REFUNDING,ORDER_STATUS_GROUP_REFUNDED,ORDER_STATUS_REFUNDING,ORDER_STATUS_REFUNDED]:
-							sale_price = order.final_price + order.coupon_money + order.integral_money + order.weizoom_card_money + order.promotion_saved_money + order.edit_money
-							final_price = order.final_price
-							if not channel_qrcode_id2total_order_sale_money.has_key(channel_qrcode_id):
-								channel_qrcode_id2total_order_sale_money[channel_qrcode_id] = sale_price
+				created_at = order.created_at.strftime("%Y-%m-%d %H:%M:%S")
+				flag = True
+				if member_id2created_at.get(member_id):
+					if member_id2created_at.get(member_id) <= created_at:
+						flag = True
+					else:
+						flag = False
+				if flag:
+					for channel_qrcode_id, member_ids in channel_qrcode_id2member_id.items():
+						if member_id in member_ids:
+							if not channel_qrcode_id2order_count.has_key(channel_qrcode_id):
+								channel_qrcode_id2order_count[channel_qrcode_id] = 1
 							else:
-								channel_qrcode_id2total_order_sale_money[channel_qrcode_id] += sale_price
+								channel_qrcode_id2order_count[channel_qrcode_id] += 1
+							if order.status not in [ORDER_STATUS_CANCEL,ORDER_STATUS_GROUP_REFUNDING,ORDER_STATUS_GROUP_REFUNDED,ORDER_STATUS_REFUNDING,ORDER_STATUS_REFUNDED]:
+								sale_price = order.final_price + order.coupon_money + order.integral_money + order.weizoom_card_money + order.promotion_saved_money + order.edit_money
+								final_price = order.final_price
+								if not channel_qrcode_id2total_order_sale_money.has_key(channel_qrcode_id):
+									channel_qrcode_id2total_order_sale_money[channel_qrcode_id] = sale_price
+								else:
+									channel_qrcode_id2total_order_sale_money[channel_qrcode_id] += sale_price
 
-							if not channel_qrcode_id2total_final_price.has_key(channel_qrcode_id):
-								channel_qrcode_id2total_final_price[channel_qrcode_id] = final_price
-							else:
-								channel_qrcode_id2total_final_price[channel_qrcode_id] += final_price
+								if not channel_qrcode_id2total_final_price.has_key(channel_qrcode_id):
+									channel_qrcode_id2total_final_price[channel_qrcode_id] = final_price
+								else:
+									channel_qrcode_id2total_final_price[channel_qrcode_id] += final_price
 
-						if order.is_first_order and order.status != ORDER_STATUS_NOT:
-							if not channel_qrcode_id2total_first_order_count.has_key(channel_qrcode_id):
-								channel_qrcode_id2total_first_order_count[channel_qrcode_id] = 1
-							else:
-								channel_qrcode_id2total_first_order_count[channel_qrcode_id] += 1
+							if order.is_first_order and order.status != ORDER_STATUS_NOT:
+								if not channel_qrcode_id2total_first_order_count.has_key(channel_qrcode_id):
+									channel_qrcode_id2total_first_order_count[channel_qrcode_id] = 1
+								else:
+									channel_qrcode_id2total_first_order_count[channel_qrcode_id] += 1
 
 			return {
 				"channel_qrcode_id2increase_order_count": channel_qrcode_id2increase_order_count,

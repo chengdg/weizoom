@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import json
 
+from django.db.models import Q
+
 from core import api_resource, paginator
 from mall.models import Order, ORDER_STATUS_SUCCESSED, ORDER_STATUS_PAYED_SHIPED, ORDER_STATUS_PAYED_NOT_SHIP, \
 	ORDER_STATUS_PAYED_SUCCESSED, ORDER_STATUS_NOT
@@ -46,20 +48,35 @@ class QrcodeMember(api_resource.ApiResource):
 				member_ids.append(member.id)
 			filter_data_args["member_id__in"] = member_ids
 
-		channel_members = ChannelQrcodeHasMember.objects.filter(**filter_data_args).order_by('-created_at')
 
-		#处理分页
-		count_per_page = int(args.get('count_per_page', '20'))
-		cur_page = int(args.get('cur_page', '1'))
-		pageinfo, channel_members = paginator.paginate(channel_members, cur_page, count_per_page)
+		channel_members = ChannelQrcodeHasMember.objects.filter(**filter_data_args).order_by('-created_at')
 		member_ids = []
+		q_has_member_ids = []
 		channel_qrcode_id2member_id = {}
 		for member_log in channel_members:
+			q_has_member_ids.append(member_log.member_id)
 			member_ids.append(member_log.member_id)
 			if not channel_qrcode_id2member_id.has_key(member_log.channel_qrcode_id):
 				channel_qrcode_id2member_id[member_log.channel_qrcode_id] = [member_log.member_id]
 			else:
 				channel_qrcode_id2member_id[member_log.channel_qrcode_id].append(member_log.member_id)
+
+		q_settings = ChannelQrcodeSettings.objects.filter(Q(id__in=channel_qrcode_ids)|Q(bing_member_id__in=member_ids))
+		q_member_id2created_at = {}
+		for qs in q_settings:
+			if qs.is_bing_member:
+				member_ids.append(qs.bing_member_id)
+				if not channel_qrcode_id2member_id.has_key(qs.id):
+					channel_qrcode_id2member_id[qs.id] = [qs.bing_member_id]
+				else:
+					channel_qrcode_id2member_id[qs.id].append(qs.bing_member_id)
+				q_member_id2created_at[qs.bing_member_id] = qs.created_at.strftime('%Y-%m-%d %H:%M:%S')
+
+		#处理分页
+		count_per_page = int(args.get('count_per_page', '20'))
+		cur_page = int(args.get('cur_page', '1'))
+		pageinfo, member_ids = paginator.paginate(member_ids, cur_page, count_per_page)
+
 
 		webapp_users = WebAppUser.objects.filter(member_id__in=member_ids)
 		webapp_user_id2member_id = dict([(u.id, u.member_id) for u in webapp_users])
@@ -72,18 +89,37 @@ class QrcodeMember(api_resource.ApiResource):
 		webapp_user_id2final_price = {}
 		webapp_user_id2sale_money = {}
 		final_price = 0
+		member_id2order_count = {}
 		for order in orders:
-			final_price += order.final_price
-			if not webapp_user_id2final_price.has_key(order.webapp_user_id):
-				webapp_user_id2final_price[order.webapp_user_id] = order.final_price
+			member_id = webapp_user_id2member_id[order.webapp_user_id]
+			created_at = q_member_id2created_at.get(member_id)
+			flag = False
+			if created_at:
+				if member_id in q_has_member_ids:
+					if order.created_at.strftime('%Y-%m-%d %H:%M:%S') < created_at:
+						flag = True
+				else:
+					if order.created_at.strftime('%Y-%m-%d %H:%M:%S') >= created_at:
+						flag = True
 			else:
-				webapp_user_id2final_price[order.webapp_user_id] += order.final_price
+				flag = True
+			if flag:
+				if not member_id2order_count.has_key(member_id):
+					member_id2order_count[member_id] = 1
+				else:
+					member_id2order_count[member_id] += 1
+				final_price += order.final_price
+				if not webapp_user_id2final_price.has_key(order.webapp_user_id):
+					webapp_user_id2final_price[order.webapp_user_id] = order.final_price
+				else:
+					webapp_user_id2final_price[order.webapp_user_id] += order.final_price
 
-			sale_price = order.final_price + order.coupon_money + order.integral_money + order.weizoom_card_money + order.promotion_saved_money + order.edit_money
-			if not webapp_user_id2sale_money.has_key(order.webapp_user_id):
-				webapp_user_id2sale_money[order.webapp_user_id] = sale_price
-			else:
-				webapp_user_id2sale_money[order.webapp_user_id] += sale_price
+				sale_price = order.final_price + order.coupon_money + order.integral_money + order.weizoom_card_money + order.promotion_saved_money + order.edit_money
+				if not webapp_user_id2sale_money.has_key(order.webapp_user_id):
+					webapp_user_id2sale_money[order.webapp_user_id] = sale_price
+				else:
+					webapp_user_id2sale_money[order.webapp_user_id] += sale_price
+
 
 		channel_members = Member.objects.filter(id__in=member_ids).order_by('-created_at')
 		members = []
@@ -103,7 +139,7 @@ class QrcodeMember(api_resource.ApiResource):
 				"channel_qrcode_id": channel_qrcode_id,
 				"member_name": channel_member.username_for_html,
 				"follow_time": channel_member.created_at.strftime('%Y-%m-%d %H:%M:%S'),
-				"pay_times": channel_member.pay_times,
+				"pay_times": member_id2order_count.get(channel_member.id, 0), #member_id2order_count
 				'pay_money': '%.2f' % pay_money,
 				"final_price": '%.2f' % final_price
 			})

@@ -46,6 +46,18 @@ class QrcodeOrder(api_resource.ApiResource):
 			else:
 				channel_qrcode_id2member_id[member_log.channel_qrcode_id].append(member_log.member_id)
 
+		member_id2created_at = {}
+		for cq in channel_qrcodes:
+			if cq.is_bing_member:
+				member_ids.append(cq.bing_member_id)
+				if not channel_qrcode_id2member_id.has_key(cq.id):
+					channel_qrcode_id2member_id[cq.id] = [cq.bing_member_id]
+				else:
+					channel_qrcode_id2member_id[cq.id].append(cq.bing_member_id)
+				member_id2created_at[cq.bing_member_id] = cq.created_at.strftime('%Y-%m-%d %H:%M:%S')
+
+
+
 		webapp_user_ids = [webappuser.id for webappuser in WebAppUser.objects.filter(member_id__in=member_ids)]
 
 		filter_data_args = {
@@ -63,7 +75,7 @@ class QrcodeOrder(api_resource.ApiResource):
 		if start_date and end_date:
 			start_time = start_date + ' 00:00:00'
 			end_time = end_date + ' 23:59:59'
-			filter_data_args["created_at__gte"] = start_time
+			filter_data_args["created_at__gte"] = start_time if min(member_id2created_at.values()) <= start_time else min(member_id2created_at.values())
 			filter_data_args["created_at__lte"] = end_time
 		if is_first_order:
 			filter_data_args["is_first_order"] = True

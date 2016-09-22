@@ -1,4 +1,4 @@
-__author__ = 'Administrator'
+# __author__ = 'Administrator'
 # -*- coding: utf-8 -*-
 
 from core import api_resource, paginator

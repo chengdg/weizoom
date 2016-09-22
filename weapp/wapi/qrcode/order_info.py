@@ -28,14 +28,13 @@ class QrcodeOrderInfo(api_resource.ApiResource):
 
 		if is_first_order:
 			filter_args["is_first_order"] = is_first_order
-		orders = Order.objects.filter(**filter_args)
+		orders = Order.objects.filter(**filter_args).order_by('-created_at')
 
 
 		order_id2created_at = {}
 		curr_orders = []
 		for order in orders:
 			sale_price = order.final_price + order.coupon_money + order.integral_money + order.weizoom_card_money + order.promotion_saved_money + order.edit_money
-
 			order_id2created_at[order.id] = order.created_at.strftime('%Y-%m-%d %H:%M:%S')
 			curr_orders.append({
 				"order_id": order.id,

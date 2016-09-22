@@ -29,6 +29,7 @@ class QrcodeBalance(api_resource.ApiResource):
 		"""
 		start = time.time()
 		channel_qrcode_ids = json.loads(args.get('channel_qrcode_ids'))
+		print channel_qrcode_ids,"fffffffffffffffff"
 		order_status = int(args.get('order_status', '-1'))
 		is_first_order = int(args.get('is_first_order', '-1'))
 		balance_time_from = args.get('balance_time_from','2016-06-24 00:00:00')
@@ -39,7 +40,35 @@ class QrcodeBalance(api_resource.ApiResource):
 			created_at = dateutil.get_today()
 
 		member_ids = [member_log.member_id for member_log in ChannelQrcodeHasMember.objects.filter(channel_qrcode_id__in=channel_qrcode_ids)]
-		webapp_user_ids = [webappuser.id for webappuser in WebAppUser.objects.filter(member_id__in=member_ids)]
+		#在二维码的会员中有人成为代言人
+		bing_member_id2channel_qrcode_id = {}
+		bing_member_id2created_at = {}
+		for cqs in ChannelQrcodeSettings.objects.filter(bing_member_id__in=member_ids):
+			bing_member_id2created_at[cqs.bing_member_id] = cqs.created_at.strftime("%Y-%m-%d %H:%M:%S")
+			bing_member_id2channel_qrcode_id[cqs.bing_member_id] = cqs.id
+
+
+		q_member_ids = []
+		channel_qrcode_id2member_id = {}
+		bing_member_id2qrcode_id = {}
+		for cq in channel_qrcodes:
+			q_member_ids.append(cq.bing_member_id)
+			if cq.is_bing_member:
+				if not channel_qrcode_id2member_id.has_key(cq.id):
+					channel_qrcode_id2member_id[cq.id] = [cq.bing_member_id]
+				else:
+					channel_qrcode_id2member_id[cq.id].append(cq.bing_member_id)
+				bing_member_id2qrcode_id[cq.bing_member_id] = cq.id
+		member_ids = set(member_ids) | set(q_member_ids)
+
+		webapp_user_ids = []
+		webapp_user_id2member_id = {}
+		webapp_user_id2created_at = {}
+		for webappuser in WebAppUser.objects.filter(member_id__in=member_ids):
+			webapp_user_ids.append(webappuser.id)
+			webapp_user_id2member_id[webappuser.id] = webappuser.member_id
+			if bing_member_id2created_at.get(webappuser.member_id):
+				webapp_user_id2created_at[webappuser.id] = bing_member_id2created_at.get(webappuser.member_id)
 
 		filter_data_args = {
 			"webapp_user_id__in": webapp_user_ids,
@@ -81,18 +110,38 @@ class QrcodeBalance(api_resource.ApiResource):
 		orders = []
 		for channel_order in channel_orders:
 			if channel_order.order_id in order_log_numbers:
+				member_id = webapp_user_id2member_id[channel_order.webapp_user_id]
 				sale_price = channel_order.final_price + channel_order.coupon_money + channel_order.integral_money + channel_order.weizoom_card_money + channel_order.promotion_saved_money + channel_order.edit_money
 				final_price = channel_order.final_price
-				orders.append({
-					"order_id": channel_order.id,
-					"order_number": channel_order.order_id,
-					"is_first_order": channel_order.is_first_order,
-					"status_text": STATUS2TEXT[channel_order.status],
-					"sale_price": sale_price,  #销售额
-					"finished_at": order_number2finished_at.get(channel_order.order_id, channel_order.update_at).strftime('%Y-%m-%d %H:%M:%S'),
-					"final_price": final_price,
-					"created_at": channel_order.created_at.strftime('%Y-%m-%d %H:%M:%S'),
-				})
+				flag = False
+				if webapp_user_id2created_at.get(channel_order.webapp_user_id):
+					if bing_member_id2channel_qrcode_id.get(member_id):
+						if bing_member_id2channel_qrcode_id.get(member_id) in channel_qrcode_ids:
+							if channel_order.created_at.strftime('%Y-%m-%d %H:%M:%S') >= webapp_user_id2created_at.get(
+									channel_order.webapp_user_id):
+								flag = True
+						else:
+							if channel_order.created_at.strftime('%Y-%m-%d %H:%M:%S') < webapp_user_id2created_at.get(
+									channel_order.webapp_user_id):
+								flag = True
+					else:
+						if bing_member_id2qrcode_id.get(member_id):
+							if channel_order.created_at.strftime('%Y-%m-%d %H:%M:%S') >= webapp_user_id2created_at.get(
+									channel_order.webapp_user_id):
+								flag = True
+				else:
+					flag = True
+				if flag:
+					orders.append({
+						"order_id": channel_order.id,
+						"order_number": channel_order.order_id,
+						"is_first_order": channel_order.is_first_order,
+						"status_text": STATUS2TEXT[channel_order.status],
+						"sale_price": sale_price,  #销售额
+						"finished_at": order_number2finished_at.get(channel_order.order_id, channel_order.update_at).strftime('%Y-%m-%d %H:%M:%S'),
+						"final_price": final_price,
+						"created_at": channel_order.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+					})
 		end = time.time()
 		print end - start, "pppppppppp"
 
