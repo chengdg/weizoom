@@ -1175,6 +1175,7 @@ class Product(resource.Resource):
             'mall_type': mall_type,
             'has_store_name': has_store_name,
             'store_name': store_name,
+            'template_id': product.limit_zone,
             'pool_mall_type': pool_mall_type,
             'limit_zone_templates': limte_zone_templates
         })
