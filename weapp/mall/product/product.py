@@ -2192,12 +2192,12 @@ class ProductLabel(resource.Resource):
             label_data = {"firstname":label_group.name,"secondname":[]}
             labels = models.ProductLabel.objects.filter(label_group_id=label_group.id).filter(is_deleted=False)
             for label in labels:
-                label_data['secondname'].append(label.name)
+                label_data['secondname'].append({"label_id":label.id,"label_name":label.name})
             return_data.append(label_data)
 
         response = create_response(200)
         response.data = {
-            'label_data': return_data
+            'items': return_data
         }
         return response.get_response()        
 ############################################################################################
