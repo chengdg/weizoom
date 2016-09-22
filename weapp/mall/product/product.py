@@ -1159,7 +1159,7 @@ class Product(resource.Resource):
         if not mall_type:
             supplier = []
         limte_zone_templates = models.ProductLimitZoneTemplate.objects.filter(owner=request.user).order_by('-id')
-
+        product_limit_zone = limte_zone_templates.filter(id=product.limit_zone).first()
         c = RequestContext(request, {
             'first_nav_name': export.PRODUCT_FIRST_NAV,
             'second_navs': export.get_mall_product_second_navs(request),
@@ -1176,6 +1176,7 @@ class Product(resource.Resource):
             'has_store_name': has_store_name,
             'store_name': store_name,
             'template_id': product.limit_zone,
+            'template_name': product_limit_zone.name if product_limit_zone else '',
             'pool_mall_type': pool_mall_type,
             'limit_zone_templates': limte_zone_templates
         })
