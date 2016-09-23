@@ -74,10 +74,11 @@ class ShopBalanceOutline(api_resource.ApiResource):
 			"origin_order_id__lte": 0,
 			'created_at__gte': created_at
 		}
-
-
+		orders = Order.objects.filter(**filter_data_args)
+		curr_order_numbers = [o.order_id for o in orders]
 		# 获取在某段时间内的已完成和退款完成的订单时间
 		orderoperationlogs = OrderOperationLog.objects.filter(
+			order_id__in=curr_order_numbers,
 			action__in=[u"完成", u"退款完成"],
 			created_at__gte=created_at
 		).exclude(order_id__contains='^')
@@ -93,91 +94,90 @@ class ShopBalanceOutline(api_resource.ApiResource):
 		else:
 			curr_order_numbers = refund_order_number
 
-		orders = Order.objects.filter(**filter_data_args).exclude(order_id__in=curr_order_numbers)
-
 		channel_qrcode_id2first_order = {}
 		channel_qrcode_id2all_order = {}
 		for order in orders:
-			member_id = webapp_user_id2member_id[order.webapp_user_id]
-			sale_price = order.final_price + order.coupon_money + order.integral_money + order.weizoom_card_money + order.promotion_saved_money + order.edit_money
-			final_price = order.final_price
-			#除已取消的订单
+			if not order.order_id in curr_order_numbers:
+				member_id = webapp_user_id2member_id[order.webapp_user_id]
+				sale_price = order.final_price + order.coupon_money + order.integral_money + order.weizoom_card_money + order.promotion_saved_money + order.edit_money
+				final_price = order.final_price
+				#除已取消的订单
 
-			if order.status not in [ORDER_STATUS_CANCEL]:
-				for channel_qrcode_id,member_ids in channel_qrcode_id2member_id.items():
-					if member_id in member_ids:
-						flag = False
-						if webapp_user_id2created_at.get(int(order.webapp_user_id)):
-							if bing_member_id2channel_qrcode_id.get(member_id):
-								if bing_member_id2channel_qrcode_id.get(member_id) == channel_qrcode_id:
-									if order.created_at.strftime('%Y-%m-%d %H:%M:%S') >= webapp_user_id2created_at.get(order.webapp_user_id):
-										flag = True
+				if order.status not in [ORDER_STATUS_CANCEL]:
+					for channel_qrcode_id,member_ids in channel_qrcode_id2member_id.items():
+						if member_id in member_ids:
+							flag = False
+							if webapp_user_id2created_at.get(int(order.webapp_user_id)):
+								if bing_member_id2channel_qrcode_id.get(member_id):
+									if bing_member_id2channel_qrcode_id.get(member_id) == channel_qrcode_id:
+										if order.created_at.strftime('%Y-%m-%d %H:%M:%S') >= webapp_user_id2created_at.get(order.webapp_user_id):
+											flag = True
+									else:
+										if order.created_at.strftime('%Y-%m-%d %H:%M:%S') <= webapp_user_id2created_at.get(order.webapp_user_id):
+											flag = True
 								else:
-									if order.created_at.strftime('%Y-%m-%d %H:%M:%S') <= webapp_user_id2created_at.get(order.webapp_user_id):
+									if order.created_at.strftime('%Y-%m-%d %H:%M:%S') <= webapp_user_id2created_at.get(
+											order.webapp_user_id):
 										flag = True
 							else:
-								if order.created_at.strftime('%Y-%m-%d %H:%M:%S') <= webapp_user_id2created_at.get(
-										order.webapp_user_id):
-									flag = True
-						else:
-							flag = True
-						if flag:
-							if not channel_qrcode_id2all_order.has_key(channel_qrcode_id):
-								channel_qrcode_id2all_order[channel_qrcode_id] = [{
-									'order_id': order.id,
-									'finished_at': order_number2finished_at.get(order.order_id, order.created_at).strftime("%Y-%m-%d %H:%M:%S"),
-									'status_text': STATUS2TEXT[order.status],
-									'sale_price': sale_price,
-									'final_price': final_price,
-									'created_at': order.created_at.strftime("%Y-%m-%d %H:%M:%S")
-								}]
-							else:
-								channel_qrcode_id2all_order[channel_qrcode_id].append({
-									'order_id': order.id,
-									'finished_at': order_number2finished_at.get(order.order_id, order.created_at).strftime("%Y-%m-%d %H:%M:%S"),
-									'status_text': STATUS2TEXT[order.status],
-									'sale_price': sale_price,
-									'final_price': final_price,
-									'created_at': order.created_at.strftime("%Y-%m-%d %H:%M:%S")
-								})
+								flag = True
+							if flag:
+								if not channel_qrcode_id2all_order.has_key(channel_qrcode_id):
+									channel_qrcode_id2all_order[channel_qrcode_id] = [{
+										'order_id': order.id,
+										'finished_at': order_number2finished_at.get(order.order_id, order.created_at).strftime("%Y-%m-%d %H:%M:%S"),
+										'status_text': STATUS2TEXT[order.status],
+										'sale_price': sale_price,
+										'final_price': final_price,
+										'created_at': order.created_at.strftime("%Y-%m-%d %H:%M:%S")
+									}]
+								else:
+									channel_qrcode_id2all_order[channel_qrcode_id].append({
+										'order_id': order.id,
+										'finished_at': order_number2finished_at.get(order.order_id, order.created_at).strftime("%Y-%m-%d %H:%M:%S"),
+										'status_text': STATUS2TEXT[order.status],
+										'sale_price': sale_price,
+										'final_price': final_price,
+										'created_at': order.created_at.strftime("%Y-%m-%d %H:%M:%S")
+									})
 
-			if order.is_first_order and order.status != ORDER_STATUS_NOT:
-				for channel_qrcode_id,member_ids in channel_qrcode_id2member_id.items():
-					if member_id in member_ids:
-						flag = False
-						if webapp_user_id2created_at.get(int(order.webapp_user_id)):
-							if bing_member_id2channel_qrcode_id.get(member_id):
-								if bing_member_id2channel_qrcode_id.get(member_id) == channel_qrcode_id:
-									if order.created_at.strftime('%Y-%m-%d %H:%M:%S') >= webapp_user_id2created_at.get(order.webapp_user_id):
-										flag = True
+				if order.is_first_order and order.status != ORDER_STATUS_NOT:
+					for channel_qrcode_id,member_ids in channel_qrcode_id2member_id.items():
+						if member_id in member_ids:
+							flag = False
+							if webapp_user_id2created_at.get(int(order.webapp_user_id)):
+								if bing_member_id2channel_qrcode_id.get(member_id):
+									if bing_member_id2channel_qrcode_id.get(member_id) == channel_qrcode_id:
+										if order.created_at.strftime('%Y-%m-%d %H:%M:%S') >= webapp_user_id2created_at.get(order.webapp_user_id):
+											flag = True
+									else:
+										if order.created_at.strftime('%Y-%m-%d %H:%M:%S') < webapp_user_id2created_at.get(order.webapp_user_id):
+											flag = True
 								else:
-									if order.created_at.strftime('%Y-%m-%d %H:%M:%S') < webapp_user_id2created_at.get(order.webapp_user_id):
+									if order.created_at.strftime('%Y-%m-%d %H:%M:%S') < webapp_user_id2created_at.get(
+											order.webapp_user_id):
 										flag = True
 							else:
-								if order.created_at.strftime('%Y-%m-%d %H:%M:%S') < webapp_user_id2created_at.get(
-										order.webapp_user_id):
-									flag = True
-						else:
-							flag = True
-						if flag:
-							if not channel_qrcode_id2first_order.has_key(channel_qrcode_id):
-								channel_qrcode_id2first_order[channel_qrcode_id] = [{
-									'order_id': order.id,
-									'finished_at': order_number2finished_at.get(order.order_id, order.created_at).strftime("%Y-%m-%d %H:%M:%S"),
-									'status_text': STATUS2TEXT[order.status],
-									'sale_price': sale_price,
-									'final_price': final_price,
-									'created_at': order.created_at.strftime("%Y-%m-%d %H:%M:%S")
-								}]
-							else:
-								channel_qrcode_id2first_order[channel_qrcode_id].append({
-									'order_id': order.id,
-									'finished_at': order_number2finished_at.get(order.order_id, order.created_at).strftime("%Y-%m-%d %H:%M:%S"),
-									'status_text': STATUS2TEXT[order.status],
-									'sale_price': sale_price,
-									'final_price': final_price,
-									'created_at': order.created_at.strftime("%Y-%m-%d %H:%M:%S")
-								})
+								flag = True
+							if flag:
+								if not channel_qrcode_id2first_order.has_key(channel_qrcode_id):
+									channel_qrcode_id2first_order[channel_qrcode_id] = [{
+										'order_id': order.id,
+										'finished_at': order_number2finished_at.get(order.order_id, order.created_at).strftime("%Y-%m-%d %H:%M:%S"),
+										'status_text': STATUS2TEXT[order.status],
+										'sale_price': sale_price,
+										'final_price': final_price,
+										'created_at': order.created_at.strftime("%Y-%m-%d %H:%M:%S")
+									}]
+								else:
+									channel_qrcode_id2first_order[channel_qrcode_id].append({
+										'order_id': order.id,
+										'finished_at': order_number2finished_at.get(order.order_id, order.created_at).strftime("%Y-%m-%d %H:%M:%S"),
+										'status_text': STATUS2TEXT[order.status],
+										'sale_price': sale_price,
+										'final_price': final_price,
+										'created_at': order.created_at.strftime("%Y-%m-%d %H:%M:%S")
+									})
 
 		member_outline_info = {
 			"channel_qrcode_id2first_order": channel_qrcode_id2first_order,
