@@ -2,6 +2,8 @@
 import json
 import time
 
+from django.contrib.auth.models import User
+
 from core import api_resource, paginator
 from market_tools.tools.channel_qrcode.models import ChannelQrcodeSettings, ChannelQrcodeHasMember
 from wapi.decorators import param_required
@@ -32,6 +34,7 @@ class QrcodeBalance(api_resource.ApiResource):
 		order_status = int(args.get('order_status', '-1'))
 		is_first_order = int(args.get('is_first_order', '-1'))
 		balance_time_from = args.get('balance_time_from',None)
+		# user = User.objects.get(username='jobs')
 		channel_qrcodes = ChannelQrcodeSettings.objects.filter(id__in=channel_qrcode_ids).order_by('created_at')
 		if balance_time_from:
 			created_at = balance_time_from
@@ -41,8 +44,8 @@ class QrcodeBalance(api_resource.ApiResource):
 			else:
 				created_at = datetime.today().strftime("%Y-%m-%d %H:%M:%S")
 
-
-		member_ids = [member_log.member_id for member_log in ChannelQrcodeHasMember.objects.filter(channel_qrcode_id__in=channel_qrcode_ids)]
+		channel_qrcode_members = ChannelQrcodeHasMember.objects.filter(channel_qrcode_id__in=channel_qrcode_ids)
+		member_ids = [member_log.member_id for member_log in channel_qrcode_members]
 		#在二维码的会员中有人成为代言人
 		bing_member_id2channel_qrcode_id = {}
 		bing_member_id2created_at = {}
@@ -92,7 +95,7 @@ class QrcodeBalance(api_resource.ApiResource):
 		if is_first_order != -1:
 			filter_data_args["is_first_order"] = is_first_order
 
-		channel_orders = Order.objects.filter(**filter_data_args).order_by('-created_at')
+		channel_orders = Order.objects.filter(**filter_data_args)
 		order_numbers = [co.order_id for co in channel_orders]
 		order_number2finished_at = {}
 		#处理筛选

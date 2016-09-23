@@ -35,8 +35,10 @@ class QrcodeBalance(api_resource.ApiResource):
 		else:
 			created_at = dateutil.get_today()
 
-		member_ids = [member_log.member_id for member_log in ChannelQrcodeHasMember.objects.filter(channel_qrcode_id__in=channel_qrcode_ids)]
-		webapp_user_ids = [webappuser.id for webappuser in WebAppUser.objects.filter(member_id__in=member_ids)]
+		member_logs = ChannelQrcodeHasMember.objects.filter(channel_qrcode_id__in=channel_qrcode_ids)
+		member_ids = [member_log.member_id for member_log in member_logs]
+		webappusers = WebAppUser.objects.filter(member_id__in=member_ids)
+		webapp_user_ids = [webappuser.id for webappuser in webappusers]
 
 		filter_data_args = {
 			"webapp_user_id__in": webapp_user_ids,
@@ -64,7 +66,8 @@ class QrcodeBalance(api_resource.ApiResource):
 		product_category = ProductCategory.objects.filter(id=5)
 		product_ids = []
 		if product_category.count() > 0:
-			product_ids = [chp.product_id for chp in CategoryHasProduct.objects.filter(category_id=product_category[0].id)]
+			category_products = CategoryHasProduct.objects.filter(category_id=product_category[0].id)
+			product_ids = [chp.product_id for chp in category_products]
 
 		# 获取商品对应的订单
 		relations = OrderHasProduct.objects.filter(product_id__in=product_ids)
@@ -87,9 +90,11 @@ class QrcodeBalance(api_resource.ApiResource):
 					"number": r.number
 				})
 
-		id2product = {product.id: product for product in Product.objects.filter(id__in=product_ids)}
+		products = Product.objects.filter(id__in=product_ids)
+		id2product = {product.id: product for product in products}
 		product_id2product_model = {}  # 商品的id对应商品规格
-		for pm in ProductModel.objects.filter(product_id__in=id2product.keys()):
+		product_models = ProductModel.objects.filter(product_id__in=id2product.keys())
+		for pm in product_models:
 			product_id_model_name = u'%s_%s' % (pm.product_id, pm.name)
 			product_id2product_model[product_id_model_name] = pm
 
