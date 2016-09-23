@@ -42,7 +42,8 @@ class ShopBalanceOutline(api_resource.ApiResource):
 
 		# 在二维码的会员中有人成为代言人
 		bing_member_id2created_at = {}
-		for cqs in ChannelQrcodeSettings.objects.filter(bing_member_id__in=total_member_ids):
+		channel_qrcode_settings = ChannelQrcodeSettings.objects.filter(bing_member_id__in=total_member_ids)
+		for cqs in channel_qrcode_settings:
 			bing_member_id2created_at[cqs.bing_member_id] = cqs.created_at.strftime("%Y-%m-%d %H:%M:%S")
 
 		bing_member_id2channel_qrcode_id = {}

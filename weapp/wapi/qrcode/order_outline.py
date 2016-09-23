@@ -32,9 +32,11 @@ class QrcodeOrderOutline(api_resource.ApiResource):
 				"channel_qrcode_id": channel_qrcode_id
 			}
 
+
 		total_channel_members = ChannelQrcodeHasMember.objects.filter(**q_filter_data_args).order_by('-created_at')
 		total_member_ids = [tcm.member_id for tcm in total_channel_members]
-		webapp_user_ids = [webappuser.id for webappuser in WebAppUser.objects.filter(member_id__in=total_member_ids)]
+		webappusers = WebAppUser.objects.filter(member_id__in=total_member_ids)
+		webapp_user_ids = [webappuser.id for webappuser in webappusers]
 
 		start_date = args.get('start_date', None)
 		end_date = args.get('end_date', None)
@@ -70,7 +72,7 @@ class QrcodeOrderOutline(api_resource.ApiResource):
 			"final_price": u'%.2f' % final_price
 		}
 		end = time.time()
-		print end - start, "pppppppppp"
+		print end - start, "oooooooooooo"
 
 		return {
 			'items': member_outline_info

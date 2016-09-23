@@ -46,7 +46,8 @@ class QrcodeBalance(api_resource.ApiResource):
 		#在二维码的会员中有人成为代言人
 		bing_member_id2channel_qrcode_id = {}
 		bing_member_id2created_at = {}
-		for cqs in ChannelQrcodeSettings.objects.filter(bing_member_id__in=member_ids):
+		channel_qrcode_settings = ChannelQrcodeSettings.objects.filter(bing_member_id__in=member_ids)
+		for cqs in channel_qrcode_settings:
 			bing_member_id2created_at[cqs.bing_member_id] = cqs.created_at.strftime("%Y-%m-%d %H:%M:%S")
 			bing_member_id2channel_qrcode_id[cqs.bing_member_id] = cqs.id
 
@@ -67,7 +68,8 @@ class QrcodeBalance(api_resource.ApiResource):
 		webapp_user_ids = []
 		webapp_user_id2member_id = {}
 		webapp_user_id2created_at = {}
-		for webappuser in WebAppUser.objects.filter(member_id__in=member_ids):
+		webappusers = WebAppUser.objects.filter(member_id__in=member_ids)
+		for webappuser in webappusers:
 			webapp_user_ids.append(webappuser.id)
 			webapp_user_id2member_id[webappuser.id] = webappuser.member_id
 			if bing_member_id2created_at.get(webappuser.member_id):
@@ -76,7 +78,7 @@ class QrcodeBalance(api_resource.ApiResource):
 		filter_data_args = {
 			"webapp_user_id__in": webapp_user_ids,
 			"origin_order_id__lte": 0,
-			"created_at__gte": created_at
+			# "created_at__gte": created_at
 		}
 
 		cur_start_date = args.get('start_date', None)

@@ -34,7 +34,8 @@ class QrcodeMemberOutline(api_resource.ApiResource):
 
 		total_channel_members = ChannelQrcodeHasMember.objects.filter(**filter_data_args).order_by('-created_at')
 		total_member_ids = [tcm.member_id for tcm in total_channel_members]
-		webapp_user_id2member_id = {webappuser.id: webappuser.member_id for webappuser in WebAppUser.objects.filter(member_id__in=total_member_ids)}
+		webappusers = WebAppUser.objects.filter(member_id__in=total_member_ids)
+		webapp_user_id2member_id = {webappuser.id: webappuser.member_id for webappuser in webappusers}
 		orders = Order.objects.filter(webapp_user_id__in=webapp_user_id2member_id.keys(), origin_order_id__lte=0)
 		total_webapp_user_ids = [order.webapp_user_id for order in orders]
 
