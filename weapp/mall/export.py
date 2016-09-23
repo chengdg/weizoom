@@ -461,15 +461,15 @@ MALL_PROMOTION_AND_APPS_SECOND_NAV = {
                     # 'url': '/apps/feedback/feedbacks/',
                     # 'permission': []
                 # },
-                {
-                    'name': MALL_APPS_SURVEY_NAV,
-                    'title': "用户调研",
-                    'url': '/apps/survey/surveies/',
-                    'permission': ''
-                },
+                # {
+                #     'name': MALL_APPS_SURVEY_NAV,
+                #     'title': "用户调研",
+                #     'url': '/apps/survey/surveies/',
+                #     'permission': ''
+                # },
                 {
                     'name': MALL_APPS_SURVEY_NAV_RE,
-                    'title': "用户调研(重)",
+                    'title': "用户调研",
                     'url': 'http://%s/apps/survey/surveies/' % MARKETAPP_DOMAIN,
                     'permission': '',
                     'need_token': True,

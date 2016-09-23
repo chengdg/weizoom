@@ -89,7 +89,7 @@ def stop_group(group_id,is_test):
 			resp = Resource.use('zeus').post({
 				'resource': 'mall.group_update_order',
 				'data': {
-					'group_id': group_id,
+					'group_id': str(group_relation_id),
 					'status': 'failure',
 					'is_test': 1 if is_test else 0
 				}
