@@ -13,6 +13,7 @@ from django.template import Context, RequestContext
 from termite import pagestore as pagestore_manager
 from apps.customerized_apps.survey import models as app_models
 from webapp import models as webapp_models
+from core.exceptionutil import unicode_full_stack
 
 type2template = {}
 
@@ -42,9 +43,15 @@ class Command(BaseCommand):
         pagestore = pagestore_manager.get_pagestore('mongo')
 
         # #通过pymongo链接新的数据库market_app_data
-        connection = pymongo.Connection(settings.APP_MONGO['HOST'], 27017)
+        l = len(args)
+        if l > 0 and args[0] == 'deploy':
+            host = 'mongodb://app:weizoom@dds-bp1502411213f1e41.mongodb.rds.aliyuncs.com:3717,dds-bp1502411213f1e42.mongodb.rds.aliyuncs.com:3717/market_app_data?replicaSet=mgset-1211291'
+        else:
+            host = settings.APP_MONGO['HOST']
+        connection = pymongo.Connection(host, 27017)
+        connection_termite = pymongo.Connection('mongo.weapp.com', 27017)
         db_market_app_data = connection.market_app_data
-        db_termite = connection.termite
+        db_termite = connection_termite.termite
 
         try:
             #泡脚本之前先把新数据库中的老数据删除
@@ -52,14 +59,14 @@ class Command(BaseCommand):
             db_market_app_data.page_html.remove({'is_old': True, 'related_page_id': {'$in': related_page_ids}})
             db_market_app_data.survey_survey_participance.remove({'is_old': True})
 
-            #复制termite里的page到market_page
+            #复制termite里的page到market_app_page
             for page in db_termite.page.find({'_id': {'$in': related_page_ids_object}}):
-                db_termite.market_page.remove(page)
-                # 更新market_page里description中静态资源地址
+                db_termite.market_app_page.remove(page)
+                # 更新market_app_page里description中静态资源地址
                 description = page['component']['components'][0]['model']['description']
                 if 'http://' not in description:
                     page['component']['components'][0]['model']['description'] = description.replace('/static/', 'http://' + settings.DOMAIN + '/static/')
-                db_termite.market_page.insert(page)
+                db_termite.market_app_page.insert(page)
 
             #然后将老数据写入新数据库
             for survey in old_surveies:
@@ -104,12 +111,13 @@ class Command(BaseCommand):
                 related_page_id = record_id2related_page_id[str(par.belong_to)]
                 termite_data = par.termite_data
                 for key, value in termite_data.items():
-                    if value['type'] == 'appkit.uploadimg':
+                    if value['type'] == 'appkit.uploadimg' and value['value']:
                         img_list = []
                         for img in value['value']:
-                            if 'http://' not in img:
-                                img = img.replace('/static/', 'http://' + settings.DOMAIN + '/static/')
-                            img_list.append(img)
+                            if img:
+                                if 'http://' not in img:
+                                    img = img.replace('/static/', 'http://' + settings.DOMAIN + '/static/')
+                                img_list.append(img)
                         termite_data[key]['value'] = img_list
 
                 db_market_app_data.survey_survey_participance.insert({
