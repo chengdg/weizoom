@@ -204,6 +204,9 @@ class Promotion(models.Model):
 			if hasattr(DetailClass, 'fill_related_details'):
 				DetailClass.fill_related_details(webapp_owner, details)
 			for detail in details:
+				if promotion_type == PROMOTION_TYPE_COUPON:
+					# CouponRule字段use_count(优惠券使用张数)为负数没法复现，暂时改为直接查库的方式 by Eugene
+					detail.use_count = Coupon.objects.filter(coupon_rule__id=detail.id, status=COUPON_STATUS_USED).count()
 				detail2promotion[detail.id].detail = detail.to_dict()
 
 	@staticmethod
