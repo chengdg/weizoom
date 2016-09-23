@@ -632,6 +632,7 @@ if 'develop' == MODE:
     MONEY_HOST = 'http://dev.money.com'
     IMAGE_HOST = 'http://dev.weapp.com'
     MARKETAPP_DOMAIN = 'marketapp.weapp.com'
+    MARKET_MOBILE_DOMAIN = 'm_marketapp.weapp.com'
 
 elif 'test' == MODE:
     DOMAIN = 'testweapp.weizoom.com'
@@ -654,6 +655,7 @@ elif 'test' == MODE:
     WAPI_HOST = 'http://dev.weapp.com'
     MONEY_HOST = 'http://money.weizoom.com'
     MARKETAPP_DOMAIN = 'marketapp.nj.weapp.weizzz.com'
+    MARKET_MOBILE_DOMAIN = 'm_marketapp.nj.weapp.weizzz.com'
 else:
     DEBUG = False
     BATMAN_API_IMPL = 'memory'
@@ -679,6 +681,7 @@ else:
     MONEY_HOST = 'http://money.weizom.com'
     IMAGE_HOST = 'http://dev.weapp.com'
     MARKETAPP_DOMAIN = 'marketapp.weapp.weizoom.com'
+    MARKET_MOBILE_DOMAIN = 'm_marketapp.weapp.weizoom.com'
 
 IN_DEVELOP_MODE = (MODE == 'develop')
 ALLOWED_HOSTS = ['*', ]
