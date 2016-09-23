@@ -85,7 +85,7 @@
 			<td>${ coupon.coupon_id }</td>
 			<td>${ coupon.money }</td>
 			<td>${ coupon.created_at }</td>
-			<td>{{if coupon.member.username_for_html }}${ coupon.provided_time }{{/if}}</td>
+			<td>{{if coupon.member.id }}${ coupon.provided_time }{{/if}}</td>
 			<td><a target="_blank" href="/member/detail/?id=${ coupon.member.id }">{{html coupon.member.username_truncated }}</a></td>
 			<td>${ coupon.use_time }</td>
 			<td><a target="_blank" href="/member/detail/?id=${ coupon.consumer.id }">{{html coupon.consumer.username_truncated }}</a></td>
