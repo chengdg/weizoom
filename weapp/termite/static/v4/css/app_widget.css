@@ -1,4 +1,4 @@
-@charset "utf-8";
+	@charset "utf-8";
 
 .xui-hidden {
 	display: none;
@@ -147,6 +147,12 @@
 	margin-top: 10px;
     color: #666;
     padding-bottom: 20px;
+}
+.wui-commonDescription .wui-i-description2 {
+	margin-top: 10px;
+    color: #666;
+    padding-top: 10px;
+    border-top: 1px solid #E5E5E5;
 }
 .wui-commonDescription .wui-i-info {
 	border-top: solid 1px #E5E5E5;

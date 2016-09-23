@@ -5,6 +5,12 @@
         float: right;
         color: #cf0404;
     }
+    .wui-i-description2 {
+        margin-top: 10px;
+        color: #666;
+        padding-top: 10px;
+        border-top: 1px solid #E5E5E5;
+    }
     </style>
 
 {% endblock %}
@@ -37,6 +43,9 @@
                 {% endif %}
                 </div>
                 <div style="clear: both;margin-bottom: 5px"></div>
+            </div>
+            <div class="wui-i-description2">
+                {{ event_detail.description2|safe }}
             </div>
         </div>
     </div>
