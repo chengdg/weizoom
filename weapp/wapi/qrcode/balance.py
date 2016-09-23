@@ -83,9 +83,9 @@ class QrcodeBalance(api_resource.ApiResource):
 		cur_end_date = args.get('end_date', None)
 
 		if order_status == -1:
-			filter_data_args["status__in"] = [ORDER_STATUS_SUCCESSED, ORDER_STATUS_REFUNDED, ORDER_STATUS_GROUP_REFUNDED]
+			filter_data_args["status__in"] = [5, 7, 9]
 		else:
-			filter_data_args["status__in"] = [ORDER_STATUS_REFUNDED, ORDER_STATUS_GROUP_REFUNDED]
+			filter_data_args["status__in"] = [7, 9]
 
 		if is_first_order != -1:
 			filter_data_args["is_first_order"] = is_first_order

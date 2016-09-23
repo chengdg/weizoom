@@ -28,7 +28,7 @@ class ShopBalanceOutline(api_resource.ApiResource):
 		if channel_qrcodes.count() > 0:
 			created_at = channel_qrcodes.first().created_at.strftime("%Y-%m-%d %H:%M:%S")
 		else:
-			created_at = dateutil.get_today()
+			created_at = datetime.today().strftime("%Y-%m-%d %H:%M:%S")
 
 		total_channel_members = ChannelQrcodeHasMember.objects.filter(channel_qrcode_id__in=channel_qrcode_ids).order_by('-created_at')
 		channel_qrcode_id2member_id = {}

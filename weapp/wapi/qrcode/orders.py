@@ -75,7 +75,7 @@ class QrcodeOrder(api_resource.ApiResource):
 		if start_date and end_date:
 			start_time = start_date + ' 00:00:00'
 			end_time = end_date + ' 23:59:59'
-			filter_data_args["created_at__gte"] = start_time if member_id2created_at.values() and min(member_id2created_at.values()) <= start_time else min(member_id2created_at.values())
+			filter_data_args["created_at__gte"] = min(member_id2created_at.values()) if member_id2created_at.values() and min(member_id2created_at.values()) >= start_time else start_time
 			filter_data_args["created_at__lte"] = end_time
 		if is_first_order:
 			filter_data_args["is_first_order"] = True
