@@ -189,11 +189,11 @@
 					<td colspan="9" class="xui-remark xa-remark" style=''>
 					{{if product.product_label_names}}
 					    {{each(i, name) product.product_label_names}}
-					    <span class="xui-product-label">${name}</span>
+					    <span class="xui-product-label" title="${name}">${name}</span>
 					    {{/each}}
 					{{else}}
 					    {{each(i, name) product.classification_label_names}}
-					    <span class="xui-product-label">${name}</span>
+					    <span class="xui-product-label" title="${name}">${name}</span>
 					    {{/each}}
 					{{/if}}
 					</td>
