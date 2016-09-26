@@ -74,7 +74,8 @@ class event(resource.Resource):
 			'event': event,
 			'is_create_new_data': is_create_new_data,
 			'project_id': project_id,
-			'app_name': 'event'
+			'app_name': 'event',
+			'permission': ['weizoomxiaoyuan', 'jobs', 'ceshi01']
 		});
 		
 		return render_to_response('event/templates/editor/workbench.html', c)
