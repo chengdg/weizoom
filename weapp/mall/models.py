@@ -3094,6 +3094,8 @@ class ProductHasLabel(models.Model):
 	"""
 	product_id = models.IntegerField(null=False)
 	label_id = models.IntegerField(null=False)
+	# -1表示改标签是商品自己的标签不是类目的标签
+	classification_id = models.IntegerField(default=-1)
 	created_at = models.DateTimeField(auto_now_add=True)
 
 	class Meta(object):

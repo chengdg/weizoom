@@ -770,15 +770,15 @@ class ProductPool(resource.Resource):
         for product in products:
             # 处理标签
             product_label_names = ''
-            classification_label_names = ''
+            # classification_label_names = ''
             if product.id in product_id2classification_id.keys():
-                product_classification = id2secondary_classification[product_id2classification_id[product.id]]
-                temp_classification_label_relation = filter(lambda p: p.classification_id == product_classification.id,
-                                                            classification_label_relations)
-                classification_labels = [label_id_2_label.get(int(relation.label_id)) for relation
-                                         in temp_classification_label_relation]
-                if classification_labels:
-                    classification_label_names = [label.name for label in classification_labels if label]
+                # product_classification = id2secondary_classification[product_id2classification_id[product.id]]
+                # temp_classification_label_relation = filter(lambda p: p.classification_id == product_classification.id,
+                #                                             classification_label_relations)
+                # classification_labels = [label_id_2_label.get(int(relation.label_id)) for relation
+                #                          in temp_classification_label_relation]
+                # if classification_labels:
+                #     classification_label_names = [label.name for label in classification_labels if label]
 
                 product_label_relations = filter(lambda r: r.product_id == product.id, product_has_labels)
                 product_labels = [label_id_2_label.get(int(relation.label_id)) for relation
@@ -833,7 +833,7 @@ class ProductPool(resource.Resource):
                 # 五五分成基础扣点
                 'basic_rebate': basic_rebate,
                 'product_label_names': product_label_names,
-                'classification_label_names': classification_label_names,
+                # 'classification_label_names': classification_label_names,
                 # 零售返点的对应此平台的反点
                 'retail_rebate': basic_retail_rebate if not self_retail_rebate else self_retail_rebate,
                 'classification': "%s-%s" % (
