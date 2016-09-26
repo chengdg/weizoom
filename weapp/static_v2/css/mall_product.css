@@ -1808,6 +1808,7 @@
     white-space: nowrap;
     overflow: hidden;
     vertical-align: middle;
+    margin-bottom: 5px;
 }
 .xui-productsPoolPage .xui-filterPanel .xui-productLabel{
 	width: 100px;
