@@ -26,6 +26,21 @@ NEW_PAGE_JSON = """
             },
             "has_global_content": "no"
         }, {
+            "cid": 6,
+            "pid": 1,
+            "property_view_title": "内容二",
+            "force_display_in_property_view": "no",
+            "components": [],
+            "selectable": "yes",
+            "type": "appkit.eventrichtext",
+            "model": {
+                "index": 5,
+                "name": "",
+                "class": "",
+                "id": ""
+            },
+            "has_global_content": "no"
+        }, {
             "cid": 3,
             "pid": 1,
             "property_view_title": "报名填写项",
@@ -61,7 +76,7 @@ NEW_PAGE_JSON = """
                 }
             },
             "has_global_content": "no"
-        },{
+        }, {
             "cid": 4,
             "pid": 1,
             "property_view_title": "提交按钮",

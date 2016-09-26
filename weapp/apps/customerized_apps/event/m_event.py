@@ -37,6 +37,8 @@ class Mevent(resource.Resource):
 				auth_appid_info = None
 				permission = ''
 				share_page_desc = ''
+				description2 = ''
+				description_is_empty = False
 				thumbnails_url = '/static_v2/img/thumbnails_event.png'
 				if not isPC:
 					isMember = request.member and request.member.is_subscribed
@@ -78,6 +80,8 @@ class Mevent(resource.Resource):
 					pagestore = pagestore_manager.get_pagestore('mongo')
 					page = pagestore.get_page(record.related_page_id, 1)
 					permission = page['component']['components'][0]['model']['permission']
+					description2 = page['component']['components'][1]['model']['description2']
+					description_is_empty = False if page['component']['components'][1]['model']['description2'] else True
 				is_already_participanted = (participance_data_count > 0)
 				if  is_already_participanted:
 					try:
@@ -94,6 +98,7 @@ class Mevent(resource.Resource):
 						'page_title': '活动报名',
 						'app_name': "event",
 						'resource': "event",
+						'description2': description2,
 						'hide_non_member_cover': True #非会员也可使用该页面
 					})
 					return render_to_response('event/templates/webapp/is_already_participanted.html', c)
@@ -116,7 +121,8 @@ class Mevent(resource.Resource):
 						'auth_appid_info': auth_appid_info,
 						'permission': permission,
 						'share_page_desc': share_page_desc,
-						'share_img_url': thumbnails_url
+						'share_img_url': thumbnails_url,
+						'description_is_empty': description_is_empty
 					})
 					return render_to_response('workbench/wepage_webapp_page.html', c)
 			else:
