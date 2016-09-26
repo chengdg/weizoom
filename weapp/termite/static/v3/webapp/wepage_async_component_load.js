@@ -107,7 +107,7 @@ W.AllComponentsView = BackboneLite.View.extend({
             app: 'webapp',
             api: 'project_api/call',
             method: 'get',
-            cache: false,
+            cache: true,
             async: true,
             args: {
                 woid: W.webappOwnerId,
@@ -240,9 +240,7 @@ W.AsyncComponentView = BackboneLite.View.extend({
         // 当前商品组件的商品信息，提取于异步接口中获得的所有商品信息
         this.products = [];
         this.datum.model.items.map(function(productId){
-            if (options.model[productId]) {
-                _this.products.push(options.model[productId]);
-            }
+            _this.products.push(options.model[productId]);
         });
     },
 
