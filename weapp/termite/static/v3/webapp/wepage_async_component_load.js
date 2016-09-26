@@ -240,14 +240,21 @@ W.AsyncComponentView = BackboneLite.View.extend({
         // 当前商品组件的商品信息，提取于异步接口中获得的所有商品信息
         this.products = [];
         this.datum.model.items.map(function(productId){
-            _this.products.push(options.model[productId]);
+            // 商品有效时，放入this.products数组
+            if (options.model[productId]) {
+                _this.products.push(options.model[productId]);
+            } else {
+                _this.products.push({isDeleted: true});
+            }
         });
+
     },
 
     // 渲染组件节点
     render: function () {
         var _this = this;
         var products = this.products; 
+        var latestDatumComponents = [];
 
         // 将产品子数据，放到component.components中
         // 并把是否显示价格和名字的开关也放进去
@@ -270,9 +277,14 @@ W.AsyncComponentView = BackboneLite.View.extend({
             product['link_url'] = W.H5_HOST+"/mall/product/?woid="+W.webappOwnerId+"&product_id="+product['id']+"&referrer=weapp_product_list";
 
             _.extend(_this.datum['components'][idx], product);
+            if (product.isDeleted) {
+            } else {
+                latestDatumComponents.push(_this.datum['components'][idx]);
+            }
         });
 
-        // 渲染组件
+        // 渲染组件, 用包含有效商品的新数组
+        _this.datum['components'] = latestDatumComponents;
         var compiledTemplate = _this.getTemplate(_this.datum['type']);
         if (compiledTemplate) {
             var html = compiledTemplate(_this.datum);
