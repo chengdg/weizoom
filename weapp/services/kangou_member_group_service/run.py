@@ -49,6 +49,7 @@ def group_kangou_member():
 				try:
 					# 添加看购分组记录
 					member_models.MemberHasTag.objects.create(member_id=member.id, member_tag_id=KANGOU_TAG_ID)
+					logging.info(u'分组新增会员：%d' % member.id)
 					kangou_members.append(member.id)
 					added_number += 1
 				except Exception, e:
