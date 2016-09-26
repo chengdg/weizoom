@@ -25,6 +25,7 @@ class CostAnalysis(api_resource.ApiResource):
 		获取自营平台的卡券分使用情况
 
 		"""
+		start_time = time.time()
 		start_date = args['start_date']
 		end_date = args['end_date']
 
@@ -89,7 +90,6 @@ class CostAnalysis(api_resource.ApiResource):
 				cur_cost["best_money"] += best_money
 
 		webapp_id2order_card_info = {}
-		start_time = time.time()
 		for weapp_id,order_numbers in webapp_id2order_numbers.items():
 			#使用微众卡的接口
 			resp = Resource.use('card_apiserver').post({
@@ -114,39 +114,6 @@ class CostAnalysis(api_resource.ApiResource):
 							order_card_info["internal"] += order_card["internal"]
 							order_card_info["rebate"] += order_card["rebate"]
 							order_card_info["unknown"] += order_card["unknown"]
-		end_time = time.time()
-		print end_time - start_time,"pppppppppp"
-
-
-		webapp_id2order_card_info = {}
-		start_time = time.time()
-		for weapp_id,order_numbers in webapp_id2order_numbers.items():
-			#使用微众卡的接口
-			resp = Resource.use('card_apiserver').post({
-				'resource': 'card.order_use_card_type',
-				'data': {"order_ids": ','.join(order_numbers)}
-			})
-			order_cards = []
-			if resp:
-				order_cards = resp['data']
-				for order_card in order_cards:
-					if order_card["order_id"] in order_numbers:
-						if not webapp_id2order_card_info.has_key(weapp_id):
-							webapp_id2order_card_info[weapp_id] = {
-								"sale": order_card["sale"],
-								"internal": order_card["internal"],
-								"rebate": order_card["rebate"],
-								"unknown": order_card["unknown"]
-							}
-						else:
-							order_card_info = webapp_id2order_card_info[weapp_id]
-							order_card_info["sale"] += order_card["sale"]
-							order_card_info["internal"] += order_card["internal"]
-							order_card_info["rebate"] += order_card["rebate"]
-							order_card_info["unknown"] += order_card["unknown"]
-		end_time = time.time()
-		print end_time - start_time,"pppppppppp"
-
 
 		owner_ids = []
 		for w_id in webapp_ids:
@@ -228,5 +195,7 @@ class CostAnalysis(api_resource.ApiResource):
 				"kangou_money": u"%.2f" % (cost["kangou_money"] if cost else 0),
 				"best_money": u"%.2f" % (cost["best_money"] if cost else 0)
 			})
+		end_time = time.time()
+		print end_time - start_time, "pppppppppp"
 
 		return cost_list
