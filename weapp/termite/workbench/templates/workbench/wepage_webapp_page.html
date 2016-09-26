@@ -3,6 +3,13 @@
 {% load workbench_filter %}
 
 {% block css %}
+<style type="text/css">
+{% if description_is_empty %}
+.wui-eventRichtext {
+	display: none;
+}
+{% endif %}
+</style>
 {% endblock %}
 
 {% block content-panel %}

@@ -1,0 +1,13 @@
+{% load workbench_filter %}
+
+
+{% ifequal component.type 'appkit.eventrichtext' %}
+<div  
+    class="wui-eventRichtext xa-prizeContainer"
+    data-component-cid="{{component.cid}}" 
+>
+	<div class="wui-i-description">
+		{{component.model.description2|safe}}
+	</div>
+</div>
+{% endifequal %}

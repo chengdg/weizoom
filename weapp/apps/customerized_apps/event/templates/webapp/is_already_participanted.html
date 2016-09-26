@@ -38,6 +38,11 @@
                 </div>
                 <div style="clear: both;margin-bottom: 5px"></div>
             </div>
+            {% if not description_is_empty %}
+            <div class="wui-i-description2">
+                {{ description2|safe }}
+            </div>
+            {% endif %}
         </div>
     </div>
 {% endblock %}
