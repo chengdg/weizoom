@@ -60,12 +60,11 @@ class Command(BaseCommand):
             db_market_app_data.survey_survey_participance.remove({'is_old': True})
 
             #复制termite里的page到market_app_page
+            db_termite.market_app_page.remove({})
             for page in db_termite.page.find({'_id': {'$in': related_page_ids_object}}):
-                db_termite.market_app_page.remove(page)
                 # 更新market_app_page里description中静态资源地址
                 description = page['component']['components'][0]['model']['description']
-                if 'http://' not in description:
-                    page['component']['components'][0]['model']['description'] = description.replace('/static/', 'http://' + settings.DOMAIN + '/static/')
+                page['component']['components'][0]['model']['description'] = description.replace('/static/', 'http://' + settings.DOMAIN + '/static/')
                 db_termite.market_app_page.insert(page)
 
             #然后将老数据写入新数据库
@@ -74,8 +73,7 @@ class Command(BaseCommand):
                 page = pagestore.get_page(related_page_id, 1)
                 page_details = page['component']['components'][0]['model']
                 description = page_details['description']
-                if 'http://' not in description:
-                    description = description.replace('/static/', 'http://' + settings.DOMAIN + '/static/')
+                description = description.replace('/static/', 'http://' + settings.DOMAIN + '/static/')
                 db_market_app_data.survey_survey.insert({
                     'owner_id': survey.owner_id,
                     'name': survey.name,
@@ -96,8 +94,7 @@ class Command(BaseCommand):
                 project_id = 'new_app:survey:%s' % related_page_id
                 html = create_page(project_id).replace('xa-submitTermite', 'xa-submitWepage')
 
-                if 'http://' not in html:
-                    html = html.replace('/static/', 'http://' + settings.DOMAIN + '/static/')
+                html = html.replace('/static/', 'http://' + settings.DOMAIN + '/static/')
 
                 db_market_app_data.page_html.insert({
                     'related_page_id': related_page_id,
