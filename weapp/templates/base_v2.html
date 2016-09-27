@@ -374,7 +374,7 @@
 							{% if nav.third_navs %}
 								secondNav['thirdNavs'] = [];
 								{% for third_nav in nav.third_navs %}
-									{% if third_nav.name == 'survey_re' %}
+									{% if third_nav.users %}
 										{% if request.manager.username in third_nav.users %}
 										secondNav['thirdNavs'].push({
 											'name': '{{third_nav.name}}',
