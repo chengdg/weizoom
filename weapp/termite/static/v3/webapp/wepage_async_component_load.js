@@ -333,7 +333,26 @@ W.AsyncComponentView = BackboneLite.View.extend({
         }
 
         // 更新促销价格
-        _this.updatePrice();
+        // _this.updatePrice();
+    },
+
+    updatePrice: function(){
+        var _this = this;
+        $(".wa-item-product").each(function(){
+            // 商品原价
+            var price = $(this).data('product-price');
+            // 商品有促销
+            var productPromotion = $(this).data('product-promotion');
+            var isMemberProduct = $(this).hasClass('xa-member-product');
+            // 计算价钱
+            price = _this.__calculPrice({
+                price: price,
+                productPromotion: productPromotion,
+                isMemberProduct: isMemberProduct
+            });
+            // 设置显示价格
+            $(this).find('.wa-inner-price').text('¥'+price);
+        });
     },
 
     __userHasPromotion: function(promotion_member_grade_id){
@@ -391,28 +410,6 @@ W.AsyncComponentView = BackboneLite.View.extend({
             price = (price * this.memberInfoData.discount / 100).toFixed(2);
         }
         return price;
-    },
-
-    updatePrice: function(){
-        var _this = this;
-        $(".wa-item-product").each(function(){
-            // 商品原价
-            var price = $(this).data('product-price');
-            // 商品有促销
-            var productPromotion = $(this).data('product-promotion');
-            var isMemberProduct = $(this).hasClass('xa-member-product');
-            // 计算价钱
-            price = _this.__calculPrice({
-                price: price,
-                productPromotion: productPromotion,
-                isMemberProduct: isMemberProduct
-            });
-            if (productPromotion) {
-                debugger;
-            }
-            // 设置显示价格
-            $(this).find('.wa-inner-price').text('¥'+price);
-        });
     }
 
 });
