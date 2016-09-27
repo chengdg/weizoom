@@ -248,6 +248,9 @@ W.AsyncComponentView = BackboneLite.View.extend({
             }
         });
 
+        // 获取用户信息
+        _this.__getMemberProductInfo();
+
     },
 
     // 渲染组件节点
@@ -329,10 +332,88 @@ W.AsyncComponentView = BackboneLite.View.extend({
             });
         }
 
+        // 更新促销价格
+        _this.updatePrice();
+    },
 
-        // });
+    __userHasPromotion: function(promotion_member_grade_id){
+        if(promotion_member_grade_id == '0'){
+            return true;
+        }
+        if(promotion_member_grade_id == this.memberInfoData.member_grade_id){
+            return true;
+        }else{
+            return false;
+        }
+
+    },
+
+    __getMemberProductInfo: function(){
+        var _this = this;           
+        W.getApi().call({
+            app: 'webapp',
+            api: 'project_api/call',
+            method: 'get',
+            args: {
+                woid: W.webappOwnerId,
+                module: 'mall',
+                target_api: 'member_product_info/get',
+                fmt: _this.fmt
+            },
+            success: function(data) {
+                _this.memberInfoData = data;
+                var alertView = $('[data-ui-role="attentionAlert"]').data('view');
+                if(!data.is_subscribed && alertView){
+                    alertView.render();
+                }
+                _this.trigger('updateProductPrice', data);
+            },
+            error: function(data) {
+
+            }
+        });
+    },
+
+    __calculPrice: function(args){
+        var price = parseFloat(args.price).toFixed(2);  
+        var isUserHasPromotion = false;
+        if(args.productPromotion){
+            // 促销是否对此用户开发
+            // args.productPromotion 包含 限时抢购、买赠活动
+            isUserHasPromotion = this.__userHasPromotion(args.productPromotion.member_grade_id);
+            if(isUserHasPromotion && args.productPromotion.detail.promotion_price){
+                // 限时抢购
+                price = (args.productPromotion.detail.promotion_price).toFixed(2);
+            }
+        }
+        if(!isUserHasPromotion && args.isMemberProduct && this.memberInfoData.discount < 100){
+            // 商品是否参与会员折扣
+            price = (price * this.memberInfoData.discount / 100).toFixed(2);
+        }
+        return price;
+    },
+
+    updatePrice: function(){
+        var _this = this;
+        $(".wa-item-product").each(function(){
+            // 商品原价
+            var price = $(this).data('product-price');
+            // 商品有促销
+            var productPromotion = $(this).data('product-promotion');
+            var isMemberProduct = $(this).hasClass('xa-member-product');
+            // 计算价钱
+            price = _this.__calculPrice({
+                price: price,
+                productPromotion: productPromotion,
+                isMemberProduct: isMemberProduct
+            });
+            if (productPromotion) {
+                debugger;
+            }
+            // 设置显示价格
+            $(this).find('.wa-inner-price').text('¥'+price);
+        });
     }
-
 
 });
 //END of W.AsyncComponentView
