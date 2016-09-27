@@ -473,8 +473,7 @@ MALL_PROMOTION_AND_APPS_SECOND_NAV = {
                     'url': 'http://%s/apps/survey/surveies/' % MARKETAPP_DOMAIN,
                     'permission': '',
                     'need_token': True,
-                    'need_blank': True,
-                    'users': ['jobs', 'ceshi01']
+                    'need_blank': True
                 },
                 {
                     'name': MALL_APPS_EVENT_NAV,
@@ -511,7 +510,7 @@ MALL_PROMOTION_AND_APPS_SECOND_NAV = {
                     'title': u'用户反馈',
                     'url': '/apps/exsurvey/exsurveies/',
                     'permission': '',
-                    'users': ['jobs', 'ceshi01', 'wzjx001', 'weizoomxs', 'weizoommm', 'weshop', 'weizoomclub', 'weizoomshop', 'Aierkang', 'BITC'] #这些帐号可以显示用户反馈
+                    'users': ['jobs', 'ceshi01', 'wzjx001', 'weizoomxs', 'weizoommm', 'weshop', 'weizoomclub', 'weizoomshop', 'Aierkang', 'BITC', 'weizoomhtxp'] #这些帐号可以显示用户反馈
                 },{
                     'name': MALL_APPS_GROUP_NAV,
                     'title': u'团购',
