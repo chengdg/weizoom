@@ -293,7 +293,8 @@
 * 编辑限定区域页--弹窗样式
 */
 .xui-mallSelectLimitedAreaDialog .modal-dialog,
-.xui-limited-area-template-dialog .modal-dialog{
+.xui-limited-area-template-dialog .modal-dialog,
+.xui-mallProductLabelDialog .modal-dialog{
 	width: 580px;
     height: 390px;
     position: absolute;
@@ -416,7 +417,8 @@
     display: none;
     border: 1px solid #d2d2d2; 
 }
-.xui-mallSelectLimitedAreaDialog .btn-success{
+.xui-mallSelectLimitedAreaDialog .btn-success,
+.xui-mallProductLabelDialog .btn-success{
 	background:#207cbe;
 }
 /*
@@ -1793,6 +1795,50 @@
 }
 .xui-productsPoolPage .xui-productList tr{
 	border-bottom:1px solid #ddd;
+}
+.xui-productsPoolPage .xui-product-label{
+    display: inline-block;
+    border: 1px solid #ccc;
+    line-height: 22px;
+    background: #fff;
+    margin-right: 3px;
+    padding: 0 8px;
+    max-width: 140px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    vertical-align: middle;
+    margin-bottom: 5px;
+}
+.xui-productsPoolPage .xui-filterPanel .xui-productLabel{
+	width: 100px;
+    text-align: right;
+    font-weight: normal;
+    margin-bottom: 0;
+    vertical-align: top;
+    line-height: 24px;
+}
+.xui-productsPoolPage .xui-filterPanel .xui-selectProductLabel{
+	white-space: nowrap;
+}
+/*微众系列商品池---选择标签弹窗*/
+.xui-mallProductLabelDialog table tr>td{
+	line-height: 36px;
+    vertical-align: top;
+}
+.xui-mallProductLabelDialog table tr>td label{
+	white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    max-width: 150px;
+    margin-right: 10px;
+    margin-left: 0px!important;
+}
+.xui-mallProductLabelDialog table tr>td:first-child{
+	width: 100px;
+}
+.xui-mallProductLabelDialog table tr>td:nth-child(2){
+	width: 448px;
 }
 /*失效商品弹窗的表格样式*/
 .xui-offshelfTable{

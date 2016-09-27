@@ -593,6 +593,7 @@ class ProductPool(resource.Resource):
         first_classification = int(request.GET.get('first_classification', '-1'))
         secondary_classification = int(request.GET.get('secondary_classification', '-1'))
         supplier_type = request.GET.get('supplier_type', -1)
+        filter_labels = request.GET.get('labels',[])
         #status = request.GET.get('status', '-1')
 
         manager_user_profile = UserProfile.objects.filter(webapp_type=2)[0]
@@ -630,7 +631,16 @@ class ProductPool(resource.Resource):
         if product_name and products:
             products = products.filter(name__contains=product_name)
 
-
+        #now_product_ids = []
+        #for product in products:
+        #    now_product_ids.append(product.id)   
+        if filter_labels:
+            #print "\\\\\\\\\\\\\\\\\\\\\\\\",filter_labels
+            filter_labels_ids = json.loads(filter_labels)
+            #filter_label_ids = models.ProductLabel.objects.filter(name__in=filter_labels).values_list('id',flat=True)
+            filter_label_product_ids = models.ProductHasLabel.objects.filter(label_id__in=filter_labels_ids).values_list('product_id',flat=True)
+            products = products.filter(id__in=filter_label_product_ids)
+        #print ";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;",products
         # else:
         #     all_mall_product = models.Product.objects.filter(
         #         owner__in=owner_ids,
@@ -742,11 +752,41 @@ class ProductPool(resource.Resource):
         # 对应商品团购数据
         # weizoom_product_ids = [str(id) for id in mall_product_id2weizoom_product_id.values()]
         # product2group = utils.get_product2group(weizoom_product_ids, request.webapp_owner_id)
-        #构造返回数据
+        # 类目和标签的中间关系（二级类目）
+        classification_label_relations = models.ClassificationHasLabel.objects\
+            .filter(classification_id__in=id2secondary_classification.keys())
+        # 所涉及到的所有标签id
+        label_ids = [relation.label_id for relation in classification_label_relations]
+
+        # 商品的标签（特殊标签）
+        product_has_labels = models.ProductHasLabel.objects.filter(product_id__in=product_ids)
+        label_ids += [p_l.label_id for p_l in product_has_labels]
+
+        # 标签id:标签
+        label_id_2_label = dict([(label.id, label) for label in models.ProductLabel.objects.filter(id__in=label_ids)])
+        # 构造返回数据
 
         items = []
         for product in products:
+            # 处理标签
+            product_label_names = ''
+            # classification_label_names = ''
+            if product.id in product_id2classification_id.keys():
+                # product_classification = id2secondary_classification[product_id2classification_id[product.id]]
+                # temp_classification_label_relation = filter(lambda p: p.classification_id == product_classification.id,
+                #                                             classification_label_relations)
+                # classification_labels = [label_id_2_label.get(int(relation.label_id)) for relation
+                #                          in temp_classification_label_relation]
+                # if classification_labels:
+                #     classification_label_names = [label.name for label in classification_labels if label]
 
+                product_label_relations = filter(lambda r: r.product_id == product.id, product_has_labels)
+                product_labels = [label_id_2_label.get(int(relation.label_id)) for relation
+                                         in product_label_relations]
+                if product_labels:
+                    product_label_names = [label.name for label in product_labels if label]
+
+            # product_labels = [for label_id in ]
             # if (mall_product_id2weizoom_product_id.has_key(product['id']) and
             #     product_id2relation.has_key(mall_product_id2weizoom_product_id[product['id']]) and
             #     product_id2relation[mall_product_id2weizoom_product_id[product['id']]].promotion.status in [promotion_model.PROMOTION_STATUS_STARTED, promotion_model.PROMOTION_STATUS_NOT_START]):
@@ -792,6 +832,8 @@ class ProductPool(resource.Resource):
                 'supplier_type': supplier_type,
                 # 五五分成基础扣点
                 'basic_rebate': basic_rebate,
+                'product_label_names': product_label_names,
+                # 'classification_label_names': classification_label_names,
                 # 零售返点的对应此平台的反点
                 'retail_rebate': basic_retail_rebate if not self_retail_rebate else self_retail_rebate,
                 'classification': "%s-%s" % (
@@ -2138,6 +2180,31 @@ class ProductClassification(resource.Resource):
         }
         return response.get_response()
 
+################################获取所有标签#############################################
+class ProductLabel(resource.Resource):
+    """
+    获取所有标签
+    """
+    app = "mall2"
+    resource = "product_label"
+
+    @login_required
+    def api_get(request):
+        return_data = []
+        label_groups = models.ProductLabelGroup.objects.filter(is_deleted=False)
+        for label_group in label_groups:
+            label_data = {"firstname":label_group.name,"secondname":[]}
+            labels = models.ProductLabel.objects.filter(label_group_id=label_group.id).filter(is_deleted=False)
+            for label in labels:
+                label_data['secondname'].append({"label_id":label.id,"label_name":label.name})
+            return_data.append(label_data)
+
+        response = create_response(200)
+        response.data = {
+            'items': return_data
+        }
+        return response.get_response()        
+############################################################################################
 
 class ProductGetFile(resource.Resource):
     """

@@ -2,7 +2,24 @@
 {% load staticfiles %}
 {% load project_filter %}
 {% load account_filter %}
+{% block css %}
+<style type="text/css">
+#exportProgress{
+	float:right;
+	margin:4px 10px;
+}
+#exportProgress .exportProgress_msg{
+	margin-right:0;
+}
+#downloadLink{
+  margin:4px 10px!important;
+}
+.xui-productsPoolPage .xui-productList tbody tr:nth-child(even) td:first-child{
+    display:none;
+}
 
+</style>
+{% endblock %}
 {% block content-panel %}
 <div class="xui-productsPoolPage">
     <ul class="breadcrumb">
@@ -166,7 +183,17 @@
                         <span class="c6">无更新</a>
                         {{/if}} -->
                     </td>
+
                 </tr>
+                <tr style="height:20px;">
+					<td colspan="9" class="xui-remark xa-remark pb0" style=''>
+					{{if product.product_label_names}}
+					    {{each(i, name) product.product_label_names}}
+					    <span class="xui-product-label" title="${name}">${name}</span>
+					    {{/each}}
+					{{/if}}
+					</td>
+				</tr>
                 {{/each}}
             {{else}}
                 <tr><td colspan='8'>还没有数据</td></tr>

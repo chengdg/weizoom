@@ -1,0 +1,47 @@
+<script id="mall-select-product-label-dialog-tmpl-src" type="text/x-jquery-tmpl">
+	<div class="modal fade xui-mallProductLabelDialog" id="mallSelectProvinceDialog">
+	<div class="modal-dialog modal-lg">
+	<div class="modal-content">
+		<div class="modal-header">
+			<button aria-hidden="true" data-dismiss="modal" class="close" type="button"><span aria-hidden="true">&times;</span></button>
+			<h3 class="modal-title">选择标签</h3>
+		</div>
+		<div class="modal-body">
+			<div
+				data-ui-role="advanced-table"
+				data-app="mall2"
+				data-api="product_label"
+				data-template-id="#product-labels-view"
+				data-enable-paginator="false"
+				data-enable-sort="false"
+			></div>
+		</div>
+		<div class="modal-footer modal-footerBg">
+			<button class="btn btn-success">确&nbsp;认</button>
+		</div>
+	</div>
+	</div>
+	</div>
+</script>
+<script id="product-labels-view" type="text/x-jquery-tmpl">
+	<table class="xb-stripedTable w">
+		<tbody>
+		{{each(i, labels) items}}
+			<tr>
+				<td width="48">
+					<label class="checkbox-inline xui-fontBold" title="${labels.firstname}">
+						<input type="checkbox" class="xa-selectAllFirstLabel">${labels.firstname}
+					</label>
+				</td>
+				<td width="508" class="xa-labels-td">
+					{{each(j, label) labels.secondname}}
+					<label class="checkbox-inline" title="${label.label_name}">
+						<input type="checkbox" value="${label.label_id}">${label.label_name}
+					</label>
+					{{/each}}
+				</td>
+			</tr>
+		{{/each}}
+		</tbody>
+	</table>
+</script>
