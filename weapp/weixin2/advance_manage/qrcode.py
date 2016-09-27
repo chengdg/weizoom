@@ -176,7 +176,8 @@ def _get_qrcode_items(request):
 			setting_id2total_final_price[setting_id] = final_price
 			setting_id2cash_money[setting_id] = cash_money
 			setting_id2weizoom_card_money[setting_id] = weizoom_card_money
-
+	print "-------66666666666-----member_id2total_final_price-----",member_id2total_final_price
+	print "-------77777777777-----member_id2setting_id-----",member_id2setting_id
 
 
 	response = create_response(200)
@@ -186,16 +187,16 @@ def _get_qrcode_items(request):
 	mp_user = get_binding_weixin_mpuser(request.manager)
 	mpuser_access_token = get_mpuser_accesstoken(mp_user)
 
+	print "-------2222222-----setting_id2total_final_price-----",setting_id2total_final_price
 	for setting in settings:
 		print "------11111-------------",setting.id
-		print "-------2222222----------",setting_id2total_final_price
 		current_setting = JsonResponse()
 		prize_info = decode_json_str(setting.award_prize_info)
 		if prize_info['name'] == '_score-prize_':
 			setting.cur_prize = '[%s]%d' % (prize_info['type'], prize_info['id'])
 		elif prize_info['name'] == 'non-prize':
 			setting.cur_prize = u'无奖励'
-			# setting.cur_prize = prize_info['type']
+		# setting.cur_prize = prize_info['type']
 		else:
 			setting.cur_prize = '[%s]%s' % (prize_info['type'], prize_info['name'])
 
@@ -204,12 +205,10 @@ def _get_qrcode_items(request):
 		else:
 			setting.count = 0
 		if setting.id in setting_id2total_final_price:
-			print "-------33333333333----------"
 			setting.total_final_price = setting_id2total_final_price[setting.id]
 			setting.cash_money = setting_id2cash_money[setting.id]
 			setting.weizoom_card_money = setting_id2weizoom_card_money[setting.id]
 		else:
-			print "-------444444444444----------"
 			setting.total_final_price = 0
 			setting.cash_money = 0
 			setting.weizoom_card_money = 0
@@ -219,8 +218,7 @@ def _get_qrcode_items(request):
 		bing_member_name = ''
 		bing_time = ''
 		cancel_time = ''
-		if setting_id2bing_member_id.has_key(setting.id) and \
-		id2member.has_key(setting_id2bing_member_id[setting.id]):
+		if setting_id2bing_member_id.has_key(setting.id) and id2member.has_key(setting_id2bing_member_id[setting.id]):
 			bing_member_name = id2member[setting_id2bing_member_id[setting.id]].username_truncated
 			if qrcode_id_and_member_id2relation.has_key((setting.id, setting.bing_member_id)):
 				r = qrcode_id_and_member_id2relation[(setting.id, setting.bing_member_id)]
