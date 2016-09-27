@@ -187,6 +187,8 @@ def _get_qrcode_items(request):
 	mpuser_access_token = get_mpuser_accesstoken(mp_user)
 
 	for setting in settings:
+		print "------11111-------------",setting.id
+		print "-------2222222----------",setting_id2total_final_price
 		current_setting = JsonResponse()
 		prize_info = decode_json_str(setting.award_prize_info)
 		if prize_info['name'] == '_score-prize_':
@@ -202,10 +204,12 @@ def _get_qrcode_items(request):
 		else:
 			setting.count = 0
 		if setting.id in setting_id2total_final_price:
+			print "-------33333333333----------"
 			setting.total_final_price = setting_id2total_final_price[setting.id]
 			setting.cash_money = setting_id2cash_money[setting.id]
 			setting.weizoom_card_money = setting_id2weizoom_card_money[setting.id]
 		else:
+			print "-------444444444444----------"
 			setting.total_final_price = 0
 			setting.cash_money = 0
 			setting.weizoom_card_money = 0
@@ -239,6 +243,7 @@ def _get_qrcode_items(request):
 					setting.save()
 			except:
 				pass
+		print "--------5555555----------",setting.total_final_price
 		current_setting.id = setting.id
 		current_setting.name = setting.name
 		current_setting.count = setting.count
@@ -774,7 +779,7 @@ class QrcodeOrder(resource.Resource):
 			final_price += order.final_price
 			weizoom_card_money += order.weizoom_card_money
 
-		print 6666666666,orders.count()
+		print 6666666666,len(orders)
 		#进行分页
 		count_per_page = int(request.GET.get('count_per_page', 15))
 		cur_page = int(request.GET.get('page', '1'))
