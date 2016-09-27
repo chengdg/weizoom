@@ -119,7 +119,7 @@ def _get_qrcode_items(request):
 	bing_members = get_member_by_id_list(bing_member_ids)
 	id2member = dict([(m.id, m) for m in bing_members])
 
-	relations = ChannelQrcodeHasMember.objects.filter(channel_qrcode_id__in=setting_ids)
+	relations = ChannelQrcodeHasMember.objects.filter(channel_qrcode_id__in=setting_ids).order_by('-created_at')
 	setting_id2count = {}
 	member_id2setting_id = {}
 	member_id2relation = {}
