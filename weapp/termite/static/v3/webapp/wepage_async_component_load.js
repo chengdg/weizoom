@@ -333,10 +333,10 @@ W.AsyncComponentView = BackboneLite.View.extend({
         }
 
         // 更新促销价格
-        // _this.updatePrice();
+        _this.updatePromotionPrice();
     },
 
-    updatePrice: function(){
+    updatePromotionPrice: function(){
         var _this = this;
         $(".wa-item-product").each(function(){
             // 商品原价
