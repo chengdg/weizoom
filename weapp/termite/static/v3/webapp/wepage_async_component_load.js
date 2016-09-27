@@ -52,26 +52,15 @@ W.AllComponentsView = BackboneLite.View.extend({
         });
 
         var deferred = $.Deferred();
-        this.__asyncFetchAllData(deferred, this.allComponentsData);
+        this.fetchAllData(deferred, this.allComponentsData);
 
         $.when(deferred).done(function(allProductData){
             // 获取完所有商品模块中的所有数据后，开始渲染模块
             // 生成商品对象库
-            _this.objProducts =  _this.productsAryToObj(allProductData);
+            _this.objProducts =  _this.__productsAryToObj(allProductData);
             // 开始渲染
             _this.render();
         });
-    },
-
-    // 生成所有商品的对象
-    productsAryToObj: function(allProductData) {
-        if (!allProductData || !allProductData.products) {return {}}
-
-        var objComponents = {};
-        allProductData.products.map(function(product){
-            objComponents[product.id] = product;
-        });
-        return  objComponents;
     },
 
     // 渲染所有组件
@@ -92,8 +81,19 @@ W.AllComponentsView = BackboneLite.View.extend({
         });
     },
 
+    // 生成所有商品的对象
+    __productsAryToObj: function(allProductData) {
+        if (!allProductData || !allProductData.products) {return {}}
+
+        var objComponents = {};
+        allProductData.products.map(function(product){
+            objComponents[product.id] = product;
+        });
+        return objComponents;
+    },
+
     // 异步获取所有商品信息
-    __asyncFetchAllData: function(deferred, allComponentsData) {
+    fetchAllData: function(deferred, allComponentsData) {
         if (typeof(allComponentsData) === 'undefined') return;
         var _this = this;
         var allProductIds = [];
@@ -157,6 +157,8 @@ W.AllComponentsView = BackboneLite.View.extend({
 W.AsyncComponentView = BackboneLite.View.extend({
     events: {
     },
+
+
 
     // 改写了原系统的handlebar模版，原模版渲染速度慢
     getTemplate: function(componentType) {
@@ -249,8 +251,17 @@ W.AsyncComponentView = BackboneLite.View.extend({
         });
 
         // 获取用户信息
-        _this.__getMemberProductInfo();
-
+        var deferred = $.Deferred();
+        _this.fetchMemberProductInfo(deferred);
+        $.when(deferred).done(function(data){
+            _this.memberInfoData = data;
+            var alertView = $('[data-ui-role="attentionAlert"]').data('view');
+            if(!data.is_subscribed && alertView){
+                alertView.render();
+            }
+            // 开始变更价格
+            _this.updatePromotionPrice();
+        });
     },
 
     // 渲染组件节点
@@ -331,9 +342,6 @@ W.AsyncComponentView = BackboneLite.View.extend({
                 placeholder: "/static_v2/img/webapp/mall/info_placeholder.png"
             });
         }
-
-        // 更新促销价格
-        _this.updatePromotionPrice();
     },
 
     updatePromotionPrice: function(){
@@ -355,19 +363,8 @@ W.AsyncComponentView = BackboneLite.View.extend({
         });
     },
 
-    __userHasPromotion: function(promotion_member_grade_id){
-        if(promotion_member_grade_id == '0'){
-            return true;
-        }
-        if(promotion_member_grade_id == this.memberInfoData.member_grade_id){
-            return true;
-        }else{
-            return false;
-        }
-
-    },
-
-    __getMemberProductInfo: function(){
+    // 异步获取用户信息
+    fetchMemberProductInfo: function(deferred){
         var _this = this;           
         W.getApi().call({
             app: 'webapp',
@@ -380,17 +377,24 @@ W.AsyncComponentView = BackboneLite.View.extend({
                 fmt: _this.fmt
             },
             success: function(data) {
-                _this.memberInfoData = data;
-                var alertView = $('[data-ui-role="attentionAlert"]').data('view');
-                if(!data.is_subscribed && alertView){
-                    alertView.render();
-                }
-                _this.trigger('updateProductPrice', data);
+                deferred.resolve(data);
             },
             error: function(data) {
 
             }
         });
+    },
+
+    __userHasPromotion: function(promotion_member_grade_id){
+        if(promotion_member_grade_id == '0'){
+            return true;
+        }
+        if(promotion_member_grade_id == this.memberInfoData.member_grade_id){
+            return true;
+        }else{
+            return false;
+        }
+
     },
 
     __calculPrice: function(args){
