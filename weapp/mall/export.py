@@ -1,4 +1,13 @@
 # -*- coding: utf-8 -*-
+
+import copy
+
+from eaglet.utils.resource_client import Resource
+
+from watchdog.utils import watchdog_error, watchdog_info
+
+from core.exceptionutil import unicode_full_stack
+from account.account_util import get_token_for_logined_user
 from weapp.settings import MONEY_HOST, MARKETAPP_DOMAIN
 
 MALL_HOME_FIRST_NAV = 'mall_outline'
@@ -323,17 +332,16 @@ MALL_APPS_EVENT_NAV = 'events'
 MALL_APPS_VOTE_NAV = 'votes'
 MALL_APPS_SIGN_NAV = 'sign'
 MALL_APPS_RED_ENVELOPE_NAV = 'red_envelopes'
-MALL_APPS_POWERME_NAV = 'powerme'
-MALL_APPS_REDPACKET_NAV = 'red_packet'
+MALL_APPS_POWERME_NAV = 'powermes'
+MALL_APPS_REDPACKET_NAV = 'red_packets'
 MALL_APPS_GROUP_NAV = 'groups'
 MALL_APPS_SHVOTE_NAV = 'shvotes'
-MALL_APPS_REBATE_NAV = 'rebate'
+MALL_APPS_REBATE_NAV = 'rebates'
 MALL_APPS_EXSIGN_NAV = 'exsign'
-MALL_APPS_EGG_NAV = 'egg'
-MALL_APPS_SCRATCH_NAV = 'scratch'
+MALL_APPS_EGG_NAV = 'eggs'
+MALL_APPS_SCRATCH_NAV = 'scratches'
 ADVANCE_MANAGE_QRCODE_NAV = 'qrcode'
 ADVANCE_MANAGE_CHANNEL_DISTRIBUTIONS_NAV = 'channel_distributions'
-MALL_APPS_SURVEY_NAV_RE = 'survey_re'
 #
 # 应用和营销左侧垂直方向二级导航信息
 #
@@ -341,6 +349,106 @@ MALL_PROMOTION_SECOND_NAV = MALL_PROMOTION_FLASH_SALE_NAV
 MALL_APPS_SECOND_NAV = MALL_APPS_LOTTERY_NAV
 MALL_CHANNEL_QRCODE_SECOND_NAV = ADVANCE_MANAGE_QRCODE_NAV
 
+DEFAULT_APPS_THIRD_NAVS = [
+    {
+        'name': MALL_APPS_EGG_NAV,
+        'title': "砸金蛋",
+        'url': '/apps/egg/eggs/',
+        'permission': ''
+    }, {
+        'name': MALL_APPS_SCRATCH_NAV,
+        'title': "刮刮卡",
+        'url': '/apps/scratch/scratches/',
+        'permission': ''
+    }, {
+        'name': MALL_APPS_LOTTERY_NAV,
+        'title': "微信抽奖",
+        'url': '/apps/lottery/lotteries/',
+        'permission': ''
+    },{
+        'name': MALL_APPS_EXLOTTERY_NAV,
+        'title': "幸运码抽奖",
+        'url': '/apps/exlottery/exlotteries/',
+        'permission': '',
+    },{
+        'name': MALL_APPS_SCANLOTTERY_NAV,
+        'title': "扫码抽奖",
+        'url': '/apps/scanlottery/scanlotteries/',
+        'permission': '',
+    },
+    {
+        'name': MALL_APPS_VOTE_NAV,
+        'title': "微信投票",
+        'url': '/apps/vote/votes/',
+        'permission': '',
+    },
+    {
+        'name': MALL_APPS_EVENT_NAV,
+        'title': "活动报名",
+        'url': '/apps/event/events/',
+        'permission': [],
+    },
+    {
+        'name': MALL_APPS_SURVEY_NAV,
+        'title': "用户调研",
+        'url': '/apps/survey/surveies/',
+        'permission': ''
+    },
+    {
+        'name': MALL_APPS_RED_ENVELOPE_NAV,
+        'title': u'分享红包',
+        'url': '/apps/red_envelope/red_envelope_rule_list/',
+        'permission': ''
+    },
+    {
+        'name': MALL_APPS_SIGN_NAV,
+        'title': u'签到',
+        'url': '/apps/sign/sign/',
+        'permission': ''
+    },
+    {
+        'name': MALL_APPS_POWERME_NAV,
+        'title': u'微助力',
+        'url': '/apps/powerme/powermes/',
+        'permission': ''
+    },
+    {
+        'name': MALL_APPS_FEEDBACK_NAV,
+        'title': u'用户反馈',
+        'url': '/apps/exsurvey/exsurveies/',
+        'permission': '',
+        'users': ['jobs', 'ceshi01', 'wzjx001', 'weizoomxs', 'weizoommm', 'weshop', 'weizoomclub', 'weizoomshop', 'Aierkang', 'BITC', 'weizoomhtxp'] #这些帐号可以显示用户反馈
+    },{
+        'name': MALL_APPS_GROUP_NAV,
+        'title': u'团购',
+        'url': '/apps/group/groups/',
+        'permission': '',
+    },{
+        'name': MALL_APPS_SHVOTE_NAV,
+        'title': u'高级投票',
+        'url': '/apps/shvote/shvotes/',
+        'permission': '',
+        'users': ['jobs','jierunda', 'ceshi01']
+    },{
+        'name': MALL_APPS_REBATE_NAV,
+        'title': u'返利活动',
+        'url': '/apps/rebate/rebates/',
+        'permission': '',
+        'users': ['jobs', 'ceshi01', 'weshop', 'Aierkang', 'BITC']
+    },{
+        'name': MALL_APPS_EXSIGN_NAV,
+        'title': u'专项签到',
+        'url': '/apps/exsign/exsign/',
+        'permission': '',
+        'users': ['jobs', 'ceshi01', 'weshop', 'Aierkang', 'BITC']
+    },
+    # {
+    #     'name': MALL_APPS_REDPACKET_NAV,
+    #     'title': u'拼红包',
+    #     'url': '/apps/red_packet/red_packets/',
+    #     'permission': ''
+    # }
+]
 
 MALL_PROMOTION_AND_APPS_SECOND_NAV = {
     'section': u'',
@@ -428,120 +536,7 @@ MALL_PROMOTION_AND_APPS_SECOND_NAV = {
             'title': u'百宝箱',
             'url': '/apps/lottery/lotteries/',
             'permission': 'manage_apps',
-            'third_navs': [
-                {
-                    'name': MALL_APPS_EGG_NAV,
-                    'title': "砸金蛋",
-                    'url': '/apps/egg/eggs/',
-                    'permission': ''
-                }, {
-                    'name': MALL_APPS_SCRATCH_NAV,
-                    'title': "刮刮卡",
-                    'url': '/apps/scratch/scratches/',
-                    'permission': ''
-                }, {
-                    'name': MALL_APPS_LOTTERY_NAV,
-                    'title': "微信抽奖",
-                    'url': '/apps/lottery/lotteries/',
-                    'permission': ''
-                },{
-                    'name': MALL_APPS_EXLOTTERY_NAV,
-                    'title': "幸运码抽奖",
-                    'url': '/apps/exlottery/exlotteries/',
-                    'permission': '',
-                },{
-                    'name': MALL_APPS_SCANLOTTERY_NAV,
-                    'title': "扫码抽奖",
-                    'url': '/apps/scanlottery/scanlotteries/',
-                    'permission': '',
-                },
-                # {
-                    # 'name': MALL_APPS_FEEDBACK_NAV,
-                    # 'title': "用户反馈",
-                    # 'url': '/apps/feedback/feedbacks/',
-                    # 'permission': []
-                # },
-                # {
-                #     'name': MALL_APPS_SURVEY_NAV,
-                #     'title': "用户调研",
-                #     'url': '/apps/survey/surveies/',
-                #     'permission': ''
-                # },
-                {
-                    'name': MALL_APPS_SURVEY_NAV_RE,
-                    'title': "用户调研",
-                    'url': 'http://%s/apps/survey/surveies/' % MARKETAPP_DOMAIN,
-                    'permission': '',
-                    'need_token': True,
-                    'need_blank': True
-                },
-                {
-                    'name': MALL_APPS_EVENT_NAV,
-                    'title': "活动报名",
-                    'url': '/apps/event/events/',
-                    'permission': [],
-                },
-                {
-                    'name': MALL_APPS_VOTE_NAV,
-                    'title': "微信投票",
-                    'url': '/apps/vote/votes/',
-                    'permission': '',
-                },
-                {
-                    'name': MALL_APPS_RED_ENVELOPE_NAV,
-                    'title': u'分享红包',
-                    'url': '/apps/red_envelope/red_envelope_rule_list/',
-                    'permission': ''
-                },
-                {
-                    'name': MALL_APPS_SIGN_NAV,
-                    'title': u'签到',
-                    'url': '/apps/sign/sign/',
-                    'permission': ''
-                },
-                {
-                    'name': MALL_APPS_POWERME_NAV,
-                    'title': u'微助力',
-                    'url': '/apps/powerme/powermes/',
-                    'permission': ''
-                },
-                {
-                    'name': MALL_APPS_FEEDBACK_NAV,
-                    'title': u'用户反馈',
-                    'url': '/apps/exsurvey/exsurveies/',
-                    'permission': '',
-                    'users': ['jobs', 'ceshi01', 'wzjx001', 'weizoomxs', 'weizoommm', 'weshop', 'weizoomclub', 'weizoomshop', 'Aierkang', 'BITC', 'weizoomhtxp'] #这些帐号可以显示用户反馈
-                },{
-                    'name': MALL_APPS_GROUP_NAV,
-                    'title': u'团购',
-                    'url': '/apps/group/groups/',
-                    'permission': '',
-                },{
-                    'name': MALL_APPS_SHVOTE_NAV,
-                    'title': u'高级投票',
-                    'url': '/apps/shvote/shvotes/',
-                    'permission': '',
-                    'users': ['jobs','jierunda', 'ceshi01']
-                },{
-                    'name': MALL_APPS_REBATE_NAV,
-                    'title': u'返利活动',
-                    'url': '/apps/rebate/rebates/',
-                    'permission': '',
-                    'users': ['jobs', 'ceshi01', 'weshop', 'Aierkang', 'BITC']
-                },{
-                    'name': MALL_APPS_EXSIGN_NAV,
-                    'title': u'专项签到',
-                    'url': '/apps/exsign/exsign/',
-                    'permission': '',
-                    'users': ['jobs', 'ceshi01', 'weshop', 'Aierkang', 'BITC']
-                },
-                # {
-                #     'name': MALL_APPS_REDPACKET_NAV,
-                #     'title': u'拼红包',
-                #     'url': '/apps/red_packet/red_packets/',
-                #     'permission': ''
-                # }
-            ]
+            'third_navs': DEFAULT_APPS_THIRD_NAVS
         },
         {
             'name': MALL_CHANNEL_QRCODE_SECOND_NAV,
@@ -573,10 +568,41 @@ MALL_PROMOTION_AND_APPS_SECOND_NAV = {
 ########################################################################
 def get_promotion_and_apps_second_navs(request):
     if request.user.username == 'manager':
-        pass
+        second_navs = []
     else:
-        second_navs = [MALL_PROMOTION_AND_APPS_SECOND_NAV]
+        menus = copy.deepcopy(DEFAULT_APPS_THIRD_NAVS)
+        try:
+            api_resp = Resource.use('marketapp_apiserver').get({
+                'resource': 'apps.get_apps_third_menu',
+                'data': {'manager_username': request.manager.username}
+            })
+            watchdog_info('call marketapp_apiserver: apps.get_apps_third_menu, resp==> \n{}'.format(api_resp))
 
+            if api_resp and api_resp['code'] == 200:
+                resp_data = api_resp['data']
+
+                fake_menus = copy.deepcopy(menus)
+                resp_dit = {r['name']: r for r in resp_data}
+                resp_keys = resp_dit.keys()
+
+                for app in fake_menus:
+                    app_name = app['name']
+                    if app_name in resp_keys:
+                        menus.remove(app)
+                        resp_dit[app_name]['url'] = 'http://{}{}'.format(MARKETAPP_DOMAIN, resp_dit[app_name]['url'])
+                        resp_dit[app_name]['users'] = []
+                        resp_dit[app_name]['need_token'] = True
+                        resp_dit[app_name]['need_blank'] = True
+                        menus.insert(0, resp_dit[app_name])
+                MALL_PROMOTION_AND_APPS_SECOND_NAV['navs'][1]['third_navs'] = menus
+            else:
+                MALL_PROMOTION_AND_APPS_SECOND_NAV['navs'][1]['third_navs'] = DEFAULT_APPS_THIRD_NAVS
+        except:
+            notify_message = u"从marketapp获取活动列表失败，cause: \n{}".format(unicode_full_stack())
+            watchdog_error(notify_message)
+            MALL_PROMOTION_AND_APPS_SECOND_NAV['navs'][1]['third_navs'] = DEFAULT_APPS_THIRD_NAVS
+
+        second_navs = [MALL_PROMOTION_AND_APPS_SECOND_NAV]
     return second_navs
 
 

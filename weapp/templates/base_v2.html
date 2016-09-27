@@ -306,18 +306,21 @@
 									if(thirdNav.className) {
 										className = '<i class="xui-noticyTip ' + thirdNav.className + '"></i>';
 									}
+									var blank = thirdNav.needBlank? 'target="_blank"': '';
 									if(thirdNavName === thirdNav.name) {
 										$('.xa-second-navs').append('<li class="xui-sideBar-third active_third">' + 
 											'<a href="' + thirdNav.url + 
 											'" title="' + thirdNav.title + 
-											'" name="' + thirdNav.name + '">&nbsp;&nbsp;&nbsp;&nbsp;' + 
+											'" name="' + thirdNav.name + '" ' + blank +
+                                            '>&nbsp;&nbsp;&nbsp;&nbsp;' +
 											thirdNav.title + '<i class="xui-icon-arrow"></i>' + 
 											className + '</a></li>');
 									} else {
 										$('.xa-second-navs').append('<li class="xui-sideBar-third">' + 
 											'<a href="' + thirdNav.url + 
 											'" title="' + thirdNav.title + 
-											'" name="' + thirdNav.name + '">&nbsp;&nbsp;&nbsp;&nbsp;' + 
+											'" name="' + thirdNav.name + '" ' + blank +
+                                            '>&nbsp;&nbsp;&nbsp;&nbsp;' +
 											thirdNav.title + '<i class="xui-icon-arrow"></i>' + 
 											className +'</a></li>');
 									}
@@ -379,18 +382,20 @@
 										secondNav['thirdNavs'].push({
 											'name': '{{third_nav.name}}',
 											'title': '{{third_nav.title}}',
-											'url': '{{third_nav.url}}',
+											'url': '{{third_nav.url}}{% if third_nav.need_token %}?token={{token}}{% endif %}',
 											'permission': '{{third_nav.permission}}',
-											'className': '{{third_nav.class_name}}'
+											'className': '{{third_nav.class_name}}',
+                                            'needBlank': '{{ third_nav.need_blank }}' === 'True'
 										});
 										{% endif %}
 									{% else %}
 										secondNav['thirdNavs'].push({
 											'name': '{{third_nav.name}}',
 											'title': '{{third_nav.title}}',
-											'url': '{{third_nav.url}}',
+											'url': '{{third_nav.url}}{% if third_nav.need_token %}?token={{token}}{% endif %}',
 											'permission': '{{third_nav.permission}}',
-											'className': '{{third_nav.class_name}}'
+											'className': '{{third_nav.class_name}}',
+                                            'needBlank': '{{ third_nav.need_blank }}' === 'True'
 										});								
 									{% endif %}
 								{% endfor %}

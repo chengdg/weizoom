@@ -102,7 +102,7 @@
 						<!-- 三级导航 -->
 						{% if nav.third_navs %}
 							{% for third_nav in nav.third_navs %}
-                                {% if third_nav.name == 'exsurveies' or third_nav.name == 'cardExchange' or third_nav.name == 'shvotes' or third_nav.name == 'virtualProducts' or third_nav.name == 'rebate' or third_nav.name == 'exsign' or third_nav.name == 'scanlottery' or third_nav.name == 'channel_distributions' %}
+                                {% if third_nav.users %}
                                     {% if request.manager.username in third_nav.users %}
                                     <li class="xui-sideBar-third {% ifequal third_nav_name third_nav.name %}active_third{% endifequal %}">
                                         <a href="{{third_nav.url}}{% if third_nav.need_token %}?token={{token}}{% endif %}" title="{{third_nav.title}}" name="{{third_nav.name}}" {% if third_nav.need_blank %} target="_blank" {% endif %}>
@@ -112,14 +112,6 @@
                                         </a>
                                     </li>
                                     {% endif %}
-                                {% elif third_nav.name == 'groups' %}
-                                    <li class="xui-sideBar-third {% ifequal third_nav_name third_nav.name %}active_third{% endifequal %}">
-                                        <a href="{{third_nav.url}}" title="{{third_nav.title}}" name="{{third_nav.name}}">
-                                            &nbsp;&nbsp;&nbsp;&nbsp;{{third_nav.title|safe}}
-                                            <i class="xui-icon-arrow"></i>
-                                            {% if third_nav.class_name %}<i class="xui-noticyTip {{third_nav.class_name}}"></i>{% endif %}
-                                        </a>
-                                    </li>
                                 {% else %}
                                     <li class="xui-sideBar-third {% ifequal third_nav_name third_nav.name %}active_third{% endifequal %}">
                                         <a href="{{third_nav.url}}{% if third_nav.need_token %}?token={{token}}{% endif %}" title="{{third_nav.title}}" name="{{third_nav.name}}" {% if third_nav.need_blank %} target="_blank" {% endif %}>
