@@ -172,7 +172,7 @@ W.AsyncComponentView = BackboneLite.View.extend({
                         <li data-component-cid="{{this.cid}}" \
                             data-index="{{this.index}}"   \
                         > \
-                            <a class="wui-inner-box{{index}}{{#if product.is_member_product}} xa-member-product{{/if}} wa-item-product" \
+                            <a class="wui-inner-box{{index}}{{#if this.is_member_product}} xa-member-product{{/if}} wa-item-product" \
                                 href="{{this.link_url}}" \
                                 data-handlebar-data=\'{ "index":"{{index}}", "product":{"thumbnails_url":"{{this.thumbnails_url}}", "name":"{{this.name}}", "display_price":"{{this.display_price}}"} }\' \
                                 data-product-promotion="{{this.promotion_js}}" \
