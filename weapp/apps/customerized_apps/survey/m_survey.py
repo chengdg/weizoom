@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 
-from datetime import datetime
+from django.conf import settings
 from django.template import RequestContext
+from datetime import datetime
 from django.shortcuts import render_to_response
+from django.http import HttpResponseRedirect, HttpResponse
 from core import resource
 import models as app_models
 from modules.member.models import Member
@@ -29,8 +31,19 @@ class Msurvey(resource.Resource):
 		"""
 		if 'id' in request.GET:
 			id = request.GET['id']
+			###############重构之后，访问老数据，直接重定向到重构调研##########
+			try:
+				related_page_id = app_models.survey.objects.get(id=id).related_page_id
+				m_marketapp_url = 'http://{}/m/apps/survey/m_survey/?woid={}&page_id={}'.format(settings.MARKET_MOBILE_DOMAIN, request.webapp_owner_id, related_page_id)
+				return HttpResponseRedirect(m_marketapp_url)
+			except:
+				c = RequestContext(request, {
+					'is_deleted_data': True
+				})
+				return render_to_response('workbench/wepage_webapp_page.html', c)
+			###############################################################
+
 			isPC = request.GET.get('isPC',0)
-			print isPC,"isPC"
 			isMember = False
 			qrcode_url = None
 			permission = ''

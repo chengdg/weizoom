@@ -13,6 +13,7 @@ from django.template import Context, RequestContext
 from termite import pagestore as pagestore_manager
 from apps.customerized_apps.survey import models as app_models
 from webapp import models as webapp_models
+from core.exceptionutil import unicode_full_stack
 
 type2template = {}
 
@@ -35,24 +36,44 @@ class Command(BaseCommand):
         print 'update survey history data start...'
         old_surveies = app_models.survey.objects()
         record_id2related_page_id = {str(survey.id): str(survey.related_page_id) for survey in old_surveies}
+        related_page_ids = [str(survey.related_page_id) for survey in old_surveies]
+        related_page_ids_object = [ObjectId(survey.related_page_id) for survey in old_surveies]
         record_ids = [str(survey.id) for survey in old_surveies]
         old_survey_participances = app_models.surveyParticipance.objects(belong_to__in=record_ids)
         pagestore = pagestore_manager.get_pagestore('mongo')
 
-        #通过pymongo链接新的数据库market_app_data
-        connection = pymongo.Connection('mongo.apps.com', 27017)
+        # #通过pymongo链接新的数据库market_app_data
+        l = len(args)
+        if l > 0 and args[0] == 'deploy':
+            host = 'mongodb://app:weizoom@dds-bp1502411213f1e41.mongodb.rds.aliyuncs.com:3717,dds-bp1502411213f1e42.mongodb.rds.aliyuncs.com:3717/market_app_data?replicaSet=mgset-1211291'
+        else:
+            host = settings.APP_MONGO['HOST']
+        connection = pymongo.Connection(host, 27017)
+        connection_termite = pymongo.Connection('mongo.weapp.com', 27017)
         db_market_app_data = connection.market_app_data
-        db_termite = connection.termite
+        db_termite = connection_termite.termite
+
         try:
             #泡脚本之前先把新数据库中的老数据删除
             db_market_app_data.survey_survey.remove({'is_old': True})
-            db_market_app_data.page_html.remove({'is_old': True})
+            db_market_app_data.page_html.remove({'is_old': True, 'related_page_id': {'$in': related_page_ids}})
             db_market_app_data.survey_survey_participance.remove({'is_old': True})
+
+            #复制termite里的page到market_app_page
+            db_termite.market_app_page.remove({'_id': {'$in': related_page_ids_object}})
+            for page in db_termite.page.find({'_id': {'$in': related_page_ids_object}}):
+                # 更新market_app_page里description中静态资源地址
+                description = page['component']['components'][0]['model']['description']
+                page['component']['components'][0]['model']['description'] = description.replace('/static/', 'http://' + settings.DOMAIN + '/static/')
+                db_termite.market_app_page.insert(page)
+
             #然后将老数据写入新数据库
             for survey in old_surveies:
                 related_page_id = survey.related_page_id
                 page = pagestore.get_page(related_page_id, 1)
                 page_details = page['component']['components'][0]['model']
+                description = page_details['description']
+                description = description.replace('/static/', 'http://' + settings.DOMAIN + '/static/')
                 db_market_app_data.survey_survey.insert({
                     'owner_id': survey.owner_id,
                     'name': survey.name,
@@ -64,36 +85,44 @@ class Command(BaseCommand):
                     'related_page_id': survey.related_page_id,
                     'created_at': survey.created_at,
                     'subtitle': page_details['subtitle'],
-                    'description': page_details['description'],
+                    'description': description,
                     'prize': page_details['prize'],
                     'permission': page_details['permission'],
                     'is_old': True
                 })
 
                 project_id = 'new_app:survey:%s' % related_page_id
-                html = create_page(project_id).replace('xa-submitTermite', 'xa-submitWepage').replace('/static/', 'http://' + settings.DOMAIN + '/static/')
+                html = create_page(project_id).replace('xa-submitTermite', 'xa-submitWepage')
+
+                html = html.replace('/static/', 'http://' + settings.DOMAIN + '/static/')
+
                 db_market_app_data.page_html.insert({
                     'related_page_id': related_page_id,
                     'html': html,
                     'is_old': True
                 })
 
-                #更新page里description中静态资源地址
-                component = db_termite.page.find_one({'_id': ObjectId(related_page_id)})['component']
-                description = component['components'][0]['model']['description']
-                component['components'][0]['model']['description'] = description.replace('/static/', 'http://' + settings.DOMAIN + '/static/')
-                db_termite.page.update({'_id': ObjectId(related_page_id)}, {'$set': {'component': component}})
-
             #构造调研活动related_page_id与活动id映射
             related_page_id2record_id = {str(survey['related_page_id']): str(survey['_id']) for survey in db_market_app_data.survey_survey.find({'is_old': True})}
             for par in old_survey_participances:
                 related_page_id = record_id2related_page_id[str(par.belong_to)]
+                termite_data = par.termite_data
+                for key, value in termite_data.items():
+                    if value['type'] == 'appkit.uploadimg' and value['value']:
+                        img_list = []
+                        for img in value['value']:
+                            if img:
+                                if 'http://' not in img:
+                                    img = img.replace('/static/', 'http://' + settings.DOMAIN + '/static/')
+                                img_list.append(img)
+                        termite_data[key]['value'] = img_list
+
                 db_market_app_data.survey_survey_participance.insert({
                     'member_id': par.member_id,
                     'belong_to': related_page_id2record_id[related_page_id],
                     'related_page_id': related_page_id,
                     'tel': par.tel,
-                    'termite_data': par.termite_data,
+                    'termite_data': termite_data,
                     'prize': par.prize,
                     'created_at': par.created_at,
                     'is_old': True

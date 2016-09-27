@@ -76,19 +76,24 @@ class Command(BaseCommand):
 			"""
 			所有已到15分钟还未开团成功的团购，删除团购记录
 			"""
+			log_need_delete_relation_ids = []
 			for group_relation in all_not_start_group_relations:
 				all_not_start_group_ids.append(group_relation.belong_to)
 				timing_minutes = (datetime.today() - group_relation.created_at).total_seconds() / 60
 				if timing_minutes >= 15 :
+					log_need_delete_relation_ids.append(str(group_relation.id))
 					group_relation.delete()
+			watchdog_info(u'所有已到15分钟还未开团成功的团购，删除团购记录，小团ids[{}]'.format(log_need_delete_relation_ids))
 
 			"""
 			所有已到15分钟还未完成支付的参与他人团购，删除团购参与记录
 			"""
+			log_need_update_relation_ids = []
 			all_unpaid_group_details = app_models.GroupDetail.objects(is_already_paid=False)
 			for group_detail in all_unpaid_group_details:
 				timing_minutes = (datetime.today() - group_detail.created_at).total_seconds() / 60
 				if timing_minutes >= 15 :
+					log_need_update_relation_ids.append(group_detail.relation_belong_to)
 					try:
 						all_running_group_relations.get(id=group_detail.relation_belong_to).update(
 							dec__grouped_number=1,
@@ -98,6 +103,7 @@ class Command(BaseCommand):
 					except:
 						#该团已被删除掉了
 						pass
+			watchdog_info(u'所有已到15分钟还未完成支付的参与他人团购，删除团购参与记录，更新小团，ids[{}]'.format(log_need_update_relation_ids))
 
 			"""
 			所有团购活动已结束的团购活动，置为团购失败
