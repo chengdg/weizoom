@@ -1797,10 +1797,12 @@
 .xui-productsPoolPage .xui-productList tr{
 	border-bottom:1px solid #ddd;
 }
-.xui-productsPoolPage table#productListTable tbody tr.xui-cps td:first-child{
+.xui-productsPoolPage table#productListTable tbody tr.xui-cps td:first-child,
+.xui-productsPage table#productListTable tbody tr.xui-cps td:first-child{
 	position: relative;
 }
-.xui-productsPoolPage table#productListTable tbody tr.xui-cps td:first-child::before{
+.xui-productsPoolPage table#productListTable tbody tr.xui-cps td:first-child::before,
+.xui-productsPage table#productListTable tbody tr.xui-cps td:first-child::before{
 	content:"CPS";
 	display: block;
 	position: absolute;
@@ -1814,7 +1816,8 @@
     top: 2px;
     z-index: 1;
 }
-.xui-productsPoolPage table#productListTable tbody tr.xui-cps td:first-child::after{
+.xui-productsPoolPage table#productListTable tbody tr.xui-cps td:first-child::after,
+.xui-productsPage table#productListTable tbody tr.xui-cps td:first-child::after{
 	content: "";
 	display: block;
 	position: absolute;
