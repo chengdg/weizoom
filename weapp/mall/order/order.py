@@ -8,6 +8,7 @@ from excel_response import ExcelResponse
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render_to_response
+from django.conf import settings
 
 from core import resource
 from mall import export
@@ -26,6 +27,7 @@ from mall.module_api import update_order_status
 from weixin.user.module_api import get_mp_qrcode_img
 from weixin2.models import News
 from export_job.models import ExportJob
+from bdem import msgutil
 
 COUNT_PER_PAGE = 20
 FIRST_NAV = export.ORDER_FIRST_NAV
@@ -80,6 +82,17 @@ class OrderInfo(resource.Resource):
                 response = create_response(500)
                 response.data = {'msg':"非法操作，订单状态不允许进行该操作"}
                 return response.get_response()
+            if action == 'cancel' and not settings.IS_UNDER_BDD:
+                topic_name = "order-close"
+                data = {
+                    "name": "cancel_group_order_and_notify_pay",
+                    "data": {
+                        "order_ids": order.order_id
+                    }
+                }
+                msg_name = "cancel_order"
+                msgutil.send_message(topic_name, msg_name, data)
+
             mall_api.update_order_status(request.user, action, order, request)
         else:
             operate_log = ''
