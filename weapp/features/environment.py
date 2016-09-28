@@ -583,7 +583,9 @@ def __create_system_user(username):
 		profile = user.get_profile()
 		if username.startswith('zymanager'):
 			profile.webapp_type = 2
+			profile.store_name = username
 		else:
+			profile.store_name = username
 			profile.webapp_type = 1
 		profile.save()
 	"""
