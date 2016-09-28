@@ -123,7 +123,7 @@ def increase_unread_order(webapp_owner_id, count):
 		records.update(unread_order_count=F('unread_order_count')+count)
 	else:
 		MallCounter.objects.create(owner_id=webapp_owner_id, unread_order_count=count).save()
-
+		
 
 # MODULE START: productcategory
 class ProductCategory(models.Model):
@@ -3113,3 +3113,24 @@ class ClassificationHasLabel(models.Model):
 
 	class Meta(object):
 		db_table = 'mall_classification_has_label'
+
+#########################cps models###########################
+
+PROMOTING = 1 # 推广中
+PROMOTE_OVER = 2 # 推广结束
+
+class PromoteDetail(models.Model): #推广明细
+	product_id = models.IntegerField() #weapp product id
+	promote_status = models.IntegerField(default=PROMOTING)#推广状态 （未推广，推广中，已结束）   推广设置中展示：未推广，已结束。推广明细中：推广中，已结束
+	promote_money = models.FloatField(default=0) #推广费用/件
+	promote_stock =  models.IntegerField(default=1) #推广库存
+	promote_time_from = models.DateTimeField(auto_now_add=True) #开始时间
+	promote_time_to = models.DateTimeField(auto_now_add=True) #结束时间
+	promote_sale_count = models.IntegerField(default=0) #推广销量
+	promote_total_money = models.FloatField(default=0) #推广费用总费用
+	created_at = models.DateTimeField(auto_now_add=True) #创建时间
+	
+	class Meta(object):
+		db_table = 'mall_promote_detail'
+
+##############################################################
