@@ -92,6 +92,8 @@ W.view.mall.OrderAction = Backbone.View.extend({
                             pageReload();
                         },
                         error: function () {
+                            W.showHint('error', '订单状态发生改变，不能取消！');
+                            pageReload();
                         }
                     })
 
@@ -210,7 +212,7 @@ W.view.mall.OrderAction = Backbone.View.extend({
             var orderId = $el.parents('.xa-actions').data('order-id');
             var integralPerYuan = $el.parents('.xa-actions').data('integral-per-yuan');
 
-            // 
+            //
             var allData = JSON.parse($('#origin-data').text());
             var mallType = allData.mall_type;
 
@@ -268,7 +270,7 @@ W.view.mall.OrderAction = Backbone.View.extend({
             var $el = $(event.currentTarget);
             var orderId = $el.parents('.xa-actions').data('order-id');
             var deliveryItemId = $el.parents('.xa-actions').data('delivery-item-id');
-            // 
+            //
             var allData = JSON.parse($('#origin-data').text());
             var mallType = allData.mall_type;
 
