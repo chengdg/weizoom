@@ -80,8 +80,8 @@ class Mevent(resource.Resource):
 					pagestore = pagestore_manager.get_pagestore('mongo')
 					page = pagestore.get_page(record.related_page_id, 1)
 					permission = page['component']['components'][0]['model']['permission']
-					description2 = page['component']['components'][1]['model']['description2']
-					description_is_empty = False if page['component']['components'][1]['model']['description2'] else True
+					description2 = page['component']['components'][1]['model'].get('description2', '')
+					description_is_empty = False if description2 else True
 				is_already_participanted = (participance_data_count > 0)
 				if  is_already_participanted:
 					try:
