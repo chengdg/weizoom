@@ -355,7 +355,7 @@ class ProductList(resource.Resource):
 
             product_dict = product.format_to_dict()
             product_dict['is_self'] = (request.manager.id == product.owner_id)
-            if product.id in cps_products_id:
+            if product.id in list(cps_products_id):
                 product_dict['is_cps'] = 1
             product_dict['classification'] = ''
             if mall_type:
@@ -769,6 +769,7 @@ class ProductPool(resource.Resource):
         label_id_2_label = dict([(label.id, label) for label in models.ProductLabel.objects.filter(id__in=label_ids)])
         # 构造返回数据
         cps_products_id = models.PromoteDetail.objects.filter(promote_status=1).values_list('product_id',flat=True)
+        print "]]]]]]]]]]",list(cps_products_id)
         items = []
         for product in products:
             # 处理标签
@@ -818,7 +819,7 @@ class ProductPool(resource.Resource):
             basic_rebate = supplier_divide_rebate.get(product.supplier, '')
             basic_retail_rebate = supplier_id_2_retail_rebate.get(product.supplier, None)
             self_retail_rebate = supplier_id_2_self_retail_rebate.get(product.supplier, None)
-            if product.id in cps_products_id:
+            if product.id in list(cps_products_id):
                 items.append({
                     'id': product.id,
                     # 'product_has_promotion': product_has_promotion,
