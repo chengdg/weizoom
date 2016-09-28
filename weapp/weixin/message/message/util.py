@@ -25,7 +25,7 @@ from weixin.user.models import WeixinMpUser
 from utils.string_util import byte_to_hex
 from weixin.message.handler.weixin_message import WeixinMessageTypes
 
-from watchdog.utils import watchdog_warning, watchdog_error, watchdog_info
+from watchdog.utils import watchdog_warning, watchdog_error, watchdog_info, watchdog_alert
 from core.exceptionutil import full_stack, unicode_full_stack
 
 ########################################################################
@@ -120,10 +120,7 @@ def record_message(args):
 		# except:
 		# 	pass
 	except:
-		import sys, traceback
-		type, value, tb = sys.exc_info()
-
-		traceback.print_tb(tb)
+		watchdog_alert(u'更新消息会话失败，改为创建，cause：\n{}'.format(unicode_full_stack()))
 		if is_un_read_msg:
 			unread_count = 1
 		else:
