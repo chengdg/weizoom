@@ -136,6 +136,7 @@ class ProductList(resource.Resource):
 
         start_date = request.GET.get('startDate', '')
         end_date = request.GET.get('endDate', '')
+        is_request_cps = request.GET.get('is_cps','')
 
         product_pool_param = {}
         if mall_type:
@@ -339,6 +340,7 @@ class ProductList(resource.Resource):
         items = []
         items1 = []
         items2 = []
+        cps_items = []
 
         #获取商品的商品分类信息
         if mall_type:
@@ -357,6 +359,11 @@ class ProductList(resource.Resource):
             product_dict['is_self'] = (request.manager.id == product.owner_id)
             if product.id in list(cps_products_id):
                 product_dict['is_cps'] = 1
+                product_dict['promote_time_from'] = models.PromoteDetail.objects.get(product_id=product.id).promote_time_from.strftime("%Y-%m-%d %H:%M:%S")
+                product_dict['promote_time_to'] = models.PromoteDetail.objects.get(product_id=product.id).promote_time_to.strftime("%Y-%m-%d %H:%M:%S")
+                product_dict['promote_money'] = models.PromoteDetail.objects.get(product_id=product.id).promote_money.strftime("%Y-%m-%d %H:%M:%S")
+                product_dict['promote_stock'] = models.PromoteDetail.objects.get(product_id=product.id).promote_stock.strftime("%Y-%m-%d %H:%M:%S")
+                cps_items.append(product_dict)
             product_dict['classification'] = ''
             if mall_type:
                 secondary_classification = product_id2classification.get(product.id,'')
@@ -422,12 +429,20 @@ class ProductList(resource.Resource):
         data['owner_id'] = request.manager.id
         data['mall_type'] = mall_type
         response = create_response(200)
-        response.data = {
-            'items': items,
-            'pageinfo': paginator.to_dict(pageinfo),
-            'sortAttr': sort_attr,
-            'data': data
-        }
+        if is_request_cps:
+            response.data = {
+                'items': cps_items,
+                'pageinfo': paginator.to_dict(pageinfo),
+                'sortAttr': sort_attr,
+                'data': data
+            }            
+        else:
+            response.data = {
+                'items': items,
+                'pageinfo': paginator.to_dict(pageinfo),
+                'sortAttr': sort_attr,
+                'data': data
+            }
         return response.get_response()
 
     @login_required
@@ -838,8 +853,8 @@ class ProductPool(resource.Resource):
                     # 五五分成基础扣点
                     'basic_rebate': basic_rebate,
                     'product_label_names': product_label_names,
-                    'promote_time_from':models.PromoteDetail.objects.get(product_id=product.id).promote_time_from,
-                    'promote_time_to':models.PromoteDetail.objects.get(product_id=product.id).promote_time_to,
+                    'promote_time_from':models.PromoteDetail.objects.get(product_id=product.id).promote_time_from.strftime("%Y-%m-%d %H:%M:%S"),
+                    'promote_time_to':models.PromoteDetail.objects.get(product_id=product.id).promote_time_to.strftime("%Y-%m-%d %H:%M:%S"),
                     #'classification_label_names': classification_label_names,
                     # 零售返点的对应此平台的反点
                     'retail_rebate': basic_retail_rebate if not self_retail_rebate else self_retail_rebate,
