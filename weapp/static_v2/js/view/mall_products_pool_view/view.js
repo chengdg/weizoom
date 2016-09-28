@@ -63,7 +63,6 @@ W.view.mall.ProductsPoolView = Backbone.View.extend({
         // console.log('status',status,$('[data-cps-value="'+status+'"]'));
 
         this.filterView.trigger('clickStatusBox', status);
-
         $('.xa-tab').removeClass('active');
         $('[data-cps-value="'+aa+'"]').addClass('active');
      },
