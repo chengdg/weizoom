@@ -87,7 +87,7 @@ class OrderInfo(resource.Resource):
                 data = {
                     "name": "cancel_group_order_and_notify_pay",
                     "data": {
-                        "order_ids": order.order_id
+                        "order_ids": [order.order_id]
                     }
                 }
                 msg_name = "cancel_order"
