@@ -50,16 +50,9 @@
     </ul>
     {% endifequal %}
     <div class="xa-productFilterView xui-filterPanel"></div>
-    <div class="panel panel-default mt20 xb-rightPanel" style="min-height:120px;">
-        <div class="panel-heading">
-            <label for="topSelectAll" class="xui-selectAll ml15">
-                <input type="checkbox" id="topSelectAll" class="xa-selectAll">全选
-            </label>
-            <a href="javascript:void(0);" class="btn btn-default ml10 xa-batchOffshelf">批量上架</a>
-           <!--  <a href="javascript:void(0);" class="btn btn-primary ml10 xa-checkOffshelf xui-offshelf-btn fr">
-                查看失效商品
-            </a> -->
-        </div>
+    <!-- <div class="panel panel-default mt20 xb-rightPanel" style="min-height:120px;"> -->
+    <div class="" style="min-height:120px;">
+        
         <div
         data-ui-role="pool-advanced-table"
         data-app="mall2"
@@ -72,22 +65,36 @@
         data-outer-selecter='.xa-selectAll'
         class="panel-body"
     ></div>
-    <label for="bottomSelectAll" class="xui-selectAll ml12 xui-bottomSelectAll">
-        <input type="checkbox" id="bottomSelectAll" class="xa-selectAll">全选
-    </label>
     </div>
 </div>
 {% endblock %}
 {% block js %}
 {% verbatim %}
 <script id="products-view" type="text/x-jquery-tmpl">
+    <ul class="nav nav-tabs mt14 ">
+        <li class="xa-tab {{if data.is_request_cds !==1 }}active{{/if}}" data-cps-value="0"><a href="javascript:void(0);">所有商品</a></li>
+        <li class="xa-tab {{if data.is_request_cds==1}}active{{/if}}" data-cps-value="1"><a href="javascript:void(0);">cps推广商品${data.is_request_cds}</a></li>
+    </ul>
+    <div class="panel-default mt20 xb-rightPanel p10" style="min-height:120px;border: 1px solid #ddd;border-bottom: 0;">
+    <div class="pb10">
+        <label for="topSelectAll" class="xui-selectAll ml20">
+            <input type="checkbox" id="topSelectAll" class="xa-selectAll">全选
+        </label>
+        <a href="javascript:void(0);" class="btn btn-default ml10 xa-batchOffshelf">批量上架</a>
+    </div>
     <table id="productListTable" class="table table-bordered table-condensed xui-productList xb-stripedTable xb-noTdBorder xb-noBottom xb-noBorder xb-theadBg">
         <thead>
             <tr>
                 <th width="250">商品信息</th>
                 <th width="100">分类</th>
                 <th width="100">供货商</th>
+                {{if data.is_request_cds&&data.is_request_cds==1}}
+                <th width="55">推广费用<br/>(元/件)</th>
+
+                {{else}}
                 <th width="55">商品价格</th>
+
+                {{/if}}
                 <th width="50">库存</th>
                 <th width="100">商品毛利</th>
                 <th width="50">扣点类型</th>
@@ -97,7 +104,7 @@
         <tbody id='product_list'>
             {{if items.length}}
                 {{each(i, product) items}}
-                <tr data-id="${product.id}" class="xa-selectTr" data-product-has-promotion="${product.product_has_promotion}" data-product-has-group="${product.product_has_group}" data-product-status="2">
+                <tr data-id="${product.id}" class="xa-selectTr{{if is_cps}} xui-cps{{/if}}" data-product-has-promotion="${product.product_has_promotion}" data-product-has-group="${product.product_has_group}" data-product-status="2">
                     <td class="wui-advanced-table-sort-handler tl_important">
                         <div class="disT w">
                             <div class="imgBox disTc pr xui-imgBox vm">
@@ -129,6 +136,9 @@
                     <td>
                         ${product.store_name}
                     </td>
+                    {{if product.is_cps}}
+                    <td>${product.promote_money}</td>
+                    {{else}}
                     <td>
                         {{if product.is_use_custom_model}}
                             <div class="xa-priceText">${product.display_price_range}</div>
@@ -136,6 +146,8 @@
                             <div class="xa-priceText">${product.price}</div>
                         {{/if}}
                     </td>
+                    {{/if}}
+
                     <td>
                         {{if !product.is_use_custom_model}}
                             {{if product.stocks == 0}}
@@ -200,6 +212,11 @@
             {{/if}}
         </tbody>
     </table>
+
+    <label for="bottomSelectAll" class="xui-selectAll ml12 xui-bottomSelectAll">
+        <input type="checkbox" id="bottomSelectAll" class="xa-selectAll">全选
+    </label>
+    </div> 
 </script>
 {% endverbatim %}
 <script type="text/javascript">

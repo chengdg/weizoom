@@ -1789,12 +1789,51 @@
 	margin-bottom: 0;
 }
 .xui-productsPoolPage .xui-bottomSelectAll{
-	position: absolute;
-    bottom: 10px;
-    left: 20px;
+    position: absolute;
+    bottom: 27px;
+    left: 30px;
 }
 .xui-productsPoolPage .xui-productList tr{
 	border-bottom:1px solid #ddd;
+}
+.xui-productsPoolPage table#productListTable tbody tr.xui-cps td:first-child{
+	position: relative;
+}
+.xui-productsPoolPage table#productListTable tbody tr.xui-cps td:first-child::before{
+	content:"CPS";
+	display: block;
+	position: absolute;
+	width: 39px;
+	height: 20px;
+	line-height: 20px;
+	background: #ff7200;
+	color: #fff;
+	font-size: 14px;
+	left: -4px;
+    top: 2px;
+    z-index: 1;
+}
+.xui-productsPoolPage table#productListTable tbody tr.xui-cps td:first-child::after{
+	content: "";
+	display: block;
+	position: absolute;
+	width: 0px;
+	height: 0px;
+	border-width: 3px;
+	border-style:solid dashed dashed dashed;
+	border-color:#a74b00 transparent transparent transparent;
+	-webkit-transform:rotate(-135deg);
+	-ms-transform:rotate(-135deg);
+	transform:rotate(-135deg);
+	left: -3px;
+    top: 18px;
+    z-index: 0;
+}
+.xui-productsPoolPage .xui-advancedTablePaginator{
+	background: #eaeef6;
+    border-top: 0;
+    border: 1px solid #ddd;
+    border-top:0;
 }
 .xui-productsPoolPage .xui-product-label{
     display: inline-block;
