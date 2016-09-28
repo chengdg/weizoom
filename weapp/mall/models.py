@@ -3126,7 +3126,7 @@ class PromoteDetail(models.Model): #推广明细
 	promote_stock =  models.IntegerField(default=1) #推广库存
 	promote_time_from = models.DateTimeField(auto_now_add=True) #开始时间
 	promote_time_to = models.DateTimeField(auto_now_add=True) #结束时间
-	promote_number = models.IntegerField(default=0) #推广销量
+	promote_sale_count = models.IntegerField(default=0) #推广销量
 	promote_total_money = models.FloatField(default=0) #推广费用总费用
 	created_at = models.DateTimeField(auto_now_add=True) #创建时间
 	
