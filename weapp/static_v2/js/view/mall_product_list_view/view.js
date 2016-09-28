@@ -33,7 +33,7 @@ W.view.mall.ProductListView = Backbone.View.extend({
         'click .xa-batchOffshelf': 'onClickBatchUpdateProductShelveTypeLink',
         'click .xa-batchRecycle': 'onClickBatchUpdateProductShelveTypeLink',
         'click .xa-batchDelete': 'onClickBatchUpdateProductShelveTypeLink',
-
+        'click .xa-tab' : 'onClickTab',
         'click .xa-modifyStandardModelStocks': 'onClickModifyStandardModelStocksLink',
         'click .xa-modifyCustomModelStocks': 'onClickModifyCustomModelStocksLink',
         'blur .xa-stockInput': 'onConfirmStockInput',
@@ -149,6 +149,16 @@ W.view.mall.ProductListView = Backbone.View.extend({
 
     },
 
+     onClickTab: function(event){
+        this.filterView.onClickResetButton();
+        var $el = $(event.currentTarget);
+        var status = $el.data('cps-value');
+        var tabStatus = $('#tabStatus').val();
+        this.filterView.trigger('clickStatusBox', status);
+        $('.xa-tab').removeClass('active');
+        $('[data-cps-value="'+tabStatus+'"]').addClass('active');
+     },
+     
     onClickBatchUpdateProductShelveTypeLink: function(event) {
         var $link = $(event.currentTarget);
         var shelveType = null;

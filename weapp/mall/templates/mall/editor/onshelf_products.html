@@ -27,6 +27,10 @@
 	</div>
 	<div class="xa-productFilterView xui-filterPanel"></div>
 	{% if has_product %}
+	<ul class="nav nav-tabs mt14 ">
+        <li class="xa-tab {%if not data.is_request_cps %}active{% endif %}" data-cps-value="0"><a href="javascript:void(0);">所有商品</a></li>
+        <li class="xa-tab {%if data.is_request_cps %}active{% endif %}" data-cps-value="1"><a href="javascript:void(0);">cps推广商品</a></li>
+    </ul>
 	<div class="panel panel-default mt20 xb-rightPanel">
 		<div class="panel-heading div_export">
 			<label for="topSelectAll" class="xui-selectAll ml15">
@@ -101,6 +105,11 @@
 				<th width="100">{{if data.data.mall_type > 0}}供货商{{else}}条码{{/if}}</th>
 				<th width="100">分组</th>
 				<th width="115">商品价格（元）</th>
+				{{if data.is_request_cps&&data.is_request_cps==1}}
+				<th width="50">推广费用（元/件）</th>
+				<th width="78">推广库存</th>
+				<th width="120">推广时间</th>
+				{{else}}
 				<th width="50">库存</th>
 				<th width="78">总销量</th>
 				{{if data.data.mall_type == 1}}
@@ -109,6 +118,7 @@
 				<th width="120">{{if data.data.mall_type == 1}}首次上架{{else}}创建{{/if}}时间</th>
 				{{if data.data.mall_type > 0 && data.data.mall_type != 3}}<th width="50">分类</th>{{/if}}
 				<th width="58">排序</th>
+				{{/if}}
 				<th width="90">操作</th>
 			</tr>
 		</thead>
@@ -181,6 +191,9 @@
 						{{/if}}
 					</td>
 					<td>
+					{{if data.is_request_cps&&data.is_request_cps==1}}
+						${product.promote_money}
+					{{else}}
 						{{if product.is_use_custom_model}}
 							<a href="javascript:void(0);" class="xa-modifyCustomModelStocks">{{if product.is_self}}修改{{/if}}</a>
 						{{else}}
@@ -188,10 +201,14 @@
 							<input class="xa-stockInput xui-hide" style="width: 100%;" />
 							<div><a href="javascript:void(0);" class="xa-modifyStandardModelStocks">{{if product.is_self}}修改{{/if}}</a></div>
 						{{/if}}
+					{{/if}}
 					</td>
-					<td>${product.sales}</td>
+					<td>{{if data.is_request_cps&&data.is_request_cps==1}}${product.promote_stock}{{else}}${product.sales}{{/if}}</td>
 					{{if data.data.mall_type == 1}}
 					<td>
+					{{if data.is_request_cps&&data.is_request_cps==1}}
+						${product.promote_time_from}-<br/>${product.promote_time_to}
+					{{else}}
 						{{if product.supplier_type == 0}}
                             首月55分成
                             {{if product.rebate}}
@@ -212,7 +229,7 @@
 
 
                         {{/if}}
-
+                    {{/if}}
                     </td>
 					{{/if}}
 					<td>{{if data.data.mall_type == 1 }}${product.sync_at}{{else}}${product.created_at}{{/if}}</td>
