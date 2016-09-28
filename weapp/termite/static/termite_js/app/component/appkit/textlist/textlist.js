@@ -79,7 +79,7 @@ W.component.appkit.TextList = W.component.Component.extend({
 	}
 }, {
 	indicator: {
-		name: '快捷模块',
-		imgClass: '' // 控件icon
+		name: '参与人信息',
+		imgClass: 'componentList_component_memberinfo' // 控件icon
 	}
 });
