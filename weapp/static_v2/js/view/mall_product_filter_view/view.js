@@ -90,7 +90,13 @@ W.view.mall.ProductFilterView = Backbone.View.extend({
         })
     },
 
-
+    clickStatusBox:function(value){
+        this.onClickResetButton();
+        $('#tabStatus').val(value);
+        
+        // 调用搜索事件
+        this.onClickSearchButton();
+    },
     // 点击‘最近7天’或‘最近30天’
     setDateText: function(event){
         var day = $(event.currentTarget).attr('data-day') -1 ;//parseInt(.toSting()) - 1;
@@ -124,6 +130,7 @@ W.view.mall.ProductFilterView = Backbone.View.extend({
         $('#high_sales').val('');
         $('#start_date').val('');
         $('#end_date').val('');
+        $('#tabStatus').val('');
         $('#category').val('-1');
         $('#supplier').val('');
         $('#orderSupplierType').val('-1');
@@ -141,7 +148,7 @@ W.view.mall.ProductFilterView = Backbone.View.extend({
         if (!secondary_classification){
             secondary_classification = -1
         }
-        
+        var tabStatu = $('#tabStatus').val();
         //上架时间
         var startDate = $.trim(this.$('#start_date').val());
         var endDate = $.trim(this.$('#end_date').val());
@@ -279,7 +286,7 @@ W.view.mall.ProductFilterView = Backbone.View.extend({
 
         this.filter_value = urlEncode(data);
         console.log('onClickSearchButton>>>>filter_value>>>',this.filter_value )
-
+        if(tabStatu == 1){data['is_cps']=1};
         this.trigger('search', data);
     },
 

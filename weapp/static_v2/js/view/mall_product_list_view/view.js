@@ -154,9 +154,11 @@ W.view.mall.ProductListView = Backbone.View.extend({
         var $el = $(event.currentTarget);
         var status = $el.data('cps-value');
         var tabStatus = $('#tabStatus').val();
+        //alert(tabStatus)
         this.filterView.trigger('clickStatusBox', status);
         $('.xa-tab').removeClass('active');
-        $('[data-cps-value="'+tabStatus+'"]').addClass('active');
+        $el.addClass('active');
+        //$('[data-cps-value="'+tabStatus+'"]').addClass('active');
      },
      
     onClickBatchUpdateProductShelveTypeLink: function(event) {

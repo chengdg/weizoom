@@ -56,6 +56,7 @@ W.view.mall.ProductsPoolView = Backbone.View.extend({
         this.filterView.trigger('clickStatusBox', status);
         $('.xa-tab').removeClass('active');
         $('[data-cps-value="'+tabStatus+'"]').addClass('active');
+        //alert('[data-cps-value="'+tabStatus+'"]')
      },
     /**
      * onClickBatchAddOffShelf: 批量‘未选择’商品放入待售

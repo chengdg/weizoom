@@ -323,8 +323,8 @@ def send_product_export_job_task(self, exportjob_id, filter_data_args, type):
                             if product.id in list(cps_products_id):
                                 promote_money = models.PromoteDetail.objects.get(product_id=product.id).promote_money
                                 promote_stock = models.PromoteDetail.objects.get(product_id=product.id).promote_stock
-                                promote_time_from = models.PromoteDetail.objects.get(product_id=product.id).promote_time_from.strftime("%Y-%m-%d %H:%M:%S")
-                                promote_time_to = models.PromoteDetail.objects.get(product_id=product.id).promote_time_to.strftime("%Y-%m-%d %H:%M:%S")
+                                promote_time_from = models.PromoteDetail.objects.get(product_id=product.id).promote_time_from.strftime("%Y/%m/%d %H:%M")
+                                promote_time_to = models.PromoteDetail.objects.get(product_id=product.id).promote_time_to.strftime("%Y/%m/%d %H:%M")
                                 alist = [product.id, model['user_code'], supplier_name_export, product.name, model_name_str, float(model['price']), float(low_price), purchase_price, float(gross_profit), '', point_type, stocks,
                                 '', total_stocks, categories_str, product_sales, product_sales_money, onshelvetime,promote_money,promote_stock,promote_time_from,promote_time_to]
                             else:
@@ -366,8 +366,8 @@ def send_product_export_job_task(self, exportjob_id, filter_data_args, type):
                             if product.id in list(cps_products_id):
                                 promote_money = models.PromoteDetail.objects.get(product_id=product.id).promote_money
                                 promote_stock = models.PromoteDetail.objects.get(product_id=product.id).promote_stock
-                                promote_time_from = models.PromoteDetail.objects.get(product_id=product.id).promote_time_from.strftime("%Y-%m-%d %H:%M:%S")
-                                promote_time_to = models.PromoteDetail.objects.get(product_id=product.id).promote_time_to.strftime("%Y-%m-%d %H:%M:%S")
+                                promote_time_from = models.PromoteDetail.objects.get(product_id=product.id).promote_time_from.strftime("%Y/%m/%d %H:%M")
+                                promote_time_to = models.PromoteDetail.objects.get(product_id=product.id).promote_time_to.strftime("%Y/%m/%d %H:%M")
                                 alist = [product.id, model['user_code'], supplier_name_export, product.name, product.name, float(model['price']), float(model['price']), float(model['price'])-float(model['gross_profit']) , float(model['gross_profit']), float(model['gross_profit']), point_type, total_stocks,
                                     total_stocks, total_stocks, categories_str, product_sales, product_sales_money, onshelvetime,promote_money,promote_stock,promote_time_from,promote_time_to]
                             else:
@@ -378,8 +378,8 @@ def send_product_export_job_task(self, exportjob_id, filter_data_args, type):
                             if product.id in list(cps_products_id):
                                 promote_money = models.PromoteDetail.objects.get(product_id=product.id).promote_money
                                 promote_stock = models.PromoteDetail.objects.get(product_id=product.id).promote_stock
-                                promote_time_from = models.PromoteDetail.objects.get(product_id=product.id).promote_time_from.strftime("%Y-%m-%d %H:%M:%S")
-                                promote_time_to = models.PromoteDetail.objects.get(product_id=product.id).promote_time_to.strftime("%Y-%m-%d %H:%M:%S")
+                                promote_time_from = models.PromoteDetail.objects.get(product_id=product.id).promote_time_from.strftime("%Y/%m/%d %H:%M")
+                                promote_time_to = models.PromoteDetail.objects.get(product_id=product.id).promote_time_to.strftime("%Y/%m/%d %H:%M")
                                 alist = [product.id, model['user_code'], supplier_name_export, product.name, product.name, float(model['price']), float(model['price']), product.purchase_price , gross_profit, gross_profit, point_type, total_stocks,
                                 total_stocks, total_stocks, categories_str, product_sales, product_sales_money, onshelvetime,promote_money,promote_stock,promote_time_from,promote_time_to]
                             else:

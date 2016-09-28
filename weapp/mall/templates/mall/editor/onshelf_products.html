@@ -108,7 +108,7 @@
 				{{if data.is_request_cps&&data.is_request_cps==1}}
 				<th width="50">推广费用（元/件）</th>
 				<th width="78">推广库存</th>
-				<th width="120">推广时间</th>
+				<th width="178">推广时间</th>
 				{{else}}
 				<th width="50">库存</th>
 				<th width="78">总销量</th>
@@ -116,10 +116,12 @@
 				<th width="78">扣点类型</th>
 				{{/if}}
 				<th width="120">{{if data.data.mall_type == 1}}首次上架{{else}}创建{{/if}}时间</th>
+				{{/if}}
 				{{if data.data.mall_type > 0 && data.data.mall_type != 3}}<th width="50">分类</th>{{/if}}
+				{{if !data.is_request_cps}}
 				<th width="58">排序</th>
 				{{/if}}
-				<th width="90">操作</th>
+				<th width="168">操作</th>
 			</tr>
 		</thead>
 		<tbody id='product_list'>
@@ -204,11 +206,11 @@
 					{{/if}}
 					</td>
 					<td>{{if data.is_request_cps&&data.is_request_cps==1}}${product.promote_stock}{{else}}${product.sales}{{/if}}</td>
-					{{if data.data.mall_type == 1}}
-					<td>
 					{{if data.is_request_cps&&data.is_request_cps==1}}
-						${product.promote_time_from}-<br/>${product.promote_time_to}
+						<td>${product.promote_time_from}-<br/>${product.promote_time_to}	</td>	
 					{{else}}
+					{{if data.data.mall_type == 1}}			
+					<td>
 						{{if product.supplier_type == 0}}
                             首月55分成
                             {{if product.rebate}}
@@ -229,16 +231,17 @@
 
 
                         {{/if}}
-                    {{/if}}
+                    
                     </td>
 					{{/if}}
 					<td>{{if data.data.mall_type == 1 }}${product.sync_at}{{else}}${product.created_at}{{/if}}</td>
+					{{/if}}
 					{{if data.data.mall_type > 0 && data.data.mall_type != 3}}<td>${product.classification}</td>{{/if}}
-
+					{{if !data.is_request_cps}}
 					<td style="padding:0 15px;">
 						<input width="38" type="text" class="xa-rank" data-id="${product.id}" style="width:100%;"
 						 			 value="${product.display_index}" data-display-index="${product.display_index}">
-					</td>
+					</td>{{/if}}
 					<td>
 					<div style=" width:74px; margin:auto;">
 						<a href="/mall2/product/?id=${product.id}&shelve_type=1" class="xa-modify fl" style="width: 37px;">
