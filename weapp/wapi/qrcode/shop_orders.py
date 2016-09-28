@@ -104,22 +104,19 @@ class ShopOrders(api_resource.ApiResource):
 					for channel_qrcode_id, member_ids in channel_qrcode_id2member_id.items():
 						if member_id in member_ids:
 							q_flag = False
-							if q_created_at:
-								if member_id in q_has_member_ids:
-									if channel_qrcode_id2user_created_at.get(str(channel_qrcode_id)):
-										if channel_qrcode_id2user_created_at.get(str(channel_qrcode_id)) <= order.created_at.strftime('%Y-%m-%d %H:%M:%S'):
-											if channel_qrcode_id2bing_member_id.get(channel_qrcode_id):
-												if curr_qrcode_id2member_id.get(channel_qrcode_id) and member_id in curr_qrcode_id2member_id.get(channel_qrcode_id):
-													if order.created_at.strftime('%Y-%m-%d %H:%M:%S') <= q_created_at:
-														q_flag = True
-												else:
-													if order.created_at.strftime('%Y-%m-%d %H:%M:%S') > q_created_at:
-														q_flag = True
-								else:
+							if member_id in q_has_member_ids:
+								if channel_qrcode_id2user_created_at.get(str(channel_qrcode_id)):
 									if channel_qrcode_id2user_created_at.get(str(channel_qrcode_id)) <= order.created_at.strftime('%Y-%m-%d %H:%M:%S'):
-										q_flag = True
+										if channel_qrcode_id2bing_member_id.get(channel_qrcode_id):
+											if curr_qrcode_id2member_id.get(channel_qrcode_id) and member_id in curr_qrcode_id2member_id.get(channel_qrcode_id):
+												if order.created_at.strftime('%Y-%m-%d %H:%M:%S') <= q_created_at:
+													q_flag = True
+											else:
+												if order.created_at.strftime('%Y-%m-%d %H:%M:%S') > q_created_at:
+													q_flag = True
 							else:
-								q_flag = True
+								if channel_qrcode_id2user_created_at.get(str(channel_qrcode_id)) <= order.created_at.strftime('%Y-%m-%d %H:%M:%S'):
+									q_flag = True
 							if q_flag:
 								if order.status not in [ORDER_STATUS_CANCEL, ORDER_STATUS_GROUP_REFUNDING, ORDER_STATUS_GROUP_REFUNDED, ORDER_STATUS_REFUNDING, ORDER_STATUS_REFUNDED]:
 									sale_price = order.final_price + order.coupon_money + order.integral_money + order.weizoom_card_money + order.promotion_saved_money + order.edit_money
@@ -175,7 +172,13 @@ class ShopOrders(api_resource.ApiResource):
 									'%Y-%m-%d %H:%M:%S'):
 									flag = True
 						else:
-							flag = True
+							for channel_qrcode_id, member_ids in channel_qrcode_id2member_id.items():
+								if member_id in member_ids:
+									if channel_qrcode_id2user_created_at.get(str(channel_qrcode_id)):
+										if order.created_at.strftime(
+												'%Y-%m-%d %H:%M:%S') >= channel_qrcode_id2user_created_at.get(
+												str(channel_qrcode_id)):
+											flag = True
 						if flag:
 							if not channel_qrcode_id2order_count.has_key(channel_qrcode_id):
 								channel_qrcode_id2order_count[channel_qrcode_id] = 1

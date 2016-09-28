@@ -99,7 +99,6 @@ def get_balance(channel_qrcode_ids, balance_time_from, args, order_status, is_fi
 					if channel_order.created_at.strftime('%Y-%m-%d %H:%M:%S') >= webapp_user_id2created_at.get(channel_order.webapp_user_id) and balance_time_from <= channel_order.created_at.strftime('%Y-%m-%d %H:%M:%S'):
 						flag = True
 				else:
-					print balance_time_from, channel_order.created_at.strftime('%Y-%m-%d %H:%M:%S'),"jjjjjjjjjjjjjjjjjjj"
 					if channel_order.created_at.strftime('%Y-%m-%d %H:%M:%S') <= webapp_user_id2created_at.get(channel_order.webapp_user_id) and balance_time_from <= channel_order.created_at.strftime('%Y-%m-%d %H:%M:%S'):
 						flag = True
 			else:
@@ -107,7 +106,8 @@ def get_balance(channel_qrcode_ids, balance_time_from, args, order_status, is_fi
 					if channel_order.created_at.strftime('%Y-%m-%d %H:%M:%S') >= webapp_user_id2created_at.get(channel_order.webapp_user_id) and balance_time_from <= channel_order.created_at.strftime('%Y-%m-%d %H:%M:%S'):
 						flag = True
 		else:
-			flag = True
+			if balance_time_from <= channel_order.created_at.strftime('%Y-%m-%d %H:%M:%S'):
+				flag = True
 		if flag:
 			orders.append({
 				"order_id": channel_order.id,

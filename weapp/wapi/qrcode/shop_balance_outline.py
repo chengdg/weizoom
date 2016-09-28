@@ -125,7 +125,13 @@ class ShopBalanceOutline(api_resource.ApiResource):
 												order.webapp_user_id):
 											flag = True
 								else:
-									flag = True
+									for channel_qrcode_id, member_ids in channel_qrcode_id2member_id.items():
+										if member_id in member_ids:
+											if channel_qrcode_id2user_created_at.get(str(channel_qrcode_id)):
+												if order.created_at.strftime(
+														'%Y-%m-%d %H:%M:%S') >= channel_qrcode_id2user_created_at.get(
+														str(channel_qrcode_id)):
+													flag = True
 								if flag:
 									if not channel_qrcode_id2all_order.has_key(channel_qrcode_id):
 										channel_qrcode_id2all_order[channel_qrcode_id] = [{
@@ -164,7 +170,13 @@ class ShopBalanceOutline(api_resource.ApiResource):
 												order.webapp_user_id):
 											flag = True
 								else:
-									flag = True
+									for channel_qrcode_id, member_ids in channel_qrcode_id2member_id.items():
+										if member_id in member_ids:
+											if channel_qrcode_id2user_created_at.get(str(channel_qrcode_id)):
+												if order.created_at.strftime(
+														'%Y-%m-%d %H:%M:%S') >= channel_qrcode_id2user_created_at.get(
+														str(channel_qrcode_id)):
+													flag = True
 								if flag:
 									if not channel_qrcode_id2first_order.has_key(channel_qrcode_id):
 										channel_qrcode_id2first_order[channel_qrcode_id] = [{

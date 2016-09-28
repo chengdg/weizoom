@@ -120,7 +120,11 @@ class QrcodeOrder(api_resource.ApiResource):
 								if channel_qrcode_id2user_created_at.get(str(channel_qrcode_id)) <= order.created_at.strftime('%Y-%m-%d %H:%M:%S'):
 									flag = True
 			else:
-				flag = True
+				for channel_qrcode_id, member_ids in channel_qrcode_id2member_id.items():
+					if member_id in member_ids:
+						if channel_qrcode_id2user_created_at.get(str(channel_qrcode_id)):
+							if order.created_at.strftime('%Y-%m-%d %H:%M:%S') >=channel_qrcode_id2user_created_at.get(str(channel_qrcode_id)):
+								flag = True
 			if flag:
 				curr_orders.append(order)
 
