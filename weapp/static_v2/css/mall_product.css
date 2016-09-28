@@ -774,7 +774,8 @@
 .xui-limited-area-template-dialog .modal-dialog tbody tr td:last-child{
 	width: initial;
 }
-.xui-limited-area-template-dialog .modal-dialog .modal-body{
+.xui-limited-area-template-dialog .modal-dialog .modal-body,
+.xui-mallProductLabelDialog .modal-dialog .modal-body{
 	min-height: 250px;
 	max-height: 300px;
     overflow-y: auto;
