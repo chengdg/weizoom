@@ -16,7 +16,7 @@ W.view.mall.ProductsPoolFilterView = Backbone.View.extend({
         this.options = options || {};
         this.$el = $(options.el);
         // this.filter_value = '';
-        // this.bind('clickStatusBox', this.clickStatusBox);
+        this.bind('clickStatusBox', this.clickStatusBox);
     },
 
     render: function() {
@@ -34,6 +34,12 @@ W.view.mall.ProductsPoolFilterView = Backbone.View.extend({
                 alert('加载失败！请刷新页面重试！');
             }
         })
+    },
+    clickStatusBox:function(value){
+        this.onClickResetButton();
+        $('#tabStatus').val(value);
+        // 调用搜索事件
+        this.onClickSearchButton();
     },
     onClickSelectLabels:function(){
         var productLabelIds = $('#productLabels').val()?$('#productLabels').val().split(','):[];
@@ -65,6 +71,7 @@ W.view.mall.ProductsPoolFilterView = Backbone.View.extend({
         $('#secondaryClassification').val('-1');
         $('#status').val('-1');
         $('#supplier_type').val('-1');
+        $('#tabStatus').val('');
 
         $('#productLabels').val('');
         $('.xa-labels-box').html('<a href="javascript:void(0);" class="xui-selectProductLabel xa-selectProductLabel">选择标签</a>');
@@ -112,6 +119,7 @@ W.view.mall.ProductsPoolFilterView = Backbone.View.extend({
         //商品标签
         var productLabels = this.$('#productLabels').val()?JSON.stringify(this.$('#productLabels').val().split(',')):"";
 
+        var tabStatu = $('#tabStatus').val();
         var data = {
             product_code: productCode,
             name: name,
@@ -120,8 +128,9 @@ W.view.mall.ProductsPoolFilterView = Backbone.View.extend({
             secondary_classification: secondaryClassification,
             status: status,
             supplier_type:supplier_type,
-            labels:productLabels
+            labels:productLabels,
         }
+        if(tabStatu == 1){data['is_cps']=1};
         this.trigger('search', data);
     },
 });

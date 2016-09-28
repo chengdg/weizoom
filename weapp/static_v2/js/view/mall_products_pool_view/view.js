@@ -23,6 +23,7 @@ W.view.mall.ProductsPoolView = Backbone.View.extend({
     events: {
         'click .xa-checkOffshelf': 'onClickCheckOffShelf',
         'click .xa-batchOffshelf': 'onClickBatchAddOffShelf',
+        'click .xa-tab' : 'onClickTab',
         'click .xa-update': 'onClickUpdateBtn',
         'click .xa-offshelf': 'onClickCreateProductOffShelf',
         'click .xa-selectAll':'onClickSelectAll',
@@ -44,6 +45,28 @@ W.view.mall.ProductsPoolView = Backbone.View.extend({
             success: function(data) {}
             });
     },
+    /**
+     * onClickTab: 选择“所有商品”或“cps商品”
+     */
+     onClickTab: function(event){
+        this.filterView.onClickResetButton();
+        var $el = $(event.currentTarget);
+        var status = $el.data('cps-value');
+        var aa = $('#tabStatus').val();
+        // console.log(status);
+        // if($el.data('cps-value')=="1"){
+        //     this.table.options.args = '{"is_cps":"1"}';
+        // }else{
+        //     this.table.options.args ='{}';
+        // }
+        // this.table.reload();
+        // console.log('status',status,$('[data-cps-value="'+status+'"]'));
+
+        this.filterView.trigger('clickStatusBox', status);
+
+        $('.xa-tab').removeClass('active');
+        $('[data-cps-value="'+aa+'"]').addClass('active');
+     },
     /**
      * onClickBatchAddOffShelf: 批量‘未选择’商品放入待售
      */
