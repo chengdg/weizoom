@@ -88,15 +88,9 @@
                 <th width="250">商品信息</th>
                 <th width="100">分类</th>
                 <th width="100">供货商</th>
-                {{if data.is_request_cds&&data.is_request_cds==1}}
-                <th width="55">推广费用<br/>(元/件)</th>
-
-                {{else}}
-                <th width="55">商品价格</th>
-
-                {{/if}}
-                <th width="50">库存</th>
-                <th width="100">商品毛利</th>
+                <th width="55">{{if data.is_request_cps&&data.is_request_cps==1}}推广费用<br/>(元/件){{else}}商品价格{{/if}}</th>
+                <th width="50">{{if data.is_request_cps&&data.is_request_cps==1}}推广库存{{else}}库存{{/if}}</th>
+                <th width="100">{{if data.is_request_cps&&data.is_request_cps==1}}推广时间{{else}}商品毛利{{/if}}</th>
                 <th width="50">扣点类型</th>
                 <th width="90">操作</th>
             </tr>
@@ -136,29 +130,37 @@
                     <td>
                         ${product.store_name}
                     </td>
-                    {{if product.is_cps}}
-                    <td>${product.promote_money}</td>
-                    {{else}}
                     <td>
-                        {{if product.is_use_custom_model}}
-                            <div class="xa-priceText">${product.display_price_range}</div>
+                        {{if data.is_request_cps&&data.is_request_cps==1}}
+                            ${product.promote_money}
                         {{else}}
-                            <div class="xa-priceText">${product.price}</div>
+                            {{if product.is_use_custom_model}}
+                                <div class="xa-priceText">${product.display_price_range}</div>
+                            {{else}}
+                                <div class="xa-priceText">${product.price}</div>
+                            {{/if}}
                         {{/if}}
                     </td>
-                    {{/if}}
 
                     <td>
-                        {{if !product.is_use_custom_model}}
-                            {{if product.stocks == 0}}
-                                无限
-                            {{else}}
-                                ${product.stocks}
+                        {{if data.is_request_cps&&data.is_request_cps==1}}
+                            ${product.promote_stock}
+                        {{else}}
+                            {{if !product.is_use_custom_model}}
+                                {{if product.stocks == 0}}
+                                    无限
+                                {{else}}
+                                    ${product.stocks}
+                                {{/if}}
                             {{/if}}
                         {{/if}}
                     </td>
                     <td>
-                        ${product.gross_profit}
+                        {{if data.is_request_cps&&data.is_request_cps==1}}
+                            ${product.promote_time_from}-<br/>${product.promote_time_to}
+                        {{else}}
+                            ${product.gross_profit}
+                        {{/if}}
                     </td>
                     <td>
                         {{if product.supplier_type == 0}}
