@@ -352,46 +352,48 @@ MALL_CHANNEL_QRCODE_SECOND_NAV = ADVANCE_MANAGE_QRCODE_NAV
 DEFAULT_APPS_THIRD_NAVS = [
     {
         'name': MALL_APPS_EGG_NAV,
-        'title': "砸金蛋",
+        'title': u"砸金蛋",
         'url': '/apps/egg/eggs/',
         'permission': ''
     }, {
         'name': MALL_APPS_SCRATCH_NAV,
-        'title': "刮刮卡",
+        'title': u"刮刮卡",
         'url': '/apps/scratch/scratches/',
         'permission': ''
     }, {
         'name': MALL_APPS_LOTTERY_NAV,
-        'title': "微信抽奖",
+        'title': u"微信抽奖",
         'url': '/apps/lottery/lotteries/',
         'permission': ''
     },{
         'name': MALL_APPS_EXLOTTERY_NAV,
-        'title': "幸运码抽奖",
+        'title': u"幸运码抽奖",
         'url': '/apps/exlottery/exlotteries/',
         'permission': '',
     },{
         'name': MALL_APPS_SCANLOTTERY_NAV,
-        'title': "扫码抽奖",
+        'title': u"扫码抽奖",
         'url': '/apps/scanlottery/scanlotteries/',
         'permission': '',
     },
     {
         'name': MALL_APPS_VOTE_NAV,
-        'title': "微信投票",
+        'title': u"微信投票",
         'url': '/apps/vote/votes/',
         'permission': '',
     },
     {
         'name': MALL_APPS_EVENT_NAV,
-        'title': "活动报名",
+        'title': u"活动报名",
         'url': '/apps/event/events/',
-        'permission': [],
+        'permission': '',
     },
     {
         'name': MALL_APPS_SURVEY_NAV,
-        'title': "用户调研",
-        'url': '/apps/survey/surveies/',
+        'title': u"用户调研",
+        'url': 'http://%s/apps/survey/surveies/' % MARKETAPP_DOMAIN,
+        'need_blank': True,
+        'need_token': True,
         'permission': ''
     },
     {
