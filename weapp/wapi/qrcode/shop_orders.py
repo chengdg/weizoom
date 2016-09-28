@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import json
 
+from django.db.models import Q
+
 from core import api_resource, paginator
 from mall.models import Order, ORDER_STATUS_CANCEL, ORDER_STATUS_GROUP_REFUNDING, ORDER_STATUS_GROUP_REFUNDED, \
 	ORDER_STATUS_REFUNDING, ORDER_STATUS_REFUNDED, ORDER_STATUS_NOT
@@ -22,33 +24,46 @@ class ShopOrders(api_resource.ApiResource):
 		帐号管理
 		"""
 		channel_qrcode_ids = json.loads(args.get('channel_qrcode_ids'))
+		channel_qrcode_id2user_created_at = json.loads(args.get('channel_qrcode_id2user_created_at', "[]"))
+		shop_id = args.get('shop_id', '0')
+
 		channel_qrcodes = ChannelQrcodeSettings.objects.filter(id__in=channel_qrcode_ids).order_by('created_at')
 		if channel_qrcodes.count() > 0:
 			created_at = channel_qrcodes.first().created_at.strftime("%Y-%m-%d %H:%M:%S")
 		else:
 			created_at = dateutil.get_today()
 
-		total_channel_members = ChannelQrcodeHasMember.objects.filter(channel_qrcode_id__in=channel_qrcode_ids).order_by('-created_at')
+		channel_members = ChannelQrcodeHasMember.objects.filter(channel_qrcode_id__in=channel_qrcode_ids).order_by('-created_at')
 		channel_qrcode_id2member_id = {}
-		total_member_ids = []
-		for m in total_channel_members:
-			total_member_ids.append(m.member_id)
-			if not channel_qrcode_id2member_id.has_key(m.channel_qrcode_id):
-				channel_qrcode_id2member_id[m.channel_qrcode_id] = [m.member_id]
+		curr_qrcode_id2member_id = {}
+		member_ids = []
+		q_has_member_ids = []
+		for member_log in channel_members:
+			q_has_member_ids.append(member_log.member_id)
+			member_ids.append(member_log.member_id)
+			if not channel_qrcode_id2member_id.has_key(member_log.channel_qrcode_id):
+				channel_qrcode_id2member_id[member_log.channel_qrcode_id] = [member_log.member_id]
 			else:
-				channel_qrcode_id2member_id[m.channel_qrcode_id].append(m.member_id)
+				channel_qrcode_id2member_id[member_log.channel_qrcode_id].append(member_log.member_id)
+			if not curr_qrcode_id2member_id.has_key(member_log.channel_qrcode_id):
+				curr_qrcode_id2member_id[member_log.channel_qrcode_id] = [member_log.member_id]
+			else:
+				curr_qrcode_id2member_id[member_log.channel_qrcode_id].append(member_log.member_id)
 
+		q_settings = ChannelQrcodeSettings.objects.filter(Q(id__in=channel_qrcode_ids) | Q(bing_member_id__in=member_ids))
 		member_id2created_at = {}
-		for cq in channel_qrcodes:
-			if cq.is_bing_member:
-				total_member_ids.append(cq.bing_member_id)
-				if not channel_qrcode_id2member_id.has_key(cq.id):
-					channel_qrcode_id2member_id[cq.id] = [cq.bing_member_id]
+		channel_qrcode_id2bing_member_id = {}
+		for qs in q_settings:
+			if qs.is_bing_member:
+				member_ids.append(qs.bing_member_id)
+				if not channel_qrcode_id2member_id.has_key(qs.id):
+					channel_qrcode_id2member_id[qs.id] = [qs.bing_member_id]
 				else:
-					channel_qrcode_id2member_id[cq.id].append(cq.bing_member_id)
-				member_id2created_at[cq.bing_member_id] = cq.created_at.strftime('%Y-%m-%d %H:%M:%S')
+					channel_qrcode_id2member_id[qs.id].append(qs.bing_member_id)
+				member_id2created_at[qs.bing_member_id] = qs.created_at.strftime('%Y-%m-%d %H:%M:%S')
+				channel_qrcode_id2bing_member_id[qs.id] = qs.bing_member_id
 
-		webapp_user_id2member_id = {webappuser.id: webappuser.member_id for webappuser in WebAppUser.objects.filter(member_id__in=total_member_ids)}
+		webapp_user_id2member_id = {webappuser.id: webappuser.member_id for webappuser in WebAppUser.objects.filter(member_id__in=member_ids)}
 
 		start_date = args.get('start_date', None)
 		end_date = args.get('end_date', None)
@@ -84,16 +99,28 @@ class ShopOrders(api_resource.ApiResource):
 				webapp_user_id = order.webapp_user_id
 				member_id = webapp_user_id2member_id.get(webapp_user_id)
 				created_at = order.created_at.strftime("%Y-%m-%d %H:%M:%S")
-				flag = True
-				if member_id2created_at.get(member_id):
-					if member_id2created_at.get(member_id) <= created_at:
-						flag = True
-					else:
-						flag = False
-				if flag:
-					if created_at >= start_time and created_at <= end_time:
-						for channel_qrcode_id, member_ids in channel_qrcode_id2member_id.items():
-							if member_id in member_ids:
+				q_created_at = member_id2created_at.get(member_id)
+				if created_at >= start_time and created_at <= end_time:
+					for channel_qrcode_id, member_ids in channel_qrcode_id2member_id.items():
+						if member_id in member_ids:
+							q_flag = False
+							if q_created_at:
+								if member_id in q_has_member_ids:
+									if channel_qrcode_id2user_created_at.get(str(channel_qrcode_id)):
+										if channel_qrcode_id2user_created_at.get(str(channel_qrcode_id)) <= order.created_at.strftime('%Y-%m-%d %H:%M:%S'):
+											if channel_qrcode_id2bing_member_id.get(channel_qrcode_id):
+												if curr_qrcode_id2member_id.get(channel_qrcode_id) and member_id in curr_qrcode_id2member_id.get(channel_qrcode_id):
+													if order.created_at.strftime('%Y-%m-%d %H:%M:%S') <= q_created_at:
+														q_flag = True
+												else:
+													if order.created_at.strftime('%Y-%m-%d %H:%M:%S') > q_created_at:
+														q_flag = True
+								else:
+									if channel_qrcode_id2user_created_at.get(str(channel_qrcode_id)) <= order.created_at.strftime('%Y-%m-%d %H:%M:%S'):
+										q_flag = True
+							else:
+								q_flag = True
+							if q_flag:
 								if order.status not in [ORDER_STATUS_CANCEL, ORDER_STATUS_GROUP_REFUNDING, ORDER_STATUS_GROUP_REFUNDED, ORDER_STATUS_REFUNDING, ORDER_STATUS_REFUNDED]:
 									sale_price = order.final_price + order.coupon_money + order.integral_money + order.weizoom_card_money + order.promotion_saved_money + order.edit_money
 									final_price = order.final_price
@@ -125,16 +152,31 @@ class ShopOrders(api_resource.ApiResource):
 			for order in orders:
 				webapp_user_id = order.webapp_user_id
 				member_id = webapp_user_id2member_id.get(webapp_user_id)
-				created_at = order.created_at.strftime("%Y-%m-%d %H:%M:%S")
-				flag = True
-				if member_id2created_at.get(member_id):
-					if member_id2created_at.get(member_id) <= created_at:
-						flag = True
-					else:
+				created_at = member_id2created_at.get(member_id)
+				for channel_qrcode_id, member_ids in channel_qrcode_id2member_id.items():
+					if member_id in member_ids:
 						flag = False
-				if flag:
-					for channel_qrcode_id, member_ids in channel_qrcode_id2member_id.items():
-						if member_id in member_ids:
+						if created_at:
+							if member_id in q_has_member_ids:
+								if channel_qrcode_id2user_created_at.get(str(channel_qrcode_id)):
+									if channel_qrcode_id2user_created_at.get(str(channel_qrcode_id)) <= order.created_at.strftime('%Y-%m-%d %H:%M:%S'):
+										if channel_qrcode_id2bing_member_id.get(channel_qrcode_id):
+											if curr_qrcode_id2member_id.get(
+													channel_qrcode_id) and member_id in curr_qrcode_id2member_id.get(
+													channel_qrcode_id):
+												if order.created_at.strftime('%Y-%m-%d %H:%M:%S') <= q_created_at:
+													flag = True
+											else:
+												if order.created_at.strftime('%Y-%m-%d %H:%M:%S') > q_created_at:
+													flag = True
+							else:
+								if channel_qrcode_id2user_created_at.get(
+										str(channel_qrcode_id)) <= order.created_at.strftime(
+									'%Y-%m-%d %H:%M:%S'):
+									flag = True
+						else:
+							flag = True
+						if flag:
 							if not channel_qrcode_id2order_count.has_key(channel_qrcode_id):
 								channel_qrcode_id2order_count[channel_qrcode_id] = 1
 							else:

@@ -24,6 +24,7 @@ class ShopBalanceOutline(api_resource.ApiResource):
 		start = time.time()
 		channel_qrcode_ids = json.loads(args.get('channel_qrcode_ids'))
 		order_numbers = json.loads(args.get('order_numbers', ''))
+		channel_qrcode_id2user_created_at = json.loads(args.get('channel_qrcode_id2user_created_at'))
 		channel_qrcodes = ChannelQrcodeSettings.objects.filter(id__in=channel_qrcode_ids).order_by('created_at')
 		if channel_qrcodes.count() > 0:
 			created_at = channel_qrcodes.first().created_at.strftime("%Y-%m-%d %H:%M:%S")
@@ -108,7 +109,7 @@ class ShopBalanceOutline(api_resource.ApiResource):
 
 				if order.status not in [ORDER_STATUS_CANCEL]:
 					for channel_qrcode_id,member_ids in channel_qrcode_id2member_id.items():
-						if channel_qrcode_id2created_at.get(channel_qrcode_id) <= order.created_at.strftime("%Y-%m-%d %H:%M:%S"):
+						if channel_qrcode_id2user_created_at.get(str(channel_qrcode_id)) <= order.created_at.strftime("%Y-%m-%d %H:%M:%S"):
 							if member_id in member_ids:
 								flag = False
 								if webapp_user_id2created_at.get(int(order.webapp_user_id)):
@@ -147,7 +148,7 @@ class ShopBalanceOutline(api_resource.ApiResource):
 
 				if order.is_first_order and order.status != ORDER_STATUS_NOT:
 					for channel_qrcode_id,member_ids in channel_qrcode_id2member_id.items():
-						if channel_qrcode_id2created_at.get(channel_qrcode_id) <= order.created_at.strftime("%Y-%m-%d %H:%M:%S"):
+						if channel_qrcode_id2user_created_at.get(str(channel_qrcode_id)) <= order.created_at.strftime("%Y-%m-%d %H:%M:%S"):
 							if member_id in member_ids:
 								flag = False
 								if webapp_user_id2created_at.get(int(order.webapp_user_id)):

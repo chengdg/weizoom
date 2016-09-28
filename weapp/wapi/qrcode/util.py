@@ -96,17 +96,15 @@ def get_balance(channel_qrcode_ids, balance_time_from, args, order_status, is_fi
 		if webapp_user_id2created_at.get(channel_order.webapp_user_id):
 			if bing_member_id2channel_qrcode_id.get(member_id):
 				if bing_member_id2channel_qrcode_id.get(member_id) in channel_qrcode_ids:
-					if channel_order.created_at.strftime('%Y-%m-%d %H:%M:%S') >= webapp_user_id2created_at.get(
-							channel_order.webapp_user_id):
+					if channel_order.created_at.strftime('%Y-%m-%d %H:%M:%S') >= webapp_user_id2created_at.get(channel_order.webapp_user_id) and balance_time_from <= channel_order.created_at.strftime('%Y-%m-%d %H:%M:%S'):
 						flag = True
 				else:
-					if channel_order.created_at.strftime('%Y-%m-%d %H:%M:%S') < webapp_user_id2created_at.get(
-							channel_order.webapp_user_id):
+					print balance_time_from, channel_order.created_at.strftime('%Y-%m-%d %H:%M:%S'),"jjjjjjjjjjjjjjjjjjj"
+					if channel_order.created_at.strftime('%Y-%m-%d %H:%M:%S') <= webapp_user_id2created_at.get(channel_order.webapp_user_id) and balance_time_from <= channel_order.created_at.strftime('%Y-%m-%d %H:%M:%S'):
 						flag = True
 			else:
 				if bing_member_id2qrcode_id.get(member_id):
-					if channel_order.created_at.strftime('%Y-%m-%d %H:%M:%S') >= webapp_user_id2created_at.get(
-							channel_order.webapp_user_id):
+					if channel_order.created_at.strftime('%Y-%m-%d %H:%M:%S') >= webapp_user_id2created_at.get(channel_order.webapp_user_id) and balance_time_from <= channel_order.created_at.strftime('%Y-%m-%d %H:%M:%S'):
 						flag = True
 		else:
 			flag = True

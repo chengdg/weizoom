@@ -58,6 +58,9 @@ class CostAnalysis(api_resource.ApiResource):
 			loss_money = sale_money - order.total_purchase_price
 			kangou_money = order.final_price if order.pay_interface_type == PAY_INTERFACE_KANGOU else 0
 			best_money = order.final_price if order.pay_interface_type == PAY_INTERFACE_BEST_PAY else 0
+			ali_money = order.final_price if order.pay_interface_type == PAY_INTERFACE_ALIPAY else 0
+			weixin_money = order.final_price if order.pay_interface_type == PAY_INTERFACE_WEIXIN_PAY else 0
+
 
 			if not webapp_id2cost.has_key(weapp_id):
 				webapp_id2cost[order.webapp_id] = {
@@ -72,7 +75,9 @@ class CostAnalysis(api_resource.ApiResource):
 					"loss_money": loss_money,
 					"sale_money": sale_money,
 					"kangou_money": kangou_money,
-					"best_money": best_money
+					"best_money": best_money,
+					"ali_money": ali_money,
+					"weixin_money": weixin_money
 				}
 			else:
 				cur_cost = webapp_id2cost[order.webapp_id]
@@ -88,6 +93,9 @@ class CostAnalysis(api_resource.ApiResource):
 				cur_cost["sale_money"] += sale_money
 				cur_cost["kangou_money"] += kangou_money
 				cur_cost["best_money"] += best_money
+				cur_cost["ali_money"] += ali_money
+				cur_cost["weixin_money"] += weixin_money
+
 
 		webapp_id2order_card_info = {}
 		for weapp_id,order_numbers in webapp_id2order_numbers.items():
@@ -193,7 +201,9 @@ class CostAnalysis(api_resource.ApiResource):
 				"get_money": u"%.2f" % (coupon["get_money"] if coupon else 0),
 				"increase_integral": webapp_id2integral.get(webapp_id, 0),
 				"kangou_money": u"%.2f" % (cost["kangou_money"] if cost else 0),
-				"best_money": u"%.2f" % (cost["best_money"] if cost else 0)
+				"best_money": u"%.2f" % (cost["best_money"] if cost else 0),
+				"ali_money": u"%.2f" % (cost["ali_money"] if cost else 0),
+				"weixin_money": u"%.2f" % (cost["weixin_money"] if cost else 0)
 			})
 		end_time = time.time()
 		print end_time - start_time, "pppppppppp"

@@ -24,6 +24,7 @@ class QrcodeMember(api_resource.ApiResource):
 		获取会员
 		"""
 		channel_qrcode_ids = json.loads(args.get('channel_qrcode_ids',"[]"))
+		channel_qrcode_id2user_created_at = json.loads(args.get('channel_qrcode_id2user_created_at',"[]"))
 
 		filter_data_args = {
 			"channel_qrcode_id__in": channel_qrcode_ids
@@ -97,10 +98,18 @@ class QrcodeMember(api_resource.ApiResource):
 			if created_at:
 				if member_id in q_has_member_ids:
 					if order.created_at.strftime('%Y-%m-%d %H:%M:%S') < created_at:
-						flag = True
+						for channel_qrcode_id, member_ids in channel_qrcode_id2member_id.items():
+							if member_id in member_ids:
+								if channel_qrcode_id2user_created_at.get(str(channel_qrcode_id)):
+									if channel_qrcode_id2user_created_at.get(str(channel_qrcode_id)) <= order.created_at.strftime('%Y-%m-%d %H:%M:%S'):
+										flag = True
 				else:
 					if order.created_at.strftime('%Y-%m-%d %H:%M:%S') >= created_at:
-						flag = True
+						for channel_qrcode_id, member_ids in channel_qrcode_id2member_id.items():
+							if channel_qrcode_id2user_created_at.get(str(channel_qrcode_id)):
+								if member_id in member_ids:
+									if channel_qrcode_id2user_created_at.get(str(channel_qrcode_id)) <= order.created_at.strftime('%Y-%m-%d %H:%M:%S'):
+										flag = True
 			else:
 				flag = True
 			if flag:
