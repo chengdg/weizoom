@@ -49,9 +49,9 @@ class Command(BaseCommand):
             for page in db_termite.page.find({'_id': {'$in': related_page_ids_object}}):
                 # 更新market_app_page里description中静态资源地址
                 model = page['component']['components'][0]['model']
-                model2 = page['component']['components'][1]['model']
                 page['component']['components'][0]['model']['description'] = model['description'].replace('/static/', 'http://' + settings.DOMAIN + '/static/')
-                page['component']['components'][1]['model']['description2'] = model2['description2'].replace('/static/', 'http://' + settings.DOMAIN + '/static/')
+                if page['component']['components'][1]['model'].get('description2', ''):
+                    page['component']['components'][1]['model']['description2'] = page['component']['components'][1]['model']['description2'].replace('/static/', 'http://' + settings.DOMAIN + '/static/')
                 db_termite.market_app_page.insert(page)
 
             #然后将老数据写入新数据库
@@ -59,9 +59,10 @@ class Command(BaseCommand):
                 related_page_id = event.related_page_id
                 page = pagestore.get_page(related_page_id, 1)
                 page_details = page['component']['components'][0]['model']
-                page_details2 = page['component']['components'][1]['model']
                 description = page_details['description'].replace('/static/', 'http://' + settings.DOMAIN + '/static/')
-                description2 = page_details2['description2'].replace('/static/', 'http://' + settings.DOMAIN + '/static/')
+                description2 = ''
+                if page['component']['components'][1]['model'].get('description2', ''):
+                    description2 = page['component']['components'][1]['model']['description2'].replace('/static/', 'http://' + settings.DOMAIN + '/static/')
                 db_market_app_data.event_event.insert({
                     'owner_id': event.owner_id,
                     'name': event.name,
