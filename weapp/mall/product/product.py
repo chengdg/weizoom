@@ -840,7 +840,7 @@ class ProductPool(resource.Resource):
                     'product_label_names': product_label_names,
                     'promote_time_from':models.PromoteDetail.objects.get(product_id=product.id).promote_time_from,
                     'promote_time_to':models.PromoteDetail.objects.get(product_id=product.id).promote_time_to,
-                    'classification_label_names': classification_label_names,
+                    #'classification_label_names': classification_label_names,
                     # 零售返点的对应此平台的反点
                     'retail_rebate': basic_retail_rebate if not self_retail_rebate else self_retail_rebate,
                     'classification': "%s-%s" % (
@@ -867,7 +867,7 @@ class ProductPool(resource.Resource):
                     # 五五分成基础扣点
                     'basic_rebate': basic_rebate,
                     'product_label_names': product_label_names,
-                    'classification_label_names': classification_label_names,
+                    #'classification_label_names': classification_label_names,
                     # 零售返点的对应此平台的反点
                     'retail_rebate': basic_retail_rebate if not self_retail_rebate else self_retail_rebate,
                     'classification': "%s-%s" % (
