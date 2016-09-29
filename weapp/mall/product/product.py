@@ -825,6 +825,7 @@ class ProductPool(resource.Resource):
                 #'status': product['status'],
                 'store_name': supplier_ids2name.get(product.supplier, product.supplier),#user_id2userprofile[product['owner_id']].store_name,
                 'stocks': product.stocks,
+                'stock_type': product.stock_type,
                 'price':product.price,
                 'is_use_custom_model': product.is_use_custom_model,
                 'models': product.models[1:],
