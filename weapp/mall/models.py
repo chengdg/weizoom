@@ -3124,8 +3124,8 @@ class PromoteDetail(models.Model): #推广明细
 	promote_status = models.IntegerField(default=PROMOTING)#推广状态 （未推广，推广中，已结束）   推广设置中展示：未推广，已结束。推广明细中：推广中，已结束
 	promote_money = models.FloatField(default=0) #推广费用/件
 	promote_stock =  models.IntegerField(default=1) #推广库存
-	promote_time_from = models.DateTimeField(auto_now_add=True) #开始时间
-	promote_time_to = models.DateTimeField(auto_now_add=True) #结束时间
+	promote_time_from = models.DateTimeField(default=datetime.now()) #开始时间
+	promote_time_to = models.DateTimeField(default=datetime.now()) #结束时间
 	promote_sale_count = models.IntegerField(default=0) #推广销量
 	promote_total_money = models.FloatField(default=0) #推广费用总费用
 	created_at = models.DateTimeField(auto_now_add=True) #创建时间
