@@ -268,7 +268,8 @@ def __clear_all_app_data():
 	member_models.MemberFollowRelation.objects.all().delete()
 	member_models.MemberSharedUrlInfo.objects.all().delete()
 	member_models.Member.objects.all().delete()
-
+	member_models.MemberHasSocialAccount.objects.all().delete()
+	member_models.SocialAccount.objects.all().delete()
 	#自动回复消息
 	weixin_qa_models.Rule.objects.all().delete()
 	weixin_material_models.News.objects.all().delete()
