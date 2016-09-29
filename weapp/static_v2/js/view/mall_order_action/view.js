@@ -20,7 +20,7 @@ W.view.mall.OrderAction = Backbone.View.extend({
         // 根据mall_type,返回相应的orderId, 母订单还是子订单
         function getOrderId($el) {
             // 从页面中的数据中提取mall_type
-            var allData = JSON.parse($('#origin-data').text());
+            var allData = JSON.parse($('#origin-data').text()|| '{}');
             var mallType = allData.mall_type*1;
 
             var orderId = $el.parents('.xa-actions').data('order-id');
@@ -213,7 +213,7 @@ W.view.mall.OrderAction = Backbone.View.extend({
             var integralPerYuan = $el.parents('.xa-actions').data('integral-per-yuan');
 
             //
-            var allData = JSON.parse($('#origin-data').text());
+            var allData = JSON.parse($('#origin-data').text() || '{}');
             var mallType = allData.mall_type;
 
             console.log('申请退款orderID：%o, 商城类型：%o: ', orderId, mallType);
@@ -271,7 +271,7 @@ W.view.mall.OrderAction = Backbone.View.extend({
             var orderId = $el.parents('.xa-actions').data('order-id');
             var deliveryItemId = $el.parents('.xa-actions').data('delivery-item-id');
             //
-            var allData = JSON.parse($('#origin-data').text());
+            var allData = JSON.parse($('#origin-data').text()||'{}');
             var mallType = allData.mall_type;
 
             if (mallType > 0) {
