@@ -3,6 +3,7 @@
 import json
 from datetime import datetime
 
+from django.conf import settings
 from django.http import HttpResponseRedirect, HttpResponse
 from django.template import RequestContext
 from django.shortcuts import render_to_response
@@ -31,6 +32,18 @@ class Mevent(resource.Resource):
 		try:
 			if 'id' in request.GET:
 				id = request.GET['id']
+				###############重构之后，访问老数据，直接重定向到重构活动报名##########
+				try:
+					related_page_id = app_models.event.objects.get(id=id).related_page_id
+					m_marketapp_url = 'http://{}/m/apps/event/m_event/?woid={}&page_id={}'.format(settings.MARKET_MOBILE_DOMAIN, request.webapp_owner_id, related_page_id)
+					return HttpResponseRedirect(m_marketapp_url)
+				except:
+					c = RequestContext(request, {
+						'is_deleted_data': True
+					})
+					return render_to_response('workbench/wepage_webapp_page.html', c)
+				###############################################################
+
 				isPC = request.GET.get('isPC',0)
 				participance_data_count = 0
 				isMember = False
