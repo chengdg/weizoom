@@ -376,26 +376,26 @@ DEFAULT_APPS_THIRD_NAVS = [
         'url': '/apps/scanlottery/scanlotteries/',
         'permission': '',
     },
-    {
-        'name': MALL_APPS_VOTE_NAV,
-        'title': u"微信投票",
-        'url': '/apps/vote/votes/',
-        'permission': '',
-    },
-    {
-        'name': MALL_APPS_EVENT_NAV,
-        'title': u"活动报名",
-        'url': '/apps/event/events/',
-        'permission': '',
-    },
-    {
-        'name': MALL_APPS_SURVEY_NAV,
-        'title': u"用户调研",
-        'url': 'http://%s/apps/survey/surveies/' % MARKETAPP_DOMAIN,
-        'need_blank': True,
-        'need_token': True,
-        'permission': ''
-    },
+    # {
+    #     'name': MALL_APPS_VOTE_NAV,
+    #     'title': u"微信投票",
+    #     'url': '/apps/vote/votes/',
+    #     'permission': '',
+    # },
+    # {
+    #     'name': MALL_APPS_EVENT_NAV,
+    #     'title': u"活动报名",
+    #     'url': '/apps/event/events/',
+    #     'permission': '',
+    # },
+    # {
+    #     'name': MALL_APPS_SURVEY_NAV,
+    #     'title': u"用户调研",
+    #     'url': 'http://%s/apps/survey/surveies/' % MARKETAPP_DOMAIN,
+    #     'need_blank': True,
+    #     'need_token': True,
+    #     'permission': ''
+    # },
     {
         'name': MALL_APPS_RED_ENVELOPE_NAV,
         'title': u'分享红包',
@@ -572,7 +572,6 @@ def get_promotion_and_apps_second_navs(request):
     if request.user.username == 'manager':
         second_navs = []
     else:
-        menus = copy.deepcopy(DEFAULT_APPS_THIRD_NAVS)
         try:
             api_resp = Resource.use('marketapp_apiserver').get({
                 'resource': 'apps.get_apps_third_menu',
@@ -583,20 +582,13 @@ def get_promotion_and_apps_second_navs(request):
             if api_resp and api_resp['code'] == 200:
                 resp_data = api_resp['data']
 
-                fake_menus = copy.deepcopy(menus)
-                resp_dit = {r['name']: r for r in resp_data}
-                resp_keys = resp_dit.keys()
+                for app in resp_data:
+                    app['url'] = 'http://{}{}'.format(MARKETAPP_DOMAIN, app['url'])
+                    app['users'] = []
+                    app['need_token'] = True
+                    app['need_blank'] = True
 
-                for app in fake_menus:
-                    app_name = app['name']
-                    if app_name in resp_keys:
-                        menus.remove(app)
-                        resp_dit[app_name]['url'] = 'http://{}{}'.format(MARKETAPP_DOMAIN, resp_dit[app_name]['url'])
-                        resp_dit[app_name]['users'] = []
-                        resp_dit[app_name]['need_token'] = True
-                        resp_dit[app_name]['need_blank'] = True
-                        menus.insert(0, resp_dit[app_name])
-                MALL_PROMOTION_AND_APPS_SECOND_NAV['navs'][1]['third_navs'] = menus
+                MALL_PROMOTION_AND_APPS_SECOND_NAV['navs'][1]['third_navs'] = resp_data + DEFAULT_APPS_THIRD_NAVS
             else:
                 MALL_PROMOTION_AND_APPS_SECOND_NAV['navs'][1]['third_navs'] = DEFAULT_APPS_THIRD_NAVS
         except:
