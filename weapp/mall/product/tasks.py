@@ -352,7 +352,7 @@ def send_product_export_job_task(self, exportjob_id, filter_data_args, type):
                             table.write(merge_row, 9, gross_profit_lowest)
                             table.write(merge_row, 12, stocks_lowest)
                         if models_count > 1:
-                            merge_columns = [2, 3, 6, 9,10, 12,13,14,15,16,17]
+                            merge_columns = [2, 3, 6, 9,10, 12,13,14,15,16,17,18,19,20,21]
                             for i in merge_columns:
                                 table.merge.append((merge_rows[0], i, merge_rows[-1],i))
 
