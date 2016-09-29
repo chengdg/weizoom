@@ -138,7 +138,7 @@
                     </td>
                     <td>
                         {{if !product.is_use_custom_model}}
-                            {{if product.stocks == 0}}
+                            {{if product.stock_type == 0}}
                                 无限
                             {{else}}
                                 ${product.stocks}
