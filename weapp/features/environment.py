@@ -158,6 +158,8 @@ def __clear_all_account_data():
 	member_models.Member.objects.all().delete()
 	member_models.MemberFollowRelation.objects.all().delete()
 	member_models.IntegralStrategySttings.objects.all().delete()
+	member_models.MemberHasSocialAccount.objects.all().delete()
+	member_models.SocialAccount.objects.all().delete()
 
 	#webapp
 	webapp_models.GlobalNavbar.objects.all().delete()
