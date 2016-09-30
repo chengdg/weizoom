@@ -444,7 +444,7 @@ class ProductList(resource.Resource):
                 'pageinfo': paginator.to_dict(pageinfo),
                 'sortAttr': sort_attr,
                 'data': data
-            }            
+            }
         elif is_request_cps:
             response.data = {
                 'is_request_cps': 1,
@@ -452,7 +452,7 @@ class ProductList(resource.Resource):
                 'pageinfo': paginator.to_dict(pageinfo),
                 'sortAttr': sort_attr,
                 'data': data
-            }            
+            }
         else:
             response.data = {
                 'items': items,
@@ -674,7 +674,7 @@ class ProductPool(resource.Resource):
 
         #now_product_ids = []
         #for product in products:
-        #    now_product_ids.append(product.id)   
+        #    now_product_ids.append(product.id)
         if filter_labels:
             #print "\\\\\\\\\\\\\\\\\\\\\\\\",filter_labels
             filter_labels_ids = json.loads(filter_labels)
@@ -863,8 +863,9 @@ class ProductPool(resource.Resource):
             product_dic['user_code'] = product.user_code
             product_dic['store_name'] = supplier_ids2name.get(product.supplier, product.supplier),#user_id2userprofile[product['owner_id']].store_name
             product_dic['stocks'] = product.stocks
+            product_dic['stock_type'] = product.stock_type
             product_dic['price'] = product.price
-            
+
             product_dic['is_use_custom_model'] = product.is_use_custom_model
             product_dic['models'] = product.models[1:]
             product_dic['display_price_range'] = product.display_price_range
@@ -885,9 +886,9 @@ class ProductPool(resource.Resource):
                 product_dic['promote_stock'] = models.PromoteDetail.objects.get(product_id=product.id).promote_stock
                 product_dic['promote_money'] = "%.2f"%models.PromoteDetail.objects.get(product_id=product.id).promote_money
                 product_dic['promote_time_from'] = models.PromoteDetail.objects.get(product_id=product.id).promote_time_from.strftime("%Y/%m/%d %H:%M")
-                product_dic['promote_time_to'] = models.PromoteDetail.objects.get(product_id=product.id).promote_time_to.strftime("%Y/%m/%d %H:%M")                
-                items.append(product_dic)      
-            else:          
+                product_dic['promote_time_to'] = models.PromoteDetail.objects.get(product_id=product.id).promote_time_to.strftime("%Y/%m/%d %H:%M")
+                items.append(product_dic)
+            else:
                 items.append(product_dic)
 
         data = dict()
@@ -912,7 +913,7 @@ class ProductPool(resource.Resource):
                 'items': items,
                 'pageinfo': paginator.to_dict(pageinfo),
                 'data': data
-            }            
+            }
         return response.get_response()
 
     @login_required
@@ -2263,7 +2264,7 @@ class ProductLabel(resource.Resource):
         response.data = {
             'items': return_data
         }
-        return response.get_response()        
+        return response.get_response()
 ############################################################################################
 
 class ProductGetFile(resource.Resource):

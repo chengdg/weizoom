@@ -158,6 +158,8 @@ def __clear_all_account_data():
 	member_models.Member.objects.all().delete()
 	member_models.MemberFollowRelation.objects.all().delete()
 	member_models.IntegralStrategySttings.objects.all().delete()
+	member_models.MemberHasSocialAccount.objects.all().delete()
+	member_models.SocialAccount.objects.all().delete()
 
 	#webapp
 	webapp_models.GlobalNavbar.objects.all().delete()
@@ -266,7 +268,8 @@ def __clear_all_app_data():
 	member_models.MemberFollowRelation.objects.all().delete()
 	member_models.MemberSharedUrlInfo.objects.all().delete()
 	member_models.Member.objects.all().delete()
-
+	member_models.MemberHasSocialAccount.objects.all().delete()
+	member_models.SocialAccount.objects.all().delete()
 	#自动回复消息
 	weixin_qa_models.Rule.objects.all().delete()
 	weixin_material_models.News.objects.all().delete()
@@ -583,7 +586,9 @@ def __create_system_user(username):
 		profile = user.get_profile()
 		if username.startswith('zymanager'):
 			profile.webapp_type = 2
+			profile.store_name = username
 		else:
+			profile.store_name = username
 			profile.webapp_type = 1
 		profile.save()
 	"""

@@ -206,3 +206,15 @@ def step_impl(context, express_number):
     }
     context.client.post(url, json_data)
 
+
+#for openapi
+@when(u'{user}修改订单编号"{order_id}"')
+def step_impl(context, user, order_id):
+
+    orders = Order.objects.filter(origin_order_id=-1)
+    source_order_id = orders[orders.count()-1].order_id
+    origin_order_id = orders[orders.count()-1].id
+    Order.objects.filter(order_id=source_order_id).update(order_id=order_id)
+    for order in  Order.objects.filter(origin_order_id=origin_order_id):
+        order.order_id = '%s^%ss' % (order_id, order.supplier)
+        order.save()

@@ -52,7 +52,7 @@
     <div class="xa-productFilterView xui-filterPanel"></div>
     <!-- <div class="panel panel-default mt20 xb-rightPanel" style="min-height:120px;"> -->
     <div class="" style="min-height:120px;">
-        
+
         <div
         data-ui-role="pool-advanced-table"
         data-app="mall2"
@@ -146,7 +146,7 @@
                             ${product.promote_stock}
                         {{else}}
                             {{if !product.is_use_custom_model}}
-                                {{if product.stocks == 0}}
+                                {{if product.stock_type == 0}}
                                     无限
                                 {{else}}
                                     ${product.stocks}
@@ -217,7 +217,7 @@
     <label for="bottomSelectAll" class="xui-selectAll ml12 xui-bottomSelectAll">
         <input type="checkbox" id="bottomSelectAll" class="xa-selectAll">全选
     </label>
-    </div> 
+    </div>
 </script>
 {% endverbatim %}
 <script type="text/javascript">

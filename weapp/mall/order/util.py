@@ -951,7 +951,8 @@ def get_detail_response(request):
             supplier_stores = list(UserProfile.objects.filter(user_id__in=supplier_user_ids, store_name__contains=name).order_by('id'))
 
         #add by duhao 把订单操作人信息放到操作日志中，方便精选的拆单子订单能正常显示操作员信息
-        order_operation_logs = mall_api.get_order_operation_logs(order.order_id, len(child_orders))
+        child_orders_length = len(child_orders) if order.origin_order_id == -1 else 1 #根据这个参数获取订单操作日志
+        order_operation_logs = mall_api.get_order_operation_logs(order.order_id, child_orders_length)
         for log in order_operation_logs:
             log.leader_name = order.leader_name
             for child_order in child_orders:
@@ -1110,19 +1111,24 @@ def get_orders_response(request, is_refund=False):
     return response.get_response()
 
 
-def check_order_status_filter(order,action,mall_type=0):
+def check_order_status_filter(order, action, mall_type=0):
         """
             检查订单的状态是否允许跳转
         """
         # todo
-        # flag = False
+
         # is_refund = True if action == 'return_success' else False
         # actions = get_order_actions(order, is_refund=is_refund, mall_type=mall_type)
         # for ac in actions:
         #     if action == ac['action']:
         #         flag = True
         # return flag
-        return True
+        flag = True
+        if action == 'cancel':
+            if order.status != ORDER_STATUS_NOT and order.pay_interface_type in [PAY_INTERFACE_ALIPAY, PAY_INTERFACE_WEIXIN_PAY]:
+                flag = False
+
+        return flag
 
 def get_order_status_text(status):
     return STATUS2TEXT[status]
