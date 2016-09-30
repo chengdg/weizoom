@@ -14,7 +14,7 @@ from mall.promotion import models as promotion_model
 from mall.signal_handler import products_not_online_handler_for_promotions
 from watchdog.utils import watchdog_warning, watchdog_error
 from account.models import UserProfile
-
+from django.contrib.auth.models import User
 from core import paginator
 from core import resource
 from core.exceptionutil import unicode_full_stack
@@ -137,7 +137,8 @@ class ProductList(resource.Resource):
         start_date = request.GET.get('startDate', '')
         end_date = request.GET.get('endDate', '')
         is_request_cps = request.GET.get('is_cps','')
-
+        current_user_id = User.objects.get(username=request.user).id
+        wtype = UserProfile.objects.get(user_id=current_user_id).webapp_type
         product_pool_param = {}
         #print '00000000000000000000000000000000',request.manager.id
         if mall_type:
@@ -220,6 +221,7 @@ class ProductList(resource.Resource):
         product_name = request.GET.get('name', '')
         if product_name:
             products = products.filter(name__icontains=product_name)
+        #print "]]]]]]]]]]]",products
         # import pdb
         # pdb.set_trace()
         #未回收的商品
@@ -362,12 +364,14 @@ class ProductList(resource.Resource):
             product_dict = product.format_to_dict()
             product_dict['is_self'] = (request.manager.id == product.owner_id)
             if product.id in list(cps_products_id):
-                product_dict['is_cps'] = 1
+                if wtype == 1:
+                    product_dict['is_cps'] = 1
                 product_dict['promote_time_from'] = models.PromoteDetail.objects.get(product_id=product.id).promote_time_from.strftime("%Y/%m/%d %H:%M")
                 product_dict['promote_time_to'] = models.PromoteDetail.objects.get(product_id=product.id).promote_time_to.strftime("%Y/%m/%d %H:%M")
-                product_dict['promote_money'] = models.PromoteDetail.objects.get(product_id=product.id).promote_money
+                product_dict['promote_money'] = "%.2f"%models.PromoteDetail.objects.get(product_id=product.id).promote_money
                 product_dict['promote_stock'] = models.PromoteDetail.objects.get(product_id=product.id).promote_stock
                 cps_items.append(product_dict)
+            if not is_request_cps: product_dict['n_request_cps'] = 1
             product_dict['classification'] = ''
             if mall_type:
                 secondary_classification = product_id2classification.get(product.id,'')
@@ -433,7 +437,15 @@ class ProductList(resource.Resource):
         data['owner_id'] = request.manager.id
         data['mall_type'] = mall_type
         response = create_response(200)
-        if is_request_cps:
+        if wtype != 1:   #非自营
+            response.data = {
+                'n_self': 1,
+                'items': items,
+                'pageinfo': paginator.to_dict(pageinfo),
+                'sortAttr': sort_attr,
+                'data': data
+            }            
+        elif is_request_cps:
             response.data = {
                 'is_request_cps': 1,
                 'items': cps_items,
@@ -619,6 +631,8 @@ class ProductPool(resource.Resource):
         filter_labels = request.GET.get('labels',[])
         #status = request.GET.get('status', '-1')
         is_request_cps = request.GET.get('is_cps','')
+        current_user_id = User.objects.get(username=request.user).id
+        wtype = UserProfile.objects.get(user_id=current_user_id).webapp_type
         manager_user_profile = UserProfile.objects.filter(webapp_type=2)[0]
         # 根据分类来筛选
         if first_classification > 0:
@@ -842,75 +856,51 @@ class ProductPool(resource.Resource):
             basic_rebate = supplier_divide_rebate.get(product.supplier, '')
             basic_retail_rebate = supplier_id_2_retail_rebate.get(product.supplier, None)
             self_retail_rebate = supplier_id_2_self_retail_rebate.get(product.supplier, None)
+            product_dic = {}
+            product_dic['id'] = product.id
+            product_dic['name'] = product.name
+            product_dic['thumbnails_url'] = product.thumbnails_url
+            product_dic['user_code'] = product.user_code
+            product_dic['store_name'] = supplier_ids2name.get(product.supplier, product.supplier),#user_id2userprofile[product['owner_id']].store_name
+            product_dic['stocks'] = product.stocks
+            product_dic['price'] = product.price
+            
+            product_dic['is_use_custom_model'] = product.is_use_custom_model
+            product_dic['models'] = product.models[1:]
+            product_dic['display_price_range'] = product.display_price_range
+            product_dic['supplier_type'] = supplier_type
+            product_dic['basic_rebate'] = basic_rebate
+            product_dic['product_label_names'] = product_label_names
+
+            product_dic['retail_rebate'] = basic_retail_rebate if not self_retail_rebate else self_retail_rebate
+            product_dic['classification'] =  "%s-%s" % (
+                        id2first_classification[id2secondary_classification[product_id2classification_id[product.id]].father_id].name,
+                        id2secondary_classification[product_id2classification_id[product.id]].name
+                        ) if product.id in product_id2classification_id.keys() else ""
+            product_dic['gross_profit'] = "%s~%s" % (min([model['gross_profit'] for model in product.models[1:]]), max([model['gross_profit'] for model in product.models[1:]])) if product.is_use_custom_model else round(float((product.price - product.purchase_price)))
+            if not is_request_cps: product_dic['n_request_cps'] = 1
             if product.id in list(cps_products_id):
-                items.append({
-                    'id': product.id,
-                    # 'product_has_promotion': product_has_promotion,
-                    # 'product_has_group': product_has_group,
-                    'is_cps':1,
-                    'name': product.name,
-                    'thumbnails_url': product.thumbnails_url,
-                    'user_code': product.user_code,
-                    #'status': product['status'],
-                    'store_name': supplier_ids2name.get(product.supplier, product.supplier),#user_id2userprofile[product['owner_id']].store_name,
-                    'stocks': product.stocks,
-                    'price':product.price,
-                    'promote_stock': models.PromoteDetail.objects.get(product_id=product.id).promote_stock,
-                    'promote_money':models.PromoteDetail.objects.get(product_id=product.id).promote_money,
-                    'is_use_custom_model': product.is_use_custom_model,
-                    'models': product.models[1:],
-                    'display_price_range': product.display_price_range,
-                    'supplier_type': supplier_type,
-                    # 五五分成基础扣点
-                    'basic_rebate': basic_rebate,
-                    'product_label_names': product_label_names,
-                    'promote_time_from':models.PromoteDetail.objects.get(product_id=product.id).promote_time_from.strftime("%Y/%m/%d %H:%M"),
-                    'promote_time_to':models.PromoteDetail.objects.get(product_id=product.id).promote_time_to.strftime("%Y/%m/%d %H:%M"),
-                    #'classification_label_names': classification_label_names,
-                    # 零售返点的对应此平台的反点
-                    'retail_rebate': basic_retail_rebate if not self_retail_rebate else self_retail_rebate,
-                    'classification': "%s-%s" % (
-                        id2first_classification[id2secondary_classification[product_id2classification_id[product.id]].father_id].name,
-                        id2secondary_classification[product_id2classification_id[product.id]].name
-                        ) if product.id in product_id2classification_id.keys() else "",
-                    'gross_profit': "%s~%s" % (min([model['gross_profit'] for model in product.models[1:]]), max([model['gross_profit'] for model in product.models[1:]]))
-                     if product.is_use_custom_model else round(float((product.price - product.purchase_price)))                    
-                })      
+                if wtype == 1:
+                    product_dic['is_cps'] = 1
+                product_dic['promote_stock'] = models.PromoteDetail.objects.get(product_id=product.id).promote_stock
+                product_dic['promote_money'] = "%.2f"%models.PromoteDetail.objects.get(product_id=product.id).promote_money
+                product_dic['promote_time_from'] = models.PromoteDetail.objects.get(product_id=product.id).promote_time_from.strftime("%Y/%m/%d %H:%M")
+                product_dic['promote_time_to'] = models.PromoteDetail.objects.get(product_id=product.id).promote_time_to.strftime("%Y/%m/%d %H:%M")                
+                items.append(product_dic)      
             else:          
-                items.append({
-                    'id': product.id,
-                    # 'product_has_promotion': product_has_promotion,
-                    # 'product_has_group': product_has_group,
-                    'name': product.name,
-                    'thumbnails_url': product.thumbnails_url,
-                    'user_code': product.user_code,
-                    #'status': product['status'],
-                    'store_name': supplier_ids2name.get(product.supplier, product.supplier),#user_id2userprofile[product['owner_id']].store_name,
-                    'stocks': product.stocks,
-                    'price':product.price,
-                    'is_use_custom_model': product.is_use_custom_model,
-                    'models': product.models[1:],
-                    'display_price_range': product.display_price_range,
-                    'supplier_type': supplier_type,
-                    # 五五分成基础扣点
-                    'basic_rebate': basic_rebate,
-                    'product_label_names': product_label_names,
-                    #'classification_label_names': classification_label_names,
-                    # 零售返点的对应此平台的反点
-                    'retail_rebate': basic_retail_rebate if not self_retail_rebate else self_retail_rebate,
-                    'classification': "%s-%s" % (
-                        id2first_classification[id2secondary_classification[product_id2classification_id[product.id]].father_id].name,
-                        id2secondary_classification[product_id2classification_id[product.id]].name
-                        ) if product.id in product_id2classification_id.keys() else "",
-                    'gross_profit': "%s~%s" % (min([model['gross_profit'] for model in product.models[1:]]), max([model['gross_profit'] for model in product.models[1:]]))
-                     if product.is_use_custom_model else round(float((product.price - product.purchase_price)))
-                   # 'sync_time': mall_product_id2relation[product['id']].sync_time.strftime('%Y-%m-%d %H:%M') if mall_product_id2relation.has_key(product['id']) else ''
-                })
+                items.append(product_dic)
 
         data = dict()
         data['owner_id'] = request.manager.id
         response = create_response(200)
-        if is_request_cps:
+        if wtype != 1:
+            response.data = {
+                'n_self': 1,
+                'items': items,
+                'pageinfo': paginator.to_dict(pageinfo),
+                'data': data
+            }
+        elif is_request_cps:
             response.data = {
                 'is_request_cps': 1,
                 'items': items,

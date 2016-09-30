@@ -27,10 +27,7 @@
 	</div>
 	<div class="xa-productFilterView xui-filterPanel"></div>
 	{% if has_product %}
-	<ul class="nav nav-tabs mt14 ">
-        <li class="xa-tab {%if not data.is_request_cps %}active{% endif %}" data-cps-value="0"><a href="javascript:void(0);">所有商品</a></li>
-        <li class="xa-tab {%if data.is_request_cps %}active{% endif %}" data-cps-value="1"><a href="javascript:void(0);">cps推广商品</a></li>
-    </ul>
+
 	<div class="panel panel-default mt20 xb-rightPanel">
 		<div class="panel-heading div_export">
 			<label for="topSelectAll" class="xui-selectAll ml15">
@@ -98,6 +95,12 @@
 {% block js %}
 {% verbatim %}
 <script id="products-view" type="text/x-jquery-tmpl">
+	{{if !data.n_self}}
+	<ul class="nav nav-tabs mt14 ">
+        <li class="xa-tab {{if !data.is_request_cps }}active{{/if}}" data-cps-value="0"><a href="javascript:void(0);">所有商品</a></li>
+        <li class="xa-tab {{if data.is_request_cps }}active{{/if}}" data-cps-value="1"><a href="javascript:void(0);">cps推广商品</a></li>
+    </ul>
+    {{/if}}
 	<table id="productListTable" class="table table-bordered table-condensed xui-productList xb-stripedTable xb-noTdBorder xb-noBottom xb-noBorder xb-theadBg">
 		<thead>
 			<tr>
@@ -128,7 +131,7 @@
             {{if items.length}}
 	            {{each(i, product) items}}
 				<tr data-id="${product.id}"
-					class="{{if !product.is_group_buying }}xa-selectTr{{/if}}{{if product.is_cps}} xui-cps{{/if}}"
+					class="{{if !product.is_group_buying }}xa-selectTr{{/if}}{{if product.n_request_cps}}{{if product.is_cps}} xui-cps{{/if}}{{/if}}"
 					data-is-group-buying="${product.is_group_buying}">
 					<td class="wui-advanced-table-sort-handler tl_important">
 						<div class="disT w">

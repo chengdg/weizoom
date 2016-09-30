@@ -37,10 +37,13 @@ def step_impl(context, user, nick_name):
     auth_appid = ComponentAuthedAppid.objects.get(user_id=user_id).id
     ComponentAuthedAppidInfo.objects.filter(auth_appid=auth_appid).update(nick_name=nick_name)
 
-@given(u"设置{user}为自营平台账号")
+@Given(u"设置{user}为自营平台账号")
 def step_impl(context, user):
+    print ']]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]'
     user_id = User.objects.get(username=user).id
+    print ']]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]',user_id
     UserProfile.objects.filter(user_id=user_id).update(webapp_type=1)
+    print ']]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]',"done"
 
 @given(u"{user}输出日志")
 def step_impl(context, user):
