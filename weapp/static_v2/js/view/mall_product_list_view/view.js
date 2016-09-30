@@ -157,7 +157,8 @@ W.view.mall.ProductListView = Backbone.View.extend({
         //alert(tabStatus)
         this.filterView.trigger('clickStatusBox', status);
         $('.xa-tab').removeClass('active');
-        $el.addClass('active');
+        $('[data-cps-value="'+tabStatus+'"]').addClass('active');
+        //$el.addClass('active');
         //$('[data-cps-value="'+tabStatus+'"]').addClass('active');
      },
      
