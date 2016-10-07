@@ -19,3 +19,15 @@ class OAuthToken(models.Model):
 	class Meta:
 		db_table = 'wapi_oauthtoken'
 		unique_together=("token",)
+
+class SupplierOAuthToken(models.Model):
+	"""
+	内部使用授权token，用于WGlass访问API用(类似OAuth的token)
+	"""
+	supplier_id = models.IntegerField(default=0)
+	token = models.CharField(max_length=50, db_index=True)
+	expire_time = models.DateTimeField()
+	
+	class Meta:
+		db_table = 'wapi_supplier_oauthtoken'
+		unique_together=("token",)

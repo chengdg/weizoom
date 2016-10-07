@@ -29,7 +29,7 @@ from core.charts_apis import *
 
 #from core.exceptionutil import unicode_full_stack
 #from watchdog.utils import watchdog_error, watchdog_warning
-from wapi.models import OAuthToken
+from wapi.models import OAuthToken,SupplierOAuthToken
 import datetime as dt
 import hashlib
 import logging
@@ -53,6 +53,30 @@ class AuthToken(api_resource.ApiResource):
 		"""
 		输入用户名、授权密码获取授权token
 		"""
+		is_exist = args.get('supplier_id', 0)
+		if is_exist:
+			supplier_id = args['supplier_id']
+			now = dt.datetime.now()
+			tokens = SupplierOAuthToken.objects.filter(supplier_id=supplier_id, expire_time__gt=now)
+			if tokens.count()>0:
+					token = tokens[0]
+			else:
+				try:
+						token_str = AuthToken._get_token_string(supplier_id)
+						token = SupplierOAuthToken.objects.create(
+							supplier_id=supplier_id,
+							token=token_str,
+							expire_time=now + dt.timedelta(days=TOKEN_EXPIRE_AFTER_DAYS)
+						)
+				except Exception as e:
+					logging.error(str(e))
+					token = None
+			if token:
+				data = {'access_token': token.token,}
+			else:
+				data = {'message': "get access_token failed"}
+			return data
+
 		username = args['username']
 		password = args['password']
 
