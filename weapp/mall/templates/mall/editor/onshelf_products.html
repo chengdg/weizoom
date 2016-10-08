@@ -266,7 +266,7 @@
 				</tr>
 				{{/each}}
             {{else}}
-                <tr><td colspan='9'>还没有数据</td></tr>
+                <tr><td colspan='{{if data.is_request_cps&&data.is_request_cps==1}}9{{else}}11{{/if}}'>还没有数据</td></tr>
             {{/if}}
 		</tbody>
 	</table></div>
