@@ -30,7 +30,7 @@
 
 	<!-- <div class="panel panel-default mt20 xb-rightPanel"> -->
 	<div class="pr">
-		<div class="div_export" style="position:absolute;right:0;{% if mall_type %}top:60px;{% endif %}">
+		<div class="div_export" style="position:absolute;right:0;{% if mall_type and mall_type !== 3%}top:60px;{% endif %}">
 
 			{% if mall_type %}
 				<a href="javascript:void(0);" class="btn fr btn-default xa-export mr20 " id="export_data_file" style="">导出结果</a>
