@@ -15,11 +15,11 @@
 
 	<div class="xa-productFilterView xui-filterPanel"></div>
 	{% if has_product %}
-	<div class="panel panel-default mt20 xb-rightPanel">
-		<div class="panel-heading">
+	<div class="pr">
+		<div class="" style="position:absolute;right:0;{% if mall_type %}top:60px;{% endif %}">
 
 			{% if not mall_type %}
-			<a href="/mall2/product/" class="btn btn-success xui-addProductBtn ml10 xa-addProduct fr"  style="margin-top:50px;"><span style="padding-right:5px;"><img src="/static_v2/img/editor/plusOpcity.png"></span>添加新商品</a>
+			<a href="/mall2/product/" class="btn btn-success xui-addProductBtn ml10 xa-addProduct fr"  style=""><span style="padding-right:5px;"><img src="/static_v2/img/editor/plusOpcity.png"></span>添加新商品</a>
 			{% endif %}
 		</div>
 		<div
@@ -34,12 +34,12 @@
 			data-item-count-per-page="30"
 			data-disable-header-select="true"
 			data-outer-selecter='.xa-selectAll'
-			class="panel-body"
+			class=""
 			data-selecttable-tr='xa-selectTr'
 		></div>
-		<div style="height:30px;"></div>
+		<!-- <div style="height:30px;"></div> -->
 		<div class="xui-batchbtn">
-			<label for="bottomSelectAll" class="xui-selectAll ml12">
+			<label for="bottomSelectAll" class="xui-selectAll ml10">
 				<input type="checkbox" id="bottomSelectAll" class="xa-selectAll">全选
 			</label>
 			<a href="javascript:void(0);" class="btn btn-default ml10 xa-batchOnshelf">批量上架</a>
@@ -80,7 +80,7 @@
     {{/if}}
     <div class="panel-default mt20 xb-rightPanel p10" style="min-height:120px;border: 1px solid #ddd;border-bottom: 0;">
     <div class="pb10">
-			<label for="topSelectAll" class="xui-selectAll ml15">
+			<label for="topSelectAll" class="xui-selectAll ml10">
 				<input type="checkbox" id="topSelectAll" class="xa-selectAll">全选
 			</label>
 			<a href="javascript:void(0);" class="btn btn-default ml10 xa-batchOnshelf">批量上架</a>
