@@ -5,6 +5,7 @@ from django.db.models import Q
 
 from core import api_resource, paginator
 from market_tools.tools.channel_qrcode.models import ChannelQrcodeSettings, ChannelQrcodeHasMember
+import util
 from wapi.decorators import param_required
 from modules.member.models import *
 from mall.models import Order, ORDER_STATUS_NOT,ORDER_STATUS_CANCEL,ORDER_STATUS_GROUP_REFUNDING,ORDER_STATUS_GROUP_REFUNDED,ORDER_STATUS_REFUNDING,ORDER_STATUS_REFUNDED
@@ -34,6 +35,11 @@ class QrcodeOrderOutline(api_resource.ApiResource):
 			q_filter_data_args = {
 				"channel_qrcode_id": channel_qrcode_id
 			}
+		channel_qrcodes = ChannelQrcodeSettings.objects.filter(id__in=channel_qrcode_ids).order_by('created_at')
+		if channel_qrcodes.count() > 0:
+			created_at = channel_qrcodes.first().created_at.strftime("%Y-%m-%d %H:%M:%S")
+		else:
+			created_at = datetime.today().strftime("%Y-%m-%d %H:%M:%S")
 
 		total_channel_members = ChannelQrcodeHasMember.objects.filter(**q_filter_data_args).order_by(
 			'-created_at')
@@ -70,65 +76,76 @@ class QrcodeOrderOutline(api_resource.ApiResource):
 
 		start_date = args.get('start_date', None)
 		end_date = args.get('end_date', None)
+
+		order_numbers = json.loads(args.get('order_numbers', ''))
+
 		filter_data_args = {
 			"webapp_user_id__in": webapp_user_id2member_id.keys(),
-			"origin_order_id__lte": 0
+			"origin_order_id__lte": 0,
+			"created_at__gte": created_at
 		}
-		if start_date and end_date:
-			start_time = start_date + ' 00:00:00'
-			end_time = end_date + ' 23:59:59'
-			filter_data_args["created_at__gte"] = start_time
-			filter_data_args["created_at__lte"] = end_time
+		# if start_date and end_date:
+		# 	start_time = start_date + ' 00:00:00'
+		# 	end_time = end_date + ' 23:59:59'
+		# 	filter_data_args["created_at__gte"] = start_time
+		# 	filter_data_args["created_at__lte"] = end_time
 
-		orders = Order.objects.filter(**filter_data_args)
+		orders = Order.objects.filter(**filter_data_args).exclude(order_id__in=order_numbers)
 
+		# orders = Order.objects.filter(**filter_data_args)
+
+		start_time = start_date + ' 00:00:00'
+		end_time = end_date + ' 23:59:59'
+
+		# 订单概况
 		increase_orders = []
 		first_orders = []
 		sale_price = 0
 		final_price = 0
 		for order in orders:
-			webapp_user_id = order.webapp_user_id
-			member_id = webapp_user_id2member_id.get(webapp_user_id)
-			created_at = member_id2created_at.get(member_id)
-			for channel_qrcode_id, member_ids in channel_qrcode_id2member_id.items():
-				if member_id in member_ids:
-					flag = False
-					if created_at:
-						if member_id in q_has_member_ids:
-							if channel_qrcode_id2user_created_at.get(str(channel_qrcode_id)):
-								if channel_qrcode_id2user_created_at.get(
-										str(channel_qrcode_id)) <= order.created_at.strftime('%Y-%m-%d %H:%M:%S'):
-
-									if channel_qrcode_id2bing_member_id.get(channel_qrcode_id):
-
-										if curr_qrcode_id2member_id.get(
-												channel_qrcode_id) and member_id in curr_qrcode_id2member_id.get(
-											channel_qrcode_id):
-											if order.created_at.strftime('%Y-%m-%d %H:%M:%S') <= created_at:
-												flag = True
-										else:
-											if order.created_at.strftime('%Y-%m-%d %H:%M:%S') > created_at:
-												flag = True
-						else:
-							if channel_qrcode_id2user_created_at.get(
-									str(channel_qrcode_id)) <= order.created_at.strftime(
-								'%Y-%m-%d %H:%M:%S'):
-								flag = True
-					else:
-						for channel_qrcode_id, member_ids in channel_qrcode_id2member_id.items():
-							if member_id in member_ids:
+			if order.created_at.strftime('%Y-%m-%d %H:%M:%S') >= start_time and order.created_at.strftime('%Y-%m-%d %H:%M:%S') <= end_time:
+				webapp_user_id = order.webapp_user_id
+				member_id = webapp_user_id2member_id.get(webapp_user_id)
+				created_at = member_id2created_at.get(member_id)
+				for channel_qrcode_id, member_ids in channel_qrcode_id2member_id.items():
+					if member_id in member_ids:
+						flag = False
+						if created_at:
+							if member_id in q_has_member_ids:
 								if channel_qrcode_id2user_created_at.get(str(channel_qrcode_id)):
-									if order.created_at.strftime(
-											'%Y-%m-%d %H:%M:%S') >= channel_qrcode_id2user_created_at.get(
-											str(channel_qrcode_id)):
-										flag = True
-					if flag:
-						if order.status not in [ORDER_STATUS_CANCEL, ORDER_STATUS_GROUP_REFUNDING, ORDER_STATUS_GROUP_REFUNDED, ORDER_STATUS_REFUNDING, ORDER_STATUS_REFUNDED]:
-							sale_price += order.final_price + order.coupon_money + order.integral_money + order.weizoom_card_money + order.promotion_saved_money + order.edit_money
-							final_price += order.final_price
-							increase_orders.append(order)
-						if order.is_first_order and order.status != ORDER_STATUS_NOT:
-							first_orders.append(order)
+									if channel_qrcode_id2user_created_at.get(
+											str(channel_qrcode_id)) <= order.created_at.strftime('%Y-%m-%d %H:%M:%S'):
+
+										if channel_qrcode_id2bing_member_id.get(channel_qrcode_id):
+
+											if curr_qrcode_id2member_id.get(
+													channel_qrcode_id) and member_id in curr_qrcode_id2member_id.get(
+												channel_qrcode_id):
+												if order.created_at.strftime('%Y-%m-%d %H:%M:%S') <= created_at:
+													flag = True
+											else:
+												if order.created_at.strftime('%Y-%m-%d %H:%M:%S') > created_at:
+													flag = True
+							else:
+								if channel_qrcode_id2user_created_at.get(
+										str(channel_qrcode_id)) <= order.created_at.strftime(
+									'%Y-%m-%d %H:%M:%S'):
+									flag = True
+						else:
+							for channel_qrcode_id, member_ids in channel_qrcode_id2member_id.items():
+								if member_id in member_ids:
+									if channel_qrcode_id2user_created_at.get(str(channel_qrcode_id)):
+										if order.created_at.strftime(
+												'%Y-%m-%d %H:%M:%S') >= channel_qrcode_id2user_created_at.get(
+												str(channel_qrcode_id)):
+											flag = True
+						if flag:
+							if order.status not in [ORDER_STATUS_CANCEL, ORDER_STATUS_GROUP_REFUNDING, ORDER_STATUS_GROUP_REFUNDED, ORDER_STATUS_REFUNDING, ORDER_STATUS_REFUNDED]:
+								sale_price += order.final_price + order.coupon_money + order.integral_money + order.weizoom_card_money + order.promotion_saved_money + order.edit_money
+								final_price += order.final_price
+								increase_orders.append(order)
+							if order.is_first_order and order.status != ORDER_STATUS_NOT:
+								first_orders.append(order)
 
 		order_outline_info = {
 			"increase_order_count": len(increase_orders),
@@ -137,47 +154,48 @@ class QrcodeOrderOutline(api_resource.ApiResource):
 			"final_price": u'%.2f' % final_price
 		}
 
+		# 会员概况
 		total_member_order_count = set()
 		for order in orders:
-			webapp_user_id = order.webapp_user_id
-			member_id = webapp_user_id2member_id.get(webapp_user_id)
-			q_created_at = member_id2created_at.get(member_id)
-			flag = False
-			for channel_qrcode_id, member_ids in channel_qrcode_id2member_id.items():
-				if member_id in member_ids:
-					if q_created_at:
-						if member_id in q_has_member_ids:
-							if channel_qrcode_id2user_created_at.get(str(channel_qrcode_id)):
+			if order.created_at.strftime('%Y-%m-%d %H:%M:%S') >= start_time and order.created_at.strftime('%Y-%m-%d %H:%M:%S') <= end_time:
+				webapp_user_id = order.webapp_user_id
+				member_id = webapp_user_id2member_id.get(webapp_user_id)
+				q_created_at = member_id2created_at.get(member_id)
+				flag = False
+				for channel_qrcode_id, member_ids in channel_qrcode_id2member_id.items():
+					if member_id in member_ids:
+						if q_created_at:
+							if member_id in q_has_member_ids:
+								if channel_qrcode_id2user_created_at.get(str(channel_qrcode_id)):
+									if channel_qrcode_id2user_created_at.get(
+											str(channel_qrcode_id)) <= order.created_at.strftime(
+										'%Y-%m-%d %H:%M:%S'):
+										if channel_qrcode_id2bing_member_id.get(channel_qrcode_id):
+											if curr_qrcode_id2member_id.get(
+													channel_qrcode_id) and member_id in curr_qrcode_id2member_id.get(
+												channel_qrcode_id):
+												if order.created_at.strftime('%Y-%m-%d %H:%M:%S') <= q_created_at:
+													flag = True
+											else:
+												if order.created_at.strftime('%Y-%m-%d %H:%M:%S') > q_created_at:
+													flag = True
+							else:
 								if channel_qrcode_id2user_created_at.get(
 										str(channel_qrcode_id)) <= order.created_at.strftime(
 									'%Y-%m-%d %H:%M:%S'):
-									if channel_qrcode_id2bing_member_id.get(channel_qrcode_id):
-										if curr_qrcode_id2member_id.get(
-												channel_qrcode_id) and member_id in curr_qrcode_id2member_id.get(
-											channel_qrcode_id):
-											if order.created_at.strftime('%Y-%m-%d %H:%M:%S') <= q_created_at:
-												flag = True
-										else:
-											if order.created_at.strftime('%Y-%m-%d %H:%M:%S') > q_created_at:
-												flag = True
+									flag = True
 						else:
-							if channel_qrcode_id2user_created_at.get(
-									str(channel_qrcode_id)) <= order.created_at.strftime(
-								'%Y-%m-%d %H:%M:%S'):
-								flag = True
-					else:
-						for channel_qrcode_id, member_ids in channel_qrcode_id2member_id.items():
-							if member_id in member_ids:
-								if channel_qrcode_id2user_created_at.get(str(channel_qrcode_id)):
-									if order.created_at.strftime(
-											'%Y-%m-%d %H:%M:%S') >= channel_qrcode_id2user_created_at.get(
-										str(channel_qrcode_id)):
-										flag = True
-			if flag:
-				total_member_order_count.add(order.webapp_user_id)
+							for channel_qrcode_id, member_ids in channel_qrcode_id2member_id.items():
+								if member_id in member_ids:
+									if channel_qrcode_id2user_created_at.get(str(channel_qrcode_id)):
+										if order.created_at.strftime(
+												'%Y-%m-%d %H:%M:%S') >= channel_qrcode_id2user_created_at.get(
+											str(channel_qrcode_id)):
+											flag = True
+				if flag:
+					total_member_order_count.add(order.webapp_user_id)
 
 		channel_members = []
-		webapp_user_ids = []
 		member_order_count = set()
 		if start_date and end_date:
 			start_time = start_date + ' 00:00:00'
@@ -264,12 +282,18 @@ class QrcodeOrderOutline(api_resource.ApiResource):
 			"total_member_order_count": len(total_member_order_count),
 			"total_member_count": total_channel_members.count()
 		}
+
+
+
+		balance_outline_info = util.get_balance_outline(orders, channel_qrcodes, created_at, channel_qrcode_ids, order_numbers, channel_qrcode_id2user_created_at)
+
 		end = time.time()
 		print end - start, "oooooooooooo"
 
 		return {
 			'items': {
 				"order_outline_info": order_outline_info,
-				"member_outline_info": member_outline_info
+				"member_outline_info": member_outline_info,
+				"balance_outline_info": balance_outline_info
 			}
 		}
