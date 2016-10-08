@@ -172,9 +172,7 @@ def send_review_export_job_task(self, exportjob_id, filter_data_args, sort_attr,
 @task(bind=True, time_limit=7200, max_retries=2)
 def send_product_export_job_task(self, exportjob_id, filter_data_args, type):
     export_jobs = ExportJob.objects.filter(id=exportjob_id)
-    woid = export_jobs[0].woid
-    is_self = UserProfile.objects.get(user_id=woid).webapp_type
-
+    
     filename = "product_{}.xlsx".format(exportjob_id)
     dir_path_excel = "excel"
     dir_path = os.path.join(settings.UPLOAD_DIR, dir_path_excel)
@@ -190,12 +188,8 @@ def send_product_export_job_task(self, exportjob_id, filter_data_args, type):
             # head_format.set_bold() # 设置粗体字
             head_format.set_font_color('white')
             head_format.set_bg_color('#5A9BD5') # 背景颜色
-            if is_self == 1:
-                head_list = [u'商品ID', u'商品编号', u'供货商', u'商品名称', u'商品规格名称', u'商品价格', u'商品最低价格', u'采购价', u'商品毛利', u'商品最低毛利', u'扣点类型', 
-                u'规格库存', u'最低库存', u'总库存', u'分组', u'总销量', u'总销售额', u'上架时间', u'推广费用', u'推广剩余库存', u'推广开始时间', u'推广结束时间']
-            else:
-                head_list = [u'商品ID', u'商品编号', u'供货商', u'商品名称', u'商品规格名称', u'商品价格', u'商品最低价格', u'采购价', u'商品毛利', u'商品最低毛利', u'扣点类型', 
-                u'规格库存', u'最低库存', u'总库存', u'分组', u'总销量', u'总销售额', u'上架时间']
+            head_list = [u'商品ID', u'商品编号', u'供货商', u'商品名称', u'商品规格名称', u'商品价格', u'商品最低价格', u'采购价', u'商品毛利', u'商品最低毛利', u'扣点类型', 
+            u'规格库存', u'最低库存', u'总库存', u'分组', u'总销量', u'总销售额', u'上架时间', u'推广费用', u'推广剩余库存', u'推广开始时间', u'推广结束时间']
             table.write_row('A1' , head_list, head_format)
             tmp_line = 1
 
@@ -326,20 +320,16 @@ def send_product_export_job_task(self, exportjob_id, filter_data_args, type):
                                 stocks_list.append(float(stocks))
                             elif model['stock_type'] == 0:
                                 stocks = u'无限'
-                            if is_self == 1:
-                                if product.id in list(cps_products_id):
-                                    promote_money = models.PromoteDetail.objects.get(product_id=product.id).promote_money
-                                    promote_stock = models.PromoteDetail.objects.get(product_id=product.id).promote_stock
-                                    promote_time_from = models.PromoteDetail.objects.get(product_id=product.id).promote_time_from.strftime("%Y/%m/%d %H:%M")
-                                    promote_time_to = models.PromoteDetail.objects.get(product_id=product.id).promote_time_to.strftime("%Y/%m/%d %H:%M")
-                                    alist = [product.id, model['user_code'], supplier_name_export, product.name, model_name_str, float(model['price']), float(low_price), purchase_price, float(gross_profit), '', point_type, stocks,
-                                    '', total_stocks, categories_str, product_sales, product_sales_money, onshelvetime,promote_money,promote_stock,promote_time_from,promote_time_to]
-                                else:
-                                    alist = [product.id, model['user_code'], supplier_name_export, product.name, model_name_str, float(model['price']), float(low_price), purchase_price, float(gross_profit), '', point_type, stocks,
-                                    '', total_stocks, categories_str, product_sales, product_sales_money, onshelvetime,'','','','']
+                            if product.id in list(cps_products_id):
+                                promote_money = models.PromoteDetail.objects.get(product_id=product.id).promote_money
+                                promote_stock = models.PromoteDetail.objects.get(product_id=product.id).promote_stock
+                                promote_time_from = models.PromoteDetail.objects.get(product_id=product.id).promote_time_from.strftime("%Y/%m/%d %H:%M")
+                                promote_time_to = models.PromoteDetail.objects.get(product_id=product.id).promote_time_to.strftime("%Y/%m/%d %H:%M")
+                                alist = [product.id, model['user_code'], supplier_name_export, product.name, model_name_str, float(model['price']), float(low_price), purchase_price, float(gross_profit), '', point_type, stocks,
+                                '', total_stocks, categories_str, product_sales, product_sales_money, onshelvetime,promote_money,promote_stock,promote_time_from,promote_time_to]
                             else:
                                 alist = [product.id, model['user_code'], supplier_name_export, product.name, model_name_str, float(model['price']), float(low_price), purchase_price, float(gross_profit), '', point_type, stocks,
-                                    '', total_stocks, categories_str, product_sales, product_sales_money, onshelvetime]
+                                '', total_stocks, categories_str, product_sales, product_sales_money, onshelvetime,'','','','']
 
                             tmp_models_count += 1
                             if tmp_models_count == models_count:
@@ -362,10 +352,7 @@ def send_product_export_job_task(self, exportjob_id, filter_data_args, type):
                             table.write(merge_row, 9, gross_profit_lowest)
                             table.write(merge_row, 12, stocks_lowest)
                         if models_count > 1:
-                            if is_self == 1:
-                                merge_columns = [2, 3, 6, 9,10, 12,13,14,15,16,17,18,19,20,21]
-                            else:
-                                merge_columns = [2, 3, 6, 9,10, 12,13,14,15,16,17]
+                            merge_columns = [2, 3, 6, 9,10, 12,13,14,15,16,17,18,19,20,21]
                             for i in merge_columns:
                                 table.merge.append((merge_rows[0], i, merge_rows[-1],i))
 
@@ -376,36 +363,28 @@ def send_product_export_job_task(self, exportjob_id, filter_data_args, type):
                         total_stocks = product.total_stocks
 
                         if product.owner_id == manager_product_user_id:
-                            if is_self == 1:
-                                if product.id in list(cps_products_id):
-                                    promote_money = models.PromoteDetail.objects.get(product_id=product.id).promote_money
-                                    promote_stock = models.PromoteDetail.objects.get(product_id=product.id).promote_stock
-                                    promote_time_from = models.PromoteDetail.objects.get(product_id=product.id).promote_time_from.strftime("%Y/%m/%d %H:%M")
-                                    promote_time_to = models.PromoteDetail.objects.get(product_id=product.id).promote_time_to.strftime("%Y/%m/%d %H:%M")
-                                    alist = [product.id, model['user_code'], supplier_name_export, product.name, product.name, float(model['price']), float(model['price']), float(model['price'])-float(model['gross_profit']) , float(model['gross_profit']), float(model['gross_profit']), point_type, total_stocks,
-                                        total_stocks, total_stocks, categories_str, product_sales, product_sales_money, onshelvetime,promote_money,promote_stock,promote_time_from,promote_time_to]
-                                else:
-                                    alist = [product.id, model['user_code'], supplier_name_export, product.name, product.name, float(model['price']), float(model['price']), float(model['price'])-float(model['gross_profit']) , float(model['gross_profit']), float(model['gross_profit']), point_type, total_stocks,
-                                        total_stocks, total_stocks, categories_str, product_sales, product_sales_money, onshelvetime,'','','','']
+                            if product.id in list(cps_products_id):
+                                promote_money = models.PromoteDetail.objects.get(product_id=product.id).promote_money
+                                promote_stock = models.PromoteDetail.objects.get(product_id=product.id).promote_stock
+                                promote_time_from = models.PromoteDetail.objects.get(product_id=product.id).promote_time_from.strftime("%Y/%m/%d %H:%M")
+                                promote_time_to = models.PromoteDetail.objects.get(product_id=product.id).promote_time_to.strftime("%Y/%m/%d %H:%M")
+                                alist = [product.id, model['user_code'], supplier_name_export, product.name, product.name, float(model['price']), float(model['price']), float(model['price'])-float(model['gross_profit']) , float(model['gross_profit']), float(model['gross_profit']), point_type, total_stocks,
+                                    total_stocks, total_stocks, categories_str, product_sales, product_sales_money, onshelvetime,promote_money,promote_stock,promote_time_from,promote_time_to]
                             else:
                                 alist = [product.id, model['user_code'], supplier_name_export, product.name, product.name, float(model['price']), float(model['price']), float(model['price'])-float(model['gross_profit']) , float(model['gross_profit']), float(model['gross_profit']), point_type, total_stocks,
-                                        total_stocks, total_stocks, categories_str, product_sales, product_sales_money, onshelvetime]
+                                    total_stocks, total_stocks, categories_str, product_sales, product_sales_money, onshelvetime,'','','','']
                         else:
                             gross_profit = float(model['price']) - product.purchase_price
-                            if is_self == 1:
-                                if product.id in list(cps_products_id):
-                                    promote_money = models.PromoteDetail.objects.get(product_id=product.id).promote_money
-                                    promote_stock = models.PromoteDetail.objects.get(product_id=product.id).promote_stock
-                                    promote_time_from = models.PromoteDetail.objects.get(product_id=product.id).promote_time_from.strftime("%Y/%m/%d %H:%M")
-                                    promote_time_to = models.PromoteDetail.objects.get(product_id=product.id).promote_time_to.strftime("%Y/%m/%d %H:%M")
-                                    alist = [product.id, model['user_code'], supplier_name_export, product.name, product.name, float(model['price']), float(model['price']), product.purchase_price , gross_profit, gross_profit, point_type, total_stocks,
-                                    total_stocks, total_stocks, categories_str, product_sales, product_sales_money, onshelvetime,promote_money,promote_stock,promote_time_from,promote_time_to]
-                                else:
-                                    alist = [product.id, model['user_code'], supplier_name_export, product.name, product.name, float(model['price']), float(model['price']), product.purchase_price , gross_profit, gross_profit, point_type, total_stocks,
-                                        total_stocks, total_stocks, categories_str, product_sales, product_sales_money, onshelvetime,'','','','']
+                            if product.id in list(cps_products_id):
+                                promote_money = models.PromoteDetail.objects.get(product_id=product.id).promote_money
+                                promote_stock = models.PromoteDetail.objects.get(product_id=product.id).promote_stock
+                                promote_time_from = models.PromoteDetail.objects.get(product_id=product.id).promote_time_from.strftime("%Y/%m/%d %H:%M")
+                                promote_time_to = models.PromoteDetail.objects.get(product_id=product.id).promote_time_to.strftime("%Y/%m/%d %H:%M")
+                                alist = [product.id, model['user_code'], supplier_name_export, product.name, product.name, float(model['price']), float(model['price']), product.purchase_price , gross_profit, gross_profit, point_type, total_stocks,
+                                total_stocks, total_stocks, categories_str, product_sales, product_sales_money, onshelvetime,promote_money,promote_stock,promote_time_from,promote_time_to]
                             else:
-                                alist = [product.id, model['user_code'], supplier_name_export, product.name, product.name, float(model['price']), float(model['price']), float(model['price'])-float(model['gross_profit']) , float(model['gross_profit']), float(model['gross_profit']), point_type, total_stocks,
-                                        total_stocks, total_stocks, categories_str, product_sales, product_sales_money, onshelvetime]
+                                alist = [product.id, model['user_code'], supplier_name_export, product.name, product.name, float(model['price']), float(model['price']), product.purchase_price , gross_profit, gross_profit, point_type, total_stocks,
+                                    total_stocks, total_stocks, categories_str, product_sales, product_sales_money, onshelvetime]
 
                         table.write_row("A{}".format(tmp_line), alist, cell_format)
                 except:
