@@ -375,6 +375,7 @@ DEFAULT_APPS_THIRD_NAVS = [
         'title': u"扫码抽奖",
         'url': '/apps/scanlottery/scanlotteries/',
         'permission': '',
+        'users': ['jobs', 'ceshi01', 'sudao']
     },
     # {
     #     'name': MALL_APPS_VOTE_NAV,
