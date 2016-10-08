@@ -1615,11 +1615,17 @@
 *商品管理页面
 */
 .xui-productsPage .xui-batchbtn{
-	position: absolute;
+	/*position: absolute;*/
 	height: 50px;
-	line-height: 50px;
-	bottom: 0;
-	padding-left: 15px;
+    line-height: 50px;
+    bottom: 0;
+    padding-left: 10px;
+    background: #eaeef6;
+    border: 1px solid #ddd;
+    border-top: 0;
+}
+.xui-productsPage .xui-addProductBtn{
+	margin:10px;
 }
 .xui-productsPage .icon-arrow-down{
 	 background: rgba(0, 0, 0, 0) url("/static_v2/img/weixin/storing.png") no-repeat scroll 0 0;

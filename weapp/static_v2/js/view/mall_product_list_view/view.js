@@ -65,7 +65,7 @@ W.view.mall.ProductListView = Backbone.View.extend({
 
         var woid = this.woid;
         var view = this.filterView;
-        $('.panel-heading').delegate('.xa-export', 'click', function(event){
+        $('body').delegate('.xa-export', 'click', function(event){
             W.getApi().call({
                 app: 'export_job',
                 resource: 'export_is_download',
