@@ -40,7 +40,8 @@ class ShopBalanceOutline(api_resource.ApiResource):
 
 		q_member_ids = []
 		for cq in channel_qrcodes:
-			q_member_ids.append(cq.bing_member_id)
+			if cq.is_bing_member:
+				q_member_ids.append(cq.bing_member_id)
 
 		total_member_ids = set(total_member_ids) | set(q_member_ids)
 
