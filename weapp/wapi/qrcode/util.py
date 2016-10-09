@@ -217,24 +217,23 @@ def get_balance_outline(orders, channel_qrcodes, created_at, channel_qrcode_ids,
 						if channel_qrcode_id2user_created_at.get(str(channel_qrcode_id)) <= order.created_at.strftime(
 								"%Y-%m-%d %H:%M:%S"):
 							if member_id in member_ids:
-								flag = False
 								if webapp_user_id2created_at.get(int(order.webapp_user_id)):
 									if bing_member_id2channel_qrcode_id.get(member_id):
 										if bing_member_id2channel_qrcode_id.get(member_id) == channel_qrcode_id:
 											if order.created_at.strftime(
 													'%Y-%m-%d %H:%M:%S') >= webapp_user_id2created_at.get(
 												order.webapp_user_id):
-												flag = True
+												channel_qrcode_id2all_order = get_all_order(channel_qrcode_id, channel_qrcode_id2all_order, order, order_number2finished_at, sale_price, final_price)
 										else:
 											if order.created_at.strftime(
 													'%Y-%m-%d %H:%M:%S') <= webapp_user_id2created_at.get(
 												order.webapp_user_id):
-												flag = True
+												channel_qrcode_id2all_order = get_all_order(channel_qrcode_id, channel_qrcode_id2all_order, order, order_number2finished_at, sale_price, final_price)
 									else:
 										if order.created_at.strftime(
 												'%Y-%m-%d %H:%M:%S') <= webapp_user_id2created_at.get(
 												order.webapp_user_id):
-											flag = True
+											channel_qrcode_id2all_order = get_all_order(channel_qrcode_id, channel_qrcode_id2all_order, order, order_number2finished_at, sale_price, final_price)
 								else:
 									for channel_qrcode_id, member_ids in channel_qrcode_id2member_id.items():
 										if member_id in member_ids:
@@ -242,54 +241,43 @@ def get_balance_outline(orders, channel_qrcodes, created_at, channel_qrcode_ids,
 												if order.created_at.strftime(
 														'%Y-%m-%d %H:%M:%S') >= channel_qrcode_id2user_created_at.get(
 													str(channel_qrcode_id)):
-													flag = True
-								if flag:
-									if not channel_qrcode_id2all_order.has_key(channel_qrcode_id):
-										channel_qrcode_id2all_order[channel_qrcode_id] = [{
-											'order_id': order.id,
-											'finished_at': order_number2finished_at.get(order.order_id,
-											                                            order.created_at).strftime(
-												"%Y-%m-%d %H:%M:%S"),
-											'status_text': STATUS2TEXT[order.status],
-											'sale_price': sale_price,
-											'final_price': final_price,
-											'created_at': order.created_at.strftime("%Y-%m-%d %H:%M:%S")
-										}]
-									else:
-										channel_qrcode_id2all_order[channel_qrcode_id].append({
-											'order_id': order.id,
-											'finished_at': order_number2finished_at.get(order.order_id,
-											                                            order.created_at).strftime(
-												"%Y-%m-%d %H:%M:%S"),
-											'status_text': STATUS2TEXT[order.status],
-											'sale_price': sale_price,
-											'final_price': final_price,
-											'created_at': order.created_at.strftime("%Y-%m-%d %H:%M:%S")
-										})
+													channel_qrcode_id2all_order = get_all_order(channel_qrcode_id, channel_qrcode_id2all_order, order, order_number2finished_at, sale_price, final_price)
+
 
 				if order.is_first_order and order.status != ORDER_STATUS_NOT:
 					for channel_qrcode_id, member_ids in channel_qrcode_id2member_id.items():
 						if channel_qrcode_id2user_created_at.get(str(channel_qrcode_id)) <= order.created_at.strftime(
 								"%Y-%m-%d %H:%M:%S"):
 							if member_id in member_ids:
-								flag = False
 								if webapp_user_id2created_at.get(int(order.webapp_user_id)):
 									if bing_member_id2channel_qrcode_id.get(member_id):
 										if bing_member_id2channel_qrcode_id.get(member_id) == channel_qrcode_id:
 											if order.created_at.strftime(
 													'%Y-%m-%d %H:%M:%S') >= webapp_user_id2created_at.get(
 												order.webapp_user_id):
-												flag = True
+												channel_qrcode_id2first_order = get_first_order(channel_qrcode_id,
+												                                                channel_qrcode_id2first_order,
+												                                                order,
+												                                                order_number2finished_at,
+												                                                sale_price, final_price)
 										else:
 											if order.created_at.strftime(
 													'%Y-%m-%d %H:%M:%S') < webapp_user_id2created_at.get(
 												order.webapp_user_id):
-												flag = True
+												channel_qrcode_id2first_order = get_first_order(channel_qrcode_id,
+												                                                channel_qrcode_id2first_order,
+												                                                order,
+												                                                order_number2finished_at,
+												                                                sale_price, final_price)
 									else:
 										if order.created_at.strftime(
 												'%Y-%m-%d %H:%M:%S') < webapp_user_id2created_at.get(
 												order.webapp_user_id):
-											flag = True
+											channel_qrcode_id2first_order = get_first_order(channel_qrcode_id,
+											                                                channel_qrcode_id2first_order,
+											                                                order,
+											                                                order_number2finished_at,
+											                                                sale_price, final_price)
 								else:
 									for channel_qrcode_id, member_ids in channel_qrcode_id2member_id.items():
 										if member_id in member_ids:
@@ -297,30 +285,8 @@ def get_balance_outline(orders, channel_qrcodes, created_at, channel_qrcode_ids,
 												if order.created_at.strftime(
 														'%Y-%m-%d %H:%M:%S') >= channel_qrcode_id2user_created_at.get(
 													str(channel_qrcode_id)):
-													flag = True
-								if flag:
-									if not channel_qrcode_id2first_order.has_key(channel_qrcode_id):
-										channel_qrcode_id2first_order[channel_qrcode_id] = [{
-											'order_id': order.id,
-											'finished_at': order_number2finished_at.get(order.order_id,
-											                                            order.created_at).strftime(
-												"%Y-%m-%d %H:%M:%S"),
-											'status_text': STATUS2TEXT[order.status],
-											'sale_price': sale_price,
-											'final_price': final_price,
-											'created_at': order.created_at.strftime("%Y-%m-%d %H:%M:%S")
-										}]
-									else:
-										channel_qrcode_id2first_order[channel_qrcode_id].append({
-											'order_id': order.id,
-											'finished_at': order_number2finished_at.get(order.order_id,
-											                                            order.created_at).strftime(
-												"%Y-%m-%d %H:%M:%S"),
-											'status_text': STATUS2TEXT[order.status],
-											'sale_price': sale_price,
-											'final_price': final_price,
-											'created_at': order.created_at.strftime("%Y-%m-%d %H:%M:%S")
-										})
+													channel_qrcode_id2first_order = get_first_order(channel_qrcode_id, channel_qrcode_id2first_order,order, order_number2finished_at, sale_price,final_price)
+
 	else:
 		channel_qrcode_id2first_order = {}
 		channel_qrcode_id2all_order = {}
@@ -333,3 +299,53 @@ def get_balance_outline(orders, channel_qrcodes, created_at, channel_qrcode_ids,
 	print end - start, "shop_balance_outlinebbbbbbbbbbbbbbbbbbbbbbbbbbbb"
 
 	return balance_outline_info
+
+def get_all_order(channel_qrcode_id, channel_qrcode_id2all_order,order, order_number2finished_at, sale_price, final_price):
+	if not channel_qrcode_id2all_order.has_key(channel_qrcode_id):
+		channel_qrcode_id2all_order[channel_qrcode_id] = [{
+			'order_id': order.id,
+			'finished_at': order_number2finished_at.get(order.order_id,
+			                                            order.created_at).strftime(
+				"%Y-%m-%d %H:%M:%S"),
+			'status_text': STATUS2TEXT[order.status],
+			'sale_price': sale_price,
+			'final_price': final_price,
+			'created_at': order.created_at.strftime("%Y-%m-%d %H:%M:%S")
+		}]
+	else:
+		channel_qrcode_id2all_order[channel_qrcode_id].append({
+			'order_id': order.id,
+			'finished_at': order_number2finished_at.get(order.order_id,
+			                                            order.created_at).strftime(
+				"%Y-%m-%d %H:%M:%S"),
+			'status_text': STATUS2TEXT[order.status],
+			'sale_price': sale_price,
+			'final_price': final_price,
+			'created_at': order.created_at.strftime("%Y-%m-%d %H:%M:%S")
+		})
+	return channel_qrcode_id2all_order
+
+def get_first_order(channel_qrcode_id,channel_qrcode_id2first_order, order, order_number2finished_at, sale_price, final_price):
+	if not channel_qrcode_id2first_order.has_key(channel_qrcode_id):
+		channel_qrcode_id2first_order[channel_qrcode_id] = [{
+			'order_id': order.id,
+			'finished_at': order_number2finished_at.get(order.order_id,
+			                                            order.created_at).strftime(
+				"%Y-%m-%d %H:%M:%S"),
+			'status_text': STATUS2TEXT[order.status],
+			'sale_price': sale_price,
+			'final_price': final_price,
+			'created_at': order.created_at.strftime("%Y-%m-%d %H:%M:%S")
+		}]
+	else:
+		channel_qrcode_id2first_order[channel_qrcode_id].append({
+			'order_id': order.id,
+			'finished_at': order_number2finished_at.get(order.order_id,
+			                                            order.created_at).strftime(
+				"%Y-%m-%d %H:%M:%S"),
+			'status_text': STATUS2TEXT[order.status],
+			'sale_price': sale_price,
+			'final_price': final_price,
+			'created_at': order.created_at.strftime("%Y-%m-%d %H:%M:%S")
+		})
+	return channel_qrcode_id2first_order
