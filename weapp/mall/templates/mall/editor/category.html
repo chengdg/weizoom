@@ -116,7 +116,7 @@
 			var dataView = $('[data-ui-role="advanced-table"]').data('view');
 			var selectedIds = dataView.getAllSelectedDataIds();
 			if(!selectedIds.length){
-				W.showHint('error','请选择至少一个商品');
+				W.showHint('error','请先选择商品！');
 				return;
 			}
 			var mallProductUpdateCategoriesView = W.getMallProductUpdateCategoriesView({

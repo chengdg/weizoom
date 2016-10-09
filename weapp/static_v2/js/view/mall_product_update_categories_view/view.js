@@ -31,7 +31,7 @@ W.view.mall.MallProductUpdateCategoriesView = W.view.common.DropBox.extend({
             return $(el).data('id');
         }).toArray();
         if(!this.isSingleModel && !categoryIds.length){
-            W.showHint('error', "请选择至少一个分类");
+            W.showHint('error', "请至少选择一个分组");
             return;
         }
 
