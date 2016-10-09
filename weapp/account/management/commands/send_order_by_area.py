@@ -55,16 +55,16 @@ class Command(BaseCommand):
 			for c in City.objects.all():
 				orders = Order.objects.filter(webapp_id__in=webapp_ids, origin_order_id__lte=0, status__in=[3,4,5], payment_time__gte= first_datetime, payment_time__lte=datetime.now(), area__startswith="%s_%s_" % (c.province_id, c.id))
 				order_count = orders.count()
-				product_price_sum = orders.aggregate(Sum('product_price'))['product_price__sum'] 
+				product_price_sum = orders.aggregate(Sum('product_price'))['product_price__sum'] if order_count else 0.0
 				#销量
-				number_sum = OrderHasProduct.objects.filter(order__in=orders).aggregate(Sum('number'))['number__sum']
+				number_sum = OrderHasProduct.objects.filter(order__in=orders).aggregate(Sum('number'))['number__sum'] if order_count else 0
 				
 
 				total_orders = Order.objects.filter(webapp_id__in=webapp_ids, origin_order_id__lte=0, status__in=[3,4,5], area__startswith="%s_%s_" % (c.province_id, c.id))
 				total_order_count = total_orders.count()
 				total_product_price_sum = total_orders.aggregate(Sum('product_price'))['product_price__sum'] 
 				total_number_sum = OrderHasProduct.objects.filter(order__in=total_orders).aggregate(Sum('number'))['number__sum']
-				if product_price_sum:
+				if total_order_count:
 					tmp_line += 1
 					tmp_list = [id2provice_names[c.province_id], c.name, order_count, number_sum, round(product_price_sum, 2), total_order_count, total_number_sum, round(total_product_price_sum, 2)]
 					table.write_row('A{}'.format(tmp_line),tmp_list)
