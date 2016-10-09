@@ -145,18 +145,18 @@ class QrcodeMember(api_resource.ApiResource):
 					final_price = webapp_user_id2final_price.get(webapp_user_id, 0)
 					pay_money = webapp_user_id2sale_money.get(webapp_user_id, 0)
 
-			channel_qrcode_id = 0
 			for channel_qrcode_id, member_ids in channel_qrcode_id2member_id.items():
 				if channel_member.id in member_ids:
 					channel_qrcode_id = channel_qrcode_id
-			members.append({
-				"channel_qrcode_id": channel_qrcode_id,
-				"member_name": channel_member.username_for_html,
-				"follow_time": channel_member.created_at.strftime('%Y-%m-%d %H:%M:%S'),
-				"pay_times": member_id2order_count.get(channel_member.id, 0), #member_id2order_count
-				'pay_money': '%.2f' % pay_money,
-				"final_price": '%.2f' % final_price
-			})
+					if str(channel_qrcode_id) in channel_qrcode_ids:
+						members.append({
+							"channel_qrcode_id": channel_qrcode_id,
+							"member_name": channel_member.username_for_html,
+							"follow_time": channel_member.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+							"pay_times": member_id2order_count.get(channel_member.id, 0), #member_id2order_count
+							'pay_money': '%.2f' % pay_money,
+							"final_price": '%.2f' % final_price
+						})
 
 		return {
 			'items': members,
