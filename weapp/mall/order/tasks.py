@@ -510,11 +510,11 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
                     coupon_money = '0'
                     if order.coupon_id:
                         role_id = coupon2role.get(order.coupon_id, None)
-                        if role_id:
+                        if role_id and i == 0:
                             if role_id2role[role_id].limit_product:
                                 if str(relation.product_id) in role_id2role[role_id].limit_product_id.split(','):
                                     coupon_name = role_id2role[role_id].name + "（多品券）"
-                            elif i == 0:
+                            else:
                                 coupon_name = role_id2role[role_id].name + "（通用券）"
                         if not role_id or coupon_name and order.coupon_money > 0:
                             coupon_money = order.coupon_money
