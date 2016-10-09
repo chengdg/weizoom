@@ -70,13 +70,7 @@ Background:
 			}]
 		}]
 		"""
-	When 给供货商选择运费配置
-		"""
-		{
-			"supplier_name": "供货商1",
-			"postage_name": "中通",
-		}
-		"""
+
 	#给供货商2配置两个运费模板-顺丰-只有首重，圆通-包含续重
 	When 给供货商'供货商2'添加运费配置
 		"""
@@ -92,13 +86,7 @@ Background:
 			"first_weight_price": 5.00
 		}]
 		"""
-	When 给供货商选择运费配置
-		"""
-		{
-			"supplier_name": "供货商2",
-			"postage_name": "圆通",
-		}
-		"""
+
 	#商品1和商品2选系统运费，商品3统一运费
 	Given 给自营平台同步商品
 		"""
@@ -180,6 +168,20 @@ Background:
 			"detail": "商品2-2描述信息"
 		}
 		"""
+    When 给供货商选择运费配置
+		"""
+		{
+			"supplier_name": "供货商1",
+			"postage_name": "中通"
+		}
+		"""
+    When 给供货商选择运费配置
+		"""
+		{
+			"supplier_name": "供货商2",
+			"postage_name": "圆通"
+		}
+		"""
 	#自营平台从商品池上架商品
 	Given zy1登录系统
 	When zy1上架商品池商品"商品1-1"
@@ -190,8 +192,8 @@ Background:
 
 	Given bill关注zy1的公众号
 
-
-Scenario:1 在自营购买单个供货商的商品，使用系统运费模板不满足续重
+@eugene @postage
+Scenario:1 在ziying购买单个供货商的商品，使用系统运费模板不满足续重
 
 	When bill访问zy1的webapp::apiserver
 	When bill购买zy1的商品::apiserver
@@ -232,8 +234,8 @@ Scenario:1 在自营购买单个供货商的商品，使用系统运费模板不
 		}
 		"""
 
-
-Scenario:2 在自营购买单个供货商的商品，使用系统运费模板满足续重
+@eugene @postage
+Scenario:2 在ziying购买单个供货商的商品，使用系统运费模板满足续重
 
 	When bill访问zy1的webapp::apiserver
 	When bill购买zy1的商品::apiserver
@@ -274,8 +276,8 @@ Scenario:2 在自营购买单个供货商的商品，使用系统运费模板满
 		}
 		"""
 
-
-Scenario:3 在自营购买单个供货商的商品，使用系统运费模板特殊地区
+@eugene @postage
+Scenario:3 在ziying购买单个供货商的商品，使用系统运费模板特殊地区
 
 	When bill访问zy1的webapp::apiserver
 	When bill购买zy1的商品::apiserver
@@ -316,8 +318,8 @@ Scenario:3 在自营购买单个供货商的商品，使用系统运费模板特
 		}
 		"""
 
-
-Scenario:4 在自营购买单个供货商的商品，使用系统运费模板满足金额包邮条件
+@eugene @postage
+Scenario:4 在ziying购买单个供货商的商品，使用系统运费模板满足金额包邮条件
 
 	When bill访问zy1的webapp::apiserver
 	When bill购买zy1的商品::apiserver
@@ -358,8 +360,8 @@ Scenario:4 在自营购买单个供货商的商品，使用系统运费模板满
 		}
 		"""
 
-
-Scenario:5 在自营购买单个供货商的商品，使用系统运费模板满足件数包邮条件
+@eugene @postage
+Scenario:5 在ziying购买单个供货商的商品，使用系统运费模板满足件数包邮条件
 
 	When bill访问zy1的webapp::apiserver
 	When bill购买zy1的商品::apiserver
@@ -408,8 +410,8 @@ Scenario:5 在自营购买单个供货商的商品，使用系统运费模板满
 		}
 		"""
 
-
-Scenario:6 在自营购买单个供货商的商品，使用系统运费模板和统一运费
+@eugene @postage
+Scenario:6 在ziying购买单个供货商的商品，使用系统运费模板和统一运费
 	1.使用运费模板的商品满足件数包邮条件
 	2.只收取使用统一运费的商品运费
 
@@ -469,8 +471,8 @@ Scenario:6 在自营购买单个供货商的商品，使用系统运费模板和
 		}
 		"""
 
-
-Scenario:7 在自营购买多个供货商的商品，使用系统运费模板和统一运费
+@eugene @postage
+Scenario:7 在ziying购买多个供货商的商品，使用系统运费模板和统一运费
 	1.使用运费模板供货商1的商品满足件数包邮条件，有统一运费
 	2.使用运费模板供货商1的商品没有续重，有统一运费
 
@@ -516,7 +518,7 @@ Scenario:7 在自营购买多个供货商的商品，使用系统运费模板和
 			"status":"待支付",
 			"ship_name": "bill",
 			"ship_tel": "13811223344",
-			"ship_area": "河北省 秦皇岛 昌黎县",
+			"ship_area": "北京市 北京市 海淀区",
 			"ship_address": "泰兴大厦",
 			"products": [{
 				"name":"商品1-1",
@@ -546,22 +548,22 @@ Scenario:7 在自营购买多个供货商的商品，使用系统运费模板和
 		}
 		"""
 
-
-Scenario:8 供货商换运费模板配置在自营购买多个供货商的商品，使用系统运费模板和统一运费
+@eugene @postage
+Scenario:8 供货商换运费模板配置在ziying购买多个供货商的商品，使用系统运费模板和统一运费
 	1.供货商变更运费模板后，在自营平台下单，是按照新的运费模板收取运费
 
 	When 给供货商选择运费配置
 		"""
 		{
 			"supplier_name": "供货商1",
-			"postage_name": "顺丰",
+			"postage_name": "顺丰"
 		}
 		"""
 	When 给供货商选择运费配置
 		"""
 		{
 			"supplier_name": "供货商2",
-			"postage_name": "顺丰",
+			"postage_name": "顺丰"
 		}
 		"""
 	When bill访问zy1的webapp::apiserver
@@ -650,7 +652,7 @@ Scenario:8 供货商换运费模板配置在自营购买多个供货商的商品
 			"postage": 25.00,
 			"status":"待支付",
 			"actions": ["支付","取消订单"],
-			"group":[{
+			"products":[{
 				"name":"商品1-1",
 				"price":50.00,
 				"count":1

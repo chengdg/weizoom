@@ -328,7 +328,7 @@ def __Create_Group(context,text,user):
     design_mode = 0
     version = 1
     text = text
-
+    print text, ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
     name = text.get("group_name","")
 
     cr_start_date = text.get('start_date', u'今天')

@@ -44,7 +44,7 @@ Background:
 		"""
 		{
 			"supplier_name": "供货商1",
-			"postage_name": "顺丰",
+			"postage_name": "顺丰"
 		}
 		"""
 	Given 给自营平台同步商品
@@ -85,7 +85,7 @@ Background:
 	When zy1上架商品池商品"商品2-1"
 	When zy1新建团购活动
 		"""
-		{
+		[{
 			"group_name":"团购1",
 			"start_date":"今天",
 			"end_date":"2天后",
@@ -106,11 +106,11 @@ Background:
 			"product_counts":"100",
 			"material_image":"1.jpg",
 			"share_description":"团购分享描述"
-		}
+		}]
 		"""
 	When zy1新建团购活动
 		"""
-		{
+		[{
 			"group_name":"团购2",
 			"start_date":"今天",
 			"end_date":"3天后",
@@ -131,13 +131,15 @@ Background:
 			"product_counts":"100",
 			"material_image":"1.jpg",
 			"share_description":"团购分享描述"
-		}
+		}]
 		"""
 	When zy1开启团购活动'团购1'
 	When zy1开启团购活动'团购2'
 
 	Given bill关注zy1的公众号
 
+@eugeneTMP
+Scenario:0
 
 Scenario:1 在自营购买团购商品1，商品1使用的是运费模板
 
