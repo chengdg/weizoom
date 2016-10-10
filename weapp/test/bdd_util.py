@@ -329,6 +329,27 @@ def assert_list(expected, actual, options=None):
 			expected_obj, actual_obj = convert_to_same_type(expected_obj, actual_obj)
 			tc.assertEquals(expected_obj, actual_obj)
 
+def ordered(obj): 
+     if isinstance(obj, dict): 
+         return sorted((k, ordered(v)) for k, v in obj.items()) 
+     if isinstance(obj, list): 
+         return sorted(ordered(x) for x in obj) 
+     else: 
+         return obj 
+  
+def assert_list_content(expected, actual, options=None):
+	"""
+	验证无关列表顺序时list内容相等。 
+	"""
+	global tc
+	try:
+		tc.assertEquals(len(expected), len(actual), 'list length DO NOT EQUAL: %d != %d' % (len(expected), len(actual)))
+	except:
+		if options and 'key' in options:
+			print '      Outer Compare Dict Key: ', options['key']
+		raise
+
+	tc.assertEquals(ordered(expected),ordered(actual))
 
 def assert_api_call_success(response):
 	"""
