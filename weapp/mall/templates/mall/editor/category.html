@@ -13,7 +13,7 @@
 			<div class="form-group">
 				<div class="input-group mt20 xui-i-name ">
 					<span class="input-group-addon">分组名称:</span>
-					<input type="text" class="form-control xa-name" maxlength="20" data-validate="require-notempty::不能为空">
+					<input type="text" class="form-control xa-name" maxlength="20" data-validate="require-notempty::不能为空" value="{% if category_name %}{{category_name}}{% endif %}">
 					<div class="errorHint"></div>
 					<span class="input-group-addon">(20字以内)</span>
 				</div>
@@ -107,11 +107,11 @@
 	$(document).ready(function () {
 		var categoryId = "{{category_id}}";
 		var $content = $('.xa-categoryPage');
-		$(document).ajaxSuccess(function (event, jqXHR, ajaxOptions, data) {
-			if (ajaxOptions.type == 'GET' && /api\/category/.test(ajaxOptions.url) && data.success) {
-				$('.xa-name').val(data.data.name);
-			}
-		});
+		// $(document).ajaxSuccess(function (event, jqXHR, ajaxOptions, data) {
+		// 	if (ajaxOptions.type == 'GET' && /api\/category/.test(ajaxOptions.url) && data.success) {
+		// 		$('.xa-name').val(data.data.name);
+		// 	}
+		// });
 		$(document).delegate('.xa-selectAll', 'click', function (event) {
 			var $checkbox = $(event.currentTarget);
 	        var isChecked = $checkbox.is(':checked');

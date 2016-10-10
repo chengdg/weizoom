@@ -384,12 +384,17 @@ class Category(resource.Resource):
         """
         编辑商品分类页面
         """
+        product_categories = mall_models.ProductCategory.objects.filter(
+            owner=request.manager,
+            id=request.GET.get('id')
+        )
         c = RequestContext(request, {
                     'category_id': request.GET.get('id'),
                     'first_nav_name': export.PRODUCT_FIRST_NAV,
                     'second_navs': export.get_mall_product_second_navs(request),
                     'second_nav_name': export.PRODUCT_MANAGE_CATEGORY_NAV,
-                    'has_categories':True}
+                    'has_categories':True,
+                    'category_name':product_categories[0].name}
         )
         return render_to_response('mall/editor/category.html', c)
 
