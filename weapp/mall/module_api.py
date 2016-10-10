@@ -1546,6 +1546,19 @@ def ship_order(order_id, express_company_name,
 	# except:
 	# 	notify_message = u"订单状态为已发货时发邮件失败，order_id:{}，cause:\n{}".format(order_id, unicode_full_stack())
 	# 	watchdog_alert(notify_message)
+	# 给MNS消息队列发消息
+	from bdem import msgutil
+	if not settings.IS_UNDER_BDD and order_id:
+		# BDD时不发消息
+		topic_name = "shiped-order"
+		data = {
+			"name": "ship_order",
+			"data": {
+				"order_id": order_id
+			}
+		}
+		msg_name = "ship_order"
+		msgutil.send_message(topic_name, msg_name, data)
 	return True
 
 
