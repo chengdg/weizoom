@@ -238,7 +238,7 @@ W.dialog.mall.RefundOrderDialog = W.dialog.Dialog.extend({
         subRIs.map(function(subRI){
             limitCash += subRI.cash;
         });
-        limitCash = mainRI.cash - limitCash;
+        limitCash = (mainRI.cash *100 - limitCash*100)/100;
 
         // 计算最多可退微众卡
         var limitCard = 0;
