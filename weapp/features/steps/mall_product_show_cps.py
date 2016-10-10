@@ -199,7 +199,7 @@ def step_impl(context, user):
             actual.append({
                 'name': product['name']
                 })
-    print actual
+    print (actual)
     bdd_util.assert_list(expected, actual)
 
 @Then(u'{user}点击待售商品cps推广商品标签')

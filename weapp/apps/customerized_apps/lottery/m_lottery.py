@@ -2,7 +2,8 @@
 
 from datetime import datetime
 
-from django.http import HttpResponse
+from django.conf import settings
+from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.template.loader import render_to_string
@@ -25,6 +26,19 @@ class Mlottery(resource.Resource):
 		响应GET
 		"""
 		id = request.GET['id']
+		###############重构之后，访问老数据，直接重定向到重构微信抽奖##########
+		try:
+			related_page_id = app_models.lottery.objects.get(id=id).related_page_id
+			m_marketapp_url = 'http://{}/m/apps/lottery/m_lottery/?woid={}&page_id={}&id={}'.format(
+				settings.MARKET_MOBILE_DOMAIN, request.webapp_owner_id, related_page_id, id)
+			return HttpResponseRedirect(m_marketapp_url)
+		except:
+			c = RequestContext(request, {
+				'is_deleted_data': True
+			})
+			return render_to_response('workbench/wepage_webapp_page.html', c)
+		###############################################################
+
 		is_pc = request.GET.get('isPC', None)
 		expend = 0
 		auth_appid_info = None
