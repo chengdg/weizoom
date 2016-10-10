@@ -64,7 +64,7 @@ Background:
         }]
         """
 
-@mall2  @product @group @ProductList  @mall @mall.product_category
+@mall2  @product @group @ProductList  @mall @mall.product_category @djs
 Scenario:1 给未添加商品分组的商品批量添加一个分组
 
     Given jobs登录系统
@@ -113,7 +113,7 @@ Scenario:1 给未添加商品分组的商品批量添加一个分组
         }]
         """
 
-@mall2  @product @group @ProductList  @mall @mall.product_category
+@mall2  @product @group @ProductList  @mall @mall.product_category @djs
 Scenario:2 给未添加商品分组的商品批量添加多个分组
 
     Given jobs登录系统
@@ -146,7 +146,7 @@ Scenario:2 给未添加商品分组的商品批量添加多个分组
         }]
         """
 
-@mall2  @product @group @ProductList  @mall @mall.product_category
+@mall2  @product @group @ProductList  @mall @mall.product_category @djs
 Scenario:3 给已添加商品分组的商品批量添加多个分组
 
     Given jobs登录系统
@@ -179,7 +179,7 @@ Scenario:3 给已添加商品分组的商品批量添加多个分组
         }]
         """
 
-@mall2  @product @group @ProductList  @mall @mall.product_category
+@mall2  @product @group @ProductList  @mall @mall.product_category @djs
 Scenario:4 给全部商品批量添加多个分组
 
     Given jobs登录系统
