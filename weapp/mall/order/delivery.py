@@ -5,6 +5,7 @@ from core.jsonresponse import create_response
 from mall.models import Order, ORDER_STATUS_PAYED_NOT_SHIP
 from market_tools.tools.channel_qrcode.models import *
 import mall.module_api as mall_api
+from django.conf import settings
 from watchdog.utils import watchdog_warning
 from core.exceptionutil import unicode_full_stack
 from core import resource
@@ -126,6 +127,22 @@ class Delivery(resource.Resource):
                                              leader_name=leader_name, is_update_express=is_update_express, is_100=is_100 )
         if is_success:
             response = create_response(200)
+            # MNS消息
+            from bdem import msgutil
+            if not settings.IS_UNDER_BDD and order_id:
+                # BDD时不发消息
+                topic_name = "shiped-order"
+                msg_name = "ship_order"
+                data = {
+                    "order_id": order.order_id,
+                    "express_company_name": express_company_name,
+                    "express_number": express_number,
+                    "action": "ship_order"
+                }
+                if is_update_express:
+                    data['action'] = 'update_ship'
+
+                msgutil.send_message(topic_name, msg_name, data)
         else:
             response = create_response(500)
             if err_msg:
