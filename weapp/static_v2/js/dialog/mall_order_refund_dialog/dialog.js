@@ -245,7 +245,7 @@ W.dialog.mall.RefundOrderDialog = W.dialog.Dialog.extend({
         subRIs.map(function(subRI){
             limitCard += subRI.weizoomCardMoney;
         });
-        limitCard = (mainRI.weizoomCardMoney*100 - limitCard*100)/100;
+        limitCard = ((mainRI.weizoomCardMoney*100 - limitCard*100)/100).toFixed(2);
 
         // 计算必须满足的总退款金额合计，可由优惠券和积分补充，提交前必须满足
         var limitTotal = 0;
