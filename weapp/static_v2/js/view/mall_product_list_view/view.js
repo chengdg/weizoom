@@ -33,6 +33,7 @@ W.view.mall.ProductListView = Backbone.View.extend({
         'click .xa-batchOffshelf': 'onClickBatchUpdateProductShelveTypeLink',
         'click .xa-batchRecycle': 'onClickBatchUpdateProductShelveTypeLink',
         'click .xa-batchDelete': 'onClickBatchUpdateProductShelveTypeLink',
+        'click .xa-batchGroup': 'onClickBatchUpdateProductGroup',
         'click .xa-tab' : 'onClickTab',
         'click .xa-modifyStandardModelStocks': 'onClickModifyStandardModelStocksLink',
         'click .xa-modifyCustomModelStocks': 'onClickModifyCustomModelStocksLink',
@@ -275,7 +276,26 @@ W.view.mall.ProductListView = Backbone.View.extend({
             updateAction();
         }
     },
-
+    onClickBatchUpdateProductGroup: function(event){
+        var selectedIds = this.table.getAllSelectedDataIds();
+        if(selectedIds.length == 0){
+            W.showHint('error', '请先选择商品！');
+            return;
+        }
+        var mallProductUpdateCategoriesView = W.getMallProductUpdateCategoriesView({
+            width: 260,
+            title: '',
+            position: 'top',
+            isTitle: false,
+            privateContainerClass: 'xui-productUpdateCategoriesBox'
+        });
+        mallProductUpdateCategoriesView.show({
+            $action: $(event.currentTarget),
+            productIds: selectedIds,
+            dataView: this.table
+        });
+        mallProductUpdateCategoriesView.render();
+    },
     /**
      * onClickModifyStandardModelStocksLink: 点击修改库存链接的响应函数
      */
