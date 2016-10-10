@@ -16,201 +16,201 @@ Feature: 商品管理-批量添加到分组
 	"""
 
 Background:
-	Given jobs登录系统
-	When jobs添加商品分类
-		"""
-		[{
-			"name": "分类1"
-		}, {
-			"name": "分类2"
-		}, {
-			"name": "分类3"
-		}, {
-			"name": "分类4"
-		}, {
-			"name": "分类5"
-		}, {
-			"name": "分类6"
-		}]
-		"""
-	And jobs已添加支付方式
-		"""
-		[{
-			"type": "货到付款",
-			"is_active": "启用"
-		},{
-			"type": "微信支付",
-			"is_active": "启用"
-		},{
-			"type": "支付宝",
-			"is_active": "启用"
-		}]
-		"""
-	And jobs已添加商品
-		"""
-		[{
-			"name": "商品1",
-			"categories": "分类1,分类2"
-		}, {
-			"name": "商品2",
-			"categories": "分类2,分类3"
-		}, {
-			"name": "商品3",
-			"categories": ""
-		}, {
-			"name": "商品4",
-			"categories": ""
-		}]
-		"""
+    Given jobs登录系统
+    When jobs添加商品分类
+        """
+        [{
+            "name": "分类1"
+        }, {
+            "name": "分类2"
+        }, {
+            "name": "分类3"
+        }, {
+            "name": "分类4"
+        }, {
+            "name": "分类5"
+        }, {
+            "name": "分类6"
+        }]
+        """
+    And jobs已添加支付方式
+        """
+        [{
+            "type": "货到付款",
+            "is_active": "启用"
+        },{
+            "type": "微信支付",
+            "is_active": "启用"
+        },{
+            "type": "支付宝",
+            "is_active": "启用"
+        }]
+        """
+    And jobs已添加商品
+        """
+        [{
+            "name": "商品1",
+            "categories": "分类1,分类2"
+        }, {
+            "name": "商品2",
+            "categories": "分类2,分类3"
+        }, {
+            "name": "商品3",
+            "categories": ""
+        }, {
+            "name": "商品4",
+            "categories": ""
+        }]
+        """
 
-
+@my1
 Scenario:1 给未添加商品分组的商品批量添加一个分组
 
-	Given jobs登录系统
-	Then jobs能获得'在售'商品列表
-		"""
-		[{
-			"name": "商品1",
-			"categories": ["分类1", "分类2"]
-		}, {
-			"name": "商品2",
-			"categories": ["分类2", "分类3"]
-		}, {
-			"name": "商品3",
-			"categories": []
-		}, {
-			"name": "商品4",
-			"categories": []
-		}]
-		"""
-	When jobs选择商品
-		"""
-		[{
-			"name": "商品3",
-		}, {
-			"name": "商品4",
-		}]
-		"""
-	When jobs批量添加商品分组
-		"""
-		["分类4"]
-		"""
-	Then jobs能获得'在售'商品列表
-		"""
-		[{
-			"name": "商品1",
-			"categories": ["分类1", "分类2"]
-		}, {
-			"name": "商品2",
-			"categories": ["分类2", "分类3"]
-		}, {
-			"name": "商品3",
-			"categories": ["分类4"]
-		}, {
-			"name": "商品4",
-			"categories": ["分类4"]
-		}]
-		"""
+    Given jobs登录系统
+    Then jobs能够获得'在售'商品列表
+        """
+        [{
+            "name": "商品1",
+            "categories": ["分类1", "分类2"]
+        },{
+            "name": "商品2",
+            "categories": ["分类2", "分类3"]
+        },{
+            "name": "商品3",
+            "categories": []
+        },{
+            "name": "商品4",
+            "categories": []
+        }]
+        """
+    When jobs选择商品
+        """
+        [{
+            "name": "商品3"
+        },{
+            "name": "商品4"
+        }]
+        """
+    When jobs批量添加商品分组
+        """
+        ["分类4"]
+        """
+    Then jobs能够获得'在售'商品列表
+        """
+        [{
+            "name": "商品1",
+            "categories": ["分类1", "分类2"]
+        }, {
+            "name": "商品2",
+            "categories": ["分类2", "分类3"]
+        }, {
+            "name": "商品3",
+            "categories": ["分类4"]
+        }, {
+            "name": "商品4",
+            "categories": ["分类4"]
+        }]
+        """
 
-
+@my2
 Scenario:2 给未添加商品分组的商品批量添加多个分组
 
-	Given jobs登录系统
-	When jobs选择商品
-		"""
-		[{
-			"name": "商品3",
-		}, {
-			"name": "商品4",
-		}]
-		"""
-	When jobs批量添加商品分组
-		"""
-		["分类4", "分类5", "分类6"]
-		"""
-	Then jobs能获得'在售'商品列表
-		"""
-		[{
-			"name": "商品1",
-			"categories": ["分类1", "分类2"]
-		}, {
-			"name": "商品2",
-			"categories": ["分类2", "分类3"]
-		}, {
-			"name": "商品3",
-			"categories": ["分类4", "分类5", "分类6"]
-		}, {
-			"name": "商品4",
-			"categories": ["分类4", "分类5", "分类6"]
-		}]
-		"""
+    Given jobs登录系统
+    When jobs选择商品
+        """
+        [{
+            "name": "商品3"
+        }, {
+            "name": "商品4"
+        }]
+        """
+    When jobs批量添加商品分组
+        """
+        ["分类4", "分类5", "分类6"]
+        """
+    Then jobs能够获得'在售'商品列表
+        """
+        [{
+            "name": "商品1",
+            "categories": ["分类1", "分类2"]
+        }, {
+            "name": "商品2",
+            "categories": ["分类2", "分类3"]
+        }, {
+            "name": "商品3",
+            "categories": ["分类4", "分类5", "分类6"]
+        }, {
+            "name": "商品4",
+            "categories": ["分类4", "分类5", "分类6"]
+        }]
+        """
 
-
+@my3
 Scenario:3 给已添加商品分组的商品批量添加多个分组
 
-	Given jobs登录系统
-	When jobs选择商品
-		"""
-		[{
-			"name": "商品1",
-		}, {
-			"name": "商品2",
-		}]
-		"""
-	When jobs批量添加商品分组
-		"""
-		["分类4", "分类5", "分类6"]
-		"""
-	Then jobs能获得'在售'商品列表
-		"""
-		[{
-			"name": "商品1",
-			"categories": ["分类1", "分类2", "分类4", "分类5", "分类6"]
-		}, {
-			"name": "商品2",
-			"categories": ["分类2", "分类3", "分类4", "分类5", "分类6"]
-		}, {
-			"name": "商品3",
-			"categories": []
-		}, {
-			"name": "商品4",
-			"categories": []
-		}]
-		"""
+    Given jobs登录系统
+    When jobs选择商品
+        """
+        [{
+            "name": "商品1"
+        }, {
+            "name": "商品2"
+        }]
+        """
+    When jobs批量添加商品分组
+        """
+        ["分类4", "分类5", "分类6"]
+        """
+    Then jobs能够获得'在售'商品列表
+        """
+        [{
+            "name": "商品1",
+            "categories": ["分类1", "分类2", "分类4", "分类5", "分类6"]
+        }, {
+            "name": "商品2",
+            "categories": ["分类2", "分类3", "分类4", "分类5", "分类6"]
+        }, {
+            "name": "商品3",
+            "categories": []
+        }, {
+            "name": "商品4",
+            "categories": []
+        }]
+        """
 
-
+@my4
 Scenario:4 给全部商品批量添加多个分组
 
-	Given jobs登录系统
-	When jobs选择商品
-		"""
-		[{
-			"name": "商品1",
-		}, {
-			"name": "商品2",
-		}, {
-			"name": "商品3",
-		}, {
-			"name": "商品4",
-		}]
-		"""
-	When jobs批量添加商品分组
-		"""
-		["分类1", "分类2", "分类3"]
-		"""
-	Then jobs能获得'在售'商品列表
-		"""
-		[{
-			"name": "商品1",
-			"categories": ["分类1", "分类2", "分类3"]
-		}, {
-			"name": "商品2",
-			"categories": ["分类1", "分类2", "分类3"]
-		}, {
-			"name": "商品3",
-			"categories": ["分类1", "分类2", "分类3"]
-		}, {
-			"name": "商品4",
-			"categories": ["分类1", "分类2", "分类3"]
-		}]
-		"""
+    Given jobs登录系统
+    When jobs选择商品
+        """
+        [{
+            "name": "商品1"
+        }, {
+            "name": "商品2"
+        }, {
+            "name": "商品3"
+        }, {
+            "name": "商品4"
+        }]
+        """
+    When jobs批量添加商品分组
+        """
+        ["分类1", "分类2", "分类3"]
+        """
+    Then jobs能够获得'在售'商品列表
+        """
+        [{
+            "name": "商品1",
+            "categories": ["分类1", "分类2", "分类3"]
+        }, {
+            "name": "商品2",
+            "categories": [ "分类2", "分类3","分类1"]
+        }, {
+            "name": "商品3",
+            "categories": ["分类1", "分类2", "分类3"]
+        }, {
+            "name": "商品4",
+            "categories": ["分类1", "分类2", "分类3"]
+        }]
+        """
