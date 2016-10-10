@@ -8,24 +8,26 @@
 		<li><a href="/mall2/category_list/">分组管理</a></li>
 		<li class="active">编辑分组</li>
 	</ul>
-	<form>
-		<div class="form-group">
-			<div class="input-group mt20 xui-i-name ">
-				<span class="input-group-addon">分组名称:</span>
-				<input type="text" class="form-control xa-name" maxlength="20" data-validate="require-notempty::不能为空">
-				<div class="errorHint"></div>
-				<span class="input-group-addon">(20字以内)</span>
+	<div class="panel panel-default xb-rightPanel">
+		<form>
+			<div class="form-group">
+				<div class="input-group mt20 xui-i-name ">
+					<span class="input-group-addon">分组名称:</span>
+					<input type="text" class="form-control xa-name" maxlength="20" data-validate="require-notempty::不能为空">
+					<div class="errorHint"></div>
+					<span class="input-group-addon">(20字以内)</span>
+				</div>
 			</div>
+		</form>
+	</div>
+	<div class="panel panel-default mt20 xb-rightPanel">
+		<div class="panel-heading ">
+			<label for="topSelectAll" class="xui-selectAll">
+				<input type="checkbox" id="topSelectAll" class="xa-selectAll">全选
+			</label>
+			<a href="javascript:void(0);" class="btn btn-default ml10 xa-batchModify">批量修改</a>
+			<a class="btn xui-fontBold xa-editCategory btn-success fr" href="javascript:void(0);">+ 添加</a>
 		</div>
-	</form>
-
-{#	<div class="panel panel-default mt20 xb-rightPanel">#}
-{#		<div class="panel-heading ">#}
-{#			<label for="topSelectAll" class="xui-selectAll ml15">#}
-{#				<input type="checkbox" id="topSelectAll" class="xa-selectAll">全选#}
-{#			</label>#}
-{#			<a href="javascript:void(0);" class="btn btn-default ml10 xa-batchOffshelf">批量修改</a>#}
-{#		</div>#}
 		<div id="categories-list-view"
 			 data-ui-role="advanced-table"
 			 data-app="mall2"
@@ -33,10 +35,11 @@
 			 data-selectable="true"
 			 data-args='{"category_id":"{{ category_id }}"}'
 			 data-template-id="#category-view"
+			 data-disable-header-select="true"
+			 data-outer-selecter='.xa-selectAll'
 			 data-enable-paginator="false"></div>
 		<div class="xui-btn-group text-center">
-			<a class="btn btn-default xui-fontBold xa-editCategory" href="javascript:void(0);">添加</a>
-			<a class="btn btn-primary mr40  xui-fontBold xa-save" href="javascript:void(0);">保存</a>
+			<a class="btn btn-primary mt20 mb20 xui-fontBold xa-save" href="javascript:void(0);">保存</a>
 		</div>
 	</div>
 
@@ -45,10 +48,10 @@
 {% block js %}
 {% verbatim %}
 <script id="category-view" type="text/x-jquery-tmpl">
-	<table class="table  mt20 ">
+	<table class="table mt10 ">
 		<thead>
 			<tr>
-				<th width="215" class="xui-i-product-name"><span class="xui-i-selectAll-text">全选</span>商品名称</th>
+				<th width="215" class="xui-i-product-name">商品名称</th>
 				<th >所属分组</th>
 				<th width="80">商品价格（元）</th>
 				<th width="80">状态</th>
@@ -57,7 +60,6 @@
 				<th width="110">加入分组时间</th>
 
 				<th width="42">操作</th>
-				<th width="55"><a href="javascript:void(0)" class="xa-batchModify">批量修改</a></th>
 			</tr>
 		</thead>
 		<tbody>
@@ -95,7 +97,6 @@
 				<td width="75">${product.sales}</td>
 				<td width="110">${product.join_category_time}</td>
 				<td width="42"><a class="xa-deleteProductFromCategory" href="javascript:void(0);">删除</a></td>
-				<td width="55"></td>
 			</tr>
 			{{/each}}
 		</tbody>
@@ -111,18 +112,24 @@
 				$('.xa-name').val(data.data.name);
 			}
 		});
+		$(document).delegate('.xa-selectAll', 'click', function (event) {
+			var $checkbox = $(event.currentTarget);
+	        var isChecked = $checkbox.is(':checked');
+	        $('tbody .xa-select').prop('checked', isChecked);
+	        $('.xa-selectAll').prop('checked', isChecked);
+		});
 		$(document).delegate('.xa-batchModify', 'click', function (event) {
 			var $el = $(event.currentTarget);
 			var dataView = $('[data-ui-role="advanced-table"]').data('view');
 			var selectedIds = dataView.getAllSelectedDataIds();
 			if(!selectedIds.length){
-				W.showHint('error','请选择至少一个商品');
+				W.showHint('error','请先选择商品！');
 				return;
 			}
 			var mallProductUpdateCategoriesView = W.getMallProductUpdateCategoriesView({
 				width: 260,
 				title: '',
-				position: 'top',
+				position: 'down-left',
 				isTitle: false,
 				privateContainerClass: 'xui-productUpdateCategoriesBox'
 			});
