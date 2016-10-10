@@ -238,14 +238,14 @@ W.dialog.mall.RefundOrderDialog = W.dialog.Dialog.extend({
         subRIs.map(function(subRI){
             limitCash += subRI.cash;
         });
-        limitCash = (mainRI.cash *100 - limitCash*100)/100;
+        limitCash = ((mainRI.cash*100 - limitCash*100)/100).toFixed(2);
 
         // 计算最多可退微众卡
         var limitCard = 0;
         subRIs.map(function(subRI){
             limitCard += subRI.weizoomCardMoney;
         });
-        limitCard = mainRI.weizoomCardMoney - limitCard;
+        limitCard = (mainRI.weizoomCardMoney*100 - limitCard*100)/100;
 
         // 计算必须满足的总退款金额合计，可由优惠券和积分补充，提交前必须满足
         var limitTotal = 0;
@@ -259,7 +259,7 @@ W.dialog.mall.RefundOrderDialog = W.dialog.Dialog.extend({
         } else if (target.cash && target.cash*1 > 0 && target.cash*1 > limitCash) {
             // 金额部分不能大于 “可退部分”
             if (target.cash > 0) {
-                tipCash = "最多可退" + limitCash.toFixed(2) + "元";
+                tipCash = "最多可退" + limitCash + "元";
             } else {
                 tipCash = "无可退金额";
             }
