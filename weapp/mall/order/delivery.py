@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import time
 from core.jsonresponse import create_response
 from mall.models import Order, ORDER_STATUS_PAYED_NOT_SHIP
 from market_tools.tools.channel_qrcode.models import *
@@ -20,6 +21,7 @@ class BulkShipment(resource.Resource):
     @login_required
     def api_post(request):
         response = create_response(200)
+        time.sleep(1)
         file_url = request.POST.get('file_url', '')
         # 读取文件
         json_data, error_rows = _read_file(file_url[1:])
