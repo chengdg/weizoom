@@ -129,19 +129,29 @@ class QrcodeMember(api_resource.ApiResource):
 		for channel_qrcode_id,member_ids in channel_qrcode_id2member_id.items():
 			if str(channel_qrcode_id) in channel_qrcode_ids:
 				for member_id in member_ids:
-					member = member_id2member[member_id]
-					member_info = channel_qrcode_id2member.get(channel_qrcode_id)
-					if member_info:
-						info = member_info.get(member_id)
-						if info:
-							members.append({
-								"channel_qrcode_id": channel_qrcode_id,
-								"member_name": member_id2member[member_id].username_for_html,
-								"follow_time": member_id2member[member_id].created_at.strftime('%Y-%m-%d %H:%M:%S'),
-								"pay_times": info["order_count"],
-								'pay_money': '%.2f' % info["sale_money"],
-								"final_price": '%.2f' % info["final_price"]
-							})
+					member = member_id2member.get(member_id)
+					if member:
+						member_info = channel_qrcode_id2member.get(channel_qrcode_id)
+						if member_info:
+							info = member_info.get(member_id)
+							if info:
+								members.append({
+									"channel_qrcode_id": channel_qrcode_id,
+									"member_name": member_id2member[member_id].username_for_html,
+									"follow_time": member_id2member[member_id].created_at.strftime('%Y-%m-%d %H:%M:%S'),
+									"pay_times": info["order_count"],
+									'pay_money': '%.2f' % info["sale_money"],
+									"final_price": '%.2f' % info["final_price"]
+								})
+							else:
+								members.append({
+									"channel_qrcode_id": channel_qrcode_id,
+									"member_name": member.username_for_html,
+									"follow_time": member.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+									"pay_times": 0,
+									'pay_money': '%.2f' % 0,
+									"final_price": '%.2f' % 0
+								})
 						else:
 							members.append({
 								"channel_qrcode_id": channel_qrcode_id,
@@ -151,15 +161,6 @@ class QrcodeMember(api_resource.ApiResource):
 								'pay_money': '%.2f' % 0,
 								"final_price": '%.2f' % 0
 							})
-					else:
-						members.append({
-							"channel_qrcode_id": channel_qrcode_id,
-							"member_name": member.username_for_html,
-							"follow_time": member.created_at.strftime('%Y-%m-%d %H:%M:%S'),
-							"pay_times": 0,
-							'pay_money': '%.2f' % 0,
-							"final_price": '%.2f' % 0
-						})
 
 		return {
 			'items': members,
