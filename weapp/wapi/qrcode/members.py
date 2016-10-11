@@ -29,6 +29,7 @@ class QrcodeMember(api_resource.ApiResource):
 		filter_data_args = {
 			"channel_qrcode_id__in": channel_qrcode_ids
 		}
+		settings_filter_args = {}
 
 		member_name = args.get('member_name', None)
 		start_date = args.get('start_date', None)
@@ -39,6 +40,7 @@ class QrcodeMember(api_resource.ApiResource):
 			for member in members:
 				member_ids.append(member.id)
 			filter_data_args["member_id__in"] = member_ids
+			settings_filter_args["bing_member_id__in"] = member_ids
 
 		if start_date and end_date:
 			start_time = start_date + ' 00:00:00'
@@ -48,25 +50,32 @@ class QrcodeMember(api_resource.ApiResource):
 			for member in members:
 				member_ids.append(member.id)
 			filter_data_args["member_id__in"] = member_ids
+			settings_filter_args["bing_member_id__in"] = member_ids
 
 
 		channel_members = ChannelQrcodeHasMember.objects.filter(**filter_data_args).order_by('-created_at')
-		total_member_ids = set()
+		total_member_ids = []
 		q_has_member_ids = []
+		channel_qrcode_id2q_has_member_ids = {}
 		channel_qrcode_id2member_id = {}
 		for member_log in channel_members:
+			if not channel_qrcode_id2q_has_member_ids.has_key(member_log.channel_qrcode_id):
+				channel_qrcode_id2q_has_member_ids[member_log.channel_qrcode_id] = [member_log.member_id]
+			else:
+				channel_qrcode_id2q_has_member_ids[member_log.channel_qrcode_id].append(member_log.member_id)
 			q_has_member_ids.append(member_log.member_id)
-			total_member_ids.add(member_log.member_id)
+			total_member_ids.append(member_log.member_id)
 			if not channel_qrcode_id2member_id.has_key(member_log.channel_qrcode_id):
 				channel_qrcode_id2member_id[member_log.channel_qrcode_id] = [member_log.member_id]
 			else:
 				channel_qrcode_id2member_id[member_log.channel_qrcode_id].append(member_log.member_id)
 
-		q_settings = ChannelQrcodeSettings.objects.filter(Q(id__in=channel_qrcode_ids)|Q(bing_member_id__in=total_member_ids))
+		q_settings = ChannelQrcodeSettings.objects.filter(**settings_filter_args).filter(Q(id__in=channel_qrcode_ids)|Q(bing_member_id__in=total_member_ids))
 		q_member_id2created_at = {}
 		for qs in q_settings:
 			if qs.is_bing_member:
-				total_member_ids.add(qs.bing_member_id)
+				if str(qs.id) in channel_qrcode_ids:
+					total_member_ids.append(qs.bing_member_id)
 				if not channel_qrcode_id2member_id.has_key(qs.id):
 					channel_qrcode_id2member_id[qs.id] = [qs.bing_member_id]
 				else:
@@ -76,7 +85,6 @@ class QrcodeMember(api_resource.ApiResource):
 		#处理分页
 		count_per_page = int(args.get('count_per_page', '20'))
 		cur_page = int(args.get('cur_page', '1'))
-		total_member_ids = list(total_member_ids)
 		pageinfo, total_member_ids = paginator.paginate(total_member_ids, cur_page, count_per_page)
 
 
@@ -88,77 +96,95 @@ class QrcodeMember(api_resource.ApiResource):
 		else:
 			orders = []
 
-		webapp_user_id2final_price = {}
-		webapp_user_id2sale_money = {}
 		final_price = 0
-		member_id2order_count = {}
+		channel_qrcode_id2member = {}
 		for order in orders:
 			member_id = webapp_user_id2member_id[order.webapp_user_id]
 			created_at = q_member_id2created_at.get(member_id)
-			flag = False
-			if created_at:
-				if member_id in q_has_member_ids:
-					if order.created_at.strftime('%Y-%m-%d %H:%M:%S') < created_at:
-						for channel_qrcode_id, member_ids in channel_qrcode_id2member_id.items():
+			final_price += order.final_price
+			sale_price = order.final_price + order.coupon_money + order.integral_money + order.weizoom_card_money + order.promotion_saved_money + order.edit_money
+			if member_id in q_has_member_ids:
+				for channel_qrcode_id, member_ids in channel_qrcode_id2member_id.items():
+					q_member_ids = channel_qrcode_id2q_has_member_ids.get(channel_qrcode_id)
+					if q_member_ids:
+						if order.created_at.strftime('%Y-%m-%d %H:%M:%S') < created_at:
 							if member_id in member_ids:
 								if channel_qrcode_id2user_created_at.get(str(channel_qrcode_id)):
 									if channel_qrcode_id2user_created_at.get(str(channel_qrcode_id)) <= order.created_at.strftime('%Y-%m-%d %H:%M:%S'):
-										flag = True
-				else:
-					if order.created_at.strftime('%Y-%m-%d %H:%M:%S') >= created_at:
-						for channel_qrcode_id, member_ids in channel_qrcode_id2member_id.items():
-							if channel_qrcode_id2user_created_at.get(str(channel_qrcode_id)):
-								if member_id in member_ids:
-									if channel_qrcode_id2user_created_at.get(str(channel_qrcode_id)) <= order.created_at.strftime('%Y-%m-%d %H:%M:%S'):
-										flag = True
+										channel_qrcode_id2member = get_member(member_id, channel_qrcode_id, channel_qrcode_id2member, final_price,sale_price)
+					else:
+						if order.created_at.strftime('%Y-%m-%d %H:%M:%S') >= created_at:
+							if member_id in member_ids:
+								channel_qrcode_id2member = get_member(member_id, channel_qrcode_id, channel_qrcode_id2member, final_price, sale_price)
 			else:
 				for channel_qrcode_id, member_ids in channel_qrcode_id2member_id.items():
 					if member_id in member_ids:
 						if channel_qrcode_id2user_created_at.get(str(channel_qrcode_id)):
-							if order.created_at.strftime('%Y-%m-%d %H:%M:%S') >=channel_qrcode_id2user_created_at.get(str(channel_qrcode_id)):
-								flag = True
-			if flag:
-				if not member_id2order_count.has_key(member_id):
-					member_id2order_count[member_id] = 1
-				else:
-					member_id2order_count[member_id] += 1
-				final_price += order.final_price
-				if not webapp_user_id2final_price.has_key(order.webapp_user_id):
-					webapp_user_id2final_price[order.webapp_user_id] = order.final_price
-				else:
-					webapp_user_id2final_price[order.webapp_user_id] += order.final_price
+							if order.created_at.strftime('%Y-%m-%d %H:%M:%S') >= channel_qrcode_id2user_created_at.get(str(channel_qrcode_id)):
+								if order.created_at.strftime('%Y-%m-%d %H:%M:%S') >= created_at:
+									channel_qrcode_id2member = get_member(member_id, channel_qrcode_id, channel_qrcode_id2member, final_price, sale_price)
 
-				sale_price = order.final_price + order.coupon_money + order.integral_money + order.weizoom_card_money + order.promotion_saved_money + order.edit_money
-				if not webapp_user_id2sale_money.has_key(order.webapp_user_id):
-					webapp_user_id2sale_money[order.webapp_user_id] = sale_price
-				else:
-					webapp_user_id2sale_money[order.webapp_user_id] += sale_price
-
-
-		channel_members = Member.objects.filter(id__in=total_member_ids).order_by('-created_at')
 		members = []
-		for channel_member in channel_members:
-			final_price = 0
-			pay_money = 0
-			for webapp_user_id,member_id in webapp_user_id2member_id.items():
-				if member_id == channel_member.id:
-					final_price = webapp_user_id2final_price.get(webapp_user_id, 0)
-					pay_money = webapp_user_id2sale_money.get(webapp_user_id, 0)
-
-			for channel_qrcode_id, member_ids in channel_qrcode_id2member_id.items():
-				if channel_member.id in member_ids:
-					channel_qrcode_id = channel_qrcode_id
-					if str(channel_qrcode_id) in channel_qrcode_ids:
+		member_id2member = {m.id: m for m in Member.objects.filter(id__in=total_member_ids).order_by('-created_at')}
+		for channel_qrcode_id,member_ids in channel_qrcode_id2member_id.items():
+			if str(channel_qrcode_id) in channel_qrcode_ids:
+				for member_id in member_ids:
+					member = member_id2member[member_id]
+					member_info = channel_qrcode_id2member.get(channel_qrcode_id)
+					if member_info:
+						info = member_info.get(member_id)
+						if info:
+							members.append({
+								"channel_qrcode_id": channel_qrcode_id,
+								"member_name": member_id2member[member_id].username_for_html,
+								"follow_time": member_id2member[member_id].created_at.strftime('%Y-%m-%d %H:%M:%S'),
+								"pay_times": info["order_count"],
+								'pay_money': '%.2f' % info["sale_money"],
+								"final_price": '%.2f' % info["final_price"]
+							})
+						else:
+							members.append({
+								"channel_qrcode_id": channel_qrcode_id,
+								"member_name": member.username_for_html,
+								"follow_time": member.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+								"pay_times": 0,
+								'pay_money': '%.2f' % 0,
+								"final_price": '%.2f' % 0
+							})
+					else:
 						members.append({
 							"channel_qrcode_id": channel_qrcode_id,
-							"member_name": channel_member.username_for_html,
-							"follow_time": channel_member.created_at.strftime('%Y-%m-%d %H:%M:%S'),
-							"pay_times": member_id2order_count.get(channel_member.id, 0), #member_id2order_count
-							'pay_money': '%.2f' % pay_money,
-							"final_price": '%.2f' % final_price
+							"member_name": member.username_for_html,
+							"follow_time": member.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+							"pay_times": 0,
+							'pay_money': '%.2f' % 0,
+							"final_price": '%.2f' % 0
 						})
 
 		return {
 			'items': members,
 			'pageinfo': paginator.to_dict(pageinfo) if pageinfo else ''
 		}
+
+def get_member(member_id,channel_qrcode_id,channel_qrcode_id2member, final_price, sale_price):
+	if not channel_qrcode_id2member.has_key(channel_qrcode_id):
+		channel_qrcode_id2member[channel_qrcode_id] = {
+			member_id: {
+				"order_count": 1,
+				"final_price": final_price,
+				"sale_money": sale_price
+			}
+		}
+	else:
+		member = channel_qrcode_id2member[channel_qrcode_id]
+		if not member.has_key(member_id):
+			member[member_id] = {
+				"order_count": 1,
+				"final_price": final_price,
+				"sale_money": sale_price
+			}
+		else:
+			member[member_id]["order_count"] += 1
+			member[member_id]["final_price"] += final_price
+			member[member_id]["sale_money"] += sale_price
+	return channel_qrcode_id2member

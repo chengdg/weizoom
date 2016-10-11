@@ -45,7 +45,12 @@ class QrcodeOrder(api_resource.ApiResource):
 		channel_qrcode_id2member_id = {}
 		member_ids = []
 		q_has_member_ids = []
+		channel_qrcode_id2q_has_member_ids = {}
 		for member_log in channel_members:
+			if not channel_qrcode_id2q_has_member_ids.has_key(member_log.channel_qrcode_id):
+				channel_qrcode_id2q_has_member_ids[member_log.channel_qrcode_id] = [member_log.member_id]
+			else:
+				channel_qrcode_id2q_has_member_ids[member_log.channel_qrcode_id].append(member_log.member_id)
 			q_has_member_ids.append(member_log.member_id)
 			member_ids.append(member_log.member_id)
 			if not channel_qrcode_id2member_id.has_key(member_log.channel_qrcode_id):
@@ -69,7 +74,6 @@ class QrcodeOrder(api_resource.ApiResource):
 				channel_qrcode_id2bing_member_id[qs.id] = qs.bing_member_id
 
 
-		# webapp_user_ids = [webappuser.id for webappuser in WebAppUser.objects.filter(member_id__in=member_ids)]
 		weapp_user_id2member_id = {wu.id: wu.member_id for wu in WebAppUser.objects.filter(member_id__in=member_ids)}
 
 
@@ -101,33 +105,31 @@ class QrcodeOrder(api_resource.ApiResource):
 		for order in channel_orders:
 			member_id = weapp_user_id2member_id[order.webapp_user_id]
 			created_at = q_member_id2created_at.get(member_id)
-			flag = False
-			if created_at:
-				if member_id in q_has_member_ids:
-					for channel_qrcode_id, member_ids in channel_qrcode_id2member_id.items():
-						if member_id in member_ids:
-							if channel_qrcode_id2user_created_at.get(str(channel_qrcode_id)):
-								if channel_qrcode_id2user_created_at.get(str(channel_qrcode_id)) <= order.created_at.strftime('%Y-%m-%d %H:%M:%S'):
-									if channel_qrcode_id2bing_member_id.get(channel_qrcode_id) and order.created_at.strftime('%Y-%m-%d %H:%M:%S') <= created_at:
-										flag = True
-									if shop_id == '-1':
-										if order.created_at.strftime('%Y-%m-%d %H:%M:%S') > created_at:
-											flag = True
-				else:
-					for channel_qrcode_id, member_ids in channel_qrcode_id2member_id.items():
-						if channel_qrcode_id2user_created_at.get(str(channel_qrcode_id)):
-							if member_id in member_ids:
-								if channel_qrcode_id2user_created_at.get(str(channel_qrcode_id)) <= order.created_at.strftime('%Y-%m-%d %H:%M:%S'):
-									flag = True
+			if member_id in q_has_member_ids:
+				for channel_qrcode_id, member_ids in channel_qrcode_id2member_id.items():
+					if str(channel_qrcode_id) in channel_qrcode_ids:
+						q_member_ids = channel_qrcode_id2q_has_member_ids.get(channel_qrcode_id)
+						if q_member_ids:
+							if order.created_at.strftime('%Y-%m-%d %H:%M:%S') < created_at:
+								if member_id in member_ids:
+									if channel_qrcode_id2user_created_at.get(str(channel_qrcode_id)):
+										if channel_qrcode_id2user_created_at.get(str(channel_qrcode_id)) <= order.created_at.strftime('%Y-%m-%d %H:%M:%S'):
+											order.channel_qrcode_id = channel_qrcode_id
+											curr_orders.append(order)
+						else:
+							if order.created_at.strftime('%Y-%m-%d %H:%M:%S') >= created_at:
+								if member_id in member_ids:
+									order.channel_qrcode_id = channel_qrcode_id
+									curr_orders.append(order)
 			else:
 				for channel_qrcode_id, member_ids in channel_qrcode_id2member_id.items():
-					if member_id in member_ids:
-						if channel_qrcode_id2user_created_at.get(str(channel_qrcode_id)):
-							if order.created_at.strftime('%Y-%m-%d %H:%M:%S') >=channel_qrcode_id2user_created_at.get(str(channel_qrcode_id)):
-								flag = True
-			if flag:
-				curr_orders.append(order)
-
+					if str(channel_qrcode_id) in channel_qrcode_ids:
+						if member_id in member_ids:
+							if channel_qrcode_id2user_created_at.get(str(channel_qrcode_id)):
+								if order.created_at.strftime('%Y-%m-%d %H:%M:%S') >= channel_qrcode_id2user_created_at.get(str(channel_qrcode_id)):
+									if order.created_at.strftime('%Y-%m-%d %H:%M:%S') >= created_at:
+										order.channel_qrcode_id = channel_qrcode_id
+										curr_orders.append(order)
 		is_export = int(args.get('is_export', 0))
 		if not is_export:
 			#处理分页
@@ -139,7 +141,6 @@ class QrcodeOrder(api_resource.ApiResource):
 		order_ids = []
 		for channel in curr_orders:
 			order_ids.append(channel.id)
-
 
 
 		#子单的信息
@@ -204,45 +205,41 @@ class QrcodeOrder(api_resource.ApiResource):
 
 		orders = []
 		for channel_order in curr_orders:
-			member_id = weapp_user_id2member_id.get(channel_order.webapp_user_id)
-			member = None
-			if member_id:
-				member = member_id2relations.get(member_id)
-			order_ids = order_id2origin_order_id.get(channel_order.id, [])
-			products = []
-			for o_id in order_ids:
-				order_products = order_id2products.get(o_id, [])
-				for order_product in order_products:
-					products.append(order_product)
-			sale_price = channel_order.final_price + channel_order.coupon_money + channel_order.integral_money + channel_order.weizoom_card_money + channel_order.promotion_saved_money + channel_order.edit_money
-			final_price = channel_order.final_price
-			if member:
-				try:
-					name = member.username.decode('utf8')
-				except:
-					name = member.username_hexstr
-			else:
-				name = u'未知'
-			channel_qrcode_id = 0
-			for qrcode_id, member_ids in channel_qrcode_id2member_id.items():
-				if member_id in member_ids:
-					channel_qrcode_id = qrcode_id
-			orders.append({
-				"channel_qrcode_id": channel_qrcode_id,
-				"order_id": channel_order.id,
-				"order_number": channel_order.order_id,
-				"is_first_order": channel_order.is_first_order,
-				"member_name": member.username_for_html if member else u'未知',
-				"member_name_for_export": name,
-				"products": products,
-				"sale_price": u'%.2f' % sale_price,  #销售额
-				"sale_money": sale_price,  # 销售额
-				"price": final_price,  # 支付金额
-				"status_text": STATUS2TEXT[channel_order.status],
-				"created_at": channel_order.created_at.strftime('%Y-%m-%d %H:%M:%S'),
-				"update_at": channel_order.update_at.strftime('%Y-%m-%d %H:%M:%S'),
-				"final_price": u'%.2f' % final_price
-			})
+				member_id = weapp_user_id2member_id.get(channel_order.webapp_user_id)
+				member = None
+				if member_id:
+					member = member_id2relations.get(member_id)
+				order_ids = order_id2origin_order_id.get(channel_order.id, [])
+				products = []
+				for o_id in order_ids:
+					order_products = order_id2products.get(o_id, [])
+					for order_product in order_products:
+						products.append(order_product)
+				sale_price = channel_order.final_price + channel_order.coupon_money + channel_order.integral_money + channel_order.weizoom_card_money + channel_order.promotion_saved_money + channel_order.edit_money
+				final_price = channel_order.final_price
+				if member:
+					try:
+						name = member.username.decode('utf8')
+					except:
+						name = member.username_hexstr
+				else:
+					name = u'未知'
+				orders.append({
+					"channel_qrcode_id": channel_order.channel_qrcode_id,
+					"order_id": channel_order.id,
+					"order_number": channel_order.order_id,
+					"is_first_order": channel_order.is_first_order,
+					"member_name": member.username_for_html if member else u'未知',
+					"member_name_for_export": name,
+					"products": products,
+					"sale_price": u'%.2f' % sale_price,  # 销售额
+					"sale_money": sale_price,  # 销售额
+					"price": final_price,  # 支付金额
+					"status_text": STATUS2TEXT[channel_order.status],
+					"created_at": channel_order.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+					"update_at": channel_order.update_at.strftime('%Y-%m-%d %H:%M:%S'),
+					"final_price": u'%.2f' % final_price
+				})
 		end = time.time()
 		print end - start, "bbbbbbbbbbbbbbbbb"
 
