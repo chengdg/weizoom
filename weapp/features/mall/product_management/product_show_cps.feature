@@ -48,7 +48,7 @@ Scenario:1 商品池中显示所有商品同时标识出cps商品。
             {
                 "is_cps": 1,
                 "name": "__虚拟商品1",
-                "promote_money": 10,
+                "promote_money": 10.00,
                 "promote_stock": 11,
                 "promote_time_to": "2017/02/14 21:32",
                 "promote_time_from": "2014/02/14 21:32"
@@ -59,7 +59,7 @@ Scenario:1 商品池中显示所有商品同时标识出cps商品。
             {
                 "is_cps": 1,
                 "name": "__虚拟商品5",
-                "promote_money": 1000,
+                "promote_money": 1000.00,
                 "promote_stock": 13,
                 "promote_time_to": "2017/02/14 21:32",
                 "promote_time_from": "2014/02/14 21:32"
@@ -72,7 +72,7 @@ Scenario:1 商品池中显示所有商品同时标识出cps商品。
             {
                 "is_cps": 1,
                 "name": "__虚拟商品1",
-                "promote_money": 10,
+                "promote_money": 10.00,
                 "promote_stock": 11,
                 "promote_time_to": "2017/02/14 21:32",
                 "promote_time_from": "2014/02/14 21:32"
@@ -80,7 +80,7 @@ Scenario:1 商品池中显示所有商品同时标识出cps商品。
             {
                 "is_cps": 1,
                 "name": "__虚拟商品5",
-                "promote_money": 1000,
+                "promote_money": 1000.00,
                 "promote_stock": 13,
                 "promote_time_to": "2017/02/14 21:32",
                 "promote_time_from": "2014/02/14 21:32"
@@ -99,7 +99,7 @@ Scenario:1 商品池中显示所有商品同时标识出cps商品。
             {
                 "is_cps": 1,
                 "name": "__虚拟商品5",
-                "promote_money": 1000,
+                "promote_money": 1000.00,
                 "promote_stock": 13,
                 "promote_time_to": "2017/02/14 21:32",
                 "promote_time_from": "2014/02/14 21:32"
@@ -112,7 +112,7 @@ Scenario:1 商品池中显示所有商品同时标识出cps商品。
             {
                 "is_cps": 1,
                 "name": "__虚拟商品5",
-                "promote_money": 1000,
+                "promote_money": 1000.00,
                 "promote_stock": 13,
                 "promote_time_to": "2017/02/14 21:32",
                 "promote_time_from": "2014/02/14 21:32"
@@ -125,7 +125,7 @@ Scenario:1 商品池中显示所有商品同时标识出cps商品。
             {
                 "is_cps": 1,
                 "name": "__虚拟商品3",
-                "promote_money": 100,
+                "promote_money": 100.00,
                 "promote_stock": 12,
                 "promote_time_to": "2017/02/14 21:32",
                 "promote_time_from": "2014/02/14 21:32"
@@ -136,7 +136,7 @@ Scenario:1 商品池中显示所有商品同时标识出cps商品。
             {
                 "is_cps": 1,
                 "name": "__虚拟商品1",
-                "promote_money": 10,
+                "promote_money": 10.00,
                 "promote_stock": 11,
                 "promote_time_to": "2017/02/14 21:32",
                 "promote_time_from": "2014/02/14 21:32"
@@ -149,14 +149,14 @@ Scenario:1 商品池中显示所有商品同时标识出cps商品。
             {
                 "is_cps": 1,
                 "name": "__虚拟商品3",
-                "promote_money": 100,
+                "promote_money": 100.00,
                 "promote_stock": 12,
                 "promote_time_to": "2017/02/14 21:32",
                 "promote_time_from": "2014/02/14 21:32"
             },{
                 "is_cps": 1,
                 "name": "__虚拟商品1",
-                "promote_money": 10,
+                "promote_money": 10.00,
                 "promote_stock": 11,
                 "promote_time_to": "2017/02/14 21:32",
                 "promote_time_from": "2014/02/14 21:32"
