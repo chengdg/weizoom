@@ -1111,6 +1111,12 @@ button.xui-close{
 	left: 76px;
     top: -3px;
 }
+/*付费推广商品提示*/
+.xui-productsPoolPage .xui-noticyTip,
+.xui-productsPage .xui-noticyTip{
+	left: 93px;
+    top: -3px;
+}
 .xui-header .xui-headerActionBar .xui-noticyTip{
 	-moz-transform: scale(.8);
 	-webkit-transform: scale(.8);
