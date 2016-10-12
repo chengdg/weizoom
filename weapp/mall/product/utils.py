@@ -583,3 +583,10 @@ def get_product_ids_by_classification(first_classification, secondary_classifica
         product_id__in=product_ids,
         status=pool_status).values_list('product_id', flat=True)
     return product_ids
+
+def get_new_promote_product_count(request):
+    new_promote_product_count = 0
+    if request.user_profile.webapp_type:
+        new_promote_product_count = models.PromoteDetail.objects.filter(promote_status=models.PROMOTING,
+                                                                        is_new=True).count()
+    return new_promote_product_count

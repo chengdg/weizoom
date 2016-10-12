@@ -59,14 +59,12 @@ class ProductList(resource.Resource):
         shelve_type = int(shelve_type_get if shelve_type_get.isdigit() else 1)
         if mall_type:
             has_product = models.Product.objects.belong_to(mall_type, request.manager, shelve_type).count() > 0
-            new_promote_product_count = models.PromoteDetail.objects.filter(promote_status=models.PROMOTING, is_new=True).count()
         else:
             has_product = models.Product.objects.filter(
                 owner=request.manager,
                 shelve_type=shelve_type,
                 is_deleted=False
             ).exists()
-            new_promote_product_count = 0
         #获取未完成的任务
         woid = request.webapp_owner_id
         export_jobs = ExportJob.objects.filter(woid=woid,type=4,is_download=0).order_by("-id")
@@ -94,8 +92,7 @@ class ProductList(resource.Resource):
              'has_product': has_product,
              'high_stocks': request.GET.get('high_stocks', '-1'),
              'mall_type': mall_type,
-             'export2data': export2data,
-             'new_promote_product_count': new_promote_product_count
+             'export2data': export2data
              }
         )
         if shelve_type == models.PRODUCT_SHELVE_TYPE_ON:
@@ -615,14 +612,12 @@ class ProductPool(resource.Resource):
     def get(request):
         # 商城的类型
         mall_type = request.user_profile.webapp_type
-        new_promote_product_count = models.PromoteDetail.objects.filter(promote_status=models.PROMOTING,
-                                                                        is_new=True).count()
+
         c = RequestContext(request, {
             'first_nav_name': export.PRODUCT_FIRST_NAV,
             'second_navs': export.get_mall_product_second_navs(request),
             'second_nav_name': export.PRODUCT_ADD_PRODUCT_NAV,
-            'mall_type': mall_type,
-            'new_promote_product_count': new_promote_product_count
+            'mall_type': mall_type
         })
         return render_to_response('mall/editor/product_pool.html', c)
 
