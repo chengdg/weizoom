@@ -92,7 +92,7 @@ class ProductList(resource.Resource):
              'has_product': has_product,
              'high_stocks': request.GET.get('high_stocks', '-1'),
              'mall_type': mall_type,
-             'export2data':export2data
+             'export2data': export2data
              }
         )
         if shelve_type == models.PRODUCT_SHELVE_TYPE_ON:
@@ -230,7 +230,7 @@ class ProductList(resource.Resource):
         cps_products_id = models.PromoteDetail.objects.filter(promote_status=1).values_list('product_id',flat=True)
         if is_request_cps:
             products = products.filter(id__in=cps_products_id)
-
+            models.PromoteDetail.objects.filter(promote_status=models.PROMOTING, is_new=True).update(is_new=False)
         if mall_type:
                 current_product_filters = utils.MALL_PRODUCT_FILTERS
         else:
@@ -612,11 +612,12 @@ class ProductPool(resource.Resource):
     def get(request):
         # 商城的类型
         mall_type = request.user_profile.webapp_type
+
         c = RequestContext(request, {
             'first_nav_name': export.PRODUCT_FIRST_NAV,
             'second_navs': export.get_mall_product_second_navs(request),
             'second_nav_name': export.PRODUCT_ADD_PRODUCT_NAV,
-            'mall_type': mall_type,
+            'mall_type': mall_type
         })
         return render_to_response('mall/editor/product_pool.html', c)
 
@@ -668,10 +669,10 @@ class ProductPool(resource.Resource):
         if product_name and products:
             products = products.filter(name__contains=product_name)
 
-        cps_products_id = models.PromoteDetail.objects.filter(promote_status=1).values_list('product_id',flat=True)
+        cps_products_id = models.PromoteDetail.objects.filter(promote_status=1).values_list('product_id', flat=True)
         if is_request_cps:
             products = products.filter(id__in=cps_products_id)
-
+            models.PromoteDetail.objects.filter(promote_status=models.PROMOTING, is_new=True).update(is_new=False)
         #now_product_ids = []
         #for product in products:
         #    now_product_ids.append(product.id)
