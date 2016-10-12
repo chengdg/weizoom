@@ -193,6 +193,24 @@
 			showLoading: false,
 			args:{},
 			success: function (data) {
+				//CPS更新提示
+				if(data.new_promote_product_count){
+					var new_promote_product_count = data.new_promote_product_count;
+					var cpsProductTipItem = $('.xa-cpsProductTip');
+					if(new_promote_product_count>0){
+						cpsProductTipItem.show();
+						if(new_promote_product_count>99){
+							cpsProductTipItem.text(99);
+						}
+						else{
+							cpsProductTipItem.text(new_promote_product_count);
+						}
+					}
+					else{
+						cpsProductTipItem.hide();
+						cpsProductTipItem.text(0);
+					}
+				}
 				//待发货订单计数
 				var unship_order_count = data.unship_order_count;
 				var orderTipItem = $('.xa-orderTip');
