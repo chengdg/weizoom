@@ -3128,6 +3128,7 @@ class PromoteDetail(models.Model): #推广明细
 	promote_time_to = models.DateTimeField(default=datetime.now()) #结束时间
 	promote_sale_count = models.IntegerField(default=0) #推广销量
 	promote_total_money = models.FloatField(default=0) #推广费用总费用
+	is_new = models.BooleanField(default=True) #是否已读
 	created_at = models.DateTimeField(auto_now_add=True) #创建时间
 	
 	class Meta(object):
