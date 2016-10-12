@@ -230,7 +230,7 @@ class ProductList(resource.Resource):
         cps_products_id = models.PromoteDetail.objects.filter(promote_status=1).values_list('product_id',flat=True)
         if is_request_cps:
             products = products.filter(id__in=cps_products_id)
-            models.PromoteDetail.objects.filter(promote_status=models.PROMOTING, is_new=True).update(is_new=False)
+            models.PromoteDetail.objects.filter(promote_status=models.PROMOTING, is_new=True, product_id__in=cps_products_id).update(is_new=False)
         if mall_type:
                 current_product_filters = utils.MALL_PRODUCT_FILTERS
         else:
@@ -672,7 +672,7 @@ class ProductPool(resource.Resource):
         cps_products_id = models.PromoteDetail.objects.filter(promote_status=1).values_list('product_id', flat=True)
         if is_request_cps:
             products = products.filter(id__in=cps_products_id)
-            models.PromoteDetail.objects.filter(promote_status=models.PROMOTING, is_new=True).update(is_new=False)
+            models.PromoteDetail.objects.filter(promote_status=models.PROMOTING, is_new=True, product_id__in=cps_products_id).update(is_new=False)
         #now_product_ids = []
         #for product in products:
         #    now_product_ids.append(product.id)
