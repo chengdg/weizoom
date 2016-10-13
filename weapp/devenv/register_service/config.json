@@ -1,0 +1,41 @@
+{
+	"server_name": "dev.weapp.com",
+	"hosts": [],
+	"locations": [{
+		"path": "/static",
+		"operator": "root",
+		"dir": "."
+	}, {
+		"path": "/custom_static",
+		"operator": "root",
+		"dir": "./templates/custom/"
+	}, {
+		"path": "/standard_static/",
+		"operator": "alias",
+		"dir": "./static/"
+	}, {
+		"path": "/landing_static/",
+		"operator": "alias",
+		"dir": "./static/landing/"
+	}, {
+		"path": "/termite_static/upload/",
+		"operator": "alias",
+		"dir": "./static/upload/"
+	}, {
+		"path": "/termite_static/head_images/",
+		"operator": "alias",
+		"dir": "./static/head_images/"
+	}, {
+		"path": "/termite_static/",
+		"operator": "alias",
+		"dir": "./termite/static/"
+	}, {
+		"path": "/markettools_static/",
+		"operator": "alias",
+		"dir": "./market_tools/tools/"
+	}, {
+		"path": "/webapp_static/",
+		"operator": "alias",
+		"dir": "./modules/static/"
+	}]
+}
