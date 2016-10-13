@@ -138,7 +138,8 @@ class ProductList(resource.Resource):
         end_date = request.GET.get('endDate', '')
         is_request_cps = request.GET.get('is_cps','')
         current_user_id = User.objects.get(username=request.user).id
-        wtype = UserProfile.objects.get(user_id=current_user_id).webapp_type
+        #wtype = UserProfile.objects.get(user_id=current_user_id).webapp_type
+        wtype = request.manager.get_profile().webapp_type
         product_pool_param = {}
         #print '00000000000000000000000000000000',request.manager.id
         if mall_type:
@@ -633,7 +634,8 @@ class ProductPool(resource.Resource):
         #status = request.GET.get('status', '-1')
         is_request_cps = request.GET.get('is_cps','')
         current_user_id = User.objects.get(username=request.user).id
-        wtype = UserProfile.objects.get(user_id=current_user_id).webapp_type
+        #wtype = UserProfile.objects.get(user_id=current_user_id).webapp_type
+        wtype = request.manager.get_profile().webapp_type
         manager_user_profile = UserProfile.objects.filter(webapp_type=2)[0]
         # 根据分类来筛选
         if first_classification > 0:

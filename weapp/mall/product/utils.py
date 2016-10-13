@@ -586,7 +586,9 @@ def get_product_ids_by_classification(first_classification, secondary_classifica
 
 def get_new_promote_product_count(request):
     new_promote_product_count = 0
-    if request.user_profile.webapp_type:
+    manager_id = request.manager.id
+    manager_profile = UserProfile.objects.get(user_id=manager_id)
+    if manager_profile.webapp_type:
         promote_detail_models = models.PromoteDetail.objects.filter(promote_status=models.PROMOTING,
                                                                     is_new=True)
         product_ids = promote_detail_models.values_list('product_id', flat=True)
