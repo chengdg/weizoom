@@ -56,11 +56,16 @@ class Outline(resource.Resource):
 		from mall.order.util import get_unship_order_count
 		unship_order_count = get_unship_order_count(request)
 
+		from mall.product.utils import get_new_promote_product_count
+		new_promote_product_count = get_new_promote_product_count(request)
+
 		try:
 			response = create_response(200)
 			response.data = {
 				'unread_realtime_count': unread_message_count,
-				'unship_order_count': unship_order_count
+				'unship_order_count': unship_order_count,
+				'new_promote_product_count': new_promote_product_count,
+				'HTTP_REFERER': request.META['HTTP_REFERER']
 			}
 			#watchdog_debug("response.data={}".format(response.data))
 		except:

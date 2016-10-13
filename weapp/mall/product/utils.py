@@ -583,3 +583,25 @@ def get_product_ids_by_classification(first_classification, secondary_classifica
         product_id__in=product_ids,
         status=pool_status).values_list('product_id', flat=True)
     return product_ids
+
+def get_new_promote_product_count(request):
+    new_promote_product_count = 0
+    if request.user_profile.webapp_type:
+        promote_detail_models = models.PromoteDetail.objects.filter(promote_status=models.PROMOTING,
+                                                                    is_new=True)
+        product_ids = promote_detail_models.values_list('product_id', flat=True)
+        if 'product_pool' in request.META['HTTP_REFERER']:
+            product_status = models.PP_STATUS_ON_POOL
+        elif '/mall2/product_list/?shelve_type=1' in request.META['HTTP_REFERER']:
+            product_status = models.PP_STATUS_ON
+        elif '/mall2/product_list/?shelve_type=0' in request.META['HTTP_REFERER']:
+            product_status = models.PP_STATUS_OFF
+        else:
+            return new_promote_product_count
+        ids = models.ProductPool.objects.filter(
+            woid=request.user.id,
+            product_id__in=product_ids,
+            status=product_status
+        ).values_list('product_id', flat=True)
+        new_promote_product_count = promote_detail_models.filter(product_id__in=ids).count()
+    return new_promote_product_count

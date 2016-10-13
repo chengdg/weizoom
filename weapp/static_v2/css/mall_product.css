@@ -1805,7 +1805,7 @@
 }
 .xui-productsPoolPage table#productListTable tbody tr.xui-cps td:first-child::before,
 .xui-productsPage table#productListTable tbody tr.xui-cps td:first-child::before{
-	content:"CPS";
+	content:"推广";
 	display: block;
 	position: absolute;
 	width: 39px;
@@ -1817,6 +1817,7 @@
 	left: -4px;
     top: 2px;
     z-index: 1;
+    font-family: "Microsoft Yahei";
 }
 .xui-productsPoolPage table#productListTable tbody tr.xui-cps td:first-child::after,
 .xui-productsPage table#productListTable tbody tr.xui-cps td:first-child::after{
