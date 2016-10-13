@@ -1,4 +1,4 @@
-etcdctl set /service/weapp/service1 "127.0.0.1:8000"
+etcdctl set /service/weapp/service1 "127.0.0.1:6080"
 etcdctl set /extra/weapp/location1 "location /static { root /home/weizoom/microservice/launcher/Weapp/weapp/; }"
 etcdctl set /extra/weapp/location2 "location /custom_static { root /home/weizoom/microservice/launcher/Weapp/weapp/templates/custom/; }"
 etcdctl set /extra/weapp/location3 "location /standard_static/ { alias /home/weizoom/microservice/launcher/Weapp/weapp/static/; }"

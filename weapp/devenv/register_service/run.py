@@ -46,8 +46,11 @@ def load_config_from_json_file():
 	locations = []
 	if 'locations' in config:
 		for location in config['locations']:
-			root = os.path.abspath(os.path.join(base_dir, location['root']))
-			locations.append("location %s { root %s; }" % (location['path'], root))
+			operator = location['operator']
+			dir = os.path.abspath(os.path.join(base_dir, location['dir']))
+			if not dir.endswith('/'):
+				dir = dir + '/'
+			locations.append("location %s { %s %s; }" % (location['path'], operator, dir))
 
 	config['locations'] = locations
 
@@ -120,11 +123,10 @@ def do_register():
 	client.set(key, json.dumps(config))
 
 def register():
-	do_register()
-	#if '_IS_WEIZOOM_DEV_VM' in os.environ:
-	#	do_register()
-	#else:
-	#	print 'not in weizoom dev vm, do nothing'
+	if '_IS_WEIZOOM_DEV_VM' in os.environ:
+		do_register()
+	else:
+		print 'not in weizoom dev vm, do nothing'
 
 def check_server_exists(domain_name, port):
 	sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
