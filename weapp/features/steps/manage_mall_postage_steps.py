@@ -10,6 +10,7 @@ from django.test.client import Client
 from tools.regional.models import Province
 
 from steps_db_util import get_postage_config
+from mall.models import PostageConfig, Supplier, Product
 
 @when(u"{user}添加邮费配置")
 def create_postage(context, user):
@@ -135,3 +136,34 @@ def __get_special_area_for_config(postage_config):
             })
     else:
         postage_config.special_area = []
+
+@when(u"给供货商'{supplier_name}'添加运费配置")
+def step_impl(context, supplier_name):
+    """
+    临时使用直接写库的方式实现添加数据，panda的代码写好之后再修改
+    """
+    postage_data = json.loads(context.text)
+    supplier = Supplier.objects.get(name=supplier_name)
+    for postage in postage_data:
+        data = __get_post_data_postage(postage)
+        response = context.client.post('/mall2/api/postage/?_method=put', data)
+        bdd_util.assert_api_call_success(response)
+        postage_config = list(PostageConfig.objects.all())[-1]
+        PostageConfig.objects.filter(owner_id=postage_config.owner_id).update(is_used=True)
+        postage_config.owner_id = supplier.owner_id
+        postage_config.supplier_id = supplier.id
+        postage_config.is_used = False
+        postage_config.save()
+
+@when(u"给供货商选择运费配置")
+def set_impl(context):
+    """
+    临时使用直接写库的方式实现添加数据，panda的代码写好之后再修改
+    """
+    data = json.loads(context.text)
+    supplier_name = data['supplier_name']
+    postage_name = data['postage_name']
+    supplier_id = Supplier.objects.get(name=supplier_name).id
+    PostageConfig.objects.filter(supplier_id=supplier_id).update(is_used=False)
+    PostageConfig.objects.filter(name=postage_name, supplier_id=supplier_id).update(is_used=True)
+    Product.objects.filter(supplier=supplier_id, unified_postage_money=0).update(postage_id=0, postage_type='custom_postage_type')

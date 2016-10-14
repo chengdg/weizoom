@@ -79,6 +79,12 @@ def step_impl(context):
             'resource': 'mall.product_pool',
             'data': account_params
         })
+
+        if context.get('postage') != u'系统' and context.get('postage') > 0:
+            product = list(Product.objects.all())[-1]
+            product.unified_postage_money = context.get('postage')
+            product.save()
+
         if account_resp and account_resp.get('code') == 200:
             assert True
         else:
