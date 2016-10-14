@@ -2347,6 +2347,18 @@ def update_order_status(user, action, order, request=None):
 			# 发短信
 			from mall.order.tasks import send_message_chargeback_to_customer
 			send_message_chargeback_to_customer.delay(order.order_id)
+			from bdem import msgutil
+			if not settings.IS_UNDER_BDD and order_id:
+				# BDD时不发消息
+				topic_name = "order-close"
+				data = {
+					"name": "cancel_group_order_and_notify_pay",
+					"data": {
+						"order_ids": [order_id]
+					}
+				}
+				msg_name = "cancel_order"
+				msgutil.send_message(topic_name, msg_name, data)
 		elif 'pay' == action:
 			payment_time = datetime.now()
 			Order.objects.filter(id=order_id).update(status=target_status, payment_time=payment_time)
