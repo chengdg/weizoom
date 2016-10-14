@@ -1229,7 +1229,7 @@ class Product(resource.Resource):
                     pay_interface)
 
         # 确定运费配置(对应表: mall_postage_config)
-        if mall_type and product:
+        if mall_type == 1 and product:
             system_postage_configs = models.PostageConfig.objects.filter(
                 supplier_id=product.supplier, is_used=True)
         else:
