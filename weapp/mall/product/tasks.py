@@ -262,8 +262,8 @@ def send_product_export_job_task(self, exportjob_id, filter_data_args, type):
                     if not store_name:
                         store_name = supplier_ids2name[product.supplier] if product.supplier and supplier_ids2name.has_key(product.supplier) else product_id2store_name.get(product.id, "")
                         is_sync = product_id2store_name.has_key(product.id)
-                    product_sales = models.OrderHasProduct.objects.filter(product_id=product.id, order__status__in=sales_order_status, order__origin_order_id__lte=0, order__webapp_id=webapp_id).aggregate(Sum('number'))['number__sum']
-                    product_sales_money = models.OrderHasProduct.objects.filter(product_id=product.id, order__status__in=sales_order_status, order__origin_order_id__lte=0, order__webapp_id=webapp_id).aggregate(Sum('total_price'))['total_price__sum']
+                    product_sales = models.OrderHasProduct.objects.filter(product_id=product.id, order__status__in=sales_order_status, order__origin_order_id__gte=0, order__webapp_id=webapp_id).aggregate(Sum('number'))['number__sum']
+                    product_sales_money = models.OrderHasProduct.objects.filter(product_id=product.id, order__status__in=sales_order_status, order__origin_order_id__gte=0, order__webapp_id=webapp_id).aggregate(Sum('total_price'))['total_price__sum']
                     if not product_sales:
                         product_sales = 0
                     if not product_sales_money:
