@@ -360,12 +360,14 @@ DEFAULT_APPS_THIRD_NAVS = [
         'title': u"刮刮卡",
         'url': '/apps/scratch/scratches/',
         'permission': ''
-    }, {
-        'name': MALL_APPS_LOTTERY_NAV,
-        'title': u"微信抽奖",
-        'url': '/apps/lottery/lotteries/',
-        'permission': ''
-    },{
+    },
+    # {
+    #     'name': MALL_APPS_LOTTERY_NAV,
+    #     'title': u"微信抽奖",
+    #     'url': '/apps/lottery/lotteries/',
+    #     'permission': ''
+    # },
+    {
         'name': MALL_APPS_EXLOTTERY_NAV,
         'title': u"幸运码抽奖",
         'url': '/apps/exlottery/exlotteries/',
