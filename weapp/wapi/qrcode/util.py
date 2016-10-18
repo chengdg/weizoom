@@ -113,38 +113,53 @@ def get_balance(channel_qrcode_ids, balance_time_from, args, order_status, is_fi
 				for channel_qrcode_id, member_ids in channel_qrcode_id2member_id.items():
 					if str(channel_qrcode_id) in channel_qrcode_ids:
 						q_member_ids = channel_qrcode_id2q_has_member_ids.get(channel_qrcode_id)
-						if q_member_ids:
-							if channel_order.created_at.strftime('%Y-%m-%d %H:%M:%S') < q_created_at:
-								if member_id in member_ids:
-									if created_at:
-										if created_at <= channel_order.created_at.strftime('%Y-%m-%d %H:%M:%S'):
-											orders.append({
-												"order_id": channel_order.id,
-												"order_number": channel_order.order_id,
-												"is_first_order": channel_order.is_first_order,
-												"status_text": STATUS2TEXT[channel_order.status],
-												"sale_price": sale_price,  # 销售额
-												"finished_at": order_number2finished_at.get(channel_order.order_id,
-												                                            channel_order.update_at).strftime(
-													'%Y-%m-%d %H:%M:%S'),
-												"final_price": final_price,
-												"created_at": channel_order.created_at.strftime('%Y-%m-%d %H:%M:%S'),
-											})
+						if q_created_at:
+							if q_member_ids:
+								if channel_order.created_at.strftime('%Y-%m-%d %H:%M:%S') < q_created_at:
+									if member_id in member_ids:
+										if created_at:
+											if created_at <= channel_order.created_at.strftime('%Y-%m-%d %H:%M:%S'):
+												orders.append({
+													"order_id": channel_order.id,
+													"order_number": channel_order.order_id,
+													"is_first_order": channel_order.is_first_order,
+													"status_text": STATUS2TEXT[channel_order.status],
+													"sale_price": sale_price,  # 销售额
+													"finished_at": order_number2finished_at.get(channel_order.order_id,
+													                                            channel_order.update_at).strftime(
+														'%Y-%m-%d %H:%M:%S'),
+													"final_price": final_price,
+													"created_at": channel_order.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+												})
+							else:
+								if channel_order.created_at.strftime('%Y-%m-%d %H:%M:%S') >= q_created_at:
+									if member_id in member_ids:
+										orders.append({
+											"order_id": channel_order.id,
+											"order_number": channel_order.order_id,
+											"is_first_order": channel_order.is_first_order,
+											"status_text": STATUS2TEXT[channel_order.status],
+											"sale_price": sale_price,  # 销售额
+											"finished_at": order_number2finished_at.get(channel_order.order_id,
+											                                            channel_order.update_at).strftime(
+												'%Y-%m-%d %H:%M:%S'),
+											"final_price": final_price,
+											"created_at": channel_order.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+										})
 						else:
-							if channel_order.created_at.strftime('%Y-%m-%d %H:%M:%S') >= q_created_at:
-								if member_id in member_ids:
-									orders.append({
-										"order_id": channel_order.id,
-										"order_number": channel_order.order_id,
-										"is_first_order": channel_order.is_first_order,
-										"status_text": STATUS2TEXT[channel_order.status],
-										"sale_price": sale_price,  # 销售额
-										"finished_at": order_number2finished_at.get(channel_order.order_id,
-										                                            channel_order.update_at).strftime(
-											'%Y-%m-%d %H:%M:%S'),
-										"final_price": final_price,
-										"created_at": channel_order.created_at.strftime('%Y-%m-%d %H:%M:%S'),
-									})
+							if channel_order.created_at.strftime('%Y-%m-%d %H:%M:%S') >= created_at:
+								orders.append({
+									"order_id": channel_order.id,
+									"order_number": channel_order.order_id,
+									"is_first_order": channel_order.is_first_order,
+									"status_text": STATUS2TEXT[channel_order.status],
+									"sale_price": sale_price,  # 销售额
+									"finished_at": order_number2finished_at.get(channel_order.order_id,
+									                                            channel_order.update_at).strftime(
+										'%Y-%m-%d %H:%M:%S'),
+									"final_price": final_price,
+									"created_at": channel_order.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+								})
 			else:
 				for channel_qrcode_id, member_ids in channel_qrcode_id2member_id.items():
 					if str(channel_qrcode_id) in channel_qrcode_ids:

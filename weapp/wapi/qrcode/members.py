@@ -106,20 +106,25 @@ class QrcodeMember(api_resource.ApiResource):
 			if member_id in q_has_member_ids:
 				for channel_qrcode_id, member_ids in channel_qrcode_id2member_id.items():
 					q_member_ids = channel_qrcode_id2q_has_member_ids.get(channel_qrcode_id)
-					if q_member_ids:
-						if order.created_at.strftime('%Y-%m-%d %H:%M:%S') < created_at:
-							if member_id in member_ids:
-								if channel_qrcode_id2user_created_at.get(str(channel_qrcode_id)):
-									if channel_qrcode_id2user_created_at.get(str(channel_qrcode_id)) <= order.created_at.strftime('%Y-%m-%d %H:%M:%S'):
-										channel_qrcode_id2member = get_member(member_id, channel_qrcode_id, channel_qrcode_id2member, final_price,sale_price)
+					if created_at:
+						if q_member_ids:
+							if order.created_at.strftime('%Y-%m-%d %H:%M:%S') < created_at:
+								if member_id in member_ids:
+									if channel_qrcode_id2user_created_at.get(str(channel_qrcode_id)):
+										if channel_qrcode_id2user_created_at.get(str(channel_qrcode_id)) <= order.created_at.strftime('%Y-%m-%d %H:%M:%S'):
+											channel_qrcode_id2member = get_member(member_id, channel_qrcode_id, channel_qrcode_id2member, final_price,sale_price)
+						else:
+							if order.created_at.strftime('%Y-%m-%d %H:%M:%S') >= created_at:
+								if member_id in member_ids:
+									channel_qrcode_id2member = get_member(member_id, channel_qrcode_id, channel_qrcode_id2member, final_price, sale_price)
 					else:
-						if order.created_at.strftime('%Y-%m-%d %H:%M:%S') >= created_at:
-							if member_id in member_ids:
-								channel_qrcode_id2member = get_member(member_id, channel_qrcode_id, channel_qrcode_id2member, final_price, sale_price)
+						if order.created_at.strftime('%Y-%m-%d %H:%M:%S') >= channel_qrcode_id2user_created_at.get(str(channel_qrcode_id)):
+							channel_qrcode_id2member = get_member(member_id, channel_qrcode_id, channel_qrcode_id2member, final_price, sale_price)
 			else:
 				for channel_qrcode_id, member_ids in channel_qrcode_id2member_id.items():
 					if member_id in member_ids:
 						if channel_qrcode_id2user_created_at.get(str(channel_qrcode_id)):
+							print order.webapp_user_id, order.created_at.strftime('%Y-%m-%d %H:%M:%S'), channel_qrcode_id2user_created_at.get(str(channel_qrcode_id)),"ddddddddddddddddddddd"
 							if order.created_at.strftime('%Y-%m-%d %H:%M:%S') >= channel_qrcode_id2user_created_at.get(str(channel_qrcode_id)):
 								if order.created_at.strftime('%Y-%m-%d %H:%M:%S') >= created_at:
 									channel_qrcode_id2member = get_member(member_id, channel_qrcode_id, channel_qrcode_id2member, final_price, sale_price)

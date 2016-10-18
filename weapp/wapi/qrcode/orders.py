@@ -109,18 +109,23 @@ class QrcodeOrder(api_resource.ApiResource):
 				for channel_qrcode_id, member_ids in channel_qrcode_id2member_id.items():
 					if str(channel_qrcode_id) in channel_qrcode_ids:
 						q_member_ids = channel_qrcode_id2q_has_member_ids.get(channel_qrcode_id)
-						if q_member_ids:
-							if order.created_at.strftime('%Y-%m-%d %H:%M:%S') < created_at:
-								if member_id in member_ids:
-									if channel_qrcode_id2user_created_at.get(str(channel_qrcode_id)):
-										if channel_qrcode_id2user_created_at.get(str(channel_qrcode_id)) <= order.created_at.strftime('%Y-%m-%d %H:%M:%S'):
-											order.channel_qrcode_id = channel_qrcode_id
-											curr_orders.append(order)
+						if created_at:
+							if q_member_ids:
+								if order.created_at.strftime('%Y-%m-%d %H:%M:%S') < created_at:
+									if member_id in member_ids:
+										if channel_qrcode_id2user_created_at.get(str(channel_qrcode_id)):
+											if channel_qrcode_id2user_created_at.get(str(channel_qrcode_id)) <= order.created_at.strftime('%Y-%m-%d %H:%M:%S'):
+												order.channel_qrcode_id = channel_qrcode_id
+												curr_orders.append(order)
+							else:
+								if order.created_at.strftime('%Y-%m-%d %H:%M:%S') >= created_at:
+									if member_id in member_ids:
+										order.channel_qrcode_id = channel_qrcode_id
+										curr_orders.append(order)
 						else:
-							if order.created_at.strftime('%Y-%m-%d %H:%M:%S') >= created_at:
-								if member_id in member_ids:
-									order.channel_qrcode_id = channel_qrcode_id
-									curr_orders.append(order)
+							if order.created_at.strftime('%Y-%m-%d %H:%M:%S') >= channel_qrcode_id2user_created_at.get(str(channel_qrcode_id)):
+								order.channel_qrcode_id = channel_qrcode_id
+								curr_orders.append(order)
 			else:
 				for channel_qrcode_id, member_ids in channel_qrcode_id2member_id.items():
 					if str(channel_qrcode_id) in channel_qrcode_ids:
