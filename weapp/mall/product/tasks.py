@@ -188,7 +188,7 @@ def send_product_export_job_task(self, exportjob_id, filter_data_args, type):
             # head_format.set_bold() # 设置粗体字
             head_format.set_font_color('white')
             head_format.set_bg_color('#5A9BD5') # 背景颜色
-            head_list = [u'商品ID', u'商品编号', u'供货商', u'商品名称', u'商品规格名称', u'商品价格', u'商品最低价格', u'采购价', u'商品毛利', u'商品最低毛利', u'扣点类型', 
+            head_list = [u'商品ID', u'商品编号', u'供货商', u'商品名称', u'商品规格名称', u'商品价格', u'商品最低价格', u'采购价', u'商品毛利', u'商品最低毛利', u'扣点类型',
             u'规格库存', u'最低库存', u'总库存', u'分组', u'总销量', u'总销售额', u'上架时间', u'推广费用', u'推广剩余库存', u'推广开始时间', u'推广结束时间']
             table.write_row('A1' , head_list, head_format)
             tmp_line = 1
@@ -251,7 +251,7 @@ def send_product_export_job_task(self, exportjob_id, filter_data_args, type):
 
             product_count = len(product_ids)
             export_jobs.update(count=product_count)
-            processed_count = 0 
+            processed_count = 0
             for product in products:
                 try:
                     processed_count += 1
@@ -262,8 +262,9 @@ def send_product_export_job_task(self, exportjob_id, filter_data_args, type):
                     if not store_name:
                         store_name = supplier_ids2name[product.supplier] if product.supplier and supplier_ids2name.has_key(product.supplier) else product_id2store_name.get(product.id, "")
                         is_sync = product_id2store_name.has_key(product.id)
-                    product_sales = models.OrderHasProduct.objects.filter(product_id=product.id, order__status__in=sales_order_status, order__origin_order_id__lte=0, order__webapp_id=webapp_id).aggregate(Sum('number'))['number__sum']
-                    product_sales_money = models.OrderHasProduct.objects.filter(product_id=product.id, order__status__in=sales_order_status, order__origin_order_id__lte=0, order__webapp_id=webapp_id).aggregate(Sum('total_price'))['total_price__sum']
+                    product_sales = models.OrderHasProduct.objects.filter(product_id=product.id, order__status__in=sales_order_status, order__origin_order_id__gte=0, order__webapp_id=webapp_id).aggregate(Sum('number'))['number__sum']
+                    origin_order_ids = models.OrderHasProduct.objects.filter(product_id=product.id, order__status__in=sales_order_status, order__origin_order_id__gte=0, order__webapp_id=webapp_id).values_list('order__origin_order_id', flat=True)
+                    product_sales_money = models.OrderHasProduct.objects.filter(product_id=product.id, order__id__in=origin_order_ids).aggregate(Sum('total_price'))['total_price__sum']
                     if not product_sales:
                         product_sales = 0
                     if not product_sales_money:
@@ -297,7 +298,7 @@ def send_product_export_job_task(self, exportjob_id, filter_data_args, type):
                         total_stocks = product.total_stocks
 
                         models_count = len(product.custom_models)
-                        tmp_models_count = 0 
+                        tmp_models_count = 0
                         for model in product.custom_models:
                             tmp_line += 1
                             merge_rows.append(tmp_line-1)
@@ -312,7 +313,7 @@ def send_product_export_job_task(self, exportjob_id, filter_data_args, type):
                             else:
                                 purchase_price = product.purchase_price
                                 gross_profit = float(model['price']) - purchase_price
-                            
+
                             gross_profits.append(float(gross_profit))
 
                             if model['stock_type'] == 1:
@@ -344,7 +345,7 @@ def send_product_export_job_task(self, exportjob_id, filter_data_args, type):
                                 else:
                                     stocks_lowest = u'无限'
                                 alist[12] = stocks_lowest
-                            
+
                             table.write_row("A{}".format(tmp_line), alist, cell_format)
                         #合并单元格
                         # list(set(merge_rows))
