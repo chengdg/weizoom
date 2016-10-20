@@ -378,7 +378,7 @@ class ProductList(resource.Resource):
                 secondary_classification = product_id2classification.get(product.id,'')
                 if secondary_classification:
                     secondary_classification_name = secondary_classification.name
-                    first_classification_name = id2first_classification[secondary_classification.father_id].name
+                    first_classification_name = id2first_classification[secondary_classification.father_id].name if id2first_classification.has_key(secondary_classification.father_id) else ""
                     product_dict['classification'] = '{}-{}'.format(first_classification_name, secondary_classification_name)
 
             if manager_supplier_ids2supplier:
