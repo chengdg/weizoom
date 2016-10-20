@@ -49,6 +49,7 @@ random.seed(time.time())
 from bs4 import BeautifulSoup
 # NO_PROMOTION_ID = -1
 from eaglet.utils.resource_client import Resource
+from utils import json_util, send_mns_message
 
 def __get_promotion_name(product):
 	"""判断商品是否促销， 没有返回None, 有返回促销ID与商品的规格名.
@@ -2382,6 +2383,15 @@ def update_order_status(user, action, order, request=None):
 				alert_message = u"update_order 修改会员消费次数和金额,平均客单价, cause:\n{}".format(unicode_full_stack())
 				watchdog_error(alert_message)
 
+			try:
+				"""
+					增加异步消息：向消息队列paid-order 发送订单相关消息
+				"""
+				__send_paid_order_info(order_id)
+			except:
+				alert_message = u"send_paid_order_info 发起支付完成后台MNS消息通知, cause:\n{}".format(unicode_full_stack())
+				watchdog_error(alert_message)
+
 		else:
 			if target_status == ORDER_STATUS_REFUNDED:
 				# 发短信
@@ -2422,6 +2432,34 @@ def update_order_status(user, action, order, request=None):
 				record_operation_log(child.order_id, operation_name, action_msg)
 		if target_status in [ORDER_STATUS_SUCCESSED, ORDER_STATUS_REFUNDING, ORDER_STATUS_CANCEL]:
 			auto_update_grade(webapp_user_id=order.webapp_user_id)
+
+def __send_paid_order_info(order_id):
+	"""
+		@param  order_id  主订单ID
+		增加异步消息：向消息队列paid-order 发送订单相关消息
+	"""
+	order = Order.objects.get(id=order_id)
+	#order_dict = order.to_dict()
+	order_dict = json.loads(json.dumps(order.to_dict(),cls=json_util.DateEncoder))
+
+	order_has_products = OrderHasProduct.objects.filter(order_id=order_id)
+	order_products_list = []
+	for order_has_product in order_has_products:
+		order_products_list.append(json.loads(json.dumps(order_has_product.to_dict(),cls=json_util.DateEncoder)))
+
+	order_dict["products"] = order_products_list
+	sub_order_list = []
+	for sub_order in Order.objects.filter(origin_order_id=order_id):
+		sub_order_dict = json.loads(json.dumps(sub_order.to_dict(),cls=json_util.DateEncoder))
+		sub_order_products_list = []
+		for sub_order_has_product in OrderHasProduct.objects.filter(order_id=sub_order.id):
+			sub_order_products_list.append(json.loads(json.dumps(sub_order_has_product.to_dict(),cls=json_util.DateEncoder)))
+		sub_order_dict["products"] = sub_order_products_list
+		sub_order_list.append(sub_order_dict)
+	order_dict["sub_orders"] = sub_order_list
+	
+	send_mns_message.send_mns_message(settings.TOPIC_PAID_ORDER, "paid-order", order_dict)
+
 
 def __increase_after_order_finsh(expired_status, target_status, order):
 	try:
