@@ -367,10 +367,10 @@ class ProductList(resource.Resource):
             if product.id in list(cps_products_id):
                 if wtype == 1:
                     product_dict['is_cps'] = 1
-                product_dict['promote_time_from'] = models.PromoteDetail.objects.get(product_id=product.id, promote_status=1).promote_time_from.strftime("%Y/%m/%d %H:%M")
-                product_dict['promote_time_to'] = models.PromoteDetail.objects.get(product_id=product.id, promote_status=1).promote_time_to.strftime("%Y/%m/%d %H:%M")
-                product_dict['promote_money'] = "%.2f"%models.PromoteDetail.objects.get(product_id=product.id, promote_status=1).promote_money
-                product_dict['promote_stock'] = models.PromoteDetail.objects.get(product_id=product.id, promote_status=1).promote_stock
+                product_dict['promote_time_from'] = models.PromoteDetail.objects.filter(product_id=product.id, promote_status=1).order_by('id').last().promote_time_from.strftime("%Y/%m/%d %H:%M")
+                product_dict['promote_time_to'] = models.PromoteDetail.objects.filter(product_id=product.id, promote_status=1).order_by('id').last().promote_time_to.strftime("%Y/%m/%d %H:%M")
+                product_dict['promote_money'] = "%.2f"%models.PromoteDetail.objects.filter(product_id=product.id, promote_status=1).order_by('id').last().promote_money
+                product_dict['promote_stock'] = models.PromoteDetail.objects.filter(product_id=product.id, promote_status=1).order_by('id').last().promote_stock
                 cps_items.append(product_dict)
             if not is_request_cps: product_dict['n_request_cps'] = 1
             product_dict['classification'] = ''
