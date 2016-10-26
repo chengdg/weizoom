@@ -261,7 +261,7 @@ class MPowerMe(resource.Resource):
 		fid = request.GET.get('fid', None)
 		###############重构之后，访问老数据，直接重定向到重构微助力##########
 		try:
-			related_page_id = app_models.PowerMe.objects.get(id=id).related_page_id
+			related_page_id = app_models.PowerMe.objects.get(id=record_id).related_page_id
 			m_marketapp_url = 'http://{}/m/apps/powerme/m_powerme/?woid={}&page_id={}&id={}'.format(
 				settings.MARKET_MOBILE_DOMAIN, request.webapp_owner_id, related_page_id, record_id)
 			if fid:
