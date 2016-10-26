@@ -90,7 +90,7 @@ class NewTemplateMessages(resource.Resource):
             if settings.count() > 0:
                 settings.update(status=status)
             else:
-                setting = weixin_models.UserTemplateSettings(owner_id=request.manager.id, template_id=template_id, status=status, usage=weixin_models.WEIXIN_TEMPLATE_TITLE2USAGE[title])
+                setting = weixin_models.UserTemplateSettings(owner_id=request.manager.id, template_id=template_id, status=status, title=title)
                 setting.save()
         else:
             saved_data = json.loads(request.POST.get('saved_data'))
@@ -106,7 +106,7 @@ class NewTemplateMessages(resource.Resource):
                     template_id=template_id,
                     first=first,
                     remark=remark,
-                    usage=weixin_models.WEIXIN_TEMPLATE_TITLE2USAGE[saved_data['title']]
+                    title=saved_data['title']
                 )
                 setting.save()
 

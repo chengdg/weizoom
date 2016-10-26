@@ -737,30 +737,12 @@ class UserHasTemplateMessages(models.Model):
 		verbose_name = '我的模版'
 		verbose_name_plural = '我的模版'
 
-
-#模版用途
-WEIXIN_TEMPLATE_USAGE = {
-	'APPS_RED_PACKET': 0, #百宝箱拼红包
-	'APPS_GROUP_SUCCESS': 1, #百宝箱团购成功
-	'APPS_GROUP_FAIL': 2, #百宝箱团购失败
-
-}
-WEIXIN_TEMPLATE_TITLE2USAGE = {
-	u'拼团成功通知': 1,
-	u'拼团退款提醒': 2,
-	u'商品发货通知': 3,
-	u'订单标记发货通知': 4,
-	u'购买成功通知': 5,
-	u'付款成功通知': 6,
-	u'积分变动通知': 7
-}
-
 class UserTemplateSettings(models.Model):
 	"""
 	商家各功能所配置的模板消息
 	"""
 	owner_id = models.IntegerField() #所属商家
-	usage = models.IntegerField() #模版用途
+	title = models.CharField(max_length=256)  # 模版用途
 	template_id = models.CharField(max_length=512) #模板id
 	first = models.CharField(max_length=1024, default='') #模版开头语
 	remark = models.CharField(max_length=1024, default='') #模版最后的注释
@@ -777,8 +759,7 @@ class TemplateMessageLogs(models.Model):
 	模版消息记录
 	"""
 	owner_id = models.IntegerField() #所属商家
-	usage = models.IntegerField() #模版用途
-	reason = models.CharField(max_length=1024, default='') #使用模版的场景描述
+	title = models.CharField(max_length=256)
 	template_id = models.CharField(max_length=512) #模板id
 	content = models.TextField() #消息内容
 	status = models.CharField(max_length=64, default='') #状态
