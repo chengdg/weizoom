@@ -3,10 +3,11 @@
 from django.core.management.base import BaseCommand
 
 from core.wxapi import get_weixin_api
-from account.models import *
+from core.exceptionutil import unicode_full_stack
+from account.models import UserProfile
 from account.util import get_binding_weixin_mpuser, get_mpuser_accesstoken
 
-import weixin2.models as weixin_models
+from weixin2.models import UserHasTemplateMessages, UserTemplateSettings
 
 
 class Command(BaseCommand):
@@ -35,7 +36,7 @@ class Command(BaseCommand):
 				try:
 					weixin_api = get_weixin_api(mpuser_access_token)
 					curr_template_info = {t.template_id: t for t in
-										  weixin_models.UserHasTemplateMessages.objects.filter(owner_id=user_id)}
+										  UserHasTemplateMessages.objects.filter(owner_id=user_id)}
 					result = weixin_api.get_all_template_messages(True)
 					template_list = result['template_list']
 					need_create_list = []  # 商家新配置的模版
@@ -46,7 +47,7 @@ class Command(BaseCommand):
 						all_sync_ids.append(template_id)
 						title = t['title']
 						if template_id not in curr_template_info.keys():
-							need_create_list.append(weixin_models.UserHasTemplateMessages(
+							need_create_list.append(UserHasTemplateMessages(
 								owner_id=user_id,
 								template_id=template_id,
 								title=title,
@@ -59,13 +60,13 @@ class Command(BaseCommand):
 						if t_id not in all_sync_ids:
 							need_delete_ids.append(t_id)
 					# 删除模板库中的记录
-					weixin_models.UserHasTemplateMessages.objects.filter(owner_id=user_id,
+					UserHasTemplateMessages.objects.filter(owner_id=user_id,
 																		 template_id__in=need_delete_ids).delete()
 					# 同时删除已配置过的模版
-					weixin_models.UserTemplateSettings.objects.filter(owner_id=user_id,
+					UserTemplateSettings.objects.filter(owner_id=user_id,
 																	  template_id__in=need_delete_ids).delete()
 					# 新增模版
-					weixin_models.UserHasTemplateMessages.objects.bulk_create(need_create_list)
+					UserHasTemplateMessages.objects.bulk_create(need_create_list)
 				except:
 					print unicode_full_stack()
 			else:
