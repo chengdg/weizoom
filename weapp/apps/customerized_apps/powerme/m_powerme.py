@@ -9,6 +9,7 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.shortcuts import render
 from django.template.loader import render_to_string
+from django.conf import settings
 
 from core import resource
 
@@ -257,11 +258,26 @@ class MPowerMe(resource.Resource):
 		响应GET
 		"""
 		record_id = request.GET.get('id', 'id')
+		fid = request.GET.get('fid', None)
+		###############重构之后，访问老数据，直接重定向到重构微助力##########
+		try:
+			related_page_id = app_models.PowerMe.objects.get(id=id).related_page_id
+			m_marketapp_url = 'http://{}/m/apps/powerme/m_powerme/?woid={}&page_id={}&id={}'.format(
+				settings.MARKET_MOBILE_DOMAIN, request.webapp_owner_id, related_page_id, record_id)
+			if fid:
+				m_marketapp_url += '&fid={}'.format(fid)
+			return HttpResponseRedirect(m_marketapp_url)
+		except:
+			c = RequestContext(request, {
+				'is_deleted_data': True
+			})
+			return render_to_response('workbench/wepage_webapp_page.html', c)
+		###############################################################
+
 		mpUserPreviewName = ''
 		activity_status = u"未开始"
 		member = request.member
 		fid = 0
-
 		user_id = request.webapp_owner_info.user_profile.user_id
 		username = User.objects.get(id=user_id).username
 

@@ -411,12 +411,12 @@ DEFAULT_APPS_THIRD_NAVS = [
         'url': '/apps/sign/sign/',
         'permission': ''
     },
-    {
-        'name': MALL_APPS_POWERME_NAV,
-        'title': u'微助力',
-        'url': '/apps/powerme/powermes/',
-        'permission': ''
-    },
+    # {
+    #     'name': MALL_APPS_POWERME_NAV,
+    #     'title': u'微助力',
+    #     'url': '/apps/powerme/powermes/',
+    #     'permission': ''
+    # },
     {
         'name': MALL_APPS_FEEDBACK_NAV,
         'title': u'用户反馈',
