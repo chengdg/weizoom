@@ -3,7 +3,7 @@
 
 
 """
-
+import urllib
 import sys
 import os
 import cProfile
@@ -673,6 +673,91 @@ class UserManagerMiddleware(object):
 			# 	manager = User.objects.get(id=departmentUser[0].owner_id)
 			request.manager = manager
 		return None
+
+
+class Redirect2HermesMiddleware(object):
+	"""
+	重定向相关模块到hermes重构后的url
+	重定向条件：
+	1. 是自营平台
+	2. 是访问重构后的页面
+	"""
+
+	def process_request(self, request):
+		# 判断是重构后页面
+		rebuilt_path2new_path = {
+			'/mall2/order/': '/order/order/',
+			'/mall2/order_list/': '/order/orders',
+			'/mall2/product/': '/mall/product/',
+			'/mall2/product_list/': '/mall/products/',
+
+			'/mall2/pay_interface_list/': '/config/pay_interface_list/',
+			'/mall2/postage_list/': '/config/postage_configs/',
+			'/mall2/express_delivery_list/': '/config/express_deliveries/',
+			'/mall2/email_notify_list/': '/config/email_notify_list/',
+
+			'/mall2/integral_strategy/': '/home/integral_strategy/',
+			'/mall2/config_product_list/': '/home/webapp_config/'
+
+		}
+		querystring_dict = {}
+
+		if '/mall2/order/' in request.path:
+			querystring_dict = {'id': request.GET['order_id']}
+			is_use_rebuilt_path = True
+
+		elif '/mall2/order_list/' in request.path:
+			is_use_rebuilt_path = True
+		# todo 处理querystring
+
+		elif '/mall2/product/' in request.path:
+			is_use_rebuilt_path = True
+			querystring_dict = {
+				'id': request.GET['id']
+			}
+		elif '/mall2/product_list/' in request.path:
+			is_use_rebuilt_path = True
+			querystring_dict['shelve_type'] = request.GET['shelve_type']
+			if 'high_stocks' in request.GET and querystring_dict['high_stocks'] == 0:
+				querystring_dict['stocks_lack'] = 1
+		elif '/mall2/pay_interface_list/' in request.path:
+			is_use_rebuilt_path = True
+		elif '/mall2/postage_list/' in request.path:
+			is_use_rebuilt_path = True
+		elif '/mall2/express_delivery_list/' in request.path:
+			is_use_rebuilt_path = True
+		elif '/mall2/email_notify_list/' in request.path:
+			is_use_rebuilt_path = True
+		elif '/mall2/integral_strategy/' in request.path:
+			is_use_rebuilt_path = True
+		elif '/mall2/config_product_list/' in request.path:
+			is_use_rebuilt_path = True
+		else:
+			is_use_rebuilt_path = False
+
+		if is_use_rebuilt_path:
+			# 判断是自营平台
+			if hasattr(request, 'manager'):
+				user_profile = request.manager.get_profile()
+				is_weizoom_mall = user_profile.webapp_type == 1
+			else:
+				is_weizoom_mall = False
+
+			print('iis_weizoom_malls', is_weizoom_mall)
+
+			if is_weizoom_mall:
+				if querystring_dict:
+
+					new_url = rebuilt_path2new_path[request.path] + '?' + urllib.urlencode(querystring_dict)
+				else:
+					new_url = rebuilt_path2new_path[request.path]
+
+				return HttpResponseRedirect(new_url)
+
+		else:
+			return
+
+
 
 
 class DisablePostInPcBrowserUnderDeployMiddleware(object):
