@@ -149,7 +149,7 @@ Background:
 					"type": "货到付款"
 				}],
 			"detail":"稻香村虚拟商品3的详情",
-			"status""在售"
+			"status":"在售"
 		}]
 		"""
 	And jobs已创建微众卡
@@ -203,8 +203,7 @@ Background:
 				},{
 					"id":"0000002",
 					"password":"2234567"
-				}],
-			"create_time":"2天前"
+				}]
 		},{
 			"product":
 				{
@@ -222,12 +221,11 @@ Background:
 				},{
 					"id":"0000004",
 					"password":"4234567"
-				}],
-			"create_time":"今天"
+				}]
 		}]
 		"""
 
-@welfare_card @weshop
+@welfare_card @weshop @nanxuezhi
 Scenario:1 福利卡券列表-增加库存
 	Given jobs登录系统
 	#点击【增加库存】按钮，可增加码库，同时设置卡有效期
@@ -253,8 +251,7 @@ Scenario:1 福利卡券列表-增加库存
 				},{
 					"id":"0000005",
 					"password":"5234567"
-				}],
-			"create_time":"2天前"
+				}]
 		}
 		"""
 	Then jobs获得福利卡券活动列表
@@ -270,7 +267,6 @@ Scenario:1 福利卡券列表-增加库存
 			"sale_cards":0,
 			"expired_cards":0,
 			"invalid_cards":0,
-			"create_time":"今天",
 			"actions":["码库详情","增加库存","结束"]
 		},{
 			"activity_name":"10元通用卡",
@@ -283,17 +279,16 @@ Scenario:1 福利卡券列表-增加库存
 			"sale_cards":0,
 			"expired_cards":0,
 			"invalid_cards":0,
-			"create_time":"2天前",
 			"actions":["码库详情","增加库存","结束"]
 		}]
 		"""
 	And jobs获得福利卡券活动'10元通用卡'的码库详情列表
 		| card_id | create_time | start_date | end_date | status | get_time | member | order_no |
-		| 0000001 |   今天      |    2天前   | 30天后   | 已失效 |          |        |          |
-		| 0000002 |   今天      |    2天前   | 30天后   | 已失效 |          |        |          |
-		| 0000005 |   今天      |    今天    | 36天后   | 已失效 |          |        |          |
+		| 0000001 |   今天      |    2天前   | 30天后   | 未领取 |          |        |          |
+		| 0000002 |   今天      |    2天前   | 30天后   | 未领取 |          |        |          |
+		| 0000005 |   今天      |    今天    | 36天后   | 未领取 |          |        |          |
 
-@welfare_card @weshop
+@welfare_card @weshop @nanxuezhi
 Scenario:2 结束福利卡券活动
 	Given jobs登录系统
 	When jobs'结束'福利卡券活动'20元通用卡'
@@ -311,7 +306,6 @@ Scenario:2 结束福利卡券活动
 			"sale_cards":0,
 			"expired_cards":0,
 			"invalid_cards":2,
-			"create_time":"今天",
 			"actions":["码库详情","已结束"]
 		},{
 			"activity_name":"10元通用卡",
@@ -324,7 +318,6 @@ Scenario:2 结束福利卡券活动
 			"sale_cards":0,
 			"expired_cards":0,
 			"invalid_cards":0,
-			"create_time":"2天前",
 			"actions":["码库详情","增加库存","结束"]
 		}]
 		"""
@@ -359,7 +352,7 @@ Scenario:2 结束福利卡券活动
 		}
 		"""
 
-@welfare_card @weshop
+@welfare_card @weshop @nanxuezhi
 Scenario:3 福利卡券活动列表的查询
 	Given jobs登录系统
 	#按照'商品名称'查询
@@ -446,79 +439,14 @@ Scenario:3 福利卡券活动列表的查询
 				}]
 				"""
 
-	#按照'创建时间'进行查询
-		#开始时间和结束时间相等
-			When jobs设置福利卡券活动列表查询条件
-				"""
-				{
-					"product_name":"",
-					"product_bar_code":"",
-					"create_start_time":"2天前",
-					"create_end_time":"2天前"
-				}
-				"""
-			Then jobs获得福利卡券活动列表
-				"""
-				[{
-					"activity_name":"10元通用卡",
-					"product":{
-						"name":"微众虚拟商品1",
-						"bar_code":"112233"
-						},
-					"create_time":"2天前"
-				}]
-				"""
-		#开始时间和结束时间不等
-			When jobs设置福利卡券活动列表查询条件
-				"""
-				{
-					"product_name":"",
-					"product_bar_code":"",
-					"create_start_time":"3天前",
-					"create_end_time":"2天后"
-				}
-				"""
-			Then jobs获得福利卡券活动列表
-				"""
-				[{
-					"activity_name":"20元通用卡",
-					"product":{
-						"name":"微众虚拟商品2",
-						"bar_code":"212233"
-						},
-					"create_time":"今天"
-				},{
-					"activity_name":"10元通用卡",
-					"product":{
-						"name":"微众虚拟商品1",
-						"bar_code":"112233"
-						},
-					"create_time":"2天前"
-				}]
-				"""
-		#查询结果为空
-			When jobs设置福利卡券活动列表查询条件
-				"""
-				{
-					"product_name":"",
-					"product_bar_code":"",
-					"create_start_time":"明天",
-					"create_end_time":"2天后"
-				}
-				"""
-			Then jobs获得福利卡券活动列表
-				"""
-				[]
-				"""
-
 	#组合查询
 		When jobs设置福利卡券活动列表查询条件
 			"""
 			{
 				"product_name":"微众",
 				"product_bar_code":"212233",
-				"create_start_time":"2天前",
-				"create_end_time":"明天"
+				"create_start_time":"",
+				"create_end_time":""
 			}
 			"""
 		Then jobs获得福利卡券活动列表
@@ -528,7 +456,6 @@ Scenario:3 福利卡券活动列表的查询
 				"product":{
 					"name":"微众虚拟商品2",
 					"bar_code":"212233"
-					},
-				"create_time":"今天"
+					}
 			}]
 			"""

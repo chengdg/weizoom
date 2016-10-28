@@ -3,6 +3,7 @@ from __future__ import absolute_import
 import copy
 import json, time
 import logging
+import steps_db_util
 from behave import when, then, given
 from mall.models import ProductCategory, Product, ProductModel, ProductLimitZoneTemplate
 from webapp.models import WebApp
@@ -63,7 +64,8 @@ def step_product_add(context, user):
                 product['stock_type'] = 1
             else:
                 product['stock_type'] = 0
-        product['type'] = mall_models.PRODUCT_DEFAULT_TYPE
+        if 'product_type' in product:
+            product['type'] = steps_db_util.__get_en_product_type(product['product_type'])
         __process_product_data(product, user=user)
         product = __supplement_product(context.webapp_owner_id, product)
         product['is_enable_bill'] = product.get('invoice', False)
@@ -440,6 +442,8 @@ def __get_products(context, type_name=u'在售'):
 
     for product in data["items"]:
         actions = []
+        if 'type' in product:
+            product['product_type'] = steps_db_util.__get_product_type(product['type'])
         product['is_member_product'] = 'on' if product.get('is_member_product', False) else 'off'
         #价格
         product['price'] = product['display_price']
@@ -529,6 +533,7 @@ def __get_product_from_web_page(context, product_name):
     actual = {
         "sales": product.sales,
         "name": product.name,
+        "product_type": steps_db_util.__get_product_type(product.type),
         "categories": category_name,
         "physical_unit": product.physical_unit,
         "thumbnails_url": product.thumbnails_url,

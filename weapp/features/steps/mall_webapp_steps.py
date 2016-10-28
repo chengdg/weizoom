@@ -11,8 +11,11 @@ from features.testenv.model_factory import *
 
 from django.test.client import Client
 from mall.models import *
+from mall import models as mall_models
 from mall.promotion.models import *
 from modules.member.models import *
+from modules.member import models as member_models
+
 from account.social_account.models import SocialAccount
 import mall_product_steps as product_step_util
 from .steps_db_util import (
@@ -991,8 +994,20 @@ def step_impl(context, webapp_user_name):
 	if __i.get("action") == u"pay":
 		argument = __i.get('context')
 		# 获取购物车参数
-		product_ids, product_counts, product_model_names = _get_shopping_cart_parameters(context.webapp_user.id, argument)
-		url = '/termite/workbench/jqm/preview/?woid=%s&module=mall&model=shopping_cart_order&action=edit&product_ids=%s&product_counts=%s&product_model_names=%s' % (context.webapp_owner_id, product_ids, product_counts, product_model_names)
+		product_ids, product_counts, product_model_names = _get_shopping_cart_parameters(context.webapp_user.id, argument, context.webapp_owner_id)
+		url = 'http://api.weapp.com/default/mall/purchasing/?woid=%s&product_ids=%s&product_counts=%s&product_model_names=%s' % (context.webapp_owner_id, product_ids, product_counts, product_model_names)
+		product_infos = {
+			'product_ids': product_ids,
+			'product_counts': product_counts,
+			'product_model_names': product_model_names
+		}
+		if __i.get('coupon'):
+			product_infos['coupon_id'] = __i['coupon']
+	elif __i.get("action") == u"click":
+		argument = __i.get('context')
+		# 获取购物车参数
+		product_ids, product_counts, product_model_names = _get_shopping_cart_parameters(context.webapp_user.id, argument, context.webapp_owner_id)
+		url = 'http://api.weapp.com/default/mall/purchasing/?woid=%s&product_ids=%s&product_counts=%s&product_model_names=%s' % (context.webapp_owner_id, product_ids, product_counts, product_model_names)
 		product_infos = {
 			'product_ids': product_ids,
 			'product_counts': product_counts,
@@ -1001,20 +1016,18 @@ def step_impl(context, webapp_user_name):
 		if __i.get('coupon'):
 			product_infos['coupon_id'] = __i['coupon']
 
-	elif __i.get("action") == u"click":
-		# 加默认地址
-		#context.webapp_user.update_ship_info(ship_name='11', ship_address='12', ship_tel='12345678970', area='1')
-		url = '/termite/workbench/jqm/preview/?woid=%s&module=mall&model=shopping_cart&action=show' % (context.webapp_owner_id)
-		product_infos = {}
-
-	response = context.client.get(bdd_util.nginx(url), follow=True)
-	assert response.status_code == 200
+	response = requests.get(url)
+	#response = context.client.get(bdd_util.nginx(url), follow=True)
 	context.product_infos = product_infos
 	context.response = response
-	context.pay_url = url
+	response_json = json.loads(response.text)
+	print "==================================="
+	print response_json['data']['order']
+	print "==================================="
 
+	context.shopping_cart_order = response_json['data']['order']
 
-def _get_shopping_cart_parameters(webapp_user_id, context):
+def _get_shopping_cart_parameters(webapp_user_id, context, webapp_owner_id):
 	"""
 	webapp_user_id-> int
 	context -> list
@@ -1026,7 +1039,7 @@ def _get_shopping_cart_parameters(webapp_user_id, context):
 			]
 	"""
 
-	shopping_cart_items = ShoppingCart.objects.filter(webapp_user_id=webapp_user_id)
+	shopping_cart_items = mall_models.ShoppingCart.objects.filter(webapp_user_id=webapp_user_id)
 	if context is not None:
 		product_infos = context
 		product_ids = []
@@ -1036,16 +1049,13 @@ def _get_shopping_cart_parameters(webapp_user_id, context):
 			product_name = product_info['name']
 			product_model_name = product_info.get('model', 'standard')
 			product_model_name = get_product_model_keys(product_model_name)
-			try:
-				product = Product.objects.get(name= product_info['name'])
-				cart = shopping_cart_items.get(product=product, product_model_name=product_model_name)
-				product_ids.append(str(product.id))
-				product_counts.append(str(cart.count))
-				product_model_names.append(product_model_name)
-			except:
-				pass
+			product = mall_models.Product.objects.get(name=product_info['name'], owner=webapp_owner_id)
+			cart = mall_models.ShoppingCart.objects.get(webapp_user_id=webapp_user_id, product=product.id, product_model_name=product_model_name)
+			product_ids.append(str(product.id))
+			product_counts.append(str(cart.count))
+			product_model_names.append(product_model_name)
 	else:
-		shopping_cart_items = list(shopping_cart_items)
+		shopping_cart_items = list(mall_models.ShoppingCart.objects.filter(webapp_user_id=webapp_user_id))
 		product_ids = [str(item.product_id) for item in shopping_cart_items]
 		product_counts = [str(item.count) for item in shopping_cart_items]
 		product_model_names = [item.product_model_name for item in shopping_cart_items]
@@ -1055,12 +1065,100 @@ def _get_shopping_cart_parameters(webapp_user_id, context):
 	product_model_names = '$'.join(product_model_names)
 	return product_ids, product_counts, product_model_names
 
+# @when(u"{webapp_user_name}在购物车订单编辑中点击提交订单")
+# def step_click_check_out(context, webapp_user_name):
+# 	"""
+# 	{
+# 		"pay_type":  "货到付款",
+# 	}
+# 	"""
+# 	argument = json.loads(context.text)
+# 	pay_type = argument['pay_type']
+# 	mall_type = account_models.UserProfile.get(user=context.webapp_owner_id).webapp_type
+
+
+# 	order = context.shopping_cart_order
+# 	if mall_type:
+# 		product_info = _zypt_get_prodcut_info(order)
+# 	else:
+# 		product_info = _get_prodcut_info(order)
+# 	url = '/mall/order/?_method=put'
+# 	data = {
+# 		'order_type': 'normal',
+# 		'is_order_from_shopping_cart': 'true',
+# 		'woid': context.webapp_owner_id,
+# 		'xa-choseInterfaces': mall_models.PAYNAME2TYPE.get(pay_type, -1),
+# 		'group2integralinfo': {},
+
+# 		"ship_name": argument.get('ship_name', "未知姓名"),
+# 		"area": get_area_ids(argument.get('ship_area')),
+# 		"ship_address": argument.get('ship_address', "长安大街"),
+# 		"ship_tel": argument.get('ship_tel', "11111111111"),
+# 	}
+
+# 	if argument.get('force', False):
+# 		data['forcing_submit'] = 1
+
+# 	data.update(product_info)
+# 	customer_message_data = argument.get('customer_message', {})
+# 	if customer_message_data:
+# 		customer_message = __get_customer_message_str(customer_message_data)
+# 		data['message'] = json.dumps(customer_message)
+
+# 	coupon_id = context.product_infos.get('coupon_id', None)
+# 	if coupon_id:
+# 		data['is_use_coupon'] = 'true'
+# 		data['coupon_id'] = coupon_id
+# 	if argument.get('integral', None):
+# 		data['orderIntegralInfo'] = json.dumps({
+# 			'integral': argument['integral'],
+# 			'money': argument['integral_money']
+# 		})
+
+# 	response = context.client.post(url, data)
+
+# 	#bdd_util.assert_api_call_success(response)
+# 	context.response = response
+
+# 	#访问支付结果链接
+# 	if response.body['code'] == 200:
+# 		pay_url_info = response.data['pay_url_info']
+# 		context.pay_url_info = pay_url_info
+# 		pay_type = pay_url_info['type']
+# 		del pay_url_info['type']
+# 		if pay_type == 'cod':
+# 			pay_url = '/pay/pay_result/?_method=put'
+# 			data = {
+# 				'pay_interface_type': pay_url_info['pay_interface_type'],
+# 				'order_id': pay_url_info['order_id']
+# 			}
+# 			context.client.post(pay_url, data)
+
+# 		context.created_order_id = response.data['order_id']
+# 	else:
+# 		context.created_order_id = -1
+# 		context.server_error_msg = response.data['detail']
+
+# 	if context.created_order_id != -1:
+# 		if 'date' in argument:
+# 			mall_models.Order.update(created_at=bdd_util.get_datetime_str(argument['date'])).dj_where(order_id=context.created_order_id)
+# 		if 'order_id' in argument:
+# 			db_order = mall_models.Order.get(order_id=context.created_order_id)
+# 			db_order.order_id=argument['order_id']
+# 			db_order.save()
+# 			if db_order.origin_order_id <0:
+# 				for order in mall_models.Order.select().dj_where(origin_order_id=db_order.id):
+# 					order.order_id = '%s^%s' % (argument['order_id'], order.order_id.split('^')[1])
+# 					order.save()
+# 			context.created_order_id = argument['order_id']
+
+# 	logging.info("[Order Created] webapp_owner_id: {}, created_order_id: {}".format(context.webapp_owner_id, context.created_order_id))
 
 @when(u"{webapp_user_name}设置{webapp_owner_name}的webapp的默认收货地址")
 def step_impl(context, webapp_user_name, webapp_owner_name):
-	expected = json.loads(context.text)
-	area_str = expected['area'].replace(',', ' ')
-	area_id = bdd_util.get_ship_area_id_for(area_str)
+	# expected = json.loads(context.text)
+	# area_str = expected['area'].replace(',', ' ')
+	# area_id = bdd_util.get_ship_area_id_for(area_str)
 	data = {
 		'area': '1_1_8',
 		'ship_address': '泰兴大厦',

@@ -269,6 +269,7 @@ def step_impl(context, user):
         actual_order['save_money'] = '' if sync_order or not order_item['save_money'] else order_item['save_money']
         actual_order['is_first_order'] = 'true' if order_item['is_first_order'] else 'false'
         actual_order['is_group_buying'] = 'true' if order_item['is_group_buying'] else 'false'
+        actual_type = order_item['type']
 
         if 'edit_money' in order_item and order_item['edit_money']:
             actual_order["order_no"] = actual_order["order_no"] + "-" + str(order_item['edit_money']).replace('.',
@@ -293,6 +294,7 @@ def step_impl(context, user):
                 buy_product_result = {}
                 buy_product_result['product_name'] = buy_product['name']
                 buy_product_result['name'] = buy_product['name']
+                buy_product_result['type'] = actual_type
                 buy_product_result['count'] = buy_product['count']
                 buy_product_result['total_price'] = total_price
                 buy_product_result['price'] = '' if sync_order else buy_product.get('price')
@@ -326,6 +328,8 @@ def step_impl(context, user):
         if mall_type and order.get('customer_message'):
             order['customer_message'] = json.dumps(__get_customer_message_str(order['customer_message']))
             actual_order['products'] = sorted(actual_order['products'], key=lambda p: p['name'])
+        for order_type in order['products']:
+            order_type['type'] = steps_db_util.__get_en_product_type(order_type['type'])
     # for i in range(len(expected)):
     #     # print expected[i]['order_no'], '++++', actual_orders[i]['order_no']
     #     # for j in range(len(expected[i]['products'])):
@@ -336,8 +340,9 @@ def step_impl(context, user):
     # for i in range(len(expected[0]['products'])):
     #     print expected[0]['products'][i]['name'], "+++++++" ,actual_orders[0]['products'][i]['name']
     #     print expected[0]['products'][i]['price'], "+++++++" ,actual_orders[0]['products'][i]['price']
+    print("expected: {}".format(expected))
+    print("actual_data: {}".format(actual_orders))
     bdd_util.assert_list(expected, actual_orders)
-
 
 @then(u"{user}可以获得最新订单详情")
 def step_impl(context, user):
@@ -717,6 +722,8 @@ def step_impl(context, user, order_id):
         if 'supplier_name' in product:
             if product['supplier_name']:
                 product['supplier'] = product['supplier_name']
+        if actual_order.type:
+            product['type'] = actual_order.type
 
     if '^' in actual_order.order_no:
         user_id = actual_order.order_no.split('^')[1][:-1]
@@ -745,10 +752,14 @@ def step_impl(context, user, order_id):
         for product in expected['products']:
             if 'is_sync_supplier' in product:
                 del product['is_sync_supplier']
+            if 'status' in product:
+                product['status'] = steps_db_util._status_change_num(product['status']);
+            if 'type' in product:
+                product['type'] = steps_db_util.__get_en_product_type(product['type']);
     if mall_type and 'customer_message' in expected:
         expected['customer_message'] = __get_customer_message_str(expected['customer_message']).values()
         actual_order.customer_message = actual_order.customer_message
-
+    
 
     # 会员详情页无会员信息
     if "member" in expected:
@@ -758,7 +769,6 @@ def step_impl(context, user, order_id):
     # 字段名称不匹配，order中有number属性
     actual_order.number = actual_order.express_number
     bdd_util.assert_dict(expected, actual_order)
-
 
 @when(u"{user}完成订单'{order_id}'")
 def step_impl(context, user, order_id):

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import requests
 
 from behave import *
 from test import bdd_util
@@ -7,30 +8,36 @@ from mall.models import *
 from features.testenv.model_factory import *
 from tools.regional.models import *
 from mall.promotion.models import *
+from mall import models as mall_models
+from account import models as account_models
 import steps_db_util
 from mall import module_api as mall_api
+from features.steps import steps_db_util
+from .steps_db_util import (
+    get_custom_model_id_from_name, get_product_model_keys, get_area_ids
+)
 
 # 手机端订单支付相关step_impl在features/steps/mall_pay_interface_webapp_steps.py
 
 ORDER_PAY_ACTION = {
-	'name': u'支付',
-	'action': 'pay',
-	'button_class': 'btn-success'
+    'name': u'支付',
+    'action': 'pay',
+    'button_class': 'btn-success'
 }
 ORDER_SHIP_ACTION = {
-	'name': u'发货',
-	'action': 'ship',
-	'button_class': 'btn-success'
+    'name': u'发货',
+    'action': 'ship',
+    'button_class': 'btn-success'
 }
 ORDER_FINISH_ACTION = {
-	'name': u'完成',
-	'action': 'finish',
-	'button_class': 'btn-success'
+    'name': u'完成',
+    'action': 'finish',
+    'button_class': 'btn-success'
 }
 ORDER_CANCEL_ACTION = {
-	'name': u'取消订单',
-	'action': 'cancel',
-	'button_class': 'btn-danger'
+    'name': u'取消订单',
+    'action': 'cancel',
+    'button_class': 'btn-danger'
 }
 
 # 临时，未保证全部数据准确
@@ -42,17 +49,17 @@ def get_order_actions_for_mobile_bdd(order):
             pay_interface_type = order.pay_interface_type
             status = order.status
         if pay_interface_type == PAY_INTERFACE_COD and status == ORDER_STATUS_PAYED_NOT_SHIP:
-        	return [ORDER_SHIP_ACTION, ORDER_CANCEL_ACTION]
+            return [ORDER_SHIP_ACTION, ORDER_CANCEL_ACTION]
         if status == ORDER_STATUS_NOT:
-        	return [ORDER_CANCEL_ACTION, ORDER_PAY_ACTION]
+            return [ORDER_CANCEL_ACTION, ORDER_PAY_ACTION]
         elif status == ORDER_STATUS_PAYED_NOT_SHIP:
-        	return [ORDER_SHIP_ACTION, ORDER_CANCEL_ACTION]
+            return [ORDER_SHIP_ACTION, ORDER_CANCEL_ACTION]
         elif status == ORDER_STATUS_PAYED_SHIPED:
-        	return [ORDER_FINISH_ACTION, ORDER_CANCEL_ACTION]
+            return [ORDER_FINISH_ACTION, ORDER_CANCEL_ACTION]
         elif status == ORDER_STATUS_SUCCESSED:
-        	return [ORDER_CANCEL_ACTION]
+            return [ORDER_CANCEL_ACTION]
         elif status == ORDER_STATUS_CANCEL:
-        	return []
+            return []
 
 
 def get_prodcut_ids_info(order):
@@ -96,6 +103,38 @@ def step_impl(context, webapp_user_name, order_id):
     else:
         context.created_order_id = -1
 
+def __get_customer_message_str(customer_message_data):
+    customer_message = {}
+    for supplier_name, message in customer_message_data.items():
+        if account_models.UserProfile.select().dj_where(store_name=supplier_name).count() > 0:
+            key = "%du" % account_models.UserProfile.select().dj_where(store_name=supplier_name).first().user_id
+            customer_message[key] = {'supplier_name': 'supplier_name', 'customer_message': message}
+
+        if mall_models.Supplier.select().dj_where(name=supplier_name).count() > 0:
+            key = "%ds" % mall_models.Supplier.select().dj_where(name=supplier_name).first().id
+            customer_message[key] = {'supplier_name': 'supplier_name', 'customer_message': message}
+    return customer_message
+
+def _zypt_get_prodcut_info(order):
+    product_ids = []
+    product_counts = []
+    product_model_names = []
+    promotion_ids = []
+    for product_groups in order['product_groups']:
+        for product_group in product_groups:
+            for product in product_group['products']:
+                product_ids.append(str(product['id']))
+                product_counts.append(str(product['purchase_count']))
+                product_model_names.append(str(product['model_name']))
+                if product_group['can_use_promotion']:
+                    promotion_ids.append(str(product_group['promotion']['id']))
+                else:
+                    promotion_ids.append('0')
+    return {'product_ids': '_'.join(product_ids),
+            'product_counts': '_'.join(product_counts),
+            'product_model_names': '$'.join(product_model_names),
+            'promotion_ids': '_'.join(promotion_ids)
+            }
 
 @when(u"{webapp_user_name}在购物车订单编辑中点击提交订单")
 def step_click_check_out(context, webapp_user_name):
@@ -104,30 +143,39 @@ def step_click_check_out(context, webapp_user_name):
         "pay_type":  "货到付款",
     }
     """
-    from mall.models import PAYNAME2TYPE
-
     argument = json.loads(context.text)
-    pay_type = argument.get(argument['pay_type'])
+    pay_type = argument['pay_type']
+    mall_type = account_models.UserProfile.objects.get(user=context.webapp_owner_id).webapp_type
 
-    order = context.response.context['order']
-    argument_request = get_prodcut_ids_info(order)
-    url = '/webapp/api/project_api/call/'
+
+    order = context.shopping_cart_order
+    if mall_type:
+        product_info = _zypt_get_prodcut_info(order)
+    else:
+        product_info = _get_prodcut_info(order)
+    url = 'http://api.weapp.com/mall/order/?_method=put'
     data = {
-        'module': 'mall',
-        'target_api': 'order/save',
+        'order_type': 'normal',
         'is_order_from_shopping_cart': 'true',
         'woid': context.webapp_owner_id,
-        'xa-choseInterfaces': PAYNAME2TYPE.get(pay_type, -1),
-        'bill': order.ship_name,
+        'xa-choseInterfaces': mall_models.PAYNAME2TYPE.get(pay_type, -1),
         'group2integralinfo': {},
 
         "ship_name": argument.get('ship_name', "未知姓名"),
-        "area": steps_db_util.get_area_ids(argument.get('ship_area')),
+        "area": get_area_ids(argument.get('ship_area')),
         "ship_address": argument.get('ship_address', "长安大街"),
         "ship_tel": argument.get('ship_tel', "11111111111"),
     }
 
-    data.update(argument_request)
+    if argument.get('force', False):
+        data['forcing_submit'] = 1
+
+    data.update(product_info)
+    customer_message_data = argument.get('customer_message', {})
+    if customer_message_data:
+        customer_message = __get_customer_message_str(customer_message_data)
+        data['message'] = json.dumps(customer_message)
+
     coupon_id = context.product_infos.get('coupon_id', None)
     if coupon_id:
         data['is_use_coupon'] = 'true'
@@ -137,29 +185,52 @@ def step_click_check_out(context, webapp_user_name):
             'integral': argument['integral'],
             'money': argument['integral_money']
         })
-    response = context.client.post(url, data)
-    response_json = json.loads(response.content)
-    msg = response_json["data"].get("msg", None)
-    if msg:
-        context.server_error_msg = msg
-        context.response_json = response_json
-    else:
+
+    # response = context.client.post(url, data)
+    response = requests.post(url, data)
+    response_json = json.loads(response.text)
+
+    print "--------------------------------"
+    print response_json,response_json['code']
+    print "--------------------------------"
+
+    #bdd_util.assert_api_call_success(response)
+    context.response = response_json
+
+    #访问支付结果链接
+    if response_json['code'] == 200:
+        pay_url_info = response_json['data']['pay_url_info']
+        #context.pay_url_info = pay_url_info
+        pay_type = pay_url_info['type']
+        del pay_url_info['type']
+        if pay_type == 'cod':
+            pay_url = 'http://api.weapp.com/pay/pay_result/?_method=put'
+            data = {
+                'pay_interface_type': pay_url_info['pay_interface_type'],
+                'order_id': pay_url_info['order_id']
+            }
+            context.client.post(pay_url, data)
+
         context.created_order_id = response_json['data']['order_id']
-        context.response = response
-        if argument.get('order_no', None):
-            db_order = Order.objects.get(order_id=context.created_order_id)
-            db_order.order_id=argument['order_no']
+    else:
+        context.created_order_id = -1
+        context.server_error_msg = response_json['data']['detail']
+
+    if context.created_order_id != -1:
+        if 'date' in argument:
+            mall_models.Order.objects.update(created_at=bdd_util.get_datetime_str(argument['date']))
+            mall_models.Order.objects.filter(order_id=context.created_order_id)
+        if 'order_id' in argument:
+            db_order = mall_models.Order.objects.get(order_id=context.created_order_id)
+            db_order.order_id=argument['order_id']
             db_order.save()
-
-            db_order_operation_log = OrderOperationLog.objects.get(order_id=context.created_order_id)
-            db_order_operation_log.order_id=argument['order_no']
-            db_order_operation_log.save()
-
             if db_order.origin_order_id <0:
-                for order in Order.objects.filter(origin_order_id=db_order.id):
-                    order.order_id = '%s^%s' % (argument['order_no'], order.supplier)
+                for order in mall_models.Order.objects.filter(origin_order_id=db_order.id):
+                    order.order_id = '%s^%s' % (argument['order_id'], order.order_id.split('^')[1])
                     order.save()
-            context.created_order_id = argument['order_no']
+            context.created_order_id = argument['order_id']
+
+    logging.info("[Order Created] webapp_owner_id: {}, created_order_id: {}".format(context.webapp_owner_id, context.created_order_id))
 
 
 # 不在mall2

@@ -12,6 +12,7 @@ from modules.member.models import WebAppUser
 from features.testenv.model_factory import *
 from tools.regional.models import District, City, Province
 from mall.promotion.models import Coupon
+from mall import models as mall_models
 
 
 def get_product_model_keys(product_model_name):
@@ -352,3 +353,45 @@ def get_area_ids(areas=None):
         else:
             ship_area = ship_area + '_' + str(dis[0].id)
     return ship_area
+
+def __get_en_product_type(type):
+    if type == u'虚拟商品':
+        return u'virtual'
+    elif type == u'微众卡':
+        return u'wzcard'
+    else:
+        return mall_models.PRODUCT_DEFAULT_TYPE
+
+def __get_product_type(type):
+    if type == u'wzcard':
+        return u'微众卡'
+    elif type == u'virtual':
+        return u'虚拟商品'
+    else:
+        return u'普通商品'
+
+def _status_change_num(status):
+    STATUS2TEXT = {
+        '待支付': 0,
+        '已取消': 1,
+        '已支付': 2,
+        '待发货': 3,
+        '已发货': 4,
+        '已完成': 5,
+        '退款中': 6,
+        '退款成功': 7,
+        '退款中': 8,
+        '退款成功': 9
+    }  
+    return STATUS2TEXT.get(str(status), 10)
+
+def code_status_to_num(status):
+    code_status = {
+        '未领取': 0,
+        '已领取': 1,
+        '已过期': 2,
+        '已失效': 3
+    }
+    return code_status.get(str(status), -1)
+    # ['未领取','已领取','已过期','已失效']
+    # stat = code_status.index(status)

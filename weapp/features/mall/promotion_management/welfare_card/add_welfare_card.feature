@@ -184,7 +184,7 @@ Background:
 		}
 		"""
 
-@welfare_card @weshop
+@welfare_card @weshop @nanxuezhi
 Scenario:1 新建福利卡券活动
 	Given jobs登录系统
 	When jobs新建福利卡券活动
@@ -206,8 +206,7 @@ Scenario:1 新建福利卡券活动
 				},{
 					"id":"0000002",
 					"password":"2234567"
-				}],
-			"create_time":"今天"
+				}]
 		}]
 		"""
 	Then jobs获得福利卡券活动列表
@@ -223,7 +222,6 @@ Scenario:1 新建福利卡券活动
 			"sale_cards":0,
 			"expired_cards":0,
 			"invalid_cards":0,
-			"create_time":"今天",
 			"actions":["码库详情","增加库存","结束"]
 		}]
 		"""
@@ -260,7 +258,7 @@ Scenario:1 新建福利卡券活动
 		}
 		"""
 
-@welfare_card @weshop
+@welfare_card @weshop @nanxuezhi
 Scenario:2 新建福利卡券活动，码库文件中包含非有效卡信息时，则上传不成功
 	Given jobs登录系统
 	#码库文件中有重复卡号
@@ -286,11 +284,10 @@ Scenario:2 新建福利卡券活动，码库文件中包含非有效卡信息时
 					},{
 						"id":"0000002",
 						"password":"2234567"
-					}],
-				"create_time":"今天"
+					}]
 			}]
 			"""
-		Then jobs获得提示信息'第3行卡号与前面重复，请核查!'
+		Then jobs获得上传文件提示信息'第3行卡号与前面重复，请核查！'
 	#码库文件中卡号为空
 		#卡号为空，密码非空
 		When jobs新建福利卡券活动
@@ -312,11 +309,10 @@ Scenario:2 新建福利卡券活动，码库文件中包含非有效卡信息时
 					},{
 						"id":"",
 						"password":"2234567"
-					}],
-				"create_time":"今天"
+					}]
 			}]
 			"""
-		Then jobs获得提示信息'第2行数据有误，请核查!'
+		Then jobs获得上传文件提示信息'第2行数据有误，请核查！'
 		#卡号和密码均为空
 		When jobs新建福利卡券活动
 			"""
@@ -337,13 +333,12 @@ Scenario:2 新建福利卡券活动，码库文件中包含非有效卡信息时
 					},{
 						"id":"0000001",
 						"password":"1234567"
-					}],
-				"create_time":"今天"
+					}]
 			}]
 			"""
-		Then jobs获得提示信息'第1行数据有误，请核查!'
+		Then jobs获得上传文件提示信息'第1行数据有误，请核查！'
 
-@welfare_card @weshop
+@welfare_card @weshop @nanxuezhi
 Scenario:3 新建福利卡券活动，码库文件中包含正在使用的卡信息时，只读取可用的卡信息
 	Given jobs登录系统
 	When jobs新建福利卡券活动
@@ -365,8 +360,7 @@ Scenario:3 新建福利卡券活动，码库文件中包含正在使用的卡信
 				},{
 					"id":"0000002",
 					"password":"2234567"
-				}],
-			"create_time":"今天"
+				}]
 		}]
 		"""
 
@@ -389,8 +383,7 @@ Scenario:3 新建福利卡券活动，码库文件中包含正在使用的卡信
 				},{
 					"id":"0000003",
 					"password":"3234567"
-				}],
-			"create_time":"今天"
+				}]
 		}]
 		"""
 	Then jobs获得福利卡券活动列表
@@ -406,7 +399,6 @@ Scenario:3 新建福利卡券活动，码库文件中包含正在使用的卡信
 			"sale_cards":0,
 			"expired_cards":0,
 			"invalid_cards":0,
-			"create_time":"今天",
 			"actions":["码库详情","增加库存","结束"]
 		},{
 			"activity_name":"10元通用卡",
@@ -419,12 +411,11 @@ Scenario:3 新建福利卡券活动，码库文件中包含正在使用的卡信
 			"sale_cards":0,
 			"expired_cards":0,
 			"invalid_cards":0,
-			"create_time":"今天",
 			"actions":["码库详情","增加库存","结束"]
 		}]
 		"""
 
-@welfare_card @weshop
+@welfare_card @weshop @nanxuezhi
 Scenario:4 新建福利卡券活动，商品弹窗的校验
 	Given jobs登录系统
 	Given jobs已添加商品
@@ -513,8 +504,7 @@ Scenario:4 新建福利卡券活动，商品弹窗的校验
 				},{
 					"id":"0000002",
 					"password":"2234567"
-				}],
-			"create_time":"今天"
+				}]
 		}]
 		"""
 	When jobs新建活动时设置参与活动的商品查询条件

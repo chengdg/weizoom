@@ -209,8 +209,7 @@ Background:
 				},{
 					"id":"0000002",
 					"password":"2234567"
-				}],
-			"create_time":"今天"
+				}]
 		},{
 			"product":
 				{
@@ -228,14 +227,13 @@ Background:
 				},{
 					"id":"0000012",
 					"password":"2234567"
-				}],
-			"create_time":"今天"
+				}]
 		}]
 		"""
 	When bill关注jobs的公众号
 	When tom关注jobs的公众号
 
-@welfare_card @weizoom
+@welfare_card @weizoom @nanxuezhi
 Scenario:1 查看含虚拟商品的订单列表
 	#bill购买微众卡商品
 	When bill访问jobs的webapp
@@ -286,7 +284,7 @@ Scenario:1 查看含虚拟商品的订单列表
 		[{
 			"order_no":"001",
 			"final_price":30.00,
-			"status":"已完成",
+			"status":"已发货",
 			"products": [{
 				"name": "微众虚拟商品1",
 				"price":10.00,
@@ -294,7 +292,7 @@ Scenario:1 查看含虚拟商品的订单列表
 				"type":"微众卡",
 				"supplier": "微众",
 				"is_sync_supplier": "false",
-				"status":"已完成"
+				"status":"已发货"
 			},{
 				"name": "微众虚拟商品2",
 				"price":20.00,
@@ -302,7 +300,7 @@ Scenario:1 查看含虚拟商品的订单列表
 				"type":"微众卡",
 				"supplier": "微众",
 				"is_sync_supplier": "false",
-				"status":"已完成"
+				"status":"已发货"
 			}]
 		}]
 		"""
@@ -310,7 +308,7 @@ Scenario:1 查看含虚拟商品的订单列表
 		"""
 		{
 			"order_no": "001",
-			"status":"已完成",
+			"status":"已发货",
 			"final_price": 30.00,
 			"products": [{
 				"name": "微众虚拟商品1",
@@ -319,7 +317,7 @@ Scenario:1 查看含虚拟商品的订单列表
 				"type":"微众卡",
 				"supplier": "微众",
 				"is_sync_supplier": "false",
-				"status":"已完成"
+				"status":"已发货"
 			},{
 				"name": "微众虚拟商品2",
 				"price":20.00,
@@ -327,7 +325,7 @@ Scenario:1 查看含虚拟商品的订单列表
 				"type":"微众卡",
 				"supplier": "微众",
 				"is_sync_supplier": "false",
-				"status":"已完成"
+				"status":"已发货"
 			}]
 		}
 		"""
@@ -365,7 +363,7 @@ Scenario:1 查看含虚拟商品的订单列表
 		},{
 			"order_no":"001",
 			"final_price":30.00,
-			"status":"已完成",
+			"status":"已发货",
 			"products": [{
 				"name": "微众虚拟商品1",
 				"price":10.00,
@@ -373,7 +371,7 @@ Scenario:1 查看含虚拟商品的订单列表
 				"type":"微众卡",
 				"supplier": "微众",
 				"is_sync_supplier": "false",
-				"status": "已完成"
+				"status": "已发货"
 			},{
 				"name": "微众虚拟商品2",
 				"price":20.00,
@@ -381,7 +379,7 @@ Scenario:1 查看含虚拟商品的订单列表
 				"type":"微众卡",
 				"supplier": "微众",
 				"is_sync_supplier": "false",
-				"status": "已完成"
+				"status": "已发货"
 			}]
 		}]
 		"""

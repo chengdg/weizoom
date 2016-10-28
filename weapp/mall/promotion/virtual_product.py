@@ -128,6 +128,7 @@ class VirtualProduct(resource.Resource):
 		"""
 		创建福利卡券活动
 		"""
+		# print "====<<<<<<<<<<start<<<<<<<<<<<<===="
 		owner = request.manager
 		name = request.POST.get('name', '').strip()
 		product_id = request.POST.get('product_id', '').strip()
@@ -146,10 +147,16 @@ class VirtualProduct(resource.Resource):
 										product_id=product_id
 									)
 					#再为该福利卡券活动上传卡密
-					success_num = upload_codes_for(owner, code_file_path, virtual_product, start_time, end_time)
-
+					success_num = 0
+					try:
+						success_num = upload_codes_for(owner, code_file_path, virtual_product, start_time, end_time)
+					except Exception, e:
+						response.errMsg = e.message
+						response.get_response()
+						return response.get_response()
 					response = create_response(200)
 					response.data = {'success_num': success_num}
+					# print "=====================response.errMsg",response.errMsg
 				else:
 					response.errMsg = u'该商品已经有进行中的活动，请不要重复创建！'
 			else:
@@ -197,10 +204,12 @@ class VirtualProduct(resource.Resource):
 		结束福利卡券活动，把该活动的所有未发放的卡券都变为已失效
 		"""
 		virtual_product_id = request.POST.get('virtual_product_id')
+		print "=========virtual_product_id==",virtual_product_id
 		if virtual_product_id:
 			owner = request.manager
 			try:
 				virtual_product = promotion_models.VirtualProduct.objects.get(owner=owner, id=virtual_product_id, is_finished=False)
+				print "=========virtual_product==",virtual_product
 				promotion_models.VirtualProductHasCode.objects.filter(
 					owner=owner, 
 					virtual_product=virtual_product,
@@ -245,7 +254,14 @@ class FileUploader(resource.Resource):
 				logging.error(e)
 				response.errMsg = u'保存文件出错'
 				return response.get_response()
-			codes, codes_dict = get_codes_dict_from_file(file_path)
+
+			codes = None
+			codes_dict = None
+			try:
+				codes, codes_dict = get_codes_dict_from_file(file_path)
+			except Exception, e:
+				response.errMsg = e.message
+				return response.get_response()
 			
 
 			valid_codes = get_valid_codes(codes)

@@ -63,7 +63,7 @@ Background:
 		}]
 		"""
 
-@virtual_product @weizoom
+@virtual_product @weizoom @nanxuezhi
 Scenario:1 微众商城添加虚拟商品
 	#微众虚拟商品01-微众卡（有图标"码"）
 	#微众普通商品02-普通（无图标"码"）

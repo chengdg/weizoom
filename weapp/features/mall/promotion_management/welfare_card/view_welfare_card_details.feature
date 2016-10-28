@@ -158,14 +158,13 @@ Background:
 							"id":"0000003",
 							"password":"3234567"
 						}]
-				},
-			"create_time":"今天"
+				}
 		}]
 		"""
 	When bill关注jobs的公众号
 	When tom关注jobs的公众号
 
-@welfare_card @weizoom
+@welfare_card @weizoom @nanxuezhi
 Scenario:1 查看福利卡券码库详情
 	Given jobs登录系统
 	Then jobs获得福利卡券活动列表
@@ -181,7 +180,6 @@ Scenario:1 查看福利卡券码库详情
 			"sale_cards":0,
 			"expired_cards":0,
 			"invalid_cards":0,
-			"create_time":"今天",
 			"actions":["码库详情","增加库存","结束"]
 		}]
 		"""
@@ -189,7 +187,7 @@ Scenario:1 查看福利卡券码库详情
 		| card_id | create_time | start_date | end_date | status | get_time | member | order_no |
 		| 0000001 |   今天      |    今天    | 30天后   | 未领取 |          |        |          |
 		| 0000002 |   今天      |    今天    | 30天后   | 未领取 |          |        |          |
-		| 0000005 |   今天      |    今天    | 36天后   | 未领取 |          |        |          |
+		| 0000003 |   今天      |    今天    | 30天后   | 未领取 |          |        |          |
 	When bill访问jobs的webapp
 	And bill购买jobs的商品
 		"""
@@ -222,12 +220,11 @@ Scenario:1 查看福利卡券码库详情
 				"name":"微众虚拟商品1",
 				"bar_code":"112233"
 			},
-			"total_stocks":2,
-			"remain_stocks":1,
+			"total_stocks":3,
+			"remain_stocks":2,
 			"sale_cards":1,
 			"expired_cards":0,
 			"invalid_cards":0,
-			"create_time":"今天",
 			"actions":["码库详情","增加库存","结束"]
 		}]
 		"""
@@ -235,9 +232,9 @@ Scenario:1 查看福利卡券码库详情
 		| card_id | create_time | start_date | end_date | status | get_time | member | order_no |
 		| 0000001 |   今天      |    今天    | 30天后   | 已领取 | 今天     | bill   |   001    |
 		| 0000002 |   今天      |    今天    | 30天后   | 未领取 |          |        |          |
-		| 0000005 |   今天      |    今天    | 36天后   | 未领取 |          |        |          |
+		| 0000003 |   今天      |    今天    | 30天后   | 未领取 |          |        |          |
 
-@welfare_card @weizoom
+@welfare_card @weizoom @nanxuezhi
 Scenario:2 福利卡券码库详情列表的查询
 	When bill访问jobs的webapp
 	And bill购买jobs的商品
@@ -290,7 +287,7 @@ Scenario:2 福利卡券码库详情列表的查询
 		| card_id | create_time | start_date | end_date | status | get_time | member | order_no |
 		| 0000001 |   今天      |    今天    | 30天后   | 已领取 | 今天     | bill   |   001    |
 		| 0000002 |   今天      |    今天    | 30天后   | 已领取 | 今天     | tom    |   002    |
-		| 0000005 |   今天      |    今天    | 36天后   | 未领取 |          |        |          |
+		| 0000003 |   今天      |    今天    | 30天后   | 未领取 |          |        |          |
 
 	#按照'卡券码'进行查询
 		When jobs访问福利卡券活动'10元通用卡'的卡券详情
@@ -310,7 +307,7 @@ Scenario:2 福利卡券码库详情列表的查询
 		Then jobs获得福利卡券活动'10元通用卡'的码库详情列表
 			"""
 			[{
-				"card_id":"000001"
+				"card_id":"0000001"
 			}]
 			"""
 
@@ -332,7 +329,7 @@ Scenario:2 福利卡券码库详情列表的查询
 			Then jobs获得福利卡券活动'10元通用卡'的码库详情列表
 				"""
 				[{
-					"card_id":"000001",
+					"card_id":"0000001",
 					"member":"bill"
 				}]
 				"""
@@ -353,7 +350,7 @@ Scenario:2 福利卡券码库详情列表的查询
 			Then jobs获得福利卡券活动'10元通用卡'的码库详情列表
 				"""
 				[{
-					"card_id":"000001",
+					"card_id":"0000001",
 					"member":"bill"
 				}]
 				"""
@@ -376,11 +373,9 @@ Scenario:2 福利卡券码库详情列表的查询
 			Then jobs获得福利卡券活动'10元通用卡'的码库详情列表
 				"""
 				[{
-					"card_id":"000001"
+					"card_id":"0000001"
 				},{
-					"card_id":"000002"
-				},{
-					"card_id":"000003"
+					"card_id":"0000002"
 				}]
 				"""
 		#开始时间和结束时间不等
@@ -400,11 +395,9 @@ Scenario:2 福利卡券码库详情列表的查询
 			Then jobs获得福利卡券活动'10元通用卡'的码库详情列表
 				"""
 				[{
-					"card_id":"000001"
+					"card_id":"0000001"
 				},{
-					"card_id":"000002"
-				},{
-					"card_id":"000003"
+					"card_id":"0000002"
 				}]
 				"""
 		#查询结果为空
@@ -462,7 +455,7 @@ Scenario:2 福利卡券码库详情列表的查询
 			Then jobs获得福利卡券活动'10元通用卡'的码库详情列表
 				"""
 				[{
-					"card_id":"000002",
+					"card_id":"0000002",
 					"order_no":"002"
 				}]
 				"""
@@ -484,7 +477,7 @@ Scenario:2 福利卡券码库详情列表的查询
 			Then jobs获得福利卡券活动'10元通用卡'的码库详情列表
 				"""
 				[{
-					"card_id":"000003",
+					"card_id":"0000003",
 					"create_time":"今天",
 					"start_date":"今天",
 					"end_date":"30天后",
@@ -532,7 +525,7 @@ Scenario:2 福利卡券码库详情列表的查询
 				| card_id | create_time | start_date | end_date | status | get_time | member | order_no |
 				| 0000001 |   今天      |    今天    | 30天后   | 已领取 | 今天     | bill   |   001    |
 				| 0000002 |   今天      |    今天    | 30天后   | 已领取 | 今天     | tom    |   002    |
-				| 0000005 |   今天      |    今天    | 36天后   | 未领取 |          |        |          |
+				| 0000003 |   今天      |    今天    | 30天后   | 未领取 |          |        |          |
 
 	#组合查询
 			When jobs设置码库详情列表查询条件
@@ -551,7 +544,7 @@ Scenario:2 福利卡券码库详情列表的查询
 			Then jobs获得福利卡券活动'10元通用卡'的码库详情列表
 				"""
 				[{
-					"card_id":"000001",
+					"card_id":"0000001",
 					"create_time":"今天",
 					"start_date":"今天",
 					"end_date":"30天后",
