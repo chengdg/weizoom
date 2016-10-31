@@ -9,6 +9,8 @@ import wzcard
 
 import qrcode
 
+import new_product
+
 import views
 from django.conf.urls import *
 
