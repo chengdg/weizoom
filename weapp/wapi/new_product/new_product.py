@@ -40,14 +40,18 @@ class AddedCategoryProduct(api_resource.ApiResource):
 
 		# 获取商品分组，若没有该分组则新建分组
 		product_category = mall_models.ProductCategory.objects.filter(owner_id=owner.id, name=u'新品速递')
+
 		if product_category.count() <= 0:
 			product_category = mall_models.ProductCategory.objects.create(
 				owner=owner,
 				name=u'新品速递'
 			)
+			category_id = product_category.id
+		else:
+			category_id = product_category[0].id
 
 		# 获取商品分组里的商品
-		category_product_ids = [chp.product_id for chp in mall_models.CategoryHasProduct.objects.filter(category_id=product_category[0].id)]
+		category_product_ids = [chp.product_id for chp in mall_models.CategoryHasProduct.objects.filter(category_id=category_id)]
 
 		add_product_ids = set(pool_product_ids) - set(category_product_ids)
 		del_product_ids = set(category_product_ids) - set(pool_product_ids)
