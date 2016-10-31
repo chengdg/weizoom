@@ -63,7 +63,7 @@ class AddedCategoryProduct(api_resource.ApiResource):
 		for add_p_id in add_product_ids:
 			add_product_list.append(mall_models.CategoryHasProduct(
 				product_id=add_p_id,
-				category_id=category_id.id
+				category_id=category_id
 			))
 			add_num += 1
 		mall_models.CategoryHasProduct.objects.bulk_create(add_product_list)
