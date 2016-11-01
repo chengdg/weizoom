@@ -50,7 +50,6 @@ class SignHandler(KeywordHandler):
 				keyword = message.content
 				openid = message.fromUserName
 				webapp_id = context.user_profile.webapp_id
-				print '1111111111111111111'
 				response_content = Resource.use('marketapp_apiserver').post({
 					'resource': 'sign.do_auto_signment',
 					'data': {
