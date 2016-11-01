@@ -258,9 +258,8 @@ class MSign(resource.Resource):
             'share_page_title': record.share['desc'] if record else '',
             'share_img_url': record.share['img'] if record else '',
             'share_page_desc': u"签到",
-            'sign_description':sign_description,
-
-        })
+            'sign_description':sign_description
+        });
         response = render_to_string('sign/templates/webapp/m_sign.html', c)
         if not isPC:
             SET_CACHE(cache_key, response)
