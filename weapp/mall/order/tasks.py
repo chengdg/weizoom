@@ -108,7 +108,7 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
         # orders[25] = u"供货商"
         # orders.insert(25, u'供货商类型')
         orders[3] = u"供货商"
-        orders.insert(3, u'供货商类型')
+        # orders.insert(3, u'供货商类型')
 
         # orders[12] = u"微众卡支付金额"
         orders[13] = u"微众卡支付金额"
