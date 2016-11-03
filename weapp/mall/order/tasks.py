@@ -105,10 +105,12 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
 
 
     if mall_type:
-        orders[25] = u"供货商"
-        orders.insert(25, u'供货商类型')
+        # orders[25] = u"供货商"
+        # orders.insert(25, u'供货商类型')
+        orders[3] = u"供货商"
+        orders.insert(3, u'供货商类型')
 
-        orders[12] = u"微众卡支付金额"
+        orders[14] = u"微众卡支付金额"
         #退现金金额
         total_refund_money = 0.0
         #退微众卡金额
@@ -118,7 +120,7 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
         #退积分抵扣金额
         total_refund_integral_money = 0.0
         for i in [u'退积分抵扣金额', u'退优惠券金额', u'退微众卡金额', u'退现金金额']:
-            orders.insert(18, i)
+            orders.insert(20, i)
 
     # 判断是否有供货商，如果有则显示该字段
 
@@ -590,6 +592,7 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
                             order_id,
                             order.created_at.strftime('%Y-%m-%d %H:%M').encode('utf8'),
                             payment_time,
+                            source.encode('utf8'),
                             product.name.encode('utf8'),
                             model_value[1:].encode('utf8'),
                             relation.price,
@@ -614,7 +617,7 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
                             address.encode('utf8') if address else '-',
                             temp_leader_names[0].encode('utf8'),
                             leader_remark.encode('utf8'),
-                            source.encode('utf8'),
+                            # source.encode('utf8'),
                             express_name if express_name else '-',
                             order_express_number if order_express_number else '-',
                             postage_time if postage_time else '-',
@@ -634,6 +637,7 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
                             order_id,
                             order.created_at.strftime('%Y-%m-%d %H:%M').encode('utf8'),
                             payment_time,
+                            source.encode('utf8'),
                             product.name,
                             model_value[1:],
                             relation.price,
@@ -658,7 +662,7 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
                             address.encode('utf8') if address else '-',
                             temp_leader_names[0].encode('utf8'),
                             leader_remark.encode('utf8'),
-                            source.encode('utf8'),
+                            # source.encode('utf8'),
                             express_name if express_name else '-',
                             order_express_number if order_express_number else '-',
                             postage_time if postage_time else '-',
@@ -671,16 +675,21 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
 
                         ]
                     if mall_type:
-                        tmp_order.insert(25, supplier_type)
+                        tmp_order.insert(3, supplier_type)
                         if fackorder and fackorder2refund.has_key(fackorder.id) and tmp_order_id != order_id: #供货商相同只在第一列展示
-                            tmp_order.insert(18, fackorder2refund[fackorder.id].integral_money)
-                            tmp_order.insert(18, fackorder2refund[fackorder.id].coupon_money)
-                            tmp_order.insert(18, fackorder2refund[fackorder.id].weizoom_card_money)
-                            tmp_order.insert(18, fackorder2refund[fackorder.id].cash)
+                            # tmp_order.insert(18, fackorder2refund[fackorder.id].integral_money)
+                            # tmp_order.insert(18, fackorder2refund[fackorder.id].coupon_money)
+                            # tmp_order.insert(18, fackorder2refund[fackorder.id].weizoom_card_money)
+                            # tmp_order.insert(18, fackorder2refund[fackorder.id].cash)
+                            tmp_order.insert(20, fackorder2refund[fackorder.id].integral_money)
+                            tmp_order.insert(20, fackorder2refund[fackorder.id].coupon_money)
+                            tmp_order.insert(20, fackorder2refund[fackorder.id].weizoom_card_money)
+                            tmp_order.insert(20, fackorder2refund[fackorder.id].cash)
                             tmp_order_id = order_id
                         else:
                             for i in xrange(4):
-                                tmp_order.insert(18,'-')
+                                # tmp_order.insert(18,'-')
+                                tmp_order.insert(20,'-')
                     if has_supplier:
                         tmp_order.append(u'-' if 0.0 == product.purchase_price else product.purchase_price)
                         tmp_order.append(u'-'  if 0.0 ==product.purchase_price else product.purchase_price*relation.number)
@@ -701,6 +710,7 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
                                 order_id,
                                 order.created_at.strftime('%Y-%m-%d %H:%M').encode('utf8'),
                                 payment_time,
+                                source.encode('utf8'),
                                 u'(赠品)' + premium_product['name'],
                                 u'-',
                                 premium_product['price'],
@@ -723,7 +733,7 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
                                 address.encode('utf8') if address else '-',
                                 temp_leader_names[0].encode('utf8'),
                                 leader_remark.encode('utf8'),
-                                source.encode('utf8'),
+                                # source.encode('utf8'),
                                 express_name if express_name else '-',
                                 order_express_number if order_express_number else '-',
                                 postage_time if postage_time else '-',
@@ -735,9 +745,11 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
                                 '-'
                             ]
                             if mall_type:
-                                tmp_order.insert(25, supplier_type)
+                                # tmp_order.insert(25, supplier_type)
+                                tmp_order.insert(3, supplier_type)
                                 for i in xrange(4):
-                                    tmp_order.insert(18,'-')
+                                    # tmp_order.insert(18,'-')
+                                    tmp_order.insert(20,'-')
                             if has_supplier:
                                 tmp_order.append( u'-' if 0.0 == premium_product['purchase_price'] else premium_product['purchase_price'])
                                 tmp_order.append(u'-' if 0.0 ==premium_product['purchase_price'] else premium_product['purchase_price']*premium_product['count'])
