@@ -756,7 +756,11 @@ class OrderRefundingOrder(resource.Resource):
 
         # sub_order.refund_money = total
         # sub_order.save()
-
+        if OrderHasRefund.objects.filter(delivery_item_id=delivery_item_id).count() == 1:
+            response = create_response(200)
+            response.data = {}
+            return response.get_response()
+        
         OrderHasRefund.objects.create(
 	        origin_order_id=order_id,
 	        delivery_item_id=delivery_item_id,
