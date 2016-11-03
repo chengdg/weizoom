@@ -97,7 +97,7 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
     webapp_id = user_profile.webapp_id
     mall_type = user_profile.webapp_type
     manager = User.objects.get(id=manager_id)
-    # 查询webapp_type为2的记录（只有一条），提供给查询不同平台的供货商数据用
+    # 查询webapp_type为2的记录（只有一条），用于查询不同平台的供货商数据用
     manager2 = UserProfile.objects.get(webapp_type=2)
 
     supplier_users = None
@@ -370,7 +370,7 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
             order2postage_time = dict([(log.order_id, log.created_at.strftime('%Y-%m-%d %H:%M').encode('utf8')) for log in
                                 OrderOperationLog.objects.filter(order_id__in=order_order_ids, action__startswith="订单发货")])
 
-            order2supplier = dict([(supplier.id, supplier) for supplier in Supplier.objects.filter(owner_id__in=[manager.id, dd.id])])
+            order2supplier = dict([(supplier.id, supplier) for supplier in Supplier.objects.filter(owner_id__in=[manager.id, manager2.user_id])])
             id2store = dict([(profile.user_id, profile) for profile in UserProfile.objects.filter(webapp_type=0)])
 
             # print 'end step 8 order - '+str(time.time() - begin_time)
