@@ -81,11 +81,11 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
         'weizoom_mall': u'商城'
     }
 
-    orders = [u'订单号', u'下单时间', u'付款时间', u'商品名称', u'规格',
+    orders = [u'订单号', u'下单时间', u'付款时间', u'来源' , u'商品名称', u'规格',
          u'商品单价', u'商品数量', u'销售额', u'商品总重量（斤）', u'支付方式', u'支付金额',
          u'现金支付金额', u'微众卡', u'运费', u'积分抵扣金额', u'优惠券金额',
          u'优惠券名称', u'订单状态', u'购买人', u'收货人', u'联系电话', u'收货地址省份',
-         u'收货地址', u'发货人', u'发货人备注', u'来源' ,u'物流公司', u'快递单号',
+         u'收货地址', u'发货人', u'发货人备注',u'物流公司', u'快递单号',
          u'发货时间',u'商家备注',u'用户备注', u'买家来源', u'买家推荐人', u'扫描带参数二维码之前是否已关注', u'是否首单']
 
     user_id = filter_data_args["user_id"]
@@ -108,8 +108,9 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
         # orders[25] = u"供货商"
         # orders.insert(25, u'供货商类型')
         orders[3] = u"供货商"
-        #orders.insert(3, u'供货商类型')
+        orders.insert(3, u'供货商类型')
 
+        # orders[12] = u"微众卡支付金额"
         orders[13] = u"微众卡支付金额"
         #退现金金额
         total_refund_money = 0.0
@@ -120,6 +121,7 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
         #退积分抵扣金额
         total_refund_integral_money = 0.0
         for i in [u'退积分抵扣金额', u'退优惠券金额', u'退微众卡金额', u'退现金金额']:
+            # orders.insert(18, i)
             orders.insert(19, i)
 
     # 判断是否有供货商，如果有则显示该字段
@@ -675,12 +677,8 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
 
                         ]
                     if mall_type:
-                        # tmp_order.insert(3, supplier_type)
+                        # tmp_order.insert(25, supplier_type)
                         if fackorder and fackorder2refund.has_key(fackorder.id) and tmp_order_id != order_id: #供货商相同只在第一列展示
-                            # tmp_order.insert(18, fackorder2refund[fackorder.id].integral_money)
-                            # tmp_order.insert(18, fackorder2refund[fackorder.id].coupon_money)
-                            # tmp_order.insert(18, fackorder2refund[fackorder.id].weizoom_card_money)
-                            # tmp_order.insert(18, fackorder2refund[fackorder.id].cash)
                             tmp_order.insert(19, fackorder2refund[fackorder.id].integral_money)
                             tmp_order.insert(19, fackorder2refund[fackorder.id].coupon_money)
                             tmp_order.insert(19, fackorder2refund[fackorder.id].weizoom_card_money)
@@ -688,7 +686,6 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
                             tmp_order_id = order_id
                         else:
                             for i in xrange(4):
-                                # tmp_order.insert(18,'-')
                                 tmp_order.insert(19,'-')
                     if has_supplier:
                         tmp_order.append(u'-' if 0.0 == product.purchase_price else product.purchase_price)
@@ -746,9 +743,7 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
                             ]
                             if mall_type:
                                 # tmp_order.insert(25, supplier_type)
-                                # tmp_order.insert(3, supplier_type)
                                 for i in xrange(4):
-                                    # tmp_order.insert(18,'-')
                                     tmp_order.insert(19,'-')
                             if has_supplier:
                                 tmp_order.append( u'-' if 0.0 == premium_product['purchase_price'] else premium_product['purchase_price'])
