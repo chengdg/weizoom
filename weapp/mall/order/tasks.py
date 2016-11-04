@@ -81,11 +81,11 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
         'weizoom_mall': u'商城'
     }
 
-    orders = [u'订单号', u'下单时间', u'付款时间', u'商品名称', u'规格',
+    orders = [u'订单号', u'下单时间', u'付款时间', u'来源' , u'商品名称', u'规格',
          u'商品单价', u'商品数量', u'销售额', u'商品总重量（斤）', u'支付方式', u'支付金额',
          u'现金支付金额', u'微众卡', u'运费', u'积分抵扣金额', u'优惠券金额',
          u'优惠券名称', u'订单状态', u'购买人', u'收货人', u'联系电话', u'收货地址省份',
-         u'收货地址', u'发货人', u'发货人备注', u'来源' ,u'物流公司', u'快递单号',
+         u'收货地址', u'发货人', u'发货人备注',u'物流公司', u'快递单号',
          u'发货时间',u'商家备注',u'用户备注', u'买家来源', u'买家推荐人', u'扫描带参数二维码之前是否已关注', u'是否首单']
 
     user_id = filter_data_args["user_id"]
@@ -97,16 +97,21 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
     webapp_id = user_profile.webapp_id
     mall_type = user_profile.webapp_type
     manager = User.objects.get(id=manager_id)
+    # 查询webapp_type为2的记录（只有一条），用于查询不同平台的供货商数据用
+    manager2 = UserProfile.objects.get(webapp_type=2)
 
     supplier_users = None
     suplier_not_sub_order_ids = []
 
 
     if mall_type:
-        orders[25] = u"供货商"
-        orders.insert(25, u'供货商类型')
+        # orders[25] = u"供货商"
+        # orders.insert(25, u'供货商类型')
+        orders[3] = u"供货商"
+        # orders.insert(3, u'供货商类型')
 
-        orders[12] = u"微众卡支付金额"
+        # orders[12] = u"微众卡支付金额"
+        orders[13] = u"微众卡支付金额"
         #退现金金额
         total_refund_money = 0.0
         #退微众卡金额
@@ -116,7 +121,8 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
         #退积分抵扣金额
         total_refund_integral_money = 0.0
         for i in [u'退积分抵扣金额', u'退优惠券金额', u'退微众卡金额', u'退现金金额']:
-            orders.insert(18, i)
+            # orders.insert(18, i)
+            orders.insert(19, i)
 
     # 判断是否有供货商，如果有则显示该字段
 
@@ -368,7 +374,7 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
             order2postage_time = dict([(log.order_id, log.created_at.strftime('%Y-%m-%d %H:%M').encode('utf8')) for log in
                                 OrderOperationLog.objects.filter(order_id__in=order_order_ids, action__startswith="订单发货")])
 
-            order2supplier = dict([(supplier.id, supplier) for supplier in Supplier.objects.filter(owner=manager)])
+            order2supplier = dict([(supplier.id, supplier) for supplier in Supplier.objects.filter(owner_id__in=[manager.id, manager2.user_id])])
             id2store = dict([(profile.user_id, profile) for profile in UserProfile.objects.filter(webapp_type=0)])
 
             # print 'end step 8 order - '+str(time.time() - begin_time)
@@ -588,6 +594,7 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
                             order_id,
                             order.created_at.strftime('%Y-%m-%d %H:%M').encode('utf8'),
                             payment_time,
+                            source.encode('utf8'),
                             product.name.encode('utf8'),
                             model_value[1:].encode('utf8'),
                             relation.price,
@@ -612,7 +619,7 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
                             address.encode('utf8') if address else '-',
                             temp_leader_names[0].encode('utf8'),
                             leader_remark.encode('utf8'),
-                            source.encode('utf8'),
+                            # source.encode('utf8'),
                             express_name if express_name else '-',
                             order_express_number if order_express_number else '-',
                             postage_time if postage_time else '-',
@@ -632,6 +639,7 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
                             order_id,
                             order.created_at.strftime('%Y-%m-%d %H:%M').encode('utf8'),
                             payment_time,
+                            source.encode('utf8'),
                             product.name,
                             model_value[1:],
                             relation.price,
@@ -656,7 +664,7 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
                             address.encode('utf8') if address else '-',
                             temp_leader_names[0].encode('utf8'),
                             leader_remark.encode('utf8'),
-                            source.encode('utf8'),
+                            # source.encode('utf8'),
                             express_name if express_name else '-',
                             order_express_number if order_express_number else '-',
                             postage_time if postage_time else '-',
@@ -669,16 +677,16 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
 
                         ]
                     if mall_type:
-                        tmp_order.insert(25, supplier_type)
+                        # tmp_order.insert(25, supplier_type)
                         if fackorder and fackorder2refund.has_key(fackorder.id) and tmp_order_id != order_id: #供货商相同只在第一列展示
-                            tmp_order.insert(18, fackorder2refund[fackorder.id].integral_money)
-                            tmp_order.insert(18, fackorder2refund[fackorder.id].coupon_money)
-                            tmp_order.insert(18, fackorder2refund[fackorder.id].weizoom_card_money)
-                            tmp_order.insert(18, fackorder2refund[fackorder.id].cash)
+                            tmp_order.insert(19, fackorder2refund[fackorder.id].integral_money)
+                            tmp_order.insert(19, fackorder2refund[fackorder.id].coupon_money)
+                            tmp_order.insert(19, fackorder2refund[fackorder.id].weizoom_card_money)
+                            tmp_order.insert(19, fackorder2refund[fackorder.id].cash)
                             tmp_order_id = order_id
                         else:
                             for i in xrange(4):
-                                tmp_order.insert(18,'-')
+                                tmp_order.insert(19,'-')
                     if has_supplier:
                         tmp_order.append(u'-' if 0.0 == product.purchase_price else product.purchase_price)
                         tmp_order.append(u'-'  if 0.0 ==product.purchase_price else product.purchase_price*relation.number)
@@ -699,6 +707,7 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
                                 order_id,
                                 order.created_at.strftime('%Y-%m-%d %H:%M').encode('utf8'),
                                 payment_time,
+                                source.encode('utf8'),
                                 u'(赠品)' + premium_product['name'],
                                 u'-',
                                 premium_product['price'],
@@ -721,7 +730,7 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
                                 address.encode('utf8') if address else '-',
                                 temp_leader_names[0].encode('utf8'),
                                 leader_remark.encode('utf8'),
-                                source.encode('utf8'),
+                                # source.encode('utf8'),
                                 express_name if express_name else '-',
                                 order_express_number if order_express_number else '-',
                                 postage_time if postage_time else '-',
@@ -733,9 +742,9 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
                                 '-'
                             ]
                             if mall_type:
-                                tmp_order.insert(25, supplier_type)
+                                # tmp_order.insert(25, supplier_type)
                                 for i in xrange(4):
-                                    tmp_order.insert(18,'-')
+                                    tmp_order.insert(19,'-')
                             if has_supplier:
                                 tmp_order.append( u'-' if 0.0 == premium_product['purchase_price'] else premium_product['purchase_price'])
                                 tmp_order.append(u'-' if 0.0 ==premium_product['purchase_price'] else premium_product['purchase_price']*premium_product['count'])
