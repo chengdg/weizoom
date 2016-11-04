@@ -744,13 +744,13 @@ class Redirect2HermesMiddleware(object):
 				is_weizoom_mall = False
 
 			print('iis_weizoom_malls', is_weizoom_mall)
-
+			from django.conf import settings
 			if is_weizoom_mall:
 				if querystring_dict:
 
-					new_url = rebuilt_path2new_path[request.path] + '?' + urllib.urlencode(querystring_dict)
+					new_url = settings.HERMES_HOST + rebuilt_path2new_path[request.path] + '?' + urllib.urlencode(querystring_dict)
 				else:
-					new_url = rebuilt_path2new_path[request.path]
+					new_url = settings.HERMES_HOST + rebuilt_path2new_path[request.path]
 
 				return HttpResponseRedirect(new_url)
 

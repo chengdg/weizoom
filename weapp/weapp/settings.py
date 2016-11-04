@@ -687,6 +687,10 @@ else:
 IN_DEVELOP_MODE = (MODE == 'develop')
 ALLOWED_HOSTS = ['*', ]
 
+
+HERMES_HOST = 'http://hermes.pttest.weapp.weizzz.com'
+SESSION_COOKIE_DOMAIN = ".pttest.weapp.weizzz.com"
+
 # added by chuter
 # mail config for auto sending notify mail
 # MAIL_NOTIFY_USERNAME = u'noreply@weizoom.com'
