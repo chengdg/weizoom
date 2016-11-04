@@ -690,6 +690,10 @@ class Redirect2HermesMiddleware(object):
 			'/mall2/order_list/': '/order/orders',
 			'/mall2/product/': '/mall/product/',
 			'/mall2/product_list/': '/mall/products/',
+			'/mall2/image_group_list/': '/mall/image_groups/',
+			'/mall2/category_list/': '/mall/categories/',
+			'/mall2/model_property_list/': '/mall/product_model_properties/',
+			'/mall2/product_limit_zone/': '/mall/limit_zones/',
 
 			'/mall2/pay_interface_list/': '/config/pay_interface_list/',
 			'/mall2/postage_list/': '/config/postage_configs/',
@@ -702,40 +706,40 @@ class Redirect2HermesMiddleware(object):
 		}
 		querystring_dict = {}
 
-		if '/mall2/order/' in request.path:
-			querystring_dict = {'id': request.GET['order_id']}
-			is_use_rebuilt_path = True
+		new_path = rebuilt_path2new_path.get(request.path, None)
 
-		elif '/mall2/order_list/' in request.path:
-			is_use_rebuilt_path = True
-		# todo 处理querystring
+		if new_path:
 
-		elif '/mall2/product/' in request.path:
-			is_use_rebuilt_path = True
-			querystring_dict = {
-				'id': request.GET['id']
-			}
-		elif '/mall2/product_list/' in request.path:
-			is_use_rebuilt_path = True
-			querystring_dict['shelve_type'] = request.GET['shelve_type']
-			if 'high_stocks' in request.GET and querystring_dict['high_stocks'] == 0:
-				querystring_dict['stocks_lack'] = 1
-		elif '/mall2/pay_interface_list/' in request.path:
-			is_use_rebuilt_path = True
-		elif '/mall2/postage_list/' in request.path:
-			is_use_rebuilt_path = True
-		elif '/mall2/express_delivery_list/' in request.path:
-			is_use_rebuilt_path = True
-		elif '/mall2/email_notify_list/' in request.path:
-			is_use_rebuilt_path = True
-		elif '/mall2/integral_strategy/' in request.path:
-			is_use_rebuilt_path = True
-		elif '/mall2/config_product_list/' in request.path:
-			is_use_rebuilt_path = True
-		else:
-			is_use_rebuilt_path = False
+			if '/mall2/order/' in request.path:
+				querystring_dict = {'id': request.GET['order_id']}
 
-		if is_use_rebuilt_path:
+			elif '/mall2/order_list/' in request.path:
+				pass
+			# todo 处理querystring
+
+			elif '/mall2/product/' in request.path:
+				querystring_dict = {
+					'id': request.GET['id']
+				}
+			elif '/mall2/product_list/' in request.path:
+				querystring_dict['shelve_type'] = request.GET['shelve_type']
+				if 'high_stocks' in request.GET and querystring_dict['high_stocks'] == 0:
+					querystring_dict['stocks_lack'] = 1
+		# elif '/mall2/pay_interface_list/' in request.path:
+		# 	is_use_rebuilt_path = True
+		# elif '/mall2/postage_list/' in request.path:
+		# 	is_use_rebuilt_path = True
+		# elif '/mall2/express_delivery_list/' in request.path:
+		# 	is_use_rebuilt_path = True
+		# elif '/mall2/email_notify_list/' in request.path:
+		# 	is_use_rebuilt_path = True
+		# elif '/mall2/integral_strategy/' in request.path:
+		# 	is_use_rebuilt_path = True
+		# elif '/mall2/config_product_list/' in request.path:
+		# 	is_use_rebuilt_path = True
+		# else:
+		# 	is_use_rebuilt_path = False
+
 			# 判断是自营平台
 			if hasattr(request, 'manager'):
 				user_profile = request.manager.get_profile()
@@ -743,14 +747,13 @@ class Redirect2HermesMiddleware(object):
 			else:
 				is_weizoom_mall = False
 
-			print('iis_weizoom_malls', is_weizoom_mall)
 			from django.conf import settings
 			if is_weizoom_mall:
 				if querystring_dict:
 
-					new_url = settings.HERMES_HOST + rebuilt_path2new_path[request.path] + '?' + urllib.urlencode(querystring_dict)
+					new_url = settings.HERMES_HOST + new_path + '?' + urllib.urlencode(querystring_dict)
 				else:
-					new_url = settings.HERMES_HOST + rebuilt_path2new_path[request.path]
+					new_url = settings.HERMES_HOST + new_path
 
 				return HttpResponseRedirect(new_url)
 
