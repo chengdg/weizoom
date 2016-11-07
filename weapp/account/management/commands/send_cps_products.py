@@ -46,7 +46,7 @@ class Command(BaseCommand):
 			table = workbook.add_worksheet()
 			alist = [u'商品', u'供货商', u'开始时间', u'结束时间']
 			table.write_row('A1',alist)
-			promote_details = PromoteDetail.objects.filter(promote_status=2)
+			promote_details = PromoteDetail.objects.filter(promote_status=1)
 
 			product_ids = [p.product_id for p in promote_details]
 			products = Product.objects.filter(id__in=product_ids)
@@ -56,10 +56,11 @@ class Command(BaseCommand):
 			productid2supplierid = dict([(p.id, p.supplier) for p in products])
 			tmp_line = 1
 			for promote_detail in promote_details:
-				tmp_line += 1
+				if promote_detail.product_id != -1:
+					tmp_line += 1
 
-				tmp_list = [productid2name[promote_detail.product_id], supplierid2name[ productid2supplierid[promote_detail.product_id] ], promote_detail.promote_time_from.strftime("%Y-%m-%d %H:%M:%S"), promote_detail.promote_time_to.strftime("%Y-%m-%d %H:%M:%S")]
-				table.write_row('A{}'.format(tmp_line),tmp_list)
+					tmp_list = [productid2name[promote_detail.product_id], supplierid2name[ productid2supplierid[promote_detail.product_id] ], promote_detail.promote_time_from.strftime("%Y-%m-%d %H:%M:%S"), promote_detail.promote_time_to.strftime("%Y-%m-%d %H:%M:%S")]
+					table.write_row('A{}'.format(tmp_line),tmp_list)
 			workbook.close()
 
 			receivers = ['zhangzhiyong@weizoom.com', 'guoyucheng@weizoom.com']
