@@ -8,6 +8,7 @@ from django.core.management.base import BaseCommand, CommandError
 
 from termite import pagestore as pagestore_manager
 from apps.customerized_apps.sign import models as app_models
+from apps.customerized_apps.mysql_models import  ConsumeCouponLog
 from apps_survey_update_history_data import create_page
 
 class Command(BaseCommand):
@@ -46,6 +47,7 @@ class Command(BaseCommand):
             db_market_app_data.page_html.remove({'is_old': True, 'related_page_id': {'$in': related_page_ids}})
             db_market_app_data.sign_sign_participance.remove({'is_old': True})
             db_market_app_data.sign_sign_details.remove({'is_old': True})
+            db_market_app_data.consume_coupon_and_integral_log.remove({'is_old': True})
 
             # 复制termite里的page到market_app_page
             db_termite.market_app_page.remove({'_id': {'$in': related_page_ids_object}})
@@ -83,6 +85,20 @@ class Command(BaseCommand):
 
             # 构造活动报名related_page_id与活动id映射
             related_page_id2record_id = {str(sign['related_page_id']): str(sign['_id']) for sign in db_market_app_data.sign_sign.find({'is_old': True})}
+
+            # 复制consume_coupon_log里的数据到consume_coupon_and_integral_log
+            for log in ConsumeCouponLog.objects(app_id__in=record_ids):
+                related_page_id = record_id2related_page_id[str(log.app_id)]
+                db_market_app_data.consume_coupon_and_integral_log.insert({
+                    'user_id': str(log.user_id),
+                    'app_name': log.app_name,
+                    'app_id': related_page_id2record_id[related_page_id],
+                    'member_id': str(log.member_id),
+                    'created_at': log.created_at,
+                    'prize': {'type': 'coupon', 'id': log.coupon_id},
+                    'prize_type': 1,
+                    'is_old': True
+                })
 
             for par in old_sign_participances:
                 related_page_id = record_id2related_page_id[str(par.belong_to)]

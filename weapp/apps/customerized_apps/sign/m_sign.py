@@ -177,9 +177,8 @@ class MSign(resource.Resource):
         p_id = request.GET.get('id','id')
         ###############重构之后，访问老数据，直接重定向到重构微助力##########
         try:
-            related_page_id = app_models.Sign.objects.get(owner_id=request.webapp_owner_id).related_page_id
-            m_marketapp_url = 'http://{}/m/apps/sign/m_sign/?woid={}&page_id={}'.format(
-                settings.MARKET_MOBILE_DOMAIN, request.webapp_owner_id, related_page_id)
+            m_marketapp_url = 'http://{}/m/apps/sign/m_sign/?webapp_owner_id={}'.format(
+                settings.MARKET_MOBILE_DOMAIN, request.webapp_owner_id)
             return HttpResponseRedirect(m_marketapp_url)
         except:
             c = RequestContext(request, {

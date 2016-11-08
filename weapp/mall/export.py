@@ -405,12 +405,12 @@ DEFAULT_APPS_THIRD_NAVS = [
         'url': '/apps/red_envelope/red_envelope_rule_list/',
         'permission': ''
     },
-    {
-        'name': MALL_APPS_SIGN_NAV,
-        'title': u'签到',
-        'url': '/apps/sign/sign/',
-        'permission': ''
-    },
+    # {
+    #     'name': MALL_APPS_SIGN_NAV,
+    #     'title': u'签到',
+    #     'url': '/apps/sign/sign/',
+    #     'permission': ''
+    # },
     # {
     #     'name': MALL_APPS_POWERME_NAV,
     #     'title': u'微助力',
