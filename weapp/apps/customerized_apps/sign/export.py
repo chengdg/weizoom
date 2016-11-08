@@ -4,6 +4,8 @@ import json
 import signs
 import models as app_models
 
+from django.conf import settings
+
 NAV = {
 	'section': u'',
 	'navs': [
@@ -70,5 +72,5 @@ def get_sing_fields_to_save(request):
 def get_sign_webapp_link(request):
 	sign = app_models.Sign.objects.count()
 	if sign > 0:
-		return '/m/apps/sign/m_sign/?webapp_owner_id=%d' % request.manager.id
+		return 'http://%s/m/apps/sign/m_sign/?webapp_owner_id=%d' % (settings.MARKETAPP_DOMAIN, request.manager.id)
 	return None

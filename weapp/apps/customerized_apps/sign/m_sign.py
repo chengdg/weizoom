@@ -4,6 +4,7 @@ import json
 from datetime import datetime
 import datetime as dt_datetime
 
+from django.conf import settings
 from django.http import HttpResponseRedirect, HttpResponse
 from django.template import RequestContext
 from django.shortcuts import render_to_response
@@ -174,6 +175,18 @@ class MSign(resource.Resource):
         响应GET
         """
         p_id = request.GET.get('id','id')
+        ###############重构之后，访问老数据，直接重定向到重构微助力##########
+        try:
+            related_page_id = app_models.Sign.objects.get(owner_id=request.webapp_owner_id).related_page_id
+            m_marketapp_url = 'http://{}/m/apps/sign/m_sign/?woid={}&page_id={}'.format(
+                settings.MARKET_MOBILE_DOMAIN, request.webapp_owner_id, related_page_id)
+            return HttpResponseRedirect(m_marketapp_url)
+        except:
+            c = RequestContext(request, {
+                'is_deleted_data': True
+            })
+            return render_to_response('workbench/wepage_webapp_page.html', c)
+        ###############################################################
 
         isPC = request.GET.get('isPC',0)
         webapp_owner_id = request.GET.get('webapp_owner_id', None)
