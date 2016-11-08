@@ -2908,14 +2908,19 @@ PP_STATUS_ON = 1 #商品上架
 PP_STATUS_DELETE = -1 #商品删除 不在当前供应商显示
 PP_STATUS_ON_POOL = 2 #商品在商品池中显示
 
+PP_TYPE_SYNC = 1 #从其他商品池同步而来的商品
+PP_TYPE_CREATE = 2 #商户自身创建的商品
 
 class ProductPool(models.Model):
 	woid = models.IntegerField() #自营平台woid
 	product_id = models.IntegerField() #商品管理上传的商品id
 	status = models.IntegerField(default=PP_STATUS_ON_POOL) #商品状态
+	type = models.IntegerField(default=PP_TYPE_SYNC) #商品类型
 	display_index = models.IntegerField(default=0, blank=True)  # 显示的排序
 	sync_at = models.DateTimeField(blank=True,null=True)  # 上架时间
 	created_at = models.DateTimeField(auto_now_add=True)  # 添加时间
+	# 是否处理过cps推广
+	is_cps_promotion_processed = models.BooleanField(default=False)
 
 	class Meta(object):
 		verbose_name = "商品池商品"
