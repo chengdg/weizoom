@@ -220,7 +220,7 @@ def get_webapp_link_menu_objectes(request):
 		'sign': {
 			'id': 11,
 			'name': '签到',
-			'link': 'http://%s/m/apps/sign/m_sign/?webapp_owner_id=%d' % (settings.MARKETAPP_DOMAIN, request.manager.id)
+			'link': 'http://%s/m/apps/sign/m_sign/?webapp_owner_id=%d' % (settings.MARKET_MOBILE_DOMAIN, request.manager.id)
 		},
 		'cardExchange': {
 			'id': 13,
