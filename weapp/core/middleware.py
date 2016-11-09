@@ -717,7 +717,7 @@ class Redirect2HermesMiddleware(object):
 				pass
 			# todo 处理querystring
 
-			elif '/mall2/product/' in request.path and 'id' in request.GET:
+			elif '/mall2/product/' in request.path and 'id' in request.GET and request.method == 'GET':
 				querystring_dict = {
 					'id': request.GET['id']
 				}
