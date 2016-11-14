@@ -151,6 +151,15 @@ APP_MONGO = {
     "ALIAS": 'apps'
 }
 
+#百宝箱重构用
+MARKET_APP_MONGO = {
+    "HOST": 'mongo.apps.com',
+    "DB": 'market_app_data',
+    "USERNAME": None,
+    "PASSWORD": None,
+    "ALIAS": 'market_apps'
+}
+
 if ENABLE_SHENGJING_APP:
     DATABASES['shengjing'] = {
         # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.

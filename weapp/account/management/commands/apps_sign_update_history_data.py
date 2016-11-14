@@ -53,7 +53,7 @@ class Command(BaseCommand):
             db_termite.market_app_page.remove({'_id': {'$in': related_page_ids_object}})
             for page in db_termite.page.find({'_id': {'$in': related_page_ids_object}}):
                 model = page['component']['components'][0]['model']
-                page['component']['components'][0]['model']['image'] = model['image'].replace('/static/', 'http://' + settings.DOMAIN + '/static/').replace('/termite_static/', 'http://' + settings.DOMAIN + '/termite_static/')
+                page['component']['components'][0]['model']['image'] = model['image'].replace('/termite_static/', '/static/')
                 db_termite.market_app_page.insert(page)
 
             # #然后将老数据写入新数据库
@@ -76,7 +76,7 @@ class Command(BaseCommand):
                     'is_old': True
                 })
                 project_id = 'new_app:sign:%s' % related_page_id
-                html = create_page(project_id).replace('xa-submitTermite', 'xa-submitWepage').replace('/static/', 'http://' + settings.DOMAIN + '/static/')
+                html = create_page(project_id).replace('xa-submitTermite', 'xa-submitWepage').replace('/termite_static/', '/static/')
                 db_market_app_data.page_html.insert({
                     'related_page_id': related_page_id,
                     'html': html,

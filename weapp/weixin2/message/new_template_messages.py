@@ -53,7 +53,7 @@ class NewTemplateMessages(resource.Resource):
         for template in templates:
             template_id = template.template_id
             item = {
-                'status': False,
+                'status': True,
                 'first': '',
                 'remark': '',
                 'industry_name': '%s-%s' % (template.primary_industry, template.deputy_industry),
@@ -64,11 +64,9 @@ class NewTemplateMessages(resource.Resource):
 
             setting = id2template.get(template_id, None)
             if setting:
-                print '----'
                 item['status'] = setting.status
                 item['first'] = setting.first
                 item['remark'] = setting.remark
-            print item
             items.append(item)
         response = create_response(200)
         response.data = items
