@@ -131,7 +131,7 @@ class Promotion(resource.Resource):
                 if not filter_type == 'forbidden_coupon':
                     product_data['can_select'] = False
             # 过滤参团的商品
-            group_records = group_models.Group.objects(owner_id=request.manager.id,status__lte=1)
+            group_records = group_models.ReGroup.objects(owner_id=request.manager.id,status__lte=1)
             product_id2record = dict([(record.product_id, record)for record in group_records])
             group_product_ids = [record.product_id for record in group_records]
             for product_id in group_product_ids:
