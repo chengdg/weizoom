@@ -723,7 +723,7 @@ class Redirect2HermesMiddleware(object):
 				}
 			elif '/mall2/product_list/' in request.path and request.method == 'GET':
 				querystring_dict['shelve_type'] = request.GET['shelve_type']
-				if 'high_stocks' in request.GET and request.GET['high_stocks'] == 0:
+				if 'high_stocks' in request.GET and request.GET['high_stocks'] == '0':
 					querystring_dict['stocks_lack'] = 1
 		# elif '/mall2/pay_interface_list/' in request.path:
 		# 	is_use_rebuilt_path = True
