@@ -189,13 +189,11 @@
 <script id="weixin-template-message-view" type="text/x-handlebar-tmpl">
     <div id="template_message_list">
         {{#each items}}
-            {{#if_in this.title ../using_templates}}
-                <div class="template_message_item">
-                    <span class="xa-industry">{{title}}（行业：{{industry_name}}）</span>
-                    <button type="button" class="template_edit btn btn-primary" title="编辑" data-template-id="{{template_id}}">编辑</button>
-                    <button type="button" class="template_control btn {{#if status}}btn-danger{{else}}btn-success{{/if}}" data-template-id="{{template_id}}" data-status = "{{status}}" data-title="{{ title }}">{{#if status}}停用{{else}}启用{{/if}}</button>
-                </div>
-            {{/if_in}}
+            <div class="template_message_item">
+                <span class="xa-industry">{{title}}（行业：{{industry_name}}）</span>
+                <button type="button" class="template_edit btn btn-primary" title="编辑" data-template-id="{{template_id}}">编辑</button>
+                <button type="button" class="template_control btn {{#if status}}btn-danger{{else}}btn-success{{/if}}" data-template-id="{{template_id}}" data-status = "{{status}}" data-title="{{ title }}">{{#if status}}停用{{else}}启用{{/if}}</button>
+            </div>
         {{/each}}
     </div>
 </script>
