@@ -247,7 +247,6 @@
 
 {% block js %}
 <script type="text/javascript">
-var using_templates = ["拼团成功通知", "拼团退款提醒", "商品发货通知", "购买成功通知", "订单标记发货通知", "积分变动通知", "付款成功通知"];
 var items;
 var editing = false; //标识当前是否在编辑某个模版内容
 var curr_first = '';
@@ -278,8 +277,7 @@ var AfterSyncDialog = W.dialog.Dialog.extend({
 function renderList(){
     console.log('rendering template...');
     var context = {
-        items: items,
-        using_templates: using_templates
+        items: items
     };
     var source = $('#weixin-template-message-view').html();
     var template = Handlebars.compile(source);  
@@ -327,7 +325,9 @@ $(document).ready(function(){
                     changed_tmpls: changed_tmpls,
                     deleted_tmpls: deleted_tmpls
                 });
-                window.location.reload(true);
+                setTimeout(function(){
+                    window.location.reload(true);
+                }, 3000);
             },
             error: function(resp){
                 W.showHint('error', resp.errMsg);
