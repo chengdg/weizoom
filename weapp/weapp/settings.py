@@ -56,9 +56,11 @@ DATABASES = {
         'USER': 'weapp',                      # Not used with sqlite3.
         'PASSWORD': 'weizoom',                  # Not used with sqlite3.
         # Set to empty string for localhost. Not used with sqlite3.
-        'HOST': 'db.weapp.com',
+        #'HOST': 'db.weapp.com',
         # Set to empty string for default. Not used with sqlite3.
-        'PORT': '',
+        #'PORT': '',
+        'HOST': '103.29.16.148',
+        'PORT': '33306',
         'CONN_MAX_AGE': 100
     },
     'watchdog': {
@@ -271,7 +273,7 @@ MIDDLEWARE_CLASSES = [
     'modules.member.middleware.AddUuidSessionMiddleware',
     'core.middleware.UserManagerMiddleware',
     'core.middleware.UserProfileMiddleware',
-    'core.middleware.Redirect2HermesMiddleware',
+    #'core.middleware.Redirect2HermesMiddleware',
     # termite middleware
     'core.termite_middleware.WebappPageCacheMiddleware',
      # webapp home_page middleware

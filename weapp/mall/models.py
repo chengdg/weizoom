@@ -2989,6 +2989,8 @@ class Classification(models.Model):
 	level = models.IntegerField(default=-1) #分类等级
 	status = models.IntegerField(default=1) # 1表示上线0表示下线
 	father_id = models.IntegerField(default=-1) #父级分类id
+	product_count = models.IntegerField(default=0) #分类下的商品数量
+	note = models.CharField(max_length=1024, default='') #分类备注
 	created_at = models.DateTimeField(auto_now_add=True)  # 添加时间
 
 	class Meta(object):
