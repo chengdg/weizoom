@@ -423,12 +423,14 @@ DEFAULT_APPS_THIRD_NAVS = [
         'url': '/apps/exsurvey/exsurveies/',
         'permission': '',
         'users': ['jobs', 'ceshi01', 'wzjx001', 'weizoomxs', 'weizoommm', 'weshop', 'weizoomclub', 'weizoomshop', 'Aierkang', 'BITC', 'weizoomhtxp'] #这些帐号可以显示用户反馈
-    },{
-        'name': MALL_APPS_GROUP_NAV,
-        'title': u'团购',
-        'url': '/apps/group/groups/',
-        'permission': '',
-    },{
+    },
+    # {
+    #     'name': MALL_APPS_GROUP_NAV,
+    #     'title': u'团购',
+    #     'url': '/apps/group/groups/',
+    #     'permission': '',
+    # },
+    {
         'name': MALL_APPS_SHVOTE_NAV,
         'title': u'高级投票',
         'url': '/apps/shvote/shvotes/',

@@ -84,7 +84,7 @@ class Command(BaseCommand):
 
                 project_id = 'new_app:group:%s' % related_page_id
                 html = create_page(project_id).replace('xa-submitTermite', 'xa-submitWepage')
-                html = html.replace('/static/', 'http://' + settings.DOMAIN + '/static/')
+                html = html.replace('/static/', 'http://' + settings.DOMAIN + '/static/').replace('/termite_static/', '/static/')
                 db_market_app_data.page_html.insert({
                     'related_page_id': related_page_id,
                     'html': html,
