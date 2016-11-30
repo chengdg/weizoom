@@ -273,7 +273,7 @@ MIDDLEWARE_CLASSES = [
     'modules.member.middleware.AddUuidSessionMiddleware',
     'core.middleware.UserManagerMiddleware',
     'core.middleware.UserProfileMiddleware',
-    #'core.middleware.Redirect2HermesMiddleware',
+    'core.middleware.Redirect2HermesMiddleware',
     # termite middleware
     'core.termite_middleware.WebappPageCacheMiddleware',
      # webapp home_page middleware
