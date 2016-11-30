@@ -59,8 +59,8 @@ DATABASES = {
         #'HOST': 'db.weapp.com',
         # Set to empty string for default. Not used with sqlite3.
         #'PORT': '',
-        'HOST': '103.29.16.148',
-        'PORT': '33306',
+        'HOST': 'db.weapp.com',
+        'PORT': '',
         'CONN_MAX_AGE': 100
     },
     'watchdog': {
