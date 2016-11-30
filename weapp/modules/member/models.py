@@ -1357,6 +1357,8 @@ class MemberCard(models.Model):
 
 	class Meta(object):
 		db_table = 'member_card'
+		verbose_name = 'member_card'
+		verbose_name_plural = 'member_card'
 
 class MemberCardLog(models.Model):
 	"""
@@ -1371,6 +1373,8 @@ class MemberCardLog(models.Model):
 	
 	class Meta(object):
 		db_table = 'member_card_log'
+		verbose_name = 'member_card_log'
+		verbose_name_plural = 'member_card_log'
 
 class AdClicked(models.Model):
 	"""
@@ -1381,6 +1385,8 @@ class AdClicked(models.Model):
 	
 	class Meta(object):
 		db_table = 'ad_clicked'
+		verbose_name = 'ad_clicked'
+		verbose_name_plural = 'ad_clicked'
 
 
 class MemberCardPayOrder(models.Model):
@@ -1399,3 +1405,5 @@ class MemberCardPayOrder(models.Model):
 	
 	class Meta(object):
 		db_table = 'member_card_pay_order'
+		verbose_name = 'member_card_pay_order'
+		verbose_name_plural = 'member_card_pay_order'
