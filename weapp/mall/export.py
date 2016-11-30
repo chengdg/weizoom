@@ -473,12 +473,12 @@ DEFAULT_APPS_THIRD_NAVS = [
         'url': '/apps/red_envelope/red_envelope_rule_list/',
         'permission': ''
     },
-    {
-        'name': MALL_APPS_SIGN_NAV,
-        'title': u'签到',
-        'url': '/apps/sign/sign/',
-        'permission': ''
-    },
+    # {
+    #     'name': MALL_APPS_SIGN_NAV,
+    #     'title': u'签到',
+    #     'url': '/apps/sign/sign/',
+    #     'permission': ''
+    # },
     # {
     #     'name': MALL_APPS_POWERME_NAV,
     #     'title': u'微助力',
@@ -491,12 +491,14 @@ DEFAULT_APPS_THIRD_NAVS = [
         'url': '/apps/exsurvey/exsurveies/',
         'permission': '',
         'users': ['jobs', 'ceshi01', 'wzjx001', 'weizoomxs', 'weizoommm', 'weshop', 'weizoomclub', 'weizoomshop', 'Aierkang', 'BITC', 'weizoomhtxp'] #这些帐号可以显示用户反馈
-    },{
-        'name': MALL_APPS_GROUP_NAV,
-        'title': u'团购',
-        'url': '/apps/group/groups/',
-        'permission': '',
-    },{
+    },
+    # {
+    #     'name': MALL_APPS_GROUP_NAV,
+    #     'title': u'团购',
+    #     'url': '/apps/group/groups/',
+    #     'permission': '',
+    # },
+    {
         'name': MALL_APPS_SHVOTE_NAV,
         'title': u'高级投票',
         'url': '/apps/shvote/shvotes/',

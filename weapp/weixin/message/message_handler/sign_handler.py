@@ -18,6 +18,7 @@ from weixin.user.models import WeixinMpUser, WoFu, WoFuLog
 from watchdog.utils import watchdog_warning, watchdog_error
 from core.exceptionutil import unicode_full_stack
 from modules.member.module_api import get_member_by_openid
+from eaglet.utils.resource_client import Resource
 
 from weixin.message.handler.weixin_message import WeixinMessageTypes
 from apps.customerized_apps.sign.models import Sign
@@ -44,15 +45,21 @@ class SignHandler(KeywordHandler):
 			response = None
 			response_rule = None
 			response_content = None
-			data = {}
 			try:
-				data['webapp_owner_id'] = context.user_profile.user_id
-				data['keyword'] = message.content
-				data['openid'] = message.fromUserName
-				data['webapp_id'] = context.user_profile.webapp_id
-
-				response_content = Sign.do_auto_signment(data)
-
+				webapp_owner_id = context.user_profile.user_id
+				keyword = message.content
+				openid = message.fromUserName
+				webapp_id = context.user_profile.webapp_id
+				response_content = Resource.use('marketapp_apiserver').post({
+					'resource': 'sign.do_auto_signment',
+					'data': {
+						'webapp_owner_id': webapp_owner_id,
+						'keyword': keyword,
+						'openid': openid,
+						'webapp_id': webapp_id
+					}
+				})
+				response_content = response_content['data']
 				if response_content:
 					response = generator.get_text_response(message.fromUserName, message.toUserName, response_content, message.fromUserName, context.user_profile)
 

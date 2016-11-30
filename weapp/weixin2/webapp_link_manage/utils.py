@@ -31,8 +31,6 @@ from market_tools.tools.channel_qrcode.export import get_channel_qrcode_webapp_l
 
 from mall.promotion.models import RedEnvelopeRule
 
-from apps.customerized_apps.sign.export import get_sign_webapp_link
-
 from apps.customerized_apps.exsign.export import get_exsign_webapp_link
 from account.models import UserProfile
 from account.account_util import get_token_for_logined_user
@@ -222,7 +220,7 @@ def get_webapp_link_menu_objectes(request):
 		'sign': {
 			'id': 11,
 			'name': '签到',
-			'link': get_sign_webapp_link(request)
+			'link': 'http://%s/m/apps/sign/m_sign/?webapp_owner_id=%d' % (settings.MARKET_MOBILE_DOMAIN, request.manager.id)
 		},
 		'cardExchange': {
 			'id': 13,
