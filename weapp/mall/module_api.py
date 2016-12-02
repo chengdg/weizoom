@@ -3488,6 +3488,24 @@ def refund_weizoom_card_money(order):
 
 	return resp
 
+def refund_member_card_money(order):
+	from modules.member.models import MemberCardLog
+	trade_id = MemberCardLog.objects.filter(order_id=order.order_id).first().trade_id
+	data = {
+		'trade_id': trade_id,
+		'trade_type': 1  # 普通退款
+	}
+	msg = 'member_card refund:' + trade_id
+
+	watchdog_info(message=msg, type='member_card')
+
+	resp = Resource.use('card_apiserver').delete({
+		'resource': 'card.trade',
+		'data': data
+	})
+
+	return resp
+
 import msg_crypt
 from weapp import settings
 crypt = msg_crypt.MsgCrypt(settings.WZCARD_ENCRYPT_INFO['token'], settings.WZCARD_ENCRYPT_INFO['encodingAESKey'],

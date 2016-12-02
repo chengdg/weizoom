@@ -1615,6 +1615,7 @@ class Order(models.Model):
 	supplier_user_id = models.IntegerField(default=0) # 订单供货商user的id，用于系列拆单
 	total_purchase_price = models.FloatField(default=0)  # 总订单采购价格
 	# refund_money = models.FloatField(default=-1)     # 订单的退款金额
+	member_card_money = models.FloatField(default=0.0)  # 会员卡抵扣金额  alter table mall_order add column member_card_money float default 0;
 
 	class Meta(object):
 		db_table = 'mall_order'
