@@ -746,7 +746,7 @@ class UserTemplateSettings(models.Model):
 	template_id = models.CharField(max_length=512) #模板id
 	first = models.CharField(max_length=1024, default='') #模版开头语
 	remark = models.CharField(max_length=1024, default='') #模版最后的注释
-	status = models.BooleanField(default=True) #配置状态，是否启用
+	status = models.BooleanField(default=False) #配置状态，是否启用
 
 	class Meta(object):
 		db_table = 'weixin_template_settings'
