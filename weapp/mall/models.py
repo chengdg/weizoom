@@ -3015,6 +3015,17 @@ class ClassificationHasProduct(models.Model):
 		db_table = "mall_classification_has_product"
 
 
+class ClassificationQualification(models.Model):
+	"""
+	商品分类配置的特殊资质
+	"""
+	classification = models.ForeignKey(Classification)
+	name = models.CharField(max_length=48, default='') #资质名称
+	created_at = models.DateTimeField(auto_now_add=True) #创建时间
+
+	class Meta(object):
+		db_table = 'mall_classification_qualification'
+
 
 class SupplierDivideRebateInfo(models.Model):
     """
