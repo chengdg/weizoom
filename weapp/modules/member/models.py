@@ -1376,11 +1376,14 @@ class MemberCardLog(models.Model):
 		verbose_name = 'member_card_log'
 		verbose_name_plural = 'member_card_log'
 
+VIP_PAGE = 1  #VIP会员首页
+WANT_TO_BUY = 2  #VIP会员我想买页面
 class AdClicked(models.Model):
 	"""
 	广告点击
 	"""
 	member_id = models.IntegerField() #会员id
+	type = models.IntegerField(default=VIP_PAGE)  #页面
 	created_at = models.DateTimeField(auto_now_add=True) #时间
 	
 	class Meta(object):
