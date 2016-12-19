@@ -452,8 +452,8 @@ INSTALLED_APPS = [
     'weixin.message.message',
     'weixin.message.qa',
     # for mantis message models.py
-    'station_message',
 
+    'station_message',
     'weixin.manage',
     'weixin.manage.customerized_menu',
 

@@ -23,6 +23,7 @@ class Message(models.Model):
     owner = models.ForeignKey(User)
 
     class Meta(object):
+        db_table = 'message_message'
         verbose_name = '系统消息'
         verbose_name_plural = '系统消息'
 
@@ -36,6 +37,20 @@ class UserHasMessage(models.Model):
         db_table = 'message_user_has_message'
         verbose_name = '用户－系统消息'
         verbose_name_plural = '用户－系统消息'
+
+class MessageAttachment(models.Model):
+    """
+    消息附件
+    """
+    # 消息id Message
+    message = models.ForeignKey(Message)
+    type = models.CharField(max_length=26)  # 文档类型
+    filename = models.CharField(max_length=1024)  # 原始文件名
+    path = models.CharField(max_length=1024, default='')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta(object):
+        db_table = 'message_attachment'
 
 def add_relation_to_user(instance, created, **kwords):
     """
