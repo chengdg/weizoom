@@ -1044,6 +1044,20 @@ class MemberBrowseRecord(models.Model):
 			url = url[:url.find('from')]
 		return MemberBrowseRecord.objects.filter(member=member,url__icontains=url)[0].title if MemberBrowseRecord.objects.filter(url__icontains=url,member=member).count() > 0 else ''
 
+class MemberBrowseProductRecord(models.Model):
+	member = models.ForeignKey(Member)
+	owner_id = models.IntegerField(default=0)  #商家id
+	product_id = models.IntegerField(default=0)  #商品id
+	referer = models.CharField(max_length=256, default='') #从哪个页面过来的
+	title = models.CharField(max_length=256, default='') #页面标题
+	url = models.TextField()
+	created_at = models.DateTimeField(auto_now_add=True)
+
+	class Meta(object):
+		db_table = 'member_browse_product_record'
+		verbose_name = '会员浏览商品详情记录'
+		verbose_name_plural = '会员浏览商品详情记录'
+		
 #########################################################################
 # MemberBrowseRecordMiddleware
 #########################################################################
