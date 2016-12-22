@@ -44,8 +44,8 @@ class MessageAttachment(models.Model):
     """
     # 消息id Message
     message = models.ForeignKey(Message)
-    type = models.CharField(max_length=26)  # 文档类型
-    filename = models.CharField(max_length=1024)  # 原始文件名
+    file_type = models.CharField(max_length=26)  # 文档类型
+    file_name = models.CharField(max_length=1024)  # 原始文件名
     path = models.CharField(max_length=1024, default='')
     created_at = models.DateTimeField(auto_now_add=True)
 
