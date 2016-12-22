@@ -905,3 +905,5 @@ else:
     MNS_SECURITY_TOKEN = ''
     SUBSCRIBE_QUEUE_NAME = 'test-order-close'
     TOPIC_PAID_ORDER = 'paid-order-test'
+
+TEST_ENV = 'nj'
