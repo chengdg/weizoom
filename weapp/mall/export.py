@@ -422,7 +422,7 @@ DEFAULT_APPS_THIRD_NAVS = [
         'title': u'用户反馈',
         'url': '/apps/exsurvey/exsurveies/',
         'permission': '',
-        'users': ['jobs', 'ceshi01', 'wzjx001', 'weizoomxs', 'weizoommm', 'weshop', 'weizoomclub', 'weizoomshop', 'Aierkang', 'BITC', 'weizoomhtxp'] #这些帐号可以显示用户反馈
+        'users': ['jobs', 'ceshi01', 'weizoomjy', 'wzjx001', 'weizoomxs', 'weizoommm', 'weshop', 'weizoomclub', 'weizoomshop', 'Aierkang', 'BITC', 'weizoomhtxp'] #这些帐号可以显示用户反馈
     },
     # {
     #     'name': MALL_APPS_GROUP_NAV,
