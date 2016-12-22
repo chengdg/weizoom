@@ -206,7 +206,7 @@ def record_member_pv(self, member_id, url, page_title=''):
 			)
 
 		#访问商品详情单独写到一张表里，方便统计商品的访问记录  duhao  20161221
-		if 'module=mall' in url and 'model=product' in url and 'model=products' not in url:
+		if 'module=mall' in url and 'model=product' in url and 'rid=' in url:
 			result = urlparse.urlparse(url)
 			params = urlparse.parse_qs(result.query, True)
 			owner_id = params['woid'][0]
