@@ -159,7 +159,7 @@ def get_webapp_link_menu_objectes(request):
 				'type': 'exsurvey',
 				'add_btn_title': '新建用户反馈',
 				'add_link': '/apps/exsurvey/exsurvey/',
-				'users': ['jobs','njtest','ceshi01', 'weizoomjy', 'wzjx001', 'weizoomxs', 'weizoommm', 'weshop', 'weizoomclub', 'weizoomshop', 'BITC', 'weizoomhtxp'] #这些帐号可以显示用户反馈
+				'users': ['jobs','njtest','ceshi01', 'weizoomjy', 'Aierkang', 'wzjx001', 'weizoomxs', 'weizoommm', 'weshop', 'weizoomclub', 'weizoomshop', 'BITC', 'weizoomhtxp'] #这些帐号可以显示用户反馈
 
 			},{
 				'name': '团购',
