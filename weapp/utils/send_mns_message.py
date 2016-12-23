@@ -51,8 +51,8 @@ def coupon_issuing_tmpl_compatible(tmpl_name):
 					'url': '',
 					'items': {
 						'keyword1': u'个人中心-我的优惠券',
-						'keyword2': coupon_rule.money,
-						'keyword3': total_money,
+						'keyword2': str(coupon_rule.money),
+						'keyword3': str(total_money),
 						'keyword4': get_current_datetime(),
 					}
 				})
