@@ -72,7 +72,7 @@ def has_new_tmpl(owner_id, tmpl_name):
 
 
 def send_weixin_template_msg(data):
-	topic_name = '{}-weixin-topic'.format(settings.MODE if settings.MODE != 'develop' else 'test')
+	topic_name = 'test-weixin-topic'
 	message_name = 'template_msg'
 	data['test_env'] = settings.TEST_ENV
 
