@@ -11,6 +11,7 @@ from eaglet.core import watchdog
 
 from weixin2 import models as weixin_models
 from mall.promotion import models as mall_models
+from modules.member import module_api as member_model_api
 
 
 def send_mns_message(topic_name, message_name, data):
@@ -44,11 +45,12 @@ def coupon_issuing_tmpl_compatible(tmpl_name):
 					total_money += coupon.money
 
 				#商家配置了新的模板消息，则使用mns,并返回空函数
+				member = member_model_api.get_member_by_id(member_id)
 				send_weixin_template_msg({
 					'user_id': woid,
 					'member_id': member_id,
 					'name': tmpl_name,
-					'url': '',
+					'url': u'{}/mall/my_coupons/?woid={}&fmt={}'.format(settings.H5_HOST, woid, member.token),
 					'items': {
 						'keyword1': u'个人中心-我的优惠券',
 						'keyword2': str(coupon_rule.money),
@@ -72,7 +74,7 @@ def has_new_tmpl(owner_id, tmpl_name):
 
 
 def send_weixin_template_msg(data):
-	topic_name = 'test-weixin-topic'
+	topic_name = '{}-weixin-topic'.format('test' if settings.IS_TMS_TEST else 'deploy')
 	message_name = 'template_msg'
 	data['test_env'] = settings.TEST_ENV
 

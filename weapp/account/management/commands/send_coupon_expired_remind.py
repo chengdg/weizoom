@@ -8,6 +8,8 @@ from core.exceptionutil import unicode_full_stack
 from utils import send_mns_message as mns_utils
 from watchdog.utils import watchdog_error, watchdog_info, watchdog_warning
 from mall.promotion import models as promotion_models
+from modules.member import module_api as member_model_api
+from weapp import settings
 from weixin.user.models import ComponentAuthedAppid, ComponentAuthedAppidInfo
 from market_tools.tools.template_message import models as template_message_model
 from market_tools.tools.template_message import module_api as template_message_api
@@ -49,11 +51,12 @@ class Command(BaseCommand):
 				new_tmpl_name = u'过期提醒'
 				if mns_utils.has_new_tmpl(coupon.owner_id, new_tmpl_name):
 					mp_info = ComponentAuthedAppidInfo.objects.get(auth_appid=owner_id2ahth_appid[coupon.owner_id])
+					member = member_model_api.get_member_by_id(coupon.member_id)
 					mns_utils.send_weixin_template_msg({
 						'user_id': coupon.owner_id,
 						'member_id': coupon.member_id,
 						'name': new_tmpl_name,
-						'url': '',
+						'url': u'{}/mall/my_coupons/?woid={}&fmt={}'.format(settings.H5_HOST, coupon.owner_id, member.token),
 						'items': {
 							'keyword1': mp_info.nick_name,
 							'keyword2': coupon.expired_time.strftime('%Y-%m-%d %H:%M:%S')
