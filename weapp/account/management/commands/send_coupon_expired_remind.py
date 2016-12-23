@@ -1,14 +1,13 @@
 #-*- coding: utf-8 -*-
 from datetime import datetime, timedelta
-import time
 
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 
 from core.exceptionutil import unicode_full_stack
-from utils import send_mns_message as mns_utils
-from watchdog.utils import watchdog_error, watchdog_info, watchdog_warning
+from watchdog.utils import watchdog_warning
 from mall.promotion import models as promotion_models
 from modules.member import module_api as member_model_api
+from utils import send_mns_message as mns_utils
 from weapp import settings
 from weixin.user.models import ComponentAuthedAppid, ComponentAuthedAppidInfo
 from market_tools.tools.template_message import models as template_message_model
@@ -37,7 +36,7 @@ class Command(BaseCommand):
 			expired_time__lt=expired_time_l,
 			status=promotion_models.COUPON_STATUS_UNUSED
 			)
-
+		print 'has{} to be handled'.format(coupons.count())
 		for coupon in coupons:
 			try:
 				model_data = {
@@ -50,6 +49,7 @@ class Command(BaseCommand):
 				print u"给用户{}发优惠券过期提醒！".format(coupon.member_id)
 				new_tmpl_name = u'过期提醒'
 				if mns_utils.has_new_tmpl(coupon.owner_id, new_tmpl_name):
+					print 'use mns----------------'
 					mp_info = ComponentAuthedAppidInfo.objects.get(auth_appid=owner_id2ahth_appid[coupon.owner_id])
 					member = member_model_api.get_member_by_id(coupon.member_id)
 					mns_utils.send_weixin_template_msg({
@@ -63,6 +63,7 @@ class Command(BaseCommand):
 						}
 					})
 				else:
+					print 'use celery----------------'
 					template_message_api.send_weixin_template_message(coupon.owner_id, coupon.member_id, model_data, template_message_model.COUPON_EXPIRED_REMIND)
 			except:
 				print unicode_full_stack()
