@@ -5,10 +5,10 @@ import time
 from django.core.management.base import BaseCommand, CommandError
 
 from core.exceptionutil import unicode_full_stack
-from utils.send_mns_message import has_new_tmpl
+from utils import send_mns_message as mns_utils
 from watchdog.utils import watchdog_error, watchdog_info, watchdog_warning
 from mall.promotion import models as promotion_models
-from weixin.user.models import ComponentAuthedAppid
+from weixin.user.models import ComponentAuthedAppid, ComponentAuthedAppidInfo
 from market_tools.tools.template_message import models as template_message_model
 from market_tools.tools.template_message import module_api as template_message_api
 
@@ -21,10 +21,11 @@ class Command(BaseCommand):
 		优惠券到期前36小时提醒用户有优惠券即将过期。
 		"""
 		user_ids = []
+		owner_id2ahth_appid = dict()
 		for component in ComponentAuthedAppid.objects.all():
 			user_ids.append(component.user_id)
+			owner_id2ahth_appid[component.user_id] = component
 
-		now = datetime.now()
 		expired_time_g = datetime.now() + timedelta(hours=36)
 		expired_time_l = datetime.now() + timedelta(hours=37)
 
@@ -45,8 +46,19 @@ class Command(BaseCommand):
 					model_data["coupon_store"] = u"满%s元即可使用" % str(coupon.coupon_rule.valid_restrictions)
 
 				print u"给用户{}发优惠券过期提醒！".format(coupon.member_id)
-				if has_new_tmpl(coupon.owner_id, u'过期提醒'):
-					pass
+				new_tmpl_name = u'过期提醒'
+				if mns_utils.has_new_tmpl(coupon.owner_id, new_tmpl_name):
+					mp_info = ComponentAuthedAppidInfo.objects.get(auth_appid=owner_id2ahth_appid[coupon.owner_id])
+					mns_utils.send_weixin_template_msg({
+						'user_id': coupon.owner_id,
+						'member_id': coupon.member_id,
+						'name': new_tmpl_name,
+						'url': '',
+						'items': {
+							'keyword1': mp_info.nick_name,
+							'keyword2': coupon.expired_time.strftime('%Y-%m-%d %H:%M:%S')
+						}
+					})
 				else:
 					template_message_api.send_weixin_template_message(coupon.owner_id, coupon.member_id, model_data, template_message_model.COUPON_EXPIRED_REMIND)
 			except:
