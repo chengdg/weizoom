@@ -1940,6 +1940,7 @@ class OrderHasRefund(models.Model):
 	created_at = models.DateTimeField(auto_now_add=True)  # 添加时间
 	total = models.FloatField(default=0)  # 积分
 	finished = models.BooleanField(default=False)  # 是否退款完成
+	member_card_money = models.FloatField(default=0.0)  # 会员卡抵扣金额
 
 
 	class Meta(object):
