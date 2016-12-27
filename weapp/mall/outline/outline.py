@@ -170,6 +170,7 @@ class Outline(resource.Resource):
                     response.innerErrMsg = unicode_full_stack()
                     return response.get_response()
         elif type and type == 'visit_daily_trend':
+            # 已弃用
             """
             获得每日pv、uv统计
             """
