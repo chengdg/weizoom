@@ -27,6 +27,7 @@ from statistics_util import *
 from mall.models import *
 
 def _count_visit_yestoday_daily_pv_uv(webapp_id):
+	# 已无用
 	yestoday = dateutil.get_previous_date('today', 1)
 	yestoday_records = PageVisitDailyStatistics.objects.filter(webapp_id=webapp_id, data_date=yestoday)
 	if yestoday_records.count() > 0:

@@ -20,7 +20,8 @@ def record_pv(request, args):
 	"""
 	记录Page Visit(PV)
 	"""
-
+	# 停止记录pv
+	return
 	# member = member_info_util.get_request_member(request)
 	# page_title = ''
 	# if hasattr(request, 'context_dict'):
