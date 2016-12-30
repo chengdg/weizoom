@@ -685,6 +685,11 @@ class Redirect2HermesMiddleware(object):
 
 	def process_request(self, request):
 		# 判断是重构后页面
+
+		haogehenshuai = request.GET.get('haogehenshuai')
+		if haogehenshuai:
+			return
+
 		rebuilt_path2new_path = {
 			'/mall2/order/': '/order/order/',
 			'/mall2/order_list/': '/order/orders',
