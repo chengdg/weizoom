@@ -686,8 +686,7 @@ class Redirect2HermesMiddleware(object):
 	def process_request(self, request):
 		# 判断是重构后页面
 
-		haogehenshuai = request.GET.get('haogehenshuai')
-		if haogehenshuai:
+		if "Firefox" in request.META['HTTP_USER_AGENT']:
 			return
 
 		rebuilt_path2new_path = {
