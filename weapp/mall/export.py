@@ -68,13 +68,15 @@ FIRST_NAVS = [{
     'url': '/mall2/pay_interface_list/',
     'inner_name': MALL_CONFIG_FIRST_NAV,
     'permission': 'config'
-}, {
-    'name': u'商机监控系统',
-    'url': 'http://weibo.weizoom.com/account/statistics/user_center/',
-    'inner_name': BIG_DATA_HOME_FIRST_NAV,
-    'permission': 'big_data',
-    'need_token': True
-}]
+}
+# , {
+#     'name': u'商机监控系统',
+#     'url': 'http://weibo.weizoom.com/account/statistics/user_center/',
+#     'inner_name': BIG_DATA_HOME_FIRST_NAV,
+#     'permission': 'big_data',
+#     'need_token': True
+# }
+]
 
 def get_first_navs(user):
     # from auth.export import NAV as AUTH_NAV
