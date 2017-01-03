@@ -233,6 +233,70 @@ MALL_PRODUCT_SECOND_NAV = {
     ]
 }
 
+
+MALL_PRODUCT_SECOND_NAV_FOR_WEIZOOM_MALL = {
+    'section': u'商品',
+    'navs': [
+        # 商品管理
+        {
+            'name': PRODUCT_MANAGE_ON_SHELF_PRODUCT_NAV,
+            'title': u'在售商品管理',
+            'url': '/mall2/product_list/?shelve_type=1',
+            'permission': 'manage_product_onshelf'
+        },
+
+        {
+            'name': PRODUCT_ADD_PRODUCT_NAV,
+            'title': u'添加新商品',
+            'url': '/mall2/product/',
+            'permission': 'manage_product_add'
+        },
+        {
+            'name': PRODUCT_MANAGE_OFF_SHELF_PRODUCT_NAV,
+            'title': u'待售商品管理',
+            'url': '/mall2/product_list/?shelve_type=0',
+            'permission': 'manage_product_offshelf'
+        },
+        # {
+        #     'name': PRODUCT_MANAGE_RECYCLED_PRODUCT_NAV,
+        #     'title': u'商品回收站',
+        #     'url': '/mall2/product_list/?shelve_type=2',
+        #     'permission': 'manage_product_deleted'
+        # },
+        # {
+        #     'name': PRODUCT_MANAGE_IMAGE_NAV,
+        #     'title': u'图片管理',
+        #     'url': '/mall2/image_group_list/',
+        #     'permission': 'manage_product_image'
+        # },
+        {
+            'name': PRODUCT_MANAGE_CATEGORY_NAV,
+            'title': u'分组管理',
+            'url': '/mall2/category_list/',
+            'permission': 'manage_product_category'
+        },
+        # {
+        #     'name': PRODUCT_MANAGE_MODEL_NAV,
+        #     'title': u'属性规格管理',
+        #     'url': '/mall2/model_property_list/',
+        #     'permission': 'manage_product_property_and_model_property'
+        # },
+        {
+            'name': PRODUCT_REVIEW_NAV,
+            'title': u'评价管理',
+            # 'url': '/mall2/product_review_list/',
+            'url': '/apps/evaluate/evaluates/',
+            'permission': 'manage_product_review'
+        },
+        # {
+        #     'name': PRODUCT_LIMIT_ZONE,
+        #     'title': u'限定区域',
+        #     'url': '/mall2/product_limit_zone/',
+        #     'permission': 'manage_product_limit_zone'
+        # },
+    ]
+}
+
 ########################################################################
 # get_mall_product_second_navs: 获得商品二级导航
 ########################################################################
@@ -240,6 +304,10 @@ def get_mall_product_second_navs(request):
     if request.user.username == 'manager':
         # second_navs = [MALL_PRODUCT_SECOND_NAV]
         pass
+    elif request.user_profile.webapp_type == 1:
+        # 自营屏蔽几个功能
+        second_navs = [MALL_PRODUCT_SECOND_NAV_FOR_WEIZOOM_MALL]
+
     else:
         second_navs = [MALL_PRODUCT_SECOND_NAV]
     #自营平台注释掉添加新商品

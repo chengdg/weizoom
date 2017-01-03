@@ -56,8 +56,10 @@ DATABASES = {
         'USER': 'weapp',                      # Not used with sqlite3.
         'PASSWORD': 'weizoom',                  # Not used with sqlite3.
         # Set to empty string for localhost. Not used with sqlite3.
-        'HOST': 'db.weapp.com',
+        #'HOST': 'db.weapp.com',
         # Set to empty string for default. Not used with sqlite3.
+        #'PORT': '',
+        'HOST': 'db.weapp.com',
         'PORT': '',
         'CONN_MAX_AGE': 100
     },
@@ -280,6 +282,7 @@ MIDDLEWARE_CLASSES = [
     'modules.member.middleware.AddUuidSessionMiddleware',
     'core.middleware.UserManagerMiddleware',
     'core.middleware.UserProfileMiddleware',
+    'core.middleware.Redirect2HermesMiddleware',
     # termite middleware
     'core.termite_middleware.WebappPageCacheMiddleware',
      # webapp home_page middleware
@@ -448,7 +451,9 @@ INSTALLED_APPS = [
     'weixin.message.material',
     'weixin.message.message',
     'weixin.message.qa',
+    # for mantis message models.py
 
+    'station_message',
     'weixin.manage',
     'weixin.manage.customerized_menu',
 
@@ -694,6 +699,14 @@ else:
 
 IN_DEVELOP_MODE = (MODE == 'develop')
 ALLOWED_HOSTS = ['*', ]
+
+
+HERMES_HOST = 'http://hermes.pttest.weapp.weizzz.com'
+# SESSION_COOKIE_DOMAIN = ".pttest.weapp.weizzz.com"
+SESSION_COOKIE_DOMAIN = '.weapp.com'
+
+# 是否启用HERMES跳转
+ENABLE_HERMES = "ENABLE_HERMES" in os.environ
 
 # added by chuter
 # mail config for auto sending notify mail
