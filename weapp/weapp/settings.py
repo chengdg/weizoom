@@ -705,6 +705,9 @@ HERMES_HOST = 'http://hermes.pttest.weapp.weizzz.com'
 # SESSION_COOKIE_DOMAIN = ".pttest.weapp.weizzz.com"
 SESSION_COOKIE_DOMAIN = '.weapp.com'
 
+# 是否启用HERMES跳转
+ENABLE_HERMES = "ENABLE_HERMES" in os.environ
+
 # added by chuter
 # mail config for auto sending notify mail
 # MAIL_NOTIFY_USERNAME = u'noreply@weizoom.com'

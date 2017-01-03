@@ -685,6 +685,10 @@ class Redirect2HermesMiddleware(object):
 
 	def process_request(self, request):
 		# 判断是重构后页面
+		from django.conf import settings
+
+		if not settings.ENABLE_HERMES:
+			return
 
 		if "Firefox" in request.META['HTTP_USER_AGENT']:
 			return
@@ -751,7 +755,6 @@ class Redirect2HermesMiddleware(object):
 			else:
 				is_weizoom_mall = False
 
-			from django.conf import settings
 			if is_weizoom_mall:
 				if querystring_dict:
 
