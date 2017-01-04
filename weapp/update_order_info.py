@@ -17,14 +17,12 @@ print('----start...')
 relations = mall_models.OrderHasProduct.objects.all()
 product_ids = [r.product_id for r in relations]
 id2product = dict([(product.id, product) for product in mall_models.Product.objects.filter(id__in=product_ids)])
-for relation in relations[:500]:
+for relation in relations:
     product = id2product[relation.product_id]
-    product.fill_specific_model(relation.product_model_name)
     product.fill_specific_model(relation.product_model_name)
     l = []
     if product.custom_model_properties:
         for pro in product.custom_model_properties:
             l.append(pro['name'])
-        print '=========================',json.dumps(l)
     relation.update(weight=product.weight, thumbnail_url=product.thumbnail_url, product_model_name_texts=json.dumps(l))
 print('end...')
