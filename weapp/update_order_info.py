@@ -24,5 +24,9 @@ for relation in relations:
     if product.custom_model_properties:
         for pro in product.custom_model_properties:
             l.append(pro['name'])
-    relation.update(weight=product.weight, thumbnail_url=product.thumbnail_url, product_model_name_texts=json.dumps(l))
+    mall_models.OrderHasProduct.objects.filter(id=relation.id).update(
+        weight=product.weight,
+        thumbnail_url=product.thumbnails_url,
+        product_model_name_texts=json.dumps(l)
+    )
 print('end...')
