@@ -1835,3 +1835,80 @@ div[data-type='wepage.specialTemplate_group'] .xui-designPage-actionPanel{
 .xui-server img{
     width: 100%;
 }
+
+/**
+* 自营账vip会员上线广告
+**/
+.xui-vipUplineBox{
+    width: 268px;
+    height: 402px;
+    background: url(/static_v2/img/upline.png) no-repeat;
+    -webkit-background-size: 100%;
+    background-size: 100%;
+    top:80px;
+    left: 50%;
+    margin-left: -134px;
+    z-index: 10;
+}
+.xui-vipUplineBox ul{
+    top:221px;
+    left: 32px;
+}
+.xui-vipUplineBox ul li{
+    margin-bottom: 14px;
+}
+.xui-vipUplineBox .xui-yellow{
+    color: #FF7D09;
+}
+.xui-vipUplineBox .xui-icon{
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    background: #202020;
+    border-radius: 3px;
+    margin-right: 6px;
+}
+.xui-vipUplineBox .xui-goToVipBtn{
+    display: block;
+    width: 166px;
+    height: 37px;
+    line-height: 37px;
+    background: #F6BA00;
+    color: #fff;
+    text-align: center;
+    border-bottom: 5px solid #E7A900;
+    border-radius: 4px;
+    box-shadow: 0 2px 0 #E5E5E5;
+    bottom:45px;
+    left: 50%;
+    margin-left: -88px;
+}
+.xui-vipUplineBox .xui-noInfoBtn{
+    bottom: 15px;
+    margin-left: 78px;
+}
+.xui-vipUplineBox .xui-noInfoBtn input{
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    top:3px;
+}
+.xui-vipUplineBox .xui-vipCloseBtn{
+    width: 37px;
+    height: 37px;
+    background: #F7BB00;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 37px;
+    right: 0;
+    top:5px;
+}
+.xui-vipMask{
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    position: absolute;
+    top:0;
+    left: 0;
+    z-index: 9;
+}
