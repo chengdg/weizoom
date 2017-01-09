@@ -3504,6 +3504,21 @@ def refund_member_card_money(order):
 		'data': data
 	})
 
+	is_success = resp and resp['code'] == 200
+	if is_success:
+		try:
+			log = MemberCardLog.objects.filter(order_id=order.order_id,reason=u'下单').first()
+			MemberCardLog.create(
+				member_card=log.member_card_id,
+				trade_id=trade_id,
+				order_id=order.order_id,
+				reason=u"取消下单或下单失败",
+				price=log.price
+			)
+		except Exception, e:
+			watchdog_error(u'会员卡自动退款时获取下单时的扣除金额失败,trade_id:%s,order_id:%s' % (trade_id, order.order_id))
+			watchdog_error(e)
+
 	return resp
 
 import msg_crypt
