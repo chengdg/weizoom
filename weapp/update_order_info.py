@@ -41,9 +41,11 @@ if __name__ == "__main__":
     pool = Pool(processes=130)
     n = 1
     result = []
-    for i in range(130):
-        if n>=641877:
-            result.append(pool.apply_async(update_info, (n-5000,641877)))
+    count = mall_models.OrderHasProduct.objects.all().count()
+    a = count/5000
+    for i in range(a+1):
+        if n>=count:
+            result.append(pool.apply_async(update_info, (n-5000,count)))
         else:
             result.append(pool.apply_async(update_info, (n,n+5000)))
         n+=5000
