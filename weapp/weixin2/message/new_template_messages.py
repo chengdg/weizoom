@@ -53,7 +53,7 @@ class NewTemplateMessages(resource.Resource):
         for template in templates:
             template_id = template.template_id
             item = {
-                'status': True,
+                'status': False,
                 'first': '',
                 'remark': '',
                 'industry_name': '%s-%s' % (template.primary_industry, template.deputy_industry),
