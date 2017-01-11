@@ -258,6 +258,8 @@ class ComponentInfo(models.Model):
 	last_update_time = models.DateTimeField(default=datetime.now())
 	component_access_token = models.TextField()
 	is_active = models.BooleanField(default=True)
+	access_token_update_time = models.DateTimeField(default=datetime.now())
+	verify_ticket_update_time = models.DateTimeField(default=datetime.now())
 
 	def __unicode__(self):
 		return self.app_id
@@ -297,8 +299,6 @@ class ComponentAuthedAppid(models.Model):
 	func_info = models.TextField()
 	created_at = models.DateTimeField(auto_now=True)
 	is_active = models.BooleanField(default=False)
-	access_token_update_time = models.DateTimeField(default=datetime.now())
-	verify_ticket_update_time = models.DateTimeField(default=datetime.now())
 
 	class Meta(object):
 		db_table = 'component_authed_appid'
