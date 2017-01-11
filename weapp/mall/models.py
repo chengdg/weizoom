@@ -216,6 +216,12 @@ PRODUCT_TYPE2TEXT = {
 }
 MAX_INDEX = 2**16 - 1
 
+PRODUCT_STATUS = {
+	'NOT_YET': 0, #尚未提交审核
+	'SUBMIT': 1, #提交审核
+	'REFUSED': 2 #驳回
+}
+
 
 class Product(models.Model):
 	"""
@@ -229,7 +235,7 @@ class Product(models.Model):
 	price = models.FloatField(default=0.0)  # 商品价格
 	introduction = models.CharField(max_length=256)  # 商品简介
 	weight = models.FloatField(default=0.0)  # 重量
-	thumbnails_url = models.CharField(max_length=1024)  # 商品缩略图
+	thumbnails_url = models.CharField(max_length=1024, default='')  # 商品缩略图
 	pic_url = models.CharField(max_length=1024)  # 商品图
 	detail = models.TextField(default='')  # 商品详情
 	remark = models.TextField(default='')  # 备注
@@ -271,6 +277,13 @@ class Product(models.Model):
 	buy_in_supplier = models.BooleanField(default=False) # 记录下单位置是商城还是供货商，0是商城1是供货商
 	limit_zone_type = models.IntegerField(default=0) # 0不限制 1禁售 2仅售
 	limit_zone = models.IntegerField(default=0) # 限制地区的模板id
+
+	# 待审核商品
+	is_pre_product = models.BooleanField(default=False)  # 是否待审核商品
+	status = models.IntegerField(default=PRODUCT_STATUS['NOT_YET'])  # 审核状态
+	refuse_reason = models.TextField(default='')  # 驳回原因
+	is_updated = models.BooleanField(default=False)  # 是否已更新
+	is_accepted = models.BooleanField(default=True)  # 审核是否已通过
 
 	class Meta(object):
 		db_table = 'mall_product'
