@@ -32,8 +32,7 @@ def update_info(index_start,index_stop):
             weight=product.weight,
             thumbnail_url=product.thumbnails_url,
             product_model_name_texts=json.dumps(l),
-            product_model_id = product.model.id,
-            product_is_deleted = product.is_deleted
+            product_model_id = product.model.id
         )
         n += 1
         print n,"==================================="
@@ -41,9 +40,9 @@ def update_info(index_start,index_stop):
 
 if __name__ == "__main__":
     from django.db.models import Max, Min
-    max_id = mall_models.OrderHasProduct.objects.aggregate(Max('id'))
+    max_id = mall_models.OrderHasProduct.objects.filter(created_at__gte='2016-12-01 00:00:00').aggregate(Max('id'))
     print max_id,'=============================='
-    min_id = mall_models.OrderHasProduct.objects.aggregate(Min('id'))
+    min_id = mall_models.OrderHasProduct.objects.filter(created_at__gte='2016-12-01 00:00:00').aggregate(Min('id'))
     print min_id,'=============================='
     update_info(int(min_id['id__min']),int(max_id['id__max']))
     print "=============================done"
