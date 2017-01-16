@@ -2245,6 +2245,30 @@ class FreePostageConfig(models.Model):
 		self._dest_str = u', '.join(provinces)
 		return self._dest_str
 
+#########################################################################
+# 发货人相关Model
+#########################################################################
+
+class Shipper(models.Model):
+	"""	
+	发货人信息
+	"""
+	owner = models.ForeignKey(User)
+	name = models.CharField(max_length=50) #发货人
+	tel_number = models.CharField(max_length=15) #手机号
+	province = models.CharField(max_length=50) #发货地区省
+	city = models.CharField(max_length=50) #市
+	district = models.CharField(max_length=512) #区/县
+	address = models.CharField(max_length=256) #详细地址
+	postcode = models.CharField(max_length=50) #邮政编码
+	company_name = models.CharField(max_length=50) #单位名称
+	remark = models.TextField(null=True) #备注
+	is_active = models.BooleanField(default=False) #是否默认
+	is_deleted = models.BooleanField(default=False) #是否删除
+	created_at = models.DateTimeField(auto_now_add=True)
+
+	class Meta(object):
+		db_table = 'mall_shipper'
 
 #########################################################################
 # PostageConfigSpecialHasProvince：运费特殊配置对应省份
