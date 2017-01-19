@@ -2247,6 +2247,27 @@ class FreePostageConfig(models.Model):
 		return self._dest_str
 
 #########################################################################
+# 电子面单账号相关Model
+#########################################################################
+
+class ExpressBillAccount(models.Model):
+	"""	
+	电子面单账号
+	"""
+	owner = models.ForeignKey(User)
+	express_name = models.CharField(max_length=50) #快递公司
+	customer_name = models.CharField(max_length=256) #商户代码/编号/id
+	customer_pwd = models.CharField(max_length=256)  #商户密码/密钥
+	logistics_number = models.CharField(max_length=256) #密码串/月结号
+	sendsite = models.CharField(max_length=256) #网点名称
+	remark = models.TextField(null=True) #备注
+	is_deleted = models.BooleanField(default=False) #是否删除
+	created_at = models.DateTimeField(auto_now_add=True)
+
+	class Meta(object):
+		db_table = 'mall_express_bill_account'
+
+#########################################################################
 # 发货人相关Model
 #########################################################################
 
