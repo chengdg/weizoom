@@ -1547,6 +1547,14 @@ def ship_order(order_id, express_company_name,
 	# except:
 	# 	notify_message = u"订单状态为已发货时发邮件失败，order_id:{}，cause:\n{}".format(order_id, unicode_full_stack())
 	# 	watchdog_alert(notify_message)
+
+	# 添加针对openapi订单发货的消息发送处理
+	data = {
+		"order_id": order_id,
+		"express_company_name": express_company_name,
+		"express_number": express_number
+	}
+	send_mns_message(topic_name='test-topic', msg_name='send_update_product_openapi_notify_service', data=data)
 	return True
 
 
