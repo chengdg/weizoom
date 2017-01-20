@@ -14,6 +14,12 @@ import json
 from mall import models as mall_models
 from eaglet.utils.resource_client import Resource
 
+# 执行脚本前需要先把数据库中表结构里面加上四个字段，SQL语句如下：
+# alter table mall_order_has_product add weight float(12) default 0,add thumbnail_url varchar(1024) default '',add product_model_name_texts varchar(1024) default '[]',add product_model_id integer(12) default 0;
+
+
+# 一共需要更新四个字段，其中三个字段是通过下面的update_info()函数进行更新，另外一个字段product_model_id是通过sql语句进行更新，语句如下：
+# update mall_order_has_product re join mall_product_model m on re.product_id = m.product_id and re.product_model_name = m.name set re.product_model_id= m.id；
 
 ##########################################处理数据更新############################################################
 def update_info():
@@ -31,12 +37,14 @@ def update_info():
         mall_models.OrderHasProduct.objects.filter(id=relation.id).update(
             weight=product.weight,
             thumbnail_url=product.thumbnails_url,
-            product_model_name_texts=json.dumps(l),
-            product_model_id = product.model.id
+            product_model_name_texts=json.dumps(l)
         )
         n += 1
-        print n,"==================================="
+        print n,"===================================",product.id
 
+    # =================================更新productmodel_id的sql
+    # update mall_order_has_product re join mall_product_model m on re.product_id = m.product_id and re.product_model_name = m.name set re.product_model_id= m.id
+    
 
 if __name__ == "__main__":
     update_info()
