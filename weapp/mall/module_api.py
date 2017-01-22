@@ -1551,7 +1551,7 @@ def ship_order(order_id, express_company_name,
 
 	# 添加针对openapi订单发货的消息发送处理
 	data = {
-		"order_id": order_id,
+		"order_id": order.order_id,
 		"express_company_name": express_company_name,
 		"express_number": express_number
 	}
