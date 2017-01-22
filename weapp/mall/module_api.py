@@ -36,6 +36,7 @@ from core import paginator
 from market_tools.tools.template_message import models as template_message_model
 from market_tools.tools.template_message import module_api as template_message_api
 from utils.microservice_consumer import microservice_consume2
+from bdem import msgutil
 
 from watchdog.utils import watchdog_fatal, watchdog_error, watchdog_alert, watchdog_warning
 from webapp.modules.mall import util as mall_util
@@ -1554,7 +1555,7 @@ def ship_order(order_id, express_company_name,
 		"express_company_name": express_company_name,
 		"express_number": express_number
 	}
-	send_mns_message.send_mns_message(topic_name='test-topic', msg_name='send_update_product_openapi_notify_service', data=data)
+	msgutil.send_message(topic_name='test-topic', msg_name='send_update_product_openapi_notify_service', data=data)
 	return True
 
 
