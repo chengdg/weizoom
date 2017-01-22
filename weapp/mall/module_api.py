@@ -1554,7 +1554,7 @@ def ship_order(order_id, express_company_name,
 		"express_company_name": express_company_name,
 		"express_number": express_number
 	}
-	send_mns_message(topic_name='test-topic', msg_name='send_update_product_openapi_notify_service', data=data)
+	send_mns_message.send_mns_message(topic_name='test-topic', msg_name='send_update_product_openapi_notify_service', data=data)
 	return True
 
 
