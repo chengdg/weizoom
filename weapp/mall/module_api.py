@@ -1555,7 +1555,7 @@ def ship_order(order_id, express_company_name,
 		"express_company_name": express_company_name,
 		"express_number": express_number
 	}
-	msgutil.send_message(topic_name='test-topic', msg_name='send_update_product_openapi_notify_service', data=data)
+	msgutil.send_message('test-topic', 'send_update_product_openapi_notify_service', data)
 	return True
 
 
