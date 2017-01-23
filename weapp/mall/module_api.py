@@ -1549,13 +1549,13 @@ def ship_order(order_id, express_company_name,
 	# 	notify_message = u"订单状态为已发货时发邮件失败，order_id:{}，cause:\n{}".format(order_id, unicode_full_stack())
 	# 	watchdog_alert(notify_message)
 
-	# 添加针对openapi订单发货的消息发送处理
+	# 添加针对openapi出货单发货的消息发送处理
 	data = {
 		"order_id": order.order_id,
 		"express_company_name": express_company_name,
 		"express_number": express_number
 	}
-	msgutil.send_message('test-topic', 'send_order_delivered_notify_service', data)
+	msgutil.send_message('order', 'delivery_item_shipped', data)
 	return True
 
 
