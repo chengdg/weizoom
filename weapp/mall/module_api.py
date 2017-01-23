@@ -36,6 +36,7 @@ from core import paginator
 from market_tools.tools.template_message import models as template_message_model
 from market_tools.tools.template_message import module_api as template_message_api
 from utils.microservice_consumer import microservice_consume2
+from bdem import msgutil
 
 from watchdog.utils import watchdog_fatal, watchdog_error, watchdog_alert, watchdog_warning
 from webapp.modules.mall import util as mall_util
@@ -1547,6 +1548,14 @@ def ship_order(order_id, express_company_name,
 	# except:
 	# 	notify_message = u"订单状态为已发货时发邮件失败，order_id:{}，cause:\n{}".format(order_id, unicode_full_stack())
 	# 	watchdog_alert(notify_message)
+
+	# 添加针对openapi出货单发货的消息发送处理
+	data = {
+		"order_id": order.order_id,
+		"express_company_name": express_company_name,
+		"express_number": express_number
+	}
+	msgutil.send_message('order', 'delivery_item_shipped', data)
 	return True
 
 
