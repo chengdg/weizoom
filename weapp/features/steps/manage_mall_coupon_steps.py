@@ -378,7 +378,7 @@ def __add_coupon_rule(context, webapp_owner_name):
             product_ids = []
             for product_name in coupon_rule['coupon_product'].split(','):
                 product_ids.append(Product.objects.get(
-                    owner_id=webapp_owner_id,
+
                     name=product_name).id)
 
             post_data['product_ids'] = ','.join(map(lambda x: str(x), product_ids))
