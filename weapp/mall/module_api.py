@@ -1554,7 +1554,7 @@ def ship_order(order_id, express_company_name,
 		"order_id": order.order_id,
 		"express_company_name": express_company_name,
 		"express_number": express_number,
-		"action":action
+		"action": 'update_ship' if action == u'修改发货信息' else 'ship_order'
 	}
 	msgutil.send_message('order', 'delivery_item_shipped', data)
 	return True
