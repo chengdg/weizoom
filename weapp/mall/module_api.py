@@ -1553,7 +1553,8 @@ def ship_order(order_id, express_company_name,
 	data = {
 		"order_id": order.order_id,
 		"express_company_name": express_company_name,
-		"express_number": express_number
+		"express_number": express_number,
+		"action":action
 	}
 	msgutil.send_message('order', 'delivery_item_shipped', data)
 	return True
