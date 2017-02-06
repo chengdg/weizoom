@@ -134,41 +134,17 @@ PRE_PRODUCT_STATUS = {
 	'REFUSED': 2  # 驳回
 }
 
-class PreProduct(models.Model):
+class ProductUnverified(models.Model):
 	"""
-	待入池商品
+	未审核的商品信息
+
+	表名：mall_product_unverified
 	"""
-	owner_id = models.IntegerField(default=0)
-	name = models.CharField(max_length=50, default='')  # 商品名称
-	promotion_title = models.CharField(max_length=50, default='')  # 促销标题
-	price = models.DecimalField(max_digits=65, decimal_places=2, default=0.00)  # 商品价格 (元)
-	settlement_price = models.DecimalField(max_digits=65, decimal_places=2, default=0.00)  # 结算价 (元)
-	weight = models.FloatField(default=0)  # 商品重量 (kg)
-	stock = models.IntegerField(default=0)  # 商品库存 默认-1{大于0: 有限 ,-1:无限}
-	valid_time_from = models.DateTimeField(null=True)  # 有效范围开始时间
-	valid_time_to = models.DateTimeField(null=True)  # 有效范围结束时间
-	limit_settlement_price = models.DecimalField(max_digits=65, decimal_places=2, default=0.00)  # 限时结算价 (元)
-	has_limit_time = models.BooleanField(default=False)  # 限时结算价是否需要 有效范期
-	has_product_model = models.BooleanField(default=False)  # 是否是多规格商品
-	classification_id = models.IntegerField(default=0)  # 所属分类id(二级分类id)
-	limit_zone_type = models.IntegerField(default=NO_LIMIT)
-	limit_zone = models.IntegerField(default=0)  # 限制地区的模板id
-	has_same_postage = models.BooleanField(default=True)  # 是否是统一运费{0:统一运费,1:默认模板运费}
-	postage_money = models.DecimalField(max_digits=65, decimal_places=2, default=0.00)  # 统一运费金额
-	postage_id = models.IntegerField(default=0)  # 默认模板运费id
-	remark = models.TextField(default='')  # 备注
-
-	review_status = models.IntegerField(default=PRE_PRODUCT_STATUS['SUBMIT'])  # 审核状态
-	refuse_reason = models.TextField(default='')  # 驳回原因
-	mall_product_id = models.IntegerField(default=0)  # 审核通过后与mall_product记录关联
-	is_updated = models.BooleanField(default=False)  # 是否更新
-	is_accepted = models.BooleanField(default=False)  # 是否已审核通过
-	is_deleted = models.BooleanField(default=False)
-
-	created_at = models.DateTimeField(auto_now_add=True)  # 添加时间
+	product_id = models.IntegerField(default=-1) #商品id
+	product_data = models.TextField() #商品信息
 
 	class Meta(object):
-		db_table = 'mall_pre_product'
+		db_table = 'mall_product_unverified'
 		
 
 # MODULE START: productcategory
