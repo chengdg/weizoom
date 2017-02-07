@@ -245,10 +245,10 @@ W.view.mall.ProductFilterView = Backbone.View.extend({
 
         var data = {
             name: name,
-            startDate: startDate,
-            endDate: endDate,
+            // startDate: startDate,
+            // endDate: endDate,
             category: category,
-            barCode: barCode,
+            // barCode: barCode,
             lowPrice: lowPrice,
             highPrice: highPrice,
             lowStocks: lowStocks,
@@ -257,7 +257,7 @@ W.view.mall.ProductFilterView = Backbone.View.extend({
             highSales: highSales,
             first_classification: first_classification,
             secondary_classification: secondary_classification,
-            supplier_type:supplier_type
+            // supplier_type:supplier_type
         }
         //微众系列 筛选‘供货商’
         if(this.$('#supplier').val()){

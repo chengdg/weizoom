@@ -13,7 +13,7 @@ from django.template import RequestContext
 from mall.promotion import models as promotion_model
 from mall.signal_handler import products_not_online_handler_for_promotions
 from watchdog.utils import watchdog_warning, watchdog_error
-from account.models import UserProfile
+from account.models import UserProfile, AccountDivideInfo
 from django.contrib.auth.models import User
 from core import paginator
 from core import resource
@@ -381,6 +381,13 @@ class ProductList(resource.Resource):
                     first_classification_name = id2first_classification[secondary_classification.father_id].name if id2first_classification.has_key(secondary_classification.father_id) else ""
                     product_dict['classification'] = '{}-{}'.format(first_classification_name, secondary_classification_name)
 
+
+                product_dict['gross_profit'] = getattr(product, 'gross_profit', 0)
+                product_dict['gross_profit_rate'] = getattr(product, 'gross_profit_rate', 0)
+                product_dict['cps_gross_profit'] = getattr(product, 'cps_gross_profit', 0)
+                product_dict['cps_gross_profit_rate'] = getattr(product, 'cps_gross_profit_rate', 0)
+                product_dict['cps_time_to'] = getattr(product, 'cps_time_to', 0)
+
             if manager_supplier_ids2supplier:
                 supplier = manager_supplier_ids2supplier.get(product.supplier, "")
                 store_name = supplier.name if supplier else ''
@@ -437,6 +444,10 @@ class ProductList(resource.Resource):
         data = dict()
         data['owner_id'] = request.manager.id
         data['mall_type'] = mall_type
+        if mall_type:
+            model = AccountDivideInfo.objects.filter(user_id=request.manager.id).first()
+            if model:
+                data['settlement_type'] = model.settlement_type
         response = create_response(200)
         if wtype != 1:   #非自营
             response.data = {
@@ -645,7 +656,6 @@ class ProductPool(resource.Resource):
             product_pool = models.ProductPool.objects.filter(woid=request.manager.id, status=models.PP_STATUS_ON_POOL)
             product_ids = [pool.product_id for pool in product_pool]
             products = models.Product.objects.filter(id__in=product_ids)
-        print "pool",products
         if int(supplier_type) != -1 or supplier_name:
             params = {}
             params['owner_id'] = manager_user_profile.user_id
@@ -890,12 +900,19 @@ class ProductPool(resource.Resource):
                 product_dic['promote_money'] = "%.2f"%models.PromoteDetail.objects.get(product_id=product.id, promote_status=1).promote_money
                 product_dic['promote_time_from'] = models.PromoteDetail.objects.get(product_id=product.id, promote_status=1).promote_time_from.strftime("%Y/%m/%d %H:%M")
                 product_dic['promote_time_to'] = models.PromoteDetail.objects.get(product_id=product.id, promote_status=1).promote_time_to.strftime("%Y/%m/%d %H:%M")
-                items.append(product_dic)
-            else:
-                items.append(product_dic)
+
+                product_dic['cps_gross_profit'] = getattr(product, 'cps_gross_profit', 0)
+                product_dic['cps_gross_profit_rate'] = getattr(product, 'cps_gross_profit_rate', 0)
+                product_dic['cps_time_to'] = getattr(product, 'cps_time_to', 0)
+            product_dic['gross_profit'] = getattr(product, 'gross_profit', 0)
+            product_dic['gross_profit_rate'] = getattr(product, 'gross_profit_rate', 0) 
+            items.append(product_dic)
 
         data = dict()
         data['owner_id'] = request.manager.id
+        model = AccountDivideInfo.objects.filter(user_id=request.manager.id).first()
+        if model:
+            data['settlement_type'] = model.settlement_type
         response = create_response(200)
         if wtype != 1:
             response.data = {
@@ -1860,7 +1877,6 @@ class ProductPos(resource.Resource):
             }
         except:
             error_msg = u"获取商品是否存在已有的排序值失败, cause:\n{}".format(unicode_full_stack())
-            print error_msg
             watchdog_warning(error_msg)
             response = create_response(500)
 

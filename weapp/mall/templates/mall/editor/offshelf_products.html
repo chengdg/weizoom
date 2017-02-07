@@ -17,9 +17,10 @@
 	{% if has_product %}
 	<div class="pr">
 		<div class="" style="position:absolute;right:0;{% if mall_type %}top:60px;{% endif %}">
-
 			{% if not mall_type %}
-			<a href="/mall2/product/" class="btn btn-success xui-addProductBtn ml10 xa-addProduct fr"  style=""><span style="padding-right:5px;"><img src="/static_v2/img/editor/plusOpcity.png"></span>添加新商品</a>
+			<a href="/mall2/product/" class="btn btn-success xui-addProductBtn ml10 xa-addProduct fr" style="">
+				<span style="padding-right:5px;"><img src="/static_v2/img/editor/plusOpcity.png"></span>添加新商品
+			</a>
 			{% endif %}
 		</div>
 		<div
@@ -36,7 +37,8 @@
 			data-outer-selecter='.xa-selectAll'
 			class=""
 			data-selecttable-tr='xa-selectTr'
-		></div>
+		>		
+		</div>
 		<!-- <div style="height:30px;"></div> -->
 		<div class="xui-batchbtn">
 			<label for="bottomSelectAll" class="xui-selectAll ml10">
@@ -72,42 +74,35 @@
 {% block js %}
 {% verbatim %}
 <script id="products-view" type="text/x-jquery-tmpl">
-	{{if !data.n_self}}
-	<ul class="nav nav-tabs mt14 ">
-        <li class="xa-tab {{if !data.is_request_cps }}active{{/if}}" data-cps-value="0"><a href="javascript:void(0);">所有商品</a></li>
-        <li class="xa-tab {{if data.is_request_cps }}active{{/if}}" data-cps-value="1"><a href="javascript:void(0);">付费推广商品<i class="xui-noticyTip xa-cpsProductTip"></i></a></li>
-    </ul>
-    {{/if}}
     <div class="panel-default mt20 xb-rightPanel p10" style="min-height:120px;border: 1px solid #ddd;border-bottom: 0;">
     <div class="pb10">
-			<label for="topSelectAll" class="xui-selectAll ml10">
-				<input type="checkbox" id="topSelectAll" class="xa-selectAll">全选
-			</label>
-			<a href="javascript:void(0);" class="btn btn-default ml10 xa-batchOnshelf">批量上架</a>
-			<a href="javascript:void(0);" class="btn btn-default ml10 xa-batchDelete">彻底删除</a>
+		<label for="topSelectAll" class="xui-selectAll ml10">
+			<input type="checkbox" id="topSelectAll" class="xa-selectAll">全选
+		</label>
+		<a href="javascript:void(0);" class="btn btn-default ml10 xa-batchOnshelf">批量上架</a>
+		<a href="javascript:void(0);" class="btn btn-default ml10 xa-batchDelete">彻底删除</a>
 	</div>
 	<table id="productListTable" class="table table-bordered table-condensed xui-productList xb-stripedTable xb-noTdBorder xb-noBottom xb-noBorder xb-theadBg">
 		<thead>
 			<tr>
-				<th width="250">商品信息</th>
-				<th width="100">{{if data.data.mall_type > 0}}供货商{{else}}条码{{/if}}</th>
+				<th width="200">商品</th>
+				{{if data.data.mall_type > 0 && data.data.mall_type != 3}}<th width="100">分类</th>{{/if}}
 				<th width="100">分组</th>
-				<th width="105">商品价格（元）</th>
+				<th width="105">价格</th>
 				{{if data.is_request_cps&&data.is_request_cps==1}}
 				<th width="50">推广费用（元/件）</th>
 				<th width="78">推广库存</th>
 				<th width="178">推广时间</th>
 				{{else}}
 				<th width="50">库存</th>
-				<th width="50">总销量</th>
-				
-				<th width="120">{{if data.data.mall_type == 1 }}首次上架{{else}}创建{{/if}}时间</th>
 				{{/if}}
-				{{if data.data.mall_type > 0 && data.data.mall_type != 3}}<th width="50">分类</th>{{/if}}
+				{{if data.data.settlement_type != 3}}
+				<th width="110">毛利率/件</th>
+				{{/if}}
 				<th width="110">操作</th>
 			</tr>
 		</thead>
-		<tbody id='product_list'>
+		<tbody id='product_list' data-settlement='${data.data.settlement_type}'>
             {{if items.length}}
 	            {{each(i, product) items}}
 				<tr data-id="${product.id}"
@@ -141,14 +136,7 @@
 							</div>
 						</div>
 					</td>
-					<td>
-					{{if data.data.mall_type > 0 }}
-						{{if product.is_sync }}<i class="xui-icon-sync">同</i>{{/if}}
-						${product.store_name}
-					{{else}}
-						${product.bar_code}
-					{{/if}}
-					</td>
+					{{if data.data.mall_type > 0 && data.data.mall_type != 3}}<td>${product.classification}</td>{{/if}}
 					<td>
 						{{if product.categories && product.categories.length > 0}}
 							${product.categories[0].name}
@@ -157,13 +145,13 @@
 								 <a class="btn xui-i-more">
 									更多（${product.categories.length-1}）
 									 <ul class="xui-i-product-categories xa-xui-i-product-categories">
-									 		{{each(i, item) product.categories}}
-											{{if i>0}}
-									 		 <li data-category-id="${item.id}">
-									 		 	${item.name}
-									 		 </li>
-											 {{/if}}
-									 		{{/each}}
+								 		{{each(i, item) product.categories}}
+										{{if i > 0}}
+								 		 <li data-category-id="${item.id}">
+								 		 	${item.name}
+								 		 </li>
+										{{/if}}
+								 		{{/each}}
 									 </ul>
 								</a>
 							{{/if}}
@@ -192,13 +180,22 @@
 						{{/if}}
 					{{/if}}
 					</td>
-					<td>{{if data.is_request_cps&&data.is_request_cps==1}}${product.promote_stock}{{else}}${product.sales}{{/if}}</td>
+					{{if data.is_request_cps&&data.is_request_cps==1}}<td>${product.promote_stock}</td>{{else}}{{/if}}
 					{{if data.is_request_cps&&data.is_request_cps==1}}
 						<td>${product.promote_time_from}-<br/>${product.promote_time_to}	</td>	
 					{{else}}
-					<td>{{if data.data.mall_type == 1 }}${product.sync_at}{{else}}${product.created_at}{{/if}}</td>
 					{{/if}}
-					{{if data.data.mall_type > 0 && data.data.mall_type != 3}}<td>${product.classification}</td>{{/if}}
+					{{if data.data.settlement_type != 3}}
+					<td>
+						{{if product.is_cps}}
+						<div style='color:#999; text-decoration:line-through'>${product.gross_profit}(${product.gross_profit_rate}%)</div>
+						<div style='color:#e00000;'>${product.cps_gross_profit}(${product.cps_gross_profit_rate}%)</div>
+						<div>限时至${product.cps_time_to}</div>
+						{{else}}
+						<div>${product.gross_profit}(${product.gross_profit_rate}%)</div>
+						{{/if}}
+					</td>
+					{{/if}}
 					<td>
 					   <div style=" width:74px; margin:auto;">
 						<a href="/mall2/product/?id=${product.id}" class="xa-modify fl" style="width: 39px;">

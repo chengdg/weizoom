@@ -23,6 +23,7 @@ from core.tenpay.tenpay_submit import TenpaySubmit
 # from core import upyun_util
 from core.wxpay.wxpay_notify import WxpayNotify
 from account.models import UserAlipayOrderConfig,UserProfile
+from account import models as account_models
 from core.exceptionutil import unicode_full_stack
 from watchdog.utils import *
 from tools.express import util as express_util
@@ -176,6 +177,15 @@ class ProductRefuseLogs(models.Model):
 	class Meta(object):
 		db_table = 'mall_product_refuse_logs'
 
+
+class ProductCustomizedPrice(models.Model):
+	corp_id = models.IntegerField(default=-1) #corp id
+	product_id = models.IntegerField(default=-1)#product id
+	product_model_id = models.IntegerField(default=-1) #ProductModel id
+	price = models.FloatField(default=0.0)
+
+	class Meta(object):
+		db_table = 'mall_product_customized_price'
 
 # MODULE START: product
 #########################################################################
@@ -441,6 +451,15 @@ class Product(models.Model):
 				_id2propertyvalue[id] = data
 				_property['values'].append(data)
 
+		divide_model = account_models.AccountDivideInfo.objects.filter(user_id=webapp_owner.id).first()
+		if divide_model:
+			settlement_type = divide_model.settlement_type
+			divide_rebate = divide_model.divide_rebate
+			product_ids = [p.id for p in products]
+			cps_product_id2promote = {p.product_id: p for p in PromoteDetail.objects.filter(promote_status=PROMOTING, product_id__in=product_ids)}
+			product_model_id2price = {c.product_model_id: c.price for c in
+									  ProductCustomizedPrice.objects.filter(product_id__in=product_ids)}
+
 		# 获取所有models
 		product2models = {}
 		for model in ProductModel.objects.filter(product_id__in=product_ids):
@@ -456,8 +475,44 @@ class Product(models.Model):
 				"stock_type": model.stock_type,
 				"stocks": model.stocks if model.stock_type == PRODUCT_STOCK_TYPE_LIMIT else u'无限',
 				"user_code": model.user_code,
+				"purchase_price": '%.2f' % model.purchase_price,
 				"market_price": '%.2f' % model.market_price,
-				"gross_profit": '%.2f' % (model.price - model.purchase_price)}
+				"gross_profit": '%.2f' % (model.price - model.purchase_price)
+			}
+			if divide_model:
+				"""
+				社群的毛利、毛利率
+				固定底价: 社群修改价 - 上浮结算价
+				固定扣点: 商品售价 * 社群扣点
+				毛利分成: {
+					cps: 商品结算价 - 推广费,
+					non_cps: (商品售价 - 微众售价) * 社群毛利点  ==> 社群毛利,
+							 (商品售价 - 微众售价)/商品售价 * 社群毛利点 ==>社群毛利率
+				}
+				对于多规格的商品，则填充毛利最大的
+				"""
+				if settlement_type == account_models.ACCOUNT_DIVIDE_TYPE_FIXED:  # 固定底价
+					customized_price = product_model_id2price.get(model.id, model.price)
+					gross_profit = customized_price - model.price
+					gross_profit_rate = gross_profit / customized_price * 100
+				elif settlement_type == account_models.ACCOUNT_DIVIDE_TYPE_RETAIL:  # 固定扣点
+					gross_profit = model.price * divide_rebate / 100
+					gross_profit_rate = divide_rebate
+				elif settlement_type == account_models.ACCOUNT_DIVIDE_TYPE_PROFIT:  # 毛利分成
+					product_id = model.product.id
+					if product_id in cps_product_id2promote.keys():
+						model_dict['cps_gross_profit'] = '%.2f' % (cps_product_id2promote[product_id].promote_money * divide_rebate)
+						model_dict['cps_gross_profit_rate'] = '%.2f' % (model_dict['cps_gross_profit'] / model.purchase_price * 100)
+						model_dict['cps_time_to'] = cps_product_id2promote[product_id].promote_time_from.strftime("%m-%d %H:%M:%S")
+
+					gross_profit = (model.price - model.purchase_price) * divide_rebate / 100
+					gross_profit_rate = gross_profit / model.price * 100
+				else:
+					gross_profit = 0
+					gross_profit_rate = 0
+
+				model_dict['gross_profit'] = '%.2f' % gross_profit
+				model_dict['gross_profit_rate'] = '%.2f' % gross_profit_rate
 
 			'''
 			获取model关联的property信息
@@ -533,12 +588,14 @@ class Product(models.Model):
 					product.models.extend(custom_models)
 					if len(custom_models) == 1:
 						target_model = custom_models[0]
+						max_profit_model = target_model
 						# 格式: X.00
 						display_price_range = target_model['price']
 					else:
 						# 列表页部分显示商品的最小价格那个model的信息
 						custom_models.sort(lambda x, y: cmp(float(x['price']), float(y['price'])))
 						target_model = custom_models[0]
+						max_profit_model = custom_models[-1]
 						low_price = target_model['price']
 						high_price = custom_models[-1]['price']
 						if low_price == high_price:
@@ -552,8 +609,15 @@ class Product(models.Model):
 				else:
 					product._is_use_custom_model = False
 					target_model = models['standard_model']
+					max_profit_model = target_model
 					product.standard_model = target_model
 					display_price_range = target_model['price']
+
+				product.gross_profit = max_profit_model.get('gross_profit', 0)
+				product.gross_profit_rate = max_profit_model.get('gross_profit_rate', 0)
+				product.cps_gross_profit = max_profit_model.get('cps_gross_profit', 0)
+				product.cps_gross_profit_rate = max_profit_model.get('cps_gross_profit_rate', 0)
+				product.cps_time_to = max_profit_model.get('cps_time_to', '')
 
 				product.current_used_model = target_model
 				product.display_price = target_model['price']
@@ -830,6 +894,9 @@ class Product(models.Model):
 		# 商品列表页缓存专用
 		if options.get('flash_sale', False):
 			Product.fill_flash_sale(products, webapp_owner)
+
+		if options.get('with_settlement_info', False):
+			Product.fill_settlement_info(webapp_owner, products)
 
 	@staticmethod
 	def get_from_model(product_id, product_model_name):
