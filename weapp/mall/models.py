@@ -757,11 +757,11 @@ class Product(models.Model):
 		cps_product_id2promote = {p.product_id: p for p in PromoteDetail.objects.filter(promote_status=PROMOTING)}
 		for product in products:
 			if product._is_use_custom_model:
-				all_model_purchase_price = [m.purchase_price for m in product.custom_models]
+				all_model_purchase_price = [float(m['purchase_price']) for m in product.custom_models]
 				min_weizoom_price = min(all_model_purchase_price)
 				max_weizoom_price = max(all_model_purchase_price)
 			else:
-				max_weizoom_price = min_weizoom_price = product.standard_model['purchase_price']
+				max_weizoom_price = min_weizoom_price = float(product.standard_model['purchase_price'])
 			if settlement_type == account_models.ACCOUNT_DIVIDE_TYPE_FIXED: #固定底价
 				pass
 			elif settlement_type == account_models.ACCOUNT_DIVIDE_TYPE_RETAIL: #固定返点

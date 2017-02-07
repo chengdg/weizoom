@@ -294,7 +294,7 @@ class ProductList(resource.Resource):
                 'with_image': False,
                 'with_property': True,
                 'with_sales': True,
-				'with_settlement_info': True,
+                'with_settlement_info': True,
                 'mall_type': mall_type
             })
 
@@ -382,6 +382,13 @@ class ProductList(resource.Resource):
                     secondary_classification_name = secondary_classification.name
                     first_classification_name = id2first_classification[secondary_classification.father_id].name if id2first_classification.has_key(secondary_classification.father_id) else ""
                     product_dict['classification'] = '{}-{}'.format(first_classification_name, secondary_classification_name)
+
+
+                product_dict['gross_profit'] = getattr(product, 'gross_profit', 0)
+                product_dict['gross_profit_rate'] = getattr(product, 'gross_profit_rate', 0)
+                product_dict['cps_gross_profit'] = getattr(product, 'cps_gross_profit', 0)
+                product_dict['cps_gross_profit_rate'] = getattr(product, 'cps_gross_profit_rate', 0)
+                product_dict['cps_time_to'] = getattr(product, 'cps_time_to', 0)
 
             if manager_supplier_ids2supplier:
                 supplier = manager_supplier_ids2supplier.get(product.supplier, "")
