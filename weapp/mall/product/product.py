@@ -246,6 +246,7 @@ class ProductList(resource.Resource):
                 'with_image': False,
                 'with_property': True,
                 'with_sales': True,
+                'with_settlement_info': True,
                 'mall_type': mall_type,
                 'product_pool_id2product_pool': product_pool_id2product_pool
             })
@@ -293,6 +294,7 @@ class ProductList(resource.Resource):
                 'with_image': False,
                 'with_property': True,
                 'with_sales': True,
+				'with_settlement_info': True,
                 'mall_type': mall_type
             })
 

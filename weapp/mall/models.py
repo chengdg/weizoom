@@ -23,6 +23,7 @@ from core.tenpay.tenpay_submit import TenpaySubmit
 # from core import upyun_util
 from core.wxpay.wxpay_notify import WxpayNotify
 from account.models import UserAlipayOrderConfig,UserProfile
+from account import models as account_models
 from core.exceptionutil import unicode_full_stack
 from watchdog.utils import *
 from tools.express import util as express_util
@@ -737,6 +738,37 @@ class Product(models.Model):
 				id2product[product_id].sales = sales.sales
 
 	@staticmethod
+	def fill_settlement_info(webapp_owner, products):
+		"""
+		毛利、毛利率
+		固定底价: pass
+		固定返点: 微众售价 * 社群返点
+		毛利分成: {
+			cps: 商品结算价 - 推广费,
+			non_cps: (商品售价 - 微众售价) * 社群毛利点  ==> 社群毛利,
+					 (商品售价 - 微众售价)/商品售价 * 社群毛利点 ==>社群毛利率
+		}
+		"""
+		model = account_models.AccountDivideInfo.objects.get(user_id=webapp_owner.id)
+		settlement_type = model.settlement_type
+		divide_rebate = model.divide_rebate
+		cps_product_id2promote = {p.product_id: p for p in PromoteDetail.objects.filter(promote_status=PROMOTING)}
+		for product in products:
+			if settlement_type == account_models.ACCOUNT_DIVIDE_TYPE_FIXED: #固定底价
+				pass
+			elif settlement_type == account_models.ACCOUNT_DIVIDE_TYPE_RETAIL: #固定返点
+				product.gross_profit = '%.2f' % (product.purchase_price * divide_rebate / 100)
+				product.gross_profit_rate = divide_rebate
+			elif settlement_type == account_models.ACCOUNT_DIVIDE_TYPE_PROFIT: #毛利分成
+				if product.id in cps_product_id2promote.keys():
+					product.cps_gross_profit = '%.2f' % (product.purchase_price - cps_product_id2promote[product.id].promote_money)
+					product.cps_gross_profit_rate = cps_product_id2promote[product.id].promote_money / product.purchase_price * 100
+					product.cps_time_to = cps_product_id2promote[product.id].promote_time_from.strftime("%Y/%m/%d %H:%M")
+
+				product.gross_profit = '%.2f' % ((product.price - product.purchase_price) * divide_rebate / 100)
+				product.gross_profit_rate = (product.price - product.purchase_price)/product.price * divide_rebate / 100
+
+	@staticmethod
 	def fill_details(webapp_owner, products, options):
 		id2property = None
 		id2propertyvalue = None
@@ -830,6 +862,9 @@ class Product(models.Model):
 		# 商品列表页缓存专用
 		if options.get('flash_sale', False):
 			Product.fill_flash_sale(products, webapp_owner)
+
+		if options.get('with_settlement_info', False):
+			Product.fill_settlement_info(webapp_owner, products)
 
 	@staticmethod
 	def get_from_model(product_id, product_model_name):
