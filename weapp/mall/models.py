@@ -457,6 +457,7 @@ class Product(models.Model):
 				"stock_type": model.stock_type,
 				"stocks": model.stocks if model.stock_type == PRODUCT_STOCK_TYPE_LIMIT else u'无限',
 				"user_code": model.user_code,
+				"purchase_price": '%.2f' % model.purchase_price,
 				"market_price": '%.2f' % model.market_price,
 				"gross_profit": '%.2f' % (model.price - model.purchase_price)}
 
@@ -748,25 +749,32 @@ class Product(models.Model):
 			non_cps: (商品售价 - 微众售价) * 社群毛利点  ==> 社群毛利,
 					 (商品售价 - 微众售价)/商品售价 * 社群毛利点 ==>社群毛利率
 		}
+		对于多规格的商品，则填充毛利最大的
 		"""
 		model = account_models.AccountDivideInfo.objects.get(user_id=webapp_owner.id)
 		settlement_type = model.settlement_type
 		divide_rebate = model.divide_rebate
 		cps_product_id2promote = {p.product_id: p for p in PromoteDetail.objects.filter(promote_status=PROMOTING)}
 		for product in products:
+			if product._is_use_custom_model:
+				all_model_purchase_price = [m.purchase_price for m in product.custom_models]
+				min_weizoom_price = min(all_model_purchase_price)
+				max_weizoom_price = max(all_model_purchase_price)
+			else:
+				max_weizoom_price = min_weizoom_price = product.standard_model['purchase_price']
 			if settlement_type == account_models.ACCOUNT_DIVIDE_TYPE_FIXED: #固定底价
 				pass
 			elif settlement_type == account_models.ACCOUNT_DIVIDE_TYPE_RETAIL: #固定返点
-				product.gross_profit = '%.2f' % (product.purchase_price * divide_rebate / 100)
+				product.gross_profit = '%.2f' % (max_weizoom_price * divide_rebate / 100)
 				product.gross_profit_rate = divide_rebate
 			elif settlement_type == account_models.ACCOUNT_DIVIDE_TYPE_PROFIT: #毛利分成
 				if product.id in cps_product_id2promote.keys():
-					product.cps_gross_profit = '%.2f' % (product.purchase_price - cps_product_id2promote[product.id].promote_money)
-					product.cps_gross_profit_rate = cps_product_id2promote[product.id].promote_money / product.purchase_price * 100
+					product.cps_gross_profit = '%.2f' % cps_product_id2promote[product.id].promote_money * divide_rebate
+					product.cps_gross_profit_rate = cps_product_id2promote[product.id].promote_money / min_weizoom_price * divide_rebate * 100
 					product.cps_time_to = cps_product_id2promote[product.id].promote_time_from.strftime("%Y/%m/%d %H:%M")
 
-				product.gross_profit = '%.2f' % ((product.price - product.purchase_price) * divide_rebate / 100)
-				product.gross_profit_rate = (product.price - product.purchase_price)/product.price * divide_rebate / 100
+				product.gross_profit = '%.2f' % ((product.price - min_weizoom_price) * divide_rebate / 100)
+				product.gross_profit_rate = (product.price - min_weizoom_price)/product.price * divide_rebate / 100
 
 	@staticmethod
 	def fill_details(webapp_owner, products, options):
