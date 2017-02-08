@@ -13,7 +13,7 @@ from django.template import RequestContext
 from mall.promotion import models as promotion_model
 from mall.signal_handler import products_not_online_handler_for_promotions
 from watchdog.utils import watchdog_warning, watchdog_error
-from account.models import UserProfile
+from account.models import UserProfile, AccountDivideInfo
 from django.contrib.auth.models import User
 from core import paginator
 from core import resource
@@ -246,7 +246,6 @@ class ProductList(resource.Resource):
                 'with_image': False,
                 'with_property': True,
                 'with_sales': True,
-                'with_settlement_info': True,
                 'mall_type': mall_type,
                 'product_pool_id2product_pool': product_pool_id2product_pool
             })
@@ -294,7 +293,6 @@ class ProductList(resource.Resource):
                 'with_image': False,
                 'with_property': True,
                 'with_sales': True,
-                'with_settlement_info': True,
                 'mall_type': mall_type
             })
 
@@ -446,6 +444,10 @@ class ProductList(resource.Resource):
         data = dict()
         data['owner_id'] = request.manager.id
         data['mall_type'] = mall_type
+        if mall_type:
+            model = AccountDivideInfo.objects.filter(user_id=request.manager.id).first()
+            if model:
+                data['settlement_type'] = model.settlement_type
         response = create_response(200)
         if wtype != 1:   #非自营
             response.data = {
@@ -713,8 +715,7 @@ class ProductPool(resource.Resource):
             "with_selected_category": True,
             'with_image': False,
             'with_property': True,
-            'with_sales': True,
-            'with_settlement_info': True
+            'with_sales': True
         })
 
         # dict_products = []
