@@ -8,19 +8,19 @@
 			<th>价格（元）</th>
 			<th>库存</th>
 			<!-- <th>商品编码</th> -->
-			<th>商品毛利</th>
+			{{if settlementType != 3}}<th>商品毛利</th>{{/if}}
 		</tr>
 	</thead>
 	<tbody>
 		{{each(i, model) models}}
 		<tr>
 			{{each(j, property_value) model.property_values}}
-			<td>${property_value.name}</th>
+			<td>${property_value.name}</td>
 			{{/each}}
-			<td>${model.price}</th>
-			<td>{{if (model.stock_type == 0)}}无限{{else}}${model.stocks}{{/if}}</th>
+			<td>${model.price}</td>
+			<td>{{if (model.stock_type == 0)}}无限{{else}}${model.stocks}{{/if}}</td>
 			<!-- <td>${model.user_code}</th> -->
-			<td>${model.gross_profit}(${model.gross_profit_rate}%)</th>
+			{{if settlementType != 3}}<td>${model.gross_profit}(${model.gross_profit_rate}%)</td>{{/if}}
 		</tr>
 		{{/each}}
 	</tbody>

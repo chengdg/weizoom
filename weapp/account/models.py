@@ -184,12 +184,13 @@ class OperationSettings(models.Model):
 		else:
 			return settings_list[0]
 
-# 固定底价
-ACCOUNT_DIVIDE_TYPE_FIXED = 1
 # 固定返点
-ACCOUNT_DIVIDE_TYPE_RETAIL = 2
+ACCOUNT_DIVIDE_TYPE_RETAIL = 1
 # 毛利分成
-ACCOUNT_DIVIDE_TYPE_PROFIT = 3
+ACCOUNT_DIVIDE_TYPE_PROFIT = 2
+# 固定底价
+ACCOUNT_DIVIDE_TYPE_FIXED = 3
+
 
 class AccountDivideInfo(models.Model):
 	"""
