@@ -766,15 +766,15 @@ class Product(models.Model):
 				pass
 			elif settlement_type == account_models.ACCOUNT_DIVIDE_TYPE_RETAIL: #固定返点
 				product.gross_profit = '%.2f' % (max_weizoom_price * divide_rebate / 100)
-				product.gross_profit_rate = divide_rebate
+				product.gross_profit_rate = '%.2f' % divide_rebate
 			elif settlement_type == account_models.ACCOUNT_DIVIDE_TYPE_PROFIT: #毛利分成
 				if product.id in cps_product_id2promote.keys():
 					product.cps_gross_profit = '%.2f' % cps_product_id2promote[product.id].promote_money * divide_rebate
-					product.cps_gross_profit_rate = cps_product_id2promote[product.id].promote_money / min_weizoom_price * divide_rebate * 100
+					product.cps_gross_profit_rate = '%.2f' % (cps_product_id2promote[product.id].promote_money / min_weizoom_price * divide_rebate * 100)
 					product.cps_time_to = cps_product_id2promote[product.id].promote_time_from.strftime("%Y/%m/%d %H:%M")
 
 				product.gross_profit = '%.2f' % ((product.price - min_weizoom_price) * divide_rebate / 100)
-				product.gross_profit_rate = (product.price - min_weizoom_price)/product.price * divide_rebate / 100
+				product.gross_profit_rate = '%.2f' % ((product.price - min_weizoom_price)/product.price * divide_rebate / 100)
 
 	@staticmethod
 	def fill_details(webapp_owner, products, options):
