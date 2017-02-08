@@ -191,7 +191,6 @@ ACCOUNT_DIVIDE_TYPE_PROFIT = 2
 # 固定底价
 ACCOUNT_DIVIDE_TYPE_FIXED = 3
 
-
 class AccountDivideInfo(models.Model):
 	"""
 	社群分成信息
