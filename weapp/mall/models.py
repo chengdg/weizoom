@@ -178,6 +178,15 @@ class ProductRefuseLogs(models.Model):
 		db_table = 'mall_product_refuse_logs'
 
 
+class ProductCustomizedPrice(models.Model):
+	corp_id = models.IntegerField(default=-1) #corp id
+	product_id = models.IntegerField(default=-1)#product id
+	product_model_id = models.IntegerField(default=-1) #ProductModel id
+	price = models.FloatField(default=0.0)
+
+	class Meta(object):
+		db_table = 'mall_product_customized_price'
+
 # MODULE START: product
 #########################################################################
 # Product：商品
@@ -757,15 +766,29 @@ class Product(models.Model):
 		settlement_type = model.settlement_type
 		divide_rebate = model.divide_rebate
 		cps_product_id2promote = {p.product_id: p for p in PromoteDetail.objects.filter(promote_status=PROMOTING)}
+		product_ids = [p.id for p in products]
+		product_model_id2price = {c.product_model_id: c.price for c in ProductCustomizedPrice.objects.filter(product_id__in=product_ids)}
 		for product in products:
 			if product._is_use_custom_model:
-				all_model_purchase_price = [float(m['purchase_price']) for m in product.custom_models]
-				min_weizoom_price = min(all_model_purchase_price)
-				max_weizoom_price = max(all_model_purchase_price)
+				product.custom_models.sort(lambda x, y: cmp(float(x['price']), float(y['price'])))
+				min_model = product.custom_models[0]
+				max_model = product.custom_models[-1]
+
+				min_weizoom_price = float(min_model['purchase_price'])
+				max_weizoom_price = float(max_model['purchase_price'])
+
+				min_product_price = float(min_model['price'])
+				max_product_price = float(max_model['price'])
+
 			else:
+				min_model = max_model = product.standard_model
 				max_weizoom_price = min_weizoom_price = float(product.standard_model['purchase_price'])
+				max_product_price = min_product_price = float(product.standard_model['price'])
+
 			if settlement_type == account_models.ACCOUNT_DIVIDE_TYPE_FIXED: #固定底价
-				pass
+				customized_price = product_model_id2price.get(min_model['id'], min_product_price)
+				product.gross_profit = '%.2f' % (customized_price - min_product_price)
+				product.gross_profit_rate = '%.2f' % ((customized_price - min_product_price) / customized_price * 100)
 			elif settlement_type == account_models.ACCOUNT_DIVIDE_TYPE_RETAIL: #固定返点
 				product.gross_profit = '%.2f' % (max_weizoom_price * divide_rebate / 100)
 				product.gross_profit_rate = '%.2f' % divide_rebate
@@ -775,8 +798,8 @@ class Product(models.Model):
 					product.cps_gross_profit_rate = '%.2f' % (cps_product_id2promote[product.id].promote_money / min_weizoom_price * divide_rebate * 100)
 					product.cps_time_to = cps_product_id2promote[product.id].promote_time_from.strftime("%Y/%m/%d %H:%M")
 
-				product.gross_profit = '%.2f' % ((product.price - min_weizoom_price) * divide_rebate / 100)
-				product.gross_profit_rate = '%.2f' % ((product.price - min_weizoom_price)/product.price * divide_rebate / 100)
+				product.gross_profit = '%.2f' % ((min_product_price - min_weizoom_price) * divide_rebate / 100)
+				product.gross_profit_rate = '%.2f' % ((min_product_price - min_weizoom_price)/min_product_price * divide_rebate / 100)
 
 	@staticmethod
 	def fill_details(webapp_owner, products, options):
