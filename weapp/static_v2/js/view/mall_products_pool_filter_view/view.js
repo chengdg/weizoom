@@ -121,13 +121,13 @@ W.view.mall.ProductsPoolFilterView = Backbone.View.extend({
 
         var tabStatu = $('#tabStatus').val();
         var data = {
-            product_code: productCode,
+            // product_code: productCode,
             name: name,
-            supplier: supplier,
+            // supplier: supplier,
             first_classification: firstClassification,
             secondary_classification: secondaryClassification,
-            status: status,
-            supplier_type:supplier_type,
+            // status: status,
+            // supplier_type:supplier_type,
             labels:productLabels,
         }
         if(tabStatu == 1){data['is_cps']=1};

@@ -500,11 +500,13 @@ W.view.mall.ProductListView = Backbone.View.extend({
     onClickShowAllModelsButton: function(event) {
         var $target = $(event.currentTarget);
         var $tr = $target.parents('tr');
+        var $tbody = $target.parents('tbody');
         var id = $tr.data('id');
         var product = this.table.getDataItem(id);
+        var settlementType = $tbody.attr('data-settlement');
         var models = product.get('models');
         var properties = _.pluck(models[0].property_values, 'propertyName');
-        var $node = $.tmpl(this.modelInfoTemplate, {properties: properties, models: models});
+        var $node = $.tmpl(this.modelInfoTemplate, {properties: properties, models: models, settlementType: settlementType});
         W.popup({
             $el: $target,
             position:'top',

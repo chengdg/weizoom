@@ -7,7 +7,7 @@
 			{{/each}}
 			<th>价格（元）</th>
 			<th>库存</th>
-			<th>商品编码</th>
+			<!-- <th>商品编码</th> -->
 			<th>商品毛利</th>
 		</tr>
 	</thead>
@@ -19,8 +19,8 @@
 			{{/each}}
 			<td>${model.price}</th>
 			<td>{{if (model.stock_type == 0)}}无限{{else}}${model.stocks}{{/if}}</th>
-			<td>${model.user_code}</th>
-			<td>${model.gross_profit}</th>
+			<!-- <td>${model.user_code}</th> -->
+			<td>${model.gross_profit}(${model.gross_profit_rate}%)</th>
 		</tr>
 		{{/each}}
 	</tbody>

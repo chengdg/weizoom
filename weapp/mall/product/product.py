@@ -905,11 +905,11 @@ class ProductPool(resource.Resource):
                 product_dic['cps_gross_profit'] = getattr(product, 'cps_gross_profit', 0)
                 product_dic['cps_gross_profit_rate'] = getattr(product, 'cps_gross_profit_rate', 0)
                 product_dic['cps_time_to'] = getattr(product, 'cps_time_to', 0)
-                items.append(product_dic)
-            else:
-                product_dic['gross_profit'] = getattr(product, 'gross_profit', 0)
-                product_dic['gross_profit_rate'] = getattr(product, 'gross_profit_rate', 0)
-                items.append(product_dic)
+            print product.gross_profit_rate
+            print '>>>>>>>>>>>>>>>>>>>>>>>>>'
+            product_dic['gross_profit'] = getattr(product, 'gross_profit', 0)
+            product_dic['gross_profit_rate'] = getattr(product, 'gross_profit_rate', 0) 
+            items.append(product_dic)
 
         data = dict()
         data['owner_id'] = request.manager.id

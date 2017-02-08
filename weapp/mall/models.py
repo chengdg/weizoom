@@ -503,7 +503,7 @@ class Product(models.Model):
 					if product_id in cps_product_id2promote.keys():
 						model_dict['cps_gross_profit'] = '%.2f' % (cps_product_id2promote[product_id].promote_money * divide_rebate)
 						model_dict['cps_gross_profit_rate'] = '%.2f' % (model_dict['cps_gross_profit'] / model.purchase_price * 100)
-						model_dict['cps_time_to'] = cps_product_id2promote[product_id].promote_time_from.strftime("%Y/%m/%d %H:%M")
+						model_dict['cps_time_to'] = cps_product_id2promote[product_id].promote_time_from.strftime("%m-%d %H:%M:%S")
 
 					gross_profit = (model.price - model.purchase_price) * divide_rebate / 100
 					gross_profit_rate = gross_profit / model.price * 100
