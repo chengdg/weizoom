@@ -713,7 +713,8 @@ class ProductPool(resource.Resource):
             "with_selected_category": True,
             'with_image': False,
             'with_property': True,
-            'with_sales': True
+            'with_sales': True,
+            'with_settlement_info': True
         })
 
         # dict_products = []
@@ -899,8 +900,14 @@ class ProductPool(resource.Resource):
                 product_dic['promote_money'] = "%.2f"%models.PromoteDetail.objects.get(product_id=product.id, promote_status=1).promote_money
                 product_dic['promote_time_from'] = models.PromoteDetail.objects.get(product_id=product.id, promote_status=1).promote_time_from.strftime("%Y/%m/%d %H:%M")
                 product_dic['promote_time_to'] = models.PromoteDetail.objects.get(product_id=product.id, promote_status=1).promote_time_to.strftime("%Y/%m/%d %H:%M")
+
+                product_dic['cps_gross_profit'] = getattr(product, 'cps_gross_profit', 0)
+                product_dic['cps_gross_profit_rate'] = getattr(product, 'cps_gross_profit_rate', 0)
+                product_dic['cps_time_to'] = getattr(product, 'cps_time_to', 0)
                 items.append(product_dic)
             else:
+                product_dic['gross_profit'] = getattr(product, 'gross_profit', 0)
+                product_dic['gross_profit_rate'] = getattr(product, 'gross_profit_rate', 0)
                 items.append(product_dic)
 
         data = dict()
