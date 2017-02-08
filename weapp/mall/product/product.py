@@ -656,7 +656,6 @@ class ProductPool(resource.Resource):
             product_pool = models.ProductPool.objects.filter(woid=request.manager.id, status=models.PP_STATUS_ON_POOL)
             product_ids = [pool.product_id for pool in product_pool]
             products = models.Product.objects.filter(id__in=product_ids)
-        print "pool",products
         if int(supplier_type) != -1 or supplier_name:
             params = {}
             params['owner_id'] = manager_user_profile.user_id
@@ -905,14 +904,15 @@ class ProductPool(resource.Resource):
                 product_dic['cps_gross_profit'] = getattr(product, 'cps_gross_profit', 0)
                 product_dic['cps_gross_profit_rate'] = getattr(product, 'cps_gross_profit_rate', 0)
                 product_dic['cps_time_to'] = getattr(product, 'cps_time_to', 0)
-            print product.gross_profit_rate
-            print '>>>>>>>>>>>>>>>>>>>>>>>>>'
             product_dic['gross_profit'] = getattr(product, 'gross_profit', 0)
             product_dic['gross_profit_rate'] = getattr(product, 'gross_profit_rate', 0) 
             items.append(product_dic)
 
         data = dict()
         data['owner_id'] = request.manager.id
+        model = AccountDivideInfo.objects.filter(user_id=request.manager.id).first()
+        if model:
+            data['settlement_type'] = model.settlement_type
         response = create_response(200)
         if wtype != 1:
             response.data = {
@@ -1877,7 +1877,6 @@ class ProductPos(resource.Resource):
             }
         except:
             error_msg = u"获取商品是否存在已有的排序值失败, cause:\n{}".format(unicode_full_stack())
-            print error_msg
             watchdog_warning(error_msg)
             response = create_response(500)
 
