@@ -751,7 +751,9 @@ class Product(models.Model):
 		}
 		对于多规格的商品，则填充毛利最大的
 		"""
-		model = account_models.AccountDivideInfo.objects.get(user_id=webapp_owner.id)
+		model = account_models.AccountDivideInfo.objects.filter(user_id=webapp_owner.id).first()
+		if not model:
+			return
 		settlement_type = model.settlement_type
 		divide_rebate = model.divide_rebate
 		cps_product_id2promote = {p.product_id: p for p in PromoteDetail.objects.filter(promote_status=PROMOTING)}
