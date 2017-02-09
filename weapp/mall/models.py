@@ -426,7 +426,7 @@ class Product(models.Model):
 				product.display_price = product.price
 
 	@staticmethod
-	def fill_model_detail(webapp_owner, products, product_ids, id2property={}, id2propertyvalue={}, is_enable_model_property_info=False):
+	def fill_model_detail(webapp_owner, products, product_ids, id2property={}, id2propertyvalue={}, is_enable_model_property_info=False, manager={}):
 		_id2property = {}
 		_id2propertyvalue = {}
 		if is_enable_model_property_info:
@@ -450,8 +450,8 @@ class Product(models.Model):
 				}
 				_id2propertyvalue[id] = data
 				_property['values'].append(data)
-
-		divide_model = account_models.AccountDivideInfo.objects.filter(user_id=webapp_owner.id).first()
+		user_id = manager.id if manager else webapp_owner.id
+		divide_model = account_models.AccountDivideInfo.objects.filter(user_id=user_id).first()
 		if divide_model:
 			settlement_type = divide_model.settlement_type
 			divide_rebate = divide_model.divide_rebate
@@ -801,7 +801,7 @@ class Product(models.Model):
 				id2product[product_id].sales = sales.sales
 
 	@staticmethod
-	def fill_details(webapp_owner, products, options):
+	def fill_details(webapp_owner, products, options, manager={}):
 		id2property = None
 		id2propertyvalue = None
 		is_enable_model_property_info = options.get(
@@ -859,7 +859,8 @@ class Product(models.Model):
 				product_ids,
 				id2property,
 				id2propertyvalue,
-				is_enable_model_property_info)
+				is_enable_model_property_info,
+				manager)
 
 		if options.get('with_product_promotion', False):
 			Product.fill_promotion_detail(webapp_owner, products, product_ids)
