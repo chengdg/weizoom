@@ -501,7 +501,7 @@ class Product(models.Model):
 				elif settlement_type == account_models.ACCOUNT_DIVIDE_TYPE_PROFIT:  # 毛利分成
 					product_id = model.product.id
 					if product_id in cps_product_id2promote.keys():
-						model_dict['cps_gross_profit'] = '%.2f' % (cps_product_id2promote[product_id].promote_money * divide_rebate)
+						model_dict['cps_gross_profit'] = '%.2f' % (cps_product_id2promote[product_id].promote_money * divide_rebate / 10000)
 						model_dict['cps_gross_profit_rate'] = '%.2f' % (float(model_dict['cps_gross_profit']) / float(model.price * 100))
 						model_dict['cps_time_to'] = cps_product_id2promote[product_id].promote_time_from.strftime("%m-%d %H:%M:%S")
 
