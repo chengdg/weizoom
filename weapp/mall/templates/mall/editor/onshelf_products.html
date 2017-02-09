@@ -229,7 +229,7 @@
 
 					{{if data.data.settlement_type != 3}}
 					<td>
-						{{if product.is_cps}}
+						{{if product.is_cps && data.data.settlement_type == 2}}
 						<div style='color:#999; text-decoration:line-through'>${product.gross_profit}(${product.gross_profit_rate}%)</div>
 						<div style='color:#e00000;'>${product.cps_gross_profit}(${product.cps_gross_profit_rate}%)</div>
 						<div>限时至${product.cps_time_to}</div>
@@ -249,7 +249,7 @@
 					<td>
 						<div style=" width:74px; margin:auto;">
 							<a href="/mall2/product/?id=${product.id}&shelve_type=1" class="xa-modify fl" style="width: 37px;">
-							{{if product.is_self}}修改{{else}}查看{{/if}}</a>
+							{{if product.is_self || data.data.settlement_type == 3}}修改{{else}}查看{{/if}}</a>
 							<a href="javascript:void(0);" class="xa-offshelf fl" style="width: 30px;">下架</a>
 						</div>
 						</br>

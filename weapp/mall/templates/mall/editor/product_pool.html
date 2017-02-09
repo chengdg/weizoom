@@ -158,13 +158,13 @@
                     {{else}}
                     {{if data.data.settlement_type != 3}}
                     <td>
-                    {{if product.is_cps}}
-                    <span style='color:#999; text-decoration:line-through'>${product.gross_profit}(${product.gross_profit_rate}%)</span>
-                    <span style='color:#e00000;'>${product.cps_gross_profit}(${product.cps_gross_profit_rate}%)</span>
-                    <span>限时至${product.cps_time_to}</span>
-                    {{else}}
-                    <span>${product.gross_profit}(${product.gross_profit_rate}%)</span>
-                    {{/if}} 
+                        {{if product.is_cps && data.data.settlement_type == 2}}
+                        <div style='color:#999; text-decoration:line-through'>${product.gross_profit}(${product.gross_profit_rate}%)</div>
+                        <div style='color:#e00000;'>${product.cps_gross_profit}(${product.cps_gross_profit_rate}%)</div>
+                        <div>限时至${product.cps_time_to}</div>
+                        {{else}}
+                        <div>${product.gross_profit}(${product.gross_profit_rate}%)</div>
+                        {{/if}}
                     </td>
                     {{/if}}
                     {{/if}} 

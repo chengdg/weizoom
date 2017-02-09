@@ -627,7 +627,7 @@ $('.xa-selectImage').click(function(){return false;})
 {% endif %}
 {% if request.manager.id != product.owner.id and product and pool_mall_type%}
 setTimeout(function(){
-	$('input').not('.xa-weshop').not('[type="hidden"]').attr('disabled','1');
+	$('input').not('.xa-weshop').not('[type="hidden"]').not('.xa-price').attr('disabled','1');
 }, 500)
 {% endif %}
 </script>
