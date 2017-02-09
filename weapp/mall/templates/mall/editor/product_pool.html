@@ -127,7 +127,7 @@
                         ${product.classification}
                     </td>
                     <td>
-                        {{if data.is_request_cps&&data.is_request_cps==1}}
+                        {{if data.is_request_cps && data.is_request_cps==1}}
                             ${product.promote_money}
                         {{else}}
                             {{if product.is_use_custom_model}}
@@ -139,7 +139,7 @@
                     </td>
 
                     <td>
-                        {{if data.is_request_cps&&data.is_request_cps==1}}
+                        {{if data.is_request_cps && data.is_request_cps==1}}
                             ${product.promote_stock}
                         {{else}}
                             {{if !product.is_use_custom_model}}
@@ -151,7 +151,7 @@
                             {{/if}}
                         {{/if}}
                     </td>
-                    {{if data.is_request_cps&&data.is_request_cps==1}}
+                    {{if data.is_request_cps && data.is_request_cps==1}}
                     <td>
                         ${product.promote_time_from}-<br/>${product.promote_time_to}
                     </td>
