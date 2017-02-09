@@ -40,7 +40,11 @@ class Command(BaseCommand):
 
             #获取对应供货商在weapp中的id
             cur.execute(u"select * from account_has_supplier where account_id='%d'" % account_id)
-            supplier_id = cur.fetchone()[3]
+            supplier = cur.fetchone()
+            if supplier:
+                supplier_id = supplier[3]
+            else:
+                continue
 
             #根据供货商，获取该供货商下全部的商品
             supplier = Supplier.objects.get(id=supplier_id)
