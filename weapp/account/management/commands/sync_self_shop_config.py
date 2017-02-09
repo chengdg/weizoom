@@ -35,15 +35,17 @@ class Command(BaseCommand):
         for row in rows:
             #获取自营平台的id或者username
             account = row[2]
-            if User.objects.filter(id=account):
-                user = User.objects.get(id=account)
-
-            if User.objects.filter(username=account):
-                user = User.objects.get(username=account)
+            if account.isdigit()
+                if User.objects.filter(id=account):
+                    user = User.objects.get(id=account)
+            else:
+                if User.objects.filter(username=account):
+                    user = User.objects.get(username=account)
 
             if user:
                 #更新panda中对应weapp自营平台的方式统一成user_id
-                execute("update self_shop_self_shops set weapp_user_id = '%d' where weapp_user_id ='%s'" % (user.id, account))
+                cur.execute("update self_shop_self_shops set weapp_user_id = '%d' where weapp_user_id ='%s'" % (user.id, account))
+                conn.commit()
                 #创建配置，如果配置不存在
                 if not AccountDivideInfo.objects.filter(user_id=user.id):
                     AccountDivideInfo.objects.create(user_id=user.id)
