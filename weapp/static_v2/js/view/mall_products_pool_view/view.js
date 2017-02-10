@@ -63,11 +63,6 @@ W.view.mall.ProductsPoolView = Backbone.View.extend({
      */
      onClickBatchAddOffShelf: function(event){
         var product_ids = this.table.getAllSelectedDataIds();
-        product_ids = product_ids.filter(function(currentValue, index, arr) {
-            if (currentValue) {
-                return currentValue;
-            }
-        });
         var $el = $(event.currentTarget);
         var _this = this;
         if(product_ids.length !== 0){
@@ -199,6 +194,9 @@ W.view.mall.ProductsPoolTable = W.view.common.AdvancedTable.extend({
             if($(this).data('product-status') !== 2){
                 $(this).find('.xa-select').attr('disabled', 'disabled').removeClass('xa-select');
             }
+        });
+        $('.xui-label-tr').each(function() {
+            $(this).find('td').eq(0).empty();
         });
     }
 });

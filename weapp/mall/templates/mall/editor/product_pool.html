@@ -66,6 +66,9 @@
         data-selectable="true"
         data-item-count-per-page="12"
         data-outer-selecter='.xa-selectAll'
+        data-disable-header-select="true"
+        class=""
+        data-selecttable-tr='xa-selectTr'
     ></div>
     </div>
 </div>
@@ -185,7 +188,7 @@
                     </td>
 
                 </tr>
-                <tr style="height:20px;">
+                <tr style="height:20px;" class="xui-label-tr">
 					<td colspan="9" class="xui-remark xa-remark pb0" style=''>
 					{{if product.product_label_names}}
 					    {{each(i, name) product.product_label_names}}
