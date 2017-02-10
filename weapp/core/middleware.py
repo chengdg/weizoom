@@ -709,7 +709,8 @@ class Redirect2HermesMiddleware(object):
 			'/mall2/email_notify_list/': '/config/email_notify_list/',
 
 			'/mall2/integral_strategy/': '/home/integral_strategy/',
-			'/mall2/config_product_list/': '/home/webapp_config/'
+			'/mall2/config_product_list/': '/home/webapp_config/',
+			'/mall2/weixin_certificate': 'config/weixin_certificate'
 
 		}
 		querystring_dict = {}
