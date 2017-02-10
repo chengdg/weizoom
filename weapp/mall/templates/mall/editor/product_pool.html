@@ -17,6 +17,9 @@
 .xui-productsPoolPage .xui-productList tbody tr:nth-child(even) td:first-child{
     display:none;
 }
+.xui-no-products input {
+    display: none;
+}
 
 </style>
 {% endblock %}
@@ -193,7 +196,7 @@
 				</tr>
                 {{/each}}
             {{else}}
-                <tr><td colspan='8'>还没有数据</td></tr>
+                <tr class="xui-no-products"><td colspan='8'>还没有数据</td></tr>
             {{/if}}
         </tbody>
     </table>

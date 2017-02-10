@@ -63,6 +63,11 @@ W.view.mall.ProductsPoolView = Backbone.View.extend({
      */
      onClickBatchAddOffShelf: function(event){
         var product_ids = this.table.getAllSelectedDataIds();
+        product_ids = product_ids.filter(function(currentValue, index, arr) {
+            if (currentValue) {
+                return currentValue;
+            }
+        });
         var $el = $(event.currentTarget);
         var _this = this;
         if(product_ids.length !== 0){
