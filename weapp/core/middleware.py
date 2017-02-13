@@ -749,21 +749,21 @@ class Redirect2HermesMiddleware(object):
 		# else:
 		# 	is_use_rebuilt_path = False
 
-			# 判断是自营平台
-			if hasattr(request, 'manager'):
-				user_profile = request.manager.get_profile()
-				is_weizoom_mall = user_profile.webapp_type == 1
+			# # 判断是自营平台
+			# if hasattr(request, 'manager'):
+			# 	user_profile = request.manager.get_profile()
+			# 	is_weizoom_mall = user_profile.webapp_type == 1
+			# else:
+			# 	is_weizoom_mall = False
+			#
+			# if is_weizoom_mall:
+			if querystring_dict:
+
+				new_url = settings.HERMES_HOST + new_path + '?' + urllib.urlencode(querystring_dict)
 			else:
-				is_weizoom_mall = False
+				new_url = settings.HERMES_HOST + new_path
 
-			if is_weizoom_mall:
-				if querystring_dict:
-
-					new_url = settings.HERMES_HOST + new_path + '?' + urllib.urlencode(querystring_dict)
-				else:
-					new_url = settings.HERMES_HOST + new_path
-
-				return HttpResponseRedirect(new_url)
+			return HttpResponseRedirect(new_url)
 
 		else:
 			return
