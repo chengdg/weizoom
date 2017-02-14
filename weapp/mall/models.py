@@ -485,7 +485,7 @@ class Product(models.Model):
 				固定底价: 社群修改价 - 上浮结算价
 				固定扣点: 商品售价 * 社群扣点
 				毛利分成: {
-					cps: 商品结算价 - 推广费,
+					cps: 推广费 * 社群毛利点,
 					non_cps: (商品售价 - 微众售价) * 社群毛利点  ==> 社群毛利,
 							 (商品售价 - 微众售价)/商品售价 * 社群毛利点 ==>社群毛利率
 				}
@@ -501,8 +501,8 @@ class Product(models.Model):
 				elif settlement_type == account_models.ACCOUNT_DIVIDE_TYPE_PROFIT:  # 毛利分成
 					product_id = model.product.id
 					if product_id in cps_product_id2promote.keys():
-						model_dict['cps_gross_profit'] = '%.2f' % (cps_product_id2promote[product_id].promote_money * divide_rebate / 10000)
-						model_dict['cps_gross_profit_rate'] = '%.2f' % (float(model_dict['cps_gross_profit']) / float(model.price) * 100)
+						model_dict['cps_gross_profit'] = '%.2f' % (cps_product_id2promote[product_id].promote_money * divide_rebate / 100)
+						model_dict['cps_gross_profit_rate'] = '%.2f' % (float(model_dict['cps_gross_profit']) / model.price * 100)
 						model_dict['cps_time_to'] = cps_product_id2promote[product_id].promote_time_from.strftime("%m-%d %H:%M:%S")
 
 					gross_profit = (model.price - model.purchase_price) * divide_rebate / 100
