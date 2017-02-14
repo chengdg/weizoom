@@ -35,7 +35,7 @@ class Command(BaseCommand):
         for row in rows:
             #获取自营平台的id或者username
             account = row[2]
-            if account.isdigit()
+            if account.isdigit():
                 if User.objects.filter(id=account):
                     user = User.objects.get(id=account)
             else:
