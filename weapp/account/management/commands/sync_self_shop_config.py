@@ -47,7 +47,7 @@ class Command(BaseCommand):
                 cur.execute("update self_shop_self_shops set weapp_user_id = '%d' where weapp_user_id ='%s'" % (user.id, account))
                 conn.commit()
                 #创建配置，如果配置不存在
-                if not AccountDivideInfo.objects.filter(user_id=user.id):
+                if AccountDivideInfo.objects.filter(user_id=user.id).count() <= 0:
                     AccountDivideInfo.objects.create(user_id=user.id)
 
 
