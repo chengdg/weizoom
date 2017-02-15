@@ -2087,13 +2087,13 @@ class OrderHasProduct(models.Model):
 	weight = models.FloatField(default=0)
 	product_model_name_texts = models.CharField(max_length=1024, default='[]')  # 规格名称的值
 	product_model_id = models.IntegerField(default=0) # 规格ID
-	# 商品毛利润
-	product_profit = models.FloatField(default=0)
-	# 商品毛利率
-	product_profit_ratio = models.FloatField(default=0)
-	
-	# 社群计算价(即和社群结算的时候应该结算多少钱)
-	webapp_purchase_price = models.FloatField(default=0)
+	# # 商品毛利润
+	# product_profit = models.FloatField(default=0)
+	# # 商品毛利率
+	# product_profit_ratio = models.FloatField(default=0)
+	#
+	# # 社群计算价(即和社群结算的时候应该结算多少钱)
+	# webapp_purchase_price = models.FloatField(default=0)
 
 	class Meta(object):
 		db_table = 'mall_order_has_product'
