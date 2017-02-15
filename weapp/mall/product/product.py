@@ -238,6 +238,9 @@ class ProductList(resource.Resource):
             current_product_filters = utils.PRODUCT_FILTERS
         #通过has_filter 判断当前填充属性还是在分页后填充属性(product_pool_id2product_pool除外，它要进行商品的排序)
         has_filter = utils.search_util.init_filters(request, current_product_filters)
+        if mall_type: #毛利率排序需要首先填充属性，再分页
+            has_filter = True
+            sort_attr = '-gross_profit_rate'
         if has_filter:
             models.Product.fill_details(request.manager, products, {
                 "with_product_model": True,
@@ -716,6 +719,10 @@ class ProductPool(resource.Resource):
             'with_property': True,
             'with_sales': True
         }, request.manager)
+
+        if wtype == 1:
+            products = sorted(products, key=operator.attrgetter('id'), reverse=True)
+            products = sorted(products, key=operator.attrgetter('-gross_profit_rate'), reverse=True)
 
         # dict_products = []
         # for product in products:
