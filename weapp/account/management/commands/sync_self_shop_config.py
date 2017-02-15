@@ -30,12 +30,12 @@ class Command(BaseCommand):
             )
         cur = conn.cursor()
         #获取所有零售返点类型的panda用户
-        cur.execute(u"select * from self_shop_self_shops")
+        cur.execute(u"select weapp_user_id from self_shop_self_shops")
         rows = cur.fetchall()
         for row in rows:
             #获取自营平台的id或者username
-            account = row[2]
-            if account.isdigit()
+            account = row[0]
+            if account.isdigit():
                 if User.objects.filter(id=account):
                     user = User.objects.get(id=account)
             else:
@@ -49,6 +49,7 @@ class Command(BaseCommand):
                 #创建配置，如果配置不存在
                 if not AccountDivideInfo.objects.filter(user_id=user.id):
                     AccountDivideInfo.objects.create(user_id=user.id)
+                    print '--------------------'
 
 
             
