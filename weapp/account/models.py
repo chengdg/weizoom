@@ -127,31 +127,30 @@ class UserProfile(models.Model):
 CLEAR_PERIOD_MONTH = 1 #自然月
 CLEAR_PERIOD_15TH_DAY = 2 #15天
 CLEAR_PERIOD_WEEK = 3 #自然周
+# 固定底价
+CORP_DIVIDE_TYPE_FIXED = 1
+# 零售价返点
+CORP_DIVIDE_TYPE_RETAIL = 2
+
 class CorpInfo(models.Model):
 	"""
 	corp详情
 	"""
 	name = models.CharField(max_length=32, default='')	#公司简称(店铺名)
 	company_name = models.CharField(max_length=32, default='')	#公司全称
-	is_weizoom_corp = models.BooleanField(default=False)
-	purchase_method = models.IntegerField(default=1) #采购方式
-	points = models.FloatField(default=0) #零售价返点
-	rebate_money = models.FloatField(default=0)  # 返点起点金额
-	rebate_proport = models.FloatField(default=0)  # 返点比例%
-	default_rebate_proport = models.FloatField(default=0)  # 默认返点比例%
+	settlement_type = models.IntegerField(default=CORP_DIVIDE_TYPE_FIXED) #采购方式
+	divide_rebate = models.FloatField(default=0) #零售价返点
 	clear_period = models.IntegerField(default=CLEAR_PERIOD_MONTH)
-	customer_from = models.IntegerField(default=0)  # 客户来源 0 PANDA ，1 渠道
+	customer_from = models.IntegerField(default=1)  # 客户来源 0 PANDA ，1 渠道
 	max_product_count = models.IntegerField(default=10)  # 最多可创建商品个数
+	classification_ids = models.CharField(max_length=1024, default='')	#分类id集合，如'12,23,45,567'
 
 	contact = models.CharField(max_length=32, default='')  # 联系人
 	contact_phone = models.CharField(max_length=16, default='')  # 手机号
-	valid_time_from = models.DateTimeField(null=True)  # 有效范围开始时间
-	valid_time_to = models.DateTimeField(null=True)  # 有效范围结束时间
 	note = models.CharField(max_length=1024, default='')  # 备注
 
-	status = models.IntegerField(default=1)  # 账号状态 0停用中，1开启中，2不在有效期内
-	is_deleted = models.BooleanField(default=True, verbose_name='用户是否有效')  # 是否删除
 	created_at = models.DateTimeField(auto_now_add=True)  # 创建时间
+	status = models.BooleanField(default=False)
 
 	pre_sale_tel = models.CharField(max_length=32, default='')  # 售前电话
 	after_sale_tel = models.CharField(max_length=32, default='')  # 售后电话

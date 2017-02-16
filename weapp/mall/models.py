@@ -597,7 +597,7 @@ class Product(models.Model):
 						target_model = custom_models[0]
 						low_price = target_model['price']
 						high_price = custom_models[-1]['price']
-						custom_models.sort(lambda x, y: cmp(float(x['gross_profit_rate']), float(y['gross_profit_rate'])))
+						custom_models.sort(lambda x, y: cmp(float(x['gross_profit']), float(y['gross_profit'])))
 						max_profit_model = custom_models[-1]
 						if low_price == high_price:
 							# 格式: X.00
