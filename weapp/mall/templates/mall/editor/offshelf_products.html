@@ -74,6 +74,161 @@
 {% block js %}
 {% verbatim %}
 <script id="products-view" type="text/x-jquery-tmpl">
+	{{if data.data.webapp_type == 0}}
+{{if !data.n_self}}
+	<ul class="nav nav-tabs mt14 ">
+        <li class="xa-tab {{if !data.is_request_cps }}active{{/if}}" data-cps-value="0"><a href="javascript:void(0);">所有商品</a></li>
+        <li class="xa-tab {{if data.is_request_cps }}active{{/if}}" data-cps-value="1"><a href="javascript:void(0);">付费推广商品<i class="xui-noticyTip xa-cpsProductTip"></i></a></li>
+    </ul>
+    {{/if}}
+    <div class="panel-default mt20 xb-rightPanel p10" style="min-height:120px;border: 1px solid #ddd;border-bottom: 0;">
+    <div class="pb10">
+			<label for="topSelectAll" class="xui-selectAll ml10">
+				<input type="checkbox" id="topSelectAll" class="xa-selectAll">全选
+			</label>
+			<a href="javascript:void(0);" class="btn btn-default ml10 xa-batchOnshelf">批量上架</a>
+			<a href="javascript:void(0);" class="btn btn-default ml10 xa-batchDelete">彻底删除</a>
+	</div>
+	<table id="productListTable" class="table table-bordered table-condensed xui-productList xb-stripedTable xb-noTdBorder xb-noBottom xb-noBorder xb-theadBg">
+		<thead>
+			<tr>
+				<th width="250">商品信息</th>
+				<th width="100">{{if data.data.mall_type > 0}}供货商{{else}}条码{{/if}}</th>
+				<th width="100">分组</th>
+				<th width="105">商品价格（元）</th>
+				{{if data.is_request_cps&&data.is_request_cps==1}}
+				<th width="50">推广费用（元/件）</th>
+				<th width="78">推广库存</th>
+				<th width="178">推广时间</th>
+				{{else}}
+				<th width="50">库存</th>
+				<th width="50">总销量</th>
+				
+				<th width="120">{{if data.data.mall_type == 1 }}首次上架{{else}}创建{{/if}}时间</th>
+				{{/if}}
+				{{if data.data.mall_type > 0 && data.data.mall_type != 3}}<th width="50">分类</th>{{/if}}
+				<th width="110">操作</th>
+			</tr>
+		</thead>
+		<tbody id='product_list'>
+            {{if items.length}}
+	            {{each(i, product) items}}
+				<tr data-id="${product.id}"
+					data-purchase-price="${product.purchase_price}"
+					data-mall-type="${mall_type}"
+					data-is-sync=${product.is_sync}
+					class="{{if !product.is_group_buying }}xa-selectTr{{/if}}{{if product.n_request_cps}}{{if product.is_cps}} xui-cps{{/if}}{{/if}}"
+					data-is-group-buying="${product.is_group_buying}">
+					<td class="wui-advanced-table-sort-handler tl_important">
+						<div class="disT w">
+							<div class="imgBox disTc pr xui-imgBox">
+								<a href="/mall2/product/?id=${product.id}">
+                                  {{if product.thumbnails_url.search('http://weappimg') != -1}}
+                                    <img src="${product.thumbnails_url + '!60'}" width="60" height="60"/>
+                                  {{else}}
+                                    <img src="${product.thumbnails_url}" width="60" height="60"/>
+                                  {{/if}}
+
+								</a>
+								{{if product.is_sellout}}
+								<div class="xui-i-sellout">已售罄</div>
+								{{/if}}
+							</div>
+							<div class="pl15 disTc xui-poductorIntroduction">
+								<div class="mb0 mt0" style="height:35px; "><p class="mb0" style="line-height:16px;">{{if product.type == 'virtual' }}<i class="xui-virtualProductIcon">码</i>{{/if}}{{if product.type == 'wzcard'}}<i class="xui-virtualProductIcon">卡</i>{{/if}}${product.name}</p></div>
+								{{if product.is_use_custom_model}}
+								<span class="label label-info xa-showAllModels cursor-pointer" style="font-size: 1.0em;">查看${product.models.length}个规格详情</span>
+								{{else}}
+									<span class="xui-fontGary">商品编码: ${product.user_code}</span>
+								{{/if}}
+							</div>
+						</div>
+					</td>
+					<td>
+					{{if data.data.mall_type > 0 }}
+						{{if product.is_sync }}<i class="xui-icon-sync">同</i>{{/if}}
+						${product.store_name}
+					{{else}}
+						${product.bar_code}
+					{{/if}}
+					</td>
+					<td>
+						{{if product.categories && product.categories.length > 0}}
+							${product.categories[0].name}
+							{{if product.categories.length >1}}
+								<br/>
+								 <a class="btn xui-i-more">
+									更多（${product.categories.length-1}）
+									 <ul class="xui-i-product-categories xa-xui-i-product-categories">
+									 		{{each(i, item) product.categories}}
+											{{if i>0}}
+									 		 <li data-category-id="${item.id}">
+									 		 	${item.name}
+									 		 </li>
+											 {{/if}}
+									 		{{/each}}
+									 </ul>
+								</a>
+							{{/if}}
+						{{/if}}
+					</td>
+					<td>
+						{{if product.is_use_custom_model}}
+						<div class="xa-priceText">${product.display_price_range}</div>
+						<div><a href="javascript:void(0);" class="xa-modifyCustomModelPrice">{{if product.is_self}}修改{{/if}}</a></div>
+						{{else}}
+						<div class="xa-priceText">${product.display_price}</div>
+						<input class="xa-priceInput xui-hide" style="width: 35%;" data-validate="require-price"/>
+						<div><a href="javascript:void(0);" class="xa-modifyStandardModelPrice">{{if product.is_self}}修改{{/if}}</a></div>
+						{{/if}}
+					</td>
+					<td>
+					{{if data.is_request_cps&&data.is_request_cps==1}}
+						${product.promote_money}
+					{{else}}					
+						{{if product.is_use_custom_model}}
+							<a href="javascript:void(0);" class="xa-modifyCustomModelStocks">{{if product.is_self}}修改{{/if}}</a>
+						{{else}}
+							<div class="xa-stockText">${product.stocks}</div>
+							<input class="xa-stockInput xui-hide" style="width: 100%;" />
+							<div><a href="javascript:void(0);" class="xa-modifyStandardModelStocks">{{if product.is_self}}修改{{/if}}</a></div>
+						{{/if}}
+					{{/if}}
+					</td>
+					<td>{{if data.is_request_cps&&data.is_request_cps==1}}${product.promote_stock}{{else}}${product.sales}{{/if}}</td>
+					{{if data.is_request_cps&&data.is_request_cps==1}}
+						<td>${product.promote_time_from}-<br/>${product.promote_time_to}	</td>	
+					{{else}}
+					<td>{{if data.data.mall_type == 1 }}${product.sync_at}{{else}}${product.created_at}{{/if}}</td>
+					{{/if}}
+					{{if data.data.mall_type > 0 && data.data.mall_type != 3}}<td>${product.classification}</td>{{/if}}
+					<td>
+					   <div style=" width:74px; margin:auto;">
+						<a href="/mall2/product/?id=${product.id}" class="xa-modify fl" style="width: 39px;">
+						{{if product.is_self}}修改{{else}}查看{{/if}}</a>
+						<!-- 微众系列-未填写采购价时 -->
+						{{if product.purchase_price == "0" && data.data.mall_type == 1 && product.is_sync}}
+							<span class="fl c6"></span>
+							<a href="javascript:void(0);" class="xa-onshelf fl">上架</a>
+						{{else}}
+							<a href="javascript:void(0);" class="xa-onshelf fl">上架</a>
+						{{/if}}
+						</div>
+						</br>
+						<a href="javascript:void(0);" class="xa-delete xui-block">彻底删除</a>
+						<a href="javascript:void(0);" class="xa-edit-categories" data-categories="${ JSON.stringify(product.categories)}">编辑分组</a>
+						{{if data.data.mall_type == 1}}
+						<a href="/mall2/product_members/?id=${product.id}" class="xui-block" target="_blank">购买会员</a>
+						{{/if}}
+					</td>
+				</tr>
+				{{/each}}
+            {{else}}
+                <tr><td colspan='9'>还没有数据</td></tr>
+            {{/if}}
+		</tbody>
+	</table></div>
+	{{else}}
     <div class="panel-default mt20 xb-rightPanel p10" style="min-height:120px;border: 1px solid #ddd;border-bottom: 0;">
     <div class="pb10">
 		<label for="topSelectAll" class="xui-selectAll ml10">
@@ -222,6 +377,7 @@
             {{/if}}
 		</tbody>
 	</table></div>
+	{{/if}}
 </script>
 {% endverbatim %}
 <script type="text/javascript">

@@ -447,6 +447,8 @@ class ProductList(resource.Resource):
         data = dict()
         data['owner_id'] = request.manager.id
         data['mall_type'] = mall_type
+        data['webapp_type'] = request.user_profile.webapp_type
+
         if mall_type:
             model = AccountDivideInfo.objects.filter(user_id=request.manager.id).first()
             if model:
