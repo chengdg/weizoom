@@ -477,7 +477,8 @@ class Product(models.Model):
 				"user_code": model.user_code,
 				"purchase_price": '%.2f' % model.purchase_price,
 				"market_price": '%.2f' % model.market_price,
-				"gross_profit": '%.2f' % (model.price - model.purchase_price)
+				"gross_profit": '%.2f' % (model.price - model.purchase_price),
+				"gross_profit_rate": '%.2f' % ((model.price - model.purchase_price)/model.price)
 			}
 			if divide_model:
 				"""

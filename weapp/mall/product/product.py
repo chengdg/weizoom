@@ -240,7 +240,7 @@ class ProductList(resource.Resource):
         has_filter = utils.search_util.init_filters(request, current_product_filters)
         if mall_type: #毛利率排序需要首先填充属性，再分页
             has_filter = True
-            sort_attr = '-gross_profit'
+            sort_attr = '-gross_profit_rate'
         if has_filter:
             models.Product.fill_details(request.manager, products, {
                 "with_product_model": True,
