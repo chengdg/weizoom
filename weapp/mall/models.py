@@ -492,25 +492,26 @@ class Product(models.Model):
 				}
 				对于多规格的商品，则填充毛利最大的
 				"""
-				if settlement_type == account_models.ACCOUNT_DIVIDE_TYPE_FIXED:  # 固定底价
-					customized_price = product_model_id2price.get(model.id, model.price)
-					gross_profit = customized_price - model.price
-					gross_profit_rate = gross_profit / customized_price * 100
-				elif settlement_type == account_models.ACCOUNT_DIVIDE_TYPE_RETAIL:  # 固定扣点
-					gross_profit = model.price * divide_rebate / 100
-					gross_profit_rate = divide_rebate
-				elif settlement_type == account_models.ACCOUNT_DIVIDE_TYPE_PROFIT:  # 毛利分成
-					product_id = model.product.id
-					if product_id in cps_product_id2promote.keys():
-						model_dict['cps_gross_profit'] = '%.2f' % (cps_product_id2promote[product_id].promote_money * divide_rebate / 100)
-						model_dict['cps_gross_profit_rate'] = '%.2f' % (float(model_dict['cps_gross_profit']) / model.price * 100)
-						model_dict['cps_time_to'] = cps_product_id2promote[product_id].promote_time_from.strftime("%m-%d %H:%M:%S")
-
-					gross_profit = (model.price - model.purchase_price) * divide_rebate / 100
-					gross_profit_rate = gross_profit / model.price * 100
-				else:
+				if model.price == 0:
 					gross_profit = 0
 					gross_profit_rate = 0
+				else:
+					if settlement_type == account_models.ACCOUNT_DIVIDE_TYPE_FIXED:  # 固定底价
+						customized_price = product_model_id2price.get(model.id, model.price)
+						gross_profit = customized_price - model.price
+						gross_profit_rate = gross_profit / customized_price * 100
+					elif settlement_type == account_models.ACCOUNT_DIVIDE_TYPE_RETAIL:  # 固定扣点
+						gross_profit = model.price * divide_rebate / 100
+						gross_profit_rate = divide_rebate
+					elif settlement_type == account_models.ACCOUNT_DIVIDE_TYPE_PROFIT:  # 毛利分成
+						product_id = model.product.id
+						if product_id in cps_product_id2promote.keys():
+							model_dict['cps_gross_profit'] = '%.2f' % (cps_product_id2promote[product_id].promote_money * divide_rebate / 100)
+							model_dict['cps_gross_profit_rate'] = '%.2f' % (float(model_dict['cps_gross_profit']) / model.price * 100)
+							model_dict['cps_time_to'] = cps_product_id2promote[product_id].promote_time_from.strftime("%m-%d %H:%M:%S")
+
+						gross_profit = (model.price - model.purchase_price) * divide_rebate / 100
+						gross_profit_rate = gross_profit / model.price * 100
 
 				model_dict['gross_profit'] = '%.2f' % gross_profit
 				model_dict['gross_profit_rate'] = '%.2f' % gross_profit_rate
@@ -641,6 +642,10 @@ class Product(models.Model):
 				product.min_limit = 0
 				product.standard_model = {}
 				product.models = []
+				product.gross_profit = 0
+				product.gross_profit_rate = 0
+				product.cps_gross_profit = 0
+				product.cps_gross_profit_rate = 0
 
 
 	@staticmethod
