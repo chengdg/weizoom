@@ -478,7 +478,7 @@ class Product(models.Model):
 				"purchase_price": '%.2f' % model.purchase_price,
 				"market_price": '%.2f' % model.market_price,
 				"gross_profit": '%.2f' % (model.price - model.purchase_price),
-				"gross_profit_rate": '%.2f' % ((model.price - model.purchase_price)/model.price)
+				"gross_profit_rate": 0 if model.price == 0 else '%.2f' % ((model.price - model.purchase_price)/model.price)
 			}
 			if divide_model:
 				"""
