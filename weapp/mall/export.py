@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import copy
+import json
 
 from eaglet.utils.resource_client import Resource
 
@@ -527,6 +528,14 @@ DEFAULT_APPS_THIRD_NAVS = [
     # }
 ]
 
+VAR_PREMIUM_SALE = {
+                    'name': MALL_PROMOTION_PREMIUM_SALE_NAV,
+                    'title': u'买赠',
+                    'url': '/mall2/premium_sale_list/',
+                    'permission': 'manage_premium_sale'
+                }
+
+
 MALL_PROMOTION_AND_APPS_SECOND_NAV = {
     'section': u'',
     'navs': [
@@ -549,13 +558,8 @@ MALL_PROMOTION_AND_APPS_SECOND_NAV = {
                     'title': u'限时抢购',
                     'url': '/mall2/flash_sale_list/',
                     'permission': 'manage_flash_sale'
-                },
-                {
-                    'name': MALL_PROMOTION_PREMIUM_SALE_NAV,
-                    'title': u'买赠',
-                    'url': '/mall2/premium_sale_list/',
-                    'permission': 'manage_premium_sale'
-                },
+                }, VAR_PREMIUM_SALE
+                ,
                 # {
                 #     'name': MALL_PROMOTION_PRICE_CUT_NAV,
                 #     'title': u'满减',
@@ -670,8 +674,11 @@ def get_promotion_and_apps_second_navs(request):
             notify_message = u"从marketapp获取活动列表失败，cause: \n{}".format(unicode_full_stack())
             watchdog_error(notify_message)
             MALL_PROMOTION_AND_APPS_SECOND_NAV['navs'][1]['third_navs'] = DEFAULT_APPS_THIRD_NAVS
-
-        second_navs = [MALL_PROMOTION_AND_APPS_SECOND_NAV]
+        navs = copy.deepcopy(MALL_PROMOTION_AND_APPS_SECOND_NAV)
+        if request.user_profile.webapp_type == 1 and VAR_PREMIUM_SALE in  navs['navs'][0]['third_navs']:
+            # 社群商城关闭买赠功能
+            navs['navs'][0]['third_navs'].remove(VAR_PREMIUM_SALE)
+        second_navs = [navs]
     return second_navs
 
 
