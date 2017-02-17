@@ -722,7 +722,7 @@ class ProductPool(resource.Resource):
 
         if wtype == 1:
             products = sorted(products, key=operator.attrgetter('id'), reverse=True)
-            products = sorted(products, key=operator.attrgetter('-gross_profit_rate'), reverse=True)
+            products = sorted(products, key=operator.attrgetter('gross_profit_rate'), reverse=True)
 
         # dict_products = []
         # for product in products:
