@@ -47,10 +47,9 @@ class Command(BaseCommand):
             else:
                 continue
             
-
             if int(purchase_method) == 1:
                 products = Product.objects.filter(supplier=supplier_id)
-                p2price = {[(p.id, p.purchase_price) for p in products]}
+                p2price = dict([(p.id, p.purchase_price) for p in products])
                 produst_ids = [p.id for p in products]
                 product_models = ProductModel.objects.filter(product_id__in=produst_ids, is_standard=True, is_deleted=False)
                 for model in product_models:
