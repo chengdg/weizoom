@@ -46,6 +46,20 @@ class Command(BaseCommand):
                 supplier_id = supplier[0]
             else:
                 continue
+            
+
+            if int(purchase_method) == 1:
+                products = Product.objects.filter(supplier=supplier_id)
+                p2price = {[(p.id, p.purchase_price) for p in products]}
+                product_models = ProductModel.objects.filter(product_id__in=produst_ids, is_standard=True, is_deleted=False)
+                for model in product_models:
+                    print model.name
+                    if model.purchase_price == 0:
+                        model.purchase_price = p2price[model.product_id]
+                        model.save()
+                    else:
+                        print 'no change'
+
             if supplier_id and int(purchase_method) == 3:
                 # 五五分成历史供货商
                 info = SupplierDivideRebateInfo.objects.filter(supplier_id=supplier_id,
@@ -58,12 +72,12 @@ class Command(BaseCommand):
             #根据供货商，获取该供货商下全部的商品
             # supplier = Supplier.objects.get(id=supplier_id)
             products = Product.objects.filter(supplier=supplier_id)
-            #
-            # #修改mall_product中的结算价
-            # for product in products:
-            #     print product.name
-            #     product.purchase_price = "%.2f" % (product.price * (100 - points)/100)
-            #     product.save()
+            
+            #修改mall_product中的结算价
+            for product in products:
+                print product.name
+                product.purchase_price = "%.2f" % (product.price * (100 - points)/100)
+                product.save()
             produst_ids = [p.id for p in products]
             
             print '--------------'
@@ -74,5 +88,6 @@ class Command(BaseCommand):
                 print model.name
                 model.purchase_price = "%.2f" % (model.price * (100 - points)/100)
                 model.save()
+
 
 
