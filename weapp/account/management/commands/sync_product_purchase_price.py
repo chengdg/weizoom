@@ -21,16 +21,16 @@ class Command(BaseCommand):
         计算零售返点类型供货商的商品的结算价
         """
         conn= MySQLdb.connect(
-            host='127.0.0.1',
+            host='rm-bp18wbhgz1493ad8t.mysql.rds.aliyuncs.com',
             port = 3306,
             user='panda',
-            passwd='weizoom',
+            passwd='Weizoom@',
             db ='panda',
             charset="utf8"
             )
         cur = conn.cursor()
         #获取所有零售返点类型的panda用户
-        cur.execute(u"select id, points, purchase_method from account_user_profile where purchase_method in(2,3)")
+        cur.execute(u"select id, points, purchase_method from account_user_profile where purchase_method in(1,2,3)")
         rows = cur.fetchall()  
         for row in rows:
             #获取account_user_profile的id和返点数
@@ -51,6 +51,7 @@ class Command(BaseCommand):
             if int(purchase_method) == 1:
                 products = Product.objects.filter(supplier=supplier_id)
                 p2price = {[(p.id, p.purchase_price) for p in products]}
+                produst_ids = [p.id for p in products]
                 product_models = ProductModel.objects.filter(product_id__in=produst_ids, is_standard=True, is_deleted=False)
                 for model in product_models:
                     print model.name
