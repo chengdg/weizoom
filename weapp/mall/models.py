@@ -542,7 +542,9 @@ class Product(models.Model):
 				for id in ids:
 					# id的格式为${property_id}:${value_id}
 					_property_id, _value_id = id.split(':')
-					_property = _id2property[_property_id]
+					_property = _id2property.get(_property_id, None)
+					if _property == None:
+						continue
 					_value = _id2propertyvalue[id]
 					property2value[_property['name']] = {
 						'id': _value['id'],
