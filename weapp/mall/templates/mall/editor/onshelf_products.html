@@ -25,7 +25,7 @@
 			<li class="active">在售商品管理</li>
 		</ul>
 	</div>
-	<div class="xa-productFilterView xui-filterPanel"></div>
+	<div class="xa-productFilterView xui-filterPanel" data-webapp-type='{{request.user_profile.webapp_type}}'></div>
 	{% if has_product %}
 
 	<!-- <div class="panel panel-default mt20 xb-rightPanel"> -->
@@ -424,7 +424,7 @@
 					<td>
 						<div style=" width:74px; margin:auto;">
 							<a href="/mall2/product/?id=${product.id}&shelve_type=1" class="xa-modify fl" style="width: 37px;">
-							{{if product.is_self || data.data.settlement_type == 3}}修改{{else}}查看{{/if}}</a>
+							{{if product.is_self}}修改{{else}}查看{{/if}}</a>
 							<a href="javascript:void(0);" class="xa-offshelf fl" style="width: 30px;">下架</a>
 						</div>
 						</br>
