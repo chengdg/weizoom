@@ -259,14 +259,6 @@ class ProductList(resource.Resource):
             })
 
 
-        if '-' in sort_attr:
-            sort_attr = sort_attr.replace('-', '')
-            products = sorted(products, key=operator.attrgetter('id'), reverse=True)
-            products = sorted(products, key=operator.attrgetter(sort_attr), reverse=True)
-            sort_attr = '-' + sort_attr
-        else:
-            products = sorted(products, key=operator.attrgetter('id'))
-            products = sorted(products, key=operator.attrgetter(sort_attr))
         products_is_0 = filter(lambda p: p.display_index == 0, products)
         products_not_0 = filter(lambda p: p.display_index != 0, products)
         products_not_0 = sorted(products_not_0, key=operator.attrgetter('display_index'))
@@ -278,6 +270,15 @@ class ProductList(resource.Resource):
                 products = utils.filter_products(request, products_not_0 + products_is_0)
         else:
             products = products_not_0 + products_is_0
+
+        if '-' in sort_attr:
+            sort_attr = sort_attr.replace('-', '')
+            products = sorted(products, key=operator.attrgetter('id'), reverse=True)
+            products = sorted(products, key=operator.attrgetter(sort_attr), reverse=True)
+            sort_attr = '-' + sort_attr
+        else:
+            products = sorted(products, key=operator.attrgetter('id'))
+            products = sorted(products, key=operator.attrgetter(sort_attr))
 
 
         #进行分页
