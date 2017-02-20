@@ -258,6 +258,8 @@ class ComponentInfo(models.Model):
 	last_update_time = models.DateTimeField(default=datetime.now())
 	component_access_token = models.TextField()
 	is_active = models.BooleanField(default=True)
+	access_token_update_time = models.DateTimeField(default=datetime.now())
+	verify_ticket_update_time = models.DateTimeField(default=datetime.now())
 
 	def __unicode__(self):
 		return self.app_id

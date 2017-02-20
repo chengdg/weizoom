@@ -123,6 +123,28 @@ def increase_unread_order(webapp_owner_id, count):
 		records.update(unread_order_count=F('unread_order_count')+count)
 	else:
 		MallCounter.objects.create(owner_id=webapp_owner_id, unread_order_count=count).save()
+
+NO_LIMIT = 0  # 不限制
+FORBIDDEN_SALE_LIMIT = 1  # 禁售
+ONLY_SALE_LIMIT = 2  # 仅售
+
+PRE_PRODUCT_STATUS = {
+	'NOT_YET': 0,  # 尚未提交审核
+	'SUBMIT': 1,  # 提交审核
+	'REFUSED': 2  # 驳回
+}
+
+class ProductUnverified(models.Model):
+	"""
+	未审核的商品信息
+
+	表名：mall_product_unverified
+	"""
+	product_id = models.IntegerField(default=-1) #商品id
+	product_data = models.TextField() #商品信息
+
+	class Meta(object):
+		db_table = 'mall_product_unverified'
 		
 
 # MODULE START: productcategory
@@ -142,6 +164,17 @@ class ProductCategory(models.Model):
 		db_table = 'mall_product_category'
 		verbose_name = '商品分类'
 		verbose_name_plural = '商品分类'
+
+class ProductRefuseLogs(models.Model):
+	"""
+	审核商品驳回日志
+	"""
+	product_id = models.IntegerField(default=-1)  # 商品id
+	refuse_reason = models.CharField(max_length=1024, default='')  # 驳回原因
+	created_at = models.DateTimeField(auto_now_add=True)
+
+	class Meta(object):
+		db_table = 'mall_product_refuse_logs'
 
 
 # MODULE START: product
@@ -170,6 +203,12 @@ PRODUCT_TYPE2TEXT = {
 }
 MAX_INDEX = 2**16 - 1
 
+PRODUCT_STATUS = {
+	'NOT_YET': 0, #尚未提交审核
+	'SUBMIT': 1, #提交审核
+	'REFUSED': 2 #驳回
+}
+
 
 class Product(models.Model):
 	"""
@@ -183,7 +222,7 @@ class Product(models.Model):
 	price = models.FloatField(default=0.0)  # 商品价格
 	introduction = models.CharField(max_length=256)  # 商品简介
 	weight = models.FloatField(default=0.0)  # 重量
-	thumbnails_url = models.CharField(max_length=1024)  # 商品缩略图
+	thumbnails_url = models.CharField(max_length=1024, default='')  # 商品缩略图
 	pic_url = models.CharField(max_length=1024)  # 商品图
 	detail = models.TextField(default='')  # 商品详情
 	remark = models.TextField(default='')  # 备注
@@ -225,6 +264,12 @@ class Product(models.Model):
 	buy_in_supplier = models.BooleanField(default=False) # 记录下单位置是商城还是供货商，0是商城1是供货商
 	limit_zone_type = models.IntegerField(default=0) # 0不限制 1禁售 2仅售
 	limit_zone = models.IntegerField(default=0) # 限制地区的模板id
+
+	# 待审核商品
+	is_pre_product = models.BooleanField(default=False)  # 是否待审核商品
+	status = models.IntegerField(default=PRODUCT_STATUS['NOT_YET'])  # 审核状态
+	is_updated = models.BooleanField(default=False)  # 是否已更新
+	is_accepted = models.BooleanField(default=True)  # 审核是否已通过
 
 	class Meta(object):
 		db_table = 'mall_product'
@@ -1615,6 +1660,7 @@ class Order(models.Model):
 	supplier_user_id = models.IntegerField(default=0) # 订单供货商user的id，用于系列拆单
 	total_purchase_price = models.FloatField(default=0)  # 总订单采购价格
 	# refund_money = models.FloatField(default=-1)     # 订单的退款金额
+	member_card_money = models.FloatField(default=0.0)  # 会员卡抵扣金额  alter table mall_order add column member_card_money float default 0;
 
 	class Meta(object):
 		db_table = 'mall_order'
@@ -1850,7 +1896,7 @@ def belong_to(webapp_id):
 	# else:
 	# 	return Order.objects.filter(webapp_id=webapp_id, origin_order_id__lte=0)
 	sync_able_status_list = [ORDER_STATUS_PAYED_SUCCESSED,
-	                         ORDER_STATUS_PAYED_NOT_SHIP,
+							 ORDER_STATUS_PAYED_NOT_SHIP,
 							 ORDER_STATUS_PAYED_SHIPED,
 							 ORDER_STATUS_SUCCESSED]
 
@@ -1939,6 +1985,7 @@ class OrderHasRefund(models.Model):
 	created_at = models.DateTimeField(auto_now_add=True)  # 添加时间
 	total = models.FloatField(default=0)  # 积分
 	finished = models.BooleanField(default=False)  # 是否退款完成
+	member_card_money = models.FloatField(default=0.0)  # 会员卡抵扣金额
 
 
 	class Meta(object):
@@ -1967,6 +2014,10 @@ class OrderHasProduct(models.Model):
 	origin_order_id = models.IntegerField(default=0) # 原始(母)订单id，用于微众精选拆单
 	purchase_price = models.FloatField(default=0)  # 采购单价
 	original_price = models.FloatField(default=0)  # 商品原价 add by bert 请勿随意赋值
+	thumbnail_url = models.CharField(max_length=1024, default='')  # 商品图片
+	weight = models.FloatField(default=0)
+	product_model_name_texts = models.CharField(max_length=1024, default='[]')  # 规格名称的值
+	product_model_id = models.IntegerField(default=0) # 规格ID
 
 	class Meta(object):
 		db_table = 'mall_order_has_product'
@@ -2181,6 +2232,51 @@ class FreePostageConfig(models.Model):
 		self._dest_str = u', '.join(provinces)
 		return self._dest_str
 
+#########################################################################
+# 电子面单账号相关Model
+#########################################################################
+
+class ExpressBillAccount(models.Model):
+	"""	
+	电子面单账号
+	"""
+	owner = models.ForeignKey(User)
+	express_name = models.CharField(max_length=50) #快递公司
+	customer_name = models.CharField(max_length=256) #商户代码/编号/id
+	customer_pwd = models.CharField(max_length=256)  #商户密码/密钥
+	logistics_number = models.CharField(max_length=256) #密码串/月结号
+	sendsite = models.CharField(max_length=256) #网点名称
+	remark = models.TextField(null=True) #备注
+	is_deleted = models.BooleanField(default=False) #是否删除
+	created_at = models.DateTimeField(auto_now_add=True)
+
+	class Meta(object):
+		db_table = 'mall_express_bill_account'
+
+#########################################################################
+# 发货人相关Model
+#########################################################################
+
+class Shipper(models.Model):
+	"""	
+	发货人信息
+	"""
+	owner = models.ForeignKey(User)
+	name = models.CharField(max_length=50) #发货人
+	tel_number = models.CharField(max_length=15) #手机号
+	province = models.CharField(max_length=50) #发货地区省
+	city = models.CharField(max_length=50) #市
+	district = models.CharField(max_length=512) #区/县
+	address = models.CharField(max_length=256) #详细地址
+	postcode = models.CharField(max_length=50) #邮政编码
+	company_name = models.CharField(max_length=50) #单位名称
+	remark = models.TextField(null=True) #备注
+	is_active = models.BooleanField(default=False) #是否默认
+	is_deleted = models.BooleanField(default=False) #是否删除
+	created_at = models.DateTimeField(auto_now_add=True)
+
+	class Meta(object):
+		db_table = 'mall_shipper'
 
 #########################################################################
 # PostageConfigSpecialHasProvince：运费特殊配置对应省份
@@ -2681,11 +2777,11 @@ class MemberProductWishlist(models.Model):
 
 # #######        订单评价实现        ####
 SCORE = (
-    ('1', '1分'),
-    ('2', '2分'),
-    ('3', '3分'),
-    ('4', '4分'),
-    ('5', '5分'),
+	('1', '1分'),
+	('2', '2分'),
+	('3', '3分'),
+	('4', '4分'),
+	('5', '5分'),
 )
 
 
@@ -2693,29 +2789,29 @@ SCORE = (
 # 订单评价
 #####################
 class OrderReview(models.Model):
-    owner_id = models.IntegerField()  # 订单的主人
-    order_id = models.IntegerField()  # 订单号
-    member_id = models.IntegerField()  # 会员ID
-    serve_score = models.CharField(  # 服务态度评分
-        max_length=1,
-        choices=SCORE,
-        default='5'
-    )
-    deliver_score = models.CharField(  # 发货速度评分
-        choices=SCORE,
-        max_length=1,
-        default='5'
-    )
-    process_score = models.CharField(  # 物流服务评分
-        max_length=1,
-        choices=SCORE,
-        default='5'
-    )
+	owner_id = models.IntegerField()  # 订单的主人
+	order_id = models.IntegerField()  # 订单号
+	member_id = models.IntegerField()  # 会员ID
+	serve_score = models.CharField(  # 服务态度评分
+		max_length=1,
+		choices=SCORE,
+		default='5'
+	)
+	deliver_score = models.CharField(  # 发货速度评分
+		choices=SCORE,
+		max_length=1,
+		default='5'
+	)
+	process_score = models.CharField(  # 物流服务评分
+		max_length=1,
+		choices=SCORE,
+		default='5'
+	)
 
-    class Meta(object):
-        db_table = 'mall_order_review'
-        verbose_name = '用户对应的订单评价'
-        verbose_name_plural = '用户对应的订单评价'
+	class Meta(object):
+		db_table = 'mall_order_review'
+		verbose_name = '用户对应的订单评价'
+		verbose_name_plural = '用户对应的订单评价'
 
 
 #####################
@@ -2723,64 +2819,64 @@ class OrderReview(models.Model):
 #####################
 # 审核状态
 PRODUCT_REVIEW_STATUS = (
-    ('-1', '已屏蔽'),
-    ('0', '待审核'),
-    ('1', '已通过'),
-    ('2', '通过并置顶'),
+	('-1', '已屏蔽'),
+	('0', '待审核'),
+	('1', '已通过'),
+	('2', '通过并置顶'),
 )
 
 
 class ProductReview(models.Model):
-    member_id = models.IntegerField()
-    owner_id = models.IntegerField()
-    order_review = models.ForeignKey(OrderReview)
-    order_id = models.IntegerField()  # 订单ID
-    product_id = models.IntegerField()
-    order_has_product = models.ForeignKey(OrderHasProduct)
-    product_score = models.CharField(  # 商品评分
-        max_length=1,
-        choices=SCORE,
-        default='5')
-    review_detail = models.TextField()  # 评价详情
-    created_at = models.DateTimeField(auto_now=True)  # 评价时间
-    top_time = models.DateTimeField(blank=True, default=DEFAULT_DATETIME) # 置顶时间
-    status = models.CharField(  # 审核状态
-        max_length=2,
-        choices=PRODUCT_REVIEW_STATUS,
-        default='0')
+	member_id = models.IntegerField()
+	owner_id = models.IntegerField()
+	order_review = models.ForeignKey(OrderReview)
+	order_id = models.IntegerField()  # 订单ID
+	product_id = models.IntegerField()
+	order_has_product = models.ForeignKey(OrderHasProduct)
+	product_score = models.CharField(  # 商品评分
+		max_length=1,
+		choices=SCORE,
+		default='5')
+	review_detail = models.TextField()  # 评价详情
+	created_at = models.DateTimeField(auto_now=True)  # 评价时间
+	top_time = models.DateTimeField(blank=True, default=DEFAULT_DATETIME) # 置顶时间
+	status = models.CharField(  # 审核状态
+		max_length=2,
+		choices=PRODUCT_REVIEW_STATUS,
+		default='0')
 
-    class Meta(object):
-        db_table = 'mall_product_review'
-        verbose_name = '用户对应的商品评价'
-        verbose_name_plural = '用户对应的商品评价'
+	class Meta(object):
+		db_table = 'mall_product_review'
+		verbose_name = '用户对应的商品评价'
+		verbose_name_plural = '用户对应的商品评价'
 
 # #######        /订单评价实现        ####
 
 
 class ProductReviewPicture(models.Model):
-    product_review = models.ForeignKey(ProductReview)
-    order_has_product = models.ForeignKey(OrderHasProduct)
-    att_url = models.CharField(max_length=1024)  # 附件地址
+	product_review = models.ForeignKey(ProductReview)
+	order_has_product = models.ForeignKey(OrderHasProduct)
+	att_url = models.CharField(max_length=1024)  # 附件地址
 
-    class Meta:
-        verbose_name = "商品评价图片"
-        verbose_name_plural = "商品评价图片"
-        db_table = "mall_product_review_picture"
+	class Meta:
+		verbose_name = "商品评价图片"
+		verbose_name_plural = "商品评价图片"
+		db_table = "mall_product_review_picture"
 
 class MallOrderFromSharedRecord(models.Model):
-    """
-    add by bert 记录通过分享链接下单 订单号和分享者信息
-    """
-    order_id = models.IntegerField()
-    fmt = models.CharField(default='', max_length=255)
-    url = models.CharField(default='', max_length=255)
-    is_updated = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)  # 添加时间
+	"""
+	add by bert 记录通过分享链接下单 订单号和分享者信息
+	"""
+	order_id = models.IntegerField()
+	fmt = models.CharField(default='', max_length=255)
+	url = models.CharField(default='', max_length=255)
+	is_updated = models.BooleanField(default=False)
+	created_at = models.DateTimeField(auto_now_add=True)  # 添加时间
 
-    class Meta:
-        verbose_name = "通过分享链接订单"
-        verbose_name_plural = "通过分享链接订单"
-        db_table = "mall_order_from_shared_record"
+	class Meta:
+		verbose_name = "通过分享链接订单"
+		verbose_name_plural = "通过分享链接订单"
+		db_table = "mall_order_from_shared_record"
 # #######        供货商实现        ####
 # 五五分成
 SUPPLIER_TYPE_DIVIDE = 0
@@ -2908,14 +3004,19 @@ PP_STATUS_ON = 1 #商品上架
 PP_STATUS_DELETE = -1 #商品删除 不在当前供应商显示
 PP_STATUS_ON_POOL = 2 #商品在商品池中显示
 
+PP_TYPE_SYNC = 1 #从其他商品池同步而来的商品
+PP_TYPE_CREATE = 2 #商户自身创建的商品
 
 class ProductPool(models.Model):
 	woid = models.IntegerField() #自营平台woid
 	product_id = models.IntegerField() #商品管理上传的商品id
 	status = models.IntegerField(default=PP_STATUS_ON_POOL) #商品状态
+	type = models.IntegerField(default=PP_TYPE_SYNC) #商品类型
 	display_index = models.IntegerField(default=0, blank=True)  # 显示的排序
 	sync_at = models.DateTimeField(blank=True,null=True)  # 上架时间
 	created_at = models.DateTimeField(auto_now_add=True)  # 添加时间
+	# 是否处理过cps推广
+	is_cps_promotion_processed = models.BooleanField(default=False)
 
 	class Meta(object):
 		verbose_name = "商品池商品"
@@ -2932,13 +3033,13 @@ def product_belong_to(mall_type, owner, type):
 
 		products = Product.objects.filter(
 				Q(owner=owner,
-                shelve_type=type,
-                is_deleted=False)|Q(id__in=product_pool_ids))
+				shelve_type=type,
+				is_deleted=False)|Q(id__in=product_pool_ids))
 	else:
 		products = Product.objects.filter(
-                owner=owner,
-                shelve_type=type,
-                is_deleted=False)
+				owner=owner,
+				shelve_type=type,
+				is_deleted=False)
 
 	return products
 
@@ -2946,44 +3047,52 @@ Product.objects.belong_to = product_belong_to
 
 
 class PandaHasProductRelation(models.Model):
-    """
-    panda同步过来的商品中间关系
-    """
-    panda_product_id = models.IntegerField()
-    weapp_product_id = models.IntegerField()
-    created_at = models.DateTimeField(auto_now_add=True)  # 添加时间
+	"""
+	panda同步过来的商品中间关系
+	"""
+	panda_product_id = models.IntegerField()
+	weapp_product_id = models.IntegerField()
+	created_at = models.DateTimeField(auto_now_add=True)  # 添加时间
 
-    class Meta(object):
-            verbose_name = "panda同步过来的商品中间关系"
-            verbose_name_plural = "panda同步过来的商品中间关系"
-            db_table = "panda_has_product_relation"
+	class Meta(object):
+			verbose_name = "panda同步过来的商品中间关系"
+			verbose_name_plural = "panda同步过来的商品中间关系"
+			db_table = "panda_has_product_relation"
 
 
 class ProductLimitPurchasePrice(models.Model):
-    """
-    8000商品限时结算价格
-    """
-    product_id = models.IntegerField(),
-    start_time = models.DateTimeField()
-    end_time = models.DateTimeField()
+	"""
+	8000商品限时结算价格
+	"""
+	product_id = models.IntegerField(),
+	start_time = models.DateTimeField()
+	end_time = models.DateTimeField()
 
-    class Meta:
-        verbose_name = "商品池商品"
-        verbose_name_plural = "商品池商品"
-        db_table = "product_limit_purchase_price"
+	class Meta:
+		verbose_name = "商品池商品"
+		verbose_name_plural = "商品池商品"
+		db_table = "product_limit_purchase_price"
 
-
+# 一级分类
 FIRST_CLASSIFICATION = 1
+# 二级分类
 SECONDARY_CLASSIFICATION = 2
+# 分类上线（类似于未删除）
+CLASSIFICATION_ONLINE = 1
+# 分类下线（类似于删除）
+CLASSIFICATION_OFFLINE = 0
 
 class Classification(models.Model):
 	"""
 	商品分类
 	"""
+	owner_id = models.IntegerField(default=0)
 	name = models.CharField(max_length=1024) #分类名
 	level = models.IntegerField(default=-1) #分类等级
 	status = models.IntegerField(default=1) # 1表示上线0表示下线
 	father_id = models.IntegerField(default=-1) #父级分类id
+	product_count = models.IntegerField(default=0) #分类下的商品数量
+	note = models.CharField(max_length=1024, default='') #分类备注
 	created_at = models.DateTimeField(auto_now_add=True)  # 添加时间
 
 	class Meta(object):
@@ -3007,42 +3116,53 @@ class ClassificationHasProduct(models.Model):
 		db_table = "mall_classification_has_product"
 
 
+class ClassificationQualification(models.Model):
+	"""
+	商品分类配置的特殊资质
+	"""
+	classification = models.ForeignKey(Classification)
+	name = models.CharField(max_length=48, default='') #资质名称
+	created_at = models.DateTimeField(auto_now_add=True) #创建时间
+
+	class Meta(object):
+		db_table = 'mall_classification_qualification'
+
 
 class SupplierDivideRebateInfo(models.Model):
-    """
-    供货商五五分成信息(不一定是五成)--目前只有首月五五分成,以后可能扩展成,不同额度不同返点.
-    """
-    # 供货商id
-    supplier_id = models.IntegerField()
-    # 钱额度
-    divide_money = models.IntegerField()
-    # 基础返点
-    basic_rebate = models.IntegerField()
-    # 在此额度内返点
-    rebate = models.IntegerField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    is_deleted = models.BooleanField(default=False)
+	"""
+	供货商五五分成信息(不一定是五成)--目前只有首月五五分成,以后可能扩展成,不同额度不同返点.
+	"""
+	# 供货商id
+	supplier_id = models.IntegerField()
+	# 钱额度
+	divide_money = models.IntegerField()
+	# 基础返点
+	basic_rebate = models.IntegerField()
+	# 在此额度内返点
+	rebate = models.IntegerField()
+	created_at = models.DateTimeField(auto_now_add=True)
+	is_deleted = models.BooleanField(default=False)
 
-    class Meta(object):
-        db_table = 'supplier_divide_rebate_info'
+	class Meta(object):
+		db_table = 'supplier_divide_rebate_info'
 
 
 class SupplierRetailRebateInfo(models.Model):
-    """
-    零售返点的供货商的返点信息(包括团购)
-    """
-    # 供货商id
-    supplier_id = models.IntegerField()
-    # 平台id(如果支持团购) 0的表示改供货商的基础扣点; 0的默认值表示改供货商的基础扣点
-    # 如果有owner_id说明该扣点是属于团购扣点
-    owner_id = models.IntegerField(default=0)
-    # 扣点
-    rebate = models.IntegerField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    is_deleted = models.BooleanField(default=False)
+	"""
+	零售返点的供货商的返点信息(包括团购)
+	"""
+	# 供货商id
+	supplier_id = models.IntegerField()
+	# 平台id(如果支持团购) 0的表示改供货商的基础扣点; 0的默认值表示改供货商的基础扣点
+	# 如果有owner_id说明该扣点是属于团购扣点
+	owner_id = models.IntegerField(default=0)
+	# 扣点
+	rebate = models.IntegerField()
+	created_at = models.DateTimeField(auto_now_add=True)
+	is_deleted = models.BooleanField(default=False)
 
-    class Meta(object):
-        db_table = 'supplier_retail_rebate_info'
+	class Meta(object):
+		db_table = 'supplier_retail_rebate_info'
 
 class ProductLimitZoneTemplate(models.Model):
 	"""

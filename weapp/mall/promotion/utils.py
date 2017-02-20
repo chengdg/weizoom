@@ -406,7 +406,7 @@ def verification_multi_product_promotion_weizoom_mall(webapp_owner, product_ids,
     all_error_product_ids.extend([p.product_id for p in error_products])
 
     # 检测团购
-    group_records = group_models.Group.objects(owner_id=webapp_owner.id, status__lte=1)
+    group_records = group_models.ReGroup.objects(owner_id=webapp_owner.id, status__lte=1)
     group_product_ids = [record.product_id for record in group_records]
 
     group_error_product_ids = list(set(product_ids).intersection(set(group_product_ids)))
@@ -458,7 +458,7 @@ def verification_multi_product_promotion(webapp_owner, product_ids, promotion_ty
     all_error_product_ids.extend([p.product_id for p in error_products])
 
     # 检测团购
-    group_records = group_models.Group.objects(owner_id=webapp_owner.id, status__lte=1)
+    group_records = group_models.ReGroup.objects(owner_id=webapp_owner.id, status__lte=1)
     group_product_ids = [record.product_id for record in group_records]
 
     group_error_product_ids = list(set(product_ids).intersection(set(group_product_ids)))

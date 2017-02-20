@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 
 from core.exceptionutil import unicode_full_stack
+from utils.send_mns_message import coupon_issuing_tmpl_compatible
 from watchdog.utils import watchdog_fatal, watchdog_error, watchdog_info, watchdog_warning
 from market_tools.tools.template_message import models as template_message_model
 from market_tools.tools.template_message import module_api as template_message_api
 from celery import task
 
 @task
+@coupon_issuing_tmpl_compatible(u'到账通知')
 def send_message_to_member(rule, member_id):
     #给用户发优惠券提示
     try:

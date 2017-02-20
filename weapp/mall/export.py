@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import copy
+import json
 
 from eaglet.utils.resource_client import Resource
 
@@ -68,13 +69,15 @@ FIRST_NAVS = [{
     'url': '/mall2/pay_interface_list/',
     'inner_name': MALL_CONFIG_FIRST_NAV,
     'permission': 'config'
-}, {
-    'name': u'商机监控系统',
-    'url': 'http://weibo.weizoom.com/account/statistics/user_center/',
-    'inner_name': BIG_DATA_HOME_FIRST_NAV,
-    'permission': 'big_data',
-    'need_token': True
-}]
+}
+# , {
+#     'name': u'商机监控系统',
+#     'url': 'http://weibo.weizoom.com/account/statistics/user_center/',
+#     'inner_name': BIG_DATA_HOME_FIRST_NAV,
+#     'permission': 'big_data',
+#     'need_token': True
+# }
+]
 
 def get_first_navs(user):
     # from auth.export import NAV as AUTH_NAV
@@ -231,6 +234,70 @@ MALL_PRODUCT_SECOND_NAV = {
     ]
 }
 
+
+MALL_PRODUCT_SECOND_NAV_FOR_WEIZOOM_MALL = {
+    'section': u'商品',
+    'navs': [
+        # 商品管理
+        {
+            'name': PRODUCT_MANAGE_ON_SHELF_PRODUCT_NAV,
+            'title': u'在售商品管理',
+            'url': '/mall2/product_list/?shelve_type=1',
+            'permission': 'manage_product_onshelf'
+        },
+
+        {
+            'name': PRODUCT_ADD_PRODUCT_NAV,
+            'title': u'添加新商品',
+            'url': '/mall2/product/',
+            'permission': 'manage_product_add'
+        },
+        {
+            'name': PRODUCT_MANAGE_OFF_SHELF_PRODUCT_NAV,
+            'title': u'待售商品管理',
+            'url': '/mall2/product_list/?shelve_type=0',
+            'permission': 'manage_product_offshelf'
+        },
+        # {
+        #     'name': PRODUCT_MANAGE_RECYCLED_PRODUCT_NAV,
+        #     'title': u'商品回收站',
+        #     'url': '/mall2/product_list/?shelve_type=2',
+        #     'permission': 'manage_product_deleted'
+        # },
+        # {
+        #     'name': PRODUCT_MANAGE_IMAGE_NAV,
+        #     'title': u'图片管理',
+        #     'url': '/mall2/image_group_list/',
+        #     'permission': 'manage_product_image'
+        # },
+        {
+            'name': PRODUCT_MANAGE_CATEGORY_NAV,
+            'title': u'分组管理',
+            'url': '/mall2/category_list/',
+            'permission': 'manage_product_category'
+        },
+        # {
+        #     'name': PRODUCT_MANAGE_MODEL_NAV,
+        #     'title': u'属性规格管理',
+        #     'url': '/mall2/model_property_list/',
+        #     'permission': 'manage_product_property_and_model_property'
+        # },
+        {
+            'name': PRODUCT_REVIEW_NAV,
+            'title': u'评价管理',
+            # 'url': '/mall2/product_review_list/',
+            'url': '/apps/evaluate/evaluates/',
+            'permission': 'manage_product_review'
+        },
+        # {
+        #     'name': PRODUCT_LIMIT_ZONE,
+        #     'title': u'限定区域',
+        #     'url': '/mall2/product_limit_zone/',
+        #     'permission': 'manage_product_limit_zone'
+        # },
+    ]
+}
+
 ########################################################################
 # get_mall_product_second_navs: 获得商品二级导航
 ########################################################################
@@ -238,6 +305,10 @@ def get_mall_product_second_navs(request):
     if request.user.username == 'manager':
         # second_navs = [MALL_PRODUCT_SECOND_NAV]
         pass
+    elif request.user_profile.webapp_type == 1:
+        # 自营屏蔽几个功能
+        second_navs = [MALL_PRODUCT_SECOND_NAV_FOR_WEIZOOM_MALL]
+
     else:
         second_navs = [MALL_PRODUCT_SECOND_NAV]
     #自营平台注释掉添加新商品
@@ -422,13 +493,15 @@ DEFAULT_APPS_THIRD_NAVS = [
         'title': u'用户反馈',
         'url': '/apps/exsurvey/exsurveies/',
         'permission': '',
-        'users': ['jobs', 'ceshi01', 'wzjx001', 'weizoomxs', 'weizoommm', 'weshop', 'weizoomclub', 'weizoomshop', 'Aierkang', 'BITC', 'weizoomhtxp'] #这些帐号可以显示用户反馈
-    },{
-        'name': MALL_APPS_GROUP_NAV,
-        'title': u'团购',
-        'url': '/apps/group/groups/',
-        'permission': '',
-    },{
+        'users': ['jobs', 'ceshi01', 'weizoomjy', 'wzjx001', 'weizoomxs', 'weizoommm', 'weshop', 'weizoomclub', 'weizoomshop', 'Aierkang', 'BITC', 'weizoomhtxp'] #这些帐号可以显示用户反馈
+    },
+    # {
+    #     'name': MALL_APPS_GROUP_NAV,
+    #     'title': u'团购',
+    #     'url': '/apps/group/groups/',
+    #     'permission': '',
+    # },
+    {
         'name': MALL_APPS_SHVOTE_NAV,
         'title': u'高级投票',
         'url': '/apps/shvote/shvotes/',
@@ -455,6 +528,14 @@ DEFAULT_APPS_THIRD_NAVS = [
     # }
 ]
 
+VAR_PREMIUM_SALE = {
+                    'name': MALL_PROMOTION_PREMIUM_SALE_NAV,
+                    'title': u'买赠',
+                    'url': '/mall2/premium_sale_list/',
+                    'permission': 'manage_premium_sale'
+                }
+
+
 MALL_PROMOTION_AND_APPS_SECOND_NAV = {
     'section': u'',
     'navs': [
@@ -477,13 +558,8 @@ MALL_PROMOTION_AND_APPS_SECOND_NAV = {
                     'title': u'限时抢购',
                     'url': '/mall2/flash_sale_list/',
                     'permission': 'manage_flash_sale'
-                },
-                {
-                    'name': MALL_PROMOTION_PREMIUM_SALE_NAV,
-                    'title': u'买赠',
-                    'url': '/mall2/premium_sale_list/',
-                    'permission': 'manage_premium_sale'
-                },
+                }, VAR_PREMIUM_SALE
+                ,
                 # {
                 #     'name': MALL_PROMOTION_PRICE_CUT_NAV,
                 #     'title': u'满减',
@@ -598,8 +674,11 @@ def get_promotion_and_apps_second_navs(request):
             notify_message = u"从marketapp获取活动列表失败，cause: \n{}".format(unicode_full_stack())
             watchdog_error(notify_message)
             MALL_PROMOTION_AND_APPS_SECOND_NAV['navs'][1]['third_navs'] = DEFAULT_APPS_THIRD_NAVS
-
-        second_navs = [MALL_PROMOTION_AND_APPS_SECOND_NAV]
+        navs = copy.deepcopy(MALL_PROMOTION_AND_APPS_SECOND_NAV)
+        if request.user_profile.webapp_type == 1 and VAR_PREMIUM_SALE in  navs['navs'][0]['third_navs']:
+            # 社群商城关闭买赠功能
+            navs['navs'][0]['third_navs'].remove(VAR_PREMIUM_SALE)
+        second_navs = [navs]
     return second_navs
 
 

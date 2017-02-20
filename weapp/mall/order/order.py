@@ -743,7 +743,12 @@ class OrderRefundingOrder(resource.Resource):
 
         integral_each_yuan = IntegralStrategySttings.objects.get(
             webapp_id=request.manager.get_profile().webapp_id).integral_each_yuan
-        integral_money = round(integral /integral_each_yuan,2)
+
+        # 兼容积分比例设置成0的情况
+        if integral_each_yuan:
+            integral_money = round(integral /integral_each_yuan,2)
+        else:
+            integral_money = 0
 
         total = cash + weizoom_card_money + coupon_money + integral_money
 

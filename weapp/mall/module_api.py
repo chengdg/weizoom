@@ -36,6 +36,7 @@ from core import paginator
 from market_tools.tools.template_message import models as template_message_model
 from market_tools.tools.template_message import module_api as template_message_api
 from utils.microservice_consumer import microservice_consume2
+from bdem import msgutil
 
 from watchdog.utils import watchdog_fatal, watchdog_error, watchdog_alert, watchdog_warning
 from webapp.modules.mall import util as mall_util
@@ -1547,6 +1548,15 @@ def ship_order(order_id, express_company_name,
 	# except:
 	# 	notify_message = u"订单状态为已发货时发邮件失败，order_id:{}，cause:\n{}".format(order_id, unicode_full_stack())
 	# 	watchdog_alert(notify_message)
+
+	# 添加针对openapi出货单发货的消息发送处理
+	data = {
+		"order_id": order.order_id,
+		"express_company_name": express_company_name,
+		"express_number": express_number,
+		"action": 'update_ship' if action == u'修改发货信息' else 'ship_order'
+	}
+	msgutil.send_message('order', 'delivery_item_shipped', data)
 	return True
 
 
@@ -3485,6 +3495,39 @@ def refund_weizoom_card_money(order):
 		'resource': 'card.trade',
 		'data': data
 	})
+
+	return resp
+
+def refund_member_card_money(order):
+	from modules.member.models import MemberCardLog
+	trade_id = MemberCardLog.objects.filter(order_id=order.order_id).first().trade_id
+	data = {
+		'trade_id': trade_id,
+		'trade_type': 1  # 普通退款
+	}
+	msg = 'member_card refund:' + trade_id
+
+	watchdog_info(message=msg, type='member_card')
+
+	resp = Resource.use('card_apiserver').delete({
+		'resource': 'card.trade',
+		'data': data
+	})
+
+	is_success = resp and resp['code'] == 200
+	if is_success:
+		try:
+			log = MemberCardLog.objects.filter(order_id=order.order_id,reason=u'下单').first()
+			MemberCardLog.objects.create(
+				member_card_id=log.member_card_id,
+				trade_id=trade_id,
+				order_id=order.order_id,
+				reason=u"取消下单或下单失败",
+				price=log.price
+			)
+		except Exception, e:
+			watchdog_error(u'会员卡自动退款时获取下单时的扣除金额失败,trade_id:%s,order_id:%s' % (trade_id, order.order_id))
+			watchdog_error(e)
 
 	return resp
 

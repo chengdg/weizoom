@@ -1044,6 +1044,20 @@ class MemberBrowseRecord(models.Model):
 			url = url[:url.find('from')]
 		return MemberBrowseRecord.objects.filter(member=member,url__icontains=url)[0].title if MemberBrowseRecord.objects.filter(url__icontains=url,member=member).count() > 0 else ''
 
+class MemberBrowseProductRecord(models.Model):
+	member = models.ForeignKey(Member)
+	owner_id = models.IntegerField(default=0)  #商家id
+	product_id = models.IntegerField(default=0)  #商品id
+	referer = models.CharField(max_length=256, default='') #从哪个页面过来的
+	title = models.CharField(max_length=256, default='') #页面标题
+	url = models.TextField()
+	created_at = models.DateTimeField(auto_now_add=True)
+
+	class Meta(object):
+		db_table = 'member_browse_product_record'
+		verbose_name = '会员浏览商品详情记录'
+		verbose_name_plural = '会员浏览商品详情记录'
+		
 #########################################################################
 # MemberBrowseRecordMiddleware
 #########################################################################
@@ -1340,3 +1354,128 @@ class MilekeLog(models.Model):
 		verbose_name_plural = 'mileke_log'
 
 		unique_together = (('mileke', 'member'),)
+
+
+class MemberCard(models.Model):
+	"""
+	会员卡
+	"""
+	owner_id = models.IntegerField() #会员id
+	member_id = models.IntegerField() #会员id
+	batch_id = models.CharField(max_length=50, default="") #微众卡批次id alter table member_card  add column batch_id varchar(50) default '';
+	card_number = models.CharField(max_length=50) #微众卡卡号
+	card_password = models.CharField(max_length=512) #微众卡密码
+	card_name = models.CharField(max_length=512) #微众卡名字
+	is_active = models.BooleanField(default=True) #会员身份是否有效 以后扩展的备用字段
+	created_at = models.DateTimeField(auto_now_add=True) #发放时间
+
+	class Meta(object):
+		db_table = 'member_card'
+		verbose_name = 'member_card'
+		verbose_name_plural = 'member_card'
+
+class MemberCardLog(models.Model):
+	"""
+	会员卡记录，仅交易记录  下单 和 取消订单
+	"""
+	member_card = models.ForeignKey(MemberCard)  #member card id
+	price = models.FloatField(default=0.0)  # 浮动金额
+	trade_id = models.CharField(max_length=50, default="") #支付流水号alter table member_card_log  add column trade_id varchar(50) default '';
+	order_id = models.CharField(max_length=200, default="") #订单号 alter table member_card_log  add column order_id varchar(200) default '';
+	reason = models.CharField(max_length=512)  # 原因
+	created_at = models.DateTimeField(auto_now_add=True) #时间
+	
+	class Meta(object):
+		db_table = 'member_card_log'
+		verbose_name = 'member_card_log'
+		verbose_name_plural = 'member_card_log'
+
+VIP_PAGE = 1  #VIP会员首页
+WANT_TO_BUY = 2  #VIP会员我想买页面
+class AdClicked(models.Model):
+	"""
+	广告点击
+	"""
+	member_id = models.IntegerField() #会员id
+	type = models.IntegerField(default=VIP_PAGE)  #页面
+	created_at = models.DateTimeField(auto_now_add=True) #时间
+	
+	class Meta(object):
+		db_table = 'ad_clicked'
+		verbose_name = 'ad_clicked'
+		verbose_name_plural = 'ad_clicked'
+
+
+class MemberCardPayOrder(models.Model):
+	"""
+	会员卡支付订单 duhao
+	"""
+	owner_id = models.IntegerField() #商家id
+	member_id = models.IntegerField() #会员id
+	batch_id = models.CharField(max_length=50, default="") #微众卡批次id
+	order_id = models.CharField(max_length=50) #支付订单id
+	batch_name = models.CharField(max_length=200) #会员卡名称
+	price = models.FloatField(default=0.0)  #支付金额
+	is_paid = models.BooleanField(default=False)  #是否支付成功
+	created_at = models.DateTimeField(auto_now_add=True) #创建时间
+	paid_at = models.DateTimeField(null=True) #支付时间
+	
+	class Meta(object):
+		db_table = 'member_card_pay_order'
+		verbose_name = 'member_card_pay_order'
+		verbose_name_plural = 'member_card_pay_order'
+
+
+SOURCE_JD = 1  #京东
+SOURCE_TMALL = 2  #天猫
+SOURCE2NAME = {
+	SOURCE_JD: u'京东',
+	SOURCE_TMALL: u'天猫'
+}
+
+STATUS_NOT_REACH = 1
+STATUS_REACH = 2
+STATUS_PURCHASE = 3
+STATUS_SHELVES_ON = 4
+STATUS2TEXT = {
+	STATUS_NOT_REACH: u'未达标',
+	STATUS_REACH: u'人气达标，采购中',
+	STATUS_PURCHASE: u'采购完成，等待上架',
+	STATUS_SHELVES_ON: u'上架完成'
+}
+class WantToBuy(models.Model):
+	"""
+	我想买
+	"""
+	owner_id = models.IntegerField() #商家id
+	member = models.ForeignKey(Member)
+	source = models.IntegerField(default=SOURCE_JD)  #来源
+	product_id = models.IntegerField(default=0) #上架后的商品id，预留字段
+	product_name = models.CharField(max_length=128) #商品名称
+	status = models.IntegerField(default=STATUS_NOT_REACH)  #状态
+	support_num = models.IntegerField(default=0)  #支持人数
+	pics = models.CharField(max_length=1024) #图片
+	is_accept_other_brand = models.BooleanField(default=True)  #是否接受同类其他品牌
+	reach_num_at = models.DateTimeField(null=True) #人气达标时间
+	purchase_completed_at = models.DateTimeField(null=True) #采购完成时间
+	shelves_on_at = models.DateTimeField(null=True) #上架时间
+	created_at = models.DateTimeField(auto_now_add=True) #创建时间
+
+	class Meta(object):
+		db_table = 'member_want_to_buy'
+		verbose_name = 'member_want_to_buy'
+		verbose_name_plural = 'member_want_to_buy'
+
+class WantToBuySupport(models.Model):
+	"""
+	我想买支持记录
+	"""
+	want_to_buy = models.ForeignKey(WantToBuy)
+	member = models.ForeignKey(Member)
+	content = models.CharField(max_length=512) #支持内容
+	created_at = models.DateTimeField(auto_now_add=True) #创建时间
+
+	class Meta(object):
+		db_table = 'member_want_to_buy_support'
+		verbose_name = 'member_want_to_buy_support'
+		verbose_name_plural = 'member_want_to_buy_support'

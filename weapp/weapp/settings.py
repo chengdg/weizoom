@@ -56,8 +56,10 @@ DATABASES = {
         'USER': 'weapp',                      # Not used with sqlite3.
         'PASSWORD': 'weizoom',                  # Not used with sqlite3.
         # Set to empty string for localhost. Not used with sqlite3.
-        'HOST': 'db.weapp.com',
+        #'HOST': 'db.weapp.com',
         # Set to empty string for default. Not used with sqlite3.
+        #'PORT': '',
+        'HOST': 'db.weapp.com',
         'PORT': '',
         'CONN_MAX_AGE': 100
     },
@@ -149,6 +151,15 @@ APP_MONGO = {
     "USERNAME": None,
     "PASSWORD": None,
     "ALIAS": 'apps'
+}
+
+#百宝箱重构用
+MARKET_APP_MONGO = {
+    "HOST": 'mongo.apps.com',
+    "DB": 'market_app_data',
+    "USERNAME": None,
+    "PASSWORD": None,
+    "ALIAS": 'market_apps'
 }
 
 if ENABLE_SHENGJING_APP:
@@ -271,6 +282,7 @@ MIDDLEWARE_CLASSES = [
     'modules.member.middleware.AddUuidSessionMiddleware',
     'core.middleware.UserManagerMiddleware',
     'core.middleware.UserProfileMiddleware',
+    'core.middleware.Redirect2HermesMiddleware',
     # termite middleware
     'core.termite_middleware.WebappPageCacheMiddleware',
      # webapp home_page middleware
@@ -439,7 +451,9 @@ INSTALLED_APPS = [
     'weixin.message.material',
     'weixin.message.message',
     'weixin.message.qa',
+    # for mantis message models.py
 
+    'station_message',
     'weixin.manage',
     'weixin.manage.customerized_menu',
 
@@ -686,6 +700,15 @@ else:
 IN_DEVELOP_MODE = (MODE == 'develop')
 ALLOWED_HOSTS = ['*', ]
 
+
+HERMES_HOST = 'http://hermes.pttest.weapp.weizzz.com'
+# SESSION_COOKIE_DOMAIN = ".pttest.weapp.weizzz.com"
+
+# 是否启用HERMES跳转
+ENABLE_HERMES = False
+
+if ENABLE_HERMES:
+    SESSION_COOKIE_DOMAIN = '.weapp.com'
 # added by chuter
 # mail config for auto sending notify mail
 # MAIL_NOTIFY_USERNAME = u'noreply@weizoom.com'
@@ -892,7 +915,10 @@ if 'deploy' == MODE:
 else:
     MNS_ACCESS_KEY_ID = 'eJ8LylRwQERRqOot'
     MNS_ACCESS_KEY_SECRET = 'xxPrfGcUlnsL7IPweJRqVekHTCu6Ad'
-    MNS_ENDPOINT = 'http://1615750970594173.mns.cn-hangzhou.aliyuncs.com/'
+    MNS_ENDPOINT = 'http://1615750970594173.mns.cn-beijing.aliyuncs.com/'
     MNS_SECURITY_TOKEN = ''
     SUBSCRIBE_QUEUE_NAME = 'test-order-close'
     TOPIC_PAID_ORDER = 'paid-order-test'
+
+TEST_ENV = 'docker'
+IS_TMS_TEST = True

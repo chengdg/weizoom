@@ -2209,7 +2209,7 @@ class CheckProductHasPromotion(resource.Resource):
             return create_response(200).get_response()
         if product_id:
             promotion_relation = promotion_model.ProductHasPromotion.objects.filter(promotion__owner=request.manager, product_id=product_id, promotion__status__in=[promotion_model.PROMOTION_STATUS_STARTED, promotion_model.PROMOTION_STATUS_NOT_START])
-            group_records = group_models.Group.objects(product_id=product_id,status__lte=1)
+            group_records = group_models.ReGroup.objects(product_id=product_id,status__lte=1)
             forbidden_coupon_product_relation = promotion_model.ForbiddenCouponProduct.objects.filter(
                     owner=ForbiddenCouponProduct,
                     product_id=product_id,

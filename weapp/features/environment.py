@@ -148,7 +148,8 @@ def __clear_all_account_data():
 	"""
 	清空账号数据
 	"""
-	User.objects.filter(id__gt=2).delete()
+	# 临时处理，让gaia创建的账户能正常存活
+	User.objects.filter(id__gt=2).exclude(username__in=["yangmi", "zhouxun"]).delete()
 
 	#会员
 	member_models.MemberTag.objects.all().delete()
@@ -802,9 +803,9 @@ def after_scenario(context, scenario):
 		print('[after scenario]: close webapp browser driver')
 		context.webapp_driver.quit()
 
-	if UserProfile.objects.filter(webapp_type=1).count() > 0:
-		if not scenario.name.find('ziying') > 0:
-			UserProfile.objects.filter(webapp_type=1).update(webapp_type=0)
+	# if UserProfile.objects.filter(webapp_type=1).count() > 0:
+	# 	if not scenario.name.find('ziying') > 0:
+	# 		UserProfile.objects.filter(webapp_type=1).update(webapp_type=0)
 
 
 def enhance_django_model_class():

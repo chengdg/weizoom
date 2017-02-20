@@ -234,6 +234,18 @@ class MGroup(resource.Resource):
 		"""
 		try:
 			record_id = request.GET.get('id','id')
+
+			try:
+				related_page_id = app_models.Group.objects.get(id=record_id).related_page_id
+				m_marketapp_url = 'http://{}/m/apps/group/m_group/?woid={}&page_id={}&id={}'.format(
+					settings.MARKET_MOBILE_DOMAIN, request.webapp_owner_id, related_page_id, record_id)
+				return HttpResponseRedirect(m_marketapp_url)
+			except:
+				c = RequestContext(request, {
+					'is_deleted_data': True
+				})
+				return render_to_response('workbench/wepage_webapp_page.html', c)
+
 			mpUserPreviewName = ''
 			activity_status = u"未开始"
 			member = request.member

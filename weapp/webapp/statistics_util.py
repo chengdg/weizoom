@@ -21,6 +21,8 @@ class PvUvCount(object):
 
 		
 def count_visit_daily_pv_uv(webapp_id, day_date):
+	# 停止写入pv
+	return
 	#获取指定日期的当天所有访问日志信息
 	visit_logs = PageVisitLog.objects.filter(webapp_id=webapp_id, create_date=day_date)
 

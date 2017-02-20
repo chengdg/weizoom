@@ -3,7 +3,7 @@
 __author__ = 'bert'
 # from __future__ import absolute_import
 
-import time
+import time, urlparse
 from django.conf import settings
 from django.db.models import F
 
@@ -203,6 +203,22 @@ def record_member_pv(self, member_id, url, page_title=''):
 				title = page_title,
 				url = url,
 				member=member
+			)
+
+		#访问商品详情单独写到一张表里，方便统计商品的访问记录  duhao  20161221
+		if 'module=mall' in url and 'model=product' in url and 'rid=' in url:
+			result = urlparse.urlparse(url)
+			params = urlparse.parse_qs(result.query, True)
+			owner_id = params['woid'][0]
+			product_id = params['rid'][0]
+			referer = ''
+			MemberBrowseProductRecord.objects.create(
+				title = page_title,
+				url = url,
+				member=member,
+				owner_id=owner_id,
+				product_id=product_id,
+				referer=referer
 			)
 	except:
 		notify_message = u"record_member_pv,member_id:{} cause:\n{}".format(member_id, unicode_full_stack())

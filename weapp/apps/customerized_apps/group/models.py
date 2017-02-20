@@ -122,3 +122,61 @@ class GroupDetail(models.Document):
 		'collection': 'group_group_detail',
 		'db_alias': 'apps'
 	}
+
+
+####################################################################################
+#重构
+####################################################################################
+
+class ReGroup(models.Document):
+	owner_id = models.LongField() #创建人id
+	related_page_id = models.StringField(default="", max_length=100) #termite page的id
+	name = models.StringField(default="", max_length=100) #名称
+	start_time = models.DateTimeField() #开始时间
+	end_time = models.DateTimeField() #结束时间
+	status = models.IntField(default=0) #状态
+	is_use = models.IntField(default=1) #删除状态 1未删除，0删除
+	handle_status =  models.IntField(default=0) #手动状态 0关闭,1开启
+	created_at = models.DateTimeField() #创建时间
+	group_dict = models.DynamicField() #团购活动字典{'0':{'group_type':'5','group_days':'10','group_price':'100.00'},...}
+	# product_dict = models.DynamicField() #活动商品
+	product_id = models.IntField()#商品id
+	product_img = models.StringField()#商品图片
+	product_name = models.StringField()#商品名称
+	product_price = models.StringField()#商品价格
+	product_socks = models.StringField()#商品库存
+	product_sales = models.StringField()#商品销量
+	product_usercode = models.StringField()#商品编码
+	product_create_at = models.StringField()#商品创建时间
+	rules = models.StringField()#团购说明
+	material_image = models.StringField()#分享图片
+	share_description = models.StringField()#分享描述
+	visited_member = models.ListField() #浏览过的member_list
+
+	meta = {
+		'collection': 'group_group',
+		'db_alias': 'market_apps'
+	}
+
+	@property
+	def status_text(self):
+		if self.status == STATUS_NOT_START:
+			return u'未开启'
+		elif self.status == STATUS_RUNNING:
+			now = datetime.today()
+			if now >= self.end_time:
+				return u'已结束'
+			else:
+				return u'进行中'
+		elif self.status == STATUS_STOPED:
+			return u'已结束'
+		else:
+			return u'未知'
+
+	@property
+	def is_finished(self):
+		status_text = self.status_text
+		if status_text == u'已结束':
+			return True
+		else:
+			return False

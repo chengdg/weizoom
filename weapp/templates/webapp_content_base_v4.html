@@ -133,6 +133,23 @@
             </div>
             {% endfor %}
         </div>
+
+        <!-- vip会员上线广告
+        {% if request.user_profile.webapp_type == 1 %}
+        <div class="xui-vipUplineBox xa-vipUplineBox pa">
+            <ul class="pa c3 f12">
+                <li><i class="xui-icon"></i><span>定期账户<span class="xui-yellow">返现</span>，会员钱包购物最实惠！</span></li>
+                <li><i class="xui-icon"></i><span><span class="xui-yellow">专享</span>发表我想买，你要的都可以有！</span></li>
+                <li><i class="xui-icon"></i><span>会员惊喜礼品<span class="xui-yellow">免费</span>等你来拿！</span></li>
+            </ul>
+            <a href="{{H5_HOST}}/user_center/vip_open/?woid={{request.webapp_owner_id}}&from=vip" class="xui-goToVipBtn pa">我要开通</a>
+            <label for="noInfo" class="xui-noInfoBtn pa f12 c3"><input class="pr xa-noInfo" id='noInfo' type="checkbox"><span>下次不再提示</span></label>
+            <div class="xui-vipCloseBtn xa-vipCloseBtn f20 pa">X</div>
+        </div>
+        <div class="xui-vipMask xa-vipMask"></div>
+        {% endif %}
+        vip会员上线广告end -->
+
         <!-- 公告超出滚动 -->
         <script type="text/javascript">
             // 定时器
@@ -164,6 +181,34 @@
                     }
                 };
             }
+
+            // 会员卡
+            var $noInfo = $('.xa-noInfo');
+            var $vipCloseBtn = $('.xa-vipCloseBtn');
+            var $vipUplineBox = $('.xa-vipUplineBox');
+            var $vipMask = $('.xa-vipMask');
+            var noInfo = localStorage.getItem('noInfo') || -1;
+            $noInfo.change(function(event) {
+                var checked = $noInfo.attr('checked');
+                if(checked){
+                    localStorage.setItem('noInfo',1);
+                }else {
+                    localStorage.setItem('noInfo',-1);
+                }
+                noInfo = localStorage.getItem('noInfo');
+            });
+            if (noInfo == 1){
+                $vipUplineBox.addClass('xui-hide');
+                $vipMask.addClass('xui-hide');
+            }
+            $vipCloseBtn.click(function() {
+                $vipUplineBox.addClass('xui-hide');
+                $vipMask.addClass('xui-hide');
+            });
+            $vipMask.click(function() {
+                $vipUplineBox.addClass('xui-hide');
+                $vipMask.addClass('xui-hide');
+            })
         </script>
         <!-- 获取屏幕宽度给高赋值 -->
         <script type="text/javascript">
@@ -182,7 +227,7 @@
                     $('.xa-server').removeClass('xui-hide');
                 } else if( W.webappOwnerId == 827){
                     // 途猫
-                    $('.xa-server-827').removeClass('xui-hide');
+//                    $('.xa-server-827').removeClass('xui-hide');
                 }
 
                 //如果是来自h5的请求，修改所有链接
@@ -216,6 +261,11 @@
                         // 新营销工具，也不做处理，加入from_h5=1
                         if (oldHref.indexOf('/m/') !== -1) {
                             $link.attr('href', oldHref+'&from_h5=1');
+                            return;
+                        }
+
+                        if (oldHref.indexOf('/user_center/') !== -1) {
+                            $link.attr('href', '{{h5_host}}/user_center/vip_open/?woid={{request.webapp_owner_id}}&from=vip');
                             return;
                         }
 
