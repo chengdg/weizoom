@@ -426,7 +426,7 @@ class Product(models.Model):
 				product.display_price = product.price
 
 	@staticmethod
-	def fill_model_detail(webapp_owner, products, product_ids, id2property={}, id2propertyvalue={}, is_enable_model_property_info=False):
+	def fill_model_detail(webapp_owner, products, product_ids, id2property={}, id2propertyvalue={}, is_enable_model_property_info=False, manager={}):
 		_id2property = {}
 		_id2propertyvalue = {}
 		if is_enable_model_property_info:
@@ -450,8 +450,8 @@ class Product(models.Model):
 				}
 				_id2propertyvalue[id] = data
 				_property['values'].append(data)
-
-		divide_model = account_models.AccountDivideInfo.objects.filter(user_id=webapp_owner.id).first()
+		user_id = manager.id if manager else webapp_owner.id
+		divide_model = account_models.AccountDivideInfo.objects.filter(user_id=user_id).first()
 		if divide_model:
 			settlement_type = divide_model.settlement_type
 			divide_rebate = divide_model.divide_rebate
@@ -477,7 +477,8 @@ class Product(models.Model):
 				"user_code": model.user_code,
 				"purchase_price": '%.2f' % model.purchase_price,
 				"market_price": '%.2f' % model.market_price,
-				"gross_profit": '%.2f' % (model.price - model.purchase_price)
+				"gross_profit": '%.2f' % (model.price - model.purchase_price),
+				"gross_profit_rate": 0 if model.price == 0 else '%.2f' % ((model.price - model.purchase_price)/model.price)
 			}
 			if divide_model:
 				"""
@@ -485,31 +486,32 @@ class Product(models.Model):
 				固定底价: 社群修改价 - 上浮结算价
 				固定扣点: 商品售价 * 社群扣点
 				毛利分成: {
-					cps: 商品结算价 - 推广费,
+					cps: 推广费 * 社群毛利点,
 					non_cps: (商品售价 - 微众售价) * 社群毛利点  ==> 社群毛利,
 							 (商品售价 - 微众售价)/商品售价 * 社群毛利点 ==>社群毛利率
 				}
 				对于多规格的商品，则填充毛利最大的
 				"""
-				if settlement_type == account_models.ACCOUNT_DIVIDE_TYPE_FIXED:  # 固定底价
-					customized_price = product_model_id2price.get(model.id, model.price)
-					gross_profit = customized_price - model.price
-					gross_profit_rate = gross_profit / customized_price * 100
-				elif settlement_type == account_models.ACCOUNT_DIVIDE_TYPE_RETAIL:  # 固定扣点
-					gross_profit = model.price * divide_rebate / 100
-					gross_profit_rate = divide_rebate
-				elif settlement_type == account_models.ACCOUNT_DIVIDE_TYPE_PROFIT:  # 毛利分成
-					product_id = model.product.id
-					if product_id in cps_product_id2promote.keys():
-						model_dict['cps_gross_profit'] = '%.2f' % (cps_product_id2promote[product_id].promote_money * divide_rebate)
-						model_dict['cps_gross_profit_rate'] = '%.2f' % (model_dict['cps_gross_profit'] / model.purchase_price * 100)
-						model_dict['cps_time_to'] = cps_product_id2promote[product_id].promote_time_from.strftime("%m-%d %H:%M:%S")
-
-					gross_profit = (model.price - model.purchase_price) * divide_rebate / 100
-					gross_profit_rate = gross_profit / model.price * 100
-				else:
+				if model.price == 0:
 					gross_profit = 0
 					gross_profit_rate = 0
+				else:
+					if settlement_type == account_models.ACCOUNT_DIVIDE_TYPE_FIXED:  # 固定底价
+						customized_price = product_model_id2price.get(model.id, model.price)
+						gross_profit = customized_price - model.price
+						gross_profit_rate = gross_profit / customized_price * 100
+					elif settlement_type == account_models.ACCOUNT_DIVIDE_TYPE_RETAIL:  # 固定扣点
+						gross_profit = model.price * divide_rebate / 100
+						gross_profit_rate = divide_rebate
+					elif settlement_type == account_models.ACCOUNT_DIVIDE_TYPE_PROFIT:  # 毛利分成
+						product_id = model.product.id
+						if product_id in cps_product_id2promote.keys():
+							model_dict['cps_gross_profit'] = '%.2f' % (cps_product_id2promote[product_id].promote_money * divide_rebate / 100)
+							model_dict['cps_gross_profit_rate'] = '%.2f' % (float(model_dict['cps_gross_profit']) / model.price * 100)
+							model_dict['cps_time_to'] = cps_product_id2promote[product_id].promote_time_from.strftime("%m-%d %H:%M:%S")
+
+						gross_profit = (model.price - model.purchase_price) * divide_rebate / 100
+						gross_profit_rate = gross_profit / model.price * 100
 
 				model_dict['gross_profit'] = '%.2f' % gross_profit
 				model_dict['gross_profit_rate'] = '%.2f' % gross_profit_rate
@@ -540,7 +542,9 @@ class Product(models.Model):
 				for id in ids:
 					# id的格式为${property_id}:${value_id}
 					_property_id, _value_id = id.split(':')
-					_property = _id2property[_property_id]
+					_property = _id2property.get(_property_id, None)
+					if _property == None:
+						continue
 					_value = _id2propertyvalue[id]
 					property2value[_property['name']] = {
 						'id': _value['id'],
@@ -595,9 +599,10 @@ class Product(models.Model):
 						# 列表页部分显示商品的最小价格那个model的信息
 						custom_models.sort(lambda x, y: cmp(float(x['price']), float(y['price'])))
 						target_model = custom_models[0]
-						max_profit_model = custom_models[-1]
 						low_price = target_model['price']
 						high_price = custom_models[-1]['price']
+						custom_models.sort(lambda x, y: cmp(float(x['gross_profit']), float(y['gross_profit'])))
+						max_profit_model = custom_models[-1]
 						if low_price == high_price:
 							# 格式: X.00
 							display_price_range = low_price
@@ -639,6 +644,10 @@ class Product(models.Model):
 				product.min_limit = 0
 				product.standard_model = {}
 				product.models = []
+				product.gross_profit = 0
+				product.gross_profit_rate = 0
+				product.cps_gross_profit = 0
+				product.cps_gross_profit_rate = 0
 
 
 	@staticmethod
@@ -801,7 +810,7 @@ class Product(models.Model):
 				id2product[product_id].sales = sales.sales
 
 	@staticmethod
-	def fill_details(webapp_owner, products, options):
+	def fill_details(webapp_owner, products, options, manager={}):
 		id2property = None
 		id2propertyvalue = None
 		is_enable_model_property_info = options.get(
@@ -859,7 +868,8 @@ class Product(models.Model):
 				product_ids,
 				id2property,
 				id2propertyvalue,
-				is_enable_model_property_info)
+				is_enable_model_property_info,
+				manager)
 
 		if options.get('with_product_promotion', False):
 			Product.fill_promotion_detail(webapp_owner, products, product_ids)
@@ -2085,6 +2095,13 @@ class OrderHasProduct(models.Model):
 	weight = models.FloatField(default=0)
 	product_model_name_texts = models.CharField(max_length=1024, default='[]')  # 规格名称的值
 	product_model_id = models.IntegerField(default=0) # 规格ID
+	# # 商品毛利润
+	# product_profit = models.FloatField(default=0)
+	# # 商品毛利率
+	# product_profit_ratio = models.FloatField(default=0)
+	#
+	# # 社群计算价(即和社群结算的时候应该结算多少钱)
+	# webapp_purchase_price = models.FloatField(default=0)
 
 	class Meta(object):
 		db_table = 'mall_order_has_product'

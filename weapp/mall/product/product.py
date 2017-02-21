@@ -238,6 +238,9 @@ class ProductList(resource.Resource):
             current_product_filters = utils.PRODUCT_FILTERS
         #通过has_filter 判断当前填充属性还是在分页后填充属性(product_pool_id2product_pool除外，它要进行商品的排序)
         has_filter = utils.search_util.init_filters(request, current_product_filters)
+        if mall_type: #毛利率排序需要首先填充属性，再分页
+            has_filter = True
+            sort_attr = '-gross_profit_rate'
         if has_filter:
             models.Product.fill_details(request.manager, products, {
                 "with_product_model": True,
@@ -256,14 +259,6 @@ class ProductList(resource.Resource):
             })
 
 
-        if '-' in sort_attr:
-            sort_attr = sort_attr.replace('-', '')
-            products = sorted(products, key=operator.attrgetter('id'), reverse=True)
-            products = sorted(products, key=operator.attrgetter(sort_attr), reverse=True)
-            sort_attr = '-' + sort_attr
-        else:
-            products = sorted(products, key=operator.attrgetter('id'))
-            products = sorted(products, key=operator.attrgetter(sort_attr))
         products_is_0 = filter(lambda p: p.display_index == 0, products)
         products_not_0 = filter(lambda p: p.display_index != 0, products)
         products_not_0 = sorted(products_not_0, key=operator.attrgetter('display_index'))
@@ -275,6 +270,15 @@ class ProductList(resource.Resource):
                 products = utils.filter_products(request, products_not_0 + products_is_0)
         else:
             products = products_not_0 + products_is_0
+
+        if '-' in sort_attr:
+            sort_attr = sort_attr.replace('-', '')
+            products = sorted(products, key=operator.attrgetter('id'), reverse=True)
+            products = sorted(products, key=operator.attrgetter(sort_attr), reverse=True)
+            sort_attr = '-' + sort_attr
+        else:
+            products = sorted(products, key=operator.attrgetter('id'))
+            products = sorted(products, key=operator.attrgetter(sort_attr))
 
 
         #进行分页
@@ -444,6 +448,8 @@ class ProductList(resource.Resource):
         data = dict()
         data['owner_id'] = request.manager.id
         data['mall_type'] = mall_type
+        data['webapp_type'] = request.user_profile.webapp_type
+
         if mall_type:
             model = AccountDivideInfo.objects.filter(user_id=request.manager.id).first()
             if model:
@@ -715,7 +721,11 @@ class ProductPool(resource.Resource):
             'with_image': False,
             'with_property': True,
             'with_sales': True
-        })
+        }, request.manager)
+
+        if wtype == 1:
+            products = sorted(products, key=operator.attrgetter('id'), reverse=True)
+            products = sorted(products, key=operator.attrgetter('gross_profit_rate'), reverse=True)
 
         # dict_products = []
         # for product in products:

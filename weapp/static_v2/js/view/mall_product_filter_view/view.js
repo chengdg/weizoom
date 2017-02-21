@@ -21,6 +21,7 @@ W.view.mall.ProductFilterView = Backbone.View.extend({
     },
 
     render: function() {
+        var webapp_type = this.$el.attr('data-webapp-type');
         W.resource.mall2.ProductClassification.get({
             scope: this,
             data: {'level': 1},
@@ -49,8 +50,8 @@ W.view.mall.ProductFilterView = Backbone.View.extend({
                             categories: data.categories,
                             low_stocks: low_stocks,  //支持从首页店铺提醒“库存不足商品”过来的请求 duhao 20150925
                             high_stocks: high_stocks,  //支持从首页店铺提醒“库存不足商品”过来的请求 duhao 20150925
-                            mall_type: mall_type // 支持微众自营平台，按照供货商筛选
-                            
+                            mall_type: mall_type, // 支持微众自营平台，按照供货商筛选
+                            webapp_type: webapp_type
                         });
                         this.$el.append(html);
                         _this.addDatepicker();
@@ -173,43 +174,13 @@ W.view.mall.ProductFilterView = Backbone.View.extend({
             W.showHint('error', '请输入正确的价格');
             return false;
         }
-        // if (lowPrice.length === 0 && highPrice.length > 0) {
-        //     W.showHint('error', '请输入起始价格！');
-        //     return false;
-        // }
-        // if (highPrice.length === 0 && lowPrice.length > 0) {
-        //     W.showHint('error', '请输入最高价格！');
-        //     return false;
-        // }
-        // if (parseFloat(highPrice) < parseFloat(lowPrice)) {
-        //     W.showHint('error', '最高价格不能低于起始价格');
-        //     return false;
-        // }
 
+        var webapp_type = this.$el.attr('data-webapp-type');
         //库存
         var stockRex = /^\d*$/;
         var lowStocks = $.trim(this.$('#low_stocks').val());
         var highStocks = $.trim(this.$('#high_stocks').val());
-
-         if(!stockRex.test(lowStocks) || (!stockRex.test(highStocks))){
-             W.showHint('error', "请输入正确库存！ 仅数字")
-             return false;
-         }
-
-        // if (lowStocks.length === 0 && highStocks.length > 0) {
-        //     W.showHint('error', '请输入起始库存！');
-        //     return false;
-        // }
-        // if (highStocks.length === 0 && lowStocks.length > 0) {
-        //     W.showHint('error', '请输入最高库存！');
-        //     return false;
-        // }
-        // if (parseFloat(highStocks) < parseFloat(lowStocks)) {
-        //     W.showHint('error', '最高库存不能低于起始库存');
-        //     return false;
-        // }
-
-        //销量
+       //销量
         var salesRex = /^\d*$/;
         var lowSales = $.trim(this.$('#low_sales').val());
         var highSales = $.trim(this.$('#high_sales').val());
@@ -217,18 +188,6 @@ W.view.mall.ProductFilterView = Backbone.View.extend({
             W.showHint('error', '请输入正确的销量, 仅数字');
             return false;
         }
-        // if (lowSales.length === 0 && highSales.length > 0) {
-        //     W.showHint('error', '请输入起始销量！');
-        //     return false;
-        // }
-        // if (highSales.length === 0 && lowSales.length > 0) {
-        //     W.showHint('error', '请输入最高销量！');
-        //     return false;
-        // }
-        // if (parseFloat(highSales) < parseFloat(lowSales)) {
-        //     W.showHint('error', '最高销量不能低于起始销量');
-        //     return false;
-        // }
 
         //分组
         var category = this.$('#category').val();
@@ -242,22 +201,82 @@ W.view.mall.ProductFilterView = Backbone.View.extend({
         var orderSupplierType = this.$('#orderSupplierType').val();
 
         var supplier_type = this.$('#supplier_type').val();
+        if (webapp_type == 0) {
+            if (lowPrice.length === 0 && highPrice.length > 0) {
+                W.showHint('error', '请输入起始价格！');
+                return false;
+            }
+            if (highPrice.length === 0 && lowPrice.length > 0) {
+                W.showHint('error', '请输入最高价格！');
+                return false;
+            }
+            if (parseFloat(highPrice) < parseFloat(lowPrice)) {
+                W.showHint('error', '最高价格不能低于起始价格');
+                return false;
+            }
+            if (lowStocks.length === 0 && highStocks.length > 0) {
+                W.showHint('error', '请输入起始库存！');
+                return false;
+            }
+            if (highStocks.length === 0 && lowStocks.length > 0) {
+                W.showHint('error', '请输入最高库存！');
+                return false;
+            }
+            if (parseFloat(highStocks) < parseFloat(lowStocks)) {
+                W.showHint('error', '最高库存不能低于起始库存');
+                return false;
+            }
+            if (lowSales.length === 0 && highSales.length > 0) {
+                W.showHint('error', '请输入起始销量！');
+                return false;
+            }
+            if (highSales.length === 0 && lowSales.length > 0) {
+                W.showHint('error', '请输入最高销量！');
+                return false;
+            }
+            if (parseFloat(highSales) < parseFloat(lowSales)) {
+                W.showHint('error', '最高销量不能低于起始销量');
+                return false;
+            }
+        }
 
-        var data = {
-            name: name,
-            // startDate: startDate,
-            // endDate: endDate,
-            category: category,
-            // barCode: barCode,
-            lowPrice: lowPrice,
-            highPrice: highPrice,
-            lowStocks: lowStocks,
-            highStocks: highStocks,
-            lowSales: lowSales,
-            highSales: highSales,
-            first_classification: first_classification,
-            secondary_classification: secondary_classification,
-            // supplier_type:supplier_type
+
+
+        if(!stockRex.test(lowStocks) || (!stockRex.test(highStocks))){
+            W.showHint('error', "请输入正确库存！ 仅数字")
+            return false;
+        }
+
+        if (webapp_type == 0) {
+            var data = {
+                name: name,
+                startDate: startDate,
+                endDate: endDate,
+                category: category,
+                barCode: barCode,
+                lowPrice: lowPrice,
+                highPrice: highPrice,
+                lowStocks: lowStocks,
+                highStocks: highStocks,
+                lowSales: lowSales,
+                highSales: highSales,
+                first_classification: first_classification,
+                secondary_classification: secondary_classification,
+                supplier_type:supplier_type
+            }
+        } else {
+            var data = {
+                name: name,
+                category: category,
+                lowPrice: lowPrice,
+                highPrice: highPrice,
+                lowStocks: lowStocks,
+                highStocks: highStocks,
+                lowSales: lowSales,
+                highSales: highSales,
+                first_classification: first_classification,
+                secondary_classification: secondary_classification,
+            }            
         }
         //微众系列 筛选‘供货商’
         if(this.$('#supplier').val()){

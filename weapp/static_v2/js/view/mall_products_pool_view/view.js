@@ -195,6 +195,9 @@ W.view.mall.ProductsPoolTable = W.view.common.AdvancedTable.extend({
                 $(this).find('.xa-select').attr('disabled', 'disabled').removeClass('xa-select');
             }
         });
+        $('.xui-label-tr').each(function() {
+            $(this).find('td').eq(0).empty();
+        });
     }
 });
 W.registerUIRole('div[data-ui-role="pool-advanced-table"]', function() {

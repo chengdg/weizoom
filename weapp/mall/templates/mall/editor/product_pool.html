@@ -17,6 +17,9 @@
 .xui-productsPoolPage .xui-productList tbody tr:nth-child(even) td:first-child{
     display:none;
 }
+.xui-no-products input {
+    display: none;
+}
 
 </style>
 {% endblock %}
@@ -63,6 +66,9 @@
         data-selectable="true"
         data-item-count-per-page="12"
         data-outer-selecter='.xa-selectAll'
+        data-disable-header-select="true"
+        class=""
+        data-selecttable-tr='xa-selectTr'
     ></div>
     </div>
 </div>
@@ -88,7 +94,7 @@
                 <th width="100">推广时间</th>
                 {{else}}
                 {{if data.data.settlement_type != 3}}
-                <th width="100">毛利率/件</th>
+                <th width="150">毛利率/件</th>
                 {{/if}}
                 {{/if}}
                 <th width="90">操作</th>
@@ -127,7 +133,7 @@
                         ${product.classification}
                     </td>
                     <td>
-                        {{if data.is_request_cps&&data.is_request_cps==1}}
+                        {{if data.is_request_cps && data.is_request_cps==1}}
                             ${product.promote_money}
                         {{else}}
                             {{if product.is_use_custom_model}}
@@ -139,7 +145,7 @@
                     </td>
 
                     <td>
-                        {{if data.is_request_cps&&data.is_request_cps==1}}
+                        {{if data.is_request_cps && data.is_request_cps==1}}
                             ${product.promote_stock}
                         {{else}}
                             {{if !product.is_use_custom_model}}
@@ -151,20 +157,20 @@
                             {{/if}}
                         {{/if}}
                     </td>
-                    {{if data.is_request_cps&&data.is_request_cps==1}}
+                    {{if data.is_request_cps && data.is_request_cps==1}}
                     <td>
                         ${product.promote_time_from}-<br/>${product.promote_time_to}
                     </td>
                     {{else}}
                     {{if data.data.settlement_type != 3}}
                     <td>
-                    {{if product.is_cps}}
-                    <span style='color:#999; text-decoration:line-through'>${product.gross_profit}(${product.gross_profit_rate}%)</span>
-                    <span style='color:#e00000;'>${product.cps_gross_profit}(${product.cps_gross_profit_rate}%)</span>
-                    <span>限时至${product.cps_time_to}</span>
-                    {{else}}
-                    <span>${product.gross_profit}(${product.gross_profit_rate}%)</span>
-                    {{/if}} 
+                        {{if product.is_cps && data.data.settlement_type == 2}}
+                        <div style='color:#999; text-decoration:line-through'>${product.gross_profit}(${product.gross_profit_rate}%)</div>
+                        <div style='color:#e00000;'>${product.cps_gross_profit}(${product.cps_gross_profit_rate}%)</div>
+                        <div>限时至${product.cps_time_to}</div>
+                        {{else}}
+                        <div>${product.gross_profit}(${product.gross_profit_rate}%)</div>
+                        {{/if}}
                     </td>
                     {{/if}}
                     {{/if}} 
@@ -182,7 +188,7 @@
                     </td>
 
                 </tr>
-                <tr style="height:20px;">
+                <tr style="height:20px;" class="xui-label-tr">
 					<td colspan="9" class="xui-remark xa-remark pb0" style=''>
 					{{if product.product_label_names}}
 					    {{each(i, name) product.product_label_names}}
@@ -193,7 +199,7 @@
 				</tr>
                 {{/each}}
             {{else}}
-                <tr><td colspan='8'>还没有数据</td></tr>
+                <tr class="xui-no-products"><td colspan='8'>还没有数据</td></tr>
             {{/if}}
         </tbody>
     </table>

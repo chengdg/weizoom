@@ -7,7 +7,7 @@
 			{{/each}}
 			<th>价格（元）</th>
 			<th>库存</th>
-			{{if settlementType != 3}}<th>毛利率/件</th>{{/if}}
+			{{if settlementType && settlementType != 3}}<th>毛利率/件</th>{{else}}<th>商品编码</th>{{/if}}
 		</tr>
 	</thead>
 	<tbody>
@@ -18,7 +18,7 @@
 			{{/each}}
 			<td>${model.price}</td>
 			<td>{{if (model.stock_type == 0)}}无限{{else}}${model.stocks}{{/if}}</td>
-			{{if settlementType != 3}}<td>${model.gross_profit}(${model.gross_profit_rate}%)</td>{{/if}}
+			{{if settlementType && settlementType != 3}}<td>${model.gross_profit}(${model.gross_profit_rate}%)</td>{{else}}<td>${model.user_code}</td>{{/if}}
 		</tr>
 		{{/each}}
 	</tbody>
