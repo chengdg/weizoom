@@ -145,13 +145,20 @@ def get_qcrod_url(ticket):
 ###########################################################
 def update_member_qrcode_log(user_profile, member, ticket):
 	try:
-		member_qrcodes = MemberQrcode.objects.filter(ticket=ticket)
-		if member_qrcodes.count() > 0:
-			member_qrcode =  member_qrcodes.first()
+		member_qrcode = MemberQrcode.objects.filter(ticket=ticket).first()
+		if member_qrcode:
 			only_create_friend = False
 			if hasattr(member, 'old_status') and member.old_status == NOT_SUBSCRIBED:
 				only_create_friend = True
-			if member and member.is_new and member_qrcode and MemberQrcodeLog.objects.filter(member_id=member.id).count() == 0:
+			if member and member.is_new and MemberQrcodeLog.objects.filter(member_id=member.id).count() == 0:
+				if member_qrcode.owner.username == 'ty': #腾易微众定制需求
+					from modules.member import models as member_models
+					if member_models.TengyiMemberRelation.objects.filter(member_id=member.id).count() <= 0:
+						member_models.TengyiMemberRelation.create(
+							member_id=member.id,
+							recommend_by_member_id=member_qrcode.member.id,
+						)
+
 				MemberQrcodeLog.objects.create(member_qrcode=member_qrcode,member_id=member.id)
 				_add_award_to_member(user_profile, member, member_qrcode)
 				#修改来源
