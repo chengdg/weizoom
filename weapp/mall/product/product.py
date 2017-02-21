@@ -364,6 +364,9 @@ class ProductList(resource.Resource):
             id2first_classification = dict([(classification.id, classification) for classification in first_classifications])
 
         #print "cps",cps_products_id
+
+        product_id2promote_detail = {p.product_id: p for p in models.PromoteDetail.objects.filter(promote_status=1).order_by('id')}
+
         for product in products:
 
             product_dict = product.format_to_dict()
@@ -371,10 +374,11 @@ class ProductList(resource.Resource):
             if product.id in list(cps_products_id):
                 if wtype == 1:
                     product_dict['is_cps'] = 1
-                product_dict['promote_time_from'] = models.PromoteDetail.objects.filter(product_id=product.id, promote_status=1).order_by('id').last().promote_time_from.strftime("%Y/%m/%d %H:%M")
-                product_dict['promote_time_to'] = models.PromoteDetail.objects.filter(product_id=product.id, promote_status=1).order_by('id').last().promote_time_to.strftime("%Y/%m/%d %H:%M")
-                product_dict['promote_money'] = "%.2f"%models.PromoteDetail.objects.filter(product_id=product.id, promote_status=1).order_by('id').last().promote_money
-                product_dict['promote_stock'] = models.PromoteDetail.objects.filter(product_id=product.id, promote_status=1).order_by('id').last().promote_stock
+                promote_detail = product_id2promote_detail[product.id]
+                product_dict['promote_time_from'] = promote_detail.promote_time_from.strftime("%Y/%m/%d %H:%M")
+                product_dict['promote_time_to'] = promote_detail.promote_time_to.strftime("%Y/%m/%d %H:%M")
+                product_dict['promote_money'] = "%.2f"%promote_detail.promote_money
+                product_dict['promote_stock'] = promote_detail.promote_stock
                 cps_items.append(product_dict)
             if not is_request_cps: product_dict['n_request_cps'] = 1
             product_dict['classification'] = ''
@@ -831,6 +835,8 @@ class ProductPool(resource.Resource):
         # 构造返回数据
         #print "]]]]]]]]]]",list(cps_products_id)
         items = []
+        product_id2promote_detail = {p.product_id: p for p in
+                                     models.PromoteDetail.objects.filter(promote_status=1).order_by('id')}
         for product in products:
             # 处理标签
             product_label_names = ''
@@ -906,16 +912,18 @@ class ProductPool(resource.Resource):
             if product.id in list(cps_products_id):
                 if wtype == 1:
                     product_dic['is_cps'] = 1
-                product_dic['promote_stock'] = models.PromoteDetail.objects.get(product_id=product.id, promote_status=1).promote_stock
-                product_dic['promote_money'] = "%.2f"%models.PromoteDetail.objects.get(product_id=product.id, promote_status=1).promote_money
-                product_dic['promote_time_from'] = models.PromoteDetail.objects.get(product_id=product.id, promote_status=1).promote_time_from.strftime("%Y/%m/%d %H:%M")
-                product_dic['promote_time_to'] = models.PromoteDetail.objects.get(product_id=product.id, promote_status=1).promote_time_to.strftime("%Y/%m/%d %H:%M")
+                product_dic['promote_stock'] = product_id2promote_detail[product.id].promote_stock
+                product_dic['promote_money'] = "%.2f"%product_id2promote_detail[product.id].promote_money
+                product_dic['promote_time_from'] = product_id2promote_detail[product.id].promote_time_from.strftime("%Y/%m/%d %H:%M")
+                product_dic['promote_time_to'] = product_id2promote_detail[product.id].promote_time_to.strftime("%Y/%m/%d %H:%M")
 
                 product_dic['cps_gross_profit'] = getattr(product, 'cps_gross_profit', 0)
                 product_dic['cps_gross_profit_rate'] = getattr(product, 'cps_gross_profit_rate', 0)
                 product_dic['cps_time_to'] = getattr(product, 'cps_time_to', 0)
             product_dic['gross_profit'] = getattr(product, 'gross_profit', 0)
-            product_dic['gross_profit_rate'] = getattr(product, 'gross_profit_rate', 0) 
+            product_dic['gross_profit_rate'] = getattr(product, 'gross_profit_rate', 0)
+
+            product_dic['sales'] = getattr(product, 'sales', 0)
             items.append(product_dic)
 
         data = dict()
