@@ -1479,3 +1479,69 @@ class WantToBuySupport(models.Model):
 		db_table = 'member_want_to_buy_support'
 		verbose_name = 'member_want_to_buy_support'
 		verbose_name_plural = 'member_want_to_buy_support'
+
+
+DEFAULT_DATETIME = datetime.strptime('2000-01-01', '%Y-%m-%d')
+
+class TengyiMember(models.Model):
+	"""
+	腾易微众星级会员表
+	"""
+	member_id = models.IntegerField(default=0)
+	recommend_by_member_id = models.IntegerField(default=0) #推荐人id
+	level = models.IntegerField(default=1) #星级
+	card_number = models.CharField(default='', max_length=50) #绑定会员卡id
+	created_at = models.DateTimeField(auto_now_add=True)  # 成为会员的时间
+
+	class Meta(object):
+		db_table = 'tengyi_member'
+		verbose_name = u'腾易微众星级会员表'
+		verbose_name_plural = u'腾易微众星级会员表'
+
+class TengyiMemberRelation(models.Model):
+	"""
+	腾易微众星级会员推荐关系表(待成为星级会员)
+	"""
+	member_id = models.IntegerField(default=0)
+	recommend_by_member_id = models.IntegerField(default=0)  # 推荐人id
+	created_at = models.DateTimeField(auto_now_add=True)
+
+	class Meta(object):
+		db_table = 'tengyi_member_relation'
+		verbose_name = u'腾易微众星级会员推荐关系表'
+		verbose_name_plural = u'腾易微众星级会员推荐关系表'
+
+class TengyiRebateLog(models.Model):
+	"""
+	腾易微众星级会员返利记录表
+	"""
+	member_id = models.IntegerField(default=0)
+	is_self_order = models.BooleanField(default=False) #是否自己的订单返利
+	supply_member_id = models.IntegerField(default=0) #返利会员id
+	is_exchanged = models.BooleanField(default=False) #是否已返利
+	exchanged_at = models.DateTimeField(default=DEFAULT_DATETIME) #返利时间
+	rebate_money = models.FloatField(default=0) #返利金额
+	created_at = models.DateTimeField(auto_now_add=True)
+
+	class Meta(object):
+		db_table = 'tengyi_rebate_log'
+		verbose_name = u'腾易微众星级会员返利记录表'
+		verbose_name_plural = u'腾易微众星级会员返利记录表'
+
+class TengyiMemberRebateCycle(models.Model):
+	"""
+	腾易微众星级会员推荐返利周期
+	"""
+	member_id = models.IntegerField(default=0)
+	start_time = models.DateTimeField()
+	end_time = models.DateTimeField()
+	is_receive_reward = models.BooleanField(default=False) #是否已获得购物返利
+	receive_reward_at = models.DateTimeField(default=DEFAULT_DATETIME) #获得推荐返利时间
+	is_recommend_member_receive_reward = models.BooleanField(default=False) #是否被推荐人已获得推荐返利
+	recommend_member_rebate_money = models.FloatField(default=0) #推荐人返利金额
+	created_at = models.DateTimeField(auto_now_add=True)
+
+	class Meta(object):
+		db_table = 'tengyi_member_rebate_cycle'
+		verbose_name = u'腾易微众星级会员推荐返利周期'
+		verbose_name_plural = u'腾易微众星级会员推荐返利周期'
