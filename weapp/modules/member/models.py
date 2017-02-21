@@ -1481,6 +1481,7 @@ class WantToBuySupport(models.Model):
 		verbose_name_plural = 'member_want_to_buy_support'
 
 
+DEFAULT_DATETIME = datetime.strptime('2000-01-01', '%Y-%m-%d')
 
 class TengyiMember(models.Model):
 	"""
@@ -1489,6 +1490,7 @@ class TengyiMember(models.Model):
 	member_id = models.IntegerField(default=0)
 	recommend_by_member_id = models.IntegerField(default=0) #推荐人id
 	level = models.IntegerField(default=1) #星级
+	card_number = models.CharField(default='', max_length=50) #绑定会员卡id
 	created_at = models.DateTimeField(auto_now_add=True)  # 成为会员的时间
 
 	class Meta(object):
@@ -1517,6 +1519,7 @@ class TengyiRebateLog(models.Model):
 	is_self_order = models.BooleanField(default=False) #是否自己的订单返利
 	supply_member_id = models.IntegerField(default=0) #返利会员id
 	is_exchanged = models.BooleanField(default=False) #是否已返利
+	exchanged_at = models.DateTimeField(default=DEFAULT_DATETIME) #返利时间
 	rebate_money = models.FloatField(default=0) #返利金额
 	created_at = models.DateTimeField(auto_now_add=True)
 
@@ -1532,8 +1535,11 @@ class TengyiMemberRebateCycle(models.Model):
 	member_id = models.IntegerField(default=0)
 	start_time = models.DateTimeField(auto_now_add=True)
 	end_time = models.DateTimeField(auto_now_add=True)
-	is_receive_reward = models.BooleanField(default=False) #是否已获得推荐返利
-	receive_reward_at = models.DateTimeField() #获得推荐返利时间
+	is_receive_reward = models.BooleanField(default=False) #是否已获得购物返利
+	receive_reward_at = models.DateTimeField(default=DEFAULT_DATETIME) #获得推荐返利时间
+	is_recommend_member_receive_reward = models.BooleanField(default=False) #是否被推荐人已获得推荐返利
+	recommend_member_rebate_money = models.FloatField(default=0) #推荐人返利金额
+	created_at = models.DateTimeField(auto_now_add=True)
 
 	class Meta(object):
 		db_table = 'tengyi_member_rebate_cycle'
