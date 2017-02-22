@@ -1,15 +1,10 @@
 # -*- coding: utf-8 -*-
 
-from django.contrib.auth.models import User, Group, Permission
-from django.db.models import F
-from django.contrib.auth.models import User
-
 import time
 
-from market_tools.prize.models import Prize
 from market_tools.tools.coupon import util as coupon_util
 
-from watchdog.utils import watchdog_fatal, watchdog_error
+from watchdog.utils import watchdog_fatal
 
 from modules.member.models import Member, MemberGrade, BRING_NEW_CUSTOMER_VIA_QRCODE, SOURCE_MEMBER_QRCODE, MemberFollowRelation, NOT_SUBSCRIBED
 from models import *
@@ -19,9 +14,7 @@ from market_tools.tools.coupon.util import consume_coupon
 from account.util import get_binding_weixin_mpuser, get_mpuser_accesstoken
 from core.wxapi.weixin_api import *
 from core.wxapi import get_weixin_api
-from core.wxapi.weixin_api import WeixinApi
-from core.wxapi.api_create_qrcode_ticket import QrcodeTicket
-from datetime import datetime, timedelta
+from datetime import datetime
 
 #############################################################################
 #get_coupon_rules: 获取优惠券rule
@@ -151,9 +144,14 @@ def update_member_qrcode_log(user_profile, member, ticket):
 			if hasattr(member, 'old_status') and member.old_status == NOT_SUBSCRIBED:
 				only_create_friend = True
 			if member and member.is_new and MemberQrcodeLog.objects.filter(member_id=member.id).count() == 0:
-				if member_qrcode.owner.username == 'ty': #腾易微众定制需求
+				if member_qrcode.owner.username == 'weizoommm': #腾易微众定制需求
+					print '============================'
+					print 'came in'
 					from modules.member import models as member_models
 					if member_models.TengyiMemberRelation.objects.filter(member_id=member.id).count() <= 0:
+						print '============================'
+						print 'TengyiMemberRelation recoding'
+						print '============================'
 						member_models.TengyiMemberRelation.create(
 							member_id=member.id,
 							recommend_by_member_id=member_qrcode.member.id,
