@@ -1,6 +1,10 @@
 ﻿# -*- coding: utf-8 -*-
 
+from datetime import datetime
+
 from django.core.management.base import BaseCommand
+
+from eaglet.utils.resource_client import Resource
 
 from mall.models import *
 from modules.member.models import *
@@ -42,11 +46,12 @@ class Command(BaseCommand):
 					webapp_id = member_id2webapp_id[member_id]
 					recommend_by_member_id = member_id2rec_id[member_id]
 					if order.final_price >= SECOND_LIMIT:
-						TengyiMember.objects.create(
+						tengyi_member = TengyiMember.objects.create(
 							member_id = member_id,
 							recommend_by_member_id = recommend_by_member_id,
 							level = 2
 						)
+
 
 						if webapp_id not in one_tag_webapp_ids:
 							member_tag = MemberTag.objects.create(
@@ -60,7 +65,7 @@ class Command(BaseCommand):
 							MemberHasTag.objects.create(member_id=member_id, member_tag_id=member_tag.id)
 
 					else:
-						TengyiMember.objects.create(
+						tengyi_member = TengyiMember.objects.create(
 							member_id=member_id,
 							recommend_by_member_id=recommend_by_member_id,
 							level=1
@@ -76,3 +81,21 @@ class Command(BaseCommand):
 
 						if member_tag and MemberHasTag.objects.filter(member_id=member_id, member_tag_id=member_tag.id).count() == 0:
 							MemberHasTag.objects.create(member_id=member_id, member_tag_id=member_tag.id)
+
+					#创建卡
+					resp = Resource.use('card_apiserver').get({
+						'resource': 'card.membership_card',
+						'data': {
+							'card_condition': json.dumps({
+								'weizoom_card_batch_id': 1,
+								'sold_time': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+								'member_id': member_id,
+								'phone_num': ''
+							})
+						}
+					})
+
+					if resp and resp['code'] == 200:
+						card_number = resp['data']['card_number']
+						tengyi_member.card_number = card_number
+						tengyi_member.save()
