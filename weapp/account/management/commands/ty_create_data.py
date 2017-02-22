@@ -74,9 +74,12 @@ class Command(BaseCommand):
 	args = ''
 	
 	def handle(self, **options):
-		grade = MemberGrade.objects.get(id=1)
+		
+
+
 
 		#清除旧数据
+		MemberGrade.objects.all().delete()
 		Member.objects.all().delete()
 		WebAppUser.objects.all().delete()
 		Order.objects.all().delete()
@@ -84,6 +87,7 @@ class Command(BaseCommand):
 		TengyiMember.objects.all().delete()
 		TengyiMemberRebateCycle.objects.all().delete()
 
+		grade = MemberGrade.objects.create(webapp_id=1,name='grade1')
 
 		member = Member.objects.create(grade=grade,token=10,username_hexstr='会员1')
 		member1 = member
