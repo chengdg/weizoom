@@ -43,7 +43,6 @@ class RebateQrcodeHandler(MessageHandler):
 		try:
 			rebate_record = apps_models.Rebate.objects.get(owner_id=user_profile.user_id, ticket=ticket, status=apps_models.STATUS_RUNNING)
 		except:
-			print unicode_full_stack()
 			return None
 		member_info = apps_models.RebateParticipance.objects(belong_to=str(rebate_record.id), member_id=member.id)
 		if member_info.count() <= 0:
