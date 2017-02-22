@@ -42,12 +42,3 @@ class Command(BaseCommand):
 							recommend_by_member_id=recommend_by_member_id,
 							level=1
 						)
-
-		for rec_member_id in set(member_id2rec_id.values()):
-			if TengyiMemberRebateCycle.objects.filter(member_id=rec_member_id).count() > 0:
-				continue
-
-
-		
-
-
