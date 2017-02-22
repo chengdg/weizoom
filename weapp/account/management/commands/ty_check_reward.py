@@ -46,21 +46,24 @@ class Command(BaseCommand):
 		print seven_days_ago_date, '================='
 		yesterday = today - timedelta(1)
 		#计算会员自身购物返利情况
-		all_tengyi_member_rebate_sycle = TengyiMemberRebateCycle.objects.filter(is_receive_reward=False)
+		all_tengyi_member_rebate_sycle = TengyiMemberRebateCycle.objects.filter(is_receive_reward=False, start_time__lt=today)
 		print 'need consumer_rebates count', all_tengyi_member_rebate_sycle.count()
 		for tengyi_member_sycle in all_tengyi_member_rebate_sycle:
 			cur_membser_id = tengyi_member_sycle.member_id
 			cur_webapp_user_id = WebAppUser.objects.get(member_id=cur_membser_id).id
 			start_at = tengyi_member_sycle.start_time.date()
-			end_at = tengyi_member_sycle.end_time.date() + timedelta(1) #查订单时候需要把截止日期后延一天
-			orders = Order.objects.filter(webapp_user_id=cur_webapp_user_id, created_at__range=(start_at, end_at), status=ORDER_STATUS_SUCCESSED)
+			end_at = tengyi_member_sycle.end_time.date() #查订单时候需要把截止日期后延一天
+			#获取区间内下单、状态为已支付、待发货、已发货、已完成的订单
+			orders = Order.objects.filter(webapp_user_id=cur_webapp_user_id, created_at__range=(start_at, end_at), status__in=[2,3,4,5])
 			order_ids = list(orders.values_list('order_id', flat=True))
 			print '>>>cur_membser_id', cur_membser_id
 			print 'order_ids',order_ids
-			status_logs = OrderStatusLog.objects.filter(order_id__in=order_ids, to_status=ORDER_STATUS_SUCCESSED, created_at__lt=seven_days_ago_date)
+			#检查订单支付时间是否是7天前完成的
+			status_logs = OrderStatusLog.objects.filter(order_id__in=order_ids, to_status=ORDER_STATUS_PAYED_SUCCESSED, created_at__lt=seven_days_ago_date)
 			order_ids = list(status_logs.values_list('order_id', flat=True))
 			orders = Order.objects.filter(order_id__in=order_ids)
 			print 'need count order count',orders.count()
+			print [o.order_id for o in orders]
 			money_sum = 0
 			for order in orders:
 				money_sum += order.final_price
