@@ -1533,8 +1533,8 @@ class TengyiMemberRebateCycle(models.Model):
 	腾易微众星级会员推荐返利周期
 	"""
 	member_id = models.IntegerField(default=0)
-	start_time = models.DateTimeField(auto_now_add=True)
-	end_time = models.DateTimeField(auto_now_add=True)
+	start_time = models.DateTimeField()
+	end_time = models.DateTimeField()
 	is_receive_reward = models.BooleanField(default=False) #是否已获得购物返利
 	receive_reward_at = models.DateTimeField(default=DEFAULT_DATETIME) #获得推荐返利时间
 	is_recommend_member_receive_reward = models.BooleanField(default=False) #是否被推荐人已获得推荐返利

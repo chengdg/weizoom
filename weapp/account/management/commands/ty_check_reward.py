@@ -43,6 +43,7 @@ class Command(BaseCommand):
 		else:
 			today = datetime.strptime(today_str, date_fmt).date()
 		seven_days_ago_date = today - timedelta(7)
+		print seven_days_ago_date, '================='
 		yesterday = today - timedelta(1)
 		#计算会员自身购物返利情况
 		all_tengyi_member_rebate_sycle = TengyiMemberRebateCycle.objects.filter(is_receive_reward=False)
@@ -70,7 +71,7 @@ class Command(BaseCommand):
 			print 'order_money:', order_money, '||||||', 'money_sum:', money_sum
 			if money_sum >= order_money:
 				#满足金额发放奖励，更新sycle表为已经发过奖励，下次不再计算
-				tengyi_member_sycle.receive_reward_at = datetime.today()
+				tengyi_member_sycle.receive_reward_at = today
 				tengyi_member_sycle.is_receive_reward = True
 				tengyi_member_sycle.save()
 				#将发奖记录保存在返利记录中
