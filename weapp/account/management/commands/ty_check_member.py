@@ -16,7 +16,7 @@ class Command(BaseCommand):
 	help = ''
 	args = ''
 	
-	def handle(self, key, **options):
+	def handle(self, *args, **options):
 		"""
 		定时检查腾易会员扫码关注的新会员，是否达到星级会员的要求
 		如果达到要求则同时加入到对应的分组中: 一星会员、二星会员
