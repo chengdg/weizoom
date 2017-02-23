@@ -71,6 +71,9 @@ class Command(BaseCommand):
 			cur_member_level = member_id2level[cur_membser_id]
 			order_money = LEVEL_INFO[cur_member_level]['order_money']
 			consumer_rebates = LEVEL_INFO[cur_member_level]['consumer_rebates']
+			#TODO特殊处理 需改进
+			if int(tengyi_member_sycle.recommend_member_rebate_money) == 20:
+				consumer_rebates = 50
 			print 'order_money:', order_money, '||||||', 'money_sum:', money_sum
 			if money_sum >= order_money:
 				#满足金额发放奖励，更新sycle表为已经发过奖励，下次不再计算
