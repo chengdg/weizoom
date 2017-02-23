@@ -54,7 +54,7 @@ class Command(BaseCommand):
 			start_at = tengyi_member_sycle.start_time.date()
 			end_at = tengyi_member_sycle.end_time.date() #查订单时候需要把截止日期后延一天
 			#获取区间内下单、状态为已支付、待发货、已发货、已完成的订单
-			orders = Order.objects.filter(webapp_user_id=cur_webapp_user_id, created_at__range=(start_at, end_at), status__in=[3,4,5], origin_order_id__lte=0)
+			orders = Order.objects.filter(webapp_user_id=cur_webapp_user_id, created_at__range=(start_at, end_at), status__in=[3,4,5], origin_order_id__lte=0, is_first_order=False)
 			order_ids = list(orders.values_list('order_id', flat=True))
 			print '>>>cur_membser_id', cur_membser_id
 			print 'order_ids',order_ids

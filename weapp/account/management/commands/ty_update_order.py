@@ -25,7 +25,7 @@ class Command(BaseCommand):
 		order = Order.objects.get(order_id=order_id)
 		order.created_at=created_at
 		order.save()
-		l = OrderStatusLog.objects.get(order_id=order.order_id,to_status=2)
+		l = OrderStatusLog.objects.get(order_id=order.order_id,to_status=3)
 		l.created_at=created_at
 		l.save()
 		print u'更新成功'

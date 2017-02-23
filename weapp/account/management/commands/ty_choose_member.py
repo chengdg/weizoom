@@ -9,6 +9,10 @@ from eaglet.utils.resource_client import Resource
 from mall.models import *
 from modules.member.models import *
 
+weizoom_card_batch_id = 32
+weizoom_card_batch_name = u'腾易星级会员卡'
+tengyi_user_id = 676
+
 
 class Command(BaseCommand):
 	help = ''
@@ -41,7 +45,7 @@ class Command(BaseCommand):
 				'resource': 'card.membership_card',
 				'data': {
 					'card_condition': json.dumps({
-						'weizoom_card_batch_id': 32,
+						'weizoom_card_batch_id': weizoom_card_batch_id,
 						'sold_time': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
 						'member_id': member_id,
 						'phone_num': '13111111111'
@@ -54,6 +58,28 @@ class Command(BaseCommand):
 				tengyi_member.card_number = card_number
 				tengyi_member.save()
 				print 'create card: ', card_number
+				card_password = resp['data']['card_password']
+
+				member_card = MemberCard.objects.create(
+					owner_id=tengyi_user_id,
+					member_id=member_id,
+					batch_id=weizoom_card_batch_id,
+					card_number=card_number,
+					card_password=card_password,
+					card_name=weizoom_card_batch_name
+				)
+
+				resp = Resource.use('card_apiserver').get({
+					'resource': 'card.membership_batch',
+					'data': {'membership_batch_id': weizoom_card_batch_id}
+				})
+				if resp and resp['code'] == 200:
+					batch_info = resp['data']['card_info']
+					MemberCardLog.create(
+						member_card=member_card.id,
+						reason=u"开通星级会员卡",
+						price=batch_info['first_money']
+					)
 			else:
 				print 'create card failed'
 

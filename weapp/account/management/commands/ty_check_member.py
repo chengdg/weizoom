@@ -12,6 +12,10 @@ from modules.member.models import *
 FIRST_LIMIT = 50.0
 SECOND_LIMIT = 100.0
 
+weizoom_card_batch_id = 32
+weizoom_card_batch_name = u'腾易星级会员卡'
+tengyi_user_id = 676
+
 class Command(BaseCommand):
 	help = ''
 	args = ''
@@ -89,7 +93,7 @@ class Command(BaseCommand):
 						'resource': 'card.membership_card',
 						'data': {
 							'card_condition': json.dumps({
-								'weizoom_card_batch_id': 32,
+								'weizoom_card_batch_id': weizoom_card_batch_id,
 								'sold_time': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
 								'member_id': member_id,
 								'phone_num': '13111111111'
@@ -102,6 +106,29 @@ class Command(BaseCommand):
 						tengyi_member.card_number = card_number
 						tengyi_member.save()
 						print 'created card', card_number
+
+						card_password = resp['data']['card_password']
+
+						member_card = MemberCard.objects.create(
+							owner_id = tengyi_user_id,
+							member_id = member_id,
+							batch_id = weizoom_card_batch_id,
+							card_number = card_number,
+							card_password = card_password,
+							card_name = weizoom_card_batch_name
+						)
+
+						resp = Resource.use('card_apiserver').get({
+							'resource': 'card.membership_batch',
+							'data': {'membership_batch_id': weizoom_card_batch_id}
+						})
+						if resp and resp['code'] == 200:
+							batch_info = resp['data']['card_info']
+							MemberCardLog.create(
+								member_card = member_card.id,
+								reason = u"开通星级会员卡",
+								price = batch_info['first_money']
+							)
 
 					if tengyi_member.level == 1:
 						cycle = range(6)
