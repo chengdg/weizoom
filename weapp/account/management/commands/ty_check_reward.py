@@ -71,6 +71,9 @@ class Command(BaseCommand):
 			cur_member_level = member_id2level[cur_membser_id]
 			order_money = LEVEL_INFO[cur_member_level]['order_money']
 			consumer_rebates = LEVEL_INFO[cur_member_level]['consumer_rebates']
+			#TODO特殊处理 需改进
+			if int(tengyi_member_sycle.recommend_member_rebate_money) == 20:
+				consumer_rebates = 50
 			print 'order_money:', order_money, '||||||', 'money_sum:', money_sum
 			if money_sum >= order_money:
 				#满足金额发放奖励，更新sycle表为已经发过奖励，下次不再计算
@@ -130,22 +133,22 @@ class Command(BaseCommand):
 			is_self_order = need_recharge_rebate_log.is_self_order
 			card_number = member_id2card_number[member_id]
 			# card_number = '111000006'
-			if is_self_order:
-				remark = u'购物返利'
-			else:
-				remark = u'推荐返利'
-			from eaglet.utils.resource_client import Resource
-			params = {
-				'card_number': card_number,
-				'money': rebate_money,
-				'remark': remark
-			}
-			resp = Resource.use('card_apiserver').post({
-				'resource': 'card.recharged_card',
-				'data': params
-			})
-			if resp and resp['code'] == 200:
-				print u'为%s充值%d' % (member_id, rebate_money)
-				need_recharge_rebate_log.is_exchanged = True
-				need_recharge_rebate_log.save()
+			# if is_self_order:
+			# 	remark = u'购物返利'
+			# else:
+			# 	remark = u'推荐返利'
+			# from eaglet.utils.resource_client import Resource
+			# params = {
+			# 	'card_number': card_number,
+			# 	'money': rebate_money,
+			# 	'remark': remark
+			# }
+			# resp = Resource.use('card_apiserver').post({
+			# 	'resource': 'card.recharged_card',
+			# 	'data': params
+			# })
+			# if resp and resp['code'] == 200:
+			print u'为%s充值%d' % (member_id, rebate_money)
+			need_recharge_rebate_log.is_exchanged = True
+			need_recharge_rebate_log.save()
 
