@@ -134,19 +134,18 @@ class Command(BaseCommand):
 				remark = u'购物返利'
 			else:
 				remark = u'推荐返利'
-			# from eaglet.utils.resource_client import Resource
-			# params = {
-			# 	'card_number': card_number,
-			# 	'money': rebate_money,
-			# 	'remark': remark
-			# }
-			# resp = Resource.use('card_apiserver').post({
-			# 	'resource': 'card.recharged_card',
-			# 	'data': params
-			# })
-			# if resp and resp['code'] == 200:
-			# 	print 'ok'
-			print u'为%s充值%d' % (member_id, rebate_money)
-			need_recharge_rebate_log.is_exchanged = True
-			need_recharge_rebate_log.save()
+			from eaglet.utils.resource_client import Resource
+			params = {
+				'card_number': card_number,
+				'money': rebate_money,
+				'remark': remark
+			}
+			resp = Resource.use('card_apiserver').post({
+				'resource': 'card.recharged_card',
+				'data': params
+			})
+			if resp and resp['code'] == 200:
+				print u'为%s充值%d' % (member_id, rebate_money)
+				need_recharge_rebate_log.is_exchanged = True
+				need_recharge_rebate_log.save()
 
