@@ -144,7 +144,7 @@ def update_member_qrcode_log(user_profile, member, ticket):
 			if hasattr(member, 'old_status') and member.old_status == NOT_SUBSCRIBED:
 				only_create_friend = True
 			if member and member.is_new and MemberQrcodeLog.objects.filter(member_id=member.id).count() == 0:
-				if member_qrcode.owner.username == 'kftengyi': #腾易微众定制需求
+				if member_qrcode.owner.username == 'weizoommm': #腾易微众定制需求
 					print '============================'
 					print 'came in'
 					from modules.member.models import TengyiMemberRelation
