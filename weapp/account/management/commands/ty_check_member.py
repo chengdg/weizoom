@@ -1,6 +1,6 @@
 ﻿# -*- coding: utf-8 -*-
 
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from django.core.management.base import BaseCommand
 
@@ -38,7 +38,7 @@ class Command(BaseCommand):
 		orders = Order.objects.filter(webapp_user_id__in=all_webapp_user_ids)
 
 		for order in orders:
-			if order.is_first_order:
+			if order.is_first_order and order.status == 5 and order.origin_order_id <= 0:
 				if order.final_price >= FIRST_LIMIT:
 					member_id = webapp_user_id2member_id[order.webapp_user_id]
 					webapp_id = member_id2webapp_id[member_id]
@@ -89,10 +89,10 @@ class Command(BaseCommand):
 						'resource': 'card.membership_card',
 						'data': {
 							'card_condition': json.dumps({
-								'weizoom_card_batch_id': 1,
+								'weizoom_card_batch_id': 32,
 								'sold_time': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
 								'member_id': member_id,
-								'phone_num': ''
+								'phone_num': '13111111111'
 							})
 						}
 					})
@@ -102,3 +102,22 @@ class Command(BaseCommand):
 						tengyi_member.card_number = card_number
 						tengyi_member.save()
 						print 'created card', card_number
+
+					if tengyi_member.level == 1:
+						cycle = range(6)
+					else:
+						cycle = range(12)
+					for i in cycle:
+						recommend_member_rebate_money = 10
+						if i > 5:
+							recommend_member_rebate_money = 20
+
+						start_time = tengyi_member.created_at.date() + timedelta(30 * i)
+						end_time = start_time + timedelta(30)
+
+						TengyiMemberRebateCycle.objects.create(
+							member_id=tengyi_member.member_id,
+							start_time=start_time,
+							end_time=end_time,
+							recommend_member_rebate_money=recommend_member_rebate_money,
+						)
