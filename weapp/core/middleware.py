@@ -763,6 +763,12 @@ class Redirect2HermesMiddleware(object):
 				else:
 					new_url = settings.HERMES_HOST + new_path
 
+				# 只开放给测试账号
+				test_account_usernames = ['devceshi', 'caiwuceshi']
+				if request.user.username not in test_account_usernames:
+					return
+				# 只开放给测试账号
+
 				return HttpResponseRedirect(new_url)
 
 		else:
