@@ -267,7 +267,7 @@ W.view.mall.ProductListView = Backbone.View.extend({
                 $el: $link,
                 width:420,
                 height:55,
-                position:'right-middle',
+                position:'top',
                 isTitle: false,
                 msg: msg,
                 confirm: updateAction

@@ -12,9 +12,9 @@ from modules.member.models import *
 FIRST_LIMIT = 50.0
 SECOND_LIMIT = 100.0
 
-weizoom_card_batch_id = 32
+weizoom_card_batch_id = 362
 weizoom_card_batch_name = u'腾易星级会员卡'
-tengyi_user_id = 676
+tengyi_user_id = 1346
 
 class Command(BaseCommand):
 	help = ''
@@ -27,6 +27,7 @@ class Command(BaseCommand):
 		"""
 		relations = TengyiMemberRelation.objects.all()
 		member_ids = [r.member_id for r in relations]
+		member_id_exists = [t.member_id for t in TengyiMember.objects.filter(member_id__in=member_ids)]
 		member_id2rec_id = {t.member_id: t.recommend_by_member_id for t in relations}
 
 		webapp_users = WebAppUser.objects.filter(member_id__in=member_ids)
@@ -42,11 +43,11 @@ class Command(BaseCommand):
 		orders = Order.objects.filter(webapp_user_id__in=all_webapp_user_ids)
 
 		for order in orders:
-			if order.is_first_order and order.status == 5 and order.origin_order_id <= 0:
+			member_id = webapp_user_id2member_id[order.webapp_user_id]
+			webapp_id = member_id2webapp_id[member_id]
+			recommend_by_member_id = member_id2rec_id[member_id]
+			if member_id not in member_id_exists and order.is_first_order and order.status == 5 and order.origin_order_id <= 0:
 				if order.final_price >= FIRST_LIMIT:
-					member_id = webapp_user_id2member_id[order.webapp_user_id]
-					webapp_id = member_id2webapp_id[member_id]
-					recommend_by_member_id = member_id2rec_id[member_id]
 					if order.final_price >= SECOND_LIMIT:
 						print 'two star'
 						tengyi_member = TengyiMember.objects.create(
