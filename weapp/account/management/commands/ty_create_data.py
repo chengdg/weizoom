@@ -92,43 +92,43 @@ class Command(BaseCommand):
 		member = Member.objects.create(grade=grade,token=10,username_hexstr='会员1')
 		member1 = member
 		webapp_user = WebAppUser.objects.create(token=10,webapp_id='0',member_id=member.id)
-		order = Order.objects.create(webapp_user_id=webapp_user.id,order_id='00001', status=5,final_price=10)
-		order.created_at='2017-01-08 08:08:08'
+		order = Order.objects.create(webapp_user_id=webapp_user.id,order_id='00001', status=5,final_price=120)
+		order.created_at='2017-06-15 08:08:08'
 		order.save()
 		l = OrderStatusLog.objects.create(order_id=order.order_id,from_status=0,to_status=2,remark='')
-		l.created_at='2017-01-08 08:08:08'
+		l.created_at='2017-06-15 08:08:08'
 		l.save()
 		l = OrderStatusLog.objects.create(order_id=order.order_id,from_status=0,to_status=5,remark='')
 		l.created_at='2017-01-16 08:08:08'
 		l.save()
-		order = Order.objects.create(webapp_user_id=webapp_user.id,order_id='00002', status=3,final_price=90)
-		order.created_at='2017-01-19 08:08:08'
+		order = Order.objects.create(webapp_user_id=webapp_user.id,order_id='00002', status=3,final_price=100)
+		order.created_at='2017-06-28 08:08:08'
 		order.save()
 		l = OrderStatusLog.objects.create(order_id=order.order_id,from_status=0,to_status=2,remark='')
-		l.created_at='2017-01-19 08:08:08'
+		l.created_at='2017-06-28 08:08:08'
 		l.save()
 		l = OrderStatusLog.objects.create(order_id=order.order_id,from_status=0,to_status=3,remark='')
 		l.created_at='2017-01-20 08:08:08'
 		l.save()
 		order = Order.objects.create(webapp_user_id=webapp_user.id,order_id='00003', status=7,final_price=30)
-		order.created_at='2017-01-20 08:08:08'
+		order.created_at='2017-07-20 08:08:08'
 		order.save()
 		l = OrderStatusLog.objects.create(order_id=order.order_id,from_status=0,to_status=2,remark='')
-		l.created_at='2017-01-20 08:08:08'
+		l.created_at='2017-07-20 08:08:08'
 		l.save()
 		l = OrderStatusLog.objects.create(order_id=order.order_id,from_status=0,to_status=7,remark='')
 		l.created_at='2017-01-22 08:08:08'
 		l.save()
-		order = Order.objects.create(webapp_user_id=webapp_user.id,order_id='00004', status=4,final_price=90)
-		order.created_at='2017-01-21 08:08:08'
+		order = Order.objects.create(webapp_user_id=webapp_user.id,order_id='00004', status=4,final_price=100)
+		order.created_at='2017-07-21 08:08:08'
 		order.save()
 		l = OrderStatusLog.objects.create(order_id=order.order_id,from_status=0,to_status=2,remark='')
-		l.created_at='2017-01-21 08:08:08'
+		l.created_at='2017-07-21 08:08:08'
 		l.save()
 		l = OrderStatusLog.objects.create(order_id=order.order_id,from_status=0,to_status=4,remark='')
 		l.created_at='2017-01-23 08:08:08'
 		l.save()
-		m = TengyiMember.objects.create(member_id=member.id,recommend_by_member_id=0,level=1)
+		m = TengyiMember.objects.create(member_id=member.id,recommend_by_member_id=0,level=2)
 		m.created_at='2017-01-01 08:08:08'
 		m.save()
 		
@@ -136,17 +136,17 @@ class Command(BaseCommand):
 		member2 = Member.objects.create(grade=grade,token=20,username_hexstr='会员2')
 		member = member2
 		webapp_user = WebAppUser.objects.create(token=20,webapp_id='0',member_id=member.id)
-		order = Order.objects.create(webapp_user_id=webapp_user.id,order_id='00005', status=5,final_price=99)
-		order.created_at='2017-01-11 08:08:08'
+		order = Order.objects.create(webapp_user_id=webapp_user.id,order_id='00005', status=5,final_price=200)
+		order.created_at='2017-06-02 08:08:08'
 		order.save()
 		l = OrderStatusLog.objects.create(order_id=order.order_id,from_status=0,to_status=2,remark='')
-		l.created_at='2017-01-11 08:08:08'
+		l.created_at='2017-06-02 08:08:08'
 		l.save()
-		order = Order.objects.create(webapp_user_id=webapp_user.id,order_id='00006', status=5,final_price=1)
-		order.created_at='2017-01-16 08:08:08'
+		order = Order.objects.create(webapp_user_id=webapp_user.id,order_id='00006', status=5,final_price=100)
+		order.created_at='2017-07-16 08:08:08'
 		order.save()
 		l = OrderStatusLog.objects.create(order_id=order.order_id,from_status=0,to_status=2,remark='')
-		l.created_at='2017-01-16 08:08:08'
+		l.created_at='2017-07-16 08:08:08'
 		l.save()
 		m = TengyiMember.objects.create(member_id=member.id,recommend_by_member_id=member1.id,level=2)
 		m.created_at='2017-01-09 08:08:08'
@@ -155,22 +155,22 @@ class Command(BaseCommand):
 		member = Member.objects.create(grade=grade,token=30,username_hexstr='会员3')
 		webapp_user = WebAppUser.objects.create(token=30,webapp_id='0',member_id=member.id)
 		order = Order.objects.create(webapp_user_id=webapp_user.id,order_id='00007', status=5,final_price=40)
-		order.created_at='2017-02-18 08:08:08'
+		order.created_at='2017-06-05 08:08:08'
 		order.save()
 		l = OrderStatusLog.objects.create(order_id=order.order_id,from_status=0,to_status=2,remark='')
-		l.created_at='2017-02-18 08:08:08'
+		l.created_at='2017-06-05 08:08:08'
 		l.save()
 		order = Order.objects.create(webapp_user_id=webapp_user.id,order_id='00008', status=3,final_price=30)
-		order.created_at='2017-02-19 08:08:08'
+		order.created_at='2017-06-15 08:08:08'
 		order.save()
 		l = OrderStatusLog.objects.create(order_id=order.order_id,from_status=0,to_status=2,remark='')
-		l.created_at='2017-02-19 08:08:08'
+		l.created_at='2017-06-15 08:08:08'
 		l.save()
 		order = Order.objects.create(webapp_user_id=webapp_user.id,order_id='00009', status=5,final_price=80)
-		order.created_at='2017-02-20 08:08:08'
+		order.created_at='2017-07-15 08:08:08'
 		order.save()
 		l = OrderStatusLog.objects.create(order_id=order.order_id,from_status=0,to_status=2,remark='')
-		l.created_at='2017-02-20 08:08:08'
+		l.created_at='2017-07-15 08:08:08'
 		l.save()
 		m = TengyiMember.objects.create(member_id=member.id,recommend_by_member_id=member1.id,level=1)
 		m.created_at='2017-01-15 08:08:08'
