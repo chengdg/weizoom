@@ -124,9 +124,9 @@ class Command(BaseCommand):
 						})
 						if resp and resp['code'] == 200:
 							batch_info = resp['data']['card_info']
-							MemberCardLog.create(
-								member_card = member_card.id,
-								reason = u"开通星级会员卡",
+							MemberCardLog.objects.create(
+								member_card = member_card,
+								reason = u"开通腾易星级会员卡",
 								price = batch_info['first_money']
 							)
 
