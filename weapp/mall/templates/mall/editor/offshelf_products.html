@@ -74,7 +74,7 @@
 {% block js %}
 {% verbatim %}
 <script id="products-view" type="text/x-jquery-tmpl">
-	{{if data.data.webapp_type == 0}}
+	{{if data.data.webapp_type == 0 || data.data.webapp_type == 3}}
 {{if !data.n_self}}
 	<ul class="nav nav-tabs mt14 ">
         <li class="xa-tab {{if !data.is_request_cps }}active{{/if}}" data-cps-value="0"><a href="javascript:void(0);">所有商品</a></li>
