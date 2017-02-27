@@ -770,7 +770,7 @@ class Redirect2HermesMiddleware(object):
 				# 	print('-----username', request.user.username, '222222222222222222222222222222')
 				# 	return
 				# # 只开放给测试账号
-
+				print('-----username',request.user.username,new_url)
 				return HttpResponseRedirect(new_url)
 
 		else:
