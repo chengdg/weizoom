@@ -313,7 +313,8 @@
 	            {{each(i, product) items}}
 				<tr data-id="${product.id}"
 					class="{{if !product.is_group_buying }}xa-selectTr{{/if}}"
-					data-is-group-buying="${product.is_group_buying}">
+					data-is-group-buying="${product.is_group_buying}"
+					data-is-cps="${product.is_cps}">
 					<td class="wui-advanced-table-sort-handler tl_important">
 						<div class="disT w">
 							<div class="imgBox disTc pr xui-imgBox">

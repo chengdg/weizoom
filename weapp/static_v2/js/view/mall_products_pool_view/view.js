@@ -173,13 +173,14 @@ W.view.mall.ProductsPoolView = Backbone.View.extend({
         var $target = $(event.currentTarget);
         var $tr = $target.parents('tr');
         var id = $tr.data('id');
+        var isCps = $tr.attr('data-is-cps');
         var product = this.table.getDataItem(id);
         var models = product.get('models');
         var $tbody = $target.parents('tbody');
         var settlementType = $tbody.attr('data-settlement');
         console.log(settlementType)
         var properties = _.pluck(models[0].property_values, 'propertyName');
-        var $node = $.tmpl(this.modelInfoTemplate, {properties: properties, models: models, settlementType: settlementType});
+        var $node = $.tmpl(this.modelInfoTemplate, {properties: properties, models: models, settlementType: settlementType, isCps: isCps});
         W.popup({
             $el: $target,
             position:'top',

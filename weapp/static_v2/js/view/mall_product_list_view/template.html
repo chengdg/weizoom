@@ -18,7 +18,15 @@
 			{{/each}}
 			<td>${model.price}</td>
 			<td>{{if (model.stock_type == 0)}}无限{{else}}${model.stocks}{{/if}}</td>
-			{{if settlementType && settlementType != 3}}<td>${model.gross_profit}(${model.gross_profit_rate}%)</td>{{else}}<td>${model.user_code}</td>{{/if}}
+			{{if settlementType && settlementType != 3}}
+			{{if isCps == 1}}
+			<td>${model.cps_gross_profit}(${model.cps_gross_profit_rate}%)</td>
+			{{else}}
+			<td>${model.gross_profit}(${model.gross_profit_rate}%)</td>
+			{{/if}}
+			{{else}}
+			<td>${model.user_code}</td>
+			{{/if}}
 		</tr>
 		{{/each}}
 	</tbody>
