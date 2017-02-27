@@ -755,11 +755,11 @@ class Redirect2HermesMiddleware(object):
 				is_weizoom_mall = False
 
 			if is_weizoom_mall:
-				if querystring_dict:
-
-					new_url = settings.HERMES_HOST + new_path + '?' + urllib.urlencode(querystring_dict)
-				else:
-					new_url = settings.HERMES_HOST + new_path
+				#url中增加token
+				from account import account_util
+				user_token = account_util.get_token_for_logined_user(request.user)
+				querystring_dict['token'] = user_token
+				new_url = settings.HERMES_HOST + new_path + '?' + urllib.urlencode(querystring_dict)
 
 				# 只开放给测试账号
 				if manager_user_profile and manager_user_profile.user_id in [968, 930]:
