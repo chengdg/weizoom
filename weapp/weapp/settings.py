@@ -708,10 +708,12 @@ HERMES_HOST = 'http://hermes.pttest.weapp.weizzz.com'
 ENABLE_HERMES = False
 
 
-if MODE == 'develop':
-    SESSION_COOKIE_DOMAIN = '.weapp.com'
-else:
-    SESSION_COOKIE_DOMAIN = '.weizoom.com'
+# if MODE == 'develop':
+#     SESSION_COOKIE_DOMAIN = '.weapp.com'
+# else:
+#     SESSION_COOKIE_DOMAIN = '.weizoom.com'
+
+
 # added by chuter
 # mail config for auto sending notify mail
 # MAIL_NOTIFY_USERNAME = u'noreply@weizoom.com'
