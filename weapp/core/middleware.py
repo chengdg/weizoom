@@ -761,13 +761,15 @@ class Redirect2HermesMiddleware(object):
 				querystring_dict['token'] = user_token
 				new_url = settings.HERMES_HOST + new_path + '?' + urllib.urlencode(querystring_dict)
 
-				# 只开放给测试账号
-				print('-----username',request.user.username,request.user.id,manager_user_profile.user_id)
-				if manager_user_profile and manager_user_profile.user_id in [968, 930, 216]:
-					pass
-				else:
-					return
-				# 只开放给测试账号
+				# # 只开放给测试账号
+				# print('-----username',request.user.username,request.user.id,manager_user_profile.user_id)
+				# if manager_user_profile and manager_user_profile.user_id in [968, 930, 216]:
+				# 	print('-----username', request.user.username, '111111111111111111')
+				# 	pass
+				# else:
+				# 	print('-----username', request.user.username, '222222222222222222222222222222')
+				# 	return
+				# # 只开放给测试账号
 
 				return HttpResponseRedirect(new_url)
 
