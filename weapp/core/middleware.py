@@ -747,9 +747,10 @@ class Redirect2HermesMiddleware(object):
 		# 	is_use_rebuilt_path = False
 
 			# 判断是自营平台
+			manager_user_profile = None
 			if hasattr(request, 'manager'):
-				user_profile = request.manager.get_profile()
-				is_weizoom_mall = user_profile.webapp_type == 1
+				manager_user_profile = request.manager.get_profile()
+				is_weizoom_mall = manager_user_profile.webapp_type == 1
 			else:
 				is_weizoom_mall = False
 
@@ -761,8 +762,9 @@ class Redirect2HermesMiddleware(object):
 					new_url = settings.HERMES_HOST + new_path
 
 				# 只开放给测试账号
-				test_account_usernames = ['devceshi', 'caiwuceshi']
-				if request.user.username not in test_account_usernames:
+				if manager_user_profile and manager_user_profile.user_id in [968, 930]:
+					pass
+				else:
 					return
 				# 只开放给测试账号
 
