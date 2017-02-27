@@ -690,9 +690,6 @@ class Redirect2HermesMiddleware(object):
 		if not settings.ENABLE_HERMES:
 			return
 
-		if "Firefox" in request.META['HTTP_USER_AGENT']:
-			return
-
 		rebuilt_path2new_path = {
 			'/mall2/order/': '/order/order/',
 			'/mall2/order_list/': '/order/orders',
