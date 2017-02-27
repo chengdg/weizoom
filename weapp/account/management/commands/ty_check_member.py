@@ -46,7 +46,7 @@ class Command(BaseCommand):
 			member_id = webapp_user_id2member_id[order.webapp_user_id]
 			webapp_id = member_id2webapp_id[member_id]
 			recommend_by_member_id = member_id2rec_id[member_id]
-			if member_id not in member_id_exists and order.is_first_order and order.status == 5 and order.origin_order_id <= 0:
+			if member_id not in member_id_exists and order.is_first_order and order.status >= ORDER_STATUS_PAYED_NOT_SHIP and order.origin_order_id <= 0:
 				if order.final_price >= FIRST_LIMIT:
 					if order.final_price >= SECOND_LIMIT:
 						print 'two star'
