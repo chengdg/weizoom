@@ -762,7 +762,7 @@ class Redirect2HermesMiddleware(object):
 				new_url = settings.HERMES_HOST + new_path + '?' + urllib.urlencode(querystring_dict)
 
 				# 只开放给测试账号
-				if manager_user_profile and manager_user_profile.user_id in [968, 930]:
+				if manager_user_profile and manager_user_profile.user_id in [968, 930, 216]:
 					pass
 				else:
 					return
