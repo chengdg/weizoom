@@ -38,6 +38,27 @@ class Command(BaseCommand):
 				level = level
 			)
 			print 'create {} star member'.format(level)
+			one_tag_webapp_ids = [m.webapp_id for m in MemberTag.objects.filter(name=u'一星会员')]
+			two_tag_webapp_ids = [m.webapp_id for m in MemberTag.objects.filter(name=u'二星会员')]
+
+			use_tag_webapp_ids = one_tag_webapp_ids if int(level) == 1 else two_tag_webapp_ids
+			tag_name = u'一星会员' if int(level) == 1 else u'二星会员'
+
+			webapp_id = WebAppUser.objects.filter(member_id=member_id).first().id
+
+			if webapp_id not in use_tag_webapp_ids:
+				member_tag = MemberTag.objects.create(
+					webapp_id=webapp_id,
+					name=tag_name
+				)
+				print 'create member_tag'
+			else:
+				member_tag = MemberTag.objects.filter(webapp_id=webapp_id, name=tag_name).first()
+
+			if member_tag and MemberHasTag.objects.filter(member_id=member_id,
+														  member_tag_id=member_tag.id).count() == 0:
+				print 'add to {} star tag'.format(level)
+				MemberHasTag.objects.create(member_id=member_id, member_tag_id=member_tag.id)
 
 		if tengyi_member.card_number == '':
 			# 创建卡
