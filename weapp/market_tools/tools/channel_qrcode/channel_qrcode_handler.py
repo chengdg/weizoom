@@ -91,9 +91,20 @@ class ChannelQrcodeHandler(MessageHandler):
 				create_new_channel_qrcode_has_memeber(user_profile, context.member, ticket, member.is_new)
 			return None
 
-		if ChannelQrcodeSettings.objects.filter(ticket=ticket, owner_id=user_profile.user_id).count() > 0:
-			channel_qrcode = ChannelQrcodeSettings.objects.filter(ticket=ticket, owner_id=user_profile.user_id)[0]
-			create_channel_qrcode_has_memeber_restructure(channel_qrcode, user_profile, context.member, ticket, member.is_new)
+		channel_qrcode = ChannelQrcodeSettings.objects.filter(ticket=ticket, owner_id=user_profile.user_id).first()
+		if channel_qrcode:
+			if user_profile.user.username in ['kftengyi'] and channel_qrcode.bing_member_id > 0: #腾易微众定制需求
+				from modules.member.models import TengyiMemberRelation
+				if TengyiMemberRelation.objects.filter(member_id=member.id).count() <= 0:
+					print '============================'
+					print 'TengyiMemberRelation recoding by channel_qrcode'
+					print '============================'
+					TengyiMemberRelation.objects.create(
+						member_id=member.id,
+						recommend_by_member_id=channel_qrcode.bing_member_id,
+					)
+			else:
+				create_channel_qrcode_has_memeber_restructure(channel_qrcode, user_profile, context.member, ticket, member.is_new)
 			msg_type, detail = get_response_msg_info_restructure(channel_qrcode, user_profile)
 			if msg_type != None:
 				#from_weixin_user = self._get_from_weixin_user(message)
