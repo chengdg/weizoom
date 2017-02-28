@@ -2187,7 +2187,7 @@ class OrderCardInfo(models.Model):
 ########################################################################
 class OrderOperationLog(models.Model):
 	order_id = models.CharField(max_length=50)
-	remark = models.TextField()
+	remark = models.CharField(max_length=128, default='')
 	action = models.CharField(max_length=50)
 	operator = models.CharField(max_length=50)
 	created_at = models.DateTimeField(auto_now_add=True)  # 添加时间
@@ -2205,7 +2205,7 @@ class OrderStatusLog(models.Model):
 	order_id = models.CharField(max_length=50)
 	from_status = models.IntegerField()
 	to_status = models.IntegerField()
-	remark = models.TextField()
+	remark = models.CharField(max_length=128, default='')
 	operator = models.CharField(max_length=50)
 	created_at = models.DateTimeField(auto_now_add=True)  # 添加时间
 
