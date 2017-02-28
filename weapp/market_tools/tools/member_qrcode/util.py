@@ -146,11 +146,11 @@ def update_member_qrcode_log(user_profile, member, ticket):
 			if member and member.is_new and MemberQrcodeLog.objects.filter(member_id=member.id).count() == 0:
 				# 腾易微众定制需求
 				from modules.member.models import TengyiMember
-				if member_qrcode.owner.username == 'kftengyi' and TengyiMember.objects.filter(member_id=MemberQrcode.member.id).first(): #判断二维码拥有者是否星级会员
+				if member_qrcode.owner.username in ['kftengyi'] and TengyiMember.objects.filter(member_id=MemberQrcode.member.id).first(): #判断二维码拥有者是否星级会员
 					from modules.member.models import TengyiMemberRelation
 					if TengyiMemberRelation.objects.filter(member_id=member.id).count() <= 0:
 						print '============================'
-						print 'TengyiMemberRelation recoding'
+						print 'TengyiMemberRelation recoding by member_qrcode'
 						print '============================'
 						TengyiMemberRelation.objects.create(
 							member_id=member.id,
