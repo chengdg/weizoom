@@ -104,8 +104,7 @@ class ChannelQrcodeHandler(MessageHandler):
 							member_id=member.id,
 							recommend_by_member_id=channel_qrcode.bing_member_id,
 						)
-			else:
-				create_channel_qrcode_has_memeber_restructure(channel_qrcode, user_profile, context.member, ticket, member.is_new)
+			create_channel_qrcode_has_memeber_restructure(channel_qrcode, user_profile, context.member, ticket, member.is_new)
 			msg_type, detail = get_response_msg_info_restructure(channel_qrcode, user_profile)
 			if msg_type != None:
 				#from_weixin_user = self._get_from_weixin_user(message)
