@@ -331,7 +331,7 @@ W.view.mall.VirtualProductCodeView = Backbone.View.extend({
 		}
 		var models = product['models'];
 		var properties = _.pluck(models[0].property_values, 'propertyName');
-		var $node = $.tmpl(this.modelInfoTemplate, {properties: properties, models: models});
+		var $node = $.tmpl(this.modelInfoTemplate, {properties: properties, models: models, settlementType: 0});
 		W.popup({
 			$el: $target,
 			position:'top',
