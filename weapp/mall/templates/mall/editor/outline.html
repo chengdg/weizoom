@@ -1,5 +1,34 @@
 {% extends "content_base_v2.html" %}
-
+{% block css %}
+<style type="text/css">
+	#spin-wrapper {
+		display: none!important;
+	}
+	#outline-spin-wrapper {
+	    background-color: rgba(0, 0, 0, 0.3);
+	    -webkit-border-radius: 8px;
+	    -moz-border-radius: 8px;
+	    border-radius: 8px;
+	    -webkit-box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.25);
+	    -moz-box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.25);
+	    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.25);
+	    color: #FFF;
+	    font-size: 14px;
+	    height: 120px;
+	    left: 50%;
+	    position: fixed;
+	    top: 200px;
+	    width: 120px;
+	    z-index: 10001;
+	    padding: 10px;
+	}
+	#outline-spinner {
+		float: left;
+		height: 80px;
+		width: 100px;
+	}
+</style>
+{% endblock %}
 {% block content-panel %}
 <div class="xui-mall-outlinePage xui-wepage-orderSummaryPage">
 	<div class="relative">
@@ -10,9 +39,15 @@
 			</li>
 			<li class="active">统计概况</li>
 		</ul>
+	</div>
+	<div class="xui-data-container xa-data-container">
 		<div class="xui-title">
 			<div class="xui-i-block"></div>
 			<span class="ml5">经营概况</span>
+		</div>
+		<div id="outline-spin-wrapper">
+			<div id="outline-spinner"></div>
+			<div id="outline-spin-hint" class="ml10">操作进行中...</div>
 		</div>
 		<table class="xui-summary"  style="height:103px;">
 			<tr>
@@ -20,78 +55,168 @@
 				<td>
 					<div class="xui-i-wrap">
 						<span class="xui-i-money" id="unred_message_count">
-							<a href="/new_weixin/realtime_messages/?status=0" target="_blank">{{unread_message_count}}</a>
+							<a href="/new_weixin/realtime_messages/?status=0" target="_blank">0</span></a>
 						</span><br/>
 						<span class="xui-i-name">未读消息</span>
 					</div>
 				</td>
 				<td>
 					<div class="xui-i-wrap">
-						<span class="xui-i-money" id="new_member_count">{{new_member_count}}</span><br/>
+						<span class="xui-i-money" id="new_member_count">0</span><br/>
 						<span class="xui-i-name">昨日新增会员</span>
 					</div>
 				</td>
 				<td>
 					<div class="xui-i-wrap">
-						<span class="xui-i-money" id="order_count">{{order_count}}</span><br/>
+						<span class="xui-i-money" id="order_count">0</span><br/>
 						<span class="xui-i-name">昨日下单数</span>
 					</div>
 				</td>
 				<td>
 					<div class="xui-i-wrap">
-						<span class="xui-i-money" id="order_money">{{order_money}}</span><br/>
+						<span class="xui-i-money" id="order_money">0</span><br/>
 						<span class="xui-i-name">昨日成交额</span>
 					</div>
 				</td>
 				<td>
 					<div class="xui-i-wrap">
-						<span class="xui-i-money" id="subscribed_member_count">{{subscribed_member_count}}</span><br/>
+						<span class="xui-i-money" id="subscribed_member_count">0</span><br/>
 						<span class="xui-i-name">关注会员</span>
 					</div>
 				</td>
 			</tr>
 		</table>
 		<div class="xui-charWrap pr xui-shopTips">
-        	<div class="xui-i-title">
-        		<span class="ml10">店铺提醒</span>
-        	</div>
-        	<ul class="xui-tips">
-        		<li>
+	    	<div class="xui-i-title">
+	    		<span class="ml10">店铺提醒</span>
+	    	</div>
+	    	<ul class="xui-tips">
+	    		<li>
 	        		<span class="xui-item">商品管理</span>
-	        		<a href="/mall2/product_list/?shelve_type=1" target="_blank">在售商品<span class="xui-numTip">（{{shop_hint_data.onshelf_product_count}}）</span></a>
-	        		<a href="/mall2/product_list/?shelve_type=1&high_stocks=0" target="_blank">库存不足商品<span class="xui-numTip">（{{shop_hint_data.sellout_product_count}}）</span></a>
-        		</li>
-        		<li>
+	        		<a href="/mall2/product_list/?shelve_type=1" target="_blank">在售商品<span class="xui-numTip">（0）</span></a>
+	        		<a href="/mall2/product_list/?shelve_type=1&high_stocks=0" target="_blank">库存不足商品<span class="xui-numTip">（0）</span></a>
+	    		</li>
+	    		<li>
 	        		<span class="xui-item">订单管理</span>
-	        		<a href="/mall2/order_list/?order_status=3" target="_blank">待发货<span class="xui-numTip">（{{shop_hint_data.to_be_shipped_order_count}}）</span></a>
-	        		<a href="/mall2/order_list/?order_status=6" target="_blank">退款中<span class="xui-numTip">（{{shop_hint_data.refunding_order_count}}）</span></a>
-        		</li>
-        		<li>
+	        		<a href="/mall2/order_list/?order_status=3" target="_blank">待发货<span class="xui-numTip">（0）</span></a>
+	        		<a href="/mall2/order_list/?order_status=6" target="_blank">退款中<span class="xui-numTip">（0）</span></a>
+	    		</li>
+	    		<li>
 	        		<span class="xui-item">即将到期的活动</span>
-	        		<a href="/mall2/flash_sale_list/?endDate={{tomorrow}}&status=2" target="_blank">限时抢购<span class="xui-numTip">（{{shop_hint_data.flash_sale_count}}）</span></a>
-	        		<a href="/mall2/premium_sale_list/?endDate={{tomorrow}}&status=2" target="_blank">买赠<span class="xui-numTip">（{{shop_hint_data.premium_sale_count}}）</span></a>
-	        		<a href="/mall2/integral_sales_list/?endDate={{tomorrow}}&status=2" target="_blank">积分应用<span class="xui-numTip">（{{shop_hint_data.integral_sale_count}}）</span></a>
-	        		<a href="/mall2/coupon_rule_list/?endDate={{tomorrow}}&status=2" target="_blank">优惠券<span class="xui-numTip">（{{shop_hint_data.coupon_count}}）</span></a>
-	        		<a href="/apps/red_envelope/red_envelope_rule_list/?endDate={{tomorrow}}&status=1" target="_blank">分享红包<span class="xui-numTip">（{{shop_hint_data.red_envelope_count}}）</span></a>
-        		</li>
-        	</ul>
-        </div>
-		<div class="xui-charWrap pr">
-        	<div class="xui-i-title">
-        		<div class="xui-i-block"></div>
-        		<span class="ml5">购买趋势</span>
-        	</div>
-        	<div  class="xui-ChartBody pt20 pb30" id="purchaseTrend" data-ui-role="echart" data-app="mall2" data-api="outline" data-args='{"type":"purchase_trend"}'>
-			 </div>
-        </div>
-
+	        		<a href="/mall2/flash_sale_list/?endDate={{tomorrow}}&status=2" target="_blank">限时抢购<span class="xui-numTip">（0）</span></a>
+	        		<a href="/mall2/premium_sale_list/?endDate={{tomorrow}}&status=2" target="_blank">买赠<span class="xui-numTip">（0）</span></a>
+	        		<a href="/mall2/integral_sales_list/?endDate={{tomorrow}}&status=2" target="_blank">积分应用<span class="xui-numTip">（0）</span></a>
+	        		<a href="/mall2/coupon_rule_list/?endDate={{tomorrow}}&status=2" target="_blank">优惠券<span class="xui-numTip">（0）</span></a>
+	        		<a href="/apps/red_envelope/red_envelope_rule_list/?endDate={{tomorrow}}&status=1" target="_blank">分享红包<span class="xui-numTip">（0）</span></a>
+	    		</li>
+	    	</ul>
+	    </div>
+	</div>
+	<div class="xui-charWrap pr">
+    	<div class="xui-i-title">
+    		<div class="xui-i-block"></div>
+    		<span class="ml5">购买趋势</span>
+    	</div>
+    	<div class="xui-ChartBody pt20 pb30" id="purchaseTrend" data-ui-role="echart" data-app="mall2" data-api="outline" data-args='{"type":"purchase_trend"}'>
+		 </div>
+    </div>
 </div>
 {% endblock %}
 
-
 {% block js %}
+
+{% verbatim %}
+<script id="outline-data-tmpl" type="text/x-handlebars-template">
+	<div class="xui-title">
+		<div class="xui-i-block"></div>
+		<span class="ml5">经营概况</span>
+	</div>
+	<table class="xui-summary"  style="height:103px;">
+		<tr>
+			<td class="xui-i-left" style="height:103px;"><p class="xui-i-title">概况</p></td>
+			<td>
+				<div class="xui-i-wrap">
+					<span class="xui-i-money" id="unred_message_count">
+						<a href="/new_weixin/realtime_messages/?status=0" target="_blank">{{unread_message_count}}</a>
+					</span><br/>
+					<span class="xui-i-name">未读消息</span>
+				</div>
+			</td>
+			<td>
+				<div class="xui-i-wrap">
+					<span class="xui-i-money" id="new_member_count">{{new_member_count}}</span><br/>
+					<span class="xui-i-name">昨日新增会员</span>
+				</div>
+			</td>
+			<td>
+				<div class="xui-i-wrap">
+					<span class="xui-i-money" id="order_count">{{order_count}}</span><br/>
+					<span class="xui-i-name">昨日下单数</span>
+				</div>
+			</td>
+			<td>
+				<div class="xui-i-wrap">
+					<span class="xui-i-money" id="order_money">{{order_money}}</span><br/>
+					<span class="xui-i-name">昨日成交额</span>
+				</div>
+			</td>
+			<td>
+				<div class="xui-i-wrap">
+					<span class="xui-i-money" id="subscribed_member_count">{{subscribed_member_count}}</span><br/>
+					<span class="xui-i-name">关注会员</span>
+				</div>
+			</td>
+		</tr>
+	</table>
+	<div class="xui-charWrap pr xui-shopTips">
+    	<div class="xui-i-title">
+    		<span class="ml10">店铺提醒</span>
+    	</div>
+    	<ul class="xui-tips">
+    		<li>
+        		<span class="xui-item">商品管理</span>
+        		<a href="/mall2/product_list/?shelve_type=1" target="_blank">在售商品<span class="xui-numTip">（{{shop_hint_data.onshelf_product_count}}）</span></a>
+        		<a href="/mall2/product_list/?shelve_type=1&high_stocks=0" target="_blank">库存不足商品<span class="xui-numTip">（{{shop_hint_data.sellout_product_count}}）</span></a>
+    		</li>
+    		<li>
+        		<span class="xui-item">订单管理</span>
+        		<a href="/mall2/order_list/?order_status=3" target="_blank">待发货<span class="xui-numTip">（{{shop_hint_data.to_be_shipped_order_count}}）</span></a>
+        		<a href="/mall2/order_list/?order_status=6" target="_blank">退款中<span class="xui-numTip">（{{shop_hint_data.refunding_order_count}}）</span></a>
+    		</li>
+    		<li>
+        		<span class="xui-item">即将到期的活动</span>
+        		<a href="/mall2/flash_sale_list/?endDate={{tomorrow}}&status=2" target="_blank">限时抢购<span class="xui-numTip">（{{shop_hint_data.flash_sale_count}}）</span></a>
+        		<a href="/mall2/premium_sale_list/?endDate={{tomorrow}}&status=2" target="_blank">买赠<span class="xui-numTip">（{{shop_hint_data.premium_sale_count}}）</span></a>
+        		<a href="/mall2/integral_sales_list/?endDate={{tomorrow}}&status=2" target="_blank">积分应用<span class="xui-numTip">（{{shop_hint_data.integral_sale_count}}）</span></a>
+        		<a href="/mall2/coupon_rule_list/?endDate={{tomorrow}}&status=2" target="_blank">优惠券<span class="xui-numTip">（{{shop_hint_data.coupon_count}}）</span></a>
+        		<a href="/apps/red_envelope/red_envelope_rule_list/?endDate={{tomorrow}}&status=1" target="_blank">分享红包<span class="xui-numTip">（{{shop_hint_data.red_envelope_count}}）</span></a>
+    		</li>
+    	</ul>
+    </div>
+</script>
+{% endverbatim %}
+
 <script type="text/javascript">
 $(document).ready(function() {
+	var spinner = new Spinner(W.BIG_SPIN_OPTS);
+	spinner.spin($('#outline-spinner')[0]);
+	W.getApi().call({
+		app: 'mall2',
+		resource: 'outline',
+		method: 'get',
+		args: {
+			'get_outline_data': 1
+		},
+		success: function(data) {
+			var template = Handlebars.compile($("#outline-data-tmpl").html());					
+			var html = template(data);
+			$('.xui-data-container').html(html);
+		},
+		error: function(resp) {
+			console.log('ajax error!');
+		}
+	});
+
 	$('.xui-numTip').each(function(index, el) {
 		if($(this).text() === "（0）"){
 			$(this).css('color', '#666');

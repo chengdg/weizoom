@@ -293,7 +293,7 @@ W.view.mall.PromotionSelectProductView = Backbone.View.extend({
 		xlog(models);
 		var properties = _.pluck(models[0].property_values, 'propertyName');
 		xlog(properties);
-		var $node = $.tmpl(this.modelInfoTemplate, {properties: properties, models: models});
+		var $node = $.tmpl(this.modelInfoTemplate, {properties: properties, models: models, settlementType: 0});
 		W.popup({
 			$el: $target,
 			position:'top',
