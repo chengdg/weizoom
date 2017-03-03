@@ -165,6 +165,7 @@
 
 <script type="text/javascript">
 $(document).ready(function() {
+	W.getLoadingView().show()
 	W.getApi().call({
 		app: 'mall2',
 		resource: 'outline',
@@ -175,7 +176,8 @@ $(document).ready(function() {
 		success: function(data) {
 			var template = Handlebars.compile($("#outline-data-tmpl").html());					
 			var html = template(data);
-			$('.xui-data-container').html(html);			
+			$('.xui-data-container').html(html);
+			W.getLoadingView().hide();		
 		},
 		error: function(resp) {
 			console.log('ajax error!')
