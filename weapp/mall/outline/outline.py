@@ -93,7 +93,7 @@ class Outline(resource.Resource):
                 'unread_message_count': get_unread_message_count(request.manager),
                 'new_member_count': new_member_count,
                 'order_count': order_count, 
-                'order_money': order_money,
+                'order_money': round(order_money, 2),
                 'subscribed_member_count': subscribed_member_count,
                 'shop_hint_data': _get_shop_hint_data(request),
                 'tomorrow': dateutil.get_tomorrow_str('today')
