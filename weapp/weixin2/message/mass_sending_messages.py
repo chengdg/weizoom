@@ -239,7 +239,7 @@ class MassSendingMessages(resource.Resource):
             for member_id in member_ids.split('|'):
                 if len(member_id) > 0:
                     id_array.append(int(member_id))
-        elif ids and ids != '' and ids != 'undefined' and ids != '[]':
+        elif ids and ids != '' and ids != 'undefined' and ids != '[]' and ids != '[""]':
             is_from_fans_list = True
             try:
                 for member_id in json.loads(ids):
