@@ -29,7 +29,8 @@ from custom_message import build_custom_message_json_str, TextCustomMessage
 		   "mpnews":{
 		      "media_id":"123dsdajkasd231jhksad"
 		   },
-		    "msgtype":"mpnews"
+		    "msgtype":"mpnews",
+		    "send_ignore_reprint": 1
 		}
 	   (2) 文本
 		{
@@ -51,6 +52,7 @@ class MassMessage(object):
 	
 class NewsMessage(MassMessage):
 	MSGTYPE = 'mpnews'
+	IGNORE = 'send_ignore_reprint'
 			
 	def __init__(self, openid_list, media_id):
 		if media_id == None or media_id == '':
@@ -60,9 +62,10 @@ class NewsMessage(MassMessage):
 
 		self.openid_list = openid_list
 		self.media_id = media_id
+		self.send_ignore_reprint = 1 #原创校验，0判定为非原创时禁止 1判定为非原创时允许
 
 	def get_message_json_str(self):
-		return json.dumps({TOUSER : self.openid_list, TYPE : self.MSGTYPE, self.MSGTYPE: {MEDIA_ID: self.media_id}})
+		return json.dumps({TOUSER : self.openid_list, TYPE : self.MSGTYPE, self.MSGTYPE: {MEDIA_ID: self.media_id}, self.IGNORE: self.send_ignore_reprint})
 
 class TextMessage(MassMessage):
 	MSGTYPE = 'text'
