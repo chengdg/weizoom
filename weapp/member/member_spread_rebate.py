@@ -27,7 +27,8 @@ class MemberSpreadRebate(resource.Resource):
 		member_id = request.GET.get('member_id')
 
 		rebate_type = request.GET.get('rebate_type', 'self')
-		month = int(request.GET.get('month', datetime.now().month))
+		cur_month = datetime.now().month
+		month = int(request.GET.get('month', cur_month))
 
 		cur_month_rebate_member_count = 0
 		cur_month_rebate_money = 0
@@ -67,6 +68,7 @@ class MemberSpreadRebate(resource.Resource):
 		response.data = {
 			'cur_month_rebate_member_count': cur_month_rebate_member_count,
 			'cur_month_rebate_money': cur_month_rebate_money,
+			'cur_month': month,
 			'items': items,
 			'sortAttr': sort_attr,
 			'pageinfo': paginator.to_dict(pageinfo),
