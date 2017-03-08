@@ -20,8 +20,8 @@ class MemberSpreadRebate(resource.Resource):
 
 	@login_required
 	def api_get(request):
-		cur_page = request.GET.get('page', 1)
-		count_per_page = request.GET.get('count_per_page', COUNT_PER_PAGE)
+		cur_page = int(request.GET.get('page', 1))
+		count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
 		sort_attr = request.GET.get('sort_attr', '-id')
 
 		member_id = request.GET.get('member_id')

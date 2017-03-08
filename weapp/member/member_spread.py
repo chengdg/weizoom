@@ -31,11 +31,31 @@ class MemberSpread(resource.Resource):
 
 	@login_required
 	def api_get(request):
-		cur_page = request.GET.get('page', 1)
-		count_per_page = request.GET.get('count_per_page', COUNT_PER_PAGE)
+		cur_page = int(request.GET.get('page', 1))
+		count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
 		sort_attr = request.GET.get('sort_attr', '-id')
 
-		ty_members = TengyiMember.objects.all().order_by(sort_attr)
+		webapp_id = request.user_profile.webapp_id
+
+		name = request.GET.get('name')
+		level = int(request.GET.get('level'))
+		start_time = request.GET.get('start_time')
+		end_time = request.GET.get('end_time')
+
+		ty_members = TengyiMember.objects.all()
+		if name:
+			hexstr = byte_to_hex(name)
+			member_ids = [m.id for m in Member.objects.filter(webapp_id=webapp_id, username_hexstr__contains=hexstr)]
+			ty_members = ty_members.filter(member_id__in=member_ids)
+
+		if level in [1,2]:
+			ty_members = ty_members.filter(level=level)
+
+		if start_time and end_time:
+			ty_members = ty_members.filter(created_at__range=[start_time, end_time])
+
+		ty_members = ty_members.order_by(sort_attr)
+
 		member_ids = [ty.member_id for ty in ty_members]
 		member_id2info = {m.id: m for m in Member.objects.filter(id__in=member_ids)}
 
