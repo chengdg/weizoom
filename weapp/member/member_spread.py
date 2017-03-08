@@ -57,8 +57,8 @@ class MemberSpread(resource.Resource):
 				member_id2order_info[member_id]['cash_money'] += order.final_price
 
 		ty_member_id2spread_count = {}
-		for ty_member in ty_members:
-			re_by_id = ty_member.recommend_by_member_id
+		for relation in TengyiMemberRelation.objects.filter(recommend_by_member_id__in=member_ids):
+			re_by_id = relation.recommend_by_member_id
 			if not ty_member_id2spread_count.has_key(re_by_id):
 				ty_member_id2spread_count[re_by_id] = 1
 			else:
@@ -74,11 +74,12 @@ class MemberSpread(resource.Resource):
 				'member_name': member_id2info[member_id].username_for_html,
 				'member_icon': member_id2info[member_id].user_icon,
 				'level': ty_member.level,
-				'level_text': u'一星会员' if ty_member.level == 1 else u'二星会员',
+				'level_text': u'一星' if ty_member.level == 1 else u'二星',
 				'recommend_by': member_id2info[ty_member.recommend_by_member_id].username_for_html,
 				'spread_count': ty_member_id2spread_count.get(member_id, 0),
 				'order_money': member_id2order_info[member_id]['order_money'],
 				'cash_money': member_id2order_info[member_id]['cash_money'],
+				'created_at': ty_member.created_at.strftime('%Y/%m/%d')
 			})
 
 		response = create_response(200)

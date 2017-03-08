@@ -6,3 +6,4 @@ import member_tags
 import update_member_tag_or_grade
 import member_qrcode
 import member_spread
+import member_spread_relation
