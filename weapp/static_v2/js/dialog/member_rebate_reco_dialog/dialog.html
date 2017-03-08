@@ -1,0 +1,59 @@
+<script id="member-reco-rebate-dialog-tmpl-src" type="text/x-jquery-tmpl">
+    <div class="modal fade xui-memberRecoRebateDialog" id="memberRecoRebateDialog">
+        <div class="modal-dialog modal-lg" style="width: 720px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button aria-hidden="true" data-dismiss="modal" class="close" type="button"><span class="xui-closeColor" aria-hidden="true">&times;</span></button>
+                     <h3 class="modal-title">推荐返利</h3>
+                </div>
+                <div class="modal-body" style="min-height: 200px;overflow: auto;">
+                    <div
+                        data-ui-role="advanced-table"
+                        data-app="member"
+                        data-resource="member_spread_rebate"
+                        data-template-id="#member-reco-rebate-dialog-tmpl"
+                        data-enable-paginator="false"
+                        data-enable-sort="false"
+                        data-item-count-per-page="7"
+                        data-auto-load="false"
+                    ></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
+<script id="member-reco-rebate-dialog-tmpl" type="text/x-jquery-tmpl">
+<table class="table table-bordered xb-stripedTable">
+    <div style="padding-bottom: 10px;">
+        <span style="margin-right: 10px;">人数：${data.cur_month_rebate_member_count}</span>
+        <span>本月返利总金额：${data.cur_month_rebate_money}</span>
+        <div class="xui-month-box">
+            <span class="xui-month-btn xa-prev-month">上月</span>
+            <input type="input" name="month" class="xui-month-input xa-month-input" maxlength="2" value=${data.cur_month}> 月
+            <span class="xui-month-btn xa-next-month">下月</span>
+        </div>  
+    </div>
+    <thead style="background:#c8d2e5;">
+        <tr>
+            <th>会员</th>
+            <th>返利金额</th>
+        </tr>
+    </thead>
+    <tbody>
+    {{if items.length}}
+        {{each(i, member) items}}
+            <tr>
+                <td width="50" style="text-align: left;">
+                    <img src=${member.supplier_icon} style="vertical-align: middle; width: 50px; height: 50px;">
+                    <span style="padding-left: 10px;">${member.supplier_name}</span>
+                </td>
+                <td width="50">${member.rebate_money}</td>
+            </tr>
+        {{/each}}
+    {{else}}
+        <tr rowspan='2'><td colspan='2' class="h130">暂无信息</td></tr>
+    {{/if}}
+    </tbody>
+</table>
+</script>

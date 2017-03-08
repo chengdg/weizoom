@@ -1,0 +1,93 @@
+<script id="member-spread-vip-dialog-tmpl-src" type="text/x-jquery-tmpl">
+    <div class="modal fade xui-memberSpreadVipDialog" id="memberSpreadVipDialog">
+        <div class="modal-dialog modal-lg" style="width: 720px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button aria-hidden="true" data-dismiss="modal" class="close" type="button"><span class="xui-closeColor" aria-hidden="true">&times;</span></button>
+                    <a href="javascript:;" class="modal-title active xa-valid-vip" style="border-right: 2px solid #000;">星级会员</a>
+                    <a href="javascript:;" class="modal-title xa-invalid-vip">预备会员</a>
+                </div>
+
+                <div class="modal-body" style="min-height: 200px;overflow: auto;">
+                    <div
+                        data-ui-role="advanced-table"
+                        data-app="member"
+                        data-resource="member_spread_relation"
+                        data-template-id="#member-spread-vip-dialog-tmpl"
+                        data-enable-paginator="true"
+                        data-enable-sort="false"
+                        data-item-count-per-page="7"
+                        data-auto-load="false"
+                    ></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
+<script id="member-spread-vip-dialog-tmpl" type="text/x-jquery-tmpl">
+<table class="table table-bordered xb-stripedTable">
+    {{if data.type == 'valid'}}
+    <div style="padding-bottom: 10px;">
+        <span style="margin-right: 10px;">人数：${data.member_count}</span>
+        <span style="margin-right: 10px;">总消费金额：${data.total_order_money}</span>
+        <span>总现金消费金额：${data.total_cash_money}</span>
+    </div>
+    <thead style="background:#c8d2e5;">
+        <tr>
+            <th>会员</th>
+            <th>星级等级</th>
+            <th>扫码时间</th>
+            <th>成为星级会员时间</th>
+            <th>总消费金额</th>
+            <th>现金消费金额</th>
+        </tr>
+    </thead>
+    <tbody>
+    {{if items.length}}
+        {{each(i, member) items}}
+            <tr>
+                <td style="text-align: left;">
+                    <img src=${member.member_icon} style="vertical-align: middle; width: 50px; height: 50px;">
+                    <span style="padding-left: 10px;">${member.member_name}</span>
+                </td>
+                <td>${member.level_text}</td>
+                <td>${member.scan_at}</td>
+                <td>${member.created_at}</td>
+                <td>${member.order_money}</td>
+                <td>${member.cash_money}</td>
+            </tr>
+        {{/each}}
+    {{else}}
+        <tr rowspan='2'><td colspan='6' class="h130">暂无信息</td></tr>
+    {{/if}}
+    </tbody>
+    {{else}}
+    <div style="padding-bottom: 10px;">
+        <span>人数：${data.member_count}</span>
+    </div>
+    <thead style="background:#c8d2e5;">
+        <tr>
+            <th>会员</th>
+            <th>扫码时间</th>
+        </tr>
+    </thead>
+    <tbody>
+    {{if items.length}}
+        {{each(i, member) items}}
+            <tr>
+                <td width="160" style="text-align: left;">
+                    <img src=${member.member_icon} style="vertical-align: middle; width: 50px; height: 50px;">
+                    <span style="padding-left: 10px;">${member.member_name}</span>
+                </td>
+                <td>${member.scan_at}</td>
+            </tr>
+        {{/each}}
+    {{else}}
+        <tr rowspan='2'><td colspan='2' class="h130">暂无信息</td></tr>
+    {{/if}}
+    </tbody>
+    {{else}}    
+    {{/if}}
+</table>
+</script>
