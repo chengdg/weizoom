@@ -52,12 +52,6 @@ MEMBER_NAV = {
 			'title': u'推广扫码',
 			'url': '/member/member_qrcode/',
             'permission': 'manage_member_qrcode'
-		},
-		{
-			'name': MEMBER_SPREAD,
-			'title': u'会员关系',
-			'url': '/member/member_spread/',
-            'permission': 'manage_member_qrcode'
 		}
 	]
 }
@@ -67,6 +61,13 @@ def get_second_navs(request):
 	if request.user.username == 'manager':
 		pass
 	else:
+		if request.user.username in ['ceshi01', 'kftengyi']:
+			MEMBER_NAV['navs'].append({
+			'name': MEMBER_SPREAD,
+			'title': u'会员关系',
+			'url': '/member/member_spread/',
+            'permission': 'manage_member_qrcode'
+		})
 		second_navs = [MEMBER_NAV]#webapp_module_views.get_modules_page_second_navs(request)
 
 	return second_navs
