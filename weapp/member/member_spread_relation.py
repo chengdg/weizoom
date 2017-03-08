@@ -26,6 +26,9 @@ class MemberSpreadRelation(resource.Resource):
 
 		member_type = request.GET.get('member_type', 'valid')
 
+		total_order_money = 0
+		total_cash_money = 0
+
 		if member_type == 'valid': #星级会员
 
 			ty_members = TengyiMember.objects.filter(recommend_by_member_id=member_id).order_by(sort_attr)
@@ -48,6 +51,9 @@ class MemberSpreadRelation(resource.Resource):
 				else:
 					member_id2order_info[member_id]['order_money'] += order.product_price
 					member_id2order_info[member_id]['cash_money'] += order.final_price
+
+				total_order_money += order.product_price
+				total_cash_money += order.final_price
 
 			ty_member_id2relation = {ty.member_id: ty for ty in TengyiMemberRelation.objects.filter(member_id__in=member_ids)}
 
@@ -89,7 +95,10 @@ class MemberSpreadRelation(resource.Resource):
 
 		response = create_response(200)
 		response.data = {
+			'member_type': member_type,
 			'member_count': member_count,
+			'total_order_money': total_order_money,
+			'total_cash_money': total_cash_money,
 			'items': items,
 			'sortAttr': sort_attr,
 			'pageinfo': paginator.to_dict(pageinfo),
