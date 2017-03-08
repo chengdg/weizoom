@@ -24,6 +24,7 @@ MEMBERS = 'members'
 MEMBER_TAG = 'memberTag'
 MEMBER_GRADE = 'memberGrade'
 MEMBER_QRCODE = 'memberQrcode'
+MEMBER_SPREAD = 'memberSpread'
 
 MEMBER_NAV = {
 	'section': u'',
@@ -50,6 +51,12 @@ MEMBER_NAV = {
 			'name': MEMBER_QRCODE,
 			'title': u'推广扫码',
 			'url': '/member/member_qrcode/',
+            'permission': 'manage_member_qrcode'
+		},
+		{
+			'name': MEMBER_SPREAD,
+			'title': u'会员关系',
+			'url': '/member/member_spread/',
             'permission': 'manage_member_qrcode'
 		}
 	]
