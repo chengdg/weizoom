@@ -62,7 +62,7 @@
 				<div class="xui-i-item">
 					<label>星级等级：</label>
 					<select id="level" name="level">
-						<option value="0">全部</option>
+						<option value="-1">全部</option>
 						<option value="1">一星会员</option>
 						<option value="2">二星会员</option>
 					</select>
@@ -125,8 +125,6 @@
 		>
 		</div>
 	</div>
-
-	<button type="button" class="xa-rebate-recommend">test</button>
 </div>
 {% endblock %}
 
@@ -208,7 +206,7 @@ $(document).ready(function() {
 	});
 	$('.xa-reset').click(function(event) {
 		$('[name="name"]').val('');
-		$('[name="level"]').val('0');
+		$('[name="level"]').val('-1');
 		$('[name="start_time"]').val('');
 		$('[name="end_time"]').val('');
 	});
@@ -235,6 +233,10 @@ $(document).ready(function() {
 			'memberId': memberId,
 			'rebateType': 'recommend'
 		});
+	});
+	//导出
+	$('.xa-export').click(function() {
+		//TODO
 	});
 });
 </script>

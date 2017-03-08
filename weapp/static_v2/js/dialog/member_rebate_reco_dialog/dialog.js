@@ -4,7 +4,7 @@ W.dialog.mall.MemberReabteRecoDialog = W.dialog.Dialog.extend({
     events: _.extend({
         'click .xa-prev-month': 'onClickPrevMonth',
         'click .xa-next-month': 'onClickNextMonth',
-        'blur .xa-month-input': 'onBlurPrevMonth',
+        'blur .xa-month-input': 'onBlurMonth',
     }, W.dialog.Dialog.prototype.events),
 
     getTemplate: function() {
@@ -40,7 +40,7 @@ W.dialog.mall.MemberReabteRecoDialog = W.dialog.Dialog.extend({
         this.table.reload({'member_id': this.memberId, 'rebate_type': this.rebateType, 'month': curMonth});
     },
 
-    onBlurPrevMonth: function() {
+    onBlurMonth: function() {
         var curMonth = parseInt($('.xa-month-input').val());
         if (curMonth < 1 || curMonth > 12) {
             W.showHint('error', '请输入1~12');
