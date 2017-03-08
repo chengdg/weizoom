@@ -1,0 +1,243 @@
+{% extends "content_base_v2.html" %}
+{% block css %}
+<style type="text/css">
+	.xui-tableBox {
+	    background-color: #E9EDF5;
+	}
+	.xui-memberSpreadVipDialog .modal-body {
+		overflow: hidden!important;
+	}
+	.xui-memberSpreadVipDialog .modal-title {
+		padding: 0 10px; 
+		font-weight: normal;
+		color: #000;
+		font-size: 14px;
+		text-decoration: none;
+	}
+	.xui-memberSpreadVipDialog .modal-title.active {
+		color: #fff;
+	}
+	.xui-memberRecoRebateDialog .xui-month-box {
+		float: right;
+		margin-top: -5px;
+	} 
+	.xui-memberRecoRebateDialog .xui-month-box .xui-month-btn {
+		background: #56B2EC;
+		color: #fff;
+		display: inline-block;
+		width: 50px;
+		height: 25px;
+		line-height: 25px;
+		text-align: center;
+		border: 1px solid #dddddd;
+		cursor: pointer;
+	}
+	.xui-memberRecoRebateDialog .xui-month-box .xui-month-input {
+		width: 40px;
+		height: 26px;
+		margin: 0 10px;
+		padding-left: 5px;
+	}
+</style>
+{% endblock %}
+
+{% block content-panel %}
+<div class="xui-memberSpreadPage">
+	<div class="relative">
+		<ul class="breadcrumb">
+			<li>您当前所在位置</li>
+			<li><a href="/member/member_spread/">会员管理</a></li>
+			<li class="active">会员关系</li>
+		</ul>
+	</div>
+	<div class="xui-filterPanel mb15">
+		<div class="xui-form disT">
+			<div class="xui-col disTc">
+				<div class="xui-i-item">
+					<label>会员名称：</label>
+					<input type="text" class="form-control" id="name" name="name" value="" />
+				</div>
+			</div>
+			<div class="xui-col disTc">
+				<div class="xui-i-item">
+					<label>星级等级：</label>
+					<select id="level" name="level">
+						<option value="-1">全部</option>
+						<option value="1">一星会员</option>
+						<option value="2">二星会员</option>
+					</select>
+				</div>
+			</div>
+			<div class="xui-col disTc">
+				<div class="xui-i-item">
+					<label class="w110 ml20">成为星级会员时间：</label>
+					<input
+						type="text"
+						class="form-control xui-datePicker"
+						id="start_time"
+						name="start_time"
+						style=""
+					    value=""
+					    readonly="readonly"
+						data-enable-select-time="true"
+						data-validate="require-notempty"
+						data-ui-role="date-picker"
+					    data-format="yy-mm-dd HH:MM" />
+					至
+					<input
+						type="text"
+						class="form-control xui-datePicker"
+						id="end_time"
+						name="end_time"
+					    value=""
+					    readonly="readonly"
+					    data-enable-select-time="true"
+						data-validate="require-notempty"
+						data-ui-role="date-picker"
+					    data-format="yy-mm-dd HH:MM"
+					    data-min-el="#start_time"/>
+				</div>
+			</div>
+		</div>
+		<div class="xui-btn-group">
+			<a class="btn btn-primary mr40 xa-search xui-fontBold" href="javascript:void(0);">查&nbsp;&nbsp;&nbsp;询</a>
+			<a class="btn btn-default xa-reset xui-fontBold" href="javascript:void(0);">重&nbsp;&nbsp;&nbsp;置</a>
+		</div>
+	</div>
+
+	<div class="panel panel-default xui-tableBox pr">
+		<div class="panel-header clearfix" style="height: 50px;">
+			<div class="pa div_export xui-export" style="top:10px;right:10px;line-height:30px;">
+				<a href="javascript:;" class="btn fr btn-default xa-export mr20" id="export_data_file">导出结果</a>
+			</div>
+		</div>
+		<div
+			class="panel-body panel-table p0"
+			data-ui-role="advanced-table"
+			data-app="member"
+			data-resource="member_spread"
+			data-template-id="#member-spread-table"
+			data-enable-paginator="false"
+			data-enable-sort="false"
+			data-selectable="false"
+			data-disable-header-select="true"
+			data-item-count-per-page="10"
+		>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block js %}
+{% verbatim %}
+<script id="member-spread-table" type="text/x-jquery-tmpl">
+	{{if items != ''}}
+	<table class="table table-bordered xb-stripedTable xb-noTdBorder xb-noBottom xb-noBorder xb-theadBg mb10">
+		<thead>
+			<tr>
+				<th>会员</th>
+				<th>星级等级</th>
+				<th>成为星级会员时间</th>
+				<th>推荐人</th>
+				<th>推荐会员数</th>
+				<th>总消费金额</th>
+				<th>现金消费金额</th>
+				<th>操作</th>
+			</tr>
+		</thead>
+		<tbody>
+			{{each(i, item) items}}
+			<tr data-member-id=${item.member_id}>
+				<td>
+					<img src=${item.member_icon} style="vertical-align: middle; width: 50px; height: 50px; margin-bottom: 5px;">
+					<div><a href="javascript:;">${item.member_name}</a></div>
+				</td>
+				<td>
+					${item.level_text}
+				</td>
+				<td>
+					${item.created_at}
+				</td>
+				<td>
+					${item.recommend_by}
+				</td>
+				<td>
+					<a href="javascript:;" class="xa-spread-count">${item.spread_count}</a>
+				</td>
+				<td>
+					${item.order_money}
+				</td>
+				<td>
+					${item.cash_money}
+				</td>
+				<td>
+					<a href="javascript:;" class="xa-rebate-self" style="padding-right: 10px;">商品返利</a>
+					<a href="javascript:;" class="xa-rebate-recommend">推荐返利</a>
+				</td>
+			</tr>	
+			{{/each}}	
+		</tbody>
+	</table>
+	{{else}}
+	<div class="xui-emptyBox m10">
+		<img src="/static_v2/img/editor/empty.png">
+		<span class="ml20">您还没有相关数据！</span>
+	</div>
+	{{/if}}
+</script>
+{% endverbatim %}
+
+<script type="text/javascript">
+$(document).ready(function() {
+	//filter panel
+	$('.xa-search').click(function(event) {
+		var name = $.trim($('[name="name"]').val());
+		var level = $.trim($('[name="level"]').val());
+		var startTime = $.trim($('[name="start_time"]').val());
+		var endTime = $.trim($('[name="end_time"]').val());
+		table.reload({
+			'name': name,
+			'level': level,
+			'start_time': startTime,
+			'end_time': endTime
+		}, {
+			'emptyDataHint': '没有符合条件的数据'
+		});
+	});
+	$('.xa-reset').click(function(event) {
+		$('[name="name"]').val('');
+		$('[name="level"]').val('-1');
+		$('[name="start_time"]').val('');
+		$('[name="end_time"]').val('');
+	});
+
+	//星级会员Dialog
+	$(document).on('click', '.xa-spread-count', function() {
+		var memberId = $(this).parents('tr').attr('data-member-id');
+		var vipDialog = W.dialog.showDialog('W.dialog.mall.MemberSpreadVipDialog', {
+			'memberId': memberId
+		});
+	});
+	//商品返利Dialog
+	$(document).on('click', '.xa-rebate-self', function() {
+		var memberId = $(this).parents('tr').attr('data-member-id');
+		var selfReabteDialog = W.dialog.showDialog('W.dialog.mall.MemberReabteSelfDialog', {
+			'memberId': memberId,
+			'rebateType': 'self'
+		});
+	});
+	//推荐返利Dialog
+	$(document).on('click', '.xa-rebate-recommend', function() {
+		var memberId = $(this).parents('tr').attr('data-member-id');
+		var recommendReabteDialog = W.dialog.showDialog('W.dialog.mall.MemberReabteRecoDialog', {
+			'memberId': memberId,
+			'rebateType': 'recommend'
+		});
+	});
+	//导出
+	$('.xa-export').click(function() {
+		//TODO
+	});
+});
+</script>
+{% endblock %}
