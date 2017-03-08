@@ -1,0 +1,48 @@
+<script id="member-self-rebate-dialog-tmpl-src" type="text/x-jquery-tmpl">
+    <div class="modal fade xui-memberSelfRebateDialog" id="memberSelfRebateDialog">
+        <div class="modal-dialog modal-lg" style="width: 720px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button aria-hidden="true" data-dismiss="modal" class="close" type="button"><span class="xui-closeColor" aria-hidden="true">&times;</span></button>
+                     <h3 class="modal-title">商品返利</h3>
+                </div>
+
+                <div class="modal-body" style="min-height: 200px;overflow: auto;">
+                    <div
+                        data-ui-role="advanced-table"
+                        data-app="member"
+                        data-resource="member_spread_rebate"
+                        data-template-id="#member-self-rebate-dialog-tmpl"
+                        data-enable-paginator="true"
+                        data-enable-sort="false"
+                        data-item-count-per-page="7"
+                        data-auto-load="false"
+                    ></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
+<script id="member-self-rebate-dialog-tmpl" type="text/x-jquery-tmpl">
+<table class="table table-bordered xb-stripedTable">
+    <thead style="background:#c8d2e5;">
+        <tr>
+            <th>返利时间</th>
+            <th>返利金额</th>
+        </tr>
+    </thead>
+    <tbody>
+    {{if items.length}}
+        {{each(i, member) items}}
+            <tr>
+                <td width="50">${member.rebate_time}</td>
+                <td width="50">${member.rebate_money}</td>
+            </tr>
+        {{/each}}
+    {{else}}
+        <tr rowspan='2'><td colspan='2' class="h130">暂无信息</td></tr>
+    {{/if}}
+    </tbody>
+</table>
+</script>

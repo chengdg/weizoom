@@ -117,4 +117,5 @@ class Command(BaseCommand):
 			if resp and resp['code'] == 200:
 				print u'为%s充值%d' % (member_id, rebate_money)
 				need_recharge_rebate_log.is_exchanged = True
+				need_recharge_rebate_log.exchanged_at = today
 				need_recharge_rebate_log.save()
