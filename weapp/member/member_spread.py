@@ -38,7 +38,7 @@ class MemberSpread(resource.Resource):
 		webapp_id = request.user_profile.webapp_id
 
 		name = request.GET.get('name')
-		level = int(request.GET.get('level'))
+		level = int(request.GET.get('level', -1))
 		start_time = request.GET.get('start_time')
 		end_time = request.GET.get('end_time')
 

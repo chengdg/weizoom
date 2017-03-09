@@ -61,7 +61,7 @@ def get_second_navs(request):
 	if request.user.username == 'manager':
 		pass
 	else:
-		if request.user.username in ['ceshi01', 'kftengyi']:
+		if request.user.username in ['ceshi01', 'weizoommm', 'kftengyi']:
 			MEMBER_NAV['navs'].append({
 			'name': MEMBER_SPREAD,
 			'title': u'会员关系',
