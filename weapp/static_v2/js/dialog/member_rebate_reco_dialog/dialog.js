@@ -5,6 +5,7 @@ W.dialog.mall.MemberReabteRecoDialog = W.dialog.Dialog.extend({
         'click .xa-prev-month': 'onClickPrevMonth',
         'click .xa-next-month': 'onClickNextMonth',
         'blur .xa-month-input': 'onBlurMonth',
+        'keydown .xa-month-input': 'onKeydownMonth'
     }, W.dialog.Dialog.prototype.events),
 
     getTemplate: function() {
@@ -47,5 +48,19 @@ W.dialog.mall.MemberReabteRecoDialog = W.dialog.Dialog.extend({
             return;
         }
         this.table.reload({'member_id': this.memberId, 'rebate_type': this.rebateType, 'month': curMonth});
+    },
+
+    onKeydownMonth: function(e) {
+        if (curMonth < 1 || curMonth > 12) {
+            W.showHint('error', '请输入1~12');
+            return;
+        }
+        console.log(e.keyCode)
+        if (e.keyCode == 13) {
+
+            var curMonth = parseInt($('.xa-month-input').val());
+            console.log(curMonth)
+            this.table.reload({'member_id': this.memberId, 'rebate_type': this.rebateType, 'month': curMonth});
+        }
     }
 });
