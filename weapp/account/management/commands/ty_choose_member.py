@@ -9,9 +9,9 @@ from eaglet.utils.resource_client import Resource
 from mall.models import *
 from modules.member.models import *
 
-weizoom_card_batch_id = 32 #362
+weizoom_card_batch_id = 362 #docker测试用32，生产用362
 weizoom_card_batch_name = u'腾易星级会员卡'
-tengyi_user_id = 119 #1346
+tengyi_user_id = 1346 #docker测试用119，生产用1346
 
 
 class Command(BaseCommand):

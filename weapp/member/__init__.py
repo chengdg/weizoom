@@ -8,3 +8,4 @@ import member_qrcode
 import member_spread
 import member_spread_relation
 import member_spread_rebate
+import member_spread_export
