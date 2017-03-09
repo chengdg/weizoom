@@ -109,6 +109,7 @@
 		<div class="panel-header clearfix" style="height: 50px;">
 			<div class="pa div_export xui-export" style="top:10px;right:10px;line-height:30px;">
 				<a href="javascript:;" class="btn fr btn-default xa-export mr20" id="export_data_file">导出结果</a>
+                <a style="display: none" id="for-export"></a>
 			</div>
 		</div>
 		<div
@@ -117,7 +118,7 @@
 			data-app="member"
 			data-resource="member_spread"
 			data-template-id="#member-spread-table"
-			data-enable-paginator="false"
+			data-enable-paginator="true"
 			data-enable-sort="false"
 			data-selectable="false"
 			data-disable-header-select="true"
@@ -174,8 +175,8 @@
 					<a href="javascript:;" class="xa-rebate-self" style="padding-right: 10px;">商品返利</a>
 					<a href="javascript:;" class="xa-rebate-recommend">推荐返利</a>
 				</td>
-			</tr>	
-			{{/each}}	
+			</tr>
+			{{/each}}
 		</tbody>
 	</table>
 	{{else}}
@@ -237,7 +238,32 @@ $(document).ready(function() {
 	});
 	//导出
 	$('.xa-export').click(function() {
-		//TODO
+		var name = $.trim($('[name="name"]').val());
+		var level = $.trim($('[name="level"]').val());
+		var startTime = $.trim($('[name="start_time"]').val());
+		var endTime = $.trim($('[name="end_time"]').val());
+
+		W.getApi().call({
+            app: 'member',
+            resource: 'member_spread_export',
+            method: 'get',
+            args: {
+                name: name,
+                level: level,
+                startTime: startTime,
+                endTime: endTime
+            },
+            success: function(data) {
+                $('#for-export').prop({
+					'href': data.download_path,
+					'download': data.filename
+				}).text('downloadXLS').get(0).click();
+            },
+            error: function(response) {
+                W.showHint('error', '导出数据失败，请稍后再试！');
+                console.log(response.innerErrMsg);
+            }
+        });
 	});
 });
 </script>

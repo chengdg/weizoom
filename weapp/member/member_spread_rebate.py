@@ -46,12 +46,12 @@ class MemberSpreadRebate(resource.Resource):
 				})
 		else: #被推荐人返利
 			logs = TengyiRebateLog.objects.filter(member_id=member_id, is_self_order=False, is_exchanged=True, exchanged_at__month=month)
+			member_ids = [ty.supply_member_id for ty in logs]
+			member_id2info = {m.id: m for m in Member.objects.filter(id__in=member_ids)}
+
 			pageinfo, ty_members = paginator.paginate(logs, cur_page, count_per_page,
 													  query_string=request.GET.get('query', None))
 			cur_month_rebate_member_count = len(set([l.supply_member_id for l in logs]))
-
-			member_ids = [ty.supply_member_id for ty in logs]
-			member_id2info = {m.id: m for m in Member.objects.filter(id__in=member_ids)}
 
 			items = []
 			for log in logs:
@@ -60,14 +60,14 @@ class MemberSpreadRebate(resource.Resource):
 					'supplier_id': log.supply_member_id,
 					'supplier_name': member_id2info[log.supply_member_id].username_for_html,
 					'supplier_icon': member_id2info[log.supply_member_id].user_icon,
-					'rebate_money': log.rebate_money,
+					'rebate_money': '%.2f' % log.rebate_money,
 					'rebate_time': log.exchanged_at.strftime('%Y/%m/%d')
 				})
 
 		response = create_response(200)
 		response.data = {
 			'cur_month_rebate_member_count': cur_month_rebate_member_count,
-			'cur_month_rebate_money': cur_month_rebate_money,
+			'cur_month_rebate_money': '%.2f' % cur_month_rebate_money,
 			'cur_month': month,
 			'items': items,
 			'sortAttr': sort_attr,

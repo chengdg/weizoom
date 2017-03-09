@@ -12,19 +12,24 @@ from modules.member.models import *
 FIRST_LIMIT = 50.0
 SECOND_LIMIT = 100.0
 
-weizoom_card_batch_id = 362 #docker测试用32，生产用362
-weizoom_card_batch_name = u'腾易星级会员卡'
-tengyi_user_id = 1346 #docker测试用119，生产用1346
-
 class Command(BaseCommand):
 	help = ''
 	args = ''
 	
-	def handle(self, *args, **options):
+	def handle(self, *args, **option):
 		"""
 		定时检查腾易会员扫码关注的新会员，是否达到星级会员的要求
 		如果达到要求则同时加入到对应的分组中: 一星会员、二星会员
 		"""
+		weizoom_card_batch_name = u'腾易星级会员卡'
+
+		if len(args)==1 and args[0] == 'dev':
+			weizoom_card_batch_id = 32
+			tengyi_user_id = 119
+		else:
+			weizoom_card_batch_id = 362
+			tengyi_user_id = 1346
+
 		relations = TengyiMemberRelation.objects.all()
 		member_ids = [r.member_id for r in relations]
 		member_id_exists = [t.member_id for t in TengyiMember.objects.filter(member_id__in=member_ids)]

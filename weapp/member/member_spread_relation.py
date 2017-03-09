@@ -45,11 +45,11 @@ class MemberSpreadRelation(resource.Resource):
 				member_id = webapp_user_id2member_id[order.webapp_user_id]
 				if not member_id2order_info.has_key(member_id):
 					member_id2order_info[member_id] = {
-						'order_money': order.product_price,
+						'order_money': order.product_price+order.postage,
 						'cash_money': order.final_price
 					}
 				else:
-					member_id2order_info[member_id]['order_money'] += order.product_price
+					member_id2order_info[member_id]['order_money'] += order.product_price+order.postage
 					member_id2order_info[member_id]['cash_money'] += order.final_price
 
 				total_order_money += order.product_price
@@ -70,8 +70,8 @@ class MemberSpreadRelation(resource.Resource):
 					'level_text': u'一星' if ty_member.level == 1 else u'二星',
 					'created_at': ty_member.created_at.strftime('%Y/%m/%d'),
 					'scan_at': ty_member_id2relation[member_id].created_at.strftime('%Y/%m/%d'),
-					'order_money': member_id2order_info[member_id]['order_money'] if member_id2order_info.get(member_id) else 0,
-					'cash_money': member_id2order_info[member_id]['cash_money'] if member_id2order_info.get(member_id) else 0,
+					'order_money': '%.2f' % (member_id2order_info[member_id]['order_money']) if member_id2order_info.get(member_id) else 0,
+					'cash_money': '%.2f' % (member_id2order_info[member_id]['cash_money']) if member_id2order_info.get(member_id) else 0,
 				})
 
 		else: #预备会员
@@ -98,8 +98,8 @@ class MemberSpreadRelation(resource.Resource):
 		response.data = {
 			'member_type': member_type,
 			'member_count': member_count,
-			'total_order_money': total_order_money,
-			'total_cash_money': total_cash_money,
+			'total_order_money': '%.2f' % total_order_money,
+			'total_cash_money': '%.2f' % total_cash_money,
 			'items': items,
 			'sortAttr': sort_attr,
 			'pageinfo': paginator.to_dict(pageinfo),

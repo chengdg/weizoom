@@ -9,19 +9,22 @@ from eaglet.utils.resource_client import Resource
 from mall.models import *
 from modules.member.models import *
 
-weizoom_card_batch_id = 362 #docker测试用32，生产用362
-weizoom_card_batch_name = u'腾易星级会员卡'
-tengyi_user_id = 1346 #docker测试用119，生产用1346
-
-
 class Command(BaseCommand):
 	help = ''
 	args = ''
 	
-	def handle(self, member_id, level, **options):
+	def handle(self, member_id, level, *args, **options):
 		"""
 		指定星级会员
 		"""
+		weizoom_card_batch_name = u'腾易星级会员卡'
+		if len(args) == 1 and args[0] == 'dev':
+			weizoom_card_batch_id = 32
+			tengyi_user_id = 119
+		else:
+			weizoom_card_batch_id = 362
+			tengyi_user_id = 1346
+
 		tengyi_member = TengyiMember.objects.filter(member_id=member_id).first()
 		if tengyi_member:
 			print member_id, ' already been tengyi member'

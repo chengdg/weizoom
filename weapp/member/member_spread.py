@@ -11,6 +11,7 @@ from core import resource
 
 from modules.member.models import *
 from mall.models import *
+from utils.string_util import byte_to_hex
 import export
 
 COUNT_PER_PAGE = 20
@@ -43,10 +44,11 @@ class MemberSpread(resource.Resource):
 		end_time = request.GET.get('end_time')
 
 		ty_members = TengyiMember.objects.all()
+		member_id2info = {m.id: m for m in Member.objects.filter(id__in=[ty_m.member_id for ty_m in ty_members])}
+
 		if name:
 			hexstr = byte_to_hex(name)
-			member_ids = [m.id for m in Member.objects.filter(webapp_id=webapp_id, username_hexstr__contains=hexstr)]
-			ty_members = ty_members.filter(member_id__in=member_ids)
+			ty_members = ty_members.filter(member_id__in=[m.id for m in Member.objects.filter(webapp_id=webapp_id, username_hexstr__contains=hexstr)])
 
 		if level in [1,2]:
 			ty_members = ty_members.filter(level=level)
@@ -57,7 +59,6 @@ class MemberSpread(resource.Resource):
 		ty_members = ty_members.order_by(sort_attr)
 
 		member_ids = [ty.member_id for ty in ty_members]
-		member_id2info = {m.id: m for m in Member.objects.filter(id__in=member_ids)}
 
 		webapp_user_id2member_id = {w.id: w.member_id for w in WebAppUser.objects.filter(member_id__in=member_ids)}
 
@@ -69,11 +70,11 @@ class MemberSpread(resource.Resource):
 			member_id = webapp_user_id2member_id[order.webapp_user_id]
 			if not member_id2order_info.has_key(member_id):
 				member_id2order_info[member_id] = {
-					'order_money': order.product_price,
+					'order_money': order.product_price+order.postage,
 					'cash_money': order.final_price
 				}
 			else:
-				member_id2order_info[member_id]['order_money'] += order.product_price
+				member_id2order_info[member_id]['order_money'] += order.product_price+order.postage
 				member_id2order_info[member_id]['cash_money'] += order.final_price
 
 		ty_member_id2spread_count = {}
@@ -97,8 +98,8 @@ class MemberSpread(resource.Resource):
 				'level_text': u'一星' if ty_member.level == 1 else u'二星',
 				'recommend_by': member_id2info[ty_member.recommend_by_member_id].username_for_html if ty_member.recommend_by_member_id != 0 else u'管理员',
 				'spread_count': ty_member_id2spread_count.get(member_id, 0),
-				'order_money': member_id2order_info[member_id]['order_money'] if member_id2order_info.get(member_id) else 0,
-				'cash_money': member_id2order_info[member_id]['cash_money'] if member_id2order_info.get(member_id) else 0,
+				'order_money': '%.2f' % (member_id2order_info[member_id]['order_money']) if member_id2order_info.get(member_id) else 0,
+				'cash_money': '%.2f' % (member_id2order_info[member_id]['cash_money']) if member_id2order_info.get(member_id) else 0,
 				'created_at': ty_member.created_at.strftime('%Y/%m/%d')
 			})
 
