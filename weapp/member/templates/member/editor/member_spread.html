@@ -189,6 +189,7 @@
 
 <script type="text/javascript">
 $(document).ready(function() {
+	var table = $('div[data-ui-role="advanced-table"]').data('view');
 	//filter panel
 	$('.xa-search').click(function(event) {
 		var name = $.trim($('[name="name"]').val());
