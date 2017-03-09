@@ -38,7 +38,7 @@ class MemberSpreadRelation(resource.Resource):
 			member_count = len(member_ids)
 
 			webapp_user_id2member_id = {w.id: w.member_id for w in WebAppUser.objects.filter(member_id__in=member_ids)}
-			orders = Order.objects.filter(webapp_user_id__in=webapp_user_id2member_id.values())
+			orders = Order.objects.filter(webapp_user_id__in=webapp_user_id2member_id.keys())
 
 			member_id2order_info = {}
 			for order in orders:

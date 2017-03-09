@@ -61,7 +61,7 @@ class MemberSpread(resource.Resource):
 
 		webapp_user_id2member_id = {w.id: w.member_id for w in WebAppUser.objects.filter(member_id__in=member_ids)}
 
-		orders = Order.objects.filter(webapp_user_id__in=webapp_user_id2member_id.values())
+		orders = Order.objects.filter(webapp_user_id__in=webapp_user_id2member_id.keys())
 
 		member_id2order_info = {}
 
@@ -75,11 +75,6 @@ class MemberSpread(resource.Resource):
 			else:
 				member_id2order_info[member_id]['order_money'] += order.product_price
 				member_id2order_info[member_id]['cash_money'] += order.final_price
-
-		print member_ids
-		print '====================='
-		print member_id2order_info
-		print '======================='
 
 		ty_member_id2spread_count = {}
 		for relation in TengyiMemberRelation.objects.filter(recommend_by_member_id__in=member_ids):
