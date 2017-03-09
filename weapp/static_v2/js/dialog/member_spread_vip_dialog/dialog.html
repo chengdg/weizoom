@@ -49,7 +49,7 @@
             <tr>
                 <td style="text-align: left;">
                     <img src=${member.member_icon} style="vertical-align: middle; width: 50px; height: 50px;">
-                    <span style="padding-left: 10px;">${member.member_name}</span>
+                    <a href="/member/detail/?id=${member.member_id}" style="padding-left: 10px;">${member.member_name}</a>
                 </td>
                 <td>${member.level_text}</td>
                 <td>${member.scan_at}</td>
@@ -78,7 +78,7 @@
             <tr>
                 <td width="160" style="text-align: left;">
                     <img src=${member.member_icon} style="vertical-align: middle; width: 50px; height: 50px;">
-                    <span style="padding-left: 10px;">${member.member_name}</span>
+                    <a ref="/member/detail/?id=${member.member_id}" style="padding-left: 10px;">${member.member_name}</a>
                 </td>
                 <td>${member.scan_at}</td>
             </tr>
