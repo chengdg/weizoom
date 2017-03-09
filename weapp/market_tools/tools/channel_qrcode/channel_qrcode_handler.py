@@ -93,7 +93,7 @@ class ChannelQrcodeHandler(MessageHandler):
 
 		channel_qrcode = ChannelQrcodeSettings.objects.filter(ticket=ticket, owner_id=user_profile.user_id).first()
 		if channel_qrcode:
-			if user_profile.user.username in ['kftengyi'] and channel_qrcode.bing_member_id > 0: #腾易微众定制需求
+			if user_profile.user.username in ['ceshi01','kftengyi'] and channel_qrcode.bing_member_id > 0: #腾易微众定制需求
 				from modules.member.models import TengyiMember, TengyiMemberRelation
 				if TengyiMember.objects.filter(member_id=channel_qrcode.bing_member_id).count() > 0:
 					if TengyiMemberRelation.objects.filter(member_id=member.id).count() <= 0:
