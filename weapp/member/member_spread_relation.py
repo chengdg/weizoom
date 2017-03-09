@@ -70,8 +70,8 @@ class MemberSpreadRelation(resource.Resource):
 					'level_text': u'一星' if ty_member.level == 1 else u'二星',
 					'created_at': ty_member.created_at.strftime('%Y/%m/%d'),
 					'scan_at': ty_member_id2relation[member_id].created_at.strftime('%Y/%m/%d'),
-					'order_money': member_id2order_info[member_id]['order_money'],
-					'cash_money': member_id2order_info[member_id]['cash_money'],
+					'order_money': member_id2order_info[member_id]['order_money'] if member_id2order_info.get(member_id) else 0,
+					'cash_money': member_id2order_info[member_id]['cash_money'] if member_id2order_info.get(member_id) else 0,
 				})
 
 		else: #预备会员

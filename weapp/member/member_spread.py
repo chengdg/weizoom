@@ -97,8 +97,8 @@ class MemberSpread(resource.Resource):
 				'level_text': u'一星' if ty_member.level == 1 else u'二星',
 				'recommend_by': member_id2info[ty_member.recommend_by_member_id].username_for_html if ty_member.recommend_by_member_id != 0 else u'管理员',
 				'spread_count': ty_member_id2spread_count.get(member_id, 0),
-				'order_money': member_id2order_info[member_id]['order_money'],
-				'cash_money': member_id2order_info[member_id]['cash_money'],
+				'order_money': member_id2order_info[member_id]['order_money'] if member_id2order_info.get(member_id) else 0,
+				'cash_money': member_id2order_info[member_id]['cash_money'] if member_id2order_info.get(member_id) else 0,
 				'created_at': ty_member.created_at.strftime('%Y/%m/%d')
 			})
 
