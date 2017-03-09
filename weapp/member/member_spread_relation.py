@@ -75,7 +75,8 @@ class MemberSpreadRelation(resource.Resource):
 				})
 
 		else: #预备会员
-			ty_members = TengyiMemberRelation.objects.filter(recommend_by_member_id=member_id)
+			valid_member_ids = [t.member_id for t in TengyiMember.objects.all()]
+			ty_members = TengyiMemberRelation.objects.filter(recommend_by_member_id=member_id).exclude(member_id__in=valid_member_ids)
 			member_ids = [ty.member_id for ty in ty_members]
 			member_id2info = {m.id: m for m in Member.objects.filter(id__in=member_ids)}
 
