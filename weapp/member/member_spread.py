@@ -95,7 +95,7 @@ class MemberSpread(resource.Resource):
 				'member_icon': member_id2info[member_id].user_icon,
 				'level': ty_member.level,
 				'level_text': u'一星' if ty_member.level == 1 else u'二星',
-				'recommend_by': member_id2info[ty_member.recommend_by_member_id].username_for_html,
+				'recommend_by': member_id2info[ty_member.recommend_by_member_id].username_for_html if ty_member.recommend_by_member_id != 0 else u'管理员',
 				'spread_count': ty_member_id2spread_count.get(member_id, 0),
 				'order_money': member_id2order_info[member_id]['order_money'],
 				'cash_money': member_id2order_info[member_id]['cash_money'],
