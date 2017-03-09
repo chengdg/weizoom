@@ -12,9 +12,9 @@ from modules.member.models import *
 FIRST_LIMIT = 50.0
 SECOND_LIMIT = 100.0
 
-weizoom_card_batch_id = 362
+weizoom_card_batch_id = 32 #362
 weizoom_card_batch_name = u'腾易星级会员卡'
-tengyi_user_id = 1346
+tengyi_user_id = 119 #1346
 
 class Command(BaseCommand):
 	help = ''
