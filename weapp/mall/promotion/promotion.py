@@ -131,17 +131,31 @@ class Promotion(resource.Resource):
                 if not filter_type == 'forbidden_coupon':
                     product_data['can_select'] = False
             # 过滤参团的商品
-            group_records = group_models.ReGroup.objects(owner_id=request.manager.id,status__lte=1)
-            product_id2record = dict([(record.product_id, record)for record in group_records])
-            group_product_ids = [record.product_id for record in group_records]
+            # group_records = group_models.ReGroup.objects(owner_id=request.manager.id,status__lte=1)
+            # product_id2record = dict([(record.product_id, record)for record in group_records])
+            # group_product_ids = [record.product_id for record in group_records]
+            from eaglet.utils.resource_client import Resource
+            resp = Resource.use('marketapp_apiserver').get(
+                {
+                    'resource': 'group.get_pids_by_woid',
+                    'data': {
+                        'woid': request.manager.id
+                    }
+                }
+            )
+            if resp and resp.get('code') == 200:
+                group_product_ids = resp['data']['pids_list']
+            else:
+                print 'marketapp_apiserver-group.get_pids_by_woid api failed'
+                group_product_ids = []
+
             for product_id in group_product_ids:
                 product_data = id2product.get(product_id, None)
                 if not product_data:
                     continue
-                record = product_id2record.get(product_id, None)
-                if record:
-                    product_data['promotion_name'] = record.name
-                    product_data['can_select'] = False
+
+                product_data['promotion_name'] = u'团购活动'
+                product_data['can_select'] = False
 
             # 过滤下单位置为供货商的商品
             buy_in_supplier_products = models.Product.objects.filter(owner=request.manager, buy_in_supplier=True)
