@@ -42,6 +42,7 @@ class Command(BaseCommand):
 			today = datetime.today().date()
 		else:
 			today = datetime.strptime(today_str, date_fmt).date()
+		seven_days_ago_date = today - timedelta(6)
 		#计算会员的推荐返利
 		#每月1号去结算上月所有推荐人的返利情况
 		this_month_first_day = today.replace(day=1)
@@ -82,17 +83,19 @@ class Command(BaseCommand):
 				recommend_member_rebate_sycle.is_recommend_member_receive_reward = True
 				recommend_member_rebate_sycle.save()
 				#将发奖记录保存在返利记录中
-				TengyiRebateLog.objects.create(
+				log = TengyiRebateLog.objects.create(
 					member_id = cur_member_id,
 					is_self_order = False,
 					supply_member_id = recommend_member_rebate_sycle.member_id,
 					is_exchanged = False,
 					rebate_money = recommend_member_rebate_money
 					)
+				log.created_at = seven_days_ago_date - timedelta(2)
+				log.save()
 
 
 		#根据未充值的返利记录，最终调用接口充值
-		need_recharge_rebate_logs = TengyiRebateLog.objects.filter(is_exchanged=False)
+		need_recharge_rebate_logs = TengyiRebateLog.objects.filter(is_exchanged=False,created_at__lt=seven_days_ago_date)
 		for need_recharge_rebate_log in need_recharge_rebate_logs:
 			member_id = need_recharge_rebate_log.member_id
 			rebate_money = need_recharge_rebate_log.rebate_money

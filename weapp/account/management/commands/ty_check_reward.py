@@ -54,16 +54,11 @@ class Command(BaseCommand):
 			start_at = tengyi_member_sycle.start_time.date()
 			end_at = tengyi_member_sycle.end_time.date() #查订单时候需要把截止日期后延一天
 			#获取区间内下单、状态为已支付、待发货、已发货、已完成的订单
-			orders = Order.objects.filter(webapp_user_id=cur_webapp_user_id, created_at__range=(start_at, end_at), status__in=[3,4,5], origin_order_id__lte=0, payment_time__lt=seven_days_ago_date)
+			# orders = Order.objects.filter(webapp_user_id=cur_webapp_user_id, created_at__range=(start_at, end_at), status__in=[3,4,5], origin_order_id__lte=0, payment_time__lt=seven_days_ago_date)
+			orders = Order.objects.filter(webapp_user_id=cur_webapp_user_id, created_at__range=(start_at, end_at), status__in=[3,4,5], origin_order_id__lte=0)
 			order_ids = list(orders.values_list('order_id', flat=True))
 			print '>>>cur_member_id', cur_member_id
 			print 'order_ids',order_ids
-			# #检查订单支付时间是否是7天前完成的
-			# status_logs = OrderStatusLog.objects.filter(order_id__in=order_ids, to_status=ORDER_STATUS_PAYED_NOT_SHIP, created_at__lt=seven_days_ago_date)
-			# order_ids = list(status_logs.values_list('order_id', flat=True))
-			# orders = Order.objects.filter(order_id__in=order_ids)
-			# print 'need count order count',orders.count()
-			# print [o.order_id for o in orders]
 			money_sum = 0
 			for order in orders:
 				money_sum += order.final_price
@@ -93,7 +88,7 @@ class Command(BaseCommand):
 
 
 		#根据未充值的返利记录，最终调用接口充值
-		need_recharge_rebate_logs = TengyiRebateLog.objects.filter(is_exchanged=False)
+		need_recharge_rebate_logs = TengyiRebateLog.objects.filter(is_exchanged=False,created_at__lt=seven_days_ago_date)
 		for need_recharge_rebate_log in need_recharge_rebate_logs:
 			member_id = need_recharge_rebate_log.member_id
 			rebate_money = need_recharge_rebate_log.rebate_money
