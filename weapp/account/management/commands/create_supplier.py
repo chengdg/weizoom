@@ -9,7 +9,7 @@ from django.core.management.base import BaseCommand, CommandError
 from django.contrib.auth.models import User, Group
 
 
-from account.models import UserProfile
+from account.models import UserProfile, CorpInfo
 from mall.models import *
 
 class Command(BaseCommand):
@@ -19,27 +19,41 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         """
         同步panda中账户类型(正式/体验)到weapp中
+        weapp库user的id即为corp_id
         """
-        suppliers = Supplier.objects.all()
-        print '==============='
-        print suppliers.count()
+        f = open('weapp_exists_users.txt', 'rb')
+        weapp_exists_users = []
+        for username in f.readlines():
+            weapp_exists_users.append(username.strip())
+        print weapp_exists_users
 
         conn= MySQLdb.connect(
-            host='127.0.0.1',
+            host='rm-bp18wbhgz1493ad8to.mysql.rds.aliyuncs.com',
             port = 3306,
             user='panda',
-            passwd='weizoom',
+            passwd='Weizoom@',
             db ='panda',
             charset="utf8"
             )
         cur = conn.cursor()
-        for supplier in suppliers:
-            print supplier.name
-            cur.execute(u"select id,username from auth_user where first_name='%s'" % supplier.name)
+        # cur.execute(u"select user_id,supplier_id from account_has_supplier where user_id in (329)")
+        cur.execute(u"select user_id,supplier_id from account_has_supplier where user_id>0")
+        relations = cur.fetchall()
+
+        for relation in relations:
+            panda_id = relation[0]
+            cur_owner_id = panda_id
+            supplier_id = relation[1]
+            print supplier_id, panda_id
+            supplier = Supplier.objects.get(id=supplier_id)
+            try:
+                print '>>>%s supplier start<<<' % supplier.name
+            except:
+                print '>>>%s supplier start<<<' % supplier.id
+            cur.execute(u"select id,username from auth_user where id='%s'" % panda_id)
             panda_user = cur.fetchone()
-            cur_owner_id = panda_user[0]
             username = panda_user[1]
-            print cur_owner_id, 'cur_owner_id'
+            # print panda_id, 'panda_id', username
 
             if not User.objects.filter(username=username):
                 user = User.objects.create_user(username, 'none@weizoom.com', '123456')
@@ -47,73 +61,75 @@ class Command(BaseCommand):
                 user.save()
                 profile = user.get_profile()
                 profile.store_name = supplier.name
+                profile.webapp_type = 4 #供货商类型帐号
+                profile.note = supplier.id
                 profile.save()
             else:
-                continue
+                # continue
+                if username in weapp_exists_users:
+                    username = username + '_317new'
+                    if User.objects.filter(username=username):
+                        continue
+                    user = User.objects.create_user(username, 'none@weizoom.com', '123456')
+                    user.first_name = supplier.name
+                    user.save()
+                    profile = user.get_profile()
+                    profile.store_name = supplier.name
+                    profile.webapp_type = 4 #供货商类型帐号
+                    profile.note = supplier.id
+                    profile.save()
+                    print username
+                else:
+                    continue
+                user = User.objects.get(username=username)
+                # print 'already exists panda_id', panda_id
 
-            Product.objects.filter(supplier=supplier.id).update(owner=user.id)
-
-            #TODO: 订单数据处理
-			#Order.objects.filter(XXX).update(owner=user.id)
-        
-            cur.execute(u"select id,owner_id,name,first_weight,first_weight_price,is_enable_added_weight,added_weight,added_weight_price,is_used,created_at,is_enable_special_config,is_enable_free_config,is_deleted from postage_config where owner_id = '%d' " % (cur_owner_id)) 
-            postage_config_rows = cur.fetchall()
-            for postage_config_row in postage_config_rows:
-                p = PostageConfig.objects.create(
-                    owner_id = user.id,
-                    name = postage_config_row[2],
-                    first_weight = postage_config_row[3],
-                    first_weight_price = postage_config_row[4],
-                    added_weight = postage_config_row[6],
-                    added_weight_price = postage_config_row[7],
-                    is_enable_special_config = postage_config_row[10],
-                    is_enable_free_config = postage_config_row[11],
-                    is_enable_added_weight = postage_config_row[5],
-                    is_used = postage_config_row[8],
-                    is_deleted = postage_config_row[12]
-                ) 
-                postage_config_id = postage_config_row[0]
-                cur.execute(u"select id,owner_id,postage_config_id,first_weight_price,added_weight_price,created_at,destination,first_weight,added_weight from postage_config_special where postage_config_id ='%d' " %(postage_config_id))
-                postage_config_special_rows = cur.fetchall()
-                for postage_config_special_row in postage_config_special_rows:
-                    if postage_config_special_row[6].isdigit():
-                        postage_config_special_destination = '[' + str(postage_config_special_row[6]) + ']'
-                    else:
-                        postage_config_special_destination=[]
-                        for x in postage_config_special_row[6].split(','):
-                            postage_config_special_destination.append(int(x))
-                    SpecialPostageConfig.objects.create(
-                        owner_id = user.id,
-                        postage_config_id = p.id,
-                        first_weight_price = postage_config_special_row[3],
-                        added_weight_price = postage_config_special_row[4],
-                        #created_at = postage_config_special_row[5],
-                        destination = postage_config_special_destination,
-                        first_weight = postage_config_special_row[7],
-                        added_weight = postage_config_special_row[8]
-                    )  
-
-                cur.execute(u"select id,owner_id,postage_config_id,destination,condition,condition_value,created_at from free_postage_config where postage_config_id ='%s' " %(postage_config_id))
-                free_postage_config_rows = cur.fetchall()
-                for free_postage_config_row in free_postage_config_rows:
-                    if free_postage_config_row[3].isdigit():
-                        free_postage_config_destination = '[' + str(free_postage_config_row[3]) + ']'
-                    else:
-                        free_postage_config_destination=[]
-                        for x in free_postage_config_row[3].split(','):
-                            free_postage_config_destination.append(int(x))
-                    FreePostageConfig.objects.create(
-                        owner_id = user.id,
-                        postage_config_id = p.id,
-                        destination = free_postage_config_destination,
-                        condition = free_postage_config_row[4],
-                        condition_value = free_postage_config_row[5],
-                        #created_at = free_postage_config_row[6],
+            #供货商配置
+            if not CorpInfo.objects.filter(corp_id=user.id):
+                cur.execute(u"select name,company_name,purchase_method,points,settlement_period,customer_from,max_product,company_type,contacter,phone,note,status,pre_sale_tel,after_sale_tel,customer_service_tel,customer_service_qq_first,customer_service_qq_second from account_user_profile where user_id='%d'" % (cur_owner_id)) 
+                panda_user_info = cur.fetchone()
+                CorpInfo.objects.create(
+                    corp_id = user.id,
+                    name = panda_user_info[0],
+                    company_name = panda_user_info[1],
+                    settlement_type = panda_user_info[2],
+                    divide_rebate = panda_user_info[3],
+                    clear_period = panda_user_info[4],
+                    customer_from = panda_user_info[5],
+                    max_product_count = panda_user_info[6],
+                    classification_ids = panda_user_info[7],
+                    contact = panda_user_info[8],
+                    contact_phone = panda_user_info[9],
+                    note = panda_user_info[10],
+                    status = panda_user_info[11],
+                    pre_sale_tel = panda_user_info[12],
+                    after_sale_tel = panda_user_info[13],
+                    service_tel = panda_user_info[14],
+                    service_qq_first = panda_user_info[15],
+                    service_qq_second = panda_user_info[16],
                     )
 
-            #TODO: ProductLimitZoneTemplate无法辨识所属关系
-			#ProductLimitZoneTemplate.objects.filter(owner_id=cur_owner_id).update(owner = user.id)
+            #更新在售商品
+            Product.objects.filter(supplier=supplier.id).update(owner=user.id)
+
+            #订单数据处理
+            Order.objects.filter(supplier=supplier.id).update(supplier=user.id)
             
+            #运费模版
+            cur.execute(u"select weapp_config_relation_id from postage_config_relation inner join postage_config on postage_config_relation.postage_config_id = postage_config.id and postage_config.owner_id='%d' " % (cur_owner_id)) 
+            weapp_config_relation_ids = cur.fetchall()
+            for weapp_config_relation_id in weapp_config_relation_ids:
+                PostageConfig.objects.filter(id=weapp_config_relation_id[0]).update(owner = user.id)
+                SpecialPostageConfig.objects.filter(postage_config_id=weapp_config_relation_id[0]).update(owner = user.id)
+                FreePostageConfig.objects.filter(postage_config_id=weapp_config_relation_id[0]).update(owner = user.id)
+
+            #仅售禁售
+            cur.execute(u"select weapp_template_id from product_limit_zone_template_relation inner join product_limit_zone_template on product_limit_zone_template_relation.template_id = product_limit_zone_template.id and product_limit_zone_template.owner_id='%s'" %(cur_owner_id))
+            weapp_template_ids = cur.fetchall()
+            for weapp_template_id in weapp_template_ids:
+                ProductLimitZoneTemplate.objects.filter(id=weapp_template_id[0]).update(owner = user.id)
+            
+            #
             cur.execute(u"select id,owner_id,express_name,customer_name,customer_pwd,logistics_number,remark,is_deleted,sendsite from express_bill_accounts where owner_id ='%s' " %(cur_owner_id))
             express_bill_account_rows = cur.fetchall()
             for express_bill_account_row in express_bill_account_rows:
@@ -128,6 +144,7 @@ class Command(BaseCommand):
                     is_deleted = express_bill_account_row[7],
                 )
 
+            #发货人
             cur.execute(u"select id,owner_id,shipper_name,tel_number,province,city,district,address,postcode,company_name,remark,is_active,is_deleted from shipper_messages where owner_id ='%s' " %(cur_owner_id))
             shipper_message_rows = cur.fetchall()
             for shipper_message_row in shipper_message_rows:
@@ -146,7 +163,11 @@ class Command(BaseCommand):
                     is_deleted = shipper_message_row[12],
                 )    
             
-            #TODO: ProductModelProperty无法辨识所属关系
-			#ProductModelProperty.objects.filter(owner_id=cur_owner_id).update(owner = user.id)
-                
+            #商品规格
+            cur.execute(u"select weapp_property_id from product_model_property_relation inner join product_model_property on product_model_property_relation.model_property_id = product_model_property.id and product_model_property.owner_id='%s'" %(cur_owner_id))
+            model_property_ids = cur.fetchall()
+            for model_property_id in model_property_ids:
+                ProductModelProperty.objects.filter(id=model_property_id[0]).update(owner = user.id)
+
+
 
