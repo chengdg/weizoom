@@ -45,11 +45,13 @@ USER_STATUSES = (
 SELF_OPERATION = 0
 THIRD_OPERATION = 1
 OTHER_OPERATION = 2
+SUPPLIER_OPERATION = 4
 
 OPERATION_TYPE = {
 	SELF_OPERATION: u'自运营',
 	THIRD_OPERATION: u'代运营',
-	OTHER_OPERATION: u'其它'
+	OTHER_OPERATION: u'其它',
+	SUPPLIER_OPERATION: u'供货商',
 }
 
 WEBAPP_TYPE_MALL = 0 #普通商城
@@ -100,6 +102,7 @@ class UserProfile(models.Model):
 	is_formal = models.BooleanField(default=True) #账户类型是否是正式账号
 	#add by duhao 20170215
 	kefu_url = models.CharField(max_length=256, default="") #客服url
+
 	class Meta(object):
 		db_table = 'account_user_profile'
 		verbose_name = '用户配置'
@@ -138,6 +141,7 @@ class CorpInfo(models.Model):
 	"""
 	corp详情
 	"""
+	corp_id = models.IntegerField(default=0)
 	name = models.CharField(max_length=32, default='')	#公司简称(店铺名)
 	company_name = models.CharField(max_length=32, default='')	#公司全称
 	settlement_type = models.IntegerField(default=CORP_DIVIDE_TYPE_FIXED) #采购方式
@@ -159,6 +163,10 @@ class CorpInfo(models.Model):
 	service_tel = models.CharField(max_length=32, default='') #客服电话
 	service_qq_first = models.CharField(max_length=32, default='') #客服qq-1
 	service_qq_second = models.CharField(max_length=32, default='') #客服qq-2
+
+	valid_time_from = models.DateTimeField(default='2000-01-01')  # 有效期
+	valid_time_to = models.DateTimeField(default='2000-01-01')  # 有效期
+
 
 	class Meta(object):
 		db_table = "account_corp_info"

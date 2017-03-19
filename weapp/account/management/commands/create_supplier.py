@@ -21,12 +21,6 @@ class Command(BaseCommand):
         同步panda中账户类型(正式/体验)到weapp中
         weapp库user的id即为corp_id
         """
-        f = open('weapp_exists_users.txt', 'rb')
-        weapp_exists_users = []
-        for username in f.readlines():
-            weapp_exists_users.append(username.strip())
-        print weapp_exists_users
-
         conn= MySQLdb.connect(
             host='rm-bp18wbhgz1493ad8to.mysql.rds.aliyuncs.com',
             port = 3306,
@@ -50,14 +44,17 @@ class Command(BaseCommand):
                 print '>>>%s supplier start<<<' % supplier.name
             except:
                 print '>>>%s supplier start<<<' % supplier.id
-            cur.execute(u"select id,username from auth_user where id='%s'" % panda_id)
+            cur.execute(u"select id,username,password from auth_user where id='%s'" % panda_id)
             panda_user = cur.fetchone()
             username = panda_user[1]
-            # print panda_id, 'panda_id', username
+            password = panda_user[2]
+            username = username + '_for_ghs'
+            print panda_id, 'panda_id', username
 
             if not User.objects.filter(username=username):
                 user = User.objects.create_user(username, 'none@weizoom.com', '123456')
                 user.first_name = supplier.name
+                user.password = password
                 user.save()
                 profile = user.get_profile()
                 profile.store_name = supplier.name
@@ -65,30 +62,15 @@ class Command(BaseCommand):
                 profile.note = supplier.id
                 profile.save()
             else:
-                # continue
-                if username in weapp_exists_users:
-                    username = username + '_317new'
-                    if User.objects.filter(username=username):
-                        continue
-                    user = User.objects.create_user(username, 'none@weizoom.com', '123456')
-                    user.first_name = supplier.name
-                    user.save()
-                    profile = user.get_profile()
-                    profile.store_name = supplier.name
-                    profile.webapp_type = 4 #供货商类型帐号
-                    profile.note = supplier.id
-                    profile.save()
-                    print username
-                else:
-                    continue
+                continue
                 user = User.objects.get(username=username)
                 # print 'already exists panda_id', panda_id
 
             #供货商配置
             if not CorpInfo.objects.filter(corp_id=user.id):
-                cur.execute(u"select name,company_name,purchase_method,points,settlement_period,customer_from,max_product,company_type,contacter,phone,note,status,pre_sale_tel,after_sale_tel,customer_service_tel,customer_service_qq_first,customer_service_qq_second from account_user_profile where user_id='%d'" % (cur_owner_id)) 
+                cur.execute(u"select name,company_name,purchase_method,points,settlement_period,customer_from,max_product,company_type,contacter,phone,note,status,pre_sale_tel,after_sale_tel,customer_service_tel,customer_service_qq_first,customer_service_qq_second,valid_time_from,valid_time_to from account_user_profile where user_id='%d'" % (cur_owner_id)) 
                 panda_user_info = cur.fetchone()
-                CorpInfo.objects.create(
+                corp_info = CorpInfo.objects.create(
                     corp_id = user.id,
                     name = panda_user_info[0],
                     company_name = panda_user_info[1],
@@ -107,7 +89,13 @@ class Command(BaseCommand):
                     service_tel = panda_user_info[14],
                     service_qq_first = panda_user_info[15],
                     service_qq_second = panda_user_info[16],
+                    valid_time_from = panda_user_info[17],
+                    valid_time_to = panda_user_info[18],
                     )
+                corp_info.valid_time_from = panda_user_info[17]
+                corp_info.valid_time_to = panda_user_info[18]
+                corp_info.save()
+
 
             #更新在售商品
             Product.objects.filter(supplier=supplier.id).update(owner=user.id)
