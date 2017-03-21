@@ -108,7 +108,7 @@ class Command(BaseCommand):
             cur.execute(u"select weapp_config_relation_id from postage_config_relation inner join postage_config on postage_config_relation.postage_config_id = postage_config.id and postage_config.owner_id='%d' " % (cur_owner_id)) 
             weapp_config_relation_ids = cur.fetchall()
             for weapp_config_relation_id in weapp_config_relation_ids:
-                PostageConfig.objects.filter(id=weapp_config_relation_id[0]).update(owner = user.id)
+                PostageConfig.objects.filter(id=weapp_config_relation_id[0]).update(owner=user.id, supplier_id=user.id)
                 SpecialPostageConfig.objects.filter(postage_config_id=weapp_config_relation_id[0]).update(owner = user.id)
                 FreePostageConfig.objects.filter(postage_config_id=weapp_config_relation_id[0]).update(owner = user.id)
             #删除创建默认模版
