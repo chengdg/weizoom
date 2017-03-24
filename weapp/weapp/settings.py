@@ -513,6 +513,7 @@ INSTALLED_APPS = [
 
     'openapi',
     'export_job',
+    'third_party_pay',
     # Third-party apps
     # 'django_extensions',
 
