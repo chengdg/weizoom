@@ -928,3 +928,14 @@ else:
 
 TEST_ENV = 'docker'
 IS_TMS_TEST = True
+
+if 'deploy' == MODE:
+    #锦歌饭卡的第三方支付公司host
+    #如果apiserver在线上增加了部署节点，一定要把新ip告知该公司进行增加白名单操作，不然可能会出现饭卡无法消费的情况
+    #目前的白名单ip有：114.55.86.248 114.55.74.184 114.55.74.184 114.215.255.147
+    JINGE_HOST = 'http://59.110.52.17:8088/wxPay/'
+    #可以使用锦歌饭卡的账号id列表
+    CAN_USE_JINGE_CARD_ACCOUNT_IDS = [119, 1375]  #ceshi01和锦歌商城
+else:
+    JINGE_HOST = 'http://101.200.142.53:8088/wxPay/'
+    CAN_USE_JINGE_CARD_ACCOUNT_IDS = [3, 119, 1375]  #jobs, ceshi01和锦歌商城

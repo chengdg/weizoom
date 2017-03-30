@@ -231,6 +231,9 @@ def cancel_order_handler(order, **kwargs):
         if order.member_card_money:
             from mall.module_api import refund_member_card_money
             refund_member_card_money(order)
+        if order.jinge_card_money:
+            from mall.module_api import refund_jinge_card_money
+            refund_jinge_card_money(order)
         # 返还优惠券
         if order.coupon_id and order.coupon_id > 0:
             coupons = promotion_models.Coupon.objects.filter(id = order.coupon_id)
