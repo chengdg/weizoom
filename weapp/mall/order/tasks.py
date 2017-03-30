@@ -138,8 +138,10 @@ def send_order_export_job_task(self, exportjob_id, filter_data_args, type):
         filename = "order_{}.xlsx".format(exportjob_id)
         dir_path_excel = "excel"
         dir_path = os.path.join(settings.UPLOAD_DIR, dir_path_excel)
+        if not os.path.exists(dir_path):
+            os.makedirs(dir_path)
         file_path = "{}/{}".format(dir_path,filename)
-        workbook   = xlsxwriter.Workbook(file_path)
+        workbook = xlsxwriter.Workbook(file_path)
         table = workbook.add_worksheet()
 
         table.write_row('A1', orders)
