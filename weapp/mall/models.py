@@ -1738,6 +1738,7 @@ class Order(models.Model):
 	total_purchase_price = models.FloatField(default=0)  # 总订单采购价格
 	# refund_money = models.FloatField(default=-1)     # 订单的退款金额
 	member_card_money = models.FloatField(default=0.0)  # 会员卡抵扣金额  alter table mall_order add column member_card_money float default 0;
+	third_party_money = models.FloatField(default=0.0)  # 第三方抵扣金额，如锦歌饭卡 duhao 20170320  alter table mall_order add column third_party_money float default 0;
 
 	class Meta(object):
 		db_table = 'mall_order'

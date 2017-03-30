@@ -3531,6 +3531,97 @@ def refund_member_card_money(order):
 
 	return resp
 
+def refund_jinge_card_money(order):
+	from third_party_pay.models import JinGeCardLog
+	order_id = order.order_id
+	log = JinGeCardLog.objects.filter(order_id=order_id).first()
+	trade_id = log.trade_id
+	jinge_card = log.jinge_card
+	data = {
+		'trade_id': trade_id,
+		'trade_type': 1  # 普通退款
+	}
+	msg = 'jinge_card refund:' + trade_id
+
+	watchdog_info(message=msg, type='jinge_card')
+
+	from weapp import settings
+	from utils import ding_util
+	DING_TOKEN = '43b4b5204686a4a09fbdec8acedcd90db0d1f12851a3c6a3935b6c7d7c08bbf2'  #支付报警群
+	AT_MOBILES = ['13718183044']
+	url = settings.JINGE_HOST + 'getRefund.json'
+	try:
+		card_number = jinge_card.card_number.encode('utf-8')
+		token = jinge_card.token.encode('utf-8')
+		card_password = jinge_card.card_password.encode('utf-8')
+		trade_id = trade_id.encode('utf-8')
+	except:
+		card_number = jinge_card.card_number
+		token = jinge_card.token
+		card_password = jinge_card.card_password
+	params = {
+		'cardNo': card_number,
+		'password': card_password,
+		'token': token,
+		'tradeId': trade_id
+	}
+	resp = requests.post(url, data=params)
+
+	if resp.status_code == 200:
+		try:
+			json_data = json.loads(resp.text)
+			if json_data['ret'] == 1:
+				watchdog_info('jinge_card refund success requests: %s, params: %s, results: %s' % (url, params, json_data))
+				trade_amount = json_data['tradeAmount']
+				refund_trade_id = json_data['tradeId']
+				if trade_amount != price:
+					#如果退款的金额跟消费的金额不一致就往钉钉群里发报警消息
+					msg = u'weapp:锦歌饭卡退款金额与消费金额不一致,\n请求退款金额: {}\n实际退款金额: {}\norder_id: {}\ncard_number: {}\ntrade_id: {}\nrefund_trade_id: {}'.format(
+						price,
+						trade_amount,
+						order_id,
+						card_number,
+						trade_id,
+						refund_trade_id
+					)
+					ding_util.send_message_to_ding(msg, token=DING_TOKEN, at_mobiles=AT_MOBILES)
+
+				balance = 0
+				url2 = settings.JINGE_HOST + 'qurBalance.json'
+				params2 = {
+					'cardNo': card_number,
+					'token': token
+				}
+				resp2 = requests.post(url2, data=params2)
+				#查询余额
+				if resp2.status_code == 200:
+					try:
+						json_data = json.loads(resp2.text)
+						if json_data['ret'] == 1:
+							balance = json_data['balance']
+					except Exception, e:
+						pass
+
+				JinGeCardLog.objects.create(
+					jinge_card_id=jinge_card.id,
+					trade_id=refund_trade_id,
+					order_id=order_id,
+					reason=u"取消下单或下单失败",
+					balance=balance,
+					price=trade_amount
+				)
+			else:
+				watchdog_alert('jinge_card refund fail requests: %s, params: %s, resp: %s' % (url, params, resp.content))
+		except Exception, e:
+			watchdog_alert('jinge_card refund fail requests: %s, params: %s, resp: %s, Exception: %s' % (url, params, resp.content, e))
+	else:
+		watchdog_alert('jinge_card refund fail requests: %s, params: %s, resp: %s' % (url, params, resp.content))
+
+	msg = u'weapp:锦歌饭卡退款失败\n消费金额: {}\norder_id: {}\ncard_number: {}'.format(price, order_id, card_number)
+	ding_util.send_message_to_ding(msg, token=DING_TOKEN, at_mobiles=AT_MOBILES)
+
+	return resp
+
 import msg_crypt
 from weapp import settings
 crypt = msg_crypt.MsgCrypt(settings.WZCARD_ENCRYPT_INFO['token'], settings.WZCARD_ENCRYPT_INFO['encodingAESKey'],
